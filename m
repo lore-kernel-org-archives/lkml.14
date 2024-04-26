@@ -1,112 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35BA13C838
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D654013C838;
+	Fri, 26 Apr 2024 09:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714123552; cv=none; b=oSvHxwxKC8RTTMbVBV23mMmaJbLMlsMZ5XBz+JDL8mZ3CtgJ30VrzOrL/7neF7f++bzhmhc7qOrLjNjmJXXw+rV3UOd3AsJQLaf/JgGeLBGdTGKr+1R/00S3BWE8yAe2XReBVEV5dFWOTD7aCPaU3tyBwseDq9ngbzQsspIf8ps=
+	t=1714123561; cv=none; b=QEIEYfzJcdykqvEulmo5lEcwQTfCJB7ZkJ+J9+KPIjmgy4wMk2kTJiKah9kgv+LI1id2NX+DCbkeKHewHuJqijDRheDUvnL2RVoaEpl2zvR8L+tiulOe1otm67/gqKaZxmtPOxJCGTDRTJLNXV+o1XxEJQZ3dGEjeMjPLM2Dgq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714123552; c=relaxed/simple;
-	bh=v/8fP7ljlfNYu8p9ZmxbNzZV08oGzX9HMMT08K/tl/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n1e0D7Hk+VvbAAx9yKx4Bh5PGan2lgAh9yrLatArcT6q7k2A9B4pnQVsH6ZhDRmyUb9laLEDfoe0Kf147Cxt4QySCWwn+YohaM92DFzKpSFSPGg+yW5gREPB2OevcneZ3658iLol7EYZW7fzrFM48O117Ar1euDyeFLuCInIxnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EIU6F4Rf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714123561; c=relaxed/simple;
+	bh=rp94rzmBiWYwRT1Xe9//2+dGBGbcwQT69S3QZcWHhbc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NtNwmK+fkjMG498GgYM7fTAAEO1Psn/FROHwRpFarnOqdrqbKBzqdDLAgnByROE/ZN9KfegestAOf2VBmFr+isGdwOsO91kN5ByFb8cGU+J21xGQMiSe+YjUw4pZrE3cNAuJkRlv1MrIoNnam3Kycwr3eX2xpBrIjY5rTCttXWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DriDzvnH; arc=none smtp.client-ip=45.254.50.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EIU6F4Rf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714123549;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aI+0tk0N0rfZ0+RaTapxWMbQJR8XZdeH/fzJ04k7BlA=;
-	b=EIU6F4Rfhg9Jg4lpAv/aUgrpZcYkEisw/QVybvAClUuBCydNMr+xuISt3Nx/TMO8lARn20
-	R07r+yZBL19tSIoRBBKObjWZMaLw2AeP/GX12P/YOo7j1eY+JMS+h51RhUkZ1cw8DqkGpF
-	+yuIHe1cTLDW2IjtTLFYGcuk2d0zxXk=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-170-8kfG_MsbM7KkUIbalHWH1w-1; Fri, 26 Apr 2024 05:25:46 -0400
-X-MC-Unique: 8kfG_MsbM7KkUIbalHWH1w-1
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso1850349a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 02:25:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714123545; x=1714728345;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aI+0tk0N0rfZ0+RaTapxWMbQJR8XZdeH/fzJ04k7BlA=;
-        b=QOPpOTwcAP9tOH0lXWnjLX1D0jnWlsgt5oWLvG+KuEeyi7VjKYElsHzCxShgDRVFq7
-         8yjPmlBvR7MZztg9Vc7bMEvYZ7hWB2aOWyJP67uSDN8cwbduxUqQAupwjyMyQ246Cl8O
-         dPNv0QQ/Ea5ZLBmyd/NSyqcA8eew2bzWelJxr/rQQVP8O/3a8awZiIl16YFjZaTnqpwM
-         JpSxcEINJXNVlbsQOP9Volg92sjtT+k9YSmH1/HVd3P/+/IE3MovwNVeBPfbeXosDIIA
-         ldMI01o3rjjwwgLzSdpriPETiDuJ90eBdwlebv8q9lrrU9KjxlLuoJBlkf2CSKo2z44j
-         keow==
-X-Forwarded-Encrypted: i=1; AJvYcCXrv9aFekK3rCq8ungLTpZREj/D0Yt/h6U6o6PLB1tPq9RAhXojqZY9Kh1O5dRZAfWkY8In0/Jd7UcJ3OJv42ci65NpHeZgXdWvA73t
-X-Gm-Message-State: AOJu0YznN2fM/2HvVp/WLZVhlXVveu2BTd3iFHGO/Aa8ltFLzNNaqPV0
-	P5nsR0IbrAQ/nK7uxoXruFDPfn7cJzNcRBPTMq7cvE7czpGpPZtdkzm5CbqsatRzaF6sw5+Z89W
-	T3ODBtEQBpyVHZD9l2QV1Hw0DcxbgePBzYdIyYNPf01FJUPBlBAhuG1PKWM/hsQ==
-X-Received: by 2002:a17:902:cec3:b0:1ea:482f:f41e with SMTP id d3-20020a170902cec300b001ea482ff41emr9963260plg.15.1714123545328;
-        Fri, 26 Apr 2024 02:25:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEvlGXSv/tKHY50Dw7+RKb6bmu/jV2eWJbng5XCKDvWXp8D8BnGzOt+jBjaEMTVQZ+CP26+DQ==
-X-Received: by 2002:a17:902:cec3:b0:1ea:482f:f41e with SMTP id d3-20020a170902cec300b001ea482ff41emr9963218plg.15.1714123545006;
-        Fri, 26 Apr 2024 02:25:45 -0700 (PDT)
-Received: from [192.168.68.50] ([43.252.112.88])
-        by smtp.gmail.com with ESMTPSA id r3-20020a170902be0300b001e27462b988sm15054500pls.61.2024.04.26.02.25.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 02:25:44 -0700 (PDT)
-Message-ID: <0a96abc4-8205-447d-9e7d-03397de5ada8@redhat.com>
-Date: Fri, 26 Apr 2024 19:25:36 +1000
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DriDzvnH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ac8Ot
+	BpdXETb5u8j8PCiiZkMHIEDlMdWPHdK4ooOeGY=; b=DriDzvnHjrY+bGS417Fpf
+	MqinJ2/Lr3xAt/nI9aHCUjJHLhQsvJrFpYu38cEBn1Kv0PrRFdmdJsij2jFh5zgk
+	qn6aIf9q9ewZYsrs7K8EG2Gq8HHi2oxVFXMbeJBQPj9DiUsQWGHLB6ICAL1DCXXc
+	SBPfj5XaheRUIiNyG4x87M=
+Received: from localhost.localdomain (unknown [112.97.48.208])
+	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wD3v3Tecitm5obCCQ--.37650S2;
+	Fri, 26 Apr 2024 17:24:48 +0800 (CST)
+From: Slark Xiao <slark_xiao@163.com>
+To: loic.poulain@linaro.org,
+	ryazanov.s.a@gmail.com,
+	johannes@sipsolutions.net
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Slark Xiao <slark_xiao@163.com>,
+	Hariprasad Kelam <hkelam@marvell.com>
+Subject: [PATCH net v2] net: wwan: Fix missing net device name for error message print
+Date: Fri, 26 Apr 2024 17:24:44 +0800
+Message-Id: <20240426092444.825735-1-slark_xiao@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 07/16] ACPI: scan: switch to flags for
- acpi_scan_check_and_detach()
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, x86@kernel.org, Russell King
- <linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>,
- Salil Mehta <salil.mehta@huawei.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com,
- justin.he@arm.com, jianyong.wu@arm.com
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
- <20240418135412.14730-8-Jonathan.Cameron@huawei.com>
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20240418135412.14730-8-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3v3Tecitm5obCCQ--.37650S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAF4xCw13Cw45Wr43JF1kKrg_yoW5Cw1Upa
+	y7K3sxZr18Jay7X3WUJrWkZFWFywn5ta47Kry2v3WSvF1ayrWUWa4fJF95uw43ta1rAw17
+	tF4a9anxW3ZrG3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piHa0PUUUUU=
+X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiowPMZGVODGqReQAAst
 
-On 4/18/24 23:54, Jonathan Cameron wrote:
-> Precursor patch adds the ability to pass a uintptr_t of flags into
-> acpi_scan_check_and detach() so that additional flags can be
-> added to indicate whether to defer portions of the eject flow.
-> The new flag follows in the next patch.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> ---
-> v7: No change
-> v6: Based on internal feedback switch to less invasive change
->      to using flags rather than a struct.
-> ---
->   drivers/acpi/scan.c | 17 ++++++++++++-----
->   1 file changed, 12 insertions(+), 5 deletions(-)
-> 
+In my local, I got an error print in dmesg like below:
+"sequence number glitch prev=487 curr=0"
+After checking, it belongs to mhi_wwan_mbim.c. Refer to the usage
+of this net_err_ratelimited() API in other files, I think we
+should add net device name print before message context.
 
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+Fixes: aa730a9905b7 ("net: wwan: Add MHI MBIM network driver")
+Signed-off-by: Slark Xiao <slark_xiao@163.com>
+Reviewed-by: Hariprasad Kelam <hkelam@marvell.com>
+---
+ drivers/net/wwan/mhi_wwan_mbim.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/wwan/mhi_wwan_mbim.c b/drivers/net/wwan/mhi_wwan_mbim.c
+index 3f72ae943b29..6cefee25efc4 100644
+--- a/drivers/net/wwan/mhi_wwan_mbim.c
++++ b/drivers/net/wwan/mhi_wwan_mbim.c
+@@ -186,14 +186,14 @@ static int mbim_rx_verify_nth16(struct mhi_mbim_context *mbim, struct sk_buff *s
+ 
+ 	if (skb->len < sizeof(struct usb_cdc_ncm_nth16) +
+ 			sizeof(struct usb_cdc_ncm_ndp16)) {
+-		net_err_ratelimited("frame too short\n");
++		net_err_ratelimited("mbim: frame too short\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	nth16 = (struct usb_cdc_ncm_nth16 *)skb->data;
+ 
+ 	if (nth16->dwSignature != cpu_to_le32(USB_CDC_NCM_NTH16_SIGN)) {
+-		net_err_ratelimited("invalid NTH16 signature <%#010x>\n",
++		net_err_ratelimited("mbim: invalid NTH16 signature <%#010x>\n",
+ 				    le32_to_cpu(nth16->dwSignature));
+ 		return -EINVAL;
+ 	}
+@@ -201,7 +201,7 @@ static int mbim_rx_verify_nth16(struct mhi_mbim_context *mbim, struct sk_buff *s
+ 	/* No limit on the block length, except the size of the data pkt */
+ 	len = le16_to_cpu(nth16->wBlockLength);
+ 	if (len > skb->len) {
+-		net_err_ratelimited("NTB does not fit into the skb %u/%u\n",
++		net_err_ratelimited("mbim: NTB does not fit into the skb %u/%u\n",
+ 				    len, skb->len);
+ 		return -EINVAL;
+ 	}
+@@ -209,7 +209,7 @@ static int mbim_rx_verify_nth16(struct mhi_mbim_context *mbim, struct sk_buff *s
+ 	if (mbim->rx_seq + 1 != le16_to_cpu(nth16->wSequence) &&
+ 	    (mbim->rx_seq || le16_to_cpu(nth16->wSequence)) &&
+ 	    !(mbim->rx_seq == 0xffff && !le16_to_cpu(nth16->wSequence))) {
+-		net_err_ratelimited("sequence number glitch prev=%d curr=%d\n",
++		net_err_ratelimited("mbim: sequence number glitch prev=%d curr=%d\n",
+ 				    mbim->rx_seq, le16_to_cpu(nth16->wSequence));
+ 	}
+ 	mbim->rx_seq = le16_to_cpu(nth16->wSequence);
+@@ -222,7 +222,7 @@ static int mbim_rx_verify_ndp16(struct sk_buff *skb, struct usb_cdc_ncm_ndp16 *n
+ 	int ret;
+ 
+ 	if (le16_to_cpu(ndp16->wLength) < USB_CDC_NCM_NDP16_LENGTH_MIN) {
+-		net_err_ratelimited("invalid DPT16 length <%u>\n",
++		net_err_ratelimited("mbim: invalid DPT16 length <%u>\n",
+ 				    le16_to_cpu(ndp16->wLength));
+ 		return -EINVAL;
+ 	}
+@@ -233,7 +233,7 @@ static int mbim_rx_verify_ndp16(struct sk_buff *skb, struct usb_cdc_ncm_ndp16 *n
+ 
+ 	if (sizeof(struct usb_cdc_ncm_ndp16) +
+ 	     ret * sizeof(struct usb_cdc_ncm_dpe16) > skb->len) {
+-		net_err_ratelimited("Invalid nframes = %d\n", ret);
++		net_err_ratelimited("mbim: Invalid nframes = %d\n", ret);
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+2.25.1
 
