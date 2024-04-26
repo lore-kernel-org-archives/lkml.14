@@ -1,127 +1,220 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B422BAF6
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 14:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8526012C7FB;
+	Fri, 26 Apr 2024 14:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714142251; cv=none; b=fGDFCZXR9gHjfAFie/mQzWp9k4mJ0blY7eDAPiBY0iF1vGM8Dw2VI+BoFq653ePNMMzkxYtEoa5R3pHcEqX3f582BMPZKlEM6OBXTGAxzIsrEzymaLFj3gMRNV+f1OxMrFm2wR0tRkX0hC7VTwsJiYUvWOskts2BHgVBRH6b1ho=
+	t=1714142319; cv=none; b=pBC1hgb+YLabiY9bdFcGkozsMQxwEKF5GrA/v99xxtXQgufp9mhLKe4GuOeWmfHzMcE2eEglvlqsfVireObDkgSUolSj20SrDmWNY9Fo8xoqAoxxpxezGb1LSecbT7EHyS+v0S3NOxwNKXVUPKV0gGVOGWla0t4gXiDzU3/FYcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714142251; c=relaxed/simple;
-	bh=RWkXe7sRC3RxM96qd474TAOzOp5sMO+lDyyEXYj/lek=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B0DRMP46UZIOuQ65Yb06mOUN0FcA18S6HSym5zsat7F3j+/F9D6ZmoVQE1o7Msw2FFJBPyzinuPTTUTYKd4cmmsxJ+ghUDMmsGdN2K4mUcW3blHGanh2wfKNFmGs8YwgkgISZk7nabfCvfuSIQ6rxOTXxHKXGcIVDckdxAXOo9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BGl4rSA9; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BGl4rSA9"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516d3a470d5so2717034e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:37:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1714142247; x=1714747047; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iyn8nuvs6hv5iFPafXpvUxP0UCsY1jeaxaf4MXYmLH4=;
-        b=BGl4rSA9xihLx1c9X6ysaGOHI6/IMSUCXiKFz9iNvKxUzu9hfEw7fDFafUJF4ossaX
-         Qp311eEWOGyCZ7cvmD8/h8I8jwB3r6gDAijEU/V8hBXvjBabmbknNphil22zTJxXvSG6
-         QTzzOaAeSBoC5Y+s7DWB0ZqCuX7teL1D2SMdXyr2r0+Rbd6wclLfmJbe0KOKddAUfIbM
-         Osb0Z/aE2dl3WqFOUIm3QA2uGAYTgUt0cbPM/p6F5/pyPpSC81BKsQ+cSLbR0QuT+BcR
-         r0oatVlvHS3eairkbZhK0RHIb9Sq498p7c/3jrIaNrWEC4KShzf58bUDcfHHFc4Ltoa7
-         YPeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714142247; x=1714747047;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iyn8nuvs6hv5iFPafXpvUxP0UCsY1jeaxaf4MXYmLH4=;
-        b=LHCsOBSd6/5a5r/35ViyX/WbujQEHcQj4QoLkFM3LIYhC6U/IgUK1bCd1wNwNCrisS
-         IMlovwkrr/ZD6+ZLkwVWIVERlzUlQXlp+L1hQQS4WL38kCQLTHBvtpc/xlN3rqiYSd2D
-         wWtGD1XO0+Vq2G1wreB0tbPgRn2QY8zbtUaIMe3ywRw/jx+CxpTnTB4wHyGz0H1wPdmW
-         0G+Q3jfICcfuHMZZf7dw1LSdNwDOU09mLhHnwGyQ/97BMQk8Qi6g3G9Yu09Nb+fRPpP/
-         FmLsqa4uHZM0C+nqIxlKZI+IE+oCic23oi73i1vGQIrF4eljLPmFM7R/VLS6MRE2w6SH
-         tMQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVug+uS+nka/sYSHIVQdvmFiKCodjQyMZafO2tJ4X0P/OQHCK5cRTK8ebrkANAPFue+WI5X4sznRG99DjAAOi8VY/UrfQM8rpsWpYYO
-X-Gm-Message-State: AOJu0YxQk1e5Zef5nf50RhKGjtxP+jQCjW+NilHMZz93+6g9Lk8dQWfz
-	kI89RRTKc08qZcJhI3Qxf3+a29ESWbVIy+8UjgNkQhWSGQryOq6WeFxPTlJtjiByzmTO44BT/hh
-	DfdfObaJcBEVrgSawjnE66d1JZqLL/c/y64QraQ==
-X-Google-Smtp-Source: AGHT+IHrCKfFiPfM30khK14cA/XfmpqBoVCAT8s/zXaG67su5ZKd1ltCu9z1MZd3xSUsZNELz+XLCluNtJmaqkz6rOs=
-X-Received: by 2002:a05:6512:1086:b0:51b:5c9f:992e with SMTP id
- j6-20020a056512108600b0051b5c9f992emr2424256lfg.14.1714142247112; Fri, 26 Apr
- 2024 07:37:27 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 26 Apr 2024 07:37:26 -0700
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <171397322792.12898.8815870206676100532.git-patchwork-notify@kernel.org>
+	s=arc-20240116; t=1714142319; c=relaxed/simple;
+	bh=Qd5gSaCdGK5d5Hzl6jhOhlcU5fmdXpAq9K7L2Zxq930=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rdDVtR/gNTH0larkImd+uL7DU7eqexSZpaR2mo+MnGQ5Jr3VmaGgQ9aFMCtC3OOG5VCZaCxjEnlECicLcxp1jj1Ui7pYqtTSlaLiTqKzVxmbTb5/ojA9d5hHBYk3orJOlvPGlgtFbYW+iCVBtpzCBW7/Xm0gcTFCKphoQDr6SxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VQwM16fjbz4f3m6w;
+	Fri, 26 Apr 2024 22:38:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 3E16B1A1002;
+	Fri, 26 Apr 2024 22:38:31 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g5gvCtmAU4WLA--.35655S5;
+	Fri, 26 Apr 2024 22:38:31 +0800 (CST)
+From: Hou Tao <houtao@huaweicloud.com>
+To: linux-fsdevel@vger.kernel.org
+Cc: Miklos Szeredi <miklos@szeredi.hu>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Bernd Schubert <bernd.schubert@fastmail.fm>,
+	"Michael S . Tsirkin" <mst@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	houtao1@huawei.com
+Subject: [PATCH v3 1/2] virtiofs: use pages instead of pointer for kernel direct IO
+Date: Fri, 26 Apr 2024 22:39:02 +0800
+Message-Id: <20240426143903.1305919-2-houtao@huaweicloud.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20240426143903.1305919-1-houtao@huaweicloud.com>
+References: <20240426143903.1305919-1-houtao@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424122932.79120-1-brgl@bgdev.pl> <171397322792.12898.8815870206676100532.git-patchwork-notify@kernel.org>
-Date: Fri, 26 Apr 2024 07:37:26 -0700
-Message-ID: <CAMRc=McMMtRid6OaYsc0PO0qsS6z+Ny127YxwNcjbo7R2Mze2Q@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: qca: set power_ctrl_enabled on NULL
- returned by gpiod_get_optional()
-To: luiz.dentz@gmail.com
-Cc: marcel@holtmann.org, krzysztof.kozlowski@linaro.org, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bartosz.golaszewski@linaro.org, wt@penguintechs.org, quic_zijuhu@quicinc.com, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX5g5gvCtmAU4WLA--.35655S5
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF4UWF1Utw4DuFWfAFW5Jrb_yoW7tFy7pF
+	W5KF4q9rs7XrW7Can7CF1UuFyxAwn3AF47WrZ5Ww1fur17Xry2kFyjya4YgFW7ZrWkArs2
+	qrs0yw42qw4qvaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
+	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
+	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
+	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2CD7DUUUU
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
-On Wed, 24 Apr 2024 17:40:27 +0200, patchwork-bot+bluetooth@kernel.org said:
-> Hello:
->
-> This patch was applied to bluetooth/bluetooth-next.git (master)
-> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
->
-> On Wed, 24 Apr 2024 14:29:32 +0200 you wrote:
->> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>
->> Any return value from gpiod_get_optional() other than a pointer to a
->> GPIO descriptor or a NULL-pointer is an error and the driver should
->> abort probing. That being said: commit 56d074d26c58 ("Bluetooth: hci_qca:
->> don't use IS_ERR_OR_NULL() with gpiod_get_optional()") no longer sets
->> power_ctrl_enabled on NULL-pointer returned by
->> devm_gpiod_get_optional(). Restore this behavior but bail-out on errors.
->> While at it: also bail-out on error returned when trying to get the
->> "swctrl" GPIO.
->>
->> [...]
->
-> Here is the summary with links:
->   - [v2] Bluetooth: qca: set power_ctrl_enabled on NULL returned by gpiod_get_optional()
->     https://git.kernel.org/bluetooth/bluetooth-next/c/48a9e64a533b
->
-> You are awesome, thank you!
-> --
-> Deet-doot-dot, I am a bot.
-> https://korg.docs.kernel.org/patchwork/pwbot.html
->
->
->
+From: Hou Tao <houtao1@huawei.com>
 
-Luiz,
+When trying to insert a 10MB kernel module kept in a virtio-fs with cache
+disabled, the following warning was reported:
 
-I think patchwork borked when picking up this one, here's what the commit
-trailer looks like in next:
+  ------------[ cut here ]------------
+  WARNING: CPU: 1 PID: 404 at mm/page_alloc.c:4551 ......
+  Modules linked in:
+  CPU: 1 PID: 404 Comm: insmod Not tainted 6.9.0-rc5+ #123
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996) ......
+  RIP: 0010:__alloc_pages+0x2bf/0x380
+  ......
+  Call Trace:
+   <TASK>
+   ? __warn+0x8e/0x150
+   ? __alloc_pages+0x2bf/0x380
+   __kmalloc_large_node+0x86/0x160
+   __kmalloc+0x33c/0x480
+   virtio_fs_enqueue_req+0x240/0x6d0
+   virtio_fs_wake_pending_and_unlock+0x7f/0x190
+   queue_request_and_unlock+0x55/0x60
+   fuse_simple_request+0x152/0x2b0
+   fuse_direct_io+0x5d2/0x8c0
+   fuse_file_read_iter+0x121/0x160
+   __kernel_read+0x151/0x2d0
+   kernel_read+0x45/0x50
+   kernel_read_file+0x1a9/0x2a0
+   init_module_from_file+0x6a/0xe0
+   idempotent_init_module+0x175/0x230
+   __x64_sys_finit_module+0x5d/0xb0
+   x64_sys_call+0x1c3/0x9e0
+   do_syscall_64+0x3d/0xc0
+   entry_SYSCALL_64_after_hwframe+0x4b/0x53
+   ......
+   </TASK>
+  ---[ end trace 0000000000000000 ]---
 
-    Reported-by: Wren Turkal <wt@penguintechs.org>
-    Reported-by: Zijun Hu <quic_zijuhu@quicinc.com>
-    Closes: https://lore.kernel.org/linux-bluetooth/1713449192-25926-2-git-send-email-quic_zijuhu@quicinc.com/
-    Fixes: 56d074d26c58 ("Bluetooth: hci_qca: don't use
-IS_ERR_OR_NULL() with gpiod_get_optional()")
-    Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-    Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-    Tested-by: Wren Turkal" <wt@penguintechs.org>
-    Reported-by: Wren Turkal <wt@penguintechs.org>
-    Reported-by: Zijun Hu <quic_zijuhu@quicinc.com>
-    Reviewed-by: Krzysztof Kozlowski<krzysztof.kozlowski@linaro.org>
-    Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-    Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+The warning is triggered as follows:
 
-Reported-by and Reviewed-by tags are duplicated. One of the RB tags is missing
-a space.
+1) syscall finit_module() handles the module insertion and it invokes
+kernel_read_file() to read the content of the module first.
 
-Bartosz
+2) kernel_read_file() allocates a 10MB buffer by using vmalloc() and
+passes it to kernel_read(). kernel_read() constructs a kvec iter by
+using iov_iter_kvec() and passes it to fuse_file_read_iter().
+
+3) virtio-fs disables the cache, so fuse_file_read_iter() invokes
+fuse_direct_io(). As for now, the maximal read size for kvec iter is
+only limited by fc->max_read. For virtio-fs, max_read is UINT_MAX, so
+fuse_direct_io() doesn't split the 10MB buffer. It saves the address and
+the size of the 10MB-sized buffer in out_args[0] of a fuse request and
+passes the fuse request to virtio_fs_wake_pending_and_unlock().
+
+4) virtio_fs_wake_pending_and_unlock() uses virtio_fs_enqueue_req() to
+queue the request. Because virtiofs need DMA-able address, so
+virtio_fs_enqueue_req() uses kmalloc() to allocate a bounce buffer for
+all fuse args, copies these args into the bounce buffer and passed the
+physical address of the bounce buffer to virtiofsd. The total length of
+these fuse args for the passed fuse request is about 10MB, so
+copy_args_to_argbuf() invokes kmalloc() with a 10MB size parameter and
+it triggers the warning in __alloc_pages():
+
+	if (WARN_ON_ONCE_GFP(order > MAX_PAGE_ORDER, gfp))
+		return NULL;
+
+5) virtio_fs_enqueue_req() will retry the memory allocation in a
+kworker, but it won't help, because kmalloc() will always return NULL
+due to the abnormal size and finit_module() will hang forever.
+
+A feasible solution is to limit the value of max_read for virtio-fs, so
+the length passed to kmalloc() will be limited. However it will affect
+the maximal read size for normal read. And for virtio-fs write initiated
+from kernel, it has the similar problem but now there is no way to limit
+fc->max_write in kernel.
+
+So instead of limiting both the values of max_read and max_write in
+kernel, introducing use_pages_for_kvec_io in fuse_conn and setting it as
+true in virtiofs. When use_pages_for_kvec_io is enabled, fuse will use
+pages instead of pointer to pass the KVEC_IO data.
+
+Fixes: a62a8ef9d97d ("virtio-fs: add virtiofs filesystem")
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+---
+ fs/fuse/file.c      | 12 ++++++++----
+ fs/fuse/fuse_i.h    |  3 +++
+ fs/fuse/virtio_fs.c |  1 +
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index b57ce41576407..82b77c5d8c643 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -1471,13 +1471,17 @@ static inline size_t fuse_get_frag_size(const struct iov_iter *ii,
+ 
+ static int fuse_get_user_pages(struct fuse_args_pages *ap, struct iov_iter *ii,
+ 			       size_t *nbytesp, int write,
+-			       unsigned int max_pages)
++			       unsigned int max_pages,
++			       bool use_pages_for_kvec_io)
+ {
+ 	size_t nbytes = 0;  /* # bytes already packed in req */
+ 	ssize_t ret = 0;
+ 
+-	/* Special case for kernel I/O: can copy directly into the buffer */
+-	if (iov_iter_is_kvec(ii)) {
++	/* Special case for kernel I/O: can copy directly into the buffer.
++	 * However if the implementation of fuse_conn requires pages instead of
++	 * pointer (e.g., virtio-fs), use iov_iter_extract_pages() instead.
++	 */
++	if (iov_iter_is_kvec(ii) && !use_pages_for_kvec_io) {
+ 		unsigned long user_addr = fuse_get_user_addr(ii);
+ 		size_t frag_size = fuse_get_frag_size(ii, *nbytesp);
+ 
+@@ -1585,7 +1589,7 @@ ssize_t fuse_direct_io(struct fuse_io_priv *io, struct iov_iter *iter,
+ 		size_t nbytes = min(count, nmax);
+ 
+ 		err = fuse_get_user_pages(&ia->ap, iter, &nbytes, write,
+-					  max_pages);
++					  max_pages, fc->use_pages_for_kvec_io);
+ 		if (err && !nbytes)
+ 			break;
+ 
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index f239196103137..d4f04e19058c1 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -860,6 +860,9 @@ struct fuse_conn {
+ 	/** Passthrough support for read/write IO */
+ 	unsigned int passthrough:1;
+ 
++	/* Use pages instead of pointer for kernel I/O */
++	unsigned int use_pages_for_kvec_io:1;
++
+ 	/** Maximum stack depth for passthrough backing files */
+ 	int max_stack_depth;
+ 
+diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+index 322af827a2329..36984c0e23d14 100644
+--- a/fs/fuse/virtio_fs.c
++++ b/fs/fuse/virtio_fs.c
+@@ -1512,6 +1512,7 @@ static int virtio_fs_get_tree(struct fs_context *fsc)
+ 	fc->delete_stale = true;
+ 	fc->auto_submounts = true;
+ 	fc->sync_fs = true;
++	fc->use_pages_for_kvec_io = true;
+ 
+ 	/* Tell FUSE to split requests that exceed the virtqueue's size */
+ 	fc->max_pages_limit = min_t(unsigned int, fc->max_pages_limit,
+-- 
+2.29.2
+
