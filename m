@@ -1,86 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpcmd0757.aruba.it (smtpcmd0757.aruba.it [62.149.156.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1328314900B;
-	Fri, 26 Apr 2024 15:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6ED414901A
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714145415; cv=none; b=PR2PL2g0lMOMh9HXWtZcVlUEaP/A1rQc2vfglVi1UJQceXj97VJ1Dk4wWf1OfXqY7mlKqc/yShrIbOnQXeMVmXiuPCrS1JIKapin6YVp1y+V7YnJW1kCyIN3G7pqeL55Z6DFu3p3nLzwZNIwF0y7xEqHyLULnXI7bYuDsI9rM+0=
+	t=1714145446; cv=none; b=aW/CflI4OF7G3OzhPGz5XHOOwPYtDcxYpuFtddDNPgoYlU9tJvt2Zpgo86FpG14P5m8uNOZIp1Gd2FaTRwx6NsnRRWx448C2HZntgmnBfAkHqc+XGADta8cvCEhKa98skOWmToYm7GagLOoDhDMmXeQ4Hv1TJJiQ6lPKb0XLm0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714145415; c=relaxed/simple;
-	bh=eZDyOOOoP7q4G7IjpLL4ncDtu1i7nV32WzyVZ3osXkk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TQZLabvlZyYP9uIKhad1WRLw8oMMRcTPrMdyU5Rms2Ta8cnpTL8C6D5/AC6fQS+5zY5kC38nPzIblE4UmnkGPuqT2czgaWHgtJK+jbPeAt/rEsgN56/uH75WfH86li5BTcl+qGdj/fK/jm/oL6D+WLcOI6mEpVncOyT55esLQ4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBqGc7O3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714145446; c=relaxed/simple;
+	bh=AL/RIHlDSD7TG5DlDkAMmKi18A+T8P4sO4zdcXPXefU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aXDLzmma739xdLqOQK7OJAgrZxqosWAN+kkPubdv40pzECEnbMtiI6Cz9bt6XUYxSynL2w26D+RjhNz477O5zUTXNhMozM39faThxvg+PCv061zXguBMcUeLauYI56tvjWdvCBX4MDpsfxRSAehdJ4gcK0ARdOpw9zr5NTzo5bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=kOuOHeAT; arc=none smtp.client-ip=62.149.156.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBqGc7O3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53343C116B1;
-	Fri, 26 Apr 2024 15:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714145414;
-	bh=eZDyOOOoP7q4G7IjpLL4ncDtu1i7nV32WzyVZ3osXkk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZBqGc7O3HZH5bTPvMsxWHWOYGS6m4xLL7gji8LEsIMpSHxuCv0awqC5UoaH8CHR2x
-	 sxN0TiXapJ+dqO81S7sGeg8MArTR1LVBUkEb0041NjdrXyAIqB1G/zIPpzQwiKZI+f
-	 DLjFF5K4Muy1eRbNb7SUg6y+ytLxqZPke/Huila1nk6A3KLDQAWbjMnSm7Sb9sYK2Z
-	 fR6LytiIOLQtAlR/gqpqoW1djNA0cjV4B3WM270At05t/RMUZjI+wDBk6Hc3mtVtJf
-	 cZqg4BiFUQaEL+6Yb3fPdjIl1FNsGNW13kKjdw3U0yy95i2DLnZOs98M+bNrdwjLop
-	 1pwW65v0PfoWQ==
-Date: Fri, 26 Apr 2024 10:30:10 -0500
-From: Rob Herring <robh@kernel.org>
-To: Christophe Roullier <christophe.roullier@foss.st.com>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="kOuOHeAT"
+Received: from engicam.com ([146.241.23.148])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id 0NU4sgEVa6epj0NU5seY30; Fri, 26 Apr 2024 17:27:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1714145254; bh=AL/RIHlDSD7TG5DlDkAMmKi18A+T8P4sO4zdcXPXefU=;
+	h=From:To:Subject:Date:MIME-Version;
+	b=kOuOHeAThuJp/LE1dluXA9fhCl3DfboaH+ZZKpug382AHP6KsB3Iy9GB03WAG9QLn
+	 geeHZ86ot/vMjxPrnr36ogu5xaVS4zLoUnuJ4OJ65IDXKf5GcdtJ6Vd77Uz0cIicz8
+	 y81dTqCEW4n75MbnF5m0zhRr1syxOOoCuvmIRbjpWCQiiJwnxDVNZQJa04L63rdT0U
+	 IAlPWTzpcVw9OQ3WMdhrtYSpDVIlKcdqGl5IFzsj4eLVsAg4dr/oF57mtaJ2Htds9r
+	 Siaf9g09YilJQ7wsV62OGD4fN9IXj9YeBKW+zs6cqEkn4Z1wB5ndkFTT792SvMKH6k
+	 7HKIo8yXLoRZA==
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Marek Vasut <marex@denx.de>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/11] dt-bindings: net: add phy-supply property for
- stm32
-Message-ID: <20240426153010.GA1910161-robh@kernel.org>
-References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
- <20240426125707.585269-3-christophe.roullier@foss.st.com>
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Fabio Aiuto <fabio.aiuto@engicam.com>,
+	Matteo Lisi <matteo.lisi@engicam.com>,
+	Mirko Ardinghi <mirko.ardinghi@engicam.com>,
+	Krzysztof Kozlowsky <krzk@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v6 1/3] dt-bindings: arm: fsl: add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+Date: Fri, 26 Apr 2024 17:27:28 +0200
+Message-Id: <20240426152730.9806-2-fabio.aiuto@engicam.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240426152730.9806-1-fabio.aiuto@engicam.com>
+References: <20240426152730.9806-1-fabio.aiuto@engicam.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240426125707.585269-3-christophe.roullier@foss.st.com>
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfBpXg0R56R6cOqqviDj0eVmGiholy62key5QTgyVk64OidOQYPGH8pVLedjYxirnNH6w/6GZ4Q20PGL/9G4lcxVEb1HqAuHoaiBg3k+uHfCvX0yYs7at
+ emkjG2GRa/L83oeTGTAoiARWlNfviUBynjZIIyeHylgRXT80iuGPhtZ7ZpUjseLwoPebJiFJ/95Xip/FdggUI9xdAiT86HmyAPR34qj1+bc0sTgzQbqOJIBS
+ REUxZiP187uYRJJ2SQ/bBSf9kvSxO59aqga5U6Or49v6BFH0/+ClIds0hxPaSwgmPXB3weXmUOhuwiSkSf/zA6LGEw5INyOXF27jaYq68xK9yB1/WXAKd4Qc
+ qp6ghCVk/x/iWk7GPSWyMTgGT6TCYDt9DvrieVkZc7OtPhtfFuJwaEIr9DOOtu71bSZaKWpa56YqsuBJ4SJXWOYt0tmZf2Q0ijbnmGfJQ9vdwVbThbzpKqdj
+ VduN/792uCWTYFA5WlhsRZqgRWVVxBoMzT1BR/NwHjg6pC7xO4UjPixm7y0ttyU41gyuh1sd4ibRQ5mLdGE95LOUkVqNos0tfj8sKtvbYK6/NajfCE86w8QH
+ X0LAg0aXWZGMpDpwJZqvhpoy7jcJg98mO1UhVrRKRBfUUxDcPvT+thL1bUtn6Znz9JUbUyU0vqhPiujQBliDldpZ
 
-On Fri, Apr 26, 2024 at 02:56:58PM +0200, Christophe Roullier wrote:
-> Phandle to a regulator that provides power to the PHY. This
-> regulator will be managed during the PHY power on/off sequence.
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
-> ---
->  Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> index b901a432dfa9..7c3aa181abcb 100644
-> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> @@ -84,6 +84,9 @@ properties:
->            - description: offset of the control register
->            - description: field to set mask in register
->  
-> +  phy-supply:
-> +    description: PHY regulator
+i.Core MX93 is a NXP i.MX93 based EDIMM SoM by Engicam.
 
-This is for which PHY? The serdes phy or ethernet phy? This only makes 
-sense here if the phy is part of the MAC. Otherwise, it belongs in the 
-phy node.
+EDIMM 2.0 Starter Kit is an EDIMM 2.0 Form Factor Capacitive
+Evaluation Board by Engicam.
 
-Rob
+i.Core MX93 needs to be mounted on top of EDIMM 2.0 Starter Kit
+to get the full i.Core MX93 EDIMM 2.0 Starter Kit board.
+
+Add bindings for this board.
+
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Reviewed-by: Krzysztof Kozlowsky <krzk@kernel.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
+---
+v3 ---> v6:
+	- no changes
+v2 ---> v3:
+	- added {Reviewed,Acked}-by tags
+v1 ---> v2:
+	- no changes
+
+ Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 0027201e19f8..b497a01c7418 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1265,6 +1265,13 @@ properties:
+               - fsl,imx93-11x11-evk       # i.MX93 11x11 EVK Board
+           - const: fsl,imx93
+ 
++      - description: Engicam i.Core MX93 based Boards
++        items:
++          - enum:
++              - engicam,icore-mx93-edimm2         # i.MX93 Engicam i.Core MX93 EDIMM 2.0 Starter Kit
++          - const: engicam,icore-mx93             # i.MX93 Engicam i.Core MX93 Som
++          - const: fsl,imx93
++
+       - description: i.MXRT1050 based Boards
+         items:
+           - enum:
+-- 
+2.34.1
+
