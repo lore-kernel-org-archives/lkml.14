@@ -1,135 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1A1152DE6;
-	Fri, 26 Apr 2024 13:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CE71487C3;
+	Fri, 26 Apr 2024 13:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139646; cv=none; b=qiXr+/Vtyvw3ek/7lAzlGnVv8SG1+RW8PYQxOXz6e3s/4Nfu7SCYdEjxlS8s77QDrHfA6VLN0vjbimgsvvT6asmIp3g9Rn2gSWtlR15Y+NkXQhsRaAtgCB8IxG4kc4IqHepH1YsdipxvDGgJ207nSYik4bBMOV6xHQKI/zb6jGg=
+	t=1714139675; cv=none; b=UDS39MtczJT35/GVaPRSKoUGSMThmFG7CEJBGSqJz1DHaxHPFTVWGyrX+Yaqb93Y/31wy7i533NVa850/A9rF3wDifpiQro0s24/wGCEJLAGSOpDlQkhij3Gsx5CUypBWFNVdtqIKbrSwTgf8nETL5xu4FzXmn2ghVFM9aAqiIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139646; c=relaxed/simple;
-	bh=bAxQvKHPxifR8Q+hfGehNFp9bGXBbIA6BrOH/rfmmCg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IkaXUNESLAYFmvfMpiGWBxU2wDa/hYMSiEqFnS4X1vkRQGsdAay3OFStVAo9Rfb8QWYa2CgBH+cqbGzKqSqDO7tAr493Tj1t+vPP5EyX3jPOuCufDjvhJo/I6IN/rMSXe0wFfQmG8H7Tk5HopXq3Iq/vBvv3Q0lNHseSa8TOYg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bajOi7Q0; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bajOi7Q0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714139645; x=1745675645;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bAxQvKHPxifR8Q+hfGehNFp9bGXBbIA6BrOH/rfmmCg=;
-  b=bajOi7Q0pcSyNXuFFJt6aHiTZhvwXd/6138yMkwPEAZMLehxCGvF1P5Q
-   1JRXG8ezTqOZk1LnmdcpYzJ7D/WIBQ4UNJdTvv0jDid0vo7Afg6eIiTua
-   ECQPXZ1K96H4lRJxjkbN5F1VFE+kJJVHOpulv6BeQfQ8T2c6sUal//NF4
-   3ENpqmD0Zg1g0vnu4OzkuBBdaeAWOb37OdyU9K3xUfxPx9hGbKGY3vcpC
-   //oxjug7nDKf3wc/KC+LLzkxMAVMXJn8TYUbjXk7ru4tn8XFlgbjINgt/
-   rTd9ei0V/o+3SkBgB16nv4KxzezcC2tljrnLwi47FjuJ4phSRx3hscLYt
-   Q==;
-X-CSE-ConnectionGUID: /pONWJr7SPOXzCDZXDflzA==
-X-CSE-MsgGUID: dnlJfU6PSamyKeeCFrFXAA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="21279808"
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="21279808"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 06:54:03 -0700
-X-CSE-ConnectionGUID: 1kOa4ofjSCepnR1fziNLxw==
-X-CSE-MsgGUID: 3vqCDBAgR12hvaQWf3DXlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="25428927"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 06:54:03 -0700
-Received: from [10.212.113.23] (kliang2-mobl1.ccr.corp.intel.com [10.212.113.23])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 1632C20B8CF1;
-	Fri, 26 Apr 2024 06:54:00 -0700 (PDT)
-Message-ID: <a55aca0f-47b0-4c0a-b4dc-089018bd9419@linux.intel.com>
-Date: Fri, 26 Apr 2024 09:53:59 -0400
+	s=arc-20240116; t=1714139675; c=relaxed/simple;
+	bh=XzlBEvzmaHxv8L38RsHV7BNKS/eL1vkrGnnq6JM9ZAA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ad6k7jJBBHz4Kp9jRo/Zk1yvYCuk3/Dx2e3j9RmbqlBHcklapxzq48kVjNKLLcim99ID4e8VsdCv62C4FWYBd4ovuLhuMUdcjTYxPpqO78U6l10ZBEZ9Kyhv2b31sOxEozJxIqaAjjdDVJVhjBRCP4pfLXAWk9jjNQMvi9PzS1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvNC2wp6z6DBBW;
+	Fri, 26 Apr 2024 21:54:19 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0903F140A87;
+	Fri, 26 Apr 2024 21:54:31 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 26 Apr 2024 14:54:30 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v8 06/16] ACPI: processor: Register deferred CPUs from acpi_processor_get_info()
+Date: Fri, 26 Apr 2024 14:51:16 +0100
+Message-ID: <20240426135126.12802-7-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Sean Christopherson <seanjc@google.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Dapeng Mi
- <dapeng1.mi@linux.intel.com>, maobibo <maobibo@loongson.cn>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
- <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
- <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
- <Zikeh2eGjwzDbytu@google.com>
- <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com>
- <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
- <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
- <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
- <ZirPGnSDUzD-iWwc@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <ZirPGnSDUzD-iWwc@google.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+From: James Morse <james.morse@arm.com>
 
+The arm64 specific arch_register_cpu() call may defer CPU registration
+until the ACPI interpreter is available and the _STA method can
+be evaluated.
 
-On 2024-04-25 5:46 p.m., Sean Christopherson wrote:
-> On Thu, Apr 25, 2024, Kan Liang wrote:
->> On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
->>> On Thu, Apr 25, 2024 at 9:13 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>> It should not happen. For the current implementation, perf rejects all
->>>> the !exclude_guest system-wide event creation if a guest with the vPMU
->>>> is running.
->>>> However, it's possible to create an exclude_guest system-wide event at
->>>> any time. KVM cannot use the information from the VM-entry to decide if
->>>> there will be active perf events in the VM-exit.
->>>
->>> Hmm, why not? If there is any exclude_guest system-wide event,
->>> perf_guest_enter() can return something to tell KVM "hey, some active
->>> host events are swapped out. they are originally in counter #2 and
->>> #3". If so, at the time when perf_guest_enter() returns, KVM will ack
->>> that and keep it in its pmu data structure.
->>
->> I think it's possible that someone creates !exclude_guest event after
-> 
-> I assume you mean an exclude_guest=1 event?  Because perf should be in a state
-> where it rejects exclude_guest=0 events.
->
+If this occurs, then a second attempt is made in
+acpi_processor_get_info(). Note that the arm64 specific call has
+not yet been added so for now this will be called for the original
+hotplug case.
 
-Right.
+For architectures that do not defer until the ACPI Processor
+driver loads (e.g. x86), for initially present CPUs there will
+already be a CPU device. If present do not try to register again.
 
->> the perf_guest_enter(). The stale information is saved in the KVM. Perf
->> will schedule the event in the next perf_guest_exit(). KVM will not know it.
-> 
-> Ya, the creation of an event on a CPU that currently has guest PMU state loaded
-> is what I had in mind when I suggested a callback in my sketch:
-> 
->  :  D. Add a perf callback that is invoked from IRQ context when perf wants to
->  :     configure a new PMU-based events, *before* actually programming the MSRs,
->  :     and have KVM's callback put the guest PMU state
-> 
-> It's a similar idea to TIF_NEED_FPU_LOAD, just that instead of a common chunk of
-> kernel code swapping out the guest state (kernel_fpu_begin()), it's a callback
-> into KVM.
+Systems can still be booted with 'acpi=off', or not include an
+ACPI description at all as in these cases arch_register_cpu()
+will not have deferred registration when first called.
 
-Yes, a callback should be required. I think it should be done right
-before switching back to the host perf events, so there are an accurate
-active event list.
+This moves the CPU register logic back to a subsys_initcall(),
+while the memory nodes will have been registered earlier.
+Note this is where the call was prior to the cleanup series so
+there should be no side effects of moving it back again for this
+specific case.
 
-Thanks,
-Kan
+[PATCH 00/21] Initial cleanups for vCPU HP.
+https://lore.kernel.org/all/ZVyz%2FVe5pPu8AWoA@shell.armlinux.org.uk/
+commit 5b95f94c3b9f ("x86/topology: Switch over to GENERIC_CPU_DEVICES")
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+---
+v8: Fxed spelling of my own name...
+(tags picked up)
+---
+ drivers/acpi/acpi_processor.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index ecc2721fecae..88108aecbcfa 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -357,14 +357,14 @@ static int acpi_processor_get_info(struct acpi_device *device)
+ 	}
+ 
+ 	/*
+-	 *  Extra Processor objects may be enumerated on MP systems with
+-	 *  less than the max # of CPUs. They should be ignored _iff
+-	 *  they are physically not present.
+-	 *
+-	 *  NOTE: Even if the processor has a cpuid, it may not be present
+-	 *  because cpuid <-> apicid mapping is persistent now.
++	 *  This code is not called unless we know the CPU is present and
++	 *  enabled. The two paths are:
++	 *  a) Initially present CPUs on architectures that do not defer
++	 *     their arch_register_cpu() calls until this point.
++	 *  b) Hotplugged CPUs (enabled bit in _STA has transitioned from not
++	 *     enabled to enabled)
+ 	 */
+-	if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
++	if (!get_cpu_device(pr->id)) {
+ 		int ret = acpi_processor_hotadd_init(pr, device);
+ 
+ 		if (ret)
+-- 
+2.39.2
+
