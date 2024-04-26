@@ -1,102 +1,168 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040F3282EA;
-	Fri, 26 Apr 2024 09:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68608282EA;
+	Fri, 26 Apr 2024 09:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714122805; cv=none; b=dvq54TXGjvKWmF4dJDmH2bBf0UaZMcLkMsxy+P4FRrvggzpJuVgUJCB6GG5i+BsAGZNin7iLDQY/xbSF/xR4aY4cx50TiV11BWvdgPbj05vJPB/2JN8CcK1FVGbckkixKqqDKHegntLR7OMmWeKXljty8bH/45AhfhxWue9dEBw=
+	t=1714122861; cv=none; b=He4OLHxj7XkvnIejMzuabDKwjIgMpDgdm5aj/4f71VcOQSo/zmPKcoJ3H86c3eyc4+EWV7myjHUZaUAEebDwfPTMOIuBGfu9SShNsQODYPYREeJ29Ky0BiTz4VXjrfvXGi3PGC4WPl46XCiRFG0iVzM3/Dnqnv0E4rOGRSeVwic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714122805; c=relaxed/simple;
-	bh=3ii8rmx58QKPD7NlzblSbXJrF9bHIa8Z3g1LxRb5V34=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PSdGYMefTAkRboC5sGvj79pJRDeWFKYl2AZjr2aX8OKJuIkSJkt6tujDMet5cVABXwXQWgZMDNVOiLWBcY/8n3QOMUXOMMBElFz8SJncOML24ftDgiJDga+d3mDYFdzTFRnNw+J4jZwCeFwDR7JqDyKHR6ZY8uGN/Vq/yif0kJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=W6B1Df0b; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1714122861; c=relaxed/simple;
+	bh=XRMyjyuFRMYv4naA7smww2pv7Fyy87chOndvIRM21zo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VsqTIRwwMnvmyS1KEetxn8jOU1fgusojDCcgSYDDg4UwCcrnpFPP2WqmRUtdiDb6dIviaPCCm52BlHwDuVoGxGKfQWMAzXcfizjFsDX15Jjap0rFrHjrPkCprPGKFYby2LUp1Bf7c8Zy0t/DfZ8TTd9uyW6SzWNJW7oQIkPSIf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=snay4uiP; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="W6B1Df0b"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 58F0D600A7;
-	Fri, 26 Apr 2024 09:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1714122793;
-	bh=3ii8rmx58QKPD7NlzblSbXJrF9bHIa8Z3g1LxRb5V34=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W6B1Df0bBRIS+HdXLLJ7mdkIpCR4Hb08D7PeltSSSKjp6ABE3HuWqO/ZvAILCJIiv
-	 oSilXzgIeYw6AaRMHL3yWLsK0ZOE7K05oU3ZvcTYomSmHf8c1uLAOwovSxGFeIOWsW
-	 K8i3C2CW08r2SQuCHuVdXnEcrrSiPGfnE1Mfwo2Uzk4IpQkWYqyP6qgRAlYFy3yIn2
-	 J4oxlEOBIrMDVB1D8FvbzMzGNQwOB3lOl4Fj5xogP9NXKjfok1nTxRKDBHFZKP3JQ3
-	 F0fOY8Z8DmRX/dJQ+DOQyDTyxe4tHuNKQgQzBxrXhBPHqT3rKtBujijTLIqF4G/RP3
-	 l4jdnlQBIWnaw==
-Received: by x201s (Postfix, from userid 1000)
-	id E1B9821BB4A; Fri, 26 Apr 2024 09:12:28 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Ariel Elior <aelior@marvell.com>,
-	Manish Chopra <manishc@marvell.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH net 4/4] net: qede: use return from qede_parse_actions()
-Date: Fri, 26 Apr 2024 09:12:26 +0000
-Message-ID: <20240426091227.78060-5-ast@fiberby.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240426091227.78060-1-ast@fiberby.net>
-References: <20240426091227.78060-1-ast@fiberby.net>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="snay4uiP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1714122857;
+	bh=XRMyjyuFRMYv4naA7smww2pv7Fyy87chOndvIRM21zo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=snay4uiPzdNKoUj8uDMupInxEoFmLrh7EgQ1xM1KF+ZwDk++yID21DyPwhm6WawCF
+	 Hukc5U8qJHT57NoFnEIWTX38a/KWVnSXuh2Xr/2+Fry9NPfxsyMH3szlCGo72Nx3U9
+	 t8vskqpAM0809QTFEExY8ZU/hgX2clP8KVn6xMNC3kwOgiIScGde4gbqgGD5Pel80g
+	 SICtTjnjBCv6UXWjLM0/JvrcyUCQPkLHlQfVDecXBsQ8KaKsBS/VL7z3vjylnomqYe
+	 511Aijo4a1XAhTGlEjqhsv/5UOXIjtdHyKCDCtXb4yadEmkiZA9ws2PbGaOfxLT9wE
+	 smOewfX04lHAQ==
+Received: from localhost.localdomain (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DCAD737809D1;
+	Fri, 26 Apr 2024 09:14:14 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Shuah Khan <shuah@kernel.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: kernel@collabora.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: tpm2: conform test to TAP output
+Date: Fri, 26 Apr 2024 14:14:31 +0500
+Message-Id: <20240426091435.2742024-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When calling qede_parse_actions() then the
-return code was only used for a non-zero check,
-and then -EINVAL was returned.
+The python unittest is being used for executing tests. TAP output
+cannot be added in the unittest framework. The python unittest is being
+run from a script. Add the output TAP logs to the script. Add "#"
+prefix to the python unittest output which will mark all output as
+informational TAP messages. Check exit status of the python unittest to
+decide if test passed or failed. Not sure why but python unittest
+outputs logs in stderr. So redirect the logs to stdout and then add
+prefix.
 
-qede_parse_actions() can currently fail with:
-* -EINVAL
-* -EOPNOTSUPP
+Specify the bash explicitly instead of sh to run these tests as all of
+the kselftests are shifting towards using bash explicitly. Some
+interpreters have different syntax and cause issues.
 
-This patch changes the code to use the actual
-return code, not just return -EINVAL.
-
-The blaimed commit broke the implicit assumption
-that only -EINVAL would ever be returned.
-
-Only compile tested.
-
-Fixes: 319a1d19471e ("flow_offload: check for basic action hw stats type")
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 ---
- drivers/net/ethernet/qlogic/qede/qede_filter.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/testing/selftests/tpm2/test_async.sh | 24 ++++++++++++++++------
+ tools/testing/selftests/tpm2/test_smoke.sh | 19 ++++++++++++++---
+ tools/testing/selftests/tpm2/test_space.sh | 19 ++++++++++++++---
+ 3 files changed, 50 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-index 377d661f70f7..cb6b33a228ea 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-@@ -1894,10 +1894,9 @@ int qede_add_tc_flower_fltr(struct qede_dev *edev, __be16 proto,
- 	}
+diff --git a/tools/testing/selftests/tpm2/test_async.sh b/tools/testing/selftests/tpm2/test_async.sh
+index 43bf5bd772fd4..0e6e5d9d649fb 100755
+--- a/tools/testing/selftests/tpm2/test_async.sh
++++ b/tools/testing/selftests/tpm2/test_async.sh
+@@ -1,10 +1,22 @@
+-#!/bin/sh
++#!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
  
- 	/* parse tc actions and get the vf_id */
--	if (qede_parse_actions(edev, &f->rule->action, f->common.extack)) {
--		rc = -EINVAL;
-+	rc = qede_parse_actions(edev, &f->rule->action, f->common.extack);
-+	if (rc)
- 		goto unlock;
--	}
+-# Kselftest framework requirement - SKIP code is 4.
+-ksft_skip=4
++DIR="$(dirname $(readlink -f "$0"))"
++source "${DIR}"/../kselftest/ktap_helpers.sh
  
- 	if (qede_flow_find_fltr(edev, &t)) {
- 		rc = -EEXIST;
+-[ -e /dev/tpm0 ] || exit $ksft_skip
+-[ -e /dev/tpmrm0 ] || exit $ksft_skip
++ktap_print_header
+ 
+-python3 -m unittest -v tpm2_tests.AsyncTest
++[ -e /dev/tpm0 ] || ktap_finished
++[ -e /dev/tpmrm0 ] || ktap_finished
++
++ktap_set_plan 1
++
++python3 -m unittest -v tpm2_tests.AsyncTest 2>&1 | sed "s/^/# /"
++
++if [ ${PIPESTATUS[0]} -eq $ksft_pass ]; then
++	ktap_test_pass "tpm2_tests.AsyncTest"
++else
++	ktap_test_fail "tpm2_tests.AsyncTest"
++fi
++
++ktap_finished
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 58af963e5b55a..2219a180de91d 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -1,9 +1,22 @@
+-#!/bin/sh
++#!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
+ # Kselftest framework requirement - SKIP code is 4.
+-ksft_skip=4
++DIR="$(dirname $(readlink -f "$0"))"
++source "${DIR}"/../kselftest/ktap_helpers.sh
++
++ktap_print_header
+ 
+ [ -e /dev/tpm0 ] || exit $ksft_skip
+ 
+-python3 -m unittest -v tpm2_tests.SmokeTest
++ktap_set_plan 1
++
++python3 -m unittest -v tpm2_tests.SmokeTest 2>&1 | sed "s/^/# /"
++
++if [ ${PIPESTATUS[0]} -eq $ksft_pass ]; then
++	ktap_test_pass "tpm2_tests.AsyncTest"
++else
++	ktap_test_fail "tpm2_tests.AsyncTest"
++fi
++
++ktap_finished
+diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+index 04c47b13fe8ac..6a55d13d74983 100755
+--- a/tools/testing/selftests/tpm2/test_space.sh
++++ b/tools/testing/selftests/tpm2/test_space.sh
+@@ -1,9 +1,22 @@
+-#!/bin/sh
++#!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
+ # Kselftest framework requirement - SKIP code is 4.
+-ksft_skip=4
++DIR="$(dirname $(readlink -f "$0"))"
++source "${DIR}"/../kselftest/ktap_helpers.sh
++
++ktap_print_header
+ 
+ [ -e /dev/tpmrm0 ] || exit $ksft_skip
+ 
+-python3 -m unittest -v tpm2_tests.SpaceTest
++ktap_set_plan 1
++
++python3 -m unittest -v tpm2_tests.SpaceTest 2>&1 | sed "s/^/# /"
++
++if [ ${PIPESTATUS[0]} -eq $ksft_pass ]; then
++	ktap_test_pass "tpm2_tests.AsyncTest"
++else
++	ktap_test_fail "tpm2_tests.AsyncTest"
++fi
++
++ktap_finished
 -- 
-2.43.0
+2.39.2
 
