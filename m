@@ -1,152 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6669B152511;
-	Fri, 26 Apr 2024 15:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECA7148FE5;
+	Fri, 26 Apr 2024 15:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714146174; cv=none; b=MuwE7Z0PWiM0xkERbOhmFjYdpCTLa8L1d7kGgu/YgN22uxt5SPdwLGrE/AEflKiphbly5RBB+kNGkv6Yasr+XsfHfTrQffYxFDqSxE8gmQMFklqYrlktMjqUVUfArkdOtJ2Meqllyz3V17V5jxqNDnscwIBq8hZfrrdfE4YTpvw=
+	t=1714146302; cv=none; b=Cyp4noI2gpt4oLIowWtXufGDVBNoLrU3werm4UwwwC6z9NrO1Aowqe+zvgkLcsrnRC7uvaROR0yEhkER/YFNvq8mk7cfnRC68u9ExiXG4xN18enXa0gixJrUdIxsPyf74J/BTHVBZkIJ3dCHMnm0155RMTh9khQkYjrRKtCS0AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714146174; c=relaxed/simple;
-	bh=ueeUrsIiAG14vTTLhDQ1O9R7Z7uj5nbKhdqR2+RXD98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E2sFQxrmJgnc3vuumLn8lY7GgCkWetOsTjP+VEXr84qJljGj3I2/ql/mECGFYx0aLBWB5K0jGWWUx0j/RcOWwPZ4sB4OzOZkaSrZnh8yixbzvB1Rty900qXngz+aCDppc+p9uhKPwGcWRnPjEMU1sANmlIuG/o+pnY/aB8EFGQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DBA/Tvqu; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714146302; c=relaxed/simple;
+	bh=eOP2/U4Vd5DzPmdW0xejV5wEgvRGsN/4+Hk2GtsLxhE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EJGJp7ilVWMaQyS9/tfVs8MnVgdy8vSoKwgvMKiZG0LA9hunBCnaDA4jreoErmJZiGepB4UqngMVqzvWPFe+ZbXGouq+IDPmVaQaFl5MIOsA1Z1tchHm6KHeUDPGr2KSztlSEkg4uipPiMy63NeGMgrbGv8u7gpe8IsmLJu9oXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/gwIiX3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DBA/Tvqu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714146172; x=1745682172;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ueeUrsIiAG14vTTLhDQ1O9R7Z7uj5nbKhdqR2+RXD98=;
-  b=DBA/TvquccgGRDMzYst8CugXYbBCj1pURNAVzFS89QlQp29G/ph3ia5s
-   HWZue20rWNhYXULkFM49QNtpiGw7LIsmqyN7AtUnt1A0lEc9YQOGxzIgU
-   /aojzH83/MtRQg7NwbcyE7TqGhhh/SBACeu6y4RdksI9HBqZKlzn6wEug
-   sIQ3Y8+VjxwPbeEMBvD/oWKqCkB3izLE/JVPGNfJBYQxTvHxikZXEGEPd
-   +3UhlJ/lWD0QN7IVC+FOH+jUzJxmrd7cvo1e7GFd/Q6FnQ6apylyqu6d2
-   9Z82o9ffRG43GjZKpNZKxihnhCykrZuKaPe26ftZk6wKuNE0dRYiYocp4
-   g==;
-X-CSE-ConnectionGUID: Jd7O79KaTa6niekOw/4ezA==
-X-CSE-MsgGUID: LyOF454PQPO4iUykURwdEQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="20496907"
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="20496907"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:42:51 -0700
-X-CSE-ConnectionGUID: kHMK1tv9RcOh0Or3oQbuQQ==
-X-CSE-MsgGUID: wBEdFSLiQmW3uQJOUb62fw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="25533130"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.48.22])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:42:49 -0700
-Message-ID: <88b460e5-ef2f-4b2f-a173-deac34c99788@intel.com>
-Date: Fri, 26 Apr 2024 18:42:42 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/gwIiX3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86CB2C113CD;
+	Fri, 26 Apr 2024 15:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714146301;
+	bh=eOP2/U4Vd5DzPmdW0xejV5wEgvRGsN/4+Hk2GtsLxhE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m/gwIiX36LDs2I9/Z1NuMFucOvQCei1MAXd+b28yCja93zW8rs3K36b2ifWD+p/sh
+	 YdrablzWIkEWpsiAry8zadTIEddCuvv7yQ/nbH8YPvuCsDQ94Qk/kOeebuV9q6dftB
+	 +5VpqNDteiE6rs4saJM3xoHCaRSOtwrUMC5LgaQ7+j5l2z38oGa7diu7lN+0xvOcu+
+	 4L7x+6SWLJ1PMiP462dzHqxy1woJVywKaa9Uig8xbDl1pI8vIrnWhrUo+6M4wKxQ7T
+	 GoRh0sUP3ne4TeZu3fJNZLK/NrgtxhxZNMpEdNlDLT5PkVifWoBC1KMRHN/igePNyF
+	 M0yn5bBNfR16Q==
+Date: Fri, 26 Apr 2024 10:44:58 -0500
+From: Rob Herring <robh@kernel.org>
+To: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] ASoC: dt-bindings: tegra30-i2s: convert to dt schema
+Message-ID: <20240426154458.GA1964057-robh@kernel.org>
+References: <20240425153045.49939-1-sheharyaar48@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf tests: Run tests in parallel by default
-To: James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240301174711.2646944-1-irogers@google.com>
- <3e54fea7-2a37-4774-8a6a-85f75cc4a9ea@arm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <3e54fea7-2a37-4774-8a6a-85f75cc4a9ea@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240425153045.49939-1-sheharyaar48@gmail.com>
 
-On 26/04/24 18:06, James Clark wrote:
+On Thu, Apr 25, 2024 at 09:00:43PM +0530, Mohammad Shehar Yaar Tausif wrote:
+> Convert NVIDIA Tegra30 I2S binding to DT schema and
+> add "clock-names" property used by multiple tegra i2s blocks
+> in arch/arm64/boot/dts/nvidia/tegra132.dtsi. This is not a
+> required property by the binding.
 > 
+> Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+> ---
+> Changes v3->v4:
+> - removed redundant example
+> - defined clock-names property
 > 
-> On 01/03/2024 17:47, Ian Rogers wrote:
->> Switch from running tests sequentially to running in parallel by
->> default. Change the opt-in '-p' or '--parallel' flag to '-S' or
->> '--sequential'.
->>
->> On an 8 core tigerlake an address sanitizer run time changes from:
->> 326.54user 622.73system 6:59.91elapsed 226%CPU
->> to:
->> 973.02user 583.98system 3:01.17elapsed 859%CPU
->>
->> So over twice as fast, saving 4 minutes.
->>
+> v3:
+> https://lore.kernel.org/all/20240425090716.176818-1-sheharyaar48@gmail.com/
+> ---
+>  .../bindings/sound/nvidia,tegra30-i2s.txt     | 27 ------
+>  .../bindings/sound/nvidia,tegra30-i2s.yaml    | 83 +++++++++++++++++++
+>  2 files changed, 83 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra30-i2s.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra30-i2s.yaml
 > 
-> Apologies for not replying earlier before this was applied. But IMO this
-> isn't a good default. Tests that use things like exclusive PMUs
-> (Coresight for example) can never pass when run in parallel.
+> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra30-i2s.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra30-i2s.txt
+> deleted file mode 100644
+> index 38caa936f6f8..000000000000
+> --- a/Documentation/devicetree/bindings/sound/nvidia,tegra30-i2s.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -NVIDIA Tegra30 I2S controller
+> -
+> -Required properties:
+> -- compatible : For Tegra30, must contain "nvidia,tegra30-i2s".  For Tegra124,
+> -  must contain "nvidia,tegra124-i2s".  Otherwise, must contain
+> -  "nvidia,<chip>-i2s" plus at least one of the above, where <chip> is
+> -  tegra114 or tegra132.
+> -- reg : Should contain I2S registers location and length
+> -- clocks : Must contain one entry, for the module clock.
+> -  See ../clocks/clock-bindings.txt for details.
+> -- resets : Must contain an entry for each entry in reset-names.
+> -  See ../reset/reset.txt for details.
+> -- reset-names : Must include the following entries:
+> -  - i2s
+> -- nvidia,ahub-cif-ids : The list of AHUB CIF IDs for this port, rx (playback)
+> -  first, tx (capture) second. See nvidia,tegra30-ahub.txt for values.
+> -
+> -Example:
+> -
+> -i2s@70080300 {
+> -	compatible = "nvidia,tegra30-i2s";
+> -	reg = <0x70080300 0x100>;
+> -	nvidia,ahub-cif-ids = <4 4>;
+> -	clocks = <&tegra_car 11>;
+> -	resets = <&tegra_car 11>;
+> -	reset-names = "i2s";
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra30-i2s.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra30-i2s.yaml
+> new file mode 100644
+> index 000000000000..13cee366f5b3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra30-i2s.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/nvidia,tegra30-i2s.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NVIDIA Tegra30 I2S controller
+> +
+> +maintainers:
+> +  - Thierry Reding <treding@nvidia.com>
+> +  - Jon Hunter <jonathanh@nvidia.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +          - nvidia,tegra124-i2s
+> +          - nvidia,tegra30-i2s
 
-Yes, that is an issue for Intel PT also.
+> +      - items:
+> +          - enum:
+> +              - nvidia,tegra114-i2s
+> +              - nvidia,tegra132-i2s
+> +          - enum:
+> +              - nvidia,tegra124-i2s
+> +              - nvidia,tegra30-i2s
 
-> 
-> For CI it's arguable whether you'd want to trade stability for speed.
-> And for interactive sessions there was already the --parallel option
-> which was easy to add and have it in your bash history.
-> 
-> Now we've changed the default, any CI will need to be updated to add
-> --sequential if it wants all the tests to pass.
+This allows 4 possible combinations for 2 SoCs. That may be how the old 
+binding was worded, but that's not valid.
 
-Same here.
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: i2s
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    const: i2s
+> +
+> +  nvidia,ahub-cif-ids:
+> +    description: list of AHUB CIF IDs
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      - description: rx (playback)
+> +      - description: tx (capture)
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - reset-names
+> +  - nvidia,ahub-cif-ids
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/tegra30-car.h>
+> +
+> +    i2s@70080300 {
+> +        compatible = "nvidia,tegra30-i2s";
+> +        reg = <0x70080300 0x100>;
+> +        nvidia,ahub-cif-ids = <4 4>;
+> +        clocks = <&tegra_car TEGRA30_CLK_I2S0>;
+> +        resets = <&tegra_car 30>;
+> +        reset-names = "i2s";
+> +    };
+> +  - |
+> +    #include <dt-bindings/clock/tegra124-car.h>
+> +
+> +    i2s@70301100 {
+> +        compatible = "nvidia,tegra124-i2s";
+> +        reg = <0x70301100 0x100>;
+> +        nvidia,ahub-cif-ids = <5 5>;
+> +        clocks = <&tegra_car TEGRA124_CLK_I2S1>;
+> +        clock-names = "i2s";
+> +        resets = <&tegra_car 11>;
+> +        reset-names = "i2s";
+> +    };
 
->                                                 Maybe we could do some
-> hack and gate it on interactive vs non interactive sessions, but that
-> might be getting too clever. (Or a "don't run in parallel" flag on
-> certain tests)
-
-Perhaps more attention is needed for the tests that take so long.
-For example, maybe they could do things in parallel.
-
-Also -F option doesn't seem to work.
-
-$ tools/perf/perf test -F
-Couldn't find a vmlinux that matches the kernel running on this machine, skipping test
-  1: vmlinux symtab matches kallsyms                                 : Skip
-  2: Detect openat syscall event                                     : Ok
-  3: Detect openat syscall event on all cpus                         : Ok
-  4.1: Read samples using the mmap interface                         : Ok
-  4.2: User space counter reading of instructions                    : Ok
-  4.3: User space counter reading of cycles                          : Ok
-  5: Test data source output                                         : Ok
-WARNING: event 'numpmu' not valid (bits 16-17,20,22 of config '6530160' not supported by kernel)!
-  6.1: Test event parsing                                            : Ok
-  6.2: Parsing of all PMU events from sysfs                          : Ok
-WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported by kernel)!
-  6.3: Parsing of given PMU events from sysfs                        : Ok
-  6.4: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
-  6.5: Parsing of aliased events                                     : Ok
-  6.6: Parsing of terms (event modifiers)                            : Ok
-  7: Simple expression parser                                        : Ok
-  8: PERF_RECORD_* events & perf_sample fields                       : Ok
-  9: Parse perf pmu format                                           : Ok
- 10.1: PMU event table sanity                                        : Ok
- 10.2: PMU event map aliases                                         : Ok
-failed: recursion detected for M1
-failed: recursion detected for M2
-failed: recursion detected for M3
-Not grouping metric tma_memory_fence's events.
-Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:
-    echo 0 > /proc/sys/kernel/nmi_watchdog
-    perf stat ...
-    echo 1 > /proc/sys/kernel/nmi_watchdog
-Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:
-    echo 0 > /proc/sys/kernel/nmi_watchdog
-    perf stat ...
-    echo 1 > /proc/sys/kernel/nmi_watchdog
-...
-^C
-
-
+I didn't check what you removed, but this is still 1 example too many. 
+They are almost the same.
