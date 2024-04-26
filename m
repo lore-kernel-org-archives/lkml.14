@@ -1,103 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A4D16FF49;
-	Fri, 26 Apr 2024 18:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCFC16D9DC;
+	Fri, 26 Apr 2024 18:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714155138; cv=none; b=Zv9XcoKjnfsvMJS+QALT0yjFbKt6y3v3PM8OlC4RxendFil2XtGFXCdMbOoNbAHEZjOTc4tm6BGrokmAvnCRa/jmx7pDgU9Gl8ze2DkoJJDLpLbEet1S0ZkvG1tUX9BpGBwa3C3KGXXoSBhzcmoUtsS15kmYyTXqACktIEgyI9A=
+	t=1714155243; cv=none; b=aPebWb/bgZbmSuGeSmSsAmOpxJ415juiVGZPzBabBL2nylL1REoPlN+Bd5VudCYjRPCFgTK9AkICsrUYH4J4mI+LVdGJO7bZhBpXZe5LKGrQXGllsxvtvOID+avmqg0HQEtkiD5yhSVvIk5OFydKrB4qI4DoOuCpikY8CIvR1f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714155138; c=relaxed/simple;
-	bh=oVQ/c6vRD+E+IuEoP/TgnBSCJAedYfsqmZcahLpy4b4=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=R9Z6FHy/ssbg8Uj1EgMXZk6kKMH6MLcvrVdFLXGzpjwMgCaRUY0QiLTWyx9xR2uv937ZtvE76FCfg3WTC1tMeSGCCzLigoCZ/Z4ThW9VB+v97gBSdqnl7QDcn24MrcdZKRVZILIsyTGbRcE9L1IBm9AGBj5jhxm6p00Dx0w8XwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BDtpyt7g; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KLdLNeHL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1714155243; c=relaxed/simple;
+	bh=aQjaL5v7EZ8Z8sheHSuTK0i8DbEog35lMqyjMZuJSH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SGNV+Nfog7NNTKlyPolKD+u1SZrGhwPBa5ppUlutxAV8q4A2pbiGfDUuKYRmXrqcVjg+2CYa0YczhmT1iZ3vFYuKGF0l7V3dwUzlJBuq4KS2nbb1M01mrDqqjTNx89SQYXnc8n2gXvLhZ/VGQTZ8cHh25FpXyfxuv66OE/acww4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=s0SGDObx; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BDtpyt7g";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KLdLNeHL"
-Date: Fri, 26 Apr 2024 18:12:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1714155131;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=tHeHIuKAaYY/sJSTKbZYKWFvjEI/DvPO1k/UX6wjaOY=;
-	b=BDtpyt7gKTFC4qB36EqyyX1ChT5R2odZZMToF+VqHpJ1OnCCTbIaSsKyHXMmXF7dokAgcz
-	SJg3ohcg01HzyqR5rJql8OyaVLGs30Fw3st0LyX/djvB5BkzGUpm32xwQu95Aw+wfzFsZg
-	jxGQr7d5vRV2eoqVwPmTnV7AHPCvNmGy5/C2ezy9wQajlc0R8zIfQpUfz9OrROp/fLK8Xp
-	j6U9vetk4B49kcYUqQYufyxosDcEWP9O3eCYcOTEN9wvBxrmqspV0zx2eeoylDgeJBf88Q
-	VVvf8JYqh2wLf1b+aHQltYXkngQ/LT0UlX+odadzdSbzuUHrIvCOEhJcpQ7vtQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1714155131;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=tHeHIuKAaYY/sJSTKbZYKWFvjEI/DvPO1k/UX6wjaOY=;
-	b=KLdLNeHLYb+m0EkkGsoEtHyvT1cWv9lheQugXtkFEGrDtM1a1iFlTKVS1uhXllf/mWZzvF
-	mqlXQqh59hKI8lAg==
-From: "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cpu] x86/cpu/intel_epb: Switch to new Intel CPU model defines
-Cc: Tony Luck <tony.luck@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="s0SGDObx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Z0WylHOBJi80XW5YVifjTqADU8U9Hi2JH9CbGlTpRYM=; b=s0SGDObxH6/3Xck4YBOF4zBOOG
+	fnpQUiVzrD846i2Wd6hb/iY8DDkplyuhIvX1OkoiBceOFTtt9ppqHNI47PrIkylMuaDy2/00rK467
+	KlBoZS9/H4jRdhfmLworvUxCa5Lg8o0ZoCedMMz1SQY4z0M+7x9vZd8JQqo8D0U+bNIQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1s0Q4k-00E62L-4W; Fri, 26 Apr 2024 20:13:34 +0200
+Date: Fri, 26 Apr 2024 20:13:34 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Parthiban.Veerasooran@microchip.com
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, saeedm@nvidia.com,
+	anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, corbet@lwn.net,
+	linux-doc@vger.kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, Horatiu.Vultur@microchip.com,
+	ruanjinjie@huawei.com, Steen.Hegelund@microchip.com,
+	vladimir.oltean@nxp.com, UNGLinuxDriver@microchip.com,
+	Thorsten.Kummermehr@microchip.com, Pier.Beruto@onsemi.com,
+	Selvamani.Rajagopal@onsemi.com, Nicolas.Ferre@microchip.com,
+	benjamin.bigler@bernformulastudent.ch
+Subject: Re: [PATCH net-next v4 09/12] net: ethernet: oa_tc6: implement
+ receive path to receive rx ethernet frames
+Message-ID: <669541fd-abc5-4461-a92f-af5a09c1e1e6@lunn.ch>
+References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
+ <20240418125648.372526-10-Parthiban.Veerasooran@microchip.com>
+ <574fec4d-5a23-490a-ba12-c40432ebe4b8@lunn.ch>
+ <6e529720-3caa-4dc4-b9be-bc6674806ba5@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171415513163.10875.2127948930072445264.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e529720-3caa-4dc4-b9be-bc6674806ba5@microchip.com>
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Fri, Apr 26, 2024 at 01:45:20PM +0000, Parthiban.Veerasooran@microchip.com wrote:
+> Hi Andrew,
+> 
+> On 24/04/24 5:38 am, Andrew Lunn wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> >> +static int oa_tc6_allocate_rx_skb(struct oa_tc6 *tc6)
+> >> +{
+> >> +     tc6->rx_skb = netdev_alloc_skb(tc6->netdev, tc6->netdev->mtu + ETH_HLEN +
+> >> +                                    ETH_FCS_LEN + NET_IP_ALIGN);
+> >> +     if (!tc6->rx_skb) {
+> >> +             tc6->netdev->stats.rx_dropped++;
+> >> +             return -ENOMEM;
+> >> +     }
+> >> +     skb_reserve(tc6->rx_skb, NET_IP_ALIGN);
+> > 
+> > I think you can use netdev_alloc_skb_ip_align() here.
+> Ah OK, then do you mean we can rewrite the function 
+> oa_tc6_allocate_rx_skb() as below?
+> 
+> static int oa_tc6_allocate_rx_skb(struct oa_tc6 *tc6)
+> {
+> 	tc6->rx_skb = netdev_alloc_skb_ip_align(tc6->netdev, tc6->netdev->mtu + 
+> ETH_HLEN + ETH_FCS_LEN);
+> 	if (tc6->rx_skb)
+> 		return 0;
+> 
+> 	tc6->netdev->stats.rx_dropped++;
+> 	return -ENOMEM;
+> }
 
-Commit-ID:     77d0930acedf5b81c0a88d385b90747cc1fc4ca0
-Gitweb:        https://git.kernel.org/tip/77d0930acedf5b81c0a88d385b90747cc1fc4ca0
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Wed, 24 Apr 2024 11:15:09 -07:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Fri, 26 Apr 2024 08:49:24 -07:00
+Looks about right. But i did say 'I think', meaning i'm not too sure
+about this.
 
-x86/cpu/intel_epb: Switch to new Intel CPU model defines
+I generally don't review code actually moving packets around. It is
+what developers focus on, test heavily, and so is generally O.K. It is
+the code around the edges which often needs improvements prompted by
+review, ethtool, PHY handling, statistics.
 
-New CPU #defines encode vendor and family as well as model.
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/20240424181510.41733-1-tony.luck%40intel.com
----
- arch/x86/kernel/cpu/intel_epb.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/intel_epb.c b/arch/x86/kernel/cpu/intel_epb.c
-index f18d35f..30b1d63 100644
---- a/arch/x86/kernel/cpu/intel_epb.c
-+++ b/arch/x86/kernel/cpu/intel_epb.c
-@@ -204,12 +204,12 @@ static int intel_epb_offline(unsigned int cpu)
- }
- 
- static const struct x86_cpu_id intel_epb_normal[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,
--				   ENERGY_PERF_BIAS_NORMAL_POWERSAVE),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GRACEMONT,
--				   ENERGY_PERF_BIAS_NORMAL_POWERSAVE),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,
--				   ENERGY_PERF_BIAS_NORMAL_POWERSAVE),
-+	X86_MATCH_VFM(INTEL_ALDERLAKE_L,
-+		      ENERGY_PERF_BIAS_NORMAL_POWERSAVE),
-+	X86_MATCH_VFM(INTEL_ATOM_GRACEMONT,
-+		      ENERGY_PERF_BIAS_NORMAL_POWERSAVE),
-+	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,
-+		      ENERGY_PERF_BIAS_NORMAL_POWERSAVE),
- 	{}
- };
- 
+	Andrew
