@@ -1,225 +1,539 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BA91474AF;
-	Fri, 26 Apr 2024 13:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2CE824B3;
+	Fri, 26 Apr 2024 13:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714137596; cv=none; b=TkYNu8RJp72ROZ1zvfqhpm9qtlRZaSQBcBptyCW0llZFp4nzDvABbzVPjW0eZdNvn4gIsbYUusjHZJafS5yJimaZdVeNOI/fD1D0kwZtzvGDe96OcBN0OAaYXvCYMkSSWIFVlX2GGPt1ANl0M3i/qP2P9Ou+6mHlJ+zeu3OiJUY=
+	t=1714137788; cv=none; b=k/bI6iG7DyDshhLliTxx0SkCtZOO7ByxXBT/TKigocuDgfW79ZDH8LfjSnjE5O8jqAN/GwLMiKclkR/hr+GzlDxNR2kynO1ToOBHVePxrxPsdYs9vVyv16KULust4/0aWHJCVmoEnVwIFaNEH7omzp98PwPruatR4SyaxY4T2WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714137596; c=relaxed/simple;
-	bh=NKjz8r5HSyZhQ50FE2JFyZ6dA1RrN866bEN9EqQbW38=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WFoF2BIb+wXxoDpgeDO+F3GGgw3vi8qlR3m3MMcNWkbL/phYe7EFs6+KdYtlQbHidAeor6EnSumeYkC7LTL3Tk+WRvwP+mY7XRIkqa1biu4NmVjQPXNyvAY4l33hcPmWraIlpv7N5Lr2KtO+EyTkILh7FTosm90d1aZmgFVhIvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VQtcJ65hmz4f3jkL;
-	Fri, 26 Apr 2024 21:19:44 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BE7B01A0572;
-	Fri, 26 Apr 2024 21:19:49 +0800 (CST)
-Received: from [10.174.176.34] (unknown [10.174.176.34])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxDzqStmn1MRLA--.12428S3;
-	Fri, 26 Apr 2024 21:19:49 +0800 (CST)
-Subject: Re: [PATCH v4 02/34] ext4: check the extent status again before
- inserting delalloc block
-To: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
- jack@suse.cz, hch@infradead.org, djwong@kernel.org, david@fromorbit.com,
- willy@infradead.org, zokeefe@google.com, yi.zhang@huawei.com,
- chengzhihao1@huawei.com, yukuai3@huawei.com, wangkefeng.wang@huawei.com
-References: <87frv8z3gl.fsf@gmail.com>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <185a0d75-558e-a1ae-9415-c3eed4def60f@huaweicloud.com>
-Date: Fri, 26 Apr 2024 21:19:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	s=arc-20240116; t=1714137788; c=relaxed/simple;
+	bh=Cl9NW7oML0g58ahEk1LK0RkW9f4fod9Lg6NgycD8gxQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rM+kUrYqX/XuQQIFfIgS2TxgOGF4Lvsi1oixi4RQ8dZQ9iNGT2b7pG5gFz86cp3dMyYo9QagZgmOIV48YjZv9fGvb5z96K5U2FDICuHCAa6zPMxgrtZ42fZ6jMa+Bq5BDmjubGujqjdk2GClXh7bfigPbg3hJZS2wDfYceentJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=zPeqWAJg; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zPeqWAJg"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43QDMwYJ055233;
+	Fri, 26 Apr 2024 08:22:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714137778;
+	bh=A4zfzGA/NXNlIf1cfElMKm2V644iTJ/IQl+LROo5Wwo=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=zPeqWAJg0mSR6DlhFFI4qOPhss5D/VfpsjemJLAJGkPQHuxQ+K9DFP95iDUAX6YDF
+	 50lkSo+EKplOVJAtecWVyZbqIFln7qMK78mKyp94gDIKcNmBZQ9FOE7Es++Aawhxhz
+	 FF7Z/0QZbKaqUFgHEu2TnSODfERBes796VsacMMM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43QDMw7V119497
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 26 Apr 2024 08:22:58 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 26
+ Apr 2024 08:22:58 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 26 Apr 2024 08:22:58 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43QDMwh0032811;
+	Fri, 26 Apr 2024 08:22:58 -0500
+Date: Fri, 26 Apr 2024 08:22:58 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Robert Nelson <robertcnelson@gmail.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Andrew Davis <afd@ti.com>,
+        Jared McArthur
+	<j-mcarthur@ti.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Deepak Khatri
+	<lorforlinux@beagleboard.org>,
+        Drew Fustini <drew@beagleboard.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: ti: Add k3-am67a-beagley-ai
+Message-ID: <20240426132258.oe5kif4yoca2yujh@jaunt>
+References: <20240425162829.2370614-1-robertcnelson@gmail.com>
+ <20240425162829.2370614-2-robertcnelson@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87frv8z3gl.fsf@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgDHlxDzqStmn1MRLA--.12428S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jw47Ar4UKF4rXw4Dur43GFg_yoW7urykpa
-	9IkF45Grs5Ww1kCanagF1UXr10gw18XrW2gr9xKr1jvFZ0kFyfWF12qFyY9FySkrs7G3W0
-	vF4jqa4xu3WjyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
-	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-	9x07UZ18PUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240425162829.2370614-2-robertcnelson@gmail.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 2024/4/26 20:57, Ritesh Harjani (IBM) wrote:
-> Ritesh Harjani (IBM) <ritesh.list@gmail.com> writes:
+On 11:28-20240425, Robert Nelson wrote:
+> BeagleBoard.org BeagleY-AI is an easy to use, affordable open source
+> hardware single board computer based on the Texas Instruments AM67A,
+> which features a quad-core 64-bit Arm CPU subsystem, 2 general-purpose
+> digital-signal-processors (DSP) and matrix-multiply-accelerators (MMA),
+> GPU, vision and deep learning accelerators, and multiple Arm Cortex-R5
+> cores for low-power, low-latency GPIO control.
 > 
->> Zhang Yi <yi.zhang@huaweicloud.com> writes:
->>
->>> From: Zhang Yi <yi.zhang@huawei.com>
->>>
->>> Now we lookup extent status entry without holding the i_data_sem before
->>> inserting delalloc block, it works fine in buffered write path and
->>> because it holds i_rwsem and folio lock, and the mmap path holds folio
->>> lock, so the found extent locklessly couldn't be modified concurrently.
->>> But it could be raced by fallocate since it allocate block whitout
->>> holding i_rwsem and folio lock.
->>>
->>> ext4_page_mkwrite()             ext4_fallocate()
->>>  block_page_mkwrite()
->>>   ext4_da_map_blocks()
->>>    //find hole in extent status tree
->>>                                  ext4_alloc_file_blocks()
->>>                                   ext4_map_blocks()
->>>                                    //allocate block and unwritten extent
->>>    ext4_insert_delayed_block()
->>>     ext4_da_reserve_space()
->>>      //reserve one more block
->>>     ext4_es_insert_delayed_block()
->>>      //drop unwritten extent and add delayed extent by mistake
->>>
->>> Then, the delalloc extent is wrong until writeback, the one more
->>> reserved block can't be release any more and trigger below warning:
->>>
->>>  EXT4-fs (pmem2): Inode 13 (00000000bbbd4d23): i_reserved_data_blocks(1) not cleared!
->>>
->>> Hold i_data_sem in write mode directly can fix the problem, but it's
->>> expansive, we should keep the lockless check and check the extent again
->>> once we need to add an new delalloc block.
->>
->> Hi Zhang, 
->>
->> It's a nice finding. I was wondering if this was caught in any of the
->> xfstests?
->>
+> https://beagley-ai.org/
+> https://openbeagle.org/beagley-ai/beagley-ai
+> 
+> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> CC: Andrew Davis <afd@ti.com>
+> CC: Nishanth Menon <nm@ti.com>
+> CC: Jared McArthur <j-mcarthur@ti.com>
+> CC: Jason Kridner <jkridner@beagleboard.org>
+> CC: Deepak Khatri <lorforlinux@beagleboard.org>
+> CC: Drew Fustini <drew@beagleboard.org>
+> ---
 
-Hi, Ritesh
+A few cosmetic comments to fix up for the next rev:
 
-I caught this issue when I tested my iomap series in generic/344 and
-generic/346. It's easy to reproduce because the iomap's buffered write path
-doesn't hold folio lock while inserting delalloc blocks, so it could be raced
-by the mmap page fault path. But the buffer_head's buffered write path can't
-trigger this problem, the race between buffered write path and fallocate path
-was discovered while I was analyzing the code, so I'm not sure if it could
-be caught by xfstests now, at least I haven't noticed this problem so far.
+> Changes since v1:
+>  - fixed incorrect vdd-3v3-sd-pins-default name
+>  - updated hdmi VDD_1V2 regulator for production pcb
+>  - switched device tree name from k3-j722s-beagley-ai to k3-am67a-beagley-ai
+>  - removed cpsw_port2 node
+>  - enable UHS support for MMCSD
+> ---
+>  arch/arm64/boot/dts/ti/Makefile               |   1 +
+>  .../arm64/boot/dts/ti/k3-am67a-beagley-ai.dts | 369 ++++++++++++++++++
+>  2 files changed, 370 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am67a-beagley-ai.dts
+> 
+> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+> index 9a722c2473fb..a61e8902a23d 100644
+> --- a/arch/arm64/boot/dts/ti/Makefile
+> +++ b/arch/arm64/boot/dts/ti/Makefile
+> @@ -95,6 +95,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j721s2-evm.dtb
+>  dtb-$(CONFIG_ARCH_K3) += k3-j721s2-evm-pcie1-ep.dtbo
+>  
+>  # Boards with J722s SoC
+> +dtb-$(CONFIG_ARCH_K3) += k3-am67a-beagley-ai.dtb
+>  dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
+>  
+>  # Boards with J784s4 SoC
+> diff --git a/arch/arm64/boot/dts/ti/k3-am67a-beagley-ai.dts b/arch/arm64/boot/dts/ti/k3-am67a-beagley-ai.dts
+> new file mode 100644
+> index 000000000000..cffa1c9ba00d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-am67a-beagley-ai.dts
+> @@ -0,0 +1,369 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +/*
+> + * https://beagley-ai.org/
+> + *
+> + * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
+> + * Copyright (C) 2024 Robert Nelson, BeagleBoard.org Foundation
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/net/ti-dp83867.h>
+> +#include "k3-j722s.dtsi"
+> +
+> +/ {
+> +	compatible = "beagle,am67a-beagley-ai", "ti,j722s";
+> +	model = "BeagleBoard.org BeagleY-AI";
+> +
+> +	aliases {
+> +		serial0 = &wkup_uart0;
+> +		serial2 = &main_uart0;
+> +		mmc0 = &sdhci1;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = &main_uart0;
+> +	};
+> +
+> +	memory@80000000 {
+> +		/* 4G RAM */
+> +		reg = <0x00000000 0x80000000 0x00000000 0x80000000>,
+> +		      <0x00000008 0x80000000 0x00000000 0x80000000>;
+> +		device_type = "memory";
+> +		bootph-pre-ram;
+> +	};
+> +
+> +	reserved_memory: reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		secure_tfa_ddr: tfa@9e780000 {
+> +			reg = <0x00 0x9e780000 0x00 0x80000>;
+> +			no-map;
+> +		};
+> +
+> +		secure_ddr: optee@9e800000 {
+> +			reg = <0x00 0x9e800000 0x00 0x01800000>;
+> +			no-map;
+> +		};
+> +
+> +		wkup_r5fss0_core0_memory_region: r5f-memory@a0100000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa0100000 0x00 0xf00000>;
+> +			no-map;
+> +		};
+> +
+> +	};
+> +
+> +	vsys_5v0: regulator-1 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vsys_5v0";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		bootph-all;
+> +	};
+> +
+> +	vdd_3v3: regulator-2 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vdd_3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vsys_5v0>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	vdd_mmc1: regulator-mmc1 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vdd_mmc1";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vdd_3v3_sd_pins_default>;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		enable-active-high;
+> +		gpio = <&main_gpio1 50 GPIO_ACTIVE_HIGH>;
+> +		bootph-all;
+> +	};
+> +
+> +	vdd_sd_dv: regulator-TLV71033 {
+> +		compatible = "regulator-gpio";
+> +		regulator-name = "tlv71033";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vdd_sd_dv_pins_default>;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		vin-supply = <&vsys_5v0>;
+> +		gpios = <&main_gpio1 49 GPIO_ACTIVE_HIGH>;
+> +		states = <1800000 0x0>,
+> +			 <3300000 0x1>;
 
->> I have reworded some of the commit message, feel free to use it if you
->> think this version is better. The use of which path uses which locks was
->> a bit confusing in the original commit message.
->>
+you will need bootph-all; here.
 
-Thanks for the message improvement, it looks more clear then mine, I will
-use it.
+> +	};
+> +
+> +	vsys_io_1v8: regulator-vsys-io-1v8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vsys_io_1v8";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	vsys_io_1v2: regulator-vsys-io-1v2 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vsys_io_1v2";
+> +		regulator-min-microvolt = <1200000>;
+> +		regulator-max-microvolt = <1200000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&main_pmx0 {
+> +
+> +	main_i2c0_pins_default: main-i2c0-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x01e0, PIN_INPUT_PULLUP, 0) /* (D23) I2C0_SCL */
+> +			J722S_IOPAD(0x01e4, PIN_INPUT_PULLUP, 0) /* (B22) I2C0_SDA */
+> +		>;
+> +		bootph-all;
+> +	};
+> +
+> +	main_uart0_pins_default: main-uart0-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x01c8, PIN_INPUT, 0)	/* (A22) UART0_RXD */
+> +			J722S_IOPAD(0x01cc, PIN_OUTPUT, 0)	/* (B22) UART0_TXD */
+> +		>;
+> +		bootph-all;
+> +	};
+> +
+> +	vdd_sd_dv_pins_default: vdd-sd-dv-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x0244, PIN_OUTPUT, 7) /* (A24) MMC1_SDWP.GPIO1_49 */
+> +		>;
+> +		bootph-all;
+> +	};
+> +
+> +	main_mmc1_pins_default: main-mmc1-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x023c, PIN_INPUT, 0) /* (H22) MMC1_CMD */
+> +			J722S_IOPAD(0x0234, PIN_OUTPUT, 0) /* (H24) MMC1_CLK */
+> +			J722S_IOPAD(0x0230, PIN_INPUT, 0) /* (H23) MMC1_DAT0 */
+> +			J722S_IOPAD(0x022c, PIN_INPUT_PULLUP, 0) /* (H20) MMC1_DAT1 */
+> +			J722S_IOPAD(0x0228, PIN_INPUT_PULLUP, 0) /* (J23) MMC1_DAT2 */
+> +			J722S_IOPAD(0x0224, PIN_INPUT_PULLUP, 0) /* (H25) MMC1_DAT3 */
+> +			J722S_IOPAD(0x0240, PIN_INPUT, 0) /* (B24) MMC1_SDCD */
 
-Thanks,
-Yi.
+I suggest using GPIO mode 7 here. (and see below):
+		J722S_IOPAD(0x0240, PIN_INPUT, 7) /* (B24) MMC1_SDCD */
 
->> <reworded from your original commit msg>
->>
->> ext4_da_map_blocks(), first looks up the extent status tree for any
->> extent entry with i_data_sem held in read mode. It then unlocks
->> i_data_sem, if it can't find an entry and take this lock in write
->> mode for inserting a new da entry.
-> 
-> Sorry about this above paragraph. I messed this paragraph.
-> Here is the correct version of this.
-> 
-> ext4_da_map_blocks looks up for any extent entry in the extent status
-> tree (w/o i_data_sem) and then the looks up for any ondisk extent
-> mapping (with i_data_sem in read mode).
-> 
-> If it finds a hole in the extent status tree or if it couldn't find any
-> entry at all, it then takes the i_data_sem in write mode to add a da entry
-> into the extent status tree. This can actually race with page mkwrite
-> & fallocate path. 
-> 
-> Note that this is ok between...  <and the rest can remain same>
-> 
->>
->> This is ok between -
->> 1. ext4 buffered-write path v/s ext4_page_mkwrite(), because of the
->> folio lock
->> 2. ext4 buffered write path v/s ext4 fallocate because of the inode
->> lock.
->>
-> 
-> 
->> But this can race between ext4_page_mkwrite() & ext4 fallocate path - 
->>
->>  ext4_page_mkwrite()             ext4_fallocate()
->>   block_page_mkwrite()
->>    ext4_da_map_blocks()
->>     //find hole in extent status tree
->>                                   ext4_alloc_file_blocks()
->>                                    ext4_map_blocks()
->>                                     //allocate block and unwritten extent
->>     ext4_insert_delayed_block()
->>      ext4_da_reserve_space()
->>       //reserve one more block
->>      ext4_es_insert_delayed_block()
->>       //drop unwritten extent and add delayed extent by mistake
->>
->> Then, the delalloc extent is wrong until writeback and the extra
->> reserved block can't be released any more and it triggers below warning:
->>
->>   EXT4-fs (pmem2): Inode 13 (00000000bbbd4d23): i_reserved_data_blocks(1) not cleared!
->>
->> This patch fixes the problem by looking up extent status tree again
->> while the i_data_sem is held in write mode. If it still can't find
->> any entry, then we insert a new da entry into the extent status tree.
->>
->>>
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
->>> ---
->>>  fs/ext4/inode.c | 19 +++++++++++++++++++
->>>  1 file changed, 19 insertions(+)
->>>
->>> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
->>> index 6a41172c06e1..118b0497a954 100644
->>> --- a/fs/ext4/inode.c
->>> +++ b/fs/ext4/inode.c
->>> @@ -1737,6 +1737,7 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
->>>  		if (ext4_es_is_hole(&es))
->>>  			goto add_delayed;
->>>  
->>> +found:
->>>  		/*
->>>  		 * Delayed extent could be allocated by fallocate.
->>>  		 * So we need to check it.
->>> @@ -1781,6 +1782,24 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
->>>  
->>>  add_delayed:
->>>  	down_write(&EXT4_I(inode)->i_data_sem);
->>> +	/*
->>> +	 * Lookup extents tree again under i_data_sem, make sure this
->>> +	 * inserting delalloc range haven't been delayed or allocated
->>> +	 * whitout holding i_rwsem and folio lock.
->>> +	 */
->>
->> page fault path (ext4_page_mkwrite does not take i_rwsem) and fallocate
->> path (no folio lock) can race. Make sure we lookup the extent status
->> tree here again while i_data_sem is held in write mode, before inserting
->> a new da entry in the extent status tree.
->>
->>
-> 
-> 
-> -ritesh
+you can optionally enable debounce as well if that is useful.
+
+> +		>;
+> +		bootph-all;
+> +	};
+> +
+> +	mdio_pins_default: mdio-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x0160, PIN_OUTPUT, 0) /* (AC24) MDIO0_MDC */
+> +			J722S_IOPAD(0x015c, PIN_INPUT, 0) /* (AD25) MDIO0_MDIO */
+> +		>;
+> +	};
+> +
+> +	rgmii1_pins_default: rgmii1-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x014c, PIN_INPUT, 0) /* (AC25) RGMII1_RD0 */
+> +			J722S_IOPAD(0x0150, PIN_INPUT, 0) /* (AD27) RGMII1_RD1 */
+> +			J722S_IOPAD(0x0154, PIN_INPUT, 0) /* (AE24) RGMII1_RD2 */
+> +			J722S_IOPAD(0x0158, PIN_INPUT, 0) /* (AE26) RGMII1_RD3 */
+> +			J722S_IOPAD(0x0148, PIN_INPUT, 0) /* (AE27) RGMII1_RXC */
+> +			J722S_IOPAD(0x0144, PIN_INPUT, 0) /* (AD23) RGMII1_RX_CTL */
+> +			J722S_IOPAD(0x0134, PIN_OUTPUT, 0) /* (AF27) RGMII1_TD0 */
+> +			J722S_IOPAD(0x0138, PIN_OUTPUT, 0) /* (AE23) RGMII1_TD1 */
+> +			J722S_IOPAD(0x013c, PIN_OUTPUT, 0) /* (AG25) RGMII1_TD2 */
+> +			J722S_IOPAD(0x0140, PIN_OUTPUT, 0) /* (AF24) RGMII1_TD3 */
+> +			J722S_IOPAD(0x0130, PIN_OUTPUT, 0) /* (AG26) RGMII1_TXC */
+> +			J722S_IOPAD(0x012c, PIN_OUTPUT, 0) /* (AF25) RGMII1_TX_CTL */
+> +		>;
+> +	};
+> +
+> +	pmic_irq_pins_default: pmic-irq-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x01f4, PIN_INPUT_PULLUP, 0) /* (B23) EXTINTn */
+> +		>;
+> +	};
+> +
+> +	vdd_3v3_sd_pins_default: vdd-3v3-sd-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x0254, PIN_OUTPUT, 7) /* (E25) USB0_DRVVBUS.GPIO1_50 */
+> +		>;
+> +	};
+> +};
+> +
+> +&cpsw3g {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rgmii1_pins_default>, <&gbe_pmx_obsclk>;
+> +
+> +	assigned-clocks = <&k3_clks 227 0>;
+> +	assigned-clock-parents = <&k3_clks 227 6>;
+
+Here and elsewhere: status is last in the list. Please follow the
+recommendations in:
+
+https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+> +};
+> +
+> +&cpsw3g_mdio {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mdio_pins_default>;
+
+https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+> +
+> +	cpsw3g_phy0: ethernet-phy@0 {
+> +		reg = <0>;
+> +		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+> +		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+> +		ti,min-output-impedance;
+> +	};
+> +};
+> +
+> +&cpsw_port1 {
+> +	phy-mode = "rgmii-rxid";
+> +	phy-handle = <&cpsw3g_phy0>;
+> +	status = "okay";
+> +};
+> +
+> +&main_gpio1 {
+> +	status = "okay";
+> +};
+> +
+> +&main_uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&main_uart0_pins_default>;
+> +	status = "okay";
+> +	bootph-all;
+
+https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+> +};
+> +
+> +&mcu_pmx0 {
+> +
+> +	wkup_uart0_pins_default: wkup-uart0-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_MCU_IOPAD(0x02c, PIN_INPUT, 0)	/* (C7) WKUP_UART0_CTSn */
+> +			J722S_MCU_IOPAD(0x030, PIN_OUTPUT, 0)	/* (C6) WKUP_UART0_RTSn */
+> +			J722S_MCU_IOPAD(0x024, PIN_INPUT, 0)	/* (D8) WKUP_UART0_RXD */
+> +			J722S_MCU_IOPAD(0x028, PIN_OUTPUT, 0)	/* (D7) WKUP_UART0_TXD */
+> +		>;
+> +		bootph-all;
+> +	};
+> +
+> +	wkup_i2c0_pins_default: wkup-i2c0-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_MCU_IOPAD(0x04c, PIN_INPUT_PULLUP, 0)	/* (C7) WKUP_I2C0_SCL */
+> +			J722S_MCU_IOPAD(0x050, PIN_INPUT_PULLUP, 0)	/* (C6) WKUP_I2C1_SDA */
+> +		>;
+> +		bootph-all;
+> +	};
+> +
+> +	gbe_pmx_obsclk: gbe-pmx-obsclk-default-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_MCU_IOPAD(0x0004, PIN_OUTPUT, 1) /* (A10) MCU_SPI0_CS1.MCU_OBSCLK0 */
+> +		>;
+> +	};
+> +};
+> +
+> +&wkup_uart0 {
+> +	/* WKUP UART0 is used by Device Manager firmware */
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&wkup_uart0_pins_default>;
+> +	status = "reserved";
+> +	bootph-all;
+
+https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+> +};
+> +
+> +&wkup_i2c0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&wkup_i2c0_pins_default>;
+> +	clock-frequency = <400000>;
+> +	status = "okay";
+> +	bootph-all;
+
+https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+> +
+> +	tps65219: pmic@30 {
+> +		bootph-all;
+https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+> +		compatible = "ti,tps65219";
+> +		reg = <0x30>;
+> +		buck1-supply = <&vsys_5v0>;
+> +		buck2-supply = <&vsys_5v0>;
+> +		buck3-supply = <&vsys_5v0>;
+> +		ldo1-supply = <&vdd_3v3>;
+> +		ldo3-supply = <&vdd_3v3>;
+> +		ldo4-supply = <&vdd_3v3>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pmic_irq_pins_default>;
+> +		interrupt-parent = <&gic500>;
+> +		interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +
+> +		system-power-controller;
+> +		ti,power-button;
+> +
+> +		regulators {
+> +			buck1_reg: buck1 {
+> +				regulator-name = "VDD_3V3";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck2_reg: buck2 {
+> +				regulator-name = "VDD_1V8";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck3_reg: buck3 {
+> +				/* Regulator is left as is unused */
+> +			};
+> +
+> +			ldo1_reg: ldo1 {
+> +				regulator-name = "VDDSHV5_SDIO";
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-allow-bypass;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo2_reg: ldo2 {
+> +				regulator-name = "VDD_1V2";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo3_reg: ldo3 {
+> +				regulator-name = "VDDA_PHY_1V8";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldo4_reg: ldo4 {
+> +				regulator-name = "VDDA_PLL_1V8";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&sdhci1 {
+> +	/* SD/MMC */
+> +	vmmc-supply = <&vdd_mmc1>;
+> +	vqmmc-supply = <&vdd_sd_dv>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&main_mmc1_pins_default>;
+> +	ti,driver-strength-ohm = <50>;
+> +	disable-wp;
+> +	status = "okay";
+> +	bootph-all;
+https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+
+Also add:
+cd-gpios = <&main_gpio1 48 GPIO_ACTIVE_LOW>;
+cd-debounce-delay-ms = <100>;
+ti,fails-without-test-cd;
+
+With this, you will actually have runtime PM working properly for SD
+card while booting off some other interface (e.g. nvme or others) and
+card detect will work since GPIO based wake sequence will still be
+valid.
+
+> +};
+> -- 
+> 2.39.2
 > 
 
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
