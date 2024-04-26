@@ -1,182 +1,150 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D66271474D8;
-	Fri, 26 Apr 2024 13:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD021448E7
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714137169; cv=none; b=Jhix8OTJMd8/roBskFNN7tPA/Ki2MwLV2wNA/+XTtRyfOWBNmwPdj6UhU0++jNRGL2Br+bkaa2NipB5dv6Y2q1ZyPGoOCeC1tPIVqtG+wnWEP5w8Ubf3NXY3uB9oXM2kcvN2kHJiG52bJJW8KaKTsZwuh7bBVVoXlFn1CvS1Fuc=
+	t=1714137326; cv=none; b=chsDiQQ66nJSzwq4+Eh9aYLLPZ2LKRtv9qsvzjy9xI/s2LoOgP743tYFtz1/3yeZbYIwClzd+eBWfMDzCuVldVXYnf2tleKrcnVDbt5IMf5qQcbQ/766ye8I4WNMUTQH+u9HWM6ub4GD0+2jzQZJh0aMBvmfOAvtA/M80lVIUNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714137169; c=relaxed/simple;
-	bh=rr6aW1+kcjEmEqWlckgXGdFCPP642C4Jtl5MwHN1w0Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=FAGIOfF4H3LpNdjLCT1gEAaoDcQ9CaZOBs3/35HOnkqiW1970XPYmFOcizye+C0ip3wJbObV6UR1ztMUuRNAaKB0kv0oBSPGW8VuKIYwzCMG8+k99VOfS6TLSZsgmZlpiDl8QzhFoIqwKGn+56PVZvNPuoBAVT3lDQh+5bcj4aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fli+4dtA; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1714137326; c=relaxed/simple;
+	bh=0EjDwZWxznSCdmZifieH6x23DZR5y0YidMHayv9FCVo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xf/A6jHGhCt8kOg+SExNnlniFiLZmHjjk+fcsx8SH48uQn4NFiCeyNDXC2U1uz1LhGloWrWqpgV7zKXW0O+aWfSJTcoSWXEh4TP5zz8azG4zjXWhQnvez8+TddstisNCDxGcI0Kv0jkPOvdS2VfQElEJ/JPRbY5Q0edV9WUFoPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G2M0viFA; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fli+4dtA"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 52C76210EF2A;
-	Fri, 26 Apr 2024 06:12:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 52C76210EF2A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1714137166;
-	bh=Mq+rN7E58bisCALoStLLEzSdNeZidytgD0uOuQCvnM8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fli+4dtAQ6pk/mK1bVD3m43hgWdV9DhUCClxNGUdoxHKu6oGYFawF8nbLhxLyLMFW
-	 GH1WY8Sh0vl8keZc/eKCpNsfrvXgHeh8wLSaX2TSNZxU3hb1+SWjh/Dp5vTY7zjHFl
-	 HruaoEH57IV91QwAwSF5ohjfY52Vs0w25tB0m0cQ=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	sharmaajay@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next v2 5/5] RDMA/mana_ib: implement uapi for creation of rnic cq
-Date: Fri, 26 Apr 2024 06:12:40 -0700
-Message-Id: <1714137160-5222-6-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1714137160-5222-1-git-send-email-kotaranov@linux.microsoft.com>
-References: <1714137160-5222-1-git-send-email-kotaranov@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G2M0viFA"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-238fd648224so971429fac.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714137323; x=1714742123; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PuoOtUcpUko+/VSS5TWCLYfoHqgBMfRY2mIEeEzceVM=;
+        b=G2M0viFA3EB9qRWl3Fy6oo4Pyse+82aScUD+VAO4SH2McYCOwOT139VOkXzQmU9CXB
+         HAAKF444lq4NyjxsHfCalO8Txb8z90EhWheie+rDxoEatwbI9lw1DIw2TrDGqNBKom6O
+         FCN/SmnDJcgISsH+wET4jdCUU5lrITL5VihJnbimeFWJ7Z/ntsbKJ5+RNQlV+9fCWI5s
+         2jmvBUxMKF1+UQt0kokQzmosAZPKUOEYbpym/dEB5hEgAWq7FYB7H6K14rwzwipQZWrM
+         okynKfyR4WY8DDbAQbpw6k/3ESHN1xbwd6ljmP8MXLMdNfmbnzhUIMtEuWsFcGUQ9Tf1
+         CRnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714137323; x=1714742123;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PuoOtUcpUko+/VSS5TWCLYfoHqgBMfRY2mIEeEzceVM=;
+        b=AIGcjvfK1EPXunE5VQTT5qKP9uYEXtZuebJpaspnEBFH0pfnM9yIL84uWdsBPKN39N
+         elMZON7bcEorY6xhqC9wuCUKRqR0SF44lghS96cLKiAvmg8cqTAFDcFW3VbQvtQMNRw9
+         Nb2vHreSf0bShNW11Nfh7iNygivczbQyZ8Nxxl1On+2QcoG4sLjRIdyFhuzy/tu3Vk13
+         Np/RomHAubNOcFwIfirk8ujYkB1QsqHu7FckZvDZoBZcoe26tPKeupJKOozE10FnXw6u
+         A72YenT+NsBskXGLKoVkNXSWT2Rh87ktGFvMEqs5l8+i8BjL6PCKnWyC34v3XP68gQMY
+         7ZBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQr+X0IMAkyLx9JsQqwUtzTxPXgOirS7zuxun6bYtX9isClyiLzHHQXgS+mbyiIW4lCeYQ/pl/cglYyEk2POUobVpkz3KlXMPiYWrL
+X-Gm-Message-State: AOJu0Yy9mPD6qaxb+nzKA3PolYIkinOeAmZUk1zw0vZbjCA20sl2erTY
+	ga+QeamuzBce1yad+uQQYXb9zawQbOxL8COc32k2UKrsEAywoCyk4oijlaAVYYD7L7xk30HdtKJ
+	DsMSLN06p+WS1O5ypRLc8jhEdJ7JC8WS172pg+o4VDLQ=
+X-Google-Smtp-Source: AGHT+IHv9Q70wToFUPGB8Vu/MmSM2vf5h9HCjiCvHhlbFotgiGjTKOa1hQ77HNvi/4fC9LGVnz4+KPA3qAVj9amlytM=
+X-Received: by 2002:a05:6870:f10c:b0:22a:a40a:a09f with SMTP id
+ k12-20020a056870f10c00b0022aa40aa09fmr2581360oac.54.1714137323717; Fri, 26
+ Apr 2024 06:15:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <Zij_fGjRS_rK-65r@archlinux> <CAEVVKH8Oagbih8E8YNPpNhyh75fWnBLdod+eEGQm9i8ciNv7sQ@mail.gmail.com>
+ <47011bf2-4000-4fd8-9dd3-4c6b6a1c4a80@clip-os.org>
+In-Reply-To: <47011bf2-4000-4fd8-9dd3-4c6b6a1c4a80@clip-os.org>
+From: Xiongwei Song <sxwjean@gmail.com>
+Date: Fri, 26 Apr 2024 21:14:57 +0800
+Message-ID: <CAEVVKH9rwS6vR5_AjHyjS0vknyZvHabooE+c+k_5XNn2Rdac6w@mail.gmail.com>
+Subject: Re: [PATCH] slub: Fixes freepointer encoding for single free
+To: Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, cl@linux.com, 
+	penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, 
+	akpm@linux-foundation.org, vbabka@suse.cz, roman.gushchin@linux.dev, 
+	42.hyeyoo@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+On Fri, Apr 26, 2024 at 8:18=E2=80=AFPM Nicolas Bouchinet
+<nicolas.bouchinet@clip-os.org> wrote:
+>
+> On 4/26/24 11:20, Xiongwei Song wrote:
+> > On Wed, Apr 24, 2024 at 8:48=E2=80=AFPM Nicolas Bouchinet
+> > <nicolas.bouchinet@clip-os.org> wrote:
+> >> From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+> >>
+> >> Commit 284f17ac13fe ("mm/slub: handle bulk and single object freeing
+> >> separately") splits single and bulk object freeing in two functions
+> >> slab_free() and slab_free_bulk() which leads slab_free() to call
+> >> slab_free_hook() directly instead of slab_free_freelist_hook().
+> >>
+> >> If `init_on_free` is set, slab_free_hook() zeroes the object.
+> >> Afterward, if `slub_debug=3DF` and `CONFIG_SLAB_FREELIST_HARDENED` are
+> >> set, the do_slab_free() slowpath executes freelist consistency
+> >> checks and try to decode a zeroed freepointer which leads to a
+> >> "Freepointer corrupt" detection in check_object().
+> >>
+> >> Object's freepointer thus needs to be properly set using
+> >> set_freepointer() after init_on_free.
+> >>
+> >> To reproduce, set `slub_debug=3DFU init_on_free=3D1 log_level=3D7` on =
+the
+> >> command line of a kernel build with `CONFIG_SLAB_FREELIST_HARDENED=3Dy=
+`.
+> >>
+> >> dmesg sample log:
+> >> [   10.708715] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> [   10.710323] BUG kmalloc-rnd-05-32 (Tainted: G    B           T ): F=
+reepointer corrupt
+> >> [   10.712695] -------------------------------------------------------=
+----------------------
+> >> [   10.712695]
+> >> [   10.712695] Slab 0xffffd8bdc400d580 objects=3D32 used=3D4 fp=3D0xff=
+ff9d9a80356f80 flags=3D0x200000000000a00(workingset|slab|node=3D0|zone=3D2)
+> >> [   10.716698] Object 0xffff9d9a80356600 @offset=3D1536 fp=3D0x7ee4f48=
+0ce0ecd7c
+> > If init_on_free is set,  slab_free_hook() zeros the object first, then
+> > do_slab_free() calls
+> > set_freepointer() to set the fp value, so there are 8 bytes non-zero
+> > at the moment?
+> > Hence, the issue is not related to init_on_free?
+> >
+> > The fp=3D0x7ee4f480ce0ecd7c here is beyond kernel memory space, is the =
+issue from
+> > CONFIG_SLAB_FREELIST_HARDENED enabled?
+>
+> My understanding of the bug is that slab_free_hook() indeed zeroes the
+> object and its metadata first, then calls do_slab_free() and directly
+> calls __slab_free(), head an tail parameters being set to the object.
+>
+> If `slub_debug=3DF` (SLAB_CONSISTENCY_CHECKS) is set, the following call
+> path can be executed :
+>
+> free_to_partial_list() ->
+>
+> free_debug_processing() ->
+>
+> free_consistency_checks() ->
+>
+> check_object() ->
+>
+> check_valid_pointer(get_freepointer())
 
-Enable users to create RNIC CQs using a corresponding flag.
-With the previous request size, an ethernet CQ is created.
-As a response, return ID of the created CQ.
+I understand the call path. I meant here the freepointer is not ZERO
+but an illegal
+value( fp=3D0x7ee4f480ce0ecd7c), then check_valid_pointer return 1 with
+it's last line
+and then check_object() printed out the error message. I'm not sure if I
+misunderstood you.
 
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
----
- drivers/infiniband/hw/mana/cq.c | 55 ++++++++++++++++++++++++++++++---
- include/uapi/rdma/mana-abi.h    | 12 +++++++
- 2 files changed, 63 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/infiniband/hw/mana/cq.c b/drivers/infiniband/hw/mana/cq.c
-index 688ffe6..c6a3fd5 100644
---- a/drivers/infiniband/hw/mana/cq.c
-+++ b/drivers/infiniband/hw/mana/cq.c
-@@ -9,17 +9,22 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		      struct ib_udata *udata)
- {
- 	struct mana_ib_cq *cq = container_of(ibcq, struct mana_ib_cq, ibcq);
-+	struct mana_ib_create_cq_resp resp = {};
-+	struct mana_ib_ucontext *mana_ucontext;
- 	struct ib_device *ibdev = ibcq->device;
- 	struct mana_ib_create_cq ucmd = {};
- 	struct mana_ib_dev *mdev;
-+	bool is_rnic_cq;
-+	u32 doorbell;
- 	int err;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
- 
--	if (udata->inlen < sizeof(ucmd))
--		return -EINVAL;
--
- 	cq->comp_vector = attr->comp_vector % ibdev->num_comp_vectors;
-+	cq->cq_handle = INVALID_MANA_HANDLE;
-+
-+	if (udata->inlen < offsetof(struct mana_ib_create_cq, flags))
-+		return -EINVAL;
- 
- 	err = ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd), udata->inlen));
- 	if (err) {
-@@ -28,7 +33,9 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		return err;
- 	}
- 
--	if (attr->cqe > mdev->adapter_caps.max_qp_wr) {
-+	is_rnic_cq = !!(ucmd.flags & MANA_IB_CREATE_RNIC_CQ);
-+
-+	if (!is_rnic_cq && attr->cqe > mdev->adapter_caps.max_qp_wr) {
- 		ibdev_dbg(ibdev, "CQE %d exceeding limit\n", attr->cqe);
- 		return -EINVAL;
- 	}
-@@ -40,7 +47,41 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 		return err;
- 	}
- 
-+	mana_ucontext = rdma_udata_to_drv_context(udata, struct mana_ib_ucontext,
-+						  ibucontext);
-+	doorbell = mana_ucontext->doorbell;
-+
-+	if (is_rnic_cq) {
-+		err = mana_ib_gd_create_cq(mdev, cq, doorbell);
-+		if (err) {
-+			ibdev_dbg(ibdev, "Failed to create RNIC cq, %d\n", err);
-+			goto err_destroy_queue;
-+		}
-+
-+		err = mana_ib_install_cq_cb(mdev, cq);
-+		if (err) {
-+			ibdev_dbg(ibdev, "Failed to install cq callback, %d\n", err);
-+			goto err_destroy_rnic_cq;
-+		}
-+	}
-+
-+	resp.cqid = cq->queue.id;
-+	err = ib_copy_to_udata(udata, &resp, min(sizeof(resp), udata->outlen));
-+	if (err) {
-+		ibdev_dbg(&mdev->ib_dev, "Failed to copy to udata, %d\n", err);
-+		goto err_remove_cq_cb;
-+	}
-+
- 	return 0;
-+
-+err_remove_cq_cb:
-+	mana_ib_remove_cq_cb(mdev, cq);
-+err_destroy_rnic_cq:
-+	mana_ib_gd_destroy_cq(mdev, cq);
-+err_destroy_queue:
-+	mana_ib_destroy_queue(mdev, &cq->queue);
-+
-+	return err;
- }
- 
- int mana_ib_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata)
-@@ -52,6 +93,12 @@ int mana_ib_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata)
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
- 
- 	mana_ib_remove_cq_cb(mdev, cq);
-+
-+	/* Ignore return code as there is not much we can do about it.
-+	 * The error message is printed inside.
-+	 */
-+	mana_ib_gd_destroy_cq(mdev, cq);
-+
- 	mana_ib_destroy_queue(mdev, &cq->queue);
- 
- 	return 0;
-diff --git a/include/uapi/rdma/mana-abi.h b/include/uapi/rdma/mana-abi.h
-index 5fcb31b..2c41cc3 100644
---- a/include/uapi/rdma/mana-abi.h
-+++ b/include/uapi/rdma/mana-abi.h
-@@ -16,8 +16,20 @@
- 
- #define MANA_IB_UVERBS_ABI_VERSION 1
- 
-+enum mana_ib_create_cq_flags {
-+	MANA_IB_CREATE_RNIC_CQ	= 1 << 0,
-+};
-+
- struct mana_ib_create_cq {
- 	__aligned_u64 buf_addr;
-+	__u16	flags;
-+	__u16	reserved0;
-+	__u32	reserved1;
-+};
-+
-+struct mana_ib_create_cq_resp {
-+	__u32 cqid;
-+	__u32 reserved;
- };
- 
- struct mana_ib_create_qp {
--- 
-2.43.0
-
+Thank,
+Xiongwei
