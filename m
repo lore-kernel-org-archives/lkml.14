@@ -1,175 +1,110 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 720E51487DA;
-	Fri, 26 Apr 2024 15:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F9918C1F
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714145964; cv=none; b=q9Re3ygU2o3De5V4QqrY5VHpoFTJDmX16bzjTBQrtw6WDlggI/pMYcfnc/kOY75+haBJ+W0y+u/uVBvPMV7RJ6wMMk2/RX9eTEzW/eWZsn+s9tZtoyFjJVeDFC/RqbiI/E7+CZM1Y8sOf0ong8YUE8nqsbQV5JR5zFqasK6IUDg=
+	t=1714146030; cv=none; b=Wt4SYbfdEk5NnYNxiiyrIEpwBWQxags5f10rt8xmStgL5arTkVjU2a6utHARAdakRmMQ6OvKGXsHrJgt0yDVSOjjwrNHCkSZxTlO80YF1klQxtCC+2mIFmXxq+dUtwSrWvGPdHJPVAUNiG7V21BzB4X7Xtd1mnibI+BXr1j2UJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714145964; c=relaxed/simple;
-	bh=4WFzQGpOjDJKNHNLLs3leqq356kBHkd0ysmWxrlPiqY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nVfIAzCHbMORHAxbW4uqLS8qHvtbmdlzpmrpv6S2jYojdlAo9YNV9q1ttOQyqg3z4OWq13Pshzh+Na3u2AOMaofr3584OjkQrp5KKShsKFNYkjxRR766wqCQLhvNUbjyO5PKXjx/MHNfi6CwpB/ySIja8m+3Mu0Q/Q4T0wFd+Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E79652F4;
-	Fri, 26 Apr 2024 08:39:49 -0700 (PDT)
-Received: from [10.1.30.55] (e133047.arm.com [10.1.30.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56AB03F73F;
-	Fri, 26 Apr 2024 08:39:19 -0700 (PDT)
-Message-ID: <6b6580df-4ffc-408e-9084-6f2f331dc24c@arm.com>
-Date: Fri, 26 Apr 2024 16:39:17 +0100
+	s=arc-20240116; t=1714146030; c=relaxed/simple;
+	bh=+j5dYm4zOwVyCAzMEhO4zgKNYoBBQrAEMaiytKgHRFw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LOPLskHdmcScrohS6SApzvbzxTpV40cQ6+1EyYrxYOnD9HW43GrDaf5JXSgxvwhLstxOelPN2ZHnRFgsGmatxyooJJSMe4SHKQhm+4kKrFKaZmXQpVN5pPdWF+5UIPKauvIuEX3M+GWSl/IEJB+zLMw4bQNqH7wSCDLlB+ZecGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQxgk38drz6F97p;
+	Fri, 26 Apr 2024 23:37:54 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 48CF1140A36;
+	Fri, 26 Apr 2024 23:40:23 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 26 Apr
+ 2024 16:40:22 +0100
+Date: Fri, 26 Apr 2024 16:40:21 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Junhao He <hejunhao3@huawei.com>
+CC: <will@kernel.org>, <yangyicong@huawei.com>, <shaojijie@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>, <chenhao418@huawei.com>
+Subject: Re: [PATCH 1/3] drivers/perf: hisi_pcie: Fix out-of-bound access
+ when valid event group
+Message-ID: <20240426164021.00006f4c@Huawei.com>
+In-Reply-To: <20240425124627.13764-2-hejunhao3@huawei.com>
+References: <20240425124627.13764-1-hejunhao3@huawei.com>
+	<20240425124627.13764-2-hejunhao3@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linus:master] [timers] 7ee9887703: stress-ng.uprobe.ops_per_sec
- -17.1% regression
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Oliver Sang <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, ying.huang@intel.com,
- feng.tang@intel.com, fengwei.yin@intel.com,
- Frederic Weisbecker <frederic@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org
-References: <87zfth3l6y.fsf@somnus>
- <9272d284-ec2c-4e35-be90-c8852278b648@arm.com> <87h6foig4s.fsf@somnus>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <87h6foig4s.fsf@somnus>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 26/04/2024 11:15, Anna-Maria Behnsen wrote:
-> Christian Loehle <christian.loehle@arm.com> writes:
-> 
->> On 25/04/2024 09:23, Anna-Maria Behnsen wrote:
->>> Hi,
->>>
->>> (adding cpuidle/power people to cc-list)
->>>
->>> Oliver Sang <oliver.sang@intel.com> writes:
->>>
->>>> hi, Frederic Weisbecker,
->>>>
->>>> On Tue, Apr 02, 2024 at 12:46:15AM +0200, Frederic Weisbecker wrote:
->>>>> Le Wed, Mar 27, 2024 at 04:39:17PM +0800, kernel test robot a écrit :
->>>>>>
->>>>>>
->>>>>> Hello,
->>>>>>
->>>>>>
->>>>>> we reported
->>>>>> "[tip:timers/core] [timers]  7ee9887703:  netperf.Throughput_Mbps -1.2% regression"
->>>>>> in
->>>>>> https://lore.kernel.org/all/202403011511.24defbbd-oliver.sang@intel.com/
->>>>>>
->>>>>> now we noticed this commit is in mainline and we captured further results.
->>>>>>
->>>>>> still include netperf results for complete. below details FYI.
->>>>>>
->>>>>>
->>>>>> kernel test robot noticed a -17.1% regression of stress-ng.uprobe.ops_per_sec
->>>>>> on:
->>>>>
->>>>> The good news is that I can reproduce.
->>>>> It has made me spot something already:
->>>>>
->>>>>    https://lore.kernel.org/lkml/ZgsynV536q1L17IS@pavilion.home/T/#m28c37a943fdbcbadf0332cf9c32c350c74c403b0
->>>>>
->>>>> But that's not enough to fix the regression. Investigation continues...
->>>>
->>>> Thanks a lot for information! if you want us test any patch, please let us know.
->>>
->>> Oliver, I would be happy to see, whether the patch at the end of the
->>> message restores the original behaviour also in your test setup. I
->>> applied it on 6.9-rc4. This patch is not a fix - it is just a pointer to
->>> the kernel path, that might cause the regression. I know, it is
->>> probable, that a warning in tick_sched is triggered. This happens when
->>> the first timer is alredy in the past. I didn't add an extra check when
->>> creating the 'defacto' timer thingy. But existing code handles this
->>> problem already properly. So the warning could be ignored here.
->>>
->>> For the cpuidle people, let me explain what I oberserved, my resulting
->>> assumption and my request for help:
->>>
->>> cpuidle governors use expected sleep length values (beside other data)
->>> to decide which idle state would be good to enter. The expected sleep
->>> length takes the first queued timer of the CPU into account and is
->>> provided by tick_nohz_get_sleep_length(). With the timer pull model in
->>> place the non pinned timers are not taken into account when there are
->>> other CPUs up and running which could handle those timers. This could
->>> lead to increased sleep length values. On my system during the stress-ng
->>> uprobes test it was in the range of maximum 100us without the patch set
->>> and with the patch set the maximum was in a range of 200sec. This is
->>> intended behaviour, because timers which could expire on any CPU should
->>> expire on the CPU which is busy anyway and the non busy CPU should be
->>> able to go idle.
->>>
->>> Those increased sleep length values were the only anomalies I could find
->>> in the traces with the regression.
->>>
->>> I created the patch below which simply fakes the sleep length values
->>> that they take all timers of the CPU into account (also the non
->>> pinned). This patch kind of restores the behavoir of
->>> tick_nohz_get_sleep_length() before the change but still with the timer
->>> pull model in place.
->>>
->>> With the patch the regression was gone, at least on my system (using
->>> cpuidle governor menu but also teo).
->>
->> I assume the regression is reproducible for both?
->> (The original report is using menu for anyone else looking at this)
-> 
-> Yes. (at least in my setup)
-> 
->>>
->>> So my assumption here is, that cpuidle governors assume that a deeper
->>> idle state could be choosen and selecting the deeper idle state makes an
->>> overhead when returning from idle. But I have to notice here, that I'm
->>> still not familiar with cpuidle internals... So I would be happy about
->>> some hints how I can debug/trace cpuidle internals to falsify or verify
->>> this assumption.
->>
->> I'd say that sounds correct.
->> Comparing cpu_idle_miss would be interesting for both.
-> 
-> 	total nr	above		below
-> "bad":	2518343		2329072		189271
-> "good":	3016019         2960004		56015
-> 
-> -> this is the result of just a single run using:
-> 
->   perf script record -a -e power:cpu_idle_miss /home/anna-maria/src/stress-ng/stress-ng --timeout 60  --times --verify --metrics --no-rand-seed --uprobe 112
+On Thu, 25 Apr 2024 20:46:25 +0800
+Junhao He <hejunhao3@huawei.com> wrote:
 
-Thanks and sorry, I just realised now that this is the stress-ng uprobe and
-not the netperf regression. So hopefully that shouldn't be much trouble
-reproducing on my end. I will give that a try.
-
+> The perf tool allows users to create event groups through following
+> cmd [1], but the driver does not check whether the array index is out of
+> bounds when writing data to the event_group array. If the number of events
+> in an event_group is greater than HISI_PCIE_MAX_COUNTERS, the memory write
+> overflow of event_group array occurs.
 > 
-> But beside of this, when running this stress-ng test, the cpus seems to
-> be mostly idle (top tells me). So the question here fore me is, what is
-> the stress in this test and what should the numbers tell we are
-> comparing? It is not totally clear to me even after looking at the code.
-
-Since we have a performance regression that is or may be related to cpuidle
-the first thing I would like to know is if the governor is doing a good
-job from a cpuidle perspective (and the regression is caused by the latency
-of waking up from the deeper idle states that were a correct decision) or
-if you can already see issues just from a cpuidle perspective.
-Anyway I'll take a look and report back!
-
-Regards,
-Christian
-
+> Add array index check to fix the possible array out of bounds violation,
+> and return directly when write new events are written to array bounds.
 > 
-> Thanks,
+> There are 9 different events in an event_group.
+> [1] perf stat -e '{pmu/event1/, ... ,pmu/event9/}'
 > 
-> 	Anna-Maria
+> Fixes: 8404b0fbc7fb ("drivers/perf: hisi: Add driver for HiSilicon PCIe PMU")
+> Signed-off-by: Junhao He <hejunhao3@huawei.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Thanks,
+
+> ---
+>  drivers/perf/hisilicon/hisi_pcie_pmu.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+> index 5d1f0e9fdb08..dba399125658 100644
+> --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
+> +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+> @@ -350,15 +350,27 @@ static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
+>  			return false;
+>  
+>  		for (num = 0; num < counters; num++) {
+> +			/*
+> +			 * If we find a related event, then it's a valid group
+> +			 * since we don't need to allocate a new counter for it.
+> +			 */
+>  			if (hisi_pcie_pmu_cmp_event(event_group[num], sibling))
+>  				break;
+>  		}
+>  
+> +		/*
+> +		 * Otherwise it's a new event but if there's no available counter,
+> +		 * fail the check since we cannot schedule all the events in
+> +		 * the group simultaneously.
+> +		 */
+> +		if (num == HISI_PCIE_MAX_COUNTERS)
+> +			return false;
+> +
+>  		if (num == counters)
+>  			event_group[counters++] = sibling;
+>  	}
+>  
+> -	return counters <= HISI_PCIE_MAX_COUNTERS;
+> +	return true;
+>  }
+>  
+>  static int hisi_pcie_pmu_event_init(struct perf_event *event)
 
