@@ -1,120 +1,71 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D73143C70;
-	Fri, 26 Apr 2024 11:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043491422C6
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 11:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714132274; cv=none; b=F99UxY6ki4BDf4P4szW5aYGvCAg6OgtGAj1Gu4G9FCnT6HNHarerO8Y6gPk/inXkxdCAe/34swR99JhfLApBcrAq9Xm5Ul4kq6U6Xg1iSmzqVmZDylsaXbfPnTEO6IPQrIyg3FQ5vxmWyqH1PAIGsV1xqoRgI70tyXkURK3ibYk=
+	t=1714132326; cv=none; b=HEtr1TItt4mo+6UdwIQQSORopw9oyw155o+5HHxf2Lw/Xk/lrTRbxSRxnACdY/9JtPoHHbBK3U3bSv+nJfCSpoo8Qh8BLY9YuElogSMmNKUCCUxXeq9vn7GEJHRRBYfQ/+tDpolWswqtj5eaYFt9lDOZ8jj8ZtzxO+QCLhizQwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714132274; c=relaxed/simple;
-	bh=pUFowI5Uew0Bfbxd/9zcBIXUhLvC5pUTztv9cOZmLvQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MIJWpjj/7zEY/rSjlgZlAtSDlEDqXNDjyO1fkD8ss1sFIF+qOIIAkuBCMFILewQhxUH9qQ70rA46s+xTvQvy7r5zwPUJW+IRWcdcGOIAi4a5T0xRYc49CIGwXNaFfSIOJtewfiZJgam70ezFTEL6L8a0djKaUqPbdk9zryZQiFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LuCpuWUm; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LuCpuWUm"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43QBbkW2006299;
-	Fri, 26 Apr 2024 11:51:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=HsCoHq+/7P37NBOty4qKIsb4+uubEDWshiCoE+9VXQ8=;
- b=LuCpuWUm0UeZmBZN6+E9fMB90cRYAl8Pviuqa3fxMiCtYUqeCEyTK1Qq7/CLfFMy3ezv
- 3yfCaStMv4Ixy2O4E5i9XLED1Jo5iPrvldFVQjFDTuPRduqzVvrm5rZDn41sPllD/hw0
- 1rHczGIEdsTRQ07epzeuSEQcSSHRMRPCnOkdix7KNmvSya/vMHJprmdSMusZ/d+pjYAC
- 3ZUhg/GIs0goTzK7XBsxPzm+OfAs6nU3zzBa/3N61AbrkEizQ4lIwa/bC5EtoheJHPQs
- qvUJIRVap7dpXk+Ayqfjy+Jr7aP0Z+UV9ZdgQmn/cPtQGla/vt5ah3icZVQTc5jbpdhY 6w== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xrbj6r108-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 11:51:10 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q9CVZa023052;
-	Fri, 26 Apr 2024 11:51:02 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xms1pfgvu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 11:51:02 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43QBovp229622824
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Apr 2024 11:50:59 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 08F2220040;
-	Fri, 26 Apr 2024 11:50:57 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C6D5E2004E;
-	Fri, 26 Apr 2024 11:50:56 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 26 Apr 2024 11:50:56 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        borntraeger@de.ibm.com
-Subject: [PATCH v2 1/2] s390/pgtable: switch read and write softbits for puds
-Date: Fri, 26 Apr 2024 13:50:55 +0200
-Message-ID: <20240426115056.31768-2-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240426115056.31768-1-imbrenda@linux.ibm.com>
-References: <20240426115056.31768-1-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1714132326; c=relaxed/simple;
+	bh=jIOR+vzhPlHA3YgmQjcxZ2mhImEnME5KI77ES+ODJAs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=roWiaXCQopY3f42Z3+4ZNViVzxix74+A2rn0AQtK77UchKJr/hA6NMl5+X66TvzWtINyFR0SEDNzD2U1HZ36eMhd2b6wrJR6z1P6jvRybXxo4UCz7g3R6ocisgwqkoVqTJXhdQ1x+rG5J+nFHL+G0u9E03WgQbX6zxKRliphqAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7de9c6b7a36so192165239f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 04:52:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714132324; x=1714737124;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iVc6/BDH6Sy9YrefDPdxSrXQevFVNRqAFB6pcl+xTic=;
+        b=DvIe5kEgBmXKjtznCxcmpg4pvVxrjaYycSgSZrlWP41hHFPD2PzS/MMoQ/51gnWrHY
+         D11UHtKcdSUlQJiZHDRY0D3pDNmp7iLAREfAm6js7i12NcGCP9RyzrHER8u8/KbflN9E
+         5plQNvQP9TCEobS+5ucd41kQ1sGQE/Kwz6ddJXeIlhft3+oE9heepfdK73+rMuKrPmhS
+         4x9R/fOejrSZJbgC8KU9oWqiGt4QjAXh2ryb0HSnphoGQ3/p1gaXd1uGybJypeNnEmnU
+         yi9xn9YzEO4x/NxrCF1eIJxVZbxLCkIakLV1ct8mfEn3mw6MxyLih7Jaeo5DfdHoMxgA
+         wZzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXNb2qM5Ym6jpZb2iTKvvoqr5qScFXpEBreY4PeEDVgII3VyTmTAvx2Z0Yj4oSvbN7CBbnJ80U0YgYwUeo5bSVb0KNxfjqM+DY7I6W
+X-Gm-Message-State: AOJu0YxIZcMFI57e2KjGUSPHwuiGmYFdPUoKwm2UvlazhgJskUyGHCIf
+	AJwWXbEdA0agkdmCZ3NTLRSgao85tzSQoFwA5m6v0yNjJ25dbDfvCmx1fl2MciuYwG0T94r71ik
+	BcBkLkMqZI9HA1ID7mm3FnD67t+QlZJploNMUiKGv18lPf9U+z8ssDkA=
+X-Google-Smtp-Source: AGHT+IEdzIQiQITYJUeOKWKbIBkyvRpuhxPgBg2W6l+emkSMCdptnDV8VRSYA4SnR4HDZ0IlA2zdhjQM2geznhblgUnwg/CkNv92
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: CK6Nt_4wasmbzxJ_hgb3rzilyH1N7Joz
-X-Proofpoint-ORIG-GUID: CK6Nt_4wasmbzxJ_hgb3rzilyH1N7Joz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-26_12,2024-04-26_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- clxscore=1015 mlxscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
- mlxlogscore=660 adultscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404260079
+X-Received: by 2002:a05:6638:16c2:b0:485:65de:892 with SMTP id
+ g2-20020a05663816c200b0048565de0892mr128439jat.5.1714132323704; Fri, 26 Apr
+ 2024 04:52:03 -0700 (PDT)
+Date: Fri, 26 Apr 2024 04:52:03 -0700
+In-Reply-To: <20240426102644.3298-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000040adeb0616fe88df@google.com>
+Subject: Re: [syzbot] [usb?] WARNING in wdm_rxwork/usb_submit_urb (2)
+From: syzbot <syzbot+c6a1953c27ace6cc34e5@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-There is no reason for the read and write softbits to be swapped in the
-puds compared to pmds. They are different only because the softbits for
-puds were introduced at the same time when the softbits for pmds were
-swapped.
+Hello,
 
-The current implementation is not wrong per se, since the macros are
-defined correctly; only the documentation does not reflect reality.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-With this patch, the read and write softbits for large pmd and large
-puds will have the same layout, and will match the existing
-documentation.
+Reported-and-tested-by: syzbot+c6a1953c27ace6cc34e5@syzkaller.appspotmail.com
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Heiko Carstens <hca@linux.ibm.com>
----
- arch/s390/include/asm/pgtable.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Tested on:
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 60950e7a25f5..3da2995fd196 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -266,8 +266,8 @@ static inline int is_module_addr(void *addr)
- #define _REGION3_ENTRY_DIRTY	0x2000	/* SW region dirty bit */
- #define _REGION3_ENTRY_YOUNG	0x1000	/* SW region young bit */
- #define _REGION3_ENTRY_LARGE	0x0400	/* RTTE-format control, large page  */
--#define _REGION3_ENTRY_READ	0x0002	/* SW region read bit */
--#define _REGION3_ENTRY_WRITE	0x0001	/* SW region write bit */
-+#define _REGION3_ENTRY_WRITE	0x0002	/* SW region write bit */
-+#define _REGION3_ENTRY_READ	0x0001	/* SW region read bit */
- 
- #ifdef CONFIG_MEM_SOFT_DIRTY
- #define _REGION3_ENTRY_SOFT_DIRTY 0x4000 /* SW region soft dirty bit */
--- 
-2.44.0
+commit:         a160e120 usb: dwc3: qcom: Add multiport suspend/resume..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=1215128b180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fe204286ac73e15
+dashboard link: https://syzkaller.appspot.com/bug?extid=c6a1953c27ace6cc34e5
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1026cd6b180000
 
+Note: testing is done by a robot and is best-effort only.
