@@ -1,63 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D48149018
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893AA14A4D2
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714146134; cv=none; b=gvcHSdJfhPGlcAccWaSGBCkDTFVVYlS9MOt+Auo6HazcQnRuP2zk3kz/gvpN4ZIuw5mFzVt0FKS8GrOWvRrls/MEVhBlICXXalm6E6EVh2idVDajeemB1kNSsk2ZzZUlUdFe/oZ7K9ahnQ5pWDP+DRE4lvTAyVY9qmKzyUb0wmQ=
+	t=1714146138; cv=none; b=EzY0VG1zQW7gHKV1Mb9Z3CTE6Y1HtuxbDuJb3mxRZVLGmOGEwCdyWDXQAqG3TdjUhxuJyJOQ9+kJByWDyzjsH6UmYFiEzh1SLNVEydg/TxfwzvAT1zGZIm/armTVowO95Ioq3ByoBOjVOx2TVFOkSTNbUXBWiZhEwhHSN7/VvPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714146134; c=relaxed/simple;
-	bh=AVa0n+Q+W/36rHA/7OFZwLOB2e6TPwhBV7cZLD770n8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fUr+z88/ctjqta4lPzZsjN7p+y51pm+Fi0nkKsNAdeyOha+IltkMkZYd/neHpGngwFGTJ6OML15A0Slom+3Gn5QCNfyPJVHrdvHYSO37jrlIcTYRxkHZQ0vJ5TBhC1Drzpgb+K640L1TfQ2NizX7VBf9l0SiqyKumpDkBQGfud8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SxCUrWIO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714146138; c=relaxed/simple;
+	bh=5aUkPQKXl0fmcyKi1yp1q6NI4zqtUpvcJOtYnfEulME=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f4wHD/aVbltXUrMcb62o2SUZwysdVJlX8rziDv95p5PG+f1nmvAFkiEBWvg5HP0zJh8EBh/E3pcDr5Oe0PH4uavxUZnBwCas/evVyMQrgkGh1+z/VtYh4Lfu6164GhTGeZfGBvTYqCQ91WAEjHb6eQzo3qp1bvhSA+8gGJfAOUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=s09jxD+i; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SxCUrWIO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714146130;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J6Za5dqP1vNIWZF7RvMAdeAfhQe3W63OGnIUvf5n09o=;
-	b=SxCUrWIOlOeR2P/HLxJI1xb5GOrn+UpaqSU7kt7NqbpuWlscioE3HGkwwripwjQ/3vLAfp
-	5QCbC6Jt10IkeLrRaW5vE5pKX7F73BNACB0ZMj/SFFUT9koVbfIi5d4uJmsrlrDSE673Xy
-	Gpc9IeLELDVmb/RnH5+jtrwg4sVwuT4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-qxmgJdkaO7OcV05bAC6RyA-1; Fri, 26 Apr 2024 11:42:07 -0400
-X-MC-Unique: qxmgJdkaO7OcV05bAC6RyA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="s09jxD+i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1714146134;
+	bh=5aUkPQKXl0fmcyKi1yp1q6NI4zqtUpvcJOtYnfEulME=;
+	h=From:To:Cc:Subject:Date:From;
+	b=s09jxD+i4byT7++j6mCHoGUuuv9IGR81RKhOaNaSljb0RPr5SzRf3yxQ2YLipQVov
+	 slCoBsmaW2sA8t9RVchoBLzd39qWwz2Hv2koD+qL8lO0clBV2GJJ7TpYgGyNY1Kbrk
+	 oe4YFQKnKdzymJ1EZOsHHSzrnFdurGTjRpIqXtv15OR/+u30ll8dOeameUYNogZDW+
+	 c0L54ENVMFRvMqOdoE9Qp5y3fmaIt0bxbELFNi+JBAztvJ8CJ5bZDB+6t3NUb0LWfx
+	 mruXSXDEBI0T7o7RA2nRyh5CB3u7Qn2/FUKI5zvT1NTrB71AbId1JrOfLKDTwSpgr3
+	 KihDhaLbw821w==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7240780021A;
-	Fri, 26 Apr 2024 15:42:06 +0000 (UTC)
-Received: from chopper.lyude.net (unknown [10.22.8.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7B165EC683;
-	Fri, 26 Apr 2024 15:42:05 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: nouveau@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org,
-	stable@vger.kernel.org,
-	Karol Herbst <kherbst@redhat.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Dave Airlie <airlied@redhat.com>,
-	Ben Skeggs <bskeggs@redhat.com>,
-	Timur Tabi <ttabi@nvidia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] drm/nouveau/gsp: Use the sg allocator for level 2 of radix3
-Date: Fri, 26 Apr 2024 11:41:29 -0400
-Message-ID: <20240426154138.64643-2-lyude@redhat.com>
-In-Reply-To: <20240426154138.64643-1-lyude@redhat.com>
-References: <20240426154138.64643-1-lyude@redhat.com>
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 789473782157;
+	Fri, 26 Apr 2024 15:42:14 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: regressions@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	kernel@collabora.com
+Subject: [REGRESSION] next boot regression caused by RIP:0010:acpi_find_gpio+0x4b/0x103 kernel panic
+Date: Fri, 26 Apr 2024 17:42:08 +0200
+Message-Id: <20240426154208.81894-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,197 +47,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Currently we allocate all 3 levels of radix3 page tables using
-nvkm_gsp_mem_ctor(), which uses dma_alloc_coherent() for allocating all of
-the relevant memory. This can end up failing in scenarios where the system
-has very high memory fragmentation, and we can't find enough contiguous
-memory to allocate level 2 of the page table.
+Hello,
 
-Currently, this can result in runtime PM issues on systems where memory
-fragmentation is high - as we'll fail to allocate the page table for our
-suspend/resume buffer:
+KernelCI has identified a next boot regression on the following
+Chromebooks, between next-20240416 and next-20240418:
+- Lenovo ThinkPad C13 Yoga Chromebook (codename morphius) - kernel
+  configuration used [1]
+- ASUS Chromebook Flip C436FA (codename helios) - kernel configuration
+  used [2]
 
-  kworker/10:2: page allocation failure: order:7, mode:0xcc0(GFP_KERNEL),
-  nodemask=(null),cpuset=/,mems_allowed=0
-  CPU: 10 PID: 479809 Comm: kworker/10:2 Not tainted
-  6.8.6-201.ChopperV6.fc39.x86_64 #1
-  Hardware name: SLIMBOOK Executive/Executive, BIOS N.1.10GRU06 02/02/2024
-  Workqueue: pm pm_runtime_work
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x64/0x80
-   warn_alloc+0x165/0x1e0
-   ? __alloc_pages_direct_compact+0xb3/0x2b0
-   __alloc_pages_slowpath.constprop.0+0xd7d/0xde0
-   __alloc_pages+0x32d/0x350
-   __dma_direct_alloc_pages.isra.0+0x16a/0x2b0
-   dma_direct_alloc+0x70/0x270
-   nvkm_gsp_radix3_sg+0x5e/0x130 [nouveau]
-   r535_gsp_fini+0x1d4/0x350 [nouveau]
-   nvkm_subdev_fini+0x67/0x150 [nouveau]
-   nvkm_device_fini+0x95/0x1e0 [nouveau]
-   nvkm_udevice_fini+0x53/0x70 [nouveau]
-   nvkm_object_fini+0xb9/0x240 [nouveau]
-   nvkm_object_fini+0x75/0x240 [nouveau]
-   nouveau_do_suspend+0xf5/0x280 [nouveau]
-   nouveau_pmops_runtime_suspend+0x3e/0xb0 [nouveau]
-   pci_pm_runtime_suspend+0x67/0x1e0
-   ? __pfx_pci_pm_runtime_suspend+0x10/0x10
-   __rpm_callback+0x41/0x170
-   ? __pfx_pci_pm_runtime_suspend+0x10/0x10
-   rpm_callback+0x5d/0x70
-   ? __pfx_pci_pm_runtime_suspend+0x10/0x10
-   rpm_suspend+0x120/0x6a0
-   pm_runtime_work+0x98/0xb0
-   process_one_work+0x171/0x340
-   worker_thread+0x27b/0x3a0
-   ? __pfx_worker_thread+0x10/0x10
-   kthread+0xe5/0x120
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork+0x31/0x50
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork_asm+0x1b/0x30
+The following kernel panic is reported in the logs:
 
-Luckily, we don't actually need to allocate coherent memory for the page
-table thanks to being able to pass the GPU a radix3 page table for
-suspend/resume data. So, let's rewrite nvkm_gsp_radix3_sg() to use the sg
-allocator for level 2. We continue using coherent allocations for lvl0 and
-1, since they only take a single page.
+[    5.136433] BUG: kernel NULL pointer dereference, address: 0000000000000218
+[    5.143393] #PF: supervisor read access in kernel mode
+[    5.148529] #PF: error_code(0x0000) - not-present page
+[    5.153664] PGD 0 P4D 0 
+[    5.156203] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+[    5.161080] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc5-next-20240424 #1 a1639945aaee7370a5f0daa79d321d2bc0769584
+[    5.172023] Hardware name: LENOVO Morphius/Morphius, BIOS Google_Morphius.13434.60.0 10/08/2020
+[    5.180714] RIP: 0010:acpi_find_gpio+0x4b/0x103
+[    5.185246] Code: 65 48 8b 04 25 28 00 00 00 48 89 44 24 38 31 c0 48 89 3c 24 e8 24 9a 04 00 48 8b 3c 24 48 8b 74 24 08 84 c0 74 04 48 8d 5f f0 <48> 8b 93 18 02 00 00 48 8d 83 18 02 00 00 31 c9 48 39 c2 75 10 48
+[    5.203988] RSP: 0018:ffffa5a0c0033b98 EFLAGS: 00010246
+[    5.209212] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffa5a0c0033c24
+[    5.216341] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8a90c02a5420
+[    5.223470] RBP: ffffa5a0c0033c24 R08: ffffa5a0c0033c28 R09: fffffffffffcc098
+[    5.230599] R10: ffffffff96054f10 R11: fefefefefefefeff R12: ffff8a90c0ba6410
+[    5.237728] R13: ffffa5a0c0033c28 R14: ffffffff95da5d86 R15: 0000000000000000
+[    5.244857] FS:  0000000000000000(0000) GS:ffff8a90eae00000(0000) knlGS:0000000000000000
+[    5.252940] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    5.258684] CR2: 0000000000000218 CR3: 00000000b2a2e000 CR4: 00000000003506f0
+[    5.265813] Call Trace:
+[    5.268262]  <TASK>
+[    5.270367]  ? __die_body+0x1b/0x5d
+[    5.273861]  ? page_fault_oops+0x340/0x3dc
+[    5.277957]  ? prb_read_valid+0x14/0x1a
+[    5.281794]  ? srso_return_thunk+0x5/0x5f
+[    5.285806]  ? console_unlock+0x91/0xc0
+[    5.289644]  ? exc_page_fault+0x1e2/0x502
+[    5.293658]  ? asm_exc_page_fault+0x22/0x30
+[    5.297846]  ? acpi_find_gpio+0x4b/0x103
+[    5.301769]  ? acpi_find_gpio+0x3a/0x103
+[    5.305694]  ? kvasprintf+0x77/0xba
+[    5.309186]  gpiod_find_and_request+0xd5/0x395
+[    5.313634]  devm_fwnode_gpiod_get_index+0x76/0xb1
+[    5.318427]  gpio_keys_probe+0x43f/0x933
+[    5.322353]  ? srso_return_thunk+0x5/0x5f
+[    5.326365]  ? acpi_dev_pm_attach+0x96/0xb8
+[    5.330551]  ? __device_attach_driver+0x93/0x93
+[    5.335083]  platform_probe+0x3e/0x83
+[    5.338748]  really_probe+0x111/0x261
+[    5.342411]  __driver_probe_device+0xc5/0xf9
+[    5.346683]  driver_probe_device+0x1e/0x77
+[    5.350778]  __driver_attach+0xce/0xe7
+[    5.354530]  bus_for_each_dev+0x7c/0xc2
+[    5.358366]  ? kmalloc_trace_noprof+0x150/0x163
+[    5.362897]  bus_add_driver+0xf4/0x1e6
+[    5.366650]  driver_register+0xa6/0xe8
+[    5.370401]  ? atkbd_init+0x26/0x26
+[    5.373892]  do_one_initcall+0x80/0x1d9
+[    5.377730]  kernel_init_freeable+0x1be/0x206
+[    5.382088]  ? rest_init+0xbc/0xbc
+[    5.385491]  kernel_init+0x16/0x119
+[    5.388981]  ret_from_fork+0x24/0x38
+[    5.392558]  ? rest_init+0xbc/0xbc
+[    5.395961]  ret_from_fork_asm+0x11/0x20
+[    5.399887]  </TASK>
+[    5.402075] Modules linked in:
+[    5.405133] CR2: 0000000000000218
+[    5.408450] ---[ end trace 0000000000000000 ]---
+[    5.413064] RIP: 0010:acpi_find_gpio+0x4b/0x103
+[    5.417592] Code: 65 48 8b 04 25 28 00 00 00 48 89 44 24 38 31 c0 48 89 3c 24 e8 24 9a 04 00 48 8b 3c 24 48 8b 74 24 08 84 c0 74 04 48 8d 5f f0 <48> 8b 93 18 02 00 00 48 8d 83 18 02 00 00 31 c9 48 39 c2 75 10 48
+[    5.436334] RSP: 0018:ffffa5a0c0033b98 EFLAGS: 00010246
+[    5.441558] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffa5a0c0033c24
+[    5.448687] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8a90c02a5420
+[    5.455816] RBP: ffffa5a0c0033c24 R08: ffffa5a0c0033c28 R09: fffffffffffcc098
+[    5.462945] R10: ffffffff96054f10 R11: fefefefefefefeff R12: ffff8a90c0ba6410
+[    5.470074] R13: ffffa5a0c0033c28 R14: ffffffff95da5d86 R15: 0000000000000000
+[    5.477203] FS:  0000000000000000(0000) GS:ffff8a90eae00000(0000) knlGS:0000000000000000
+[    5.485286] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    5.491026] CR2: 0000000000000218 CR3: 00000000b2a2e000 CR4: 00000000003506f0
+[    5.498155] Kernel panic - not syncing: Fatal exception
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
----
- .../gpu/drm/nouveau/include/nvkm/subdev/gsp.h |  4 +-
- .../gpu/drm/nouveau/nvkm/subdev/gsp/r535.c    | 71 ++++++++++++-------
- 2 files changed, 47 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/include/nvkm/subdev/gsp.h b/drivers/gpu/drm/nouveau/include/nvkm/subdev/gsp.h
-index 6f5d376d8fcc1..a11d16a16c3b2 100644
---- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/gsp.h
-+++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/gsp.h
-@@ -15,7 +15,9 @@ struct nvkm_gsp_mem {
- };
- 
- struct nvkm_gsp_radix3 {
--	struct nvkm_gsp_mem mem[3];
-+	struct nvkm_gsp_mem lvl0;
-+	struct nvkm_gsp_mem lvl1;
-+	struct sg_table lvl2;
- };
- 
- int nvkm_gsp_sg(struct nvkm_device *, u64 size, struct sg_table *);
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-index 9858c1438aa7f..2bf9077d37118 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-@@ -1624,7 +1624,7 @@ r535_gsp_wpr_meta_init(struct nvkm_gsp *gsp)
- 	meta->magic = GSP_FW_WPR_META_MAGIC;
- 	meta->revision = GSP_FW_WPR_META_REVISION;
- 
--	meta->sysmemAddrOfRadix3Elf = gsp->radix3.mem[0].addr;
-+	meta->sysmemAddrOfRadix3Elf = gsp->radix3.lvl0.addr;
- 	meta->sizeOfRadix3Elf = gsp->fb.wpr2.elf.size;
- 
- 	meta->sysmemAddrOfBootloader = gsp->boot.fw.addr;
-@@ -1919,8 +1919,9 @@ nvkm_gsp_sg(struct nvkm_device *device, u64 size, struct sg_table *sgt)
- static void
- nvkm_gsp_radix3_dtor(struct nvkm_gsp *gsp, struct nvkm_gsp_radix3 *rx3)
- {
--	for (int i = ARRAY_SIZE(rx3->mem) - 1; i >= 0; i--)
--		nvkm_gsp_mem_dtor(gsp, &rx3->mem[i]);
-+	nvkm_gsp_sg_free(gsp->subdev.device, &rx3->lvl2);
-+	nvkm_gsp_mem_dtor(gsp, &rx3->lvl1);
-+	nvkm_gsp_mem_dtor(gsp, &rx3->lvl0);
- }
- 
- /**
-@@ -1960,36 +1961,52 @@ static int
- nvkm_gsp_radix3_sg(struct nvkm_gsp *gsp, struct sg_table *sgt, u64 size,
- 		   struct nvkm_gsp_radix3 *rx3)
- {
--	u64 addr;
-+	struct sg_dma_page_iter sg_dma_iter;
-+	struct scatterlist *sg;
-+	size_t bufsize;
-+	u64 *pte;
-+	int ret, i, page_idx = 0;
- 
--	for (int i = ARRAY_SIZE(rx3->mem) - 1; i >= 0; i--) {
--		u64 *ptes;
--		size_t bufsize;
--		int ret, idx;
--
--		bufsize = ALIGN((size / GSP_PAGE_SIZE) * sizeof(u64), GSP_PAGE_SIZE);
--		ret = nvkm_gsp_mem_ctor(gsp, bufsize, &rx3->mem[i]);
--		if (ret)
--			return ret;
-+	ret = nvkm_gsp_mem_ctor(gsp, GSP_PAGE_SIZE, &rx3->lvl0);
-+	if (ret)
-+		return ret;
- 
--		ptes = rx3->mem[i].data;
--		if (i == 2) {
--			struct scatterlist *sgl;
-+	ret = nvkm_gsp_mem_ctor(gsp, GSP_PAGE_SIZE, &rx3->lvl1);
-+	if (ret)
-+		goto lvl1_fail;
- 
--			for_each_sgtable_dma_sg(sgt, sgl, idx) {
--				for (int j = 0; j < sg_dma_len(sgl) / GSP_PAGE_SIZE; j++)
--					*ptes++ = sg_dma_address(sgl) + (GSP_PAGE_SIZE * j);
--			}
--		} else {
--			for (int j = 0; j < size / GSP_PAGE_SIZE; j++)
--				*ptes++ = addr + GSP_PAGE_SIZE * j;
-+	// Allocate level 2
-+	bufsize = ALIGN((size / GSP_PAGE_SIZE) * sizeof(u64), GSP_PAGE_SIZE);
-+	ret = nvkm_gsp_sg(gsp->subdev.device, bufsize, &rx3->lvl2);
-+	if (ret)
-+		goto lvl2_fail;
-+
-+	// Write the bus address of level 1 to level 0
-+	pte = rx3->lvl0.data;
-+	*pte = rx3->lvl1.addr;
-+
-+	// Write the bus address of each page in level 2 to level 1
-+	pte = rx3->lvl1.data;
-+	for_each_sgtable_dma_page(&rx3->lvl2, &sg_dma_iter, 0)
-+		*pte++ = sg_page_iter_dma_address(&sg_dma_iter);
-+
-+	// Finally, write the bus address of each page in sgt to level 2
-+	for_each_sgtable_sg(&rx3->lvl2, sg, i) {
-+		pte = sg_virt(sg);
-+		for_each_sgtable_dma_page(sgt, &sg_dma_iter, page_idx) {
-+			*pte++ = sg_page_iter_dma_address(&sg_dma_iter);
-+			page_idx++;
- 		}
-+	}
- 
--		size = rx3->mem[i].size;
--		addr = rx3->mem[i].addr;
-+	if (ret) {
-+lvl2_fail:
-+		nvkm_gsp_mem_dtor(gsp, &rx3->lvl1);
-+lvl1_fail:
-+		nvkm_gsp_mem_dtor(gsp, &rx3->lvl0);
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- int
-@@ -2021,7 +2038,7 @@ r535_gsp_fini(struct nvkm_gsp *gsp, bool suspend)
- 		sr = gsp->sr.meta.data;
- 		sr->magic = GSP_FW_SR_META_MAGIC;
- 		sr->revision = GSP_FW_SR_META_REVISION;
--		sr->sysmemAddrOfSuspendResumeData = gsp->sr.radix3.mem[0].addr;
-+		sr->sysmemAddrOfSuspendResumeData = gsp->sr.radix3.lvl0.addr;
- 		sr->sizeOfSuspendResumeData = len;
- 
- 		mbox0 = lower_32_bits(gsp->sr.meta.addr);
--- 
-2.44.0
+The issue is still present on next-20240426.
+
+Sending this report in order to track the regression while a fix is
+identified.
+
+Best,
+
+Laura
+
+[1] https://pastebin.com/raw/C8ZVg4s2 
+[2] https://pastebin.com/raw/iej1hNWw
+
+#regzbot introduced: next-20240416..next-20240418
 
