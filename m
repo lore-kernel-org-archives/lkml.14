@@ -1,48 +1,48 @@
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC40146A90;
-	Fri, 26 Apr 2024 13:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FBF147C95;
+	Fri, 26 Apr 2024 13:00:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714136456; cv=none; b=p9SoZuJxy3YveGnQKUp90G8fWCCS6egTLXhL6OrmUTiCUo5IrxTiG/qojeZKjbcXURxwmXBh+C5wJ5ajjF5TD/q6vCz7IMbk+4Wbglr+ES9dfoHfhb9f+aU3inF/Jr2CD4lNNvRXAPZWtiRs6kNUBLjmoE1lgYCnxw1J3hIcgCE=
+	t=1714136461; cv=none; b=uT9+lHd8416PcvF3jfetInqUL0VW+0yThYOdoqxY8fU3qLqT4SoZJ6vobGgytKU1C7va1UHRwXO+UHslc7DZD+cF21YELIQSvCeeJiwt0JR4Cc72QdqMYE7gYWnBU9Wd1WzRYImOKHoRN8FiSUGQEwVHOcojVjpWjl1AUbnejbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714136456; c=relaxed/simple;
-	bh=JJn4j2sPWA2KJhvaonjCd4MXhJ+Qkrb9cH+dDZasf/0=;
+	s=arc-20240116; t=1714136461; c=relaxed/simple;
+	bh=gdRqxITpkFjYrUJvkxFmXlxSWb2+T05+5s5UutHdLqA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rvOAsL2NV3fWUPvKi0yeNOGEa+W+bUaSK00K6u4higoELvsv+Lux3PPz0zUFD1G7++cPpBtp0sxguWf1Tzb33FtnNJoAYg46TLGCFSdn0JsqaRcUCwBTot0fMOPYz8+A5JyJO4uJJIsIuiafvry52HG7T5Ro7Aay29NT+SoDWv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=5DxkakyA; arc=none smtp.client-ip=185.132.182.106
+	 MIME-Version:Content-Type; b=czb1EOJW0svXd0JVroET5k4eX7dHYLoV4PinScZmgvoHVsLXd06/2XnNeuyc7xbytrXnFH3/WxkwF/gl0GwXE+BRu5UmzFNUpGfqFEkyK89KDtbLmO+G2zoUTmMTR3dVeiVQgjVhdjYQDSc6By/NBPvNTNtx/fm5hGXzZc6VYk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Bq9Hqf5l; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="5DxkakyA"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43Q9YPXr012219;
-	Fri, 26 Apr 2024 15:00:34 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Bq9Hqf5l"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43Q97Sfw018300;
+	Fri, 26 Apr 2024 15:00:38 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=uuBIq6cHzNUvhFpuSfaSyR7YS5Ocw91Cd4jDm9etaIM=; b=5D
-	xkakyAdNPlcR8YNWS2TYpWw/B0himF5P5h7MQzR0iq6IXyoCR83PqSziABJV8PPV
-	2mvBpQHAK5nDjpDhimdcMG+LbGMgiN7ZGct3NNmxU23CWKhJHI091Oafv+MnxaAD
-	8XLYCRYr8eowHyuitgXXbZy2iOB3LxDvj2V/w+tO8AUCPBsc/ZfLXJ4YkY/EAUrd
-	N6LuVlmEURM0pyV4aYBBJhen5ELdORO2vorkjaPNoEcl3MIV/by/5at8VE1GuPxO
-	g3xxpUkWxq5XCo1FvZiZYhbbljTeXSmL5I5Q5AaRuaeA6qSI8KP++6zZReYnW22l
-	V6MtTb9TsBr8YIWBQArw==
+	selector1; bh=zdOScCWi16Umq4Ie6jjJ/nimxxbncgqkcY22u+W2FUA=; b=Bq
+	9Hqf5lTrFHuKKNiLdnHGI90mR91w9Rejo0skRIKnZ+1g+78r3x2a1h40NrQCR7+Q
+	vem/pahGNV6URR6zCLtuNQJKbQQgzzNZzfWSkPvtmy533zvTWJgMGfvVtd57PIrF
+	aNg9OFwiA39KheImehOBnR6W5oo3PpYzUtjDNANZlZfAGJSGyn734ntlELLG16mX
+	KGn+50w259I8gAUfaYDpogS480Y+n5AKQuoYBfNoYOT/7lqlRKJHlPuPqIvse3RN
+	XSlpufGDJJXWU5xA9uBAnjtnfWHLlv2X26xPoZBoKYMmu5kPqJctvrZQKtypuL2F
+	wA3zoY+B4hcU9bi0+N7A==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xmq9108g9-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xm4cntnun-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 15:00:34 +0200 (MEST)
+	Fri, 26 Apr 2024 15:00:38 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2F75740044;
-	Fri, 26 Apr 2024 15:00:30 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EB2CD40049;
+	Fri, 26 Apr 2024 15:00:33 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4A666222CB0;
-	Fri, 26 Apr 2024 14:59:17 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 16675222C9E;
+	Fri, 26 Apr 2024 14:59:21 +0200 (CEST)
 Received: from localhost (10.252.17.191) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Apr
- 2024 14:59:16 +0200
+ 2024 14:59:18 +0200
 From: Christophe Roullier <christophe.roullier@foss.st.com>
 To: "David S . Miller" <davem@davemloft.net>,
         Eric Dumazet
@@ -65,9 +65,9 @@ To: "David S . Miller" <davem@davemloft.net>,
 CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 05/11] net: stmmac: dwmac-stm32: update config management for phy wo cristal
-Date: Fri, 26 Apr 2024 14:57:01 +0200
-Message-ID: <20240426125707.585269-6-christophe.roullier@foss.st.com>
+Subject: [PATCH v2 07/11] net: stmmac: dwmac-stm32: support the phy-supply regulator binding
+Date: Fri, 26 Apr 2024 14:57:03 +0200
+Message-ID: <20240426125707.585269-8-christophe.roullier@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240426125707.585269-1-christophe.roullier@foss.st.com>
 References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
@@ -85,99 +85,129 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-04-26_12,2024-04-26_02,2023-05-22_02
 
-Some cleaning because some Ethernet PHY configs do not need to add
-st,ext-phyclk property.
-Change print info message "No phy clock provided" only when debug.
+Configure the phy regulator if defined by the "phy-supply" DT phandle.
 
 Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 27 ++++++++++---------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 51 ++++++++++++++++++-
+ 1 file changed, 50 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index 7529a8d15492..e648c4e790a7 100644
+index 5d8f4eac4bc0..964173d08026 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -55,17 +55,17 @@
-  *|         |        |      25MHz    |        50MHz       |                  |
-  * ---------------------------------------------------------------------------
-  *|  MII    |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
-- *|         |        | st,ext-phyclk |                    |		     |
-+ *|         |        |	             |                    |		     |
-  * ---------------------------------------------------------------------------
-  *|  GMII   |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
-- *|         |        | st,ext-phyclk |                    |		     |
-+ *|         |        |               |                    |		     |
-  * ---------------------------------------------------------------------------
-  *| RGMII   |	 -   |     eth-ck    |	      n/a	  |      eth-ck      |
-- *|         |        | st,ext-phyclk |                    | st,eth-clk-sel or|
-+ *|         |        |               |                    | st,eth-clk-sel or|
-  *|         |        |               |                    | st,ext-phyclk    |
-  * ---------------------------------------------------------------------------
-  *| RMII    |	 -   |     eth-ck    |	    eth-ck        |	  n/a        |
-- *|         |        | st,ext-phyclk | st,eth-ref-clk-sel |		     |
-+ *|         |        |               | st,eth-ref-clk-sel |		     |
-  *|         |        |               | or st,ext-phyclk   |		     |
-  * ---------------------------------------------------------------------------
-  *
-@@ -174,23 +174,22 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
- 	dwmac->enable_eth_ck = false;
- 	switch (plat_dat->mac_interface) {
- 	case PHY_INTERFACE_MODE_MII:
--		if (clk_rate == ETH_CK_F_25M && dwmac->ext_phyclk)
-+		if (clk_rate == ETH_CK_F_25M)
- 			dwmac->enable_eth_ck = true;
- 		val = dwmac->ops->pmcsetr.eth1_selmii;
- 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
- 		break;
- 	case PHY_INTERFACE_MODE_GMII:
- 		val = SYSCFG_PMCR_ETH_SEL_GMII;
--		if (clk_rate == ETH_CK_F_25M &&
--		    (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
-+		if (clk_rate == ETH_CK_F_25M)
- 			dwmac->enable_eth_ck = true;
--			val |= dwmac->ops->pmcsetr.eth1_clk_sel;
--		}
- 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
- 		break;
- 	case PHY_INTERFACE_MODE_RMII:
- 		val = dwmac->ops->pmcsetr.eth1_sel_rmii | dwmac->ops->pmcsetr.eth2_sel_rmii;
--		if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_50M) &&
-+		if (clk_rate == ETH_CK_F_25M)
-+			dwmac->enable_eth_ck = true;
-+		if (clk_rate == ETH_CK_F_50M &&
- 		    (dwmac->eth_ref_clk_sel_reg || dwmac->ext_phyclk)) {
- 			dwmac->enable_eth_ck = true;
- 			val |= dwmac->ops->pmcsetr.eth1_ref_clk_sel;
-@@ -203,7 +202,9 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
- 	case PHY_INTERFACE_MODE_RGMII_RXID:
- 	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		val = dwmac->ops->pmcsetr.eth1_sel_rgmii | dwmac->ops->pmcsetr.eth2_sel_rgmii;
--		if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_125M) &&
-+		if (clk_rate == ETH_CK_F_25M)
-+			dwmac->enable_eth_ck = true;
-+		if (clk_rate == ETH_CK_F_125M &&
- 		    (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
- 			dwmac->enable_eth_ck = true;
- 			val |= dwmac->ops->pmcsetr.eth1_clk_sel;
-@@ -219,7 +220,7 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
- 	}
+@@ -14,6 +14,7 @@
+ #include <linux/of_net.h>
+ #include <linux/phy.h>
+ #include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/pm_wakeirq.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+@@ -84,6 +85,7 @@ struct stm32_dwmac {
+ 	u32 mode_reg;		 /* MAC glue-logic mode register */
+ 	u32 mode_mask;
+ 	struct regmap *regmap;
++	struct regulator *regulator;
+ 	u32 speed;
+ 	const struct stm32_ops *ops;
+ 	struct device *dev;
+@@ -305,6 +307,16 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
+ 	if (err)
+ 		pr_debug("Warning sysconfig register mask not set\n");
  
- 	/* Need to update PMCCLRR (clear register) */
--	regmap_write(dwmac->regmap, reg + dwmac->ops->syscfg_clr_off,
-+	regmap_write(dwmac->regmap, dwmac->ops->syscfg_clr_off,
- 		     dwmac->mode_mask);
++	dwmac->regulator = devm_regulator_get_optional(dev, "phy");
++	if (IS_ERR(dwmac->regulator)) {
++		if (PTR_ERR(dwmac->regulator) == -EPROBE_DEFER) {
++			dev_dbg(dev, "phy regulator is not available yet, deferred probing\n");
++			return -EPROBE_DEFER;
++		}
++		dev_dbg(dev, "no regulator found\n");
++		dwmac->regulator = NULL;
++	}
++
+ 	return 0;
+ }
  
- 	/* Update PMCSETR (set register) */
-@@ -328,7 +329,7 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
- 	/*  Get ETH_CLK clocks */
- 	dwmac->clk_eth_ck = devm_clk_get(dev, "eth-ck");
- 	if (IS_ERR(dwmac->clk_eth_ck)) {
--		dev_info(dev, "No phy clock provided...\n");
-+		dev_dbg(dev, "No phy clock provided...\n");
- 		dwmac->clk_eth_ck = NULL;
- 	}
+@@ -363,6 +375,27 @@ static int stm32_dwmac_wake_init(struct device *dev,
+ 	return 0;
+ }
  
++static int phy_power_on(struct stm32_dwmac *bsp_priv, bool enable)
++{
++	int ret;
++	struct device *dev = bsp_priv->dev;
++
++	if (!bsp_priv->regulator)
++		return 0;
++
++	if (enable) {
++		ret = regulator_enable(bsp_priv->regulator);
++		if (ret)
++			dev_err(dev, "fail to enable phy-supply\n");
++	} else {
++		ret = regulator_disable(bsp_priv->regulator);
++		if (ret)
++			dev_err(dev, "fail to disable phy-supply\n");
++	}
++
++	return ret;
++}
++
+ static int stm32_dwmac_probe(struct platform_device *pdev)
+ {
+ 	struct plat_stmmacenet_data *plat_dat;
+@@ -410,12 +443,18 @@ static int stm32_dwmac_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_wake_init_disable;
+ 
+-	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
++	ret = phy_power_on(plat_dat->bsp_priv, true);
+ 	if (ret)
+ 		goto err_clk_disable;
+ 
++	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
++	if (ret)
++		goto err_gmac_powerdown;
++
+ 	return 0;
+ 
++err_gmac_powerdown:
++	phy_power_on(plat_dat->bsp_priv, false);
+ err_clk_disable:
+ 	stm32_dwmac_clk_disable(dwmac, false);
+ err_wake_init_disable:
+@@ -436,6 +475,8 @@ static void stm32_dwmac_remove(struct platform_device *pdev)
+ 
+ 	dev_pm_clear_wake_irq(&pdev->dev);
+ 	device_init_wakeup(&pdev->dev, false);
++
++	phy_power_on(priv->plat->bsp_priv, false);
+ }
+ 
+ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
+@@ -466,6 +507,10 @@ static int stm32_dwmac_suspend(struct device *dev)
+ 	if (dwmac->ops->suspend)
+ 		ret = dwmac->ops->suspend(dwmac);
+ 
++	/* Keep the PHY up if we use Wake-on-Lan. */
++	if (!device_may_wakeup(dwmac->dev))
++		phy_power_on(dwmac, false);
++
+ 	return ret;
+ }
+ 
+@@ -479,6 +524,10 @@ static int stm32_dwmac_resume(struct device *dev)
+ 	if (dwmac->ops->resume)
+ 		dwmac->ops->resume(dwmac);
+ 
++	/* The PHY was up for Wake-on-Lan. */
++	if (!device_may_wakeup(dwmac->dev))
++		phy_power_on(dwmac, true);
++
+ 	ret = stm32_dwmac_init(priv->plat, true);
+ 	if (ret)
+ 		return ret;
 -- 
 2.25.1
 
