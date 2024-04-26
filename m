@@ -1,93 +1,56 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8634B13F45D;
-	Fri, 26 Apr 2024 09:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC61113DB90;
+	Fri, 26 Apr 2024 09:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714123930; cv=none; b=BwswTP3G8o/H0kmNlx7F6kb6gxZha1gPb8H68ZRJs4XIMqPmRRUMC6w/lkDmPO9M7nTKhxo8Xke42pK6lrTlMhpLP6jte6kEsDazOq2YxAg9A4T/6NC9GKtlN/hQkk6fnpvSfbv5X5npCk1PblpMyhPOVstHm2IK856C3speCKk=
+	t=1714123969; cv=none; b=e31F8v32WSyk4iROFDBCDK+hvJ2c+d0agORYoQ95IEMp8m12gaTifTKgBDC0k98rAFqgRq2Xd/0vsciK83etjIBZNUXe8kxwd4T62Y14loesVKJlL051lu6Zx0AdifFaXxChpWlzET1Yt8v4M43WRAb8X7hoyW7/lzLgEFWqads=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714123930; c=relaxed/simple;
-	bh=lrNuWaHK5BdyB8pVP8kuJCm68c1uOozItiB7SfFwPIg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N0hLe9uZCPOZCJ2cNcknzQKmD6DBgFjpPSJfK/JcOUmvzlWx1Z0gL9/Ljt/la5Kc3gGbpb/bXYRohggcjkvrH5npheT9qsFb7C2HBARCcUmal9PhAIMi6G3JRz7G2q2jO4uwnZYSmLubqvydyYtM8y97/04JR3s20mE5/5Zasd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a55ab922260so262259266b.3;
-        Fri, 26 Apr 2024 02:32:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714123927; x=1714728727;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KB47YEskg0YsuvufIWkNOdLy1BfCNPRDkJhRY5gUXJc=;
-        b=iPOnWxxuSlPgCS/PaJSkO8d6TJCc2emkhnJ3PfRlMJZfdmldfbjkIvoktQnT72lONP
-         7cR3DV3wDXuGIczdYxkjallA+u4xPSJsdDtuf7XQ5kMRYXeJmN6RLwH1p1WiWcjufD5d
-         uq9mpRtvi7ce7WY2fHDqo34CdkRmebDT0a2wF7dWxoA1xS4CFquEnWE9heqac7ncypbe
-         84wmudoyhksFQ++tXSDpOIgB2iOkGTZGKfcKE6Y43Oft0xFysAtKqfgni9QDcnBR97nR
-         DirHrj7R99hb0L8wAru+YVlMoU9+5jPs86HrN7tDUVF4ZSFQSirnBrhOk/DdGGYxs0a9
-         qUkw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9x43ccFexcW/+UoDTK5DrJYvcP1QftmtpjXosAIQyZjUXyueHHGj/9unduu2WFeOcyZlmZstCTEgXlX4t5Ns7xSaIs9SKrObxrfes
-X-Gm-Message-State: AOJu0YzaFRLWs5QbiuoOgdZd5m6F3udSbYiZKFyQkqZlghvCDhXzKQyv
-	lc6QUfgpsG38fidYCf5GPmgionG2NakUIGDI1wCJej9ix2M+Vidr
-X-Google-Smtp-Source: AGHT+IFRY4i8ripmmRgmZcMA4dCbq+M0SBXKAURjKWqCOr/9ZZ0ocBXIuwONrHVrNX7KKn7K4WqV8A==
-X-Received: by 2002:a17:906:c12:b0:a58:9e89:7d91 with SMTP id s18-20020a1709060c1200b00a589e897d91mr1406081ejf.42.1714123926789;
-        Fri, 26 Apr 2024 02:32:06 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-009.fbsv.net. [2a03:2880:30ff:9::face:b00c])
-        by smtp.gmail.com with ESMTPSA id z12-20020a170906270c00b00a55895c7f50sm8897398ejc.151.2024.04.26.02.32.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 02:32:06 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: kvalo@kernel.org,
-	Igor Mitsyanko <imitsyanko@quantenna.com>,
-	Sergey Matyukevich <geomatsi@gmail.com>
-Cc: linux-wireless@vger.kernel.org,
-	kuba@kernel.org,
-	Johannes Berg <johannes.berg@intel.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH wireless 2/2] wifi: qtnfmac: Remove generic .ndo_get_stats64
-Date: Fri, 26 Apr 2024 02:31:49 -0700
-Message-ID: <20240426093156.2002258-2-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240426093156.2002258-1-leitao@debian.org>
-References: <20240426093156.2002258-1-leitao@debian.org>
+	s=arc-20240116; t=1714123969; c=relaxed/simple;
+	bh=R6A1kwxDS7Gj46FdqR10ssFG+tuR5RWyKtng5Ej0Ors=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pq+Wz8Y0EQLF7sQ1mTs3h9Arave3z4U+ElHWB/jWntOF1yemJOVtL/xIQFyIHvXj2oZfJ6Bmyw+WTycVo2HzuK++uleqgmFeE4bh7gMsIaCQZdVMD89S9T81ppBEgu3EJv5+S8qzu0uoNPimI62a+o04XB4vN0iMWlpdklUrG1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1s0Hwe-006eQ0-O7; Fri, 26 Apr 2024 17:32:41 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Apr 2024 17:32:58 +0800
+Date: Fri, 26 Apr 2024 17:32:58 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Akhil R <akhilrajeev@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-crypto@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 1/2] crypto: tegra - Fix some error codes
+Message-ID: <Zit0yiDp1ECQODNA@gondor.apana.org.au>
+References: <ec425896-49eb-4099-9898-ac9509f6ab8f@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec425896-49eb-4099-9898-ac9509f6ab8f@moroto.mountain>
 
-Commit 3e2f544dd8a33 ("net: get stats64 if device if driver is
-configured") moved the callback to dev_get_tstats64() to net core, so,
-unless the driver is doing some custom stats collection, it does not
-need to set .ndo_get_stats64.
+On Wed, Apr 17, 2024 at 09:12:32PM +0300, Dan Carpenter wrote:
+> Return negative -ENOMEM, instead of positive ENOMEM.
+> 
+> Fixes: 0880bb3b00c8 ("crypto: tegra - Add Tegra Security Engine driver")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/crypto/tegra/tegra-se-aes.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Since this driver is now relying in NETDEV_PCPU_STAT_TSTATS, then, it
-doesn't need to set the dev_get_tstats64() generic .ndo_get_stats64
-function pointer.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/wireless/quantenna/qtnfmac/core.c | 1 -
- 1 file changed, 1 deletion(-)
-
-PS: This is compile-tested only due to lack of hardware.
-
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/core.c b/drivers/net/wireless/quantenna/qtnfmac/core.c
-index 0aa4b1d14809..825b05dd3271 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/core.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/core.c
-@@ -202,7 +202,6 @@ const struct net_device_ops qtnf_netdev_ops = {
- 	.ndo_stop = qtnf_netdev_close,
- 	.ndo_start_xmit = qtnf_netdev_hard_start_xmit,
- 	.ndo_tx_timeout = qtnf_netdev_tx_timeout,
--	.ndo_get_stats64 = dev_get_tstats64,
- 	.ndo_set_mac_address = qtnf_netdev_set_mac_address,
- 	.ndo_get_port_parent_id = qtnf_netdev_port_parent_id,
- };
+Patch applied.  Thanks.
 -- 
-2.43.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
