@@ -1,39 +1,39 @@
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDED149C4B;
-	Fri, 26 Apr 2024 16:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DE714AD26;
+	Fri, 26 Apr 2024 16:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714147254; cv=none; b=Rr9h6IG+xVHopPOnI4+AzDdeE5mbAPWHiZrzl9Xm5t/4zP5jSnjngr3d9MZXnVzzajFKd0cnCkbOKLG7FxcF7jIvN1setzSjevmsgMW8+z1iBam7ASV1itJo4VNR7HZxOz9jIalLAznJP7AUphRtFxTiNZqDH5XCIWoJrGzjnJg=
+	t=1714147256; cv=none; b=ezGVwY4X0u+AsZS8vgIPVpiXaxypaCdv4A9N8pVXxiubYT6J208K9p1gqWSDf66oQtfjDUsjbENs5hGNpg239kR212dWIUf8tJNQadDRJUlnzU3w3bqH/ibbWAe1HVTsnV0VqlZVZaXlPses9gqR88yDRSh+TjSrhyAJptddONM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714147254; c=relaxed/simple;
-	bh=PFmO1GjsH3ZnbXjVv4QA0fj5fCj+YtjfQKAlIFclL5I=;
+	s=arc-20240116; t=1714147256; c=relaxed/simple;
+	bh=e/e/CkS2lyAv5dcyu8k8+s7I4g7ycYx06SZTbh0t75k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qQrpT6iHRUqRB2+w/GVskFSEjsgkz2UWzYQJy5sc/zi+3H92xo8/MjsfD3fuGRK82nuzLTEdc2BBblv1aZ/jWbAX54vj4TC8Astudx5dkBZfjuT3/dAGFOruChcjo5vztMTV7xGn6D4s4hfnY2CWBVc0Smj5NurP10Rs5cdHbEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=uGlfKuSL; arc=none smtp.client-ip=85.214.62.61
+	 In-Reply-To:Content-Type; b=dt5LptFg8rk9xenoiocMy1GVrIsJ1dYPjVaJFPO0nl+VdXUH19d8UoD9rSbDz/UXJpqbu1vYs/1RI2AhXnQlWdC0kV2Fxdnavew6Dk/bj6S5zsX1QXhtbxBqqAnE68ZRwG0plNy9S0hiXvC0QJOlVZpwy7fKkFAqQ5isUyd/5Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=OlxJiBA4; arc=none smtp.client-ip=85.214.62.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="uGlfKuSL"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="OlxJiBA4"
 Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id D36B588221;
-	Fri, 26 Apr 2024 18:00:44 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id F101F885A2;
+	Fri, 26 Apr 2024 18:00:51 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1714147246;
-	bh=MbBx9Y1hMfZdkFnfEVCvE/hOTF3f77wjPkbrDnF6OaA=;
+	s=phobos-20191101; t=1714147253;
+	bh=KntFSRKKJlXDI5nElDgSk47qflI7G4WWVDhKzJ36saw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uGlfKuSLMpDsGs/aW46lZfoPSnPPN9ijCRIEy+VBNcNpuD7hsVmf+/gAHVuRx3iRK
-	 9xnLuq/ijpWbrlfmnokZ8WGNLBB9GSs5yt2QeFwfgW9Dl7OV7+LKZBTWc6XVETiif9
-	 tHm5L1onuijzcxUvykagrn6i4WI03Kt/IH/2w29fYy7GzTkk5QW2vgHhxjEJ2XMiAq
-	 rZsv9lFU58dqkgXFBrkfOSpT2cpoz8JY6am80tgsXcjrXWF6z5VSNGR2BevR2eTZON
-	 Ub45GvVtpGoia+tmRatERcxGYTs2SOeRMy5K+npgubrMfStbabmZ4159bRWekKpyBO
-	 zE4EYNejYy7+Q==
-Message-ID: <2ffaad98-8b43-444e-a4a0-985bee5e6a04@denx.de>
-Date: Fri, 26 Apr 2024 16:46:55 +0200
+	b=OlxJiBA4JqiSkPep5+//Fab0HwkAzF4JpRmBY7MmnztFaBs1CPhfiiJg0ggs186tS
+	 FUPEmouTIVHsld25mVu1cdwPn6C0rqtoPLMk+EYPLrP4ynWAXJuYgAsk7V+AS8/p/O
+	 lQzAOvhn6cmgSjN1NDjb3KFLd27GSD7fp54cDaBx7GfSLF3d7/W5Bthlr66buqjQKX
+	 AtWFuDl14vhYxmjFdnSsEa/4q0BwZp/MfnRAlMtMwF0Hjm35xnePRM2FnAKfRiUvnz
+	 SLFwOy2aphZnlwRhiXWW5PtwXL/WXKdqAWyqe/bx5cR8CBugtQGiJb3WDHRm3kGsYN
+	 FZuYqDTShKRjA==
+Message-ID: <5b8b52cf-bd43-40c0-962a-c6936637b7de@denx.de>
+Date: Fri, 26 Apr 2024 17:40:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +41,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/11] dt-bindings: net: add STM32MP13 compatible in
- documentation for stm32
+Subject: Re: [PATCH v2 06/11] net: stmmac: dwmac-stm32: clean the way to
+ manage wol irqwake
 To: Christophe Roullier <christophe.roullier@foss.st.com>,
  "David S . Miller" <davem@davemloft.net>, Eric Dumazet
  <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
@@ -58,30 +58,26 @@ Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
- <20240426125707.585269-2-christophe.roullier@foss.st.com>
+ <20240426125707.585269-7-christophe.roullier@foss.st.com>
 Content-Language: en-US
 From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240426125707.585269-2-christophe.roullier@foss.st.com>
+In-Reply-To: <20240426125707.585269-7-christophe.roullier@foss.st.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
 
-On 4/26/24 2:56 PM, Christophe Roullier wrote:
-> New STM32 SOC
+On 4/26/24 2:57 PM, Christophe Roullier wrote:
+> On STM32 platforms it is no longer needed to use a dedicated wakeup to
+> wake up system from CStop.
 
-Which New STM32 SoC is that ? Please add type/model/...
+This really needs more clarification.
 
-> have 2 GMACs instances.
-> GMAC IP version is SNPS 4.20.
+Why was the code needed before ? Maybe because it was used by some of 
+the older STM32F4/F7/H7 SoCs ? Is it still needed by those SoCs ? Will 
+this patch break those older SoCs ?
 
-The commit message should describe what does this patch do, and why does 
-it do so, something like:
-
-"
-Document support for STM32MP13xx. This SoC contains two instances of 
-DWMAC 4.20 IP. Because this is <somehow special>, document <some 
-difference>.
-"
+> This patch removes the dedicated wake up usage
+> and clean the way to register the wake up irq.
 
 [...]
