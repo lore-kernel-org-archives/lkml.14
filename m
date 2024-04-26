@@ -1,179 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CF213C9AA
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775BD282EA
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714123126; cv=none; b=Pq4AhUbR7ylr/yp8HNBErRlSbaLjoZUedzwiE3flw2UIZ9kgRJ3JNqrSIQOdOiqP/GFqRlMBDvvllfI4E6OqMQU3bj2KLblFE4D/AlkOQbJUePtfFgTvFHZQNi831h/zk77ABLpRTgx0prU4UVsv7zSGwtYUviU/VOH8EeUFOi0=
+	t=1714123233; cv=none; b=CpX4Lw2DRCsReVnKsxEzHdIf6JJ+HXA6G/2smnKh7ngc7m9S1dj4pH6I+MP4kBqoDdrMbTs7Mcw9N8RrSdQE/G5RYfG+kzWnkKNUkkZCKa3YG+9mN08Jzkff4I8+mpKa1bUZZTarvCHKw9S1EPADeGxq/FQy3EPYVFzrDlpyIVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714123126; c=relaxed/simple;
-	bh=7D3tJqcQV8LkgrErNYvrT2JiTabNaxY0YMn3aq3U2TI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aRoYIYEYNMx/kR9ftQpKe1fRGby9x0pqk/8X+xluuyDI5c0mILI/g8M+Fzj6I7u706A1O6ILSDu9sJGJmFuw90qMsH6/PtR6OoMG46KIBAomJrV1IsDmpbjYBN7khih2t8mFGwu4nvVJ7NfSccJXSevpcyGhbJ4cINThJK9MjYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ggNwOoTP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714123233; c=relaxed/simple;
+	bh=UXH7vkMVz9Qr8wjk2cH7wap4outoAOPM4GoB7kdUvV0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cEd2rUkkYNY7gqCik6gAJdjUJWAUrItHwd80tCMlDr2qV2n5jTQEhygFq+HnszSC6iiFKXAcbHfOGHW634CJPlj5SIeRdMujOQuEEagmLEP68pKJCqckP8a06Xy/12W3Va3xAOE78RePqGzAibtc9Pc8lC0QYqntTwh7nUZ3boY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K6+f6lgr; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ggNwOoTP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714123124;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G1NbTRHbQ7U0GF+15RrhvfyGaj1mUIGy4Pli01lUXKI=;
-	b=ggNwOoTP9ArKA0dUTvRHoUmFSj9sWrRPqq9UYgdY2bhYG7kwACl8s/i/MDxAizoIgkE+3O
-	ov7rbNdb9d/2ITj2Vj7i/Wgv8z7O9dkXshPL5aqBwz8pkDE5zztkn7nXjaVAoJ9r/R8L/H
-	3+/GkSsag3UHXNnln6nHHi9LkoPyGzA=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-47-y6nWMdmdO_mTLN-_KrxKjQ-1; Fri, 26 Apr 2024 05:18:42 -0400
-X-MC-Unique: y6nWMdmdO_mTLN-_KrxKjQ-1
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6ecea48eb37so2213690b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 02:18:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6+f6lgr"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-234f5e54446so894401fac.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 02:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714123230; x=1714728030; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XEGoLxUkWwDTn+Odyi6lg3eK/cudTzIim330VH70exg=;
+        b=K6+f6lgraaQQnOb/BxI1PJPXCJpn09OoBWIPOmQSbxjEIk91UAl8mSfB0CKokRvP0h
+         7NAnPYNB8GW2W93V8xckklwJkL1J9UvoAdu3MBs5utG3BVTTnWo3t+KCzL40o6eqy5zz
+         RyLgNV+FkxZFPwR1ZxfG74iDPzk2G1R/oDW7qtcpRvaQsFh8ar/g2BqJnr6wkY8LysVt
+         APD7yMmKsvv+H6UUrqUWevOh5i5E4q1AZT1CFQ7xUNFOWpGD0xFJlmer62fQjVuiewrP
+         nSALXT5aKvXLzYdKqCu/P4nE0Mfjw6HqJEwUS1u69VyMUAnw3AsV2sBpjyORuuGX1+pN
+         o4Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714123121; x=1714727921;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G1NbTRHbQ7U0GF+15RrhvfyGaj1mUIGy4Pli01lUXKI=;
-        b=hisR5gTPA67Sd7tLaD2eOBDWelhEKw4V3xyk6tgGaK0jpXsAxLNEQ5OnjpApr5ACPJ
-         UoelC3g/3qZ+JQLY1+HKENSC6K5lQM8ho/OB7KMu07qhkWsIddfTuzVUbLjsU3cEH4qi
-         IbwlvrenNJlCfu50XupdQeGuy1ENcu3LfQaXSJJblXvBzTdXlB7uCiVImsxRCEgmKiwq
-         F1lNHd7nAamLZ3W+KGo7D6hQFXoqLO23SSBEGKhSmAMoZ7s6VyFwbcaY+D6V9FcBv5Ob
-         wkohOmnawEQ5/wI31JLQnWKK6Jjeg47CVl5RSnI30G2KjKsF+yqSa8K4i/i3C4kbGx4G
-         By+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWJEu+uIlx5uEvsAnYhv9YvxH7bQSEau/NsGasKMji4d1tugSqhLhEzo9vQaVmWbe+z1KyWSAD6wMKHLVnb4jkjon3kDUKbY/8d3pbK
-X-Gm-Message-State: AOJu0Yy+VvUE1KhWbTA8lI/Y7E2MafQXW/qfbbqnX+e0J0gYs12Vdui6
-	7B3XHzWlR+zDMXQ9Xmmb2qV/wEAC66g8LJ6s6BLsndhHfKG6cDsgeKDAbnJL/OUMicumxORrTJX
-	9nfQxQH7nfl6HstsLJ1whyziJh3EPyYJXkps/+9S6wZV3zWaFmLl1glTlx3OfQA==
-X-Received: by 2002:a05:6a21:168c:b0:1ae:431b:c53b with SMTP id np12-20020a056a21168c00b001ae431bc53bmr323804pzb.35.1714123121576;
-        Fri, 26 Apr 2024 02:18:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEStifC6QEJp3sMK/8R6KuO9lazU0QJGymTFO9aPTPCPf5v6oHPNuoPbZcboZcvieVYxOB7Ww==
-X-Received: by 2002:a05:6a21:168c:b0:1ae:431b:c53b with SMTP id np12-20020a056a21168c00b001ae431bc53bmr323789pzb.35.1714123121191;
-        Fri, 26 Apr 2024 02:18:41 -0700 (PDT)
-Received: from [192.168.68.50] ([43.252.112.88])
-        by smtp.gmail.com with ESMTPSA id n15-20020a170902e54f00b001e512537a5fsm15114388plf.9.2024.04.26.02.18.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 02:18:40 -0700 (PDT)
-Message-ID: <c8f59fd1-cd76-4ac4-a70b-66932170c7c4@redhat.com>
-Date: Fri, 26 Apr 2024 19:18:30 +1000
+        d=1e100.net; s=20230601; t=1714123230; x=1714728030;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XEGoLxUkWwDTn+Odyi6lg3eK/cudTzIim330VH70exg=;
+        b=ByczgBdTYKgwXgGFYYZiSj/xOZbcHOquZxQwWzS47PufhMlgo+P6YZfCRYCPfDYQVc
+         Pe5l7M9ME9CUl7Bf8t1c8KYMyaY1o/5aIoH9tz8bRf5ayMnV0pL979XK8rMYA65xyUue
+         ilLeAItVLPqHnrilW3t5HbVM2BfGTcAFG9qieZQpSCoceoutTvERd8umFAbAot6K9ycN
+         zoSJizeP9jfWIRxX0OoGbtTrcuG39DE0Z7nL56Bt6x87KTTGD5JmhLLczrq8gW6mh67z
+         tEG+D/I5yHhkHImexRdJWwC4urQ9BFy2CLvuxWNgEUvch67Kihdj2ohN294goRuGQE0H
+         teQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnloGO7L5uqpBXOHee9HBxAw92ihqefGvJ3/8q7sDQDYCIgVGThE8fWQFmnC7owwqrXF4XcDRj9BC2KYDsWZibUJwRn5XiIUVp5XUw
+X-Gm-Message-State: AOJu0YwEArGNpvWHz56BnMfO/SeUS56kHfEe+0C9nSqVzJuM+JftDGx+
+	obAVws7c1yqsVxwlwDk7gwkt/9dnPyu3QSME6Slx3zhGcCZRPdaTNzBCbQ1K4B4+WogeuV3efEt
+	CSwCKZAabOR8CHQuMUMsBTv9E+s0=
+X-Google-Smtp-Source: AGHT+IGKkWnDPhZbKeVeOePz1PtuqYkJhmTMbe1AbOipYv5BGs5ZkYUUkdQ91bVvtP5fnG6ltjsHXuBfuDGhrdoCiLY=
+X-Received: by 2002:a05:6870:8a0f:b0:235:3e77:49b4 with SMTP id
+ p15-20020a0568708a0f00b002353e7749b4mr2567306oaq.0.1714123230026; Fri, 26 Apr
+ 2024 02:20:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 06/16] ACPI: processor: Register deferred CPUs from
- acpi_processor_get_info()
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, x86@kernel.org, Russell King
- <linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>,
- Salil Mehta <salil.mehta@huawei.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com,
- justin.he@arm.com, jianyong.wu@arm.com
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
- <20240418135412.14730-7-Jonathan.Cameron@huawei.com>
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20240418135412.14730-7-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <Zij_fGjRS_rK-65r@archlinux>
+In-Reply-To: <Zij_fGjRS_rK-65r@archlinux>
+From: Xiongwei Song <sxwjean@gmail.com>
+Date: Fri, 26 Apr 2024 17:20:03 +0800
+Message-ID: <CAEVVKH8Oagbih8E8YNPpNhyh75fWnBLdod+eEGQm9i8ciNv7sQ@mail.gmail.com>
+Subject: Re: [PATCH] slub: Fixes freepointer encoding for single free
+To: Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, cl@linux.com, 
+	penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, 
+	akpm@linux-foundation.org, vbabka@suse.cz, roman.gushchin@linux.dev, 
+	42.hyeyoo@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/18/24 23:54, Jonathan Cameron wrote:
-> From: James Morse <james.morse@arm.com>
-> 
-> The arm64 specific arch_register_cpu() call may defer CPU registration
-> until the ACPI interpreter is available and the _STA method can
-> be evaluated.
-> 
-> If this occurs, then a second attempt is made in
-> acpi_processor_get_info(). Note that the arm64 specific call has
-> not yet been added so for now this will be called for the original
-> hotplug case.
-> 
-> For architectures that do not defer until the ACPI Processor
-> driver loads (e.g. x86), for initially present CPUs there will
-> already be a CPU device. If present do not try to register again.
-> 
-> Systems can still be booted with 'acpi=off', or not include an
-> ACPI description at all as in these cases arch_register_cpu()
-> will not have deferred registration when first called.
-> 
-> This moves the CPU register logic back to a subsys_initcall(),
-> while the memory nodes will have been registered earlier.
-> Note this is where the call was prior to the cleanup series so
-> there should be no side effects of moving it back again for this
-> specific case.
-> 
-> [PATCH 00/21] Initial cleanups for vCPU HP.
-> https://lore.kernel.org/all/ZVyz%2FVe5pPu8AWoA@shell.armlinux.org.uk/
-> commit 5b95f94c3b9f ("x86/topology: Switch over to GENERIC_CPU_DEVICES")
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-> Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
-> ---
+On Wed, Apr 24, 2024 at 8:48=E2=80=AFPM Nicolas Bouchinet
+<nicolas.bouchinet@clip-os.org> wrote:
+>
+> From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+>
+> Commit 284f17ac13fe ("mm/slub: handle bulk and single object freeing
+> separately") splits single and bulk object freeing in two functions
+> slab_free() and slab_free_bulk() which leads slab_free() to call
+> slab_free_hook() directly instead of slab_free_freelist_hook().
+>
+> If `init_on_free` is set, slab_free_hook() zeroes the object.
+> Afterward, if `slub_debug=3DF` and `CONFIG_SLAB_FREELIST_HARDENED` are
+> set, the do_slab_free() slowpath executes freelist consistency
+> checks and try to decode a zeroed freepointer which leads to a
+> "Freepointer corrupt" detection in check_object().
+>
+> Object's freepointer thus needs to be properly set using
+> set_freepointer() after init_on_free.
+>
+> To reproduce, set `slub_debug=3DFU init_on_free=3D1 log_level=3D7` on the
+> command line of a kernel build with `CONFIG_SLAB_FREELIST_HARDENED=3Dy`.
+>
+> dmesg sample log:
+> [   10.708715] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+> [   10.710323] BUG kmalloc-rnd-05-32 (Tainted: G    B           T ): Free=
+pointer corrupt
+> [   10.712695] ----------------------------------------------------------=
+-------------------
+> [   10.712695]
+> [   10.712695] Slab 0xffffd8bdc400d580 objects=3D32 used=3D4 fp=3D0xffff9=
+d9a80356f80 flags=3D0x200000000000a00(workingset|slab|node=3D0|zone=3D2)
+> [   10.716698] Object 0xffff9d9a80356600 @offset=3D1536 fp=3D0x7ee4f480ce=
+0ecd7c
 
-s/Joanthan/Jonathan ?
+If init_on_free is set,  slab_free_hook() zeros the object first, then
+do_slab_free() calls
+set_freepointer() to set the fp value, so there are 8 bytes non-zero
+at the moment?
+Hence, the issue is not related to init_on_free?
 
-> v7: Simplify the logic on whether to hotadd the CPU.
->      This path can only be reached either for coldplug in which
->      case all we care about is has register_cpu() already been
->      called (identifying deferred), or hotplug in which case
->      whether register_cpu() has been called is also sufficient.
->      Checks on _STA related elements or the validity of the ID
->      are no longer necessary here due to similar checks having
->      moved elsewhere in the path.
-> v6: Squash the two paths for conventional CPU Hotplug and arm64
->      vCPU HP.
-> ---
->   drivers/acpi/acpi_processor.c | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-> index 127ae8dcb787..4e65011e706c 100644
-> --- a/drivers/acpi/acpi_processor.c
-> +++ b/drivers/acpi/acpi_processor.c
-> @@ -350,14 +350,14 @@ static int acpi_processor_get_info(struct acpi_device *device)
->   	}
->   
->   	/*
-> -	 *  Extra Processor objects may be enumerated on MP systems with
-> -	 *  less than the max # of CPUs. They should be ignored _iff
-> -	 *  they are physically not present.
-> -	 *
-> -	 *  NOTE: Even if the processor has a cpuid, it may not be present
-> -	 *  because cpuid <-> apicid mapping is persistent now.
-> +	 *  This code is not called unless we know the CPU is present and
-> +	 *  enabled. The two paths are:
-> +	 *  a) Initially present CPUs on architectures that do not defer
-> +	 *     their arch_register_cpu() calls until this point.
-> +	 *  b) Hotplugged CPUs (enabled bit in _STA has transitioned from not
-> +	 *     enabled to enabled)
->   	 */
-> -	if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
-> +	if (!get_cpu_device(pr->id)) {
->   		ret = acpi_processor_hotadd_init(pr, device);
->   
->   		if (ret)
+The fp=3D0x7ee4f480ce0ecd7c here is beyond kernel memory space, is the issu=
+e from
+CONFIG_SLAB_FREELIST_HARDENED enabled?
 
 Thanks,
-Gavin
+Xiongwei
 
+> [   10.716698]
+> [   10.716698] Bytes b4 ffff9d9a803565f0: 00 00 00 00 00 00 00 00 00 00 0=
+0 00 00 00 00 00  ................
+> [   10.720703] Object   ffff9d9a80356600: 00 00 00 00 00 00 00 00 00 00 0=
+0 00 00 00 00 00  ................
+> [   10.720703] Object   ffff9d9a80356610: 00 00 00 00 00 00 00 00 00 00 0=
+0 00 00 00 00 00  ................
+> [   10.724696] Padding  ffff9d9a8035666c: 00 00 00 00 00 00 00 00 00 00 0=
+0 00 00 00 00 00  ................
+> [   10.724696] Padding  ffff9d9a8035667c: 00 00 00 00                    =
+                  ....
+> [   10.724696] FIX kmalloc-rnd-05-32: Object at 0xffff9d9a80356600 not fr=
+eed
+>
+> Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+> ---
+>  mm/slub.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 3aa12b9b323d9..71dbff9ad8f17 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4342,10 +4342,16 @@ static __fastpath_inline
+>  void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
+>                unsigned long addr)
+>  {
+> +       bool init =3D false;
+> +
+>         memcg_slab_free_hook(s, slab, &object, 1);
+> +       init =3D slab_want_init_on_free(s);
+>
+> -       if (likely(slab_free_hook(s, object, slab_want_init_on_free(s))))
+> +       if (likely(slab_free_hook(s, object, init))) {
+> +               if (init)
+> +                       set_freepointer(s, object, NULL);
+>                 do_slab_free(s, slab, object, object, 1, addr);
+> +       }
+>  }
+>
+>  static __fastpath_inline
+> --
+> 2.44.0
+>
+>
