@@ -1,35 +1,36 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0413013D265;
-	Fri, 26 Apr 2024 09:13:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A07C13D2BF;
+	Fri, 26 Apr 2024 09:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714122804; cv=none; b=damxRR+B/IxKFw4rDrztbkdorz9LqQ8qBLGminCw8T9LTA1ds2X2LPQvwYq8vajQAo+TDMPJT+3WhJ3v/GjcFHnlx1r9gge9k6Pkc5pufrZ2E1GygCKH/8Hrd7OL97W/Dz/enH4rvwvwYddFawJ1QZwEXP+6k7LxWdjqzBWC848=
+	t=1714122804; cv=none; b=kLbu8ZE3IkFx1Juy54QE2jaA+A1vu4gZTxBQwDQb82RzYKQa94bWZtWCwKHUBdYOpA/l48qV3p47EM4k24CWphEcXOGPnAZxiWvoSeutV+/C8M4FcTYUlDS8N3iLTFGMvotQGY647ZGprbvUBLak6I9cGLGgOJrFm/tKIx7RNl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714122804; c=relaxed/simple;
-	bh=zYNHv/2I1GsaOpoj5TYzpTtsAvLoHihfT4LrgFzxEwU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N1E/jR/FvG3pCYtg8DDCgnqFQXXduDqIunNpCtNL/Fifp65MsKYHn4TYXSBv4BWGamdVQdI8KQK7OscTdntGQ5wH34Jx1mtbHKze7qaAPN6dZmgxlL5QL/JqU1vhbG0m1UnwLoLvrvUGDrZ2W6h9wdQ/Vh7pu3lX8S4W0Vk6NZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=gUG+t1E3; arc=none smtp.client-ip=193.104.135.124
+	bh=eV33PMxw0Cc21m0h+LKsBOgy4HzT4yeVL9NTNgNOzUg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jiTdlSMrEAbVz27o9B7peGy3SIf5byuHWEc3y5KIpRZRrKXPp+I4cskeiz0ayBWUihBppkqu4EFyFj6mq/R+eqgDxddYzxFfApvMcxdrU43sZzTWjY2m3wa2LpzlBJuxJUTEuNtRqZ7MGudCnc7hhNc3xtoTViQDFVSc/Ys4nGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=qRE12cjV; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="gUG+t1E3"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="qRE12cjV"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 81BB8600AF;
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 4A1B2600A2;
 	Fri, 26 Apr 2024 09:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1714122793;
-	bh=zYNHv/2I1GsaOpoj5TYzpTtsAvLoHihfT4LrgFzxEwU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gUG+t1E3T8i40vfURQFtPC9dEJSwfKciJnuLfv+hvxB9ZdHqE1fCtXtbsfGD5OHfk
-	 KF92vPBEVtOpjXfKrCZ33WbARzzIaMB1w/CVY0SI3ZmIt/6Le5c/6+K5mM7hdpSQsn
-	 lNjRuxysOCqiy59Rrux97wxPHHKFQUiud/SM995ZBxYDOS25oaEb3XFeWrsvIHiVv3
-	 RLzWKw4elcQ+l5kjHe5tp8etWsgmXeADKEIP9nC/z/ZXi6qPDQVcuPQFqgM432SGHl
-	 fyQvHbZAU89+jE/qL8XnBn+jkdeNzYPgiO3cd4aWERJfxnPWCbmFL+XGgQJcr+tLY2
-	 HtaWqGw9MYA6g==
+	bh=eV33PMxw0Cc21m0h+LKsBOgy4HzT4yeVL9NTNgNOzUg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qRE12cjVZ4Mcz4/uXis4EX/HjYv7KESNpmUUDkna1CHOODlCdCLzVGDlH8z8QEwM0
+	 7bJxthBBffvjqhGEohwNiOVIVpVGV8+cHtN0+Q6g8YVTi82OYjFtr9UCZJkrEDkOUi
+	 9kb/p0eoLm7nCE39hLCOTatwYVd3dwiw8wifA5FFIZAN06UjBcDn5QiCBur8yalR/h
+	 3r5HMzEYQ+RqVp9tzGk8fD6Du65BtqZY/wNisRh3536kwqWdsGu2sdX29pGZpCXRbP
+	 YmG0nsiyKSUoftwLIQZ4k1BXFxII5SV82U+9zBdm7ktmJflxmu/F4qbOK32U9m/O/0
+	 F2EpjEy4KyI4A==
 Received: by x201s (Postfix, from userid 1000)
-	id D1713205831; Fri, 26 Apr 2024 09:12:27 +0000 (UTC)
+	id B838721BB48; Fri, 26 Apr 2024 09:12:28 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: netdev@vger.kernel.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -42,10 +43,12 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Manish Chopra <manishc@marvell.com>,
 	Jiri Pirko <jiri@resnulli.us>,
 	Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH net 0/4] net: qede: avoid overruling error codes
-Date: Fri, 26 Apr 2024 09:12:22 +0000
-Message-ID: <20240426091227.78060-1-ast@fiberby.net>
+Subject: [PATCH net 3/4] net: qede: use return from qede_parse_flow_attr() for flow_spec
+Date: Fri, 26 Apr 2024 09:12:25 +0000
+Message-ID: <20240426091227.78060-4-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240426091227.78060-1-ast@fiberby.net>
+References: <20240426091227.78060-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,31 +58,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series fixes the qede driver, so that
-qede_parse_flow_attr() and it's subfunctions
-doesn't get their error codes overruled
-(ie. turning -EOPNOTSUPP into -EINVAL).
+In qede_flow_spec_to_rule(), when calling
+qede_parse_flow_attr() then the return code
+was only used for a non-zero check, and then
+-EINVAL was returned.
 
+qede_parse_flow_attr() can currently fail with:
+* -EINVAL
+* -EOPNOTSUPP
+* -EPROTONOSUPPORT
+
+This patch changes the code to use the actual
+return code, not just return -EINVAL.
+
+The blaimed commit introduced qede_flow_spec_to_rule(),
+and this call to qede_parse_flow_attr(), it looks
+like it just duplicated how it was already used.
+
+Only compile tested.
+
+Fixes: 37c5d3efd7f8 ("qede: use ethtool_rx_flow_rule() to remove duplicated parser code")
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 ---
-I have two more patches along the same lines,
-but they are not yet causing any issues,
-so I have them destined for net-next.
-(those are for qede_flow_spec_validate_unused()
-and qede_flow_parse_ports().)
+ drivers/net/ethernet/qlogic/qede/qede_filter.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-After that I have a series for converting to
-extack + the final one for validating control
-flags.
-
-Asbjørn Sloth Tønnesen (4):
-  net: qede: sanitize 'rc' in qede_add_tc_flower_fltr()
-  net: qede: use return from qede_parse_flow_attr() for flower
-  net: qede: use return from qede_parse_flow_attr() for flow_spec
-  net: qede: use return from qede_parse_actions()
-
- drivers/net/ethernet/qlogic/qede/qede_filter.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+index 25ef0f4258cb..377d661f70f7 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+@@ -2002,10 +2002,9 @@ static int qede_flow_spec_to_rule(struct qede_dev *edev,
+ 	if (IS_ERR(flow))
+ 		return PTR_ERR(flow);
+ 
+-	if (qede_parse_flow_attr(edev, proto, flow->rule, t)) {
+-		err = -EINVAL;
++	err = qede_parse_flow_attr(edev, proto, flow->rule, t);
++	if (err)
+ 		goto err_out;
+-	}
+ 
+ 	/* Make sure location is valid and filter isn't already set */
+ 	err = qede_flow_spec_validate(edev, &flow->rule->action, t,
 -- 
 2.43.0
 
