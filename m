@@ -1,206 +1,72 @@
-Received: from forward200a.mail.yandex.net (forward200a.mail.yandex.net [178.154.239.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FC614831F;
-	Fri, 26 Apr 2024 13:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1D3145B0F
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714138466; cv=none; b=VOR1CgjutMlaMsZt3zP+cc/FpmkRxK0StUNbCHDmYw5fJiigcjnXHHjdlSCPanecE1bnaHLdSYoHy95f8optQXoFxrhyVLvR0riGjsdh7PZLptRJUXVtxBby3r/3UJiWIzykWW08+2/HFIg4M+/OX2GYpzmwWiKtq5CTV8/rogQ=
+	t=1714138504; cv=none; b=VpE3gUfe0kmonNvTWLq8ISHSx52QedxKGQTk3giCX9GWvvGaBFqJRCnJpoIgTF/PzapAeL+mkkGXIDWDpSmEGPT4gtMC9oiwPqkjKlbDTpOxzzH5OnrJvHxn828yJqDYDVMCps6ImQQiky8p+btUZi+aqWdkyBSdMbLsUDFZoRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714138466; c=relaxed/simple;
-	bh=NJLlv+BYrw+C+sbV2KvdymITp5TUT7pACIgIb4CZHl4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N8vX3J58cHidIA2bcge4QkZchzZJ+AbZUrcs+yYg3HyP9uR2itenZJrLuNIrK1BUoEfEWvnq77X9uZF8sBZ0hwodYZW2EEMKH+lOgve91Ovf+rrjmUHcvyoZoYwD0t/bSQrM6yrvKN/O604S6rEQM5qkTpcWrUNct8A2zpFnwhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=ECoAuMMR; arc=none smtp.client-ip=178.154.239.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="ECoAuMMR"
-Received: from forward101a.mail.yandex.net (forward101a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d101])
-	by forward200a.mail.yandex.net (Yandex) with ESMTPS id 7AF1C66A43;
-	Fri, 26 Apr 2024 16:34:16 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0d:230c:0:640:f8e:0])
-	by forward101a.mail.yandex.net (Yandex) with ESMTPS id 8EFA360B53;
-	Fri, 26 Apr 2024 16:34:08 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 2YN3P0DXnmI0-XlfhjaY2;
-	Fri, 26 Apr 2024 16:34:06 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1714138446; bh=oe8bbNwOy9Cey4DMgLCWnxFN4lQ1FLTo4XG3E1C4v8Q=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=ECoAuMMRjRsRnHs1YWDcIiI84Zgj6ZrBSrBEhwjmClSLd/H74Kj3f9iLL0MLpNdOX
-	 069WuQs8GyqfI7yU+T2IfDdn1aYqLeMAg/Ffxq2+hq8zN1sBe0GhbYlyMLV7qjA8CD
-	 Xl0IpvfqDbE9Fnsay/URNI7VmN5Z4rJsgcHLons0=
-Authentication-Results: mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Stas Sergeev <stsp2@yandex.ru>
-To: linux-kernel@vger.kernel.org
-Cc: Stas Sergeev <stsp2@yandex.ru>,
-	Stefan Metzmacher <metze@samba.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Andy Lutomirski <luto@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	linux-fsdevel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	=?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	linux-arch@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v5 2/3] open: add O_CRED_ALLOW flag
-Date: Fri, 26 Apr 2024 16:33:09 +0300
-Message-ID: <20240426133310.1159976-3-stsp2@yandex.ru>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240426133310.1159976-1-stsp2@yandex.ru>
-References: <20240426133310.1159976-1-stsp2@yandex.ru>
+	s=arc-20240116; t=1714138504; c=relaxed/simple;
+	bh=m+kS218jt0du5H+U4ww/ufMUqNVw+bWZWMftVxqX6uU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=cIgFztB1JmFHoNob9FEnHVKNt6FMCEhsTuOATZ41Na9D6WVKkzugz5v3zoYXN2/ZwcJVX5NZrg/5TCNfCVuWkF8lyZe9twJU8QVcSOryCbCq3bEtsr/8zp0ljLgB4PnK/5I3f60DFLOGkk4JKetkEnsUSfBicmp/n4o9jCbvACg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36b34b3a5fdso20269325ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:35:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714138502; x=1714743302;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wuDLgNPEPbdMqePbD8KgIT6xOlVG4D1tdaDE2YInWA8=;
+        b=iONeeq+QhbNjuD0gPUOWc05bhqIR2p94fNNpFMxHolW3r7eFbgpBvMh2OgXg9QCtg7
+         7DMRRZDuAxQ7f4ZBl7NcojDfQq79r/3P0i9I6rIRgWdKUXY0mLI34Y+2NVu3Y3WOotTT
+         UQf1zjkjV3fjJAxRZuca40kBCHmVD0lR7wf69GCyA3+kc1p1nerCKiyp5sC1whE7GXh6
+         aXsrgsTAbdkyAzzCioXP1QOYdy9VzmWwa8Hcntr8Go6hbZcAaMsmwqVslkIDKjNyjeps
+         0zqoynqp3rwEbmBsXQ4BqaQc1C5krU3N9YX2TumOhH3OxucTQjAlpc0CgEczRNwmxkDg
+         W1Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCWCkJjYkUaR32/iN67HM8Tq1qSZgtlK3fWpn/8rcjD0kQIxJgTvA62613Hayfk0GeycVXU9QrFlAqjfpMKl6RoaSAAubm/98lI3rsJR
+X-Gm-Message-State: AOJu0Yz7egc/VBB56QrJP4iHVzjiKApO8EC4Kr8QL8QVDBZvgK4+lZZd
+	dxDRc12xU/+F0yLpIr7szsiJqlmJpENLuVdUzt6Hrg9vQ1eMgXYDNfIZZxJ0P9ZtZ7zbBzJlVn7
+	jJ5yOUeYgtY0ZW6RT8VOl1rKvxra5N4xlCp14LeFl7VsY0XVM1Q/jzzc=
+X-Google-Smtp-Source: AGHT+IEmE/D5eUWM3aazPdASVp2ndWN2Klx3oxJWUkQ8hKxgnVlM7qt0MSyaTsonzow98DrxSD3ec2fL1yp+5/rIGkUCMCzs2HRR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1d9a:b0:368:c9e2:b372 with SMTP id
+ h26-20020a056e021d9a00b00368c9e2b372mr59976ila.0.1714138502468; Fri, 26 Apr
+ 2024 06:35:02 -0700 (PDT)
+Date: Fri, 26 Apr 2024 06:35:02 -0700
+In-Reply-To: <c0a1b8d8-4b54-4881-b924-406e0e2cbca5@kernel.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000892ccb0616fff80b@google.com>
+Subject: Re: [syzbot] [f2fs?] KASAN: slab-out-of-bounds Read in f2fs_get_node_info
+From: syzbot <syzbot+3694e283cf5c40df6d14@syzkaller.appspotmail.com>
+To: chao@kernel.org, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-This flag prevents an fd from being passed via unix socket, and
-makes it to be always closed on exec().
-It is needed for the subsequent OA2_CRED_INHERIT addition, to work
-as an "opt-in" for the new cred-inherit functionality. Without using
-O_CRED_ALLOW when opening dir fd, it won't be possible to use
-OA2_CRED_INHERIT on that dir fd.
+Hello,
 
-Signed-off-by: Stas Sergeev <stsp2@yandex.ru>
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-CC: Eric Biederman <ebiederm@xmission.com>
-CC: Alexander Viro <viro@zeniv.linux.org.uk>
-CC: Christian Brauner <brauner@kernel.org>
-CC: Jan Kara <jack@suse.cz>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: David Laight <David.Laight@ACULAB.COM>
-CC: Arnd Bergmann <arnd@arndb.de>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: Eric Dumazet <edumazet@google.com>
-CC: Jakub Kicinski <kuba@kernel.org>
-CC: Paolo Abeni <pabeni@redhat.com>
-CC: Jens Axboe <axboe@kernel.dk>
-CC: Kuniyuki Iwashima <kuniyu@amazon.com>
-CC: Pavel Begunkov <asml.silence@gmail.com>
-CC: linux-arch@vger.kernel.org
-CC: netdev@vger.kernel.org
-CC: linux-fsdevel@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: linux-api@vger.kernel.org
----
- fs/fcntl.c                       |  2 +-
- fs/file.c                        | 15 ++++++++-------
- include/linux/fcntl.h            |  2 +-
- include/uapi/asm-generic/fcntl.h |  4 ++++
- net/core/scm.c                   |  5 +++++
- 5 files changed, 19 insertions(+), 9 deletions(-)
+Reported-and-tested-by: syzbot+3694e283cf5c40df6d14@syzkaller.appspotmail.com
 
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 54cc85d3338e..78c96b1293c2 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -1039,7 +1039,7 @@ static int __init fcntl_init(void)
- 	 * Exceptions: O_NONBLOCK is a two bit define on parisc; O_NDELAY
- 	 * is defined as O_NONBLOCK on some platforms and not on others.
- 	 */
--	BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=
-+	BUILD_BUG_ON(22 - 1 /* for O_RDONLY being 0 */ !=
- 		HWEIGHT32(
- 			(VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY)) |
- 			__FMODE_EXEC | __FMODE_NONOTIFY));
-diff --git a/fs/file.c b/fs/file.c
-index 3b683b9101d8..2a09d5276676 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -827,22 +827,23 @@ void do_close_on_exec(struct files_struct *files)
- 	/* exec unshares first */
- 	spin_lock(&files->file_lock);
- 	for (i = 0; ; i++) {
-+		int j;
- 		unsigned long set;
- 		unsigned fd = i * BITS_PER_LONG;
- 		fdt = files_fdtable(files);
- 		if (fd >= fdt->max_fds)
- 			break;
- 		set = fdt->close_on_exec[i];
--		if (!set)
--			continue;
- 		fdt->close_on_exec[i] = 0;
--		for ( ; set ; fd++, set >>= 1) {
--			struct file *file;
--			if (!(set & 1))
--				continue;
--			file = fdt->fd[fd];
-+		for (j = 0; j < BITS_PER_LONG; j++, fd++, set >>= 1) {
-+			struct file *file = fdt->fd[fd];
- 			if (!file)
- 				continue;
-+			/* Close all cred-allow files. */
-+			if (file->f_flags & O_CRED_ALLOW)
-+				set |= 1;
-+			if (!(set & 1))
-+				continue;
- 			rcu_assign_pointer(fdt->fd[fd], NULL);
- 			__put_unused_fd(files, fd);
- 			spin_unlock(&files->file_lock);
-diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
-index a332e79b3207..e074ee9c1e36 100644
---- a/include/linux/fcntl.h
-+++ b/include/linux/fcntl.h
-@@ -10,7 +10,7 @@
- 	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | \
- 	 O_APPEND | O_NDELAY | O_NONBLOCK | __O_SYNC | O_DSYNC | \
- 	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
--	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
-+	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE | O_CRED_ALLOW)
- 
- /* List of all valid flags for the how->resolve argument: */
- #define VALID_RESOLVE_FLAGS \
-diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-index 80f37a0d40d7..ee8c2267c516 100644
---- a/include/uapi/asm-generic/fcntl.h
-+++ b/include/uapi/asm-generic/fcntl.h
-@@ -89,6 +89,10 @@
- #define __O_TMPFILE	020000000
- #endif
- 
-+#ifndef O_CRED_ALLOW
-+#define O_CRED_ALLOW		040000000
-+#endif
-+
- /* a horrid kludge trying to make sure that this will fail on old kernels */
- #define O_TMPFILE (__O_TMPFILE | O_DIRECTORY)
- 
-diff --git a/net/core/scm.c b/net/core/scm.c
-index 9cd4b0a01cd6..f54fb0ee9727 100644
---- a/net/core/scm.c
-+++ b/net/core/scm.c
-@@ -111,6 +111,11 @@ static int scm_fp_copy(struct cmsghdr *cmsg, struct scm_fp_list **fplp)
- 			fput(file);
- 			return -EINVAL;
- 		}
-+		/* don't allow files with creds */
-+		if (file->f_flags & O_CRED_ALLOW) {
-+			fput(file);
-+			return -EPERM;
-+		}
- 		if (unix_get_socket(file))
- 			fpl->count_unix++;
- 
--- 
-2.44.0
+Tested on:
 
+commit:         77d6a556 f2fs: fix to do sanity check on i_xattr_nid i..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git bugfix/syzbot
+console output: https://syzkaller.appspot.com/x/log.txt?x=1535f237180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5a05c230e142f2bc
+dashboard link: https://syzkaller.appspot.com/bug?extid=3694e283cf5c40df6d14
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
