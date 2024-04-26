@@ -1,160 +1,139 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4FD14D447
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1ED148FE5
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714146159; cv=none; b=sROL4O9PuwPxvoW4v6b4J22TzBxVDRaSDJmzJ/4fZY+hmKQN6C+FycBCmQiJi3xsmoMNQanhqDBKBNsDphpXUdI+bctSjZMeSdX7vcofAivfBZqh+o05g93G1ZaJcIuqjR0NZgyMu0zMlRKe2WQ/QUUa5NvUy/ywgfGZWQXWr8w=
+	t=1714146170; cv=none; b=Dj2iFjtdNKfJ5S4qiXQW9qIQxllxMXAn20h5qpWRwgItZWFLbR+cBhlvnrsLjouHlQ1RV2LwS8yKrYatTl/X4hUDCR2rN9Nruj55YylsHARv+7ouXDKtkBcT0WHzk1Dt+03ys4Tm6iceVUfzMqdcwEJ5katBmW6gumTq6fe70fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714146159; c=relaxed/simple;
-	bh=jDAoK3tQd/jCsQTNWO5hZlLZh39SD7GChIw21CQaSsM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WgRK3h0zWUF0KtIvhXZ9u4WRN1BhhcqxxiY9g2ZjXVvQKnJG+tqziYm44k2DRIcboG8usfv/pdvfTtMrX+z6Ll9WBmGaZ7Ob6suapMLddXhswBpS42ckODEvPax/tZE0Jte/nMYNbQa/WFDBlst6mHqMXcJsAraqyORhFOE7Fso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZBPzz7X6; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714146170; c=relaxed/simple;
+	bh=zUlVdYEnCLmuHB4grnGC0MlCVYEHZkxwPqnNYeshHcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iz8zz7JRDNwcBCITYa5PbomtwWejQuMQcBK4jradK7jUKsDPUS8hCi/oVXsALJ5waD8itWAU2rXR3s+jj5g9CmEKtTFJGuQosAnxZmFBJVrPULFMnP9H0lz+wZ6eyjFPZGOjAsFze6tIaR5wp8O0+a1aa7e92H2WGtG5mU+0bk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=loGTGmAF; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZBPzz7X6"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de54c2a4145so2673322276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:42:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714146157; x=1714750957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1r/qRH9kPvAGgkQEMeuJ0NKJrHsmyltgKmm0PUhotBc=;
-        b=ZBPzz7X6nBg0db1tlindiw+miYKLn27adT9NhYVuOremCzfGZVLr9ZeAdEo3ux/QRk
-         c4/hPZBJb+y+xt2tT0Eko4AAGxbl0itQjDNnzYNEgcju1mN+yj1uH5EbtpUxMUsZK2fO
-         n0mZJFpbxhdF9KnoyEeHOYZF6u5OftPNihNnd0HJCHISSUKD3NNpGBNmRf1ge4uUS+b4
-         9NNNzFmT98K/IJEUQTxTcDrSRlj1wOPBaWS+Tj7v68vN5YdxcfBv/vn962eNepqw8MZc
-         V7ecq34JF+4nNJ+w8rJVYlCo2IwMiCQIaMyd7VoP1Zx14Liiyzz0gJDtw12uOMF8TAz2
-         cGRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714146157; x=1714750957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1r/qRH9kPvAGgkQEMeuJ0NKJrHsmyltgKmm0PUhotBc=;
-        b=lKZ4Cr9zplckHKpe3TmbiH8//o+wJ6Qrr5k2P1ademWPYmwaHB6F0OKBZIMZjhrg7r
-         uZi3e5HzNDY2yp86fXVzVRCDF+mPNKMmNtG/xxQNeVAA3TQdPtHW3Ieg5CeOAnmmTSyA
-         X3gp2KQJJmmUufRjgaHsmdMvXhWwEGMLZKCP64hnOAyN6qxGP3cBuHgqRdHATZN7RSbd
-         MA5GlzVLcahMH+tzVpyDYzplhrA9BAvyNjYJasWKPjnYCO2pik/v0nmhkQztO1AKWMMI
-         UwYQPz4yzi2gbYznn4Fy28aF/7/4FCqLQTaTp0mLxnhiwL3C1sKvVOMHILgxQTfApmyu
-         nhwA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5OqdorE/1tj///W1jTniRzSU0FqnxMqEujtWIOpHkxX5Ybnz/0CWQX8W5G0nVQK8Ud1y1+cAglcmS6PM5u/qkeZAqYXaMwYTsxoEz
-X-Gm-Message-State: AOJu0YyuKTUgeYNzP8sbedhxezbBphOUaIHKixHjJBGpI0QjAXG1hKVc
-	M6toooLGVD2cm05MKx4IcdJ/qm86tHewAWyTBMcNoBAuUkkp5h81QBz6Yy2svRqnZFdN4y99Jq0
-	HBotlkn2t19L00fZkgqy2Ao1uxa2z2oD4nvo4xQ==
-X-Google-Smtp-Source: AGHT+IHXqiLVi5dGGByxbmqNOLy8Bm6k1zPc3+mbxHwesdXyWEV5jekoYy/P2rzj/Dz7Gdb0KBXe5GlRkEgu/X9acRQ=
-X-Received: by 2002:a05:6902:1b84:b0:dd1:2f58:6a2e with SMTP id
- ei4-20020a0569021b8400b00dd12f586a2emr3667726ybb.9.1714146156805; Fri, 26 Apr
- 2024 08:42:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="loGTGmAF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714146169; x=1745682169;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=zUlVdYEnCLmuHB4grnGC0MlCVYEHZkxwPqnNYeshHcc=;
+  b=loGTGmAFHV2ZP5qlNxlp7akWNQ8LQfzhTFMvKA+BsZ5IHNI7KiD+QsOb
+   rijlgD9FFsWUtg42H9h/bJQKQHMdMnWR2dV5ctmaLscc4CMiTZyvBnWYT
+   Xn/FpCv60oRU6sTuAzUJ3yuCkkFuugPhS4S4WaFjcePRKvJTNVLO0fP/C
+   miGhEJ7xqxcNYJUk/Zt7rkOD/ZyKtIAgljT4QSiA6+ISnzLAF+YqTou01
+   eNN5uUzklhrfIthzdUVoXuPOuabtlKfHjlWZa+lL0hJ1eF26rEuR3/FZ0
+   3qLfbpQzxIYOgtY0+o2CL0Fsss6DobIkYORaK9wbR3eatap07Hlmpfok6
+   w==;
+X-CSE-ConnectionGUID: gtXiEzz7SQOg44vZ4WugeA==
+X-CSE-MsgGUID: 5BVU23qyR7aR1J056YaeUA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="13673885"
+X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
+   d="scan'208";a="13673885"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:42:49 -0700
+X-CSE-ConnectionGUID: xEmPUfTfQ6+AMXIjeJ5PAw==
+X-CSE-MsgGUID: b3vCRnJoT6KqyaTHU4Ux5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
+   d="scan'208";a="25530546"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:42:47 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s0Nil-00000001MlS-3Pv4;
+	Fri, 26 Apr 2024 18:42:43 +0300
+Date: Fri, 26 Apr 2024 18:42:43 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Matthew Wilcox <willy@infradead.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] Printing numbers in SI units
+Message-ID: <ZivLc0bjtfxo8ZyB@smile.fi.intel.com>
+References: <ZbFd5TZ_pi7q3hso@casper.infradead.org>
+ <94713e86-30a8-4828-959d-bd95800149e4@rasmusvillemoes.dk>
+ <CAMuHMdUp3fOkAttk2FKJTh5svaiMwgu4JZ8utPeHghU4TQLE-w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424172017.1.Id15fae80582bc74a0d4f1338987fa375738f45b9@changeid>
- <87pludq2g0.fsf@intel.com> <CAD=FV=W+Pcr+voBkcfeE_UC+ukN_hLXgoqMk0watROWRXe_2dg@mail.gmail.com>
- <beqsovvdkvn63prt3c6b3epb6tachff35vpaf62dfkwof7kwht@u3p7bkv7owro> <CAD=FV=WxYoFYefdZ4PQ=QF5aHpeWoC3qM1b5d2vf_qBH90ZMQw@mail.gmail.com>
-In-Reply-To: <CAD=FV=WxYoFYefdZ4PQ=QF5aHpeWoC3qM1b5d2vf_qBH90ZMQw@mail.gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 26 Apr 2024 18:42:25 +0300
-Message-ID: <CAA8EJpodW+VjUzBh1VLC2OeUaMhoX7FgNrsNStq5rPbOnyp95g@mail.gmail.com>
-Subject: Re: [PATCH] drm/mipi-dsi: Reduce driver bloat of mipi_dsi_*_write_seq()
-To: Doug Anderson <dianders@chromium.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, dri-devel@lists.freedesktop.org, 
-	Javier Martinez Canillas <javierm@redhat.com>, Neil Armstrong <neil.armstrong@linaro.org>, linus.walleij@linaro.org, 
-	Cong Yang <yangcong5@huaqin.corp-partner.google.com>, 
-	lvzhaoxiong@huaqin.corp-partner.google.com, Hsin-Yi Wang <hsinyi@google.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUp3fOkAttk2FKJTh5svaiMwgu4JZ8utPeHghU4TQLE-w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 26 Apr 2024 at 18:41, Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Thu, Apr 25, 2024 at 8:03=E2=80=AFPM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
-> >
-> > On Thu, Apr 25, 2024 at 10:04:49AM -0700, Doug Anderson wrote:
-> > > Hi,
+On Fri, Apr 26, 2024 at 05:27:08PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Jan 24, 2024 at 11:43 PM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+> > On 24/01/2024 19.58, Matthew Wilcox wrote:
+> > > I was looking at hugetlbfs and it has several snippets of code like
+> > > this:
 > > >
-> > > On Thu, Apr 25, 2024 at 1:19=E2=80=AFAM Jani Nikula <jani.nikula@linu=
-x.intel.com> wrote:
-> > > >
-> > > > > @@ -279,6 +281,8 @@ enum mipi_dsi_dcs_tear_mode {
-> > > > >
-> > > > >  ssize_t mipi_dsi_dcs_write_buffer(struct mipi_dsi_device *dsi,
-> > > > >                                 const void *data, size_t len);
-> > > > > +ssize_t mipi_dsi_dcs_write_buffer_chatty(struct mipi_dsi_device =
-*dsi,
-> > > > > +                                      const void *data, size_t l=
-en);
-> > > > >  ssize_t mipi_dsi_dcs_write(struct mipi_dsi_device *dsi, u8 cmd,
-> > > > >                          const void *data, size_t len);
-> > > > >  ssize_t mipi_dsi_dcs_read(struct mipi_dsi_device *dsi, u8 cmd, v=
-oid *data,
-> > > > > @@ -317,14 +321,10 @@ int mipi_dsi_dcs_get_display_brightness_lar=
-ge(struct mipi_dsi_device *dsi,
-> > > > >  #define mipi_dsi_generic_write_seq(dsi, seq...)                 =
-               \
-> > > > >       do {                                                       =
-            \
-> > > > >               static const u8 d[] =3D { seq };                   =
-              \
-> > > > > -             struct device *dev =3D &dsi->dev;                  =
-              \
-> > > > >               int ret;                                           =
-            \
-> > > > > -             ret =3D mipi_dsi_generic_write(dsi, d, ARRAY_SIZE(d=
-));           \
-> > > > > -             if (ret < 0) {                                     =
-            \
-> > > > > -                     dev_err_ratelimited(dev, "transmit data fai=
-led: %d\n", \
-> > > > > -                                         ret);                  =
-            \
-> > > > > +             ret =3D mipi_dsi_generic_write_chatty(dsi, d, ARRAY=
-_SIZE(d));    \
-> > > > > +             if (ret < 0)                                       =
-            \
-> > > > >                       return ret;                                =
-            \
-> > > > > -             }                                                  =
-            \
-> > > > >       } while (0)
+> > >         string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
+> > >         pr_warn("HugeTLB: allocating %u of page size %s failed node%d.  Only allocated %lu hugepages.\n",
+> > >                 h->max_huge_pages_node[nid], buf, nid, i);
+> > >
+> > > That's not terribly ergonomic, so I wondered if I could do better.
+> > > Unfortunately, I decided to do it using the SPECIAL flag which GCC
+> > > warns about.  But I've written the code now, so I'm sending it out in
+> > > case anybody has a better idea for how to incorporate it.
 > >
+> > Well, something that gcc will warn about with Wformat isn't gonna fly,
+> > obviously. But my man page also mentions ' as a possible flag for d
+> > conversions:
 > >
-> > Reading the thread makes me wonder whether we should be going into
-> > slightly other direction:
-> >
-> > Add __must_check() to mipi_dsi_ writing functions,
-> >
-> > #define mipi_dsi_dcs_whatever_write(dsi, cmd, seq...)   \
-> >         ({                                              \
-> >                 static const u8 d[] =3D { cmd, seq };     \
-> >                 mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));    \
-> >         })
-> >
-> > Then in panel drivers we actually have to explicitly handle the return
-> > code (either by dropping to the error label or by just returning an
-> > error).
->
-> Given the sheer number of init commands needed by some panels (see
-> j606f_boe_init_sequence() for instance) I'm still convinced that we
-> want something that allows people to write their init code in a way
-> that's not quite so verbose. It sounds as if Jani is OK w/ the
-> proposal of using the "accumulated return value" (proposal #2 I had).
-> I'm hoping you're OK w/ that too...
+> >        '      For decimal conversion (i, d, u, f, F, g, G) the output is
+> > to be grouped with thousands'
+> >               grouping characters if the locale information indicates any.
+> 
+> > Obviously, our printf wouldn't implement that, [...]
+> 
+> Why not? ;-)
 
-Yes, I'm fine with that.
+:-)
 
---=20
-With best wishes
-Dmitry
+> Old Gmail-white-space-damaged patch below, which I wrote when I got
+> fed up with meticulously counting zeros in GHz-range clock
+> frequencies...
+
+...
+
+>     lib/vsprintf.c: Add support for thousands' grouping
+> 
+>     Use an underscore as the grouping character.
+> 
+>     TODO:
+>       - Documentation
+>       - Self test
+
+Definitely won't fly without these two.
+
+>       - Do we want to use this in /sys/kernel/debug/clk/clk_summary ?
+>         RFC patch, compatibility was already broken by commit
+>         e55a839a7a1c561b ("clk: add clock protection mechanism to clk
+>         core")
+> 
+>     Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>     ---
+>     Originally I wanted to use grouping by 4 for octal and hexadecimal
+>     numbers.
+
+Not sure about octals, but for the hexadecimal we have hex_dump_to_buffer()
+and %ph. The latter one can be modified to support grouping.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
