@@ -1,54 +1,52 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DE213A3EB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F251513A3EF;
 	Fri, 26 Apr 2024 05:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714110818; cv=none; b=nwk+xHOZsZ6xx2YNlyKy4L/WOlLgtaoDfmYc6K+Dt1bLE7sGyFdnrDM7xnjJp27Z1+6/N2/HWcRZaZm0tGH2f3FcePOnnQPI2sltcpSeyP6N6DYmnB1Xa3xxsXPl8xa7FRMFkHfPgNozvbv8AqsbrqF/DQroEkELoFcM7EPZxjM=
+	t=1714110819; cv=none; b=KVSk/jUY1zwOiISevATg8JNFJfRD/8iKkxwlp5m96H+MHWL0vASGRXZV03UmjFeuochLRNHY6ch7GtuOFCw/QFrTH0DGz/gfcLDgY80kcaweLRGXwgqX70BJg/25HxznwEuwF2SqaylXA+4X4Ib7XcgaWlIeXYelSiiBzzYak+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714110818; c=relaxed/simple;
-	bh=fYZYhM90ZOghJXsmCvdMyR6vyGr8zbnxtkaiH+woRBE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kQtDwaGBqMcaFkyia8mgOVLHt81Sm2xCHNPr9sc5oBwpbZpZ0T2TO9igkDJKBy6cD+itjCYninZbFTKR9ziDK1pi3wqxHhq/EyARBrgcuksastQEq+adAt72bMYg8VFAxn6dXlbEqIwv2fIVWrzDgP6w3d9b06szWuBlgp9OG00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QBv3TZ7k; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1714110819; c=relaxed/simple;
+	bh=MCnGY0c3dpitORd+a6OSnBfTRNG9RcfjvF3wfkk+qxM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q8AUqBsarTuGqzHxYdGisJTjtoo2YKJe7xBMO97DAMmyfdKmMRywlmzO7EKceJAsNDS7++5dwFCuAbzXFwqITDXKri/PLo6uob6P1cG7SJmXe6yyP2lDPsfn0udOdUKPGQ6CjixMbtr2a1jvP0F1DSDzOTQDV48qsxbLA2djejE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AQYQ8xT1; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QBv3TZ7k"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43Q5Ji0j013674;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AQYQ8xT1"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43Q5iWfi002491;
 	Fri, 26 Apr 2024 05:53:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=qcppdkim1; bh=z5d2Nv4
-	1ZA4brUUmtvK/zgXGl+RQxorA99ASbCkjfIE=; b=QBv3TZ7kma/HkhhBOVqtaRp
-	uXeArH+qhZLPSIXCnPfn8M+cCFRnf79w9IgdkS4gu9TSxd0UopbZd+ehXcjVzZ0v
-	4ZieL3eMByQVIoH6oMCWyNaU0b6/9bosYUIWkcGpkTmFP3z5aGDe5AhzodlApVoo
-	ntwL0iLTqykJxD3K3peJ47lcw33SkBeI5B47IaUUUOu/NENBjTwRF5rVNtPxB2Re
-	sLl/FVDrCODzbffAEI8KcPCvgddtEWHp1/fbx7JClAeED1y2tpu5ijqKsk2woO3q
-	iYrzkCx0Uf6Ml7E9sWXuG4qub3sU7g9OONzuynCwJL+m5IDsk+kvzzjVvfz8Acg=
-	=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=qcppdkim1; bh=d57somguSp5P4bbEo03J
+	M4yz7plk+g1rTAQTnQFCORU=; b=AQYQ8xT1xmKSoN6JI1znGzaSjfqolQ0FUcrU
+	+cHAEantZghnKAuHYcbSXr4tvPZ5jxfxQ2YFmeas8hEE7W6LWB6sV93rG5lPAS5T
+	j91Jirsypp9Qk/EAxGDX9s9wQyvbUdnmwgkceZOnF1ERz7Xdl595DRYFPOHthUlm
+	xwjDVGGP73Wl6sH3DyPn1T2B97FbNd70ydPR/5w9lZZtJvgh5RYIUuv9MF0y9GC6
+	a5xPzGlpE+mIt2rMHrEkJBc/St9p1kIyIVQoptYQMecRyhv14KalWNjm0tx4913x
+	3+Mn03m3UzKYHde9V8FU7E8LT/8gw2AZPDuaJYqIuW4rxBTZLQ==
 Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xr611g6bm-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xr1ne8suw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 05:53:32 +0000 (GMT)
+	Fri, 26 Apr 2024 05:53:33 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 43Q5rTmI002289;
+	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 43Q5rT0e002280;
 	Fri, 26 Apr 2024 05:53:29 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3xm6smm8se-1
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3xm6smm8s8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 26 Apr 2024 05:53:29 +0000
 Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43Q5rTWY002272;
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43Q5rTLn002260;
 	Fri, 26 Apr 2024 05:53:29 GMT
 Received: from hu-devc-hyd-u20-c-new.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.147.246.70])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 43Q5rTpQ002255
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 43Q5rSAt002253
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 26 Apr 2024 05:53:29 +0000
 Received: by hu-devc-hyd-u20-c-new.qualcomm.com (Postfix, from userid 3970568)
-	id 2977921381; Fri, 26 Apr 2024 11:23:28 +0530 (+0530)
+	id 9CCA220FFA; Fri, 26 Apr 2024 11:23:27 +0530 (+0530)
 From: Rohit Agarwal <quic_rohiagar@quicinc.com>
 To: andersson@kernel.org, konrad.dybcio@linaro.org,
         manivannan.sadhasivam@linaro.org, jassisinghbrar@gmail.com,
@@ -57,12 +55,10 @@ To: andersson@kernel.org, konrad.dybcio@linaro.org,
 Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, kernel@quicinc.com,
         Rohit Agarwal <quic_rohiagar@quicinc.com>
-Subject: [PATCH 2/6] dt-bindings: mfd: qcom,tcsr: Add compatible for SDX75
-Date: Fri, 26 Apr 2024 11:23:22 +0530
-Message-Id: <20240426055326.3141727-3-quic_rohiagar@quicinc.com>
+Subject: [PATCH 0/6] Add some devicetree node for SDX75
+Date: Fri, 26 Apr 2024 11:23:20 +0530
+Message-Id: <20240426055326.3141727-1-quic_rohiagar@quicinc.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240426055326.3141727-1-quic_rohiagar@quicinc.com>
-References: <20240426055326.3141727-1-quic_rohiagar@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,36 +70,39 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: q_qkxaJUDsqy3msfQp38ZTfKrfkWFwIl
-X-Proofpoint-GUID: q_qkxaJUDsqy3msfQp38ZTfKrfkWFwIl
+X-Proofpoint-ORIG-GUID: QyFH59i0u9_X9kuLgzEczXNB8X85v05y
+X-Proofpoint-GUID: QyFH59i0u9_X9kuLgzEczXNB8X85v05y
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-04-26_06,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 malwarescore=0 suspectscore=0 bulkscore=0 mlxscore=0
- phishscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=943
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=855 malwarescore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2404010003 definitions=main-2404260034
 
-Document the qcom,sdx75-tcsr compatible.
+Hi,
 
-Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
----
- Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml | 1 +
- 1 file changed, 1 insertion(+)
+This series add some basic DT nodes on Qcom's SDX75 SoC that are required
+for different subsystems.
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml b/Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml
-index b97d77015335..c6bd14ec5aa0 100644
---- a/Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml
-+++ b/Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml
-@@ -28,6 +28,7 @@ properties:
-           - qcom,sdm845-tcsr
-           - qcom,sdx55-tcsr
-           - qcom,sdx65-tcsr
-+          - qcom,sdx75-tcsr
-           - qcom,sm4450-tcsr
-           - qcom,sm6115-tcsr
-           - qcom,sm8150-tcsr
+Thanks,
+Rohit.
+
+Rohit Agarwal (6):
+  dt-bindings: mailbox: qcom-ipcc: Document the SDX75 IPCC
+  dt-bindings: mfd: qcom,tcsr: Add compatible for SDX75
+  dt-bindings: soc: qcom,aoss-qmp: Document the SDX75 AOSS channel
+  arm64: dts: qcom: sdx75: Add IPCC node
+  arm64: dts: qcom: sdx75: Add TCSR register space
+  arm64: dts: qcom: sdx75: Add AOSS node
+
+ .../bindings/mailbox/qcom-ipcc.yaml           |  1 +
+ .../devicetree/bindings/mfd/qcom,tcsr.yaml    |  1 +
+ .../bindings/soc/qcom/qcom,aoss-qmp.yaml      |  1 +
+ arch/arm64/boot/dts/qcom/sdx75.dtsi           | 26 +++++++++++++++++++
+ 4 files changed, 29 insertions(+)
+
 -- 
 2.25.1
 
