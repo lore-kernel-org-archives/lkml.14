@@ -1,126 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABAC148846;
-	Fri, 26 Apr 2024 15:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7603149007;
+	Fri, 26 Apr 2024 15:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714144019; cv=none; b=ZixxIQn+VCcBOJnKq4IyUGKnNJ0J87mUZwbvAQPTmabG7GExAtsQo0hu2mKujrQwkrkNLQR+0jtqxE5LEpM2L/BvHJo99NwE4n1Gfehfnwtbe0+S+7J355AhZVfwmNKAzsHYs0PWhDQzVk9E1ZBVGSRmTpvpuh2lu7DgdcUc57I=
+	t=1714144034; cv=none; b=NiteJTDYmY7b+iAMGjxo/PXeDwc553fsJZPEXPsq/sjz2c9Ezr2uLmfxs+c1BZajNg4m0cn6uI+VguzF/87oUcYvIBnXdUCwYJFqr1Bv0m+/65spBD17fiTrfBrWlxJOBq0iuDU1c1Lsdoh1iTEDaYUgSdZPo0lArp97GFRAsT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714144019; c=relaxed/simple;
-	bh=ncTVHNygt84sLGMiwmdLqfXu6MVvic3n8Py3fm7DG00=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pWDQjKCLj2T96aD/YyJqqFQ+fk1PsmtlMduVmWgEg2URor5PdmUWZTMRALrwxoNisluHfiWD0uaMcHFem1F0uVABWj5KDAzp33QU7br15NeOhsyBtIM3XcyDBB6YUSnP9IjHXMTjsKjSpHQeVOuVpSQQAhB+ZmXbajpMbliiCN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L2MlZHaF; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714144034; c=relaxed/simple;
+	bh=P1j9CF8rNKFfzwB14P3a4NdCNMWR8w49UK9+jltcIf0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tu+Gd96vW6toi6DYkYKcqaMClTS7ZTwem4HyThyprYpRiUvO+X1FokMdFY/6d9SgBZaVW5GevTZ5blK/dQQ/cMZtYnAYARkvGJXcDZnFMvwbTSEeLOQvSWsjD/ejjZDqErtXn29Wx+DhI5HP4PzuueMMHfK2FQkzj9ea7pOtUWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NjMIgi9L; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1Q6gv7Zn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NjMIgi9L; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1Q6gv7Zn; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L2MlZHaF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714144017; x=1745680017;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ncTVHNygt84sLGMiwmdLqfXu6MVvic3n8Py3fm7DG00=;
-  b=L2MlZHaFPqibHt7ZfC+CX3ZR02me0rcNzhFwyvkQL6yiqU4FZ+PPkGRh
-   iuSbpM074Gi526No+wxMfvHO4Z1D/zxAX15p829nlQdN5kg+K10VLPsuY
-   92H7B6uTSSjnnIIAF5tlVJ31fLfh2wHGiJvvLFd1KWQHOLNESj+TUVrL2
-   BZeRQP1oM+scNpO+bdU9CeyOsjH+KbQzgX5eWypgrgX1PXgSCpq38frE/
-   Dx+0AfgHyt8GD1ivhjl9BKO/aFKkVUVdgKWYY7OAu+rMdKxi+hkuBVkC0
-   OjgP3jVyDTqy7ppf83vBvdgU07WlE3KJYxnCrgmX6/I/O//+qmiAeRPQm
-   g==;
-X-CSE-ConnectionGUID: CxheVWS1Q4ektaLNCiTIWw==
-X-CSE-MsgGUID: wKiO8BF9ToynOZN2DRxGbA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="35269262"
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="35269262"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 08:06:56 -0700
-X-CSE-ConnectionGUID: 1RUVn8Y9T/mQyMy1zY+F5g==
-X-CSE-MsgGUID: /O+8e8J3TPmWp53xRzjg/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="25519467"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa010.fm.intel.com with ESMTP; 26 Apr 2024 08:06:56 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NjMIgi9L";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1Q6gv7Zn";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NjMIgi9L";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1Q6gv7Zn"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D817434F1C;
+	Fri, 26 Apr 2024 15:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714144028; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K4oUvXBlx37Fg431v/r9M3PlkZEuJo6qfb7xxW5BqWk=;
+	b=NjMIgi9L3j53ukDkFttWJ//Jqo43feiBLgVE7grPMGVnNgOu0katBBUgmrCe33f3dI3uZH
+	eMm3Ur93Y7SPYuTD+ThrdDnOIWi2Dyjjh0FlCEELcDzPApe52W0O+bmbTi2A33YgfFJW8Z
+	jET3jiHfaN9GsYr0ifA+8TJl29EEZpM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714144028;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K4oUvXBlx37Fg431v/r9M3PlkZEuJo6qfb7xxW5BqWk=;
+	b=1Q6gv7ZnFV2P2z0to2fE8fiieLiQpO//jC0kmZcanlgdXLJxucnzYyfykgCN9lDmEWP3c2
+	1y5YlZL0L7cc3lBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714144028; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K4oUvXBlx37Fg431v/r9M3PlkZEuJo6qfb7xxW5BqWk=;
+	b=NjMIgi9L3j53ukDkFttWJ//Jqo43feiBLgVE7grPMGVnNgOu0katBBUgmrCe33f3dI3uZH
+	eMm3Ur93Y7SPYuTD+ThrdDnOIWi2Dyjjh0FlCEELcDzPApe52W0O+bmbTi2A33YgfFJW8Z
+	jET3jiHfaN9GsYr0ifA+8TJl29EEZpM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714144028;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K4oUvXBlx37Fg431v/r9M3PlkZEuJo6qfb7xxW5BqWk=;
+	b=1Q6gv7ZnFV2P2z0to2fE8fiieLiQpO//jC0kmZcanlgdXLJxucnzYyfykgCN9lDmEWP3c2
+	1y5YlZL0L7cc3lBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A4C91398B;
+	Fri, 26 Apr 2024 15:07:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LsIsJBzDK2aMfAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 26 Apr 2024 15:07:08 +0000
+Date: Fri, 26 Apr 2024 17:07:19 +0200
+Message-ID: <87jzkk2me0.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Ivan Orlov <ivan.orlov0322@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: eranian@google.com,
-	ak@linux.intel.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ahmad Yasin <ahmad.yasin@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] perf/x86/intel: Add a distinct name for Granite Rapids
-Date: Fri, 26 Apr 2024 08:05:57 -0700
-Message-Id: <20240426150557.2857936-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+Subject: Re: [PATCH][next] ALSA: kunit: make read-only array buf_samples static const
+In-Reply-To: <20240425160754.114716-1-colin.i.king@gmail.com>
+References: <20240425160754.114716-1-colin.i.king@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.03 / 50.00];
+	BAYES_HAM(-2.23)[96.34%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,perex.cz,suse.com,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -1.03
+X-Spam-Flag: NO
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Thu, 25 Apr 2024 18:07:54 +0200,
+Colin Ian King wrote:
+> 
+> Don't populate the read-only array buf_samples on the stack at
+> run time, instead make it static const.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-Currently, the Sapphire Rapids and Granite Rapids share the same PMU
-name, sapphire_rapids. Because from the kernel’s perspective, GNR is
-similar to SPR. The only key difference is that they support different
-extra MSRs. The code path and the PMU name are shared.
+Thanks, applied now.
 
-However, from end users' perspective, they are quite different. Besides
-the extra MSRs, GNR has a newer PEBS format, supports Retire Latency,
-supports new CPUID enumeration architecture, doesn't required the
-load-latency AUX event, has additional TMA Level 1 Architectural Events,
-etc. The differences can be enumerated by CPUID or the PERF_CAPABILITIES
-MSR. They weren't reflected in the model-specific kernel setup.
-But it is worth to have a distinct PMU name for GNR.
 
-Fixes: a6742cb90b56 ("perf/x86/intel: Fix the FRONTEND encoding on GNR and MTL")
-Suggested-by: Ahmad Yasin <ahmad.yasin@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/events/intel/core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index f3315f13f920..da38a16b2cbc 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -6768,12 +6768,17 @@ __init int intel_pmu_init(void)
- 	case INTEL_FAM6_EMERALDRAPIDS_X:
- 		x86_pmu.flags |= PMU_FL_MEM_LOADS_AUX;
- 		x86_pmu.extra_regs = intel_glc_extra_regs;
-+		pr_cont("Sapphire Rapids events, ");
-+		name = "sapphire_rapids";
- 		fallthrough;
- 	case INTEL_FAM6_GRANITERAPIDS_X:
- 	case INTEL_FAM6_GRANITERAPIDS_D:
- 		intel_pmu_init_glc(NULL);
--		if (!x86_pmu.extra_regs)
-+		if (!x86_pmu.extra_regs) {
- 			x86_pmu.extra_regs = intel_rwc_extra_regs;
-+			pr_cont("Granite Rapids events, ");
-+			name = "granite_rapids";
-+		}
- 		x86_pmu.pebs_ept = 1;
- 		x86_pmu.hw_config = hsw_hw_config;
- 		x86_pmu.get_event_constraints = glc_get_event_constraints;
-@@ -6784,8 +6789,6 @@ __init int intel_pmu_init(void)
- 		td_attr = glc_td_events_attrs;
- 		tsx_attr = glc_tsx_events_attrs;
- 		intel_pmu_pebs_data_source_skl(true);
--		pr_cont("Sapphire Rapids events, ");
--		name = "sapphire_rapids";
- 		break;
- 
- 	case INTEL_FAM6_ALDERLAKE:
--- 
-2.35.1
-
+Takashi
