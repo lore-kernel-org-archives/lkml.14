@@ -1,61 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5B214883D
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 14:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E04154450;
+	Fri, 26 Apr 2024 14:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714141557; cv=none; b=d+Pv5NHbM7fxM4hdO+b0PJeFXj4ABMg3Hhf5jcgp3kKBDz/wqiyaZQK287ErBfrXxWyqoCwkf3rf/iZAawBM9ZAjWSb5Oymq42EiPcAjwvUNhIVw/iTY1J+aGFY8KgMe8ovIqZo1r7B/04dj36vHqFiXl0sIjcIDoFJSEsLrLJ0=
+	t=1714141559; cv=none; b=ky8arRHETacGIBw263iDuEEgHVNrtyenQ4Lo7Umxzeis7Uyotf1qH2puWXcnPkvjhYT/340tP0FYAy1ApjCPte82fyubjBk4lB/cOWrPFoJxPjwlaU9ZmS5lhpJc0UHYmOyaZcfYmfbWhlj72wu46BRqiEzixISdFXu137w0Qf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714141557; c=relaxed/simple;
-	bh=FOxXbY04/XnrCXMqvWb1uftEXqf7Fy5BxGfZ+arTFXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=EmQvJGJWvscsRkdxpq3NRSvYbDhwmZ44rKk4GLAL8JSxptRhLTdnK5p3MGFbDBpO+Fq6ZxaMaSzgnzpb8SdB9S2JEAtUL06OHUrMu0elb/lOSKAHwJ2TiWEHH5f2sxrcfJNAMy4hb0zJJiTuuFP+5+dwSmsYAppfkbwsre0PjFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YkytswIb; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714141559; c=relaxed/simple;
+	bh=JAlZlhRgd43TtcbyzJjboofIoaeMSgpIa90XkM2QRNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bly2ruxqcLl/SomsvDzi2SZie4+A80R/OOOnvuShLmViIyIuLuKL0TFzV6HunMb2m1Hiz08PsnkJ59UXh/MuWJKT0NriD5q4yvsGbDok6BQcRJ4tKeRIsea62vVf7xezFH95xFyWzz9JY2Qz7QueUseKfxQLYKvNPJVWFde25Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qir+Mwqb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YkytswIb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714141555; x=1745677555;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=FOxXbY04/XnrCXMqvWb1uftEXqf7Fy5BxGfZ+arTFXk=;
-  b=YkytswIbFsIgP+ka1gOYDtbE9g9e2QO4cEfYWxm1uS2oYF9fmcm5Nm6M
-   ou9luQl5S1R4QO5rECmnAxQhg6M1hMbb56zhfXVFBfHjaM0ZQhACB0fpJ
-   9Zk6voWpcx7jIKwtAKmWTonjjMNc6bdwd9OEUIlv05rUVYX97rhN9vbUI
-   W63xagtNPzutrQKUW6wrlGF520WcfD+erPri+uLmQ6Wl0Ff/+6Xd7VMXx
-   3SMmYK1hYXeVUXatz49Er6S8qi37HIuPOxwUoIDpCVwydOzqRdvhQzKpC
-   D/e7icDaLSrDrFyBIY/GFhUZo2/L7SmnVRNzlMkwc3qqW3APMbIpXAfHu
-   g==;
-X-CSE-ConnectionGUID: JINWK1LgTpeFZ8hY3GFgcw==
-X-CSE-MsgGUID: waHEHlFVTxyk/34VRveDHw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="27333073"
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="27333073"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 07:25:54 -0700
-X-CSE-ConnectionGUID: KaZEcMiAQRK2yurP5QfyJw==
-X-CSE-MsgGUID: WdR0UyhOQay6S4gFyvWuuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="25313701"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 26 Apr 2024 07:25:52 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s0MWL-0003o8-1h;
-	Fri, 26 Apr 2024 14:25:49 +0000
-Date: Fri, 26 Apr 2024 22:24:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Liam Howlett <liam.howlett@oracle.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>
-Subject: lib/maple_tree.c:336:20: error: unused function 'mte_has_null'
-Message-ID: <202404262254.lEmMOMMd-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qir+Mwqb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC7BC2BD10;
+	Fri, 26 Apr 2024 14:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714141558;
+	bh=JAlZlhRgd43TtcbyzJjboofIoaeMSgpIa90XkM2QRNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qir+Mwqb5Zq5hWmubS/5pJqzYxgn5aTBjTqr0TpgW4AM4iQ+njzAOLQJThbz/7Mpl
+	 PhGYYqgksOCndQzchmi2jKZuYtz0+jq8klFTZr/64s+8NfsEkp/6m0YjcEMHq8IwaT
+	 oekwUamRvgweQ5GN7ZO6cD2rBTYW7QiKD7joaWPgrhoJjo6GFWX9gJruEUfjKSbulb
+	 xRmSnCokz5ttfmiDPFy/Mrfn8AV2uKfP4mFk9/tKObmooSYZV+MYMkBNtsegpmVzoo
+	 oqVvJWWMcmHBV8QRF3kQKQ3tE7DLy8eHjKDTqCGNI/7JV5xYR8KNTAWWZw2FzCLOnr
+	 JEbaKD8KX2esw==
+Date: Fri, 26 Apr 2024 15:25:53 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: yisen.zhuang@huawei.com, salil.mehta@huawei.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	jiri@resnulli.us, shenjian15@huawei.com, wangjie125@huawei.com,
+	liuyonglong@huawei.com, chenhao418@huawei.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 net 4/7] net: hns3: use appropriate barrier function
+ after setting a bit value
+Message-ID: <20240426142553.GB513047@kernel.org>
+References: <20240426100045.1631295-1-shaojijie@huawei.com>
+ <20240426100045.1631295-5-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,43 +47,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240426100045.1631295-5-shaojijie@huawei.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   c942a0cd3603e34dd2d7237e064d9318cb7f9654
-commit: 6e7ba8b5e2380f941dda8a1025d70c5ce5b38982 maple_tree: mte_set_full() and mte_clear_full() clang-analyzer clean up
-date:   1 year, 5 months ago
-config: x86_64-sof-customedconfig-amd-defconfig (https://download.01.org/0day-ci/archive/20240426/202404262254.lEmMOMMd-lkp@intel.com/config)
-compiler: clang version 18.1.4 (https://github.com/llvm/llvm-project e6c3289804a67ea0bb6a86fadbe454dd93b8d855)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240426/202404262254.lEmMOMMd-lkp@intel.com/reproduce)
+On Fri, Apr 26, 2024 at 06:00:42PM +0800, Jijie Shao wrote:
+> From: Peiyang Wang <wangpeiyang1@huawei.com>
+> 
+> There is a memory barrier in followed case. When set the port down,
+> hclgevf_set_timmer will set DOWN in state. Meanwhile, the service task has
+> different behaviour based on whether the state is DOWN. Thus, to make sure
+> service task see DOWN, use smp_mb__after_atomic after calling set_bit().
+> 
+>           CPU0                        CPU1
+> ========================== ===================================
+> hclgevf_set_timer_task()    hclgevf_periodic_service_task()
+>   set_bit(DOWN,state)         test_bit(DOWN,state)
+> 
+> pf also has this issue.
+> 
+> Fixes: ff200099d271 ("net: hns3: remove unnecessary work in hclgevf_main")
+> Fixes: 1c6dfe6fc6f7 ("net: hns3: remove mailbox and reset work in hclge_main")
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404262254.lEmMOMMd-lkp@intel.com/
+FWIIW, I think it is fine to fix both problems in one patch
+because both the cited patches were included in the same release - v5.6.
+(Actually, they seem to be consecutive patches in git history.)
 
-All errors (new ones prefixed by >>):
+> Signed-off-by: Peiyang Wang <wangpeiyang1@huawei.com>
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+> ---
+>  drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 3 +--
+>  drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 3 +--
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+> index a068cd745eb4..6eda73f1e6ad 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+> @@ -7954,8 +7954,7 @@ static void hclge_set_timer_task(struct hnae3_handle *handle, bool enable)
+>  		/* Set the DOWN flag here to disable link updating */
+>  		set_bit(HCLGE_STATE_DOWN, &hdev->state);
+>  
+> -		/* flush memory to make sure DOWN is seen by service task */
+> -		smp_mb__before_atomic();
+> +		smp_mb__after_atomic(); /* flush memory to make sure DOWN is seen by service task */
 
-   lib/maple_tree.c:326:21: error: unused function 'mte_set_full' [-Werror,-Wunused-function]
-     326 | static inline void *mte_set_full(const struct maple_enode *node)
-         |                     ^~~~~~~~~~~~
-   lib/maple_tree.c:331:21: error: unused function 'mte_clear_full' [-Werror,-Wunused-function]
-     331 | static inline void *mte_clear_full(const struct maple_enode *node)
-         |                     ^~~~~~~~~~~~~~
->> lib/maple_tree.c:336:20: error: unused function 'mte_has_null' [-Werror,-Wunused-function]
-     336 | static inline bool mte_has_null(const struct maple_enode *node)
-         |                    ^~~~~~~~~~~~
-   3 errors generated.
+If you need to post a v2 for some other reason, please consider reworking
+this comment so lines are no longer than 80 columns wide. The previous form
+where the comment was on it's own line looks good to me.
 
+Likewise below.
 
-vim +/mte_has_null +336 lib/maple_tree.c
+In any case, this patch looks good to me.
 
-   335	
- > 336	static inline bool mte_has_null(const struct maple_enode *node)
-   337	{
-   338		return (unsigned long)node & MAPLE_ENODE_NULL;
-   339	}
-   340	
+Reviewed-by: Simon Horman <horms@kernel.org>
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  		hclge_flush_link_update(hdev);
+>  	}
+>  }
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+> index b57111252d07..08db8e84be4e 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+> @@ -2181,8 +2181,7 @@ static void hclgevf_set_timer_task(struct hnae3_handle *handle, bool enable)
+>  	} else {
+>  		set_bit(HCLGEVF_STATE_DOWN, &hdev->state);
+>  
+> -		/* flush memory to make sure DOWN is seen by service task */
+> -		smp_mb__before_atomic();
+> +		smp_mb__after_atomic(); /* flush memory to make sure DOWN is seen by service task */
+>  		hclgevf_flush_link_update(hdev);
+>  	}
+>  }
+> -- 
+> 2.30.0
+> 
+> 
