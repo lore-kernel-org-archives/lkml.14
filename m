@@ -1,93 +1,150 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E68A147C99;
-	Fri, 26 Apr 2024 13:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009B5147C99;
+	Fri, 26 Apr 2024 13:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139552; cv=none; b=rDN5ahLz8fOClHMTQBNEwIQJ2fYDsafTItqXUnEGlEd6gFdOjGmYhJwrm8Zwy1IMX2bbLkMHRsOlHF7Fv8a1LDBQM3ahANsDytQtIfojf/ad+d724kG9fJ6gzpfZ8IIoK8UT4FLjZh+fznrxu+H/puPLbuZzqtI2hK9015z6yyg=
+	t=1714139559; cv=none; b=CN6k/fc9PQjLrAdu/AJFszdPs9lFyNHiVlJad47NBaxgyxnc7aTaBuM847cZ84/idH3lKKi2kutVi2yE3c5XzQB2Iqw0+Cf5V8EtMt8kYHmtzDjK3bj2MHXr0e50+J+V5O5ss82noQKUyRr2NJGTrbaan1SUaE+ldk/Et/R+9I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139552; c=relaxed/simple;
-	bh=EqnPqYd+jON+bJvqbrJwqw2XVjsLroBVZfBzA47YEBQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lpK8quFyUe0LPj+nowIdxri7TSQ5eaq+d2edjjA9HCNXRnTG8wUANcDfYyIVgsgrJNjbHbQmJsRTXeCppw1HrKWDo7PwT75OzAS/NosvaWFRIDLh7qu/6Eofyfq1zGG27HNVZ6piXpCgwHbo2mq/fhuzO1TpHH5eoCKgA2823Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvHB5Svjz6K6CT;
-	Fri, 26 Apr 2024 21:49:58 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 746DB140B67;
-	Fri, 26 Apr 2024 21:52:27 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 14:52:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
-	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v8 02/16] cpu: Do not warn on arch_register_cpu() returning -EPROBE_DEFER
-Date: Fri, 26 Apr 2024 14:51:12 +0100
-Message-ID: <20240426135126.12802-3-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
-References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1714139559; c=relaxed/simple;
+	bh=gMtHGUb4M5s/DcbVs8UWDKiLf+2lO+ad/+QYz4lqtIg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cQcy5feRDrlqWjBYYJp0nAMjLIYKaJkqe1+irVQzu+UOG84/uEpzeSL4oRv/G6M6asc3APPpN5EBYQAGGV5qygoKSZ763t+vKNDDBOfqRP49JSPvYhYDeXRO/WZmnx+9gQM0zJqeuKqWLK7LJc7naU3Q04vPRkCQ7Vi1xA4dgP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UahOrDm7; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UahOrDm7"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e78970853so5643036a12.0;
+        Fri, 26 Apr 2024 06:52:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714139555; x=1714744355; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vdC/8U1Kxz1mEJxl3Cf8RJ3ZSt5Qcg4msblYJFG7Ecg=;
+        b=UahOrDm7I27KO8ZNv/bI1dltnxpFzf20FGUhMmFjnvGXooh9sPdLgcj9c/kLiX9XCg
+         DIMy2/I2lZNoA6z9WupBtvJ534IoKNsNORtXN1U/nR9QsGWq5BMOM5XsP2Hugcs3cPUL
+         hrlJib5kvNd93NXL54D/EkcdvLRScx6Wz9igp2aBAh6f5TJrY1j61HAXNwZ0NjsXz2Ck
+         Q99vpl0Y8Cnv08zyso6TVFW0iHsEcuztUNXr4RleIzSWYHi7/b1d8n5VctfnRg9RQHz7
+         QswzLfbwJZvqfuBslUAP9kyR4/1gYvFcH7sl1NnZHFhFEc2H1zv78GL1OrLDaAQjpLmp
+         56oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714139555; x=1714744355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vdC/8U1Kxz1mEJxl3Cf8RJ3ZSt5Qcg4msblYJFG7Ecg=;
+        b=Xbv1UY2M67QQsSiUWWfhAsKC9PjnS9mL9Mrj/PFpQm36FK/uIlXuXWAp2yOgScpoAU
+         lF9kwB0BO8kIfTfHRMzIpoV6FjNLf21j8mZJvyMVLhjQCKTM3ZIhMzgu+Ae3dueA9MR4
+         c5l+hNIoQ012WjMhX1UePRJsBCCOzOED5KlhYC2xVfO9VP/g6/SMgZVJumPY1wAaJuud
+         2rk6d9O80Qjhpw+hDykF8ijnLxGRozJmLoR39PzhbSidV6MfoU/07Fx12WZ9vQsWaVlq
+         8/JQiGuqZTz1JaLFynVMfQi/OzUzggLFic90HNAhzoQ/GA4icp4FN57z3qsxL1KHTT8e
+         FcSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyxTipuDaXprWw4W8rvf1P/PEgEZ4QHF0i0j5IEfhgNHPi8OfcM8TA4DCv781al+gDGne+E4Cb2qxo7OPJkzgGKF1LhX4uI2zbj4w6XhfPWhzh6icgR3wr/uamg8IYLcpgCNESOa2KWXPvVClcs0AnWPnrLZwuj3YldIkpe/q0g9YmtLzy
+X-Gm-Message-State: AOJu0Yzcr+BHj/MJR/13ndsLt5GFsz+vhw1I5/L0uB2KoInEfZImGa26
+	q3kpBJt7lwZqaXb5UWRJC8OiXj+e0Fx2zoIK1c8g5y0sVNX7fG0jkq/9pfUPsZ8l6yJAAXbwEeZ
+	wfwrguiHMruF+mb61sYg5F+pjxeo=
+X-Google-Smtp-Source: AGHT+IHXG0x9JABiG3fS/W399UgGKpb+PNo0PDtz+cJyxFStDFH5E0ooy9h6KyWG0L0HmW6tLrPDFwGQ90Prtx1rfq8=
+X-Received: by 2002:a17:906:d107:b0:a4e:24e6:9880 with SMTP id
+ b7-20020a170906d10700b00a4e24e69880mr6030876ejz.33.1714139555199; Fri, 26 Apr
+ 2024 06:52:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+References: <20240404222009.670685-1-andreas@kemnade.info> <20240404222009.670685-3-andreas@kemnade.info>
+ <CAHp75VeZ9U_+1rJQjr4KvvzjYQGzfKtk+BK00vqvKcVn2-yP3g@mail.gmail.com>
+ <20240405182832.4e457695@aktux> <CAHp75VckoDheCN-KQ0KcSk9rE_-cXFUujurtA4sK6KAixDttQQ@mail.gmail.com>
+ <20240425185417.0a5f9c19@aktux> <7dd1eb70-b011-4247-aea9-173ddcd17dc7@kaechele.ca>
+ <20240426095617.4e442681@aktux>
+In-Reply-To: <20240426095617.4e442681@aktux>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 26 Apr 2024 16:51:59 +0300
+Message-ID: <CAHp75VdA_peJBWXFWSs-vDxA86y6MG0J7ixzXExqDxJJzfJ7mA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] Input: edt-ft5x06 - add ft5426
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Felix Kaechele <felix@kaechele.ca>, dmitry.torokhov@gmail.com, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	o.rempel@pengutronix.de, u.kleine-koenig@pengutronix.de, hdegoede@redhat.com, 
+	ye.xingchen@zte.com.cn, p.puschmann@pironex.com, linux-input@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	caleb.connolly@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For arm64 the CPU registration cannot complete until the ACPI
-interpreter us up and running so in those cases the arch specific
-arch_register_cpu() will return -EPROBE_DEFER at this stage and the
-registration will be attempted later.
+On Fri, Apr 26, 2024 at 10:56=E2=80=AFAM Andreas Kemnade <andreas@kemnade.i=
+nfo> wrote:
+> On Thu, 25 Apr 2024 22:54:13 -0400
+> Felix Kaechele <felix@kaechele.ca> wrote:
+> > On 2024-04-25 12:54, Andreas Kemnade wrote:
+> > > On Fri, 5 Apr 2024 20:21:19 +0300
+> > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > >> On Fri, Apr 5, 2024 at 7:28=E2=80=AFPM Andreas Kemnade <andreas@kemn=
+ade.info> wrote: >>> On Fri, 5 Apr 2024 18:13:45 +0300
+> > >>> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+...
 
----
-v8: No change
----
- drivers/base/cpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > >>>> Why a different vendor prefix?
+> >
+> > >>> I sorted by the numbers. Looking at datasheets for other controller=
+s I see >>> https://www.displayfuture.com/Display/datasheet/controller/FT5x=
+06.pdf
+> > >>> it only mentions FocalTech Systems Co., Ltd.
+> > >>
+> > >> But does the driver use that? AFAICS it uses edt. Perhaps it's due t=
+o
+> > >> a business split, not to my knowledge anyway.
+> >
+> > I've been looking into this over the past few weeks as I was working on
+> > mainline support for an Android device.
+> > And please forgive me if any of the following is not fully accurate, I'=
+m
+> > not an industry expert.
+> >
+> > After some research, my understanding of this is as follows:
+> >
+> > - There are companies that make touch ICs, LCD driver ICs and sometimes
+> > even ICs that are both. Focaltech or Himax are examples of such compani=
+es.
+> >
+> > - There are companies that make LCMs. These are complete assemblies of
+> > panel, backlight, touch layer and driver circuitry PCBs. This is what
+> > OEMs generally purchase when they design a consumer device. Emerging
+> > Display Technologies Corp. (EDT) is such a LCM manufacturing company.
+> > More often than not LCM manufacturers do not make their own driver ICs.
+> >
+> > LCM manufacturers include ICs from Focaltech in their LCMs.
+> > To my knowledge Focaltech is not a manufacturer of LCMs.
+> >
+> > As such, an interpretation of the compatible string "edt,edt-ft5406"
+> > could be: Unspecified EDT LCM with Focaltech FT5406 IC.
+> >
+> >  From my perspective, more correct would either be something like
+> > "edt,etm070001bdh6" (the LCM by EDT that contains this IC, especially i=
+f
+> > it had model specific quirks) or "focaltech,ft5406".
+> > But "edt,edt-ft5406" is incorrect if being specific is the goal here.
+> > Given that the driver predates much of the DT binding rigour it's what
+> > we have now though.
+> >
+> I think focaltech,ft5406 is better because it is consistent with other dr=
+ivers/
+> bindings. We do not specify the display it is used on on other touchscree=
+n
+> bindings. We do not specify the actual LEDs behind a LED interface chip.
+> And often the chip name is more easily to find out than the name of a
+> display.
 
-diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-index 56fba44ba391..7b83e9c87d7c 100644
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -558,7 +558,7 @@ static void __init cpu_dev_register_generic(void)
- 
- 	for_each_present_cpu(i) {
- 		ret = arch_register_cpu(i);
--		if (ret)
-+		if (ret && ret != -EPROBE_DEFER)
- 			pr_warn("register_cpu %d failed (%d)\n", i, ret);
- 	}
- }
--- 
-2.39.2
+I'm _not_ a DT person, you should clarify this with them. I just
+pointed out the possible mistake (from Linux / DT perspective), and
+not hardware / business related one. If they are fine with focaltech
+prefix, then it's fine to me as well!
 
+--=20
+With Best Regards,
+Andy Shevchenko
