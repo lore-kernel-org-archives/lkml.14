@@ -1,254 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0787D144D3E
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 10:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714128603; cv=none; b=IGW0oSHIWQvN8pVERSMwDrX01U6xrghtKN/YGBeAMrMEEfWxrduwt7zJT8Z2kecW6+6xTQlpATUCkD7bsd8izrXEoy+ZDsvRQLzdIvy/YwYIKEd0hgE4WVHDGHQW9P7WlZcxi1ojdMQ4g/oM1q6ImPzP2VBTCmhqEFljriL6QVE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714128603; c=relaxed/simple;
-	bh=utF6bK/ynDvKtFTtpZCiM6gnQeq7mtq++CnFbpesggk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K8i0iaFSY4jfY/ilUkd9XrLzw7x1qJXF1t6v0CeqvOEs3g6P9R7Ea0xOv5PseZeRBoCeuT5TGPFo6lfosqT8x0xzeQcO94TSmNleAsekLS4Zj3GTtbqQFI9r+Iqdc98iEgMUAKl/JDKZ7scMyi9yckr6uq7zl4N1cEb3STmxWW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mnhqi9zW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F40B145348;
+	Fri, 26 Apr 2024 10:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714128606; cv=pass; b=gNG/iiaZTThfurUEHbNgrsS6SxSWuyq1kxZwmefsy53DLurYeQZezJZlxtXCnH9B7WE3eP/Pqmym/5L+6kj/rwAvIM42yzG5cs5zpg02WCP3A32qqXP3YizNv2SDftDzDU5oH/UpKyNapAbMi4kSDgADUel7wxjcu8sgdL7eBbE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714128606; c=relaxed/simple;
+	bh=GWaq2g/xBydbPN9q+8h8xFfRgOf8B9sswxl0BgJjkVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qdvZjfwYCbE46gV43Catk0f0tUoM0R1fp3TEbuORUIyJI6iLV1aC/paJUm3bJIWxqThIu6P3+YM2w5JL3wmlDGtPFsTS0XTRURw8X/FmLHTiegnYzZjJfg78Fh5fqNSS6Vabsh11VVMb9MsYY1aXmveVFPMUHscN6xmA1fMr61U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=FpdTpkqu; arc=pass smtp.client-ip=195.140.195.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mnhqi9zW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714128600;
+	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="FpdTpkqu"
+Received: from hillosipuli.retiisi.eu (80-248-247-191.cust.suomicom.net [80.248.247.191])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sailus)
+	by meesny.iki.fi (Postfix) with ESMTPSA id 4VQqHY5VpTzyRw;
+	Fri, 26 Apr 2024 13:50:01 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
+	t=1714128601;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cGbSr+4fcHT2eAsfJezUbtC5iwN5BsiYgVJ4o5jDSLU=;
-	b=Mnhqi9zW+3amQDPqTObmpwIF60z/hHhz0ab3XAjVgBZ5J6PhrIWpUKIakGuulOhFNap26O
-	O4qPbOXIid01HAe3krdO1tnjLv7YWC/vtjCLMXScx0iWJuD+4DTrH5mkbL0eOlqOkQD2H5
-	y+FQoBZq6hhjTsR5uQ11PR6yx2go3OI=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-R0eUjCgiMuGLIXk9TF7xxg-1; Fri, 26 Apr 2024 06:49:59 -0400
-X-MC-Unique: R0eUjCgiMuGLIXk9TF7xxg-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-78319f64126so265001885a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 03:49:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714128599; x=1714733399;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cGbSr+4fcHT2eAsfJezUbtC5iwN5BsiYgVJ4o5jDSLU=;
-        b=fcqyRizxuYR2BauuMhKW5zp3lu0fdXfFpm1g92dYGaS71HWiGlUqWgy3sDPRdQ13cW
-         eX8YvnujLtMQQho0LHNW1AdyEMBWLhJSjju1+50mBbmNiCfkmwFKTlwM48nw+vobccWu
-         kiCIaAMVmdo97TNWv0YuTAgNPnocoKtMihrLFc5U3JYbUrRLFPZBZqvRjSQK1rtpBB9k
-         //htqbEtdVB2C1UG5YzPSE/mfNzUWgElzu2PRymz8L/ZMpbDswgxGgJaM7TLjfyXcHBz
-         sJlvoFg3O9lDFwgVAfTuE90/0zv4YJUs1QMb5eggpRMfDId4vT52L1lWTqAd3TzLYd0M
-         gGVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaAsNnoPQtSgY6zBDB4UByNdMMcPgI+71Je64mC3VQ8HusVMTW9vyIIoNI5l3J8VyWU26duqJl/W51SlB9tQPm5TmfJCt+kMLye5ap
-X-Gm-Message-State: AOJu0YwRKh+IZWU/4cXDRoyQscL3FmxhZguivrqnRag1Sw8BkR/3kgPH
-	1Cvl5R5mwWfj186RN5QjucbcuxfJnUH9Whn7Yg4Bd7YhvFcKFLbs65YyHuTbi9hTNLLzBB/sSU+
-	fym0kjMSP6jOiiDOwz1l0YjXWWoc3R5TztTHEe+3Xw0ISc5ctLSBsNo8LJeSHhw==
-X-Received: by 2002:a05:620a:992:b0:78e:e479:3ddb with SMTP id x18-20020a05620a099200b0078ee4793ddbmr2394287qkx.23.1714128598874;
-        Fri, 26 Apr 2024 03:49:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHh18C4THl4Xonjz0GTh9Qrl3LA0jHHF1NCbVJUxnZ8bmimP/NV7dkk5fFTYl157a5HGhORJQ==
-X-Received: by 2002:a05:620a:992:b0:78e:e479:3ddb with SMTP id x18-20020a05620a099200b0078ee4793ddbmr2394272qkx.23.1714128598452;
-        Fri, 26 Apr 2024 03:49:58 -0700 (PDT)
-Received: from rh.redhat.com (p200300c93f4cc600a5cdf10de606b5e2.dip0.t-ipconnect.de. [2003:c9:3f4c:c600:a5cd:f10d:e606:b5e2])
-        by smtp.gmail.com with ESMTPSA id vv26-20020a05620a563a00b007907b57aa1fsm3888019qkn.12.2024.04.26.03.49.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 03:49:58 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH v2 2/6] KVM: arm64: unify trap setup code
-Date: Fri, 26 Apr 2024 12:49:46 +0200
-Message-ID: <20240426104950.7382-3-sebott@redhat.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240426104950.7382-1-sebott@redhat.com>
-References: <20240426104950.7382-1-sebott@redhat.com>
+	bh=XFC6uXO7DD8kpivh7H6J7YSnZ1VOLVEISlEahgPLNVE=;
+	b=FpdTpkquJWDKmrBJHeWlhFbZQptxWPo7F55rM/TgBwxSulmgDsCzUUd1HNDTjQoLK64tmx
+	9VnhJLsD4TqG9E/NY9ATV8f97RBgpIAPKVbG/NIf+CgFLUb6lVpLG2pAOIJbmrGceF4ApL
+	TsItngSB3uipVZCUwD7DPk+m88OxOfE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+	s=meesny; t=1714128601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFC6uXO7DD8kpivh7H6J7YSnZ1VOLVEISlEahgPLNVE=;
+	b=O9Z6E+oh13HuxWGXsVkR/V/t35lJE2aTF1Y/numuJ/KtRVxS/pykhOlJaXkkfach+Jk4xx
+	OljS2azg8MR+1vgCYu1GQQs2gRtLGxq6Mj8N6UAXdWpLHYQSAdQs5wgI9S8hpKVR/LtQSt
+	fPe3BOyGIqePdulXkHX6MrgnWbhGRmA=
+ARC-Seal: i=1; s=meesny; d=iki.fi; t=1714128601; a=rsa-sha256; cv=none;
+	b=ak4v3CveP1m9N8Wgn5kFDnv5j5LNtUQiaA1SSpg36eJplljQ55ZwA1kY+xQuenydNKY8kO
+	NHCdaZ0Fwd9ynE/cOwi5cr14CCHHOchckltEHI6wAW6ltsZXPnv0+95Cym9CUFOHYX2QKA
+	6oLSirzrr/DYDxb2nVF+y6S34G+r/aQ=
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
+Received: from valkosipuli.retiisi.eu (valkosipuli.localdomain [192.168.4.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 08CF2634C96;
+	Fri, 26 Apr 2024 13:49:59 +0300 (EEST)
+Date: Fri, 26 Apr 2024 10:49:59 +0000
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: Tommaso Merciai <tomm.merciai@gmail.com>
+Cc: martin.hecht@avnet.eu, michael.roeder@avnet.eu,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] media: i2c: alvium: Move V4L2_CID_GAIN to
+ V4L2_CID_ANALOG_GAIN
+Message-ID: <ZiuG1xS5umlNl7vq@valkosipuli.retiisi.eu>
+References: <20240416141905.454253-1-tomm.merciai@gmail.com>
+ <20240416141905.454253-6-tomm.merciai@gmail.com>
+ <ZilLThyqHC2xi6tS@valkosipuli.retiisi.eu>
+ <ZitTL/IhmuvwF2Qu@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
+ <ZitUAsBgoxLG_vEx@valkosipuli.retiisi.eu>
+ <ZitowFM86EE52IZB@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZitowFM86EE52IZB@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
 
-There are 2 functions to set up traps via HCR_EL2:
-* kvm_init_sysreg() called via KVM_RUN (before the 1st run or when
-  the pid changes)
-* vcpu_reset_hcr() called via KVM_ARM_VCPU_INIT
+Hi Tommaso,
 
-To unify these 2 and to support traps that are dependent on the
-ID register configuration, move vcpu_reset_hcr() to sys_regs.c
-and call it via kvm_init_sysreg().
+On Fri, Apr 26, 2024 at 10:41:36AM +0200, Tommaso Merciai wrote:
+> Hi Sakari,
+> 
+> On Fri, Apr 26, 2024 at 07:13:06AM +0000, Sakari Ailus wrote:
+> > Hi Tommaso,
+> > 
+> > On Fri, Apr 26, 2024 at 09:09:35AM +0200, Tommaso Merciai wrote:
+> > > Hi Sakari,
+> > > Thanks for your review.
+> > > 
+> > > On Wed, Apr 24, 2024 at 06:11:26PM +0000, Sakari Ailus wrote:
+> > > > Hi Tommaso,
+> > > > 
+> > > > On Tue, Apr 16, 2024 at 04:19:05PM +0200, Tommaso Merciai wrote:
+> > > > > Into alvium cameras REG_BCRM_GAIN_RW control the analog gain.
+> > > > > Let's use the right V4L2_CID_ANALOGUE_GAIN ctrl.
+> > > > > 
+> > > > > Signed-off-by: Tommaso Merciai <tomm.merciai@gmail.com>
+> > > > > ---
+> > > > >  drivers/media/i2c/alvium-csi2.c | 6 +++---
+> > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/media/i2c/alvium-csi2.c b/drivers/media/i2c/alvium-csi2.c
+> > > > > index 30ef9b905211..56d64f27df72 100644
+> > > > > --- a/drivers/media/i2c/alvium-csi2.c
+> > > > > +++ b/drivers/media/i2c/alvium-csi2.c
+> > > > > @@ -1993,7 +1993,7 @@ static int alvium_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
+> > > > >  	int val;
+> > > > >  
+> > > > >  	switch (ctrl->id) {
+> > > > > -	case V4L2_CID_GAIN:
+> > > > > +	case V4L2_CID_ANALOGUE_GAIN:
+> > > > >  		val = alvium_get_gain(alvium);
+> > > > >  		if (val < 0)
+> > > > >  			return val;
+> > > > > @@ -2025,7 +2025,7 @@ static int alvium_s_ctrl(struct v4l2_ctrl *ctrl)
+> > > > >  		return 0;
+> > > > >  
+> > > > >  	switch (ctrl->id) {
+> > > > > -	case V4L2_CID_GAIN:
+> > > > > +	case V4L2_CID_ANALOGUE_GAIN:
+> > > > >  		ret = alvium_set_ctrl_gain(alvium, ctrl->val);
+> > > > >  		break;
+> > > > >  	case V4L2_CID_AUTOGAIN:
+> > > > > @@ -2154,7 +2154,7 @@ static int alvium_ctrl_init(struct alvium_dev *alvium)
+> > > > >  
+> > > > >  	if (alvium->avail_ft.gain) {
+> > > > >  		ctrls->gain = v4l2_ctrl_new_std(hdl, ops,
+> > > > > -						V4L2_CID_GAIN,
+> > > > > +						V4L2_CID_ANALOGUE_GAIN,
+> > > > >  						alvium->min_gain,
+> > > > >  						alvium->max_gain,
+> > > > >  						alvium->inc_gain,
+> > > > 
+> > > > This looks like a bugfix. Shouldn't it be cc'd to stable as well? A Fixes:
+> > > > tag would be nice, too.
+> > > 
+> > > Fully agree.
+> > > Plan is to add in v2 Fixes: 0a7af872915e ("media: i2c: Add support for alvium camera")
+> > > like you suggest and stable@vger.kernel.org in CC.
+> > 
+> > Just make sure git send-email won't actually cc the patch to the stable
+> > e-mail address. Cc: tag is enough. The git config option is
+> > sendemail.suppresscc.
+> 
+> Sorry, just to clarify.
+> You are suggesting just to add sendemail.suppresscc. option right?
+> No cc stable@vger.kernel.org
 
-While at it rename kvm_init_sysreg() to kvm_setup_traps() to
-better reflect what it's doing.
+Yes, and adding a Cc: stable@vger.kernel.org tag.
 
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
----
- arch/arm64/include/asm/kvm_emulate.h | 37 -----------------------
- arch/arm64/include/asm/kvm_host.h    |  2 +-
- arch/arm64/kvm/arm.c                 |  3 +-
- arch/arm64/kvm/sys_regs.c            | 44 ++++++++++++++++++++++++++--
- 4 files changed, 44 insertions(+), 42 deletions(-)
-
-diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
-index 975af30af31f..9e71fcbb033d 100644
---- a/arch/arm64/include/asm/kvm_emulate.h
-+++ b/arch/arm64/include/asm/kvm_emulate.h
-@@ -67,43 +67,6 @@ static __always_inline bool vcpu_el1_is_32bit(struct kvm_vcpu *vcpu)
- }
- #endif
- 
--static inline void vcpu_reset_hcr(struct kvm_vcpu *vcpu)
--{
--	vcpu->arch.hcr_el2 = HCR_GUEST_FLAGS;
--	if (has_vhe() || has_hvhe())
--		vcpu->arch.hcr_el2 |= HCR_E2H;
--	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN)) {
--		/* route synchronous external abort exceptions to EL2 */
--		vcpu->arch.hcr_el2 |= HCR_TEA;
--		/* trap error record accesses */
--		vcpu->arch.hcr_el2 |= HCR_TERR;
--	}
--
--	if (cpus_have_final_cap(ARM64_HAS_STAGE2_FWB)) {
--		vcpu->arch.hcr_el2 |= HCR_FWB;
--	} else {
--		/*
--		 * For non-FWB CPUs, we trap VM ops (HCR_EL2.TVM) until M+C
--		 * get set in SCTLR_EL1 such that we can detect when the guest
--		 * MMU gets turned on and do the necessary cache maintenance
--		 * then.
--		 */
--		vcpu->arch.hcr_el2 |= HCR_TVM;
--	}
--
--	if (cpus_have_final_cap(ARM64_HAS_EVT) &&
--	    !cpus_have_final_cap(ARM64_MISMATCHED_CACHE_TYPE))
--		vcpu->arch.hcr_el2 |= HCR_TID4;
--	else
--		vcpu->arch.hcr_el2 |= HCR_TID2;
--
--	if (vcpu_el1_is_32bit(vcpu))
--		vcpu->arch.hcr_el2 &= ~HCR_RW;
--
--	if (kvm_has_mte(vcpu->kvm))
--		vcpu->arch.hcr_el2 |= HCR_ATA;
--}
--
- static inline unsigned long *vcpu_hcr(struct kvm_vcpu *vcpu)
- {
- 	return (unsigned long *)&vcpu->arch.hcr_el2;
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 9e8a496fb284..696acba883c1 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -1115,7 +1115,7 @@ int __init populate_nv_trap_config(void);
- bool lock_all_vcpus(struct kvm *kvm);
- void unlock_all_vcpus(struct kvm *kvm);
- 
--void kvm_init_sysreg(struct kvm_vcpu *);
-+void kvm_setup_traps(struct kvm_vcpu *);
- 
- /* MMIO helpers */
- void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index c4a0a35e02c7..d6c27d8a8f2f 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -683,7 +683,7 @@ int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu)
- 	 * This needs to happen after NV has imposed its own restrictions on
- 	 * the feature set
- 	 */
--	kvm_init_sysreg(vcpu);
-+	kvm_setup_traps(vcpu);
- 
- 	ret = kvm_timer_enable(vcpu);
- 	if (ret)
-@@ -1438,7 +1438,6 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
- 			icache_inval_all_pou();
- 	}
- 
--	vcpu_reset_hcr(vcpu);
- 	vcpu->arch.cptr_el2 = kvm_get_reset_cptr_el2(vcpu);
- 
- 	/*
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 131f5b0ca2b9..ac366d0b614a 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -4020,11 +4020,43 @@ int kvm_vm_ioctl_get_reg_writable_masks(struct kvm *kvm, struct reg_mask_range *
- 	return 0;
- }
- 
--void kvm_init_sysreg(struct kvm_vcpu *vcpu)
-+static void vcpu_reset_hcr(struct kvm_vcpu *vcpu)
- {
- 	struct kvm *kvm = vcpu->kvm;
- 
--	mutex_lock(&kvm->arch.config_lock);
-+	vcpu->arch.hcr_el2 = HCR_GUEST_FLAGS;
-+	if (has_vhe() || has_hvhe())
-+		vcpu->arch.hcr_el2 |= HCR_E2H;
-+	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN)) {
-+		/* route synchronous external abort exceptions to EL2 */
-+		vcpu->arch.hcr_el2 |= HCR_TEA;
-+		/* trap error record accesses */
-+		vcpu->arch.hcr_el2 |= HCR_TERR;
-+	}
-+
-+	if (cpus_have_final_cap(ARM64_HAS_STAGE2_FWB)) {
-+		vcpu->arch.hcr_el2 |= HCR_FWB;
-+	} else {
-+		/*
-+		 * For non-FWB CPUs, we trap VM ops (HCR_EL2.TVM) until M+C
-+		 * get set in SCTLR_EL1 such that we can detect when the guest
-+		 * MMU gets turned on and do the necessary cache maintenance
-+		 * then.
-+		 */
-+		vcpu->arch.hcr_el2 |= HCR_TVM;
-+	}
-+
-+	if (cpus_have_final_cap(ARM64_HAS_EVT) &&
-+	    !cpus_have_final_cap(ARM64_MISMATCHED_CACHE_TYPE))
-+		vcpu->arch.hcr_el2 |= HCR_TID4;
-+	else
-+		vcpu->arch.hcr_el2 |= HCR_TID2;
-+
-+	if (vcpu_el1_is_32bit(vcpu))
-+		vcpu->arch.hcr_el2 &= ~HCR_RW;
-+
-+	if (kvm_has_mte(vcpu->kvm))
-+		vcpu->arch.hcr_el2 |= HCR_ATA;
- 
- 	/*
- 	 * In the absence of FGT, we cannot independently trap TLBI
-@@ -4033,6 +4065,14 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
- 	 */
- 	if (!kvm_has_feat(kvm, ID_AA64ISAR0_EL1, TLB, OS))
- 		vcpu->arch.hcr_el2 |= HCR_TTLBOS;
-+}
-+
-+void kvm_setup_traps(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm *kvm = vcpu->kvm;
-+
-+	mutex_lock(&kvm->arch.config_lock);
-+	vcpu_reset_hcr(vcpu);
- 
- 	if (cpus_have_final_cap(ARM64_HAS_HCX)) {
- 		vcpu->arch.hcrx_el2 = HCRX_GUEST_FLAGS;
 -- 
-2.42.0
+Regards,
 
+Sakari Ailus
