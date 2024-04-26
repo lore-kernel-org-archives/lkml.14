@@ -1,116 +1,233 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BD5173336;
-	Fri, 26 Apr 2024 15:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AB85175541
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714144256; cv=none; b=WkxpgnoSTajnsWnrb15EZIVTF1AL1Uhju/azZfxRfPHsrFdQ8pJ1LZFhZ4I8uM2sbaJQGIprhNA22ZgB8v9CLzwEBrvsB83WmSzHWG8gZFtvuzPhHWQuH8xNhGmH4HHve19ywFFtQfrPL09bLPlWLkjFSiUPXEUGsCaqWGWWgrU=
+	t=1714144258; cv=none; b=pLTUsknPsTstYaOZiHphFaTMCT+TevhVUf1LoBEEQIuug4HheH3AlSFDdDVMgPMkVV21Mzw9x1mHCQFozFmeZVz/xODKOvEsAZ4y5Re+renyVeU4ZR4CxlnVG6eypV06x97IJB499XU3WcpdumWlt7OcsStPR3ao74sofCbqdTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714144256; c=relaxed/simple;
-	bh=BYPOdMsMzE1brBaEX2NM1L90yMA6pQOB3uUsCzFwWGk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eBDJmdmTDllikA3TMzoui3fpB7rIwh7D3/q/qm9KkdBYihJxr7XYS4tX74YPu2aSf0sdnXZnQ1ymJqixkizq8ISg0conekhLjiTPkt0Gy95hjLONUCp1y0gmTDwT1LBkj4kw0Nhlh6QRZKNP0KhJz9dmwQzVMEyqCoMr6hhZ2uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hw6wsS4L; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hw6wsS4L"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a519e1b0e2dso316364266b.2;
-        Fri, 26 Apr 2024 08:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714144253; x=1714749053; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QQ3U4IOEJf7j3zTFFqacVVA+V6T2ck3l/h8QpFjRr3Q=;
-        b=hw6wsS4LpVyDFu23dUPhbhGU89JYEnaTjH/ORrOai8PEzlkCjlAud9tmLYadZvsEU/
-         d5QB93MYOBg199r//TgGuH4+eZYOfa3sd3txhsgL4tj3ldBWFDOlO6XvgrdTT3yjsGzf
-         tr1q7bPv1KqfKNH8rHluGXVcrf4qxfWlXz3RzBadAosHNkM6V1kT6T9SYe/huMMkX1Xv
-         Y3phCLiYPrmdSWxCDZ6ftnkh96xpt7wPhxe0tpFreaDSJRsMUOg8kezPLB0OWGyfHtDn
-         kTeIee7mhxMB21KqdVXDEp5b/biq3pPGzjfv4ZPHZLvZWTGgx0sx0DhTgwmer1gdAFdF
-         +zSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714144253; x=1714749053;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QQ3U4IOEJf7j3zTFFqacVVA+V6T2ck3l/h8QpFjRr3Q=;
-        b=fBu2Cv/MQ6b6icGJP31aO9Jmc5fkfThCn32/EyZSJ+fF5IG+iZujxvEJV9HB+YZv4g
-         /yC0ujLCSlhWTh/jt5z2DZDpD2tuOnTsbZWKyLTLLLsB0Dj79Q+av/PT0KSiCWFpT9NS
-         wbxSo88w3AN3F7HzvECGu7FXgAwOYGMzfxgM/r/p/E+I8ILi2+4CcAG/FRlrPprh3o18
-         IquCzkx1VfbMbYy5W/RIJz6bYBRwtrTfaITfynxfvQNCylrk2z70D79C+DvOYsXHNx8E
-         KRJ7GOVvO/bxCwvRnu8PtYOpKnPnA61mPZVAgPiYCsUFy1N+NLhHAsn7I0LQdiW78JTK
-         1E7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVGotSQJgPUJArupbiEhrbOpmwNDRKjAv3ZNQAKWLbOCs0hqjy1guVqMG7bagOdt7hl4LX/PWI+e0VatH8xqF4bPmS29xMaVnXMgIVVJJj2zJ/BTAdQegXUyVMJGVMyfS94/4xzagvEJNc6
-X-Gm-Message-State: AOJu0Yy15neYHjmB7ex9dO0gp0/XZtImjOZniQTCnK+8QMPnuI5O9MAA
-	fEco1gPe0WqxC9bBpIaog0lMQziBS2A7uNVH09NZesVTB7fPbKu0J0fDoyvEBRFr3MwB+0JPMt9
-	JPlDH84utDZur2xI3Oreq/f3ssJ4=
-X-Google-Smtp-Source: AGHT+IEs+SmQfEqr2BrT/zdK8IF1hlONaksJrfx2Q75r/9u1UGKK7NUtDB3KKZ6gRu+5n0xoQ9OVS2XJWrCeTYgwh6E=
-X-Received: by 2002:a17:907:1b16:b0:a55:5ddd:ec0f with SMTP id
- mp22-20020a1709071b1600b00a555dddec0fmr2636807ejc.12.1714144252833; Fri, 26
- Apr 2024 08:10:52 -0700 (PDT)
+	s=arc-20240116; t=1714144258; c=relaxed/simple;
+	bh=eqo9pDDGltWBh/jbE5OxwbESAse+eEPKEfKd/1qke4U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dslOfQ8zRWM1qCcnIu9AovOGBQLuB9zgyLyHrfrthR+ZiAxElOSj6oUByXvJnDh4yaX+tenWH/lN4DqURPQ1xUWvalXXDBc1Julh1SLQBJrVJL6KKhDNj2m2yd1YOoK3hAX3g3t9BtN7Lbs+pzhGJIw0zYLgNQ2PWjVn8w3ryhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0AE01007;
+	Fri, 26 Apr 2024 08:11:23 -0700 (PDT)
+Received: from e133380.cambridge.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBE3F3F73F;
+	Fri, 26 Apr 2024 08:10:52 -0700 (PDT)
+From: Dave Martin <Dave.Martin@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: James Morse <james.morse@arm.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	"Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	Peter Newman <peternewman@google.com>,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: [PATCH v2 33/35] x86/resctrl: Move the filesystem bits to headers visible to fs/resctrl
+Date: Fri, 26 Apr 2024 16:09:02 +0100
+Message-Id: <20240426150904.8854-33-Dave.Martin@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240426150904.8854-1-Dave.Martin@arm.com>
+References: <20240426150537.8094-1-Dave.Martin@arm.com>
+ <20240426150904.8854-1-Dave.Martin@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240425183251.174412-1-rilian.la.te@ya.ru> <20240425183251.174412-2-rilian.la.te@ya.ru>
- <Ziu7DpoHGLrURI_9@smile.fi.intel.com> <CAF1WSuytbkoMfRotBiQyKHGKacwicSJtkSrbLis9UVwD83WVKQ@mail.gmail.com>
- <CAHp75Vc9k8-LggzaHO+Qg2MgnmxA3purw9_YcVhAWC=S0eND3Q@mail.gmail.com>
-In-Reply-To: <CAHp75Vc9k8-LggzaHO+Qg2MgnmxA3purw9_YcVhAWC=S0eND3Q@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 26 Apr 2024 18:10:16 +0300
-Message-ID: <CAHp75VeQyZ-WQ3D=T4wLQ46=oQYQPBXg9+8nj6AsXgEop8txgA@mail.gmail.com>
-Subject: Re: [PATCH v9 1/3] serial: sc16is7xx: announce support of SER_RS485_RTS_ON_SEND
-To: "Konstantin P." <ria.freelander@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Konstantin Pugin <rilian.la.te@ya.ru>, krzk@kernel.org, 
-	conor@kernel.org, lkp@intel.com, vz@mleia.com, robh@kernel.org, 
-	jcmvbkbc@gmail.com, nicolas.ferre@microchip.com, manikanta.guntupalli@amd.com, 
-	corbet@lwn.net, ychuang3@nuvoton.com, u.kleine-koenig@pengutronix.de, 
-	Maarten.Brock@sttls.nl, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Lech Perczak <lech.perczak@camlingroup.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 26, 2024 at 6:06=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Apr 26, 2024 at 6:00=E2=80=AFPM Konstantin P. <ria.freelander@gma=
-il.com> wrote:
-> > On Fri, Apr 26, 2024 at 5:36=E2=80=AFPM Andy Shevchenko <andy@kernel.or=
-g> wrote:
-> > > On Thu, Apr 25, 2024 at 09:32:33PM +0300, Konstantin Pugin wrote:
+From: James Morse <james.morse@arm.com>
 
-...
+Once the filesystem parts of resctrl move to fs/resctrl, it cannot rely
+on definitions in x86's internal.h.
 
-> > > Greg KH, who is maintainer of TTY/serial subsystem, usually asks to s=
-eparate
-> > > fixes from new features. So, sending this patch separately may not on=
-ly help
-> > > him, but let's move forward with your stuff.
-> >
-> > Do I need to increase the version number in split send?
->
-> Nope, the opposite, i.e. drop it to v1 (and mention in the comments
-> area, that's after the cutter '---' line, that it's a split from this
-> series).
->
-> >  And if I need
-> > to do so, then how I should do it? Only on new driver? Or only on fix?
-> > Should I CC linux-stable in fix patch?
->
-> Everything else is documented:
-> https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+Move definitions in internal.h that need to be shared between the
+filesystem and architecture code to header files that fs/resctrl can
+include.
 
-Just to be crystal clear:
-- the split of the fix goes as v1
-- the rest as v10 (or what is the number of the next revision?) after
-you address all review comments, confirmed testing, etc.
+Doing this separately means the filesystem code only moves between files
+of the same name, instead of having these changes mixed in too.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+
+---
+
+FYI: James Morse (et al.):
+
+ * This patch needs review to see how many of the x86-specific
+   definitions really ought to be exported...
+
+ * The resctrl_types.h header should have a comment explaining its
+   content and purpose (once we have that nailed down).
+
+Changes in v2:
+
+ * Revert apparently unintentional duplication of a couple of variable
+   declarations in <linux/resctrl.h>.
+
+   No functional change.
+---
+ arch/x86/include/asm/resctrl.h         |  3 +++
+ arch/x86/kernel/cpu/resctrl/core.c     |  5 ++++
+ arch/x86/kernel/cpu/resctrl/internal.h | 36 --------------------------
+ include/linux/resctrl_types.h          | 30 +++++++++++++++++++++
+ 4 files changed, 38 insertions(+), 36 deletions(-)
+
+diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
+index a8bc1d68f889..506ecd04788b 100644
+--- a/arch/x86/include/asm/resctrl.h
++++ b/arch/x86/include/asm/resctrl.h
+@@ -218,6 +218,9 @@ int resctrl_arch_measure_l2_residency(void *_plr);
+ int resctrl_arch_measure_l3_residency(void *_plr);
+ void resctrl_cpu_detect(struct cpuinfo_x86 *c);
+ 
++bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l);
++int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool enable);
++
+ #else
+ 
+ static inline void resctrl_arch_sched_in(struct task_struct *tsk) {}
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index f94ad04023c3..c0fb2e22e110 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -306,6 +306,11 @@ static void rdt_get_cdp_l2_config(void)
+ 	rdt_get_cdp_config(RDT_RESOURCE_L2);
+ }
+ 
++bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l)
++{
++	return rdt_resources_all[l].cdp_enabled;
++}
++
+ static void
+ mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
+ {
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 3707f5ccfeda..e4244e771ef6 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -14,12 +14,6 @@
+ 
+ #define L2_QOS_CDP_ENABLE		0x01ULL
+ 
+-#define CQM_LIMBOCHECK_INTERVAL	1000
+-
+-#define MBM_CNTR_WIDTH_BASE		24
+-#define MBM_OVERFLOW_INTERVAL		1000
+-#define MAX_MBA_BW			100u
+-#define MBA_IS_LINEAR			0x4
+ #define MBM_CNTR_WIDTH_OFFSET_AMD	20
+ 
+ #define RMID_VAL_ERROR			BIT_ULL(63)
+@@ -209,29 +203,6 @@ struct rdtgroup {
+ 	struct pseudo_lock_region	*plr;
+ };
+ 
+-/* rdtgroup.flags */
+-#define	RDT_DELETED		1
+-
+-/* rftype.flags */
+-#define RFTYPE_FLAGS_CPUS_LIST	1
+-
+-/*
+- * Define the file type flags for base and info directories.
+- */
+-#define RFTYPE_INFO			BIT(0)
+-#define RFTYPE_BASE			BIT(1)
+-#define RFTYPE_CTRL			BIT(4)
+-#define RFTYPE_MON			BIT(5)
+-#define RFTYPE_TOP			BIT(6)
+-#define RFTYPE_RES_CACHE		BIT(8)
+-#define RFTYPE_RES_MB			BIT(9)
+-#define RFTYPE_DEBUG			BIT(10)
+-#define RFTYPE_CTRL_INFO		(RFTYPE_INFO | RFTYPE_CTRL)
+-#define RFTYPE_MON_INFO			(RFTYPE_INFO | RFTYPE_MON)
+-#define RFTYPE_TOP_INFO			(RFTYPE_INFO | RFTYPE_TOP)
+-#define RFTYPE_CTRL_BASE		(RFTYPE_BASE | RFTYPE_CTRL)
+-#define RFTYPE_MON_BASE			(RFTYPE_BASE | RFTYPE_MON)
+-
+ /* List of all resource groups */
+ extern struct list_head rdt_all_groups;
+ 
+@@ -369,13 +340,6 @@ static inline struct rdt_resource *resctrl_inc(struct rdt_resource *res)
+ 	return &hw_res->r_resctrl;
+ }
+ 
+-static inline bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l)
+-{
+-	return rdt_resources_all[l].cdp_enabled;
+-}
+-
+-int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool enable);
+-
+ /*
+  * To return the common struct rdt_resource, which is contained in struct
+  * rdt_hw_resource, walk the resctrl member of struct rdt_hw_resource.
+diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+index 4788bd95dac6..fe0b10b589c0 100644
+--- a/include/linux/resctrl_types.h
++++ b/include/linux/resctrl_types.h
+@@ -7,6 +7,36 @@
+ #ifndef __LINUX_RESCTRL_TYPES_H
+ #define __LINUX_RESCTRL_TYPES_H
+ 
++#define CQM_LIMBOCHECK_INTERVAL	1000
++
++#define MBM_CNTR_WIDTH_BASE		24
++#define MBM_OVERFLOW_INTERVAL		1000
++#define MAX_MBA_BW			100u
++#define MBA_IS_LINEAR			0x4
++
++/* rdtgroup.flags */
++#define	RDT_DELETED		1
++
++/* rftype.flags */
++#define RFTYPE_FLAGS_CPUS_LIST	1
++
++/*
++ * Define the file type flags for base and info directories.
++ */
++#define RFTYPE_INFO			BIT(0)
++#define RFTYPE_BASE			BIT(1)
++#define RFTYPE_CTRL			BIT(4)
++#define RFTYPE_MON			BIT(5)
++#define RFTYPE_TOP			BIT(6)
++#define RFTYPE_RES_CACHE		BIT(8)
++#define RFTYPE_RES_MB			BIT(9)
++#define RFTYPE_DEBUG			BIT(10)
++#define RFTYPE_CTRL_INFO		(RFTYPE_INFO | RFTYPE_CTRL)
++#define RFTYPE_MON_INFO			(RFTYPE_INFO | RFTYPE_MON)
++#define RFTYPE_TOP_INFO			(RFTYPE_INFO | RFTYPE_TOP)
++#define RFTYPE_CTRL_BASE		(RFTYPE_BASE | RFTYPE_CTRL)
++#define RFTYPE_MON_BASE			(RFTYPE_BASE | RFTYPE_MON)
++
+ /* Reads to Local DRAM Memory */
+ #define READS_TO_LOCAL_MEM		BIT(0)
+ 
+-- 
+2.34.1
+
