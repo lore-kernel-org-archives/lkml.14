@@ -1,38 +1,39 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE0B168AE6;
-	Fri, 26 Apr 2024 16:56:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F71816F271;
+	Fri, 26 Apr 2024 16:56:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714150614; cv=none; b=a2mOG7gktyk2L9hmeIOAIPEtYP2U5wkV+h/PBSmKYAdU6h3zOUBpcmz4pIa3N3jRggMWD2+9hTniNcYlv5EvpDvRDGkx2t/YeTz62th6dfXrTpGROhDodJdSEezgtxmOdOpr2CSEAq61sblzJFbeXqZljivAddFoNgiguGrfzv4=
+	t=1714150617; cv=none; b=uCnO/n7ZIsWIE5963NUWDo2MiDiJC51yWMtdPRqrqJxTpzOI2wsJTRTXDOqfn6rqtJZh1+wQDorkHA9h5o963XlxlrbBwc+fsvEFqmfsisf+nTodc3mRB/wyJBSL6FK5G4DXTN2LDWFOy+wC0igh4oNeUo1KpRefwNdAIrMQGF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714150614; c=relaxed/simple;
-	bh=Y9CUnck7THjoN6x8IrAFw09G6hJUpUvGCNUaNkYbzZY=;
+	s=arc-20240116; t=1714150617; c=relaxed/simple;
+	bh=XYFPk3FkQ7DoDucDYSBcdACRbcapzxVltYw2E7kA37Q=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EGsfsf5z06ZWPAxLdxX3YmJGIlIglxKmFSMDyZ5ZT8ETWBXEg/NCCNAx5WZ+pH6KAdjxe8OnIGHxxq1/VLvTsFwVf5C8tLzKIDk8XTVZYP8Nn3+3yxQF5sZFsHz7Xp/PAxna1uvFDHPmpt7AfNg2BLimqVJTyXTco9HIcJi8KSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Mbvn6Lit; arc=none smtp.client-ip=217.70.183.199
+	 In-Reply-To:To:Cc; b=oMbqtthrEzusFLvGqR1M2Kfa550F2FcaqCIrGBChfZ+l09jmrsxOUiC9GvX/rA8tJxO2f6FI3Ahu28QQqsTx9+kfLnRADGNFE7MPYcGK930bHIIP59P87uVYlvBG0A1zAhOHbwTudsrjFTUfyFrDyDSC/qgF2UrcNWsgcXteJRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=d6pd9TaQ; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Mbvn6Lit"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8FF8DFF807;
-	Fri, 26 Apr 2024 16:56:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="d6pd9TaQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C2FD7FF80A;
+	Fri, 26 Apr 2024 16:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714150611;
+	t=1714150613;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iSUU7C4Fcf6ZvY0mTm+OdGB1Q5lauGV6mB1GfXERmdg=;
-	b=Mbvn6LitXY8/acwBgzfvXmcLNflwTmAotthAi+skuIcs/SEo6PyF/35YB3sqEZmdlKRRYD
-	InRnupPiBEGpwAiojpf+aCKVS3+TI/JY7D21kI4NmhSD3eTzF6MDN/ylyOasMEKQp4Voke
-	B45kf31txw1sqap7oVgNQABdQJPBJFYfVCo3eCWL0fKMLWfDIu9bbl4wnyMc9DANbZzHUL
-	3Cg6Pk4qYa+k+8RfbELBTosvISUPGz+6zkkIhcAxDBIPp8wbUjac91WpZ56Uw1/VJGX3Vx
-	RIv2extlaWJhfDLuOMj5GUTamE+Ewdhu5+6U7lD8HDZTK0N1KdyavYPnpYcKuQ==
+	bh=+UBvOzoqMa/jwSCZa3hO8uAMEhEb6gozqHJClVGlszs=;
+	b=d6pd9TaQuiuO7ZYfLMgtn/1ztB6l8swWyCQvdAauc0eBgcA+oRBNRToKsNVxgQ0accHkIT
+	Cwb+PvKNffPxwIQsme96rvglK88wwQT1lo2thCadQl2mi3IcSxVnV0YSDj1KTF3PTUvBj4
+	qlUmQN206+nBU6/6IwNj/nsvuuS6h460WjevvaUdX96wYt/BUN0gRqPWVLOOY1esiRhY7Y
+	QHDwco4JT4uOd0RQaqawrhXRLS5A8k7dupvyGRi+IJd9pxLg9rSZUYy2QMVdVIXva4so61
+	xrZ8GsFHyk8az3E2Q+txwh30BZckK8aMey1nqpyEhowROuswDIUNKvUf/kPohA==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Fri, 26 Apr 2024 18:56:39 +0200
-Subject: [PATCH v2 06/12] ASoC: doc: dapm: replace "map" with "graph"
+Date: Fri, 26 Apr 2024 18:56:41 +0200
+Subject: [PATCH v2 08/12] ASoC: doc: dapm: describe how widgets and routes
+ are registered
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240426-dapm-docs-v2-6-87b07547eb5b@bootlin.com>
+Message-Id: <20240426-dapm-docs-v2-8-87b07547eb5b@bootlin.com>
 References: <20240426-dapm-docs-v2-0-87b07547eb5b@bootlin.com>
 In-Reply-To: <20240426-dapm-docs-v2-0-87b07547eb5b@bootlin.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -55,46 +56,71 @@ Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: luca.ceresoli@bootlin.com
 
-DAPM is actually based on a graph, so use this specific term instead of the
-more generic "map".
+The small paragraph describing how to register widgets is incomplete (does
+not mention routes) and mentions snd_soc_dapm_new_control() which is not
+really used. Moreover it appears as a part of the "Virtual Widgets"
+subsection.
+
+Replace it with a detailed and current description of how widgets and
+routes are registered, mentioning both static declaration and runtime
+registration. Also make this a section on its own.
 
 Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- Documentation/sound/soc/dapm.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/sound/soc/dapm.rst | 38 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/sound/soc/dapm.rst b/Documentation/sound/soc/dapm.rst
-index f96a32f137aa..11f7f2f685af 100644
+index 58ef880ac8b6..4b094c3d7942 100644
 --- a/Documentation/sound/soc/dapm.rst
 +++ b/Documentation/sound/soc/dapm.rst
-@@ -49,7 +49,7 @@ Stream domain
-       stopped respectively. e.g. aplay, arecord.
+@@ -251,8 +251,42 @@ a virtual widget - a widget with no control bits e.g.
  
- All DAPM power switching decisions are made automatically by consulting an audio
--routing map of the whole machine. This map is specific to each machine and
-+routing graph of the whole machine. This graph is specific to each machine and
- consists of the interconnections between every audio component (including
- internal codec components). All audio components that affect power are called
- widgets hereafter.
-@@ -230,7 +230,7 @@ to any stream event or by kernel PM events.
- Virtual Widgets
- ---------------
+ This can be used to merge two signal paths together in software.
  
--Sometimes widgets exist in the codec or machine audio map that don't have any
-+Sometimes widgets exist in the codec or machine audio graph that don't have any
- corresponding soft power control. In this case it is necessary to create
- a virtual widget - a widget with no control bits e.g.
- ::
-@@ -248,7 +248,7 @@ Codec/DSP Widget Interconnections
+-After all the widgets have been defined, they can then be added to the DAPM
+-subsystem individually with a call to snd_soc_dapm_new_control().
++Registering DAPM controls
++=========================
++
++In many cases the DAPM widgets implemented statically in a ``static const
++struct snd_soc_dapm_widget`` array and the routes connecting them in a
++``static const struct snd_soc_dapm_route`` array in a codec driver, and
++simply declared via the ``dapm_widgets`` and ``num_dapm_widgets`` fields of
++the ``struct snd_soc_component_driver`` so the driver registration will
++take care of populating them::
++
++  static const struct snd_soc_dapm_widget wm2000_dapm_widgets[] = {
++  	SND_SOC_DAPM_OUTPUT("SPKN"),
++  	SND_SOC_DAPM_OUTPUT("SPKP"),
++  	...
++  };
++
++  /* Target, Path, Source */
++  static const struct snd_soc_dapm_route wm2000_audio_map[] = {
++  	{ "SPKN", NULL, "ANC Engine" },
++  	{ "SPKP", NULL, "ANC Engine" },
++	...
++  };
++
++  static const struct snd_soc_component_driver soc_component_dev_wm2000 = {
++	...
++  	.dapm_widgets		= wm2000_dapm_widgets,
++  	.num_dapm_widgets	= ARRAY_SIZE(wm2000_dapm_widgets),
++	...
++  };
++
++In more complex cases the list of DAPM widgets and/or routes can be only
++known at build time. This happens for example when a driver supports
++different models having a different set of features. In those cases
++separate widgets and routes arrays implementing the case-specific features
++can be registered programmatically by calling snd_soc_dapm_new_controls()
++and snd_soc_dapm_add_routes().
  
- Widgets are connected to each other within the codec, platform and machine by
- audio paths (called interconnections). Each interconnection must be defined in
--order to create a map of all audio paths between widgets.
-+order to create a graph of all audio paths between widgets.
  
- This is easiest with a diagram of the codec or DSP (and schematic of the machine
- audio system), as it requires joining widgets together via their audio signal
+ Codec/DSP Widget Interconnections
 
 -- 
 2.34.1
