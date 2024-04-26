@@ -1,119 +1,192 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D9F29CEC;
-	Fri, 26 Apr 2024 10:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 467DE29CEC
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 10:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714128320; cv=none; b=gU255tEgVVXTaP5nIrRJwRSBb2twhj1Ls6CQ3cPEt30kMaZ/xcXfMhtfw98BN8u8iM9EJzwbnfZqkEhGzcGFmrCPArbLRvjYu2ZlYF/+983PwhbI3Diehi/zG91wVrL/lowjwwhDvqBaA0x6Kc5t8WJyygz33vUPq5sDHnCkMgk=
+	t=1714128361; cv=none; b=Yaj20GWZzInmJyxZ41GtUR0Fg/PFhEKGP0DmQlW3jwo53TEuxRY6FxCEraH9NqpbsEg4RhI2HnJ9dJsFNLi5QN7FdjUqJm/kykDeckyvBCGytv60vqgtLDsIfVWs6+l08q0KJtpP6kRFL6+WcfbZm1Q6iQvJIPUNvierNY3rp1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714128320; c=relaxed/simple;
-	bh=1GPTVzQ3RYu+uPM1fHOsgJyMAZBfR2SYv+4tP9n5U+g=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G99ba6Hn33lSuMzS4sRDdhjuEUvuksOonhMHj2Q/m/QT+vt0NuTfg8rc9228qK3z69BBqybSenmMD1GkdWhVEWEN8t8a4pQrcWbpgWg8NtkeF1Jnn2GX7m4145IvSgJtjfEVOatdrs6IyqTx6Y1vdoSGLzodpNny2C94BUBXQKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=X8cp6vmN; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X8cp6vmN"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43QAj8lt022035;
-	Fri, 26 Apr 2024 05:45:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1714128308;
-	bh=+G7hsmNHlWKp3MAGArQvL4SERCA89ndaYO3wLVxnObY=;
-	h=From:To:CC:Subject:Date;
-	b=X8cp6vmNJa9NwO2efNpAA82fO+z0oMnNhH3ZecU0SxbHtSFQ/hiQHlmeJMioI28IB
-	 Wh2sZTytfzzZW9P2woIjLhvYxK/1VzfOB/9aRevj1g7weAv/DfARGZegNi5zipM0zk
-	 HuiBmETAC5nQmWJ3xxaMBAGIS/Bwi8t0Fq3Twi8c=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43QAj8bf002628
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 26 Apr 2024 05:45:08 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 26
- Apr 2024 05:45:07 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 26 Apr 2024 05:45:08 -0500
-Received: from localhost ([10.249.129.12])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43QAj790098712;
-	Fri, 26 Apr 2024 05:45:07 -0500
-From: Bhavya Kapoor <b-kapoor@ti.com>
-To: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <b-kapoor@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <conor+dt@kernel.org>, <krzk+dt@kernel.org>, <robh@kernel.org>,
-        <kristo@kernel.org>, <vigneshr@ti.com>, <nm@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-j722s-evm: Enable main_uart5 node
-Date: Fri, 26 Apr 2024 16:15:06 +0530
-Message-ID: <20240426104506.29990-1-b-kapoor@ti.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1714128361; c=relaxed/simple;
+	bh=eyOccf8Xy7flTGGh+YY5mmHvEDzf63ettllp3q8969g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jaw9fbxwGiHImI1wBPJvjpPy+XdCdYQb5e5hksqHG4W0a+Mfyf9IQb8LXyqg4biFnfzTtmb8pyqZ16s2DS8ZXD4sUzuxJpstFMj1HuPmSIx69sRm7vN1ULMwkw61eITkjkPJl/3s6XRTqPtmQMx16vMNwutOutsdg8gI0xCAgvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3DE22F4;
+	Fri, 26 Apr 2024 03:46:26 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4C243F64C;
+	Fri, 26 Apr 2024 03:45:55 -0700 (PDT)
+Date: Fri, 26 Apr 2024 12:45:39 +0200
+From: Beata Michalska <beata.michalska@arm.com>
+To: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>,
+	viresh.kumar@linaro.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	ionela.voinescu@arm.com, sudeep.holla@arm.com, will@kernel.org,
+	catalin.marinas@arm.com, vincent.guittot@linaro.org,
+	sumitg@nvidia.com, yang@os.amperecomputing.com,
+	lihuisong@huawei.com
+Subject: Re: Re: [PATCH v4 4/4] cpufreq: Use arch specific feedback for
+ cpuinfo_cur_freq
+Message-ID: <ZiuF0zgqkMlmkEZz@arm.com>
+References: <20240405133319.859813-1-beata.michalska@arm.com>
+ <20240405133319.859813-5-beata.michalska@arm.com>
+ <76zutrz47zs6i2cquvjo2qn7myxpq7e3c6alhper7n3wrkhf5h@22l5t5pio2cd>
+ <Zh6dSrUnckoa-thV@arm.com>
+ <s2bel7fzwpkyfyfkhod4xaihuklsaum75ycbcgmcanqaezxdu7@uxvqdqt3yo7l>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s2bel7fzwpkyfyfkhod4xaihuklsaum75ycbcgmcanqaezxdu7@uxvqdqt3yo7l>
 
-Main_uart5 node defined in the top-level J722S SoC dtsi file is
-incomplete and may not be functional unless it is extended
-with pinmux information.
+On Wed, Apr 17, 2024 at 02:38:58PM -0700, Vanshidhar Konda wrote:
+> On Tue, Apr 16, 2024 at 05:46:18PM +0200, Beata Michalska wrote:
+> > On Mon, Apr 15, 2024 at 09:23:10PM -0700, Vanshidhar Konda wrote:
+> > > On Fri, Apr 05, 2024 at 02:33:19PM +0100, Beata Michalska wrote:
+> > > > Some architectures provide a way to determine an average frequency over
+> > > > a certain period of time based on available performance monitors (AMU on
+> > > > ARM or APERF/MPERf on x86). With those at hand, enroll arch_freq_get_on_cpu
+> > > > into cpuinfo_cur_freq policy sysfs attribute handler, which is expected to
+> > > > represent the current frequency of a given CPU, as obtained by the hardware.
+> > > > This is the type of feedback that counters do provide.
+> > > >
+> > > 
+> > > --- snip ---
+> > > 
+> > > While testing this patch series on AmpereOne system, I simulated CPU
+> > > frequency throttling when the system is under power or thermal
+> > > constraints.
+> > > 
+> > > In this scenario, based on the user guilde, I expect scaling_cur_freq
+> > > is the frequency the kernel requests from the hardware; cpuinfo_cur_freq
+> > > is the actual frequency that the hardware is able to run at during the
+> > > power or thermal constraints.
+> > There has been a discussion on scaling_cur_freq vs cpuinfo_cur_freq [1].
+> > The guidelines you are referring here (assuming you mean [2]) are kinda
+> > out-of-sync already as scaling_cur_freq has been wired earlier to use arch
+> > specific feedback. As there was no Arm dedicated implementation of
+> > arch_freq_get_on_cpu, this went kinda unnoticed.
+> > The conclusion of the above mentioned discussion (though rather unstated
+> > explicitly) was to keep the current behaviour of scaling_cur_freq and align
+> > both across different archs: so with the patches, both attributes will provide
+> > hw feedback on current frequency, when available.
+> > Note that if we are to adhere to the docs cpuinfo_cur_freq is the place to use
+> > the counters really.
+> > 
+> > That change was also requested through [3]
+> > 
+> > Adding @Viresh in case there was any shift in the tides ....
+> > 
+> 
+> Thank you for the pointer to the discussion in [1]. It makes sense to
+> bring arm64 behavior in line with x86. The question about whether
+> modifying the behavior of scaling_cur_freq was a good idea did not get
+> any response.
+> 
+> > > 
+> > > The AmpereOne system I'm testing on has the following configuration:
+> > > - Max frequency is 3000000
+> > > - Support for AMU registers
+> > > - ACPI CPPC feedback counters use PCC register space
+> > > - Fedora 39 with 6.7.5 kernel
+> > > - Fedora 39 with 6.9.0-rc3 + this patch series
+> > > 
+> > > With 6.7.5 kernel:
+> > > Core        scaling_cur_freq        cpuinfo_cur_freq
+> > > ----        ----------------        ----------------
+> > > 0             3000000                 2593000
+> > > 1             3000000                 2613000
+> > > 2             3000000                 2625000
+> > > 3             3000000                 2632000
+> > > 
+> > So if I got it right from the info you have provided the numbers above are
+> > obtained without applying the patches. In that case, scaling_cur_freq will
+> > use policy->cur (in your case) showing last frequency set, not necessarily
+> > the actual freq, whereas cpuinfo_cur_freq uses __cpufreq_get and AMU counters.
+> > 
+> > 
+> > > With 6.9.0-rc3 + this patch series:
+> > > Core        scaling_cur_freq        cpuinfo_cur_freq
+> > > ----        ----------------        ----------------
+> > > 0             2671875                 2671875
+> > > 1             2589632                 2589632
+> > > 2             2648437                 2648437
+> > > 3             2698242                 2698242
+> > > 
+> > With the patches applied both scaling_cur_freq and cpuinfo_cur_freq will use AMU
+> > counters, or fie scale factor obtained based on AMU counters to be more precise:
+> > both should now show similar/same frequency (as discussed in [1])
+> > I'd say due to existing implementation for scaling_cur_freq (which we cannot
+> > change at this point) this is unavoidable.
+> > 
+> > > In the second case we can't identify that the CPU frequency is
+> > > being throttled by the hardware. I noticed this behavior with
+> > > or without this patch.
+> > > 
+> > I am not entirely sure comparing the two should be a way to go about throttling
+> > (whether w/ or w/o the changes).
+> > It would probably be best to refer to thermal sysfs and get a hold of cur_state
+> 
+> Throttling could happen due to non-thermal reasons. Or a system may not
+> even support thermal zones. So on those systems we wouldn't be able to
+> identify/debug the behavior of the hardware providing less than maximum
+> performance. The discussion around scaling_cur_freq should probably be
+> re-visited in a targeted manner I think.
+> 
 
-As the pinmux is only known at the board integration level, main_uart5
-node should only be enabled when provided with this information.
+@Viresh:
 
-Thus, add pinmux for main_uart5 and enable it in the board dts file.
+It seems that we might need to revisit the discussion we've had around
+scaling_cur_freq and cpuinfo_cur_freq and the use of arch_freq_get_on_cpu.
+As Vanshi has raised, having both utilizing arch specific feedback for
+getting current frequency is bit problematic and might be confusing at best.
+As arch_freq_get_on_cpu is already used by show_scaling_cur_freq there are not
+many options we are left with, if we want to kee all archs aligned:
+we can either try to rework show_scaling_cur_freq and it's use of
+arch_freq_get_on_cpu, and move it to cpuinfo_cur_freq, which would align with
+relevant docs, though that will not work for x86, or we keep it only there and
+skip updating cpuinfo_cur_freq, going against the guidelines. Other options,
+purely theoretical, would involve making arch_freq_get_on_cpu aware of type of
+the info requested (hw vs sw) or adding yet another arch-specific implementation,
+and those are not really appealing alternatives to say at least.
+What's your opinion on this one ?
 
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+BR
+Beata
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-index cee3a8661d5e..b92d5c385f13 100644
---- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-@@ -18,6 +18,7 @@ / {
- 	aliases {
- 		serial0 = &wkup_uart0;
- 		serial2 = &main_uart0;
-+		serial3 = &main_uart5;
- 		mmc0 = &sdhci0;
- 		mmc1 = &sdhci1;
- 	};
-@@ -142,6 +143,14 @@ J722S_IOPAD(0x01cc, PIN_OUTPUT, 0)	/* (B22) UART0_TXD */
- 		bootph-all;
- 	};
- 
-+	main_uart5_pins_default: main-uart5-default-pins {
-+		pinctrl-single,pins = <
-+			J722S_IOPAD(0x0108, PIN_INPUT, 3)	/* (J27) UART5_RXD */
-+			J722S_IOPAD(0x010c, PIN_OUTPUT, 3)	/* (H27) UART5_TXD */
-+		>;
-+		bootph-all;
-+	};
-+
- 	vdd_sd_dv_pins_default: vdd-sd-dv-default-pins {
- 		pinctrl-single,pins = <
- 			J722S_IOPAD(0x0120, PIN_INPUT, 7) /* (F27) MMC2_CMD.GPIO0_70 */
-@@ -243,6 +252,13 @@ &main_uart0 {
- 	bootph-all;
- };
- 
-+&main_uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_uart5_pins_default>;
-+	status = "okay";
-+	bootph-all;
-+};
-+
- &mcu_pmx0 {
- 
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
--- 
-2.40.1
 
+> I'll test v5 of the series on AmpereOne and report back on that thread.
+> 
+> Thanks,
+> Vanshi
+> 
+> > which should indicate current throttle state:
+> > 
+> > /sys/class/thermal/thermal_zone[0-*]/cdev[0-*]/cur_state
+> > 
+> > with values above '0' implying ongoing throttling.
+> > 
+> > The appropriate thermal_zone can be identified through 'type' attribute.
+> > 
+> > 
+> > Thank you for giving those patches a spin.
+> > 
+> > ---
+> > BR
+> > Beata
+> > ---
+> > [1] https://lore.kernel.org/all/20230609043922.eyyqutbwlofqaddz@vireshk-i7/
+> > [2] https://elixir.bootlin.com/linux/latest/source/Documentation/admin-guide/pm/cpufreq.rst#L197
+> > [3] https://lore.kernel.org/lkml/2cfbc633-1e94-d741-2337-e1b0cf48b81b@nvidia.com/
+> > ---
+> > 
+> > 
+> > > Thanks,
+> > > Vanshi
