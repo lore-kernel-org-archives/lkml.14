@@ -1,117 +1,101 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0E713D2AC;
-	Fri, 26 Apr 2024 16:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD71158D97;
+	Fri, 26 Apr 2024 16:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714150593; cv=none; b=ZKdH0f+5GcQpxnl2CJc01a+Pg4/ortMcdLz0vZ3mZ5M12NJIIfsOucvcahvGcLfFkxdjtpXzDM4xwoltNL4+prEmZJPiIK5MUH8VL+kOwhFmC+7OfvbtDrcVvQmu2mmP/RubzdWDCUTVvP3UW1U6eO0BKmxXAxnnRVodstLZpOE=
+	t=1714150610; cv=none; b=d/5UoUsg4JyEtHLqT1z4yP3TU7oTPBqWq9okHfaUF3zzBGwtDjxOhmDoHsOh6xlbwILfj++MEhxEhBp9lt6ki4tJ5PyKXNj7NPCw8WGiEqwTaS9FGRrWsxEEhDsx2Z7jOSLucKS2AjovHfSfq+/A3Fq28i5Hx1sYm45A3pJTTT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714150593; c=relaxed/simple;
-	bh=2CBCeqVlaVwCRJppC6SrANWKUwwDmqsGemGxcgfUpcQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Twqg6Db8nJwhqLOCwkFAhhOFYU/isJGTw4tPNWWpiUhwDL8lokN1nTXJEyd8o2AUAl5DX2XWRJA5VE/U/U2VlOrCusFOJmWeqosMwmYy10NfWkToHyWBHD253EluaXOgEfhlIersPU2c8MNQu3I5K8MSmQQA5hSQ8Fyi663m1UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=HUQzo9IY reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1714150610; c=relaxed/simple;
+	bh=P+1rMsmlu3vZ5B86+d/1krofnxEMi9vT6St9leoKSwE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UW/46w4IUL4XrvwQbAaD5+jAoqWF6eLTZdWN+gBe88dxcGk1/2JYjG+92omx9o2gdobj8h7tYAxTtmF75WTSt9SbzJY+mlFODVeYw0MXKDydxwfF/QcrU1YKd1DtfADwPP5B+DRgpOSByCaFCrQCPbSazmoJGsYUlhHBPAz0qxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=k8pqd5J0; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="HUQzo9IY"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
- id 5e71bb44f59ac11c; Fri, 26 Apr 2024 18:56:21 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 44FDC66E0B3;
-	Fri, 26 Apr 2024 18:56:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1714150581;
-	bh=2CBCeqVlaVwCRJppC6SrANWKUwwDmqsGemGxcgfUpcQ=;
-	h=From:To:Cc:Subject:Date;
-	b=HUQzo9IY+PrGCQP90idBk+kegZmJ0UchoCL8fLdyVsSPr1/do8ciUYMQ+baoiBgVb
-	 qaDTBsbRPUQ8jaDPp/eL4qDtml39SxSPJnglsdV01uS/P9KreXqsg0RB7KWlCHAhDA
-	 FQPLH2BO5Rf7WMhRjymVlLNi/cwDFJ7ld8+RRepNv4Sqq8Igmmbl7sqfQJocgdsY3/
-	 EuiIhIp+bv1kWvBePUaAMPjoLToHbssGlvjEe7CZUhmf7qT9dSu2/FzIqhB/IA+bNs
-	 KoFa+sBbDL/M9UZ15XP2k+j3UR7Q8KHZc8mglQ07/XuI3OlVOEZlf0RhyM2RIfl+ZH
-	 egBOEzjN9xTpw==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux ACPI <linux-acpi@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Salil Mehta <salil.mehta@huawei.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject:
- [PATCH v1] ACPI: scan: Avoid enumerating devices with clearly invalid _STA
- values
-Date: Fri, 26 Apr 2024 18:56:21 +0200
-Message-ID: <2741433.mvXUDI8C0e@kreacher>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="k8pqd5J0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 39C4AFF808;
+	Fri, 26 Apr 2024 16:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1714150606;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0c2iYCYeMf93nelrLleWfSo4CLIYmfO/ZMUay8A7fbg=;
+	b=k8pqd5J0SEnI/Q3NCYNucRHZGWch2GW/mNj40FYSbmu+rvS8sB6mf9AHu2omVxd+oo5mLa
+	T7U2Nue9z6jsqsvt3fXmHXoIGkVTUBQy0yITLp8A18K+cD0j53jwrTclLTd7HuwTAehGkQ
+	bzOZvMmzkZgidTabc6yCsscFkrZiRW9lGcVl2btgdIt6ISod0rYtl3UwUpfLUG6zPtgtzF
+	yYXsrb7NlrHXO1reuPJzgpBxYpLlWaZO3MIswcv/U4AOseebrW0FCODi1FeFWSYs30Gs6/
+	Ngrrk6SCBbZNSA+GZeOo4T5JbYouq834ob6MztasZobKG/36Vs21QKwJNRKtZw==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Fri, 26 Apr 2024 18:56:34 +0200
+Subject: [PATCH v2 01/12] ASoC: doc: dapm: fix typos
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudelledguddtjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeeuuefghfdutdeuieeludekieelffeiteduhfeutdefjeeghfevieeggeelteetvdenucffohhmrghinhepuhgvfhhirdhorhhgpdhkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrlhhilhdrmhgvhhhtrgeshhhurgifvghirdgtohhmpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgrfigvihdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240426-dapm-docs-v2-1-87b07547eb5b@bootlin.com>
+References: <20240426-dapm-docs-v2-0-87b07547eb5b@bootlin.com>
+In-Reply-To: <20240426-dapm-docs-v2-0-87b07547eb5b@bootlin.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Bagas Sanjaya <bagasdotme@gmail.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-sound@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fix various typos.
 
-The return value of _STA with the "present" bit unset and the "enabled"
-bit set is clearly invalid as per the ACPI specification, Section 6.3.7
-"_STA (Device Status)", so make the ACPI device enumeration code
-disregard devices with such _STA return values.
-
-Also, because this implies that status.enabled will only be set if
-status.present is set too, acpi_device_is_enabled() can be modified
-to simply return the value of the former.
-
-Link: https://uefi.org/specs/ACPI/6.5/06_Device_Configuration.html#sta-device-status
-Link: https://lore.kernel.org/linux-acpi/88179311a503493099028c12ca37d430@huawei.com/
-Suggested-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- drivers/acpi/bus.c  |   11 +++++++++++
- drivers/acpi/scan.c |    2 +-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ Documentation/sound/soc/dapm.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Index: linux-pm/drivers/acpi/bus.c
-===================================================================
---- linux-pm.orig/drivers/acpi/bus.c
-+++ linux-pm/drivers/acpi/bus.c
-@@ -112,6 +112,17 @@ int acpi_bus_get_status(struct acpi_devi
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
+diff --git a/Documentation/sound/soc/dapm.rst b/Documentation/sound/soc/dapm.rst
+index c3154ce6e1b2..59f65b181828 100644
+--- a/Documentation/sound/soc/dapm.rst
++++ b/Documentation/sound/soc/dapm.rst
+@@ -50,7 +50,7 @@ Stream domain
+ All DAPM power switching decisions are made automatically by consulting an audio
+ routing map of the whole machine. This map is specific to each machine and
+ consists of the interconnections between every audio component (including
+-internal codec components). All audio components that effect power are called
++internal codec components). All audio components that affect power are called
+ widgets hereafter.
  
-+	if (!device->status.present && device->status.enabled) {
-+		pr_info(FW_BUG "Device [%s] status [%08x]: not present and enabled\n",
-+			device->pnp.bus_id, (u32)sta);
-+		device->status.enabled = 0;
-+		/*
-+		 * The status is clearly invalid, so clear the enabled bit as
-+		 * well to avoid attempting to use the device.
-+		 */
-+		device->status.functional = 0;
-+	}
-+
- 	acpi_set_device_status(device, sta);
  
- 	if (device->status.functional && !device->status.present) {
-Index: linux-pm/drivers/acpi/scan.c
-===================================================================
---- linux-pm.orig/drivers/acpi/scan.c
-+++ linux-pm/drivers/acpi/scan.c
-@@ -1962,7 +1962,7 @@ bool acpi_device_is_present(const struct
+@@ -221,7 +221,7 @@ when the Mic is inserted:-::
+ Codec (BIAS) Domain
+ -------------------
  
- bool acpi_device_is_enabled(const struct acpi_device *adev)
- {
--	return adev->status.present && adev->status.enabled;
-+	return adev->status.enabled;
- }
+-The codec bias power domain has no widgets and is handled by the codecs DAPM
++The codec bias power domain has no widgets and is handled by the codec DAPM
+ event handler. This handler is called when the codec powerstate is changed wrt
+ to any stream event or by kernel PM events.
  
- static bool acpi_scan_handler_matching(struct acpi_scan_handler *handler,
+@@ -236,7 +236,7 @@ a virtual widget - a widget with no control bits e.g.
+ 
+   SND_SOC_DAPM_MIXER("AC97 Mixer", SND_SOC_NOPM, 0, 0, NULL, 0),
+ 
+-This can be used to merge to signal paths together in software.
++This can be used to merge two signal paths together in software.
+ 
+ After all the widgets have been defined, they can then be added to the DAPM
+ subsystem individually with a call to snd_soc_dapm_new_control().
 
-
+-- 
+2.34.1
 
