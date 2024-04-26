@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AB85175541
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2884314900A
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714144258; cv=none; b=pLTUsknPsTstYaOZiHphFaTMCT+TevhVUf1LoBEEQIuug4HheH3AlSFDdDVMgPMkVV21Mzw9x1mHCQFozFmeZVz/xODKOvEsAZ4y5Re+renyVeU4ZR4CxlnVG6eypV06x97IJB499XU3WcpdumWlt7OcsStPR3ao74sofCbqdTg=
+	t=1714144266; cv=none; b=s+P+ZtsPV0zV5a/mts+THdViKlM2iHkSSW7nemidFNXQHbI8wQ4hOeIGucmpIxq4HHzTvGuhSAUQM0S30rCNaw1vIIZ0+yf8IaJeTGyMvfM282iUOcxFuhbTHVcqHrUvTHNlv3GTVmm+/MCHlI5zjpDxgXj0UjuSynDTv1CTne4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714144258; c=relaxed/simple;
-	bh=eqo9pDDGltWBh/jbE5OxwbESAse+eEPKEfKd/1qke4U=;
+	s=arc-20240116; t=1714144266; c=relaxed/simple;
+	bh=XzwbygXB1XLTnLy5KTDvuQn0QpU/+Zp/WcuJJpMI2YE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dslOfQ8zRWM1qCcnIu9AovOGBQLuB9zgyLyHrfrthR+ZiAxElOSj6oUByXvJnDh4yaX+tenWH/lN4DqURPQ1xUWvalXXDBc1Julh1SLQBJrVJL6KKhDNj2m2yd1YOoK3hAX3g3t9BtN7Lbs+pzhGJIw0zYLgNQ2PWjVn8w3ryhI=
+	 MIME-Version; b=Fa7I3YatNPL7YYu2164/MIzQY5JGvWwFi2459+O729xxn6LXukGmUoVSjohDVKPI8MCCoZEAdbJsS3YwJJnNrvBRCDwjbAGdxE/mbdDKdnd5UTqwyyQKbiXQafF754o3IhWiTdRujNbK2/u9BO5m7gqxXFGbZT5N1EBo8H0VMIw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0AE01007;
-	Fri, 26 Apr 2024 08:11:23 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DFF51007;
+	Fri, 26 Apr 2024 08:11:32 -0700 (PDT)
 Received: from e133380.cambridge.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBE3F3F73F;
-	Fri, 26 Apr 2024 08:10:52 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EF8A3F73F;
+	Fri, 26 Apr 2024 08:11:01 -0700 (PDT)
 From: Dave Martin <Dave.Martin@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -43,9 +43,9 @@ Cc: James Morse <james.morse@arm.com>,
 	amitsinght@marvell.com,
 	David Hildenbrand <david@redhat.com>,
 	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: [PATCH v2 33/35] x86/resctrl: Move the filesystem bits to headers visible to fs/resctrl
-Date: Fri, 26 Apr 2024 16:09:02 +0100
-Message-Id: <20240426150904.8854-33-Dave.Martin@arm.com>
+Subject: [PATCH v2 35/35] [SQUASHME] x86/resctrl: Move the resctrl filesystem code to /fs/resctrl
+Date: Fri, 26 Apr 2024 16:09:04 +0100
+Message-Id: <20240426150904.8854-35-Dave.Martin@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240426150904.8854-1-Dave.Martin@arm.com>
 References: <20240426150537.8094-1-Dave.Martin@arm.com>
@@ -58,176 +58,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: James Morse <james.morse@arm.com>
+Relax asm #includes identified by checkpatch.pl as satisfiable by a
+<linux/> include in the destination files of this code move.
 
-Once the filesystem parts of resctrl move to fs/resctrl, it cannot rely
-on definitions in x86's internal.h.
-
-Move definitions in internal.h that need to be shared between the
-filesystem and architecture code to header files that fs/resctrl can
-include.
-
-Doing this separately means the filesystem code only moves between files
-of the same name, instead of having these changes mixed in too.
-
-Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 
 ---
 
 FYI: James Morse (et al.):
 
- * This patch needs review to see how many of the x86-specific
-   definitions really ought to be exported...
+ * This patch is kept separate for now so that these changes do not
+   get lost when rebuilding the previous code-movement patch.
 
- * The resctrl_types.h header should have a comment explaining its
-   content and purpose (once we have that nailed down).
+   It should be folded into the previous patch or dropped once the
+   series is final.
 
 Changes in v2:
 
- * Revert apparently unintentional duplication of a couple of variable
-   declarations in <linux/resctrl.h>.
-
-   No functional change.
+ * New patch.
 ---
- arch/x86/include/asm/resctrl.h         |  3 +++
- arch/x86/kernel/cpu/resctrl/core.c     |  5 ++++
- arch/x86/kernel/cpu/resctrl/internal.h | 36 --------------------------
- include/linux/resctrl_types.h          | 30 +++++++++++++++++++++
- 4 files changed, 38 insertions(+), 36 deletions(-)
+ fs/resctrl/internal.h    | 2 --
+ fs/resctrl/pseudo_lock.c | 4 ++--
+ fs/resctrl/rdtgroup.c    | 2 +-
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
-index a8bc1d68f889..506ecd04788b 100644
---- a/arch/x86/include/asm/resctrl.h
-+++ b/arch/x86/include/asm/resctrl.h
-@@ -218,6 +218,9 @@ int resctrl_arch_measure_l2_residency(void *_plr);
- int resctrl_arch_measure_l3_residency(void *_plr);
- void resctrl_cpu_detect(struct cpuinfo_x86 *c);
+diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
+index f73267762a87..0e0c70d62c40 100644
+--- a/fs/resctrl/internal.h
++++ b/fs/resctrl/internal.h
+@@ -9,8 +9,6 @@
+ #include <linux/jump_label.h>
+ #include <linux/tick.h>
  
-+bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l);
-+int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool enable);
-+
- #else
- 
- static inline void resctrl_arch_sched_in(struct task_struct *tsk) {}
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index f94ad04023c3..c0fb2e22e110 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -306,6 +306,11 @@ static void rdt_get_cdp_l2_config(void)
- 	rdt_get_cdp_config(RDT_RESOURCE_L2);
- }
- 
-+bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l)
-+{
-+	return rdt_resources_all[l].cdp_enabled;
-+}
-+
- static void
- mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
- {
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 3707f5ccfeda..e4244e771ef6 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -14,12 +14,6 @@
- 
- #define L2_QOS_CDP_ENABLE		0x01ULL
- 
--#define CQM_LIMBOCHECK_INTERVAL	1000
+-#include <asm/resctrl.h>
 -
--#define MBM_CNTR_WIDTH_BASE		24
--#define MBM_OVERFLOW_INTERVAL		1000
--#define MAX_MBA_BW			100u
--#define MBA_IS_LINEAR			0x4
- #define MBM_CNTR_WIDTH_OFFSET_AMD	20
+ /**
+  * cpumask_any_housekeeping() - Choose any CPU in @mask, preferring those that
+  *			        aren't marked nohz_full
+diff --git a/fs/resctrl/pseudo_lock.c b/fs/resctrl/pseudo_lock.c
+index 077c2abb6edd..2a36a2efbd49 100644
+--- a/fs/resctrl/pseudo_lock.c
++++ b/fs/resctrl/pseudo_lock.c
+@@ -11,6 +11,7 @@
  
- #define RMID_VAL_ERROR			BIT_ULL(63)
-@@ -209,29 +203,6 @@ struct rdtgroup {
- 	struct pseudo_lock_region	*plr;
- };
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
  
--/* rdtgroup.flags */
--#define	RDT_DELETED		1
--
--/* rftype.flags */
--#define RFTYPE_FLAGS_CPUS_LIST	1
--
--/*
-- * Define the file type flags for base and info directories.
-- */
--#define RFTYPE_INFO			BIT(0)
--#define RFTYPE_BASE			BIT(1)
--#define RFTYPE_CTRL			BIT(4)
--#define RFTYPE_MON			BIT(5)
--#define RFTYPE_TOP			BIT(6)
--#define RFTYPE_RES_CACHE		BIT(8)
--#define RFTYPE_RES_MB			BIT(9)
--#define RFTYPE_DEBUG			BIT(10)
--#define RFTYPE_CTRL_INFO		(RFTYPE_INFO | RFTYPE_CTRL)
--#define RFTYPE_MON_INFO			(RFTYPE_INFO | RFTYPE_MON)
--#define RFTYPE_TOP_INFO			(RFTYPE_INFO | RFTYPE_TOP)
--#define RFTYPE_CTRL_BASE		(RFTYPE_BASE | RFTYPE_CTRL)
--#define RFTYPE_MON_BASE			(RFTYPE_BASE | RFTYPE_MON)
--
- /* List of all resource groups */
- extern struct list_head rdt_all_groups;
++#include <linux/cacheflush.h>
+ #include <linux/cacheinfo.h>
+ #include <linux/cpu.h>
+ #include <linux/cpumask.h>
+@@ -19,11 +20,10 @@
+ #include <linux/mman.h>
+ #include <linux/perf_event.h>
+ #include <linux/pm_qos.h>
++#include <linux/resctrl.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
  
-@@ -369,13 +340,6 @@ static inline struct rdt_resource *resctrl_inc(struct rdt_resource *res)
- 	return &hw_res->r_resctrl;
- }
+-#include <asm/cacheflush.h>
+-#include <asm/resctrl.h>
+ #include <asm/perf_event.h>
  
--static inline bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l)
--{
--	return rdt_resources_all[l].cdp_enabled;
--}
--
--int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool enable);
--
- /*
-  * To return the common struct rdt_resource, which is contained in struct
-  * rdt_hw_resource, walk the resctrl member of struct rdt_hw_resource.
-diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
-index 4788bd95dac6..fe0b10b589c0 100644
---- a/include/linux/resctrl_types.h
-+++ b/include/linux/resctrl_types.h
-@@ -7,6 +7,36 @@
- #ifndef __LINUX_RESCTRL_TYPES_H
- #define __LINUX_RESCTRL_TYPES_H
+ #include "internal.h"
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+index 8b18224eda35..09f120772c48 100644
+--- a/fs/resctrl/rdtgroup.c
++++ b/fs/resctrl/rdtgroup.c
+@@ -19,6 +19,7 @@
+ #include <linux/fs_parser.h>
+ #include <linux/sysfs.h>
+ #include <linux/kernfs.h>
++#include <linux/resctrl.h>
+ #include <linux/seq_buf.h>
+ #include <linux/seq_file.h>
+ #include <linux/sched/signal.h>
+@@ -29,7 +30,6 @@
  
-+#define CQM_LIMBOCHECK_INTERVAL	1000
-+
-+#define MBM_CNTR_WIDTH_BASE		24
-+#define MBM_OVERFLOW_INTERVAL		1000
-+#define MAX_MBA_BW			100u
-+#define MBA_IS_LINEAR			0x4
-+
-+/* rdtgroup.flags */
-+#define	RDT_DELETED		1
-+
-+/* rftype.flags */
-+#define RFTYPE_FLAGS_CPUS_LIST	1
-+
-+/*
-+ * Define the file type flags for base and info directories.
-+ */
-+#define RFTYPE_INFO			BIT(0)
-+#define RFTYPE_BASE			BIT(1)
-+#define RFTYPE_CTRL			BIT(4)
-+#define RFTYPE_MON			BIT(5)
-+#define RFTYPE_TOP			BIT(6)
-+#define RFTYPE_RES_CACHE		BIT(8)
-+#define RFTYPE_RES_MB			BIT(9)
-+#define RFTYPE_DEBUG			BIT(10)
-+#define RFTYPE_CTRL_INFO		(RFTYPE_INFO | RFTYPE_CTRL)
-+#define RFTYPE_MON_INFO			(RFTYPE_INFO | RFTYPE_MON)
-+#define RFTYPE_TOP_INFO			(RFTYPE_INFO | RFTYPE_TOP)
-+#define RFTYPE_CTRL_BASE		(RFTYPE_BASE | RFTYPE_CTRL)
-+#define RFTYPE_MON_BASE			(RFTYPE_BASE | RFTYPE_MON)
-+
- /* Reads to Local DRAM Memory */
- #define READS_TO_LOCAL_MEM		BIT(0)
+ #include <uapi/linux/magic.h>
  
+-#include <asm/resctrl.h>
+ #include "internal.h"
+ 
+ /* Mutex to protect rdtgroup access. */
 -- 
 2.34.1
 
