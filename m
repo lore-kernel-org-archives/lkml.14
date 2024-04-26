@@ -1,110 +1,210 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC55F1DFFC
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF6D149005
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714146095; cv=none; b=SAnA/eZQ56PthaTp0ZhyZozblCPwq9t4y9cp4UFmvcnLOTDAB3WP88p0dZufnzCEnnCwfVskxuBQLVkkSBmCuDgHXC3kBk0RmBn70NmnN0QL2Ex92JV6cqmva3tOHj3u2ic4UNVubmOnDO/qeHIffWuIEyDwLcZjOX1UAyNarGo=
+	t=1714146124; cv=none; b=IRaG9pKgJL3xT5aaugRktqG5k/h33BjdLr5XqJ0YUkG/UKMAnp54pcqlHOeQRdLvFQT4oXGshmBDTGai9MNrJ75pwBiEj9SblJmbANMa4eer/CIbkmyD/D31Qe8HYQF1wzA0x+Tfu71bm/e1CNBWKi8owWd4kdz8S6m6eY69Irk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714146095; c=relaxed/simple;
-	bh=akSXuCsPICaiLz3ncjvxcTIZY/ePkkrqw52xd8vA6sY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rc+j7pOba7us56ikMMdNPMlbm7f8U6diootEnYqfo/wXpScwKLemp+6jW25lYi7eUGHPFvH2jUwkOIV55etEB65ASih1w7MkRmEg9Kg3yCMT3GqiSXT7iGnm4kvyYWaTxAwo3awGU6W1AU4Ad4TF8z+QfJ9ufLTOr4DojeV33Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQxlg3jhlz6DBLt;
-	Fri, 26 Apr 2024 23:41:19 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 46A21140A36;
-	Fri, 26 Apr 2024 23:41:31 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 26 Apr
- 2024 16:41:30 +0100
-Date: Fri, 26 Apr 2024 16:41:29 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Junhao He <hejunhao3@huawei.com>
-CC: <will@kernel.org>, <yangyicong@huawei.com>, <shaojijie@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>, <chenhao418@huawei.com>
-Subject: Re: [PATCH 2/3] drivers/perf: hisi: hns3: Fix out-of-bound access
- when valid event group
-Message-ID: <20240426164129.00004b37@Huawei.com>
-In-Reply-To: <20240425124627.13764-3-hejunhao3@huawei.com>
-References: <20240425124627.13764-1-hejunhao3@huawei.com>
-	<20240425124627.13764-3-hejunhao3@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1714146124; c=relaxed/simple;
+	bh=14+rpldCaSzHef8aS06UJj1525hCkyWYEThn+dTnrNw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JROFF6G0TitLb5POOpOSBYSSBQZZUPjGNe12osq7W9L4pCw0rgYOB8HLjgzyB0x7uXTklERcZhZoWQYBfdJvKUWOkNHwrgQbU7RdFmFbkjDuF9qgkJqZGvlEZZQNE0mFH9Klsemn0xAuIixISatNKs0XNXiSZrmyuyg7oJZtHkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xm9f32QV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xm9f32QV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714146121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7VnGZicWFW/d+/1fPpNzYRf/LnrOSTnWU9XlyME7agc=;
+	b=Xm9f32QVH1D6c1KxpEVVExoUzHK8LSKxZX1Ij7gipQeZlCNhNXZxrRzg3mZFYjlPtr1xUa
+	Njeey8Ggs5oZGqtDhyCKfCXjRkgR7POeZCVXwd56U4IaenGtuiNYEssTiKpY5wpHMzbSKM
+	pMqAWxrOyoYFZR/5DFj3jUSliBxcAsE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-269-dZOs051oNW2hkGqkS1G_6g-1; Fri, 26 Apr 2024 11:41:59 -0400
+X-MC-Unique: dZOs051oNW2hkGqkS1G_6g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 54EF318065AA;
+	Fri, 26 Apr 2024 15:41:59 +0000 (UTC)
+Received: from chopper.lyude.net (unknown [10.22.8.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 138C651BF;
+	Fri, 26 Apr 2024 15:41:58 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: nouveau@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org,
+	Karol Herbst <kherbst@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Dave Airlie <airlied@redhat.com>,
+	Ben Skeggs <bskeggs@redhat.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Kees Cook <keescook@chromium.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] drm/nouveau/firmware: Fix SG_DEBUG error with nvkm_firmware_ctor()
+Date: Fri, 26 Apr 2024 11:41:28 -0400
+Message-ID: <20240426154138.64643-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Thu, 25 Apr 2024 20:46:26 +0800
-Junhao He <hejunhao3@huawei.com> wrote:
+Currently, enabling SG_DEBUG in the kernel will cause nouveau to hit a
+BUG() on startup:
 
-> The perf tool allows users to create event groups through following
-> cmd [1], but the driver does not check whether the array index is out
-> of bounds when writing data to the event_group array. If the number of
-> events in an event_group is greater than HNS3_PMU_MAX_HW_EVENTS, the
-> memory write overflow of event_group array occurs.
-> 
-> Add array index check to fix the possible array out of bounds violation,
-> and return directly when write new events are written to array bounds.
-> 
-> There are 9 different events in an event_group.
-> [1] perf stat -e '{pmu/event1/, ... ,pmu/event9/}
-> 
-> Fixes: 66637ab137b4 ("drivers/perf: hisi: add driver for HNS3 PMU")
-> Signed-off-by: Junhao He <hejunhao3@huawei.com>
-> Signed-off-by: Hao Chen <chenhao418@huawei.com>
+  kernel BUG at include/linux/scatterlist.h:187!
+  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+  CPU: 7 PID: 930 Comm: (udev-worker) Not tainted 6.9.0-rc3Lyude-Test+ #30
+  Hardware name: MSI MS-7A39/A320M GAMING PRO (MS-7A39), BIOS 1.I0 01/22/2019
+  RIP: 0010:sg_init_one+0x85/0xa0
+  Code: 69 88 32 01 83 e1 03 f6 c3 03 75 20 a8 01 75 1e 48 09 cb 41 89 54
+  24 08 49 89 1c 24 41 89 6c 24 0c 5b 5d 41 5c e9 7b b9 88 00 <0f> 0b 0f 0b
+  0f 0b 48 8b 05 5e 46 9a 01 eb b2 66 66 2e 0f 1f 84 00
+  RSP: 0018:ffffa776017bf6a0 EFLAGS: 00010246
+  RAX: 0000000000000000 RBX: ffffa77600d87000 RCX: 000000000000002b
+  RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffffa77680d87000
+  RBP: 000000000000e000 R08: 0000000000000000 R09: 0000000000000000
+  R10: ffff98f4c46aa508 R11: 0000000000000000 R12: ffff98f4c46aa508
+  R13: ffff98f4c46aa008 R14: ffffa77600d4a000 R15: ffffa77600d4a018
+  FS:  00007feeb5aae980(0000) GS:ffff98f5c4dc0000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f22cb9a4520 CR3: 00000001043ba000 CR4: 00000000003506f0
+  Call Trace:
+   <TASK>
+   ? die+0x36/0x90
+   ? do_trap+0xdd/0x100
+   ? sg_init_one+0x85/0xa0
+   ? do_error_trap+0x65/0x80
+   ? sg_init_one+0x85/0xa0
+   ? exc_invalid_op+0x50/0x70
+   ? sg_init_one+0x85/0xa0
+   ? asm_exc_invalid_op+0x1a/0x20
+   ? sg_init_one+0x85/0xa0
+   nvkm_firmware_ctor+0x14a/0x250 [nouveau]
+   nvkm_falcon_fw_ctor+0x42/0x70 [nouveau]
+   ga102_gsp_booter_ctor+0xb4/0x1a0 [nouveau]
+   r535_gsp_oneinit+0xb3/0x15f0 [nouveau]
+   ? srso_return_thunk+0x5/0x5f
+   ? srso_return_thunk+0x5/0x5f
+   ? nvkm_udevice_new+0x95/0x140 [nouveau]
+   ? srso_return_thunk+0x5/0x5f
+   ? srso_return_thunk+0x5/0x5f
+   ? ktime_get+0x47/0xb0
+   ? srso_return_thunk+0x5/0x5f
+   nvkm_subdev_oneinit_+0x4f/0x120 [nouveau]
+   nvkm_subdev_init_+0x39/0x140 [nouveau]
+   ? srso_return_thunk+0x5/0x5f
+   nvkm_subdev_init+0x44/0x90 [nouveau]
+   nvkm_device_init+0x166/0x2e0 [nouveau]
+   nvkm_udevice_init+0x47/0x70 [nouveau]
+   nvkm_object_init+0x41/0x1c0 [nouveau]
+   nvkm_ioctl_new+0x16a/0x290 [nouveau]
+   ? __pfx_nvkm_client_child_new+0x10/0x10 [nouveau]
+   ? __pfx_nvkm_udevice_new+0x10/0x10 [nouveau]
+   nvkm_ioctl+0x126/0x290 [nouveau]
+   nvif_object_ctor+0x112/0x190 [nouveau]
+   nvif_device_ctor+0x23/0x60 [nouveau]
+   nouveau_cli_init+0x164/0x640 [nouveau]
+   nouveau_drm_device_init+0x97/0x9e0 [nouveau]
+   ? srso_return_thunk+0x5/0x5f
+   ? pci_update_current_state+0x72/0xb0
+   ? srso_return_thunk+0x5/0x5f
+   nouveau_drm_probe+0x12c/0x280 [nouveau]
+   ? srso_return_thunk+0x5/0x5f
+   local_pci_probe+0x45/0xa0
+   pci_device_probe+0xc7/0x270
+   really_probe+0xe6/0x3a0
+   __driver_probe_device+0x87/0x160
+   driver_probe_device+0x1f/0xc0
+   __driver_attach+0xec/0x1f0
+   ? __pfx___driver_attach+0x10/0x10
+   bus_for_each_dev+0x88/0xd0
+   bus_add_driver+0x116/0x220
+   driver_register+0x59/0x100
+   ? __pfx_nouveau_drm_init+0x10/0x10 [nouveau]
+   do_one_initcall+0x5b/0x320
+   do_init_module+0x60/0x250
+   init_module_from_file+0x86/0xc0
+   idempotent_init_module+0x120/0x2b0
+   __x64_sys_finit_module+0x5e/0xb0
+   do_syscall_64+0x83/0x160
+   ? srso_return_thunk+0x5/0x5f
+   entry_SYSCALL_64_after_hwframe+0x71/0x79
+  RIP: 0033:0x7feeb5cc20cd
+  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89
+  f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0
+  ff ff 73 01 c3 48 8b 0d 1b cd 0c 00 f7 d8 64 89 01 48
+  RSP: 002b:00007ffcf220b2c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+  RAX: ffffffffffffffda RBX: 000055fdd2916aa0 RCX: 00007feeb5cc20cd
+  RDX: 0000000000000000 RSI: 000055fdd29161e0 RDI: 0000000000000035
+  RBP: 00007ffcf220b380 R08: 00007feeb5d8fb20 R09: 00007ffcf220b310
+  R10: 000055fdd2909dc0 R11: 0000000000000246 R12: 000055fdd29161e0
+  R13: 0000000000020000 R14: 000055fdd29203e0 R15: 000055fdd2909d80
+   </TASK>
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+We hit this because when initializing firmware of type
+NVKM_FIRMWARE_IMG_DMA we allocate coherent memory and then attempt to
+include that coherent memory in a scatterlist. What we actually mean to do
+here though is to pass a CPU-allocated memory address, since that's the
+only thing that would make sense to put in the scatterlist.
 
-> ---
->  drivers/perf/hisilicon/hns3_pmu.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/perf/hisilicon/hns3_pmu.c b/drivers/perf/hisilicon/hns3_pmu.c
-> index 16869bf5bf4c..cbdd53b0a034 100644
-> --- a/drivers/perf/hisilicon/hns3_pmu.c
-> +++ b/drivers/perf/hisilicon/hns3_pmu.c
-> @@ -1085,15 +1085,27 @@ static bool hns3_pmu_validate_event_group(struct perf_event *event)
->  			return false;
->  
->  		for (num = 0; num < counters; num++) {
-> +			/*
-> +			 * If we find a related event, then it's a valid group
-> +			 * since we don't need to allocate a new counter for it.
-> +			 */
->  			if (hns3_pmu_cmp_event(event_group[num], sibling))
->  				break;
->  		}
->  
-> +		/*
-> +		 * Otherwise it's a new event but if there's no available counter,
-> +		 * fail the check since we cannot schedule all the events in
-> +		 * the group simultaneously.
-> +		 */
-> +		if (num == HNS3_PMU_MAX_HW_EVENTS)
-> +			return false;
-> +
->  		if (num == counters)
->  			event_group[counters++] = sibling;
->  	}
->  
-> -	return counters <= HNS3_PMU_MAX_HW_EVENTS;
-> +	return true;
->  }
->  
->  static u32 hns3_pmu_get_filter_condition(struct perf_event *event)
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ drivers/gpu/drm/nouveau/nvkm/core/firmware.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nvkm/core/firmware.c b/drivers/gpu/drm/nouveau/nvkm/core/firmware.c
+index adc60b25f8e6c..141b0a513bf52 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/core/firmware.c
++++ b/drivers/gpu/drm/nouveau/nvkm/core/firmware.c
+@@ -205,7 +205,9 @@ nvkm_firmware_dtor(struct nvkm_firmware *fw)
+ 		break;
+ 	case NVKM_FIRMWARE_IMG_DMA:
+ 		nvkm_memory_unref(&memory);
+-		dma_free_coherent(fw->device->dev, sg_dma_len(&fw->mem.sgl), fw->img, fw->phys);
++		dma_unmap_single(fw->device->dev, fw->phys, sg_dma_len(&fw->mem.sgl),
++				 DMA_TO_DEVICE);
++		kfree(fw->img);
+ 		break;
+ 	case NVKM_FIRMWARE_IMG_SGT:
+ 		nvkm_memory_unref(&memory);
+@@ -235,14 +237,17 @@ nvkm_firmware_ctor(const struct nvkm_firmware_func *func, const char *name,
+ 		fw->img = kmemdup(src, fw->len, GFP_KERNEL);
+ 		break;
+ 	case NVKM_FIRMWARE_IMG_DMA: {
+-		dma_addr_t addr;
+-
+ 		len = ALIGN(fw->len, PAGE_SIZE);
+ 
+-		fw->img = dma_alloc_coherent(fw->device->dev, len, &addr, GFP_KERNEL);
+-		if (fw->img) {
+-			memcpy(fw->img, src, fw->len);
+-			fw->phys = addr;
++		fw->img = kmalloc(len, GFP_KERNEL);
++		if (!fw->img)
++			return -ENOMEM;
++
++		memcpy(fw->img, src, fw->len);
++		fw->phys = dma_map_single(fw->device->dev, fw->img, len, DMA_TO_DEVICE);
++		if (dma_mapping_error(fw->device->dev, fw->phys)) {
++			kfree(fw->img);
++			return -EFAULT;
+ 		}
+ 
+ 		sg_init_one(&fw->mem.sgl, fw->img, len);
+-- 
+2.44.0
 
