@@ -1,129 +1,277 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4883A13BC28;
-	Fri, 26 Apr 2024 08:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6C742A9B
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714118688; cv=none; b=kEg+k75/wZhqD9AeBFnfVpd4mFHNofy2rH+OBkceMn5GYnOmr1lzAWfJ7zR4MQ4shApz02dyCP+M2gRvirBW4ypDjXUEx7507kM7OHClkYTHg4WFsFrLSfRpdM8RWRu2EDb9BMmmOy/NxBOeYdXSuQoZdjC1yXg85HZFlFu1Wxg=
+	t=1714118831; cv=none; b=OFP4tXDcntgWrjQDuW8p+1c1VEhPd01OGLEFqIn/Xupfr1mLGj6XYcVy+vy9ZajYq7rJoYvZlCyJiZ32GHTOV/To6GCEULL/D7chichVbEQjK3Diz/KIaWiRiODClZbgq5N3+e8og+T8HeLYHSg0Ikge2cw6pHmoFQv7ViPHYIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714118688; c=relaxed/simple;
-	bh=gkrVI/hEJ5vPdNwfDc1cqgOQSI4zGxPCnC5lJLAXYTs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kh5hpj2Y5ozs2whn5zSQBf6ZWbxfosiS/RMaAND41MJqVhGN/ks2/ie/iw0XivUaoBCK4a1AoT1MzcTCOmaDU5eXcqFGWS7ia+6qT7WBmlAWtKm6n3qDFITTjYly/AJ/SRM9Vu6cHmedS4D6K89aqI907rx4IgXGGll0YjeINVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=svwAEpNi; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1714118831; c=relaxed/simple;
+	bh=TGAcZesai+U0xVAWvA7J/MAJQ7c0rregms0Ggpsl5S0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Q3y7k5W+DML/T4GdKeOJtKo9zXhqLR98glDGKSIP2jmKiFy1ABEekdMPFlJTQbOr4HkJLH8n+UBSt7YBpmwk0PIMGy3VGQUEiCkxDNmt7OetilIjjtz/Pgo03rdQrHE5840mogEEF67ohTlvuDqQIpBmYYWR+h7tTFVypFTnGlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iUu67gYV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="svwAEpNi"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q82ZOn010160;
-	Fri, 26 Apr 2024 08:04:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=dXVCujixqBnPqm5Kh3D7JLPwnYnmNrEdPMF0rWzu/Q0=;
- b=svwAEpNisBQMsGfAOPTx0c7DhZdP3h4y7O9ssBZ8eKAb6+jl6H9Gq4sXxtjxDTt2Njop
- LK+paDX3yfUhVc6/goIjkVhSKAdWrsJUOG5b8NBDEdOe4Bdhr78M5NjO3cFLrnhhW3/w
- TPY87vyJrfsGJP9ZvqOpnuY+vHfR/86TL0L/Y/vuSvBFBUDSnqnBdpLX3RyL+9GJjKt4
- 7govMyIKfRiyTfE/D7BwgEUcXdjOzgIQzxAqUlphnflnlEEUN/ged9frgVyJocZ3R6Fe
- BYzjQeGj/cOxqVRicmX7+daKg79fBdx00RRoMZoLUpCcPPvZypeFPEu/2QhEtOtIoN+X IA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xr8dd003y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 08:04:41 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43Q84eUt012938;
-	Fri, 26 Apr 2024 08:04:40 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xr8dd003u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 08:04:40 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q4l4ae020886;
-	Fri, 26 Apr 2024 08:04:39 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xmre0eqxg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 08:04:39 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43Q84aDO66322714
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Apr 2024 08:04:38 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 512CB5806A;
-	Fri, 26 Apr 2024 08:04:36 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 051CE58056;
-	Fri, 26 Apr 2024 08:04:33 +0000 (GMT)
-Received: from [9.171.42.122] (unknown [9.171.42.122])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 26 Apr 2024 08:04:32 +0000 (GMT)
-Message-ID: <d0b8e551-6330-4b1d-98bc-ef1b0e41fbb4@linux.ibm.com>
-Date: Fri, 26 Apr 2024 10:04:32 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 07/11] net/smc: register loopback-ism into
- SMC-D device list
-Content-Language: en-GB
-To: Alexandra Winter <wintera@linux.ibm.com>,
-        Wen Gu
- <guwen@linux.alibaba.com>, twinkler@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
-        tonylu@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org
-References: <20240414040304.54255-1-guwen@linux.alibaba.com>
- <20240414040304.54255-8-guwen@linux.alibaba.com>
- <ef936c58-e87c-4078-a4dc-ed7313dba2a3@linux.ibm.com>
- <23cff564-a65c-4db6-a386-2a7e56be84c8@linux.ibm.com>
-From: Wenjia Zhang <wenjia@linux.ibm.com>
-In-Reply-To: <23cff564-a65c-4db6-a386-2a7e56be84c8@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: d5OOasa6LH4wdU1zG06SqGHMVWAEV8Ei
-X-Proofpoint-GUID: 9nhuHZSwqFZB7kPXUXd0eYYmvDOMbPmX
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iUu67gYV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714118829;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TGAcZesai+U0xVAWvA7J/MAJQ7c0rregms0Ggpsl5S0=;
+	b=iUu67gYVsOfcyjG+kN3vXsAneSSnXQkTVp9hfFTqttetZvbqD2FJIP0w/pGLoKykusMSgJ
+	lZm92ZXTg09PD58PrG7IzWi32fqknR0KAfpDVvjz1+KJl88UGqzI+pF6zB0G+s0yE4a+F8
+	No+6drArGznBHC5gFVATD0FULwLFf0Y=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-378--I1e8NbVMcym4a1Ad3exWA-1; Fri, 26 Apr 2024 04:07:07 -0400
+X-MC-Unique: -I1e8NbVMcym4a1Ad3exWA-1
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4379bbdc9b4so6614121cf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 01:07:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714118827; x=1714723627;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TGAcZesai+U0xVAWvA7J/MAJQ7c0rregms0Ggpsl5S0=;
+        b=SjTVEb3NTS5R5zbyp/nnB63dCn0zOko1ibQyDo2W0b22Phwzo/V+wg9JWFq0Q63/8k
+         /Ira1SwjCwUMgmGxDmGw0VOVYCV/qbcHcl3YNu1y50qDC0nxW8XqPJEC+hS8bq3Gc2dc
+         4lbZuV1J5HLByg4f1EKVzFopeBL5KariKaBJ89M0hnvtwLE4gPYBh0+92eiQTq0VnZay
+         u8odDoPIc/PeLcoxgQBlS3X3BnCOISy2uEHqqkseM+fYe0xAWHYEVfZ5PFZk8tQSFSPs
+         JCAzgnBqH9qE2oMHAmQ86KNdPKol8lOPKFsFMc9vSgZRiXVhu3iO8fKbcXnRdgbhd2kN
+         YACQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWM3GMA/q1j+2hN8MrsF7Hru/6QM5zRjnuUpwmbDTHcODRlmQnP+0TwuScctMtFBXMBTILEwfC7ST7vk3CkyEWeU6J3Ytb/HY9IFc0t
+X-Gm-Message-State: AOJu0YzHTegh4+7mRMTZNmDZG+MMyajMJW3sLGiThyoXdsEheB+nLeZ8
+	A3NBSDPSEDO0BPP6Wk69Kb1mheQ8h8wvvg985MbKLLkvV/AhxkSHeD4N1EC+fBB8FuNfOu1ogTI
+	GH0WtktD9EzuGQ6RrAzsfRRNnTf0nuMuBjBjK2p4j7WTVR8ofJsWR7KC2AO64Fg==
+X-Received: by 2002:a05:6214:4008:b0:6a0:b2e4:583c with SMTP id kd8-20020a056214400800b006a0b2e4583cmr268841qvb.3.1714118826879;
+        Fri, 26 Apr 2024 01:07:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9/G3aBbIJJGde1rRzmHIwatW3ktBZ39Vo5CZV6c+UaHMj1uKk0ppHJzc4RWsj3GbzINlW+w==
+X-Received: by 2002:a05:6214:4008:b0:6a0:b2e4:583c with SMTP id kd8-20020a056214400800b006a0b2e4583cmr268820qvb.3.1714118826480;
+        Fri, 26 Apr 2024 01:07:06 -0700 (PDT)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id y18-20020a0c9a92000000b0069f77a0079fsm7761670qvd.34.2024.04.26.01.07.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 01:07:06 -0700 (PDT)
+Message-ID: <77ee27e2f155abd340b166e2856181577fdf08cc.camel@redhat.com>
+Subject: Re: [PATCH v6 00/10] Make PCI's devres API more consistent
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>, Sam
+ Ravnborg <sam@ravnborg.org>, dakr@redhat.com, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org
+Date: Fri, 26 Apr 2024 10:07:02 +0200
+In-Reply-To: <20240424201229.GA503230@bhelgaas>
+References: <20240424201229.GA503230@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-26_07,2024-04-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=885 spamscore=0 mlxscore=0 phishscore=0 suspectscore=0
- adultscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
- priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2404010000 definitions=main-2404260050
+
+On Wed, 2024-04-24 at 15:12 -0500, Bjorn Helgaas wrote:
+> On Mon, Apr 08, 2024 at 10:44:12AM +0200, Philipp Stanner wrote:
+> > ...
+> > PCI's devres API suffers several weaknesses:
+> >=20
+> > 1. There are functions prefixed with pcim_. Those are always
+> > managed
+> > =C2=A0=C2=A0 counterparts to never-managed functions prefixed with pci_=
+ =E2=80=93 or
+> > so one
+> > =C2=A0=C2=A0 would like to think. There are some apparently unmanaged
+> > functions
+> > =C2=A0=C2=A0 (all region-request / release functions, and pci_intx()) w=
+hich
+> > =C2=A0=C2=A0 suddenly become managed once the user has initialized the =
+device
+> > with
+> > =C2=A0=C2=A0 pcim_enable_device() instead of pci_enable_device(). This
+> > "sometimes
+> > =C2=A0=C2=A0 yes, sometimes no" nature of those functions is confusing =
+and
+> > =C2=A0=C2=A0 therefore bug-provoking. In fact, it has already caused a =
+bug in
+> > DRM.
+> > =C2=A0=C2=A0 The last patch in this series fixes that bug.
+> > 2. iomappings: Instead of giving each mapping its own callback, the
+> > =C2=A0=C2=A0 existing API uses a statically allocated struct tracking o=
+ne
+> > mapping
+> > =C2=A0=C2=A0 per bar. This is not extensible. Especially, you can't cre=
+ate
+> > =C2=A0=C2=A0 _ranged_ managed mappings that way, which many drivers wan=
+t.
+> > 3. Managed request functions only exist as "plural versions" with a
+> > =C2=A0=C2=A0 bit-mask as a parameter. That's quite over-engineered
+> > considering
+> > =C2=A0=C2=A0 that each user only ever mapps one, maybe two bars.
+> >=20
+> > This series:
+> > - add a set of new "singular" devres functions that use devres the
+> > way
+> > =C2=A0 its intended, with one callback per resource.
+> > - deprecates the existing iomap-table mechanism.
+> > - deprecates the hybrid nature of pci_ functions.
+> > - preserves backwards compatibility so that drivers using the
+> > existing
+> > =C2=A0 API won't notice any changes.
+> > - adds documentation, especially some warning users about the
+> > =C2=A0 complicated nature of PCI's devres.
+>=20
+> There's a lot of good work here; thanks for working on it.
+
+Thanks!
+Good to get some more feedback from you
+
+>=20
+> > Philipp Stanner (10):
+> > =C2=A0 PCI: Add new set of devres functions
+>=20
+> This first patch adds some infrastructure and several new exported
+> interfaces:
+>=20
+> =C2=A0 void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
+> const char *name)
+> =C2=A0 void pcim_iounmap_region(struct pci_dev *pdev, int bar)
+> =C2=A0 int pcim_request_region(struct pci_dev *pdev, int bar, const char
+> *name)
+> =C2=A0 void pcim_release_region(struct pci_dev *pdev, int bar)
+> =C2=A0 void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
+> =C2=A0 void __iomem *pcim_iomap_region_range(struct pci_dev *pdev, int
+> bar,
+> =C2=A0 void pcim_iounmap_region_range(struct pci_dev *pdev, int bar,
+>=20
+> > =C2=A0 PCI: Deprecate iomap-table functions
+>=20
+> This adds a little bit of infrastructure (add/remove to
+> legacy_table),
+> reimplements these existing interfaces:
+>=20
+> =C2=A0 void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned
+> long maxlen)
+> =C2=A0 void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr)
+> =C2=A0 int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char
+> *name)
+> =C2=A0 int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
+> =C2=A0 void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
+>=20
+> and adds a couple new exported interfaces:
+>=20
+> =C2=A0 void pcim_release_all_regions(struct pci_dev *pdev)
+> =C2=A0 int pcim_request_all_regions(struct pci_dev *pdev, const char
+> *name)
+>=20
+> There's a lot going on in these two patches, so they're hard to
+> review.=C2=A0 I think it would be easier if you could do the fixes to
+> existing interfaces first,
+
+I agree that the patches can be further split into smaller chunks to
+make them more atomic and easier to review. I can do that.
+
+BUT I'd need some more details about what you mean by "do the fixes
+first" =E2=80=93 which fixes?
+The later patches at least in part rely on the new better functions
+being available.
 
 
+> followed by adding new things, maybe
+> something like separate patches that:
+>=20
+> =C2=A0 - Add pcim_addr_devres_alloc(), pcim_addr_devres_free(),
+> =C2=A0=C2=A0=C2=A0 pcim_addr_devres_clear().
+>=20
+> =C2=A0 - Add pcim_add_mapping_to_legacy_table(),
+> =C2=A0=C2=A0=C2=A0 pcim_remove_mapping_from_legacy_table(),
+> =C2=A0=C2=A0=C2=A0 pcim_remove_bar_from_legacy_table().
+>=20
+> =C2=A0 - Reimplement pcim_iomap(), pcim_iomap_regions(), pcim_iounmap().
+>=20
+> =C2=A0 - Add new interfaces like pcim_iomap_region(),
+> =C2=A0=C2=A0=C2=A0 pcim_request_region(), etc.
+>=20
+> =C2=A0=C2=A0=C2=A0 AFAICS, except for pcim_iomap_range() (used by vbox), =
+these new
+> =C2=A0=C2=A0=C2=A0 interfaces have no users outside drivers/pci, so ... w=
+e might
+> =C2=A0=C2=A0=C2=A0 defer adding them, or at least defer exposing them via
+> =C2=A0=C2=A0=C2=A0 include/linux/pci.h, until we have users for them.
 
-On 25.04.24 15:29, Alexandra Winter wrote:
-> 
-> 
-> On 25.04.24 13:29, Wenjia Zhang wrote:
->>> +    if (!smcd->pnetid[0]) {
->>> +        fentry = list_first_entry_or_null(&smcd_dev_list.list,
->>> +                          struct smcd_dev, list);
->>> +        if (fentry && smc_ism_is_loopback(fentry))
->>> +            list_add(&smcd->list, &fentry->list);
->>> +        else
->>> +            list_add(&smcd->list, &smcd_dev_list.list);
->>> +    } else {
->>>            list_add_tail(&smcd->list, &smcd_dev_list.list);
->>> -    else
->>> -        list_add(&smcd->list, &smcd_dev_list.list);
->>> +    }
->>
->> Nit: here the pair of curly brackets are unnecessary.
-> 
-> Actually
-> https://www.kernel.org/doc/html/latest/process/coding-style.html#codingstyle
-> tells you to use those braces.
-Thanks, @Alexandra!
-Then @Wen, forget my comments on this pls!
+Dropping (the export of) functions like pcim_request_region_range() or
+pcim_request_all_regions() is not a problem.
+
+What I quite fundamentally have to disagree with, however, is not to
+export the functions=C2=A0
+
+ * pcim_request_region()
+ * pcim_iomap_region()
+
+the main point of this series is to deprecate that hybrid nature of
+those existing pci_* functions. You can only deprecate something when
+you provide users with new, better alternatives.
+
+Not exporting them would inevitably tempt driver programmers into using
+pcim_enable_device() + pci_*() as they did so far, which caused at
+least that leak in vboxvideo and another one that my plan was to
+address after we got this merged.
+
+Once we have those new pcim_ functions exported, we could successively
+port the older drivers which use the aforementioned combination with
+pcim_enable_device().
+Then we could drop the hybrid nature of pci_ functions once and for all
+and would end up with a consistent, clean API.
+
+I intended to do that over the months after we merged this.
+
+So I'd suggest let me cancel the export of the "luxury functions" and
+let's keep the two listed above exported
+
+
+P.
+
+>=20
+> > =C2=A0 PCI: Warn users about complicated devres nature
+> > =C2=A0 PCI: Make devres region requests consistent
+> > =C2=A0 PCI: Move dev-enabled status bit to struct pci_dev
+> > =C2=A0 PCI: Move pinned status bit to struct pci_dev
+> > =C2=A0 PCI: Give pcim_set_mwi() its own devres callback
+> > =C2=A0 PCI: Give pci(m)_intx its own devres callback
+> > =C2=A0 PCI: Remove legacy pcim_release()
+> > =C2=A0 drm/vboxvideo: fix mapping leaks
+> >=20
+> > =C2=A0drivers/gpu/drm/vboxvideo/vbox_main.c |=C2=A0=C2=A0 20 +-
+> > =C2=A0drivers/pci/devres.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1011
+> > +++++++++++++++++++++----
+> > =C2=A0drivers/pci/iomap.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
+=A0 18 +
+> > =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 123 ++-
+> > =C2=A0drivers/pci/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 21 +-
+> > =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
+=A0 18 +-
+> > =C2=A06 files changed, 999 insertions(+), 212 deletions(-)
+> >=20
+> > --=20
+> > 2.44.0
+> >=20
+>=20
+
