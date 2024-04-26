@@ -1,669 +1,287 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ADE1474BC;
-	Fri, 26 Apr 2024 13:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F433146D5A
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714137792; cv=none; b=OR6ATYIlMFYNeEFWZ1eP+KoI6xXLRBqE9/L53T6taS47Oj6mt4IimZtH0f3Aui6jLvxM4yIs0K4g9xUAP3rQanoUJrn0nZfQ2pDwrpLuN1GP3m7c+zuwF837p/fUMHrTuAMi48X75iQKOJK77YINvaGhEO0GZla3h6HrBDElPT4=
+	t=1714137877; cv=none; b=ltrl/3mzCIXvT9kWAs787LrGg8etMMAjwDzI4gpAwEQ1J1Cbd+d/IpYLRBRSJbYtHcK851BAWipsuYDSPK7FEmpyhckkNKrWOVuM1qMKQuHfwcpuyYGPSJTYJ/Rb92OOU0tUBLDTvoRBICWmQO9O7sIe7QI6+DekPd1zSK/dGYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714137792; c=relaxed/simple;
-	bh=s5rjh2pkj4coWMASwLmnQkHDOqv7JQtCljSF9r/i0dc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Zk/kdfHmIuUgWZt3Tnk6CLBZrIEZUD6Bzc+OH7K8Pv6cIUKtyjCRXASKo8twi8OkSUVqvWOyoJqIe9/umD35GON7EfFH4n8DS3RClLOhzx3pe8icwuJFX7KNX+AojWJaJYlo6qNWRq+4p+w2E+FvaXJWNZ35On+cGm9Me2srd9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=e1NpjMIX; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1714137877; c=relaxed/simple;
+	bh=jbcAHDiaTrHxMVyZRUpcW1QK1AMqtrKf4Idd/G1q1D8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s+UllYIt5N7fawa1mIDZXbGmWCs34o2oUFfAe9FjW/gU8Q3QmzP1zeI5YdtzTImkRD5vGqIbsibzXjzug6eYIvSCHOelcOst6fIaOOD4kk4NIgQhLU55ws4c9tBNVeYNBIYfQPni4pNnmhOEZIGiW0jDJNdU+nGXqzDTLBawFsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oOwhrkb0; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e1NpjMIX"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43QD4OkI021284;
-	Fri, 26 Apr 2024 13:22:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=5sPoxtulQ7cFa0vgq7qqWjU5XaiBnaPCViXmi0y4pFs=;
- b=e1NpjMIXGH4nNJU1Xi6PnEs7Lp7vblsGhT2gw2Kik2zYLo9kPoBFFWZaJQic3uiAtlKy
- JfGy8kkDx3Mr5RUo5Sf5rZX2SX8NzZtqqbIVBitAGCVW8cx1HuyIzVuuLnGQqStpTSgU
- nE6wTSg/YVJotjGCt4K22BnsBrJVDQE2hP48YmxgtxE9YpG3QQn6GL7+TPf1zgmtm7q4
- fLqTXej3A/hAFFXzxCn9An1AV2av1TSCRf4ke85/oijJPqhh8TOvjyUM6S/FVlfwzrcS
- Cu4uQkzjUQg8WW/97Guo8L3DFV1M2rSWosl9ztzSiBrw7gvN155mnDFEztrNP8FdrVKQ Gw== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xrctg817j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 13:22:49 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43QBGxuU028315;
-	Fri, 26 Apr 2024 13:22:48 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xmtr2ye9w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 13:22:48 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43QDMjnf37028298
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Apr 2024 13:22:47 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 978D558059;
-	Fri, 26 Apr 2024 13:22:45 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 49AC358043;
-	Fri, 26 Apr 2024 13:22:45 +0000 (GMT)
-Received: from [9.61.156.17] (unknown [9.61.156.17])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 26 Apr 2024 13:22:45 +0000 (GMT)
-Message-ID: <1d236c82-f335-43ad-878d-20a1cafccf81@linux.ibm.com>
-Date: Fri, 26 Apr 2024 08:22:45 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 13/14] ARM: dts: aspeed: Add IBM P11 Blueridge BMC
- system
-To: Krzysztof Kozlowski <krzk@kernel.org>, linux-aspeed@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsi@lists.ozlabs.org, linux-spi@vger.kernel.org,
-        linux-i2c@vger.kernel.org, lakshmiy@us.ibm.com, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
-        andrew@codeconstruct.com.au
-References: <20240425213701.655540-1-eajames@linux.ibm.com>
- <20240425213701.655540-14-eajames@linux.ibm.com>
- <b6c54d2e-9906-4607-bc19-e0de077c25b9@kernel.org>
-Content-Language: en-US
-From: Eddie James <eajames@linux.ibm.com>
-In-Reply-To: <b6c54d2e-9906-4607-bc19-e0de077c25b9@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: huckSBBMeBLdF50cFa6Degttx0zdQ3Qp
-X-Proofpoint-GUID: huckSBBMeBLdF50cFa6Degttx0zdQ3Qp
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oOwhrkb0"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516d3a470d5so2608726e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714137874; x=1714742674; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O0Bi6gVXsIuX31dHLMHLC1PBbtKVJLJWgT+esEKInv0=;
+        b=oOwhrkb0do8zR+EfU+BtoXpitJJDV3ugjbow3kQ02nJRP1Hj/f3H+YU7gh12dhIy3Y
+         NJRVnmGHke4JU1f0Ev+Kdjs7rBjZDXxVVD2A95YwgNyTAIt8H0MYOgYuMkdEw5V6rOmi
+         jrrd1oUr/QeYH+Q1EKXu+79FsxjBwgEWF9sCdhgwjHE7Lzx8CHOHBX5NGpclZMtQn7yd
+         P0NkkBLFcpBTFq5wUykrgIH4bdlCuJvj49b8bVBHO+7Ab4ca43BR6xIIOOuz5hATX9sd
+         +rlymuIzfwKJu/EuljSUgU78snIVzsiT0IRuhpAA5Pg0Kr80bZ3Wtf4n5f3jEX5IhWla
+         ygTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714137874; x=1714742674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O0Bi6gVXsIuX31dHLMHLC1PBbtKVJLJWgT+esEKInv0=;
+        b=qt4iRwFhyMvpK4/bBqIcoQ+u+M87LWZbzc++M+fNsQONpDb89i6CL8QsHu+d0OfpFj
+         qciaOhToUuxyQNEeuSbBLXLDzjRlbeDL75zMd22kArZs/Gp2ZecXIpuIfxoLgGA6xEAi
+         2xEJi1phUvJkZyNoIvMCMYtN9flNMQr5hS1pI7p29SoIUDJJtzhjaYcDxYTNuN/qPEkw
+         khSwvhU7iF47fa0u40+f0BDL+wkrQtwtIA5QZV3CoPdJxJ6ZuM0QIgzJ4b5BjwRy/WjV
+         aA6tj6NI4xbrw5avN6REYVolirmTrb4obWfvPX7gdFB/ATxiBsSjI8e/5TnVwngIA0Xd
+         Sm2g==
+X-Gm-Message-State: AOJu0YwynEFBTlF8wEdxFjFwC5gOcoOjqMHHBtkDfGpOC7QGNcZozO7T
+	6MIkLwq61vhh4X5aIjSzdEanQPBIF2BHPX2pdnzVWNa3qeJU9g4Gnzsk7G6RJv/lvcLk9zFfAfR
+	PfRd7Tfsd3hWDL6hVU80Dd9F3KW4sLMlWn4UD4Q==
+X-Google-Smtp-Source: AGHT+IHPfuxG9pOejD1ZKXKtqG/5pabtZoHlEQcSq1hk+hdHhJo+p7Q0A0wddj7FCls7ewydYqC9LME1vMp1yED8vpE=
+X-Received: by 2002:a19:e015:0:b0:516:d259:245e with SMTP id
+ x21-20020a19e015000000b00516d259245emr1727155lfg.9.1714137873732; Fri, 26 Apr
+ 2024 06:24:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-26_12,2024-04-26_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
- adultscore=0 spamscore=0 mlxscore=0 bulkscore=0 priorityscore=1501
- suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2404010000 definitions=main-2404260089
+References: <20240422091936.3714381-1-jens.wiklander@linaro.org>
+ <20240422091936.3714381-3-jens.wiklander@linaro.org> <ZioXkvnIw5V5MXBU@mecka.net>
+In-Reply-To: <ZioXkvnIw5V5MXBU@mecka.net>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Fri, 26 Apr 2024 15:24:21 +0200
+Message-ID: <CAHUa44Fojanryuc+ciJrVZUopRLcTt2teS_pC4BBjt1Wmy240A@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] mmc: block: register RPMB partition with the RPMB subsystem
+To: Manuel Traut <manut@mecka.net>
+Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	op-tee@lists.trustedfirmware.org, 
+	Shyam Saini <shyamsaini@linux.microsoft.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Jerome Forissier <jerome.forissier@linaro.org>, 
+	Sumit Garg <sumit.garg@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Bart Van Assche <bvanassche@acm.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomas Winkler <tomas.winkler@intel.com>, 
+	Alexander Usyskin <alexander.usyskin@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 4/26/24 01:35, Krzysztof Kozlowski wrote:
-> On 25/04/2024 23:37, Eddie James wrote:
->> Add the device tree for the new BMC system. The Blueridge is a
->> P11 system with four processors.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> ---
->>   .../dts/aspeed/aspeed-bmc-ibm-blueridge.dts   | 1711 +++++++++++++++++
->>   1 file changed, 1711 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-blueridge.dts
->>
->> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-blueridge.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-blueridge.dts
->> new file mode 100644
->> index 000000000000..8503ce2480b5
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-blueridge.dts
->> @@ -0,0 +1,1711 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +// Copyright 2024 IBM Corp.
->> +/dts-v1/;
->> +
->> +#include "aspeed-g6.dtsi"
->> +#include <dt-bindings/gpio/aspeed-gpio.h>
->> +#include <dt-bindings/i2c/i2c.h>
->> +#include <dt-bindings/leds/leds-pca955x.h>
->> +
->> +/ {
->> +	model = "Blueridge";
->> +	compatible = "ibm,blueridge-bmc", "aspeed,ast2600";
->> +
->> +	aliases {
->> +		serial4 = &uart5;
->> +		i2c16 = &i2c2mux0;
->> +		i2c17 = &i2c2mux1;
->> +		i2c18 = &i2c2mux2;
->> +		i2c19 = &i2c2mux3;
->> +		i2c20 = &i2c4mux0chn0;
->> +		i2c21 = &i2c4mux0chn1;
->> +		i2c22 = &i2c4mux0chn2;
->> +		i2c23 = &i2c5mux0chn0;
->> +		i2c24 = &i2c5mux0chn1;
->> +		i2c25 = &i2c6mux0chn0;
->> +		i2c26 = &i2c6mux0chn1;
->> +		i2c27 = &i2c6mux0chn2;
->> +		i2c28 = &i2c6mux0chn3;
->> +		i2c29 = &i2c11mux0chn0;
->> +		i2c30 = &i2c11mux0chn1;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path = &uart5;
->> +		bootargs = "console=ttyS4,115200n8 earlycon";
-> Drop bootargs. ALWAYS.
+On Thu, Apr 25, 2024 at 10:43=E2=80=AFAM Manuel Traut <manut@mecka.net> wro=
+te:
 >
+> On Mon, Apr 22, 2024 at 11:19:35AM +0200, Jens Wiklander wrote:
+> > Register eMMC RPMB partition with the RPMB subsystem and provide
+> > an implementation for the RPMB access operations abstracting
+> > the actual multi step process.
+> >
+> > Add a callback to extract the needed device information at registration
+> > to avoid accessing the struct mmc_card at a later stage as we're not
+> > holding a reference counter for this struct.
+> >
+> > Taking the needed reference to md->disk in mmc_blk_alloc_rpmb_part()
+> > instead of in mmc_rpmb_chrdev_open(). This is needed by the
+> > route_frames() function pointer in struct rpmb_ops.
+> >
+> > Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> > Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> > ---
+> >  drivers/mmc/core/block.c | 241 ++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 239 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> > index 32d49100dff5..a7f126fbc605 100644
+> > --- a/drivers/mmc/core/block.c
+> > +++ b/drivers/mmc/core/block.c
+> > @@ -33,6 +33,7 @@
+> >  #include <linux/cdev.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/scatterlist.h>
+> > +#include <linux/string.h>
+> >  #include <linux/string_helpers.h>
+> >  #include <linux/delay.h>
+> >  #include <linux/capability.h>
+> > @@ -40,6 +41,7 @@
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/idr.h>
+> >  #include <linux/debugfs.h>
+> > +#include <linux/rpmb.h>
+> >
+> >  #include <linux/mmc/ioctl.h>
+> >  #include <linux/mmc/card.h>
+> > @@ -76,6 +78,48 @@ MODULE_ALIAS("mmc:block");
+> >  #define MMC_EXTRACT_INDEX_FROM_ARG(x) ((x & 0x00FF0000) >> 16)
+> >  #define MMC_EXTRACT_VALUE_FROM_ARG(x) ((x & 0x0000FF00) >> 8)
+> >
+> > +/**
+> > + * struct rpmb_frame - rpmb frame as defined by eMMC 5.1 (JESD84-B51)
+> > + *
+> > + * @stuff        : stuff bytes
+> > + * @key_mac      : The authentication key or the message authenticatio=
+n
+> > + *                 code (MAC) depending on the request/response type.
+> > + *                 The MAC will be delivered in the last (or the only)
+> > + *                 block of data.
+> > + * @data         : Data to be written or read by signed access.
+> > + * @nonce        : Random number generated by the host for the request=
+s
+> > + *                 and copied to the response by the RPMB engine.
+> > + * @write_counter: Counter value for the total amount of the successfu=
+l
+> > + *                 authenticated data write requests made by the host.
+> > + * @addr         : Address of the data to be programmed to or read
+> > + *                 from the RPMB. Address is the serial number of
+> > + *                 the accessed block (half sector 256B).
+> > + * @block_count  : Number of blocks (half sectors, 256B) requested to =
+be
+> > + *                 read/programmed.
+> > + * @result       : Includes information about the status of the write =
+counter
+> > + *                 (valid, expired) and result of the access made to t=
+he RPMB.
+> > + * @req_resp     : Defines the type of request and response to/from th=
+e memory.
+> > + *
+> > + * The stuff bytes and big-endian properties are modeled to fit to the=
+ spec.
+> > + */
+> > +struct rpmb_frame {
+> > +     u8     stuff[196];
+> > +     u8     key_mac[32];
+> > +     u8     data[256];
+> > +     u8     nonce[16];
+> > +     __be32 write_counter;
+> > +     __be16 addr;
+> > +     __be16 block_count;
+> > +     __be16 result;
+> > +     __be16 req_resp;
+> > +} __packed;
+> > +
+> > +#define RPMB_PROGRAM_KEY       0x1    /* Program RPMB Authentication K=
+ey */
+> > +#define RPMB_GET_WRITE_COUNTER 0x2    /* Read RPMB write counter */
+> > +#define RPMB_WRITE_DATA        0x3    /* Write data to RPMB partition =
+*/
+> > +#define RPMB_READ_DATA         0x4    /* Read data from RPMB partition=
+ */
+> > +#define RPMB_RESULT_READ       0x5    /* Read result request  (Interna=
+l) */
+> > +
+> >  static DEFINE_MUTEX(block_mutex);
+> >
+> >  /*
+> > @@ -163,6 +207,7 @@ struct mmc_rpmb_data {
+> >       int id;
+> >       unsigned int part_index;
+> >       struct mmc_blk_data *md;
+> > +     struct rpmb_dev *rdev;
+> >       struct list_head node;
+> >  };
+> >
+> > @@ -2672,7 +2717,6 @@ static int mmc_rpmb_chrdev_open(struct inode *ino=
+de, struct file *filp)
+> >
+> >       get_device(&rpmb->dev);
+> >       filp->private_data =3D rpmb;
+> > -     mmc_blk_get(rpmb->md->disk);
+> >
+> >       return nonseekable_open(inode, filp);
+> >  }
+> > @@ -2682,7 +2726,6 @@ static int mmc_rpmb_chrdev_release(struct inode *=
+inode, struct file *filp)
+> >       struct mmc_rpmb_data *rpmb =3D container_of(inode->i_cdev,
+> >                                                 struct mmc_rpmb_data, c=
+hrdev);
+> >
+> > -     mmc_blk_put(rpmb->md);
+> >       put_device(&rpmb->dev);
+> >
+> >       return 0;
+> > @@ -2703,10 +2746,165 @@ static void mmc_blk_rpmb_device_release(struct=
+ device *dev)
+> >  {
+> >       struct mmc_rpmb_data *rpmb =3D dev_get_drvdata(dev);
+> >
+> > +     rpmb_dev_unregister(rpmb->rdev);
+> > +     mmc_blk_put(rpmb->md);
+> >       ida_simple_remove(&mmc_rpmb_ida, rpmb->id);
+> >       kfree(rpmb);
+> >  }
+> >
+> > +static void free_idata(struct mmc_blk_ioc_data **idata, unsigned int c=
+md_count)
+> > +{
+> > +     unsigned int n;
+> > +
+> > +     for (n =3D 0; n < cmd_count; n++)
+> > +             kfree(idata[n]);
+> > +     kfree(idata);
+> > +}
+> > +
+> > +static struct mmc_blk_ioc_data **alloc_idata(struct mmc_rpmb_data *rpm=
+b,
+> > +                                          unsigned int cmd_count)
+> > +{
+> > +     struct mmc_blk_ioc_data **idata;
+> > +     unsigned int n;
+> > +
+> > +     idata =3D kcalloc(cmd_count, sizeof(*idata), GFP_KERNEL);
+> > +     if (!idata)
+> > +             return NULL;
+> > +
+> > +     for (n =3D 0; n < cmd_count; n++) {
+> > +             idata[n] =3D kcalloc(1, sizeof(**idata), GFP_KERNEL);
+> > +             if (!idata[n]) {
+> > +                     free_idata(idata, n);
+> > +                     return NULL;
+> > +             }
+> > +             idata[n]->rpmb =3D rpmb;
+> > +     }
+> > +
+> > +     return idata;
+> > +}
+> > +
+> > +static void set_idata(struct mmc_blk_ioc_data *idata, u32 opcode,
+> > +                   int write_flag, u8 *buf, unsigned int buf_bytes)
+> > +{
+> > +     /*
+> > +      * The size of an RPMB frame must match what's expected by the
+> > +      * hardware.
+> > +      */
+> > +     BUILD_BUG_ON(sizeof(struct rpmb_frame) !=3D 512);
+> > +
+> > +     idata->ic.opcode =3D opcode;
+> > +     idata->ic.flags =3D MMC_RSP_R1 | MMC_CMD_ADTC;
+> > +     idata->ic.write_flag =3D write_flag;
+> > +     idata->ic.blksz =3D sizeof(struct rpmb_frame);
+> > +     idata->ic.blocks =3D buf_bytes /  idata->ic.blksz;
+> > +     idata->buf =3D buf;
 >
->> +	};
->> +
->> +	memory@80000000 {
->> +		device_type = "memory";
->> +		reg = <0x80000000 0x40000000>;
->> +	};
->> +
->> +	reserved-memory {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		event_log: tcg_event_log@b3d00000 {
-> No underscores.
+> I tested the series on a i.MX8MM with a eMMC connected via the imx-sdhci
+> controller. Reading from RPMB does not work. It ends in timeouts due to
+> no response from the SDHCI controller.
 >
-> Didn't you already received such basic review?
+> If idata->buf is allocated here with kmalloc(buf_bytes, GFP_KERNEL) and
+> the content of buf is copied to the new allocated area, transfers succeed=
+.
+>
+> Is it possible that idata->buf is not DMA capable? Any other ideas?
 
-
-Thanks for your detailed review Krzysztof. These device trees are based 
-off 5 year old device trees that were merged when the rules were much 
-less strict. I will attempt to address all of your comments for these 
-new dts.
-
+Thanks for testing. I don't know, the idata->buf is allocated using
+alloc_pages_exact(nr_pages * PAGE_SIZE, GFP_KERNEL | __GFP_ZERO); in
+optee_pool_op_alloc_helper(). Alternatively, it's from the memory
+range mapped using memremap() in optee_config_shm_memremap(), but
+that's only if you don't have "dynamic shared memory is enabled" in
+the boot log.
 
 Thanks,
-
-Eddie
-
-
->
->
->> +			no-map;
->> +			reg = <0xb3d00000 0x100000>;
->> +		};
->> +
->> +		ramoops@b3e00000 {
->> +			compatible = "ramoops";
->> +			reg = <0xb3e00000 0x200000>; /* 16 * (4 * 0x8000) */
->> +			record-size = <0x8000>;
->> +			console-size = <0x8000>;
->> +			ftrace-size = <0x8000>;
->> +			pmsg-size = <0x8000>;
->> +			max-reason = <3>; /* KMSG_DUMP_EMERG */
->> +		};
->> +
->> +		/* LPC FW cycle bridge region requires natural alignment */
->> +		flash_memory: region@b4000000 {
->> +			no-map;
->> +			reg = <0xb4000000 0x04000000>; /* 64M */
->> +		};
->> +
->> +		/* VGA region is dictated by hardware strapping */
->> +		vga_memory: region@bf000000 {
->> +			no-map;
->> +			compatible = "shared-dma-pool";
->> +			reg = <0xbf000000 0x01000000>;  /* 16M */
->> +		};
->> +	};
->> +
->> +	i2c2mux: i2cmux {
->> +		compatible = "i2c-mux-gpio";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		status = "okay";
-> ??? Drop
->
->
->> +
->> +		i2c-parent = <&i2c2>;
->> +		mux-gpios = <&gpio0 ASPEED_GPIO(G, 4) GPIO_ACTIVE_HIGH>,
->> +			    <&gpio0 ASPEED_GPIO(G, 5) GPIO_ACTIVE_HIGH>;
->> +		idle-state = <0>;
->> +
->> +		i2c2mux0: i2c@0 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <0>;
->> +		};
->> +
->> +		i2c2mux1: i2c@1 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <1>;
->> +		};
->> +
->> +		i2c2mux2: i2c@2 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <2>;
->> +		};
->> +
->> +		i2c2mux3: i2c@3 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <3>;
->> +		};
->> +	};
->> +
->> +	leds {
->> +		compatible = "gpio-leds";
->> +
->> +		/* BMC Card fault LED at the back */
->> +		led-bmc-ingraham0 {
->> +			gpios = <&gpio0 ASPEED_GPIO(H, 1) GPIO_ACTIVE_LOW>;
->> +		};
->> +
->> +		/* Enclosure ID LED at the back */
->> +		led-rear-enc-id0 {
->> +			gpios = <&gpio0 ASPEED_GPIO(H, 2) GPIO_ACTIVE_LOW>;
->> +		};
->> +
->> +		/* Enclosure fault LED at the back */
->> +		led-rear-enc-fault0 {
->> +			gpios = <&gpio0 ASPEED_GPIO(H, 3) GPIO_ACTIVE_LOW>;
->> +		};
->> +
->> +		/* PCIE slot power LED */
->> +		led-pcieslot-power {
->> +			gpios = <&gpio0 ASPEED_GPIO(P, 4) GPIO_ACTIVE_LOW>;
->> +		};
->> +	};
->> +
->> +	gpio-keys-polled {
->> +		compatible = "gpio-keys-polled";
->> +		poll-interval = <1000>;
->> +
->> +		event-fan0-presence {
->> +			label = "fan0-presence";
->> +			gpios = <&pca0 6 GPIO_ACTIVE_LOW>;
->> +			linux,code = <6>;
->> +		};
->> +
->> +		event-fan1-presence {
->> +			label = "fan1-presence";
->> +			gpios = <&pca0 7 GPIO_ACTIVE_LOW>;
->> +			linux,code = <7>;
->> +		};
->> +
->> +		event-fan2-presence {
->> +			label = "fan2-presence";
->> +			gpios = <&pca0 8 GPIO_ACTIVE_LOW>;
->> +			linux,code = <8>;
->> +		};
->> +
->> +		event-fan3-presence {
->> +			label = "fan3-presence";
->> +			gpios = <&pca0 9 GPIO_ACTIVE_LOW>;
->> +			linux,code = <9>;
->> +		};
->> +
->> +		event-fan4-presence {
->> +			label = "fan4-presence";
->> +			gpios = <&pca0 10 GPIO_ACTIVE_LOW>;
->> +			linux,code = <10>;
->> +		};
->> +
->> +		event-fan5-presence {
->> +			label = "fan5-presence";
->> +			gpios = <&pca0 11 GPIO_ACTIVE_LOW>;
->> +			linux,code = <11>;
->> +		};
->> +	};
->> +
->> +	iio-hwmon {
->> +		compatible = "iio-hwmon";
->> +		io-channels = <&adc1 7>;
->> +	};
->> +};
->> +
->> +&adc1 {
->> +	status = "okay";
->> +	aspeed,int-vref-microvolt = <2500000>;
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_adc8_default &pinctrl_adc9_default
->> +		&pinctrl_adc10_default &pinctrl_adc11_default
->> +		&pinctrl_adc12_default &pinctrl_adc13_default
->> +		&pinctrl_adc14_default &pinctrl_adc15_default>;
->> +};
->> +
->> +&ehci1 {
->> +	status = "okay";
->> +};
->> +
->> +&uhci {
->> +	status = "okay";
->> +};
->> +
->> +&gpio0 {
->> +	gpio-line-names =
->> +	/*A0-A7*/	"","","","","","","","",
->> +	/*B0-B7*/	"","","","","","","checkstop","",
->> +	/*C0-C7*/	"","","","","","","","",
->> +	/*D0-D7*/	"","","","","","","","",
->> +	/*E0-E7*/	"","","","","","","","",
->> +	/*F0-F7*/	"","","rtc-battery-voltage-read-enable","reset-cause-pinhole","","","factory-reset-toggle","",
->> +	/*G0-G7*/	"","","","","","","","",
->> +	/*H0-H7*/	"","bmc-ingraham0","rear-enc-id0","rear-enc-fault0","","","","",
->> +	/*I0-I7*/	"","","","","","","bmc-secure-boot","",
->> +	/*J0-J7*/	"","","","","","","","",
->> +	/*K0-K7*/	"","","","","","","","",
->> +	/*L0-L7*/	"","","","","","","","",
->> +	/*M0-M7*/	"","","","","","","","",
->> +	/*N0-N7*/	"","","","","","","","",
->> +	/*O0-O7*/	"","","","usb-power","","","","",
->> +	/*P0-P7*/	"","","","","pcieslot-power","","","",
->> +	/*Q0-Q7*/	"cfam-reset","","regulator-standby-faulted","","","","","",
->> +	/*R0-R7*/	"bmc-tpm-reset","power-chassis-control","power-chassis-good","","","","","",
->> +	/*S0-S7*/	"presence-ps0","presence-ps1","presence-ps2","presence-ps3",
->> +	"power-ffs-sync-history","","","",
->> +	/*T0-T7*/	"","","","","","","","",
->> +	/*U0-U7*/	"","","","","","","","",
->> +	/*V0-V7*/	"","","","","","","","",
->> +	/*W0-W7*/	"","","","","","","","",
->> +	/*X0-X7*/	"","","","","","","","",
->> +	/*Y0-Y7*/	"","","","","","","","",
->> +	/*Z0-Z7*/	"","","","","","","","";
->> +
->> +	i2c3_mux_oe_n-hog {
->> +		gpio-hog;
->> +		gpios = <ASPEED_GPIO(G, 6) GPIO_ACTIVE_LOW>;
->> +		output-high;
->> +		line-name = "I2C3_MUX_OE_N";
->> +	};
->> +
->> +	usb_power-hog {
->> +		gpio-hog;
->> +		gpios = <ASPEED_GPIO(O, 3) GPIO_ACTIVE_LOW>;
->> +		output-high;
->> +	};
->> +};
->> +
->> +&emmc_controller {
->> +	status = "okay";
->> +};
->> +
->> +&pinctrl_emmc_default {
->> +	bias-disable;
->> +};
->> +
->> +&emmc {
->> +	status = "okay";
->> +	clk-phase-mmc-hs200 = <180>, <180>;
->> +};
->> +
->> +&ibt {
->> +	status = "okay";
->> +};
->> +
->> +&i2c0 {
->> +	status = "okay";
->> +
->> +	eeprom@51 {
->> +		compatible = "atmel,24c64";
->> +		reg = <0x51>;
->> +	};
->> +
->> +	tca_pres1: tca9554@20{
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
->
-> Also missing space before {
->
->
->> +		compatible = "ti,tca9554";
->> +		reg = <0x20>;
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +
->> +		gpio-line-names = "",
->> +			"RUSSEL_FW_I2C_ENABLE_N",
->> +			"RUSSEL_OPPANEL_PRESENCE_N",
->> +			"BLYTH_OPPANEL_PRESENCE_N",
->> +			"CPU_TPM_CARD_PRESENT_N",
->> +			"DASD_BP2_PRESENT_N",
->> +			"DASD_BP1_PRESENT_N",
->> +			"DASD_BP0_PRESENT_N";
->> +	};
->> +};
->> +
->> +&i2c1 {
->> +	status = "okay";
->> +};
->> +
->> +&i2c2 {
->> +	status = "okay";
->> +};
->> +
->> +&i2c3 {
->> +	status = "okay";
->> +
->> +	power-supply@68 {
->> +		compatible = "ibm,cffps";
->> +		reg = <0x68>;
->> +	};
->> +
->> +	power-supply@69 {
->> +		compatible = "ibm,cffps";
->> +		reg = <0x69>;
->> +	};
->> +
->> +	pca_pres1: pca9552@61 {
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
->
->
->> +		compatible = "nxp,pca9552";
->> +		reg = <0x61>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +
->> +		gpio-line-names =
->> +			"SLOT0_PRSNT_EN_RSVD", "SLOT1_PRSNT_EN_RSVD",
->> +			"SLOT2_PRSNT_EN_RSVD", "SLOT3_PRSNT_EN_RSVD",
->> +			"SLOT4_PRSNT_EN_RSVD", "SLOT0_EXPANDER_PRSNT_N",
->> +			"SLOT1_EXPANDER_PRSNT_N", "SLOT2_EXPANDER_PRSNT_N",
->> +			"SLOT3_EXPANDER_PRSNT_N", "SLOT4_EXPANDER_PRSNT_N",
->> +			"", "", "", "", "", "";
->> +	};
->> +};
->> +
->> +&i2c4 {
->> +	status = "okay";
->> +
->> +	tmp275@48 {
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
->
->
->
->> +		compatible = "ti,tmp275";
->> +		reg = <0x48>;
->> +	};
->> +
->> +	tmp275@49 {
-> So it's everywhere...
->
->> +		compatible = "ti,tmp275";
->> +		reg = <0x49>;
->> +	};
->> +
->> +	tmp275@4a {
->> +		compatible = "ti,tmp275";
->> +		reg = <0x4a>;
->> +	};
->> +
->> +	i2c-mux@70 {
->> +		compatible = "nxp,pca9546";
->> +		reg = <0x70>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		status = "okay";
-> Why? Drop
->
->> +		i2c-mux-idle-disconnect;
->> +
->> +		i2c4mux0chn0: i2c@0 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <0>;
->> +
->> +			eeprom@50 {
->> +				compatible = "atmel,24c64";
->> +				reg = <0x50>;
->> +			};
->> +
->> +			pca9551@60 {
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
->
->
->> +				compatible = "nxp,pca9551";
->> +				reg = <0x60>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +
->> +				gpio-controller;
->> +				#gpio-cells = <2>;
->> +
->> +				led@0 {
->> +					label = "cablecard0-cxp-top";
->> +					reg = <0>;
->> +					retain-state-shutdown;
->> +					default-state = "keep";
->> +					type = <PCA955X_TYPE_LED>;
->> +				};
->> +
->> +				led@1 {
->> +					label = "cablecard0-cxp-bot";
->> +					reg = <1>;
->> +					retain-state-shutdown;
->> +					default-state = "keep";
->> +					type = <PCA955X_TYPE_LED>;
->> +				};
->> +			};
->> +		};
->> +
->> +		i2c4mux0chn1: i2c@1 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <1>;
-> reg is after compatible, which means if there is no compatible, reg is
-> always first. This applies you all your DTS patches. This patchset and
-> future.
->
->
->> +
->> +			eeprom@51 {
->> +				compatible = "atmel,24c64";
->> +				reg = <0x51>;
->> +			};
->> +		};
->> +
->> +		i2c4mux0chn2: i2c@2 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <2>;
->> +
->> +			eeprom@52 {
->> +				compatible = "atmel,24c64";
->> +				reg = <0x52>;
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +&i2c5 {
->> +	status = "okay";
->> +
->> +	tmp275@48 {
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
->
->
->> +		compatible = "ti,tmp275";
->> +		reg = <0x48>;
->> +	};
->> +
->> +	tmp275@49 {
->> +		compatible = "ti,tmp275";
->> +		reg = <0x49>;
->> +	};
->> +
->> +	i2c-mux@70 {
->> +		compatible = "nxp,pca9546";
->> +		reg = <0x70>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		status = "okay";
-> Drop
->
->
->> +		i2c-mux-idle-disconnect;
->> +
->> +		i2c5mux0chn0: i2c@0 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <0>;
->> +
->> +			eeprom@50 {
->> +				compatible = "atmel,24c64";
->> +				reg = <0x50>;
->> +			};
->> +
->> +			pca9551@60 {
->> +				compatible = "nxp,pca9551";
->> +				reg = <0x60>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +
->> +				gpio-controller;
->> +				#gpio-cells = <2>;
->> +
->> +				led@0 {
->> +					label = "cablecard3-cxp-top";
->> +					reg = <0>;
->> +					retain-state-shutdown;
->> +					default-state = "keep";
->> +					type = <PCA955X_TYPE_LED>;
->> +				};
->> +
->> +				led@1 {
->> +					label = "cablecard3-cxp-bot";
->> +					reg = <1>;
->> +					retain-state-shutdown;
->> +					default-state = "keep";
->> +					type = <PCA955X_TYPE_LED>;
->> +				};
->> +			};
->> +		};
->> +
->> +		i2c5mux0chn1: i2c@1 {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <1>;
->> +
->> +			eeprom@51 {
->> +				compatible = "atmel,24c64";
->> +				reg = <0x51>;
->> +			};
->> +
->> +			pca9551@61 {
->> +				compatible = "nxp,pca9551";
->> +				reg = <0x61>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->
-> And here you have correct order of properties...
->
->
->
-> Best regards,
-> Krzysztof
->
+Jens
