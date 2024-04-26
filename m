@@ -1,168 +1,156 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F90D13F420
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B181013F426
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714124161; cv=none; b=lUNTUO9gsIo0+4gOZyLbdEhfpMQJwbeaq14/MYVfrClaFFXDcNueuCtbvY7Lpn3Azepq2UUKLqu/gfl3Xg2Olp0WDKzr8pIE0iBkVrLS2ZcFs03fe+EfyvWUO1IQ9Knq8PwEQP6lLus3hZa7GJIfogr1aUb9MCvbyEv6vbGySAE=
+	t=1714124187; cv=none; b=frR7SSajZSLbu2SbJmn04y43PSE7Hxk3f6windzuer8BCMcoJpRluLOT1s8sDkLWK4zHwYqrnb1AdUOUD4CCPIoDFbAZK98kDqZcjvTz4VAOGemn3xrE4s89qcpQst+VfwTFxFlS1O+5o69JFMUgZJBTpqWIRpKv4Wsda1t4egI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714124161; c=relaxed/simple;
-	bh=pN3yy4CmQ4hSslxqgMrAB2AztZnKL7xpwpzx81cP/aE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ege9Sfj/sy/ktjdG5uYny0IUANtBOl/Mj5tWrxFIVQr9FZsvUOYQLOEN/MoJqjmDLU/PKWiGvll6YlyZw13FrqsFWtSjc56jRm+XoGUCeiJUaOW06z8Z7iSFywwrRm/zKwrH+9AIxC4PuqOgR+2QtJ/2qgdLtdfQ8IMYd3Bi6og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HktyPIZd; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714124187; c=relaxed/simple;
+	bh=Y3jENvyu7fKPEdBvKAbLTUiG9vM1ldEliX0y6fpkZxM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tNj1wZQ2IzxrpesDDJBX1p8JkHel7DJWkPkEFkOtouzdKZf0DkSZytgaF1gicGFiQ3oeT4oBxbceHcdbgjxbnZ1gS+BAXHNsCrnMa/6iMbINwyMY3h8fPmSFWdyQwD4wNQm3mQNhafWyB8ksvpBQVj+JUtsluj3wFmolQh0dN4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NAJFlKQU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HktyPIZd"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dcc71031680so1978163276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 02:36:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714124159; x=1714728959; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=G7WFcySPvcg+ldo/VhFJ6svW9p0g+/3RSWp3xt+xPYc=;
-        b=HktyPIZddmdNrMPSXGExNh3sAJsGhQc/kPgoAn5CjQZ+QSzX5uvWofpTBpte5TlpvF
-         rKEvE8oTnS07mnTS0PcGyd6ldLK7wJny9HCqRh4Ar006hKZcwF7L7kMpceT7AvbeEV1a
-         J/y5Bs+1OnHNqvd9BnnFSVUTCL2X8ZndLnVHWq1bcvH1IWE69ivpgL3avN03X7qzGWr1
-         vNZUkQv1stl26mB5ATf0tWCeZoqMKY2uBCvd+ZUa2Yzst6/DX8rMn+yYuzzvxVm/MTAo
-         yQ2vBTir3s+NbvkS95tMCDdRWfY79hKxARNAzF361+dxcQ1kmAwg1vc4XCl0OUSZ50B7
-         6T9w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NAJFlKQU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714124184;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qExq3Nq0hUqrQo4qRdmB4OoXaEaQNPNwgb/ED5v1FgA=;
+	b=NAJFlKQUOtD8Xyw1KldI5jzjzoZPg4rSl8CObnjHlCwVsIoCXxa0/ew5Gbg5KYmImMU/OX
+	5A4afiBufnudk7BM787q+EKyayAs7SIr+9PxwW8gk7b8KXBZbK6BMkLGKUE2bwqwP1K6fx
+	/w93e8BoyRtaGATLoprfd+dpzsnjrwE=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-97-TtNwzY3eOj-jol1sHRJUKA-1; Fri, 26 Apr 2024 05:36:22 -0400
+X-MC-Unique: TtNwzY3eOj-jol1sHRJUKA-1
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1e2bbb6049eso18152495ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 02:36:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714124159; x=1714728959;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G7WFcySPvcg+ldo/VhFJ6svW9p0g+/3RSWp3xt+xPYc=;
-        b=bUXcgu+F613p5aCOvUjqoTpqLdkuVmwDbUeXzSLdjo4U3lVN/PCLBjoxErcJJDCF9p
-         bMPMunW286+nQqK5DAICMbRBcaVDs4h1qOHe/t9bDY2xFryleIJBfYKVtlIMMBOf5ipI
-         lRclcC/IUuW8oZpX0smDSr6cqU6KOukLv6Ffst/lUQ24mYz7lt5p5Ag6XcaWc6jdjCb1
-         v/NVj8/NeVFjbAqg2huhsDYWAfQVGctRRoRioqhr1Ef46KhMrKI+0+CNxeaDB5mKtJqp
-         rjWgVO2E4TfJ4GvyGfy2DjNWvjVbqlZmVx8UP+ECuPsn2POyU1E1UCIAlKi7gipjK3xQ
-         TCig==
-X-Forwarded-Encrypted: i=1; AJvYcCXd5PMlbNKQMgOzzDcx9O70KHkTNqlW4l0Xdfc0LYIMxcmIU9M6FJtnp4bcXqlGpWFPtNRKmRrJj2hdHKY1llsRslIFy8lwavo1F6Al
-X-Gm-Message-State: AOJu0YwMsKCL+88FhBkFFSSZ6iTmL6I7lMHjgH4wtOQkchZhrbNpkcqU
-	HTZHQn9AkIToMGr0za1BFjoEAmhUeUm/eqWWI0vhxVfvoVv4uTe5VU9kYey8syaeC0hcmxdJiYt
-	MnRKMXf7G8afEZ2JscMrnDIWePdLIeD5b6ca2yQ==
-X-Google-Smtp-Source: AGHT+IGRxb+h564OecbbHaINPtM7+aIceXzejpd3vORJuXQEIFRy1ifQGFmUA/Nv+Pgt7RnHaz3NbXj1yxxbCy+Q+7o=
-X-Received: by 2002:a25:9392:0:b0:de5:4a94:b027 with SMTP id
- a18-20020a259392000000b00de54a94b027mr2063862ybm.53.1714124159108; Fri, 26
- Apr 2024 02:35:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714124181; x=1714728981;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qExq3Nq0hUqrQo4qRdmB4OoXaEaQNPNwgb/ED5v1FgA=;
+        b=SS+QixXYbwxe710ChagR59kYVZ+5S+wCNZpOvKJqEhxBviMDUJSR59GgqG6+uNvGJw
+         k5k0HQys6xMn4qQczLtXDpCDSsKCVBtE+0WeVHzp6XwhW1omGvrB+Xem/eq1bqTRIzk9
+         FKGlh3wbefcCgq/H8fkXMvLHVPyICGwbxv2mfo4w8NSbz0NZSLjo7jdrEJUA/F6Ik970
+         amMBJ10Df6JtVaLK4l+/wOOK09JWxFLEKeJOBqIi1rvy/DX//c3p8zLppBUown/Kb0F0
+         ha89CCkUidAdiAmiKUqPKHQS/M2E/uAA2ZeR5hO50DxfelxnErXsCSdTtQ/kVmwdYxRC
+         9cZg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0B1i4bTWlp1MeDdGkPtj/3uhQTeoIByYFuWY4VPHr4viWoKocxhdjUFX2ZOwbzCqkFll9SepI2QWTm1J8XNGnU7S/+iFfpZH1XjO7
+X-Gm-Message-State: AOJu0YxxhnNhg7TBXFIe26GoZql9T/cL+UBy5yOMrQBJ8S4m3nZG59bJ
+	4xw+Lg9ztIPrXm3Dd0pmTx3FifC4H/GN32qLI2MAgXeFFKsGDQqMVTbIwq4m7QNJQj8HE/B4S8/
+	hZUJpjoUfECr11JObiKEG14CMNDDIHcjgnsfoOcBppdVLQtfOXNECPdbkYgbhJw==
+X-Received: by 2002:a17:902:e743:b0:1e9:13eb:9082 with SMTP id p3-20020a170902e74300b001e913eb9082mr2650418plf.0.1714124181202;
+        Fri, 26 Apr 2024 02:36:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+kB8MtLlnQihsmOFiAsNTY4H/hnM+mV/Y1YJ7mzin6YbOqhwE6PJBBN0k7jOFD1Z7EzpxaA==
+X-Received: by 2002:a17:902:e743:b0:1e9:13eb:9082 with SMTP id p3-20020a170902e74300b001e913eb9082mr2650377plf.0.1714124180801;
+        Fri, 26 Apr 2024 02:36:20 -0700 (PDT)
+Received: from [192.168.68.50] ([43.252.112.88])
+        by smtp.gmail.com with ESMTPSA id u2-20020a170902e5c200b001e556734814sm15079254plf.134.2024.04.26.02.36.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Apr 2024 02:36:20 -0700 (PDT)
+Message-ID: <e4628e32-8e76-4db4-9c85-b1246186f3be@redhat.com>
+Date: Fri, 26 Apr 2024 19:36:10 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416182005.75422-1-quic_ajipan@quicinc.com>
- <20240416182005.75422-8-quic_ajipan@quicinc.com> <CAA8EJpqwrKcgm7c57=LpxS7+CfrN2UxNg8k_46auBrdZG7vQnA@mail.gmail.com>
- <ca017ebf-c099-b436-f062-1341f765a08c@quicinc.com>
-In-Reply-To: <ca017ebf-c099-b436-f062-1341f765a08c@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 26 Apr 2024 12:35:48 +0300
-Message-ID: <CAA8EJporZFsjagW5CU5AwtqDsEXTtGJmRmLRedyBTZa7249p6w@mail.gmail.com>
-Subject: Re: [PATCH V2 7/8] clk: qcom: Add GPUCC driver support for SM4450
-To: Ajit Pandey <quic_ajipan@quicinc.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Vinod Koul <vkoul@kernel.org>, 
-	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Taniya Das <quic_tdas@quicinc.com>, 
-	Jagadeesh Kona <quic_jkona@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>, 
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 12/16] arm64: psci: Ignore DENIED CPUs
+Content-Language: en-US
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+ linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, x86@kernel.org, Russell King
+ <linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>,
+ Salil Mehta <salil.mehta@huawei.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com,
+ justin.he@arm.com, jianyong.wu@arm.com
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+ <20240418135412.14730-13-Jonathan.Cameron@huawei.com>
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20240418135412.14730-13-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 26 Apr 2024 at 12:20, Ajit Pandey <quic_ajipan@quicinc.com> wrote:
->
->
->
-> On 4/17/2024 11:35 AM, Dmitry Baryshkov wrote:
-> > On Tue, 16 Apr 2024 at 21:23, Ajit Pandey <quic_ajipan@quicinc.com> wrote:
-> >>
-> >> Add Graphics Clock Controller (GPUCC) support for SM4450 platform.
-> >>
-> >> Signed-off-by: Ajit Pandey <quic_ajipan@quicinc.com>
-> >> ---
-> >>   drivers/clk/qcom/Kconfig        |   9 +
-> >>   drivers/clk/qcom/Makefile       |   1 +
-> >>   drivers/clk/qcom/gpucc-sm4450.c | 805 ++++++++++++++++++++++++++++++++
-> >>   3 files changed, 815 insertions(+)
-> >>   create mode 100644 drivers/clk/qcom/gpucc-sm4450.c
-> >
-> > [skipped]
-> >
-> >> +
-> >> +static int gpu_cc_sm4450_probe(struct platform_device *pdev)
-> >> +{
-> >> +       struct regmap *regmap;
-> >> +
-> >> +       regmap = qcom_cc_map(pdev, &gpu_cc_sm4450_desc);
-> >> +       if (IS_ERR(regmap))
-> >> +               return PTR_ERR(regmap);
-> >> +
-> >> +       clk_lucid_evo_pll_configure(&gpu_cc_pll0, regmap, &gpu_cc_pll0_config);
-> >> +       clk_lucid_evo_pll_configure(&gpu_cc_pll1, regmap, &gpu_cc_pll1_config);
-> >> +
-> >> +       /* Keep some clocks always enabled */
-> >> +       qcom_branch_set_clk_en(regmap, 0x93a4); /* GPU_CC_CB_CLK */
-> >> +       qcom_branch_set_clk_en(regmap, 0x9004); /* GPU_CC_CXO_AON_CLK */
-> >> +       qcom_branch_set_clk_en(regmap, 0x900c); /* GPU_CC_DEMET_CLK */
-> >
-> > My main concern here is the AON clocks. If we don't model
-> > gpu_cc_demet_clk as a leaf clock, then gpu_cc_demet_div_clk_src
-> > becomes a clock without children and can be disabled by Linux.
-> > Likewise not modelling gpu_cc_cxo_aon_clk removes one of the voters on
-> > gpu_cc_xo_clk_src, which can now be turned off by Linux.
-> > Our usual recommendation is to model such clocks properly and to use
-> > CLK_IS_CRITICAL or CLK_IGNORE_UNUSED to mark then as aon.
-> >
-> Thanks for review, actually if leaf (branch) clock is ON, hardware will
-> take care of enabling and keeping the parent ON. So parent clocks won't
-> get turned OFF in HW as long as branch clock is enabled.
->
-> For clocks which are fixed rate (19.2MHz) and recommended to be kept ON
-> forever from HW design, modelling and exposing clock structure in kernel
-> will be a redundant code in kernel memory, hence as per earlier
-> suggestion in previous thread such clocks are recommended to be kept
-> enabled from probe.
+On 4/18/24 23:54, Jonathan Cameron wrote:
+> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> 
+> When a CPU is marked as disabled, but online capable in the MADT, PSCI
+> applies some firmware policy to control when it can be brought online.
+> PSCI returns DENIED to a CPU_ON request if this is not currently
+> permitted. The OS can learn the current policy from the _STA enabled bit.
+> 
+> Handle the PSCI DENIED return code gracefully instead of printing an
+> error.
+> 
+> See https://developer.arm.com/documentation/den0022/f/?lang=en page 58.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> [ morse: Rewrote commit message ]
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> v7: No change
+> ---
+>   arch/arm64/kernel/psci.c | 2 +-
+>   arch/arm64/kernel/smp.c  | 3 ++-
+>   2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index 29a8e444db83..fabd732d0a2d 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -40,7 +40,7 @@ static int cpu_psci_cpu_boot(unsigned int cpu)
+>   {
+>   	phys_addr_t pa_secondary_entry = __pa_symbol(secondary_entry);
+>   	int err = psci_ops.cpu_on(cpu_logical_map(cpu), pa_secondary_entry);
+> -	if (err)
+> +	if (err && err != -EPERM)
+>   		pr_err("failed to boot CPU%d (%d)\n", cpu, err);
+>   
+>   	return err;
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 4ced34f62dab..dc0e0b3ec2d4 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -132,7 +132,8 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+>   	/* Now bring the CPU into our world */
+>   	ret = boot_secondary(cpu, idle);
+>   	if (ret) {
+> -		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
+> +		if (ret != -EPERM)
+> +			pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
+>   		return ret;
+>   	}
+>   
 
-Recommended by whom?
+The changes in smp.c are based the assumption that PSCI is the only backend, which
+isn't true. So we probably need move this error message to specific backend, which
+could be PSCI, ACPI parking protocol, or smp_spin_table.
 
-Kernel developers clearly recommend describing all the clocks so that
-CCF has knowledge about all the clocks in the system.
+Thanks,
+Gavin
 
-> >> +
-> >> +       return qcom_cc_really_probe(pdev, &gpu_cc_sm4450_desc, regmap);
-> >> +}
-> >> +
-> >> +static struct platform_driver gpu_cc_sm4450_driver = {
-> >> +       .probe = gpu_cc_sm4450_probe,
-> >> +       .driver = {
-> >> +               .name = "gpucc-sm4450",
-> >> +               .of_match_table = gpu_cc_sm4450_match_table,
-> >> +       },
-> >> +};
-> >> +
-> >> +module_platform_driver(gpu_cc_sm4450_driver);
-> >> +
-> >> +MODULE_DESCRIPTION("QTI GPUCC SM4450 Driver");
-> >> +MODULE_LICENSE("GPL");
-> >> --
-> >> 2.25.1
-> >>
-> >>
-> >
-> >
->
-> --
-> Thanks, and Regards
-> Ajit
-
-
-
--- 
-With best wishes
-Dmitry
