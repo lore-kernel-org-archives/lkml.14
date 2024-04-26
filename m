@@ -1,399 +1,223 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2087.outbound.protection.outlook.com [40.107.247.87])
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A96196;
-	Fri, 26 Apr 2024 00:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714089645; cv=fail; b=fr5ElovWW+WfJlc1hGTyY0kieKj9zirDsXLvTO4+zE7yYpEKi46KQ8dmiyFDf6QJq2A1Eywl5MFSjhSMmIu6DeShhVv9rxaIUcWKMXyj6ebgmHiv82bp2lrUab56FSpWYiFPRTfMhnFQzDvCEebhDpLyIh58YQctOTgRLhgJTCw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714089645; c=relaxed/simple;
-	bh=zXSeMQFGO/K/jcw3DBDLG/ZccM85csiqYD/GnxAlEhg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fMsaB0BuZnp7ZHUtZL+/WZidw5hUm+3aN4e/2i3Rhy5vVL4oXNrjMtMCSA/jdw2B32ATD29j9fkALNDmy56KnbpjLngyYoYR1kDsovCZHtXMvFS4w6rlEexlT6tZv1EGsXGcEI1BLTaIVh1HHasys28ZWOuwUhvMP1G56r+zBsY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=hh9eYZsa; arc=fail smtp.client-ip=40.107.247.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F68E364;
+	Fri, 26 Apr 2024 00:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714090210; cv=none; b=jFI3Lsne4aa9SnSsa8Ovenpi/HDx3ItQbsFi3yfcMSB1BgrSy9V4ly59oaEPAGRiaAcOhBhE3p+ogYFfyQ5smZ0J+u1lZRWUuScg/D00JEmD82f9qv7BHhNeCr+2xYZoSlnIbA9VAfpt/GWTwGxllDYmO2qeQLw2FF8Q5fR/GMM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714090210; c=relaxed/simple;
+	bh=dJtI9o4EFtZNVHQ+nTl9snF0td1+s6F3a0x4Z6jvHWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ue6z+dAE1s/D3OvNS8R3bYu1JIdsJ5tHKeDoIPloSxYl7VRj/C8+M5Pgw5+SabvyiIU4Kg1GI1QAXiZz2R4YuuWNZsSidF7a7doUFKhPZaVmcURKlgNX+VQv9KiKOCMAw2W9ycymU2SMUrviDGuP5p5NjsWSIyLsKVSHNjMWUw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=cZLMJjDA; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hh9eYZsa"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SQmsqnhR9t8DJWiW7UGWKgAha2azpa2Vvhzz1g8AIk2b2ys10CslVoMxgQ7E/mM5pDDAw9q7kyeJqr2PleEAAFi0ko1IcSa0Wrk5Q/aRoMX9SK1IpoV34QneON/XtlFCxALArk1p3bWYME3XVh4YEOhytd3BqI3PfZpEJTAukdi+i/93s3mUKIJYj+RZRCjFwQ870faXg5vEZ9eUIKVbC161G2FR2zPAHBkSSwY2PvDGuexOMtizdwyz/Ck9x0V7wNqQEnQIxLUGa6kmx8QsOxRXC4ShKfvQdX61olk6sekIdak5qJ6Kjrmt8c+haxSdtNq21dJcM87NaY3KWI9zpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GjeeqokNn7K8EgERMbFZF9th8PgCaRckaOcdfI+gbDw=;
- b=F4uqZF8/kjmPDcSQ2WbK9D61wabpUrwHbmNTi7s181TYNz2xEpsqG4NbIy4DL+7kMn5k+qcv3cRHNasZbmIbxAWTSbQeFuvki6YUR6BxIwMadYvmrNi8OX51EBMMGYDXJ07ZHmRbpjjVrUBJ04oio71yXG6R7W0vnkRs5NnF2ibL1OMbZaCcwilMATzvx6HTE1ZqEEu6u2jXNGVQpMns0U9mXnH73YOKZGvD5+U8BKQSVW0B+HaohCA6xEPhp0pzbYoWbopZYgPTxrArxCaBQBLsmBtOOEOcRivopZXcVqXN1xFML1khOyzeN9sHxwKv6YGFq8v5O6qdE6VSk6pFbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GjeeqokNn7K8EgERMbFZF9th8PgCaRckaOcdfI+gbDw=;
- b=hh9eYZsaMo/BhbV7PtBSyhDlyMYG+1PMvtm631yKszXGgxflHiMCO7MRE2g0fB7YNMIdaCd7s5/OcEBzRiGGbYYrV6kiuzmslFEY7FYfvOplGmjZIK5F/xIjAhtxLB4wpk9nm8NdSb81r2S/Km0wWM6p3nG93M9BcwhGtsjpq7g=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by DU2PR04MB8597.eurprd04.prod.outlook.com (2603:10a6:10:2d8::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Fri, 26 Apr
- 2024 00:00:38 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7472.044; Fri, 26 Apr 2024
- 00:00:37 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Rob Herring <robh@kernel.org>
-CC: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Linus Walleij
-	<linus.walleij@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
-	<s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properties
- for i.MX95 Pinctrl OEM extensions
-Thread-Topic: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properties
- for i.MX95 Pinctrl OEM extensions
-Thread-Index: AQHakTp0F0gZzKwEJ0KLehvuXBXWtLF32SuAgADPKOCAAICOAIAAbbtw
-Date: Fri, 26 Apr 2024 00:00:37 +0000
-Message-ID:
- <DU0PR04MB9417CC2150FF2F038202433F88162@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240418-pinctrl-scmi-oem-v1-v2-0-3a555a3c58c3@nxp.com>
- <20240418-pinctrl-scmi-oem-v1-v2-1-3a555a3c58c3@nxp.com>
- <20240424193007.GA329896-robh@kernel.org>
- <DU0PR04MB9417C67342B1DD6CC299B4CE88172@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <20240425153140.GA2556348-robh@kernel.org>
-In-Reply-To: <20240425153140.GA2556348-robh@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DU2PR04MB8597:EE_
-x-ms-office365-filtering-correlation-id: 4191f3fc-9bd0-4fd2-f47c-08dc6583e71d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?yBleLm5/9bgCkLhW8axCIBD72xoebnjZynqN7SQ51d1Q02uapCaTECwLbK3C?=
- =?us-ascii?Q?oIiAoWHAkJdWisXPia/DKLus8QznAYuDciG772+yABOjzYyhyLIIsRoH7w4i?=
- =?us-ascii?Q?s3XY+ki8AbQ2GPovLXG6ccoHE7ZRAjsKz8XolJQobI05AGmSRDgtfoUaOEVK?=
- =?us-ascii?Q?+Yjx0h0zShPKiche1wZhQXXbSZEM/n0R9n0TlvUfGyJlHqHwvT9wUUBi3ApI?=
- =?us-ascii?Q?PCNbrItArB7fpKiz/R5Moa1rUKaXAEaI/SAz3vxsbnqhJchzNGM2ANFJZbpM?=
- =?us-ascii?Q?anDPxy409ych+OkQ7nBCt6tLOGQ8Nbwxwid1bM1uLfiwImpeDBLrFiQnxs44?=
- =?us-ascii?Q?HYdS2lMcY3wN47Yc5ZBZXaY+gb8vvEtmOqy4q/BxyGBGHWwIpW0MdAX1XWnG?=
- =?us-ascii?Q?Ujl7fWd8NJIrrdf+5gSmUsG6tE0AFNa05trE1u9E98TPEY+C5ok+rGLTgV3H?=
- =?us-ascii?Q?p96lPd2CgRUlyY59KDtfe3w7EpiW/iyaVb9HZclxx+4GEguOYM1dhDq+nh1P?=
- =?us-ascii?Q?Z1cGMZze9T7Y8zC9Def0oEM+ypEfW491yAU27TGcOTAgLYyjP5pD8ZBDZDhG?=
- =?us-ascii?Q?w3hci2sk9JrF7W0kf/erhqkWmXU5AWqir0zMgsslHwrM0xZ21UR/NJGkTlfp?=
- =?us-ascii?Q?0v/elYB6OxqPVJ48doZ4Af7clymCqROIMSdz9xLXBk6df12W1HVRtFtDv6gG?=
- =?us-ascii?Q?PUXG0Tyi9u4xCFfHUFSiUunFsdyLbiTZHvY3McIqkSht111Wx5vEeXxbeEPV?=
- =?us-ascii?Q?kfaW9GTilu/qb61/ritzF9JDvQ5wkN5eVnUGRhV8oyQiNDHL6i15LNC8JCpx?=
- =?us-ascii?Q?74PnFWm3kVE6WZm4h40XEqHRmMLXDFpXnA+VUsQBAbdhmZK46SD0QP/028Jw?=
- =?us-ascii?Q?44K6GQloPf8qxVEooL1GReuKYLwHSRHjUjOmbrfmUFygQ0xVEqyCvXw2CYR5?=
- =?us-ascii?Q?93esGh2v+ejpNL8mWPGKaDCd9U/lD6qpEMkiEyTNPnaR56oNouvzBLjENwiC?=
- =?us-ascii?Q?l2YtRZ0B/MOSsZI6ZyaWIbCLUMDsbA53MS56hz0nDrTFMtXDw1YvoYDNgGZN?=
- =?us-ascii?Q?4mzPcatyFezAQkirZ+O3OxPiAkfMl40SKd0txSf7Iq1rUiWff8SI9IKcGGDE?=
- =?us-ascii?Q?tfzSYJySFrYVWHr8jDbba+BF8ronkkx99pkOBH2KTANZZWZLVliGIQF5KoL9?=
- =?us-ascii?Q?OgYLQ/dVo34vqzA4Yc6Rq7L1xojtBRKmKqqg7fajA9SZvkBrLsS8X2x022eS?=
- =?us-ascii?Q?rb98os08VDsAnNMs4ZO0+UuJCN20OolD7syhnCrpaAIsLLplGfAowrUVabRX?=
- =?us-ascii?Q?74UOvGryPJXTVTPKRmD/IJJSq/A3EN/q3hp5PEm1Ji25RA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?NLGOl/y89Ifmza24Yi4QcOndROEDvtV2HLJq4aaDabvrd1d9EtA85KPgG8u7?=
- =?us-ascii?Q?sKAIXZIM2IYW1HwLn/7Tc3zKdCoKQ/JH97IPEORaMeapdUokKasBPexL9FnO?=
- =?us-ascii?Q?aWi5W5uE5hOMfS1RrbOO8RWF35OQ7pgxlEJ++LF1n0RWFYDmmCbvyI7tiVnV?=
- =?us-ascii?Q?1T9vMHmSg8YjPB93FXVOUvMLICXCHPv7YA2Hykb+K7AwG1OdDLeocoqYRUYL?=
- =?us-ascii?Q?hPnxASyGlQ0lXHjH6QbyJHX+2nPwsG+kJOd277CHwbWR+eyz6WeEKDLGI0KF?=
- =?us-ascii?Q?VHUgzPz4fvY9f/vsH90jAsOQM03mEcD6AhVIawqL1TTYdNoc11lyfLQykrmi?=
- =?us-ascii?Q?StIyKElP0aLoZZWBTTDWNvotqxav9BiFfFbRjbBzXnAV5luCW0ifZX5FP3u4?=
- =?us-ascii?Q?NKyhgKm6rsvvNtw+OK1AUBqejEQhZIeHti8gQCnPxpDaW/79wLGXiQnHwhaK?=
- =?us-ascii?Q?7SOaCNcqFH3p4CDIrVhkZus5ZVFzcjOq3MgNh70nMHO8JpGbttesvtEXp6Zb?=
- =?us-ascii?Q?R1S1eHP52FwpNu9XtZfZBEufw83gi7edmbCK/F3Qul/EEfPqXw7ejR8T+bWz?=
- =?us-ascii?Q?YcJk2d0gZO9wUwIujrGDfT8//+FrunuoCpY8OCMZAsi0ghnghrCHiWqdtt6e?=
- =?us-ascii?Q?ZNXkLWQQC7Hnq0+6oXKFonMI6DG8v96FC5p6nX6zQYFCBOj/6c3NHwe4L+4U?=
- =?us-ascii?Q?QV3UcKu4DMr480cGNxKuQr9fPA81QNgCJxEfrU0/rDYzX37HbZO8Ap5h71iP?=
- =?us-ascii?Q?sqOtjbiUFIdfvJw3mafvyfQMcR0OdHoRDAE0zNJ6AzYs6NYiWweRszkE2mVx?=
- =?us-ascii?Q?gCpLW0FQtxRa8EwUFG4IrAU0xVznkdFgWp0q0ogZIZNR3pHkh+jxMWQX12yG?=
- =?us-ascii?Q?wCOpVDa0DzBpepmPeIleCvMgAEVEirHtVB3f3zKSGh8I2QLvAI4J1Z7Q0+0w?=
- =?us-ascii?Q?ZkDQhk2mIcdgZwiMSQLamxBFQZtAGqNPLYH01+pdHo+isOHVM5MgWby1c4GM?=
- =?us-ascii?Q?y9LmX7mTii75vdWNJ3Clpyqm7DvHTXEB7OPxhxVGl8TxIRBx0rbIJAfsdyx+?=
- =?us-ascii?Q?STlLfg5c28WCHLQQSBpDSx0UBS8jN4hua40pYDuRAE2dlelHNqvvztsLJPKr?=
- =?us-ascii?Q?jNkioZAP0OAAbD8pOisrtTTo7Ml/IUHLs0WrQJMPPKg90L+DRdoOzl8Jfnfc?=
- =?us-ascii?Q?YNHy4GPtZF6lNjDdEsvPRlk2zEtXy+VsEzJsygw5Z6YDGGaalZTBd0Oacik1?=
- =?us-ascii?Q?EXSFzCtS/ZzmmtGuSJVXMF8LoPKqBwJGO9BXOfpHcj31EcPHga4bE2dD5BmX?=
- =?us-ascii?Q?2zY5qfYn9kNdgVqBsjWFQ14fOMkDdZbMFcPK9ckPaJqHf1Fcfevmc0TaTJC5?=
- =?us-ascii?Q?V4vTT43laenm5Kvpk4XxEzcibV3Sn0OvVVC9EFAKp0eEgr4WKVgZmQtFhEvz?=
- =?us-ascii?Q?3ki6ibsS7bivc9EiGd2dR4gWTQ1hLBRsQIhS2zlcYFm4S/j5/wdIw0wMhTu5?=
- =?us-ascii?Q?eyQmKLff6PDG+9h70r/9js4ZKkEOErEYVRtpm/IKFKvIvEV7fL63Cez11tgH?=
- =?us-ascii?Q?DZ+jToMvp6uSybcuucg=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="cZLMJjDA"
+Received: from bender.morinfr.org (unknown [82.66.66.112])
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id E31342003B4;
+	Fri, 26 Apr 2024 02:09:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
+	; s=20170427; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=N6MeTijVraZtnAlr4I7UfZ/peAb7am+s8EPeA93kPNI=; b=cZLMJjDArvL10ffE2YMrqTH3Wy
+	JrJA05nUJdSlJgehfNcCMR04i8YZzmsE+saToPPGB+XTxyELSXtExWD5i35JQA9edMTERbl8lXFCq
+	/bG00Ct6upF8odr2ViSIfz+zQ6pYcS/LpCGetlMOaF5ixcCpWIg1PskR38z/929ZDcTE=;
+Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
+	(envelope-from <guillaume@morinfr.org>)
+	id 1s09A2-001c5t-10;
+	Fri, 26 Apr 2024 02:09:54 +0200
+Date: Fri, 26 Apr 2024 02:09:54 +0200
+From: Guillaume Morin <guillaume@morinfr.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Guillaume Morin <guillaume@morinfr.org>, oleg@redhat.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	muchun.song@linux.dev
+Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
+Message-ID: <Zirw0uINbP6GxFiK@bender.morinfr.org>
+References: <ZiK50qob9yl5e0Xz@bender.morinfr.org>
+ <b70a3d3a-ea8b-4b20-964b-b019c146945a@redhat.com>
+ <ZiaoZlGc_8ZV3736@bender.morinfr.org>
+ <22fcde31-16c4-42d0-ad99-568173ec4dd0@redhat.com>
+ <ZibOQI9kwzE98n12@bender.morinfr.org>
+ <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
+ <ZilvOi7ceSXmwkNq@bender.morinfr.org>
+ <b1cf78f8-8480-4451-bbf8-78694ebd0438@redhat.com>
+ <Zip0fEliGeL0qmID@bender.morinfr.org>
+ <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4191f3fc-9bd0-4fd2-f47c-08dc6583e71d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2024 00:00:37.1885
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bbk6Tv7wQZNBMmlu3o3smS1r/lpvjGvq4mWqu3RSuJT4h2Re2jpzCg3Qpnxfd7NMX9M9GXDdjNclXAoDVUisrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8597
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
 
-Hi Rob, Sudeep, Cristian, Linus
+On 25 Apr 21:56, David Hildenbrand wrote:
+>
+> On 25.04.24 17:19, Guillaume Morin wrote:
+> > On 24 Apr 23:00, David Hildenbrand wrote:
+> > > > One issue here is that FOLL_FORCE|FOLL_WRITE is not implemented for
+> > > > hugetlb mappings. However this was also on my TODO and I have a draft
+> > > > patch that implements it.
+> > > 
+> > > Yes, I documented it back then and added sanity checks in GUP code to fence
+> > > it off. Shouldn't be too hard to implement (famous last words) and would be
+> > > the cleaner thing to use here once I manage to switch over to
+> > > FOLL_WRITE|FOLL_FORCE to break COW.
+> > 
+> > Yes, my patch seems to be working. The hugetlb code is pretty simple.
+> > And it allows ptrace and the proc pid mem file to work on the executable
+> > private hugetlb mappings.
+> > 
+> > There is one thing I am unclear about though. hugetlb enforces that
+> > huge_pte_write() is true on FOLL_WRITE in both the fault and
+> > follow_page_mask paths. I am not sure if we can simply assume in the
+> > hugetlb code that if the pte is not writable and this is a write fault
+> > then we're in the FOLL_FORCE|FOLL_WRITE case.  Or do we want to keep the
+> > checks simply not enforce it for FOLL_FORCE|FOLL_WRITE?
+> > 
+> > The latter is more complicated in the fault path because there is no
+> > FAULT_FLAG_FORCE flag.
+> > 
+> 
+> I just pushed something to
+> 	https://github.com/davidhildenbrand/linux/tree/uprobes_cow
+> 
+> Only very lightly tested so far. Expect the worst :)
 
-Although this is dt-binding stuff, I hope you could also help suggest how t=
-o
-support NXP SCMI OEM extensions. There is less chance NXP will change
-SCMI firmware to make linux happy using generic conf stuff, because
-the SCMI firmware will also need to work for FreeRTOS/GHS/QNX and etc.
 
-> Subject: Re: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properti=
-es
-> for i.MX95 Pinctrl OEM extensions
->=20
-> On Thu, Apr 25, 2024 at 09:06:00AM +0000, Peng Fan wrote:
-> > Hi Rob,
-> >
-> > > Subject: Re: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add
-> > > properties for i.MX95 Pinctrl OEM extensions
-> > >
-> > > On Thu, Apr 18, 2024 at 10:53:17AM +0800, Peng Fan (OSS) wrote:
-> > > > From: Peng Fan <peng.fan@nxp.com>
-> > > >
-> > > > i.MX95 Pinctrl is managed by SCMI firmware using OEM extensions.
-> > > > This patch is to add i.MX95 Pinctrl OEM extensions properties.
-> > > >
-> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > ---
-> > > >  .../devicetree/bindings/firmware/arm,scmi.yaml     |  9 ++-
-> > > >  .../bindings/firmware/nxp,imx95-scmi-pinctrl.yaml  | 66
-> > > > ++++++++++++++++++++++
-> > > >  2 files changed, 72 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> > > > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> >
-> > ....
-> >
-> > > > +
-> > > > +title: i.MX System Control and Management Interface (SCMI)
-> > > > +Pinctrl Protocol
-> > > > +
-> > > > +maintainers:
-> > > > +  - Peng Fan <peng.fan@arm.com>
-> > > > +
-> > > > +patternProperties:
-> > > > +  '[a-f0-9]+$':
-> > > > +    type: object
-> > > > +    unevaluatedProperties: false
-> > > > +
-> > > > +    properties:
-> > > > +      pins:
-> > > > +        $ref: /schemas/types.yaml#/definitions/string
-> > > > +        description: name of the pin
-> > > > +        items:
-> > > > +          enum: [ daptdi, daptmsswdio, daptclkswclk, daptdotracesw=
-o,
-> > > > +                  gpioio00, gpioio01, gpioio02, gpioio03,
-> > > > + gpioio04,
-> > >
-> > > ioio?
-> >
-> > Yes. The name is exported from SCMI firmware.
-> >
-> > >
-> > > > +                  gpioio05, gpioio06, gpioio07, gpioio08, gpioio09=
-,
-> > > > +                  gpioio10, gpioio11, gpioio12, gpioio13, gpioio14=
-,
-> > > > +                  gpioio15, gpioio16, gpioio17, gpioio18, gpioio19=
-,
-> > > > +                  gpioio20, gpioio21, gpioio22, gpioio23, gpioio24=
-,
-> > > > +                  gpioio25, gpioio26, gpioio27, gpioio28, gpioio29=
-,
-> > > > +                  gpioio30, gpioio31, gpioio32, gpioio33, gpioio34=
-,
-> > > > +                  gpioio35, gpioio36, gpioio37, ccmclko1, ccmclko2=
-,
-> > > > +                  ccmclko3, ccmclko4, enet1mdc, enet1mdio, enet1td=
-3,
-> > > > +                  enet1td2, enet1td1, enet1td0, enet1txctl, enet1t=
-xc,
-> > > > +                  enet1rxctl, enet1rxc, enet1rd0, enet1rd1, enet1r=
-d2,
-> > > > +                  enet1rd3, enet2mdc, enet2mdio, enet2td3, enet2td=
-2,
-> > > > +                  enet2td1, enet2td0, enet2txctl, enet2txc, enet2r=
-xctl,
-> > > > +                  enet2rxc, enet2rd0, enet2rd1, enet2rd2, enet2rd3=
-,
-> > > > +                  sd1clk, sd1cmd, sd1data0, sd1data1, sd1data2, sd=
-1data3,
-> > > > +                  sd1data4, sd1data5, sd1data6, sd1data7, sd1strob=
-e,
-> > > > +                  sd2vselect, sd3clk, sd3cmd, sd3data0, sd3data1,
-> > > > +                  sd3data2, sd3data3, xspi1data0, xspi1data1, xspi=
-1data2,
-> > > > +                  xspi1data3, xspi1data4, xspi1data5, xspi1data6,
-> > > > +                  xspi1data7, xspi1dqs, xspi1sclk, xspi1ss0b, xspi=
-1ss1b,
-> > > > +                  sd2cdb, sd2clk, sd2cmd, sd2data0, sd2data1, sd2d=
-ata2,
-> > > > +                  sd2data3, sd2resetb, i2c1scl, i2c1sda, i2c2scl, =
-i2c2sda,
-> > > > +                  uart1rxd, uart1txd, uart2rxd, uart2txd, pdmclk,
-> > > > +                  pdmbitstream0, pdmbitstream1, sai1txfs, sai1txc,
-> > > > +                  sai1txd0, sai1rxd0, wdogany, fccuerr0 ]
-> > > > +
-> > > > +      nxp,func-id:
-> > > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +        description: Indicates the PAD connections which function
-> > > > + module
-> > >
-> > > The description makes no sense...
-> >
-> > I will use below description in v3:
-> > For each pin, there are up to 8 muxing options (called ALT modes). For
-> example:
-> > Select 1 of 5 iomux modes to be used for pad: DAP_TCLK_SWCLK.
-> > 000b - Select mux mode: ALT0 mux port: JTAG_MUX_TCK of instance:
-> > jtag_mux 010b - Select mux mode: ALT2 mux port: CAN4_RX of instance:
-> > imx95_wakeupmix_top 100b - Select mux mode: ALT4 mux port:
-> > FLEXIO1_FLEXIO30 of instance: imx95_wakeupmix_top 101b - Select mux
-> > mode: ALT5 mux port: GPIO3_IO30 of instance: imx95_wakeupmix_top
-> 110b
-> > - Select mux mode: ALT6 mux port: LPUART5_CTS_B of instance:
-> imx95_wakeupmix_top The nxp,func-id property is selecting one ALT mode.
->=20
-> Looks like constraints on the values. Please add schema for them. I don't
-> think you need to list an example.
+I'll try it out and send you the hugetlb bits
 
-Will add maxItems: 8, minItems: 1
->=20
-> Perhaps you should be using 'pinmux' property. That is the standard way t=
-o
-> specify a numeric mux mode.
+> 
+> I still detest having the zapping logic there, but to get it all right I
+> don't see a clean way around that.
+> 
+> 
+> For hugetlb, we'd primarily have to implement the
+> mm_walk_ops->hugetlb_entry() callback (well, and FOLL_FORCE).
 
-Ok let me try.=20
+For FOLL_FORCE, heer is my draft. Let me know if this is what you had in
+mind. 
 
->=20
->=20
-> > >
-> > > > +
-> > > > +      nxp,pin-conf:
-> > > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +        description: The PAD configuration
-> > >
-> > > PAD stands for? Or is it pin configuration as the property name says?
-> >
-> > It is pin configuration which includes pull up/down, drive strength and=
- etc.
-> >
-> > >
-> > > This is just a raw register values?
-> >
-> > Yes.
-> >
-> > Why can't standard pinctrl properties be
-> > > used here. What's the point of using SCMI pinctrl if you are just shu=
-ttling
-> > > register values to SCMI?
-> >
-> > Standard pinctrl properties will need more memory in our SCMI
-> > firmware design. We have limited on-chip memory for SCMI firmware usage=
-.
->=20
-> Then maybe you shouldn't be using SCMI and just write a pinctrl driver.
 
-I think I have to. pinctrl-scmi-imx.c was not preferred by ARM SCMI maintai=
-ner.
+diff --git a/mm/gup.c b/mm/gup.c
+index 1611e73b1121..ac60e0ae64e8 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1056,9 +1056,6 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+ 		if (!(vm_flags & VM_WRITE) || (vm_flags & VM_SHADOW_STACK)) {
+ 			if (!(gup_flags & FOLL_FORCE))
+ 				return -EFAULT;
+-			/* hugetlb does not support FOLL_FORCE|FOLL_WRITE. */
+-			if (is_vm_hugetlb_page(vma))
+-				return -EFAULT;
+ 			/*
+ 			 * We used to let the write,force case do COW in a
+ 			 * VM_MAYWRITE VM_SHARED !VM_WRITE vma, so ptrace could
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 3548eae42cf9..73f86eddf888 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -5941,7 +5941,8 @@ static vm_fault_t hugetlb_wp(struct mm_struct *mm, struct vm_area_struct *vma,
+ 		       struct folio *pagecache_folio, spinlock_t *ptl,
+ 		       struct vm_fault *vmf)
+ {
+-	const bool unshare = flags & FAULT_FLAG_UNSHARE;
++	const bool make_writable = !(flags & FAULT_FLAG_UNSHARE) &&
++		(vma->vm_flags & VM_WRITE);
+ 	pte_t pte = huge_ptep_get(ptep);
+ 	struct hstate *h = hstate_vma(vma);
+ 	struct folio *old_folio;
+@@ -5959,16 +5960,9 @@ static vm_fault_t hugetlb_wp(struct mm_struct *mm, struct vm_area_struct *vma,
+ 	 * can trigger this, because hugetlb_fault() will always resolve
+ 	 * uffd-wp bit first.
+ 	 */
+-	if (!unshare && huge_pte_uffd_wp(pte))
++	if (make_writable && huge_pte_uffd_wp(pte))
+ 		return 0;
+ 
+-	/*
+-	 * hugetlb does not support FOLL_FORCE-style write faults that keep the
+-	 * PTE mapped R/O such as maybe_mkwrite() would do.
+-	 */
+-	if (WARN_ON_ONCE(!unshare && !(vma->vm_flags & VM_WRITE)))
+-		return VM_FAULT_SIGSEGV;
+-
+ 	/* Let's take out MAP_SHARED mappings first. */
+ 	if (vma->vm_flags & VM_MAYSHARE) {
+ 		set_huge_ptep_writable(vma, haddr, ptep);
+@@ -5989,7 +5983,7 @@ static vm_fault_t hugetlb_wp(struct mm_struct *mm, struct vm_area_struct *vma,
+ 			folio_move_anon_rmap(old_folio, vma);
+ 			SetPageAnonExclusive(&old_folio->page);
+ 		}
+-		if (likely(!unshare))
++		if (likely(make_writable))
+ 			set_huge_ptep_writable(vma, haddr, ptep);
+ 
+ 		delayacct_wpcopy_end();
+@@ -6094,7 +6088,8 @@ static vm_fault_t hugetlb_wp(struct mm_struct *mm, struct vm_area_struct *vma,
+ 	spin_lock(ptl);
+ 	ptep = hugetlb_walk(vma, haddr, huge_page_size(h));
+ 	if (likely(ptep && pte_same(huge_ptep_get(ptep), pte))) {
+-		pte_t newpte = make_huge_pte(vma, &new_folio->page, !unshare);
++		pte_t newpte = make_huge_pte(vma, &new_folio->page,
++					     make_writable);
+ 
+ 		/* Break COW or unshare */
+ 		huge_ptep_clear_flush(vma, haddr, ptep);
+@@ -6883,6 +6878,17 @@ int hugetlb_mfill_atomic_pte(pte_t *dst_pte,
+ }
+ #endif /* CONFIG_USERFAULTFD */
+ 
++static bool is_force_follow(struct vm_area_struct* vma, unsigned int flags,
++			     struct page* page) {
++	if (vma->vm_flags & VM_WRITE)
++		return false;
++
++	if (!(flags & FOLL_FORCE))
++		return false;
++
++	return page && PageAnon(page) && page_mapcount(page) == 1;
++}
++
+ struct page *hugetlb_follow_page_mask(struct vm_area_struct *vma,
+ 				      unsigned long address, unsigned int flags,
+ 				      unsigned int *page_mask)
+@@ -6907,11 +6913,11 @@ struct page *hugetlb_follow_page_mask(struct vm_area_struct *vma,
+ 
+ 		if (!huge_pte_write(entry)) {
+ 			if (flags & FOLL_WRITE) {
+-				page = NULL;
+-				goto out;
+-			}
+-
+-			if (gup_must_unshare(vma, flags, page)) {
++				if (!is_force_follow(vma, flags, page)) {
++					page = NULL;
++					goto out;
++				}
++			} else if (gup_must_unshare(vma, flags, page)) {
+ 				/* Tell the caller to do unsharing */
+ 				page = ERR_PTR(-EMLINK);
+ 				goto out;
 
-If Linus, Cristian, Sudeep are ok, I could add back pinctrl-scmi-imx.c for
-some OEM mapping/unmapping stuff.
+> 
+> Likely vaddr and PAGE_SIZE in uprobe_write_opcode() would have to be
+> expanded to cover the full hugetlb page.
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
 
-> Or, Linux has to parse the DT anyways, so use standard properties and
-> transform them into your register values and send that to SCMI.
-
-Cristian, Sudeep, Linus,
-
-Is this ok for you? Before sending to SCMI, linux driver transform
-the bits into register value, and send to SCMI firmware.
-
->=20
-> > > > +
-> > > > +      nxp,daisy-id:
-> > > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +        description: The select input register ID
-> > > > +
-> > > > +      nxp,daisy-conf:
-> > > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +        description: The select input register value
-> > >
-> > > I remember some daisy chaining stuff in iomuxc, but otherwise
-> > >
-> > > What's the relationship between these 2 properties? Is it valid if on=
-ly
-> > > 1 is present? I doubt it.
-> >
-> > The scmi firmware will convert the daisy-id into register address, and
-> > write the daisy-conf value into the register.
-> >
-> >  Looks like an address and value pair. Either the
-> > > schema needs to define allowed combinations
-> >
-> > The firmware will check whether id and conf is valid, is there a need t=
-o
-> define
-> > allowed combinations? There will be lots of check to define allowed
-> > combinations.
->=20
-> The firmware can't check that the DT contains nxp,daisy-id but not
-> nxp,daisy-conf or vice-versa. Of course the kernel could check that, but
-> validating the DT is not the kernel's job.
->=20
->=20
-> >  or design the properties in a
-> > > way you don't have too. IOW, make a single property that's a tuple of
-> register
-> > > ID and value.
-> >
-> > Define tuple will make the property not able to use linux generic pinco=
-nf
-> > driver. The current parse_dt_cfg for custom_dt_params only support a
-> > single u32 value and not easy to support tuple.
->=20
-> Sounds like a Linux problem. We're talking about bindings. Fix Linux if
-> it doesn't meet your needs.
->=20
->=20
-> How many bits of id and conf do you need? This too could just be part of
-> 'pinmux' property. It's value is entirely h/w specific and up to you.
-> You just need to fit it into 32-bits (though we could perhaps enlarge
-> it).
-
-For conf, 4 bits is find. For id, 12 bits is fine I think.=20
-
-Using pinmux property with some vendor handing code. Not sure
-ARM SCMI maintainer is happy or not.
-
-Thanks,
-Peng.
-
->=20
-> Rob
+-- 
+Guillaume Morin <guillaume@morinfr.org>
