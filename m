@@ -1,240 +1,178 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31D91849
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 05:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA1713A271
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 05:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714109788; cv=none; b=jse8Gz2cGzIJCbxDYJVP2A2gcyhxzSdK0mudHnt//dHsn4uBj0HBbmbDO/DNzj0ZDmzS8aPN9fSRwOpIqI1y2GqjlFkSkffUGuaMucYyGYU+3t8dEazgmLPQSTqRSMGgYk5CVPyu2Et/sWRHUHRlu/DewrU+Pb/1iXngnpLlfxY=
+	t=1714109807; cv=none; b=Q0uWzkvHkCKP4GYUJuf76jUZnyifIVCAIZeQRWbDXfQnxJ4FPCy93UcdWpeWbvqymtaXd+2Ok9lH+E1x0xOu2eLD/kMDkR915MSu+cX/Uby/yOih/itA/sDw9cuxQZnOMKLCXh0YhUtEXnWMBEQr35Az0L6tooo/VzoHH3nAXjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714109788; c=relaxed/simple;
-	bh=Jst70ATySv9w8j//MdnX7Lf4+8NFrjBh0WiYwLnsNK4=;
+	s=arc-20240116; t=1714109807; c=relaxed/simple;
+	bh=NNkq0zGDVAvXUD7gt5Xb4JVzIcOqT5Cwhmcg2rtLrXY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZQp9zoV5Llkosjt/crquuItzkaRfnURsrtpXuvGd9KX6PvuWZxrylsGfBYQmuMMG98Uowe9IXmFSe1wxj+AFU1x6vO9d3Lcl2yB/chCKgeN38vc89xNLCPlGBuy+/TjNCHewYXm347wEjj3rU4Iz6iCp4ZArhFCY0ATjsdLR5Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=fz3ggYx6; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
+	 To:Cc:Content-Type; b=bG2J4mL7hhcHLjaKoCvIhLCDqukavavF8wddz1SqXFL2gAm0ir+0a1wAVyKCbAe0sBhNkGmUTLPb+YYGK1WQIBzSeB4o+W/dIsUglGbUatMQVYRAd5yUCHAUvsPPvNCJ/4pdmw2Jfzc9bYXfDKzw3k8LwPs8KtrQa9Am0PurpmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YlsFfMgc; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="fz3ggYx6"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-61b6200fcb5so18722897b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 22:36:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlsFfMgc"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-571c2055cb1so421068a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 22:36:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1714109782; x=1714714582; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714109804; x=1714714604; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Fun5634FSrpPfbO99ypFnP0OQqLiNPobqGLz/86CEto=;
-        b=fz3ggYx6MzVG+UTUmGYxidjLX/+xi+fTdc5mYuG22JEDFJDCq1aH+E33HVtVxmaNlt
-         TqBDYQG0MAYLoP2HAG/xtaxIw+/0EP7DtDKTCNuLlzgH12qrZhZ2T3aSO1WxHI1iWLqj
-         P2BgL7tjp9ZPStzrCqIXEqtO6w2gMZWLo5IPb63cXtKwS0Pq98rNq3VX2KacvsD3tHAg
-         F5wzgkN3m9NZXp+DeUFgU1OidcKf2P8S8z4sdbF6K2lXhgnzL3hrY9qZ2MPRwCSpGGPs
-         pKZARrY2uTXvV/sigNc+plwCE7Bf7qLCLG7Ng0JX9lBtJKU8Zny3lT69CNK6lxerh16R
-         +Rtg==
+        bh=lc8iU/v3P10/yMOncB/G3mR9tNm+X0e5zlPO4UZDD50=;
+        b=YlsFfMgcO0b+SJnNuBMJ0SDzLTK+8ieRlNznIjkq8OiHcpbdKFGz3OCHtLRK3PlxaL
+         xApbfmGm9Ryvi6alKuazZvWxzdmb855L5U8SfIl73SFBf0JPpR95qsthV2/B2QK+yaN1
+         MZbFaPm9tSApPR8F/MlJNx0WMbjDUy4IVagqtgWiRzPjf9D7kp/8CXrNh/1oBayZ+N3u
+         IyXQKqf4+FjoIQb7VTevkLKB2EdxffUH1iLElUqUQXHUpUKmxc1LCv9nC8LYHG/2Xbg5
+         a4J8wsFSCMOcA3TosZ/oety2JPpMlqwiAAnOKEn3twsTS0s0Wp5nk1BkRDNo66J/dndo
+         C6/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714109782; x=1714714582;
+        d=1e100.net; s=20230601; t=1714109804; x=1714714604;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Fun5634FSrpPfbO99ypFnP0OQqLiNPobqGLz/86CEto=;
-        b=nAH9+NBnTwXYGRs0J2tWj/afjCBeiAwcTuXQtkbQPRjrXRVZa4vu3cwlcEthfo488C
-         BsHbCVbq+NKMfVLbUfdtEzmfffTsedDL0/2nq98uXTaLhd9OVjMeJFMNSHcLEdBIsmjb
-         pMvONb8Z2IvEwaMVoDmBaQOs9RHEEHi0TmWgwz97vjgVHCpmPZCCrUKPmvT+buoa0BQT
-         5Srnyte1SRrb8VPGio20ZIsPE6sUHTy3qiGDokuZtNeu/fhoFPEfRiu5/1qXs9Gn7J9d
-         AVyj3bugzSy96L92a/8JM/3tqQ9VHc/0o/hzN5Dk0/csoeZcIFn00ipiB3Bb6lYujMeB
-         yhMg==
-X-Gm-Message-State: AOJu0Yw3FENvjgazuMJAptg7tWvzjwVAoqdx6ZBHpHemabBom8XV5r5B
-	E+AAAohPIt10mphmhKqxkImdGCWGV8SunSni0XMEc79G1PNenfLTc+JSplpdDFZsoci/UNE0dZe
-	XVLgqeg==
-X-Google-Smtp-Source: AGHT+IGTvYDQjyYm1BYNEh7UbSJyn/ULbuMm10h9OzEnCWtfTZ1xAvqqxzY4rBcBKzPuom65VvOI4w==
-X-Received: by 2002:a05:690c:3813:b0:60a:3ef4:29b4 with SMTP id jx19-20020a05690c381300b0060a3ef429b4mr2253858ywb.38.1714109781828;
-        Thu, 25 Apr 2024 22:36:21 -0700 (PDT)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id o186-20020a0dfec3000000b0061b8e9593d4sm1092984ywf.3.2024.04.25.22.36.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Apr 2024 22:36:21 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-de477949644so1938508276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 22:36:21 -0700 (PDT)
-X-Received: by 2002:a25:b31c:0:b0:de4:6c97:2156 with SMTP id
- l28-20020a25b31c000000b00de46c972156mr2009606ybj.39.1714109780639; Thu, 25
- Apr 2024 22:36:20 -0700 (PDT)
+        bh=lc8iU/v3P10/yMOncB/G3mR9tNm+X0e5zlPO4UZDD50=;
+        b=gxyq9tt5qGsvjC1Y87xfDMl5T2ltg+K0O7NjdSzFse+R/rS70JsB5deSaA2UTIcL9W
+         slegTksCb2N3xj08Igntds18o5PRCJBU8mbf1XRyp72T2obOwMBTWExUTahi61f3Nq98
+         JaTC6Pha9REJglmMXK/NFkcNf5ap8bF/Zy3TQG6RFrCEs8jVZ3ZXmdv0Fkcg0xd16uQo
+         vgLNza8GuxyW0QNQqyMqQcELiAVh48dclG+ONULKELJBe6wEhwUJ4PHfv5kN/Cn1t2/q
+         GAXkK+WvMaby/81W5cZgZXSYO7BlHpTGcrKAlW4ZjD9tBQfmGd6VCmj6dt/H7bKXFDUJ
+         5ooA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnR9ZdzpSXPHZ06f3S+arSqYJhGPfHDp63m8bdRKuahvgreImsYr9aV+f1bBjpFeKppndFdmK7KXAmROCA4138X8LA/ebkonpMvoYM
+X-Gm-Message-State: AOJu0YwwOlof0fEp88t0YYcvPESAp9d1mYvaotcg/6nPl9QSjhYSQG2h
+	0T5xBvcFr4aDJHRLuEHz5BBBG4X5hgmN263om10o/a5ML4BWufwOereSKIHdoNli9YSt2huKbE3
+	Dlfu/hvEjyPWCwzH8NsGyfozF8UhgHPmySrY=
+X-Google-Smtp-Source: AGHT+IFtRB+ue+V6NPjuiSDB3WY/guLQo3ngUF4p7TfZrKiT6CEMmOSRx5mQwx3IiC1H43AO4PRgtI8NE+OzK/gwlqM=
+X-Received: by 2002:a50:d5d3:0:b0:56e:3f0:a163 with SMTP id
+ g19-20020a50d5d3000000b0056e03f0a163mr1289583edj.14.1714109803820; Thu, 25
+ Apr 2024 22:36:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424063753.3740664-1-tomeu@tomeuvizoso.net> <CAH9NwWdzeF0=USW_bckDhPSUrgTfnFuAq44m1OhEmTL4JnBzLg@mail.gmail.com>
-In-Reply-To: <CAH9NwWdzeF0=USW_bckDhPSUrgTfnFuAq44m1OhEmTL4JnBzLg@mail.gmail.com>
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Fri, 26 Apr 2024 07:36:09 +0200
-X-Gmail-Original-Message-ID: <CAAObsKBjytOtVrDL5TKWqrBO3OuhQtRVk5Mn3MA801xyRczo+w@mail.gmail.com>
-Message-ID: <CAAObsKBjytOtVrDL5TKWqrBO3OuhQtRVk5Mn3MA801xyRczo+w@mail.gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: Create an accel device node if compute-only
-To: Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Oded Gabbay <ogabbay@kernel.org>, 
-	Lucas Stach <l.stach@pengutronix.de>, Russell King <linux+etnaviv@armlinux.org.uk>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org
+References: <20240425211136.486184-1-zi.yan@sent.com> <CAK1f24nZFJKAyEX3A8DsFA8_VkdtYiB251WxvTa9fcnmi01aOg@mail.gmail.com>
+In-Reply-To: <CAK1f24nZFJKAyEX3A8DsFA8_VkdtYiB251WxvTa9fcnmi01aOg@mail.gmail.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Fri, 26 Apr 2024 13:36:32 +0800
+Message-ID: <CAK1f24=ouD18JHWEGOW4hmauU-J=QQE9MQQA+shm0XX-SPLhMQ@mail.gmail.com>
+Subject: Re: [PATCH v4] mm/rmap: do not add fully unmapped large folio to
+ deferred split list
+To: Zi Yan <ziy@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Yang Shi <shy828301@gmail.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Barry Song <21cnbao@gmail.com>, 
+	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 25, 2024 at 1:32=E2=80=AFPM Christian Gmeiner
-<christian.gmeiner@gmail.com> wrote:
+On Fri, Apr 26, 2024 at 11:45=E2=80=AFAM Lance Yang <ioworker0@gmail.com> w=
+rote:
 >
-> Hi Tomeu,
->
+> On Fri, Apr 26, 2024 at 5:11=E2=80=AFAM Zi Yan <zi.yan@sent.com> wrote:
 > >
-> > If we expose a render node for NPUs without rendering capabilities, the
-> > userspace stack will offer it to compositors and applications for
-> > rendering, which of course won't work.
+> > From: Zi Yan <ziy@nvidia.com>
 > >
-> > Userspace is probably right in not questioning whether a render node
-> > might not be capable of supporting rendering, so change it in the kerne=
-l
-> > instead by exposing a /dev/accel node.
+> > In __folio_remove_rmap(), a large folio is added to deferred split list
+> > if any page in a folio loses its final mapping. But it is possible that
+> > the folio is fully unmapped and adding it to deferred split list is
+> > unnecessary.
 > >
-> > Before we bring the device up we don't know whether it is capable of
-> > rendering or not (depends on the features of its blocks), so first try
-> > to probe a rendering node, and if we find out that there is no renderin=
-g
-> > hardware, abort and retry with an accel node.
+> > For PMD-mapped THPs, that was not really an issue, because removing the
+> > last PMD mapping in the absence of PTE mappings would not have added th=
+e
+> > folio to the deferred split queue.
 > >
->
-> I really love this idea of moving away from a render node. What needs to =
-be done
-> on the userspace side?
-
-Doesn't seem that bad, here is a proof of concept:
-
-https://gitlab.freedesktop.org/tomeu/mesa/-/tree/teflon-accel
-
-Thanks for taking a look.
-
-Tomeu
-
-> > Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> > Cc: Oded Gabbay <ogabbay@kernel.org>
->
-> Reviewed-by: Christian Gmeiner <cgmeiner@igalia.com>
->
+> > However, for PTE-mapped THPs, which are now more prominent due to mTHP,
+> > they are always added to the deferred split queue. One side effect
+> > is that the THP_DEFERRED_SPLIT_PAGE stat for a PTE-mapped folio can be
+> > unintentionally increased, making it look like there are many partially
+> > mapped folios -- although the whole folio is fully unmapped stepwise.
+> >
+> > Core-mm now tries batch-unmapping consecutive PTEs of PTE-mapped THPs
+> > where possible starting from commit b06dc281aa99 ("mm/rmap: introduce
+> > folio_remove_rmap_[pte|ptes|pmd]()"). When it happens, a whole PTE-mapp=
+ed
+> > folio is unmapped in one go and can avoid being added to deferred split
+> > list, reducing the THP_DEFERRED_SPLIT_PAGE noise. But there will still =
+be
+> > noise when we cannot batch-unmap a complete PTE-mapped folio in one go
+> > -- or where this type of batching is not implemented yet, e.g., migrati=
+on.
+> >
+> > To avoid the unnecessary addition, folio->_nr_pages_mapped is checked
+> > to tell if the whole folio is unmapped. If the folio is already on
+> > deferred split list, it will be skipped, too.
+> >
+> > Note: commit 98046944a159 ("mm: huge_memory: add the missing
+> > folio_test_pmd_mappable() for THP split statistics") tried to exclude
+> > mTHP deferred split stats from THP_DEFERRED_SPLIT_PAGE, but it does not
+> > fix the above issue. A fully unmapped PTE-mapped order-9 THP was still
+> > added to deferred split list and counted as THP_DEFERRED_SPLIT_PAGE,
+> > since nr is 512 (non zero), level is RMAP_LEVEL_PTE, and inside
+> > deferred_split_folio() the order-9 folio is folio_test_pmd_mappable().
+> >
+> > Signed-off-by: Zi Yan <ziy@nvidia.com>
+> > Reviewed-by: Yang Shi <shy828301@gmail.com>
 > > ---
-> >  drivers/gpu/drm/etnaviv/etnaviv_drv.c | 46 ++++++++++++++++++++++-----
-> >  1 file changed, 38 insertions(+), 8 deletions(-)
+> >  mm/rmap.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
 > >
-> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/et=
-naviv/etnaviv_drv.c
-> > index 6500f3999c5f..8e7dd23115f4 100644
-> > --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/uaccess.h>
+> > diff --git a/mm/rmap.c b/mm/rmap.c
+> > index a7913a454028..220ad8a83589 100644
+> > --- a/mm/rmap.c
+> > +++ b/mm/rmap.c
+> > @@ -1553,9 +1553,11 @@ static __always_inline void __folio_remove_rmap(=
+struct folio *folio,
+> >                  * page of the folio is unmapped and at least one page
+> >                  * is still mapped.
+> >                  */
+> > -               if (folio_test_large(folio) && folio_test_anon(folio))
+> > -                       if (level =3D=3D RMAP_LEVEL_PTE || nr < nr_pmdm=
+apped)
+> > -                               deferred_split_folio(folio);
+> > +               if (folio_test_large(folio) && folio_test_anon(folio) &=
+&
+> > +                   list_empty(&folio->_deferred_list) &&
+>
+> FWIW
+>
+> Perhaps it would achieve the same check, ensuring that at least one
+> page of the folio is unmapped while at least one page remains mapped.
+>
+>  +                   atomic_read(mapped) && nr < folio_nr_pages(folio))
+>  -                   ((level =3D=3D RMAP_LEVEL_PTE && atomic_read(mapped)=
+) ||
+>  -                    (level =3D=3D RMAP_LEVEL_PMD && nr < nr_pmdmapped))=
+)
+
+Second thought: it=E2=80=99s probably best to leave it as is. The compiler =
+should
+optimize out based on the level enum, which is what I overlooked.
+
+Thanks,
+Lance
+
+>
+> Thanks,
+> Lance
+>
+>
+> > +                   ((level =3D=3D RMAP_LEVEL_PTE && atomic_read(mapped=
+)) ||
+> > +                    (level =3D=3D RMAP_LEVEL_PMD && nr < nr_pmdmapped)=
+))
+> > +                       deferred_split_folio(folio);
+> >         }
 > >
-> > +#include <drm/drm_accel.h>
-> >  #include <drm/drm_debugfs.h>
-> >  #include <drm/drm_drv.h>
-> >  #include <drm/drm_file.h>
-> > @@ -488,10 +489,10 @@ static const struct drm_ioctl_desc etnaviv_ioctls=
-[] =3D {
-> >         ETNA_IOCTL(PM_QUERY_SIG, pm_query_sig, DRM_RENDER_ALLOW),
-> >  };
+> >         /*
 > >
-> > -DEFINE_DRM_GEM_FOPS(fops);
-> > +DEFINE_DRM_GEM_FOPS(render_fops);
-> > +DEFINE_DRM_ACCEL_FOPS(accel_fops);
-> >
-> > -static const struct drm_driver etnaviv_drm_driver =3D {
-> > -       .driver_features    =3D DRIVER_GEM | DRIVER_RENDER,
-> > +static struct drm_driver etnaviv_drm_driver =3D {
-> >         .open               =3D etnaviv_open,
-> >         .postclose           =3D etnaviv_postclose,
-> >         .gem_prime_import_sg_table =3D etnaviv_gem_prime_import_sg_tabl=
-e,
-> > @@ -500,7 +501,6 @@ static const struct drm_driver etnaviv_drm_driver =
-=3D {
-> >  #endif
-> >         .ioctls             =3D etnaviv_ioctls,
-> >         .num_ioctls         =3D DRM_ETNAVIV_NUM_IOCTLS,
-> > -       .fops               =3D &fops,
-> >         .name               =3D "etnaviv",
-> >         .desc               =3D "etnaviv DRM",
-> >         .date               =3D "20151214",
-> > @@ -508,15 +508,20 @@ static const struct drm_driver etnaviv_drm_driver=
- =3D {
-> >         .minor              =3D 4,
-> >  };
-> >
-> > -/*
-> > - * Platform driver:
-> > - */
-> > -static int etnaviv_bind(struct device *dev)
-> > +static int etnaviv_bind_with_type(struct device *dev, u32 type)
-> >  {
-> >         struct etnaviv_drm_private *priv;
-> >         struct drm_device *drm;
-> > +       bool is_compute_only =3D true;
-> >         int ret;
-> >
-> > +       etnaviv_drm_driver.driver_features =3D DRIVER_GEM | type;
-> > +
-> > +       if (type =3D=3D DRIVER_RENDER)
-> > +               etnaviv_drm_driver.fops =3D &render_fops;
-> > +       else
-> > +               etnaviv_drm_driver.fops =3D &accel_fops;
-> > +
-> >         drm =3D drm_dev_alloc(&etnaviv_drm_driver, dev);
-> >         if (IS_ERR(drm))
-> >                 return PTR_ERR(drm);
-> > @@ -553,6 +558,18 @@ static int etnaviv_bind(struct device *dev)
-> >
-> >         load_gpu(drm);
-> >
-> > +       for (unsigned int i =3D 0; i < ETNA_MAX_PIPES; i++) {
-> > +               struct etnaviv_gpu *g =3D priv->gpu[i];
-> > +
-> > +               if (g && (g->identity.minor_features8 & chipMinorFeatur=
-es8_COMPUTE_ONLY) =3D=3D 0)
-> > +                       is_compute_only =3D false;
-> > +       }
-> > +
-> > +       if (type =3D=3D DRIVER_RENDER && is_compute_only) {
-> > +               ret =3D -EINVAL;
-> > +               goto out_unbind;
-> > +       }
-> > +
-> >         ret =3D drm_dev_register(drm, 0);
-> >         if (ret)
-> >                 goto out_unbind;
-> > @@ -571,6 +588,19 @@ static int etnaviv_bind(struct device *dev)
-> >         return ret;
-> >  }
-> >
-> > +/*
-> > + * Platform driver:
-> > + */
-> > +static int etnaviv_bind(struct device *dev)
-> > +{
-> > +       int ret =3D etnaviv_bind_with_type(dev, DRIVER_RENDER);
-> > +
-> > +       if (ret =3D=3D -EINVAL)
-> > +               return etnaviv_bind_with_type(dev, DRIVER_COMPUTE_ACCEL=
-);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> >  static void etnaviv_unbind(struct device *dev)
-> >  {
-> >         struct drm_device *drm =3D dev_get_drvdata(dev);
+> > base-commit: 66313c66dd90e8711a8b63fc047ddfc69c53636a
 > > --
-> > 2.44.0
+> > 2.43.0
 > >
->
->
-> --
-> greets
-> --
-> Christian Gmeiner, MSc
->
-> https://christian-gmeiner.info/privacypolicy
