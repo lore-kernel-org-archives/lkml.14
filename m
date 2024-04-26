@@ -1,241 +1,253 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF7B13AD25;
-	Fri, 26 Apr 2024 07:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714117407; cv=fail; b=XWticll+xeCndA+H83zLPKnpz8cjoeGQzxx4ZzBHyJgSjkvecTQK7XXpOyER/vPzxGo8ARBrUA/mmT4LXi32QRWuXPOcZrMuP9w4/2H7cY6xIlu3NIqXvnhct1k5LGXya3pDd4L8eC9ETvGYwSoxwfE8f4Hc1zW2/d8xy/mc0KY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714117407; c=relaxed/simple;
-	bh=tbnfDzS5CsLhZ31HfEvryKcELZ/ujULkAIk1d5iKstc=;
-	h=Message-ID:Date:From:Subject:To:CC:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VxmKqHp1UQDONZJQDgUz7gpLhZGBZkrqK9YK4eSqn1toieuYqXhSHtcxqJOpc05gdDdtaglYm1kFZZH2hki3UQocymBOs0655GUnT6h4bR80kAOm/fo2JrOyPY0IUO7DpE4gjO+P2QbdKTRr4rVi0rIrqKcQfMpfcmeIQUZjTgw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wl/bShBW; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wl/bShBW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714117406; x=1745653406;
-  h=message-id:date:from:subject:to:cc:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=tbnfDzS5CsLhZ31HfEvryKcELZ/ujULkAIk1d5iKstc=;
-  b=Wl/bShBW5t5W17h1cu8mUet4jT++f2po60WHGEKSyyraCVFfKrr33uJU
-   0qobQy3YoN9WwfTOMHjInsS6UNN/gEgWv57jf0+Ga1zA4qLmlnv2q671w
-   BNke9PV0lQ8ueywVEZAN1ErXTfyRHKFJnN+9RYpa+lVSg/xWx3+2cq9Zx
-   kJaiPN7MzAchuXsrvkLzLBwg94pyFMZzgFEXlsCd04gxJXkIz4rRNj7YR
-   uuV3p0TyeE1vNHDYglRJ8gMjq0P5dudQzORFbA8wuHO9bFtApyZU4IUzK
-   laQrLgAD7cEt30QCSzxKaVC1cl49nwtpLoZNEkR77U1prKHsrVUMgAXyV
-   g==;
-X-CSE-ConnectionGUID: O+OoHDeXQheZq/WxJRlVXA==
-X-CSE-MsgGUID: KLGBtlF2SyCmnl6TIhlmZQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="9678071"
-X-IronPort-AV: E=Sophos;i="6.07,231,1708416000"; 
-   d="scan'208";a="9678071"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 00:43:26 -0700
-X-CSE-ConnectionGUID: eQKM+EYKTZagegOviF2HKg==
-X-CSE-MsgGUID: 5dRQuTM3SrajiT7BgxMtwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,231,1708416000"; 
-   d="scan'208";a="56278803"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Apr 2024 00:43:26 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 26 Apr 2024 00:43:25 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 26 Apr 2024 00:43:25 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 00:43:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ojo4q6i5MLI2PwNxL9qsegdWnW/y3cgE77B+p29Zmv9O171wexOvYYl01KnWlApJfbiu3x48WjD4eKhmtkMr2Wb00x6NvGS7ZsL0gBvG/j/A0gxwPqC6yfiP3vXxf7kbhBoqSk5EDSRivl/R/1Dxf9ypsYV4iBEQXp5wv1TR42efKqYJE+UIpEufvF6eYBeB1tKdW5z+GHrQywPdURLN15nDiFogTBCLnYtvORUQz7nhnWSBVh2ug1UJkp8HLso6s6L3ZJ2gm4mMtlRk83uIWj6XR4Eud8hQrCtbErLzF20m5GlTQAvCeKIu6MrWRwJ4W/bUxeO81C2L5xXVOLuKyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nc2N+PVQ4aI04Ze7+N/vHqwCc180LPeAqSRPzowJdOI=;
- b=VyWcVYaYHg4kSomg/rv7RrDWjGycrYhiMISsWD8P3cLpCgqBZrkyPVFhKr3oPWcvky/gw+2OotMw6yzo3dyc1zNx8N0Nv1Jsk1cYC19ctDA6kekxuQF6/x4QuLr/tOWsJvbMbnuXKZhPseqZArCm5z6d5VhSEz85Fkws5dNy6piZTTsBnJp2SAqrNiVRN4yIW+T7cgcp/zyyfRjDxmAhu+EYvVKC6uuPRrqN18mRxoOzmI0y7WPjXm0eEYjtJUNUFqsoRmaKRxnIT7C2xVAyh7Mzk9GrNMqy+NvjhJrTCG22HfEypDmJUBGfFlewXNGEfcPG5gavT9jIdB7esdta3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH0PR11MB4965.namprd11.prod.outlook.com (2603:10b6:510:34::7)
- by LV8PR11MB8605.namprd11.prod.outlook.com (2603:10b6:408:1e5::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Fri, 26 Apr
- 2024 07:43:23 +0000
-Received: from PH0PR11MB4965.namprd11.prod.outlook.com
- ([fe80::3e4d:bb33:667c:ecff]) by PH0PR11MB4965.namprd11.prod.outlook.com
- ([fe80::3e4d:bb33:667c:ecff%5]) with mapi id 15.20.7519.021; Fri, 26 Apr 2024
- 07:43:22 +0000
-Message-ID: <672782e6-b143-42d0-9ed6-8c343d02e49d@intel.com>
-Date: Fri, 26 Apr 2024 15:43:16 +0800
-User-Agent: Mozilla Thunderbird
-From: "Yang, Weijiang" <weijiang.yang@intel.com>
-Subject: Re: [PATCH 10/10] KVM: x86: Suppress userspace access failures on
- unsupported, "emulated" MSRs
-To: Sean Christopherson <seanjc@google.com>
-CC: Paolo Bonzini <pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>
-References: <20240425181422.3250947-1-seanjc@google.com>
- <20240425181422.3250947-11-seanjc@google.com>
-Content-Language: en-US
-In-Reply-To: <20240425181422.3250947-11-seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI1PR02CA0055.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::16) To PH0PR11MB4965.namprd11.prod.outlook.com
- (2603:10b6:510:34::7)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E27F513C3EB
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714117440; cv=none; b=uBhg+YUF3tCrgVkE3yEiKGJOxdoMahIhCL44k/J2H12WInWCqbbAG7wYdNOYuFVrBkoHDwlwbrOUXHqyMIaORrrGLtcbQlFhbSxdhQ1t1yOvKRjH7HHkzrt3R7lBZVyN5LjtNRs0gUHUpr+MfLF2pALC+clRa6gHdvIlDDWU0Iw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714117440; c=relaxed/simple;
+	bh=ESqTrOwgaGI5RaSIQvrJ8aDNimksUUXagRDqFxSG3eU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S4KjzaApnjx8B33z685O0vBNgwQx2TQ+DH5DVq02BfdtVYauXuNLPjh2E1+eh5NPTV78HCGpb6orZyVVbEwYL9yMSAins35bm10EP1oW9BJKf2huQkN3OnghpRNqwf/LD/9LKorNhN/gHzClavrn+ucBV8/TSYDhmRQIqEGPOCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF2B72F4;
+	Fri, 26 Apr 2024 00:44:24 -0700 (PDT)
+Received: from [10.57.64.176] (unknown [10.57.64.176])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5A433F793;
+	Fri, 26 Apr 2024 00:43:55 -0700 (PDT)
+Message-ID: <87df74b7-2352-4ad6-b9f9-baed9291cbed@arm.com>
+Date: Fri, 26 Apr 2024 08:43:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR11MB4965:EE_|LV8PR11MB8605:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17444bab-624c-46a0-9f2c-08dc65c48c75
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?MEdhdk5pMlorc1RvWXd4eFpVaDlqNU4zbjVkVGpSWWZKK0VBdTRzcDJMMGxy?=
- =?utf-8?B?bHVBVUZVd0VjQk5veG93ZHpyWmVLTWt5eHRCY3lLQWdkckJSbU5FUUlnTHoz?=
- =?utf-8?B?Rlgzc1FPUVVKeVFOWnlab1V6VllReDNCWmpVSGlub2xkd09TcU5kWEJwdmJD?=
- =?utf-8?B?TUg1UjN4LzNtQ0hpb0JicEE0MGcxU2d5R3Z2MDllbjE3TWJIWmpETnhsTFM2?=
- =?utf-8?B?dGdXcnJEZitDam0wc3ZCMTRXSDlaU0puMGdqQmM0UkIzai9jTGxJVzVhZE1r?=
- =?utf-8?B?bTNjeENGdmk0dmQ1YlEybzY2TUVNS0VBSTd6a0ZLd0gwNUhicjF6R3Z4a0pk?=
- =?utf-8?B?UzlDQ3d3aWYvbHRrTXVmWVd4aHR2dFo0cGRXdnRkMVpuQWtuSDNCemg1YmxQ?=
- =?utf-8?B?M1VualVXT3ZKelZUbW1kdm5sMTdPblJWT1VQU2xyVVJUUmJBMHFEZXBnZnRC?=
- =?utf-8?B?clp2ZzZjdjJhdDNvb0NKSythOWxtaWh1dU0zUktRR05iZTlFcVUyV0kyZHFN?=
- =?utf-8?B?a3VyQVRsVldEbWxUQllXZngxM1lIbWQ1akd5cVpLYmJvOUk1NFRXTjR2WWND?=
- =?utf-8?B?N0ZKakhBWHNURGROT1JUUHZnaTFLQm9KZGIzaDd4L3czNUVBMDNGbnRaYUs4?=
- =?utf-8?B?bDZtWDVxcHpPQ2p1QXE3elpqb05wWGRaM3U1ZENCanhRcFNFMFBwaEVNWGVT?=
- =?utf-8?B?R1ZLdUVBV0pPQXdESkhoTVVRYU1RMGFIMnRGQUlsaVB6UDZNRVE1S2FjclpQ?=
- =?utf-8?B?VjdvOUpnVGNqWmxrbnN2NkxlL1JYektkVWlYellnVXBVR3QyNXhIVjJ2d00w?=
- =?utf-8?B?aUZweUc5MlpIRS9iL1NMZzRaVEhuVkthcms3dldkNFlGb2ZzTWdMcEhxQmhN?=
- =?utf-8?B?dEI5R0tKYWJrOXpnNFc0b3NLdlhWNXB2L2pBVmVXb1pzMHNiQUpNUmoxcVVJ?=
- =?utf-8?B?OGZaN2NnQWxhbFNZZFVVMjUrVFNGakRCajUyRnFielpxSFJHRlI2dkNzdUdp?=
- =?utf-8?B?REFPbWJGQ29XMSs5aDFFQTF6N0wzRVQ5OUJIeVpxNllrdWsrZnhHSVVLVE85?=
- =?utf-8?B?YWt3ZXZQRHVLcmdVMjUzSW5Kd0RmTm1XVlFPOVdRQUZ5akp5enkyMnh2cEx1?=
- =?utf-8?B?R1JHamx3dkdxNlo3UDBXT2hDUjVlamUyMFozTEZ4YlZmbEZ0RW9hNzRxVFM1?=
- =?utf-8?B?WlBiRnJKVmwxVGltdUl5Z3hZa2tEZXFTemZnZklFU1dxR01mVm5NSitPRU1X?=
- =?utf-8?B?V09QTmVKR0FwY08rT0ZNSm1PUTJhN2FDbU5hU3BoK2NqVE9rRVR4dUdhNW9U?=
- =?utf-8?B?dkYvMEY3bWwrZlQ2eStTbVByUWNPcUQ4ODMzeXFpWXVaMXQwREdQSjRaWWRT?=
- =?utf-8?B?Z2lhWS91c0NDaDhMOTZXMWVZWVczVEg2dnV3M0d4V0NuVWsxWTB0c2pRQ0hL?=
- =?utf-8?B?OGJaZGtLNGNKRk5zQmMycmVXcmp0NTJwQlVYc0lRaDMxZ2l5R0VldzNtREVx?=
- =?utf-8?B?aEVLVjFNc1Q4ZWNxRTl6V2RWcjhmS1dPUHFXUkx6ZHMyeGlCS2RxbE5TSkQw?=
- =?utf-8?B?MGRwVHNubFNHdVAzcGMvS3hTMXpnYitjTUFmd2JvV0Nmb3lwZmc4aHg2bHhw?=
- =?utf-8?B?TyswZDRNWVBTbVBibFJqdnNDTk4zSTYySUxoakJTSlBxNG1kQU5ud0dZMjR3?=
- =?utf-8?B?eS9GTjJaQjlCUzN1cHZPZFROTERJSEJLYVRtbGU4NDJ5TzdKaStiQ3h3PT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB4965.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?alRneHhGb0FBcWZIeUo5THFvTUljeGRWUGJncGFnTTNkWjl0QjFBZlAwV0x6?=
- =?utf-8?B?eGlEQzkxa1dLNUZzQmdabUJ6Tmc1OGJ4ZG1vVnZtc1MzUGlIU2IzRGpPdFYv?=
- =?utf-8?B?OGZzamJxSmptZEJkQmcveFphYnQ0Qkxzd1RLUEQxUE5EOGNVb3ZzYnhodDh4?=
- =?utf-8?B?V0UwZ0hlNVFBZzlKMGhNYnp5R1FZdzFXOEd6Unk3MGZ5UCtiU2cwWXczVjFJ?=
- =?utf-8?B?ei8zMEVrTUFLTzJ6N01VTmVtd1pKSG9sU0JXTzN1SWtudkwvOW9EK2w5cDdy?=
- =?utf-8?B?S0hKT3pSa0VRQzVzZUR3emV2aW1iOGJKd1hYdVFVOHJRbkFkOEZaUGk2dG9u?=
- =?utf-8?B?S0N3aEI3d3hua3BwbGI1b0N5MC91YmR4UzdXcE9tYytaZmFNbERtOVRtYzhG?=
- =?utf-8?B?MFNrUkFqY082MGkwZm9lT016ZVYvcjBVTHhMNzR5Z1lBVTN6ZXhYWHo0SkZl?=
- =?utf-8?B?Rm9UZS9WVzhDSUFIMjdlMWVmTENlSXlGR0ljanBpSjIyeDg5SHRIUTA5U1Mx?=
- =?utf-8?B?ZnhzaVhnb0hDN05nM3FkU1Njc0U0d2c4YnlnTHg4eEJydWsyRTNwNWZmRFdU?=
- =?utf-8?B?ZWI0ZXcxeldCcU5hZnF0NzFybUZHcWN2b1kvNWRZTlI5QWM4MFkyQTQ4NFMz?=
- =?utf-8?B?a3Fha29YQTlYY0JWVHZQNFdEaXRRbko2dEZKOUNKUGtGY1RTN2UremNkTCt4?=
- =?utf-8?B?UW1OdmFUYk1IdWFHZWJ4WjFFT3VNZ2YrQXhKYjhKRjNiYzJQeEVITkV2MDRV?=
- =?utf-8?B?d3hmZWdnQ3hGOVhvdkRPMDZTck5rd29JdGJIeG52WmZKZjV0ZmMwbHRTMnl4?=
- =?utf-8?B?Ni9IYWErM1VHSWU3L2ZsR1JQd0VXeDlIMlZ6b2JTSXNmUjJGTzA2Y3NtUFlh?=
- =?utf-8?B?OVZhVmlaMUFjd3BablJxbFpRRGxRSnVLc1lTcU5rZXQ3MDlDZEtnK1ppMXU2?=
- =?utf-8?B?YlFxTXBtTFZZbnBQa3dVV1RzN0k4L2E0dzJ2TVZqNzhQVzhNbnIzNFBkUE1I?=
- =?utf-8?B?Ukc1QXFZWVZmZGVmczJlS3gzdE1yeEhYYmpaNHRGQkxDS0c1ZGkxZ0FyR1JT?=
- =?utf-8?B?QTlmUzdhWWJGeWpTMVA1S25TM2hTd3M5TXZRUkRvTUgxVTBvYXkvWC9VVGtK?=
- =?utf-8?B?OXBQbDF1RXFacUl4bExCMTV2N3hBSGlvaG9RTTVGRENrRlN1WnZxYmcxNVA1?=
- =?utf-8?B?RU1uOW5JOUZaWGdUVnlUZTlxanMrNmNJenVnb25hcGpxQ09jVlMwalpiQ0l2?=
- =?utf-8?B?bkwzNzNyb0VsZkwxNWVDQmxFZ1ZkUXFZTnJ1R1ljRFQwYndZc1krY29ZQ3Bi?=
- =?utf-8?B?K1crWjgrL2NKVlFkMGlUV25IUzZPcjNTODZ5d0RiMG0rVm5vMVprcXBKV2Ew?=
- =?utf-8?B?dmlFZ2o2cUJpZkVldHRJTnY1OTZQNUU4VGdxd1YzZlNJcGI1OHYwS3l1bGVk?=
- =?utf-8?B?VHNXazZtQ2VUdk5iWCtTQ0lRVFErcFh4TFVSTkdEZzRZQkNHSWR0MzJLYUl4?=
- =?utf-8?B?S2hBMUpWbmdscSthZWFmZ2d6djAyL2FvZzMwdVdDckxNRDRSZkJ1TFdLb1VF?=
- =?utf-8?B?ZStHK2o5TVFHVG1WR0F6OVFkUHN1N1V1dnRocDBhNHJaMFdtUDR1UEwyeUw4?=
- =?utf-8?B?cy84SGMxcDBySVBKNzJoRHcwemRDRU04OEliejJHUjZrTVJVNHJTVWhFOXd1?=
- =?utf-8?B?TUo1cGg1VnZwN0cyZUkxM1NIZDUvQXZVd21OZm1PSzFlbk42ckg2a0pGeGEw?=
- =?utf-8?B?M051ODVZcHNTSERkU05oa2ovbFRkV0JmUlhGaWUvVWZoM0I1K2p4S3hVTkJ5?=
- =?utf-8?B?L1ZEM0NGbG96ZWtpWVFyMXcxSzVvWWhMWVlnUWgwdmxyZXRzTzE5dng1dVRC?=
- =?utf-8?B?V1ZNOHNrWEhRa09RQ3BOYk9rY2FJWWpENUhrR2VVbmNmZ3Y5cFFwaitWOTBy?=
- =?utf-8?B?RnJxRzhqQ0xIN3M5anNOdk50eG5nclJnYUVGZXZ4WTh6RGNRUk1RTmhMM3dk?=
- =?utf-8?B?Rjc3YkpZYjdRT1VQaDI0V3ROOUNOTmpMb2ZsNGZiTDl0bmhyRXRwSHAwaWxW?=
- =?utf-8?B?Y1Q3UTNjamRSTHZIaGtPYlBNSGJycWxXd2t6TDFpVmduc3cvenlQTm1heVRw?=
- =?utf-8?B?ZjZ5ekRtYVgrVFVVSk4vKzREMlhLNkpmYzhzVUppdmZTaDRzZWRIMDJ4MHJZ?=
- =?utf-8?B?MHc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17444bab-624c-46a0-9f2c-08dc65c48c75
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB4965.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 07:43:22.6979
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4G917FDAHVPmxIgUE7iCeONqRkv2PSZ7VV53rd2JxVbzQDIhVQx/uZ8RygtKjjO3RzdJKGA1HGDa0MavEJG1eg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8605
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm: Fix race between __split_huge_pmd_locked() and
+ GUP-fast
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Zi Yan <zi.yan@cs.rutgers.edu>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240425170704.3379492-1-ryan.roberts@arm.com>
+ <39d0236c-4297-4001-bc7e-f516bc674f7b@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <39d0236c-4297-4001-bc7e-f516bc674f7b@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 4/26/2024 2:14 AM, Sean Christopherson wrote:
-> Extend KVM's suppression of userspace MSR access failures to MSRs that KVM
-> reports as emulated, but are ultimately unsupported, e.g. if the VMX MSRs
-> are emulated by KVM, but are unsupported given the vCPU model.
->
-> Suggested-by: Weijiang Yang<weijiang.yang@intel.com>
-> Signed-off-by: Sean Christopherson<seanjc@google.com>
-> ---
->   arch/x86/kvm/x86.c | 11 ++++++++---
->   1 file changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 4c91189342ff..14cfa25ef0e7 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -491,7 +491,7 @@ static bool kvm_is_immutable_feature_msr(u32 msr)
->   	return false;
->   }
->   
-> -static bool kvm_is_msr_to_save(u32 msr_index)
-> +static bool kvm_is_advertised_msr(u32 msr_index)
->   {
->   	unsigned int i;
->   
-> @@ -500,6 +500,11 @@ static bool kvm_is_msr_to_save(u32 msr_index)
->   			return true;
->   	}
->   
-> +	for (i = 0; i < num_emulated_msrs; i++) {
-> +		if (emulated_msrs[i] == msr_index)
-> +			return true;
-> +	}
-> +
->   	return false;
->   }
->   
-> @@ -529,11 +534,11 @@ static __always_inline int kvm_do_msr_access(struct kvm_vcpu *vcpu, u32 msr,
->   
->   	/*
->   	 * Userspace is allowed to read MSRs, and write '0' to MSRs, that KVM
-> -	 * reports as to-be-saved, even if an MSR isn't fully supported.
-> +	 * advertises to userspace, even if an MSR isn't fully supported.
->   	 * Simply check that @data is '0', which covers both the write '0' case
->   	 * and all reads (in which case @data is zeroed on failure; see above).
->   	 */
-> -	if (host_initiated && !*data && kvm_is_msr_to_save(msr))
-> +	if (host_initiated && !*data && kvm_is_advertised_msr(msr))
->   		return 0;
->   
->   	if (!ignore_msrs) {
+On 26/04/2024 05:19, Anshuman Khandual wrote:
+> On 4/25/24 22:37, Ryan Roberts wrote:
+>> __split_huge_pmd_locked() can be called for a present THP, devmap or
+>> (non-present) migration entry. It calls pmdp_invalidate()
+>> unconditionally on the pmdp and only determines if it is present or not
+>> based on the returned old pmd. This is a problem for the migration entry
+>> case because pmd_mkinvalid(), called by pmdp_invalidate() must only be
+>> called for a present pmd.
+> 
+> pmdp_invalidate() must be called only for present PMD - is this expected
+> by core MM ? Does this cause any problem otherwise ?
 
-Reviewed-by: Weijiang Yang <weijiang.yang@intel.com>
+I'm saying that only calling pmdp_invalidate() on a pte_present()==true pte is
+the only semantic that makes sense. And, yes, it causes a problem if called on a
+pte_present()==false pte - that's exactly what I'm describing in this commit log.
+
+To labour the point, this is the logical type hierachy of PTEs (and block-mapped
+PMDs) as I see it:
+
+---8<----
+
+pte
+ |- present
+ |   |- valid
+ |   |- invalid
+ |
+ |- not_present
+     |- none
+     |- swap_pte
+
+present: All fields must be interpretted the way the HW sees them. e.g.
+         pte_pfn(), pte_write(), pte_dirty(), pte_young(), pte_mkwrite(),
+         pte_mkold() can all be legitimately used to query and modify the pte.
+
+  valid: The HW may access the pte, interpret the fields and create a TLB entry,
+         etc.
+
+  invalid: The HW will never access the pte or create a TLB entry for it.
+
+not_present: The fields are SW-defined. HW never accesses the PTE.
+
+  none: Unused; represents a hole
+
+  swap_pte: Contains a swap entry and swap pte bits. The contained swap entry
+            may 1 of a few different types e.g. actual swap entry, migration
+            entry, hw poison, etc.
+
+---8<----
+
+We test present vs not_present with pte_present()
+
+We test none vs swap_pte with pte_none()
+
+valid vs invalid is slightly more vague. The core-mm can move a PMD from valid
+-> invalid by calling pmd_mkinvalid(). But it can't query the state. And it
+can't do this generically for a PTE.
+
+
+Based on that lot, it makes no sense to me that we should permit calling
+pmd_mkinvalid() on a non-present pte. Indeed, we don't permit calling
+pte_mkwrite() etc on a non-present pte. And those functions are not defensive;
+they don't check that the pte is present before making the change. They just
+trust that the core-mm will not call them for non-present ptes.
+
+The alternative approach would be to make pmdp_invalidate() defensive so that it
+checks the pmd is present before making any changes. But it doesn't semantically
+make sense to invalidate a non-present pmd in the first place so why call it
+under these circumstances? There is also a practical problem in that some arches
+implement their own pmdp_invalidate() so you would want to make all those
+defensive too, which would grow the size of the change.
+
+
+> 
+>>
+>> On arm64 at least, pmd_mkinvalid() will mark the pmd such that any
+>> future call to pmd_present() will return true. And therefore any
+> 
+> IIRC the following semantics needs to be followed as expected by core MM.
+> 
+> -------------------------------------------------------------------------
+> |	PMD states	|	pmd_present	|	pmd_trans_huge	|
+> -------------------------------------------------------------------------
+> |	Mapped		|	Yes		|	Yes		|
+> -------------------------------------------------------------------------
+> |	Splitting	|	Yes		|	Yes		|
+> -------------------------------------------------------------------------
+> |	Migration/Swap	|	No		|	No		|
+> -------------------------------------------------------------------------
+
+Indeed, the problem, as I see it, is if pmd_mkinvalid() is called on a
+"Migration/Swap" pmd, then a future call to pmd_present() will return Yes, which
+is clearly wrong. pmd_trans_huge() will also return Yes due to:
+
+static inline int pmd_trans_huge(pmd_t pmd)
+{
+	return pmd_val(pmd) && pmd_present(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT);
+}
+
+At least this happens for arm64. Although Zi suggests other arches look like
+they will do this too in the other email.
+
+The reason is that arm64's pmd_mkinvalid() unconditionally sets
+PMD_PRESENT_INVALID (bit 59) and clears PMD_SECT_VALID (bit 0) in the pte. So
+next time pmd_present() is called it will see PMD_PRESENT_INVALID is set and
+return true.
+
+> 
+> 
+>> lockless pgtable walker could see the migration entry pmd in this state
+>> and start interpretting the fields as if it were present, leading to
+>> BadThings (TM). GUP-fast appears to be one such lockless pgtable walker.
+> 
+> Could you please explain how bad things might happen ?
+
+See 2 places where pmdp_get_lockless() is called in gup.c, without the PTL.
+These could both return the swap pte for which pmd_mkinvalid() has been called.
+In both cases, this would lead to the pmd_present() check eroneously returning
+true, eventually causing incorrect interpretation of the pte fields. e.g.:
+
+gup_pmd_range()
+  pmd_t pmd = pmdp_get_lockless(pmdp);
+  gup_huge_pmd(pmd, ...)
+    page = nth_page(pmd_page(orig), (addr & ~PMD_MASK) >> PAGE_SHIFT);
+
+page is guff.
+
+Let me know what you think!
+
+Thanks,
+Ryan
+
+
+>  
+>> I suspect the same is possible on other architectures.
+>>
+>> Fix this by only calling pmdp_invalidate() for a present pmd. And for
+>> good measure let's add a warning to the generic implementation of
+>> pmdp_invalidate(). I've manually reviewed all other
+>> pmdp_invalidate[_ad]() call sites and believe all others to be
+>> conformant.
+>>
+>> This is a theoretical bug found during code review. I don't have any
+>> test case to trigger it in practice.
+>>
+>> Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>
+>> Applies on top of v6.9-rc5. Passes all the mm selftests on arm64.
+>>
+>> Thanks,
+>> Ryan
+>>
+>>
+>>  mm/huge_memory.c     | 5 +++--
+>>  mm/pgtable-generic.c | 2 ++
+>>  2 files changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 89f58c7603b2..80939ad00718 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -2513,12 +2513,12 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+>>  	 * for this pmd), then we flush the SMP TLB and finally we write the
+>>  	 * non-huge version of the pmd entry with pmd_populate.
+>>  	 */
+>> -	old_pmd = pmdp_invalidate(vma, haddr, pmd);
+>>
+>> -	pmd_migration = is_pmd_migration_entry(old_pmd);
+>> +	pmd_migration = is_pmd_migration_entry(*pmd);
+>>  	if (unlikely(pmd_migration)) {
+>>  		swp_entry_t entry;
+>>
+>> +		old_pmd = *pmd;
+>>  		entry = pmd_to_swp_entry(old_pmd);
+>>  		page = pfn_swap_entry_to_page(entry);
+>>  		write = is_writable_migration_entry(entry);
+>> @@ -2529,6 +2529,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+>>  		soft_dirty = pmd_swp_soft_dirty(old_pmd);
+>>  		uffd_wp = pmd_swp_uffd_wp(old_pmd);
+>>  	} else {
+>> +		old_pmd = pmdp_invalidate(vma, haddr, pmd);
+>>  		page = pmd_page(old_pmd);
+>>  		folio = page_folio(page);
+>>  		if (pmd_dirty(old_pmd)) {
+>> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+>> index 4fcd959dcc4d..74e34ea90656 100644
+>> --- a/mm/pgtable-generic.c
+>> +++ b/mm/pgtable-generic.c
+>> @@ -198,6 +198,7 @@ pgtable_t pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp)
+>>  pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
+>>  		     pmd_t *pmdp)
+>>  {
+>> +	VM_WARN_ON(!pmd_present(*pmdp));
+>>  	pmd_t old = pmdp_establish(vma, address, pmdp, pmd_mkinvalid(*pmdp));
+>>  	flush_pmd_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
+>>  	return old;
+>> @@ -208,6 +209,7 @@ pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
+>>  pmd_t pmdp_invalidate_ad(struct vm_area_struct *vma, unsigned long address,
+>>  			 pmd_t *pmdp)
+>>  {
+>> +	VM_WARN_ON(!pmd_present(*pmdp));
+>>  	return pmdp_invalidate(vma, address, pmdp);
+>>  }
+>>  #endif
+>> --
+>> 2.25.1
+>>
+>>
 
