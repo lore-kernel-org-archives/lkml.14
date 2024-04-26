@@ -1,101 +1,96 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB65A42A9B;
-	Fri, 26 Apr 2024 08:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B9533981
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714120013; cv=none; b=YMyUwiZbQTd4a2YvPsSpKlPtiJWqpMiiC0/CrBoIyU0O63jEkaksNtDRTE9V03GN/ykuEGHEsZrn8HWNgTabQMPM4LDOqHjx3e7ybbl+ok8CdHJdzALwsAIfn6r+jEX4tAQ13XZ768s6WQa/h4UHXoZH8ohHAVliZR+52qonbec=
+	t=1714120128; cv=none; b=PIIYuQ+XU7y8SG5R9naT5Sgce6vfSQ9tPuR4jU+KzCVlrap3ugoxd2CkIxvihH9xco0jOhTjkHDtFxRu9av6i+M4dB90EPlHhEfYxXTKv2J0+cxzRzpwOAZMELORvNzhLtqB4lsCd5J+k1pSFIPVi+oY3feWfhSM+hSm//HEOwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714120013; c=relaxed/simple;
-	bh=8pVQsFc9e2tQaYnUmWtJ7P8GYTSfTJM8Tba6mAmz3Ts=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=KL3SpAvkM3uAdrEM4gXtv1eDF1+HH3DBdDz9WJFPgO07j8baujjCmR8ykHBQ5LDbJ/OqDM3Oa6aRroNr4r0MQz91J4ZjBQHMnetDYK8WlLfRQHtIRi6VbhHv4OLMPPYRhHBOAFStMKujPT7FrCharBJCj9zJm9IHka7arM+pI/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=BcsfrSPI; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714120128; c=relaxed/simple;
+	bh=b45WhGsUbMs/Aao6bI5khlq7pgS1Ea1P4SDgIZ9e3CI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q66/BmwRy3J+JowngJjIPDZD1ZwZ4bBlpQLbwao4k8ZRQi7UeYy+TZAGvv7e4R0XPVRbTmVLfzSSGjJieQ9rNIsWkxvF1YtguPZLjNZZodry69+jri4xt8ou5+654ZMLyl/vnNyanJDYWnlz9S7OUUuRZj9OsWKDTTX5r7e+GgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Jkx9vo+E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="BcsfrSPI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714119984; x=1714724784; i=markus.elfring@web.de;
-	bh=8pVQsFc9e2tQaYnUmWtJ7P8GYTSfTJM8Tba6mAmz3Ts=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=BcsfrSPIXPT5U/digXkHgoLAM0HjR7MOpanXEte2nRUPxLnsZb93Fa9k8MfEmB8y
-	 PVAulXIRAJqPYODCq43CxquZyHZs4dU7Ebq0tbNylJIRiUjOBvfvv7whb95pVxpq8
-	 i0xvoW/aeeUAZDshkn7yCLZpNLzs3QsFwsLXz2NVl6ertZRFJRE9YwT5GAxEixvxw
-	 M3xcc9i/3fQ+Lv75HksCXXDQhMHQEvBDnX+NS7JjC8QOKj3YMq3qtIVck6TrmVlGy
-	 igLvQ//NMOH1MCoWZBGBzd+keJ7gtHC+lA9Bno+JH2TM5BfonbdateVQIh8Sak0PK
-	 RPVk5LP2VFnNaveGxw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MCogm-1rrRCq1A8G-006T8Z; Fri, 26
- Apr 2024 10:26:24 +0200
-Message-ID: <964b0005-3a9d-499b-91d3-171a3c917b4a@web.de>
-Date: Fri, 26 Apr 2024 10:25:56 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Jkx9vo+E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ABBFC113CD;
+	Fri, 26 Apr 2024 08:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714120128;
+	bh=b45WhGsUbMs/Aao6bI5khlq7pgS1Ea1P4SDgIZ9e3CI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jkx9vo+ESNU1TwEoxKGTXP/16UVlXmQBMUL9qKSdJMBT30Gf63OgJn0om23p0bX1D
+	 +E4hbRUAXEaZRAAtLay1aL3/x53aitBRuyZcP1NVuggf38gkYBqCNtJSLxDWbWQyGS
+	 qMPSxPK4MCM5XiANR1JjTL86VBawF2cw6WUgdCLg=
+Date: Thu, 25 Apr 2024 18:04:33 -0700
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Vamsi Krishna Attunuru <vattunuru@marvell.com>
+Cc: "arnd@arndb.de" <arnd@arndb.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Jerin Jacob <jerinj@marvell.com>
+Subject: Re: [EXTERNAL] Re: [PATCH v5 1/1] misc: mrvl-cn10k-dpi: add Octeon
+ CN10K DPI administrative driver
+Message-ID: <2024042501-stargazer-departure-e5b9@gregkh>
+References: <MW4PR18MB5244C76290A15737DC94FFDBA6042@MW4PR18MB5244.namprd18.prod.outlook.com>
+ <20240412121005.1825881-1-vattunuru@marvell.com>
+ <2024041250-nursing-tidy-db7e@gregkh>
+ <MW4PR18MB5244FA7231C64F8A7928B83EA6042@MW4PR18MB5244.namprd18.prod.outlook.com>
+ <MW4PR18MB5244CD9591CDE87CB062DFEAA6172@MW4PR18MB5244.namprd18.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Sungwoo Kim <iam@sung-woo.kim>, linux-bluetooth@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, "Dave (Jing) Tian"
- <daveti@purdue.edu>, Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Marcel Holtmann <marcel@holtmann.org>
-References: <20240426072006.358802-1-iam@sung-woo.kim>
-Subject: Re: [PATCH] Bluetooth: L2CAP: Fix slab-use-after-free in
- l2cap_send_cmd
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240426072006.358802-1-iam@sung-woo.kim>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7I8MMJ3+llChUL62IO6Flhz1ePooA/kw1bKz/w0zXGcvAB0i5OQ
- VQF7QILJ/BMe7dfvL+Uv5jPuwteuEZCO0xDrBz5neXZrkIblnUTaDmSdFwTPVVUs6eKZxHg
- YhGCf1w7h7JrjJi/r4uPh7MEjxzwTU69AKOJSKRjlZPvrw3hl+IRRHRTbVE7sZ7QMUrwRrO
- W0KhKqOXDKIxDU4YVFCjA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:eQvVI7Nbi6s=;LW1EogrDkhHEGEMsPOBCIVyHBlc
- nLTWINc5YBbFVzpsqft8ZBR4rj+teM85Li2sybkIxfGJQCJDcX6lA7UewpPbQ4bHNhQMd7mtn
- ABfGWKJEOJl77uuIwf+MTSesOPfKIkBpYo0WC0UvLscavIhkIDL5xLP471LMDJAB8MLcNGI66
- dO/uBQkF1Fe8mzfmVi9lpdGzalF345wtTkW7vXRk+WY1A9xPIJLLqCklemAkfOD3lrFCsPCku
- Ku6OEoQ0dYDvsQsRqsIqLL68nxkGpNosuQbNypBegbVVbJ75i9p5CubikViZhmDnjcAsAEO8D
- 5c2yQcFKKeBQXPMBsEqK4IfZfumRnY3nVw1Qc8Td4K6YnpiigQ+VuHSEAOHxqxFVrRDo695lR
- YCZ9usbuLCJd9BQOJL6ytBjpDUwY/oUm1RJD2b+lzM2Q+/HacCMCT6xmjoGzgJxheMn8T4J2C
- 4htBST39yRrlSlCTvDn56e9Nv4q6ZHuUhByMqk2e9pQ3/nc90sWdp6wVXsj4qvE2UryZZTm0x
- z1YA5T/6U4UHOECwXyARwbFTwN9U7o4GcsNcE3u+sLMUlmjyd01ZJTUBbaHWZQMe4x6WLXtLd
- Aa8vPsoiTpj41eTdwEvoKLLlkKYY/4ZeIVlvFqvxSl9DDpuvKFhszDkZl10dtPpf0AFWTt25X
- qXD4qQ3UuAVIf583IFuCLQOeZlt8Z7JaBctPWmCv8XWwehaAehY55UMb6HPrqmu0QfSIYI6T2
- +P2IBdY+cP7IgM2OvVdYAoEQy/Gjl9bNGtdQ6yxt8QO1re+WlAKsAbK/KLmz8rxNlQ7Hfm87l
- w7oQ/VI8ll7vyZCqXgkvI7/klqH/iheotDx/MfvjH9yk0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW4PR18MB5244CD9591CDE87CB062DFEAA6172@MW4PR18MB5244.namprd18.prod.outlook.com>
 
-I prefer that you would put recipient specifications also into the message=
- field =E2=80=9CTo=E2=80=9D
-(besides =E2=80=9CCc=E2=80=9D).
+On Thu, Apr 25, 2024 at 01:36:05PM +0000, Vamsi Krishna Attunuru wrote:
+> > 
+> > > -----Original Message-----
+> > > From: Greg KH <gregkh@linuxfoundation.org>
+> > > Sent: Friday, April 12, 2024 5:57 PM
+> > > To: Vamsi Krishna Attunuru <vattunuru@marvell.com>
+> > > Cc: arnd@arndb.de; linux-kernel@vger.kernel.org
+> > > Subject: [EXTERNAL] Re: [PATCH v5 1/1] misc: mrvl-cn10k-dpi: add
+> > > Octeon CN10K DPI administrative driver
+> > >
+> > > Prioritize security for external emails: Confirm sender and content
+> > > safety before clicking links or opening attachments
+> > >
+> > > ----------------------------------------------------------------------
+> > > On Fri, Apr 12, 2024 at 05:10:05AM -0700, Vamsi Attunuru wrote:
+> > > > Adds a misc driver for Marvell CN10K DPI(DMA Engine) device's
+> > > > physical function which initializes DPI DMA hardware's global
+> > > > configuration and enables hardware mailbox channels between physical
+> > > > function (PF) and it's virtual functions (VF). VF device drivers
+> > > > (User space drivers) use this hw mailbox to communicate any required
+> > > > device configuration on it's respective VF device. Accordingly, this
+> > > > DPI PF driver provisions the VF device resources.
+> > > >
+> > > > At the hardware level, the DPI physical function (PF) acts as a
+> > > > management interface to setup the VF device resources, VF devices
+> > > > are only provisioned to handle or control the actual DMA Engine's
+> > > > data transfer
+> > > capabilities.
+> > >
+> > > No pointer to the userspace code that uses this?  Why not?  How are we
+> > > supposed to be able to review this?
+> > 
+> Hi Greg, please check the below files for userspace code that interact with this kernel driver.
+> driver/roc_dpi.c provides the mailbox interface to communicate with this kernel driver.
+> application/main.c is the DPI DMA application which uses this misc driver to configure
+> the device with required mps, mrrs, fifo_mask parameters.
+> 
+> https://github.com/VamsiKrishnaA99/dpi-dma/blob/main/driver/roc_dpi.c 
+> https://github.com/VamsiKrishnaA99/dpi-dma/blob/main/application/main.c
 
+Please provide this information in a new version of the patch, looking
+at this now when we don't have the kernel code present is almost
+impossible, sorry.
 
-> Hello, could you review a bug and its fix?
+thanks,
 
-I suggest to omit such a question from better change descriptions.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc5#n45
-
-
-=E2=80=A6
-> To fix this, this patch holds and locks the l2cap channel.
-
-Please choose a corresponding imperative wording.
-
-
-You would probably like to improve your patch approach further
-so that provided data will be kept consistent.
-https://lore.kernel.org/lkml/20240426073142.363876-1-iam@sung-woo.kim/
-
-Regards,
-Markus
+greg k-h
