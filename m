@@ -1,85 +1,119 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604AA145B0D
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 12:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADAB146A8E;
+	Fri, 26 Apr 2024 12:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714136297; cv=none; b=boOZBTHE3mfB9iaDUTJyZmfPUCZDzKDxXDt6zZtG0X7ckmHZKvZqlvQtlAvldd9QcBWrnXGN7eSElJ32/UUAnSn7T9kHg0w2GroEn7VTQb8IkQX+0qZ+AuUeimnkdt3dFfri9DtHyFgDJNtYZ0yMUymomk6PoNuoJhFKxxFP4vE=
+	t=1714136391; cv=none; b=t46V31ML+lWUeeSRohcSNvn/KM/CyTye6CVL9v9uaDtWEP7I9XXZVSwpq6Vm/4degs67IfWMiGJ7cLbWAEtcMtPrsHwXGsMBDN0Ec40kB536/r8NGQ/MivC+h7WWWn+XBJI/AMV+OnRDtqnI3gPPR+JRggbyE4g7B6iCyq3x4oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714136297; c=relaxed/simple;
-	bh=QYk4rjYRopBRkpm4YBPXSiacVYDLMEGjeCLCnHfTe7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DTR6rRibIrXFlKjixTOlSRqMajeLMJl+jz/6RxVd6HzNjKWnBEhN+FGklqbHgUibwuyIODIEPNx2nZr7vghorOtd2opO0/FM7/lcvJyuFLAmrdHJLtIO48j5NFZ/66bymnmMwXft0FjRpxn7UzPA9gyqDa6Xxv8CDM4VH5KB7mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=RZuOsYbP; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1714136391; c=relaxed/simple;
+	bh=ZxFJUIWX4TvIfLdPim81/AwMqb2DbXINuDtV5oNr/Lo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=olzAv5Jl5ORv1cAOWhF6H7mrkqNW0rlTmko+rQkGSWJCg4yYpg11qv75KYitePl5lSW8ePGYfPf3Z/sYWjjsXtwY/Egsc7lgvR6VfD4IRB4nJye5QvgcS0TaBQCMrgRwZ6Do4PmWW3KT4TI5k6k4dWQ54+4v7oZrYuOZtIIzgQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=2OVL/9e+; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="RZuOsYbP"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4B93B40E0187;
-	Fri, 26 Apr 2024 12:58:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Qw4k9b_DB3ES; Fri, 26 Apr 2024 12:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1714136289; bh=SBWDLy/Z8jULbV9JWFfWKICsmpR29qvLNIwHCgU4JC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RZuOsYbP5BVSxtGsO69gB8NQlp3mB/pn3smaTkfin78c8Oko7na0jJZ4k0zZA7fol
-	 JzbSpswcTQuX5Xo5a9HJlQTPjTVxXpINQ2vW5TwYr/bf1x114D8kKryDN3B44VmJdx
-	 eY8GClZny3oL75jlhKzACb+vAW73ra0xG75u5GjVLgFeSzMBzQUm0ME8Cu2GHT74hJ
-	 W5aondW9SLCKoX4yrQbpgwQYYOtwAn/rC0p2XTs36VUUQKNcIPjE3nf7nvhRHD75ah
-	 6UlGpdYDKPwMZ3K/IuY4z2VjQo+JUrk7/xK51XP1mmaAg2yyMD/4JIBjc4XURBr1UI
-	 Njx5AT5PgD9PMcLaTTa6uDE6UydhFXLWBtIbIoeNAwaqpkILuFBjjVBkINtSBg9r+W
-	 DvsRilx0jmC5S5kXepHZyhByr7dU2eJMajky/dUo8PTUAly1bsDykx+C8Am6bgfmP5
-	 vmqX8E/0mYfAPhQLWYwyBfXx2Pp49zGs+zmcivXf1JG02HCtILXeLycxHDPd3TLxsc
-	 CSO7nDs4hPAzc9sGeff3tIDOmIfHhd5hvvq1qJneLQp4dCiNof3R+H/YpkTXV4aZGG
-	 IVFFyIbJjLND3Gz9hh5tpmU0pzxmqChgVvFqpasuBYAcl00DOzfac2R2TuHV6kYvpW
-	 jMZV6wHkvfSpPL8svOJezFUQ=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 90F2A40E0177;
-	Fri, 26 Apr 2024 12:58:04 +0000 (UTC)
-Date: Fri, 26 Apr 2024 14:58:03 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kalra, Ashish" <ashish.kalra@amd.com>
-Cc: thomas.lendacky@amd.com, michael.roth@amd.com, x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] x86/sev: Add callback to apply RMP table fixups
- for kexec.
-Message-ID: <20240426125803.GDZiuk2-YonyodvSbi@fat_crate.local>
-References: <cover.1713212104.git.ashish.kalra@amd.com>
- <96b2949cf225501d686b47070c7bbad341e160a3.1713212104.git.ashish.kalra@amd.com>
- <20240420130533.GNZiO9nShSxjxB-FQn@fat_crate.local>
- <ed4cb373-e626-4b79-b692-df5ea2ca8899@amd.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="2OVL/9e+"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43Q9bYBw032401;
+	Fri, 26 Apr 2024 14:59:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=82TTePM
+	YeUp1fhEV5NgGPQLSJ7G6ou259POq1elrSMY=; b=2OVL/9e+vSzyhA5HF0B/8Iq
+	xe3L1jK8NSsvNDWRSO97bVSs5e1V62MzdPGWiLy2RKqJXfqyegKXmCZNhDROnj7c
+	Xitw6HLGG8t06OicTiBIMRSEb4ca11dqX5tbmgsIYD/iIscoZssnXHP5iN9IF5+Q
+	JPqz0X84+xB7fL16PqgztpuMaT/1hIVF6b8OQjrjpT8ifXg5NO8kzwJY6QuwiShI
+	71BrRnAfeSp35eKAUgtU1n5n4weFZCTOZsXlDlOTcrXNst1CqIwE2EbUt4DECacE
+	WYy2PIZETzito+gTgaqrSXDZ4WWXrvXBd0yxF719nTNn8eN3tbQ2X2JEym72WTA=
+	=
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xm4kbhs8v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 14:59:24 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 70A5140046;
+	Fri, 26 Apr 2024 14:59:18 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1A53B222C9E;
+	Fri, 26 Apr 2024 14:58:04 +0200 (CEST)
+Received: from localhost (10.252.17.191) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Apr
+ 2024 14:58:01 +0200
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 00/11] Series to deliver Ethernets for STM32MP13
+Date: Fri, 26 Apr 2024 14:56:56 +0200
+Message-ID: <20240426125707.585269-1-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ed4cb373-e626-4b79-b692-df5ea2ca8899@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_12,2024-04-26_02,2023-05-22_02
 
-On Wed, Apr 24, 2024 at 06:48:08PM -0500, Kalra, Ashish wrote:
-> This callback needs to be invoked as part of setup_arch() as it needs e820
-> table to be setup in e820__memory_setup() before the callback is invoked and
-> snp_init() is called from sme_enable() in kernel/head_64.S (startup_64),
-> which is much before start_kernel() -> setup_arch() is invoked.
+STM32MP13 is STM32 SOC with 2 GMACs instances
+This board have 2 RMII phy:
+  -Ethernet1: RMII with crystal
+  -Ethernet2: RMII without crystal
+Rework dwmac glue to simplify management for next stm32
+Add support for PHY regulator
 
-So?
+V2: - Remark from Rob Herring (add Krzysztof's ack in patch 02/11, update in yaml)
+      Remark from Serge Semin (upate commits msg)
 
-snp_init() still runs before e820__memory_setup(). So what's stopping
-you?
+Christophe Roullier (11):
+  dt-bindings: net: add STM32MP13 compatible in documentation for stm32
+  dt-bindings: net: add phy-supply property for stm32
+  net: stmmac: dwmac-stm32: rework glue to simplify management
+  net: stmmac: dwmac-stm32: add management of stm32mp13
+  net: stmmac: dwmac-stm32: update config management for phy wo cristal
+  net: stmmac: dwmac-stm32: clean the way to manage wol irqwake
+  net: stmmac: dwmac-stm32: support the phy-supply regulator binding
+  ARM: dts: stm32: add ethernet1 and ethernet2 support on stm32mp13
+  ARM: dts: stm32: add ethernet1/2 RMII pins for STM32MP13F-DK board
+  ARM: dts: stm32: add ethernet1 and ethernet2 for STM32MP135F-DK board
+  ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
+
+ .../devicetree/bindings/net/stm32-dwmac.yaml  |  79 +++++-
+ arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi   |  71 ++++++
+ arch/arm/boot/dts/st/stm32mp131.dtsi          |  31 +++
+ arch/arm/boot/dts/st/stm32mp133.dtsi          |  30 +++
+ arch/arm/boot/dts/st/stm32mp135f-dk.dts       |  48 ++++
+ arch/arm/configs/multi_v7_defconfig           |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 235 ++++++++++++------
+ 7 files changed, 416 insertions(+), 79 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
