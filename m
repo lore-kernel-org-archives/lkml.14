@@ -1,95 +1,168 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1865A17EF
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 02:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E6663A9
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 02:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714097552; cv=none; b=U0CfZvZBn/0s14rb09Ju//eKsCtvnQh5ByiQevycdk7t5Sv3fw36F65luNWMvYPe/TqugaFfEqd5KaHhMzUL9bLvu1+YrsPf6qFE8IF+f+oPtFk7bM5Kt92ewuN0zruR0aIneh3pZ0kk6Mn/4NAyDCId3uNwmEV4Sj8+7qb+MxQ=
+	t=1714097602; cv=none; b=cyBfuO7mjQc5MBsarOvgEv44EemDTuRMkI3XqXElYxajLEiggh+AAXQgLWXLtFUa0VzFn4zZxAgPvZcbTdMQimk0PNJk1fmVZUnvvJgVMxNunpbhB7+ds49sLsJ4HODE+XdrUqv+bSPeE3YGckvD4/esemr8Q2FKz/wQpBvvz/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714097552; c=relaxed/simple;
-	bh=/cb+Yx4GDTjN9P4OtzCb600bLMu5/Scwqd+0UNWp8UA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PWV2oSUI2X+E+Dn1t/hyAb8iUNuziC6naZeFTTmhuYi2nl82UkinVP3aAlSSmL7fNEeuwBjWXNruL8zxeNFofMIwS3rQstRyEOdT4Hxuz+C5MJYqG4YZkNhwLrtes0BPVt5t+vz8/Zw6/mRTXrpR3nrK7GfV9hCtg2OZxKwF2Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pdcMubts; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pdcMubts"
-X-UUID: 6b5206d0037211efa074750273bbc5f9-20240426
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=j0QYK3u1tNscMJGC++pFg34wNNSwspyGoedC9JhFCgE=;
-	b=pdcMubtsdvdgiL72wYu8ojGJJXagL8txoELFhlwmzYPNwhg82c4BmkHDhKmlpFCvr+0C5x0jzxbXDiFz6ZDD+78Y1LYOdC2SQOwfB62/Zj/42UJKuFBUqJJh06GxfJr8C66XP+rIMPreBmhCSCb3XvsqVGLZb4R/+a0O5eSOJCA=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:a7567bcf-c4d5-4e92-b3d0-9b799e5c1efc,IP:0,U
-	RL:0,TC:0,Content:100,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:100
-X-CID-META: VersionHash:82c5f88,CLOUDID:e19c5dfb-ed05-4274-9204-014369d201e8,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:801|102,TC:nil,Content:3,EDM:-3,IP:n
-	il,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0
-	,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 6b5206d0037211efa074750273bbc5f9-20240426
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1619398132; Fri, 26 Apr 2024 10:12:23 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 26 Apr 2024 10:12:22 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 26 Apr 2024 10:12:22 +0800
-From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>, Chun-Kuang Hu
-	<chunkuang.hu@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-CC: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jason-ch Chen <jason-ch.chen@mediatek.com>, "Jason-JH . Lin"
-	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
- Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH] mailbox: mtk-cmdq: Fix pm_runtime_get_sync() warning in mbox shutdown
-Date: Fri, 26 Apr 2024 10:01:21 +0800
-Message-ID: <20240426020121.5273-1-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	s=arc-20240116; t=1714097602; c=relaxed/simple;
+	bh=IKyM0RRgp91tpBkkosb3POhPoylTVEXs8xoD7G2L7I8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ah6cALoYrIeWHST58ekCq4mcpxhTSK4Ty5WYyAr2UJI2RAO1/xNo0n8MCqbCzBm95F4DNnfHavZXudOAbCBQ9IaFt9nTmK9PO4ELtDg3N0Bq8ifhBavzMSilbo2ortr8njoeTgmPiMt8J4Wmqnj5w3qcYChJl078TjXo9RMJGHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-36afb9ef331so18651485ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Apr 2024 19:13:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714097600; x=1714702400;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Gaf9uHIX188wy87s5s0fm7jlwwFHmUIC3X8hW3n0+40=;
+        b=qCp3FNi5Z+9oRqWn0SEUH/OqZoOK4ic3orT87qd2pEk2ncmKgP1xa+zb1ITwExwL0Z
+         GUt69nqmw8B8Vymu02rGWo/wQZEE0jG53PzzZT3k7SWDw0mkVnaLvumoT+EPynHaLFgD
+         NjGMY6oen8hTIMn8VmWc4dHH7BYCq4G2/kcXLvLtSohStBo3bqCUmn40+7Qtig3tsT28
+         hoowupiencnA6ThBit2mtMrFbAJRabXm3tIITw9X9uF59C8VeFFSOshwJUv4fIiVZpe7
+         eSwZ4w2DcRq2bpM46U1IefSLAEckEG7yxP2M43XbXQ1VPInFn+5+U6sJqgiPayoZ071+
+         4Epg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8U++0J4lkiTVktQWPvw9yVYqY40ql7p06/zsdoj9v6cwP95kIH197Df81dJvZvF7Nt0QnBm+d9g3jxdmMvNyFU3deG2Q3Hw+M2b1J
+X-Gm-Message-State: AOJu0Yw3hQ8jFiPWTxEsvutGPdNpvl/NjJjeJ317ym9LMroNhEcJTtGj
+	a6PQ46J1fqEd3y49NpfNGsUUmkyCyXPy3RQTeWswuvnRYZR6C6nmKt3R6ErhvAWxj6efeI/zwBW
+	mFH48efVTOiZGa13kq48mCh6MdDPEkZUbEAXckBsd5EFpuN9fMs1DLAs=
+X-Google-Smtp-Source: AGHT+IFrB3lnw6BEPuWJpIonFKpdLdEWFcYAzAtghz/5naMW7RN8TmntdUhWPuTdxTTYaEcwqVGg7p10VQzQlNX+bsuipxfOL5gW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+X-Received: by 2002:a05:6e02:1d10:b0:36b:26df:cce4 with SMTP id
+ i16-20020a056e021d1000b0036b26dfcce4mr72709ila.6.1714097600234; Thu, 25 Apr
+ 2024 19:13:20 -0700 (PDT)
+Date: Thu, 25 Apr 2024 19:13:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009299ad0616f6727a@google.com>
+Subject: [syzbot] [netfs?] WARNING in netfs_pages_written_back
+From: syzbot <syzbot+dbc44fd848d570fc1526@syzkaller.appspotmail.com>
+To: dhowells@redhat.com, jlayton@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The return value of pm_runtime_get_sync() in cmdq_mbox_shutdown()
-will return 1 when pm runtime state is active, and we don't want to
-get the warning message in this case.
+Hello,
 
-So we change the return value < 0 for WARN_ON().
+syzbot found the following issue on:
 
-Fixes: 8afe816b0c99 ("mailbox: mtk-cmdq-mailbox: Implement Runtime PM with autosuspend")
-Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+HEAD commit:    e33c4963bf53 Merge tag 'nfsd-6.9-5' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=118f2c08980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=19891bd776e81b8b
+dashboard link: https://syzkaller.appspot.com/bug?extid=dbc44fd848d570fc1526
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-e33c4963.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/af334172fdbc/vmlinux-e33c4963.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9c0bfbadd1ab/bzImage-e33c4963.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+dbc44fd848d570fc1526@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+bad 1 @0 page 0 0
+WARNING: CPU: 0 PID: 14804 at fs/netfs/buffered_write.c:653 netfs_pages_written_back+0xe02/0x1320 fs/netfs/buffered_write.c:653
+Modules linked in:
+CPU: 0 PID: 14804 Comm: syz-executor.2 Not tainted 6.9.0-rc5-syzkaller-00053-ge33c4963bf53 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+RIP: 0010:netfs_pages_written_back+0xe02/0x1320 fs/netfs/buffered_write.c:653
+Code: 48 c1 ee 03 80 3c 06 00 0f 85 d0 04 00 00 48 8b 44 24 18 4d 89 f0 48 c7 c7 80 54 22 8b 48 8b b0 28 01 00 00 e8 8f 0a 21 ff 90 <0f> 0b 90 90 e9 3c f4 ff ff e8 c0 35 5e ff e8 9b cc 44 ff 31 ff 41
+RSP: 0018:ffffc900030a75b8 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffffea0001522140 RCX: ffffffff81513b29
+RDX: ffff88801e1c2440 RSI: ffffffff81513b36 RDI: 0000000000000001
+RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000003 R12: dffffc0000000000
+R13: ffff88801fa60040 R14: 0000000000000000 R15: ffff88801fa60138
+FS:  0000000000000000(0000) GS:ffff88802c200000(0063) knlGS:00000000f5ed1b40
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 00000000eda8fda4 CR3: 00000000468b6000 CR4: 0000000000350ef0
+DR0: 0000000000000000 DR1: 00000000872c9164 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ netfs_cleanup_buffered_write+0x7a8/0x9b0 fs/netfs/buffered_write.c:726
+ netfs_write_terminated+0x3c7/0x910 fs/netfs/output.c:121
+ netfs_end_writethrough+0x1a6/0x200 fs/netfs/output.c:468
+ netfs_perform_write+0x1a6c/0x26b0 fs/netfs/buffered_write.c:398
+ netfs_buffered_write_iter_locked+0x213/0x2c0 fs/netfs/buffered_write.c:454
+ netfs_file_write_iter+0x1e0/0x470 fs/netfs/buffered_write.c:493
+ v9fs_file_write_iter+0xa1/0x100 fs/9p/vfs_file.c:407
+ call_write_iter include/linux/fs.h:2110 [inline]
+ do_iter_readv_writev+0x504/0x780 fs/read_write.c:741
+ vfs_writev+0x36f/0xdb0 fs/read_write.c:971
+ do_pwritev+0x1b2/0x260 fs/read_write.c:1072
+ __do_compat_sys_pwritev2 fs/read_write.c:1218 [inline]
+ __se_compat_sys_pwritev2 fs/read_write.c:1210 [inline]
+ __ia32_compat_sys_pwritev2+0x121/0x1b0 fs/read_write.c:1210
+ do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
+ __do_fast_syscall_32+0x75/0x120 arch/x86/entry/common.c:386
+ do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
+ entry_SYSENTER_compat_after_hwframe+0x84/0x8e
+RIP: 0023:0xf7300579
+Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
+RSP: 002b:00000000f5ed15ac EFLAGS: 00000292 ORIG_RAX: 000000000000017b
+RAX: ffffffffffffffda RBX: 0000000000000026 RCX: 0000000020000240
+RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000015 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000292 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+----------------
+Code disassembly (best guess), 2 bytes skipped:
+   0:	10 06                	adc    %al,(%rsi)
+   2:	03 74 b4 01          	add    0x1(%rsp,%rsi,4),%esi
+   6:	10 07                	adc    %al,(%rdi)
+   8:	03 74 b0 01          	add    0x1(%rax,%rsi,4),%esi
+   c:	10 08                	adc    %cl,(%rax)
+   e:	03 74 d8 01          	add    0x1(%rax,%rbx,8),%esi
+  1e:	00 51 52             	add    %dl,0x52(%rcx)
+  21:	55                   	push   %rbp
+  22:	89 e5                	mov    %esp,%ebp
+  24:	0f 34                	sysenter
+  26:	cd 80                	int    $0x80
+* 28:	5d                   	pop    %rbp <-- trapping instruction
+  29:	5a                   	pop    %rdx
+  2a:	59                   	pop    %rcx
+  2b:	c3                   	ret
+  2c:	90                   	nop
+  2d:	90                   	nop
+  2e:	90                   	nop
+  2f:	90                   	nop
+  30:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
+  37:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
+
+
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index ead2200f39ba..033aff11f87c 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -465,7 +465,7 @@ static void cmdq_mbox_shutdown(struct mbox_chan *chan)
- 	struct cmdq_task *task, *tmp;
- 	unsigned long flags;
- 
--	WARN_ON(pm_runtime_get_sync(cmdq->mbox.dev));
-+	WARN_ON(pm_runtime_get_sync(cmdq->mbox.dev) < 0);
- 
- 	spin_lock_irqsave(&thread->chan->lock, flags);
- 	if (list_empty(&thread->task_busy_list))
--- 
-2.18.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
