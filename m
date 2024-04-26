@@ -1,109 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935EB4A23;
-	Fri, 26 Apr 2024 18:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C3763AE
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 18:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714156725; cv=none; b=kMuHPB5sA/YbrdxnNPucyYtPo0O9/4E9352L42DvLqospNE2Q89jlBMnkjiSWr9QbxL/rpeI1BjGBd1n79jSPB/hLCruxouZAZammZpGQT26qy8aNOLm4io55KDUPSBQc6ft118UyCdP7CGzfV6kdK9kJJHQl6duleTrMe2qw7Q=
+	t=1714156917; cv=none; b=ehgjp/EGEg/PEnXdbP0DrGvDKmsEWhoFVKUvUzzefEypRcd+hqc/8X5LFftQZ5+20RjUDXCfy8D3emTomAe/Vqr679Drv4EcNoU4ClJfYryqxY6fpmt8ng2mOLbR3HvZvOG2g5+Dbtcs5wjNssudloGpB/vxMztbOYF3S3/z4HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714156725; c=relaxed/simple;
-	bh=SZ0a+QERSJsoCy997xFEiy87bwh0vfwyXGIDwWShdug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JbVsFURzJHvgdm4sZi6sPeeHH2nE1q3as9b4AKurqSaDQm3EBPhHDe14jBQI1qvV/6w7x09g+o0iGC7HAhG/94aR2LODTHMjZOg+c8fyJynSOI+WDxf7dzoPrlMhGesQCSt3BUiONmsT4UjdYjUj/CNZcM13qiZVe9dmu4iIGUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dP0YN4Yv; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714156917; c=relaxed/simple;
+	bh=rFfiul7lN3W4ving5spK8bKXhKZAySO3bcWAGeEJCSo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZYo0iQtDbqzyP2ft/rkRmHguprYvZDdy0I8+9klF8B3knlWLqVWw+kB0DrlI4fDcaShvzwE/LIh1+JY79tUVIvN+mGnVk9kLOHSFx0LNuMzj9vVs5iBihyjeaCmAHGcdpP3cIb/iVShTVKcXJr4CqEkyeelC2DSWH4Oo89cR53I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RUbtxMPa; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dP0YN4Yv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714156722; x=1745692722;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=SZ0a+QERSJsoCy997xFEiy87bwh0vfwyXGIDwWShdug=;
-  b=dP0YN4Yv7eLnxKP4lEU0UQUQtGYw/Zvm/kjteQ7O+su9Wrcm7FVFSbNB
-   2hD8YsQ/GYW9I3aIo5qVxbxvXZdWa7EyhfIh4wKsjPy01McsjrrnfPtVB
-   yRtvUcEMxhnDtVfrzbnL083iUcSHMvvWZlgfJ8Mm3lDckJlzFhkPr2Her
-   X/Nv0rlExSvJIvDvuW0Xos3bols4J3wGaqPiVBxoNRfhWAE/3YNEN7PMR
-   aORKIWjyTlLqNddrE8Q9smwCLbu4BQkWroq30QLd5qxZOWBMZ8NYykhjv
-   EOD4SBNkvN2RidwenfoBV5lhNjBSRff4OHEnc0Yf0rAjB0Njtfk2a47Ds
-   A==;
-X-CSE-ConnectionGUID: dG6bj8PoQ5q0DnXJfcLYpw==
-X-CSE-MsgGUID: vtS7jOpCTpqxO5KoMJJ8CA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="21319197"
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="21319197"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 11:38:41 -0700
-X-CSE-ConnectionGUID: v6j26nX0R82E5FYAD0zYSg==
-X-CSE-MsgGUID: SfU9mithQd2X9XTpF3XgXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="30298889"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 11:38:41 -0700
-Date: Fri, 26 Apr 2024 11:38:40 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>,
-	"Zhang, Tina" <tina.zhang@intel.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"Yuan, Hang" <hang.yuan@intel.com>,
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
-	"Chen, Bo2" <chen.bo@intel.com>,
-	"sagis@google.com" <sagis@google.com>,
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"Yao, Yuan" <yuan.yao@intel.com>, isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 030/130] KVM: TDX: Add helper functions to print TDX
- SEAMCALL error
-Message-ID: <20240426183840.GS3596705@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <1259755bde3a07ec4dc2c78626fa348cf7323b33.1708933498.git.isaku.yamahata@intel.com>
- <434f5ea4807cdfbe59ec8cbe078ba9c87933e5e7.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUbtxMPa"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-572669fd9f9so445782a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 11:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714156914; x=1714761714; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JUJqNR/S6ihu0yVmhT6SDnrwYDU6/B9sR5X5jfrhksU=;
+        b=RUbtxMPaj3xcPgKqcTvpRM8xhg+i9oC488iF9RQrmOjpTN8s3stpcF2psju7ja4mez
+         InFjcg4LXoq+DF3g+ndImVfkldn5nx6rSmc3+jLRBmISlB5nLNUvMJsPxVTEimTs7rl7
+         2vZ9xB5eyqUeD7f7Cdd58acDZLO61JL5U9L2QMvCipJO4viN0hImhCAYMouSm64utD63
+         I+axVgsUvbQTWUoB7bUmoj+WT2By4vVaobtqzccyhYl1oc3XK0aOE+j7n8wbRe+jMDUR
+         OyZDHjHudXFBZNPBOWwe1eAWcLk6vmSnjPRf9FPBPHSHN/VicjmhqWFFFqCZIeBPYiSg
+         sHUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714156914; x=1714761714;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JUJqNR/S6ihu0yVmhT6SDnrwYDU6/B9sR5X5jfrhksU=;
+        b=eetNGa6kxZJ/BEDnCpwAFQP0Eq7g8xcSOdnW7qTTjgod4n/wTgTqg+yR9YpfrQG2cF
+         jMk+9CFb2zCHbT0wCutJn4l/tSLhKIdY5iqB/n8Gq5BWL1iYZwU6v3/+x8TgQtDkBvZh
+         fuHhEpN6SQWceZE1DtoqKHD4Fc2AiZtE7am6ctMkr5Eb83Xy+VbX6GtUW8fwx1a3FGWN
+         G8/Gyg50tmmS6RBg7MK0ZXm4vnUBVcZDn3xNA8Bv5WI/JnTF7vk+j1lhJBeu3CwbWWnd
+         XQGPqrQ5YayBFHUl6BOUavfFfkFN14ewlSXwc/0ODgMyjERQruUGXA6ArTgMs4O4gGCC
+         olBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTn5JrRDAaUTEDFUMBxrl/WvsGMYx2W8ots7QiBfj7UyDCnDu8rnO70i9bbDHM5sUERixcmK2w0mdzNdTq2aSwC1tKtMb7tBt0MtNK
+X-Gm-Message-State: AOJu0Yy4+APRUX+AhlO/LhfQsWBkwms57vSdkSlOIc2patbXrA1CZ5/2
+	0I9UXfXa+5zEAI/bIfKWwKMJp0OVvOx4GCTh1UlRy6i0EUvFrPrADWNFZ4gxOhL4ibxFTvTjOOL
+	ZinhakHYR7t7eEd4xq44L2c8Y6LA=
+X-Google-Smtp-Source: AGHT+IHL50vkU5e2FRTV9N/UG5c5QHN1n3fJd/D3N0Z5Di6Ohr+hn6EsKibgn039BfBIv8fUWmKCYqA8nAZGi80X6O4=
+X-Received: by 2002:a50:998a:0:b0:56e:2b0b:58 with SMTP id m10-20020a50998a000000b0056e2b0b0058mr2525093edb.10.1714156913663;
+ Fri, 26 Apr 2024 11:41:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <434f5ea4807cdfbe59ec8cbe078ba9c87933e5e7.camel@intel.com>
+References: <20240425211136.486184-1-zi.yan@sent.com> <ec4f9194-9ae3-43b3-8559-0b1f186c1d9d@redhat.com>
+ <7c233278-1006-4449-81b2-d473b18a66ca@redhat.com>
+In-Reply-To: <7c233278-1006-4449-81b2-d473b18a66ca@redhat.com>
+From: Yang Shi <shy828301@gmail.com>
+Date: Fri, 26 Apr 2024 11:41:42 -0700
+Message-ID: <CAHbLzkqZmd=HGQ8_adjEipp49GEzN45bz=NwJPi9X+qOHnNFZQ@mail.gmail.com>
+Subject: Re: [PATCH v4] mm/rmap: do not add fully unmapped large folio to
+ deferred split list
+To: David Hildenbrand <david@redhat.com>
+Cc: Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Barry Song <21cnbao@gmail.com>, Lance Yang <ioworker0@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 24, 2024 at 12:11:25AM +0000,
-"Huang, Kai" <kai.huang@intel.com> wrote:
+On Fri, Apr 26, 2024 at 1:26=E2=80=AFAM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+>
+> > @@ -1553,9 +1557,9 @@ static __always_inline void __folio_remove_rmap(s=
+truct folio *folio,
+> >                    * page of the folio is unmapped and at least one pag=
+e
+> >                    * is still mapped.
+> >                    */
+> > -               if (folio_test_large(folio) && folio_test_anon(folio))
+> > -                       if (level =3D=3D RMAP_LEVEL_PTE || nr < nr_pmdm=
+apped)
+> > -                               deferred_split_folio(folio);
+> > +               if (folio_test_large(folio) && folio_test_anon(folio) &=
+&
+> > +                   list_empty(&folio->_deferred_list) && partially_map=
+ped)
+> > +                       deferred_split_folio(folio);
+>
+> And now I realize that we can then even drop the folio_test_large(folio)
+> check here!
 
-> On Mon, 2024-02-26 at 00:25 -0800, isaku.yamahata@intel.com wrote:
-> > --- a/arch/x86/kvm/vmx/tdx_ops.h
-> > +++ b/arch/x86/kvm/vmx/tdx_ops.h
-> > @@ -40,6 +40,10 @@ static inline u64 tdx_seamcall(u64 op, struct tdx_module_args *in,
-> >  	return ret;
-> >  }
-> >  
-> > +#ifdef CONFIG_INTEL_TDX_HOST
-> > +void pr_tdx_error(u64 op, u64 error_code, const struct tdx_module_args *out);
-> > +#endif
-> > +
-> 
-> Why this needs to be inside the CONFIG_INTEL_TDX_HOST while other
-> tdh_xxx() don't?
-> 
-> I suppose all tdh_xxx() together with this pr_tdx_error() should only be
-> called tdx.c, which is only built when CONFIG_INTEL_TDX_HOST is true?
-> 
-> In fact, tdx_seamcall() directly calls seamcall() and seamcall_ret(),
-> which are only present when CONFIG_INTEL_TDX_HOST is on.
-> 
-> So things are really confused here.  I do believe we should just remove
-> this CONFIG_INTEL_TDX_HOST around pr_tdx_error() so all functions in
-> "tdx_ops.h" should only be used in tdx.c.
+Good idea. This is more understandable.
 
-You're right, please go clean them up.
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
