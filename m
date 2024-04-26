@@ -1,81 +1,99 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp-190c.mail.infomaniak.ch (smtp-190c.mail.infomaniak.ch [185.125.25.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9ED1635DD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD40915B579
 	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 17:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714152195; cv=none; b=D+XIhMIzC21VEcVBma5/auQGRj/SRONRJSHjOYKEB9LjbQfzHKxaXCmN/4XgtVSueAhMGj0ZxDQ/RV34kexusVOzI/dW/Z5/9lmMz0DOymdM0h8YwWCQcbXCp3XhoavZvB6gE0lKNDbCg4txpJWDcc36mgsg/+gNz8h3+Zfho70=
+	t=1714152198; cv=none; b=CUx7FHcWM8L6flsXSxpMLrl+wuK4E5aOJrglNZgo55O+jAv1FeTaJotwF8updVYEhtwvBnPc2fciSbhqWvkesE/faesifn3vQPjIhAjxuJK3r1JYm9tF8KFm/ldgOjm4lfi1I2hnF8tq/1JS5yBdzzi23zFlYO5eLKkDARsqZBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714152195; c=relaxed/simple;
-	bh=8c14yDAPeO5YUURLeNl2uwUPQd2O+PB2Dd7K4zo3CIk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mZQIxrTCV8zrv4KeABHngP6gAJEP8iA29IYINXafBxFiu81JYH0jBMdLm8QjEjUO8a1Lu7mwala8pD4liIyqajX6I44DiswImB6SgZg7whMYKcUOIaOI9ysHA6KaMblKlMe9rAIkgpnbVmP3y9GsskQeFHD2e3Ut3uDEetA3Nko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fqf2dZBV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gMdtoM3w; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1714152198; c=relaxed/simple;
+	bh=6kRuOtJ4a93MXDCwtzvP1VdtvY2kl4/ucaoZA2ZyQwA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lc0MLLyTNe4h8NeDCFZ8MC+4ZWHPhzc9KIhEF8oDLLltZJlBFYDidZ0nUBb7MbzvStDDOYNBqhE1h+ZCBCAM4IFI+z6zQ5DYWFfXI3V4M3NaF3j3WkG5KblZhqssQbfQuNVCK7g9jGJMP3r70RieTCjNBx42yUrIRfUlHHApBS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=b5brXSr/; arc=none smtp.client-ip=185.125.25.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fqf2dZBV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gMdtoM3w"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1714152185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Phh2SQgb1fDjrQMMKRxrCqZZm1HdbdAFSSyGdV9+ugA=;
-	b=fqf2dZBVlGkKUbdpZcudTUm0uT1c1sMhmWzvD/QNDKLEDyIwgBtrTpKV1lwZI/YY2nR3CY
-	c/x3uaE4VnMCTLR7+Xe6ujJN86J9gaSFaAP0T2kQfKnODpGOZwu50T2fWfT6G/YyDdLWLI
-	5M689pfHpDsC7o0ZMj7WHfeXALLR7NBXytpN4uE4tT/Jmp81Rntq1baUJkpPDrU1MtBbME
-	Ud7MrNHSBEBVQemvwbwTXuwzNOM60PWEZnj+yNd6OGaux+PUZVNIpZiF1ZDnfReqHcFeOm
-	APuYvUeBTiEVmxNJGn91j/HPf2geAduKl9OJYLrjIF6DdE5F2jzzi9PB4+OB+w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1714152185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Phh2SQgb1fDjrQMMKRxrCqZZm1HdbdAFSSyGdV9+ugA=;
-	b=gMdtoM3wBIlQpsXyJoq2ixOBd+w1J5liSuqrNWF1n+43jaL3sfpG6Xia2mYierh5gkafjH
-	1rxMnsBoofjEodCw==
-To: Z qiang <qiang.zhang1211@gmail.com>, paulmck@kernel.org
-Cc: syzbot <syzbot+dce04ed6d1438ad69656@syzkaller.appspotmail.com>,
- linux-kernel@vger.kernel.org, peterz@infradead.org,
- syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [kernel?] WARNING: suspicious RCU usage in __do_softirq
-In-Reply-To: <CALm+0cVvM56xse8ejf7+Wro+XBkFwY-MO1jyhWcVU8BWaZ2qjg@mail.gmail.com>
-References: <CALm+0cWx1kYtftE4nj7Jjgx2_bmNmSrBAgd36ksSvxJtNVhxHg@mail.gmail.com>
- <CALm+0cWRC1kqLJvmEqda4O97PZ-n0R0UQ35=fi6oA3rLsPoUSQ@mail.gmail.com>
- <8f281a10-b85a-4586-9586-5bbc12dc784f@paulmck-laptop>
- <CALm+0cWN0+cCsYddBUefya3aUw9c9Xn89GVV=Ys1_UPjS19WrQ@mail.gmail.com>
- <4c09abb6-4f6e-42d7-9944-c5da995649cb@paulmck-laptop>
- <CALm+0cVaLfE2ieK9aqh9yHkPDyO7zWbMe9K6WjTUgm4t9SnSFQ@mail.gmail.com>
- <ac7bf2c3-c752-46db-a5c8-0c55a1af8561@paulmck-laptop>
- <CALm+0cXGBPWxiNOkAoQG4hdnKCeVVR-APbfBPk9OGeU2RW+bKA@mail.gmail.com>
- <87o7a1umj3.ffs@tglx>
- <CALm+0cUesD9KaWyfsRUyGdErbrU11sAfRgRR=Qjyz7Boq9Vt=g@mail.gmail.com>
- <b735d174-8ad9-4ace-86ee-75dc09852537@paulmck-laptop>
- <CALm+0cVvM56xse8ejf7+Wro+XBkFwY-MO1jyhWcVU8BWaZ2qjg@mail.gmail.com>
-Date: Fri, 26 Apr 2024 19:23:04 +0200
-Message-ID: <8734r8t4w7.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="b5brXSr/"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VR01625gfzVFG;
+	Fri, 26 Apr 2024 19:23:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1714152186;
+	bh=6kRuOtJ4a93MXDCwtzvP1VdtvY2kl4/ucaoZA2ZyQwA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=b5brXSr/ayXj1jxkxMnO/ban2apbqGPXZGnhyjDGWltc9xixX/hbl2lO891HwPkLS
+	 ccZSTRqsUl4IDTS8VMnIpn9sdePz/T7iJ0V2bwHMBEsfimRZLrZ492bWldGsXOa5gw
+	 k18BGvGa1prg06wt4moxAesuZk7X4nne4B3LlAbA=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VR0155F9lz4b8;
+	Fri, 26 Apr 2024 19:23:05 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Mark Brown <broonie@kernel.org>,
+	Shengyu Li <shengyu.li.evgeny@gmail.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	"David S . Miller" <davem@davemloft.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Will Drewry <wad@chromium.org>,
+	kernel test robot <oliver.sang@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v1 2/5] selftests/landlock: Fix FS tests when run on a private mount point
+Date: Fri, 26 Apr 2024 19:22:49 +0200
+Message-ID: <20240426172252.1862930-3-mic@digikod.net>
+In-Reply-To: <20240426172252.1862930-1-mic@digikod.net>
+References: <20240426172252.1862930-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Fri, Apr 26 2024 at 10:09, Z qiang wrote:
->> This looks quite nice to me, especially given that it avoids changing
->> all the other calls to __do_softirq().  Some architectures might want
->> to directly call handle_softirqs(), but if so, they can send the patches.
->
->
-> Can you send an official patch? or I will send and add you to
-> Co-developed-by tags.
+According to the test environment, the mount point of the test's working
+directory may be shared or not, which changes the visibility of the
+nested "tmp" mount point for the test's parent process calling
+umount("tmp").
 
-Just send it along with a nice changelog and add:
+This was spotted while running tests on different Linux distributions,
+with different mount point configurations.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Günther Noack <gnoack@google.com>
+Fixes: 41cca0542d7c ("selftests/harness: Fix TEST_F()'s vfork handling")
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20240426172252.1862930-3-mic@digikod.net
+---
+ tools/testing/selftests/landlock/fs_test.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-That's good enough.
+diff --git a/tools/testing/selftests/landlock/fs_test.c b/tools/testing/selftests/landlock/fs_test.c
+index 9a6036fbf289..46b9effd53e4 100644
+--- a/tools/testing/selftests/landlock/fs_test.c
++++ b/tools/testing/selftests/landlock/fs_test.c
+@@ -293,7 +293,15 @@ static void prepare_layout(struct __test_metadata *const _metadata)
+ static void cleanup_layout(struct __test_metadata *const _metadata)
+ {
+ 	set_cap(_metadata, CAP_SYS_ADMIN);
+-	EXPECT_EQ(0, umount(TMP_DIR));
++	if (umount(TMP_DIR)) {
++		/*
++		 * According to the test environment, the mount point of the
++		 * current directory may be shared or not, which changes the
++		 * visibility of the nested TMP_DIR mount point for the test's
++		 * parent process doing this cleanup.
++		 */
++		ASSERT_EQ(EINVAL, errno);
++	}
+ 	clear_cap(_metadata, CAP_SYS_ADMIN);
+ 	EXPECT_EQ(0, remove_path(TMP_DIR));
+ }
+-- 
+2.44.0
+
