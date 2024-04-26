@@ -1,220 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51E627473
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 19:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A48E208D6
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 19:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714161355; cv=none; b=LExUYfhsHPOoztT4ue1cFjUQlrvrG65UCCjvkAR08imgAodf+sVKFGcSw1rn45/Np9UmeLcn5PlDaoCWJSDQC2NhppJPIzdqL+d6Mj1dn+Oj0F+g+vZHEs6w8Esc9K/N8w/mIFkIapzz9GnGelZlPxLpGiAteicbK7DZTCS06Xs=
+	t=1714161432; cv=none; b=SlyNUnPZn6PN/u2fiapymXvEsiXI3r51nLQUi8RoUP2EYGxramYOeYsEtVT73BOdBJE8H9v6jJF3atXjglaoZQJR+pHHqVhUG0v3oVBznPzhTLTVexfKageXDZ1t0z8boWKS8uFVJ0WsAFcOnBd4JMY04IQoYjiyxVNZcwT2YkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714161355; c=relaxed/simple;
-	bh=6AK1a+YGlSdrMLec/1Sholu7r5pO4ZP20qs3Z/D68a8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dP9IsK7wk7+n+akLW9HvgjkLe4HeCZ5eCrZVO9QA3SM3rgt5YX9krv9pgIrzQoMu+QmO7Q1MLlHlrJfZThayRs2pUCBJObB4PbuYsBdmcfWiSgRXPtjDhrImvjnvANd/S8BpQ7g36+jwGYYYADmnY+N6CynElj7GUtRHk7VwlPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EBwp3rlY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714161432; c=relaxed/simple;
+	bh=4Tl6Q7eOW4o1xylpHfLT20dEfliDc3ACOmwo+d+76q8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=sl3qHIAXzbyR9ldWv6zliZgznq2US2XbNsXGcisBbKpOmCyvTzKH665Qae30cRYK8OrK3RYfhzRJxZyTfJdA6yxafTtzEnsm/Udm/Jl9rUm1IyZwwsv0AmaTLhI1ieqRBvsoljcTz7o6h4WQBODCJ72RJX1B4+RNTBBu5fCrN24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DUJoHdQg; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EBwp3rlY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714161352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NYTN7Rkmmp1WWVEQ1FtYo1Y7cK63p7rGfuFTRkrq4H4=;
-	b=EBwp3rlYvT9qB1hlhZf9F719x4j4E1x5bNHCHSsqEYNbPsx9TKnf5vGiXrycglm+7tqmy1
-	QrD4v1S0Whha4RdrnU9fDG/vWiSUKoya500GxjLtEs21ZFYzKbhHU/eD5lvDinsxR0OL1O
-	fGqBuPVahOel/Dca5ZBogk0IFmxdK/A=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-679-YWlZr5STM6yyMvzcviNNOQ-1; Fri, 26 Apr 2024 15:55:51 -0400
-X-MC-Unique: YWlZr5STM6yyMvzcviNNOQ-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6a087bba1c9so29189886d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 12:55:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DUJoHdQg"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6167463c60cso29665757b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 12:57:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714161430; x=1714766230; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7JHOwynv12T0Y/tQm4DZx8daXixOsghTKfdQCt+IwUg=;
+        b=DUJoHdQgSkNEv5FFc8d+51AkMU+KSLEf78ghN7IpvWkZ5WN1FWM6w5GzUr2KJKHUbr
+         xAo42I0B9Jqc/lZeeIx3HPSVaoNuOqcqpRY8wonTdKJM6ER64qrQ+CYXuvETyBK4n8I8
+         COoXCR10OC7ZU3ShH9dzB9wgVdWV6wqXO/dSLeNWhjbKuXxkzO0iyHg8Ad6iuI1CcOP7
+         EiYsnfGWMAb4YNxPTjAyhtIgSIsGvYNaFwZpHpNqd7yG6nlhAtrx6VmwaxIXxLR/wPcY
+         9OGStJ5EAuG7qgqV10d/7DDMve6LOSUA1dAynGbSieZYe4PVCorFHfPkzhCHgjtTmMbf
+         8dyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714161351; x=1714766151;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NYTN7Rkmmp1WWVEQ1FtYo1Y7cK63p7rGfuFTRkrq4H4=;
-        b=FHVWotpJZiAbS43Gr8vHinA9Kgh0+G1nmYjKvNtzISV75D6DJxAl7NCLZgfFwkpk8c
-         oq+vbNqtAzywHV0vIu6GYuzLdsNMpTWX3VbF2Y+ENxGRFilBaTmkKs+eYD/BMbUfnVMy
-         aeT88R3d4yXHaeRMZJJVTc3JrEQ2ec1vKjFITTbjAlWdWj9WtNIYVQyA1F5I8VKx0sgb
-         7yQg1OmreR8fSDFniNmsxE+n8ZTfgYNpf3kHh+npgcV6FUHSI+wPD1JwU+DZYDyKRmOw
-         fTIuZRy2yqHe3LRJG2UX3aFC4ayuVQZgEA3r2iojmxi5hIDexJjqre7c6aRXBa2Fw1R9
-         4Xag==
-X-Forwarded-Encrypted: i=1; AJvYcCX0z3OqB9M27FaUTKIucHheY6M2Rknp9O0tPiTaeFK7LjAG1j9y1s4pfXpqkAUVf9fMJuF+JBlIB1zik6kNnt8vBoXHABA6DJkytiIj
-X-Gm-Message-State: AOJu0YwFDqrmbNwHQPscjOXyoqu0aTbz7pnC2Kuc3FiID4oH/WmNHfdX
-	i3emkEQcojgJUz7r0bYNN8DRB7ZB+2EWISJGo3IQeD9u44ls/mQgh1PMaBweoJSjIKstQxaGE6F
-	KcQ7KDwyBSEFbaTopv4NH05+6E7vT8LBo0PDr5j2BMppZTIQbof9u5Adw9dmKQg==
-X-Received: by 2002:ad4:5ca3:0:b0:6a0:7e34:b70d with SMTP id q3-20020ad45ca3000000b006a07e34b70dmr794254qvh.39.1714161351051;
-        Fri, 26 Apr 2024 12:55:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEmzcCv0w9vmIOTyVKZqwKRolLaIQkIYXO1xIFSQqQQoX9JIOBYX5RY7O8hZ+Fcf1u0NlO4Ng==
-X-Received: by 2002:ad4:5ca3:0:b0:6a0:7e34:b70d with SMTP id q3-20020ad45ca3000000b006a07e34b70dmr794243qvh.39.1714161350746;
-        Fri, 26 Apr 2024 12:55:50 -0700 (PDT)
-Received: from fedora.redhat.com ([142.189.203.61])
-        by smtp.gmail.com with ESMTPSA id v3-20020ad45343000000b006a0404ce6afsm1882268qvs.140.2024.04.26.12.55.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 12:55:50 -0700 (PDT)
-From: Lucas Karpinski <lkarpins@redhat.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	alexl@redhat.com,
-	echanude@redhat.com,
-	ikent@redhat.com,
-	Lucas Karpinski <lkarpins@redhat.com>
-Subject: [RFC v2 1/1] fs/namespace: defer RCU sync for MNT_DETACH umount
-Date: Fri, 26 Apr 2024 15:53:48 -0400
-Message-ID: <20240426195429.28547-2-lkarpins@redhat.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240426195429.28547-1-lkarpins@redhat.com>
-References: <20240426195429.28547-1-lkarpins@redhat.com>
+        d=1e100.net; s=20230601; t=1714161430; x=1714766230;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7JHOwynv12T0Y/tQm4DZx8daXixOsghTKfdQCt+IwUg=;
+        b=AuVJhLxdplu+/hfI4GmMLPDia1HKNXKdJ1TKaFvRTn2lpz2o61PQqtIZevCwXGehWQ
+         KqdWjBJLcJ2qwsCEr99R+rk5vzTP93Cf9vCb1vG03k8cyzrSDVAQuZ94srZSwXsSU8hH
+         TYMdoFHCl4j88g0YQQ3O1VychCvTi6eyRqt8kJRbICmaWOTOPmJTjkbCJE2KmhIVK8PC
+         5CGiG/o5Gn2+qOK/0eHEFqOltIDSiIbo2jLXfnnmR3Czeh+b4SF65oZXj54qi1gMSb5v
+         jjv0qyo+WVThLiBzrQQaeTli59tdyua3LA/QlRdWouSBdHGFtJlOCbZSOuVGatZ0ssoz
+         ioyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDT/ViPd/RnqGFg4CpFepD4/fWCMTBwlZZYWM5LaXN4+XlWR+seJhgADO5/THVQM1NqASDEyZsjkTUoV8GuSfpjvPB0PrE7s1wuEcU
+X-Gm-Message-State: AOJu0YxXTIcP74BiDZtsWeM8VR6fCMiArsi7znskpm1wzJcRDVPCbsr5
+	wDpfUYqkRUmtnAsNw/UpHlYWlbjpr8i4Y94RWXvBLD0XzpdriVQHafn+9Z1iBa1WMnO3hPsNBeh
+	0qA==
+X-Google-Smtp-Source: AGHT+IGVs0AhQC/2tCuBf1vwuuUKjoCfCrLrEQi6QfgrOK53aglDlk7/orKA5npkCNzcOFKzvJ7EPkWyDNk=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:9e13:0:b0:61a:d420:3b57 with SMTP id
+ m19-20020a819e13000000b0061ad4203b57mr174224ywj.0.1714161430548; Fri, 26 Apr
+ 2024 12:57:10 -0700 (PDT)
+Date: Fri, 26 Apr 2024 12:57:08 -0700
+In-Reply-To: <20240426173515.6pio42iqvjj2aeac@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240421180122.1650812-1-michael.roth@amd.com>
+ <20240421180122.1650812-22-michael.roth@amd.com> <ZimgrDQ_j2QTM6s5@google.com>
+ <20240426173515.6pio42iqvjj2aeac@amd.com>
+Message-ID: <ZiwHFMfExfXvqDIr@google.com>
+Subject: Re: [PATCH v14 21/22] crypto: ccp: Add the SNP_{PAUSE,RESUME}_ATTESTATION
+ commands
+From: Sean Christopherson <seanjc@google.com>
+To: Michael Roth <michael.roth@amd.com>
+Cc: kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-mm@kvack.org, 
+	linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de, 
+	thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, pbonzini@redhat.com, 
+	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org, 
+	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com, 
+	peterz@infradead.org, srinivas.pandruvada@linux.intel.com, 
+	rientjes@google.com, dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, 
+	vbabka@suse.cz, kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com, 
+	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com, 
+	pankaj.gupta@amd.com, liam.merwick@oracle.com
+Content-Type: text/plain; charset="us-ascii"
 
-Use call_rcu to defer releasing the detached filesystem when calling
-namespace_unlock() during a lazy umount.
+On Fri, Apr 26, 2024, Michael Roth wrote:
+> On Wed, Apr 24, 2024 at 05:15:40PM -0700, Sean Christopherson wrote:
+> > On Sun, Apr 21, 2024, Michael Roth wrote:
+> > > These commands can be used to pause servicing of guest attestation
+> > > requests. This useful when updating the reported TCB or signing key with
+> > > commands such as SNP_SET_CONFIG/SNP_COMMIT/SNP_VLEK_LOAD, since they may
+> > > in turn require updates to userspace-supplied certificates, and if an
+> > > attestation request happens to be in-flight at the time those updates
+> > > are occurring there is potential for a guest to receive a certificate
+> > > blob that is out of sync with the effective signing key for the
+> > > attestation report.
+> > > 
+> > > These interfaces also provide some versatility with how similar
+> > > firmware/certificate update activities can be handled in the future.
+> > 
+> > Wait, IIUC, this is using the kernel to get two userspace components to not
+> > stomp over each other.   Why is this the kernel's problem to solve?
+> 
+> It's not that they are stepping on each other, but that kernel and
+> userspace need to coordinate on updating 2 components whose updates need
+> to be atomic from a guest perspective. Take an update to VLEK key for
+> instance:
+> 
+>  1) management gets a new VLEK endorsement key from KDS along with
 
-When detaching (MNT_DETACH) a filesystem, it should not be necessary to
-wait for the grace period before completing the syscall. The
-expectation that the filesystem is shut down by the time the syscall
-returns does not apply in this case.
+What is "management"?  I assume its some userspace daemon?
 
-Calling synchronize_rcu_expedited() has a significant cost on RT kernel
-that default to rcupdate.rcu_normal_after_boot=1. The struct mount
-umount'ed are queued up for release in a separate list
-once the grace period completes while no longer accessible to following
-syscalls.
+>     associated certificate chain
+>  2) management uses SNP_VLEK_LOAD to update key
+>  3) management updates the certs at the path VMM will grab them
+>     from when the EXT_GUEST_REQUEST userspace exit is issued
+> 
+> If an attestation request comes in after 2), but before 3), then the
+> guest sees an attestation report signed with the new key, but still
+> gets the old certificate.
+> 
+> If you reverse the ordering:
+> 
+>  1) management gets a new VLEK endorsement key from KDS along with
+>     associated certificate chain
+>  2) management updates the certs at the path VMM will grab them
+>     from when the EXT_GUEST_REQUEST userspace exit is issued
+>  3) management uses SNP_VLEK_LOAD to update key
+> 
+> then an attestation request between 2) and 3) will result in the guest
+> getting the new cert, but getting an attestation report signed with an old
+> endorsement key.
+> 
+> Providing a way to pause guest attestation requests prior to 2), and
+> resume after 3), provides a straightforward way to make those updates
+> atomic to the guest.
 
-Without patch, on 6.9.0-rc2-rt kernel:
-perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
-        0.02756 +- 0.00299 seconds time elapsed  ( +- 10.84% )
-perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
-        0.04422 +- 0.00521 seconds time elapsed  ( +- 11.79% )
-
-With patch, on 6.9.0-rc2-rt kernel:
-perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
-	0.02852 +- 0.00377 seconds time elapsed  ( +- 13.20% )
-perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
-        0.0030812 +- 0.0000524 seconds time elapsed  ( +-  1.70% )
-
-Signed-off-by: Alexander Larsson <alexl@redhat.com>
-Signed-off-by: Eric Chanudet <echanude@redhat.com>
-Signed-off-by: Lucas Karpinski <lkarpins@redhat.com>
----
- fs/namespace.c | 51 ++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 45 insertions(+), 6 deletions(-)
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 5a51315c6678..df03fc0d1990 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -45,6 +45,11 @@ static unsigned int m_hash_shift __ro_after_init;
- static unsigned int mp_hash_mask __ro_after_init;
- static unsigned int mp_hash_shift __ro_after_init;
- 
-+struct mount_delayed_release {
-+	struct rcu_head rcu;
-+	struct hlist_head release_list;
-+};
-+
- static __initdata unsigned long mhash_entries;
- static int __init set_mhash_entries(char *str)
- {
-@@ -78,6 +83,7 @@ static struct kmem_cache *mnt_cache __ro_after_init;
- static DECLARE_RWSEM(namespace_sem);
- static HLIST_HEAD(unmounted);	/* protected by namespace_sem */
- static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
-+static bool lazy_unlock = false; /* protected by namespace_sem */
- 
- struct mount_kattr {
- 	unsigned int attr_set;
-@@ -1553,16 +1559,39 @@ int may_umount(struct vfsmount *mnt)
- 
- EXPORT_SYMBOL(may_umount);
- 
--static void namespace_unlock(void)
-+static void free_mounts(struct hlist_head *mount_list)
- {
--	struct hlist_head head;
- 	struct hlist_node *p;
- 	struct mount *m;
-+
-+	hlist_for_each_entry_safe(m, p, mount_list, mnt_umount) {
-+		hlist_del(&m->mnt_umount);
-+		mntput(&m->mnt);
-+	}
-+}
-+
-+static void delayed_mount_release(struct rcu_head *head)
-+{
-+	struct mount_delayed_release *drelease =
-+		container_of(head, struct mount_delayed_release, rcu);
-+
-+	free_mounts(&drelease->release_list);
-+	kfree(drelease);
-+}
-+
-+static void namespace_unlock(void)
-+{
-+	HLIST_HEAD(head);
- 	LIST_HEAD(list);
-+	bool lazy;
-+
- 
- 	hlist_move_list(&unmounted, &head);
- 	list_splice_init(&ex_mountpoints, &list);
- 
-+	lazy = lazy_unlock;
-+	lazy_unlock = false;
-+
- 	up_write(&namespace_sem);
- 
- 	shrink_dentry_list(&list);
-@@ -1570,12 +1599,21 @@ static void namespace_unlock(void)
- 	if (likely(hlist_empty(&head)))
- 		return;
- 
--	synchronize_rcu_expedited();
-+	if (lazy) {
-+		struct mount_delayed_release *drelease =
-+			kmalloc(sizeof(*drelease), GFP_KERNEL);
- 
--	hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
--		hlist_del(&m->mnt_umount);
--		mntput(&m->mnt);
-+		if (unlikely(!drelease))
-+			goto out;
-+
-+		hlist_move_list(&head, &drelease->release_list);
-+		call_rcu(&drelease->rcu, delayed_mount_release);
-+		return;
- 	}
-+
-+out:
-+	synchronize_rcu_expedited();
-+	free_mounts(&head);
- }
- 
- static inline void namespace_lock(void)
-@@ -1798,6 +1836,7 @@ static int do_umount(struct mount *mnt, int flags)
- 	}
- out:
- 	unlock_mount_hash();
-+	lazy_unlock = flags & MNT_DETACH ? true : false;
- 	namespace_unlock();
- 	return retval;
- }
--- 
-2.44.0
-
+Assuming "management" is a userspace component, I still don't see why this
+requires kernel involvement.  "management" can tell VMMs to pause attestation
+without having to bounce through the kernel.  It doesn't even require a push
+model, e.g. wrap/redirect the certs with a file that has a "pause" flag and a
+sequence counter.
