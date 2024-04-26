@@ -1,163 +1,164 @@
-Received: from mg.ssi.bg (mg.ssi.bg [193.238.174.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D35014534B;
-	Fri, 26 Apr 2024 12:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.238.174.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A58E13D244;
+	Fri, 26 Apr 2024 12:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714133434; cv=none; b=BscJAKSYOrRPU8Nbp4YBtlKThjyGjIDu/910362iJmMcZjOpSwlSBqUm5iORid4sqcnAv7yNA+50ynNlXcZ195cqlrpX5gPq+KUL6yVDzKNfTov0RKfCfioqbUmg+jd+rPbv+5jp/zqSufrye+b17YjiB9l7en49S3LP8hBqi3I=
+	t=1714133641; cv=none; b=Tc/ZvjntiZB0FYtJl1/e/Zx9Es/4JDb0FHdlQGYFkD1hA/nX7Ewn+NSXoayR962KyDHjB80RcHn8hqo4pHTkIENI3kel/Yff9efQUeXmUFkRDBbokPZSMYJ/9ryQnMFVkk6SE71H/pufjQGkBO0kc2jBDX4GjzO+wOPQxuNqEC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714133434; c=relaxed/simple;
-	bh=sk3F8kQlklKnamzgzVwKQ00rlNEpTKcd9WWMXq8UVps=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=atDnJvBvQaCpA8aIfLOVMoIyYeD7M4LxF4NM4+CaFIRHFSABwCwTV7nvASndQBgekkMJbym7CkpUL4fqyt8Y76wna3cTVEWokR5Uj2BUGinkh9dFUHO5RbtrQqfm3jq4Z7c6JjOoQE7M1MY7DyJypW31i4B8DHp1iKuPgEBdoEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ssi.bg; spf=pass smtp.mailfrom=ssi.bg; dkim=pass (1024-bit key) header.d=ssi.bg header.i=@ssi.bg header.b=Ee8l6YFJ; arc=none smtp.client-ip=193.238.174.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ssi.bg
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ssi.bg
+	s=arc-20240116; t=1714133641; c=relaxed/simple;
+	bh=DxBgaKwTefQF1Qh6WVIH65YwLhtzYLsdLbNUCj6Cxbw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Y3PGll9sdcOoz7BGjkDTWGgdswzgmhTgS3Gtfl1/WStEgVrUGoywaiVHzFQAabHmhvKUmVmvxe1D8uUV2WalBuCSk9l+sNA2S4swqWFZe9BGn6pSD14+HeA7N20coq6yAq6T5hjwagN2ku/YwZKb7TdbSMHuHKCl3/0PdxeDXmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEx9IEAU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ssi.bg header.i=@ssi.bg header.b="Ee8l6YFJ"
-Received: from mg.ssi.bg (localhost [127.0.0.1])
-	by mg.ssi.bg (Proxmox) with ESMTP id 6674A201AD;
-	Fri, 26 Apr 2024 15:10:29 +0300 (EEST)
-Received: from ink.ssi.bg (ink.ssi.bg [193.238.174.40])
-	by mg.ssi.bg (Proxmox) with ESMTPS;
-	Fri, 26 Apr 2024 15:10:28 +0300 (EEST)
-Received: from ja.ssi.bg (unknown [213.16.62.126])
-	by ink.ssi.bg (Postfix) with ESMTPSA id C3D63900281;
-	Fri, 26 Apr 2024 15:09:52 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ssi.bg; s=ink;
-	t=1714133398; bh=sk3F8kQlklKnamzgzVwKQ00rlNEpTKcd9WWMXq8UVps=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=Ee8l6YFJS7RZ24aWwUO+TQ58uAlvKg44da8bN2aXoBnCDabYnu1QZRbWM/YCvMCtm
-	 KCb/TDE1mSM/2m6jLtLrvv6haBRhIsD746J+S3tEsYMKzO87OwtlGyaijhx9Z6novF
-	 rNPRpgWaQyfc0DLkHErLzQp3U+PMcMndbKLDFZiA=
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by ja.ssi.bg (8.17.1/8.17.1) with ESMTP id 43QC9jvI068943;
-	Fri, 26 Apr 2024 15:09:47 +0300
-Date: Fri, 26 Apr 2024 15:09:45 +0300 (EEST)
-From: Julian Anastasov <ja@ssi.bg>
-To: Joel Granados <j.granados@samsung.com>
-cc: "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Alexander Aring <alex.aring@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        David Ahern <dsahern@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Matthieu Baerts <matttbe@kernel.org>,
-        Mat Martineau <martineau@kernel.org>,
-        Geliang Tang <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>,
-        Remi Denis-Courmont <courmisch@gmail.com>,
-        Allison Henderson <allison.henderson@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>,
-        Jan Karcher <jaka@linux.ibm.com>,
-        "D. Wythe" <alibuda@linux.alibaba.com>,
-        Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>,
-        Nikolay Aleksandrov <razor@blackwall.org>,
-        Simon Horman <horms@verge.net.au>, Joerg Reuter <jreuter@yaina.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
-        linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, bridge@lists.linux.dev,
-        lvs-devel@vger.kernel.org
-Subject: Re: [PATCH v5 6/8] netfilter: Remove the now superfluous sentinel
- elements from ctl_table array
-In-Reply-To: <20240426-jag-sysctl_remset_net-v5-6-e3b12f6111a6@samsung.com>
-Message-ID: <d78c6353-99b9-41f8-0c54-19eb86e1fce3@ssi.bg>
-References: <20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com> <20240426-jag-sysctl_remset_net-v5-6-e3b12f6111a6@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEx9IEAU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7A06C113CD;
+	Fri, 26 Apr 2024 12:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714133641;
+	bh=DxBgaKwTefQF1Qh6WVIH65YwLhtzYLsdLbNUCj6Cxbw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CEx9IEAUBV834qasmxP80Ps5Z5rdkkglCPZFARjcKLNFuI1LOxyRoDg2urrmK0ZRT
+	 XKfc2jX1kM90tB19kZBbOfZo9A60tuFtns5uczMFYtDZd/8zhvJuRY35itosqgchSV
+	 RdOJ4pyx9OfgmRMy/1p/29fTr9mcPEI61SfU/K0DH+hvPlsWTtAjlEAyXYyDY1BCJh
+	 s9xIzWeMn4PGnGJ9zsJ8mbLhzsqu5YkeyZAHBgsQHZ6yL20j9TG+Z/bZbPQJVuEHOx
+	 7uKMZoNcbFD4erfA9eI7com+3hQndmTPO8DQ6jAWIM1uMHIj7aBI084pFOhdZgVpzo
+	 6lJsXa0U8gnyw==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Zi Shen Lim <zlim.lnx@gmail.com>,
+	Xu Kuohai <xukuohai@huawei.com>,
+	Florent Revest <revest@chromium.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: puranjay12@gmail.com
+Subject: [PATCH bpf-next v3 0/2]  bpf, arm64: Support per-cpu instruction
+Date: Fri, 26 Apr 2024 12:13:47 +0000
+Message-Id: <20240426121349.97651-1-puranjay@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Changes in v2 -> v3:
+v2: https://lore.kernel.org/all/20240424173550.16359-1-puranjay@kernel.org/
+- Fixed the xlated dump of percpu mov to "r0 = &(void __percpu *)(r0)"
+- Made ARM64 and x86-64 use the same code for inlining. The only difference
+  that remains is the per-cpu address of the cpu_number.
+
+Changes in v1 -> v2:
+v1: https://lore.kernel.org/all/20240405091707.66675-1-puranjay12@gmail.com/
+- Add a patch to inline bpf_get_smp_processor_id()
+- Fix an issue in MRS instruction encoding as pointed out by Will
+- Remove CONFIG_SMP check because arm64 kernel always compiles with CONFIG_SMP
+
+This series adds the support of internal only per-CPU instructions and
+inlines the bpf_get_smp_processor_id() helper call for ARM64 BPF JIT.
+
+Here is an example of calls to bpf_get_smp_processor_id() and
+percpu_array_map_lookup_elem() before and after this series.
+
+                                         BPF
+                                        =====
+              BEFORE                                       AFTER
+             --------                                     -------
+
+int cpu = bpf_get_smp_processor_id();           int cpu = bpf_get_smp_processor_id();
+(85) call bpf_get_smp_processor_id#229032       (18) r0 = 0xffff800082072008
+                                                (bf) r0 = &(void __percpu *)(r0)
+                                                (61) r0 = *(u32 *)(r0 +0)
 
 
-	Hello,
+p = bpf_map_lookup_elem(map, &zero);            p = bpf_map_lookup_elem(map, &zero);
+(18) r1 = map[id:78]                            (18) r1 = map[id:153]
+(18) r2 = map[id:82][0]+65536                   (18) r2 = map[id:157][0]+65536
+(85) call percpu_array_map_lookup_elem#313512   (07) r1 += 496
+                                                (61) r0 = *(u32 *)(r2 +0)
+                                                (35) if r0 >= 0x1 goto pc+5
+                                                (67) r0 <<= 3
+                                                (0f) r0 += r1
+                                                (79) r0 = *(u64 *)(r0 +0)
+                                                (bf) r0 = &(void __percpu *)(r0)
+                                                (05) goto pc+1
+                                                (b7) r0 = 0
 
-On Fri, 26 Apr 2024, Joel Granados via B4 Relay wrote:
 
-> From: Joel Granados <j.granados@samsung.com>
-> 
-> This commit comes at the tail end of a greater effort to remove the
-> empty elements at the end of the ctl_table arrays (sentinels) which will
-> reduce the overall build time size of the kernel and run time memory
-> bloat by ~64 bytes per sentinel (further information Link :
-> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> 
-> * Remove sentinel elements from ctl_table structs
-> * Remove instances where an array element is zeroed out to make it look
->   like a sentinel. This is not longer needed and is safe after commit
->   c899710fe7f9 ("networking: Update to register_net_sysctl_sz") added
->   the array size to the ctl_table registration
-> * Remove the need for having __NF_SYSCTL_CT_LAST_SYSCTL as the
->   sysctl array size is now in NF_SYSCTL_CT_LAST_SYSCTL
-> * Remove extra element in ctl_table arrays declarations
-> 
-> Acked-by: Kees Cook <keescook@chromium.org> # loadpin & yama
-> Signed-off-by: Joel Granados <j.granados@samsung.com>
-> ---
->  net/bridge/br_netfilter_hooks.c         | 1 -
->  net/ipv6/netfilter/nf_conntrack_reasm.c | 1 -
->  net/netfilter/ipvs/ip_vs_ctl.c          | 5 +----
->  net/netfilter/ipvs/ip_vs_lblc.c         | 5 +----
->  net/netfilter/ipvs/ip_vs_lblcr.c        | 5 +----
->  net/netfilter/nf_conntrack_standalone.c | 6 +-----
->  net/netfilter/nf_log.c                  | 3 +--
->  7 files changed, 5 insertions(+), 21 deletions(-)
+                                      ARM64 JIT
+                                     ===========
 
-...
+              BEFORE                                       AFTER
+             --------                                     -------
 
-> diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-> index 143a341bbc0a..50b5dbe40eb8 100644
-> --- a/net/netfilter/ipvs/ip_vs_ctl.c
-> +++ b/net/netfilter/ipvs/ip_vs_ctl.c
+int cpu = bpf_get_smp_processor_id();           int cpu = bpf_get_smp_processor_id();
+mov     x10, #0xfffffffffffff4d0                mov     x7, #0xffff8000ffffffff
+movk    x10, #0x802b, lsl #16                   movk    x7, #0x8207, lsl #16
+movk    x10, #0x8000, lsl #32                   movk    x7, #0x2008
+blr     x10                                     mrs     x10, tpidr_el1
+add     x7, x0, #0x0                            add     x7, x7, x10
+                                                ldr     w7, [x7]
 
-...
 
-> @@ -4286,10 +4285,8 @@ static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
->  			return -ENOMEM;
->  
->  		/* Don't export sysctls to unprivileged users */
-> -		if (net->user_ns != &init_user_ns) {
-> -			tbl[0].procname = NULL;
-> +		if (net->user_ns != &init_user_ns)
->  			ctl_table_size = 0;
-> -		}
->  	} else
->  		tbl = vs_vars;
->  	/* Initialize sysctl defaults */
+p = bpf_map_lookup_elem(map, &zero);            p = bpf_map_lookup_elem(map, &zero);
+mov     x0, #0xffff0003ffffffff                 mov     x0, #0xffff0003ffffffff
+movk    x0, #0xce5c, lsl #16                    movk    x0, #0xe0f3, lsl #16
+movk    x0, #0xca00                             movk    x0, #0x7c00
+mov     x1, #0xffff8000ffffffff                 mov     x1, #0xffff8000ffffffff
+movk    x1, #0x8bdb, lsl #16                    movk    x1, #0xb0c7, lsl #16
+movk    x1, #0x6000                             movk    x1, #0xe000
+mov     x10, #0xffffffffffff3ed0                add     x0, x0, #0x1f0
+movk    x10, #0x802d, lsl #16                   ldr     w7, [x1]
+movk    x10, #0x8000, lsl #32                   cmp     x7, #0x1
+blr     x10                                     b.cs    0x0000000000000090
+add     x7, x0, #0x0                            lsl     x7, x7, #3
+                                                add     x7, x7, x0
+                                                ldr     x7, [x7]
+                                                mrs     x10, tpidr_el1
+                                                add     x7, x7, x10
+                                                b       0x0000000000000094
+                                                mov     x7, #0x0
 
-	We are in process of changing this code (not in trees yet):
+              Performance improvement found using benchmark[1]
 
-https://marc.info/?t=171345219600002&r=1&w=2
+             BEFORE                                       AFTER
+            --------                                     -------
 
-	As I'm not sure which patch will win, the end result should
-be this single if-block/hunk to be removed.
+glob-arr-inc   :   23.817 ± 0.019M/s      glob-arr-inc   :   24.631 ± 0.027M/s
+arr-inc        :   23.253 ± 0.019M/s      arr-inc        :   23.742 ± 0.023M/s
+hash-inc       :   12.258 ± 0.010M/s      hash-inc       :   12.625 ± 0.004M/s
 
-Regards
+[1] https://github.com/anakryiko/linux/commit/8dec900975ef
 
---
-Julian Anastasov <ja@ssi.bg>
+Puranjay Mohan (2):
+  arm64, bpf: add internal-only MOV instruction to resolve per-CPU addrs
+  bpf, arm64: inline bpf_get_smp_processor_id() helper
+
+ arch/arm64/include/asm/insn.h |  7 +++++++
+ arch/arm64/lib/insn.c         | 11 +++++++++++
+ arch/arm64/net/bpf_jit.h      |  6 ++++++
+ arch/arm64/net/bpf_jit_comp.c | 14 ++++++++++++++
+ kernel/bpf/verifier.c         | 24 +++++++++++++++++-------
+ 5 files changed, 55 insertions(+), 7 deletions(-)
+
+-- 
+2.40.1
 
