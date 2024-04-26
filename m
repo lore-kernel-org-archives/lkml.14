@@ -1,88 +1,162 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F17D14430A;
-	Fri, 26 Apr 2024 10:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BB3144D26;
+	Fri, 26 Apr 2024 10:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714128368; cv=none; b=uTFKtydSRfdvLGBvk2b/Xc/jWCmX7Ftf8iaArA7Ixtr4rMaLmHx4R1ZYUUht4u0svYRfAewmG10zE7DA3A4p7YhJRthUoOM1KJfiiET2ez3kUhr9+5KzsiiQtu3ozM5K0S0xvP5QWyEKKOiOIT9kEzTrWkXhL7/gIcf2w1U49Z0=
+	t=1714128431; cv=none; b=qlze/LuArT209EuyEsDafyiUGl3mG915TtyJIH5k27EALR1b/p6Y2wfcpldZv4qtsXSCY1gYHsjBpWiCW3l3JM740xGx6vyljjkMHhtf4tTlnXFDTiQik24D+KtDPmGkiIhpr+sUCcU9OLZa4l9fWYil+2fBqgiOnuXYUhug+d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714128368; c=relaxed/simple;
-	bh=1Pxy5wY6hXj0Y3hhL63SvhatbJuxuuTHhotJyXcqVgk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Nxo/D3ktj8sXGyMo8JtRuXesgInFZaDqmTjaR1BtsBjMjuEhZtm/6wJPu0cpktzI0t1dzr68e1OBbzv7kh5E2Mlcslm7S3de107x/nGFFqfa6i5vNKixvvfDF0UDEfGHLP9c1bUIsifCzlHnnyaruZjbfyJZ1W0ke5Zrtva4e0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=L4xE3tMB; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1714128431; c=relaxed/simple;
+	bh=OaWenH2ecs+TvT40FvZfeCOsMkIprLb3i+uRB7TGjxw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ozx9oLacVRhFfqgJU2wLnwTGdIOxuha3tUtRstRDlZ4V2HnK/MNQlU82+DhsANF248gSduMAnP3tNaRqI+7uWaOED++HUzxXsemtdXlRTDK0cF26e3svYzhaQCxtdX3r8Rvm3Z3TIG3Axcfc33B/iTAIChDhOJb2QtjX7sP8eS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L81ooAJc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="L4xE3tMB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=JYyZF
-	llG1UFCRZ2iFF/rENG29SUZzw0/ZtGvA7R1+0A=; b=L4xE3tMBjiiMw5Yuv+mvv
-	E3hImT9kngJA1jt9O3Em6nSlGwzOUHoxZxI2iRucdjU44nIxSKlA9vYEaRFvZrwY
-	ZW+A3Zs13us20wbJllFVE0xZ5WZEj6fT0egz8djEtXOZ3N86ZAPJPT6PfUpk+E3O
-	P3eg91OOCjYbhWPFhXvDC0=
-Received: from localhost.localdomain (unknown [111.198.54.11])
-	by gzga-smtp-mta-g0-5 (Coremail) with SMTP id _____wD3H0rRhStmSuqdAw--.3265S2;
-	Fri, 26 Apr 2024 18:45:38 +0800 (CST)
-From: lumingyindetect@126.com
-To: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-Subject: [PATCH] Fix a memory leak in the function lpss8250_probe
-Date: Fri, 26 Apr 2024 11:45:35 +0100
-Message-Id: <20240426104535.1238368-1-lumingyindetect@126.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L81ooAJc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E519EC4AF13;
+	Fri, 26 Apr 2024 10:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714128430;
+	bh=OaWenH2ecs+TvT40FvZfeCOsMkIprLb3i+uRB7TGjxw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=L81ooAJczZ6l+I9P1nO9tRSraH/Xl/LHT8jqPr1kG8Ntk4NV3vuKefx6pZVi8hpxa
+	 pGDUyEo94r5a/iSiuHrNt1fwPX37y9BKPjDx9l4Q62s36axvKzzS6kH2WEuaNt38Sm
+	 DbILGltKVRBdNaMtPYhif6Bbfj4u0mlrWmAptnyF2c8WnMKBSKseBEIpXCRB49RiuZ
+	 yuipi7ezjjPh5ITfMYNVRvH++qoVsHiwSg1hX1m1TWNN8788OBPL9ZoJ5mBGtnoKlV
+	 wBLOtI3E0kTXhisG012vUs7MXhKplbpxwZJC6yS59Pebl+9R/MMkDJCxnWRVVYyJNr
+	 7kgFZm27u2Mdg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2365C04FFE;
+	Fri, 26 Apr 2024 10:47:10 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Date: Fri, 26 Apr 2024 12:46:55 +0200
+Subject: [PATCH v5 3/8] net: rds: Remove the now superfluous sentinel
+ elements from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3H0rRhStmSuqdAw--.3265S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AF1rKry8Cr48XrWfur4rKrg_yoW8Wr4UpF
-	sIkF90kFyvqa4xWa4jyr4jqr1Fva97Za47GrZrKwnIkrZIkF9IyFyFya4ftF18ZrZ5tF9F
-	va1UAF4UAa4UtaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bbJ5rUUUUU=
-X-CM-SenderInfo: poxpx0hj1l0vphwhu3a6rslhhfrp/1tbi6BXM9mVLbDyv5QAAsz
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240426-jag-sysctl_remset_net-v5-3-e3b12f6111a6@samsung.com>
+References: <20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com>
+In-Reply-To: <20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>, 
+ Stefan Schmidt <stefan@datenfreihafen.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, 
+ Steffen Klassert <steffen.klassert@secunet.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, 
+ Remi Denis-Courmont <courmisch@gmail.com>, 
+ Allison Henderson <allison.henderson@oracle.com>, 
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
+ Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+ Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
+ Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, 
+ Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, 
+ Pablo Neira Ayuso <pablo@netfilter.org>, 
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, 
+ Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
+ Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, 
+ Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Kees Cook <keescook@chromium.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dccp@vger.kernel.org, linux-wpan@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ rds-devel@oss.oracle.com, linux-afs@lists.infradead.org, 
+ linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
+ linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+ Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1604;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=Yhw5Yxzxk2wGoyQtTfioNjf4XA/aQJR8HoqakSkFmW8=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYrhilhsDLKMciOakZ2hp+OF9Gcz8PYw79X5
+ 2enJ+JxfEEqeIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmK4YpAAoJELqXzVK3
+ lkFPkfwL/Ai+Yo+GmKvgTo+Umr4alxLieJctsBpAOAdVaHgF75wTSgdW3xdYq69M3kxafgvUUmH
+ FwnSiNd/Aro4onzDt8NlrzX3kpInHsv3kXiDRDDNDrC4Vc+aS2Ne8vTuKy4U5o/CX9j+LAff7qH
+ H3yeRFXZikV04jEmRG8i6fo9p0gKrBEhpANzcb2DjtzXzZ3XH58k9fEYXmnBYtTFv5CLOF4QQV5
+ VMD3WmZU5ydWNVnLZmAfsfqs+gAUvJBwoTjgn9qoeP64T1FSMYOIyk93QUWIFwc79qiNNMot677
+ MANECcoUwPtZqVGLDom62wBNi+i98/TYbxKJD4mvEYzXKZ3ResSvNPoRwOp3DVB6lacwExbz/xe
+ iCj6kwdmEG04UFyW7P+J1rcJgHZ1Y0GdWJtoIZLtcnd2LIrFl781UKZaGUiQfTlfk1Q44S/iikk
+ tlYuokWms1BEMwASp/t4FBi8LJ5b/Gnq5xlD6gn5lsGjW/cRNHQm5DFU5x9jxRl48wkyqVS/WJ5
+ 4M=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
+ auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: j.granados@samsung.com
 
-From: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+From: Joel Granados <j.granados@samsung.com>
 
-In the lpss8250_probe function in the 8250_lpss.c file, the program may directly return at either line 347 or line 351, without jumping to the error handling label to release the dynamically allocated memory region pointed to by the variable pdev, as done at line 357 or line 361. This fix introduces a new label named free_irq_vectors to release the dynamically allocated memory region pointed to by pdev, thereby fixing the memory leak defect.
+This commit comes at the tail end of a greater effort to remove the
+empty elements at the end of the ctl_table arrays (sentinels) which
+will reduce the overall build time size of the kernel and run time
+memory bloat by ~64 bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+* Remove sentinel element from ctl_table structs.
+
+Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- drivers/tty/serial/8250/8250_lpss.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/rds/ib_sysctl.c | 1 -
+ net/rds/sysctl.c    | 1 -
+ net/rds/tcp.c       | 1 -
+ 3 files changed, 3 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
-index c3cd6cb9ac80..fa9fd4dc86c7 100644
---- a/drivers/tty/serial/8250/8250_lpss.c
-+++ b/drivers/tty/serial/8250/8250_lpss.c
-@@ -344,11 +344,11 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	uart.port.mapbase = pci_resource_start(pdev, 0);
- 	uart.port.membase = pcim_iomap(pdev, 0, 0);
- 	if (!uart.port.membase)
--		return -ENOMEM;
-+		goto free_irq_vectors;
+diff --git a/net/rds/ib_sysctl.c b/net/rds/ib_sysctl.c
+index e4e41b3afce7..2af678e71e3c 100644
+--- a/net/rds/ib_sysctl.c
++++ b/net/rds/ib_sysctl.c
+@@ -103,7 +103,6 @@ static struct ctl_table rds_ib_sysctl_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec,
+ 	},
+-	{ }
+ };
  
- 	ret = lpss->board->setup(lpss, &uart.port);
- 	if (ret)
--		return ret;
-+		goto free_irq_vectors;
+ void rds_ib_sysctl_exit(void)
+diff --git a/net/rds/sysctl.c b/net/rds/sysctl.c
+index e381bbcd9cc1..025f518a4349 100644
+--- a/net/rds/sysctl.c
++++ b/net/rds/sysctl.c
+@@ -89,7 +89,6 @@ static struct ctl_table rds_sysctl_rds_table[] = {
+ 		.mode           = 0644,
+ 		.proc_handler   = proc_dointvec,
+ 	},
+-	{ }
+ };
  
- 	dw8250_setup_port(&uart.port);
+ void rds_sysctl_exit(void)
+diff --git a/net/rds/tcp.c b/net/rds/tcp.c
+index 2dba7505b414..d8111ac83bb6 100644
+--- a/net/rds/tcp.c
++++ b/net/rds/tcp.c
+@@ -86,7 +86,6 @@ static struct ctl_table rds_tcp_sysctl_table[] = {
+ 		.proc_handler   = rds_tcp_skbuf_handler,
+ 		.extra1		= &rds_tcp_min_rcvbuf,
+ 	},
+-	{ }
+ };
  
-@@ -367,6 +367,7 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- err_exit:
- 	lpss->board->exit(lpss);
-+free_irq_vectors:
- 	pci_free_irq_vectors(pdev);
- 	return ret;
- }
+ u32 rds_tcp_write_seq(struct rds_tcp_connection *tc)
+
 -- 
-2.25.1
+2.43.0
+
 
