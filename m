@@ -1,106 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.tkos.co.il (golan.tkos.co.il [84.110.109.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B3043AC5;
-	Fri, 26 Apr 2024 08:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D85813A879;
+	Fri, 26 Apr 2024 08:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714121068; cv=none; b=rYTnXwOA7Qb+3IEFZYADz4InWZux0zUbhhVKZOEqoeEAh9MSeiXh0nqdaeIckMN35UmmUYuf2qQoBkamqNrd4vSw77rTtr6bls7XfQ6zQLkz9X31M23oSvy63clQciU8+uaMxrRMNUH9fRb5UY/kwmvPsR3hGRrq4L0EvSGxVOk=
+	t=1714121088; cv=none; b=WzO2MfpcqOQY4i6WJ/b9pYNLbKqZVeeB9CoLNRY8bgDOUFOt/rBSnLBsKg8JxnN5JDF0SVSYEgSIJWUM7Qzn2neoHjlbkFrb2tfz4x5xAYAoA/LX1mEjRMgk9gbREMP+701Hjufd5welv3GAaafx/PWKmLjXqhJQeVaLciPR+40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714121068; c=relaxed/simple;
-	bh=4wvOYv8+NIdUpdRb7Grmdgfv9If4faaLPcCOfZoDlE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UvDZm2xUa6+kh9Z86+bXJXyS5HjLFM9tx3qy2ufgxqc7BFakL43zoziwcdI2KqKjA6Lc3NSbMijONoNuh8gM754xEipVbxNDni7R0qyGpIewcQoZC0b8mLSuTvTvY9CztUpwqQO6GPLZ0nLix4Nbt8xaZdLjPMrjaMcaL5Yqn7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=E+4H8Rpd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714121088; c=relaxed/simple;
+	bh=OAVtZtBf7B9h6ZnYh5M/C/oO9W5Yg0/byzN4wLUDgb0=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=kUcDUkGwz35kJXFhrW8qmhHpj9rH0SXAwpiyhgotsMBpH6teo15J1leboRVtjMAQLV3tutdWP74dVvyyg9wBY7s3hviglwXuorAYWMwVV4VV+hzgH5W3IQQ0nOZFtFwBsubhVmsL9b7RmY6DcJBjfJOVe2qpu/2zGyYTKw6QrGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=aX8CtGSq; arc=none smtp.client-ip=84.110.109.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="E+4H8Rpd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A00E9C113CD;
-	Fri, 26 Apr 2024 08:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1714121067;
-	bh=4wvOYv8+NIdUpdRb7Grmdgfv9If4faaLPcCOfZoDlE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E+4H8Rpd6Cp58EWOWAjvv0PVZSWobDuIWzJvMc3meXBqGv5BkMauw98WEWTFTnwtx
-	 ka/qKcLZu0uyQeQtYiXju71UOIVvQMjUxHu8cYy0qHTwwHyIi7wAma9KwI/G4uPknf
-	 Z9v9rZJqFCnWpNLrv3iLR3WKKMMrQYi6YR5WGLTo=
-Date: Fri, 26 Apr 2024 10:44:18 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	allen.lkml@gmail.com, dianders@google.com, briannorris@google.com,
-	momohatt@google.com, Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH 5.15 000/476] 5.15.149-rc1 review
-Message-ID: <2024042603-sleek-janitor-34f8@gregkh>
-References: <20240221130007.738356493@linuxfoundation.org>
- <aceda6e2-cefb-4146-aef8-ff4bafa56e56@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="aX8CtGSq"
+Received: from localhost (unknown [10.0.8.2])
+	by mail.tkos.co.il (Postfix) with ESMTP id E3074440534;
+	Fri, 26 Apr 2024 11:38:22 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+	s=default; t=1714120702;
+	bh=OAVtZtBf7B9h6ZnYh5M/C/oO9W5Yg0/byzN4wLUDgb0=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+	b=aX8CtGSqsKGv/OzL6CPpi+dX9N6dhOwBlp/IsUivA9Dv/EfbCCXY59PhlTStpHu3g
+	 xphb3xLfNLhY6iEdHbuvdeF74l53KNsX3KYqFzbhFxFtOy5f2Jimab2ckNojsXsiBs
+	 QY17hX6o1kQo5kYhyXezD9NQEpwZZQSz+90XZvOtqlxlARqAYo9EVMy8CMGNO+Ffbt
+	 oKpMhK9RBEsbUl7ualBGHsBIciAlqopeEKlpn+XkK5BxZRZ1piUP81Iyc18Q9lmXoh
+	 TYaWzLRuKd28qpFAXHPaqkv+GNdvWNyyW7foSpAHVRYWV8/p0DG0gJUT4uiQln7te/
+	 23+JT9YmxPieQ==
+References: <20240426064408.7372-1-wsa+renesas@sang-engineering.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Baruch Siach <baruch@tkos.co.il>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: smbus: fix NULL function pointer dereference
+Date: Fri, 26 Apr 2024 11:32:49 +0300
+In-reply-to: <20240426064408.7372-1-wsa+renesas@sang-engineering.com>
+Message-ID: <87edas5xip.fsf@tarshish>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aceda6e2-cefb-4146-aef8-ff4bafa56e56@roeck-us.net>
+Content-Type: text/plain
 
-On Thu, Apr 25, 2024 at 03:46:18PM -0700, Guenter Roeck wrote:
-> Hi,
-> 
-> On 2/21/24 05:00, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.15.149 release.
-> > There are 476 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri, 23 Feb 2024 12:59:02 +0000.
-> > Anything received after that time might be too late.
-> > 
-> [ ... ]
-> 
-> > Herbert Xu <herbert@gondor.apana.org.au>
-> >      crypto: api - Disallow identical driver names
-> > 
-> 
-> This patch results in a severe performance regression on arm64 systems;
-> there is more than 50% throughput loss on some sequential read tests.
-> The problem affects v5.15.y and older kernel branches.
-> 
-> Analysis shows that v5.15.y and older kernel _do_ try to register the same
-> crypto algorithm twice, once through
-> 
->  __crypto_register_alg
->  crypto_register_alg
->  crypto_register_skciphers
->  aes_init
-> 
-> and then again through
-> 
->  __crypto_register_alg
->  crypto_register_alg
->  crypto_register_skcipher
->  simd_skcipher_create_compat
->  aes_init
-> 
-> After above patch was applied, the second registration fails, resulting
-> in the regression.
-> 
-> The problem is not seen in later kernels due to commit 676e508122d9
-> ("crypto: arm64/aes-ce - stop using SIMD helper for skciphers"). Applying this
-> commit or reverting above commit fixes the regression in v5.15.y and older.
-> 
-> Thanks is due to Momoko Hattori for reporting the problem and finding the
-> offending patch, Doug Anderson for finding the duplicate registration attempt,
-> and Brian Norris for finding the fix. I copied them on this e-mail in case
-> there are further questions.
+Hi Wolfram,
 
-Thanks for the report.  I got a report that this breaks some android
-systems as well due to some FIPS crypto code that happens to duplicate
-the names as well.  I think reverting it makes sense and I'll queue that
-up for the next round of releases.
+On Fri, Apr 26 2024, Wolfram Sang wrote:
+> Brauch reported an OOPS when using the designware controller as target
+> only. Target-only modes break the assumption of one transfer function
+> always being available. Fix this by always checking the pointer in
+> __i2c_transfer.
+>
+> Reported-by: Baruch Siach <baruch@tkos.co.il>
+> Closes: https://lore.kernel.org/r/4269631780e5ba789cf1ae391eec1b959def7d99.1712761976.git.baruch@tkos.co.il
+> Fixes: 4b1acc43331d ("i2c: core changes for slave support")
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-greg k-h
+Tested-by: Baruch Siach <baruch@tkos.co.il>
+
+Thanks,
+baruch
+
+> ---
+>  drivers/i2c/i2c-core-base.c  | 12 ++++++------
+>  drivers/i2c/i2c-core-smbus.c |  2 +-
+>  2 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index ff5c486a1dbb..db0d1ac82910 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -2200,13 +2200,18 @@ static int i2c_check_for_quirks(struct i2c_adapter *adap, struct i2c_msg *msgs,
+>   * Returns negative errno, else the number of messages executed.
+>   *
+>   * Adapter lock must be held when calling this function. No debug logging
+> - * takes place. adap->algo->master_xfer existence isn't checked.
+> + * takes place.
+>   */
+>  int __i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+>  {
+>  	unsigned long orig_jiffies;
+>  	int ret, try;
+>  
+> +	if (!adap->algo->master_xfer) {
+> +		dev_dbg(&adap->dev, "I2C level transfers not supported\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+>  	if (WARN_ON(!msgs || num < 1))
+>  		return -EINVAL;
+>  
+> @@ -2273,11 +2278,6 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+>  {
+>  	int ret;
+>  
+> -	if (!adap->algo->master_xfer) {
+> -		dev_dbg(&adap->dev, "I2C level transfers not supported\n");
+> -		return -EOPNOTSUPP;
+> -	}
+> -
+>  	/* REVISIT the fault reporting model here is weak:
+>  	 *
+>  	 *  - When we get an error after receiving N bytes from a slave,
+> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+> index e3b96fc53b5c..a942c5306a4e 100644
+> --- a/drivers/i2c/i2c-core-smbus.c
+> +++ b/drivers/i2c/i2c-core-smbus.c
+> @@ -596,7 +596,7 @@ s32 __i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
+>  				break;
+>  		}
+>  
+> -		if (res != -EOPNOTSUPP || !adapter->algo->master_xfer)
+> +		if (res != -EOPNOTSUPP)
+>  			goto trace;
+>  		/*
+>  		 * Fall back to i2c_smbus_xfer_emulated if the adapter doesn't
+
+
+-- 
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
