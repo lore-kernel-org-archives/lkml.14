@@ -1,120 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07BF13E88A;
-	Fri, 26 Apr 2024 13:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A3F146D69
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 13:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714137926; cv=none; b=lA7tds5MdMkFXiC4jOgTAkxyj+9rnUbo7UDTGG7bq3+R92qB9hmTl3mvYwpAb/xog1y/Dh2j5bEmZTvAM6LQ77292gHVTSNSO9G8I4bBJECYymvshoamISdE/YNxH1/GuakwAMYgwK778amJ9lExRQPzj/kp55Y36rSblGL2t30=
+	t=1714137944; cv=none; b=P7wt3hK3ciLW7g9y9ml8ztxBlh3a4VDRU9eQkdCpmTfQzbDht2dOCeQQtIHi6iRuYfoojRyt+k0XQ9WQsae9prrBYi3vhnm1bQpru355ujIrVgsv4JT8ssvcq4PxN4uJv6KJIENd6l4Y+h+Yfw3rvoSs/3ZYGWUmB+g8h+hu7/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714137926; c=relaxed/simple;
-	bh=wrFvzBHWtoD17fbW2f/KSN/X1vBLYzoBPj1SNMLxdRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S0aD/DO7a9zZMYjy83iFfUAv92bilnSYJCZyKjpmN4BURoJETpnCakWrtzFnEvo52U2WTv6Z6cF1vTobF4DVi74I0MMTVeLKxSz+q6cVvbrDgc0bxTE2E1OOwTm0AQ2a0Wu4lGQCJfSAlOfrCxwiDXuA6V2l8h1kBrxgRh2J4gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FxYfYQoJ; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714137944; c=relaxed/simple;
+	bh=ztaqmhvdRLeUQiXlEr1FC/+chY8yQf+6bxg+Si1/hN0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pgl+ie/998IzEOCXEaZ0MJciaPdpb7fRcuSOwv9SnthF4WxAnxMARDPhtk/CyuV+57LM8ohK0oaK2CReVXttUB4pgOevQicm2WIcvK2cfgUxS3SgFra2EIxDWaY53tkf7LV0uOsJLe4S3BBAf4KZNYmYVs+T+j6yyiglTej+gFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zkX14Dfo; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FxYfYQoJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714137925; x=1745673925;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wrFvzBHWtoD17fbW2f/KSN/X1vBLYzoBPj1SNMLxdRo=;
-  b=FxYfYQoJiqQ4XFK0+20FMa/SdLPdyR14aywTaRZZrqY0I0BOOJ9eidwS
-   D2kckzlnJNOmiwV+UTAYJWHl78DcWFCFZ5q9IOE3CAbmlRm7a88cs7MDT
-   H1NHT9DiUAu3iAlc5tcpoo8HwpRTzxXKB4dAQyPBb7D5fX+CiihHYiRDW
-   PA4ZYH2XB6PdWRfd3h2JxAG4OPBktKMobIw1uChJZRZ4CzdvfouaFRaUc
-   rU+8+42FkFvnGSkYvDg/yRkJqIT+vDkYlIJxQ1sOwTAditnAlu8fopdqj
-   MUkHqLfD38jKQ2Vv0xyQNChUIDPL1E5jUNnpvGzj/j9FFowJ26cmWjoKh
-   w==;
-X-CSE-ConnectionGUID: ZKv3CoJfR0WM2TDV1wlD+A==
-X-CSE-MsgGUID: omO/glAoR7GgvzoCwfq3BQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="27388466"
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="27388466"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 06:25:24 -0700
-X-CSE-ConnectionGUID: Gl8OHmJ8Qr+bku/V74LdJA==
-X-CSE-MsgGUID: YJy8i+p+RI6WRk3uU1XurA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="25302209"
-Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.0.53]) ([10.94.0.53])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 06:25:18 -0700
-Message-ID: <3d70c19f-bab8-4e50-9551-de406a0e0314@linux.intel.com>
-Date: Fri, 26 Apr 2024 15:25:18 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zkX14Dfo"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57232e47a81so3658756a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 06:25:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714137941; x=1714742741; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lvJQ6z3LIYsXbX0CNbTi23jNqb0LHvvyCvPaynRyaTs=;
+        b=zkX14DfoJ+l+KH5pSBs0Hb6YhjccbYvaq4ixcWKszs6s+3OxXO+H/4hOK/DkZiv+x5
+         Atp/Izkia1XRLfG8i75tsf1vKstmbx08tolgBe7wdXO301hvo/Wk6eS87kHIqJjr1XSH
+         yNOea39v4FsfxKJxZvbWSIR7rHYreCdn+41QtTWVlpsGInaVaazcvvCQ3v6ep/+nBD1D
+         W4VoPuCY5iAK99xqnRcep65PUOEEAx8HtiHfNCMkHQ8APJvUxwHFgo/Whabnbt14uzti
+         A92Htr0wByd7JLQlahHyP8BbeJocUtAQi7aYsRYCKA5gwQTMttCzoJM6tnBaF8YFiCwf
+         UIZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714137941; x=1714742741;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lvJQ6z3LIYsXbX0CNbTi23jNqb0LHvvyCvPaynRyaTs=;
+        b=csSXcHc3i9W+OwJay1wMH9GT6NvGc9Nzo95IaY4VW9z/MjfzOy/VI6AEp2pZ891Fst
+         874Lp4Fcpt4ZjPPEp/ITC31snZoj/zuucP84xZC2l4iRGXIuTIN+07E+tflIIb34qEU4
+         J12ERkihRHzgPUWVjFxoOuAP766EunPWUV5lxiF2FWtxkryioeQk//nA+2vDK/EL7yK6
+         bZUkZSlNZIYUwXmMhLjZ5q0/aaXqUiNawoGHWBtaW6OxUOeibu0VbD2wdmvtgZMXvfI+
+         5B/fZ4cNhX5xsg/Qg+A7ZHsp1zbmWFOVwhJQjfprKna1NPWcxRagAjQxiH5GzVuh2Uiu
+         doLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJsnC0qjC9jP1ELcoKkDroLtOeuc9TFQxON1CAqfFnxlpe+PNv7FsCuNGg/taQ2nmm6nA+4OEgaqWa1QE5cwTTqQ6tMXMLlx2qyxhF
+X-Gm-Message-State: AOJu0YztZnEFF8WDyQ+Ykt7UVjBgXF9LfKFXNUyDRnShF2ENdFqvGEWn
+	j4Pza1BUNOiRYADiCjtqqLffJlnroUe/RAU5nbQ+Jr/Hf/IK0HB4zjRxdJoQGWg=
+X-Google-Smtp-Source: AGHT+IGyLKLUTlpLc0/JKdHbgkUEEFP/rYyXDO/oYK6H/QYkI4iS98NiLFkTCs9d+I1/u+WoUFPuQQ==
+X-Received: by 2002:a50:96d1:0:b0:572:553e:6c1b with SMTP id z17-20020a5096d1000000b00572553e6c1bmr1170246eda.5.1714137941095;
+        Fri, 26 Apr 2024 06:25:41 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id q25-20020aa7cc19000000b0057203242f31sm6187837edt.11.2024.04.26.06.25.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 06:25:40 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Fri, 26 Apr 2024 14:25:14 +0100
+Subject: [PATCH v3 1/2] dt-bindings: pinctrl: samsung: google,gs101-pinctrl
+ needs a clock
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 22/41] ASoC: usb: Add PCM format check API for USB
- backend
-Content-Language: en-US
-To: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
- mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
- corbet@lwn.net, lgirdwood@gmail.com, andersson@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, gregkh@linuxfoundation.org,
- Thinh.Nguyen@synopsys.com, broonie@kernel.org, bgoswami@quicinc.com,
- tiwai@suse.com, robh@kernel.org, konrad.dybcio@linaro.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
- alsa-devel@alsa-project.org
-References: <20240425215125.29761-1-quic_wcheng@quicinc.com>
- <20240425215125.29761-23-quic_wcheng@quicinc.com>
-From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <20240425215125.29761-23-quic_wcheng@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240426-samsung-pinctrl-busclock-v3-1-adb8664b8a7e@linaro.org>
+References: <20240426-samsung-pinctrl-busclock-v3-0-adb8664b8a7e@linaro.org>
+In-Reply-To: <20240426-samsung-pinctrl-busclock-v3-0-adb8664b8a7e@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
+ Peter Griffin <peter.griffin@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, 
+ Sam Protsenko <semen.protsenko@linaro.org>, kernel-team@android.com, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.12.4
 
-On 4/25/2024 11:51 PM, Wesley Cheng wrote:
-> Introduce a helper to check if a particular PCM format is supported by the
-> USB audio device connected.  If the USB audio device does not have an
-> audio profile which can support the requested format, then notify the USB
-> backend.
-> 
-> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
-> ---
+The pin controller on Google Tensor gs101 requires a bus clock for
+register access to work. Add it.
 
-(...)
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
 
-> +/**
-> + * snd_soc_usb_find_format() - Check if audio format is supported
-> + * @card_idx: USB sound chip array index
-> + * @params: PCM parameters
-> + * @direction: capture or playback
-> + *
-> + * Ensure that a requested audio profile from the ASoC side is able to be
-> + * supported by the USB device.
-> + *
-> + * Return 0 on success, negative on error.
-> + *
-> + */
-> +int snd_soc_usb_find_format(int card_idx, struct snd_pcm_hw_params *params,
-> +			int direction)
+---
+As we only have the one clock here, please let me know if the
+clock-names should be removed. Having it does make
+/sys/kernel/debug/clk/clk_summary look nicer / more meaningful though
+:-)
+---
+ .../bindings/pinctrl/samsung,pinctrl.yaml           | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Perhaps name function similar to its snd_usb equivalent, so 
-snd_soc_usb_find_supported_format?
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+index 118549c25976..242dd13c276b 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+@@ -73,6 +73,13 @@ properties:
+     minItems: 1
+     maxItems: 2
+ 
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: pclk
++
+   wakeup-interrupt-controller:
+     $ref: samsung,pinctrl-wakeup-interrupt.yaml
+ 
+@@ -120,6 +127,20 @@ required:
+ 
+ allOf:
+   - $ref: pinctrl.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: google,gs101-pinctrl
++    then:
++      required:
++        - clocks
++        - clock-names
++    else:
++      properties:
++        clocks: false
++        clock-names: false
++
+   - if:
+       properties:
+         compatible:
 
-> +{
-> +	struct snd_usb_stream *as;
-> +
-> +	as = snd_usb_find_suppported_substream(card_idx, params, direction);
-> +	if (!as)
-> +		return -EOPNOTSUPP;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(snd_soc_usb_find_format);
-> +
->   /**
->    * snd_soc_usb_allocate_port() - allocate a SOC USB device
->    * @component: USB DPCM backend DAI component
-> 
+-- 
+2.44.0.769.g3c40516874-goog
 
