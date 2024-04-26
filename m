@@ -1,57 +1,57 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F71148825;
-	Fri, 26 Apr 2024 13:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDB1149009;
+	Fri, 26 Apr 2024 13:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139633; cv=none; b=G2o8dolx1p4IqbEeDFW4zboVq3vaiiFGuNVvd5OO1uI0uS+AYeX/yHQkaAhYNtPdU5b6dGHMqie8YINnDADLFOyzI4qgC5bfbodTHjMZFPmbRN+H1uAjXv6tOXc+Xe7aFTm1uo5OZDIap8Qb1KT/8wySypMvV1Ba/x/0FiDecmg=
+	t=1714139636; cv=none; b=MSXTA/WRNac1wSHaoqIxU2IQYBkmhz/6gM49yGsFEjpb0t4vnWe1p+SXW4uTGf8ctcoZw49eC1N9H+fbFcM4sl/tzOBevXOdCs99GDbKVnNozvTUaT/82jGdNwxnRX449C69KB6ffxaM5F7+Owfl+fKXDFRgKKfgaQd8MhUCmwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139633; c=relaxed/simple;
-	bh=s46D5VE1a9+LZtM8feY9X9CdkNYJktMcrrTVJv0uZbQ=;
+	s=arc-20240116; t=1714139636; c=relaxed/simple;
+	bh=m2yxV5B405RCZQld4AIwLovxgEUSP5z4fMOhlaEf9yI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t006Dui5IzppOdqhBG+gz/f/w9wRporuaM2fQmfxFq26i9OUJTO9XAxNEvdmgSaikuxdZO+FVaxOXqchSdx4i7QQiEjd0OFTh+q+JUQ3sYwbiKYvcj5sSBb8DAeG10kGHWMUNBzDQ8A3Mkz+VnwD/fC7EMvft4LSw+40z1H19UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dx0uVD5b; arc=none smtp.client-ip=209.85.221.53
+	 MIME-Version; b=lcVCk27ZmhOYDmU6IGplrOlAD7Fkt1jZo+dajTE1TWFWcHvD7gL82RpsuN1WuzhqakxOkOI9heM64RvXSPxrKCIV0+CvX/Gjp6GZES4+vHZoXqJduueNxfFS2JglPYfgOfqybTX90BQ9TvPIXbUpNQsUa2gNURBjm3RjW/UT2iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jEFbLxFP; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dx0uVD5b"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-347c197a464so1554771f8f.2;
-        Fri, 26 Apr 2024 06:53:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEFbLxFP"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-34c1fff534fso1271433f8f.1;
+        Fri, 26 Apr 2024 06:53:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714139629; x=1714744429; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714139632; x=1714744432; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ts8PanbuocYKHioybpUJKUW7o4eKULt+4+GailhanEU=;
-        b=dx0uVD5b8XPIn/aCxvSoZOS9b5INzRcwkCfMsJfqbxsPaeaD2m94SzC8kvksb9qCtZ
-         KqoZK76MdmZO95lnlL8EhfIIhTPYysR03Qny13ZgYYB4YxOOonhJugzufchxDlcC7F3x
-         KQ2n/DRe3TjOCRJ0QeUHkMgU9DKt+zLq7H3stt+m4CPaU580tFi5gG0sCMqAu22QBKMm
-         yAZk/UkdEATRIoEUvZs7gy5y/oaEOueUf99JZAKNjOmbanR9607D1jm3j9rboRljxeO2
-         HQ2/ci4/r1VQZ83vWqjiHenVQ6Kx4sWuiS6JXEFqMWIQXgW3FQGXMBYrSkD+MnCdBQ1Z
-         D++w==
+        bh=bLJ9dsSLK+nY8Hvlsn/3+HI9I2fOpNl7ItjLv5mlK7A=;
+        b=jEFbLxFPPNK9n//JdjmUmawgJ3EzZeK07I1BtlvsTvp9NGZakL678XKzbgZ4HrpA+w
+         T4VrPVzPAM6kLlYqbxMBvgcTh0XxwfISpXu6rFnrJ2vbPuD77iXdMtpiu+lHstftJF1d
+         Sq8nm1Kp7bwHQIpYtCijzHiRvKqAxURq7af55zeg/OPxEpurQe/kxfzdMJXhMjN4fy9Z
+         qcxlZIZKjIrYDurIlYfK0vF55MHaPZj9ZAnmdsbOuwclxzTdmNVyqDm4EB2BeuJFcqfB
+         u5ZJv07NekG4Zj7k9QDcC/qGMMLYei8mnNr6NANOIZxS4UZFH4qjj63AYtWQg/Q3cAZo
+         zpYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714139629; x=1714744429;
+        d=1e100.net; s=20230601; t=1714139632; x=1714744432;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ts8PanbuocYKHioybpUJKUW7o4eKULt+4+GailhanEU=;
-        b=QsaY8IDwS2TQ1SRIYtOpGwwBDcirLd+PlCbfGuzAa7A8XjmRXmFQnOnhHFr4o7Gjjx
-         nvqFsWK2bJ7/CifvmqnJeaY/JsePpzLxAN1WnCRFZ64vUU+fi7qcAPXWC4ARO0DIcamR
-         GonECGr4s3Yrzq5Jt8WHyLDM3KCjaghwRKtztdkvvdS3fxeflH54s7uqus1vVGEpj2Bn
-         w68RmMP4/Cj78t72ra8bEnNkziADlayApjgqDP7z1OGV3RMYXda0wo/2bkog+DJrOuZN
-         I0G/IQzshejNf2MRrWbTRmYu4UIEIiieZrLh3FyCcxJUfC4NhQDcMjuzvhC6X/RuaXkv
-         b5WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWt08rqb4DzluP3eyLKlt092K8q8a8SKa8i7ib6eBNMXfgYpsSxxOgIfXOE+0U+BwoSemZM9jfJg3adXmrOMixx2PM++dgRHqAiGofdd+iMusIg4ycV7ZDfQIobOXHPI7tU/+Dr7g==
-X-Gm-Message-State: AOJu0YxXc3L87ty/qTAWzbFy85qKS3LG36d6YoXNChM2meELo5bVbNLD
-	s4t6jDPRvjKn/w11IaUQ/ke4suExQaBHCbgalolkl1pF/3UT+OasL35EEUow
-X-Google-Smtp-Source: AGHT+IEYxwA/tYeZdOVQU2YXoLT3zHxBrre6YzwqxgOq69D5zKpU3QgN2/qRc5jLZSpp2z7mKGnmdQ==
-X-Received: by 2002:a05:6000:1251:b0:34a:5683:1c37 with SMTP id j17-20020a056000125100b0034a56831c37mr1795930wrx.51.1714139628840;
-        Fri, 26 Apr 2024 06:53:48 -0700 (PDT)
+        bh=bLJ9dsSLK+nY8Hvlsn/3+HI9I2fOpNl7ItjLv5mlK7A=;
+        b=Vc8dQPnNHCZCEntGhd8ovJ4ZBlvUfm0QZRKhjamrRKCLNpwGVEDfvZIRHYXJufotVQ
+         rPgNbqICn9TgnzCmbxev1th4FDQ4jYBxDQBf/1kG/2/PmB+DkKfhonNyynQW4BaT7vSD
+         ZG1S7mZi4LrkbikP4Ox6QZufFeXq6NDkbVztC9C51VAaIQZ1JeoEXzLWeV5T+1pBPs7u
+         RbssIFeaUBfNJa0PoDwy25La5XOAj7aLwlF88Ne8pSvBD4IA4fBQKza9wfZmuHH5KsA+
+         ZXtnS58NNlnW0/PY/QQOgaXcG5v/c3GW6wq4HxYy44fvAVoQZS+Pu3SBJA5WESomlBay
+         2QnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVy9LiYpWh54ZYtBKjqsTfFqVLL0ecXXnulVtryWQaVgzkAIsK6ymH13cwTCBhMMDxWvyO3LIQ89GMWF3CoI7JJbLh6FdHErqngrRkzuT4Bb0EUKQKRoQn9c/k5fSuecNm9toMOlg==
+X-Gm-Message-State: AOJu0Yz/29HBrRASGH2eBQTT/N3UqBooYpDcmbhy6gw2QGNW+chcTIHP
+	S3x2zVWfRcpPtfoVAwA8DJcBllOqiAf6phEF4xdLI/UjKb0wKi9tLnahYuZs
+X-Google-Smtp-Source: AGHT+IHEms0dC8ezv3c4Amk0JUZhJpSMYgKLuKKM9jXiTHegW2/Lhl7B/LSPhkV3pnb3KFmE0A3q9w==
+X-Received: by 2002:a5d:4386:0:b0:34b:8bf:6019 with SMTP id i6-20020a5d4386000000b0034b08bf6019mr1733253wrq.70.1714139632252;
+        Fri, 26 Apr 2024 06:53:52 -0700 (PDT)
 Received: from rbolboac.. ([2a02:2f0e:320d:e800:f4f8:b5e1:d7d4:bf65])
-        by smtp.gmail.com with ESMTPSA id k6-20020a5d6d46000000b003434f526cb5sm22302919wri.95.2024.04.26.06.53.48
+        by smtp.gmail.com with ESMTPSA id k6-20020a5d6d46000000b003434f526cb5sm22302919wri.95.2024.04.26.06.53.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 06:53:48 -0700 (PDT)
+        Fri, 26 Apr 2024 06:53:51 -0700 (PDT)
 From: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	jic23@kernel.org,
@@ -62,9 +62,9 @@ To: linux-kernel@vger.kernel.org,
 	robh@kernel.org,
 	nuno.sa@analog.com
 Cc: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
-Subject: [PATCH 3/7] iio: imu: adis16475: Re-define ADIS16475_DATA
-Date: Fri, 26 Apr 2024 16:53:35 +0300
-Message-Id: <20240426135339.185602-4-ramona.bolboaca13@gmail.com>
+Subject: [PATCH 6/7] dt-bindings: iio: imu: Add ADIS1657X family devices compatibles
+Date: Fri, 26 Apr 2024 16:53:38 +0300
+Message-Id: <20240426135339.185602-7-ramona.bolboaca13@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240426135339.185602-1-ramona.bolboaca13@gmail.com>
 References: <20240426135339.185602-1-ramona.bolboaca13@gmail.com>
@@ -76,308 +76,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Re-define ADIS16475_DATA such that it takes _burst_max_len and
-_burst_max_speed_hz as parameters.
+Add ADIS1657X family devices compatibles and specify the according
+maximum SPI baudrate.
+Similarly to other ADIS1650X devices, ADIS1657X supports sync-mode
+values [0,2].
 
 Signed-off-by: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
 ---
- drivers/iio/imu/adis16475.c | 136 +++++++++++++++++++++++-------------
- 1 file changed, 89 insertions(+), 47 deletions(-)
+ .../bindings/iio/imu/adi,adis16475.yaml       | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/iio/imu/adis16475.c b/drivers/iio/imu/adis16475.c
-index 7fab40daa659..52333772fbe0 100644
---- a/drivers/iio/imu/adis16475.c
-+++ b/drivers/iio/imu/adis16475.c
-@@ -690,32 +690,32 @@ static const char * const adis16475_status_error_msgs[] = {
- 	[ADIS16475_DIAG_STAT_CLK] = "Clock error",
- };
+diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+index db52e7063116..9d185f7bfdcb 100644
+--- a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
++++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+@@ -37,6 +37,12 @@ properties:
+       - adi,adis16507-1
+       - adi,adis16507-2
+       - adi,adis16507-3
++      - adi,adis16575-2
++      - adi,adis16575-3
++      - adi,adis16576-2
++      - adi,adis16576-3
++      - adi,adis16577-2
++      - adi,adis16577-3
  
--#define ADIS16475_DATA(_prod_id, _timeouts)				\
--{									\
--	.msc_ctrl_reg = ADIS16475_REG_MSG_CTRL,				\
--	.glob_cmd_reg = ADIS16475_REG_GLOB_CMD,				\
--	.diag_stat_reg = ADIS16475_REG_DIAG_STAT,			\
--	.prod_id_reg = ADIS16475_REG_PROD_ID,				\
--	.prod_id = (_prod_id),						\
--	.self_test_mask = BIT(2),					\
--	.self_test_reg = ADIS16475_REG_GLOB_CMD,			\
--	.cs_change_delay = 16,						\
--	.read_delay = 5,						\
--	.write_delay = 5,						\
--	.status_error_msgs = adis16475_status_error_msgs,		\
--	.status_error_mask = BIT(ADIS16475_DIAG_STAT_DATA_PATH) |	\
--		BIT(ADIS16475_DIAG_STAT_FLASH_MEM) |			\
--		BIT(ADIS16475_DIAG_STAT_SPI) |				\
--		BIT(ADIS16475_DIAG_STAT_STANDBY) |			\
--		BIT(ADIS16475_DIAG_STAT_SENSOR) |			\
--		BIT(ADIS16475_DIAG_STAT_MEMORY) |			\
--		BIT(ADIS16475_DIAG_STAT_CLK),				\
--	.unmasked_drdy = true,						\
--	.timeouts = (_timeouts),					\
--	.burst_reg_cmd = ADIS16475_REG_GLOB_CMD,			\
--	.burst_len = ADIS16475_BURST_MAX_DATA,				\
--	.burst_max_len = ADIS16475_BURST32_MAX_DATA,			\
--	.burst_max_speed_hz = ADIS16475_BURST_MAX_SPEED			\
-+#define ADIS16475_DATA(_prod_id, _timeouts, _burst_max_len, _burst_max_speed_hz)	\
-+{											\
-+	.msc_ctrl_reg = ADIS16475_REG_MSG_CTRL,						\
-+	.glob_cmd_reg = ADIS16475_REG_GLOB_CMD,						\
-+	.diag_stat_reg = ADIS16475_REG_DIAG_STAT,					\
-+	.prod_id_reg = ADIS16475_REG_PROD_ID,						\
-+	.prod_id = (_prod_id),								\
-+	.self_test_mask = BIT(2),							\
-+	.self_test_reg = ADIS16475_REG_GLOB_CMD,					\
-+	.cs_change_delay = 16,								\
-+	.read_delay = 5,								\
-+	.write_delay = 5,								\
-+	.status_error_msgs = adis16475_status_error_msgs,				\
-+	.status_error_mask = BIT(ADIS16475_DIAG_STAT_DATA_PATH) |			\
-+		BIT(ADIS16475_DIAG_STAT_FLASH_MEM) |					\
-+		BIT(ADIS16475_DIAG_STAT_SPI) |						\
-+		BIT(ADIS16475_DIAG_STAT_STANDBY) |					\
-+		BIT(ADIS16475_DIAG_STAT_SENSOR) |					\
-+		BIT(ADIS16475_DIAG_STAT_MEMORY) |					\
-+		BIT(ADIS16475_DIAG_STAT_CLK),						\
-+	.unmasked_drdy = true,								\
-+	.timeouts = (_timeouts),							\
-+	.burst_reg_cmd = ADIS16475_REG_GLOB_CMD,					\
-+	.burst_len = ADIS16475_BURST_MAX_DATA,						\
-+	.burst_max_len = _burst_max_len,						\
-+	.burst_max_speed_hz = _burst_max_speed_hz					\
- }
+   reg:
+     maxItems: 1
+@@ -98,6 +104,12 @@ allOf:
+               - adi,adis16507-1
+               - adi,adis16507-2
+               - adi,adis16507-3
++              - adi,adis16575-2
++              - adi,adis16575-3
++              - adi,adis16576-2
++              - adi,adis16576-3
++              - adi,adis16577-2
++              - adi,adis16577-3
  
- static const struct adis16475_sync adis16475_sync_mode[] = {
-@@ -753,7 +753,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16470, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16470, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16475_1] = {
- 		.name = "adis16475-1",
-@@ -770,7 +772,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16475_2] = {
- 		.name = "adis16475-2",
-@@ -787,7 +791,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16475_3] = {
- 		.name = "adis16475-3",
-@@ -804,7 +810,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16477_1] = {
- 		.name = "adis16477-1",
-@@ -822,7 +830,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16477_2] = {
- 		.name = "adis16477-2",
-@@ -840,7 +850,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16477_3] = {
- 		.name = "adis16477-3",
-@@ -858,7 +870,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16465_1] = {
- 		.name = "adis16465-1",
-@@ -875,7 +889,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16465_2] = {
- 		.name = "adis16465-2",
-@@ -892,7 +908,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16465_3] = {
- 		.name = "adis16465-3",
-@@ -909,7 +927,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16467_1] = {
- 		.name = "adis16467-1",
-@@ -926,7 +946,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16467_2] = {
- 		.name = "adis16467-2",
-@@ -943,7 +965,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16467_3] = {
- 		.name = "adis16467-3",
-@@ -960,7 +984,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16500] = {
- 		.name = "adis16500",
-@@ -979,7 +1005,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16500, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16500, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16501] = {
- 		.name = "adis16501",
-@@ -998,7 +1026,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16501, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16501, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16505_1] = {
- 		.name = "adis16505-1",
-@@ -1017,7 +1047,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16505, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16505, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16505_2] = {
- 		.name = "adis16505-2",
-@@ -1036,7 +1068,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16505, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16505, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16505_3] = {
- 		.name = "adis16505-3",
-@@ -1055,7 +1089,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16505, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16505, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16507_1] = {
- 		.name = "adis16507-1",
-@@ -1074,7 +1110,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16507, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16507, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16507_2] = {
- 		.name = "adis16507-2",
-@@ -1093,7 +1131,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16507, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16507, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16507_3] = {
- 		.name = "adis16507-3",
-@@ -1112,7 +1152,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16507, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16507, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- };
+     then:
+       properties:
+@@ -114,6 +126,23 @@ allOf:
+       dependencies:
+         adi,sync-mode: [ clocks ]
  
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - adi,adis16575-2
++              - adi,adis16575-3
++              - adi,adis16576-2
++              - adi,adis16576-3
++              - adi,adis16577-2
++              - adi,adis16577-3
++
++    then:
++      properties:
++        spi-max-frequency:
++          maximum: 15000000
++
+ unevaluatedProperties: false
+ 
+ examples:
 -- 
 2.34.1
 
