@@ -1,185 +1,131 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5E9143899;
-	Fri, 26 Apr 2024 10:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300D014430A;
+	Fri, 26 Apr 2024 10:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714126552; cv=none; b=T0fYSAnblfoW0IwZGxkLg/2vKsE1c7Sg4rDNZWjqeErFXdTeIHLp1djLQdVu2FNGpkErCEhKKfM3FL4okd/JWPn+gh7WH0dqI8LLnK9QBtjrKvH4RLnYC/WRdXHUK9xAXQbDHI9necuQGaRPah+tZVNvJhQL90oC/SYTwd+Ds2o=
+	t=1714126567; cv=none; b=TNiYNnLtHOT0Um9idrCGQwDh2WPh+OBbzEcV5G0KSdMW5qre4aOXxQFTeQxXYAKjcSdgP/tLvw3+B+ZulLLBubQnYyrrx4vGgg4KqiopD6t2M+Fwn0XntboflBM/R4XFqa9yHHRcvKQeMhZ8qHGO4O8DyyifTQp0YOQQUpsCUMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714126552; c=relaxed/simple;
-	bh=eczfEPf8+cFClZXypKyENnkZzh1ZDabFL3TAGE42UJ8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qYoYKINkcT9c0B+hLhCje0FPmyZKPfS63up8hClAZNOKlmXr4FdmojjU6uLyZi94ZK9QRuhJ9hg/K5yuiioMJnK3GVx+MRyucpa41BCCYJHyw17OEs+EbYKQNCspqvSHDa8Gr++i89H1jynF+CYyig0LjS0ycDvXtupckvGIGNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A2APrOue; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5U/SVVte; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1714126567; c=relaxed/simple;
+	bh=Aaok4akx8+JwelwN/ppsY7WbWfpSN8p1AaPa1nlurvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wy7hX/Is9hEnnXtk6hHBewqkAQWPc2qxlj5Ofi5j78a2PWD0haGXim6atmRsE5NSzUM8R5AwVmGne21imm6mexOfRQDJCGYqm51ftYNom4Cj8+9PnDzcTvqkcLGPtZsq2IVIcQrvzENNDEHtBtOkD/eVEMo6qSU9EA0WxbWhslE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=msW2IDHk; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A2APrOue";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5U/SVVte"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1714126548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eyQmuETk80+Og3yZd6Uncex8B3lEi+jXfmfyncA+Ljc=;
-	b=A2APrOuetVI6C/yQVZOeesx+RmkjWqSWin3XQdMjtdNHbUXzbewqZrHP3dUtZNUi5A3YqO
-	BehI0HeR0y7Tdze0Nex3Eby6nivnrYwCMk9CgWW3OGgC0x54C0liQpSmp071yxaYduE9Hc
-	2W1dEC0eCFFWIGXkxYFK+a0qwz7sDGicV39vSufc5bKzKD/wTNYvmO3fXh8NDmHtRhsT+H
-	vQFqfKjeKH/vw99E+OmAlPvcpBRQFbbwgoI9rQiLC7HJMiYvP1PA8V3V6/JtmKdRMKnDCV
-	8fFuq4s+TYXBLJDDp+lg4YZdMdUtaN4Ts8i9MdlpBd3L6w27vBElg9OWp7X51Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1714126548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eyQmuETk80+Og3yZd6Uncex8B3lEi+jXfmfyncA+Ljc=;
-	b=5U/SVVtev+wtSQkVBKpp2wGp4bHkO48NJOAPp3+411brazE8px+0OGRMjOFYL8R9CeCiYc
-	doD/Wd9D/QjUFTCA==
-To: Christian Loehle <christian.loehle@arm.com>, Oliver Sang
- <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, ying.huang@intel.com,
- feng.tang@intel.com, fengwei.yin@intel.com, Frederic Weisbecker
- <frederic@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel
- Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org
-Subject: Re: [linus:master] [timers] 7ee9887703:
- stress-ng.uprobe.ops_per_sec -17.1% regression
-In-Reply-To: <9272d284-ec2c-4e35-be90-c8852278b648@arm.com>
-References: <87zfth3l6y.fsf@somnus>
- <9272d284-ec2c-4e35-be90-c8852278b648@arm.com>
-Date: Fri, 26 Apr 2024 12:15:47 +0200
-Message-ID: <87h6foig4s.fsf@somnus>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="msW2IDHk"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43QA3CRq012436;
+	Fri, 26 Apr 2024 10:15:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=Aaok4akx8+JwelwN/ppsY7WbWfpSN8p1AaPa1nlurvo=;
+ b=msW2IDHklridPA49V4Yn6HHDnEqXh+aKAz0bWIaNe0idSkv7PvIbkpYeYc9esxhPabzW
+ 4X4CMusBRpMEzG4/LmnYXrL8IcwCVKFzFskC5zzdH2qnizCHK2kPsASdowEkMCp76sba
+ BPKCL33+JNzpY4IS+CeFNJIpUjIsTAqpHs0bdkzjH+Lu9h7Gyv7Ldlr26w8/ipvnUjha
+ VbM2+zZdSp6jDJZiWyk0gzAIth9gkvj65KKHMrf/h6nXkToaBxgJhQtK/N/8afpfZbY1
+ N39Pacl5FM+QS2nAxapGZLI981J2wF2FwIZVAOfPxb41EJjC5iqsoWHhwM2T6AGDOpS/ vA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xra62g0uq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 10:15:48 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43QAFllU030841;
+	Fri, 26 Apr 2024 10:15:47 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xra62g0uj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 10:15:47 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q8N5Sn021021;
+	Fri, 26 Apr 2024 10:10:46 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xmre0f8u9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 10:10:46 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43QAAeZn30540508
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Apr 2024 10:10:42 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8446420063;
+	Fri, 26 Apr 2024 10:10:40 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3285C2004D;
+	Fri, 26 Apr 2024 10:10:37 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.4.163])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 26 Apr 2024 10:10:37 +0000 (GMT)
+Date: Fri, 26 Apr 2024 12:10:35 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Bui Quang Minh <minhquangbui99@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>,
+        Rasesh Mody <rmody@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        Nilesh Javali <nilesh.javali@cavium.com>,
+        Arun Easi <arun.easi@cavium.com>,
+        Manish Rangankar <manish.rangankar@cavium.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Sunil Goutham <sgoutham@marvell.com>,
+        Linu Cherian <lcherian@marvell.com>,
+        Geetha sowjanya <gakula@marvell.com>, Jerin Jacob <jerinj@marvell.com>,
+        hariprasad <hkelam@marvell.com>,
+        Subbaraya Sundeep <sbhatta@marvell.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Saurav Kashyap <saurav.kashyap@cavium.com>, linux-s390@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v2 5/6] cio: ensure the copied buf is NUL terminated
+Message-ID: <Zit9myOJp0SYFL1F@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20240424-fix-oob-read-v2-0-f1f1b53a10f4@gmail.com>
+ <20240424-fix-oob-read-v2-5-f1f1b53a10f4@gmail.com>
+ <ZikiZsSTGUUM69GE@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZikiZsSTGUUM69GE@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: nwzmHa-XFUQKTaw4oYDH1K-dtAII8FVL
+X-Proofpoint-GUID: fy_d-znjR1XF0iGIbw_36HPeZjIuI1Lh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_09,2024-04-26_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
+ adultscore=0 mlxscore=0 spamscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=721 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2404010000 definitions=main-2404260067
 
-Christian Loehle <christian.loehle@arm.com> writes:
+On Wed, Apr 24, 2024 at 05:16:56PM +0200, Alexander Gordeev wrote:
+> Applied, thanks!
 
-> On 25/04/2024 09:23, Anna-Maria Behnsen wrote:
->> Hi,
->>=20
->> (adding cpuidle/power people to cc-list)
->>=20
->> Oliver Sang <oliver.sang@intel.com> writes:
->>=20
->>> hi, Frederic Weisbecker,
->>>
->>> On Tue, Apr 02, 2024 at 12:46:15AM +0200, Frederic Weisbecker wrote:
->>>> Le Wed, Mar 27, 2024 at 04:39:17PM +0800, kernel test robot a =C3=A9cr=
-it :
->>>>>
->>>>>
->>>>> Hello,
->>>>>
->>>>>
->>>>> we reported
->>>>> "[tip:timers/core] [timers]  7ee9887703:  netperf.Throughput_Mbps -1.=
-2% regression"
->>>>> in
->>>>> https://lore.kernel.org/all/202403011511.24defbbd-oliver.sang@intel.c=
-om/
->>>>>
->>>>> now we noticed this commit is in mainline and we captured further res=
-ults.
->>>>>
->>>>> still include netperf results for complete. below details FYI.
->>>>>
->>>>>
->>>>> kernel test robot noticed a -17.1% regression of stress-ng.uprobe.ops=
-_per_sec
->>>>> on:
->>>>
->>>> The good news is that I can reproduce.
->>>> It has made me spot something already:
->>>>
->>>>    https://lore.kernel.org/lkml/ZgsynV536q1L17IS@pavilion.home/T/#m28c=
-37a943fdbcbadf0332cf9c32c350c74c403b0
->>>>
->>>> But that's not enough to fix the regression. Investigation continues...
->>>
->>> Thanks a lot for information! if you want us test any patch, please let=
- us know.
->>=20
->> Oliver, I would be happy to see, whether the patch at the end of the
->> message restores the original behaviour also in your test setup. I
->> applied it on 6.9-rc4. This patch is not a fix - it is just a pointer to
->> the kernel path, that might cause the regression. I know, it is
->> probable, that a warning in tick_sched is triggered. This happens when
->> the first timer is alredy in the past. I didn't add an extra check when
->> creating the 'defacto' timer thingy. But existing code handles this
->> problem already properly. So the warning could be ignored here.
->>=20
->> For the cpuidle people, let me explain what I oberserved, my resulting
->> assumption and my request for help:
->>=20
->> cpuidle governors use expected sleep length values (beside other data)
->> to decide which idle state would be good to enter. The expected sleep
->> length takes the first queued timer of the CPU into account and is
->> provided by tick_nohz_get_sleep_length(). With the timer pull model in
->> place the non pinned timers are not taken into account when there are
->> other CPUs up and running which could handle those timers. This could
->> lead to increased sleep length values. On my system during the stress-ng
->> uprobes test it was in the range of maximum 100us without the patch set
->> and with the patch set the maximum was in a range of 200sec. This is
->> intended behaviour, because timers which could expire on any CPU should
->> expire on the CPU which is busy anyway and the non busy CPU should be
->> able to go idle.
->>=20
->> Those increased sleep length values were the only anomalies I could find
->> in the traces with the regression.
->>=20
->> I created the patch below which simply fakes the sleep length values
->> that they take all timers of the CPU into account (also the non
->> pinned). This patch kind of restores the behavoir of
->> tick_nohz_get_sleep_length() before the change but still with the timer
->> pull model in place.
->>=20
->> With the patch the regression was gone, at least on my system (using
->> cpuidle governor menu but also teo).
->
-> I assume the regression is reproducible for both?
-> (The original report is using menu for anyone else looking at this)
+Hi Jakub,
 
-Yes. (at least in my setup)
+I just want to make sure you do not have plans to pull this patch
+via the net tree, right? (I schedulled it for the s390 tree already).
 
->>=20
->> So my assumption here is, that cpuidle governors assume that a deeper
->> idle state could be choosen and selecting the deeper idle state makes an
->> overhead when returning from idle. But I have to notice here, that I'm
->> still not familiar with cpuidle internals... So I would be happy about
->> some hints how I can debug/trace cpuidle internals to falsify or verify
->> this assumption.
->
-> I'd say that sounds correct.
-> Comparing cpu_idle_miss would be interesting for both.
-
-	total nr	above		below
-"bad":	2518343		2329072		189271
-"good":	3016019         2960004		56015
-
--> this is the result of just a single run using:
-
-  perf script record -a -e power:cpu_idle_miss /home/anna-maria/src/stress-=
-ng/stress-ng --timeout 60  --times --verify --metrics --no-rand-seed --upro=
-be 112
-
-
-
-But beside of this, when running this stress-ng test, the cpus seems to
-be mostly idle (top tells me). So the question here fore me is, what is
-the stress in this test and what should the numbers tell we are
-comparing? It is not totally clear to me even after looking at the code.
-
-Thanks,
-
-	Anna-Maria
-
+Thanks!
