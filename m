@@ -1,462 +1,127 @@
-Received: from smtpcmd0757.aruba.it (smtpcmd0757.aruba.it [62.149.156.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3784B14B09E
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E786E148854
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 15:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714145448; cv=none; b=K1FaW4UIcA/cXSPHHIa46L868OEOKH5qZ2qKkAcm+7pZyU/pE8DzJ3ogBm8YaQ/nuPkis124dwJHJd4xrrWc1PJc4XJU/tP3bPiupw1fwW3NrjrWyPjPmIU5teFsgBNc2qOz3Otn8UOw/w3HJtR2qVH6aPA8QwfHOWjDe7E3SiY=
+	t=1714145540; cv=none; b=kjUs//MVbJHacTzPPC131lJyFgGp4/Fu2JoU799ACosJZJCMbe5q0k8R37fNmF7xy52rrSunitclz5+WuAAmAmtAloQuaY6YwzfIb4bX2FpDurHGKLSRG7UUcFZdelY+Sr3AfFjPp18kMJ3x7gIx8kobbln7w1SohvlPXmFzvHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714145448; c=relaxed/simple;
-	bh=Ax6/DOMKEDbCj4WJgNuv60PEhjHWl1MnM+TaNC/LV4Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IGBn0Kr8mhbETY5pdNSXlCe01Z0ikH2hczInvahdVOWSiwAXS9g5vmqGAKuB1LWRE3zGJ16ic1kcR395V6HrzYvk1tvCZ7BCErQn21Q9b+e/JBTyJHkXCN5Q7wIPDBjY5cQ3HdGsC0cIJRvAd7XK/t848imt7Yznj1n8BEO3za8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=ii0tHDDd; arc=none smtp.client-ip=62.149.156.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
+	s=arc-20240116; t=1714145540; c=relaxed/simple;
+	bh=DbV+zobexYg0znYqLnhPnqemiMr2YzUJ8flgCq0Rwas=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rANqxdlPQLLpQcIDxgs3ab0jhKG84hwiE972snHOJJCX2hE6MaVgjOkV4rMmqk1SMZeOUmKZ5f2mhTc0a4UPfgUFXKGDudHakoub7nXZyn0GhQcnSEHrA+U1Q1wTH4JM+vjD0eM2aIols4N2YsV/PMTcIak6rNgRRCe394un1Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=myC72MAE; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="ii0tHDDd"
-Received: from engicam.com ([146.241.23.148])
-	by Aruba Outgoing Smtp  with ESMTPSA
-	id 0NU4sgEVa6epj0NU7seY3t; Fri, 26 Apr 2024 17:27:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1714145255; bh=Ax6/DOMKEDbCj4WJgNuv60PEhjHWl1MnM+TaNC/LV4Y=;
-	h=From:To:Subject:Date:MIME-Version;
-	b=ii0tHDDdsha4fS/VxA42QIcTWABD2TtaWwktgNtNry0AUCE/fSF3xP8uYYUc8rBhA
-	 8gpijjVlSYY0TuQT5qICfyFVUz0mGnf6/IRAfMvtkO7/cjuwki6rcd9RJRMNbkQ555
-	 ZpaNjNUQVZ3BE/iOTXbvwtxmze/ReI+zyc0YZhFplUiGk6d6j1bZmca2VkjIUYEMN+
-	 KGbrFBxc8Oh0F4EtBIj6zj/9OL3Gphe9xCZbK2FrMqJ7osaQmVijOzbBgZr2jb4pdF
-	 nRmQpQfzSaYZBpnBWwcSjjl8MZyaly3qli/kzJ1Rr6gydeN9MLYwxRLk+lQcbYgx0O
-	 sMrMyDXubrTCQ==
-From: Fabio Aiuto <fabio.aiuto@engicam.com>
-To: Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Fabio Aiuto <fabio.aiuto@engicam.com>,
-	Matteo Lisi <matteo.lisi@engicam.com>,
-	Mirko Ardinghi <mirko.ardinghi@engicam.com>,
-	Peng Fan <peng.fan@nxp.com>,
-	Michael Trimarchi <michael@amarulasolutions.com>
-Subject: [PATCH v6 3/3] arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
-Date: Fri, 26 Apr 2024 17:27:30 +0200
-Message-Id: <20240426152730.9806-4-fabio.aiuto@engicam.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240426152730.9806-1-fabio.aiuto@engicam.com>
-References: <20240426152730.9806-1-fabio.aiuto@engicam.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="myC72MAE"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de467733156so2456327276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 08:32:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714145538; x=1714750338; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AS7F2S8/cotcGn6q7tGA+zdknX79HwQNovwoIzqrUUg=;
+        b=myC72MAEY2pD9iy2JCa1YY5ORR1Sbc3W46dFS+7ago7Gff2DO1vLOA8xUDO8WAbWn3
+         Vy1tQgXS8G2W+AFrBEd7OUw6A59INIcwlMcEQ+UGhkQtYjRNc6Ec6sYAFq0jAT7DlGYa
+         LYHA+UX1NaCOF0GcOFgVwEAzbkTgzOWS23wLQ4aj4SFWc5SgY82c3Ml9t93HTExEJIyV
+         pmv4ZZTd1lYBix1MgfaKq66b6bf+ChjTdrmAKLh2UhAti9m7ojkgJtt3qF0xsj7yv65v
+         e75kva+U51OMskXtheKQM2XCgC5GCdOkd8j/vxWKCdJTS8vOC5y/eGMS8noGfhhLLPt+
+         Cdow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714145538; x=1714750338;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AS7F2S8/cotcGn6q7tGA+zdknX79HwQNovwoIzqrUUg=;
+        b=PTfYay1dMHDSvWtF6szH1HcD7DyzD/dMohnNXEPD2YDJQC+qaAdD+PLCZPmB/n6OkB
+         4L5hIb/zF+EbmUV1QgR8ETcsxBlds/7w4OLkO9tmdFHfVTzpiWRL+f+cu98JL70DEp3A
+         6gMiFch5iLrVG8VXJ6vZgBGFRxug+jKcfz/KwO7BnWMo7d4zn+8vXnOYxKc3InWR4Qhp
+         ZbIpV3wUJHNLBH7lsA4KFI2cS7DlxqE8KNAXxEE60I7PFKoZa9VW4p09MvW4b9+pgrYR
+         UsW5lo9u38pnpw21msXyx4oRmtz7y0jYyw6lRHFSlmqj31yIcAyAl88DtikMbrfb+9S0
+         k2yw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFHyvh/NEq3ubYE3stUIvSVAr+AXUPJWqYd+HJyOV6AhIufjBaf7XFlFoQz2kb/12CDb9015QGFhVN/8olHief5cunsoh8fiam/ZnP
+X-Gm-Message-State: AOJu0YyMgWx1mEIqwBYQ82XbzvshmNw0qRgIAvgQA63mJ5nj2wEQflhV
+	xl/I7rv6+wg8p5rlfG8xt5zQNw4g/wpjfJaXsIPKEwOvGMwj6z6+eCPKoaCroiU50R8v6Fzb7sU
+	RS1rS3rNd/YLIKi1uDgO4Mfi8MUhhrPpR0HLX
+X-Google-Smtp-Source: AGHT+IEbMHZmUoliwhZDi51Mi8cRiHlfjY/QQEfE15qe+QlxN4TZHCdoAoldZKGr4HHtMlg+YKOHqObI+mDnD/6gxOk=
+X-Received: by 2002:a25:dbd3:0:b0:de5:ad49:3e2b with SMTP id
+ g202-20020a25dbd3000000b00de5ad493e2bmr2218945ybf.37.1714145537300; Fri, 26
+ Apr 2024 08:32:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfMTfbUipsuTo9QC65IIra2IWaM0mKsJfDj9zfbXQmRjufylmEzNJehgnSko4fi+/+BklfTDOJ8LsUk2/bUpOsPb7YOFVGeZ36PasM9ez9ca6oOdHZWYN
- Qu6GRIl9Aioj+r92vdjYSw02tovkYLTCr/Uj0q3/I87puWx81o8r0xWWkWKOoe+ajIhcwGNlqzWQ2ERHiG01ljdLWsiTKbEjXhbV9AWWHrzsMYcBhyrX8yYn
- +QI94yZcd9bof/abYhaF9jES9QyUNmIjq/UHz03A/7o6WDkucBAqjLyw4U12uvb9gu/LTRnqaDO6EDX8uGZS1YsMsuYcmBZCqIkIX4e+s5hGgVZCwOicqtOG
- mXfvTvnXzJxr7Gkbzzv6RD0EAY7Ag2SUfUIkFwxTf/XxJbLL4D2MTjaiLWL/r9B7XXgszswhqGwx6hwSiMZyno3VhVS5zxRinQxBXXBiTXzen9EdwfvqyQ4a
- LkM/GaGV8I4ToiQNDsxfBmxl64+vpEDbjZomZ2Mbo33ZGhI5Lx9dkmEoWxOGpAE0ZFzzg3RbLaBbEo0trW9STCQYKNMBFogd29ii8OEK8COAv7qwxLqa32W+
- 8m8XcEciW6kHgEyv1DN76LJ4whHZ2/XoRw/uRYuTuaxMEOWHy3nfqBp8669Y0EDQ9C+PWrUFHqFwmMcmKvGbhpwl
+References: <20240410170621.2011171-1-peterx@redhat.com> <20240411171319.almhz23xulg4f7op@revolver>
+ <ZhhSItiyLYBEdAX3@x1n> <ZhhV3PKgEX9d7_vA@casper.infradead.org>
+ <ZhhaRXHKk7w_hKgi@x1n> <Zhhd-A7w1A8JUadM@casper.infradead.org>
+ <ZhinCD-PoblxGFm0@casper.infradead.org> <ZiuzikG6-jDpbitv@casper.infradead.org>
+ <CAJuCfpH+O0NYtTrGKSY6FjBOcWpyKXB+_4rsSRjcewSXUWVfCQ@mail.gmail.com> <ZivILlyRv7rNMldQ@casper.infradead.org>
+In-Reply-To: <ZivILlyRv7rNMldQ@casper.infradead.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 26 Apr 2024 08:32:06 -0700
+Message-ID: <CAJuCfpEqJV9Lv+36xNK+vnpsR5DhQ0kCK3CW7tLFWbbbSCH8yg@mail.gmail.com>
+Subject: Re: [PATCH] mm: Always sanity check anon_vma first for per-vma locks
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Peter Xu <peterx@redhat.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Lokesh Gidra <lokeshgidra@google.com>, 
+	Alistair Popple <apopple@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-i.Core MX93 is a NXP i.MX93 based SoM by Enigcam which needs to be
-mounted on top of Engicam baseboards.
+On Fri, Apr 26, 2024 at 8:28=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Fri, Apr 26, 2024 at 08:07:45AM -0700, Suren Baghdasaryan wrote:
+> > On Fri, Apr 26, 2024 at 7:00=E2=80=AFAM Matthew Wilcox <willy@infradead=
+.org> wrote:
+> > > Intel's 0day got back to me with data and it's ridiculously good.
+> > > Headline figure: over 3x throughput improvement with vm-scalability
+> > > https://lore.kernel.org/all/202404261055.c5e24608-oliver.sang@intel.c=
+om/
+> > >
+> > > I can't see why it's that good.  It shouldn't be that good.  I'm
+> > > seeing big numbers here:
+> > >
+> > >       4366 =C4=85  2%    +565.6%      29061        perf-stat.overall.=
+cycles-between-cache-misses
+> > >
+> > > and the code being deleted is only checking vma->vm_ops and
+> > > vma->anon_vma.  Surely that cache line is referenced so frequently
+> > > during pagefault that deleting a reference here will make no differen=
+ce
+> > > at all?
+> >
+> > That indeed looks overly good. Sorry, I didn't have a chance to run
+> > the benchmarks on my side yet because of the ongoing Android bootcamp
+> > this week.
+>
+> No problem.  Darn work getting in the way of having fun ;-)
+>
+> > > I still don't understand why we have to take the mmap_sem less often.
+> > > Is there perhaps a VMA for which we have a NULL vm_ops, but don't set
+> > > an anon_vma on a page fault?
+> >
+> > I think the only path in either do_anonymous_page() or
+> > do_huge_pmd_anonymous_page() that skips calling anon_vma_prepare() is
+> > the "Use the zero-page for reads" here:
+> > https://elixir.bootlin.com/linux/latest/source/mm/memory.c#L4265. I
+> > didn't look into this particular benchmark yet but will try it out
+> > once I have some time to benchmark your change.
+>
+> Yes, Liam and I had just brainstormed that as being a plausible
+> explanation too.  I don't know how frequent it is to use anon memory
+> read-only.  Presumably it must happen often enough that we've bothered
+> to implement the zero-page optimisation.  But probably not nearly as
+> often as this benchmark makes it happen ;-)
 
-Add support for EDIMM 2.0 Starter Kit hosting i.Core MX93.
-
-Starter Kit main features:
-
-2x LVDS interfaces
-HDMI output
-Audio out
-Mic in
-Micro SD card slot
-USB 3.0 A port
-3x USB 2.0 A port
-Gb Ethernet
-2x CAN bus, 3x UART interfaces
-SIM card slot
-M.2 KEY_B slot
-
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
----
-v5 ---> v6:
-	- added property in lpuart5 node
-	- removed unused sai1 node
-	- move Cc tag to Reviewed-by tag
-v4 ---> v5:
-	- done some property reorder, indentation fixes, node rename,
-	  drop/add new lines
-	- added Reviewed-by tag
-v3 ---> v4:
-	- drop wl_reg_on regulator in favor of mmc-pwrseq-simple
-	- add Cc tag
-v2 ---> v3:
-	- fixed dtschema warnings
-	- removed regulator-always-on on bt_reg_on
-	- fixed clock rate assignment on sgtl5000 node
-	- fixed indentation issue
-v1 ---> v2:
-	- fixed indentation issue
-	- fixed missing space issue
-	- improved naming of regulator nodes
-	- removed unneeded include
-
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../dts/freescale/imx93-icore-mx93-edimm2.dts | 324 ++++++++++++++++++
- 2 files changed, 325 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 045250d0a040..d26c0a458a44 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -226,6 +226,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqp-mba8xx.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-11x11-evk.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx93-icore-mx93-edimm2.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts b/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
-new file mode 100644
-index 000000000000..149707d84165
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
-@@ -0,0 +1,324 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2022 NXP
-+ * Copyright 2024 Engicam s.r.l.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx93-icore-mx93.dtsi"
-+
-+/ {
-+	model = "Engicam i.Core MX93 - EDIMM 2 Starterkit";
-+	compatible = "engicam,icore-mx93-edimm2", "engicam,icore-mx93",
-+		     "fsl,imx93";
-+
-+	aliases {
-+		rtc1 = &bbnsm_rtc;
-+	};
-+
-+	chosen {
-+		stdout-path = &lpuart1;
-+	};
-+
-+	bt_reg_on: regulator-btregon {
-+		compatible = "regulator-gpio";
-+		regulator-name = "BT_REG_ON";
-+		regulator-min-microvolt = <100000>;
-+		regulator-max-microvolt = <3300000>;
-+		states = <3300000 0x1>, <100000 0x0>;
-+		gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	reg_1v8_sgtl: regulator-1v8-sgtl {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1v8_sgtl";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_3v3_avdd_sgtl: regulator-3v3-avdd-sgtl {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3v3_avdd_sgtl";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_3v3_sgtl: regulator-3v3-sgtl {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3v3_sgtl";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			alloc-ranges = <0 0x80000000 0 0x40000000>;
-+			size = <0 0x10000000>;
-+			linux,cma-default;
-+		};
-+
-+		rsc_table: rsc-table@2021f000 {
-+			reg = <0 0x2021f000 0 0x1000>;
-+			no-map;
-+		};
-+
-+		vdevbuffer: vdevbuffer@a4020000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0xa4020000 0 0x100000>;
-+			no-map;
-+		};
-+
-+		vdev0vring0: vdev0vring0@a4000000 {
-+			reg = <0 0xa4000000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		vdev0vring1: vdev0vring1@a4008000 {
-+			reg = <0 0xa4008000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		vdev1vring0: vdev1vring0@a4000000 {
-+			reg = <0 0xa4010000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		vdev1vring1: vdev1vring1@a4018000 {
-+			reg = <0 0xa4018000 0 0x8000>;
-+			no-map;
-+		};
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "imx93-sgtl5000";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&dailink_master>;
-+		simple-audio-card,frame-master = <&dailink_master>;
-+		/*simple-audio-card,mclk-fs = <1>;*/
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&sai3>;
-+		};
-+
-+		dailink_master: simple-audio-card,codec {
-+			sound-dai = <&sgtl5000>;
-+			clocks = <&clk IMX93_CLK_SAI3_IPG>;
-+		};
-+	};
-+
-+	usdhc3_pwrseq: usdhc3-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usdhc3_pwrseq>;
-+		reset-gpios = <&gpio2 22 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&cm33 {
-+	mbox-names = "tx", "rx", "rxdb";
-+	mboxes = <&mu1 0 1>,
-+		 <&mu1 1 1>,
-+		 <&mu1 3 1>;
-+	memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>,
-+			<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
-+	status = "okay";
-+};
-+
-+&flexcan1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	fsl,stop-mode = <&aonmix_ns_gpr 0x10 4>;
-+	status = "okay";
-+};
-+
-+&flexcan2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	fsl,stop-mode = <&aonmix_ns_gpr 0x10 4>;
-+	status = "okay";
-+};
-+
-+&lpi2c1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&pinctrl_lpi2c1>;
-+	pinctrl-1 = <&pinctrl_lpi2c1>;
-+	status = "okay";
-+
-+	sgtl5000: audio-codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		#sound-dai-cells = <0>;
-+		clocks = <&clk IMX93_CLK_SAI3_GATE>;
-+		VDDA-supply = <&reg_3v3_avdd_sgtl>;
-+		VDDIO-supply = <&reg_3v3_sgtl>;
-+		VDDD-supply = <&reg_1v8_sgtl>;
-+		status = "okay";
-+	};
-+
-+	pcf8523: rtc@68 {
-+		compatible = "nxp,pcf8523";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&lpuart1 { /* console */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&lpuart5 { /* RS485 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&lpuart8 { /* RS232 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart8>;
-+	status = "okay";
-+};
-+
-+&micfil {
-+	#sound-dai-cells = <0>;
-+	assigned-clocks = <&clk IMX93_CLK_PDM>;
-+	assigned-clock-parents = <&clk IMX93_CLK_AUDIO_PLL>;
-+	assigned-clock-rates = <196608000>;
-+	status = "okay";
-+};
-+
-+&mu1 {
-+	status = "okay";
-+};
-+
-+&mu2 {
-+	status = "okay";
-+};
-+
-+&sai3 {
-+	#sound-dai-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai3>;
-+	assigned-clocks = <&clk IMX93_CLK_SAI3>;
-+	assigned-clock-parents = <&clk IMX93_CLK_AUDIO_PLL>;
-+	assigned-clock-rates = <24576000>;
-+	fsl,sai-mclk-direction-output;
-+	status = "okay";
-+};
-+
-+&usdhc3 { /* WiFi */
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3>;
-+	pinctrl-2 = <&pinctrl_usdhc3>;
-+	mmc-pwrseq = <&usdhc3_pwrseq>;
-+	bus-width = <4>;
-+	no-1-8-v;
-+	non-removable;
-+	max-frequency = <25000000>;
-+	status = "okay";
-+
-+	brcmf: bcrmf@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+	};
-+};
-+
-+&wdog3 {
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_bluetooth: bluetoothgrp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO19__GPIO2_IO19		0x31e /* BT_REG_ON */
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			MX93_PAD_PDM_CLK__CAN1_TX		0x139e
-+			MX93_PAD_PDM_BIT_STREAM0__CAN1_RX	0x139e
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO25__CAN2_TX		0x139e
-+			MX93_PAD_GPIO_IO27__CAN2_RX		0x139e
-+		>;
-+	};
-+
-+	pinctrl_lpi2c1: lpi2c1grp {
-+		fsl,pins = <
-+			MX93_PAD_I2C1_SCL__LPI2C1_SCL		0x40000b9e
-+			MX93_PAD_I2C1_SDA__LPI2C1_SDA		0x40000b9e
-+		>;
-+	};
-+
-+	pinctrl_sai3: sai3grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO26__SAI3_TX_SYNC	0x31e
-+			MX93_PAD_GPIO_IO16__SAI3_TX_BCLK	0x31e
-+			MX93_PAD_GPIO_IO17__SAI3_MCLK		0x31e
-+			MX93_PAD_GPIO_IO21__SAI3_TX_DATA00	0x31e
-+			MX93_PAD_GPIO_IO20__SAI3_RX_DATA00	0x31e
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
-+			MX93_PAD_UART1_TXD__LPUART1_TX		0x31e
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO01__LPUART5_RX		0x31e
-+			MX93_PAD_GPIO_IO00__LPUART5_TX		0x31e
-+			MX93_PAD_GPIO_IO02__LPUART5_CTS_B	0x31e
-+		>;
-+	};
-+
-+	pinctrl_uart8: uart8grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO13__LPUART8_RX		0x31e
-+			MX93_PAD_GPIO_IO12__LPUART8_TX		0x31e
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX93_PAD_SD3_CLK__USDHC3_CLK		0x17fe
-+			MX93_PAD_SD3_CMD__USDHC3_CMD		0x13fe
-+			MX93_PAD_SD3_DATA0__USDHC3_DATA0	0x13fe
-+			MX93_PAD_SD3_DATA1__USDHC3_DATA1        0x13fe
-+			MX93_PAD_SD3_DATA2__USDHC3_DATA2        0x13fe
-+			MX93_PAD_SD3_DATA3__USDHC3_DATA3        0x13fe
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_pwrseq: usdhc3pwrseqgrp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO22__GPIO2_IO22		0x31e /* WL_REG_ON */
-+		>;
-+	};
-+};
--- 
-2.34.1
-
+I also wonder if some of this improvement can be attributed to the
+last patch in your series
+(https://lore.kernel.org/all/20240426144506.1290619-5-willy@infradead.org/)=
+.
+I assume it was included in the 0day testing?
