@@ -1,106 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456E213D500;
-	Fri, 26 Apr 2024 09:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F389613D500;
+	Fri, 26 Apr 2024 09:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714122396; cv=none; b=jbO8yB/HvxU4r2wkbDTNvnids6QEAdESL3aIWRfbV7Fx/REiUdW2pSe0XK5tG85mKJQ8MM+NTvKA8GeUFrgy4N9E4Aw82JW22k/Y5z5CQyhTvOcW0rqjE+U5EPWvzAnnk/c5OnoJ0YwDrRHJhIKIOX56hfaEGMqq+idyCbXdh5k=
+	t=1714122415; cv=none; b=MT9s4zS+AxQAYQzUQ/6WCksxIbZ5z6wD2dftsze9n/M9yn66Y2tHNJN3SiZuuXJnsv9znKa8AI3rKvfk34WTvRozkyp3lzkMwqeRznC/awI1k3uXxis1/kBtI5EmYhPrTZkmwAMmQIxs6z0Mlnp5lnHEBWnOnnGOK3AOzW6AvLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714122396; c=relaxed/simple;
-	bh=1j45APt84Z2XIlLb4CgSXht8+Dv+bV1Rc+4llmd3nOU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PkQj1GYzqs2unCJX6y7Kjks/IcMHxbIyzKkoe/12STFQAvD8HoQOzk0h3UTDkED5j/Ug6lEhhhTHVJO483wOSZxP6FX2ERiexYGFDESZOYWQDKAEADb6T5amrFdMEQvH0B0pw1GzeaeIHe6FwsZfKQQwIcNWpKWNfSLLXedTmlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YQehXKrr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714122415; c=relaxed/simple;
+	bh=+A+wN+Waa3u+GSAaOXj5u/i6Q2N/50vS3XJI5nCkpCQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fmjlsGu126f0D38ZjLR7WmQmEpQK4sGIxasJDZ1ZOQwMaN6FvfEWOAqa+01mvPq88HfNPr7wiyJrK3rwIx4CH3VdbQ1UvCgCwiAwwYXH24aypJVMOMnOeh4Mk/IFJ6aRfPgQK8NLJGCbnbk6WAYA5TiaaFVXn95eFpegDsI47uY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tf02vT6Q; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YQehXKrr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F039AC2BD10;
-	Fri, 26 Apr 2024 09:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714122395;
-	bh=1j45APt84Z2XIlLb4CgSXht8+Dv+bV1Rc+4llmd3nOU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YQehXKrr/O/mDKcnEZ/VzzQIguHqfHe3LKofGVlscwcbsgubsTX5zxKFuh6luz/uZ
-	 x5QOEM64z9voC8y7xCFEfsScljgkOzCOORs5FaB2kBMLjXa328uZOUQ4Cc0vf/ftt7
-	 pCQRpP0M4CoeX20h+PraWWEdYcWtwHB9uLP+cRvTwa1LcT2sZm28NmT2tCRdSbpk+o
-	 Kt2ixUBwlffHVhUkMnuvdCaPu+4qcjJ4xbPnPzOqVSvNJcB+u6/KRm0gXnT43X6Mfs
-	 ET1okh6qQUwzrUjqbwwmQeMKpR5+FXRSp5va0PlCO42WRDjS7e1eoTIODOXevTJI0s
-	 uyl0UUt2rOfYw==
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Fri, 26 Apr 2024 11:04:01 +0200
-Subject: [PATCH v2 14/14] ASoC: SOF: mediatek: mt8195: Constify
- snd_sof_dsp_ops
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tf02vT6Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714122413; x=1745658413;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=+A+wN+Waa3u+GSAaOXj5u/i6Q2N/50vS3XJI5nCkpCQ=;
+  b=Tf02vT6QWJlDCRf6Gzfb3fOT1TSG4++b4TQYIF+Kxgq8SinP4JOPpuZr
+   iK8AvWJsbJVCvOzdVkoxPMVEUzpWdMndIB738vDWmJj4hk0We6WGotKrY
+   W9TEaRDZyY0iQTxu0hBxTOrfa4XVO/JRURL+YSW7NcYMLavNuF2/4UOWx
+   px6Xk0NxedN5Q5WxY2T9iIzbXlvU59nrDmhs8IAMyYEJBKjcl99MU5IoK
+   4xlV8hi928F3uV+gyECiBPyzMTgWEbvSuTji6po46XVDDeomnkclZn7zk
+   4x2X9/+kb8GmZVmf3GcYsNDnc8JHHhWc3VZXQZkXJzMoEPrGykZ+YmbqO
+   w==;
+X-CSE-ConnectionGUID: md4oKigeRzKk8FI8j84qxw==
+X-CSE-MsgGUID: C5+M3sRbQCKuhc6TOHKKgA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="10384430"
+X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
+   d="scan'208";a="10384430"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 02:06:52 -0700
+X-CSE-ConnectionGUID: 8CNiV51sRYOLvzTmgMUIcA==
+X-CSE-MsgGUID: KYE62ThXSw6c0mT7w0LGuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
+   d="scan'208";a="29809989"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.43])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 02:06:49 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 26 Apr 2024 12:06:45 +0300 (EEST)
+To: lumingyindetect@126.com
+cc: LKML <linux-kernel@vger.kernel.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>, 
+    LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+Subject: Re: [PATCH] "drivers:Fixed memory leak in /linux/drivers/tty/serial/8250/8250_lpss.c
+ file.
+In-Reply-To: <20240426021939.1083521-1-lumingyindetect@126.com>
+Message-ID: <1ed76406-443d-63e2-3b3b-f6528a13f95a@linux.intel.com>
+References: <20240426021939.1083521-1-lumingyindetect@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240426-n-const-ops-var-v2-14-e553fe67ae82@kernel.org>
-References: <20240426-n-const-ops-var-v2-0-e553fe67ae82@kernel.org>
-In-Reply-To: <20240426-n-const-ops-var-v2-0-e553fe67ae82@kernel.org>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, 
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Daniel Baluta <daniel.baluta@nxp.com>, 
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=960; i=krzk@kernel.org;
- h=from:subject:message-id; bh=1j45APt84Z2XIlLb4CgSXht8+Dv+bV1Rc+4llmd3nOU=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmK24ri5hbvvP8DkjdiR3gDZ/o/lD3rZTZSVmyL
- 9OhKlqW3dWJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZituKwAKCRDBN2bmhouD
- 1wyvD/979AcclNlfz3AHCAc7yWzJwuKG99G5B/V3GZmbbF/Q10mefin+IcW+1AAGJx2Ay8WQH06
- /gJnJMTc3D4r/w/4atnDj/NHGDbxk3muVAtK2hnvsR0839UYh5KzKhXGo1/6mOyClf6pbRaFPb1
- 8jViXGzLcqMaBMKNWSCn7JwanyBjPd6O/O1J1Y5+cQvx5G94upsOAULNXWUOewj0xXSuTWXx4th
- gSgRLwfnoz+P1gVvurneJUtyWMOFYLINjNVclWPllOnNff328w3UN9Oi5rlxpJttkKV3EvOevXA
- D6M2gp7LsDUCyBHBVDe8ENUm9reCFKuFACkUnU6Gb3vF4AdUbVglglpD9+UHNr/MQMGNgc4n2g3
- ARGqfKiz9ibJC5AzsUnsErKtnJvNl9riPrMHpTxo9kyk5HDPSIg10LMOmzGp6ONl+8KBfGIuqgF
- 6byJO3lHB14IYBAL77WuIUDDjUT9gIW5NzklFSiTcJys/0UWJ/zg1CnxJlTbq/1mzugQw+bOTeZ
- rpDZWvYtaNvQVTNIvr5WcZUUR2Pv4bPIf4D15CgtHKvTtbhBoFQqdkyqdvk/GIKXdjLqM2ShDRh
- OINLugwKjkJTmgFR6c+03NS9CXETbG+wymA6nbTIrHLhl9JrwVOoAxysfBELBVJLlzdCuokBjqv
- +kpjVSBdxdC1Z4Q==
-X-Developer-Key: i=krzk@kernel.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=US-ASCII
 
-'struct snd_sof_dsp_ops' is not modified by core code, so it can be made
-const for increased code safety.
+On Fri, 26 Apr 2024, lumingyindetect@126.com wrote:
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- sound/soc/sof/mediatek/mt8195/mt8195.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
 
-diff --git a/sound/soc/sof/mediatek/mt8195/mt8195.c b/sound/soc/sof/mediatek/mt8195/mt8195.c
-index 8ee7ee246344..fc1c016104ae 100644
---- a/sound/soc/sof/mediatek/mt8195/mt8195.c
-+++ b/sound/soc/sof/mediatek/mt8195/mt8195.c
-@@ -505,7 +505,7 @@ static struct snd_soc_dai_driver mt8195_dai[] = {
- };
- 
- /* mt8195 ops */
--static struct snd_sof_dsp_ops sof_mt8195_ops = {
-+static const struct snd_sof_dsp_ops sof_mt8195_ops = {
- 	/* probe and remove */
- 	.probe		= mt8195_dsp_probe,
- 	.remove		= mt8195_dsp_remove,
+Use:
+
+git log --oneline -- drivers/tty/serial/8250/8250_lpss.c
+
+to learn what prefix you should use for shortlog (on the subject line). 
+Beyond the correct prefix, don't use filename in the shortlog at all.
+
+"Fixed" -> "Fix"
+
+"in xx file" is awfully generic, please be more specific where the leak 
+is.
+
+> In the lpss8250_probe function in the file /linux/drivers/tty/serial/8250/8250_lpss.c, there were certain return paths where pci_free_irq_vectors was not called to release memory related to pdev, leading to a memory leak. This commit fixes that issue." 
+
+- Wrap this properly.
+- Don't write full paths like that.
+- Put () into description when talking about functions.
+- Use imperative language, don't use "This patch ...".
+
+- Add Fixes tag
+
+> Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+
+> ---
+>  drivers/tty/serial/8250/8250_lpss.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
+> index 776ec1ef29d6..2bb86f9cad5b 100644
+> --- a/drivers/tty/serial/8250/8250_lpss.c
+> +++ b/drivers/tty/serial/8250/8250_lpss.c
+> @@ -344,11 +344,11 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	uart.port.mapbase = pci_resource_start(pdev, 0);
+>  	uart.port.membase = pcim_iomap(pdev, 0, 0);
+>  	if (!uart.port.membase)
+> -		return -ENOMEM;
+> +		goto early_err_exit;
+>  
+>  	ret = lpss->board->setup(lpss, &uart.port);
+>  	if (ret)
+> -		return ret;
+> +		goto early_err_exit;
+>  
+>  	dw8250_setup_port(&uart.port);
+>  
+> @@ -367,6 +367,7 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  
+>  err_exit:
+>  	lpss->board->exit(lpss);
+> +early_err_exit:
+
+This label could be more specific that it's about freeing the vectors.
+
+>  	pci_free_irq_vectors(pdev);
+>  	return ret;
+>  }
+> 
 
 -- 
-2.43.0
+ i.
 
