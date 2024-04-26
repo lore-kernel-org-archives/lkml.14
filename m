@@ -1,68 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8921487E7;
-	Fri, 26 Apr 2024 13:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F3B1487E7;
+	Fri, 26 Apr 2024 13:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139744; cv=none; b=XfD5ZqITZDvWhaorX68U678J49cvdEQYGFY2SPdhyiDvH9Gmx4wjXDq8OQiERk45oJLKh8yvOztfT/XQbYRgZ81tHuClH+42NjXbWlRTr0g+B1OtIY2D7dKCw9+03vlYpSl6jyMiAmhRS+ZhDNyz1gDjpwNml0zYaGyXg2FnQ0o=
+	t=1714139768; cv=none; b=WBnZSmHPjHl+W3dQc4p/o3NlfcwTyD+4t7YZUwfm6Gn4eNIjnLTRIgtWc7Gd52qn4YQ61UrDurmpgQZhBOHpwf1V1ualvhh+5/m3pGXeJ8+6DuV3+J7nfg8EBDb9dFEsNefekcPz9DIkXfMoDNbChqVYcMlGnD+LRpDxtwe6sP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139744; c=relaxed/simple;
-	bh=UbY+ExOiqPp3H3piUK3cAIwA80EItQL1YsmY71g3gIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGhp/Sg2V8grGu/JIvkue8zucHwwVxqdPUz+mOnijDaD+1tQlgKUzDrhvcxOZwYJNvlOvoRFD04oJNxeDS4YL6snoPlti9SPZhbvWCeK5pT8n79jwvQgozg0mAQ0mhHVbPRls4uJ6vmRGojgsThC0IvVMFRpium3Tdvp21eJd/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wq3WFSfS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wq3WFSfS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D865C113CD;
-	Fri, 26 Apr 2024 13:55:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1714139743;
-	bh=UbY+ExOiqPp3H3piUK3cAIwA80EItQL1YsmY71g3gIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wq3WFSfS2sElJ7Hs1e/HlvhMlSIefIBTNkW/FXDV7NZp9kYLCdddl1JH8flEXyQQZ
-	 FBitLBASbbEpo80pF+5jodBDqTzniulOry9y46lTKQwSdwZdhIbMutmsFJQUUyTGFm
-	 ADYvITYipGpV/rnDc7gqdxep4lwBnxz6bEc48ODk=
-Date: Fri, 26 Apr 2024 15:55:40 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: lumingyindetect@126.com
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com,
-	jirislaby@kernel.or
-Subject: Re: [PATCH] serial: 8250_lpss: Fix memory leak in lpss8250_probe()
-Message-ID: <2024042652-even-mud-476d@gregkh>
-References: <20240426133959.1294012-1-lumingyindetect@126.com>
+	s=arc-20240116; t=1714139768; c=relaxed/simple;
+	bh=fOszkkX23sBJOMvmYgu8nscMaWNwiYDO1qYK+ouql6E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mk7hZ7WE+TzNl1c3pum6Orc+DHVYfmbpx7FHszfuFLXgdAvPYHFpWnya7HVQ3SR4asaOKX4VaAgrD9scZqIjimcMfzdwCZT3/lIOaLpPzmDb3x5QZ41iAYVyrTz34msqAengzdo/H/Ovs+lCysdt44zhszsVzdyh+i7WQUOjiAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvMM5cR4z6K6XR;
+	Fri, 26 Apr 2024 21:53:35 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7C30E140594;
+	Fri, 26 Apr 2024 21:56:04 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 26 Apr 2024 14:56:03 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v8 09/16] arm64: acpi: Move get_cpu_for_acpi_id() to a header
+Date: Fri, 26 Apr 2024 14:51:19 +0100
+Message-ID: <20240426135126.12802-10-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240426133959.1294012-1-lumingyindetect@126.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, Apr 26, 2024 at 02:39:59PM +0100, lumingyindetect@126.com wrote:
-> From: LuMingYin <lumingyindetect@126.com>
-> 
-> The return statements at line 347 and line 351 in the lpss8250_probe() function result in a memory leak of the variable pdev.
-> Add a label named free_irq_vectors in the lpss8250_probe() function to release the memory area pointed to by pdev.
-> Modify the two return statements mentioned above to jump to the label "free_irq_vectors" instead.
-> 
-> Fixes: e88c4cfcb7b888ac374916806f86c17d8ecaeb67 ("serial: 8250_lpss: fix memory in lpss8250_probe()")
-> 
-> Signed-off-by: LuMingYin <lumingyindetect@126.com>
+From: James Morse <james.morse@arm.com>
 
-Please stop and read all of the instructions provide, and then go read
-the "how to submit your first patch" tutorial at kernelnewbies.org and
-compare that to what you have been sending here.
+ACPI identifies CPUs by UID. get_cpu_for_acpi_id() maps the ACPI UID
+to the Linux CPU number.
 
-You also keep sending stuff to quickly, patches should be, at the most,
-sent once a day, and even then, that would be very quick.
+The helper to retrieve this mapping is only available in arm64's NUMA
+code.
 
-Relax, take the weekend off, and come back next week with a proper
-change based on the documentation.
+Move it to live next to get_acpi_id_for_cpu().
 
-thanks,
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Acked-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-greg k-h
+---
+v8: Picked up tags.
+---
+ arch/arm64/include/asm/acpi.h | 11 +++++++++++
+ arch/arm64/kernel/acpi_numa.c | 11 -----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+index 6792a1f83f2a..bc9a6656fc0c 100644
+--- a/arch/arm64/include/asm/acpi.h
++++ b/arch/arm64/include/asm/acpi.h
+@@ -119,6 +119,17 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+ 	return	acpi_cpu_get_madt_gicc(cpu)->uid;
+ }
+ 
++static inline int get_cpu_for_acpi_id(u32 uid)
++{
++	int cpu;
++
++	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
++		if (uid == get_acpi_id_for_cpu(cpu))
++			return cpu;
++
++	return -EINVAL;
++}
++
+ static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+ void __init acpi_init_cpus(void);
+ int apei_claim_sea(struct pt_regs *regs);
+diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
+index e51535a5f939..0c036a9a3c33 100644
+--- a/arch/arm64/kernel/acpi_numa.c
++++ b/arch/arm64/kernel/acpi_numa.c
+@@ -34,17 +34,6 @@ int __init acpi_numa_get_nid(unsigned int cpu)
+ 	return acpi_early_node_map[cpu];
+ }
+ 
+-static inline int get_cpu_for_acpi_id(u32 uid)
+-{
+-	int cpu;
+-
+-	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+-		if (uid == get_acpi_id_for_cpu(cpu))
+-			return cpu;
+-
+-	return -EINVAL;
+-}
+-
+ static int __init acpi_parse_gicc_pxm(union acpi_subtable_headers *header,
+ 				      const unsigned long end)
+ {
+-- 
+2.39.2
+
