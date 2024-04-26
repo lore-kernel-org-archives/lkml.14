@@ -1,106 +1,97 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C74F14535C;
-	Fri, 26 Apr 2024 12:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63F21E87F
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 12:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714134558; cv=none; b=KDede91p+vC/O5Wg5xWS6w21+wzInr5mQZUez3UZw6Tr0rQBLTH1yQDa9hu+2Y0IEDajJYGardPhXkMbOk2DcVNZjlZ3jUVx6inUz+YUdnnqkP9kDPf4CIxl6rus8WaumI0Tvej8VtzL5lapUOTE37eH8rNXIJdlJWTOiez7JN8=
+	t=1714134668; cv=none; b=qmWwvYoF8Tzx45bx0kH6Gls/mUkmvIOf7+FnW8r5btq+Qdvi5ve3T4QX4YTPP0FERIMPomwSdcri1bU7jw/Ctmi7Wvtwvqfrd/oK8uXQaY3V8R9eOhQ1IOMm4zj1Z82glJBtZmtDoc4QGwjV8SdWdo8kwX1bE5y2P7tVml3c++4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714134558; c=relaxed/simple;
-	bh=H4p73NShfY5YEqWp7dPCAHt3mIwIFXwsuZPdnZOnwYc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=NQm42F/rtqU0y8x73aNIgW/YljeYp8kobLar3CArNxZigFCe6ydeMeugCH/3HhcoGIWq4cmhVlH1VRdVDm8ggkbWha7G1tlGGmXU2ynKmvHygtG9Ra57D0x0foganLqC8OxGAvEGxCRvr6mX9kudccdH8oxTtJaArjA29oifR/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=q4EABXFn; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714134668; c=relaxed/simple;
+	bh=d/oaR76lqNG7xNtfX839VYSmrqO5K70+zhGXLKbDQnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jmtgb03JO7Ja6pA3QZDd/dP0Gq5QG77iP2tw5dDltbnakk74bjWGn54Z6qSFbSZbHsigLHXbOylgSkcRwPdFXzJpwzFYff5/Jgf+6y8SUXDc+IAmu3+6eLQ+YOLbvBVZgekZrH/9HObrPZWdicIU5l/8ZOzVbyd+LXID2/LJ374=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D/wolc9o; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="q4EABXFn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714134525; x=1714739325; i=markus.elfring@web.de;
-	bh=mST+U+wJ6B+mYy57rbG1uACdL69LsS+O3Z/CbYAv0JU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=q4EABXFnG7Gexe7YQbV/SxHcb8p68+yWYEecI7nzT3pzxaTW9SYDoRKxFtA5t0Vb
-	 D4fjPL6A1vffMLxFburoAjTnXKU2EjGRLbOjZdR8QsiKQbCXpW+puTAOQPs/LezXm
-	 kLSQU685FeA4ZAzheYsMnbVnVnIHKogAu00V9BhPVC/ozhVwGRWFWCZ/l0sCkjSjj
-	 XKjz7wMlqYPNImHE/zgAs18H7mYeba6yk3J2MeBc+rt/jUs/mCnHIVFpGScNuR8AG
-	 aVabMd7mcmqTUXuq5WJRiA8HV+ZvQVA8dRgEZ0ftIJTQHvAPA8TVYLTQ4vCS05vw0
-	 NTOqRnC+sip3q81BoQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N4eGJ-1siZB40xrb-00vGRE; Fri, 26
- Apr 2024 14:28:45 +0200
-Message-ID: <42c5d1f0-d16a-483b-8bb1-4c5768aa3a8c@web.de>
-Date: Fri, 26 Apr 2024 14:28:43 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D/wolc9o"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5723edf0ae5so2272146a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 05:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714134665; x=1714739465; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xiMpqWHu87fDT4J0TWysn4eELCjDaabUFZMQse25vy8=;
+        b=D/wolc9ob4kex3NU5qR5VlNGjy7CycY+dz5VsD9mgF7Gs4EPgIomtoMpTSJs4FowkR
+         DhlUY4/B7gfB4vFV3aX0Hrs9XeTM8GuATK3YtN9dFew72Y7Sr4mPFzi5aICTq+3DGjg8
+         9jMl8XW2mLprfEyJfYx153kyaHdMn0ZubpfodUkaI4DBwtADy60dD4cZXFfqxLGw3Zyb
+         hj+tdIP/V1bD62xYuhg9O+HraPWNqxwclMhSPldhCDMLUz9sfXfhT+G8t7Z4t3tAagXN
+         HGQHFVxIHqwyAbWtnLyavTfDF9p3A4rUEvVL1uX8ip4J/Hw27BFWBS1jaC8Tb9ZgQHEU
+         ilsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714134665; x=1714739465;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xiMpqWHu87fDT4J0TWysn4eELCjDaabUFZMQse25vy8=;
+        b=IvRjSwWj6XpkmXQeAgxGQHHV+Xf5VccRKTH30nH8nIOCozkSGUy2FiKl0scNkaCNaz
+         GZ+iXwNi4MH9BWytFjzM6AOU5MCjChhH8t7kDFOSBiuigjcz5RKGHCQMHrgEYDgMcZUC
+         1u0TP1ybxNRgmzlh9JJYzbhOT5p+/mSAeMS8XSHR2oYLIzgOzdZ5x0+rfX6OCnmowFYd
+         ncMbILimuUw0RaPN/EHipZEgxOT0zg99fi3zk0k8YWVdQfoEX3IedwyYZ13mmQLkZZuR
+         d0mebVg3lxLaZ7duwALf/XZA4vr5507ricczv/f4kjIIbU5C5kDxbWDnWhFI8EvKx+FA
+         z3og==
+X-Forwarded-Encrypted: i=1; AJvYcCUPoIX5jRhnynGyW+ABl0Rq1qkXHJRDZLlafpHwMGjLsHAktMVO/PBiR+9FaECCgnh6oRoLqfGXoSFeqCVWomxPHzyXB19P4BSYAfbJ
+X-Gm-Message-State: AOJu0Yx3Wf/GZ4FkYVwtrUsEbGf1mt3nDG/vPD3Ty7jqiT7SuzLZRKzm
+	/GZChKgi1cItrzstjAW4QEkFPK/Ach2MO/WeLYnotduCUYvVeY15wQe02N8icpE=
+X-Google-Smtp-Source: AGHT+IH/DanPdRwEVdnmt/V0koBH8Pn/HkA087uaLGGXbaFu8Y57wMImmUEd2BZTYXYPKYE5kon+Rw==
+X-Received: by 2002:a50:baaf:0:b0:570:5e7e:474e with SMTP id x44-20020a50baaf000000b005705e7e474emr2039629ede.22.1714134665008;
+        Fri, 26 Apr 2024 05:31:05 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id q25-20020aa7cc19000000b0057203242f31sm6144342edt.11.2024.04.26.05.31.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 05:31:04 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] arm64: dts: qocm: sdx75: align smem node name with coding style
+Date: Fri, 26 Apr 2024 14:31:01 +0200
+Message-ID: <20240426123101.500676-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: lumingyindetect@126.com, linux-serial@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jiri Slaby <jirislaby@kernel.org>
-References: <20240426114716.1275085-1-lumingyindetect@126.com>
-Subject: Re: [PATCH] serial: 8250_lpss: Fix memory leak in lpss8250_probe()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240426114716.1275085-1-lumingyindetect@126.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:K0LIFsUWA2FDQcBUvUBsrmBxoRuc2xMc+8BbJxJCbdF3i89gYsF
- 9JA6MRNdjpgs0PYw4y+BQOYyF4/HiU5YcFrUn7kr1I5OetyYxtAacJFehMEqerevYi7fNht
- ZiQ4/fIiDjZVYxf/o0CM36ZvVFF9soYFUw8l4x7/uAsVIcKl/YTi2zSmGe4bVM3TYvnxYA7
- cHV5ymDNWdnT9D6mnoRYQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ciZyN5Jlt8Q=;C/Iie5z125EquYpm2Q+F+1hhRhp
- aGR3YA2W4MZY1uaMUVFv8JV6rfuEvho3081LHhC/lsxsrPqf3YIB98uKcCqoIjEYyK9WyBqDA
- aH0IXzswPU4b++xjmqJJdXmFmhV0Zb9IHoyFMEZT7ruP88B12Bmw4clemsR+WGDhbKiVaQIXl
- LgiJUC06k5aGDWFTqmjRBof1DqVNJkUR138NlaIYb3aPrPVOztN2MwylFYuarUT1ZZ+COjKz4
- AjkLJWuHBNzzZs6syH3uy2d8iOx/XE6/TjTOC6iyv3j3oo8ZRstx7gVC3GY4nCvrtY6PQ56WT
- 30qcmFx81DMJxFZ3AybdBz5IxJKUravLMt6Ds0vesZCnhJ9aN+ojoJcA4BDM7V/LlxKWzxjas
- B+/AJMo+RvbnR8gl6UlbC6y2Ss/nx4AN8/e599niUqbXdqVz+twj2m3J1KttrP58uEoGaNBgd
- d49vgpgx5NgUfKSwhuVouRwf9hssrB7Xly82/7qz/QicrSQvlZlfts1q7vKJPh3ry4EC1pViA
- ScT9fSK2lqrMbpnJZ5IRWOES9Vm9iss69+KXmuBSslYo3KxC9CgT+lIAt2KuqpyNnb+U2uMOI
- NWLR0iLEcXoj9ESAjxN67+1mtF2gnjrC4zPU5sssk7kltZRyyQZffocVUywvZVHCCKvKgKGZw
- t5lza2RksqXK0nSejuudvvU4U0HATorWOIDgOCeSufkUpUjsQifqMhkTK0aEYvvCRBqWvtPJR
- 37A70Niu5iuu4EE9b/QlSU76IlneLCnoeQKRD5Cd9AivrP2faHyMehWz2UDNI/jogcgGYNVyZ
- E2tztddjhlApeKqWtPRLI1oUumG0RQT5jnRCJoxQ0IsuU=
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> In the lpss8250_probe() function, I added a label named "free_irq_vector=
-s" to release the dynamically allocated memory region pointed to by the va=
-riable pdev, and replaced the two return statements mentioned above with g=
-oto statements to this label.
+Node names should not have vendor prefixes.
 
-* Please improve the word wrapping according to line length preferences
-  for change descriptions.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdx75.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-* Please choose corresponding imperative wordings.
+diff --git a/arch/arm64/boot/dts/qcom/sdx75.dtsi b/arch/arm64/boot/dts/qcom/sdx75.dtsi
+index f58da999a72d..b8b80127079e 100644
+--- a/arch/arm64/boot/dts/qcom/sdx75.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdx75.dtsi
+@@ -405,7 +405,7 @@ hyp_smmu_s2_pt_mem: hyp-smmu-s2-pt@bfc00000 {
+ 		};
+ 	};
+ 
+-	smem: qcom,smem {
++	smem: smem {
+ 		compatible = "qcom,smem";
+ 		memory-region = <&smem_mem>;
+ 		hwlocks = <&tcsr_mutex 3>;
+-- 
+2.43.0
 
-
-> Fixes: e88c4cfcb7b888ac374916806f86c17d8ecaeb67
-
-Please add a commit subject for this tag.
-
-
-> Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-
-I find the author email addresses suspicious according to the Developer's =
-Certificate of Origin.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc5#n398
-
-Would other email addresses be more appropriate for desired patch communic=
-ation?
-
-Regards,
-Markus
