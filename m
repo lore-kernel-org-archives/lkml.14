@@ -1,40 +1,41 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307E013C3D2;
-	Fri, 26 Apr 2024 08:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B33A13A3E7;
+	Fri, 26 Apr 2024 08:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714118895; cv=none; b=LSUB00E7/JSDljiSJM0Eet0ykj/JjfD2WFPaG+oC39zjBWHnHrYmOYpn0/5npgHs5i/XR6WDj4cWDOipvlgEJnvRyh6XmU0q+55A8Lpso6V7SlbqW13+H+De5+ikXZ3EfGZd8/7r4YsZGG9E3D7IJExIBmqeBepfZfm5aIc3xiY=
+	t=1714118968; cv=none; b=QfBfk9D7KzZOUwjD+BsObtvi4RwCihGnEPAmOo0NILkjDI07n6p9Z7cDWQ1aoBJMVzJY04VUKp6BOW33eNAMC0x/7gkUraXjHstGCiq0pEff5Vo2UNnyUJ5orjVqi6x7Q1xXJgCXlQ6mXDDAOBWInRpXLXXufuJPt7g5zlV+Feg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714118895; c=relaxed/simple;
-	bh=3xfRicWnDi/w4UfU1YIn3STeRnJyS+kGHjQyZiewljk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E8mdx1sxXBv+GT5JqtvIhKlwV0ApA7Y1wFZt4K8F4WbTdLnXoop7Gyw48rgEnwTfUSrxMVqgh8Ae2nxLU/x32QlFMo1ABBW52x5Db643kB8Brkrl7BPv/Xqsh255iCgjc1BkmRm6m+HwmZPVXlhXJs+lwhUNHGki/cmYdE0PsWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 43Q86Ale090356;
-	Fri, 26 Apr 2024 16:06:10 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VQlbP0QkYz2Nhclv;
-	Fri, 26 Apr 2024 16:03:29 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Fri, 26 Apr 2024 16:06:08 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <viro@zeniv.linux.org.uk>, <brauner@kernel.org>, <mingo@redhat.com>,
-        <peterz@infradead.org>, <juri.lelli@redhat.com>,
-        <vincent.guittot@linaro.org>
-CC: <jack@suse.cz>, <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
-        <bsegall@google.com>, <mgorman@suse.de>, <bristot@redhat.com>,
-        <vschneid@redhat.com>, <cmllamas@google.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <ke.wang@unisoc.com>, <jing.xia@unisoc.com>, <xuewen.yan94@gmail.com>
-Subject: [RFC PATCH] epoll: Add synchronous wakeup support for ep_poll_callback
-Date: Fri, 26 Apr 2024 16:05:48 +0800
-Message-ID: <20240426080548.8203-1-xuewen.yan@unisoc.com>
+	s=arc-20240116; t=1714118968; c=relaxed/simple;
+	bh=dqexjYVG/TRkkiRk3X4lAKrAzhWMuPT98yCFL7d1i0M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GwrE+JA1ycyehYPnrErsWDDA4nZ6lLn5I+hvs39ghg2aVKuWAmYVhixynAdCPbg2zSo0xILRiBzfb5hUr3F12C2L9ichZE5cY5fWvmv57VPUUxYNBzfQq00spjIBWpDVU7gAx7PRBLZDbAijOPV3jpKfx8OnQKwFJF6srjQkIzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jze/LJ6Q; arc=none smtp.client-ip=45.254.50.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jze/LJ6Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=4ZX3C
+	2yV/g45GL3DnetD0/tBcmwuj74la9gUgdxLngs=; b=jze/LJ6Q9A3vEKrrQxIoU
+	gW/j8DkkC2mduhZzYHZ4zR1iLvOsk4MYU3CHKzTk27uMZU3GQifvRn50T3Hvjirn
+	r8SPUU+89foHJnloA7zNko9HpfMZSWfCUl9ls061xJ+WncdVxhPSuglyrBWJ2Ix6
+	eWyeiSvEtu3zvEdoIpbtGA=
+Received: from localhost.localdomain (unknown [112.97.48.208])
+	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wDnPprJYCtmjTm8CQ--.11148S2;
+	Fri, 26 Apr 2024 16:07:39 +0800 (CST)
+From: Slark Xiao <slark_xiao@163.com>
+To: loic.poulain@linaro.org,
+	ryazanov.s.a@gmail.com,
+	johannes@sipsolutions.net
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Slark Xiao <slark_xiao@163.com>
+Subject: [PATCH net] net: wwan: Add net device name for error message print
+Date: Fri, 26 Apr 2024 16:07:33 +0800
+Message-Id: <20240426080733.819633-1-slark_xiao@163.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,54 +44,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 43Q86Ale090356
+X-CM-TRANSID:_____wDnPprJYCtmjTm8CQ--.11148S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXry5KFW7XFyrCr15KF1ftFb_yoW5AF4DpF
+	W7K3sxZr1UJay7X3WUJrWkZFWYywn5ta47Kry2v3WSvF1ayrWUWa4fJF95uw43ta1rAr17
+	tF4S9anxW3ZrG3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piH5l8UUUUU=
+X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiowvLZGVODFttogABs1
 
-Now, the epoll only use wake_up() interface to wake up task.
-However, sometimes, there are epoll users which want to use
-the synchronous wakeup flag to hint the scheduler, such as
-Android binder driver.
-So add a wake_up_sync() define, and use the wake_up_sync()
-when the sync is true in ep_poll_callback().
+In my local, I got an error print in dmesg like below:
+"sequence number glitch prev=487 curr=0"
+After checking, it belongs to mhi_wwan_mbim.c. Refer to the usage
+of this API in other files, I think we should add net device name
+print before message context.
 
-Co-developed-by: Jing Xia <jing.xia@unisoc.com>
-Signed-off-by: Jing Xia <jing.xia@unisoc.com>
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+Signed-off-by: Slark Xiao <slark_xiao@163.com>
 ---
- fs/eventpoll.c       | 5 ++++-
- include/linux/wait.h | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wwan/mhi_wwan_mbim.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 882b89edc52a..9b815e0a1ac5 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1336,7 +1336,10 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
- 				break;
- 			}
- 		}
--		wake_up(&ep->wq);
-+		if (sync)
-+			wake_up_sync(&ep->wq);
-+		else
-+			wake_up(&ep->wq);
- 	}
- 	if (waitqueue_active(&ep->poll_wait))
- 		pwake++;
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index 8aa3372f21a0..2b322a9b88a2 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -221,6 +221,7 @@ void __wake_up_pollfree(struct wait_queue_head *wq_head);
- #define wake_up_all(x)			__wake_up(x, TASK_NORMAL, 0, NULL)
- #define wake_up_locked(x)		__wake_up_locked((x), TASK_NORMAL, 1)
- #define wake_up_all_locked(x)		__wake_up_locked((x), TASK_NORMAL, 0)
-+#define wake_up_sync(x)			__wake_up_sync(x, TASK_NORMAL)
+diff --git a/drivers/net/wwan/mhi_wwan_mbim.c b/drivers/net/wwan/mhi_wwan_mbim.c
+index 3f72ae943b29..6cefee25efc4 100644
+--- a/drivers/net/wwan/mhi_wwan_mbim.c
++++ b/drivers/net/wwan/mhi_wwan_mbim.c
+@@ -186,14 +186,14 @@ static int mbim_rx_verify_nth16(struct mhi_mbim_context *mbim, struct sk_buff *s
  
- #define wake_up_interruptible(x)	__wake_up(x, TASK_INTERRUPTIBLE, 1, NULL)
- #define wake_up_interruptible_nr(x, nr)	__wake_up(x, TASK_INTERRUPTIBLE, nr, NULL)
+ 	if (skb->len < sizeof(struct usb_cdc_ncm_nth16) +
+ 			sizeof(struct usb_cdc_ncm_ndp16)) {
+-		net_err_ratelimited("frame too short\n");
++		net_err_ratelimited("mbim: frame too short\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	nth16 = (struct usb_cdc_ncm_nth16 *)skb->data;
+ 
+ 	if (nth16->dwSignature != cpu_to_le32(USB_CDC_NCM_NTH16_SIGN)) {
+-		net_err_ratelimited("invalid NTH16 signature <%#010x>\n",
++		net_err_ratelimited("mbim: invalid NTH16 signature <%#010x>\n",
+ 				    le32_to_cpu(nth16->dwSignature));
+ 		return -EINVAL;
+ 	}
+@@ -201,7 +201,7 @@ static int mbim_rx_verify_nth16(struct mhi_mbim_context *mbim, struct sk_buff *s
+ 	/* No limit on the block length, except the size of the data pkt */
+ 	len = le16_to_cpu(nth16->wBlockLength);
+ 	if (len > skb->len) {
+-		net_err_ratelimited("NTB does not fit into the skb %u/%u\n",
++		net_err_ratelimited("mbim: NTB does not fit into the skb %u/%u\n",
+ 				    len, skb->len);
+ 		return -EINVAL;
+ 	}
+@@ -209,7 +209,7 @@ static int mbim_rx_verify_nth16(struct mhi_mbim_context *mbim, struct sk_buff *s
+ 	if (mbim->rx_seq + 1 != le16_to_cpu(nth16->wSequence) &&
+ 	    (mbim->rx_seq || le16_to_cpu(nth16->wSequence)) &&
+ 	    !(mbim->rx_seq == 0xffff && !le16_to_cpu(nth16->wSequence))) {
+-		net_err_ratelimited("sequence number glitch prev=%d curr=%d\n",
++		net_err_ratelimited("mbim: sequence number glitch prev=%d curr=%d\n",
+ 				    mbim->rx_seq, le16_to_cpu(nth16->wSequence));
+ 	}
+ 	mbim->rx_seq = le16_to_cpu(nth16->wSequence);
+@@ -222,7 +222,7 @@ static int mbim_rx_verify_ndp16(struct sk_buff *skb, struct usb_cdc_ncm_ndp16 *n
+ 	int ret;
+ 
+ 	if (le16_to_cpu(ndp16->wLength) < USB_CDC_NCM_NDP16_LENGTH_MIN) {
+-		net_err_ratelimited("invalid DPT16 length <%u>\n",
++		net_err_ratelimited("mbim: invalid DPT16 length <%u>\n",
+ 				    le16_to_cpu(ndp16->wLength));
+ 		return -EINVAL;
+ 	}
+@@ -233,7 +233,7 @@ static int mbim_rx_verify_ndp16(struct sk_buff *skb, struct usb_cdc_ncm_ndp16 *n
+ 
+ 	if (sizeof(struct usb_cdc_ncm_ndp16) +
+ 	     ret * sizeof(struct usb_cdc_ncm_dpe16) > skb->len) {
+-		net_err_ratelimited("Invalid nframes = %d\n", ret);
++		net_err_ratelimited("mbim: Invalid nframes = %d\n", ret);
+ 		return -EINVAL;
+ 	}
+ 
 -- 
 2.25.1
 
