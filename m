@@ -1,135 +1,273 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D9013F01A
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A3313C9A7;
+	Fri, 26 Apr 2024 09:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714124234; cv=none; b=qpV6SoDJd/8QyUk5q2ibvXHcvvzqjFwE2uUFMgDoech/lbaTf4c3LckU9mcvaluNuVEBaLDSvcFl9z/9n+Tc6Bu8aFGdACmM1DNXR8agGcMRMl6pgoFCJGYmD0cj0FdXMoUhT/a9c/noP63Nvhk92uG4qRxxEgwiUWYCuSYmiNk=
+	t=1714124292; cv=none; b=rkMLjVytVQ0BO/ToBHhvMCD2QiLASFVFPyzRKr7Pm+WTvzrHvPZALA2Q+q2TfXQiV3/ouCPMfYRIlnkZK0f5uxC1eGJhmISLmJSa6Ca217BQgfYrh0RCKXEYv3sm3jwJQf0BoH65JWxaq7be0bZmMwwa9bYudRbctH9ac12kRJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714124234; c=relaxed/simple;
-	bh=fkUkozjfvh4JxoQsiMPWUJNXjugSkQuTgQdyapQWyWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PI8srSmo+m9JtRQk4KJqJJwJpAifcJLpPUKsy9z1mPLTvHYKSKKYjrPtZTGGe6BQ8EnYKGkq/3+tx0HRtlxB0gmMKlxIDieS4WG1mXAB0cwdWy6UG/tzcV7Y5ykmOQ9U79DnOz8d8lGMmJgcSkroU1MyWdmAnod6KgX9dW6K1qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Zl8CRRqE; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zl8CRRqE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rZRRRs62CqlZjf4gCbzutCXAjbmEkJH9KTLakhods+U=; b=Zl8CRRqEiedNjs0MTpSTbIhtPh
-	xVWEiI5k4wWO0sW7Zd5/i1wibzBGiyLxugsjl3d+mdkMgwGL5ZCaQluDHAwue9VAIoutgTzdqzfPn
-	Its5QzTB9qA7OyxVqE0StxmbH/lb7FZMu/nyd7AaiaE3g1lofA3OyeqhX5VSDDNX1bsokGzHTU6P1
-	4xNq2Fj9NTopmc360Q4Iw8X69zP+Fziv4Jo0b5pkg4G6cTzAgw8wsfiwEpriSkf89JRhYchHccXe3
-	hE2AtNWWztAaC4RTG2hoTaXbLGfJqpWzeovDCLja73yjCSOehAeArocKJVr99ERT5pACHjCB5+HbG
-	14JFUgbw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s0I0n-00000004wNt-49pC;
-	Fri, 26 Apr 2024 09:36:58 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A42723003EA; Fri, 26 Apr 2024 11:36:57 +0200 (CEST)
-Date: Fri, 26 Apr 2024 11:36:57 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Luis Machado <luis.machado@arm.com>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	linux-kernel@vger.kernel.org, kprateek.nayak@amd.com,
-	wuyun.abel@bytedance.com, tglx@linutronix.de, efault@gmx.de,
-	nd <nd@arm.com>, John Stultz <jstultz@google.com>
-Subject: Re: [RFC][PATCH 08/10] sched/fair: Implement delayed dequeue
-Message-ID: <20240426093657.GJ12673@noisy.programming.kicks-ass.net>
-References: <20240405102754.435410987@infradead.org>
- <20240405110010.631664251@infradead.org>
- <3888d7c8-660e-479c-8c10-8295204e5f36@arm.com>
- <1461277e-af68-41e7-947c-9178b55810b1@arm.com>
- <20240425104220.GE21980@noisy.programming.kicks-ass.net>
- <20240425114949.GH12673@noisy.programming.kicks-ass.net>
- <20240426093241.GI12673@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1714124292; c=relaxed/simple;
+	bh=1iMFtZnjk8H0Dg72c9aJ7ZABHqaO+HlPveUZ8X7NXBw=;
+	h=Subject:From:To:CC:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QuzYdwFChNa0/c4nKsT5Og3ackesYpYej47hgPDxw5pmxPh15GKH3YubFuawso/t0F7f9kRAG1YP/uNIXwLuvnkHb8I2sz5meGfdIo21I2iHr1GvR8u7plq1AmQqS7RN/D82sfW/+nB/HjFBRgspgyZsllPn0byKdgIOqs+dfRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VQncr3VWLzwVGG;
+	Fri, 26 Apr 2024 17:34:52 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 68444140382;
+	Fri, 26 Apr 2024 17:38:05 +0800 (CST)
+Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
+ (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 26 Apr
+ 2024 17:38:05 +0800
+Subject: Re: [PATCH net-next v2 09/15] mm: page_frag: reuse MSB of 'size'
+ field for pfmemalloc
+From: Yunsheng Lin <linyunsheng@huawei.com>
+To: Alexander H Duyck <alexander.duyck@gmail.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, <linux-mm@kvack.org>
+References: <20240415131941.51153-1-linyunsheng@huawei.com>
+ <20240415131941.51153-10-linyunsheng@huawei.com>
+ <37d012438d4850c3d7090e784e09088d02a2780c.camel@gmail.com>
+ <8b7361c2-6f45-72e8-5aca-92e8a41a7e5e@huawei.com>
+ <17066b6a4f941eea3ef567767450b311096da22b.camel@gmail.com>
+ <c45fdd75-44be-82a6-8e47-42bbc5ee4795@huawei.com>
+Message-ID: <efd21f1d-8c67-b060-5ad2-0d500fac2ba6@huawei.com>
+Date: Fri, 26 Apr 2024 17:38:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240426093241.GI12673@noisy.programming.kicks-ass.net>
+In-Reply-To: <c45fdd75-44be-82a6-8e47-42bbc5ee4795@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-On Fri, Apr 26, 2024 at 11:32:41AM +0200, Peter Zijlstra wrote:
-> On Thu, Apr 25, 2024 at 01:49:49PM +0200, Peter Zijlstra wrote:
-> > On Thu, Apr 25, 2024 at 12:42:20PM +0200, Peter Zijlstra wrote:
-> > 
-> > > > I wonder if the delayed dequeue logic is having an unwanted effect on the calculation of
-> > > > utilization/load of the runqueue and, as a consequence, we're scheduling things to run on
-> > > > higher OPP's in the big cores, leading to poor decisions for energy efficiency.
-> > > 
-> > > Notably util_est_update() gets delayed. Given we don't actually do an
-> > > enqueue when a delayed task gets woken, it didn't seem to make sense to
-> > > update that sooner.
-> > 
-> > The PELT runnable values will be inflated because of delayed dequeue.
-> > cpu_util() uses those in the @boost case, and as such this can indeed
-> > affect things.
-> > 
-> > This can also slightly affect the cgroup case, but since the delay goes
-> > away as contention goes away, and the cgroup case must already assume
-> > worst case overlap, this seems limited.
-> > 
-> > /me goes ponder things moar.
+On 2024/4/18 17:39, Yunsheng Lin wrote:
+
+...
+
 > 
-> First order approximation of a fix would be something like the totally
-> untested below I suppose...
+>> combining the pagecnt_bias with the va. I'm wondering if it wouldn't
+>> make more sense to look at putting together the structure something
+>> like:
+>>
+>> #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>> typedef u16 page_frag_bias_t;
+>> #else
+>> typedef u32 page_frag_bias_t;
+>> #endif
+>>
+>> struct page_frag_cache {
+>> 	/* page address and offset */
+>> 	void *va;
 > 
-> ---
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index cfd1fd188d29..f3f70b5adca0 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5391,6 +5391,7 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
->  			if (cfs_rq->next == se)
->  				cfs_rq->next = NULL;
->  			se->sched_delayed = 1;
-> +			update_load_avg(cfs_rq, se, 0);
->  			return false;
->  		}
->  	}
-> @@ -6817,6 +6818,7 @@ requeue_delayed_entity(struct sched_entity *se)
->  	}
->  
->  	se->sched_delayed = 0;
-> +	update_load_avg(qcfs_rq, se, 0);
+> Generally I am agreed with combining the virtual address with the
+> offset for the reason you mentioned below.
+> 
+>> 	page_frag_bias_t pagecnt_bias;
+>> 	u8 pfmemalloc;
+>> 	u8 page_frag_order;
+>> }
+> 
+> The issue with the 'page_frag_order' I see is that we might need to do
+> a 'PAGE << page_frag_order' to get actual size, and we might also need
+> to do 'size - 1' to get the size_mask if we want to mask out the offset
+> from the 'va'.
+> 
+> For page_frag_order, we need to:
+> size = PAGE << page_frag_order
+> size_mask = size - 1
+> 
+> For size_mask, it seem we only need to do:
+> size = size_mask + 1
+> 
+> And as PAGE_FRAG_CACHE_MAX_SIZE = 32K, which can be fitted into 15 bits
+> if we use size_mask instead of size.
+> 
+> Does it make sense to use below, so that we only need to use bitfield
+> for SIZE < PAGE_FRAG_CACHE_MAX_SIZE in 32 bits system? And 'struct
+> page_frag' is using a similar '(BITS_PER_LONG > 32)' checking trick.
+> 
+> struct page_frag_cache {
+> 	/* page address and offset */
+> 	void *va;
+> 
+> #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE) && (BITS_PER_LONG <= 32)
+> 	u16 pagecnt_bias;
+> 	u16 size_mask:15;
+> 	u16 pfmemalloc:1;
+> #else
+> 	u32 pagecnt_bias;
+> 	u16 size_mask;
+> 	u16 pfmemalloc;
+> #endif
+> };
+> 
 
-Compiler demands this ^^^^^ be cfs_rq instead ;-) brown_paper_bags--;
+After considering a few different layouts for 'struct page_frag_cache',
+it seems the below is more optimized:
 
->  }
->  
->  /*
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index d07a3b98f1fb..d16529613123 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -810,6 +810,9 @@ static inline void se_update_runnable(struct sched_entity *se)
->  
->  static inline long se_runnable(struct sched_entity *se)
->  {
-> +	if (se->sched_delayed)
-> +		return false;
-> +
->  	if (entity_is_task(se))
->  		return !!se->on_rq;
->  	else
-> @@ -823,6 +826,9 @@ static inline void se_update_runnable(struct sched_entity *se) {}
->  
->  static inline long se_runnable(struct sched_entity *se)
->  {
-> +	if (se->sched_delayed)
-> +		return false;
-> +
->  	return !!se->on_rq;
->  }
->  #endif
+struct page_frag_cache {
+	/* page address & pfmemalloc & order */
+	void *va;
+
+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE) && (BITS_PER_LONG <= 32)
+	u16 pagecnt_bias;
+	u16 size;
+#else
+	u32 pagecnt_bias;
+	u32 size;
+#endif
+}
+
+The lower bits of 'va' is or'ed with the page order & pfmemalloc instead
+of offset or pagecnt_bias, so that we don't have to add more checking
+for handling the problem of not having enough space for offset or
+pagecnt_bias for PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE and 32 bits system.
+And page address & pfmemalloc & order is unchanged for the same page
+in the same 'page_frag_cache' instance, it makes sense to fit them
+together.
+
+Also, it seems it is better to replace 'offset' with 'size', which indicates
+the remaining size for the cache in a 'page_frag_cache' instance, and we
+might be able to do a single 'size >= fragsz' checking for the case of cache
+being enough, which should be the fast path if we ensure size is zoro when
+'va' == NULL.
+
+Something like below:
+
+#define PAGE_FRAG_CACHE_ORDER_MASK	GENMASK(1, 0)
+#define PAGE_FRAG_CACHE_PFMEMALLOC_BIT	BIT(2)
+
+struct page_frag_cache {
+	/* page address & pfmemalloc & order */
+	void *va;
+
+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE) && (BITS_PER_LONG <= 32)
+	u16 pagecnt_bias;
+	u16 size;
+#else
+	u32 pagecnt_bias;
+	u32 size;
+#endif
+};
+
+
+static void *__page_frag_cache_refill(struct page_frag_cache *nc,
+				      unsigned int fragsz, gfp_t gfp_mask,
+				      unsigned int align_mask)
+{
+	gfp_t gfp = gfp_mask;
+	struct page *page;
+	void *va;
+
+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+	/* Ensure free_unref_page() can be used to free the page fragment */
+	BUILD_BUG_ON(PAGE_FRAG_CACHE_MAX_ORDER > PAGE_ALLOC_COSTLY_ORDER);
+
+	gfp_mask = (gfp_mask & ~__GFP_DIRECT_RECLAIM) |  __GFP_COMP |
+		   __GFP_NOWARN | __GFP_NORETRY | __GFP_NOMEMALLOC;
+	page = alloc_pages_node(NUMA_NO_NODE, gfp_mask,
+				PAGE_FRAG_CACHE_MAX_ORDER);
+	if (likely(page)) {
+		nc->size = PAGE_FRAG_CACHE_MAX_SIZE - fragsz;
+		va = page_address(page);
+		nc->va = (void *)((unsigned long)va |
+				  PAGE_FRAG_CACHE_MAX_ORDER |
+				  (page_is_pfmemalloc(page) ?
+				   PAGE_FRAG_CACHE_PFMEMALLOC_BIT : 0));
+		page_ref_add(page, PAGE_FRAG_CACHE_MAX_SIZE);
+		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE;
+		return va;
+	}
+#endif
+	page = alloc_pages_node(NUMA_NO_NODE, gfp, 0);
+	if (likely(page)) {
+		nc->size = PAGE_SIZE - fragsz;
+		va = page_address(page);
+		nc->va = (void *)((unsigned long)va |
+				  (page_is_pfmemalloc(page) ?
+				   PAGE_FRAG_CACHE_PFMEMALLOC_BIT : 0));
+		page_ref_add(page, PAGE_FRAG_CACHE_MAX_SIZE);
+		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE;
+		return va;
+	}
+
+	nc->va = NULL;
+	nc->size = 0;
+	return NULL;
+}
+
+void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
+				 unsigned int fragsz, gfp_t gfp_mask,
+				 unsigned int align_mask)
+{
+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+	unsigned long page_order;
+#endif
+	unsigned long page_size;
+	unsigned long size;
+	struct page *page;
+	void *va;
+
+	size = nc->size & align_mask;
+	va = nc->va;
+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+	page_order = (unsigned long)va & PAGE_FRAG_CACHE_ORDER_MASK;
+	page_size = PAGE_SIZE << page_order;
+#else
+	page_size = PAGE_SIZE;
+#endif
+
+	if (unlikely(fragsz > size)) {
+		if (unlikely(!va))
+			return __page_frag_cache_refill(nc, fragsz, gfp_mask,
+							align_mask);
+
+		/* fragsz is not supposed to be bigger than PAGE_SIZE as we are
+		 * allowing order 3 page allocation to fail easily under low
+		 * memory condition.
+		 */
+		if (WARN_ON_ONCE(fragsz > PAGE_SIZE))
+			return NULL;
+
+		page = virt_to_page(va);
+		if (!page_ref_sub_and_test(page, nc->pagecnt_bias))
+			return __page_frag_cache_refill(nc, fragsz, gfp_mask,
+							align_mask);
+
+		if (unlikely((unsigned long)va &
+			     PAGE_FRAG_CACHE_PFMEMALLOC_BIT)) {
+			free_unref_page(page, compound_order(page));
+			return __page_frag_cache_refill(nc, fragsz, gfp_mask,
+							align_mask);
+		}
+
+		/* OK, page count is 0, we can safely set it */
+		set_page_count(page, PAGE_FRAG_CACHE_MAX_SIZE + 1);
+
+		/* reset page count bias and offset to start of new frag */
+		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+		size = page_size;
+	}
+
+	va = (void *)((unsigned long)va & PAGE_MASK);
+	va = va + (page_size - size);
+	nc->size = size - fragsz;
+	nc->pagecnt_bias--;
+
+	return va;
+}
+EXPORT_SYMBOL(__page_frag_alloc_va_align);
