@@ -1,132 +1,99 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05805144D3F;
-	Fri, 26 Apr 2024 11:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D473A1B7;
+	Fri, 26 Apr 2024 11:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714131743; cv=none; b=KCkK2XEEjW6/WgUfQ/cd8uwSL4Ur3HHDYOlnmFSNL0HkKeRjQsTXzLSCWs/1IfJWLmhoKvUr/56JtnKB+1nE1EybuUlp3KVxDiTnEkhFq+8keItuhXgOS8SAEDKF6+7fQpt9spig+WF9a5b+yy1YdSrzWvLJHDP4knwW3a1w0fI=
+	t=1714131797; cv=none; b=KO6P4qfN4cqfn3oc0Ewiwx2NrC8kJ/E7YXKJkFVAnUXSnLsqxh7Uw+WHsg45A9nc3PCwUc9Cq2TPgtNZPbCrbZY9U1IG8IA+AdrkF9xL99oyeMAl+4Qly1Dh8J/cZtpOZ6fsJ29zuF8dZ4x7hq0DDVHmq7acw9xzxR+6KjHyUVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714131743; c=relaxed/simple;
-	bh=r1LBvcN21bnCsvNbCvInEtP2axcREmP/1hM9yXgtm84=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ePoKPudbpX0ajvf9ZMP1pvD/zQlv90909eedXEsmZF55A0B73BfkN6gt1yzdp8kcQPTAyCaE352YQmz88p6Zca2ZCtlRvMLMVmtQrxxjMLoerMCIbDvxIaDNBwFh0RVqCQOGghHaJulgOjcJ5vLPOIv3Zjn5n2iorRecIZiIFLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=EFbrcrlS; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1714131797; c=relaxed/simple;
+	bh=BcEjWt3YbmNIE7LVBFxvxMgZ2KaV3f86h2IsdGvrfSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tYVd2y3Ngvr2QWW/iD0jVS5dhC1WFjylcuF5pEdDacNMWiGDAIotYGJEGk/dy4nF65Q0A1oEzabMHjHqmW+usxoPlq2Lmbusm/L530+oDKN3No6qj8ueaFM2quUM2Y/QRKli+3LmEqJwduqmh9/kVtUHR2T/RtZNkLvLWAJBo+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=aQ34CJ9E; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="EFbrcrlS"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43Q9YZbQ003998;
-	Fri, 26 Apr 2024 13:42:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=xlp/k6NhfJf0MqxY61zVVi1EscMRkgrov08pc3xWnOQ=; b=EF
-	brcrlSp46O1V38x7aimygEW9OOem1rrJnfo1JuqJegCGR9OogPSz7VKupSeL3T3V
-	pqW7mazob116524aoeNUmLKrH81SIFt/gMORjwOOnDBMPj45kg4fxwz7PSGEB6V0
-	FZs8g/JUmBmjNQ4e6HCH+OM8aGMeEehZIfM36OGF8c3hy4xxkyPdFbKnTBWQK7Eq
-	KeyCgtmpqjif0ai204Bywn5alXego3R9uiCHICxdmCvwg0eBkq1+HbdCkD5zRSBp
-	RdCeVJOEkbpwDRrXZeFRq7yfQ4kDfECoax2q7coLWPA8FrMM5TWYtlK8FW1inqBb
-	frfX0FIJ7nKaVXbLAzCA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xm4ee9jx4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 13:42:01 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id F36D74002D;
-	Fri, 26 Apr 2024 13:41:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF31E2194CC;
-	Fri, 26 Apr 2024 13:41:14 +0200 (CEST)
-Received: from [10.48.86.112] (10.48.86.112) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Apr
- 2024 13:41:13 +0200
-Message-ID: <28aeb8b1-72f1-4dd9-b433-f5b693150475@foss.st.com>
-Date: Fri, 26 Apr 2024 13:41:12 +0200
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="aQ34CJ9E"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4VQrSn4Vb2z9smT;
+	Fri, 26 Apr 2024 13:43:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1714131785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cltDh65KDZw+OJ1Jx8uFob9VDGIFeVIuEhOR2xoeV7w=;
+	b=aQ34CJ9EipShkD28LV1bat6g3mnpc2GYmdBbBDCxEOoKx1zuh67XteNQm//lttTjtJ0edL
+	6LHYT43I/gKfoQuSGCtBrXqszUCosiV79JLe/IpGS2LxZSkhUI7OvKsJYEDjwHNBKu8mdo
+	UlDUKmUFUqBoNudAiYdIi/bpWmjmwDddMKFafy8oYEyhkldv+0DZxVEi8SZ1hUtGFCQf/B
+	rdfj2D7v9znaP2RGoKhZD/BYFOGRi82ix5kxdxKbu4K5kZkVUmO3U2/QhsErvykWztTiKe
+	7h0LLoaQJb+HZoz5OX0ZqX+BGUNHfMp8oEV433VEKJDCmdeFCDClI1k7vcvcPQ==
+Date: Fri, 26 Apr 2024 11:43:01 +0000
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: willy@infradead.org, djwong@kernel.org, brauner@kernel.org,
+	david@fromorbit.com, chandan.babu@oracle.com,
+	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+	hare@suse.de, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-xfs@vger.kernel.org, mcgrof@kernel.org, gost.dev@samsung.com,
+	p.raghav@samsung.com
+Subject: Re: [PATCH v4 07/11] iomap: fix iomap_dio_zero() for fs bs > system
+ page size
+Message-ID: <20240426114301.rtrqsv653a6vkbh6@quentin>
+References: <20240425113746.335530-1-kernel@pankajraghav.com>
+ <20240425113746.335530-8-kernel@pankajraghav.com>
+ <ZitIK5OnR7ZNY0IG@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] ARM: st: use a correct pwr compatible for stm32mp15
-To: Rob Herring <robh@kernel.org>
-CC: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Olivier Moysan <olivier.moysan@foss.st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-        Pascal Paillet
-	<p.paillet@foss.st.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20240425074835.760134-1-patrick.delaunay@foss.st.com>
- <20240425163035.GA2783061-robh@kernel.org>
-Content-Language: en-US
-From: Patrick DELAUNAY <patrick.delaunay@foss.st.com>
-In-Reply-To: <20240425163035.GA2783061-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-26_12,2024-04-26_02,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZitIK5OnR7ZNY0IG@infradead.org>
+X-Rspamd-Queue-Id: 4VQrSn4Vb2z9smT
 
-Hi,
+On Thu, Apr 25, 2024 at 11:22:35PM -0700, Christoph Hellwig wrote:
+> On Thu, Apr 25, 2024 at 01:37:42PM +0200, Pankaj Raghav (Samsung) wrote:
+> > From: Pankaj Raghav <p.raghav@samsung.com>
+> > 
+> > iomap_dio_zero() will pad a fs block with zeroes if the direct IO size
+> > < fs block size. iomap_dio_zero() has an implicit assumption that fs block
+> > size < page_size. This is true for most filesystems at the moment.
+> > 
+> > If the block size > page size, this will send the contents of the page
+> > next to zero page(as len > PAGE_SIZE) to the underlying block device,
+> > causing FS corruption.
+> > 
+> > iomap is a generic infrastructure and it should not make any assumptions
+> > about the fs block size and the page size of the system.
+> 
+> So what happened to the plan to making huge_zero_page a folio and have
+> it available for non-hugetlb setups?  Not only would this be cleaner
+> and more efficient, but it would actually work for the case where you'd
+> have to zero more than 1MB on a 4k PAGE_SIZE system, which doesn't
+> seem impossible with 2MB folios.
 
-On 4/25/24 18:30, Rob Herring wrote:
-> On Thu, Apr 25, 2024 at 09:48:31AM +0200, Patrick Delaunay wrote:
->> This patchset removes the unexpected comma in the PWR compatible
->> "st,stm32mp1,pwr-reg" and uses a new compatible "st,stm32mp1-pwr-reg"
->> in STM3MP15 device trees.
-> Why? I don't see any warnings from this. Yes, we wouldn't new cases
-> following this pattern, but I don't think it is worth maintaining
-> support for both strings. We're stuck with it. And the only way to
-> maintain forward compatibility is:
+I mentioned this Darrick in one of the older series[1] that it was
+proving to be a bit complicated (at least for me) to add that support.
 
+Currently, we reserve the ZERO_PAGE during kernel startup (arch/x86/kernel/head_64.S).
 
-Yes, no warning because the compatible string are not yet checked by tools.
+Do we go about doing the same by reserving 1 PMD (512 PTEs with base page size)
+at kernel startup if we want to have zeroed 2MB (for x86) always at
+our disposal to use for zeroing out?
+Because allocating it during runtime will defeat the purpose.
 
+Let me know what you think.
 
-I propose this patch to avoid the usage of this compatible for other SoC 
-in STM32MP1 family.
+In anycase, I would like to pursue huge_zero_page folio separately
+from this series. Also iomap_dio_zero() only pads a fs block with
+zeroes, which should never be > 64k for XFS.
 
-
-I see the invalid compatible string when I reviewed the U-Boot patch to 
-add the PWR node for STM32MP13 family:
-
-https://patchwork.ozlabs.org/project/uboot/patch/20240319024534.103299-1-marex@denx.de/
-
-
-So I prefer change the PWR binding before to have the same patch applied 
-on Linux device tree
-
-> compatible = "st,stm32mp1-pwr-reg", "st,stm32mp1,pwr-reg";
-
-
-Yes, I will update the SoC patch with you proposal.
-
-it is the only way to have compatibility of OLD Linux kernel (with old 
-driver) with NEW device tree.
-
-I miss this compatibility issue.
-
-
->
-> Rob
->
->
->
-Regards
-
-Patrick
-
+[1] https://lore.kernel.org/linux-fsdevel/5kodxnrvjq5dsjgjfeps6wte774c2sl75bn3fg3hh46q3wkwk5@2tru4htvqmrq/
