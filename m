@@ -1,85 +1,107 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DF17EF;
-	Fri, 26 Apr 2024 09:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B711413F436
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714124026; cv=none; b=Ydy3GhFXOja5kvnFH6wk3yhTaMJFWZC8tTxoyjYvKXVX1eY5pW1VMTIi/+3YknAhZMHv5JRVMIleREP7lHbHh9fyITGUwkR3af1m2cUQFcXqWigY/UoDx+06YwrdRW9uTxQRXV6mWAIFcFhdpaChA9JYV049/rhcy0VKmd65ed0=
+	t=1714124036; cv=none; b=WeR5U9jn7+OTlnIhi5o/2g5qavn1Nb+LZoVFBRKZoOdFSMORHUoP3937ztPg4dduGd8nnaCb0AA+9Ux+0TrqkOlGZZ/RTOMPpV9e2Q/WJ5d79wJXQ2aUie4DlXt6TKtb4isuKu6UEa8TzJnCy17oV4//DOUgqvCCNM+nm/kQQik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714124026; c=relaxed/simple;
-	bh=KtdZRT0AgIFuzw20NQYONI1ukZmIKXfG2gF/BlqBVcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KFM2Kd9eFZVZZ35iqBCZZiaJecbruU4UrJKVMdPWuJ4r/cfzKv9WT709xl6pFnPa0yobVI+vgYiyijPoOzUzZrBQjvBXJsdQ2o1H8PSDN8czjI7cPRmTSvj7L3qyXrK6SHW2rahif3U1j8OgmjLHUOrJDrO42ostrI2/gtZoSk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1s0HxZ-006eRA-EA; Fri, 26 Apr 2024 17:33:38 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Apr 2024 17:33:55 +0800
-Date: Fri, 26 Apr 2024 17:33:55 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: linux-crypto@vger.kernel.org, davem@davemloft.net,
-	linux-kernel@vger.kernel.org, jarkko@kernel.org, ardb@kernel.org,
-	git@jvdsn.com, hkario@redhat.com, simo@redhat.com
-Subject: Re: [PATCH v3 0/2] crypto: ecdh & ecc: Fix private key byte ordering
- issues
-Message-ID: <Zit1AwnkuuPZcwol@gondor.apana.org.au>
-References: <20240418152445.2773042-1-stefanb@linux.ibm.com>
+	s=arc-20240116; t=1714124036; c=relaxed/simple;
+	bh=/pMH4enciC7L9Alrpd3tuEENkzHhRgIR4fDOAN+IbQs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gpTDmEoBVZfBZmIH8wvZhMl07qh0coQYRbjuOiOWykqcWLbPKqyAwHQTURAejHZX2GjT1YExVbh8+niAmlKAEM3BYBkNz0s3ZVVYvMiJbYBHTcC3YlojO10K2S9Yn7iV3G4dYiZN6v5BG8YEiWkmwWi+6CDQg32VUAZTrBGAAh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHQIXMFT; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHQIXMFT"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-572229f196bso2358357a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 02:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714124033; x=1714728833; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cPuH+vBjv5eyQAgbcQ7abdv/zl57lH4J1QFyOBw4iiY=;
+        b=LHQIXMFTykhyOU7VZ1d2A7PPuEYRBLAUcT894E6Ixp+18A/jqro5yt62y4EWxT1KZN
+         IobWW77dKwlSDwPnUPuZ4u0qh2tVj4xpUxHpgj7ou8RhAuq0BYpXYpLEloZynEE/edVQ
+         IfvK2bPthJz7jPLhxqYECA7rB6p+R8ryp02hXGlNRWqRfY3T1yGL64uHjX3pGCrUzLYw
+         TuK9uvDOgGiWCIEQCFDcr6ASWCThxgNTocOQgNOJqnpcfkfhlZN+sI1+r2SKr55KXoR7
+         0sY6WggSREywVnqEygN9P5OQrK+XZuzLLy7QNgzsUmHu0Xf/1rgN161Xx9JJ8nL4o8ra
+         /VZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714124033; x=1714728833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cPuH+vBjv5eyQAgbcQ7abdv/zl57lH4J1QFyOBw4iiY=;
+        b=YWN702T/QlnWrpwJPNXAL8jfRb2mHIiX6p3W/jtQxqnVGbRZiYAgFaMBoR5ZRwA8AJ
+         xBOD6C1aFLIPVH+Yx7Vf/QSgVZSv5OcKYr1dDrcL1blnsM6fj8Xb1j64kdexoCrjxnrR
+         BKqBwyG5o7Sj203LljZ5MSk25u++E/l0dCRWS2J50OxlDfJWD5zK58LLV6o7rQUlpGmZ
+         CkU3yWJPMxdqkt3FlGIfSUqp0tIoSrd1qdKRT5CF6U1ZbJHGPu3tzbotPtV4HjiWkE3z
+         d2AkOl72HDcbNxy0a/Aof3LB8H76v/3z8alMY5OGr6MqeqqqH69poP03CGYFRmyQneFJ
+         jXYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLlAmAXCU0Q382M3RS9hToYuTKyv+7wH/I4Ee08vdd+f28Kxu+b0j3HWvezM9TxwI8wCgx1VX3AKCWRl/SIykIyYoCi+kanA0z6v/3
+X-Gm-Message-State: AOJu0YzFx+e9Hbmd+SebWprctc5L9cDnZv8xHTsLxk+Ngoe6gQ57+ZZk
+	ZT4buQtsiqbocmUrf4ro1w+J4/wbubZBXWoH+hNsPeYvEuWJNkvYqCLYfU3vRuX8MgEvS33NUNC
+	vOktcvFYe3blBspRtxwHkWHQOc1oPItEz
+X-Google-Smtp-Source: AGHT+IHPezjE+CJztDyYGDoPWkYAoc0JFZBredYxiGUqz91b4Ostfrb6qpSw9Sq9J+ppKcnAjnV98p/aXleUwfeXIEM=
+X-Received: by 2002:a50:950c:0:b0:56d:f47c:5308 with SMTP id
+ u12-20020a50950c000000b0056df47c5308mr1351685eda.34.1714124032931; Fri, 26
+ Apr 2024 02:33:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418152445.2773042-1-stefanb@linux.ibm.com>
+References: <20240425211136.486184-1-zi.yan@sent.com> <ec4f9194-9ae3-43b3-8559-0b1f186c1d9d@redhat.com>
+ <7c233278-1006-4449-81b2-d473b18a66ca@redhat.com>
+In-Reply-To: <7c233278-1006-4449-81b2-d473b18a66ca@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Fri, 26 Apr 2024 17:33:41 +0800
+Message-ID: <CAK1f24=k0mq_PKKWG9KF4vbfk1xN9MrRoa5=DW-eT1YD-S5Vtg@mail.gmail.com>
+Subject: Re: [PATCH v4] mm/rmap: do not add fully unmapped large folio to
+ deferred split list
+To: David Hildenbrand <david@redhat.com>
+Cc: Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Yang Shi <shy828301@gmail.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Barry Song <21cnbao@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18, 2024 at 11:24:43AM -0400, Stefan Berger wrote:
-> The 1st patch fixes a byte ordering issue where ctx->private_key is
-> currently passed to ecc_is_key_valid but the key is in reverse byte order.
-> To solve this issue it introduces the variable 'priv', that is already used
-> throughout the ecc and ecdh code bases for a private key in proper byte
-> order, and calls ecc_is_key_valid with 'priv'. Note that ecc_gen_privkey
-> also calls __ecc_is_key_valid with 'priv' already.
-> 
-> The 2nd patch gets rid of the 'priv' variable wherever it is used to hold
-> a private key (byte-swapped initialized from ctx->private_key) in proper
-> byte order and uses ctx->private_key directly that is now initialized in
-> proper byte order.
-> 
-> Regards,
->   Stefan
-> 
-> v3:
->   - Added Jarkko's A-b tag
->   - Expanded on the description of changes to ecc_gen_privkey (2/2)
-> 
-> v2:
->   - Added missing zeroizing of priv variable (1/2)
->   - Improved patch description (2/2)
-> 
-> 
-> 
-> 
-> Stefan Berger (2):
->   crypto: ecdh - Pass private key in proper byte order to check valid
->     key
->   crypto: ecdh & ecc - Initialize ctx->private_key in proper byte order
-> 
->  crypto/ecc.c                  | 29 ++++++++++-------------------
->  crypto/ecdh.c                 |  9 ++++++---
->  include/crypto/internal/ecc.h |  3 ++-
->  3 files changed, 18 insertions(+), 23 deletions(-)
-> 
-> -- 
-> 2.43.0
+On Fri, Apr 26, 2024 at 4:26=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+>
+> > @@ -1553,9 +1557,9 @@ static __always_inline void __folio_remove_rmap(s=
+truct folio *folio,
+> >                    * page of the folio is unmapped and at least one pag=
+e
+> >                    * is still mapped.
+> >                    */
+> > -               if (folio_test_large(folio) && folio_test_anon(folio))
+> > -                       if (level =3D=3D RMAP_LEVEL_PTE || nr < nr_pmdm=
+apped)
+> > -                               deferred_split_folio(folio);
+> > +               if (folio_test_large(folio) && folio_test_anon(folio) &=
+&
+> > +                   list_empty(&folio->_deferred_list) && partially_map=
+ped)
+> > +                       deferred_split_folio(folio);
+>
+> And now I realize that we can then even drop the folio_test_large(folio)
+> check here!
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
++1
+
+Thanks,
+Lance
+
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
