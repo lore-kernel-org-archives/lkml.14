@@ -1,215 +1,285 @@
-Received: from mo-csw.securemx.jp (mo-csw1122.securemx.jp [210.130.202.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163D5762FF;
-	Fri, 26 Apr 2024 08:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.158
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714118557; cv=none; b=bSkF4mTnNNwMM757TMTq3r8GtQ4DKSe/L43dIy8UH/AJzvu1DuyotxsvbDGFuXz3j3ni+NnRvtJd416FW9XJdJzWMMEvKZPpvqyk+eVsZTkhcKd2Q3TRQTkwLcUJi13C4ZO5rbu/1FDYCK9G/rJRDMIBnJMwUM3c91Fq7max98Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714118557; c=relaxed/simple;
-	bh=5DzvnFhpBpUJt4RSZwfBJZLdio99DLDe1icuSKFbjFw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=h2/m/7sK0pIP9bQm87Fo9h3a5HoiKzYCuyQfumFMXu33Cv0QMw+IGtsU8TrMPW+Ppoed6CES7GwksPKKVgJ1q06HHPaZQ973dJ7VbL7HaW8nGtaVUtLLtwrLhwIN/rHaTgvUwTK0J23Suc+t3ItbqE69n451s1t/8555TiItttg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
-Received: by mo-csw.securemx.jp (mx-mo-csw1122) id 43Q81xGe4192807; Fri, 26 Apr 2024 17:01:59 +0900
-X-Iguazu-Qid: 2rWhAUbYirZdWvlLp7
-X-Iguazu-QSIG: v=2; s=0; t=1714118519; q=2rWhAUbYirZdWvlLp7; m=/Lyerl9OXsq+THcaPTylrfkVlvPSTUl+KzFCVHKXbIU=
-Received: from CNN1EMTA01.test.kioxia.com ([202.248.33.144])
-	by relay.securemx.jp (mx-mr1120) id 43Q81vfP1943313
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 26 Apr 2024 17:01:57 +0900
-Received: from Switcher-Post_Send (gateway [10.232.20.1])
-	by CNN1EMTA01.test.kioxia.com (Postfix) with ESMTP id F240F48A84;
-	Fri, 26 Apr 2024 17:01:56 +0900 (JST)
-Received: from CNN1ESTR03.kioxia.com (localhost [127.0.0.1])
-	by Switcher-Post_Send (Postfix) with ESMTP id 86ECA1938B55A8;
-	Fri, 26 Apr 2024 16:39:47 +0900 (JST)
-Received: from localhost [127.0.0.1] 
-	 by CNN1ESTR03.kioxia.com with ESMTP id 0002SAAAAAA00BBM;
-	 Fri, 26 Apr 2024 16:39:47 +0900
-Received: from CNN1EXMB04.r1.kioxia.com (CNN1EXMB04.r1.kioxia.com [10.232.20.153])
-	by Switcher-Pre_Send (Postfix) with ESMTP id 7B53CAA284800;
-	Fri, 26 Apr 2024 16:39:47 +0900 (JST)
-Received: from CNN1EXMB03.r1.kioxia.com (10.232.20.152) by
- CNN1EXMB04.r1.kioxia.com (10.232.20.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 26 Apr 2024 17:01:55 +0900
-Received: from CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) by
- CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) with mapi id 15.01.2507.035; Fri,
- 26 Apr 2024 17:01:55 +0900
-From: tada keisuke <keisuke1.tada@kioxia.com>
-To: Paul E Luse <paul.e.luse@linux.intel.com>,
-        Yu Kuai
-	<yukuai1@huaweicloud.com>
-CC: "song@kernel.org" <song@kernel.org>, "yukuai (C)" <yukuai3@huawei.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Luse, Paul E"
-	<paul.e.luse@intel.com>
-Subject: RE: [PATCH v2 08/11] md: add atomic mode switching in RAID 1/10
-Thread-Topic: [PATCH v2 08/11] md: add atomic mode switching in RAID 1/10
-Thread-Index: AdqLx+XD0n9rpAUxRba5DThcEUS6pAF1ejgc//zL4YD/937IgA==
-Date: Fri, 26 Apr 2024 08:01:55 +0000
-Message-ID: <4b8f2f7499bd497c9db280775ae4ea81@kioxia.com>
-References: <47c035c3e741418b80eb6b73d96e7e92@kioxia.com>
- <8d21354c-9e67-b19c-1986-b4c027dff125@huaweicloud.com>
- <20240416073806.50e3ff5d@peluse-desk5> <20240416154113.114dc42f@peluse-desk5>
-In-Reply-To: <20240416154113.114dc42f@peluse-desk5>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28344.001
-x-tm-as-result: No-10--7.668700-8.000000
-x-tmase-matchedrid: 4uiQDFKJCRSmagT1k9kBpu5i6weAmSDKQV99ahimM1VYC5LPd7Bvbf3c
-	g9WGG5V+HkAOv6n9gx5hoUIS5GGeElqzeP+fKaZirltvlARhKR0Jlr1xKkE5ucC5DTEMxpeQfiq
-	1gj2xET/uo3YBjUsFh2kzi5An54UG0UwGeYlGH8nOvXpg7ONnXYiuaoNXJrK/njPfVXLnMPpdvd
-	jb5IwdboBsLAy4Xg8nk60UwrkrF+Q7mT8/EEC+/t5x7RpGJf1aWC/7aMfV0JHyXa/7gO3s/eQ5w
-	ujMC0dGS8TZctow9KA99FRUGO9LC6sKBwAAbK0INT0Qrj4fxTWhxK8Q8oY751PJPmOOhanxBUz2
-	Q+xpjHgAr2+Yl5G+KEqGW42c0HkYUrCpHdMhGxSSJLHHb2KALZ8z6yZBmpaQePIcxyHyQ7B/HKm
-	e7ZTCHzu0b394gf+xqvVqP+O9J1pK69zQ3OcNluJMNIftzCCT9qZsX+XDJhCHvxzu1FG4kXHoU3
-	FSpRakyP5rOgF6xbQk6hi9T3GK5+9MJYPOVXnMZ7RHc0AX9yEQOcMSo0926rEOBl2MVn3Qmn3Zw
-	Jqelp8aQPl5Dimwj2EjXesrhGFfNyl1nd9CIt2DGx/OQ1GV8gD6RpjqQGaF+gtHj7OwNO2FR9Ha
-	u8GO7mOyIFxsyFI0FWgWw7VpSwggBNMyfWznSpWwJd6jQkqPYBKnkM8aAXc=
-x-tm-as-user-approved-sender: No
-x-tm-as-user-blocked-sender: No
-x-tmase-result: 10--7.668700-8.000000
-x-tmase-version: ISME-14.0.0.2080-9.0.1002-28344.001
-x-tm-snts-smtp: DC8A42DBCA8CCF84F8042C574AE0422201E5FF69DB6EAEFAAA9413D2596B34822000:8
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EBC1E885;
+	Fri, 26 Apr 2024 08:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714118628; cv=fail; b=VdX53BFiT/hrjsP3vMY8Me01obnn7yn0JJht32DOHcfaT0IsHGWpUS+UjUdowjXwsvDRMoDmrkbQHiJ4VUQ3+v9XzD8n34hMzerH17bMum6jQYnfyj8IxdY2gw8uF9ImZUEA7tVQBhnLNTDNuhb5FRvQAUklAGptkBmWkl7Hp6g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714118628; c=relaxed/simple;
+	bh=kWpU1Fr7M5S/jVdOoQ22QodjbkM45XiBg2en4k1ef3A=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pidcaeQ6ltwBjABEkD442H8jpprTrfciT6fz1WZuD/NAbl/l/3eWuc2S63LaNshuubReSGwHZmM4h4vTuZrJ6myxD0NERfgWuzWb2r3pouHFLExTKlbfdqIWddLw5EXDdsriA2RB0Kt24c6q8tUS2md3CzbW0cHCF+V6zaSzVGg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dD3Q/gCZ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=P9CPTj3X; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dD3Q/gCZ";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="P9CPTj3X"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q46KVK015972;
+	Fri, 26 Apr 2024 08:02:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=egJb7nlS0xZLT1ITlSU6S13nAtyKKlyicSu+hR4jq6o=;
+ b=dD3Q/gCZWoceuit/f0/MZqCJZMJJUSDWNMeluw5BKRQ3rKVPHjTJn48peqfzeSYJriaj
+ eMmh1/rx/BvQVY5svr/M16QYf8M8qbLYtFFwiCkRsP9OI8OUKZwuuSpgg7zRSSWAvycm
+ OBpH41RLlszqYTNWfz8u40soRtz5esN1lka5yVJYOyfkQd6nfeb52pHlTqU6bfkO+MW2
+ soV5T6A5IJq/1fq+7HC0K43hpf/E+q5E5S8Vixm/hfxXvx44m7dQL/Qd9NkhNsC6vzLi
+ ruV7phhEUj/gpercCoZDi4sbBLcaJQrziSapRObOVJkABai2oEk/Mvj5e2U7jEgTNUeJ 5w== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xm4mddkhh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Apr 2024 08:02:42 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q7gEAr019720;
+	Fri, 26 Apr 2024 08:02:41 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xpbf7e3wm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Apr 2024 08:02:41 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=agjiU3EAJLXCeYP1LBbffNSUYyUqB6Bqm5NzznOo/J6kPaNQg7QtvqCZynt4kGo354Ab+E34bm16BASY4Ku7ix6Uz0QJx/YfH0D4cNU6IDovH0GxfldoxQN5wI4zI/L7oI5pvVulTFnmWHbac8esWDlrvNZUrNS2uqq012DEQ2/wuQtdoHnkFAmyivCBhtuRH2ktya6OxsL6tOPxHoksp183uMc/58mruZ93BcF+Lu3bu6wctGyWuH2+alMQja3aHas0Gela+9LLvy69ESrhK5fNtYQlRe/s2ojHJCVpbUdEootpgB34kGvsxgpZBuUYQ6dyejqaFxO9h3cDYTNuzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=egJb7nlS0xZLT1ITlSU6S13nAtyKKlyicSu+hR4jq6o=;
+ b=MnNja4K3Rtj078UrtONbkViuuBF8qNh2ifTTbFhfOfi2GF2ZnCZfQpdAPcdo1R/qro7rr2qmpsozze6yngfiUSYil4yRPXF4CpQ2PpC2wQyZV754IqrP0t/4NlNTZaZ4uM3Dfarq8mt4/tfH7XA/f/cLcsRirvPy6GvTS/zj46M3BfJKLJ+Tp3S/3F1buPjL8i43m7q7WO0/8mHgP+XGGUvyx0NnC6SU+me5TwOjDJqQXIy8MZH7tn5P5zNklWFviQh96OpEiyVVjx8VVuyU4zJ0pdKmSJTzIAdQS/N8INhxMGBZy8lN7HVkSTahLHSVoRLaBxNtBGlspN9CbgD/sA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=egJb7nlS0xZLT1ITlSU6S13nAtyKKlyicSu+hR4jq6o=;
+ b=P9CPTj3Xr/VvcG4d1XQIOW4b02Tsb40R5Z/LX2AzyQR3d+Hr9TrtqTL/Jaq1kGEbpt6HteQLf64d4WX8z78iK+QbtAxaoCdcXLQKvM06tvqUxItMnvywhWojv5PNc6VNUF5bsAIPAwWxZeccKkp5ut/htkzvmiRh5h4dfLNfBi8=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by PH7PR10MB6155.namprd10.prod.outlook.com (2603:10b6:510:1f4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Fri, 26 Apr
+ 2024 08:02:37 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%4]) with mapi id 15.20.7519.021; Fri, 26 Apr 2024
+ 08:02:37 +0000
+Message-ID: <db87a92d-9813-4fdd-bea5-e3d8a6838b30@oracle.com>
+Date: Fri, 26 Apr 2024 09:02:31 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 2/7] filemap: Change mapping_set_folio_min_order() ->
+ mapping_set_folio_orders()
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, djwong@kernel.org,
+        viro@zeniv.linux.org.uk, jack@suse.cz, akpm@linux-foundation.org,
+        willy@infradead.org, dchinner@redhat.com, tytso@mit.edu, hch@lst.de,
+        martin.petersen@oracle.com, nilay@linux.ibm.com, ritesh.list@gmail.com,
+        mcgrof@kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        ojaswin@linux.ibm.com, p.raghav@samsung.com, jbongio@google.com,
+        okiselev@amazon.com
+References: <20240422143923.3927601-1-john.g.garry@oracle.com>
+ <20240422143923.3927601-3-john.g.garry@oracle.com>
+ <20240425144741.houv6uoflhwmcc2u@quentin>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20240425144741.houv6uoflhwmcc2u@quentin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0144.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:193::23) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB04.r1.kioxia.com
-X-OrganizationHeadersPreserved: CNN1EXMB04.r1.kioxia.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH7PR10MB6155:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0cf0b7de-2f66-4b6b-263e-08dc65c73cc9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?SExjWjZWT0FsOFJsR3RGZWpHL3JNcUt2RTBjbUNad2JLejUzekxyV3VBaWJs?=
+ =?utf-8?B?dFZtOFBBQ09IVzlseERON2hVc29jeHNuaHB6aTgxb0w0MWNvMVo1U3NVejB2?=
+ =?utf-8?B?ckU2TmYwcmVxRGwrQ1ZiTXJjTEVwTzBxYjA0MTQ5KzVNM2RuT1M0ZWZxQnF3?=
+ =?utf-8?B?WEJYVC8xZDloR0Z1aW5zVVFnT0tMV3pxTlo4T2NkVXFTSDRqK1V6TjN2QzFw?=
+ =?utf-8?B?RTFEeTZ2cCtxRWNYNHlvamd1disvN0R2SjFRZm0xeFd5S1BtWkxQaDhrL2l6?=
+ =?utf-8?B?bFZFU01oUnZmUHU2UzdQSlgybDZyaFRtU1QrTWJrcFRoUWRyTkUrKzk2R25l?=
+ =?utf-8?B?M3o2UldVNnpFbDdHWmJDTFpCaWVZU1o5RUUzREZqcFhoVWdxVWdPaGxMU2Vk?=
+ =?utf-8?B?RHh1a2puZkI5SHR3YzNsa3ZiL3ZqYmxJZDFZSGI4c1IrdXJPcWVCWXZQcXpD?=
+ =?utf-8?B?Vmowd0ZDTTY1eXNTVFJseXBSWjc3d3hwU2NXcGVLWXZMVmpQYXFjSWdXczBE?=
+ =?utf-8?B?bThPcXdZcG1HOXV4ZWhBSmdHNnN4YnhUY3diUFowcXR3Nm1UdWVocUtoN0kr?=
+ =?utf-8?B?VzR3SlFHNzdIVi9iSVJISDRpVUtOdmxMUW1peDdUMmVrWlZJdDFpSTZvSktq?=
+ =?utf-8?B?V216ZUwrRjNHMzRVeEtLT0lxckVmN0RkV2pBdzB5dnppWVJwTUdNakhRdHY0?=
+ =?utf-8?B?cVJHL1ZwdWlEcEpEY2s2N0t6WGkxMlhUb3l6ZEYxZjFUYnUxT2dia0xmcFFE?=
+ =?utf-8?B?c0ZkWDBTOUNCTHdiWHJsa1AyMEh0Tm1ESWFOVDFPT0tQY2VVMG43OXJ6NkQz?=
+ =?utf-8?B?Z0JsVm9Wb3plUlpsbml2ZXNNMzJLQ2U2NFRWOXB6YUdQWUFMTVlneEpwRmwx?=
+ =?utf-8?B?K0lTdE5WaHR3T2tDVURCYmwyQnFadnJQeWw5dlp6enpGcmprOXFXdHU3d2I0?=
+ =?utf-8?B?U0JGZGdZY21SekR2NWpkQjNGdG1MVXNNRnJUcVVEa0ZsL0hOSXFRZVZzQms2?=
+ =?utf-8?B?WnlzaDhHQlFybEJKaFVLWGtkOFY5NDkrM0ZMN3kvczlPRW5sSFNCWEQzTW5l?=
+ =?utf-8?B?UVAvTXJKMWx1MytlMFZHcXY1aHZHWkk3VnB4TWJRK3pyYzRPY01YZUJuWDNI?=
+ =?utf-8?B?TVVNQlp5WnpESEY2Q2YyellFRmZTQ3ozMWh5L1ZVeGFYb2QxS0ZhYUtQbDg3?=
+ =?utf-8?B?YVhTYkNNOERDcThTNUlrZUdNeVFIUSt0RHJTR2lla1hqOUg0eWJNRmh3bUtt?=
+ =?utf-8?B?TEw2OFkxRjFERGV1cE9GNEdVelBGTVdlRHdabWFhblRiS2NaUGlrZzU0Q2l6?=
+ =?utf-8?B?Q1Z5NnJOREcvUDM5TmJETnU5REpuOHJyZHZOMmRTOEVaR1R1OGZzOGFzRkhv?=
+ =?utf-8?B?UEFPZklsUDFxTjVFRFpIN1ZTMFp5UnhTUkpIVjUyQzMxN2NxUk1IOEFTWTN6?=
+ =?utf-8?B?dllQMmtlanBTcll6L1o2T1dzV2RRVmpYUzBhdnZRaERXT1I1VmMzWGZYMFBY?=
+ =?utf-8?B?RTlKdm50LytSbVFIZ3FCckM0RVBtbTFCMlZ6WjAyMkNnQldmaFplU21WSjBG?=
+ =?utf-8?B?SUFPR1IveENsNkNuWDBYMllicm0xbTRNQW1NZzVrdnVodHJsQmZXcU9OTjZi?=
+ =?utf-8?B?eGd1NUhSbWlwbWFLNVFqT3JPSjFSYmNBbHg3Yi93TEVhNnF1ZEtLQkdCaGhh?=
+ =?utf-8?B?TjRVQTFmZUhBQmlualh4TTJQSkdJRmtZS3ZrcDNpNWpZZnBMaVJOV1dBPT0=?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?QU1rOVh0U09TRG1CSSt0OENCQVkwVmFGR1RTUWRUcngvM0JDSktkeXZTKy8v?=
+ =?utf-8?B?cWlOMDNlWFZhMFBLWTVETWlLa2hwUHVwK0NaTFZRL0ZZVHFMUEl5eTdFS2ox?=
+ =?utf-8?B?aHR3L0J2eXRJQnhOZndBekxhRVYyeGxMUlhnRGZnS0tPby9rNkphSW8rSitq?=
+ =?utf-8?B?cXJkWHJNMVFScjZsYUVIMHovWE56bWYrdXZFam0zM3h0alVmTjI0NGEwY0pm?=
+ =?utf-8?B?Q0VmSDZjT3lNSmFZaGhqOEhzMnRnOURvUmNWVnRUclVEbitIWVhzekxSUGY0?=
+ =?utf-8?B?anVJS0JpZnlmaEtXVU1hMFIxYWZqR2xCMHZIZmgvZk02d1c5azg5a0NuUEx2?=
+ =?utf-8?B?aHlTRStMejZjUUxYMVc4dmM2TzhielpCbkRtREJRT2VFMUNPVVdQNmg5QlEw?=
+ =?utf-8?B?blIycHhSZysvWDVsMjUyTmVPRC92dFhDZlJyejhudmkwZ3J5b2l6LzRsYklw?=
+ =?utf-8?B?V05DcHMvZGt4T1R5b09qU0tHWXNFclhUajFhUU9oUlBQSzRCQkdBeVc3dmVx?=
+ =?utf-8?B?b2Vjc2tqSFdBa3d3ay9IUStWamZNT0t1cy9tTk5wOXVCQWVqL3Q4Wkc3TlQ2?=
+ =?utf-8?B?ckUyU1NueUNRM1VDaXBPSmJCekxxQnBBSHF5WXBHaklEelVGemFPZ1Vud1Fv?=
+ =?utf-8?B?YUJWS2doa2I2WWNybUlTWXRlZVlsNkp5cnR4UUNscHBadmVjdDRIcUxROVJF?=
+ =?utf-8?B?SXpvZG5SRHdiZDFlOFFPZmM1d01iNjhUVjB1QlJWZDJEay91VkxGVmYvdVQv?=
+ =?utf-8?B?RVZiQm5kZjFxT3pHaFU1VjVzcDlJNFZoUGRGMVMybUZGYjRrMVRoNmFJNDBT?=
+ =?utf-8?B?MW9ibDRBRVRmZlFwOE0vWm14TE1yMFlsWWxaQnF5RGhxRk5USXFLbkU5Qjhw?=
+ =?utf-8?B?cDlWZGNFR0JUaG9TMGF2d1ZSNENMN0pJWTNuU29BcDNjbFdaS0dSS05HcUM0?=
+ =?utf-8?B?ZTNlR1k4U2JoaU1wNFJCa29aN0tKWE43WnltdzVvNzBtbXVZaW91OUlTOUpj?=
+ =?utf-8?B?cjN3V3A5ZXZldzJsY1RsTjhpOU9UL2N5c21Yam1SeTdRTHNHeHhMV0JnVzk2?=
+ =?utf-8?B?b0xpTEdsc1V5ZldsaFplTEgzVmtZZ1VzTUE2b0FhVVhZbTNNQUN6S0ZjODZm?=
+ =?utf-8?B?RXRrTnhjQTNIaXE4VVNNaUE3SVE1VDNXU2JVQ09kZXNxRHFxdTBoWWxZYzNH?=
+ =?utf-8?B?STFLLzIxeWpEUnZNSWVUVE0wS0ZrU0pET3RiS2lFTlpiR0l2czhwZ0ZVOTNQ?=
+ =?utf-8?B?Y29UL3RVMHBmUFVXUG0wMVNrMVF0cVFScUNLcmNGaUlBNFBDV1Q1MzgyN2FI?=
+ =?utf-8?B?T0FFTkN1RFo3WWEzWUNBakhUUTBKck4walpsWEt0VTM1UWFYbFlPM3dUbE40?=
+ =?utf-8?B?MUVURjhTMEE1ckZ2NnRDMzlhb0RlK1B6QUFEc3FLcWtKbXVqUmZkSStRRHFv?=
+ =?utf-8?B?U1M4eXRNdzFZdjdzRllLNVFjdW9IenRzM3F2emNSRFRwU0RTTUJpeitKaU1G?=
+ =?utf-8?B?VFkyK2c3R3F0M0MvVHY0Smcwa2dKY3p0T0FXSkZFZEF1Ulo5YmZSdlFkbFh0?=
+ =?utf-8?B?MnBpSWFMUTZtYUtKbmhsdUxvVzlCSkFLMVIxTmp0eUg1eFBHeGFFanl2Z0VB?=
+ =?utf-8?B?MC9NMXJ2WVRMNVVYVk1RQUFaMXpjRFdGSDNkK3E3NmNSMUZQdjdRT3FuaGdx?=
+ =?utf-8?B?L0l2NkdIRXErZUx5QnQ4aG1lMG1aOEJTU2JvR0g2S2s1aHY0enp6R2ZCbDY1?=
+ =?utf-8?B?QXpXN3dlQXI5WWZPZXgrK2VTNm5TK3hjRFFqRklkVXJmMUx1eG1hSjB5cWZ6?=
+ =?utf-8?B?Mng5bVZJNDhXcTltQmFyaGNWOERJL2tZQ2R1Ym44MXRJSU50ZmltTDVRakNu?=
+ =?utf-8?B?QUdINklmdTV4aEdoL0c3VTZCbW8zS0Evd1VpdEwvczlBMm1oVGxMUGFaeEdj?=
+ =?utf-8?B?anBPNFIyTVdMQ0ZZbkU5UEJwYXVEbU1CMnVhVFd5emRXb1FEQTJBZlBmMDVo?=
+ =?utf-8?B?eWt3dk5UOG95NHJlcTdNWlFBamU0UUNWbEdldGtYVVVkazk5NzQ4QzZFUHJT?=
+ =?utf-8?B?YlNyZ0ZqUVFpakZMeDRiM1grQnJ5YXl2YXErZDA1Mnh0VHFLZ2Z5TDlZcXV1?=
+ =?utf-8?B?eENld0pzaXVLNENHTDNCNktOVVFCaHJWVjVBNTVyelpQYWFIUGxXNGZLNnor?=
+ =?utf-8?B?S2c9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	CGlfwlcpMy5ecsGyI1NNnFl6028onGWafui1Yrwrxat4EkuITOUl6371OhQdAzq1W33D+YewPr4hfpgS3tPm6TIHc8gmLDGaRBfRn04/wBJlv8MQuHMLbb01SOuxiqwGoTt2g3vSQAZe0Jspm2sTlRFlSRnh5KshLehsEsxKsZCuuwYl61VH+/7/OYNy09eKcPgzv6rjzSAwK8bA5sh9lr2K40GK+cAzbiVKVlLpziOSw1iL3p55vpyfLwiZ2NHUA4pqBI+Thz/rJFYmUxYbOYAVQTxbcFx9rJSnFjooueOIC0/DhF0dnYusq3CD4U41tsbPNeM79Z563WOicwIhJwn9OA/ixVp+yJrREy2qmZ04UV2kAXR2ln6FOIz5Afxp9NRUbKftAtUnTFdGUFDNdZCa5dkRUlvfdG5FxjlexzU1TP/IJoUIy09bdVAA3oFB3qr3dTDS8kMPuwayZ9yCy/2h37DJly4tptm6qMo4WQdXJuS3d2qBfOVFonZDWuXCz9hPvQWyiB5momDfwCCfEg+mSLgyWt5l+axFN6cdM1wka2vhnOmD+4vrKFQGj+CnXjIcaGphMQHaWK+OWawtpAO9ajHok15mcviigMnRGVU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0cf0b7de-2f66-4b6b-263e-08dc65c73cc9
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 08:02:37.5319
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ATLs+PdzljorOortdv/q7bpdlKVU/nWnxKrdJkcnNM/7sJyPV1kAoX6fXnsUUTWyZu+MlNMlYuSZeiFDKjHuNg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6155
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_07,2024-04-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 phishscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404260050
+X-Proofpoint-ORIG-GUID: 9CWikY-ymdwDVl5JWCpqLn62IR1_rjlG
+X-Proofpoint-GUID: 9CWikY-ymdwDVl5JWCpqLn62IR1_rjlG
 
-> > > Hi,
-> > >
-> > > =1B$B:_=1B(B 2024/04/18 13:44, tada keisuke =1B$B<LF;=1B(B:
-> > > > This patch depends on patch 07.
-> > > >
-> > > > All rdevs running in RAID 1/10 switch nr_pending to atomic mode.
-> > > > The value of nr_pending is read in a normal operation
-> > > > (choose_best_rdev()). Therefore, nr_pending must always be
-> > > > consistent.
-> > > >
-> > > > Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
-> > > > Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
-> > > > ---
-> > > >   drivers/md/md.h     | 14 ++++++++++++++
-> > > >   drivers/md/raid1.c  |  7 +++++++
-> > > >   drivers/md/raid10.c |  4 ++++
-> > > >   3 files changed, 25 insertions(+)
-> > > >
-> > > > diff --git a/drivers/md/md.h b/drivers/md/md.h
-> > > > index ab09e312c9bb..57b09b567ffa 100644
-> > > > --- a/drivers/md/md.h
-> > > > +++ b/drivers/md/md.h
-> > > > @@ -236,6 +236,20 @@ static inline unsigned long
-> > > > nr_pending_read(struct md_rdev *rdev) return
-> > > > atomic_long_read(&rdev->nr_pending.data->count); }
-> > > >
-> > > > +static inline bool nr_pending_is_percpu_mode(struct md_rdev
-> > > > *rdev) +{
-> > > > +	unsigned long __percpu *percpu_count;
-> > > > +
-> > > > +	return __ref_is_percpu(&rdev->nr_pending, &percpu_count);
-> > > > +}
-> > > > +
-> > > > +static inline bool nr_pending_is_atomic_mode(struct md_rdev
-> > > > *rdev) +{
-> > > > +	unsigned long __percpu *percpu_count;
-> > > > +
-> > > > +	return !__ref_is_percpu(&rdev->nr_pending,
-> > > > &percpu_count); +}
-> > > > +
-> > > >   static inline int is_badblock(struct md_rdev *rdev, sector_t s,
-> > > > int sectors, sector_t *first_bad, int *bad_sectors)
-> > > >   {
-> > > > diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> > > > index 12318fb15a88..c38ae13aadab 100644
-> > > > --- a/drivers/md/raid1.c
-> > > > +++ b/drivers/md/raid1.c
-> > > > @@ -784,6 +784,7 @@ static int choose_best_rdev(struct r1conf
-> > > > *conf, struct r1bio *r1_bio) if (ctl.readable_disks++ =3D=3D 1)
-> > > >   			set_bit(R1BIO_FailFast, &r1_bio->state);
-> > > >
-> > > > +		WARN_ON_ONCE(nr_pending_is_percpu_mode(rdev));
-> > > >   		pending =3D nr_pending_read(rdev);
-> > > >   		dist =3D abs(r1_bio->sector -
-> > > > conf->mirrors[disk].head_position);
-> > > > @@ -1930,6 +1931,7 @@ static int raid1_add_disk(struct mddev
-> > > > *mddev, struct md_rdev *rdev) if (err)
-> > > >   				return err;
-> > > >
-> > > > +
-> > > > percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
-> > > > raid1_add_conf(conf, rdev, mirror, false); /* As all devices are
-> > > > equivalent, we don't need a full recovery
-> > > >   			 * if this was recently any drive of the
-> > > > array @@ -1949,6 +1951,7 @@ static int raid1_add_disk(struct mddev
-> > > > *mddev, struct md_rdev *rdev) set_bit(Replacement, &rdev->flags);
-> > > >   		raid1_add_conf(conf, rdev, repl_slot, true);
-> > > >   		err =3D 0;
-> > > > +
-> > > > percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
-> > >
-> > > I don't understand what's the point here, 'nr_pending' will be used
-> > > when the rdev issuing IO, and it's always used as atomic mode, there
-> > > is no difference.
-> > >
-> > > Consider that 'nr_pending' must be read from IO fast path, use it as
-> > > atomic is something we must accept. Unless someone comes up with a
-> > > plan to avoid reading 'inflight' counter from fast path like generic
-> > > block layer, it's not ok to me to switch to percpu_ref for now.
+On 25/04/2024 15:47, Pankaj Raghav (Samsung) wrote:
+> On Mon, Apr 22, 2024 at 02:39:18PM +0000, John Garry wrote:
+>> Borrowed from:
+>>
+>> https://urldefense.com/v3/__https://lore.kernel.org/linux-fsdevel/20240213093713.1753368-2-kernel@pankajraghav.com/__;!!ACWV5N9M2RV99hQ!LvajFab0xQx8oBWDlDtVY8duiLDjOKX91G4YqadoCu6gqatA2H0FzBUvdSC69dqXNoe2QvStSwrxIZ142MXOKk8$
+>> (credit given in due course)
+>>
+>> We will need to be able to only use a single folio order for buffered
+>> atomic writes, so allow the mapping folio order min and max be set.
+> 
+>>
+>> We still have the restriction of not being able to support order-1
+>> folios - it will be required to lift this limit at some stage.
+> 
+> This is already supported upstream for file-backed folios:
+> commit: 8897277acfef7f70fdecc054073bea2542fc7a1b
 
-The main purpose of this patchset is to improve RAID5 performance.
-In the current RAID 1/10 design, the value of nr_pending is intentionally a=
-lways in atomic mode because it must be read in IO fast path.
-Unless the design of reading the value of nr_pending has changed, I believe=
- that this patchset is a reasonable design and RAID1 performance is about t=
-he same as atomic_t before this patchset was applied.
-Paul's results also show that.
+ok
 
-Best Regards,
-Keisuke
+> 
+>> index fc8eb9c94e9c..c22455fa28a1 100644
+>> --- a/include/linux/pagemap.h
+>> +++ b/include/linux/pagemap.h
+>> @@ -363,9 +363,10 @@ static inline void mapping_set_gfp_mask(struct address_space *m, gfp_t mask)
+>>   #endif
+>>   
+>>   /*
+>> - * mapping_set_folio_min_order() - Set the minimum folio order
+>> + * mapping_set_folio_orders() - Set the minimum and max folio order
+> 
+> In the new series (sorry forgot to CC you),
 
-> > > +CC Paul
-> > >
-> > > HI, Paul, perhaps you RR mode doesn't need such 'inflight' counter
-> > > anymore?
-> > >
-> >
-> > I too am struggling to see the benefit but am curious enough that I
-> > will run some tests on my own as I have fresh baseline RAID1 large
-> > sweep performance data ready right now.
-> >
-> > So my WIP round robin patch won't need nr_pedning for SSDs but I think
-> > it will for HDD plus I need a new atomic counter for round robin for
-> > SSDs anyway but I see no perfomrnace impact so far from adding it.
-> >
-> > -Paul
-> >
->=20
-> I can run more if others are interested (RAID5 or HDD for example) but
-> at least for RAID1 there's really no difference.  This was a quick run,
-> just 40 sec each, 16 jobs and the rest ofthe fio params are on the
-> charts. 2 disk RAID1. THe baseline is 6.8.0 from the md repo.
-> Using my favorite drives, of course, KIOXIA KCMYDVUG3T20 :)
->=20
-> Here's the results: https://photos.app.goo.gl/Avyw64eXCqWFWrs78
->=20
-> NOTE:  There are few small randoms where it appears to help but I
-> assumed that was because these are small randoms with very short run
-> times.  SO I reran the 4K mixed rw randoms with 5 minute run time and
-> that chart is at the very bottom and shows that over longer duration
-> its a wash, there's no clear winner.  I'm sure an even longer run would
-> show more consistently close results.
+no worries, I saw it
 
+> I added a new helper called
+> mapping_set_folio_order_range() which does something similar to avoid
+> confusion based on willy's suggestion:
+> https://urldefense.com/v3/__https://lore.kernel.org/linux-xfs/20240425113746.335530-3-kernel@pankajraghav.com/__;!!ACWV5N9M2RV99hQ!LvajFab0xQx8oBWDlDtVY8duiLDjOKX91G4YqadoCu6gqatA2H0FzBUvdSC69dqXNoe2QvStSwrxIZ14opzAoso$
+> 
+
+Fine, I can include that
+
+> mapping_set_folio_min_order() also sets max folio order to be
+> MAX_PAGECACHE_ORDER order anyway. So no need of explicitly calling it
+> here?
+> 
+
+Here mapping_set_folio_min_order() is being replaced with 
+mapping_set_folio_order_range(), so not sure why you mention that. 
+Regardless, I'll use your mapping_set_folio_order_range().
+
+>>   /**
+>> @@ -400,7 +406,7 @@ static inline void mapping_set_folio_min_order(struct address_space *mapping,
+>>    */
+>>   static inline void mapping_set_large_folios(struct address_space *mapping)
+>>   {
+>> -	mapping_set_folio_min_order(mapping, 0);
+>> +	mapping_set_folio_orders(mapping, 0, MAX_PAGECACHE_ORDER);
+>>   }
+>>   
+>>   static inline unsigned int mapping_max_folio_order(struct address_space *mapping)
+>> diff --git a/mm/filemap.c b/mm/filemap.c
+>> index d81530b0aac0..d5effe50ddcb 100644
+>> --- a/mm/filemap.c
+>> +++ b/mm/filemap.c
+>> @@ -1898,9 +1898,15 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+>>   no_page:
+>>   	if (!folio && (fgp_flags & FGP_CREAT)) {
+>>   		unsigned int min_order = mapping_min_folio_order(mapping);
+>> -		unsigned int order = max(min_order, FGF_GET_ORDER(fgp_flags));
+>> +		unsigned int max_order = mapping_max_folio_order(mapping);
+>> +		unsigned int order = FGF_GET_ORDER(fgp_flags);
+>>   		int err;
+>>   
+>> +		if (order > max_order)
+>> +			order = max_order;
+>> +		else if (order < min_order)
+>> +			order = max_order;
+> 
+> order = min_order; ?
+
+right
+
+Thanks,
+John
