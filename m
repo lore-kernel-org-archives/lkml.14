@@ -1,59 +1,35 @@
-Received: from out203-205-221-236.mail.qq.com (out203-205-221-236.mail.qq.com [203.205.221.236])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D2617FF;
-	Fri, 26 Apr 2024 03:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AEFA762EF;
+	Fri, 26 Apr 2024 03:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714102192; cv=none; b=TXEmLPjCulBv6x8UcphmKbodjSZfwhCFNtZjIEuTCuGrJQfJWtrkTh+SQ2Vtdi3qsaAVxPZX+tHdBClbcMOgUoYcxuNdFZHH5ZC52k3woqhRBXaF/4esJkex1RbkQMCsbc1pQq76iyYpD4f547tpioO+f3Qm0Mcn/tEg5mjS/Ao=
+	t=1714102228; cv=none; b=GDNP/kLw9GxSfOqzhPohwnsov16XxNydC2d2lHatyevQZwE6/wiBF52niQNfCxw7+UzFcZO1sbiz4SiaTk9tCvzvJGskIj+reyc8SpSVCzcdI6lqUFySy6tAlsDjnl1I3IK64S5X55uKqO3fifC6Kouq6vAdqfwtfjQJk6CVTmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714102192; c=relaxed/simple;
-	bh=OvfqhcQfXKS6rGycDA26/7o4eZJGT3gbJHvgOxtGbj4=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=po9NqVHqwx6RrEgj93FanIbBj5RHXquej7ZyHp27BAZd4bzWqIyQwfFsLPwsLLn+613qdJRdAvc4gubMiyBuy2bqDOISTpTT0KVcZQicCB4K4xFYZ+QdxrqRuHTMNw4y1nFBtGoRVLfeoOl8UEuqUjGWcyVOR0P/xwSgSpW4dcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kOeL5vCb; arc=none smtp.client-ip=203.205.221.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1714102228; c=relaxed/simple;
+	bh=EdgVL+mjeevOY833THEkV8ftpwKHklYo0/miJTIw3KQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Nr5A0G0ar5lvqAir5GOrSzpTvJGGdtsT+JSQUjnMrm7ndau1jSMMxs3nwrUmQlkRl4qVaPrEv7enEyRTKywOXkbCf+9WiPMm/jDKx1Zl3L1Uy9n9gZm+SKJNUnd1OAHj9nPr1ldN21+2R3aZQE6CBo3bf7wkjbiAOIXwYXOg3vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZ0HtMw9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kOeL5vCb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1714101882; bh=YbWm0yuE8+IGfwGx/G8xrzovevOvaafkCSPh5TsqX8s=;
-	h=From:To:Cc:Subject:Date;
-	b=kOeL5vCbgidmz6Em6RjSrcYx3TCzx/qzhcQozpJt6OCDpmFXLHUOloAmlcop6Sey6
-	 0ncTE4GlDGse4t3CUJODjbk2xEVMMn+ZMV4YU7rZ1SeDrloyVzMoR2Oe9/xCDPBEDl
-	 knZPTvGed2ySMbbcfRWEUAI1rvYGCZ+UYgickNVU=
-Received: from localhost.localdomain ([58.213.8.145])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 627802A8; Fri, 26 Apr 2024 11:24:39 +0800
-X-QQ-mid: xmsmtpt1714101879tocg2lgcy
-Message-ID: <tencent_F9B2296C93928D6F68FF0C95C33475C68209@qq.com>
-X-QQ-XMAILINFO: MtZ6QPwsmM9Xvp8tJWGGOOumDXDeOWCX4xyOG3f81mbjIoVYvvGJLO4etvNtaL
-	 QpfxbOGwyQHutU9GnvR+xL5foYawQOSq1RnD5wFXADm8ajm2Ki8lLw7grr42T1P1cqu+QFSA/Zty
-	 mjUm845QLvulRTqkpe7XnjjWP9aWyO5cccJ2Ddg9x0x/v/Zhsv5BLHxKFKItwsDGOeSk8x33F22k
-	 xO1pT7EzPAVBcFlPakl9sNJZItErLKhHynJ0HaIXc7mKNXByHHsx3OJHB8ZpmdSSF18bERehKCc+
-	 vPkJDqk7Q68fuW16gXDozBUh2UHPOxMAS7QM7te9IyeyW2h7SCsYiYzQFNwv4+wbPXuKD6UzUKZe
-	 ItqUqoG0ME6p6yP8OSbYngJpVrTaWJdHBB21tc5PuQkxl3sLFd6M6Qf7X3z637YgfUPjGmNckU3T
-	 lnAAR9J5NFnrgva/1Ue5jbv2Gu12dDUl2MVQQx4y8jkdSyJDDdIxneuk8oUxGe9O4ZHKxycv1Sq4
-	 vtbI9GvHyD0jYqA66LIE+uRsOTniz6ZqBIusI72G3HWEN2zrLW8qF6OgOjuwaVAKRxVGjh1RsSkm
-	 2F51rlWoYLdECwMlrO2vduA7gBrAZQgRVIhDEuXMrBX+yRf14ogb5+wUmcxtGXc7L19KYI6PsfDh
-	 UQEqBSulWLD2kX7ttDB9WybeNdywnxnwnzaEhkd4+Ie+ziYTw84/dKUODDSM3oiM/JJxj3zUJJ7A
-	 9HN61OLdBg3YlyveEe32oVjzPrr08iJd6W2dmxes4BA4R44sHHSEFtzfmoHH8t4Ol5sP7Q3fo1Eg
-	 Ra4/674WGrccJb2uzNmlxoDODiEP9LKmkr19Z2px3v7eemPyKf51kRh7/m1EFiMv78fwoSTp7MP8
-	 dJok/9esQukjkWspA1DqtP5lUbihQnTr8qvylrNGDyIj8Lk2zhtIF6PuK8AuwYfU8Xk+PTEYwR+K
-	 zgWQyOnGgTCir+PPHQIs84PE7JAjX7LkbUhOomQ88y6BmYL02uavHUyld30P2hP7zxnRoBBTfKf1
-	 nivAkd6g==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: linke li <lilinke99@qq.com>
-To: 
-Cc: xujianhao01@gmail.com,
-	linke li <lilinke99@qq.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring/msg_ring: reuse ctx->submitter_task read using READ_ONCE instead of re-reading it
-Date: Fri, 26 Apr 2024 11:24:37 +0800
-X-OQ-MSGID: <20240426032438.11830-1-lilinke99@qq.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZ0HtMw9"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 13C99C2BD11;
+	Fri, 26 Apr 2024 03:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714102228;
+	bh=EdgVL+mjeevOY833THEkV8ftpwKHklYo0/miJTIw3KQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=mZ0HtMw9qHyNqgn5EB/WWtrssN6O887nOeLt4cDOOborhaSqhSA0s74YIjFOlMw/O
+	 voSjMh7bhhqgi7798goJKgWFo/rjO/u0dGqHmKCQYaYhF6wRnFYOFSqGUtNlCY8syV
+	 XLayyNPSNLJyVQ4a+9Qv24qYO3qF/XfWakilaVK4EAu/YEjDTfZzmO7gBvekGfr/6d
+	 UjMbs5MILVQ6cdZpy6fnAgPsFlLrKIEf2KNzSrPQ6lGU5EehnpB3jPL8y9qrSD2kFn
+	 aqInyb7KNnjVBBekJ316yj6Oo1VWz6EUQjFLDmS72Uqbbw/Fyb9DQBvOJZhGsYJZ3K
+	 XsRsPn2wi2/+A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EEEBFC595D2;
+	Fri, 26 Apr 2024 03:30:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,31 +37,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v11 00/10][pull request] net: intel: start The Great
+ Code Dedup + Page Pool for iavf
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171410222797.8197.8566659158199091850.git-patchwork-notify@kernel.org>
+Date: Fri, 26 Apr 2024 03:30:27 +0000
+References: <20240424203559.3420468-1-anthony.l.nguyen@intel.com>
+In-Reply-To: <20240424203559.3420468-1-anthony.l.nguyen@intel.com>
+To: Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, netdev@vger.kernel.org, hawk@kernel.org,
+ linux-mm@kvack.org, przemyslaw.kitszel@intel.com, alexanderduyck@fb.com,
+ ilias.apalodimas@linaro.org, linux-kernel@vger.kernel.org,
+ aleksander.lobakin@intel.com, linyunsheng@huawei.com,
+ nex.sw.ncis.osdt.itp.upstreaming@intel.com, cl@linux.com,
+ akpm@linux-foundation.org, vbabka@suse.cz
 
-In io_msg_exec_remote(), ctx->submitter_task is read using READ_ONCE at
-the beginning of the function, checked, and then re-read from
-ctx->submitter_task, voiding all guarantees of the checks. Reuse the value
-that was read by READ_ONCE to ensure the consistency of the task struct
-throughout the function.
+Hello:
 
-Signed-off-by: linke li <lilinke99@qq.com>
----
- io_uring/msg_ring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This series was applied to netdev/net-next.git (main)
+by Tony Nguyen <anthony.l.nguyen@intel.com>:
 
-diff --git a/io_uring/msg_ring.c b/io_uring/msg_ring.c
-index cd6dcf634ba3..d74670b39ed6 100644
---- a/io_uring/msg_ring.c
-+++ b/io_uring/msg_ring.c
-@@ -83,7 +83,7 @@ static int io_msg_exec_remote(struct io_kiocb *req, task_work_func_t func)
- 		return -EOWNERDEAD;
- 
- 	init_task_work(&msg->tw, func);
--	if (task_work_add(ctx->submitter_task, &msg->tw, TWA_SIGNAL))
-+	if (task_work_add(task, &msg->tw, TWA_SIGNAL))
- 		return -EOWNERDEAD;
- 
- 	return IOU_ISSUE_SKIP_COMPLETE;
+On Wed, 24 Apr 2024 13:35:47 -0700 you wrote:
+> Alexander Lobakin says:
+> 
+> Here's a two-shot: introduce {,Intel} Ethernet common library (libeth and
+> libie) and switch iavf to Page Pool. Details are in the commit messages;
+> here's a summary:
+> 
+> Not a secret there's a ton of code duplication between two and more Intel
+> ethernet modules. Before introducing new changes, which would need to be
+> copied over again, start decoupling the already existing duplicate
+> functionality into a new module, which will be shared between several
+> Intel Ethernet drivers. The first name that came to my mind was
+> "libie" -- "Intel Ethernet common library". Also this sounds like
+> "lovelie" (-> one word, no "lib I E" pls) and can be expanded as
+> "lib Internet Explorer" :P
+> The "generic", pure-software part is placed separately, so that it can be
+> easily reused in any driver by any vendor without linking to the Intel
+> pre-200G guts. In a few words, it's something any modern driver does the
+> same way, but nobody moved it level up (yet).
+> The series is only the beginning. From now on, adding every new feature
+> or doing any good driver refactoring will remove much more lines than add
+> for quite some time. There's a basic roadmap with some deduplications
+> planned already, not speaking of that touching every line now asks:
+> "can I share this?". The final destination is very ambitious: have only
+> one unified driver for at least i40e, ice, iavf, and idpf with a struct
+> ops for each generation. That's never gonna happen, right? But you still
+> can at least try.
+> PP conversion for iavf lands within the same series as these two are tied
+> closely. libie will support Page Pool model only, so that a driver can't
+> use much of the lib until it's converted. iavf is only the example, the
+> rest will eventually be converted soon on a per-driver basis. That is
+> when it gets really interesting. Stay tech.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v11,01/10] net: intel: introduce {, Intel} Ethernet common library
+    https://git.kernel.org/netdev/net-next/c/306ec721d043
+  - [net-next,v11,02/10] iavf: kill "legacy-rx" for good
+    https://git.kernel.org/netdev/net-next/c/53844673d555
+  - [net-next,v11,03/10] iavf: drop page splitting and recycling
+    https://git.kernel.org/netdev/net-next/c/920d86f3c552
+  - [net-next,v11,04/10] slab: introduce kvmalloc_array_node() and kvcalloc_node()
+    https://git.kernel.org/netdev/net-next/c/a1d6063d9f2f
+  - [net-next,v11,05/10] page_pool: constify some read-only function arguments
+    https://git.kernel.org/netdev/net-next/c/ef9226cd56b7
+  - [net-next,v11,06/10] page_pool: add DMA-sync-for-CPU inline helper
+    https://git.kernel.org/netdev/net-next/c/ce230f4f8981
+  - [net-next,v11,07/10] libeth: add Rx buffer management
+    https://git.kernel.org/netdev/net-next/c/e6c91556b97f
+  - [net-next,v11,08/10] iavf: pack iavf_ring more efficiently
+    https://git.kernel.org/netdev/net-next/c/97cadd3d3ce3
+  - [net-next,v11,09/10] iavf: switch to Page Pool
+    https://git.kernel.org/netdev/net-next/c/5fa4caff59f2
+  - [net-next,v11,10/10] MAINTAINERS: add entry for libeth and libie
+    https://git.kernel.org/netdev/net-next/c/87a927efa7d9
+
+You are awesome, thank you!
 -- 
-2.39.3 (Apple Git-146)
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
