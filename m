@@ -1,103 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E8314D71D;
-	Fri, 26 Apr 2024 17:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29C01DDF8
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 17:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714153147; cv=none; b=dn5bAEJBeNCC2XBwo0ZpxRJGPaCGyiPKoeJ/OpGeUIxuvND2ypdtTkLkfcnlhKjECPuPyO0igY+DjkGylB1ffCAYaSw+Ga5Wrbme3T98quxf8+VLRXps9xxRaVc1a72UM83P2M28qcvigMaBpinkhrjTXjcg5WZGqM1W1tKCXVI=
+	t=1714153248; cv=none; b=uxP954Ux7PeIUmhu/695WScww4yBGIn5cP++5pNUENfv9XoYcrSRKfss1xIhCoMRuAtemK9yPSHJ92xu07OFh6NoCz7mKiY/WbwWIaihuVrWfVFJ9POFq6rtNoPQ3XfOIpRobT86uVFzgPHZL/jv3UXvxEnUI7nnZBvZuMCtOjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714153147; c=relaxed/simple;
-	bh=uSOsduM5wRVCMMD/AkIj/0wtY94jVo7lOxBH9kH4mRA=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=b/0Ie00ReEUdfMQ9z/ORBvOR/gtlMXnR5gKH6ID0nXgc40yrdYpWiZA6iOe7Va3jpoTL1+2ur8X8lGtxiA7zNwNNgRIGHt6fbHyd8UJ0blAg2nNUdofRifKBW+z4Ar/0JJKEHF4zOFnnFSymucmVktiA4ACK4DdL/RWYxx3TmLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lJvu8cJg; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714153248; c=relaxed/simple;
+	bh=CQBiIeVTKBpDd91iYuqIIzq3XnC8Q4yWuXaprTtqOFQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IhRLQdS2beLrgx6Mw9YGAPbrRJGWORMPy1tjIi14gDp3ErwSVpr8z8bUnIP9VoN09LKrKLfLEBPFka0z1BeRZwqronJjZWm7O1qHMzJjga1CI0X2Cev8oXwdH7r4IasmFEJMk/w1pAFAoq1Q+9/+SDYz7h/u9G46I+EaXcCawTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=Alc/Ff+z; arc=none smtp.client-ip=83.166.143.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lJvu8cJg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714153144; x=1745689144;
-  h=message-id:date:mime-version:to:from:subject:cc:
-   content-transfer-encoding;
-  bh=uSOsduM5wRVCMMD/AkIj/0wtY94jVo7lOxBH9kH4mRA=;
-  b=lJvu8cJg86TWL69PJ94HiztknfWVIt8gSD8Gps+oK1+cAT0UlHKzDhfX
-   vZs1Zt4i0Z6eMwub0gtNV48Q/CBiGqRSJNIuFVift3BzTMJ5aXO65tIvp
-   m0/mjMUBVen+4fmJ4Rf5G7TtSt6vxjzF8XohBYJ+dcR2Yqr5jpVlrt2ky
-   2AUSwwNiyf4VEOnCupYpBY05r5ujjfIEDNUcpoIEoGHbPHCF2N7rntczo
-   BbWfSwZJEQIACz0cHZLYmCQ9QtdaA9vvcwWZZMx0W61CsXZj5PsuCnahX
-   e/6e06m2Hz3JPW/ZZQEAUB8IRJYk0rud5RZCXGPf41v8xgH/2qFSGPMTO
-   w==;
-X-CSE-ConnectionGUID: AiP1G3LNRyG81TeTaYlLxQ==
-X-CSE-MsgGUID: WyEGHlx8S2mO9WMX0JZQTg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="20509341"
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="20509341"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 10:39:03 -0700
-X-CSE-ConnectionGUID: 9pSmMFi/Q/GicW5WOhkFmQ==
-X-CSE-MsgGUID: Kvje6/xSS9yFFYfiLE2gug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="25369838"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.33.42]) ([10.212.33.42])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 10:39:02 -0700
-Message-ID: <0ab5345e-3a73-45eb-af20-80b61f3de7e9@intel.com>
-Date: Fri, 26 Apr 2024 10:39:00 -0700
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Alc/Ff+z"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VR0184XrKzXZt;
+	Fri, 26 Apr 2024 19:23:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1714152188;
+	bh=CQBiIeVTKBpDd91iYuqIIzq3XnC8Q4yWuXaprTtqOFQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Alc/Ff+zUYtVfEFUxhg2vFb0uqi/XpKcMtiYKj4YgB1ib4V5/Gn7UNS6e2YElnRB6
+	 E6OHfBsMEwtyMjvV3Skj5ZboRIibBCXgaF7IAA6PRVLnnUbGANaSXTa18se2aVVlL1
+	 r1F5gksDlqVRyUnqobnTpbMn9RPIu/B8E8B5BVRg=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VR0180Yq0zgR1;
+	Fri, 26 Apr 2024 19:23:08 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Mark Brown <broonie@kernel.org>,
+	Shengyu Li <shengyu.li.evgeny@gmail.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	"David S . Miller" <davem@davemloft.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Will Drewry <wad@chromium.org>,
+	kernel test robot <oliver.sang@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v1 4/5] selftests/harness: Fix interleaved scheduling leading to race conditions
+Date: Fri, 26 Apr 2024 19:22:51 +0200
+Message-ID: <20240426172252.1862930-5-mic@digikod.net>
+In-Reply-To: <20240426172252.1862930-1-mic@digikod.net>
+References: <20240426172252.1862930-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-From: Dave Jiang <dave.jiang@intel.com>
-Subject: [GIT PULL] Compute Express Link (CXL) Fix for 6.9-rc6
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Alison Schofield <alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-Hi Linus, please pull from
-  
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.9-rc6
+Fix a race condition when running several FIXTURE_TEARDOWN() managing
+the same resource.  This fixes a race condition in the Landlock file
+system tests when creating or unmounting the same directory.
 
-...to receive a fix for the CXL subsystem.
+Using clone3() with CLONE_VFORK guarantees that the child and grandchild
+test processes are sequentially scheduled.  This is implemented with a
+new clone3_vfork() helper replacing the fork() call.
 
-Fix addresses a potential mailbox payload size confusion in cxl_mem_get_poison().
+This avoids triggering this error in __wait_for_test():
+  Test ended in some other way [127]
 
-This has build success notification from the kbuild-robot. It has been in the -next
-for several days with no reported issues.
-
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Günther Noack <gnoack@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Will Drewry <wad@chromium.org>
+Fixes: 41cca0542d7c ("selftests/harness: Fix TEST_F()'s vfork handling")
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20240426172252.1862930-5-mic@digikod.net
 ---
+ tools/testing/selftests/kselftest_harness.h | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-The following changes since commit ed30a4a51bb196781c8058073ea720133a65596f:
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 73491efbae9e..d2dd246a3843 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -67,6 +67,8 @@
+ #include <sys/wait.h>
+ #include <unistd.h>
+ #include <setjmp.h>
++#include <syscall.h>
++#include <linux/sched.h>
+ 
+ #include "kselftest.h"
+ 
+@@ -81,6 +83,17 @@
+ #  define TH_LOG_ENABLED 1
+ #endif
+ 
++/* Wait for the child process to end but without sharing memory mapping. */
++static pid_t __attribute__((__unused__)) clone3_vfork(void)
++{
++	struct clone_args args = {
++		.flags = CLONE_VFORK,
++		.exit_signal = SIGCHLD,
++	};
++
++	return syscall(__NR_clone3, &args, sizeof(args));
++}
++
+ /**
+  * TH_LOG()
+  *
+@@ -1180,7 +1193,7 @@ void __run_test(struct __fixture_metadata *f,
+ 	fflush(stdout);
+ 	fflush(stderr);
+ 
+-	t->pid = fork();
++	t->pid = clone3_vfork();
+ 	if (t->pid < 0) {
+ 		ksft_print_msg("ERROR SPAWNING TEST CHILD\n");
+ 		t->exit_code = KSFT_FAIL;
+-- 
+2.44.0
 
-  Linux 6.9-rc5 (2024-04-21 12:35:54 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-6.9-rc6
-
-for you to fetch changes up to 4b759dd5765503bd466defac7d93aca14c23a15d:
-
-  cxl/core: Fix potential payload size confusion in cxl_mem_get_poison() (2024-04-22 08:58:59 -0700)
-
-----------------------------------------------------------------
-cxl fixes for v6.9-rc6
-
-- Fix potential payload size confusion in cxl_mem_get_poison()
-
-----------------------------------------------------------------
-Dan Williams (1):
-      cxl/core: Fix potential payload size confusion in cxl_mem_get_poison()
-
- drivers/cxl/core/mbox.c | 38 +++++++++++++++++---------------------
- 1 file changed, 17 insertions(+), 21 deletions(-)
