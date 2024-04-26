@@ -1,44 +1,66 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B541E46A4
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 18:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71F47470;
+	Fri, 26 Apr 2024 18:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714157494; cv=none; b=Viqa3JWWA4QjEj/3hnLqI+fS+fxroKEKwTuI4xfCXD4hcChIiR4u3nG5BO7xVISva1mMN74ebE3/+EsFb56/3RjqgzR49w29xX1cuPWz6wQCma4/72m1P9ZfpGVvhEPWc24gDtfymWAvSvfi5wggjs4lYQhYr9aXJ5JZmEX5eYw=
+	t=1714157601; cv=none; b=SOQK1UXx2oQCNWW1Sx58gxl8I+HJDifNaLpVwR7WReVwowx4BE7wNtLkbYQ1eqPieXNcYog8808VwZJRs4AHGuwGneQLV2nlX4Gz3RWJZ2KNIxDy/iSu0zIjuaBS4IBFOgDUKk2BmALo3e0F4R+dJgyCTEC8ZnqbXO99SerEhIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714157494; c=relaxed/simple;
-	bh=DkEvngDBB3MNfELbAt9f5hlbt6xYbf9ijwH0JaDlDio=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=I8i5n/wvmdlwFYdn1PZ9vKu7coCBXPD8IMQMxnLOYy3+lkJjh2T+lyfX2vMin3mBZotEcRMudh1XcMjNAZbgSqFbqIoSCqd6hsQXIYX/45Jz5sC2O62SX/HvsUEJUDhWhYSE1nKfHbV1kNLyfic/Z28BkjGLnYNIBUxrWFGyWOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gy9Ml43x; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1714157601; c=relaxed/simple;
+	bh=LYrhv94fXfJc/xrjaftEa5kLjlw/Ms5LsmooEzuSh+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VkvY9y5uiUcHgiEDGVYEIFd2vxYGJDN3k6mPBdB7Au2ionxGRZPg1HZqmtqQy9kwGr77h2miz9opye2lH4gv3Ty4ZO9RNTYvMAasBlE9Z2xPHg5VLGIjOUs4ZTLmj/yGqCQo6EN4pXBfXZ798tRcJD3syGhF5tj8hfgpNm4nK+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=axkDQcPp; arc=none smtp.client-ip=161.97.139.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gy9Ml43x"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 194BF1C0002;
-	Fri, 26 Apr 2024 18:51:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714157484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=BGDwF3LmHI8vTp9didlTcp3I3mEcoXABuDaz4YLe+zg=;
-	b=gy9Ml43xUjrjg/Gi5x1lst7/Sa46RY9YXzQeYroTafjQg8xrRb9+zqzVLfekcTmiKRL4c6
-	XE1Dyymun20Oo44Lki0ct7AiMGLdeoXSxqG4+aidGUCcx6nHzDEPaArSX16bMplHVZjmSC
-	sAcO2jYexgRUU5gzYdvXJWvBp0tTPmwHGop+fc3RL92IO50BZCiUNZX6g9RYiUK1RP/YTh
-	aOx1hFsuaAl6u00cO9M5rG2+Tv7Xt8HGnZemwkSqtpPDkj77VbktzVM+2Tpu+mDrq8n7hl
-	jAarOaWQfMePDKfck0Qm1ilb12t6E3WCUIMe8AMs/9xRGMEibn1nuSwGdJRrfA==
-Date: Fri, 26 Apr 2024 20:51:20 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
- Tudor Ambarus <Tudor.Ambarus@linaro.org>, Vignesh Raghavendra
- <vigneshr@ti.com>, Frieder Schrempf <frieder.schrempf@kontron.de>, Michael
- Walle <michael@walle.cc>, Pratyush Yadav <pratyush@kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: [GIT PULL] mtd: Fixes for v6.9-rc6
-Message-ID: <20240426205120.36804cea@xps-13>
-Organization: Bootlin
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="axkDQcPp"
+Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
+	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1s0Qh1-002ipf-0T;
+	Fri, 26 Apr 2024 20:53:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nPehlEQTssGP0G33zMbxlvgJ6Z2DjBR7Px27U6BzRnk=; b=axkDQcPpzxZxap1pRfnjMJ3Bvs
+	SJ0bDsZcQes8UzO6Oq2PTXvieDtFtY2/iJjljFu81inca4zfw1nwEHG2mSeGPTea2726RPnfjW5if
+	9E4fcyg2V8R39/9ragSmJN+jsab5mA8DvKrzgYiwH29rDQCc2CXBPDjpxSq4DdIKDV99pp4l5zbBh
+	thwc6/gkj4vtS5NbbZCof5SqVL1BqaDhqp2DaV9A+09sEWzYRNoJrAKJCKHzs55vqjI74bUG8I2A0
+	AciL7VnUxww0SWxXf1BJ3wjbdK80gC6eMfOKy8L1GP3A5SChDrDZ/wao8yqjtiz95QJxsz68Q3BUC
+	0deG5kdg==;
+Received: from p200300c2071a02001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:71a:200:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1s0Qgx-0005ao-0p;
+	Fri, 26 Apr 2024 20:53:04 +0200
+Date: Fri, 26 Apr 2024 20:53:02 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Felix Kaechele <felix@kaechele.ca>, dmitry.torokhov@gmail.com,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ o.rempel@pengutronix.de, u.kleine-koenig@pengutronix.de,
+ hdegoede@redhat.com, ye.xingchen@zte.com.cn, p.puschmann@pironex.com,
+ linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, caleb.connolly@linaro.org
+Subject: Re: [PATCH v2 2/2] Input: edt-ft5x06 - add ft5426
+Message-ID: <20240426205302.4acbdb11@aktux>
+In-Reply-To: <CAHp75VdA_peJBWXFWSs-vDxA86y6MG0J7ixzXExqDxJJzfJ7mA@mail.gmail.com>
+References: <20240404222009.670685-1-andreas@kemnade.info>
+	<20240404222009.670685-3-andreas@kemnade.info>
+	<CAHp75VeZ9U_+1rJQjr4KvvzjYQGzfKtk+BK00vqvKcVn2-yP3g@mail.gmail.com>
+	<20240405182832.4e457695@aktux>
+	<CAHp75VckoDheCN-KQ0KcSk9rE_-cXFUujurtA4sK6KAixDttQQ@mail.gmail.com>
+	<20240425185417.0a5f9c19@aktux>
+	<7dd1eb70-b011-4247-aea9-173ddcd17dc7@kaechele.ca>
+	<20240426095617.4e442681@aktux>
+	<CAHp75VdA_peJBWXFWSs-vDxA86y6MG0J7ixzXExqDxJJzfJ7mA@mail.gmail.com>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,57 +68,27 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello Linus,
+Hi,
 
-This is an MTD fixes PR for the next -rc.
+On Fri, 26 Apr 2024 16:51:59 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Thanks,
-Miqu=C3=A8l
+> > I think focaltech,ft5406 is better because it is consistent with other drivers/
+> > bindings. We do not specify the display it is used on on other touchscreen
+> > bindings. We do not specify the actual LEDs behind a LED interface chip.
+> > And often the chip name is more easily to find out than the name of a
+> > display.  
+> 
+> I'm _not_ a DT person, you should clarify this with them. I just
+> pointed out the possible mistake (from Linux / DT perspective), and
+> not hardware / business related one. If they are fine with focaltech
+> prefix, then it's fine to me as well!
 
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+as 1/2 is Acked-by DT, I think the compatible is fine, so I will probably
+just send a v3 with a sorted 2/2.
 
-  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/fixe=
-s-for-6.9-rc6
-
-for you to fetch changes up to d2d73a6dd17365c43e109263841f7c26da55cfb0:
-
-  mtd: limit OTP NVMEM cell parse to non-NAND devices (2024-04-15 12:04:37 =
-+0200)
-
-----------------------------------------------------------------
-There has been OTP support improvements in the NVMEM subsystem, and
-later also improvements of OTP support in the NAND subsystem. This lead
-to situations that we currently cannot handle, so better prevent this
-situation from happening in order to avoid canceling device's probe.
-
-In the raw NAND subsystem, two runtime fixes have been shared, one
-fixing two important commands in the Qcom driver since it got reworked
-and a NULL pointer dereference happening on STB chips.
-
-Arnd also fixed a UBSAN link failure on diskonchip.
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      mtd: diskonchip: work around ubsan link failure
-
-Christian Marangi (2):
-      mtd: rawnand: qcom: Fix broken OP_RESET_DEVICE command in qcom_misc_c=
-md_type_exec()
-      mtd: limit OTP NVMEM cell parse to non-NAND devices
-
-William Zhang (1):
-      mtd: rawnand: brcmnand: Fix data access violation for STB chip
-
- drivers/mtd/mtdcore.c                    | 2 +-
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 2 +-
- drivers/mtd/nand/raw/diskonchip.c        | 4 ++--
- drivers/mtd/nand/raw/qcom_nandc.c        | 7 +++----
- 4 files changed, 7 insertions(+), 8 deletions(-)
+Regards,
+Andreas
