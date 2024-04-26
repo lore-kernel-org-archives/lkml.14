@@ -1,133 +1,102 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D188C04
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 18:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F231C06;
+	Fri, 26 Apr 2024 19:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714158003; cv=none; b=QEJSYoCBfmGvE4Qol6grLTJwRaoNCAt+RfBYQBHmFXrvn3ZnQEr5Mb+IQpDwN9q2+J7MzAftP04GoliZdyfweSXO26xAh2b+qnq+fR9TbXrf4OWGcXAOWJSJPiBrVT9+y09o6+ytsDDtewYJC0wo7jIm8omTWFrSNTBLzH/Epv0=
+	t=1714158108; cv=none; b=W6HD41fQz19sweJgwEJ7EYqIaTLo9/32ZjmbPalPqYI4rRBRpWWipZDtA3AmAtb0KjhboJrcLpzp1i2kA7bcOcLKdIerYONNNzOz/m3i9R8OCsTc8NeO9hoOUGY2To7hf/8Hb/0NPp46hywRGydNPK+KNu4u2b1qSNFlnVZwRdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714158003; c=relaxed/simple;
-	bh=8Ox2+l5MR9tOdPVsRQBBlGlqk5HKgQkld0q9gnMi/B4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UpA9ly699eiocJRIzrIimG0gRXCaRKe+VxtYfl1i/iKuN06qDSK6nilE6BUhFdrTdPGldejELEF24o/WQCdq5x4uWmvWK7bFuBCURdkwFOgSVeJtNg7hu2On7JVKm9dTc4DEJNnx4AAQ0qoIrB940wUt/mXeVJLVLA2mqCNd5p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id AA44F300608BF;
-	Fri, 26 Apr 2024 20:59:51 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 7B5DE1EC32D; Fri, 26 Apr 2024 20:59:51 +0200 (CEST)
-Date: Fri, 26 Apr 2024 20:59:51 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH] sysfs: Allow bin_attributes to be added to groups
-Message-ID: <Ziv5p3SMEIw3XZkK@wunner.de>
-References: <e140f6bf8dc99c24cc387f7ac3c7908c8830587f.1714030457.git.lukas@wunner.de>
- <662be72549aaf_db82d294c7@dwillia2-xfh.jf.intel.com.notmuch>
+	s=arc-20240116; t=1714158108; c=relaxed/simple;
+	bh=spHwlcTCpaNA543nwyK0H2eAD2T0c3htMv4UjyBqffA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RhdvC1F4R4e3uvxGNnkx3a5KQr3e8bp8ki0aLHO7xtNRl4F3FBkh3MRRYzDgD+oUgMeSL2sVjQ93FK3x9FvSdCu2JIzqn9xv3aZ4l74MXhCVFwgCNRn3ed4mfMPi4n5wx0Vs/wd6c/rncLGmsB99ky4cqNSkQ0uz8pc4DRD1BWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1J8gS6e; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1J8gS6e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D934C4AF0B;
+	Fri, 26 Apr 2024 19:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714158107;
+	bh=spHwlcTCpaNA543nwyK0H2eAD2T0c3htMv4UjyBqffA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u1J8gS6el0nAxFSbvhUmiteeeXNoJZJN5MPZ60QK8xy+IuJlkTXsHsNrzkbPy5TqD
+	 de39M5yXbq+ntNG1c/6nbsdwkYXeDFX1MSl+Fi0o2O9vI1Qd0a43krhnD8x6h+FV0m
+	 wlO6PXD2h3aPbk1x/4BZ7QoDsjaeDob+jGsSj+rmBEO15awWX82WHpVByDcK/7srXO
+	 ZSQDUE3BCOcr85i/+vlQyfSOR0XhzCaCfEOgUJDjSgUS6O0kiXb7ZAZne92g7psDMZ
+	 DVcXQzkfK3TKHln6vD5/6f1ZlTR1cK6SRZi9YHQAfiSfJAxBcBY+UqW5ezGHDQjaaF
+	 pbTgvfRBhCTeA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51ac5923ef6so2266102e87.0;
+        Fri, 26 Apr 2024 12:01:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXv8pxNSWqRXzdQ9G76oELuSMmA5ZFIlKT4vxK5ksqnk6ZYTE2tcW0E/2KmtMBHb0bg5+DgxJCjjVAc0AYY0KuJOIMjrn1f/POQ2t3w1u8h0+v2bJS6LJgRf13SVvbnvJb0RqzVHlQUoOf+2R231l1BJpSJXOSEM/iGAcYOZWYlv710cZYY2EmUAAUZKBJQYESduiBpOqICtdkQx80HUwyGl9nncqu6SlK/LwugCoab+5CEkwAON6Crp5j/Qpu4sx5HqLfh71Iqhvsqn/wBf91CZMhVsUN38HzsPS3M23OBN9pJw21DKsQP1tg9EO+12j0gtaZsUO0Bty0pVxtlp2XSu5gIWAw2Drkx2eLS0ALFz7EMSv976hGLtmS0yLo5y1AVZ0RQywRwpexkIo4=
+X-Gm-Message-State: AOJu0YzeamOqJfgHaiNFAFTc75ZvDN7CvcR1I9Tcr0KrQOg6ZMWUUo8t
+	4cLLMKqy9j8L3V/5vBpRNP4O+BHS0Q8nNtyhwthsncMEeR95E+mQeWS6j01P48Hinoh+APKwzot
+	ZwcMX9BesBaQDLTzIu/xvWnE0R6E=
+X-Google-Smtp-Source: AGHT+IF/3UI9Cwbb8z8OI8jFmskqzepU4aeg2+YglDD7FKhfHPiRdUcmMxLF73Ba/yVMMyprkxylEY00eIaasdUhAvE=
+X-Received: by 2002:a05:6512:151:b0:513:c1a2:d380 with SMTP id
+ m17-20020a056512015100b00513c1a2d380mr1420572lfo.31.1714158105499; Fri, 26
+ Apr 2024 12:01:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <662be72549aaf_db82d294c7@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240426082854.7355-1-rppt@kernel.org> <20240426082854.7355-9-rppt@kernel.org>
+In-Reply-To: <20240426082854.7355-9-rppt@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Fri, 26 Apr 2024 12:01:34 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW52MYy4Md5O=7XVGvkw395-LB+BiSadxoDdw8CrLw5t7A@mail.gmail.com>
+Message-ID: <CAPhsuW52MYy4Md5O=7XVGvkw395-LB+BiSadxoDdw8CrLw5t7A@mail.gmail.com>
+Subject: Re: [PATCH v6 08/16] mm/execmem, arch: convert remaining overrides of
+ module_alloc to execmem
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
+	Sam Ravnborg <sam@ravnborg.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Will Deacon <will@kernel.org>, bpf@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 26, 2024 at 10:40:53AM -0700, Dan Williams wrote:
-> Lukas Wunner wrote:
-> > Commit dfa87c824a9a ("sysfs: allow attributes to be added to groups")
-> > introduced dynamic addition of sysfs attributes to groups.
-> > 
-> > Allow the same for bin_attributes, in support of a forthcoming commit
-> > which adds various bin_attributes every time a PCI device is
-> > authenticated.
-> > 
-> > Addition of bin_attributes to groups differs from regular attributes in
-> > that different kernfs_ops are selected by sysfs_add_bin_file_mode_ns()
-> > vis-à-vis sysfs_add_file_mode_ns().
-> > 
-> > So call either of those two functions from sysfs_add_file_to_group()
-> > based on an additional boolean parameter and add two wrapper functions,
-> > one for bin_attributes and another for regular attributes.
-> > 
-> > Removal of bin_attributes from groups does not require a differentiation
-> > for bin_attributes and can use the same code path as regular attributes.
-> > 
-> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> > Cc: Alan Stern <stern@rowland.harvard.edu>
-> > ---
-> > Submitting this ahead of my PCI device authentication v2 patches.
-> > Not sure if the patch is acceptable without an accompanying user,
-> > but even if it's not, perhaps someone has early review feedback
-> > or wants to provide an Acked-by?  Thank you!
-> 
-> On the one hand it makes sense from a symmetry perspective, on the other
-> hand the expectation and the infrastructure for dynamic sysfs visibilty
-> has increased since 2007.
-> 
-> That is why I would like to see the use case to understand why a
-> dynamically added a bin_attribute is needed compared with a statically
-> defined attribute with dynamic visibility.
+On Fri, Apr 26, 2024 at 1:30=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+>
+> Extend execmem parameters to accommodate more complex overrides of
+> module_alloc() by architectures.
+>
+> This includes specification of a fallback range required by arm, arm64
+> and powerpc, EXECMEM_MODULE_DATA type required by powerpc, support for
+> allocation of KASAN shadow required by s390 and x86 and support for
+> late initialization of execmem required by arm64.
+>
+> The core implementation of execmem_alloc() takes care of suppressing
+> warnings when the initial allocation fails but there is a fallback range
+> defined.
+>
+> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> Acked-by: Will Deacon <will@kernel.org>
 
-I assume "would like to see" means "on the mailing list", which would
-(or will) be as part of the PCI device authentication v2 patches.
+nit: We should probably move the logic for ARCH_WANTS_EXECMEM_LATE
+to a separate patch.
 
-But in case you're curious, the use case is the log of signatures
-presented by the device.  Each signature is exposed as a bin_attribute
-in a signatures/ directory below a PCI device's sysfs directory,
-for verification by a remote attester (or user space in general).
+Otherwise,
 
-Here's the code:
-
-https://github.com/l1k/linux/commit/ca420b22af05
-
-The signature's bin_attribute is accompanied by several other
-bin_attributes containing ancillary data, such as nonces
-(to allow user space to ascertain that a fresh nonce has been used).
-
-The signatures/ directory is an empty attribute group to which the
-signatures received from the device are dynamically added using
-sysfs_add_bin_file_to_group() (introduced by the present patch).
-
-All of that was done to address an objection raised by James Bottomley
-at Plumbers that it is "not good enough" if the kernel keeps the
-challenge-response received from the device to itself and doesn't
-allow a remote attester to verify it.
-
-Here is the recording, in his own words:
-
-https://www.youtube.com/watch?v=ZqMIlZ5lPAw&t=2345s
-
-A static attribute with dynamic visibility doesn't cut it in this case:
-
-Each signature needs a unique filename and the number of signatures
-that can be generated is essentially unlimited.  (Though older ones
-are likely uninteresting and can be culled.)  If you want to expose,
-say, up to 1000 signatures per device, you'd have to allocate an array
-of 1000 signatures (for each device!), even though the actual number
-of signatures received might be much lower.  It would be a waste of
-memory.  It is much more economical to add signature attributes
-dynamically on demand.
-
-It has the additional benefit that it allows user space to dynamically
-adjust the maximum number of signatures retained in the log.
-That's more difficult to implement with static attributes, as you'd
-have to reallocate the attributes array and adjust all the pointers
-pointing to it.
-
-Thanks,
-
-Lukas
+Acked-by: Song Liu <song@kernel.org>
