@@ -1,117 +1,136 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F32F14533F;
-	Fri, 26 Apr 2024 12:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6702145355
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 12:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714133143; cv=none; b=i6b0c9jbxEFaB8OXJOYC2+x/CzybjiYVh+ECNS8B+rZ35dsvtcof0KdHQU8hLJ3pFik2vpjRR4vSvb+5Lyrt3e9YMnv0cse99oM/rvmuxjA/rW//d6Q1GrWrr650A3tPI2lMQ0RKQMaG9zL9QEJ7pVDq0APIyslHxx7SfY7hEgU=
+	t=1714133434; cv=none; b=bBEbeN+73R/G/l2ooVNR50lVgifYdXnG/QtQBLgTGOKQC6NG2GLZDfvEFeWuAUHxOcag6wRKZFMWuc/URGOgr1MGRPQxI3z6xFl3djd67JHZUNUH/7MHATNvmLLz/tsaNjNjfwzJ+bFDG0lZXiH+6j1mve9MPWkIuRjrguaF2Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714133143; c=relaxed/simple;
-	bh=VZ4dyN6HsEQTrAuuWJizHwgtH2IUGnz23LHLcnDqNXo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FNiQf8EvZ0fvdXAZffGL6TxZGA0MgK0U0pKDDjEekNEDAaqs2JkcLHI12H7u9pEUzTh1+5nd6QuQLqn1dzMQqgRFF759I9/EZkfEec0I5lX1wFWlskaugF9Qn4ErqJKnoLkXNCf+MNTRga7jRphUk7ZA1s23EFYaS3KiWHYlz9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T/99TpxJ; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/99TpxJ"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2dd80401e81so4791371fa.3;
-        Fri, 26 Apr 2024 05:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714133140; x=1714737940; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IFRgbloGhVnIKWuDRlSJQNjAIv7cIETH3l3I8D/RWn0=;
-        b=T/99TpxJQ+o7rKczf5e7s3PcFO1hyjncMqloVg1ECYnr+swynjeq45H4KkyemaEtDN
-         JrFGInHVrqTttNL63shSOeRcXxO7TqHbJGL1Pmy7ekIERifgg+sgpsmfstMeOIPh88ud
-         xvGSK+HH8qaeLRiRBz2NWsUC58D5Rjgl96h1CHAa5QefuO0JFnHqpyhUIHSZqWOGPhKx
-         tehh8Y8Hf238eeGR+5HS0au6ySs7VR/TZynmVnwimcPrkkGElU/jzi02gbfE5fQdxBmy
-         ZZPVtSIBB+u1/m9B1FpRGzEWYYrEynO75LR1lKzFv2muvPMuuZjr0fuOF4ylEPLnN0AV
-         CBdw==
+	s=arc-20240116; t=1714133434; c=relaxed/simple;
+	bh=VDak55zfLn9yH98huhlZNYU5hK4qGuSisAUpSY2QKnc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Kgo4ErXA+KuRI5Xp1L0xZoZuhMDpTfxC7AHr+JEC9lrxLdvvU9aOtiP80zcVWjVJJeQWtVrqQaT/X13C4ZpidLPLwfha7wBXdh/bskOE1fK1w+jyGbeiQVMmUyM+Ny2s/de/MQIxxfI86In9gYhske9YAO1OkPYY9nd2A6HIJYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d667dd202cso208113539f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 05:10:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714133140; x=1714737940;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IFRgbloGhVnIKWuDRlSJQNjAIv7cIETH3l3I8D/RWn0=;
-        b=SJWxFoK0TW2g2iBitbViKC+VM+k4DUSLAr0Fg/+8NnrrO08H9eAQBISrdDv3tVisKh
-         fklvXjp2XFNRtDsRo6XgsgsX5b35O/xSB3hSHCtbxH+KGCeHi2Bkp3KZZtO8bFwqmPDB
-         Eve+WPTYTnC4hne7+X/WRNpPibtWaob74D4QxAjxb/zkk4hMmb1bbdxOKoMg5isAZdIc
-         AgJWVjaIKcsqcfMEQRioBU9Fzthuim3nhXKoYnvTjnskmA+0Ypvb3C96zbXtJIOgilxr
-         SOvuQ6lqLqE9ttASKSIrXILYTU86YN4ksrdD2YpxsKPfvFaVvwK5L5EONt4rVR/YYC1P
-         u2rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUV58/Xui6L7AfEuHx6NewiiNxoEX0ZoIk/lFlX8FVkzxlu5eBF29plLpGakKPQDjECtgvkSoVcTl1oP/PMlQUHTfgE5T07+OSb/Fc5wWwDwwRCZyfroJzD6NPawExeXeA4494PkPCDkJWek7Oo9nBXNl1fwhZJI1PhQIc9jkUC+jA2VwMrFM3tq94=
-X-Gm-Message-State: AOJu0Yyeg1mmqXyaKSg2HBz+oqzHRvpD7qPwK9jyunZ5mDgQbNRLHS2q
-	BNNoa91HiGvce4rWDO6ORfgDcxHFKSrJ9z8zBCb6oh76Mr8Nt4M/
-X-Google-Smtp-Source: AGHT+IEe8mldUM2Wv5ZRNT6Twg6RekMttRFRq1NWmP7m1iCts+MYJNSTfm41RqGdQjLEgw0/c8z1VQ==
-X-Received: by 2002:a2e:b61a:0:b0:2dc:759e:981 with SMTP id r26-20020a2eb61a000000b002dc759e0981mr1615343ljn.4.1714133139789;
-        Fri, 26 Apr 2024 05:05:39 -0700 (PDT)
-Received: from [172.16.102.219] ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id k41-20020a05600c1ca900b00417e8be070csm30937272wms.9.2024.04.26.05.05.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Apr 2024 05:05:39 -0700 (PDT)
-Message-ID: <81a9e3c2-2c44-406e-af19-90d9dcfe4a92@gmail.com>
-Date: Fri, 26 Apr 2024 13:05:34 +0100
+        d=1e100.net; s=20230601; t=1714133432; x=1714738232;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4UdzRBinvaLIUGUBa8Qs3FzTYEcAEXl0i7GmgW4GMdE=;
+        b=E/8H94ZBmdVjSQESKjStGovJBsYeTKFytqprpXZjY3Awn+JKxwbB8N37EwyWVVSRqV
+         xzw0AvF9KNamqsBoYZQckEAZzwIliDCeLZpm0lImCPrqfpWa/WUvnvPyr84BLQJn1J1p
+         aZmgUIXhFSkmdGCwk64vzI6P5F5yHrJ2sb1d0PFGDcdlg2q5zig9SHwV6Xxrc12V/QXN
+         lvuJ8ZCHI1/tV5WSOzI3eeRFABCJIN+PB0Uv45SsikBf6FP+5NGy45H3yFOIuzr+SS2l
+         2Re0Zd8aZmIwQA1eD8WCIUaGV7ecLMSWGDTfKypJPgkdxQ8vtBHHtm6LL0uVJWCS89yS
+         +wdw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ073VkbkYZdom71dfw1ll+QNh7TjMFoUwge9jazFk+ml/SHElsZdJYt0hDVMmAIMjIuXcy01SCFz1mxfnvVIGYmexbcft0PIxIN1B
+X-Gm-Message-State: AOJu0YzQw75atyrzD7bjmEDLikTjr8J6GOOxfVkGwl8zUukeV2FdmQjY
+	lWE4RyOgF1wc2M7pf1oIPqvztiBE/Bt3fQDSGeGYvvCynuZFyRHVDeGgJbMeVskiHh+U4wLvHKY
+	AVduwsXsX0F9gc3myIEDt0PVMbus9WKtFwVLcg04eA7MXuEZ/338iYPQ=
+X-Google-Smtp-Source: AGHT+IFavDCbEhFNVt/bk1n8KNjEVZOqlg4ILJAKbnXFWR+MljzAEqiFXZY+t1oxmWtl55qVTgM50Xik79tvs3G0NHE7Gk1Td9gd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] ALSA: kunit: make read-only array buf_samples
- static const
-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
- Colin Ian King <colin.i.king@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240425160754.114716-1-colin.i.king@gmail.com>
- <20240425232250.GA205425@workstation.local>
-Content-Language: en-US
-From: Ivan Orlov <ivan.orlov0322@gmail.com>
-In-Reply-To: <20240425232250.GA205425@workstation.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:170f:b0:36b:26df:cce0 with SMTP id
+ u15-20020a056e02170f00b0036b26dfcce0mr151937ill.0.1714133432185; Fri, 26 Apr
+ 2024 05:10:32 -0700 (PDT)
+Date: Fri, 26 Apr 2024 05:10:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000052c1d00616feca15@google.com>
+Subject: [syzbot] [bluetooth?] WARNING in hci_recv_frame
+From: syzbot <syzbot+3e07a461b836821ff70e@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/26/24 00:22, Takashi Sakamoto wrote:
-> Hi,
-> 
-> On Thu, Apr 25, 2024 at 05:07:54PM +0100, Colin Ian King wrote:
->> Don't populate the read-only array buf_samples on the stack at
->> run time, instead make it static const.
->>
->> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
->> ---
->>   sound/core/sound_kunit.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/sound/core/sound_kunit.c b/sound/core/sound_kunit.c
->> index eb90f62228c0..e34c4317f5eb 100644
->> --- a/sound/core/sound_kunit.c
->> +++ b/sound/core/sound_kunit.c
->> @@ -167,7 +167,7 @@ static void _test_fill_silence(struct kunit *test, struct snd_format_test_data *
->>   
->>   static void test_format_fill_silence(struct kunit *test)
->>   {
->> -	u32 buf_samples[] = { 10, 20, 32, 64, 129, SILENCE_BUFFER_MAX_FRAMES };
->> +	static const u32 buf_samples[] = { 10, 20, 32, 64, 129, SILENCE_BUFFER_MAX_FRAMES };
->>   	u8 *buffer;
->>   	u32 i, j;
-> 
-> Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> 
-> We can see the other similar cases in the kunit file. I'll post the fix
-> later.
-> 
+Hello,
 
-Hi Takashi,
+syzbot found the following issue on:
 
-Hmm, correct me if I'm wrong, but I don't see any other significant 
-allocations on the stack in the test.
+HEAD commit:    2bd87951de65 Merge git://git.kernel.org/pub/scm/linux/kern..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1655ccef180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5ced800a6af0f5b0
+dashboard link: https://syzkaller.appspot.com/bug?extid=3e07a461b836821ff70e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
--- 
-Kind regards,
-Ivan Orlov
+Unfortunately, I don't have any reproducer for this issue yet.
 
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/167fa7ed263b/disk-2bd87951.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d5451b036870/vmlinux-2bd87951.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a0d784e076f2/bzImage-2bd87951.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3e07a461b836821ff70e@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 14307 at kernel/workqueue.c:2322 __queue_work+0xc6c/0xef0 kernel/workqueue.c:2321
+Modules linked in:
+CPU: 0 PID: 14307 Comm: syz-executor.2 Not tainted 6.9.0-rc5-syzkaller-01160-g2bd87951de65 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:__queue_work+0xc6c/0xef0 kernel/workqueue.c:2321
+Code: ff e8 48 38 36 00 90 0f 0b 90 e9 20 fd ff ff e8 3a 38 36 00 eb 13 e8 33 38 36 00 eb 0c e8 2c 38 36 00 eb 05 e8 25 38 36 00 90 <0f> 0b 90 48 83 c4 68 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc
+RSP: 0018:ffffc900034f78a0 EFLAGS: 00010093
+RAX: ffffffff815fc90d RBX: ffff88802a579e00 RCX: ffff88802a579e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff815fbdd3 R09: 1ffff1100f64b9ac
+R10: dffffc0000000000 R11: ffffed100f64b9ad R12: ffff888068ebd9c0
+R13: dffffc0000000000 R14: ffff888068ebd800 R15: 0000000000000008
+FS:  000055557f1bb480(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0909aba170 CR3: 0000000079f8e000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ queue_work_on+0x14f/0x250 kernel/workqueue.c:2435
+ queue_work include/linux/workqueue.h:605 [inline]
+ hci_recv_frame+0x489/0x610 net/bluetooth/hci_core.c:2998
+ vhci_get_user drivers/bluetooth/hci_vhci.c:521 [inline]
+ vhci_write+0x35a/0x480 drivers/bluetooth/hci_vhci.c:617
+ do_iter_readv_writev+0x5a4/0x800
+ vfs_writev+0x395/0xbb0 fs/read_write.c:971
+ do_writev+0x1b1/0x350 fs/read_write.c:1018
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0909a7dc9d
+Code: 28 89 54 24 1c 48 89 74 24 10 89 7c 24 08 e8 0a 70 02 00 8b 54 24 1c 48 8b 74 24 10 41 89 c0 8b 7c 24 08 b8 14 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 33 44 89 c7 48 89 44 24 08 e8 5e 70 02 00 48
+RSP: 002b:00007fffb04b4630 EFLAGS: 00000293 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f0909a7dc9d
+RDX: 0000000000000003 RSI: 00007fffb04b4670 RDI: 00000000000000ca
+RBP: 000055557f1bb430 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000008 R11: 0000000000000293 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f0909bac9d8 R15: 000000000000000c
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
