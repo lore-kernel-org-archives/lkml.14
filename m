@@ -1,88 +1,99 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8D1BB642;
-	Fri, 26 Apr 2024 02:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.6
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A161860;
+	Fri, 26 Apr 2024 02:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714098125; cv=none; b=IfYUMZ1ET1LtsS8dgdDtvoCLdDFTNhdcV1kN4Mj/di6jdDrNeZ47A9Mp/XBJH4ZrFPcEJ+EObgEfNIcZT5+XMG394GBN+cumcJs1Y/GzhLu2T0EjED+4piI9hcoGUwU+MR/qijZn8zp0IUKfzddc5r9/d9NGYR+S7vH0UFWjOyU=
+	t=1714098163; cv=none; b=p2dnjibi7gw7w/GUX8T6ODdwaFzf4dhQUj+Oa4cSiiEzkHctoAWeI9LjkAQqXn2ZOvvqF2eGR0E1geG7WMhTTxNYz0BUEBUjD5JTw+1MdoDU6uHNyBZlQHbrXd1l25i2iTJ2qUczVq1sauEqfaOvB4/Fwqla8Lk+Fowjgn6P3JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714098125; c=relaxed/simple;
-	bh=XXS/DqzOUd2pZXmZfdeWQlXnvZ4h6TO847RjqihLfV0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PWgQDs/FXQUClgAnkGOdbcyOgSlw7MPWNnMHNhHuEBN05wUEFbCGRhaN7eplx/sq7xD9y05udJ3dGXdUWSiERsUekIqKRvWB/6dXGi0ZYAreFD6rlMAtv2x8unZMTojQ2Hq4CMClsXMzYME4CaY1uf4X0gApXoK4ggnkd2uCvyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=G6kmxnNS; arc=none smtp.client-ip=220.197.31.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1714098163; c=relaxed/simple;
+	bh=SGYmgklzXAXHDbnGapUv+OP9t2fZ8HQN2L78VH8xfWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QRFxKqYqIoJkFaPzo8pKhIBl9owfiOsyAXhEuMq3drsmwJi+1pQrTxbv0TKrWpJHYHBqu5H5e/O1wngJhUBstahJeG4A2bFd588hWPt40Hrk2Mpp91tRBXIbHT6UFp6ojCxaSueRWbZc/Plkr3o257YfCneQrELVlpTr6FuV9/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=j3eU+Xvx; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="G6kmxnNS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=W+llE
-	iqHYcicbi/eAfa58Zpn06ur3WDHgrUuuzURwcs=; b=G6kmxnNScC5OKeEvYCRxJ
-	6RtO1bCZAee5jvKaXiQDcM2Zy7mfmOyWlNgvH57ND3Cb5rFX9nqvMgc64ONgt1Gp
-	vkzjz1UiJqsDhCJkGnsMXu+9I9wv0flIET2qVR3xehB/taVR21vYs2LC9rkoXK2I
-	e6PbPGXU5e06tDyyU6lHlY=
-Received: from localhost.localdomain (unknown [111.198.54.11])
-	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wDnL+I9DytmkXXvAQ--.21672S2;
-	Fri, 26 Apr 2024 10:19:47 +0800 (CST)
-From: lumingyindetect@126.com
-To: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-Subject: [PATCH] "drivers:Fixed memory leak in /linux/drivers/tty/serial/8250/8250_lpss.c file.
-Date: Fri, 26 Apr 2024 03:19:39 +0100
-Message-Id: <20240426021939.1083521-1-lumingyindetect@126.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="j3eU+Xvx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1714098158;
+	bh=vCi5NeIBjIy/G8fUon9n+kNojGUZtoR7sj43GA36g60=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=j3eU+XvxnnnBhJkXi7EnOId35O122bgrQY0ZQmU2k4hPAkmBVVjRHeCR0yroLrDEq
+	 9RccHQg7qhAeN/FzLk0Z8efnuaCu9WaETxfzzOfr8a/NdrHVv75ibG2i/Zm/xR/iZk
+	 EAgehT/JElJ2FBrg52Mh4spCMB+Rz70/Y7J1wAxS1RuOOAiVY+3wJqKr1UldMvi3Sl
+	 XwT9n+c+lpADJx5XjsVkuEXNioTaY4ra4ZLMGIE8cb9J2f/JGf4xPZdt3XuiSQLkY6
+	 Z1FPTt516h3xvTUiNz1HIFYuKG4DJyld9PnbnBoeQnfscbRwjHqbsKoa1f+rABaj7b
+	 39B0mq+wp5iWQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VQc2632xMz4wbr;
+	Fri, 26 Apr 2024 12:22:38 +1000 (AEST)
+Date: Fri, 26 Apr 2024 12:22:37 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the drm-msm-lumag tree
+Message-ID: <20240426122237.4991a706@canb.auug.org.au>
+In-Reply-To: <20240409120108.2303d0bd@canb.auug.org.au>
+References: <20240409120108.2303d0bd@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnL+I9DytmkXXvAQ--.21672S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7CFWDKF4xXFW5WF4kArykGrg_yoW8GF4UpF
-	sxtFsIyFyYqa4Ig3Wjyr4qqF1Y9FZ2ya47WrZrGwnI9rZIyF93tF4rtFySyF1UXrWktF9F
-	yF48Ca1jya4UJFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jK-erUUUUU=
-X-CM-SenderInfo: poxpx0hj1l0vphwhu3a6rslhhfrp/1tbiEATM9mVLbE9NvgAAsQ
+Content-Type: multipart/signed; boundary="Sig_/mQ9A.ugvWxqRpGSq+vfTx6V";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+--Sig_/mQ9A.ugvWxqRpGSq+vfTx6V
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-In the lpss8250_probe function in the file /linux/drivers/tty/serial/8250/8250_lpss.c, there were certain return paths where pci_free_irq_vectors was not called to release memory related to pdev, leading to a memory leak. This commit fixes that issue."
+Hi all,
 
-Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
----
- drivers/tty/serial/8250/8250_lpss.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On Tue, 9 Apr 2024 12:01:08 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> After merging the drm-msm-lumag tree, today's linux-next build (arm
+> multi_v7_defconfig) produced this warning:
+>=20
+> lxml not found, skipping validation
+>=20
+> (lots of these)
+>=20
+> Introduced by commit
+>=20
+>   8f7abf0b86fe ("drm/msm: generate headers on the fly")
 
-diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
-index 776ec1ef29d6..2bb86f9cad5b 100644
---- a/drivers/tty/serial/8250/8250_lpss.c
-+++ b/drivers/tty/serial/8250/8250_lpss.c
-@@ -344,11 +344,11 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	uart.port.mapbase = pci_resource_start(pdev, 0);
- 	uart.port.membase = pcim_iomap(pdev, 0, 0);
- 	if (!uart.port.membase)
--		return -ENOMEM;
-+		goto early_err_exit;
- 
- 	ret = lpss->board->setup(lpss, &uart.port);
- 	if (ret)
--		return ret;
-+		goto early_err_exit;
- 
- 	dw8250_setup_port(&uart.port);
- 
-@@ -367,6 +367,7 @@ static int lpss8250_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- err_exit:
- 	lpss->board->exit(lpss);
-+early_err_exit:
- 	pci_free_irq_vectors(pdev);
- 	return ret;
- }
--- 
-2.25.1
+I am still seeing these wanrings.  The above commit is now commit
 
+  0fddd045f88e ("drm/msm: generate headers on the fly")
+
+in the drm-msm tree.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/mQ9A.ugvWxqRpGSq+vfTx6V
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYrD+0ACgkQAVBC80lX
+0GyoeAf/ZQiUldJfOSBDK3hKj1htCY86Ecb/9rOgzmwtwNowLgPIlBSair75Q7LL
+9GdCPCJ9PYy41tb4jJ4B4JMlRfaH8XhgV71B6wEH32OsvEhjn73eAXINBlLDwpLB
+8Rr85E+D7HUjOR7qTR0yKry/3cXhM4L4SAVHsdpW8l3TfWVwIgNTAN6P4ByYUUvc
+EYu95wLoPFKiJ08Zm8RDXZSfnT0++DdxAVeuBgbOcBpg6fL2gkIf03eR6SuxKTkG
+3fG3D7YUHbXNa1R/dXs/c5OXdXPRBsHlwtCQlCyR46rZkW71dkzA3nj88hXp6WOO
+EbYZ5GljqwIzTO62vPMEnLduuuNEPA==
+=uvM2
+-----END PGP SIGNATURE-----
+
+--Sig_/mQ9A.ugvWxqRpGSq+vfTx6V--
