@@ -1,162 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D660149E17;
-	Fri, 26 Apr 2024 15:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DC6157492;
+	Fri, 26 Apr 2024 15:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714144725; cv=none; b=OBmx/doPBX4atzwlCMJ6RjLCq5ZJ2hg5w9oS8RFhOUuVrzoI70E2XtsdjNkbxrRAG0PzwxIf5yjJYgMgSn2ZeLAwIGCXLrqJoFs3NbYM99xNT3BjZIp6XTwHLdM+b0qvh8ik0OpeiNlIquWTTCmQg/5Of+pWZ6+tkeJ+Zefsna4=
+	t=1714144728; cv=none; b=BttU980tgQ6a0k3jUWo7IWHdPOKEs9zGqneHZskfwOlfxXulSlJoaDIJYsGaysb9Rhnf4iV8uiBuD+EmOuMr7+S4JAp5B+VUi6OdyyJOf/Zh9OTKC29FjCUhatkQpjwCBpDeCdx3d36rSrIuhPe9ulByehvVQyBATxB3XZjuM9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714144725; c=relaxed/simple;
-	bh=iMSfAGShKd7YbJ5VcD2YOia5ZlLkkptKg528JtHK0kI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nXlM7ADupI5x31U1pUWFKIbp+aOAtpQldsxHyw0tpcsqsVLZkv2wdtb2Sk1BqjokmtqBGsuI1jT5Ho0waNkBDak0ZNfAGjW7T5u3Swl8P0ck7naQ/FhJSTGvkIHrr/rSSlPkDsDEg+WkRoQfLCmYIH5wJD/NTegp3o/86hjW39k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4y7MUDF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714144728; c=relaxed/simple;
+	bh=xDXR4jGjSYN0GC7bX9ghHVGM783FJ6/ARVqYRX6/33k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RMyCXsV986JwOStyfq3qzpBdCBivzsmp0c707NfuqQP+74ukejJvU4ggweDaThvhKJHQMrFyi56khhI55QpiIJwMpOawpo5uOs5kidep8lGcOvafCFPTn4iZiqSMEgnmAJf8x5DfbQwAmIhIGa/GzwUxYJtjHKFZTK1Z45GABAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBtIY03c; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4y7MUDF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77878C113CD;
-	Fri, 26 Apr 2024 15:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714144724;
-	bh=iMSfAGShKd7YbJ5VcD2YOia5ZlLkkptKg528JtHK0kI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c4y7MUDFUSoWtSFhptFDidEtAkjexq+z9Djlt/GbttVvkxEnjl3ydqNclRY1n/TtZ
-	 92PRSZsFmO1P58TrQWvFhbJY7Dxu1ChOiSgA6jmeTzuqC5y53cd/q+/wQDztfTk4CP
-	 LAFFhr0oNYqq+tyuKN3mEtXliPa5g5099kskUNDPiIwa00jDaNcQfTxEJ8Y1aAipMe
-	 iKMGWT9ekThd9mhtyvihorTIQLZvC+z/DPbp+TG48LJ2hEM41WzGfEjUcvGgFm7Flf
-	 8kfKIt5AoYHbfTakwI+QQUPRC4O8lHA2dkb65+mlGxtf9kh7mmQ68Qe08nTs4mz+oN
-	 8sjT+izzxOCRw==
-Date: Fri, 26 Apr 2024 08:18:44 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: willy@infradead.org, brauner@kernel.org, david@fromorbit.com,
-	chandan.babu@oracle.com, akpm@linux-foundation.org,
-	linux-fsdevel@vger.kernel.org, hare@suse.de,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-xfs@vger.kernel.org, mcgrof@kernel.org, gost.dev@samsung.com,
-	p.raghav@samsung.com, Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH v4 08/11] xfs: use kvmalloc for xattr buffers
-Message-ID: <20240426151844.GH360919@frogsfrogsfrogs>
-References: <20240425113746.335530-1-kernel@pankajraghav.com>
- <20240425113746.335530-9-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBtIY03c"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e78970853so5791978a12.0;
+        Fri, 26 Apr 2024 08:18:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714144725; x=1714749525; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3kpEePsUV7nJIPsd2LpqCo6410MJmYJkw/rGNMDqU0E=;
+        b=HBtIY03c2MBdlgjKaCxgzMdBJhpW1iv+oereOLdx/5JY3j9LmYnt6mkAXguNZu+oax
+         gJqaT9+z4a9Za2e9rZPu76fRkaA6YFOU/8JdqQG2/PlYqBAIsVtgCL+V48IeQo9rC8hT
+         jL5lWz3RUwV3VX2UTTPSh9qem4a3kUxlh9A6Od3Rvam7X8u5PC4y7IwEYS6dH57f0ktc
+         CuxZNvjMK1F6UStRSdXSjkh+1ZT/Mlt5wdVfr21v/Lre7u33zw9p+Rt7HWynvML5cb1O
+         UCQTQh6MZpDBcpl+qnrm0rtsQJ/5px3VdOFNOLWF5VBZmMqE9/DMsczIZvjuO22ZXwXr
+         AcMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714144725; x=1714749525;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3kpEePsUV7nJIPsd2LpqCo6410MJmYJkw/rGNMDqU0E=;
+        b=EyWLWU9IQL6ZRuYxiXQr7NRyOJrG/S/DH1r+MWZw5SKDQrVKS0AScp2yz3tQ7NP50G
+         VGL4dWRKbthORzaV8A6yk+WobDLfLkMs3UQPN5E/8bZU54NZ696ydhP3OfdB69Vd85z3
+         0L7Y/UMr3dbDwWagxs1YwwPrKjubyZOaugV69zyu/gHOZrjPpwPXnA7M9P0uPAX7YvXe
+         6GYqdyLLsqp/7ZQcl3AZ017cJPob58pcyysY9J5G3r+DmSBiHk2amCJJdEUOzmoOM+QX
+         7gy5WtyjUNh0gTz5nNJcLn+Ep3gNkWul/30rH3xFq1j89GBtrnqAOAP8quQjFNcDEWMq
+         VFNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmhHvAdp2zBRQ66egUGOKqRlMG1E9QFTT5LfoxCXZYhsLqCm4QSEdU6iP225bWQ3syaDsmLOrYqRdI55rpwqg/5Nzzq0J/iAhXR/d/HoyMdA89pNPP3764II07DyZXMTkx/Qzn0CrT
+X-Gm-Message-State: AOJu0YycdnSBs1LcFHVEi8xiy8nku+9ibHnUF2S5VSFtArA4fd4AU3w1
+	zIQ5oXZfTvO07OA2lLRmMMAFs+e6YAGC4FiMifoY7qAGHISxNZDg
+X-Google-Smtp-Source: AGHT+IEphW+cY8HC5z3tGFpXv3PALgQYDo10WbNXlOUf3GKBkIEhxbGYao2zggBh/LXIojnz81SrPw==
+X-Received: by 2002:a17:907:2d2b:b0:a58:c09a:71bf with SMTP id gs43-20020a1709072d2b00b00a58c09a71bfmr3066388ejc.38.1714144724578;
+        Fri, 26 Apr 2024 08:18:44 -0700 (PDT)
+Received: from fedora.fritz.box (host-79-27-41-113.retail.telecomitalia.it. [79.27.41.113])
+        by smtp.gmail.com with ESMTPSA id s17-20020a1709067b9100b00a51bf5932aesm10684754ejo.28.2024.04.26.08.18.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 08:18:44 -0700 (PDT)
+From: Francesco Valla <valla.francesco@gmail.com>
+To: Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Simon Horman <horms@kernel.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	fabio@redaril.me,
+	Francesco Valla <valla.francesco@gmail.com>
+Subject: [PATCH v3 0/1] Documentation: networking: document ISO 15765-2
+Date: Fri, 26 Apr 2024 17:18:12 +0200
+Message-ID: <20240426151825.80120-1-valla.francesco@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240425113746.335530-9-kernel@pankajraghav.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 25, 2024 at 01:37:43PM +0200, Pankaj Raghav (Samsung) wrote:
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> Pankaj Raghav reported that when filesystem block size is larger
-> than page size, the xattr code can use kmalloc() for high order
-> allocations. This triggers a useless warning in the allocator as it
-> is a __GFP_NOFAIL allocation here:
-> 
-> static inline
-> struct page *rmqueue(struct zone *preferred_zone,
->                         struct zone *zone, unsigned int order,
->                         gfp_t gfp_flags, unsigned int alloc_flags,
->                         int migratetype)
-> {
->         struct page *page;
-> 
->         /*
->          * We most definitely don't want callers attempting to
->          * allocate greater than order-1 page units with __GFP_NOFAIL.
->          */
-> >>>>    WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
-> ...
-> 
-> Fix this by changing all these call sites to use kvmalloc(), which
-> will strip the NOFAIL from the kmalloc attempt and if that fails
-> will do a __GFP_NOFAIL vmalloc().
-> 
-> This is not an issue that productions systems will see as
-> filesystems with block size > page size cannot be mounted by the
-> kernel; Pankaj is developing this functionality right now.
-> 
-> Reported-by: Pankaj Raghav <kernel@pankajraghav.com>
-> Fixes: f078d4ea8276 ("xfs: convert kmem_alloc() to kmalloc()")
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+While the in-kernel ISO 15765-2 (ISO-TP) stack is fully functional and
+easy to use, no documentation exists for it.
 
-Didn't this already go in for-next?
+This patch adds such documentation, containing the very basics of the
+protocol, the APIs and a basic example.
 
-If not,
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Thanks,
+Francesco
 
---D
+---
+Changes in v3:
+ - drop the :2016 version suffix, as in the mean time ISO 15765-2:2024
+   has been released (and is thus referenced as the referenced
+   specification)
+ - add details on mixed addressing (all the paragraph about the addressing
+   format has been reworked)
+ - align some descriptions to the specification
+ - miscellaneous fixes
+ - collected a Reviewed-by
 
-> ---
->  fs/xfs/libxfs/xfs_attr_leaf.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-> index ac904cc1a97b..969abc6efd70 100644
-> --- a/fs/xfs/libxfs/xfs_attr_leaf.c
-> +++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-> @@ -1059,10 +1059,7 @@ xfs_attr3_leaf_to_shortform(
->  
->  	trace_xfs_attr_leaf_to_sf(args);
->  
-> -	tmpbuffer = kmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
-> -	if (!tmpbuffer)
-> -		return -ENOMEM;
-> -
-> +	tmpbuffer = kvmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
->  	memcpy(tmpbuffer, bp->b_addr, args->geo->blksize);
->  
->  	leaf = (xfs_attr_leafblock_t *)tmpbuffer;
-> @@ -1125,7 +1122,7 @@ xfs_attr3_leaf_to_shortform(
->  	error = 0;
->  
->  out:
-> -	kfree(tmpbuffer);
-> +	kvfree(tmpbuffer);
->  	return error;
->  }
->  
-> @@ -1533,7 +1530,7 @@ xfs_attr3_leaf_compact(
->  
->  	trace_xfs_attr_leaf_compact(args);
->  
-> -	tmpbuffer = kmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
-> +	tmpbuffer = kvmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
->  	memcpy(tmpbuffer, bp->b_addr, args->geo->blksize);
->  	memset(bp->b_addr, 0, args->geo->blksize);
->  	leaf_src = (xfs_attr_leafblock_t *)tmpbuffer;
-> @@ -1571,7 +1568,7 @@ xfs_attr3_leaf_compact(
->  	 */
->  	xfs_trans_log_buf(trans, bp, 0, args->geo->blksize - 1);
->  
-> -	kfree(tmpbuffer);
-> +	kvfree(tmpbuffer);
->  }
->  
->  /*
-> @@ -2250,7 +2247,7 @@ xfs_attr3_leaf_unbalance(
->  		struct xfs_attr_leafblock *tmp_leaf;
->  		struct xfs_attr3_icleaf_hdr tmphdr;
->  
-> -		tmp_leaf = kzalloc(state->args->geo->blksize,
-> +		tmp_leaf = kvzalloc(state->args->geo->blksize,
->  				GFP_KERNEL | __GFP_NOFAIL);
->  
->  		/*
-> @@ -2291,7 +2288,7 @@ xfs_attr3_leaf_unbalance(
->  		}
->  		memcpy(save_leaf, tmp_leaf, state->args->geo->blksize);
->  		savehdr = tmphdr; /* struct copy */
-> -		kfree(tmp_leaf);
-> +		kvfree(tmp_leaf);
->  	}
->  
->  	xfs_attr3_leaf_hdr_to_disk(state->args->geo, save_leaf, &savehdr);
-> -- 
-> 2.34.1
-> 
-> 
+Changes in v2:
+ - rename (and re-title) documentation to to align it with KConfig option,
+   using ISO 15765-2:2016 instead of ISO-TP (the latter is still used for
+   brevity inside the document)
+ - address review comments
+ - solve warnings coming from checkpatch and make htmldocs
+
+Francesco Valla (1):
+  Documentation: networking: document ISO 15765-2
+
+ Documentation/networking/index.rst      |   1 +
+ Documentation/networking/iso15765-2.rst | 386 ++++++++++++++++++++++++
+ MAINTAINERS                             |   1 +
+ 3 files changed, 388 insertions(+)
+ create mode 100644 Documentation/networking/iso15765-2.rst
+
+-- 
+2.44.0
+
