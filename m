@@ -1,137 +1,70 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA58148317;
-	Fri, 26 Apr 2024 13:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34767148315;
+	Fri, 26 Apr 2024 13:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714139923; cv=none; b=Ax+MU30b7+Pn1kqzsP5hP1w2mOW6SB7yPJ13mJ41C7ERjEFgkfDB03YofChufmm/0c95eJf8zLPGVeND0dyK5P1MUXyAxCXZCznFl6b4qY4Q+bPBKiqPctvxPdQDd7KncPM+rMKNHLsi/yvRbRoRuJgkMDb4RLDR78UFUEZKYwc=
+	t=1714139940; cv=none; b=TJHumAECdUJhHokjVBvcUMQ73jK+nhTZ29oJcC9oDM32op8KY0DP6FeHz2pJhPTKcwZl2eW6jXAgtJx73EXa++oTf7ZzjpOaPvXQrjZB3/DRVDfXGbvx3N133H7U/IfDxbOtEo0R57jGqHRDCRHy4AA2Gev/UBU33Aaurru27kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714139923; c=relaxed/simple;
-	bh=kdlYUCV3Md6Cg91FTWPIeZpb+G6UbOiI5GcDos6hRHc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i1VAw6bIaaMyPQk4xOAhK4HgyrjftIENTEIxyN/XwYoBT8u20h86EJnKRXHbpjNK4vZTG037VA7WabsFjbS0AFQEiJCbksLaR1hRhuMDPyQxWImD5Z/2+DFnba87Fq2ZILcwU2CS2vHzdv3jRLpOE08nTSHy/oXmsBJOJ8hIIh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VQvQM0KKWz67Q7R;
-	Fri, 26 Apr 2024 21:56:11 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C08B2140A70;
-	Fri, 26 Apr 2024 21:58:39 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 14:58:39 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
-	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v8 14/16] arm64: Kconfig: Enable hotplug CPU on arm64 if ACPI_PROCESSOR is enabled.
-Date: Fri, 26 Apr 2024 14:51:24 +0100
-Message-ID: <20240426135126.12802-15-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
-References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1714139940; c=relaxed/simple;
+	bh=U5JTEg76JRGgJ+uh8sUvqUM1psjGTvG9LX9g2tsLyiM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YGK3Mvkk1sOPcklQR7XH/qgdjjKvjeuKFwREX++XbyfGaiwOoX1Jck0x8Y4luCf6F2BjeMnpWi3kwxIcuBaoZANmMi9t7G1klSTcHTiuzdtdGyHKVUH/aKD/w6IEIp3L5CPz4LpcFPXQYzQ5JDqqYoNp7pwwPJMKWDEIkfJJWCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Zv7jBhfr; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Zv7jBhfr"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 256C047C3A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1714139938; bh=hSBvj3AMfluHMQLCfI6sXscWndkjq2Oc1zVGNVHaAZE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Zv7jBhfrgwe7figF3E72J77HJnPmUu8/KI3zawxW+uinuKU0qOnmvGvYewxknKHCo
+	 RYQC/3A5+9ghTC32PyYlROyGlnoySexk7YkmK5UTcJcQQ6j3iKuy0HEHcsJWkcHbg5
+	 UDMkKyQq1ypURRRtcvHT5khobqCLZHclmH1bVOtVr+RU90GVUwePZcOMTzyudjApyn
+	 kQAlcIDxatc5XrPXV7f4mrAV9jKJ0YwlrjALlfigdbr0/bWzpsoE7iLrwY6zu/znfm
+	 fCzBfHp7t9kBLLqI7YkO1uRl9WPHzeOSuxESHDj0MNK2IJe8QDTWM4vcflL77PwEH1
+	 fPlceTybTPH6Q==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 256C047C3A;
+	Fri, 26 Apr 2024 13:58:58 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Dongliang Mu <dzm91@hust.edu.cn>, Alex Shi <alexs@kernel.org>, Yanteng
+ Si <siyanteng@loongson.cn>, Dongliang Mu <dzm91@hust.edu.cn>, Konstantin
+ Ryabitsev <konstantin@linuxfoundation.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] docs/zh_CN: add process/cve Chinese translation
+In-Reply-To: <20240422041115.2439166-1-dzm91@hust.edu.cn>
+References: <20240422041115.2439166-1-dzm91@hust.edu.cn>
+Date: Fri, 26 Apr 2024 07:58:57 -0600
+Message-ID: <87r0esns2m.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-In order to move arch_register_cpu() to be called via the same path
-for initially present CPUs described by ACPI and hotplugged CPUs
-ACPI_HOTPLUG_CPU needs to be enabled.
+Dongliang Mu <dzm91@hust.edu.cn> writes:
 
-The protection against invalid IDs in acpi_map_cpu() is needed as
-at least one production BIOS is in the wild which reports entries
-in DSDT (with no _STA method, so assumed enabled and present)
-that don't match MADT.
+> Translate process/cve.rst into Chinese and add it to
+> Documentation/translations/zh_CN directory.
+>
+> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+> ---
+> v3->v4: revise sentences suggested by Alex Shi
+> v2->v3: remove a trailing space
+> v1->v2: add a newline at then end of cve.rst.
+>  .../translations/zh_CN/process/cve.rst        | 89 +++++++++++++++++++
+>  .../translations/zh_CN/process/index.rst      |  1 +
+>  2 files changed, 90 insertions(+)
+>  create mode 100644 Documentation/translations/zh_CN/process/cve.rst
 
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Applied, thanks.
 
----
-v8: If acpi_map_cpu() stub is passed an error code as pcpu, don't
-    pretend it worked.
-    Note that x86 relies on passing an invalid error code in here
-    to indicate a CPU ID needs to be allocated, on ARM64 if we
-    don't get something valid there is nothing we can do about it.
----
- arch/arm64/Kconfig       |  1 +
- arch/arm64/kernel/acpi.c | 22 ++++++++++++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7b11c98b3e84..fed7d0d54179 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -5,6 +5,7 @@ config ARM64
- 	select ACPI_CCA_REQUIRED if ACPI
- 	select ACPI_GENERIC_GSI if ACPI
- 	select ACPI_GTDT if ACPI
-+	select ACPI_HOTPLUG_CPU if ACPI_PROCESSOR
- 	select ACPI_IORT if ACPI
- 	select ACPI_REDUCED_HARDWARE_ONLY if ACPI
- 	select ACPI_MCFG if (ACPI && PCI)
-diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-index dba8fcec7f33..fb9368197c74 100644
---- a/arch/arm64/kernel/acpi.c
-+++ b/arch/arm64/kernel/acpi.c
-@@ -29,6 +29,7 @@
- #include <linux/pgtable.h>
- 
- #include <acpi/ghes.h>
-+#include <acpi/processor.h>
- #include <asm/cputype.h>
- #include <asm/cpu_ops.h>
- #include <asm/daifflags.h>
-@@ -413,6 +414,27 @@ void arch_reserve_mem_area(acpi_physical_address addr, size_t size)
- 	memblock_mark_nomap(addr, size);
- }
- 
-+#ifdef CONFIG_ACPI_HOTPLUG_CPU
-+int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 apci_id,
-+		 int *pcpu)
-+{
-+	/* If an error code is passed in this stub can't fix it */
-+	if (*pcpu < 0) {
-+		pr_warn_once("Unable to map CPU to valid ID\n");
-+		return *pcpu;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(acpi_map_cpu);
-+
-+int acpi_unmap_cpu(int cpu)
-+{
-+	return 0;
-+}
-+EXPORT_SYMBOL(acpi_unmap_cpu);
-+#endif /* CONFIG_ACPI_HOTPLUG_CPU */
-+
- #ifdef CONFIG_ACPI_FFH
- /*
-  * Implements ARM64 specific callbacks to support ACPI FFH Operation Region as
--- 
-2.39.2
-
+jon
