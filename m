@@ -1,197 +1,246 @@
-Received: from mail-m24106.xmail.ntesmail.com (mail-m24106.xmail.ntesmail.com [45.195.24.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F2815624D;
-	Fri, 26 Apr 2024 16:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA2F14D452
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 16:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714147979; cv=none; b=HEif2LsGdnZbwq6qfD9ugyllIOcCrNp2FJvBselDEQatic+48EQMZdR4RgmLh9zKokyjYfXED7rClo92r1faa8ZOzScBvK6c3Ke1gr86g2UaGjVyib+4gvltoo4dNEbbp5E+NcFLtKh8LA9SEaCCD4AhMW6feWJj6DV7uQkaBAU=
+	t=1714148009; cv=none; b=J9ftMGsgM+d3/3Zrjl24iy4hvan315PR1LRT6YMMcGS1p9jJzZDSQ1vVNguISmNv+pEVqEekugnq3k81qnpOrhfnCkxfxekBOJx6hUMtdfu4dm9ilByiuWtrAIaxreYTGIDNjvWijkNtTlu/oakocm17NPvsOw8dAWLOrVpCG7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714147979; c=relaxed/simple;
-	bh=N0X94kNzWw2q0Lpb3KDr/8sbEe3G/viabZlzQ8Tfe4c=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=r5Ni1gQfFpHVhsg8TRI13Vu5Js2QtjedgYU5g93acfzit9rH5aytfwuWIHLk8b/LIqkCsls5M42c90t7bm9UJ6tvTV2+QRWKOhBZ7QLKXwng41/2gK3uuHoq7t+xmcjhnbJODfqqkWmkk9C1k5OLCb/sQd0SIzb3kkmQ5ykKdqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.24.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 235B9860231;
-	Fri, 26 Apr 2024 22:53:45 +0800 (CST)
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, axboe@kernel.dk,
- John Groves <John@groves.net>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
- <66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
- <ZikhwAAIGFG0UU23@memverge.com>
- <bbf692ec-2109-baf2-aaae-7859a8315025@easystack.cn>
- <ZiuwyIVaKJq8aC6g@memverge.com>
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Message-ID: <98ae27ff-b01a-761d-c1c6-39911a000268@easystack.cn>
-Date: Fri, 26 Apr 2024 22:53:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	s=arc-20240116; t=1714148009; c=relaxed/simple;
+	bh=+DvfMUfVfSlvACLu6SZb+rXe3Bo6+Y2bt6RJFf/QlTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y+jmYZTTTWI6YyE2Cpy3QmkC/TdMvjw3pUVDzOYyS/E+5Erw0rLiIeFTco3JFco5qg/Cg41SgGvfISVqg9qUPJ4cRri+JdO+RnnujLfbjaEnUmPn2n22BNUoBuAZ8xuXL0TWofv1d3FA+LTpt8iIyJpFms33zzIGq0aYyT12xHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SYd4FvY8; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SYd4FvY8"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6eb7d1a5d39so1300302a34.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 09:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714148006; x=1714752806; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yccucKA3aFNVlZUQSPzxnJHi7bfkvfAlVbgOCPgI34U=;
+        b=SYd4FvY8Er6bnDH4wCMZrbqFSr5o0MLeIuqXMdcq0u+kMjrNjdsUWETduZK6381q6J
+         MtEhhIermKUZbgFU6G2OqBXhrkxWjE7KuSzIqe7y9k5SNdOVEl1c78IwHWklws4amhLz
+         joG1FeIXH9fhPXV8KfOdxxzvcLon+lXCSN+3k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714148006; x=1714752806;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yccucKA3aFNVlZUQSPzxnJHi7bfkvfAlVbgOCPgI34U=;
+        b=fB+zGpcuMX1+zWM5RxuZa9W0KzWTT0H+26XH4vr3zzlDl2JvXqJMVS9D5fGAjmmnPM
+         J0SONoWvghLZ6vwnJkuTppfWElX37E9DIZLWtuzeZZcHj4O6Wh5hfNyefeJyUdEQ4AtK
+         u54OQdc97d/WOmgSv5iQ18bI0/XtUCfxKlIosFBWcsN2/u/kxtazgJijJjpkDw1Fwhby
+         MLTUE4rb+Igi3OqlQdUOaFHGWpFNfLqnL9IIKVpz11sFKmWjmhrbZQtL/4obGcvuM03K
+         TWWULSj1giuaE2r6PWi2SnHESWq9i+2dJ9NvqRFaklWR49jLAG7zp9edSug7cahg+MOn
+         mPZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLW1EVfxlaX3qhwiOPSRg5aeW7clZ1ExArdZYCQ8eg1qdtk1iOFToxgXmM97377GqNUnbGae+oA2o47EUlo/Z0cpUXejMxA/GSjCeT
+X-Gm-Message-State: AOJu0YyUJh26h8aOvO5BOjvOz02ki6LMsphV6p3rN03PFEcrBH1inszB
+	lcA4C1MHedtN+FpFsGmZJ/YD0w7dJYMJN7vMFWOdbdUx+3xI1IBNQufBZt8ITopKYLt0nX2LwGa
+	EqQ8CgJtgs2716YYrG9y3d/uW0ScFn7TGSXgA
+X-Google-Smtp-Source: AGHT+IGAiuyCDA8OC+TOraYAVrPt7fIfEUUSWYb91k+k/OXz1rvN52l5EyuOy2LTDvWYXGQZOWCfpUHfPeCF+Xnse9o=
+X-Received: by 2002:a05:6871:148:b0:23a:a6f:ed5a with SMTP id
+ z8-20020a056871014800b0023a0a6fed5amr3286784oab.19.1714148005651; Fri, 26 Apr
+ 2024 09:13:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZiuwyIVaKJq8aC6g@memverge.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGUgaVk9ITB1MSh5CSUwfTVUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f1ae5e640023ckunm235b9860231
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OCo6KDo*MTc8PxQRPy5CMQEK
-	DDIKCRNVSlVKTEpPSk9ISUlOQ0hIVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBQ0JMTjcG
+References: <20240321215622.3396410-2-aruna.ramakrishna@oracle.com>
+ <20240425210540.3265342-1-jeffxu@chromium.org> <7054B528-C603-4EAC-B48D-784480DFE4B6@oracle.com>
+ <CALmYWFsW5XcM8PYwd=SCthfgjC3TxqVz=DjnCuV8TU7k+_jLaQ@mail.gmail.com>
+In-Reply-To: <CALmYWFsW5XcM8PYwd=SCthfgjC3TxqVz=DjnCuV8TU7k+_jLaQ@mail.gmail.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 26 Apr 2024 09:13:14 -0700
+Message-ID: <CABi2SkVvGWa0=Q9AEkTGAr6f_hZ54Ekrxw5CdgvrRKWtNPNkng@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/1] x86/pkeys: update PKRU to enable pkey 0 before XSAVE
+To: Jeff Xu <jeffxu@google.com>
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>, 
+	Andrew Brownsword <andrew.brownsword@oracle.com>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	Matthias Neugschwandtner <matthias.neugschwandtner@oracle.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "jannh@google.com" <jannh@google.com>, 
+	"sroettger@google.com" <sroettger@google.com>, "x86@kernel.org" <x86@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	rick.p.edgecombe@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 25, 2024 at 5:12=E2=80=AFPM Jeff Xu <jeffxu@google.com> wrote:
+>
+> On Thu, Apr 25, 2024 at 3:49=E2=80=AFPM Aruna Ramakrishna
+> <aruna.ramakrishna@oracle.com> wrote:
+> >
+> >
+> >
+> > > On Apr 25, 2024, at 2:05=E2=80=AFPM, jeffxu@chromium.org wrote:
+> > >
+> > > From: Jeff Xu <jeffxu@chromium.org>
+> > >
+> > > On 3/21/24 14:56, Aruna Ramakrishna wrote:
+> > >> Enabling both the non-zero pkey (for the thread) and pkey zero (in
+> > >> userspace) will not work for us. We cannot have the alt stack writea=
+ble
+> > >> by all - the rationale here is that the code running in that thread
+> > >> (using a non-zero pkey) is untrusted and should not have access to t=
+he
+> > >> alternate signal stack (that uses pkey zero), to prevent the return
+> > >> address of a function from being changed. The expectation is that ke=
+rnel
+> > >> should be able to set up the alternate signal stack and deliver the
+> > >> signal to the application even if pkey zero is explicitly disabled b=
+y
+> > >> the application. The signal handler accessibility should not be dict=
+ated
+> > >> by the PKRU value that the thread sets up.
+> > >>
+> > > We have a similar threat model that we don't want "untrusted threads"=
+ to
+> > > access altstack. I think this patch need not be restricted to the
+> > > use case of zero pkey for altstack, i.e. application can also set
+> > > non-zero pkey to altstack and expect the same.
+> >
+> > Agreed. In the latest version of this patchset, this assumption has bee=
+n removed.
+> >
+> > Link here:
+> > https://lore.kernel.org/lkml/20240425180542.1042933-1-aruna.ramakrishna=
+@oracle.com/T/#t
+> >
+> > >
+> > >> Solution:
+> > >> The PKRU register is managed by XSAVE, which means the sigframe cont=
+ents
+> > >> must match the register contents - which is not the case here. We wa=
+nt
+> > >> the sigframe to contain the user-defined PKRU value (so that it is
+> > >> restored correctly from sigcontext) but the actual register must be
+> > >> reset to init_pkru so that the alt stack is accessible and the signa=
+l
+> > >> can be delivered to the application. It seems that the proper fix he=
+re
+> > >> would be to remove PKRU from the XSAVE framework and manage it
+> > >> separately, which is quite complicated. As a workaround, this patch =
+does
+> > >> something like this:
+> > >>
+> > >>       orig_pkru =3D rdpkru();
+> > >>       wrpkru(init_pkru & orig_pkru);
+> > >>       xsave_to_user_sigframe();
+> > >>       put_user(pkru_sigframe_addr, orig_pkru)
+> > >>
+> > > The default PKRU of thread [1] is set as 01 (disable access) for each=
+ PKEY
+> > > from 1 to 15, and 00 (RW) for PKEY 0.
+> > >
+> > > Let's use pkey 1 as an example:
+> > > The init_pkru is 01, if the thread has PKRU (orig_pkru) as 10 (disabl=
+e write
+> > > but have read) then new_pkru from (init_pkru & orig_pkru) is 00, whic=
+h gives
+> > > RW access to the pkey 1.
+> > >
+> > > When the thread has orig_pkru as 01 (disable access) or 00 (RW), new_=
+pkru is
+> > > unchanged from orig_pkru.
+> > >
+> > > Now take pkey 0:
+> > > the init_pkru is 00, regardless what threads has, new_pkru will alway=
+s be 00.
+> > >
+> > > This seems to work out well for pkey 1 to 15, i.e. signal handing cod=
+e in
+> > > kernel only give write access when the thread alrady has read access =
+to the
+> > > PKEY that is used by the altstack. The threat model interesting here =
+is to
+> > > prevent untrusted threads from writing to altstack, and read is proba=
+bly less
+> > > of a problem.
+> > >
+> >
+> > This piece of code assumed that the init PKRU value allows writes to th=
+e alternative
+> > signal stack. As you mentioned earlier, that may not always be true - a=
+ non-zero pkey
+> > can be used for the altstack.
+> >
+> Only PKEY 0 has init PKRU as 00.
+> So in your case, the thread doesn't have write access to pkey 0, and
+> need the write
+> access to pkey 0 during signal handling.
+>
+> > So the new version simply does write_pkru(0) (i.e. enabled all pkeys) b=
+efore XSAVE.
+> > Is this more reasonable?
+> >
+> write_pkru(0) will work, but it is unnecessary in the current patch.
+>
+> Consider the following case: A thread has no access to pkey 1,  and
+> use pkey 1 for its altstack.
+>
+> In V3 (use write_pkru(0):
+> Signal will be dispatched to the user, i.e. write to signal frame is
+> OK, but it will SEGV at sigreturn.
+>
+> In V2:
+> it will SEGV earlier at dispatch stage when writing to sigframe.
+>
+> I would rather that the code fails earlier for this case.
+>
+> > >
+> > > Does this meet what you want? (Note the pkey 0 is different than 1-15=
+)
+> > >
+> > > Suppose someone also like to disable all access to altstack, then the=
+re is one
+> > > more place to mind: in sigreturn(), it calls restore_altstack(), and =
+requires
+> > > read access to altstack. However, at the time, PKRU is already restor=
+ed from
+> > > sigframe, so SEGV will raise (the value in sigframe doesn't have read=
+ access
+> > > to the PKEY).
+> > >
+> > > Without changing sigreturn, using wrpkru(0) here might not be necessa=
+ry:
+> > > the dispatch to user space works fine, only to crash at sigreturn ste=
+p.
+> > >
+> > > [1] defined by init_pkru_value in pkeys.c
+> > >
+> > > Best regards,
+> > > -Jeff
+> >
+> >
+> > I see what you're saying. In rt_sigreturn():
+> >
+> >         if (!restore_sigcontext(regs, &frame->uc.uc_mcontext, uc_flags)=
+) <=E2=80=94 restores PKRU, disabling access to altstack
+> >                 goto badframe;
+> > ...
+> >         if (restore_altstack(&frame->uc.uc_stack)) <=E2=80=94 needs rea=
+d access to altstack
+> >                 goto badframe;
+> >
+> >
+> > I=E2=80=99m wary about reordering anything here. Also, this code is not=
+ aware of the altstack permissions. I=E2=80=99m wondering if wrpkru(0) is n=
+eeded here too.
+> >
+> We can't change PKRU after restore_sigcontext,  the calling thread
+> would have PKRU 0, not the original PKRU from before handling the
+> signal.
 
-
-在 2024/4/26 星期五 下午 9:48, Gregory Price 写道:
-> On Fri, Apr 26, 2024 at 09:25:53AM +0800, Dongsheng Yang wrote:
->>
->>
->> 在 2024/4/24 星期三 下午 11:14, Gregory Price 写道:
->>> On Wed, Apr 24, 2024 at 02:33:28PM +0800, Dongsheng Yang wrote:
->>>>
->>>>
->>>> 在 2024/4/24 星期三 下午 12:29, Dan Williams 写道:
->>>>> Dongsheng Yang wrote:
->>>>>> From: Dongsheng Yang <dongsheng.yang.linux@gmail.com>
->>>>>>
->>>>>> Hi all,
->>>>>> 	This patchset introduce cbd (CXL block device). It's based on linux 6.8, and available at:
->>>>>> 	https://github.com/DataTravelGuide/linux
->>>>>>
->>>>> [..]
->>>>>> (4) dax is not supported yet:
->>>>>> 	same with famfs, dax device is not supported here, because dax device does not support
->>>>>> dev_dax_iomap so far. Once dev_dax_iomap is supported, CBD can easily support DAX mode.
->>>>>
->>>>> I am glad that famfs is mentioned here, it demonstrates you know about
->>>>> it. However, unfortunately this cover letter does not offer any analysis
->>>>> of *why* the Linux project should consider this additional approach to
->>>>> the inter-host shared-memory enabling problem.
->>>>>
->>>>> To be clear I am neutral at best on some of the initiatives around CXL
->>>>> memory sharing vs pooling, but famfs at least jettisons block-devices
->>>>> and gets closer to a purpose-built memory semantic.
->>>>>
->>>>> So my primary question is why would Linux need both famfs and cbd? I am
->>>>> sure famfs would love feedback and help vs developing competing efforts.
->>>>
->>>> Hi,
->>>> 	Thanks for your reply, IIUC about FAMfs, the data in famfs is stored in
->>>> shared memory, and related nodes can share the data inside this file system;
->>>> whereas cbd does not store data in shared memory, it uses shared memory as a
->>>> channel for data transmission, and the actual data is stored in the backend
->>>> block device of remote nodes. In cbd, shared memory works more like network
->>>> to connect different hosts.
->>>>
->>>
->>> Couldn't you basically just allocate a file for use as a uni-directional
->>> buffer on top of FAMFS and achieve the same thing without the need for
->>> additional kernel support? Similar in a sense to allocating a file on
->>> network storage and pinging the remote host when it's ready (except now
->>> it's fast!)
->>
->> I'm not entirely sure I follow your suggestion. I guess it means that cbd
->> would no longer directly manage the pmem device, but allocate files on famfs
->> to transfer data. I didn't do it this way because I considered at least a
->> few points: one of them is, cbd_transport actually requires a DAX device to
->> access shared memory, and cbd has very simple requirements for space
->> management, so there's no need to rely on a file system layer, which would
->> increase architectural complexity.
->>
->> However, we still need cbd_blkdev to provide a block device, so it doesn't
->> achieve "achieve the same without the need for additional kernel support".
->>
->> Could you please provide more specific details about your suggestion?
-> 
-> Fundamentally you're shuffling bits from one place to another, the
-> ultimate target is storage located on another device as opposed to
-> the memory itself.  So you're using CXL as a transport medium.
-> 
-> Could you not do the same thing with a file in FAMFS, and put all of
-> the transport logic in userland? Then you'd just have what looks like
-> a kernel bypass transport mechanism built on top of a file backed by
-> shared memory.
-> 
-> Basically it's unclear to me why this must be done in the kernel.
-> Performance? Explicit bypass? Some technical reason I'm missing?
-
-
-In user space, transferring data via FAMFS files poses no problem, but 
-how do we present this data to users? We cannot expect users to revamp 
-all their business I/O methods.
-
-For example, suppose a user needs to run a database on a compute node. 
-As the cloud infrastructure department, we need to allocate a block 
-storage on the storage node and provide it to the database on the 
-compute node through a certain transmission protocol (such as iSCSI, 
-NVMe over Fabrics, or our current solution, cbd). Users can then create 
-any file system they like on the block device and run the database on 
-it. We aim to enhance the performance of this block device with cbd, 
-rather than requiring the business department to adapt their database to 
-fit our shared memory-facing storage node disks.
-
-This is why we need to provide users with a block device. If it were 
-only about data transmission, we wouldn't need a block device. But when 
-it comes to actually running business operations, we need a block 
-storage interface for the upper layer. Additionally, the block device 
-layer offers many other rich features, such as RAID.
-
-If accessing shared memory in user space is mandatory, there's another 
-option: using user space block storage technologies like ublk. However, 
-this would lead to performance issues as data would need to traverse 
-back to the kernel space block device from the user space process.
-
-In summary, we need a block device sharing mechanism, similar to what is 
-provided by NBD, iSCSI, or NVMe over Fabrics, because user businesses 
-rely on the block device interface and ecosystem.
-> 
-> 
-> Also, on a tangential note, you're using pmem/qemu to emulate the
-> behavior of shared CXL memory.  You should probably explain the
-> coherence implications of the system more explicitly.
-> 
-> The emulated system implements what amounts to hardware-coherent
-> memory (i.e. the two QEMU machines run on the same physical machine,
-> so coherency is managed within the same coherence domain).
-> 
-> If there is no explicit coherence control in software, then it is
-> important to state that this system relies on hardware that implements
-> snoop back-invalidate (which is not a requirement of a CXL 3.x device,
-> just a feature described by the spec that may be implemented).
-
-In (5) of the cover letter, I mentioned that cbd addresses cache 
-coherence at the software level:
-
-(5) How do blkdev and backend interact through the channel?
-	a) For reader side, before reading the data, if the data in this 
-channel may be modified by the other party, then I need to flush the 
-cache before reading to ensure that I get the latest data. For example, 
-the blkdev needs to flush the cache before obtaining compr_head because 
-compr_head will be updated by the backend handler.
-	b) For writter side, if the written information will be read by others, 
-then after writing, I need to flush the cache to let the other party see 
-it immediately. For example, after blkdev submits cbd_se, it needs to 
-update cmd_head to let the handler have a new cbd_se. Therefore, after 
-updating cmd_head, I need to flush the cache to let the backend see it.
-
-
-This part of the code is indeed implemented, however, as you pointed 
-out, since I am currently using qemu/pmem for emulation, the effects of 
-this code cannot be observed.
-
-Thanx
-> 
-> ~Gregory
-> .
-> 
+probably putting restore_altstack ahead of restore_sigcontext would be
+good enough.
+restore_altstack doesn't seem to need to be after restore_sigcontex,
+it reads data
+from the sigframe and calls do_sigaltstack to update the current struct.
