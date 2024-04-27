@@ -1,264 +1,153 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674AB41C64
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 05:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7379C42047
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 05:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714195822; cv=none; b=IeHPEuqhJ/ZPyelTrckjNFj+uXeEQhE1vUYwlKSdjmtjgPHO+bHS8YFassO+GZ8CFYgBhZmrn+Bb7nSdSvMyg3BXbIbkprt/g3iBCjQoSxD3QQpFltRdl6Xubu6N4MKsE7uZMY+rbXhHHQtE4b9C7oMukQvOrrKK7oBg5oM9+C4=
+	t=1714195879; cv=none; b=NaMO8qJDkxVKc9bY7aeZmrh1Z5pmbbV8usbgYjQJZMn8Oaz6/P6o2z9IqLPea41pnFh8bKMjHTdKuDBsUy1lJ6HrX5gSyYIKyB4nZD59O9e2/1wZM+cP1ZfvXwg6GZaeLOzwuxJNLSK+POe8RQyrJMi0yKVURj/kO5R0Fwks++g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714195822; c=relaxed/simple;
-	bh=2rXCF1cjT+QHm8WnliQ61ZmiTsOPl4xRY1+aGo+jg1A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=erfJZNVy8kwCfdOW0dxzpkxCh8BKgrrw5q7EOf75Jr/k8/wLLSQwnpa++nQtHdBaTY4S8fv9gzHlHfhEIKLsSd4a/yAZ7L8o7hJLbqAqCNMtohZoIkZTn9W3YnSuXK4F1NaRHtwnFSzMc+GqIDEtK0FWYkH4p60KdAvtWEThf94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IxL2+X0w; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1714195879; c=relaxed/simple;
+	bh=jCGCnQYYAB5z/OH6q2TDHXIp3uoHtH/DUWsdqJBiBbo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tINvoD+Tfc5wM1F0uziOMSu+9oiWFetxTFcy9/gkr6ItAAWTVbxdKjKR8x7eltCENNjzN0hJhKjvXZHeoGQQlvHRRreHmeLriuoS6Vori/DnBHp0YZMkG6BlMhgbkdsD96JtsWg0rRLZOklDlID2qkTA88NyZkRCcjkOQj8/eQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ka4wubfO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IxL2+X0w"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43R5T8jx127815;
-	Sat, 27 Apr 2024 00:29:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1714195748;
-	bh=0O40gQDPXgpzSv3czKXsh1hPTkc4wVRxlVY7EIyxO5Y=;
-	h=From:To:CC:Subject:Date;
-	b=IxL2+X0woi90tEOAKXfc1+3yy3RvEtj3SskMATuQX5OplDbEolHg0R5SbuxSrUA3f
-	 oz57aFk2elSt89dGF+TsauBwStgjLh+S/OvzK3B1ktC1DJKi+3VUcfv+BtfdpMAGEf
-	 pTQR7KjDsmU7TQuJAFnc7CTMkKFWT1/ZWY14xZKE=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43R5T8OE109822
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 27 Apr 2024 00:29:08 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 27
- Apr 2024 00:29:07 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 27 Apr 2024 00:29:07 -0500
-Received: from LT5CG31242FY.dhcp.ti.com ([10.250.160.109])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43R5T2bc035757;
-	Sat, 27 Apr 2024 00:29:02 -0500
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <broonie@kernel.org>
-CC: <andriy.shevchenko@linux.intel.com>, <lgirdwood@gmail.com>,
-        <perex@perex.cz>, <pierre-louis.bossart@linux.intel.com>,
-        <13916275206@139.com>, <mimperial@lenovo.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <liam.r.girdwood@intel.com>, <bard.liao@intel.com>,
-        <yung-chuan.liao@linux.intel.com>, <kevin-lu@ti.com>,
-        <cameron.berkenpas@gmail.com>, <tiwai@suse.de>, <baojun.xu@ti.com>,
-        <soyer@irl.hu>, <Baojun.Xu@fpt.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v1] ALSA: ASoc/tas2781: fixed wrong loading calibrated data sequence
-Date: Sat, 27 Apr 2024 13:28:57 +0800
-Message-ID: <20240427052858.265-1-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ka4wubfO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB2BC113CE;
+	Sat, 27 Apr 2024 05:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714195879;
+	bh=jCGCnQYYAB5z/OH6q2TDHXIp3uoHtH/DUWsdqJBiBbo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Ka4wubfONE9jPzqNfqBgVZ2oZYFwK/T7dEa94QhtlrbRKCJlHTkMAgir9+YpTtbY+
+	 YJpyFYadnUmuDI7Tk0CZ7mLFUWUKXeX/mARktyGVS/6XwnKOE1zt9RG4L0QlhHEQ9E
+	 YgHAPQ0oYS16pxEyUYZyQt40wkjdIpKGVPCQiefTJIcFliyfvNFyeOEguDgM9aPWjM
+	 cqKr01lbokT+pz0qoe6Mr4dQcdGd0WcpUiMxfj6RYely2LXGDKKxJhDBYeJ64Idx8T
+	 tYXtMLVk7DBFMULc2wt2wWPGdO8MAIKoNZuEnCxtlPfo7SAoQSy0kqQCyez3q+HvB+
+	 Qidw+XN6GjgBg==
+Date: Sat, 27 Apr 2024 11:01:14 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v6.9
+Message-ID: <ZiyNohV82k_NTxKZ@matsya>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="WafzuL1t1lOHN71H"
+Content-Disposition: inline
 
-Calibrated data will be set to default after loading dsp config params,
-which will cause speaker protection work abnormally. Reload calibrated
-data after loading dsp config params.
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+--WafzuL1t1lOHN71H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-Change in v1:
- - Download calibrated data after loading the new dsp config params
- - call tasdevice_prmg_load instead of tasdevice_prmg_calibdata_load, it
-   is unnecessary to load calibrated data after loading dsp program. Load
-   it after loading dsp config params.
- - Remove tasdevice_prmg_calibdata_load, because it is unnecessary to load
-   calibrated data after loading dsp program.
- - work in bypass-dsp mode even if no dsp fw loaded.
----
- include/sound/tas2781-dsp.h       |  3 +-
- sound/soc/codecs/tas2781-fmwlib.c | 96 +++++++------------------------
- sound/soc/codecs/tas2781-i2c.c    |  4 +-
- 3 files changed, 23 insertions(+), 80 deletions(-)
+Hello Linus,=20
 
-diff --git a/include/sound/tas2781-dsp.h b/include/sound/tas2781-dsp.h
-index ea9af2726a53..14a4a254ad2a 100644
---- a/include/sound/tas2781-dsp.h
-+++ b/include/sound/tas2781-dsp.h
-@@ -2,7 +2,7 @@
- //
- // ALSA SoC Texas Instruments TAS2781 Audio Smart Amplifier
- //
--// Copyright (C) 2022 - 2023 Texas Instruments Incorporated
-+// Copyright (C) 2022 - 2024 Texas Instruments Incorporated
- // https://www.ti.com
- //
- // The TAS2781 driver implements a flexible and configurable
-@@ -180,7 +180,6 @@ void tasdevice_calbin_remove(void *context);
- int tasdevice_select_tuningprm_cfg(void *context, int prm,
- 	int cfg_no, int rca_conf_no);
- int tasdevice_prmg_load(void *context, int prm_no);
--int tasdevice_prmg_calibdata_load(void *context, int prm_no);
- void tasdevice_tuning_switch(void *context, int state);
- int tas2781_load_calibration(void *context, char *file_name,
- 	unsigned short i);
-diff --git a/sound/soc/codecs/tas2781-fmwlib.c b/sound/soc/codecs/tas2781-fmwlib.c
-index 45760fe19523..c21bce6f09d6 100644
---- a/sound/soc/codecs/tas2781-fmwlib.c
-+++ b/sound/soc/codecs/tas2781-fmwlib.c
-@@ -2,7 +2,7 @@
- //
- // tasdevice-fmw.c -- TASDEVICE firmware support
- //
--// Copyright 2023 Texas Instruments, Inc.
-+// Copyright 2023 - 2024 Texas Instruments, Inc.
- //
- // Author: Shenghao Ding <shenghao-ding@ti.com>
- 
-@@ -2210,21 +2210,9 @@ int tasdevice_select_tuningprm_cfg(void *context, int prm_no,
- 		for (i = 0; i < tas_priv->ndev; i++) {
- 			if (tas_priv->tasdevice[i].is_loaderr == true)
- 				continue;
--			else if (tas_priv->tasdevice[i].is_loaderr == false
--				&& tas_priv->tasdevice[i].is_loading == true) {
--				struct tasdevice_fw *cal_fmw =
--					tas_priv->tasdevice[i].cali_data_fmw;
--
--				if (cal_fmw) {
--					struct tasdevice_calibration
--						*cal = cal_fmw->calibrations;
--
--					if (cal)
--						load_calib_data(tas_priv,
--							&(cal->dev_data));
--				}
-+			if (tas_priv->tasdevice[i].is_loaderr == false
-+				&& tas_priv->tasdevice[i].is_loading == true)
- 				tas_priv->tasdevice[i].cur_prog = prm_no;
--			}
- 		}
- 	}
- 
-@@ -2247,9 +2235,24 @@ int tasdevice_select_tuningprm_cfg(void *context, int prm_no,
- 			if (tas_priv->tasdevice[i].is_loaderr == true) {
- 				status |= 1 << (i + 4);
- 				continue;
--			} else if (tas_priv->tasdevice[i].is_loaderr == false
--				&& tas_priv->tasdevice[i].is_loading == true)
-+			}
-+
-+			if (tas_priv->tasdevice[i].is_loaderr == false
-+				&& tas_priv->tasdevice[i].is_loading == true) {
-+				struct tasdevice_fw *cal_fmw =
-+					tas_priv->tasdevice[i].cali_data_fmw;
-+
-+				if (cal_fmw) {
-+					struct tasdevice_calibration
-+						*cal = cal_fmw->calibrations;
-+
-+					if (cal)
-+						load_calib_data(tas_priv,
-+							&(cal->dev_data));
-+				}
-+
- 				tas_priv->tasdevice[i].cur_conf = cfg_no;
-+			}
- 		}
- 	} else
- 		dev_dbg(tas_priv->dev, "%s: Unneeded loading dsp conf %d\n",
-@@ -2308,65 +2311,6 @@ int tasdevice_prmg_load(void *context, int prm_no)
- }
- EXPORT_SYMBOL_NS_GPL(tasdevice_prmg_load, SND_SOC_TAS2781_FMWLIB);
- 
--int tasdevice_prmg_calibdata_load(void *context, int prm_no)
--{
--	struct tasdevice_priv *tas_priv = (struct tasdevice_priv *) context;
--	struct tasdevice_fw *tas_fmw = tas_priv->fmw;
--	struct tasdevice_prog *program;
--	int prog_status = 0;
--	int i;
--
--	if (!tas_fmw) {
--		dev_err(tas_priv->dev, "%s: Firmware is NULL\n", __func__);
--		goto out;
--	}
--
--	if (prm_no >= tas_fmw->nr_programs) {
--		dev_err(tas_priv->dev,
--			"%s: prm(%d) is not in range of Programs %u\n",
--			__func__, prm_no, tas_fmw->nr_programs);
--		goto out;
--	}
--
--	for (i = 0, prog_status = 0; i < tas_priv->ndev; i++) {
--		if (prm_no >= 0 && tas_priv->tasdevice[i].cur_prog != prm_no) {
--			tas_priv->tasdevice[i].cur_conf = -1;
--			tas_priv->tasdevice[i].is_loading = true;
--			prog_status++;
--		}
--		tas_priv->tasdevice[i].is_loaderr = false;
--	}
--
--	if (prog_status) {
--		program = &(tas_fmw->programs[prm_no]);
--		tasdevice_load_data(tas_priv, &(program->dev_data));
--		for (i = 0; i < tas_priv->ndev; i++) {
--			if (tas_priv->tasdevice[i].is_loaderr == true)
--				continue;
--			else if (tas_priv->tasdevice[i].is_loaderr == false
--				&& tas_priv->tasdevice[i].is_loading == true) {
--				struct tasdevice_fw *cal_fmw =
--					tas_priv->tasdevice[i].cali_data_fmw;
--
--				if (cal_fmw) {
--					struct tasdevice_calibration *cal =
--						cal_fmw->calibrations;
--
--					if (cal)
--						load_calib_data(tas_priv,
--							&(cal->dev_data));
--				}
--				tas_priv->tasdevice[i].cur_prog = prm_no;
--			}
--		}
--	}
--
--out:
--	return prog_status;
--}
--EXPORT_SYMBOL_NS_GPL(tasdevice_prmg_calibdata_load,
--	SND_SOC_TAS2781_FMWLIB);
--
- void tasdevice_tuning_switch(void *context, int state)
- {
- 	struct tasdevice_priv *tas_priv = (struct tasdevice_priv *) context;
-diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
-index b5abff230e43..9350972dfefe 100644
---- a/sound/soc/codecs/tas2781-i2c.c
-+++ b/sound/soc/codecs/tas2781-i2c.c
-@@ -2,7 +2,7 @@
- //
- // ALSA SoC Texas Instruments TAS2563/TAS2781 Audio Smart Amplifier
- //
--// Copyright (C) 2022 - 2023 Texas Instruments Incorporated
-+// Copyright (C) 2022 - 2024 Texas Instruments Incorporated
- // https://www.ti.com
- //
- // The TAS2563/TAS2781 driver implements a flexible and configurable
-@@ -414,7 +414,7 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
- 				__func__, tas_priv->cal_binaryname[i]);
- 	}
- 
--	tasdevice_prmg_calibdata_load(tas_priv, 0);
-+	tasdevice_prmg_load(tas_priv, 0);
- 	tas_priv->cur_prog = 0;
- out:
- 	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
--- 
-2.34.1
+Please pull to receive dmaengine subsystem fixes for v6.9. This has
+bunch of odd driver fixes for the subsystem
 
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
+aengine-fix-6.9
+
+for you to fetch changes up to f221033f5c24659dc6ad7e5cf18fb1b075f4a8be:
+
+  dmaengine: idxd: Fix oops during rmmod on single-CPU platforms (2024-04-0=
+7 17:56:06 +0530)
+
+----------------------------------------------------------------
+dmaengine fixes for v6.9
+
+Driver fixes for:
+ - Revert pl330 issue_pending waits until WFP state due to regression
+   reported in Bluetooth loading
+ - Xilinx driver fixes for synchronization, buffer offsets, locking and kdoc
+ - idxd fixes for spinlock and preventing the migration of the perf
+   context to an invalid target
+ - idma driver fix for interrupt handling when powered off
+ - Tegra driver residual calculation fix
+ - Owl driver register access fix
+
+----------------------------------------------------------------
+Akhil R (1):
+      dmaengine: tegra186: Fix residual calculation
+
+Andy Shevchenko (1):
+      idma64: Don't try to serve interrupts when device is powered off
+
+Arnd Bergmann (1):
+      dmaengine: owl: fix register access functions
+
+Fenghua Yu (1):
+      dmaengine: idxd: Fix oops during rmmod on single-CPU platforms
+
+Louis Chauvet (1):
+      dmaengine: xilinx: xdma: Fix synchronization issue
+
+Miquel Raynal (2):
+      dmaengine: xilinx: xdma: Fix wrong offsets in the buffers addresses i=
+n dma descriptor
+      dmaengine: xilinx: xdma: Clarify kdoc in XDMA driver
+
+Rex Zhang (1):
+      dmaengine: idxd: Convert spinlock to mutex to lock evl workqueue
+
+Sean Anderson (1):
+      dma: xilinx_dpdma: Fix locking
+
+Vinod Koul (1):
+      dmaengine: Revert "dmaengine: pl330: issue_pending waits until WFP st=
+ate"
+
+ drivers/dma/idma64.c              |  4 ++++
+ drivers/dma/idxd/cdev.c           |  5 ++---
+ drivers/dma/idxd/debugfs.c        |  4 ++--
+ drivers/dma/idxd/device.c         |  8 ++++----
+ drivers/dma/idxd/idxd.h           |  2 +-
+ drivers/dma/idxd/init.c           |  2 +-
+ drivers/dma/idxd/irq.c            |  4 ++--
+ drivers/dma/idxd/perfmon.c        |  9 +++------
+ drivers/dma/owl-dma.c             |  4 ++--
+ drivers/dma/pl330.c               |  3 ---
+ drivers/dma/tegra186-gpc-dma.c    |  3 +++
+ drivers/dma/xilinx/xdma-regs.h    |  3 +++
+ drivers/dma/xilinx/xdma.c         | 42 +++++++++++++++++++++++++----------=
+----
+ drivers/dma/xilinx/xilinx_dpdma.c | 13 +++++++++---
+ 14 files changed, 64 insertions(+), 42 deletions(-)
+--=20
+~Vinod
+
+--WafzuL1t1lOHN71H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmYsjaIACgkQfBQHDyUj
+g0dezBAAtJ8eaZ/AgUhacP7YsBAAs3GuujwEM1D5b2B8MHSr5yw/O5f+dlxxMBLG
+nfa74w4gRxBZO6PxW4hqAM1Vd6OCGFJxX8b/Uu85gxLuq0D3KCabiEzw1KUcAnNp
+uUr+jNQwPrl7h24KeLeOTc4WwqCEEjlBzAfZ3vT9l3AeyYeOevXdUYc07m9/WVjr
+6O7cdKjvkXUN7gfyvP4Lxqs59+STxIdC8KvEoVEUdDNHrUdsF7FWa94u51GsgrU+
+VxSF5JRGAEvTU9NvOhXH6Cq+COy11PKnLQl4jgAive6PbkvoqTRE4EmaXPrM6KBq
+py6vQPxDly4pmud4Rq99PM7b6tv3pCzaS8vno3MgbOVK2cfIHWeO6jIxwzWcIb0y
+MCkBcAL9x00BnovYkFaG9q5UMNHAjn0iXXcQpukE+LXX0wS5hcfzYDE2D+j9oUql
+TAyqhVp/54KHgNLddG2p2b6x/xrchKSm2V2WqmDhUnhZwGt/tdTMTzfR2CCLReB3
+9NM3qSX5i8p0ABEIyTSAJJV+zAGBZAYQL5/UWkF1YqqLclJyMLMkcqAsc0IBnp5P
+3x/ltil5+uv7B0ZyZyV3mb48sRY1qq6vNuGwOlMuHxcuhMKQ1bjgyxdZeIzJ50PB
+gf5HXottOe05pqYUTPsv9zwGvzblH62c0Ak42+0/EwtMwDT05Fw=
+=d9l1
+-----END PGP SIGNATURE-----
+
+--WafzuL1t1lOHN71H--
