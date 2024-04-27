@@ -1,145 +1,206 @@
-Received: from smtp1.math.uni-bielefeld.de (smtp1.math.uni-bielefeld.de [129.70.45.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431574F618
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 13:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.70.45.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D022032A
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 14:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714226083; cv=none; b=eXT/ksQe65EeJJbGL475EWjytYHIrULWz/8yrd/T0H7A1GCkdd8XBNJDnjuiXR0/xHW76mmBdm9NmLbNAb869X6ef36dq6vh4Vw3zCARV4PuofiozEWLJyla5FgItsnxE6YvtXHuKDUsTZFPOpDCOc30rqN+Sgcr6swwQ+/5V5Q=
+	t=1714227229; cv=none; b=P80GzpR4j0ajbHXqcWPN8+gAZ5kRYE63Fx45oVt89kU6md+qmOAzj02/AOL5cOQdqRXUKUSuyFvonwz+5twlALDWsZeLqcKJAJYb1F0eWPwnSZXzs1bi0JVvt1JWwYd759WQDexxy07XS6ZaIj4pOP7kH46E5FS37Rbkxcj7Tsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714226083; c=relaxed/simple;
-	bh=2Z2cZ2r3ZL3Y/MT8LeagIDIKA+w/N+Zqp6OvwQwmLwI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b4/TgiVE+3euea+lM5bCUTstD+gC+V1Nt963lQ7xeEFRzxCm/pQzHV2aOC3LaTHGcwf3bdEdPAQPWgAAbSE6D/bvvQG6GngZ2vPLtD/AB9FkMPFq7m74FSEpaEjFJ9aKK1HUMn7CEyoytYA0lw6tai6h+cGwNRydx+3sQBO4Q/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=math.uni-bielefeld.de; spf=pass smtp.mailfrom=math.uni-bielefeld.de; dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b=FxDgcFWs; arc=none smtp.client-ip=129.70.45.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=math.uni-bielefeld.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=math.uni-bielefeld.de
+	s=arc-20240116; t=1714227229; c=relaxed/simple;
+	bh=d+3n9UZfA+VHX1B+2z7z9tf7+zE4wxd4K78Oea2WZ/8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aMx7Vk1LqtTUW5fI4iZL/ES++kWZL8Ar3VwbTmB4ocsyNJ1iBJGgzX8UgJL1S2SjzgCB1GPa876dWAOjd4XyUGHezdzIKIU9+rdhQfjFPmcYx90RxYh2xg/SIrEQhZulDqZzZjfAaapTbc9eZ4rpZaedDjXah2z2Gmyk5VNgpI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HyH488HP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b="FxDgcFWs"
-Received: from [192.168.0.100] (dslb-084-060-164-146.084.060.pools.vodafone-ip.de [84.60.164.146])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp1.math.uni-bielefeld.de (Postfix) with ESMTPSA id 35D7D602E5;
-	Sat, 27 Apr 2024 15:49:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=math.uni-bielefeld.de; s=default; t=1714225766;
-	bh=2Z2cZ2r3ZL3Y/MT8LeagIDIKA+w/N+Zqp6OvwQwmLwI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FxDgcFWs5MEv8aGvyMPcUPmUrnkcrUDEGzTyDiPJYz93lPZNAXMVqNYbIKmwcrhn8
-	 h+4qr73/+OnwT480/zXEVHN7zlZaepupTjqYktHFgTCVYwMCFwRjAk04IOxu+oM12u
-	 iBhTWFyEa4378j3dd1IwO09tjZJUdCbeBkP3ehHNOzC/wcD4Em7BaVlBN9Lv4ZK8YE
-	 kBWoxHClYXM+Ted8C6jP/4z8zMjRXVCG40DgkhmiQ9u6uY42hDMA4VxR6cOiN1DlxZ
-	 YPKh65HkUCBXaTBm2Rt5zLRdbJGgtUvXp+Ndloq7d1/gWXTi2/BojMxc0Rll7gGjAG
-	 ttMF39oONZcYg==
-Message-ID: <0782e84f-5fab-4025-ad8e-aa7b56f3fbc6@math.uni-bielefeld.de>
-Date: Sat, 27 Apr 2024 15:49:22 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HyH488HP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714227227;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WXMypIwiegUqOtpslqLpUy8xSEb8Llb9TidhERCUP+M=;
+	b=HyH488HPNu5QclA6YE3uKkNo6kBQHszfAZJBnWpDGPBglCTu8QRuveeNd1khlEmg2TvqDa
+	rFWfzpE9EyXS6Nd3YUa13QLxale+Tkkxi42SFGiaeQWdU+RDSCvTK7TlU+h3v4pGtDuXTJ
+	g+nCjXLaoLZFgJpgWft5l94AewkinDA=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-478-g48KcNn0NMe4O9_uliiI5w-1; Sat, 27 Apr 2024 10:13:42 -0400
+X-MC-Unique: g48KcNn0NMe4O9_uliiI5w-1
+Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-de5823bd7eeso6435401276.0
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 07:13:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714227222; x=1714832022;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WXMypIwiegUqOtpslqLpUy8xSEb8Llb9TidhERCUP+M=;
+        b=k85q2PwW4DPoCKLrBk3jWkmIyx+v239unWZlpvU6egFFRvYaGYaL/eHgm2ekYCdmkJ
+         A4nHpOrHfWPB4dzoeG6KAwiF2GjQy4M3bkOdneu5euVqMK4F1kMEs4L09flmTcvn+Pce
+         dv0ZBDXjaqJlF+Uur52v+7DHEr8iU2uggJ9bqxFNtRL6RlBs8SLBLle54O478jhEjPI3
+         v0EbWRG85owC3oG/Q6Zk9KYFsAH7xsZu/MWsd9S2g7D4F6+Jd9tenfoKs1Urekwb/Nbu
+         02wywTelpMCKOoKR7nttaS/BOf4GXmsP0/19BZOM3/6oCSyT/o9qGZXMyGPVL2QThnrc
+         op+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWjejP86m6JnR7FVtKqNSoiJzv3oN7ldqvQ53gz29Bg2UhM9knSnskD9wzB4M/wzKQvru/kCrRwyLfY1ToU5KIY7+bagiqsD2JF9KCg
+X-Gm-Message-State: AOJu0YwcZ36aSIVQueUOsDGBRWmcDmG4uwBKPMwt/s7k+/phQ75TRAah
+	NNBTEetNKIFRcWisozxawOBiYUetQ6nL8MHeNItaGxrPW3QjOmdiwpU47qFakNHDu6yXvAy2HcH
+	0rzbmSE8294KcAnbnGCcatbDE80zpgE1g2Q6MthrSujgaCBNzL8lTmN5GPu4sH7LOneUe8yeyYC
+	JAII3+muUA1erhKzeLYgc8AQUVmynI/4GceVzc
+X-Received: by 2002:a05:6902:1611:b0:dc6:e1ed:bd1c with SMTP id bw17-20020a056902161100b00dc6e1edbd1cmr2046679ybb.21.1714227221973;
+        Sat, 27 Apr 2024 07:13:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHOaakH4d+LaeLNo52h6Gxinx2ybJegK2Mwwom9kD+jJ+azyRkUfpoyYFCx3mWohB2H42zgnIbu8s/UEv/e7Yo=
+X-Received: by 2002:a05:6902:1611:b0:dc6:e1ed:bd1c with SMTP id
+ bw17-20020a056902161100b00dc6e1edbd1cmr2046668ybb.21.1714227221686; Sat, 27
+ Apr 2024 07:13:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/amd/display: Add MSF panel to DPCD 0x317 patch list
-To: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
- Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20240309014732.722139-1-tjakobi@math.uni-bielefeld.de>
-Content-Language: en-US
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Autocrypt: addr=tjakobi@math.uni-bielefeld.de; keydata=
- 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
- JRHWPGCL3BhOxQ==
-In-Reply-To: <20240309014732.722139-1-tjakobi@math.uni-bielefeld.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240405164920.2844-1-mcassell411@gmail.com> <CAHrQN1xuLfc0sfe1kMHmHrBzKQLMD-6PNEakA=EDdabEv4ATnQ@mail.gmail.com>
+ <CANiscBDGqwMvbNUXydKMMgXdwSNeXDQOGy=jgdOJCNh7+WaSvg@mail.gmail.com>
+In-Reply-To: <CANiscBDGqwMvbNUXydKMMgXdwSNeXDQOGy=jgdOJCNh7+WaSvg@mail.gmail.com>
+From: Vratislav Bendel <vbendel@redhat.com>
+Date: Sat, 27 Apr 2024 16:13:25 +0200
+Message-ID: <CAHrQN1ximY20i9EiOgbmTQcgdEpfsZarjKczE15pyUp0Zc7=2g@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/admin-guide/sysctl/vm.rst adding the
+ importance of NUMA-node count to documentation
+To: Matthew Cassell <mcassell411@gmail.com>
+Cc: corbet@lwn.net, akpm@linux-foundation.org, rppt@kernel.org, 
+	linux-mm@kvack.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/9/24 02:47, tjakobi@math.uni-bielefeld.de wrote:
+(plain text resend)
 
-> From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+IMHO you went too encyclopedia-style this time. :)
+My extra point was just to elaborate on what the "additional actions" means=
+,
+but I would suggest keeping it as concise as possible.
+Also the bit values are already explained - no need to repeat that.
+
+
+On Fri, Apr 12, 2024 at 10:48=E2=80=AFPM Matthew Cassell <mcassell411@gmail=
+.com> wrote:
 >
-> This 8.4 inch panel is integrated in the Ayaneo Kun handheld
-> device. The panel resolution is 2560×1600, i.e. it has
-> portrait dimensions.
+> Thanks for the feedback. Here is a quick outline I came up with on your
+> advice:
 >
-> Decoding the EDID shows:
-> Manufacturer: MSF
-> Model: 4099
-> Display Product Name: 'TV080WUM-NL0 '
+> [...] (original content)
 >
-> Judging from the product name this might be a clone of a
-> BOE panel, but with larger dimensions.
+> Keep in mind enabling bits in zone_reclaim_mode makes the most sense
+> for topologies consisting of multiple NUMA nodes. In addition to vanilla
+> zone_reclaim (clean and unmapped pages), there exist additional bits that
+> expand which pages are eligible to be reclaimed and dictate scan_control
+> policy during the reclaim process. The page allocator will attempt to rec=
+laim
+> memory locally in accordance with these bits before attempting to allocat=
+e
+> on remote nodes.
 >
-> Panel frequently shows non-functional backlight control. Adding
-> some debug prints to update_connector_ext_caps() shows that
-> something the OLED bit of ext_caps is set, and then the driver
-> assumes that backlight is controlled via AUX.
+> Allow dirty pages to become candidates for memory reclaim::
 >
-> Forcing backlight control to PWM via amdgpu.backlight=0 restores
-> backlight operation.
+>         echo 2 > /proc/sys/vm/zone_reclaim_mode
 >
-> Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-> ---
->   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 1 +
->   1 file changed, 1 insertion(+)
+> [...] (original content)
 >
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-> index 7a09a72e182f..5a017ba94e3c 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-> @@ -68,6 +68,7 @@ static void apply_edid_quirks(struct edid *edid, struct dc_edid_caps *edid_caps)
->   	case drm_edid_encode_panel_id('A', 'U', 'O', 0xE69B):
->   	case drm_edid_encode_panel_id('B', 'O', 'E', 0x092A):
->   	case drm_edid_encode_panel_id('L', 'G', 'D', 0x06D1):
-> +	case drm_edid_encode_panel_id('M', 'S', 'F', 0x1003):
->   		DRM_DEBUG_DRIVER("Clearing DPCD 0x317 on monitor with panel id %X\n", panel_id);
->   		edid_caps->panel_patch.remove_sink_ext_caps = true;
->   		break;
-Another gentle ping!
+> Allow mapped pages to become candidates for memory reclaim::
+>
+>         echo 4 > /proc/sys/vm/zone_reclaim_mode
+>
+> [...] (original content)
+>
+> I'm trying to balance between keeping the original content, being descrip=
+tive,
+> and not going into encyclopedia-mode. My motivation was to stress the imp=
+ortance
+> of NUMA-node count and describe the additional bits more per your advice.
+> I added the echo snippets to better segue the aggressive options. Any tho=
+ughts
+> on the above?
+>
+> On Thu, Apr 11, 2024 at 2:54=E2=80=AFAM Vratislav Bendel <vbendel@redhat.=
+com> wrote:
+> >
+> > On Fri, Apr 5, 2024 at 6:49=E2=80=AFPM Matthew Cassell <mcassell411@gma=
+il.com> wrote:
+> > >
+> > > If any bits are set in node_reclaim_mode (tunable via
+> > > /proc/sys/vm/zone_reclaim_mode) within get_pages_from_freelist(), the=
+n
+> > > page allocations start getting early access to reclaim via the
+> > > node_reclaim() code path when memory pressure increases. This behavio=
+r
+> > > provides the most optimization for multiple NUMA node machines. The a=
+bove
+> > > is mentioned in:
+> > >
+> > > Commit 9eeff2395e3cfd05c9b2e6 ("[PATCH] Zone reclaim: Reclaim logic")
+> > > states "Zone reclaim is of particular importance for NUMA machines. I=
+t
+> > > can be more beneficial to reclaim a page than taking the performance
+> > > penalties that come with allocating a page on a REMOTE zone."
+> > >
+> > > While the pros/cons of staying on node versus allocating remotely are
+> > > mentioned in commit histories and mailing lists. It isn't specificall=
+y
+> > > mentioned in Documentation/ and isn't possible with a lone node. Imag=
+ine a
+> > > situation where CONFIG_NUMA=3Dy (the default on most major distributi=
+ons)
+> > > and only a single NUMA node exists. The latter is an oxymoron
+> > > (single-node =3D=3D uniform memory access). Informing the user via vm=
+.rst that
+> > > the most bang for their buck is when multiple nodes exist seems helpf=
+ul.
+> > >
+> >
+> > I agree that the documentation could be improved to better express the
+> > implications
+> > and relevance of setting zone_reclaim_mode bits.
+> >
+> > Though I would suggest to go a step further and also elaborate on
+> > those "additional actions",
+> > for example something like:
+> > "The page allocator will attempt to reclaim memory within the zone,
+> > depending on the bits set,
+> > before looking for free pages in other zones, namely on remote memory n=
+odes."
+> >
+> > > Signed-off-by: Matthew Cassell <mcassell411@gmail.com>
+> > > ---
+> > >  Documentation/admin-guide/sysctl/vm.rst | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/=
+admin-guide/sysctl/vm.rst
+> > > index c59889de122b..10270548af2a 100644
+> > > --- a/Documentation/admin-guide/sysctl/vm.rst
+> > > +++ b/Documentation/admin-guide/sysctl/vm.rst
+> > > @@ -1031,7 +1031,8 @@ Consider enabling one or more zone_reclaim mode=
+ bits if it's known that the
+> > >  workload is partitioned such that each partition fits within a NUMA =
+node
+> > >  and that accessing remote memory would cause a measurable performanc=
+e
+> > >  reduction.  The page allocator will take additional actions before
+> > > -allocating off node pages.
+> > > +allocating off node pages. Keep in mind enabling bits in zone_reclai=
+m_mode
+> > > +makes the most sense for topologies consisting of multiple NUMA node=
+s.
+> > >
+> > >  Allowing zone reclaim to write out pages stops processes that are
+> > >  writing large amounts of data from dirtying pages on other nodes. Zo=
+ne
+> > > --
+> > > 2.34.1
+> > >
+> >
+>
+
