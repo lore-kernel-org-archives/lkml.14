@@ -1,76 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BAB628
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 16:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8748F77
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 16:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714236804; cv=none; b=WBj0ChqUsa1+28YIpmDdai+5goIJQKu3YaqT70OpKzycN0ohIYS1AUU+gNFxR/sA4XutlRcGXet/e/3c3918aNOAoIrR2OvWEWFLfd+HzfaxZJ2M4cV82OA4IirLHZm7LTu+AV1xihaWjlANKt9k0V+eKub9X5/c3jcJy24VoBs=
+	t=1714236950; cv=none; b=ot6i7SG6APTbER8boJFqri4DEFl8xBmEogDEv+fPBOFgnTJrOJIjOpsZr+TUuOv9MmpFwRf6SSjoP4sgh+r4Kj2NI+kTI8t/HxZRO95kD1np0BFVeaRjjpJV1UGk0xpXfKcUEb9T4scNTQMLg7XZZQ3TMfPvmvlpNbv1YkwbEFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714236804; c=relaxed/simple;
-	bh=QWybhLUhrELLESM27F8WIrWgZG2CGCVmC7Q3DMOepaM=;
+	s=arc-20240116; t=1714236950; c=relaxed/simple;
+	bh=B+EwIW3/BGAmVbm61WUgZ9X7DpD/uEeYcPKZ0BRR3dY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RnB8U7MQKcahCbpWkyq3l+506y3phCVd5bF732yw9DxRZGLwEu3A14y0G94Y+F45IdG9OTh/DJzQwYlguGI/r1eD9KpB0OaZDFBRNmuFwLOSzYm9deLj1U+RSh4p70QAP577qNJ8ExdqzT3DkOCHcYdaOKFZOzZ9J85QXGzxevM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oo5PO85d; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gnUnmczR6y/IGl9Apy22MLqbsJHeshB+MRmd+pnBk3yNPQdoZOW9C4HhIQJfcrQsBvRppfOA2MS6FPmVg+sHMFJPMh541ZzKIrd8lUMBp7ucOz5Ga7JnL0ktmiPbs8Jr3KZJsjdlSC9Ey+JuHbO8zKOPtoWdb01MlhZ+ZgpZaaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DjGXAN+b; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oo5PO85d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714236803; x=1745772803;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QWybhLUhrELLESM27F8WIrWgZG2CGCVmC7Q3DMOepaM=;
-  b=Oo5PO85dOod9E/HrotklbM7H1xgbRapk3QMMCtE3MyPgLfyr6Uta6v+3
-   xDqWWQ7jFFTjqctkHsz9szlAwt5NmYWq28K2DCZt3PXdejND97avwNAmc
-   EBFGLexlp97ZQu0WGmUelpTpIZYFfeVrwLL/rlZ1qOgF59TlIREB8JVBa
-   xfTfN9VHaIQTicQLzd2WLIubMWUonf740rB1mT+EMp6UsSga7tJHjfxBm
-   gHHowSGGMBDmTuL1mxBXBVjSb6g4by/UnE5oEy6JQvSVNUmVoV+iumVlB
-   Ab3jmROb1l+sVBhki6wtWTIab33JuZ1IamHlzoQA2Yu4ZCsZC8Io7LuL/
-   Q==;
-X-CSE-ConnectionGUID: dxJX6hMzTWGUpjilb1uVOA==
-X-CSE-MsgGUID: N696blKkQuyN+q8QQ6o5/Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="21362566"
-X-IronPort-AV: E=Sophos;i="6.07,235,1708416000"; 
-   d="scan'208";a="21362566"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2024 09:53:22 -0700
-X-CSE-ConnectionGUID: Z3zAs51+SDCIkuEOvtFanA==
-X-CSE-MsgGUID: cutovxMVQHiT6sg+voIfPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,235,1708416000"; 
-   d="scan'208";a="26119745"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 27 Apr 2024 09:53:20 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id D8347118; Sat, 27 Apr 2024 19:53:17 +0300 (EEST)
-Date: Sat, 27 Apr 2024 19:53:17 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, hpa@zytor.com, seanjc@google.com, elena.reshetova@intel.com, 
-	rick.p.edgecombe@intel.com, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 4/4] x86/tdx: Enable ENUM_TOPOLOGY
-Message-ID: <cazjiiltxc2ydvmhfexu7gpnfwlaqq54dplyjbamcu72ucawat@m3xuliqigt6p>
-References: <20240325104607.2653307-1-kirill.shutemov@linux.intel.com>
- <20240325104607.2653307-5-kirill.shutemov@linux.intel.com>
- <8f4c664e-665b-495c-b6d0-04899a3c216b@intel.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DjGXAN+b"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 05F6740E0187;
+	Sat, 27 Apr 2024 16:48:19 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id RJqSXYuWMYl9; Sat, 27 Apr 2024 16:48:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1714236494; bh=SQR9m3AlnZH/DoVLOL78q+n6vHtGt70RLlgLJ3+EdQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DjGXAN+b8wx5Km/bOJsO0ZI7VOO8xPDmfWqfW9OmLLleG0fdy/h8yBpHmZEFNOg7l
+	 tQZd0ZkO/ujyqgn/tRcghWxqpMJL8W71cRx6yggVBsm5c5AsKPqH5mAatwZCB7xZTE
+	 KorsprTHlyDtCLstPx/3aiTaQjasP2LdyvZW3TuVBRvK8UD8u+MSeJsgI7ww0v0dWk
+	 lI2HFNxI1TmbgjPJ7+Q4NN2jfPCsi1nGWOftkZ/9mc1Kvhj+vdeTfilKimvNzOkGAw
+	 syf9J5Ruw4c6Qw6R3h2f75cxRCyCcED9hFofDHFCgI3Sh/TtlKCt65mzh4CYNuEZR5
+	 x8ZIU2Zw20taEdkP48LQ/eqVmzLY7aByaogExDmDokQhpWRCiLg8gRia1i7JXwb/nj
+	 Sfh4DAXa4p9rR426wKQTOv0G+g4j0zEWBNbwKuf2qVco12zHvqyHmZDJNimQM6NGhc
+	 nSyZOzlfQRkIEKdxZJ/oQmirPtXa5Q5a+48XB5ab0O1PV5G0XEqqQopa/gaG9Ia/ad
+	 ChY80GmGaeXjVq8kNRbqkvF5QFmsnKI2kd8zYfNbA0AS5sdwG13ir5hSEaNx17vIw4
+	 uYeA7jdWVeg+7GmxPjJHc11qf0yzFRgdOLzVS1ErEhxZplrbsG9wdobsPO44KRJ8/r
+	 18rO1xRu2is89599r8DzbBoQ=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 831FE40E0177;
+	Sat, 27 Apr 2024 16:47:52 +0000 (UTC)
+Date: Sat, 27 Apr 2024 18:47:47 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Nikolay Borisov <nik.borisov@suse.com>, Tao Liu <ltao@redhat.com>
+Subject: Re: [PATCHv10 09/18] x86/mm: Adding callbacks to prepare encrypted
+ memory for kexec
+Message-ID: <20240427164747.GCZi0sM6HBCBYtgWqF@fat_crate.local>
+References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
+ <20240409113010.465412-10-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8f4c664e-665b-495c-b6d0-04899a3c216b@intel.com>
+In-Reply-To: <20240409113010.465412-10-kirill.shutemov@linux.intel.com>
 
-On Wed, Apr 24, 2024 at 03:20:54PM -0700, Dave Hansen wrote:
-> But seriously, why all the complexity over and over?  What does this buy?
+On Tue, Apr 09, 2024 at 02:30:01PM +0300, Kirill A. Shutemov wrote:
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index e74d0c4286c1..7a1560d7e62d 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -128,6 +128,12 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+>  #ifdef CONFIG_HPET_TIMER
+>  	hpet_disable();
+>  #endif
+> +
+> +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
+> +		x86_platform.guest.enc_kexec_stop_conversion(true);
+> +		x86_platform.guest.enc_kexec_unshare_mem();
+> +	}
 
-Thanks. That's a good perspective. I will rework the patchset dropping all
-unneeded enumeration.
+This is not how this is done - the point of those function pointers is
+to avoid random checks in the code but simply unconditionally call them.
+
+The platform which needs something special to happen, assigns to them
+its own function pointers and the rest assigns dummy stubs.
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
