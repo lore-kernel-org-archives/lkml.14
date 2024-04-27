@@ -1,168 +1,120 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F1B3D387
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 08:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9763E43AA2;
+	Sat, 27 Apr 2024 08:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714207646; cv=none; b=b87UR986XPdy4vKwjudJfPPBqkipctkcC5zWcDF2YbbQbdhpcwvDIfzQ2C31j2HH6G6Qi1Qid3rktXpaYO75RG8EAynriWSshigZrp4XT8VTEwy0NqR1lx/1eDDguDaR0L+4SrUUBXYw0zHbUXj80zxy5mXsLcOK7QtM1NDsWKg=
+	t=1714207712; cv=none; b=r7DU47kh2ywl68MrIrIVseTGo4yu4As9KH+yqd8z/RcUIgOXi6K1yoQNb0ZHxIVDrTKUJpibl32IxVb9B0KXZjidSjsg5qFY+YP9Ga/POp4H5l2bWHflAz3t2PxbI7yADyzJtmSo3XdeBgbY/Tlnv8Nf/zM7hz7T/E+kFlN5DJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714207646; c=relaxed/simple;
-	bh=opzsk3KbWdUcsDAGrr0mjmV+Ees95gaFUnLHAk7uYGw=;
+	s=arc-20240116; t=1714207712; c=relaxed/simple;
+	bh=V4NpDnxzjqlT9WYru8l/dQpMschafKVu3wR/Hiqueg0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFQJJoEGXOijSwNQnhZFr4JMMkB77vkisUDPFAzzm73+XF9Vglm4c9c3woJtD/B68kDp7fvrLiGhebthCaCbRIoNMIvFIStm82weEnPMoQPbHN8YUaodd17S0u7oi7oj+wfXufuXN7hb+GTSXkzFzDFk4aE+EQzq/fHNiEDLDDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=geIda5Gu; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=UwAUkzzkcAxzD3ntTBOAX6z7jXzYM74n8hyoU3TlpLfo5pM+rpzXvn00dTxxjva9HZAhCSfgTLmNWo2US1D+jfYNVUQT0foAISUzS1wh3Oc/1uS6FHHVfumnN5i3GONPPX/8IjU93wKK6G3Sd6a5Y0E47xT7cv2WGiDTbiDdJTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eoqTZyHa; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="geIda5Gu"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e3ff14f249so22133995ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 01:47:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoqTZyHa"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so2120997a12.0;
+        Sat, 27 Apr 2024 01:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714207644; x=1714812444; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RrloM48uDUpeaAw5cm9XDyBz0ypDNTLMvn080FMn1GA=;
-        b=geIda5GutSf1aGdh8HLQn9G1mmZMsXJ24MlRYf6yVorGyGIpdfpDagyNJXCPL8N2pH
-         dcATlkQyywzzLs4T3TSsgG1c64tU/Fifo9PBQfqAC5YdB7xZZNJoLvhrnDbvS6ALLiJZ
-         4ScRydLowlRMG4ETwJn+t9G2goFWXrD3T9PtmbVPO3ht5kJXARDrxysfxxzezwfIHoQu
-         hDaUKs4H09rAlHc6+9ryLZMocpv2PJEeTp/Cvkx8s84Sy20zzkcqdjTKQtZxfGX9xJLF
-         wOARsda8MA/AuFK1q6XNqeXGG9gjec++sdAcGW66dP7INyP2GsyjGjQ71+mntAf3Uy7b
-         ITcw==
+        d=gmail.com; s=20230601; t=1714207710; x=1714812510; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PXHIbNFrUZ3oIq2rhdb5p0syCAenZ2Q/nUC+x14Dlxc=;
+        b=eoqTZyHaawkjybYL58tlGgfVGMVFyvn+c667tURGccLvW6bhWkw8UoGEtKieUfBFbN
+         umhI+9FZygiEoaop1r6xZwedYGwDxiW4lEkSUyKYp0f/+Ef92jVBY+tBfgicjIwSoQ4X
+         ZuHJ0kDXBml0+RMmuGO/TQtC1ZQC6VhQfSwrBTTT3EgpvCMNbuOCpCryP2D7qnRlvedz
+         Cf09WGMCx6rxHzemuHu3jGA3Bco8O0JjX98jUJnP/cTcpHior0gwaOmurzPh6h+FLHet
+         eFpVsBh4qAKdNeh176B1lDb+HX99hcVnxmNmNkRuSWcZjlHnO9L1R8mlYglES2UvScu5
+         Iu8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714207644; x=1714812444;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RrloM48uDUpeaAw5cm9XDyBz0ypDNTLMvn080FMn1GA=;
-        b=S/EDzz66APqIU+Yv2fGhO18zlQnU/9Ah6oa6F39R5IlzVyRfyCTqxzACvzbgcnHsrW
-         r01UBF6fY9r4FBeemlhx4f3mGyaLKNcdqVypZcAsqOVhPTGNFT6CUv2lv9Ix+DqwQIc7
-         LreRJ8C/dz60HAjWhyez69ViJ3dq7I1Tlv7aDq9emHwd/DT8zSJ1jydF/O7QNL4Uv50w
-         k2MttGGMCjCfSlqXZS1vlImHcQiFNdhEYHVZNlP6Konx8CSWtXpzOWqcj1AfLBmsuM9y
-         Hn13WI+zKJzWXRM5gNKSyf35saC2+ui3QL6IznCAVJvnW7xAeptYwJn1mbFFo1KwIv0q
-         vb9w==
-X-Forwarded-Encrypted: i=1; AJvYcCULFWs2akURsbJCQCXwmZRRqio5nNcIXGRjqmTu1AocNPC68CAV+SLnZfSD47hs926AbifC301g/m6bOjB8+wt7ui6DyhsEj/BQBudD
-X-Gm-Message-State: AOJu0Yxn0WobKp4UYte2bABG8w9QxX/fTkhGRu8eR/mXB7WsyQbXYo2N
-	6ASy3Zqa6pE5hTSWyl6/d3BEXn4PuxCTQGJTb2LF+a/Mpv1BuP7pEVIWsB+naQ==
-X-Google-Smtp-Source: AGHT+IGesKZO5rYvQ6ydH5sTslIBruP1og5SUrJwUccA8/imWknzBveKZuuJwbrYkycK+keVpUpZ5g==
-X-Received: by 2002:a17:903:228a:b0:1e0:b60f:5de3 with SMTP id b10-20020a170903228a00b001e0b60f5de3mr7831646plh.7.1714207644230;
-        Sat, 27 Apr 2024 01:47:24 -0700 (PDT)
-Received: from thinkpad ([120.60.53.237])
-        by smtp.gmail.com with ESMTPSA id j10-20020a17090276ca00b001dd69aca213sm16542547plt.270.2024.04.27.01.47.20
+        d=1e100.net; s=20230601; t=1714207710; x=1714812510;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PXHIbNFrUZ3oIq2rhdb5p0syCAenZ2Q/nUC+x14Dlxc=;
+        b=usB14MyTbh6eUGEDZGcZcOdD+i90uI8laZEnzPXyPcDI1BKK1DVMRz/wIkWyOucilB
+         rPbSprzijxyjzbkPK2V7nX399p3MARiDGOWkuPcfy2tc4BB+ZGS1PRDQ+MDYn/x27fiW
+         Ik51ZpyBeFH4UK1tZswsgEq5cQsdP3cQbPs2MRXUW2dtnt4En9OQrQ2RvUUA/rnpCEei
+         mcKkXzTyT1qke5581kPi97f22jI8e7dOy+/s5nrifFzYGDpQ5Oh1wkLyc1iDwMnngPFh
+         m2EcHZsOZXdCwk/ly9y/iQYF+iVVDnVIhyQJezcT5+tV7Yp0XMji9qgxYXDFSx8I1azi
+         xgsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqu4ev7fEr4NhPYKQ5KLPOOvUotrFh7U+uRFvQkZHFfHruWfdXTsgONRgP4OV7Bu8ml/bxotHaZukccKJL4Cry6fCz3p0T0M9LseMoOdcY50mkeBoR3QtOs8GCPaiiEcU/sHBWVFZV
+X-Gm-Message-State: AOJu0Yyjxm7+mze/lsVefDDuDuZelwHo0KT8a/WI4uI19KX46PFYbGc5
+	hBXjh3+8LSSYrhFjNBsxoi6UXsJKlNATvnj75pkWr8GeAnRJWBQO
+X-Google-Smtp-Source: AGHT+IHR5tbH6MWsLG0qWRbuZ84BDJigIemtA0Lf+Sj/Ld57wPUYzXI0snSmQFCm8kXNUnvTOpHeqQ==
+X-Received: by 2002:a05:6a20:3954:b0:1a9:8251:41ba with SMTP id r20-20020a056a20395400b001a9825141bamr5582525pzg.51.1714207710369;
+        Sat, 27 Apr 2024 01:48:30 -0700 (PDT)
+Received: from localhost ([2804:30c:1f6c:5400:ea32:e7c8:5bc0:103])
+        by smtp.gmail.com with ESMTPSA id k1-20020a17090a590100b002afd65ff881sm3946516pji.44.2024.04.27.01.48.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Apr 2024 01:47:23 -0700 (PDT)
-Date: Sat, 27 Apr 2024 14:17:07 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Aleksandr Mishin <amishin@t-argos.ru>
-Cc: Rob Herring <robh@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH v2] PCI: dwc: keystone: Fix potential NULL dereference
-Message-ID: <20240427084707.GE1981@thinkpad>
-References: <20240329051947.28900-1-amishin@t-argos.ru>
- <20240425092135.13348-1-amishin@t-argos.ru>
+        Sat, 27 Apr 2024 01:48:29 -0700 (PDT)
+Date: Sat, 27 Apr 2024 05:49:18 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Andrew Hepp <andrew.hepp@ahepp.dev>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: temperature: mcp9600: Fix temperature reading for
+ negative values
+Message-ID: <Ziy8DsMCeAGK79E7@debian-BULLSEYE-live-builder-AMD64>
+References: <20240424185913.1177127-1-dima.fedrau@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240425092135.13348-1-amishin@t-argos.ru>
+In-Reply-To: <20240424185913.1177127-1-dima.fedrau@gmail.com>
 
-On Thu, Apr 25, 2024 at 12:21:35PM +0300, Aleksandr Mishin wrote:
-> In ks_pcie_setup_rc_app_regs() resource_list_first_type() may return
-> NULL which is later dereferenced. Fix this bug by adding NULL check.
+Hi Dimitri,
+
+Interesting patch this one.
+I think this does apply, although, the cold junction register has for sign bits
+so I think we could also have a mask to clear those out.
+Some code suggestions inline.
+
+Regards,
+Marcelo
+
+On 04/24, Dimitri Fedrau wrote:
+> Temperature is stored as 16bit value in two's complement format. Current
+> implementation ignores the sign bit. Make it aware of the sign bit by
+> using sign_extend32.
 > 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
-> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+> Fixes: 3f6b9598b6df ("iio: temperature: Add MCP9600 thermocouple EMF converter")
+> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
 > ---
-> v2: Add return code processing
+>  drivers/iio/temperature/mcp9600.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
->  drivers/pci/controller/dwc/pci-keystone.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 844de4418724..5c6786d9f3e9 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -382,17 +382,22 @@ static void ks_pcie_clear_dbi_mode(struct keystone_pcie *ks_pcie)
->  	} while (val & DBI_CS2);
->  }
->  
-> -static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
-> +static int ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
->  {
->  	u32 val;
->  	u32 num_viewport = ks_pcie->num_viewport;
->  	struct dw_pcie *pci = ks_pcie->pci;
->  	struct dw_pcie_rp *pp = &pci->pp;
-> -	u64 start, end;
-> +	struct resource_entry *ft;
->  	struct resource *mem;
-> +	u64 start, end;
->  	int i;
->  
-> -	mem = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM)->res;
-> +	ft = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
-> +	if (!ft)
-> +		return -EINVAL;
+> diff --git a/drivers/iio/temperature/mcp9600.c b/drivers/iio/temperature/mcp9600.c
+> index 46845804292b..7a3eef5d5e75 100644
+> --- a/drivers/iio/temperature/mcp9600.c
+> +++ b/drivers/iio/temperature/mcp9600.c
 
--ENODEV please.
+#define MCP9600_COLD_JUNCTION_SIGN_MSK GENMASK(15,12)
+...
 
-- Mani
-
-> +
-> +	mem = ft->res;
->  	start = mem->start;
->  	end = mem->end;
+> @@ -52,7 +52,8 @@ static int mcp9600_read(struct mcp9600_data *data,
 >  
-> @@ -403,7 +408,7 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
->  	ks_pcie_clear_dbi_mode(ks_pcie);
->  
->  	if (ks_pcie->is_am6)
-> -		return;
-> +		return 0;
->  
->  	val = ilog2(OB_WIN_SIZE);
->  	ks_pcie_app_writel(ks_pcie, OB_SIZE, val);
-> @@ -420,6 +425,8 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
->  	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
->  	val |= OB_XLAT_EN_VAL;
->  	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
-> +
-> +	return 0;
->  }
->  
->  static void __iomem *ks_pcie_other_map_bus(struct pci_bus *bus,
-> @@ -814,7 +821,10 @@ static int __init ks_pcie_host_init(struct dw_pcie_rp *pp)
+>  	if (ret < 0)
 >  		return ret;
->  
->  	ks_pcie_stop_link(pci);
-> -	ks_pcie_setup_rc_app_regs(ks_pcie);
-> +	ret = ks_pcie_setup_rc_app_regs(ks_pcie);
-> +	if (ret < 0)
-> +		return ret;
+> -	*val = ret;
 > +
->  	writew(PCI_IO_RANGE_TYPE_32 | (PCI_IO_RANGE_TYPE_32 << 8),
->  			pci->dbi_base + PCI_IO_BASE);
->  
-> -- 
-> 2.30.2
-> 
+> +	*val = sign_extend32(ret, 15);
+	if (chan->address == MCP9600_COLD_JUNCTION)
+		*val &= ~MCP9600_COLD_JUNCTION_SIGN_MSK;
 
--- 
-மணிவண்ணன் சதாசிவம்
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.39.2
+> 
+> 
