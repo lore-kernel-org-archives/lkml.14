@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3748B22325;
-	Sat, 27 Apr 2024 15:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9372B1D68F;
+	Sat, 27 Apr 2024 15:55:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714233323; cv=none; b=Fimf49ZwSRfk4N6Tl9mGvgAQPJwoFva9D4pYKxY6b55kpZP4v85SU2ytiISGOifV6TCfO4tnpLtfEK7hkyELxvifVXOunqabJIAyrDzkLevpghmk75/X+JA4wZchXrfzvtnzLcMu+BxT7DuMVPmz8jC8QjwVmthhB6s7YYAQvtc=
+	t=1714233309; cv=none; b=ZJYrqHwEK9+mftH4rLNXiKT/a+MUkJDWOFpaBqZhXGjUX5Fj8ZHzIDlWWyFIpmHcVd05KKzuv9g4TH2wjx/oSkdjstocq2i/vfi4A3q9uO3ualUfB8Z0eRgeYLKrpyWMDeZXII2mU0kQkDAP9KTrykxzkd/MDao7txmUwp0cRR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714233323; c=relaxed/simple;
-	bh=n7aM4C7clYKvcmWmxCUpe9JpL/Ceqj2v9Q2i4s+nEXc=;
+	s=arc-20240116; t=1714233309; c=relaxed/simple;
+	bh=ofuhFWPl4k3YMFbQdDOUk1Gke1D1lygzEswmhGN6K2M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CaspdR1UUkRuA5MSNImDzTA+vlN/rfI+/2EwTy0PCGzmpOoeQxkQZIT6TFzDOdNlgmSObl6WMF5CoTW/gGXv494uZnCiHlMuORQJn9pIGNuEPDEhZ+wF23ZBUMtAhYyg2sAzINodqS7uDbLw2h65mgQAiCShs+BIU/UlRQtx9zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zTyitrC7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=g54cE+wWRwbHoxZfVXWItLlwhA2/e285nUKyq3BLGRRXCBxw/Qz9nIAhboitCFm1hOLBEResPOFG5wN4iN1gbtdMAkQmaBMiLru6MPyt/LyKRWcKMeIIEzemw72a49MpVfy2kOngGn7jUMc9qvV+/bgf2csnoqdLBgsSDM67dQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YKEQtaDY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zTyitrC7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA76C32781;
-	Sat, 27 Apr 2024 15:55:20 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YKEQtaDY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C48D1C113CE;
+	Sat, 27 Apr 2024 15:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1714233322;
-	bh=n7aM4C7clYKvcmWmxCUpe9JpL/Ceqj2v9Q2i4s+nEXc=;
+	s=korg; t=1714233308;
+	bh=ofuhFWPl4k3YMFbQdDOUk1Gke1D1lygzEswmhGN6K2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=zTyitrC72wZF4La9nvBuYnNtRdxjiCoANoyK4NO2BpDt4E9bIRVpn3FxQdzUSykAY
-	 9fX3P+AW4aTJWxu9i8UQmiO6UlXXQ4VTSVOQJLbUOeDqAlErqyxc6venqJL4i4zo5J
-	 hp9stkb5MOssL/1uh+AjlvyHN/DlPipLqFKD9+BM=
+	b=YKEQtaDYDeMkBP7AqS4Zj4arztEQu48l/jC70lvOkcZqX6SVfDrjbFVyH5C9rFtV0
+	 KMyW8gvKDnVG8jHHVr4azM3hmnLEQRVqBrro1JVumEWNJCXwPeV8T69Mk2LaIPPzPo
+	 UAjmiIZvKvAHUdM5qvZo9caZNBL/WBkTgdrGykls=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -31,54 +31,138 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.8.8
-Date: Sat, 27 Apr 2024 17:55:09 +0200
-Message-ID: <2024042708-krypton-bloating-f80e@gregkh>
+Subject: Re: Linux 6.1.88
+Date: Sat, 27 Apr 2024 17:54:55 +0200
+Message-ID: <2024042755-purist-lure-e839@gregkh>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <2024042708-stooge-unmanaged-61e7@gregkh>
-References: <2024042708-stooge-unmanaged-61e7@gregkh>
+In-Reply-To: <2024042754-surrender-exclaim-79bb@gregkh>
+References: <2024042754-surrender-exclaim-79bb@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index aebbe2981241..e6f0570cf490 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6603,6 +6603,9 @@
+ 					pause after every control message);
+ 				o = USB_QUIRK_HUB_SLOW_RESET (Hub needs extra
+ 					delay after resetting its port);
++				p = USB_QUIRK_SHORT_SET_ADDRESS_REQ_TIMEOUT
++					(Reduce timeout of the SET_ADDRESS
++					request from 5000 ms to 500 ms);
+ 			Example: quirks=0781:5580:bk,0a5c:5834:gij
+ 
+ 	usbhid.mousepoll=
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bbfedb0b2093..ecf4d0c8f446 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8031,7 +8031,7 @@ M:	Geoffrey D. Bennett <g@b4.vu>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+-F:	sound/usb/mixer_scarlett_gen2.c
++F:	sound/usb/mixer_scarlett2.c
+ 
+ FORCEDETH GIGABIT ETHERNET DRIVER
+ M:	Rain River <rain.1986.08.12@gmail.com>
 diff --git a/Makefile b/Makefile
-index e6c0a00722ea..ffa43a6d0424 100644
+index e46a57006a34..c73cb678fb9a 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
  VERSION = 6
- PATCHLEVEL = 8
--SUBLEVEL = 7
-+SUBLEVEL = 8
+ PATCHLEVEL = 1
+-SUBLEVEL = 87
++SUBLEVEL = 88
  EXTRAVERSION =
- NAME = Hurr durr I'ma ninja sloth
+ NAME = Curry Ramen
  
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index cab7f91949d8..a92905e6d43a 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -569,6 +569,11 @@ SYM_INNER_LABEL(init_el2, SYM_L_LOCAL)
- 	adr_l	x1, __hyp_text_end
- 	adr_l	x2, dcache_clean_poc
- 	blr	x2
+diff --git a/arch/arm/mach-omap2/board-n8x0.c b/arch/arm/mach-omap2/board-n8x0.c
+index 5e86145db0e2..8897364e550b 100644
+--- a/arch/arm/mach-omap2/board-n8x0.c
++++ b/arch/arm/mach-omap2/board-n8x0.c
+@@ -22,7 +22,6 @@
+ #include <linux/platform_data/spi-omap2-mcspi.h>
+ #include <linux/platform_data/mmc-omap.h>
+ #include <linux/mfd/menelaus.h>
+-#include <sound/tlv320aic3x.h>
+ 
+ #include <asm/mach/arch.h>
+ #include <asm/mach-types.h>
+@@ -567,10 +566,6 @@ struct menelaus_platform_data n8x0_menelaus_platform_data = {
+ 	.late_init = n8x0_menelaus_late_init,
+ };
+ 
+-struct aic3x_pdata n810_aic33_data = {
+-	.gpio_reset = 118,
+-};
+-
+ static int __init n8x0_late_initcall(void)
+ {
+ 	if (!board_caps)
+diff --git a/arch/arm/mach-omap2/common-board-devices.h b/arch/arm/mach-omap2/common-board-devices.h
+index b23962c38fb2..69694af71475 100644
+--- a/arch/arm/mach-omap2/common-board-devices.h
++++ b/arch/arm/mach-omap2/common-board-devices.h
+@@ -2,12 +2,10 @@
+ #ifndef __OMAP_COMMON_BOARD_DEVICES__
+ #define __OMAP_COMMON_BOARD_DEVICES__
+ 
+-#include <sound/tlv320aic3x.h>
+ #include <linux/mfd/menelaus.h>
+ 
+ void *n8x0_legacy_init(void);
+ 
+ extern struct menelaus_platform_data n8x0_menelaus_platform_data;
+-extern struct aic3x_pdata n810_aic33_data;
+ 
+ #endif /* __OMAP_COMMON_BOARD_DEVICES__ */
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 5b99d602c87b..44da1e14a374 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -257,9 +257,19 @@ static struct platform_device pandora_backlight = {
+ 	.id	= -1,
+ };
+ 
++static struct gpiod_lookup_table pandora_soc_audio_gpios = {
++	.dev_id = "soc-audio",
++	.table = {
++		GPIO_LOOKUP("gpio-112-127", 6, "dac", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("gpio-0-15", 14, "amp", GPIO_ACTIVE_HIGH),
++		{ }
++	},
++};
 +
-+	mov_q	x0, INIT_SCTLR_EL2_MMU_OFF
-+	pre_disable_mmu_workaround
-+	msr	sctlr_el2, x0
-+	isb
- 0:
- 	mov_q	x0, HCR_HOST_NVHE_FLAGS
- 	msr	hcr_el2, x0
+ static void __init omap3_pandora_legacy_init(void)
+ {
+ 	platform_device_register(&pandora_backlight);
++	gpiod_add_lookup_table(&pandora_soc_audio_gpios);
+ }
+ #endif /* CONFIG_ARCH_OMAP3 */
+ 
+@@ -440,7 +450,6 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
+ #ifdef CONFIG_MACH_NOKIA_N8X0
+ 	OF_DEV_AUXDATA("ti,omap2420-mmc", 0x4809c000, "mmci-omap.0", NULL),
+ 	OF_DEV_AUXDATA("menelaus", 0x72, "1-0072", &n8x0_menelaus_platform_data),
+-	OF_DEV_AUXDATA("tlv320aic3x", 0x18, "2-0018", &n810_aic33_data),
+ #endif
+ #ifdef CONFIG_ARCH_OMAP3
+ 	OF_DEV_AUXDATA("ti,omap2-iommu", 0x5d000000, "5d000000.mmu",
 diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-index 924843f1f661..0a62f458c5cb 100644
+index 826cb200b204..425b398f8d45 100644
 --- a/arch/arm64/mm/pageattr.c
 +++ b/arch/arm64/mm/pageattr.c
-@@ -219,9 +219,6 @@ bool kernel_page_present(struct page *page)
+@@ -220,9 +220,6 @@ bool kernel_page_present(struct page *page)
  	pte_t *ptep;
  	unsigned long addr = (unsigned long)page_address(page);
  
@@ -88,37 +172,908 @@ index 924843f1f661..0a62f458c5cb 100644
  	pgdp = pgd_offset_k(addr);
  	if (pgd_none(READ_ONCE(*pgdp)))
  		return false;
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 0216f63a366b..d0795b5fab46 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -79,6 +79,9 @@ do {									\
- #define __smp_mb__before_atomic()	do { } while (0)
- #define __smp_mb__after_atomic()	do { } while (0)
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 9e38ffaadb5d..3c1b3520361c 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -91,7 +91,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
  
-+/* Writing to CR3 provides a full memory barrier in switch_mm(). */
-+#define smp_mb__after_switch_mm()	do { } while (0)
+ SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
+ 
+-sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|efi32_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
++sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|z_.*\)$$/\#define ZO_\2 0x\1/p'
+ 
+ quiet_cmd_zoffset = ZOFFSET $@
+       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 3965b2c9efee..6e61baff223f 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -84,7 +84,7 @@ LDFLAGS_vmlinux += -T
+ hostprogs	:= mkpiggy
+ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+ 
+-sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(_text\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
++sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(_text\|__start_rodata\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
+ 
+ quiet_cmd_voffset = VOFFSET $@
+       cmd_voffset = $(NM) $< | sed -n $(sed-voffset) > $@
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 8ae7893d712f..45435ff88363 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -330,6 +330,7 @@ static size_t parse_elf(void *output)
+ 	return ehdr.e_entry - LOAD_PHYSICAL_ADDR;
+ }
+ 
++const unsigned long kernel_text_size = VO___start_rodata - VO__text;
+ const unsigned long kernel_total_size = VO__end - VO__text;
+ 
+ static u8 boot_heap[BOOT_HEAP_SIZE] __aligned(4);
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index d07e665bb265..3c5d5c97f8f7 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -118,6 +118,9 @@ static bool fault_in_kernel_space(unsigned long address)
+ #define __init
+ #define __pa(x)	((unsigned long)(x))
+ 
++#undef __head
++#define __head
 +
- #include <asm-generic/barrier.h>
+ #define __BOOT_COMPRESSED
  
- #endif /* _ASM_X86_BARRIER_H */
+ /* Basic instruction decoding support needed */
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 112b2375d021..bcf0e4e4c98e 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -42,11 +42,13 @@ SECTIONS
+ 		*(.rodata.*)
+ 		_erodata = . ;
+ 	}
+-	.data :	{
++	.data :	ALIGN(0x1000) {
+ 		_data = . ;
+ 		*(.data)
+ 		*(.data.*)
+-		*(.bss.efistub)
++
++		/* Add 4 bytes of extra space for a CRC-32 checksum */
++		. = ALIGN(. + 4, 0x200);
+ 		_edata = . ;
+ 	}
+ 	. = ALIGN(L1_CACHE_BYTES);
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index d31982509654..7593339b529a 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -36,65 +36,19 @@ SYSSEG		= 0x1000		/* historical load address >> 4 */
+ #define ROOT_RDONLY 1
+ #endif
+ 
++	.set	salign, 0x1000
++	.set	falign, 0x200
++
+ 	.code16
+ 	.section ".bstext", "ax"
+-
+-	.global bootsect_start
+-bootsect_start:
+ #ifdef CONFIG_EFI_STUB
+ 	# "MZ", MS-DOS header
+ 	.word	MZ_MAGIC
+-#endif
+-
+-	# Normalize the start address
+-	ljmp	$BOOTSEG, $start2
+-
+-start2:
+-	movw	%cs, %ax
+-	movw	%ax, %ds
+-	movw	%ax, %es
+-	movw	%ax, %ss
+-	xorw	%sp, %sp
+-	sti
+-	cld
+-
+-	movw	$bugger_off_msg, %si
+-
+-msg_loop:
+-	lodsb
+-	andb	%al, %al
+-	jz	bs_die
+-	movb	$0xe, %ah
+-	movw	$7, %bx
+-	int	$0x10
+-	jmp	msg_loop
+-
+-bs_die:
+-	# Allow the user to press a key, then reboot
+-	xorw	%ax, %ax
+-	int	$0x16
+-	int	$0x19
+-
+-	# int 0x19 should never return.  In case it does anyway,
+-	# invoke the BIOS reset code...
+-	ljmp	$0xf000,$0xfff0
+-
+-#ifdef CONFIG_EFI_STUB
+ 	.org	0x3c
+ 	#
+ 	# Offset to the PE header.
+ 	#
+ 	.long	pe_header
+-#endif /* CONFIG_EFI_STUB */
+-
+-	.section ".bsdata", "a"
+-bugger_off_msg:
+-	.ascii	"Use a boot loader.\r\n"
+-	.ascii	"\n"
+-	.ascii	"Remove disk and press any key to reboot...\r\n"
+-	.byte	0
+-
+-#ifdef CONFIG_EFI_STUB
+ pe_header:
+ 	.long	PE_MAGIC
+ 
+@@ -123,30 +77,26 @@ optional_header:
+ 	.byte	0x02				# MajorLinkerVersion
+ 	.byte	0x14				# MinorLinkerVersion
+ 
+-	# Filled in by build.c
+-	.long	0				# SizeOfCode
++	.long	ZO__data			# SizeOfCode
+ 
+-	.long	0				# SizeOfInitializedData
++	.long	ZO__end - ZO__data		# SizeOfInitializedData
+ 	.long	0				# SizeOfUninitializedData
+ 
+-	# Filled in by build.c
+-	.long	0x0000				# AddressOfEntryPoint
++	.long	setup_size + ZO_efi_pe_entry	# AddressOfEntryPoint
+ 
+-	.long	0x0200				# BaseOfCode
++	.long	setup_size			# BaseOfCode
+ #ifdef CONFIG_X86_32
+ 	.long	0				# data
+ #endif
+ 
+ extra_header_fields:
+-	# PE specification requires ImageBase to be 64k aligned
+-	.set	image_base, (LOAD_PHYSICAL_ADDR + 0xffff) & ~0xffff
+ #ifdef CONFIG_X86_32
+-	.long	image_base			# ImageBase
++	.long	0				# ImageBase
+ #else
+-	.quad	image_base			# ImageBase
++	.quad	0				# ImageBase
+ #endif
+-	.long	0x20				# SectionAlignment
+-	.long	0x20				# FileAlignment
++	.long	salign				# SectionAlignment
++	.long	falign				# FileAlignment
+ 	.word	0				# MajorOperatingSystemVersion
+ 	.word	0				# MinorOperatingSystemVersion
+ 	.word	LINUX_EFISTUB_MAJOR_VERSION	# MajorImageVersion
+@@ -155,12 +105,9 @@ extra_header_fields:
+ 	.word	0				# MinorSubsystemVersion
+ 	.long	0				# Win32VersionValue
+ 
+-	#
+-	# The size of the bzImage is written in tools/build.c
+-	#
+-	.long	0				# SizeOfImage
++	.long	setup_size + ZO__end		# SizeOfImage
+ 
+-	.long	0x200				# SizeOfHeaders
++	.long	salign				# SizeOfHeaders
+ 	.long	0				# CheckSum
+ 	.word	IMAGE_SUBSYSTEM_EFI_APPLICATION	# Subsystem (EFI application)
+ #ifdef CONFIG_EFI_DXE_MEM_ATTRIBUTES
+@@ -191,87 +138,77 @@ extra_header_fields:
+ 
+ 	# Section table
+ section_table:
+-	#
+-	# The offset & size fields are filled in by build.c.
+-	#
+ 	.ascii	".setup"
+ 	.byte	0
+ 	.byte	0
+-	.long	0
+-	.long	0x0				# startup_{32,64}
+-	.long	0				# Size of initialized data
+-						# on disk
+-	.long	0x0				# startup_{32,64}
+-	.long	0				# PointerToRelocations
+-	.long	0				# PointerToLineNumbers
+-	.word	0				# NumberOfRelocations
+-	.word	0				# NumberOfLineNumbers
+-	.long	IMAGE_SCN_CNT_CODE		| \
+-		IMAGE_SCN_MEM_READ		| \
+-		IMAGE_SCN_MEM_EXECUTE		| \
+-		IMAGE_SCN_ALIGN_16BYTES		# Characteristics
++	.long	pecompat_fstart - salign 	# VirtualSize
++	.long	salign				# VirtualAddress
++	.long	pecompat_fstart - salign	# SizeOfRawData
++	.long	salign				# PointerToRawData
+ 
+-	#
+-	# The EFI application loader requires a relocation section
+-	# because EFI applications must be relocatable. The .reloc
+-	# offset & size fields are filled in by build.c.
+-	#
+-	.ascii	".reloc"
+-	.byte	0
+-	.byte	0
+-	.long	0
+-	.long	0
+-	.long	0				# SizeOfRawData
+-	.long	0				# PointerToRawData
+-	.long	0				# PointerToRelocations
+-	.long	0				# PointerToLineNumbers
+-	.word	0				# NumberOfRelocations
+-	.word	0				# NumberOfLineNumbers
++	.long	0, 0, 0
+ 	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
+ 		IMAGE_SCN_MEM_READ		| \
+-		IMAGE_SCN_MEM_DISCARDABLE	| \
+-		IMAGE_SCN_ALIGN_1BYTES		# Characteristics
++		IMAGE_SCN_MEM_DISCARDABLE	# Characteristics
+ 
+ #ifdef CONFIG_EFI_MIXED
+-	#
+-	# The offset & size fields are filled in by build.c.
+-	#
+ 	.asciz	".compat"
+-	.long	0
+-	.long	0x0
+-	.long	0				# Size of initialized data
+-						# on disk
+-	.long	0x0
+-	.long	0				# PointerToRelocations
+-	.long	0				# PointerToLineNumbers
+-	.word	0				# NumberOfRelocations
+-	.word	0				# NumberOfLineNumbers
++
++	.long	pecompat_fsize			# VirtualSize
++	.long	pecompat_fstart			# VirtualAddress
++	.long	pecompat_fsize			# SizeOfRawData
++	.long	pecompat_fstart			# PointerToRawData
++
++	.long	0, 0, 0
+ 	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
+ 		IMAGE_SCN_MEM_READ		| \
+-		IMAGE_SCN_MEM_DISCARDABLE	| \
+-		IMAGE_SCN_ALIGN_1BYTES		# Characteristics
++		IMAGE_SCN_MEM_DISCARDABLE	# Characteristics
++
++	/*
++	 * Put the IA-32 machine type and the associated entry point address in
++	 * the .compat section, so loaders can figure out which other execution
++	 * modes this image supports.
++	 */
++	.pushsection ".pecompat", "a", @progbits
++	.balign	salign
++	.globl	pecompat_fstart
++pecompat_fstart:
++	.byte	0x1				# Version
++	.byte	8				# Size
++	.word	IMAGE_FILE_MACHINE_I386		# PE machine type
++	.long	setup_size + ZO_efi32_pe_entry	# Entrypoint
++	.byte	0x0				# Sentinel
++	.popsection
++#else
++	.set	pecompat_fstart, setup_size
+ #endif
+-
+-	#
+-	# The offset & size fields are filled in by build.c.
+-	#
+ 	.ascii	".text"
+ 	.byte	0
+ 	.byte	0
+ 	.byte	0
+-	.long	0
+-	.long	0x0				# startup_{32,64}
+-	.long	0				# Size of initialized data
++	.long	ZO__data
++	.long	setup_size
++	.long	ZO__data			# Size of initialized data
+ 						# on disk
+-	.long	0x0				# startup_{32,64}
++	.long	setup_size
+ 	.long	0				# PointerToRelocations
+ 	.long	0				# PointerToLineNumbers
+ 	.word	0				# NumberOfRelocations
+ 	.word	0				# NumberOfLineNumbers
+ 	.long	IMAGE_SCN_CNT_CODE		| \
+ 		IMAGE_SCN_MEM_READ		| \
+-		IMAGE_SCN_MEM_EXECUTE		| \
+-		IMAGE_SCN_ALIGN_16BYTES		# Characteristics
++		IMAGE_SCN_MEM_EXECUTE		# Characteristics
++
++	.ascii	".data\0\0\0"
++	.long	ZO__end - ZO__data		# VirtualSize
++	.long	setup_size + ZO__data		# VirtualAddress
++	.long	ZO__edata - ZO__data		# SizeOfRawData
++	.long	setup_size + ZO__data		# PointerToRawData
++
++	.long	0, 0, 0
++	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
++		IMAGE_SCN_MEM_READ		| \
++		IMAGE_SCN_MEM_WRITE		# Characteristics
+ 
+ 	.set	section_count, (. - section_table) / 40
+ #endif /* CONFIG_EFI_STUB */
+@@ -285,12 +222,12 @@ sentinel:	.byte 0xff, 0xff        /* Used to detect broken loaders */
+ 
+ 	.globl	hdr
+ hdr:
+-setup_sects:	.byte 0			/* Filled in by build.c */
++		.byte setup_sects - 1
+ root_flags:	.word ROOT_RDONLY
+-syssize:	.long 0			/* Filled in by build.c */
++syssize:	.long ZO__edata / 16
+ ram_size:	.word 0			/* Obsolete */
+ vid_mode:	.word SVGA_MODE
+-root_dev:	.word 0			/* Filled in by build.c */
++root_dev:	.word 0			/* Default to major/minor 0/0 */
+ boot_flag:	.word 0xAA55
+ 
+ 	# offset 512, entry point
+@@ -578,9 +515,25 @@ pref_address:		.quad LOAD_PHYSICAL_ADDR	# preferred load addr
+ # define INIT_SIZE VO_INIT_SIZE
+ #endif
+ 
++	.macro		__handover_offset
++#ifndef CONFIG_EFI_HANDOVER_PROTOCOL
++	.long		0
++#elif !defined(CONFIG_X86_64)
++	.long		ZO_efi32_stub_entry
++#else
++	/* Yes, this is really how we defined it :( */
++	.long		ZO_efi64_stub_entry - 0x200
++#ifdef CONFIG_EFI_MIXED
++	.if		ZO_efi32_stub_entry != ZO_efi64_stub_entry - 0x200
++	.error		"32-bit and 64-bit EFI entry points do not match"
++	.endif
++#endif
++#endif
++	.endm
++
+ init_size:		.long INIT_SIZE		# kernel initialization size
+-handover_offset:	.long 0			# Filled in by build.c
+-kernel_info_offset:	.long 0			# Filled in by build.c
++handover_offset:	__handover_offset
++kernel_info_offset:	.long ZO_kernel_info
+ 
+ # End of setup header #####################################################
+ 
+diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
+index 49546c247ae2..3a2d1360abb0 100644
+--- a/arch/x86/boot/setup.ld
++++ b/arch/x86/boot/setup.ld
+@@ -10,10 +10,11 @@ ENTRY(_start)
+ SECTIONS
+ {
+ 	. = 0;
+-	.bstext		: { *(.bstext) }
+-	.bsdata		: { *(.bsdata) }
++	.bstext	: {
++		*(.bstext)
++		. = 495;
++	} =0xffffffff
+ 
+-	. = 495;
+ 	.header		: { *(.header) }
+ 	.entrytext	: { *(.entrytext) }
+ 	.inittext	: { *(.inittext) }
+@@ -23,6 +24,9 @@ SECTIONS
+ 	.text		: { *(.text .text.*) }
+ 	.text32		: { *(.text32) }
+ 
++	.pecompat	: { *(.pecompat) }
++	PROVIDE(pecompat_fsize = setup_size - pecompat_fstart);
++
+ 	. = ALIGN(16);
+ 	.rodata		: { *(.rodata*) }
+ 
+@@ -38,8 +42,10 @@ SECTIONS
+ 	.signature	: {
+ 		setup_sig = .;
+ 		LONG(0x5a5aaa55)
+-	}
+ 
++		setup_size = ALIGN(ABSOLUTE(.), 4096);
++		setup_sects = ABSOLUTE(setup_size / 512);
++	}
+ 
+ 	. = ALIGN(16);
+ 	.bss		:
+diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
+index bd247692b701..10311d77c67f 100644
+--- a/arch/x86/boot/tools/build.c
++++ b/arch/x86/boot/tools/build.c
+@@ -40,10 +40,6 @@ typedef unsigned char  u8;
+ typedef unsigned short u16;
+ typedef unsigned int   u32;
+ 
+-#define DEFAULT_MAJOR_ROOT 0
+-#define DEFAULT_MINOR_ROOT 0
+-#define DEFAULT_ROOT_DEV (DEFAULT_MAJOR_ROOT << 8 | DEFAULT_MINOR_ROOT)
+-
+ /* Minimal number of setup sectors */
+ #define SETUP_SECT_MIN 5
+ #define SETUP_SECT_MAX 64
+@@ -51,22 +47,7 @@ typedef unsigned int   u32;
+ /* This must be large enough to hold the entire setup */
+ u8 buf[SETUP_SECT_MAX*512];
+ 
+-#define PECOFF_RELOC_RESERVE 0x20
+-
+-#ifdef CONFIG_EFI_MIXED
+-#define PECOFF_COMPAT_RESERVE 0x20
+-#else
+-#define PECOFF_COMPAT_RESERVE 0x0
+-#endif
+-
+-static unsigned long efi32_stub_entry;
+-static unsigned long efi64_stub_entry;
+-static unsigned long efi_pe_entry;
+-static unsigned long efi32_pe_entry;
+-static unsigned long kernel_info;
+-static unsigned long startup_64;
+-static unsigned long _ehead;
+-static unsigned long _end;
++static unsigned long _edata;
+ 
+ /*----------------------------------------------------------------------*/
+ 
+@@ -152,180 +133,6 @@ static void usage(void)
+ 	die("Usage: build setup system zoffset.h image");
+ }
+ 
+-#ifdef CONFIG_EFI_STUB
+-
+-static void update_pecoff_section_header_fields(char *section_name, u32 vma, u32 size, u32 datasz, u32 offset)
+-{
+-	unsigned int pe_header;
+-	unsigned short num_sections;
+-	u8 *section;
+-
+-	pe_header = get_unaligned_le32(&buf[0x3c]);
+-	num_sections = get_unaligned_le16(&buf[pe_header + 6]);
+-
+-#ifdef CONFIG_X86_32
+-	section = &buf[pe_header + 0xa8];
+-#else
+-	section = &buf[pe_header + 0xb8];
+-#endif
+-
+-	while (num_sections > 0) {
+-		if (strncmp((char*)section, section_name, 8) == 0) {
+-			/* section header size field */
+-			put_unaligned_le32(size, section + 0x8);
+-
+-			/* section header vma field */
+-			put_unaligned_le32(vma, section + 0xc);
+-
+-			/* section header 'size of initialised data' field */
+-			put_unaligned_le32(datasz, section + 0x10);
+-
+-			/* section header 'file offset' field */
+-			put_unaligned_le32(offset, section + 0x14);
+-
+-			break;
+-		}
+-		section += 0x28;
+-		num_sections--;
+-	}
+-}
+-
+-static void update_pecoff_section_header(char *section_name, u32 offset, u32 size)
+-{
+-	update_pecoff_section_header_fields(section_name, offset, size, size, offset);
+-}
+-
+-static void update_pecoff_setup_and_reloc(unsigned int size)
+-{
+-	u32 setup_offset = 0x200;
+-	u32 reloc_offset = size - PECOFF_RELOC_RESERVE - PECOFF_COMPAT_RESERVE;
+-#ifdef CONFIG_EFI_MIXED
+-	u32 compat_offset = reloc_offset + PECOFF_RELOC_RESERVE;
+-#endif
+-	u32 setup_size = reloc_offset - setup_offset;
+-
+-	update_pecoff_section_header(".setup", setup_offset, setup_size);
+-	update_pecoff_section_header(".reloc", reloc_offset, PECOFF_RELOC_RESERVE);
+-
+-	/*
+-	 * Modify .reloc section contents with a single entry. The
+-	 * relocation is applied to offset 10 of the relocation section.
+-	 */
+-	put_unaligned_le32(reloc_offset + 10, &buf[reloc_offset]);
+-	put_unaligned_le32(10, &buf[reloc_offset + 4]);
+-
+-#ifdef CONFIG_EFI_MIXED
+-	update_pecoff_section_header(".compat", compat_offset, PECOFF_COMPAT_RESERVE);
+-
+-	/*
+-	 * Put the IA-32 machine type (0x14c) and the associated entry point
+-	 * address in the .compat section, so loaders can figure out which other
+-	 * execution modes this image supports.
+-	 */
+-	buf[compat_offset] = 0x1;
+-	buf[compat_offset + 1] = 0x8;
+-	put_unaligned_le16(0x14c, &buf[compat_offset + 2]);
+-	put_unaligned_le32(efi32_pe_entry + size, &buf[compat_offset + 4]);
+-#endif
+-}
+-
+-static void update_pecoff_text(unsigned int text_start, unsigned int file_sz,
+-			       unsigned int init_sz)
+-{
+-	unsigned int pe_header;
+-	unsigned int text_sz = file_sz - text_start;
+-	unsigned int bss_sz = init_sz - file_sz;
+-
+-	pe_header = get_unaligned_le32(&buf[0x3c]);
+-
+-	/*
+-	 * The PE/COFF loader may load the image at an address which is
+-	 * misaligned with respect to the kernel_alignment field in the setup
+-	 * header.
+-	 *
+-	 * In order to avoid relocating the kernel to correct the misalignment,
+-	 * add slack to allow the buffer to be aligned within the declared size
+-	 * of the image.
+-	 */
+-	bss_sz	+= CONFIG_PHYSICAL_ALIGN;
+-	init_sz	+= CONFIG_PHYSICAL_ALIGN;
+-
+-	/*
+-	 * Size of code: Subtract the size of the first sector (512 bytes)
+-	 * which includes the header.
+-	 */
+-	put_unaligned_le32(file_sz - 512 + bss_sz, &buf[pe_header + 0x1c]);
+-
+-	/* Size of image */
+-	put_unaligned_le32(init_sz, &buf[pe_header + 0x50]);
+-
+-	/*
+-	 * Address of entry point for PE/COFF executable
+-	 */
+-	put_unaligned_le32(text_start + efi_pe_entry, &buf[pe_header + 0x28]);
+-
+-	update_pecoff_section_header_fields(".text", text_start, text_sz + bss_sz,
+-					    text_sz, text_start);
+-}
+-
+-static int reserve_pecoff_reloc_section(int c)
+-{
+-	/* Reserve 0x20 bytes for .reloc section */
+-	memset(buf+c, 0, PECOFF_RELOC_RESERVE);
+-	return PECOFF_RELOC_RESERVE;
+-}
+-
+-static void efi_stub_defaults(void)
+-{
+-	/* Defaults for old kernel */
+-#ifdef CONFIG_X86_32
+-	efi_pe_entry = 0x10;
+-#else
+-	efi_pe_entry = 0x210;
+-	startup_64 = 0x200;
+-#endif
+-}
+-
+-static void efi_stub_entry_update(void)
+-{
+-	unsigned long addr = efi32_stub_entry;
+-
+-#ifdef CONFIG_EFI_HANDOVER_PROTOCOL
+-#ifdef CONFIG_X86_64
+-	/* Yes, this is really how we defined it :( */
+-	addr = efi64_stub_entry - 0x200;
+-#endif
+-
+-#ifdef CONFIG_EFI_MIXED
+-	if (efi32_stub_entry != addr)
+-		die("32-bit and 64-bit EFI entry points do not match\n");
+-#endif
+-#endif
+-	put_unaligned_le32(addr, &buf[0x264]);
+-}
+-
+-#else
+-
+-static inline void update_pecoff_setup_and_reloc(unsigned int size) {}
+-static inline void update_pecoff_text(unsigned int text_start,
+-				      unsigned int file_sz,
+-				      unsigned int init_sz) {}
+-static inline void efi_stub_defaults(void) {}
+-static inline void efi_stub_entry_update(void) {}
+-
+-static inline int reserve_pecoff_reloc_section(int c)
+-{
+-	return 0;
+-}
+-#endif /* CONFIG_EFI_STUB */
+-
+-static int reserve_pecoff_compat_section(int c)
+-{
+-	/* Reserve 0x20 bytes for .compat section */
+-	memset(buf+c, 0, PECOFF_COMPAT_RESERVE);
+-	return PECOFF_COMPAT_RESERVE;
+-}
+-
+ /*
+  * Parse zoffset.h and find the entry points. We could just #include zoffset.h
+  * but that would mean tools/build would have to be rebuilt every time. It's
+@@ -354,14 +161,7 @@ static void parse_zoffset(char *fname)
+ 	p = (char *)buf;
+ 
+ 	while (p && *p) {
+-		PARSE_ZOFS(p, efi32_stub_entry);
+-		PARSE_ZOFS(p, efi64_stub_entry);
+-		PARSE_ZOFS(p, efi_pe_entry);
+-		PARSE_ZOFS(p, efi32_pe_entry);
+-		PARSE_ZOFS(p, kernel_info);
+-		PARSE_ZOFS(p, startup_64);
+-		PARSE_ZOFS(p, _ehead);
+-		PARSE_ZOFS(p, _end);
++		PARSE_ZOFS(p, _edata);
+ 
+ 		p = strchr(p, '\n');
+ 		while (p && (*p == '\r' || *p == '\n'))
+@@ -371,17 +171,14 @@ static void parse_zoffset(char *fname)
+ 
+ int main(int argc, char ** argv)
+ {
+-	unsigned int i, sz, setup_sectors, init_sz;
++	unsigned int i, sz, setup_sectors;
+ 	int c;
+-	u32 sys_size;
+ 	struct stat sb;
+ 	FILE *file, *dest;
+ 	int fd;
+ 	void *kernel;
+ 	u32 crc = 0xffffffffUL;
+ 
+-	efi_stub_defaults();
+-
+ 	if (argc != 5)
+ 		usage();
+ 	parse_zoffset(argv[3]);
+@@ -403,72 +200,27 @@ int main(int argc, char ** argv)
+ 		die("Boot block hasn't got boot flag (0xAA55)");
+ 	fclose(file);
+ 
+-	c += reserve_pecoff_compat_section(c);
+-	c += reserve_pecoff_reloc_section(c);
+-
+ 	/* Pad unused space with zeros */
+-	setup_sectors = (c + 511) / 512;
++	setup_sectors = (c + 4095) / 4096;
++	setup_sectors *= 8;
+ 	if (setup_sectors < SETUP_SECT_MIN)
+ 		setup_sectors = SETUP_SECT_MIN;
+ 	i = setup_sectors*512;
+ 	memset(buf+c, 0, i-c);
+ 
+-	update_pecoff_setup_and_reloc(i);
+-
+-	/* Set the default root device */
+-	put_unaligned_le16(DEFAULT_ROOT_DEV, &buf[508]);
+-
+ 	/* Open and stat the kernel file */
+ 	fd = open(argv[2], O_RDONLY);
+ 	if (fd < 0)
+ 		die("Unable to open `%s': %m", argv[2]);
+ 	if (fstat(fd, &sb))
+ 		die("Unable to stat `%s': %m", argv[2]);
+-	sz = sb.st_size;
++	if (_edata != sb.st_size)
++		die("Unexpected file size `%s': %u != %u", argv[2], _edata,
++		    sb.st_size);
++	sz = _edata - 4;
+ 	kernel = mmap(NULL, sz, PROT_READ, MAP_SHARED, fd, 0);
+ 	if (kernel == MAP_FAILED)
+ 		die("Unable to mmap '%s': %m", argv[2]);
+-	/* Number of 16-byte paragraphs, including space for a 4-byte CRC */
+-	sys_size = (sz + 15 + 4) / 16;
+-#ifdef CONFIG_EFI_STUB
+-	/*
+-	 * COFF requires minimum 32-byte alignment of sections, and
+-	 * adding a signature is problematic without that alignment.
+-	 */
+-	sys_size = (sys_size + 1) & ~1;
+-#endif
+-
+-	/* Patch the setup code with the appropriate size parameters */
+-	buf[0x1f1] = setup_sectors-1;
+-	put_unaligned_le32(sys_size, &buf[0x1f4]);
+-
+-	init_sz = get_unaligned_le32(&buf[0x260]);
+-#ifdef CONFIG_EFI_STUB
+-	/*
+-	 * The decompression buffer will start at ImageBase. When relocating
+-	 * the compressed kernel to its end, we must ensure that the head
+-	 * section does not get overwritten.  The head section occupies
+-	 * [i, i + _ehead), and the destination is [init_sz - _end, init_sz).
+-	 *
+-	 * At present these should never overlap, because 'i' is at most 32k
+-	 * because of SETUP_SECT_MAX, '_ehead' is less than 1k, and the
+-	 * calculation of INIT_SIZE in boot/header.S ensures that
+-	 * 'init_sz - _end' is at least 64k.
+-	 *
+-	 * For future-proofing, increase init_sz if necessary.
+-	 */
+-
+-	if (init_sz - _end < i + _ehead) {
+-		init_sz = (i + _ehead + _end + 4095) & ~4095;
+-		put_unaligned_le32(init_sz, &buf[0x260]);
+-	}
+-#endif
+-	update_pecoff_text(setup_sectors * 512, i + (sys_size * 16), init_sz);
+-
+-	efi_stub_entry_update();
+-
+-	/* Update kernel_info offset. */
+-	put_unaligned_le32(kernel_info, &buf[0x268]);
+ 
+ 	crc = partial_crc32(buf, i, crc);
+ 	if (fwrite(buf, 1, i, dest) != i)
+@@ -479,13 +231,6 @@ int main(int argc, char ** argv)
+ 	if (fwrite(kernel, 1, sz, dest) != sz)
+ 		die("Writing kernel failed");
+ 
+-	/* Add padding leaving 4 bytes for the checksum */
+-	while (sz++ < (sys_size*16) - 4) {
+-		crc = partial_crc32_one('\0', crc);
+-		if (fwrite("\0", 1, 1, dest) != 1)
+-			die("Writing padding failed");
+-	}
+-
+ 	/* Write the CRC */
+ 	put_unaligned_le32(crc, buf);
+ 	if (fwrite(buf, 1, 4, dest) != 4)
+diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
+index a38cc0afc90a..a3e0be0470a4 100644
+--- a/arch/x86/include/asm/boot.h
++++ b/arch/x86/include/asm/boot.h
+@@ -81,6 +81,7 @@
+ 
+ #ifndef __ASSEMBLY__
+ extern unsigned int output_len;
++extern const unsigned long kernel_text_size;
+ extern const unsigned long kernel_total_size;
+ 
+ unsigned long decompress_kernel(unsigned char *outbuf, unsigned long virt_addr,
+diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
+index 5f1d3c421f68..cc9ccf61b6bd 100644
+--- a/arch/x86/include/asm/init.h
++++ b/arch/x86/include/asm/init.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_INIT_H
+ #define _ASM_X86_INIT_H
+ 
++#define __head	__section(".head.text")
++
+ struct x86_mapping_info {
+ 	void *(*alloc_pgt_page)(void *); /* allocate buf for page table */
+ 	void *context;			 /* context for alloc_pgt_page */
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index d271ba20a0b2..b7a539ea2986 100644
+index dfcdcafe3a2c..887a171488ea 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -854,6 +854,7 @@ struct kvm_vcpu_arch {
+@@ -773,6 +773,7 @@ struct kvm_vcpu_arch {
  	int cpuid_nent;
  	struct kvm_cpuid_entry2 *cpuid_entries;
- 	struct kvm_hypervisor_cpuid kvm_cpuid;
+ 	u32 kvm_cpuid_base;
 +	bool is_amd_compatible;
  
- 	/*
- 	 * FIXME: Drop this macro and use KVM_NR_GOVERNED_FEATURES directly
+ 	u64 reserved_gpa_bits;
+ 	int maxphyaddr;
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 41d06822bc8c..853f423b1d13 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -46,8 +46,8 @@ void __init sme_unmap_bootdata(char *real_mode_data);
+ void __init sme_early_init(void);
+ void __init sev_setup_arch(void);
+ 
+-void __init sme_encrypt_kernel(struct boot_params *bp);
+-void __init sme_enable(struct boot_params *bp);
++void sme_encrypt_kernel(struct boot_params *bp);
++void sme_enable(struct boot_params *bp);
+ 
+ int __init early_set_memory_decrypted(unsigned long vaddr, unsigned long size);
+ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size);
+@@ -80,8 +80,8 @@ static inline void __init sme_unmap_bootdata(char *real_mode_data) { }
+ static inline void __init sme_early_init(void) { }
+ static inline void __init sev_setup_arch(void) { }
+ 
+-static inline void __init sme_encrypt_kernel(struct boot_params *bp) { }
+-static inline void __init sme_enable(struct boot_params *bp) { }
++static inline void sme_encrypt_kernel(struct boot_params *bp) { }
++static inline void sme_enable(struct boot_params *bp) { }
+ 
+ static inline void sev_es_init_vc_handling(void) { }
+ 
+diff --git a/arch/x86/include/asm/page_types.h b/arch/x86/include/asm/page_types.h
+index a506a411474d..86bd4311daf8 100644
+--- a/arch/x86/include/asm/page_types.h
++++ b/arch/x86/include/asm/page_types.h
+@@ -11,20 +11,14 @@
+ #define PAGE_SIZE		(_AC(1,UL) << PAGE_SHIFT)
+ #define PAGE_MASK		(~(PAGE_SIZE-1))
+ 
+-#define PMD_PAGE_SIZE		(_AC(1, UL) << PMD_SHIFT)
+-#define PMD_PAGE_MASK		(~(PMD_PAGE_SIZE-1))
+-
+-#define PUD_PAGE_SIZE		(_AC(1, UL) << PUD_SHIFT)
+-#define PUD_PAGE_MASK		(~(PUD_PAGE_SIZE-1))
+-
+ #define __VIRTUAL_MASK		((1UL << __VIRTUAL_MASK_SHIFT) - 1)
+ 
+-/* Cast *PAGE_MASK to a signed type so that it is sign-extended if
++/* Cast P*D_MASK to a signed type so that it is sign-extended if
+    virtual addresses are 32-bits but physical addresses are larger
+    (ie, 32-bit PAE). */
+ #define PHYSICAL_PAGE_MASK	(((signed long)PAGE_MASK) & __PHYSICAL_MASK)
+-#define PHYSICAL_PMD_PAGE_MASK	(((signed long)PMD_PAGE_MASK) & __PHYSICAL_MASK)
+-#define PHYSICAL_PUD_PAGE_MASK	(((signed long)PUD_PAGE_MASK) & __PHYSICAL_MASK)
++#define PHYSICAL_PMD_PAGE_MASK	(((signed long)PMD_MASK) & __PHYSICAL_MASK)
++#define PHYSICAL_PUD_PAGE_MASK	(((signed long)PUD_MASK) & __PHYSICAL_MASK)
+ 
+ #define HPAGE_SHIFT		PMD_SHIFT
+ #define HPAGE_SIZE		(_AC(1,UL) << HPAGE_SHIFT)
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index c57dd21155bd..bcac2e53d50b 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -192,15 +192,15 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
+ struct snp_guest_request_ioctl;
+ 
+ void setup_ghcb(void);
+-void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
+-					 unsigned long npages);
+-void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
+-					unsigned long npages);
++void early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
++				  unsigned long npages);
++void early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
++				 unsigned long npages);
+ void snp_set_memory_shared(unsigned long vaddr, unsigned long npages);
+ void snp_set_memory_private(unsigned long vaddr, unsigned long npages);
+ void snp_set_wakeup_secondary_cpu(void);
+ bool snp_init(struct boot_params *bp);
+-void __init __noreturn snp_abort(void);
++void __noreturn snp_abort(void);
+ void snp_dmi_setup(void);
+ int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct snp_guest_request_ioctl *rio);
+ u64 snp_get_unsupported_features(u64 status);
+diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
+index 19a0207e529f..56a917df410d 100644
+--- a/arch/x86/kernel/amd_gart_64.c
++++ b/arch/x86/kernel/amd_gart_64.c
+@@ -504,7 +504,7 @@ static __init unsigned long check_iommu_size(unsigned long aper, u64 aper_size)
+ 	}
+ 
+ 	a = aper + iommu_size;
+-	iommu_size -= round_up(a, PMD_PAGE_SIZE) - a;
++	iommu_size -= round_up(a, PMD_SIZE) - a;
+ 
+ 	if (iommu_size < 64*1024*1024) {
+ 		pr_warn("PCI-DMA: Warning: Small IOMMU %luMB."
 diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index cbc8c88144e4..e7ceee008bd0 100644
+index 6d69123de366..3f38592ec771 100644
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1651,7 +1651,8 @@ static void __init bhi_select_mitigation(void)
+@@ -1629,7 +1629,8 @@ static void __init bhi_select_mitigation(void)
  		return;
  
  	/* Retpoline mitigates against BHI unless the CPU has RRSBA behavior */
@@ -128,7 +1083,7 @@ index cbc8c88144e4..e7ceee008bd0 100644
  		spec_ctrl_disable_kernel_rrsba();
  		if (rrsba_disabled)
  			return;
-@@ -2803,11 +2804,13 @@ static const char *spectre_bhi_state(void)
+@@ -2783,11 +2784,13 @@ static const char *spectre_bhi_state(void)
  {
  	if (!boot_cpu_has_bug(X86_BUG_BHI))
  		return "; BHI: Not affected";
@@ -146,7 +1101,7 @@ index cbc8c88144e4..e7ceee008bd0 100644
  	else if (boot_cpu_has(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT))
  		return "; BHI: Vulnerable, KVM: SW loop";
 diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index e462c1d3800a..6fb6d8a57cec 100644
+index c881bcafba7d..9c19f40b1b27 100644
 --- a/arch/x86/kernel/cpu/cpuid-deps.c
 +++ b/arch/x86/kernel/cpu/cpuid-deps.c
 @@ -44,7 +44,10 @@ static const struct cpuid_dep cpuid_deps[] = {
@@ -170,11 +1125,195 @@ index e462c1d3800a..6fb6d8a57cec 100644
  	{ X86_FEATURE_AVX512_VNNI,		X86_FEATURE_AVX512VL  },
  	{ X86_FEATURE_AVX512_BITALG,		X86_FEATURE_AVX512VL  },
  	{ X86_FEATURE_AVX512_4VNNIW,		X86_FEATURE_AVX512F   },
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 84adf12a76d3..4fae511b2e2b 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -41,6 +41,7 @@
+ #include <asm/trapnr.h>
+ #include <asm/sev.h>
+ #include <asm/tdx.h>
++#include <asm/init.h>
+ 
+ /*
+  * Manage page tables very early on.
+@@ -84,8 +85,6 @@ static struct desc_ptr startup_gdt_descr = {
+ 	.address = 0,
+ };
+ 
+-#define __head	__section(".head.text")
+-
+ static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
+ {
+ 	return ptr - (void *)_text + (void *)physaddr;
+@@ -203,7 +202,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 	load_delta = physaddr - (unsigned long)(_text - __START_KERNEL_map);
+ 
+ 	/* Is the address not 2M aligned? */
+-	if (load_delta & ~PMD_PAGE_MASK)
++	if (load_delta & ~PMD_MASK)
+ 		for (;;);
+ 
+ 	/* Include the SME encryption mask in the fixup value */
+@@ -588,7 +587,7 @@ static void set_bringup_idt_handler(gate_desc *idt, int n, void *handler)
+ }
+ 
+ /* This runs while still in the direct mapping */
+-static void startup_64_load_idt(unsigned long physbase)
++static void __head startup_64_load_idt(unsigned long physbase)
+ {
+ 	struct desc_ptr *desc = fixup_pointer(&bringup_idt_descr, physbase);
+ 	gate_desc *idt = fixup_pointer(bringup_idt_table, physbase);
+diff --git a/arch/x86/kernel/platform-quirks.c b/arch/x86/kernel/platform-quirks.c
+index b348a672f71d..b525fe6d6657 100644
+--- a/arch/x86/kernel/platform-quirks.c
++++ b/arch/x86/kernel/platform-quirks.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/pnp.h>
+ 
+ #include <asm/setup.h>
+ #include <asm/bios_ebda.h>
+diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+index 271e70d5748e..3fe76bf17d95 100644
+--- a/arch/x86/kernel/sev-shared.c
++++ b/arch/x86/kernel/sev-shared.c
+@@ -86,7 +86,8 @@ static bool __init sev_es_check_cpu_features(void)
+ 	return true;
+ }
+ 
+-static void __noreturn sev_es_terminate(unsigned int set, unsigned int reason)
++static void __head __noreturn
++sev_es_terminate(unsigned int set, unsigned int reason)
+ {
+ 	u64 val = GHCB_MSR_TERM_REQ;
+ 
+@@ -323,13 +324,7 @@ static int sev_cpuid_hv(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid
+  */
+ static const struct snp_cpuid_table *snp_cpuid_get_table(void)
+ {
+-	void *ptr;
+-
+-	asm ("lea cpuid_table_copy(%%rip), %0"
+-	     : "=r" (ptr)
+-	     : "p" (&cpuid_table_copy));
+-
+-	return ptr;
++	return &RIP_REL_REF(cpuid_table_copy);
+ }
+ 
+ /*
+@@ -388,7 +383,7 @@ static u32 snp_cpuid_calc_xsave_size(u64 xfeatures_en, bool compacted)
+ 	return xsave_size;
+ }
+ 
+-static bool
++static bool __head
+ snp_cpuid_get_validated_func(struct cpuid_leaf *leaf)
+ {
+ 	const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
+@@ -525,7 +520,8 @@ static int snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+  * Returns -EOPNOTSUPP if feature not enabled. Any other non-zero return value
+  * should be treated as fatal by caller.
+  */
+-static int snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
++static int __head
++snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
+ {
+ 	const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
+ 
+@@ -567,7 +563,7 @@ static int snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_le
+  * page yet, so it only supports the MSR based communication with the
+  * hypervisor and only the CPUID exit-code.
+  */
+-void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
++void __head do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
+ {
+ 	unsigned int subfn = lower_bits(regs->cx, 32);
+ 	unsigned int fn = lower_bits(regs->ax, 32);
+@@ -1013,7 +1009,8 @@ struct cc_setup_data {
+  * Search for a Confidential Computing blob passed in as a setup_data entry
+  * via the Linux Boot Protocol.
+  */
+-static struct cc_blob_sev_info *find_cc_blob_setup_data(struct boot_params *bp)
++static __head
++struct cc_blob_sev_info *find_cc_blob_setup_data(struct boot_params *bp)
+ {
+ 	struct cc_setup_data *sd = NULL;
+ 	struct setup_data *hdr;
+@@ -1040,7 +1037,7 @@ static struct cc_blob_sev_info *find_cc_blob_setup_data(struct boot_params *bp)
+  * mapping needs to be updated in sync with all the changes to virtual memory
+  * layout and related mapping facilities throughout the boot process.
+  */
+-static void __init setup_cpuid_table(const struct cc_blob_sev_info *cc_info)
++static void __head setup_cpuid_table(const struct cc_blob_sev_info *cc_info)
+ {
+ 	const struct snp_cpuid_table *cpuid_table_fw, *cpuid_table;
+ 	int i;
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index e35fcc8d4bae..f8a8249ae117 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -26,6 +26,7 @@
+ #include <linux/dmi.h>
+ #include <uapi/linux/sev-guest.h>
+ 
++#include <asm/init.h>
+ #include <asm/cpu_entry_area.h>
+ #include <asm/stacktrace.h>
+ #include <asm/sev.h>
+@@ -690,7 +691,7 @@ static void pvalidate_pages(unsigned long vaddr, unsigned long npages, bool vali
+ 	}
+ }
+ 
+-static void __init early_set_pages_state(unsigned long paddr, unsigned long npages, enum psc_op op)
++static void __head early_set_pages_state(unsigned long paddr, unsigned long npages, enum psc_op op)
+ {
+ 	unsigned long paddr_end;
+ 	u64 val;
+@@ -728,7 +729,7 @@ static void __init early_set_pages_state(unsigned long paddr, unsigned long npag
+ 	sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
+ }
+ 
+-void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
++void __head early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
+ 					 unsigned long npages)
+ {
+ 	/*
+@@ -2085,7 +2086,7 @@ bool __init handle_vc_boot_ghcb(struct pt_regs *regs)
+  *
+  * Scan for the blob in that order.
+  */
+-static __init struct cc_blob_sev_info *find_cc_blob(struct boot_params *bp)
++static __head struct cc_blob_sev_info *find_cc_blob(struct boot_params *bp)
+ {
+ 	struct cc_blob_sev_info *cc_info;
+ 
+@@ -2111,7 +2112,7 @@ static __init struct cc_blob_sev_info *find_cc_blob(struct boot_params *bp)
+ 	return cc_info;
+ }
+ 
+-bool __init snp_init(struct boot_params *bp)
++bool __head snp_init(struct boot_params *bp)
+ {
+ 	struct cc_blob_sev_info *cc_info;
+ 
+@@ -2133,7 +2134,7 @@ bool __init snp_init(struct boot_params *bp)
+ 	return true;
+ }
+ 
+-void __init __noreturn snp_abort(void)
++void __head __noreturn snp_abort(void)
+ {
+ 	sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
+ }
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index adba49afb5fe..3a02276899db 100644
+index 62a44455c51d..f02961cbbb75 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -366,6 +366,7 @@ static void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+@@ -340,6 +340,7 @@ static void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
  
  	kvm_update_pv_runtime(vcpu);
  
@@ -183,10 +1322,10 @@ index adba49afb5fe..3a02276899db 100644
  	vcpu->arch.reserved_gpa_bits = kvm_vcpu_reserved_gpa_bits_raw(vcpu);
  
 diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 856e3037e74f..23dbb9eb277c 100644
+index b1658c0de847..18fd2e845989 100644
 --- a/arch/x86/kvm/cpuid.h
 +++ b/arch/x86/kvm/cpuid.h
-@@ -120,6 +120,16 @@ static inline bool guest_cpuid_is_intel(struct kvm_vcpu *vcpu)
+@@ -125,6 +125,16 @@ static inline bool guest_cpuid_is_intel(struct kvm_vcpu *vcpu)
  	return best && is_guest_vendor_intel(best->ebx, best->ecx, best->edx);
  }
  
@@ -204,10 +1343,10 @@ index 856e3037e74f..23dbb9eb277c 100644
  {
  	struct kvm_cpuid_entry2 *best;
 diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 75bc7d3f0022..76fcee92b070 100644
+index bfeafe485552..c90fef0258c5 100644
 --- a/arch/x86/kvm/lapic.c
 +++ b/arch/x86/kvm/lapic.c
-@@ -2771,7 +2771,8 @@ int kvm_apic_local_deliver(struct kvm_lapic *apic, int lvt_type)
+@@ -2548,7 +2548,8 @@ int kvm_apic_local_deliver(struct kvm_lapic *apic, int lvt_type)
  		trig_mode = reg & APIC_LVT_LEVEL_TRIGGER;
  
  		r = __apic_accept_irq(apic, mode, vector, 1, trig_mode, NULL);
@@ -218,93 +1357,23 @@ index 75bc7d3f0022..76fcee92b070 100644
  		return r;
  	}
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index e2c3573f53e4..982cf41e1492 100644
+index d30325e297a0..13134954e24d 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4922,7 +4922,7 @@ static void reset_guest_rsvds_bits_mask(struct kvm_vcpu *vcpu,
+@@ -4649,7 +4649,7 @@ static void reset_guest_rsvds_bits_mask(struct kvm_vcpu *vcpu,
  				context->cpu_role.base.level, is_efer_nx(context),
- 				guest_can_use(vcpu, X86_FEATURE_GBPAGES),
+ 				guest_can_use_gbpages(vcpu),
  				is_cr4_pse(context),
 -				guest_cpuid_is_amd_or_hygon(vcpu));
 +				guest_cpuid_is_amd_compatible(vcpu));
  }
  
- static void __reset_rsvds_bits_mask_ept(struct rsvd_bits_validate *rsvd_check,
-@@ -7388,7 +7388,8 @@ bool kvm_arch_post_set_memory_attributes(struct kvm *kvm,
- 			 * by the memslot, KVM can't use a hugepage due to the
- 			 * misaligned address regardless of memory attributes.
- 			 */
--			if (gfn >= slot->base_gfn) {
-+			if (gfn >= slot->base_gfn &&
-+			    gfn + nr_pages <= slot->base_gfn + slot->npages) {
- 				if (hugepage_has_attrs(kvm, slot, gfn, level, attrs))
- 					hugepage_clear_mixed(slot, gfn, level);
- 				else
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index 6ae19b4ee5b1..953082bf96e2 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -1498,6 +1498,16 @@ void kvm_tdp_mmu_try_split_huge_pages(struct kvm *kvm,
- 	}
- }
- 
-+static bool tdp_mmu_need_write_protect(struct kvm_mmu_page *sp)
-+{
-+	/*
-+	 * All TDP MMU shadow pages share the same role as their root, aside
-+	 * from level, so it is valid to key off any shadow page to determine if
-+	 * write protection is needed for an entire tree.
-+	 */
-+	return kvm_mmu_page_ad_need_write_protect(sp) || !kvm_ad_enabled();
-+}
-+
- /*
-  * Clear the dirty status of all the SPTEs mapping GFNs in the memslot. If
-  * AD bits are enabled, this will involve clearing the dirty bit on each SPTE.
-@@ -1508,7 +1518,8 @@ void kvm_tdp_mmu_try_split_huge_pages(struct kvm *kvm,
- static bool clear_dirty_gfn_range(struct kvm *kvm, struct kvm_mmu_page *root,
- 			   gfn_t start, gfn_t end)
- {
--	u64 dbit = kvm_ad_enabled() ? shadow_dirty_mask : PT_WRITABLE_MASK;
-+	const u64 dbit = tdp_mmu_need_write_protect(root) ? PT_WRITABLE_MASK :
-+							    shadow_dirty_mask;
- 	struct tdp_iter iter;
- 	bool spte_set = false;
- 
-@@ -1523,7 +1534,7 @@ static bool clear_dirty_gfn_range(struct kvm *kvm, struct kvm_mmu_page *root,
- 		if (tdp_mmu_iter_cond_resched(kvm, &iter, false, true))
- 			continue;
- 
--		KVM_MMU_WARN_ON(kvm_ad_enabled() &&
-+		KVM_MMU_WARN_ON(dbit == shadow_dirty_mask &&
- 				spte_ad_need_write_protect(iter.old_spte));
- 
- 		if (!(iter.old_spte & dbit))
-@@ -1570,8 +1581,8 @@ bool kvm_tdp_mmu_clear_dirty_slot(struct kvm *kvm,
- static void clear_dirty_pt_masked(struct kvm *kvm, struct kvm_mmu_page *root,
- 				  gfn_t gfn, unsigned long mask, bool wrprot)
- {
--	u64 dbit = (wrprot || !kvm_ad_enabled()) ? PT_WRITABLE_MASK :
--						   shadow_dirty_mask;
-+	const u64 dbit = (wrprot || tdp_mmu_need_write_protect(root)) ? PT_WRITABLE_MASK :
-+									shadow_dirty_mask;
- 	struct tdp_iter iter;
- 
- 	lockdep_assert_held_write(&kvm->mmu_lock);
-@@ -1583,7 +1594,7 @@ static void clear_dirty_pt_masked(struct kvm *kvm, struct kvm_mmu_page *root,
- 		if (!mask)
- 			break;
- 
--		KVM_MMU_WARN_ON(kvm_ad_enabled() &&
-+		KVM_MMU_WARN_ON(dbit == shadow_dirty_mask &&
- 				spte_ad_need_write_protect(iter.old_spte));
- 
- 		if (iter.level > PG_LEVEL_4K ||
+ static void
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 88a4ff200d04..784f2ecca5d2 100644
+index 5c1590855ffc..10aff2c9a4e4 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7857,8 +7857,28 @@ static u64 vmx_get_perf_capabilities(void)
+@@ -7742,8 +7742,28 @@ static u64 vmx_get_perf_capabilities(void)
  
  	if (vmx_pebs_supported()) {
  		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
@@ -336,10 +1405,10 @@ index 88a4ff200d04..784f2ecca5d2 100644
  
  	return perf_cap;
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 8e4e48840290..c84927216fad 100644
+index f724765032bc..a2ea636a2308 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -3422,7 +3422,7 @@ static bool is_mci_status_msr(u32 msr)
+@@ -3278,7 +3278,7 @@ static bool is_mci_status_msr(u32 msr)
  static bool can_set_mci_status(struct kvm_vcpu *vcpu)
  {
  	/* McStatusWrEn enabled? */
@@ -348,76 +1417,267 @@ index 8e4e48840290..c84927216fad 100644
  		return !!(vcpu->arch.msr_hwcr & BIT_ULL(18));
  
  	return false;
-diff --git a/block/bdev.c b/block/bdev.c
-index 678807bcd003..2b0f97651a0a 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -639,6 +639,14 @@ static void blkdev_flush_mapping(struct block_device *bdev)
- 	bdev_write_inode(bdev);
- }
+diff --git a/arch/x86/mm/mem_encrypt_boot.S b/arch/x86/mm/mem_encrypt_boot.S
+index 9de3d900bc92..e25288ee33c2 100644
+--- a/arch/x86/mm/mem_encrypt_boot.S
++++ b/arch/x86/mm/mem_encrypt_boot.S
+@@ -26,7 +26,7 @@ SYM_FUNC_START(sme_encrypt_execute)
+ 	 *   RCX - virtual address of the encryption workarea, including:
+ 	 *     - stack page (PAGE_SIZE)
+ 	 *     - encryption routine page (PAGE_SIZE)
+-	 *     - intermediate copy buffer (PMD_PAGE_SIZE)
++	 *     - intermediate copy buffer (PMD_SIZE)
+ 	 *    R8 - physical address of the pagetables to use for encryption
+ 	 */
  
-+static void blkdev_put_whole(struct block_device *bdev)
-+{
-+	if (atomic_dec_and_test(&bdev->bd_openers))
-+		blkdev_flush_mapping(bdev);
-+	if (bdev->bd_disk->fops->release)
-+		bdev->bd_disk->fops->release(bdev->bd_disk);
-+}
-+
- static int blkdev_get_whole(struct block_device *bdev, blk_mode_t mode)
+@@ -123,7 +123,7 @@ SYM_FUNC_START(__enc_copy)
+ 	wbinvd				/* Invalidate any cache entries */
+ 
+ 	/* Copy/encrypt up to 2MB at a time */
+-	movq	$PMD_PAGE_SIZE, %r12
++	movq	$PMD_SIZE, %r12
+ 1:
+ 	cmpq	%r12, %r9
+ 	jnb	2f
+diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
+index 06ccbd36e8dc..f17609884874 100644
+--- a/arch/x86/mm/mem_encrypt_identity.c
++++ b/arch/x86/mm/mem_encrypt_identity.c
+@@ -41,6 +41,7 @@
+ #include <linux/mem_encrypt.h>
+ #include <linux/cc_platform.h>
+ 
++#include <asm/init.h>
+ #include <asm/setup.h>
+ #include <asm/sections.h>
+ #include <asm/cmdline.h>
+@@ -93,12 +94,12 @@ struct sme_populate_pgd_data {
+  * section is 2MB aligned to allow for simple pagetable setup using only
+  * PMD entries (see vmlinux.lds.S).
+  */
+-static char sme_workarea[2 * PMD_PAGE_SIZE] __section(".init.scratch");
++static char sme_workarea[2 * PMD_SIZE] __section(".init.scratch");
+ 
+ static char sme_cmdline_arg[] __initdata = "mem_encrypt";
+ static char sme_cmdline_on[]  __initdata = "on";
+ 
+-static void __init sme_clear_pgd(struct sme_populate_pgd_data *ppd)
++static void __head sme_clear_pgd(struct sme_populate_pgd_data *ppd)
  {
- 	struct gendisk *disk = bdev->bd_disk;
-@@ -657,20 +665,21 @@ static int blkdev_get_whole(struct block_device *bdev, blk_mode_t mode)
- 
- 	if (!atomic_read(&bdev->bd_openers))
- 		set_init_blocksize(bdev);
--	if (test_bit(GD_NEED_PART_SCAN, &disk->state))
--		bdev_disk_changed(disk, false);
- 	atomic_inc(&bdev->bd_openers);
-+	if (test_bit(GD_NEED_PART_SCAN, &disk->state)) {
-+		/*
-+		 * Only return scanning errors if we are called from contexts
-+		 * that explicitly want them, e.g. the BLKRRPART ioctl.
-+		 */
-+		ret = bdev_disk_changed(disk, false);
-+		if (ret && (mode & BLK_OPEN_STRICT_SCAN)) {
-+			blkdev_put_whole(bdev);
-+			return ret;
-+		}
-+	}
- 	return 0;
+ 	unsigned long pgd_start, pgd_end, pgd_size;
+ 	pgd_t *pgd_p;
+@@ -113,7 +114,7 @@ static void __init sme_clear_pgd(struct sme_populate_pgd_data *ppd)
+ 	memset(pgd_p, 0, pgd_size);
  }
  
--static void blkdev_put_whole(struct block_device *bdev)
--{
--	if (atomic_dec_and_test(&bdev->bd_openers))
--		blkdev_flush_mapping(bdev);
--	if (bdev->bd_disk->fops->release)
--		bdev->bd_disk->fops->release(bdev->bd_disk);
--}
+-static pud_t __init *sme_prepare_pgd(struct sme_populate_pgd_data *ppd)
++static pud_t __head *sme_prepare_pgd(struct sme_populate_pgd_data *ppd)
+ {
+ 	pgd_t *pgd;
+ 	p4d_t *p4d;
+@@ -150,7 +151,7 @@ static pud_t __init *sme_prepare_pgd(struct sme_populate_pgd_data *ppd)
+ 	return pud;
+ }
+ 
+-static void __init sme_populate_pgd_large(struct sme_populate_pgd_data *ppd)
++static void __head sme_populate_pgd_large(struct sme_populate_pgd_data *ppd)
+ {
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+@@ -166,7 +167,7 @@ static void __init sme_populate_pgd_large(struct sme_populate_pgd_data *ppd)
+ 	set_pmd(pmd, __pmd(ppd->paddr | ppd->pmd_flags));
+ }
+ 
+-static void __init sme_populate_pgd(struct sme_populate_pgd_data *ppd)
++static void __head sme_populate_pgd(struct sme_populate_pgd_data *ppd)
+ {
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+@@ -192,17 +193,17 @@ static void __init sme_populate_pgd(struct sme_populate_pgd_data *ppd)
+ 		set_pte(pte, __pte(ppd->paddr | ppd->pte_flags));
+ }
+ 
+-static void __init __sme_map_range_pmd(struct sme_populate_pgd_data *ppd)
++static void __head __sme_map_range_pmd(struct sme_populate_pgd_data *ppd)
+ {
+ 	while (ppd->vaddr < ppd->vaddr_end) {
+ 		sme_populate_pgd_large(ppd);
+ 
+-		ppd->vaddr += PMD_PAGE_SIZE;
+-		ppd->paddr += PMD_PAGE_SIZE;
++		ppd->vaddr += PMD_SIZE;
++		ppd->paddr += PMD_SIZE;
+ 	}
+ }
+ 
+-static void __init __sme_map_range_pte(struct sme_populate_pgd_data *ppd)
++static void __head __sme_map_range_pte(struct sme_populate_pgd_data *ppd)
+ {
+ 	while (ppd->vaddr < ppd->vaddr_end) {
+ 		sme_populate_pgd(ppd);
+@@ -212,7 +213,7 @@ static void __init __sme_map_range_pte(struct sme_populate_pgd_data *ppd)
+ 	}
+ }
+ 
+-static void __init __sme_map_range(struct sme_populate_pgd_data *ppd,
++static void __head __sme_map_range(struct sme_populate_pgd_data *ppd,
+ 				   pmdval_t pmd_flags, pteval_t pte_flags)
+ {
+ 	unsigned long vaddr_end;
+@@ -224,11 +225,11 @@ static void __init __sme_map_range(struct sme_populate_pgd_data *ppd,
+ 	vaddr_end = ppd->vaddr_end;
+ 
+ 	/* If start is not 2MB aligned, create PTE entries */
+-	ppd->vaddr_end = ALIGN(ppd->vaddr, PMD_PAGE_SIZE);
++	ppd->vaddr_end = ALIGN(ppd->vaddr, PMD_SIZE);
+ 	__sme_map_range_pte(ppd);
+ 
+ 	/* Create PMD entries */
+-	ppd->vaddr_end = vaddr_end & PMD_PAGE_MASK;
++	ppd->vaddr_end = vaddr_end & PMD_MASK;
+ 	__sme_map_range_pmd(ppd);
+ 
+ 	/* If end is not 2MB aligned, create PTE entries */
+@@ -236,22 +237,22 @@ static void __init __sme_map_range(struct sme_populate_pgd_data *ppd,
+ 	__sme_map_range_pte(ppd);
+ }
+ 
+-static void __init sme_map_range_encrypted(struct sme_populate_pgd_data *ppd)
++static void __head sme_map_range_encrypted(struct sme_populate_pgd_data *ppd)
+ {
+ 	__sme_map_range(ppd, PMD_FLAGS_ENC, PTE_FLAGS_ENC);
+ }
+ 
+-static void __init sme_map_range_decrypted(struct sme_populate_pgd_data *ppd)
++static void __head sme_map_range_decrypted(struct sme_populate_pgd_data *ppd)
+ {
+ 	__sme_map_range(ppd, PMD_FLAGS_DEC, PTE_FLAGS_DEC);
+ }
+ 
+-static void __init sme_map_range_decrypted_wp(struct sme_populate_pgd_data *ppd)
++static void __head sme_map_range_decrypted_wp(struct sme_populate_pgd_data *ppd)
+ {
+ 	__sme_map_range(ppd, PMD_FLAGS_DEC_WP, PTE_FLAGS_DEC_WP);
+ }
+ 
+-static unsigned long __init sme_pgtable_calc(unsigned long len)
++static unsigned long __head sme_pgtable_calc(unsigned long len)
+ {
+ 	unsigned long entries = 0, tables = 0;
+ 
+@@ -288,7 +289,7 @@ static unsigned long __init sme_pgtable_calc(unsigned long len)
+ 	return entries + tables;
+ }
+ 
+-void __init sme_encrypt_kernel(struct boot_params *bp)
++void __head sme_encrypt_kernel(struct boot_params *bp)
+ {
+ 	unsigned long workarea_start, workarea_end, workarea_len;
+ 	unsigned long execute_start, execute_end, execute_len;
+@@ -323,9 +324,8 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
+ 	 *     memory from being cached.
+ 	 */
+ 
+-	/* Physical addresses gives us the identity mapped virtual addresses */
+-	kernel_start = __pa_symbol(_text);
+-	kernel_end = ALIGN(__pa_symbol(_end), PMD_PAGE_SIZE);
++	kernel_start = (unsigned long)RIP_REL_REF(_text);
++	kernel_end = ALIGN((unsigned long)RIP_REL_REF(_end), PMD_SIZE);
+ 	kernel_len = kernel_end - kernel_start;
+ 
+ 	initrd_start = 0;
+@@ -342,25 +342,17 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
+ 	}
+ #endif
+ 
+-	/*
+-	 * We're running identity mapped, so we must obtain the address to the
+-	 * SME encryption workarea using rip-relative addressing.
+-	 */
+-	asm ("lea sme_workarea(%%rip), %0"
+-	     : "=r" (workarea_start)
+-	     : "p" (sme_workarea));
 -
- static int blkdev_get_part(struct block_device *part, blk_mode_t mode)
+ 	/*
+ 	 * Calculate required number of workarea bytes needed:
+ 	 *   executable encryption area size:
+ 	 *     stack page (PAGE_SIZE)
+ 	 *     encryption routine page (PAGE_SIZE)
+-	 *     intermediate copy buffer (PMD_PAGE_SIZE)
++	 *     intermediate copy buffer (PMD_SIZE)
+ 	 *   pagetable structures for the encryption of the kernel
+ 	 *   pagetable structures for workarea (in case not currently mapped)
+ 	 */
+-	execute_start = workarea_start;
+-	execute_end = execute_start + (PAGE_SIZE * 2) + PMD_PAGE_SIZE;
++	execute_start = workarea_start = (unsigned long)RIP_REL_REF(sme_workarea);
++	execute_end = execute_start + (PAGE_SIZE * 2) + PMD_SIZE;
+ 	execute_len = execute_end - execute_start;
+ 
+ 	/*
+@@ -383,7 +375,7 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
+ 	 * before it is mapped.
+ 	 */
+ 	workarea_len = execute_len + pgtable_area_len;
+-	workarea_end = ALIGN(workarea_start + workarea_len, PMD_PAGE_SIZE);
++	workarea_end = ALIGN(workarea_start + workarea_len, PMD_SIZE);
+ 
+ 	/*
+ 	 * Set the address to the start of where newly created pagetable
+@@ -502,7 +494,7 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
+ 	native_write_cr3(__native_read_cr3());
+ }
+ 
+-void __init sme_enable(struct boot_params *bp)
++void __head sme_enable(struct boot_params *bp)
  {
- 	struct gendisk *disk = part->bd_disk;
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 438f79c564cf..5f8c988239c6 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -556,7 +556,8 @@ static int blkdev_common_ioctl(struct block_device *bdev, blk_mode_t mode,
- 			return -EACCES;
- 		if (bdev_is_partition(bdev))
- 			return -EINVAL;
--		return disk_scan_partitions(bdev->bd_disk, mode);
-+		return disk_scan_partitions(bdev->bd_disk,
-+				mode | BLK_OPEN_STRICT_SCAN);
- 	case BLKTRACESTART:
- 	case BLKTRACESTOP:
- 	case BLKTRACETEARDOWN:
+ 	const char *cmdline_ptr, *cmdline_arg, *cmdline_on;
+ 	unsigned int eax, ebx, ecx, edx;
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 5f0ce77a259d..68d4f328f169 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -747,11 +747,11 @@ phys_addr_t slow_virt_to_phys(void *__virt_addr)
+ 	switch (level) {
+ 	case PG_LEVEL_1G:
+ 		phys_addr = (phys_addr_t)pud_pfn(*(pud_t *)pte) << PAGE_SHIFT;
+-		offset = virt_addr & ~PUD_PAGE_MASK;
++		offset = virt_addr & ~PUD_MASK;
+ 		break;
+ 	case PG_LEVEL_2M:
+ 		phys_addr = (phys_addr_t)pmd_pfn(*(pmd_t *)pte) << PAGE_SHIFT;
+-		offset = virt_addr & ~PMD_PAGE_MASK;
++		offset = virt_addr & ~PMD_MASK;
+ 		break;
+ 	default:
+ 		phys_addr = (phys_addr_t)pte_pfn(*pte) << PAGE_SHIFT;
+@@ -1041,7 +1041,7 @@ __split_large_page(struct cpa_data *cpa, pte_t *kpte, unsigned long address,
+ 	case PG_LEVEL_1G:
+ 		ref_prot = pud_pgprot(*(pud_t *)kpte);
+ 		ref_pfn = pud_pfn(*(pud_t *)kpte);
+-		pfninc = PMD_PAGE_SIZE >> PAGE_SHIFT;
++		pfninc = PMD_SIZE >> PAGE_SHIFT;
+ 		lpaddr = address & PUD_MASK;
+ 		lpinc = PMD_SIZE;
+ 		/*
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index ffe3b3a087fe..78414c6d1b5e 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -592,7 +592,7 @@ static void pti_set_kernel_image_nonglobal(void)
+ 	 * of the image.
+ 	 */
+ 	unsigned long start = PFN_ALIGN(_text);
+-	unsigned long end = ALIGN((unsigned long)_end, PMD_PAGE_SIZE);
++	unsigned long end = ALIGN((unsigned long)_end, PMD_SIZE);
+ 
+ 	/*
+ 	 * This clears _PAGE_GLOBAL from the entire kernel image.
 diff --git a/drivers/accessibility/speakup/main.c b/drivers/accessibility/speakup/main.c
-index 1fbc9b921c4f..736c2eb8c0f3 100644
+index 73db0cb44fc7..45d906f17ea3 100644
 --- a/drivers/accessibility/speakup/main.c
 +++ b/drivers/accessibility/speakup/main.c
-@@ -574,7 +574,7 @@ static u_long get_word(struct vc_data *vc)
+@@ -573,7 +573,7 @@ static u_long get_word(struct vc_data *vc)
  	}
  	attr_ch = get_char(vc, (u_short *)tmp_pos, &spk_attr);
  	buf[cnt++] = attr_ch;
@@ -427,10 +1687,10 @@ index 1fbc9b921c4f..736c2eb8c0f3 100644
  		tmpx++;
  		ch = get_char(vc, (u_short *)tmp_pos, &temp);
 diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index eca24f41556d..d6f14c8e20be 100644
+index 55cd17a13e75..8c2b7c074eca 100644
 --- a/drivers/android/binder.c
 +++ b/drivers/android/binder.c
-@@ -1708,8 +1708,10 @@ static size_t binder_get_object(struct binder_proc *proc,
+@@ -1707,8 +1707,10 @@ static size_t binder_get_object(struct binder_proc *proc,
  	size_t object_size = 0;
  
  	read_size = min_t(size_t, sizeof(*object), buffer->data_size - offset);
@@ -443,10 +1703,10 @@ index eca24f41556d..d6f14c8e20be 100644
  		if (copy_from_user(object, u + offset, read_size))
  			return 0;
 diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 456be28ba67c..2597cb43f438 100644
+index 5d1c8e1c99b5..fd57eb372d49 100644
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -702,7 +702,7 @@ static void extract_entropy(void *buf, size_t len)
+@@ -683,7 +683,7 @@ static void extract_entropy(void *buf, size_t len)
  
  static void __cold _credit_init_bits(size_t bits)
  {
@@ -455,18 +1715,18 @@ index 456be28ba67c..2597cb43f438 100644
  	unsigned int new, orig, add;
  	unsigned long flags;
  
-@@ -718,8 +718,8 @@ static void __cold _credit_init_bits(size_t bits)
+@@ -699,8 +699,8 @@ static void __cold _credit_init_bits(size_t bits)
  
  	if (orig < POOL_READY_BITS && new >= POOL_READY_BITS) {
- 		crng_reseed(NULL); /* Sets crng_init to CRNG_READY under base_crng.lock. */
+ 		crng_reseed(); /* Sets crng_init to CRNG_READY under base_crng.lock. */
 -		if (static_key_initialized)
 -			execute_in_process_context(crng_set_ready, &set_ready);
 +		if (static_key_initialized && system_unbound_wq)
 +			queue_work(system_unbound_wq, &set_ready);
- 		atomic_notifier_call_chain(&random_ready_notifier, 0, NULL);
  		wake_up_interruptible(&crng_init_wait);
  		kill_fasync(&fasync, SIGIO, POLL_IN);
-@@ -890,8 +890,8 @@ void __init random_init(void)
+ 		pr_notice("crng init done\n");
+@@ -870,8 +870,8 @@ void __init random_init(void)
  
  	/*
  	 * If we were initialized by the cpu or bootloader before jump labels
@@ -478,7 +1738,7 @@ index 456be28ba67c..2597cb43f438 100644
  	if (!static_branch_likely(&crng_is_ready) && crng_init >= CRNG_READY)
  		crng_set_ready(NULL);
 diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 20c4b28fed06..cf1fc0edfdbc 100644
+index 9004e0718225..fe1d45eac837 100644
 --- a/drivers/clk/clk.c
 +++ b/drivers/clk/clk.c
 @@ -37,6 +37,10 @@ static HLIST_HEAD(clk_root_list);
@@ -590,7 +1850,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  /***           locking             ***/
  static void clk_prepare_lock(void)
  {
-@@ -1362,9 +1450,6 @@ static void __init clk_unprepare_unused_subtree(struct clk_core *core)
+@@ -1310,9 +1398,6 @@ static void __init clk_unprepare_unused_subtree(struct clk_core *core)
  	if (core->flags & CLK_IGNORE_UNUSED)
  		return;
  
@@ -600,7 +1860,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  	if (clk_core_is_prepared(core)) {
  		trace_clk_unprepare(core);
  		if (core->ops->unprepare_unused)
-@@ -1373,8 +1458,6 @@ static void __init clk_unprepare_unused_subtree(struct clk_core *core)
+@@ -1321,8 +1406,6 @@ static void __init clk_unprepare_unused_subtree(struct clk_core *core)
  			core->ops->unprepare(core->hw);
  		trace_clk_unprepare_complete(core);
  	}
@@ -609,7 +1869,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  }
  
  static void __init clk_disable_unused_subtree(struct clk_core *core)
-@@ -1390,9 +1473,6 @@ static void __init clk_disable_unused_subtree(struct clk_core *core)
+@@ -1338,9 +1421,6 @@ static void __init clk_disable_unused_subtree(struct clk_core *core)
  	if (core->flags & CLK_OPS_PARENT_ENABLE)
  		clk_core_prepare_enable(core->parent);
  
@@ -619,7 +1879,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  	flags = clk_enable_lock();
  
  	if (core->enable_count)
-@@ -1417,8 +1497,6 @@ static void __init clk_disable_unused_subtree(struct clk_core *core)
+@@ -1365,8 +1445,6 @@ static void __init clk_disable_unused_subtree(struct clk_core *core)
  
  unlock_out:
  	clk_enable_unlock(flags);
@@ -628,7 +1888,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  	if (core->flags & CLK_OPS_PARENT_ENABLE)
  		clk_core_disable_unprepare(core->parent);
  }
-@@ -1434,6 +1512,7 @@ __setup("clk_ignore_unused", clk_ignore_unused_setup);
+@@ -1382,12 +1460,22 @@ __setup("clk_ignore_unused", clk_ignore_unused_setup);
  static int __init clk_disable_unused(void)
  {
  	struct clk_core *core;
@@ -636,10 +1896,11 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  
  	if (clk_ignore_unused) {
  		pr_warn("clk: Not disabling unused clocks\n");
-@@ -1442,6 +1521,13 @@ static int __init clk_disable_unused(void)
+ 		return 0;
+ 	}
  
- 	pr_info("clk: Disabling unused clocks\n");
- 
++	pr_info("clk: Disabling unused clocks\n");
++
 +	ret = clk_pm_runtime_get_all();
 +	if (ret)
 +		return ret;
@@ -650,7 +1911,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  	clk_prepare_lock();
  
  	hlist_for_each_entry(core, &clk_root_list, child_node)
-@@ -1458,6 +1544,8 @@ static int __init clk_disable_unused(void)
+@@ -1404,6 +1492,8 @@ static int __init clk_disable_unused(void)
  
  	clk_prepare_unlock();
  
@@ -659,7 +1920,56 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  	return 0;
  }
  late_initcall_sync(clk_disable_unused);
-@@ -3233,9 +3321,7 @@ static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
+@@ -3115,28 +3205,41 @@ static void clk_summary_show_one(struct seq_file *s, struct clk_core *c,
+ 				 int level)
+ {
+ 	int phase;
++	struct clk *clk_user;
++	int multi_node = 0;
+ 
+-	seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu ",
++	seq_printf(s, "%*s%-*s %-7d %-8d %-8d %-11lu %-10lu ",
+ 		   level * 3 + 1, "",
+-		   30 - level * 3, c->name,
++		   35 - level * 3, c->name,
+ 		   c->enable_count, c->prepare_count, c->protect_count,
+ 		   clk_core_get_rate_recalc(c),
+ 		   clk_core_get_accuracy_recalc(c));
+ 
+ 	phase = clk_core_get_phase(c);
+ 	if (phase >= 0)
+-		seq_printf(s, "%5d", phase);
++		seq_printf(s, "%-5d", phase);
+ 	else
+ 		seq_puts(s, "-----");
+ 
+-	seq_printf(s, " %6d", clk_core_get_scaled_duty_cycle(c, 100000));
++	seq_printf(s, " %-6d", clk_core_get_scaled_duty_cycle(c, 100000));
+ 
+ 	if (c->ops->is_enabled)
+-		seq_printf(s, " %9c\n", clk_core_is_enabled(c) ? 'Y' : 'N');
++		seq_printf(s, " %5c ", clk_core_is_enabled(c) ? 'Y' : 'N');
+ 	else if (!c->ops->enable)
+-		seq_printf(s, " %9c\n", 'Y');
++		seq_printf(s, " %5c ", 'Y');
+ 	else
+-		seq_printf(s, " %9c\n", '?');
++		seq_printf(s, " %5c ", '?');
++
++	hlist_for_each_entry(clk_user, &c->clks, clks_node) {
++		seq_printf(s, "%*s%-*s  %-25s\n",
++			   level * 3 + 2 + 105 * multi_node, "",
++			   30,
++			   clk_user->dev_id ? clk_user->dev_id : "deviceless",
++			   clk_user->con_id ? clk_user->con_id : "no_connection_id");
++
++		multi_node = 1;
++	}
++
+ }
+ 
+ static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
+@@ -3144,9 +3247,7 @@ static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
  {
  	struct clk_core *child;
  
@@ -669,23 +1979,28 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  
  	hlist_for_each_entry(child, &c->children, child_node)
  		clk_summary_show_subtree(s, child, level + 1);
-@@ -3245,11 +3331,15 @@ static int clk_summary_show(struct seq_file *s, void *data)
+@@ -3155,11 +3256,16 @@ static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
+ static int clk_summary_show(struct seq_file *s, void *data)
  {
  	struct clk_core *c;
- 	struct hlist_head **lists = s->private;
+-	struct hlist_head **lists = (struct hlist_head **)s->private;
++	struct hlist_head **lists = s->private;
 +	int ret;
  
- 	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware                            connection\n");
- 	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id\n");
- 	seq_puts(s, "---------------------------------------------------------------------------------------------------------------------------------------------\n");
- 
+-	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware\n");
+-	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable\n");
+-	seq_puts(s, "-------------------------------------------------------------------------------------------------------\n");
++	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware                            connection\n");
++	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id\n");
++	seq_puts(s, "---------------------------------------------------------------------------------------------------------------------------------------------\n");
++
 +	ret = clk_pm_runtime_get_all();
 +	if (ret)
 +		return ret;
  
  	clk_prepare_lock();
  
-@@ -3258,6 +3348,7 @@ static int clk_summary_show(struct seq_file *s, void *data)
+@@ -3168,6 +3274,7 @@ static int clk_summary_show(struct seq_file *s, void *data)
  			clk_summary_show_subtree(s, c, 0);
  
  	clk_prepare_unlock();
@@ -693,10 +2008,12 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  
  	return 0;
  }
-@@ -3305,8 +3396,14 @@ static int clk_dump_show(struct seq_file *s, void *data)
+@@ -3214,9 +3321,15 @@ static int clk_dump_show(struct seq_file *s, void *data)
+ {
  	struct clk_core *c;
  	bool first_node = true;
- 	struct hlist_head **lists = s->private;
+-	struct hlist_head **lists = (struct hlist_head **)s->private;
++	struct hlist_head **lists = s->private;
 +	int ret;
 +
 +	ret = clk_pm_runtime_get_all();
@@ -708,7 +2025,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  	clk_prepare_lock();
  
  	for (; *lists; lists++) {
-@@ -3319,6 +3416,7 @@ static int clk_dump_show(struct seq_file *s, void *data)
+@@ -3229,6 +3342,7 @@ static int clk_dump_show(struct seq_file *s, void *data)
  	}
  
  	clk_prepare_unlock();
@@ -716,7 +2033,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  
  	seq_puts(s, "}\n");
  	return 0;
-@@ -3962,8 +4060,6 @@ static int __clk_core_init(struct clk_core *core)
+@@ -3836,8 +3950,6 @@ static int __clk_core_init(struct clk_core *core)
  	}
  
  	clk_core_reparent_orphans_nolock();
@@ -725,7 +2042,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  out:
  	clk_pm_runtime_put(core);
  unlock:
-@@ -4192,6 +4288,22 @@ static void clk_core_free_parent_map(struct clk_core *core)
+@@ -4066,6 +4178,22 @@ static void clk_core_free_parent_map(struct clk_core *core)
  	kfree(core->parents);
  }
  
@@ -748,7 +2065,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  static struct clk *
  __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
  {
-@@ -4212,6 +4324,8 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
+@@ -4086,6 +4214,8 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
  		goto fail_out;
  	}
  
@@ -757,7 +2074,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  	core->name = kstrdup_const(init->name, GFP_KERNEL);
  	if (!core->name) {
  		ret = -ENOMEM;
-@@ -4224,9 +4338,8 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
+@@ -4098,9 +4228,8 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
  	}
  	core->ops = init->ops;
  
@@ -768,7 +2085,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  	core->of_node = np;
  	if (dev && dev->driver)
  		core->owner = dev->driver->owner;
-@@ -4266,12 +4379,10 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
+@@ -4140,12 +4269,10 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
  	hw->clk = NULL;
  
  fail_create_clk:
@@ -782,7 +2099,7 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  fail_out:
  	return ERR_PTR(ret);
  }
-@@ -4351,18 +4462,6 @@ int of_clk_hw_register(struct device_node *node, struct clk_hw *hw)
+@@ -4225,18 +4352,6 @@ int of_clk_hw_register(struct device_node *node, struct clk_hw *hw)
  }
  EXPORT_SYMBOL_GPL(of_clk_hw_register);
  
@@ -801,35 +2118,1650 @@ index 20c4b28fed06..cf1fc0edfdbc 100644
  /*
   * Empty clk_ops for unregistered clocks. These are used temporarily
   * after clk_unregister() was called on a clock and until last clock
-diff --git a/drivers/clk/mediatek/clk-mt7988-infracfg.c b/drivers/clk/mediatek/clk-mt7988-infracfg.c
-index 8011ef278bea..df02997c6b7c 100644
---- a/drivers/clk/mediatek/clk-mt7988-infracfg.c
-+++ b/drivers/clk/mediatek/clk-mt7988-infracfg.c
-@@ -152,7 +152,7 @@ static const struct mtk_gate infra_clks[] = {
- 	GATE_INFRA0(CLK_INFRA_PCIE_PERI_26M_CK_P1, "infra_pcie_peri_ck_26m_ck_p1",
- 		    "csw_infra_f26m_sel", 8),
- 	GATE_INFRA0(CLK_INFRA_PCIE_PERI_26M_CK_P2, "infra_pcie_peri_ck_26m_ck_p2",
--		    "csw_infra_f26m_sel", 9),
-+		    "infra_pcie_peri_ck_26m_ck_p3", 9),
- 	GATE_INFRA0(CLK_INFRA_PCIE_PERI_26M_CK_P3, "infra_pcie_peri_ck_26m_ck_p3",
- 		    "csw_infra_f26m_sel", 10),
- 	/* INFRA1 */
+diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
+index 0c867136e49d..67d9e741c5e7 100644
+--- a/drivers/clk/mediatek/clk-gate.c
++++ b/drivers/clk/mediatek/clk-gate.c
+@@ -152,12 +152,12 @@ const struct clk_ops mtk_clk_gate_ops_no_setclr_inv = {
+ };
+ EXPORT_SYMBOL_GPL(mtk_clk_gate_ops_no_setclr_inv);
+ 
+-static struct clk_hw *mtk_clk_register_gate(const char *name,
++static struct clk_hw *mtk_clk_register_gate(struct device *dev, const char *name,
+ 					 const char *parent_name,
+ 					 struct regmap *regmap, int set_ofs,
+ 					 int clr_ofs, int sta_ofs, u8 bit,
+ 					 const struct clk_ops *ops,
+-					 unsigned long flags, struct device *dev)
++					 unsigned long flags)
+ {
+ 	struct mtk_clk_gate *cg;
+ 	int ret;
+@@ -202,10 +202,9 @@ static void mtk_clk_unregister_gate(struct clk_hw *hw)
+ 	kfree(cg);
+ }
+ 
+-int mtk_clk_register_gates_with_dev(struct device_node *node,
+-				    const struct mtk_gate *clks, int num,
+-				    struct clk_hw_onecell_data *clk_data,
+-				    struct device *dev)
++int mtk_clk_register_gates(struct device *dev, struct device_node *node,
++			   const struct mtk_gate *clks, int num,
++			   struct clk_hw_onecell_data *clk_data)
+ {
+ 	int i;
+ 	struct clk_hw *hw;
+@@ -229,13 +228,13 @@ int mtk_clk_register_gates_with_dev(struct device_node *node,
+ 			continue;
+ 		}
+ 
+-		hw = mtk_clk_register_gate(gate->name, gate->parent_name,
++		hw = mtk_clk_register_gate(dev, gate->name, gate->parent_name,
+ 					    regmap,
+ 					    gate->regs->set_ofs,
+ 					    gate->regs->clr_ofs,
+ 					    gate->regs->sta_ofs,
+ 					    gate->shift, gate->ops,
+-					    gate->flags, dev);
++					    gate->flags);
+ 
+ 		if (IS_ERR(hw)) {
+ 			pr_err("Failed to register clk %s: %pe\n", gate->name,
+@@ -261,14 +260,6 @@ int mtk_clk_register_gates_with_dev(struct device_node *node,
+ 
+ 	return PTR_ERR(hw);
+ }
+-EXPORT_SYMBOL_GPL(mtk_clk_register_gates_with_dev);
+-
+-int mtk_clk_register_gates(struct device_node *node,
+-			   const struct mtk_gate *clks, int num,
+-			   struct clk_hw_onecell_data *clk_data)
+-{
+-	return mtk_clk_register_gates_with_dev(node, clks, num, clk_data, NULL);
+-}
+ EXPORT_SYMBOL_GPL(mtk_clk_register_gates);
+ 
+ void mtk_clk_unregister_gates(const struct mtk_gate *clks, int num,
+diff --git a/drivers/clk/mediatek/clk-gate.h b/drivers/clk/mediatek/clk-gate.h
+index d9897ef53528..1a46b4c56fc5 100644
+--- a/drivers/clk/mediatek/clk-gate.h
++++ b/drivers/clk/mediatek/clk-gate.h
+@@ -50,15 +50,10 @@ struct mtk_gate {
+ #define GATE_MTK(_id, _name, _parent, _regs, _shift, _ops)		\
+ 	GATE_MTK_FLAGS(_id, _name, _parent, _regs, _shift, _ops, 0)
+ 
+-int mtk_clk_register_gates(struct device_node *node,
++int mtk_clk_register_gates(struct device *dev, struct device_node *node,
+ 			   const struct mtk_gate *clks, int num,
+ 			   struct clk_hw_onecell_data *clk_data);
+ 
+-int mtk_clk_register_gates_with_dev(struct device_node *node,
+-				    const struct mtk_gate *clks, int num,
+-				    struct clk_hw_onecell_data *clk_data,
+-				    struct device *dev);
+-
+ void mtk_clk_unregister_gates(const struct mtk_gate *clks, int num,
+ 			      struct clk_hw_onecell_data *clk_data);
+ 
+diff --git a/drivers/clk/mediatek/clk-mt2701-aud.c b/drivers/clk/mediatek/clk-mt2701-aud.c
+index 4287bd3f545e..03ab212aa7f4 100644
+--- a/drivers/clk/mediatek/clk-mt2701-aud.c
++++ b/drivers/clk/mediatek/clk-mt2701-aud.c
+@@ -127,8 +127,8 @@ static int clk_mt2701_aud_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_AUD_NR);
+ 
+-	mtk_clk_register_gates(node, audio_clks, ARRAY_SIZE(audio_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, audio_clks,
++			       ARRAY_SIZE(audio_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r) {
+diff --git a/drivers/clk/mediatek/clk-mt2701-eth.c b/drivers/clk/mediatek/clk-mt2701-eth.c
+index 601358748750..924725d67c13 100644
+--- a/drivers/clk/mediatek/clk-mt2701-eth.c
++++ b/drivers/clk/mediatek/clk-mt2701-eth.c
+@@ -51,8 +51,8 @@ static int clk_mt2701_eth_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_ETHSYS_NR);
+ 
+-	mtk_clk_register_gates(node, eth_clks, ARRAY_SIZE(eth_clks),
+-						clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, eth_clks,
++			       ARRAY_SIZE(eth_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt2701-g3d.c b/drivers/clk/mediatek/clk-mt2701-g3d.c
+index 8d1fc8e3336e..501fb99bb41a 100644
+--- a/drivers/clk/mediatek/clk-mt2701-g3d.c
++++ b/drivers/clk/mediatek/clk-mt2701-g3d.c
+@@ -45,7 +45,7 @@ static int clk_mt2701_g3dsys_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_G3DSYS_NR);
+ 
+-	mtk_clk_register_gates(node, g3d_clks, ARRAY_SIZE(g3d_clks),
++	mtk_clk_register_gates(&pdev->dev, node, g3d_clks, ARRAY_SIZE(g3d_clks),
+ 			       clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+diff --git a/drivers/clk/mediatek/clk-mt2701-hif.c b/drivers/clk/mediatek/clk-mt2701-hif.c
+index edeeb033a235..1ddefc21d6a0 100644
+--- a/drivers/clk/mediatek/clk-mt2701-hif.c
++++ b/drivers/clk/mediatek/clk-mt2701-hif.c
+@@ -48,8 +48,8 @@ static int clk_mt2701_hif_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_HIFSYS_NR);
+ 
+-	mtk_clk_register_gates(node, hif_clks, ARRAY_SIZE(hif_clks),
+-						clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, hif_clks,
++			       ARRAY_SIZE(hif_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r) {
+diff --git a/drivers/clk/mediatek/clk-mt2701-mm.c b/drivers/clk/mediatek/clk-mt2701-mm.c
+index eb069f3bc9a2..f4885dffb324 100644
+--- a/drivers/clk/mediatek/clk-mt2701-mm.c
++++ b/drivers/clk/mediatek/clk-mt2701-mm.c
+@@ -76,8 +76,8 @@ static int clk_mt2701_mm_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MM_NR);
+ 
+-	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
+-						clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, mm_clks,
++			       ARRAY_SIZE(mm_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt2701.c b/drivers/clk/mediatek/clk-mt2701.c
+index 00d2e81bdd43..e80fe9c942ee 100644
+--- a/drivers/clk/mediatek/clk-mt2701.c
++++ b/drivers/clk/mediatek/clk-mt2701.c
+@@ -679,14 +679,15 @@ static int mtk_topckgen_init(struct platform_device *pdev)
+ 	mtk_clk_register_factors(top_fixed_divs, ARRAY_SIZE(top_fixed_divs),
+ 								clk_data);
+ 
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes),
+-				base, &mt2701_clk_lock, clk_data);
++	mtk_clk_register_composites(&pdev->dev, top_muxes,
++				    ARRAY_SIZE(top_muxes), base,
++				    &mt2701_clk_lock, clk_data);
+ 
+ 	mtk_clk_register_dividers(top_adj_divs, ARRAY_SIZE(top_adj_divs),
+ 				base, &mt2701_clk_lock, clk_data);
+ 
+-	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks),
+-						clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, top_clks,
++			       ARRAY_SIZE(top_clks), clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ }
+@@ -789,8 +790,8 @@ static int mtk_infrasys_init(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-						infra_clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), infra_clk_data);
+ 	mtk_clk_register_factors(infra_fixed_divs, ARRAY_SIZE(infra_fixed_divs),
+ 						infra_clk_data);
+ 
+@@ -902,11 +903,12 @@ static int mtk_pericfg_init(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
+-						clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, peri_clks,
++			       ARRAY_SIZE(peri_clks), clk_data);
+ 
+-	mtk_clk_register_composites(peri_muxs, ARRAY_SIZE(peri_muxs), base,
+-			&mt2701_clk_lock, clk_data);
++	mtk_clk_register_composites(&pdev->dev, peri_muxs,
++				    ARRAY_SIZE(peri_muxs), base,
++				    &mt2701_clk_lock, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt2712-mm.c b/drivers/clk/mediatek/clk-mt2712-mm.c
+index ad6daa8f28a8..e5264f1ce60d 100644
+--- a/drivers/clk/mediatek/clk-mt2712-mm.c
++++ b/drivers/clk/mediatek/clk-mt2712-mm.c
+@@ -117,8 +117,8 @@ static int clk_mt2712_mm_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
+-			clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, mm_clks,
++			       ARRAY_SIZE(mm_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+diff --git a/drivers/clk/mediatek/clk-mt2712.c b/drivers/clk/mediatek/clk-mt2712.c
+index d6c2cc183b1a..a0f0c9ed48d1 100644
+--- a/drivers/clk/mediatek/clk-mt2712.c
++++ b/drivers/clk/mediatek/clk-mt2712.c
+@@ -1320,12 +1320,13 @@ static int clk_mt2712_top_probe(struct platform_device *pdev)
+ 	mtk_clk_register_factors(top_early_divs, ARRAY_SIZE(top_early_divs),
+ 			top_clk_data);
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), top_clk_data);
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+-			&mt2712_clk_lock, top_clk_data);
++	mtk_clk_register_composites(&pdev->dev, top_muxes,
++				    ARRAY_SIZE(top_muxes), base,
++				    &mt2712_clk_lock, top_clk_data);
+ 	mtk_clk_register_dividers(top_adj_divs, ARRAY_SIZE(top_adj_divs), base,
+ 			&mt2712_clk_lock, top_clk_data);
+-	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks),
+-			top_clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, top_clks,
++			       ARRAY_SIZE(top_clks), top_clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, top_clk_data);
+ 
+@@ -1344,8 +1345,8 @@ static int clk_mt2712_infra_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_INFRA_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-			clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+@@ -1366,8 +1367,8 @@ static int clk_mt2712_peri_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
+-			clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, peri_clks,
++			       ARRAY_SIZE(peri_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+@@ -1395,8 +1396,11 @@ static int clk_mt2712_mcu_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MCU_NR_CLK);
+ 
+-	mtk_clk_register_composites(mcu_muxes, ARRAY_SIZE(mcu_muxes), base,
+-			&mt2712_clk_lock, clk_data);
++	r = mtk_clk_register_composites(&pdev->dev, mcu_muxes,
++					ARRAY_SIZE(mcu_muxes), base,
++					&mt2712_clk_lock, clk_data);
++	if (r)
++		dev_err(&pdev->dev, "Could not register composites: %d\n", r);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+diff --git a/drivers/clk/mediatek/clk-mt6765.c b/drivers/clk/mediatek/clk-mt6765.c
+index 2c6a52ff5564..c4941523f552 100644
+--- a/drivers/clk/mediatek/clk-mt6765.c
++++ b/drivers/clk/mediatek/clk-mt6765.c
+@@ -743,7 +743,7 @@ static int clk_mt6765_apmixed_probe(struct platform_device *pdev)
+ 
+ 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+ 
+-	mtk_clk_register_gates(node, apmixed_clks,
++	mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
+ 			       ARRAY_SIZE(apmixed_clks), clk_data);
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+@@ -782,10 +782,11 @@ static int clk_mt6765_top_probe(struct platform_device *pdev)
+ 				    clk_data);
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs),
+ 				 clk_data);
+-	mtk_clk_register_muxes(top_muxes, ARRAY_SIZE(top_muxes), node,
++	mtk_clk_register_muxes(&pdev->dev, top_muxes,
++			       ARRAY_SIZE(top_muxes), node,
+ 			       &mt6765_clk_lock, clk_data);
+-	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, top_clks,
++			       ARRAY_SIZE(top_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+@@ -820,8 +821,8 @@ static int clk_mt6765_ifr_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	mtk_clk_register_gates(node, ifr_clks, ARRAY_SIZE(ifr_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, ifr_clks,
++			       ARRAY_SIZE(ifr_clks), clk_data);
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt6779-mm.c b/drivers/clk/mediatek/clk-mt6779-mm.c
+index eda8cbee3d23..2cccf62d3b36 100644
+--- a/drivers/clk/mediatek/clk-mt6779-mm.c
++++ b/drivers/clk/mediatek/clk-mt6779-mm.c
+@@ -93,8 +93,8 @@ static int clk_mt6779_mm_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, mm_clks,
++			       ARRAY_SIZE(mm_clks), clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ }
+diff --git a/drivers/clk/mediatek/clk-mt6779.c b/drivers/clk/mediatek/clk-mt6779.c
+index 39dadc954708..7fe9d12b2dfd 100644
+--- a/drivers/clk/mediatek/clk-mt6779.c
++++ b/drivers/clk/mediatek/clk-mt6779.c
+@@ -1223,7 +1223,7 @@ static int clk_mt6779_apmixed_probe(struct platform_device *pdev)
+ 
+ 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+ 
+-	mtk_clk_register_gates(node, apmixed_clks,
++	mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
+ 			       ARRAY_SIZE(apmixed_clks), clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+@@ -1248,14 +1248,17 @@ static int clk_mt6779_top_probe(struct platform_device *pdev)
+ 
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+ 
+-	mtk_clk_register_muxes(top_muxes, ARRAY_SIZE(top_muxes),
+-			       node, &mt6779_clk_lock, clk_data);
++	mtk_clk_register_muxes(&pdev->dev, top_muxes,
++			       ARRAY_SIZE(top_muxes), node,
++			       &mt6779_clk_lock, clk_data);
+ 
+-	mtk_clk_register_composites(top_aud_muxes, ARRAY_SIZE(top_aud_muxes),
+-				    base, &mt6779_clk_lock, clk_data);
++	mtk_clk_register_composites(&pdev->dev, top_aud_muxes,
++				    ARRAY_SIZE(top_aud_muxes), base,
++				    &mt6779_clk_lock, clk_data);
+ 
+-	mtk_clk_register_composites(top_aud_divs, ARRAY_SIZE(top_aud_divs),
+-				    base, &mt6779_clk_lock, clk_data);
++	mtk_clk_register_composites(&pdev->dev, top_aud_divs,
++				    ARRAY_SIZE(top_aud_divs), base,
++				    &mt6779_clk_lock, clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ }
+@@ -1267,8 +1270,8 @@ static int clk_mt6779_infra_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_INFRA_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ }
+diff --git a/drivers/clk/mediatek/clk-mt6795-infracfg.c b/drivers/clk/mediatek/clk-mt6795-infracfg.c
+index df7eed6e071e..8025d171d692 100644
+--- a/drivers/clk/mediatek/clk-mt6795-infracfg.c
++++ b/drivers/clk/mediatek/clk-mt6795-infracfg.c
+@@ -101,7 +101,8 @@ static int clk_mt6795_infracfg_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_clk_data;
+ 
+-	ret = mtk_clk_register_gates(node, infra_gates, ARRAY_SIZE(infra_gates), clk_data);
++	ret = mtk_clk_register_gates(&pdev->dev, node, infra_gates,
++				     ARRAY_SIZE(infra_gates), clk_data);
+ 	if (ret)
+ 		goto free_clk_data;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt6795-mm.c b/drivers/clk/mediatek/clk-mt6795-mm.c
+index fd73f202f292..eebb6143ada2 100644
+--- a/drivers/clk/mediatek/clk-mt6795-mm.c
++++ b/drivers/clk/mediatek/clk-mt6795-mm.c
+@@ -87,7 +87,8 @@ static int clk_mt6795_mm_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	ret = mtk_clk_register_gates(node, mm_gates, ARRAY_SIZE(mm_gates), clk_data);
++	ret = mtk_clk_register_gates(&pdev->dev, node, mm_gates,
++				     ARRAY_SIZE(mm_gates), clk_data);
+ 	if (ret)
+ 		goto free_clk_data;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt6795-pericfg.c b/drivers/clk/mediatek/clk-mt6795-pericfg.c
+index cb28d35dad59..08aaa9b09c36 100644
+--- a/drivers/clk/mediatek/clk-mt6795-pericfg.c
++++ b/drivers/clk/mediatek/clk-mt6795-pericfg.c
+@@ -109,11 +109,13 @@ static int clk_mt6795_pericfg_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_clk_data;
+ 
+-	ret = mtk_clk_register_gates(node, peri_gates, ARRAY_SIZE(peri_gates), clk_data);
++	ret = mtk_clk_register_gates(&pdev->dev, node, peri_gates,
++				     ARRAY_SIZE(peri_gates), clk_data);
+ 	if (ret)
+ 		goto free_clk_data;
+ 
+-	ret = mtk_clk_register_composites(peri_clks, ARRAY_SIZE(peri_clks), base,
++	ret = mtk_clk_register_composites(&pdev->dev, peri_clks,
++					  ARRAY_SIZE(peri_clks), base,
+ 					  &mt6795_peri_clk_lock, clk_data);
+ 	if (ret)
+ 		goto unregister_gates;
+diff --git a/drivers/clk/mediatek/clk-mt6795-topckgen.c b/drivers/clk/mediatek/clk-mt6795-topckgen.c
+index 2948dd1aee8f..2ab8bf5d6d6d 100644
+--- a/drivers/clk/mediatek/clk-mt6795-topckgen.c
++++ b/drivers/clk/mediatek/clk-mt6795-topckgen.c
+@@ -552,12 +552,14 @@ static int clk_mt6795_topckgen_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto unregister_fixed_clks;
+ 
+-	ret = mtk_clk_register_muxes(top_muxes, ARRAY_SIZE(top_muxes), node,
++	ret = mtk_clk_register_muxes(&pdev->dev, top_muxes,
++				     ARRAY_SIZE(top_muxes), node,
+ 				     &mt6795_top_clk_lock, clk_data);
+ 	if (ret)
+ 		goto unregister_factors;
+ 
+-	ret = mtk_clk_register_composites(top_aud_divs, ARRAY_SIZE(top_aud_divs), base,
++	ret = mtk_clk_register_composites(&pdev->dev, top_aud_divs,
++					  ARRAY_SIZE(top_aud_divs), base,
+ 					  &mt6795_top_clk_lock, clk_data);
+ 	if (ret)
+ 		goto unregister_muxes;
+diff --git a/drivers/clk/mediatek/clk-mt6797-mm.c b/drivers/clk/mediatek/clk-mt6797-mm.c
+index 99a63f46642f..d5e9fe445e30 100644
+--- a/drivers/clk/mediatek/clk-mt6797-mm.c
++++ b/drivers/clk/mediatek/clk-mt6797-mm.c
+@@ -89,8 +89,8 @@ static int clk_mt6797_mm_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MM_NR);
+ 
+-	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, mm_clks,
++			       ARRAY_SIZE(mm_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt6797.c b/drivers/clk/mediatek/clk-mt6797.c
+index b362e99c8f53..0429a80f3cad 100644
+--- a/drivers/clk/mediatek/clk-mt6797.c
++++ b/drivers/clk/mediatek/clk-mt6797.c
+@@ -398,7 +398,8 @@ static int mtk_topckgen_init(struct platform_device *pdev)
+ 	mtk_clk_register_factors(top_fixed_divs, ARRAY_SIZE(top_fixed_divs),
+ 				 clk_data);
+ 
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
++	mtk_clk_register_composites(&pdev->dev, top_muxes,
++				    ARRAY_SIZE(top_muxes), base,
+ 				    &mt6797_clk_lock, clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+@@ -584,8 +585,8 @@ static int mtk_infrasys_init(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-			       infra_clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), infra_clk_data);
+ 	mtk_clk_register_factors(infra_fixed_divs, ARRAY_SIZE(infra_fixed_divs),
+ 				 infra_clk_data);
+ 
+diff --git a/drivers/clk/mediatek/clk-mt7622-aud.c b/drivers/clk/mediatek/clk-mt7622-aud.c
+index b17731fa1144..e9070d0bea8d 100644
+--- a/drivers/clk/mediatek/clk-mt7622-aud.c
++++ b/drivers/clk/mediatek/clk-mt7622-aud.c
+@@ -114,8 +114,8 @@ static int clk_mt7622_audiosys_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_AUDIO_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, audio_clks, ARRAY_SIZE(audio_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, audio_clks,
++			       ARRAY_SIZE(audio_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r) {
+diff --git a/drivers/clk/mediatek/clk-mt7622-eth.c b/drivers/clk/mediatek/clk-mt7622-eth.c
+index a60190e83418..ece0f7a7c5f6 100644
+--- a/drivers/clk/mediatek/clk-mt7622-eth.c
++++ b/drivers/clk/mediatek/clk-mt7622-eth.c
+@@ -69,8 +69,8 @@ static int clk_mt7622_ethsys_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_ETH_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, eth_clks, ARRAY_SIZE(eth_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, eth_clks,
++			       ARRAY_SIZE(eth_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -91,8 +91,8 @@ static int clk_mt7622_sgmiisys_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_SGMII_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, sgmii_clks, ARRAY_SIZE(sgmii_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, sgmii_clks,
++			       ARRAY_SIZE(sgmii_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt7622-hif.c b/drivers/clk/mediatek/clk-mt7622-hif.c
+index 55baa6d06a20..c57ac2273c4e 100644
+--- a/drivers/clk/mediatek/clk-mt7622-hif.c
++++ b/drivers/clk/mediatek/clk-mt7622-hif.c
+@@ -80,8 +80,8 @@ static int clk_mt7622_ssusbsys_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_SSUSB_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, ssusb_clks, ARRAY_SIZE(ssusb_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, ssusb_clks,
++			       ARRAY_SIZE(ssusb_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -102,8 +102,8 @@ static int clk_mt7622_pciesys_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_PCIE_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, pcie_clks, ARRAY_SIZE(pcie_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, pcie_clks,
++			       ARRAY_SIZE(pcie_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt7622.c b/drivers/clk/mediatek/clk-mt7622.c
+index eebbb8790693..67a296646722 100644
+--- a/drivers/clk/mediatek/clk-mt7622.c
++++ b/drivers/clk/mediatek/clk-mt7622.c
+@@ -615,14 +615,15 @@ static int mtk_topckgen_init(struct platform_device *pdev)
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs),
+ 				 clk_data);
+ 
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes),
+-				    base, &mt7622_clk_lock, clk_data);
++	mtk_clk_register_composites(&pdev->dev, top_muxes,
++				    ARRAY_SIZE(top_muxes), base,
++				    &mt7622_clk_lock, clk_data);
+ 
+ 	mtk_clk_register_dividers(top_adj_divs, ARRAY_SIZE(top_adj_divs),
+ 				  base, &mt7622_clk_lock, clk_data);
+ 
+-	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, top_clks,
++			       ARRAY_SIZE(top_clks), clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ }
+@@ -635,8 +636,8 @@ static int mtk_infrasys_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_INFRA_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), clk_data);
+ 
+ 	mtk_clk_register_cpumuxes(node, infra_muxes, ARRAY_SIZE(infra_muxes),
+ 				  clk_data);
+@@ -663,7 +664,7 @@ static int mtk_apmixedsys_init(struct platform_device *pdev)
+ 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls),
+ 			      clk_data);
+ 
+-	mtk_clk_register_gates(node, apmixed_clks,
++	mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
+ 			       ARRAY_SIZE(apmixed_clks), clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+@@ -682,10 +683,11 @@ static int mtk_pericfg_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, peri_clks,
++			       ARRAY_SIZE(peri_clks), clk_data);
+ 
+-	mtk_clk_register_composites(peri_muxes, ARRAY_SIZE(peri_muxes), base,
++	mtk_clk_register_composites(&pdev->dev, peri_muxes,
++				    ARRAY_SIZE(peri_muxes), base,
+ 				    &mt7622_clk_lock, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+diff --git a/drivers/clk/mediatek/clk-mt7629-eth.c b/drivers/clk/mediatek/clk-mt7629-eth.c
+index e1d2635c72c1..eab838af6d41 100644
+--- a/drivers/clk/mediatek/clk-mt7629-eth.c
++++ b/drivers/clk/mediatek/clk-mt7629-eth.c
+@@ -82,7 +82,8 @@ static int clk_mt7629_ethsys_init(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	mtk_clk_register_gates(node, eth_clks, CLK_ETH_NR_CLK, clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, eth_clks,
++			       CLK_ETH_NR_CLK, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -106,8 +107,8 @@ static int clk_mt7629_sgmiisys_init(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	mtk_clk_register_gates(node, sgmii_clks[id++], CLK_SGMII_NR_CLK,
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, sgmii_clks[id++],
++			       CLK_SGMII_NR_CLK, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt7629-hif.c b/drivers/clk/mediatek/clk-mt7629-hif.c
+index 3628811a2f57..804900792e49 100644
+--- a/drivers/clk/mediatek/clk-mt7629-hif.c
++++ b/drivers/clk/mediatek/clk-mt7629-hif.c
+@@ -75,8 +75,8 @@ static int clk_mt7629_ssusbsys_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_SSUSB_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, ssusb_clks, ARRAY_SIZE(ssusb_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, ssusb_clks,
++			       ARRAY_SIZE(ssusb_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -97,8 +97,8 @@ static int clk_mt7629_pciesys_init(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_PCIE_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, pcie_clks, ARRAY_SIZE(pcie_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, pcie_clks,
++			       ARRAY_SIZE(pcie_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt7629.c b/drivers/clk/mediatek/clk-mt7629.c
+index 01ee45fcd7e3..2019e272d1cd 100644
+--- a/drivers/clk/mediatek/clk-mt7629.c
++++ b/drivers/clk/mediatek/clk-mt7629.c
+@@ -566,8 +566,9 @@ static int mtk_topckgen_init(struct platform_device *pdev)
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs),
+ 				 clk_data);
+ 
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes),
+-				    base, &mt7629_clk_lock, clk_data);
++	mtk_clk_register_composites(&pdev->dev, top_muxes,
++				    ARRAY_SIZE(top_muxes), base,
++				    &mt7629_clk_lock, clk_data);
+ 
+ 	clk_prepare_enable(clk_data->hws[CLK_TOP_AXI_SEL]->clk);
+ 	clk_prepare_enable(clk_data->hws[CLK_TOP_MEM_SEL]->clk);
+@@ -585,8 +586,8 @@ static int mtk_infrasys_init(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), clk_data);
+ 
+ 	mtk_clk_register_cpumuxes(node, infra_muxes, ARRAY_SIZE(infra_muxes),
+ 				  clk_data);
+@@ -610,10 +611,11 @@ static int mtk_pericfg_init(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, peri_clks,
++			       ARRAY_SIZE(peri_clks), clk_data);
+ 
+-	mtk_clk_register_composites(peri_muxes, ARRAY_SIZE(peri_muxes), base,
++	mtk_clk_register_composites(&pdev->dev, peri_muxes,
++				    ARRAY_SIZE(peri_muxes), base,
+ 				    &mt7629_clk_lock, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+@@ -637,7 +639,7 @@ static int mtk_apmixedsys_init(struct platform_device *pdev)
+ 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls),
+ 			      clk_data);
+ 
+-	mtk_clk_register_gates(node, apmixed_clks,
++	mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
+ 			       ARRAY_SIZE(apmixed_clks), clk_data);
+ 
+ 	clk_prepare_enable(clk_data->hws[CLK_APMIXED_ARMPLL]->clk);
+diff --git a/drivers/clk/mediatek/clk-mt7986-eth.c b/drivers/clk/mediatek/clk-mt7986-eth.c
+index c21e1d672384..e04bc6845ea6 100644
+--- a/drivers/clk/mediatek/clk-mt7986-eth.c
++++ b/drivers/clk/mediatek/clk-mt7986-eth.c
+@@ -72,8 +72,8 @@ static void __init mtk_sgmiisys_0_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(ARRAY_SIZE(sgmii0_clks));
+ 
+-	mtk_clk_register_gates(node, sgmii0_clks, ARRAY_SIZE(sgmii0_clks),
+-			       clk_data);
++	mtk_clk_register_gates(NULL, node, sgmii0_clks,
++			       ARRAY_SIZE(sgmii0_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -90,8 +90,8 @@ static void __init mtk_sgmiisys_1_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(ARRAY_SIZE(sgmii1_clks));
+ 
+-	mtk_clk_register_gates(node, sgmii1_clks, ARRAY_SIZE(sgmii1_clks),
+-			       clk_data);
++	mtk_clk_register_gates(NULL, node, sgmii1_clks,
++			       ARRAY_SIZE(sgmii1_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+@@ -109,7 +109,7 @@ static void __init mtk_ethsys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(ARRAY_SIZE(eth_clks));
+ 
+-	mtk_clk_register_gates(node, eth_clks, ARRAY_SIZE(eth_clks), clk_data);
++	mtk_clk_register_gates(NULL, node, eth_clks, ARRAY_SIZE(eth_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+diff --git a/drivers/clk/mediatek/clk-mt7986-infracfg.c b/drivers/clk/mediatek/clk-mt7986-infracfg.c
+index 74e68a719730..0a4bf87ee160 100644
+--- a/drivers/clk/mediatek/clk-mt7986-infracfg.c
++++ b/drivers/clk/mediatek/clk-mt7986-infracfg.c
+@@ -178,10 +178,11 @@ static int clk_mt7986_infracfg_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	mtk_clk_register_factors(infra_divs, ARRAY_SIZE(infra_divs), clk_data);
+-	mtk_clk_register_muxes(infra_muxes, ARRAY_SIZE(infra_muxes), node,
++	mtk_clk_register_muxes(&pdev->dev, infra_muxes,
++			       ARRAY_SIZE(infra_muxes), node,
+ 			       &mt7986_clk_lock, clk_data);
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r) {
+diff --git a/drivers/clk/mediatek/clk-mt7986-topckgen.c b/drivers/clk/mediatek/clk-mt7986-topckgen.c
+index de5121cf2877..c9bf47e6098f 100644
+--- a/drivers/clk/mediatek/clk-mt7986-topckgen.c
++++ b/drivers/clk/mediatek/clk-mt7986-topckgen.c
+@@ -303,7 +303,8 @@ static int clk_mt7986_topckgen_probe(struct platform_device *pdev)
+ 	mtk_clk_register_fixed_clks(top_fixed_clks, ARRAY_SIZE(top_fixed_clks),
+ 				    clk_data);
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+-	mtk_clk_register_muxes(top_muxes, ARRAY_SIZE(top_muxes), node,
++	mtk_clk_register_muxes(&pdev->dev, top_muxes,
++			       ARRAY_SIZE(top_muxes), node,
+ 			       &mt7986_clk_lock, clk_data);
+ 
+ 	clk_prepare_enable(clk_data->hws[CLK_TOP_SYSAXI_SEL]->clk);
+diff --git a/drivers/clk/mediatek/clk-mt8135.c b/drivers/clk/mediatek/clk-mt8135.c
+index 3ea06d2ec2f1..a39ad58e2741 100644
+--- a/drivers/clk/mediatek/clk-mt8135.c
++++ b/drivers/clk/mediatek/clk-mt8135.c
+@@ -536,8 +536,9 @@ static void __init mtk_topckgen_init(struct device_node *node)
+ 
+ 	mtk_clk_register_factors(root_clk_alias, ARRAY_SIZE(root_clk_alias), clk_data);
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+-			&mt8135_clk_lock, clk_data);
++	mtk_clk_register_composites(NULL, top_muxes,
++				    ARRAY_SIZE(top_muxes), base,
++				    &mt8135_clk_lock, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -553,8 +554,8 @@ static void __init mtk_infrasys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_INFRA_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-						clk_data);
++	mtk_clk_register_gates(NULL, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -579,10 +580,11 @@ static void __init mtk_pericfg_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, peri_gates, ARRAY_SIZE(peri_gates),
+-						clk_data);
+-	mtk_clk_register_composites(peri_clks, ARRAY_SIZE(peri_clks), base,
+-			&mt8135_clk_lock, clk_data);
++	mtk_clk_register_gates(NULL, node, peri_gates,
++			       ARRAY_SIZE(peri_gates), clk_data);
++	mtk_clk_register_composites(NULL, peri_clks,
++				    ARRAY_SIZE(peri_clks), base,
++				    &mt8135_clk_lock, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt8167-aud.c b/drivers/clk/mediatek/clk-mt8167-aud.c
+index b5ac196cd945..47a7d89d5777 100644
+--- a/drivers/clk/mediatek/clk-mt8167-aud.c
++++ b/drivers/clk/mediatek/clk-mt8167-aud.c
+@@ -50,7 +50,7 @@ static void __init mtk_audsys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_AUD_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, aud_clks, ARRAY_SIZE(aud_clks), clk_data);
++	mtk_clk_register_gates(NULL, node, aud_clks, ARRAY_SIZE(aud_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt8167-img.c b/drivers/clk/mediatek/clk-mt8167-img.c
+index 4e7c0772b4f9..e196b3b894a1 100644
+--- a/drivers/clk/mediatek/clk-mt8167-img.c
++++ b/drivers/clk/mediatek/clk-mt8167-img.c
+@@ -42,7 +42,7 @@ static void __init mtk_imgsys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_IMG_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, img_clks, ARRAY_SIZE(img_clks), clk_data);
++	mtk_clk_register_gates(NULL, node, img_clks, ARRAY_SIZE(img_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8167-mfgcfg.c b/drivers/clk/mediatek/clk-mt8167-mfgcfg.c
+index 192714498b2e..602d25f4cb2e 100644
+--- a/drivers/clk/mediatek/clk-mt8167-mfgcfg.c
++++ b/drivers/clk/mediatek/clk-mt8167-mfgcfg.c
+@@ -40,7 +40,7 @@ static void __init mtk_mfgcfg_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MFG_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, mfg_clks, ARRAY_SIZE(mfg_clks), clk_data);
++	mtk_clk_register_gates(NULL, node, mfg_clks, ARRAY_SIZE(mfg_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8167-mm.c b/drivers/clk/mediatek/clk-mt8167-mm.c
+index a94961b7b8cc..abc70e1221bf 100644
+--- a/drivers/clk/mediatek/clk-mt8167-mm.c
++++ b/drivers/clk/mediatek/clk-mt8167-mm.c
+@@ -98,8 +98,8 @@ static int clk_mt8167_mm_probe(struct platform_device *pdev)
+ 
+ 	data = &mt8167_mmsys_driver_data;
+ 
+-	ret = mtk_clk_register_gates(node, data->gates_clk, data->gates_num,
+-				     clk_data);
++	ret = mtk_clk_register_gates(&pdev->dev, node, data->gates_clk,
++				     data->gates_num, clk_data);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8167-vdec.c b/drivers/clk/mediatek/clk-mt8167-vdec.c
+index 38f0ba357d59..92bc05d99798 100644
+--- a/drivers/clk/mediatek/clk-mt8167-vdec.c
++++ b/drivers/clk/mediatek/clk-mt8167-vdec.c
+@@ -49,7 +49,8 @@ static void __init mtk_vdecsys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_VDEC_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, vdec_clks, ARRAY_SIZE(vdec_clks), clk_data);
++	mtk_clk_register_gates(NULL, node, vdec_clks, ARRAY_SIZE(vdec_clks),
++			       clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8167.c b/drivers/clk/mediatek/clk-mt8167.c
+index f900ac4bf7b8..91669ebafaf9 100644
+--- a/drivers/clk/mediatek/clk-mt8167.c
++++ b/drivers/clk/mediatek/clk-mt8167.c
+@@ -937,11 +937,12 @@ static void __init mtk_topckgen_init(struct device_node *node)
+ 
+ 	mtk_clk_register_fixed_clks(fixed_clks, ARRAY_SIZE(fixed_clks),
+ 				    clk_data);
+-	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks), clk_data);
++	mtk_clk_register_gates(NULL, node, top_clks, ARRAY_SIZE(top_clks), clk_data);
+ 
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+-		&mt8167_clk_lock, clk_data);
++	mtk_clk_register_composites(NULL, top_muxes,
++				    ARRAY_SIZE(top_muxes), base,
++				    &mt8167_clk_lock, clk_data);
+ 	mtk_clk_register_dividers(top_adj_divs, ARRAY_SIZE(top_adj_divs),
+ 				base, &mt8167_clk_lock, clk_data);
+ 
+@@ -966,8 +967,9 @@ static void __init mtk_infracfg_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_IFR_NR_CLK);
+ 
+-	mtk_clk_register_composites(ifr_muxes, ARRAY_SIZE(ifr_muxes), base,
+-		&mt8167_clk_lock, clk_data);
++	mtk_clk_register_composites(NULL, ifr_muxes,
++				    ARRAY_SIZE(ifr_muxes), base,
++				    &mt8167_clk_lock, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt8173-mm.c b/drivers/clk/mediatek/clk-mt8173-mm.c
+index 5826eabdc9c7..444a3d58c8bf 100644
+--- a/drivers/clk/mediatek/clk-mt8173-mm.c
++++ b/drivers/clk/mediatek/clk-mt8173-mm.c
+@@ -112,8 +112,8 @@ static int clk_mt8173_mm_probe(struct platform_device *pdev)
+ 
+ 	data = &mt8173_mmsys_driver_data;
+ 
+-	ret = mtk_clk_register_gates(node, data->gates_clk, data->gates_num,
+-				     clk_data);
++	ret = mtk_clk_register_gates(&pdev->dev, node, data->gates_clk,
++				     data->gates_num, clk_data);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+index b8529ee7199d..d05c1109b4f8 100644
+--- a/drivers/clk/mediatek/clk-mt8173.c
++++ b/drivers/clk/mediatek/clk-mt8173.c
+@@ -869,8 +869,9 @@ static void __init mtk_topckgen_init(struct device_node *node)
+ 
+ 	mtk_clk_register_fixed_clks(fixed_clks, ARRAY_SIZE(fixed_clks), clk_data);
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+-			&mt8173_clk_lock, clk_data);
++	mtk_clk_register_composites(NULL, top_muxes,
++				    ARRAY_SIZE(top_muxes), base,
++				    &mt8173_clk_lock, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -888,8 +889,8 @@ static void __init mtk_infrasys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_INFRA_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-						clk_data);
++	mtk_clk_register_gates(NULL, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), clk_data);
+ 	mtk_clk_register_factors(infra_divs, ARRAY_SIZE(infra_divs), clk_data);
+ 
+ 	mtk_clk_register_cpumuxes(node, cpu_muxes, ARRAY_SIZE(cpu_muxes),
+@@ -918,10 +919,11 @@ static void __init mtk_pericfg_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, peri_gates, ARRAY_SIZE(peri_gates),
+-						clk_data);
+-	mtk_clk_register_composites(peri_clks, ARRAY_SIZE(peri_clks), base,
+-			&mt8173_clk_lock, clk_data);
++	mtk_clk_register_gates(NULL, node, peri_gates,
++			       ARRAY_SIZE(peri_gates), clk_data);
++	mtk_clk_register_composites(NULL, peri_clks,
++				    ARRAY_SIZE(peri_clks), base,
++				    &mt8173_clk_lock, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -1062,8 +1064,8 @@ static void __init mtk_imgsys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_IMG_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, img_clks, ARRAY_SIZE(img_clks),
+-						clk_data);
++	mtk_clk_register_gates(NULL, node, img_clks,
++			       ARRAY_SIZE(img_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 
+@@ -1080,8 +1082,8 @@ static void __init mtk_vdecsys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_VDEC_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, vdec_clks, ARRAY_SIZE(vdec_clks),
+-						clk_data);
++	mtk_clk_register_gates(NULL, node, vdec_clks,
++			       ARRAY_SIZE(vdec_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -1097,8 +1099,8 @@ static void __init mtk_vencsys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_VENC_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, venc_clks, ARRAY_SIZE(venc_clks),
+-						clk_data);
++	mtk_clk_register_gates(NULL, node, venc_clks,
++			       ARRAY_SIZE(venc_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -1114,8 +1116,8 @@ static void __init mtk_vencltsys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_VENCLT_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, venclt_clks, ARRAY_SIZE(venclt_clks),
+-						clk_data);
++	mtk_clk_register_gates(NULL, node, venclt_clks,
++			       ARRAY_SIZE(venclt_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt8183-audio.c b/drivers/clk/mediatek/clk-mt8183-audio.c
+index b2d7746eddbe..f358a6e7a340 100644
+--- a/drivers/clk/mediatek/clk-mt8183-audio.c
++++ b/drivers/clk/mediatek/clk-mt8183-audio.c
+@@ -75,8 +75,8 @@ static int clk_mt8183_audio_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_AUDIO_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, audio_clks, ARRAY_SIZE(audio_clks),
+-			clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, audio_clks,
++			       ARRAY_SIZE(audio_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt8183-mm.c b/drivers/clk/mediatek/clk-mt8183-mm.c
+index 11ecc6fb0065..358031530913 100644
+--- a/drivers/clk/mediatek/clk-mt8183-mm.c
++++ b/drivers/clk/mediatek/clk-mt8183-mm.c
+@@ -90,8 +90,8 @@ static int clk_mt8183_mm_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
+-			clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, mm_clks,
++			       ARRAY_SIZE(mm_clks), clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ }
+diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
+index 1860a35a723a..78620244144e 100644
+--- a/drivers/clk/mediatek/clk-mt8183.c
++++ b/drivers/clk/mediatek/clk-mt8183.c
+@@ -1172,8 +1172,8 @@ static int clk_mt8183_apmixed_probe(struct platform_device *pdev)
+ 
+ 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+ 
+-	mtk_clk_register_gates(node, apmixed_clks, ARRAY_SIZE(apmixed_clks),
+-		clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
++			       ARRAY_SIZE(apmixed_clks), clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ }
+@@ -1238,17 +1238,20 @@ static int clk_mt8183_top_probe(struct platform_device *pdev)
+ 
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), top_clk_data);
+ 
+-	mtk_clk_register_muxes(top_muxes, ARRAY_SIZE(top_muxes),
+-		node, &mt8183_clk_lock, top_clk_data);
++	mtk_clk_register_muxes(&pdev->dev, top_muxes,
++			       ARRAY_SIZE(top_muxes), node,
++			       &mt8183_clk_lock, top_clk_data);
+ 
+-	mtk_clk_register_composites(top_aud_muxes, ARRAY_SIZE(top_aud_muxes),
+-		base, &mt8183_clk_lock, top_clk_data);
++	mtk_clk_register_composites(&pdev->dev, top_aud_muxes,
++				    ARRAY_SIZE(top_aud_muxes), base,
++				    &mt8183_clk_lock, top_clk_data);
+ 
+-	mtk_clk_register_composites(top_aud_divs, ARRAY_SIZE(top_aud_divs),
+-		base, &mt8183_clk_lock, top_clk_data);
++	mtk_clk_register_composites(&pdev->dev, top_aud_divs,
++				    ARRAY_SIZE(top_aud_divs), base,
++				    &mt8183_clk_lock, top_clk_data);
+ 
+-	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks),
+-		top_clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, top_clks,
++			       ARRAY_SIZE(top_clks), top_clk_data);
+ 
+ 	ret = clk_mt8183_reg_mfg_mux_notifier(&pdev->dev,
+ 					      top_clk_data->hws[CLK_TOP_MUX_MFG]->clk);
+@@ -1267,8 +1270,8 @@ static int clk_mt8183_infra_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_INFRA_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
+-		clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, infra_clks,
++			       ARRAY_SIZE(infra_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r) {
+@@ -1290,8 +1293,8 @@ static int clk_mt8183_peri_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
+-			       clk_data);
++	mtk_clk_register_gates(&pdev->dev, node, peri_clks,
++			       ARRAY_SIZE(peri_clks), clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ }
+@@ -1308,8 +1311,9 @@ static int clk_mt8183_mcu_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MCU_NR_CLK);
+ 
+-	mtk_clk_register_composites(mcu_muxes, ARRAY_SIZE(mcu_muxes), base,
+-			&mt8183_clk_lock, clk_data);
++	mtk_clk_register_composites(&pdev->dev, mcu_muxes,
++				    ARRAY_SIZE(mcu_muxes), base,
++				    &mt8183_clk_lock, clk_data);
+ 
+ 	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ }
+diff --git a/drivers/clk/mediatek/clk-mt8186-mcu.c b/drivers/clk/mediatek/clk-mt8186-mcu.c
+index dfc305c1fc5d..e52a2d986c99 100644
+--- a/drivers/clk/mediatek/clk-mt8186-mcu.c
++++ b/drivers/clk/mediatek/clk-mt8186-mcu.c
+@@ -65,7 +65,8 @@ static int clk_mt8186_mcu_probe(struct platform_device *pdev)
+ 		goto free_mcu_data;
+ 	}
+ 
+-	r = mtk_clk_register_composites(mcu_muxes, ARRAY_SIZE(mcu_muxes), base,
++	r = mtk_clk_register_composites(&pdev->dev, mcu_muxes,
++					ARRAY_SIZE(mcu_muxes), base,
+ 					NULL, clk_data);
+ 	if (r)
+ 		goto free_mcu_data;
+diff --git a/drivers/clk/mediatek/clk-mt8186-mm.c b/drivers/clk/mediatek/clk-mt8186-mm.c
+index 1d33be407947..0b72607777fa 100644
+--- a/drivers/clk/mediatek/clk-mt8186-mm.c
++++ b/drivers/clk/mediatek/clk-mt8186-mm.c
+@@ -69,7 +69,8 @@ static int clk_mt8186_mm_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	r = mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks), clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, mm_clks,
++				   ARRAY_SIZE(mm_clks), clk_data);
+ 	if (r)
+ 		goto free_mm_data;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8186-topckgen.c b/drivers/clk/mediatek/clk-mt8186-topckgen.c
+index d7f2c4663c85..70b6e008a188 100644
+--- a/drivers/clk/mediatek/clk-mt8186-topckgen.c
++++ b/drivers/clk/mediatek/clk-mt8186-topckgen.c
+@@ -715,17 +715,20 @@ static int clk_mt8186_topck_probe(struct platform_device *pdev)
+ 	if (r)
+ 		goto unregister_fixed_clks;
+ 
+-	r = mtk_clk_register_muxes(top_mtk_muxes, ARRAY_SIZE(top_mtk_muxes), node,
++	r = mtk_clk_register_muxes(&pdev->dev, top_mtk_muxes,
++				   ARRAY_SIZE(top_mtk_muxes), node,
+ 				   &mt8186_clk_lock, clk_data);
+ 	if (r)
+ 		goto unregister_factors;
+ 
+-	r = mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
++	r = mtk_clk_register_composites(&pdev->dev, top_muxes,
++					ARRAY_SIZE(top_muxes), base,
+ 					&mt8186_clk_lock, clk_data);
+ 	if (r)
+ 		goto unregister_muxes;
+ 
+-	r = mtk_clk_register_composites(top_adj_divs, ARRAY_SIZE(top_adj_divs), base,
++	r = mtk_clk_register_composites(&pdev->dev, top_adj_divs,
++					ARRAY_SIZE(top_adj_divs), base,
+ 					&mt8186_clk_lock, clk_data);
+ 	if (r)
+ 		goto unregister_composite_muxes;
+diff --git a/drivers/clk/mediatek/clk-mt8192-aud.c b/drivers/clk/mediatek/clk-mt8192-aud.c
+index 8c989bffd8c7..f524188fe4c2 100644
+--- a/drivers/clk/mediatek/clk-mt8192-aud.c
++++ b/drivers/clk/mediatek/clk-mt8192-aud.c
+@@ -87,7 +87,8 @@ static int clk_mt8192_aud_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	r = mtk_clk_register_gates(node, aud_clks, ARRAY_SIZE(aud_clks), clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, aud_clks,
++				   ARRAY_SIZE(aud_clks), clk_data);
+ 	if (r)
+ 		return r;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8192-mm.c b/drivers/clk/mediatek/clk-mt8192-mm.c
+index 1be3ff4d407d..e9eb4cf8349a 100644
+--- a/drivers/clk/mediatek/clk-mt8192-mm.c
++++ b/drivers/clk/mediatek/clk-mt8192-mm.c
+@@ -91,7 +91,8 @@ static int clk_mt8192_mm_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	r = mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks), clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, mm_clks,
++			       ARRAY_SIZE(mm_clks), clk_data);
+ 	if (r)
+ 		return r;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8192.c b/drivers/clk/mediatek/clk-mt8192.c
+index d0f226931070..16feb86dcb1b 100644
+--- a/drivers/clk/mediatek/clk-mt8192.c
++++ b/drivers/clk/mediatek/clk-mt8192.c
+@@ -1100,27 +1100,68 @@ static int clk_mt8192_top_probe(struct platform_device *pdev)
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+-	mtk_clk_register_fixed_clks(top_fixed_clks, ARRAY_SIZE(top_fixed_clks), top_clk_data);
+-	mtk_clk_register_factors(top_early_divs, ARRAY_SIZE(top_early_divs), top_clk_data);
+-	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), top_clk_data);
+-	mtk_clk_register_muxes(top_mtk_muxes, ARRAY_SIZE(top_mtk_muxes), node, &mt8192_clk_lock,
+-			       top_clk_data);
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base, &mt8192_clk_lock,
+-				    top_clk_data);
+-	mtk_clk_register_composites(top_adj_divs, ARRAY_SIZE(top_adj_divs), base, &mt8192_clk_lock,
+-				    top_clk_data);
+-	r = mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks), top_clk_data);
++	r = mtk_clk_register_fixed_clks(top_fixed_clks, ARRAY_SIZE(top_fixed_clks), top_clk_data);
+ 	if (r)
+ 		return r;
+ 
++	r = mtk_clk_register_factors(top_early_divs, ARRAY_SIZE(top_early_divs), top_clk_data);
++	if (r)
++		goto unregister_fixed_clks;
++
++	r = mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), top_clk_data);
++	if (r)
++		goto unregister_early_factors;
++
++	r = mtk_clk_register_muxes(&pdev->dev, top_mtk_muxes,
++				   ARRAY_SIZE(top_mtk_muxes), node,
++				   &mt8192_clk_lock, top_clk_data);
++	if (r)
++		goto unregister_factors;
++
++	r = mtk_clk_register_composites(&pdev->dev, top_muxes,
++					ARRAY_SIZE(top_muxes), base,
++					&mt8192_clk_lock, top_clk_data);
++	if (r)
++		goto unregister_muxes;
++
++	r = mtk_clk_register_composites(&pdev->dev, top_adj_divs,
++					ARRAY_SIZE(top_adj_divs), base,
++					&mt8192_clk_lock, top_clk_data);
++	if (r)
++		goto unregister_top_composites;
++
++	r = mtk_clk_register_gates(&pdev->dev, node, top_clks,
++				   ARRAY_SIZE(top_clks), top_clk_data);
++	if (r)
++		goto unregister_adj_divs_composites;
++
+ 	r = clk_mt8192_reg_mfg_mux_notifier(&pdev->dev,
+ 					    top_clk_data->hws[CLK_TOP_MFG_PLL_SEL]->clk);
+ 	if (r)
+-		return r;
++		goto unregister_gates;
+ 
+-
+-	return of_clk_add_hw_provider(node, of_clk_hw_onecell_get,
++	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, top_clk_data);
++	if (r)
++		goto unregister_gates;
++
++	return 0;
++
++unregister_gates:
++	mtk_clk_unregister_gates(top_clks, ARRAY_SIZE(top_clks), top_clk_data);
++unregister_adj_divs_composites:
++	mtk_clk_unregister_composites(top_adj_divs, ARRAY_SIZE(top_adj_divs), top_clk_data);
++unregister_top_composites:
++	mtk_clk_unregister_composites(top_muxes, ARRAY_SIZE(top_muxes), top_clk_data);
++unregister_muxes:
++	mtk_clk_unregister_muxes(top_mtk_muxes, ARRAY_SIZE(top_mtk_muxes), top_clk_data);
++unregister_factors:
++	mtk_clk_unregister_factors(top_divs, ARRAY_SIZE(top_divs), top_clk_data);
++unregister_early_factors:
++	mtk_clk_unregister_factors(top_early_divs, ARRAY_SIZE(top_early_divs), top_clk_data);
++unregister_fixed_clks:
++	mtk_clk_unregister_fixed_clks(top_fixed_clks, ARRAY_SIZE(top_fixed_clks),
+ 				      top_clk_data);
++	return r;
+ }
+ 
+ static int clk_mt8192_infra_probe(struct platform_device *pdev)
+@@ -1133,20 +1174,23 @@ static int clk_mt8192_infra_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	r = mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks), clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, infra_clks,
++				   ARRAY_SIZE(infra_clks), clk_data);
+ 	if (r)
+ 		goto free_clk_data;
+ 
+ 	r = mtk_register_reset_controller_with_dev(&pdev->dev, &clk_rst_desc);
+ 	if (r)
+-		goto free_clk_data;
++		goto unregister_gates;
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+-		goto free_clk_data;
++		goto unregister_gates;
+ 
+ 	return r;
+ 
++unregister_gates:
++	mtk_clk_unregister_gates(infra_clks, ARRAY_SIZE(infra_clks), clk_data);
+ free_clk_data:
+ 	mtk_free_clk_data(clk_data);
+ 	return r;
+@@ -1162,16 +1206,19 @@ static int clk_mt8192_peri_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	r = mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks), clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, peri_clks,
++				   ARRAY_SIZE(peri_clks), clk_data);
+ 	if (r)
+ 		goto free_clk_data;
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+-		goto free_clk_data;
++		goto unregister_gates;
+ 
+ 	return r;
+ 
++unregister_gates:
++	mtk_clk_unregister_gates(peri_clks, ARRAY_SIZE(peri_clks), clk_data);
+ free_clk_data:
+ 	mtk_free_clk_data(clk_data);
+ 	return r;
+@@ -1188,16 +1235,19 @@ static int clk_mt8192_apmixed_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+-	r = mtk_clk_register_gates(node, apmixed_clks, ARRAY_SIZE(apmixed_clks), clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
++				   ARRAY_SIZE(apmixed_clks), clk_data);
+ 	if (r)
+ 		goto free_clk_data;
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+-		goto free_clk_data;
++		goto unregister_gates;
+ 
+ 	return r;
+ 
++unregister_gates:
++	mtk_clk_unregister_gates(apmixed_clks, ARRAY_SIZE(apmixed_clks), clk_data);
+ free_clk_data:
+ 	mtk_free_clk_data(clk_data);
+ 	return r;
+diff --git a/drivers/clk/mediatek/clk-mt8195-apmixedsys.c b/drivers/clk/mediatek/clk-mt8195-apmixedsys.c
+index 0dfed6ec4d15..1bc917f2667e 100644
+--- a/drivers/clk/mediatek/clk-mt8195-apmixedsys.c
++++ b/drivers/clk/mediatek/clk-mt8195-apmixedsys.c
+@@ -124,7 +124,8 @@ static int clk_mt8195_apmixed_probe(struct platform_device *pdev)
+ 	if (r)
+ 		goto free_apmixed_data;
+ 
+-	r = mtk_clk_register_gates(node, apmixed_clks, ARRAY_SIZE(apmixed_clks), clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, apmixed_clks,
++				   ARRAY_SIZE(apmixed_clks), clk_data);
+ 	if (r)
+ 		goto unregister_plls;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8195-topckgen.c b/drivers/clk/mediatek/clk-mt8195-topckgen.c
+index 1e016329c1d2..3485ebb17ab8 100644
+--- a/drivers/clk/mediatek/clk-mt8195-topckgen.c
++++ b/drivers/clk/mediatek/clk-mt8195-topckgen.c
+@@ -1262,7 +1262,8 @@ static int clk_mt8195_topck_probe(struct platform_device *pdev)
+ 	if (r)
+ 		goto unregister_fixed_clks;
+ 
+-	r = mtk_clk_register_muxes(top_mtk_muxes, ARRAY_SIZE(top_mtk_muxes), node,
++	r = mtk_clk_register_muxes(&pdev->dev, top_mtk_muxes,
++				   ARRAY_SIZE(top_mtk_muxes), node,
+ 				   &mt8195_clk_lock, top_clk_data);
+ 	if (r)
+ 		goto unregister_factors;
+@@ -1281,12 +1282,14 @@ static int clk_mt8195_topck_probe(struct platform_device *pdev)
+ 	if (r)
+ 		goto unregister_muxes;
+ 
+-	r = mtk_clk_register_composites(top_adj_divs, ARRAY_SIZE(top_adj_divs), base,
++	r = mtk_clk_register_composites(&pdev->dev, top_adj_divs,
++					ARRAY_SIZE(top_adj_divs), base,
+ 					&mt8195_clk_lock, top_clk_data);
+ 	if (r)
+ 		goto unregister_muxes;
+ 
+-	r = mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks), top_clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, top_clks,
++				   ARRAY_SIZE(top_clks), top_clk_data);
+ 	if (r)
+ 		goto unregister_composite_divs;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8195-vdo0.c b/drivers/clk/mediatek/clk-mt8195-vdo0.c
+index 07b46bfd5040..839b730688ac 100644
+--- a/drivers/clk/mediatek/clk-mt8195-vdo0.c
++++ b/drivers/clk/mediatek/clk-mt8195-vdo0.c
+@@ -104,7 +104,8 @@ static int clk_mt8195_vdo0_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	r = mtk_clk_register_gates(node, vdo0_clks, ARRAY_SIZE(vdo0_clks), clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, vdo0_clks,
++				   ARRAY_SIZE(vdo0_clks), clk_data);
+ 	if (r)
+ 		goto free_vdo0_data;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8195-vdo1.c b/drivers/clk/mediatek/clk-mt8195-vdo1.c
+index 835335b9d87b..7df695b28925 100644
+--- a/drivers/clk/mediatek/clk-mt8195-vdo1.c
++++ b/drivers/clk/mediatek/clk-mt8195-vdo1.c
+@@ -131,7 +131,8 @@ static int clk_mt8195_vdo1_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	r = mtk_clk_register_gates(node, vdo1_clks, ARRAY_SIZE(vdo1_clks), clk_data);
++	r = mtk_clk_register_gates(&pdev->dev, node, vdo1_clks,
++				   ARRAY_SIZE(vdo1_clks), clk_data);
+ 	if (r)
+ 		goto free_vdo1_data;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8365-mm.c b/drivers/clk/mediatek/clk-mt8365-mm.c
+index 5c8bf18ab1f1..22c75a03a645 100644
+--- a/drivers/clk/mediatek/clk-mt8365-mm.c
++++ b/drivers/clk/mediatek/clk-mt8365-mm.c
+@@ -81,9 +81,8 @@ static int clk_mt8365_mm_probe(struct platform_device *pdev)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
+ 
+-	ret = mtk_clk_register_gates_with_dev(node, mm_clks,
+-					      ARRAY_SIZE(mm_clks), clk_data,
+-					      dev);
++	ret = mtk_clk_register_gates(dev, node, mm_clks,
++				     ARRAY_SIZE(mm_clks), clk_data);
+ 	if (ret)
+ 		goto err_free_clk_data;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8365.c b/drivers/clk/mediatek/clk-mt8365.c
+index adfecb618f10..c9faa07ec0a6 100644
+--- a/drivers/clk/mediatek/clk-mt8365.c
++++ b/drivers/clk/mediatek/clk-mt8365.c
+@@ -947,12 +947,13 @@ static int clk_mt8365_top_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto unregister_fixed_clks;
+ 
+-	ret = mtk_clk_register_muxes(top_muxes, ARRAY_SIZE(top_muxes), node,
++	ret = mtk_clk_register_muxes(&pdev->dev, top_muxes,
++				     ARRAY_SIZE(top_muxes), node,
+ 				     &mt8365_clk_lock, clk_data);
+ 	if (ret)
+ 		goto unregister_factors;
+ 
+-	ret = mtk_clk_register_composites(top_misc_mux_gates,
++	ret = mtk_clk_register_composites(&pdev->dev, top_misc_mux_gates,
+ 					  ARRAY_SIZE(top_misc_mux_gates), base,
+ 					  &mt8365_clk_lock, clk_data);
+ 	if (ret)
+@@ -1019,8 +1020,8 @@ static int clk_mt8365_infra_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	ret = mtk_clk_register_gates(node, ifr_clks, ARRAY_SIZE(ifr_clks),
+-				     clk_data);
++	ret = mtk_clk_register_gates(&pdev->dev, node, ifr_clks,
++				     ARRAY_SIZE(ifr_clks), clk_data);
+ 	if (ret)
+ 		goto free_clk_data;
+ 
+@@ -1080,8 +1081,9 @@ static int clk_mt8365_mcu_probe(struct platform_device *pdev)
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	ret = mtk_clk_register_composites(mcu_muxes, ARRAY_SIZE(mcu_muxes),
+-					  base, &mt8365_clk_lock, clk_data);
++	ret = mtk_clk_register_composites(&pdev->dev, mcu_muxes,
++					  ARRAY_SIZE(mcu_muxes), base,
++					  &mt8365_clk_lock, clk_data);
+ 	if (ret)
+ 		goto free_clk_data;
+ 
+diff --git a/drivers/clk/mediatek/clk-mt8516-aud.c b/drivers/clk/mediatek/clk-mt8516-aud.c
+index a3dafc719799..a6ae8003b9ff 100644
+--- a/drivers/clk/mediatek/clk-mt8516-aud.c
++++ b/drivers/clk/mediatek/clk-mt8516-aud.c
+@@ -48,7 +48,7 @@ static void __init mtk_audsys_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_AUD_NR_CLK);
+ 
+-	mtk_clk_register_gates(node, aud_clks, ARRAY_SIZE(aud_clks), clk_data);
++	mtk_clk_register_gates(NULL, node, aud_clks, ARRAY_SIZE(aud_clks), clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+diff --git a/drivers/clk/mediatek/clk-mt8516.c b/drivers/clk/mediatek/clk-mt8516.c
+index 056953d594c6..6983d3a48dc9 100644
+--- a/drivers/clk/mediatek/clk-mt8516.c
++++ b/drivers/clk/mediatek/clk-mt8516.c
+@@ -655,11 +655,12 @@ static void __init mtk_topckgen_init(struct device_node *node)
+ 
+ 	mtk_clk_register_fixed_clks(fixed_clks, ARRAY_SIZE(fixed_clks),
+ 				    clk_data);
+-	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks), clk_data);
++	mtk_clk_register_gates(NULL, node, top_clks, ARRAY_SIZE(top_clks), clk_data);
+ 
+ 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
+-	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+-		&mt8516_clk_lock, clk_data);
++	mtk_clk_register_composites(NULL, top_muxes,
++				    ARRAY_SIZE(top_muxes), base,
++				    &mt8516_clk_lock, clk_data);
+ 	mtk_clk_register_dividers(top_adj_divs, ARRAY_SIZE(top_adj_divs),
+ 				base, &mt8516_clk_lock, clk_data);
+ 
+@@ -684,8 +685,9 @@ static void __init mtk_infracfg_init(struct device_node *node)
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_IFR_NR_CLK);
+ 
+-	mtk_clk_register_composites(ifr_muxes, ARRAY_SIZE(ifr_muxes), base,
+-		&mt8516_clk_lock, clk_data);
++	mtk_clk_register_composites(NULL, ifr_muxes,
++				    ARRAY_SIZE(ifr_muxes), base,
++				    &mt8516_clk_lock, clk_data);
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
 diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
-index 2e55368dc4d8..bd37ab4d1a9b 100644
+index d31f01d0ba1c..fa2c1b1c7dee 100644
 --- a/drivers/clk/mediatek/clk-mtk.c
 +++ b/drivers/clk/mediatek/clk-mtk.c
-@@ -13,6 +13,7 @@
+@@ -11,12 +11,15 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
  #include <linux/of.h>
- #include <linux/of_address.h>
++#include <linux/of_address.h>
+ #include <linux/of_device.h>
  #include <linux/platform_device.h>
 +#include <linux/pm_runtime.h>
  #include <linux/slab.h>
  
  #include "clk-mtk.h"
-@@ -494,6 +495,16 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
- 			return IS_ERR(base) ? PTR_ERR(base) : -ENOMEM;
+ #include "clk-gate.h"
++#include "clk-mux.h"
+ 
+ static void mtk_init_clk_data(struct clk_hw_onecell_data *clk_data,
+ 			      unsigned int clk_num)
+@@ -197,8 +200,8 @@ void mtk_clk_unregister_factors(const struct mtk_fixed_factor *clks, int num,
+ }
+ EXPORT_SYMBOL_GPL(mtk_clk_unregister_factors);
+ 
+-static struct clk_hw *mtk_clk_register_composite(const struct mtk_composite *mc,
+-		void __iomem *base, spinlock_t *lock)
++static struct clk_hw *mtk_clk_register_composite(struct device *dev,
++		const struct mtk_composite *mc, void __iomem *base, spinlock_t *lock)
+ {
+ 	struct clk_hw *hw;
+ 	struct clk_mux *mux = NULL;
+@@ -264,7 +267,7 @@ static struct clk_hw *mtk_clk_register_composite(const struct mtk_composite *mc,
+ 		div_ops = &clk_divider_ops;
  	}
  
+-	hw = clk_hw_register_composite(NULL, mc->name, parent_names, num_parents,
++	hw = clk_hw_register_composite(dev, mc->name, parent_names, num_parents,
+ 		mux_hw, mux_ops,
+ 		div_hw, div_ops,
+ 		gate_hw, gate_ops,
+@@ -308,7 +311,8 @@ static void mtk_clk_unregister_composite(struct clk_hw *hw)
+ 	kfree(mux);
+ }
+ 
+-int mtk_clk_register_composites(const struct mtk_composite *mcs, int num,
++int mtk_clk_register_composites(struct device *dev,
++				const struct mtk_composite *mcs, int num,
+ 				void __iomem *base, spinlock_t *lock,
+ 				struct clk_hw_onecell_data *clk_data)
+ {
+@@ -327,7 +331,7 @@ int mtk_clk_register_composites(const struct mtk_composite *mcs, int num,
+ 			continue;
+ 		}
+ 
+-		hw = mtk_clk_register_composite(mc, base, lock);
++		hw = mtk_clk_register_composite(dev, mc, base, lock);
+ 
+ 		if (IS_ERR(hw)) {
+ 			pr_err("Failed to register clk %s: %pe\n", mc->name,
+@@ -449,20 +453,81 @@ int mtk_clk_simple_probe(struct platform_device *pdev)
+ 	const struct mtk_clk_desc *mcd;
+ 	struct clk_hw_onecell_data *clk_data;
+ 	struct device_node *node = pdev->dev.of_node;
+-	int r;
++	void __iomem *base;
++	int num_clks, r;
+ 
+ 	mcd = of_device_get_match_data(&pdev->dev);
+ 	if (!mcd)
+ 		return -EINVAL;
+ 
+-	clk_data = mtk_alloc_clk_data(mcd->num_clks);
++	/* Composite clocks needs us to pass iomem pointer */
++	if (mcd->composite_clks) {
++		if (!mcd->shared_io)
++			base = devm_platform_ioremap_resource(pdev, 0);
++		else
++			base = of_iomap(node, 0);
++
++		if (IS_ERR_OR_NULL(base))
++			return IS_ERR(base) ? PTR_ERR(base) : -ENOMEM;
++	}
++
 +
 +	devm_pm_runtime_enable(&pdev->dev);
 +	/*
@@ -840,10 +3772,61 @@ index 2e55368dc4d8..bd37ab4d1a9b 100644
 +	if (r)
 +		return r;
 +
- 	/* Calculate how many clk_hw_onecell_data entries to allocate */
- 	num_clks = mcd->num_clks + mcd->num_composite_clks;
- 	num_clks += mcd->num_fixed_clks + mcd->num_factor_clks;
-@@ -574,6 +585,8 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
++	/* Calculate how many clk_hw_onecell_data entries to allocate */
++	num_clks = mcd->num_clks + mcd->num_composite_clks;
++	num_clks += mcd->num_fixed_clks + mcd->num_factor_clks;
++	num_clks += mcd->num_mux_clks;
++
++	clk_data = mtk_alloc_clk_data(num_clks);
+ 	if (!clk_data)
+ 		return -ENOMEM;
+ 
+-	r = mtk_clk_register_gates_with_dev(node, mcd->clks, mcd->num_clks,
+-					    clk_data, &pdev->dev);
+-	if (r)
+-		goto free_data;
++	if (mcd->fixed_clks) {
++		r = mtk_clk_register_fixed_clks(mcd->fixed_clks,
++						mcd->num_fixed_clks, clk_data);
++		if (r)
++			goto free_data;
++	}
++
++	if (mcd->factor_clks) {
++		r = mtk_clk_register_factors(mcd->factor_clks,
++					     mcd->num_factor_clks, clk_data);
++		if (r)
++			goto unregister_fixed_clks;
++	}
++
++	if (mcd->mux_clks) {
++		r = mtk_clk_register_muxes(&pdev->dev, mcd->mux_clks,
++					   mcd->num_mux_clks, node,
++					   mcd->clk_lock, clk_data);
++		if (r)
++			goto unregister_factors;
++	};
++
++	if (mcd->composite_clks) {
++		/* We don't check composite_lock because it's optional */
++		r = mtk_clk_register_composites(&pdev->dev,
++						mcd->composite_clks,
++						mcd->num_composite_clks,
++						base, mcd->clk_lock, clk_data);
++		if (r)
++			goto unregister_muxes;
++	}
++
++	if (mcd->clks) {
++		r = mtk_clk_register_gates(&pdev->dev, node, mcd->clks,
++					   mcd->num_clks, clk_data);
++		if (r)
++			goto unregister_composites;
++	}
+ 
+ 	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (r)
+@@ -477,12 +542,35 @@ int mtk_clk_simple_probe(struct platform_device *pdev)
  			goto unregister_clks;
  	}
  
@@ -852,15 +3835,148 @@ index 2e55368dc4d8..bd37ab4d1a9b 100644
  	return r;
  
  unregister_clks:
-@@ -604,6 +617,8 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
- free_base:
- 	if (mcd->shared_io && base)
- 		iounmap(base);
+-	mtk_clk_unregister_gates(mcd->clks, mcd->num_clks, clk_data);
++	if (mcd->clks)
++		mtk_clk_unregister_gates(mcd->clks, mcd->num_clks, clk_data);
++unregister_composites:
++	if (mcd->composite_clks)
++		mtk_clk_unregister_composites(mcd->composite_clks,
++					      mcd->num_composite_clks, clk_data);
++unregister_muxes:
++	if (mcd->mux_clks)
++		mtk_clk_unregister_muxes(mcd->mux_clks,
++					 mcd->num_mux_clks, clk_data);
++unregister_factors:
++	if (mcd->factor_clks)
++		mtk_clk_unregister_factors(mcd->factor_clks,
++					   mcd->num_factor_clks, clk_data);
++unregister_fixed_clks:
++	if (mcd->fixed_clks)
++		mtk_clk_unregister_fixed_clks(mcd->fixed_clks,
++					      mcd->num_fixed_clks, clk_data);
+ free_data:
+ 	mtk_free_clk_data(clk_data);
++	if (mcd->shared_io && base)
++		iounmap(base);
 +
 +	pm_runtime_put(&pdev->dev);
  	return r;
  }
+ EXPORT_SYMBOL_GPL(mtk_clk_simple_probe);
+@@ -494,7 +582,20 @@ int mtk_clk_simple_remove(struct platform_device *pdev)
+ 	struct device_node *node = pdev->dev.of_node;
  
+ 	of_clk_del_provider(node);
+-	mtk_clk_unregister_gates(mcd->clks, mcd->num_clks, clk_data);
++	if (mcd->clks)
++		mtk_clk_unregister_gates(mcd->clks, mcd->num_clks, clk_data);
++	if (mcd->composite_clks)
++		mtk_clk_unregister_composites(mcd->composite_clks,
++					      mcd->num_composite_clks, clk_data);
++	if (mcd->mux_clks)
++		mtk_clk_unregister_muxes(mcd->mux_clks,
++					 mcd->num_mux_clks, clk_data);
++	if (mcd->factor_clks)
++		mtk_clk_unregister_factors(mcd->factor_clks,
++					   mcd->num_factor_clks, clk_data);
++	if (mcd->fixed_clks)
++		mtk_clk_unregister_fixed_clks(mcd->fixed_clks,
++					      mcd->num_fixed_clks, clk_data);
+ 	mtk_free_clk_data(clk_data);
+ 
+ 	return 0;
+diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
+index 63ae7941aa92..880b3d6d8011 100644
+--- a/drivers/clk/mediatek/clk-mtk.h
++++ b/drivers/clk/mediatek/clk-mtk.h
+@@ -149,7 +149,8 @@ struct mtk_composite {
+ 		.flags = 0,						\
+ 	}
+ 
+-int mtk_clk_register_composites(const struct mtk_composite *mcs, int num,
++int mtk_clk_register_composites(struct device *dev,
++				const struct mtk_composite *mcs, int num,
+ 				void __iomem *base, spinlock_t *lock,
+ 				struct clk_hw_onecell_data *clk_data);
+ void mtk_clk_unregister_composites(const struct mtk_composite *mcs, int num,
+@@ -195,7 +196,17 @@ void mtk_clk_unregister_ref2usb_tx(struct clk_hw *hw);
+ struct mtk_clk_desc {
+ 	const struct mtk_gate *clks;
+ 	size_t num_clks;
++	const struct mtk_composite *composite_clks;
++	size_t num_composite_clks;
++	const struct mtk_fixed_clk *fixed_clks;
++	size_t num_fixed_clks;
++	const struct mtk_fixed_factor *factor_clks;
++	size_t num_factor_clks;
++	const struct mtk_mux *mux_clks;
++	size_t num_mux_clks;
+ 	const struct mtk_clk_rst_desc *rst_desc;
++	spinlock_t *clk_lock;
++	bool shared_io;
+ };
+ 
+ int mtk_clk_simple_probe(struct platform_device *pdev);
+diff --git a/drivers/clk/mediatek/clk-mux.c b/drivers/clk/mediatek/clk-mux.c
+index ba1720b9e231..c8593554239d 100644
+--- a/drivers/clk/mediatek/clk-mux.c
++++ b/drivers/clk/mediatek/clk-mux.c
+@@ -154,9 +154,10 @@ const struct clk_ops mtk_mux_gate_clr_set_upd_ops  = {
+ };
+ EXPORT_SYMBOL_GPL(mtk_mux_gate_clr_set_upd_ops);
+ 
+-static struct clk_hw *mtk_clk_register_mux(const struct mtk_mux *mux,
+-				 struct regmap *regmap,
+-				 spinlock_t *lock)
++static struct clk_hw *mtk_clk_register_mux(struct device *dev,
++					   const struct mtk_mux *mux,
++					   struct regmap *regmap,
++					   spinlock_t *lock)
+ {
+ 	struct mtk_clk_mux *clk_mux;
+ 	struct clk_init_data init = {};
+@@ -177,7 +178,7 @@ static struct clk_hw *mtk_clk_register_mux(const struct mtk_mux *mux,
+ 	clk_mux->lock = lock;
+ 	clk_mux->hw.init = &init;
+ 
+-	ret = clk_hw_register(NULL, &clk_mux->hw);
++	ret = clk_hw_register(dev, &clk_mux->hw);
+ 	if (ret) {
+ 		kfree(clk_mux);
+ 		return ERR_PTR(ret);
+@@ -198,7 +199,8 @@ static void mtk_clk_unregister_mux(struct clk_hw *hw)
+ 	kfree(mux);
+ }
+ 
+-int mtk_clk_register_muxes(const struct mtk_mux *muxes,
++int mtk_clk_register_muxes(struct device *dev,
++			   const struct mtk_mux *muxes,
+ 			   int num, struct device_node *node,
+ 			   spinlock_t *lock,
+ 			   struct clk_hw_onecell_data *clk_data)
+@@ -222,7 +224,7 @@ int mtk_clk_register_muxes(const struct mtk_mux *muxes,
+ 			continue;
+ 		}
+ 
+-		hw = mtk_clk_register_mux(mux, regmap, lock);
++		hw = mtk_clk_register_mux(dev, mux, regmap, lock);
+ 
+ 		if (IS_ERR(hw)) {
+ 			pr_err("Failed to register clk %s: %pe\n", mux->name,
+diff --git a/drivers/clk/mediatek/clk-mux.h b/drivers/clk/mediatek/clk-mux.h
+index 83ff420f4ebe..7ecb963b0ec6 100644
+--- a/drivers/clk/mediatek/clk-mux.h
++++ b/drivers/clk/mediatek/clk-mux.h
+@@ -83,7 +83,8 @@ extern const struct clk_ops mtk_mux_gate_clr_set_upd_ops;
+ 			0, _upd_ofs, _upd, CLK_SET_RATE_PARENT,		\
+ 			mtk_mux_clr_set_upd_ops)
+ 
+-int mtk_clk_register_muxes(const struct mtk_mux *muxes,
++int mtk_clk_register_muxes(struct device *dev,
++			   const struct mtk_mux *muxes,
+ 			   int num, struct device_node *node,
+ 			   spinlock_t *lock,
+ 			   struct clk_hw_onecell_data *clk_data);
 diff --git a/drivers/comedi/drivers/vmk80xx.c b/drivers/comedi/drivers/vmk80xx.c
 index 4536ed43f65b..84dce5184a77 100644
 --- a/drivers/comedi/drivers/vmk80xx.c
@@ -911,33 +4027,133 @@ index 4536ed43f65b..84dce5184a77 100644
  	if (!usb_endpoint_maxp(devpriv->ep_rx) || !usb_endpoint_maxp(devpriv->ep_tx))
  		return -EINVAL;
  
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-index b0ed10f4de60..a5ceec7820cf 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-@@ -562,7 +562,6 @@ static int amdgpu_ttm_io_mem_reserve(struct ttm_device *bdev,
- 				     struct ttm_resource *mem)
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 473ef18421db..748781c25787 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -102,13 +102,6 @@ lib-y				:= $(patsubst %.o,%.stub.o,$(lib-y))
+ # https://bugs.llvm.org/show_bug.cgi?id=46480
+ STUBCOPY_FLAGS-y		+= --remove-section=.note.gnu.property
+ 
+-#
+-# For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
+-# .bss section, so the .bss section of the EFI stub needs to be included in the
+-# .data section of the compressed kernel to ensure initialization. Rename the
+-# .bss section here so it's easy to pick out in the linker script.
+-#
+-STUBCOPY_FLAGS-$(CONFIG_X86)	+= --rename-section .bss=.bss.efistub,load,alloc
+ STUBCOPY_RELOC-$(CONFIG_X86_32)	:= R_386_32
+ STUBCOPY_RELOC-$(CONFIG_X86_64)	:= R_X86_64_64
+ 
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index dc50dda40239..55468debd55d 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -227,6 +227,15 @@ efi_status_t efi_adjust_memory_range_protection(unsigned long start,
+ 	rounded_end = roundup(start + size, EFI_PAGE_SIZE);
+ 
+ 	if (memattr != NULL) {
++		status = efi_call_proto(memattr, set_memory_attributes,
++					rounded_start,
++					rounded_end - rounded_start,
++					EFI_MEMORY_RO);
++		if (status != EFI_SUCCESS) {
++			efi_warn("Failed to set EFI_MEMORY_RO attribute\n");
++			return status;
++		}
++
+ 		status = efi_call_proto(memattr, clear_memory_attributes,
+ 					rounded_start,
+ 					rounded_end - rounded_start,
+@@ -426,9 +435,8 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
+ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 				   efi_system_table_t *sys_table_arg)
  {
- 	struct amdgpu_device *adev = amdgpu_ttm_adev(bdev);
--	size_t bus_size = (size_t)mem->size;
+-	struct boot_params *boot_params;
+-	struct setup_header *hdr;
+-	void *image_base;
++	static struct boot_params boot_params __page_aligned_bss;
++	struct setup_header *hdr = &boot_params.hdr;
+ 	efi_guid_t proto = LOADED_IMAGE_PROTOCOL_GUID;
+ 	int options_size = 0;
+ 	efi_status_t status;
+@@ -449,57 +457,25 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 		efi_exit(handle, status);
+ 	}
  
- 	switch (mem->mem_type) {
- 	case TTM_PL_SYSTEM:
-@@ -573,9 +572,6 @@ static int amdgpu_ttm_io_mem_reserve(struct ttm_device *bdev,
- 		break;
- 	case TTM_PL_VRAM:
- 		mem->bus.offset = mem->start << PAGE_SHIFT;
--		/* check if it's visible */
--		if ((mem->bus.offset + bus_size) > adev->gmc.visible_vram_size)
--			return -EINVAL;
+-	image_base = efi_table_attr(image, image_base);
+-
+-	status = efi_allocate_pages(sizeof(struct boot_params),
+-				    (unsigned long *)&boot_params, ULONG_MAX);
+-	if (status != EFI_SUCCESS) {
+-		efi_err("Failed to allocate lowmem for boot params\n");
+-		efi_exit(handle, status);
+-	}
+-
+-	memset(boot_params, 0x0, sizeof(struct boot_params));
+-
+-	hdr = &boot_params->hdr;
+-
+-	/* Copy the setup header from the second sector to boot_params */
+-	memcpy(&hdr->jump, image_base + 512,
+-	       sizeof(struct setup_header) - offsetof(struct setup_header, jump));
+-
+-	/*
+-	 * Fill out some of the header fields ourselves because the
+-	 * EFI firmware loader doesn't load the first sector.
+-	 */
++	/* Assign the setup_header fields that the kernel actually cares about */
+ 	hdr->root_flags	= 1;
+ 	hdr->vid_mode	= 0xffff;
+-	hdr->boot_flag	= 0xAA55;
  
- 		if (adev->mman.aper_base_kaddr &&
- 		    mem->placement & TTM_PL_FLAG_CONTIGUOUS)
+ 	hdr->type_of_loader = 0x21;
++	hdr->initrd_addr_max = INT_MAX;
+ 
+ 	/* Convert unicode cmdline to ascii */
+ 	cmdline_ptr = efi_convert_cmdline(image, &options_size);
+ 	if (!cmdline_ptr)
+ 		goto fail;
+ 
+-	efi_set_u64_split((unsigned long)cmdline_ptr,
+-			  &hdr->cmd_line_ptr, &boot_params->ext_cmd_line_ptr);
+-
+-	hdr->ramdisk_image = 0;
+-	hdr->ramdisk_size = 0;
++	efi_set_u64_split((unsigned long)cmdline_ptr, &hdr->cmd_line_ptr,
++			  &boot_params.ext_cmd_line_ptr);
+ 
+-	/*
+-	 * Disregard any setup data that was provided by the bootloader:
+-	 * setup_data could be pointing anywhere, and we have no way of
+-	 * authenticating or validating the payload.
+-	 */
+-	hdr->setup_data = 0;
+-
+-	efi_stub_entry(handle, sys_table_arg, boot_params);
++	efi_stub_entry(handle, sys_table_arg, &boot_params);
+ 	/* not reached */
+ 
+ fail:
+-	efi_free(sizeof(struct boot_params), (unsigned long)boot_params);
+-
+ 	efi_exit(handle, status);
+ }
+ 
+@@ -811,7 +787,7 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry)
+ 
+ 	*kernel_entry = addr + entry;
+ 
+-	return efi_adjust_memory_range_protection(addr, kernel_total_size);
++	return efi_adjust_memory_range_protection(addr, kernel_text_size);
+ }
+ 
+ static void __noreturn enter_kernel(unsigned long kernel_addr,
 diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index b8fcb6c55698..5b50f7359199 100644
+index 4c661e024e13..49a47807c42d 100644
 --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
 +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -1559,6 +1559,37 @@ static void amdgpu_vm_bo_insert_map(struct amdgpu_device *adev,
+@@ -1400,6 +1400,37 @@ static void amdgpu_vm_bo_insert_map(struct amdgpu_device *adev,
  	trace_amdgpu_vm_bo_map(bo_va, mapping);
  }
  
@@ -975,7 +4191,7 @@ index b8fcb6c55698..5b50f7359199 100644
  /**
   * amdgpu_vm_bo_map - map bo inside a vm
   *
-@@ -1585,21 +1616,14 @@ int amdgpu_vm_bo_map(struct amdgpu_device *adev,
+@@ -1426,21 +1457,14 @@ int amdgpu_vm_bo_map(struct amdgpu_device *adev,
  	struct amdgpu_bo *bo = bo_va->base.bo;
  	struct amdgpu_vm *vm = bo_va->base.vm;
  	uint64_t eaddr;
@@ -1002,7 +4218,7 @@ index b8fcb6c55698..5b50f7359199 100644
  
  	tmp = amdgpu_vm_it_iter_first(&vm->va, saddr, eaddr);
  	if (tmp) {
-@@ -1652,17 +1676,9 @@ int amdgpu_vm_bo_replace_map(struct amdgpu_device *adev,
+@@ -1493,17 +1517,9 @@ int amdgpu_vm_bo_replace_map(struct amdgpu_device *adev,
  	uint64_t eaddr;
  	int r;
  
@@ -1023,7 +4239,7 @@ index b8fcb6c55698..5b50f7359199 100644
  
  	/* Allocate all the needed memory */
  	mapping = kmalloc(sizeof(*mapping), GFP_KERNEL);
-@@ -1676,7 +1692,7 @@ int amdgpu_vm_bo_replace_map(struct amdgpu_device *adev,
+@@ -1517,7 +1533,7 @@ int amdgpu_vm_bo_replace_map(struct amdgpu_device *adev,
  	}
  
  	saddr /= AMDGPU_GPU_PAGE_SIZE;
@@ -1032,7 +4248,7 @@ index b8fcb6c55698..5b50f7359199 100644
  
  	mapping->start = saddr;
  	mapping->last = eaddr;
-@@ -1763,10 +1779,14 @@ int amdgpu_vm_bo_clear_mappings(struct amdgpu_device *adev,
+@@ -1604,10 +1620,14 @@ int amdgpu_vm_bo_clear_mappings(struct amdgpu_device *adev,
  	struct amdgpu_bo_va_mapping *before, *after, *tmp, *next;
  	LIST_HEAD(removed);
  	uint64_t eaddr;
@@ -1049,96 +4265,225 @@ index b8fcb6c55698..5b50f7359199 100644
  
  	/* Allocate all the needed memory */
  	before = kzalloc(sizeof(*before), GFP_KERNEL);
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-index 717a60d7a4ea..b79986412cd8 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -819,9 +819,9 @@ struct kfd_process *kfd_create_process(struct task_struct *thread)
- 	mutex_lock(&kfd_processes_mutex);
- 
- 	if (kfd_is_locked()) {
--		mutex_unlock(&kfd_processes_mutex);
- 		pr_debug("KFD is locked! Cannot create process");
--		return ERR_PTR(-EINVAL);
-+		process = ERR_PTR(-EINVAL);
-+		goto out;
- 	}
- 
- 	/* A prior open of /dev/kfd could have already created the process. */
-diff --git a/drivers/gpu/drm/i915/display/intel_cdclk.c b/drivers/gpu/drm/i915/display/intel_cdclk.c
-index 6e36a1528453..7ba30d26f620 100644
---- a/drivers/gpu/drm/i915/display/intel_cdclk.c
-+++ b/drivers/gpu/drm/i915/display/intel_cdclk.c
-@@ -2512,7 +2512,8 @@ intel_set_cdclk_pre_plane_update(struct intel_atomic_state *state)
- 		intel_atomic_get_old_cdclk_state(state);
- 	const struct intel_cdclk_state *new_cdclk_state =
- 		intel_atomic_get_new_cdclk_state(state);
--	enum pipe pipe = new_cdclk_state->pipe;
-+	struct intel_cdclk_config cdclk_config;
-+	enum pipe pipe;
- 
- 	if (!intel_cdclk_changed(&old_cdclk_state->actual,
- 				 &new_cdclk_state->actual))
-@@ -2521,12 +2522,25 @@ intel_set_cdclk_pre_plane_update(struct intel_atomic_state *state)
- 	if (IS_DG2(i915))
- 		intel_cdclk_pcode_pre_notify(state);
- 
--	if (new_cdclk_state->disable_pipes ||
--	    old_cdclk_state->actual.cdclk <= new_cdclk_state->actual.cdclk) {
--		drm_WARN_ON(&i915->drm, !new_cdclk_state->base.changed);
-+	if (new_cdclk_state->disable_pipes) {
-+		cdclk_config = new_cdclk_state->actual;
-+		pipe = INVALID_PIPE;
-+	} else {
-+		if (new_cdclk_state->actual.cdclk >= old_cdclk_state->actual.cdclk) {
-+			cdclk_config = new_cdclk_state->actual;
-+			pipe = new_cdclk_state->pipe;
-+		} else {
-+			cdclk_config = old_cdclk_state->actual;
-+			pipe = INVALID_PIPE;
-+		}
- 
--		intel_set_cdclk(i915, &new_cdclk_state->actual, pipe);
-+		cdclk_config.voltage_level = max(new_cdclk_state->actual.voltage_level,
-+						 old_cdclk_state->actual.voltage_level);
- 	}
-+
-+	drm_WARN_ON(&i915->drm, !new_cdclk_state->base.changed);
-+
-+	intel_set_cdclk(i915, &cdclk_config, pipe);
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
+index 66a6f7a37ebc..5a5787bfbce7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
+@@ -1531,44 +1531,70 @@ static void gfx_v11_0_select_se_sh(struct amdgpu_device *adev, u32 se_num,
+ 	WREG32_SOC15(GC, 0, regGRBM_GFX_INDEX, data);
  }
  
- /**
-@@ -2544,7 +2558,7 @@ intel_set_cdclk_post_plane_update(struct intel_atomic_state *state)
- 		intel_atomic_get_old_cdclk_state(state);
- 	const struct intel_cdclk_state *new_cdclk_state =
- 		intel_atomic_get_new_cdclk_state(state);
--	enum pipe pipe = new_cdclk_state->pipe;
-+	enum pipe pipe;
- 
- 	if (!intel_cdclk_changed(&old_cdclk_state->actual,
- 				 &new_cdclk_state->actual))
-@@ -2554,11 +2568,14 @@ intel_set_cdclk_post_plane_update(struct intel_atomic_state *state)
- 		intel_cdclk_pcode_post_notify(state);
- 
- 	if (!new_cdclk_state->disable_pipes &&
--	    old_cdclk_state->actual.cdclk > new_cdclk_state->actual.cdclk) {
--		drm_WARN_ON(&i915->drm, !new_cdclk_state->base.changed);
-+	    new_cdclk_state->actual.cdclk < old_cdclk_state->actual.cdclk)
-+		pipe = new_cdclk_state->pipe;
-+	else
-+		pipe = INVALID_PIPE;
- 
--		intel_set_cdclk(i915, &new_cdclk_state->actual, pipe);
--	}
-+	drm_WARN_ON(&i915->drm, !new_cdclk_state->base.changed);
+-static u32 gfx_v11_0_get_rb_active_bitmap(struct amdgpu_device *adev)
++static u32 gfx_v11_0_get_sa_active_bitmap(struct amdgpu_device *adev)
+ {
+-	u32 data, mask;
++	u32 gc_disabled_sa_mask, gc_user_disabled_sa_mask, sa_mask;
 +
-+	intel_set_cdclk(i915, &new_cdclk_state->actual, pipe);
++	gc_disabled_sa_mask = RREG32_SOC15(GC, 0, regCC_GC_SA_UNIT_DISABLE);
++	gc_disabled_sa_mask = REG_GET_FIELD(gc_disabled_sa_mask,
++					   CC_GC_SA_UNIT_DISABLE,
++					   SA_DISABLE);
++	gc_user_disabled_sa_mask = RREG32_SOC15(GC, 0, regGC_USER_SA_UNIT_DISABLE);
++	gc_user_disabled_sa_mask = REG_GET_FIELD(gc_user_disabled_sa_mask,
++						 GC_USER_SA_UNIT_DISABLE,
++						 SA_DISABLE);
++	sa_mask = amdgpu_gfx_create_bitmask(adev->gfx.config.max_sh_per_se *
++					    adev->gfx.config.max_shader_engines);
+ 
+-	data = RREG32_SOC15(GC, 0, regCC_RB_BACKEND_DISABLE);
+-	data |= RREG32_SOC15(GC, 0, regGC_USER_RB_BACKEND_DISABLE);
++	return sa_mask & (~(gc_disabled_sa_mask | gc_user_disabled_sa_mask));
++}
+ 
+-	data &= CC_RB_BACKEND_DISABLE__BACKEND_DISABLE_MASK;
+-	data >>= GC_USER_RB_BACKEND_DISABLE__BACKEND_DISABLE__SHIFT;
++static u32 gfx_v11_0_get_rb_active_bitmap(struct amdgpu_device *adev)
++{
++	u32 gc_disabled_rb_mask, gc_user_disabled_rb_mask;
++	u32 rb_mask;
+ 
+-	mask = amdgpu_gfx_create_bitmask(adev->gfx.config.max_backends_per_se /
+-					 adev->gfx.config.max_sh_per_se);
++	gc_disabled_rb_mask = RREG32_SOC15(GC, 0, regCC_RB_BACKEND_DISABLE);
++	gc_disabled_rb_mask = REG_GET_FIELD(gc_disabled_rb_mask,
++					    CC_RB_BACKEND_DISABLE,
++					    BACKEND_DISABLE);
++	gc_user_disabled_rb_mask = RREG32_SOC15(GC, 0, regGC_USER_RB_BACKEND_DISABLE);
++	gc_user_disabled_rb_mask = REG_GET_FIELD(gc_user_disabled_rb_mask,
++						 GC_USER_RB_BACKEND_DISABLE,
++						 BACKEND_DISABLE);
++	rb_mask = amdgpu_gfx_create_bitmask(adev->gfx.config.max_backends_per_se *
++					    adev->gfx.config.max_shader_engines);
+ 
+-	return (~data) & mask;
++	return rb_mask & (~(gc_disabled_rb_mask | gc_user_disabled_rb_mask));
  }
  
- static int intel_pixel_rate_to_cdclk(const struct intel_crtc_state *crtc_state)
+ static void gfx_v11_0_setup_rb(struct amdgpu_device *adev)
+ {
+-	int i, j;
+-	u32 data;
+-	u32 active_rbs = 0;
+-	u32 rb_bitmap_width_per_sh = adev->gfx.config.max_backends_per_se /
+-					adev->gfx.config.max_sh_per_se;
++	u32 rb_bitmap_width_per_sa;
++	u32 max_sa;
++	u32 active_sa_bitmap;
++	u32 global_active_rb_bitmap;
++	u32 active_rb_bitmap = 0;
++	u32 i;
+ 
+-	mutex_lock(&adev->grbm_idx_mutex);
+-	for (i = 0; i < adev->gfx.config.max_shader_engines; i++) {
+-		for (j = 0; j < adev->gfx.config.max_sh_per_se; j++) {
+-			gfx_v11_0_select_se_sh(adev, i, j, 0xffffffff);
+-			data = gfx_v11_0_get_rb_active_bitmap(adev);
+-			active_rbs |= data << ((i * adev->gfx.config.max_sh_per_se + j) *
+-					       rb_bitmap_width_per_sh);
+-		}
++	/* query sa bitmap from SA_UNIT_DISABLE registers */
++	active_sa_bitmap = gfx_v11_0_get_sa_active_bitmap(adev);
++	/* query rb bitmap from RB_BACKEND_DISABLE registers */
++	global_active_rb_bitmap = gfx_v11_0_get_rb_active_bitmap(adev);
++
++	/* generate active rb bitmap according to active sa bitmap */
++	max_sa = adev->gfx.config.max_shader_engines *
++		 adev->gfx.config.max_sh_per_se;
++	rb_bitmap_width_per_sa = adev->gfx.config.max_backends_per_se /
++				 adev->gfx.config.max_sh_per_se;
++	for (i = 0; i < max_sa; i++) {
++		if (active_sa_bitmap & (1 << i))
++			active_rb_bitmap |= (0x3 << (i * rb_bitmap_width_per_sa));
+ 	}
+-	gfx_v11_0_select_se_sh(adev, 0xffffffff, 0xffffffff, 0xffffffff);
+-	mutex_unlock(&adev->grbm_idx_mutex);
+ 
+-	adev->gfx.config.backend_enable_mask = active_rbs;
+-	adev->gfx.config.num_rbs = hweight32(active_rbs);
++	active_rb_bitmap &= global_active_rb_bitmap;
++	adev->gfx.config.backend_enable_mask = active_rb_bitmap;
++	adev->gfx.config.num_rbs = hweight32(active_rb_bitmap);
+ }
+ 
+ #define DEFAULT_SH_MEM_BASES	(0x6000)
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn32/dcn32_optc.c b/drivers/gpu/drm/amd/display/dc/dcn32/dcn32_optc.c
+index a974f86e718a..37c645a882dd 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn32/dcn32_optc.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn32/dcn32_optc.c
+@@ -216,9 +216,6 @@ static void optc32_setup_manual_trigger(struct timing_generator *optc)
+ 				OTG_V_TOTAL_MAX_SEL, 1,
+ 				OTG_FORCE_LOCK_ON_EVENT, 0,
+ 				OTG_SET_V_TOTAL_MIN_MASK, (1 << 1)); /* TRIGA */
+-
+-		// Setup manual flow control for EOF via TRIG_A
+-		optc->funcs->setup_manual_trigger(optc);
+ 	}
+ }
+ 
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index 3fe5e6439c40..aa93129c3397 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -348,6 +348,12 @@ static const struct dmi_system_id orientation_data[] = {
+ 		  DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "IdeaPad Duet 3 10IGL5"),
+ 		},
+ 		.driver_data = (void *)&lcd1200x1920_rightside_up,
++	}, {	/* Lenovo Legion Go 8APU1 */
++		.matches = {
++		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		  DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8APU1"),
++		},
++		.driver_data = (void *)&lcd1600x2560_leftside_up,
+ 	}, {	/* Lenovo Yoga Book X90F / X90L */
+ 		.matches = {
+ 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
+diff --git a/drivers/gpu/drm/i915/i915_vma.c b/drivers/gpu/drm/i915/i915_vma.c
+index c8ad8f37e5cf..58a03da16a10 100644
+--- a/drivers/gpu/drm/i915/i915_vma.c
++++ b/drivers/gpu/drm/i915/i915_vma.c
+@@ -32,6 +32,7 @@
+ #include "gt/intel_engine.h"
+ #include "gt/intel_engine_heartbeat.h"
+ #include "gt/intel_gt.h"
++#include "gt/intel_gt_pm.h"
+ #include "gt/intel_gt_requests.h"
+ 
+ #include "i915_drv.h"
+@@ -98,12 +99,34 @@ static inline struct i915_vma *active_to_vma(struct i915_active *ref)
+ 
+ static int __i915_vma_active(struct i915_active *ref)
+ {
+-	return i915_vma_tryget(active_to_vma(ref)) ? 0 : -ENOENT;
++	struct i915_vma *vma = active_to_vma(ref);
++
++	if (!i915_vma_tryget(vma))
++		return -ENOENT;
++
++	/*
++	 * Exclude global GTT VMA from holding a GT wakeref
++	 * while active, otherwise GPU never goes idle.
++	 */
++	if (!i915_vma_is_ggtt(vma))
++		intel_gt_pm_get(vma->vm->gt);
++
++	return 0;
+ }
+ 
+ static void __i915_vma_retire(struct i915_active *ref)
+ {
+-	i915_vma_put(active_to_vma(ref));
++	struct i915_vma *vma = active_to_vma(ref);
++
++	if (!i915_vma_is_ggtt(vma)) {
++		/*
++		 * Since we can be called from atomic contexts,
++		 * use an async variant of intel_gt_pm_put().
++		 */
++		intel_gt_pm_put_async(vma->vm->gt);
++	}
++
++	i915_vma_put(vma);
+ }
+ 
+ static struct i915_vma *
+@@ -1365,7 +1388,7 @@ int i915_vma_pin_ww(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
+ 	struct i915_vma_work *work = NULL;
+ 	struct dma_fence *moving = NULL;
+ 	struct i915_vma_resource *vma_res = NULL;
+-	intel_wakeref_t wakeref = 0;
++	intel_wakeref_t wakeref;
+ 	unsigned int bound;
+ 	int err;
+ 
+@@ -1385,8 +1408,14 @@ int i915_vma_pin_ww(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
+ 	if (err)
+ 		return err;
+ 
+-	if (flags & PIN_GLOBAL)
+-		wakeref = intel_runtime_pm_get(&vma->vm->i915->runtime_pm);
++	/*
++	 * In case of a global GTT, we must hold a runtime-pm wakeref
++	 * while global PTEs are updated.  In other cases, we hold
++	 * the rpm reference while the VMA is active.  Since runtime
++	 * resume may require allocations, which are forbidden inside
++	 * vm->mutex, get the first rpm wakeref outside of the mutex.
++	 */
++	wakeref = intel_runtime_pm_get(&vma->vm->i915->runtime_pm);
+ 
+ 	if (flags & vma->vm->bind_async_flags) {
+ 		/* lock VM */
+@@ -1522,8 +1551,7 @@ int i915_vma_pin_ww(struct i915_vma *vma, struct i915_gem_ww_ctx *ww,
+ 	if (work)
+ 		dma_fence_work_commit_imm(&work->base);
+ err_rpm:
+-	if (wakeref)
+-		intel_runtime_pm_put(&vma->vm->i915->runtime_pm, wakeref);
++	intel_runtime_pm_put(&vma->vm->i915->runtime_pm, wakeref);
+ 
+ 	if (moving)
+ 		dma_fence_put(moving);
 diff --git a/drivers/gpu/drm/nouveau/nouveau_bios.c b/drivers/gpu/drm/nouveau/nouveau_bios.c
-index 479effcf607e..79cfab53f80e 100644
+index 189903b65edc..48cf593383b3 100644
 --- a/drivers/gpu/drm/nouveau/nouveau_bios.c
 +++ b/drivers/gpu/drm/nouveau/nouveau_bios.c
 @@ -23,6 +23,7 @@
@@ -1149,7 +4494,7 @@ index 479effcf607e..79cfab53f80e 100644
  #include "nouveau_reg.h"
  #include "dispnv04/hw.h"
  #include "nouveau_encoder.h"
-@@ -1677,7 +1678,7 @@ apply_dcb_encoder_quirks(struct drm_device *dev, int idx, u32 *conn, u32 *conf)
+@@ -1675,7 +1676,7 @@ apply_dcb_encoder_quirks(struct drm_device *dev, int idx, u32 *conn, u32 *conf)
  	 */
  	if (nv_match_device(dev, 0x0201, 0x1462, 0x8851)) {
  		if (*conn == 0xf2005014 && *conf == 0xffffffff) {
@@ -1158,7 +4503,7 @@ index 479effcf607e..79cfab53f80e 100644
  			return false;
  		}
  	}
-@@ -1763,26 +1764,26 @@ fabricate_dcb_encoder_table(struct drm_device *dev, struct nvbios *bios)
+@@ -1761,26 +1762,26 @@ fabricate_dcb_encoder_table(struct drm_device *dev, struct nvbios *bios)
  #ifdef __powerpc__
  	/* Apple iMac G4 NV17 */
  	if (of_machine_is_compatible("PowerMac4,5")) {
@@ -1191,10 +4536,10 @@ index 479effcf607e..79cfab53f80e 100644
  
  static int
 diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/nv50.c b/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/nv50.c
-index a7f3fc342d87..dd5b5a17ece0 100644
+index c51bac76174c..9fe5b6a36ab9 100644
 --- a/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/nv50.c
 +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/instmem/nv50.c
-@@ -222,8 +222,11 @@ nv50_instobj_acquire(struct nvkm_memory *memory)
+@@ -221,8 +221,11 @@ nv50_instobj_acquire(struct nvkm_memory *memory)
  	void __iomem *map = NULL;
  
  	/* Already mapped? */
@@ -1207,7 +4552,7 @@ index a7f3fc342d87..dd5b5a17ece0 100644
  
  	/* Take the lock, and re-check that another thread hasn't
  	 * already mapped the object in the meantime.
-@@ -250,6 +253,8 @@ nv50_instobj_acquire(struct nvkm_memory *memory)
+@@ -249,6 +252,8 @@ nv50_instobj_acquire(struct nvkm_memory *memory)
  			iobj->base.memory.ptrs = &nv50_instobj_fast;
  		else
  			iobj->base.memory.ptrs = &nv50_instobj_slow;
@@ -1217,10 +4562,10 @@ index a7f3fc342d87..dd5b5a17ece0 100644
  	}
  
 diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-index 775144695283..b15ca56a09a7 100644
+index ec228c269146..b380bbb0e0d0 100644
 --- a/drivers/gpu/drm/panel/panel-visionox-rm69299.c
 +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-@@ -253,8 +253,6 @@ static void visionox_rm69299_remove(struct mipi_dsi_device *dsi)
+@@ -261,8 +261,6 @@ static void visionox_rm69299_remove(struct mipi_dsi_device *dsi)
  	struct visionox_rm69299 *ctx = mipi_dsi_get_drvdata(dsi);
  
  	mipi_dsi_detach(ctx->dsi);
@@ -1229,311 +4574,33 @@ index 775144695283..b15ca56a09a7 100644
  	drm_panel_remove(&ctx->panel);
  }
  
-diff --git a/drivers/gpu/drm/radeon/radeon_atombios.c b/drivers/gpu/drm/radeon/radeon_atombios.c
-index 3596ea4a8b60..fc7b0e8f1ca1 100644
---- a/drivers/gpu/drm/radeon/radeon_atombios.c
-+++ b/drivers/gpu/drm/radeon/radeon_atombios.c
-@@ -923,8 +923,12 @@ bool radeon_get_atom_connector_info_from_supported_devices_table(struct
- 		max_device = ATOM_MAX_SUPPORTED_DEVICE_INFO;
- 
- 	for (i = 0; i < max_device; i++) {
--		ATOM_CONNECTOR_INFO_I2C ci =
--		    supported_devices->info.asConnInfo[i];
-+		ATOM_CONNECTOR_INFO_I2C ci;
-+
-+		if (frev > 1)
-+			ci = supported_devices->info_2d1.asConnInfo[i];
-+		else
-+			ci = supported_devices->info.asConnInfo[i];
- 
- 		bios_connectors[i].valid = false;
- 
-diff --git a/drivers/gpu/drm/ttm/ttm_pool.c b/drivers/gpu/drm/ttm/ttm_pool.c
-index 112438d965ff..6e1fd6985ffc 100644
---- a/drivers/gpu/drm/ttm/ttm_pool.c
-+++ b/drivers/gpu/drm/ttm/ttm_pool.c
-@@ -288,17 +288,23 @@ static struct ttm_pool_type *ttm_pool_select_type(struct ttm_pool *pool,
- 						  enum ttm_caching caching,
- 						  unsigned int order)
- {
--	if (pool->use_dma_alloc || pool->nid != NUMA_NO_NODE)
-+	if (pool->use_dma_alloc)
- 		return &pool->caching[caching].orders[order];
- 
- #ifdef CONFIG_X86
- 	switch (caching) {
- 	case ttm_write_combined:
-+		if (pool->nid != NUMA_NO_NODE)
-+			return &pool->caching[caching].orders[order];
-+
- 		if (pool->use_dma32)
- 			return &global_dma32_write_combined[order];
- 
- 		return &global_write_combined[order];
- 	case ttm_uncached:
-+		if (pool->nid != NUMA_NO_NODE)
-+			return &pool->caching[caching].orders[order];
-+
- 		if (pool->use_dma32)
- 			return &global_dma32_uncached[order];
- 
-@@ -566,11 +572,17 @@ void ttm_pool_init(struct ttm_pool *pool, struct device *dev,
- 	pool->use_dma_alloc = use_dma_alloc;
- 	pool->use_dma32 = use_dma32;
- 
--	if (use_dma_alloc || nid != NUMA_NO_NODE) {
--		for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i)
--			for (j = 0; j < NR_PAGE_ORDERS; ++j)
--				ttm_pool_type_init(&pool->caching[i].orders[j],
--						   pool, i, j);
-+	for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i) {
-+		for (j = 0; j < NR_PAGE_ORDERS; ++j) {
-+			struct ttm_pool_type *pt;
-+
-+			/* Initialize only pool types which are actually used */
-+			pt = ttm_pool_select_type(pool, i, j);
-+			if (pt != &pool->caching[i].orders[j])
-+				continue;
-+
-+			ttm_pool_type_init(pt, pool, i, j);
-+		}
- 	}
- }
- EXPORT_SYMBOL(ttm_pool_init);
-@@ -599,10 +611,16 @@ void ttm_pool_fini(struct ttm_pool *pool)
- {
- 	unsigned int i, j;
- 
--	if (pool->use_dma_alloc || pool->nid != NUMA_NO_NODE) {
--		for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i)
--			for (j = 0; j < NR_PAGE_ORDERS; ++j)
--				ttm_pool_type_fini(&pool->caching[i].orders[j]);
-+	for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i) {
-+		for (j = 0; j < NR_PAGE_ORDERS; ++j) {
-+			struct ttm_pool_type *pt;
-+
-+			pt = ttm_pool_select_type(pool, i, j);
-+			if (pt != &pool->caching[i].orders[j])
-+				continue;
-+
-+			ttm_pool_type_fini(pt);
-+		}
- 	}
- 
- 	/* We removed the pool types from the LRU, but we need to also make sure
-diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
-index afc76390a197..b8f9f2a3d2fb 100644
---- a/drivers/gpu/drm/v3d/v3d_irq.c
-+++ b/drivers/gpu/drm/v3d/v3d_irq.c
-@@ -105,7 +105,6 @@ v3d_irq(int irq, void *arg)
- 		struct v3d_file_priv *file = v3d->bin_job->base.file->driver_priv;
- 		u64 runtime = local_clock() - file->start_ns[V3D_BIN];
- 
--		file->enabled_ns[V3D_BIN] += local_clock() - file->start_ns[V3D_BIN];
- 		file->jobs_sent[V3D_BIN]++;
- 		v3d->queue[V3D_BIN].jobs_sent++;
- 
-@@ -126,7 +125,6 @@ v3d_irq(int irq, void *arg)
- 		struct v3d_file_priv *file = v3d->render_job->base.file->driver_priv;
- 		u64 runtime = local_clock() - file->start_ns[V3D_RENDER];
- 
--		file->enabled_ns[V3D_RENDER] += local_clock() - file->start_ns[V3D_RENDER];
- 		file->jobs_sent[V3D_RENDER]++;
- 		v3d->queue[V3D_RENDER].jobs_sent++;
- 
-@@ -147,7 +145,6 @@ v3d_irq(int irq, void *arg)
- 		struct v3d_file_priv *file = v3d->csd_job->base.file->driver_priv;
- 		u64 runtime = local_clock() - file->start_ns[V3D_CSD];
- 
--		file->enabled_ns[V3D_CSD] += local_clock() - file->start_ns[V3D_CSD];
- 		file->jobs_sent[V3D_CSD]++;
- 		v3d->queue[V3D_CSD].jobs_sent++;
- 
-@@ -195,7 +192,6 @@ v3d_hub_irq(int irq, void *arg)
- 		struct v3d_file_priv *file = v3d->tfu_job->base.file->driver_priv;
- 		u64 runtime = local_clock() - file->start_ns[V3D_TFU];
- 
--		file->enabled_ns[V3D_TFU] += local_clock() - file->start_ns[V3D_TFU];
- 		file->jobs_sent[V3D_TFU]++;
- 		v3d->queue[V3D_TFU].jobs_sent++;
- 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c b/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
-index c52c7bf1485b..717d624e9a05 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
-@@ -456,8 +456,10 @@ int vmw_bo_cpu_blit(struct ttm_buffer_object *dst,
- 		.no_wait_gpu = false
- 	};
- 	u32 j, initial_line = dst_offset / dst_stride;
--	struct vmw_bo_blit_line_data d;
-+	struct vmw_bo_blit_line_data d = {0};
- 	int ret = 0;
-+	struct page **dst_pages = NULL;
-+	struct page **src_pages = NULL;
- 
- 	/* Buffer objects need to be either pinned or reserved: */
- 	if (!(dst->pin_count))
-@@ -477,12 +479,35 @@ int vmw_bo_cpu_blit(struct ttm_buffer_object *dst,
- 			return ret;
- 	}
- 
-+	if (!src->ttm->pages && src->ttm->sg) {
-+		src_pages = kvmalloc_array(src->ttm->num_pages,
-+					   sizeof(struct page *), GFP_KERNEL);
-+		if (!src_pages)
-+			return -ENOMEM;
-+		ret = drm_prime_sg_to_page_array(src->ttm->sg, src_pages,
-+						 src->ttm->num_pages);
-+		if (ret)
-+			goto out;
-+	}
-+	if (!dst->ttm->pages && dst->ttm->sg) {
-+		dst_pages = kvmalloc_array(dst->ttm->num_pages,
-+					   sizeof(struct page *), GFP_KERNEL);
-+		if (!dst_pages) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+		ret = drm_prime_sg_to_page_array(dst->ttm->sg, dst_pages,
-+						 dst->ttm->num_pages);
-+		if (ret)
-+			goto out;
-+	}
-+
- 	d.mapped_dst = 0;
- 	d.mapped_src = 0;
- 	d.dst_addr = NULL;
- 	d.src_addr = NULL;
--	d.dst_pages = dst->ttm->pages;
--	d.src_pages = src->ttm->pages;
-+	d.dst_pages = dst->ttm->pages ? dst->ttm->pages : dst_pages;
-+	d.src_pages = src->ttm->pages ? src->ttm->pages : src_pages;
- 	d.dst_num_pages = PFN_UP(dst->resource->size);
- 	d.src_num_pages = PFN_UP(src->resource->size);
- 	d.dst_prot = ttm_io_prot(dst, dst->resource, PAGE_KERNEL);
-@@ -504,6 +529,10 @@ int vmw_bo_cpu_blit(struct ttm_buffer_object *dst,
- 		kunmap_atomic(d.src_addr);
- 	if (d.dst_addr)
- 		kunmap_atomic(d.dst_addr);
-+	if (src_pages)
-+		kvfree(src_pages);
-+	if (dst_pages)
-+		kvfree(dst_pages);
- 
- 	return ret;
- }
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-index 2bfac3aad7b7..4aac88cc5f91 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-@@ -377,7 +377,8 @@ static int vmw_bo_init(struct vmw_private *dev_priv,
- {
- 	struct ttm_operation_ctx ctx = {
- 		.interruptible = params->bo_type != ttm_bo_type_kernel,
--		.no_wait_gpu = false
-+		.no_wait_gpu = false,
-+		.resv = params->resv,
- 	};
- 	struct ttm_device *bdev = &dev_priv->bdev;
- 	struct drm_device *vdev = &dev_priv->drm;
-@@ -394,8 +395,8 @@ static int vmw_bo_init(struct vmw_private *dev_priv,
- 
- 	vmw_bo_placement_set(vmw_bo, params->domain, params->busy_domain);
- 	ret = ttm_bo_init_reserved(bdev, &vmw_bo->tbo, params->bo_type,
--				   &vmw_bo->placement, 0, &ctx, NULL,
--				   NULL, destroy);
-+				   &vmw_bo->placement, 0, &ctx,
-+				   params->sg, params->resv, destroy);
- 	if (unlikely(ret))
- 		return ret;
- 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.h b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.h
-index 0d496dc9c6af..f349642e6190 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.h
-@@ -55,6 +55,8 @@ struct vmw_bo_params {
- 	enum ttm_bo_type bo_type;
- 	size_t size;
- 	bool pin;
-+	struct dma_resv *resv;
-+	struct sg_table *sg;
- };
- 
- /**
 diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-index 0a304706e013..58fb40c93100 100644
+index 9d7a1b710f48..53f63ad656a4 100644
 --- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
 +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-@@ -1628,6 +1628,7 @@ static const struct drm_driver driver = {
+@@ -663,11 +663,12 @@ static int vmw_dma_select_mode(struct vmw_private *dev_priv)
+ 		[vmw_dma_map_populate] = "Caching DMA mappings.",
+ 		[vmw_dma_map_bind] = "Giving up DMA mappings early."};
  
- 	.prime_fd_to_handle = vmw_prime_fd_to_handle,
- 	.prime_handle_to_fd = vmw_prime_handle_to_fd,
-+	.gem_prime_import_sg_table = vmw_prime_import_sg_table,
- 
- 	.fops = &vmwgfx_driver_fops,
- 	.name = VMWGFX_DRIVER_NAME,
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-index 3cd5090dedfc..6acc7ad0e9eb 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-@@ -1131,6 +1131,9 @@ extern int vmw_prime_handle_to_fd(struct drm_device *dev,
- 				  struct drm_file *file_priv,
- 				  uint32_t handle, uint32_t flags,
- 				  int *prime_fd);
-+struct drm_gem_object *vmw_prime_import_sg_table(struct drm_device *dev,
-+						 struct dma_buf_attachment *attach,
-+						 struct sg_table *table);
- 
- /*
-  * MemoryOBject management -  vmwgfx_mob.c
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_gem.c b/drivers/gpu/drm/vmwgfx/vmwgfx_gem.c
-index 12787bb9c111..d6bcaf078b1f 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_gem.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_gem.c
-@@ -149,6 +149,38 @@ int vmw_gem_object_create_with_handle(struct vmw_private *dev_priv,
- 	return ret;
- }
- 
-+struct drm_gem_object *vmw_prime_import_sg_table(struct drm_device *dev,
-+						 struct dma_buf_attachment *attach,
-+						 struct sg_table *table)
-+{
-+	int ret;
-+	struct vmw_private *dev_priv = vmw_priv(dev);
-+	struct drm_gem_object *gem = NULL;
-+	struct vmw_bo *vbo;
-+	struct vmw_bo_params params = {
-+		.domain = (dev_priv->has_mob) ? VMW_BO_DOMAIN_SYS : VMW_BO_DOMAIN_VRAM,
-+		.busy_domain = VMW_BO_DOMAIN_SYS,
-+		.bo_type = ttm_bo_type_sg,
-+		.size = attach->dmabuf->size,
-+		.pin = false,
-+		.resv = attach->dmabuf->resv,
-+		.sg = table,
-+
-+	};
-+
-+	dma_resv_lock(params.resv, NULL);
-+
-+	ret = vmw_bo_create(dev_priv, &params, &vbo);
-+	if (ret != 0)
-+		goto out_no_bo;
-+
-+	vbo->tbo.base.funcs = &vmw_gem_object_funcs;
-+
-+	gem = &vbo->tbo.base;
-+out_no_bo:
-+	dma_resv_unlock(params.resv);
-+	return gem;
-+}
- 
- int vmw_gem_object_create_ioctl(struct drm_device *dev, void *data,
- 				struct drm_file *filp)
+-	/* TTM currently doesn't fully support SEV encryption. */
+-	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
+-		return -EINVAL;
+-
+-	if (vmw_force_coherent)
++	/*
++	 * When running with SEV we always want dma mappings, because
++	 * otherwise ttm tt pool pages will bounce through swiotlb running
++	 * out of available space.
++	 */
++	if (vmw_force_coherent || cc_platform_has(CC_ATTR_MEM_ENCRYPT))
+ 		dev_priv->map_mode = vmw_dma_alloc_coherent;
+ 	else if (vmw_restrict_iommu)
+ 		dev_priv->map_mode = vmw_dma_map_bind;
 diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-index 65be9e4a8992..f27afc6e39ee 100644
+index aa571b75cd07..b1aed051b41a 100644
 --- a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
 +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-@@ -932,6 +932,7 @@ int vmw_du_cursor_plane_atomic_check(struct drm_plane *plane,
+@@ -793,6 +793,7 @@ int vmw_du_cursor_plane_atomic_check(struct drm_plane *plane,
  int vmw_du_crtc_atomic_check(struct drm_crtc *crtc,
  			     struct drm_atomic_state *state)
  {
@@ -1541,7 +4608,7 @@ index 65be9e4a8992..f27afc6e39ee 100644
  	struct drm_crtc_state *new_state = drm_atomic_get_new_crtc_state(state,
  									 crtc);
  	struct vmw_display_unit *du = vmw_crtc_to_du(new_state->crtc);
-@@ -939,9 +940,13 @@ int vmw_du_crtc_atomic_check(struct drm_crtc *crtc,
+@@ -800,9 +801,13 @@ int vmw_du_crtc_atomic_check(struct drm_crtc *crtc,
  	bool has_primary = new_state->plane_mask &
  			   drm_plane_mask(crtc->primary);
  
@@ -1559,10 +4626,10 @@ index 65be9e4a8992..f27afc6e39ee 100644
  
  	if (new_state->connector_mask != connector_mask &&
 diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.h b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.h
-index db81e635dc06..9fda4f4ec7a9 100644
+index b02d2793659f..b116600b343a 100644
 --- a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.h
 +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.h
-@@ -243,10 +243,10 @@ struct vmw_framebuffer_bo {
+@@ -246,10 +246,10 @@ struct vmw_framebuffer_bo {
  
  
  static const uint32_t __maybe_unused vmw_primary_plane_formats[] = {
@@ -1575,166 +4642,156 @@ index db81e635dc06..9fda4f4ec7a9 100644
  };
  
  static const uint32_t __maybe_unused vmw_cursor_plane_formats[] = {
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_prime.c b/drivers/gpu/drm/vmwgfx/vmwgfx_prime.c
-index 2d72a5ee7c0c..c99cad444991 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_prime.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_prime.c
-@@ -75,8 +75,12 @@ int vmw_prime_fd_to_handle(struct drm_device *dev,
- 			   int fd, u32 *handle)
- {
- 	struct ttm_object_file *tfile = vmw_fpriv(file_priv)->tfile;
-+	int ret = ttm_prime_fd_to_handle(tfile, fd, handle);
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 1be454bafcb9..405d88b08908 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -717,10 +717,10 @@
+ #define USB_DEVICE_ID_KYE_GPEN_560	0x5003
+ #define USB_DEVICE_ID_KYE_EASYPEN_I405X	0x5010
+ #define USB_DEVICE_ID_KYE_MOUSEPEN_I608X	0x5011
+-#define USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2	0x501a
+ #define USB_DEVICE_ID_KYE_EASYPEN_M610X	0x5013
+ #define USB_DEVICE_ID_KYE_PENSKETCH_M912	0x5015
+ #define USB_DEVICE_ID_KYE_EASYPEN_M406XE	0x5019
++#define USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2	0x501A
  
--	return ttm_prime_fd_to_handle(tfile, fd, handle);
-+	if (ret)
-+		ret = drm_gem_prime_fd_to_handle(dev, file_priv, fd, handle);
-+
-+	return ret;
- }
- 
- int vmw_prime_handle_to_fd(struct drm_device *dev,
-@@ -85,5 +89,12 @@ int vmw_prime_handle_to_fd(struct drm_device *dev,
- 			   int *prime_fd)
- {
- 	struct ttm_object_file *tfile = vmw_fpriv(file_priv)->tfile;
--	return ttm_prime_handle_to_fd(tfile, handle, flags, prime_fd);
-+	int ret;
-+
-+	if (handle > VMWGFX_NUM_MOB)
-+		ret = ttm_prime_handle_to_fd(tfile, handle, flags, prime_fd);
-+	else
-+		ret = drm_gem_prime_handle_to_fd(dev, file_priv, handle, flags, prime_fd);
-+
-+	return ret;
- }
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
-index af8562c95cc3..fcb87d83760e 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
-@@ -220,13 +220,18 @@ static int vmw_ttm_map_dma(struct vmw_ttm_tt *vmw_tt)
- 	switch (dev_priv->map_mode) {
- 	case vmw_dma_map_bind:
- 	case vmw_dma_map_populate:
--		vsgt->sgt = &vmw_tt->sgt;
--		ret = sg_alloc_table_from_pages_segment(
--			&vmw_tt->sgt, vsgt->pages, vsgt->num_pages, 0,
--			(unsigned long)vsgt->num_pages << PAGE_SHIFT,
--			dma_get_max_seg_size(dev_priv->drm.dev), GFP_KERNEL);
--		if (ret)
--			goto out_sg_alloc_fail;
-+		if (vmw_tt->dma_ttm.page_flags  & TTM_TT_FLAG_EXTERNAL) {
-+			vsgt->sgt = vmw_tt->dma_ttm.sg;
-+		} else {
-+			vsgt->sgt = &vmw_tt->sgt;
-+			ret = sg_alloc_table_from_pages_segment(&vmw_tt->sgt,
-+				vsgt->pages, vsgt->num_pages, 0,
-+				(unsigned long)vsgt->num_pages << PAGE_SHIFT,
-+				dma_get_max_seg_size(dev_priv->drm.dev),
-+				GFP_KERNEL);
-+			if (ret)
-+				goto out_sg_alloc_fail;
-+		}
- 
- 		ret = vmw_ttm_map_for_dma(vmw_tt);
- 		if (unlikely(ret != 0))
-@@ -241,8 +246,9 @@ static int vmw_ttm_map_dma(struct vmw_ttm_tt *vmw_tt)
- 	return 0;
- 
- out_map_fail:
--	sg_free_table(vmw_tt->vsgt.sgt);
--	vmw_tt->vsgt.sgt = NULL;
-+	drm_warn(&dev_priv->drm, "VSG table map failed!");
-+	sg_free_table(vsgt->sgt);
-+	vsgt->sgt = NULL;
- out_sg_alloc_fail:
- 	return ret;
- }
-@@ -388,15 +394,17 @@ static void vmw_ttm_destroy(struct ttm_device *bdev, struct ttm_tt *ttm)
- static int vmw_ttm_populate(struct ttm_device *bdev,
- 			    struct ttm_tt *ttm, struct ttm_operation_ctx *ctx)
- {
--	int ret;
-+	bool external = (ttm->page_flags & TTM_TT_FLAG_EXTERNAL) != 0;
- 
--	/* TODO: maybe completely drop this ? */
- 	if (ttm_tt_is_populated(ttm))
- 		return 0;
- 
--	ret = ttm_pool_alloc(&bdev->pool, ttm, ctx);
-+	if (external && ttm->sg)
-+		return  drm_prime_sg_to_dma_addr_array(ttm->sg,
-+						       ttm->dma_address,
-+						       ttm->num_pages);
- 
--	return ret;
-+	return ttm_pool_alloc(&bdev->pool, ttm, ctx);
- }
- 
- static void vmw_ttm_unpopulate(struct ttm_device *bdev,
-@@ -404,6 +412,10 @@ static void vmw_ttm_unpopulate(struct ttm_device *bdev,
- {
- 	struct vmw_ttm_tt *vmw_tt = container_of(ttm, struct vmw_ttm_tt,
- 						 dma_ttm);
-+	bool external = (ttm->page_flags & TTM_TT_FLAG_EXTERNAL) != 0;
-+
-+	if (external)
-+		return;
- 
- 	vmw_ttm_unbind(bdev, ttm);
- 
-@@ -422,6 +434,7 @@ static struct ttm_tt *vmw_ttm_tt_create(struct ttm_buffer_object *bo,
- {
- 	struct vmw_ttm_tt *vmw_be;
- 	int ret;
-+	bool external = bo->type == ttm_bo_type_sg;
- 
- 	vmw_be = kzalloc(sizeof(*vmw_be), GFP_KERNEL);
- 	if (!vmw_be)
-@@ -430,7 +443,10 @@ static struct ttm_tt *vmw_ttm_tt_create(struct ttm_buffer_object *bo,
- 	vmw_be->dev_priv = vmw_priv_from_ttm(bo->bdev);
- 	vmw_be->mob = NULL;
- 
--	if (vmw_be->dev_priv->map_mode == vmw_dma_alloc_coherent)
-+	if (external)
-+		page_flags |= TTM_TT_FLAG_EXTERNAL | TTM_TT_FLAG_EXTERNAL_MAPPABLE;
-+
-+	if (vmw_be->dev_priv->map_mode == vmw_dma_alloc_coherent || external)
- 		ret = ttm_sg_tt_init(&vmw_be->dma_ttm, bo, page_flags,
- 				     ttm_cached);
- 	else
-diff --git a/drivers/gpu/drm/xe/display/intel_fb_bo.c b/drivers/gpu/drm/xe/display/intel_fb_bo.c
-index b21da7b745a5..a9c1f9885c6b 100644
---- a/drivers/gpu/drm/xe/display/intel_fb_bo.c
-+++ b/drivers/gpu/drm/xe/display/intel_fb_bo.c
-@@ -31,7 +31,7 @@ int intel_fb_bo_framebuffer_init(struct intel_framebuffer *intel_fb,
- 
- 	ret = ttm_bo_reserve(&bo->ttm, true, false, NULL);
- 	if (ret)
--		return ret;
-+		goto err;
- 
- 	if (!(bo->flags & XE_BO_SCANOUT_BIT)) {
- 		/*
-@@ -42,12 +42,16 @@ int intel_fb_bo_framebuffer_init(struct intel_framebuffer *intel_fb,
- 		 */
- 		if (XE_IOCTL_DBG(i915, !list_empty(&bo->ttm.base.gpuva.list))) {
- 			ttm_bo_unreserve(&bo->ttm);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto err;
+ #define USB_VENDOR_ID_LABTEC		0x1020
+ #define USB_DEVICE_ID_LABTEC_WIRELESS_KEYBOARD	0x0006
+diff --git a/drivers/hid/hid-kye.c b/drivers/hid/hid-kye.c
+index da903138eee4..dc57e9d4a3e2 100644
+--- a/drivers/hid/hid-kye.c
++++ b/drivers/hid/hid-kye.c
+@@ -602,6 +602,18 @@ static __u8 *kye_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+ 			rdesc[74] = 0x08;
  		}
- 		bo->flags |= XE_BO_SCANOUT_BIT;
+ 		break;
++	case USB_DEVICE_ID_GENIUS_GILA_GAMING_MOUSE:
++		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 104,
++					"Genius Gila Gaming Mouse");
++		break;
++	case USB_DEVICE_ID_GENIUS_MANTICORE:
++		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 104,
++					"Genius Manticore Keyboard");
++		break;
++	case USB_DEVICE_ID_GENIUS_GX_IMPERATOR:
++		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 83,
++					"Genius Gx Imperator Keyboard");
++		break;
+ 	case USB_DEVICE_ID_KYE_EASYPEN_I405X:
+ 		if (*rsize == EASYPEN_I405X_RDESC_ORIG_SIZE) {
+ 			rdesc = easypen_i405x_rdesc_fixed;
+@@ -638,18 +650,6 @@ static __u8 *kye_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+ 			*rsize = sizeof(pensketch_m912_rdesc_fixed);
+ 		}
+ 		break;
+-	case USB_DEVICE_ID_GENIUS_GILA_GAMING_MOUSE:
+-		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 104,
+-					"Genius Gila Gaming Mouse");
+-		break;
+-	case USB_DEVICE_ID_GENIUS_GX_IMPERATOR:
+-		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 83,
+-					"Genius Gx Imperator Keyboard");
+-		break;
+-	case USB_DEVICE_ID_GENIUS_MANTICORE:
+-		rdesc = kye_consumer_control_fixup(hdev, rdesc, rsize, 104,
+-					"Genius Manticore Keyboard");
+-		break;
  	}
- 	ttm_bo_unreserve(&bo->ttm);
-+	return 0;
- 
-+err:
-+	xe_bo_put(bo);
- 	return ret;
+ 	return rdesc;
  }
+@@ -717,26 +717,26 @@ static int kye_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 	}
  
+ 	switch (id->product) {
++	case USB_DEVICE_ID_GENIUS_MANTICORE:
++		/*
++		 * The manticore keyboard needs to have all the interfaces
++		 * opened at least once to be fully functional.
++		 */
++		if (hid_hw_open(hdev))
++			hid_hw_close(hdev);
++		break;
+ 	case USB_DEVICE_ID_KYE_EASYPEN_I405X:
+ 	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X:
+-	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2:
+ 	case USB_DEVICE_ID_KYE_EASYPEN_M610X:
+-	case USB_DEVICE_ID_KYE_EASYPEN_M406XE:
+ 	case USB_DEVICE_ID_KYE_PENSKETCH_M912:
++	case USB_DEVICE_ID_KYE_EASYPEN_M406XE:
++	case USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2:
+ 		ret = kye_tablet_enable(hdev);
+ 		if (ret) {
+ 			hid_err(hdev, "tablet enabling failed\n");
+ 			goto enabling_err;
+ 		}
+ 		break;
+-	case USB_DEVICE_ID_GENIUS_MANTICORE:
+-		/*
+-		 * The manticore keyboard needs to have all the interfaces
+-		 * opened at least once to be fully functional.
+-		 */
+-		if (hid_hw_open(hdev))
+-			hid_hw_close(hdev);
+-		break;
+ 	}
+ 
+ 	return 0;
+@@ -749,23 +749,23 @@ static int kye_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ static const struct hid_device_id kye_devices[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_ERGO_525V) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+-				USB_DEVICE_ID_KYE_EASYPEN_I405X) },
++				USB_DEVICE_ID_GENIUS_GILA_GAMING_MOUSE) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+-				USB_DEVICE_ID_KYE_MOUSEPEN_I608X) },
++				USB_DEVICE_ID_GENIUS_MANTICORE) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+-				USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2) },
++				USB_DEVICE_ID_GENIUS_GX_IMPERATOR) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+-				USB_DEVICE_ID_KYE_EASYPEN_M610X) },
++				USB_DEVICE_ID_KYE_EASYPEN_I405X) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+-				USB_DEVICE_ID_KYE_EASYPEN_M406XE) },
++				USB_DEVICE_ID_KYE_MOUSEPEN_I608X) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+-				USB_DEVICE_ID_GENIUS_GILA_GAMING_MOUSE) },
++				USB_DEVICE_ID_KYE_EASYPEN_M610X) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+-				USB_DEVICE_ID_GENIUS_GX_IMPERATOR) },
++				USB_DEVICE_ID_KYE_PENSKETCH_M912) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+-				USB_DEVICE_ID_GENIUS_MANTICORE) },
++				USB_DEVICE_ID_KYE_EASYPEN_M406XE) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE,
+-				USB_DEVICE_ID_KYE_PENSKETCH_M912) },
++				USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(hid, kye_devices);
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 60884066362a..debc49272a5c 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -107,12 +107,12 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_1f4a), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_IDEACOM, USB_DEVICE_ID_IDEACOM_IDC6680), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_INNOMEDIA, USB_DEVICE_ID_INNEX_GENESIS_ATARI), HID_QUIRK_MULTI_INPUT },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M610X), HID_QUIRK_MULTI_INPUT },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_PIXART_USB_OPTICAL_MOUSE_ID2), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_MOUSEPEN_I608X), HID_QUIRK_MULTI_INPUT },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2), HID_QUIRK_MULTI_INPUT },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M610X), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_PENSKETCH_M912), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M406XE), HID_QUIRK_MULTI_INPUT },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_PIXART_USB_OPTICAL_MOUSE_ID2), HID_QUIRK_ALWAYS_POLL },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_MOUSEPEN_I608X_V2), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_OPTICAL_USB_MOUSE_600E), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_608D), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_6019), HID_QUIRK_ALWAYS_POLL },
 diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
-index bf0df6ee4f78..07fb8d3c037f 100644
+index 462a10d6a576..950fe205995b 100644
 --- a/drivers/infiniband/core/cm.c
 +++ b/drivers/infiniband/core/cm.c
 @@ -1026,23 +1026,26 @@ static void cm_reset_to_idle(struct cm_id_private *cm_id_priv)
@@ -1777,7 +4834,7 @@ index bf0df6ee4f78..07fb8d3c037f 100644
  
  	while ((work = cm_dequeue_work(cm_id_priv)) != NULL)
 diff --git a/drivers/infiniband/hw/mlx5/mad.c b/drivers/infiniband/hw/mlx5/mad.c
-index 0c3c4e64812c..3e43687a7f6f 100644
+index 9c8a7b206dcf..e61efed320f1 100644
 --- a/drivers/infiniband/hw/mlx5/mad.c
 +++ b/drivers/infiniband/hw/mlx5/mad.c
 @@ -188,7 +188,8 @@ static int process_pma_cmd(struct mlx5_ib_dev *dev, u32 port_num,
@@ -1791,7 +4848,7 @@ index 0c3c4e64812c..3e43687a7f6f 100644
  		mdev = dev->mdev;
  		mdev_port_num = 1;
 diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/infiniband/sw/rxe/rxe.c
-index 54c723a6edda..6f9ec8db014c 100644
+index 51daac5c4feb..be3ddfbf3cae 100644
 --- a/drivers/infiniband/sw/rxe/rxe.c
 +++ b/drivers/infiniband/sw/rxe/rxe.c
 @@ -33,6 +33,8 @@ void rxe_dealloc(struct ib_device *ib_dev)
@@ -1803,139 +4860,8 @@ index 54c723a6edda..6f9ec8db014c 100644
  }
  
  /* initialize rxe device parameters */
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 50bac2d79d9b..68edb07d4443 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -176,6 +176,8 @@ static struct icc_path *path_init(struct device *dev, struct icc_node *dst,
- 
- 	path->num_nodes = num_nodes;
- 
-+	mutex_lock(&icc_bw_lock);
-+
- 	for (i = num_nodes - 1; i >= 0; i--) {
- 		node->provider->users++;
- 		hlist_add_head(&path->reqs[i].req_node, &node->req_list);
-@@ -186,6 +188,8 @@ static struct icc_path *path_init(struct device *dev, struct icc_node *dst,
- 		node = node->reverse;
- 	}
- 
-+	mutex_unlock(&icc_bw_lock);
-+
- 	return path;
- }
- 
-@@ -792,12 +796,16 @@ void icc_put(struct icc_path *path)
- 		pr_err("%s: error (%d)\n", __func__, ret);
- 
- 	mutex_lock(&icc_lock);
-+	mutex_lock(&icc_bw_lock);
-+
- 	for (i = 0; i < path->num_nodes; i++) {
- 		node = path->reqs[i].node;
- 		hlist_del(&path->reqs[i].req_node);
- 		if (!WARN_ON(!node->provider->users))
- 			node->provider->users--;
- 	}
-+
-+	mutex_unlock(&icc_bw_lock);
- 	mutex_unlock(&icc_lock);
- 
- 	kfree_const(path->name);
-diff --git a/drivers/interconnect/qcom/x1e80100.c b/drivers/interconnect/qcom/x1e80100.c
-index cbaf4f9c41be..06f0a6d6cbbc 100644
---- a/drivers/interconnect/qcom/x1e80100.c
-+++ b/drivers/interconnect/qcom/x1e80100.c
-@@ -116,15 +116,6 @@ static struct qcom_icc_node xm_sdc2 = {
- 	.links = { X1E80100_SLAVE_A2NOC_SNOC },
- };
- 
--static struct qcom_icc_node ddr_perf_mode_master = {
--	.name = "ddr_perf_mode_master",
--	.id = X1E80100_MASTER_DDR_PERF_MODE,
--	.channels = 1,
--	.buswidth = 4,
--	.num_links = 1,
--	.links = { X1E80100_SLAVE_DDR_PERF_MODE },
--};
--
- static struct qcom_icc_node qup0_core_master = {
- 	.name = "qup0_core_master",
- 	.id = X1E80100_MASTER_QUP_CORE_0,
-@@ -832,14 +823,6 @@ static struct qcom_icc_node qns_a2noc_snoc = {
- 	.links = { X1E80100_MASTER_A2NOC_SNOC },
- };
- 
--static struct qcom_icc_node ddr_perf_mode_slave = {
--	.name = "ddr_perf_mode_slave",
--	.id = X1E80100_SLAVE_DDR_PERF_MODE,
--	.channels = 1,
--	.buswidth = 4,
--	.num_links = 0,
--};
--
- static struct qcom_icc_node qup0_core_slave = {
- 	.name = "qup0_core_slave",
- 	.id = X1E80100_SLAVE_QUP_CORE_0,
-@@ -1591,12 +1574,6 @@ static struct qcom_icc_bcm bcm_acv = {
- 	.nodes = { &ebi },
- };
- 
--static struct qcom_icc_bcm bcm_acv_perf = {
--	.name = "ACV_PERF",
--	.num_nodes = 1,
--	.nodes = { &ddr_perf_mode_slave },
--};
--
- static struct qcom_icc_bcm bcm_ce0 = {
- 	.name = "CE0",
- 	.num_nodes = 1,
-@@ -1863,18 +1840,15 @@ static const struct qcom_icc_desc x1e80100_aggre2_noc = {
- };
- 
- static struct qcom_icc_bcm * const clk_virt_bcms[] = {
--	&bcm_acv_perf,
- 	&bcm_qup0,
- 	&bcm_qup1,
- 	&bcm_qup2,
- };
- 
- static struct qcom_icc_node * const clk_virt_nodes[] = {
--	[MASTER_DDR_PERF_MODE] = &ddr_perf_mode_master,
- 	[MASTER_QUP_CORE_0] = &qup0_core_master,
- 	[MASTER_QUP_CORE_1] = &qup1_core_master,
- 	[MASTER_QUP_CORE_2] = &qup2_core_master,
--	[SLAVE_DDR_PERF_MODE] = &ddr_perf_mode_slave,
- 	[SLAVE_QUP_CORE_0] = &qup0_core_slave,
- 	[SLAVE_QUP_CORE_1] = &qup1_core_slave,
- 	[SLAVE_QUP_CORE_2] = &qup2_core_slave,
-diff --git a/drivers/iommu/iommufd/Kconfig b/drivers/iommu/iommufd/Kconfig
-index 99d4b075df49..76656fe0470d 100644
---- a/drivers/iommu/iommufd/Kconfig
-+++ b/drivers/iommu/iommufd/Kconfig
-@@ -37,6 +37,7 @@ config IOMMUFD_TEST
- 	depends on DEBUG_KERNEL
- 	depends on FAULT_INJECTION
- 	depends on RUNTIME_TESTING_MENU
-+	select IOMMUFD_DRIVER
- 	default n
- 	help
- 	  This is dangerous, do not enable unless running
-diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index 1a64364700eb..0ad2ff9065aa 100644
---- a/drivers/misc/cardreader/rtsx_pcr.c
-+++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -1002,7 +1002,7 @@ static irqreturn_t rtsx_pci_isr(int irq, void *dev_id)
- 		} else {
- 			pcr->card_removed |= SD_EXIST;
- 			pcr->card_inserted &= ~SD_EXIST;
--			if (PCI_PID(pcr) == PID_5261) {
-+			if ((PCI_PID(pcr) == PID_5261) || (PCI_PID(pcr) == PID_5264)) {
- 				rtsx_pci_write_register(pcr, RTS5261_FW_STATUS,
- 					RTS5261_EXPRESS_LINK_FAIL_MASK, 0);
- 				pcr->extra_caps |= EXTRA_CAPS_SD_EXPRESS;
 diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-index 8cf636c54032..bd4e3df44865 100644
+index f8219cbd2c7c..a617f64a351d 100644
 --- a/drivers/misc/mei/pci-me.c
 +++ b/drivers/misc/mei/pci-me.c
 @@ -116,7 +116,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
@@ -1947,222 +4873,46 @@ index 8cf636c54032..bd4e3df44865 100644
  
  	{MEI_PCI_DEVICE(MEI_DEV_ID_MTL_M, MEI_ME_PCH15_CFG)},
  	{MEI_PCI_DEVICE(MEI_DEV_ID_ARL_S, MEI_ME_PCH15_CFG)},
-diff --git a/drivers/misc/mei/platform-vsc.c b/drivers/misc/mei/platform-vsc.c
-index 8d303c6c0000..8db0fcf24e70 100644
---- a/drivers/misc/mei/platform-vsc.c
-+++ b/drivers/misc/mei/platform-vsc.c
-@@ -402,25 +402,40 @@ static int mei_vsc_remove(struct platform_device *pdev)
- static int mei_vsc_suspend(struct device *dev)
- {
- 	struct mei_device *mei_dev = dev_get_drvdata(dev);
-+	struct mei_vsc_hw *hw = mei_dev_to_vsc_hw(mei_dev);
- 
- 	mei_stop(mei_dev);
- 
-+	mei_disable_interrupts(mei_dev);
-+
-+	vsc_tp_free_irq(hw->tp);
-+
- 	return 0;
- }
- 
- static int mei_vsc_resume(struct device *dev)
- {
- 	struct mei_device *mei_dev = dev_get_drvdata(dev);
-+	struct mei_vsc_hw *hw = mei_dev_to_vsc_hw(mei_dev);
- 	int ret;
- 
--	ret = mei_restart(mei_dev);
-+	ret = vsc_tp_request_irq(hw->tp);
- 	if (ret)
- 		return ret;
- 
-+	ret = mei_restart(mei_dev);
-+	if (ret)
-+		goto err_free;
-+
- 	/* start timer if stopped in suspend */
- 	schedule_delayed_work(&mei_dev->timer_work, HZ);
- 
- 	return 0;
-+
-+err_free:
-+	vsc_tp_free_irq(hw->tp);
-+
-+	return ret;
- }
- 
- static DEFINE_SIMPLE_DEV_PM_OPS(mei_vsc_pm_ops, mei_vsc_suspend, mei_vsc_resume);
-diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-index 682c62c635b6..870c70ef3bb8 100644
---- a/drivers/misc/mei/vsc-tp.c
-+++ b/drivers/misc/mei/vsc-tp.c
-@@ -94,6 +94,27 @@ static const struct acpi_gpio_mapping vsc_tp_acpi_gpios[] = {
- 	{}
- };
- 
-+static irqreturn_t vsc_tp_isr(int irq, void *data)
-+{
-+	struct vsc_tp *tp = data;
-+
-+	atomic_inc(&tp->assert_cnt);
-+
-+	wake_up(&tp->xfer_wait);
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static irqreturn_t vsc_tp_thread_isr(int irq, void *data)
-+{
-+	struct vsc_tp *tp = data;
-+
-+	if (tp->event_notify)
-+		tp->event_notify(tp->event_notify_context);
-+
-+	return IRQ_HANDLED;
-+}
-+
- /* wakeup firmware and wait for response */
- static int vsc_tp_wakeup_request(struct vsc_tp *tp)
- {
-@@ -383,6 +404,37 @@ int vsc_tp_register_event_cb(struct vsc_tp *tp, vsc_tp_event_cb_t event_cb,
- }
- EXPORT_SYMBOL_NS_GPL(vsc_tp_register_event_cb, VSC_TP);
- 
-+/**
-+ * vsc_tp_request_irq - request irq for vsc_tp device
-+ * @tp: vsc_tp device handle
-+ */
-+int vsc_tp_request_irq(struct vsc_tp *tp)
-+{
-+	struct spi_device *spi = tp->spi;
-+	struct device *dev = &spi->dev;
-+	int ret;
-+
-+	irq_set_status_flags(spi->irq, IRQ_DISABLE_UNLAZY);
-+	ret = request_threaded_irq(spi->irq, vsc_tp_isr, vsc_tp_thread_isr,
-+				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+				   dev_name(dev), tp);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(vsc_tp_request_irq, VSC_TP);
-+
-+/**
-+ * vsc_tp_free_irq - free irq for vsc_tp device
-+ * @tp: vsc_tp device handle
-+ */
-+void vsc_tp_free_irq(struct vsc_tp *tp)
-+{
-+	free_irq(tp->spi->irq, tp);
-+}
-+EXPORT_SYMBOL_NS_GPL(vsc_tp_free_irq, VSC_TP);
-+
- /**
-  * vsc_tp_intr_synchronize - synchronize vsc_tp interrupt
-  * @tp: vsc_tp device handle
-@@ -413,27 +465,6 @@ void vsc_tp_intr_disable(struct vsc_tp *tp)
- }
- EXPORT_SYMBOL_NS_GPL(vsc_tp_intr_disable, VSC_TP);
- 
--static irqreturn_t vsc_tp_isr(int irq, void *data)
--{
--	struct vsc_tp *tp = data;
--
--	atomic_inc(&tp->assert_cnt);
--
--	return IRQ_WAKE_THREAD;
--}
--
--static irqreturn_t vsc_tp_thread_isr(int irq, void *data)
--{
--	struct vsc_tp *tp = data;
--
--	wake_up(&tp->xfer_wait);
--
--	if (tp->event_notify)
--		tp->event_notify(tp->event_notify_context);
--
--	return IRQ_HANDLED;
--}
--
- static int vsc_tp_match_any(struct acpi_device *adev, void *data)
- {
- 	struct acpi_device **__adev = data;
-@@ -485,10 +516,9 @@ static int vsc_tp_probe(struct spi_device *spi)
- 	tp->spi = spi;
- 
- 	irq_set_status_flags(spi->irq, IRQ_DISABLE_UNLAZY);
--	ret = devm_request_threaded_irq(dev, spi->irq, vsc_tp_isr,
--					vsc_tp_thread_isr,
--					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
--					dev_name(dev), tp);
-+	ret = request_threaded_irq(spi->irq, vsc_tp_isr, vsc_tp_thread_isr,
-+				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+				   dev_name(dev), tp);
- 	if (ret)
- 		return ret;
- 
-@@ -522,6 +552,8 @@ static int vsc_tp_probe(struct spi_device *spi)
- err_destroy_lock:
- 	mutex_destroy(&tp->mutex);
- 
-+	free_irq(spi->irq, tp);
-+
- 	return ret;
- }
- 
-@@ -532,6 +564,8 @@ static void vsc_tp_remove(struct spi_device *spi)
- 	platform_device_unregister(tp->pdev);
- 
- 	mutex_destroy(&tp->mutex);
-+
-+	free_irq(spi->irq, tp);
- }
- 
- static const struct acpi_device_id vsc_tp_acpi_ids[] = {
-diff --git a/drivers/misc/mei/vsc-tp.h b/drivers/misc/mei/vsc-tp.h
-index f9513ddc3e40..14ca195cbddc 100644
---- a/drivers/misc/mei/vsc-tp.h
-+++ b/drivers/misc/mei/vsc-tp.h
-@@ -37,6 +37,9 @@ int vsc_tp_xfer(struct vsc_tp *tp, u8 cmd, const void *obuf, size_t olen,
- int vsc_tp_register_event_cb(struct vsc_tp *tp, vsc_tp_event_cb_t event_cb,
- 			     void *context);
- 
-+int vsc_tp_request_irq(struct vsc_tp *tp);
-+void vsc_tp_free_irq(struct vsc_tp *tp);
-+
- void vsc_tp_intr_enable(struct vsc_tp *tp);
- void vsc_tp_intr_disable(struct vsc_tp *tp);
- void vsc_tp_intr_synchronize(struct vsc_tp *tp);
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 22b97505fa53..e48ef9823c8e 100644
+index d4515c19a5f3..1aba0cf38630 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -1947,14 +1947,16 @@ mt7530_port_vlan_del(struct dsa_switch *ds, int port,
- 
- static int mt753x_mirror_port_get(unsigned int id, u32 val)
- {
--	return (id == ID_MT7531) ? MT7531_MIRROR_PORT_GET(val) :
--				   MIRROR_PORT(val);
-+	return (id == ID_MT7531 || id == ID_MT7988) ?
-+		       MT7531_MIRROR_PORT_GET(val) :
-+		       MIRROR_PORT(val);
+@@ -419,6 +419,20 @@ static void mt7530_pll_setup(struct mt7530_priv *priv)
+ 	core_set(priv, CORE_TRGMII_GSW_CLK_CG, REG_GSWCK_EN);
  }
  
- static int mt753x_mirror_port_set(unsigned int id, u32 val)
- {
--	return (id == ID_MT7531) ? MT7531_MIRROR_PORT_SET(val) :
--				   MIRROR_PORT(val);
-+	return (id == ID_MT7531 || id == ID_MT7988) ?
-+		       MT7531_MIRROR_PORT_SET(val) :
-+		       MIRROR_PORT(val);
- }
++/* If port 6 is available as a CPU port, always prefer that as the default,
++ * otherwise don't care.
++ */
++static struct dsa_port *
++mt753x_preferred_default_local_cpu_port(struct dsa_switch *ds)
++{
++	struct dsa_port *cpu_dp = dsa_to_port(ds, 6);
++
++	if (dsa_port_is_cpu(cpu_dp))
++		return cpu_dp;
++
++	return NULL;
++}
++
+ /* Setup port 6 interface mode and TRGMII TX circuit */
+ static int
+ mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
+@@ -1236,6 +1250,13 @@ mt753x_cpu_port_enable(struct dsa_switch *ds, int port)
+ 	if (priv->id == ID_MT7530 || priv->id == ID_MT7621)
+ 		mt7530_rmw(priv, MT7530_MFC, CPU_MASK, CPU_EN | CPU_PORT(port));
  
- static int mt753x_port_mirror_add(struct dsa_switch *ds, int port,
-@@ -2469,8 +2471,6 @@ mt7530_setup(struct dsa_switch *ds)
++	/* Add the CPU port to the CPU port bitmap for MT7531. Trapped frames
++	 * will be forwarded to the CPU port that is affine to the inbound user
++	 * port.
++	 */
++	if (priv->id == ID_MT7531)
++		mt7530_set(priv, MT7531_CFC, MT7531_CPU_PMAP(BIT(port)));
++
+ 	/* CPU port gets connected to all user ports of
+ 	 * the switch.
+ 	 */
+@@ -2413,8 +2434,6 @@ mt7530_setup(struct dsa_switch *ds)
  		     SYS_CTRL_PHY_RST | SYS_CTRL_SW_RST |
  		     SYS_CTRL_REG_RST);
  
@@ -2171,7 +4921,7 @@ index 22b97505fa53..e48ef9823c8e 100644
  	/* Lower Tx driving for TRGMII path */
  	for (i = 0; i < NUM_TRGMII_CTRL; i++)
  		mt7530_write(priv, MT7530_TRGMII_TD_ODT(i),
-@@ -2488,6 +2488,9 @@ mt7530_setup(struct dsa_switch *ds)
+@@ -2432,6 +2451,9 @@ mt7530_setup(struct dsa_switch *ds)
  
  	priv->p6_interface = PHY_INTERFACE_MODE_NA;
  
@@ -2181,7 +4931,7 @@ index 22b97505fa53..e48ef9823c8e 100644
  	mt753x_trap_frames(priv);
  
  	/* Enable and reset MIB counters */
-@@ -2517,6 +2520,9 @@ mt7530_setup(struct dsa_switch *ds)
+@@ -2461,6 +2483,9 @@ mt7530_setup(struct dsa_switch *ds)
  			   PVC_EG_TAG(MT7530_VLAN_EG_CONSISTENT));
  	}
  
@@ -2191,7 +4941,24 @@ index 22b97505fa53..e48ef9823c8e 100644
  	/* Setup VLAN ID 0 for VLAN-unaware bridges */
  	ret = mt7530_setup_vlan0(priv);
  	if (ret)
-@@ -2625,6 +2631,9 @@ mt7531_setup_common(struct dsa_switch *ds)
+@@ -2531,16 +2556,8 @@ static int
+ mt7531_setup_common(struct dsa_switch *ds)
+ {
+ 	struct mt7530_priv *priv = ds->priv;
+-	struct dsa_port *cpu_dp;
+ 	int ret, i;
+ 
+-	/* BPDU to CPU port */
+-	dsa_switch_for_each_cpu_port(cpu_dp, ds) {
+-		mt7530_rmw(priv, MT7531_CFC, MT7531_CPU_PMAP_MASK,
+-			   BIT(cpu_dp->index));
+-		break;
+-	}
+-
+ 	mt753x_trap_frames(priv);
+ 
+ 	/* Enable and reset MIB counters */
+@@ -2577,6 +2594,9 @@ mt7531_setup_common(struct dsa_switch *ds)
  			   PVC_EG_TAG(MT7530_VLAN_EG_CONSISTENT));
  	}
  
@@ -2201,7 +4968,7 @@ index 22b97505fa53..e48ef9823c8e 100644
  	/* Flush the FDB table */
  	ret = mt7530_fdb_cmd(priv, MT7530_FDB_FLUSH, NULL);
  	if (ret < 0)
-@@ -2703,18 +2712,25 @@ mt7531_setup(struct dsa_switch *ds)
+@@ -2655,18 +2675,25 @@ mt7531_setup(struct dsa_switch *ds)
  	priv->p5_interface = PHY_INTERFACE_MODE_NA;
  	priv->p6_interface = PHY_INTERFACE_MODE_NA;
  
@@ -2232,11 +4999,19 @@ index 22b97505fa53..e48ef9823c8e 100644
  	mt7531_setup_common(ds);
  
  	/* Setup VLAN ID 0 for VLAN-unaware bridges */
+@@ -3400,6 +3427,7 @@ static int mt753x_set_mac_eee(struct dsa_switch *ds, int port,
+ static const struct dsa_switch_ops mt7530_switch_ops = {
+ 	.get_tag_protocol	= mtk_get_tag_protocol,
+ 	.setup			= mt753x_setup,
++	.preferred_default_local_cpu_port = mt753x_preferred_default_local_cpu_port,
+ 	.get_strings		= mt7530_get_strings,
+ 	.get_ethtool_stats	= mt7530_get_ethtool_stats,
+ 	.get_sset_count		= mt7530_get_sset_count,
 diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index ddefeb69afda..0ad52d3cbfeb 100644
+index 2d1ea390f05a..6441e8d7f05d 100644
 --- a/drivers/net/dsa/mt7530.h
 +++ b/drivers/net/dsa/mt7530.h
-@@ -32,6 +32,10 @@ enum mt753x_id {
+@@ -31,6 +31,10 @@ enum mt753x_id {
  #define SYSC_REG_RSTCTRL		0x34
  #define  RESET_MCM			BIT(2)
  
@@ -2247,7 +5022,15 @@ index ddefeb69afda..0ad52d3cbfeb 100644
  /* Registers to mac forward control for unknown frames */
  #define MT7530_MFC			0x10
  #define  BC_FFP(x)			(((x) & 0xff) << 24)
-@@ -630,6 +634,7 @@ enum mt7531_clk_skew {
+@@ -53,6 +57,7 @@ enum mt753x_id {
+ #define  MT7531_MIRROR_PORT_GET(x)	(((x) >> 16) & MIRROR_MASK)
+ #define  MT7531_MIRROR_PORT_SET(x)	(((x) & MIRROR_MASK) << 16)
+ #define  MT7531_CPU_PMAP_MASK		GENMASK(7, 0)
++#define  MT7531_CPU_PMAP(x)		FIELD_PREP(MT7531_CPU_PMAP_MASK, x)
+ 
+ #define MT753X_MIRROR_REG(id)		(((id) == ID_MT7531) ? \
+ 					 MT7531_CFC : MT7530_MFC)
+@@ -668,6 +673,7 @@ enum mt7531_clk_skew {
  #define  RG_SYSPLL_DDSFBK_EN		BIT(12)
  #define  RG_SYSPLL_BIAS_EN		BIT(11)
  #define  RG_SYSPLL_BIAS_LPF_EN		BIT(10)
@@ -2256,31 +5039,10 @@ index ddefeb69afda..0ad52d3cbfeb 100644
  #define  MT7531_PHY_PLL_BYPASS_MODE	BIT(4)
  
 diff --git a/drivers/net/ethernet/intel/ice/ice_tc_lib.c b/drivers/net/ethernet/intel/ice/ice_tc_lib.c
-index b890410a2bc0..688ccb0615ab 100644
+index 652ef09eeb30..ec6628aacc13 100644
 --- a/drivers/net/ethernet/intel/ice/ice_tc_lib.c
 +++ b/drivers/net/ethernet/intel/ice/ice_tc_lib.c
-@@ -28,6 +28,8 @@ ice_tc_count_lkups(u32 flags, struct ice_tc_flower_lyr_2_4_hdrs *headers,
- 	 * - ICE_TC_FLWR_FIELD_VLAN_TPID (present if specified)
- 	 * - Tunnel flag (present if tunnel)
- 	 */
-+	if (fltr->direction == ICE_ESWITCH_FLTR_EGRESS)
-+		lkups_cnt++;
- 
- 	if (flags & ICE_TC_FLWR_FIELD_TENANT_ID)
- 		lkups_cnt++;
-@@ -363,6 +365,11 @@ ice_tc_fill_rules(struct ice_hw *hw, u32 flags,
- 	/* Always add direction metadata */
- 	ice_rule_add_direction_metadata(&list[ICE_TC_METADATA_LKUP_IDX]);
- 
-+	if (tc_fltr->direction == ICE_ESWITCH_FLTR_EGRESS) {
-+		ice_rule_add_src_vsi_metadata(&list[i]);
-+		i++;
-+	}
-+
- 	rule_info->tun_type = ice_sw_type_from_tunnel(tc_fltr->tunnel_type);
- 	if (tc_fltr->tunnel_type != TNL_LAST) {
- 		i = ice_tc_fill_tunnel_outer(flags, tc_fltr, list, i);
-@@ -772,7 +779,7 @@ ice_eswitch_add_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
+@@ -663,7 +663,7 @@ ice_eswitch_add_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
  	int ret;
  	int i;
  
@@ -2289,94 +5051,8 @@ index b890410a2bc0..688ccb0615ab 100644
  		NL_SET_ERR_MSG_MOD(fltr->extack, "Unsupported encap field(s)");
  		return -EOPNOTSUPP;
  	}
-@@ -820,6 +827,7 @@ ice_eswitch_add_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
- 
- 	/* specify the cookie as filter_rule_id */
- 	rule_info.fltr_rule_id = fltr->cookie;
-+	rule_info.src_vsi = vsi->idx;
- 
- 	ret = ice_add_adv_rule(hw, list, lkups_cnt, &rule_info, &rule_added);
- 	if (ret == -EEXIST) {
-@@ -1481,7 +1489,10 @@ ice_parse_cls_flower(struct net_device *filter_dev, struct ice_vsi *vsi,
- 		  (BIT_ULL(FLOW_DISSECTOR_KEY_ENC_IPV4_ADDRS) |
- 		   BIT_ULL(FLOW_DISSECTOR_KEY_ENC_IPV6_ADDRS) |
- 		   BIT_ULL(FLOW_DISSECTOR_KEY_ENC_KEYID) |
--		   BIT_ULL(FLOW_DISSECTOR_KEY_ENC_PORTS))) {
-+		   BIT_ULL(FLOW_DISSECTOR_KEY_ENC_PORTS) |
-+		   BIT_ULL(FLOW_DISSECTOR_KEY_ENC_IP) |
-+		   BIT_ULL(FLOW_DISSECTOR_KEY_ENC_OPTS) |
-+		   BIT_ULL(FLOW_DISSECTOR_KEY_ENC_CONTROL))) {
- 		NL_SET_ERR_MSG_MOD(fltr->extack, "Tunnel key used, but device isn't a tunnel");
- 		return -EOPNOTSUPP;
- 	} else {
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_tc.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_tc.c
-index 4fd44b6eecea..60ee7ae2c409 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_tc.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_tc.c
-@@ -688,6 +688,7 @@ static int otx2_tc_prepare_flow(struct otx2_nic *nic, struct otx2_tc_flow *node,
- 
- 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_CONTROL)) {
- 		struct flow_match_control match;
-+		u32 val;
- 
- 		flow_rule_match_control(rule, &match);
- 		if (match.mask->flags & FLOW_DIS_FIRST_FRAG) {
-@@ -696,12 +697,14 @@ static int otx2_tc_prepare_flow(struct otx2_nic *nic, struct otx2_tc_flow *node,
- 		}
- 
- 		if (match.mask->flags & FLOW_DIS_IS_FRAGMENT) {
-+			val = match.key->flags & FLOW_DIS_IS_FRAGMENT;
- 			if (ntohs(flow_spec->etype) == ETH_P_IP) {
--				flow_spec->ip_flag = IPV4_FLAG_MORE;
-+				flow_spec->ip_flag = val ? IPV4_FLAG_MORE : 0;
- 				flow_mask->ip_flag = IPV4_FLAG_MORE;
- 				req->features |= BIT_ULL(NPC_IPFRAG_IPV4);
- 			} else if (ntohs(flow_spec->etype) == ETH_P_IPV6) {
--				flow_spec->next_header = IPPROTO_FRAGMENT;
-+				flow_spec->next_header = val ?
-+							 IPPROTO_FRAGMENT : 0;
- 				flow_mask->next_header = 0xff;
- 				req->features |= BIT_ULL(NPC_IPFRAG_IPV6);
- 			} else {
-diff --git a/drivers/net/ethernet/mediatek/mtk_wed.c b/drivers/net/ethernet/mediatek/mtk_wed.c
-index c895e265ae0e..61334a71058c 100644
---- a/drivers/net/ethernet/mediatek/mtk_wed.c
-+++ b/drivers/net/ethernet/mediatek/mtk_wed.c
-@@ -1074,13 +1074,13 @@ mtk_wed_dma_disable(struct mtk_wed_device *dev)
- static void
- mtk_wed_stop(struct mtk_wed_device *dev)
- {
-+	mtk_wed_dma_disable(dev);
- 	mtk_wed_set_ext_int(dev, false);
- 
- 	wed_w32(dev, MTK_WED_WPDMA_INT_TRIGGER, 0);
- 	wed_w32(dev, MTK_WED_WDMA_INT_TRIGGER, 0);
- 	wdma_w32(dev, MTK_WDMA_INT_MASK, 0);
- 	wdma_w32(dev, MTK_WDMA_INT_GRP2, 0);
--	wed_w32(dev, MTK_WED_WPDMA_INT_MASK, 0);
- 
- 	if (!mtk_wed_get_rx_capa(dev))
- 		return;
-@@ -1093,7 +1093,6 @@ static void
- mtk_wed_deinit(struct mtk_wed_device *dev)
- {
- 	mtk_wed_stop(dev);
--	mtk_wed_dma_disable(dev);
- 
- 	wed_clr(dev, MTK_WED_CTRL,
- 		MTK_WED_CTRL_WDMA_INT_AGENT_EN |
-@@ -2605,9 +2604,6 @@ mtk_wed_irq_get(struct mtk_wed_device *dev, u32 mask)
- static void
- mtk_wed_irq_set_mask(struct mtk_wed_device *dev, u32 mask)
- {
--	if (!dev->running)
--		return;
--
- 	mtk_wed_set_ext_int(dev, !!mask);
- 	wed_w32(dev, MTK_WED_INT_MASK, mask);
- }
 diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-index e66f486faafe..415fec7763bd 100644
+index 58eacba6de8c..ad51edf55318 100644
 --- a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
 @@ -45,6 +45,10 @@ struct arfs_table {
@@ -2390,15 +5066,15 @@ index e66f486faafe..415fec7763bd 100644
  enum arfs_type {
  	ARFS_IPV4_TCP,
  	ARFS_IPV6_TCP,
-@@ -59,6 +63,7 @@ struct mlx5e_arfs_tables {
- 	spinlock_t                     arfs_lock;
+@@ -60,6 +64,7 @@ struct mlx5e_arfs_tables {
+ 	struct list_head               rules;
  	int                            last_filter_id;
  	struct workqueue_struct        *wq;
 +	unsigned long                  state;
  };
  
  struct arfs_tuple {
-@@ -169,6 +174,8 @@ int mlx5e_arfs_enable(struct mlx5e_flow_steering *fs)
+@@ -170,6 +175,8 @@ int mlx5e_arfs_enable(struct mlx5e_flow_steering *fs)
  			return err;
  		}
  	}
@@ -2416,7 +5092,7 @@ index e66f486faafe..415fec7763bd 100644
  	spin_lock_bh(&arfs->arfs_lock);
  	mlx5e_for_each_arfs_rule(rule, htmp, arfs->arfs_tables, i, j) {
  		hlist_del_init(&rule->hlist);
-@@ -626,17 +635,8 @@ static void arfs_handle_work(struct work_struct *work)
+@@ -621,17 +630,8 @@ static void arfs_handle_work(struct work_struct *work)
  	struct mlx5_flow_handle *rule;
  
  	arfs = mlx5e_fs_get_arfs(priv->fs);
@@ -2436,7 +5112,7 @@ index e66f486faafe..415fec7763bd 100644
  
  	if (!arfs_rule->rule) {
  		rule = arfs_add_rule(priv, arfs_rule);
-@@ -752,6 +752,11 @@ int mlx5e_rx_flow_steer(struct net_device *dev, const struct sk_buff *skb,
+@@ -744,6 +744,11 @@ int mlx5e_rx_flow_steer(struct net_device *dev, const struct sk_buff *skb,
  		return -EPROTONOSUPPORT;
  
  	spin_lock_bh(&arfs->arfs_lock);
@@ -2447,75 +5123,12 @@ index e66f486faafe..415fec7763bd 100644
 +
  	arfs_rule = arfs_find_rule(arfs_t, &fk);
  	if (arfs_rule) {
- 		if (arfs_rule->rxq == rxq_index || work_busy(&arfs_rule->arfs_work)) {
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index 3047d7015c52..1789800faaeb 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -1868,6 +1868,7 @@ int mlx5_eswitch_init(struct mlx5_core_dev *dev)
- 	if (err)
- 		goto abort;
- 
-+	dev->priv.eswitch = esw;
- 	err = esw_offloads_init(esw);
- 	if (err)
- 		goto reps_err;
-@@ -1892,11 +1893,6 @@ int mlx5_eswitch_init(struct mlx5_core_dev *dev)
- 		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_BASIC;
- 	else
- 		esw->offloads.encap = DEVLINK_ESWITCH_ENCAP_MODE_NONE;
--	if (MLX5_ESWITCH_MANAGER(dev) &&
--	    mlx5_esw_vport_match_metadata_supported(esw))
--		esw->flags |= MLX5_ESWITCH_VPORT_MATCH_METADATA;
--
--	dev->priv.eswitch = esw;
- 	BLOCKING_INIT_NOTIFIER_HEAD(&esw->n_head);
- 
- 	esw_info(dev,
-@@ -1908,6 +1904,7 @@ int mlx5_eswitch_init(struct mlx5_core_dev *dev)
- 
- reps_err:
- 	mlx5_esw_vports_cleanup(esw);
-+	dev->priv.eswitch = NULL;
- abort:
- 	if (esw->work_queue)
- 		destroy_workqueue(esw->work_queue);
-@@ -1926,7 +1923,6 @@ void mlx5_eswitch_cleanup(struct mlx5_eswitch *esw)
- 
- 	esw_info(esw->dev, "cleanup\n");
- 
--	esw->dev->priv.eswitch = NULL;
- 	destroy_workqueue(esw->work_queue);
- 	WARN_ON(refcount_read(&esw->qos.refcnt));
- 	mutex_destroy(&esw->state_lock);
-@@ -1937,6 +1933,7 @@ void mlx5_eswitch_cleanup(struct mlx5_eswitch *esw)
- 	mutex_destroy(&esw->offloads.encap_tbl_lock);
- 	mutex_destroy(&esw->offloads.decap_tbl_lock);
- 	esw_offloads_cleanup(esw);
-+	esw->dev->priv.eswitch = NULL;
- 	mlx5_esw_vports_cleanup(esw);
- 	debugfs_remove_recursive(esw->debugfs_root);
- 	devl_params_unregister(priv_to_devlink(esw->dev), mlx5_eswitch_params,
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-index baaae628b0a0..e3cce110e52f 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-@@ -2476,6 +2476,10 @@ int esw_offloads_init(struct mlx5_eswitch *esw)
- 	if (err)
- 		return err;
- 
-+	if (MLX5_ESWITCH_MANAGER(esw->dev) &&
-+	    mlx5_esw_vport_match_metadata_supported(esw))
-+		esw->flags |= MLX5_ESWITCH_VPORT_MATCH_METADATA;
-+
- 	err = devl_params_register(priv_to_devlink(esw->dev),
- 				   esw_devlink_params,
- 				   ARRAY_SIZE(esw_devlink_params));
+ 		if (arfs_rule->rxq == rxq_index) {
 diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c b/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
-index d14459e5c04f..69d482f7c5a2 100644
+index ad32b80e8501..01c0e1ee918d 100644
 --- a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
-@@ -703,8 +703,10 @@ int mlx5_deactivate_lag(struct mlx5_lag *ldev)
+@@ -679,8 +679,10 @@ static int mlx5_deactivate_lag(struct mlx5_lag *ldev)
  		return err;
  	}
  
@@ -2527,687 +5140,22 @@ index d14459e5c04f..69d482f7c5a2 100644
  	if (mlx5_lag_has_drop_rule(ldev))
  		mlx5_lag_drop_rule_cleanup(ldev);
  
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index 131a836c127e..e285823bd08f 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1699,12 +1699,15 @@ int mlx5_init_one_light(struct mlx5_core_dev *dev)
- 	err = mlx5_devlink_params_register(priv_to_devlink(dev));
- 	if (err) {
- 		mlx5_core_warn(dev, "mlx5_devlink_param_reg err = %d\n", err);
--		goto query_hca_caps_err;
-+		goto params_reg_err;
- 	}
- 
- 	devl_unlock(devlink);
- 	return 0;
- 
-+params_reg_err:
-+	devl_unregister(devlink);
-+	devl_unlock(devlink);
- query_hca_caps_err:
- 	devl_unregister(devlink);
- 	devl_unlock(devlink);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/sf/dev/driver.c b/drivers/net/ethernet/mellanox/mlx5/core/sf/dev/driver.c
-index e3bf8c7e4baa..7ebe71280827 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/sf/dev/driver.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/sf/dev/driver.c
-@@ -75,7 +75,6 @@ static int mlx5_sf_dev_probe(struct auxiliary_device *adev, const struct auxilia
- 		goto peer_devlink_set_err;
- 	}
- 
--	devlink_register(devlink);
- 	return 0;
- 
- peer_devlink_set_err:
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-index 523e0c470894..55f255a3c9db 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-@@ -36,6 +36,27 @@ struct sparx5_tc_flower_template {
- 	u16 l3_proto; /* protocol specified in the template */
- };
- 
-+/* SparX-5 VCAP fragment types:
-+ * 0 = no fragment, 1 = initial fragment,
-+ * 2 = suspicious fragment, 3 = valid follow-up fragment
-+ */
-+enum {                   /* key / mask */
-+	FRAG_NOT   = 0x03, /* 0 / 3 */
-+	FRAG_SOME  = 0x11, /* 1 / 1 */
-+	FRAG_FIRST = 0x13, /* 1 / 3 */
-+	FRAG_LATER = 0x33, /* 3 / 3 */
-+	FRAG_INVAL = 0xff, /* invalid */
-+};
-+
-+/* Flower fragment flag to VCAP fragment type mapping */
-+static const u8 sparx5_vcap_frag_map[4][4] = {		  /* is_frag */
-+	{ FRAG_INVAL, FRAG_INVAL, FRAG_INVAL, FRAG_FIRST }, /* 0/0 */
-+	{ FRAG_NOT,   FRAG_NOT,   FRAG_INVAL, FRAG_INVAL }, /* 0/1 */
-+	{ FRAG_INVAL, FRAG_INVAL, FRAG_INVAL, FRAG_INVAL }, /* 1/0 */
-+	{ FRAG_SOME,  FRAG_LATER, FRAG_INVAL, FRAG_FIRST }  /* 1/1 */
-+	/* 0/0	      0/1	  1/0	      1/1 <-- first_frag */
-+};
-+
- static int
- sparx5_tc_flower_es0_tpid(struct vcap_tc_flower_parse_usage *st)
- {
-@@ -145,29 +166,27 @@ sparx5_tc_flower_handler_control_usage(struct vcap_tc_flower_parse_usage *st)
- 	flow_rule_match_control(st->frule, &mt);
- 
- 	if (mt.mask->flags) {
--		if (mt.mask->flags & FLOW_DIS_FIRST_FRAG) {
--			if (mt.key->flags & FLOW_DIS_FIRST_FRAG) {
--				value = 1; /* initial fragment */
--				mask = 0x3;
--			} else {
--				if (mt.mask->flags & FLOW_DIS_IS_FRAGMENT) {
--					value = 3; /* follow up fragment */
--					mask = 0x3;
--				} else {
--					value = 0; /* no fragment */
--					mask = 0x3;
--				}
--			}
--		} else {
--			if (mt.mask->flags & FLOW_DIS_IS_FRAGMENT) {
--				value = 3; /* follow up fragment */
--				mask = 0x3;
--			} else {
--				value = 0; /* no fragment */
--				mask = 0x3;
--			}
-+		u8 is_frag_key = !!(mt.key->flags & FLOW_DIS_IS_FRAGMENT);
-+		u8 is_frag_mask = !!(mt.mask->flags & FLOW_DIS_IS_FRAGMENT);
-+		u8 is_frag_idx = (is_frag_key << 1) | is_frag_mask;
-+
-+		u8 first_frag_key = !!(mt.key->flags & FLOW_DIS_FIRST_FRAG);
-+		u8 first_frag_mask = !!(mt.mask->flags & FLOW_DIS_FIRST_FRAG);
-+		u8 first_frag_idx = (first_frag_key << 1) | first_frag_mask;
-+
-+		/* Lookup verdict based on the 2 + 2 input bits */
-+		u8 vdt = sparx5_vcap_frag_map[is_frag_idx][first_frag_idx];
-+
-+		if (vdt == FRAG_INVAL) {
-+			NL_SET_ERR_MSG_MOD(st->fco->common.extack,
-+					   "Match on invalid fragment flag combination");
-+			return -EINVAL;
- 		}
- 
-+		/* Extract VCAP fragment key and mask from verdict */
-+		value = (vdt >> 4) & 0x3;
-+		mask = vdt & 0x3;
-+
- 		err = vcap_rule_add_key_u32(st->vrule,
- 					    VCAP_KF_L3_FRAGMENT_TYPE,
- 					    value, mask);
-diff --git a/drivers/net/ethernet/realtek/r8169.h b/drivers/net/ethernet/realtek/r8169.h
-index 81567fcf3957..1ef39928757b 100644
---- a/drivers/net/ethernet/realtek/r8169.h
-+++ b/drivers/net/ethernet/realtek/r8169.h
-@@ -72,6 +72,7 @@ enum mac_version {
- };
- 
- struct rtl8169_private;
-+struct r8169_led_classdev;
- 
- void r8169_apply_firmware(struct rtl8169_private *tp);
- u16 rtl8168h_2_get_adc_bias_ioffset(struct rtl8169_private *tp);
-@@ -83,4 +84,5 @@ void r8169_get_led_name(struct rtl8169_private *tp, int idx,
- 			char *buf, int buf_len);
- int rtl8168_get_led_mode(struct rtl8169_private *tp);
- int rtl8168_led_mod_ctrl(struct rtl8169_private *tp, u16 mask, u16 val);
--void rtl8168_init_leds(struct net_device *ndev);
-+struct r8169_led_classdev *rtl8168_init_leds(struct net_device *ndev);
-+void r8169_remove_leds(struct r8169_led_classdev *leds);
-diff --git a/drivers/net/ethernet/realtek/r8169_leds.c b/drivers/net/ethernet/realtek/r8169_leds.c
-index 007d077edcad..1c97f3cca22a 100644
---- a/drivers/net/ethernet/realtek/r8169_leds.c
-+++ b/drivers/net/ethernet/realtek/r8169_leds.c
-@@ -138,20 +138,31 @@ static void rtl8168_setup_ldev(struct r8169_led_classdev *ldev,
- 	led_cdev->hw_control_get_device = r8169_led_hw_control_get_device;
- 
- 	/* ignore errors */
--	devm_led_classdev_register(&ndev->dev, led_cdev);
-+	led_classdev_register(&ndev->dev, led_cdev);
- }
- 
--void rtl8168_init_leds(struct net_device *ndev)
-+struct r8169_led_classdev *rtl8168_init_leds(struct net_device *ndev)
- {
--	/* bind resource mgmt to netdev */
--	struct device *dev = &ndev->dev;
- 	struct r8169_led_classdev *leds;
- 	int i;
- 
--	leds = devm_kcalloc(dev, RTL8168_NUM_LEDS, sizeof(*leds), GFP_KERNEL);
-+	leds = kcalloc(RTL8168_NUM_LEDS + 1, sizeof(*leds), GFP_KERNEL);
- 	if (!leds)
--		return;
-+		return NULL;
- 
- 	for (i = 0; i < RTL8168_NUM_LEDS; i++)
- 		rtl8168_setup_ldev(leds + i, ndev, i);
-+
-+	return leds;
-+}
-+
-+void r8169_remove_leds(struct r8169_led_classdev *leds)
-+{
-+	if (!leds)
-+		return;
-+
-+	for (struct r8169_led_classdev *l = leds; l->ndev; l++)
-+		led_classdev_unregister(&l->led);
-+
-+	kfree(leds);
- }
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 4b6c28576a51..32b73f3988e8 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -634,6 +634,8 @@ struct rtl8169_private {
- 	const char *fw_name;
- 	struct rtl_fw *rtl_fw;
- 
-+	struct r8169_led_classdev *leds;
-+
- 	u32 ocp_base;
- };
- 
-@@ -4930,6 +4932,9 @@ static void rtl_remove_one(struct pci_dev *pdev)
- 
- 	cancel_work_sync(&tp->wk.work);
- 
-+	if (IS_ENABLED(CONFIG_R8169_LEDS))
-+		r8169_remove_leds(tp->leds);
-+
- 	unregister_netdev(tp->dev);
- 
- 	if (tp->dash_type != RTL_DASH_NONE)
-@@ -5391,7 +5396,7 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (IS_ENABLED(CONFIG_R8169_LEDS) &&
- 	    tp->mac_version > RTL_GIGA_MAC_VER_06 &&
- 	    tp->mac_version < RTL_GIGA_MAC_VER_61)
--		rtl8168_init_leds(dev);
-+		tp->leds = rtl8168_init_leds(dev);
- 
- 	netdev_info(dev, "%s, %pM, XID %03x, IRQ %d\n",
- 		    rtl_chip_infos[chipset].name, dev->dev_addr, xid, tp->irq);
-diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
-index e0f8276cffed..fd59155a70e1 100644
---- a/drivers/net/ethernet/renesas/ravb.h
-+++ b/drivers/net/ethernet/renesas/ravb.h
-@@ -1060,8 +1060,10 @@ struct ravb_private {
- 	struct ravb_desc *desc_bat;
- 	dma_addr_t rx_desc_dma[NUM_RX_QUEUE];
- 	dma_addr_t tx_desc_dma[NUM_TX_QUEUE];
--	struct ravb_rx_desc *gbeth_rx_ring;
--	struct ravb_ex_rx_desc *rx_ring[NUM_RX_QUEUE];
-+	union {
-+		struct ravb_rx_desc *desc;
-+		struct ravb_ex_rx_desc *ex_desc;
-+	} rx_ring[NUM_RX_QUEUE];
- 	struct ravb_tx_desc *tx_ring[NUM_TX_QUEUE];
- 	void *tx_align[NUM_TX_QUEUE];
- 	struct sk_buff *rx_1st_skb;
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 1bdf0abb256c..853c2a0d4e25 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -250,11 +250,11 @@ static void ravb_rx_ring_free_gbeth(struct net_device *ndev, int q)
- 	unsigned int ring_size;
- 	unsigned int i;
- 
--	if (!priv->gbeth_rx_ring)
-+	if (!priv->rx_ring[q].desc)
- 		return;
- 
- 	for (i = 0; i < priv->num_rx_ring[q]; i++) {
--		struct ravb_rx_desc *desc = &priv->gbeth_rx_ring[i];
-+		struct ravb_rx_desc *desc = &priv->rx_ring[q].desc[i];
- 
- 		if (!dma_mapping_error(ndev->dev.parent,
- 				       le32_to_cpu(desc->dptr)))
-@@ -264,9 +264,9 @@ static void ravb_rx_ring_free_gbeth(struct net_device *ndev, int q)
- 					 DMA_FROM_DEVICE);
- 	}
- 	ring_size = sizeof(struct ravb_rx_desc) * (priv->num_rx_ring[q] + 1);
--	dma_free_coherent(ndev->dev.parent, ring_size, priv->gbeth_rx_ring,
-+	dma_free_coherent(ndev->dev.parent, ring_size, priv->rx_ring[q].desc,
- 			  priv->rx_desc_dma[q]);
--	priv->gbeth_rx_ring = NULL;
-+	priv->rx_ring[q].desc = NULL;
- }
- 
- static void ravb_rx_ring_free_rcar(struct net_device *ndev, int q)
-@@ -275,11 +275,11 @@ static void ravb_rx_ring_free_rcar(struct net_device *ndev, int q)
- 	unsigned int ring_size;
- 	unsigned int i;
- 
--	if (!priv->rx_ring[q])
-+	if (!priv->rx_ring[q].ex_desc)
- 		return;
- 
- 	for (i = 0; i < priv->num_rx_ring[q]; i++) {
--		struct ravb_ex_rx_desc *desc = &priv->rx_ring[q][i];
-+		struct ravb_ex_rx_desc *desc = &priv->rx_ring[q].ex_desc[i];
- 
- 		if (!dma_mapping_error(ndev->dev.parent,
- 				       le32_to_cpu(desc->dptr)))
-@@ -290,9 +290,9 @@ static void ravb_rx_ring_free_rcar(struct net_device *ndev, int q)
- 	}
- 	ring_size = sizeof(struct ravb_ex_rx_desc) *
- 		    (priv->num_rx_ring[q] + 1);
--	dma_free_coherent(ndev->dev.parent, ring_size, priv->rx_ring[q],
-+	dma_free_coherent(ndev->dev.parent, ring_size, priv->rx_ring[q].ex_desc,
- 			  priv->rx_desc_dma[q]);
--	priv->rx_ring[q] = NULL;
-+	priv->rx_ring[q].ex_desc = NULL;
- }
- 
- /* Free skb's and DMA buffers for Ethernet AVB */
-@@ -344,11 +344,11 @@ static void ravb_rx_ring_format_gbeth(struct net_device *ndev, int q)
- 	unsigned int i;
- 
- 	rx_ring_size = sizeof(*rx_desc) * priv->num_rx_ring[q];
--	memset(priv->gbeth_rx_ring, 0, rx_ring_size);
-+	memset(priv->rx_ring[q].desc, 0, rx_ring_size);
- 	/* Build RX ring buffer */
- 	for (i = 0; i < priv->num_rx_ring[q]; i++) {
- 		/* RX descriptor */
--		rx_desc = &priv->gbeth_rx_ring[i];
-+		rx_desc = &priv->rx_ring[q].desc[i];
- 		rx_desc->ds_cc = cpu_to_le16(GBETH_RX_DESC_DATA_SIZE);
- 		dma_addr = dma_map_single(ndev->dev.parent, priv->rx_skb[q][i]->data,
- 					  GBETH_RX_BUFF_MAX,
-@@ -361,7 +361,7 @@ static void ravb_rx_ring_format_gbeth(struct net_device *ndev, int q)
- 		rx_desc->dptr = cpu_to_le32(dma_addr);
- 		rx_desc->die_dt = DT_FEMPTY;
- 	}
--	rx_desc = &priv->gbeth_rx_ring[i];
-+	rx_desc = &priv->rx_ring[q].desc[i];
- 	rx_desc->dptr = cpu_to_le32((u32)priv->rx_desc_dma[q]);
- 	rx_desc->die_dt = DT_LINKFIX; /* type */
- }
-@@ -374,11 +374,11 @@ static void ravb_rx_ring_format_rcar(struct net_device *ndev, int q)
- 	dma_addr_t dma_addr;
- 	unsigned int i;
- 
--	memset(priv->rx_ring[q], 0, rx_ring_size);
-+	memset(priv->rx_ring[q].ex_desc, 0, rx_ring_size);
- 	/* Build RX ring buffer */
- 	for (i = 0; i < priv->num_rx_ring[q]; i++) {
- 		/* RX descriptor */
--		rx_desc = &priv->rx_ring[q][i];
-+		rx_desc = &priv->rx_ring[q].ex_desc[i];
- 		rx_desc->ds_cc = cpu_to_le16(RX_BUF_SZ);
- 		dma_addr = dma_map_single(ndev->dev.parent, priv->rx_skb[q][i]->data,
- 					  RX_BUF_SZ,
-@@ -391,7 +391,7 @@ static void ravb_rx_ring_format_rcar(struct net_device *ndev, int q)
- 		rx_desc->dptr = cpu_to_le32(dma_addr);
- 		rx_desc->die_dt = DT_FEMPTY;
- 	}
--	rx_desc = &priv->rx_ring[q][i];
-+	rx_desc = &priv->rx_ring[q].ex_desc[i];
- 	rx_desc->dptr = cpu_to_le32((u32)priv->rx_desc_dma[q]);
- 	rx_desc->die_dt = DT_LINKFIX; /* type */
- }
-@@ -446,10 +446,10 @@ static void *ravb_alloc_rx_desc_gbeth(struct net_device *ndev, int q)
- 
- 	ring_size = sizeof(struct ravb_rx_desc) * (priv->num_rx_ring[q] + 1);
- 
--	priv->gbeth_rx_ring = dma_alloc_coherent(ndev->dev.parent, ring_size,
--						 &priv->rx_desc_dma[q],
--						 GFP_KERNEL);
--	return priv->gbeth_rx_ring;
-+	priv->rx_ring[q].desc = dma_alloc_coherent(ndev->dev.parent, ring_size,
-+						   &priv->rx_desc_dma[q],
-+						   GFP_KERNEL);
-+	return priv->rx_ring[q].desc;
- }
- 
- static void *ravb_alloc_rx_desc_rcar(struct net_device *ndev, int q)
-@@ -459,10 +459,11 @@ static void *ravb_alloc_rx_desc_rcar(struct net_device *ndev, int q)
- 
- 	ring_size = sizeof(struct ravb_ex_rx_desc) * (priv->num_rx_ring[q] + 1);
- 
--	priv->rx_ring[q] = dma_alloc_coherent(ndev->dev.parent, ring_size,
--					      &priv->rx_desc_dma[q],
--					      GFP_KERNEL);
--	return priv->rx_ring[q];
-+	priv->rx_ring[q].ex_desc = dma_alloc_coherent(ndev->dev.parent,
-+						      ring_size,
-+						      &priv->rx_desc_dma[q],
-+						      GFP_KERNEL);
-+	return priv->rx_ring[q].ex_desc;
- }
- 
- /* Init skb and descriptor buffer for Ethernet AVB */
-@@ -780,12 +781,15 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
- 	int limit;
- 	int i;
- 
--	entry = priv->cur_rx[q] % priv->num_rx_ring[q];
- 	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
- 	stats = &priv->stats[q];
- 
--	desc = &priv->gbeth_rx_ring[entry];
--	for (i = 0; i < limit && rx_packets < *quota && desc->die_dt != DT_FEMPTY; i++) {
-+	for (i = 0; i < limit; i++, priv->cur_rx[q]++) {
-+		entry = priv->cur_rx[q] % priv->num_rx_ring[q];
-+		desc = &priv->rx_ring[q].desc[entry];
-+		if (rx_packets == *quota || desc->die_dt == DT_FEMPTY)
-+			break;
-+
- 		/* Descriptor type must be checked before all other reads */
- 		dma_rmb();
- 		desc_status = desc->msc;
-@@ -849,15 +853,12 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
- 				break;
- 			}
- 		}
--
--		entry = (++priv->cur_rx[q]) % priv->num_rx_ring[q];
--		desc = &priv->gbeth_rx_ring[entry];
- 	}
- 
- 	/* Refill the RX ring buffers. */
- 	for (; priv->cur_rx[q] - priv->dirty_rx[q] > 0; priv->dirty_rx[q]++) {
- 		entry = priv->dirty_rx[q] % priv->num_rx_ring[q];
--		desc = &priv->gbeth_rx_ring[entry];
-+		desc = &priv->rx_ring[q].desc[entry];
- 		desc->ds_cc = cpu_to_le16(GBETH_RX_DESC_DATA_SIZE);
- 
- 		if (!priv->rx_skb[q][entry]) {
-@@ -893,30 +894,29 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
- {
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
--	int entry = priv->cur_rx[q] % priv->num_rx_ring[q];
--	int boguscnt = (priv->dirty_rx[q] + priv->num_rx_ring[q]) -
--			priv->cur_rx[q];
- 	struct net_device_stats *stats = &priv->stats[q];
- 	struct ravb_ex_rx_desc *desc;
-+	unsigned int limit, i;
- 	struct sk_buff *skb;
- 	dma_addr_t dma_addr;
- 	struct timespec64 ts;
-+	int rx_packets = 0;
- 	u8  desc_status;
- 	u16 pkt_len;
--	int limit;
-+	int entry;
-+
-+	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
-+	for (i = 0; i < limit; i++, priv->cur_rx[q]++) {
-+		entry = priv->cur_rx[q] % priv->num_rx_ring[q];
-+		desc = &priv->rx_ring[q].ex_desc[entry];
-+		if (rx_packets == *quota || desc->die_dt == DT_FEMPTY)
-+			break;
- 
--	boguscnt = min(boguscnt, *quota);
--	limit = boguscnt;
--	desc = &priv->rx_ring[q][entry];
--	while (desc->die_dt != DT_FEMPTY) {
- 		/* Descriptor type must be checked before all other reads */
- 		dma_rmb();
- 		desc_status = desc->msc;
- 		pkt_len = le16_to_cpu(desc->ds_cc) & RX_DS;
- 
--		if (--boguscnt < 0)
--			break;
--
- 		/* We use 0-byte descriptors to mark the DMA mapping errors */
- 		if (!pkt_len)
- 			continue;
-@@ -962,18 +962,15 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
- 			if (ndev->features & NETIF_F_RXCSUM)
- 				ravb_rx_csum(skb);
- 			napi_gro_receive(&priv->napi[q], skb);
--			stats->rx_packets++;
-+			rx_packets++;
- 			stats->rx_bytes += pkt_len;
- 		}
--
--		entry = (++priv->cur_rx[q]) % priv->num_rx_ring[q];
--		desc = &priv->rx_ring[q][entry];
- 	}
- 
- 	/* Refill the RX ring buffers. */
- 	for (; priv->cur_rx[q] - priv->dirty_rx[q] > 0; priv->dirty_rx[q]++) {
- 		entry = priv->dirty_rx[q] % priv->num_rx_ring[q];
--		desc = &priv->rx_ring[q][entry];
-+		desc = &priv->rx_ring[q].ex_desc[entry];
- 		desc->ds_cc = cpu_to_le16(RX_BUF_SZ);
- 
- 		if (!priv->rx_skb[q][entry]) {
-@@ -998,9 +995,9 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
- 		desc->die_dt = DT_FEMPTY;
- 	}
- 
--	*quota -= limit - (++boguscnt);
--
--	return boguscnt <= 0;
-+	stats->rx_packets += rx_packets;
-+	*quota -= rx_packets;
-+	return *quota == 0;
- }
- 
- /* Packet receive function for Ethernet AVB */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 5ba606a596e7..5a1d46dcd5de 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -550,6 +550,7 @@ extern const struct stmmac_hwtimestamp stmmac_ptp;
- extern const struct stmmac_mode_ops dwmac4_ring_mode_ops;
- 
- struct mac_link {
-+	u32 caps;
- 	u32 speed_mask;
- 	u32 speed10;
- 	u32 speed100;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index b21d99faa2d0..e1b761dcfa1d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -1096,6 +1096,8 @@ static struct mac_device_info *sun8i_dwmac_setup(void *ppriv)
- 
- 	priv->dev->priv_flags |= IFF_UNICAST_FLT;
- 
-+	mac->link.caps = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
-+			 MAC_10 | MAC_100 | MAC_1000;
- 	/* The loopback bit seems to be re-set when link change
- 	 * Simply mask it each time
- 	 * Speed 10/100/1000 are set in BIT(2)/BIT(3)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-index 3927609abc44..8555299443f4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -539,6 +539,8 @@ int dwmac1000_setup(struct stmmac_priv *priv)
- 	if (mac->multicast_filter_bins)
- 		mac->mcast_bits_log2 = ilog2(mac->multicast_filter_bins);
- 
-+	mac->link.caps = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
-+			 MAC_10 | MAC_100 | MAC_1000;
- 	mac->link.duplex = GMAC_CONTROL_DM;
- 	mac->link.speed10 = GMAC_CONTROL_PS;
- 	mac->link.speed100 = GMAC_CONTROL_PS | GMAC_CONTROL_FES;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
-index a6e8d7bd9588..7667d103cd0e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
-@@ -175,6 +175,8 @@ int dwmac100_setup(struct stmmac_priv *priv)
- 	dev_info(priv->device, "\tDWMAC100\n");
- 
- 	mac->pcsr = priv->ioaddr;
-+	mac->link.caps = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
-+			 MAC_10 | MAC_100;
- 	mac->link.duplex = MAC_CONTROL_F;
- 	mac->link.speed10 = 0;
- 	mac->link.speed100 = 0;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index cef25efbdff9..a38226d7cc6a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -70,7 +70,10 @@ static void dwmac4_core_init(struct mac_device_info *hw,
- 
- static void dwmac4_phylink_get_caps(struct stmmac_priv *priv)
- {
--	priv->phylink_config.mac_capabilities |= MAC_2500FD;
-+	if (priv->plat->tx_queues_to_use > 1)
-+		priv->hw->link.caps &= ~(MAC_10HD | MAC_100HD | MAC_1000HD);
-+	else
-+		priv->hw->link.caps |= (MAC_10HD | MAC_100HD | MAC_1000HD);
- }
- 
- static void dwmac4_rx_queue_enable(struct mac_device_info *hw,
-@@ -1378,6 +1381,8 @@ int dwmac4_setup(struct stmmac_priv *priv)
- 	if (mac->multicast_filter_bins)
- 		mac->mcast_bits_log2 = ilog2(mac->multicast_filter_bins);
- 
-+	mac->link.caps = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
-+			 MAC_10 | MAC_100 | MAC_1000 | MAC_2500FD;
- 	mac->link.duplex = GMAC_CONFIG_DM;
- 	mac->link.speed10 = GMAC_CONFIG_PS;
- 	mac->link.speed100 = GMAC_CONFIG_FES | GMAC_CONFIG_PS;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index e841e312077e..f8e7775bb633 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -47,14 +47,6 @@ static void dwxgmac2_core_init(struct mac_device_info *hw,
- 	writel(XGMAC_INT_DEFAULT_EN, ioaddr + XGMAC_INT_EN);
- }
- 
--static void xgmac_phylink_get_caps(struct stmmac_priv *priv)
--{
--	priv->phylink_config.mac_capabilities |= MAC_2500FD | MAC_5000FD |
--						 MAC_10000FD | MAC_25000FD |
--						 MAC_40000FD | MAC_50000FD |
--						 MAC_100000FD;
--}
--
- static void dwxgmac2_set_mac(void __iomem *ioaddr, bool enable)
- {
- 	u32 tx = readl(ioaddr + XGMAC_TX_CONFIG);
-@@ -1540,7 +1532,6 @@ static void dwxgmac3_fpe_configure(void __iomem *ioaddr, struct stmmac_fpe_cfg *
- 
- const struct stmmac_ops dwxgmac210_ops = {
- 	.core_init = dwxgmac2_core_init,
--	.phylink_get_caps = xgmac_phylink_get_caps,
- 	.set_mac = dwxgmac2_set_mac,
- 	.rx_ipc = dwxgmac2_rx_ipc,
- 	.rx_queue_enable = dwxgmac2_rx_queue_enable,
-@@ -1601,7 +1592,6 @@ static void dwxlgmac2_rx_queue_enable(struct mac_device_info *hw, u8 mode,
- 
- const struct stmmac_ops dwxlgmac2_ops = {
- 	.core_init = dwxgmac2_core_init,
--	.phylink_get_caps = xgmac_phylink_get_caps,
- 	.set_mac = dwxgmac2_set_mac,
- 	.rx_ipc = dwxgmac2_rx_ipc,
- 	.rx_queue_enable = dwxlgmac2_rx_queue_enable,
-@@ -1661,6 +1651,9 @@ int dwxgmac2_setup(struct stmmac_priv *priv)
- 	if (mac->multicast_filter_bins)
- 		mac->mcast_bits_log2 = ilog2(mac->multicast_filter_bins);
- 
-+	mac->link.caps = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
-+			 MAC_1000FD | MAC_2500FD | MAC_5000FD |
-+			 MAC_10000FD;
- 	mac->link.duplex = 0;
- 	mac->link.speed10 = XGMAC_CONFIG_SS_10_MII;
- 	mac->link.speed100 = XGMAC_CONFIG_SS_100_MII;
-@@ -1698,6 +1691,11 @@ int dwxlgmac2_setup(struct stmmac_priv *priv)
- 	if (mac->multicast_filter_bins)
- 		mac->mcast_bits_log2 = ilog2(mac->multicast_filter_bins);
- 
-+	mac->link.caps = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
-+			 MAC_1000FD | MAC_2500FD | MAC_5000FD |
-+			 MAC_10000FD | MAC_25000FD |
-+			 MAC_40000FD | MAC_50000FD |
-+			 MAC_100000FD;
- 	mac->link.duplex = 0;
- 	mac->link.speed1000 = XLGMAC_CONFIG_SS_1000;
- 	mac->link.speed2500 = XLGMAC_CONFIG_SS_2500;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 7c6aef033a45..83b732c30c1b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -1198,17 +1198,6 @@ static int stmmac_init_phy(struct net_device *dev)
- 	return ret;
- }
- 
--static void stmmac_set_half_duplex(struct stmmac_priv *priv)
--{
--	/* Half-Duplex can only work with single tx queue */
--	if (priv->plat->tx_queues_to_use > 1)
--		priv->phylink_config.mac_capabilities &=
--			~(MAC_10HD | MAC_100HD | MAC_1000HD);
--	else
--		priv->phylink_config.mac_capabilities |=
--			(MAC_10HD | MAC_100HD | MAC_1000HD);
--}
--
- static int stmmac_phy_setup(struct stmmac_priv *priv)
- {
- 	struct stmmac_mdio_bus_data *mdio_bus_data;
-@@ -1236,15 +1225,11 @@ static int stmmac_phy_setup(struct stmmac_priv *priv)
- 		xpcs_get_interfaces(priv->hw->xpcs,
- 				    priv->phylink_config.supported_interfaces);
- 
--	priv->phylink_config.mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
--						MAC_10FD | MAC_100FD |
--						MAC_1000FD;
--
--	stmmac_set_half_duplex(priv);
--
- 	/* Get the MAC specific capabilities */
- 	stmmac_mac_phylink_get_caps(priv);
- 
-+	priv->phylink_config.mac_capabilities = priv->hw->link.caps;
-+
- 	max_speed = priv->plat->max_speed;
- 	if (max_speed)
- 		phylink_limit_mac_speed(&priv->phylink_config, max_speed);
-@@ -7286,6 +7271,7 @@ int stmmac_reinit_queues(struct net_device *dev, u32 rx_cnt, u32 tx_cnt)
- {
- 	struct stmmac_priv *priv = netdev_priv(dev);
- 	int ret = 0, i;
-+	int max_speed;
- 
- 	if (netif_running(dev))
- 		stmmac_release(dev);
-@@ -7299,7 +7285,14 @@ int stmmac_reinit_queues(struct net_device *dev, u32 rx_cnt, u32 tx_cnt)
- 			priv->rss.table[i] = ethtool_rxfh_indir_default(i,
- 									rx_cnt);
- 
--	stmmac_set_half_duplex(priv);
-+	stmmac_mac_phylink_get_caps(priv);
-+
-+	priv->phylink_config.mac_capabilities = priv->hw->link.caps;
-+
-+	max_speed = priv->plat->max_speed;
-+	if (max_speed)
-+		phylink_limit_mac_speed(&priv->phylink_config, max_speed);
-+
- 	stmmac_napi_add(dev);
- 
- 	if (netif_running(dev))
 diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 2939a21ca74f..1d00e21808c1 100644
+index 76fabeae512d..33df06a2de13 100644
 --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
 +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2793,6 +2793,8 @@ static void am65_cpsw_unregister_devlink(struct am65_cpsw_common *common)
+@@ -2549,6 +2549,8 @@ static void am65_cpsw_unregister_devlink(struct am65_cpsw_common *common)
  
  static int am65_cpsw_nuss_register_ndevs(struct am65_cpsw_common *common)
  {
 +	struct am65_cpsw_rx_chn *rx_chan = &common->rx_chns;
 +	struct am65_cpsw_tx_chn *tx_chan = common->tx_chns;
  	struct device *dev = common->dev;
+ 	struct devlink_port *dl_port;
  	struct am65_cpsw_port *port;
- 	int ret = 0, i;
-@@ -2805,6 +2807,22 @@ static int am65_cpsw_nuss_register_ndevs(struct am65_cpsw_common *common)
- 	if (ret)
+@@ -2567,6 +2569,22 @@ static int am65_cpsw_nuss_register_ndevs(struct am65_cpsw_common *common)
  		return ret;
+ 	}
  
 +	/* The DMA Channels are not guaranteed to be in a clean state.
 +	 * Reset and disable them to ensure that they are back to the
@@ -3229,10 +5177,10 @@ index 2939a21ca74f..1d00e21808c1 100644
  	if (ret)
  		return ret;
 diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 8f95a562b8d0..86515f0c2b6c 100644
+index 922d6f16d99d..4af1ba5d074c 100644
 --- a/drivers/net/tun.c
 +++ b/drivers/net/tun.c
-@@ -2132,14 +2132,16 @@ static ssize_t tun_put_user(struct tun_struct *tun,
+@@ -2121,14 +2121,16 @@ static ssize_t tun_put_user(struct tun_struct *tun,
  					    tun_is_little_endian(tun), true,
  					    vlan_hlen)) {
  			struct skb_shared_info *sinfo = skb_shinfo(skb);
@@ -3286,31 +5234,667 @@ index e0e9b4c53cb0..3078511f7608 100644
  	.stop = ax88179_stop,
  	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
  	.rx_fixup = ax88179_rx_fixup,
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index b456370166b6..b4f49720c87f 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -208,6 +208,15 @@ static const struct dmi_system_id fwbug_list[] = {
- 			DMI_MATCH(DMI_BIOS_VERSION, "03.03"),
- 		}
- 	},
-+	{
-+		.ident = "Framework Laptop 13 (Phoenix)",
-+		.driver_data = &quirk_spurious_8042,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Laptop 13 (AMD Ryzen 7040Series)"),
-+			DMI_MATCH(DMI_BIOS_VERSION, "03.05"),
-+		}
-+	},
- 	{}
- };
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index feafa378bf8e..aa2fba1c0f56 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -379,21 +379,8 @@ void pci_bus_add_devices(const struct pci_bus *bus)
+ }
+ EXPORT_SYMBOL(pci_bus_add_devices);
  
+-/** pci_walk_bus - walk devices on/under bus, calling callback.
+- *  @top      bus whose devices should be walked
+- *  @cb       callback to be called for each device found
+- *  @userdata arbitrary pointer to be passed to callback.
+- *
+- *  Walk the given bus, including any bridged devices
+- *  on buses under this bus.  Call the provided callback
+- *  on each device found.
+- *
+- *  We check the return of @cb each time. If it returns anything
+- *  other than 0, we break out.
+- *
+- */
+-void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+-		  void *userdata)
++static void __pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
++			   void *userdata, bool locked)
+ {
+ 	struct pci_dev *dev;
+ 	struct pci_bus *bus;
+@@ -401,7 +388,8 @@ void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+ 	int retval;
+ 
+ 	bus = top;
+-	down_read(&pci_bus_sem);
++	if (!locked)
++		down_read(&pci_bus_sem);
+ 	next = top->devices.next;
+ 	for (;;) {
+ 		if (next == &bus->devices) {
+@@ -424,10 +412,37 @@ void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+ 		if (retval)
+ 			break;
+ 	}
+-	up_read(&pci_bus_sem);
++	if (!locked)
++		up_read(&pci_bus_sem);
++}
++
++/**
++ *  pci_walk_bus - walk devices on/under bus, calling callback.
++ *  @top: bus whose devices should be walked
++ *  @cb: callback to be called for each device found
++ *  @userdata: arbitrary pointer to be passed to callback
++ *
++ *  Walk the given bus, including any bridged devices
++ *  on buses under this bus.  Call the provided callback
++ *  on each device found.
++ *
++ *  We check the return of @cb each time. If it returns anything
++ *  other than 0, we break out.
++ */
++void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *), void *userdata)
++{
++	__pci_walk_bus(top, cb, userdata, false);
+ }
+ EXPORT_SYMBOL_GPL(pci_walk_bus);
+ 
++void pci_walk_bus_locked(struct pci_bus *top, int (*cb)(struct pci_dev *, void *), void *userdata)
++{
++	lockdep_assert_held(&pci_bus_sem);
++
++	__pci_walk_bus(top, cb, userdata, true);
++}
++EXPORT_SYMBOL_GPL(pci_walk_bus_locked);
++
+ struct pci_bus *pci_bus_get(struct pci_bus *bus)
+ {
+ 	if (bus)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 5368a37154cf..67956bfebf87 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1258,6 +1258,7 @@ int pci_power_up(struct pci_dev *dev)
+ /**
+  * pci_set_full_power_state - Put a PCI device into D0 and update its state
+  * @dev: PCI device to power up
++ * @locked: whether pci_bus_sem is held
+  *
+  * Call pci_power_up() to put @dev into D0, read from its PCI_PM_CTRL register
+  * to confirm the state change, restore its BARs if they might be lost and
+@@ -1267,7 +1268,7 @@ int pci_power_up(struct pci_dev *dev)
+  * to D0, it is more efficient to use pci_power_up() directly instead of this
+  * function.
+  */
+-static int pci_set_full_power_state(struct pci_dev *dev)
++static int pci_set_full_power_state(struct pci_dev *dev, bool locked)
+ {
+ 	u16 pmcsr;
+ 	int ret;
+@@ -1303,7 +1304,7 @@ static int pci_set_full_power_state(struct pci_dev *dev)
+ 	}
+ 
+ 	if (dev->bus->self)
+-		pcie_aspm_pm_state_change(dev->bus->self);
++		pcie_aspm_pm_state_change(dev->bus->self, locked);
+ 
+ 	return 0;
+ }
+@@ -1332,10 +1333,22 @@ void pci_bus_set_current_state(struct pci_bus *bus, pci_power_t state)
+ 		pci_walk_bus(bus, __pci_dev_set_current_state, &state);
+ }
+ 
++static void __pci_bus_set_current_state(struct pci_bus *bus, pci_power_t state, bool locked)
++{
++	if (!bus)
++		return;
++
++	if (locked)
++		pci_walk_bus_locked(bus, __pci_dev_set_current_state, &state);
++	else
++		pci_walk_bus(bus, __pci_dev_set_current_state, &state);
++}
++
+ /**
+  * pci_set_low_power_state - Put a PCI device into a low-power state.
+  * @dev: PCI device to handle.
+  * @state: PCI power state (D1, D2, D3hot) to put the device into.
++ * @locked: whether pci_bus_sem is held
+  *
+  * Use the device's PCI_PM_CTRL register to put it into a low-power state.
+  *
+@@ -1346,7 +1359,7 @@ void pci_bus_set_current_state(struct pci_bus *bus, pci_power_t state)
+  * 0 if device already is in the requested state.
+  * 0 if device's power state has been successfully changed.
+  */
+-static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state)
++static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool locked)
+ {
+ 	u16 pmcsr;
+ 
+@@ -1400,29 +1413,12 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state)
+ 				     pci_power_name(state));
+ 
+ 	if (dev->bus->self)
+-		pcie_aspm_pm_state_change(dev->bus->self);
++		pcie_aspm_pm_state_change(dev->bus->self, locked);
+ 
+ 	return 0;
+ }
+ 
+-/**
+- * pci_set_power_state - Set the power state of a PCI device
+- * @dev: PCI device to handle.
+- * @state: PCI power state (D0, D1, D2, D3hot) to put the device into.
+- *
+- * Transition a device to a new power state, using the platform firmware and/or
+- * the device's PCI PM registers.
+- *
+- * RETURN VALUE:
+- * -EINVAL if the requested state is invalid.
+- * -EIO if device does not support PCI PM or its PM capabilities register has a
+- * wrong version, or device doesn't support the requested state.
+- * 0 if the transition is to D1 or D2 but D1 and D2 are not supported.
+- * 0 if device already is in the requested state.
+- * 0 if the transition is to D3 but D3 is not supported.
+- * 0 if device's power state has been successfully changed.
+- */
+-int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
++static int __pci_set_power_state(struct pci_dev *dev, pci_power_t state, bool locked)
+ {
+ 	int error;
+ 
+@@ -1446,7 +1442,7 @@ int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 		return 0;
+ 
+ 	if (state == PCI_D0)
+-		return pci_set_full_power_state(dev);
++		return pci_set_full_power_state(dev, locked);
+ 
+ 	/*
+ 	 * This device is quirked not to be put into D3, so don't put it in
+@@ -1460,16 +1456,16 @@ int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 		 * To put the device in D3cold, put it into D3hot in the native
+ 		 * way, then put it into D3cold using platform ops.
+ 		 */
+-		error = pci_set_low_power_state(dev, PCI_D3hot);
++		error = pci_set_low_power_state(dev, PCI_D3hot, locked);
+ 
+ 		if (pci_platform_power_transition(dev, PCI_D3cold))
+ 			return error;
+ 
+ 		/* Powering off a bridge may power off the whole hierarchy */
+ 		if (dev->current_state == PCI_D3cold)
+-			pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
++			__pci_bus_set_current_state(dev->subordinate, PCI_D3cold, locked);
+ 	} else {
+-		error = pci_set_low_power_state(dev, state);
++		error = pci_set_low_power_state(dev, state, locked);
+ 
+ 		if (pci_platform_power_transition(dev, state))
+ 			return error;
+@@ -1477,8 +1473,38 @@ int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 
+ 	return 0;
+ }
++
++/**
++ * pci_set_power_state - Set the power state of a PCI device
++ * @dev: PCI device to handle.
++ * @state: PCI power state (D0, D1, D2, D3hot) to put the device into.
++ *
++ * Transition a device to a new power state, using the platform firmware and/or
++ * the device's PCI PM registers.
++ *
++ * RETURN VALUE:
++ * -EINVAL if the requested state is invalid.
++ * -EIO if device does not support PCI PM or its PM capabilities register has a
++ * wrong version, or device doesn't support the requested state.
++ * 0 if the transition is to D1 or D2 but D1 and D2 are not supported.
++ * 0 if device already is in the requested state.
++ * 0 if the transition is to D3 but D3 is not supported.
++ * 0 if device's power state has been successfully changed.
++ */
++int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
++{
++	return __pci_set_power_state(dev, state, false);
++}
+ EXPORT_SYMBOL(pci_set_power_state);
+ 
++int pci_set_power_state_locked(struct pci_dev *dev, pci_power_t state)
++{
++	lockdep_assert_held(&pci_bus_sem);
++
++	return __pci_set_power_state(dev, state, true);
++}
++EXPORT_SYMBOL(pci_set_power_state_locked);
++
+ #define PCI_EXP_SAVE_REGS	7
+ 
+ static struct pci_cap_saved_state *_pci_find_saved_cap(struct pci_dev *pci_dev,
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 9950deeb047a..88576a22fecb 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -556,12 +556,12 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+ #ifdef CONFIG_PCIEASPM
+ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+ void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+-void pcie_aspm_pm_state_change(struct pci_dev *pdev);
++void pcie_aspm_pm_state_change(struct pci_dev *pdev, bool locked);
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+ #else
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+-static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
++static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev, bool locked) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+ #endif
+ 
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 25736d408e88..cf4acea6610d 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -743,10 +743,10 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 	 * in pcie_config_aspm_link().
+ 	 */
+ 	if (enable_req & (ASPM_STATE_L1_1 | ASPM_STATE_L1_2)) {
+-		pcie_capability_clear_and_set_word(child, PCI_EXP_LNKCTL,
+-						   PCI_EXP_LNKCTL_ASPM_L1, 0);
+-		pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL,
+-						   PCI_EXP_LNKCTL_ASPM_L1, 0);
++		pcie_capability_clear_word(child, PCI_EXP_LNKCTL,
++					   PCI_EXP_LNKCTL_ASPM_L1);
++		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
++					   PCI_EXP_LNKCTL_ASPM_L1);
+ 	}
+ 
+ 	val = 0;
+@@ -1055,8 +1055,11 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+ 	up_read(&pci_bus_sem);
+ }
+ 
+-/* @pdev: the root port or switch downstream port */
+-void pcie_aspm_pm_state_change(struct pci_dev *pdev)
++/*
++ * @pdev: the root port or switch downstream port
++ * @locked: whether pci_bus_sem is held
++ */
++void pcie_aspm_pm_state_change(struct pci_dev *pdev, bool locked)
+ {
+ 	struct pcie_link_state *link = pdev->link_state;
+ 
+@@ -1066,12 +1069,14 @@ void pcie_aspm_pm_state_change(struct pci_dev *pdev)
+ 	 * Devices changed PM state, we should recheck if latency
+ 	 * meets all functions' requirement
+ 	 */
+-	down_read(&pci_bus_sem);
++	if (!locked)
++		down_read(&pci_bus_sem);
+ 	mutex_lock(&aspm_lock);
+ 	pcie_update_aspm_capable(link->root);
+ 	pcie_config_aspm_path(link);
+ 	mutex_unlock(&aspm_lock);
+-	up_read(&pci_bus_sem);
++	if (!locked)
++		up_read(&pci_bus_sem);
+ }
+ 
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev)
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 08800282825e..acdbf9e770a8 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -9,6 +9,7 @@
+ #define dev_fmt(fmt) "DPC: " fmt
+ 
+ #include <linux/aer.h>
++#include <linux/bitfield.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/init.h>
+@@ -203,7 +204,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+ 
+ 	/* Get First Error Pointer */
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &dpc_status);
+-	first_error = (dpc_status & 0x1f00) >> 8;
++	first_error = FIELD_GET(PCI_EXP_DPC_RP_PIO_FEP, dpc_status);
+ 
+ 	for (i = 0; i < ARRAY_SIZE(rp_pio_error_string); i++) {
+ 		if ((status & ~mask) & (1 << i))
+@@ -339,7 +340,7 @@ void pci_dpc_init(struct pci_dev *pdev)
+ 	/* Quirks may set dpc_rp_log_size if device or firmware is buggy */
+ 	if (!pdev->dpc_rp_log_size) {
+ 		pdev->dpc_rp_log_size =
+-			(cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
++				FIELD_GET(PCI_EXP_DPC_RP_PIO_LOG_SIZE, cap);
+ 		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
+ 			pci_err(pdev, "RP PIO log size %u is invalid\n",
+ 				pdev->dpc_rp_log_size);
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 289ba6902e41..56dce858a693 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2425,9 +2425,9 @@ static void quirk_enable_clear_retrain_link(struct pci_dev *dev)
+ 	dev->clear_retrain_link = 1;
+ 	pci_info(dev, "Enable PCIe Retrain Link quirk\n");
+ }
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PERICOM, 0xe110, quirk_enable_clear_retrain_link);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PERICOM, 0xe111, quirk_enable_clear_retrain_link);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PERICOM, 0xe130, quirk_enable_clear_retrain_link);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PERICOM, 0xe110, quirk_enable_clear_retrain_link);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PERICOM, 0xe111, quirk_enable_clear_retrain_link);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_PERICOM, 0xe130, quirk_enable_clear_retrain_link);
+ 
+ static void fixup_rev1_53c810(struct pci_dev *dev)
+ {
+@@ -4011,10 +4011,11 @@ static int nvme_disable_and_flr(struct pci_dev *dev, bool probe)
+ }
+ 
+ /*
+- * Intel DC P3700 NVMe controller will timeout waiting for ready status
+- * to change after NVMe enable if the driver starts interacting with the
+- * device too soon after FLR.  A 250ms delay after FLR has heuristically
+- * proven to produce reliably working results for device assignment cases.
++ * Some NVMe controllers such as Intel DC P3700 and Solidigm P44 Pro will
++ * timeout waiting for ready status to change after NVMe enable if the driver
++ * starts interacting with the device too soon after FLR.  A 250ms delay after
++ * FLR has heuristically proven to produce reliably working results for device
++ * assignment cases.
+  */
+ static int delay_250ms_after_flr(struct pci_dev *dev, bool probe)
+ {
+@@ -4101,6 +4102,7 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+ 	{ PCI_VENDOR_ID_SAMSUNG, 0xa804, nvme_disable_and_flr },
+ 	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
+ 	{ PCI_VENDOR_ID_INTEL, 0x0a54, delay_250ms_after_flr },
++	{ PCI_VENDOR_ID_SOLIDIGM, 0xf1ac, delay_250ms_after_flr },
+ 	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+ 		reset_chelsio_generic_dev },
+ 	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
+@@ -4474,9 +4476,9 @@ static void quirk_disable_root_port_attributes(struct pci_dev *pdev)
+ 
+ 	pci_info(root_port, "Disabling No Snoop/Relaxed Ordering Attributes to avoid PCIe Completion erratum in %s\n",
+ 		 dev_name(&pdev->dev));
+-	pcie_capability_clear_and_set_word(root_port, PCI_EXP_DEVCTL,
+-					   PCI_EXP_DEVCTL_RELAX_EN |
+-					   PCI_EXP_DEVCTL_NOSNOOP_EN, 0);
++	pcie_capability_clear_word(root_port, PCI_EXP_DEVCTL,
++				   PCI_EXP_DEVCTL_RELAX_EN |
++				   PCI_EXP_DEVCTL_NOSNOOP_EN);
+ }
+ 
+ /*
+@@ -5403,6 +5405,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x7901, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+ 
++/* FLR may cause the SolidRun SNET DPU (rev 0x1) to hang */
++static void quirk_no_flr_snet(struct pci_dev *dev)
++{
++	if (dev->revision == 0x1)
++		quirk_no_flr(dev);
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLIDRUN, 0x1000, quirk_no_flr_snet);
++
+ static void quirk_no_ext_tags(struct pci_dev *pdev)
+ {
+ 	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+@@ -5808,6 +5818,42 @@ SWITCHTEC_QUIRK(0x4428);  /* PSXA 28XG4 */
+ SWITCHTEC_QUIRK(0x4552);  /* PAXA 52XG4 */
+ SWITCHTEC_QUIRK(0x4536);  /* PAXA 36XG4 */
+ SWITCHTEC_QUIRK(0x4528);  /* PAXA 28XG4 */
++SWITCHTEC_QUIRK(0x5000);  /* PFX 100XG5 */
++SWITCHTEC_QUIRK(0x5084);  /* PFX 84XG5 */
++SWITCHTEC_QUIRK(0x5068);  /* PFX 68XG5 */
++SWITCHTEC_QUIRK(0x5052);  /* PFX 52XG5 */
++SWITCHTEC_QUIRK(0x5036);  /* PFX 36XG5 */
++SWITCHTEC_QUIRK(0x5028);  /* PFX 28XG5 */
++SWITCHTEC_QUIRK(0x5100);  /* PSX 100XG5 */
++SWITCHTEC_QUIRK(0x5184);  /* PSX 84XG5 */
++SWITCHTEC_QUIRK(0x5168);  /* PSX 68XG5 */
++SWITCHTEC_QUIRK(0x5152);  /* PSX 52XG5 */
++SWITCHTEC_QUIRK(0x5136);  /* PSX 36XG5 */
++SWITCHTEC_QUIRK(0x5128);  /* PSX 28XG5 */
++SWITCHTEC_QUIRK(0x5200);  /* PAX 100XG5 */
++SWITCHTEC_QUIRK(0x5284);  /* PAX 84XG5 */
++SWITCHTEC_QUIRK(0x5268);  /* PAX 68XG5 */
++SWITCHTEC_QUIRK(0x5252);  /* PAX 52XG5 */
++SWITCHTEC_QUIRK(0x5236);  /* PAX 36XG5 */
++SWITCHTEC_QUIRK(0x5228);  /* PAX 28XG5 */
++SWITCHTEC_QUIRK(0x5300);  /* PFXA 100XG5 */
++SWITCHTEC_QUIRK(0x5384);  /* PFXA 84XG5 */
++SWITCHTEC_QUIRK(0x5368);  /* PFXA 68XG5 */
++SWITCHTEC_QUIRK(0x5352);  /* PFXA 52XG5 */
++SWITCHTEC_QUIRK(0x5336);  /* PFXA 36XG5 */
++SWITCHTEC_QUIRK(0x5328);  /* PFXA 28XG5 */
++SWITCHTEC_QUIRK(0x5400);  /* PSXA 100XG5 */
++SWITCHTEC_QUIRK(0x5484);  /* PSXA 84XG5 */
++SWITCHTEC_QUIRK(0x5468);  /* PSXA 68XG5 */
++SWITCHTEC_QUIRK(0x5452);  /* PSXA 52XG5 */
++SWITCHTEC_QUIRK(0x5436);  /* PSXA 36XG5 */
++SWITCHTEC_QUIRK(0x5428);  /* PSXA 28XG5 */
++SWITCHTEC_QUIRK(0x5500);  /* PAXA 100XG5 */
++SWITCHTEC_QUIRK(0x5584);  /* PAXA 84XG5 */
++SWITCHTEC_QUIRK(0x5568);  /* PAXA 68XG5 */
++SWITCHTEC_QUIRK(0x5552);  /* PAXA 52XG5 */
++SWITCHTEC_QUIRK(0x5536);  /* PAXA 36XG5 */
++SWITCHTEC_QUIRK(0x5528);  /* PAXA 28XG5 */
+ 
+ /*
+  * The PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints.
+@@ -6057,7 +6103,7 @@ static void dpc_log_size(struct pci_dev *dev)
+ 	if (!(val & PCI_EXP_DPC_CAP_RP_EXT))
+ 		return;
+ 
+-	if (!((val & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8)) {
++	if (FIELD_GET(PCI_EXP_DPC_RP_PIO_LOG_SIZE, val) == 0) {
+ 		pci_info(dev, "Overriding RP PIO Log Size to 4\n");
+ 		dev->dpc_rp_log_size = 4;
+ 	}
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index d05a482639e3..332af6938d7f 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -372,7 +372,7 @@ static ssize_t field ## _show(struct device *dev, \
+ 	if (stdev->gen == SWITCHTEC_GEN3) \
+ 		return io_string_show(buf, &si->gen3.field, \
+ 				      sizeof(si->gen3.field)); \
+-	else if (stdev->gen == SWITCHTEC_GEN4) \
++	else if (stdev->gen >= SWITCHTEC_GEN4) \
+ 		return io_string_show(buf, &si->gen4.field, \
+ 				      sizeof(si->gen4.field)); \
+ 	else \
+@@ -663,7 +663,7 @@ static int ioctl_flash_info(struct switchtec_dev *stdev,
+ 	if (stdev->gen == SWITCHTEC_GEN3) {
+ 		info.flash_length = ioread32(&fi->gen3.flash_length);
+ 		info.num_partitions = SWITCHTEC_NUM_PARTITIONS_GEN3;
+-	} else if (stdev->gen == SWITCHTEC_GEN4) {
++	} else if (stdev->gen >= SWITCHTEC_GEN4) {
+ 		info.flash_length = ioread32(&fi->gen4.flash_length);
+ 		info.num_partitions = SWITCHTEC_NUM_PARTITIONS_GEN4;
+ 	} else {
+@@ -870,7 +870,7 @@ static int ioctl_flash_part_info(struct switchtec_dev *stdev,
+ 		ret = flash_part_info_gen3(stdev, &info);
+ 		if (ret)
+ 			return ret;
+-	} else if (stdev->gen == SWITCHTEC_GEN4) {
++	} else if (stdev->gen >= SWITCHTEC_GEN4) {
+ 		ret = flash_part_info_gen4(stdev, &info);
+ 		if (ret)
+ 			return ret;
+@@ -1606,7 +1606,7 @@ static int switchtec_init_pci(struct switchtec_dev *stdev,
+ 
+ 	if (stdev->gen == SWITCHTEC_GEN3)
+ 		part_id = &stdev->mmio_sys_info->gen3.partition_id;
+-	else if (stdev->gen == SWITCHTEC_GEN4)
++	else if (stdev->gen >= SWITCHTEC_GEN4)
+ 		part_id = &stdev->mmio_sys_info->gen4.partition_id;
+ 	else
+ 		return -EOPNOTSUPP;
+@@ -1740,63 +1740,99 @@ static void switchtec_pci_remove(struct pci_dev *pdev)
+ 	}
+ 
+ static const struct pci_device_id switchtec_pci_tbl[] = {
+-	SWITCHTEC_PCI_DEVICE(0x8531, SWITCHTEC_GEN3),  //PFX 24xG3
+-	SWITCHTEC_PCI_DEVICE(0x8532, SWITCHTEC_GEN3),  //PFX 32xG3
+-	SWITCHTEC_PCI_DEVICE(0x8533, SWITCHTEC_GEN3),  //PFX 48xG3
+-	SWITCHTEC_PCI_DEVICE(0x8534, SWITCHTEC_GEN3),  //PFX 64xG3
+-	SWITCHTEC_PCI_DEVICE(0x8535, SWITCHTEC_GEN3),  //PFX 80xG3
+-	SWITCHTEC_PCI_DEVICE(0x8536, SWITCHTEC_GEN3),  //PFX 96xG3
+-	SWITCHTEC_PCI_DEVICE(0x8541, SWITCHTEC_GEN3),  //PSX 24xG3
+-	SWITCHTEC_PCI_DEVICE(0x8542, SWITCHTEC_GEN3),  //PSX 32xG3
+-	SWITCHTEC_PCI_DEVICE(0x8543, SWITCHTEC_GEN3),  //PSX 48xG3
+-	SWITCHTEC_PCI_DEVICE(0x8544, SWITCHTEC_GEN3),  //PSX 64xG3
+-	SWITCHTEC_PCI_DEVICE(0x8545, SWITCHTEC_GEN3),  //PSX 80xG3
+-	SWITCHTEC_PCI_DEVICE(0x8546, SWITCHTEC_GEN3),  //PSX 96xG3
+-	SWITCHTEC_PCI_DEVICE(0x8551, SWITCHTEC_GEN3),  //PAX 24XG3
+-	SWITCHTEC_PCI_DEVICE(0x8552, SWITCHTEC_GEN3),  //PAX 32XG3
+-	SWITCHTEC_PCI_DEVICE(0x8553, SWITCHTEC_GEN3),  //PAX 48XG3
+-	SWITCHTEC_PCI_DEVICE(0x8554, SWITCHTEC_GEN3),  //PAX 64XG3
+-	SWITCHTEC_PCI_DEVICE(0x8555, SWITCHTEC_GEN3),  //PAX 80XG3
+-	SWITCHTEC_PCI_DEVICE(0x8556, SWITCHTEC_GEN3),  //PAX 96XG3
+-	SWITCHTEC_PCI_DEVICE(0x8561, SWITCHTEC_GEN3),  //PFXL 24XG3
+-	SWITCHTEC_PCI_DEVICE(0x8562, SWITCHTEC_GEN3),  //PFXL 32XG3
+-	SWITCHTEC_PCI_DEVICE(0x8563, SWITCHTEC_GEN3),  //PFXL 48XG3
+-	SWITCHTEC_PCI_DEVICE(0x8564, SWITCHTEC_GEN3),  //PFXL 64XG3
+-	SWITCHTEC_PCI_DEVICE(0x8565, SWITCHTEC_GEN3),  //PFXL 80XG3
+-	SWITCHTEC_PCI_DEVICE(0x8566, SWITCHTEC_GEN3),  //PFXL 96XG3
+-	SWITCHTEC_PCI_DEVICE(0x8571, SWITCHTEC_GEN3),  //PFXI 24XG3
+-	SWITCHTEC_PCI_DEVICE(0x8572, SWITCHTEC_GEN3),  //PFXI 32XG3
+-	SWITCHTEC_PCI_DEVICE(0x8573, SWITCHTEC_GEN3),  //PFXI 48XG3
+-	SWITCHTEC_PCI_DEVICE(0x8574, SWITCHTEC_GEN3),  //PFXI 64XG3
+-	SWITCHTEC_PCI_DEVICE(0x8575, SWITCHTEC_GEN3),  //PFXI 80XG3
+-	SWITCHTEC_PCI_DEVICE(0x8576, SWITCHTEC_GEN3),  //PFXI 96XG3
+-	SWITCHTEC_PCI_DEVICE(0x4000, SWITCHTEC_GEN4),  //PFX 100XG4
+-	SWITCHTEC_PCI_DEVICE(0x4084, SWITCHTEC_GEN4),  //PFX 84XG4
+-	SWITCHTEC_PCI_DEVICE(0x4068, SWITCHTEC_GEN4),  //PFX 68XG4
+-	SWITCHTEC_PCI_DEVICE(0x4052, SWITCHTEC_GEN4),  //PFX 52XG4
+-	SWITCHTEC_PCI_DEVICE(0x4036, SWITCHTEC_GEN4),  //PFX 36XG4
+-	SWITCHTEC_PCI_DEVICE(0x4028, SWITCHTEC_GEN4),  //PFX 28XG4
+-	SWITCHTEC_PCI_DEVICE(0x4100, SWITCHTEC_GEN4),  //PSX 100XG4
+-	SWITCHTEC_PCI_DEVICE(0x4184, SWITCHTEC_GEN4),  //PSX 84XG4
+-	SWITCHTEC_PCI_DEVICE(0x4168, SWITCHTEC_GEN4),  //PSX 68XG4
+-	SWITCHTEC_PCI_DEVICE(0x4152, SWITCHTEC_GEN4),  //PSX 52XG4
+-	SWITCHTEC_PCI_DEVICE(0x4136, SWITCHTEC_GEN4),  //PSX 36XG4
+-	SWITCHTEC_PCI_DEVICE(0x4128, SWITCHTEC_GEN4),  //PSX 28XG4
+-	SWITCHTEC_PCI_DEVICE(0x4200, SWITCHTEC_GEN4),  //PAX 100XG4
+-	SWITCHTEC_PCI_DEVICE(0x4284, SWITCHTEC_GEN4),  //PAX 84XG4
+-	SWITCHTEC_PCI_DEVICE(0x4268, SWITCHTEC_GEN4),  //PAX 68XG4
+-	SWITCHTEC_PCI_DEVICE(0x4252, SWITCHTEC_GEN4),  //PAX 52XG4
+-	SWITCHTEC_PCI_DEVICE(0x4236, SWITCHTEC_GEN4),  //PAX 36XG4
+-	SWITCHTEC_PCI_DEVICE(0x4228, SWITCHTEC_GEN4),  //PAX 28XG4
+-	SWITCHTEC_PCI_DEVICE(0x4352, SWITCHTEC_GEN4),  //PFXA 52XG4
+-	SWITCHTEC_PCI_DEVICE(0x4336, SWITCHTEC_GEN4),  //PFXA 36XG4
+-	SWITCHTEC_PCI_DEVICE(0x4328, SWITCHTEC_GEN4),  //PFXA 28XG4
+-	SWITCHTEC_PCI_DEVICE(0x4452, SWITCHTEC_GEN4),  //PSXA 52XG4
+-	SWITCHTEC_PCI_DEVICE(0x4436, SWITCHTEC_GEN4),  //PSXA 36XG4
+-	SWITCHTEC_PCI_DEVICE(0x4428, SWITCHTEC_GEN4),  //PSXA 28XG4
+-	SWITCHTEC_PCI_DEVICE(0x4552, SWITCHTEC_GEN4),  //PAXA 52XG4
+-	SWITCHTEC_PCI_DEVICE(0x4536, SWITCHTEC_GEN4),  //PAXA 36XG4
+-	SWITCHTEC_PCI_DEVICE(0x4528, SWITCHTEC_GEN4),  //PAXA 28XG4
++	SWITCHTEC_PCI_DEVICE(0x8531, SWITCHTEC_GEN3),  /* PFX 24xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8532, SWITCHTEC_GEN3),  /* PFX 32xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8533, SWITCHTEC_GEN3),  /* PFX 48xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8534, SWITCHTEC_GEN3),  /* PFX 64xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8535, SWITCHTEC_GEN3),  /* PFX 80xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8536, SWITCHTEC_GEN3),  /* PFX 96xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8541, SWITCHTEC_GEN3),  /* PSX 24xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8542, SWITCHTEC_GEN3),  /* PSX 32xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8543, SWITCHTEC_GEN3),  /* PSX 48xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8544, SWITCHTEC_GEN3),  /* PSX 64xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8545, SWITCHTEC_GEN3),  /* PSX 80xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8546, SWITCHTEC_GEN3),  /* PSX 96xG3 */
++	SWITCHTEC_PCI_DEVICE(0x8551, SWITCHTEC_GEN3),  /* PAX 24XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8552, SWITCHTEC_GEN3),  /* PAX 32XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8553, SWITCHTEC_GEN3),  /* PAX 48XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8554, SWITCHTEC_GEN3),  /* PAX 64XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8555, SWITCHTEC_GEN3),  /* PAX 80XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8556, SWITCHTEC_GEN3),  /* PAX 96XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8561, SWITCHTEC_GEN3),  /* PFXL 24XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8562, SWITCHTEC_GEN3),  /* PFXL 32XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8563, SWITCHTEC_GEN3),  /* PFXL 48XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8564, SWITCHTEC_GEN3),  /* PFXL 64XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8565, SWITCHTEC_GEN3),  /* PFXL 80XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8566, SWITCHTEC_GEN3),  /* PFXL 96XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8571, SWITCHTEC_GEN3),  /* PFXI 24XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8572, SWITCHTEC_GEN3),  /* PFXI 32XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8573, SWITCHTEC_GEN3),  /* PFXI 48XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8574, SWITCHTEC_GEN3),  /* PFXI 64XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8575, SWITCHTEC_GEN3),  /* PFXI 80XG3 */
++	SWITCHTEC_PCI_DEVICE(0x8576, SWITCHTEC_GEN3),  /* PFXI 96XG3 */
++	SWITCHTEC_PCI_DEVICE(0x4000, SWITCHTEC_GEN4),  /* PFX 100XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4084, SWITCHTEC_GEN4),  /* PFX 84XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4068, SWITCHTEC_GEN4),  /* PFX 68XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4052, SWITCHTEC_GEN4),  /* PFX 52XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4036, SWITCHTEC_GEN4),  /* PFX 36XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4028, SWITCHTEC_GEN4),  /* PFX 28XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4100, SWITCHTEC_GEN4),  /* PSX 100XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4184, SWITCHTEC_GEN4),  /* PSX 84XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4168, SWITCHTEC_GEN4),  /* PSX 68XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4152, SWITCHTEC_GEN4),  /* PSX 52XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4136, SWITCHTEC_GEN4),  /* PSX 36XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4128, SWITCHTEC_GEN4),  /* PSX 28XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4200, SWITCHTEC_GEN4),  /* PAX 100XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4284, SWITCHTEC_GEN4),  /* PAX 84XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4268, SWITCHTEC_GEN4),  /* PAX 68XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4252, SWITCHTEC_GEN4),  /* PAX 52XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4236, SWITCHTEC_GEN4),  /* PAX 36XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4228, SWITCHTEC_GEN4),  /* PAX 28XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4352, SWITCHTEC_GEN4),  /* PFXA 52XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4336, SWITCHTEC_GEN4),  /* PFXA 36XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4328, SWITCHTEC_GEN4),  /* PFXA 28XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4452, SWITCHTEC_GEN4),  /* PSXA 52XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4436, SWITCHTEC_GEN4),  /* PSXA 36XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4428, SWITCHTEC_GEN4),  /* PSXA 28XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4552, SWITCHTEC_GEN4),  /* PAXA 52XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4536, SWITCHTEC_GEN4),  /* PAXA 36XG4 */
++	SWITCHTEC_PCI_DEVICE(0x4528, SWITCHTEC_GEN4),  /* PAXA 28XG4 */
++	SWITCHTEC_PCI_DEVICE(0x5000, SWITCHTEC_GEN5),  /* PFX 100XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5084, SWITCHTEC_GEN5),  /* PFX 84XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5068, SWITCHTEC_GEN5),  /* PFX 68XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5052, SWITCHTEC_GEN5),  /* PFX 52XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5036, SWITCHTEC_GEN5),  /* PFX 36XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5028, SWITCHTEC_GEN5),  /* PFX 28XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5100, SWITCHTEC_GEN5),  /* PSX 100XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5184, SWITCHTEC_GEN5),  /* PSX 84XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5168, SWITCHTEC_GEN5),  /* PSX 68XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5152, SWITCHTEC_GEN5),  /* PSX 52XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5136, SWITCHTEC_GEN5),  /* PSX 36XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5128, SWITCHTEC_GEN5),  /* PSX 28XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5200, SWITCHTEC_GEN5),  /* PAX 100XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5284, SWITCHTEC_GEN5),  /* PAX 84XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5268, SWITCHTEC_GEN5),  /* PAX 68XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5252, SWITCHTEC_GEN5),  /* PAX 52XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5236, SWITCHTEC_GEN5),  /* PAX 36XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5228, SWITCHTEC_GEN5),  /* PAX 28XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5300, SWITCHTEC_GEN5),  /* PFXA 100XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5384, SWITCHTEC_GEN5),  /* PFXA 84XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5368, SWITCHTEC_GEN5),  /* PFXA 68XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5352, SWITCHTEC_GEN5),  /* PFXA 52XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5336, SWITCHTEC_GEN5),  /* PFXA 36XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5328, SWITCHTEC_GEN5),  /* PFXA 28XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5400, SWITCHTEC_GEN5),  /* PSXA 100XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5484, SWITCHTEC_GEN5),  /* PSXA 84XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5468, SWITCHTEC_GEN5),  /* PSXA 68XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5452, SWITCHTEC_GEN5),  /* PSXA 52XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5436, SWITCHTEC_GEN5),  /* PSXA 36XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5428, SWITCHTEC_GEN5),  /* PSXA 28XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5500, SWITCHTEC_GEN5),  /* PAXA 100XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5584, SWITCHTEC_GEN5),  /* PAXA 84XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5568, SWITCHTEC_GEN5),  /* PAXA 68XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5552, SWITCHTEC_GEN5),  /* PAXA 52XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5536, SWITCHTEC_GEN5),  /* PAXA 36XG5 */
++	SWITCHTEC_PCI_DEVICE(0x5528, SWITCHTEC_GEN5),  /* PAXA 28XG5 */
+ 	{0}
+ };
+ MODULE_DEVICE_TABLE(pci, switchtec_pci_tbl);
 diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 0cfb179e1bcb..34b2567b8df4 100644
+index 02813b63f90f..5666b9cc5d29 100644
 --- a/drivers/s390/cio/device.c
 +++ b/drivers/s390/cio/device.c
-@@ -363,10 +363,8 @@ int ccw_device_set_online(struct ccw_device *cdev)
+@@ -360,10 +360,8 @@ int ccw_device_set_online(struct ccw_device *cdev)
  
  	spin_lock_irq(cdev->ccwlock);
  	ret = ccw_device_online(cdev);
@@ -3323,7 +5907,7 @@ index 0cfb179e1bcb..34b2567b8df4 100644
  		CIO_MSG_EVENT(0, "ccw_device_online returned %d, "
  			      "device 0.%x.%04x\n",
  			      ret, cdev->private->dev_id.ssid,
-@@ -375,7 +373,12 @@ int ccw_device_set_online(struct ccw_device *cdev)
+@@ -372,7 +370,12 @@ int ccw_device_set_online(struct ccw_device *cdev)
  		put_device(&cdev->dev);
  		return ret;
  	}
@@ -3421,458 +6005,31 @@ index 9cde55730b65..ebcb53580988 100644
  	wake_up(&cdev->private->wait_q);
  }
  
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index 2c8e964425dc..43778b088ffa 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -292,13 +292,16 @@ static int ism_read_local_gid(struct ism_dev *ism)
- static void ism_free_dmb(struct ism_dev *ism, struct ism_dmb *dmb)
+diff --git a/drivers/thunderbolt/quirks.c b/drivers/thunderbolt/quirks.c
+index 638cb5fb22c1..e81de9c30eac 100644
+--- a/drivers/thunderbolt/quirks.c
++++ b/drivers/thunderbolt/quirks.c
+@@ -10,6 +10,7 @@
+ static void quirk_force_power_link(struct tb_switch *sw)
  {
- 	clear_bit(dmb->sba_idx, ism->sba_bitmap);
--	dma_free_coherent(&ism->pdev->dev, dmb->dmb_len,
--			  dmb->cpu_addr, dmb->dma_addr);
-+	dma_unmap_page(&ism->pdev->dev, dmb->dma_addr, dmb->dmb_len,
-+		       DMA_FROM_DEVICE);
-+	folio_put(virt_to_folio(dmb->cpu_addr));
+ 	sw->quirks |= QUIRK_FORCE_POWER_LINK_CONTROLLER;
++	tb_sw_dbg(sw, "forcing power to link controller\n");
  }
  
- static int ism_alloc_dmb(struct ism_dev *ism, struct ism_dmb *dmb)
- {
-+	struct folio *folio;
- 	unsigned long bit;
-+	int rc;
+ static void quirk_dp_credit_allocation(struct tb_switch *sw)
+@@ -130,6 +131,7 @@ void tb_check_quirks(struct tb_switch *sw)
+ 		if (q->device && q->device != sw->device)
+ 			continue;
  
- 	if (PAGE_ALIGN(dmb->dmb_len) > dma_get_max_seg_size(&ism->pdev->dev))
- 		return -EINVAL;
-@@ -315,14 +318,30 @@ static int ism_alloc_dmb(struct ism_dev *ism, struct ism_dmb *dmb)
- 	    test_and_set_bit(dmb->sba_idx, ism->sba_bitmap))
- 		return -EINVAL;
- 
--	dmb->cpu_addr = dma_alloc_coherent(&ism->pdev->dev, dmb->dmb_len,
--					   &dmb->dma_addr,
--					   GFP_KERNEL | __GFP_NOWARN |
--					   __GFP_NOMEMALLOC | __GFP_NORETRY);
--	if (!dmb->cpu_addr)
--		clear_bit(dmb->sba_idx, ism->sba_bitmap);
-+	folio = folio_alloc(GFP_KERNEL | __GFP_NOWARN | __GFP_NOMEMALLOC |
-+			    __GFP_NORETRY, get_order(dmb->dmb_len));
- 
--	return dmb->cpu_addr ? 0 : -ENOMEM;
-+	if (!folio) {
-+		rc = -ENOMEM;
-+		goto out_bit;
-+	}
-+
-+	dmb->cpu_addr = folio_address(folio);
-+	dmb->dma_addr = dma_map_page(&ism->pdev->dev,
-+				     virt_to_page(dmb->cpu_addr), 0,
-+				     dmb->dmb_len, DMA_FROM_DEVICE);
-+	if (dma_mapping_error(&ism->pdev->dev, dmb->dma_addr)) {
-+		rc = -ENOMEM;
-+		goto out_free;
-+	}
-+
-+	return 0;
-+
-+out_free:
-+	kfree(dmb->cpu_addr);
-+out_bit:
-+	clear_bit(dmb->sba_idx, ism->sba_bitmap);
-+	return rc;
- }
- 
- int ism_register_dmb(struct ism_dev *ism, struct ism_dmb *dmb,
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index df5ac03d5d6c..189dfeb37820 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -543,10 +543,9 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
- 	if (blk_queue_add_random(q))
- 		add_disk_randomness(req->q->disk);
- 
--	if (!blk_rq_is_passthrough(req)) {
--		WARN_ON_ONCE(!(cmd->flags & SCMD_INITIALIZED));
--		cmd->flags &= ~SCMD_INITIALIZED;
--	}
-+	WARN_ON_ONCE(!blk_rq_is_passthrough(req) &&
-+		     !(cmd->flags & SCMD_INITIALIZED));
-+	cmd->flags = 0;
- 
- 	/*
- 	 * Calling rcu_barrier() is not necessary here because the
-diff --git a/drivers/thermal/thermal_debugfs.c b/drivers/thermal/thermal_debugfs.c
-index c617e8b9f0dd..d78d54ae2605 100644
---- a/drivers/thermal/thermal_debugfs.c
-+++ b/drivers/thermal/thermal_debugfs.c
-@@ -616,6 +616,7 @@ void thermal_debug_tz_trip_up(struct thermal_zone_device *tz,
- 	tze->trip_stats[trip_id].timestamp = now;
- 	tze->trip_stats[trip_id].max = max(tze->trip_stats[trip_id].max, temperature);
- 	tze->trip_stats[trip_id].min = min(tze->trip_stats[trip_id].min, temperature);
-+	tze->trip_stats[trip_id].count++;
- 	tze->trip_stats[trip_id].avg = tze->trip_stats[trip_id].avg +
- 		(temperature - tze->trip_stats[trip_id].avg) /
- 		tze->trip_stats[trip_id].count;
-diff --git a/drivers/thunderbolt/domain.c b/drivers/thunderbolt/domain.c
-index 9fb1a64f3300..df0d845e069a 100644
---- a/drivers/thunderbolt/domain.c
-+++ b/drivers/thunderbolt/domain.c
-@@ -423,6 +423,7 @@ struct tb *tb_domain_alloc(struct tb_nhi *nhi, int timeout_msec, size_t privsize
- /**
-  * tb_domain_add() - Add domain to the system
-  * @tb: Domain to add
-+ * @reset: Issue reset to the host router
-  *
-  * Starts the domain and adds it to the system. Hotplugging devices will
-  * work after this has been returned successfully. In order to remove
-@@ -431,7 +432,7 @@ struct tb *tb_domain_alloc(struct tb_nhi *nhi, int timeout_msec, size_t privsize
-  *
-  * Return: %0 in case of success and negative errno in case of error
-  */
--int tb_domain_add(struct tb *tb)
-+int tb_domain_add(struct tb *tb, bool reset)
- {
- 	int ret;
- 
-@@ -460,7 +461,7 @@ int tb_domain_add(struct tb *tb)
- 
- 	/* Start the domain */
- 	if (tb->cm_ops->start) {
--		ret = tb->cm_ops->start(tb);
-+		ret = tb->cm_ops->start(tb, reset);
- 		if (ret)
- 			goto err_domain_del;
++		tb_sw_dbg(sw, "running %ps\n", q->hook);
+ 		q->hook(sw);
  	}
-diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
-index 56790d50f9e3..baf10d099c77 100644
---- a/drivers/thunderbolt/icm.c
-+++ b/drivers/thunderbolt/icm.c
-@@ -2144,7 +2144,7 @@ static int icm_runtime_resume(struct tb *tb)
- 	return 0;
  }
- 
--static int icm_start(struct tb *tb)
-+static int icm_start(struct tb *tb, bool not_used)
- {
- 	struct icm *icm = tb_priv(tb);
- 	int ret;
-diff --git a/drivers/thunderbolt/lc.c b/drivers/thunderbolt/lc.c
-index 633970fbe9b0..63cb4b6afb71 100644
---- a/drivers/thunderbolt/lc.c
-+++ b/drivers/thunderbolt/lc.c
-@@ -6,6 +6,8 @@
-  * Author: Mika Westerberg <mika.westerberg@linux.intel.com>
-  */
- 
-+#include <linux/delay.h>
-+
- #include "tb.h"
- 
- /**
-@@ -45,6 +47,49 @@ static int find_port_lc_cap(struct tb_port *port)
- 	return sw->cap_lc + start + phys * size;
- }
- 
-+/**
-+ * tb_lc_reset_port() - Trigger downstream port reset through LC
-+ * @port: Port that is reset
-+ *
-+ * Triggers downstream port reset through link controller registers.
-+ * Returns %0 in case of success negative errno otherwise. Only supports
-+ * non-USB4 routers with link controller (that's Thunderbolt 2 and
-+ * Thunderbolt 3).
-+ */
-+int tb_lc_reset_port(struct tb_port *port)
-+{
-+	struct tb_switch *sw = port->sw;
-+	int cap, ret;
-+	u32 mode;
-+
-+	if (sw->generation < 2)
-+		return -EINVAL;
-+
-+	cap = find_port_lc_cap(port);
-+	if (cap < 0)
-+		return cap;
-+
-+	ret = tb_sw_read(sw, &mode, TB_CFG_SWITCH, cap + TB_LC_PORT_MODE, 1);
-+	if (ret)
-+		return ret;
-+
-+	mode |= TB_LC_PORT_MODE_DPR;
-+
-+	ret = tb_sw_write(sw, &mode, TB_CFG_SWITCH, cap + TB_LC_PORT_MODE, 1);
-+	if (ret)
-+		return ret;
-+
-+	fsleep(10000);
-+
-+	ret = tb_sw_read(sw, &mode, TB_CFG_SWITCH, cap + TB_LC_PORT_MODE, 1);
-+	if (ret)
-+		return ret;
-+
-+	mode &= ~TB_LC_PORT_MODE_DPR;
-+
-+	return tb_sw_write(sw, &mode, TB_CFG_SWITCH, cap + TB_LC_PORT_MODE, 1);
-+}
-+
- static int tb_lc_set_port_configured(struct tb_port *port, bool configured)
- {
- 	bool upstream = tb_is_upstream_port(port);
-diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
-index fb4f46e51753..b22023fae60d 100644
---- a/drivers/thunderbolt/nhi.c
-+++ b/drivers/thunderbolt/nhi.c
-@@ -1221,7 +1221,7 @@ static void nhi_check_iommu(struct tb_nhi *nhi)
- 		str_enabled_disabled(port_ok));
- }
- 
--static void nhi_reset(struct tb_nhi *nhi)
-+static bool nhi_reset(struct tb_nhi *nhi)
- {
- 	ktime_t timeout;
- 	u32 val;
-@@ -1229,11 +1229,11 @@ static void nhi_reset(struct tb_nhi *nhi)
- 	val = ioread32(nhi->iobase + REG_CAPS);
- 	/* Reset only v2 and later routers */
- 	if (FIELD_GET(REG_CAPS_VERSION_MASK, val) < REG_CAPS_VERSION_2)
--		return;
-+		return false;
- 
- 	if (!host_reset) {
- 		dev_dbg(&nhi->pdev->dev, "skipping host router reset\n");
--		return;
-+		return false;
- 	}
- 
- 	iowrite32(REG_RESET_HRR, nhi->iobase + REG_RESET);
-@@ -1244,12 +1244,14 @@ static void nhi_reset(struct tb_nhi *nhi)
- 		val = ioread32(nhi->iobase + REG_RESET);
- 		if (!(val & REG_RESET_HRR)) {
- 			dev_warn(&nhi->pdev->dev, "host router reset successful\n");
--			return;
-+			return true;
- 		}
- 		usleep_range(10, 20);
- 	} while (ktime_before(ktime_get(), timeout));
- 
- 	dev_warn(&nhi->pdev->dev, "timeout resetting host router\n");
-+
-+	return false;
- }
- 
- static int nhi_init_msi(struct tb_nhi *nhi)
-@@ -1331,6 +1333,7 @@ static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	struct device *dev = &pdev->dev;
- 	struct tb_nhi *nhi;
- 	struct tb *tb;
-+	bool reset;
- 	int res;
- 
- 	if (!nhi_imr_valid(pdev))
-@@ -1365,7 +1368,11 @@ static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	nhi_check_quirks(nhi);
- 	nhi_check_iommu(nhi);
- 
--	nhi_reset(nhi);
-+	/*
-+	 * Only USB4 v2 hosts support host reset so if we already did
-+	 * that then don't do it again when the domain is initialized.
-+	 */
-+	reset = nhi_reset(nhi) ? false : host_reset;
- 
- 	res = nhi_init_msi(nhi);
- 	if (res)
-@@ -1392,7 +1399,7 @@ static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	dev_dbg(dev, "NHI initialized, starting thunderbolt\n");
- 
--	res = tb_domain_add(tb);
-+	res = tb_domain_add(tb, reset);
- 	if (res) {
- 		/*
- 		 * At this point the RX/TX rings might already have been
-diff --git a/drivers/thunderbolt/path.c b/drivers/thunderbolt/path.c
-index 091a81bbdbdc..f760e54cd9bd 100644
---- a/drivers/thunderbolt/path.c
-+++ b/drivers/thunderbolt/path.c
-@@ -446,6 +446,19 @@ static int __tb_path_deactivate_hop(struct tb_port *port, int hop_index,
- 	return -ETIMEDOUT;
- }
- 
-+/**
-+ * tb_path_deactivate_hop() - Deactivate one path in path config space
-+ * @port: Lane or protocol adapter
-+ * @hop_index: HopID of the path to be cleared
-+ *
-+ * This deactivates or clears a single path config space entry at
-+ * @hop_index. Returns %0 in success and negative errno otherwise.
-+ */
-+int tb_path_deactivate_hop(struct tb_port *port, int hop_index)
-+{
-+	return __tb_path_deactivate_hop(port, hop_index, true);
-+}
-+
- static void __tb_path_deactivate_hops(struct tb_path *path, int first_hop)
- {
- 	int i, res;
 diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index fad40c4bc710..7b086923cec6 100644
+index 55698a0978f0..d3058ede5306 100644
 --- a/drivers/thunderbolt/switch.c
 +++ b/drivers/thunderbolt/switch.c
-@@ -676,6 +676,13 @@ int tb_port_disable(struct tb_port *port)
- 	return __tb_port_enable(port, false);
- }
- 
-+static int tb_port_reset(struct tb_port *port)
-+{
-+	if (tb_switch_is_usb4(port->sw))
-+		return port->cap_usb4 ? usb4_port_reset(port) : 0;
-+	return tb_lc_reset_port(port);
-+}
-+
- /*
-  * tb_init_port() - initialize a port
-  *
-@@ -1534,29 +1541,124 @@ static void tb_dump_switch(const struct tb *tb, const struct tb_switch *sw)
- 	       regs->__unknown1, regs->__unknown4);
- }
- 
-+static int tb_switch_reset_host(struct tb_switch *sw)
-+{
-+	if (sw->generation > 1) {
-+		struct tb_port *port;
-+
-+		tb_switch_for_each_port(sw, port) {
-+			int i, ret;
-+
-+			/*
-+			 * For lane adapters we issue downstream port
-+			 * reset and clear up path config spaces.
-+			 *
-+			 * For protocol adapters we disable the path and
-+			 * clear path config space one by one (from 8 to
-+			 * Max Input HopID of the adapter).
-+			 */
-+			if (tb_port_is_null(port) && !tb_is_upstream_port(port)) {
-+				ret = tb_port_reset(port);
-+				if (ret)
-+					return ret;
-+			} else if (tb_port_is_usb3_down(port) ||
-+				   tb_port_is_usb3_up(port)) {
-+				tb_usb3_port_enable(port, false);
-+			} else if (tb_port_is_dpin(port) ||
-+				   tb_port_is_dpout(port)) {
-+				tb_dp_port_enable(port, false);
-+			} else if (tb_port_is_pcie_down(port) ||
-+				   tb_port_is_pcie_up(port)) {
-+				tb_pci_port_enable(port, false);
-+			} else {
-+				continue;
-+			}
-+
-+			/* Cleanup path config space of protocol adapter */
-+			for (i = TB_PATH_MIN_HOPID;
-+			     i <= port->config.max_in_hop_id; i++) {
-+				ret = tb_path_deactivate_hop(port, i);
-+				if (ret)
-+					return ret;
-+			}
-+		}
-+	} else {
-+		struct tb_cfg_result res;
-+
-+		/* Thunderbolt 1 uses the "reset" config space packet */
-+		res.err = tb_sw_write(sw, ((u32 *) &sw->config) + 2,
-+				      TB_CFG_SWITCH, 2, 2);
-+		if (res.err)
-+			return res.err;
-+		res = tb_cfg_reset(sw->tb->ctl, tb_route(sw));
-+		if (res.err > 0)
-+			return -EIO;
-+		else if (res.err < 0)
-+			return res.err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tb_switch_reset_device(struct tb_switch *sw)
-+{
-+	return tb_port_reset(tb_switch_downstream_port(sw));
-+}
-+
-+static bool tb_switch_enumerated(struct tb_switch *sw)
-+{
-+	u32 val;
-+	int ret;
-+
-+	/*
-+	 * Read directly from the hardware because we use this also
-+	 * during system sleep where sw->config.enabled is already set
-+	 * by us.
-+	 */
-+	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH, ROUTER_CS_3, 1);
-+	if (ret)
-+		return false;
-+
-+	return !!(val & ROUTER_CS_3_V);
-+}
-+
- /**
-- * tb_switch_reset() - reconfigure route, enable and send TB_CFG_PKG_RESET
-- * @sw: Switch to reset
-+ * tb_switch_reset() - Perform reset to the router
-+ * @sw: Router to reset
-  *
-- * Return: Returns 0 on success or an error code on failure.
-+ * Issues reset to the router @sw. Can be used for any router. For host
-+ * routers, resets all the downstream ports and cleans up path config
-+ * spaces accordingly. For device routers issues downstream port reset
-+ * through the parent router, so as side effect there will be unplug
-+ * soon after this is finished.
-+ *
-+ * If the router is not enumerated does nothing.
-+ *
-+ * Returns %0 on success or negative errno in case of failure.
-  */
- int tb_switch_reset(struct tb_switch *sw)
- {
--	struct tb_cfg_result res;
-+	int ret;
- 
--	if (sw->generation > 1)
-+	/*
-+	 * We cannot access the port config spaces unless the router is
-+	 * already enumerated. If the router is not enumerated it is
-+	 * equal to being reset so we can skip that here.
-+	 */
-+	if (!tb_switch_enumerated(sw))
- 		return 0;
- 
--	tb_sw_dbg(sw, "resetting switch\n");
-+	tb_sw_dbg(sw, "resetting\n");
-+
-+	if (tb_route(sw))
-+		ret = tb_switch_reset_device(sw);
-+	else
-+		ret = tb_switch_reset_host(sw);
- 
--	res.err = tb_sw_write(sw, ((u32 *) &sw->config) + 2,
--			      TB_CFG_SWITCH, 2, 2);
--	if (res.err)
--		return res.err;
--	res = tb_cfg_reset(sw->tb->ctl, tb_route(sw));
--	if (res.err > 0)
--		return -EIO;
--	return res.err;
-+	if (ret)
-+		tb_sw_warn(sw, "failed to reset\n");
-+
-+	return ret;
- }
- 
- /**
-@@ -3078,22 +3180,29 @@ void tb_switch_unconfigure_link(struct tb_switch *sw)
+@@ -2880,22 +2880,29 @@ void tb_switch_unconfigure_link(struct tb_switch *sw)
  {
  	struct tb_port *up, *down;
  
@@ -3909,7 +6066,7 @@ index fad40c4bc710..7b086923cec6 100644
  }
  
  static void tb_switch_credits_init(struct tb_switch *sw)
-@@ -3339,7 +3448,26 @@ static int tb_switch_set_wake(struct tb_switch *sw, unsigned int flags)
+@@ -3135,7 +3142,26 @@ static int tb_switch_set_wake(struct tb_switch *sw, unsigned int flags)
  	return tb_lc_set_wake(sw, flags);
  }
  
@@ -3937,7 +6094,7 @@ index fad40c4bc710..7b086923cec6 100644
  {
  	struct tb_port *port;
  	int err;
-@@ -3388,6 +3516,9 @@ int tb_switch_resume(struct tb_switch *sw)
+@@ -3184,6 +3210,9 @@ int tb_switch_resume(struct tb_switch *sw)
  	if (err)
  		return err;
  
@@ -3947,7 +6104,7 @@ index fad40c4bc710..7b086923cec6 100644
  	/* Disable wakes */
  	tb_switch_set_wake(sw, 0);
  
-@@ -3417,7 +3548,8 @@ int tb_switch_resume(struct tb_switch *sw)
+@@ -3213,7 +3242,8 @@ int tb_switch_resume(struct tb_switch *sw)
  			 */
  			if (tb_port_unlock(port))
  				tb_port_warn(port, "failed to unlock port\n");
@@ -3958,81 +6115,19 @@ index fad40c4bc710..7b086923cec6 100644
  					     "lost during suspend, disconnecting\n");
  				tb_sw_set_unplugged(port->remote->sw);
 diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index e6681f153c69..525f515e8b48 100644
+index e83269dc2b06..c5e4fa478e64 100644
 --- a/drivers/thunderbolt/tb.c
 +++ b/drivers/thunderbolt/tb.c
-@@ -1717,6 +1717,12 @@ static struct tb_port *tb_find_dp_out(struct tb *tb, struct tb_port *in)
- 			continue;
- 		}
- 
-+		/* Needs to be on different routers */
-+		if (in->sw == port->sw) {
-+			tb_port_dbg(port, "skipping DP OUT on same router\n");
-+			continue;
-+		}
-+
- 		tb_port_dbg(port, "DP OUT available\n");
- 
- 		/*
-@@ -2628,7 +2634,7 @@ static int tb_scan_finalize_switch(struct device *dev, void *data)
- 	return 0;
- }
- 
--static int tb_start(struct tb *tb)
-+static int tb_start(struct tb *tb, bool reset)
- {
- 	struct tb_cm *tcm = tb_priv(tb);
- 	int ret;
-@@ -2669,12 +2675,24 @@ static int tb_start(struct tb *tb)
- 	tb_switch_tmu_configure(tb->root_switch, TB_SWITCH_TMU_MODE_LOWRES);
- 	/* Enable TMU if it is off */
- 	tb_switch_tmu_enable(tb->root_switch);
--	/* Full scan to discover devices added before the driver was loaded. */
--	tb_scan_switch(tb->root_switch);
--	/* Find out tunnels created by the boot firmware */
--	tb_discover_tunnels(tb);
--	/* Add DP resources from the DP tunnels created by the boot firmware */
--	tb_discover_dp_resources(tb);
-+
-+	/*
-+	 * Boot firmware might have created tunnels of its own. Since we
-+	 * cannot be sure they are usable for us, tear them down and
-+	 * reset the ports to handle it as new hotplug for USB4 v1
-+	 * routers (for USB4 v2 and beyond we already do host reset).
-+	 */
-+	if (reset && usb4_switch_version(tb->root_switch) == 1) {
-+		tb_switch_reset(tb->root_switch);
-+	} else {
-+		/* Full scan to discover devices added before the driver was loaded. */
-+		tb_scan_switch(tb->root_switch);
-+		/* Find out tunnels created by the boot firmware */
-+		tb_discover_tunnels(tb);
-+		/* Add DP resources from the DP tunnels created by the boot firmware */
-+		tb_discover_dp_resources(tb);
-+	}
-+
- 	/*
- 	 * If the boot firmware did not create USB 3.x tunnels create them
- 	 * now for the whole topology.
-@@ -2745,10 +2763,14 @@ static int tb_resume_noirq(struct tb *tb)
- 
- 	tb_dbg(tb, "resuming...\n");
- 
--	/* remove any pci devices the firmware might have setup */
--	tb_switch_reset(tb->root_switch);
-+	/*
-+	 * For non-USB4 hosts (Apple systems) remove any PCIe devices
-+	 * the firmware might have setup.
-+	 */
-+	if (!tb_switch_is_usb4(tb->root_switch))
-+		tb_switch_reset(tb->root_switch);
+@@ -1628,7 +1628,7 @@ static int tb_resume_noirq(struct tb *tb)
+ 	/* remove any pci devices the firmware might have setup */
+ 	tb_switch_reset(tb->root_switch);
  
 -	tb_switch_resume(tb->root_switch);
 +	tb_switch_resume(tb->root_switch, false);
  	tb_free_invalid_tunnels(tb);
  	tb_free_unplugged_children(tb->root_switch);
  	tb_restore_children(tb->root_switch);
-@@ -2874,7 +2896,7 @@ static int tb_runtime_resume(struct tb *tb)
+@@ -1754,7 +1754,7 @@ static int tb_runtime_resume(struct tb *tb)
  	struct tb_tunnel *tunnel, *n;
  
  	mutex_lock(&tb->lock);
@@ -4042,28 +6137,10 @@ index e6681f153c69..525f515e8b48 100644
  	tb_restore_children(tb->root_switch);
  	list_for_each_entry_safe(tunnel, n, &tcm->tunnel_list, list)
 diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index e4d4effb9444..7706f8e08c8d 100644
+index b3fec5f8e20c..acf5b8620845 100644
 --- a/drivers/thunderbolt/tb.h
 +++ b/drivers/thunderbolt/tb.h
-@@ -487,7 +487,7 @@ struct tb_path {
-  */
- struct tb_cm_ops {
- 	int (*driver_ready)(struct tb *tb);
--	int (*start)(struct tb *tb);
-+	int (*start)(struct tb *tb, bool reset);
- 	void (*stop)(struct tb *tb);
- 	int (*suspend_noirq)(struct tb *tb);
- 	int (*resume_noirq)(struct tb *tb);
-@@ -750,7 +750,7 @@ int tb_xdomain_init(void);
- void tb_xdomain_exit(void);
- 
- struct tb *tb_domain_alloc(struct tb_nhi *nhi, int timeout_msec, size_t privsize);
--int tb_domain_add(struct tb *tb);
-+int tb_domain_add(struct tb *tb, bool reset);
- void tb_domain_remove(struct tb *tb);
- int tb_domain_suspend_noirq(struct tb *tb);
- int tb_domain_resume_noirq(struct tb *tb);
-@@ -817,7 +817,7 @@ int tb_switch_configuration_valid(struct tb_switch *sw);
+@@ -787,7 +787,7 @@ int tb_switch_configure(struct tb_switch *sw);
  int tb_switch_add(struct tb_switch *sw);
  void tb_switch_remove(struct tb_switch *sw);
  void tb_switch_suspend(struct tb_switch *sw, bool runtime);
@@ -4072,74 +6149,19 @@ index e4d4effb9444..7706f8e08c8d 100644
  int tb_switch_reset(struct tb_switch *sw);
  int tb_switch_wait_for_bit(struct tb_switch *sw, u32 offset, u32 bit,
  			   u32 value, int timeout_msec);
-@@ -1154,6 +1154,7 @@ struct tb_path *tb_path_alloc(struct tb *tb, struct tb_port *src, int src_hopid,
- void tb_path_free(struct tb_path *path);
- int tb_path_activate(struct tb_path *path);
- void tb_path_deactivate(struct tb_path *path);
-+int tb_path_deactivate_hop(struct tb_port *port, int hop_index);
- bool tb_path_is_invalid(struct tb_path *path);
- bool tb_path_port_on_path(const struct tb_path *path,
- 			  const struct tb_port *port);
-@@ -1173,6 +1174,7 @@ int tb_drom_read(struct tb_switch *sw);
- int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid);
- 
- int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid);
-+int tb_lc_reset_port(struct tb_port *port);
- int tb_lc_configure_port(struct tb_port *port);
- void tb_lc_unconfigure_port(struct tb_port *port);
- int tb_lc_configure_xdomain(struct tb_port *port);
-@@ -1276,6 +1278,7 @@ static inline bool tb_switch_is_usb4(const struct tb_switch *sw)
- 	return usb4_switch_version(sw) > 0;
+@@ -1182,6 +1182,7 @@ static inline struct tb_retimer *tb_to_retimer(struct device *dev)
+ 	return NULL;
  }
  
 +void usb4_switch_check_wakes(struct tb_switch *sw);
  int usb4_switch_setup(struct tb_switch *sw);
- int usb4_switch_configuration_valid(struct tb_switch *sw);
  int usb4_switch_read_uid(struct tb_switch *sw, u64 *uid);
-@@ -1305,6 +1308,7 @@ void usb4_switch_remove_ports(struct tb_switch *sw);
- 
- int usb4_port_unlock(struct tb_port *port);
- int usb4_port_hotplug_enable(struct tb_port *port);
-+int usb4_port_reset(struct tb_port *port);
- int usb4_port_configure(struct tb_port *port);
- void usb4_port_unconfigure(struct tb_port *port);
- int usb4_port_configure_xdomain(struct tb_port *port, struct tb_xdomain *xd);
-diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-index 6f798f6a2b84..4e43b47f9f11 100644
---- a/drivers/thunderbolt/tb_regs.h
-+++ b/drivers/thunderbolt/tb_regs.h
-@@ -194,6 +194,8 @@ struct tb_regs_switch_header {
- #define USB4_VERSION_MAJOR_MASK			GENMASK(7, 5)
- 
- #define ROUTER_CS_1				0x01
-+#define ROUTER_CS_3				0x03
-+#define ROUTER_CS_3_V				BIT(31)
- #define ROUTER_CS_4				0x04
- /* Used with the router cmuv field */
- #define ROUTER_CS_4_CMUV_V1			0x10
-@@ -389,6 +391,7 @@ struct tb_regs_port_header {
- #define PORT_CS_18_CSA				BIT(22)
- #define PORT_CS_18_TIP				BIT(24)
- #define PORT_CS_19				0x13
-+#define PORT_CS_19_DPR				BIT(0)
- #define PORT_CS_19_PC				BIT(3)
- #define PORT_CS_19_PID				BIT(4)
- #define PORT_CS_19_WOC				BIT(16)
-@@ -584,6 +587,9 @@ struct tb_regs_hop {
- #define TB_LC_POWER				0x740
- 
- /* Link controller registers */
-+#define TB_LC_PORT_MODE				0x26
-+#define TB_LC_PORT_MODE_DPR			BIT(0)
-+
- #define TB_LC_CS_42				0x2a
- #define TB_LC_CS_42_USB_PLUGGED			BIT(31)
- 
+ int usb4_switch_drom_read(struct tb_switch *sw, unsigned int address, void *buf,
 diff --git a/drivers/thunderbolt/usb4.c b/drivers/thunderbolt/usb4.c
-index 1515eff8cc3e..a74c9ea67bf5 100644
+index 3c821f5e4481..b0394ba6d111 100644
 --- a/drivers/thunderbolt/usb4.c
 +++ b/drivers/thunderbolt/usb4.c
-@@ -155,7 +155,13 @@ static inline int usb4_switch_op_data(struct tb_switch *sw, u16 opcode,
+@@ -153,15 +153,18 @@ static inline int usb4_switch_op_data(struct tb_switch *sw, u16 opcode,
  				tx_dwords, rx_data, rx_dwords);
  }
  
@@ -4152,9 +6174,7 @@ index 1515eff8cc3e..a74c9ea67bf5 100644
 + */
 +void usb4_switch_check_wakes(struct tb_switch *sw)
  {
- 	bool wakeup_usb4 = false;
- 	struct usb4_port *usb4;
-@@ -163,9 +169,6 @@ static void usb4_switch_check_wakes(struct tb_switch *sw)
+ 	struct tb_port *port;
  	bool wakeup = false;
  	u32 val;
  
@@ -4164,7 +6184,7 @@ index 1515eff8cc3e..a74c9ea67bf5 100644
  	if (tb_route(sw)) {
  		if (tb_sw_read(sw, &val, TB_CFG_SWITCH, ROUTER_CS_6, 1))
  			return;
-@@ -244,8 +247,6 @@ int usb4_switch_setup(struct tb_switch *sw)
+@@ -226,8 +229,6 @@ int usb4_switch_setup(struct tb_switch *sw)
  	u32 val = 0;
  	int ret;
  
@@ -4173,83 +6193,11 @@ index 1515eff8cc3e..a74c9ea67bf5 100644
  	if (!tb_route(sw))
  		return 0;
  
-@@ -1113,6 +1114,45 @@ int usb4_port_hotplug_enable(struct tb_port *port)
- 	return tb_port_write(port, &val, TB_CFG_PORT, ADP_CS_5, 1);
- }
- 
-+/**
-+ * usb4_port_reset() - Issue downstream port reset
-+ * @port: USB4 port to reset
-+ *
-+ * Issues downstream port reset to @port.
-+ */
-+int usb4_port_reset(struct tb_port *port)
-+{
-+	int ret;
-+	u32 val;
-+
-+	if (!port->cap_usb4)
-+		return -EINVAL;
-+
-+	ret = tb_port_read(port, &val, TB_CFG_PORT,
-+			   port->cap_usb4 + PORT_CS_19, 1);
-+	if (ret)
-+		return ret;
-+
-+	val |= PORT_CS_19_DPR;
-+
-+	ret = tb_port_write(port, &val, TB_CFG_PORT,
-+			    port->cap_usb4 + PORT_CS_19, 1);
-+	if (ret)
-+		return ret;
-+
-+	fsleep(10000);
-+
-+	ret = tb_port_read(port, &val, TB_CFG_PORT,
-+			   port->cap_usb4 + PORT_CS_19, 1);
-+	if (ret)
-+		return ret;
-+
-+	val &= ~PORT_CS_19_DPR;
-+
-+	return tb_port_write(port, &val, TB_CFG_PORT,
-+			     port->cap_usb4 + PORT_CS_19, 1);
-+}
-+
- static int usb4_port_set_configured(struct tb_port *port, bool configured)
- {
- 	int ret;
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index c1d43f040c43..2d1f350a4bea 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -357,9 +357,9 @@ static void dw8250_set_termios(struct uart_port *p, struct ktermios *termios,
- 	long rate;
- 	int ret;
- 
-+	clk_disable_unprepare(d->clk);
- 	rate = clk_round_rate(d->clk, newrate);
--	if (rate > 0 && p->uartclk != rate) {
--		clk_disable_unprepare(d->clk);
-+	if (rate > 0) {
- 		/*
- 		 * Note that any clock-notifer worker will block in
- 		 * serial8250_update_uartclk() until we are done.
-@@ -367,8 +367,8 @@ static void dw8250_set_termios(struct uart_port *p, struct ktermios *termios,
- 		ret = clk_set_rate(d->clk, newrate);
- 		if (!ret)
- 			p->uartclk = rate;
--		clk_prepare_enable(d->clk);
- 	}
-+	clk_prepare_enable(d->clk);
- 
- 	dw8250_do_set_termios(p, termios, old);
- }
 diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-index 4749331fe618..1e8853eae504 100644
+index d21a4f3ef2fe..8b31017e7e56 100644
 --- a/drivers/tty/serial/mxs-auart.c
 +++ b/drivers/tty/serial/mxs-auart.c
-@@ -1086,11 +1086,13 @@ static void mxs_auart_set_ldisc(struct uart_port *port,
+@@ -1094,11 +1094,13 @@ static void mxs_auart_set_ldisc(struct uart_port *port,
  
  static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
  {
@@ -4265,7 +6213,7 @@ index 4749331fe618..1e8853eae504 100644
  	istat = mxs_read(s, REG_INTR);
  
  	/* ack irq */
-@@ -1126,6 +1128,8 @@ static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
+@@ -1134,6 +1136,8 @@ static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
  		istat &= ~AUART_INTR_TXIS;
  	}
  
@@ -4275,7 +6223,7 @@ index 4749331fe618..1e8853eae504 100644
  }
  
 diff --git a/drivers/tty/serial/pmac_zilog.c b/drivers/tty/serial/pmac_zilog.c
-index c8bf08c19c64..77691fbbf779 100644
+index fe2e4ec423f7..daf15d23bb42 100644
 --- a/drivers/tty/serial/pmac_zilog.c
 +++ b/drivers/tty/serial/pmac_zilog.c
 @@ -210,7 +210,6 @@ static bool pmz_receive_chars(struct uart_pmac_port *uap)
@@ -4311,163 +6259,11 @@ index c8bf08c19c64..77691fbbf779 100644
  	return true;
  }
  
-diff --git a/drivers/tty/serial/serial_base.h b/drivers/tty/serial/serial_base.h
-index c74c548f0db6..b6c38d2edfd4 100644
---- a/drivers/tty/serial/serial_base.h
-+++ b/drivers/tty/serial/serial_base.h
-@@ -22,6 +22,7 @@ struct serial_ctrl_device {
- struct serial_port_device {
- 	struct device dev;
- 	struct uart_port *port;
-+	unsigned int tx_enabled:1;
- };
- 
- int serial_base_ctrl_init(void);
-@@ -30,6 +31,9 @@ void serial_base_ctrl_exit(void);
- int serial_base_port_init(void);
- void serial_base_port_exit(void);
- 
-+void serial_base_port_startup(struct uart_port *port);
-+void serial_base_port_shutdown(struct uart_port *port);
-+
- int serial_base_driver_register(struct device_driver *driver);
- void serial_base_driver_unregister(struct device_driver *driver);
- 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index ff85ebd3a007..c476d884356d 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -156,7 +156,7 @@ static void __uart_start(struct uart_state *state)
- 	 * enabled, serial_port_runtime_resume() calls start_tx() again
- 	 * after enabling the device.
- 	 */
--	if (pm_runtime_active(&port_dev->dev))
-+	if (!pm_runtime_enabled(port->dev) || pm_runtime_active(&port_dev->dev))
- 		port->ops->start_tx(port);
- 	pm_runtime_mark_last_busy(&port_dev->dev);
- 	pm_runtime_put_autosuspend(&port_dev->dev);
-@@ -323,16 +323,26 @@ static int uart_startup(struct tty_struct *tty, struct uart_state *state,
- 			bool init_hw)
- {
- 	struct tty_port *port = &state->port;
-+	struct uart_port *uport;
- 	int retval;
- 
- 	if (tty_port_initialized(port))
--		return 0;
-+		goto out_base_port_startup;
- 
- 	retval = uart_port_startup(tty, state, init_hw);
--	if (retval)
-+	if (retval) {
- 		set_bit(TTY_IO_ERROR, &tty->flags);
-+		return retval;
-+	}
- 
--	return retval;
-+out_base_port_startup:
-+	uport = uart_port_check(state);
-+	if (!uport)
-+		return -EIO;
-+
-+	serial_base_port_startup(uport);
-+
-+	return 0;
- }
- 
- /*
-@@ -355,6 +365,9 @@ static void uart_shutdown(struct tty_struct *tty, struct uart_state *state)
- 	if (tty)
- 		set_bit(TTY_IO_ERROR, &tty->flags);
- 
-+	if (uport)
-+		serial_base_port_shutdown(uport);
-+
- 	if (tty_port_initialized(port)) {
- 		tty_port_set_initialized(port, false);
- 
-@@ -1775,6 +1788,7 @@ static void uart_tty_port_shutdown(struct tty_port *port)
- 	uport->ops->stop_rx(uport);
- 	uart_port_unlock_irq(uport);
- 
-+	serial_base_port_shutdown(uport);
- 	uart_port_shutdown(port);
- 
- 	/*
-@@ -1788,6 +1802,7 @@ static void uart_tty_port_shutdown(struct tty_port *port)
- 	 * Free the transmit buffer.
- 	 */
- 	uart_port_lock_irq(uport);
-+	uart_circ_clear(&state->xmit);
- 	buf = state->xmit.buf;
- 	state->xmit.buf = NULL;
- 	uart_port_unlock_irq(uport);
-diff --git a/drivers/tty/serial/serial_port.c b/drivers/tty/serial/serial_port.c
-index 72b6f4f326e2..7d51e66ec88b 100644
---- a/drivers/tty/serial/serial_port.c
-+++ b/drivers/tty/serial/serial_port.c
-@@ -36,8 +36,12 @@ static int serial_port_runtime_resume(struct device *dev)
- 
- 	/* Flush any pending TX for the port */
- 	uart_port_lock_irqsave(port, &flags);
-+	if (!port_dev->tx_enabled)
-+		goto unlock;
- 	if (__serial_port_busy(port))
- 		port->ops->start_tx(port);
-+
-+unlock:
- 	uart_port_unlock_irqrestore(port, flags);
- 
- out:
-@@ -57,6 +61,11 @@ static int serial_port_runtime_suspend(struct device *dev)
- 		return 0;
- 
- 	uart_port_lock_irqsave(port, &flags);
-+	if (!port_dev->tx_enabled) {
-+		uart_port_unlock_irqrestore(port, flags);
-+		return 0;
-+	}
-+
- 	busy = __serial_port_busy(port);
- 	if (busy)
- 		port->ops->start_tx(port);
-@@ -68,6 +77,31 @@ static int serial_port_runtime_suspend(struct device *dev)
- 	return busy ? -EBUSY : 0;
- }
- 
-+static void serial_base_port_set_tx(struct uart_port *port,
-+				    struct serial_port_device *port_dev,
-+				    bool enabled)
-+{
-+	unsigned long flags;
-+
-+	uart_port_lock_irqsave(port, &flags);
-+	port_dev->tx_enabled = enabled;
-+	uart_port_unlock_irqrestore(port, flags);
-+}
-+
-+void serial_base_port_startup(struct uart_port *port)
-+{
-+	struct serial_port_device *port_dev = port->port_dev;
-+
-+	serial_base_port_set_tx(port, port_dev, true);
-+}
-+
-+void serial_base_port_shutdown(struct uart_port *port)
-+{
-+	struct serial_port_device *port_dev = port->port_dev;
-+
-+	serial_base_port_set_tx(port, port_dev, false);
-+}
-+
- static DEFINE_RUNTIME_DEV_PM_OPS(serial_port_pm,
- 				 serial_port_runtime_suspend,
- 				 serial_port_runtime_resume, NULL);
 diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 693e932d6feb..d103b07d10ee 100644
+index 2a9c4058824a..7d11511c8c12 100644
 --- a/drivers/tty/serial/stm32-usart.c
 +++ b/drivers/tty/serial/stm32-usart.c
-@@ -857,6 +857,7 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
+@@ -755,6 +755,7 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
  	const struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
  	u32 sr;
  	unsigned int size;
@@ -4475,7 +6271,7 @@ index 693e932d6feb..d103b07d10ee 100644
  
  	sr = readl_relaxed(port->membase + ofs->isr);
  
-@@ -865,11 +866,14 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
+@@ -763,11 +764,14 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
  	    (sr & USART_SR_TC)) {
  		stm32_usart_tc_interrupt_disable(port);
  		stm32_usart_rs485_rts_disable(port);
@@ -4491,7 +6287,7 @@ index 693e932d6feb..d103b07d10ee 100644
  
  	if ((sr & USART_SR_WUF) && ofs->icr != UNDEF_REG) {
  		/* Clear wake up flag and disable wake up interrupt */
-@@ -878,6 +882,7 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
+@@ -776,6 +780,7 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
  		stm32_usart_clr_bits(port, ofs->cr3, USART_CR3_WUFIE);
  		if (irqd_is_wakeup_set(irq_get_irq_data(port->irq)))
  			pm_wakeup_event(tport->tty->dev, 0);
@@ -4499,7 +6295,7 @@ index 693e932d6feb..d103b07d10ee 100644
  	}
  
  	/*
-@@ -892,6 +897,7 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
+@@ -790,6 +795,7 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
  			uart_unlock_and_check_sysrq(port);
  			if (size)
  				tty_flip_buffer_push(tport);
@@ -4507,15 +6303,15 @@ index 693e932d6feb..d103b07d10ee 100644
  		}
  	}
  
-@@ -899,6 +905,7 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
- 		uart_port_lock(port);
+@@ -797,6 +803,7 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
+ 		spin_lock(&port->lock);
  		stm32_usart_transmit_chars(port);
- 		uart_port_unlock(port);
+ 		spin_unlock(&port->lock);
 +		ret = IRQ_HANDLED;
  	}
  
  	/* Receiver timeout irq for DMA RX */
-@@ -908,9 +915,10 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
+@@ -806,9 +813,10 @@ static irqreturn_t stm32_usart_interrupt(int irq, void *ptr)
  		uart_unlock_and_check_sysrq(port);
  		if (size)
  			tty_flip_buffer_push(tport);
@@ -4527,7 +6323,7 @@ index 693e932d6feb..d103b07d10ee 100644
  }
  
  static void stm32_usart_set_mctrl(struct uart_port *port, unsigned int mctrl)
-@@ -1080,6 +1088,7 @@ static int stm32_usart_startup(struct uart_port *port)
+@@ -1013,6 +1021,7 @@ static int stm32_usart_startup(struct uart_port *port)
  		val |= USART_CR2_SWAP;
  		writel_relaxed(val, port->membase + ofs->cr2);
  	}
@@ -4535,54 +6331,8 @@ index 693e932d6feb..d103b07d10ee 100644
  
  	/* RX FIFO Flush */
  	if (ofs->rqr != UNDEF_REG)
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index f532e2c004a2..bcbcf758925b 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -47,7 +47,7 @@ enum {
- 	TSTBUS_MAX,
- };
- 
--#define QCOM_UFS_MAX_GEAR 4
-+#define QCOM_UFS_MAX_GEAR 5
- #define QCOM_UFS_MAX_LANE 2
- 
- enum {
-@@ -67,26 +67,32 @@ static const struct __ufs_qcom_bw_table {
- 	[MODE_PWM][UFS_PWM_G2][UFS_LANE_1] = { 1844,		1000 },
- 	[MODE_PWM][UFS_PWM_G3][UFS_LANE_1] = { 3688,		1000 },
- 	[MODE_PWM][UFS_PWM_G4][UFS_LANE_1] = { 7376,		1000 },
-+	[MODE_PWM][UFS_PWM_G5][UFS_LANE_1] = { 14752,		1000 },
- 	[MODE_PWM][UFS_PWM_G1][UFS_LANE_2] = { 1844,		1000 },
- 	[MODE_PWM][UFS_PWM_G2][UFS_LANE_2] = { 3688,		1000 },
- 	[MODE_PWM][UFS_PWM_G3][UFS_LANE_2] = { 7376,		1000 },
- 	[MODE_PWM][UFS_PWM_G4][UFS_LANE_2] = { 14752,		1000 },
-+	[MODE_PWM][UFS_PWM_G5][UFS_LANE_2] = { 29504,		1000 },
- 	[MODE_HS_RA][UFS_HS_G1][UFS_LANE_1] = { 127796,		1000 },
- 	[MODE_HS_RA][UFS_HS_G2][UFS_LANE_1] = { 255591,		1000 },
- 	[MODE_HS_RA][UFS_HS_G3][UFS_LANE_1] = { 1492582,	102400 },
- 	[MODE_HS_RA][UFS_HS_G4][UFS_LANE_1] = { 2915200,	204800 },
-+	[MODE_HS_RA][UFS_HS_G5][UFS_LANE_1] = { 5836800,	409600 },
- 	[MODE_HS_RA][UFS_HS_G1][UFS_LANE_2] = { 255591,		1000 },
- 	[MODE_HS_RA][UFS_HS_G2][UFS_LANE_2] = { 511181,		1000 },
- 	[MODE_HS_RA][UFS_HS_G3][UFS_LANE_2] = { 1492582,	204800 },
- 	[MODE_HS_RA][UFS_HS_G4][UFS_LANE_2] = { 2915200,	409600 },
-+	[MODE_HS_RA][UFS_HS_G5][UFS_LANE_2] = { 5836800,	819200 },
- 	[MODE_HS_RB][UFS_HS_G1][UFS_LANE_1] = { 149422,		1000 },
- 	[MODE_HS_RB][UFS_HS_G2][UFS_LANE_1] = { 298189,		1000 },
- 	[MODE_HS_RB][UFS_HS_G3][UFS_LANE_1] = { 1492582,	102400 },
- 	[MODE_HS_RB][UFS_HS_G4][UFS_LANE_1] = { 2915200,	204800 },
-+	[MODE_HS_RB][UFS_HS_G5][UFS_LANE_1] = { 5836800,	409600 },
- 	[MODE_HS_RB][UFS_HS_G1][UFS_LANE_2] = { 298189,		1000 },
- 	[MODE_HS_RB][UFS_HS_G2][UFS_LANE_2] = { 596378,		1000 },
- 	[MODE_HS_RB][UFS_HS_G3][UFS_LANE_2] = { 1492582,	204800 },
- 	[MODE_HS_RB][UFS_HS_G4][UFS_LANE_2] = { 2915200,	409600 },
-+	[MODE_HS_RB][UFS_HS_G5][UFS_LANE_2] = { 5836800,	819200 },
- 	[MODE_MAX][0][0]		    = { 7643136,	307200 },
- };
- 
 diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
-index c8262e2f2917..c553decb5461 100644
+index fdc1a66b129a..1f0951be15ab 100644
 --- a/drivers/usb/class/cdc-wdm.c
 +++ b/drivers/usb/class/cdc-wdm.c
 @@ -485,7 +485,6 @@ static ssize_t wdm_write
@@ -4605,11 +6355,55 @@ index c8262e2f2917..c553decb5461 100644
  	spin_unlock_irq(&desc->iuspin);
  	rv = usb_submit_urb(desc->response, GFP_KERNEL);
  	spin_lock_irq(&desc->iuspin);
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index b1fb04e5247c..dea110241ee7 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -60,6 +60,12 @@
+ #define USB_PING_RESPONSE_TIME		400	/* ns */
+ #define USB_REDUCE_FRAME_INTR_BINTERVAL	9
+ 
++/*
++ * The SET_ADDRESS request timeout will be 500 ms when
++ * USB_QUIRK_SHORT_SET_ADDRESS_REQ_TIMEOUT quirk flag is set.
++ */
++#define USB_SHORT_SET_ADDRESS_REQ_TIMEOUT	500  /* ms */
++
+ /* Protect struct usb_device->state and ->children members
+  * Note: Both are also protected by ->dev.sem, except that ->state can
+  * change to USB_STATE_NOTATTACHED even when the semaphore isn't held. */
+@@ -4648,7 +4654,12 @@ EXPORT_SYMBOL_GPL(usb_ep0_reinit);
+ static int hub_set_address(struct usb_device *udev, int devnum)
+ {
+ 	int retval;
++	unsigned int timeout_ms = USB_CTRL_SET_TIMEOUT;
+ 	struct usb_hcd *hcd = bus_to_hcd(udev->bus);
++	struct usb_hub *hub = usb_hub_to_struct_hub(udev->parent);
++
++	if (hub->hdev->quirks & USB_QUIRK_SHORT_SET_ADDRESS_REQ_TIMEOUT)
++		timeout_ms = USB_SHORT_SET_ADDRESS_REQ_TIMEOUT;
+ 
+ 	/*
+ 	 * The host controller will choose the device address,
+@@ -4661,11 +4672,11 @@ static int hub_set_address(struct usb_device *udev, int devnum)
+ 	if (udev->state != USB_STATE_DEFAULT)
+ 		return -EINVAL;
+ 	if (hcd->driver->address_device)
+-		retval = hcd->driver->address_device(hcd, udev);
++		retval = hcd->driver->address_device(hcd, udev, timeout_ms);
+ 	else
+ 		retval = usb_control_msg(udev, usb_sndaddr0pipe(),
+ 				USB_REQ_SET_ADDRESS, 0, devnum, 0,
+-				NULL, 0, USB_CTRL_SET_TIMEOUT);
++				NULL, 0, timeout_ms);
+ 	if (retval == 0) {
+ 		update_devnum(udev, devnum);
+ 		/* Device now using proper address. */
 diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
-index a5776531ba4d..97ff2073cf1e 100644
+index e91fa567d08d..93a63b7f164d 100644
 --- a/drivers/usb/core/port.c
 +++ b/drivers/usb/core/port.c
-@@ -448,8 +448,10 @@ static void usb_port_shutdown(struct device *dev)
+@@ -409,8 +409,10 @@ static void usb_port_shutdown(struct device *dev)
  {
  	struct usb_port *port_dev = to_usb_port(dev);
  
@@ -4621,6 +6415,31 @@ index a5776531ba4d..97ff2073cf1e 100644
  }
  
  static const struct dev_pm_ops usb_port_pm_ops = {
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index 15e9bd180a1d..b4783574b8e6 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -138,6 +138,9 @@ static int quirks_param_set(const char *value, const struct kernel_param *kp)
+ 			case 'o':
+ 				flags |= USB_QUIRK_HUB_SLOW_RESET;
+ 				break;
++			case 'p':
++				flags |= USB_QUIRK_SHORT_SET_ADDRESS_REQ_TIMEOUT;
++				break;
+ 			/* Ignore unrecognized flag characters */
+ 			}
+ 		}
+@@ -527,6 +530,10 @@ static const struct usb_device_id usb_quirk_list[] = {
+ 
+ 	{ USB_DEVICE(0x2386, 0x350e), .driver_info = USB_QUIRK_NO_LPM },
+ 
++	/* APTIV AUTOMOTIVE HUB */
++	{ USB_DEVICE(0x2c48, 0x0132), .driver_info =
++			USB_QUIRK_SHORT_SET_ADDRESS_REQ_TIMEOUT },
++
+ 	/* DJI CineSSD */
+ 	{ USB_DEVICE(0x2ca3, 0x0031), .driver_info = USB_QUIRK_NO_LPM },
+ 
 diff --git a/drivers/usb/dwc2/hcd_ddma.c b/drivers/usb/dwc2/hcd_ddma.c
 index 79582b102c7e..994a78ad084b 100644
 --- a/drivers/usb/dwc2/hcd_ddma.c
@@ -4643,10 +6462,10 @@ index 79582b102c7e..994a78ad084b 100644
  				sizeof(struct dwc2_dma_desc)),
  				sizeof(struct dwc2_dma_desc),
 diff --git a/drivers/usb/gadget/function/f_ncm.c b/drivers/usb/gadget/function/f_ncm.c
-index 28f4e6552e84..0acc32ed9960 100644
+index 14601a2d2542..b267ed9dc6d9 100644
 --- a/drivers/usb/gadget/function/f_ncm.c
 +++ b/drivers/usb/gadget/function/f_ncm.c
-@@ -878,7 +878,7 @@ static int ncm_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
+@@ -884,7 +884,7 @@ static int ncm_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
  		if (alt > 1)
  			goto fail;
  
@@ -4655,7 +6474,7 @@ index 28f4e6552e84..0acc32ed9960 100644
  			DBG(cdev, "reset ncm\n");
  			ncm->netdev = NULL;
  			gether_disconnect(&ncm->port);
-@@ -1367,7 +1367,7 @@ static void ncm_disable(struct usb_function *f)
+@@ -1369,7 +1369,7 @@ static void ncm_disable(struct usb_function *f)
  
  	DBG(cdev, "ncm deactivated\n");
  
@@ -4664,32 +6483,169 @@ index 28f4e6552e84..0acc32ed9960 100644
  		ncm->netdev = NULL;
  		gether_disconnect(&ncm->port);
  	}
-diff --git a/drivers/usb/misc/onboard_usb_hub.c b/drivers/usb/misc/onboard_usb_hub.c
-index 0dd2b032c90b..e162838bec3d 100644
---- a/drivers/usb/misc/onboard_usb_hub.c
-+++ b/drivers/usb/misc/onboard_usb_hub.c
-@@ -78,7 +78,7 @@ static int onboard_hub_power_on(struct onboard_hub *hub)
- 	err = regulator_bulk_enable(hub->pdata->num_supplies, hub->supplies);
- 	if (err) {
- 		dev_err(hub->dev, "failed to enable supplies: %pe\n", ERR_PTR(err));
--		return err;
-+		goto disable_clk;
+diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
+index ef08d68b9714..2665832f9add 100644
+--- a/drivers/usb/host/pci-quirks.c
++++ b/drivers/usb/host/pci-quirks.c
+@@ -207,8 +207,7 @@ EXPORT_SYMBOL_GPL(sb800_prefetch);
+ static void usb_amd_find_chipset_info(void)
+ {
+ 	unsigned long flags;
+-	struct amd_chipset_info info;
+-	info.need_pll_quirk = false;
++	struct amd_chipset_info info = { };
+ 
+ 	spin_lock_irqsave(&amd_lock, flags);
+ 
+@@ -218,7 +217,6 @@ static void usb_amd_find_chipset_info(void)
+ 		spin_unlock_irqrestore(&amd_lock, flags);
+ 		return;
+ 	}
+-	memset(&info, 0, sizeof(info));
+ 	spin_unlock_irqrestore(&amd_lock, flags);
+ 
+ 	if (!amd_chipset_sb_type_init(&info)) {
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index 019dcbe55dbd..62808c98713e 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -1752,6 +1752,8 @@ struct xhci_command *xhci_alloc_command(struct xhci_hcd *xhci,
  	}
  
- 	fsleep(hub->pdata->reset_us);
-@@ -87,6 +87,10 @@ static int onboard_hub_power_on(struct onboard_hub *hub)
- 	hub->is_powered_on = true;
- 
- 	return 0;
-+
-+disable_clk:
-+	clk_disable_unprepare(hub->clk);
-+	return err;
+ 	command->status = 0;
++	/* set default timeout to 5000 ms */
++	command->timeout_ms = XHCI_CMD_DEFAULT_TIMEOUT;
+ 	INIT_LIST_HEAD(&command->cmd_list);
+ 	return command;
+ }
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 239b5edee326..4a039e42694b 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -332,9 +332,10 @@ void xhci_ring_cmd_db(struct xhci_hcd *xhci)
+ 	readl(&xhci->dba->doorbell[0]);
  }
  
- static int onboard_hub_power_off(struct onboard_hub *hub)
+-static bool xhci_mod_cmd_timer(struct xhci_hcd *xhci, unsigned long delay)
++static bool xhci_mod_cmd_timer(struct xhci_hcd *xhci)
+ {
+-	return mod_delayed_work(system_wq, &xhci->cmd_timer, delay);
++	return mod_delayed_work(system_wq, &xhci->cmd_timer,
++			msecs_to_jiffies(xhci->current_cmd->timeout_ms));
+ }
+ 
+ static struct xhci_command *xhci_next_queued_cmd(struct xhci_hcd *xhci)
+@@ -378,7 +379,7 @@ static void xhci_handle_stopped_cmd_ring(struct xhci_hcd *xhci,
+ 	if ((xhci->cmd_ring->dequeue != xhci->cmd_ring->enqueue) &&
+ 	    !(xhci->xhc_state & XHCI_STATE_DYING)) {
+ 		xhci->current_cmd = cur_cmd;
+-		xhci_mod_cmd_timer(xhci, XHCI_CMD_DEFAULT_TIMEOUT);
++		xhci_mod_cmd_timer(xhci);
+ 		xhci_ring_cmd_db(xhci);
+ 	}
+ }
+@@ -1762,7 +1763,7 @@ static void handle_cmd_completion(struct xhci_hcd *xhci,
+ 	if (!list_is_singular(&xhci->cmd_list)) {
+ 		xhci->current_cmd = list_first_entry(&cmd->cmd_list,
+ 						struct xhci_command, cmd_list);
+-		xhci_mod_cmd_timer(xhci, XHCI_CMD_DEFAULT_TIMEOUT);
++		xhci_mod_cmd_timer(xhci);
+ 	} else if (xhci->current_cmd == cmd) {
+ 		xhci->current_cmd = NULL;
+ 	}
+@@ -4339,7 +4340,7 @@ static int queue_command(struct xhci_hcd *xhci, struct xhci_command *cmd,
+ 	/* if there are no other commands queued we start the timeout timer */
+ 	if (list_empty(&xhci->cmd_list)) {
+ 		xhci->current_cmd = cmd;
+-		xhci_mod_cmd_timer(xhci, XHCI_CMD_DEFAULT_TIMEOUT);
++		xhci_mod_cmd_timer(xhci);
+ 	}
+ 
+ 	list_add_tail(&cmd->cmd_list, &xhci->cmd_list);
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 565aba6b9986..27e01671d386 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4170,12 +4170,18 @@ int xhci_alloc_dev(struct usb_hcd *hcd, struct usb_device *udev)
+ 	return 0;
+ }
+ 
+-/*
+- * Issue an Address Device command and optionally send a corresponding
+- * SetAddress request to the device.
++/**
++ * xhci_setup_device - issues an Address Device command to assign a unique
++ *			USB bus address.
++ * @hcd: USB host controller data structure.
++ * @udev: USB dev structure representing the connected device.
++ * @setup: Enum specifying setup mode: address only or with context.
++ * @timeout_ms: Max wait time (ms) for the command operation to complete.
++ *
++ * Return: 0 if successful; otherwise, negative error code.
+  */
+ static int xhci_setup_device(struct usb_hcd *hcd, struct usb_device *udev,
+-			     enum xhci_setup_dev setup)
++			     enum xhci_setup_dev setup, unsigned int timeout_ms)
+ {
+ 	const char *act = setup == SETUP_CONTEXT_ONLY ? "context" : "address";
+ 	unsigned long flags;
+@@ -4232,6 +4238,7 @@ static int xhci_setup_device(struct usb_hcd *hcd, struct usb_device *udev,
+ 	}
+ 
+ 	command->in_ctx = virt_dev->in_ctx;
++	command->timeout_ms = timeout_ms;
+ 
+ 	slot_ctx = xhci_get_slot_ctx(xhci, virt_dev->in_ctx);
+ 	ctrl_ctx = xhci_get_input_control_ctx(virt_dev->in_ctx);
+@@ -4358,14 +4365,16 @@ static int xhci_setup_device(struct usb_hcd *hcd, struct usb_device *udev,
+ 	return ret;
+ }
+ 
+-static int xhci_address_device(struct usb_hcd *hcd, struct usb_device *udev)
++static int xhci_address_device(struct usb_hcd *hcd, struct usb_device *udev,
++			       unsigned int timeout_ms)
+ {
+-	return xhci_setup_device(hcd, udev, SETUP_CONTEXT_ADDRESS);
++	return xhci_setup_device(hcd, udev, SETUP_CONTEXT_ADDRESS, timeout_ms);
+ }
+ 
+ static int xhci_enable_device(struct usb_hcd *hcd, struct usb_device *udev)
+ {
+-	return xhci_setup_device(hcd, udev, SETUP_CONTEXT_ONLY);
++	return xhci_setup_device(hcd, udev, SETUP_CONTEXT_ONLY,
++				 XHCI_CMD_DEFAULT_TIMEOUT);
+ }
+ 
+ /*
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index fc25a5b09710..fa9e87141e0b 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -815,6 +815,8 @@ struct xhci_command {
+ 	struct completion		*completion;
+ 	union xhci_trb			*command_trb;
+ 	struct list_head		cmd_list;
++	/* xHCI command response timeout in milliseconds */
++	unsigned int			timeout_ms;
+ };
+ 
+ /* drop context bitmasks */
+@@ -1574,8 +1576,11 @@ struct xhci_td {
+ 	unsigned int		num_trbs;
+ };
+ 
+-/* xHCI command default timeout value */
+-#define XHCI_CMD_DEFAULT_TIMEOUT	(5 * HZ)
++/*
++ * xHCI command default timeout value in milliseconds.
++ * USB 3.2 spec, section 9.2.6.1
++ */
++#define XHCI_CMD_DEFAULT_TIMEOUT	5000
+ 
+ /* command descriptor */
+ struct xhci_cd {
 diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
-index 55a65d941ccb..8a5846d4adf6 100644
+index 1a3e5a9414f0..b5ee8518fcc7 100644
 --- a/drivers/usb/serial/option.c
 +++ b/drivers/usb/serial/option.c
 @@ -255,6 +255,10 @@ static void option_instat_callback(struct urb *urb);
@@ -4776,247 +6732,11 @@ index 55a65d941ccb..8a5846d4adf6 100644
  	{ USB_DEVICE_AND_INTERFACE_INFO(OPPO_VENDOR_ID, OPPO_PRODUCT_R11, 0xff, 0xff, 0x30) },
  	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9191, 0xff, 0xff, 0x30) },
  	{ USB_DEVICE_AND_INTERFACE_INFO(SIERRA_VENDOR_ID, SIERRA_PRODUCT_EM9191, 0xff, 0xff, 0x40) },
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index f81699537312..df9a5d6760b4 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -6111,14 +6111,14 @@ static int tcpm_pd_set(struct typec_port *p, struct usb_power_delivery *pd)
- 	if (data->sink_desc.pdo[0]) {
- 		for (i = 0; i < PDO_MAX_OBJECTS && data->sink_desc.pdo[i]; i++)
- 			port->snk_pdo[i] = data->sink_desc.pdo[i];
--		port->nr_snk_pdo = i + 1;
-+		port->nr_snk_pdo = i;
- 		port->operating_snk_mw = data->operating_snk_mw;
- 	}
- 
- 	if (data->source_desc.pdo[0]) {
- 		for (i = 0; i < PDO_MAX_OBJECTS && data->source_desc.pdo[i]; i++)
- 			port->src_pdo[i] = data->source_desc.pdo[i];
--		port->nr_src_pdo = i + 1;
-+		port->nr_src_pdo = i;
- 	}
- 
- 	switch (port->state) {
-diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
-index b67a28da4702..a1c467a0e9f7 100644
---- a/drivers/virt/vmgenid.c
-+++ b/drivers/virt/vmgenid.c
-@@ -68,7 +68,6 @@ static int vmgenid_add(struct acpi_device *device)
- static void vmgenid_notify(struct acpi_device *device, u32 event)
- {
- 	struct vmgenid_state *state = acpi_driver_data(device);
--	char *envp[] = { "NEW_VMGENID=1", NULL };
- 	u8 old_id[VMGENID_SIZE];
- 
- 	memcpy(old_id, state->this_id, sizeof(old_id));
-@@ -76,7 +75,6 @@ static void vmgenid_notify(struct acpi_device *device, u32 event)
- 	if (!memcmp(old_id, state->this_id, sizeof(old_id)))
- 		return;
- 	add_vmfork_randomness(state->this_id, sizeof(state->this_id));
--	kobject_uevent_env(&device->dev.kobj, KOBJ_CHANGE, envp);
- }
- 
- static const struct acpi_device_id vmgenid_ids[] = {
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 77260cb9d0b2..b5175b9929f8 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -692,31 +692,21 @@ static void end_bbio_data_read(struct btrfs_bio *bbio)
- int btrfs_alloc_page_array(unsigned int nr_pages, struct page **page_array,
- 			   gfp_t extra_gfp)
- {
-+	const gfp_t gfp = GFP_NOFS | extra_gfp;
- 	unsigned int allocated;
- 
- 	for (allocated = 0; allocated < nr_pages;) {
- 		unsigned int last = allocated;
- 
--		allocated = alloc_pages_bulk_array(GFP_NOFS | extra_gfp,
--						   nr_pages, page_array);
--
--		if (allocated == nr_pages)
--			return 0;
--
--		/*
--		 * During this iteration, no page could be allocated, even
--		 * though alloc_pages_bulk_array() falls back to alloc_page()
--		 * if  it could not bulk-allocate. So we must be out of memory.
--		 */
--		if (allocated == last) {
-+		allocated = alloc_pages_bulk_array(gfp, nr_pages, page_array);
-+		if (unlikely(allocated == last)) {
-+			/* No progress, fail and do cleanup. */
- 			for (int i = 0; i < allocated; i++) {
- 				__free_page(page_array[i]);
- 				page_array[i] = NULL;
- 			}
- 			return -ENOMEM;
- 		}
--
--		memalloc_retry_wait(GFP_NOFS);
- 	}
- 	return 0;
- }
-@@ -4140,7 +4130,7 @@ void btrfs_clear_buffer_dirty(struct btrfs_trans_handle *trans,
- 	 * The actual zeroout of the buffer will happen later in
- 	 * btree_csum_one_bio.
- 	 */
--	if (btrfs_is_zoned(fs_info)) {
-+	if (btrfs_is_zoned(fs_info) && test_bit(EXTENT_BUFFER_DIRTY, &eb->bflags)) {
- 		set_bit(EXTENT_BUFFER_ZONED_ZEROOUT, &eb->bflags);
- 		return;
- 	}
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index 9307bb4393b8..bd3b21d4850a 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -1317,6 +1317,7 @@ static int fuse_update_get_attr(struct inode *inode, struct file *file,
- 			err = fuse_do_statx(inode, file, stat);
- 			if (err == -ENOSYS) {
- 				fc->no_statx = 1;
-+				err = 0;
- 				goto retry;
- 			}
- 		} else {
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index c719c475a068..c17bdf973c18 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3490,11 +3490,13 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 		    struct dentry *dentry, const u32 *bmval,
- 		    int ignore_crossmnt)
- {
-+	DECLARE_BITMAP(attr_bitmap, ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops));
- 	struct nfsd4_fattr_args args;
- 	struct svc_fh *tempfh = NULL;
- 	int starting_len = xdr->buf->len;
- 	__be32 *attrlen_p, status;
- 	int attrlen_offset;
-+	u32 attrmask[3];
- 	int err;
- 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
- 	u32 minorversion = resp->cstate.minorversion;
-@@ -3502,10 +3504,6 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 		.mnt	= exp->ex_path.mnt,
- 		.dentry	= dentry,
- 	};
--	union {
--		u32		attrmask[3];
--		unsigned long	mask[2];
--	} u;
- 	unsigned long bit;
- 
- 	WARN_ON_ONCE(bmval[1] & NFSD_WRITEONLY_ATTRS_WORD1);
-@@ -3519,20 +3517,19 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 	/*
- 	 * Make a local copy of the attribute bitmap that can be modified.
- 	 */
--	memset(&u, 0, sizeof(u));
--	u.attrmask[0] = bmval[0];
--	u.attrmask[1] = bmval[1];
--	u.attrmask[2] = bmval[2];
-+	attrmask[0] = bmval[0];
-+	attrmask[1] = bmval[1];
-+	attrmask[2] = bmval[2];
- 
- 	args.rdattr_err = 0;
- 	if (exp->ex_fslocs.migrated) {
--		status = fattr_handle_absent_fs(&u.attrmask[0], &u.attrmask[1],
--						&u.attrmask[2], &args.rdattr_err);
-+		status = fattr_handle_absent_fs(&attrmask[0], &attrmask[1],
-+						&attrmask[2], &args.rdattr_err);
- 		if (status)
- 			goto out;
- 	}
- 	args.size = 0;
--	if (u.attrmask[0] & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
-+	if (attrmask[0] & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
- 		status = nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry));
- 		if (status)
- 			goto out;
-@@ -3547,16 +3544,16 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 
- 	if (!(args.stat.result_mask & STATX_BTIME))
- 		/* underlying FS does not offer btime so we can't share it */
--		u.attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
--	if ((u.attrmask[0] & (FATTR4_WORD0_FILES_AVAIL | FATTR4_WORD0_FILES_FREE |
-+		attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+	if ((attrmask[0] & (FATTR4_WORD0_FILES_AVAIL | FATTR4_WORD0_FILES_FREE |
- 			FATTR4_WORD0_FILES_TOTAL | FATTR4_WORD0_MAXNAME)) ||
--	    (u.attrmask[1] & (FATTR4_WORD1_SPACE_AVAIL | FATTR4_WORD1_SPACE_FREE |
-+	    (attrmask[1] & (FATTR4_WORD1_SPACE_AVAIL | FATTR4_WORD1_SPACE_FREE |
- 		       FATTR4_WORD1_SPACE_TOTAL))) {
- 		err = vfs_statfs(&path, &args.statfs);
- 		if (err)
- 			goto out_nfserr;
- 	}
--	if ((u.attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID)) &&
-+	if ((attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID)) &&
- 	    !fhp) {
- 		tempfh = kmalloc(sizeof(struct svc_fh), GFP_KERNEL);
- 		status = nfserr_jukebox;
-@@ -3571,10 +3568,10 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 		args.fhp = fhp;
- 
- 	args.acl = NULL;
--	if (u.attrmask[0] & FATTR4_WORD0_ACL) {
-+	if (attrmask[0] & FATTR4_WORD0_ACL) {
- 		err = nfsd4_get_nfs4_acl(rqstp, dentry, &args.acl);
- 		if (err == -EOPNOTSUPP)
--			u.attrmask[0] &= ~FATTR4_WORD0_ACL;
-+			attrmask[0] &= ~FATTR4_WORD0_ACL;
- 		else if (err == -EINVAL) {
- 			status = nfserr_attrnotsupp;
- 			goto out;
-@@ -3586,17 +3583,17 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	args.context = NULL;
--	if ((u.attrmask[2] & FATTR4_WORD2_SECURITY_LABEL) ||
--	     u.attrmask[0] & FATTR4_WORD0_SUPPORTED_ATTRS) {
-+	if ((attrmask[2] & FATTR4_WORD2_SECURITY_LABEL) ||
-+	     attrmask[0] & FATTR4_WORD0_SUPPORTED_ATTRS) {
- 		if (exp->ex_flags & NFSEXP_SECURITY_LABEL)
- 			err = security_inode_getsecctx(d_inode(dentry),
- 						&args.context, &args.contextlen);
- 		else
- 			err = -EOPNOTSUPP;
- 		args.contextsupport = (err == 0);
--		if (u.attrmask[2] & FATTR4_WORD2_SECURITY_LABEL) {
-+		if (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL) {
- 			if (err == -EOPNOTSUPP)
--				u.attrmask[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
-+				attrmask[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
- 			else if (err)
- 				goto out_nfserr;
- 		}
-@@ -3604,8 +3601,8 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
- 
- 	/* attrmask */
--	status = nfsd4_encode_bitmap4(xdr, u.attrmask[0],
--				      u.attrmask[1], u.attrmask[2]);
-+	status = nfsd4_encode_bitmap4(xdr, attrmask[0], attrmask[1],
-+				      attrmask[2]);
- 	if (status)
- 		goto out;
- 
-@@ -3614,7 +3611,9 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
- 	attrlen_p = xdr_reserve_space(xdr, XDR_UNIT);
- 	if (!attrlen_p)
- 		goto out_resource;
--	for_each_set_bit(bit, (const unsigned long *)&u.mask,
-+	bitmap_from_arr32(attr_bitmap, attrmask,
-+			  ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops));
-+	for_each_set_bit(bit, attr_bitmap,
- 			 ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops)) {
- 		status = nfsd4_enc_fattr4_encode_ops[bit](xdr, &args);
- 		if (status != nfs_ok)
 diff --git a/fs/nilfs2/dir.c b/fs/nilfs2/dir.c
-index bc846b904b68..aee40db7a036 100644
+index decd6471300b..760405da852f 100644
 --- a/fs/nilfs2/dir.c
 +++ b/fs/nilfs2/dir.c
-@@ -240,7 +240,7 @@ nilfs_filetype_table[NILFS_FT_MAX] = {
+@@ -243,7 +243,7 @@ nilfs_filetype_table[NILFS_FT_MAX] = {
  
  #define S_SHIFT 12
  static unsigned char
@@ -5026,10 +6746,10 @@ index bc846b904b68..aee40db7a036 100644
  	[S_IFDIR >> S_SHIFT]	= NILFS_FT_DIR,
  	[S_IFCHR >> S_SHIFT]	= NILFS_FT_CHRDEV,
 diff --git a/fs/smb/common/smb2pdu.h b/fs/smb/common/smb2pdu.h
-index 57f2343164a3..a233a24352b1 100644
+index a3936ff53d9d..25383b11d01b 100644
 --- a/fs/smb/common/smb2pdu.h
 +++ b/fs/smb/common/smb2pdu.h
-@@ -702,7 +702,7 @@ struct smb2_close_rsp {
+@@ -699,7 +699,7 @@ struct smb2_close_rsp {
  	__le16 StructureSize; /* 60 */
  	__le16 Flags;
  	__le32 Reserved;
@@ -5039,7 +6759,7 @@ index 57f2343164a3..a233a24352b1 100644
  		__le64 LastAccessTime;
  		__le64 LastWriteTime;
 diff --git a/fs/smb/server/server.c b/fs/smb/server/server.c
-index 3079e607c5fe..2bbc3c3316f0 100644
+index 11b201e6ee44..63b01f7d9703 100644
 --- a/fs/smb/server/server.c
 +++ b/fs/smb/server/server.c
 @@ -167,20 +167,17 @@ static void __handle_ksmbd_work(struct ksmbd_work *work,
@@ -5069,10 +6789,10 @@ index 3079e607c5fe..2bbc3c3316f0 100644
  	if (rc) {
  		/* either uid or tid is not correct */
 diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
-index cd2ed345c3d3..8ae0c4d5ab96 100644
+index c02b1772cb80..34d88425434a 100644
 --- a/fs/smb/server/smb2pdu.c
 +++ b/fs/smb/server/smb2pdu.c
-@@ -535,6 +535,10 @@ int smb2_allocate_rsp_buf(struct ksmbd_work *work)
+@@ -534,6 +534,10 @@ int smb2_allocate_rsp_buf(struct ksmbd_work *work)
  	if (cmd == SMB2_QUERY_INFO_HE) {
  		struct smb2_query_info_req *req;
  
@@ -5084,10 +6804,10 @@ index cd2ed345c3d3..8ae0c4d5ab96 100644
  		if ((req->InfoType == SMB2_O_INFO_FILE &&
  		     (req->FileInfoClass == FILE_FULL_EA_INFORMATION ||
 diff --git a/fs/smb/server/vfs.c b/fs/smb/server/vfs.c
-index 2e992fadeaa7..d7906efaa96b 100644
+index fe2c80ea2e47..a4c99ec38fac 100644
 --- a/fs/smb/server/vfs.c
 +++ b/fs/smb/server/vfs.c
-@@ -754,10 +754,15 @@ int ksmbd_vfs_rename(struct ksmbd_work *work, const struct path *old_path,
+@@ -746,10 +746,15 @@ int ksmbd_vfs_rename(struct ksmbd_work *work, const struct path *old_path,
  		goto out4;
  	}
  
@@ -5103,34 +6823,11 @@ index 2e992fadeaa7..d7906efaa96b 100644
  
  	if (old_child == trap) {
  		err = -EINVAL;
-diff --git a/fs/squashfs/inode.c b/fs/squashfs/inode.c
-index aa3411354e66..16bd693d0b3a 100644
---- a/fs/squashfs/inode.c
-+++ b/fs/squashfs/inode.c
-@@ -48,6 +48,10 @@ static int squashfs_new_inode(struct super_block *sb, struct inode *inode,
- 	gid_t i_gid;
- 	int err;
- 
-+	inode->i_ino = le32_to_cpu(sqsh_ino->inode_number);
-+	if (inode->i_ino == 0)
-+		return -EINVAL;
-+
- 	err = squashfs_get_id(sb, le16_to_cpu(sqsh_ino->uid), &i_uid);
- 	if (err)
- 		return err;
-@@ -58,7 +62,6 @@ static int squashfs_new_inode(struct super_block *sb, struct inode *inode,
- 
- 	i_uid_write(inode, i_uid);
- 	i_gid_write(inode, i_gid);
--	inode->i_ino = le32_to_cpu(sqsh_ino->inode_number);
- 	inode_set_mtime(inode, le32_to_cpu(sqsh_ino->mtime), 0);
- 	inode_set_atime(inode, inode_get_mtime_sec(inode), 0);
- 	inode_set_ctime(inode, inode_get_mtime_sec(inode), 0);
 diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-index 6b7652fb8050..7cd64021d453 100644
+index a12ac0356c69..f21e73d10724 100644
 --- a/fs/sysfs/file.c
 +++ b/fs/sysfs/file.c
-@@ -463,6 +463,8 @@ struct kernfs_node *sysfs_break_active_protection(struct kobject *kobj,
+@@ -450,6 +450,8 @@ struct kernfs_node *sysfs_break_active_protection(struct kobject *kobj,
  	kn = kernfs_find_and_get(kobj->sd, attr->name);
  	if (kn)
  		kernfs_break_active_protection(kn);
@@ -5139,42 +6836,11 @@ index 6b7652fb8050..7cd64021d453 100644
  	return kn;
  }
  EXPORT_SYMBOL_GPL(sysfs_break_active_protection);
-diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
-index 961f4d88f9ef..1985c22d90ca 100644
---- a/include/asm-generic/barrier.h
-+++ b/include/asm-generic/barrier.h
-@@ -296,5 +296,13 @@ do {									\
- #define io_stop_wc() do { } while (0)
- #endif
- 
-+/*
-+ * Architectures that guarantee an implicit smp_mb() in switch_mm()
-+ * can override smp_mb__after_switch_mm.
-+ */
-+#ifndef smp_mb__after_switch_mm
-+# define smp_mb__after_switch_mm()	smp_mb()
-+#endif
-+
- #endif /* !__ASSEMBLY__ */
- #endif /* __ASM_GENERIC_BARRIER_H */
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 99e4f5e72213..b43ca3b9d2a2 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -126,6 +126,8 @@ typedef unsigned int __bitwise blk_mode_t;
- #define BLK_OPEN_WRITE_IOCTL	((__force blk_mode_t)(1 << 4))
- /* open is exclusive wrt all other BLK_OPEN_WRITE opens to the device */
- #define BLK_OPEN_RESTRICT_WRITES	((__force blk_mode_t)(1 << 5))
-+/* return partition scanning errors */
-+#define BLK_OPEN_STRICT_SCAN	((__force blk_mode_t)(1 << 6))
- 
- struct gendisk {
- 	/*
 diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-index e5ee2c694401..3f4b4ac527ca 100644
+index ca73940e26df..4195444ec45d 100644
 --- a/include/linux/bootconfig.h
 +++ b/include/linux/bootconfig.h
-@@ -288,7 +288,12 @@ int __init xbc_init(const char *buf, size_t size, const char **emsg, int *epos);
+@@ -287,7 +287,12 @@ int __init xbc_init(const char *buf, size_t size, const char **emsg, int *epos);
  int __init xbc_get_info(int *node_size, size_t *data_size);
  
  /* XBC cleanup data structures */
@@ -5188,155 +6854,113 @@ index e5ee2c694401..3f4b4ac527ca 100644
  
  /* XBC embedded bootconfig data in kernel */
  #ifdef CONFIG_BOOT_CONFIG_EMBED
-diff --git a/include/linux/gpio/property.h b/include/linux/gpio/property.h
-index 6c75c8bd44a0..1a14e239221f 100644
---- a/include/linux/gpio/property.h
-+++ b/include/linux/gpio/property.h
-@@ -2,7 +2,6 @@
- #ifndef __LINUX_GPIO_PROPERTY_H
- #define __LINUX_GPIO_PROPERTY_H
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index f5d89a4b811f..4da7411da9ba 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1383,6 +1383,7 @@ int pci_load_and_free_saved_state(struct pci_dev *dev,
+ 				  struct pci_saved_state **state);
+ int pci_platform_power_transition(struct pci_dev *dev, pci_power_t state);
+ int pci_set_power_state(struct pci_dev *dev, pci_power_t state);
++int pci_set_power_state_locked(struct pci_dev *dev, pci_power_t state);
+ pci_power_t pci_choose_state(struct pci_dev *dev, pm_message_t state);
+ bool pci_pme_capable(struct pci_dev *dev, pci_power_t state);
+ void pci_pme_active(struct pci_dev *dev, bool enable);
+@@ -1553,6 +1554,8 @@ int pci_scan_bridge(struct pci_bus *bus, struct pci_dev *dev, int max,
  
--#include <dt-bindings/gpio/gpio.h> /* for GPIO_* flags */
- #include <linux/property.h>
+ void pci_walk_bus(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
+ 		  void *userdata);
++void pci_walk_bus_locked(struct pci_bus *top, int (*cb)(struct pci_dev *, void *),
++			 void *userdata);
+ int pci_cfg_space_size(struct pci_dev *dev);
+ unsigned char pci_bus_max_busnr(struct pci_bus *bus);
+ void pci_setup_bridge(struct pci_bus *bus);
+@@ -1884,6 +1887,8 @@ static inline int pci_save_state(struct pci_dev *dev) { return 0; }
+ static inline void pci_restore_state(struct pci_dev *dev) { }
+ static inline int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ { return 0; }
++static inline int pci_set_power_state_locked(struct pci_dev *dev, pci_power_t state)
++{ return 0; }
+ static inline int pci_wake_from_d3(struct pci_dev *dev, bool enable)
+ { return 0; }
+ static inline pci_power_t pci_choose_state(struct pci_dev *dev,
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 73cc1e7dd15a..9e9794d03c9f 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -158,6 +158,8 @@
  
- #define PROPERTY_ENTRY_GPIO(_name_, _chip_node_, _idx_, _flags_) \
-diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-index 66828dfc6e74..f0c6bf982832 100644
---- a/include/linux/shmem_fs.h
-+++ b/include/linux/shmem_fs.h
-@@ -114,8 +114,17 @@ extern struct page *shmem_read_mapping_page_gfp(struct address_space *mapping,
- extern void shmem_truncate_range(struct inode *inode, loff_t start, loff_t end);
- int shmem_unuse(unsigned int type);
+ #define PCI_VENDOR_ID_LOONGSON		0x0014
  
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
- extern bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
- 			  struct mm_struct *mm, unsigned long vm_flags);
-+#else
-+static __always_inline bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
-+					  struct mm_struct *mm, unsigned long vm_flags)
-+{
-+	return false;
-+}
-+#endif
++#define PCI_VENDOR_ID_SOLIDIGM		0x025e
 +
- #ifdef CONFIG_SHMEM
- extern unsigned long shmem_swap_usage(struct vm_area_struct *vma);
- #else
-diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-index bff1e8d97de0..925c84653af5 100644
---- a/include/linux/swapops.h
-+++ b/include/linux/swapops.h
-@@ -390,6 +390,35 @@ static inline bool is_migration_entry_dirty(swp_entry_t entry)
- }
- #endif	/* CONFIG_MIGRATION */
+ #define PCI_VENDOR_ID_TTTECH		0x0357
+ #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
  
-+#ifdef CONFIG_MEMORY_FAILURE
+diff --git a/include/linux/switchtec.h b/include/linux/switchtec.h
+index 48fabe36509e..8d8fac1626bd 100644
+--- a/include/linux/switchtec.h
++++ b/include/linux/switchtec.h
+@@ -41,6 +41,7 @@ enum {
+ enum switchtec_gen {
+ 	SWITCHTEC_GEN3,
+ 	SWITCHTEC_GEN4,
++	SWITCHTEC_GEN5,
+ };
+ 
+ struct mrpc_regs {
+diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+index 5a89928ea953..cd667acf6267 100644
+--- a/include/linux/usb/hcd.h
++++ b/include/linux/usb/hcd.h
+@@ -371,8 +371,9 @@ struct hc_driver {
+ 		 * or bandwidth constraints.
+ 		 */
+ 	void	(*reset_bandwidth)(struct usb_hcd *, struct usb_device *);
+-		/* Returns the hardware-chosen device address */
+-	int	(*address_device)(struct usb_hcd *, struct usb_device *udev);
++		/* Set the hardware-chosen device address */
++	int	(*address_device)(struct usb_hcd *, struct usb_device *udev,
++				  unsigned int timeout_ms);
+ 		/* prepares the hardware to send commands to the device */
+ 	int	(*enable_device)(struct usb_hcd *, struct usb_device *udev);
+ 		/* Notifies the HCD after a hub descriptor is fetched.
+diff --git a/include/linux/usb/quirks.h b/include/linux/usb/quirks.h
+index eeb7c2157c72..59409c1fc3de 100644
+--- a/include/linux/usb/quirks.h
++++ b/include/linux/usb/quirks.h
+@@ -72,4 +72,7 @@
+ /* device has endpoints that should be ignored */
+ #define USB_QUIRK_ENDPOINT_IGNORE		BIT(15)
+ 
++/* short SET_ADDRESS request timeout */
++#define USB_QUIRK_SHORT_SET_ADDRESS_REQ_TIMEOUT	BIT(16)
 +
-+/*
-+ * Support for hardware poisoned pages
-+ */
-+static inline swp_entry_t make_hwpoison_entry(struct page *page)
-+{
-+	BUG_ON(!PageLocked(page));
-+	return swp_entry(SWP_HWPOISON, page_to_pfn(page));
-+}
+ #endif /* __LINUX_USB_QUIRKS_H */
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index ee369670e20e..f96b61d9768e 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -968,6 +968,14 @@ struct dsa_switch_ops {
+ 			       struct phy_device *phy);
+ 	void	(*port_disable)(struct dsa_switch *ds, int port);
+ 
++	/*
++	 * Compatibility between device trees defining multiple CPU ports and
++	 * drivers which are not OK to use by default the numerically smallest
++	 * CPU port of a switch for its local ports. This can return NULL,
++	 * meaning "don't know/don't care".
++	 */
++	struct dsa_port *(*preferred_default_local_cpu_port)(struct dsa_switch *ds);
 +
-+static inline int is_hwpoison_entry(swp_entry_t entry)
-+{
-+	return swp_type(entry) == SWP_HWPOISON;
-+}
-+
-+#else
-+
-+static inline swp_entry_t make_hwpoison_entry(struct page *page)
-+{
-+	return swp_entry(0, 0);
-+}
-+
-+static inline int is_hwpoison_entry(swp_entry_t swp)
-+{
-+	return 0;
-+}
-+#endif
-+
- typedef unsigned long pte_marker;
- 
- #define  PTE_MARKER_UFFD_WP			BIT(0)
-@@ -470,8 +499,9 @@ static inline struct page *pfn_swap_entry_to_page(swp_entry_t entry)
- 
- /*
-  * A pfn swap entry is a special type of swap entry that always has a pfn stored
-- * in the swap offset. They are used to represent unaddressable device memory
-- * and to restrict access to a page undergoing migration.
-+ * in the swap offset. They can either be used to represent unaddressable device
-+ * memory, to restrict access to a page undergoing migration or to represent a
-+ * pfn which has been hwpoisoned and unmapped.
-  */
- static inline bool is_pfn_swap_entry(swp_entry_t entry)
- {
-@@ -479,7 +509,7 @@ static inline bool is_pfn_swap_entry(swp_entry_t entry)
- 	BUILD_BUG_ON(SWP_TYPE_SHIFT < SWP_PFN_BITS);
- 
- 	return is_migration_entry(entry) || is_device_private_entry(entry) ||
--	       is_device_exclusive_entry(entry);
-+	       is_device_exclusive_entry(entry) || is_hwpoison_entry(entry);
- }
- 
- struct page_vma_mapped_walk;
-@@ -548,35 +578,6 @@ static inline int is_pmd_migration_entry(pmd_t pmd)
- }
- #endif  /* CONFIG_ARCH_ENABLE_THP_MIGRATION */
- 
--#ifdef CONFIG_MEMORY_FAILURE
--
--/*
-- * Support for hardware poisoned pages
-- */
--static inline swp_entry_t make_hwpoison_entry(struct page *page)
--{
--	BUG_ON(!PageLocked(page));
--	return swp_entry(SWP_HWPOISON, page_to_pfn(page));
--}
--
--static inline int is_hwpoison_entry(swp_entry_t entry)
--{
--	return swp_type(entry) == SWP_HWPOISON;
--}
--
--#else
--
--static inline swp_entry_t make_hwpoison_entry(struct page *page)
--{
--	return swp_entry(0, 0);
--}
--
--static inline int is_hwpoison_entry(swp_entry_t swp)
--{
--	return 0;
--}
--#endif
--
- static inline int non_swap_entry(swp_entry_t entry)
- {
- 	return swp_type(entry) >= MAX_SWAPFILES;
-diff --git a/include/linux/udp.h b/include/linux/udp.h
-index 94e63b269540..00790bb5cbde 100644
---- a/include/linux/udp.h
-+++ b/include/linux/udp.h
-@@ -105,7 +105,7 @@ struct udp_sock {
- #define udp_assign_bit(nr, sk, val)		\
- 	assign_bit(UDP_FLAGS_##nr, &udp_sk(sk)->udp_flags, val)
- 
--#define UDP_MAX_SEGMENTS	(1 << 6UL)
-+#define UDP_MAX_SEGMENTS	(1 << 7UL)
- 
- #define udp_sk(ptr) container_of_const(ptr, struct udp_sock, inet.sk)
- 
+ 	/*
+ 	 * Port's MAC EEE settings
+ 	 */
 diff --git a/include/net/netfilter/nf_flow_table.h b/include/net/netfilter/nf_flow_table.h
-index a763dd327c6e..9abb7ee40d72 100644
+index 4a767b3d20b9..df7775afb92b 100644
 --- a/include/net/netfilter/nf_flow_table.h
 +++ b/include/net/netfilter/nf_flow_table.h
-@@ -336,7 +336,7 @@ int nf_flow_rule_route_ipv6(struct net *net, struct flow_offload *flow,
+@@ -335,7 +335,7 @@ int nf_flow_rule_route_ipv6(struct net *net, struct flow_offload *flow,
  int nf_flow_table_offload_init(void);
  void nf_flow_table_offload_exit(void);
  
@@ -5345,7 +6969,7 @@ index a763dd327c6e..9abb7ee40d72 100644
  {
  	__be16 proto;
  
-@@ -352,6 +352,16 @@ static inline __be16 nf_flow_pppoe_proto(const struct sk_buff *skb)
+@@ -351,6 +351,16 @@ static inline __be16 nf_flow_pppoe_proto(const struct sk_buff *skb)
  	return 0;
  }
  
@@ -5362,51 +6986,11 @@ index a763dd327c6e..9abb7ee40d72 100644
  #define NF_FLOW_TABLE_STAT_INC(net, count) __this_cpu_inc((net)->ft.stat->count)
  #define NF_FLOW_TABLE_STAT_DEC(net, count) __this_cpu_dec((net)->ft.stat->count)
  #define NF_FLOW_TABLE_STAT_INC_ATOMIC(net, count)	\
-diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
-index 510244cc0f8f..1cf9cb0f0a97 100644
---- a/include/net/netfilter/nf_tables.h
-+++ b/include/net/netfilter/nf_tables.h
-@@ -307,9 +307,23 @@ static inline void *nft_elem_priv_cast(const struct nft_elem_priv *priv)
- 	return (void *)priv;
- }
- 
-+
-+/**
-+ * enum nft_iter_type - nftables set iterator type
-+ *
-+ * @NFT_ITER_READ: read-only iteration over set elements
-+ * @NFT_ITER_UPDATE: iteration under mutex to update set element state
-+ */
-+enum nft_iter_type {
-+	NFT_ITER_UNSPEC,
-+	NFT_ITER_READ,
-+	NFT_ITER_UPDATE,
-+};
-+
- struct nft_set;
- struct nft_set_iter {
- 	u8		genmask;
-+	enum nft_iter_type type:8;
- 	unsigned int	count;
- 	unsigned int	skip;
- 	int		err;
-diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
-index cefe0c4bdae3..41ca14e81d55 100644
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -117,6 +117,7 @@ struct Qdisc {
- 	struct qdisc_skb_head	q;
- 	struct gnet_stats_basic_sync bstats;
- 	struct gnet_stats_queue	qstats;
-+	int                     owner;
- 	unsigned long		state;
- 	unsigned long		state2; /* must be written under qdisc spinlock */
- 	struct Qdisc            *next_sched;
 diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
-index ba2d96a1bc2f..f50fcafc69de 100644
+index 3f121eed369e..894d9fc8bd94 100644
 --- a/include/trace/events/rpcgss.h
 +++ b/include/trace/events/rpcgss.h
-@@ -609,7 +609,7 @@ TRACE_EVENT(rpcgss_context,
+@@ -587,7 +587,7 @@ TRACE_EVENT(rpcgss_context,
  		__field(unsigned int, timeout)
  		__field(u32, window_size)
  		__field(int, len)
@@ -5415,7 +6999,7 @@ index ba2d96a1bc2f..f50fcafc69de 100644
  	),
  
  	TP_fast_assign(
-@@ -618,7 +618,7 @@ TRACE_EVENT(rpcgss_context,
+@@ -596,7 +596,7 @@ TRACE_EVENT(rpcgss_context,
  		__entry->timeout = timeout;
  		__entry->window_size = window_size;
  		__entry->len = len;
@@ -5424,11 +7008,23 @@ index ba2d96a1bc2f..f50fcafc69de 100644
  	),
  
  	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 57b8e2ffb1dd..3325155036c8 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -1043,6 +1043,7 @@
+ #define  PCI_EXP_DPC_STATUS_INTERRUPT	    0x0008 /* Interrupt Status */
+ #define  PCI_EXP_DPC_RP_BUSY		    0x0010 /* Root Port Busy */
+ #define  PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT 0x0060 /* Trig Reason Extension */
++#define  PCI_EXP_DPC_RP_PIO_FEP		    0x1f00 /* RP PIO First Err Ptr */
+ 
+ #define PCI_EXP_DPC_SOURCE_ID		 0x0A	/* DPC Source Identifier */
+ 
 diff --git a/init/main.c b/init/main.c
-index 98fdd93d79a5..b06bb72a288a 100644
+index ccde19e7275f..2c339793511b 100644
 --- a/init/main.c
 +++ b/init/main.c
-@@ -635,6 +635,8 @@ static void __init setup_command_line(char *command_line)
+@@ -633,6 +633,8 @@ static void __init setup_command_line(char *command_line)
  	if (!saved_command_line)
  		panic("%s: Failed to allocate %zu bytes\n", __func__, len + ilen);
  
@@ -5438,142 +7034,39 @@ index 98fdd93d79a5..b06bb72a288a 100644
  	if (!static_command_line)
  		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
 diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 3fc792dfc6ae..dc0235ff472d 100644
+index 68f1b6f8699a..958c3b619020 100644
 --- a/io_uring/io_uring.c
 +++ b/io_uring/io_uring.c
-@@ -2610,19 +2610,6 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 	if (__io_cqring_events_user(ctx) >= min_events)
- 		return 0;
+@@ -2426,6 +2426,14 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 			return 0;
+ 	} while (ret > 0);
  
--	if (sig) {
--#ifdef CONFIG_COMPAT
--		if (in_compat_syscall())
--			ret = set_compat_user_sigmask((const compat_sigset_t __user *)sig,
--						      sigsz);
--		else
--#endif
--			ret = set_user_sigmask(sig, sigsz);
++	if (uts) {
++		struct timespec64 ts;
++
++		if (get_timespec64(&ts, uts))
++			return -EFAULT;
++		timeout = ktime_add_ns(timespec64_to_ktime(ts), ktime_get_ns());
++	}
++
+ 	if (sig) {
+ #ifdef CONFIG_COMPAT
+ 		if (in_compat_syscall())
+@@ -2439,14 +2447,6 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+ 			return ret;
+ 	}
+ 
+-	if (uts) {
+-		struct timespec64 ts;
 -
--		if (ret)
--			return ret;
+-		if (get_timespec64(&ts, uts))
+-			return -EFAULT;
+-		timeout = ktime_add_ns(timespec64_to_ktime(ts), ktime_get_ns());
 -	}
 -
  	init_waitqueue_func_entry(&iowq.wq, io_wake_function);
  	iowq.wq.private = current;
  	INIT_LIST_HEAD(&iowq.wq.entry);
-@@ -2639,6 +2626,19 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 		iowq.timeout = ktime_add_ns(timespec64_to_ktime(ts), ktime_get_ns());
- 	}
- 
-+	if (sig) {
-+#ifdef CONFIG_COMPAT
-+		if (in_compat_syscall())
-+			ret = set_compat_user_sigmask((const compat_sigset_t __user *)sig,
-+						      sigsz);
-+		else
-+#endif
-+			ret = set_user_sigmask(sig, sigsz);
-+
-+		if (ret)
-+			return ret;
-+	}
-+
- 	trace_io_uring_cqring_wait(ctx, min_events);
- 	do {
- 		int nr_wait = (int) iowq.cq_tail - READ_ONCE(ctx->rings->cq.tail);
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 0d944e92a43f..3b9cdb42e757 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -712,6 +712,23 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 		} else if (anon_vma_fork(tmp, mpnt))
- 			goto fail_nomem_anon_vma_fork;
- 		vm_flags_clear(tmp, VM_LOCKED_MASK);
-+		/*
-+		 * Copy/update hugetlb private vma information.
-+		 */
-+		if (is_vm_hugetlb_page(tmp))
-+			hugetlb_dup_vma_private(tmp);
-+
-+		/*
-+		 * Link the vma into the MT. After using __mt_dup(), memory
-+		 * allocation is not necessary here, so it cannot fail.
-+		 */
-+		vma_iter_bulk_store(&vmi, tmp);
-+
-+		mm->map_count++;
-+
-+		if (tmp->vm_ops && tmp->vm_ops->open)
-+			tmp->vm_ops->open(tmp);
-+
- 		file = tmp->vm_file;
- 		if (file) {
- 			struct address_space *mapping = file->f_mapping;
-@@ -728,25 +745,9 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 			i_mmap_unlock_write(mapping);
- 		}
- 
--		/*
--		 * Copy/update hugetlb private vma information.
--		 */
--		if (is_vm_hugetlb_page(tmp))
--			hugetlb_dup_vma_private(tmp);
--
--		/*
--		 * Link the vma into the MT. After using __mt_dup(), memory
--		 * allocation is not necessary here, so it cannot fail.
--		 */
--		vma_iter_bulk_store(&vmi, tmp);
--
--		mm->map_count++;
- 		if (!(tmp->vm_flags & VM_WIPEONFORK))
- 			retval = copy_page_range(tmp, mpnt);
- 
--		if (tmp->vm_ops && tmp->vm_ops->open)
--			tmp->vm_ops->open(tmp);
--
- 		if (retval) {
- 			mpnt = vma_next(&vmi);
- 			goto loop_out;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 001fe047bd5d..8c817d0a92f3 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -79,6 +79,8 @@
- # include <asm/paravirt_api_clock.h>
- #endif
- 
-+#include <asm/barrier.h>
-+
- #include "cpupri.h"
- #include "cpudeadline.h"
- 
-@@ -3445,13 +3447,19 @@ static inline void switch_mm_cid(struct rq *rq,
- 		 * between rq->curr store and load of {prev,next}->mm->pcpu_cid[cpu].
- 		 * Provide it here.
- 		 */
--		if (!prev->mm)                          // from kernel
-+		if (!prev->mm) {                        // from kernel
- 			smp_mb();
--		/*
--		 * user -> user transition guarantees a memory barrier through
--		 * switch_mm() when current->mm changes. If current->mm is
--		 * unchanged, no barrier is needed.
--		 */
-+		} else {				// from user
-+			/*
-+			 * user->user transition relies on an implicit
-+			 * memory barrier in switch_mm() when
-+			 * current->mm changes. If the architecture
-+			 * switch_mm() does not have an implicit memory
-+			 * barrier, it is emitted here.  If current->mm
-+			 * is unchanged, no barrier is needed.
-+			 */
-+			smp_mb__after_switch_mm();
-+		}
- 	}
- 	if (prev->mm_cid_active) {
- 		mm_cid_snapshot_time(rq, prev->mm);
 diff --git a/lib/bootconfig.c b/lib/bootconfig.c
 index c59d26068a64..8841554432d5 100644
 --- a/lib/bootconfig.c
@@ -5637,228 +7130,11 @@ index c59d26068a64..8841554432d5 100644
  	} else
  		ret = xbc_node_num;
  
-diff --git a/mm/gup.c b/mm/gup.c
-index df83182ec72d..f6d55635742f 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1206,6 +1206,22 @@ static long __get_user_pages(struct mm_struct *mm,
- 
- 		/* first iteration or cross vma bound */
- 		if (!vma || start >= vma->vm_end) {
-+			/*
-+			 * MADV_POPULATE_(READ|WRITE) wants to handle VMA
-+			 * lookups+error reporting differently.
-+			 */
-+			if (gup_flags & FOLL_MADV_POPULATE) {
-+				vma = vma_lookup(mm, start);
-+				if (!vma) {
-+					ret = -ENOMEM;
-+					goto out;
-+				}
-+				if (check_vma_flags(vma, gup_flags)) {
-+					ret = -EINVAL;
-+					goto out;
-+				}
-+				goto retry;
-+			}
- 			vma = gup_vma_lookup(mm, start);
- 			if (!vma && in_gate_area(mm, start)) {
- 				ret = get_gate_page(mm, start & PAGE_MASK,
-@@ -1683,35 +1699,35 @@ long populate_vma_page_range(struct vm_area_struct *vma,
- }
- 
- /*
-- * faultin_vma_page_range() - populate (prefault) page tables inside the
-- *			      given VMA range readable/writable
-+ * faultin_page_range() - populate (prefault) page tables inside the
-+ *			  given range readable/writable
-  *
-  * This takes care of mlocking the pages, too, if VM_LOCKED is set.
-  *
-- * @vma: target vma
-+ * @mm: the mm to populate page tables in
-  * @start: start address
-  * @end: end address
-  * @write: whether to prefault readable or writable
-  * @locked: whether the mmap_lock is still held
-  *
-- * Returns either number of processed pages in the vma, or a negative error
-- * code on error (see __get_user_pages()).
-+ * Returns either number of processed pages in the MM, or a negative error
-+ * code on error (see __get_user_pages()). Note that this function reports
-+ * errors related to VMAs, such as incompatible mappings, as expected by
-+ * MADV_POPULATE_(READ|WRITE).
-  *
-- * vma->vm_mm->mmap_lock must be held. The range must be page-aligned and
-- * covered by the VMA. If it's released, *@locked will be set to 0.
-+ * The range must be page-aligned.
-+ *
-+ * mm->mmap_lock must be held. If it's released, *@locked will be set to 0.
-  */
--long faultin_vma_page_range(struct vm_area_struct *vma, unsigned long start,
--			    unsigned long end, bool write, int *locked)
-+long faultin_page_range(struct mm_struct *mm, unsigned long start,
-+			unsigned long end, bool write, int *locked)
- {
--	struct mm_struct *mm = vma->vm_mm;
- 	unsigned long nr_pages = (end - start) / PAGE_SIZE;
- 	int gup_flags;
- 	long ret;
- 
- 	VM_BUG_ON(!PAGE_ALIGNED(start));
- 	VM_BUG_ON(!PAGE_ALIGNED(end));
--	VM_BUG_ON_VMA(start < vma->vm_start, vma);
--	VM_BUG_ON_VMA(end > vma->vm_end, vma);
- 	mmap_assert_locked(mm);
- 
- 	/*
-@@ -1723,19 +1739,13 @@ long faultin_vma_page_range(struct vm_area_struct *vma, unsigned long start,
- 	 *		  a poisoned page.
- 	 * !FOLL_FORCE: Require proper access permissions.
- 	 */
--	gup_flags = FOLL_TOUCH | FOLL_HWPOISON | FOLL_UNLOCKABLE;
-+	gup_flags = FOLL_TOUCH | FOLL_HWPOISON | FOLL_UNLOCKABLE |
-+		    FOLL_MADV_POPULATE;
- 	if (write)
- 		gup_flags |= FOLL_WRITE;
- 
--	/*
--	 * We want to report -EINVAL instead of -EFAULT for any permission
--	 * problems or incompatible mappings.
--	 */
--	if (check_vma_flags(vma, gup_flags))
--		return -EINVAL;
--
--	ret = __get_user_pages(mm, start, nr_pages, gup_flags,
--			       NULL, locked);
-+	ret = __get_user_pages_locked(mm, start, nr_pages, NULL, locked,
-+				      gup_flags);
- 	lru_add_drain();
- 	return ret;
- }
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 94c958f7ebb5..6790f93fda45 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2244,9 +2244,6 @@ int move_pages_huge_pmd(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd, pm
- 		goto unlock_ptls;
- 	}
- 
--	folio_move_anon_rmap(src_folio, dst_vma);
--	WRITE_ONCE(src_folio->index, linear_page_index(dst_vma, dst_addr));
--
- 	src_pmdval = pmdp_huge_clear_flush(src_vma, src_addr, src_pmd);
- 	/* Folio got pinned from under us. Put it back and fail the move. */
- 	if (folio_maybe_dma_pinned(src_folio)) {
-@@ -2255,6 +2252,9 @@ int move_pages_huge_pmd(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd, pm
- 		goto unlock_ptls;
- 	}
- 
-+	folio_move_anon_rmap(src_folio, dst_vma);
-+	WRITE_ONCE(src_folio->index, linear_page_index(dst_vma, dst_addr));
-+
- 	_dst_pmd = mk_huge_pmd(&src_folio->page, dst_vma->vm_page_prot);
- 	/* Follow mremap() behavior and treat the entry dirty after the move */
- 	_dst_pmd = pmd_mkwrite(pmd_mkdirty(_dst_pmd), dst_vma);
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index ed1581b670d4..e5e3df1d3b87 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -6943,9 +6943,13 @@ long hugetlb_change_protection(struct vm_area_struct *vma,
- 			if (!pte_same(pte, newpte))
- 				set_huge_pte_at(mm, address, ptep, newpte, psize);
- 		} else if (unlikely(is_pte_marker(pte))) {
--			/* No other markers apply for now. */
--			WARN_ON_ONCE(!pte_marker_uffd_wp(pte));
--			if (uffd_wp_resolve)
-+			/*
-+			 * Do nothing on a poison marker; page is
-+			 * corrupted, permissons do not apply.  Here
-+			 * pte_marker_uffd_wp()==true implies !poison
-+			 * because they're mutual exclusive.
-+			 */
-+			if (pte_marker_uffd_wp(pte) && uffd_wp_resolve)
- 				/* Safe to modify directly (non-present->none). */
- 				huge_pte_clear(mm, address, ptep, psize);
- 		} else if (!huge_pte_none(pte)) {
-diff --git a/mm/internal.h b/mm/internal.h
-index f309a010d50f..c3f3e0f19115 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -590,9 +590,8 @@ struct anon_vma *folio_anon_vma(struct folio *folio);
- void unmap_mapping_folio(struct folio *folio);
- extern long populate_vma_page_range(struct vm_area_struct *vma,
- 		unsigned long start, unsigned long end, int *locked);
--extern long faultin_vma_page_range(struct vm_area_struct *vma,
--				   unsigned long start, unsigned long end,
--				   bool write, int *locked);
-+extern long faultin_page_range(struct mm_struct *mm, unsigned long start,
-+		unsigned long end, bool write, int *locked);
- extern bool mlock_future_ok(struct mm_struct *mm, unsigned long flags,
- 			       unsigned long bytes);
- 
-@@ -1031,10 +1030,13 @@ enum {
- 	FOLL_FAST_ONLY = 1 << 20,
- 	/* allow unlocking the mmap lock */
- 	FOLL_UNLOCKABLE = 1 << 21,
-+	/* VMA lookup+checks compatible with MADV_POPULATE_(READ|WRITE) */
-+	FOLL_MADV_POPULATE = 1 << 22,
- };
- 
- #define INTERNAL_GUP_FLAGS (FOLL_TOUCH | FOLL_TRIED | FOLL_REMOTE | FOLL_PIN | \
--			    FOLL_FAST_ONLY | FOLL_UNLOCKABLE)
-+			    FOLL_FAST_ONLY | FOLL_UNLOCKABLE | \
-+			    FOLL_MADV_POPULATE)
- 
- /*
-  * Indicates for which pages that are write-protected in the page table,
-diff --git a/mm/madvise.c b/mm/madvise.c
-index cfa5e7288261..f2c818af0b66 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -908,27 +908,14 @@ static long madvise_populate(struct vm_area_struct *vma,
- {
- 	const bool write = behavior == MADV_POPULATE_WRITE;
- 	struct mm_struct *mm = vma->vm_mm;
--	unsigned long tmp_end;
- 	int locked = 1;
- 	long pages;
- 
- 	*prev = vma;
- 
- 	while (start < end) {
--		/*
--		 * We might have temporarily dropped the lock. For example,
--		 * our VMA might have been split.
--		 */
--		if (!vma || start >= vma->vm_end) {
--			vma = vma_lookup(mm, start);
--			if (!vma)
--				return -ENOMEM;
--		}
--
--		tmp_end = min_t(unsigned long, end, vma->vm_end);
- 		/* Populate (prefault) page tables readable/writable. */
--		pages = faultin_vma_page_range(vma, start, tmp_end, write,
--					       &locked);
-+		pages = faultin_page_range(mm, start, end, write, &locked);
- 		if (!locked) {
- 			mmap_read_lock(mm);
- 			locked = 1;
-@@ -949,7 +936,7 @@ static long madvise_populate(struct vm_area_struct *vma,
- 				pr_warn_once("%s: unhandled return value: %ld\n",
- 					     __func__, pages);
- 				fallthrough;
--			case -ENOMEM:
-+			case -ENOMEM: /* No VMA or out of memory. */
- 				return -ENOMEM;
- 			}
- 		}
 diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 9349948f1abf..9e62a00b46dd 100644
+index 5b846ed5dcbe..be58ce999259 100644
 --- a/mm/memory-failure.c
 +++ b/mm/memory-failure.c
-@@ -154,11 +154,23 @@ static int __page_handle_poison(struct page *page)
+@@ -84,11 +84,23 @@ static int __page_handle_poison(struct page *page)
  {
  	int ret;
  
@@ -5885,25 +7161,8 @@ index 9349948f1abf..9e62a00b46dd 100644
  
  	return ret;
  }
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 791a6dc16324..5853f3ae36e5 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -742,12 +742,6 @@ static long shmem_unused_huge_count(struct super_block *sb,
- 
- #define shmem_huge SHMEM_HUGE_DENY
- 
--bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
--		   struct mm_struct *mm, unsigned long vm_flags)
--{
--	return false;
--}
--
- static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
- 		struct shrink_control *sc, unsigned long nr_to_split)
- {
 diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
-index f21097e73482..ceaa5a89b947 100644
+index 6bb272894c96..b94a1783902e 100644
 --- a/net/bridge/br_input.c
 +++ b/net/bridge/br_input.c
 @@ -30,7 +30,7 @@ br_netif_receive_skb(struct net *net, struct sock *sk, struct sk_buff *skb)
@@ -5932,7 +7191,7 @@ index f21097e73482..ceaa5a89b947 100644
  	u16 vid = 0;
  	u8 state;
  
-@@ -137,7 +140,9 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
+@@ -120,7 +123,9 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
  	if (p->flags & BR_LEARNING)
  		br_fdb_update(br, p, eth_hdr(skb)->h_source, vid, 0);
  
@@ -5943,7 +7202,7 @@ index f21097e73482..ceaa5a89b947 100644
  	if (is_multicast_ether_addr(eth_hdr(skb)->h_dest)) {
  		/* by definition the broadcast is also a multicast address */
  		if (is_broadcast_ether_addr(eth_hdr(skb)->h_dest)) {
-@@ -200,7 +205,7 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
+@@ -183,7 +188,7 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
  		unsigned long now = jiffies;
  
  		if (test_bit(BR_FDB_LOCAL, &dst->flags))
@@ -5952,7 +7211,7 @@ index f21097e73482..ceaa5a89b947 100644
  
  		if (now != dst->used)
  			dst->used = now;
-@@ -213,7 +218,7 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
+@@ -196,7 +201,7 @@ int br_handle_frame_finish(struct net *net, struct sock *sk, struct sk_buff *skb
  	}
  
  	if (local_rcv)
@@ -5961,7 +7220,7 @@ index f21097e73482..ceaa5a89b947 100644
  
  out:
  	return 0;
-@@ -386,6 +391,8 @@ static rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
+@@ -368,6 +373,8 @@ static rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
  				goto forward;
  		}
  
@@ -5971,7 +7230,7 @@ index f21097e73482..ceaa5a89b947 100644
  		 *   - returns < 0 (drop/error)
  		 *   - returns = 0 (stolen/nf_queue)
 diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
-index 35e10c5a766d..22e35623c148 100644
+index bff48d576363..9ac70c27da83 100644
 --- a/net/bridge/br_netfilter_hooks.c
 +++ b/net/bridge/br_netfilter_hooks.c
 @@ -600,11 +600,17 @@ static unsigned int br_nf_local_in(void *priv,
@@ -5993,10 +7252,10 @@ index 35e10c5a766d..22e35623c148 100644
  		return NF_ACCEPT;
  
 diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 86ea5e6689b5..d4bedc87b1d8 100644
+index 51d010f64e06..940de9516768 100644
 --- a/net/bridge/br_private.h
 +++ b/net/bridge/br_private.h
-@@ -589,6 +589,7 @@ struct br_input_skb_cb {
+@@ -559,6 +559,7 @@ struct br_input_skb_cb {
  #endif
  	u8 proxyarp_replied:1;
  	u8 src_port_isolated:1;
@@ -6005,7 +7264,7 @@ index 86ea5e6689b5..d4bedc87b1d8 100644
  	u8 vlan_filtered:1;
  #endif
 diff --git a/net/bridge/netfilter/nf_conntrack_bridge.c b/net/bridge/netfilter/nf_conntrack_bridge.c
-index 6f877e31709b..c3c51b9a6826 100644
+index c7c27ada6704..e60c38670f22 100644
 --- a/net/bridge/netfilter/nf_conntrack_bridge.c
 +++ b/net/bridge/netfilter/nf_conntrack_bridge.c
 @@ -294,18 +294,24 @@ static unsigned int nf_ct_bridge_pre(void *priv, struct sk_buff *skb,
@@ -6037,31 +7296,53 @@ index 6f877e31709b..c3c51b9a6826 100644
  		return NF_ACCEPT;
  
  	/* let inet prerouting call conntrack again */
-diff --git a/net/core/dev.c b/net/core/dev.c
-index c9b8412f1c9d..c365aa06f886 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3791,6 +3791,10 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
- 		return rc;
- 	}
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index 5417f7b1187c..98f864879175 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -425,6 +425,24 @@ static int dsa_tree_setup_default_cpu(struct dsa_switch_tree *dst)
+ 	return 0;
+ }
  
-+	if (unlikely(READ_ONCE(q->owner) == smp_processor_id())) {
-+		kfree_skb_reason(skb, SKB_DROP_REASON_TC_RECLASSIFY_LOOP);
-+		return NET_XMIT_DROP;
-+	}
- 	/*
- 	 * Heuristic to force contended enqueues to serialize on a
- 	 * separate lock before trying to get qdisc main lock.
-@@ -3830,7 +3834,9 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
- 		qdisc_run_end(q);
- 		rc = NET_XMIT_SUCCESS;
- 	} else {
-+		WRITE_ONCE(q->owner, smp_processor_id());
- 		rc = dev_qdisc_enqueue(skb, q, &to_free, txq);
-+		WRITE_ONCE(q->owner, -1);
- 		if (qdisc_run_begin(q)) {
- 			if (unlikely(contended)) {
- 				spin_unlock(&q->busylock);
++static struct dsa_port *
++dsa_switch_preferred_default_local_cpu_port(struct dsa_switch *ds)
++{
++	struct dsa_port *cpu_dp;
++
++	if (!ds->ops->preferred_default_local_cpu_port)
++		return NULL;
++
++	cpu_dp = ds->ops->preferred_default_local_cpu_port(ds);
++	if (!cpu_dp)
++		return NULL;
++
++	if (WARN_ON(!dsa_port_is_cpu(cpu_dp) || cpu_dp->ds != ds))
++		return NULL;
++
++	return cpu_dp;
++}
++
+ /* Perform initial assignment of CPU ports to user ports and DSA links in the
+  * fabric, giving preference to CPU ports local to each switch. Default to
+  * using the first CPU port in the switch tree if the port does not have a CPU
+@@ -432,12 +450,16 @@ static int dsa_tree_setup_default_cpu(struct dsa_switch_tree *dst)
+  */
+ static int dsa_tree_setup_cpu_ports(struct dsa_switch_tree *dst)
+ {
+-	struct dsa_port *cpu_dp, *dp;
++	struct dsa_port *preferred_cpu_dp, *cpu_dp, *dp;
+ 
+ 	list_for_each_entry(cpu_dp, &dst->ports, list) {
+ 		if (!dsa_port_is_cpu(cpu_dp))
+ 			continue;
+ 
++		preferred_cpu_dp = dsa_switch_preferred_default_local_cpu_port(cpu_dp->ds);
++		if (preferred_cpu_dp && preferred_cpu_dp != cpu_dp)
++			continue;
++
+ 		/* Prefer a local CPU port */
+ 		dsa_switch_for_each_port(dp, cpu_dp->ds) {
+ 			/* Prefer the first local CPU port found */
 diff --git a/net/netfilter/nf_flow_table_inet.c b/net/netfilter/nf_flow_table_inet.c
 index 9505f9d188ff..6eef15648b7b 100644
 --- a/net/netfilter/nf_flow_table_inet.c
@@ -6077,10 +7358,10 @@ index 9505f9d188ff..6eef15648b7b 100644
  	default:
  		proto = skb->protocol;
 diff --git a/net/netfilter/nf_flow_table_ip.c b/net/netfilter/nf_flow_table_ip.c
-index e45fade76409..5383bed3d3e0 100644
+index 6feaac9ab05c..22bc0e3d8a0b 100644
 --- a/net/netfilter/nf_flow_table_ip.c
 +++ b/net/netfilter/nf_flow_table_ip.c
-@@ -157,7 +157,7 @@ static void nf_flow_tuple_encap(struct sk_buff *skb,
+@@ -156,7 +156,7 @@ static void nf_flow_tuple_encap(struct sk_buff *skb,
  		tuple->encap[i].proto = skb->protocol;
  		break;
  	case htons(ETH_P_PPP_SES):
@@ -6089,7 +7370,7 @@ index e45fade76409..5383bed3d3e0 100644
  		tuple->encap[i].id = ntohs(phdr->sid);
  		tuple->encap[i].proto = skb->protocol;
  		break;
-@@ -273,10 +273,11 @@ static unsigned int nf_flow_xmit_xfrm(struct sk_buff *skb,
+@@ -267,10 +267,11 @@ static unsigned int nf_flow_xmit_xfrm(struct sk_buff *skb,
  	return NF_STOLEN;
  }
  
@@ -6102,7 +7383,7 @@ index e45fade76409..5383bed3d3e0 100644
  
  	switch (skb->protocol) {
  	case htons(ETH_P_8021Q):
-@@ -287,7 +288,8 @@ static bool nf_flow_skb_encap_protocol(const struct sk_buff *skb, __be16 proto,
+@@ -281,7 +282,8 @@ static bool nf_flow_skb_encap_protocol(const struct sk_buff *skb, __be16 proto,
  		}
  		break;
  	case htons(ETH_P_PPP_SES):
@@ -6112,7 +7393,7 @@ index e45fade76409..5383bed3d3e0 100644
  			*offset += PPPOE_SES_HLEN;
  			return true;
  		}
-@@ -316,7 +318,7 @@ static void nf_flow_encap_pop(struct sk_buff *skb,
+@@ -310,7 +312,7 @@ static void nf_flow_encap_pop(struct sk_buff *skb,
  			skb_reset_network_header(skb);
  			break;
  		case htons(ETH_P_PPP_SES):
@@ -6122,39 +7403,10 @@ index e45fade76409..5383bed3d3e0 100644
  			skb_reset_network_header(skb);
  			break;
 diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 21581bae700c..0e697e53a790 100644
+index 8152a69d8268..1c4b7a8ec2cc 100644
 --- a/net/netfilter/nf_tables_api.c
 +++ b/net/netfilter/nf_tables_api.c
-@@ -594,6 +594,12 @@ static int nft_mapelem_deactivate(const struct nft_ctx *ctx,
- 				  const struct nft_set_iter *iter,
- 				  struct nft_elem_priv *elem_priv)
- {
-+	struct nft_set_ext *ext = nft_set_elem_ext(set, elem_priv);
-+
-+	if (!nft_set_elem_active(ext, iter->genmask))
-+		return 0;
-+
-+	nft_set_elem_change_active(ctx->net, set, ext);
- 	nft_setelem_data_deactivate(ctx->net, set, elem_priv);
- 
- 	return 0;
-@@ -617,6 +623,7 @@ static void nft_map_catchall_deactivate(const struct nft_ctx *ctx,
- 		if (!nft_set_elem_active(ext, genmask))
- 			continue;
- 
-+		nft_set_elem_change_active(ctx->net, set, ext);
- 		nft_setelem_data_deactivate(ctx->net, set, catchall->elem);
- 		break;
- 	}
-@@ -626,6 +633,7 @@ static void nft_map_deactivate(const struct nft_ctx *ctx, struct nft_set *set)
- {
- 	struct nft_set_iter iter = {
- 		.genmask	= nft_genmask_next(ctx->net),
-+		.type		= NFT_ITER_UPDATE,
- 		.fn		= nft_mapelem_deactivate,
- 	};
- 
-@@ -3048,7 +3056,7 @@ static const struct nft_expr_type *__nft_expr_type_get(u8 family,
+@@ -2891,7 +2891,7 @@ static const struct nft_expr_type *__nft_expr_type_get(u8 family,
  {
  	const struct nft_expr_type *type, *candidate = NULL;
  
@@ -6163,7 +7415,7 @@ index 21581bae700c..0e697e53a790 100644
  		if (!nla_strcmp(nla, type->name)) {
  			if (!type->family && !candidate)
  				candidate = type;
-@@ -3080,9 +3088,13 @@ static const struct nft_expr_type *nft_expr_type_get(struct net *net,
+@@ -2923,9 +2923,13 @@ static const struct nft_expr_type *nft_expr_type_get(struct net *net,
  	if (nla == NULL)
  		return ERR_PTR(-EINVAL);
  
@@ -6178,156 +7430,7 @@ index 21581bae700c..0e697e53a790 100644
  
  	lockdep_nfnl_nft_mutex_not_held();
  #ifdef CONFIG_MODULES
-@@ -3863,6 +3875,9 @@ int nft_setelem_validate(const struct nft_ctx *ctx, struct nft_set *set,
- 	const struct nft_data *data;
- 	int err;
- 
-+	if (!nft_set_elem_active(ext, iter->genmask))
-+		return 0;
-+
- 	if (nft_set_ext_exists(ext, NFT_SET_EXT_FLAGS) &&
- 	    *nft_set_ext_flags(ext) & NFT_SET_ELEM_INTERVAL_END)
- 		return 0;
-@@ -3886,17 +3901,20 @@ int nft_setelem_validate(const struct nft_ctx *ctx, struct nft_set *set,
- 
- int nft_set_catchall_validate(const struct nft_ctx *ctx, struct nft_set *set)
- {
--	u8 genmask = nft_genmask_next(ctx->net);
-+	struct nft_set_iter dummy_iter = {
-+		.genmask	= nft_genmask_next(ctx->net),
-+	};
- 	struct nft_set_elem_catchall *catchall;
-+
- 	struct nft_set_ext *ext;
- 	int ret = 0;
- 
- 	list_for_each_entry_rcu(catchall, &set->catchall_list, list) {
- 		ext = nft_set_elem_ext(set, catchall->elem);
--		if (!nft_set_elem_active(ext, genmask))
-+		if (!nft_set_elem_active(ext, dummy_iter.genmask))
- 			continue;
- 
--		ret = nft_setelem_validate(ctx, set, NULL, catchall->elem);
-+		ret = nft_setelem_validate(ctx, set, &dummy_iter, catchall->elem);
- 		if (ret < 0)
- 			return ret;
- 	}
-@@ -5393,6 +5411,11 @@ static int nf_tables_bind_check_setelem(const struct nft_ctx *ctx,
- 					const struct nft_set_iter *iter,
- 					struct nft_elem_priv *elem_priv)
- {
-+	const struct nft_set_ext *ext = nft_set_elem_ext(set, elem_priv);
-+
-+	if (!nft_set_elem_active(ext, iter->genmask))
-+		return 0;
-+
- 	return nft_setelem_data_validate(ctx, set, elem_priv);
- }
- 
-@@ -5437,6 +5460,7 @@ int nf_tables_bind_set(const struct nft_ctx *ctx, struct nft_set *set,
- 		}
- 
- 		iter.genmask	= nft_genmask_next(ctx->net);
-+		iter.type	= NFT_ITER_UPDATE;
- 		iter.skip 	= 0;
- 		iter.count	= 0;
- 		iter.err	= 0;
-@@ -5484,6 +5508,13 @@ static int nft_mapelem_activate(const struct nft_ctx *ctx,
- 				const struct nft_set_iter *iter,
- 				struct nft_elem_priv *elem_priv)
- {
-+	struct nft_set_ext *ext = nft_set_elem_ext(set, elem_priv);
-+
-+	/* called from abort path, reverse check to undo changes. */
-+	if (nft_set_elem_active(ext, iter->genmask))
-+		return 0;
-+
-+	nft_clear(ctx->net, ext);
- 	nft_setelem_data_activate(ctx->net, set, elem_priv);
- 
- 	return 0;
-@@ -5501,6 +5532,7 @@ static void nft_map_catchall_activate(const struct nft_ctx *ctx,
- 		if (!nft_set_elem_active(ext, genmask))
- 			continue;
- 
-+		nft_clear(ctx->net, ext);
- 		nft_setelem_data_activate(ctx->net, set, catchall->elem);
- 		break;
- 	}
-@@ -5510,6 +5542,7 @@ static void nft_map_activate(const struct nft_ctx *ctx, struct nft_set *set)
- {
- 	struct nft_set_iter iter = {
- 		.genmask	= nft_genmask_next(ctx->net),
-+		.type		= NFT_ITER_UPDATE,
- 		.fn		= nft_mapelem_activate,
- 	};
- 
-@@ -5774,6 +5807,9 @@ static int nf_tables_dump_setelem(const struct nft_ctx *ctx,
- 	const struct nft_set_ext *ext = nft_set_elem_ext(set, elem_priv);
- 	struct nft_set_dump_args *args;
- 
-+	if (!nft_set_elem_active(ext, iter->genmask))
-+		return 0;
-+
- 	if (nft_set_elem_expired(ext) || nft_set_elem_is_dead(ext))
- 		return 0;
- 
-@@ -5884,6 +5920,7 @@ static int nf_tables_dump_set(struct sk_buff *skb, struct netlink_callback *cb)
- 	args.skb		= skb;
- 	args.reset		= dump_ctx->reset;
- 	args.iter.genmask	= nft_genmask_cur(net);
-+	args.iter.type		= NFT_ITER_READ;
- 	args.iter.skip		= cb->args[0];
- 	args.iter.count		= 0;
- 	args.iter.err		= 0;
-@@ -6623,7 +6660,7 @@ static void nft_setelem_activate(struct net *net, struct nft_set *set,
- 	struct nft_set_ext *ext = nft_set_elem_ext(set, elem_priv);
- 
- 	if (nft_setelem_is_catchall(set, elem_priv)) {
--		nft_set_elem_change_active(net, set, ext);
-+		nft_clear(net, ext);
- 	} else {
- 		set->ops->activate(net, set, elem_priv);
- 	}
-@@ -7182,6 +7219,16 @@ void nft_data_hold(const struct nft_data *data, enum nft_data_types type)
- 	}
- }
- 
-+static int nft_setelem_active_next(const struct net *net,
-+				   const struct nft_set *set,
-+				   struct nft_elem_priv *elem_priv)
-+{
-+	const struct nft_set_ext *ext = nft_set_elem_ext(set, elem_priv);
-+	u8 genmask = nft_genmask_next(net);
-+
-+	return nft_set_elem_active(ext, genmask);
-+}
-+
- static void nft_setelem_data_activate(const struct net *net,
- 				      const struct nft_set *set,
- 				      struct nft_elem_priv *elem_priv)
-@@ -7305,8 +7352,12 @@ static int nft_setelem_flush(const struct nft_ctx *ctx,
- 			     const struct nft_set_iter *iter,
- 			     struct nft_elem_priv *elem_priv)
- {
-+	const struct nft_set_ext *ext = nft_set_elem_ext(set, elem_priv);
- 	struct nft_trans *trans;
- 
-+	if (!nft_set_elem_active(ext, iter->genmask))
-+		return 0;
-+
- 	trans = nft_trans_alloc_gfp(ctx, NFT_MSG_DELSETELEM,
- 				    sizeof(struct nft_trans_elem), GFP_ATOMIC);
- 	if (!trans)
-@@ -7368,6 +7419,7 @@ static int nft_set_flush(struct nft_ctx *ctx, struct nft_set *set, u8 genmask)
- {
- 	struct nft_set_iter iter = {
- 		.genmask	= genmask,
-+		.type		= NFT_ITER_UPDATE,
- 		.fn		= nft_setelem_flush,
- 	};
- 
-@@ -7603,7 +7655,7 @@ static const struct nft_object_type *__nft_obj_type_get(u32 objtype, u8 family)
+@@ -7171,7 +7175,7 @@ static const struct nft_object_type *__nft_obj_type_get(u32 objtype, u8 family)
  {
  	const struct nft_object_type *type;
  
@@ -6336,7 +7439,7 @@ index 21581bae700c..0e697e53a790 100644
  		if (type->family != NFPROTO_UNSPEC &&
  		    type->family != family)
  			continue;
-@@ -7619,9 +7671,13 @@ nft_obj_type_get(struct net *net, u32 objtype, u8 family)
+@@ -7187,9 +7191,13 @@ nft_obj_type_get(struct net *net, u32 objtype, u8 family)
  {
  	const struct nft_object_type *type;
  
@@ -6351,171 +7454,11 @@ index 21581bae700c..0e697e53a790 100644
  
  	lockdep_nfnl_nft_mutex_not_held();
  #ifdef CONFIG_MODULES
-@@ -10590,8 +10646,10 @@ static int __nf_tables_abort(struct net *net, enum nfnl_abort_action action)
- 		case NFT_MSG_DESTROYSETELEM:
- 			te = (struct nft_trans_elem *)trans->data;
- 
--			nft_setelem_data_activate(net, te->set, te->elem_priv);
--			nft_setelem_activate(net, te->set, te->elem_priv);
-+			if (!nft_setelem_active_next(net, te->set, te->elem_priv)) {
-+				nft_setelem_data_activate(net, te->set, te->elem_priv);
-+				nft_setelem_activate(net, te->set, te->elem_priv);
-+			}
- 			if (!nft_setelem_is_catchall(te->set, te->elem_priv))
- 				te->set->ndeact--;
- 
-@@ -10779,6 +10837,9 @@ static int nf_tables_loop_check_setelem(const struct nft_ctx *ctx,
- {
- 	const struct nft_set_ext *ext = nft_set_elem_ext(set, elem_priv);
- 
-+	if (!nft_set_elem_active(ext, iter->genmask))
-+		return 0;
-+
- 	if (nft_set_ext_exists(ext, NFT_SET_EXT_FLAGS) &&
- 	    *nft_set_ext_flags(ext) & NFT_SET_ELEM_INTERVAL_END)
- 		return 0;
-@@ -10863,6 +10924,7 @@ static int nf_tables_check_loops(const struct nft_ctx *ctx,
- 				continue;
- 
- 			iter.genmask	= nft_genmask_next(ctx->net);
-+			iter.type	= NFT_ITER_UPDATE;
- 			iter.skip 	= 0;
- 			iter.count	= 0;
- 			iter.err	= 0;
-diff --git a/net/netfilter/nft_lookup.c b/net/netfilter/nft_lookup.c
-index 870e5b113d13..87c18eddb068 100644
---- a/net/netfilter/nft_lookup.c
-+++ b/net/netfilter/nft_lookup.c
-@@ -216,6 +216,7 @@ static int nft_lookup_validate(const struct nft_ctx *ctx,
- 		return 0;
- 
- 	iter.genmask	= nft_genmask_next(ctx->net);
-+	iter.type	= NFT_ITER_UPDATE;
- 	iter.skip	= 0;
- 	iter.count	= 0;
- 	iter.err	= 0;
-diff --git a/net/netfilter/nft_set_bitmap.c b/net/netfilter/nft_set_bitmap.c
-index 32df7a16835d..1caa04619dc6 100644
---- a/net/netfilter/nft_set_bitmap.c
-+++ b/net/netfilter/nft_set_bitmap.c
-@@ -172,7 +172,7 @@ static void nft_bitmap_activate(const struct net *net,
- 	nft_bitmap_location(set, nft_set_ext_key(&be->ext), &idx, &off);
- 	/* Enter 11 state. */
- 	priv->bitmap[idx] |= (genmask << off);
--	nft_set_elem_change_active(net, set, &be->ext);
-+	nft_clear(net, &be->ext);
- }
- 
- static void nft_bitmap_flush(const struct net *net,
-@@ -222,8 +222,6 @@ static void nft_bitmap_walk(const struct nft_ctx *ctx,
- 	list_for_each_entry_rcu(be, &priv->list, head) {
- 		if (iter->count < iter->skip)
- 			goto cont;
--		if (!nft_set_elem_active(&be->ext, iter->genmask))
--			goto cont;
- 
- 		iter->err = iter->fn(ctx, set, iter, &be->priv);
- 
-diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
-index 6968a3b34236..daa56dda737a 100644
---- a/net/netfilter/nft_set_hash.c
-+++ b/net/netfilter/nft_set_hash.c
-@@ -199,7 +199,7 @@ static void nft_rhash_activate(const struct net *net, const struct nft_set *set,
- {
- 	struct nft_rhash_elem *he = nft_elem_priv_cast(elem_priv);
- 
--	nft_set_elem_change_active(net, set, &he->ext);
-+	nft_clear(net, &he->ext);
- }
- 
- static void nft_rhash_flush(const struct net *net,
-@@ -286,8 +286,6 @@ static void nft_rhash_walk(const struct nft_ctx *ctx, struct nft_set *set,
- 
- 		if (iter->count < iter->skip)
- 			goto cont;
--		if (!nft_set_elem_active(&he->ext, iter->genmask))
--			goto cont;
- 
- 		iter->err = iter->fn(ctx, set, iter, &he->priv);
- 		if (iter->err < 0)
-@@ -599,7 +597,7 @@ static void nft_hash_activate(const struct net *net, const struct nft_set *set,
- {
- 	struct nft_hash_elem *he = nft_elem_priv_cast(elem_priv);
- 
--	nft_set_elem_change_active(net, set, &he->ext);
-+	nft_clear(net, &he->ext);
- }
- 
- static void nft_hash_flush(const struct net *net,
-@@ -652,8 +650,6 @@ static void nft_hash_walk(const struct nft_ctx *ctx, struct nft_set *set,
- 		hlist_for_each_entry_rcu(he, &priv->table[i], node) {
- 			if (iter->count < iter->skip)
- 				goto cont;
--			if (!nft_set_elem_active(&he->ext, iter->genmask))
--				goto cont;
- 
- 			iter->err = iter->fn(ctx, set, iter, &he->priv);
- 			if (iter->err < 0)
 diff --git a/net/netfilter/nft_set_pipapo.c b/net/netfilter/nft_set_pipapo.c
-index b3b282de802d..b42a34087e80 100644
+index 58eca2616273..2299ced939c4 100644
 --- a/net/netfilter/nft_set_pipapo.c
 +++ b/net/netfilter/nft_set_pipapo.c
-@@ -360,7 +360,7 @@
-  * Return: -1 on no match, bit position on 'match_only', 0 otherwise.
-  */
- int pipapo_refill(unsigned long *map, int len, int rules, unsigned long *dst,
--		  union nft_pipapo_map_bucket *mt, bool match_only)
-+		  const union nft_pipapo_map_bucket *mt, bool match_only)
- {
- 	unsigned long bitset;
- 	int k, ret = -1;
-@@ -412,9 +412,9 @@ bool nft_pipapo_lookup(const struct net *net, const struct nft_set *set,
- 	struct nft_pipapo_scratch *scratch;
- 	unsigned long *res_map, *fill_map;
- 	u8 genmask = nft_genmask_cur(net);
-+	const struct nft_pipapo_match *m;
-+	const struct nft_pipapo_field *f;
- 	const u8 *rp = (const u8 *)key;
--	struct nft_pipapo_match *m;
--	struct nft_pipapo_field *f;
- 	bool map_index;
- 	int i;
- 
-@@ -519,11 +519,13 @@ static struct nft_pipapo_elem *pipapo_get(const struct net *net,
- {
- 	struct nft_pipapo_elem *ret = ERR_PTR(-ENOENT);
- 	struct nft_pipapo *priv = nft_set_priv(set);
--	struct nft_pipapo_match *m = priv->clone;
- 	unsigned long *res_map, *fill_map = NULL;
--	struct nft_pipapo_field *f;
-+	const struct nft_pipapo_match *m;
-+	const struct nft_pipapo_field *f;
- 	int i;
- 
-+	m = priv->clone;
-+
- 	res_map = kmalloc_array(m->bsize_max, sizeof(*res_map), GFP_ATOMIC);
- 	if (!res_map) {
- 		ret = ERR_PTR(-ENOMEM);
-@@ -1597,7 +1599,7 @@ static void pipapo_gc(struct nft_set *set, struct nft_pipapo_match *m)
- 
- 	while ((rules_f0 = pipapo_rules_same_key(m->f, first_rule))) {
- 		union nft_pipapo_map_bucket rulemap[NFT_PIPAPO_MAX_FIELDS];
--		struct nft_pipapo_field *f;
-+		const struct nft_pipapo_field *f;
- 		int i, start, rules_fx;
- 
- 		start = first_rule;
-@@ -1771,7 +1773,7 @@ static void nft_pipapo_activate(const struct net *net,
- {
- 	struct nft_pipapo_elem *e = nft_elem_priv_cast(elem_priv);
- 
--	nft_set_elem_change_active(net, set, &e->ext);
-+	nft_clear(net, &e->ext);
- }
- 
- /**
-@@ -2000,6 +2002,8 @@ static void nft_pipapo_remove(const struct net *net, const struct nft_set *set,
+@@ -1994,6 +1994,8 @@ static void nft_pipapo_remove(const struct net *net, const struct nft_set *set,
  		rules_fx = rules_f0;
  
  		nft_pipapo_for_each_field(f, i, m) {
@@ -6524,7 +7467,7 @@ index b3b282de802d..b42a34087e80 100644
  			if (!pipapo_match_field(f, start, rules_fx,
  						match_start, match_end))
  				break;
-@@ -2012,16 +2016,18 @@ static void nft_pipapo_remove(const struct net *net, const struct nft_set *set,
+@@ -2006,16 +2008,18 @@ static void nft_pipapo_remove(const struct net *net, const struct nft_set *set,
  
  			match_start += NFT_PIPAPO_GROUPS_PADDED_SIZE(f);
  			match_end += NFT_PIPAPO_GROUPS_PADDED_SIZE(f);
@@ -6548,254 +7491,11 @@ index b3b282de802d..b42a34087e80 100644
  }
  
  /**
-@@ -2038,13 +2044,15 @@ static void nft_pipapo_walk(const struct nft_ctx *ctx, struct nft_set *set,
- 			    struct nft_set_iter *iter)
- {
- 	struct nft_pipapo *priv = nft_set_priv(set);
--	struct net *net = read_pnet(&set->net);
--	struct nft_pipapo_match *m;
--	struct nft_pipapo_field *f;
-+	const struct nft_pipapo_match *m;
-+	const struct nft_pipapo_field *f;
- 	int i, r;
- 
-+	WARN_ON_ONCE(iter->type != NFT_ITER_READ &&
-+		     iter->type != NFT_ITER_UPDATE);
-+
- 	rcu_read_lock();
--	if (iter->genmask == nft_genmask_cur(net))
-+	if (iter->type == NFT_ITER_READ)
- 		m = rcu_dereference(priv->match);
- 	else
- 		m = priv->clone;
-@@ -2066,9 +2074,6 @@ static void nft_pipapo_walk(const struct nft_ctx *ctx, struct nft_set *set,
- 
- 		e = f->mt[r].e;
- 
--		if (!nft_set_elem_active(&e->ext, iter->genmask))
--			goto cont;
--
- 		iter->err = iter->fn(ctx, set, iter, &e->priv);
- 		if (iter->err < 0)
- 			goto out;
-diff --git a/net/netfilter/nft_set_pipapo.h b/net/netfilter/nft_set_pipapo.h
-index 3842c7341a9f..42464e7c24ac 100644
---- a/net/netfilter/nft_set_pipapo.h
-+++ b/net/netfilter/nft_set_pipapo.h
-@@ -187,7 +187,7 @@ struct nft_pipapo_elem {
- };
- 
- int pipapo_refill(unsigned long *map, int len, int rules, unsigned long *dst,
--		  union nft_pipapo_map_bucket *mt, bool match_only);
-+		  const union nft_pipapo_map_bucket *mt, bool match_only);
- 
- /**
-  * pipapo_and_field_buckets_4bit() - Intersect 4-bit buckets
-@@ -195,7 +195,7 @@ int pipapo_refill(unsigned long *map, int len, int rules, unsigned long *dst,
-  * @dst:	Area to store result
-  * @data:	Input data selecting table buckets
-  */
--static inline void pipapo_and_field_buckets_4bit(struct nft_pipapo_field *f,
-+static inline void pipapo_and_field_buckets_4bit(const struct nft_pipapo_field *f,
- 						 unsigned long *dst,
- 						 const u8 *data)
- {
-@@ -223,7 +223,7 @@ static inline void pipapo_and_field_buckets_4bit(struct nft_pipapo_field *f,
-  * @dst:	Area to store result
-  * @data:	Input data selecting table buckets
-  */
--static inline void pipapo_and_field_buckets_8bit(struct nft_pipapo_field *f,
-+static inline void pipapo_and_field_buckets_8bit(const struct nft_pipapo_field *f,
- 						 unsigned long *dst,
- 						 const u8 *data)
- {
-diff --git a/net/netfilter/nft_set_pipapo_avx2.c b/net/netfilter/nft_set_pipapo_avx2.c
-index a3a8ddca9918..d08407d589ea 100644
---- a/net/netfilter/nft_set_pipapo_avx2.c
-+++ b/net/netfilter/nft_set_pipapo_avx2.c
-@@ -212,8 +212,9 @@ static int nft_pipapo_avx2_refill(int offset, unsigned long *map,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_4b_2(unsigned long *map, unsigned long *fill,
--				       struct nft_pipapo_field *f, int offset,
--				       const u8 *pkt, bool first, bool last)
-+				       const struct nft_pipapo_field *f,
-+				       int offset, const u8 *pkt,
-+				       bool first, bool last)
- {
- 	int i, ret = -1, m256_size = f->bsize / NFT_PIPAPO_LONGS_PER_M256, b;
- 	u8 pg[2] = { pkt[0] >> 4, pkt[0] & 0xf };
-@@ -274,8 +275,9 @@ static int nft_pipapo_avx2_lookup_4b_2(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_4b_4(unsigned long *map, unsigned long *fill,
--				       struct nft_pipapo_field *f, int offset,
--				       const u8 *pkt, bool first, bool last)
-+				       const struct nft_pipapo_field *f,
-+				       int offset, const u8 *pkt,
-+				       bool first, bool last)
- {
- 	int i, ret = -1, m256_size = f->bsize / NFT_PIPAPO_LONGS_PER_M256, b;
- 	u8 pg[4] = { pkt[0] >> 4, pkt[0] & 0xf, pkt[1] >> 4, pkt[1] & 0xf };
-@@ -350,8 +352,9 @@ static int nft_pipapo_avx2_lookup_4b_4(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_4b_8(unsigned long *map, unsigned long *fill,
--				       struct nft_pipapo_field *f, int offset,
--				       const u8 *pkt, bool first, bool last)
-+				       const struct nft_pipapo_field *f,
-+				       int offset, const u8 *pkt,
-+				       bool first, bool last)
- {
- 	u8 pg[8] = {  pkt[0] >> 4,  pkt[0] & 0xf,  pkt[1] >> 4,  pkt[1] & 0xf,
- 		      pkt[2] >> 4,  pkt[2] & 0xf,  pkt[3] >> 4,  pkt[3] & 0xf,
-@@ -445,8 +448,9 @@ static int nft_pipapo_avx2_lookup_4b_8(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_4b_12(unsigned long *map, unsigned long *fill,
--				        struct nft_pipapo_field *f, int offset,
--				        const u8 *pkt, bool first, bool last)
-+					const struct nft_pipapo_field *f,
-+					int offset, const u8 *pkt,
-+					bool first, bool last)
- {
- 	u8 pg[12] = {  pkt[0] >> 4,  pkt[0] & 0xf,  pkt[1] >> 4,  pkt[1] & 0xf,
- 		       pkt[2] >> 4,  pkt[2] & 0xf,  pkt[3] >> 4,  pkt[3] & 0xf,
-@@ -534,8 +538,9 @@ static int nft_pipapo_avx2_lookup_4b_12(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_4b_32(unsigned long *map, unsigned long *fill,
--					struct nft_pipapo_field *f, int offset,
--					const u8 *pkt, bool first, bool last)
-+					const struct nft_pipapo_field *f,
-+					int offset, const u8 *pkt,
-+					bool first, bool last)
- {
- 	u8 pg[32] = {  pkt[0] >> 4,  pkt[0] & 0xf,  pkt[1] >> 4,  pkt[1] & 0xf,
- 		       pkt[2] >> 4,  pkt[2] & 0xf,  pkt[3] >> 4,  pkt[3] & 0xf,
-@@ -669,8 +674,9 @@ static int nft_pipapo_avx2_lookup_4b_32(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_8b_1(unsigned long *map, unsigned long *fill,
--				       struct nft_pipapo_field *f, int offset,
--				       const u8 *pkt, bool first, bool last)
-+				       const struct nft_pipapo_field *f,
-+				       int offset, const u8 *pkt,
-+				       bool first, bool last)
- {
- 	int i, ret = -1, m256_size = f->bsize / NFT_PIPAPO_LONGS_PER_M256, b;
- 	unsigned long *lt = f->lt, bsize = f->bsize;
-@@ -726,8 +732,9 @@ static int nft_pipapo_avx2_lookup_8b_1(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_8b_2(unsigned long *map, unsigned long *fill,
--				       struct nft_pipapo_field *f, int offset,
--				       const u8 *pkt, bool first, bool last)
-+				       const struct nft_pipapo_field *f,
-+				       int offset, const u8 *pkt,
-+				       bool first, bool last)
- {
- 	int i, ret = -1, m256_size = f->bsize / NFT_PIPAPO_LONGS_PER_M256, b;
- 	unsigned long *lt = f->lt, bsize = f->bsize;
-@@ -790,8 +797,9 @@ static int nft_pipapo_avx2_lookup_8b_2(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_8b_4(unsigned long *map, unsigned long *fill,
--				       struct nft_pipapo_field *f, int offset,
--				       const u8 *pkt, bool first, bool last)
-+				       const struct nft_pipapo_field *f,
-+				       int offset, const u8 *pkt,
-+				       bool first, bool last)
- {
- 	int i, ret = -1, m256_size = f->bsize / NFT_PIPAPO_LONGS_PER_M256, b;
- 	unsigned long *lt = f->lt, bsize = f->bsize;
-@@ -865,8 +873,9 @@ static int nft_pipapo_avx2_lookup_8b_4(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_8b_6(unsigned long *map, unsigned long *fill,
--				       struct nft_pipapo_field *f, int offset,
--				       const u8 *pkt, bool first, bool last)
-+				       const struct nft_pipapo_field *f,
-+				       int offset, const u8 *pkt,
-+				       bool first, bool last)
- {
- 	int i, ret = -1, m256_size = f->bsize / NFT_PIPAPO_LONGS_PER_M256, b;
- 	unsigned long *lt = f->lt, bsize = f->bsize;
-@@ -950,8 +959,9 @@ static int nft_pipapo_avx2_lookup_8b_6(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_8b_16(unsigned long *map, unsigned long *fill,
--					struct nft_pipapo_field *f, int offset,
--					const u8 *pkt, bool first, bool last)
-+					const struct nft_pipapo_field *f,
-+					int offset, const u8 *pkt,
-+					bool first, bool last)
- {
- 	int i, ret = -1, m256_size = f->bsize / NFT_PIPAPO_LONGS_PER_M256, b;
- 	unsigned long *lt = f->lt, bsize = f->bsize;
-@@ -1042,8 +1052,9 @@ static int nft_pipapo_avx2_lookup_8b_16(unsigned long *map, unsigned long *fill,
-  * word index to be checked next (i.e. first filled word).
-  */
- static int nft_pipapo_avx2_lookup_slow(unsigned long *map, unsigned long *fill,
--					struct nft_pipapo_field *f, int offset,
--					const u8 *pkt, bool first, bool last)
-+					const struct nft_pipapo_field *f,
-+					int offset, const u8 *pkt,
-+					bool first, bool last)
- {
- 	unsigned long bsize = f->bsize;
- 	int i, ret = -1, b;
-@@ -1119,9 +1130,9 @@ bool nft_pipapo_avx2_lookup(const struct net *net, const struct nft_set *set,
- 	struct nft_pipapo *priv = nft_set_priv(set);
- 	struct nft_pipapo_scratch *scratch;
- 	u8 genmask = nft_genmask_cur(net);
-+	const struct nft_pipapo_match *m;
-+	const struct nft_pipapo_field *f;
- 	const u8 *rp = (const u8 *)key;
--	struct nft_pipapo_match *m;
--	struct nft_pipapo_field *f;
- 	unsigned long *res, *fill;
- 	bool map_index;
- 	int i, ret = 0;
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index 9944fe479e53..b7ea21327549 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -532,7 +532,7 @@ static void nft_rbtree_activate(const struct net *net,
- {
- 	struct nft_rbtree_elem *rbe = nft_elem_priv_cast(elem_priv);
- 
--	nft_set_elem_change_active(net, set, &rbe->ext);
-+	nft_clear(net, &rbe->ext);
- }
- 
- static void nft_rbtree_flush(const struct net *net,
-@@ -600,8 +600,6 @@ static void nft_rbtree_walk(const struct nft_ctx *ctx,
- 
- 		if (iter->count < iter->skip)
- 			goto cont;
--		if (!nft_set_elem_active(&rbe->ext, iter->genmask))
--			goto cont;
- 
- 		iter->err = iter->fn(ctx, set, iter, &rbe->priv);
- 		if (iter->err < 0) {
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 9b3e9262040b..a498b5d7c5d6 100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -973,6 +973,7 @@ struct Qdisc *qdisc_alloc(struct netdev_queue *dev_queue,
- 	sch->enqueue = ops->enqueue;
- 	sch->dequeue = ops->dequeue;
- 	sch->dev_queue = dev_queue;
-+	sch->owner = -1;
- 	netdev_hold(dev, &sch->dev_tracker, GFP_KERNEL);
- 	refcount_set(&sch->refcnt, 1);
- 
 diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index e37cf913818a..9df15a7bc256 100644
+index 0a75d76535f7..f28e2956fea5 100644
 --- a/net/unix/af_unix.c
 +++ b/net/unix/af_unix.c
-@@ -2602,7 +2602,9 @@ static struct sk_buff *manage_oob(struct sk_buff *skb, struct sock *sk,
+@@ -2675,7 +2675,9 @@ static struct sk_buff *manage_oob(struct sk_buff *skb, struct sock *sk,
  					WRITE_ONCE(u->oob_skb, NULL);
  					consume_skb(skb);
  				}
@@ -6806,7 +7506,7 @@ index e37cf913818a..9df15a7bc256 100644
  				skb_unlink(skb, &sk->sk_receive_queue);
  				WRITE_ONCE(u->oob_skb, NULL);
  				if (!WARN_ON_ONCE(skb_unref(skb)))
-@@ -2680,18 +2682,16 @@ static int unix_stream_read_generic(struct unix_stream_read_state *state,
+@@ -2753,18 +2755,16 @@ static int unix_stream_read_generic(struct unix_stream_read_state *state,
  		last = skb = skb_peek(&sk->sk_receive_queue);
  		last_len = last ? last->len : 0;
  
@@ -6828,51 +7528,11 @@ index e37cf913818a..9df15a7bc256 100644
  		if (skb == NULL) {
  			if (copied >= target)
  				goto unlock;
-diff --git a/sound/core/seq/seq_ump_convert.c b/sound/core/seq/seq_ump_convert.c
-index b141024830ec..ee6ac649df83 100644
---- a/sound/core/seq/seq_ump_convert.c
-+++ b/sound/core/seq/seq_ump_convert.c
-@@ -428,7 +428,7 @@ static int cvt_ump_midi2_to_midi1(struct snd_seq_client *dest,
- 	midi1->note.group = midi2->note.group;
- 	midi1->note.status = midi2->note.status;
- 	midi1->note.channel = midi2->note.channel;
--	switch (midi2->note.status << 4) {
-+	switch (midi2->note.status) {
- 	case UMP_MSG_STATUS_NOTE_ON:
- 	case UMP_MSG_STATUS_NOTE_OFF:
- 		midi1->note.note = midi2->note.note;
 diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 8c2467ed127e..bf0618ab4fda 100644
+index e8cf38dc8a5e..77c40063d63a 100644
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -10215,6 +10215,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1462, 0xb120, "MSI Cubi MS-B120", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1462, 0xb171, "Cubi N 8GL (MS-B171)", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x152d, 0x1082, "Quanta NL3", ALC269_FIXUP_LIFEBOOK),
-+	SND_PCI_QUIRK(0x152d, 0x1262, "Huawei NBLB-WAX9N", ALC2XX_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1558, 0x0353, "Clevo V35[05]SN[CDE]Q", ALC256_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1558, 0x1323, "Clevo N130ZU", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1558, 0x1325, "Clevo N15[01][CW]U", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
-@@ -10320,6 +10321,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x222e, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x2231, "Thinkpad T560", ALC292_FIXUP_TPT460),
- 	SND_PCI_QUIRK(0x17aa, 0x2233, "Thinkpad", ALC292_FIXUP_TPT460),
-+	SND_PCI_QUIRK(0x17aa, 0x2234, "Thinkpad ICE-1", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x2245, "Thinkpad T470", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x2246, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x2247, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
-@@ -10381,8 +10383,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x3886, "Y780 VECO DUAL", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38a7, "Y780P AMD YG dual", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38a8, "Y780P AMD VECO dual", ALC287_FIXUP_TAS2781_I2C),
--	SND_PCI_QUIRK(0x17aa, 0x38a9, "Thinkbook 16P", ALC287_FIXUP_CS35L41_I2C_2),
--	SND_PCI_QUIRK(0x17aa, 0x38ab, "Thinkbook 16P", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x17aa, 0x38a9, "Thinkbook 16P", ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_THINKPAD),
-+	SND_PCI_QUIRK(0x17aa, 0x38ab, "Thinkbook 16P", ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_THINKPAD),
- 	SND_PCI_QUIRK(0x17aa, 0x38b4, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x38b5, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x38b6, "Legion Slim 7 16APH8", ALC287_FIXUP_CS35L41_I2C_2),
-@@ -10442,6 +10444,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -10122,6 +10122,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
  	SND_PCI_QUIRK(0x1d05, 0x115c, "TongFang GMxTGxx", ALC269_FIXUP_NO_SHUTUP),
  	SND_PCI_QUIRK(0x1d05, 0x121b, "TongFang GMxAGxx", ALC269_FIXUP_NO_SHUTUP),
  	SND_PCI_QUIRK(0x1d05, 0x1387, "TongFang GMxIXxx", ALC2XX_FIXUP_HEADSET_MIC),
@@ -6880,73 +7540,8881 @@ index 8c2467ed127e..bf0618ab4fda 100644
  	SND_PCI_QUIRK(0x1d72, 0x1602, "RedmiBook", ALC255_FIXUP_XIAOMI_HEADSET_MIC),
  	SND_PCI_QUIRK(0x1d72, 0x1701, "XiaomiNotebook Pro", ALC298_FIXUP_DELL1_MIC_NO_PRESENCE),
  	SND_PCI_QUIRK(0x1d72, 0x1901, "RedmiBook 14", ALC256_FIXUP_ASUS_HEADSET_MIC),
-diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index 693c1b81a23c..e19f2fa1a528 100644
---- a/sound/pci/hda/tas2781_hda_i2c.c
-+++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -501,10 +501,10 @@ static int tas2563_save_calibration(struct tasdevice_priv *tas_priv)
- static void tas2781_apply_calib(struct tasdevice_priv *tas_priv)
+diff --git a/sound/soc/ti/omap3pandora.c b/sound/soc/ti/omap3pandora.c
+index a287e9747c2a..fa92ed97dfe3 100644
+--- a/sound/soc/ti/omap3pandora.c
++++ b/sound/soc/ti/omap3pandora.c
+@@ -7,7 +7,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/platform_device.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/delay.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/module.h>
+@@ -21,12 +21,11 @@
+ 
+ #include "omap-mcbsp.h"
+ 
+-#define OMAP3_PANDORA_DAC_POWER_GPIO	118
+-#define OMAP3_PANDORA_AMP_POWER_GPIO	14
+-
+ #define PREFIX "ASoC omap3pandora: "
+ 
+ static struct regulator *omap3pandora_dac_reg;
++static struct gpio_desc *dac_power_gpio;
++static struct gpio_desc *amp_power_gpio;
+ 
+ static int omap3pandora_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_pcm_hw_params *params)
+@@ -78,9 +77,9 @@ static int omap3pandora_dac_event(struct snd_soc_dapm_widget *w,
+ 			return ret;
+ 		}
+ 		mdelay(1);
+-		gpio_set_value(OMAP3_PANDORA_DAC_POWER_GPIO, 1);
++		gpiod_set_value(dac_power_gpio, 1);
+ 	} else {
+-		gpio_set_value(OMAP3_PANDORA_DAC_POWER_GPIO, 0);
++		gpiod_set_value(dac_power_gpio, 0);
+ 		mdelay(1);
+ 		regulator_disable(omap3pandora_dac_reg);
+ 	}
+@@ -92,9 +91,9 @@ static int omap3pandora_hp_event(struct snd_soc_dapm_widget *w,
+ 	struct snd_kcontrol *k, int event)
  {
- 	static const unsigned char page_array[CALIB_MAX] = {
--		0x17, 0x18, 0x18, 0x0d, 0x18
-+		0x17, 0x18, 0x18, 0x13, 0x18,
- 	};
- 	static const unsigned char rgno_array[CALIB_MAX] = {
--		0x74, 0x0c, 0x14, 0x3c, 0x7c
-+		0x74, 0x0c, 0x14, 0x70, 0x7c,
- 	};
- 	unsigned char *data;
- 	int i, j, rc;
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index ec5e21932876..4790c735599b 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -970,7 +970,7 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
- 	if (dso->annotate_warned)
- 		return -1;
+ 	if (SND_SOC_DAPM_EVENT_ON(event))
+-		gpio_set_value(OMAP3_PANDORA_AMP_POWER_GPIO, 1);
++		gpiod_set_value(amp_power_gpio, 1);
+ 	else
+-		gpio_set_value(OMAP3_PANDORA_AMP_POWER_GPIO, 0);
++		gpiod_set_value(amp_power_gpio, 0);
  
--	if (not_annotated) {
-+	if (not_annotated || !sym->annotate2) {
- 		err = symbol__annotate2(ms, evsel, &browser.arch);
- 		if (err) {
- 			char msg[BUFSIZ];
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 9b70ab110ce7..86a996290e9a 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2435,6 +2435,9 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
- 	if (parch)
- 		*parch = arch;
+ 	return 0;
+ }
+@@ -229,35 +228,10 @@ static int __init omap3pandora_soc_init(void)
  
-+	if (!list_empty(&notes->src->source))
+ 	pr_info("OMAP3 Pandora SoC init\n");
+ 
+-	ret = gpio_request(OMAP3_PANDORA_DAC_POWER_GPIO, "dac_power");
+-	if (ret) {
+-		pr_err(PREFIX "Failed to get DAC power GPIO\n");
+-		return ret;
+-	}
+-
+-	ret = gpio_direction_output(OMAP3_PANDORA_DAC_POWER_GPIO, 0);
+-	if (ret) {
+-		pr_err(PREFIX "Failed to set DAC power GPIO direction\n");
+-		goto fail0;
+-	}
+-
+-	ret = gpio_request(OMAP3_PANDORA_AMP_POWER_GPIO, "amp_power");
+-	if (ret) {
+-		pr_err(PREFIX "Failed to get amp power GPIO\n");
+-		goto fail0;
+-	}
+-
+-	ret = gpio_direction_output(OMAP3_PANDORA_AMP_POWER_GPIO, 0);
+-	if (ret) {
+-		pr_err(PREFIX "Failed to set amp power GPIO direction\n");
+-		goto fail1;
+-	}
+-
+ 	omap3pandora_snd_device = platform_device_alloc("soc-audio", -1);
+ 	if (omap3pandora_snd_device == NULL) {
+ 		pr_err(PREFIX "Platform device allocation failed\n");
+-		ret = -ENOMEM;
+-		goto fail1;
++		return -ENOMEM;
+ 	}
+ 
+ 	platform_set_drvdata(omap3pandora_snd_device, &snd_soc_card_omap3pandora);
+@@ -268,6 +242,20 @@ static int __init omap3pandora_soc_init(void)
+ 		goto fail2;
+ 	}
+ 
++	dac_power_gpio = devm_gpiod_get(&omap3pandora_snd_device->dev,
++					"dac", GPIOD_OUT_LOW);
++	if (IS_ERR(dac_power_gpio)) {
++		ret = PTR_ERR(dac_power_gpio);
++		goto fail3;
++	}
++
++	amp_power_gpio = devm_gpiod_get(&omap3pandora_snd_device->dev,
++					"amp", GPIOD_OUT_LOW);
++	if (IS_ERR(amp_power_gpio)) {
++		ret = PTR_ERR(amp_power_gpio);
++		goto fail3;
++	}
++
+ 	omap3pandora_dac_reg = regulator_get(&omap3pandora_snd_device->dev, "vcc");
+ 	if (IS_ERR(omap3pandora_dac_reg)) {
+ 		pr_err(PREFIX "Failed to get DAC regulator from %s: %ld\n",
+@@ -283,10 +271,7 @@ static int __init omap3pandora_soc_init(void)
+ 	platform_device_del(omap3pandora_snd_device);
+ fail2:
+ 	platform_device_put(omap3pandora_snd_device);
+-fail1:
+-	gpio_free(OMAP3_PANDORA_AMP_POWER_GPIO);
+-fail0:
+-	gpio_free(OMAP3_PANDORA_DAC_POWER_GPIO);
++
+ 	return ret;
+ }
+ module_init(omap3pandora_soc_init);
+@@ -295,8 +280,6 @@ static void __exit omap3pandora_soc_exit(void)
+ {
+ 	regulator_put(omap3pandora_dac_reg);
+ 	platform_device_unregister(omap3pandora_snd_device);
+-	gpio_free(OMAP3_PANDORA_AMP_POWER_GPIO);
+-	gpio_free(OMAP3_PANDORA_DAC_POWER_GPIO);
+ }
+ module_exit(omap3pandora_soc_exit);
+ 
+diff --git a/sound/usb/Makefile b/sound/usb/Makefile
+index 9ccb21a4ff8a..64a718c766a7 100644
+--- a/sound/usb/Makefile
++++ b/sound/usb/Makefile
+@@ -12,7 +12,7 @@ snd-usb-audio-objs := 	card.o \
+ 			mixer.o \
+ 			mixer_quirks.o \
+ 			mixer_scarlett.o \
+-			mixer_scarlett_gen2.o \
++			mixer_scarlett2.o \
+ 			mixer_us16x08.o \
+ 			mixer_s1810c.o \
+ 			pcm.o \
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index 1f32e3ae3aa3..c8d48566e175 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -33,7 +33,7 @@
+ #include "mixer.h"
+ #include "mixer_quirks.h"
+ #include "mixer_scarlett.h"
+-#include "mixer_scarlett_gen2.h"
++#include "mixer_scarlett2.h"
+ #include "mixer_us16x08.h"
+ #include "mixer_s1810c.h"
+ #include "helper.h"
+@@ -3447,8 +3447,13 @@ int snd_usb_mixer_apply_create_quirk(struct usb_mixer_interface *mixer)
+ 	case USB_ID(0x1235, 0x8213): /* Focusrite Scarlett 8i6 3rd Gen */
+ 	case USB_ID(0x1235, 0x8214): /* Focusrite Scarlett 18i8 3rd Gen */
+ 	case USB_ID(0x1235, 0x8215): /* Focusrite Scarlett 18i20 3rd Gen */
++	case USB_ID(0x1235, 0x8206): /* Focusrite Clarett 2Pre USB */
++	case USB_ID(0x1235, 0x8207): /* Focusrite Clarett 4Pre USB */
++	case USB_ID(0x1235, 0x8208): /* Focusrite Clarett 8Pre USB */
++	case USB_ID(0x1235, 0x820a): /* Focusrite Clarett+ 2Pre */
++	case USB_ID(0x1235, 0x820b): /* Focusrite Clarett+ 4Pre */
+ 	case USB_ID(0x1235, 0x820c): /* Focusrite Clarett+ 8Pre */
+-		err = snd_scarlett_gen2_init(mixer);
++		err = snd_scarlett2_init(mixer);
+ 		break;
+ 
+ 	case USB_ID(0x041e, 0x323b): /* Creative Sound Blaster E1 */
+diff --git a/sound/usb/mixer_scarlett2.c b/sound/usb/mixer_scarlett2.c
+new file mode 100644
+index 000000000000..bcb8b7617406
+--- /dev/null
++++ b/sound/usb/mixer_scarlett2.c
+@@ -0,0 +1,4391 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *   Focusrite Scarlett 2 Protocol Driver for ALSA
++ *   (including Scarlett 2nd Gen, 3rd Gen, Clarett USB, and Clarett+
++ *   series products)
++ *
++ *   Supported models:
++ *   - 6i6/18i8/18i20 Gen 2
++ *   - Solo/2i2/4i4/8i6/18i8/18i20 Gen 3
++ *   - Clarett 2Pre/4Pre/8Pre USB
++ *   - Clarett+ 2Pre/4Pre/8Pre
++ *
++ *   Copyright (c) 2018-2023 by Geoffrey D. Bennett <g at b4.vu>
++ *   Copyright (c) 2020-2021 by Vladimir Sadovnikov <sadko4u@gmail.com>
++ *   Copyright (c) 2022 by Christian Colglazier <christian@cacolglazier.com>
++ *
++ *   Based on the Scarlett (Gen 1) Driver for ALSA:
++ *
++ *   Copyright (c) 2013 by Tobias Hoffmann
++ *   Copyright (c) 2013 by Robin Gareus <robin at gareus.org>
++ *   Copyright (c) 2002 by Takashi Iwai <tiwai at suse.de>
++ *   Copyright (c) 2014 by Chris J Arges <chris.j.arges at canonical.com>
++ *
++ *   Many codes borrowed from audio.c by
++ *     Alan Cox (alan at lxorguk.ukuu.org.uk)
++ *     Thomas Sailer (sailer at ife.ee.ethz.ch)
++ *
++ *   Code cleanup:
++ *   David Henningsson <david.henningsson at canonical.com>
++ */
++
++/* The protocol was reverse engineered by looking at the communication
++ * between Focusrite Control 2.3.4 and the Focusrite(R) Scarlett 18i20
++ * (firmware 1083) using usbmon in July-August 2018.
++ *
++ * Scarlett 18i8 support added in April 2019.
++ *
++ * Scarlett 6i6 support added in June 2019 (thanks to Martin Wittmann
++ * for providing usbmon output and testing).
++ *
++ * Scarlett 4i4/8i6 Gen 3 support added in May 2020 (thanks to Laurent
++ * Debricon for donating a 4i4 and to Fredrik Unger for providing 8i6
++ * usbmon output and testing).
++ *
++ * Scarlett 18i8/18i20 Gen 3 support added in June 2020 (thanks to
++ * Darren Jaeckel, Alex Sedlack, and Clovis Lunel for providing usbmon
++ * output, protocol traces and testing).
++ *
++ * Support for loading mixer volume and mux configuration from the
++ * interface during driver initialisation added in May 2021 (thanks to
++ * Vladimir Sadovnikov for figuring out how).
++ *
++ * Support for Solo/2i2 Gen 3 added in May 2021 (thanks to Alexander
++ * Vorona for 2i2 protocol traces).
++ *
++ * Support for phantom power, direct monitoring, speaker switching,
++ * and talkback added in May-June 2021.
++ *
++ * Support for Clarett+ 8Pre added in Aug 2022 by Christian
++ * Colglazier.
++ *
++ * Support for Clarett 8Pre USB added in Sep 2023 (thanks to Philippe
++ * Perrot for confirmation).
++ *
++ * Support for Clarett+ 4Pre and 2Pre added in Sep 2023 (thanks to
++ * Gregory Rozzo for donating a 4Pre, and David Sherwood and Patrice
++ * Peterson for usbmon output).
++ *
++ * Support for Clarett 2Pre and 4Pre USB added in Oct 2023.
++ *
++ * This ALSA mixer gives access to (model-dependent):
++ *  - input, output, mixer-matrix muxes
++ *  - mixer-matrix gain stages
++ *  - gain/volume/mute controls
++ *  - level meters
++ *  - line/inst level, pad, and air controls
++ *  - phantom power, direct monitor, speaker switching, and talkback
++ *    controls
++ *  - disable/enable MSD mode
++ *  - disable/enable standalone mode
++ *
++ * <ditaa>
++ *    /--------------\    18chn            20chn     /--------------\
++ *    | Hardware  in +--+------\    /-------------+--+ ALSA PCM out |
++ *    \--------------/  |      |    |             |  \--------------/
++ *                      |      |    |    /-----\  |
++ *                      |      |    |    |     |  |
++ *                      |      v    v    v     |  |
++ *                      |   +---------------+  |  |
++ *                      |    \ Matrix  Mux /   |  |
++ *                      |     +-----+-----+    |  |
++ *                      |           |          |  |
++ *                      |           |18chn     |  |
++ *                      |           |          |  |
++ *                      |           |     10chn|  |
++ *                      |           v          |  |
++ *                      |     +------------+   |  |
++ *                      |     | Mixer      |   |  |
++ *                      |     |     Matrix |   |  |
++ *                      |     |            |   |  |
++ *                      |     | 18x10 Gain |   |  |
++ *                      |     |   stages   |   |  |
++ *                      |     +-----+------+   |  |
++ *                      |           |          |  |
++ *                      |18chn      |10chn     |  |20chn
++ *                      |           |          |  |
++ *                      |           +----------/  |
++ *                      |           |             |
++ *                      v           v             v
++ *                      ===========================
++ *               +---------------+       +--—------------+
++ *                \ Output  Mux /         \ Capture Mux /
++ *                 +---+---+---+           +-----+-----+
++ *                     |   |                     |
++ *                10chn|   |                     |18chn
++ *                     |   |                     |
++ *  /--------------\   |   |                     |   /--------------\
++ *  | S/PDIF, ADAT |<--/   |10chn                \-->| ALSA PCM in  |
++ *  | Hardware out |       |                         \--------------/
++ *  \--------------/       |
++ *                         v
++ *                  +-------------+    Software gain per channel.
++ *                  | Master Gain |<-- 18i20 only: Switch per channel
++ *                  +------+------+    to select HW or SW gain control.
++ *                         |
++ *                         |10chn
++ *  /--------------\       |
++ *  | Analogue     |<------/
++ *  | Hardware out |
++ *  \--------------/
++ * </ditaa>
++ *
++ * Gen 3 devices have a Mass Storage Device (MSD) mode where a small
++ * disk with registration and driver download information is presented
++ * to the host. To access the full functionality of the device without
++ * proprietary software, MSD mode can be disabled by:
++ * - holding down the 48V button for five seconds while powering on
++ *   the device, or
++ * - using this driver and alsamixer to change the "MSD Mode" setting
++ *   to Off and power-cycling the device
++ */
++
++#include <linux/slab.h>
++#include <linux/usb.h>
++#include <linux/moduleparam.h>
++
++#include <sound/control.h>
++#include <sound/tlv.h>
++
++#include "usbaudio.h"
++#include "mixer.h"
++#include "helper.h"
++
++#include "mixer_scarlett2.h"
++
++/* device_setup value to allow turning MSD mode back on */
++#define SCARLETT2_MSD_ENABLE 0x02
++
++/* device_setup value to disable this mixer driver */
++#define SCARLETT2_DISABLE 0x04
++
++/* some gui mixers can't handle negative ctl values */
++#define SCARLETT2_VOLUME_BIAS 127
++
++/* mixer range from -80dB to +6dB in 0.5dB steps */
++#define SCARLETT2_MIXER_MIN_DB -80
++#define SCARLETT2_MIXER_BIAS (-SCARLETT2_MIXER_MIN_DB * 2)
++#define SCARLETT2_MIXER_MAX_DB 6
++#define SCARLETT2_MIXER_MAX_VALUE \
++	((SCARLETT2_MIXER_MAX_DB - SCARLETT2_MIXER_MIN_DB) * 2)
++#define SCARLETT2_MIXER_VALUE_COUNT (SCARLETT2_MIXER_MAX_VALUE + 1)
++
++/* map from (dB + 80) * 2 to mixer value
++ * for dB in 0 .. 172: int(8192 * pow(10, ((dB - 160) / 2 / 20)))
++ */
++static const u16 scarlett2_mixer_values[SCARLETT2_MIXER_VALUE_COUNT] = {
++	0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
++	2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 8, 8,
++	9, 9, 10, 10, 11, 12, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
++	23, 24, 25, 27, 29, 30, 32, 34, 36, 38, 41, 43, 46, 48, 51,
++	54, 57, 61, 65, 68, 73, 77, 81, 86, 91, 97, 103, 109, 115,
++	122, 129, 137, 145, 154, 163, 173, 183, 194, 205, 217, 230,
++	244, 259, 274, 290, 307, 326, 345, 365, 387, 410, 434, 460,
++	487, 516, 547, 579, 614, 650, 689, 730, 773, 819, 867, 919,
++	973, 1031, 1092, 1157, 1225, 1298, 1375, 1456, 1543, 1634,
++	1731, 1833, 1942, 2057, 2179, 2308, 2445, 2590, 2744, 2906,
++	3078, 3261, 3454, 3659, 3876, 4105, 4349, 4606, 4879, 5168,
++	5475, 5799, 6143, 6507, 6892, 7301, 7733, 8192, 8677, 9191,
++	9736, 10313, 10924, 11571, 12257, 12983, 13752, 14567, 15430,
++	16345
++};
++
++/* Maximum number of analogue outputs */
++#define SCARLETT2_ANALOGUE_MAX 10
++
++/* Maximum number of level and pad switches */
++#define SCARLETT2_LEVEL_SWITCH_MAX 2
++#define SCARLETT2_PAD_SWITCH_MAX 8
++#define SCARLETT2_AIR_SWITCH_MAX 8
++#define SCARLETT2_PHANTOM_SWITCH_MAX 2
++
++/* Maximum number of inputs to the mixer */
++#define SCARLETT2_INPUT_MIX_MAX 25
++
++/* Maximum number of outputs from the mixer */
++#define SCARLETT2_OUTPUT_MIX_MAX 12
++
++/* Maximum size of the data in the USB mux assignment message:
++ * 20 inputs, 20 outputs, 25 matrix inputs, 12 spare
++ */
++#define SCARLETT2_MUX_MAX 77
++
++/* Maximum number of meters (sum of output port counts) */
++#define SCARLETT2_MAX_METERS 65
++
++/* There are three different sets of configuration parameters across
++ * the devices
++ */
++enum {
++	SCARLETT2_CONFIG_SET_NO_MIXER = 0,
++	SCARLETT2_CONFIG_SET_GEN_2 = 1,
++	SCARLETT2_CONFIG_SET_GEN_3 = 2,
++	SCARLETT2_CONFIG_SET_CLARETT = 3,
++	SCARLETT2_CONFIG_SET_COUNT = 4
++};
++
++/* Hardware port types:
++ * - None (no input to mux)
++ * - Analogue I/O
++ * - S/PDIF I/O
++ * - ADAT I/O
++ * - Mixer I/O
++ * - PCM I/O
++ */
++enum {
++	SCARLETT2_PORT_TYPE_NONE     = 0,
++	SCARLETT2_PORT_TYPE_ANALOGUE = 1,
++	SCARLETT2_PORT_TYPE_SPDIF    = 2,
++	SCARLETT2_PORT_TYPE_ADAT     = 3,
++	SCARLETT2_PORT_TYPE_MIX      = 4,
++	SCARLETT2_PORT_TYPE_PCM      = 5,
++	SCARLETT2_PORT_TYPE_COUNT    = 6,
++};
++
++/* I/O count of each port type kept in struct scarlett2_ports */
++enum {
++	SCARLETT2_PORT_IN    = 0,
++	SCARLETT2_PORT_OUT   = 1,
++	SCARLETT2_PORT_DIRNS = 2,
++};
++
++/* Dim/Mute buttons on the 18i20 */
++enum {
++	SCARLETT2_BUTTON_MUTE    = 0,
++	SCARLETT2_BUTTON_DIM     = 1,
++	SCARLETT2_DIM_MUTE_COUNT = 2,
++};
++
++static const char *const scarlett2_dim_mute_names[SCARLETT2_DIM_MUTE_COUNT] = {
++	"Mute Playback Switch", "Dim Playback Switch"
++};
++
++/* Description of each hardware port type:
++ * - id: hardware ID of this port type
++ * - src_descr: printf format string for mux input selections
++ * - src_num_offset: added to channel number for the fprintf
++ * - dst_descr: printf format string for mixer controls
++ */
++struct scarlett2_port {
++	u16 id;
++	const char * const src_descr;
++	int src_num_offset;
++	const char * const dst_descr;
++};
++
++static const struct scarlett2_port scarlett2_ports[SCARLETT2_PORT_TYPE_COUNT] = {
++	[SCARLETT2_PORT_TYPE_NONE] = {
++		.id = 0x000,
++		.src_descr = "Off"
++	},
++	[SCARLETT2_PORT_TYPE_ANALOGUE] = {
++		.id = 0x080,
++		.src_descr = "Analogue %d",
++		.src_num_offset = 1,
++		.dst_descr = "Analogue Output %02d Playback"
++	},
++	[SCARLETT2_PORT_TYPE_SPDIF] = {
++		.id = 0x180,
++		.src_descr = "S/PDIF %d",
++		.src_num_offset = 1,
++		.dst_descr = "S/PDIF Output %d Playback"
++	},
++	[SCARLETT2_PORT_TYPE_ADAT] = {
++		.id = 0x200,
++		.src_descr = "ADAT %d",
++		.src_num_offset = 1,
++		.dst_descr = "ADAT Output %d Playback"
++	},
++	[SCARLETT2_PORT_TYPE_MIX] = {
++		.id = 0x300,
++		.src_descr = "Mix %c",
++		.src_num_offset = 'A',
++		.dst_descr = "Mixer Input %02d Capture"
++	},
++	[SCARLETT2_PORT_TYPE_PCM] = {
++		.id = 0x600,
++		.src_descr = "PCM %d",
++		.src_num_offset = 1,
++		.dst_descr = "PCM %02d Capture"
++	},
++};
++
++/* Number of mux tables: one for each band of sample rates
++ * (44.1/48kHz, 88.2/96kHz, and 176.4/176kHz)
++ */
++#define SCARLETT2_MUX_TABLES 3
++
++/* Maximum number of entries in a mux table */
++#define SCARLETT2_MAX_MUX_ENTRIES 10
++
++/* One entry within mux_assignment defines the port type and range of
++ * ports to add to the set_mux message. The end of the list is marked
++ * with count == 0.
++ */
++struct scarlett2_mux_entry {
++	u8 port_type;
++	u8 start;
++	u8 count;
++};
++
++struct scarlett2_device_info {
++	/* Gen 3 devices have an internal MSD mode switch that needs
++	 * to be disabled in order to access the full functionality of
++	 * the device.
++	 */
++	u8 has_msd_mode;
++
++	/* which set of configuration parameters the device uses */
++	u8 config_set;
++
++	/* line out hw volume is sw controlled */
++	u8 line_out_hw_vol;
++
++	/* support for main/alt speaker switching */
++	u8 has_speaker_switching;
++
++	/* support for talkback microphone */
++	u8 has_talkback;
++
++	/* the number of analogue inputs with a software switchable
++	 * level control that can be set to line or instrument
++	 */
++	u8 level_input_count;
++
++	/* the first input with a level control (0-based) */
++	u8 level_input_first;
++
++	/* the number of analogue inputs with a software switchable
++	 * 10dB pad control
++	 */
++	u8 pad_input_count;
++
++	/* the number of analogue inputs with a software switchable
++	 * "air" control
++	 */
++	u8 air_input_count;
++
++	/* the number of phantom (48V) software switchable controls */
++	u8 phantom_count;
++
++	/* the number of inputs each phantom switch controls */
++	u8 inputs_per_phantom;
++
++	/* the number of direct monitor options
++	 * (0 = none, 1 = mono only, 2 = mono/stereo)
++	 */
++	u8 direct_monitor;
++
++	/* remap analogue outputs; 18i8 Gen 3 has "line 3/4" connected
++	 * internally to the analogue 7/8 outputs
++	 */
++	u8 line_out_remap_enable;
++	u8 line_out_remap[SCARLETT2_ANALOGUE_MAX];
++
++	/* additional description for the line out volume controls */
++	const char * const line_out_descrs[SCARLETT2_ANALOGUE_MAX];
++
++	/* number of sources/destinations of each port type */
++	const int port_count[SCARLETT2_PORT_TYPE_COUNT][SCARLETT2_PORT_DIRNS];
++
++	/* layout/order of the entries in the set_mux message */
++	struct scarlett2_mux_entry mux_assignment[SCARLETT2_MUX_TABLES]
++						 [SCARLETT2_MAX_MUX_ENTRIES];
++};
++
++struct scarlett2_data {
++	struct usb_mixer_interface *mixer;
++	struct mutex usb_mutex; /* prevent sending concurrent USB requests */
++	struct mutex data_mutex; /* lock access to this data */
++	struct delayed_work work;
++	const struct scarlett2_device_info *info;
++	const char *series_name;
++	__u8 bInterfaceNumber;
++	__u8 bEndpointAddress;
++	__u16 wMaxPacketSize;
++	__u8 bInterval;
++	int num_mux_srcs;
++	int num_mux_dsts;
++	u16 scarlett2_seq;
++	u8 sync_updated;
++	u8 vol_updated;
++	u8 input_other_updated;
++	u8 monitor_other_updated;
++	u8 mux_updated;
++	u8 speaker_switching_switched;
++	u8 sync;
++	u8 master_vol;
++	u8 vol[SCARLETT2_ANALOGUE_MAX];
++	u8 vol_sw_hw_switch[SCARLETT2_ANALOGUE_MAX];
++	u8 mute_switch[SCARLETT2_ANALOGUE_MAX];
++	u8 level_switch[SCARLETT2_LEVEL_SWITCH_MAX];
++	u8 pad_switch[SCARLETT2_PAD_SWITCH_MAX];
++	u8 dim_mute[SCARLETT2_DIM_MUTE_COUNT];
++	u8 air_switch[SCARLETT2_AIR_SWITCH_MAX];
++	u8 phantom_switch[SCARLETT2_PHANTOM_SWITCH_MAX];
++	u8 phantom_persistence;
++	u8 direct_monitor_switch;
++	u8 speaker_switching_switch;
++	u8 talkback_switch;
++	u8 talkback_map[SCARLETT2_OUTPUT_MIX_MAX];
++	u8 msd_switch;
++	u8 standalone_switch;
++	struct snd_kcontrol *sync_ctl;
++	struct snd_kcontrol *master_vol_ctl;
++	struct snd_kcontrol *vol_ctls[SCARLETT2_ANALOGUE_MAX];
++	struct snd_kcontrol *sw_hw_ctls[SCARLETT2_ANALOGUE_MAX];
++	struct snd_kcontrol *mute_ctls[SCARLETT2_ANALOGUE_MAX];
++	struct snd_kcontrol *dim_mute_ctls[SCARLETT2_DIM_MUTE_COUNT];
++	struct snd_kcontrol *level_ctls[SCARLETT2_LEVEL_SWITCH_MAX];
++	struct snd_kcontrol *pad_ctls[SCARLETT2_PAD_SWITCH_MAX];
++	struct snd_kcontrol *air_ctls[SCARLETT2_AIR_SWITCH_MAX];
++	struct snd_kcontrol *phantom_ctls[SCARLETT2_PHANTOM_SWITCH_MAX];
++	struct snd_kcontrol *mux_ctls[SCARLETT2_MUX_MAX];
++	struct snd_kcontrol *direct_monitor_ctl;
++	struct snd_kcontrol *speaker_switching_ctl;
++	struct snd_kcontrol *talkback_ctl;
++	u8 mux[SCARLETT2_MUX_MAX];
++	u8 mix[SCARLETT2_INPUT_MIX_MAX * SCARLETT2_OUTPUT_MIX_MAX];
++};
++
++/*** Model-specific data ***/
++
++static const struct scarlett2_device_info s6i6_gen2_info = {
++	.config_set = SCARLETT2_CONFIG_SET_GEN_2,
++	.level_input_count = 2,
++	.pad_input_count = 2,
++
++	.line_out_descrs = {
++		"Headphones 1 L",
++		"Headphones 1 R",
++		"Headphones 2 L",
++		"Headphones 2 R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  4,  4 },
++		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
++		[SCARLETT2_PORT_TYPE_PCM]      = {  6,  6 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	} },
++};
++
++static const struct scarlett2_device_info s18i8_gen2_info = {
++	.config_set = SCARLETT2_CONFIG_SET_GEN_2,
++	.level_input_count = 2,
++	.pad_input_count = 4,
++
++	.line_out_descrs = {
++		"Monitor L",
++		"Monitor R",
++		"Headphones 1 L",
++		"Headphones 1 R",
++		"Headphones 2 L",
++		"Headphones 2 R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  8,  6 },
++		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
++		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  0 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
++		[SCARLETT2_PORT_TYPE_PCM]      = {  8, 18 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  6 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 14 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  6 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 10 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  6 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  4 },
++		{ 0,                            0,  0 },
++	} },
++};
++
++static const struct scarlett2_device_info s18i20_gen2_info = {
++	.config_set = SCARLETT2_CONFIG_SET_GEN_2,
++	.line_out_hw_vol = 1,
++
++	.line_out_descrs = {
++		"Monitor L",
++		"Monitor R",
++		NULL,
++		NULL,
++		NULL,
++		NULL,
++		"Headphones 1 L",
++		"Headphones 1 R",
++		"Headphones 2 L",
++		"Headphones 2 R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  8, 10 },
++		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
++		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  8 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
++		[SCARLETT2_PORT_TYPE_PCM]      = { 20, 18 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_ADAT,     0,  8 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 14 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_ADAT,     0,  4 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 10 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  6 },
++		{ 0,                            0,  0 },
++	} },
++};
++
++static const struct scarlett2_device_info solo_gen3_info = {
++	.has_msd_mode = 1,
++	.config_set = SCARLETT2_CONFIG_SET_NO_MIXER,
++	.level_input_count = 1,
++	.level_input_first = 1,
++	.air_input_count = 1,
++	.phantom_count = 1,
++	.inputs_per_phantom = 1,
++	.direct_monitor = 1,
++};
++
++static const struct scarlett2_device_info s2i2_gen3_info = {
++	.has_msd_mode = 1,
++	.config_set = SCARLETT2_CONFIG_SET_NO_MIXER,
++	.level_input_count = 2,
++	.air_input_count = 2,
++	.phantom_count = 1,
++	.inputs_per_phantom = 2,
++	.direct_monitor = 2,
++};
++
++static const struct scarlett2_device_info s4i4_gen3_info = {
++	.has_msd_mode = 1,
++	.config_set = SCARLETT2_CONFIG_SET_GEN_3,
++	.level_input_count = 2,
++	.pad_input_count = 2,
++	.air_input_count = 2,
++	.phantom_count = 1,
++	.inputs_per_phantom = 2,
++
++	.line_out_descrs = {
++		"Monitor L",
++		"Monitor R",
++		"Headphones L",
++		"Headphones R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = { 1, 0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = { 4, 4 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 6, 8 },
++		[SCARLETT2_PORT_TYPE_PCM]      = { 4, 6 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0, 16 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0, 16 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0, 16 },
++		{ 0,                            0,  0 },
++	} },
++};
++
++static const struct scarlett2_device_info s8i6_gen3_info = {
++	.has_msd_mode = 1,
++	.config_set = SCARLETT2_CONFIG_SET_GEN_3,
++	.level_input_count = 2,
++	.pad_input_count = 2,
++	.air_input_count = 2,
++	.phantom_count = 1,
++	.inputs_per_phantom = 2,
++
++	.line_out_descrs = {
++		"Headphones 1 L",
++		"Headphones 1 R",
++		"Headphones 2 L",
++		"Headphones 2 R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = { 1,  0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = { 6,  4 },
++		[SCARLETT2_PORT_TYPE_SPDIF]    = { 2,  2 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 8,  8 },
++		[SCARLETT2_PORT_TYPE_PCM]      = { 6, 10 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_PCM,      8,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0, 18 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_PCM,      8,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0, 18 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_PCM,      8,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0, 18 },
++		{ 0,                            0,  0 },
++	} },
++};
++
++static const struct scarlett2_device_info s18i8_gen3_info = {
++	.has_msd_mode = 1,
++	.config_set = SCARLETT2_CONFIG_SET_GEN_3,
++	.line_out_hw_vol = 1,
++	.has_speaker_switching = 1,
++	.level_input_count = 2,
++	.pad_input_count = 4,
++	.air_input_count = 4,
++	.phantom_count = 2,
++	.inputs_per_phantom = 2,
++
++	.line_out_remap_enable = 1,
++	.line_out_remap = { 0, 1, 6, 7, 2, 3, 4, 5 },
++
++	.line_out_descrs = {
++		"Monitor L",
++		"Monitor R",
++		"Alt Monitor L",
++		"Alt Monitor R",
++		"Headphones 1 L",
++		"Headphones 1 R",
++		"Headphones 2 L",
++		"Headphones 2 R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  8,  8 },
++		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
++		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  0 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 20 },
++		[SCARLETT2_PORT_TYPE_PCM]      = {  8, 20 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,       0, 10 },
++		{ SCARLETT2_PORT_TYPE_PCM,      12,  8 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0,  2 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  6,  2 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  2,  4 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
++		{ SCARLETT2_PORT_TYPE_PCM,      10,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,       0, 20 },
++		{ SCARLETT2_PORT_TYPE_NONE,      0, 10 },
++		{ 0,                             0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,       0, 10 },
++		{ SCARLETT2_PORT_TYPE_PCM,      12,  4 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0,  2 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  6,  2 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  2,  4 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
++		{ SCARLETT2_PORT_TYPE_PCM,      10,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,       0, 20 },
++		{ SCARLETT2_PORT_TYPE_NONE,      0, 10 },
++		{ 0,                             0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,       0, 10 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0,  2 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  6,  2 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  2,  4 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,       0, 20 },
++		{ SCARLETT2_PORT_TYPE_NONE,      0, 10 },
++		{ 0,                             0,  0 },
++	} },
++};
++
++static const struct scarlett2_device_info s18i20_gen3_info = {
++	.has_msd_mode = 1,
++	.config_set = SCARLETT2_CONFIG_SET_GEN_3,
++	.line_out_hw_vol = 1,
++	.has_speaker_switching = 1,
++	.has_talkback = 1,
++	.level_input_count = 2,
++	.pad_input_count = 8,
++	.air_input_count = 8,
++	.phantom_count = 2,
++	.inputs_per_phantom = 4,
++
++	.line_out_descrs = {
++		"Monitor 1 L",
++		"Monitor 1 R",
++		"Monitor 2 L",
++		"Monitor 2 R",
++		NULL,
++		NULL,
++		"Headphones 1 L",
++		"Headphones 1 R",
++		"Headphones 2 L",
++		"Headphones 2 R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  9, 10 },
++		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
++		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  8 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 12, 25 },
++		[SCARLETT2_PORT_TYPE_PCM]      = { 20, 20 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,       0,  8 },
++		{ SCARLETT2_PORT_TYPE_PCM,      10, 10 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0, 10 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
++		{ SCARLETT2_PORT_TYPE_ADAT,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_PCM,       8,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,       0, 25 },
++		{ SCARLETT2_PORT_TYPE_NONE,      0, 12 },
++		{ 0,                             0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,       0,  8 },
++		{ SCARLETT2_PORT_TYPE_PCM,      10,  8 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0, 10 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
++		{ SCARLETT2_PORT_TYPE_ADAT,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_PCM,       8,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,       0, 25 },
++		{ SCARLETT2_PORT_TYPE_NONE,      0, 10 },
++		{ 0,                             0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,       0, 10 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0, 10 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
++		{ SCARLETT2_PORT_TYPE_NONE,      0, 24 },
++		{ 0,                             0,  0 },
++	} },
++};
++
++static const struct scarlett2_device_info clarett_2pre_info = {
++	.config_set = SCARLETT2_CONFIG_SET_CLARETT,
++	.line_out_hw_vol = 1,
++	.level_input_count = 2,
++	.air_input_count = 2,
++
++	.line_out_descrs = {
++		"Monitor L",
++		"Monitor R",
++		"Headphones L",
++		"Headphones R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  2,  4 },
++		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  0 },
++		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  0 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
++		[SCARLETT2_PORT_TYPE_PCM]      = {  4, 12 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 12 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  8 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0,  2 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0, 26 },
++		{ 0,                            0,  0 },
++	} },
++};
++
++static const struct scarlett2_device_info clarett_4pre_info = {
++	.config_set = SCARLETT2_CONFIG_SET_CLARETT,
++	.line_out_hw_vol = 1,
++	.level_input_count = 2,
++	.air_input_count = 4,
++
++	.line_out_descrs = {
++		"Monitor L",
++		"Monitor R",
++		"Headphones 1 L",
++		"Headphones 1 R",
++		"Headphones 2 L",
++		"Headphones 2 R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  8,  6 },
++		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
++		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  0 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
++		[SCARLETT2_PORT_TYPE_PCM]      = {  8, 18 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  6 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 14 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  6 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 12 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  6 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0, 24 },
++		{ 0,                            0,  0 },
++	} },
++};
++
++static const struct scarlett2_device_info clarett_8pre_info = {
++	.config_set = SCARLETT2_CONFIG_SET_CLARETT,
++	.line_out_hw_vol = 1,
++	.level_input_count = 2,
++	.air_input_count = 8,
++
++	.line_out_descrs = {
++		"Monitor L",
++		"Monitor R",
++		NULL,
++		NULL,
++		NULL,
++		NULL,
++		"Headphones 1 L",
++		"Headphones 1 R",
++		"Headphones 2 L",
++		"Headphones 2 R",
++	},
++
++	.port_count = {
++		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
++		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  8, 10 },
++		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
++		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  8 },
++		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
++		[SCARLETT2_PORT_TYPE_PCM]      = { 20, 18 },
++	},
++
++	.mux_assignment = { {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_ADAT,     0,  8 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 14 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_ADAT,     0,  4 },
++		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
++		{ 0,                            0,  0 },
++	}, {
++		{ SCARLETT2_PORT_TYPE_PCM,      0, 12 },
++		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
++		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
++		{ SCARLETT2_PORT_TYPE_NONE,     0, 22 },
++		{ 0,                            0,  0 },
++	} },
++};
++
++struct scarlett2_device_entry {
++	const u32 usb_id; /* USB device identifier */
++	const struct scarlett2_device_info *info;
++	const char *series_name;
++};
++
++static const struct scarlett2_device_entry scarlett2_devices[] = {
++	/* Supported Gen 2 devices */
++	{ USB_ID(0x1235, 0x8203), &s6i6_gen2_info, "Scarlett Gen 2" },
++	{ USB_ID(0x1235, 0x8204), &s18i8_gen2_info, "Scarlett Gen 2" },
++	{ USB_ID(0x1235, 0x8201), &s18i20_gen2_info, "Scarlett Gen 2" },
++
++	/* Supported Gen 3 devices */
++	{ USB_ID(0x1235, 0x8211), &solo_gen3_info, "Scarlett Gen 3" },
++	{ USB_ID(0x1235, 0x8210), &s2i2_gen3_info, "Scarlett Gen 3" },
++	{ USB_ID(0x1235, 0x8212), &s4i4_gen3_info, "Scarlett Gen 3" },
++	{ USB_ID(0x1235, 0x8213), &s8i6_gen3_info, "Scarlett Gen 3" },
++	{ USB_ID(0x1235, 0x8214), &s18i8_gen3_info, "Scarlett Gen 3" },
++	{ USB_ID(0x1235, 0x8215), &s18i20_gen3_info, "Scarlett Gen 3" },
++
++	/* Supported Clarett USB/Clarett+ devices */
++	{ USB_ID(0x1235, 0x8206), &clarett_2pre_info, "Clarett USB" },
++	{ USB_ID(0x1235, 0x8207), &clarett_4pre_info, "Clarett USB" },
++	{ USB_ID(0x1235, 0x8208), &clarett_8pre_info, "Clarett USB" },
++	{ USB_ID(0x1235, 0x820a), &clarett_2pre_info, "Clarett+" },
++	{ USB_ID(0x1235, 0x820b), &clarett_4pre_info, "Clarett+" },
++	{ USB_ID(0x1235, 0x820c), &clarett_8pre_info, "Clarett+" },
++
++	/* End of list */
++	{ 0, NULL },
++};
++
++/* get the starting port index number for a given port type/direction */
++static int scarlett2_get_port_start_num(
++	const int port_count[][SCARLETT2_PORT_DIRNS],
++	int direction, int port_type)
++{
++	int i, num = 0;
++
++	for (i = 0; i < port_type; i++)
++		num += port_count[i][direction];
++
++	return num;
++}
++
++/*** USB Interactions ***/
++
++/* Notifications from the interface */
++#define SCARLETT2_USB_NOTIFY_SYNC          0x00000008
++#define SCARLETT2_USB_NOTIFY_DIM_MUTE      0x00200000
++#define SCARLETT2_USB_NOTIFY_MONITOR       0x00400000
++#define SCARLETT2_USB_NOTIFY_INPUT_OTHER   0x00800000
++#define SCARLETT2_USB_NOTIFY_MONITOR_OTHER 0x01000000
++
++/* Commands for sending/receiving requests/responses */
++#define SCARLETT2_USB_CMD_INIT 0
++#define SCARLETT2_USB_CMD_REQ  2
++#define SCARLETT2_USB_CMD_RESP 3
++
++#define SCARLETT2_USB_INIT_1    0x00000000
++#define SCARLETT2_USB_INIT_2    0x00000002
++#define SCARLETT2_USB_GET_METER 0x00001001
++#define SCARLETT2_USB_GET_MIX   0x00002001
++#define SCARLETT2_USB_SET_MIX   0x00002002
++#define SCARLETT2_USB_GET_MUX   0x00003001
++#define SCARLETT2_USB_SET_MUX   0x00003002
++#define SCARLETT2_USB_GET_SYNC  0x00006004
++#define SCARLETT2_USB_GET_DATA  0x00800000
++#define SCARLETT2_USB_SET_DATA  0x00800001
++#define SCARLETT2_USB_DATA_CMD  0x00800002
++
++#define SCARLETT2_USB_CONFIG_SAVE 6
++
++#define SCARLETT2_USB_VOLUME_STATUS_OFFSET 0x31
++#define SCARLETT2_USB_METER_LEVELS_GET_MAGIC 1
++
++/* volume status is read together (matches scarlett2_config_items[1]) */
++struct scarlett2_usb_volume_status {
++	/* dim/mute buttons */
++	u8 dim_mute[SCARLETT2_DIM_MUTE_COUNT];
++
++	u8 pad1;
++
++	/* software volume setting */
++	s16 sw_vol[SCARLETT2_ANALOGUE_MAX];
++
++	/* actual volume of output inc. dim (-18dB) */
++	s16 hw_vol[SCARLETT2_ANALOGUE_MAX];
++
++	/* internal mute buttons */
++	u8 mute_switch[SCARLETT2_ANALOGUE_MAX];
++
++	/* sw (0) or hw (1) controlled */
++	u8 sw_hw_switch[SCARLETT2_ANALOGUE_MAX];
++
++	u8 pad3[6];
++
++	/* front panel volume knob */
++	s16 master_vol;
++} __packed;
++
++/* Configuration parameters that can be read and written */
++enum {
++	SCARLETT2_CONFIG_DIM_MUTE = 0,
++	SCARLETT2_CONFIG_LINE_OUT_VOLUME = 1,
++	SCARLETT2_CONFIG_MUTE_SWITCH = 2,
++	SCARLETT2_CONFIG_SW_HW_SWITCH = 3,
++	SCARLETT2_CONFIG_LEVEL_SWITCH = 4,
++	SCARLETT2_CONFIG_PAD_SWITCH = 5,
++	SCARLETT2_CONFIG_MSD_SWITCH = 6,
++	SCARLETT2_CONFIG_AIR_SWITCH = 7,
++	SCARLETT2_CONFIG_STANDALONE_SWITCH = 8,
++	SCARLETT2_CONFIG_PHANTOM_SWITCH = 9,
++	SCARLETT2_CONFIG_PHANTOM_PERSISTENCE = 10,
++	SCARLETT2_CONFIG_DIRECT_MONITOR = 11,
++	SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH = 12,
++	SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE = 13,
++	SCARLETT2_CONFIG_TALKBACK_MAP = 14,
++	SCARLETT2_CONFIG_COUNT = 15
++};
++
++/* Location, size, and activation command number for the configuration
++ * parameters. Size is in bits and may be 1, 8, or 16.
++ */
++struct scarlett2_config {
++	u8 offset;
++	u8 size;
++	u8 activate;
++};
++
++static const struct scarlett2_config
++	scarlett2_config_items[SCARLETT2_CONFIG_SET_COUNT]
++			      [SCARLETT2_CONFIG_COUNT] =
++
++/* Devices without a mixer (Gen 3 Solo and 2i2) */
++{ {
++	[SCARLETT2_CONFIG_MSD_SWITCH] = {
++		.offset = 0x04, .size = 8, .activate = 6 },
++
++	[SCARLETT2_CONFIG_PHANTOM_PERSISTENCE] = {
++		.offset = 0x05, .size = 8, .activate = 6 },
++
++	[SCARLETT2_CONFIG_PHANTOM_SWITCH] = {
++		.offset = 0x06, .size = 8, .activate = 3 },
++
++	[SCARLETT2_CONFIG_DIRECT_MONITOR] = {
++		.offset = 0x07, .size = 8, .activate = 4 },
++
++	[SCARLETT2_CONFIG_LEVEL_SWITCH] = {
++		.offset = 0x08, .size = 1, .activate = 7 },
++
++	[SCARLETT2_CONFIG_AIR_SWITCH] = {
++		.offset = 0x09, .size = 1, .activate = 8 },
++
++/* Gen 2 devices: 6i6, 18i8, 18i20 */
++}, {
++	[SCARLETT2_CONFIG_DIM_MUTE] = {
++		.offset = 0x31, .size = 8, .activate = 2 },
++
++	[SCARLETT2_CONFIG_LINE_OUT_VOLUME] = {
++		.offset = 0x34, .size = 16, .activate = 1 },
++
++	[SCARLETT2_CONFIG_MUTE_SWITCH] = {
++		.offset = 0x5c, .size = 8, .activate = 1 },
++
++	[SCARLETT2_CONFIG_SW_HW_SWITCH] = {
++		.offset = 0x66, .size = 8, .activate = 3 },
++
++	[SCARLETT2_CONFIG_LEVEL_SWITCH] = {
++		.offset = 0x7c, .size = 8, .activate = 7 },
++
++	[SCARLETT2_CONFIG_PAD_SWITCH] = {
++		.offset = 0x84, .size = 8, .activate = 8 },
++
++	[SCARLETT2_CONFIG_STANDALONE_SWITCH] = {
++		.offset = 0x8d, .size = 8, .activate = 6 },
++
++/* Gen 3 devices: 4i4, 8i6, 18i8, 18i20 */
++}, {
++	[SCARLETT2_CONFIG_DIM_MUTE] = {
++		.offset = 0x31, .size = 8, .activate = 2 },
++
++	[SCARLETT2_CONFIG_LINE_OUT_VOLUME] = {
++		.offset = 0x34, .size = 16, .activate = 1 },
++
++	[SCARLETT2_CONFIG_MUTE_SWITCH] = {
++		.offset = 0x5c, .size = 8, .activate = 1 },
++
++	[SCARLETT2_CONFIG_SW_HW_SWITCH] = {
++		.offset = 0x66, .size = 8, .activate = 3 },
++
++	[SCARLETT2_CONFIG_LEVEL_SWITCH] = {
++		.offset = 0x7c, .size = 8, .activate = 7 },
++
++	[SCARLETT2_CONFIG_PAD_SWITCH] = {
++		.offset = 0x84, .size = 8, .activate = 8 },
++
++	[SCARLETT2_CONFIG_AIR_SWITCH] = {
++		.offset = 0x8c, .size = 8, .activate = 8 },
++
++	[SCARLETT2_CONFIG_STANDALONE_SWITCH] = {
++		.offset = 0x95, .size = 8, .activate = 6 },
++
++	[SCARLETT2_CONFIG_PHANTOM_SWITCH] = {
++		.offset = 0x9c, .size = 1, .activate = 8 },
++
++	[SCARLETT2_CONFIG_MSD_SWITCH] = {
++		.offset = 0x9d, .size = 8, .activate = 6 },
++
++	[SCARLETT2_CONFIG_PHANTOM_PERSISTENCE] = {
++		.offset = 0x9e, .size = 8, .activate = 6 },
++
++	[SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH] = {
++		.offset = 0x9f, .size = 1, .activate = 10 },
++
++	[SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE] = {
++		.offset = 0xa0, .size = 1, .activate = 10 },
++
++	[SCARLETT2_CONFIG_TALKBACK_MAP] = {
++		.offset = 0xb0, .size = 16, .activate = 10 },
++
++/* Clarett USB and Clarett+ devices: 2Pre, 4Pre, 8Pre */
++}, {
++	[SCARLETT2_CONFIG_DIM_MUTE] = {
++		.offset = 0x31, .size = 8, .activate = 2 },
++
++	[SCARLETT2_CONFIG_LINE_OUT_VOLUME] = {
++		.offset = 0x34, .size = 16, .activate = 1 },
++
++	[SCARLETT2_CONFIG_MUTE_SWITCH] = {
++		.offset = 0x5c, .size = 8, .activate = 1 },
++
++	[SCARLETT2_CONFIG_SW_HW_SWITCH] = {
++		.offset = 0x66, .size = 8, .activate = 3 },
++
++	[SCARLETT2_CONFIG_LEVEL_SWITCH] = {
++		.offset = 0x7c, .size = 8, .activate = 7 },
++
++	[SCARLETT2_CONFIG_AIR_SWITCH] = {
++		.offset = 0x95, .size = 8, .activate = 8 },
++
++	[SCARLETT2_CONFIG_STANDALONE_SWITCH] = {
++		.offset = 0x8d, .size = 8, .activate = 6 },
++} };
++
++/* proprietary request/response format */
++struct scarlett2_usb_packet {
++	__le32 cmd;
++	__le16 size;
++	__le16 seq;
++	__le32 error;
++	__le32 pad;
++	u8 data[];
++};
++
++static void scarlett2_fill_request_header(struct scarlett2_data *private,
++					  struct scarlett2_usb_packet *req,
++					  u32 cmd, u16 req_size)
++{
++	/* sequence must go up by 1 for each request */
++	u16 seq = private->scarlett2_seq++;
++
++	req->cmd = cpu_to_le32(cmd);
++	req->size = cpu_to_le16(req_size);
++	req->seq = cpu_to_le16(seq);
++	req->error = 0;
++	req->pad = 0;
++}
++
++static int scarlett2_usb_tx(struct usb_device *dev, int interface,
++			    void *buf, u16 size)
++{
++	return snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
++			SCARLETT2_USB_CMD_REQ,
++			USB_RECIP_INTERFACE | USB_TYPE_CLASS | USB_DIR_OUT,
++			0, interface, buf, size);
++}
++
++static int scarlett2_usb_rx(struct usb_device *dev, int interface,
++			    u32 usb_req, void *buf, u16 size)
++{
++	return snd_usb_ctl_msg(dev, usb_rcvctrlpipe(dev, 0),
++			usb_req,
++			USB_RECIP_INTERFACE | USB_TYPE_CLASS | USB_DIR_IN,
++			0, interface, buf, size);
++}
++
++/* Send a proprietary format request to the Scarlett interface */
++static int scarlett2_usb(
++	struct usb_mixer_interface *mixer, u32 cmd,
++	void *req_data, u16 req_size, void *resp_data, u16 resp_size)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	struct usb_device *dev = mixer->chip->dev;
++	struct scarlett2_usb_packet *req, *resp = NULL;
++	size_t req_buf_size = struct_size(req, data, req_size);
++	size_t resp_buf_size = struct_size(resp, data, resp_size);
++	int err;
++
++	req = kmalloc(req_buf_size, GFP_KERNEL);
++	if (!req) {
++		err = -ENOMEM;
++		goto error;
++	}
++
++	resp = kmalloc(resp_buf_size, GFP_KERNEL);
++	if (!resp) {
++		err = -ENOMEM;
++		goto error;
++	}
++
++	mutex_lock(&private->usb_mutex);
++
++	/* build request message and send it */
++
++	scarlett2_fill_request_header(private, req, cmd, req_size);
++
++	if (req_size)
++		memcpy(req->data, req_data, req_size);
++
++	err = scarlett2_usb_tx(dev, private->bInterfaceNumber,
++			       req, req_buf_size);
++
++	if (err != req_buf_size) {
++		usb_audio_err(
++			mixer->chip,
++			"%s USB request result cmd %x was %d\n",
++			private->series_name, cmd, err);
++		err = -EINVAL;
++		goto unlock;
++	}
++
++	/* send a second message to get the response */
++
++	err = scarlett2_usb_rx(dev, private->bInterfaceNumber,
++			       SCARLETT2_USB_CMD_RESP,
++			       resp, resp_buf_size);
++
++	/* validate the response */
++
++	if (err != resp_buf_size) {
++		usb_audio_err(
++			mixer->chip,
++			"%s USB response result cmd %x was %d expected %zu\n",
++			private->series_name, cmd, err, resp_buf_size);
++		err = -EINVAL;
++		goto unlock;
++	}
++
++	/* cmd/seq/size should match except when initialising
++	 * seq sent = 1, response = 0
++	 */
++	if (resp->cmd != req->cmd ||
++	    (resp->seq != req->seq &&
++		(le16_to_cpu(req->seq) != 1 || resp->seq != 0)) ||
++	    resp_size != le16_to_cpu(resp->size) ||
++	    resp->error ||
++	    resp->pad) {
++		usb_audio_err(
++			mixer->chip,
++			"%s USB invalid response; "
++			   "cmd tx/rx %d/%d seq %d/%d size %d/%d "
++			   "error %d pad %d\n",
++			private->series_name,
++			le32_to_cpu(req->cmd), le32_to_cpu(resp->cmd),
++			le16_to_cpu(req->seq), le16_to_cpu(resp->seq),
++			resp_size, le16_to_cpu(resp->size),
++			le32_to_cpu(resp->error),
++			le32_to_cpu(resp->pad));
++		err = -EINVAL;
++		goto unlock;
++	}
++
++	if (resp_data && resp_size > 0)
++		memcpy(resp_data, resp->data, resp_size);
++
++unlock:
++	mutex_unlock(&private->usb_mutex);
++error:
++	kfree(req);
++	kfree(resp);
++	return err;
++}
++
++/* Send a USB message to get data; result placed in *buf */
++static int scarlett2_usb_get(
++	struct usb_mixer_interface *mixer,
++	int offset, void *buf, int size)
++{
++	struct {
++		__le32 offset;
++		__le32 size;
++	} __packed req;
++
++	req.offset = cpu_to_le32(offset);
++	req.size = cpu_to_le32(size);
++	return scarlett2_usb(mixer, SCARLETT2_USB_GET_DATA,
++			     &req, sizeof(req), buf, size);
++}
++
++/* Send a USB message to get configuration parameters; result placed in *buf */
++static int scarlett2_usb_get_config(
++	struct usb_mixer_interface *mixer,
++	int config_item_num, int count, void *buf)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const struct scarlett2_config *config_item =
++		&scarlett2_config_items[info->config_set][config_item_num];
++	int size, err, i;
++	u8 *buf_8;
++	u8 value;
++
++	/* For byte-sized parameters, retrieve directly into buf */
++	if (config_item->size >= 8) {
++		size = config_item->size / 8 * count;
++		err = scarlett2_usb_get(mixer, config_item->offset, buf, size);
++		if (err < 0)
++			return err;
++		if (size == 2) {
++			u16 *buf_16 = buf;
++
++			for (i = 0; i < count; i++, buf_16++)
++				*buf_16 = le16_to_cpu(*(__le16 *)buf_16);
++		}
++		return 0;
++	}
++
++	/* For bit-sized parameters, retrieve into value */
++	err = scarlett2_usb_get(mixer, config_item->offset, &value, 1);
++	if (err < 0)
++		return err;
++
++	/* then unpack from value into buf[] */
++	buf_8 = buf;
++	for (i = 0; i < 8 && i < count; i++, value >>= 1)
++		*buf_8++ = value & 1;
++
++	return 0;
++}
++
++/* Send SCARLETT2_USB_DATA_CMD SCARLETT2_USB_CONFIG_SAVE */
++static void scarlett2_config_save(struct usb_mixer_interface *mixer)
++{
++	__le32 req = cpu_to_le32(SCARLETT2_USB_CONFIG_SAVE);
++
++	int err = scarlett2_usb(mixer, SCARLETT2_USB_DATA_CMD,
++				&req, sizeof(u32),
++				NULL, 0);
++	if (err < 0)
++		usb_audio_err(mixer->chip, "config save failed: %d\n", err);
++}
++
++/* Delayed work to save config */
++static void scarlett2_config_save_work(struct work_struct *work)
++{
++	struct scarlett2_data *private =
++		container_of(work, struct scarlett2_data, work.work);
++
++	scarlett2_config_save(private->mixer);
++}
++
++/* Send a USB message to set a SCARLETT2_CONFIG_* parameter */
++static int scarlett2_usb_set_config(
++	struct usb_mixer_interface *mixer,
++	int config_item_num, int index, int value)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const struct scarlett2_config *config_item =
++	       &scarlett2_config_items[info->config_set][config_item_num];
++	struct {
++		__le32 offset;
++		__le32 bytes;
++		__le32 value;
++	} __packed req;
++	__le32 req2;
++	int offset, size;
++	int err;
++
++	/* Cancel any pending NVRAM save */
++	cancel_delayed_work_sync(&private->work);
++
++	/* Convert config_item->size in bits to size in bytes and
++	 * calculate offset
++	 */
++	if (config_item->size >= 8) {
++		size = config_item->size / 8;
++		offset = config_item->offset + index * size;
++
++	/* If updating a bit, retrieve the old value, set/clear the
++	 * bit as needed, and update value
++	 */
++	} else {
++		u8 tmp;
++
++		size = 1;
++		offset = config_item->offset;
++
++		err = scarlett2_usb_get(mixer, offset, &tmp, 1);
++		if (err < 0)
++			return err;
++
++		if (value)
++			tmp |= (1 << index);
++		else
++			tmp &= ~(1 << index);
++
++		value = tmp;
++	}
++
++	/* Send the configuration parameter data */
++	req.offset = cpu_to_le32(offset);
++	req.bytes = cpu_to_le32(size);
++	req.value = cpu_to_le32(value);
++	err = scarlett2_usb(mixer, SCARLETT2_USB_SET_DATA,
++			    &req, sizeof(u32) * 2 + size,
++			    NULL, 0);
++	if (err < 0)
++		return err;
++
++	/* Activate the change */
++	req2 = cpu_to_le32(config_item->activate);
++	err = scarlett2_usb(mixer, SCARLETT2_USB_DATA_CMD,
++			    &req2, sizeof(req2), NULL, 0);
++	if (err < 0)
++		return err;
++
++	/* Schedule the change to be written to NVRAM */
++	if (config_item->activate != SCARLETT2_USB_CONFIG_SAVE)
++		schedule_delayed_work(&private->work, msecs_to_jiffies(2000));
++
++	return 0;
++}
++
++/* Send a USB message to get sync status; result placed in *sync */
++static int scarlett2_usb_get_sync_status(
++	struct usb_mixer_interface *mixer,
++	u8 *sync)
++{
++	__le32 data;
++	int err;
++
++	err = scarlett2_usb(mixer, SCARLETT2_USB_GET_SYNC,
++			    NULL, 0, &data, sizeof(data));
++	if (err < 0)
++		return err;
++
++	*sync = !!data;
++	return 0;
++}
++
++/* Send a USB message to get volume status; result placed in *buf */
++static int scarlett2_usb_get_volume_status(
++	struct usb_mixer_interface *mixer,
++	struct scarlett2_usb_volume_status *buf)
++{
++	return scarlett2_usb_get(mixer, SCARLETT2_USB_VOLUME_STATUS_OFFSET,
++				 buf, sizeof(*buf));
++}
++
++/* Send a USB message to get the volumes for all inputs of one mix
++ * and put the values into private->mix[]
++ */
++static int scarlett2_usb_get_mix(struct usb_mixer_interface *mixer,
++				 int mix_num)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++
++	int num_mixer_in =
++		info->port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_OUT];
++	int err, i, j, k;
++
++	struct {
++		__le16 mix_num;
++		__le16 count;
++	} __packed req;
++
++	__le16 data[SCARLETT2_INPUT_MIX_MAX];
++
++	req.mix_num = cpu_to_le16(mix_num);
++	req.count = cpu_to_le16(num_mixer_in);
++
++	err = scarlett2_usb(mixer, SCARLETT2_USB_GET_MIX,
++			    &req, sizeof(req),
++			    data, num_mixer_in * sizeof(u16));
++	if (err < 0)
++		return err;
++
++	for (i = 0, j = mix_num * num_mixer_in; i < num_mixer_in; i++, j++) {
++		u16 mixer_value = le16_to_cpu(data[i]);
++
++		for (k = 0; k < SCARLETT2_MIXER_VALUE_COUNT; k++)
++			if (scarlett2_mixer_values[k] >= mixer_value)
++				break;
++		if (k == SCARLETT2_MIXER_VALUE_COUNT)
++			k = SCARLETT2_MIXER_MAX_VALUE;
++		private->mix[j] = k;
++	}
++
++	return 0;
++}
++
++/* Send a USB message to set the volumes for all inputs of one mix
++ * (values obtained from private->mix[])
++ */
++static int scarlett2_usb_set_mix(struct usb_mixer_interface *mixer,
++				 int mix_num)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++
++	struct {
++		__le16 mix_num;
++		__le16 data[SCARLETT2_INPUT_MIX_MAX];
++	} __packed req;
++
++	int i, j;
++	int num_mixer_in =
++		info->port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_OUT];
++
++	req.mix_num = cpu_to_le16(mix_num);
++
++	for (i = 0, j = mix_num * num_mixer_in; i < num_mixer_in; i++, j++)
++		req.data[i] = cpu_to_le16(
++			scarlett2_mixer_values[private->mix[j]]
++		);
++
++	return scarlett2_usb(mixer, SCARLETT2_USB_SET_MIX,
++			     &req, (num_mixer_in + 1) * sizeof(u16),
++			     NULL, 0);
++}
++
++/* Convert a port number index (per info->port_count) to a hardware ID */
++static u32 scarlett2_mux_src_num_to_id(
++	const int port_count[][SCARLETT2_PORT_DIRNS], int num)
++{
++	int port_type;
++
++	for (port_type = 0;
++	     port_type < SCARLETT2_PORT_TYPE_COUNT;
++	     port_type++) {
++		if (num < port_count[port_type][SCARLETT2_PORT_IN])
++			return scarlett2_ports[port_type].id | num;
++		num -= port_count[port_type][SCARLETT2_PORT_IN];
++	}
++
++	/* Oops */
++	return 0;
++}
++
++/* Convert a hardware ID to a port number index */
++static u32 scarlett2_mux_id_to_num(
++	const int port_count[][SCARLETT2_PORT_DIRNS], int direction, u32 id)
++{
++	int port_type;
++	int port_num = 0;
++
++	for (port_type = 0;
++	     port_type < SCARLETT2_PORT_TYPE_COUNT;
++	     port_type++) {
++		int base = scarlett2_ports[port_type].id;
++		int count = port_count[port_type][direction];
++
++		if (id >= base && id < base + count)
++			return port_num + id - base;
++		port_num += count;
++	}
++
++	/* Oops */
++	return -1;
++}
++
++/* Convert one mux entry from the interface and load into private->mux[] */
++static void scarlett2_usb_populate_mux(struct scarlett2_data *private,
++				       u32 mux_entry)
++{
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++
++	int dst_idx, src_idx;
++
++	dst_idx = scarlett2_mux_id_to_num(port_count, SCARLETT2_PORT_OUT,
++					  mux_entry & 0xFFF);
++	if (dst_idx < 0)
++		return;
++
++	if (dst_idx >= private->num_mux_dsts) {
++		usb_audio_err(private->mixer->chip,
++			"BUG: scarlett2_mux_id_to_num(%06x, OUT): %d >= %d",
++			mux_entry, dst_idx, private->num_mux_dsts);
++		return;
++	}
++
++	src_idx = scarlett2_mux_id_to_num(port_count, SCARLETT2_PORT_IN,
++					  mux_entry >> 12);
++	if (src_idx < 0)
++		return;
++
++	if (src_idx >= private->num_mux_srcs) {
++		usb_audio_err(private->mixer->chip,
++			"BUG: scarlett2_mux_id_to_num(%06x, IN): %d >= %d",
++			mux_entry, src_idx, private->num_mux_srcs);
++		return;
++	}
++
++	private->mux[dst_idx] = src_idx;
++}
++
++/* Send USB message to get mux inputs and then populate private->mux[] */
++static int scarlett2_usb_get_mux(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	int count = private->num_mux_dsts;
++	int err, i;
++
++	struct {
++		__le16 num;
++		__le16 count;
++	} __packed req;
++
++	__le32 data[SCARLETT2_MUX_MAX];
++
++	private->mux_updated = 0;
++
++	req.num = 0;
++	req.count = cpu_to_le16(count);
++
++	err = scarlett2_usb(mixer, SCARLETT2_USB_GET_MUX,
++			    &req, sizeof(req),
++			    data, count * sizeof(u32));
++	if (err < 0)
++		return err;
++
++	for (i = 0; i < count; i++)
++		scarlett2_usb_populate_mux(private, le32_to_cpu(data[i]));
++
++	return 0;
++}
++
++/* Send USB messages to set mux inputs */
++static int scarlett2_usb_set_mux(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int table;
++
++	struct {
++		__le16 pad;
++		__le16 num;
++		__le32 data[SCARLETT2_MUX_MAX];
++	} __packed req;
++
++	req.pad = 0;
++
++	/* set mux settings for each rate */
++	for (table = 0; table < SCARLETT2_MUX_TABLES; table++) {
++		const struct scarlett2_mux_entry *entry;
++
++		/* i counts over the output array */
++		int i = 0, err;
++
++		req.num = cpu_to_le16(table);
++
++		/* loop through each entry */
++		for (entry = info->mux_assignment[table];
++		     entry->count;
++		     entry++) {
++			int j;
++			int port_type = entry->port_type;
++			int port_idx = entry->start;
++			int mux_idx = scarlett2_get_port_start_num(port_count,
++				SCARLETT2_PORT_OUT, port_type) + port_idx;
++			int dst_id = scarlett2_ports[port_type].id + port_idx;
++
++			/* Empty slots */
++			if (!dst_id) {
++				for (j = 0; j < entry->count; j++)
++					req.data[i++] = 0;
++				continue;
++			}
++
++			/* Non-empty mux slots use the lower 12 bits
++			 * for the destination and next 12 bits for
++			 * the source
++			 */
++			for (j = 0; j < entry->count; j++) {
++				int src_id = scarlett2_mux_src_num_to_id(
++					port_count, private->mux[mux_idx++]);
++				req.data[i++] = cpu_to_le32(dst_id |
++							    src_id << 12);
++				dst_id++;
++			}
++		}
++
++		err = scarlett2_usb(mixer, SCARLETT2_USB_SET_MUX,
++				    &req, (i + 1) * sizeof(u32),
++				    NULL, 0);
++		if (err < 0)
++			return err;
++	}
++
++	return 0;
++}
++
++/* Send USB message to get meter levels */
++static int scarlett2_usb_get_meter_levels(struct usb_mixer_interface *mixer,
++					  u16 num_meters, u16 *levels)
++{
++	struct {
++		__le16 pad;
++		__le16 num_meters;
++		__le32 magic;
++	} __packed req;
++	u32 resp[SCARLETT2_MAX_METERS];
++	int i, err;
++
++	req.pad = 0;
++	req.num_meters = cpu_to_le16(num_meters);
++	req.magic = cpu_to_le32(SCARLETT2_USB_METER_LEVELS_GET_MAGIC);
++	err = scarlett2_usb(mixer, SCARLETT2_USB_GET_METER,
++			    &req, sizeof(req), resp, num_meters * sizeof(u32));
++	if (err < 0)
++		return err;
++
++	/* copy, convert to u16 */
++	for (i = 0; i < num_meters; i++)
++		levels[i] = resp[i];
++
++	return 0;
++}
++
++/*** Control Functions ***/
++
++/* helper function to create a new control */
++static int scarlett2_add_new_ctl(struct usb_mixer_interface *mixer,
++				 const struct snd_kcontrol_new *ncontrol,
++				 int index, int channels, const char *name,
++				 struct snd_kcontrol **kctl_return)
++{
++	struct snd_kcontrol *kctl;
++	struct usb_mixer_elem_info *elem;
++	int err;
++
++	elem = kzalloc(sizeof(*elem), GFP_KERNEL);
++	if (!elem)
++		return -ENOMEM;
++
++	/* We set USB_MIXER_BESPOKEN type, so that the core USB mixer code
++	 * ignores them for resume and other operations.
++	 * Also, the head.id field is set to 0, as we don't use this field.
++	 */
++	elem->head.mixer = mixer;
++	elem->control = index;
++	elem->head.id = 0;
++	elem->channels = channels;
++	elem->val_type = USB_MIXER_BESPOKEN;
++
++	kctl = snd_ctl_new1(ncontrol, elem);
++	if (!kctl) {
++		kfree(elem);
++		return -ENOMEM;
++	}
++	kctl->private_free = snd_usb_mixer_elem_free;
++
++	strscpy(kctl->id.name, name, sizeof(kctl->id.name));
++
++	err = snd_usb_mixer_add_control(&elem->head, kctl);
++	if (err < 0)
++		return err;
++
++	if (kctl_return)
++		*kctl_return = kctl;
++
++	return 0;
++}
++
++/*** Sync Control ***/
++
++/* Update sync control after receiving notification that the status
++ * has changed
++ */
++static int scarlett2_update_sync(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++
++	private->sync_updated = 0;
++	return scarlett2_usb_get_sync_status(mixer, &private->sync);
++}
++
++static int scarlett2_sync_ctl_info(struct snd_kcontrol *kctl,
++				   struct snd_ctl_elem_info *uinfo)
++{
++	static const char *texts[2] = {
++		"Unlocked", "Locked"
++	};
++	return snd_ctl_enum_info(uinfo, 1, 2, texts);
++}
++
++static int scarlett2_sync_ctl_get(struct snd_kcontrol *kctl,
++				  struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->sync_updated) {
++		err = scarlett2_update_sync(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.enumerated.item[0] = private->sync;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_sync_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.access = SNDRV_CTL_ELEM_ACCESS_READ,
++	.name = "",
++	.info = scarlett2_sync_ctl_info,
++	.get  = scarlett2_sync_ctl_get
++};
++
++static int scarlett2_add_sync_ctl(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++
++	/* devices without a mixer also don't support reporting sync status */
++	if (private->info->config_set == SCARLETT2_CONFIG_SET_NO_MIXER)
 +		return 0;
 +
- 	args.arch = arch;
- 	args.ms = *ms;
- 	if (annotate_opts.full_addr)
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 95cd8414f6ef..e5d78565f479 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -289,6 +289,7 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
- 	struct task_struct *curr;
- 	struct mm_struct___old *mm_old;
- 	struct mm_struct___new *mm_new;
-+	struct sighand_struct *sighand;
- 
- 	switch (flags) {
- 	case LCB_F_READ:  /* rwsem */
-@@ -310,7 +311,9 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
- 		break;
- 	case LCB_F_SPIN:  /* spinlock */
- 		curr = bpf_get_current_task_btf();
--		if (&curr->sighand->siglock == (void *)lock)
-+		sighand = curr->sighand;
++	return scarlett2_add_new_ctl(mixer, &scarlett2_sync_ctl,
++				     0, 1, "Sync Status", &private->sync_ctl);
++}
 +
-+		if (sighand && &sighand->siglock == (void *)lock)
- 			return LCD_F_SIGHAND_LOCK;
- 		break;
- 	default:
++/*** Analogue Line Out Volume Controls ***/
++
++/* Update hardware volume controls after receiving notification that
++ * they have changed
++ */
++static int scarlett2_update_volumes(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	struct scarlett2_usb_volume_status volume_status;
++	int num_line_out =
++		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
++	int err, i;
++	int mute;
++
++	private->vol_updated = 0;
++
++	err = scarlett2_usb_get_volume_status(mixer, &volume_status);
++	if (err < 0)
++		return err;
++
++	private->master_vol = clamp(
++		volume_status.master_vol + SCARLETT2_VOLUME_BIAS,
++		0, SCARLETT2_VOLUME_BIAS);
++
++	if (info->line_out_hw_vol)
++		for (i = 0; i < SCARLETT2_DIM_MUTE_COUNT; i++)
++			private->dim_mute[i] = !!volume_status.dim_mute[i];
++
++	mute = private->dim_mute[SCARLETT2_BUTTON_MUTE];
++
++	for (i = 0; i < num_line_out; i++)
++		if (private->vol_sw_hw_switch[i]) {
++			private->vol[i] = private->master_vol;
++			private->mute_switch[i] = mute;
++		}
++
++	return 0;
++}
++
++static int scarlett2_volume_ctl_info(struct snd_kcontrol *kctl,
++				     struct snd_ctl_elem_info *uinfo)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++
++	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
++	uinfo->count = elem->channels;
++	uinfo->value.integer.min = 0;
++	uinfo->value.integer.max = SCARLETT2_VOLUME_BIAS;
++	uinfo->value.integer.step = 1;
++	return 0;
++}
++
++static int scarlett2_master_volume_ctl_get(struct snd_kcontrol *kctl,
++					   struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->vol_updated) {
++		err = scarlett2_update_volumes(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.integer.value[0] = private->master_vol;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int line_out_remap(struct scarlett2_data *private, int index)
++{
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int line_out_count =
++		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
++
++	if (!info->line_out_remap_enable)
++		return index;
++
++	if (index >= line_out_count)
++		return index;
++
++	return info->line_out_remap[index];
++}
++
++static int scarlett2_volume_ctl_get(struct snd_kcontrol *kctl,
++				    struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int index = line_out_remap(private, elem->control);
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->vol_updated) {
++		err = scarlett2_update_volumes(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.integer.value[0] = private->vol[index];
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_volume_ctl_put(struct snd_kcontrol *kctl,
++				    struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int index = line_out_remap(private, elem->control);
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->vol[index];
++	val = ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->vol[index] = val;
++	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_LINE_OUT_VOLUME,
++				       index, val - SCARLETT2_VOLUME_BIAS);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const DECLARE_TLV_DB_MINMAX(
++	db_scale_scarlett2_gain, -SCARLETT2_VOLUME_BIAS * 100, 0
++);
++
++static const struct snd_kcontrol_new scarlett2_master_volume_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.access = SNDRV_CTL_ELEM_ACCESS_READ |
++		  SNDRV_CTL_ELEM_ACCESS_TLV_READ,
++	.name = "",
++	.info = scarlett2_volume_ctl_info,
++	.get  = scarlett2_master_volume_ctl_get,
++	.private_value = 0, /* max value */
++	.tlv = { .p = db_scale_scarlett2_gain }
++};
++
++static const struct snd_kcontrol_new scarlett2_line_out_volume_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.access = SNDRV_CTL_ELEM_ACCESS_READWRITE |
++		  SNDRV_CTL_ELEM_ACCESS_TLV_READ,
++	.name = "",
++	.info = scarlett2_volume_ctl_info,
++	.get  = scarlett2_volume_ctl_get,
++	.put  = scarlett2_volume_ctl_put,
++	.private_value = 0, /* max value */
++	.tlv = { .p = db_scale_scarlett2_gain }
++};
++
++/*** Mute Switch Controls ***/
++
++static int scarlett2_mute_ctl_get(struct snd_kcontrol *kctl,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int index = line_out_remap(private, elem->control);
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->vol_updated) {
++		err = scarlett2_update_volumes(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.integer.value[0] = private->mute_switch[index];
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_mute_ctl_put(struct snd_kcontrol *kctl,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int index = line_out_remap(private, elem->control);
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->mute_switch[index];
++	val = !!ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->mute_switch[index] = val;
++
++	/* Send mute change to the device */
++	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_MUTE_SWITCH,
++				       index, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_mute_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = snd_ctl_boolean_mono_info,
++	.get  = scarlett2_mute_ctl_get,
++	.put  = scarlett2_mute_ctl_put,
++};
++
++/*** HW/SW Volume Switch Controls ***/
++
++static void scarlett2_sw_hw_ctl_ro(struct scarlett2_data *private, int index)
++{
++	private->sw_hw_ctls[index]->vd[0].access &=
++		~SNDRV_CTL_ELEM_ACCESS_WRITE;
++}
++
++static void scarlett2_sw_hw_ctl_rw(struct scarlett2_data *private, int index)
++{
++	private->sw_hw_ctls[index]->vd[0].access |=
++		SNDRV_CTL_ELEM_ACCESS_WRITE;
++}
++
++static int scarlett2_sw_hw_enum_ctl_info(struct snd_kcontrol *kctl,
++					 struct snd_ctl_elem_info *uinfo)
++{
++	static const char *const values[2] = {
++		"SW", "HW"
++	};
++
++	return snd_ctl_enum_info(uinfo, 1, 2, values);
++}
++
++static int scarlett2_sw_hw_enum_ctl_get(struct snd_kcontrol *kctl,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct scarlett2_data *private = elem->head.mixer->private_data;
++	int index = line_out_remap(private, elem->control);
++
++	ucontrol->value.enumerated.item[0] = private->vol_sw_hw_switch[index];
++	return 0;
++}
++
++static void scarlett2_vol_ctl_set_writable(struct usb_mixer_interface *mixer,
++					   int index, int value)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	struct snd_card *card = mixer->chip->card;
++
++	/* Set/Clear write bits */
++	if (value) {
++		private->vol_ctls[index]->vd[0].access |=
++			SNDRV_CTL_ELEM_ACCESS_WRITE;
++		private->mute_ctls[index]->vd[0].access |=
++			SNDRV_CTL_ELEM_ACCESS_WRITE;
++	} else {
++		private->vol_ctls[index]->vd[0].access &=
++			~SNDRV_CTL_ELEM_ACCESS_WRITE;
++		private->mute_ctls[index]->vd[0].access &=
++			~SNDRV_CTL_ELEM_ACCESS_WRITE;
++	}
++
++	/* Notify of write bit and possible value change */
++	snd_ctl_notify(card,
++		       SNDRV_CTL_EVENT_MASK_VALUE | SNDRV_CTL_EVENT_MASK_INFO,
++		       &private->vol_ctls[index]->id);
++	snd_ctl_notify(card,
++		       SNDRV_CTL_EVENT_MASK_VALUE | SNDRV_CTL_EVENT_MASK_INFO,
++		       &private->mute_ctls[index]->id);
++}
++
++static int scarlett2_sw_hw_change(struct usb_mixer_interface *mixer,
++				  int ctl_index, int val)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	int index = line_out_remap(private, ctl_index);
++	int err;
++
++	private->vol_sw_hw_switch[index] = val;
++
++	/* Change access mode to RO (hardware controlled volume)
++	 * or RW (software controlled volume)
++	 */
++	scarlett2_vol_ctl_set_writable(mixer, ctl_index, !val);
++
++	/* Reset volume/mute to master volume/mute */
++	private->vol[index] = private->master_vol;
++	private->mute_switch[index] = private->dim_mute[SCARLETT2_BUTTON_MUTE];
++
++	/* Set SW volume to current HW volume */
++	err = scarlett2_usb_set_config(
++		mixer, SCARLETT2_CONFIG_LINE_OUT_VOLUME,
++		index, private->master_vol - SCARLETT2_VOLUME_BIAS);
++	if (err < 0)
++		return err;
++
++	/* Set SW mute to current HW mute */
++	err = scarlett2_usb_set_config(
++		mixer, SCARLETT2_CONFIG_MUTE_SWITCH,
++		index, private->dim_mute[SCARLETT2_BUTTON_MUTE]);
++	if (err < 0)
++		return err;
++
++	/* Send SW/HW switch change to the device */
++	return scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_SW_HW_SWITCH,
++					index, val);
++}
++
++static int scarlett2_sw_hw_enum_ctl_put(struct snd_kcontrol *kctl,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int ctl_index = elem->control;
++	int index = line_out_remap(private, ctl_index);
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->vol_sw_hw_switch[index];
++	val = !!ucontrol->value.enumerated.item[0];
++
++	if (oval == val)
++		goto unlock;
++
++	err = scarlett2_sw_hw_change(mixer, ctl_index, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_sw_hw_enum_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = scarlett2_sw_hw_enum_ctl_info,
++	.get  = scarlett2_sw_hw_enum_ctl_get,
++	.put  = scarlett2_sw_hw_enum_ctl_put,
++};
++
++/*** Line Level/Instrument Level Switch Controls ***/
++
++static int scarlett2_update_input_other(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++
++	private->input_other_updated = 0;
++
++	if (info->level_input_count) {
++		int err = scarlett2_usb_get_config(
++			mixer, SCARLETT2_CONFIG_LEVEL_SWITCH,
++			info->level_input_count + info->level_input_first,
++			private->level_switch);
++		if (err < 0)
++			return err;
++	}
++
++	if (info->pad_input_count) {
++		int err = scarlett2_usb_get_config(
++			mixer, SCARLETT2_CONFIG_PAD_SWITCH,
++			info->pad_input_count, private->pad_switch);
++		if (err < 0)
++			return err;
++	}
++
++	if (info->air_input_count) {
++		int err = scarlett2_usb_get_config(
++			mixer, SCARLETT2_CONFIG_AIR_SWITCH,
++			info->air_input_count, private->air_switch);
++		if (err < 0)
++			return err;
++	}
++
++	if (info->phantom_count) {
++		int err = scarlett2_usb_get_config(
++			mixer, SCARLETT2_CONFIG_PHANTOM_SWITCH,
++			info->phantom_count, private->phantom_switch);
++		if (err < 0)
++			return err;
++
++		err = scarlett2_usb_get_config(
++			mixer, SCARLETT2_CONFIG_PHANTOM_PERSISTENCE,
++			1, &private->phantom_persistence);
++		if (err < 0)
++			return err;
++	}
++
++	return 0;
++}
++
++static int scarlett2_level_enum_ctl_info(struct snd_kcontrol *kctl,
++					 struct snd_ctl_elem_info *uinfo)
++{
++	static const char *const values[2] = {
++		"Line", "Inst"
++	};
++
++	return snd_ctl_enum_info(uinfo, 1, 2, values);
++}
++
++static int scarlett2_level_enum_ctl_get(struct snd_kcontrol *kctl,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++
++	int index = elem->control + info->level_input_first;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->input_other_updated) {
++		err = scarlett2_update_input_other(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.enumerated.item[0] = private->level_switch[index];
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_level_enum_ctl_put(struct snd_kcontrol *kctl,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++
++	int index = elem->control + info->level_input_first;
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->level_switch[index];
++	val = !!ucontrol->value.enumerated.item[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->level_switch[index] = val;
++
++	/* Send switch change to the device */
++	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_LEVEL_SWITCH,
++				       index, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_level_enum_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = scarlett2_level_enum_ctl_info,
++	.get  = scarlett2_level_enum_ctl_get,
++	.put  = scarlett2_level_enum_ctl_put,
++};
++
++/*** Pad Switch Controls ***/
++
++static int scarlett2_pad_ctl_get(struct snd_kcontrol *kctl,
++				 struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->input_other_updated) {
++		err = scarlett2_update_input_other(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.integer.value[0] =
++		private->pad_switch[elem->control];
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_pad_ctl_put(struct snd_kcontrol *kctl,
++				 struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++
++	int index = elem->control;
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->pad_switch[index];
++	val = !!ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->pad_switch[index] = val;
++
++	/* Send switch change to the device */
++	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_PAD_SWITCH,
++				       index, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_pad_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = snd_ctl_boolean_mono_info,
++	.get  = scarlett2_pad_ctl_get,
++	.put  = scarlett2_pad_ctl_put,
++};
++
++/*** Air Switch Controls ***/
++
++static int scarlett2_air_ctl_get(struct snd_kcontrol *kctl,
++				 struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->input_other_updated) {
++		err = scarlett2_update_input_other(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.integer.value[0] = private->air_switch[elem->control];
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_air_ctl_put(struct snd_kcontrol *kctl,
++				 struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++
++	int index = elem->control;
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->air_switch[index];
++	val = !!ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->air_switch[index] = val;
++
++	/* Send switch change to the device */
++	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_AIR_SWITCH,
++				       index, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_air_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = snd_ctl_boolean_mono_info,
++	.get  = scarlett2_air_ctl_get,
++	.put  = scarlett2_air_ctl_put,
++};
++
++/*** Phantom Switch Controls ***/
++
++static int scarlett2_phantom_ctl_get(struct snd_kcontrol *kctl,
++				     struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->input_other_updated) {
++		err = scarlett2_update_input_other(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.integer.value[0] =
++		private->phantom_switch[elem->control];
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_phantom_ctl_put(struct snd_kcontrol *kctl,
++				     struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++
++	int index = elem->control;
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->phantom_switch[index];
++	val = !!ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->phantom_switch[index] = val;
++
++	/* Send switch change to the device */
++	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_PHANTOM_SWITCH,
++				       index, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_phantom_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = snd_ctl_boolean_mono_info,
++	.get  = scarlett2_phantom_ctl_get,
++	.put  = scarlett2_phantom_ctl_put,
++};
++
++/*** Phantom Persistence Control ***/
++
++static int scarlett2_phantom_persistence_ctl_get(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct scarlett2_data *private = elem->head.mixer->private_data;
++
++	ucontrol->value.integer.value[0] = private->phantom_persistence;
++	return 0;
++}
++
++static int scarlett2_phantom_persistence_ctl_put(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++
++	int index = elem->control;
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->phantom_persistence;
++	val = !!ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->phantom_persistence = val;
++
++	/* Send switch change to the device */
++	err = scarlett2_usb_set_config(
++		mixer, SCARLETT2_CONFIG_PHANTOM_PERSISTENCE, index, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_phantom_persistence_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = snd_ctl_boolean_mono_info,
++	.get  = scarlett2_phantom_persistence_ctl_get,
++	.put  = scarlett2_phantom_persistence_ctl_put,
++};
++
++/*** Direct Monitor Control ***/
++
++static int scarlett2_update_monitor_other(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	int err;
++
++	/* monitor_other_enable[0] enables speaker switching
++	 * monitor_other_enable[1] enables talkback
++	 */
++	u8 monitor_other_enable[2];
++
++	/* monitor_other_switch[0] activates the alternate speakers
++	 * monitor_other_switch[1] activates talkback
++	 */
++	u8 monitor_other_switch[2];
++
++	private->monitor_other_updated = 0;
++
++	if (info->direct_monitor)
++		return scarlett2_usb_get_config(
++			mixer, SCARLETT2_CONFIG_DIRECT_MONITOR,
++			1, &private->direct_monitor_switch);
++
++	/* if it doesn't do speaker switching then it also doesn't do
++	 * talkback
++	 */
++	if (!info->has_speaker_switching)
++		return 0;
++
++	err = scarlett2_usb_get_config(
++		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE,
++		2, monitor_other_enable);
++	if (err < 0)
++		return err;
++
++	err = scarlett2_usb_get_config(
++		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH,
++		2, monitor_other_switch);
++	if (err < 0)
++		return err;
++
++	if (!monitor_other_enable[0])
++		private->speaker_switching_switch = 0;
++	else
++		private->speaker_switching_switch = monitor_other_switch[0] + 1;
++
++	if (info->has_talkback) {
++		const int (*port_count)[SCARLETT2_PORT_DIRNS] =
++			info->port_count;
++		int num_mixes =
++			port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
++		u16 bitmap;
++		int i;
++
++		if (!monitor_other_enable[1])
++			private->talkback_switch = 0;
++		else
++			private->talkback_switch = monitor_other_switch[1] + 1;
++
++		err = scarlett2_usb_get_config(mixer,
++					       SCARLETT2_CONFIG_TALKBACK_MAP,
++					       1, &bitmap);
++		if (err < 0)
++			return err;
++		for (i = 0; i < num_mixes; i++, bitmap >>= 1)
++			private->talkback_map[i] = bitmap & 1;
++	}
++
++	return 0;
++}
++
++static int scarlett2_direct_monitor_ctl_get(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = elem->head.mixer->private_data;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->monitor_other_updated) {
++		err = scarlett2_update_monitor_other(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.enumerated.item[0] = private->direct_monitor_switch;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_direct_monitor_ctl_put(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++
++	int index = elem->control;
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->direct_monitor_switch;
++	val = min(ucontrol->value.enumerated.item[0], 2U);
++
++	if (oval == val)
++		goto unlock;
++
++	private->direct_monitor_switch = val;
++
++	/* Send switch change to the device */
++	err = scarlett2_usb_set_config(
++		mixer, SCARLETT2_CONFIG_DIRECT_MONITOR, index, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_direct_monitor_stereo_enum_ctl_info(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_info *uinfo)
++{
++	static const char *const values[3] = {
++		"Off", "Mono", "Stereo"
++	};
++
++	return snd_ctl_enum_info(uinfo, 1, 3, values);
++}
++
++/* Direct Monitor for Solo is mono-only and only needs a boolean control
++ * Direct Monitor for 2i2 is selectable between Off/Mono/Stereo
++ */
++static const struct snd_kcontrol_new scarlett2_direct_monitor_ctl[2] = {
++	{
++		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++		.name = "",
++		.info = snd_ctl_boolean_mono_info,
++		.get  = scarlett2_direct_monitor_ctl_get,
++		.put  = scarlett2_direct_monitor_ctl_put,
++	},
++	{
++		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++		.name = "",
++		.info = scarlett2_direct_monitor_stereo_enum_ctl_info,
++		.get  = scarlett2_direct_monitor_ctl_get,
++		.put  = scarlett2_direct_monitor_ctl_put,
++	}
++};
++
++static int scarlett2_add_direct_monitor_ctl(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const char *s;
++
++	if (!info->direct_monitor)
++		return 0;
++
++	s = info->direct_monitor == 1
++	      ? "Direct Monitor Playback Switch"
++	      : "Direct Monitor Playback Enum";
++
++	return scarlett2_add_new_ctl(
++		mixer, &scarlett2_direct_monitor_ctl[info->direct_monitor - 1],
++		0, 1, s, &private->direct_monitor_ctl);
++}
++
++/*** Speaker Switching Control ***/
++
++static int scarlett2_speaker_switch_enum_ctl_info(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_info *uinfo)
++{
++	static const char *const values[3] = {
++		"Off", "Main", "Alt"
++	};
++
++	return snd_ctl_enum_info(uinfo, 1, 3, values);
++}
++
++static int scarlett2_speaker_switch_enum_ctl_get(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->monitor_other_updated) {
++		err = scarlett2_update_monitor_other(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.enumerated.item[0] = private->speaker_switching_switch;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++/* when speaker switching gets enabled, switch the main/alt speakers
++ * to HW volume and disable those controls
++ */
++static int scarlett2_speaker_switch_enable(struct usb_mixer_interface *mixer)
++{
++	struct snd_card *card = mixer->chip->card;
++	struct scarlett2_data *private = mixer->private_data;
++	int i, err;
++
++	for (i = 0; i < 4; i++) {
++		int index = line_out_remap(private, i);
++
++		/* switch the main/alt speakers to HW volume */
++		if (!private->vol_sw_hw_switch[index]) {
++			err = scarlett2_sw_hw_change(private->mixer, i, 1);
++			if (err < 0)
++				return err;
++		}
++
++		/* disable the line out SW/HW switch */
++		scarlett2_sw_hw_ctl_ro(private, i);
++		snd_ctl_notify(card,
++			       SNDRV_CTL_EVENT_MASK_VALUE |
++				 SNDRV_CTL_EVENT_MASK_INFO,
++			       &private->sw_hw_ctls[i]->id);
++	}
++
++	/* when the next monitor-other notify comes in, update the mux
++	 * configuration
++	 */
++	private->speaker_switching_switched = 1;
++
++	return 0;
++}
++
++/* when speaker switching gets disabled, reenable the hw/sw controls
++ * and invalidate the routing
++ */
++static void scarlett2_speaker_switch_disable(struct usb_mixer_interface *mixer)
++{
++	struct snd_card *card = mixer->chip->card;
++	struct scarlett2_data *private = mixer->private_data;
++	int i;
++
++	/* enable the line out SW/HW switch */
++	for (i = 0; i < 4; i++) {
++		scarlett2_sw_hw_ctl_rw(private, i);
++		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_INFO,
++			       &private->sw_hw_ctls[i]->id);
++	}
++
++	/* when the next monitor-other notify comes in, update the mux
++	 * configuration
++	 */
++	private->speaker_switching_switched = 1;
++}
++
++static int scarlett2_speaker_switch_enum_ctl_put(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->speaker_switching_switch;
++	val = min(ucontrol->value.enumerated.item[0], 2U);
++
++	if (oval == val)
++		goto unlock;
++
++	private->speaker_switching_switch = val;
++
++	/* enable/disable speaker switching */
++	err = scarlett2_usb_set_config(
++		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE,
++		0, !!val);
++	if (err < 0)
++		goto unlock;
++
++	/* if speaker switching is enabled, select main or alt */
++	err = scarlett2_usb_set_config(
++		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH,
++		0, val == 2);
++	if (err < 0)
++		goto unlock;
++
++	/* update controls if speaker switching gets enabled or disabled */
++	if (!oval && val)
++		err = scarlett2_speaker_switch_enable(mixer);
++	else if (oval && !val)
++		scarlett2_speaker_switch_disable(mixer);
++
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_speaker_switch_enum_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = scarlett2_speaker_switch_enum_ctl_info,
++	.get  = scarlett2_speaker_switch_enum_ctl_get,
++	.put  = scarlett2_speaker_switch_enum_ctl_put,
++};
++
++static int scarlett2_add_speaker_switch_ctl(
++	struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++
++	if (!info->has_speaker_switching)
++		return 0;
++
++	return scarlett2_add_new_ctl(
++		mixer, &scarlett2_speaker_switch_enum_ctl,
++		0, 1, "Speaker Switching Playback Enum",
++		&private->speaker_switching_ctl);
++}
++
++/*** Talkback and Talkback Map Controls ***/
++
++static int scarlett2_talkback_enum_ctl_info(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_info *uinfo)
++{
++	static const char *const values[3] = {
++		"Disabled", "Off", "On"
++	};
++
++	return snd_ctl_enum_info(uinfo, 1, 3, values);
++}
++
++static int scarlett2_talkback_enum_ctl_get(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->monitor_other_updated) {
++		err = scarlett2_update_monitor_other(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.enumerated.item[0] = private->talkback_switch;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_talkback_enum_ctl_put(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->talkback_switch;
++	val = min(ucontrol->value.enumerated.item[0], 2U);
++
++	if (oval == val)
++		goto unlock;
++
++	private->talkback_switch = val;
++
++	/* enable/disable talkback */
++	err = scarlett2_usb_set_config(
++		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE,
++		1, !!val);
++	if (err < 0)
++		goto unlock;
++
++	/* if talkback is enabled, select main or alt */
++	err = scarlett2_usb_set_config(
++		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH,
++		1, val == 2);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_talkback_enum_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = scarlett2_talkback_enum_ctl_info,
++	.get  = scarlett2_talkback_enum_ctl_get,
++	.put  = scarlett2_talkback_enum_ctl_put,
++};
++
++static int scarlett2_talkback_map_ctl_get(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int index = elem->control;
++
++	ucontrol->value.integer.value[0] = private->talkback_map[index];
++
++	return 0;
++}
++
++static int scarlett2_talkback_map_ctl_put(
++	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] =
++		private->info->port_count;
++	int num_mixes = port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
++
++	int index = elem->control;
++	int oval, val, err = 0, i;
++	u16 bitmap = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->talkback_map[index];
++	val = !!ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->talkback_map[index] = val;
++
++	for (i = 0; i < num_mixes; i++)
++		bitmap |= private->talkback_map[i] << i;
++
++	/* Send updated bitmap to the device */
++	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_TALKBACK_MAP,
++				       0, bitmap);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_talkback_map_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = snd_ctl_boolean_mono_info,
++	.get  = scarlett2_talkback_map_ctl_get,
++	.put  = scarlett2_talkback_map_ctl_put,
++};
++
++static int scarlett2_add_talkback_ctls(
++	struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int num_mixes = port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
++	int err, i;
++	char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
++
++	if (!info->has_talkback)
++		return 0;
++
++	err = scarlett2_add_new_ctl(
++		mixer, &scarlett2_talkback_enum_ctl,
++		0, 1, "Talkback Playback Enum",
++		&private->talkback_ctl);
++	if (err < 0)
++		return err;
++
++	for (i = 0; i < num_mixes; i++) {
++		snprintf(s, sizeof(s),
++			 "Talkback Mix %c Playback Switch", i + 'A');
++		err = scarlett2_add_new_ctl(mixer, &scarlett2_talkback_map_ctl,
++					    i, 1, s, NULL);
++		if (err < 0)
++			return err;
++	}
++
++	return 0;
++}
++
++/*** Dim/Mute Controls ***/
++
++static int scarlett2_dim_mute_ctl_get(struct snd_kcontrol *kctl,
++				      struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->vol_updated) {
++		err = scarlett2_update_volumes(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.integer.value[0] = private->dim_mute[elem->control];
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_dim_mute_ctl_put(struct snd_kcontrol *kctl,
++				      struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int num_line_out =
++		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
++
++	int index = elem->control;
++	int oval, val, err = 0, i;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->dim_mute[index];
++	val = !!ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->dim_mute[index] = val;
++
++	/* Send switch change to the device */
++	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_DIM_MUTE,
++				       index, val);
++	if (err == 0)
++		err = 1;
++
++	if (index == SCARLETT2_BUTTON_MUTE)
++		for (i = 0; i < num_line_out; i++) {
++			int line_index = line_out_remap(private, i);
++
++			if (private->vol_sw_hw_switch[line_index]) {
++				private->mute_switch[line_index] = val;
++				snd_ctl_notify(mixer->chip->card,
++					       SNDRV_CTL_EVENT_MASK_VALUE,
++					       &private->mute_ctls[i]->id);
++			}
++		}
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_dim_mute_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = snd_ctl_boolean_mono_info,
++	.get  = scarlett2_dim_mute_ctl_get,
++	.put  = scarlett2_dim_mute_ctl_put
++};
++
++/*** Create the analogue output controls ***/
++
++static int scarlett2_add_line_out_ctls(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int num_line_out =
++		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
++	int err, i;
++	char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
++
++	/* Add R/O HW volume control */
++	if (info->line_out_hw_vol) {
++		snprintf(s, sizeof(s), "Master HW Playback Volume");
++		err = scarlett2_add_new_ctl(mixer,
++					    &scarlett2_master_volume_ctl,
++					    0, 1, s, &private->master_vol_ctl);
++		if (err < 0)
++			return err;
++	}
++
++	/* Add volume controls */
++	for (i = 0; i < num_line_out; i++) {
++		int index = line_out_remap(private, i);
++
++		/* Fader */
++		if (info->line_out_descrs[i])
++			snprintf(s, sizeof(s),
++				 "Line %02d (%s) Playback Volume",
++				 i + 1, info->line_out_descrs[i]);
++		else
++			snprintf(s, sizeof(s),
++				 "Line %02d Playback Volume",
++				 i + 1);
++		err = scarlett2_add_new_ctl(mixer,
++					    &scarlett2_line_out_volume_ctl,
++					    i, 1, s, &private->vol_ctls[i]);
++		if (err < 0)
++			return err;
++
++		/* Mute Switch */
++		snprintf(s, sizeof(s),
++			 "Line %02d Mute Playback Switch",
++			 i + 1);
++		err = scarlett2_add_new_ctl(mixer,
++					    &scarlett2_mute_ctl,
++					    i, 1, s,
++					    &private->mute_ctls[i]);
++		if (err < 0)
++			return err;
++
++		/* Make the fader and mute controls read-only if the
++		 * SW/HW switch is set to HW
++		 */
++		if (private->vol_sw_hw_switch[index])
++			scarlett2_vol_ctl_set_writable(mixer, i, 0);
++
++		/* SW/HW Switch */
++		if (info->line_out_hw_vol) {
++			snprintf(s, sizeof(s),
++				 "Line Out %02d Volume Control Playback Enum",
++				 i + 1);
++			err = scarlett2_add_new_ctl(mixer,
++						    &scarlett2_sw_hw_enum_ctl,
++						    i, 1, s,
++						    &private->sw_hw_ctls[i]);
++			if (err < 0)
++				return err;
++
++			/* Make the switch read-only if the line is
++			 * involved in speaker switching
++			 */
++			if (private->speaker_switching_switch && i < 4)
++				scarlett2_sw_hw_ctl_ro(private, i);
++		}
++	}
++
++	/* Add dim/mute controls */
++	if (info->line_out_hw_vol)
++		for (i = 0; i < SCARLETT2_DIM_MUTE_COUNT; i++) {
++			err = scarlett2_add_new_ctl(
++				mixer, &scarlett2_dim_mute_ctl,
++				i, 1, scarlett2_dim_mute_names[i],
++				&private->dim_mute_ctls[i]);
++			if (err < 0)
++				return err;
++		}
++
++	return 0;
++}
++
++/*** Create the analogue input controls ***/
++
++static int scarlett2_add_line_in_ctls(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	int err, i;
++	char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
++	const char *fmt = "Line In %d %s Capture %s";
++	const char *fmt2 = "Line In %d-%d %s Capture %s";
++
++	/* Add input level (line/inst) controls */
++	for (i = 0; i < info->level_input_count; i++) {
++		snprintf(s, sizeof(s), fmt, i + 1 + info->level_input_first,
++			 "Level", "Enum");
++		err = scarlett2_add_new_ctl(mixer, &scarlett2_level_enum_ctl,
++					    i, 1, s, &private->level_ctls[i]);
++		if (err < 0)
++			return err;
++	}
++
++	/* Add input pad controls */
++	for (i = 0; i < info->pad_input_count; i++) {
++		snprintf(s, sizeof(s), fmt, i + 1, "Pad", "Switch");
++		err = scarlett2_add_new_ctl(mixer, &scarlett2_pad_ctl,
++					    i, 1, s, &private->pad_ctls[i]);
++		if (err < 0)
++			return err;
++	}
++
++	/* Add input air controls */
++	for (i = 0; i < info->air_input_count; i++) {
++		snprintf(s, sizeof(s), fmt, i + 1, "Air", "Switch");
++		err = scarlett2_add_new_ctl(mixer, &scarlett2_air_ctl,
++					    i, 1, s, &private->air_ctls[i]);
++		if (err < 0)
++			return err;
++	}
++
++	/* Add input phantom controls */
++	if (info->inputs_per_phantom == 1) {
++		for (i = 0; i < info->phantom_count; i++) {
++			snprintf(s, sizeof(s), fmt, i + 1,
++				 "Phantom Power", "Switch");
++			err = scarlett2_add_new_ctl(
++				mixer, &scarlett2_phantom_ctl,
++				i, 1, s, &private->phantom_ctls[i]);
++			if (err < 0)
++				return err;
++		}
++	} else if (info->inputs_per_phantom > 1) {
++		for (i = 0; i < info->phantom_count; i++) {
++			int from = i * info->inputs_per_phantom + 1;
++			int to = (i + 1) * info->inputs_per_phantom;
++
++			snprintf(s, sizeof(s), fmt2, from, to,
++				 "Phantom Power", "Switch");
++			err = scarlett2_add_new_ctl(
++				mixer, &scarlett2_phantom_ctl,
++				i, 1, s, &private->phantom_ctls[i]);
++			if (err < 0)
++				return err;
++		}
++	}
++	if (info->phantom_count) {
++		err = scarlett2_add_new_ctl(
++			mixer, &scarlett2_phantom_persistence_ctl, 0, 1,
++			"Phantom Power Persistence Capture Switch", NULL);
++		if (err < 0)
++			return err;
++	}
++
++	return 0;
++}
++
++/*** Mixer Volume Controls ***/
++
++static int scarlett2_mixer_ctl_info(struct snd_kcontrol *kctl,
++				    struct snd_ctl_elem_info *uinfo)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++
++	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
++	uinfo->count = elem->channels;
++	uinfo->value.integer.min = 0;
++	uinfo->value.integer.max = SCARLETT2_MIXER_MAX_VALUE;
++	uinfo->value.integer.step = 1;
++	return 0;
++}
++
++static int scarlett2_mixer_ctl_get(struct snd_kcontrol *kctl,
++				   struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct scarlett2_data *private = elem->head.mixer->private_data;
++
++	ucontrol->value.integer.value[0] = private->mix[elem->control];
++	return 0;
++}
++
++static int scarlett2_mixer_ctl_put(struct snd_kcontrol *kctl,
++				   struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int oval, val, num_mixer_in, mix_num, err = 0;
++	int index = elem->control;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->mix[index];
++	val = clamp(ucontrol->value.integer.value[0],
++		    0L, (long)SCARLETT2_MIXER_MAX_VALUE);
++	num_mixer_in = port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_OUT];
++	mix_num = index / num_mixer_in;
++
++	if (oval == val)
++		goto unlock;
++
++	private->mix[index] = val;
++	err = scarlett2_usb_set_mix(mixer, mix_num);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const DECLARE_TLV_DB_MINMAX(
++	db_scale_scarlett2_mixer,
++	SCARLETT2_MIXER_MIN_DB * 100,
++	SCARLETT2_MIXER_MAX_DB * 100
++);
++
++static const struct snd_kcontrol_new scarlett2_mixer_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.access = SNDRV_CTL_ELEM_ACCESS_READWRITE |
++		  SNDRV_CTL_ELEM_ACCESS_TLV_READ,
++	.name = "",
++	.info = scarlett2_mixer_ctl_info,
++	.get  = scarlett2_mixer_ctl_get,
++	.put  = scarlett2_mixer_ctl_put,
++	.private_value = SCARLETT2_MIXER_MAX_DB, /* max value */
++	.tlv = { .p = db_scale_scarlett2_mixer }
++};
++
++static int scarlett2_add_mixer_ctls(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int err, i, j;
++	int index;
++	char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
++
++	int num_inputs =
++		port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_OUT];
++	int num_outputs =
++		port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
++
++	for (i = 0, index = 0; i < num_outputs; i++)
++		for (j = 0; j < num_inputs; j++, index++) {
++			snprintf(s, sizeof(s),
++				 "Mix %c Input %02d Playback Volume",
++				 'A' + i, j + 1);
++			err = scarlett2_add_new_ctl(mixer, &scarlett2_mixer_ctl,
++						    index, 1, s, NULL);
++			if (err < 0)
++				return err;
++		}
++
++	return 0;
++}
++
++/*** Mux Source Selection Controls ***/
++
++static int scarlett2_mux_src_enum_ctl_info(struct snd_kcontrol *kctl,
++					   struct snd_ctl_elem_info *uinfo)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct scarlett2_data *private = elem->head.mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	unsigned int item = uinfo->value.enumerated.item;
++	int items = private->num_mux_srcs;
++	int port_type;
++
++	uinfo->type = SNDRV_CTL_ELEM_TYPE_ENUMERATED;
++	uinfo->count = elem->channels;
++	uinfo->value.enumerated.items = items;
++
++	if (item >= items)
++		item = uinfo->value.enumerated.item = items - 1;
++
++	for (port_type = 0;
++	     port_type < SCARLETT2_PORT_TYPE_COUNT;
++	     port_type++) {
++		if (item < port_count[port_type][SCARLETT2_PORT_IN]) {
++			const struct scarlett2_port *port =
++				&scarlett2_ports[port_type];
++
++			sprintf(uinfo->value.enumerated.name,
++				port->src_descr, item + port->src_num_offset);
++			return 0;
++		}
++		item -= port_count[port_type][SCARLETT2_PORT_IN];
++	}
++
++	return -EINVAL;
++}
++
++static int scarlett2_mux_src_enum_ctl_get(struct snd_kcontrol *kctl,
++					  struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int index = line_out_remap(private, elem->control);
++	int err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	if (private->mux_updated) {
++		err = scarlett2_usb_get_mux(mixer);
++		if (err < 0)
++			goto unlock;
++	}
++	ucontrol->value.enumerated.item[0] = private->mux[index];
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static int scarlett2_mux_src_enum_ctl_put(struct snd_kcontrol *kctl,
++					  struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++	int index = line_out_remap(private, elem->control);
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->mux[index];
++	val = min(ucontrol->value.enumerated.item[0],
++		  private->num_mux_srcs - 1U);
++
++	if (oval == val)
++		goto unlock;
++
++	private->mux[index] = val;
++	err = scarlett2_usb_set_mux(mixer);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_mux_src_enum_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = scarlett2_mux_src_enum_ctl_info,
++	.get  = scarlett2_mux_src_enum_ctl_get,
++	.put  = scarlett2_mux_src_enum_ctl_put,
++};
++
++static int scarlett2_add_mux_enums(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int port_type, channel, i;
++
++	for (i = 0, port_type = 0;
++	     port_type < SCARLETT2_PORT_TYPE_COUNT;
++	     port_type++) {
++		for (channel = 0;
++		     channel < port_count[port_type][SCARLETT2_PORT_OUT];
++		     channel++, i++) {
++			int err;
++			char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
++			const char *const descr =
++				scarlett2_ports[port_type].dst_descr;
++
++			snprintf(s, sizeof(s) - 5, descr, channel + 1);
++			strcat(s, " Enum");
++
++			err = scarlett2_add_new_ctl(mixer,
++						    &scarlett2_mux_src_enum_ctl,
++						    i, 1, s,
++						    &private->mux_ctls[i]);
++			if (err < 0)
++				return err;
++		}
++	}
++
++	return 0;
++}
++
++/*** Meter Controls ***/
++
++static int scarlett2_meter_ctl_info(struct snd_kcontrol *kctl,
++				    struct snd_ctl_elem_info *uinfo)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++
++	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
++	uinfo->count = elem->channels;
++	uinfo->value.integer.min = 0;
++	uinfo->value.integer.max = 4095;
++	uinfo->value.integer.step = 1;
++	return 0;
++}
++
++static int scarlett2_meter_ctl_get(struct snd_kcontrol *kctl,
++				   struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	u16 meter_levels[SCARLETT2_MAX_METERS];
++	int i, err;
++
++	err = scarlett2_usb_get_meter_levels(elem->head.mixer, elem->channels,
++					     meter_levels);
++	if (err < 0)
++		return err;
++
++	for (i = 0; i < elem->channels; i++)
++		ucontrol->value.integer.value[i] = meter_levels[i];
++
++	return 0;
++}
++
++static const struct snd_kcontrol_new scarlett2_meter_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_PCM,
++	.access = SNDRV_CTL_ELEM_ACCESS_READ | SNDRV_CTL_ELEM_ACCESS_VOLATILE,
++	.name = "",
++	.info = scarlett2_meter_ctl_info,
++	.get  = scarlett2_meter_ctl_get
++};
++
++static int scarlett2_add_meter_ctl(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++
++	/* devices without a mixer also don't support reporting levels */
++	if (private->info->config_set == SCARLETT2_CONFIG_SET_NO_MIXER)
++		return 0;
++
++	return scarlett2_add_new_ctl(mixer, &scarlett2_meter_ctl,
++				     0, private->num_mux_dsts,
++				     "Level Meter", NULL);
++}
++
++/*** MSD Controls ***/
++
++static int scarlett2_msd_ctl_get(struct snd_kcontrol *kctl,
++				 struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct scarlett2_data *private = elem->head.mixer->private_data;
++
++	ucontrol->value.integer.value[0] = private->msd_switch;
++	return 0;
++}
++
++static int scarlett2_msd_ctl_put(struct snd_kcontrol *kctl,
++				 struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->msd_switch;
++	val = !!ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->msd_switch = val;
++
++	/* Send switch change to the device */
++	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_MSD_SWITCH,
++				       0, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_msd_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = snd_ctl_boolean_mono_info,
++	.get  = scarlett2_msd_ctl_get,
++	.put  = scarlett2_msd_ctl_put,
++};
++
++static int scarlett2_add_msd_ctl(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++
++	if (!info->has_msd_mode)
++		return 0;
++
++	/* If MSD mode is off, hide the switch by default */
++	if (!private->msd_switch && !(mixer->chip->setup & SCARLETT2_MSD_ENABLE))
++		return 0;
++
++	/* Add MSD control */
++	return scarlett2_add_new_ctl(mixer, &scarlett2_msd_ctl,
++				     0, 1, "MSD Mode Switch", NULL);
++}
++
++/*** Standalone Control ***/
++
++static int scarlett2_standalone_ctl_get(struct snd_kcontrol *kctl,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct scarlett2_data *private = elem->head.mixer->private_data;
++
++	ucontrol->value.integer.value[0] = private->standalone_switch;
++	return 0;
++}
++
++static int scarlett2_standalone_ctl_put(struct snd_kcontrol *kctl,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct usb_mixer_elem_info *elem = kctl->private_data;
++	struct usb_mixer_interface *mixer = elem->head.mixer;
++	struct scarlett2_data *private = mixer->private_data;
++
++	int oval, val, err = 0;
++
++	mutex_lock(&private->data_mutex);
++
++	oval = private->standalone_switch;
++	val = !!ucontrol->value.integer.value[0];
++
++	if (oval == val)
++		goto unlock;
++
++	private->standalone_switch = val;
++
++	/* Send switch change to the device */
++	err = scarlett2_usb_set_config(mixer,
++				       SCARLETT2_CONFIG_STANDALONE_SWITCH,
++				       0, val);
++	if (err == 0)
++		err = 1;
++
++unlock:
++	mutex_unlock(&private->data_mutex);
++	return err;
++}
++
++static const struct snd_kcontrol_new scarlett2_standalone_ctl = {
++	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++	.name = "",
++	.info = snd_ctl_boolean_mono_info,
++	.get  = scarlett2_standalone_ctl_get,
++	.put  = scarlett2_standalone_ctl_put,
++};
++
++static int scarlett2_add_standalone_ctl(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++
++	if (private->info->config_set == SCARLETT2_CONFIG_SET_NO_MIXER)
++		return 0;
++
++	/* Add standalone control */
++	return scarlett2_add_new_ctl(mixer, &scarlett2_standalone_ctl,
++				     0, 1, "Standalone Switch", NULL);
++}
++
++/*** Cleanup/Suspend Callbacks ***/
++
++static void scarlett2_private_free(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++
++	cancel_delayed_work_sync(&private->work);
++	kfree(private);
++	mixer->private_data = NULL;
++}
++
++static void scarlett2_private_suspend(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++
++	if (cancel_delayed_work_sync(&private->work))
++		scarlett2_config_save(private->mixer);
++}
++
++/*** Initialisation ***/
++
++static void scarlett2_count_mux_io(struct scarlett2_data *private)
++{
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int port_type, srcs = 0, dsts = 0;
++
++	for (port_type = 0;
++	     port_type < SCARLETT2_PORT_TYPE_COUNT;
++	     port_type++) {
++		srcs += port_count[port_type][SCARLETT2_PORT_IN];
++		dsts += port_count[port_type][SCARLETT2_PORT_OUT];
++	}
++
++	private->num_mux_srcs = srcs;
++	private->num_mux_dsts = dsts;
++}
++
++/* Look through the interface descriptors for the Focusrite Control
++ * interface (bInterfaceClass = 255 Vendor Specific Class) and set
++ * bInterfaceNumber, bEndpointAddress, wMaxPacketSize, and bInterval
++ * in private
++ */
++static int scarlett2_find_fc_interface(struct usb_device *dev,
++				       struct scarlett2_data *private)
++{
++	struct usb_host_config *config = dev->actconfig;
++	int i;
++
++	for (i = 0; i < config->desc.bNumInterfaces; i++) {
++		struct usb_interface *intf = config->interface[i];
++		struct usb_interface_descriptor *desc =
++			&intf->altsetting[0].desc;
++		struct usb_endpoint_descriptor *epd;
++
++		if (desc->bInterfaceClass != 255)
++			continue;
++
++		epd = get_endpoint(intf->altsetting, 0);
++		private->bInterfaceNumber = desc->bInterfaceNumber;
++		private->bEndpointAddress = epd->bEndpointAddress &
++			USB_ENDPOINT_NUMBER_MASK;
++		private->wMaxPacketSize = le16_to_cpu(epd->wMaxPacketSize);
++		private->bInterval = epd->bInterval;
++		return 0;
++	}
++
++	return -EINVAL;
++}
++
++/* Initialise private data */
++static int scarlett2_init_private(struct usb_mixer_interface *mixer,
++				  const struct scarlett2_device_entry *entry)
++{
++	struct scarlett2_data *private =
++		kzalloc(sizeof(struct scarlett2_data), GFP_KERNEL);
++
++	if (!private)
++		return -ENOMEM;
++
++	mutex_init(&private->usb_mutex);
++	mutex_init(&private->data_mutex);
++	INIT_DELAYED_WORK(&private->work, scarlett2_config_save_work);
++
++	mixer->private_data = private;
++	mixer->private_free = scarlett2_private_free;
++	mixer->private_suspend = scarlett2_private_suspend;
++
++	private->info = entry->info;
++	private->series_name = entry->series_name;
++	scarlett2_count_mux_io(private);
++	private->scarlett2_seq = 0;
++	private->mixer = mixer;
++
++	return scarlett2_find_fc_interface(mixer->chip->dev, private);
++}
++
++/* Cargo cult proprietary initialisation sequence */
++static int scarlett2_usb_init(struct usb_mixer_interface *mixer)
++{
++	struct usb_device *dev = mixer->chip->dev;
++	struct scarlett2_data *private = mixer->private_data;
++	u8 buf[24];
++	int err;
++
++	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
++		return -EINVAL;
++
++	/* step 0 */
++	err = scarlett2_usb_rx(dev, private->bInterfaceNumber,
++			       SCARLETT2_USB_CMD_INIT, buf, sizeof(buf));
++	if (err < 0)
++		return err;
++
++	/* step 1 */
++	private->scarlett2_seq = 1;
++	err = scarlett2_usb(mixer, SCARLETT2_USB_INIT_1, NULL, 0, NULL, 0);
++	if (err < 0)
++		return err;
++
++	/* step 2 */
++	private->scarlett2_seq = 1;
++	return scarlett2_usb(mixer, SCARLETT2_USB_INIT_2, NULL, 0, NULL, 84);
++}
++
++/* Read configuration from the interface on start */
++static int scarlett2_read_configs(struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int num_line_out =
++		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
++	int num_mixer_out =
++		port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
++	struct scarlett2_usb_volume_status volume_status;
++	int err, i;
++
++	if (info->has_msd_mode) {
++		err = scarlett2_usb_get_config(
++			mixer, SCARLETT2_CONFIG_MSD_SWITCH,
++			1, &private->msd_switch);
++		if (err < 0)
++			return err;
++
++		/* no other controls are created if MSD mode is on */
++		if (private->msd_switch)
++			return 0;
++	}
++
++	err = scarlett2_update_input_other(mixer);
++	if (err < 0)
++		return err;
++
++	err = scarlett2_update_monitor_other(mixer);
++	if (err < 0)
++		return err;
++
++	/* the rest of the configuration is for devices with a mixer */
++	if (info->config_set == SCARLETT2_CONFIG_SET_NO_MIXER)
++		return 0;
++
++	err = scarlett2_usb_get_config(
++		mixer, SCARLETT2_CONFIG_STANDALONE_SWITCH,
++		1, &private->standalone_switch);
++	if (err < 0)
++		return err;
++
++	err = scarlett2_update_sync(mixer);
++	if (err < 0)
++		return err;
++
++	err = scarlett2_usb_get_volume_status(mixer, &volume_status);
++	if (err < 0)
++		return err;
++
++	if (info->line_out_hw_vol)
++		for (i = 0; i < SCARLETT2_DIM_MUTE_COUNT; i++)
++			private->dim_mute[i] = !!volume_status.dim_mute[i];
++
++	private->master_vol = clamp(
++		volume_status.master_vol + SCARLETT2_VOLUME_BIAS,
++		0, SCARLETT2_VOLUME_BIAS);
++
++	for (i = 0; i < num_line_out; i++) {
++		int volume, mute;
++
++		private->vol_sw_hw_switch[i] =
++			info->line_out_hw_vol
++				&& volume_status.sw_hw_switch[i];
++
++		volume = private->vol_sw_hw_switch[i]
++			   ? volume_status.master_vol
++			   : volume_status.sw_vol[i];
++		volume = clamp(volume + SCARLETT2_VOLUME_BIAS,
++			       0, SCARLETT2_VOLUME_BIAS);
++		private->vol[i] = volume;
++
++		mute = private->vol_sw_hw_switch[i]
++			 ? private->dim_mute[SCARLETT2_BUTTON_MUTE]
++			 : volume_status.mute_switch[i];
++		private->mute_switch[i] = mute;
++	}
++
++	for (i = 0; i < num_mixer_out; i++) {
++		err = scarlett2_usb_get_mix(mixer, i);
++		if (err < 0)
++			return err;
++	}
++
++	return scarlett2_usb_get_mux(mixer);
++}
++
++/* Notify on sync change */
++static void scarlett2_notify_sync(
++	struct usb_mixer_interface *mixer)
++{
++	struct scarlett2_data *private = mixer->private_data;
++
++	private->sync_updated = 1;
++
++	snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
++		       &private->sync_ctl->id);
++}
++
++/* Notify on monitor change */
++static void scarlett2_notify_monitor(
++	struct usb_mixer_interface *mixer)
++{
++	struct snd_card *card = mixer->chip->card;
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int num_line_out =
++		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
++	int i;
++
++	/* if line_out_hw_vol is 0, there are no controls to update */
++	if (!info->line_out_hw_vol)
++		return;
++
++	private->vol_updated = 1;
++
++	snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
++		       &private->master_vol_ctl->id);
++
++	for (i = 0; i < num_line_out; i++)
++		if (private->vol_sw_hw_switch[line_out_remap(private, i)])
++			snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++				       &private->vol_ctls[i]->id);
++}
++
++/* Notify on dim/mute change */
++static void scarlett2_notify_dim_mute(
++	struct usb_mixer_interface *mixer)
++{
++	struct snd_card *card = mixer->chip->card;
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
++	int num_line_out =
++		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
++	int i;
++
++	private->vol_updated = 1;
++
++	if (!info->line_out_hw_vol)
++		return;
++
++	for (i = 0; i < SCARLETT2_DIM_MUTE_COUNT; i++)
++		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++			       &private->dim_mute_ctls[i]->id);
++
++	for (i = 0; i < num_line_out; i++)
++		if (private->vol_sw_hw_switch[line_out_remap(private, i)])
++			snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++				       &private->mute_ctls[i]->id);
++}
++
++/* Notify on "input other" change (level/pad/air) */
++static void scarlett2_notify_input_other(
++	struct usb_mixer_interface *mixer)
++{
++	struct snd_card *card = mixer->chip->card;
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++	int i;
++
++	private->input_other_updated = 1;
++
++	for (i = 0; i < info->level_input_count; i++)
++		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++			       &private->level_ctls[i]->id);
++	for (i = 0; i < info->pad_input_count; i++)
++		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++			       &private->pad_ctls[i]->id);
++	for (i = 0; i < info->air_input_count; i++)
++		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++			       &private->air_ctls[i]->id);
++	for (i = 0; i < info->phantom_count; i++)
++		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++			       &private->phantom_ctls[i]->id);
++}
++
++/* Notify on "monitor other" change (direct monitor, speaker
++ * switching, talkback)
++ */
++static void scarlett2_notify_monitor_other(
++	struct usb_mixer_interface *mixer)
++{
++	struct snd_card *card = mixer->chip->card;
++	struct scarlett2_data *private = mixer->private_data;
++	const struct scarlett2_device_info *info = private->info;
++
++	private->monitor_other_updated = 1;
++
++	if (info->direct_monitor) {
++		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++			       &private->direct_monitor_ctl->id);
++		return;
++	}
++
++	if (info->has_speaker_switching)
++		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++			       &private->speaker_switching_ctl->id);
++
++	if (info->has_talkback)
++		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++			       &private->talkback_ctl->id);
++
++	/* if speaker switching was recently enabled or disabled,
++	 * invalidate the dim/mute and mux enum controls
++	 */
++	if (private->speaker_switching_switched) {
++		int i;
++
++		scarlett2_notify_dim_mute(mixer);
++
++		private->speaker_switching_switched = 0;
++		private->mux_updated = 1;
++
++		for (i = 0; i < private->num_mux_dsts; i++)
++			snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
++				       &private->mux_ctls[i]->id);
++	}
++}
++
++/* Interrupt callback */
++static void scarlett2_notify(struct urb *urb)
++{
++	struct usb_mixer_interface *mixer = urb->context;
++	int len = urb->actual_length;
++	int ustatus = urb->status;
++	u32 data;
++
++	if (ustatus != 0 || len != 8)
++		goto requeue;
++
++	data = le32_to_cpu(*(__le32 *)urb->transfer_buffer);
++	if (data & SCARLETT2_USB_NOTIFY_SYNC)
++		scarlett2_notify_sync(mixer);
++	if (data & SCARLETT2_USB_NOTIFY_MONITOR)
++		scarlett2_notify_monitor(mixer);
++	if (data & SCARLETT2_USB_NOTIFY_DIM_MUTE)
++		scarlett2_notify_dim_mute(mixer);
++	if (data & SCARLETT2_USB_NOTIFY_INPUT_OTHER)
++		scarlett2_notify_input_other(mixer);
++	if (data & SCARLETT2_USB_NOTIFY_MONITOR_OTHER)
++		scarlett2_notify_monitor_other(mixer);
++
++requeue:
++	if (ustatus != -ENOENT &&
++	    ustatus != -ECONNRESET &&
++	    ustatus != -ESHUTDOWN) {
++		urb->dev = mixer->chip->dev;
++		usb_submit_urb(urb, GFP_ATOMIC);
++	}
++}
++
++static int scarlett2_init_notify(struct usb_mixer_interface *mixer)
++{
++	struct usb_device *dev = mixer->chip->dev;
++	struct scarlett2_data *private = mixer->private_data;
++	unsigned int pipe = usb_rcvintpipe(dev, private->bEndpointAddress);
++	void *transfer_buffer;
++
++	if (mixer->urb) {
++		usb_audio_err(mixer->chip,
++			      "%s: mixer urb already in use!\n", __func__);
++		return 0;
++	}
++
++	if (usb_pipe_type_check(dev, pipe))
++		return -EINVAL;
++
++	mixer->urb = usb_alloc_urb(0, GFP_KERNEL);
++	if (!mixer->urb)
++		return -ENOMEM;
++
++	transfer_buffer = kmalloc(private->wMaxPacketSize, GFP_KERNEL);
++	if (!transfer_buffer)
++		return -ENOMEM;
++
++	usb_fill_int_urb(mixer->urb, dev, pipe,
++			 transfer_buffer, private->wMaxPacketSize,
++			 scarlett2_notify, mixer, private->bInterval);
++
++	return usb_submit_urb(mixer->urb, GFP_KERNEL);
++}
++
++static const struct scarlett2_device_entry *get_scarlett2_device_entry(
++	struct usb_mixer_interface *mixer)
++{
++	const struct scarlett2_device_entry *entry = scarlett2_devices;
++
++	/* Find entry in scarlett2_devices */
++	while (entry->usb_id && entry->usb_id != mixer->chip->usb_id)
++		entry++;
++	if (!entry->usb_id)
++		return NULL;
++
++	return entry;
++}
++
++static int snd_scarlett2_controls_create(
++	struct usb_mixer_interface *mixer,
++	const struct scarlett2_device_entry *entry)
++{
++	int err;
++
++	/* Initialise private data */
++	err = scarlett2_init_private(mixer, entry);
++	if (err < 0)
++		return err;
++
++	/* Send proprietary USB initialisation sequence */
++	err = scarlett2_usb_init(mixer);
++	if (err < 0)
++		return err;
++
++	/* Read volume levels and controls from the interface */
++	err = scarlett2_read_configs(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the MSD control */
++	err = scarlett2_add_msd_ctl(mixer);
++	if (err < 0)
++		return err;
++
++	/* If MSD mode is enabled, don't create any other controls */
++	if (((struct scarlett2_data *)mixer->private_data)->msd_switch)
++		return 0;
++
++	/* Create the analogue output controls */
++	err = scarlett2_add_line_out_ctls(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the analogue input controls */
++	err = scarlett2_add_line_in_ctls(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the input, output, and mixer mux input selections */
++	err = scarlett2_add_mux_enums(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the matrix mixer controls */
++	err = scarlett2_add_mixer_ctls(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the level meter controls */
++	err = scarlett2_add_meter_ctl(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the sync control */
++	err = scarlett2_add_sync_ctl(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the direct monitor control */
++	err = scarlett2_add_direct_monitor_ctl(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the speaker switching control */
++	err = scarlett2_add_speaker_switch_ctl(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the talkback controls */
++	err = scarlett2_add_talkback_ctls(mixer);
++	if (err < 0)
++		return err;
++
++	/* Create the standalone control */
++	err = scarlett2_add_standalone_ctl(mixer);
++	if (err < 0)
++		return err;
++
++	/* Set up the interrupt polling */
++	err = scarlett2_init_notify(mixer);
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
++int snd_scarlett2_init(struct usb_mixer_interface *mixer)
++{
++	struct snd_usb_audio *chip = mixer->chip;
++	const struct scarlett2_device_entry *entry;
++	int err;
++
++	/* only use UAC_VERSION_2 */
++	if (!mixer->protocol)
++		return 0;
++
++	/* find entry in scarlett2_devices */
++	entry = get_scarlett2_device_entry(mixer);
++	if (!entry) {
++		usb_audio_err(mixer->chip,
++			      "%s: missing device entry for %04x:%04x\n",
++			      __func__,
++			      USB_ID_VENDOR(chip->usb_id),
++			      USB_ID_PRODUCT(chip->usb_id));
++		return 0;
++	}
++
++	if (chip->setup & SCARLETT2_DISABLE) {
++		usb_audio_info(chip,
++			"Focusrite %s Mixer Driver disabled "
++			"by modprobe options (snd_usb_audio "
++			"vid=0x%04x pid=0x%04x device_setup=%d)\n",
++			entry->series_name,
++			USB_ID_VENDOR(chip->usb_id),
++			USB_ID_PRODUCT(chip->usb_id),
++			SCARLETT2_DISABLE);
++		return 0;
++	}
++
++	usb_audio_info(chip,
++		"Focusrite %s Mixer Driver enabled (pid=0x%04x); "
++		"report any issues to g@b4.vu",
++		entry->series_name,
++		USB_ID_PRODUCT(chip->usb_id));
++
++	err = snd_scarlett2_controls_create(mixer, entry);
++	if (err < 0)
++		usb_audio_err(mixer->chip,
++			      "Error initialising %s Mixer Driver: %d",
++			      entry->series_name,
++			      err);
++
++	return err;
++}
+diff --git a/sound/usb/mixer_scarlett2.h b/sound/usb/mixer_scarlett2.h
+new file mode 100644
+index 000000000000..d209362cf41a
+--- /dev/null
++++ b/sound/usb/mixer_scarlett2.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __USB_MIXER_SCARLETT2_H
++#define __USB_MIXER_SCARLETT2_H
++
++int snd_scarlett2_init(struct usb_mixer_interface *mixer);
++
++#endif /* __USB_MIXER_SCARLETT2_H */
+diff --git a/sound/usb/mixer_scarlett_gen2.c b/sound/usb/mixer_scarlett_gen2.c
+deleted file mode 100644
+index 1bcb05c73e0a..000000000000
+--- a/sound/usb/mixer_scarlett_gen2.c
++++ /dev/null
+@@ -1,4274 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- *   Focusrite Scarlett Gen 2/3 and Clarett+ Driver for ALSA
+- *
+- *   Supported models:
+- *   - 6i6/18i8/18i20 Gen 2
+- *   - Solo/2i2/4i4/8i6/18i8/18i20 Gen 3
+- *   - Clarett+ 8Pre
+- *
+- *   Copyright (c) 2018-2022 by Geoffrey D. Bennett <g at b4.vu>
+- *   Copyright (c) 2020-2021 by Vladimir Sadovnikov <sadko4u@gmail.com>
+- *   Copyright (c) 2022 by Christian Colglazier <christian@cacolglazier.com>
+- *
+- *   Based on the Scarlett (Gen 1) Driver for ALSA:
+- *
+- *   Copyright (c) 2013 by Tobias Hoffmann
+- *   Copyright (c) 2013 by Robin Gareus <robin at gareus.org>
+- *   Copyright (c) 2002 by Takashi Iwai <tiwai at suse.de>
+- *   Copyright (c) 2014 by Chris J Arges <chris.j.arges at canonical.com>
+- *
+- *   Many codes borrowed from audio.c by
+- *     Alan Cox (alan at lxorguk.ukuu.org.uk)
+- *     Thomas Sailer (sailer at ife.ee.ethz.ch)
+- *
+- *   Code cleanup:
+- *   David Henningsson <david.henningsson at canonical.com>
+- */
+-
+-/* The protocol was reverse engineered by looking at the communication
+- * between Focusrite Control 2.3.4 and the Focusrite(R) Scarlett 18i20
+- * (firmware 1083) using usbmon in July-August 2018.
+- *
+- * Scarlett 18i8 support added in April 2019.
+- *
+- * Scarlett 6i6 support added in June 2019 (thanks to Martin Wittmann
+- * for providing usbmon output and testing).
+- *
+- * Scarlett 4i4/8i6 Gen 3 support added in May 2020 (thanks to Laurent
+- * Debricon for donating a 4i4 and to Fredrik Unger for providing 8i6
+- * usbmon output and testing).
+- *
+- * Scarlett 18i8/18i20 Gen 3 support added in June 2020 (thanks to
+- * Darren Jaeckel, Alex Sedlack, and Clovis Lunel for providing usbmon
+- * output, protocol traces and testing).
+- *
+- * Support for loading mixer volume and mux configuration from the
+- * interface during driver initialisation added in May 2021 (thanks to
+- * Vladimir Sadovnikov for figuring out how).
+- *
+- * Support for Solo/2i2 Gen 3 added in May 2021 (thanks to Alexander
+- * Vorona for 2i2 protocol traces).
+- *
+- * Support for phantom power, direct monitoring, speaker switching,
+- * and talkback added in May-June 2021.
+- *
+- * Support for Clarett+ 8Pre added in Aug 2022 by Christian
+- * Colglazier.
+- *
+- * This ALSA mixer gives access to (model-dependent):
+- *  - input, output, mixer-matrix muxes
+- *  - mixer-matrix gain stages
+- *  - gain/volume/mute controls
+- *  - level meters
+- *  - line/inst level, pad, and air controls
+- *  - phantom power, direct monitor, speaker switching, and talkback
+- *    controls
+- *  - disable/enable MSD mode
+- *  - disable/enable standalone mode
+- *
+- * <ditaa>
+- *    /--------------\    18chn            20chn     /--------------\
+- *    | Hardware  in +--+------\    /-------------+--+ ALSA PCM out |
+- *    \--------------/  |      |    |             |  \--------------/
+- *                      |      |    |    /-----\  |
+- *                      |      |    |    |     |  |
+- *                      |      v    v    v     |  |
+- *                      |   +---------------+  |  |
+- *                      |    \ Matrix  Mux /   |  |
+- *                      |     +-----+-----+    |  |
+- *                      |           |          |  |
+- *                      |           |18chn     |  |
+- *                      |           |          |  |
+- *                      |           |     10chn|  |
+- *                      |           v          |  |
+- *                      |     +------------+   |  |
+- *                      |     | Mixer      |   |  |
+- *                      |     |     Matrix |   |  |
+- *                      |     |            |   |  |
+- *                      |     | 18x10 Gain |   |  |
+- *                      |     |   stages   |   |  |
+- *                      |     +-----+------+   |  |
+- *                      |           |          |  |
+- *                      |18chn      |10chn     |  |20chn
+- *                      |           |          |  |
+- *                      |           +----------/  |
+- *                      |           |             |
+- *                      v           v             v
+- *                      ===========================
+- *               +---------------+       +--—------------+
+- *                \ Output  Mux /         \ Capture Mux /
+- *                 +---+---+---+           +-----+-----+
+- *                     |   |                     |
+- *                10chn|   |                     |18chn
+- *                     |   |                     |
+- *  /--------------\   |   |                     |   /--------------\
+- *  | S/PDIF, ADAT |<--/   |10chn                \-->| ALSA PCM in  |
+- *  | Hardware out |       |                         \--------------/
+- *  \--------------/       |
+- *                         v
+- *                  +-------------+    Software gain per channel.
+- *                  | Master Gain |<-- 18i20 only: Switch per channel
+- *                  +------+------+    to select HW or SW gain control.
+- *                         |
+- *                         |10chn
+- *  /--------------\       |
+- *  | Analogue     |<------/
+- *  | Hardware out |
+- *  \--------------/
+- * </ditaa>
+- *
+- * Gen 3 devices have a Mass Storage Device (MSD) mode where a small
+- * disk with registration and driver download information is presented
+- * to the host. To access the full functionality of the device without
+- * proprietary software, MSD mode can be disabled by:
+- * - holding down the 48V button for five seconds while powering on
+- *   the device, or
+- * - using this driver and alsamixer to change the "MSD Mode" setting
+- *   to Off and power-cycling the device
+- */
+-
+-#include <linux/slab.h>
+-#include <linux/usb.h>
+-#include <linux/moduleparam.h>
+-
+-#include <sound/control.h>
+-#include <sound/tlv.h>
+-
+-#include "usbaudio.h"
+-#include "mixer.h"
+-#include "helper.h"
+-
+-#include "mixer_scarlett_gen2.h"
+-
+-/* device_setup value to enable */
+-#define SCARLETT2_ENABLE 0x01
+-
+-/* device_setup value to allow turning MSD mode back on */
+-#define SCARLETT2_MSD_ENABLE 0x02
+-
+-/* some gui mixers can't handle negative ctl values */
+-#define SCARLETT2_VOLUME_BIAS 127
+-
+-/* mixer range from -80dB to +6dB in 0.5dB steps */
+-#define SCARLETT2_MIXER_MIN_DB -80
+-#define SCARLETT2_MIXER_BIAS (-SCARLETT2_MIXER_MIN_DB * 2)
+-#define SCARLETT2_MIXER_MAX_DB 6
+-#define SCARLETT2_MIXER_MAX_VALUE \
+-	((SCARLETT2_MIXER_MAX_DB - SCARLETT2_MIXER_MIN_DB) * 2)
+-#define SCARLETT2_MIXER_VALUE_COUNT (SCARLETT2_MIXER_MAX_VALUE + 1)
+-
+-/* map from (dB + 80) * 2 to mixer value
+- * for dB in 0 .. 172: int(8192 * pow(10, ((dB - 160) / 2 / 20)))
+- */
+-static const u16 scarlett2_mixer_values[SCARLETT2_MIXER_VALUE_COUNT] = {
+-	0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
+-	2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 8, 8,
+-	9, 9, 10, 10, 11, 12, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+-	23, 24, 25, 27, 29, 30, 32, 34, 36, 38, 41, 43, 46, 48, 51,
+-	54, 57, 61, 65, 68, 73, 77, 81, 86, 91, 97, 103, 109, 115,
+-	122, 129, 137, 145, 154, 163, 173, 183, 194, 205, 217, 230,
+-	244, 259, 274, 290, 307, 326, 345, 365, 387, 410, 434, 460,
+-	487, 516, 547, 579, 614, 650, 689, 730, 773, 819, 867, 919,
+-	973, 1031, 1092, 1157, 1225, 1298, 1375, 1456, 1543, 1634,
+-	1731, 1833, 1942, 2057, 2179, 2308, 2445, 2590, 2744, 2906,
+-	3078, 3261, 3454, 3659, 3876, 4105, 4349, 4606, 4879, 5168,
+-	5475, 5799, 6143, 6507, 6892, 7301, 7733, 8192, 8677, 9191,
+-	9736, 10313, 10924, 11571, 12257, 12983, 13752, 14567, 15430,
+-	16345
+-};
+-
+-/* Maximum number of analogue outputs */
+-#define SCARLETT2_ANALOGUE_MAX 10
+-
+-/* Maximum number of level and pad switches */
+-#define SCARLETT2_LEVEL_SWITCH_MAX 2
+-#define SCARLETT2_PAD_SWITCH_MAX 8
+-#define SCARLETT2_AIR_SWITCH_MAX 8
+-#define SCARLETT2_PHANTOM_SWITCH_MAX 2
+-
+-/* Maximum number of inputs to the mixer */
+-#define SCARLETT2_INPUT_MIX_MAX 25
+-
+-/* Maximum number of outputs from the mixer */
+-#define SCARLETT2_OUTPUT_MIX_MAX 12
+-
+-/* Maximum size of the data in the USB mux assignment message:
+- * 20 inputs, 20 outputs, 25 matrix inputs, 12 spare
+- */
+-#define SCARLETT2_MUX_MAX 77
+-
+-/* Maximum number of meters (sum of output port counts) */
+-#define SCARLETT2_MAX_METERS 65
+-
+-/* There are three different sets of configuration parameters across
+- * the devices
+- */
+-enum {
+-	SCARLETT2_CONFIG_SET_NO_MIXER = 0,
+-	SCARLETT2_CONFIG_SET_GEN_2 = 1,
+-	SCARLETT2_CONFIG_SET_GEN_3 = 2,
+-	SCARLETT2_CONFIG_SET_CLARETT = 3,
+-	SCARLETT2_CONFIG_SET_COUNT = 4
+-};
+-
+-/* Hardware port types:
+- * - None (no input to mux)
+- * - Analogue I/O
+- * - S/PDIF I/O
+- * - ADAT I/O
+- * - Mixer I/O
+- * - PCM I/O
+- */
+-enum {
+-	SCARLETT2_PORT_TYPE_NONE     = 0,
+-	SCARLETT2_PORT_TYPE_ANALOGUE = 1,
+-	SCARLETT2_PORT_TYPE_SPDIF    = 2,
+-	SCARLETT2_PORT_TYPE_ADAT     = 3,
+-	SCARLETT2_PORT_TYPE_MIX      = 4,
+-	SCARLETT2_PORT_TYPE_PCM      = 5,
+-	SCARLETT2_PORT_TYPE_COUNT    = 6,
+-};
+-
+-/* I/O count of each port type kept in struct scarlett2_ports */
+-enum {
+-	SCARLETT2_PORT_IN    = 0,
+-	SCARLETT2_PORT_OUT   = 1,
+-	SCARLETT2_PORT_DIRNS = 2,
+-};
+-
+-/* Dim/Mute buttons on the 18i20 */
+-enum {
+-	SCARLETT2_BUTTON_MUTE    = 0,
+-	SCARLETT2_BUTTON_DIM     = 1,
+-	SCARLETT2_DIM_MUTE_COUNT = 2,
+-};
+-
+-static const char *const scarlett2_dim_mute_names[SCARLETT2_DIM_MUTE_COUNT] = {
+-	"Mute Playback Switch", "Dim Playback Switch"
+-};
+-
+-/* Description of each hardware port type:
+- * - id: hardware ID of this port type
+- * - src_descr: printf format string for mux input selections
+- * - src_num_offset: added to channel number for the fprintf
+- * - dst_descr: printf format string for mixer controls
+- */
+-struct scarlett2_port {
+-	u16 id;
+-	const char * const src_descr;
+-	int src_num_offset;
+-	const char * const dst_descr;
+-};
+-
+-static const struct scarlett2_port scarlett2_ports[SCARLETT2_PORT_TYPE_COUNT] = {
+-	[SCARLETT2_PORT_TYPE_NONE] = {
+-		.id = 0x000,
+-		.src_descr = "Off"
+-	},
+-	[SCARLETT2_PORT_TYPE_ANALOGUE] = {
+-		.id = 0x080,
+-		.src_descr = "Analogue %d",
+-		.src_num_offset = 1,
+-		.dst_descr = "Analogue Output %02d Playback"
+-	},
+-	[SCARLETT2_PORT_TYPE_SPDIF] = {
+-		.id = 0x180,
+-		.src_descr = "S/PDIF %d",
+-		.src_num_offset = 1,
+-		.dst_descr = "S/PDIF Output %d Playback"
+-	},
+-	[SCARLETT2_PORT_TYPE_ADAT] = {
+-		.id = 0x200,
+-		.src_descr = "ADAT %d",
+-		.src_num_offset = 1,
+-		.dst_descr = "ADAT Output %d Playback"
+-	},
+-	[SCARLETT2_PORT_TYPE_MIX] = {
+-		.id = 0x300,
+-		.src_descr = "Mix %c",
+-		.src_num_offset = 'A',
+-		.dst_descr = "Mixer Input %02d Capture"
+-	},
+-	[SCARLETT2_PORT_TYPE_PCM] = {
+-		.id = 0x600,
+-		.src_descr = "PCM %d",
+-		.src_num_offset = 1,
+-		.dst_descr = "PCM %02d Capture"
+-	},
+-};
+-
+-/* Number of mux tables: one for each band of sample rates
+- * (44.1/48kHz, 88.2/96kHz, and 176.4/176kHz)
+- */
+-#define SCARLETT2_MUX_TABLES 3
+-
+-/* Maximum number of entries in a mux table */
+-#define SCARLETT2_MAX_MUX_ENTRIES 10
+-
+-/* One entry within mux_assignment defines the port type and range of
+- * ports to add to the set_mux message. The end of the list is marked
+- * with count == 0.
+- */
+-struct scarlett2_mux_entry {
+-	u8 port_type;
+-	u8 start;
+-	u8 count;
+-};
+-
+-struct scarlett2_device_info {
+-	u32 usb_id; /* USB device identifier */
+-
+-	/* Gen 3 devices have an internal MSD mode switch that needs
+-	 * to be disabled in order to access the full functionality of
+-	 * the device.
+-	 */
+-	u8 has_msd_mode;
+-
+-	/* which set of configuration parameters the device uses */
+-	u8 config_set;
+-
+-	/* line out hw volume is sw controlled */
+-	u8 line_out_hw_vol;
+-
+-	/* support for main/alt speaker switching */
+-	u8 has_speaker_switching;
+-
+-	/* support for talkback microphone */
+-	u8 has_talkback;
+-
+-	/* the number of analogue inputs with a software switchable
+-	 * level control that can be set to line or instrument
+-	 */
+-	u8 level_input_count;
+-
+-	/* the first input with a level control (0-based) */
+-	u8 level_input_first;
+-
+-	/* the number of analogue inputs with a software switchable
+-	 * 10dB pad control
+-	 */
+-	u8 pad_input_count;
+-
+-	/* the number of analogue inputs with a software switchable
+-	 * "air" control
+-	 */
+-	u8 air_input_count;
+-
+-	/* the number of phantom (48V) software switchable controls */
+-	u8 phantom_count;
+-
+-	/* the number of inputs each phantom switch controls */
+-	u8 inputs_per_phantom;
+-
+-	/* the number of direct monitor options
+-	 * (0 = none, 1 = mono only, 2 = mono/stereo)
+-	 */
+-	u8 direct_monitor;
+-
+-	/* remap analogue outputs; 18i8 Gen 3 has "line 3/4" connected
+-	 * internally to the analogue 7/8 outputs
+-	 */
+-	u8 line_out_remap_enable;
+-	u8 line_out_remap[SCARLETT2_ANALOGUE_MAX];
+-
+-	/* additional description for the line out volume controls */
+-	const char * const line_out_descrs[SCARLETT2_ANALOGUE_MAX];
+-
+-	/* number of sources/destinations of each port type */
+-	const int port_count[SCARLETT2_PORT_TYPE_COUNT][SCARLETT2_PORT_DIRNS];
+-
+-	/* layout/order of the entries in the set_mux message */
+-	struct scarlett2_mux_entry mux_assignment[SCARLETT2_MUX_TABLES]
+-						 [SCARLETT2_MAX_MUX_ENTRIES];
+-};
+-
+-struct scarlett2_data {
+-	struct usb_mixer_interface *mixer;
+-	struct mutex usb_mutex; /* prevent sending concurrent USB requests */
+-	struct mutex data_mutex; /* lock access to this data */
+-	struct delayed_work work;
+-	const struct scarlett2_device_info *info;
+-	__u8 bInterfaceNumber;
+-	__u8 bEndpointAddress;
+-	__u16 wMaxPacketSize;
+-	__u8 bInterval;
+-	int num_mux_srcs;
+-	int num_mux_dsts;
+-	u16 scarlett2_seq;
+-	u8 sync_updated;
+-	u8 vol_updated;
+-	u8 input_other_updated;
+-	u8 monitor_other_updated;
+-	u8 mux_updated;
+-	u8 speaker_switching_switched;
+-	u8 sync;
+-	u8 master_vol;
+-	u8 vol[SCARLETT2_ANALOGUE_MAX];
+-	u8 vol_sw_hw_switch[SCARLETT2_ANALOGUE_MAX];
+-	u8 mute_switch[SCARLETT2_ANALOGUE_MAX];
+-	u8 level_switch[SCARLETT2_LEVEL_SWITCH_MAX];
+-	u8 pad_switch[SCARLETT2_PAD_SWITCH_MAX];
+-	u8 dim_mute[SCARLETT2_DIM_MUTE_COUNT];
+-	u8 air_switch[SCARLETT2_AIR_SWITCH_MAX];
+-	u8 phantom_switch[SCARLETT2_PHANTOM_SWITCH_MAX];
+-	u8 phantom_persistence;
+-	u8 direct_monitor_switch;
+-	u8 speaker_switching_switch;
+-	u8 talkback_switch;
+-	u8 talkback_map[SCARLETT2_OUTPUT_MIX_MAX];
+-	u8 msd_switch;
+-	u8 standalone_switch;
+-	struct snd_kcontrol *sync_ctl;
+-	struct snd_kcontrol *master_vol_ctl;
+-	struct snd_kcontrol *vol_ctls[SCARLETT2_ANALOGUE_MAX];
+-	struct snd_kcontrol *sw_hw_ctls[SCARLETT2_ANALOGUE_MAX];
+-	struct snd_kcontrol *mute_ctls[SCARLETT2_ANALOGUE_MAX];
+-	struct snd_kcontrol *dim_mute_ctls[SCARLETT2_DIM_MUTE_COUNT];
+-	struct snd_kcontrol *level_ctls[SCARLETT2_LEVEL_SWITCH_MAX];
+-	struct snd_kcontrol *pad_ctls[SCARLETT2_PAD_SWITCH_MAX];
+-	struct snd_kcontrol *air_ctls[SCARLETT2_AIR_SWITCH_MAX];
+-	struct snd_kcontrol *phantom_ctls[SCARLETT2_PHANTOM_SWITCH_MAX];
+-	struct snd_kcontrol *mux_ctls[SCARLETT2_MUX_MAX];
+-	struct snd_kcontrol *direct_monitor_ctl;
+-	struct snd_kcontrol *speaker_switching_ctl;
+-	struct snd_kcontrol *talkback_ctl;
+-	u8 mux[SCARLETT2_MUX_MAX];
+-	u8 mix[SCARLETT2_INPUT_MIX_MAX * SCARLETT2_OUTPUT_MIX_MAX];
+-};
+-
+-/*** Model-specific data ***/
+-
+-static const struct scarlett2_device_info s6i6_gen2_info = {
+-	.usb_id = USB_ID(0x1235, 0x8203),
+-
+-	.config_set = SCARLETT2_CONFIG_SET_GEN_2,
+-	.level_input_count = 2,
+-	.pad_input_count = 2,
+-
+-	.line_out_descrs = {
+-		"Headphones 1 L",
+-		"Headphones 1 R",
+-		"Headphones 2 L",
+-		"Headphones 2 R",
+-	},
+-
+-	.port_count = {
+-		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
+-		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  4,  4 },
+-		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
+-		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
+-		[SCARLETT2_PORT_TYPE_PCM]      = {  6,  6 },
+-	},
+-
+-	.mux_assignment = { {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
+-		{ 0,                            0,  0 },
+-	} },
+-};
+-
+-static const struct scarlett2_device_info s18i8_gen2_info = {
+-	.usb_id = USB_ID(0x1235, 0x8204),
+-
+-	.config_set = SCARLETT2_CONFIG_SET_GEN_2,
+-	.level_input_count = 2,
+-	.pad_input_count = 4,
+-
+-	.line_out_descrs = {
+-		"Monitor L",
+-		"Monitor R",
+-		"Headphones 1 L",
+-		"Headphones 1 R",
+-		"Headphones 2 L",
+-		"Headphones 2 R",
+-	},
+-
+-	.port_count = {
+-		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
+-		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  8,  6 },
+-		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
+-		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  0 },
+-		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
+-		[SCARLETT2_PORT_TYPE_PCM]      = {  8, 18 },
+-	},
+-
+-	.mux_assignment = { {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  6 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0, 14 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  6 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0, 10 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  6 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  4 },
+-		{ 0,                            0,  0 },
+-	} },
+-};
+-
+-static const struct scarlett2_device_info s18i20_gen2_info = {
+-	.usb_id = USB_ID(0x1235, 0x8201),
+-
+-	.config_set = SCARLETT2_CONFIG_SET_GEN_2,
+-	.line_out_hw_vol = 1,
+-
+-	.line_out_descrs = {
+-		"Monitor L",
+-		"Monitor R",
+-		NULL,
+-		NULL,
+-		NULL,
+-		NULL,
+-		"Headphones 1 L",
+-		"Headphones 1 R",
+-		"Headphones 2 L",
+-		"Headphones 2 R",
+-	},
+-
+-	.port_count = {
+-		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
+-		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  8, 10 },
+-		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
+-		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  8 },
+-		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
+-		[SCARLETT2_PORT_TYPE_PCM]      = { 20, 18 },
+-	},
+-
+-	.mux_assignment = { {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_ADAT,     0,  8 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0, 14 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_ADAT,     0,  4 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0, 10 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  6 },
+-		{ 0,                            0,  0 },
+-	} },
+-};
+-
+-static const struct scarlett2_device_info solo_gen3_info = {
+-	.usb_id = USB_ID(0x1235, 0x8211),
+-
+-	.has_msd_mode = 1,
+-	.config_set = SCARLETT2_CONFIG_SET_NO_MIXER,
+-	.level_input_count = 1,
+-	.level_input_first = 1,
+-	.air_input_count = 1,
+-	.phantom_count = 1,
+-	.inputs_per_phantom = 1,
+-	.direct_monitor = 1,
+-};
+-
+-static const struct scarlett2_device_info s2i2_gen3_info = {
+-	.usb_id = USB_ID(0x1235, 0x8210),
+-
+-	.has_msd_mode = 1,
+-	.config_set = SCARLETT2_CONFIG_SET_NO_MIXER,
+-	.level_input_count = 2,
+-	.air_input_count = 2,
+-	.phantom_count = 1,
+-	.inputs_per_phantom = 2,
+-	.direct_monitor = 2,
+-};
+-
+-static const struct scarlett2_device_info s4i4_gen3_info = {
+-	.usb_id = USB_ID(0x1235, 0x8212),
+-
+-	.has_msd_mode = 1,
+-	.config_set = SCARLETT2_CONFIG_SET_GEN_3,
+-	.level_input_count = 2,
+-	.pad_input_count = 2,
+-	.air_input_count = 2,
+-	.phantom_count = 1,
+-	.inputs_per_phantom = 2,
+-
+-	.line_out_descrs = {
+-		"Monitor L",
+-		"Monitor R",
+-		"Headphones L",
+-		"Headphones R",
+-	},
+-
+-	.port_count = {
+-		[SCARLETT2_PORT_TYPE_NONE]     = { 1, 0 },
+-		[SCARLETT2_PORT_TYPE_ANALOGUE] = { 4, 4 },
+-		[SCARLETT2_PORT_TYPE_MIX]      = { 6, 8 },
+-		[SCARLETT2_PORT_TYPE_PCM]      = { 4, 6 },
+-	},
+-
+-	.mux_assignment = { {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0, 16 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0, 16 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0,  6 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0, 16 },
+-		{ 0,                            0,  0 },
+-	} },
+-};
+-
+-static const struct scarlett2_device_info s8i6_gen3_info = {
+-	.usb_id = USB_ID(0x1235, 0x8213),
+-
+-	.has_msd_mode = 1,
+-	.config_set = SCARLETT2_CONFIG_SET_GEN_3,
+-	.level_input_count = 2,
+-	.pad_input_count = 2,
+-	.air_input_count = 2,
+-	.phantom_count = 1,
+-	.inputs_per_phantom = 2,
+-
+-	.line_out_descrs = {
+-		"Headphones 1 L",
+-		"Headphones 1 R",
+-		"Headphones 2 L",
+-		"Headphones 2 R",
+-	},
+-
+-	.port_count = {
+-		[SCARLETT2_PORT_TYPE_NONE]     = { 1,  0 },
+-		[SCARLETT2_PORT_TYPE_ANALOGUE] = { 6,  4 },
+-		[SCARLETT2_PORT_TYPE_SPDIF]    = { 2,  2 },
+-		[SCARLETT2_PORT_TYPE_MIX]      = { 8,  8 },
+-		[SCARLETT2_PORT_TYPE_PCM]      = { 6, 10 },
+-	},
+-
+-	.mux_assignment = { {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_PCM,      8,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0, 18 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_PCM,      8,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0, 18 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0,  4 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_PCM,      8,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0, 18 },
+-		{ 0,                            0,  0 },
+-	} },
+-};
+-
+-static const struct scarlett2_device_info s18i8_gen3_info = {
+-	.usb_id = USB_ID(0x1235, 0x8214),
+-
+-	.has_msd_mode = 1,
+-	.config_set = SCARLETT2_CONFIG_SET_GEN_3,
+-	.line_out_hw_vol = 1,
+-	.has_speaker_switching = 1,
+-	.level_input_count = 2,
+-	.pad_input_count = 4,
+-	.air_input_count = 4,
+-	.phantom_count = 2,
+-	.inputs_per_phantom = 2,
+-
+-	.line_out_remap_enable = 1,
+-	.line_out_remap = { 0, 1, 6, 7, 2, 3, 4, 5 },
+-
+-	.line_out_descrs = {
+-		"Monitor L",
+-		"Monitor R",
+-		"Alt Monitor L",
+-		"Alt Monitor R",
+-		"Headphones 1 L",
+-		"Headphones 1 R",
+-		"Headphones 2 L",
+-		"Headphones 2 R",
+-	},
+-
+-	.port_count = {
+-		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
+-		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  8,  8 },
+-		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
+-		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  0 },
+-		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 20 },
+-		[SCARLETT2_PORT_TYPE_PCM]      = {  8, 20 },
+-	},
+-
+-	.mux_assignment = { {
+-		{ SCARLETT2_PORT_TYPE_PCM,       0, 10 },
+-		{ SCARLETT2_PORT_TYPE_PCM,      12,  8 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0,  2 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  6,  2 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  2,  4 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
+-		{ SCARLETT2_PORT_TYPE_PCM,      10,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,       0, 20 },
+-		{ SCARLETT2_PORT_TYPE_NONE,      0, 10 },
+-		{ 0,                             0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,       0, 10 },
+-		{ SCARLETT2_PORT_TYPE_PCM,      12,  4 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0,  2 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  6,  2 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  2,  4 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
+-		{ SCARLETT2_PORT_TYPE_PCM,      10,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,       0, 20 },
+-		{ SCARLETT2_PORT_TYPE_NONE,      0, 10 },
+-		{ 0,                             0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,       0, 10 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0,  2 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  6,  2 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  2,  4 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,       0, 20 },
+-		{ SCARLETT2_PORT_TYPE_NONE,      0, 10 },
+-		{ 0,                             0,  0 },
+-	} },
+-};
+-
+-static const struct scarlett2_device_info s18i20_gen3_info = {
+-	.usb_id = USB_ID(0x1235, 0x8215),
+-
+-	.has_msd_mode = 1,
+-	.config_set = SCARLETT2_CONFIG_SET_GEN_3,
+-	.line_out_hw_vol = 1,
+-	.has_speaker_switching = 1,
+-	.has_talkback = 1,
+-	.level_input_count = 2,
+-	.pad_input_count = 8,
+-	.air_input_count = 8,
+-	.phantom_count = 2,
+-	.inputs_per_phantom = 4,
+-
+-	.line_out_descrs = {
+-		"Monitor 1 L",
+-		"Monitor 1 R",
+-		"Monitor 2 L",
+-		"Monitor 2 R",
+-		NULL,
+-		NULL,
+-		"Headphones 1 L",
+-		"Headphones 1 R",
+-		"Headphones 2 L",
+-		"Headphones 2 R",
+-	},
+-
+-	.port_count = {
+-		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
+-		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  9, 10 },
+-		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
+-		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  8 },
+-		[SCARLETT2_PORT_TYPE_MIX]      = { 12, 25 },
+-		[SCARLETT2_PORT_TYPE_PCM]      = { 20, 20 },
+-	},
+-
+-	.mux_assignment = { {
+-		{ SCARLETT2_PORT_TYPE_PCM,       0,  8 },
+-		{ SCARLETT2_PORT_TYPE_PCM,      10, 10 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0, 10 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
+-		{ SCARLETT2_PORT_TYPE_ADAT,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_PCM,       8,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,       0, 25 },
+-		{ SCARLETT2_PORT_TYPE_NONE,      0, 12 },
+-		{ 0,                             0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,       0,  8 },
+-		{ SCARLETT2_PORT_TYPE_PCM,      10,  8 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0, 10 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
+-		{ SCARLETT2_PORT_TYPE_ADAT,      0,  8 },
+-		{ SCARLETT2_PORT_TYPE_PCM,       8,  2 },
+-		{ SCARLETT2_PORT_TYPE_MIX,       0, 25 },
+-		{ SCARLETT2_PORT_TYPE_NONE,      0, 10 },
+-		{ 0,                             0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,       0, 10 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE,  0, 10 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,     0,  2 },
+-		{ SCARLETT2_PORT_TYPE_NONE,      0, 24 },
+-		{ 0,                             0,  0 },
+-	} },
+-};
+-
+-static const struct scarlett2_device_info clarett_8pre_info = {
+-	.usb_id = USB_ID(0x1235, 0x820c),
+-
+-	.config_set = SCARLETT2_CONFIG_SET_CLARETT,
+-	.line_out_hw_vol = 1,
+-	.level_input_count = 2,
+-	.air_input_count = 8,
+-
+-	.line_out_descrs = {
+-		"Monitor L",
+-		"Monitor R",
+-		NULL,
+-		NULL,
+-		NULL,
+-		NULL,
+-		"Headphones 1 L",
+-		"Headphones 1 R",
+-		"Headphones 2 L",
+-		"Headphones 2 R",
+-	},
+-
+-	.port_count = {
+-		[SCARLETT2_PORT_TYPE_NONE]     = {  1,  0 },
+-		[SCARLETT2_PORT_TYPE_ANALOGUE] = {  8, 10 },
+-		[SCARLETT2_PORT_TYPE_SPDIF]    = {  2,  2 },
+-		[SCARLETT2_PORT_TYPE_ADAT]     = {  8,  8 },
+-		[SCARLETT2_PORT_TYPE_MIX]      = { 10, 18 },
+-		[SCARLETT2_PORT_TYPE_PCM]      = { 20, 18 },
+-	},
+-
+-	.mux_assignment = { {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_ADAT,     0,  8 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0, 14 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_ADAT,     0,  4 },
+-		{ SCARLETT2_PORT_TYPE_MIX,      0, 18 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0,  8 },
+-		{ 0,                            0,  0 },
+-	}, {
+-		{ SCARLETT2_PORT_TYPE_PCM,      0, 12 },
+-		{ SCARLETT2_PORT_TYPE_ANALOGUE, 0, 10 },
+-		{ SCARLETT2_PORT_TYPE_SPDIF,    0,  2 },
+-		{ SCARLETT2_PORT_TYPE_NONE,     0, 22 },
+-		{ 0,                            0,  0 },
+-	} },
+-};
+-
+-static const struct scarlett2_device_info *scarlett2_devices[] = {
+-	/* Supported Gen 2 devices */
+-	&s6i6_gen2_info,
+-	&s18i8_gen2_info,
+-	&s18i20_gen2_info,
+-
+-	/* Supported Gen 3 devices */
+-	&solo_gen3_info,
+-	&s2i2_gen3_info,
+-	&s4i4_gen3_info,
+-	&s8i6_gen3_info,
+-	&s18i8_gen3_info,
+-	&s18i20_gen3_info,
+-
+-	/* Supported Clarett+ devices */
+-	&clarett_8pre_info,
+-
+-	/* End of list */
+-	NULL
+-};
+-
+-/* get the starting port index number for a given port type/direction */
+-static int scarlett2_get_port_start_num(
+-	const int port_count[][SCARLETT2_PORT_DIRNS],
+-	int direction, int port_type)
+-{
+-	int i, num = 0;
+-
+-	for (i = 0; i < port_type; i++)
+-		num += port_count[i][direction];
+-
+-	return num;
+-}
+-
+-/*** USB Interactions ***/
+-
+-/* Notifications from the interface */
+-#define SCARLETT2_USB_NOTIFY_SYNC          0x00000008
+-#define SCARLETT2_USB_NOTIFY_DIM_MUTE      0x00200000
+-#define SCARLETT2_USB_NOTIFY_MONITOR       0x00400000
+-#define SCARLETT2_USB_NOTIFY_INPUT_OTHER   0x00800000
+-#define SCARLETT2_USB_NOTIFY_MONITOR_OTHER 0x01000000
+-
+-/* Commands for sending/receiving requests/responses */
+-#define SCARLETT2_USB_CMD_INIT 0
+-#define SCARLETT2_USB_CMD_REQ  2
+-#define SCARLETT2_USB_CMD_RESP 3
+-
+-#define SCARLETT2_USB_INIT_1    0x00000000
+-#define SCARLETT2_USB_INIT_2    0x00000002
+-#define SCARLETT2_USB_GET_METER 0x00001001
+-#define SCARLETT2_USB_GET_MIX   0x00002001
+-#define SCARLETT2_USB_SET_MIX   0x00002002
+-#define SCARLETT2_USB_GET_MUX   0x00003001
+-#define SCARLETT2_USB_SET_MUX   0x00003002
+-#define SCARLETT2_USB_GET_SYNC  0x00006004
+-#define SCARLETT2_USB_GET_DATA  0x00800000
+-#define SCARLETT2_USB_SET_DATA  0x00800001
+-#define SCARLETT2_USB_DATA_CMD  0x00800002
+-
+-#define SCARLETT2_USB_CONFIG_SAVE 6
+-
+-#define SCARLETT2_USB_VOLUME_STATUS_OFFSET 0x31
+-#define SCARLETT2_USB_METER_LEVELS_GET_MAGIC 1
+-
+-/* volume status is read together (matches scarlett2_config_items[1]) */
+-struct scarlett2_usb_volume_status {
+-	/* dim/mute buttons */
+-	u8 dim_mute[SCARLETT2_DIM_MUTE_COUNT];
+-
+-	u8 pad1;
+-
+-	/* software volume setting */
+-	s16 sw_vol[SCARLETT2_ANALOGUE_MAX];
+-
+-	/* actual volume of output inc. dim (-18dB) */
+-	s16 hw_vol[SCARLETT2_ANALOGUE_MAX];
+-
+-	/* internal mute buttons */
+-	u8 mute_switch[SCARLETT2_ANALOGUE_MAX];
+-
+-	/* sw (0) or hw (1) controlled */
+-	u8 sw_hw_switch[SCARLETT2_ANALOGUE_MAX];
+-
+-	u8 pad3[6];
+-
+-	/* front panel volume knob */
+-	s16 master_vol;
+-} __packed;
+-
+-/* Configuration parameters that can be read and written */
+-enum {
+-	SCARLETT2_CONFIG_DIM_MUTE = 0,
+-	SCARLETT2_CONFIG_LINE_OUT_VOLUME = 1,
+-	SCARLETT2_CONFIG_MUTE_SWITCH = 2,
+-	SCARLETT2_CONFIG_SW_HW_SWITCH = 3,
+-	SCARLETT2_CONFIG_LEVEL_SWITCH = 4,
+-	SCARLETT2_CONFIG_PAD_SWITCH = 5,
+-	SCARLETT2_CONFIG_MSD_SWITCH = 6,
+-	SCARLETT2_CONFIG_AIR_SWITCH = 7,
+-	SCARLETT2_CONFIG_STANDALONE_SWITCH = 8,
+-	SCARLETT2_CONFIG_PHANTOM_SWITCH = 9,
+-	SCARLETT2_CONFIG_PHANTOM_PERSISTENCE = 10,
+-	SCARLETT2_CONFIG_DIRECT_MONITOR = 11,
+-	SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH = 12,
+-	SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE = 13,
+-	SCARLETT2_CONFIG_TALKBACK_MAP = 14,
+-	SCARLETT2_CONFIG_COUNT = 15
+-};
+-
+-/* Location, size, and activation command number for the configuration
+- * parameters. Size is in bits and may be 1, 8, or 16.
+- */
+-struct scarlett2_config {
+-	u8 offset;
+-	u8 size;
+-	u8 activate;
+-};
+-
+-static const struct scarlett2_config
+-	scarlett2_config_items[SCARLETT2_CONFIG_SET_COUNT]
+-			      [SCARLETT2_CONFIG_COUNT] =
+-
+-/* Devices without a mixer (Gen 3 Solo and 2i2) */
+-{ {
+-	[SCARLETT2_CONFIG_MSD_SWITCH] = {
+-		.offset = 0x04, .size = 8, .activate = 6 },
+-
+-	[SCARLETT2_CONFIG_PHANTOM_PERSISTENCE] = {
+-		.offset = 0x05, .size = 8, .activate = 6 },
+-
+-	[SCARLETT2_CONFIG_PHANTOM_SWITCH] = {
+-		.offset = 0x06, .size = 8, .activate = 3 },
+-
+-	[SCARLETT2_CONFIG_DIRECT_MONITOR] = {
+-		.offset = 0x07, .size = 8, .activate = 4 },
+-
+-	[SCARLETT2_CONFIG_LEVEL_SWITCH] = {
+-		.offset = 0x08, .size = 1, .activate = 7 },
+-
+-	[SCARLETT2_CONFIG_AIR_SWITCH] = {
+-		.offset = 0x09, .size = 1, .activate = 8 },
+-
+-/* Gen 2 devices: 6i6, 18i8, 18i20 */
+-}, {
+-	[SCARLETT2_CONFIG_DIM_MUTE] = {
+-		.offset = 0x31, .size = 8, .activate = 2 },
+-
+-	[SCARLETT2_CONFIG_LINE_OUT_VOLUME] = {
+-		.offset = 0x34, .size = 16, .activate = 1 },
+-
+-	[SCARLETT2_CONFIG_MUTE_SWITCH] = {
+-		.offset = 0x5c, .size = 8, .activate = 1 },
+-
+-	[SCARLETT2_CONFIG_SW_HW_SWITCH] = {
+-		.offset = 0x66, .size = 8, .activate = 3 },
+-
+-	[SCARLETT2_CONFIG_LEVEL_SWITCH] = {
+-		.offset = 0x7c, .size = 8, .activate = 7 },
+-
+-	[SCARLETT2_CONFIG_PAD_SWITCH] = {
+-		.offset = 0x84, .size = 8, .activate = 8 },
+-
+-	[SCARLETT2_CONFIG_STANDALONE_SWITCH] = {
+-		.offset = 0x8d, .size = 8, .activate = 6 },
+-
+-/* Gen 3 devices: 4i4, 8i6, 18i8, 18i20 */
+-}, {
+-	[SCARLETT2_CONFIG_DIM_MUTE] = {
+-		.offset = 0x31, .size = 8, .activate = 2 },
+-
+-	[SCARLETT2_CONFIG_LINE_OUT_VOLUME] = {
+-		.offset = 0x34, .size = 16, .activate = 1 },
+-
+-	[SCARLETT2_CONFIG_MUTE_SWITCH] = {
+-		.offset = 0x5c, .size = 8, .activate = 1 },
+-
+-	[SCARLETT2_CONFIG_SW_HW_SWITCH] = {
+-		.offset = 0x66, .size = 8, .activate = 3 },
+-
+-	[SCARLETT2_CONFIG_LEVEL_SWITCH] = {
+-		.offset = 0x7c, .size = 8, .activate = 7 },
+-
+-	[SCARLETT2_CONFIG_PAD_SWITCH] = {
+-		.offset = 0x84, .size = 8, .activate = 8 },
+-
+-	[SCARLETT2_CONFIG_AIR_SWITCH] = {
+-		.offset = 0x8c, .size = 8, .activate = 8 },
+-
+-	[SCARLETT2_CONFIG_STANDALONE_SWITCH] = {
+-		.offset = 0x95, .size = 8, .activate = 6 },
+-
+-	[SCARLETT2_CONFIG_PHANTOM_SWITCH] = {
+-		.offset = 0x9c, .size = 1, .activate = 8 },
+-
+-	[SCARLETT2_CONFIG_MSD_SWITCH] = {
+-		.offset = 0x9d, .size = 8, .activate = 6 },
+-
+-	[SCARLETT2_CONFIG_PHANTOM_PERSISTENCE] = {
+-		.offset = 0x9e, .size = 8, .activate = 6 },
+-
+-	[SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH] = {
+-		.offset = 0x9f, .size = 1, .activate = 10 },
+-
+-	[SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE] = {
+-		.offset = 0xa0, .size = 1, .activate = 10 },
+-
+-	[SCARLETT2_CONFIG_TALKBACK_MAP] = {
+-		.offset = 0xb0, .size = 16, .activate = 10 },
+-
+-/* Clarett+ 8Pre */
+-}, {
+-	[SCARLETT2_CONFIG_DIM_MUTE] = {
+-		.offset = 0x31, .size = 8, .activate = 2 },
+-
+-	[SCARLETT2_CONFIG_LINE_OUT_VOLUME] = {
+-		.offset = 0x34, .size = 16, .activate = 1 },
+-
+-	[SCARLETT2_CONFIG_MUTE_SWITCH] = {
+-		.offset = 0x5c, .size = 8, .activate = 1 },
+-
+-	[SCARLETT2_CONFIG_SW_HW_SWITCH] = {
+-		.offset = 0x66, .size = 8, .activate = 3 },
+-
+-	[SCARLETT2_CONFIG_LEVEL_SWITCH] = {
+-		.offset = 0x7c, .size = 8, .activate = 7 },
+-
+-	[SCARLETT2_CONFIG_AIR_SWITCH] = {
+-		.offset = 0x95, .size = 8, .activate = 8 },
+-
+-	[SCARLETT2_CONFIG_STANDALONE_SWITCH] = {
+-		.offset = 0x8d, .size = 8, .activate = 6 },
+-} };
+-
+-/* proprietary request/response format */
+-struct scarlett2_usb_packet {
+-	__le32 cmd;
+-	__le16 size;
+-	__le16 seq;
+-	__le32 error;
+-	__le32 pad;
+-	u8 data[];
+-};
+-
+-static void scarlett2_fill_request_header(struct scarlett2_data *private,
+-					  struct scarlett2_usb_packet *req,
+-					  u32 cmd, u16 req_size)
+-{
+-	/* sequence must go up by 1 for each request */
+-	u16 seq = private->scarlett2_seq++;
+-
+-	req->cmd = cpu_to_le32(cmd);
+-	req->size = cpu_to_le16(req_size);
+-	req->seq = cpu_to_le16(seq);
+-	req->error = 0;
+-	req->pad = 0;
+-}
+-
+-static int scarlett2_usb_tx(struct usb_device *dev, int interface,
+-			    void *buf, u16 size)
+-{
+-	return snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
+-			SCARLETT2_USB_CMD_REQ,
+-			USB_RECIP_INTERFACE | USB_TYPE_CLASS | USB_DIR_OUT,
+-			0, interface, buf, size);
+-}
+-
+-static int scarlett2_usb_rx(struct usb_device *dev, int interface,
+-			    u32 usb_req, void *buf, u16 size)
+-{
+-	return snd_usb_ctl_msg(dev, usb_rcvctrlpipe(dev, 0),
+-			usb_req,
+-			USB_RECIP_INTERFACE | USB_TYPE_CLASS | USB_DIR_IN,
+-			0, interface, buf, size);
+-}
+-
+-/* Send a proprietary format request to the Scarlett interface */
+-static int scarlett2_usb(
+-	struct usb_mixer_interface *mixer, u32 cmd,
+-	void *req_data, u16 req_size, void *resp_data, u16 resp_size)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	struct usb_device *dev = mixer->chip->dev;
+-	struct scarlett2_usb_packet *req, *resp = NULL;
+-	size_t req_buf_size = struct_size(req, data, req_size);
+-	size_t resp_buf_size = struct_size(resp, data, resp_size);
+-	int err;
+-
+-	req = kmalloc(req_buf_size, GFP_KERNEL);
+-	if (!req) {
+-		err = -ENOMEM;
+-		goto error;
+-	}
+-
+-	resp = kmalloc(resp_buf_size, GFP_KERNEL);
+-	if (!resp) {
+-		err = -ENOMEM;
+-		goto error;
+-	}
+-
+-	mutex_lock(&private->usb_mutex);
+-
+-	/* build request message and send it */
+-
+-	scarlett2_fill_request_header(private, req, cmd, req_size);
+-
+-	if (req_size)
+-		memcpy(req->data, req_data, req_size);
+-
+-	err = scarlett2_usb_tx(dev, private->bInterfaceNumber,
+-			       req, req_buf_size);
+-
+-	if (err != req_buf_size) {
+-		usb_audio_err(
+-			mixer->chip,
+-			"Scarlett Gen 2/3 USB request result cmd %x was %d\n",
+-			cmd, err);
+-		err = -EINVAL;
+-		goto unlock;
+-	}
+-
+-	/* send a second message to get the response */
+-
+-	err = scarlett2_usb_rx(dev, private->bInterfaceNumber,
+-			       SCARLETT2_USB_CMD_RESP,
+-			       resp, resp_buf_size);
+-
+-	/* validate the response */
+-
+-	if (err != resp_buf_size) {
+-		usb_audio_err(
+-			mixer->chip,
+-			"Scarlett Gen 2/3 USB response result cmd %x was %d "
+-			"expected %zu\n",
+-			cmd, err, resp_buf_size);
+-		err = -EINVAL;
+-		goto unlock;
+-	}
+-
+-	/* cmd/seq/size should match except when initialising
+-	 * seq sent = 1, response = 0
+-	 */
+-	if (resp->cmd != req->cmd ||
+-	    (resp->seq != req->seq &&
+-		(le16_to_cpu(req->seq) != 1 || resp->seq != 0)) ||
+-	    resp_size != le16_to_cpu(resp->size) ||
+-	    resp->error ||
+-	    resp->pad) {
+-		usb_audio_err(
+-			mixer->chip,
+-			"Scarlett Gen 2/3 USB invalid response; "
+-			   "cmd tx/rx %d/%d seq %d/%d size %d/%d "
+-			   "error %d pad %d\n",
+-			le32_to_cpu(req->cmd), le32_to_cpu(resp->cmd),
+-			le16_to_cpu(req->seq), le16_to_cpu(resp->seq),
+-			resp_size, le16_to_cpu(resp->size),
+-			le32_to_cpu(resp->error),
+-			le32_to_cpu(resp->pad));
+-		err = -EINVAL;
+-		goto unlock;
+-	}
+-
+-	if (resp_data && resp_size > 0)
+-		memcpy(resp_data, resp->data, resp_size);
+-
+-unlock:
+-	mutex_unlock(&private->usb_mutex);
+-error:
+-	kfree(req);
+-	kfree(resp);
+-	return err;
+-}
+-
+-/* Send a USB message to get data; result placed in *buf */
+-static int scarlett2_usb_get(
+-	struct usb_mixer_interface *mixer,
+-	int offset, void *buf, int size)
+-{
+-	struct {
+-		__le32 offset;
+-		__le32 size;
+-	} __packed req;
+-
+-	req.offset = cpu_to_le32(offset);
+-	req.size = cpu_to_le32(size);
+-	return scarlett2_usb(mixer, SCARLETT2_USB_GET_DATA,
+-			     &req, sizeof(req), buf, size);
+-}
+-
+-/* Send a USB message to get configuration parameters; result placed in *buf */
+-static int scarlett2_usb_get_config(
+-	struct usb_mixer_interface *mixer,
+-	int config_item_num, int count, void *buf)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const struct scarlett2_config *config_item =
+-		&scarlett2_config_items[info->config_set][config_item_num];
+-	int size, err, i;
+-	u8 *buf_8;
+-	u8 value;
+-
+-	/* For byte-sized parameters, retrieve directly into buf */
+-	if (config_item->size >= 8) {
+-		size = config_item->size / 8 * count;
+-		err = scarlett2_usb_get(mixer, config_item->offset, buf, size);
+-		if (err < 0)
+-			return err;
+-		if (size == 2) {
+-			u16 *buf_16 = buf;
+-
+-			for (i = 0; i < count; i++, buf_16++)
+-				*buf_16 = le16_to_cpu(*(__le16 *)buf_16);
+-		}
+-		return 0;
+-	}
+-
+-	/* For bit-sized parameters, retrieve into value */
+-	err = scarlett2_usb_get(mixer, config_item->offset, &value, 1);
+-	if (err < 0)
+-		return err;
+-
+-	/* then unpack from value into buf[] */
+-	buf_8 = buf;
+-	for (i = 0; i < 8 && i < count; i++, value >>= 1)
+-		*buf_8++ = value & 1;
+-
+-	return 0;
+-}
+-
+-/* Send SCARLETT2_USB_DATA_CMD SCARLETT2_USB_CONFIG_SAVE */
+-static void scarlett2_config_save(struct usb_mixer_interface *mixer)
+-{
+-	__le32 req = cpu_to_le32(SCARLETT2_USB_CONFIG_SAVE);
+-
+-	int err = scarlett2_usb(mixer, SCARLETT2_USB_DATA_CMD,
+-				&req, sizeof(u32),
+-				NULL, 0);
+-	if (err < 0)
+-		usb_audio_err(mixer->chip, "config save failed: %d\n", err);
+-}
+-
+-/* Delayed work to save config */
+-static void scarlett2_config_save_work(struct work_struct *work)
+-{
+-	struct scarlett2_data *private =
+-		container_of(work, struct scarlett2_data, work.work);
+-
+-	scarlett2_config_save(private->mixer);
+-}
+-
+-/* Send a USB message to set a SCARLETT2_CONFIG_* parameter */
+-static int scarlett2_usb_set_config(
+-	struct usb_mixer_interface *mixer,
+-	int config_item_num, int index, int value)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const struct scarlett2_config *config_item =
+-	       &scarlett2_config_items[info->config_set][config_item_num];
+-	struct {
+-		__le32 offset;
+-		__le32 bytes;
+-		__le32 value;
+-	} __packed req;
+-	__le32 req2;
+-	int offset, size;
+-	int err;
+-
+-	/* Cancel any pending NVRAM save */
+-	cancel_delayed_work_sync(&private->work);
+-
+-	/* Convert config_item->size in bits to size in bytes and
+-	 * calculate offset
+-	 */
+-	if (config_item->size >= 8) {
+-		size = config_item->size / 8;
+-		offset = config_item->offset + index * size;
+-
+-	/* If updating a bit, retrieve the old value, set/clear the
+-	 * bit as needed, and update value
+-	 */
+-	} else {
+-		u8 tmp;
+-
+-		size = 1;
+-		offset = config_item->offset;
+-
+-		err = scarlett2_usb_get(mixer, offset, &tmp, 1);
+-		if (err < 0)
+-			return err;
+-
+-		if (value)
+-			tmp |= (1 << index);
+-		else
+-			tmp &= ~(1 << index);
+-
+-		value = tmp;
+-	}
+-
+-	/* Send the configuration parameter data */
+-	req.offset = cpu_to_le32(offset);
+-	req.bytes = cpu_to_le32(size);
+-	req.value = cpu_to_le32(value);
+-	err = scarlett2_usb(mixer, SCARLETT2_USB_SET_DATA,
+-			    &req, sizeof(u32) * 2 + size,
+-			    NULL, 0);
+-	if (err < 0)
+-		return err;
+-
+-	/* Activate the change */
+-	req2 = cpu_to_le32(config_item->activate);
+-	err = scarlett2_usb(mixer, SCARLETT2_USB_DATA_CMD,
+-			    &req2, sizeof(req2), NULL, 0);
+-	if (err < 0)
+-		return err;
+-
+-	/* Schedule the change to be written to NVRAM */
+-	if (config_item->activate != SCARLETT2_USB_CONFIG_SAVE)
+-		schedule_delayed_work(&private->work, msecs_to_jiffies(2000));
+-
+-	return 0;
+-}
+-
+-/* Send a USB message to get sync status; result placed in *sync */
+-static int scarlett2_usb_get_sync_status(
+-	struct usb_mixer_interface *mixer,
+-	u8 *sync)
+-{
+-	__le32 data;
+-	int err;
+-
+-	err = scarlett2_usb(mixer, SCARLETT2_USB_GET_SYNC,
+-			    NULL, 0, &data, sizeof(data));
+-	if (err < 0)
+-		return err;
+-
+-	*sync = !!data;
+-	return 0;
+-}
+-
+-/* Send a USB message to get volume status; result placed in *buf */
+-static int scarlett2_usb_get_volume_status(
+-	struct usb_mixer_interface *mixer,
+-	struct scarlett2_usb_volume_status *buf)
+-{
+-	return scarlett2_usb_get(mixer, SCARLETT2_USB_VOLUME_STATUS_OFFSET,
+-				 buf, sizeof(*buf));
+-}
+-
+-/* Send a USB message to get the volumes for all inputs of one mix
+- * and put the values into private->mix[]
+- */
+-static int scarlett2_usb_get_mix(struct usb_mixer_interface *mixer,
+-				 int mix_num)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-
+-	int num_mixer_in =
+-		info->port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_OUT];
+-	int err, i, j, k;
+-
+-	struct {
+-		__le16 mix_num;
+-		__le16 count;
+-	} __packed req;
+-
+-	__le16 data[SCARLETT2_INPUT_MIX_MAX];
+-
+-	req.mix_num = cpu_to_le16(mix_num);
+-	req.count = cpu_to_le16(num_mixer_in);
+-
+-	err = scarlett2_usb(mixer, SCARLETT2_USB_GET_MIX,
+-			    &req, sizeof(req),
+-			    data, num_mixer_in * sizeof(u16));
+-	if (err < 0)
+-		return err;
+-
+-	for (i = 0, j = mix_num * num_mixer_in; i < num_mixer_in; i++, j++) {
+-		u16 mixer_value = le16_to_cpu(data[i]);
+-
+-		for (k = 0; k < SCARLETT2_MIXER_VALUE_COUNT; k++)
+-			if (scarlett2_mixer_values[k] >= mixer_value)
+-				break;
+-		if (k == SCARLETT2_MIXER_VALUE_COUNT)
+-			k = SCARLETT2_MIXER_MAX_VALUE;
+-		private->mix[j] = k;
+-	}
+-
+-	return 0;
+-}
+-
+-/* Send a USB message to set the volumes for all inputs of one mix
+- * (values obtained from private->mix[])
+- */
+-static int scarlett2_usb_set_mix(struct usb_mixer_interface *mixer,
+-				 int mix_num)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-
+-	struct {
+-		__le16 mix_num;
+-		__le16 data[SCARLETT2_INPUT_MIX_MAX];
+-	} __packed req;
+-
+-	int i, j;
+-	int num_mixer_in =
+-		info->port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_OUT];
+-
+-	req.mix_num = cpu_to_le16(mix_num);
+-
+-	for (i = 0, j = mix_num * num_mixer_in; i < num_mixer_in; i++, j++)
+-		req.data[i] = cpu_to_le16(
+-			scarlett2_mixer_values[private->mix[j]]
+-		);
+-
+-	return scarlett2_usb(mixer, SCARLETT2_USB_SET_MIX,
+-			     &req, (num_mixer_in + 1) * sizeof(u16),
+-			     NULL, 0);
+-}
+-
+-/* Convert a port number index (per info->port_count) to a hardware ID */
+-static u32 scarlett2_mux_src_num_to_id(
+-	const int port_count[][SCARLETT2_PORT_DIRNS], int num)
+-{
+-	int port_type;
+-
+-	for (port_type = 0;
+-	     port_type < SCARLETT2_PORT_TYPE_COUNT;
+-	     port_type++) {
+-		if (num < port_count[port_type][SCARLETT2_PORT_IN])
+-			return scarlett2_ports[port_type].id | num;
+-		num -= port_count[port_type][SCARLETT2_PORT_IN];
+-	}
+-
+-	/* Oops */
+-	return 0;
+-}
+-
+-/* Convert a hardware ID to a port number index */
+-static u32 scarlett2_mux_id_to_num(
+-	const int port_count[][SCARLETT2_PORT_DIRNS], int direction, u32 id)
+-{
+-	int port_type;
+-	int port_num = 0;
+-
+-	for (port_type = 0;
+-	     port_type < SCARLETT2_PORT_TYPE_COUNT;
+-	     port_type++) {
+-		int base = scarlett2_ports[port_type].id;
+-		int count = port_count[port_type][direction];
+-
+-		if (id >= base && id < base + count)
+-			return port_num + id - base;
+-		port_num += count;
+-	}
+-
+-	/* Oops */
+-	return -1;
+-}
+-
+-/* Convert one mux entry from the interface and load into private->mux[] */
+-static void scarlett2_usb_populate_mux(struct scarlett2_data *private,
+-				       u32 mux_entry)
+-{
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-
+-	int dst_idx, src_idx;
+-
+-	dst_idx = scarlett2_mux_id_to_num(port_count, SCARLETT2_PORT_OUT,
+-					  mux_entry & 0xFFF);
+-	if (dst_idx < 0)
+-		return;
+-
+-	if (dst_idx >= private->num_mux_dsts) {
+-		usb_audio_err(private->mixer->chip,
+-			"BUG: scarlett2_mux_id_to_num(%06x, OUT): %d >= %d",
+-			mux_entry, dst_idx, private->num_mux_dsts);
+-		return;
+-	}
+-
+-	src_idx = scarlett2_mux_id_to_num(port_count, SCARLETT2_PORT_IN,
+-					  mux_entry >> 12);
+-	if (src_idx < 0)
+-		return;
+-
+-	if (src_idx >= private->num_mux_srcs) {
+-		usb_audio_err(private->mixer->chip,
+-			"BUG: scarlett2_mux_id_to_num(%06x, IN): %d >= %d",
+-			mux_entry, src_idx, private->num_mux_srcs);
+-		return;
+-	}
+-
+-	private->mux[dst_idx] = src_idx;
+-}
+-
+-/* Send USB message to get mux inputs and then populate private->mux[] */
+-static int scarlett2_usb_get_mux(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	int count = private->num_mux_dsts;
+-	int err, i;
+-
+-	struct {
+-		__le16 num;
+-		__le16 count;
+-	} __packed req;
+-
+-	__le32 data[SCARLETT2_MUX_MAX];
+-
+-	private->mux_updated = 0;
+-
+-	req.num = 0;
+-	req.count = cpu_to_le16(count);
+-
+-	err = scarlett2_usb(mixer, SCARLETT2_USB_GET_MUX,
+-			    &req, sizeof(req),
+-			    data, count * sizeof(u32));
+-	if (err < 0)
+-		return err;
+-
+-	for (i = 0; i < count; i++)
+-		scarlett2_usb_populate_mux(private, le32_to_cpu(data[i]));
+-
+-	return 0;
+-}
+-
+-/* Send USB messages to set mux inputs */
+-static int scarlett2_usb_set_mux(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int table;
+-
+-	struct {
+-		__le16 pad;
+-		__le16 num;
+-		__le32 data[SCARLETT2_MUX_MAX];
+-	} __packed req;
+-
+-	req.pad = 0;
+-
+-	/* set mux settings for each rate */
+-	for (table = 0; table < SCARLETT2_MUX_TABLES; table++) {
+-		const struct scarlett2_mux_entry *entry;
+-
+-		/* i counts over the output array */
+-		int i = 0, err;
+-
+-		req.num = cpu_to_le16(table);
+-
+-		/* loop through each entry */
+-		for (entry = info->mux_assignment[table];
+-		     entry->count;
+-		     entry++) {
+-			int j;
+-			int port_type = entry->port_type;
+-			int port_idx = entry->start;
+-			int mux_idx = scarlett2_get_port_start_num(port_count,
+-				SCARLETT2_PORT_OUT, port_type) + port_idx;
+-			int dst_id = scarlett2_ports[port_type].id + port_idx;
+-
+-			/* Empty slots */
+-			if (!dst_id) {
+-				for (j = 0; j < entry->count; j++)
+-					req.data[i++] = 0;
+-				continue;
+-			}
+-
+-			/* Non-empty mux slots use the lower 12 bits
+-			 * for the destination and next 12 bits for
+-			 * the source
+-			 */
+-			for (j = 0; j < entry->count; j++) {
+-				int src_id = scarlett2_mux_src_num_to_id(
+-					port_count, private->mux[mux_idx++]);
+-				req.data[i++] = cpu_to_le32(dst_id |
+-							    src_id << 12);
+-				dst_id++;
+-			}
+-		}
+-
+-		err = scarlett2_usb(mixer, SCARLETT2_USB_SET_MUX,
+-				    &req, (i + 1) * sizeof(u32),
+-				    NULL, 0);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	return 0;
+-}
+-
+-/* Send USB message to get meter levels */
+-static int scarlett2_usb_get_meter_levels(struct usb_mixer_interface *mixer,
+-					  u16 num_meters, u16 *levels)
+-{
+-	struct {
+-		__le16 pad;
+-		__le16 num_meters;
+-		__le32 magic;
+-	} __packed req;
+-	u32 resp[SCARLETT2_MAX_METERS];
+-	int i, err;
+-
+-	req.pad = 0;
+-	req.num_meters = cpu_to_le16(num_meters);
+-	req.magic = cpu_to_le32(SCARLETT2_USB_METER_LEVELS_GET_MAGIC);
+-	err = scarlett2_usb(mixer, SCARLETT2_USB_GET_METER,
+-			    &req, sizeof(req), resp, num_meters * sizeof(u32));
+-	if (err < 0)
+-		return err;
+-
+-	/* copy, convert to u16 */
+-	for (i = 0; i < num_meters; i++)
+-		levels[i] = resp[i];
+-
+-	return 0;
+-}
+-
+-/*** Control Functions ***/
+-
+-/* helper function to create a new control */
+-static int scarlett2_add_new_ctl(struct usb_mixer_interface *mixer,
+-				 const struct snd_kcontrol_new *ncontrol,
+-				 int index, int channels, const char *name,
+-				 struct snd_kcontrol **kctl_return)
+-{
+-	struct snd_kcontrol *kctl;
+-	struct usb_mixer_elem_info *elem;
+-	int err;
+-
+-	elem = kzalloc(sizeof(*elem), GFP_KERNEL);
+-	if (!elem)
+-		return -ENOMEM;
+-
+-	/* We set USB_MIXER_BESPOKEN type, so that the core USB mixer code
+-	 * ignores them for resume and other operations.
+-	 * Also, the head.id field is set to 0, as we don't use this field.
+-	 */
+-	elem->head.mixer = mixer;
+-	elem->control = index;
+-	elem->head.id = 0;
+-	elem->channels = channels;
+-	elem->val_type = USB_MIXER_BESPOKEN;
+-
+-	kctl = snd_ctl_new1(ncontrol, elem);
+-	if (!kctl) {
+-		kfree(elem);
+-		return -ENOMEM;
+-	}
+-	kctl->private_free = snd_usb_mixer_elem_free;
+-
+-	strscpy(kctl->id.name, name, sizeof(kctl->id.name));
+-
+-	err = snd_usb_mixer_add_control(&elem->head, kctl);
+-	if (err < 0)
+-		return err;
+-
+-	if (kctl_return)
+-		*kctl_return = kctl;
+-
+-	return 0;
+-}
+-
+-/*** Sync Control ***/
+-
+-/* Update sync control after receiving notification that the status
+- * has changed
+- */
+-static int scarlett2_update_sync(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	private->sync_updated = 0;
+-	return scarlett2_usb_get_sync_status(mixer, &private->sync);
+-}
+-
+-static int scarlett2_sync_ctl_info(struct snd_kcontrol *kctl,
+-				   struct snd_ctl_elem_info *uinfo)
+-{
+-	static const char *texts[2] = {
+-		"Unlocked", "Locked"
+-	};
+-	return snd_ctl_enum_info(uinfo, 1, 2, texts);
+-}
+-
+-static int scarlett2_sync_ctl_get(struct snd_kcontrol *kctl,
+-				  struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->sync_updated) {
+-		err = scarlett2_update_sync(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.enumerated.item[0] = private->sync;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_sync_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.access = SNDRV_CTL_ELEM_ACCESS_READ,
+-	.name = "",
+-	.info = scarlett2_sync_ctl_info,
+-	.get  = scarlett2_sync_ctl_get
+-};
+-
+-static int scarlett2_add_sync_ctl(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	/* devices without a mixer also don't support reporting sync status */
+-	if (private->info->config_set == SCARLETT2_CONFIG_SET_NO_MIXER)
+-		return 0;
+-
+-	return scarlett2_add_new_ctl(mixer, &scarlett2_sync_ctl,
+-				     0, 1, "Sync Status", &private->sync_ctl);
+-}
+-
+-/*** Analogue Line Out Volume Controls ***/
+-
+-/* Update hardware volume controls after receiving notification that
+- * they have changed
+- */
+-static int scarlett2_update_volumes(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	struct scarlett2_usb_volume_status volume_status;
+-	int num_line_out =
+-		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
+-	int err, i;
+-	int mute;
+-
+-	private->vol_updated = 0;
+-
+-	err = scarlett2_usb_get_volume_status(mixer, &volume_status);
+-	if (err < 0)
+-		return err;
+-
+-	private->master_vol = clamp(
+-		volume_status.master_vol + SCARLETT2_VOLUME_BIAS,
+-		0, SCARLETT2_VOLUME_BIAS);
+-
+-	if (info->line_out_hw_vol)
+-		for (i = 0; i < SCARLETT2_DIM_MUTE_COUNT; i++)
+-			private->dim_mute[i] = !!volume_status.dim_mute[i];
+-
+-	mute = private->dim_mute[SCARLETT2_BUTTON_MUTE];
+-
+-	for (i = 0; i < num_line_out; i++)
+-		if (private->vol_sw_hw_switch[i]) {
+-			private->vol[i] = private->master_vol;
+-			private->mute_switch[i] = mute;
+-		}
+-
+-	return 0;
+-}
+-
+-static int scarlett2_volume_ctl_info(struct snd_kcontrol *kctl,
+-				     struct snd_ctl_elem_info *uinfo)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-
+-	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
+-	uinfo->count = elem->channels;
+-	uinfo->value.integer.min = 0;
+-	uinfo->value.integer.max = SCARLETT2_VOLUME_BIAS;
+-	uinfo->value.integer.step = 1;
+-	return 0;
+-}
+-
+-static int scarlett2_master_volume_ctl_get(struct snd_kcontrol *kctl,
+-					   struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->vol_updated) {
+-		err = scarlett2_update_volumes(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.integer.value[0] = private->master_vol;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int line_out_remap(struct scarlett2_data *private, int index)
+-{
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int line_out_count =
+-		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
+-
+-	if (!info->line_out_remap_enable)
+-		return index;
+-
+-	if (index >= line_out_count)
+-		return index;
+-
+-	return info->line_out_remap[index];
+-}
+-
+-static int scarlett2_volume_ctl_get(struct snd_kcontrol *kctl,
+-				    struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int index = line_out_remap(private, elem->control);
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->vol_updated) {
+-		err = scarlett2_update_volumes(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.integer.value[0] = private->vol[index];
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_volume_ctl_put(struct snd_kcontrol *kctl,
+-				    struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int index = line_out_remap(private, elem->control);
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->vol[index];
+-	val = ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->vol[index] = val;
+-	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_LINE_OUT_VOLUME,
+-				       index, val - SCARLETT2_VOLUME_BIAS);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const DECLARE_TLV_DB_MINMAX(
+-	db_scale_scarlett2_gain, -SCARLETT2_VOLUME_BIAS * 100, 0
+-);
+-
+-static const struct snd_kcontrol_new scarlett2_master_volume_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.access = SNDRV_CTL_ELEM_ACCESS_READ |
+-		  SNDRV_CTL_ELEM_ACCESS_TLV_READ,
+-	.name = "",
+-	.info = scarlett2_volume_ctl_info,
+-	.get  = scarlett2_master_volume_ctl_get,
+-	.private_value = 0, /* max value */
+-	.tlv = { .p = db_scale_scarlett2_gain }
+-};
+-
+-static const struct snd_kcontrol_new scarlett2_line_out_volume_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.access = SNDRV_CTL_ELEM_ACCESS_READWRITE |
+-		  SNDRV_CTL_ELEM_ACCESS_TLV_READ,
+-	.name = "",
+-	.info = scarlett2_volume_ctl_info,
+-	.get  = scarlett2_volume_ctl_get,
+-	.put  = scarlett2_volume_ctl_put,
+-	.private_value = 0, /* max value */
+-	.tlv = { .p = db_scale_scarlett2_gain }
+-};
+-
+-/*** Mute Switch Controls ***/
+-
+-static int scarlett2_mute_ctl_get(struct snd_kcontrol *kctl,
+-					struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int index = line_out_remap(private, elem->control);
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->vol_updated) {
+-		err = scarlett2_update_volumes(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.integer.value[0] = private->mute_switch[index];
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_mute_ctl_put(struct snd_kcontrol *kctl,
+-					struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int index = line_out_remap(private, elem->control);
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->mute_switch[index];
+-	val = !!ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->mute_switch[index] = val;
+-
+-	/* Send mute change to the device */
+-	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_MUTE_SWITCH,
+-				       index, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_mute_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = snd_ctl_boolean_mono_info,
+-	.get  = scarlett2_mute_ctl_get,
+-	.put  = scarlett2_mute_ctl_put,
+-};
+-
+-/*** HW/SW Volume Switch Controls ***/
+-
+-static void scarlett2_sw_hw_ctl_ro(struct scarlett2_data *private, int index)
+-{
+-	private->sw_hw_ctls[index]->vd[0].access &=
+-		~SNDRV_CTL_ELEM_ACCESS_WRITE;
+-}
+-
+-static void scarlett2_sw_hw_ctl_rw(struct scarlett2_data *private, int index)
+-{
+-	private->sw_hw_ctls[index]->vd[0].access |=
+-		SNDRV_CTL_ELEM_ACCESS_WRITE;
+-}
+-
+-static int scarlett2_sw_hw_enum_ctl_info(struct snd_kcontrol *kctl,
+-					 struct snd_ctl_elem_info *uinfo)
+-{
+-	static const char *const values[2] = {
+-		"SW", "HW"
+-	};
+-
+-	return snd_ctl_enum_info(uinfo, 1, 2, values);
+-}
+-
+-static int scarlett2_sw_hw_enum_ctl_get(struct snd_kcontrol *kctl,
+-					struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct scarlett2_data *private = elem->head.mixer->private_data;
+-	int index = line_out_remap(private, elem->control);
+-
+-	ucontrol->value.enumerated.item[0] = private->vol_sw_hw_switch[index];
+-	return 0;
+-}
+-
+-static void scarlett2_vol_ctl_set_writable(struct usb_mixer_interface *mixer,
+-					   int index, int value)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	struct snd_card *card = mixer->chip->card;
+-
+-	/* Set/Clear write bits */
+-	if (value) {
+-		private->vol_ctls[index]->vd[0].access |=
+-			SNDRV_CTL_ELEM_ACCESS_WRITE;
+-		private->mute_ctls[index]->vd[0].access |=
+-			SNDRV_CTL_ELEM_ACCESS_WRITE;
+-	} else {
+-		private->vol_ctls[index]->vd[0].access &=
+-			~SNDRV_CTL_ELEM_ACCESS_WRITE;
+-		private->mute_ctls[index]->vd[0].access &=
+-			~SNDRV_CTL_ELEM_ACCESS_WRITE;
+-	}
+-
+-	/* Notify of write bit and possible value change */
+-	snd_ctl_notify(card,
+-		       SNDRV_CTL_EVENT_MASK_VALUE | SNDRV_CTL_EVENT_MASK_INFO,
+-		       &private->vol_ctls[index]->id);
+-	snd_ctl_notify(card,
+-		       SNDRV_CTL_EVENT_MASK_VALUE | SNDRV_CTL_EVENT_MASK_INFO,
+-		       &private->mute_ctls[index]->id);
+-}
+-
+-static int scarlett2_sw_hw_change(struct usb_mixer_interface *mixer,
+-				  int ctl_index, int val)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	int index = line_out_remap(private, ctl_index);
+-	int err;
+-
+-	private->vol_sw_hw_switch[index] = val;
+-
+-	/* Change access mode to RO (hardware controlled volume)
+-	 * or RW (software controlled volume)
+-	 */
+-	scarlett2_vol_ctl_set_writable(mixer, ctl_index, !val);
+-
+-	/* Reset volume/mute to master volume/mute */
+-	private->vol[index] = private->master_vol;
+-	private->mute_switch[index] = private->dim_mute[SCARLETT2_BUTTON_MUTE];
+-
+-	/* Set SW volume to current HW volume */
+-	err = scarlett2_usb_set_config(
+-		mixer, SCARLETT2_CONFIG_LINE_OUT_VOLUME,
+-		index, private->master_vol - SCARLETT2_VOLUME_BIAS);
+-	if (err < 0)
+-		return err;
+-
+-	/* Set SW mute to current HW mute */
+-	err = scarlett2_usb_set_config(
+-		mixer, SCARLETT2_CONFIG_MUTE_SWITCH,
+-		index, private->dim_mute[SCARLETT2_BUTTON_MUTE]);
+-	if (err < 0)
+-		return err;
+-
+-	/* Send SW/HW switch change to the device */
+-	return scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_SW_HW_SWITCH,
+-					index, val);
+-}
+-
+-static int scarlett2_sw_hw_enum_ctl_put(struct snd_kcontrol *kctl,
+-					struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int ctl_index = elem->control;
+-	int index = line_out_remap(private, ctl_index);
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->vol_sw_hw_switch[index];
+-	val = !!ucontrol->value.enumerated.item[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	err = scarlett2_sw_hw_change(mixer, ctl_index, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_sw_hw_enum_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = scarlett2_sw_hw_enum_ctl_info,
+-	.get  = scarlett2_sw_hw_enum_ctl_get,
+-	.put  = scarlett2_sw_hw_enum_ctl_put,
+-};
+-
+-/*** Line Level/Instrument Level Switch Controls ***/
+-
+-static int scarlett2_update_input_other(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-
+-	private->input_other_updated = 0;
+-
+-	if (info->level_input_count) {
+-		int err = scarlett2_usb_get_config(
+-			mixer, SCARLETT2_CONFIG_LEVEL_SWITCH,
+-			info->level_input_count + info->level_input_first,
+-			private->level_switch);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	if (info->pad_input_count) {
+-		int err = scarlett2_usb_get_config(
+-			mixer, SCARLETT2_CONFIG_PAD_SWITCH,
+-			info->pad_input_count, private->pad_switch);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	if (info->air_input_count) {
+-		int err = scarlett2_usb_get_config(
+-			mixer, SCARLETT2_CONFIG_AIR_SWITCH,
+-			info->air_input_count, private->air_switch);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	if (info->phantom_count) {
+-		int err = scarlett2_usb_get_config(
+-			mixer, SCARLETT2_CONFIG_PHANTOM_SWITCH,
+-			info->phantom_count, private->phantom_switch);
+-		if (err < 0)
+-			return err;
+-
+-		err = scarlett2_usb_get_config(
+-			mixer, SCARLETT2_CONFIG_PHANTOM_PERSISTENCE,
+-			1, &private->phantom_persistence);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	return 0;
+-}
+-
+-static int scarlett2_level_enum_ctl_info(struct snd_kcontrol *kctl,
+-					 struct snd_ctl_elem_info *uinfo)
+-{
+-	static const char *const values[2] = {
+-		"Line", "Inst"
+-	};
+-
+-	return snd_ctl_enum_info(uinfo, 1, 2, values);
+-}
+-
+-static int scarlett2_level_enum_ctl_get(struct snd_kcontrol *kctl,
+-					struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-
+-	int index = elem->control + info->level_input_first;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->input_other_updated) {
+-		err = scarlett2_update_input_other(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.enumerated.item[0] = private->level_switch[index];
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_level_enum_ctl_put(struct snd_kcontrol *kctl,
+-					struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-
+-	int index = elem->control + info->level_input_first;
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->level_switch[index];
+-	val = !!ucontrol->value.enumerated.item[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->level_switch[index] = val;
+-
+-	/* Send switch change to the device */
+-	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_LEVEL_SWITCH,
+-				       index, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_level_enum_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = scarlett2_level_enum_ctl_info,
+-	.get  = scarlett2_level_enum_ctl_get,
+-	.put  = scarlett2_level_enum_ctl_put,
+-};
+-
+-/*** Pad Switch Controls ***/
+-
+-static int scarlett2_pad_ctl_get(struct snd_kcontrol *kctl,
+-				 struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->input_other_updated) {
+-		err = scarlett2_update_input_other(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.integer.value[0] =
+-		private->pad_switch[elem->control];
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_pad_ctl_put(struct snd_kcontrol *kctl,
+-				 struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	int index = elem->control;
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->pad_switch[index];
+-	val = !!ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->pad_switch[index] = val;
+-
+-	/* Send switch change to the device */
+-	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_PAD_SWITCH,
+-				       index, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_pad_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = snd_ctl_boolean_mono_info,
+-	.get  = scarlett2_pad_ctl_get,
+-	.put  = scarlett2_pad_ctl_put,
+-};
+-
+-/*** Air Switch Controls ***/
+-
+-static int scarlett2_air_ctl_get(struct snd_kcontrol *kctl,
+-				 struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->input_other_updated) {
+-		err = scarlett2_update_input_other(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.integer.value[0] = private->air_switch[elem->control];
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_air_ctl_put(struct snd_kcontrol *kctl,
+-				 struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	int index = elem->control;
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->air_switch[index];
+-	val = !!ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->air_switch[index] = val;
+-
+-	/* Send switch change to the device */
+-	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_AIR_SWITCH,
+-				       index, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_air_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = snd_ctl_boolean_mono_info,
+-	.get  = scarlett2_air_ctl_get,
+-	.put  = scarlett2_air_ctl_put,
+-};
+-
+-/*** Phantom Switch Controls ***/
+-
+-static int scarlett2_phantom_ctl_get(struct snd_kcontrol *kctl,
+-				     struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->input_other_updated) {
+-		err = scarlett2_update_input_other(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.integer.value[0] =
+-		private->phantom_switch[elem->control];
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_phantom_ctl_put(struct snd_kcontrol *kctl,
+-				     struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	int index = elem->control;
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->phantom_switch[index];
+-	val = !!ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->phantom_switch[index] = val;
+-
+-	/* Send switch change to the device */
+-	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_PHANTOM_SWITCH,
+-				       index, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_phantom_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = snd_ctl_boolean_mono_info,
+-	.get  = scarlett2_phantom_ctl_get,
+-	.put  = scarlett2_phantom_ctl_put,
+-};
+-
+-/*** Phantom Persistence Control ***/
+-
+-static int scarlett2_phantom_persistence_ctl_get(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct scarlett2_data *private = elem->head.mixer->private_data;
+-
+-	ucontrol->value.integer.value[0] = private->phantom_persistence;
+-	return 0;
+-}
+-
+-static int scarlett2_phantom_persistence_ctl_put(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	int index = elem->control;
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->phantom_persistence;
+-	val = !!ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->phantom_persistence = val;
+-
+-	/* Send switch change to the device */
+-	err = scarlett2_usb_set_config(
+-		mixer, SCARLETT2_CONFIG_PHANTOM_PERSISTENCE, index, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_phantom_persistence_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = snd_ctl_boolean_mono_info,
+-	.get  = scarlett2_phantom_persistence_ctl_get,
+-	.put  = scarlett2_phantom_persistence_ctl_put,
+-};
+-
+-/*** Direct Monitor Control ***/
+-
+-static int scarlett2_update_monitor_other(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	int err;
+-
+-	/* monitor_other_enable[0] enables speaker switching
+-	 * monitor_other_enable[1] enables talkback
+-	 */
+-	u8 monitor_other_enable[2];
+-
+-	/* monitor_other_switch[0] activates the alternate speakers
+-	 * monitor_other_switch[1] activates talkback
+-	 */
+-	u8 monitor_other_switch[2];
+-
+-	private->monitor_other_updated = 0;
+-
+-	if (info->direct_monitor)
+-		return scarlett2_usb_get_config(
+-			mixer, SCARLETT2_CONFIG_DIRECT_MONITOR,
+-			1, &private->direct_monitor_switch);
+-
+-	/* if it doesn't do speaker switching then it also doesn't do
+-	 * talkback
+-	 */
+-	if (!info->has_speaker_switching)
+-		return 0;
+-
+-	err = scarlett2_usb_get_config(
+-		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE,
+-		2, monitor_other_enable);
+-	if (err < 0)
+-		return err;
+-
+-	err = scarlett2_usb_get_config(
+-		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH,
+-		2, monitor_other_switch);
+-	if (err < 0)
+-		return err;
+-
+-	if (!monitor_other_enable[0])
+-		private->speaker_switching_switch = 0;
+-	else
+-		private->speaker_switching_switch = monitor_other_switch[0] + 1;
+-
+-	if (info->has_talkback) {
+-		const int (*port_count)[SCARLETT2_PORT_DIRNS] =
+-			info->port_count;
+-		int num_mixes =
+-			port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
+-		u16 bitmap;
+-		int i;
+-
+-		if (!monitor_other_enable[1])
+-			private->talkback_switch = 0;
+-		else
+-			private->talkback_switch = monitor_other_switch[1] + 1;
+-
+-		err = scarlett2_usb_get_config(mixer,
+-					       SCARLETT2_CONFIG_TALKBACK_MAP,
+-					       1, &bitmap);
+-		if (err < 0)
+-			return err;
+-		for (i = 0; i < num_mixes; i++, bitmap >>= 1)
+-			private->talkback_map[i] = bitmap & 1;
+-	}
+-
+-	return 0;
+-}
+-
+-static int scarlett2_direct_monitor_ctl_get(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = elem->head.mixer->private_data;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->monitor_other_updated) {
+-		err = scarlett2_update_monitor_other(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.enumerated.item[0] = private->direct_monitor_switch;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_direct_monitor_ctl_put(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	int index = elem->control;
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->direct_monitor_switch;
+-	val = min(ucontrol->value.enumerated.item[0], 2U);
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->direct_monitor_switch = val;
+-
+-	/* Send switch change to the device */
+-	err = scarlett2_usb_set_config(
+-		mixer, SCARLETT2_CONFIG_DIRECT_MONITOR, index, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_direct_monitor_stereo_enum_ctl_info(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_info *uinfo)
+-{
+-	static const char *const values[3] = {
+-		"Off", "Mono", "Stereo"
+-	};
+-
+-	return snd_ctl_enum_info(uinfo, 1, 3, values);
+-}
+-
+-/* Direct Monitor for Solo is mono-only and only needs a boolean control
+- * Direct Monitor for 2i2 is selectable between Off/Mono/Stereo
+- */
+-static const struct snd_kcontrol_new scarlett2_direct_monitor_ctl[2] = {
+-	{
+-		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-		.name = "",
+-		.info = snd_ctl_boolean_mono_info,
+-		.get  = scarlett2_direct_monitor_ctl_get,
+-		.put  = scarlett2_direct_monitor_ctl_put,
+-	},
+-	{
+-		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-		.name = "",
+-		.info = scarlett2_direct_monitor_stereo_enum_ctl_info,
+-		.get  = scarlett2_direct_monitor_ctl_get,
+-		.put  = scarlett2_direct_monitor_ctl_put,
+-	}
+-};
+-
+-static int scarlett2_add_direct_monitor_ctl(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const char *s;
+-
+-	if (!info->direct_monitor)
+-		return 0;
+-
+-	s = info->direct_monitor == 1
+-	      ? "Direct Monitor Playback Switch"
+-	      : "Direct Monitor Playback Enum";
+-
+-	return scarlett2_add_new_ctl(
+-		mixer, &scarlett2_direct_monitor_ctl[info->direct_monitor - 1],
+-		0, 1, s, &private->direct_monitor_ctl);
+-}
+-
+-/*** Speaker Switching Control ***/
+-
+-static int scarlett2_speaker_switch_enum_ctl_info(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_info *uinfo)
+-{
+-	static const char *const values[3] = {
+-		"Off", "Main", "Alt"
+-	};
+-
+-	return snd_ctl_enum_info(uinfo, 1, 3, values);
+-}
+-
+-static int scarlett2_speaker_switch_enum_ctl_get(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->monitor_other_updated) {
+-		err = scarlett2_update_monitor_other(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.enumerated.item[0] = private->speaker_switching_switch;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-/* when speaker switching gets enabled, switch the main/alt speakers
+- * to HW volume and disable those controls
+- */
+-static int scarlett2_speaker_switch_enable(struct usb_mixer_interface *mixer)
+-{
+-	struct snd_card *card = mixer->chip->card;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int i, err;
+-
+-	for (i = 0; i < 4; i++) {
+-		int index = line_out_remap(private, i);
+-
+-		/* switch the main/alt speakers to HW volume */
+-		if (!private->vol_sw_hw_switch[index]) {
+-			err = scarlett2_sw_hw_change(private->mixer, i, 1);
+-			if (err < 0)
+-				return err;
+-		}
+-
+-		/* disable the line out SW/HW switch */
+-		scarlett2_sw_hw_ctl_ro(private, i);
+-		snd_ctl_notify(card,
+-			       SNDRV_CTL_EVENT_MASK_VALUE |
+-				 SNDRV_CTL_EVENT_MASK_INFO,
+-			       &private->sw_hw_ctls[i]->id);
+-	}
+-
+-	/* when the next monitor-other notify comes in, update the mux
+-	 * configuration
+-	 */
+-	private->speaker_switching_switched = 1;
+-
+-	return 0;
+-}
+-
+-/* when speaker switching gets disabled, reenable the hw/sw controls
+- * and invalidate the routing
+- */
+-static void scarlett2_speaker_switch_disable(struct usb_mixer_interface *mixer)
+-{
+-	struct snd_card *card = mixer->chip->card;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int i;
+-
+-	/* enable the line out SW/HW switch */
+-	for (i = 0; i < 4; i++) {
+-		scarlett2_sw_hw_ctl_rw(private, i);
+-		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_INFO,
+-			       &private->sw_hw_ctls[i]->id);
+-	}
+-
+-	/* when the next monitor-other notify comes in, update the mux
+-	 * configuration
+-	 */
+-	private->speaker_switching_switched = 1;
+-}
+-
+-static int scarlett2_speaker_switch_enum_ctl_put(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->speaker_switching_switch;
+-	val = min(ucontrol->value.enumerated.item[0], 2U);
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->speaker_switching_switch = val;
+-
+-	/* enable/disable speaker switching */
+-	err = scarlett2_usb_set_config(
+-		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE,
+-		0, !!val);
+-	if (err < 0)
+-		goto unlock;
+-
+-	/* if speaker switching is enabled, select main or alt */
+-	err = scarlett2_usb_set_config(
+-		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH,
+-		0, val == 2);
+-	if (err < 0)
+-		goto unlock;
+-
+-	/* update controls if speaker switching gets enabled or disabled */
+-	if (!oval && val)
+-		err = scarlett2_speaker_switch_enable(mixer);
+-	else if (oval && !val)
+-		scarlett2_speaker_switch_disable(mixer);
+-
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_speaker_switch_enum_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = scarlett2_speaker_switch_enum_ctl_info,
+-	.get  = scarlett2_speaker_switch_enum_ctl_get,
+-	.put  = scarlett2_speaker_switch_enum_ctl_put,
+-};
+-
+-static int scarlett2_add_speaker_switch_ctl(
+-	struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-
+-	if (!info->has_speaker_switching)
+-		return 0;
+-
+-	return scarlett2_add_new_ctl(
+-		mixer, &scarlett2_speaker_switch_enum_ctl,
+-		0, 1, "Speaker Switching Playback Enum",
+-		&private->speaker_switching_ctl);
+-}
+-
+-/*** Talkback and Talkback Map Controls ***/
+-
+-static int scarlett2_talkback_enum_ctl_info(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_info *uinfo)
+-{
+-	static const char *const values[3] = {
+-		"Disabled", "Off", "On"
+-	};
+-
+-	return snd_ctl_enum_info(uinfo, 1, 3, values);
+-}
+-
+-static int scarlett2_talkback_enum_ctl_get(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->monitor_other_updated) {
+-		err = scarlett2_update_monitor_other(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.enumerated.item[0] = private->talkback_switch;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_talkback_enum_ctl_put(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->talkback_switch;
+-	val = min(ucontrol->value.enumerated.item[0], 2U);
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->talkback_switch = val;
+-
+-	/* enable/disable talkback */
+-	err = scarlett2_usb_set_config(
+-		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_ENABLE,
+-		1, !!val);
+-	if (err < 0)
+-		goto unlock;
+-
+-	/* if talkback is enabled, select main or alt */
+-	err = scarlett2_usb_set_config(
+-		mixer, SCARLETT2_CONFIG_MONITOR_OTHER_SWITCH,
+-		1, val == 2);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_talkback_enum_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = scarlett2_talkback_enum_ctl_info,
+-	.get  = scarlett2_talkback_enum_ctl_get,
+-	.put  = scarlett2_talkback_enum_ctl_put,
+-};
+-
+-static int scarlett2_talkback_map_ctl_get(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int index = elem->control;
+-
+-	ucontrol->value.integer.value[0] = private->talkback_map[index];
+-
+-	return 0;
+-}
+-
+-static int scarlett2_talkback_map_ctl_put(
+-	struct snd_kcontrol *kctl, struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] =
+-		private->info->port_count;
+-	int num_mixes = port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
+-
+-	int index = elem->control;
+-	int oval, val, err = 0, i;
+-	u16 bitmap = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->talkback_map[index];
+-	val = !!ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->talkback_map[index] = val;
+-
+-	for (i = 0; i < num_mixes; i++)
+-		bitmap |= private->talkback_map[i] << i;
+-
+-	/* Send updated bitmap to the device */
+-	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_TALKBACK_MAP,
+-				       0, bitmap);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_talkback_map_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = snd_ctl_boolean_mono_info,
+-	.get  = scarlett2_talkback_map_ctl_get,
+-	.put  = scarlett2_talkback_map_ctl_put,
+-};
+-
+-static int scarlett2_add_talkback_ctls(
+-	struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int num_mixes = port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
+-	int err, i;
+-	char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
+-
+-	if (!info->has_talkback)
+-		return 0;
+-
+-	err = scarlett2_add_new_ctl(
+-		mixer, &scarlett2_talkback_enum_ctl,
+-		0, 1, "Talkback Playback Enum",
+-		&private->talkback_ctl);
+-	if (err < 0)
+-		return err;
+-
+-	for (i = 0; i < num_mixes; i++) {
+-		snprintf(s, sizeof(s),
+-			 "Talkback Mix %c Playback Switch", i + 'A');
+-		err = scarlett2_add_new_ctl(mixer, &scarlett2_talkback_map_ctl,
+-					    i, 1, s, NULL);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	return 0;
+-}
+-
+-/*** Dim/Mute Controls ***/
+-
+-static int scarlett2_dim_mute_ctl_get(struct snd_kcontrol *kctl,
+-				      struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->vol_updated) {
+-		err = scarlett2_update_volumes(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.integer.value[0] = private->dim_mute[elem->control];
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_dim_mute_ctl_put(struct snd_kcontrol *kctl,
+-				      struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int num_line_out =
+-		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
+-
+-	int index = elem->control;
+-	int oval, val, err = 0, i;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->dim_mute[index];
+-	val = !!ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->dim_mute[index] = val;
+-
+-	/* Send switch change to the device */
+-	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_DIM_MUTE,
+-				       index, val);
+-	if (err == 0)
+-		err = 1;
+-
+-	if (index == SCARLETT2_BUTTON_MUTE)
+-		for (i = 0; i < num_line_out; i++) {
+-			int line_index = line_out_remap(private, i);
+-
+-			if (private->vol_sw_hw_switch[line_index]) {
+-				private->mute_switch[line_index] = val;
+-				snd_ctl_notify(mixer->chip->card,
+-					       SNDRV_CTL_EVENT_MASK_VALUE,
+-					       &private->mute_ctls[i]->id);
+-			}
+-		}
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_dim_mute_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = snd_ctl_boolean_mono_info,
+-	.get  = scarlett2_dim_mute_ctl_get,
+-	.put  = scarlett2_dim_mute_ctl_put
+-};
+-
+-/*** Create the analogue output controls ***/
+-
+-static int scarlett2_add_line_out_ctls(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int num_line_out =
+-		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
+-	int err, i;
+-	char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
+-
+-	/* Add R/O HW volume control */
+-	if (info->line_out_hw_vol) {
+-		snprintf(s, sizeof(s), "Master HW Playback Volume");
+-		err = scarlett2_add_new_ctl(mixer,
+-					    &scarlett2_master_volume_ctl,
+-					    0, 1, s, &private->master_vol_ctl);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	/* Add volume controls */
+-	for (i = 0; i < num_line_out; i++) {
+-		int index = line_out_remap(private, i);
+-
+-		/* Fader */
+-		if (info->line_out_descrs[i])
+-			snprintf(s, sizeof(s),
+-				 "Line %02d (%s) Playback Volume",
+-				 i + 1, info->line_out_descrs[i]);
+-		else
+-			snprintf(s, sizeof(s),
+-				 "Line %02d Playback Volume",
+-				 i + 1);
+-		err = scarlett2_add_new_ctl(mixer,
+-					    &scarlett2_line_out_volume_ctl,
+-					    i, 1, s, &private->vol_ctls[i]);
+-		if (err < 0)
+-			return err;
+-
+-		/* Mute Switch */
+-		snprintf(s, sizeof(s),
+-			 "Line %02d Mute Playback Switch",
+-			 i + 1);
+-		err = scarlett2_add_new_ctl(mixer,
+-					    &scarlett2_mute_ctl,
+-					    i, 1, s,
+-					    &private->mute_ctls[i]);
+-		if (err < 0)
+-			return err;
+-
+-		/* Make the fader and mute controls read-only if the
+-		 * SW/HW switch is set to HW
+-		 */
+-		if (private->vol_sw_hw_switch[index])
+-			scarlett2_vol_ctl_set_writable(mixer, i, 0);
+-
+-		/* SW/HW Switch */
+-		if (info->line_out_hw_vol) {
+-			snprintf(s, sizeof(s),
+-				 "Line Out %02d Volume Control Playback Enum",
+-				 i + 1);
+-			err = scarlett2_add_new_ctl(mixer,
+-						    &scarlett2_sw_hw_enum_ctl,
+-						    i, 1, s,
+-						    &private->sw_hw_ctls[i]);
+-			if (err < 0)
+-				return err;
+-
+-			/* Make the switch read-only if the line is
+-			 * involved in speaker switching
+-			 */
+-			if (private->speaker_switching_switch && i < 4)
+-				scarlett2_sw_hw_ctl_ro(private, i);
+-		}
+-	}
+-
+-	/* Add dim/mute controls */
+-	if (info->line_out_hw_vol)
+-		for (i = 0; i < SCARLETT2_DIM_MUTE_COUNT; i++) {
+-			err = scarlett2_add_new_ctl(
+-				mixer, &scarlett2_dim_mute_ctl,
+-				i, 1, scarlett2_dim_mute_names[i],
+-				&private->dim_mute_ctls[i]);
+-			if (err < 0)
+-				return err;
+-		}
+-
+-	return 0;
+-}
+-
+-/*** Create the analogue input controls ***/
+-
+-static int scarlett2_add_line_in_ctls(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	int err, i;
+-	char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
+-	const char *fmt = "Line In %d %s Capture %s";
+-	const char *fmt2 = "Line In %d-%d %s Capture %s";
+-
+-	/* Add input level (line/inst) controls */
+-	for (i = 0; i < info->level_input_count; i++) {
+-		snprintf(s, sizeof(s), fmt, i + 1 + info->level_input_first,
+-			 "Level", "Enum");
+-		err = scarlett2_add_new_ctl(mixer, &scarlett2_level_enum_ctl,
+-					    i, 1, s, &private->level_ctls[i]);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	/* Add input pad controls */
+-	for (i = 0; i < info->pad_input_count; i++) {
+-		snprintf(s, sizeof(s), fmt, i + 1, "Pad", "Switch");
+-		err = scarlett2_add_new_ctl(mixer, &scarlett2_pad_ctl,
+-					    i, 1, s, &private->pad_ctls[i]);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	/* Add input air controls */
+-	for (i = 0; i < info->air_input_count; i++) {
+-		snprintf(s, sizeof(s), fmt, i + 1, "Air", "Switch");
+-		err = scarlett2_add_new_ctl(mixer, &scarlett2_air_ctl,
+-					    i, 1, s, &private->air_ctls[i]);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	/* Add input phantom controls */
+-	if (info->inputs_per_phantom == 1) {
+-		for (i = 0; i < info->phantom_count; i++) {
+-			snprintf(s, sizeof(s), fmt, i + 1,
+-				 "Phantom Power", "Switch");
+-			err = scarlett2_add_new_ctl(
+-				mixer, &scarlett2_phantom_ctl,
+-				i, 1, s, &private->phantom_ctls[i]);
+-			if (err < 0)
+-				return err;
+-		}
+-	} else if (info->inputs_per_phantom > 1) {
+-		for (i = 0; i < info->phantom_count; i++) {
+-			int from = i * info->inputs_per_phantom + 1;
+-			int to = (i + 1) * info->inputs_per_phantom;
+-
+-			snprintf(s, sizeof(s), fmt2, from, to,
+-				 "Phantom Power", "Switch");
+-			err = scarlett2_add_new_ctl(
+-				mixer, &scarlett2_phantom_ctl,
+-				i, 1, s, &private->phantom_ctls[i]);
+-			if (err < 0)
+-				return err;
+-		}
+-	}
+-	if (info->phantom_count) {
+-		err = scarlett2_add_new_ctl(
+-			mixer, &scarlett2_phantom_persistence_ctl, 0, 1,
+-			"Phantom Power Persistence Capture Switch", NULL);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	return 0;
+-}
+-
+-/*** Mixer Volume Controls ***/
+-
+-static int scarlett2_mixer_ctl_info(struct snd_kcontrol *kctl,
+-				    struct snd_ctl_elem_info *uinfo)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-
+-	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
+-	uinfo->count = elem->channels;
+-	uinfo->value.integer.min = 0;
+-	uinfo->value.integer.max = SCARLETT2_MIXER_MAX_VALUE;
+-	uinfo->value.integer.step = 1;
+-	return 0;
+-}
+-
+-static int scarlett2_mixer_ctl_get(struct snd_kcontrol *kctl,
+-				   struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct scarlett2_data *private = elem->head.mixer->private_data;
+-
+-	ucontrol->value.integer.value[0] = private->mix[elem->control];
+-	return 0;
+-}
+-
+-static int scarlett2_mixer_ctl_put(struct snd_kcontrol *kctl,
+-				   struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int oval, val, num_mixer_in, mix_num, err = 0;
+-	int index = elem->control;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->mix[index];
+-	val = clamp(ucontrol->value.integer.value[0],
+-		    0L, (long)SCARLETT2_MIXER_MAX_VALUE);
+-	num_mixer_in = port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_OUT];
+-	mix_num = index / num_mixer_in;
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->mix[index] = val;
+-	err = scarlett2_usb_set_mix(mixer, mix_num);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const DECLARE_TLV_DB_MINMAX(
+-	db_scale_scarlett2_mixer,
+-	SCARLETT2_MIXER_MIN_DB * 100,
+-	SCARLETT2_MIXER_MAX_DB * 100
+-);
+-
+-static const struct snd_kcontrol_new scarlett2_mixer_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.access = SNDRV_CTL_ELEM_ACCESS_READWRITE |
+-		  SNDRV_CTL_ELEM_ACCESS_TLV_READ,
+-	.name = "",
+-	.info = scarlett2_mixer_ctl_info,
+-	.get  = scarlett2_mixer_ctl_get,
+-	.put  = scarlett2_mixer_ctl_put,
+-	.private_value = SCARLETT2_MIXER_MAX_DB, /* max value */
+-	.tlv = { .p = db_scale_scarlett2_mixer }
+-};
+-
+-static int scarlett2_add_mixer_ctls(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int err, i, j;
+-	int index;
+-	char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
+-
+-	int num_inputs =
+-		port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_OUT];
+-	int num_outputs =
+-		port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
+-
+-	for (i = 0, index = 0; i < num_outputs; i++)
+-		for (j = 0; j < num_inputs; j++, index++) {
+-			snprintf(s, sizeof(s),
+-				 "Mix %c Input %02d Playback Volume",
+-				 'A' + i, j + 1);
+-			err = scarlett2_add_new_ctl(mixer, &scarlett2_mixer_ctl,
+-						    index, 1, s, NULL);
+-			if (err < 0)
+-				return err;
+-		}
+-
+-	return 0;
+-}
+-
+-/*** Mux Source Selection Controls ***/
+-
+-static int scarlett2_mux_src_enum_ctl_info(struct snd_kcontrol *kctl,
+-					   struct snd_ctl_elem_info *uinfo)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct scarlett2_data *private = elem->head.mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	unsigned int item = uinfo->value.enumerated.item;
+-	int items = private->num_mux_srcs;
+-	int port_type;
+-
+-	uinfo->type = SNDRV_CTL_ELEM_TYPE_ENUMERATED;
+-	uinfo->count = elem->channels;
+-	uinfo->value.enumerated.items = items;
+-
+-	if (item >= items)
+-		item = uinfo->value.enumerated.item = items - 1;
+-
+-	for (port_type = 0;
+-	     port_type < SCARLETT2_PORT_TYPE_COUNT;
+-	     port_type++) {
+-		if (item < port_count[port_type][SCARLETT2_PORT_IN]) {
+-			const struct scarlett2_port *port =
+-				&scarlett2_ports[port_type];
+-
+-			sprintf(uinfo->value.enumerated.name,
+-				port->src_descr, item + port->src_num_offset);
+-			return 0;
+-		}
+-		item -= port_count[port_type][SCARLETT2_PORT_IN];
+-	}
+-
+-	return -EINVAL;
+-}
+-
+-static int scarlett2_mux_src_enum_ctl_get(struct snd_kcontrol *kctl,
+-					  struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int index = line_out_remap(private, elem->control);
+-	int err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	if (private->mux_updated) {
+-		err = scarlett2_usb_get_mux(mixer);
+-		if (err < 0)
+-			goto unlock;
+-	}
+-	ucontrol->value.enumerated.item[0] = private->mux[index];
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static int scarlett2_mux_src_enum_ctl_put(struct snd_kcontrol *kctl,
+-					  struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-	int index = line_out_remap(private, elem->control);
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->mux[index];
+-	val = min(ucontrol->value.enumerated.item[0],
+-		  private->num_mux_srcs - 1U);
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->mux[index] = val;
+-	err = scarlett2_usb_set_mux(mixer);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_mux_src_enum_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = scarlett2_mux_src_enum_ctl_info,
+-	.get  = scarlett2_mux_src_enum_ctl_get,
+-	.put  = scarlett2_mux_src_enum_ctl_put,
+-};
+-
+-static int scarlett2_add_mux_enums(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int port_type, channel, i;
+-
+-	for (i = 0, port_type = 0;
+-	     port_type < SCARLETT2_PORT_TYPE_COUNT;
+-	     port_type++) {
+-		for (channel = 0;
+-		     channel < port_count[port_type][SCARLETT2_PORT_OUT];
+-		     channel++, i++) {
+-			int err;
+-			char s[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
+-			const char *const descr =
+-				scarlett2_ports[port_type].dst_descr;
+-
+-			snprintf(s, sizeof(s) - 5, descr, channel + 1);
+-			strcat(s, " Enum");
+-
+-			err = scarlett2_add_new_ctl(mixer,
+-						    &scarlett2_mux_src_enum_ctl,
+-						    i, 1, s,
+-						    &private->mux_ctls[i]);
+-			if (err < 0)
+-				return err;
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+-/*** Meter Controls ***/
+-
+-static int scarlett2_meter_ctl_info(struct snd_kcontrol *kctl,
+-				    struct snd_ctl_elem_info *uinfo)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-
+-	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
+-	uinfo->count = elem->channels;
+-	uinfo->value.integer.min = 0;
+-	uinfo->value.integer.max = 4095;
+-	uinfo->value.integer.step = 1;
+-	return 0;
+-}
+-
+-static int scarlett2_meter_ctl_get(struct snd_kcontrol *kctl,
+-				   struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	u16 meter_levels[SCARLETT2_MAX_METERS];
+-	int i, err;
+-
+-	err = scarlett2_usb_get_meter_levels(elem->head.mixer, elem->channels,
+-					     meter_levels);
+-	if (err < 0)
+-		return err;
+-
+-	for (i = 0; i < elem->channels; i++)
+-		ucontrol->value.integer.value[i] = meter_levels[i];
+-
+-	return 0;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_meter_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_PCM,
+-	.access = SNDRV_CTL_ELEM_ACCESS_READ | SNDRV_CTL_ELEM_ACCESS_VOLATILE,
+-	.name = "",
+-	.info = scarlett2_meter_ctl_info,
+-	.get  = scarlett2_meter_ctl_get
+-};
+-
+-static int scarlett2_add_meter_ctl(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	/* devices without a mixer also don't support reporting levels */
+-	if (private->info->config_set == SCARLETT2_CONFIG_SET_NO_MIXER)
+-		return 0;
+-
+-	return scarlett2_add_new_ctl(mixer, &scarlett2_meter_ctl,
+-				     0, private->num_mux_dsts,
+-				     "Level Meter", NULL);
+-}
+-
+-/*** MSD Controls ***/
+-
+-static int scarlett2_msd_ctl_get(struct snd_kcontrol *kctl,
+-				 struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct scarlett2_data *private = elem->head.mixer->private_data;
+-
+-	ucontrol->value.integer.value[0] = private->msd_switch;
+-	return 0;
+-}
+-
+-static int scarlett2_msd_ctl_put(struct snd_kcontrol *kctl,
+-				 struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->msd_switch;
+-	val = !!ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->msd_switch = val;
+-
+-	/* Send switch change to the device */
+-	err = scarlett2_usb_set_config(mixer, SCARLETT2_CONFIG_MSD_SWITCH,
+-				       0, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_msd_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = snd_ctl_boolean_mono_info,
+-	.get  = scarlett2_msd_ctl_get,
+-	.put  = scarlett2_msd_ctl_put,
+-};
+-
+-static int scarlett2_add_msd_ctl(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-
+-	if (!info->has_msd_mode)
+-		return 0;
+-
+-	/* If MSD mode is off, hide the switch by default */
+-	if (!private->msd_switch && !(mixer->chip->setup & SCARLETT2_MSD_ENABLE))
+-		return 0;
+-
+-	/* Add MSD control */
+-	return scarlett2_add_new_ctl(mixer, &scarlett2_msd_ctl,
+-				     0, 1, "MSD Mode Switch", NULL);
+-}
+-
+-/*** Standalone Control ***/
+-
+-static int scarlett2_standalone_ctl_get(struct snd_kcontrol *kctl,
+-					struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct scarlett2_data *private = elem->head.mixer->private_data;
+-
+-	ucontrol->value.integer.value[0] = private->standalone_switch;
+-	return 0;
+-}
+-
+-static int scarlett2_standalone_ctl_put(struct snd_kcontrol *kctl,
+-					struct snd_ctl_elem_value *ucontrol)
+-{
+-	struct usb_mixer_elem_info *elem = kctl->private_data;
+-	struct usb_mixer_interface *mixer = elem->head.mixer;
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	int oval, val, err = 0;
+-
+-	mutex_lock(&private->data_mutex);
+-
+-	oval = private->standalone_switch;
+-	val = !!ucontrol->value.integer.value[0];
+-
+-	if (oval == val)
+-		goto unlock;
+-
+-	private->standalone_switch = val;
+-
+-	/* Send switch change to the device */
+-	err = scarlett2_usb_set_config(mixer,
+-				       SCARLETT2_CONFIG_STANDALONE_SWITCH,
+-				       0, val);
+-	if (err == 0)
+-		err = 1;
+-
+-unlock:
+-	mutex_unlock(&private->data_mutex);
+-	return err;
+-}
+-
+-static const struct snd_kcontrol_new scarlett2_standalone_ctl = {
+-	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+-	.name = "",
+-	.info = snd_ctl_boolean_mono_info,
+-	.get  = scarlett2_standalone_ctl_get,
+-	.put  = scarlett2_standalone_ctl_put,
+-};
+-
+-static int scarlett2_add_standalone_ctl(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	if (private->info->config_set == SCARLETT2_CONFIG_SET_NO_MIXER)
+-		return 0;
+-
+-	/* Add standalone control */
+-	return scarlett2_add_new_ctl(mixer, &scarlett2_standalone_ctl,
+-				     0, 1, "Standalone Switch", NULL);
+-}
+-
+-/*** Cleanup/Suspend Callbacks ***/
+-
+-static void scarlett2_private_free(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	cancel_delayed_work_sync(&private->work);
+-	kfree(private);
+-	mixer->private_data = NULL;
+-}
+-
+-static void scarlett2_private_suspend(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	if (cancel_delayed_work_sync(&private->work))
+-		scarlett2_config_save(private->mixer);
+-}
+-
+-/*** Initialisation ***/
+-
+-static void scarlett2_count_mux_io(struct scarlett2_data *private)
+-{
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int port_type, srcs = 0, dsts = 0;
+-
+-	for (port_type = 0;
+-	     port_type < SCARLETT2_PORT_TYPE_COUNT;
+-	     port_type++) {
+-		srcs += port_count[port_type][SCARLETT2_PORT_IN];
+-		dsts += port_count[port_type][SCARLETT2_PORT_OUT];
+-	}
+-
+-	private->num_mux_srcs = srcs;
+-	private->num_mux_dsts = dsts;
+-}
+-
+-/* Look through the interface descriptors for the Focusrite Control
+- * interface (bInterfaceClass = 255 Vendor Specific Class) and set
+- * bInterfaceNumber, bEndpointAddress, wMaxPacketSize, and bInterval
+- * in private
+- */
+-static int scarlett2_find_fc_interface(struct usb_device *dev,
+-				       struct scarlett2_data *private)
+-{
+-	struct usb_host_config *config = dev->actconfig;
+-	int i;
+-
+-	for (i = 0; i < config->desc.bNumInterfaces; i++) {
+-		struct usb_interface *intf = config->interface[i];
+-		struct usb_interface_descriptor *desc =
+-			&intf->altsetting[0].desc;
+-		struct usb_endpoint_descriptor *epd;
+-
+-		if (desc->bInterfaceClass != 255)
+-			continue;
+-
+-		epd = get_endpoint(intf->altsetting, 0);
+-		private->bInterfaceNumber = desc->bInterfaceNumber;
+-		private->bEndpointAddress = epd->bEndpointAddress &
+-			USB_ENDPOINT_NUMBER_MASK;
+-		private->wMaxPacketSize = le16_to_cpu(epd->wMaxPacketSize);
+-		private->bInterval = epd->bInterval;
+-		return 0;
+-	}
+-
+-	return -EINVAL;
+-}
+-
+-/* Initialise private data */
+-static int scarlett2_init_private(struct usb_mixer_interface *mixer,
+-				  const struct scarlett2_device_info *info)
+-{
+-	struct scarlett2_data *private =
+-		kzalloc(sizeof(struct scarlett2_data), GFP_KERNEL);
+-
+-	if (!private)
+-		return -ENOMEM;
+-
+-	mutex_init(&private->usb_mutex);
+-	mutex_init(&private->data_mutex);
+-	INIT_DELAYED_WORK(&private->work, scarlett2_config_save_work);
+-
+-	mixer->private_data = private;
+-	mixer->private_free = scarlett2_private_free;
+-	mixer->private_suspend = scarlett2_private_suspend;
+-
+-	private->info = info;
+-	scarlett2_count_mux_io(private);
+-	private->scarlett2_seq = 0;
+-	private->mixer = mixer;
+-
+-	return scarlett2_find_fc_interface(mixer->chip->dev, private);
+-}
+-
+-/* Cargo cult proprietary initialisation sequence */
+-static int scarlett2_usb_init(struct usb_mixer_interface *mixer)
+-{
+-	struct usb_device *dev = mixer->chip->dev;
+-	struct scarlett2_data *private = mixer->private_data;
+-	u8 buf[24];
+-	int err;
+-
+-	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
+-		return -EINVAL;
+-
+-	/* step 0 */
+-	err = scarlett2_usb_rx(dev, private->bInterfaceNumber,
+-			       SCARLETT2_USB_CMD_INIT, buf, sizeof(buf));
+-	if (err < 0)
+-		return err;
+-
+-	/* step 1 */
+-	private->scarlett2_seq = 1;
+-	err = scarlett2_usb(mixer, SCARLETT2_USB_INIT_1, NULL, 0, NULL, 0);
+-	if (err < 0)
+-		return err;
+-
+-	/* step 2 */
+-	private->scarlett2_seq = 1;
+-	return scarlett2_usb(mixer, SCARLETT2_USB_INIT_2, NULL, 0, NULL, 84);
+-}
+-
+-/* Read configuration from the interface on start */
+-static int scarlett2_read_configs(struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int num_line_out =
+-		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
+-	int num_mixer_out =
+-		port_count[SCARLETT2_PORT_TYPE_MIX][SCARLETT2_PORT_IN];
+-	struct scarlett2_usb_volume_status volume_status;
+-	int err, i;
+-
+-	if (info->has_msd_mode) {
+-		err = scarlett2_usb_get_config(
+-			mixer, SCARLETT2_CONFIG_MSD_SWITCH,
+-			1, &private->msd_switch);
+-		if (err < 0)
+-			return err;
+-
+-		/* no other controls are created if MSD mode is on */
+-		if (private->msd_switch)
+-			return 0;
+-	}
+-
+-	err = scarlett2_update_input_other(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	err = scarlett2_update_monitor_other(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* the rest of the configuration is for devices with a mixer */
+-	if (info->config_set == SCARLETT2_CONFIG_SET_NO_MIXER)
+-		return 0;
+-
+-	err = scarlett2_usb_get_config(
+-		mixer, SCARLETT2_CONFIG_STANDALONE_SWITCH,
+-		1, &private->standalone_switch);
+-	if (err < 0)
+-		return err;
+-
+-	err = scarlett2_update_sync(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	err = scarlett2_usb_get_volume_status(mixer, &volume_status);
+-	if (err < 0)
+-		return err;
+-
+-	if (info->line_out_hw_vol)
+-		for (i = 0; i < SCARLETT2_DIM_MUTE_COUNT; i++)
+-			private->dim_mute[i] = !!volume_status.dim_mute[i];
+-
+-	private->master_vol = clamp(
+-		volume_status.master_vol + SCARLETT2_VOLUME_BIAS,
+-		0, SCARLETT2_VOLUME_BIAS);
+-
+-	for (i = 0; i < num_line_out; i++) {
+-		int volume, mute;
+-
+-		private->vol_sw_hw_switch[i] =
+-			info->line_out_hw_vol
+-				&& volume_status.sw_hw_switch[i];
+-
+-		volume = private->vol_sw_hw_switch[i]
+-			   ? volume_status.master_vol
+-			   : volume_status.sw_vol[i];
+-		volume = clamp(volume + SCARLETT2_VOLUME_BIAS,
+-			       0, SCARLETT2_VOLUME_BIAS);
+-		private->vol[i] = volume;
+-
+-		mute = private->vol_sw_hw_switch[i]
+-			 ? private->dim_mute[SCARLETT2_BUTTON_MUTE]
+-			 : volume_status.mute_switch[i];
+-		private->mute_switch[i] = mute;
+-	}
+-
+-	for (i = 0; i < num_mixer_out; i++) {
+-		err = scarlett2_usb_get_mix(mixer, i);
+-		if (err < 0)
+-			return err;
+-	}
+-
+-	return scarlett2_usb_get_mux(mixer);
+-}
+-
+-/* Notify on sync change */
+-static void scarlett2_notify_sync(
+-	struct usb_mixer_interface *mixer)
+-{
+-	struct scarlett2_data *private = mixer->private_data;
+-
+-	private->sync_updated = 1;
+-
+-	snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
+-		       &private->sync_ctl->id);
+-}
+-
+-/* Notify on monitor change */
+-static void scarlett2_notify_monitor(
+-	struct usb_mixer_interface *mixer)
+-{
+-	struct snd_card *card = mixer->chip->card;
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int num_line_out =
+-		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
+-	int i;
+-
+-	/* if line_out_hw_vol is 0, there are no controls to update */
+-	if (!info->line_out_hw_vol)
+-		return;
+-
+-	private->vol_updated = 1;
+-
+-	snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
+-		       &private->master_vol_ctl->id);
+-
+-	for (i = 0; i < num_line_out; i++)
+-		if (private->vol_sw_hw_switch[line_out_remap(private, i)])
+-			snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-				       &private->vol_ctls[i]->id);
+-}
+-
+-/* Notify on dim/mute change */
+-static void scarlett2_notify_dim_mute(
+-	struct usb_mixer_interface *mixer)
+-{
+-	struct snd_card *card = mixer->chip->card;
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	const int (*port_count)[SCARLETT2_PORT_DIRNS] = info->port_count;
+-	int num_line_out =
+-		port_count[SCARLETT2_PORT_TYPE_ANALOGUE][SCARLETT2_PORT_OUT];
+-	int i;
+-
+-	private->vol_updated = 1;
+-
+-	if (!info->line_out_hw_vol)
+-		return;
+-
+-	for (i = 0; i < SCARLETT2_DIM_MUTE_COUNT; i++)
+-		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-			       &private->dim_mute_ctls[i]->id);
+-
+-	for (i = 0; i < num_line_out; i++)
+-		if (private->vol_sw_hw_switch[line_out_remap(private, i)])
+-			snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-				       &private->mute_ctls[i]->id);
+-}
+-
+-/* Notify on "input other" change (level/pad/air) */
+-static void scarlett2_notify_input_other(
+-	struct usb_mixer_interface *mixer)
+-{
+-	struct snd_card *card = mixer->chip->card;
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-	int i;
+-
+-	private->input_other_updated = 1;
+-
+-	for (i = 0; i < info->level_input_count; i++)
+-		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-			       &private->level_ctls[i]->id);
+-	for (i = 0; i < info->pad_input_count; i++)
+-		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-			       &private->pad_ctls[i]->id);
+-	for (i = 0; i < info->air_input_count; i++)
+-		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-			       &private->air_ctls[i]->id);
+-	for (i = 0; i < info->phantom_count; i++)
+-		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-			       &private->phantom_ctls[i]->id);
+-}
+-
+-/* Notify on "monitor other" change (direct monitor, speaker
+- * switching, talkback)
+- */
+-static void scarlett2_notify_monitor_other(
+-	struct usb_mixer_interface *mixer)
+-{
+-	struct snd_card *card = mixer->chip->card;
+-	struct scarlett2_data *private = mixer->private_data;
+-	const struct scarlett2_device_info *info = private->info;
+-
+-	private->monitor_other_updated = 1;
+-
+-	if (info->direct_monitor) {
+-		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-			       &private->direct_monitor_ctl->id);
+-		return;
+-	}
+-
+-	if (info->has_speaker_switching)
+-		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-			       &private->speaker_switching_ctl->id);
+-
+-	if (info->has_talkback)
+-		snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-			       &private->talkback_ctl->id);
+-
+-	/* if speaker switching was recently enabled or disabled,
+-	 * invalidate the dim/mute and mux enum controls
+-	 */
+-	if (private->speaker_switching_switched) {
+-		int i;
+-
+-		scarlett2_notify_dim_mute(mixer);
+-
+-		private->speaker_switching_switched = 0;
+-		private->mux_updated = 1;
+-
+-		for (i = 0; i < private->num_mux_dsts; i++)
+-			snd_ctl_notify(card, SNDRV_CTL_EVENT_MASK_VALUE,
+-				       &private->mux_ctls[i]->id);
+-	}
+-}
+-
+-/* Interrupt callback */
+-static void scarlett2_notify(struct urb *urb)
+-{
+-	struct usb_mixer_interface *mixer = urb->context;
+-	int len = urb->actual_length;
+-	int ustatus = urb->status;
+-	u32 data;
+-
+-	if (ustatus != 0 || len != 8)
+-		goto requeue;
+-
+-	data = le32_to_cpu(*(__le32 *)urb->transfer_buffer);
+-	if (data & SCARLETT2_USB_NOTIFY_SYNC)
+-		scarlett2_notify_sync(mixer);
+-	if (data & SCARLETT2_USB_NOTIFY_MONITOR)
+-		scarlett2_notify_monitor(mixer);
+-	if (data & SCARLETT2_USB_NOTIFY_DIM_MUTE)
+-		scarlett2_notify_dim_mute(mixer);
+-	if (data & SCARLETT2_USB_NOTIFY_INPUT_OTHER)
+-		scarlett2_notify_input_other(mixer);
+-	if (data & SCARLETT2_USB_NOTIFY_MONITOR_OTHER)
+-		scarlett2_notify_monitor_other(mixer);
+-
+-requeue:
+-	if (ustatus != -ENOENT &&
+-	    ustatus != -ECONNRESET &&
+-	    ustatus != -ESHUTDOWN) {
+-		urb->dev = mixer->chip->dev;
+-		usb_submit_urb(urb, GFP_ATOMIC);
+-	}
+-}
+-
+-static int scarlett2_init_notify(struct usb_mixer_interface *mixer)
+-{
+-	struct usb_device *dev = mixer->chip->dev;
+-	struct scarlett2_data *private = mixer->private_data;
+-	unsigned int pipe = usb_rcvintpipe(dev, private->bEndpointAddress);
+-	void *transfer_buffer;
+-
+-	if (mixer->urb) {
+-		usb_audio_err(mixer->chip,
+-			      "%s: mixer urb already in use!\n", __func__);
+-		return 0;
+-	}
+-
+-	if (usb_pipe_type_check(dev, pipe))
+-		return -EINVAL;
+-
+-	mixer->urb = usb_alloc_urb(0, GFP_KERNEL);
+-	if (!mixer->urb)
+-		return -ENOMEM;
+-
+-	transfer_buffer = kmalloc(private->wMaxPacketSize, GFP_KERNEL);
+-	if (!transfer_buffer)
+-		return -ENOMEM;
+-
+-	usb_fill_int_urb(mixer->urb, dev, pipe,
+-			 transfer_buffer, private->wMaxPacketSize,
+-			 scarlett2_notify, mixer, private->bInterval);
+-
+-	return usb_submit_urb(mixer->urb, GFP_KERNEL);
+-}
+-
+-static int snd_scarlett_gen2_controls_create(struct usb_mixer_interface *mixer)
+-{
+-	const struct scarlett2_device_info **info = scarlett2_devices;
+-	int err;
+-
+-	/* Find device in scarlett2_devices */
+-	while (*info && (*info)->usb_id != mixer->chip->usb_id)
+-		info++;
+-	if (!*info)
+-		return -EINVAL;
+-
+-	/* Initialise private data */
+-	err = scarlett2_init_private(mixer, *info);
+-	if (err < 0)
+-		return err;
+-
+-	/* Send proprietary USB initialisation sequence */
+-	err = scarlett2_usb_init(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Read volume levels and controls from the interface */
+-	err = scarlett2_read_configs(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the MSD control */
+-	err = scarlett2_add_msd_ctl(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* If MSD mode is enabled, don't create any other controls */
+-	if (((struct scarlett2_data *)mixer->private_data)->msd_switch)
+-		return 0;
+-
+-	/* Create the analogue output controls */
+-	err = scarlett2_add_line_out_ctls(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the analogue input controls */
+-	err = scarlett2_add_line_in_ctls(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the input, output, and mixer mux input selections */
+-	err = scarlett2_add_mux_enums(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the matrix mixer controls */
+-	err = scarlett2_add_mixer_ctls(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the level meter controls */
+-	err = scarlett2_add_meter_ctl(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the sync control */
+-	err = scarlett2_add_sync_ctl(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the direct monitor control */
+-	err = scarlett2_add_direct_monitor_ctl(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the speaker switching control */
+-	err = scarlett2_add_speaker_switch_ctl(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the talkback controls */
+-	err = scarlett2_add_talkback_ctls(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Create the standalone control */
+-	err = scarlett2_add_standalone_ctl(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	/* Set up the interrupt polling */
+-	err = scarlett2_init_notify(mixer);
+-	if (err < 0)
+-		return err;
+-
+-	return 0;
+-}
+-
+-int snd_scarlett_gen2_init(struct usb_mixer_interface *mixer)
+-{
+-	struct snd_usb_audio *chip = mixer->chip;
+-	int err;
+-
+-	/* only use UAC_VERSION_2 */
+-	if (!mixer->protocol)
+-		return 0;
+-
+-	if (!(chip->setup & SCARLETT2_ENABLE)) {
+-		usb_audio_info(chip,
+-			"Focusrite Scarlett Gen 2/3 Mixer Driver disabled; "
+-			"use options snd_usb_audio vid=0x%04x pid=0x%04x "
+-			"device_setup=1 to enable and report any issues "
+-			"to g@b4.vu",
+-			USB_ID_VENDOR(chip->usb_id),
+-			USB_ID_PRODUCT(chip->usb_id));
+-		return 0;
+-	}
+-
+-	usb_audio_info(chip,
+-		"Focusrite Scarlett Gen 2/3 Mixer Driver enabled pid=0x%04x",
+-		USB_ID_PRODUCT(chip->usb_id));
+-
+-	err = snd_scarlett_gen2_controls_create(mixer);
+-	if (err < 0)
+-		usb_audio_err(mixer->chip,
+-			      "Error initialising Scarlett Mixer Driver: %d",
+-			      err);
+-
+-	return err;
+-}
+diff --git a/sound/usb/mixer_scarlett_gen2.h b/sound/usb/mixer_scarlett_gen2.h
+deleted file mode 100644
+index 668c6b0cb50a..000000000000
+--- a/sound/usb/mixer_scarlett_gen2.h
++++ /dev/null
+@@ -1,7 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __USB_MIXER_SCARLETT_GEN2_H
+-#define __USB_MIXER_SCARLETT_GEN2_H
+-
+-int snd_scarlett_gen2_init(struct usb_mixer_interface *mixer);
+-
+-#endif /* __USB_MIXER_SCARLETT_GEN2_H */
 diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
 index b1ede6249866..b7c8f29c09a9 100644
 --- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
@@ -6978,170 +16446,3 @@ index b1ede6249866..b7c8f29c09a9 100644
  if [ $count -ne 0 ]; then
      fail "any of scheduler events should not be recorded"
  fi
-diff --git a/tools/testing/selftests/iommu/config b/tools/testing/selftests/iommu/config
-index 110d73917615..02a2a1b267c1 100644
---- a/tools/testing/selftests/iommu/config
-+++ b/tools/testing/selftests/iommu/config
-@@ -1,3 +1,5 @@
- CONFIG_IOMMUFD=y
-+CONFIG_FAULT_INJECTION_DEBUG_FS=y
- CONFIG_FAULT_INJECTION=y
- CONFIG_IOMMUFD_TEST=y
-+CONFIG_FAILSLAB=y
-diff --git a/tools/testing/selftests/net/tcp_ao/lib/proc.c b/tools/testing/selftests/net/tcp_ao/lib/proc.c
-index 2fb6dd8adba6..8b984fa04286 100644
---- a/tools/testing/selftests/net/tcp_ao/lib/proc.c
-+++ b/tools/testing/selftests/net/tcp_ao/lib/proc.c
-@@ -86,7 +86,7 @@ static void netstat_read_type(FILE *fnetstat, struct netstat **dest, char *line)
- 
- 	pos = strchr(line, ' ') + 1;
- 
--	if (fscanf(fnetstat, type->header_name) == EOF)
-+	if (fscanf(fnetstat, "%[^ :]", type->header_name) == EOF)
- 		test_error("fscanf(%s)", type->header_name);
- 	if (fread(&tmp, 1, 1, fnetstat) != 1 || tmp != ':')
- 		test_error("Unexpected netstat format (%c)", tmp);
-diff --git a/tools/testing/selftests/net/tcp_ao/lib/setup.c b/tools/testing/selftests/net/tcp_ao/lib/setup.c
-index 92276f916f2f..e408b9243b2c 100644
---- a/tools/testing/selftests/net/tcp_ao/lib/setup.c
-+++ b/tools/testing/selftests/net/tcp_ao/lib/setup.c
-@@ -17,37 +17,37 @@ static pthread_mutex_t ksft_print_lock = PTHREAD_MUTEX_INITIALIZER;
- void __test_msg(const char *buf)
- {
- 	pthread_mutex_lock(&ksft_print_lock);
--	ksft_print_msg(buf);
-+	ksft_print_msg("%s", buf);
- 	pthread_mutex_unlock(&ksft_print_lock);
- }
- void __test_ok(const char *buf)
- {
- 	pthread_mutex_lock(&ksft_print_lock);
--	ksft_test_result_pass(buf);
-+	ksft_test_result_pass("%s", buf);
- 	pthread_mutex_unlock(&ksft_print_lock);
- }
- void __test_fail(const char *buf)
- {
- 	pthread_mutex_lock(&ksft_print_lock);
--	ksft_test_result_fail(buf);
-+	ksft_test_result_fail("%s", buf);
- 	pthread_mutex_unlock(&ksft_print_lock);
- }
- void __test_xfail(const char *buf)
- {
- 	pthread_mutex_lock(&ksft_print_lock);
--	ksft_test_result_xfail(buf);
-+	ksft_test_result_xfail("%s", buf);
- 	pthread_mutex_unlock(&ksft_print_lock);
- }
- void __test_error(const char *buf)
- {
- 	pthread_mutex_lock(&ksft_print_lock);
--	ksft_test_result_error(buf);
-+	ksft_test_result_error("%s", buf);
- 	pthread_mutex_unlock(&ksft_print_lock);
- }
- void __test_skip(const char *buf)
- {
- 	pthread_mutex_lock(&ksft_print_lock);
--	ksft_test_result_skip(buf);
-+	ksft_test_result_skip("%s", buf);
- 	pthread_mutex_unlock(&ksft_print_lock);
- }
- 
-diff --git a/tools/testing/selftests/net/tcp_ao/rst.c b/tools/testing/selftests/net/tcp_ao/rst.c
-index 7df8b8700e39..a2fe88d35ac0 100644
---- a/tools/testing/selftests/net/tcp_ao/rst.c
-+++ b/tools/testing/selftests/net/tcp_ao/rst.c
-@@ -256,8 +256,6 @@ static int test_wait_fds(int sk[], size_t nr, bool is_writable[],
- 
- static void test_client_active_rst(unsigned int port)
- {
--	/* one in queue, another accept()ed */
--	unsigned int wait_for = backlog + 2;
- 	int i, sk[3], err;
- 	bool is_writable[ARRAY_SIZE(sk)] = {false};
- 	unsigned int last = ARRAY_SIZE(sk) - 1;
-@@ -275,16 +273,20 @@ static void test_client_active_rst(unsigned int port)
- 	for (i = 0; i < last; i++) {
- 		err = _test_connect_socket(sk[i], this_ip_dest, port,
- 					       (i == 0) ? TEST_TIMEOUT_SEC : -1);
--
- 		if (err < 0)
- 			test_error("failed to connect()");
- 	}
- 
--	synchronize_threads(); /* 2: connection accept()ed, another queued */
--	err = test_wait_fds(sk, last, is_writable, wait_for, TEST_TIMEOUT_SEC);
-+	synchronize_threads(); /* 2: two connections: one accept()ed, another queued */
-+	err = test_wait_fds(sk, last, is_writable, last, TEST_TIMEOUT_SEC);
- 	if (err < 0)
- 		test_error("test_wait_fds(): %d", err);
- 
-+	/* async connect() with third sk to get into request_sock_queue */
-+	err = _test_connect_socket(sk[last], this_ip_dest, port, -1);
-+	if (err < 0)
-+		test_error("failed to connect()");
-+
- 	synchronize_threads(); /* 3: close listen socket */
- 	if (test_client_verify(sk[0], packet_sz, quota / packet_sz, TEST_TIMEOUT_SEC))
- 		test_fail("Failed to send data on connected socket");
-@@ -292,13 +294,14 @@ static void test_client_active_rst(unsigned int port)
- 		test_ok("Verified established tcp connection");
- 
- 	synchronize_threads(); /* 4: finishing up */
--	err = _test_connect_socket(sk[last], this_ip_dest, port, -1);
--	if (err < 0)
--		test_error("failed to connect()");
- 
- 	synchronize_threads(); /* 5: closed active sk */
--	err = test_wait_fds(sk, ARRAY_SIZE(sk), NULL,
--			    wait_for, TEST_TIMEOUT_SEC);
-+	/*
-+	 * Wait for 2 connections: one accepted, another in the accept queue,
-+	 * the one in request_sock_queue won't get fully established, so
-+	 * doesn't receive an active RST, see inet_csk_listen_stop().
-+	 */
-+	err = test_wait_fds(sk, last, NULL, last, TEST_TIMEOUT_SEC);
- 	if (err < 0)
- 		test_error("select(): %d", err);
- 
-diff --git a/tools/testing/selftests/net/tcp_ao/setsockopt-closed.c b/tools/testing/selftests/net/tcp_ao/setsockopt-closed.c
-index 452de131fa3a..517930f9721b 100644
---- a/tools/testing/selftests/net/tcp_ao/setsockopt-closed.c
-+++ b/tools/testing/selftests/net/tcp_ao/setsockopt-closed.c
-@@ -21,7 +21,7 @@ static void make_listen(int sk)
- static void test_vefify_ao_info(int sk, struct tcp_ao_info_opt *info,
- 				const char *tst)
- {
--	struct tcp_ao_info_opt tmp;
-+	struct tcp_ao_info_opt tmp = {};
- 	socklen_t len = sizeof(tmp);
- 
- 	if (getsockopt(sk, IPPROTO_TCP, TCP_AO_INFO, &tmp, &len))
-diff --git a/tools/testing/selftests/net/udpgso.c b/tools/testing/selftests/net/udpgso.c
-index 7badaf215de2..b02080d09fbc 100644
---- a/tools/testing/selftests/net/udpgso.c
-+++ b/tools/testing/selftests/net/udpgso.c
-@@ -34,7 +34,7 @@
- #endif
- 
- #ifndef UDP_MAX_SEGMENTS
--#define UDP_MAX_SEGMENTS	(1 << 6UL)
-+#define UDP_MAX_SEGMENTS	(1 << 7UL)
- #endif
- 
- #define CONST_MTU_TEST	1500
-diff --git a/tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c b/tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c
-index 505294da1b9f..d6f99eb9be65 100644
---- a/tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c
-+++ b/tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c
-@@ -154,7 +154,7 @@ static int dev_papr_vpd_null_handle(void)
- static int papr_vpd_close_handle_without_reading(void)
- {
- 	const int devfd = open(DEVPATH, O_RDONLY);
--	struct papr_location_code lc;
-+	struct papr_location_code lc = { .str = "", };
- 	int fd;
- 
- 	SKIP_IF_MSG(devfd < 0 && errno == ENOENT,
