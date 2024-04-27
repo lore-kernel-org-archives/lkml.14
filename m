@@ -1,489 +1,504 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4320544376;
-	Sat, 27 Apr 2024 05:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF191E484;
+	Sat, 27 Apr 2024 05:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714194729; cv=none; b=rruonesxZth1FXriOHm2zfOYNR6bwQb6NlUnMCyk192ICt0CZ7P4SKqjhcAXSatLCsbqqgfartHL9tzRTB+qK2hT3AhELy7sURePIh4O9SlAiwtnqVg3W3ev01yWBgu7ESaSG968ZHqUKJIEql900FI+zhJ4zsWXCN7W2YFycCQ=
+	t=1714195191; cv=none; b=HeYnl48BDEUAvGavxB2vi3Y2/YDZ2qkbKrGC5CbSk9zySA8mc17xTtPyoNO6yMHxvf6ORmemX85XzNYI9425UO9msNoOpWuQdLLnmAjA7zm3TIVISAwSA6il8BwFXT4F2XpbKbN01vbGrdY1lw50x5/A7U0wYSzFaChhsUz913o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714194729; c=relaxed/simple;
-	bh=w7j7eoPe3wMPBymfAu2rfATkFGf9aoN/OioKZKEgqAI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HQYaZficOZXI4KimN7BQI5XA5gfyB5HBrcmQl5IHnWDXzFx9iNJ/fWtptW/ZkFIi6clcSKSRnhiLNXLWmXv6/qolyff8znoI/dPhvZjXIhlYMaTqBVdiw7/Vwy7YzHmMBYcLf7jgQ9efvCFxWGFZVzsHG07KZDQqA5L1n5cnqps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zni3YmDs; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1714195191; c=relaxed/simple;
+	bh=RYX8F+zvG5EslMX/+64SkgI84f9MXhrbywtX0H/1F2g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ke++2xPJtc+XeM6d5NU25hfvTbnnJF52AwlBbba6p2Xc+GiBQkl95nGSenYTmhKCitbaAjlypgeOfMA0CG0EIpbiVZeqnEnwaf7fjBS4R0VSXpYXWtld7VJUiWT3XCJJQIu/1opjgsY8F/19tFe+x8qY80L6sP1AK/qdEKsw73U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zni3YmDs"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5af2358c7e5so1764485eaf.0;
-        Fri, 26 Apr 2024 22:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714194726; x=1714799526; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KqQXMvgfEIvf1SoegchzmEBs0evEfQTO7JV2ujH24s0=;
-        b=Zni3YmDsLdlGWeobmeOSJR9LWa+NnONlbNbeCOuDkXLzPAIfCtWKSKzD9bCZ0tgGxb
-         PTQcsGSAwtQQJ68irJOy2VmmgN0VL7e8C1aCYWXEG/Pxf9kFmIzwhhDjUteJui2IM+Dl
-         lEEZNapeUX3UmhCUnJ1nul2Zsx/lJs6EtJMGdOebUtA/xM6BQVSuPszlmtYaMkBsYfJD
-         u8KGAE7ZV2sth3gemwDGbc7Fi260Iov+SeWQgrx/OL1Pyp3VN1q4WXRIFdkijBrPAFHX
-         lR5eb8WFR8+Vk6Nw4zUS05umidgjyyjswgE8Hb3IF2mC2awft22qFNtCUdSHJ3w91W7G
-         bsvQ==
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-69b24162dd6so18641886d6.2;
+        Fri, 26 Apr 2024 22:19:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714194726; x=1714799526;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KqQXMvgfEIvf1SoegchzmEBs0evEfQTO7JV2ujH24s0=;
-        b=FsPDM7PqAdCOG01ypCf5J3DltkhgrWI5uEqJbS2BdS0KRhZhxgs0e2FyPyT3BQbRaA
-         jgO9ruJpkx+5VnYxxC2mnPFgoTqjk4M4krUCUgId8moklBbIJEWryNBtFibVfKr+OxCX
-         2Q2toDpt5l/ldJD9sltAtEKpm4Up2hbZQ9DZxX383bnNZ788xPqI91IjYYMuorjSH1xc
-         5IrDMmfhNMTqcU5GZ1/SGg9uvJ4xz2sBHgJGyDM/e0uTo1UOLB8OA8G0pb4t0uavT4N7
-         x8SjisEDQwi6NRn/Lgm6feHkidtZGJjQ1yNsachqjn9/2j2rD05NeSyGplAVJDgLTS73
-         BofQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUt4aqWbHRvxBSqAg1Xj/yDhK6tcr/eKXHuPveHuEnq8k0hWnRZyQaTwq5Lg3MYW2zd+SjPyYqIdtmzIoyTR86qoYlddahTWly870JlaiGNyg/vsxE1Jq9hXmV43t1ZbYO1dFvwZKZ3sg==
-X-Gm-Message-State: AOJu0YzugVAL3n3RnU8OybCCZln4tdUi+8DZhPf4ZWlndDmbi++Ke2/y
-	8yO4uqsX3/DPwdowv8YYsXAfeZXFLBE9SikjmXSUn73fHg9XjHrTcJPcrkcG
-X-Google-Smtp-Source: AGHT+IEDxEbHUa0iEITOStiDCKL7LmwldX6SjCB1iMMGOW/z4uBw5734azLOc3hOoGPfSZij8UJ5ow==
-X-Received: by 2002:a05:6358:b58a:b0:186:100b:1552 with SMTP id wa10-20020a056358b58a00b00186100b1552mr5437096rwc.8.1714194725864;
-        Fri, 26 Apr 2024 22:12:05 -0700 (PDT)
-Received: from tresc054937.tre-sc.gov.br ([189.34.32.15])
-        by smtp.gmail.com with ESMTPSA id cb17-20020a056a02071100b0060063c4be3bsm8108513pgb.14.2024.04.26.22.11.59
+        d=1e100.net; s=20230601; t=1714195188; x=1714799988;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k124akF3sOq3754lL+HFp4fE6U2uXPExb4y8QjWoDBY=;
+        b=lekSw6nsGs7HPnm+qdEQKES9W0BhWQwxMRdcP97WXQq2EZfbAnxBkGKqRxYUk9qlOl
+         c3f/CVn4PZQn+8XjsHfSGoh/pTMu3IDmIxcLru9kYUiD6KMmHFu9Z5CBHrUQffiO5Dbj
+         so5tVFL7ihHVRykG7zlsbgs+WYtsZ9KY2+aVB62KsApcBxZZ66GoP+dlloz9FaTAw30v
+         8eAxiwYXKy/Cy/DE5XEscQz/g3RNULxfKl9iaqs968ancbqQs5ennt2vnHQqjguYmMSe
+         wlDVwa2kZ5Z3D8HNnbaQMoWemjDh8rqtW8dDH6cFljIYlnGtq8U9Tt5Ei2VDHQkcqDdG
+         0nOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3A7S+xOcooH3myaQh5FGkkd1MnGExGJGxfaejYsG0eGS+qs1NZRuCWOiT8AhpmfVwd9uWZDBeen3nQ4kgDRM5Sr6KEHdLjsRF8vC1bto3sIMZ4jOtwotcc7CZo5wkuWaSP44NpCmkNbEAmPMY
+X-Gm-Message-State: AOJu0YxELli2ta64r/sfYPQN6ZmqiIr4CKzE0nnjZCRtdcIUfA3A23yo
+	p4Tr67QSYBsvRJlZOI6iBQ5gkyGVPOMJv8/6YoZKWQUww63xAnJa
+X-Google-Smtp-Source: AGHT+IHOwecrBshoKnamML9BKMsRKRPBeI/6+MOgjp5gAaLf+GXS5rAjDRcnZSsJCkvb86iTzZlOHQ==
+X-Received: by 2002:a05:6214:d67:b0:6a0:b3cc:ee0f with SMTP id 7-20020a0562140d6700b006a0b3ccee0fmr3815916qvs.43.1714195187913;
+        Fri, 26 Apr 2024 22:19:47 -0700 (PDT)
+Received: from tofu.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id w17-20020a056214013100b0069b57111a98sm7612721qvs.79.2024.04.26.22.19.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 22:12:05 -0700 (PDT)
-From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-Date: Sat, 27 Apr 2024 02:11:30 -0300
-Subject: [PATCH net-next v2 3/3] net: dsa: realtek: add LED drivers for
- rtl8366rb
+        Fri, 26 Apr 2024 22:19:47 -0700 (PDT)
+From: Sungwoo Kim <iam@sung-woo.kim>
+To: 
+Cc: daveti@purdue.edu,
+	Sungwoo Kim <iam@sung-woo.kim>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Bluetooth: msft: fix slab-use-after-free in msft_do_close()
+Date: Sat, 27 Apr 2024 01:19:35 -0400
+Message-Id: <20240427051934.879051-1-iam@sung-woo.kim>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240427-realtek-led-v2-3-5abaddc32cf6@gmail.com>
-References: <20240427-realtek-led-v2-0-5abaddc32cf6@gmail.com>
-In-Reply-To: <20240427-realtek-led-v2-0-5abaddc32cf6@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>, 
- Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Luiz Angelo Daros de Luca <luizluca@gmail.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11662; i=luizluca@gmail.com;
- h=from:subject:message-id; bh=w7j7eoPe3wMPBymfAu2rfATkFGf9aoN/OioKZKEgqAI=;
- b=owEBbQGS/pANAwAIAbsR27rRBztWAcsmYgBmLIkLFq2cD/EcUYBtCokmfJ8vz9xDNTxj5c8S2
- ROToXU6fKWJATMEAAEIAB0WIQQRByhHhc1bOhL6L/i7Edu60Qc7VgUCZiyJCwAKCRC7Edu60Qc7
- VselB/0e+1kLCy/9RKS3ZUdZXlpfuGdQdt0g2kxsiE4z3z+/evmd7LHV7ucXH9jCuXJqCu3sodJ
- iH92imdKAvUnv152Z5REAV0IjvdrcW/8mz845824LNLfzY4+uGyAxzFChTYD27vTbF+61x//avL
- 1erhVZFKGGW1mOHoYnkL00hT/S0kmY4zRUQrXRlrqPIoFYrylBErI4JTNK3mRS7HFetGdY++SnP
- ihlVL3dXfg8Xyi4P8Ae2FqtVNmMsdnEoaqyLmniKlRDkqD2ZidzrMl8ZeUDFUXEjZJCaDmyf3SE
- 1O/d7b+LAJCaQHzX3GMGD4pEppeccPTK65qLoymYP/oWDZzM
-X-Developer-Key: i=luizluca@gmail.com; a=openpgp;
- fpr=1107284785CD5B3A12FA2FF8BB11DBBAD1073B56
+Content-Transfer-Encoding: 8bit
 
-This commit introduces LED drivers for rtl8366rb, enabling LEDs to be
-described in the device tree using the same format as qca8k. Each port
-can configure up to 4 LEDs.
+Add refcnt to safely destroy hdev->msft_data.
 
-If all LEDs in a group use the default state "keep", they will use the
-default behavior after a reset. Changing the brightness of one LED,
-either manually or by a trigger, will disable the default hardware
-trigger and switch the entire LED group to manually controlled LEDs.
-Once in this mode, there is no way to revert to hardware-controlled LEDs
-(except by resetting the switch).
+How msft is used after freed:
 
-Software triggers function as expected with manually controlled LEDs.
+[use]
+msft_do_close()
+  if (!msft)                      ...(1)
+    return;
+  mutex_lock(&msft->filter_lock); ...(4) <- used after freed
 
-Signed-off-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+[free]
+msft_unregister()
+  hdev->msft_data = NULL;         ...(2)
+  kfree(msft);                    ...(3) <- msft is freed
+
+==================================================================
+BUG: KASAN: slab-use-after-free in __mutex_lock_common kernel/locking/mutex.c:587 [inline]
+BUG: KASAN: slab-use-after-free in __mutex_lock+0x8f/0xc30 kernel/locking/mutex.c:752
+Read of size 8 at addr ffff888106cbbca8 by task kworker/u5:2/309
+
+CPU: 0 PID: 309 Comm: kworker/u5:2 Not tainted 6.9.0-rc5+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+Workqueue: hci4 hci_error_reset
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xcd/0x140 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x191/0x560 mm/kasan/report.c:488
+ kasan_report+0xe2/0x120 mm/kasan/report.c:601
+ __asan_report_load8_noabort+0x18/0x20 mm/kasan/report_generic.c:381
+ __mutex_lock_common kernel/locking/mutex.c:587 [inline]
+ __mutex_lock+0x8f/0xc30 kernel/locking/mutex.c:752
+ mutex_lock_nested+0x1f/0x30 kernel/locking/mutex.c:804
+ msft_do_close+0x292/0x700 net/bluetooth/msft.c:694
+ hci_dev_close_sync+0x906/0xf10 net/bluetooth/hci_sync.c:5168
+ hci_dev_do_close net/bluetooth/hci_core.c:554 [inline]
+ hci_error_reset+0x152/0x410 net/bluetooth/hci_core.c:1091
+ process_one_work kernel/workqueue.c:3254 [inline]
+ process_scheduled_works+0x90f/0x1530 kernel/workqueue.c:3335
+ worker_thread+0x926/0xe70 kernel/workqueue.c:3416
+ kthread+0x2e3/0x380 kernel/kthread.c:388
+ ret_from_fork+0x5c/0x90 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+Allocated by task 7328:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x30/0x70 mm/kasan/common.c:68
+ kasan_save_alloc_info+0x3c/0x50 mm/kasan/generic.c:565
+ poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+ __kasan_kmalloc+0xa2/0xc0 mm/kasan/common.c:387
+ kasan_kmalloc include/linux/kasan.h:211 [inline]
+ kmalloc_trace+0x20c/0x3e0 mm/slub.c:3997
+ kmalloc include/linux/slab.h:628 [inline]
+ kzalloc include/linux/slab.h:749 [inline]
+ msft_register+0x66/0x1d0 net/bluetooth/msft.c:760
+ hci_register_dev+0x85e/0x9a0 net/bluetooth/hci_core.c:2737
+ __vhci_create_device drivers/bluetooth/hci_vhci.c:438 [inline]
+ vhci_create_device+0x390/0x720 drivers/bluetooth/hci_vhci.c:480
+ vhci_get_user drivers/bluetooth/hci_vhci.c:537 [inline]
+ vhci_write+0x39b/0x460 drivers/bluetooth/hci_vhci.c:617
+ call_write_iter include/linux/fs.h:2110 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0x8eb/0xb50 fs/read_write.c:590
+ ksys_write+0x106/0x1f0 fs/read_write.c:643
+ __do_sys_write fs/read_write.c:655 [inline]
+ __se_sys_write fs/read_write.c:652 [inline]
+ __x64_sys_write+0x84/0xa0 fs/read_write.c:652
+ x64_sys_call+0x271a/0x2ce0 arch/x86/include/generated/asm/syscalls_64.h:2
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x9c/0x130 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+Freed by task 7332:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x30/0x70 mm/kasan/common.c:68
+ kasan_save_free_info+0x44/0x50 mm/kasan/generic.c:579
+ poison_slab_object+0x11a/0x190 mm/kasan/common.c:240
+ __kasan_slab_free+0x3b/0x60 mm/kasan/common.c:256
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2106 [inline]
+ slab_free mm/slub.c:4280 [inline]
+ kfree+0x13c/0x330 mm/slub.c:4390
+ msft_unregister+0x9d/0x120 net/bluetooth/msft.c:785
+ hci_unregister_dev+0x1d9/0x520 net/bluetooth/hci_core.c:2771
+ vhci_release+0x8c/0xe0 drivers/bluetooth/hci_vhci.c:674
+ __fput+0x36f/0x750 fs/file_table.c:422
+ ____fput+0x1e/0x30 fs/file_table.c:450
+ task_work_run+0x1da/0x280 kernel/task_work.c:180
+ exit_task_work include/linux/task_work.h:38 [inline]
+ do_exit+0x856/0x2210 kernel/exit.c:878
+ do_group_exit+0x201/0x2c0 kernel/exit.c:1027
+ get_signal+0x12ff/0x1380 kernel/signal.c:2911
+ arch_do_signal_or_restart+0x3b/0x650 arch/x86/kernel/signal.c:310
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0xcc/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xa8/0x130 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+The buggy address belongs to the object at ffff888106cbbc00
+ which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 168 bytes inside of
+ freed 256-byte region [ffff888106cbbc00, ffff888106cbbd00)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x106cba
+head: order:1 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x17ffffe0000840(slab|head|node=0|zone=2|lastcpupid=0x3fffff)
+page_type: 0xffffffff()
+raw: 0017ffffe0000840 ffff888100042040 ffffea00042de590 ffffea00041b3e10
+raw: 0000000000000000 00000000000a000a 00000001ffffffff 0000000000000000
+head: 0017ffffe0000840 ffff888100042040 ffffea00042de590 ffffea00041b3e10
+head: 0000000000000000 00000000000a000a 00000001ffffffff 0000000000000000
+head: 0017ffffe0000001 ffffea00041b2e81 dead000000000122 00000000ffffffff
+head: 0000000200000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888106cbbb80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888106cbbc00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888106cbbc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888106cbbd00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888106cbbd80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+Fixes: 9e14606d8f38 ("Bluetooth: disable advertisement filters during suspend")
+Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
 ---
- drivers/net/dsa/realtek/rtl8366rb.c | 304 +++++++++++++++++++++++++++++++-----
- 1 file changed, 265 insertions(+), 39 deletions(-)
+ net/bluetooth/msft.c | 124 ++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 99 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/dsa/realtek/rtl8366rb.c b/drivers/net/dsa/realtek/rtl8366rb.c
-index 5ccb1a3a149d..9244c63e8289 100644
---- a/drivers/net/dsa/realtek/rtl8366rb.c
-+++ b/drivers/net/dsa/realtek/rtl8366rb.c
-@@ -176,6 +176,7 @@
- #define RTL8366RB_VLAN_INGRESS_CTRL2_REG	0x037f
- 
- /* LED control registers */
-+/* The LED blink rate is global; it is used by all triggers in all groups. */
- #define RTL8366RB_LED_BLINKRATE_REG		0x0430
- #define RTL8366RB_LED_BLINKRATE_MASK		0x0007
- #define RTL8366RB_LED_BLINKRATE_28MS		0x0000
-@@ -191,31 +192,21 @@
- 	(4 * (led_group))
- #define RTL8366RB_LED_CTRL_MASK(led_group)	\
- 	(0xf << RTL8366RB_LED_CTRL_OFFSET(led_group))
--#define RTL8366RB_LED_OFF			0x0
--#define RTL8366RB_LED_DUP_COL			0x1
--#define RTL8366RB_LED_LINK_ACT			0x2
--#define RTL8366RB_LED_SPD1000			0x3
--#define RTL8366RB_LED_SPD100			0x4
--#define RTL8366RB_LED_SPD10			0x5
--#define RTL8366RB_LED_SPD1000_ACT		0x6
--#define RTL8366RB_LED_SPD100_ACT		0x7
--#define RTL8366RB_LED_SPD10_ACT			0x8
--#define RTL8366RB_LED_SPD100_10_ACT		0x9
--#define RTL8366RB_LED_FIBER			0xa
--#define RTL8366RB_LED_AN_FAULT			0xb
--#define RTL8366RB_LED_LINK_RX			0xc
--#define RTL8366RB_LED_LINK_TX			0xd
--#define RTL8366RB_LED_MASTER			0xe
--#define RTL8366RB_LED_FORCE			0xf
- 
- /* The RTL8366RB_LED_X_X registers are used to manually set the LED state only
-  * when the corresponding LED group in RTL8366RB_LED_CTRL_REG is
-- * RTL8366RB_LED_FORCE. Otherwise, it is ignored.
-+ * RTL8366RB_LEDGROUP_FORCE. Otherwise, it is ignored.
-  */
- #define RTL8366RB_LED_0_1_CTRL_REG		0x0432
--#define RTL8366RB_LED_1_OFFSET			6
- #define RTL8366RB_LED_2_3_CTRL_REG		0x0433
--#define RTL8366RB_LED_3_OFFSET			6
-+#define RTL8366RB_LED_X_X_CTRL_REG(led_group)	\
-+	((led_group) <= 1 ? \
-+		RTL8366RB_LED_0_1_CTRL_REG : \
-+		RTL8366RB_LED_2_3_CTRL_REG)
-+#define RTL8366RB_LED_0_X_CTRL_MASK		GENMASK(5, 0)
-+#define RTL8366RB_LED_X_1_CTRL_MASK		GENMASK(11, 6)
-+#define RTL8366RB_LED_2_X_CTRL_MASK		GENMASK(5, 0)
-+#define RTL8366RB_LED_X_3_CTRL_MASK		GENMASK(11, 6)
- 
- #define RTL8366RB_MIB_COUNT			33
- #define RTL8366RB_GLOBAL_MIB_COUNT		1
-@@ -359,14 +350,44 @@
- #define RTL8366RB_GREEN_FEATURE_TX	BIT(0)
- #define RTL8366RB_GREEN_FEATURE_RX	BIT(2)
- 
-+enum rtl8366_ledgroup_mode {
-+	RTL8366RB_LEDGROUP_OFF			= 0x0,
-+	RTL8366RB_LEDGROUP_DUP_COL		= 0x1,
-+	RTL8366RB_LEDGROUP_LINK_ACT		= 0x2,
-+	RTL8366RB_LEDGROUP_SPD1000		= 0x3,
-+	RTL8366RB_LEDGROUP_SPD100		= 0x4,
-+	RTL8366RB_LEDGROUP_SPD10		= 0x5,
-+	RTL8366RB_LEDGROUP_SPD1000_ACT		= 0x6,
-+	RTL8366RB_LEDGROUP_SPD100_ACT		= 0x7,
-+	RTL8366RB_LEDGROUP_SPD10_ACT		= 0x8,
-+	RTL8366RB_LEDGROUP_SPD100_10_ACT	= 0x9,
-+	RTL8366RB_LEDGROUP_FIBER		= 0xa,
-+	RTL8366RB_LEDGROUP_AN_FAULT		= 0xb,
-+	RTL8366RB_LEDGROUP_LINK_RX		= 0xc,
-+	RTL8366RB_LEDGROUP_LINK_TX		= 0xd,
-+	RTL8366RB_LEDGROUP_MASTER		= 0xe,
-+	RTL8366RB_LEDGROUP_FORCE		= 0xf,
-+
-+	__RTL8366RB_LEDGROUP_MODE_MAX
-+};
-+
-+struct rtl8366rb_led {
-+	u8 port_num;
-+	u8 led_group;
-+	struct realtek_priv *priv;
-+	struct led_classdev cdev;
-+};
-+
- /**
-  * struct rtl8366rb - RTL8366RB-specific data
-  * @max_mtu: per-port max MTU setting
-  * @pvid_enabled: if PVID is set for respective port
-+ * @leds: per-port and per-ledgroup led info
-  */
- struct rtl8366rb {
- 	unsigned int max_mtu[RTL8366RB_NUM_PORTS];
- 	bool pvid_enabled[RTL8366RB_NUM_PORTS];
-+	struct rtl8366rb_led leds[RTL8366RB_NUM_PORTS][RTL8366RB_NUM_LEDGROUPS];
+diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
+index 9612c5d1b..d42150cf9 100644
+--- a/net/bluetooth/msft.c
++++ b/net/bluetooth/msft.c
+@@ -132,10 +132,45 @@ struct msft_data {
+ 	__u8 filter_enabled;
+ 	/* To synchronize add/remove address filter and monitor device event.*/
+ 	struct mutex filter_lock;
++	struct kref	kref;
  };
  
- static struct rtl8366_mib_counter rtl8366rb_mib_counters[] = {
-@@ -809,6 +830,217 @@ static int rtl8366rb_jam_table(const struct rtl8366rb_jam_tbl_entry *jam_table,
++static void msft_data_free(struct kref *kref);
++
++static struct msft_data *msft_data_hold_unless_zero(struct msft_data *msft)
++{
++	BT_DBG("msft %p orig refcnt %u", msft, kref_read(&msft->kref));
++
++	if (!msft)
++		return NULL;
++
++	if (!kref_get_unless_zero(&msft->kref))
++		return NULL;
++
++	return msft;
++}
++
++static void msft_data_put(struct msft_data *msft)
++{
++	BT_DBG("msft %p orig refcnt %u", msft, kref_read(&msft->kref));
++
++	kref_put(&msft->kref, msft_data_free);
++}
++
++static void msft_data_free(struct kref *kref)
++{
++	struct msft_data *msft = container_of(kref, struct msft_data, kref);
++
++	BT_DBG("msft %p", msft);
++
++	kfree(msft->evt_prefix);
++	mutex_destroy(&msft->filter_lock);
++	kfree(msft);
++}
++
+ bool msft_monitor_supported(struct hci_dev *hdev)
+ {
++	/* msft_get_features() holds and put hdev->msft_data */
+ 	return !!(msft_get_features(hdev) & MSFT_FEATURE_MASK_LE_ADV_MONITOR);
+ }
+ 
+@@ -449,12 +484,17 @@ static int msft_remove_monitor_sync(struct hci_dev *hdev,
+ /* This function requires the caller holds hci_req_sync_lock */
+ int msft_suspend_sync(struct hci_dev *hdev)
+ {
+-	struct msft_data *msft = hdev->msft_data;
++	struct msft_data *msft;
+ 	struct adv_monitor *monitor;
+ 	int handle = 0;
+ 
+-	if (!msft || !msft_monitor_supported(hdev))
++	msft = msft_data_hold_unless_zero(hdev->msft_data);
++	if (!msft)
+ 		return 0;
++	if (!msft_monitor_supported(hdev)) {
++		msft_data_put(msft);
++		return 0;
++	}
+ 
+ 	msft->suspending = true;
+ 
+@@ -471,6 +511,7 @@ int msft_suspend_sync(struct hci_dev *hdev)
+ 	/* All monitors have been removed */
+ 	msft->suspending = false;
+ 
++	msft_data_put(msft);
  	return 0;
  }
  
-+static int rb8366rb_set_ledgroup_mode(struct realtek_priv *priv,
-+				      u8 led_group,
-+				      enum rtl8366_ledgroup_mode mode)
-+{
-+	int ret;
-+	u32 val;
-+
-+	val = mode << RTL8366RB_LED_CTRL_OFFSET(led_group);
-+
-+	ret = regmap_update_bits(priv->map,
-+				 RTL8366RB_LED_CTRL_REG,
-+				 RTL8366RB_LED_CTRL_MASK(led_group),
-+				 val);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static inline u32 rtl8366rb_led_group_port_mask(u8 led_group, u8 port)
-+{
-+	switch (led_group) {
-+	case 0:
-+		return FIELD_PREP(RTL8366RB_LED_0_X_CTRL_MASK, BIT(port));
-+	case 1:
-+		return FIELD_PREP(RTL8366RB_LED_0_X_CTRL_MASK, BIT(port));
-+	case 2:
-+		return FIELD_PREP(RTL8366RB_LED_0_X_CTRL_MASK, BIT(port));
-+	case 3:
-+		return FIELD_PREP(RTL8366RB_LED_0_X_CTRL_MASK, BIT(port));
-+	default:
+@@ -608,11 +649,17 @@ static void reregister_monitor(struct hci_dev *hdev)
+ /* This function requires the caller holds hci_req_sync_lock */
+ int msft_resume_sync(struct hci_dev *hdev)
+ {
+-	struct msft_data *msft = hdev->msft_data;
++	struct msft_data *msft;
+ 
+-	if (!msft || !msft_monitor_supported(hdev))
++	msft = msft_data_hold_unless_zero(hdev->msft_data);
++	if (!msft)
+ 		return 0;
+ 
++	if (!msft_monitor_supported(hdev)) {
++		msft_data_put(msft);
 +		return 0;
 +	}
-+}
 +
-+static int rb8366rb_get_port_led(struct rtl8366rb_led *led)
-+{
-+	struct realtek_priv *priv = led->priv;
-+	u8 led_group = led->led_group;
-+	u8 port_num = led->port_num;
-+	int ret;
-+	u32 val;
-+
-+	ret = regmap_read(priv->map, RTL8366RB_LED_X_X_CTRL_REG(led_group),
-+			  &val);
-+	if (ret) {
-+		dev_err(priv->dev, "error reading LED on port %d group %d\n",
-+			led_group, port_num);
-+		return ret;
-+	}
-+
-+	return !!(val & rtl8366rb_led_group_port_mask(led_group, port_num));
-+}
-+
-+static int rb8366rb_set_port_led(struct rtl8366rb_led *led, bool enable)
-+{
-+	struct realtek_priv *priv = led->priv;
-+	u8 led_group = led->led_group;
-+	u8 port_num = led->port_num;
-+	int ret;
-+
-+	ret = regmap_update_bits(priv->map,
-+				 RTL8366RB_LED_X_X_CTRL_REG(led_group),
-+				 rtl8366rb_led_group_port_mask(led_group,
-+							       port_num),
-+				 enable ? 0xffff : 0);
-+	if (ret) {
-+		dev_err(priv->dev, "error updating LED on port %d group %d\n",
-+			led_group, port_num);
-+		return ret;
-+	}
-+
-+	/* Change the LED group to manual controlled LEDs if required */
-+	ret = rb8366rb_set_ledgroup_mode(priv, led_group,
-+					 RTL8366RB_LEDGROUP_FORCE);
-+
-+	if (ret) {
-+		dev_err(priv->dev, "error updating LED GROUP group %d\n",
-+			led_group);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+rtl8366rb_cled_brightness_set_blocking(struct led_classdev *ldev,
-+				       enum led_brightness brightness)
-+{
-+	struct rtl8366rb_led *led = container_of(ldev, struct rtl8366rb_led,
-+						 cdev);
-+
-+	return rb8366rb_set_port_led(led, brightness == LED_ON);
-+}
-+
-+static int rtl8366rb_setup_led(struct realtek_priv *priv, struct dsa_port *dp,
-+			       struct fwnode_handle *led_fwnode)
-+{
-+	struct rtl8366rb *rb = priv->chip_data;
-+	struct led_init_data init_data = { };
-+	enum led_default_state state;
-+	struct rtl8366rb_led *led;
-+	u32 led_group;
-+	int ret;
-+
-+	ret = fwnode_property_read_u32(led_fwnode, "reg", &led_group);
-+	if (ret)
-+		return ret;
-+
-+	if (led_group >= RTL8366RB_NUM_LEDGROUPS) {
-+		dev_warn(priv->dev, "Invalid LED reg %d defined for port %d",
-+			 led_group, dp->index);
-+		return -EINVAL;
-+	}
-+
-+	led = &rb->leds[dp->index][led_group];
-+	led->port_num = dp->index;
-+	led->led_group = led_group;
-+	led->priv = priv;
-+
-+	state = led_init_default_state_get(led_fwnode);
-+	switch (state) {
-+	case LEDS_DEFSTATE_ON:
-+		led->cdev.brightness = 1;
-+		rb8366rb_set_port_led(led, 1);
-+		break;
-+	case LEDS_DEFSTATE_KEEP:
-+		led->cdev.brightness =
-+			rb8366rb_get_port_led(led);
-+		break;
-+	case LEDS_DEFSTATE_OFF:
-+	default:
-+		led->cdev.brightness = 0;
-+		rb8366rb_set_port_led(led, 0);
-+	}
-+
-+	led->cdev.max_brightness = 1;
-+	led->cdev.brightness_set_blocking =
-+		rtl8366rb_cled_brightness_set_blocking;
-+	init_data.fwnode = led_fwnode;
-+	init_data.devname_mandatory = true;
-+
-+	init_data.devicename = kasprintf(GFP_KERNEL, "Realtek-%d:0%d:%d",
-+					 dp->ds->index, dp->index, led_group);
-+	if (!init_data.devicename)
-+		return -ENOMEM;
-+
-+	ret = devm_led_classdev_register_ext(priv->dev, &led->cdev, &init_data);
-+	if (ret) {
-+		dev_warn(priv->dev, "Failed to init LED %d for port %d",
-+			 led_group, dp->index);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rtl8366rb_setup_all_leds_off(struct realtek_priv *priv)
-+{
-+	int ret = 0;
-+	int i;
-+
-+	regmap_update_bits(priv->map,
-+			   RTL8366RB_INTERRUPT_CONTROL_REG,
-+			   RTL8366RB_P4_RGMII_LED,
-+			   0);
-+
-+	for (i = 0; i < RTL8366RB_NUM_LEDGROUPS; i++) {
-+		ret = rb8366rb_set_ledgroup_mode(priv, i,
-+						 RTL8366RB_LEDGROUP_OFF);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static int rtl8366rb_setup_leds(struct realtek_priv *priv)
-+{
-+	struct device_node *leds_np, *led_np;
-+	struct dsa_switch *ds = &priv->ds;
-+	struct dsa_port *dp;
-+	int ret = 0;
-+
-+	dsa_switch_for_each_port(dp, ds) {
-+		if (!dp->dn)
-+			continue;
-+
-+		leds_np = of_get_child_by_name(dp->dn, "leds");
-+		if (!leds_np) {
-+			dev_dbg(priv->dev, "No leds defined for port %d",
-+				dp->index);
-+			continue;
-+		}
-+
-+		for_each_child_of_node(leds_np, led_np) {
-+			ret = rtl8366rb_setup_led(priv, dp,
-+						  of_fwnode_handle(led_np));
-+			if (ret) {
-+				of_node_put(led_np);
-+				break;
-+			}
-+		}
-+
-+		of_node_put(leds_np);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
- static int rtl8366rb_setup(struct dsa_switch *ds)
+ 	hci_dev_lock(hdev);
+ 
+ 	/* Clear already tracked devices on resume. Once the monitors are
+@@ -625,17 +672,19 @@ int msft_resume_sync(struct hci_dev *hdev)
+ 
+ 	reregister_monitor(hdev);
+ 
++	msft_data_put(msft);
+ 	return 0;
+ }
+ 
+ /* This function requires the caller holds hci_req_sync_lock */
+ void msft_do_open(struct hci_dev *hdev)
  {
- 	struct realtek_priv *priv = ds->priv;
-@@ -817,7 +1049,6 @@ static int rtl8366rb_setup(struct dsa_switch *ds)
- 	u32 chip_ver = 0;
- 	u32 chip_id = 0;
- 	int jam_size;
--	u32 val;
- 	int ret;
- 	int i;
+-	struct msft_data *msft = hdev->msft_data;
++	struct msft_data *msft;
  
-@@ -997,7 +1228,9 @@ static int rtl8366rb_setup(struct dsa_switch *ds)
- 	if (ret)
- 		return ret;
+ 	if (hdev->msft_opcode == HCI_OP_NOP)
+ 		return;
  
--	/* Set blinking, TODO: make this configurable */
-+	/* Set blinking, used by all LED groups using HW triggers.
-+	 * TODO: make this configurable
-+	 */
- 	ret = regmap_update_bits(priv->map, RTL8366RB_LED_BLINKRATE_REG,
- 				 RTL8366RB_LED_BLINKRATE_MASK,
- 				 RTL8366RB_LED_BLINKRATE_56MS);
-@@ -1005,26 +1238,19 @@ static int rtl8366rb_setup(struct dsa_switch *ds)
- 		return ret;
++	msft = msft_data_hold_unless_zero(hdev->msft_data);
+ 	if (!msft) {
+ 		bt_dev_err(hdev, "MSFT extension not registered");
+ 		return;
+@@ -650,8 +699,7 @@ void msft_do_open(struct hci_dev *hdev)
+ 	msft->features = 0;
  
- 	/* Set up LED activity:
--	 * Each port has 4 LEDs, we configure all ports to the same
--	 * behaviour (no individual config) but we can set up each
--	 * LED separately.
-+	 * Each port has 4 LEDs on fixed groups. Each group shares the same
-+	 * hardware trigger across all ports. LEDs can only be indiviually
-+	 * controlled setting the LED group to fixed mode and using the driver
-+	 * to toggle them LEDs on/off.
- 	 */
- 	if (priv->leds_disabled) {
--		/* Turn everything off */
--		regmap_update_bits(priv->map,
--				   RTL8366RB_INTERRUPT_CONTROL_REG,
--				   RTL8366RB_P4_RGMII_LED,
--				   0);
--
--		for (i = 0; i < RTL8366RB_NUM_LEDGROUPS; i++) {
--			val = RTL8366RB_LED_OFF << RTL8366RB_LED_CTRL_OFFSET(i);
--			ret = regmap_update_bits(priv->map,
--						 RTL8366RB_LED_CTRL_REG,
--						 RTL8366RB_LED_CTRL_MASK(i),
--						 val);
--			if (ret)
--				return ret;
--		}
-+		ret = rtl8366rb_setup_all_leds_off(priv);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = rtl8366rb_setup_leds(priv);
-+		if (ret)
-+			return ret;
+ 	if (!read_supported_features(hdev, msft)) {
+-		hdev->msft_data = NULL;
+-		kfree(msft);
++		msft_data_put(msft);
+ 		return;
  	}
  
- 	ret = rtl8366_reset_vlan(priv);
-
+@@ -663,15 +711,17 @@ void msft_do_open(struct hci_dev *hdev)
+ 		 */
+ 		reregister_monitor(hdev);
+ 	}
++	msft_data_put(msft);
+ }
+ 
+ void msft_do_close(struct hci_dev *hdev)
+ {
+-	struct msft_data *msft = hdev->msft_data;
++	struct msft_data *msft;
+ 	struct msft_monitor_advertisement_handle_data *handle_data, *tmp;
+ 	struct msft_monitor_addr_filter_data *address_filter, *n;
+ 	struct adv_monitor *monitor;
+ 
++	msft = msft_data_hold_unless_zero(hdev->msft_data);
+ 	if (!msft)
+ 		return;
+ 
+@@ -705,6 +755,8 @@ void msft_do_close(struct hci_dev *hdev)
+ 	hdev->advmon_pend_notify = false;
+ 	msft_monitor_device_del(hdev, 0, NULL, 0, true);
+ 
++	msft_data_put(msft);
++
+ 	hci_dev_unlock(hdev);
+ }
+ 
+@@ -767,6 +819,7 @@ void msft_register(struct hci_dev *hdev)
+ 	INIT_LIST_HEAD(&msft->address_filters);
+ 	hdev->msft_data = msft;
+ 	mutex_init(&msft->filter_lock);
++	kref_init(&msft->kref);
+ }
+ 
+ void msft_unregister(struct hci_dev *hdev)
+@@ -779,10 +832,7 @@ void msft_unregister(struct hci_dev *hdev)
+ 	bt_dev_dbg(hdev, "Unregister MSFT extension");
+ 
+ 	hdev->msft_data = NULL;
+-
+-	kfree(msft->evt_prefix);
+-	mutex_destroy(&msft->filter_lock);
+-	kfree(msft);
++	msft_data_put(msft);
+ }
+ 
+ /* This function requires the caller holds hdev->lock */
+@@ -1068,10 +1118,11 @@ static void msft_monitor_device_evt(struct hci_dev *hdev, struct sk_buff *skb)
+ 
+ void msft_vendor_evt(struct hci_dev *hdev, void *data, struct sk_buff *skb)
+ {
+-	struct msft_data *msft = hdev->msft_data;
++	struct msft_data *msft;
+ 	u8 *evt_prefix;
+ 	u8 *evt;
+ 
++	msft = msft_data_hold_unless_zero(hdev->msft_data);
+ 	if (!msft)
+ 		return;
+ 
+@@ -1081,21 +1132,21 @@ void msft_vendor_evt(struct hci_dev *hdev, void *data, struct sk_buff *skb)
+ 	if (msft->evt_prefix_len > 0) {
+ 		evt_prefix = msft_skb_pull(hdev, skb, 0, msft->evt_prefix_len);
+ 		if (!evt_prefix)
+-			return;
++			goto done;
+ 
+ 		if (memcmp(evt_prefix, msft->evt_prefix, msft->evt_prefix_len))
+-			return;
++			goto done;
+ 	}
+ 
+ 	/* Every event starts at least with an event code and the rest of
+ 	 * the data is variable and depends on the event code.
+ 	 */
+ 	if (skb->len < 1)
+-		return;
++		goto done;
+ 
+ 	evt = msft_skb_pull(hdev, skb, 0, sizeof(*evt));
+ 	if (!evt)
+-		return;
++		goto done;
+ 
+ 	hci_dev_lock(hdev);
+ 
+@@ -1112,13 +1163,24 @@ void msft_vendor_evt(struct hci_dev *hdev, void *data, struct sk_buff *skb)
+ 	}
+ 
+ 	hci_dev_unlock(hdev);
++
++done:
++	msft_data_put(msft);
+ }
+ 
+ __u64 msft_get_features(struct hci_dev *hdev)
+ {
+-	struct msft_data *msft = hdev->msft_data;
++	struct msft_data *msft;
++	unsigned long long features;
++
++	msft = msft_data_hold_unless_zero(hdev->msft_data);
++	if (!msft)
++		return 0;
++
++	features = msft->features;
+ 
+-	return msft ? msft->features : 0;
++	msft_data_put(msft);
++	return features;
+ }
+ 
+ static void msft_le_set_advertisement_filter_enable_cb(struct hci_dev *hdev,
+@@ -1152,37 +1214,48 @@ static void msft_le_set_advertisement_filter_enable_cb(struct hci_dev *hdev,
+ /* This function requires the caller holds hci_req_sync_lock */
+ int msft_add_monitor_pattern(struct hci_dev *hdev, struct adv_monitor *monitor)
+ {
+-	struct msft_data *msft = hdev->msft_data;
++	struct msft_data *msft;
++	int err;
+ 
++	msft = msft_data_hold_unless_zero(hdev->msft_data);
+ 	if (!msft)
+ 		return -EOPNOTSUPP;
+ 
+-	if (msft->resuming || msft->suspending)
++	if (msft->resuming || msft->suspending) {
++		msft_data_put(msft);
+ 		return -EBUSY;
++	}
+ 
+-	return msft_add_monitor_sync(hdev, monitor);
++	err = msft_add_monitor_sync(hdev, monitor);
++	msft_data_put(msft);
++	return err;
+ }
+ 
+ /* This function requires the caller holds hci_req_sync_lock */
+ int msft_remove_monitor(struct hci_dev *hdev, struct adv_monitor *monitor)
+ {
+-	struct msft_data *msft = hdev->msft_data;
++	struct msft_data *msft;
++	int err;
+ 
++	msft = msft_data_hold_unless_zero(hdev->msft_data);
+ 	if (!msft)
+ 		return -EOPNOTSUPP;
+ 
+ 	if (msft->resuming || msft->suspending)
+ 		return -EBUSY;
+ 
+-	return msft_remove_monitor_sync(hdev, monitor);
++	err = msft_remove_monitor_sync(hdev, monitor);
++	msft_data_put(msft);
++	return err;
+ }
+ 
+ int msft_set_filter_enable(struct hci_dev *hdev, bool enable)
+ {
+ 	struct msft_cp_le_set_advertisement_filter_enable cp;
+-	struct msft_data *msft = hdev->msft_data;
++	struct msft_data *msft;
+ 	int err;
+ 
++	msft = msft_data_hold_unless_zero(hdev->msft_data);
+ 	if (!msft)
+ 		return -EOPNOTSUPP;
+ 
+@@ -1193,6 +1266,7 @@ int msft_set_filter_enable(struct hci_dev *hdev, bool enable)
+ 
+ 	msft_le_set_advertisement_filter_enable_cb(hdev, &cp, err);
+ 
++	msft_data_put(msft);
+ 	return 0;
+ }
+ 
 -- 
-2.44.0
+2.34.1
 
