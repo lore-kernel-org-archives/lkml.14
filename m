@@ -1,48 +1,43 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C128F15991E
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 20:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C73515AABF
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 20:36:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714250194; cv=none; b=q4nkvUJ7o3cECFLxn2QydKYwqcG64VnGbp95s+J3VWtWPCZQCET8URnNBF+yJfCh2D50npWyH0wuSG7IRpv60Gp2C/PlQOFSDxuti8nvHHAVpiO9TlQhE6fsoMntTHe+I5jemSiAchD/FtrlroNDUEhdRIoClpsXpCSW7k2P3nM=
+	t=1714250195; cv=none; b=ZsoAEY7i6jd3ncLSe+U1zrnIZqxtIYeyYHPAdEc2a0Dg0Wq9rJBrGkQn8kb2kkyTyPMNa/Ui5+ZCURED/2W3KhDuw8daN5fsHx/wV6JUXMGS6rJCfdnVYK2KijqE9FuWU7IrKU81XjLAOCFsUj+jUBJMjcV69/g0Ob/0+DsTAOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714250194; c=relaxed/simple;
-	bh=+MzugzJWD0ePnwNN8kUfm/oNioMUuBkwypU7J8gu1eI=;
+	s=arc-20240116; t=1714250195; c=relaxed/simple;
+	bh=FtVdbC/U+l3sGLK8ZjsebvbxA/VMSsQcdOcx5l5rRRI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=diTn0jR/4rteTfJ5VKJrirtf8suKGMRRtO3iJF5REheHCzW8LBCqZJ4sDLVonAKhyXXJZ9GQq00VDeiSUt4LR6T0qrtt5jDDegSJZ613qg1wPe7B1VCjHhSIDZudfgO0vNf+b17JekS7C2YTGUFknvakDK3Mzd5VjwOXtPQJHj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=HseIkXQe; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=m3HdBQ8zJ8JjRqd7MjauaI+B9PR3GiwOwu6SgEQi0pJdy7rrwnJiLQMZ2ayYd6iZGkNuymBHoRDNIFqUrulq2YPo9G6ZIPwfXYIjHnzi15wQS2PUIBwvYRClRegAVeG/4ViePYF4/kQMZJIJ0oAQbxVOw/Ao5awmcgoiDI+BQ0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=KlcFqedh; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="HseIkXQe"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="KlcFqedh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=gZ01Lhe4pAwdcuNCxaIYgv6RGXpiS5mlcEHdQcrIkWs=; b=HseIkX
-	QeeKpgVS9jKY4BFhE/0UABE1zW0Qtb4VnivHX577i1yOEm/I+47oowrPMH9LHqnb
-	MkwiKA+2NOg+KZwq2G91nlmmV01I+/7mZayTfWuToS6V/yewif7lNRllCbkQTXIj
-	3lSqVJV6CX4HrrakUN+dmjXfh3gU6Xy+TzgG3pr5sQF8yThqDDl17yCg0mOuET2O
-	gqYIHau5mkauEbFYudMXLFdHwIW9Lbx9Ipej6NRnPPUTGAB4dAlJfoWgWKaioOJ1
-	gYBEpL6ZHriOdPz8Gfo3FviY/0Jy1BhXWB36135S/GSfv94r8K5x52vqVqCMpivg
-	OVycBaShXiLV6cBg==
-Received: (qmail 1781964 invoked from network); 27 Apr 2024 22:36:20 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Apr 2024 22:36:20 +0200
-X-UD-Smtp-Session: l3s3148p1@P+gS+RkX0s9ehh9l
+	 s=k1; bh=TosNpVR11Gbh2os3Snnrhjp03ukLw8+MsWgLfBAsKaU=; b=KlcFqe
+	dhq+bjZ/SZMwpB56m5o0iNHhDcAfUVEYFwPbIMPH5pvi7snaN65Ktv3yfDxzZA0d
+	JlixcTIoAw9LYijnAKEoTLCShCdJgDnZoLr1yt2cCuP9ZHFobBNdjZmHKLVQDDSZ
+	yn+qTER3IG2YwggPCkykkbJkUP/0eN6Xoyc8LOKBywrBY2eeaIbMIc2YsFOeW7lA
+	jQdySzRISMN+pPJgiSQTX2kI+N/v24cCOrSygJ5CyDqKLBrMEL9bMwQQkCSxvzbD
+	H6TU5CctN4oKOHMxaJWNPXhJeD+eToHiYQbtaNG8CqMqwIiThRQdnFY561GHlAKh
+	ofYGi2phDhiPaG6A==
+Received: (qmail 1782046 invoked from network); 27 Apr 2024 22:36:22 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Apr 2024 22:36:22 +0200
+X-UD-Smtp-Session: l3s3148p1@wtIq+RkX4M9ehh9l
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-i2c@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
-	Alain Volmat <alain.volmat@foss.st.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
 	Andi Shyti <andi.shyti@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 08/15] i2c: stm32f4: use 'time_left' variable with wait_for_completion_timeout()
-Date: Sat, 27 Apr 2024 22:36:00 +0200
-Message-ID: <20240427203611.3750-9-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 10/15] i2c: synquacer: use 'time_left' variable with wait_for_completion_timeout()
+Date: Sat, 27 Apr 2024 22:36:02 +0200
+Message-ID: <20240427203611.3750-11-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240427203611.3750-1-wsa+renesas@sang-engineering.com>
 References: <20240427203611.3750-1-wsa+renesas@sang-engineering.com>
@@ -65,37 +60,35 @@ self explaining.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-stm32f4.c | 8 ++++----
+ drivers/i2c/busses/i2c-synquacer.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-stm32f4.c b/drivers/i2c/busses/i2c-stm32f4.c
-index 859ac0cf7f6c..f8b12be6ef55 100644
---- a/drivers/i2c/busses/i2c-stm32f4.c
-+++ b/drivers/i2c/busses/i2c-stm32f4.c
-@@ -681,7 +681,7 @@ static int stm32f4_i2c_xfer_msg(struct stm32f4_i2c_dev *i2c_dev,
+diff --git a/drivers/i2c/busses/i2c-synquacer.c b/drivers/i2c/busses/i2c-synquacer.c
+index bbea521b05dd..bf9bcfefa30e 100644
+--- a/drivers/i2c/busses/i2c-synquacer.c
++++ b/drivers/i2c/busses/i2c-synquacer.c
+@@ -311,7 +311,7 @@ static int synquacer_i2c_doxfer(struct synquacer_i2c *i2c,
+ 				struct i2c_msg *msgs, int num)
  {
- 	struct stm32f4_i2c_msg *f4_msg = &i2c_dev->msg;
- 	void __iomem *reg = i2c_dev->base + STM32F4_I2C_CR1;
+ 	unsigned char bsr;
 -	unsigned long timeout;
 +	unsigned long time_left;
- 	u32 mask;
  	int ret;
  
-@@ -706,11 +706,11 @@ static int stm32f4_i2c_xfer_msg(struct stm32f4_i2c_dev *i2c_dev,
- 		stm32f4_i2c_set_bits(reg, STM32F4_I2C_CR1_START);
+ 	synquacer_i2c_hw_init(i2c);
+@@ -335,9 +335,9 @@ static int synquacer_i2c_doxfer(struct synquacer_i2c *i2c,
+ 		return ret;
  	}
  
--	timeout = wait_for_completion_timeout(&i2c_dev->complete,
--					      i2c_dev->adap.timeout);
-+	time_left = wait_for_completion_timeout(&i2c_dev->complete,
-+						i2c_dev->adap.timeout);
- 	ret = f4_msg->result;
- 
--	if (!timeout)
-+	if (!time_left)
- 		ret = -ETIMEDOUT;
- 
- 	return ret;
+-	timeout = wait_for_completion_timeout(&i2c->completion,
+-					msecs_to_jiffies(i2c->timeout_ms));
+-	if (timeout == 0) {
++	time_left = wait_for_completion_timeout(&i2c->completion,
++						msecs_to_jiffies(i2c->timeout_ms));
++	if (time_left == 0) {
+ 		dev_dbg(i2c->dev, "timeout\n");
+ 		return -EAGAIN;
+ 	}
 -- 
 2.43.0
 
