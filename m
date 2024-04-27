@@ -1,38 +1,38 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178A24DA12;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177A64D9E0;
 	Sat, 27 Apr 2024 11:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714216888; cv=none; b=spsztoiJ3DE9IBhxzWam5HbiWhxI9ZkjxPPN4459v9L+mUUoObVZQlZAAfgj3v2F1/mWS3kV1+EMzjrNf8ixf/Sl+jnY1bn3FiWltrA+5tQkNPbaKMHGplGjLKdMxhbPtXezHBJOw31b5E/IqY6UFvOn2FKfPmeSTaN2i3ogZb0=
+	t=1714216888; cv=none; b=CAIJ14pLp5MzgVV/DsWXjgEF6xIAt8alt7v6ACaTFERSsiBco/1KkiW8p7CiIx5x6WFbrGZ4eyH4Nl2m61GYkmZo4ceQQ31c0zpN+t4lkK91zlWJhWQqSxs6IGYKIPzV2IUCpE8puq7KPBdiNtKC8xQGsZQkcsTySELlJApOdsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714216888; c=relaxed/simple;
-	bh=C5CZWRn/dblAaawMHg2qNlfLg+yBr5J2uQbwj2YUfTg=;
+	bh=JgGabuAHu2kBFYqmC6hzVu4EnGRQ0JFgxHIloweNGrk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XNOnNumFYjlZPgV7CPW+WSKoWaCSawb1oKrzHVOL6i6u972AgDNIFQmfQ6NZTAYQ3rYccNTHhLb0WxWGtlV8YZir/Xss7OYfqae7MrBCGc79L4e1tt+onaMkeSDHGMZ/RM49IWaTv2P7J9QjI9oTbj9zmihXeu5dE/x4oeSQHwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DiMkLcQ0; arc=none smtp.client-ip=90.155.92.199
+	 MIME-Version; b=iGWJopikp2OHLM5NT9CdEibmgwWPcmaUbFUx623revqBfxDiYYSgs9iH+PDyzc10tHPuK1oOq12Slvrg4NHC31Y6UTmiuDc3EPFsiUtBp1vOx1UyH2d+tT4kczSQIV4iu4MLF5dKmxb0EfR+xPNbOTkKS5uj6V92q9ho2lTK3Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eyWNY0fg; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DiMkLcQ0"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eyWNY0fg"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description;
-	bh=E2BLnhCI82wBGMd07MyYrgTnQQv3Sa9TdJWanAWnpdE=; b=DiMkLcQ0m0oActJMV0r/Um0L8D
-	eqN4bzbg77nSayhDWCQuq6HS0YI26i94JMsHg+24nkLKpKnw6yOITt4Zv1t7ORaTvs+wAEh+1Oqin
-	PL/e2BSA9PPfIVd2kkAwBbK5GZ5yaxuO4aCF+9EPghDr2Ewc6pV/TPQJn+L+34KZ2lrfuuBlALvti
-	HFgaDSDzznXB+NjcuTv3mNXCY9+YdTni4sX/vmTm18n/rjb24OiNSVCtQqe3LV6jFP2U4BMjBRkU2
-	hZiv3NqdzHrNI0IsFoRhm1ixxEHDdbDacO3AYKOUIMettQXRc4mz3d8Co+XAVZ6NmicrFNrxanp16
-	tN4itiuw==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=ICZ72GFgqWeWSew6Hy8geT+ffx42fw8pPdYL/rfeVOU=; b=eyWNY0fgoB6wWS5DiiizFp/4TP
+	uyG0aGNmw97AGbTz8Z7yunbXJcGQwcpLrkFF1zMDbpdBS3sgHqMFUPSqFc7VQnf7eHYnVaohul/0W
+	wrJRVU7BsF0H9R6813lWxOvX/xM5eMOVsNENQaeTsHuBmSLm74D/H6B45ZcOth+/by+9urEDbVCbl
+	9zXcPsymetxxjfpJlOxNpfJTbzrK4ZXXNNjl0cPYKcrM5qgBYm7wY3BhHsx/eduWAU6He2IdBrb2+
+	evnRgU1JixYDY2c4RHtnGLNNTddPI4OgCe6p1fFIp5IaLYs9tzt/PR3kRpNM8f9vvfCFgQGB9PQrb
+	jXtx+8Hw==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s0g5h-0000000FeZd-3meW;
-	Sat, 27 Apr 2024 11:19:54 +0000
+	id 1s0g5i-0000000FeZh-0pYE;
+	Sat, 27 Apr 2024 11:20:59 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s0g5f-000000002b3-3HnV;
-	Sat, 27 Apr 2024 12:19:35 +0100
+	id 1s0g5g-000000002bV-1IK2;
+	Sat, 27 Apr 2024 12:19:36 +0100
 From: David Woodhouse <dwmw2@infradead.org>
 To: kvm@vger.kernel.org
 Cc: Paolo Bonzini <pbonzini@redhat.com>,
@@ -55,9 +55,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	sveith@amazon.de,
 	zide.chen@intel.com,
 	Dongli Zhang <dongli.zhang@oracle.com>
-Subject: [PATCH v2 01/15] KVM: x86/xen: Do not corrupt KVM clock in kvm_xen_shared_info_init()
-Date: Sat, 27 Apr 2024 12:04:58 +0100
-Message-ID: <20240427111929.9600-2-dwmw2@infradead.org>
+Subject: [PATCH v2 08/15] KVM: x86: Fix KVM clock precision in __get_kvmclock()
+Date: Sat, 27 Apr 2024 12:05:05 +0100
+Message-ID: <20240427111929.9600-9-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240427111929.9600-1-dwmw2@infradead.org>
 References: <20240427111929.9600-1-dwmw2@infradead.org>
@@ -67,99 +67,289 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: David Woodhouse <dwmw2@infradead.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-The KVM clock is an interesting thing. It is defined as "nanoseconds
-since the guest was created", but in practice it runs at two *different*
-rates — or three different rates, if you count implementation bugs.
+When in 'master clock mode' (i.e. when host and guest TSCs are behaving
+sanely and in sync), the KVM clock is defined in terms of the guest TSC.
 
-Definition A is that it runs synchronously with the CLOCK_MONOTONIC_RAW
-of the host, with a delta of kvm->arch.kvmclock_offset.
+When TSC scaling is used, calculating the KVM clock directly from *host*
+TSC cycles leads to a systemic drift from the values calculated by the
+guest from its TSC.
 
-But that version doesn't actually get used in the common case, where the
-host has a reliable TSC and the guest TSCs are all running at the same
-rate and in sync with each other, and kvm->arch.use_master_clock is set.
+Commit 451a707813ae ("KVM: x86/xen: improve accuracy of Xen timers")
+had a simple workaround for the specific case of Xen timers, as it had an
+actual vCPU to hand and could use its scaling information. That commit
+noted that it was broken for the general case of get_kvmclock_ns(), and
+said "I'll come back to that".
 
-In that common case, definition B is used: There is a reference point in
-time at kvm->arch.master_kernel_ns (again a CLOCK_MONOTONIC_RAW time),
-and a corresponding host TSC value kvm->arch.master_cycle_now. This
-fixed point in time is converted to guest units (the time offset by
-kvmclock_offset and the TSC Value scaled and offset to be a guest TSC
-value) and advertised to the guest in the pvclock structure. While in
-this 'use_master_clock' mode, the fixed point in time never needs to be
-changed, and the clock runs precisely in time with the guest TSC, at the
-rate advertised in the pvclock structure.
+Since __get_kvmclock() is invoked without a specific CPU, it needs to
+be able to find or generate the scaling values required to perform the
+correct calculation.
 
-The third definition C is implemented in kvm_get_wall_clock_epoch() and
-__get_kvmclock(), using the master_cycle_now and master_kernel_ns fields
-but converting the *host* TSC cycles directly to a value in nanoseconds
-instead of scaling via the guest TSC.
+Thankfully, TSC scaling can only happen with X86_FEATURE_CONSTANT_TSC,
+so it isn't as complex as it might have been.
 
-One might naïvely think that all three definitions are identical, since
-CLOCK_MONOTONIC_RAW is not skewed by NTP frequency corrections; all
-three are just the result of counting the host TSC at a known frequency,
-or the scaled guest TSC at a known precise fraction of the host's
-frequency. The problem is with arithmetic precision, and the way that
-frequency scaling is done in a division-free way by multiplying by a
-scale factor, then shifting right. In practice, all three ways of
-calculating the KVM clock will suffer a systemic drift from each other.
+In __kvm_synchronize_tsc(), note the current vCPU's scaling ratio in
+kvm->arch.last_tsc_scaling_ratio. That is only protected by the
+tsc_write_lock, so in pvclock_update_vm_gtod_copy(), copy it into a
+separate kvm->arch.master_tsc_scaling_ratio so that it can be accessed
+using the kvm->arch.pvclock_sc seqcount lock. Also generate the mul and
+shift factors to convert to nanoseconds for the corresponding KVM clock,
+just as kvm_guest_time_update() would.
 
-Eventually, definition C should just be eliminated. Commit 451a707813ae
-("KVM: x86/xen: improve accuracy of Xen timers") worked around it for
-the specific case of Xen timers, which are defined in terms of the KVM
-clock and suffered from a continually increasing error in timer expiry
-times. That commit notes that get_kvmclock_ns() is non-trivial to fix
-and says "I'll come back to that", which remains true.
+In __get_kvmclock(), which runs within a seqcount retry loop, use those
+values to convert host to guest TSC and then to nanoseconds. Only fall
+back to using get_kvmclock_base_ns() when not in master clock mode.
 
-Definitions A and B do need to coexist, the former to handle the case
-where the host or guest TSC is suboptimally configured. But KVM should
-be more careful about switching between them, and the discontinuity in
-guest time which could result.
+There was previously a code path in __get_kvmclock() which looked like
+it could set KVM_CLOCK_TSC_STABLE without KVM_CLOCK_REALTIME, perhaps
+even on 32-bit hosts. In practice that could never happen as the
+ka->use_master_clock flag couldn't be set on 32-bit, and even on 64-bit
+hosts it would never be set when the system clock isn't TSC-based. So
+that code path is now removed.
 
-In particular, KVM_REQ_MASTERCLOCK_UPDATE will take a new snapshot of
-time as the reference in master_kernel_ns and master_cycle_now, yanking
-the guest's clock back to match definition A at that moment.
+The kvm_get_wall_clock_epoch() function had the same problem; make it
+just call get_kvmclock() and subtract kvmclock from wallclock, with
+the same fallback as before.
 
-When invoked from in 'use_master_clock' mode, kvm_update_masterclock()
-should probably *adjust* kvm->arch.kvmclock_offset to account for the
-drift, instead of yanking the clock back to defintion A. But in the
-meantime there are a bunch of places where it just doesn't need to be
-invoked at all.
-
-To start with: there is no need to do such an update when a Xen guest
-populates the shared_info page. This seems to have been a hangover from
-the very first implementation of shared_info which automatically
-populated the vcpu_info structures at their default locations, but even
-then it should just have raised KVM_REQ_CLOCK_UPDATE on each vCPU
-instead of using KVM_REQ_MASTERCLOCK_UPDATE. And now that userspace is
-expected to explicitly set the vcpu_info even in its default locations,
-there's not even any need for that either.
-
-Fixes: 629b5348841a1 ("KVM: x86/xen: update wallclock region")
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-Reviewed-by: Paul Durrant <paul@xen.org>
 ---
- arch/x86/kvm/xen.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/x86/include/asm/kvm_host.h |   4 +
+ arch/x86/kvm/x86.c              | 151 ++++++++++++++++----------------
+ 2 files changed, 79 insertions(+), 76 deletions(-)
 
-diff --git a/arch/x86/kvm/xen.c b/arch/x86/kvm/xen.c
-index f65b35a05d91..5a83a8154b79 100644
---- a/arch/x86/kvm/xen.c
-+++ b/arch/x86/kvm/xen.c
-@@ -98,8 +98,6 @@ static int kvm_xen_shared_info_init(struct kvm *kvm)
- 	wc->version = wc_version + 1;
- 	read_unlock_irq(&gpc->lock);
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 8440c4081727..b01c1d000fff 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1353,6 +1353,7 @@ struct kvm_arch {
+ 	u64 last_tsc_write;
+ 	u32 last_tsc_khz;
+ 	u64 last_tsc_offset;
++	u64 last_tsc_scaling_ratio;
+ 	u64 cur_tsc_nsec;
+ 	u64 cur_tsc_write;
+ 	u64 cur_tsc_offset;
+@@ -1364,6 +1365,9 @@ struct kvm_arch {
  
--	kvm_make_all_cpus_request(kvm, KVM_REQ_MASTERCLOCK_UPDATE);
+ 	seqcount_raw_spinlock_t pvclock_sc;
+ 	bool use_master_clock;
++	s8 master_tsc_shift;
++	u32 master_tsc_mul;
++	u64 master_tsc_scaling_ratio;
+ 	u64 master_kernel_ns;
+ 	u64 master_cycle_now;
+ 	struct delayed_work kvmclock_update_work;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 44b3d2a0da5b..89918ba266cd 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2674,6 +2674,7 @@ static void __kvm_synchronize_tsc(struct kvm_vcpu *vcpu, u64 offset, u64 tsc,
+ 	kvm->arch.last_tsc_nsec = ns;
+ 	kvm->arch.last_tsc_write = tsc;
+ 	kvm->arch.last_tsc_khz = vcpu->arch.virtual_tsc_khz;
++	kvm->arch.last_tsc_scaling_ratio = vcpu->arch.l1_tsc_scaling_ratio;
+ 	kvm->arch.last_tsc_offset = offset;
+ 
+ 	vcpu->arch.last_guest_tsc = tsc;
+@@ -3009,6 +3010,7 @@ static void pvclock_update_vm_gtod_copy(struct kvm *kvm)
+ {
+ #ifdef CONFIG_X86_64
+ 	struct kvm_arch *ka = &kvm->arch;
++	uint64_t last_tsc_hz;
+ 	int vclock_mode;
+ 	bool host_tsc_clocksource, vcpus_matched;
+ 
+@@ -3028,6 +3030,35 @@ static void pvclock_update_vm_gtod_copy(struct kvm *kvm)
+ 				&& !ka->backwards_tsc_observed
+ 				&& !ka->boot_vcpu_runs_old_kvmclock;
+ 
++	/*
++	 * When TSC scaling is in use (which can thankfully only happen
++	 * with X86_FEATURE_CONSTANT_TSC), the host must calculate the
++	 * KVM clock precisely as the guest would, by scaling through
++	 * the guest TSC frequency. Otherwise, differences in arithmetic
++	 * precision lead to systemic drift between the guest's and the
++	 * host's idea of the time.
++	 */
++	if (kvm_caps.has_tsc_control) {
++		/*
++		 * Copy from the field protected solely by ka->tsc_write_lock,
++		 * to the field protected by the ka->pvclock_sc seqlock.
++		 */
++		ka->master_tsc_scaling_ratio = ka->last_tsc_scaling_ratio ? :
++			kvm_caps.default_tsc_scaling_ratio;
++
++		/*
++		 * Calculate the scaling factors precisely the same way
++		 * that kvm_guest_time_update() does.
++		 */
++		last_tsc_hz = kvm_scale_tsc(tsc_khz * 1000LL,
++					    ka->master_tsc_scaling_ratio);
++		kvm_get_time_scale(NSEC_PER_SEC, last_tsc_hz,
++				   &ka->master_tsc_shift, &ka->master_tsc_mul);
++	} else if (boot_cpu_has(X86_FEATURE_CONSTANT_TSC)) {
++		kvm_get_time_scale(NSEC_PER_SEC, tsc_khz * 1000LL,
++				   &ka->master_tsc_shift, &ka->master_tsc_mul);
++	}
++
+ 	if (ka->use_master_clock)
+ 		atomic_set(&kvm_guest_has_master_clock, 1);
+ 
+@@ -3100,36 +3131,49 @@ static unsigned long get_cpu_tsc_khz(void)
+ static void __get_kvmclock(struct kvm *kvm, struct kvm_clock_data *data)
+ {
+ 	struct kvm_arch *ka = &kvm->arch;
+-	struct pvclock_vcpu_time_info hv_clock;
++
++#ifdef CONFIG_X86_64
++	uint64_t cur_tsc_khz = 0;
++	struct timespec64 ts;
+ 
+ 	/* both __this_cpu_read() and rdtsc() should be on the same cpu */
+ 	get_cpu();
+ 
+-	data->flags = 0;
+ 	if (ka->use_master_clock &&
+-	    (static_cpu_has(X86_FEATURE_CONSTANT_TSC) || __this_cpu_read(cpu_tsc_khz))) {
+-#ifdef CONFIG_X86_64
+-		struct timespec64 ts;
++	    (cur_tsc_khz = get_cpu_tsc_khz()) &&
++	    !kvm_get_walltime_and_clockread(&ts, &data->host_tsc))
++		cur_tsc_khz = 0;
+ 
+-		if (kvm_get_walltime_and_clockread(&ts, &data->host_tsc)) {
+-			data->realtime = ts.tv_nsec + NSEC_PER_SEC * ts.tv_sec;
+-			data->flags |= KVM_CLOCK_REALTIME | KVM_CLOCK_HOST_TSC;
+-		} else
+-#endif
+-		data->host_tsc = rdtsc();
 -
- out:
- 	srcu_read_unlock(&kvm->srcu, idx);
- 	return ret;
+-		data->flags |= KVM_CLOCK_TSC_STABLE;
+-		hv_clock.tsc_timestamp = ka->master_cycle_now;
+-		hv_clock.system_time = ka->master_kernel_ns + ka->kvmclock_offset;
+-		kvm_get_time_scale(NSEC_PER_SEC, get_cpu_tsc_khz() * 1000LL,
+-				   &hv_clock.tsc_shift,
+-				   &hv_clock.tsc_to_system_mul);
+-		data->clock = __pvclock_read_cycles(&hv_clock, data->host_tsc);
+-	} else {
+-		data->clock = get_kvmclock_base_ns() + ka->kvmclock_offset;
++	put_cpu();
++
++	if (cur_tsc_khz) {
++		uint64_t tsc_cycles;
++		uint32_t mul;
++		int8_t shift;
++
++		tsc_cycles = data->host_tsc - ka->master_cycle_now;
++
++		if (kvm_caps.has_tsc_control)
++			tsc_cycles = kvm_scale_tsc(tsc_cycles,
++						   ka->master_tsc_scaling_ratio);
++
++		if (static_cpu_has(X86_FEATURE_CONSTANT_TSC)) {
++			mul = ka->master_tsc_mul;
++			shift = ka->master_tsc_shift;
++		} else {
++			kvm_get_time_scale(NSEC_PER_SEC, cur_tsc_khz * 1000LL,
++					   &shift, &mul);
++		}
++		data->clock = ka->master_kernel_ns + ka->kvmclock_offset +
++			pvclock_scale_delta(tsc_cycles, mul, shift);
++		data->realtime = ts.tv_nsec + NSEC_PER_SEC * ts.tv_sec;
++		data->flags = KVM_CLOCK_REALTIME | KVM_CLOCK_HOST_TSC | KVM_CLOCK_TSC_STABLE;
++		return;
+ 	}
++#endif
+ 
+-	put_cpu();
++	data->clock = get_kvmclock_base_ns() + ka->kvmclock_offset;
++	data->flags = 0;
+ }
+ 
+ static void get_kvmclock(struct kvm *kvm, struct kvm_clock_data *data)
+@@ -3330,68 +3374,23 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
+  * that and kvmclock, but even that would be subject to change over
+  * time.
+  *
+- * Attempt to calculate the epoch at a given moment using the *same*
+- * TSC reading via kvm_get_walltime_and_clockread() to obtain both
+- * wallclock and kvmclock times, and subtracting one from the other.
++ * Use get_kvmclock() to obtain a simultaneous reading of wallclock
++ * and kvmclock times from the *same* TSC reading, and subtract one
++ * from the other.
+  *
+  * Fall back to using their values at slightly different moments by
+  * calling ktime_get_real_ns() and get_kvmclock_ns() separately.
+  */
+ uint64_t kvm_get_wall_clock_epoch(struct kvm *kvm)
+ {
+-#ifdef CONFIG_X86_64
+-	struct pvclock_vcpu_time_info hv_clock;
+-	struct kvm_arch *ka = &kvm->arch;
+-	unsigned long seq, local_tsc_khz;
+-	struct timespec64 ts;
+-	uint64_t host_tsc;
+-
+-	do {
+-		seq = read_seqcount_begin(&ka->pvclock_sc);
+-
+-		local_tsc_khz = 0;
+-		if (!ka->use_master_clock)
+-			break;
+-
+-		/*
+-		 * The TSC read and the call to get_cpu_tsc_khz() must happen
+-		 * on the same CPU.
+-		 */
+-		get_cpu();
+-
+-		local_tsc_khz = get_cpu_tsc_khz();
+-
+-		if (local_tsc_khz &&
+-		    !kvm_get_walltime_and_clockread(&ts, &host_tsc))
+-			local_tsc_khz = 0; /* Fall back to old method */
+-
+-		put_cpu();
+-
+-		/*
+-		 * These values must be snapshotted within the seqcount loop.
+-		 * After that, it's just mathematics which can happen on any
+-		 * CPU at any time.
+-		 */
+-		hv_clock.tsc_timestamp = ka->master_cycle_now;
+-		hv_clock.system_time = ka->master_kernel_ns + ka->kvmclock_offset;
++	struct kvm_clock_data data;
+ 
+-	} while (read_seqcount_retry(&ka->pvclock_sc, seq));
++	get_kvmclock(kvm, &data);
+ 
+-	/*
+-	 * If the conditions were right, and obtaining the wallclock+TSC was
+-	 * successful, calculate the KVM clock at the corresponding time and
+-	 * subtract one from the other to get the guest's epoch in nanoseconds
+-	 * since 1970-01-01.
+-	 */
+-	if (local_tsc_khz) {
+-		kvm_get_time_scale(NSEC_PER_SEC, local_tsc_khz * NSEC_PER_USEC,
+-				   &hv_clock.tsc_shift,
+-				   &hv_clock.tsc_to_system_mul);
+-		return ts.tv_nsec + NSEC_PER_SEC * ts.tv_sec -
+-			__pvclock_read_cycles(&hv_clock, host_tsc);
+-	}
+-#endif
+-	return ktime_get_real_ns() - get_kvmclock_ns(kvm);
++	if (data.flags & KVM_CLOCK_REALTIME)
++		return data.realtime - data.clock;
++	else
++		return ktime_get_real_ns() - data.clock;
+ }
+ 
+ /*
 -- 
 2.44.0
 
