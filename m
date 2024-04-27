@@ -1,37 +1,37 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C55495CC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CEB4AEC7;
 	Sat, 27 Apr 2024 11:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714216785; cv=none; b=ey8EDXetESwbmn18W6XLAzijjbV4KnTWXB5Aet5A9a2P+8A3Fr4xIhcMBw8TjI6SYmp3zMtdsJkdiX1Iazx7WxiNi7ATUV8n1gH+1SXu1vIiHjszF24PMU8Biaqvo0c9DAIpmeP9e674NPjQOCHvRs4jJEi2xdReKy4ajT7FS4c=
+	t=1714216786; cv=none; b=a4tpuIxzALZaVb9T545/Njs5BNyN0zp3k80WOUg/R9xjBWBekkSUps/61fgm+UJW/x4CwHqFKS2TBzeZ5/N27ARCHeGkSySR3q6Tw8SaZ0xcGeUuEzfhOYMrafV5HGWdobUM7UUl3Fkg0yll/Ciy5XrTdknhwm1Dyz7K/HIgKTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714216785; c=relaxed/simple;
-	bh=iOmvqV+vbYDKZG4Z0hPkoNLgaOP2tzUKcwotb2WDGfA=;
+	s=arc-20240116; t=1714216786; c=relaxed/simple;
+	bh=MfsZSEbRwBJ9w5jCG1r9UNHwXDhRvX+YH1b8L7lq6jc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nrfr90tgWZdeM2481wSJT4veZnljYL3vuAX0oqGzn7hVc/cg+U1ySGa27ajsTEZy0CqhcGYUJgHIzFOL8jT0IVZcX7PJ+IHEdpIRCx4kdB/F4lGM7jxEzZTpkNxQv/lufRdsNIRXHnXVxYoSt8KSRjUHO415ZeEiYrHefyge2so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cmn7aYhf; arc=none smtp.client-ip=90.155.50.34
+	 MIME-Version; b=WvsxMcOhGwVyYv9Jr2ifIvwEclTL9IQB8DYS+zoZTndWHwaY+9D9ffXc8bmgIV7mgK9GyvwqJmoV9iu3THDt+It6tVbj5Mcp6Y9LWnRRMzcum5LgV3iYCw5APBEJ3EVCeCeWHj7B6xbKgvy/OvY7syFkMcuvxgw6JazM5l9d/Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jkwhuFHy; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cmn7aYhf"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jkwhuFHy"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=vQRg8jTSE/w84X85rubENd1tTskSzNXDiSVdMmVU2k0=; b=cmn7aYhfwh7DslkWnh5DqUZEIx
-	j9fX5K6GH0V9zbxwMg3+0ZIl9hHP+KQ/z/B9Zv/oQRJg/gjuQlViVmqmce4HtfXOe0GtacMer0Vzk
-	ES7aVffN34pEVqZkTxXUuvI5QTx1wLclppF/bBswcoiRkHXhVTE1vKS1ZpKfSIAki1+2o9lp6Z8Cs
-	pS2/wSeYj7ddIwxXXJnQzFI+HUTvkJi9QDt/9dr1yQ4mkIPAmGGaNVt/LlSWXd+cN7NZp3bIkzNnr
-	T0gUJY0VuLBoesPKzPyxKkz35NojO96EiIEIzm2ONrbz1Fp0RiCYAfXCBOXkHblB2MhnbJpKQWrGL
-	x90YaXoQ==;
+	bh=LhUA0U4IOeUA/e+o4NGCvx07Pxtovz/JSXQ/6S+Lttw=; b=jkwhuFHyGP0W6eB0FCnQXRFH1i
+	k4V8nJu/xHElplfQ/c7+njx0qvE8deBVDcTyE9rgOoghUUN5igilN5V+rqmTDMsJdhi77EBjPax08
+	lA8P+A6XkAY08ZqqKSYqa0ObaIFU/zIhg1qD8D+i6rdt/dusU1Gb8Kp+2Zr3Z0Db+IG0+gwih/M8j
+	rz68Ifm9ozpxAEai5f4RwNjVPSIy0hdirWJRWl8LRdwQuonmQ0XMaLj6mpsdCgF+19itDnfWgpwvq
+	E8mZg+A1HzWTtwr9kEqbWA1PL8cyvMk6XTgd8953Bb8gr1Wj+cnR/ghH+HjPdxiNrpFw0z1wxLzV9
+	y/8okUJw==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s0g5g-00000007Jwj-2Dkw;
+	id 1s0g5h-00000007Jwn-00cY;
 	Sat, 27 Apr 2024 11:19:37 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s0g5g-000000002bJ-0XQk;
+	id 1s0g5g-000000002bh-20OW;
 	Sat, 27 Apr 2024 12:19:36 +0100
 From: David Woodhouse <dwmw2@infradead.org>
 To: kvm@vger.kernel.org
@@ -55,9 +55,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	sveith@amazon.de,
 	zide.chen@intel.com,
 	Dongli Zhang <dongli.zhang@oracle.com>
-Subject: [PATCH v2 05/15] KVM: x86: Explicitly disable TSC scaling without CONSTANT_TSC
-Date: Sat, 27 Apr 2024 12:05:02 +0100
-Message-ID: <20240427111929.9600-6-dwmw2@infradead.org>
+Subject: [PATCH v2 11/15] KVM: x86: Remove implicit rdtsc() from kvm_compute_l1_tsc_offset()
+Date: Sat, 27 Apr 2024 12:05:08 +0100
+Message-ID: <20240427111929.9600-12-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240427111929.9600-1-dwmw2@infradead.org>
 References: <20240427111929.9600-1-dwmw2@infradead.org>
@@ -73,52 +73,79 @@ X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-KVM does make an attempt to cope with non-constant TSC, and has notifiers
-to handle host TSC frequency changes. However, it *only* adjusts the KVM
-clock, and doesn't adjust TSC frequency scaling when the host changes.
+Let the callers pass the host TSC value in as an explicit parameter.
 
-This is presumably because non-constant TSCs were fixed in hardware long
-before TSC scaling was implemented, so there should never be real CPUs
-which have TSC scaling but *not* CONSTANT_TSC.
+This leaves some fairly obviously stupid code, which using this function
+to compare the guest TSC at some *other* time, with the newly-minted TSC
+value from rdtsc(). Unless it's being used to measure *elapsed* time,
+that isn't very sensible.
 
-Such a combination could potentially happen in some odd L1 nesting
-environment, but it isn't worth trying to support it. Just make the
-dependency explicit.
+In this case, "obviously stupid" is an improvement over being non-obviously
+so.
+
+No functional change intended.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-Reviewed-by: Paul Durrant <paul@xen.org>
 ---
- arch/x86/kvm/svm/svm.c | 3 ++-
- arch/x86/kvm/vmx/vmx.c | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 0f3b59da0d4a..4d3ec1c3231e 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -5202,7 +5202,8 @@ static __init int svm_hardware_setup(void)
- 		kvm_enable_efer_bits(EFER_FFXSR);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index ef3cd6113037..ea59694d712a 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2601,11 +2601,12 @@ u64 kvm_scale_tsc(u64 tsc, u64 ratio)
+ 	return _tsc;
+ }
  
- 	if (tsc_scaling) {
--		if (!boot_cpu_has(X86_FEATURE_TSCRATEMSR)) {
-+		if (!boot_cpu_has(X86_FEATURE_TSCRATEMSR) ||
-+		    !boot_cpu_has(X86_FEATURE_CONSTANT_TSC)) {
- 			tsc_scaling = false;
+-static u64 kvm_compute_l1_tsc_offset(struct kvm_vcpu *vcpu, u64 target_tsc)
++static u64 kvm_compute_l1_tsc_offset(struct kvm_vcpu *vcpu, u64 host_tsc,
++				     u64 target_tsc)
+ {
+ 	u64 tsc;
+ 
+-	tsc = kvm_scale_tsc(rdtsc(), vcpu->arch.l1_tsc_scaling_ratio);
++	tsc = kvm_scale_tsc(host_tsc, vcpu->arch.l1_tsc_scaling_ratio);
+ 
+ 	return target_tsc - tsc;
+ }
+@@ -2758,7 +2759,7 @@ static void kvm_synchronize_tsc(struct kvm_vcpu *vcpu, u64 *user_value)
+ 	bool synchronizing = false;
+ 
+ 	raw_spin_lock_irqsave(&kvm->arch.tsc_write_lock, flags);
+-	offset = kvm_compute_l1_tsc_offset(vcpu, data);
++	offset = kvm_compute_l1_tsc_offset(vcpu, rdtsc(), data);
+ 	ns = get_kvmclock_base_ns();
+ 	elapsed = ns - kvm->arch.last_tsc_nsec;
+ 
+@@ -2809,7 +2810,7 @@ static void kvm_synchronize_tsc(struct kvm_vcpu *vcpu, u64 *user_value)
  		} else {
- 			pr_info("TSC scaling supported\n");
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6780313914f8..bee830adf744 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -8428,7 +8428,7 @@ __init int vmx_hardware_setup(void)
- 	if (!enable_apicv || !cpu_has_vmx_ipiv())
- 		enable_ipiv = false;
+ 			u64 delta = nsec_to_cycles(vcpu, elapsed);
+ 			data += delta;
+-			offset = kvm_compute_l1_tsc_offset(vcpu, data);
++			offset = kvm_compute_l1_tsc_offset(vcpu, rdtsc(), data);
+ 		}
+ 		matched = true;
+ 	}
+@@ -4024,7 +4025,8 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		if (msr_info->host_initiated) {
+ 			kvm_synchronize_tsc(vcpu, &data);
+ 		} else {
+-			u64 adj = kvm_compute_l1_tsc_offset(vcpu, data) - vcpu->arch.l1_tsc_offset;
++			u64 adj = kvm_compute_l1_tsc_offset(vcpu, rdtsc(), data) -
++				vcpu->arch.l1_tsc_offset;
+ 			adjust_tsc_offset_guest(vcpu, adj);
+ 			vcpu->arch.ia32_tsc_adjust_msr += adj;
+ 		}
+@@ -5098,7 +5100,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 			mark_tsc_unstable("KVM discovered backwards TSC");
  
--	if (cpu_has_vmx_tsc_scaling())
-+	if (cpu_has_vmx_tsc_scaling() && boot_cpu_has(X86_FEATURE_CONSTANT_TSC))
- 		kvm_caps.has_tsc_control = true;
- 
- 	kvm_caps.max_tsc_scaling_ratio = KVM_VMX_TSC_MULTIPLIER_MAX;
+ 		if (kvm_check_tsc_unstable()) {
+-			u64 offset = kvm_compute_l1_tsc_offset(vcpu,
++			u64 offset = kvm_compute_l1_tsc_offset(vcpu, rdtsc(),
+ 						vcpu->arch.last_guest_tsc);
+ 			kvm_vcpu_write_tsc_offset(vcpu, offset);
+ 			vcpu->arch.tsc_catchup = 1;
 -- 
 2.44.0
 
