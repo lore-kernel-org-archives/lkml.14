@@ -1,31 +1,37 @@
-Received: from mail-m24109.xmail.ntesmail.com (mail-m24109.xmail.ntesmail.com [45.195.24.109])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0F344C66;
-	Sat, 27 Apr 2024 11:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA834EB30;
+	Sat, 27 Apr 2024 11:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714218027; cv=none; b=RGm8wghBlV/CTl0OKrT5YSaJTc1iF1ojnrboYnm1CiNNuRmNnViS678mydbbdxOCKVKEcbshxAIffTg2x1mHc0svC4wZQvzMAtWScACq9BOUB6mmWJe0fGpSdRQuwCO8OQPY5AIpdIHHssncI8onLV9J4XzpKqZooo51+SmZN74=
+	t=1714218037; cv=none; b=jBlARM9TIb3H3euhdE1I+5WFpvunSAHtIrki18IbtCxwFVwsImnbO4UBLSGtjAVBxlOsWh7xbLHPkSq9qReiqpMBYW9a3PIX/ryw9VNGr6yjEpHPW+U+NaabWGR6RB5vCG5D9hBTHb/BBkjyoLEYDfJ2Ih2q++W73tJeE0PGWqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714218027; c=relaxed/simple;
-	bh=+YSUFQ+m14yYo9GtYP9ffNI+CUZl9aN5mXoRk/mlNqg=;
+	s=arc-20240116; t=1714218037; c=relaxed/simple;
+	bh=qHnjax+wVI8Hd0+8rGo+MaTwitn/56tGJ2azAOki7Mg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dhOzS4AGIPi/2rvSvVwibHY5a+gYSQAPR7hDU3pLPCJC9dhgPZrlmYaK/smGpd9tjZe89bUGH9ORDJCkUmoZsMhAdSnRsO9CjzpvWgFSGbuB4h6TFRGMBKOj+ofQ8PnDsHk0luiYezygb1on2kmz37lmUBm1aGirkumywfz+eVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ENHryBFR; arc=none smtp.client-ip=45.195.24.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	 In-Reply-To:Content-Type; b=Sa8M7CP/zo8gumlgngm9oMU/t6NL9zUOWw5Ry9wtIUpallUqDtPVJHoyfEwOQo2kan3plSh/8zVCeu+5oW7ve+P1diA2VFGNXi5t2bFJYCPtVfvOQvqwCZWiS9z60VfRzkj+SNVIgfv+Ya9aMKEpiEXMhRcXvSIzmwsfbkPaRnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=dXILapqo; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ENHryBFR"
-DKIM-Signature: a=rsa-sha256;
-	b=ENHryBFRQ4aCyvtieRGb6DXfSVh9F9/fbSSLIharXG7pCWkF2FfOX4va3dp7ekNYizAlb583eS8FK17NZZOO0TiW2dHn11yOoatcswaE0s6vdLOnxO49yLfuo3381SAETarhCvmcZKKNIfAuQWT260OP6LtcG/RxxV/zqRXdk0c=;
-	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=MFHvEQxvuWiIZUy27EMlytieIefflDA+IcGdm224ubE=;
-	h=date:mime-version:subject:message-id:from;
-Received: from [172.16.12.141] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 01E2B840219;
-	Sat, 27 Apr 2024 18:44:54 +0800 (CST)
-Message-ID: <68eba0ec-bf9c-4d76-a362-5304a4cb61d5@rock-chips.com>
-Date: Sat, 27 Apr 2024 18:44:54 +0800
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="dXILapqo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 531CAFF808;
+	Sat, 27 Apr 2024 11:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1714218032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4Th/jadybDrg9puHNEAFgBTKzp4XwtZa5abxeCTq37w=;
+	b=dXILapqokkWTzyMm9VzvUN0Z6dDfxO9bU7rAgTMNYEXK7vDiqfCJOABQZ4wsL8UcT7QWRN
+	jHStMUmtR4NGqxAIVmKyYQCTm7kYSJyyFbBGgmO8xQ6a8llHGyGM0/M7dIWsZx3SmJ+dVM
+	jfwSs6oJIXKl9GDK3XXR9ZLcYyjhZWQJL4gRAASonKr8RLzzIup0GeZ769avxKj/8A+BN6
+	plqCU1JU/CgzUCLIzCPLAbyN3s1mM9zFbyRqpY8UNsytedIj1B/uivC67tjUDfM06txK7s
+	27Zqd4MZnhMSpciumma0VibwqY9aZ9/ZDzUu3w4C8djBGmBVdLoGKTU0/q8pwA==
+Message-ID: <f7af9006-492c-473a-bc77-054d85c6284a@arinc9.com>
+Date: Sat, 27 Apr 2024 14:40:01 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,417 +39,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 27/28] drm/rockchip: inno_hdmi: Switch to HDMI
- connector
-To: Maxime Ripard <mripard@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>,
- Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
- Sebastian Wick <sebastian.wick@redhat.com>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <20240423-kms-hdmi-connector-state-v12-0-3338e4c0b189@kernel.org>
- <20240423-kms-hdmi-connector-state-v12-27-3338e4c0b189@kernel.org>
+Subject: Re: [PATCH net-next v2 07/15] net: dsa: mt7530: move MT753X_MTRAP
+ operations for MT7530
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
+ Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
+ erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240422-for-netnext-mt7530-improvements-4-v2-0-a75157ba76ad@arinc9.com>
+ <20240422-for-netnext-mt7530-improvements-4-v2-7-a75157ba76ad@arinc9.com>
+ <Zixh0qsQat3ypqFp@makrotopia.org>
 Content-Language: en-US
-From: Andy Yan <andy.yan@rock-chips.com>
-In-Reply-To: <20240423-kms-hdmi-connector-state-v12-27-3338e4c0b189@kernel.org>
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <Zixh0qsQat3ypqFp@makrotopia.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRhPGFZPQkNPHklKSh1PSBhVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5IVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a8f1f28744d03a4kunm01e2b840219
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MCI6LAw4LDNLSSk1Nx0YNBVC
-	GBAaFChVSlVKTEpPSUpPTUJNTkhNVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
-	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBSkNNSkI3Bg++
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-Hi Maxime,
-
-On 4/23/24 18:45, Maxime Ripard wrote:
-> The new HDMI connector infrastructure allows to remove some boilerplate,
-> especially to generate infoframes. Let's switch to it.
+On 27.04.2024 05:24, Daniel Golle wrote:
+> Hi Arınç,
 > 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Acked-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->   drivers/gpu/drm/rockchip/Kconfig     |   1 +
->   drivers/gpu/drm/rockchip/inno_hdmi.c | 143 +++++++++++++----------------------
->   2 files changed, 53 insertions(+), 91 deletions(-)
+> On Mon, Apr 22, 2024 at 10:15:14AM +0300, Arınç ÜNAL via B4 Relay wrote:
+>> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+>>
+>> On MT7530, the media-independent interfaces of port 5 and 6 are controlled
+>> by the MT7530_P5_DIS and MT7530_P6_DIS bits of the hardware trap. Deal with
+>> these bits only when the relevant port is being enabled or disabled. This
+>> ensures that these ports will be disabled when they are not in use.
+>>
+>> Do not set MT7530_CHG_TRAP on mt7530_setup_port5() as that's already being
+>> done on mt7530_setup().
 > 
-> diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-> index 4c7072e6e34e..e2ec20c2e2eb 100644
-> --- a/drivers/gpu/drm/rockchip/Kconfig
-> +++ b/drivers/gpu/drm/rockchip/Kconfig
-> @@ -72,10 +72,11 @@ config ROCKCHIP_DW_MIPI_DSI
->   	  enable MIPI DSI on RK3288 or RK3399 based SoC, you should
->   	  select this option.
->   
->   config ROCKCHIP_INNO_HDMI
->   	bool "Rockchip specific extensions for Innosilicon HDMI"
-> +	depends on DRM_HDMI_STATE_HELPER
->   	help
->   	  This selects support for Rockchip SoC specific extensions
->   	  for the Innosilicon HDMI driver. If you want to enable
->   	  HDMI on RK3036 based SoC, you should select this option.
->   
-> diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
-> index 1d2261643743..3756259bfb10 100644
-> --- a/drivers/gpu/drm/rockchip/inno_hdmi.c
-> +++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
-> @@ -65,13 +65,11 @@ struct inno_hdmi {
->   	const struct inno_hdmi_variant *variant;
->   };
->   
-
-I think we should include <drm/display/drm_hdmi_state_helper.h>, or the compile will complain about:
-implicit decalaration of funciont drm_atomic_helper_connector_hdmi_update_infoframes
-
->   struct inno_hdmi_connector_state {
->   	struct drm_connector_state	base;
-> -	unsigned int			enc_out_format;
->   	unsigned int			colorimetry;
-> -	bool				rgb_limited_range;
->   };
->   
->   static struct inno_hdmi *encoder_to_inno_hdmi(struct drm_encoder *encoder)
->   {
->   	struct rockchip_encoder *rkencoder = to_rockchip_encoder(encoder);
-> @@ -255,90 +253,53 @@ static void inno_hdmi_reset(struct inno_hdmi *hdmi)
->   	hdmi_modb(hdmi, HDMI_SYS_CTRL, msk, val);
->   
->   	inno_hdmi_standby(hdmi);
->   }
->   
-> -static void inno_hdmi_disable_frame(struct inno_hdmi *hdmi,
-> -				    enum hdmi_infoframe_type type)
-> +static int inno_hdmi_disable_frame(struct drm_connector *connector,
-> +				   enum hdmi_infoframe_type type)
->   {
-> -	struct drm_connector *connector = &hdmi->connector;
-> -
-> -	if (type != HDMI_INFOFRAME_TYPE_AVI) {
-> -		drm_err(connector->dev,
-> -			"Unsupported infoframe type: %u\n", type);
-> -		return;
-> -	}
-> -
-> -	hdmi_writeb(hdmi, HDMI_CONTROL_PACKET_BUF_INDEX, INFOFRAME_AVI);
-> -}
-> -
-> -static int inno_hdmi_upload_frame(struct inno_hdmi *hdmi,
-> -				  union hdmi_infoframe *frame, enum hdmi_infoframe_type type)
-> -{
-> -	struct drm_connector *connector = &hdmi->connector;
-> -	u8 packed_frame[HDMI_MAXIMUM_INFO_FRAME_SIZE];
-> -	ssize_t rc, i;
-> +	struct inno_hdmi *hdmi = connector_to_inno_hdmi(connector);
->   
->   	if (type != HDMI_INFOFRAME_TYPE_AVI) {
->   		drm_err(connector->dev,
->   			"Unsupported infoframe type: %u\n", type);
->   		return 0;
->   	}
->   
-> -	inno_hdmi_disable_frame(hdmi, type);
-> +	hdmi_writeb(hdmi, HDMI_CONTROL_PACKET_BUF_INDEX, INFOFRAME_AVI);
->   
-> -	rc = hdmi_infoframe_pack(frame, packed_frame,
-> -				 sizeof(packed_frame));
-> -	if (rc < 0)
-> -		return rc;
-> +	return 0;
-> +}
->   
-> -	for (i = 0; i < rc; i++)
-> +static int inno_hdmi_upload_frame(struct drm_connector *connector,
-> +				  enum hdmi_infoframe_type type,
-> +				  const u8 *buffer, size_t len)
-> +{
-> +	struct inno_hdmi *hdmi = connector_to_inno_hdmi(connector);
-> +	u8 packed_frame[HDMI_MAXIMUM_INFO_FRAME_SIZE];
-> +	ssize_t i;
-> +
-> +	if (type != HDMI_INFOFRAME_TYPE_AVI) {
-> +		drm_err(connector->dev,
-> +			"Unsupported infoframe type: %u\n", type);
-> +		return 0;
-> +	}
-> +
-> +	inno_hdmi_disable_frame(connector, type);
-> +
-> +	for (i = 0; i < len; i++)
->   		hdmi_writeb(hdmi, HDMI_CONTROL_PACKET_ADDR + i,
->   			    packed_frame[i]);
->   
->   	return 0;
->   }
->   
-> -static int inno_hdmi_config_video_avi(struct inno_hdmi *hdmi,
-> -				      struct drm_display_mode *mode)
-> -{
-> -	struct drm_connector *connector = &hdmi->connector;
-> -	struct drm_connector_state *conn_state = connector->state;
-> -	struct inno_hdmi_connector_state *inno_conn_state =
-> -					to_inno_hdmi_conn_state(conn_state);
-> -	union hdmi_infoframe frame;
-> -	int rc;
-> -
-> -	rc = drm_hdmi_avi_infoframe_from_display_mode(&frame.avi,
-> -						      &hdmi->connector,
-> -						      mode);
-> -	if (rc) {
-> -		inno_hdmi_disable_frame(hdmi, HDMI_INFOFRAME_TYPE_AVI);
-> -		return rc;
-> -	}
-> -
-> -	if (inno_conn_state->enc_out_format == HDMI_COLORSPACE_YUV444)
-> -		frame.avi.colorspace = HDMI_COLORSPACE_YUV444;
-> -	else if (inno_conn_state->enc_out_format == HDMI_COLORSPACE_YUV422)
-> -		frame.avi.colorspace = HDMI_COLORSPACE_YUV422;
-> -	else
-> -		frame.avi.colorspace = HDMI_COLORSPACE_RGB;
-> -
-> -	if (inno_conn_state->enc_out_format == HDMI_COLORSPACE_RGB) {
-> -		drm_hdmi_avi_infoframe_quant_range(&frame.avi,
-> -						   connector, mode,
-> -						   inno_conn_state->rgb_limited_range ?
-> -						   HDMI_QUANTIZATION_RANGE_LIMITED :
-> -						   HDMI_QUANTIZATION_RANGE_FULL);
-> -	} else {
-> -		frame.avi.quantization_range = HDMI_QUANTIZATION_RANGE_DEFAULT;
-> -		frame.avi.ycc_quantization_range =
-> -			HDMI_YCC_QUANTIZATION_RANGE_LIMITED;
-> -	}
-> -
-> -	return inno_hdmi_upload_frame(hdmi, &frame, HDMI_INFOFRAME_TYPE_AVI);
-> -}
-> +static const struct drm_connector_hdmi_funcs inno_hdmi_hdmi_connector_funcs = {
-> +	.clear_infoframe	= inno_hdmi_disable_frame,
-> +	.write_infoframe	= inno_hdmi_upload_frame,
-> +};
->   
->   static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi)
->   {
->   	struct drm_connector *connector = &hdmi->connector;
->   	struct drm_connector_state *conn_state = connector->state;
-> @@ -359,12 +320,12 @@ static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi)
->   	value = v_VIDEO_INPUT_BITS(VIDEO_INPUT_8BITS) |
->   		v_VIDEO_OUTPUT_COLOR(0) |
->   		v_VIDEO_INPUT_CSP(0);
->   	hdmi_writeb(hdmi, HDMI_VIDEO_CONTRL2, value);
->   
-> -	if (inno_conn_state->enc_out_format == HDMI_COLORSPACE_RGB) {
-> -		if (inno_conn_state->rgb_limited_range) {
-> +	if (conn_state->hdmi.output_format == HDMI_COLORSPACE_RGB) {
-> +		if (conn_state->hdmi.is_limited_range) {
->   			csc_mode = CSC_RGB_0_255_TO_RGB_16_235_8BIT;
->   			auto_csc = AUTO_CSC_DISABLE;
->   			c0_c2_change = C0_C2_CHANGE_DISABLE;
->   			csc_enable = v_CSC_ENABLE;
->   
-> @@ -378,18 +339,18 @@ static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi)
->   				  v_VIDEO_C0_C2_SWAP(C0_C2_CHANGE_DISABLE));
->   			return 0;
->   		}
->   	} else {
->   		if (inno_conn_state->colorimetry == HDMI_COLORIMETRY_ITU_601) {
-> -			if (inno_conn_state->enc_out_format == HDMI_COLORSPACE_YUV444) {
-> +			if (conn_state->hdmi.output_format == HDMI_COLORSPACE_YUV444) {
->   				csc_mode = CSC_RGB_0_255_TO_ITU601_16_235_8BIT;
->   				auto_csc = AUTO_CSC_DISABLE;
->   				c0_c2_change = C0_C2_CHANGE_DISABLE;
->   				csc_enable = v_CSC_ENABLE;
->   			}
->   		} else {
-> -			if (inno_conn_state->enc_out_format == HDMI_COLORSPACE_YUV444) {
-> +			if (conn_state->hdmi.output_format == HDMI_COLORSPACE_YUV444) {
->   				csc_mode = CSC_RGB_0_255_TO_ITU709_16_235_8BIT;
->   				auto_csc = AUTO_CSC_DISABLE;
->   				c0_c2_change = C0_C2_CHANGE_DISABLE;
->   				csc_enable = v_CSC_ENABLE;
->   			}
-> @@ -460,14 +421,16 @@ static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
->   
->   	return 0;
->   }
->   
->   static int inno_hdmi_setup(struct inno_hdmi *hdmi,
-> -			   struct drm_display_mode *mode)
-> +			   struct drm_crtc_state *new_crtc_state,
-> +			   struct drm_connector_state *new_conn_state)
->   {
-> -	struct drm_display_info *display = &hdmi->connector.display_info;
-> -	unsigned long mpixelclock = mode->clock * 1000;
-> +	struct drm_connector *connector = &hdmi->connector;
-> +	struct drm_display_info *display = &connector->display_info;
-> +	struct drm_display_mode *mode = &new_crtc_state->adjusted_mode;
->   
->   	/* Mute video and audio output */
->   	hdmi_modb(hdmi, HDMI_AV_MUTE, m_AUDIO_MUTE | m_VIDEO_BLACK,
->   		  v_AUDIO_MUTE(1) | v_VIDEO_MUTE(1));
->   
-> @@ -477,26 +440,26 @@ static int inno_hdmi_setup(struct inno_hdmi *hdmi,
->   
->   	inno_hdmi_config_video_timing(hdmi, mode);
->   
->   	inno_hdmi_config_video_csc(hdmi);
->   
-> -	if (display->is_hdmi)
-> -		inno_hdmi_config_video_avi(hdmi, mode);
-> +	drm_atomic_helper_connector_hdmi_update_infoframes(connector,
-> +							   new_conn_state->state);
->   
->   	/*
->   	 * When IP controller have configured to an accurate video
->   	 * timing, then the TMDS clock source would be switched to
->   	 * DCLK_LCDC, so we need to init the TMDS rate to mode pixel
->   	 * clock rate, and reconfigure the DDC clock.
->   	 */
-> -	inno_hdmi_i2c_init(hdmi, mpixelclock);
-> +	inno_hdmi_i2c_init(hdmi, new_conn_state->hdmi.tmds_char_rate);
->   
->   	/* Unmute video and audio output */
->   	hdmi_modb(hdmi, HDMI_AV_MUTE, m_AUDIO_MUTE | m_VIDEO_BLACK,
->   		  v_AUDIO_MUTE(0) | v_VIDEO_MUTE(0));
->   
-> -	inno_hdmi_power_up(hdmi, mpixelclock);
-> +	inno_hdmi_power_up(hdmi, new_conn_state->hdmi.tmds_char_rate);
->   
->   	return 0;
->   }
->   
->   static enum drm_mode_status inno_hdmi_display_mode_valid(struct inno_hdmi *hdmi,
-> @@ -544,11 +507,11 @@ static void inno_hdmi_encoder_enable(struct drm_encoder *encoder,
->   
->   	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
->   	if (WARN_ON(!crtc_state))
->   		return;
->   
-> -	inno_hdmi_setup(hdmi, &crtc_state->adjusted_mode);
-> +	inno_hdmi_setup(hdmi, crtc_state, conn_state);
->   }
->   
->   static void inno_hdmi_encoder_disable(struct drm_encoder *encoder,
->   				      struct drm_atomic_state *state)
->   {
-> @@ -561,11 +524,10 @@ static int
->   inno_hdmi_encoder_atomic_check(struct drm_encoder *encoder,
->   			       struct drm_crtc_state *crtc_state,
->   			       struct drm_connector_state *conn_state)
->   {
->   	struct rockchip_crtc_state *s = to_rockchip_crtc_state(crtc_state);
-> -	struct inno_hdmi *hdmi = encoder_to_inno_hdmi(encoder);
->   	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
->   	u8 vic = drm_match_cea_mode(mode);
->   	struct inno_hdmi_connector_state *inno_conn_state =
->   					to_inno_hdmi_conn_state(conn_state);
->   
-> @@ -578,16 +540,11 @@ inno_hdmi_encoder_atomic_check(struct drm_encoder *encoder,
->   	    vic == 17 || vic == 18)
->   		inno_conn_state->colorimetry = HDMI_COLORIMETRY_ITU_601;
->   	else
->   		inno_conn_state->colorimetry = HDMI_COLORIMETRY_ITU_709;
->   
-> -	inno_conn_state->enc_out_format = HDMI_COLORSPACE_RGB;
-> -	inno_conn_state->rgb_limited_range =
-> -		drm_default_rgb_quant_range(mode) == HDMI_QUANTIZATION_RANGE_LIMITED;
-> -
-> -	return  inno_hdmi_display_mode_valid(hdmi,
-> -				&crtc_state->adjusted_mode) == MODE_OK ? 0 : -EINVAL;
-> +	return 0;
->   }
->   
->   static struct drm_encoder_helper_funcs inno_hdmi_encoder_helper_funcs = {
->   	.atomic_check	= inno_hdmi_encoder_atomic_check,
->   	.atomic_enable	= inno_hdmi_encoder_enable,
-> @@ -660,14 +617,13 @@ static void inno_hdmi_connector_reset(struct drm_connector *connector)
->   	inno_conn_state = kzalloc(sizeof(*inno_conn_state), GFP_KERNEL);
->   	if (!inno_conn_state)
->   		return;
->   
->   	__drm_atomic_helper_connector_reset(connector, &inno_conn_state->base);
-> +	__drm_atomic_helper_connector_hdmi_reset(connector, connector->state);
->   
->   	inno_conn_state->colorimetry = HDMI_COLORIMETRY_ITU_709;
-> -	inno_conn_state->enc_out_format = HDMI_COLORSPACE_RGB;
-> -	inno_conn_state->rgb_limited_range = false;
->   }
->   
->   static struct drm_connector_state *
->   inno_hdmi_connector_duplicate_state(struct drm_connector *connector)
->   {
-> @@ -696,10 +652,11 @@ static const struct drm_connector_funcs inno_hdmi_connector_funcs = {
->   	.atomic_duplicate_state = inno_hdmi_connector_duplicate_state,
->   	.atomic_destroy_state = inno_hdmi_connector_destroy_state,
->   };
->   
->   static struct drm_connector_helper_funcs inno_hdmi_connector_helper_funcs = {
-> +	.atomic_check = drm_atomic_helper_connector_hdmi_check,
->   	.get_modes = inno_hdmi_connector_get_modes,
->   	.mode_valid = inno_hdmi_connector_mode_valid,
->   };
->   
->   static int inno_hdmi_register(struct drm_device *drm, struct inno_hdmi *hdmi)
-> @@ -723,14 +680,18 @@ static int inno_hdmi_register(struct drm_device *drm, struct inno_hdmi *hdmi)
->   
->   	hdmi->connector.polled = DRM_CONNECTOR_POLL_HPD;
->   
->   	drm_connector_helper_add(&hdmi->connector,
->   				 &inno_hdmi_connector_helper_funcs);
-> -	drm_connector_init_with_ddc(drm, &hdmi->connector,
-> -				    &inno_hdmi_connector_funcs,
-> -				    DRM_MODE_CONNECTOR_HDMIA,
-> -				    hdmi->ddc);
-> +	drmm_connector_hdmi_init(drm, &hdmi->connector,
-> +				 "Rockchip", "Inno HDMI",
-> +				 &inno_hdmi_connector_funcs,
-> +				 &inno_hdmi_hdmi_connector_funcs,
-> +				 DRM_MODE_CONNECTOR_HDMIA,
-> +				 hdmi->ddc,
-> +				 BIT(HDMI_COLORSPACE_RGB),
-> +				 8);
-     This function call will failed as inno_hdmi_connector_funcs has a destory callback.
-     drmm_connector_init have the check:
-     if (drm_WARN_ON(dev, funcs && funcs->destory))
-         return -EINVAL.
-
-I think the patch for sun4i has the same issue.
-
->   
->   	drm_connector_attach_encoder(&hdmi->connector, encoder);
->   
->   	return 0;
->   }
+> Multiple users reported ([1], [2]) that after I've imported the series
+> to OpenWrt they noticed that WAN connection on MT7621 boards using
+> PHY-muxing to hook up either port 0 or port 4 to GMAC1 no longer works.
 > 
+> The link still seems to come up, but no data flows. I went ahead and
+> confirmed the bug, then started bisecting the patches of this series,
+> and ended up identifying this very patch being the culprit.
+> 
+> I can't exclude that what ever the issue may be is caused by other
+> downstream patches we have, but can confirm that removing this patch of
+> your series [3] in OpenWrt fixes the issue. Please take a look and as
+> the cover letter states you have tested this on some MT7621 board,
+> please make sure traffic actually flows on the PHY-muxed port on that
+> board after this patch is applied, and if not, please figure out why and
+> repost a fixed version of this patch.
+> 
+> 
+> Cheers
+> 
+> 
+> Daniel
+> 
+> [1]: https://github.com/openwrt/openwrt/issues/15273
+> [2]: https://github.com/openwrt/openwrt/issues/15279
+> [3]: https://git.openwrt.org/?p=openwrt/openwrt.git;a=commit;h=a8dde7e5bd6d289db6485cf57d3512ea62eaa827
 
-And after this whole series applied on linux 6.9-rc4, the display on rk3036 kylin is lost, I get
-the following error:
-[  178.999421] rockchip-drm display-subsystem: [drm:drm_atomic_check_only] checking 87b7fbde
-[  178.999471] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CRTC:35:crtc-0] mode changed
-[  178.999498] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CRTC:35:crtc-0] enable changed
-[  178.999521] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CRTC:35:crtc-0] active changed
-[  178.999547] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] Updating routing for [CONNECTOR:37:HDMI-A-1]
-[  178.999575] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CONNECTOR:37:HDMI-A-1] using [ENCODER:36:TMDS-36] on [CRTC:35:crtc-0]
-[  178.999604] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] Trying with a 8 bpc output
-[  178.999636] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] Trying RGB output format
-[  178.999730] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] RGB Format, checking the constraints.
-[  178.999757] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] RGB output format not supported with 8 bpc
-[  178.999783] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] Failed. No Format Supported for that bpc count.
-[  178.999810] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CONNECTOR:37:HDMI-A-1] driver check failed
-[  178.999836] rockchip-drm display-subsystem: [drm:drm_atomic_check_only] atomic driver check for 87b7fbde failed: -22
-[  178.999868] rockchip-drm display-subsystem: [drm:drm_atomic_state_default_clear] Clearing atomic state 87b7fbde
-[  178.999898] [drm:drm_mode_object_put] OBJ ID: 37 (4)
-[  178.999922] [drm:drm_mode_object_put] OBJ ID: 37 (3)
-[  178.999944] [drm:drm_mode_object_put] OBJ ID: 40 (1)
-[  178.999971] [drm:drm_mode_object_put] OBJ ID: 39 (2)
+Thanks for reporting this Daniel. I am not happy that I've caused all this
+fuss. My testing as described on the cover letter did not include the
+hardware design with PHY muxing. Lesson learned; next time, I'll make sure
+to test the specific hardware design when I work on the part of the code
+that would affect that hardware design.
+
+That said, I've submitted a patch that fixes this issue [1]. I have tested
+the hardware design with PHY muxing with this fix applied and I don't
+experience this issue anymore.
+
+[1] https://lore.kernel.org/netdev/20240427-for-netnext-mt7530-do-not-disable-port5-when-phy-muxing-v1-1-793cdf9d7707@arinc9.com/
+
+Arınç
