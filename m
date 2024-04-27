@@ -1,122 +1,140 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 499C4405FC;
-	Sat, 27 Apr 2024 10:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905C5482C3
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 10:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714214703; cv=none; b=VMhBj4o5OBOWNIHoCYRepbSGdborZFOjD/Zpim4pZrGYazpbjNjGfV4qzJse/0qtvWp0r1cDpea/yMOb6Eb9RW62DDyeimVmDAlvpH+EOytcFFX77Pg9WeV5w599KC2PWdpKTXSjyxSZcGB8LixyiIuOyfBZZLp5etRDZ9p4ODU=
+	t=1714214837; cv=none; b=SUQsiCRjVn9vBvv9i59t1H4ChNQPYZsMCIpoGrbTKKJq1DwHq14kiuVHqNJqlcJGuojTRkppc6p1hUVoFPwitTbDnhWZ1b9am4x8ddNKUCHbu7NOIY7/9Clz/cxSoKzylLYcG+EbV7kj0UYtSCWjyEeTmKu8opQXFpbxRk8cj9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714214703; c=relaxed/simple;
-	bh=MLacY6aG8bo9wwwwbKKlBJEsS83ygocXS1Ntn3xYnC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uZHyEE6Edk7yUyG9w07mYtlSPrFVdHwshORA8+OqJrD9YO9Hy/kkbKa4RYlZZ2TtjW0yvO+m3SlV7CtAVkEwNTKZWQOPE4iGMZP04ZOeyWfn9GXorEOyjMpBA9HSpE4jHGBW4hRlzKNt43exj74ez1wgW7FVWGYcnAqkSjp1tts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.112.218])
-	by gateway (Coremail) with SMTP id _____8AxaOkn1yxmme8DAA--.2815S3;
-	Sat, 27 Apr 2024 18:44:55 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.112.218])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxnlcl1yxm4E8HAA--.16414S3;
-	Sat, 27 Apr 2024 18:44:55 +0800 (CST)
-Message-ID: <4ef9835e-b3dd-4b05-b09a-047f941a0870@loongson.cn>
-Date: Sat, 27 Apr 2024 18:44:53 +0800
+	s=arc-20240116; t=1714214837; c=relaxed/simple;
+	bh=V/KsT2l1lLKaNucqtbUkHPoat4/H53QLyxsOCUw6n2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hbo1eirkI/xymmuCoD1toGjQl6DWQGqDG9b0iNwaAh5TzZEpQBN9ow3fOXejVhkoDG3dsAyPTfPeevBLyT/Il8mEsuKAF+RhTetzSL1aPartCDklqz3oeIToT1QXwsJx7gQIhv8xg8iFtbdG+6WBWQw3Pf7LXlIUW/zpjX6KlNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rNeuQu1P; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rNeuQu1P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DB6FC113CE;
+	Sat, 27 Apr 2024 10:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714214837;
+	bh=V/KsT2l1lLKaNucqtbUkHPoat4/H53QLyxsOCUw6n2A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rNeuQu1PPnk7Z3rctJZ9paFPkHUt/8b4Y/QyMA1uFsGpFEj6A32E4wmPtYUF5cwNK
+	 gKlAwHWAzTFpj4Vjc7MWcRNsA3YQACT2bTfVXHoHc6YdAckvraj4r2h7s8NeA0Q3ir
+	 e74MkBaeCTDheAUGjt9NKJyqeoy/Mtbv/a4akiNs=
+Date: Sat, 27 Apr 2024 12:47:11 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH] sysfs: Allow bin_attributes to be added to groups
+Message-ID: <2024042736-radiance-unaired-c69c@gregkh>
+References: <e140f6bf8dc99c24cc387f7ac3c7908c8830587f.1714030457.git.lukas@wunner.de>
+ <662be72549aaf_db82d294c7@dwillia2-xfh.jf.intel.com.notmuch>
+ <Ziv5p3SMEIw3XZkK@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scripts: add `check-trans-update.py`
-To: Cheng Ziqiu <chengziqiu@hust.edu.cn>, Alex Shi <alexs@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: Dongliang Mu <dzm91@hust.edu.cn>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, hust-os-kernel-patches@googlegroups.com
-References: <20240422065822.1441611-1-chengziqiu@hust.edu.cn>
-Content-Language: en-US
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <20240422065822.1441611-1-chengziqiu@hust.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxnlcl1yxm4E8HAA--.16414S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ww48Cw17GrW8Ary3XryrGrX_yoW8Kw17pa
-	909rsIya1UGF1xWw13Gr18XFs0kF95J398Wrnrta4Iqrs7tF1kWrsIyFsIy3WUCryrXa43
-	uF4UAry2ka1FkFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr
-	1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8yrW7UU
-	UUU==
+In-Reply-To: <Ziv5p3SMEIw3XZkK@wunner.de>
 
+On Fri, Apr 26, 2024 at 08:59:51PM +0200, Lukas Wunner wrote:
+> On Fri, Apr 26, 2024 at 10:40:53AM -0700, Dan Williams wrote:
+> > Lukas Wunner wrote:
+> > > Commit dfa87c824a9a ("sysfs: allow attributes to be added to groups")
+> > > introduced dynamic addition of sysfs attributes to groups.
+> > > 
+> > > Allow the same for bin_attributes, in support of a forthcoming commit
+> > > which adds various bin_attributes every time a PCI device is
+> > > authenticated.
+> > > 
+> > > Addition of bin_attributes to groups differs from regular attributes in
+> > > that different kernfs_ops are selected by sysfs_add_bin_file_mode_ns()
+> > > vis-�-vis sysfs_add_file_mode_ns().
+> > > 
+> > > So call either of those two functions from sysfs_add_file_to_group()
+> > > based on an additional boolean parameter and add two wrapper functions,
+> > > one for bin_attributes and another for regular attributes.
+> > > 
+> > > Removal of bin_attributes from groups does not require a differentiation
+> > > for bin_attributes and can use the same code path as regular attributes.
+> > > 
+> > > Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> > > Cc: Alan Stern <stern@rowland.harvard.edu>
+> > > ---
+> > > Submitting this ahead of my PCI device authentication v2 patches.
+> > > Not sure if the patch is acceptable without an accompanying user,
+> > > but even if it's not, perhaps someone has early review feedback
+> > > or wants to provide an Acked-by?  Thank you!
+> > 
+> > On the one hand it makes sense from a symmetry perspective, on the other
+> > hand the expectation and the infrastructure for dynamic sysfs visibilty
+> > has increased since 2007.
+> > 
+> > That is why I would like to see the use case to understand why a
+> > dynamically added a bin_attribute is needed compared with a statically
+> > defined attribute with dynamic visibility.
+> 
+> I assume "would like to see" means "on the mailing list", which would
+> (or will) be as part of the PCI device authentication v2 patches.
+> 
+> But in case you're curious, the use case is the log of signatures
+> presented by the device.  Each signature is exposed as a bin_attribute
+> in a signatures/ directory below a PCI device's sysfs directory,
+> for verification by a remote attester (or user space in general).
+> 
+> Here's the code:
+> 
+> https://github.com/l1k/linux/commit/ca420b22af05
+> 
+> The signature's bin_attribute is accompanied by several other
+> bin_attributes containing ancillary data, such as nonces
+> (to allow user space to ascertain that a fresh nonce has been used).
+> 
+> The signatures/ directory is an empty attribute group to which the
+> signatures received from the device are dynamically added using
+> sysfs_add_bin_file_to_group() (introduced by the present patch).
+> 
+> All of that was done to address an objection raised by James Bottomley
+> at Plumbers that it is "not good enough" if the kernel keeps the
+> challenge-response received from the device to itself and doesn't
+> allow a remote attester to verify it.
+> 
+> Here is the recording, in his own words:
+> 
+> https://www.youtube.com/watch?v=ZqMIlZ5lPAw&t=2345s
+> 
+> A static attribute with dynamic visibility doesn't cut it in this case:
+> 
+> Each signature needs a unique filename and the number of signatures
+> that can be generated is essentially unlimited.  (Though older ones
+> are likely uninteresting and can be culled.)  If you want to expose,
+> say, up to 1000 signatures per device, you'd have to allocate an array
+> of 1000 signatures (for each device!), even though the actual number
+> of signatures received might be much lower.  It would be a waste of
+> memory.  It is much more economical to add signature attributes
+> dynamically on demand.
+> 
+> It has the additional benefit that it allows user space to dynamically
+> adjust the maximum number of signatures retained in the log.
+> That's more difficult to implement with static attributes, as you'd
+> have to reallocate the attributes array and adjust all the pointers
+> pointing to it.
 
-在 2024/4/22 14:58, Cheng Ziqiu 写道:
-> The `check-trans-update.py` scripts check whether a translated version
-> of a documentation is up-to-date with the english version.
->
-> The scripts use `git log` commit to find the latest english commit from
-> the translation commit (order by author date) and the latest english
-> commits from HEAD. If differences occurs, report the file and commits
-> need to be updated.
->
-> Signed-off-by: Cheng Ziqiu <chengziqiu@hust.edu.cn>
-> ---
->   scripts/check-trans-update.py | 176 ++++++++++++++++++++++++++++++++++
+Thanks for the details, that makes sense.
 
-Because we'll be typing its name a lot, it's important to consider 
-tabulating the
+And overall, the patch also looks good, so just include it in the patch
+series that uses it and I'll be glad to ack it then.
 
-name. If it's easy to understand, choose a name that will slow down the tab
+thanks,
 
-button's wear.
-
-
-I gave your script a quick test and got the following output:
-
-[siyanteng@kernelserver linux-next]$ ./scripts/check-trans-update.py 
-Documentation/translations/zh_CN/process/1.Intro.rst 
-[siyanteng@kernelserver linux-next]$
-
-It seems that your script can't handle documents that never get updated. 
-You need to print a warning or hint.
-
-[siyanteng@kernelserver linux-next]$ ./scripts/check-trans-update.py 
-Documentation/translations/zh_CN/rust/arch-support.rst 
-Documentation/translations/zh_CN/rust/arch-support.rst (8 commits) 
-2f4fe71fdd25ebb4e41aee3b467b54fbef332643
-
-This seems to be just a merge, try to drop it?
-
-81889e8523e63395b388f285c77ff0c98ea04556 
-01848eee20c6396e5a96cfbc9061dc37481e06fd 
-724a75ac9542fe1f8aaa587da4d3863d8ea292fc 
-90868ff9cadecd46fa2a4f5501c66bfea8ade9b7 
-e5e86572e3f20222b5d308df9ae986c06f229321 
-04df97e150c83d4640540008e95d0229cb188135 
-0438aadfa69a345136f5ba4f582e0f769450ee0d
-
-Hmmm, How about printing it this way?
-
-We need to update the following commits.
-
-commit 81889e8523e6 ("RISC-V: enable building 64-bit kernels with rust support")
-commit 01848eee20c6 ("docs: rust: fix improper rendering in Arch Supportpage")
-commit 724a75ac9542 ("arm64: rust: Enable Rust support for AArch64")
-commit 90868ff9cade ("LoongArch: Enable initial Rust support")
-commit e5e86572e3f2 ("rust: sort uml documentation arch support table")
-commit 04df97e150c8 ("Documentation: rust: Fix arch support table")
-commit 0438aadfa69a ("rust: arch/um: Add support for CONFIG_RUST under x86_64 UML")
-
-
-Thanks,
-Yanteng
-
+greg k-h
