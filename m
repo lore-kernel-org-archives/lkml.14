@@ -1,180 +1,145 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2072.outbound.protection.outlook.com [40.107.237.72])
+Received: from smtp1.math.uni-bielefeld.de (smtp1.math.uni-bielefeld.de [129.70.45.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5FF4F61D;
-	Sat, 27 Apr 2024 13:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714225992; cv=fail; b=DPwFu54gv0S/Wx8oUeqCzFbBnC7DV5rDJ1RSf1xLKhjQb75/R7Q9GxJ8Y3C+Qyq+QU2gBPdJNSaLhbK7RQtZBcT8kNDWP15Z/v4obrLCRlmpCoMM2tUU7uFPzpvVBafC6T/kRuS8wTGG/Ff/3B4AVyHTJBZs6MTtxpGkk1Qp4WY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714225992; c=relaxed/simple;
-	bh=3KzZir9ZebkkfwcvdVMfJAyjKSnxrIkdoOZq39YMsqo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d3FabPuGPgSY+91VaLx1p5oe6oLTcInoWW4M8zbE4DJaGYnzcCXC6kCIaF97+mbxQP4eQGgbxl6FksbcRh3k5rfEwtgqGdxUm617e97j2DYjkiWu15bGeT+i0/j4IDuQgOiBU26A3Vs3oe4GyjxBWesBXuihKiaMmsdkC+eWcHw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aSWa5snQ; arc=fail smtp.client-ip=40.107.237.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431574F618
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 13:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.70.45.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714226083; cv=none; b=eXT/ksQe65EeJJbGL475EWjytYHIrULWz/8yrd/T0H7A1GCkdd8XBNJDnjuiXR0/xHW76mmBdm9NmLbNAb869X6ef36dq6vh4Vw3zCARV4PuofiozEWLJyla5FgItsnxE6YvtXHuKDUsTZFPOpDCOc30rqN+Sgcr6swwQ+/5V5Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714226083; c=relaxed/simple;
+	bh=2Z2cZ2r3ZL3Y/MT8LeagIDIKA+w/N+Zqp6OvwQwmLwI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b4/TgiVE+3euea+lM5bCUTstD+gC+V1Nt963lQ7xeEFRzxCm/pQzHV2aOC3LaTHGcwf3bdEdPAQPWgAAbSE6D/bvvQG6GngZ2vPLtD/AB9FkMPFq7m74FSEpaEjFJ9aKK1HUMn7CEyoytYA0lw6tai6h+cGwNRydx+3sQBO4Q/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=math.uni-bielefeld.de; spf=pass smtp.mailfrom=math.uni-bielefeld.de; dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b=FxDgcFWs; arc=none smtp.client-ip=129.70.45.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=math.uni-bielefeld.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=math.uni-bielefeld.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aSWa5snQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g29Lje0u6vzTJulUvq8EZppZbodJG7h9cc7kU2qg5ea07Y8yuo/rUPxW7nXXAP0/dtdc1FTOvg/cWC0mvvue5EQs9mJJC9uMPKxfIiXfcTfIexyw4L0R3DGyexXRXfFTl9gfFuMhLwxKXRjNSHpSedGcbwkzTQ8N2Vd4e1MV0DR+o0A+9w2/qTku+bxwMR5xZAQt/VsTXIONtAexq0XUHdDAuyQ1qdwC2z2EJ3tBV3Fh3/eygziinrNpvR2nTNy61lWMzgBEdC0DJ+RLndWXRbpelKueL5MWyPX5ovVkij/CuNQRwAQ0pBUV8yXBpavtv0dgTDDvIBWauYYv9AyICg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H2bS/o2FdF909UMNdNgWxw74U42UcCPJjHvrtArdOp0=;
- b=YsF+lzHht8jhktuIXCiQZ+eyaIFk2vmyBYuL/8tXILNJOdfDVGZ644bgLSlNLtxhB3aKVy4msatmiW1N4jhXr+qixCeT2tsScQdGENaJY9yF//zv3EIiDNjZmt+TG3JDR8TQ+GMiMisxPX/5Cezd4BF8xADFxLwBbU2GaN6CQt4F5ldUL+zKmvVrmu0cHImEvhDQEH2w+KveFQlZ2r7eusD9TGfXUh1qyK4P/mjLU/zcWRgIQttCKeMIFu3TI+lPV+hBHYy54jgZM8uhHXydnjyXGk+p9Xq4ngK4wNs2lkw1pZzNIGWakBAx539WsrSHJnEEoghfsK/xEcodMd3+VA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H2bS/o2FdF909UMNdNgWxw74U42UcCPJjHvrtArdOp0=;
- b=aSWa5snQgZu6bNDp8JChDfjFiizHcbisMaFZFZIQrZV0uqe8U7iEtSUUloPawTmDZ7PG3w1dP6Zd4W53j/k2GjyJ0995imN6LR1/YehIGC0q16GjkrFr55iwdghqYiN068k9qLDb/YZAQhJWzmdiBrXawUQnXoTfRGtKBCP5y4o=
-Received: from SJ2PR07CA0021.namprd07.prod.outlook.com (2603:10b6:a03:505::23)
- by BL1PR12MB5970.namprd12.prod.outlook.com (2603:10b6:208:399::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.32; Sat, 27 Apr
- 2024 13:53:06 +0000
-Received: from DS2PEPF00003439.namprd02.prod.outlook.com
- (2603:10b6:a03:505:cafe::da) by SJ2PR07CA0021.outlook.office365.com
- (2603:10b6:a03:505::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.32 via Frontend
- Transport; Sat, 27 Apr 2024 13:53:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS2PEPF00003439.mail.protection.outlook.com (10.167.18.36) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Sat, 27 Apr 2024 13:53:05 +0000
-Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sat, 27 Apr 2024 08:53:01 -0500
-From: Perry Yuan <perry.yuan@amd.com>
-To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
-	<viresh.kumar@linaro.org>, <gautham.shenoy@amd.com>,
-	<Borislav.Petkov@amd.com>, <Ray.Huang@amd.com>, <Alexander.Deucher@amd.com>
-CC: <Xinmei.Huang@amd.com>, <oleksandr@natalenko.name>, <Xiaojian.Du@amd.com>,
-	<Li.Meng@amd.com>, <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] cpufreq: amd-pstate: fix code format problems
-Date: Sat, 27 Apr 2024 21:52:49 +0800
-Message-ID: <20240427135249.2160493-1-perry.yuan@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b="FxDgcFWs"
+Received: from [192.168.0.100] (dslb-084-060-164-146.084.060.pools.vodafone-ip.de [84.60.164.146])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp1.math.uni-bielefeld.de (Postfix) with ESMTPSA id 35D7D602E5;
+	Sat, 27 Apr 2024 15:49:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=math.uni-bielefeld.de; s=default; t=1714225766;
+	bh=2Z2cZ2r3ZL3Y/MT8LeagIDIKA+w/N+Zqp6OvwQwmLwI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FxDgcFWs5MEv8aGvyMPcUPmUrnkcrUDEGzTyDiPJYz93lPZNAXMVqNYbIKmwcrhn8
+	 h+4qr73/+OnwT480/zXEVHN7zlZaepupTjqYktHFgTCVYwMCFwRjAk04IOxu+oM12u
+	 iBhTWFyEa4378j3dd1IwO09tjZJUdCbeBkP3ehHNOzC/wcD4Em7BaVlBN9Lv4ZK8YE
+	 kBWoxHClYXM+Ted8C6jP/4z8zMjRXVCG40DgkhmiQ9u6uY42hDMA4VxR6cOiN1DlxZ
+	 YPKh65HkUCBXaTBm2Rt5zLRdbJGgtUvXp+Ndloq7d1/gWXTi2/BojMxc0Rll7gGjAG
+	 ttMF39oONZcYg==
+Message-ID: <0782e84f-5fab-4025-ad8e-aa7b56f3fbc6@math.uni-bielefeld.de>
+Date: Sat, 27 Apr 2024 15:49:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amd/display: Add MSF panel to DPCD 0x317 patch list
+To: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20240309014732.722139-1-tjakobi@math.uni-bielefeld.de>
+Content-Language: en-US
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Autocrypt: addr=tjakobi@math.uni-bielefeld.de; keydata=
+ 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
+ JRHWPGCL3BhOxQ==
+In-Reply-To: <20240309014732.722139-1-tjakobi@math.uni-bielefeld.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003439:EE_|BL1PR12MB5970:EE_
-X-MS-Office365-Filtering-Correlation-Id: 48ca6fed-549c-4e80-1500-08dc66c15d05
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|1800799015|376005|82310400014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DNJy2YEG63dcbeR/WLm2ESpM4CSfLO/un6iEQ5NSWwLAGOdV8LkI1TKzCcT3?=
- =?us-ascii?Q?exqdHYBMDL0sGLqhx1yBgRD5zUVn3aCcTbAM3t8s00t6z88uGgX1g0T7wnDB?=
- =?us-ascii?Q?9U953B2Mx/h96KBbae50BFfFAbgMX/7zf58mjT3D8gRVp9fJf56GFF7zNlI7?=
- =?us-ascii?Q?RMoq/RKrh4QM92Amvek1SElE48cCUMxpgLH0uV6PDxJfBUhlXTPYTx4fc12U?=
- =?us-ascii?Q?mhm/U9dBEDV8D5qipfHw7fcbuEcq1b3lHjYh4mMAbL63Dr3mOMdGhfmgoUuf?=
- =?us-ascii?Q?E7JZFlgYwX8vGIvaGWCiGLQuWKGleUwQiSkdKuhap7YItbhrqSsY0K/lNvHd?=
- =?us-ascii?Q?IeqA4MHS+iqEKUuPoAB9b3jHOxkAhtRilSoCaasUcJAdRuA2MCCvC3aH7EaK?=
- =?us-ascii?Q?/+1rw+GgDwoUSHziaH2Z2pARuEe2rgHDslngeb30xjE3ZxaqWHqD0AQSn2cZ?=
- =?us-ascii?Q?x7GjjQhNDS72JW6UAWXenEbAAIiFzy161g0KiHYHRJJ8kEHnQmPvsfGFv67O?=
- =?us-ascii?Q?6VWOabaQnD7R2mSbPvH5+CEkhqB6BdetDHXdfiaqKFOf9Zw01x4fo9e/ZiBe?=
- =?us-ascii?Q?/5ICpWGix9h2CXpEhPWRNJ1N5Fy/TKcxq95fWGHfDVL0UrQBhb7l9hlRKDef?=
- =?us-ascii?Q?SAGD3RprBX16msKB8bYhGNefb4rdynlPj4Jk37oahuy9fc1osVktaLzgtRkF?=
- =?us-ascii?Q?eHektS1swyVsfY1wjlVCQUTHfwqx1zXUi3dtrpLd7kqsdZLiwQKzfUsrYMeR?=
- =?us-ascii?Q?q++ceYq15SIXNobmh2AugytrMFR9K8cpHbZzU48Zx/D2ORnuC6vEVkquRpSP?=
- =?us-ascii?Q?p3l1jrnTG+Fy/XRQ03IMuzplXvGhO4XFlf4mwILJ2fYruhRMpeL5K8vTj+Aq?=
- =?us-ascii?Q?gHheAaS56X6ydP8q2bP5XJVI/Ca8Exnj9a+SJDzVngR79pgKAE8DjnAGmNLc?=
- =?us-ascii?Q?PJSEBMnyoiF+q/szPaxOb0aXnBmww6Uno9enWno1RSlzAVGYIQ8wrTdOfT68?=
- =?us-ascii?Q?ghVOmsOHGCJQFibH5VlQd909JYudm4miYx2RETozJQL8Dz6udi2cczmw/vK7?=
- =?us-ascii?Q?bT/7frLBgh3wM4OE8x5o0+95weETVCT6Ye6Oo7dLY8wDWLUNrl08dX/dQsnH?=
- =?us-ascii?Q?LiKEtoaSikOg1dZ7yH1jAhovHm3oFSlxcK2qBEBF8kmrrBdeeSgRbe+2VsDt?=
- =?us-ascii?Q?OTw90r4/t5PEnSw0OnopUVxbA6DK0BJeRnnRqIW3+gzVSWNZdScshIs7C0eb?=
- =?us-ascii?Q?aa+ShwlU4LD1oVmamKZ3CprDx22CSIzlF39yDsdqJDLJVJd8QNkbFE36z3+G?=
- =?us-ascii?Q?1xFdqu5PGTeXOOrMpxYNvb021F3yIKFZvpuKHReaxItBv69XP3FBKQbfJ61q?=
- =?us-ascii?Q?L5tRN5rjXhiem323GK9RC6nth4Nl?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(376005)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2024 13:53:05.3540
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48ca6fed-549c-4e80-1500-08dc66c15d05
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF00003439.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5970
 
-get some code format problems fixed in the amd-pstate driver.
+On 3/9/24 02:47, tjakobi@math.uni-bielefeld.de wrote:
 
-Changes Made:
-
-- Fixed incorrect comment format in the functions.
-
-- Removed unnecessary blank line.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202404271148.HK9yHBlB-lkp@intel.com/
-Signed-off-by: Perry Yuan <perry.yuan@amd.com>
----
- drivers/cpufreq/amd-pstate.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 83a29b257794..85656342a101 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -792,7 +792,7 @@ static void amd_pstate_update_limits(unsigned int cpu)
- 	mutex_unlock(&amd_pstate_driver_lock);
- }
- 
--/**
-+/*
-  * Get pstate transition delay time from ACPI tables that firmware set
-  * instead of using hardcode value directly.
-  */
-@@ -807,7 +807,7 @@ static u32 amd_pstate_get_transition_delay_us(unsigned int cpu)
- 	return transition_delay_ns / NSEC_PER_USEC;
- }
- 
--/**
-+/*
-  * Get pstate transition latency value from ACPI tables that firmware
-  * set instead of using hardcode value directly.
-  */
-@@ -822,7 +822,7 @@ static u32 amd_pstate_get_transition_latency(unsigned int cpu)
- 	return transition_latency;
- }
- 
--/**
-+/*
-  * amd_pstate_init_freq: Initialize the max_freq, min_freq,
-  *                       nominal_freq and lowest_nonlinear_freq for
-  *                       the @cpudata object.
-@@ -843,7 +843,6 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
- 	u32 boost_ratio, lowest_nonlinear_ratio;
- 	struct cppc_perf_caps cppc_perf;
- 
--
- 	ret = cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
- 	if (ret)
- 		return ret;
--- 
-2.34.1
-
+> From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+>
+> This 8.4 inch panel is integrated in the Ayaneo Kun handheld
+> device. The panel resolution is 2560×1600, i.e. it has
+> portrait dimensions.
+>
+> Decoding the EDID shows:
+> Manufacturer: MSF
+> Model: 4099
+> Display Product Name: 'TV080WUM-NL0 '
+>
+> Judging from the product name this might be a clone of a
+> BOE panel, but with larger dimensions.
+>
+> Panel frequently shows non-functional backlight control. Adding
+> some debug prints to update_connector_ext_caps() shows that
+> something the OLED bit of ext_caps is set, and then the driver
+> assumes that backlight is controlled via AUX.
+>
+> Forcing backlight control to PWM via amdgpu.backlight=0 restores
+> backlight operation.
+>
+> Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+> ---
+>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> index 7a09a72e182f..5a017ba94e3c 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> @@ -68,6 +68,7 @@ static void apply_edid_quirks(struct edid *edid, struct dc_edid_caps *edid_caps)
+>   	case drm_edid_encode_panel_id('A', 'U', 'O', 0xE69B):
+>   	case drm_edid_encode_panel_id('B', 'O', 'E', 0x092A):
+>   	case drm_edid_encode_panel_id('L', 'G', 'D', 0x06D1):
+> +	case drm_edid_encode_panel_id('M', 'S', 'F', 0x1003):
+>   		DRM_DEBUG_DRIVER("Clearing DPCD 0x317 on monitor with panel id %X\n", panel_id);
+>   		edid_caps->panel_patch.remove_sink_ext_caps = true;
+>   		break;
+Another gentle ping!
