@@ -1,83 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FB68BFC
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 08:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938BD8BFC
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 08:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714207193; cv=none; b=FgDqgL++ZdagqUY39dtEh1nkgxbO2JP6ZGwEfuO9dBXQ3qp7HPCBgntg1cNQC+eC0Bz3gozfE1vfA0qgoczZ+Y+x9vtC/YbaD+oP5JTtVkFPDdKbp0VNp9zl+CoeTH810GZZF21wDQtmAzszFviq0RmdoH4P3gvBnFn54Aephsk=
+	t=1714207506; cv=none; b=TjKnwKN3UBsf03CpBXS0JfC50s2cABr8MVhKYUhqbf2Uc0QCWpP27Ky9BgBM1y0JYqXv+1PtNkEvwEANU/wW27IkK7VGh1yR4fNYRiwdiPda0IQmIa2nuSZUM3aCiuNdgxTzB5DfxjClt7hwr/dpOw2y9FuTNdaRpOu1k4hliqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714207193; c=relaxed/simple;
-	bh=9UkwLsoFz9zLzP7eFObDUQEcnezh8fLG+6WW0kgWm8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TFxW3W1VBtarC3dz0Ah9kjsISyBWzWOErDdGu5RAEIcBvhYerZ9xt2sL1iGsrCz2bKCRDXFZgT0SK8QFjQyo2Kf2/IaBtTt/aYahp0OYsyYKCgCfaLuEECPg8BWHrE205JRakJlw6y2Z6/f62fGguYScndbZkaHgpiPKLVb1+D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qm0ZhP3u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qm0ZhP3u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A68EDC32781
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 08:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714207192;
-	bh=9UkwLsoFz9zLzP7eFObDUQEcnezh8fLG+6WW0kgWm8c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qm0ZhP3uKnBsPQQQ+i46d5ciyc5qlttfnYZkqMc2ZECIqpeODBDpxOWm8lGRJmCkc
-	 AL/3q9Tdbk9zxW+0VGcuBiFGpWwE3NEn5X6dot2etBlD1sLlKSbcX919OeWWkEmAT9
-	 FV03coIiAEm9kCLBcm2CWeOUp33iwzlF7WA+KX0q61SkqbyY091ZAIAUz+HWkqXHZG
-	 OyZSk8tqGjNnVuZcpvPmGXcZAUvK9B2nrge6CprDAGxYkZy9muivETbjc4KK/3r58a
-	 vIzJkU9bzEo8PENQiGqsyzWY9JjAngJmQIuqCPSF4LuHOpL8F8+zYCAklTG37nhEYv
-	 1wyGX9XXSlMpg==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2db17e8767cso33486981fa.3
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 01:39:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVktAhA5goEsPqfMJEu8wqxtdYR7rSPCKITNpXgzIQ6KZQP4RYNK7OKQnKLgRChvntegmaqIBtGP20BFeiFUMADYicf5bJDTtWsOqn
-X-Gm-Message-State: AOJu0YztO+dXBlaEvo3l0UnwIK+xHfnU3FLlGYIYd/hCexirh4+gKq8B
-	72ugG1qYIRnxOT07YElaIfMKJ2HWw4W0RjpLRNKDvvaFcZjMBnLVpyoZ4ARbGvrq984koBq2UvN
-	pbsJ9aB/s8axQVU13Bgk8KJuLWvY=
-X-Google-Smtp-Source: AGHT+IFUDQr/uNIgyqM49IZAZopqDoStPK3MK55h2TsQs43NhAyCsa3E5kJ0YWg/v+GstTN8OaZ50u45oy+h3L7dcqE=
-X-Received: by 2002:a05:6512:3f17:b0:51a:a400:785e with SMTP id
- y23-20020a0565123f1700b0051aa400785emr3477964lfa.43.1714207190992; Sat, 27
- Apr 2024 01:39:50 -0700 (PDT)
+	s=arc-20240116; t=1714207506; c=relaxed/simple;
+	bh=DM9jX6G7gd4KPBusHIWo7AiJ+eVeRcVXrQUk1Khfb20=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Rcd8KVNdzhMVTMIAv08VrCo7iLE09bW2MQI7IZphGHuSQ9nDjR27UFSoP+naw07lc1xBo8enOCY2rrJeTUM3R4Ai08gmsaxM+4DYuCEpluN7lozpUqirkN00EJwIevTngV2W1/He9kAeEMENct+HVqeBQos9O2iGWuIYji4cRWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36c1127c5deso30692285ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 01:45:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714207503; x=1714812303;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AVEXpsLW2+IZw0Si3tq/O6jflvI7ZAA2BBSupAQv0ls=;
+        b=lcjum3CpNmbbu4ktjV+0xr1kAbJvpDNsQk5nEZOl9ybrzzyisjsk/lWxZqcAYWyWk/
+         SFaTl1rGcGcJWvPn8JEH+MgjWdzboshBxsiBBEf/Ui6T/J1Yc+5KtQwuclnIT7MkXfmf
+         krRS4KMsR4nZ/fJI88YUVaqJOhtyQwYFCY8GrwhGl4cO/O0pOltsDIyjIuIAisYqjEkg
+         AlNTDSHI8SiJ9V1aGTs4OmbSEt6tcWxJq4J1mNQKAua9JIAxTy8xfpcTOC4lrKLK7/P6
+         uu3wGpJJWSP/nstCvLPvbvxBxAChHBUMvCCnq25QD43ye5dL/E3cqrocV6eob8gVEdJe
+         TnWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWj4aXrfYXkkiBSkeqgw844GXhji3F8lYml4PhHTRuTTlzOpvyXXqi7YJ3wkI04nZTOlsiOUaIoLS9bBNZq2FxQG+QoS5CdS3xAyCfl
+X-Gm-Message-State: AOJu0YzMnkqLSFK5963C4aY64W0pW6Vu13+l8A30wV1ml6DVmGgVyGl6
+	oxQ//3Qg6CC0HlCf6nQjPOKAHYN7uDjxQ+DiTIrmaz0IEK/OtzlsW/eXSMFj2WE4X/xvLytvZK+
+	mbCGF+7qIK4cKCCgDVlmtCN/OcBPHceh/HLevFy9BBBYVJzu+zgkZJ6U=
+X-Google-Smtp-Source: AGHT+IG9wvyJJlVzTozPpPWigGgSs/dKpCCT1lj9or4J1Dyvuq3M5mlz4DUk4K6HROsiojL6x4DHbQNVlSiWQZQDgV2NmZIDMke6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240426121442.882029-1-xry111@xry111.site> <CAAhV-H74cQ4XdDez5PipCxUZTpfS=CA6azL5qob=jGGebobD6g@mail.gmail.com>
- <dfdc9823a0b89c8582587fa75448bba5c3a7e15e.camel@xry111.site>
- <56414029e179d219442bde9b8eae81fa3e3ceec4.camel@xry111.site>
- <CAAhV-H5vrCrBFhDKjTXchCGABWHT6Wxz1JK6hNsarOwp+vfHpg@mail.gmail.com> <a3df8ae7ad7c4af447c6143858ae44c3da453704.camel@xry111.site>
-In-Reply-To: <a3df8ae7ad7c4af447c6143858ae44c3da453704.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 27 Apr 2024 16:39:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5bq-PONAfUYR8+5Q_z=7+1mqtXOGTsDi9g_r71qrf9Cw@mail.gmail.com>
-Message-ID: <CAAhV-H5bq-PONAfUYR8+5Q_z=7+1mqtXOGTsDi9g_r71qrf9Cw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Provide __lshrti3, __ashrti3, and __ashrti3
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>
+X-Received: by 2002:a05:6e02:1a4f:b0:36b:1b8b:75f4 with SMTP id
+ u15-20020a056e021a4f00b0036b1b8b75f4mr63094ilv.2.1714207503710; Sat, 27 Apr
+ 2024 01:45:03 -0700 (PDT)
+Date: Sat, 27 Apr 2024 01:45:03 -0700
+In-Reply-To: <20240427081536.3770-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000548fd70617100951@google.com>
+Subject: Re: [syzbot] [net?] [bpf?] possible deadlock in sock_hash_delete_elem (2)
+From: syzbot <syzbot+ec941d6e24f633a59172@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 27, 2024 at 3:49=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> On Sat, 2024-04-27 at 15:20 +0800, Huacai Chen wrote:
-> > > /* The prototypes are incorrect but this file is only used by
-> > >     modpost which does not care.  */
-> > > long long __ashlti3(long long a, int b);
-> > > long long __ashrti3(long long a, int b);
-> > > long long __lshrti3(long long a, int b);
-> > >
-> > > How do you think?
-> > OK, then just keep the original status.
->
-> Then I'll just send a patch squashing the origin version of this patch
-> and the patch selecting ARCH_SUPPORTS_INT128 in a day if there are no
-> other review comments.
-Needn't, I will squash it when I apply.
+Hello,
 
-Huacai
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-and-tested-by: syzbot+ec941d6e24f633a59172@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         b2ff42c6 Merge tag 'for-netdev' of https://git.kernel...
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=141a3d30980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=98d5a8e00ed1044a
+dashboard link: https://syzkaller.appspot.com/bug?extid=ec941d6e24f633a59172
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=118d1937180000
+
+Note: testing is done by a robot and is best-effort only.
