@@ -1,105 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F292381C7;
-	Sat, 27 Apr 2024 05:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E671E4A8
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 05:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714196333; cv=none; b=tapBpXwNDoQZ5s8nG16Q/wIYOSlnVtfDT4qq/RUaRhc7teBYjNyv7OWXPOdRw/wUUo8l2Ubh5GkG7crdBS4gCuDcMda+TDoW8XJzANQHdF2gUiVveRmv+Ljxe25B5IoVSm48RlWM7UdI0X1XfTi8U3jzHB4pVGIlUbIH/bDmWh0=
+	t=1714197508; cv=none; b=u83bG98nh2To3hrcc91Cr5pyeQRNCYeQQ6byXChGyb9tyGG/qR4/ZIl77eWh7NgTmWm4vx/JuqHn00Gi4qLHKoUVL4GN7fRIhISO2pP1SCrd9FmxvkAkgHxsYBZzOWm372jN54gJvSTqtf8SzYzwWn/9movxLfzkg8hzIJRc0MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714196333; c=relaxed/simple;
-	bh=K4EbgByRT7TtstqD4HXOVYBvbr60newEfJFOinghURg=;
+	s=arc-20240116; t=1714197508; c=relaxed/simple;
+	bh=kXoZjLFn59koFc28BQ9bqNwWral4V6ynyEbfza2RnrQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PH3XwcG5QFw08RegimstVu8lgBsrzompxOGpNaT9PWYCS/N/v9UwYREQyVixLDX0qg3x1hJEQt0dPCO+fw7pKcIhYOHKyUNwjOyK5ZygBWrCTFcoFzwjP1m2awkUVlSu+6Ol7Dc5jHXYklQRXfwmfS47oBrjm/RIbBslEgA+/jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WsULUO2u; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=jnGPJN3YqlqSqlOkmSBMxYPA5b4OoR8oOSJaek4FBwJsbl0Q/KQIHx1UZXlC7dYek9VdUS/xD1ZWbnj/RPyleniEMRypbf2Cag5qIc/L6cub5P8A56DVPf8E9YN8/YVn76C4YQvv8t9EYqYnYMEcP17DzX+khddqrLxr98dGcVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cF2sR36W; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WsULUO2u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714196331; x=1745732331;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=K4EbgByRT7TtstqD4HXOVYBvbr60newEfJFOinghURg=;
-  b=WsULUO2u9s6Xa1/9ZIYCeVyeZGeWzGYFd7FTqSREUsBUkyq4VHqdlenE
-   vKzB0EfHhJ/BFye6kh/Q1VCVT0m2RYYDA23t9TeUkVgR2yR0oy4mK4fI+
-   p5B3Kp0+/5anBdtrUlnFGuLzDO4C4rUBe4XzaNkB5tjWbCqgWaRROKTAS
-   4mKq/p7j/bb6zXg+49qyjMcZtgzajp2DZkZrgFyFZLscbV655wQAEK/jG
-   Fyy+CeBOsnNpLyNlvLCW8zwgzMB7JCW90ObeDnNkD2pJy9eXJRDYtc1WE
-   CwPWtgy+L7hV2KtZn/yj+oepjwMJFiegDD2o3mXIhyr4Lj2IwI8adkKSY
-   Q==;
-X-CSE-ConnectionGUID: bemiSHTFSsuIXRdzsYhDRw==
-X-CSE-MsgGUID: 0MuWYMa2QNSUuMiDdzICEQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="32437623"
-X-IronPort-AV: E=Sophos;i="6.07,234,1708416000"; 
-   d="scan'208";a="32437623"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 22:38:51 -0700
-X-CSE-ConnectionGUID: 0FfLCUrISlq89yEGnkD66w==
-X-CSE-MsgGUID: 6Edd325aRAGxni0rsDbMoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,234,1708416000"; 
-   d="scan'208";a="56530661"
-Received: from akalapal-mobl.amr.corp.intel.com (HELO [10.124.149.167]) ([10.124.149.167])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 22:38:50 -0700
-Message-ID: <002340b7-86e2-4be3-8468-71d59233c32e@intel.com>
-Date: Fri, 26 Apr 2024 22:38:49 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cF2sR36W"
+Message-ID: <509b3822-dcf6-45eb-9516-ba8ff2cc4382@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714197503;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pxlklMfBDzUJzfzH3D9A2wRzbh/nwoFGA5lYNX7H0P0=;
+	b=cF2sR36WA5QZw0FBHgOJ0ruxDsHJ0SIZ69AjdZ6LFB6lwTkj0I/zcr1BZkalt9X24iVj+F
+	7xmzjBDQEO8LWg8qk0SR2+hi5FwxcmozZdUCfFwieX+ywOFT3waCBsHeUcJpfDoh/pUlsK
+	fBl47oVHcIW+Lyn3IMvWt/VrKHXSFMw=
+Date: Sat, 27 Apr 2024 13:57:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 4/4] KVM: selftests: Add test for configure of x86 APIC
- bus frequency
-To: Reinette Chatre <reinette.chatre@intel.com>, isaku.yamahata@intel.com,
- pbonzini@redhat.com, erdemaktas@google.com, vkuznets@redhat.com,
- seanjc@google.com, vannapurve@google.com, jmattson@google.com,
- mlevitsk@redhat.com, xiaoyao.li@intel.com, chao.gao@intel.com,
- rick.p.edgecombe@intel.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1714081725.git.reinette.chatre@intel.com>
- <eac8c5e0431529282e7887aad0ba66506df28e9e.1714081726.git.reinette.chatre@intel.com>
- <f5a80896-e1aa-4f23-a739-5835f7430f78@intel.com>
- <12445519-efd9-42e9-a226-60cfa9d2a880@intel.com>
+Subject: Re: [v1,1/3] drm/panel: ili9341: Correct use of device property APIs
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Randy Dunlap <rdunlap@infradead.org>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>
+References: <20240425142706.2440113-2-andriy.shevchenko@linux.intel.com>
+ <c2d41916-0b6c-43b5-98eb-514eb0511f84@linux.dev>
+ <ZiqqiAztCaiAgI8e@smile.fi.intel.com>
+ <2599705c-0a64-4742-b1d7-330e9fde6e7a@linux.dev>
+ <20240426-married-augmented-mantis-ff7edd@penduick>
 Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <12445519-efd9-42e9-a226-60cfa9d2a880@intel.com>
-Content-Type: text/plain; charset=UTF-8
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <20240426-married-augmented-mantis-ff7edd@penduick>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
+
+Hi,
 
 
+On 2024/4/26 14:23, Maxime Ripard wrote:
+> Hi,
+>
+> On Fri, Apr 26, 2024 at 04:43:18AM +0800, Sui Jingfeng wrote:
+>> On 2024/4/26 03:10, Andy Shevchenko wrote:
+>>> On Fri, Apr 26, 2024 at 02:08:16AM +0800, Sui Jingfeng wrote:
+>>>> On 2024/4/25 22:26, Andy Shevchenko wrote:
+>>>>> It seems driver missed the point of proper use of device property APIs.
+>>>>> Correct this by updating headers and calls respectively.
+>>>> You are using the 'seems' here exactly saying that you are not 100% sure.
+>>>>
+>>>> Please allow me to tell you the truth: This patch again has ZERO effect.
+>>>> It fix nothing. And this patch is has the risks to be wrong.
+>>> Huh?! Really, stop commenting the stuff you do not understand.
+>> I'm actually a professional display drivers developer at the downstream
+>> in the past, despite my contribution to upstream is less. But I believe
+>> that all panel driver developers know what I'm talking about. So please
+>> have take a look at my replies.
+> Most of the interactions you had in this series has been uncalled for.
+> You might be against a patch, but there's no need to go to such length.
+>
+> As far as I'm concerned, this patch is fine to me in itself, and I don't
+> see anything that would prevent us from merging it.
 
-On 4/26/2024 4:26 PM, Reinette Chatre wrote:
-> Hi Zide,
-> 
-> On 4/26/2024 4:06 PM, Chen, Zide wrote:
->>
->>
->> On 4/25/2024 3:07 PM, Reinette Chatre wrote:
->>> diff --git a/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c b/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
->>> new file mode 100644
->>> index 000000000000..5100b28228af
->>> --- /dev/null
->>> +++ b/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
->>> @@ -0,0 +1,166 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only
->>> +/*
->>> + * Test configure of APIC bus frequency.
->>> + *
->>> + * Copyright (c) 2024 Intel Corporation
->>> + *
->>> + * To verify if the APIC bus frequency can be configured this test starts
->>
->> Nit: some typos here?
-> 
-> Apologies but this is not obvious to me. Could you please help
-> by pointing out all those typos to me?
+No one is preventing you, as long as don't misunderstanding what other
+people's technical replies intentionally. I'm just a usual and normal
+contributor, I hope the world will better than yesterday. Saying such
+thing to me may not proper, I guess you may want to talk to peoples
+who has the push rights, just make sure it isn't a insult to the
+professionalism of drm bridge community itself though.
 
-Do you think it's more readable to add a ","?
+We still grateful for you help and admire you numerous contribution,
+thanks.
 
-- * To verify if the APIC bus frequency can be configured this test starts
-+ * To verify if the APIC bus frequency can be configured, this test starts
-  * by setting the TSC frequency in KVM, and then:
+-- 
+Best regards,
+Sui
+
