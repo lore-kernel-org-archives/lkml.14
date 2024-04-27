@@ -1,79 +1,141 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 832EC33C8;
-	Sat, 27 Apr 2024 02:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30EA3A1BE
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 03:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714186686; cv=none; b=AiJf0vUzx8r4gGbzRNinSnWXk3o+gURVvmhLu2Os8DUR/1uWGPvufdD5gVGUx/Jt2OWawxkfxJzK7VYGN1FH+kGT4UpGYh3A0UJ8j7wqRWi/xDjxv+RBkbRYvXyHMKzYq4FAhk5ZlFoPLIutwONZ0SMs3VJEbb9Eh8wHdsBnxSs=
+	t=1714187123; cv=none; b=tKf4H9u3mCDpYK4t/dgC3LE7C1x1tbW6OMSJLM0uQRCXfUbgkkRfDuSs55kz7j6yl9LqulBrzilRkJYzxr3BPdFrNBsOjqb8H9UPy1zv7DVHZW4TfV5kgwXd/0cHItMJ5OeTmMJUPMftUhN0g9apZpUongBFoqlRWllkRiZ/Bl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714186686; c=relaxed/simple;
-	bh=xX5D+EAZ5Bpq4vJHf+wbm1BIbRo+WTB8OkrJBGaP538=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CqLqGbV4ZDP0XLTNZrprr0AbelLEujfgmmcmDe0lBTYS13rbjymrntPmCisx0FvJ7Rd5ImdavNy/V4zW+372kr9IiM3ZdouTX3XcMlXENEUY4u4IjoHbKykBqPAO0y5zonIsHl8B161ZRhi/2Ib1FOiloFlIrG4WJfmaVrxAsE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=BoP/sU4R; arc=none smtp.client-ip=220.197.31.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1714187123; c=relaxed/simple;
+	bh=cha9/ffLclacPVD18t3NcfWoJYtnsmNrKw5+kqwJzek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YBn1SaRWjMI7y6Mtkk7LHA7RNyJ1f9gbASzfZLa+SKajVhHGWR89GOyhA2OnW5xWHRWQwlBw3+5KNvcN2+iyey8mGcd4woZUt3w17irrg5XI+LNbODyyWUTSNoON5Rp4D5dr5VKRQVCV4mTTHD/8hnCYslP55McPLndl4OH3HkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=voTlGHY6; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="BoP/sU4R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=fy6C0
-	g0qKGiiSklD9pwp4zCj85V4AWoPTjeoUY/osls=; b=BoP/sU4RpTOWtH/KEjmBt
-	g57CBLUt2c4DSk1iP6y7chyxkX4gbzvdBcw2jXwAjLF0NIkSLIlVXvcgzKDdlwaU
-	33NA4UojRde44TqnVE2JThjNWcAEyi497IecKTjSTpMpHy39m6+KwLOI2qwAesMo
-	cP+OrcsInxt6mY4YZX+5x0=
-Received: from localhost.localdomain (unknown [111.198.54.11])
-	by gzga-smtp-mta-g1-2 (Coremail) with SMTP id _____wD3X1CSaSxmFuefBA--.58122S2;
-	Sat, 27 Apr 2024 10:57:23 +0800 (CST)
-From: lumingyindetect@126.com
-To: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	LuMingYin <lumingyindetect@126.com>
-Subject: [PATCH v2] tracing/probes: Fix memory leak in traceprobe_parse_probe_arg_body
-Date: Sat, 27 Apr 2024 03:57:20 +0100
-Message-Id: <20240427025720.1321211-1-lumingyindetect@126.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="voTlGHY6"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51d2047220cso100997e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Apr 2024 20:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714187120; x=1714791920; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/KxZsU8CfmoqVg9nhLSmO6KA2q/B4uRALVgx58uGwIw=;
+        b=voTlGHY6WNTRPZ9TfTButMeOuMUwcNq5SxdPYKrglGQUsUvzcGUUbGHg5tNjo5Oldm
+         z3Do2cIXWc0N4G0ogEAh2PqNlhVBOpQuXvesYHWlBkUDW28XNwYh7jumUCeR+5YyWDBn
+         FzDB1AbuEXZdS3mwxpQwRVUBZX5yCkN9o7eJDsEE/hSRAI5/N32SLzRKVqgH2yQAsoUS
+         ofG8gkthNoRAgcP5PQjmKOgHxciOsT0OT5Mxxv8E54CJiBZ0cKczfh8CUrYWjovIqi85
+         KR90oxrD+0rvylNqHD4ZHTNeGJrni037tpSceMkDcjEA2HRKAFG5ke8oTNQPDSy2fMzm
+         l0hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714187120; x=1714791920;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/KxZsU8CfmoqVg9nhLSmO6KA2q/B4uRALVgx58uGwIw=;
+        b=gaJA2eL7p5BWBlLCTnD2YjRd9RnOkxE41pex+D4pp83kexG6V5a3FZiG2ZzIUwuYvh
+         KLFE5KRrrVEhzLrLz/wyJ658ekqSAqPBj10rpgaW/VFkcyjZXvQdumTLoofP5e1m7GYE
+         WIOPSnm2S3XT0obFPIt2aBorppZfxWxGpG2xY0tvnIBqkGvVuQfKa6Xe9TCPNZA26aYW
+         /DQ+5R6SZegIyfnfSc6M7yzyY8sBohdkPplQ3CzfiNz3+EUDmvcMoxMPB7WiC0thD8Hc
+         B/H1nE2Xx0p6hv+wt64LrHtGi7YWbDwxrUdrPYeXIlbPoShnChbgyUTAOib2+oywkqb2
+         nZ+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUNtlzd8+r3lUl6qJ+hKCe4nRSs58Mx5DSbplgIEvQCtEOmzK3d0TvOLgKkR4oDajt0bvY+jkskDtJ1+S1mR8bupHPbe9FFijePM0nq
+X-Gm-Message-State: AOJu0Yw1HO/rpYyQXNdARJpd74RHICvJzPepGANUvQM/YeJromHcmoLV
+	4ih5eIj3isg8+ddG3IMrVUKTxSjTqSRzbzP9IDVnJjEzf2DvSuXR4pxpuZbvJm1UQIuDVAmpP+J
+	Vfxnyt0+2zW9FCOGop8frE5J9o/o7XDdLhxE4
+X-Google-Smtp-Source: AGHT+IH7ZrbbxcIWFPMbr/gIXjFP4VCMqRaA2i6I0HFIVTbw9MBdGrgRXfr/4EcW+YlMTOtyvboEK6FX9s4UKILqlag=
+X-Received: by 2002:a05:6512:684:b0:518:17ad:a6e0 with SMTP id
+ t4-20020a056512068400b0051817ada6e0mr2933668lfe.51.1714187119584; Fri, 26 Apr
+ 2024 20:05:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3X1CSaSxmFuefBA--.58122S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Wr1fXr18uFWfJFyfWw17Wrg_yoWDXFcEka
-	ykGa4kXr4jkrsrurW3ArsaqrWq9F1rWFy09a17tFZ8J34jkr13W3Z8CasYqrZ5WFyqqr97
-	XwnxWr1v9FyrKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU017K7UUUUU==
-X-CM-SenderInfo: poxpx0hj1l0vphwhu3a6rslhhfrp/1tbiEBzM9mVLbFus-AACs9
+References: <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
+ <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com> <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
+ <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com> <ZirPGnSDUzD-iWwc@google.com>
+ <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com> <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
+ <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com> <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
+ <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com> <ZiwEoZDIg8l7-uid@google.com>
+In-Reply-To: <ZiwEoZDIg8l7-uid@google.com>
+From: Mingwei Zhang <mizhang@google.com>
+Date: Fri, 26 Apr 2024 20:04:42 -0700
+Message-ID: <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Sean Christopherson <seanjc@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	maobibo <maobibo@loongson.cn>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
+	peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com, 
+	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: LuMingYin <lumingyindetect@126.com>
+On Fri, Apr 26, 2024 at 12:46=E2=80=AFPM Sean Christopherson <seanjc@google=
+.com> wrote:
+>
+> On Fri, Apr 26, 2024, Kan Liang wrote:
+> > > Optimization 4
+> > > allows the host side to immediately profiling this part instead of
+> > > waiting for vcpu to reach to PMU context switch locations. Doing so
+> > > will generate more accurate results.
+> >
+> > If so, I think the 4 is a must to have. Otherwise, it wouldn't honer th=
+e
+> > definition of the exclude_guest. Without 4, it brings some random blind
+> > spots, right?
+>
+> +1, I view it as a hard requirement.  It's not an optimization, it's abou=
+t
+> accuracy and functional correctness.
 
-If traceprobe_parse_probe_arg_body() fails to allocate 'parg->fmt', it
-jumps to 'out' instead of 'fail' by mistake. In the result, in this
-case the 'tmp' buffer is not freed and leaks its memory.
+Well. Does it have to be a _hard_ requirement? no? The irq handler
+triggered by "perf record -a" could just inject a "state". Instead of
+immediately preempting the guest PMU context, perf subsystem could
+allow KVM defer the context switch when it reaches the next PMU
+context switch location.
 
-Fix it by jumping to 'fail' in that case.
+This is the same as the preemption kernel logic. Do you want me to
+stop the work immediately? Yes (if you enable preemption), or No, let
+me finish my job and get to the scheduling point.
 
-Fixes: 032330abd08b ("tracing/probes: Cleanup probe argument parser")
-Signed-off-by: LuMingYin <lumingyindetect@126.com>
----
- kernel/trace/trace_probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Implementing this might be more difficult to debug. That's my real
+concern. If we do not enable preemption, the PMU context switch will
+only happen at the 2 pairs of locations. If we enable preemption, it
+could happen at any time.
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index dfe3ee6035ec..42bc0f362226 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1466,7 +1466,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 		parg->fmt = kmalloc(len, GFP_KERNEL);
- 		if (!parg->fmt) {
- 			ret = -ENOMEM;
--			goto out;
-+			goto fail;
- 		}
- 		snprintf(parg->fmt, len, "%s[%d]", parg->type->fmttype,
- 			 parg->count);
--- 
-2.25.1
+>
+> What _is_ an optimization is keeping guest state loaded while KVM is in i=
+ts
+> run loop, i.e. initial mediated/passthrough PMU support could land upstre=
+am with
+> unconditional switches at entry/exit.  The performance of KVM would likel=
+y be
+> unacceptable for any production use cases, but that would give us motivat=
+ion to
+> finish the job, and it doesn't result in random, hard to diagnose issues =
+for
+> userspace.
 
+That's true. I agree with that.
+
+>
+> > > Do we want to preempt that? I think it depends. For regular cloud
+> > > usage, we don't. But for any other usages where we want to prioritize
+> > > KVM/VMM profiling over guest vPMU, it is useful.
+> > >
+> > > My current opinion is that optimization 4 is something nice to have.
+> > > But we should allow people to turn it off just like we could choose t=
+o
+> > > disable preempt kernel.
+> >
+> > The exclude_guest means everything but the guest. I don't see a reason
+> > why people want to turn it off and get some random blind spots.
