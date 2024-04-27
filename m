@@ -1,40 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A894A02;
-	Sat, 27 Apr 2024 14:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2126611721;
+	Sat, 27 Apr 2024 14:55:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714229711; cv=none; b=pEB/si4ZlrwYTqHxIKLRGqknYcSOpLRByu+hHXw9K5wq3aIquftESvsQFqF+WkDRkdyP6kHOs0fTvHztQyr9X/mhynPU87/b/ZkZDH+hnJmlXihfz7UVh0lSt4iGJKuXTcNN3NCBFVn9EkXTLuregAWaQ6W2Ksem3nU7PvoYmaY=
+	t=1714229713; cv=none; b=DV1O2iZgHm5FokZqiWhzFhsWJ4mItKT/Xg4wKqaM28DjmCevibD3E/gLspyChLBuiNABJ8KCrnmFS+c6eOR0eW4JXDWqoFzKGkiNo1U7Sn2Ya1RwyYv7sueN+7U31F3dgOhxc9u0+GvCdr4koPA/pYg/+fEuQ7PEaObpsehOyt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714229711; c=relaxed/simple;
-	bh=wq89dRCvrNa0PsG19mCNdBlAe1+Vu/za2sDeBBPhDQw=;
+	s=arc-20240116; t=1714229713; c=relaxed/simple;
+	bh=sxkO/VNGuHCpY+xaA593lVgtx7OEmQ5zj1XiiuDfS9A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ak56RXL6OfJ9oxQbsVYfEyry8OL/+S4VIM2Pd/avO2hMmg6643mUfxU6sDdmba3sQkXo3sp9bbZQfuEz2BsAUn37zSHri6/E8L3nyDX36oz/61GDGL8aZtvZgqIxxatJjvsrEBnErNu0zak0qMziZc283S3NgYg0oYKxQw6wzDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6F5Uhw+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=O6e9+pfHz7dVkyVuR/FgihEZF24GCdna/UKsP6Vr89MWh1VKR3a0ryiSo3kvC342rNAc/82MyExx0Y6fyuyaracp95cSEQp6O/44ogNaQ5JsTSWbfnF+uGpxJLLy+WB3CZ9upm2S1kr/XhwayFXxiVcBwcm7fXdkK4qQPpb1f6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FF0gp7fx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6F5Uhw+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 743F7C2BD10;
-	Sat, 27 Apr 2024 14:55:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FF0gp7fx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A76CEC2BD10;
+	Sat, 27 Apr 2024 14:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714229709;
-	bh=wq89dRCvrNa0PsG19mCNdBlAe1+Vu/za2sDeBBPhDQw=;
+	s=k20201202; t=1714229712;
+	bh=sxkO/VNGuHCpY+xaA593lVgtx7OEmQ5zj1XiiuDfS9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T6F5Uhw+aDtrz8kYD8o/47R0a+0biQRqaOwnHrKPW/HLzSr9LECH73uuO1Nh/ozVF
-	 XIp8eD+9qXqKLLS570opS7PSZQU7ecEA7ROqFNr+4vbAis+4bcSyQGRoOh+UdPAd8t
-	 2J6BVQfXU5WS/VUK2h0BLy2N2h+f2/U88uPm61jfXHxLuaHOAOveWZWrswDl9wHjLb
-	 6k7I3IGIbQ7C01G4krSK7H8RkrrtEq6jVaVzeXjDE0Gm6AecPuoWdzSp9u37gAF0du
-	 +OgY2BBQgw++LF9xTM/GNrtxqIZ56PFE18h4BQEAWaOC5nsvaFYbSshdAdE60XvPYq
-	 LhTkzIRiDfffA==
+	b=FF0gp7fx6+7X5owHaXgnY2c+n0niE6MF2CwPjVBtN+2Ui676eB3E5o4265uR+MGtL
+	 GRA4sI7BEuRiUIM6bLTRGgqP8ldhtt2wTTcbBcO2T7teYMu+Qum/Zwa3hJVVDJKlUQ
+	 omj0hKaaiqwU/VqNXg5kO0OKKwfkGP+13E4vgWXgo6SLvdQp2G/lw25z3bwTMnzp6z
+	 V0OaiWRY85gORgGxP3qkn5qHpXH7yJslCYjkiTow7pCY3oscQQJTQZAMqwTLozXork
+	 j49sgdB7pA1vcxs6T+8EnevN9zbZL8wUkmN638AAJPZ/kxRmBVdXCUqrZ7Q+rZoMyW
+	 7hisVHcklQwfg==
 From: Masahiro Yamada <masahiroy@kernel.org>
 To: linux-kbuild@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Masahiro Yamada <masahiroy@kernel.org>,
-	Helge Deller <deller@gmx.de>,
 	Nicolas Schier <nicolas@fjasle.eu>
-Subject: [PATCH v2 1/4] arch: use $(obj)/ instead of $(src)/ for preprocessed linker scripts
-Date: Sat, 27 Apr 2024 23:54:59 +0900
-Message-Id: <20240427145502.2804311-2-masahiroy@kernel.org>
+Subject: [PATCH v2 3/4] kbuild: use $(obj)/ instead of $(src)/ for common pattern rules
+Date: Sat, 27 Apr 2024 23:55:01 +0900
+Message-Id: <20240427145502.2804311-4-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240427145502.2804311-1-masahiroy@kernel.org>
 References: <20240427145502.2804311-1-masahiroy@kernel.org>
@@ -46,140 +45,175 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These are generated files. Prefix them with $(obj)/ instead of $(src)/.
+Kbuild conventionally uses $(obj)/ for generated files, and $(src)/ for
+checked-in source files. It is merely a convention without any functional
+difference. In fact, $(obj) and $(src) are exactly the same, as defined
+in scripts/Makefile.build:
+
+  src := $(obj)
+
+Before changing the semantics of $(src) in the next commit, this commit
+replaces $(obj)/ with $(src)/ in pattern rules where the prerequisite
+might be a generated file.
+
+C, assembly, and Rust files are sometimes generated by tools, so they
+could be either generated files or real sources. The $(obj)/ prefix
+works for both cases with the help of VPATH.
+
+As mentioned above, $(obj) and $(src) are the same at this point, hence
+this commit has no functional change.
+
+I did not modify scripts/Makefile.userprogs because there is no use
+case where userspace C files are generated.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Helge Deller <deller@gmx.de>
 Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
 ---
 
-(no changes since v1)
+Changes in v2:
+  - replace $(src)/%.rs with $(obj)/%.rs because Rust files are
+    also generated
 
- arch/arm64/kernel/vdso32/Makefile  | 2 +-
- arch/csky/kernel/vdso/Makefile     | 2 +-
- arch/parisc/kernel/vdso32/Makefile | 2 +-
- arch/parisc/kernel/vdso64/Makefile | 2 +-
- arch/powerpc/kernel/vdso/Makefile  | 4 ++--
- arch/s390/kernel/vdso32/Makefile   | 2 +-
- arch/s390/kernel/vdso64/Makefile   | 2 +-
- arch/sh/kernel/vsyscall/Makefile   | 4 ++--
- 8 files changed, 10 insertions(+), 10 deletions(-)
+ scripts/Makefile.build | 26 +++++++++++++-------------
+ scripts/Makefile.host  |  4 ++--
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index f5f80fdce0fe..cc4508c604b2 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -136,7 +136,7 @@ $(obj)/vdso32.so.dbg: $(obj)/vdso.so.raw $(obj)/$(munge) FORCE
- 	$(call if_changed,vdsomunge)
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index baf86c0880b6..41138346afb0 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -113,13 +113,13 @@ endif
+ quiet_cmd_cc_s_c = CC $(quiet_modtag)  $@
+       cmd_cc_s_c = $(CC) $(filter-out $(DEBUG_CFLAGS) $(CC_FLAGS_LTO), $(c_flags)) -fverbose-asm -S -o $@ $<
  
- # Link rule for the .so file, .lds has to be first
--$(obj)/vdso.so.raw: $(src)/vdso.lds $(obj-vdso) FORCE
-+$(obj)/vdso.so.raw: $(obj)/vdso.lds $(obj-vdso) FORCE
- 	$(call if_changed,vdsold_and_vdso_check)
+-$(obj)/%.s: $(src)/%.c FORCE
++$(obj)/%.s: $(obj)/%.c FORCE
+ 	$(call if_changed_dep,cc_s_c)
  
- # Compilation rules for the vDSO sources
-diff --git a/arch/csky/kernel/vdso/Makefile b/arch/csky/kernel/vdso/Makefile
-index ddf784a62c11..24a01c22293e 100644
---- a/arch/csky/kernel/vdso/Makefile
-+++ b/arch/csky/kernel/vdso/Makefile
-@@ -31,7 +31,7 @@ KCOV_INSTRUMENT := n
- $(obj)/vdso.o: $(obj)/vdso.so
+ quiet_cmd_cpp_i_c = CPP $(quiet_modtag) $@
+ cmd_cpp_i_c       = $(CPP) $(c_flags) -o $@ $<
  
- SYSCFLAGS_vdso.so.dbg = $(c_flags)
--$(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
-+$(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) FORCE
- 	$(call if_changed,vdsold)
- SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
- 	-Wl,--build-id=sha1 -Wl,--hash-style=both
-diff --git a/arch/parisc/kernel/vdso32/Makefile b/arch/parisc/kernel/vdso32/Makefile
-index e45d46bf46a2..60dc708a0f80 100644
---- a/arch/parisc/kernel/vdso32/Makefile
-+++ b/arch/parisc/kernel/vdso32/Makefile
-@@ -26,7 +26,7 @@ $(obj)/vdso32_wrapper.o : $(obj)/vdso32.so FORCE
+-$(obj)/%.i: $(src)/%.c FORCE
++$(obj)/%.i: $(obj)/%.c FORCE
+ 	$(call if_changed_dep,cpp_i_c)
  
- # Force dependency (incbin is bad)
- # link rule for the .so file, .lds has to be first
--$(obj)/vdso32.so: $(src)/vdso32.lds $(obj-vdso32) $(VDSO_LIBGCC) FORCE
-+$(obj)/vdso32.so: $(obj)/vdso32.lds $(obj-vdso32) $(VDSO_LIBGCC) FORCE
- 	$(call if_changed,vdso32ld)
+ genksyms = scripts/genksyms/genksyms		\
+@@ -133,7 +133,7 @@ cmd_gensymtypes_c = $(CPP) -D__GENKSYMS__ $(c_flags) $< | $(genksyms)
+ quiet_cmd_cc_symtypes_c = SYM $(quiet_modtag) $@
+       cmd_cc_symtypes_c = $(call cmd_gensymtypes_c,true,$@) >/dev/null
  
- # assembly rules for the .S files
-diff --git a/arch/parisc/kernel/vdso64/Makefile b/arch/parisc/kernel/vdso64/Makefile
-index f3d6045793f4..0982f3099ae2 100644
---- a/arch/parisc/kernel/vdso64/Makefile
-+++ b/arch/parisc/kernel/vdso64/Makefile
-@@ -26,7 +26,7 @@ $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so FORCE
+-$(obj)/%.symtypes : $(src)/%.c FORCE
++$(obj)/%.symtypes : $(obj)/%.c FORCE
+ 	$(call cmd,cc_symtypes_c)
  
- # Force dependency (incbin is bad)
- # link rule for the .so file, .lds has to be first
--$(obj)/vdso64.so: $(src)/vdso64.lds $(obj-vdso64) $(VDSO_LIBGCC) FORCE
-+$(obj)/vdso64.so: $(obj)/vdso64.lds $(obj-vdso64) $(VDSO_LIBGCC) FORCE
- 	$(call if_changed,vdso64ld)
+ # LLVM assembly
+@@ -141,7 +141,7 @@ $(obj)/%.symtypes : $(src)/%.c FORCE
+ quiet_cmd_cc_ll_c = CC $(quiet_modtag)  $@
+       cmd_cc_ll_c = $(CC) $(c_flags) -emit-llvm -S -fno-discard-value-names -o $@ $<
  
- # assembly rules for the .S files
-diff --git a/arch/powerpc/kernel/vdso/Makefile b/arch/powerpc/kernel/vdso/Makefile
-index 1b93655c2857..a14eab366993 100644
---- a/arch/powerpc/kernel/vdso/Makefile
-+++ b/arch/powerpc/kernel/vdso/Makefile
-@@ -74,9 +74,9 @@ targets += vdso64.lds
- CPPFLAGS_vdso64.lds += -P -C
+-$(obj)/%.ll: $(src)/%.c FORCE
++$(obj)/%.ll: $(obj)/%.c FORCE
+ 	$(call if_changed_dep,cc_ll_c)
  
- # link rule for the .so file, .lds has to be first
--$(obj)/vdso32.so.dbg: $(src)/vdso32.lds $(obj-vdso32) $(obj)/vgettimeofday-32.o FORCE
-+$(obj)/vdso32.so.dbg: $(obj)/vdso32.lds $(obj-vdso32) $(obj)/vgettimeofday-32.o FORCE
- 	$(call if_changed,vdso32ld_and_check)
--$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) $(obj)/vgettimeofday-64.o FORCE
-+$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) $(obj)/vgettimeofday-64.o FORCE
- 	$(call if_changed,vdso64ld_and_check)
+ # C (.c) files
+@@ -240,7 +240,7 @@ define rule_as_o_S
+ endef
  
- # assembly rules for the .S files
-diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
-index b12a274cbb47..70e9949c2612 100644
---- a/arch/s390/kernel/vdso32/Makefile
-+++ b/arch/s390/kernel/vdso32/Makefile
-@@ -44,7 +44,7 @@ $(obj)/vdso32_wrapper.o : $(obj)/vdso32.so
- quiet_cmd_vdso_and_check = VDSO    $@
-       cmd_vdso_and_check = $(cmd_ld); $(cmd_vdso_check)
+ # Built-in and composite module parts
+-$(obj)/%.o: $(src)/%.c $(recordmcount_source) FORCE
++$(obj)/%.o: $(obj)/%.c $(recordmcount_source) FORCE
+ 	$(call if_changed_rule,cc_o_c)
+ 	$(call cmd,force_checksrc)
  
--$(obj)/vdso32.so.dbg: $(src)/vdso32.lds $(obj-vdso32) FORCE
-+$(obj)/vdso32.so.dbg: $(obj)/vdso32.lds $(obj-vdso32) FORCE
- 	$(call if_changed,vdso_and_check)
+@@ -257,7 +257,7 @@ quiet_cmd_cc_lst_c = MKLST   $@
+ 		     $(CONFIG_SHELL) $(srctree)/scripts/makelst $*.o \
+ 				     System.map $(OBJDUMP) > $@
  
- # strip rule for the .so file
-diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-index ef9832726097..2b3617b6d162 100644
---- a/arch/s390/kernel/vdso64/Makefile
-+++ b/arch/s390/kernel/vdso64/Makefile
-@@ -50,7 +50,7 @@ quiet_cmd_vdso_and_check = VDSO    $@
-       cmd_vdso_and_check = $(cmd_ld); $(cmd_vdso_check)
+-$(obj)/%.lst: $(src)/%.c FORCE
++$(obj)/%.lst: $(obj)/%.c FORCE
+ 	$(call if_changed_dep,cc_lst_c)
  
- # link rule for the .so file, .lds has to be first
--$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) $(obj-cvdso64) FORCE
-+$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) $(obj-cvdso64) FORCE
- 	$(call if_changed,vdso_and_check)
+ # Compile Rust sources (.rs)
+@@ -290,7 +290,7 @@ rust_common_cmd = \
+ quiet_cmd_rustc_o_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
+       cmd_rustc_o_rs = $(rust_common_cmd) --emit=obj=$@ $<
  
- # strip rule for the .so file
-diff --git a/arch/sh/kernel/vsyscall/Makefile b/arch/sh/kernel/vsyscall/Makefile
-index 118744d349e2..cb4f0bb80c38 100644
---- a/arch/sh/kernel/vsyscall/Makefile
-+++ b/arch/sh/kernel/vsyscall/Makefile
-@@ -19,14 +19,14 @@ vsyscall-flags = -shared -s -Wl,-soname=linux-gate.so.1 -Wl,--hash-style=sysv
- SYSCFLAGS_vsyscall-trapa.so	= $(vsyscall-flags)
+-$(obj)/%.o: $(src)/%.rs FORCE
++$(obj)/%.o: $(obj)/%.rs FORCE
+ 	+$(call if_changed_dep,rustc_o_rs)
  
- $(obj)/vsyscall-trapa.so: \
--$(obj)/vsyscall-%.so: $(src)/vsyscall.lds $(obj)/vsyscall-%.o FORCE
-+$(obj)/vsyscall-%.so: $(obj)/vsyscall.lds $(obj)/vsyscall-%.o FORCE
- 	$(call if_changed,syscall)
+ quiet_cmd_rustc_rsi_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
+@@ -298,19 +298,19 @@ quiet_cmd_rustc_rsi_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
+ 	$(rust_common_cmd) -Zunpretty=expanded $< >$@; \
+ 	command -v $(RUSTFMT) >/dev/null && $(RUSTFMT) $@
  
- # We also create a special relocatable object that should mirror the symbol
- # table and layout of the linked DSO.  With ld -R we can then refer to
- # these symbols in the kernel code rather than hand-coded addresses.
- SYSCFLAGS_vsyscall-dummy.o = -r
--$(obj)/vsyscall-dummy.o: $(src)/vsyscall.lds \
-+$(obj)/vsyscall-dummy.o: $(obj)/vsyscall.lds \
- 			$(obj)/vsyscall-trapa.o $(obj)/vsyscall-note.o FORCE
- 	$(call if_changed,syscall)
+-$(obj)/%.rsi: $(src)/%.rs FORCE
++$(obj)/%.rsi: $(obj)/%.rs FORCE
+ 	+$(call if_changed_dep,rustc_rsi_rs)
  
+ quiet_cmd_rustc_s_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
+       cmd_rustc_s_rs = $(rust_common_cmd) --emit=asm=$@ $<
+ 
+-$(obj)/%.s: $(src)/%.rs FORCE
++$(obj)/%.s: $(obj)/%.rs FORCE
+ 	+$(call if_changed_dep,rustc_s_rs)
+ 
+ quiet_cmd_rustc_ll_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
+       cmd_rustc_ll_rs = $(rust_common_cmd) --emit=llvm-ir=$@ $<
+ 
+-$(obj)/%.ll: $(src)/%.rs FORCE
++$(obj)/%.ll: $(obj)/%.rs FORCE
+ 	+$(call if_changed_dep,rustc_ll_rs)
+ 
+ # Compile assembler sources (.S)
+@@ -336,14 +336,14 @@ cmd_gensymtypes_S =                                                         \
+ quiet_cmd_cc_symtypes_S = SYM $(quiet_modtag) $@
+       cmd_cc_symtypes_S = $(call cmd_gensymtypes_S,true,$@) >/dev/null
+ 
+-$(obj)/%.symtypes : $(src)/%.S FORCE
++$(obj)/%.symtypes : $(obj)/%.S FORCE
+ 	$(call cmd,cc_symtypes_S)
+ 
+ 
+ quiet_cmd_cpp_s_S = CPP $(quiet_modtag) $@
+ cmd_cpp_s_S       = $(CPP) $(a_flags) -o $@ $<
+ 
+-$(obj)/%.s: $(src)/%.S FORCE
++$(obj)/%.s: $(obj)/%.S FORCE
+ 	$(call if_changed_dep,cpp_s_S)
+ 
+ quiet_cmd_as_o_S = AS $(quiet_modtag)  $@
+@@ -358,7 +358,7 @@ cmd_gen_symversions_S = $(call gen_symversions,S)
+ 
+ endif
+ 
+-$(obj)/%.o: $(src)/%.S FORCE
++$(obj)/%.o: $(obj)/%.S FORCE
+ 	$(call if_changed_rule,as_o_S)
+ 
+ targets += $(filter-out $(subdir-builtin), $(real-obj-y))
+diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+index 3c17e6ba421c..d35f55e0d141 100644
+--- a/scripts/Makefile.host
++++ b/scripts/Makefile.host
+@@ -112,7 +112,7 @@ endif
+ quiet_cmd_host-csingle 	= HOSTCC  $@
+       cmd_host-csingle	= $(HOSTCC) $(hostc_flags) $(KBUILD_HOSTLDFLAGS) -o $@ $< \
+ 		$(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(target-stem))
+-$(host-csingle): $(obj)/%: $(src)/%.c FORCE
++$(host-csingle): $(obj)/%: $(obj)/%.c FORCE
+ 	$(call if_changed_dep,host-csingle)
+ 
+ # Link an executable based on list of .o files, all plain c
+@@ -129,7 +129,7 @@ $(call multi_depend, $(host-cmulti), , -objs)
+ # host-cobjs -> .o
+ quiet_cmd_host-cobjs	= HOSTCC  $@
+       cmd_host-cobjs	= $(HOSTCC) $(hostc_flags) -c -o $@ $<
+-$(host-cobjs): $(obj)/%.o: $(src)/%.c FORCE
++$(host-cobjs): $(obj)/%.o: $(obj)/%.c FORCE
+ 	$(call if_changed_dep,host-cobjs)
+ 
+ # Link an executable based on list of .o files, a mixture of .c and .cc
 -- 
 2.40.1
 
