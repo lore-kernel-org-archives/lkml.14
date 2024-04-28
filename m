@@ -1,34 +1,32 @@
 Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A93A57876;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A886E573;
 	Sun, 28 Apr 2024 11:40:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714304450; cv=none; b=P6NvslyIbWffUiJXAxrOPIhXmRSnrzChaoL5zFAOfM84msx8330bYymgqnx890VVH6Yy86cUJiN8qpqiGVgFpJdAwiBg6/opzBZQNmvFwXS1i7ihEdVvGK6blEKZlDzwxc0HvrKhl9Dx/3WpHu0cNZRGBEbr+R3HZBvJw0s9TyE=
+	t=1714304452; cv=none; b=Wk2nCSPSY6s59n3w1N6k+igLiBBiRWDUlp9kCrLkuEM+Zhe7vR8le16CgCzYmeiZaCGs31b03c23ny1ED2uoVQlzEeIgQhvsvbHEqY+KbHqW1go4BM9fV3EOtcm0fdIDgVXwBg3FkOjOvvLkAdz7PR6x1/YlSurL/5hizp1aYWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714304450; c=relaxed/simple;
-	bh=4qMEkoFsIAMskrIOxbExs0rTAt41YA8CssKoQ++e7tI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n9mT+qQhHcBCWYYqAewO7uh5Wki2kAoGUvSegFX83oy0Xq5vxmyjiKkRS/lcuOEj0mlcBvaGPhwWavNfP7lCIXfaiCCE6RurPnE6fqquZAHIGKb/srKvGJqd9AgYV8mV5hrutnxpqOCB/qgL/3BgV7mt+rjPL8oZofg5eTTX+uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=jEsaHxT+; arc=none smtp.client-ip=116.203.91.91
+	s=arc-20240116; t=1714304452; c=relaxed/simple;
+	bh=38qZybaFIbJJQUgyJkChPDujC2+Dkdv/fBlW/vsmtsQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GSJ0vmdDZ7PWANLJL0ou+x/NsebPf/q2fuqE4WA6dFLxnFvZg0IjoWT1JmiAa0LOMk9TOH4GQRhXSnRGaF+aGtyWAXqvb4kdS75M8q1a377fRwSineXJ90D13stX5LxMGFgA+ZO8Fv1shKfmoDolvQoy/HetZIGIhj1rhzryV48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=SlJ1ct7Q; arc=none smtp.client-ip=116.203.91.91
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="jEsaHxT+"
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="SlJ1ct7Q"
 From: Dragan Simic <dsimic@manjaro.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1714304445;
+	t=1714304444;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s+4FNoNxkXA3lHy8/kRgdBQW+poGAHHKvQpgJQdlQzY=;
-	b=jEsaHxT+V7ZWLuIP9v2cO19KyNFujzleqGJpnDYNHiyJob6YQ7BzSsV7/N395OiVCfIAq1
-	2hSNW7wP8AnRvx89AWDIw+V85XW16UeM7V2yNgk2CBznDIPjWUHsSaTzdKScuD+Syu54Oy
-	pygVa0IRc7R4gJOIIGZZHvODzQFKxvFGR2csicLxLPPiLTvYQWan+mTxAmz6L3/MurqVid
-	+vI1qM0VfMBMv+Oqnt+Ytyz9oVrWZTHonr0OJrPxQ6JIu2YhugOGrikKt9u04pj0SqIGfB
-	HCX+F3TjtNjN/Iy/CToO6eygIDfRf34M/id8Gs5to+pBSXbwQAEAdARXI2i2IA==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fUUlO8nSkAmh0ieyYyxQ3T6zIAKTL4UZHOPVrkuWOnQ=;
+	b=SlJ1ct7Qbmgs/iRfAlf0K+hPxDYtqovcTVLtZoJUXu7iPQxNtw2vyh4VPwNfkmgoNJ1oby
+	fRbsxecxQpE/TgsXDHSM1/ZCpXlFR0mXnfg1DFRk+kRfQaxjoCrFUDPhTaUU1stRMZ2iVw
+	tK0iearS6rjrwl5oELDxFKl6WAFMO6ryubceAJx5HnKJ7n5YF2L3De4N0Oa/YXzCNofYKv
+	/nPKzUdRm05Ds9+cGNRoj6aLghOw3r+p2D87+Y+5ZC4M8gX8KOvadRGpIVKUxdwnwRxkCX
+	U+Ua4OO3Jx9D6R0Em1JcDP9qcH0DLqJrgBiitjLnXDf2FWaJSzF7dA4FGEBYGw==
 To: linux-sunxi@lists.linux.dev
 Cc: wens@csie.org,
 	jernej.skrabec@gmail.com,
@@ -39,11 +37,9 @@ Cc: wens@csie.org,
 	krzk+dt@kernel.org,
 	conor+dt@kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: allwinner: Add cache information to the SoC dtsi for H6
-Date: Sun, 28 Apr 2024 13:40:36 +0200
-Message-Id: <49abb93000078c692c48c0a65ff677893909361a.1714304071.git.dsimic@manjaro.org>
-In-Reply-To: <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
-References: <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
+Subject: [PATCH] arm64: dts: allwinner: Add cache information to the SoC dtsi for A64
+Date: Sun, 28 Apr 2024 13:40:35 +0200
+Message-Id: <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,21 +50,19 @@ Content-Transfer-Encoding: 8bit
 Authentication-Results: ORIGINATING;
 	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Add missing cache information to the Allwinner H6 SoC dtsi, to allow
+Add missing cache information to the Allwinner A64 SoC dtsi, to allow
 the userspace, which includes lscpu(1) that uses the virtual files provided
 by the kernel under the /sys/devices/system/cpu directory, to display the
-proper H6 cache information.
+proper A64 cache information.
 
-Adding the cache information to the H6 SoC dtsi also makes the following
-warning message in the kernel log go away:
+While there, use a more self-descriptive label for the L2 cache node, which
+also makes it more consistent with other SoC dtsi files.
 
-  cacheinfo: Unable to detect cache hierarchy for CPU 0
-
-The cache parameters for the H6 dtsi were obtained and partially derived
+The cache parameters for the A64 dtsi were obtained and partially derived
 by hand from the cache size and layout specifications found in the following
 datasheets and technical reference manuals:
 
-  - Allwinner H6 V200 datasheet, version 1.1
+  - Allwinner A64 datasheet, version 1.1
   - ARM Cortex-A53 revision r0p3 TRM, version E
 
 For future reference, here's a brief summary of the documentation:
@@ -80,16 +74,20 @@ For future reference, here's a brief summary of the documentation:
 
 Signed-off-by: Dragan Simic <dsimic@manjaro.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 37 ++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 37 ++++++++++++++++---
+ 1 file changed, 32 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index d11e5041bae9..1a63066396e8 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -29,36 +29,73 @@ cpu0: cpu@0 {
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 57ac18738c99..86074d03afa9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -51,49 +51,76 @@ cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			enable-method = "psci";
+-			next-level-cache = <&L2>;
  			clocks = <&ccu CLK_CPUX>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			clock-names = "cpu";
  			#cooling-cells = <2>;
 +			i-cache-size = <0x8000>;
 +			i-cache-line-size = <64>;
@@ -105,8 +103,9 @@ index d11e5041bae9..1a63066396e8 100644
  			device_type = "cpu";
  			reg = <1>;
  			enable-method = "psci";
+-			next-level-cache = <&L2>;
  			clocks = <&ccu CLK_CPUX>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			clock-names = "cpu";
  			#cooling-cells = <2>;
 +			i-cache-size = <0x8000>;
 +			i-cache-line-size = <64>;
@@ -122,8 +121,9 @@ index d11e5041bae9..1a63066396e8 100644
  			device_type = "cpu";
  			reg = <2>;
  			enable-method = "psci";
+-			next-level-cache = <&L2>;
  			clocks = <&ccu CLK_CPUX>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			clock-names = "cpu";
  			#cooling-cells = <2>;
 +			i-cache-size = <0x8000>;
 +			i-cache-line-size = <64>;
@@ -139,8 +139,9 @@ index d11e5041bae9..1a63066396e8 100644
  			device_type = "cpu";
  			reg = <3>;
  			enable-method = "psci";
+-			next-level-cache = <&L2>;
  			clocks = <&ccu CLK_CPUX>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			clock-names = "cpu";
  			#cooling-cells = <2>;
 +			i-cache-size = <0x8000>;
 +			i-cache-line-size = <64>;
@@ -149,12 +150,13 @@ index d11e5041bae9..1a63066396e8 100644
 +			d-cache-line-size = <64>;
 +			d-cache-sets = <128>;
 +			next-level-cache = <&l2_cache>;
-+		};
-+
+ 		};
+ 
+-		L2: l2-cache {
 +		l2_cache: l2-cache {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			cache-unified;
+ 			compatible = "cache";
+ 			cache-level = <2>;
+ 			cache-unified;
 +			cache-size = <0x80000>;
 +			cache-line-size = <64>;
 +			cache-sets = <512>;
