@@ -1,65 +1,44 @@
-Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0455915A4;
-	Sun, 28 Apr 2024 03:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D131215C9;
+	Sun, 28 Apr 2024 03:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714273759; cv=none; b=gAhbbDijK84faMtnWcotkZ9fR/FwiX3f41ZPQBIW5jRyLvG1SBcYI+Wj3Tko4QrjL/VZiXpsT3ELDT/gUsXRzvCgUhtzGYTAlJlisXPg3HRq2CW1a4+FJPVUzlIj+V6mP8Ae494Ehbrmi91ysJDORHWDU99idXt4igGfsQvEcts=
+	t=1714273822; cv=none; b=iRWc+NNHmlLX/CAzantTx+PXxSVpsGRUD9rCHd34QwZwIOIxo++yKIb32AQ/gqF8YRBp3aDl5vRns3/Ck2NZbC0Oa8nOmd7MydZjsdUZshGIFil2M1yVPIscRmmEEK6+e7KViHzqMs3aOGQdimwku+aLCTNr9HHj+K4MrK/0WfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714273759; c=relaxed/simple;
-	bh=k6OWLn97dyPXiojG9nCjtXAuHyNojQdpkS9sgnConzM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bHJZuOF89MeOgWKKx98EX5GYSBR31COOK5L7nMDcDJizewvyo1gQTfj6N0ZddxQ+vkF1zFfpdbfM4AWTRpEySRyzH4ToC/d9rJrAwCMNYMvFMZr8XZbUeqHhDA1C6+VLSKA/HHKUXFMflhK4K6W5ekBwBJqQeQVI6mBjyQPROVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=cg8K9yxO; arc=none smtp.client-ip=68.232.139.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="cg8K9yxO"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1714273757; x=1745809757;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=k6OWLn97dyPXiojG9nCjtXAuHyNojQdpkS9sgnConzM=;
-  b=cg8K9yxO6DZ8R19DEvAGbxxVFwAcASjXeIxD8LWOe9TU1t7jsefKFpyr
-   BPiJxB9qBGN84jPHp8thLk78pgEA1MJicr37n0fjKyABiCDHJc8hFmxjI
-   geIwVNUSASNYNiWtNMllpWGbHyhAMb52a0ktMas6dRY5aOaQFw1xl89Yx
-   J1UnmALLpWo2/DtawJ3lhdkMIn0/g2j0DBCQg3chUlOmZgFsMOO68wfrJ
-   ih3rhA+7uAdWPNTH+IFITxY7l5xZxP3O/3SDiPXov5TpmQ4Dx14vmL6QL
-   YG+xRYLXBnoDis/xm7aFaki/Kk1bnq+LPhQ5Dru58gH67A5NWvOcoco0y
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="156389211"
-X-IronPort-AV: E=Sophos;i="6.07,236,1708354800"; 
-   d="scan'208";a="156389211"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2024 12:08:03 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id A12D1E8F86;
-	Sun, 28 Apr 2024 12:08:00 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id C7D60BF4AF;
-	Sun, 28 Apr 2024 12:07:59 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 539BD34789;
-	Sun, 28 Apr 2024 12:07:59 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 61EF31A0002;
-	Sun, 28 Apr 2024 11:07:58 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [PATCH] cxl/region: Fix cxlr_pmem leaks
-Date: Sun, 28 Apr 2024 11:07:48 +0800
-Message-Id: <20240428030748.318985-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1714273822; c=relaxed/simple;
+	bh=zRjS4HniSyauajIjylYLbXjWxv2s24OoOrQ1SnYwpBE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DyUFuho54VKt+HTcU3ujrepJtDMhkuNubBYZqmp0fuUXFsylQyXmBWoSBOsUQq0J8N1C46gBq7QuE5uSiGor7shcKm0Hkn8o60GuwscB6OC7urQJ3d5CKs5Kcn3Jcjcm+eXlSV3jhUC/9kjQCap5bhn0GqWfX3q0oT/SY5BmDDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VRrwc0YD4zvQ62;
+	Sun, 28 Apr 2024 11:07:12 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8FFA518007C;
+	Sun, 28 Apr 2024 11:10:18 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Sun, 28 Apr 2024 11:10:17 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Changbin
+ Du <changbin.du@huawei.com>
+Subject: [PATCH v3 1/2] perf trace beauty: Always show param if show_zero is set
+Date: Sun, 28 Apr 2024 11:10:07 +0800
+Message-ID: <20240428031008.1535765-2-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240428031008.1535765-1-changbin.du@huawei.com>
+References: <20240428031008.1535765-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,39 +46,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28348.004
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28348.004
-X-TMASE-Result: 10-0.891900-10.000000
-X-TMASE-MatchedRID: rWcK0WiM0yxUfypZw6S0pSQLXCPUFARrTFQnI+epPIakob0Y35+HFL8F
-	Hrw7frluf146W0iUu2v46qOd1x1zqpcFdomgH0lnFEUknJ/kEl5jFT88f69nG/oLR4+zsDTtjoc
-	zmuoPCq2BlDQq+LQ0B9zCG0GDXnSbHq67pWYcGwtU1RsVEEJA/I8pk/SmUpRHjZEDJ+dycfNkeF
-	KCrXUpHp8Roq8b+01TGnrijSn3hCQVwbf5lERMgI/2RRfVn5u4Tcu6aRtCI3BUKpNI+7y1VHsDE
-	gQ63iHZ
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemd100011.china.huawei.com (7.221.188.204)
 
-Before this error path, cxlr_pmem pointed to a kzalloc() memory, free
-it to avoid this memory leaking.
+For some parameters, it is best to also display them when they are 0,
+e.g. flags.
 
-Fixes: f17b558d6663 ("cxl/pmem: Refactor nvdimm device registration, delete the workqueue")
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+Here we only check the show_zero property and let arg printer handle
+special cases.
+
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
 ---
- drivers/cxl/core/region.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-trace.c | 29 +++++++----------------------
+ 1 file changed, 7 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 5c186e0a39b9..812b2948b6c6 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2719,6 +2719,7 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
- 		if (i == 0) {
- 			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
- 			if (!cxl_nvb) {
-+				kfree(cxlr_pmem);
- 				cxlr_pmem = ERR_PTR(-ENODEV);
- 				goto out;
- 			}
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index e5fef39c34bf..915dcd258002 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2091,17 +2091,11 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			val = syscall_arg_fmt__mask_val(&sc->arg_fmt[arg.idx], &arg, val);
+ 
+ 			/*
+- 			 * Suppress this argument if its value is zero and
+- 			 * and we don't have a string associated in an
+- 			 * strarray for it.
+- 			 */
+-			if (val == 0 &&
+-			    !trace->show_zeros &&
+-			    !(sc->arg_fmt &&
+-			      (sc->arg_fmt[arg.idx].show_zero ||
+-			       sc->arg_fmt[arg.idx].scnprintf == SCA_STRARRAY ||
+-			       sc->arg_fmt[arg.idx].scnprintf == SCA_STRARRAYS) &&
+-			      sc->arg_fmt[arg.idx].parm))
++			 * Suppress this argument if its value is zero and show_zero
++			 * property isn't set.
++			 */
++			if (val == 0 && !trace->show_zeros &&
++			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].show_zero))
+ 				continue;
+ 
+ 			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
+@@ -2796,17 +2790,8 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		 */
+ 		val = syscall_arg_fmt__mask_val(arg, &syscall_arg, val);
+ 
+-		/*
+-		 * Suppress this argument if its value is zero and
+-		 * we don't have a string associated in an
+-		 * strarray for it.
+-		 */
+-		if (val == 0 &&
+-		    !trace->show_zeros &&
+-		    !((arg->show_zero ||
+-		       arg->scnprintf == SCA_STRARRAY ||
+-		       arg->scnprintf == SCA_STRARRAYS) &&
+-		      arg->parm))
++		/* Suppress this argument if its value is zero and show_zero property isn't set. */
++		if (val == 0 && !trace->show_zeros && !arg->show_zero)
+ 			continue;
+ 
+ 		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
 -- 
-2.29.2
+2.34.1
 
