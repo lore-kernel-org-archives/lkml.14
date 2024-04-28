@@ -1,138 +1,78 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A3A58AA4;
-	Sun, 28 Apr 2024 11:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB23456B6C
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 11:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714303154; cv=none; b=GYnBqGQrcJX/Rt9XYJUXhp+g5N5MFCHMD9lR/MRKnWVzivbzqAICF5n2cvB0UzqDaMQYIOKa+ZyDN5Hdk4UUrdTuJjrBw3w0YE/gC/A621WjfHKrLnekMS7qEco+Pj/reqdX/Ji7jeXC3hzT9TdWpVWEw8xeHE2hcdHvkhQTIK8=
+	t=1714303403; cv=none; b=RJiPhHZslvT6XDvcljpNg8qbiM4Wr/J2U2ClwB9QDe4rnNzukaF5FcEr/TqpELms28mpH6gLp/q03UsL+Muig3GEekLq1PcBhhP1vZNvE1ciUW6HUH1sYqI+EqbFRW/IIhrR8lvEZPpaqh3HP26tlD/uB2KDiXnOxJTN6vSwlwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714303154; c=relaxed/simple;
-	bh=4+r6r9mLcw3DG9xwAzvLFDmxGy+SCZxO28Cxfof2pZU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QezDR5QEkDtNz5Jw2cRX0QcGfcl/IzHqvq/He4KedXQQqs2M5Y9HwzTibCHi8SE4zSR7hee3WY6akLTvhWb276VxA07P/2ASKsaRhxFztNYmDRFsrCz0+PAKmdFp6+sW6EXKUEnRb2QunOyK4Q3qXaRz/m2SSZpYKY5HeSSzUgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VS3mW54lPz1RB0m;
-	Sun, 28 Apr 2024 19:15:55 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 77B0F18007C;
-	Sun, 28 Apr 2024 19:19:02 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sun, 28 Apr 2024 19:19:02 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: David Howells <dhowells@redhat.com>, Marc Dionne
-	<marc.dionne@auristor.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>
-CC: Yunsheng Lin <linyunsheng@huawei.com>, Alexander Duyck
-	<alexander.duyck@gmail.com>, <linux-afs@lists.infradead.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] rxrpc: Fix using alignmask being zero for __page_frag_alloc_align()
-Date: Sun, 28 Apr 2024 19:16:38 +0800
-Message-ID: <20240428111640.27306-1-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1714303403; c=relaxed/simple;
+	bh=qeSlEnULi1s8O4qV+q5O9CH7dsCvGcClXmiaLVpkARU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hevkgU6BgOdpHCG2ByOAT/AmaSlA0B7N1/SX8SPtaIDyd1xMw7IU1+LFAZ9wHwppghWNpAXAFGKoOQyC25cL/FoMPh87LPPr+efybkBeu4YuwDwsoB1bL4Ztwjnq3q9KXcBMMfUjlH7h5ZCTmNGV0jMyEh5LEZFbVefcdel8Ujg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7+xVqZT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7+xVqZT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2643C113CC;
+	Sun, 28 Apr 2024 11:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714303403;
+	bh=qeSlEnULi1s8O4qV+q5O9CH7dsCvGcClXmiaLVpkARU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=a7+xVqZTUUSVCh78XU7dKkzK7vgpylcPKZADLwILLepCP75gkYNa0cI2nTDogIpTO
+	 7MsAUvTh+U2PbWMfKIpBsv20imwXHA8/xOY70KL01Jiv4dbbFdkaKDCveTiQldivav
+	 RWGTUoqd90ptzANwEvFV2ey6JNsnQb3UbjIu5/1fW5zaZAfnwfSUGHLIYAxeIZwk0U
+	 MyeY7ZweBumfxBDCy+lsDE4Kzr3G1UcZIag4u636Hmmc+D7I/9TQjVUya7t5BSPrB0
+	 hPB+3Zifi2ObG+g0yFEj57Uhql//uEHqlsz3O+YgaNtd3wUFgqfbQuHxEv+YpgnOU3
+	 7O6z4QV509KIg==
+Message-ID: <7f97aae7-557d-4fac-854b-594e99939598@kernel.org>
+Date: Sun, 28 Apr 2024 19:23:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] f2fs:remove the restriction on zone sector being align to
+ pow2
+To: Liao Yuanhong <liaoyuanhong@vivo.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: bo.wu@vivo.com, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+References: <20240428111457.17224-1-liaoyuanhong@vivo.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20240428111457.17224-1-liaoyuanhong@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-rxrpc_alloc_data_txbuf() may be called with data_align being
-zero in none_alloc_txbuf() and rxkad_alloc_txbuf(), data_align
-is supposed to be an order-based alignment value, but zero is
-not a valid order-based alignment value, and '~(data_align - 1)'
-doesn't result in a valid mask-based alignment value for
-__page_frag_alloc_align().
+On 2024/4/28 19:14, Liao Yuanhong wrote:
+> For zoned-UFS, sector size may not aligned to pow2, so we need to remove
+> the pow2 limitation.
+> 
+> Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
+> ---
+>   drivers/md/dm-table.c | 4 ----
+>   1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index 41f1d731ae5a..823f2f6a2d53 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
 
-Fix it by passing a valid order-based alignment value in
-none_alloc_txbuf() and rxkad_alloc_txbuf().
+Hi, please discuss this in dm-devel@lists.linux.dev, thanks.
 
-Also use page_frag_alloc_align() expecting an order-based
-alignment value in rxrpc_alloc_data_txbuf() to avoid doing the
-alignment converting operation and to catch possible invalid
-alignment value in the future. Remove the 'if (data_align)'
-checking too, as it is always true for a valid order-based
-alignment value.
+Thanks,
 
-Fixes: 6b2536462fd4 ("rxrpc: Fix use of changed alignment param to page_frag_alloc_align()")
-Fixes: 49489bb03a50 ("rxrpc: Do zerocopy using MSG_SPLICE_PAGES and page frags")
-CC: David Howells <dhowells@redhat.com>
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Acked-by: David Howells <dhowells@redhat.com>
----
-V2: use 'umax' and drop 'U' as suggested by David.
----
- net/rxrpc/insecure.c |  2 +-
- net/rxrpc/rxkad.c    |  2 +-
- net/rxrpc/txbuf.c    | 10 +++++-----
- 3 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/net/rxrpc/insecure.c b/net/rxrpc/insecure.c
-index f2701068ed9e..6716c021a532 100644
---- a/net/rxrpc/insecure.c
-+++ b/net/rxrpc/insecure.c
-@@ -19,7 +19,7 @@ static int none_init_connection_security(struct rxrpc_connection *conn,
-  */
- static struct rxrpc_txbuf *none_alloc_txbuf(struct rxrpc_call *call, size_t remain, gfp_t gfp)
- {
--	return rxrpc_alloc_data_txbuf(call, min_t(size_t, remain, RXRPC_JUMBO_DATALEN), 0, gfp);
-+	return rxrpc_alloc_data_txbuf(call, min_t(size_t, remain, RXRPC_JUMBO_DATALEN), 1, gfp);
- }
- 
- static int none_secure_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
-diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
-index f1a68270862d..48a1475e6b06 100644
---- a/net/rxrpc/rxkad.c
-+++ b/net/rxrpc/rxkad.c
-@@ -155,7 +155,7 @@ static struct rxrpc_txbuf *rxkad_alloc_txbuf(struct rxrpc_call *call, size_t rem
- 	switch (call->conn->security_level) {
- 	default:
- 		space = min_t(size_t, remain, RXRPC_JUMBO_DATALEN);
--		return rxrpc_alloc_data_txbuf(call, space, 0, gfp);
-+		return rxrpc_alloc_data_txbuf(call, space, 1, gfp);
- 	case RXRPC_SECURITY_AUTH:
- 		shdr = sizeof(struct rxkad_level1_hdr);
- 		break;
-diff --git a/net/rxrpc/txbuf.c b/net/rxrpc/txbuf.c
-index e0679658d9de..c3913d8a50d3 100644
---- a/net/rxrpc/txbuf.c
-+++ b/net/rxrpc/txbuf.c
-@@ -21,20 +21,20 @@ struct rxrpc_txbuf *rxrpc_alloc_data_txbuf(struct rxrpc_call *call, size_t data_
- {
- 	struct rxrpc_wire_header *whdr;
- 	struct rxrpc_txbuf *txb;
--	size_t total, hoff = 0;
-+	size_t total, hoff;
- 	void *buf;
- 
- 	txb = kmalloc(sizeof(*txb), gfp);
- 	if (!txb)
- 		return NULL;
- 
--	if (data_align)
--		hoff = round_up(sizeof(*whdr), data_align) - sizeof(*whdr);
-+	hoff = round_up(sizeof(*whdr), data_align) - sizeof(*whdr);
- 	total = hoff + sizeof(*whdr) + data_size;
- 
-+	data_align = umax(data_align, L1_CACHE_BYTES);
- 	mutex_lock(&call->conn->tx_data_alloc_lock);
--	buf = __page_frag_alloc_align(&call->conn->tx_data_alloc, total, gfp,
--				      ~(data_align - 1) & ~(L1_CACHE_BYTES - 1));
-+	buf = page_frag_alloc_align(&call->conn->tx_data_alloc, total, gfp,
-+				    data_align);
- 	mutex_unlock(&call->conn->tx_data_alloc_lock);
- 	if (!buf) {
- 		kfree(txb);
--- 
-2.33.0
-
+> @@ -1663,10 +1663,6 @@ static int validate_hardware_zoned(struct dm_table *t, bool zoned,
+>   		return -EINVAL;
+>   	}
+>   
+> -	/* Check zone size validity and compatibility */
+> -	if (!zone_sectors || !is_power_of_2(zone_sectors))
+> -		return -EINVAL;
+> -
+>   	if (dm_table_any_dev_attr(t, device_not_matches_zone_sectors, &zone_sectors)) {
+>   		DMERR("%s: zone sectors is not consistent across all zoned devices",
+>   		      dm_device_name(t->md));
