@@ -1,63 +1,66 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B81633DF
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 05:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76575AD5F
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 05:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714282582; cv=none; b=DtC6lD/ccbmJm2YBYdfjs/5AcqGurlzxYLi7AjyI9LIx6bHa1kqdIVBYVtAd4m2iXRynk5MCmk8d3v1Tyau3z72exmEnoZDDwipBxoLqASPA+KCrv0poWMnBkHEw3ba1dRvy8yDmiwGbG8nX9QjKv9geXaUunpy57bUiP3iZ4AA=
+	t=1714282587; cv=none; b=nuhmqifE72Tbmt3rtAcHG3yaV2+x4FEezZIXUy38b6UgZmV05x48IxaxaIFDfhbA2Q/sivRpMhRQFFdXFTSmpD9adpF0fmfvb55WFJHcSdwvqfgX2vv1KBn2DSMYUUNVlASa0d+UhmLCFFoaos/UnwwVRtevAaHQ4VKkq2qNdkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714282582; c=relaxed/simple;
-	bh=NFU1j9REnnJnHP9rU0qINEtrlKmkOP2nR4Z7xM3qTzY=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=nmXe55b7uy1QmzrhyAoOrJX/16wCIS7QUenRSCIjM6TYGu2lXL2awi5Xy5DZlwEm7KdsBj6w9AGEG7u7MzigJOMp5geSTu+yNLEckxU5loY8NOnmo82Ui1mQ/R6qZytGsAfjHkNxAazmTJmaUr1GBWIVR9oiZcpETZ525G5cIoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VjUKM5Rd; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1714282587; c=relaxed/simple;
+	bh=XYz7PiZeKaJrW6wdr56WN27ZHPHIxfeYIzS3CYO6Ldo=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=GzaZQ2Lg/PpWGehtuCQwpV+C0WnjUYUzXAaYElLnVkvvH8jpRN/bbe6SZG2jysG2iExGhDWuxcGHgkc0/KmilHrhvFkhDUaxe2MW3cp+emWoOlarOxun6U93oyg6TquVea7BKcWacfYofWErcYslhv/kYM7W8BKthlXcuUR0GsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pRc/TvfU; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VjUKM5Rd"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso5118334276.3
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 22:36:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pRc/TvfU"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de54be7066bso6407723276.0
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 22:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714282580; x=1714887380; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=F5UONr62/BtTjFsEWsO6NhiyjPYCMJsSpwuIBi8shds=;
-        b=VjUKM5RdYC+JuffF5tG5W8bHB4lLYT/GmXOEmbSQL6+RFK6zofN0fgMuBK9Q5nQwYG
-         QFoiXZ3ceBVatJCJ1TC+Mq9BSsoUP8VZQR6nm8evyr4Ip7aLWheWy8y+LnOhQnG3CK3i
-         QO+EtmYnK4UnsoOdPo2QlSobCkaiCOuRMM0O2IvTiPQN5LI5kKdHoYlhHvczk86OVItt
-         V55h7jFDg6djPn+DanMY7l8LPKzAB4Nlg4bE7zkxTe5x60wPCw/XL9jUwoyaJzrXmUts
-         BuHTs2xHMWbT7qC9sJg35bBsgx8uEOYlMbbvHTi5+TYVjKNYABpo0JeSj59XI5+fcTLE
-         5loQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714282580; x=1714887380;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1714282585; x=1714887385; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=F5UONr62/BtTjFsEWsO6NhiyjPYCMJsSpwuIBi8shds=;
-        b=LloLQOvt39sOONvx2FvEbaFKdHCqaMJu3kVkck7sI0V6pHdvcnRQhzWRe2177lrWL1
-         cGOpLK64r4kyBvf3K0SIDZ0AizYS0BQfOpBQEIDtrbmVlf2GkwbytZ0wY96U6OJqJiDC
-         TDibfvtGOSe3d0VBVBWntPa3bIPGPeNundvBOVXZYLNkHA+7m3kWt650xdnAwAxVQPQF
-         FmGKEi1zTz+iTeKSoaYQS3J8tlfL34cXeBkR9ZUvw/swcrCKWhvrHbg0XehhJ+u3Q0ec
-         QgU/+M4OOvMF74azfqDc82UaQI0l1spxK5MKud/k3EPEB/mF2H2etheMc8yB3z2j0a+S
-         eYdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGNF5WcgYfYB9+nXsaqSC1ZjCzGT3mduwbqB6Bk0TgbRQ8CYUKC8UVCNzfo9SkTTW5lNnAlHKJuD1hDdb7SxDKF3A1SMByu00GBFpn
-X-Gm-Message-State: AOJu0Yw+757RbsENTJFiFBQFO6r23VcU5G9tUSecct4aB8iJnTdnW7Fa
-	HxATKqL5N3HubJO9Wij8H7axZnFbaceEzjbtm2nAoicwy8p5uEt6MCyZfQPErzd9RWplgGSjXZx
-	/+jDAEw==
-X-Google-Smtp-Source: AGHT+IHnIqnyqOgG5wxLpKKGc0nBRCSWmDN48/SGCvVP7YH14n7K1dyVj/TAGmLMLknF4zCi/jqrnVM9edAg
+        bh=krs4YntHEU9iOHeaFDkbJHHtOvC7kECGCvfxGbSfmkQ=;
+        b=pRc/TvfUX5nUHQRhbtdMv8DyWtfQYzTFrb3VgrtJkmsnbZUb8QFzBImeYDTPY5K1Y8
+         S8+FtQsLPBROi/t/LdMbRBSQAxS0m5eK28kRqDAKeXJuhpbZJQXh9aCyPXogv9xDbMXx
+         2KnM5rZSl6Emzy/1btrOAm4M6I1eHdiMjfQo6xB/MMBTtiaDseqdMVD5cKqFBgDnFVHt
+         bqQPzktKo8umaiZ+RKz2MrhyzkBJgFyopaFeJ5+AFPaozv1n91mJJebWN19H+1m8eyRd
+         dtCW8rC1Rn3e0FH7C2rgbXIc4q0y2DSvOCl0QBgWPkhUZUmxeINIMQ+8pdEYVvs6UnsD
+         TEkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714282585; x=1714887385;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=krs4YntHEU9iOHeaFDkbJHHtOvC7kECGCvfxGbSfmkQ=;
+        b=wZLCqMbnaaAFb5eGvrIC3UhoH2hc2+VsL7gzzjzRzPFUOcH+jE5/rXq5BVVbFzUi8q
+         fxNSoMAu8RfQ+blO2kWU9QYnIsXuxoz/zlfPFhLPu+78g/64v6cB8TtJPNv6vMFGDTda
+         KtVYyETGCCkdNYP7ovv+7Kx4fzNJLmuOLkN7HKAA+th/4ZPaqYxzR/AvjbsI3wIjpui9
+         1Z54iPxv6nYXM+M+xp3PXVZsyJfOJZ/je5AGVtVTtQuZMmAgnujg7PVdciNQ/Sw3oJ6X
+         LiRtLy2Kqph+U0cE5ixqkxNue1QFQosQkjflZb/XNtptY2vxmiYc6bS2qYGCKrep3x+C
+         2WXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVuFV2ifc8V1+dDtLwrXFbYX/0wuMmBrcWM+LOIKV48LmEip0i4A5FRmxfoa+L0f5tkmcpjwg9vIPmkWmNKNcoh105ko3bOR3o+cITt
+X-Gm-Message-State: AOJu0YwVAEROjTxqEJk4JMNBJRcyueZQ+3IbT+OK1a90GIdyEK3BSa7E
+	gLOoSkUQ5Mm7H6ErxjN5KS0YdgnCIUmPsFKzbGwAQlPSPiTHIZAigpJ63JYfxulvOyVgRCzwAg3
+	5dxYO2g==
+X-Google-Smtp-Source: AGHT+IFL313crM7366bdymB8A9NsEt7dBWM+iKAnI9tjkhRPwwhupbcJhMxyu2niAAkb9SN6FztymMqhiq8Q
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:eaaa:2f79:c83c:9def])
- (user=irogers job=sendgmr) by 2002:a05:6902:2b03:b0:de4:845b:8f08 with SMTP
- id fi3-20020a0569022b0300b00de4845b8f08mr2249715ybb.2.1714282580394; Sat, 27
- Apr 2024 22:36:20 -0700 (PDT)
-Date: Sat, 27 Apr 2024 22:36:12 -0700
-Message-Id: <20240428053616.1125891-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:4ac1:0:b0:ddd:7581:1380 with SMTP id
+ x184-20020a254ac1000000b00ddd75811380mr2092963yba.11.1714282585305; Sat, 27
+ Apr 2024 22:36:25 -0700 (PDT)
+Date: Sat, 27 Apr 2024 22:36:14 -0700
+In-Reply-To: <20240428053616.1125891-1-irogers@google.com>
+Message-Id: <20240428053616.1125891-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240428053616.1125891-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Subject: [RFC PATCH v2 0/3] Retirement latency perf stat support
+Subject: [RFC PATCH v2 2/3] perf parse-events: Add a retirement latency modifier
 From: Ian Rogers <irogers@google.com>
 To: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,47 +74,75 @@ To: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Support 'R' as a retirement latency modifier on events. When present
-the evsel will fork perf record and perf report commands, parsing the
-perf report output as the count value. The intent is to do something
-similar to Weilin's series:
-https://lore.kernel.org/lkml/20240402214436.1409476-1-weilin.wang@intel.com/
+Retirement latency is a separate sampled count used on newer Intel
+CPUs.
 
-While the 'R' and the retirement latency are Intel specific, in the
-future I can imagine more evsel like commands that require child
-processes. We can make the logic more generic at that point.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/evsel.h        | 1 +
+ tools/perf/util/parse-events.c | 2 ++
+ tools/perf/util/parse-events.h | 1 +
+ tools/perf/util/parse-events.l | 3 ++-
+ 4 files changed, 6 insertions(+), 1 deletion(-)
 
-The code is untested on hardware that supports retirement latency, and
-with metrics with retirement latency in them. The record is also of
-sleep and various things need tweaking but I think v1 is good enough
-for people to give input.
-
-The first patch refactors tool events. I came across various issues
-while looking into the issue and we can likely just pick it first. I
-kept it in the series for cleanliness sake.
-
-The code has benefitted greatly from Weilin's work and Namhyung's
-great review input.
-
-v2. Better refactor tool events to support interval mode and more.
-    Switch "weight1" to "retire_lat" in perf report command.
-    Ensure max precision 'P' is enabled on the perf record command.
-    Kill the perf record at read but keep sleep 0.1.
-    Fix issues around perf record of tool and retirement latency events.
-
-Ian Rogers (3):
-  perf evsel: Refactor tool events
-  perf parse-events: Add a retirement latency modifier
-  perf evsel: Add retirement latency event support
-
- tools/perf/builtin-stat.c      |  74 +++---
- tools/perf/util/evsel.c        | 409 ++++++++++++++++++++++++++++++++-
- tools/perf/util/evsel.h        |  10 +
- tools/perf/util/parse-events.c |   2 +
- tools/perf/util/parse-events.h |   1 +
- tools/perf/util/parse-events.l |   3 +-
- 6 files changed, 453 insertions(+), 46 deletions(-)
-
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 43f6fd1dcb4d..bd8e84954e34 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -98,6 +98,7 @@ struct evsel {
+ 		bool			bpf_counter;
+ 		bool			use_config_name;
+ 		bool			skippable;
++		bool			retire_lat;
+ 		int			bpf_fd;
+ 		struct bpf_object	*bpf_obj;
+ 		struct list_head	config_terms;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 0f308b4db2b9..9c2a76ec8c99 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1818,6 +1818,8 @@ static int parse_events__modifier_list(struct parse_events_state *parse_state,
+ 			evsel->weak_group = true;
+ 		if (mod.bpf)
+ 			evsel->bpf_counter = true;
++		if (mod.retire_lat)
++			evsel->retire_lat = true;
+ 	}
+ 	return 0;
+ }
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 5695308efab9..eb94d1247dae 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -201,6 +201,7 @@ struct parse_events_modifier {
+ 	bool hypervisor : 1;	/* 'h' */
+ 	bool guest : 1;		/* 'G' */
+ 	bool host : 1;		/* 'H' */
++	bool retire_lat : 1;	/* 'R' */
+ };
+ 
+ int parse_events__modifier_event(struct parse_events_state *parse_state, void *loc,
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 08ea2d845dc3..85015f080240 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -209,6 +209,7 @@ static int modifiers(struct parse_events_state *parse_state, yyscan_t scanner)
+ 		CASE('W', weak);
+ 		CASE('e', exclusive);
+ 		CASE('b', bpf);
++		CASE('R', retire_lat);
+ 		default:
+ 			return PE_ERROR;
+ 		}
+@@ -250,7 +251,7 @@ drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
+  * If you add a modifier you need to update check_modifier().
+  * Also, the letters in modifier_event must not be in modifier_bp.
+  */
+-modifier_event	[ukhpPGHSDIWeb]{1,15}
++modifier_event	[ukhpPGHSDIWebR]{1,16}
+ modifier_bp	[rwx]{1,3}
+ lc_type 	(L1-dcache|l1-d|l1d|L1-data|L1-icache|l1-i|l1i|L1-instruction|LLC|L2|dTLB|d-tlb|Data-TLB|iTLB|i-tlb|Instruction-TLB|branch|branches|bpu|btb|bpc|node)
+ lc_op_result	(load|loads|read|store|stores|write|prefetch|prefetches|speculative-read|speculative-load|refs|Reference|ops|access|misses|miss)
 -- 
 2.44.0.769.g3c40516874-goog
 
