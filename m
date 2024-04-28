@@ -1,334 +1,159 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BC450260
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 07:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE82D50251;
+	Sun, 28 Apr 2024 07:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714288762; cv=none; b=Y8wQfNpI/tSM4kY+4pXlqCzCgypDFp/d+l1LuP8bEMR86ILfJpcZc7OhnPgMFzCPZLnQVJLYsP4yzd7jJesW2VwqG0pnwAl57Urbp/w25C58bGBjA/lyEBBi9+gKgg+6j1v6K6VmgBxwtANNsc/NPCqYIAVUrxXWuR1KlEUZfFQ=
+	t=1714289005; cv=none; b=Gc6UpBcHvPO8UfzeaFr5mXk9XN1AEsASoAbvhLZC9B5Q3fFa3hrhMDLv+QmiRbftogrbj7pvl3fVMfDsHl5/RJ1FTTKlqBf7rxGEYOGFiWICrZHhV5kJT+Tj8ZX+pRBP2ROs9zUF07L3VKjnBKZ2rKCfxCxSzad9S4gytDG7+JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714288762; c=relaxed/simple;
-	bh=mBmav5DgYUIxYdHYDIk02Ru+DUP6YdWlMwQ4Hd+ceR4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=o7+e+1pQodBfIOCZnHdh3sKcE594bxm1CSXCGowUCnG1n9PYaLQ96kI9VQ6aC5d14o+cvphGfsjmpDWqg+xzGkErokyvxJBnhphOYSXtmnmhOTxyE3dAcMuQj/gsGCxozxfrhKs8xA4s+LCPrDwlc1wxXalc5yy0KTgHV0YsYm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7da42f683f7so335718439f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 00:19:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714288760; x=1714893560;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ajFfmxlk7w7mK1LbllQC51s0HBWBH2DjO8S8KWYskh0=;
-        b=EaSMpBIZQ2JrddtwcdI5Lk/W+T+nXs9FLWIkfsm8TPjRacaAjbAuDbym00zVdDQ1uE
-         rsj48LEh3Sp5xIFjon+2Sy7NTvxg2r74wmUi1TziKL3AJcCjYINhMp8sAx2EzaTRgpnA
-         ixAhvYlXQrrlNKdjw+E8hLbXY/rqyIj6Y/u4c8mYrbUWKIT1myklDl5xcVT9vofwiBQQ
-         NnEL1Dookyz76U+8vHIWZmkawF/AhXpxFRVPJoBxHKgP2YzQI/8BFxisvOplQ/kvDNjU
-         LLa08zt1pbACUFA+TtdveSVDZj18ua3H+liLFwWR/lz05oIx0QvkxnVJFD7Mt5ZfPE9q
-         2/Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpL7sTPiYGTzqysrschpXSznBDQzeF8xi7AvJacw/4MKsAr6JLF8X7La8dm5kpaRkZUNFAk+6Jy2z6N06x/fl91DceZH52rvHn5Hrz
-X-Gm-Message-State: AOJu0Yzl4Y2hgLor63/qXtsCQXDgtiYIrxelwVJiniAHz8Lsa1fFGidG
-	zydf21cKCNHAIxV4SCpQ90ljB8WCtZ7z1Cc5FHg8I4bCToEdvvboI2V+SgHrQHQCaMazE+R9SMR
-	wbOqSSxP8lFqTtqpWzQf1pXEN/WcFg4543KbbHAQ3RCey0f1ZvWBDqKc=
-X-Google-Smtp-Source: AGHT+IH9wkyPO+Vazc0NB1R/lUoZ78LnD2vTnPD9swt7NAArkKYmF8s91e7sUVEjVEmeLb80ndxp/tzo4Xww7El8bmUKlJdTC9YY
+	s=arc-20240116; t=1714289005; c=relaxed/simple;
+	bh=DP/Aemdi0KQCVAXsAFaA/0biCg9ptDN5YTYd2q7KhJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PNT/n7rh7YZdPSoroBBKT1U33ohcDND7V19Iih0S7Dh7Qp3AtpaAEgyRCSR0IIWL5jmOhNWD8lG7uXKFxWGffgTJso9sGTmm400Zc466nzP90OWQI7ImJyNtVMthg727alQJB6x001BAK4GUbB3/F7av4UGRAB6YlDBfP15MbmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nE66YgTI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nE66YgTI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F02F1C113CC;
+	Sun, 28 Apr 2024 07:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714289004;
+	bh=DP/Aemdi0KQCVAXsAFaA/0biCg9ptDN5YTYd2q7KhJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nE66YgTI69QfmVwPjTW2XnkJQBVd7P/4BPQ3n0Sz3wK+PAt5TCm2pCZuuKN6PDgoX
+	 pD2uajeEUrDUANVaxos2Kkcfj8zcJ7j9KAqtwBrRpK7YmQ5Uc3jv6WoMAd5EgUQKPr
+	 jF4ihlx0R1lV4LNlNeyt9D79u3zgWW4ci81MQAWx/xu19H+sMAUaSKXX3HxrAL4edU
+	 WTdcu8YK2R1QRkzCuP9BoDL5t1GJ8y/FlIT/TNzoM4t6b9EjuWNbScqd1nWhNsAKsd
+	 EiCPeUtKIrqHhyRIqX/2u2B8O2XZ+LFNdgVFKJ+l+qfFNBWLTG6uSpMkEeWd2iCHa2
+	 PNIV8SeDkhd1g==
+Date: Sun, 28 Apr 2024 08:23:18 +0100
+From: Will Deacon <will@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Vidya Sagar <vidyas@nvidia.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Krishna Thota <kthota@nvidia.com>, Joerg Roedel <joro@8bytes.org>
+Subject: Re: [Query] ACS enablement in the DT based boot flow
+Message-ID: <20240428072318.GA11447@willie-the-truck>
+References: <PH8PR12MB667446D4A4CAD6E0A2F488B5B83F2@PH8PR12MB6674.namprd12.prod.outlook.com>
+ <20240410192840.GA2147526@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3008:b0:486:ec11:3b8a with SMTP id
- r8-20020a056638300800b00486ec113b8amr375263jak.6.1714288759971; Sun, 28 Apr
- 2024 00:19:19 -0700 (PDT)
-Date: Sun, 28 Apr 2024 00:19:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000094b0b8061722f448@google.com>
-Subject: [syzbot] [xfs?] possible deadlock in xfs_qm_dqpurge
-From: syzbot <syzbot+a191ccc95425c3409faa@syzkaller.appspotmail.com>
-To: chandan.babu@oracle.com, djwong@kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240410192840.GA2147526@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hello,
+On Wed, Apr 10, 2024 at 02:28:40PM -0500, Bjorn Helgaas wrote:
+> [+cc Will, Joerg]
+> 
+> On Mon, Apr 01, 2024 at 10:40:15AM +0000, Vidya Sagar wrote:
+> > Hi folks,
+> > ACS (Access Control Services) is configured for a PCI device through
+> > pci_enable_acs().  The first thing pci_enable_acs() checks for is
+> > whether the global flag 'pci_acs_enable' is set or not.  The global
+> > flag 'pci_acs_enable' is set by the function pci_request_acs().
+> > 
+> > pci_enable_acs() function is called whenever a new PCI device is
+> > added to the system
+> > 
+> >  pci_enable_acs+0x4c/0x2a4
+> >  pci_acs_init+0x38/0x60
+> >  pci_device_add+0x1a0/0x670
+> >  pci_scan_single_device+0xc4/0x100
+> >  pci_scan_slot+0x6c/0x1e0
+> >  pci_scan_child_bus_extend+0x48/0x2e0
+> >  pci_scan_root_bus_bridge+0x64/0xf0
+> >  pci_host_probe+0x18/0xd0
+> > 
+> > In the case of a system that boots using device-tree blob,
+> > pci_request_acs() is called when the device driver binds with the
+> > respective device
+> > 
+> > of_iommu_configure+0xf4/0x230
+> > of_dma_configure_id+0x110/0x340
+> > pci_dma_configure+0x54/0x120
+> > really_probe+0x80/0x3e0
+> > __driver_probe_device+0x88/0x1c0
+> > driver_probe_device+0x3c/0x140
+> > __device_attach_driver+0xe8/0x1e0
+> > bus_for_each_drv+0x78/0xf0
+> > __device_attach+0x104/0x1e0
+> > device_attach+0x14/0x30
+> > pci_bus_add_device+0x50/0xd0
+> > pci_bus_add_devices+0x38/0x90
+> > pci_host_probe+0x40/0xd0
+> > 
+> > Since the device addition always happens first followed by the
+> > driver binding, this flow effectively makes sure that ACS never gets
+> > enabled.
+> > 
+> > Ideally, I would expect the pci_request_acs() get called (probably
+> > by the OF framework itself) before calling pci_enable_acs().
+> > 
+> > This happens in the ACPI flow where pci_request_acs() is called
+> > during IORT node initialization (i.e. iort_init_platform_devices()
+> > function).
+> > 
+> > Is this understanding correct? If yes, would it make sense to call
+> > pci_request_acs() during OF initialization (similar to IORT
+> > initialization in ACPI flow)?
+> 
+> Your understanding looks correct to me.  My call graph notes, FWIW:
+> 
+>   mem_init
+>     pci_iommu_alloc                   # x86 only
+>       amd_iommu_detect                # init_state = IOMMU_START_STATE
+>         iommu_go_to_state(IOMMU_IVRS_DETECTED)
+>           state_next
+>             switch (init_state)
+>             case IOMMU_START_STATE:
+>               detect_ivrs
+>                 pci_request_acs
+>                   pci_acs_enable = 1  # <--
+>       detect_intel_iommu
+>         pci_request_acs
+>           pci_acs_enable = 1          # <--
+> 
+>   pci_scan_single_device              # PCI enumeration
+>     ...
+>       pci_init_capabilities
+>         pci_acs_init
+>           pci_enable_acs
+>             if (pci_acs_enable)       # <--
+>               pci_std_enable_acs
+> 
+>   __driver_probe_device
+>     really_probe
+>       pci_dma_configure               # pci_bus_type.dma_configure
+>         if (OF)
+>           of_dma_configure
+>             of_dma_configure_id
+>               of_iommu_configure
+>                 pci_request_acs       # <-- 6bf6c24720d3
+>                 iommu_probe_device
+>         else if (ACPI)
+>           acpi_dma_configure
+>             acpi_dma_configure_id
+>               acpi_iommu_configure_id
+>                 iommu_probe_device
+> 
+> The pci_request_acs() in of_iommu_configure(), which happens too late
+> to affect pci_enable_acs(), was added by 6bf6c24720d3 ("iommu/of:
+> Request ACS from the PCI core when configuring IOMMU linkage"), so I
+> cc'd Will and Joerg.  I don't know if that *used* to work and got
+> broken somehow, or if it never worked as intended.
 
-syzbot found the following issue on:
+I don't have any way to test this, but I'm supportive of having the same
+flow for DT and ACPI-based flows. Vidya, are you able to cook a patch?
 
-HEAD commit:    9d1ddab261f3 Merge tag '6.9-rc5-smb-client-fixes' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=131236e3180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=19891bd776e81b8b
-dashboard link: https://syzkaller.appspot.com/bug?extid=a191ccc95425c3409faa
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-9d1ddab2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ee7f420f8fb9/vmlinux-9d1ddab2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/18bef520c373/bzImage-9d1ddab2.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a191ccc95425c3409faa@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.9.0-rc5-syzkaller-00036-g9d1ddab261f3 #0 Not tainted
-------------------------------------------------------
-syz-executor.2/5415 is trying to acquire lock:
-ffffffff8d9373c0 (fs_reclaim){+.+.}-{0:0}, at: might_alloc include/linux/sched/mm.h:312 [inline]
-ffffffff8d9373c0 (fs_reclaim){+.+.}-{0:0}, at: slab_pre_alloc_hook mm/slub.c:3746 [inline]
-ffffffff8d9373c0 (fs_reclaim){+.+.}-{0:0}, at: slab_alloc_node mm/slub.c:3827 [inline]
-ffffffff8d9373c0 (fs_reclaim){+.+.}-{0:0}, at: kmalloc_trace+0x51/0x330 mm/slub.c:3992
-
-but task is already holding lock:
-ffff8880767b0868 (&xfs_dquot_group_class){+.+.}-{3:3}, at: xfs_dqlock fs/xfs/xfs_dquot.h:125 [inline]
-ffff8880767b0868 (&xfs_dquot_group_class){+.+.}-{3:3}, at: xfs_qm_dqpurge+0xc5/0x630 fs/xfs/xfs_qm.c:129
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&xfs_dquot_group_class){+.+.}-{3:3}:
-       __lock_release kernel/locking/lockdep.c:5468 [inline]
-       lock_release+0x33e/0x6c0 kernel/locking/lockdep.c:5774
-       __mutex_unlock_slowpath+0xa3/0x650 kernel/locking/mutex.c:912
-       xfs_qm_dqget_cache_lookup+0x428/0x880 fs/xfs/xfs_dquot.c:802
-       xfs_qm_dqget_inode+0x1e7/0x6d0 fs/xfs/xfs_dquot.c:994
-       xfs_qm_dqattach_one+0x26f/0x590 fs/xfs/xfs_qm.c:278
-       xfs_qm_dqattach_locked+0x1c6/0x2d0 fs/xfs/xfs_qm.c:337
-       xfs_qm_vop_dqalloc+0x344/0xe40 fs/xfs/xfs_qm.c:1710
-       xfs_create+0x422/0x1170 fs/xfs/xfs_inode.c:1041
-       xfs_generic_create+0x631/0x7c0 fs/xfs/xfs_iops.c:199
-       lookup_open.isra.0+0x10a1/0x13c0 fs/namei.c:3497
-       open_last_lookups fs/namei.c:3566 [inline]
-       path_openat+0x92f/0x2990 fs/namei.c:3796
-       do_filp_open+0x1dc/0x430 fs/namei.c:3826
-       do_sys_openat2+0x17a/0x1e0 fs/open.c:1406
-       do_sys_open fs/open.c:1421 [inline]
-       __do_compat_sys_open fs/open.c:1472 [inline]
-       __se_compat_sys_open fs/open.c:1470 [inline]
-       __ia32_compat_sys_open+0x147/0x1e0 fs/open.c:1470
-       do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
-       __do_fast_syscall_32+0x75/0x120 arch/x86/entry/common.c:386
-       do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
-       entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-
--> #1 (&xfs_dir_ilock_class){++++}-{3:3}:
-       down_write_nested+0x3d/0x50 kernel/locking/rwsem.c:1695
-       xfs_ilock+0x2ef/0x420 fs/xfs/xfs_inode.c:206
-       xfs_reclaim_inode fs/xfs/xfs_icache.c:945 [inline]
-       xfs_icwalk_process_inode fs/xfs/xfs_icache.c:1631 [inline]
-       xfs_icwalk_ag+0xca6/0x1780 fs/xfs/xfs_icache.c:1713
-       xfs_icwalk+0x57/0x100 fs/xfs/xfs_icache.c:1762
-       xfs_reclaim_inodes_nr+0x182/0x250 fs/xfs/xfs_icache.c:1011
-       super_cache_scan+0x409/0x550 fs/super.c:227
-       do_shrink_slab+0x44f/0x11c0 mm/shrinker.c:435
-       shrink_slab+0x18a/0x1310 mm/shrinker.c:662
-       shrink_one+0x493/0x7c0 mm/vmscan.c:4774
-       shrink_many mm/vmscan.c:4835 [inline]
-       lru_gen_shrink_node+0x89f/0x1750 mm/vmscan.c:4935
-       shrink_node mm/vmscan.c:5894 [inline]
-       kswapd_shrink_node mm/vmscan.c:6704 [inline]
-       balance_pgdat+0x10d1/0x1a10 mm/vmscan.c:6895
-       kswapd+0x5ea/0xbf0 mm/vmscan.c:7164
-       kthread+0x2c1/0x3a0 kernel/kthread.c:388
-       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #0 (fs_reclaim){+.+.}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain kernel/locking/lockdep.c:3869 [inline]
-       __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
-       lock_acquire kernel/locking/lockdep.c:5754 [inline]
-       lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
-       __fs_reclaim_acquire mm/page_alloc.c:3698 [inline]
-       fs_reclaim_acquire+0x102/0x160 mm/page_alloc.c:3712
-       might_alloc include/linux/sched/mm.h:312 [inline]
-       slab_pre_alloc_hook mm/slub.c:3746 [inline]
-       slab_alloc_node mm/slub.c:3827 [inline]
-       kmalloc_trace+0x51/0x330 mm/slub.c:3992
-       kmalloc include/linux/slab.h:628 [inline]
-       add_stack_record_to_list mm/page_owner.c:177 [inline]
-       inc_stack_record_count mm/page_owner.c:219 [inline]
-       __set_page_owner+0x517/0x7a0 mm/page_owner.c:334
-       set_page_owner include/linux/page_owner.h:32 [inline]
-       post_alloc_hook+0x2d4/0x350 mm/page_alloc.c:1534
-       prep_new_page mm/page_alloc.c:1541 [inline]
-       get_page_from_freelist+0xa28/0x3780 mm/page_alloc.c:3317
-       __alloc_pages+0x22b/0x2460 mm/page_alloc.c:4575
-       __alloc_pages_bulk+0x742/0x14f0 mm/page_alloc.c:4523
-       alloc_pages_bulk_array include/linux/gfp.h:202 [inline]
-       xfs_buf_alloc_pages+0x20f/0x9d0 fs/xfs/xfs_buf.c:398
-       xfs_buf_find_insert fs/xfs/xfs_buf.c:650 [inline]
-       xfs_buf_get_map+0x1e69/0x30d0 fs/xfs/xfs_buf.c:755
-       xfs_buf_read_map+0xd2/0xb40 fs/xfs/xfs_buf.c:860
-       xfs_trans_read_buf_map+0x352/0x990 fs/xfs/xfs_trans_buf.c:289
-       xfs_trans_read_buf fs/xfs/xfs_trans.h:210 [inline]
-       xfs_qm_dqflush+0x224/0x1470 fs/xfs/xfs_dquot.c:1271
-       xfs_qm_dqpurge+0x1d3/0x630 fs/xfs/xfs_qm.c:149
-       xfs_qm_dquot_walk.isra.0+0x217/0x3d0 fs/xfs/xfs_qm.c:88
-       xfs_qm_dqpurge_all fs/xfs/xfs_qm.c:194 [inline]
-       xfs_qm_unmount+0x92/0x1c0 fs/xfs/xfs_qm.c:206
-       xfs_unmountfs+0x76/0x240 fs/xfs/xfs_mount.c:1076
-       xfs_fs_put_super+0x61/0x160 fs/xfs/xfs_super.c:1134
-       generic_shutdown_super+0x159/0x3d0 fs/super.c:641
-       kill_block_super+0x3b/0x90 fs/super.c:1675
-       xfs_kill_sb+0x15/0x50 fs/xfs/xfs_super.c:2026
-       deactivate_locked_super+0xbe/0x1a0 fs/super.c:472
-       deactivate_super+0xde/0x100 fs/super.c:505
-       cleanup_mnt+0x222/0x450 fs/namespace.c:1267
-       task_work_run+0x14e/0x250 kernel/task_work.c:180
-       resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
-       exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
-       exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
-       __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
-       syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
-       __do_fast_syscall_32+0x82/0x120 arch/x86/entry/common.c:389
-       do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
-       entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-
-other info that might help us debug this:
-
-Chain exists of:
-  fs_reclaim --> &xfs_dir_ilock_class --> &xfs_dquot_group_class
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&xfs_dquot_group_class);
-                               lock(&xfs_dir_ilock_class);
-                               lock(&xfs_dquot_group_class);
-  lock(fs_reclaim);
-
- *** DEADLOCK ***
-
-3 locks held by syz-executor.2/5415:
- #0: ffff8880267b00e0 (&type->s_umount_key#52){++++}-{3:3}, at: __super_lock fs/super.c:56 [inline]
- #0: ffff8880267b00e0 (&type->s_umount_key#52){++++}-{3:3}, at: __super_lock_excl fs/super.c:71 [inline]
- #0: ffff8880267b00e0 (&type->s_umount_key#52){++++}-{3:3}, at: deactivate_super+0xd6/0x100 fs/super.c:504
- #1: ffff88805a740158 (&qinf->qi_tree_lock){+.+.}-{3:3}, at: xfs_qm_dquot_walk.isra.0+0x111/0x3d0 fs/xfs/xfs_qm.c:75
- #2: ffff8880767b0868 (&xfs_dquot_group_class){+.+.}-{3:3}, at: xfs_dqlock fs/xfs/xfs_dquot.h:125 [inline]
- #2: ffff8880767b0868 (&xfs_dquot_group_class){+.+.}-{3:3}, at: xfs_qm_dqpurge+0xc5/0x630 fs/xfs/xfs_qm.c:129
-
-stack backtrace:
-CPU: 3 PID: 5415 Comm: syz-executor.2 Not tainted 6.9.0-rc5-syzkaller-00036-g9d1ddab261f3 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain kernel/locking/lockdep.c:3869 [inline]
- __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
- lock_acquire kernel/locking/lockdep.c:5754 [inline]
- lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
- __fs_reclaim_acquire mm/page_alloc.c:3698 [inline]
- fs_reclaim_acquire+0x102/0x160 mm/page_alloc.c:3712
- might_alloc include/linux/sched/mm.h:312 [inline]
- slab_pre_alloc_hook mm/slub.c:3746 [inline]
- slab_alloc_node mm/slub.c:3827 [inline]
- kmalloc_trace+0x51/0x330 mm/slub.c:3992
- kmalloc include/linux/slab.h:628 [inline]
- add_stack_record_to_list mm/page_owner.c:177 [inline]
- inc_stack_record_count mm/page_owner.c:219 [inline]
- __set_page_owner+0x517/0x7a0 mm/page_owner.c:334
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x2d4/0x350 mm/page_alloc.c:1534
- prep_new_page mm/page_alloc.c:1541 [inline]
- get_page_from_freelist+0xa28/0x3780 mm/page_alloc.c:3317
- __alloc_pages+0x22b/0x2460 mm/page_alloc.c:4575
- __alloc_pages_bulk+0x742/0x14f0 mm/page_alloc.c:4523
- alloc_pages_bulk_array include/linux/gfp.h:202 [inline]
- xfs_buf_alloc_pages+0x20f/0x9d0 fs/xfs/xfs_buf.c:398
- xfs_buf_find_insert fs/xfs/xfs_buf.c:650 [inline]
- xfs_buf_get_map+0x1e69/0x30d0 fs/xfs/xfs_buf.c:755
- xfs_buf_read_map+0xd2/0xb40 fs/xfs/xfs_buf.c:860
- xfs_trans_read_buf_map+0x352/0x990 fs/xfs/xfs_trans_buf.c:289
- xfs_trans_read_buf fs/xfs/xfs_trans.h:210 [inline]
- xfs_qm_dqflush+0x224/0x1470 fs/xfs/xfs_dquot.c:1271
- xfs_qm_dqpurge+0x1d3/0x630 fs/xfs/xfs_qm.c:149
- xfs_qm_dquot_walk.isra.0+0x217/0x3d0 fs/xfs/xfs_qm.c:88
- xfs_qm_dqpurge_all fs/xfs/xfs_qm.c:194 [inline]
- xfs_qm_unmount+0x92/0x1c0 fs/xfs/xfs_qm.c:206
- xfs_unmountfs+0x76/0x240 fs/xfs/xfs_mount.c:1076
- xfs_fs_put_super+0x61/0x160 fs/xfs/xfs_super.c:1134
- generic_shutdown_super+0x159/0x3d0 fs/super.c:641
- kill_block_super+0x3b/0x90 fs/super.c:1675
- xfs_kill_sb+0x15/0x50 fs/xfs/xfs_super.c:2026
- deactivate_locked_super+0xbe/0x1a0 fs/super.c:472
- deactivate_super+0xde/0x100 fs/super.c:505
- cleanup_mnt+0x222/0x450 fs/namespace.c:1267
- task_work_run+0x14e/0x250 kernel/task_work.c:180
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
- __do_fast_syscall_32+0x82/0x120 arch/x86/entry/common.c:389
- do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-RIP: 0023:0xf7334579
-Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-RSP: 002b:00000000ffb89538 EFLAGS: 00000292 ORIG_RAX: 0000000000000034
-RAX: 0000000000000000 RBX: 00000000ffb8a680 RCX: 0000000000000009
-RDX: 00000000f748bff4 RSI: 0000000000000064 RDI: 00000000ffb8a680
-RBP: 00000000f73db3bd R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000296 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-EXT4-fs (loop2): unmounting filesystem 76b65be2-f6da-4727-8c75-0525a5b65a09.
-XFS (loop2): Unmounting Filesystem a2f82aab-77f8-4286-afd4-a8f747a74bab
-XFS (loop2): Unmounting Filesystem a2f82aab-77f8-4286-afd4-a8f747a74bab
-----------------
-Code disassembly (best guess), 2 bytes skipped:
-   0:	10 06                	adc    %al,(%rsi)
-   2:	03 74 b4 01          	add    0x1(%rsp,%rsi,4),%esi
-   6:	10 07                	adc    %al,(%rdi)
-   8:	03 74 b0 01          	add    0x1(%rax,%rsi,4),%esi
-   c:	10 08                	adc    %cl,(%rax)
-   e:	03 74 d8 01          	add    0x1(%rax,%rbx,8),%esi
-  1e:	00 51 52             	add    %dl,0x52(%rcx)
-  21:	55                   	push   %rbp
-  22:	89 e5                	mov    %esp,%ebp
-  24:	0f 34                	sysenter
-  26:	cd 80                	int    $0x80
-* 28:	5d                   	pop    %rbp <-- trapping instruction
-  29:	5a                   	pop    %rdx
-  2a:	59                   	pop    %rcx
-  2b:	c3                   	ret
-  2c:	90                   	nop
-  2d:	90                   	nop
-  2e:	90                   	nop
-  2f:	90                   	nop
-  30:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-  37:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Will
