@@ -1,104 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6D167C43;
-	Sun, 28 Apr 2024 12:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C46D5B693
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 12:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714305708; cv=none; b=OD9zK1rHaInCV6MQbuXjhPjCfDw0m2SYnylq/ZEeI4WkitU7NjbBBzfYjRsu/1lmAYBcA8si9KhXtRN5j51nmeb1tGURWp5qzjO+5E+lUKcJ7YEs/R6ZiSpdHv1vi2Gui0zi19r7S+um0LFJH9jywE8w/A7jByPD5sNBaPoiM8U=
+	t=1714305984; cv=none; b=NaRpAiGGfgAwSPHe4gYsw6dimnYARVCpe/p9ETOWN+Duxepg0OWL4a1L6NfnRFf4XwK26qS7ySpoBjgu8rGURH82w8cRDQHXU4b+dy036XApqwSQyE75c0Rxq5RGzL8cQVmmmQWHu0d7idxDIWemuCE6dD2B2I0ijFzQA7ANIZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714305708; c=relaxed/simple;
-	bh=xQA0aeIVCOl9cvhNh35c+pjMwnZaLPISTQQzeLHDgxU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9ZC1Q5OPWO+JerkaZ6VqQlxTHfKirm55A5aSm0IvI+TrdryGBCeqUYMG6ZmWn5ww53ejrGq4v6Y8FXnK/UdC/WRLXH2scchOSxMzefu2724ZQHRiGfSQY9XZWOyz9WtewN6vA19Cd+AnD3dfAUItOp8kEeiNE/4F/r8+CIulEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUHwloOm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714305984; c=relaxed/simple;
+	bh=+XZR/H2IEv9IjwDx4Fi2n5kzKDZposEiTAx2GYa/PE0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BPpIB1tVdTERO3fmvp8ha+N8WNuQWwzhl5tHJym68OgX692SFZLyusCMrvHJuX0z0qIyaoTE4eMCYfwAtz+JhztPEIuWy6kK1xIpSC8xd2b3OWktVEOxVEDNgIr9D1cevc1eNEXtCB13qFkUVdNjfhub9yxPILcvPVfejifqKAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com; spf=pass smtp.mailfrom=tweaklogic.com; dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b=Mq+7lI9N; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tweaklogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUHwloOm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6FEC113CC;
-	Sun, 28 Apr 2024 12:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714305708;
-	bh=xQA0aeIVCOl9cvhNh35c+pjMwnZaLPISTQQzeLHDgxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qUHwloOmhu/Cl4Rnk3U4Kiqr72C27OEJ51SLFwtFAOCmcMKqCfGoXgbJkb4zMmXiP
-	 DuSGUed+qZj/L3OiFbnseekaGbVmZqvIqnyKyi9BBePeMlxZr3z4eH3UI+THbKGiAt
-	 A+NkqPjThCvwdQ1jv+7/MC93b/MUTRke0bJQvZU5mmXiiehIaO+6TFHi6WqegQE4kt
-	 kpd9KeGEqNpv19ohU+81Q0V0oYbOJDqDEq+UrXCXneiw7A2hQgvt4PbigECnneuXoo
-	 sq+I43d+FUmaGsVlNBC5OG5/RtyMnTUIsKIV/MHsyOnxFIqqA1LC1QqwoYXLBbEKaM
-	 2M1WYZssXOzOQ==
-Date: Sun, 28 Apr 2024 15:00:26 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: DaeRo Lee <skseofh@gmail.com>
-Cc: robh@kernel.org, saravanak@google.com, akpm@linux-foundation.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Daero Lee <daero_le.lee@samsung.com>
-Subject: Re: [PATCH v2] memblock: add no-map alloc functions
-Message-ID: <Zi46Wri1mPTiEArU@kernel.org>
-References: <20240416120635.361838-2-skseofh@gmail.com>
- <Zh9l_LpThq9aFUR7@kernel.org>
- <CAATEi5kywwC2yUaYjgs+Gm=4HM5o=KHTqH1ALKJijWE_gge0=g@mail.gmail.com>
- <ZiFgYWydIwvnpIIY@kernel.org>
- <CAATEi5kFt8iUeWSkrj_bVTyPO_tfQzG77D719P5dLsr2j6Zkzw@mail.gmail.com>
- <CAATEi5ksY-v7-LEqNZWFV5hsHiegNEtrh4LpMWOQ=vT7hC0Rng@mail.gmail.com>
- <Ziy8AsAGZyKCyXX_@kernel.org>
- <CAATEi5=Z0qirM-fyGJL_UPcr7-iyCFtOW9d3XsdN50Tkhpm0iA@mail.gmail.com>
- <Zi3twYLGvhtJa9Yh@kernel.org>
- <CAATEi5nOQE7xi5ztV0BFO6MRqSGwUPT4V9dqpMT+p4r7iZQwRQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b="Mq+7lI9N"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f3f6aa1437so521876b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 05:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tweaklogic.com; s=google; t=1714305982; x=1714910782; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A7Puehy8P6JLTcZ0cSqMx2ZhFLTSzcAEUxqgkAcEo9g=;
+        b=Mq+7lI9NphoSH9oGGScW5Tmo6oLgCGb+fTruEGdFuIpjQBNsEIqFapwEtkHeosVAw0
+         BmZqOUGvCFe47VZ0cJASPYwIokpxACrbV0XVARTlIT2d36cTkyW9uZs4ZrUL9weUq3/y
+         J6BLAFJVtQlTTjueVRu2OaJTw3jWiVRtSEKeC/ckN2+quplXN37aXQV6zmHdpXyIUHqn
+         HwsL16uaVLRmm7XzTX0lxYoKgsejLua8Tx6nRsMzJbmxnp6VVizyDM8HaIgUhtFZIJzo
+         NE7fCCJXwawcn7WpJz3ldu70AXQUWG2jCtDYMq5Mv33havivuWl41KNH9krL5V1sXWTc
+         soMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714305982; x=1714910782;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A7Puehy8P6JLTcZ0cSqMx2ZhFLTSzcAEUxqgkAcEo9g=;
+        b=v1L2hiDvgOQlqACqfBJPcFn4StNpb+37aN6O+AjEKwdBUpH3Zo4QcMY4xUUff7tuCK
+         fFjdquyW18YeZ6jol8Nzyi07cKstXq2gakX0d6BiknqNVDHFZJthczxCjLqN7XrGvy4X
+         0Xc5s/DBIFPQOLH4YUprRYINwOO+lAys1EhvPOnfY+zP0rNMNbv7moS2M+X8cNdPnXz1
+         rbNRR6oS/mlkXGOwlXbJy46cVPH7Rp+wqEShJvP8OXilm9j+73SBHSAxZWip9AUCBQFo
+         290CLlfeIQ+zuTULOCPXAEr62G0+wCbumjP44oKxcjEZ4et1XcQ1kr0+dpjnX/btfFKr
+         Ekdw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5mRzuDySmExXLGqvxXOwURyaKAtWOQxNAcbpw0C9qKVVg0Ei7xocWiwNIntJirAPlIVT2S/69KPIuSFyLBOo7Npx2F+UCe1aWsz31
+X-Gm-Message-State: AOJu0YzYfimeEmPETyZHlvOIkYKyddjrZJfkssvywenRUTCmYKvJJYiz
+	13Sx/vYoad8nHi+lC8tGi/RqDQBNlQuEiDWTIaauP8ViX/rQGbr0fi+//s4q7Gk=
+X-Google-Smtp-Source: AGHT+IGdfh6v+jBIQuSGQH2LjYfZ5KzStpJnTg/6mCYFQ1QXySzsWc3Tsnzee/ZH2ef7Owa+RlFdzA==
+X-Received: by 2002:a05:6a00:2da9:b0:6ed:d5f5:869 with SMTP id fb41-20020a056a002da900b006edd5f50869mr9779472pfb.3.1714305982237;
+        Sun, 28 Apr 2024 05:06:22 -0700 (PDT)
+Received: from ?IPV6:2403:580d:82f4:0:885d:4711:59d4:b6a2? (2403-580d-82f4-0-885d-4711-59d4-b6a2.ip6.aussiebb.net. [2403:580d:82f4:0:885d:4711:59d4:b6a2])
+        by smtp.gmail.com with ESMTPSA id m19-20020aa78a13000000b006e697bd5285sm17496178pfa.203.2024.04.28.05.06.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Apr 2024 05:06:21 -0700 (PDT)
+Message-ID: <6d401f1b-bc3f-4064-adc1-a22d9a65c778@tweaklogic.com>
+Date: Sun, 28 Apr 2024 21:36:17 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAATEi5nOQE7xi5ztV0BFO6MRqSGwUPT4V9dqpMT+p4r7iZQwRQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: light: apds9306: Fix input arguments to in_range()
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Dan Carpenter <dan.carpenter@linaro.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240427090914.37274-1-subhajit.ghosh@tweaklogic.com>
+ <20240428124745.2cb0e2a2@jic23-huawei>
+Content-Language: en-US
+From: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
+In-Reply-To: <20240428124745.2cb0e2a2@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 28, 2024 at 07:36:40PM +0900, DaeRo Lee wrote:
-> 2024년 4월 28일 (일) 오후 3:35, Mike Rapoport <rppt@kernel.org>님이 작성:
-> >
-> > On Sat, Apr 27, 2024 at 07:24:23PM +0900, DaeRo Lee wrote:
-> > > 2024년 4월 27일 (토) 오후 5:50, Mike Rapoport <rppt@kernel.org>님이 작성:
-> > > > > >
-> > > > > > So, here is what I think:
-> > > > > > - reserved-memory w/ nomap region -> mark only to memblock.memory
-> > > > > > - reserved-memory w/o nomap region -> add to the memblock.reserved
-> > > >
-> > > > NOMAP and memblock.reserved are semantically different, and at makes sense
-> > > > to have a "reserved nomap" node in fdt recorded in both memblock.memory and
-> > > > memblock.reserved.
-> > > >
-> > > > memblock.reserved represents the memory that is used by firmware or early
-> > > > kernel allocation, so reserved memory in fdt should be reserved in memblock
-> > > > as well. I believe it's an oversight that early_init_dt_reserve_memory()
-> > > > does not call memblock_reserve() for nomap memory.
-> > > >
-> > > > NOMAP is a property of a memory region that says that that region should
-> > > > not be mapped in the linear map, it's not necessarily in use.
-> > >
-> > > I agree that the NOMAP region should be added to memblock.reserved.
-> > >
-> > > So, I think we need to clean-up memmap_init_reserved_pages, because in
-> > > this function we call reserve_bootmem_region for memblock.reserved and
-> > > memblock.memory with nomap. We don't need to call
-> > > reserve_bootmem_region for nomap.
-> >
-> > Read the comment about memblock_mark_nomap()
-> I read the comment about memblock_mark_nomap() and understood that
-> regions with nomap flags should be treated as PageReserved.
-> But, if we add this nomap region to memblock.reserved, the region with
-> nomap flag will be processed in the first for-loop in
-> memmap_init_reserved_pages.
-
-memblock still must make sure that pages in nomap regions get PG_Reserved
-to be robust against potential errors and bugs in firmware parsing.
- 
-> Am I thinking wrong?
+On 28/4/24 21:17, Jonathan Cameron wrote:
+> On Sat, 27 Apr 2024 18:39:14 +0930
+> Subhajit Ghosh <subhajit.ghosh@tweaklogic.com> wrote:
 > 
-> Regards,
-> DaeRo Lee
+>> Third input argument to in_range() function requires the number of
+>> values in range, not the last value in that range. Update macro for
+>> persistence and adaptive threshold to reflect number of values
+>> supported instead of the maximum values supported.
+>>
+>> Fixes: 620d1e6c7a3f ("iio: light: Add support for APDS9306 Light Sensor")
+>> Signed-off-by: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
+> Applied to the togreg branch of iio.git. Pushed out initially as testing
+> for 0-day to take a first look.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+Thank you Jonathan.
 
--- 
-Sincerely yours,
-Mike.
+Regards,
+Subhajit Ghosh
+
