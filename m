@@ -1,76 +1,98 @@
-Received: from mail.spsk4.lublin.pl (mail.spsk4.lublin.pl [94.230.25.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00A879E1
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 09:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.230.25.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8B8AD52
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 09:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714297545; cv=none; b=qZTzUcq9hwb+SI9HRhpsNX/U30FPMf57Xt/5PxmHeR++foqjRSfooJAPzzmysP44l7I3RsW86stoIym0aK/j7zqheNnyuUDCFdUgjcdsRjjmFAd/Z2K6SUpRkoXdn+9YNG15bUgRnr/XTep3S+5f8OBiPvuKDzJ3JCcPErJdExQ=
+	t=1714297657; cv=none; b=sIN+LEvLY9r29Dg4qNF3Lb3uBqlTV3l8OiGhYBmYR4irWSrE/ZbXnqqv3XX7CAxAr95kY5peOEH7I1GTATj9OfLxCE4ap5TGX242O40I0DyN5egKuZ8Ql7fz9ffb4dnkOXloMD5LSH/p2tUw3A2MNQw7NQiHcJYgHsv0rQOdkGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714297545; c=relaxed/simple;
-	bh=v2c5/7wPZJso13gFAmJxg9/lu4caPLpEZTN0isUs2Yo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z1hOfE2B+ZYEf0SfEOy7NENrvpLes77Zjth2i4bu7a6S3rFgFq9Fb4yx1BBcpIcFkaD+0YQ55JU9Pu+0VakGWlZbHFyaFSqm3+B0Abj7xGDTpBfs152OlduzYnfaK4w96tSMcCENGgiYdmm3uOToLaBRGtctx3BFPz5UIegbPa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=spsk4.lublin.pl; spf=pass smtp.mailfrom=spsk4.lublin.pl; dkim=pass (2048-bit key) header.d=spsk4.lublin.pl header.i=@spsk4.lublin.pl header.b=nt48oQ09; arc=none smtp.client-ip=94.230.25.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=spsk4.lublin.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=spsk4.lublin.pl
+	s=arc-20240116; t=1714297657; c=relaxed/simple;
+	bh=fBR+X0ZuoYudejnJhNPe0F13DsJXHpLmoaeO4zLaVIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sqtMrtAuuaxEnLerJea4Ri41EGCGLOd+/VpiVYuxG6VZo089IHAcGQtMMN1WQGQCE1+bbvHBkyHWh3rAz371Nsuk1yy/w5WQRR1CLF72bwkgcwB5/hyBSpK3esL/E7Bdp8D6VcTVbaPN5Y6R/RvrcPhHHiMWutTe01mybY7EZAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Io13Aaod; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=spsk4.lublin.pl header.i=@spsk4.lublin.pl header.b="nt48oQ09"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.spsk4.lublin.pl (Postfix) with ESMTP id 802BA27DC3
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 11:36:49 +0200 (CEST)
-Received: from mail.spsk4.lublin.pl ([127.0.0.1])
- by localhost (zimbra-mta.spsk4.lublin.pl [127.0.0.1]) (amavis, port 10032)
- with ESMTP id NmuP4t7Dr2lD for <linux-kernel@vger.kernel.org>;
- Sun, 28 Apr 2024 11:36:49 +0200 (CEST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.spsk4.lublin.pl (Postfix) with ESMTP id 5CDDA27DC7
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 11:36:49 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.spsk4.lublin.pl 5CDDA27DC7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=spsk4.lublin.pl;
-	s=0B6D5DC2-FF57-11EB-9505-2F96557CE46E; t=1714297009;
-	bh=v2c5/7wPZJso13gFAmJxg9/lu4caPLpEZTN0isUs2Yo=;
-	h=From:To:Date:Message-ID:MIME-Version;
-	b=nt48oQ09TZixHKaxLK7VvErMFRBOcQusJfutT4asQXj/AIsieMFV1ADm8ggxvkC6m
-	 n40fIhp8jaKf8uMWU8QxPkxrMW1fUTd7FdcqhNNGMqkoc5frLOidp7leqciqrUqX+i
-	 BMdoDHidR/snsLUs1fTuj/oOH7mntBXkNsXFMhEi2FQ9zbG9evnSjK2nqny+yJAQPq
-	 1NNC+qUbvfty5CpI1Jk/Em4QnR5B5bJgMoezgyGPUoOjCQU9V22dO6Kt0zPRlCH/pY
-	 lY/SYZd8/oR2+irmbQLdtD2sltEkGpqn9oulpHnu52qO1wpz9sj4zXHIBI4GRgciiJ
-	 20tDUh+KaODBg==
-X-Virus-Scanned: amavis at 
-Received: from mail.spsk4.lublin.pl ([127.0.0.1])
- by localhost (zimbra-mta.spsk4.lublin.pl [127.0.0.1]) (amavis, port 10026)
- with ESMTP id EEwyiX_lVP8R for <linux-kernel@vger.kernel.org>;
- Sun, 28 Apr 2024 11:36:49 +0200 (CEST)
-Received: from spsk4.lublin.pl (unknown [5.253.206.184])
-	by mail.spsk4.lublin.pl (Postfix) with ESMTPSA id 7BAEA27DC3
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 11:36:48 +0200 (CEST)
-Reply-To: cheng@xinyisolar-sale.com
-From: "Cheng Kin"<Marta.Orzel@spsk4.lublin.pl>
-To: linux-kernel@vger.kernel.org
-Subject: Re: Representative
-Date: 28 Apr 2024 19:35:00 +1000
-Message-ID: <20240428193459.D5E31831DE49FDA5@spsk4.lublin.pl>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Io13Aaod"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e3ca546d40so29554555ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 02:47:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714297655; x=1714902455; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fBR+X0ZuoYudejnJhNPe0F13DsJXHpLmoaeO4zLaVIQ=;
+        b=Io13AaodiVQ+9BehlgcXi4gs7jWKPbwrnwPAPMvj7mAXzLOYmDT+caWW+MFyRRPfZT
+         vCHQ3bPnkXppTFkNe46LHI++4OyJm+It/DpzsvcYdUMArQZ5AEcChL+NNSnJiROr5Wmb
+         bipi+tnItySdJ3OjHfG/wivxkM7TZUCKgYCtnDcLvWVdrA42gLJMFlDQY3rego4kaVrA
+         RvN8BjARkg/IhSvleqiWF7HH4gfhh9s/fBABqDOqJeh+7FO9ZAsq50ciNuIzesVO+aNk
+         XofNiRjGZGu8a6AN3oXq+gzwdIuKoiKz7MdlViPUlMaYhT8No3bpl71aUGspGe0pQN2s
+         4CtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714297655; x=1714902455;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fBR+X0ZuoYudejnJhNPe0F13DsJXHpLmoaeO4zLaVIQ=;
+        b=bHWWAwC3Ppr5clOQ/Vhj+yWow0Rtud4bqLcg5Wh0gthRBLFwK4IXzDiikJ/4Zt7O+7
+         meB/UAsQvG3A9kePYdjaIY6nfRBflDdHVwWaH3ct05ykkc+1w/s4pens/BJvOJEutC0J
+         WUNKuO3X792SKr9QZWFqAbAaoFUj8zrPFqT9ZIEWgrtFIdMkC60ajUcnabOpCt75e7cP
+         J9zDNDkurrvps/YW7gh2kUEwiCd/ir0h/kOQ6IBcJkOwT/rnhXfpPi9wRIAd/dKoZrFj
+         xz/yTRSSKD5onIllBd+O/B4ApmjEsHbCNlwJCu9OaFUmSrZU2myn/VHRR6cInvSNuBBx
+         80Hg==
+X-Gm-Message-State: AOJu0Yx4q0DnEw3BGwpP2nJ65FOHbvv7jbvrh38P0LQdjg8sJCXBcmqc
+	6Ymv1GqQici8tUvICqtzRMobZ99RRxsLvesMvrBdvpd6RoO0oywaZsjvLg==
+X-Google-Smtp-Source: AGHT+IHDSPaQguUm+pSvWiNq6Q7JSo/A5gmUC0Bc51qBeRDwhGlP0PGHoagJEv6jJeg6y+re4lMfAA==
+X-Received: by 2002:a17:90b:370c:b0:2a0:3dc3:8a8b with SMTP id mg12-20020a17090b370c00b002a03dc38a8bmr6834495pjb.47.1714297655137;
+        Sun, 28 Apr 2024 02:47:35 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id m15-20020a17090b068f00b0029b59bf77b4sm18839576pjz.42.2024.04.28.02.47.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Apr 2024 02:47:34 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 07C1C184692DC; Sun, 28 Apr 2024 16:47:31 +0700 (WIB)
+Date: Sun, 28 Apr 2024 16:47:31 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Sending patches as eml message attachment?
+Message-ID: <Zi4bMx2FKuviJi0M@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="d/1vvkNs4WDaLotI"
+Content-Disposition: inline
+
+
+--d/1vvkNs4WDaLotI
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello linux-kernel,
+Hi Greg,
 
-I apologize for my cold outreach.
+Sometimes I'm tempted to send patches as .eml attachments (just like in
+error messages sent by mail servers to me). Is patch submission by
+aforementioned way accepted? If not, why?
 
-My company is interested in your service as a company=20
-representative. I have also reviewed your profile and know your=20
-eligibility to work with the company.
+Thanks.
 
-Have a great day ahead.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Best Regards,
-Cheng Kin
-Executive Director
-Xinyi Solar Holding Co., Ltd
+--d/1vvkNs4WDaLotI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZi4bMwAKCRD2uYlJVVFO
+ow0JAP49JJ73V9xjX7lULH5XCUv80s56+OFWDwyS1weirDNSxgD9GgnaqM+TQQX9
+crKHbOnMjn10GplFB9Uq0kKLJ3uyhA8=
+=3cD1
+-----END PGP SIGNATURE-----
+
+--d/1vvkNs4WDaLotI--
