@@ -1,110 +1,95 @@
-Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C2334CDE;
-	Sun, 28 Apr 2024 14:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A087B8C1F;
+	Sun, 28 Apr 2024 14:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714315577; cv=none; b=t7/a0XdYh2oQ2sy2bo4hHKPd5yBNN7cfWR14PNuur2VGNhasXvsCTrhrs+c/Ll/XC7trlvmiCU7MmR7+6Z1KzNYa8jo/Pnf/edFHH6JiOxSrWakFRPP4cUS4fLTHTiO42wB0f/QpNFo7G4UTFhsEhG3oEHxLVTwn4UgBJbTVp04=
+	t=1714315652; cv=none; b=JEGVXWDWpQnFg49A2vX3J59TJ/BMrjVmD6pzpWu6dC7NUYnvEJHHzUnUe9g3nfMSrlgxgouH4kgPacFbmuKb9T9pgVI/xWAt0zM/Ni1xYn5CdGq+apFpT3DM9ryMMJr53JhSagpS+qUz5yz4oUGR/DKuEYoWN2R2dXTWW3IRtdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714315577; c=relaxed/simple;
-	bh=O9lYynF7TbwV25WJ4FbULB8m/hH0HLsZXryml5NonVg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kzy139plk0W8vg5Rz6OezrX4cRTzsiILkUNsGp53i0qEGm/Cfa0YVrwgVr+IP6i1iTiTqbAw3QGqy4e96ot7G63recBJIeTQ6PwWg+6kJQZomxot8wKLc6X5ppeza936CeKUdrIrnp/pURjAWrkmgvvyZD4Z30qEhbPLiqni4xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=ER6fEmJl; arc=none smtp.client-ip=178.154.239.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
+	s=arc-20240116; t=1714315652; c=relaxed/simple;
+	bh=j3dgZxwRNCdjI+Z7qYMD9SW57AmVLugjFAeYYrRK/KE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=udQZkj71zhe39tJAg3KZ4bYVWfXoo1EcguBoGD1ww+0KV4YSE+whkUVGrs4KYotCFF6n3KJwJ0ZM1nbnF99nhZn1eFPeO/SpRzd5GDLmHw+Oa8brrxcfZu0uRFbW3uPdAsCBoo+kVvTn6AvCbHQLrSemXbuWdBN79Nr2ct2R0Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbpNeXf9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="ER6fEmJl"
-Received: from mail-nwsmtp-smtp-production-main-68.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-68.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0d:41f:0:640:22c7:0])
-	by forward500a.mail.yandex.net (Yandex) with ESMTPS id 687D260D74;
-	Sun, 28 Apr 2024 17:46:04 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-68.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id tjQeFr9Sga60-st7Y47if;
-	Sun, 28 Apr 2024 17:46:03 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
-	t=1714315563; bh=67waao3F0EHQeKvBPxYU8iF726Np7zyvUcDDCjQruTU=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=ER6fEmJl9riDd/aCADkQC/2hHjyJZrwSoFGW6fLBb6P58c2G7ksYlQCrelZegDA5+
-	 8nOTUH3eh88RHmxA5Lud8egBcNwvoWplczaRRJAJ2qGFxAldA8cVVxp/0SPYgMEOhI
-	 UVFL2Ew0oVhxyTomS3flRk9Exn/DA9OgB8x09rYI=
-Authentication-Results: mail-nwsmtp-smtp-production-main-68.vla.yp-c.yandex.net; dkim=pass header.i=@ya.ru
-From: Konstantin Pugin <rilian.la.te@ya.ru>
-To: 
-Cc: krzk@kernel.org,
-	conor@kernel.org,
-	lkp@intel.com,
-	vz@mleia.com,
-	robh@kernel.org,
-	jcmvbkbc@gmail.com,
-	nicolas.ferre@microchip.com,
-	manikanta.guntupalli@amd.com,
-	corbet@lwn.net,
-	ychuang3@nuvoton.com,
-	u.kleine-koenig@pengutronix.de,
-	Maarten.Brock@sttls.nl,
-	linux-stable@vger.kernel.org,
-	Konstantin Pugin <ria.freelander@gmail.com>,
-	stable@vger.kernel.org,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Lech Perczak <lech.perczak@camlingroup.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH 1/1] serial: sc16is7xx: announce support of SER_RS485_RTS_ON_SEND
-Date: Sun, 28 Apr 2024 17:45:33 +0300
-Message-ID: <20240428144541.80812-2-rilian.la.te@ya.ru>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240428144541.80812-1-rilian.la.te@ya.ru>
-References: <20240428144541.80812-1-rilian.la.te@ya.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbpNeXf9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35F1C113CC;
+	Sun, 28 Apr 2024 14:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714315652;
+	bh=j3dgZxwRNCdjI+Z7qYMD9SW57AmVLugjFAeYYrRK/KE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fbpNeXf91akNWf9Z9oN/ywTA3xvo4Iv1flypFsbcpznkTXlDms019j7h21DKqAMaa
+	 8qk8DSkZ+HTvE5XRyhx2KInErkxig4gFbIFZ4OHfo1ZzVTN81rNKpro5ub4/XyshHr
+	 zRsAx15XPwMzLbdR0qApIgMPS+Hq+2PTlsmoZZRb7ZaWe8QcEccFeiRfF8hzVCyYbm
+	 Fz+SLqos/JBw2hMKGzPTKES9OBycPXy2ldh0GKa4pEgl6YbQFGxj/XHBsV0lMN1LeI
+	 BVPb3XgQ60MjmI8rau0K50/M1NM5zjqYC+7PvRpzIZuLO26U2FiwtmJKSxq+vMPRRp
+	 bD7Mm8Q4iFVzQ==
+Date: Sun, 28 Apr 2024 15:47:22 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-doc@vger.kernel.org, corbet@lwn.net, Ramona Gradinariu
+ <ramona.gradinariu@analog.com>
+Subject: Re: [PATCH 1/1] docs: iio: adis16475: fix device files tables
+Message-ID: <20240428154722.168cb7c2@jic23-huawei>
+In-Reply-To: <20240424094152.103667-2-ramona.gradinariu@analog.com>
+References: <20240424094152.103667-1-ramona.gradinariu@analog.com>
+	<20240424094152.103667-2-ramona.gradinariu@analog.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Konstantin Pugin <ria.freelander@gmail.com>
+On Wed, 24 Apr 2024 12:41:52 +0300
+Ramona Gradinariu <ramona.bolboaca13@gmail.com> wrote:
 
-When specifying flag SER_RS485_RTS_ON_SEND in RS485 configuration,
-we get the following warning after commit 4afeced55baa ("serial: core:
-fix sanitizing check for RTS settings"):
-
-    invalid RTS setting, using RTS_AFTER_SEND instead
-
-This results in SER_RS485_RTS_AFTER_SEND being set and the
-driver always write to the register field SC16IS7XX_EFCR_RTS_INVERT_BIT,
-which breaks some hardware using these chips.
-
-The hardware supports both RTS_ON_SEND and RTS_AFTER_SEND modes, so fix
-this by announcing support for RTS_ON_SEND.
-
-Cc: stable@vger.kernel.org
-Fixes: 267913ecf737 ("serial: sc16is7xx: Fill in rs485_supported")
-Tested-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
----
- drivers/tty/serial/sc16is7xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 03cf30e20b75..dfcc804f558f 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1449,7 +1449,7 @@ static int sc16is7xx_setup_mctrl_ports(struct sc16is7xx_port *s,
- }
- 
- static const struct serial_rs485 sc16is7xx_rs485_supported = {
--	.flags = SER_RS485_ENABLED | SER_RS485_RTS_AFTER_SEND,
-+	.flags = SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND | SER_RS485_RTS_AFTER_SEND,
- 	.delay_rts_before_send = 1,
- 	.delay_rts_after_send = 1,	/* Not supported but keep returning -EINVAL */
- };
--- 
-2.44.0
+> Remove in_accel_calibbias_x and in_anglvel_calibbias_x device files
+> description, as they do not exist and were added by mistake.
+> Add correct naming for in_accel_y_calibbias and in_anglvel_y_calibbias
+> device files and update their description.
+> 
+> Fixes: 8243b2877eef ("docs: iio: add documentation for adis16475 driver")
+> Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+Applied
+> ---
+>  Documentation/iio/adis16475.rst | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/iio/adis16475.rst b/Documentation/iio/adis16475.rst
+> index 91cabb7d8d05..130f9e97cc17 100644
+> --- a/Documentation/iio/adis16475.rst
+> +++ b/Documentation/iio/adis16475.rst
+> @@ -66,11 +66,9 @@ specific device folder path ``/sys/bus/iio/devices/iio:deviceX``.
+>  +-------------------------------------------+----------------------------------------------------------+
+>  | in_accel_x_calibbias                      | Calibration offset for the X-axis accelerometer channel. |
+>  +-------------------------------------------+----------------------------------------------------------+
+> -| in_accel_calibbias_x                      | x-axis acceleration offset correction                    |
+> -+-------------------------------------------+----------------------------------------------------------+
+>  | in_accel_x_raw                            | Raw X-axis accelerometer channel value.                  |
+>  +-------------------------------------------+----------------------------------------------------------+
+> -| in_accel_calibbias_y                      | y-axis acceleration offset correction                    |
+> +| in_accel_y_calibbias                      | Calibration offset for the Y-axis accelerometer channel. |
+>  +-------------------------------------------+----------------------------------------------------------+
+>  | in_accel_y_raw                            | Raw Y-axis accelerometer channel value.                  |
+>  +-------------------------------------------+----------------------------------------------------------+
+> @@ -94,11 +92,9 @@ specific device folder path ``/sys/bus/iio/devices/iio:deviceX``.
+>  +---------------------------------------+------------------------------------------------------+
+>  | in_anglvel_x_calibbias                | Calibration offset for the X-axis gyroscope channel. |
+>  +---------------------------------------+------------------------------------------------------+
+> -| in_anglvel_calibbias_x                | x-axis gyroscope offset correction                   |
+> -+---------------------------------------+------------------------------------------------------+
+>  | in_anglvel_x_raw                      | Raw X-axis gyroscope channel value.                  |
+>  +---------------------------------------+------------------------------------------------------+
+> -| in_anglvel_calibbias_y                | y-axis gyroscope offset correction                   |
+> +| in_anglvel_y_calibbias                | Calibration offset for the Y-axis gyroscope channel. |
+>  +---------------------------------------+------------------------------------------------------+
+>  | in_anglvel_y_raw                      | Raw Y-axis gyroscope channel value.                  |
+>  +---------------------------------------+------------------------------------------------------+
 
