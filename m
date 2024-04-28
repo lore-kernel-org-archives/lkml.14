@@ -1,76 +1,116 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from relay03.th.seeweb.it (relay03.th.seeweb.it [5.144.164.164])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706AEC2C6;
-	Sun, 28 Apr 2024 21:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2B617D2
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 21:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714340496; cv=none; b=LU65gYvIk5HfIAVcIfI0IMTOygE6LgADPrnoVFHK5h+gMMwKXw54Jwb2gdcBub6c+FJBFup5RC/KTNTewD1lzIxsVzx1lceCs5PrDSnflTDuGiP5xuDIhxs8ggProaQXcyWG/fiwrXzOeVCUizs6iseodaIDNtzirRI3xa7vYGY=
+	t=1714340719; cv=none; b=XLlY+otXjj68TjNQOgJdl9QbCO2WPw+skupGE0PbOjEg6axdawHYwkBLsi19x/1YeVcYtThPImtaN7+GseiBWyqRgTbzuiiWzGJebyEHZuABXTtBkSdmx9iaco9vDjEXtY7S8p1w77fuWqQeM0aycZgKjiTVV67+MrRYue749+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714340496; c=relaxed/simple;
-	bh=g/6yt8bN2SG8nYFAhg2VDbUzvzglw6s3LVMo5oELXxg=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=P6DVDTNE+ISVgpl92FuOWUHC39e6UM2GtTSh/xR8vo3H0/1QjDdANl7oyTlud+ypyp21iIxxV30qGDez+0B5BxTE03JEUDWUnkPc/Ni+Uh4tn32KCL+IYq2rcmIjwHi7iEmsPj3aIaZFhWbrkcYDOoUAozoKthDFJrsuRovUyAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=EJb4KSIn; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="EJb4KSIn"
+	s=arc-20240116; t=1714340719; c=relaxed/simple;
+	bh=kAVP55YO4U/ubSBWbaDMVA8lpzhP6ZAkZbi2R0GkA5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6ntfPdwebzJ+kBCic2afhMuXlixnp0PmgbkqMKTFRKkb4fiWNcqgG/RtNvG5xEr1fV2p7sSQz9y/7e/ln+5WQiXgTv0qJEK0rg2O7IsIIofhVyKn9kcfzNIDDy2fT1WRhA5wZKYKW74QD9i5lyy0aUW8E24Qr2Evyukjom5O+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 9A1D21F62F;
+	Sun, 28 Apr 2024 23:06:35 +0200 (CEST)
+Date: Sun, 28 Apr 2024 23:06:34 +0200
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Archit Taneja <architt@codeaurora.org>, 
+	Chandan Uddaraju <chandanu@codeaurora.org>, Vinod Koul <vkoul@kernel.org>, 
+	Sravanthi Kollukuduru <skolluku@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Jordan Crouse <jordan@cosmicpenguin.net>, Rajesh Yadav <ryadav@codeaurora.org>, 
+	Jeykumar Sankaran <jsanka@codeaurora.org>, ~postmarketos/upstreaming@lists.sr.ht, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Martin Botka <martin.botka@somainline.org>, Jami Kettunen <jami.kettunen@somainline.org>
+Subject: Re: [PATCH 5/7] drm/msm/dpu: Correct dual-ctl -> dual-intf typo in
+ comment
+Message-ID: <mrg3m7awzvozhyg2zwwbawfa6cb6xo7obzooiq3iph6mu3ybfc@b5h2pzxvcjvf>
+References: <20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-0-78ae3ee9a697@somainline.org>
+ <20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-5-78ae3ee9a697@somainline.org>
+ <76hjmo4sq6sfjgmnvjoienc5aij74pfjtwevnnls65kxinyaxu@y3yydacvcflm>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1714340486;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Br6/mlh4IbIGBLsAZO56LX/rMiHfPwJFLzbYvHw/Wok=;
-	b=EJb4KSIna+pZFFr9jVzc9Zn9UN+jlLP1PmhpYlNwIBLNiZY1mVmQ74OmJq7+UEeAUbTG19
-	ieRRrKZoVYqmky00vauNVsx8lpUkgTsAFp6CaBOdUM/J+K8ocoLgcCUN/tFjHyc5D2MF3A
-	CZ6DXqXSJ3J5qdFXxKVOtL4E7E+RkL9ZWMdRj1Pv0cpGvPDMycPNSXm5ZtZDPr9C71BooX
-	qbYCNMad6VSKTOV5H/UntEjVrZqte+u76aYt1GVvxM6BaV+uSQhaKn5j7+YWTKeq8JHGDd
-	PKjzA2X9fP+eQtoy+aW5iomTjTuhHt15bx6CGMCRH8gxW87YnyT3nQ7mK0kwCw==
-Date: Sun, 28 Apr 2024 23:41:24 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Chukun Pan <amadeus@jmu.edu.cn>, Heiko Stuebner <heiko@sntech.de>, Conor
- Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob
- Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: rockchip: add Radxa ROCK 3C
-In-Reply-To: <d6004beb-2e7d-4f26-a202-0c5baabd4023@kernel.org>
-References: <20240428123618.72170-1-amadeus@jmu.edu.cn>
- <20240428123618.72170-2-amadeus@jmu.edu.cn>
- <d6004beb-2e7d-4f26-a202-0c5baabd4023@kernel.org>
-Message-ID: <f4baaff6fe20bba48cddb356df6e531a@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76hjmo4sq6sfjgmnvjoienc5aij74pfjtwevnnls65kxinyaxu@y3yydacvcflm>
 
-Hello Krzysztof,
-
-On 2024-04-28 18:37, Krzysztof Kozlowski wrote:
-> On 28/04/2024 14:36, Chukun Pan wrote:
->> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml 
->> b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> index 1bbbaf81134b..e04c213a0dee 100644
->> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
->> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> @@ -799,6 +799,11 @@ properties:
->>            - const: radxa,rock3a
->>            - const: rockchip,rk3568
->> 
->> +      - description: Radxa ROCK 3C
+On 2024-04-18 02:30:59, Dmitry Baryshkov wrote:
+> On Wed, Apr 17, 2024 at 01:57:45AM +0200, Marijn Suijten wrote:
+> > This comment one line down references a single, "same CTL" that controls
+> > two interfaces, so the comment should clearly describe two interfaces
+> > used with a single active CTL and not "two CTLs".
+> > 
+> > Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
+> > Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> > ---
+> >  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> > index d9e7dbf0499c..7e849fe74801 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> > @@ -428,7 +428,7 @@ static void dpu_encoder_phys_vid_enable(struct dpu_encoder_phys *phys_enc)
+> >  	dpu_encoder_phys_vid_setup_timing_engine(phys_enc);
+> >  
+> >  	/*
+> > -	 * For single flush cases (dual-ctl or pp-split), skip setting the
+> > +	 * For single flush cases (dual-intf or pp-split), skip setting the
 > 
-> There was some big renaming of these boards. I assume you are using
-> correct naming?
+> It should be fixed, but in the other way: it's 'single-ctl'. See
+> sde_encoder_phys_needs_single_flush().
 
-I can confirm that the naming above is fine.
+As written in the cover letter I was unsure about this comment.
+
+You are right that sde_encoder_phys_needs_single_flush() is supposed to return
+true in pp-split or single-ctl.  However, the second part of the comment (right
+below) is in conflict with another patch that I've sent as part of these series:
+on a single-ctl setup with dual interfaces, the second INTF needs to be marked
+for flushing.
+
+While that observation and fix is for CMD-mode, the exact same comment is found
+downstream for video mode:
+
+https://git.codelinaro.org/clo/la/platform/vendor/opensource/display-drivers/-/blob/display-kernel.lnx.5.4.r1-rel/msm/sde/sde_encoder_phys_vid.c?ref_type=heads#L794-804
+
+You were fixing exactly that in one of your preliminary Active-CTL patches by
+making dpu_encoder_phys_vid_needs_single_flush() return for Active-CTL, so we
+should probably update this comment in the same patch when you send it?
+
+(that is: the flush bit needs to be set for the slave intf in Active-CTL. Before
+Active-CTL, a slave encoder would actually have two CTLs and two INTFs where the
+flush bit was probably skipped on both slaves?)
+
+On a side-note, since the needs_single_flush callback is used elsehwere, I'm
+unsure if that patch affects things in the wrong way since the downstream file
+linked above applies the check for CTL_ACTIVE_CFG directly in-line without
+affecting the callback.
+
+- Marijn
+
+> >  	 * flush bit for the slave intf, since both intfs use same ctl
+> >  	 * and HW will only flush the master.
+> >  	 */
+> > 
+> > -- 
+> > 2.44.0
+> > 
+> 
+> -- 
+> With best wishes
+> Dmitry
