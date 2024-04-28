@@ -1,98 +1,130 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D412B3A1DA;
-	Sun, 28 Apr 2024 13:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D416BFBD;
+	Sun, 28 Apr 2024 13:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714311302; cv=none; b=HDk0kto1+vX5x/T60UiSwnIWUucjBAYhkWXsiRB7DGE29MUiFp8zhInTQxALJoKI08FUZ+X26+PJpygneBCORBvl9ptjTUQ7tY3uT38xaqDvwmKz++wrXybrzD6c90NCqNkPAnBd6omgRoiOfrVSg9xXC3glZSRhfd6HH8+UIMw=
+	t=1714311977; cv=none; b=QaTBy+eOdLwXRHv7T6upYJ432DIaaw4QQdXBMipryTJ7gQd987OZwYycLEP6ZbhX+umvgXBR9ABvCrmRSwEVrputqgNbX2mQSsl3OkUGMmCS2mBDdD5kEDVR75uFzKz4vV+zPb0JCgLFNMlSCw9b3z0otG28C55d+0bSV+v8f6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714311302; c=relaxed/simple;
-	bh=2uRI9LxPo4B51JZchTefSe/fRwTISlvKr+vlD/tMD1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=T2tS/mm2etFMipvjFQNRFipDUC327WbFRISJYg60wqXSRu/lLrig+OZViheogG2RLcs6mtpGhydqjNcl4lFJ+lOzl8eB4a33SwNvTaxVe9ksfQX5rzX2pWzqkJWfhL/9FOQcAbHgW68tUVq7KCmKlUwp3yMCKhzseoRe098ZeUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tq+w/6vI; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714311977; c=relaxed/simple;
+	bh=XGeSlMdeDD1Qsf+xehzikrE+33otHTVL2krpJMt5DKk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JDFCaDYbjkKRViadbJuNND941s+htHztf/tCCl16PqLr/70m4Owfr3uriulAaGceEpzNCZp5+v1j21qb+xX9EvgXuKZo7QWTrUppyQyEDXyReKA8UNxizT851uNRtWTxTj8Q6bc/UFEw2jD7zbRd+MdGgRsaC9ZUhywX3LNdnpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYZIobLc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tq+w/6vI"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2dd64d6fe94so40309001fa.0;
-        Sun, 28 Apr 2024 06:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714311299; x=1714916099; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IP96e4j7N2ga+3IohjdHWOANxjwoUHNjswPRS+pnAU4=;
-        b=Tq+w/6vI88gK23Fb/vRSMKbNk95fq+gIFGKajmnc4DikVOcCNQVX1UfUd4gaj7MdLq
-         93lZMLyqHEWE9bRuV+639Q8SJV8s+JTu1IBJkl1tb1TjDNiN4mpScXc9EpHX0GBX6kSS
-         9GLRh4ZG7mV4zYMWccY1YlXNytPdUGa4N4lkDJVivGOxMA/zElNHTLQTyatr4We2uIZp
-         02XB1LPOG0hKmnY+OrGVrDXo3TG/8/aSk7WSqFfAJAtQs/Uwes5BnCA4E7YzbWXjvafk
-         vLbJYIzeA9+dvs+xMS0wdjd+GEGNof7/8Ah2K2EuqiCQzeNNnLN7MYluyT488neJPNhf
-         uGKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714311299; x=1714916099;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IP96e4j7N2ga+3IohjdHWOANxjwoUHNjswPRS+pnAU4=;
-        b=o/+Zibn1gRVy07v6pb1SBfIKeSpVQd1Ze94HF1NErKOE4CxwusPteMiLssnlYYhpBi
-         ttCfHmz53oESz63ORC29el9bR02UmtIgz5IACZqxaiT8+DPkQ+E4CcahEtaL5ERQRJG0
-         k33PJgoL3DlvoMaY5a9WQ/+Gy1U+fCwwOuesuccOS2OlKjW3a7R91b534T2hPr9yP2/1
-         yDjtCXyIq6Ulg7E0Iouuzhi5Gd2XbAOx2SoyjafZht1tQGlVi9QEmVQtvQ/W4vnF2zaa
-         X/zmXLA5hVWhRYSQAAn3ZY5lFHxJa83NV2yUf0JS23eVwbB4dbl0mfw45t1D0tpwMgQy
-         sr4g==
-X-Forwarded-Encrypted: i=1; AJvYcCU9DBJC3O/AIEmfG918+PcYjd2LY1Vl9pAEy2N1UrufTE+W0moUP4nF18MCxt3tSzZmRyc0TUllitu559qyKdpyZexBe7DNSVn6ckg8+0Jlr8jpeEdqkgM6DRM7poeZ5/0BSMhCD717Cw==
-X-Gm-Message-State: AOJu0Yyoly7YnnILjJq7ngweqngyHyW9Y5DQX8ohFp2WYRFrrxnR5HEO
-	bPg6/6//jGB5Albu28XA13zeo/tyqtC97oRwxZp5mCtEGtAmvEA=
-X-Google-Smtp-Source: AGHT+IE+EDa/RpA244Drr2Qyd4OYXHmApxtCXrUqvkVYq0vUKmloj1NkIcSPyFBdjssKb4UwMd8tEA==
-X-Received: by 2002:a2e:9643:0:b0:2df:97b1:d4f4 with SMTP id z3-20020a2e9643000000b002df97b1d4f4mr3063645ljh.33.1714311298705;
-        Sun, 28 Apr 2024 06:34:58 -0700 (PDT)
-Received: from octinomon.home (182.179.147.147.dyn.plus.net. [147.147.179.182])
-        by smtp.gmail.com with ESMTPSA id fm18-20020a05600c0c1200b0041b5500e438sm12260745wmb.23.2024.04.28.06.34.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Apr 2024 06:34:58 -0700 (PDT)
-Date: Sun, 28 Apr 2024 14:34:56 +0100
-From: Jules Irenge <jbi.octave@gmail.com>
-To: jgg@ziepe.ca
-Cc: leon@kernel.org, wenglianfa@huawei.com, gustavoars@kernel.org,
-	lishifeng@sangfor.com.cn, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] RDMA/core: Remove NULL check before dev_{put, hold}
-Message-ID: <Zi5QgLIt9sblrfYs@octinomon.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYZIobLc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADB8DC113CC;
+	Sun, 28 Apr 2024 13:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714311976;
+	bh=XGeSlMdeDD1Qsf+xehzikrE+33otHTVL2krpJMt5DKk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JYZIobLcbB6cD1kT4ntLrXTtY7O2WhUy0BSeOJjbeRKtt5tvpipAr2izMNopXdQyk
+	 pPVqDColO/fTFJDJMqv1+tt7X1vhnjD/Upx/e6Po+iqrP+FPSytbleMeFkoN6ykTP9
+	 g/De7HCVuuFJWvG67VTBPqLhGcGN0uDxl+V3+juw0s39ZUXI2ocGhdLt0FHR5XVhQ+
+	 Yibiu7BWlHRCnopbQf0LAZfsPsNTHga9NwKb0XiMPH6wpWfYY+kGuzv2WgfnBFvvWt
+	 oIjOD+Hrly1XGAZQEgV85DGtyJbMfNPMzNYVKwiNwjG+q5PRc4iMVTf+vJ7g26V6QJ
+	 35Mxn7ob0mxfQ==
+Date: Sun, 28 Apr 2024 14:46:06 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Andrew Hepp <andrew.hepp@ahepp.dev>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: temperature: mcp9600: Fix temperature reading for
+ negative values
+Message-ID: <20240428144606.5b3d9a7e@jic23-huawei>
+In-Reply-To: <20240427195758.GA3350@debian>
+References: <20240424185913.1177127-1-dima.fedrau@gmail.com>
+	<Ziy8DsMCeAGK79E7@debian-BULLSEYE-live-builder-AMD64>
+	<20240427195758.GA3350@debian>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Coccinelle reports a warning
+On Sat, 27 Apr 2024 21:57:58 +0200
+Dimitri Fedrau <dima.fedrau@gmail.com> wrote:
 
-WARNING: NULL check before dev_{put, hold} functions is not needed
+> Am Sat, Apr 27, 2024 at 05:49:18AM -0300 schrieb Marcelo Schmitt:
+> > Hi Dimitri,
+> >=20
+> > Interesting patch this one.
+> > I think this does apply, although, the cold junction register has for s=
+ign bits
+> > so I think we could also have a mask to clear those out.
+> > Some code suggestions inline.
+> > =20
+> Hi Marcelo,
+>=20
+> the temperature bits are in two=E2=80=99s complement format for hot and c=
+old
+> junction. Equations to calculate the temperature are also the same in
+> the datasheet. There should be no difference when handling them. I don't
+> think we need to do anything more with the value except sign_extend it to
+> the appropriate data type. If the sign bits aren't right, there is a bug
+> in the chip, until then futher processing of it is unneeded. I could add
+> a comment here if it helps.
 
-The reason is the call netdev_{put, hold} of dev_{put,hold} will check NULL
-There is no need to check before using dev_{put, hold}
+Agreed - by my reading the original patch is correct. Maybe it would act
+as cleaner 'documentation' to have the sign_extend32() for the cold junctio=
+n be
+from bit 12 rather than 15, but I'm not sure it's worth the effort.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- drivers/infiniband/core/device.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Andrew, would be great if you can review this fix in case we are all missing
+something!
 
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index 07cb6c5ffda0..84be4bb9b625 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -2235,8 +2235,7 @@ struct net_device *ib_device_get_netdev(struct ib_device *ib_dev,
- 		spin_lock(&pdata->netdev_lock);
- 		res = rcu_dereference_protected(
- 			pdata->netdev, lockdep_is_held(&pdata->netdev_lock));
--		if (res)
--			dev_hold(res);
-+		dev_hold(res);
- 		spin_unlock(&pdata->netdev_lock);
- 	}
- 
--- 
-2.43.2
+Jonathan
+
+>=20
+> > On 04/24, Dimitri Fedrau wrote: =20
+> > > Temperature is stored as 16bit value in two's complement format. Curr=
+ent
+> > > implementation ignores the sign bit. Make it aware of the sign bit by
+> > > using sign_extend32.
+> > >=20
+> > > Fixes: 3f6b9598b6df ("iio: temperature: Add MCP9600 thermocouple EMF =
+converter")
+> > > Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+> > > ---
+> > >  drivers/iio/temperature/mcp9600.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/iio/temperature/mcp9600.c b/drivers/iio/temperat=
+ure/mcp9600.c
+> > > index 46845804292b..7a3eef5d5e75 100644
+> > > --- a/drivers/iio/temperature/mcp9600.c
+> > > +++ b/drivers/iio/temperature/mcp9600.c =20
+> >=20
+> > #define MCP9600_COLD_JUNCTION_SIGN_MSK GENMASK(15,12)
+> > ...
+> >  =20
+> > > @@ -52,7 +52,8 @@ static int mcp9600_read(struct mcp9600_data *data,
+> > > =20
+> > >  	if (ret < 0)
+> > >  		return ret;
+> > > -	*val =3D ret;
+> > > +
+> > > +	*val =3D sign_extend32(ret, 15); =20
+> > 	if (chan->address =3D=3D MCP9600_COLD_JUNCTION)
+> > 		*val &=3D ~MCP9600_COLD_JUNCTION_SIGN_MSK;
+> > =20
+> This won't work. Assuming int is 32-bit ret =3D 0xfffe and *val =3D -2 af=
+ter
+> sign_extends32, this would result in *val =3D -61442 which is wrong.
+> > > =20
+> > >  	return 0;
+> > >  }
+> > > --=20
+> > > 2.39.2
+> > >=20
+> > >  =20
+> Best regards,
+> Dimitri Fedrau
 
