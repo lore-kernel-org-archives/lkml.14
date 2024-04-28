@@ -1,133 +1,202 @@
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazolkn19011003.outbound.protection.outlook.com [52.103.66.3])
+Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8466E19F
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 04:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.66.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714279508; cv=fail; b=XHNTNXq8KHkyni0irYQG/2UNytqRu/KD41xspa2SZ4K8izH8LkioVgzlzGVsPz/935IERDqbphkhINCvmPlnP4B93rfY09UH+Bs2UsOwVofdxwLTXsW1CZah20Gxzb6xdUhGO/cNeKKLKHlHa546oh79vxtJf3DDBOPnjn9lIKU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714279508; c=relaxed/simple;
-	bh=cBdNWWQPo4+AjeWksCaZzxycSNDHAdGVeVpcVOLVr7k=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=big//IvxtlOKHIiU6Y0wUU3iwXw2cpT5pnwkPON4olxlSD/VSWfLb84PsCyxTdfbnWltTbWJq1EVOTJE8jM2R+BI7znfO4NfPA17uvBW0hQWsV2z9yceBBZt+QbJgjWG1BoxWG0kq4sx99B+NUGqlf7KF7OMESpa7tliSaV0xVY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=pPdmMD01; arc=fail smtp.client-ip=52.103.66.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="pPdmMD01"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XuL0QbWrfwKLfJcVS8pVQ5orIiojgsMZScnRXG2DkWthqmOBxSufLvI+fmZwCmFIb3gj/ZH3mkrQA2QnfJlkzc+/F9r+BAK7/APiCNWc9PqMJnnmd+SuMGeaeszMAV/khn1InJ6SsIyF8IggNaw5SnjaTHYyHUnXazFAiyf0yaorToHBOjQLGdU6QoS+aQk7Qh75SIHPGALcn2SDEPNlbx6P1Ag+IY9P85+6UQpb1nxSFPiliapxjoPl2Vbq9dy6B/00oU1j27CC/d3HkQ/HG1zACtCJZVYXdsB3vVWXXzoHQJkKW0hqvuB5tF0/XjwI3h0EKc8DC4ov3VfzIpNHQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1FRUhzaLIO+NPD86/Q7agHIkNEjG7ywy+myCCzisDxI=;
- b=ZvMi1bMOyyh7V2TUOXgsDeeAXj48PDLQ7jqk5ZKFMAJk8IwYu/t2FhW9nTHdGL/zBIz2hP/Oy4ut3pZPjicTZQUWDot40sMZSe0ijCqBmUTzOEnTAmi/h2DftB1GtXdNE2H6ki5gL0C7lwbPtAKStOcXLPnh5NTVMfDt3wsIhHm2GMUCPUnqhIxw4LdcyV/4WQjDtlZlVvsfONfvamOf3mnIzsmcuqCVUUpyZkmDxoY8DontSpwk9LTpxVTh0u2PRL2f+Cstkx1ohdX64frsj+x7w3ZwlXI060lWpMY63RbAyHvTVBLOW9Sbh3WyFPXHDMDFMuO+7GBRlNmMmkxyVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1FRUhzaLIO+NPD86/Q7agHIkNEjG7ywy+myCCzisDxI=;
- b=pPdmMD011eoCcssJp1ekB9hMxJ2iXXz5XZh6slx6nfv907bNQEze7eTNxmxRhZ0Dn/jcB3u1ST6HUnOPSe8ne3NnnGZuUCYgRyhuKNSDQU0IzlzgUlh3R4i+mGp1olLtCKiofkRv9JZJ085tt+k2A0GYNh6OIatqS5/bfNlpETQKw5w8/3WGC53xoySjB+/l8CGywfPiBvY2/04Bw5O2a1/cWGYqnpK2VyXAdqI6YiC5S7UCTRfr8fRmEGI0oJswvIG9KT8QOold2LFdCl5GLvmpKz7EXg0Paq70A9WL4W9drziZBVPIjcid5hL2glz+17WNdPWfI1zKedcThl8HpA==
-Received: from TYAP286MB0026.JPNP286.PROD.OUTLOOK.COM (2603:1096:404:8041::13)
- by OSZP286MB1799.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:1bc::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.32; Sun, 28 Apr
- 2024 04:45:02 +0000
-Received: from TYAP286MB0026.JPNP286.PROD.OUTLOOK.COM
- ([fe80::435b:a73c:1b5e:2169]) by TYAP286MB0026.JPNP286.PROD.OUTLOOK.COM
- ([fe80::435b:a73c:1b5e:2169%4]) with mapi id 15.20.7519.030; Sun, 28 Apr 2024
- 04:45:02 +0000
-From: Zesen Liu <ftyg@live.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>
-Cc: Zesen Liu <ftyg@live.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] sched: update the location of entry_64.S in the code comment
-Date: Sun, 28 Apr 2024 12:44:39 +0800
-Message-ID:
- <TYAP286MB0026B32BB0A525F6635F6F21AF142@TYAP286MB0026.JPNP286.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.44.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [8RPdo1up3hdZTAJg/FFKK8BpcFSBIW3z]
-X-ClientProxiedBy: SG2P153CA0050.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::19)
- To TYAP286MB0026.JPNP286.PROD.OUTLOOK.COM (2603:1096:404:8041::13)
-X-Microsoft-Original-Message-ID: <20240428044440.30718-1-ftyg@live.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B8E28F1;
+	Sun, 28 Apr 2024 04:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714279991; cv=none; b=dSRMvK1Q5HfZbEgWf2kRriqEj+9a6fKKmcyYHvr6jPY+l0M9xh9qs2Jo+2YnAHdYsRW352yDY0G8YydlZTB8ni7DbexTgMy90ocwX9kQgwPJC68e6cN8oidFWvRc1n41Aji80A3mWLgKdsts930SDJyOeBnenCohxmgT3qcpld8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714279991; c=relaxed/simple;
+	bh=G4YP2/ZWQwZU2XzsNw7jXNrEDs7fUDza/7rfo9ENXWI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L/wKD+TjfF7/bkBkCNjFXkRTKy7ruLH++wLMCTZIrt2GPWTj81nNUyiPcpwzRfxqEwC8oJZ8YwKgFVcOuHAnvxdCXG8h7XVblfAAoqYVlkvG6rSzbjztocxH800pKHDSllizHC5aLnfXbq/jXGtzmk0CJMqnu0onbMJBzztXSw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
+Received: from h3cspam02-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+	by h3cspam02-ex.h3c.com with ESMTP id 43S3jaSg028991;
+	Sun, 28 Apr 2024 11:45:36 +0800 (GMT-8)
+	(envelope-from xi.fengfei@h3c.com)
+Received: from mail.maildlp.com ([172.25.15.154])
+	by h3cspam02-ex.h3c.com with ESMTP id 43S3iaGj025312;
+	Sun, 28 Apr 2024 11:44:37 +0800 (GMT-8)
+	(envelope-from xi.fengfei@h3c.com)
+Received: from DAG6EX01-IMDC.srv.huawei-3com.com (unknown [10.62.14.10])
+	by mail.maildlp.com (Postfix) with ESMTP id A2F8522E8727;
+	Sun, 28 Apr 2024 11:47:11 +0800 (CST)
+Received: from localhost.localdomain (10.99.206.12) by
+ DAG6EX01-IMDC.srv.huawei-3com.com (10.62.14.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1258.27; Sun, 28 Apr 2024 11:44:38 +0800
+From: Fengfei Xi <xi.fengfei@h3c.com>
+To: <sandeen@sandeen.net>
+CC: <darrick.wong@oracle.com>, <linux-kernel@vger.kernel.org>,
+        <linux-xfs@vger.kernel.org>, <tian.xianting@h3c.com>,
+        <xi.fengfei@h3c.com>
+Subject: Re: [PATCH] xfs: fix system crash caused by null bp->b_pages
+Date: Sun, 28 Apr 2024 11:44:36 +0800
+Message-ID: <20240428034436.42237-1-xi.fengfei@h3c.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <63d75865-84c6-0f76-81a2-058f4cad1d84@sandeen.net>
+References: <63d75865-84c6-0f76-81a2-058f4cad1d84@sandeen.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYAP286MB0026:EE_|OSZP286MB1799:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce0c9bd2-0a61-4f93-6b44-08dc673df7a1
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	Mdu4EDcFBORl5jYIcmSG+SfA8P16Uhm+BsuCqWoCmYC7rrIU+ordF0iJkzwcmkUdq9wHfc8FV8zfnQ4j++dNRSpoxYhmbdnRR2ri1FaTWNZKHUZIR5gomtBcxO8VqxBh977To6ir591HbmJImO6st0kGIIyn+B85v/t/Ya2+vripOwmokCzAVjYuQPB6vdg4CjaXOnQG4DlMQlUzBySvf7qLaOvfbEAE83azjsG21W37iZ3lS3GBK5lJuQ0kkFTFCtG7jDHYxtvuhqTiFiQL1aRKhrr1iaUAJ87lUyZVUNA53x31HJ4xkRzYPFFDTbtVJEbcw01jIoi86r7hGAu7sPWVUnuVh36qGWXgzWodB+gRhFKyjGqqV9+L80wDVzZ3yQg3PfXnJK5ER1hzGu5q7IGnX2LYqjLvFmAeA2f1YyJXCJfX48hztlVCjWJ7h2hOU0lVMmInCGioqrK+RMnjcoW+KunjjgOV9OMwTrto4YautL86wGoSuWJHnP6vrlFV0aooU+u+Waubiu+MZCjOn7+0QmFKwDQTdfA9vUHUuT/oHChzsZYvnXtxbGDjVUsvF+NQpiYzcZv9GnnFL1KZO70a25AOIgNxUnNT2yBYMh8=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3lSNJ2lHRL3POSjNtT/d00dokIifbDDlflu5lCJL0wniw1nOt527AFVPbi3q?=
- =?us-ascii?Q?2BoGQTl3Jmniey9qfcPeU5XVN6Kbtmb9cp1oyD9WldQETuBN3MuRr7f9m1JR?=
- =?us-ascii?Q?uflFT2MLMq6o6eYgnJ8gR5r65rKIrjjLIJltPn4u3c1gMduu3og0iKxYYo0K?=
- =?us-ascii?Q?4n9YV+8+ZOGbKBBYByl0ObDHmF7QZEXqJGl7fcG5d/fHB2o3Kz3YIbnpw7G7?=
- =?us-ascii?Q?GI0ajRGl6wojpYerhT3L1UjyFy3wj9ftLTcUUovRGJqZtsW/KilTKMu+d0Ki?=
- =?us-ascii?Q?jfC7MHbdcX5AjAJfXDJqKn4Evs6LKkla2+LFiJJsCd7rZ9z877bM/GNSdJtI?=
- =?us-ascii?Q?2RjQ8dWwJMSjUay3b4MSnV7SeNMDHgMS1I/+eT9pj9JTXshPAVLPRojW7eMr?=
- =?us-ascii?Q?ZNfgiS2hq8f7/0dMEvIszNpVrJ14UNu+SFmRz5nxlINSgVIBjESrZS1/YfTv?=
- =?us-ascii?Q?j8VKgw9NPzJsr/MGq2luoZBv+BuLHg3smC3Zfm6lM/pt1nWD3uF9DWWd5URC?=
- =?us-ascii?Q?quj9KTyewh9tQPtCxcKH4ITtCG4W3PmeFohQArme3shMY9W+p4Oea2fDpEto?=
- =?us-ascii?Q?cJDrc9b+yEgzQnGdro1JiqmWMzJfMVx7/9gqLqlM+6dbD9QhFIdK93Z1V5Ox?=
- =?us-ascii?Q?Z08wRLeH4F8WBOytLq/XR06G21ZhIsqKkyebLwKjBjAF5OzFmYdfaapchJrA?=
- =?us-ascii?Q?/0B2rqow6pu5uu9oPxDP6PeD405IfRZ7BKCymyfP2sm3ZURcG/3AITgZVh7e?=
- =?us-ascii?Q?l+4Ua1gsXuki1jXkB5KIGs/TcuzVtjvxmO8/x7TP6bXeLokgQl3pdfcL6FyH?=
- =?us-ascii?Q?OroMk4gi0x40XCjm995Aq606FC2T2cn/buGFHeBnHfzkIGV1pFjMLi2lxec/?=
- =?us-ascii?Q?Ki72AfAHdMBYgVSC4/tw+IQOnJuhMn57X7IXmzmMofXnGFfQnlc9oHAWmqiU?=
- =?us-ascii?Q?b5deRWqNzIDOWQ8stI70g/8bxlOlmSOw4MWHQ/99KkHPyF8NBd8IW7nmm1nw?=
- =?us-ascii?Q?p1t54brHA6c2WUM0hwNmKMnWMB5NsD6tPwUvbOSHXP4uM4Lun17Mp8FtpstU?=
- =?us-ascii?Q?QZBsGAXctmTH5rbJDnbnmP4u+OSMMeST5nII9Ff7s/KLWfgWvlJ0umsmiwE6?=
- =?us-ascii?Q?f5IPdUII/GtK2oWstJA24WXpM7N84EWWUaDM77lKFDYwuzu7KzQLCeN8mVOT?=
- =?us-ascii?Q?W9n7Nu2bIDT33ZSC9fk5i95AcqNjcw+7tLPOmA=3D=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-05f45.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce0c9bd2-0a61-4f93-6b44-08dc673df7a1
-X-MS-Exchange-CrossTenant-AuthSource: TYAP286MB0026.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2024 04:45:02.7455
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZP286MB1799
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
+ DAG6EX01-IMDC.srv.huawei-3com.com (10.62.14.10)
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:h3cspam02-ex.h3c.com 43S3jaSg028991
 
-Signed-off-by: Zesen Liu <ftyg@live.com>
----
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>On 12/24/20 3:51 AM, Fengfei Xi wrote:
+>> We have encountered the following problems several times:
+>>     1、A raid slot or hardware problem causes block device loss.
+>>     2、Continue to issue IO requests to the problematic block device.
+>>     3、The system possibly crash after a few hours.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7019a40457a6..8a0d7102ce94 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6582,7 +6582,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-  *   1. Explicit blocking: mutex, semaphore, waitqueue, etc.
-  *
-  *   2. TIF_NEED_RESCHED flag is checked on interrupt and userspace return
-- *      paths. For example, see arch/x86/entry_64.S.
-+ *      paths. For example, see arch/x86/entry/entry_64.S.
-  *
-  *      To drive preemption between tasks, the scheduler sets the flag in timer
-  *      interrupt handler scheduler_tick().
--- 
-2.44.0
+>What kernel is this on?
 
+>> dmesg log as below:
+>> [15205901.268313] blk_partition_remap: fail for partition 1
+
+>I think this message has been gone since kernel v4.16...
+
+>If you're testing this on an old kernel, can you reproduce it on a
+>current kernel?
+
+>> [15205901.319309] blk_partition_remap: fail for partition 1
+>> [15205901.319341] blk_partition_remap: fail for partition 1
+>> [15205901.319873] sysctl (3998546): drop_caches: 3
+
+>What performed the drop_caches immediately before the BUG?  Does
+>the BUG happen without drop_caches?
+
+>> [15205901.371379] BUG: unable to handle kernel NULL pointer dereference at
+
+>was something lost here?  "dereference at" ... what?
+
+>> [15205901.372602] IP: xfs_buf_offset+0x32/0x60 [xfs]
+>> [15205901.373605] PGD 0 P4D 0
+>> [15205901.374690] Oops: 0000 [#1] SMP
+>> [15205901.375629] Modules linked in:
+>> [15205901.382445] CPU: 6 PID: 18545 Comm: xfsaild/sdh1 Kdump: loaded Tainted: G
+>> [15205901.384728] Hardware name:
+>> [15205901.385830] task: ffff885216939e80 task.stack: ffffb28ba9b38000
+>> [15205901.386974] RIP: 0010:xfs_buf_offset+0x32/0x60 [xfs]
+>> [15205901.388044] RSP: 0018:ffffb28ba9b3bc68 EFLAGS: 00010246
+>> [15205901.389021] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000000000b
+>> [15205901.390016] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88627bebf000
+>> [15205901.391075] RBP: ffffb28ba9b3bc98 R08: ffff88627bebf000 R09: 00000001802a000d
+>> [15205901.392031] R10: ffff88521f3a0240 R11: ffff88627bebf000 R12: ffff88521041e000
+>> [15205901.392950] R13: 0000000000000020 R14: ffff88627bebf000 R15: 0000000000000000
+>> [15205901.393858] FS:  0000000000000000(0000) GS:ffff88521f380000(0000) knlGS:0000000000000000
+>> [15205901.394774] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [15205901.395756] CR2: 0000000000000000 CR3: 000000099bc09001 CR4: 00000000007606e0
+>> [15205901.396904] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> [15205901.397869] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> [15205901.398836] PKRU: 55555554
+>> [15205901.400111] Call Trace:
+>> [15205901.401058]  ? xfs_inode_buf_verify+0x8e/0xf0 [xfs]
+>> [15205901.402069]  ? xfs_buf_delwri_submit_buffers+0x16d/0x2b0 [xfs]
+>> [15205901.403060]  xfs_inode_buf_write_verify+0x10/0x20 [xfs]
+>> [15205901.404017]  _xfs_buf_ioapply+0x88/0x410 [xfs]
+>> [15205901.404990]  ? xfs_buf_delwri_submit_buffers+0x16d/0x2b0 [xfs]
+>> [15205901.405929]  xfs_buf_submit+0x63/0x200 [xfs]
+>> [15205901.406801]  xfs_buf_delwri_submit_buffers+0x16d/0x2b0 [xfs]
+>> [15205901.407675]  ? xfs_buf_delwri_submit_nowait+0x10/0x20 [xfs]
+>> [15205901.408540]  ? xfs_inode_item_push+0xb7/0x190 [xfs]
+>> [15205901.409395]  xfs_buf_delwri_submit_nowait+0x10/0x20 [xfs]
+>> [15205901.410249]  xfsaild+0x29a/0x780 [xfs]
+>> [15205901.411121]  kthread+0x109/0x140
+>> [15205901.411981]  ? xfs_trans_ail_cursor_first+0x90/0x90 [xfs]
+>> [15205901.412785]  ? kthread_park+0x60/0x60
+>> [15205901.413578]  ret_from_fork+0x2a/0x40
+>> 
+>> The "obvious" cause is that the bp->b_pages was NULL in function
+>> xfs_buf_offset. Analyzing vmcore, we found that b_pages=NULL but
+>> b_page_count=16, so b_pages is set to NULL for some reason.
+
+>this can happen, for example _xfs_buf_get_pages sets the count, but may
+>fail the allocation, and leave the count set while the pointer is NULL.
+>> 
+>> crash> struct xfs_buf ffff88627bebf000 | less
+>>     ...
+>>   b_pages = 0x0,
+>>   b_page_array = {0x0, 0x0},
+>>   b_maps = 0xffff88627bebf118,
+>>   __b_map = {
+>>     bm_bn = 512,
+>>     bm_len = 128
+>>   },
+>>   b_map_count = 1,
+>>   b_io_length = 128,
+>>   b_pin_count = {
+>>     counter = 0
+>>   },
+>>   b_io_remaining = {
+>>     counter = 1
+>>   },
+>>   b_page_count = 16,
+>>   b_offset = 0,
+>>   b_error = 0,
+>>     ...
+>> 
+>> To avoid system crash, we can add the check of 'bp->b_pages' to
+>> xfs_inode_buf_verify(). If b_pages == NULL, we mark the buffer
+>> as -EFSCORRUPTED and the IO will not dispatched.
+>> 
+>> Signed-off-by: Fengfei Xi <xi.fengfei@h3c.com>
+>> Reviewed-by: Xianting Tian <tian.xianting@h3c.com>
+>> ---
+>>  fs/xfs/libxfs/xfs_inode_buf.c | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>> 
+>> diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+>> index c667c63f2..5a485c51f 100644
+>> --- a/fs/xfs/libxfs/xfs_inode_buf.c
+>> +++ b/fs/xfs/libxfs/xfs_inode_buf.c
+>> @@ -45,6 +45,17 @@ xfs_inode_buf_verify(
+>>  	int		i;
+>>  	int		ni;
+>>  
+>> +	/*
+>> +	 * Don't crash and mark buffer EFSCORRUPTED when b_pages is NULL
+>> +	 */
+>> +	if (!bp->b_pages) {
+>> +		xfs_buf_ioerror(bp, -EFSCORRUPTED);
+>> +		xfs_alert(mp,
+>> +			"xfs_buf(%p) b_pages corruption detected at %pS\n",
+>> +			bp, __return_address);
+>> +		return;
+>> +	}
+
+>This seems fairly ad hoc.
+
+>I think we need a better idea of how we got here; why should inode buffers
+>be uniquely impacted (or defensively protected?)  Can you reproduce this
+>using virtual devices so the test can be scripted?
+
+Hi, we have confirmed through the systemtap instrumentation of ioerror that 
+the issue is related to the cleanup logic for xfs_log_item->li_flags in the 
+xfs_buf_resubmit_failed_buffers function. 
+
+As described in commit d43aaf1685aa471f0593685c9f54d53e3af3cf3f: 
+if we clear the log item failed state before queuing the buffer for IO 
+we can release all active references to the buffer and free it, 
+leading to use after free problems in xfs_buf_delwri_queue.
+
+If we trigger dropcache between xfs_clear_li_failed and xfs_buf_delwri_queue,
+as no one holds the xfs_buf, the xfs_buf is released.
+
+Currently, after incorporating the modifications, the issue has not reoccurred.
+
+--
+Thanks, 
+
+Fengfei.Xi
