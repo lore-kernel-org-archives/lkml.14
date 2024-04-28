@@ -1,106 +1,120 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE957433DA
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 16:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E642A10F1;
+	Sun, 28 Apr 2024 16:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714322021; cv=none; b=hlgrH2YNLq9qGQfQzNFibi7Ldk9jXWiBS9JSwj/orDsjaOCBPrh2/Of4hkV4ylK5r4RapVT8fSFlLNfMsGAqaWwzo2dDg8T81hVqM2ip8cslWMjJBeofhlh8rF7TPaUDMB/wQf4CdAUd4hNfevP7EhFMeYF/+0NVe9+aCs8x4os=
+	t=1714322075; cv=none; b=MFz3LchyMXqHwn6gapW5c/5ThN2nMf5ZAIGIPuMkIQefCgieAj+uNTaOXfLS+dAisAG9kWFVU2yVjwFn7m0wsaEhnXPjcgq/ACC5XnhuhP6xw2RP2Wvhlc7i6+ZarnKpLzcKUw95Oq441VrQn8gK1I3hMehrZZJLzJ2ZOZsZ8og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714322021; c=relaxed/simple;
-	bh=9ns3Zeagcn2owJh2UVZrXIni5VgaYKCzy1XZ28kpGmw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ojqX1iz1Z3AA5cQuEPdF/Rq79R5HA+A64yihq1daWQZvd6xoFckocTiJxooyWNQfiCUpWwKrzKUbLOWSqly4jUMY917UTvTY3zz62qXRL9Z9cMPn+1FLm2qTnDcQO9vAQsP8FTCy21dTEhyH2wXHlXfe1TCQDiko/2jEe9IHWcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b=WCzutloV; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1714322075; c=relaxed/simple;
+	bh=/ZnkzW7mgNGMkQEi2367jg8Z87SujBjczjx+Ing/UQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sgGVk3/JnKbdYfHoqBD5cG5xgEMXyZ+IWgNkQXFrv4nEALwpDce/rYp//l8bDjKNjnZHzLoVu9evgLKHSa/2n0AEPb+mMJh+erJRlQPLSD1c54gAPxa568kN7e9xmdbmeWY0++h5hJJBTUsYNOOpZDouG7yEPAVLBUa73Mp2uGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKnGjU7D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b="WCzutloV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1714321972; x=1714926772; i=efault@gmx.de;
-	bh=XKc8GiNUeMIch2wEoTBmyOb2M49diZSRbPsPlquGtBA=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=WCzutloVsJBx2ilXu7Wsp8E3TuMcnCu99H2uejtXLxNY3RZcCcK0e8YE+7wUTGhj
-	 PE+uNhAc5ZUNyHTkmx8BdR2Key+rbAEBrfBW6HmG1sZdzPyM6MnF3KRGOhEFvVthx
-	 3o5cRzwvdWEJRW5g4VYRrNt++j9UYN4LTVtVeR/xXqaobYlgIDckMuHfYiz+GRjKm
-	 5xsW0ypKcjsVaaWDk9URP9PxLzJ+UNrtSkm44Tf8Upqo48b82bM70GwEiu+exQ1wn
-	 RN2qQiituq3D0v34apeRBIKy9XdGLB74UE/xfdUByXx1bfC294JDIs+7WMhuOoSQk
-	 AFIWhcmkLI0IZ2ygYw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from homer.fritz.box ([185.146.49.222]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MBUqL-1rohml10wh-00BFVd; Sun, 28
- Apr 2024 18:32:52 +0200
-Message-ID: <b344235ed5e2af6c573ff371d3687f0fa7bc5c5e.camel@gmx.de>
-Subject: Re: [RFC][PATCH 08/10] sched/fair: Implement delayed dequeue
-From: Mike Galbraith <efault@gmx.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, mingo@redhat.com, 
- juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com,  rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com,  vschneid@redhat.com,
- linux-kernel@vger.kernel.org, wuyun.abel@bytedance.com, 
- tglx@linutronix.de, Chen Yu <yu.c.chen@intel.com>, Oliver Sang
- <oliver.sang@intel.com>
-Date: Sun, 28 Apr 2024 18:32:49 +0200
-In-Reply-To: <8d2fd91db108428680cd4ed988b36cf3f579c5ec.camel@gmx.de>
-References: <20240405102754.435410987@infradead.org>
-	 <20240405110010.631664251@infradead.org>
-	 <557be85d-e1c1-0835-eebd-f76e32456179@amd.com>
-	 <ec6f811b9977eeef1b3f1b3fb951fda066fd95f5.camel@gmx.de>
-	 <14330cf4-8d9e-1e55-7717-653b800e5cee@amd.com>
-	 <747627a1414f1f33d0c237f555494149d6937800.camel@gmx.de>
-	 <2b9f7617f2b2130bb6270504ec3858f15d463f1d.camel@gmx.de>
-	 <20240425112855.GF21980@noisy.programming.kicks-ass.net>
-	 <20240426105607.GK12673@noisy.programming.kicks-ass.net>
-	 <20240426111607.GL12673@noisy.programming.kicks-ass.net>
-	 <18f557cd69fc65f5b43daddd8ad3e43278dfa44e.camel@gmx.de>
-	 <8d2fd91db108428680cd4ed988b36cf3f579c5ec.camel@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKnGjU7D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD75FC113CC;
+	Sun, 28 Apr 2024 16:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714322074;
+	bh=/ZnkzW7mgNGMkQEi2367jg8Z87SujBjczjx+Ing/UQY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tKnGjU7DWR6jT6vZ3c9NEvLAOdJ+s4gzSvSfuvVpF96zgCj/+y5dj+3U6JMAjj8cI
+	 yMiKUyUFH1PJN0yDqxsE1t5Qlt2iusd6aNWE23PM8ZPlvFtkEi755TryAKfOjcgyMD
+	 Hoekex1uxqA27b3r39Yxjz8AAWsnDyiszKe+bZOvbUD416nbDi+zA6j8THL/ACsVSr
+	 1AYrtje6/73VYuFpios3t8ZwpVnaS56sRKvIPI7chDd8TREcgX/1amK/Uz3gzbPhZL
+	 KJwE157MOzWPjZbEqG4j2+zqRSCAI9ZskqkrGzsZ7CahmxLRkQIUCTXI4/nUSccZ3h
+	 9cAVhbLqTj/XA==
+Date: Sun, 28 Apr 2024 17:34:22 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Aren Moynihan <aren@peacevolution.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Ondrej Jirman <megi@xff.cz>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>,
+ linux-iio@vger.kernel.org, phone-devel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, Willow
+ Barraco <contact@willowbarraco.fr>
+Subject: Re: [PATCH v2 2/6] iio: light: stk3310: Implement vdd supply and
+ power it off during suspend
+Message-ID: <20240428173422.7c0f44cf@jic23-huawei>
+In-Reply-To: <CAHp75VeRDSPvpmSbUyZPp0RMoTOE193U2ma18qxv_qZQKLCq8g@mail.gmail.com>
+References: <20240423223309.1468198-2-aren@peacevolution.org>
+	<20240423223309.1468198-4-aren@peacevolution.org>
+	<CAHp75VeRDSPvpmSbUyZPp0RMoTOE193U2ma18qxv_qZQKLCq8g@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sVIbo9Cn2EV8gwjvqxk0bVLpmOdONByGQz1/whKZh28uHgdVNkM
- 1qrL2N1GyXsGCJKCPHNihOS7rAYJUfKGgKSe9EtAJfzuYQ2KG8tqHX5Hv4Sa86h0ICp7/9t
- EwZ1FCNpueKlydqZG6VWTHAUh2DFG9hkTb8COe7SR3MxLRLblMSoRZ8mDcoF/Mb/eOx/WGh
- sAxZyAOIJEJSzW1Wg5Vnw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ydEGgL5qy8o=;1lFIhO55+OTL6Nxvq/KA5hX/sPV
- WO/kOpZzypWVPUsIB4R36YJVEgd+AvdHxW3pJ7AVauCZmGOUKFqQmi5gABFx2ZEftQiyqBVTU
- cXhXbSgTVAcoFzIa55HRVApdHiWa4v/GEm9hOAvBJn0ZbAjTOF0n4otX/dkj6m8yfWgWa3fsV
- 95TwigeGvQriC1gL2PTbsrG2HdPhvJZ6SzfYSPjdk7/A6F0yhNc10XDc47aQbNXynv01tbAL1
- ccBogtUfl7Ylvvk/ovXy882OYMjcc5CMD2bRHMNWcEPhtQt0GniozeTnvmRVk6B59vtpVSWEo
- cGaEnwAy9sGfaMlr97xZ+6OIZci36l35snq7w4//Wyd0j2JqE60GaDyMrFP+A5R3B2rP68Bvc
- AvW+ssyXupghtQOL87JenE3amI7AxoEGY56CA7gIOCAJ85az3lltPVfmE8Mq9Mb8CDGuv6pBH
- sXI63sn0ASGgeFMof5ra1EnZ8M4glKml6xLEiu9mLPaQV4YkPk26q1vPeqqrdb9Z3k2s97dg1
- 3K06la5UJYj/ln/RYDvqSDM3K/MSSFLTjh6Y8QFZILDA2PgjS5s77h023K/9oJ4Kng4Qvz+nq
- 0C8ZjHHeU4+l9X9kPuYk7k2ZF1baBlhusM2UkRwqS8awPzGY6WKi88xemTvcbAqE6/uonvyyV
- EePfecJrQUjb1V6S5TZ46ZBnWW/wD8wBcnNBceDGfCXNaSWSpKT9xi3Fyjz7fUZ7DBSUNGOCm
- CScd+oFaO+rOaxR0n/gARKH1iWboHbNEGM5J5qgaDxISxV0xWSIC6B0dino5C97CiV7YWfKmB
- RxGMewnZBo12/BqszUcC6BQCTSPPyLN4rQ/iBZiboZDfc=
 
-On Sat, 2024-04-27 at 08:42 +0200, Mike Galbraith wrote:
-> On Fri, 2024-04-26 at 18:03 +0200, Mike Galbraith wrote:
-> > fwiw, tbench liked the previous version better.
->
-> The culprit lies somewhere in the new PREEMPT_SHORT patch.
+On Wed, 24 Apr 2024 02:16:06 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-<squint>
+> On Wed, Apr 24, 2024 at 1:41=E2=80=AFAM Aren Moynihan <aren@peacevolution=
+.org> wrote:
+> >
+> > From: Ondrej Jirman <megi@xff.cz>
+> >
+> > VDD power input can be used to completely power off the chip during
+> > system suspend. Do so if available. =20
+>=20
+> ...
+>=20
+> >         ret =3D stk3310_init(indio_dev);
+> >         if (ret < 0)
+> > -               return ret;
+> > +               goto err_vdd_disable; =20
+>=20
+> This is wrong. You will have the regulator being disabled _before_
+> IRQ. Note, that the original code likely has a bug which sets states
+> before disabling IRQ and removing a handler.
+>=20
+> Side note, you may make the driver neater with help of
+>=20
+>   struct device *dev =3D &client->dev;
+>=20
+> defined in this patch.
+>=20
+> ...
+>=20
+> >  static int stk3310_suspend(struct device *dev)
+> >  {
+> >         struct stk3310_data *data; =20
+>=20
+> >         data =3D iio_priv(i2c_get_clientdata(to_i2c_client(dev))); =20
+>=20
+> Side note: This may be updated (in a separate change) to use
+> dev_get_drvdata() directly.
+>=20
+> Jonathan, do we have something like iio_priv_from_drvdata(struct
+> device *dev)? Seems many drivers may utilise it.
 
-Ah, moving the curr eligibility check into pick_curr() left an
-ineligible curr to be seen/used further down in pick_eevdf().
+Not yet, but I'm not sure it's a good idea as there is no inherent
+reason to assume the drvdata is a struct iio_dev.  It often is but
+adding a function that assumes that is a path to subtle bugs.
 
-found:
-        if (!best || (curr && entity_before(curr, best)))
-                best =3D curr;
+Jonathan
 
-Nit: PREEMPT_SHORT depending on RUN_TO_PARITY looks odd.
+>=20
+> >  } =20
+>=20
+> ...
+>=20
+> >  static int stk3310_resume(struct device *dev) =20
+>=20
+> Ditto.
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-	-Mike
