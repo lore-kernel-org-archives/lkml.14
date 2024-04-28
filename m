@@ -1,380 +1,247 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F86B1876;
-	Sun, 28 Apr 2024 03:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714276457; cv=none; b=CJbWO+12Llszlw8Qk2sBySkk16jUznx4MVJgzShh9q/STaNHqX/2mKyoiOb6MHtlaiIA8/GV7J/+T3U8xvCbAThWPHGZ/FSqgpqwN4NxFBnO6m6C6ygJGZAItMAbqit1udlqMtfw8ujwXyXiVnclZIw3o3p5Fjz8S3kvacVighY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714276457; c=relaxed/simple;
-	bh=aNjB07W8U36J0nUWbKqxP/4UyrwGwcvrCUmVtPtMEdM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ebRkkGr6LDlp5Dv6br4kmYZ5HZEnq3e1lJTacqmScKKBrFcjpbOkVAUDDzEFzyona3b9yRox1ZSPpfZJqN8M8hvTCSDum8PMa34O5JVX1UR0e9O3t8690A+BXUbaw+pvimtXd6nDhFh9jyhts4yRIeJ19Aw7ZA06BtXBFnMfxcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TxJm0xxG; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A621A2905;
+	Sun, 28 Apr 2024 04:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714277865; cv=fail; b=k3RX8CrAFCYRW095Fp/i8A2qrQaj7uXk3draMFU1yqhHbR8UROyiqNK8XReRSA1BbYFPMBgewvg4K96vP4aLlG+RatAoksQNy+CeXsAq9vBzGUQOJNO3h6tqwmqJWJDC3rmMGhTccICC+DE2JNnyxgWgAhFp+Bo3X+WE4w+gPSc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714277865; c=relaxed/simple;
+	bh=MJn/izRnzHO1JweDz8whytVnPYtTQD51PikyzXpLfgQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aZbmBW9jNUavsEzXRAU1Unqm2uBUdGmU9caT8oVqFXx9Agxz1KfWOkW5jmKs4LCBemK6KzJA3H5tfyzxQkDxyL/3pLFrd9BgpfNynRPqo8+cZDqo1WU6EtKwZ903emlTq6iaq/8aKGauKIts44xmu3lNLqPka0oYs9PMNNtULNk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YvJ8tVPH; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TxJm0xxG"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-23319017c4cso2199686fac.2;
-        Sat, 27 Apr 2024 20:54:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714276454; x=1714881254; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CLpY/XhI5HbcFTKFtWlC5rSdt0Q9kJF4aY4r/ezxW9w=;
-        b=TxJm0xxGFzwYdxIThSqm0tYBGLao7SajxxxXLJB0XBrFQ8oADrZ7rhZ4iOzswJEOJA
-         ipuiXTbevALWbruTbW8wqcMAMRhCaagP4E8hW7yxqeI8bEy/QkF8THlU26X0z+7j1bil
-         7Pe+Q1ATKgA3SoQZgG5K7xpy2XcDALwVD1zo5qJeSLIJo0ylAZTOGBYXHrLTUQ0atLx/
-         abWlyYSIzKP7xS6lo8LyGQXQmfJvaQLI6BWg59jWzjSe2k+ZlQLz7hN52fmoFdzsZHym
-         wdugt96xGh1IU7vqG6ZOUBSM1Md+wjOAxJp0O/aYzN/K6E333TLaVzH4BC7jf0osLTV/
-         Rw/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714276454; x=1714881254;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CLpY/XhI5HbcFTKFtWlC5rSdt0Q9kJF4aY4r/ezxW9w=;
-        b=R1wIGwi9DdQfUkGCR/gIn6Tf13Bt8QZTheX6y7QAg4ddKyrNZwYKBOw5LLX8gxvRvJ
-         u5pWR97jCVU8+TezQFvlbFz+BhUt7ZgkxoLo7ZUqAJeWWb/O89HP6yzq2xKvRQhNgV1j
-         HfE/JVPca0lb/rjoqi7erm94YSXRvXxsHOHd6F3l5tgKJfLkQ8M4c0e0oWDOljEB+FuC
-         iqGVPNd5FsRlp0FLX6BGPNydnOumKFFH2Urpk/4rDN68YotKOV3jKb301Q8p/oCgSbAc
-         05a1ZH3AQqDfr11TZDExmI5UCz80sNKPBsibeohfzxy+WfrxR5SyRnwPWeRb1KfajDAY
-         OA6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVPOxxvI6XWBGaejOUti9ojih4kCb4c6C6EBQWu4w+4PCuOOc6iWXndEJ2HtTO3IVtRcjZlq8+6E3Eak6fzrCMWEi2QTHzyPSJPmqIocQD18yLQyn5F6k2eeiWCIYsWCpiw/i5IOBe00k1G75wz5MD2hhm9LLCY4hcEsK/tLi0aEMp7p7DX9ZQ=
-X-Gm-Message-State: AOJu0Yw0rZvq343bRQi+n6OSod/4+zhnPrhuVyIJ06WeP1HZKpVPPyXG
-	5QlR9E4CwZgNQBIu56O5ICIG4x/GSsRSsrfORJ7MGHe8PL6H+2VO
-X-Google-Smtp-Source: AGHT+IECFoxzkYPE9JmOaGsxWZcrK5Todisg8/d+PBvt5Xw6UOu42wHTOHTWW5/gCiRYyLITGDlz4w==
-X-Received: by 2002:a05:6870:f22a:b0:22e:c787:5fa2 with SMTP id t42-20020a056870f22a00b0022ec7875fa2mr7294645oao.58.1714276454353;
-        Sat, 27 Apr 2024 20:54:14 -0700 (PDT)
-Received: from [0.0.0.0] (42-3-109-144.ptr.netvigator.com. [42.3.109.144])
-        by smtp.gmail.com with ESMTPSA id fb12-20020a056a002d8c00b006f3ec69bc09sm1968853pfb.75.2024.04.27.20.54.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 27 Apr 2024 20:54:13 -0700 (PDT)
-Message-ID: <f80384eb-d7eb-4a68-952d-529230ec51a6@gmail.com>
-Date: Sun, 28 Apr 2024 11:54:07 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YvJ8tVPH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714277864; x=1745813864;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=MJn/izRnzHO1JweDz8whytVnPYtTQD51PikyzXpLfgQ=;
+  b=YvJ8tVPHg1pC8HaIZHwvitT1Xqm61/A9OZQ64J1LuLgvHi8nQfokEHuV
+   EGte2CFMCsW/0Q9VQ7wS4zvgVDFyqFI1Bv8srDoqAd8zrGPkjUNboGKvY
+   iyMv0wh72mYKNmeS3mguZ1G6GhPqh9bL49jAF+zyHYMnSj5KS+UokDWdC
+   TTrdc9nIQc9TgpZMKqjXYIkx5NzYITZyg1D39SuU2cewiJoU83HQ5Qwvt
+   bwDwm+rLUO1ZunIA6df4NFCk7aK8+7R/pX/MEBvQCdjHmtY60LqfxsfaM
+   ALVvxAIQIniSTr6U7YuQ5VhwbLPBuL8msUj35dFrKaby5/iI2cZ0j+r46
+   w==;
+X-CSE-ConnectionGUID: TwAuE2cEQGGafxWO9xj6Hg==
+X-CSE-MsgGUID: buaYLFH7R4SRIChQQY6rOQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="10130679"
+X-IronPort-AV: E=Sophos;i="6.07,236,1708416000"; 
+   d="scan'208";a="10130679"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2024 21:17:43 -0700
+X-CSE-ConnectionGUID: 9PGUDi+xSEuu73ltuvpnQw==
+X-CSE-MsgGUID: yNN2r4IFTPOENWQ1Syh5tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,236,1708416000"; 
+   d="scan'208";a="25859637"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Apr 2024 21:17:43 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sat, 27 Apr 2024 21:17:42 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sat, 27 Apr 2024 21:17:42 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sat, 27 Apr 2024 21:17:42 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sat, 27 Apr 2024 21:17:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dkgAim8FXi/NU5Rx7uo0uNghVfuEtbBjvfAV7u7XvaGoKU6mtf+SadMdUWjqXqGP4+dHE39UsuIWmWdGtwvciMiRYopbDOUZuNXMk5xM7UD70e4uCpdxSd7m4Gu025fYgMSUMb9Y5ndiqJz6pjnNDmoZqZXk9AxehWwDfswz2b5HJSoTcEx8Er2+nuoRbgqbWWlSoa+P+tyLBGYOBs1d8SoRP+6vEgrsY7w7E3A7+QdBTLvHQNB5geRd5nOEgQv1zZdvZNLEoD0MgGbva7Pklgi2TMIOn4/F/cK+fHeTDdGw4nBh1O+13ZQM88blLAIt0RZCngnM7sjMTI2MzeKA3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MJn/izRnzHO1JweDz8whytVnPYtTQD51PikyzXpLfgQ=;
+ b=Nx1q8WIVbu/apw1val70jCD4P7qevCT6pikaJkgZhgQatftZ/dhEDsqanCXtvNCC3yokkb5qD8gUvU4xso85boCjnwZhj9ZVp2iYY81i5QGhTUCJ2yZ1ypaVEHYC95TFpOXgUTJfErT6qcVOB8ExOYcQ208EMNs3R4q1xh/cqYPIEUw+Edq0wgnQigRKokqWO+JxvJais9lDN2EJP87sGVkyZxKRZbFT+sclcf9uLGwLEjgOxG7aOWmmF/+GA7d+4wTbFHHorKabqgXUmDalgod95G+LcouSp0yHRC/rLMsWYvTx76fKzi6NyHolByI7/v+MbNF2pt84lLtbGl9gIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ0PR11MB6622.namprd11.prod.outlook.com (2603:10b6:a03:478::6)
+ by MW3PR11MB4746.namprd11.prod.outlook.com (2603:10b6:303:5f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Sun, 28 Apr
+ 2024 04:17:39 +0000
+Received: from SJ0PR11MB6622.namprd11.prod.outlook.com
+ ([fe80::d5d6:c0cc:baae:1ba6]) by SJ0PR11MB6622.namprd11.prod.outlook.com
+ ([fe80::d5d6:c0cc:baae:1ba6%4]) with mapi id 15.20.7519.031; Sun, 28 Apr 2024
+ 04:17:39 +0000
+From: "Zhang, Rui" <rui.zhang@intel.com>
+To: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>
+CC: "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
+	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] ACPI: scan: Avoid enumerating devices with clearly
+ invalid _STA values
+Thread-Topic: [PATCH v1] ACPI: scan: Avoid enumerating devices with clearly
+ invalid _STA values
+Thread-Index: AQHal/rEvYr4YALfg0ik+n9h9UnvILF9FgwA
+Date: Sun, 28 Apr 2024 04:17:39 +0000
+Message-ID: <278b47946efd7f67229e26335c419570871427cc.camel@intel.com>
+References: <2741433.mvXUDI8C0e@kreacher>
+In-Reply-To: <2741433.mvXUDI8C0e@kreacher>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR11MB6622:EE_|MW3PR11MB4746:EE_
+x-ms-office365-filtering-correlation-id: c0ad1298-840c-409d-0da0-08dc673a246b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|366007|376005|1800799015|38070700009;
+x-microsoft-antispam-message-info: =?utf-8?B?TERmUXlHNzlLQ2JTVzZIT0xqMGN2U3ltdGVudHptYzlSbURPckxZK1ZZL0FQ?=
+ =?utf-8?B?RG5hOUNKY2hRZVR0bFRjanFPYzVDai8rNjN2R004SXk0aTkzNXFFOEtub1Vm?=
+ =?utf-8?B?YktTWjBrZUVqU3RBdjF6Y0tMLzVkN2llV0FNV1dmTS84b1VQc1duSUtEVGl1?=
+ =?utf-8?B?a2dGNmZCVkxHeTNONUMyY1NObFAwb01iVXVHeFJ0VVdIbUkveWN3NzlpekEz?=
+ =?utf-8?B?S0VoaGF2cmYyQkJYUC9ZMWE4RWd3bGJRRU1scW1nSDV3QmorQVFrT0N2ZUxX?=
+ =?utf-8?B?bi9sRDhRaXkxc1FaWGRpeVYxUTFYaDZWUnUzTkFKNmJQQ1pFWGwvQTEyRUx3?=
+ =?utf-8?B?dTVzT0ZuSTFkQ2VRVmVvM0h0RVB3TDE3cGIyejJUTlpYbDdaLy9zMWszYWF6?=
+ =?utf-8?B?eEdBQ1M2SVJCL0pVWTJYcXhhNXBUUlMxWFNkTUZROHQwUTdOWmxRNmNvQ0ZJ?=
+ =?utf-8?B?VmFCYk5nTXBDZXpGcjE1RWlOWDdKYmZsQmh5c3dPd3MxbXBiVDV4MVVVWnlU?=
+ =?utf-8?B?S0xaVmYrd0dNMDlxMjU4aEVRelIzRmo1dFJQdldqMis0VXhaQTd4aGw4RDYx?=
+ =?utf-8?B?Ly8vbk9qT1JFQTMxdnNSL3pZS2ZXVTBzUGtMM2YxNGVjRkZJZmI3ZHM0REE5?=
+ =?utf-8?B?WjIzcjdWZXNQeThVT0JPVlRyM20ycW5vcFEyUENVdWoxM2NFcWUzOS9jeVFN?=
+ =?utf-8?B?YXljeXdUWnM2UlJBdnZJYWtwME1EcXQrbGxpOVV2elZxNDEreXBoVFJZTnc0?=
+ =?utf-8?B?MFIvWVdsZ2FvandHbW5qM1JyTVlzVXhnTG00L3UvZE5QZm9kVkRXZGVEZlNH?=
+ =?utf-8?B?U0ppcGRrUzhxNnd1N083WWxhM3FmRkQvVFRpRi90c1JVdWdxNDV3VlEyTEk3?=
+ =?utf-8?B?TyttdWZXZkR6N28yaXJzR2VyS1l1WmNYNnpBZmsxRGwyNXF6VWMrYlJUWlRl?=
+ =?utf-8?B?WVlHRllrVWlFRmJ1Si94L3FRSE9sSEdJMVF3SEsrOGRjUUFJMjVyYWx0MXZS?=
+ =?utf-8?B?YjIzYnRrZnZhaWZpenVia0kwbVdmcmhRNVk1SlJpcHlqTTdUZHUycmVLMitt?=
+ =?utf-8?B?RERLTkxxY2tTM1o2T0ZpZGZLSkwxM0V4YnZNNElZZnJ5RFJURTNiZGtuTzJS?=
+ =?utf-8?B?eU5SamFtSHdNN0JvVm1YcmdNMEt4aHEvNk5FS2hWYnBOS3VxdkVaU0E3RVE2?=
+ =?utf-8?B?SnRQazNTV1hYMVgwYXhIR3EydmFuNnhXa2xrR0k0UGpZOGlQWFROVnBSRCtO?=
+ =?utf-8?B?OW1yTzVFblBmM0tTNjJodG0zcGZ6d3ZYTUUyQmJJdWNURlVwYjA4d1IrdHdl?=
+ =?utf-8?B?NnNVbEFsT0lNSDBhQTNuYTRLd0N4WnVwZitySzlMdkcyYUpJZ3lkMkZnU2Rx?=
+ =?utf-8?B?YXV0R2VnMXZyR29qM0NPYndaWWs0RTBIa2JoTERPYXc5NjdlYUtDQ2lvYXN4?=
+ =?utf-8?B?Y0d6azFrRkNzbnpkNEZyMWdqZ09pNW5LaE5iNmRqMDZNbWVuYUV1UFJkY1FH?=
+ =?utf-8?B?QlUrVDFibXl0R1orei9reGVlTW1Nb1lKYmNFWHJZd0VxS2tGMDNBUndJbnNG?=
+ =?utf-8?B?NlB4Y1JleUlVMEdBNG5jb245OW9hd29MS2lUTmwvbGt6cEF2cVRta2ZHdVln?=
+ =?utf-8?B?NzdHT0pQSUkyVVBCZlY0SFpzK1lwQUtNNVgyOTEyTUNLUFlsYklJaHd6U1dS?=
+ =?utf-8?B?cmhHMUY3QStIUERlMXFjOGNpY2RNOWpnei9oWDlyOS9mditsY2xzajJnPT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB6622.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UFlsdXRQbVBGZjlJVVRmYS8yZzYzSVE2NnRKbEdrdGVIV0ZmbWNpL0hSTmhw?=
+ =?utf-8?B?cGVSWEs2Rk5wTmovRUd0RHIzUGllUVBsc1ZHaGd5UmRIS0pBVG5OdUUyRTc3?=
+ =?utf-8?B?a1Z2ejEwdlRVd3ArSUtPZWxhRndXejhxdytHekxKYm1hSGRNRjdPZCtsNzg4?=
+ =?utf-8?B?Y2d2TmVCZVRDZGhvLzY5U28vL2xQU1ZsTXRsV0hRTmFkbEhsYXpQSWd3ZVpK?=
+ =?utf-8?B?MkdGQVV5WDNWeEFTNkwvR21rc0hvdlNIRkVCWjZZMnhXTFRBT1hSeXg3VzdM?=
+ =?utf-8?B?YVlxYmlaZGRsQmdRUlpuUFArK2RGZVBjVkJZa3FsK0VCTEZBZkl3RXY4U3JB?=
+ =?utf-8?B?cFhudHpWeEQvNktFUEVMRng2ZDZPRDdOZTYzdWp1ZTRSVDJOT2NtK0ZRVC9S?=
+ =?utf-8?B?NStwSldtYS9kaGRaYjFqM1Zhb1haUnVaTHAzN3UxdE5QeHo3bXBKQWFnV3g5?=
+ =?utf-8?B?SlVuK3RXMEI0QjB3Z0NaWDZySUdkU0dDNlczc3A1dE1uVUN2TjZPNXJlTWlY?=
+ =?utf-8?B?YTJDNndvUnRPRzRkbEg2bjhLeFdhVm80V3QzSlJHM0NtTjVXM0dkUXdNeWdU?=
+ =?utf-8?B?Q09tNnlHUkZ1RHhOYlZ1QWxXWDdnK3hPUjlZZFpUTWdoRjB3NnZpMmV2QXJH?=
+ =?utf-8?B?aWpWdW5WVVhlK2hwV2ZDWEZnMms3Y21UbGtxZVJ5ejVhWWFlV3d0TFVwejRF?=
+ =?utf-8?B?Z2VRaFl6TmI4NFc2M0lMbTQwZG16dURYejhOclIvOS85YkZRZDE5SFoyVU5W?=
+ =?utf-8?B?QUFDMmdZakh2RTFRSVRET2ZyeUNQNVVlSVNTQVQxblozUVVPaHkvcDNCbmVw?=
+ =?utf-8?B?RkRFWkVMcDc5WmowdG9raFJud3BNc0NrNkVXQlZwazhMNjF6eDlRV3AxY2lD?=
+ =?utf-8?B?T0Q3cEkwaCtwOTd5eVZDdzJCK2xBRzNSQXc0U1pDTitMZ3lYd3QxSDJYci9X?=
+ =?utf-8?B?b2hLeml0REwzWFE5d3AxVWhkNTlJNHRidzR2VmMrYXkvUWZFTHVhT3o5RUFl?=
+ =?utf-8?B?M29oKzJuL1Q2M1ZySG1FRk03VFZxak9MUngrQWR0d1dQSytXS1dCYlloQTBz?=
+ =?utf-8?B?ckhRQktBbDczTCtudWNYR203N0hrTzIyRCtYNUZ1UG00a1ZGNDhHbGwrVzU1?=
+ =?utf-8?B?clJjUjFFemtUMEV4VzFob3RJSmRwcnlFc1F4dzNubUttb29TKzVuRGhzTXVQ?=
+ =?utf-8?B?NnA4OEk5V0FObnA5LzJaaDF4b1NNalN2Y3ZWdWUzQk84a0dOaFRjZGdrUys1?=
+ =?utf-8?B?akx4dkNUYUZYYllGYzZDem9USnFnbkQvMy92eVpseWw1Wm9TTk5NTjR1Y0tC?=
+ =?utf-8?B?Sk5weFdhQWduQmR2akFmU1pVU0ZUaTA3ZytvenJVdWVtemFjWHQrYUxqdVI3?=
+ =?utf-8?B?Y2hIK2dsUG8yV2w2bnh3Z2ZtYlN3NnBnYWVDMlFPekxpYjQyMmhKUlpkQWVC?=
+ =?utf-8?B?L091T3RVZU5lQjNCM211TGlGN3lvVUhYdTdOZXZNZWJIS09HbWY4TVAvb3Zs?=
+ =?utf-8?B?NDhmS2dRRnFhYml5R0xubldWRjh1QTJjNklacGVNQnN1YmxlQ0tNaGZlNFpZ?=
+ =?utf-8?B?RHA4YStvZXM3eGhKSVJRVGFuc0lSZytaRHlsQ1QvL3FGQkJoTjZmamljSDIx?=
+ =?utf-8?B?cmhHdTE2TDVsUVIwYnorTllaRW5EQkt5c2Y0dGt4Y24ybFg5ODJUNmlza25l?=
+ =?utf-8?B?UXRRcGVMVWVyNDlJa3FHbGFZbDRMb0RXVzROVVpramhIc1IrODBCTkkyWjJa?=
+ =?utf-8?B?RlpYYkE5VVpKdnViSkI4bUM2amNwSDdaSkVlU1RoNzA2MzhSSTVpc0cyczZn?=
+ =?utf-8?B?NnEzeWZHZlBMRkNua1V1UXE1aFhIZHN5eERpWEs4M1hUaGhxLzZOUWJuU3Ri?=
+ =?utf-8?B?VThNVUt0aDNVTGtnU09mUDNvZ2ZaNGplbnZ2bUdZWktnYzgwMmozdkZOR3Nz?=
+ =?utf-8?B?UFF6RG9ZdjBWazFuQ2sva2ovSDFSZ1Q4UVd1MjVlUURJUldrZExnclBEWENl?=
+ =?utf-8?B?MVkvWTNFYkFYZzFCYXlBcy82TkVTOS9WdXFJYUdrb0JNcWFJSVFSNUx0Mmho?=
+ =?utf-8?B?cjRadzRMbE9WMTZWV3Z3RzRBYWVhaGk5c216MlQyWFByVEF6TTFpbHFBZVFn?=
+ =?utf-8?Q?3B9ZKEhPO2OfKUyoiKFRjmoCg?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F320A58BE57F1B4BACDEB85D9BB9E607@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/10] arm64: dts: qcom: Add AYN Odin 2
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Junhao Xie <bigfoot@classfun.cn>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Tengfei Fan <quic_tengfan@quicinc.com>,
- Molly Sophia <mollysophia379@gmail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arm-msm@vger.kernel.org
-References: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com>
- <20240424-ayn-odin2-initial-v1-10-e0aa05c991fd@gmail.com>
- <0d1c6ed9-0c20-4b0e-876d-4b0adf5aa75d@kernel.org>
-Content-Language: en-US
-From: Xilin Wu <wuxilin123@gmail.com>
-In-Reply-To: <0d1c6ed9-0c20-4b0e-876d-4b0adf5aa75d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB6622.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0ad1298-840c-409d-0da0-08dc673a246b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2024 04:17:39.6109
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f3MXq2ZfD4sssd9WGV0aNoOwanqMypBo7Y21XYx1zrPDQrrMMugOKgYLGa6VFqMjMkHjszWIyeKLrgbVzToRzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4746
+X-OriginatorOrg: intel.com
 
-On 2024/4/25 14:28, Krzysztof Kozlowski wrote:
-> On 24/04/2024 17:29, Xilin Wu via B4 Relay wrote:
->> From: Xilin Wu <wuxilin123@gmail.com>
->>
->> AYN Odin 2 is a gaming handheld based on QCS8550, which is derived
->> from SM8550 but without modem RF system.
->>
-> 
-> 
-> 
->> +
->> +/ {
->> +	model = "AYN Odin 2";
->> +	compatible = "ayn,odin2", "qcom,qcs8550", "qcom,sm8550";
->> +	chassis-type = "handset";
->> +
->> +	qcom,msm-id = <QCOM_ID_QCS8550 0x20000>;
->> +	qcom,board-id = <0x1001f 0>;
-> 
-> No, these are not allowed. You did not test your dts.
-> 
-> It does not look like you tested the DTS against bindings. Please run
-> `make dtbs_check W=1` (see
-> Documentation/devicetree/bindings/writing-schema.rst or
-> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-> for instructions).
-> 
->> +
->> +	aliases {
->> +		serial0 = &uart7;
->> +		serial1 = &uart14;
->> +		serial2 = &uart15;
->> +	};
->> +
->> +	backlight: backlight {
->> +		compatible = "pwm-backlight";
->> +		pwms = <&pmk8550_pwm 0 860000>;
->> +		brightness-levels = <1023 0>;
->> +		num-interpolated-steps = <1023>;
->> +		default-brightness-level = <600>;
->> +		power-supply = <&vph_pwr>;
->> +		enable-gpios = <&pmk8550_gpios 5 GPIO_ACTIVE_HIGH>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&pwm_backlight_default>;
->> +		status = "okay";
-> 
-> Drop, why do you need it? Do you see it anywhere else in the backlight
-> nodes in DTS?
-> 
-> 
->> +	};
->> +
->> +	fan_pwr: fan-pwr-regulator {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "fan_pwr";
->> +
->> +		regulator-min-microvolt = <5000000>;
->> +		regulator-max-microvolt = <5000000>;
->> +
->> +		gpio = <&tlmm 109 GPIO_ACTIVE_HIGH>;
->> +		enable-active-high;
->> +
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&fan_pwr_en>;
->> +
->> +		regulator-state-mem {
->> +			regulator-off-in-suspend;
->> +		};
->> +	};
->> +
->> +	gpio-keys {
->> +		compatible = "gpio-keys";
->> +
->> +		pinctrl-0 = <&volume_up_n>, <&m1_m2_keys_default>;
->> +		pinctrl-names = "default";
->> +
->> +		key-volume-up {
->> +			label = "Volume Up";
->> +			linux,code = <KEY_VOLUMEUP>;
->> +			gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
->> +			debounce-interval = <15>;
->> +			linux,can-disable;
->> +			wakeup-source;
->> +		};
->> +
->> +		m1-button {
->> +			label = "M1";
->> +			linux,code = <BTN_TRIGGER_HAPPY1>;
->> +			gpios = <&tlmm 57 GPIO_ACTIVE_LOW>;
->> +		};
->> +
->> +		m2-button {
->> +			label = "M2";
->> +			linux,code = <BTN_TRIGGER_HAPPY2>;
->> +			gpios = <&tlmm 58 GPIO_ACTIVE_LOW>;
->> +		};
->> +	};
->> +
->> +	hdmi-out {
->> +		compatible = "hdmi-connector";
->> +		type = "d";
->> +		hpd-gpios = <&tlmm 9 GPIO_ACTIVE_HIGH>;
->> +
->> +		port {
->> +			hdmi_con: endpoint {
->> +				remote-endpoint = <&lt8912_out>;
->> +			};
->> +		};
->> +	};
->> +
->> +	hdmi_pwr: hdmi-pwr-regulator {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "hdmi_pwr";
->> +
->> +		regulator-min-microvolt = <1800000>;
->> +		regulator-max-microvolt = <1800000>;
->> +
->> +		gpio = <&tlmm 10 GPIO_ACTIVE_HIGH>;
->> +		enable-active-high;
->> +	};
->> +
->> +	vdd_lcm_2p8: vdd-lcm-2p8-regulator {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vdd_lcm_2p8";
->> +
->> +		regulator-min-microvolt = <2800000>;
->> +		regulator-max-microvolt = <2800000>;
->> +
->> +		gpio = <&tlmm 142 GPIO_ACTIVE_HIGH>;
->> +		enable-active-high;
->> +	};
->> +
->> +	led_left_side: led-controller-1 {
->> +		compatible = "pwm-leds-multicolor";
->> +
->> +		multi-led {
->> +			label = "left-side";
->> +			color = <LED_COLOR_ID_RGB>;
->> +			max-brightness = <255>;
->> +
->> +			led-red {
->> +				color = <LED_COLOR_ID_RED>;
->> +				pwms = <&pwm_rgb_left 0>;
->> +			};
->> +
->> +			led-green {
->> +				color = <LED_COLOR_ID_GREEN>;
->> +				pwms = <&pwm_rgb_left 1>;
->> +			};
->> +
->> +			led-blue {
->> +				color = <LED_COLOR_ID_BLUE>;
->> +				pwms = <&pwm_rgb_left 2>;
->> +			};
->> +		};
->> +	};
->> +
->> +	led_left_joystick: led-controller-2 {
->> +		compatible = "pwm-leds-multicolor";
->> +
->> +		multi-led {
->> +			label = "left-joystick";
->> +			color = <LED_COLOR_ID_RGB>;
->> +			max-brightness = <255>;
->> +
->> +			led-red {
->> +				color = <LED_COLOR_ID_RED>;
->> +				pwms = <&pwm_rgb_left 6>;
->> +			};
->> +
->> +			led-green {
->> +				color = <LED_COLOR_ID_GREEN>;
->> +				pwms = <&pwm_rgb_left 7>;
->> +			};
->> +
->> +			led-blue {
->> +				color = <LED_COLOR_ID_BLUE>;
->> +				pwms = <&pwm_rgb_left 8>;
->> +			};
->> +		};
->> +	};
->> +
->> +	led_right_side: led-controller-3 {
->> +		compatible = "pwm-leds-multicolor";
->> +
->> +		multi-led {
->> +			label = "right-side";
->> +			color = <LED_COLOR_ID_RGB>;
->> +			max-brightness = <255>;
->> +
->> +			led-red {
->> +				color = <LED_COLOR_ID_RED>;
->> +				pwms = <&pwm_rgb_right 0>;
->> +			};
->> +
->> +			led-green {
->> +				color = <LED_COLOR_ID_GREEN>;
->> +				pwms = <&pwm_rgb_right 1>;
->> +			};
->> +
->> +			led-blue {
->> +				color = <LED_COLOR_ID_BLUE>;
->> +				pwms = <&pwm_rgb_right 2>;
->> +			};
->> +		};
->> +	};
->> +
->> +	led_right_joystick: led-controller-4 {
->> +		compatible = "pwm-leds-multicolor";
->> +
->> +		multi-led {
->> +			label = "right-joystick";
->> +			color = <LED_COLOR_ID_RGB>;
->> +			max-brightness = <255>;
->> +
->> +			led-red {
->> +				color = <LED_COLOR_ID_RED>;
->> +				pwms = <&pwm_rgb_right 6>;
->> +			};
->> +
->> +			led-green {
->> +				color = <LED_COLOR_ID_GREEN>;
->> +				pwms = <&pwm_rgb_right 7>;
->> +			};
->> +
->> +			led-blue {
->> +				color = <LED_COLOR_ID_BLUE>;
->> +				pwms = <&pwm_rgb_right 8>;
->> +			};
->> +		};
->> +	};
->> +
->> +	mcu_3v3: mcu-3v3-regulator {
-> 
-> Name all regulators regulator-n, where n is decimal number. Then order
-> the nodes by name.
-> 
-> 
-> ...
-> 
->> +
->> +&i2c4 {
->> +	clock-frequency = <400000>;
->> +	status = "okay";
->> +
->> +	touchscreen@20 {
->> +		compatible = "syna,rmi4-i2c";
->> +		reg = <0x20>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		interrupts-extended = <&tlmm 25 0x2008>;
->> +
->> +		pinctrl-names = "default", "sleep";
->> +		pinctrl-0 = <&ts_int_default>;
->> +		pinctrl-1 = <&ts_int_sleep>;
->> +
->> +		vio-supply = <&vreg_l12b_1p8>;
->> +
->> +		syna,startup-delay-ms = <200>;
->> +		syna,reset-delay-ms = <200>;
->> +
->> +		rmi4-f01@1 {
->> +			syna,nosleep-mode = <0x1>;
->> +			reg = <0x1>;
->> +		};
->> +
->> +		rmi4-f12@12 {
->> +			reg = <0x12>;
->> +			syna,rezero-wait-ms = <20>;
->> +			syna,clip-x-low = <0>;
->> +			syna,clip-y-low = <0>;
->> +			syna,clip-x-high = <1080>;
->> +			syna,clip-y-high = <1920>;
->> +			syna,sensor-type = <1>;
->> +			touchscreen-inverted-x;
->> +		};
->> +	};
-> 
-> Please confirm the status of dtbs_check for your board. I am pretty sure
-> it fails.
-> 
-> Best regards,
-> Krzysztof
-> 
-
-I will correct all the mistakes in v2. Thanks for catching them!
-
--- 
-Thanks,
-Xilin Wu
-
+T24gRnJpLCAyMDI0LTA0LTI2IGF0IDE4OjU2ICswMjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
+ZToNCj4gRnJvbTogUmFmYWVsIEouIFd5c29ja2kgPHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29t
+Pg0KPiANCj4gVGhlIHJldHVybiB2YWx1ZSBvZiBfU1RBIHdpdGggdGhlICJwcmVzZW50IiBiaXQg
+dW5zZXQgYW5kIHRoZQ0KPiAiZW5hYmxlZCINCj4gYml0IHNldCBpcyBjbGVhcmx5IGludmFsaWQg
+YXMgcGVyIHRoZSBBQ1BJIHNwZWNpZmljYXRpb24sIFNlY3Rpb24NCj4gNi4zLjcNCj4gIl9TVEEg
+KERldmljZSBTdGF0dXMpIiwgc28gbWFrZSB0aGUgQUNQSSBkZXZpY2UgZW51bWVyYXRpb24gY29k
+ZQ0KPiBkaXNyZWdhcmQgZGV2aWNlcyB3aXRoIHN1Y2ggX1NUQSByZXR1cm4gdmFsdWVzLg0KPiAN
+Cj4gQWxzbywgYmVjYXVzZSB0aGlzIGltcGxpZXMgdGhhdCBzdGF0dXMuZW5hYmxlZCB3aWxsIG9u
+bHkgYmUgc2V0IGlmDQo+IHN0YXR1cy5wcmVzZW50IGlzIHNldCB0b28sIGFjcGlfZGV2aWNlX2lz
+X2VuYWJsZWQoKSBjYW4gYmUgbW9kaWZpZWQNCj4gdG8gc2ltcGx5IHJldHVybiB0aGUgdmFsdWUg
+b2YgdGhlIGZvcm1lci4NCj4gDQo+IExpbms6DQo+IGh0dHBzOi8vdWVmaS5vcmcvc3BlY3MvQUNQ
+SS82LjUvMDZfRGV2aWNlX0NvbmZpZ3VyYXRpb24uaHRtbCNzdGEtZGV2aWNlLXN0YXR1cw0KPiBM
+aW5rOg0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1hY3BpLzg4MTc5MzExYTUwMzQ5
+MzA5OTAyOGMxMmNhMzdkNDMwQGh1YXdlaS5jb20vDQo+IFN1Z2dlc3RlZC1ieTogU2FsaWwgTWVo
+dGEgPHNhbGlsLm1laHRhQGh1YXdlaS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJhZmFlbCBKLiBX
+eXNvY2tpIDxyYWZhZWwuai53eXNvY2tpQGludGVsLmNvbT4NCj4gLS0tDQo+IMKgZHJpdmVycy9h
+Y3BpL2J1cy5jwqAgfMKgwqAgMTEgKysrKysrKysrKysNCj4gwqBkcml2ZXJzL2FjcGkvc2Nhbi5j
+IHzCoMKgwqAgMiArLQ0KPiDCoDIgZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMSBk
+ZWxldGlvbigtKQ0KPiANCj4gSW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMvYWNwaS9idXMuYw0KPiA9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09DQo+IC0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvYWNwaS9idXMuYw0KPiArKysg
+bGludXgtcG0vZHJpdmVycy9hY3BpL2J1cy5jDQo+IEBAIC0xMTIsNiArMTEyLDE3IEBAIGludCBh
+Y3BpX2J1c19nZXRfc3RhdHVzKHN0cnVjdCBhY3BpX2RldmkNCj4gwqDCoMKgwqDCoMKgwqDCoGlm
+IChBQ1BJX0ZBSUxVUkUoc3RhdHVzKSkNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqByZXR1cm4gLUVOT0RFVjsNCj4gwqANCj4gK8KgwqDCoMKgwqDCoMKgaWYgKCFkZXZpY2UtPnN0
+YXR1cy5wcmVzZW50ICYmIGRldmljZS0+c3RhdHVzLmVuYWJsZWQpIHsNCj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoHByX2luZm8oRldfQlVHICJEZXZpY2UgWyVzXSBzdGF0dXMgWyUw
+OHhdOiBub3QNCj4gcHJlc2VudCBhbmQgZW5hYmxlZFxuIiwNCj4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZpY2UtPnBucC5idXNfaWQsICh1MzIpc3Rh
+KTsNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRldmljZS0+c3RhdHVzLmVuYWJs
+ZWQgPSAwOw0KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLyoNCj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqIFRoZSBzdGF0dXMgaXMgY2xlYXJseSBpbnZhbGlkLCBz
+byBjbGVhciB0aGUNCj4gZW5hYmxlZCBiaXQgYXMNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCAqIHdlbGwgdG8gYXZvaWQgYXR0ZW1wdGluZyB0byB1c2UgdGhlIGRldmljZS4NCj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqLw0KDQpzZWVtcyB0aGF0IHRoaXMgY29t
+bWVudCBpcyBmb3IgdGhlIGxpbmUgYWJvdmU/DQoNCnRoYW5rcywNCnJ1aQ0KPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2aWNlLT5zdGF0dXMuZnVuY3Rpb25hbCA9IDA7DQo+ICvC
+oMKgwqDCoMKgwqDCoH0NCj4gKw0KPiDCoMKgwqDCoMKgwqDCoMKgYWNwaV9zZXRfZGV2aWNlX3N0
+YXR1cyhkZXZpY2UsIHN0YSk7DQo+IMKgDQo+IMKgwqDCoMKgwqDCoMKgwqBpZiAoZGV2aWNlLT5z
+dGF0dXMuZnVuY3Rpb25hbCAmJiAhZGV2aWNlLT5zdGF0dXMucHJlc2VudCkgew0KPiBJbmRleDog
+bGludXgtcG0vZHJpdmVycy9hY3BpL3NjYW4uYw0KPiA9PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+IC0tLSBsaW51eC1w
+bS5vcmlnL2RyaXZlcnMvYWNwaS9zY2FuLmMNCj4gKysrIGxpbnV4LXBtL2RyaXZlcnMvYWNwaS9z
+Y2FuLmMNCj4gQEAgLTE5NjIsNyArMTk2Miw3IEBAIGJvb2wgYWNwaV9kZXZpY2VfaXNfcHJlc2Vu
+dChjb25zdCBzdHJ1Y3QNCj4gwqANCj4gwqBib29sIGFjcGlfZGV2aWNlX2lzX2VuYWJsZWQoY29u
+c3Qgc3RydWN0IGFjcGlfZGV2aWNlICphZGV2KQ0KPiDCoHsNCj4gLcKgwqDCoMKgwqDCoMKgcmV0
+dXJuIGFkZXYtPnN0YXR1cy5wcmVzZW50ICYmIGFkZXYtPnN0YXR1cy5lbmFibGVkOw0KPiArwqDC
+oMKgwqDCoMKgwqByZXR1cm4gYWRldi0+c3RhdHVzLmVuYWJsZWQ7DQo+IMKgfQ0KPiDCoA0KPiDC
+oHN0YXRpYyBib29sIGFjcGlfc2Nhbl9oYW5kbGVyX21hdGNoaW5nKHN0cnVjdCBhY3BpX3NjYW5f
+aGFuZGxlcg0KPiAqaGFuZGxlciwNCj4gDQo+IA0KPiANCj4gDQoNCg==
