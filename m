@@ -1,94 +1,102 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAC36FE21;
-	Sun, 28 Apr 2024 17:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FA93BBCA;
+	Sun, 28 Apr 2024 17:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714324989; cv=none; b=ZnQbyizxWZDDV+yKVfsEFlSh+UeEpACwFAiMVMLTKVDbeDdN3nVjWKVlVVZMEZHffC+DFFJdBnhzX7EtXEcKuAGDycrrwufrkxAa9BLIemOSO/Y3Bof4lOC2OPff3VvY45/cE4JEFNSzmXHUGs6UJwaxw7YAhu1//SMM1pBgJQ0=
+	t=1714325127; cv=none; b=QOLADktJxRr6rjoqZU+C8sPhSrD2AfnGPhYeLnu9BOKTpwVBCi7GZGE89yBTLgRh3el+a8MSoQEKWJaFkuQX6nOYB3tOQs6r4kmX++sNWkqEKcVZGhReOXWg8nKFHJeJJU8nSQvNhhN/wMLud7LUn6AmtHbNS1esR8BnsOAVlCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714324989; c=relaxed/simple;
-	bh=PYFz5HTWMutlt0eTPiwR2RA99TqHVcOULCpVwL8wV44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ie0YbtpPGdQ9knw/8B1lZWIHbidUN0AfQELAa6If9s3II8vJnxfd7W2Xn68VbqiHu08NVq5AwfZdUh3q+LV7Alw8s+DEiQf5k4GNbGG+Iedkb3YwbntmNSnAHT2AwiTnoBObvRjaNyJpxwmGZO2873gCMi0/EsQCNgBBLWwFRpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GE078V1m; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714325127; c=relaxed/simple;
+	bh=5Ie8qBiBobpvq91m8AfEjh4NgFLM5+PpWwD6L45jGsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NLqtx6GSNl8U62BhwebXP5ETWVcoFFIywcYR+SVIhr8EOMc1JWEkYybtOGMVPTQOyjXeYlwPXf6y7V+AfHVqyLNVYgihis2vqXAIDjHWRIT35dUnsYnGX1xp/CjPnPxrUu6qo5geYDs8ocY/SvRDtB9Ifvnqo5Eaf271Ud5VoFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ed0LQV1E; arc=none smtp.client-ip=80.12.242.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GE078V1m"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ed04c91c46so3660177b3a.0;
-        Sun, 28 Apr 2024 10:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714324987; x=1714929787; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WkZp8j5EtMWXXwQU8xtuxveb6JUFMfZuYsQT9nlHj4U=;
-        b=GE078V1mygz7aY8mhZR4k2GQ6ja1YgU1dxj7xEIwtXeNo7mWo1eGuQu5Y7Fp91DEtA
-         gGU7ocFaLNAnLOOor7Q8jpyL3ZOVR5WfZ6ttYGgYqTF+3hyL70hH80ee62EoI5n4PI/Q
-         diUEsQPx2gnA/RFQSbsfTMtAPj51nxig1Sk9lSiHDMA99jPC/+pTViQN3znykRycFT4H
-         g3gdgDOsBPZT91eN4i1Ar2OXIiMJQOpo7opukrsWm5FBtZNb7ZjIyFhT389UJjZcU0O6
-         nEuy9l/Lrw8VB1M8BcIij6+XMx3BRHWXA9ECx0yO1lC0P5GWfTJaQYQYQ1agn5kjdQEL
-         oskQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714324987; x=1714929787;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WkZp8j5EtMWXXwQU8xtuxveb6JUFMfZuYsQT9nlHj4U=;
-        b=CVtxKQSUSvd2zUg5Ab+ZKPiQbY2C0xGjt3T95xiog71ejv5eYhyCQUD1G52zMST7aK
-         gTD8t4I2yLDavFG1Uz6oa1nukbshKRETcMm7THLKtkHLiUaFOlrKH2JqiH1vpHt7B+9Q
-         UzT7Hp9c9IDNrii9iherKrRLTJ90QNtBwMgZdGDTbtdanB+PNFT0Mk/bnF+DbuMrWtXO
-         YTepaGALHNsHNbaBxNlSj/L71P/3KUc1D/w6LItNcDu0fxzB2uMz8EJMjLY7DalrPJdj
-         4tmt3zakb1vxVRZ3bESAIoJZxbhx7s3u2xYgsXhnQHcTP7rT94aLc6PbuezB/v8h1pp/
-         k90Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXq9qLdKhIzMwaYByC8YT9RhUlSyndgLkKlH8+JO8p0yMYGuXVMHGx/47q31E4dSHFdyZQ4DJO9HLWICZ/PPsO0MZxF7RA/QcGcX/KGbpk9uMU5iS/6OBwRp+jca9OdRhoZxlbUIJsiflsa8jXSZ5YkDPRS2LQYsN0EoxISsJWPLa0YRGKI9gnthtCAnl0djDiYQSOHRQjRcOHN8K2Yu8fnsr16O+XuL/dlRaBcEK9B0QklauEP29kWdxfM
-X-Gm-Message-State: AOJu0YzscXDaU1acbx3zwCYtRAKrnkqOKmQ5pud5lf02ZMhSw5tS6Hhy
-	LxwRFiXT+evVXD0utqxSdBpf5NCvKV+KWxj4qypJl4H67dpndnup
-X-Google-Smtp-Source: AGHT+IFknSQ2W4h+jW2irM7chqU+6+Gh0g7OpxMZOnhRTTvSUweYDfHBuIe/cSEyZorYMbZ9fOhJZA==
-X-Received: by 2002:a05:6a21:3a43:b0:1a9:3e7a:b0fc with SMTP id zu3-20020a056a213a4300b001a93e7ab0fcmr10728714pzb.51.1714324987560;
-        Sun, 28 Apr 2024 10:23:07 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w13-20020a63d74d000000b0060cc76aab72sm4628983pgi.46.2024.04.28.10.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Apr 2024 10:23:07 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 28 Apr 2024 10:23:05 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Peter Yin <peteryin.openbmc@gmail.com>
-Cc: patrick@stwcx.xyz, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Charles Hsu <ythsu0511@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: hwmon: Add infineon xdp710 driver
- bindings
-Message-ID: <e16ae555-3c10-48eb-94e1-e4ee77c2f521@roeck-us.net>
-References: <20240425153608.4003782-1-peteryin.openbmc@gmail.com>
- <20240425153608.4003782-3-peteryin.openbmc@gmail.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ed0LQV1E"
+Received: from localhost.localdomain ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 187rso5aKhCCi187ysyVvo; Sun, 28 Apr 2024 19:15:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1714324551;
+	bh=5CZgwmjLxv43WMhGXX/Yzm0AcpGimpypUVeUw8u1ncs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=ed0LQV1EVZScxldK46Qkqnyk6u95rniGUT3+SheeNMfBTOOE5RasW+Jy5QDMb3hYo
+	 nhKlu4DH3YvdGfJZXDrHyyGdxA8k2mnJV+tWV55gqsWs1EbmaWdRS7Zo7KeiA81OYy
+	 1HLwkDK4i2APklK5H5es5gr6MUFjwFBYrm0pHvKPhiqVLjMIMySIxLn6Oq9qWc2QGk
+	 WCZK1jy73Itd31EFP6sbaxu3cGzUhQccKeyxnR8+MZMYriOCiuDkyYAbJqwJK6/3xy
+	 IzTBAmmjjwYjBu/gKPq2u5kZDBNQHWtA/Bs2//pcV90GHaL4Gi6jLlqvQ3FvUc78K4
+	 cd498XOTL1JjA==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 28 Apr 2024 19:15:51 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-leds@vger.kernel.org
+Subject: [PATCH 2/2] leds: lp50xx: Remove an unused field in struct lp50xx
+Date: Sun, 28 Apr 2024 19:15:25 +0200
+Message-ID: <a0d472ff587d13a2b91ec32c8776061019caab6a.1714324500.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <bc2e5e57b93ca0a33bcc84e9bdc89f26fc8f6d57.1714324500.git.christophe.jaillet@wanadoo.fr>
+References: <bc2e5e57b93ca0a33bcc84e9bdc89f26fc8f6d57.1714324500.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240425153608.4003782-3-peteryin.openbmc@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 25, 2024 at 11:36:02PM +0800, Peter Yin wrote:
-> Add a device tree bindings for xdp710 device
-> 
-> Acked-by: "Rob Herring (Arm)" <robh@kernel.org>
-> Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
+In "struct lp50xx", the 'num_of_banked_leds' field is only written and is
+never used.
+Moreover, storing such an information in the 'priv' structure looks
+pointless.
 
-Applied, after fixing the tag.
+So, remove it.
 
-Guenter
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only.
+---
+ drivers/leds/leds-lp50xx.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c
+index 407eddcf17c0..175d4b06659b 100644
+--- a/drivers/leds/leds-lp50xx.c
++++ b/drivers/leds/leds-lp50xx.c
+@@ -278,7 +278,6 @@ struct lp50xx_led {
+  * @dev: pointer to the devices device struct
+  * @lock: lock for reading/writing the device
+  * @chip_info: chip specific information (ie num_leds)
+- * @num_of_banked_leds: holds the number of banked LEDs
+  * @leds: array of LED strings
+  */
+ struct lp50xx {
+@@ -289,7 +288,6 @@ struct lp50xx {
+ 	struct device *dev;
+ 	struct mutex lock;
+ 	const struct lp50xx_chip_info *chip_info;
+-	int num_of_banked_leds;
+ 
+ 	/* This needs to be at the end of the struct */
+ 	struct lp50xx_led leds[];
+@@ -403,8 +401,6 @@ static int lp50xx_probe_leds(struct fwnode_handle *child, struct lp50xx *priv,
+ 			return -EINVAL;
+ 		}
+ 
+-		priv->num_of_banked_leds = num_leds;
+-
+ 		ret = fwnode_property_read_u32_array(child, "reg", led_banks, num_leds);
+ 		if (ret) {
+ 			dev_err(priv->dev, "reg property is missing\n");
+-- 
+2.44.0
+
