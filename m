@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376301C14
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 22:00:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376F2B66C;
+	Sun, 28 Apr 2024 22:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714341635; cv=none; b=QtsFgQEIxl7XNUu666ETpmpVN9U/L6y4UfTyrofHJ34fGxo7u8VYKBLlII/aXkW2ktyou86SAAMCoG0O9WoGISxfqUVKBCMUyBDQfZXJh6uYtSJbTh2br7CqUA+qz97rK2Ds37ct84bKTyrRyfYHyoHlT4wu4o+DYNfCX4/O+Ns=
+	t=1714341635; cv=none; b=OJ+DOXjrHyee4PGqW9UcDXfq8JplaRLYL6q8hqNvwNHv+nDkuboqAREqlco4qofBI4NLBXL9uLtV5HjuB1/KoSkk1Rkm/XUusqO2WHNeg65URKofNaqwkq1hge5sC+9D2Cga592m6DjKj95bqJrZ89w6sNLBUSFuvTvudTiC/P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714341635; c=relaxed/simple;
-	bh=i0lgj4Gi4l7oqdJ7DvxdlIR0OkstYyRvXjI4yj9zdRo=;
+	bh=9Zs3qLqdKozykHa9V75JS3GRduTLPrPINfUtjXZ9lBM=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=EYsfN8sONAZmS4pmb5KoJz5vidQ5mbdDDMlYNjPVbmKcVAU2kkukWTqb38WiokU7oX5DCkwK+gRV8Td4KJouY/6nTIxAuo3Vy2B95aZzQc26cZ9hyDw3xjBeDw0MnxfNuJwy1r80RDOF7Vi2MbcZ1/gEs198Elp3vHMRdtKaJho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFePvE/R; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=iMnP1Ex/bEfmLE1SLjoIskjmxeOH4wi9y8h108qOP1UhC38H/f8R7r8y62nrxbQfPkz+Us15219eIS/26261RdThCGe34iFVQ0owX1AZMvhT+iHrN+nfbbsetagak2h7PO5w31RU9byP1U0Mn3G4+XPBu/TwhhITzgkNE2gWfiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H26tfuoj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFePvE/R"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E4C54C4AF1D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H26tfuoj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C06B4C113CC;
 	Sun, 28 Apr 2024 22:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714341635;
-	bh=i0lgj4Gi4l7oqdJ7DvxdlIR0OkstYyRvXjI4yj9zdRo=;
+	s=k20201202; t=1714341634;
+	bh=9Zs3qLqdKozykHa9V75JS3GRduTLPrPINfUtjXZ9lBM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HFePvE/RtKH5Z6L5x9jhbEi8evaKNPLoBTsa4exJ6iHJHGMnIZa9Gs12Blr+04Zfa
-	 AUMZQ+KhknlXyFoc9+0tIAK1det3byxvh3G283lbaVWw2El3zKRJc9AX2WtPsarDjk
-	 Mg1cwWrbFaDANMRPXIpl/ufu9auK1/3B2+UphJtOYd9YsXPTKJN3ESD7AWtVZXF4xh
-	 9j1ZeLhUJ2WNmjdDNN5KnLdOBxXhR654ga6RFGbkucalf8FTOXgtu/DG7FZCmTIjJb
-	 EoTBKGhc9fTs0GgYcZEOrM/dsM/y/A+R8YgMKDPQR15ePzjs7uHxhe21/ObDkWmaGg
-	 yf0oHbOXpbrhQ==
+	b=H26tfuojMbEhe+aZECwDU+ED3T57TnYoE/Oa+tN65hwAONVJCWsXAhrS4a8xlV8WS
+	 AzlrzY0ue4clDNz2ht2J0Xn/NSF5vU5h/kBH+VRGYF/qLdDVHGtQk5OYEh4xG8QZMa
+	 AI0QNnmzv47L4oTpMhoBEPUq6TALpXn3RPLcxM+hgZXJHtlLNHybiwtvmNz6/fpFGM
+	 PgZTX9izxRSAxdv0zZh4RnPFP11kbNFWsHxEWrwUI1y9HnB2fv3jAK2F+WXp5mV3sJ
+	 h/S/o+uBvJayQOLvhwjr2zsNP2ltb3c5aAuAv6dP6tY1oLexG8DqQVGX9kJTrLyzms
+	 IM1weeXXc6FcQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D7432C4167D;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AFF72C43614;
 	Sun, 28 Apr 2024 22:00:34 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,36 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 RESEND] riscv: select ARCH_HAS_FAST_MULTIPLIER
+Subject: Re: [PATCH] cpuidle: riscv-sbi: Add cluster_pm_enter()/exit()
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171434163487.22130.12031747809558123919.git-patchwork-notify@kernel.org>
+ <171434163471.22130.9333013244228014885.git-patchwork-notify@kernel.org>
 Date: Sun, 28 Apr 2024 22:00:34 +0000
-References: <20240325105823.1483-1-jszhang@kernel.org>
-In-Reply-To: <20240325105823.1483-1-jszhang@kernel.org>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
- samuel.holland@sifive.com, alexghiti@rivosinc.com
+References: <20240226065113.1690534-1-nick.hu@sifive.com>
+In-Reply-To: <20240226065113.1690534-1-nick.hu@sifive.com>
+To: Nick Hu <nick.hu@sifive.com>
+Cc: linux-riscv@lists.infradead.org, anup@brainfault.org, rafael@kernel.org,
+ daniel.lezcano@linaro.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, zong.li@sifive.com
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Mon, 25 Mar 2024 18:58:23 +0800 you wrote:
-> Currently, riscv linux requires at least IMA, so all platforms have a
-> multiplier. And I assume the 'mul' efficiency is comparable or better
-> than a sequence of five or so register-dependent arithmetic
-> instructions. Select ARCH_HAS_FAST_MULTIPLIER to get slightly nicer
-> codegen. Refer to commit f9b4192923fa ("[PATCH] bitops: hweight()
-> speedup") for more details.
+On Mon, 26 Feb 2024 14:51:13 +0800 you wrote:
+> When the cpus in the same cluster are all in the idle state, the kernel
+> might put the cluster into a deeper low power state. Call the
+> cluster_pm_enter() before entering the low power state and call the
+> cluster_pm_exit() after the cluster woken up.
+> 
+> Signed-off-by: Nick Hu <nick.hu@sifive.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [v3,RESEND] riscv: select ARCH_HAS_FAST_MULTIPLIER
-    https://git.kernel.org/riscv/c/0a16a1728790
+  - cpuidle: riscv-sbi: Add cluster_pm_enter()/exit()
+    https://git.kernel.org/riscv/c/3fd665f2854d
 
 You are awesome, thank you!
 -- 
