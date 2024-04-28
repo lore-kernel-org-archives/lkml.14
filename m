@@ -1,108 +1,103 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47C06F506;
-	Sun, 28 Apr 2024 16:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D406F072
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 16:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714321159; cv=none; b=o/YcZEFNldCV7dWU0iYwoW5MIvU6VCe3IhY4lxZwQmBogIpnFNCrVAfpbs+DKmgTitDq6bTWzIbnFQgdTTSOFAwx5fsVxYiMRzvPxSoBVjzDZf9AtUgCx2LZxfuulfp+THT2xyCwFcG52IMsaJQbXJHebnK6zgNOVXbGEeSTZD8=
+	t=1714321207; cv=none; b=VsUm4ckMRRbK0oCqYKOveWgmJGqoVGzTrPPYJxyQTpNSlR8bCPiao8iDepheS0FBUVLqFHc5QiIw1XKtPP/PQvqBp+mS5uZGkuZ6sVCEcdNw77zEcUyQV2YrdyjWEL+LY9b+n/3BpACIJCNShCE3vxgxPafKkhkPbR7B3IcbVNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714321159; c=relaxed/simple;
-	bh=ulUn2Roe+pzNA/CtKdogTu9szg+ulnwZVNNaty/EbLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kaKCW/A53QkdPHIxvXPbgNdL7EnpF7T88MAj8SyexXu0HBjd8rZFKmuf+OySjjpArT1p7JVTRtcsFEVGLDdhsCb5iVY/uYOqfmExju0uoWf6qyCgjKAvY4orgTkXZoCH4GUtq05wfpYP/cfgixTUywAFIlId9OkkHHARvL36xOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fgztAZrJ; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714321207; c=relaxed/simple;
+	bh=c4iAuXANxkyaFARjZ7T0cXAt+fVdYbYegOBH3TKfk0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SzgvX9pHaD+mUYveuHRgX9ZK/XMHhO5CFKtwSaVujF3dZptOZ6zWr4AtjWc6geE3S3wPe6DcpfJ0091wMSqmrAq7zguT2lIM/keLrnRrR3PoE88quQlAO6G++eqUkkaVPjbKMJlCkZz777G5HkMT/k4Xnlz8QuPjGMHgiw2uCes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZuMl3kab; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgztAZrJ"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41bab13ca80so13617745e9.0;
-        Sun, 28 Apr 2024 09:19:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZuMl3kab"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a58f1f36427so92240066b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 09:20:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714321156; x=1714925956; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r8wa13zwfdNflwwU+lO/hDpPql8ov9l9JWWF4zFv8PI=;
-        b=fgztAZrJGVmDpQieqU4ArI9DMpafJLcO0GQY9TnZY3/v2hWORXWe+sQp8PMpm2szjK
-         zR+vPsObwZD3LEkg2n3qs8SZIKe859HCnDJu4/fv3P9FLk7LPsR9BMqyjUP3Vk+xzZoW
-         2QKl/MIMb9H3G8hZ2DN7W+3G+lfpDpqyE4UamOyNYWYI59QM+3uF+9YWdd9rVNetG623
-         ITIgIzQBfYNPqeN8Eutuh7Pswn/vhmMyqV9oaelsn6CkWu4XxzHgGf9VVlbEwXpejbAH
-         xAITLESlbZKd7fiH2OzuEEdMeuDDBiZGvFBOBLuQuRMaAEv8CL6/3Jq95IMyxuhocOLa
-         yl6A==
+        d=linaro.org; s=google; t=1714321204; x=1714926004; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FASynAs5IxrMDovqRBLq0gB6byYA6/mpBMhiTARocxs=;
+        b=ZuMl3kabH7+0uTZXsRqXWlrxtMWeEgxAq2OgfGXy9rGk/13qzHLfjuRh+QAi3He6NS
+         qndJL0E2E87ZhtMk9t6mW7Oi+/wUEtkLKTUIAz/CUY8QJyHELJVsTwbNZyL9IJE2DKDj
+         H0KJfoSJQ031liIUo3yTczslKYXEZgx+EDJb8ZfP2TcxHYlUBE7WRZPLP+mOhWZzEPRV
+         /NXImfYvQR8C7+2ZgmrXYomA4b8iFFyaWEv10mWAiQpHMtM7eF4xAo0UTyvNbOPPmp88
+         rADXP6i6VOhK3Se/bvE/NmLOabVOKg+mKX031qsJG06s5qBbtvN1y0DNbEjrKX2o1Qv+
+         jJpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714321156; x=1714925956;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r8wa13zwfdNflwwU+lO/hDpPql8ov9l9JWWF4zFv8PI=;
-        b=q1PcuGgyrwWz1cYGmFLmi7s2lnY7G2jKTTOgniH6vNSyiKhUsYWjkAzO+OFPzHoKV8
-         p79FYD/yWNRsKE03Fn+7wyKEHOEdY57xbrR/nNSBfdAA9mufPTE7RRoFAXwwyGJKPQsE
-         A8zKPFI7P/3oIWPgOly/yQ45M0Vk4csFNXbA/+nT1nBz3y5GFKIf0Tl4iXTQkMW7PCkb
-         qyUw0pvx3RSdZpWQNYO6Nzue9/LKHSz9nYKwYjAfIcW5YKCeWCax1mTeb2uwoerh9YuO
-         ob32V5r9PLCAP2jnhWQH+uN0SO3BKC8P8GR/BajQjjLrRs+7JZxYTAeiIwVHwe7PpvzN
-         UzRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJADKjE5ZVLZ0zYqQXBgTMgMC5Jjwy994bAm5eclk38zLoxg1paSJdVVPxMDlST8BUBW5ekJdljrIxR7X0FshfrTeZAMRYOADYNA6J9wtW5+kyt22x2avQJxtKO2Wrmoa5xSX2H5aZ9g==
-X-Gm-Message-State: AOJu0YwYgd74SeXdgNuFfEViHT6TcFAlyP43p3kDWgDGSAkaFH6l1/Xc
-	c4eKuigPqhoTCi21rWVz+dHTKMUwW/3QsjSWKIHzpIT7752eI6mH
-X-Google-Smtp-Source: AGHT+IGptgXSf37/lCXJb/77nPWdb36TF7NEcazq4nRcEnOE+ZBrhWAs9b9n7VfqYJuZo01OUoWiUg==
-X-Received: by 2002:a05:600c:3111:b0:41a:9fc2:a6b1 with SMTP id g17-20020a05600c311100b0041a9fc2a6b1mr7155221wmo.22.1714321155771;
-        Sun, 28 Apr 2024 09:19:15 -0700 (PDT)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id p8-20020a05600c358800b00418f72d9027sm36319513wmq.18.2024.04.28.09.19.14
+        d=1e100.net; s=20230601; t=1714321204; x=1714926004;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FASynAs5IxrMDovqRBLq0gB6byYA6/mpBMhiTARocxs=;
+        b=QsEJEv6pB3y9ZyK2f3leRuSp8CK744Q1saEPPgDrI/X2PbzVLvCjYy99NwzwjxqT7l
+         rDzbK7UhdkwzpQsdEuzBfZwUckg0Yy7JYOdKiXg5kxVe7UNibbd/Ujf3xVJPxiS+Pi4t
+         qD8ZrLUmHjsVDPlmAVXy5rYaSEEDKwXogFfSScGszVIIOpmGyhru+I+Kc43PqaVmIVOQ
+         fsTf/46oA9fK/0m6gdVG8EQdGzlgfymwbPK13XcmK4FM8iX2QCarzr6Ln9tLeqbdDH+8
+         SkppyAnjMyy3xja2P/tzhM1T7C/l2MfoNpyCTFIpECvevTqpvuBGTNgnbtWoD3p4KFpK
+         8kFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQP6xXCHRFMawO77lQA8pNlqiwVObVbMeqV/rZb0CylgMmVsDL7gM8iY4e2szPCldbFrkpFY2yoNOZTttsNsRiN1TwN2ityyL8N5mg
+X-Gm-Message-State: AOJu0YyMs23gjJcQXTbv1Depsqhtdjo8lJUQ0bc7zP+Tv8m0U1zY2dd3
+	IlhbF9Iw32ZYV5oFhmrhPr4r42fwKyL1zNGLsWIQgn2ZO8e1MQYayY87918Atj1UDRZ6PGo+EPD
+	Gq14=
+X-Google-Smtp-Source: AGHT+IHUbZG5j4eAjiIEASfxJU33DsXgl8sNmmmfQQbZA+L0ob/0eeZAUp3u39qVBjAlNmwaZu7ueQ==
+X-Received: by 2002:a17:906:6d3:b0:a51:a288:5af9 with SMTP id v19-20020a17090606d300b00a51a2885af9mr4805711ejb.51.1714321203930;
+        Sun, 28 Apr 2024 09:20:03 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id u3-20020a170906b10300b00a52552a8605sm12886738ejy.159.2024.04.28.09.20.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Apr 2024 09:19:15 -0700 (PDT)
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: linux-sunxi@lists.linux.dev, Dragan Simic <dsimic@manjaro.org>
-Cc: wens@csie.org, samuel@sholland.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH] arm64: dts: allwinner: Add cache information to the SoC dtsi for
- A64
-Date: Sun, 28 Apr 2024 18:19:13 +0200
-Message-ID: <2726728.mvXUDI8C0e@jernej-laptop>
-In-Reply-To:
- <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
-References:
- <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
+        Sun, 28 Apr 2024 09:20:03 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Olof Johansson <olof@lixom.net>,
+	Arnd Bergmann <arnd@arndb.de>,
+	arm@kernel.org,
+	soc@kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] memory: drivers for v6.10
+Date: Sun, 28 Apr 2024 18:20:01 +0200
+Message-ID: <20240428162001.28011-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Dne nedelja, 28. april 2024 ob 13:40:35 GMT +2 je Dragan Simic napisal(a):
-> Add missing cache information to the Allwinner A64 SoC dtsi, to allow
-> the userspace, which includes lscpu(1) that uses the virtual files provided
-> by the kernel under the /sys/devices/system/cpu directory, to display the
-> proper A64 cache information.
-> 
-> While there, use a more self-descriptive label for the L2 cache node, which
-> also makes it more consistent with other SoC dtsi files.
-> 
-> The cache parameters for the A64 dtsi were obtained and partially derived
-> by hand from the cache size and layout specifications found in the following
-> datasheets and technical reference manuals:
-> 
->   - Allwinner A64 datasheet, version 1.1
->   - ARM Cortex-A53 revision r0p3 TRM, version E
-> 
-> For future reference, here's a brief summary of the documentation:
-> 
->   - All caches employ the 64-byte cache line length
->   - Each Cortex-A53 core has 32 KB of L1 2-way, set-associative instruction
->     cache and 32 KB of L1 4-way, set-associative data cache
->   - The entire SoC has 512 KB of unified L2 16-way, set-associative cache
-> 
-> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
 
-Best regards,
-Jernej
+are available in the Git repository at:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl.git tags/memory-controller-drv-6.10
 
+for you to fetch changes up to bf11908757eeab716536d16a32693b5dcd6990de:
+
+  memory: mtk-smi: fix module autoloading (2024-04-11 08:22:26 +0200)
+
+----------------------------------------------------------------
+Memory controller drivers for v6.10
+
+Few cleanups:
+1. Correct module auto-loading - missing aliases in the module.
+2. Document bindings for the Samsung S5Pv210 SoC DMC memory controller.
+
+----------------------------------------------------------------
+Krzysztof Kozlowski (3):
+      dt-bindings: memory-controllers: add Samsung S5Pv210 SoC DMC
+      memory: brcmstb_memc: fix module autoloading
+      memory: mtk-smi: fix module autoloading
+
+ .../memory-controllers/samsung,s5pv210-dmc.yaml    | 33 ++++++++++++++++++++++
+ drivers/memory/brcmstb_memc.c                      |  1 +
+ drivers/memory/mtk-smi.c                           |  2 ++
+ 3 files changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/samsung,s5pv210-dmc.yaml
