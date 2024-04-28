@@ -1,57 +1,57 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B9C748E
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 05:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099EFBA41
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 05:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714282585; cv=none; b=CqG3tsM8/w0Ci987IAgnLZ+Cc64r7iukGNwz8aUen1fDKX7ptJbXmLowSqUq82kYOFP08L+c97q23WGyq/uqkmmXIALRa8ImzM0LYOeeFQ0FPOFU1rvBGAXUPn20ZFIxQH3QkqYBZoKhV99INDIS0ax9OtucwqvUy0XG19wVGr8=
+	t=1714282590; cv=none; b=gUEPs1qnNCgwzOwUNhb1WbrZeXeotWOxiYSZrs78/XTSQPCkcoTvdeMAp/f0/cESu4S/xB4K41o2d8l6fpZTyKIqs4sB7UsBWKbkrqhbUuC89uMaeesaML0Uah8RXRbGyns7aOThEmU4BdETDWzyc3O/6djElaxsmZVM/cKSylo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714282585; c=relaxed/simple;
-	bh=EWdP+7COA2xba+bx5qQfd0FHHHhd2CSIwhRcuRcZK4U=;
+	s=arc-20240116; t=1714282590; c=relaxed/simple;
+	bh=ds3FTpAVnoEQPwjyBLlVVQYAf2s8bYy/yXDtibgv24Y=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=rpa0tp5FBdN/r5HW/6YVOA0PCXxRizWCk+z2RofnsPdPCGAcXq0y8+RZwlY8W3WUxcMDlVqTnQvZw5pgcn2+SNYW+rws67eu7ehZ/1iS89NWzRBEyDGO9RhzkG4jaxhy2SEhfMsVf/us/JX5is+8zVOqMR0mkp5YvFkeEK7C2N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V95qcKcs; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=dTKK60WqQCyVpMXEj0eoo3uCKss8Ac0+h5uK6YPgKRR0IaA5aMUxwGhkAMyS5t37R88D3TnYnqi9GsvexQVhhx+x8Uh0l5mrSQe7dD0Od4OQ1qOSMP6SM08f/pbbwOnyL49jDI95kj0sbIEfcYORVEf8UtlOHRpHzvHmLx/Csa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h+QUlFSk; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V95qcKcs"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1e4d22f83a7so32740895ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 22:36:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h+QUlFSk"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de45d0b7ffaso6577287276.2
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Apr 2024 22:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714282583; x=1714887383; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714282588; x=1714887388; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bsdmaBlcSPO/fRHlcFv0cg2y7UrKxiHMlbNG9JYitIs=;
-        b=V95qcKcs825ZPzS1E6Wk0q51RL44mtbJn8xvvwree1no7HFUnJaOs07lO9mXpo8JO7
-         STs/RhY26PBFXv8WnX/AkweGSQXrXu86hHxjrJvIVXJJ5Z8pLNLb3HOwdH3UNpMxRDqu
-         GATM24bDcTlVggX/7xFOVJcl/HC1kDuFDPfRWhaodjQ13YW58+Ox15/gOFyK+J2jwsri
-         h712+a6qWDJyvZnzrqviiHA6ALUrM1dZ7lR5/N7zUfggn1HUUGzgTy8QqNSTLed4O+3z
-         plQA3voDKFd5MVSB4YRj6byv+n4o9BmPdnNfK+E1qn7N3Ss911TQcvAe/h1sQzgZR66M
-         RbSA==
+        bh=JEMBdRiSYAzLnQF6W26QVCloinXfU92DZLk227BSKkk=;
+        b=h+QUlFSkXNj/FTzkYofHlX4Mqx2McsxdsrFP+DlVlLonnd28OaQf+7vSk3VvQJNeQk
+         ME8JaeC3T2g/rX45zfGnB0LFwZ/cPc/qzviBxoa5vqPfcm9BMUUB2A91tElv81VvI0xu
+         tuWZ4GKw5tix4u87ogM5FZLPWnDksWpLzfvmLE5TBueSNobCIPpWRO5EVypPmQ5TSNA4
+         fgwILvILLX2CSU9jlIPuFZybGVBxdQpIRmvtKM/P+GiVpwtUyAXiFipMLoLHr9ihqA4Q
+         Y/+uu8qlxOmrwOWMXfihfbEguuwk1jXxox+dF6NOlujriq6yW3FgsVxqLJo0esnW2nyX
+         7q7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714282583; x=1714887383;
+        d=1e100.net; s=20230601; t=1714282588; x=1714887388;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bsdmaBlcSPO/fRHlcFv0cg2y7UrKxiHMlbNG9JYitIs=;
-        b=wBleikTV+fKzhCkB3+2GQ+coj1PuBWS9JSTUuSaO11kdo2rFhVnz+tq1CO/UD35SVY
-         PjnYvRfGdul4wgXNTT84UJiBLZivhISUrcn64X5O0K/YLvf6sW9y2yYCGs6GKXSaLFwI
-         bAJCS3xr2q6suAvrXrj3ouuoZinZGZv6ic9otxYHM2ZiZ7Rqz065WKB6x4TkrfbS98VH
-         WAdtjQnYY2zdJ6Qwr9ZRL51DvF/eGO5I/GyAKjie6LZeXcTKbhSHzUPhBH2kGjs7gBaD
-         6ly+IIht1Q/CF60ioEQsOMhiKi6GRF4ctzJ10BcbSPDSMAzPwull3OFyxFSNJTZUgBzG
-         7gvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWj9Xt4zLud0kB8qf1EeOy9vXiHoEa7If0OYIcYdEpOU3bUfPzBkPh8LsdzosY3D2zIfePbAny0xCIBtqzeTa46BFRW33vOxguFZsZY
-X-Gm-Message-State: AOJu0YwY+Q5mjyR0Hh9h+nt/ypEOV0a7NX1D/mdVnQaLHyepxNvk+WtG
-	9oHSbtW2tP5WKiHU4fzraYttR3dJ1UcXqc+67uH5dPMiLRrIxurRSy3F74+1KGPzCRLafRX9ajL
-	bqB1Ttg==
-X-Google-Smtp-Source: AGHT+IFmAmFeL0NHyMvi9/pFcmepNocBq8xT8lE6DutuOHSb2FJufJTaSCPx21H2vi9U0VDIaCXqv4Gb5Jel
+        bh=JEMBdRiSYAzLnQF6W26QVCloinXfU92DZLk227BSKkk=;
+        b=ezPT6PTLM37pHndb9KF8QuOF8l0Kgx+oRoWt6lBRnWY98VTMOi0ZC1/5F5LwSlP2NR
+         LS5Hyw9AdMRmb1z7ejhpYgdmhgMb/Q38lSzYewoibjdu91CThhLCu0wnNCtByrsoKv5D
+         MP8JdqbSy941njTAwJbaUgq3Vi++ZPhIZW3Sxc1GYxrO8en4flPeGJF9TGIzgK7aza5N
+         RMKoJXvc3dXNkvSRqrc985SAlrD6IcIWAW/pwSH57wjwcZ8qWPJcFX/RMJvFNAsJT536
+         LR4OHTiQKIm42ewL6/VQxkNd0ox169gyc93Wug15OFZBFXJC3YlBHzOPZTlEKe44cP5T
+         Xs1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUU2chntkrmwhqpb5n3PrbjpNp7fzAoYjPUwInMikoa43TAQsh0B0jAO0mJMFQ/cpFY7Swx8SsnGE1lIasx1COdNT7OEfAhbDgVs+Sk
+X-Gm-Message-State: AOJu0YxnQYYQ86HkQpp/kmgVrcXsZE5SuqvRu+9tKP9nZlzmkGl/dcIi
+	9HorSgdHXbi2Xg6ZcZtImos4oegAY2+N2zOVlY7/ZaF2TG4KMnxvEMNihXGsGnydPxlSPJD5ZLR
+	gUn0iFg==
+X-Google-Smtp-Source: AGHT+IHzqyKnSGf7Pk6gDt60ZrjYNxljd0CkcvR8nELq18HPFE76znx0vCTgauxHqqYDBN6fFbSAyL6qVedt
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:eaaa:2f79:c83c:9def])
- (user=irogers job=sendgmr) by 2002:a17:902:e888:b0:1e5:1158:e44d with SMTP id
- w8-20020a170902e88800b001e51158e44dmr507815plg.2.1714282582913; Sat, 27 Apr
- 2024 22:36:22 -0700 (PDT)
-Date: Sat, 27 Apr 2024 22:36:13 -0700
+ (user=irogers job=sendgmr) by 2002:a25:aa63:0:b0:de4:654f:9ad0 with SMTP id
+ s90-20020a25aa63000000b00de4654f9ad0mr702348ybi.6.1714282588141; Sat, 27 Apr
+ 2024 22:36:28 -0700 (PDT)
+Date: Sat, 27 Apr 2024 22:36:15 -0700
 In-Reply-To: <20240428053616.1125891-1-irogers@google.com>
-Message-Id: <20240428053616.1125891-2-irogers@google.com>
+Message-Id: <20240428053616.1125891-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240428053616.1125891-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Subject: [RFC PATCH v2 1/3] perf evsel: Refactor tool events
+Subject: [RFC PATCH v2 3/3] perf evsel: Add retirement latency event support
 From: Ian Rogers <irogers@google.com>
 To: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,447 +74,277 @@ To: weilin.wang@intel.com, Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Tool events unnecessarily open a dummy perf event which is useless
-even with `perf record` which will still open a dummy event. Change
-the behavior of tool events so:
+When a retirement latency event is processed it sets a flag on the
+evsel. This change makes it so that when the flag is set evsel
+opening, reading and exiting report values from child perf record and
+perf report processes.
 
- - duration_time - call `rdclock` on open and then report the count as
-   a delta since the start in evsel__read_counter. This moves code out
-   of builtin-stat making it more general purpose.
+Something similar was suggested by Namhyung Kim in:
+https://lore.kernel.org/lkml/CAM9d7cgdQQn5GYB7t++xuoMdeqPXiEkkcop69+rD06RAnu9-EQ@mail.gmail.com/
 
- - user_time/system_time - open the fd as either `/proc/pid/stat` or
-   `/proc/stat` for cases like system wide. evsel__read_counter will
-   read the appropriate field out of the procfs file. These values
-   were previously supplied by wait4, if the procfs read fails then
-   the wait4 values are used, assuming the process/thread terminated.
-   By reading user_time and system_time this way, interval mode can be
-   supported.
-
-Opening any of the tool events for `perf record` returns invalid.
+This is trying to add support for retirement latency directly in
+events rather than through metric changes, as suggested by Weilin Wang in:
+https://lore.kernel.org/lkml/20240402214436.1409476-1-weilin.wang@intel.com/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c |  74 ++++++-------
- tools/perf/util/evsel.c   | 223 +++++++++++++++++++++++++++++++++++++-
- tools/perf/util/evsel.h   |   6 +
- 3 files changed, 259 insertions(+), 44 deletions(-)
+ tools/perf/util/evsel.c | 186 +++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/evsel.h |   3 +
+ 2 files changed, 188 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 65a3dd7ffac3..428e9721b908 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -255,45 +255,37 @@ static int evsel__write_stat_event(struct evsel *counter, int cpu_map_idx, u32 t
- 					   process_synthesized_event, NULL);
- }
- 
--static int read_single_counter(struct evsel *counter, int cpu_map_idx,
--			       int thread, struct timespec *rs)
--{
--	switch(counter->tool_event) {
--		case PERF_TOOL_DURATION_TIME: {
--			u64 val = rs->tv_nsec + rs->tv_sec*1000000000ULL;
--			struct perf_counts_values *count =
--				perf_counts(counter->counts, cpu_map_idx, thread);
--			count->ena = count->run = val;
--			count->val = val;
--			return 0;
--		}
--		case PERF_TOOL_USER_TIME:
--		case PERF_TOOL_SYSTEM_TIME: {
--			u64 val;
--			struct perf_counts_values *count =
--				perf_counts(counter->counts, cpu_map_idx, thread);
--			if (counter->tool_event == PERF_TOOL_USER_TIME)
--				val = ru_stats.ru_utime_usec_stat.mean;
--			else
--				val = ru_stats.ru_stime_usec_stat.mean;
--			count->ena = count->run = val;
--			count->val = val;
--			return 0;
--		}
--		default:
--		case PERF_TOOL_NONE:
--			return evsel__read_counter(counter, cpu_map_idx, thread);
--		case PERF_TOOL_MAX:
--			/* This should never be reached */
--			return 0;
-+static int read_single_counter(struct evsel *counter, int cpu_map_idx, int thread)
-+{
-+	int err = evsel__read_counter(counter, cpu_map_idx, thread);
-+
-+	/*
-+	 * Reading user and system time will fail when the process
-+	 * terminates. Use the wait4 values in that case.
-+	 */
-+	if (err &&
-+	    (counter->tool_event == PERF_TOOL_USER_TIME ||
-+	     counter->tool_event == PERF_TOOL_SYSTEM_TIME)) {
-+		u64 val;
-+		struct perf_counts_values *count =
-+			perf_counts(counter->counts, cpu_map_idx, thread);
-+
-+		if (counter->tool_event == PERF_TOOL_USER_TIME)
-+			val = ru_stats.ru_utime_usec_stat.mean;
-+		else
-+			val = ru_stats.ru_stime_usec_stat.mean;
-+		count->ena = count->run = val;
-+		count->val = val;
-+		return 0;
- 	}
-+	return err;
- }
- 
- /*
-  * Read out the results of a single counter:
-  * do not aggregate counts across CPUs in system-wide mode
-  */
--static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu_map_idx)
-+static int read_counter_cpu(struct evsel *counter, int cpu_map_idx)
- {
- 	int nthreads = perf_thread_map__nr(evsel_list->core.threads);
- 	int thread;
-@@ -311,7 +303,7 @@ static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu_
- 		 * (via evsel__read_counter()) and sets their count->loaded.
- 		 */
- 		if (!perf_counts__is_loaded(counter->counts, cpu_map_idx, thread) &&
--		    read_single_counter(counter, cpu_map_idx, thread, rs)) {
-+		    read_single_counter(counter, cpu_map_idx, thread)) {
- 			counter->counts->scaled = -1;
- 			perf_counts(counter->counts, cpu_map_idx, thread)->ena = 0;
- 			perf_counts(counter->counts, cpu_map_idx, thread)->run = 0;
-@@ -340,7 +332,7 @@ static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu_
- 	return 0;
- }
- 
--static int read_affinity_counters(struct timespec *rs)
-+static int read_affinity_counters(void)
- {
- 	struct evlist_cpu_iterator evlist_cpu_itr;
- 	struct affinity saved_affinity, *affinity;
-@@ -361,10 +353,8 @@ static int read_affinity_counters(struct timespec *rs)
- 		if (evsel__is_bpf(counter))
- 			continue;
- 
--		if (!counter->err) {
--			counter->err = read_counter_cpu(counter, rs,
--							evlist_cpu_itr.cpu_map_idx);
--		}
-+		if (!counter->err)
-+			counter->err = read_counter_cpu(counter, evlist_cpu_itr.cpu_map_idx);
- 	}
- 	if (affinity)
- 		affinity__cleanup(&saved_affinity);
-@@ -388,11 +378,11 @@ static int read_bpf_map_counters(void)
- 	return 0;
- }
- 
--static int read_counters(struct timespec *rs)
-+static int read_counters(void)
- {
- 	if (!stat_config.stop_read_counter) {
- 		if (read_bpf_map_counters() ||
--		    read_affinity_counters(rs))
-+		    read_affinity_counters())
- 			return -1;
- 	}
- 	return 0;
-@@ -423,7 +413,7 @@ static void process_interval(void)
- 
- 	evlist__reset_aggr_stats(evsel_list);
- 
--	if (read_counters(&rs) == 0)
-+	if (read_counters() == 0)
- 		process_counters();
- 
- 	if (STAT_RECORD) {
-@@ -911,7 +901,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	 * avoid arbitrary skew, we must read all counters before closing any
- 	 * group leaders.
- 	 */
--	if (read_counters(&(struct timespec) { .tv_nsec = t1-t0 }) == 0)
-+	if (read_counters() == 0)
- 		process_counters();
- 
- 	/*
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3536404e9447..a0a8aee7d6b9 100644
+index a0a8aee7d6b9..17c123cddde3 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -10,6 +10,7 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <linux/bitops.h>
-+#include <api/io.h>
- #include <api/fs/fs.h>
- #include <api/fs/tracing_path.h>
- #include <linux/hw_breakpoint.h>
-@@ -30,6 +31,7 @@
- #include "counts.h"
- #include "event.h"
- #include "evsel.h"
-+#include "time-utils.h"
- #include "util/env.h"
- #include "util/evsel_config.h"
- #include "util/evsel_fprintf.h"
-@@ -1600,11 +1602,183 @@ static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
- 	return evsel__process_group_data(leader, cpu_map_idx, thread, data);
- }
+@@ -22,6 +22,7 @@
+ #include <sys/resource.h>
+ #include <sys/types.h>
+ #include <dirent.h>
++#include <signal.h>
+ #include <stdlib.h>
+ #include <perf/evsel.h>
+ #include "asm/bug.h"
+@@ -58,6 +59,7 @@
+ #include <internal/xyarray.h>
+ #include <internal/lib.h>
+ #include <internal/threadmap.h>
++#include <subcmd/run-command.h>
  
-+static int read_stat_field(int fd, struct perf_cpu cpu, int field, __u64 *val)
+ #include <linux/ctype.h>
+ 
+@@ -493,6 +495,162 @@ struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx)
+ }
+ #endif
+ 
++static int evsel__start_retire_latency_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
++					  int cpu_map_idx)
 +{
-+	char buf[256];
-+	struct io io;
-+	int c, i;
++	char buf[16];
++	int pipefd[2];
++	int err, i;
++	struct perf_cpu cpu = perf_cpu_map__cpu(cpus, cpu_map_idx);
++	struct child_process *child_record =
++		xyarray__entry(evsel->children, cpu_map_idx, 0);
++	struct child_process *child_report =
++		xyarray__entry(evsel->children, cpu_map_idx, 1);
++	char *event = strdup(evsel__name(evsel));
++	/* TODO: the dummy event also won't be used, but there's no option to disable. */
++	const char *record_argv[15] = {
++		[0] = "perf",
++		[1] = "record",
++		[2] = "--synth=no",
++		[3] = "--no-bpf-event",
++		[4] = "-W",
++		[5] = "-o",
++		[6] = "-",
++		[7] = "-e",
++	};
++	const char *report_argv[] = {
++		[0] = "perf",
++		[1] = "report",
++		[2] = "-i",
++		[3] = "-",
++		[4] = "-q",
++		[5] = "-F",
++		[6] = "retire_lat",
++		NULL,
++	};
 +
-+	io__init(&io, fd, buf, sizeof(buf));
++	if (evsel->core.attr.sample_period) /* no sampling */
++		return -EINVAL;
 +
-+	/* Skip lines to relevant CPU. */
-+	for (i = -1; i < cpu.cpu; i++) {
-+		do {
-+			c = io__get_char(&io);
-+			if (c == -1)
-+				return -EINVAL;
-+		} while (c != '\n');
-+	}
-+	/* Skip to "cpu". */
-+	c = io__get_char(&io);
-+	if (c != 'c')
-+		return -EINVAL;
-+	c = io__get_char(&io);
-+	if (c != 'p')
-+		return -EINVAL;
-+	c = io__get_char(&io);
-+	if (c != 'u')
-+		return -EINVAL;
-+	/* Skip N of cpuN. */
-+	do {
-+		c = io__get_char(&io);
-+		if (c == -1)
-+			return -EINVAL;
-+	} while (c != ' ');
++	if (!event)
++		return -ENOMEM;
 +
-+	i = 1;
-+	while (true) {
-+		c = io__get_dec(&io, val);
-+		if (c != ' ')
++	/* Change the R modifier to the maximum precision one. */
++	for (i = strlen(event) - 1; i > 0; i--) {
++		if (event[i] == 'R')
 +			break;
-+		if (field == i)
-+			return 0;
-+		i++;
++		if (event[i] == ':' || event[i] == '/')
++			i = 0;
 +	}
-+	return -EINVAL;
-+}
-+
-+static int read_pid_stat_field(int fd, int field, __u64 *val)
-+{
-+	char buf[256];
-+	struct io io;
-+	int c, i;
-+
-+	io__init(&io, fd, buf, sizeof(buf));
-+	c = io__get_dec(&io, val);
-+	if (c != ' ')
++	if (i <= 0) {
++		pr_err("Expected retired latency 'R'\n");
 +		return -EINVAL;
-+	if (field == 1)
-+		return 0;
-+
-+	/* Skip comm. */
-+	c = io__get_char(&io);
-+	if (c != '(')
-+		return -EINVAL;
-+	do {
-+		c = io__get_char(&io);
-+		if (c == -1)
-+			return -EINVAL;
-+	} while (c != ')');
-+	if (field == 2)
-+		return -EINVAL;
-+
-+	/* Skip state */
-+	c = io__get_char(&io);
-+	if (c != ' ')
-+		return -EINVAL;
-+	c = io__get_char(&io);
-+	if (c == -1)
-+		return -EINVAL;
-+	if (field == 3)
-+		return -EINVAL;
-+
-+	/* Loop over numeric fields*/
-+	c = io__get_char(&io);
-+	if (c != ' ')
-+		return -EINVAL;
-+
-+	i = 4;
-+	while (true) {
-+		c = io__get_dec(&io, val);
-+		if (c == -1)
-+			return -EINVAL;
-+		if (c == -2) {
-+			/* Assume a -ve was read */
-+			c = io__get_dec(&io, val);
-+			*val *= -1;
-+		}
-+		if (c != ' ')
-+			return -EINVAL;
-+		if (field == i)
-+			return 0;
-+		i++;
 +	}
-+	return -EINVAL;
-+}
++	event[i] = 'P';
 +
-+static int evsel__read_tool(struct evsel *evsel, int cpu_map_idx, int thread)
-+{
-+	__u64 cur_time, delta_start;
-+	int fd, err = 0;
-+	struct perf_counts_values *count;
-+	bool adjust = false;
-+
-+	count = perf_counts(evsel->counts, cpu_map_idx, thread);
-+
-+	switch (evsel->tool_event) {
-+	case PERF_TOOL_DURATION_TIME:
-+		/*
-+		 * Pretend duration_time is only on the first CPU and thread, or
-+		 * else aggregation will scale duration_time by the number of
-+		 * CPUs/threads.
-+		 */
-+		if (cpu_map_idx == 0 && thread == 0)
-+			cur_time = rdclock();
-+		else
-+			cur_time = evsel->start_time;
-+		break;
-+	case PERF_TOOL_USER_TIME:
-+	case PERF_TOOL_SYSTEM_TIME: {
-+		bool system = evsel->tool_event == PERF_TOOL_SYSTEM_TIME;
-+
-+		fd = FD(evsel, cpu_map_idx, thread);
-+		lseek(fd, SEEK_SET, 0);
-+		if (evsel->pid_stat) {
-+			/* The event exists solely on 1 CPU. */
-+			if (cpu_map_idx == 0)
-+				err = read_pid_stat_field(fd, system ? 15 : 14, &cur_time);
-+			else
-+				cur_time = 0;
-+		} else {
-+			/* The event is for all threads. */
-+			if (thread == 0) {
-+				struct perf_cpu cpu = perf_cpu_map__cpu(evsel->core.cpus,
-+									cpu_map_idx);
-+
-+				err = read_stat_field(fd, cpu, system ? 3 : 1, &cur_time);
-+			} else {
-+				cur_time = 0;
-+			}
-+		}
-+		adjust = true;
-+		break;
++	i = 8;
++	record_argv[i++] = event;
++	if (verbose) {
++		record_argv[i++] = verbose > 1 ? "-vv" : "-v";
 +	}
-+	case PERF_TOOL_NONE:
-+	case PERF_TOOL_MAX:
-+	default:
-+		err = -EINVAL;
++	if (cpu.cpu >= 0) {
++		record_argv[i++] = "-C";
++		snprintf(buf, sizeof(buf), "%d", cpu.cpu);
++		record_argv[i++] = buf;
++	} else {
++		record_argv[i++] = "-a";
 +	}
++	/* TODO: use something like the control fds to control perf record behavior. */
++	record_argv[i++] = "sleep";
++	record_argv[i++] = "0.1";
++
++	if (pipe(pipefd) < 0) {
++		free(event);
++		return -errno;
++	}
++
++	child_record->argv = record_argv;
++	child_record->pid = -1;
++	child_record->no_stdin = 1;
++	if (verbose)
++		child_record->err = fileno(stderr);
++	else
++		child_record->no_stderr = 1;
++	child_record->out = pipefd[1];
++	err = start_command(child_record);
++	free(event);
 +	if (err)
 +		return err;
 +
-+	delta_start = cur_time - evsel->start_time;
-+	if (adjust) {
-+		__u64 ticks_per_sec = sysconf(_SC_CLK_TCK);
++	child_report->argv = report_argv;
++	child_report->pid = -1;
++	if (verbose)
++		child_report->err = fileno(stderr);
++	else
++		child_report->no_stderr = 1;
++	child_report->in = pipefd[0];
++	child_report->out = -1;
++	return start_command(child_report);
++}
 +
-+		delta_start *= 1000000000 / ticks_per_sec;
-+	}
-+	count->val    = delta_start;
-+	count->ena    = count->run = delta_start;
-+	count->lost   = 0;
++static int evsel__finish_retire_latency_cpu(struct evsel *evsel, int cpu_map_idx)
++{
++	struct child_process *child_record =
++		xyarray__entry(evsel->children, cpu_map_idx, 0);
++	struct child_process *child_report =
++		xyarray__entry(evsel->children, cpu_map_idx, 1);
++
++	if (child_record->pid > 0)
++		finish_command(child_record);
++	if (child_report->pid > 0)
++		finish_command(child_report);
 +	return 0;
 +}
 +
- int evsel__read_counter(struct evsel *evsel, int cpu_map_idx, int thread)
- {
--	u64 read_format = evsel->core.attr.read_format;
-+	if (evsel__is_tool(evsel))
-+		return evsel__read_tool(evsel, cpu_map_idx, thread);
++static int evsel__read_retire_latency(struct evsel *evsel, int cpu_map_idx, int thread)
++{
++	struct child_process *child_record = xyarray__entry(evsel->children, cpu_map_idx, 0);
++	struct child_process *child_report = xyarray__entry(evsel->children, cpu_map_idx, 1);
++	struct perf_counts_values *count = perf_counts(evsel->counts, cpu_map_idx, thread);
++	char buf[256];
++	int err;
++
++	kill(child_record->pid, SIGTERM);
++	err = read(child_report->out, buf, sizeof(buf));
++	if (err < 0 || strlen(buf) == 0)
++		return -1;
++
++	count->val = atoll(buf);
++	count->ena = 1;
++	count->run = 1;
++	count->id = 0;
++	count->lost = 0;
++
++	/*
++	 * TODO: The SIGCHLD from the children exiting will cause interval mode
++	 *       to stop, use the control fd to avoid this.
++	 */
++	err = evsel__finish_retire_latency_cpu(evsel, cpu_map_idx);
++	if (err)
++		return err;
++
++	/* Restart the counter. */
++	return evsel__start_retire_latency_cpu(evsel, evsel->core.cpus, cpu_map_idx);
++}
++
++static int evsel__finish_retire_latency(struct evsel *evsel)
++{
++	int idx;
++
++	perf_cpu_map__for_each_idx(idx, evsel->core.cpus) {
++		int err = evsel__finish_retire_latency_cpu(evsel, idx);
++
++		if (err)
++			return err;
++	}
++	return 0;
++}
++
+ const char *const evsel__hw_names[PERF_COUNT_HW_MAX] = {
+ 	"cycles",
+ 	"instructions",
+@@ -1465,6 +1623,10 @@ static void evsel__free_config_terms(struct evsel *evsel)
  
--	if (read_format & PERF_FORMAT_GROUP)
-+	if (evsel->core.attr.read_format & PERF_FORMAT_GROUP)
+ void evsel__exit(struct evsel *evsel)
+ {
++	if (evsel->children) {
++		evsel__finish_retire_latency(evsel);
++		zfree(&evsel->children);
++	}
+ 	assert(list_empty(&evsel->core.node));
+ 	assert(evsel->evlist == NULL);
+ 	bpf_counter__destroy(evsel);
+@@ -1778,6 +1940,9 @@ int evsel__read_counter(struct evsel *evsel, int cpu_map_idx, int thread)
+ 	if (evsel__is_tool(evsel))
+ 		return evsel__read_tool(evsel, cpu_map_idx, thread);
+ 
++	if (evsel->retire_lat)
++		return evsel__read_retire_latency(evsel, cpu_map_idx, thread);
++
+ 	if (evsel->core.attr.read_format & PERF_FORMAT_GROUP)
  		return evsel__read_group(evsel, cpu_map_idx, thread);
  
- 	return evsel__read_one(evsel, cpu_map_idx, thread);
-@@ -2005,6 +2179,13 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	int pid = -1, err, old_errno;
- 	enum rlimit_action set_rlimit = NO_CHANGE;
+@@ -1993,10 +2158,22 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		threads = empty_thread_map;
+ 	}
  
-+	if (evsel->tool_event == PERF_TOOL_DURATION_TIME) {
-+		if (evsel->core.attr.sample_period) /* no sampling */
-+			return -EINVAL;
-+		evsel->start_time = rdclock();
-+		return 0;
+-	if (evsel->core.fd == NULL &&
++	if (!evsel->retire_lat && evsel->core.fd == NULL &&
+ 	    perf_evsel__alloc_fd(&evsel->core, perf_cpu_map__nr(cpus), nthreads) < 0)
+ 		return -ENOMEM;
+ 
++	if (evsel->retire_lat && evsel->children == NULL) {
++		/*
++		 * Use ylen of 2, [0] is the record and [1] is the report
++		 * command. Currently retirement latency doesn't support
++		 * per-thread mode.
++		 */
++		evsel->children = xyarray__new(perf_cpu_map__nr(cpus), /*ylen=*/2,
++					sizeof(struct child_process));
++		if (!evsel->children)
++			return -ENOMEM;
 +	}
 +
- 	err = __evsel__prepare_open(evsel, cpus, threads);
- 	if (err)
- 		return err;
-@@ -2037,6 +2218,44 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 			if (!evsel->cgrp && !evsel->core.system_wide)
- 				pid = perf_thread_map__pid(threads, thread);
+ 	evsel->open_flags = PERF_FLAG_FD_CLOEXEC;
+ 	if (evsel->cgrp)
+ 		evsel->open_flags |= PERF_FLAG_PID_CGROUP;
+@@ -2209,6 +2386,13 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
  
-+			if (evsel->tool_event == PERF_TOOL_USER_TIME ||
-+			    evsel->tool_event == PERF_TOOL_SYSTEM_TIME) {
-+				bool system = evsel->tool_event == PERF_TOOL_SYSTEM_TIME;
-+
-+				if (evsel->core.attr.sample_period) {
-+					/* no sampling */
-+					err = -EINVAL;
-+					goto out_close;
-+				}
-+				if (pid > -1) {
-+					char buf[64];
-+
-+					snprintf(buf, sizeof(buf), "/proc/%d/stat", pid);
-+					fd = open(buf, O_RDONLY);
-+					evsel->pid_stat = true;
-+				} else {
-+					fd = open("/proc/stat", O_RDONLY);
-+				}
-+				FD(evsel, idx, thread) = fd;
-+				if (fd < 0) {
-+					err = -errno;
-+					goto out_close;
-+				}
-+				if (pid > -1) {
-+					err = read_pid_stat_field(fd, system ? 15 : 14,
-+								  &evsel->start_time);
-+				} else {
-+					struct perf_cpu cpu;
-+
-+					cpu = perf_cpu_map__cpu(evsel->core.cpus, idx);
-+					err = read_stat_field(fd, cpu, system ? 3 : 1,
-+							      &evsel->start_time);
-+				}
-+				if (err)
-+					goto out_close;
-+				continue;
-+			}
-+
- 			group_fd = get_group_fd(evsel, idx, thread);
+ 	for (idx = start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
  
- 			if (group_fd == -2) {
++		if (evsel->retire_lat) {
++			err = evsel__start_retire_latency_cpu(evsel, cpus, idx);
++			if (err)
++				goto out_close;
++			continue;
++		}
++
+ 		for (thread = 0; thread < nthreads; thread++) {
+ 			int fd, group_fd;
+ retry_open:
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 517cff431de2..43f6fd1dcb4d 100644
+index bd8e84954e34..3c0806436e64 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -170,6 +170,12 @@ struct evsel {
- 
- 	/* for missing_features */
- 	struct perf_pmu		*pmu;
+@@ -177,6 +177,9 @@ struct evsel {
+ 	__u64 start_time;
+ 	/* Is the tool's fd for /proc/pid/stat or /proc/stat. */
+ 	bool pid_stat;
 +
-+	/* For tool events */
-+	/* Beginning time subtracted when the counter is read. */
-+	__u64 start_time;
-+	/* Is the tool's fd for /proc/pid/stat or /proc/stat. */
-+	bool pid_stat;
++	/* Used for retire_lat child process. */
++	struct xyarray *children;
  };
  
  struct perf_missing_features {
