@@ -1,57 +1,57 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD584AEDE
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 23:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA05452F9A
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 23:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714345282; cv=none; b=cKX9FygQp1n/ruEOir7m+C3gMIdd4/2Wg6bWs8fFL8/1OR9dzprCT2VMffAvT3UoJycKAoNRQfYIcscMdBfzhmR6FxH4+WJwpz6Pwsl+1B1FUpfdS7RQnJr+eUIAVM0A+/I7V/gtEo5Wj6mTNu/EJjAv7V1zYZshDezX3DSln2c=
+	t=1714345283; cv=none; b=J+/JcnaJAS9SrrWEPRxylm59tcYU8J8zIUinv9k8yYnmcRukNHYqUbJjfNdxVOtppPUTycLNtSpfhvqhKVO0wUpBV6CH2Hi+l0hpAtbfSICg5b6RJeVSnJkkPnaiGIHf/lmq5qA4qFrCHCp6kminsARsa3s9cZZF2y6/RbLa5wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714345282; c=relaxed/simple;
-	bh=5Y3rMOfmPj9I5oo9SIOrDTqUJHDHqOhOLjPzdtcs9vQ=;
+	s=arc-20240116; t=1714345283; c=relaxed/simple;
+	bh=CINZa7BZ9kwdDRvCzgXCeiUMShws1T7hlMcYDXKXccg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nXMpuSU5xcyUOHEmSMSlFeyFPllJHHKmKXvb1XpGGVgz64fBbHDgun7rGtnsmTZe0sUUAGYH720wlsURJdDOUDH7u6YhPM35lAtVakTTQIvBPbac+qVkMWPhtOB1zznUOZvGVb2ZOWpzr/psWo4us3BtWk5NABnczxDjyVmlhLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=Vmer1/2j; arc=none smtp.client-ip=209.85.216.45
+	 MIME-Version; b=TuCePJbOnNjqsc5qvaDWFerGRq7QbqZvG72oLHibqf+yIRntCkfxZJoQd6LQR8wzV73S5+RouaYo9ixKxAeravJ+zzKXroSxLlnvSKcFVuJ2rdpfd595XPYPZphWTXQWMKjwOe/6lAlw0JytqB+mwvcXFq0DIl5/KrHER99RbRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=QXj1p9cJ; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="Vmer1/2j"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2a7e19c440dso2860199a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 16:01:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="QXj1p9cJ"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ee13f19e7eso3639123b3a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 16:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=darkphysics.net; s=google; t=1714345279; x=1714950079; darn=vger.kernel.org;
+        d=darkphysics.net; s=google; t=1714345281; x=1714950081; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UaX0yMsXS4twHiF6maUrciZQmjJPvFyuY1/pgw0/zBU=;
-        b=Vmer1/2jB4khbXSeexFsPcMbbPIvSMXnEg+xLr/xqYgSbRsUuzoonzLDqybstpuF6Q
-         6MOZlantA6TFw1DqzrMvCHlbJy23AV+/nZc4vssQ5fENoGvFnJKvqVuidXTb7WHkbI58
-         yBb0p8ZN0M/soYDAQIOKRK4LEQ7MMOwnONjTSzLzpXiJWWiLqOfqmm05JscBl/KmDfeA
-         OjVhb1YIcQjaJZqFNT1J/VkLtXsbkuBeXRqFlqQcRgrlFy2lW9WP7A6cN+QuR5kmA8up
-         d1YryrYWUomtDj2PY1jYxb9I3LbqeYJEySYjkPMKQ/+Jjdf8CVuFIXaANbd0+FsENCvO
-         kS/w==
+        bh=szh4UKx+DCu/+Jb81IHvm3sJHBJ5ImWZ7XqJmmyg3wk=;
+        b=QXj1p9cJaY8K3kod7j5jarr0dD7/jBjsyOfaxaKw5XJPG3lhRpuqxxhH0CuozHlmri
+         tFqibPHer5aH0cBjrW0rpdXa27K1OSWyf2coiXTgJcVLwWLLo4WN4y31ejCbkp+L3lLf
+         17kRIYdB1a0l4fc0anitPrVpu+yYR1Miri6WJODKgmRJ6SLTu1OgonYmqo0gGBeruBOA
+         /O/IhKG4ZeshMEXFn0E0I8I++FFcymhj93T5QVarh06hOfE0ytp0TgJLYluYxp/kKgcs
+         xZsPbxTxYK2/o8A4lMXXNgg5dI87AvRYCQFnT6DzH30KdhdJiEMVu/it/sURUd1Eg3U+
+         xngw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714345279; x=1714950079;
+        d=1e100.net; s=20230601; t=1714345281; x=1714950081;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UaX0yMsXS4twHiF6maUrciZQmjJPvFyuY1/pgw0/zBU=;
-        b=EXDBR76zc1wVULtKACVryybTk0bg3e4XtNZcdXgIpmiGdDFgaZnL+poo8P/xwT73DT
-         jcS8wES5mJ0ptseWp9JqaY6wMUHGycI7W8V6W1tyyb/zOE1ROFmygHwSA0XeErk91l1g
-         IBeW8Y0XxzepdoCtfuO/ctgZPNJdKMqgORrMZ3DCS6NuDFoL5jXirbwKHwVyvfwRzlfv
-         J4+23+U9AljDIdxA5v0+vXeu643WXkvwEGR19LTgFw/cKGaZdPPypyp+kLFxE+DD5ksT
-         DFidDei8/7STAMsdBplOliC9//fSQzrmanmmWLSl85cdnw8w03nWJIRQHKqmd2eHGZbW
-         AyZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWHMQWLG2yXWWegtiOCkcgd6dy7Jn5yqerv/erm7BNzgdio51OcnjCHu2wgB7jwvKFJEMKStgmWrun7ib27NsejwCIXg7T+zuMs+y2
-X-Gm-Message-State: AOJu0Yyg/YqqoVzONCrtDmDsI8SjvWEZPXkg9Xam3ejUg7JncMaUl+pL
-	7MtkZWo37rdjpMNwqvPxPCMe5xv90/A82ML4WL1ERu1bSx9ToDk9tYBVoQuswBc=
-X-Google-Smtp-Source: AGHT+IGlUPh7Zl+7QcgueIGd9sfz8pquCRemizZTa+v6Pa3rQpQ+0/znBpeo6eWIy5FZ4ZblL1BDQQ==
-X-Received: by 2002:a17:90a:fe10:b0:2ae:6e16:da91 with SMTP id ck16-20020a17090afe1000b002ae6e16da91mr7779149pjb.29.1714345279309;
-        Sun, 28 Apr 2024 16:01:19 -0700 (PDT)
+        bh=szh4UKx+DCu/+Jb81IHvm3sJHBJ5ImWZ7XqJmmyg3wk=;
+        b=eLT7azGXAoL5dJuGhaaSwARS7KbUMpuuRM9LbFaw8LsCAb94bvREf9MTyAcMzhF8K+
+         +CXZxAU/stDTODWzYkDMX5gLStDanY4TsSzvttwXcovAB2Pe16VVjWWTbnvEQAKn4sL+
+         XQefXNWPHQTmQmVXMMZc3UsUWCLLrPbXzDkkCyIF4Wdo3WNAfpanfbUUbnWqcd/TIOh0
+         KF/zGIwi8JimrVZT9xWwytjA36m1ID8mg55UAMvVWX6OrwXbZ47SW303OeeqyLfCJpNn
+         CYGwmZDwZEHCQvfmxPkdsp1IPXvsP9a6XV4wIepNbTyWvPVa3sSlV1dE500DiCzC8jkx
+         g7Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCXw+cPP9XsLdqUQQ512/7PpZO+4f/8Q2qKzMFaVj0XjP2tfqVmWmMJQbKRJGZl7vfwjDuRtbVTgJ0RMdFzYbaWTqRqYhczQmqviVZEE
+X-Gm-Message-State: AOJu0Yx91xlxCQZ2/TEhw6zykszHQ+5iM7AW0Ajarn30Rqhl95/cvHDl
+	wwaVb/PkYtuPltWIHv9HVFKeiVSMX0A1kqPSOTdVLmduW2lkxVe3SuVThgNL1YU=
+X-Google-Smtp-Source: AGHT+IEayXLaLCT7Ia7HGBREBpMOGoPMsguYGlKFCBMNIDhZLcTnbCBm/Um9a55y4twAp7YTf9gqJA==
+X-Received: by 2002:a17:90b:684:b0:2b1:9845:e09b with SMTP id m4-20020a17090b068400b002b19845e09bmr1107604pjz.49.1714345281097;
+        Sun, 28 Apr 2024 16:01:21 -0700 (PDT)
 Received: from lunchbox.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
-        by smtp.gmail.com with ESMTPSA id o16-20020a17090aac1000b002a27132ac02sm17860864pjq.2.2024.04.28.16.01.18
+        by smtp.gmail.com with ESMTPSA id o16-20020a17090aac1000b002a27132ac02sm17860864pjq.2.2024.04.28.16.01.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Apr 2024 16:01:19 -0700 (PDT)
+        Sun, 28 Apr 2024 16:01:20 -0700 (PDT)
 From: Tree Davies <tdavies@darkphysics.net>
 To: gregkh@linuxfoundation.org,
 	philipp.g.hortmann@gmail.com,
@@ -59,9 +59,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tree Davies <tdavies@darkphysics.net>
-Subject: [PATCH 15/18] Staging: rtl8192e: Rename variable MaxRxAMPDUFactor
-Date: Sun, 28 Apr 2024 16:01:03 -0700
-Message-Id: <20240428230106.6548-16-tdavies@darkphysics.net>
+Subject: [PATCH 18/18] Staging: rtl8192e: Rename variable DssCCk
+Date: Sun, 28 Apr 2024 16:01:06 -0700
+Message-Id: <20240428230106.6548-19-tdavies@darkphysics.net>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20240428230106.6548-1-tdavies@darkphysics.net>
 References: <20240428230106.6548-1-tdavies@darkphysics.net>
@@ -73,60 +73,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename variable MaxRxAMPDUFactor to max_rx_ampdu_factor
+Rename variable DssCCk to dss_cck
 to fix checkpatch warning Avoid CamelCase.
 
 Signed-off-by: Tree Davies <tdavies@darkphysics.net>
 ---
- drivers/staging/rtl8192e/rtl819x_HT.h     |  2 +-
- drivers/staging/rtl8192e/rtl819x_HTProc.c | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/staging/rtl8192e/rtl819x_HT.h     | 2 +-
+ drivers/staging/rtl8192e/rtl819x_HTProc.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/staging/rtl8192e/rtl819x_HT.h b/drivers/staging/rtl8192e/rtl819x_HT.h
-index e0906e4588c2..425df93486b3 100644
+index c1446081956d..a6e0077630c7 100644
 --- a/drivers/staging/rtl8192e/rtl819x_HT.h
 +++ b/drivers/staging/rtl8192e/rtl819x_HT.h
-@@ -39,7 +39,7 @@ struct ht_capab_ele {
+@@ -34,7 +34,7 @@ struct ht_capab_ele {
+ 	u8	rx_stbc:2;
+ 	u8	delay_ba:1;
+ 	u8	max_amsdu_size:1;
+-	u8	DssCCk:1;
++	u8	dss_cck:1;
+ 	u8	PSMP:1;
  	u8	Rsvd1:1;
  	u8	lsig_txop_protect:1;
- 
--	u8	MaxRxAMPDUFactor:2;
-+	u8	max_rx_ampdu_factor:2;
- 	u8	MPDUDensity:3;
- 	u8	Rsvd2:3;
- 
 diff --git a/drivers/staging/rtl8192e/rtl819x_HTProc.c b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-index 7b08e549726b..516e48073dc7 100644
+index 963d69680049..9b0a981f6f22 100644
 --- a/drivers/staging/rtl8192e/rtl819x_HTProc.c
 +++ b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-@@ -276,9 +276,9 @@ void ht_construct_capability_element(struct rtllib_device *ieee, u8 *pos_ht_cap,
+@@ -266,13 +266,13 @@ void ht_construct_capability_element(struct rtllib_device *ieee, u8 *pos_ht_cap,
+ 	cap_ele->rx_stbc			= 0;
+ 	cap_ele->delay_ba		= 0;
+ 	cap_ele->max_amsdu_size = (MAX_RECEIVE_BUFFER_SIZE >= 7935) ? 1 : 0;
+-	cap_ele->DssCCk = 1;
++	cap_ele->dss_cck = 1;
+ 	cap_ele->PSMP = 0;
+ 	cap_ele->lsig_txop_protect = 0;
+ 
+ 	netdev_dbg(ieee->dev,
+-		   "TX HT cap/info ele BW=%d max_amsdu_size:%d DssCCk:%d\n",
+-		   cap_ele->chl_width, cap_ele->max_amsdu_size, cap_ele->DssCCk);
++		   "TX HT cap/info ele BW=%d max_amsdu_size:%d dss_cck:%d\n",
++		   cap_ele->chl_width, cap_ele->max_amsdu_size, cap_ele->dss_cck);
  
  	if (is_encrypt) {
- 		cap_ele->MPDUDensity	= 7;
--		cap_ele->MaxRxAMPDUFactor	= 2;
-+		cap_ele->max_rx_ampdu_factor	= 2;
- 	} else {
--		cap_ele->MaxRxAMPDUFactor	= 3;
-+		cap_ele->max_rx_ampdu_factor	= 3;
- 		cap_ele->MPDUDensity	= 0;
- 	}
- 
-@@ -471,12 +471,12 @@ void ht_on_assoc_rsp(struct rtllib_device *ieee)
- 	if (ieee->current_network.bssht.bd_rt2rt_aggregation) {
- 		if (ieee->pairwise_key_type != KEY_TYPE_NA)
- 			ht_info->current_ampdu_factor =
--					 pPeerHTCap->MaxRxAMPDUFactor;
-+					 pPeerHTCap->max_rx_ampdu_factor;
- 		else
- 			ht_info->current_ampdu_factor = HT_AGG_SIZE_64K;
- 	} else {
--		ht_info->current_ampdu_factor = min_t(u32, pPeerHTCap->MaxRxAMPDUFactor,
--						    HT_AGG_SIZE_32K);
-+		ht_info->current_ampdu_factor = min_t(u32, pPeerHTCap->max_rx_ampdu_factor,
-+						      HT_AGG_SIZE_32K);
- 	}
- 
- 	ht_info->current_mpdu_density = pPeerHTCap->MPDUDensity;
+ 		cap_ele->mpdu_density	= 7;
 -- 
 2.30.2
 
