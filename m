@@ -1,104 +1,87 @@
-Received: from mail-108-mta118.mxroute.com (mail-108-mta118.mxroute.com [136.175.108.118])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E85873199
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 19:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376F473176
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 19:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714331169; cv=none; b=j/L5U5P8kKIlDjod6WgiTOp+dLqHp9HnvHtYGQqzS0ltpTC5On6ttcB3f9kNaRMlw2MA4TAG73ihyrDzDMxmDw73B/sM/kSOoju5agUBZjsM+VgLWTHl6L2c/ubsbe56qh4YfWrNZcCmeSe3nhHLPYHhjnFQaHFYIhXZuLf/IHo=
+	t=1714331631; cv=none; b=CQV+ksQloJVcwIuUcN5FwBSCdKdU6OU0eD/DoSD28SHOnPJcH4xD/LQYAnE1VHgngxaC4JfrCRnP1kN6k8J7kU4oe8xBOIJQRAJl73XkiTl888kqfvnvo3j2lGbWVDYC1cJq0ejgHi8QfJN0v3BHySHUWmb1VKCkKwL4t2I2nXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714331169; c=relaxed/simple;
-	bh=FiUb2ZRKXaowaIWwgAaTVex3jsYUrKBONETujOYeFmY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=JWsDqTrM0QMqeFzvt8ioorzy28rumCAw1yibyCPHSIf4M3kfVjB0LsGVoKHqK6gPaCiOxaCsw6ra6cgXoZXBWfSu4RxE1HMjXEZ44mWUjTMWPZ4hf/6L+J037CUIwzQII+i8SRL+rMpdo81LputV30UVwhebdEhyTCa8sxnjyeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ahepp.dev; spf=pass smtp.mailfrom=ahepp.dev; dkim=fail (0-bit key) header.d=ahepp.dev header.i=@ahepp.dev header.b=CmtSsxO9 reason="key not found in DNS"; arc=none smtp.client-ip=136.175.108.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ahepp.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ahepp.dev
+	s=arc-20240116; t=1714331631; c=relaxed/simple;
+	bh=M+kIdKV83CeWIYfNFH0404fY2395INVzEpA9SjmBJdI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u+OPwlqv1tUV9FG4ZQri5/HOjM8KQMvkWy7CmJaVRExBq5fHVHdpp7y3q5M8W+eEuZ0Do1Zk/VwJo7pKqFUviGJHxIW9a97mp7KukiJH9aiDoj9tLIP7CiuexWxESID9e60MO0Neewqbt0YQ9bMZs5GrHQRjzaOCKrme/3vG0i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TGuYhJnO; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ahepp.dev header.i=@ahepp.dev header.b="CmtSsxO9"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta118.mxroute.com (ZoneMTA) with ESMTPSA id 18f2614e28d0008ca2.006
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Sun, 28 Apr 2024 19:00:54 +0000
-X-Zone-Loop: 0de28ab534ca72b83d2f0e5a6b031c785dfdfe306a56
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ahepp.dev;
-	s=x; h=To:References:Message-Id:Content-Transfer-Encoding:Cc:Date:In-Reply-To
-	:From:Subject:Mime-Version:Content-Type:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=968QCX5bxl8071/40EvUd0nag7Yb3N5amaxl7Wlh/00=; b=CmtSsxO9ueK0WBEuJPWL01y9yR
-	4PCbZ3IQNnYBTgQ7I4zpY/Ee7XDeoPziaN3fV2aoYVqoZZAfeKKtRIAcni0JwMgyLhAcNOnGQfCoL
-	RRPyeff5anHVrHkRlZSpsDJAUmIvyQ/xd/hZyNUVlds3gxBR2SQ1Qvh9WElREgfNJsJwBQWv5EkwI
-	xjQDB1WXE61xPvjOCjn2II5PAUarGIvIRVHXuZtTzLjgIdzZxNAEh51Sp6DREw/Rp+FkibTNkIxEL
-	8VDKxs1AINQZlQz2v/MzyiuBBKtxeiwayxo6zHnX/R9fyuMC6JHOHluFjPRKfru4TMA/W8TG5u8FY
-	XF/T5+CQ==;
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TGuYhJnO"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57258c90899so3936118a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 12:13:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1714331627; x=1714936427; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=d9DYSc62j/dkZT2dYI+dTqeBrvYapxz40+LCqscPcm4=;
+        b=TGuYhJnOxzQ7VqCo3xgDcSxtHSnvRy/D7MGZse3EemPPR62o+NH0WXddNYn9C5Ms0D
+         GlFPrG0fEkgrqPx18rJWcLKz0dy/vKD0HpZZ3P29JUwygP2ZPrrDXSobYiWEzkex6/eA
+         W/XwLHhEwc14RrcLTXt7qun0bdMWzyhZP1N2k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714331627; x=1714936427;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d9DYSc62j/dkZT2dYI+dTqeBrvYapxz40+LCqscPcm4=;
+        b=uSsvnCABosAxoYhUHH0bHqAJabQTx3EPFUCcDBDcpXLf5D9deE0iCzNp9gDiSLoYt7
+         KvkemgtPXCK4IsDOS/P+QlOBEcdc7S/D210TNzgHRjCD/Iw4EG86Y7D/jeT2d8iSYFjv
+         w70i5CLSTInO4w9Qw8+W4vtXNHaSGZ6pkmtgPzpir0LCe8ZF3yH5IR+sntgYDL/+dnTe
+         3BgxaLVChwwqZJ28TY0FhZVGRSunjrJex73i0ZqcBnq86CukfEKv6Srh0woXtIUWwmts
+         synHtqKuU22AG4gPIJcO0jmY3Pzv/qhiTAIeLUU/WqkYvkuIcLefi8ihxGDX5URDIC6H
+         dfiA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKKE89vYhSf/Lmzcc2YDRGNiI0j9Cp8bnGTxXqpOyECvWxt6C8kvHprj1bpdkEJO8oFevgA9ttr+Nfs4M/Yrt2GAhn9NsskLb2Ox5R
+X-Gm-Message-State: AOJu0Yybk1OZfOMfPGhJep8+O+b0UhZb2kUCpuq26zy60mPce1ktu2uw
+	h9Vy5MkPY/M2BbyzMAvMlMZ7PypJkomx5ehuve9/sr981JUO3tiuZ854/6YQhioXOjhbTsLdLJ1
+	X9iaqOw==
+X-Google-Smtp-Source: AGHT+IExDfeKCWN9l5n72lDqnK3BQmgs8NdDuZR9h5pknVrrCMJZw0lIAxrTbqKMYh1ILbx58Fwy5w==
+X-Received: by 2002:a50:99c4:0:b0:571:ba0f:fb8a with SMTP id n4-20020a5099c4000000b00571ba0ffb8amr4797908edb.1.1714331627363;
+        Sun, 28 Apr 2024 12:13:47 -0700 (PDT)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id t22-20020a50d716000000b005726e206449sm1898611edi.24.2024.04.28.12.13.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Apr 2024 12:13:46 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a58e2740cd7so229679466b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 12:13:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWDcrnPkTjQkSI0O/jx/SDjGvyvkyCZHKYof9gVnUzvTUnuqeE+om2Umb8obyeHDcKNUKkspLPnzBLBQWqQikuoZGve2TZcPJXnyBFB
+X-Received: by 2002:a17:906:370f:b0:a58:eb0d:f2a6 with SMTP id
+ d15-20020a170906370f00b00a58eb0df2a6mr3535098ejc.31.1714331626134; Sun, 28
+ Apr 2024 12:13:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH] iio: temperature: mcp9600: Fix temperature reading for
- negative values
-From: Andrew Hepp <andrew.hepp@ahepp.dev>
-In-Reply-To: <20240428144606.5b3d9a7e@jic23-huawei>
-Date: Sun, 28 Apr 2024 14:46:39 -0400
-Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
- Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C96CEE0A-920C-4BDD-9689-058B2E6D4B29@ahepp.dev>
-References: <20240424185913.1177127-1-dima.fedrau@gmail.com>
- <Ziy8DsMCeAGK79E7@debian-BULLSEYE-live-builder-AMD64>
- <20240427195758.GA3350@debian> <20240428144606.5b3d9a7e@jic23-huawei>
-To: Jonathan Cameron <jic23@kernel.org>
-X-Authenticated-Id: andrew.hepp@ahepp.dev
+MIME-Version: 1.0
+References: <Zi4HyMFJBwm+JIKZ@gmail.com> <Zi4MBjmqMr0Ndwpf@gmail.com>
+In-Reply-To: <Zi4MBjmqMr0Ndwpf@gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 28 Apr 2024 12:13:29 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiP1KA8sg9=PVTs7Xj_AC7yDpLujB6Sw=Eofg5Jtn0ymg@mail.gmail.com>
+Message-ID: <CAHk-=wiP1KA8sg9=PVTs7Xj_AC7yDpLujB6Sw=Eofg5Jtn0ymg@mail.gmail.com>
+Subject: Re: [GIT PULL] scheduler fixes
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Juri Lelli <juri.lelli@redhat.com>, Daniel Bristot de Oliveira <bristot@redhat.com>, 
+	Valentin Schneider <vschneid@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi all,
+On Sun, 28 Apr 2024 at 01:42, Ingo Molnar <mingo@kernel.org> wrote:
+>
+> Merge note: in case you are wondering about the timestamps, I ninja-rebased
+> these two commits shortly before the pull request to fix an annoying typo
+> in a commit title.
 
-On Apr 28, 2024, at 9:46=E2=80=AFAM, Jonathan Cameron <jic23@kernel.org> =
-wrote:
+Hmm. You also forgot to have a diffstat..
 
-> Agreed - by my reading the original patch is correct. Maybe it would =
-act
-> as cleaner 'documentation' to have the sign_extend32() for the cold =
-junction be
-> from bit 12 rather than 15, but I'm not sure it's worth the effort.
->=20
-> Andrew, would be great if you can review this fix in case we are all =
-missing
-> something!
-
-I also agree that Dimitri=E2=80=99s original patch appears correct per =
-the data sheet.
-
-I think of the cold junction register as a 16 bit 2s complement signed =
-integer,=20
-despite the limited range. I like sign extending it from bit 15 rather =
-than from 12.
-
-I applied Dimitri=E2=80=99s patch and stuck a dev board in my icebox.
-
-Before patch:
-    # cat /sys/bus/iio/devices/iio:device0/in_temp_raw=20
-    65222
-    # cat /sys/bus/iio/devices/iio:device0/in_temp_ambient_raw
-    65256
-
-After patch:
-    # cat /sys/bus/iio/devices/iio:device0/in_temp_raw
-    -260
-    # cat /sys/bus/iio/devices/iio:device0/in_temp_ambient_raw
-    -212
-
-Looks good to me! Thanks for the patch Dimitri, and thanks to all for =
-the review!
-
-Andrew=
+               Linus
