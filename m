@@ -1,87 +1,120 @@
-Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B608B44C6F;
-	Sun, 28 Apr 2024 12:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EE653E0D
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 12:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714307857; cv=none; b=cdjmtAjn1q4JJA482NXgcsjoOILgrZc6B/iyqz0ugpSHIMTX4QG5G7fmdOg+CbmB/afGRw92WaNJgvNtxylmZAHgz5WTRsAfzYtnGv0AsxWQ2ypWENpJnE9r4r7XXv56GEmUiNSgoa7GJDocciXuyTvvnAIZTNt+9YkFn5a2JMQ=
+	t=1714307920; cv=none; b=Vs/UlFJWk7oKiDQujpx86NyBCZKg+pn+TFLTDMSfY4PtC6szPmOPCJ1f9/ZKOxXoHUUFfV0ynjHH9SJD72U6CPDEZ4As0TlFVf6Mb0QEqoT6DcngempF3EM4+R82NAfzc1wzVEn3C7Yz1zc/6Po8bL9tUtEOM9PG6pBmDT/D6Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714307857; c=relaxed/simple;
-	bh=TmOhP4qc8Qi8jh/T/QcsP5k7J4MiQIZY8f+q7/ewjis=;
-	h=Message-ID:From:To:Subject:Date:MIME-Version; b=P+vNRCcHMlVUF2NhvUioksnJX1RDeLCD/Fdb9/mSTWhemvRtiNqyioHB7HD+oIu/6UVv/N6mMZFzE6BlpdHaiv0lErgmVzYg/USX6bAwx+7neF0bkxZXLuESd+f1zPPQ0CbseoyyBEhgP2Mj+/iJKW7kmUF5YeclUaczAuYtLp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ayQam/nL; arc=none smtp.client-ip=203.205.221.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ayQam/nL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1714307545; bh=WhRK7c5VI5zG7dpXv/k2M42hjr8IyRYvYtQoYcJ0eOU=;
-	h=From:To:Subject:Date;
-	b=ayQam/nLt2FDlH16TSK1lgc2CoL/nYgXtdi4Z4c9h9jk7MAaWLta1X4UTmU/Dyjn5
-	 9HYs7gl3+nxLSj8nYe6cR01jbB1aTYOGZW1DoUViXi8/9Mf3j/0fEaAcggXsToWqVn
-	 2TfilTe9VQUR/1mgrku9e2JkBwOpnTBzrFtuS5v0=
-Received: from pipishuo-OMEN-by-HP-Laptop-16-b0xxx.. ([123.115.148.131])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 4C8B4CD2; Sun, 28 Apr 2024 20:19:08 +0800
-X-QQ-mid: xmsmtpt1714306748t5cry6yph
-Message-ID: <tencent_FDF9E162435F21368C39AB61255D2F2C8D08@qq.com>
-X-QQ-XMAILINFO: MR/iVh5QLeiesT/qxp6yj39CByasNjpnL5Z9mIbo5D+NZ9po4qliBl7DIFt78D
-	 ITDjU605nzcmebLng8uzqyv7GojIslOw3SROUovLp80U7NtYgHQnx+0tG0sDkC4/pM60JQYKoO7t
-	 Sc+vbmlLFOlv7X0tMWf3+tqikoA56BEh+DMM5Dk1GSPcU9TD+GBbEd1roUWxE4AFFwgCR0iDXn8Z
-	 LaXMgDB6PqBeaz1v8uoeiG1eh5QLGos1LwTtyWf36ATlikbNTZIsVpx7vIVHcWrbXfismzSPwC0G
-	 +XCifmb0TFFO07iC2Lx9MyQjno6okveCNNfKqna0LEGzNp0oQ/GGvZiPpXQJAe/+dVs1Yz1zXVjl
-	 w0hKCqlP5nWcES09G7l18v93GFj85xB2QdzDiwhUc3cFs9gu1+w/yvaCVE8t0a9RHi/xmps0szop
-	 LN/43paZ/CXvrvxBV/VHobonLF1cePaUBzMk/ECZl5iPF+/d+0G1Uc7Yn77KUminZ091tYdvjEwt
-	 2fCPcK2cmxfhPXR2/zB3zArhQNnd2XtBJ50S5fP2MRvQhocC1n80yo0trCqnUgF/g20xmoWdrks6
-	 HLJYE0cjSdT+iEVS5YfFs6YPJoSYS6z5+AwZiaowHzc8U+3hXN8PYsYmWDFHERA20ph5hrKc/7Xv
-	 agjPWoZ6Z0jq/Nx0+EIFGTfUTkDocBNNuu8r7BXAixw9JmosQKKI1fYOsQftT+Tt5XanuVvw5msF
-	 URs7/MTpd7ccZ2Uy604K2VaoBx+w5YCUFzLDETlEkR1HCL+m/vWpCYMHimitSueAmWxL7U9vb2vK
-	 7BcryxX+D7XLOL7LVFFenBBKXXwDsCsRM6P/KOpR5gboNr2z4SvJDjgWI7Nloi3g6FyoyXc8VMtm
-	 jyq6qdeBlI8XArgDPCYq2PNXnDyuvB/V6QO0x5sEBxGdi+Lp7lU4lkbfms6e3HijM4uAUcb8aGAw
-	 us/kan5KW3wwyvPVYAEtBKLnJcWR/OY9UMG+5SYU7lU2/8AWvgsEg/VKHtMaSdtOJBEQWZSmrVXA
-	 YzeRrEoJ9G5TB+eSHCM9xEtP82Ca6j4UXkIpg0/Q==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: pipishuo <1289151713@qq.com>
-To: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	1289151713@qq.com
-Subject: [PATCH] staging: fbtft:fixes unnecessary parentheses
-Date: Sun, 28 Apr 2024 20:19:08 +0800
-X-OQ-MSGID: <20240428121908.16060-1-1289151713@qq.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1714307920; c=relaxed/simple;
+	bh=a3C3w/l9Jk1EM3ykAh3xpeCqiIxLu5anbdm5krjQwRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lE1Mxzp3q19ak+nMglqo+Iqeq3JW4brE8o9I8OHBZCzY6JoUPxd65IQZM2minGVf6DohAWuyKfyDSvTQu6xB2FN/yQc0bQpzWR27uRoYyb5KtjwKf6LQ/Y66NNPRvFVOL6G/giGR8x2I164aQ0pYOPnKg59j2uVTxGUIWUltcSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-346407b8c9aso952909f8f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 05:38:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714307917; x=1714912717;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0qrkhLGFiOhJUvJx8Zd/ZRGYvnBujxufO0mRfURt1kw=;
+        b=bsvb4nNRzIh+wLwzkNrpVZOQDxvdOClWkAgpIWa1Bg8BFLGFLve0DOxr5TBV925mmX
+         Wvi/r5aZRd7orkFRA5icbtViifkAh3jTPkgoqJnhgXF5kl+Mkloj1xNccNd7WipHg3iV
+         5H+HsmJK5jczoiV7/jh84HtqUnIIsQggujHFPEFk9EUnICaM1bgtPElJOm3TEcgx3kQ2
+         BwRWldTbWPd6ikVVB4ZgT9eGgfmhxlEb5bRL7Y8WLEWVFye44D69wBSV3UQ358olGCfC
+         63sIeoq+rfsyCHch8PJFJr04IgYtjmem4vL7NcJ3rXqYBoBlBl1vduG8MkXlcH3hLzQU
+         eaNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhTc68aunj+t7ojRrTw3RZRUyJf/K+wIqSfw3ZSsLxVFqfssqfiuovYRmJGV/v3SgLXwAKBYSIGsKVJ5EgQlDr8EfG22kKJ2lBXHjx
+X-Gm-Message-State: AOJu0Yz+64b5+o37TiPT5mJSi+dRCVJ0rhLiGeXcbm2H7bAaal2VYcwY
+	4V8urtlnXvX0aZGOif5SST+jxF5T1j3g7h0rnLEsqEn4qaJT3GRu
+X-Google-Smtp-Source: AGHT+IFBe0UM3OUjH2RryrS/FQjB51e2yJzBYqU6NhjEKAauDK5BgRjfVpwg/rezbQeRw2Zny/aCbg==
+X-Received: by 2002:a5d:5f52:0:b0:34a:a754:eb51 with SMTP id cm18-20020a5d5f52000000b0034aa754eb51mr6222293wrb.3.1714307916652;
+        Sun, 28 Apr 2024 05:38:36 -0700 (PDT)
+Received: from [10.100.102.74] (85.65.192.64.dynamic.barak-online.net. [85.65.192.64])
+        by smtp.gmail.com with ESMTPSA id n4-20020a5d4844000000b00349f098f4a6sm26983632wrs.53.2024.04.28.05.38.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Apr 2024 05:38:36 -0700 (PDT)
+Message-ID: <fd92f659-f96c-4e48-b4be-3156a9616dab@grimberg.me>
+Date: Sun, 28 Apr 2024 15:38:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bug Report] nvme connect deadlock in allocating tag
+To: kwb <wangbing.kuang@shopee.com>
+Cc: axboe@fb.com, chunguang.xu@shopee.com, hch@lst.de,
+ james.smart@broadcom.com, kbusch@kernel.org, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org
+References: <d200fc7c-c781-49f1-8277-bdb5d537b1f4@grimberg.me>
+ <20240428102527.37462-1-wangbing.kuang@shopee.com>
+Content-Language: he-IL, en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240428102527.37462-1-wangbing.kuang@shopee.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This patch fixes the checks reported by checkpatch.pl
-for unnecessary parentheses
 
-Signed-off-by: pipishuo <1289151713@qq.com>
----
- drivers/staging/fbtft/fb_ili9320.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/fbtft/fb_ili9320.c b/drivers/staging/fbtft/fb_ili9320.c
-index 0be7c2d51548..045275a9bc0b 100644
---- a/drivers/staging/fbtft/fb_ili9320.c
-+++ b/drivers/staging/fbtft/fb_ili9320.c
-@@ -37,7 +37,8 @@ static int init_display(struct fbtft_par *par)
- 	devcode = read_devicecode(par);
- 	fbtft_par_dbg(DEBUG_INIT_DISPLAY, par, "Device code: 0x%04X\n",
- 		      devcode);
--	if ((devcode != 0x0000) && (devcode != 0x9320))
-+	if (devcode != 0x0000 &&
-+	    devcode != 0x9320)
- 		dev_warn(par->info->device,
- 			 "Unrecognized Device code: 0x%04X (expected 0x9320)\n",
- 			devcode);
--- 
-2.34.1
+On 28/04/2024 13:25, kwb wrote:
+>> On 28/04/2024 12:16, Wangbing Kuang wrote:
+>>> "The error_recovery work should unquiesce the admin_q, which should fail
+>>> fast all pending admin commands,
+>>> so it is unclear to me how the connect process gets stuck."
+>>> I think the reason is: the command can be unquiesce but the tag cannot be
+>>> return until command success.
+>> The error recovery also cancels all pending requests. See
+>> nvme_cancel_admin_tagset
+> nvme_cancel_admin_tagset can cancel requests before stop admin queue, but
+> cannot cancel requests before next reconnect time.
 
+the error recovery does quiesce + cancel_admin_taget + unquiesce, all 
+following
+admin I/O should fail immediately upon submission as the ctrl/queue is 
+not live.
+
+> The time line is:
+> recover failed(we can reproduce by hang io for more time)
+> -> reconnect delay
+> -> multi nvme list issue(used up tagset)
+> -> reconnect start(wait for tag when call nvme_enabel_ctrl and nvme_wait_ready)
+
+failing all admin I/O should not be associated with the next reconnect, 
+it happens
+way before that, in the error recovery work. Hence it is still not clear 
+to me how
+you are seeing what you are seeing.
+
+It is possible that 5.15 is missing something.
+
+>
+>
+>>> "What is step (2) - make nvme io timeout to recover the connection?"
+>>> I use spdk-nvmf-target for backend.  It is easy to set read/write
+>>> nvmf-target io  hang and unhang.  So I just set the io hang for over 30
+>>> seconds, then trigger linux-nvmf-host trigger io timeout event. then io
+>>> timeout will trigger connection recover.
+>>> by the way, I use multipath=0
+>> Interesting, does this happen with multipath=Y ?
+>> I didn't expect people to be using multipath=0 for fabrics in the past few
+>> years.
+> No certain, I did not test on multipath=Y.We choose multipath=0 cos less code and we need only one path
+>
+>>> "Is this reproducing with upstream nvme? or is this some distro kernel
+>>> where this happens?"
+>>> it is reproduced in a kernel based from v5.15, but I think this is common
+>>> error.
+>> It would be beneficial to verify this.
+> ok, test need more time, but we can first verify it only in v5.15.
+
+We should not be spending time debugging an issue that might have
+been addressed in upstream. The first thing we should do is to understand
+if this reproduces in upstream, if so fix it, if not identify the 
+missing patch(es)
+in 5.15
