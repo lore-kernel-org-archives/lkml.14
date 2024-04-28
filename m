@@ -1,82 +1,206 @@
-Received: from mail-m92102.xmail.ntesmail.com (mail-m92102.xmail.ntesmail.com [103.126.92.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F1D53E0D;
-	Sun, 28 Apr 2024 12:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.126.92.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9E2634E2
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 12:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714308166; cv=none; b=StCkxU9h8uDW17nQrgbjAZmuF1an5lwH+fbUELf/7b0YAH5Nmbv56jvJQHTpY0zabFZe4AQtcSuKXbm3ylr+j0XueRI29rzGTFuD+t4/8btWgL3qQyYNuM0S1ggPb8TSh1g3AEJIHvCueVHCmut3u+M8H8jAmE4PcG59p2V4cBQ=
+	t=1714308174; cv=none; b=ckSqS3M7FnwW+sun3xTLH0qYFhuZZMo/DeZMwL6hHrub5fpVUUXMBwItNCXZ25HAnZ/X+yBcU9xdqo7hax801R2gAa6rSS5QjmdSrUhfSTthlwUD4YG1BgGWqye5QDc6H4b0Me2mhMo78N8JZSod6NogfsPgem5B2Z866cRsuTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714308166; c=relaxed/simple;
-	bh=pYH3MW6UZKTfpCgbG6Ne2hDDEvhTdlGJWmkhcaMOB38=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E/2oJ1nClXckkYLK1ZjEGPl5TAccJIcnDT7owd0C77tBf/B1zjF96o2vcKFxynlHig0gFJIVvYw52vfKsV5ACVZhnT7xL+tYPp1yST2Zc+MbKPJmPDJJaNrDdaO6E9Lc3ja/6cTqSwIm7OllgNF2uHOC51W/lYh54Edsg48X6NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=103.126.92.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c00:6c50:87d:6be4:19e8:d47])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 72D4A7E012E;
-	Sun, 28 Apr 2024 20:36:46 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 1/2] dt-bindings: arm: rockchip: add Radxa ROCK 3C
-Date: Sun, 28 Apr 2024 20:36:17 +0800
-Message-Id: <20240428123618.72170-2-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240428123618.72170-1-amadeus@jmu.edu.cn>
-References: <20240428123618.72170-1-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1714308174; c=relaxed/simple;
+	bh=k/iZvRfF4dcBdsWWF77jrzu9Aw/WjqQU12YZsvYi4a4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OJcRmuxnoYc1xMHOSVJ3pntXDydrl7llql08C3VOGczWz2wQe68dthCDdVCIX8ZVmku6SOfMS70SvvUgZgqwY18K7+QyTtFhKJN8nj/XSsdiYD4YvVHy96x64HyNC6UQsGEQMDXLKGGvF3iFUQ00ArKD07zXu0iAU77ssAb+8HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cpBo87EX; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cpBo87EX"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a55911bff66so444430066b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 05:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714308169; x=1714912969; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ruxM04DcwSqc1+5CUH/yirqxxYT+4VUtJYzmah4p6Dc=;
+        b=cpBo87EXt3WMgaxpNN31yxuUx0Rcol8oyoxwM47VajTb3LiRx4pgpBjdeYONHMET2O
+         RFXgPINGMoAgUXJzEMHlVDVOE32Niqp5+OBHgouT1zeBajOiP2ncGH2Fr5tg6dg8ABc8
+         /MCd4x5VxrTAFVPI6RfUi7T6zLaBCm06WmonKBoPmzSMF/Eg7DkuCKgoCL49w2gZTsK2
+         a81yKfmYkE+BVXSddXZva9YgkWioOrifykpFaJvGvnBisaKgvbTbXTR3ZdGRe5v528z6
+         Bys94BLFRNBtVkasyOvG8SWtFA3aGygFRGNuWr0ROjJ9ghKQc0v5jU66vm2dEyNAkdF2
+         Iwqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714308169; x=1714912969;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ruxM04DcwSqc1+5CUH/yirqxxYT+4VUtJYzmah4p6Dc=;
+        b=uU+M4kuC1rKQw2xGKc2knrCI0wRvRAMQnlBqichqdbk+4AxCDF1fqI7uuf1cyP1BY1
+         6abZm4KQNzM8M9WOiYXRDAIAw/IMJAERxYUUlbJjJTBTjEZtOP95/6f0/fZis8cPmfdb
+         JQbGiJH+h7P9CG0LkDdatUnku5suyH46UZq3td3YOaL4cpMGZ05DuKCXPD99PTvsGm36
+         yBp809PLDAe/Cni2TcHl/kyUQXaZWWTk1ewPbWBAUwlJsvh3wO8Hx9iF37CE3LYSO3Ke
+         7RWb9Nh5H/pAiYlQf18/B10AWnmwWIaBmfqH86Uy8P+yzZGNS0rXNxnMS6ZiZWz7oK3i
+         DrBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUF5B62jELc7G8R3CPbvLvEgAGDDt9qsgEvUs3wcu4xaHwZuoCDGx5hfDGrKEGXYktPYmyH0yCBGUeCXKgAkdC2x9XH0OIMN2mwdad9
+X-Gm-Message-State: AOJu0YzF3htJI+QRWBQUuyx0KUrrGmMK3+ucnKk9QLYCSIRfQsVNimfn
+	mdvAoBeIjnc7JJJhxeYY0Xq/9ur8aZAZTUGi557R9Hif5MYIqKNKZ/RLCI6QjF8=
+X-Google-Smtp-Source: AGHT+IFEmenVCstN3qRQ3VZod695J/pFmJ7LOK2zFQWoDBSbhtYZRvHLRnkehwSsSY/MkO5h5SEVWQ==
+X-Received: by 2002:a17:906:a2d3:b0:a55:856b:5892 with SMTP id by19-20020a170906a2d300b00a55856b5892mr2957543ejb.30.1714308169136;
+        Sun, 28 Apr 2024 05:42:49 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id b25-20020a17090630d900b00a5875b34b6asm6935689ejb.14.2024.04.28.05.42.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Apr 2024 05:42:48 -0700 (PDT)
+Date: Sun, 28 Apr 2024 15:42:44 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Harry Wentland <harry.wentland@amd.com>
+Cc: Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] drm/amd/display: re-indent dpp401_dscl_program_isharp()
+Message-ID: <2b0a61a0-baca-415f-aad4-7dc4cde73ef7@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGE5KVkpDT00YGUtPSkgZSFUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUlPSx5BSBlIQUkYS0tBTRhOS0FDTB9BTRkeT0FKQh5DQR9PTFlXWRYaDxIVHRRZQV
-	lPS0hVSkpLSEpDVUpLS1VLWQY+
-X-HM-Tid: 0a8f24b535ee03a2kunm72d4a7e012e
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PjI6Dhw5TzNRPi4dPDwSOEwZ
-	KRoKCSpVSlVKTEpPSEtMQ0tMS0tJVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0tBTRhOS0FDTB9BTRkeT0FKQh5DQR9PTFlXWQgBWUFJSE1KNwY+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-The Radxa ROCK 3C is a similar board to the
-Radxa ROCK 3A with the Rockchip RK3566 SoC.
-Add devicetree binding documentation for it.
+Smatch complains because some lines are indented more than they should
+be.  I went a bit crazy re-indenting this.  ;)
 
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+The comments were not useful except as a marker of things which are left
+to implement so I deleted most of them except for the TODO.
+
+I introduced a "data" pointer so that I could replace
+"scl_data->dscl_prog_data." with just "data->" and shorten the lines a
+bit.  It's more readable without the line breaks.
+
+I also tried to align it so you can see what is changing on each line.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../display/dc/dpp/dcn401/dcn401_dpp_dscl.c   | 93 ++++++-------------
+ 1 file changed, 30 insertions(+), 63 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 1bbbaf81134b..e04c213a0dee 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -799,6 +799,11 @@ properties:
-           - const: radxa,rock3a
-           - const: rockchip,rk3568
+diff --git a/drivers/gpu/drm/amd/display/dc/dpp/dcn401/dcn401_dpp_dscl.c b/drivers/gpu/drm/amd/display/dc/dpp/dcn401/dcn401_dpp_dscl.c
+index c20376083441..696ccf96b847 100644
+--- a/drivers/gpu/drm/amd/display/dc/dpp/dcn401/dcn401_dpp_dscl.c
++++ b/drivers/gpu/drm/amd/display/dc/dpp/dcn401/dcn401_dpp_dscl.c
+@@ -779,75 +779,42 @@ static void dpp401_dscl_program_isharp(struct dpp *dpp_base,
+ 		const struct scaler_data *scl_data)
+ {
+ 	struct dcn401_dpp *dpp = TO_DCN401_DPP(dpp_base);
++	const struct dscl_prog_data *data;
  
-+      - description: Radxa ROCK 3C
-+        items:
-+          - const: radxa,rock-3c
-+          - const: rockchip,rk3566
+ 	if (memcmp(&dpp->scl_data, scl_data, sizeof(*scl_data)) == 0)
+ 		return;
+ 
+ 	PERF_TRACE();
+ 	dpp->scl_data = *scl_data;
+-	// ISHARP_EN
+-	REG_SET(ISHARP_MODE, 0,
+-		ISHARP_EN, scl_data->dscl_prog_data.isharp_en);
+-		// ISHARP_NOISEDET_EN
+-		REG_SET(ISHARP_MODE, 0,
+-				ISHARP_NOISEDET_EN, scl_data->dscl_prog_data.isharp_noise_det.enable);
+-		// ISHARP_NOISEDET_MODE
+-		REG_SET(ISHARP_MODE, 0,
+-				ISHARP_NOISEDET_MODE, scl_data->dscl_prog_data.isharp_noise_det.mode);
+-		// ISHARP_NOISEDET_UTHRE
+-		REG_SET(ISHARP_NOISEDET_THRESHOLD, 0,
+-				ISHARP_NOISEDET_UTHRE, scl_data->dscl_prog_data.isharp_noise_det.uthreshold);
+-		// ISHARP_NOISEDET_DTHRE
+-		REG_SET(ISHARP_NOISEDET_THRESHOLD, 0,
+-				ISHARP_NOISEDET_DTHRE, scl_data->dscl_prog_data.isharp_noise_det.dthreshold);
+-		REG_SET(ISHARP_MODE, 0,
+-				ISHARP_NOISEDET_MODE, scl_data->dscl_prog_data.isharp_noise_det.mode);
+-		// ISHARP_NOISEDET_UTHRE
+-		REG_SET(ISHARP_NOISEDET_THRESHOLD, 0,
+-				ISHARP_NOISEDET_UTHRE, scl_data->dscl_prog_data.isharp_noise_det.uthreshold);
+-		// ISHARP_NOISEDET_DTHRE
+-		REG_SET(ISHARP_NOISEDET_THRESHOLD, 0,
+-				ISHARP_NOISEDET_DTHRE, scl_data->dscl_prog_data.isharp_noise_det.dthreshold);
+-		// ISHARP_NOISEDET_PWL_START_IN
+-		REG_SET(ISHARP_NOISE_GAIN_PWL, 0,
+-				ISHARP_NOISEDET_PWL_START_IN, scl_data->dscl_prog_data.isharp_noise_det.pwl_start_in);
+-		// ISHARP_NOISEDET_PWL_END_IN
+-		REG_SET(ISHARP_NOISE_GAIN_PWL, 0,
+-				ISHARP_NOISEDET_PWL_END_IN, scl_data->dscl_prog_data.isharp_noise_det.pwl_end_in);
+-		// ISHARP_NOISEDET_PWL_SLOPE
+-		REG_SET(ISHARP_NOISE_GAIN_PWL, 0,
+-				ISHARP_NOISEDET_PWL_SLOPE, scl_data->dscl_prog_data.isharp_noise_det.pwl_slope);
+-		// ISHARP_LBA_MODE
+-		REG_SET(ISHARP_MODE, 0,
+-				ISHARP_LBA_MODE, scl_data->dscl_prog_data.isharp_lba.mode);
+-		// TODO: ISHARP_LBA: IN_SEG, BASE_SEG, SLOPE_SEG
+-		// ISHARP_FMT_MODE
+-		REG_SET(ISHARP_MODE, 0,
+-				ISHARP_FMT_MODE, scl_data->dscl_prog_data.isharp_fmt.mode);
+-		// ISHARP_FMT_NORM
+-		REG_SET(ISHARP_MODE, 0,
+-				ISHARP_FMT_NORM, scl_data->dscl_prog_data.isharp_fmt.norm);
+-		// ISHARP_DELTA_LUT
+-		dpp401_dscl_set_isharp_filter(dpp, scl_data->dscl_prog_data.isharp_delta);
+-		// ISHARP_NLDELTA_SCLIP_EN_P
+-		REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0,
+-				ISHARP_NLDELTA_SCLIP_EN_P, scl_data->dscl_prog_data.isharp_nldelta_sclip.enable_p);
+-		// ISHARP_NLDELTA_SCLIP_PIVOT_P
+-		REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0,
+-				ISHARP_NLDELTA_SCLIP_PIVOT_P, scl_data->dscl_prog_data.isharp_nldelta_sclip.pivot_p);
+-		// ISHARP_NLDELTA_SCLIP_SLOPE_P
+-		REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0,
+-				ISHARP_NLDELTA_SCLIP_SLOPE_P, scl_data->dscl_prog_data.isharp_nldelta_sclip.slope_p);
+-		// ISHARP_NLDELTA_SCLIP_EN_N
+-		REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0,
+-				ISHARP_NLDELTA_SCLIP_EN_N, scl_data->dscl_prog_data.isharp_nldelta_sclip.enable_n);
+-		// ISHARP_NLDELTA_SCLIP_PIVOT_N
+-		REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0,
+-				ISHARP_NLDELTA_SCLIP_PIVOT_N, scl_data->dscl_prog_data.isharp_nldelta_sclip.pivot_n);
+-		// ISHARP_NLDELTA_SCLIP_SLOPE_N
+-		REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0,
+-				ISHARP_NLDELTA_SCLIP_SLOPE_N, scl_data->dscl_prog_data.isharp_nldelta_sclip.slope_n);
+-		PERF_TRACE();
++	data = &scl_data->dscl_prog_data;
 +
-       - description: Radxa ROCK 5A
-         items:
-           - const: radxa,rock-5a
++	REG_SET(ISHARP_MODE, 0,	ISHARP_EN, data->isharp_en);
++
++	REG_SET(ISHARP_MODE, 0,	              ISHARP_NOISEDET_EN,    data->isharp_noise_det.enable);
++	REG_SET(ISHARP_MODE, 0,               ISHARP_NOISEDET_MODE,  data->isharp_noise_det.mode);
++	REG_SET(ISHARP_NOISEDET_THRESHOLD, 0, ISHARP_NOISEDET_UTHRE, data->isharp_noise_det.uthreshold);
++	REG_SET(ISHARP_NOISEDET_THRESHOLD, 0, ISHARP_NOISEDET_DTHRE, data->isharp_noise_det.dthreshold);
++	REG_SET(ISHARP_MODE, 0,               ISHARP_NOISEDET_MODE,  data->isharp_noise_det.mode);
++	REG_SET(ISHARP_NOISEDET_THRESHOLD, 0, ISHARP_NOISEDET_UTHRE, data->isharp_noise_det.uthreshold);
++	REG_SET(ISHARP_NOISEDET_THRESHOLD, 0, ISHARP_NOISEDET_DTHRE, data->isharp_noise_det.dthreshold);
++	REG_SET(ISHARP_NOISE_GAIN_PWL, 0, ISHARP_NOISEDET_PWL_START_IN, data->isharp_noise_det.pwl_start_in);
++	REG_SET(ISHARP_NOISE_GAIN_PWL, 0, ISHARP_NOISEDET_PWL_END_IN, data->isharp_noise_det.pwl_end_in);
++	REG_SET(ISHARP_NOISE_GAIN_PWL, 0, ISHARP_NOISEDET_PWL_SLOPE, data->isharp_noise_det.pwl_slope);
++
++	REG_SET(ISHARP_MODE, 0, ISHARP_LBA_MODE, data->isharp_lba.mode);
++	// TODO: ISHARP_LBA: IN_SEG, BASE_SEG, SLOPE_SEG
++	REG_SET(ISHARP_MODE, 0, ISHARP_FMT_MODE, data->isharp_fmt.mode);
++	REG_SET(ISHARP_MODE, 0, ISHARP_FMT_NORM, data->isharp_fmt.norm);
++
++	dpp401_dscl_set_isharp_filter(dpp, data->isharp_delta);
++
++	REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0, ISHARP_NLDELTA_SCLIP_EN_P,    data->isharp_nldelta_sclip.enable_p);
++	REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0, ISHARP_NLDELTA_SCLIP_PIVOT_P, data->isharp_nldelta_sclip.pivot_p);
++	REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0, ISHARP_NLDELTA_SCLIP_SLOPE_P, data->isharp_nldelta_sclip.slope_p);
++	REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0, ISHARP_NLDELTA_SCLIP_EN_N,    data->isharp_nldelta_sclip.enable_n);
++	REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0, ISHARP_NLDELTA_SCLIP_PIVOT_N, data->isharp_nldelta_sclip.pivot_n);
++	REG_SET(ISHARP_NLDELTA_SOFT_CLIP, 0, ISHARP_NLDELTA_SCLIP_SLOPE_N, data->isharp_nldelta_sclip.slope_n);
++	PERF_TRACE();
+ } // dpp401_dscl_program_isharp
+ /**
+  * dpp401_dscl_set_scaler_manual_scale - Manually program scaler and line buffer
 -- 
-2.25.1
+2.43.0
 
