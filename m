@@ -1,319 +1,137 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC64A5F;
-	Sun, 28 Apr 2024 00:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF60764A;
+	Sun, 28 Apr 2024 00:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714265880; cv=none; b=Y0IcKCE/rrg6eRLJTIs2UViPfu/VTOf4EKipfAY0gJPoXKEHl2ccJJ2BQJBZZAcMGishLXreCFf+Ri0NwrYDNCzkg1XE7ZlO7rUK48Q6JBAYcPUfYxY2yLBSNtP/2lwLwYoYFE95D0Ug9SUlApLhrlsHPK1BRHgzOFaE7syGMz8=
+	t=1714265939; cv=none; b=RA9CjTt3uN75CaSoqnv3xinM8auaMK7SInkM/ZX3fR94BeiF86oSXXZUXksHFlTHtYdRWqCShCBGRD6HLe2oEqnoEVrqu9v5C5zS/jeLm3MpeW2qLMbrEGfuVTDP4roeW5T7mBn6Eh66PgrlHXEjUAey9E3iVMkrtPcfvWdGWDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714265880; c=relaxed/simple;
-	bh=aeZV4VkHFBd56GPAQ6Hk0pRkNPw80Fcm4EJgz9bw0pM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gGAmiotMidnBUWS2OGALhtzYwGat4YMu2BVZEEOh6MhkPaFV9Mokgf5gpb0hD6plFRHQLltJKkiRY7dhUIsMJRyB7B1LGAE2sXsupqZHLgtj+SwzP05BStNifR0Vib/XO/f7wkIfk7UXWt+x4lYxmo5+Yqmh1VEKT9jO5naEFXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KKQJU6WI; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714265939; c=relaxed/simple;
+	bh=sruZuykMgwQNrqDsSrjLsyhTwtcH6jJaF/1elUBTY4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oJEjg8UYblshmzYK868Gw7Opr1YlKw+UXhQFJO3Jb2mJgEwVHGD80XET0WxGT1cGTn6V/N4YKUt6tJdgLDEwvSodrH8HF+nRoCqK3L8pzUe0w5u9//u/OL53D4O3i0nn7LdBRClnNENjS45q4xSYqZR369MTbh8vqKX9lNNkdwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZbkQ2qu; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKQJU6WI"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6ee13f19e7eso3218353b3a.1;
-        Sat, 27 Apr 2024 17:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714265878; x=1714870678; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8O+z1hsIAadgTFETxDS1vCHvfH0Dq8uKuo3sDo2uaLg=;
-        b=KKQJU6WIKIjpAbisXlwMmzITE+VrtzHDSvo3B503UHAGE7PNX6N0c/9zfAZyd6ZOJG
-         NEgDbBcJdGFX5tDp9b12uqHxJVtDhzAgwi2jtt2j0mrIN6rsjeEdEemcopPqU7FvGbq8
-         fzJXK3U5/bUasnpOvPn8yEhG4H+aE2/gmBwn3ehW+C/EYbrbsBEp/WbD96aAJ93aKPZo
-         LDXlk+ZaYzRtsZ32RObhbdjCWBomaBQqc6ji+BQwSThaOSuJaQOl8Tbr/uHFDs8FZ8Mu
-         FGatAvErqHtsnTbGOJ5otW/5g5T1fXZeF0CIz2UdZG932Qffhu2l0VV1g92EIIO90CX9
-         iZhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714265878; x=1714870678;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8O+z1hsIAadgTFETxDS1vCHvfH0Dq8uKuo3sDo2uaLg=;
-        b=wcjQjB2mGNybL9o8DQ66Pi7ZRHCINKQ6VugfjwTp6nznLFb18rJlgVzZKUICRF+qcA
-         2Ts/XeesRD62D0cYcCnoohbqOT5adHLdbCw6Io4mYDfUsTstrh6I3nxjoQK8XUpDHqOb
-         pL+Z1eSAqfa6I16rjBmomNgr09odjRsUvcHnFs6Oghb/k6QvqJk7yBqeqP+0WIa/W2fd
-         ncWKyKuoUMiWejYJzLpXSGRBOXSdrAFzic74FMblVRlLA/cxxxJj68K14LYKK+/EQaop
-         c99SiIxiMti9Q0H1e6mZ7e3QY4YLuyqs6oi6ec0b1Xd+caiGJ359Ospp3+fuTLcJUcBh
-         MRgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvKsbCKK3U7eqFmVFcKrjeYLVIfm8izdn3qzicCj+e4N3EVFWVQBovKZ2anNbIjeFQron7snDGFPc4Qcmjp0SXqSkmbNTPI+KszK7lsxocT3jCG6DSmtRRR5aM4kRwDwm3KwOSkscKwVg=
-X-Gm-Message-State: AOJu0Yy24aT51wEY28eIie4juQ+1wOYQvZeXUjDJRvdic7VCPm83YceP
-	olQH5NieMDHo6G6VohC47nlb+MJC067+ldd4fNliPvrMf9D4qEzR
-X-Google-Smtp-Source: AGHT+IHcYlDQ+Qw3kc756nQlZxyezBVWXDm1Y9z3jz9sDj5e5RdNu96Hkrz6pHf7nxTVbsgEAfqJ3Q==
-X-Received: by 2002:a05:6a20:da9e:b0:1ac:4fca:23c2 with SMTP id iy30-20020a056a20da9e00b001ac4fca23c2mr8444563pzb.8.1714265877639;
-        Sat, 27 Apr 2024 17:57:57 -0700 (PDT)
-Received: from thought.. ([186.139.89.143])
-        by smtp.gmail.com with ESMTPSA id g11-20020aa7818b000000b006ecfd0bf326sm15771013pfi.99.2024.04.27.17.57.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Apr 2024 17:57:57 -0700 (PDT)
-From: ManuLinares <mbarriolinares@gmail.com>
-To: alsa-devel@alsa-project.org
-Cc: ManuLinares <mbarriolinares@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	dengxiang <dengxiang@nfschina.com>,
-	Geraldo Nascimento <geraldogabriel@gmail.com>,
-	Max McCarthy <mmccarthy@mcintoshlabs.com>,
-	WhaleChang <whalechang@google.com>,
-	Lukasz Tyl <ltyl@hem-e.com>,
-	Jeremie Knuesel <knuesel@gmail.com>,
-	Alexander Tsoy <alexander@tsoy.me>,
-	Jussi Laako <jussi@sonarnerd.net>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: usb-audio: Add sampling rates support for Mbox3
-Date: Sat, 27 Apr 2024 21:57:29 -0300
-Message-ID: <20240428005733.202978-1-mbarriolinares@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZbkQ2qu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714265938; x=1745801938;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sruZuykMgwQNrqDsSrjLsyhTwtcH6jJaF/1elUBTY4o=;
+  b=WZbkQ2qunJKXyRHUKZ5cF2TwWCiNvHhfjzXsTYu1gilfOP2HKOQQlbV5
+   +aZFtsr95MX4pGP5QCyB7/oXXOgZWCb0yV2MPIY5ZLqzTM1CrjwYhltLz
+   OviE7Yag7zTuCtxc06Z6OmlO8bYP61oSu25IeStQ1HfVHlU1lJbArbvQH
+   HSm/vJBVXuUoe4AdS+INvfMKWKMlXOJ7zg0WRcJTk5TrvV1MJqN8BDspf
+   Y9TaQ6/33NBidnDlqLdUSyVmicwHAoWLF7Tukruo6LJtfvGoO8zNpkCW0
+   7MpvANHuym5OQXdd9z/rgBC7rW7ZxxKkfZO6qOiQfF0lZvI1tv6sNnAaT
+   g==;
+X-CSE-ConnectionGUID: c7P+zrYJRPeoG3GMLCd9+g==
+X-CSE-MsgGUID: KLLNWMcZTyuAv3FY7qv+1A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="9827167"
+X-IronPort-AV: E=Sophos;i="6.07,236,1708416000"; 
+   d="scan'208";a="9827167"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2024 17:58:57 -0700
+X-CSE-ConnectionGUID: 1ADNkzFRT7KuUnFBhO/zJg==
+X-CSE-MsgGUID: fFQsozLAQF6AxccK77EbFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,236,1708416000"; 
+   d="scan'208";a="25642447"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.127]) ([10.124.245.127])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2024 17:58:53 -0700
+Message-ID: <b9095b0d-72f0-4e54-8d2e-f965ddff06bb@linux.intel.com>
+Date: Sun, 28 Apr 2024 08:58:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>, maobibo <maobibo@loongson.cn>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+ peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
+ <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
+ <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
+ <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
+ <ZirPGnSDUzD-iWwc@google.com>
+ <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
+ <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
+ <ff4a4229-04ac-4cbf-8aea-c84ccfa96e0b@linux.intel.com>
+ <CAL715WJKL5__8RU0xxUf0HifNVQBDRODE54O2bwOx45w67TQTQ@mail.gmail.com>
+ <5f5bcbc0-e2ef-4232-a56a-fda93c6a569e@linux.intel.com>
+ <ZiwEoZDIg8l7-uid@google.com>
+ <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAL715WJ4jHmto3ci=Fz5Bwx2Y=Hiy1MoFCpcUhz-C8aPMqYskw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-This adds support for all sample rates supported by the hardware,
-Digidesign Mbox 3 supports: {44100, 48000, 88200, 96000}
 
-Fixes syncing clock issues that presented as pops. To test this, without
-this patch playing 440hz tone produces pops.
+On 4/27/2024 11:04 AM, Mingwei Zhang wrote:
+> On Fri, Apr 26, 2024 at 12:46 PM Sean Christopherson <seanjc@google.com> wrote:
+>> On Fri, Apr 26, 2024, Kan Liang wrote:
+>>>> Optimization 4
+>>>> allows the host side to immediately profiling this part instead of
+>>>> waiting for vcpu to reach to PMU context switch locations. Doing so
+>>>> will generate more accurate results.
+>>> If so, I think the 4 is a must to have. Otherwise, it wouldn't honer the
+>>> definition of the exclude_guest. Without 4, it brings some random blind
+>>> spots, right?
+>> +1, I view it as a hard requirement.  It's not an optimization, it's about
+>> accuracy and functional correctness.
+> Well. Does it have to be a _hard_ requirement? no? The irq handler
+> triggered by "perf record -a" could just inject a "state". Instead of
+> immediately preempting the guest PMU context, perf subsystem could
+> allow KVM defer the context switch when it reaches the next PMU
+> context switch location.
+>
+> This is the same as the preemption kernel logic. Do you want me to
+> stop the work immediately? Yes (if you enable preemption), or No, let
+> me finish my job and get to the scheduling point.
+>
+> Implementing this might be more difficult to debug. That's my real
+> concern. If we do not enable preemption, the PMU context switch will
+> only happen at the 2 pairs of locations. If we enable preemption, it
+> could happen at any time.
 
-Clock is now synced between playback and capture interfaces so no more
-latency drift issue when using pipewire pro-profile.
-(https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/3900)
+IMO I don't prefer to add a switch to enable/disable the preemption. I 
+think current implementation is already complicated enough and 
+unnecessary to introduce an new parameter to confuse users. Furthermore, 
+the switch could introduce an uncertainty and may mislead the perf user 
+to read the perf stats incorrectly.  As for debug, it won't bring any 
+difference as long as no host event is created.
 
-Signed-off-by: ManuLinares <mbarriolinares@gmail.com>
----
- sound/usb/quirks-table.h | 37 +++++++++++-------
- sound/usb/quirks.c       | 84 +++++++++++++++++++++++++++++++---------
- 2 files changed, 88 insertions(+), 33 deletions(-)
 
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index 5d72dc8441cb..5228afbc00e3 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3013,21 +3013,28 @@ YAMAHA_DEVICE(0x7010, "UB99"),
- 				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
- 				.data = &(const struct audioformat) {
- 					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.fmt_bits = 24,
- 					.channels = 4,
- 					.iface = 2,
- 					.altsetting = 1,
- 					.altset_idx = 1,
- 					.attributes = 0x00,
--					.endpoint = 0x01,
-+					.endpoint = USB_RECIP_INTERFACE | USB_DIR_OUT,
- 					.ep_attr = USB_ENDPOINT_XFER_ISOC |
- 						USB_ENDPOINT_SYNC_ASYNC,
--					.rates = SNDRV_PCM_RATE_48000,
--					.rate_min = 48000,
--					.rate_max = 48000,
--					.nr_rates = 1,
-+					.rates = SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000 |
-+							SNDRV_PCM_RATE_88200 | SNDRV_PCM_RATE_96000,
-+					.rate_min = 44100,
-+					.rate_max = 96000,
-+					.nr_rates = 4,
- 					.rate_table = (unsigned int[]) {
--						48000
--					}
-+						44100, 48000, 88200, 96000
-+					},
-+					.sync_ep = USB_RECIP_INTERFACE | USB_DIR_IN,
-+					.sync_iface = 3,
-+					.sync_altsetting = 1,
-+					.sync_ep_idx = 1,
-+					.implicit_fb = 1,
- 				}
- 			},
- 			{
-@@ -3035,22 +3042,24 @@ YAMAHA_DEVICE(0x7010, "UB99"),
- 				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
- 				.data = &(const struct audioformat) {
- 					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.fmt_bits = 24,
- 					.channels = 4,
- 					.iface = 3,
- 					.altsetting = 1,
- 					.altset_idx = 1,
--					.endpoint = 0x81,
- 					.attributes = 0x00,
-+					.endpoint = USB_RECIP_INTERFACE | USB_DIR_IN,
- 					.ep_attr = USB_ENDPOINT_XFER_ISOC |
- 						USB_ENDPOINT_SYNC_ASYNC,
- 					.maxpacksize = 0x009c,
--					.rates = SNDRV_PCM_RATE_48000,
--					.rate_min = 48000,
--					.rate_max = 48000,
--					.nr_rates = 1,
-+					.rates = SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000 |
-+							SNDRV_PCM_RATE_88200 | SNDRV_PCM_RATE_96000,
-+					.rate_min = 44100,
-+					.rate_max = 96000,
-+					.nr_rates = 4,
- 					.rate_table = (unsigned int[]) {
--						48000
--					}
-+						44100, 48000, 88200, 96000
-+					},
- 				}
- 			},
- 			{
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 09712e61c606..279b80874f6a 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -984,21 +984,13 @@ static int snd_usb_axefx3_boot_quirk(struct usb_device *dev)
- 	return 0;
- }
- 
--static void mbox3_setup_48_24_magic(struct usb_device *dev)
-+static void mbox3_setup_defaults(struct usb_device *dev)
- {
- 	/* The Mbox 3 is "little endian" */
- 	/* max volume is: 0x0000. */
- 	/* min volume is: 0x0080 (shown in little endian form) */
- 
--
--	/* Load 48000Hz rate into buffer */
--	u8 com_buff[4] = {0x80, 0xbb, 0x00, 0x00};
--
--	/* Set 48000Hz sample rate */
--	snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
--			0x01, 0x21, 0x0100, 0x0001, &com_buff, 4);  //Is this really needed?
--	snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
--			0x01, 0x21, 0x0100, 0x8101, &com_buff, 4);
-+	u8 com_buff[2];
- 
- 	/* Deactivate Tuner */
- 	/* on  = 0x01*/
-@@ -1008,6 +1000,8 @@ static void mbox3_setup_48_24_magic(struct usb_device *dev)
- 		0x01, 0x21, 0x0003, 0x2001, &com_buff, 1);
- 
- 	/* Set clock source to Internal (as opposed to S/PDIF) */
-+	/* Internal  = 0x01*/
-+	/* S/PDIF    = 0x02*/
- 	com_buff[0] = 0x01;
- 	snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
- 			1, 0x21, 0x0100, 0x8001, &com_buff, 1);
-@@ -1113,9 +1107,11 @@ static void mbox3_setup_48_24_magic(struct usb_device *dev)
- 			1, 0x21, 0x0107, 0x4201, &com_buff, 2);
- 
- 	/* Toggle allowing host control */
-+	/* Not needed
- 	com_buff[0] = 0x02;
- 	snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
- 			3, 0x21, 0x0000, 0x2001, &com_buff, 1);
-+	 */
- 
- 	/* Do not dim fx returns */
- 	com_buff[0] = 0x00;
-@@ -1259,26 +1255,27 @@ static int snd_usb_mbox3_boot_quirk(struct usb_device *dev)
- 	descriptor_size = le16_to_cpu(get_cfg_desc(config)->wTotalLength);
- 
- 	if (descriptor_size != MBOX3_DESCRIPTOR_SIZE) {
--		dev_err(&dev->dev, "Invalid descriptor size=%d.\n", descriptor_size);
-+		dev_err(&dev->dev, "MBOX3: Invalid descriptor size=%d.\n", descriptor_size);
- 		return -ENODEV;
- 	}
- 
--	dev_dbg(&dev->dev, "device initialised!\n");
-+	dev_dbg(&dev->dev, "MBOX3: device initialised!\n");
- 
- 	err = usb_get_descriptor(dev, USB_DT_DEVICE, 0,
- 		&dev->descriptor, sizeof(dev->descriptor));
- 	config = dev->actconfig;
--	if (err < 0)
--		dev_dbg(&dev->dev, "error usb_get_descriptor: %d\n", err);
-+	if (err < 0) 
-+		dev_dbg(&dev->dev, "MBOX3: error usb_get_descriptor: %d\n", err);
- 
- 	err = usb_reset_configuration(dev);
--	if (err < 0)
--		dev_dbg(&dev->dev, "error usb_reset_configuration: %d\n", err);
--	dev_dbg(&dev->dev, "mbox3_boot: new boot length = %d\n",
-+	if (err < 0) 
-+		dev_dbg(&dev->dev, "MBOX3: error usb_reset_configuration: %d\n", err);
-+
-+	dev_dbg(&dev->dev, "MBOX3: new boot length = %d\n",
- 		le16_to_cpu(get_cfg_desc(config)->wTotalLength));
- 
--	mbox3_setup_48_24_magic(dev);
--	dev_info(&dev->dev, "Digidesign Mbox 3: 24bit 48kHz");
-+	mbox3_setup_defaults(dev);
-+	dev_info(&dev->dev, "MBOX3: Initialized.");
- 
- 	return 0; /* Successful boot */
- }
-@@ -1734,6 +1731,52 @@ static int pioneer_djm_set_format_quirk(struct snd_usb_substream *subs,
- 	return 0;
- }
- 
-+static void mbox3_set_format_quirk(struct snd_usb_substream *subs,
-+									const struct audioformat *fmt)
-+{
-+	// Set rate only for one interface
-+	//u8 iface = subs->data_endpoint->iface;
-+	//if (iface != 2) return;
-+
-+	u8 buffer[4] = {0};
-+	u32 new_rate = subs->data_endpoint->cur_rate;
-+
-+	// Get current rate from card and check if changing it is needed
-+	snd_usb_ctl_msg(subs->dev, usb_sndctrlpipe(subs->dev, 0),
-+					0x01, 0x21 | USB_DIR_IN, 0x0100, 0x8101, &buffer, 4);
-+	//u32 current_rate = le32_to_cpu(*(u32 *)buffer);
-+	dev_dbg(&subs->dev->dev,
-+			 "MBOX3: Current configured sample rate: %d", le32_to_cpu(*(u32 *)buffer));
-+	if (le32_to_cpu(*(u32 *)buffer) == new_rate) {
-+		dev_dbg(&subs->dev->dev,
-+			"MBOX3: No change needed, current rate:%d == new rate:%d",
-+			le32_to_cpu(*(u32 *)buffer), new_rate);
-+		return;
-+	}
-+
-+	// Set new rate
-+	dev_info(&subs->dev->dev,
-+			 "MBOX3: Changing sample rate to: %d", new_rate);
-+	__le32 set_rate = cpu_to_le32(new_rate);
-+	snd_usb_ctl_msg(subs->dev, usb_sndctrlpipe(subs->dev, 0),
-+					0x01, 0x21, 0x0100, 0x8101, &set_rate, 4);
-+
-+	// Set clock source to Internal
-+	buffer[0] = 0x01;
-+	snd_usb_ctl_msg(subs->dev, usb_sndctrlpipe(subs->dev, 0),
-+					0x01, 0x21, 0x0100, 0x8001, &buffer[0], 1);
-+
-+	// Check whether the change was successful
-+	buffer[0] = 0; buffer[1] = 0; buffer[2] = 0; buffer[3] = 0;
-+	snd_usb_ctl_msg(subs->dev,
-+					usb_sndctrlpipe(subs->dev, 0),
-+					0x01, 0x21 | USB_DIR_IN, 0x0100, 0x8101, &buffer, 4);
-+	//set_rate = *(int *)buffer;
-+	set_rate = le32_to_cpu(*(u32 *)buffer);
-+	if (new_rate != set_rate)
-+		dev_warn(&subs->dev->dev, "MBOX3: Couldn't set the sample rate");
-+}
-+
- void snd_usb_set_format_quirk(struct snd_usb_substream *subs,
- 			      const struct audioformat *fmt)
- {
-@@ -1755,6 +1798,9 @@ void snd_usb_set_format_quirk(struct snd_usb_substream *subs,
- 	case USB_ID(0x08e4, 0x0163): /* Pioneer DJM-850 */
- 		pioneer_djm_set_format_quirk(subs, 0x0086);
- 		break;
-+	case USB_ID(0x0dba, 0x5000):
-+		mbox3_set_format_quirk(subs, fmt); /* Digidesign Mbox 3 */
-+		break;
- 	}
- }
- 
--- 
-2.44.0
-
+>
+>> What _is_ an optimization is keeping guest state loaded while KVM is in its
+>> run loop, i.e. initial mediated/passthrough PMU support could land upstream with
+>> unconditional switches at entry/exit.  The performance of KVM would likely be
+>> unacceptable for any production use cases, but that would give us motivation to
+>> finish the job, and it doesn't result in random, hard to diagnose issues for
+>> userspace.
+> That's true. I agree with that.
+>
+>>>> Do we want to preempt that? I think it depends. For regular cloud
+>>>> usage, we don't. But for any other usages where we want to prioritize
+>>>> KVM/VMM profiling over guest vPMU, it is useful.
+>>>>
+>>>> My current opinion is that optimization 4 is something nice to have.
+>>>> But we should allow people to turn it off just like we could choose to
+>>>> disable preempt kernel.
+>>> The exclude_guest means everything but the guest. I don't see a reason
+>>> why people want to turn it off and get some random blind spots.
