@@ -1,173 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B77200D3;
-	Sun, 28 Apr 2024 16:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5B710F1
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 16:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714321772; cv=none; b=TVCKFQ1nvyr9x8E29QFXsWzHmKTEpCBUDQj9Wvfrr/T3+71mPmoDvVHcUP+yR7HHgMsEuqy7uWK5Wmsob3a36oanugqKGsyHrrX9vdDDUv28jYJza9J8A4Cg+5VqTcjj8SCHvnj0JBAFXKPJ7eWVcuHbUzgcp1pMDVTWh+SwTFU=
+	t=1714322005; cv=none; b=O8gXOJaqDOc1Ai+Z5KXX2VrOPg06KRSwFWFDtgW4OKSSXWgWyuDpKGK7E+MdwvyxBIwT3RgO5mgkGY5AKUj3Yt4OBD8luwn4QTza6XP3R9kEF2HoaNQu167q/1mJMVeJSw3w28KwDvA0ZPrjCEM35ypJyjEzDiFb0rODUV/f61E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714321772; c=relaxed/simple;
-	bh=vSrMdYGVa1THJhE9VGHR3c71Wan1QAssbo5bxRU7fyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eE8GZK1jwk+7lqQsSLDi126UKJUi3OpiSQNzTCUe2dapsddRUuLLv1mZCDLG+I3/0jlVmF1/dHt1xAiNCqi5sx113QIXL28HQUz2mVTrPpEH+rhpELeZ0p4dOuHE+bIUqeeMzeDgFDgtulDE7LoArzhv/RC7XW9j+db+ZSiYBfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6ivtPvR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714322005; c=relaxed/simple;
+	bh=hJwkw1Qe6He0UoOh47oNbcetclyLtp+Ip53ep8cFUls=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r25BGAdn42070v6OPbLaMJG8puOZ8OtbLRRcMp5sb685Y0PW2t/Squcu49QeO6zzpdiLgz9dZwtdTwe/WtrOd3UZBisr3ycvgM0B4Ygtai8KRcYOQzA4J20D9RUe12lr2qYT4R++3ly9Fm3FtFPjXlsHfk+pNnH3LItqSpvsw9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iQe/YZgk; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6ivtPvR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E1DC113CC;
-	Sun, 28 Apr 2024 16:29:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714321771;
-	bh=vSrMdYGVa1THJhE9VGHR3c71Wan1QAssbo5bxRU7fyk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e6ivtPvR1g/dJdwd2h2A6IrgImRP910wNr/OE0fTPtZ+6UCoicXkyLT/0iN+uq1DU
-	 kB4wxp8DnZ/uMAlwH9+4zjgacZQ0NlJLk7XNsbRDxDh6HJYOU7B0Qlr/+2kjOFJcCO
-	 JP+86oRoGjkcdo83+T1yf5UglcR/jZRIBkGDbXmI7s+tg6scrzM+u+M7V916W8fqyk
-	 F16SUavqdp7hpNcpuucvMLL/uaX0Ave3MwAZMSFpH8ONC65oogurZwVD8nE7pcwN6R
-	 cC9f7cd3jz83aBPsEVEyH7ayZGNYpL7w1kC0H4upFqkc/o7+EzRv1ibCSv+w1qK58q
-	 kFRpaQnU3endA==
-Date: Sun, 28 Apr 2024 17:29:23 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH 1/2] iio: adc: ad7944: add support for chain mode
-Message-ID: <20240428172923.7dfe00ff@jic23-huawei>
-In-Reply-To: <20240425-iio-ad7944-chain-mode-v1-1-9d9220ff21e1@baylibre.com>
-References: <20240425-iio-ad7944-chain-mode-v1-0-9d9220ff21e1@baylibre.com>
-	<20240425-iio-ad7944-chain-mode-v1-1-9d9220ff21e1@baylibre.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iQe/YZgk"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a5200202c1bso484468566b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 09:33:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714322000; x=1714926800; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bkBehBmM8rJHl9TYbr2TiyM0+uJxcjWlmpw8IC5vBb8=;
+        b=iQe/YZgkG3VfRhMfu7oqQ+qhLNl81XSjTEmfY9KNlvZNs/8tTKhwmrlPA1Y6mOOfiv
+         U0jq/NelAiO0gMfis7Xn4qsgruRthqDjOIOtStweI6sJLYqQTFGWz2xC3T1Mp2hzsLSx
+         IIaNwnUusxdAkDMhPEHQX1zzaJy/6nudFHBW/fTl5io5rbEeN+xvmJYelVlQAh1pZClO
+         3ZqeDgO69t2atuisQEmBt0JBbrxlvjMePYLxXYefhQ5x4Yciz9dsAayyUcYalalKBJXy
+         0QW55+r7OhADKy/RrcuYLKcLEQ7UCNKY10nG223aj5LahvPohacHRhPOu+3cTj5Y0G3m
+         rpuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714322000; x=1714926800;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bkBehBmM8rJHl9TYbr2TiyM0+uJxcjWlmpw8IC5vBb8=;
+        b=Z6HdNpn2RyPkPePRI8bWEgKb4LoyLREVb1LncKwfMu0HvBYRIH7oHdXXHAVmIfrxu/
+         6+DIU59ZYVKSHHEReClLxypElOfl2peJGSMvpAby9XuDeNQP3udp1UL0OdDhF8Yzwh0T
+         tzk57lCQnvY3jaGcapr9cKfD/5OkoT4/sZyQsPqUrxBIr1YlzBJ9bBlKIuvcxkIzoE+L
+         eqikMM+D17MiBEKKtuE8W8oMCfrI2rCit0H6z3NWLA1+lMDH3eyiisYiOIMkLRFrzeAd
+         N6ECgvj2piGuczI0DBjRwNx57V/z/NXamb7+w+sQwUj5R5Hp1QN2UA0k7Ka8WjxyzfgM
+         0AlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJcorw3p02Xxc5WpgMAlJXclL2TOT+Fxb9cK5AdwhvZMaprBtFaMGEO7T0ev7GiPs0YhX/uvlgII/+mlqkrpqHoQbPlj96mUoAl2cf
+X-Gm-Message-State: AOJu0YwAKQVPY0dsvqQ/1k3OgteygeeXnGIa+Az97S6MT9PyjiMXtd/b
+	kTIQEGz9jScZoula8QMSB5psvug7gmjs44T9/pVwnBwaVPW2SseubLJnKYTjIq8=
+X-Google-Smtp-Source: AGHT+IG2xsOsBb1Q9wusjv7j48e04laj4MhrtGe2fyJZosVzz7UkCTyzwT62xmRR9KcjI6SwTW3mwg==
+X-Received: by 2002:a17:906:1c8b:b0:a58:c09d:1484 with SMTP id g11-20020a1709061c8b00b00a58c09d1484mr7831776ejh.7.1714322000448;
+        Sun, 28 Apr 2024 09:33:20 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id lb2-20020a170906adc200b00a58f4b3661asm1173623ejb.0.2024.04.28.09.33.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Apr 2024 09:33:19 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Olof Johansson <olof@lixom.net>,
+	Arnd Bergmann <arnd@arndb.de>,
+	arm@kernel.org,
+	soc@kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL 1/2] arm64: dts: cleanup and fixes for v6.10
+Date: Sun, 28 Apr 2024 18:33:13 +0200
+Message-ID: <20240428163316.28955-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 25 Apr 2024 09:09:59 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
-> This adds support for the chain mode of the AD7944 ADC. This mode allows
-> multiple ADCs to be daisy-chained together. Data from all of the ADCs in
-> is read by reading multiple words from the first ADC in the chain.
-> 
-> Each chip in the chain adds an extra IIO input voltage channel to the
-> IIO device.
-> 
-> Only the wiring configuration where the SPI controller CS line is
-> connected to the CNV pin of all of the ADCs in the chain is supported
-> in this patch.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
 
-Looks good except for one minor tweak needed to ensure the allocated buffer
-is zeroed as we don't necessarily overwrite the the whole thing.
+are available in the Git repository at:
 
-Given that's all I found, I've just switched that to devm_kzalloc and
-applied the series.
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git tags/dt64-cleanup-6.10
 
-Applied to the togreg branch of iio.git and pushed out initially as testing
-for 0-day to look at it.
+for you to fetch changes up to de2ba5bd3607a5e5442a5fcbdea6ee2823b72fb9:
 
-Thanks,
+  arm64: dts: cavium: thunder2-99xx: drop redundant reg-names (2024-04-24 09:23:56 +0200)
 
-Jonathan
+----------------------------------------------------------------
+Minor improvements in ARM64 DTS for v6.10
 
+Fixes, which might have practical impact, however things were broken for
+long enough to justify pushing it regular path:
+1. ARM Juno: shorten node names for thermal zones, because Linux drivers
+   have strict limit of 20 characters.
+2. HiSilicon: correct size of GIC GICC address space and add missing
+   GICH and GICV spaces, add cache info to properly describe cache
+   topology and solve kernel boot warning.
 
+Several cleanups:
+1. Use capital "OR" for multiple licenses in SPDX.
+2. Correct white-spaces for code readability.
+3. Fix W=1 dtc compiler warnings, which should not have practical
+   impact for Amazon, APM, Cavium, Realtek, Socionext Uniphier and
+   Spreadtrum like:
+    - missing unit addresses,
+    - nodes not belonging to soc node,
+    - not using generic node names,
+    - few incorrect unit addresses.
 
->  
-> +/**
-> + * ad7944_chain_mode_alloc - allocate and initialize channel specs and buffers
-> + *                           for daisy-chained devices
-> + * @dev: The device for devm_ functions
-> + * @chan_template: The channel template for the devices (array of 2 channels
-> + *                 voltage and timestamp)
-> + * @n_chain_dev: The number of devices in the chain
-> + * @chain_chan: Pointer to receive the allocated channel specs
-> + * @chain_mode_buf: Pointer to receive the allocated rx buffer
-> + * @chain_scan_masks: Pointer to receive the allocated scan masks
-> + * Return: 0 on success, a negative error code on failure
-> + */
-> +static int ad7944_chain_mode_alloc(struct device *dev,
-> +				   const struct iio_chan_spec *chan_template,
-> +				   u32 n_chain_dev,
-> +				   struct iio_chan_spec **chain_chan,
-> +				   void **chain_mode_buf,
-> +				   unsigned long **chain_scan_masks)
-> +{
-> +	struct iio_chan_spec *chan;
-> +	size_t chain_mode_buf_size;
-> +	unsigned long *scan_masks;
-> +	void *buf;
-> +	int i;
-> +
-> +	/* 1 channel for each device in chain plus 1 for soft timestamp */
-> +
-> +	chan = devm_kcalloc(dev, n_chain_dev + 1, sizeof(*chan), GFP_KERNEL);
-> +	if (!chan)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < n_chain_dev; i++) {
-> +		chan[i] = chan_template[0];
-> +
-> +		if (chan_template[0].differential) {
-> +			chan[i].channel = 2 * i;
-> +			chan[i].channel2 = 2 * i + 1;
-> +		} else {
-> +			chan[i].channel = i;
-> +		}
-> +
-> +		chan[i].scan_index = i;
-> +	}
-> +
-> +	/* soft timestamp */
-> +	chan[i] = chan_template[1];
-> +	chan[i].scan_index = i;
-> +
-> +	*chain_chan = chan;
-> +
-> +	/* 1 word for each voltage channel + aligned u64 for timestamp */
-> +
-> +	chain_mode_buf_size = ALIGN(n_chain_dev *
-> +		BITS_TO_BYTES(chan[0].scan_type.storagebits), sizeof(u64))
-> +		+ sizeof(u64);
-> +	buf = devm_kmalloc(dev, chain_mode_buf_size, GFP_KERNEL);
+----------------------------------------------------------------
+Krzysztof Kozlowski (25):
+      arm64: dts: juno: fix thermal zone node names
+      arm64: dts: amd: use capital "OR" for multiple licenses in SPDX
+      arm64: dts: sprd: minor whitespace cleanup
+      arm64: dts: sc9860: add missing aon-prediv unit address
+      arm64: dts: sc9860: move GPIO keys to board
+      arm64: dts: sc9860: move GIC to soc node
+      arm64: dts: whale2: add missing ap-apb unit address
+      arm64: dts: sharkl3: add missing unit addresses
+      arm64: dts: uniphier: ld11-global: use generic node name for audio-codec
+      arm64: dts: uniphier: ld11-global: drop audio codec port unit address
+      arm64: dts: uniphier: ld20-global: use generic node name for audio-codec
+      arm64: dts: uniphier: ld20-global: drop audio codec port unit address
+      arm64: dts: realtek: rtd129x: add missing unit address to soc node
+      arm64: dts: realtek: rtd139x: add missing unit address to soc node
+      arm64: dts: realtek: rtc16xx: add missing unit address to soc node
+      arm64: dts: cavium: move non-MMIO node out of soc
+      arm64: dts: cavium: correct unit addresses
+      arm64: dts: apm: storm: move non-MMIO node out of soc
+      arm64: dts: apm: shadowcat: move non-MMIO node out of soc
+      arm64: dts: amazon: alpine-v2: add missing io-fabric unit addresses
+      arm64: dts: amazon: alpine-v2: move non-MMIO node out of soc
+      arm64: dts: amazon: alpine-v3: add missing io-fabric unit addresses
+      arm64: dts: amazon: alpine-v3: drop cache nodes unit addresses
+      arm64: dts: amazon: alpine-v3: correct gic unit addresses
+      arm64: dts: cavium: thunder2-99xx: drop redundant reg-names
 
-Zero it - It's not a problem to leak stale ADC data or similar
-into the gap between the data and the timestamp, but it is a problem
-if it's general kernel data potentially leaking.
+Yang Xiwen (3):
+      arm64: dts: hi3798cv200: fix the size of GICR
+      arm64: dts: hi3798cv200: add GICH, GICV register space and irq
+      arm64: dts: hi3798cv200: add cache info
 
-So play it safe and devm_kzalloc()
-		
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	*chain_mode_buf = buf;
-> +
-> +	/*
-> +	 * Have to limit n_chain_dev due to current implementation of
-> +	 * available_scan_masks.
-> +	 */
-> +	if (n_chain_dev > BITS_PER_LONG)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "chain is limited to 32 devices\n");
-> +
-> +	scan_masks = devm_kcalloc(dev, 2, sizeof(*scan_masks), GFP_KERNEL);
-> +	if (!scan_masks)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * Scan mask is needed since we always have to read all devices in the
-> +	 * chain in one SPI transfer.
-> +	 */
-> +	scan_masks[0] = GENMASK(n_chain_dev - 1, 0);
-> +
-> +	*chain_scan_masks = scan_masks;
-> +
-> +	return 0;
-> +}
-
+ arch/arm64/boot/dts/amazon/alpine-v2.dtsi          | 35 +++++++-------
+ arch/arm64/boot/dts/amazon/alpine-v3.dtsi          | 12 ++---
+ arch/arm64/boot/dts/amd/elba-16core.dtsi           |  2 +-
+ arch/arm64/boot/dts/amd/elba-asic-common.dtsi      |  2 +-
+ arch/arm64/boot/dts/amd/elba-asic.dts              |  2 +-
+ arch/arm64/boot/dts/amd/elba-flash-parts.dtsi      |  2 +-
+ arch/arm64/boot/dts/amd/elba.dtsi                  |  2 +-
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi         | 14 +++---
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             | 13 ++---
+ arch/arm64/boot/dts/arm/juno-base.dtsi             |  4 +-
+ arch/arm64/boot/dts/arm/juno-scmi.dtsi             |  4 +-
+ arch/arm64/boot/dts/cavium/thunder-88xx.dtsi       | 20 ++++----
+ arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi      |  1 -
+ arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     | 43 ++++++++++++++++-
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi           |  2 +-
+ arch/arm64/boot/dts/realtek/rtd139x.dtsi           |  2 +-
+ arch/arm64/boot/dts/realtek/rtd16xx.dtsi           |  2 +-
+ .../boot/dts/socionext/uniphier-ld11-global.dts    |  4 +-
+ .../boot/dts/socionext/uniphier-ld20-global.dts    |  4 +-
+ arch/arm64/boot/dts/sprd/sc9860.dtsi               | 56 ++++++----------------
+ arch/arm64/boot/dts/sprd/sharkl3.dtsi              | 18 +++----
+ arch/arm64/boot/dts/sprd/sp9860g-1h10.dts          | 30 +++++++++++-
+ arch/arm64/boot/dts/sprd/whale2.dtsi               |  2 +-
+ 23 files changed, 159 insertions(+), 117 deletions(-)
