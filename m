@@ -1,131 +1,124 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934C16A8DC
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2C7C127;
+	Mon, 29 Apr 2024 13:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714396329; cv=none; b=mYKezqvqz9YQCxeXxDiEPhfeTRIVmz41gzw06AaiUdMqNawzvzAq8f2rlKe20idJuJq3IdPKCQoIuki65cvQygex8LloMKOFLgAxo8i0UOn7v9pxLFmRikMFBEN3xMccuC4m5XD3FugWX8Cy7W1DPIMKjEwE8AB9B1QVx+8DKR8=
+	t=1714396378; cv=none; b=aHbvp80mB6EXK0EtJtfsDpiPow3i760gBWtS52kFJRWRmIuy4fn4QgzKASe1uz+LYbM97FwKxoxqO8R/VKzHwsbFUeeK/n/6dfR1BcHUh1KSALkEvMK8C8Zcr7Sb2zYmj8SkGGy2kwgoRTyhT/k7+ND399W2VERsryJrb7n8k04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714396329; c=relaxed/simple;
-	bh=z19VIn1sG6igy5dUMxCt2WQyOdvkz0w8IHOvqAg2Rhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SmYncc1BxUyaH/G+7Yq9rgZXNn0v5gcr9Lri8gNGk/cwbHD3/huX13AMsWFK+X+pXh69kcQVS5anPZtsObNne0IXJYGY15LqDJ8SZ6fvPYw6oV+Ml8ixUaGwr50q7mTZH+H0Y+VAEgHDoctN6JziV+ftslSFHgDBjTnUxWoNqnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=I0IvXxBC; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1714396378; c=relaxed/simple;
+	bh=C/1/HgtOPadIccfda7rkD/uKMPU+S43i6YXTEI9RK70=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=HRm8tx3sWr97aAvdRZaBXXJEP4voPbK66vGvqZWfvgQytrVDiVX33gb9Cvv+R2CcfJJgSJoAyZBdf/gfDdfkIT6qKZnzGdqFY7TvYrgVPonb11ENSKTx0LBhy/0Jn/ALH0Or7FfGFQBjsxoSTc7RMqGw/m7FuZMX8C3TjyyEQZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ig0PRhPy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="I0IvXxBC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ox5aOTl2u3/O1HZ+ZjOWh89n2x4TqGAsSONUIygHFgI=; b=I0IvXxBCdTEiV8oJVfpfFuUtvt
-	BExqcDkxn6HFrDIcmv5MVWJCgHmFydJw/wApnTjQU4ivtR6zuMuhbVHvgZIjhGQYoZUEobCybpZOR
-	C8A07Z86xgAnGpUfyf2T/+/4rJWjGe7TstwmFZ8WgicG+kd+djDweRq1MV2AnJWfSFn2ODYc3uQ7L
-	fwWFvVUY8MX+3C5038L54rPnenLAg92iwBdN/IjL+NYigOE2qmIqBRsNfBNsoaPpzx+VPX2HbK69N
-	yIzu1aRRvWoaGRpIwuY6fdBm6KqzerhU5zevmY78awFLkLR9oUVyHi8qOIPWkdhdKCEx8A5imh8VY
-	MDz52Dmg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60030)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1s1QnV-0003Cq-2G;
-	Mon, 29 Apr 2024 14:11:57 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1s1QnV-0000sD-57; Mon, 29 Apr 2024 14:11:57 +0100
-Date: Mon, 29 Apr 2024 14:11:57 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Boy Wu =?utf-8?B?KOWQs+WLg+iqvCk=?= <Boy.Wu@mediatek.com>,
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"andreyknvl@gmail.com" <andreyknvl@gmail.com>,
-	"dvyukov@google.com" <dvyukov@google.com>,
-	"kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-	Iverlin Wang =?utf-8?B?KOeOi+iLs+mclik=?= <Iverlin.Wang@mediatek.com>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	Light Chen =?utf-8?B?KOmZs+aYseWFiSk=?= <Light.Chen@mediatek.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"glider@google.com" <glider@google.com>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v2] arm: kasan: clear stale stack poison
-Message-ID: <Zi+cnTPS1rgHtneN@shell.armlinux.org.uk>
-References: <20240410073044.23294-1-boy.wu@mediatek.com>
- <CACRpkdZ5iK+LnQ0GJjZpxROCDT9GKVbe9m8hDSSh2eMXp3do0Q@mail.gmail.com>
- <Zi5hDV6e0oMTyFfr@shell.armlinux.org.uk>
- <292f9fe4bab26028aa80f63bf160e0f2b874a17c.camel@mediatek.com>
- <Zi+Vu29rmNZ0MIFG@shell.armlinux.org.uk>
- <f90f5352-30ed-419f-803b-7885b4298868@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ig0PRhPy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97814C113CD;
+	Mon, 29 Apr 2024 13:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714396378;
+	bh=C/1/HgtOPadIccfda7rkD/uKMPU+S43i6YXTEI9RK70=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=Ig0PRhPyyWkKOwe/eu5h8ET0VfrmwbqvRZfWKTAHn4yuxUXHHxyb4S0POuhUwQs2o
+	 FUw3mdPX8kjdylv3ZVICMGb/q/ITOv4pahl3dRxc7MpDFNLfgSeisZHBjxgW8dP2Q9
+	 yxxUuR1e7MYyf6ZxgwfxUS8rXgtsu29Lh1zFTi8ZyUJFmrPmEpSuaJOpJmUt/+CRC0
+	 tdCdH9c+uEU448gyCCi419nAm0rCnBbfnGvNassirpClrb7dJt7qGvOcjeKThSBTry
+	 WrwBkwK4y6DsPkCoz9ifJ2dzK4hIeBWT0MpDaqTn59D8xD0QznHnuDP5Cir/ielRcV
+	 qwHCcOz9CCsDw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f90f5352-30ed-419f-803b-7885b4298868@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 29 Apr 2024 16:12:54 +0300
+Message-Id: <D0WMSLWS0GIR.149P7U2PJBUV1@kernel.org>
+Cc: <keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] crypto: ecc - Protect ecc_digits_from_bytes from
+ reading too many bytes
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>, "Lukas Wunner"
+ <lukas@wunner.de>
+X-Mailer: aerc 0.17.0
+References: <20240426225553.3038070-1-stefanb@linux.ibm.com>
+ <D0W3MTR0CY08.Q2UIYE4N274L@kernel.org> <Zi8UXS1MD5V58dnN@wunner.de>
+ <D0WIZTMRKHSJ.1Z4ZV54DLVWAB@kernel.org>
+ <8109c35b-344e-4d98-8245-77f4919624a1@linux.ibm.com>
+In-Reply-To: <8109c35b-344e-4d98-8245-77f4919624a1@linux.ibm.com>
 
-On Mon, Apr 29, 2024 at 02:57:35PM +0200, Andrey Ryabinin wrote:
-> On 4/29/24 14:42, Russell King (Oracle) wrote:
-> > On Mon, Apr 29, 2024 at 07:51:49AM +0000, Boy Wu (吳勃誼) wrote:
-> >> On Sun, 2024-04-28 at 15:45 +0100, Russell King (Oracle) wrote:
-> >>>  On Fri, Apr 12, 2024 at 10:37:06AM +0200, Linus Walleij wrote:
-> >>>> On Wed, Apr 10, 2024 at 9:31 AM boy.wu <boy.wu@mediatek.com> wrote:
+On Mon Apr 29, 2024 at 2:11 PM EEST, Stefan Berger wrote:
+>
+>
+> On 4/29/24 06:14, Jarkko Sakkinen wrote:
+> > On Mon Apr 29, 2024 at 6:30 AM EEST, Lukas Wunner wrote:
+> >> On Mon, Apr 29, 2024 at 01:12:00AM +0300, Jarkko Sakkinen wrote:
+> >>> On Sat Apr 27, 2024 at 1:55 AM EEST, Stefan Berger wrote:
+> >>>> Protect ecc_digits_from_bytes from reading too many bytes from the i=
+nput
+> >>>> byte array in case an insufficient number of bytes is provided to fi=
+ll the
+> >>>> output digit array of ndigits. Therefore, initialize the most signif=
+icant
+> >>>> digits with 0 to avoid trying to read too many bytes later on.
 > >>>>
-> >>>>> From: Boy Wu <boy.wu@mediatek.com>
-> >>>>>
-> >>>>> We found below OOB crash:
+> >>>> If too many bytes are provided on the input byte array the extra byt=
+es
+> >>>> are ignored since the input variable 'ndigits' limits the number of =
+digits
+> >>>> that will be filled.
 > >>>>
-> >>>> Thanks for digging in!
+> >>>> Fixes: d67c96fb97b5 ("crypto: ecdsa - Convert byte arrays with key c=
+oordinates to digits")
+> >>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> >>>> ---
+> >>>>   include/crypto/internal/ecc.h | 7 +++++++
+> >>>>   1 file changed, 7 insertions(+)
 > >>>>
-> >>>> Pleas put this patch into Russell's patch tracker so he can apply
-> >>> it:
-> >>>> https://www.armlinux.org.uk/developer/patches/
+> >>>> diff --git a/include/crypto/internal/ecc.h b/include/crypto/internal=
+/ecc.h
+> >>>> index 7ca1f463d1ec..56215f14ff96 100644
+> >>>> --- a/include/crypto/internal/ecc.h
+> >>>> +++ b/include/crypto/internal/ecc.h
+> >>>> @@ -67,9 +67,16 @@ static inline void ecc_swap_digits(const void *in=
+, u64 *out, unsigned int ndigit
+> >>>>   static inline void ecc_digits_from_bytes(const u8 *in, unsigned in=
+t nbytes,
+> >>>>   					 u64 *out, unsigned int ndigits)
+> >>>>   {
+> >>>> +	int diff =3D ndigits - DIV_ROUND_UP(nbytes, sizeof(u64));
+> >>>>   	unsigned int o =3D nbytes & 7;
+> >>>>   	__be64 msd =3D 0;
+> >>>>  =20
+> >>>> +	/* diff > 0: not enough input bytes: set most significant digits t=
+o 0 */
+> >>>> +	while (diff > 0) {
+> >>>> +		out[--ndigits] =3D 0;
+> >>>> +		diff--;
+> >>>> +	}
 > >>>
-> >>> Is this a bug fix? If so, having a Fixes: tag would be nice...
+> >>> Could be just trivial for-loop:
 > >>>
+> >>> for (i =3D 0; i < diff; i++)
+> >>> 	out[--ndigits] =3D 0;
+> >>>
+> >>> Or also simpler while-loop could work:
+> >>>
+> >>> while (diff-- > 0)
+> >>> 	out[--ndigits] =3D 0;
 > >>
-> >> This is a patch for cpuidle flow when KASAN enable, that is in ARM64
-> >> but not in ARM, so add to ARM.
-> >>
-> >> The reference commits did not mention fix any commits.
-> >> [1] commit 0d97e6d8024c ("arm64: kasan: clear stale stack poison")
-> >> [2] commit d56a9ef84bd0 ("kasan, arm64: unpoison stack only with
-> >> CONFIG_KASAN_STACK")
-> > 
-> > These are not suitable for use as a Fixes: tag because these commits
-> > refer to code in another part of the tree that has nothing to do with
-> > the BUG() dump that is contained within your commit message.
-> > 
-> > I ask again... Is this a bug fix?
-> > 
-> > Is it a regression?
-> > 
-> > Is it something that used to work that no longer works?
-> > 
-> > When did it break?
-> > 
-> > Has it always been broken?
-> > 
-> > Has it been broken since KASAN was introduced on 32-bit ARM?
-> > 
-> 
-> Yes, this is a bug fix and it has been broken since KASAN was introduced on 32-bit ARM.
-> So, I think this should be
-> 	Fixes: 5615f69bc209 ("ARM: 9016/2: Initialize the mapping of KASan shadow memory")
+> >> Or just use memset(), which uses optimized instructions on many arches=
+.
+> >=20
+> > Yeah, sure, that would be even better, or even memzero_explicit()?
+>
+> Thanks. The function isn't getting too big for an inline?
 
-Brilliant, thanks! Now merged.
+Hmm... so as far as I'm concerned you pick what works for you. Just
+was pointing out at it would make to simplify the original a bit :-)
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+BR, Jarkko
