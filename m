@@ -1,93 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E8574C07
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F8874BEB;
+	Mon, 29 Apr 2024 12:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714392579; cv=none; b=WXR86EpevLicWfJqsbwF+UESylnqSx16WyBe8VpUhrYgvSdmImwtAhk5DQcl2m75LTY1YyLxuxNNhTBf9aNHL47sL7aqr1D1ZZcZX2u/l4rUHgzfUmzlqQIj64XYB9E84NghaM9MSDSQiaj9CsUqEBhNTYnm2e+K1BrJiOUIKHE=
+	t=1714392579; cv=none; b=BNyteOcnaXLG1e1R1LFg28Ge1/gQIeZ0Q7VHEY7BY88DAJ0OezOMbZlh6gyqqbnFW541hIp9tFWi4Kw3l8Rat8n3npr6i9E/mwg1j94QodMTv1h5uaY4uZsmRiHACdXPjuWMRSIUSla3iOQoVq1MRoDQIa2KTXj6ql4Wty63kz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714392579; c=relaxed/simple;
-	bh=6oEQ8SmB24y33MxFtl+D/rMkW5uAGu9qGTWbUveLuYk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pqDoHhbbZUijIQL5Q3xRo2IOQ9i7bBZskJ/Yixz12Fh+52YXLnFmzyp7XSe8P59iHNc8e1MbU125SBxbyJSAMNlR6/+NDSC2UtfzvL98mTi1F6Jeg3Lf4DoaQrgtZNLCRPDVXuOcetYRegfS/ZW52ig0RRS3d7ElUtlBMgkeexM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fqAKCN0e; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=5rT0MW8a+Q608EQ2WOLBLIOLnw2hvDV6qV7Xa4L4Vvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NKxUHqN3ftUmL+t014HtoIeDFW+hGzoVefoTekc/520ZAF4JZ4dV2smtVZNNbPA2k90Kn+f+s06O2wWO6nqiZLBv4y8MzU17/q93Mb+SW6AriRy2du9cqoMzm4ZxhGxZJIETXYjctG+aDKFVGUMNjFwbx2vV2Ou868nhiCLAGog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=RzZObxK1; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fqAKCN0e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714392578; x=1745928578;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6oEQ8SmB24y33MxFtl+D/rMkW5uAGu9qGTWbUveLuYk=;
-  b=fqAKCN0etbtcUrCg7LnJqAJTnunHAHdUx1vzYCxJ0qn2A6RjQdsDQAFf
-   j5NKkXdCD/Owe52/AfnOcFznL4L6s5eDSGJKxL1hK4cK7brGqu0JDCYQU
-   D87cMRKx2R+FIslqa7gJHpew2HWLQTC/zyLDx+rsw/K2k255d11Y5snjt
-   FVkBwMFaU1uZVYqTj1FKUAzP3iA2g1lg0v8D71EwGzfumjmP9McSKyUyh
-   1ZWnR+Zqk89G6YZUMYNK8DeTrynUoZ0BKzDHecsHWSBkOffdxHx2WsKg1
-   wOKGe/+04l/PeeAoaFkDYQeorFKohhA31OTs7Ya9Tg6OVfJqPR9+CYd+o
-   g==;
-X-CSE-ConnectionGUID: kHiAWewdQ+i8J4qSANSgrA==
-X-CSE-MsgGUID: Rp/VGpBTR1ad43a1trSGyg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="9908283"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="9908283"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 05:09:38 -0700
-X-CSE-ConnectionGUID: +fqvG9R1Rmus9DGVjPtRQw==
-X-CSE-MsgGUID: slNfCorNR06f6euAjbpI4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="26166660"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 29 Apr 2024 05:09:36 -0700
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	stable@kernel.org
-Subject: [PATCH 12/14] intel_th: pci: Add Meteor Lake-S support
-Date: Mon, 29 Apr 2024 15:09:06 +0300
-Message-ID: <20240429120908.3723458-13-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240429120908.3723458-1-alexander.shishkin@linux.intel.com>
-References: <20240429120908.3723458-1-alexander.shishkin@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RzZObxK1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=h9t4XYnMZ7pWMVqItnio1QT6PeGN1g5MdB6mzR8+nTc=; b=RzZObxK1rl9M7ufGw2N+tp6YzK
+	+qFKeH4uRQ85TfaQzaBViNMA+CX3XUu172Z2q6ZVrkq5Ri+gtgvfZrY4/z0JOI0/19V3B07Ylutge
+	cPHzBbN/A0xqYbqTz1z/QRk4/+HcC1Fx4bOlDEANMrTQxRifPJ4cuurky6xxl829Zp64=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1s1Poq-00EFGB-Ci; Mon, 29 Apr 2024 14:09:16 +0200
+Date: Mon, 29 Apr 2024 14:09:16 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Parthiban.Veerasooran@microchip.com
+Cc: conor@kernel.org, ramon.nordin.rodriguez@ferroamp.se,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, saeedm@nvidia.com,
+	anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, corbet@lwn.net,
+	linux-doc@vger.kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, Horatiu.Vultur@microchip.com,
+	ruanjinjie@huawei.com, Steen.Hegelund@microchip.com,
+	vladimir.oltean@nxp.com, UNGLinuxDriver@microchip.com,
+	Thorsten.Kummermehr@microchip.com, Pier.Beruto@onsemi.com,
+	Selvamani.Rajagopal@onsemi.com, Nicolas.Ferre@microchip.com,
+	benjamin.bigler@bernformulastudent.ch
+Subject: Re: [PATCH net-next v4 11/12] microchip: lan865x: add driver support
+ for Microchip's LAN865X MAC-PHY
+Message-ID: <243dab3b-ac07-4d88-8c43-aed53a34cea9@lunn.ch>
+References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
+ <20240418125648.372526-12-Parthiban.Veerasooran@microchip.com>
+ <Zi1PxgANUWh1S0sO@builder>
+ <20240427-vaporizer-pencil-be6a25030f08@spud>
+ <1ae4f1d5-140b-41b1-9191-da14fd67d409@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ae4f1d5-140b-41b1-9191-da14fd67d409@microchip.com>
 
-Add support for the Trace Hub in Meteor Lake-S.
+> Looks like, the below changes needed to work correctly,
+> 
+> lan865x.c:
+> - compatible string to be changed like below as it is a fallback for all 
+> variants,
+> 	.compatible = "microchip,lan8650"
+> - DRV_NAME to be changed like below,
+> 	#define DRV_NAME                        "lan8650"
+> 
+> microchip,lan865x.example.dts for lan8650:
+> - compatible string to be changed like below,
+> 	.compatible = "microchip,lan8650";
+> 	OR
+> microchip,lan865x.example.dts for lan8651:
+> - compatible string to be changed like below,
+> 	compatible = "microchip,lan8651", "microchip,lan8650";
+> 
+> I tested with the above changes and there was no issues observed. Any 
+> comments on this? Otherwise we can stick with these changes for the next 
+> version.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@kernel.org
----
- drivers/hwtracing/intel_th/pci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+As Conor said, this is probably relying on the fallback
+mechanism. Please look at other SPI devices, e.g. hwmon, and see how
+they probe for multiple different devices.
 
-diff --git a/drivers/hwtracing/intel_th/pci.c b/drivers/hwtracing/intel_th/pci.c
-index 08c956fb4995..7bb50d414027 100644
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -289,6 +289,11 @@ static const struct pci_device_id intel_th_pci_id_table[] = {
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x7e24),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Meteor Lake-S */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x7f26),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{
- 		/* Raptor Lake-S */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x7a26),
--- 
-2.43.0
-
+	Andrew
