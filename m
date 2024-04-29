@@ -1,33 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14E0200BA;
-	Mon, 29 Apr 2024 08:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD66DC2C8;
+	Mon, 29 Apr 2024 08:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714380795; cv=none; b=UyXvEyZmn2GLCfWHbsbd0YMbr8jNQ0SIatC+DQ1UFqfDyjmsEeaI6Eqw3PjpL/clyJ/7Bvpb2TDnPwaF8UdxQ0yxUQHYL4dbxz4y0gBhnfhnihpmtPZuojeEBqjI1tZn3V8FI4KBkMujVGaTn4abZ4rJMPYTCfbUonhYG6PX9iA=
+	t=1714380827; cv=none; b=vGXj9E4wMqBaXp3btfGJYQVWf3zNcnvGoq1xwtpo3zcafV//4yBCIplf5WhVGUth0/CSjRZJqrcksQ+zajX7Pau1MV8o3cr66HhUgRrPbd9q949Xgzd02rq8oHtxLW/lW0ruf+MI/AjceyPQ1kKr00rzj3qmPDvTQdLYt0laLUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714380795; c=relaxed/simple;
-	bh=qCiVpmPm2vD21QvDTCakxjwW4nT2phnYn/CJReOGSRg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UWZ6P4BZk3YfLyJ47OBRZhbPKP+Eo+PeQIRAEUm4O/HjVxbjxs65HkNcgO0XkgBM6PQHufEd7hSGq8lX5s7OApzO+iC5YXewJ2qcD0QyQ2AbxJwsAWWcTFA3IDXIhizC+zY0oDxYc/mEQjUCBsxk0aOWGMSCRnc1utlbNIJZe/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXl7xx3i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714380827; c=relaxed/simple;
+	bh=XxJMGad54tR9sirQj06vDhJW0TOP5mpqMJiFYt+RuPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ipM1+vYFuaYs3sNBwOHjF+1jXS1C2SlEDHup3aQcWn0NAlzPsH/GS/zPV4sa+GUD5byTqbq0DiE8xFiPgwF9G6vKgnlNvrDcp0j8XwfF6dLpaMJc/5Hc2QNT+4wty0cd2ZRD3j0jz60DOdmNK4QnchHyQzhrGzFhijDcCWKTYxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=cx8ZJd96; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXl7xx3i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8456C113CD;
-	Mon, 29 Apr 2024 08:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714380794;
-	bh=qCiVpmPm2vD21QvDTCakxjwW4nT2phnYn/CJReOGSRg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FXl7xx3iPrMFlZZBVgM2InLgHEYa1PL9HR9lM2FKMSwr9En0jzUmOFEreZgCTrQrd
-	 9j3XO471snTmM7K6zH8vXdE/oRDjydWKgoIHs5R2l0BklDjJldQVAp46a84oB+/vKI
-	 iKdZcy5HdtqV1FhCOFz4JWGjexCKZwZ+Fk013HVeJx9bJDJKFzm8NRFF8Wy81kqAR4
-	 jWg7AqL7L4cM5RH4orErESAh90fn6r3u8YL8BfpZoIK4ESwYC+fSRUzvX/LvvIVDhj
-	 muiOYZb3KOSUmpNYh8F241ik3wZO4sgah59/pSEc/e8dJd14uoXSTQoNKuKI4zso80
-	 C3L3nN+w4UQcQ==
-Message-ID: <07fa8910-da6e-49f3-a3d3-b7a55c48224a@kernel.org>
-Date: Mon, 29 Apr 2024 10:53:08 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="cx8ZJd96"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43T7ixZ9007532;
+	Mon, 29 Apr 2024 10:53:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=PDnBIULbsSxakTpOd1Nm1WtFrD4kcum3r6evgJ4f4ys=; b=cx
+	8ZJd96Uhy5fsInDA28xxjsDp188fEYLlEWtAt6Oe1LxNo3O6j1QyWLiHHiGYuJ57
+	y3WtM0kRFbKbkeqRJ2Q2up7MfiST9GM/suENhxKwlO7PLFl/4bIYOgq2hOLdZEKU
+	m5PE2G29eymm6Xl9xFrxOy7GOENbjgvF2mNKAX06OlsLkhUudwemF1ueAgsCTUnU
+	KUmHHPKMGzKPAFTVtoGnC1ToIlHWgEXk3mY1PIzC+iQtSxybuPh3k6N4U9v6UuMy
+	3ZSccP+1zXRPv3xFzTHjLCTiRpkPstvmUh61P0ACcaDSOCua4zVzkKlzBsbepBAY
+	IozdqzjusGz4+6Algqmw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xscahufgs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Apr 2024 10:53:18 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AD1524004B;
+	Mon, 29 Apr 2024 10:53:12 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3E7D6216837;
+	Mon, 29 Apr 2024 10:52:35 +0200 (CEST)
+Received: from [10.130.72.241] (10.130.72.241) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 29 Apr
+ 2024 10:52:34 +0200
+Message-ID: <d2432381-827f-4825-a450-9954f8291576@foss.st.com>
+Date: Mon, 29 Apr 2024 10:52:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,89 +52,157 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/3] dt-bindings: arm: fsl: add Engicam i.Core MX93
- EDIMM 2.0 Starter Kit
-To: Fabio Aiuto <fabio.aiuto@engicam.com>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Matteo Lisi <matteo.lisi@engicam.com>,
- Mirko Ardinghi <mirko.ardinghi@engicam.com>,
- Conor Dooley <conor.dooley@microchip.com>
-References: <20240429084422.8369-1-fabio.aiuto@engicam.com>
- <20240429084422.8369-2-fabio.aiuto@engicam.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH linux-next] media: i2c: st-mipid02: replace of_node_put()
+ with __free
+To: R Sundar <prosunofficial@gmail.com>, <sylvain.petinot@foss.st.com>,
+        <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <skhan@linuxfoundation.org>, <javier.carrasco.cruz@gmail.com>,
+        Julia Lawall
+	<julia.lawall@inria.fr>
+References: <20240427095643.11486-1-prosunofficial@gmail.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240429084422.8369-2-fabio.aiuto@engicam.com>
-Content-Type: text/plain; charset=UTF-8
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+In-Reply-To: <20240427095643.11486-1-prosunofficial@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-29_06,2024-04-26_02,2023-05-22_02
 
-On 29/04/2024 10:44, Fabio Aiuto wrote:
-> i.Core MX93 is a NXP i.MX93 based EDIMM SoM by Engicam.
+Hi,
+
+Thank you for your patch.
+
+On 4/27/24 11:56, R Sundar wrote:
+> Use the new cleanup magic to replace of_node_put() with
+> __free(device_node) marking to auto release and to simplify the error
+> paths.
 > 
-> EDIMM 2.0 Starter Kit is an EDIMM 2.0 Form Factor Capacitive
-> Evaluation Board by Engicam.
+> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> Signed-off-by: R Sundar <prosunofficial@gmail.com>
+
+I was not aware of this kind of auto release mechanism. Thanks for
+bringing that to my eyes.
+
+Now I looked in /drivers/media and couldn't find such structure. All
+drivers seem to follow the goto error_of_node_put style.
+As I'm unsure if we want to introduce such magic, could either Laurent
+or Sakari comment on this ?
+
+> ---
+>  drivers/media/i2c/st-mipid02.c | 37 +++++++++-------------------------
+>  1 file changed, 9 insertions(+), 28 deletions(-)
 > 
-> i.Core MX93 needs to be mounted on top of EDIMM 2.0 Starter Kit
-> to get the full i.Core MX93 EDIMM 2.0 Starter Kit board.
-> 
-> Add bindings for this board.
-> 
-> Cc: Matteo Lisi <matteo.lisi@engicam.com>
-> Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
-> Reviewed-by: Krzysztof Kozlowsky <krzk@kernel.org>
+> diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
+> index f250640729ca..d42a306530f3 100644
+> --- a/drivers/media/i2c/st-mipid02.c
+> +++ b/drivers/media/i2c/st-mipid02.c
+> @@ -715,31 +715,28 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
+>  	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
+>  	struct i2c_client *client = bridge->i2c_client;
+>  	struct v4l2_async_connection *asd;
+> -	struct device_node *ep_node;
+>  	int ret;
+>  
+>  	/* parse rx (endpoint 0) */
+> -	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
+> -						0, 0);
+> +	struct device_node *ep_node __free(device_node) =
+> +		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 0, 0);
+>  	if (!ep_node) {
+>  		dev_err(&client->dev, "unable to find port0 ep");
+> -		ret = -EINVAL;
+> -		goto error;
+> +		return -EINVAL;
+>  	}
+>  
+>  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
+>  	if (ret) {
+>  		dev_err(&client->dev, "Could not parse v4l2 endpoint %d\n",
+>  			ret);
+> -		goto error_of_node_put;
+> +		return ret;
+>  	}
+>  
+>  	/* do some sanity checks */
+>  	if (ep.bus.mipi_csi2.num_data_lanes > 2) {
+>  		dev_err(&client->dev, "max supported data lanes is 2 / got %d",
+>  			ep.bus.mipi_csi2.num_data_lanes);
+> -		ret = -EINVAL;
+> -		goto error_of_node_put;
+> +		return -EINVAL;
+>  	}
+>  
+>  	/* register it for later use */
+> @@ -750,7 +747,6 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
+>  	asd = v4l2_async_nf_add_fwnode_remote(&bridge->notifier,
+>  					      of_fwnode_handle(ep_node),
+>  					      struct v4l2_async_connection);
+> -	of_node_put(ep_node);
+>  
+>  	if (IS_ERR(asd)) {
+>  		dev_err(&client->dev, "fail to register asd to notifier %ld",
+> @@ -764,46 +760,31 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
+>  		v4l2_async_nf_cleanup(&bridge->notifier);
+>  
+>  	return ret;
+> -
+> -error_of_node_put:
+> -	of_node_put(ep_node);
+> -error:
+> -
+> -	return ret;
+>  }
+>  
+>  static int mipid02_parse_tx_ep(struct mipid02_dev *bridge)
+>  {
+>  	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_PARALLEL };
+>  	struct i2c_client *client = bridge->i2c_client;
+> -	struct device_node *ep_node;
+>  	int ret;
+>  
+>  	/* parse tx (endpoint 2) */
+> -	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
+> -						2, 0);
+> +	struct device_node *ep_node =
+> +		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 2, 0);
 
-What the hell? Why are you changing tags?
+Shouldn't there be a '__free' here too ?
 
-This is corrupted since v3!
+>  	if (!ep_node) {
+>  		dev_err(&client->dev, "unable to find port1 ep");
+> -		ret = -EINVAL;
+> -		goto error;
+> +		return -EINVAL;
+>  	}
+>  
+>  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
+>  	if (ret) {
+>  		dev_err(&client->dev, "Could not parse v4l2 endpoint\n");
+> -		goto error_of_node_put;
+> +		return ret;
+>  	}
+>  
+> -	of_node_put(ep_node);
+>  	bridge->tx = ep;
+>  
+>  	return 0;
+> -
+> -error_of_node_put:
+> -	of_node_put(ep_node);
+> -error:
+> -
+> -	return -EINVAL;
+>  }
+>  
+>  static int mipid02_probe(struct i2c_client *client)
 
-NAK.
+-- 
+Regards,
 
-Best regards,
-Krzysztof
-
+Benjamin
