@@ -1,464 +1,201 @@
-Received: from smtpcmd13146.aruba.it (smtpcmd13146.aruba.it [62.149.156.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B773C241E1
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523C110A13
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714383272; cv=none; b=EFPEZ/yu6LihBeO0Vuv6Vaf6I89L7eRtzaSM7xpRQlMg33DIv17q0B1w/yUem2JKPvTY/og0Z/ydcriULx/qR/T7T8w49K4PGgP5InfZW9K9qpfKpKb+mxLN9bIq4MMGjbxiMvKLM+8RsoFMyvzUd8vQYhaOK+VgIdUT7ax0Qoo=
+	t=1714383490; cv=none; b=tRlmdgoFu++NMY+wltuaUOotv/CDgPYOPj3ZWrMBYSI6CPx6/7lOr4DSe2+6SqQ+hn14CG5si+Os/6EC7c7/nzL2QI9Tp5jtGW/MgyTn+7qlJWGpJFFYQrKfUBjGVAqDsvMPmU0Se9iBFOtBWvfflF/XbRFXpoSwKhY4gaNnFMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714383272; c=relaxed/simple;
-	bh=vmszalou0wUHxhm6qeZSejmKLtppZ3O+szMZyEgPAZU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e/a85we9RFVQ1vKaqxw6om3D2H9kmBhU5ggHEPbrZHB6sSLCQ1icRa/BM7a96X1kCHkqYrYsc7qgXWpjO9g/kYeyarovmKLV2PInQYRcv7V36NYSe740l9sjYgtxLp2WlwgU9nS3eXrC/UGWIkPMaDswLr9lwJsGAPRcAwLyvZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=cTKYb6Db; arc=none smtp.client-ip=62.149.156.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
+	s=arc-20240116; t=1714383490; c=relaxed/simple;
+	bh=zA6xKat/sfgyvpOiLk32Wchu0VF6PKEOQX86Smcut9w=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TwRmjGvRyqbNCpK2s9/fQtPztBwGSbUnThow4E58vBwZuRFwEfh+o8IEvV9gUxxncgLOquLYdPeZDr/ZuSTrYF/3So8CWzAbvg8n0VhoAefxjgmoUHaFXAl1Y7XQ/jmkKC7FX81Jvvfem6j4Osrj4oh2FNoWtyfFFMu/eYd6BaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ld+rrLqj; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="cTKYb6Db"
-Received: from engicam.com ([146.241.8.107])
-	by Aruba Outgoing Smtp  with ESMTPSA
-	id 1NLxsVDmQ8U421NLzsOAiw; Mon, 29 Apr 2024 11:31:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1714383079; bh=vmszalou0wUHxhm6qeZSejmKLtppZ3O+szMZyEgPAZU=;
-	h=From:To:Subject:Date:MIME-Version;
-	b=cTKYb6Db1dk37tONNi6EYLw3rFkUjBCtYcCo7tsT2NTAU5hAPqKyeNUXoqs0rFk2A
-	 jY8u1n/48bi6RaO7warLsph5CuHWZGWonzcqJbuZhzXWeST6Mbwj4HR92sORHMopcO
-	 a7vLTK8VRPen32CbmeMtXERlzuB9+5cvbZ7I7YkEqEZ6YY2tWwNFL5Nn12LKkMA62n
-	 3b0E4nyurZM3dW2xB5xI7xz9E7019VbF/jqxQYRRZBwlphxuKFE4kgfGZK/978LBvS
-	 uHaNDS5vnVoLbdIZPcx6h79Zcrp0ryJUpI6y7GBkejTJd3t1qkJu+z0gtHyO54hrIF
-	 xZGoyAwIuRMhg==
-From: Fabio Aiuto <fabio.aiuto@engicam.com>
-To: Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Fabio Aiuto <fabio.aiuto@engicam.com>,
-	Matteo Lisi <matteo.lisi@engicam.com>,
-	Mirko Ardinghi <mirko.ardinghi@engicam.com>,
-	Peng Fan <peng.fan@nxp.com>,
-	Michael Trimarchi <michael@amarulasolutions.com>
-Subject: [PATCH v8 3/3] arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
-Date: Mon, 29 Apr 2024 11:31:16 +0200
-Message-Id: <20240429093116.9346-4-fabio.aiuto@engicam.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240429093116.9346-1-fabio.aiuto@engicam.com>
-References: <20240429093116.9346-1-fabio.aiuto@engicam.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ld+rrLqj"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-34c8f392172so1524728f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 02:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714383486; x=1714988286; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A+LnRlsICvGEFiJqDwaAff8ODI9d9U18e2E6oVjJp+M=;
+        b=Ld+rrLqjT3J7SG/hmLaLAB/dP1tEMC4DYcQ+HFgFKmeN/KAJtSugW6CC18k/29UHCm
+         OKCjXQBGCYMvUlNht0HumIYu0dAW45e0igPE6bUe86Q5f4xmlxA53oFi4yzIvpLuN8JW
+         0N0K+WITl8fR1y0LyLbQLhEr+4GITysx4XSeNrGByQaKqWmYXXVDPI5UOaj3oKJxQbNh
+         B/o93U8CKV4Yy+ybOcYdMrrNc4fEps48PEmsiflf50/tJbK9faepPO+vQ4DZu5zxfX+1
+         M+jysWPc0Dh78VlsYWP6j6A1L6y+3FenWRUwsxbnQcyn3qQiD+82ULKrOJe39ZvirCpi
+         Oy4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714383486; x=1714988286;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=A+LnRlsICvGEFiJqDwaAff8ODI9d9U18e2E6oVjJp+M=;
+        b=roXhIB0nNHmg/kjUaOtcLhBz0NeH1LBAn3Sxt5fP4mvBC3O6hSnDnpxlXaV/XCUW/v
+         iLni4ESuYNy1yXTBcEDrq1wQhNSzurnyWcoHlzz9/e8P8DLy1Cko0kzcS8sPSiHz4Pwe
+         LmuSs58cvU/omp8yH+zXUo8AepQB/zKo0Oz0snK2x4iC6dEynn8dyw4udQh+x8AGB/a2
+         98Sh0epxHqHadlwHSEw0DoAQB7V+VTnS5q486daCLz9qkKHdnzb+BmtUvrElyuN2dpND
+         5iJLg/7x5AuLRBJ+MGwQNioP8KZ/Iowog9oIfxzldD2iHJjg9tVvbsc3cObUnzKqwu9g
+         BC1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVENy5QifxBNQXapdqYSAFxDIrInN2xhnrg0s3b6aef58gDcs7b73KOfMTEFHNZJiDjnbFI+vKgCv1pqQrXV6Qqq31kH6NrnpX+l/oY
+X-Gm-Message-State: AOJu0Yy1wCSVCAxOj2akKliUi49HiB22lJFXQ4VbhJPH3regzcoEypmr
+	kNb4TuUGGBPKNI41+MpazAMnbtw4Mvm/sNuXAmXbg2zFe4IVOd0i42I6mlQ2f6o=
+X-Google-Smtp-Source: AGHT+IF4glwX/gOVNwy5kk//cdVouWrqxBeBlGjgMfsH0PaEMwuHOiWu8jeqIKtAZwy8kuUkkxiUtg==
+X-Received: by 2002:a5d:59a8:0:b0:34c:ceee:b2f5 with SMTP id p8-20020a5d59a8000000b0034cceeeb2f5mr4652539wrr.67.1714383486530;
+        Mon, 29 Apr 2024 02:38:06 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:cad:2140:d72:4b40:65fa:89e6? ([2a01:e0a:cad:2140:d72:4b40:65fa:89e6])
+        by smtp.gmail.com with ESMTPSA id q4-20020adffec4000000b00347f6b5bb6dsm28923908wrs.30.2024.04.29.02.38.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Apr 2024 02:38:06 -0700 (PDT)
+Message-ID: <2af446d3-7834-4a6b-897b-b14c6bccff65@linaro.org>
+Date: Mon, 29 Apr 2024 11:38:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfHibUBq6QL/vLnREt8AOC318HZbqxhIGukr5XMbZh3ZHrsXMKwRGzAAyj9rh00mb0zQdMEUD5BG5Il89FObojCBQRgmXrKYiIEGiet716fRt6PfX9gWL
- xcShxd9mECBt0jowx5ZL+Mmn/qPZNXfqd16q6/Jgmyw7W5RJUYdTcn6eA5MNG+mGinBs634R5NXawrZuF9uknF3dKyBpiIhnJTzgLYcKFrwSlhqzTOD6y9kX
- wCAeewNpLxiKUd5gwAX2TkM30yA3BxvIUWS5DPYS+L5QiNj8MdaSzlPD90ZnQWkuQME4YMd4xaHh7NiLpNGOuTlVuxPIFGhIMJ68MXHXjayLIha2xUol9MGZ
- 79Tx7gAghFkCOTi63iUheQSLUJiTB5vnzj2h4N3GKWjcW4ZpfZcctCxTgwye9p8eJcJFXv5JGGpNLThq/lIo3o9QhF1JtP4wg5ExoYbZWAYgCCJbpqaLJRpb
- wT2mQ9in+lpWaKoOnxqGi4j1yySysJXUvbIss75H2QVrHZMMXD79R/iRK7IYpy1iEDbhkKj9/Q9gjEN9rTyAZYFmKWyloamT6mgNccMr7CJ4emUlxhkJYYYQ
- VDHcjburKm7zy8hi/js28wBjJEHMcVhlHgYvDRbdub2ozspz/5s5fluojgOqLxoQ2uCNkMNvg31Y/bPPhzjM3Mxb
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 4/8] drm/mipi-dsi: Introduce
+ mipi_dsi_*_write_seq_multi()
+To: Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ lvzhaoxiong@huaqin.corp-partner.google.com,
+ Jani Nikula <jani.nikula@linux.intel.com>, Hsin-Yi Wang <hsinyi@google.com>,
+ Javier Martinez Canillas <javierm@redhat.com>, Joel Selvaraj
+ <jo@jsfamily.in>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
+ Sam Ravnborg <sam@ravnborg.org>, Daniel Vetter <daniel@ffwll.ch>,
+ David Airlie <airlied@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ linux-kernel@vger.kernel.org
+References: <20240426235857.3870424-1-dianders@chromium.org>
+ <20240426165839.v2.4.Ie94246c30fe95101e0e26dd5f96e976dbeb8f242@changeid>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240426165839.v2.4.Ie94246c30fe95101e0e26dd5f96e976dbeb8f242@changeid>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-i.Core MX93 is a NXP i.MX93 based SoM by Enigcam which needs to be
-mounted on top of Engicam baseboards.
+Hello Mister Anderson,
 
-Add support for EDIMM 2.0 Starter Kit hosting i.Core MX93.
+On 27/04/2024 01:58, Douglas Anderson wrote:
+> The current mipi_dsi_*_write_seq() macros are non-intutitive because
+> they contain a hidden "return" statement that will return out of the
+> _caller_ of the macro. Let's mark them as deprecated and instead
+> introduce some new macros that are more intuitive.
+> 
+> These new macros are less optimal when an error occurs but should
+> behave more optimally when there is no error. Specifically these new
+> macros cause smaller code to get generated and the code size savings
+> (less to fetch from RAM, less cache space used, less RAM used) are
+> important. Since the error case isn't something we need to optimize
+> for and these new macros are easier to understand and more flexible,
+> they should be used.
+> 
+> After converting to use these new functions, one example shows some
+> nice savings while also being easier to understand.
+> 
+> $ scripts/bloat-o-meter \
+>    ...after/panel-novatek-nt36672e.ko \
+>    ...ctx/panel-novatek-nt36672e.ko
+> add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-988 (-988)
+> Function                                     old     new   delta
+> nt36672e_1080x2408_60hz_init                6236    5248    -988
+> Total: Before=10651, After=9663, chg -9.28%
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Right now this patch introduces two new functions in
+> drm_mipi_dsi.c. Alternatively we could have changed the prototype of
+> the "chatty" functions and made the deprecated macros adapt to the new
+> prototype. While this sounds nice, it bloated callers of the
+> deprecated functioin a bit because it caused the compiler to emit less
+> optimal code. It doesn't seem terrible to add two more functions, so I
+> went that way.
+> 
+> Changes in v2:
+> - New
+> 
+>   drivers/gpu/drm/drm_mipi_dsi.c | 56 +++++++++++++++++++++++++++++++++
+>   include/drm/drm_mipi_dsi.h     | 57 ++++++++++++++++++++++++++++++++++
+>   2 files changed, 113 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+> index 1e062eda3b88..b7c75a4396e6 100644
+> --- a/drivers/gpu/drm/drm_mipi_dsi.c
+> +++ b/drivers/gpu/drm/drm_mipi_dsi.c
+> @@ -792,6 +792,34 @@ int mipi_dsi_generic_write_chatty(struct mipi_dsi_device *dsi,
+>   }
+>   EXPORT_SYMBOL(mipi_dsi_generic_write_chatty);
+>   
 
-Starter Kit main features:
+<snip>
 
-2x LVDS interfaces
-HDMI output
-Audio out
-Mic in
-Micro SD card slot
-USB 3.0 A port
-3x USB 2.0 A port
-Gb Ethernet
-2x CAN bus, 3x UART interfaces
-SIM card slot
-M.2 KEY_B slot
+>   };
+>   
+> +/**
+> + * struct mipi_dsi_multi_context - Context to call multiple MIPI DSI funcs in a row
+> + * @dsi: Pointer to the MIPI DSI device
+> + * @accum_err: Storage for the accumulated error over the multiple calls. Init
+> + *	to 0. If a function encounters an error then the error code will be
+> + *	stored here. If you call a function and this points to a non-zero
+> + *	value then the function will be a noop. This allows calling a function
+> + *	many times in a row and just checking the error at the end to see if
+> + *	any of them failed.
+> + */
+> +
+> +struct mipi_dsi_multi_context {
+> +	struct mipi_dsi_device *dsi;
+> +	int accum_err;
+> +};
 
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
----
-v7 ---> v8:
-	- no changes
-v6 ---> v7:
-        - removed max-frequency property in wifi node
-        - removed pinctrl-{1,2} in usdhc3 node
-v5 ---> v6:
-        - added property in lpuart5 node
-        - removed unused sai1 node
-        - move Cc tag to Reviewed-by tag
-v4 ---> v5:
-        - done some property reorder, indentation fixes, node rename,
-          drop/add new lines
-        - added Reviewed-by tag
-v3 ---> v4:
-        - drop wl_reg_on regulator in favor of mmc-pwrseq-simple
-        - add Cc tag
-v2 ---> v3:
-        - fixed dtschema warnings
-        - removed regulator-always-on on bt_reg_on
-        - fixed clock rate assignment on sgtl5000 node
-        - fixed indentation issue
-v1 ---> v2:
-        - fixed indentation issue
-        - fixed missing space issue
-        - improved naming of regulator nodes
-        - removed unneeded include
+I like the design, but having a context struct seems over-engineered while we could pass
+a single int over without encapsulating it with mipi_dsi_multi_context.
 
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../dts/freescale/imx93-icore-mx93-edimm2.dts | 321 ++++++++++++++++++
- 2 files changed, 322 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+void mipi_dsi_dcs_write_buffer_multi(struct mipi_dsi_multi_context *ctx,
+				     const void *data, size_t len);
+vs
+void mipi_dsi_dcs_write_buffer_multi(struct mipi_dsi_device *dsi, int *accum_err,
+				     const void *data, size_t len);
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 045250d0a040..d26c0a458a44 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -226,6 +226,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqp-mba8xx.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-11x11-evk.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx93-icore-mx93-edimm2.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts b/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
-new file mode 100644
-index 000000000000..c22d71cdf7cb
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2022 NXP
-+ * Copyright 2024 Engicam s.r.l.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx93-icore-mx93.dtsi"
-+
-+/ {
-+	model = "Engicam i.Core MX93 - EDIMM 2 Starterkit";
-+	compatible = "engicam,icore-mx93-edimm2", "engicam,icore-mx93",
-+		     "fsl,imx93";
-+
-+	aliases {
-+		rtc1 = &bbnsm_rtc;
-+	};
-+
-+	chosen {
-+		stdout-path = &lpuart1;
-+	};
-+
-+	bt_reg_on: regulator-btregon {
-+		compatible = "regulator-gpio";
-+		regulator-name = "BT_REG_ON";
-+		regulator-min-microvolt = <100000>;
-+		regulator-max-microvolt = <3300000>;
-+		states = <3300000 0x1>, <100000 0x0>;
-+		gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	reg_1v8_sgtl: regulator-1v8-sgtl {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1v8_sgtl";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_3v3_avdd_sgtl: regulator-3v3-avdd-sgtl {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3v3_avdd_sgtl";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_3v3_sgtl: regulator-3v3-sgtl {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3v3_sgtl";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			alloc-ranges = <0 0x80000000 0 0x40000000>;
-+			size = <0 0x10000000>;
-+			linux,cma-default;
-+		};
-+
-+		rsc_table: rsc-table@2021f000 {
-+			reg = <0 0x2021f000 0 0x1000>;
-+			no-map;
-+		};
-+
-+		vdevbuffer: vdevbuffer@a4020000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0xa4020000 0 0x100000>;
-+			no-map;
-+		};
-+
-+		vdev0vring0: vdev0vring0@a4000000 {
-+			reg = <0 0xa4000000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		vdev0vring1: vdev0vring1@a4008000 {
-+			reg = <0 0xa4008000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		vdev1vring0: vdev1vring0@a4000000 {
-+			reg = <0 0xa4010000 0 0x8000>;
-+			no-map;
-+		};
-+
-+		vdev1vring1: vdev1vring1@a4018000 {
-+			reg = <0 0xa4018000 0 0x8000>;
-+			no-map;
-+		};
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "imx93-sgtl5000";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&dailink_master>;
-+		simple-audio-card,frame-master = <&dailink_master>;
-+		/*simple-audio-card,mclk-fs = <1>;*/
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&sai3>;
-+		};
-+
-+		dailink_master: simple-audio-card,codec {
-+			sound-dai = <&sgtl5000>;
-+			clocks = <&clk IMX93_CLK_SAI3_IPG>;
-+		};
-+	};
-+
-+	usdhc3_pwrseq: usdhc3-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usdhc3_pwrseq>;
-+		reset-gpios = <&gpio2 22 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&cm33 {
-+	mbox-names = "tx", "rx", "rxdb";
-+	mboxes = <&mu1 0 1>,
-+		 <&mu1 1 1>,
-+		 <&mu1 3 1>;
-+	memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>,
-+			<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
-+	status = "okay";
-+};
-+
-+&flexcan1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	fsl,stop-mode = <&aonmix_ns_gpr 0x10 4>;
-+	status = "okay";
-+};
-+
-+&flexcan2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	fsl,stop-mode = <&aonmix_ns_gpr 0x10 4>;
-+	status = "okay";
-+};
-+
-+&lpi2c1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&pinctrl_lpi2c1>;
-+	pinctrl-1 = <&pinctrl_lpi2c1>;
-+	status = "okay";
-+
-+	sgtl5000: audio-codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		#sound-dai-cells = <0>;
-+		clocks = <&clk IMX93_CLK_SAI3_GATE>;
-+		VDDA-supply = <&reg_3v3_avdd_sgtl>;
-+		VDDIO-supply = <&reg_3v3_sgtl>;
-+		VDDD-supply = <&reg_1v8_sgtl>;
-+		status = "okay";
-+	};
-+
-+	pcf8523: rtc@68 {
-+		compatible = "nxp,pcf8523";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&lpuart1 { /* console */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&lpuart5 { /* RS485 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&lpuart8 { /* RS232 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart8>;
-+	status = "okay";
-+};
-+
-+&micfil {
-+	#sound-dai-cells = <0>;
-+	assigned-clocks = <&clk IMX93_CLK_PDM>;
-+	assigned-clock-parents = <&clk IMX93_CLK_AUDIO_PLL>;
-+	assigned-clock-rates = <196608000>;
-+	status = "okay";
-+};
-+
-+&mu1 {
-+	status = "okay";
-+};
-+
-+&mu2 {
-+	status = "okay";
-+};
-+
-+&sai3 {
-+	#sound-dai-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai3>;
-+	assigned-clocks = <&clk IMX93_CLK_SAI3>;
-+	assigned-clock-parents = <&clk IMX93_CLK_AUDIO_PLL>;
-+	assigned-clock-rates = <24576000>;
-+	fsl,sai-mclk-direction-output;
-+	status = "okay";
-+};
-+
-+&usdhc3 { /* WiFi */
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	mmc-pwrseq = <&usdhc3_pwrseq>;
-+	bus-width = <4>;
-+	no-1-8-v;
-+	non-removable;
-+	status = "okay";
-+
-+	brcmf: bcrmf@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+	};
-+};
-+
-+&wdog3 {
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_bluetooth: bluetoothgrp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO19__GPIO2_IO19		0x31e /* BT_REG_ON */
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			MX93_PAD_PDM_CLK__CAN1_TX		0x139e
-+			MX93_PAD_PDM_BIT_STREAM0__CAN1_RX	0x139e
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO25__CAN2_TX		0x139e
-+			MX93_PAD_GPIO_IO27__CAN2_RX		0x139e
-+		>;
-+	};
-+
-+	pinctrl_lpi2c1: lpi2c1grp {
-+		fsl,pins = <
-+			MX93_PAD_I2C1_SCL__LPI2C1_SCL		0x40000b9e
-+			MX93_PAD_I2C1_SDA__LPI2C1_SDA		0x40000b9e
-+		>;
-+	};
-+
-+	pinctrl_sai3: sai3grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO26__SAI3_TX_SYNC	0x31e
-+			MX93_PAD_GPIO_IO16__SAI3_TX_BCLK	0x31e
-+			MX93_PAD_GPIO_IO17__SAI3_MCLK		0x31e
-+			MX93_PAD_GPIO_IO21__SAI3_TX_DATA00	0x31e
-+			MX93_PAD_GPIO_IO20__SAI3_RX_DATA00	0x31e
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
-+			MX93_PAD_UART1_TXD__LPUART1_TX		0x31e
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO01__LPUART5_RX		0x31e
-+			MX93_PAD_GPIO_IO00__LPUART5_TX		0x31e
-+			MX93_PAD_GPIO_IO02__LPUART5_CTS_B	0x31e
-+		>;
-+	};
-+
-+	pinctrl_uart8: uart8grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO13__LPUART8_RX		0x31e
-+			MX93_PAD_GPIO_IO12__LPUART8_TX		0x31e
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX93_PAD_SD3_CLK__USDHC3_CLK		0x17fe
-+			MX93_PAD_SD3_CMD__USDHC3_CMD		0x13fe
-+			MX93_PAD_SD3_DATA0__USDHC3_DATA0	0x13fe
-+			MX93_PAD_SD3_DATA1__USDHC3_DATA1        0x13fe
-+			MX93_PAD_SD3_DATA2__USDHC3_DATA2        0x13fe
-+			MX93_PAD_SD3_DATA3__USDHC3_DATA3        0x13fe
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_pwrseq: usdhc3pwrseqgrp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO22__GPIO2_IO22		0x31e /* WL_REG_ON */
-+		>;
-+	};
-+};
--- 
-2.34.1
+is the same, and it avoids having to declare a mipi_dsi_multi_context and set ctx->dsi,
+and I'll find it much easier to migrate, just add a &ret and make sure ret is initialized to 0.
+
+
+<snip>
 
