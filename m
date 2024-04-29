@@ -1,136 +1,182 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF2B17597;
-	Mon, 29 Apr 2024 19:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA8313B2A2;
+	Mon, 29 Apr 2024 19:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714419563; cv=none; b=PQClUZRzU6kzmtxVqULRT1ydYenbAVN+yLDKHwBqPEfgP9qZyY215yxBp7BoDPtXyXDwPSl2qjhOTXQ1rqAQGCVDyKvXsrGeqQKp3VdXjrZdyo4/fa0hV5mXBJ+fhQsgNtOA+UxKU5AhnieH14Kx8kEB8Pp5UqSr8a3/7+1plv8=
+	t=1714419570; cv=none; b=Zo8GWqlhiAOfEOVcjfVsCCgV9STaKWoUrQv+lPd6CFh6tjMnwM+4JP0Dvkh8wZaK+038mIxn0LWrS+pVJX8iaIhARsR2uj0PIKkEBk0AfG6Bg3WiAS+MdBGuNQGhFspXgBRYQtfuKqhDpi2BD3oapzwoIBEN6RJ0Pg6ScEyn/8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714419563; c=relaxed/simple;
-	bh=WhgcW/bisSpMZeVcT/iQoAmlUPS83pZyhBZcNJvwjkI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XCNlnRHqYYpI6nuP82mzU5vPR4JWzReA0GtyG+x56o5Kot3O5VnzWQ1Nned3xADh3CWGNFWntX1ZPNv9EApIaXL/ORIbF3v+t/zmxaSvFb/OnsCzYM85CbwpHn2tK6gW0l/NqxTvh9jL/0Li1MrwSUPskZDhzmlv2xeFswXqwUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xWbJ9Vy0; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1714419570; c=relaxed/simple;
+	bh=0OetwS3VJCN5pUQCPfGzxhYb5ZicuWDFYppJAp8i11M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Msw0Y2KR8rLf5FMBjalOTACCQi9whcarnC5GiUvz4gCk7fFeI7APavg7X9y1eJX3fOEpBZIDVZVZwP4FieyKgTw6RCRdR0c2moiwX/sysdE2qvbkpu9G4MUdnJWc2usEEyFcmA8DOv6NbMgdkQj8Ze/UCIx1QdMfc7grdjP7vtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bnhpHzDg; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xWbJ9Vy0"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43TJdCRA025117;
-	Mon, 29 Apr 2024 14:39:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1714419552;
-	bh=lVO2rgJjLq4yw9Oul8jln9aM6c3F0zQr/8SSJzsApYQ=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=xWbJ9Vy0/d5ip39xkTzF8xujH1O01/X1GWBuwV2fAnFSrT8ogcV6GvYb0X4p8VCOw
-	 crR45GlvB0XLGWRFmD4QFYxUAhA4aO/0QCqn360r9l1AuTONz+smPNY5m7i0QIuU9k
-	 0E5wMpnrQi90uHe70pSfMLydPDf9BY+n4qoKwP70=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43TJdCfU109555
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 29 Apr 2024 14:39:12 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
- Apr 2024 14:39:12 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 29 Apr 2024 14:39:11 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43TJdBQE093494;
-	Mon, 29 Apr 2024 14:39:11 -0500
-Date: Mon, 29 Apr 2024 14:39:11 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Chintan Vankar <c-vankar@ti.com>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh@kernel.org>, Tero
- Kristo <kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <s-vadapalli@ti.com>
-Subject: Re: [PATCH v6 5/5] arm64: dts: ti: k3-j784s4: Add overlay for dual
- port USXGMII mode
-Message-ID: <20240429193911.crcrasbcxnhxonlh@altitude>
-References: <20240329053130.2822129-1-c-vankar@ti.com>
- <20240329053130.2822129-6-c-vankar@ti.com>
- <1cf7f439-45cc-42cb-b707-4c87c00015ac@linaro.org>
- <f406bac9-f4c1-4289-8239-82420cd300b8@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnhpHzDg"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7dbc33bdf08so207963339f.1;
+        Mon, 29 Apr 2024 12:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714419567; x=1715024367; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JIz+6Oy1eqH41GGZgxlPQbWfghUp3j8MpQZmEvPSsQ0=;
+        b=bnhpHzDgRg7wt4oBvu3Jjww2Hi0e10OgUdBFf1HSZRxZvYJAX7ViAwxSX5D0UXEhuQ
+         +yCAekCU391LpPDpnNhMgtVlbVIEvQ1x0pWPKG+p4ETmWrvSQxd+m0sGqVeTthLIETTb
+         i7wdLBndN7MrXRFXqUXFxNxwz15qexv+AGvGMBWEQULS6lTnKunXotgrKXw6fFg4BSCx
+         ToIiJQKouYxAqlDwJVpQ3QDSY+7iFXVtJ9g4yPgL0Hn3e9ijYpp4D9esqaXCzvyuXorF
+         USqvfr9s49xEJ1Hjgu9LTpf8sbMNr5GvkdgLnuiRkmCDn0RqNkoSHccgolv96U135JeZ
+         d2rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714419567; x=1715024367;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JIz+6Oy1eqH41GGZgxlPQbWfghUp3j8MpQZmEvPSsQ0=;
+        b=iX2p7eDo1NaCp32Zs5y5DhgUj8616Eoh5reeTRdcyh7pdG6LhwyvuW55V1WXLA+6LE
+         cFYBu8E4kuxWlp0/0SbpTxsYY0UpX/aQOos30S0NSbe2v2fdyA9rbAgBF4XlCITSikND
+         11kTsMjT7g47REi5HhZLfpXSOYthwuduwJk4eIJGZwGXM6ScBTMF08mn1f3IuFUNvcQ5
+         888RlSB2xxn4p50SPB89BSIollsnR7XBmP7JBxR1Y0hxSFAe2n5Upq5sN6Z4K+NvhZyx
+         ns7N7AfzKXkkPKKOiSOKrxvj/7Ix/sZDATEBiXoBGctX8sTv5YLiK3/oNX3ASTXi9GqL
+         G3dA==
+X-Forwarded-Encrypted: i=1; AJvYcCXueTZfVtpOvVtMpTxU1FS0PUrxz2g5541+3H5khL+/dyS2pMvcM+rZtH/LXLfnN++2K0b/u1BC1ARssYqQw7KvBeJmFMcwTpZomVSSrDQcTbHEznDdIWvLYxUoRnkVk+nTLGClw08q
+X-Gm-Message-State: AOJu0Yz1A6sWa+lBTVVJKB+2X/IbQVT7Ng+qc6EN3+t6mw2fpPYb6GpT
+	ZOaSTYIKNSzaxoF6da0iYyjSXCxtcrB/fXbecXwg+pOfRsIisOKsHUTsKh6x
+X-Google-Smtp-Source: AGHT+IFThzWVB3vIE8LFgGpixsEhbHUun9+9i1vLB9kJbGTkJx0mvT+Q90khSTqWjq6hpXuEXvfcOQ==
+X-Received: by 2002:a05:6602:1cca:b0:7de:8d0d:8836 with SMTP id hg10-20020a0566021cca00b007de8d0d8836mr9390488iob.7.1714419567644;
+        Mon, 29 Apr 2024 12:39:27 -0700 (PDT)
+Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
+        by smtp.googlemail.com with ESMTPSA id y16-20020a056602165000b007de9f92dc57sm2325105iow.16.2024.04.29.12.39.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 12:39:27 -0700 (PDT)
+From: Jim Cromie <jim.cromie@gmail.com>
+To: jbaron@akamai.com,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org,
+	intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org
+Cc: ukaszb@chromium.org,
+	linux-doc@vger.kernel.org,
+	daniel.vetter@ffwll.ch,
+	tvrtko.ursulin@linux.intel.com,
+	jani.nikula@intel.com,
+	ville.syrjala@linux.intel.com,
+	seanpaul@chromium.org,
+	robdclark@gmail.com,
+	groeck@google.com,
+	yanivt@google.com,
+	bleung@google.com,
+	Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH v8 20/35] dyndbg-doc: add classmap info to howto
+Date: Mon, 29 Apr 2024 13:39:06 -0600
+Message-ID: <20240429193921.66648-1-jim.cromie@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f406bac9-f4c1-4289-8239-82420cd300b8@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
-On 17:16-20240429, Chintan Vankar wrote:
-> 
-> 
-> On 29/04/24 16:01, Krzysztof Kozlowski wrote:
-> > On 29/03/2024 06:31, Chintan Vankar wrote:
-> > > From: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > 
-> > > The CPSW9G instance of the CPSW Ethernet Switch supports USXGMII mode
-> > > with MAC Ports 1 and 2 of the instance, which are connected to ENET
-> > > Expansion 1 and ENET Expansion 2 slots on the EVM respectively, through
-> > > the Serdes2 instance of the SERDES.
-> > > 
-> > > Enable CPSW9G MAC Ports 1 and 2 in fixed-link configuration USXGMII mode
-> > > at 5 Gbps each.
-> > > 
-> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > Signed-off-by: Chintan Vankar <c-vankar@ti.com>
-> > > ---
-> > > 
-> > > Link to v5:
-> > > https://lore.kernel.org/r/20240314072129.1520475-6-c-vankar@ti.com/
-> > > 
-> > > Changes from v5 to v6:
-> > > - Updated order of properties in Device Nodes based on
-> > >    https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
-> > > 
-> > >   arch/arm64/boot/dts/ti/Makefile               |  6 +-
-> > >   .../ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso   | 81 +++++++++++++++++++
-> > >   2 files changed, 86 insertions(+), 1 deletion(-)
-> > >   create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> > > index f8e47278df43..2d798ef415e4 100644
-> > > --- a/arch/arm64/boot/dts/ti/Makefile
-> > > +++ b/arch/arm64/boot/dts/ti/Makefile
-> > > @@ -101,6 +101,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
-> > >   dtb-$(CONFIG_ARCH_K3) += k3-am69-sk.dtb
-> > >   dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
-> > >   dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-quad-port-eth-exp1.dtbo
-> > > +dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-usxgmii-exp1-exp2.dtbo
-> > >   # Build time test only, enabled by CONFIG_OF_ALL_DTBS
-> > >   k3-am625-beagleplay-csi2-ov5640-dtbs := k3-am625-beagleplay.dtb \
-> > > @@ -148,6 +149,8 @@ k3-j721s2-evm-pcie1-ep-dtbs := k3-j721s2-common-proc-board.dtb \
-> > >   	k3-j721s2-evm-pcie1-ep.dtbo
-> > >   k3-j784s4-evm-quad-port-eth-exp1-dtbs := k3-j784s4-evm.dtb \
-> > >   	k3-j784s4-evm-quad-port-eth-exp1.dtbo
-> > > +k3-j784s4-evm-usxgmii-exp1-exp2.dtbs := k3-j784s4-evm.dtb \
-> > > +	k3-j784s4-evm-usxgmii-exp1-exp2.dtbo\
-> > 
-> > I have doubts this commit was ever built. It clearly fails, just like
-> > now linux-next fails.
-> > 
-> 
-> Apologies for the syntax error here, I will fix it and post next
-> version.
+Describe the 3 API macros providing dynamic_debug's classmaps
 
-Series dropped. Looks like it slipped my checker as well :(
+DYNDBG_CLASSMAP_DEFINE - create, exports a module's classmap
+DYNDBG_CLASSMAP_USE    - refer to exported map
+DYNDBG_CLASSMAP_PARAM  - bind control param to the classmap
+DYNDBG_CLASSMAP_PARAM_REF + use module's storage - __drm_debug
 
+cc: linux-doc@vger.kernel.org
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+---
+v5 adjustments per Randy Dunlap
+v7 checkpatch fixes
+v8 more
+---
+ .../admin-guide/dynamic-debug-howto.rst       | 63 ++++++++++++++++++-
+ 1 file changed, 62 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index 6a8ce5a34382..742eb4230c6e 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -225,7 +225,6 @@ the ``p`` flag has meaning, other flags are ignored.
+ Note the regexp ``^[-+=][fslmpt_]+$`` matches a flags specification.
+ To clear all flags at once, use ``=_`` or ``-fslmpt``.
+ 
+-
+ Debug messages during Boot Process
+ ==================================
+ 
+@@ -375,3 +374,65 @@ just a shortcut for ``print_hex_dump(KERN_DEBUG)``.
+ For ``print_hex_dump_debug()``/``print_hex_dump_bytes()``, format string is
+ its ``prefix_str`` argument, if it is constant string; or ``hexdump``
+ in case ``prefix_str`` is built dynamically.
++
++Dynamic Debug classmaps
++=======================
++
++Dyndbg allows selection/grouping of *prdbg* callsites using structural
++info: module, file, function, line.  Classmaps allow authors to add
++their own domain-oriented groupings using class-names.  Classmaps are
++exported, so they referencable from other modules.
++
++  # enable classes individually
++  :#> ddcmd class DRM_UT_CORE +p
++  :#> ddcmd class DRM_UT_KMS +p
++  # or more selectively
++  :#> ddcmd class DRM_UT_CORE module drm +p
++
++The "class FOO" syntax protects class'd prdbgs from generic overwrite::
++
++  # IOW this doesn't wipe any DRM.debug settings
++  :#> ddcmd -p
++
++To support the DRM.debug parameter, DYNDBG_CLASSMAP_PARAM* updates all
++classes in a classmap, mapping param-bits 0..N onto the classes:
++DRM_UT_<*> for the DRM use-case.
++
++Dynamic Debug Classmap API
++==========================
++
++DYNDBG_CLASSMAP_DEFINE - modules use this to create classmaps, naming
++each of the classes (stringified enum-symbols: "DRM_UT_<*>"), and
++type, and mapping the class-names to consecutive _class_ids.
++
++By doing so, modules tell dyndbg that they have prdbgs with those
++class_ids, and they authorize dyndbg to accept "class FOO" for the
++module defining the classmap, and its contained classnames.
++
++DYNDBG_CLASSMAP_USE - drm drivers invoke this to ref the CLASSMAP that
++drm DEFINEs.  This shares the classmap definition, and authorizes
++dyndbg to apply changes to the user module's class'd pr_debugs.  It
++also tells dyndbg how to initialize the user's prdbgs at modprobe,
++based upon the current setting of the parent's controlling param.
++
++There are 2 types of classmaps:
++
++ DD_CLASS_TYPE_DISJOINT_BITS: classes are independent, like DRM.debug
++ DD_CLASS_TYPE_LEVEL_NUM: classes are relative, ordered (V3 > V2)
++
++DYNDBG_CLASSMAP_PARAM - modelled after module_param_cb, it refers to a
++DEFINEd classmap, and associates it to the param's data-store.  This
++state is then applied to DEFINEr and USEr modules when they're modprobed.
++
++This interface also enforces the DD_CLASS_TYPE_LEVEL_NUM relation
++amongst the contained classnames; all classes are independent in the
++control parser itself.
++
++Modules or module-groups (drm & drivers) can define multiple
++classmaps, as long as they share the limited 0..62 per-module-group
++_class_id range, without overlap.
++
++``#define DEBUG`` will enable all pr_debugs in scope, including any
++class'd ones.  This won't be reflected in the PARAM readback value,
++but the class'd pr_debug callsites can be forced off by toggling the
++classmap-kparam all-on then all-off.
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+2.44.0
+
