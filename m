@@ -1,26 +1,40 @@
-Received: from mail.schimsalabim.eu (vps01.schimsalabim.eu [85.214.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (smtp-78.smtpout.orange.fr [80.12.242.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A08067A14;
-	Mon, 29 Apr 2024 18:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32610134725;
+	Mon, 29 Apr 2024 18:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714416038; cv=none; b=oWi/e7cHWJZlFY5/mPV67YebLcgprx2xJf9FQBiAmvQ5cZdudL2taieC7miiryB5iZ+pFC2vYuRYiX0S/pLwrcZo+Nwjz61lsBOva+TCcT1VvdQ/rRsHPvFVtjiQffsca6Mzkw1e1zSW51DOnIXdhypb/5zv66l1AU0kbRwC54c=
+	t=1714416140; cv=none; b=c5qMg4tdWags7FLgeabS53bwb0fDs06gwoG/99Axp+h3v9LRub2G+ZPekm2jPMA1oHIxCinxjUDBat94IyHvadWzURxjIIfAhetYtv/45G0+8emSh/GQPulQ3NeNURVPtU2aSx/qHDHwjKJOKk7/nRI0u83XDCvai7nctRZhlFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714416038; c=relaxed/simple;
-	bh=JKKbafSuoPn8Q0v0LpzntyGjrFoJpfFeVfyKmby/OBg=;
+	s=arc-20240116; t=1714416140; c=relaxed/simple;
+	bh=iEqKds8978Vw53F6+gIayrgICTbvNUp0FZfkv8g8X9I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PChfq4ldKHa26U5AEC/oEwbl4mlxeEdpsyjDj2G1EvTHIMW14PNktKjzY5kKSyac3JglpR1ZFnuRzy10hyEbHNd1ko42IWIyB8QP7YpwhxdhaLcEAHI6Q8GBx9euuwZ+GLOeKThm7R8RvCVQYTUVnv1fq/9rhONv2+76GdFY3/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=schimsalabim.eu; spf=pass smtp.mailfrom=schimsalabim.eu; arc=none smtp.client-ip=85.214.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=schimsalabim.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=schimsalabim.eu
-Received: from [192.168.0.158] (82-217-109-137.cable.dynamic.v4.ziggo.nl [82.217.109.137])
-	(authenticated bits=0)
-	by h2374449.stratoserver.net (8.14.7/8.14.7) with ESMTP id 43TIdTVN028081
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 29 Apr 2024 20:39:29 +0200
-Message-ID: <534a73a7-bc41-42a7-a060-bc1465f3a21e@schimsalabim.eu>
-Date: Mon, 29 Apr 2024 20:39:24 +0200
+	 In-Reply-To:Content-Type; b=gxVrOuq/Y/gDV1zSh3Uj9gxGaMs425HidZxpmMtux8k9aVBSEv3z5qXMAS2s1+mfO4dqFSUd4eX8hd80cSxpo/0W1/JZKYEE/GHD4eG2t1ZYFtPGJ4/OY3W1WZFNia3Yf66eIP2mKUOCmzrYjFKOOhC72i+BIXw4oUm+Zy1TZnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=OLXnqBpe; arc=none smtp.client-ip=80.12.242.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="OLXnqBpe"
+Received: from [192.168.1.37] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 1VvxsPXSuHa8W1Vvxso5Gw; Mon, 29 Apr 2024 20:41:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1714416062;
+	bh=Lw+0wwwgkPuPooUBjrUaQWJD8aF8/Gl4n3le/MiBo/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=OLXnqBpeo/FVEpFz8kyco8u1g3XGhVWRrFluugAY/EMsA4Yb3HJaGkMnZ87vN7zCQ
+	 uZAE2c1/skwhrjtRtXUBH24rkp41EsCpKoUwaZpTe0ieuPpsV9OitSWmv1UuISOI4k
+	 O5nNljnOid/J1dUFVhSUmOOWwe4I3AIvx3nIclm7SL1N0wL1hJxhDeva6yjxDS8ijG
+	 0QgRd2nCpzBZyoT0jRJLLnD8xqhjxRrh3kpYPyyQdgSBeQZJ4K9kPKJFjAa1DJsYxt
+	 O2NXNujaXWWUjZ6kYnoc6cfGdKsOssUXEuUSWrXSynUfTsfCby7gbE+oSAiLYnzOEj
+	 EWvblyYeMQJlQ==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 29 Apr 2024 20:41:02 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <6df5d715-3e31-40a5-9db3-2c3b9f12efac@wanadoo.fr>
+Date: Mon, 29 Apr 2024 20:40:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,141 +42,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: sunxi: DMIC: Add controls for adjusting the mic
- gains
-To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        Ban Tao <fengzheng923@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-References: <20240422150213.4040734-1-joao@schimsalabim.eu>
- <5772237.DvuYhMxLoT@jernej-laptop>
- <e256942d-eba1-4800-bd02-c490167dea12@schimsalabim.eu>
- <2262648.iZASKD2KPV@jernej-laptop>
-Content-Language: en-US
-From: Joao Schim <joao@schimsalabim.eu>
-In-Reply-To: <2262648.iZASKD2KPV@jernej-laptop>
+Subject: Re: [PATCH linux-next] media:cdns-csi2tx: replace of_node_put() with
+ __free
+To: R Sundar <prosunofficial@gmail.com>, mripard@kernel.org,
+ mchehab@kernel.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com,
+ Julia Lawall <julia.lawall@inria.fr>
+References: <20240429171543.13032-1-prosunofficial@gmail.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240429171543.13032-1-prosunofficial@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/26/24 16:39, Jernej Škrabec wrote:
-> Dne četrtek, 25. april 2024 ob 13:03:56 GMT +2 je Joao Schim napisal(a):
->> On 4/24/24 20:42, Jernej Škrabec wrote:
->>> Hi Joao,
->> Hi Jernej,  thanks for your prompt response.
->>> Dne ponedeljek, 22. april 2024 ob 17:02:13 GMT +2 je Joao Schim napisal(a):
->>>> The AllWinner H6 and later SoCs that sport a DMIC block contain a set of registers to control
->>>> the gain (left + right) of each of the four supported channels.
->>>>
->>>> Add ASoC controls for changing each of the stereo channel gains using alsamixer and alike
->>> Add SoB tag.
->> Yeah, i realized that too late. Thanks for bringing that to my
->> attention. I will add it in v1.
->>>> ---
->>>>    sound/soc/sunxi/sun50i-dmic.c | 34 ++++++++++++++++++++++++++++++++++
->>>>    1 file changed, 34 insertions(+)
->>>>
->>>> diff --git a/sound/soc/sunxi/sun50i-dmic.c b/sound/soc/sunxi/sun50i-dmic.c
->>>> index c76628bc86c6..f8613d8c3462 100644
->>>> --- a/sound/soc/sunxi/sun50i-dmic.c
->>>> +++ b/sound/soc/sunxi/sun50i-dmic.c
->>>> @@ -14,6 +14,7 @@
->>>>    #include <sound/dmaengine_pcm.h>
->>>>    #include <sound/pcm_params.h>
->>>>    #include <sound/soc.h>
->>>> +#include <sound/tlv.h>
->>>>    
->>>>    #define SUN50I_DMIC_EN_CTL			(0x00)
->>>>    	#define SUN50I_DMIC_EN_CTL_GLOBE			BIT(8)
->>>> @@ -43,6 +44,17 @@
->>>>    	#define SUN50I_DMIC_CH_NUM_N_MASK			GENMASK(2, 0)
->>>>    #define SUN50I_DMIC_CNT				(0x2c)
->>>>    	#define SUN50I_DMIC_CNT_N				(1 << 0)
->>>> +#define SUN50I_DMIC_D0D1_VOL_CTR		(0x30)
->>>> +	#define SUN50I_DMIC_D0D1_VOL_CTR_0R			(0)
->>>> +	#define SUN50I_DMIC_D0D1_VOL_CTR_0L			(8)
->>>> +	#define SUN50I_DMIC_D0D1_VOL_CTR_1R			(16)
->>>> +	#define SUN50I_DMIC_D0D1_VOL_CTR_1L			(24)
->>>> +#define SUN50I_DMIC_D2D3_VOL_CTR                (0x34)
->>>> +        #define SUN50I_DMIC_D2D3_VOL_CTR_2R                     (0)
->>>> +        #define SUN50I_DMIC_D2D3_VOL_CTR_2L                     (8)
->>>> +        #define SUN50I_DMIC_D2D3_VOL_CTR_3R                     (16)
->>>> +        #define SUN50I_DMIC_D2D3_VOL_CTR_3L                     (24)
->>>> +
->>>>    #define SUN50I_DMIC_HPF_CTRL			(0x38)
->>>>    #define SUN50I_DMIC_VERSION			(0x50)
->>>>    
->>>> @@ -273,8 +285,30 @@ static const struct of_device_id sun50i_dmic_of_match[] = {
->>>>    };
->>>>    MODULE_DEVICE_TABLE(of, sun50i_dmic_of_match);
->>>>    
->>>> +static const DECLARE_TLV_DB_SCALE(sun50i_dmic_vol_scale, -12000, 75, 1);
->>> DECLARE_TLV_DB_SCALE is old name, SNDRV_CTL_TLVD_DECLARE_DB_SCALE should be
->>> used instead.
->> I can't seem to find that define in HEAD. what code-base are you
->> referring to that i should checkout ?
-> Here is define:
-> https://elixir.bootlin.com/linux/v6.9-rc1/source/include/uapi/sound/tlv.h#L52
->
-> However, I'm not sure if this message means DECLARE_TLV_DB_SCALE is
-> deprecated or not:
-> https://elixir.bootlin.com/linux/v6.9-rc1/source/include/sound/tlv.h#L12
+Le 29/04/2024 à 19:15, R Sundar a écrit :
+> Use the new cleanup magic to replace of_node_put() with
+> __free(device_node) marking to auto release when they get out of scope.
+> 
+> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> Signed-off-by: R Sundar <prosunofficial@gmail.com>
+> ---
+>   drivers/media/platform/cadence/cdns-csi2tx.c | 19 +++++++------------
+>   1 file changed, 7 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/media/platform/cadence/cdns-csi2tx.c b/drivers/media/platform/cadence/cdns-csi2tx.c
+> index 3d98f91f1bee..88aed2f299fd 100644
+> --- a/drivers/media/platform/cadence/cdns-csi2tx.c
+> +++ b/drivers/media/platform/cadence/cdns-csi2tx.c
+> @@ -496,48 +496,43 @@ static int csi2tx_get_resources(struct csi2tx_priv *csi2tx,
+>   static int csi2tx_check_lanes(struct csi2tx_priv *csi2tx)
+>   {
+>   	struct v4l2_fwnode_endpoint v4l2_ep = { .bus_type = 0 };
+> -	struct device_node *ep;
+>   	int ret, i;
+> -
+> -	ep = of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
+> +	struct device_node *ep __free(device_node) =
+> +		of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
+> +
+>   	if (!ep)
+>   		return -EINVAL;
+>   
+>   	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
+>   	if (ret) {
+>   		dev_err(csi2tx->dev, "Could not parse v4l2 endpoint\n");
+> -		goto out;
+> +		return ret;
+>   	}
+>   
+>   	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
+>   		dev_err(csi2tx->dev, "Unsupported media bus type: 0x%x\n",
+>   			v4l2_ep.bus_type);
+> -		ret = -EINVAL;
+> -		goto out;
+> +		return -EINVAL;
+>   	}
+>   
+>   	csi2tx->num_lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
+>   	if (csi2tx->num_lanes > csi2tx->max_lanes) {
+>   		dev_err(csi2tx->dev,
+>   			"Current configuration uses more lanes than supported\n");
+> -		ret = -EINVAL;
+> -		goto out;
+> +		return -EINVAL;
+>   	}
+>   
+>   	for (i = 0; i < csi2tx->num_lanes; i++) {
+>   		if (v4l2_ep.bus.mipi_csi2.data_lanes[i] < 1) {
+>   			dev_err(csi2tx->dev, "Invalid lane[%d] number: %u\n",
+>   				i, v4l2_ep.bus.mipi_csi2.data_lanes[i]);
+> -			ret = -EINVAL;
+> -			goto out;
+> +			return -EINVAL;
+>   		}
+>   	}
+>   
+>   	memcpy(csi2tx->lanes, v4l2_ep.bus.mipi_csi2.data_lanes,
+>   	       sizeof(csi2tx->lanes));
+>   
+> -out:
+> -	of_node_put(ep);
+>   	return ret;
 
-Right, apparently i sneaked in another D in the name. That explains i 
-could not find it.
+Hi,
 
-Will send v1 in a few minutes. Thanks.
+Nit: return 0; ?
 
-Kind regards,
+CJ
 
-Joao
+>   }
+>   
 
-> Best regards,
-> Jernej
->
->>> Other than that, it looks fine.
->> Thanks.
->>
->>> Best regards,
->>> Jernej
->>>
->>>> +
->>>> +static const struct snd_kcontrol_new sun50i_dmic_controls[] = {
->>>> +
->>>> +        SOC_DOUBLE_TLV("DMIC Channel 0 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
->>>> +                       SUN50I_DMIC_D0D1_VOL_CTR_0L, SUN50I_DMIC_D0D1_VOL_CTR_0R,
->>>> +                       0xFF, 0, sun50i_dmic_vol_scale),
->>>> +        SOC_DOUBLE_TLV("DMIC Channel 1 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
->>>> +                       SUN50I_DMIC_D0D1_VOL_CTR_1L, SUN50I_DMIC_D0D1_VOL_CTR_1R,
->>>> +                       0xFF, 0, sun50i_dmic_vol_scale),
->>>> +        SOC_DOUBLE_TLV("DMIC Channel 2 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
->>>> +                       SUN50I_DMIC_D2D3_VOL_CTR_2L, SUN50I_DMIC_D2D3_VOL_CTR_2R,
->>>> +                       0xFF, 0, sun50i_dmic_vol_scale),
->>>> +        SOC_DOUBLE_TLV("DMIC Channel 3 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
->>>> +                       SUN50I_DMIC_D2D3_VOL_CTR_3L, SUN50I_DMIC_D2D3_VOL_CTR_3R,
->>>> +                       0xFF, 0, sun50i_dmic_vol_scale),
->>>> +
->>>> +
->>>> +};
->>>> +
->>>>    static const struct snd_soc_component_driver sun50i_dmic_component = {
->>>>    	.name           = "sun50i-dmic",
->>>> +	.controls	= sun50i_dmic_controls,
->>>> +	.num_controls	= ARRAY_SIZE(sun50i_dmic_controls),
->>>>    };
->>>>    
->>>>    static int sun50i_dmic_runtime_suspend(struct device *dev)
->>>>
->>>
->>>
->> Kind regards,
->>
->> Joao
->>
->>
->
->
->
