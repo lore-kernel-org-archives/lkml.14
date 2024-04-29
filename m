@@ -1,225 +1,103 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F742941E;
-	Mon, 29 Apr 2024 09:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D058D2942C
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 10:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714384770; cv=none; b=gBIaEXTOK1QB017LQOOR1yRSsaKPIUmBTHwz7vicODCt4ewiuBnxGN+jZwr7lwTopAohvcoQHHecoGk8R3B/+l+k7vrTL59Q41Xvfpp5C2nNffTIUsx4AL6eenAezNnXoakAsoRZvvtJqZTgThtaoiCyv3gxyrl9PMIDL9F3FWQ=
+	t=1714384820; cv=none; b=LRO+XTpUW+3oxL2K4aNzrG7ScOPO+2yQNPxtjMKuhTTHYA7UfkjKO18GFWR8qN4VJP6eQ0fhlk8QoW1dj0DvQ5GRtlfepQongqtntry7KVv083GfYS5o0YtXCoAFY5okAA2HU4k929OJJTBn+Gh6xVqQi6CbROJtqzSIWmQZFrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714384770; c=relaxed/simple;
-	bh=HOUufDhAadIvE1dNC2ij4uIv1kbQ9kv7VZBvHzwlMVA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=mE4ox2qrdk3BLyRYK2SIAPuSSmbTDm/gWirp7urZwh7K66fw3GMtOXsYQm3wfIr1pNEH3ClcIO/kVKQ8SRXQ4Ro7y6TeRJ2iVeyf2gpppvn3lrLqgK/tOuTptsMC0OwQULMezx9j9Mgkh7t+0ezhPYrqbBMya25FCOl8pZ7qtqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EnyKFka0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hwij2dnB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1714384820; c=relaxed/simple;
+	bh=/dZqyz1It+w2R7umVEzwzcTipCzDfzUlkwHTD8s6SOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KUcHXWyt0TAEt9V3ENecQFQSjaGX4R7YK8W/xgtebDT1BKGBvEEbuWBI6wYCx2N35bfN0ld28C5b8Odd9dUis0jlQC//0QJNY2SmVhCD9hRt6J7O+D9ljDg/eycOk1i8ArIvluX8pV9YZr3koMX0cdmzPUu0+FeB40AlyvcJewk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XuGJYnty; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EnyKFka0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hwij2dnB"
-Date: Mon, 29 Apr 2024 09:59:26 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1714384766;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mJ6SqK+DcITrmbrGVV/86ZK7KrzTV3d8pYqbUHIskhg=;
-	b=EnyKFka0pExikE5xFP+yf085aOiKyMB/6jXx88bsH+TzZFMJaTP9ETudPxBLmnht/ctQUD
-	7sPDSjbRineaj6KyJ2qUZOpm17G7j8xhd2K6ujP4WI0ARGbO9K9Qul93Ap45a8U214H20m
-	BOkFAoHkwxgWBiRWn6P7w9QZYSMRoTyJRRCvL/9KpIlRpFSj8nYI0fFalzhBiHbkNxrCOe
-	XBISOrqg4miHi+RyFcXw/cxzoI9wIz3h+3Ow3NXqk8tFcFA5MWefCxvUZJGAtydRSdir98
-	xNTIrYmWLdIStU0aRf0zmRcev2f6jGsE0OmJE4JLFm0eiDbPqteoFjPPjeTnpA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1714384766;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mJ6SqK+DcITrmbrGVV/86ZK7KrzTV3d8pYqbUHIskhg=;
-	b=hwij2dnBA18gLCXAXMYZUCD6NnluZFp9dWjjEQTbzYmyOUKQa1rZjOChs6a88//WLVACbk
-	doyfBrmWCcZASXDw==
-From: "tip-bot2 for Ashish Kalra" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/urgent] x86/sev: Add callback to apply RMP table fixups for kexec
-Cc: Ashish Kalra <ashish.kalra@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Cdf6e995ff88565262c2c7c69964883ff8aa6fc30=2E17140?=
- =?utf-8?q?90302=2Egit=2Eashish=2Ekalra=40amd=2Ecom=3E?=
-References: =?utf-8?q?=3Cdf6e995ff88565262c2c7c69964883ff8aa6fc30=2E171409?=
- =?utf-8?q?0302=2Egit=2Eashish=2Ekalra=40amd=2Ecom=3E?=
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XuGJYnty"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-518a56cdbcfso6604191e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 03:00:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714384817; x=1714989617; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6herh9L8Ye+/rY/8ZqWIyzGEwHPKIW0DS7qwT7CViEU=;
+        b=XuGJYnty+ZRGrIATEfSFGRS3XgebTfwirFADxAQKjI7u7kZRf6ugFzo8E2Ns8tq23n
+         iDe1l5s228aPfXQZcnwCVmw8DF3bcAfJhe/CeDaJi7UIstQMwW9oubAaYCBVvp2wtFZO
+         vcO7mwBVZGveMMEc/0rEzISnVow4/WMB+JKhnX1SS9lK95+LJjD5iOT9yicwLGqS3+jy
+         a0FiYVYH3ASWjME152KcEP8tYwJhlV1xm7BFar17nJzvslq1TLK42k7AODtioh5L1TwX
+         mQj+EGo1oC0YNxQ2wpDutTrOSaP19cmogDUT7/7zuhRYHlZ5YgUN9GeO4htMSSqT+UY1
+         24tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714384817; x=1714989617;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6herh9L8Ye+/rY/8ZqWIyzGEwHPKIW0DS7qwT7CViEU=;
+        b=diizMuhVSrn/DIGkqfX6tTsQmYn67wbCo/tKsCYwzZOVEL4YH7iBe5v2JFcNYaCsvn
+         uI2LChB705KNSxoi7u2YSfV1R/GAR8Vlj854yaO9c65nL/NUMwRPX5GYqvEH090SWpFM
+         S0w13wEESeNCoxFwxebKvAAoAv/gjbCoOVH1ykJeJHMQPKRLoUY1jrS7Shi4ku1v+j3e
+         DziUauXaCfRBViYASyGhqACTuTK5CtcIlRL4mg12GjkwChwaaeMRHc+UOpAR01RFa8qH
+         ixAebrcQ/eqVSEveHeENu5OVUL79rCLGMrYrlTqSIp0nAvScl7nLBz/UW7WWg5DJv7xZ
+         Z0JA==
+X-Forwarded-Encrypted: i=1; AJvYcCWocq3HXm9M3PY9lPGwI25WBmP1FoQ8rmcgf3beM7J4kGu6hjZiL0PCn3pAX0lNzb4yNyN6sH0bI9Aa5chyHNB3x05o+/1IAPt6iScY
+X-Gm-Message-State: AOJu0Yy4ylSJ8/UiDrsFj6uFq12Lmu1JBq3i+Flqh+2us+Cbzb5QdMLo
+	wVsHC1L3YBkKqQV+K0cX3mVbJiMfSkrxyux1WZztM0GdJ4ieV72u8w3xGlIGb4Q=
+X-Google-Smtp-Source: AGHT+IHw8pGwH4w5X5Ob/iDCnRmh06lGOKdejVGcTb2jrtnhOlzwS6yCZfh7Y3XAS52rVxcDVy2pwg==
+X-Received: by 2002:ac2:44cf:0:b0:51d:9aa7:23e with SMTP id d15-20020ac244cf000000b0051d9aa7023emr2088320lfm.65.1714384816684;
+        Mon, 29 Apr 2024 03:00:16 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id e20-20020a170906249400b00a5910978816sm2568ejb.121.2024.04.29.03.00.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 03:00:16 -0700 (PDT)
+Date: Mon, 29 Apr 2024 13:00:11 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] cxl/region: Fix missing put_device(region_dev)
+Message-ID: <9254b051-3221-4877-b6ce-68bc2bb9f217@moroto.mountain>
+References: <20240429013154.368118-2-lizhijian@fujitsu.com>
+ <bdfa663d-9a00-484c-80f7-75d7fa130cd3@web.de>
+ <2ea9506e-4be7-48a2-bcc8-4ae543a7f1b5@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171438476623.10875.16783275868264913579.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2ea9506e-4be7-48a2-bcc8-4ae543a7f1b5@fujitsu.com>
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Mon, Apr 29, 2024 at 08:26:19AM +0000, Zhijian Li (Fujitsu) wrote:
+> 
+> 
+> On 29/04/2024 16:00, Markus Elfring wrote:
+> > …
+> >> Simply put_device(region_dev) if region_dev is valid in the error path.
+> > 
+> > Please improve the change description with a corresponding imperative wording.
+> 
+> Yeah, I always overlook this point. thank you.
+> 
 
-Commit-ID:     400fea4b9651adf5d7ebd5d71e905f34f4e4e493
-Gitweb:        https://git.kernel.org/tip/400fea4b9651adf5d7ebd5d71e905f34f4e4e493
-Author:        Ashish Kalra <ashish.kalra@amd.com>
-AuthorDate:    Fri, 26 Apr 2024 00:43:18 
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 29 Apr 2024 11:21:09 +02:00
+Greg has a bot that responds to Markus's reviews for USB.
 
-x86/sev: Add callback to apply RMP table fixups for kexec
+https://lore.kernel.org/all/2024042547-shimmy-guileless-c7f2@gregkh/
 
-Handle cases where the RMP table placement in the BIOS is not 2M aligned
-and the kexec-ed kernel could try to allocate from within that chunk
-which then causes a fatal RMP fault.
+regards,
+dan carpenter
 
-The kexec failure is illustrated below:
-
-  SEV-SNP: RMP table physical range [0x0000007ffe800000 - 0x000000807f0fffff]
-  BIOS-provided physical RAM map:
-  BIOS-e820: [mem 0x0000000000000000-0x000000000008efff] usable
-  BIOS-e820: [mem 0x000000000008f000-0x000000000008ffff] ACPI NVS
-  ...
-  BIOS-e820: [mem 0x0000004080000000-0x0000007ffe7fffff] usable
-  BIOS-e820: [mem 0x0000007ffe800000-0x000000807f0fffff] reserved
-  BIOS-e820: [mem 0x000000807f100000-0x000000807f1fefff] usable
-
-As seen here in the e820 memory map, the end range of the RMP table is not
-aligned to 2MB and not reserved but it is usable as RAM.
-
-Subsequently, kexec -s (KEXEC_FILE_LOAD syscall) loads it's purgatory
-code and boot_param, command line and other setup data into this RAM
-region as seen in the kexec logs below, which leads to fatal RMP fault
-during kexec boot.
-
-  Loaded purgatory at 0x807f1fa000
-  Loaded boot_param, command line and misc at 0x807f1f8000 bufsz=0x1350 memsz=0x2000
-  Loaded 64bit kernel at 0x7ffae00000 bufsz=0xd06200 memsz=0x3894000
-  Loaded initrd at 0x7ff6c89000 bufsz=0x4176014 memsz=0x4176014
-  E820 memmap:
-  0000000000000000-000000000008efff (1)
-  000000000008f000-000000000008ffff (4)
-  0000000000090000-000000000009ffff (1)
-  ...
-  0000004080000000-0000007ffe7fffff (1)
-  0000007ffe800000-000000807f0fffff (2)
-  000000807f100000-000000807f1fefff (1)
-  000000807f1ff000-000000807fffffff (2)
-  nr_segments = 4
-  segment[0]: buf=0x00000000e626d1a2 bufsz=0x4000 mem=0x807f1fa000 memsz=0x5000
-  segment[1]: buf=0x0000000029c67bd6 bufsz=0x1350 mem=0x807f1f8000 memsz=0x2000
-  segment[2]: buf=0x0000000045c60183 bufsz=0xd06200 mem=0x7ffae00000 memsz=0x3894000
-  segment[3]: buf=0x000000006e54f08d bufsz=0x4176014 mem=0x7ff6c89000 memsz=0x4177000
-  kexec_file_load: type:0, start:0x807f1fa150 head:0x1184d0002 flags:0x0
-
-Check if RMP table start and end physical range in the e820 tables are
-not aligned to 2MB and in that case map this range to reserved in all
-the three e820 tables.
-
-  [ bp: Massage. ]
-
-Fixes: c3b86e61b756 ("x86/cpufeatures: Enable/unmask SEV-SNP CPU feature")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/df6e995ff88565262c2c7c69964883ff8aa6fc30.1714090302.git.ashish.kalra@amd.com
----
- arch/x86/include/asm/sev.h |  2 ++
- arch/x86/mm/mem_encrypt.c  |  7 +++++++
- arch/x86/virt/svm/sev.c    | 36 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+)
-
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 7f57382..93ed600 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -269,6 +269,7 @@ int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, u32 asid, bool immut
- int rmp_make_shared(u64 pfn, enum pg_level level);
- void snp_leak_pages(u64 pfn, unsigned int npages);
- void kdump_sev_callback(void);
-+void snp_fixup_e820_tables(void);
- #else
- static inline bool snp_probe_rmptable_info(void) { return false; }
- static inline int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level) { return -ENODEV; }
-@@ -282,6 +283,7 @@ static inline int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, u32 as
- static inline int rmp_make_shared(u64 pfn, enum pg_level level) { return -ENODEV; }
- static inline void snp_leak_pages(u64 pfn, unsigned int npages) {}
- static inline void kdump_sev_callback(void) { }
-+static inline void snp_fixup_e820_tables(void) {}
- #endif
- 
- #endif
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 6f3b3e0..0a120d8 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -102,6 +102,13 @@ void __init mem_encrypt_setup_arch(void)
- 	phys_addr_t total_mem = memblock_phys_mem_size();
- 	unsigned long size;
- 
-+	/*
-+	 * Do RMP table fixups after the e820 tables have been setup by
-+	 * e820__memory_setup().
-+	 */
-+	if (cc_platform_has(CC_ATTR_HOST_SEV_SNP))
-+		snp_fixup_e820_tables();
-+
- 	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		return;
- 
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index ab0e844..0ae1053 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -163,6 +163,42 @@ bool snp_probe_rmptable_info(void)
- 	return true;
- }
- 
-+static void __init __snp_fixup_e820_tables(u64 pa)
-+{
-+	if (IS_ALIGNED(pa, PMD_SIZE))
-+		return;
-+
-+	/*
-+	 * Handle cases where the RMP table placement by the BIOS is not
-+	 * 2M aligned and the kexec kernel could try to allocate
-+	 * from within that chunk which then causes a fatal RMP fault.
-+	 *
-+	 * The e820_table needs to be updated as it is converted to
-+	 * kernel memory resources and used by KEXEC_FILE_LOAD syscall
-+	 * to load kexec segments.
-+	 *
-+	 * The e820_table_firmware needs to be updated as it is exposed
-+	 * to sysfs and used by the KEXEC_LOAD syscall to load kexec
-+	 * segments.
-+	 *
-+	 * The e820_table_kexec needs to be updated as it passed to
-+	 * the kexec-ed kernel.
-+	 */
-+	pa = ALIGN_DOWN(pa, PMD_SIZE);
-+	if (e820__mapped_any(pa, pa + PMD_SIZE, E820_TYPE_RAM)) {
-+		pr_info("Reserving start/end of RMP table on a 2MB boundary [0x%016llx]\n", pa);
-+		e820__range_update(pa, PMD_SIZE, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+		e820__range_update_table(e820_table_kexec, pa, PMD_SIZE, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+		e820__range_update_table(e820_table_firmware, pa, PMD_SIZE, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+	}
-+}
-+
-+void __init snp_fixup_e820_tables(void)
-+{
-+	__snp_fixup_e820_tables(probed_rmp_base);
-+	__snp_fixup_e820_tables(probed_rmp_base + probed_rmp_size);
-+}
-+
- /*
-  * Do the necessary preparations which are verified by the firmware as
-  * described in the SNP_INIT_EX firmware command description in the SNP
