@@ -1,33 +1,33 @@
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
+Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [83.166.143.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DEA13C3CF
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BCE13C80B
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714418366; cv=none; b=nE/ml6uFjn9bPM7nujTdwowRjwsbeC1HyMApWJLn6oHl5D1wMcAPUyjXA4gyIkmNEdQXUh1oxVfgXCt/YLatO8tRoo6BanSIvnKenBkmmqnwfykQ6jRhi5plZ/A065guJcP1W0EwZaUpT6P99BDuGVJFdu/BFIql2rhKZnK9qgM=
+	t=1714418369; cv=none; b=GIZz6GKqWtetw2A2ScR+eQBMPGWGH3NCUKKOlM/mzU4eiKzh4QDjnFmJDXo9D8I2SFiQW3VItLCvd78qJzwguk8sKUPYwNqgL9WfrySy8rKmkNWY4Iud1SN4Mq+rhEgUPR9gehxnm5e+cpoEVXmn5mu46kLt58syf6oJ/b6uNVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714418366; c=relaxed/simple;
-	bh=YNoWdpho3K357HAWa8pQd6LbWwT9b05aCa7duYxa780=;
+	s=arc-20240116; t=1714418369; c=relaxed/simple;
+	bh=8IgMlrw1Zs24fBiwXR0ESfsCd1pDNmKxcuVbJ79egKk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kQfC/mXOwgW4pOf99HXFJo14y3ky7If167X29ELEAFAcWmJIanDuPfIUgR/Ay434CRCTnJ3ldswzPHuKNo95/MLVg66QwujlnVhWXtietijvpmMKp4mQZS5OGxdWAPctIgwl+ywRQ0MjDF/hzI8m1yZlsLSY7x4UuCfbnaG/hFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=aDu2RMiu; arc=none smtp.client-ip=84.16.66.175
+	 MIME-Version:Content-Type; b=Tu948fWlZwQg0bakPpyMNZNRp5pB8L+3HGTz16Aaj99SIcWQQh85xSczpMDaWsua69h8Tc1fTQnEdsBr4H3niIDHgRH/XPb6Bndb2/0ng8754jz1RRP8hxTjKqkqAupjUhcex/N1Vvi25s8vC8zlZiB2MwVAaBY4jezva8djotU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=EF5OYp31; arc=none smtp.client-ip=83.166.143.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="aDu2RMiu"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VStRn0k6DzFqR;
-	Mon, 29 Apr 2024 21:19:17 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="EF5OYp31"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VStRq2tvmzFqX;
+	Mon, 29 Apr 2024 21:19:19 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1714418356;
-	bh=YNoWdpho3K357HAWa8pQd6LbWwT9b05aCa7duYxa780=;
+	s=20191114; t=1714418359;
+	bh=8IgMlrw1Zs24fBiwXR0ESfsCd1pDNmKxcuVbJ79egKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aDu2RMiujrXkuiKN7rYDW30rxfl+DeJuz3aPRZvmJKP7p4RpKn5ioq9WTnJzgoV4A
-	 RliCX4NKQaoRTS18r8V1vdsHvZ6AJ9NXFJ/uwsLrSuJhpypFRLT9Vb7Kq/eqtN66cP
-	 wPRvXUZDnUKC+VJLtD4SLZmmV/86g6jEz+fTfvss=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VStRm3rxBzWvq;
-	Mon, 29 Apr 2024 21:19:16 +0200 (CEST)
+	b=EF5OYp31KcghNmm9V4JlnE3cmFefMhDZ49LZFxHjaMieDvzzSwvXadMHiCZbMURBs
+	 cHnUxWRKlheAtWElEyJ5CNW4CwLhCRtrgsPnOUFeMx2DxksgkK/BPzCiCG9a2K3eCs
+	 knrIgyO6q2Wrw+60ouaFDXVFwQQfangxuwa3AoOc=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VStRp5jZHzTFr;
+	Mon, 29 Apr 2024 21:19:18 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Christian Brauner <brauner@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>,
@@ -43,9 +43,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v3 3/9] selftests/harness: Fix fixture teardown
-Date: Mon, 29 Apr 2024 21:19:05 +0200
-Message-ID: <20240429191911.2552580-4-mic@digikod.net>
+Subject: [PATCH v3 5/9] selftests/landlock: Do not allocate memory in fixture data
+Date: Mon, 29 Apr 2024 21:19:07 +0200
+Message-ID: <20240429191911.2552580-6-mic@digikod.net>
 In-Reply-To: <20240429191911.2552580-1-mic@digikod.net>
 References: <20240429191911.2552580-1-mic@digikod.net>
 Precedence: bulk
@@ -58,61 +58,160 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Make sure fixture teardowns are run when test cases failed, including
-when _metadata->teardown_parent is set to true.
+Do not allocate self->dir_path in the test process because this would
+not be visible in the FIXTURE_TEARDOWN() process when relying on
+fork()/clone3() instead of vfork().
 
-Make sure only one fixture teardown is run per test case, handling the
-case where the test child forks.
+This change is required for a following commit removing vfork() call to
+not break the layout3_fs.* test cases.
 
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Shengyu Li <shengyu.li.evgeny@gmail.com>
+Cc: Günther Noack <gnoack@google.com>
 Cc: Shuah Khan <skhan@linuxfoundation.org>
-Fixes: 72d7cb5c190b ("selftests/harness: Prevent infinite loop due to Assert in FIXTURE_TEARDOWN")
-Fixes: 0710a1a73fb4 ("selftests/harness: Merge TEST_F_FORK() into TEST_F()")
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240429191911.2552580-4-mic@digikod.net
+Link: https://lore.kernel.org/r/20240429191911.2552580-6-mic@digikod.net
 ---
- tools/testing/selftests/kselftest_harness.h | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index d98702b6955d..55699a762c45 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -382,7 +382,10 @@
- 		FIXTURE_DATA(fixture_name) self; \
- 		pid_t child = 1; \
- 		int status = 0; \
--		bool jmp = false; \
-+		/* Makes sure there is only one teardown, even when child forks again. */ \
-+		bool *teardown = mmap(NULL, sizeof(*teardown), \
-+			PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0); \
-+		*teardown = false; \
- 		memset(&self, 0, sizeof(FIXTURE_DATA(fixture_name))); \
- 		if (setjmp(_metadata->env) == 0) { \
- 			/* Use the same _metadata. */ \
-@@ -399,15 +402,16 @@
- 				_metadata->exit_code = KSFT_FAIL; \
- 			} \
- 		} \
--		else \
--			jmp = true; \
- 		if (child == 0) { \
--			if (_metadata->setup_completed && !_metadata->teardown_parent && !jmp) \
-+			if (_metadata->setup_completed && !_metadata->teardown_parent && \
-+					__sync_bool_compare_and_swap(teardown, false, true)) \
- 				fixture_name##_teardown(_metadata, &self, variant->data); \
- 			_exit(0); \
- 		} \
--		if (_metadata->setup_completed && _metadata->teardown_parent) \
-+		if (_metadata->setup_completed && _metadata->teardown_parent && \
-+				__sync_bool_compare_and_swap(teardown, false, true)) \
- 			fixture_name##_teardown(_metadata, &self, variant->data); \
-+		munmap(teardown, sizeof(*teardown)); \
- 		if (!WIFEXITED(status) && WIFSIGNALED(status)) \
- 			/* Forward signal to __wait_for_test(). */ \
- 			kill(getpid(), WTERMSIG(status)); \
+Changes since v1:
+* Extract change from a bigger patch (suggested by Kees).
+---
+ tools/testing/selftests/landlock/fs_test.c | 57 +++++++++++++---------
+ 1 file changed, 35 insertions(+), 22 deletions(-)
+
+diff --git a/tools/testing/selftests/landlock/fs_test.c b/tools/testing/selftests/landlock/fs_test.c
+index 46b9effd53e4..1e2cffde02b5 100644
+--- a/tools/testing/selftests/landlock/fs_test.c
++++ b/tools/testing/selftests/landlock/fs_test.c
+@@ -9,6 +9,7 @@
+ 
+ #define _GNU_SOURCE
+ #include <fcntl.h>
++#include <libgen.h>
+ #include <linux/landlock.h>
+ #include <linux/magic.h>
+ #include <sched.h>
+@@ -4624,7 +4625,6 @@ FIXTURE(layout3_fs)
+ {
+ 	bool has_created_dir;
+ 	bool has_created_file;
+-	char *dir_path;
+ 	bool skip_test;
+ };
+ 
+@@ -4683,11 +4683,24 @@ FIXTURE_VARIANT_ADD(layout3_fs, hostfs) {
+ 	.cwd_fs_magic = HOSTFS_SUPER_MAGIC,
+ };
+ 
++static char *dirname_alloc(const char *path)
++{
++	char *dup;
++
++	if (!path)
++		return NULL;
++
++	dup = strdup(path);
++	if (!dup)
++		return NULL;
++
++	return dirname(dup);
++}
++
+ FIXTURE_SETUP(layout3_fs)
+ {
+ 	struct stat statbuf;
+-	const char *slash;
+-	size_t dir_len;
++	char *dir_path = dirname_alloc(variant->file_path);
+ 
+ 	if (!supports_filesystem(variant->mnt.type) ||
+ 	    !cwd_matches_fs(variant->cwd_fs_magic)) {
+@@ -4697,25 +4710,15 @@ FIXTURE_SETUP(layout3_fs)
+ 
+ 	_metadata->teardown_parent = true;
+ 
+-	slash = strrchr(variant->file_path, '/');
+-	ASSERT_NE(slash, NULL);
+-	dir_len = (size_t)slash - (size_t)variant->file_path;
+-	ASSERT_LT(0, dir_len);
+-	self->dir_path = malloc(dir_len + 1);
+-	self->dir_path[dir_len] = '\0';
+-	strncpy(self->dir_path, variant->file_path, dir_len);
+-
+ 	prepare_layout_opt(_metadata, &variant->mnt);
+ 
+ 	/* Creates directory when required. */
+-	if (stat(self->dir_path, &statbuf)) {
++	if (stat(dir_path, &statbuf)) {
+ 		set_cap(_metadata, CAP_DAC_OVERRIDE);
+-		EXPECT_EQ(0, mkdir(self->dir_path, 0700))
++		EXPECT_EQ(0, mkdir(dir_path, 0700))
+ 		{
+ 			TH_LOG("Failed to create directory \"%s\": %s",
+-			       self->dir_path, strerror(errno));
+-			free(self->dir_path);
+-			self->dir_path = NULL;
++			       dir_path, strerror(errno));
+ 		}
+ 		self->has_created_dir = true;
+ 		clear_cap(_metadata, CAP_DAC_OVERRIDE);
+@@ -4736,6 +4739,8 @@ FIXTURE_SETUP(layout3_fs)
+ 		self->has_created_file = true;
+ 		clear_cap(_metadata, CAP_DAC_OVERRIDE);
+ 	}
++
++	free(dir_path);
+ }
+ 
+ FIXTURE_TEARDOWN(layout3_fs)
+@@ -4754,16 +4759,17 @@ FIXTURE_TEARDOWN(layout3_fs)
+ 	}
+ 
+ 	if (self->has_created_dir) {
++		char *dir_path = dirname_alloc(variant->file_path);
++
+ 		set_cap(_metadata, CAP_DAC_OVERRIDE);
+ 		/*
+ 		 * Don't check for error because the directory might already
+ 		 * have been removed (cf. release_inode test).
+ 		 */
+-		rmdir(self->dir_path);
++		rmdir(dir_path);
+ 		clear_cap(_metadata, CAP_DAC_OVERRIDE);
++		free(dir_path);
+ 	}
+-	free(self->dir_path);
+-	self->dir_path = NULL;
+ 
+ 	cleanup_layout(_metadata);
+ }
+@@ -4830,7 +4836,10 @@ TEST_F_FORK(layout3_fs, tag_inode_dir_mnt)
+ 
+ TEST_F_FORK(layout3_fs, tag_inode_dir_child)
+ {
+-	layer3_fs_tag_inode(_metadata, self, variant, self->dir_path);
++	char *dir_path = dirname_alloc(variant->file_path);
++
++	layer3_fs_tag_inode(_metadata, self, variant, dir_path);
++	free(dir_path);
+ }
+ 
+ TEST_F_FORK(layout3_fs, tag_inode_file)
+@@ -4857,9 +4866,13 @@ TEST_F_FORK(layout3_fs, release_inodes)
+ 	if (self->has_created_file)
+ 		EXPECT_EQ(0, remove_path(variant->file_path));
+ 
+-	if (self->has_created_dir)
++	if (self->has_created_dir) {
++		char *dir_path = dirname_alloc(variant->file_path);
++
+ 		/* Don't check for error because of cgroup specificities. */
+-		remove_path(self->dir_path);
++		remove_path(dir_path);
++		free(dir_path);
++	}
+ 
+ 	ruleset_fd =
+ 		create_ruleset(_metadata, LANDLOCK_ACCESS_FS_READ_DIR, layer1);
 -- 
 2.44.0
 
