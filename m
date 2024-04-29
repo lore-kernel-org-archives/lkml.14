@@ -1,79 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC82144C87;
-	Mon, 29 Apr 2024 11:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C9C3C24;
+	Mon, 29 Apr 2024 11:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714390585; cv=none; b=AM1ZT45M6zcI5rWoZAYiEmxtfHNBSA4Yw5RsmMOQMsPI5UNcjo97VAPGDhSI3r1xg/HwQI+GUjhIZksmzkAnD+3NKA4SIF83M8Fs8KCBGsCmXQi3Croh1jiJtQ5D04Yr0jEFCJ0Vp/twZGXUquXmgq0GP60ORGVFGMZwK0w8hCA=
+	t=1714390749; cv=none; b=EYdt7JP3Fniln9ORe5iaO4HEO+QoMDKnPuIald4Be6WMcbQn3FOdNa8pxRhT4WdaVKIZoFQyvuzqCUHOm9uUpt8bQMPqKzv1Pn5JCDoweLmUU2/hdUOQjp7WFqmG5KNogEvusYy3RBsnfCcI+pY9+/VxQA1UlaqWdsmyw1mTroY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714390585; c=relaxed/simple;
-	bh=pW4q+Ms5JJAaPWrYlwZ6qTOWYSfW5QeO9KUHreTbyqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gSti7NZlCgnWlANPWmVtnDPq9DFA5nqnYU2PnL2l9NcowMQWvy1FyQumzkLpMUVGeL/Bk5UINykwl8i83NQKiaImJd99ygotkokxJ3xqKDBsVF/sdwYZpVXoZ0gEPhumk6KmW/EF0DKvM5droicMuPGQvUwC0Y1fn3xH605F8NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GoteHLpo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714390749; c=relaxed/simple;
+	bh=uZu3wKHQNWr0ZLymAFjd5ivV78yNbTAn33ozggWSTE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PH1kE/m6n/e0WBIRTH1FKIF+sWAjfWngKmvGkUCowhTNEb9B3E5XOBDkTepz716SKHBC19Dtao6aBQqiFLeL20R9EP0KP38wfQslhMB4ki70G7/yxtjoLDANmgTWeLu2DEq8llzQHM5eyrB5NcsrT+yqN+aFRYxW030pSZIaqTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HC+nGYW2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GoteHLpo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239D8C113CD;
-	Mon, 29 Apr 2024 11:36:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HC+nGYW2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A805C113CD;
+	Mon, 29 Apr 2024 11:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714390584;
-	bh=pW4q+Ms5JJAaPWrYlwZ6qTOWYSfW5QeO9KUHreTbyqM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GoteHLpouWGXccfFDzZzPcBUmPUzUVAXMSfKJKNFdwI6id8I5FzWv1rQGs92sLr6S
-	 Gr0EblQ1T0ZRDfwhVK1vNhXEQcam5PTiqv9pDQ2ttckwwnF1H2Z3IFVzWR1klYA1zA
-	 ohGQxHanHXjfv4+bUPubnhamjczy8Z+OWpl7yNl98kYNrLupoBcGIiyxs/P2baox3C
-	 BfnR19jJiNLJDWybIjRToqNIK3RzVRX2Ji0ssMjEkChMl5j4IoGCZWKNGUvdNX/Y+T
-	 UGNk7IT8PFg89scGqxLNk4tBj38/GHGl9lImI7KXRbKa/d0VcjjVKPP3YK86qtLYP0
-	 TDANw2Q4wWMUQ==
-Message-ID: <21dd3b6e-6e7b-4dcb-9050-4d63fc810749@kernel.org>
-Date: Mon, 29 Apr 2024 13:36:20 +0200
+	s=k20201202; t=1714390748;
+	bh=uZu3wKHQNWr0ZLymAFjd5ivV78yNbTAn33ozggWSTE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HC+nGYW2S8rw/A3OruRlx4jB+D0gz6jk7NqR9R3PD4B/0HEXqW+bZlzv5BlOdJrrY
+	 35TrG6u24kc/7Igpkw3xHpC+21isyj/mWgnZaz7LUqmvQhTK0ATuaZwqpAgWjUXkI9
+	 qK4HvdMYxr/fLAh8VFLa7Y7Wh3NOqqp0VQ2Qrkq+2K+0xti8Dz4wpSBsp26g9nXvK6
+	 GOL3H26QxYWHjhZi3rPuusu+SBqJpF9boYvhrXddnSQMK8CEnNcfWqsCg8MvbXQFye
+	 0ENWLu3F3Wxv5CffhqU4AovNvY79Jb0X2BrlZp1mDFVfpaUjT3EPaFa42qr3QA+Zxf
+	 DUIqQ5gZ080tQ==
+Date: Mon, 29 Apr 2024 13:39:06 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, David Lechner <dlechner@baylibre.com>, 
+	Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] drm/ili9341: Remove the duplicative driver
+Message-ID: <20240429-gorgeous-beetle-of-downpour-492bbd@houat>
+References: <20240425124208.2255265-1-andriy.shevchenko@linux.intel.com>
+ <20240425-perky-myrtle-gorilla-e1e24f@penduick>
+ <ZipxEk9Lpff1kB7b@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] cgroup/rstat: add cgroup_rstat_lock helpers and
- tracepoints
-To: Simon Horman <horms@kernel.org>
-Cc: tj@kernel.org, hannes@cmpxchg.org, lizefan.x@bytedance.com,
- cgroups@vger.kernel.org, yosryahmed@google.com, longman@redhat.com,
- netdev@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- shakeel.butt@linux.dev, kernel-team@cloudflare.com,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, mhocko@kernel.org
-References: <171328983017.3930751.9484082608778623495.stgit@firesoul>
- <171328988660.3930751.17537768209042139758.stgit@firesoul>
- <20240423165350.GY42092@kernel.org>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <20240423165350.GY42092@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="ypdsdw5t4cfybdrt"
+Content-Disposition: inline
+In-Reply-To: <ZipxEk9Lpff1kB7b@smile.fi.intel.com>
 
 
+--ypdsdw5t4cfybdrt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 23/04/2024 18.53, Simon Horman wrote:
-> On Tue, Apr 16, 2024 at 07:51:26PM +0200, Jesper Dangaard Brouer wrote:
-> 
-> ...
-> 
->>   /**
->>    * cgroup_rstat_flush_release - release cgroup_rstat_flush_hold()
->>    */
-> 
-> Hi Jesper,
-> 
-> as a follow-up could you add an entry for cgrp to the kernel doc above?
-> 
+On Thu, Apr 25, 2024 at 06:04:50PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 25, 2024 at 04:58:06PM +0200, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > On Thu, Apr 25, 2024 at 03:42:07PM +0300, Andy Shevchenko wrote:
+> > > First of all, the driver was introduced when it was already
+> > > two drivers available for Ilitek 9341 panels.
+> > >=20
+> > > Second, the most recent (fourth!) driver has incorporated this one
+> > > and hence, when enabled, it covers the provided functionality.
+> > >=20
+> > > Taking into account the above, remove duplicative driver and make
+> > > maintenance and support eaiser for everybody.
+> > >=20
+> > > Also see discussion [1] for details about Ilitek 9341 duplication
+> > > code.
+> > >=20
+> > > Link: https://lore.kernel.org/r/ZXM9pG-53V4S8E2H@smile.fi.intel.com [=
+1]
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >=20
+> > I think it should be the other way around and we should remove the
+> > mipi-dbi handling from panel/panel-ilitek-ili9341.c
+>=20
+> Then please do it! I whining already for a few years about this.
 
-Already fixed in TJ's tree for-6.10
-  - https://lore.kernel.org/cgroups/ZiB97v73Fr-wq14f@slm.duckdns.org/
-  - 
-https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/commit/?h=for-6.10&id=97a46a66ad7d9126
+I have neither the hardware nor the interest to do so. Seems it looks
+like you have plenty of the latter at least, I'm sure you'll find some
+time to tackle this.
 
-But thanks Simon for your vigilance in noticing these things :-)
---Jesper
+Maxime
 
+--ypdsdw5t4cfybdrt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZi+G2QAKCRAnX84Zoj2+
+dpzEAX9NlMH8mHXaP+9bA+sNZT1R3FNYhW4Pt/1Pn1ubi1pgXk5iBoL6JrqISoVP
+QXA4pXMBgORaHd6OB/qFoTj87/v5BZX5gZC0QpOeO4bItwlvpgRISkUwBwjWNi6u
+pd9y46+Yag==
+=V5/I
+-----END PGP SIGNATURE-----
+
+--ypdsdw5t4cfybdrt--
