@@ -1,112 +1,107 @@
-Received: from out0-210.mail.aliyun.com (out0-210.mail.aliyun.com [140.205.0.210])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83554E1BE;
-	Mon, 29 Apr 2024 10:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE28E4F1E0;
+	Mon, 29 Apr 2024 10:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714386971; cv=none; b=OY/AeFbaM4mUC1XqttBjvRkZi46D/xLwuuPFgtRtbnY3z4802xH7vn1SYaoveW9Ioq4NnpaG8Fhs9jsMu7sC5sphql6xPBqbVCQHxPWRXZwJiR/FByG+7AR8/ZI0zuu60juUkxRbyZ6H7iB8cZNFwXAatBiTQ2dcsc9xVknnt1w=
+	t=1714386971; cv=none; b=UqVt8uta9slqH2OYdFPgmL68X5htNzCc9WSJmBySvHRJ0PXJXKkI3rMq2s1EZBpg608xfsAPnC+ChopIU9Cy9irygnFH1Q7t+XUdDt3WLr8pXIRpn2RU8NQ+hnu8aMNYTer2ulw585V27nugqvUamKJOBvruaQrymX1Elfir4PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714386971; c=relaxed/simple;
-	bh=VY9sZlLbdOohRHek7Or+cOx51HaBJ+7tOVXra2qD9VE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ar68NBxp9A97f/Q6H772Xi5qj+yroP8ZAi+fx3I4Ha+bWHY2yrTJfnAU2BaBlnwOq1iPcbD5aQS+cBezoEY/TlHVCczJ3PQP3XSsmTioNowX8+r4fbS7o+unG6LfgTmcGDzIaFBdTZRZZ9+pDNipouGAKpdBoAcl03uDW/ZsnQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=V9juz5Rx; arc=none smtp.client-ip=140.205.0.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	bh=xJgozEc9bvRSml/VE5BORhP5iBvQAIxM4K9jCU3zMvU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=B71HaYHZutatRvZWNgz1eqGaFYmHcBCGfKLchAAGv4+k1UIYvOwNepYmGBc3F8rlVBORwkcg4IFP+kCMcLVtq2JGQkNL1MlvGG7CRQBsxry+BpnUI0ISVbe/OYk+N5LaQPgIXMuwtBk4m94dU8dCQNBHjygMPmYp3lFx1PQdqYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=h8YKeSKo; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="V9juz5Rx"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1714386961; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=MCByWayo1rTtWGbtdA4qwJOFgDYVs7q3tTYHIInGmHY=;
-	b=V9juz5RxFGMGwrjlGxUh97IayTySsqHdx93GAsZJba2WhiS8GGBz02xt4XsuxTdbaQ9wKXc7rUzfor1j2xII6VQP6ynLRcRZTlCtX/ozvt3PeNKrm2W2FTXR2a1q32wbdkxfpqivwBtjHj2UacqHIdl2SS6tZ0M5i4ybLeSuRJI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047192;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---.XOEanMm_1714386958;
-Received: from localhost(mailfrom:libang.li@antgroup.com fp:SMTPD_---.XOEanMm_1714386958)
-          by smtp.aliyun-inc.com;
-          Mon, 29 Apr 2024 18:35:59 +0800
-From: "Bang Li" <libang.li@antgroup.com>
-To: akpm@linux-foundation.org,
-	chenhuacai@kernel.org,
-	tsbogend@alpha.franken.de,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	chris@zankel.net,
-	jcmvbkbc@gmail.com
-Cc:  <david@redhat.com>,
-   <ryan.roberts@arm.com>,
-   <libang.linux@gmail.com>,
-   <ioworker0@gmail.com>,
-   <linux-kernel@vger.kernel.org>,
-   <linux-mm@kvack.org>,
-   <loongarch@lists.linux.dev>,
-   <linux-mips@vger.kernel.org>,
-   <linux-riscv@lists.infradead.org>,
-  "Bang Li" <libang.li@antgroup.com>
-Subject: [PATCH v1 5/5] mm: Add update_mmu_tlb_range()
-Date: Mon, 29 Apr 2024 18:33:46 +0800
-Message-Id: <20240429103346.59115-6-libang.li@antgroup.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240429103346.59115-1-libang.li@antgroup.com>
-References: <20240429103346.59115-1-libang.li@antgroup.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h8YKeSKo"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43TAZokD062642;
+	Mon, 29 Apr 2024 05:35:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714386950;
+	bh=VlOmsa4jHj0oxLSa8GgFslPkSe4QTnCL8SwfmLq2ews=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=h8YKeSKoLrOIJKzItVGjngyM6djvljrwYPKjkp37E0frKqaIo1ZfBLnlwTvpsgCWd
+	 G+LyITC8dg0imuSRB0iOEm58dorhDlbeW8i3LnL+1GI+G3SG6tG08petSUnBEFHPwq
+	 /Ao9PdGBgjvJUFhNBTFB1SBxZ/QjacO0VFxkaBzk=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43TAZoTB074068
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Apr 2024 05:35:50 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Apr 2024 05:35:50 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Apr 2024 05:35:50 -0500
+Received: from [172.24.227.88] (uda0500640.dhcp.ti.com [172.24.227.88])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43TAZklk008401;
+	Mon, 29 Apr 2024 05:35:46 -0500
+Message-ID: <a0ae09ae-664f-263f-e08e-ab6638a632ef@ti.com>
+Date: Mon, 29 Apr 2024 16:05:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v3 2/2] arm64: dts: ti: k3-am62a7: Add overlay for second
+ CPSW3G Port
+Content-Language: en-US
+To: Chintan Vankar <c-vankar@ti.com>, Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Tero
+ Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
+ Menon <nm@ti.com>,
+        <s-vadapalli@ti.com>, <danishanwar@ti.com>, <srk@ti.com>,
+        Ravi Gunasekaran <r-gunasekaran@ti.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20240429101739.2770090-1-c-vankar@ti.com>
+ <20240429101739.2770090-3-c-vankar@ti.com>
+From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+In-Reply-To: <20240429101739.2770090-3-c-vankar@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-After the commit 19eaf44954df ("mm: thp: support allocation of anonymous
-multi-size THP"), it may need to batch update tlb of an address range
-through the update_mmu_tlb function. We can simplify this operation by
-adding the update_mmu_tlb_range function, which may also reduce the
-execution of some unnecessary code in some architectures.
 
-Signed-off-by: Bang Li <libang.li@antgroup.com>
----
- include/linux/pgtable.h | 5 +++++
- mm/memory.c             | 4 +---
- 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 18019f037bae..73411dfebf7a 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -734,6 +734,11 @@ static inline void update_mmu_tlb(struct vm_area_struct *vma,
- 				unsigned long address, pte_t *ptep)
- {
- }
-+
-+static inline void update_mmu_tlb_range(struct vm_area_struct *vma,
-+				unsigned long address, pte_t *ptep, unsigned int nr)
-+{
-+}
- #define __HAVE_ARCH_UPDATE_MMU_TLB
- #endif
- 
-diff --git a/mm/memory.c b/mm/memory.c
-index 6647685fd3c4..1f0ca362b82a 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4396,7 +4396,6 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 	vm_fault_t ret = 0;
- 	int nr_pages = 1;
- 	pte_t entry;
--	int i;
- 
- 	/* File mapping without ->vm_ops ? */
- 	if (vma->vm_flags & VM_SHARED)
-@@ -4465,8 +4464,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 		update_mmu_tlb(vma, addr, vmf->pte);
- 		goto release;
- 	} else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
--		for (i = 0; i < nr_pages; i++)
--			update_mmu_tlb(vma, addr + PAGE_SIZE * i, vmf->pte + i);
-+		update_mmu_tlb_range(vma, addr, vmf->pte, nr_pages);
- 		goto release;
- 	}
- 
+On 4/29/24 3:47 PM, Chintan Vankar wrote:
+> From: Siddharth Vadapalli <s-vadapalli@ti.com>
+> 
+> The SK-Ethernet-DC01 Add-On Ethernet Card for AM62A7-SK board supports
+> RGMII mode.
+> 
+> Add overlay to enable the second CPSW3G port in RGMII-RXID mode with the
+> Add-On Ethernet Card.
+> 
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+> ---
+> 
+> Link to v2:
+> https://lore.kernel.org/r/20240425102038.1995252-3-c-vankar@ti.com/
+> 
+> Changes from v2 to v3:
+> - Updated SPDX-License-Identifier and "pinctrl-0" property in "cpsw3g"
+>   node in "k3-am62a7-sk-ethernet-dc01.dtso" as suggested by Ravi.
+> 
+>  arch/arm64/boot/dts/ti/Makefile               |  3 +
+>  .../dts/ti/k3-am62a7-sk-ethernet-dc01.dtso    | 62 +++++++++++++++++++
+>  2 files changed, 65 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am62a7-sk-ethernet-dc01.dtso
+
+
+Reviewed-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+
 -- 
-2.19.1.6.gb485710b
-
+Regards,
+Ravi
