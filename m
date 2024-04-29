@@ -1,105 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.vivaldi.net (smtp.vivaldi.net [31.209.137.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E3D335A7;
-	Mon, 29 Apr 2024 23:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071346CDD3;
+	Mon, 29 Apr 2024 23:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=31.209.137.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714432924; cv=none; b=uOA3kQL5N8bZO0xdmondEkHY2vY0a8K47wwdJonLfal/5z3jp2+8FKNK4EpEOdP2W8VliCbIrsD9S/qgmzzuxn8mfz1S/lH1t6ThmZWXvxJgzzeP+ZrC6cy3Cftn+qsTWgzs62e3I3n3/05zAsOj/wvDCYHmj2RUgWGvESZBWCk=
+	t=1714432977; cv=none; b=okjrtSu6Xh+XF4pHKTQs8XH44TX23rn8ZofAToW/ae1t+qlhnHDJ22n8HFPvGBWpQ2wnzNvKYv/zIpfkQtRuxDn+xQH7ETv1qNDutRh3IwW2t+/GGwaRbgQvqKoxghdo/wzhD3rr6gXIDDwvNDJ5den6nnh+i2Kfi9D4rsIP2D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714432924; c=relaxed/simple;
-	bh=A7LMOLKCsAZ4qqkqFakSPa39jisM1x5hfA4rCg+XE3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LGVc35UthAXFHYtOK8HZAaPJG+UCsm3STpGT51TSV6kcDgoum4bbQ13mtS1JZQDHUlIss74l5QT7iKiUELB8X9DRaGODyBy/wwu+GPdRcjaRVtFeKZODsqmgS8vkR92osOisSoZWMETftmoA4jreb9zslMs+SKGhXx0IyKVTPvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KToNGRgI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714432977; c=relaxed/simple;
+	bh=byf9Z71+sb0GLOb3GdyWbm5OBgcDZx9meWJrrQxJ3yU=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition; b=a+oOCDauaLElNvPxNDy8mbjeVoar86iemvnd3leRXtn6L05OIuI0ON32vXDK1U+auUNGr0KmRmBvI9uLGGE3ebVYHXT9R7HHTYETOZKOjSNB3MkqWIriljotCrlWXbC9ktwNV2gUn79rKqlnj4aADbwd1O+vwsLEhvcB+CBT2gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vivaldi.net; spf=pass smtp.mailfrom=vivaldi.net; dkim=pass (2048-bit key) header.d=vivaldi.net header.i=@vivaldi.net header.b=HtobcFcy; dkim=pass (2048-bit key) header.d=vivaldi.net header.i=@vivaldi.net header.b=A2t+mgaE; arc=none smtp.client-ip=31.209.137.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vivaldi.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivaldi.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KToNGRgI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C2F3C113CD;
-	Mon, 29 Apr 2024 23:22:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714432924;
-	bh=A7LMOLKCsAZ4qqkqFakSPa39jisM1x5hfA4rCg+XE3o=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=KToNGRgIxyv+sP1bfRfFXAlXElYZI5F6ubz8J6Zni/+vq+mAxjRqMW6HuvnzVBF7P
-	 ORuw/ydLE8gyHm2/5rNVOXSdSxcMof3MsansVXePzWDiY8jm8i7K7+2W07E2qsnWoN
-	 CwoBje7YvfXUST/oTzUIGknZYnSOfraYbU5oeUhKKCmNj9uGED0sXLrsnw4zsK+LJI
-	 BDG5SpYhTgyv0Sb9REpRQsjmxWqsS1c6aQYkFaoAzTrdpi1+j9wmwu5jN1de/6lC/G
-	 m2qbCOecn7w5j1uC4STdpzzFvMeFUpCBy1hI7d3cJfJSHThVuiFMb1KdgEDwHikD4U
-	 8oFbQfgNO+t8A==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id CB5B8CE0B6B; Mon, 29 Apr 2024 16:22:03 -0700 (PDT)
-Date: Mon, 29 Apr 2024 16:22:03 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Zhouyi Zhou <zhouzhouyi@gmail.com>
-Cc: linux-kernel@vger.kernel.org, frederic@kernel.org, boqun.feng@gmail.com,
-	joel@joelfernandes.org, neeraj.upadhyay@amd.com,
-	qiang.zhang1211@gmail.com, rcu@vger.kernel.org, lance@osuosl.org
-Subject: Re: [PATCH] x86/rcutorture move CONFIG_HYPERVISOR_GUEST to
- kvm-test-1-run.sh
-Message-ID: <059d36ce-6453-42be-a31e-895abd35d590@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240427005626.1365935-1-zhouzhouyi@gmail.com>
+	dkim=pass (2048-bit key) header.d=vivaldi.net header.i=@vivaldi.net header.b="HtobcFcy";
+	dkim=pass (2048-bit key) header.d=vivaldi.net header.i=@vivaldi.net header.b="A2t+mgaE"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.vivaldi.net (Postfix) with ESMTP id 0BB6ABD871;
+	Mon, 29 Apr 2024 23:16:28 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp.vivaldi.net 0BB6ABD871
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivaldi.net;
+	s=default; t=1714432588;
+	bh=gmlOdeuOOqOrPjRFOowspShiT6SLu9pZIyUtwclj2CM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=HtobcFcyrnUvMtU9i7nM2fVDAtYTPhl0TbvUYAgKthzbirMl+v09V2V5godpz/xV7
+	 MFpZdHQqrhln6jlPdyWq4kM6o4Yec5TvtcD3mD6SqkLu02F6mRRnLVlJDy3Pv6m5vH
+	 pkwzDQEAaTHqWTxCAw3eUu3FzWCLA5wV8KXpDB8D2vcWwh3P4qCgNuHbMlntIJMHA8
+	 vP+ib7wlc+qHONW19xWhdYM65Y0knFMvSOPp4sLWCNG3oUTTNmZ/ywcAQkl5HRS15S
+	 UqhJis+zHxw3whFWHzUspRitblMdgLw9SwLbpPr7nqJxW8+LKSA5BqNfmkWU20oXKk
+	 ZbN9pS4DQ5hAA==
+X-Virus-Scanned: Debian amavisd-new at smtp.vivaldi.net
+Received: from smtp.vivaldi.net ([127.0.0.1])
+	by localhost (mxo.viv.dc01 [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id KXrbchY7OmMQ; Mon, 29 Apr 2024 23:16:24 +0000 (UTC)
+Date: Mon, 29 Apr 2024 18:16:05 -0500
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp.vivaldi.net 673B8BD6FC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivaldi.net;
+	s=default; t=1714432584;
+	bh=gmlOdeuOOqOrPjRFOowspShiT6SLu9pZIyUtwclj2CM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=A2t+mgaEWjnyp81IIVmf++ILe0m/k+aihZovm2QIzZfgZAfZ2WYIrDerKMGrFYncx
+	 wm0YlasYu0ONoAChz5KaPa2rQ2C3zLjrjIO8HLw/0ndPtn+rjr8Xt3YCEnju+YTaji
+	 5GFb6o1IxTMTCV67WtBx/a4pFunD39dlJSGj4aDWEM1WZmsqqtYgySbzKFVTeBvA+w
+	 3iV5o2P8mG8GHQcp2JPPywYy2EjSSQQn8MXvd6KTRAoedJJE1ts4qJ1G3FVBbpjn56
+	 UXEXSr1AMpblXrVRofOa6svAx7INUmcQupcukOU1/oWzwdAD1zgFxZVDg9e9HqtG1Z
+	 cv++XT95GJucQ==
+From: Isaac Ganoung <inventor500@vivaldi.net>
+To: jtornosm@redhat.com
+Cc: jtornosm@redhat.com, davem@davemloft.net, edumazet@google.com, 
+	jarkko.palviainen@gmail.com, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	stable@vger.kernel.org
+Subject: RE: [PATCH v2] net: usb: ax88179_178a: avoid writing the mac address
+ before first reading
+Message-ID: <hzhomd7d7uc4dcnpvd6ki6v2f6camzm5ufqp2syqudrvzzfxi4@ykcirhonbqql>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n3kbqcmcqkpkrtj4"
+Content-Disposition: inline
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+
+
+--n3kbqcmcqkpkrtj4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240427005626.1365935-1-zhouzhouyi@gmail.com>
 
-On Sat, Apr 27, 2024 at 12:56:26AM +0000, Zhouyi Zhou wrote:
-> CONFIG_HYPERVISOR_GUEST is a x86 specific kernel option, move to
-> kvm-test-1-run.sh to avoid ConfigFragment.diags in non-x86 platforms.
-> 
-> Tested in both PPC VM of Open Source lab of Oregon State University and
-> local x86_64 server.
-> 
-> Fixes: a6fda6dab93c ("rcutorture: Tweak kvm options")
-> Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
 
-I like this general approach, but why not have something like a
-CFCOMMON.arch for the various "arch"s that need it?
+Hello,
 
-Better yet, I bet that there is already something somewhere in the
-Linux kernel source tree that knows what hypervisor Kconfig options
-each architecture needs.  If so, it would be most excellent to reuse
-that information instead of maintaining it separately in RCU.
+I am using a TP-Link UE306 USB Ethernet adapter. The kernel detects it as an ASIX AX88179A USB Ethernet adapter. When using a different MAC address than the adapter's own (i.e. MAC address randomization), I am unable to send or receive packets unless set to promiscuous mode.
 
-							Thanx, Paul
+I am using NetworkManager to manage my connections. When I set 802-3-ethernet.cloned-mac-address to the device's MAC address in the connection settings (i.e. `nmcli con edit), the device works as expected. When that property is not set (null value), the device is only able to receive packets when set to promiscuous mode.
 
-> ---
->  tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 4 ++++
->  tools/testing/selftests/rcutorture/configs/rcu/CFcommon  | 1 -
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-> index b33cd8753689..75774bc70be7 100755
-> --- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-> +++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-> @@ -68,6 +68,10 @@ config_override_param "--gdb options" KcList "$TORTURE_KCONFIG_GDB_ARG"
->  config_override_param "--kasan options" KcList "$TORTURE_KCONFIG_KASAN_ARG"
->  config_override_param "--kcsan options" KcList "$TORTURE_KCONFIG_KCSAN_ARG"
->  config_override_param "--kconfig argument" KcList "$TORTURE_KCONFIG_ARG"
-> +if uname -a | grep -q x86
-> +then
-> +	config_override_param "x86 specific option" KcList "CONFIG_HYPERVISOR_GUEST=y"
-> +fi
->  cp $T/KcList $resdir/ConfigFragment
->  
->  base_resdir=`echo $resdir | sed -e 's/\.[0-9]\+$//'`
-> diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
-> index 0e92d85313aa..cf0387ae5358 100644
-> --- a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
-> +++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
-> @@ -1,6 +1,5 @@
->  CONFIG_RCU_TORTURE_TEST=y
->  CONFIG_PRINTK_TIME=y
-> -CONFIG_HYPERVISOR_GUEST=y
->  CONFIG_PARAVIRT=y
->  CONFIG_KVM_GUEST=y
->  CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n
-> -- 
-> 2.34.1
-> 
+uname -a output: Linux hostname 6.8.8-arch1-1 #1 SMP PREEMPT_DYNAMIC Sun, 28 Apr 2024 18:53:26 +0000 x86_64 GNU/Linux
+This is Arch Linux's kernel. The patches applied are here: <https://github.com/archlinux/linux/releases/tag/v6.8.8-arch1>
+
+dmesg:
+[37988.917741] usb 2-2: new SuperSpeed USB device number 4 using xhci_hcd
+[37989.208722] usb 2-2: New USB device found, idVendor=0b95, idProduct=1790, bcdDevice= 2.00
+[37989.208744] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[37989.208753] usb 2-2: Product: AX88179A
+[37989.208760] usb 2-2: Manufacturer: ASIX
+[37989.208766] usb 2-2: SerialNumber: 0003B40D
+[37989.481930] cdc_ncm 2-2:2.0: MAC-Address: <removed>
+[37989.481949] cdc_ncm 2-2:2.0: setting rx_max = 16384
+[37989.494646] cdc_ncm 2-2:2.0: setting tx_max = 16384
+[37989.506072] cdc_ncm 2-2:2.0 eth1: register 'cdc_ncm' at usb-0000:00:14.0-2, CDC NCM (NO ZLP), <removed>
+
+journalctl (from when not in promiscuous mode):
+Apr 29 17:34:47 hostname kernel: usb 2-1: new SuperSpeed USB device number 5 using xhci_hcd
+Apr 29 17:34:48 hostname kernel: usb 2-1: New USB device found, idVendor=0b95, idProduct=1790, bcdDevice= 2.00
+Apr 29 17:34:48 hostname kernel: usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+Apr 29 17:34:48 hostname kernel: usb 2-1: Product: AX88179A
+Apr 29 17:34:48 hostname kernel: usb 2-1: Manufacturer: ASIX
+Apr 29 17:34:48 hostname kernel: usb 2-1: SerialNumber: 0003B40D
+Apr 29 17:34:48 hostname kernel: cdc_ncm 2-1:2.0: MAC-Address: <removed>
+Apr 29 17:34:48 hostname kernel: cdc_ncm 2-1:2.0: setting rx_max = 16384
+Apr 29 17:34:48 hostname kernel: cdc_ncm 2-1:2.0: setting tx_max = 16384
+Apr 29 17:34:48 hostname kernel: cdc_ncm 2-1:2.0 eth1: register 'cdc_ncm' at usb-0000:00:14.0-1, CDC NCM (NO ZLP), <removed>
+Apr 29 17:34:48 hostname NetworkManager[5652]: <info>  [1714430088.5005] manager: (eth1): new Ethernet device (/org/freedesktop/NetworkManager/Devices/14)
+Apr 29 17:34:48 hostname mtp-probe[6423]: checking bus 2, device 5: "/sys/devices/pci0000:00/0000:00:14.0/usb2/2-1"
+Apr 29 17:34:48 hostname mtp-probe[6423]: bus: 2, device: 5 was not an MTP device
+Apr 29 17:34:49 hostname (udev-worker)[6422]: Network interface NamePolicy= disabled on kernel command line.
+Apr 29 17:34:49 hostname NetworkManager[5652]: <info>  [1714430089.1558] device (eth1): state change: unmanaged -> unavailable (reason 'managed', sys-iface-state: 'external')
+Apr 29 17:34:49 hostname mtp-probe[6456]: checking bus 2, device 5: "/sys/devices/pci0000:00/0000:00:14.0/usb2/2-1"
+Apr 29 17:34:49 hostname mtp-probe[6456]: bus: 2, device: 5 was not an MTP device
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.2247] device (eth1): carrier: link connected
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.2255] device (eth1): state change: unavailable -> disconnected (reason 'carrier-changed', sys-iface-state: 'managed')
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.2275] policy: auto-activating connection 'Wired connection 2' (e1106b48-8695-3ed4-b512-a0909ddaa247)
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.2279] device (eth1): Activation: starting connection 'Wired connection 2' (e1106b48-8695-3ed4-b512-a0909ddaa247)
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.2280] device (eth1): state change: disconnected -> prepare (reason 'none', sys-iface-state: 'managed')
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.2282] manager: NetworkManager state is now CONNECTING
+Apr 29 17:34:51 hostname NetworkManager[5652]: <warn>  [1714430091.2284] platform-linux: do-change-link[9]: failure 16 (Device or resource busy)
+Apr 29 17:34:51 hostname systemd[1]: NetworkManager-dispatcher.service: Deactivated successfully.
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.3634] device (eth1): set-hw-addr: set-cloned MAC address to 6A:0D:A2:E2:9D:A6 (random)
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.3646] device (eth1): state change: prepare -> config (reason 'none', sys-iface-state: 'managed')
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.3729] device (eth1): state change: config -> ip-config (reason 'none', sys-iface-state: 'managed')
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.3740] dhcp4 (eth1): activation: beginning transaction (timeout in 45 seconds)
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.3791] dhcp4 (eth1): dhclient started with pid 6459
+Apr 29 17:34:51 hostname dhclient[6459]: DHCPREQUEST for 192.168.1.169 on eth1 to 255.255.255.255 port 67
+Apr 29 17:34:51 hostname dhclient[6459]: DHCPNAK from 192.168.1.1
+Apr 29 17:34:51 hostname NetworkManager[5652]: <info>  [1714430091.4578] dhcp4 (eth1): state changed no lease
+
+Thanks,
+Isaac Ganoung
+
+--n3kbqcmcqkpkrtj4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKkFABYIACkiIQWu9OejSHRObh6wRzaYOt2b+sY1MbPYEve6H7+92tvbBgUCZjAq
+LgAALDEByM/RpJzrN4tsyayqlxQ6z1zu7GXBcKiNOWq4mkAk5ZNOS+EMr9Xm44S1
+Pq44eyG79m3d2NHw2fIMAAHHez3UYwCShykJyyvbM/dRBY4LoMxfxV1fcuca9udH
+Iosz4Sv/gnMLaxGkmS3cwLQ2RRSf3DEtdCYA
+=gXUS
+-----END PGP SIGNATURE-----
+
+--n3kbqcmcqkpkrtj4--
