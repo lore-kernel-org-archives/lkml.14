@@ -1,103 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6E02942C
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 10:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9702029421;
+	Mon, 29 Apr 2024 10:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714385068; cv=none; b=inn0KV622RnH1mo/BAyXJ1UJum3QUoBYXahD23Exq9JcVpW5t9wNB5GaNUv+gtdJdlhoy0URp+OarIUfkSPclVDdLJZdQdSWJ/dugrmMd5ttl/3bn9wDSlwErB7gQCIZC/jbicAPbzuW425JYItFuFd7AoHnMe10/gCK1c6lksk=
+	t=1714385085; cv=none; b=JQ7NNWQpYGdnw2PY3VoNjMoIpTm8z4T0wdQf8PriPvt/CaJnbzMXP2c+Oebs8sRmp63vhl9uRBNIPGEZZNJwdDKhzask+VZY/Igb27yEBFH+CguCyZHFVvmD7a12QnD9tyMTbCjIl5SOYjD/WniIXYIPrgm8P7q1sUpdHUQRAQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714385068; c=relaxed/simple;
-	bh=TMQs2ZThSKL7ZuJsmgK3ppCSu+w2q9rdEEkumpq08Kk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=uv9oKVrnmCkXgojGvG8vYOWveao+T67r3cXet0CfzDlCW4mcRqqrEkbDnP+yBO7PAh07ycL+ZQPW8IEJar38rfWX48MGoF1wwnpk7U+1bWBBGJdswEzuCCkPiFZdFYpDtv2wqii0kfWLUpcC22Yfn9FhEA03qFP9uzy/qywS4uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jo0RNhTa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jo0RNhTa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC1D9C113CD;
-	Mon, 29 Apr 2024 10:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714385067;
-	bh=TMQs2ZThSKL7ZuJsmgK3ppCSu+w2q9rdEEkumpq08Kk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Jo0RNhTax2WmFwOctSSt1zPguvty5QKlc+EsNN8ghhqlFc1IpV3nKEOL5QfmSJBkE
-	 3XqnOakkbHXNOpod4aW0HZMchYWg7oC1qnO43EmKAu93k4JQTdJOOToiV3tFX3vLUU
-	 hVdkeMz6z44Sv10RyKzVN0AhSdjDK4qFiF420YHsQEHlzBVqzvpBqUlTXBMwUobmUJ
-	 LenNHvtmSxAIHa3BvmvJTPWy62yWcY0cjr2fMDRwyhSaBraMScD0PElUiRN8k9O+SB
-	 hjqlNGO9ywaLa7XATdi7/m3SHwmjK2fQu8viH73USz8BfYpIBVysa8LQf84ZRqPXWh
-	 mVjiOfzBvUbnA==
-Date: Mon, 29 Apr 2024 18:04:22 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linuxfoundation.org>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Chao Yu <chao@kernel.org>, Jingbo Xu <jefflexu@linux.alibaba.com>,
-	Baokun Li <libaokun1@huawei.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Hongbo Li <lihongbo22@huawei.com>
-Subject: [GIT PULL] erofs fixes for 6.9-rc7
-Message-ID: <Zi9wpiog2uo1wGBb@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linuxfoundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Chao Yu <chao@kernel.org>, Jingbo Xu <jefflexu@linux.alibaba.com>,
-	Baokun Li <libaokun1@huawei.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Hongbo Li <lihongbo22@huawei.com>
+	s=arc-20240116; t=1714385085; c=relaxed/simple;
+	bh=iv0of1SDuLM2j+lS8i9Lv/zFTg7B6r5cfF5tUfHgGdQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EAuv0iKYstykdOCmZyX7q2YeIsKWcRSkfxpAJ1RXiqxwnrjMl7UxTDfP9Fzx/C4boLQVoon4yk1afZ0VU4cRhihVyY9mxFJBROCKv20tTwgY26YJgCanTfNuyvFY2sqVVBm9LEa6JOun85uJn41wwKNAMI3oTTP3040l5sJv5Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a55b93f5540so565496866b.1;
+        Mon, 29 Apr 2024 03:04:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714385082; x=1714989882;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u871SX269932WaLaHJ9AhtcP7Cj5iBk3lhKgV6jUuqM=;
+        b=fjfYm4am06ul0JfcU8kGDnRTV5v0ZtcmqmI4SVXjGkmHA/HUAMcgk3A+2RZ+PYs2Qe
+         QtOKKtkdbTY/fNAxkMFfvk/leRRJJa1vMAEr/XlbWpjVaQx23ooOBgv6eod0hI+FZRYJ
+         RWMx9o3wnjbFuyiNSk3qhu/8N5ZBaJxObaq/ZVMDemlbQwh/QzL9EZ8FvUkhJMaBRhBs
+         NSZ8jwAKjaCsh0p3pHkAWYZelmWnOB+rZ2FEz9Vxg5QXZsVtPQaFpitgdZqsbadl5Au8
+         1zsf/MziGpIh7I5x7F4yH/opZIOTah/xVU21OE524pGKTYenhy+pp2148AAxYJsNFbpJ
+         g8+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWqzjnPBjCLk8yYCQ6PX1bEAU1Gf5HrS9CeZtNI+wLJtM9DMLZIGW7QVHxxF88rt5ox2SAfJoj0D+RP9TjIw/b78m4QA5pS2zOGfWw1QQHnwWOgbbSz17fAWOV6aSfhLTWgepvL
+X-Gm-Message-State: AOJu0YzAgdmouwxi7wTYDJxVQkpNEz0zf4gh3QeRRDYWwEbYOtm0u72J
+	r4CkBZ2GAcqKoglbZXxY5kPjgrU1NcTQWpsCgMkrxS52sSVF05ky
+X-Google-Smtp-Source: AGHT+IFH+kBOBRma4QXn972uVsjWjU+aUIe0TKAfOhLbRNkOSO3ysqiqh8e22s8Omp0bk6BGAzSMww==
+X-Received: by 2002:a17:906:7185:b0:a58:73f0:4d1a with SMTP id h5-20020a170906718500b00a5873f04d1amr6449916ejk.70.1714385081700;
+        Mon, 29 Apr 2024 03:04:41 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id z13-20020a170906434d00b00a51e5813f4fsm13924963ejm.19.2024.04.29.03.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 03:04:41 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: leit@meta.com,
+	netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] netpoll: Fix race condition in netpoll_owner_active
+Date: Mon, 29 Apr 2024 03:04:33 -0700
+Message-ID: <20240429100437.3487432-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+KCSAN detected a race condition in netpoll:
 
-Could you consider this pull request for 6.9-rc7?
+	BUG: KCSAN: data-race in net_rx_action / netpoll_send_skb
+	write (marked) to 0xffff8881164168b0 of 4 bytes by interrupt on cpu 10:
+	net_rx_action (./include/linux/netpoll.h:90 net/core/dev.c:6712 net/core/dev.c:6822)
+<snip>
+	read to 0xffff8881164168b0 of 4 bytes by task 1 on cpu 2:
+	netpoll_send_skb (net/core/netpoll.c:319 net/core/netpoll.c:345 net/core/netpoll.c:393)
+	netpoll_send_udp (net/core/netpoll.c:?)
+<snip>
+	value changed: 0x0000000a -> 0xffffffff
 
-Here are three fixes related to EROFS fscache mode.  The most important
-two patches fix calling kill_block_super() in bdev-based mode instead of
-kill_anon_super() as mentioned in [1].  The rest patch is an informative
-one.
+This happens because netpoll_owner_active() needs to check if the
+current CPU is the owner of the lock, touching napi->poll_owner
+non atomically. The ->poll_owner field contains the current CPU holding
+the lock.
 
-All commits have been in -next and no potential merge conflict is
-observed.
+Use an atomic read to check if the poll owner is the current CPU.
 
-[1] https://lore.kernel.org/r/15ab9875-5123-7bc2-bb25-fc683129ad9e@huawei.com
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ net/core/netpoll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Gao Xiang
+diff --git a/net/core/netpoll.c b/net/core/netpoll.c
+index 543007f159f9..55bcacf67df3 100644
+--- a/net/core/netpoll.c
++++ b/net/core/netpoll.c
+@@ -316,7 +316,7 @@ static int netpoll_owner_active(struct net_device *dev)
+ 	struct napi_struct *napi;
+ 
+ 	list_for_each_entry_rcu(napi, &dev->napi_list, dev_list) {
+-		if (napi->poll_owner == smp_processor_id())
++		if (READ_ONCE(napi->poll_owner) == smp_processor_id())
+ 			return 1;
+ 	}
+ 	return 0;
+-- 
+2.43.0
 
-The following changes since commit ed30a4a51bb196781c8058073ea720133a65596f:
-
-  Linux 6.9-rc5 (2024-04-21 12:35:54 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.9-rc7-fixes
-
-for you to fetch changes up to 7af2ae1b1531feab5d38ec9c8f472dc6cceb4606:
-
-  erofs: reliably distinguish block based and fscache mode (2024-04-28 20:36:52 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Better error message when prepare_ondemand_read failed;
-
- - Fix unmount of bdev-based mode if CONFIG_EROFS_FS_ONDEMAND is on.
-
-----------------------------------------------------------------
-Baokun Li (1):
-      erofs: get rid of erofs_fs_context
-
-Christian Brauner (1):
-      erofs: reliably distinguish block based and fscache mode
-
-Hongbo Li (1):
-      erofs: modify the error message when prepare_ondemand_read failed
-
- fs/erofs/fscache.c  |   2 +-
- fs/erofs/internal.h |   7 ---
- fs/erofs/super.c    | 124 +++++++++++++++++++++++-----------------------------
- 3 files changed, 56 insertions(+), 77 deletions(-)
