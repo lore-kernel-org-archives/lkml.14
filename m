@@ -1,53 +1,35 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3DE1836D1
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 23:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE11194C6B;
+	Mon, 29 Apr 2024 23:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714434007; cv=none; b=VsaLvd8iuHIfQYdNdoWDT95lw1LNRoo1m7kMD7/YUXPVr7/yWKZPhScHZXGMDLb+NRAg0IEs19G7LJsd2b+M3qC3wslKw9GwdeLMFpVnFJ/6WpyHskekQ7FlnGYHibvpKBXoAZqxtBzQAj5yYnmJsfajYPmX6VYH9g99S+mB31E=
+	t=1714434029; cv=none; b=UTi5wWEzeNEuTNPuyd/3NiZ7RbUbDwMBAg7k7KwiMH/6OOqMpqVP0JCaaUpG2JJkH3BkO+7uW7p61XK9wmERXxeITuwTdlFbK8p0U7xMiDtToWqrg9VFM25b70624xZp9AT9mFHKB1F3S09GmkQ6Nml00DbW6Q890yossveRStc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714434007; c=relaxed/simple;
-	bh=rxAEVq+yifZnHDpSwnTFmxkZ/Y0BmsczwpqA4u2RUTA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PD9MTDwqOGCnsh06ubapoDwayd43SnnZ83WWTg/aLesA2ehUPk9h9+SgUKCpKaYLl/LfiK2+Lse0+alkIhTphtXUivNjxjMxC41aeCTvzRN077X49iLxuxhX5e4B5tYRs1ERdX8Lt37kfQsGipU9N4UhhQ0TGJ4gQOXbYzW8Qcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf; spf=pass smtp.mailfrom=kl.wtf; dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b=SaNJQ6sI; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kl.wtf
+	s=arc-20240116; t=1714434029; c=relaxed/simple;
+	bh=gUPva0KZ1bj3hcLSMjpCy0JRDgsPk6D22JAPPqxw/yQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=d/0EqvKOlROyvqa3GwdxFHuDrOJq8KtZ4TQfM4ffMcl6bNlFVCWvPIf+nBlzb/LPLkbHCjedHMqu58vCQ/Yr1STbHJfNJXFarktnB7SCAAd90o43SfwthyACP0t3hP5tUGxwfnrgPM6md5Sof42y+1lxenZ1LN62J1Ov9Opuygs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RuTE298J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="SaNJQ6sI"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=key1;
-	t=1714434004;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y0LgG9Ur/gE5LwaFx84ee4SVeTx5Bvd1sdclfM8Q3a4=;
-	b=SaNJQ6sI0gOg/Yf8qvx/TsNAUA3kHWmRGUo1ZM8nt3t0OW8V4dz+wYI/XnJQThFXdaZVUv
-	H6jhdu3OogLQMponF+tTPT15z3/KSEHoBQ0M9s1y8AnleyFhGo7ijA7SuelualTjPYNrd0
-	h/qQbebw+zJMkN/nvO77YAINjsVnVLLiAXtIlzN0PNdFuc1Y7F5hccYPdFI9ov0sMTT3bF
-	4exSD40FiaF4X6wCX5yjzIBfQGsVM/m4mlcFSQbJVhWHBFzR+MN9XlfPTKToaEshvT8FE+
-	k0YuGjFWT2nMMhIaS7JxNzdKed2WcNAMNYZh845gqUGXYUvEgjgx3oBqURQYbg==
-From: Kenny Levinsen <kl@kl.wtf>
-To: Jiri Kosina <jikos@kernel.org>,
-	Dmitry Torokhov <dtor@chromium.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Radoslaw Biernacki <rad@chromium.org>,
-	Lukasz Majczak <lma@chromium.org>
-Cc: Kenny Levinsen <kl@kl.wtf>
-Subject: [PATCH 2/2] HID: i2c-hid: Use address probe to wake on resume
-Date: Tue, 30 Apr 2024 01:33:15 +0200
-Message-ID: <20240429233924.6453-3-kl@kl.wtf>
-In-Reply-To: <20240429233924.6453-1-kl@kl.wtf>
-References: <20240429233924.6453-1-kl@kl.wtf>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RuTE298J"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 36343C4AF18;
+	Mon, 29 Apr 2024 23:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714434029;
+	bh=gUPva0KZ1bj3hcLSMjpCy0JRDgsPk6D22JAPPqxw/yQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=RuTE298J8ZpvWmruPnUBzwgK5qlJa5tJK1sMMEWFZtpYmvb39XGycPdcwWtkSw1sW
+	 a/KXlMdjqvS3PrvXTYu7pgGg33F6x8CF6L/HNnSh4RXCITmqbidbhz7k7PFhNdYqK8
+	 eYhH/M22SootWteMovGEIL0o0eoI2DvxtTFCsN0dvne0tozJ2sAKdmSquS1UtSIfvM
+	 MNr/oI8E6HiBM03A/1jMk/FO6YpRvBsUZ+LoG8/cmALhl5Tp21x/oXvDS1o+TO6eWa
+	 EAnqOu5OLDeBrXrAD95FOi6J0YMptx7pOpSzRCsnNPI1TtjGiImV3qnChsH7xvcJHN
+	 gf31xGqrb+0AQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 23D9BE2D48A;
+	Mon, 29 Apr 2024 23:40:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,61 +37,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Subject: Re: [PATCH bpf-next v3] bpf: btf: include linux/types.h for u32
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171443402914.12141.3176528838601718128.git-patchwork-notify@kernel.org>
+Date: Mon, 29 Apr 2024 23:40:29 +0000
+References: <20240420042457.3198883-1-dmitrii.bundin.a@gmail.com>
+In-Reply-To: <20240420042457.3198883-1-dmitrii.bundin.a@gmail.com>
+To: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
+Cc: olsajiri@gmail.com, andrii@kernel.org, ast@kernel.org,
+ bpf@vger.kernel.org, daniel@iogearbox.net, dxu@dxuuu.xyz, eddyz87@gmail.com,
+ haoluo@google.com, john.fastabend@gmail.com, khazhy@chromium.org,
+ kpsingh@kernel.org, linux-kernel@vger.kernel.org, martin.lau@linux.dev,
+ ncopa@alpinelinux.org, ndesaulniers@google.com, sdf@google.com,
+ song@kernel.org, vmalik@redhat.com, yonghong.song@linux.dev
 
-Certain devices, both from STM and Weida Tech, need to be woken up after
-having entered a deeper sleep state. The relevant places to wake up such
-device is during our initial HID probe, and after resuming.
+Hello:
 
-A retry for power commands was previously added to i2c_hid_set_power to
-wake up Weida Tech devices, but lacked sufficient sleep for STM devices.
-Replace the power command retry with the same address probe we using
-during our initial HID probe.
+This patch was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
 
-Signed-off-by: Kenny Levinsen <kl@kl.wtf>
----
- drivers/hid/i2c-hid/i2c-hid-core.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+On Sat, 20 Apr 2024 07:24:57 +0300 you wrote:
+> Inclusion of the header linux/btf_ids.h relies on indirect inclusion of
+> the header linux/types.h. Including it directly on the top level helps
+> to avoid potential problems if linux/types.h hasn't been included
+> before.
+> 
+> The main motiviation to introduce this it is to avoid similar problems that
+> was shown up in the bpf tool where GNU libc indirectly pulls
+> linux/types.h causing compile error of the form:
+> 
+> [...]
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index a40489bb7643..3e3885ae6ce2 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -402,19 +402,6 @@ static int i2c_hid_set_power(struct i2c_hid *ihid, int power_state)
- 
- 	i2c_hid_dbg(ihid, "%s\n", __func__);
- 
--	/*
--	 * Some devices require to send a command to wakeup before power on.
--	 * The call will get a return value (EREMOTEIO) but device will be
--	 * triggered and activated. After that, it goes like a normal device.
--	 */
--	if (power_state == I2C_HID_PWR_ON) {
--		ret = i2c_hid_set_power_command(ihid, I2C_HID_PWR_ON);
--
--		/* Device was already activated */
--		if (!ret)
--			goto set_pwr_exit;
--	}
--
- 	ret = i2c_hid_set_power_command(ihid, power_state);
- 	if (ret)
- 		dev_err(&ihid->client->dev,
-@@ -977,6 +964,14 @@ static int i2c_hid_core_resume(struct i2c_hid *ihid)
- 
- 	enable_irq(client->irq);
- 
-+	/* Make sure the device is awake on the bus */
-+	ret = i2c_hid_probe_address(ihid);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "nothing at address after resume: %d\n",
-+			ret);
-+		return -ENXIO;
-+	}
-+
- 	/* Instead of resetting device, simply powers the device on. This
- 	 * solves "incomplete reports" on Raydium devices 2386:3118 and
- 	 * 2386:4B33 and fixes various SIS touchscreens no longer sending
+Here is the summary with links:
+  - [bpf-next,v3] bpf: btf: include linux/types.h for u32
+    https://git.kernel.org/bpf/bpf-next/c/cfd3bfe9507b
+
+You are awesome, thank you!
 -- 
-2.44.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
