@@ -1,138 +1,123 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2112.outbound.protection.partner.outlook.cn [139.219.146.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29C9101DA
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 06:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714371716; cv=none; b=gpKXuwYi4F3MQndMfJN2vA904Z66pe5j+DUmMQVmvhOI+ViJkU2fsb5HLZUGzDyrh4i44x2aZf6gie4S20wh1ovWQxvO50xr4fEUnU+t0blooJt0dMOoRrdrdiX5q3MWvRcymPxiFg/90yhsYAUjje5dPWOtcs4mb4zJ1cMZyak=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714371716; c=relaxed/simple;
-	bh=CsOgcQpFSovGlVW61jqzWLRE03y/x8FlEOR0JqwUKQo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DkacYB7vHfNsu0t21HFuvFpaV1oZ4tvKspOpg5orFRmELA0pnH7yvOVx8dF5ra39qwu2Sn1qspOZ09sNvF/9B8ZOZPgdj6DfBnni5FQvDyKQqZ1NMbG+80BNWxYi9fOrSV66TbPn/4mU6aqCL+xrYpoaTwIRZb+wzJ2RSEPWnog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z0sODvdQ; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z0sODvdQ"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a58fbbcd77aso88603666b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 23:21:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714371713; x=1714976513; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=0iIhwLrypP4pGdT+1LcpSrgW93/LeBiwJ20LTDl7Lwo=;
-        b=z0sODvdQwncDshu/5VCKeafOnrq0jEahDa4+2N5NlG0lI2TLtBVCVI+elwZzPahP3v
-         HMMDC0CmkrYE9tYf+z71ejbD2dIiXWCThZzFBFihgBAYIyN/v6PXHVBcdQJ41DkDFaIJ
-         H7JlhIL9ELqaKqge2K90PJG6VkIbfUbvILN/bsVhbJIH6bMF0dcfgQspQ5M2QbMpUMXl
-         jIF54E7fJahbRN/O8AMz/FiqDMzuWWmweT7v93LVlDxFdWIbF7EgYszO4Wag4RpFASCI
-         +4kLk/K6AgW6Hq4Szg1MdggvR5hoaFNrfmKWeaFwAuV+pIkxFMBWP5/eWDKLaBpNl8ZZ
-         1OYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714371713; x=1714976513;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0iIhwLrypP4pGdT+1LcpSrgW93/LeBiwJ20LTDl7Lwo=;
-        b=tmZNMEsJTd9t2FJQMoABAVHNcFsJ18pS3yPUhu4C2TRErtNouOTb4mv8mk4SdIe/Oq
-         Hwn+haZA5E5Jva49LW4ejD8diD5eNyTwXU16SlYqIu4I3tPGeyZb8oVChu3EEBqcr3oN
-         oGp3U0YP/rrGlQ4s84zc5Cj2OOi5zVN19VALyqOjaliZ48+HoPPZH3G7U6AsY/zuLYWQ
-         eR7sTKv60+O2OcwwKLejkCQQgMVuTJhRCXn4EMQAMiwKBnizkRUWhLF3lJKHJtOc0UU4
-         pr6lkTKiJbTE+3T4g27Kt5Nn/YKGcHdUpRF5uDCbDnAhNP4j9UHF6sGgu6OkEzkEvLmg
-         EluQ==
-X-Gm-Message-State: AOJu0Yzu4Bbb5v5QpoEMovFfsUZRQ7OcYme73dCQU10h4F6qc1FFylqI
-	d0lmohkehlrXnZiJko41FOBlSvrl1L8NXDkuWPJQeb4d/Qj2Tmy1eZm0Nb/gpaI=
-X-Google-Smtp-Source: AGHT+IEnYF+XGSN5C1DjcH6g9MQzwajCC9XXptmqmCTyVJX1f+C7UbMACTcUHIGwEjCyC4uWwdC17w==
-X-Received: by 2002:a17:906:12cd:b0:a52:30d3:41dd with SMTP id l13-20020a17090612cd00b00a5230d341ddmr4040183ejb.41.1714371713235;
-        Sun, 28 Apr 2024 23:21:53 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id d13-20020a170906640d00b00a5267ee40efsm13739783ejm.18.2024.04.28.23.21.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 Apr 2024 23:21:52 -0700 (PDT)
-Message-ID: <7d7de9cb-c6d0-4af7-9063-3ad9f1a08f9a@linaro.org>
-Date: Mon, 29 Apr 2024 08:21:51 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BD0D53C;
+	Mon, 29 Apr 2024 06:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714371760; cv=fail; b=VOKBYUV0jNuJ5Wphrq/BoMtTccZcqVn4G4cM6O3JfF0kmbJWf0upE4mG023Z9XazFyxCH6o1tqmbLAQfGlXo9xU4Y8v2Ro4dysGbFngY6wyQUDdSUwWnjXfiAcIs66UC5XtcISZYvnB/GRPpZE3wDwOLZDndb0J39cG4Jq1IIcQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714371760; c=relaxed/simple;
+	bh=aGgeXITSF7fT5WEyez+BL6jbet8bjpeMXN/UNoCn5/o=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=XI8h4aUYQLnzpX46NtOTSqkOuZxQV8RxUhA3j/4cHKdl235ghUtT7y+GZYzSOOzdscPAfVRgXGzlcFIkgcqU8H1TkyjS8GwkYg+2pFJCvrB4akJwJ8TSjdUnu9DjBe61IYMjTfPHPc0ULcpN9X/eOy2dSkpqVqSmNvJAO1vmWXI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N3Vm0Gd4DlZb5LwHRqzWT8sl/Z3YvHKh3HNNQJkdmLz46Gg2OwwPDY0wGIESbX+D++SurOPOR+8IsVWP2JppX6TocUbguecmNYbSgMMQ8JVgYGKDHCk6BcuAMC5D1FqxQ0DEm4TmVhwfp8nxO9LyGF78xAEuOFn0gA7S9AlbXfrBwWSMawqSgmSxbPAGdaGuVW7mxzS0Lt/sCtXKfRzEsjwfpRBmUNB2s2bgVHRVsh/+kgerXsDCM+kOeLQAYbwGH58F/l1mWruorOuHEUgxnaNS6BQwThTjnWZsq112tqvfEkr2cbh2IZRxdcHzu7UrsmCOtupmx/epS7TVnLpIRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Z02FCXp8/LNJAmf/mUoUsFL9rVtPgyhNGXzOg7Zh7fY=;
+ b=VTJKuZDrLPDruSVxlfvnLImMfYiPwez/qhsev0SdOh369anWqDwKf/J9atE255Lto7bwMwa92XHkON/pO1ScIW+f06xUPjtHOvD8fzHPX4n7dt3aD0g7eUhthDBg2nPePGQX3IUXnTALgEbZx1ihm+3amDUCUqRAneI4oxRPpdcBUZ+kFhrL7YwfNfGnmJS3pPOV0saLZgCwKi50VzJjYzwbx9Li5k1L8Y7U5lClHmpWePo0deY31Nf6rEmjcfu9bwTvgIYaKvgtave4Ujr7yyzT6GgEcuiU/QnTPv1YO9MbrlbZ7bjemsKRp3rMuHlZ27Qr1iY8a3OeA0MXOylchQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:10::10) by NT0PR01MB1278.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:12::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Mon, 29 Apr
+ 2024 06:07:54 +0000
+Received: from NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
+ ([fe80::3dc9:e0c9:9a09:3bb7]) by
+ NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn ([fe80::3dc9:e0c9:9a09:3bb7%4])
+ with mapi id 15.20.7472.044; Mon, 29 Apr 2024 06:07:54 +0000
+From: Jia Jie Ho <jiajie.ho@starfivetech.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH -next 0/4] crypto: starfive - Minor fixes for AES and RSA
+Date: Mon, 29 Apr 2024 14:06:36 +0800
+Message-Id: <20240429060640.2451685-1-jiajie.ho@starfivetech.com>
+X-Mailer: git-send-email 2.40.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0034.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:2::12) To NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:10::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator: dt-bindings: fixed-regulator: Add a preferred
- node name
-To: "Rob Herring (Arm)" <robh@kernel.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240426215147.3138211-1-robh@kernel.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240426215147.3138211-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: NT0PR01MB1182:EE_|NT0PR01MB1278:EE_
+X-MS-Office365-Filtering-Correlation-Id: 89c00973-de8c-4f40-f45f-08dc6812b57d
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ADWj31n9+Z/bq2VPZiOQ+pKqyV9vy+WTNyBjGaQQ4FgKidtS51OEQvziLipuChQhoHGxlluCLScEX0EkCeuMoHOALoDCZ3Ut6ghR4n1KKzWmW9SLvgoFifiHGuZmFJgdWJz8zoyNVernOG3vR7mEokwcVq5plW4G9b/AbOF5eQSHu+WL+EPYbFkk138rTl0KYuE8vvzfoxy2rzDSCTj5fg/fM84CU3qf8mehS7KViJZQieKGj8M2e/qCu5/FQ83Ql64RsKmb/DokPVYQhucyYkp0jn0PAeJDvrR6Tx40ECS6UYm4LfWb/O+MMzEahuLDutHywXTaa6kPNmkKqXvu9C7aVY2CiFcEOm1z30Myq7rFHeb9vRqM2DuHVOgsJHZjMF1TZaMZLGOcuQ5uCSL8sA/2mNd7XFDQiGd+L6tZggFCpM+VnT/8HxUEmN5ejaNB+RwU95lRA+y7skKdKzhzvAolBPr6IfPDshwMhp/Fz5W//2iWh+aVAu9MNg7S6nLQ1JKfQMSnpyFKwSDVXkY95ucNSmj00tImITZDWE8Va8Fylgq//ITbjI2MkYZoiJ2ahJaCv4CxRrwe8SAFHVDZ7TjkhpPbxtFKy2Mm9P+7nfJYJZxx5vjozoXiMqTpDHL4
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(1800799015)(52116005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?bJCUtVqbrWmhR/MY9rXulSfzmMlC6i2YvI3vWdAIwuOT25DTEU6FAuTD73h1?=
+ =?us-ascii?Q?d0Ihh6+LSMkerv8fkfHw0SedV+5P3r6CH2k1QoLXx1aNeBOwXt2tpmGnetEK?=
+ =?us-ascii?Q?hLtZfmYYCIwGkxyEbmB7RAe/3Sb0EsIjncEO8XRPV8qrXpqAMj+t3be/uSTQ?=
+ =?us-ascii?Q?RiU0SedEF7RHUnbDTDgHYPuZhlEWfCir0u8r8IOTI5ZKdzC9MQQ5ZlvO0pYA?=
+ =?us-ascii?Q?m3Abt1ywDzuebm4zalI3FvZkNf7Di3B6zanwoAql3LaZPp61fzhUh0LXxORv?=
+ =?us-ascii?Q?ILUdqmjgJk/u9VU45N/CDAly+3UCjDVchnzv/WKR6hYSAa4jHQ7bvhz+Vedx?=
+ =?us-ascii?Q?IKGgh+pc5SbSdRJ3UOjrzieJdOmSB1uOkMSMKwDWJo32RARccI5PdI7sBKQy?=
+ =?us-ascii?Q?IpaYtgi8BM17ZPerbNLKg/ZhTFHG3I0C0kKDUkemCDIoBNvDVJbAFG51CIBg?=
+ =?us-ascii?Q?fmDgHlM9/AeR663/3AnXrTBu+fdtOqoba5N0hAuqSxoStmsXeNAi4v8AIqiw?=
+ =?us-ascii?Q?1Yvaxd6nR2aFdDnUNh4Xf/ar7bY5J6ruFuEmmkKCbr//OAm++jVqPpc/JUh7?=
+ =?us-ascii?Q?c58Z0ttzQKnHhtry2YDpRhnnN7FO8MwDuskkwWruqj2I5Y+NEVxFoT58RlkG?=
+ =?us-ascii?Q?oUOliLn0khqHdvtCVT1pnhGx9LkzFrL2KTKZSAwzqgf9OeLb6yuGARdZ9cWj?=
+ =?us-ascii?Q?LPaAtb3448Eoi2ju0G0c8IYWCzS7r5r9yS3BOO1xw9kvTlndSP0jcLEiv/zz?=
+ =?us-ascii?Q?fZwV4Tt3Uu4IAqytG/yx4jz6AIpxJ3CI1Q8j6ugV7xrYFRl7jiXPs9PEgxkK?=
+ =?us-ascii?Q?k5WQEvEltPm5ej2ab8A2YsvmmZH2d9yU8+t5pKEBW4dL+oLB8lU6xIjetOWw?=
+ =?us-ascii?Q?tSEv23XOYYnpDb9M1RGoW9jVesUl/QFUnPtoUtCSiIGyToE/B0FWoCIMk9eY?=
+ =?us-ascii?Q?AcEm2Z1FHlBlgqLb/kjbfgdNEbEWZpWLEBTfeaOPrM1sEJNegmppUQKqqAry?=
+ =?us-ascii?Q?eGSsmoORvurEgV6co0wR5Ac0TW0DX4D0HxDhy2wC+omK1fWIMGP8SorVSSFs?=
+ =?us-ascii?Q?NlxlnTluBeFj3qD+BTv6gtzGNOLXhG48FoP0lfYzmAW1ZtBBVqbw+poNssm0?=
+ =?us-ascii?Q?AxUFXZ22P32Xt2a9odKimiE2kC9RGCdWrhsy936jFlLmkRw55Yv9O2dknLux?=
+ =?us-ascii?Q?zG8UhKySD8pRk8T+uZj0pcBh02GJ1Mmop0RW9H1RXagZHIKelUzGCTOYtiKH?=
+ =?us-ascii?Q?ExlzW+nNWuB0WW5gMONPn66a/C0cjKvvRf1OAVH61m5T3/CffZqd9hsVI94T?=
+ =?us-ascii?Q?tafd7C6CLSQvgj6a+mgS9q3bCkSyD26QXnY5TjDjzOy6K+A+lgEz1DBsKnUz?=
+ =?us-ascii?Q?S/qiqiV2+MnNO9pQtOQ5k55rhKPJTOaE93yYS7KHF4rLKqqGXZszAiFLjvNT?=
+ =?us-ascii?Q?BdSfnCBD4nT4V1/Fa6NgCLIVvHdhVlAEikPv/PRd9KlUfa0j1+l8kYGNyHtn?=
+ =?us-ascii?Q?emVVSXcrXBRG2IVNLDRVO5Qvc9eZY4b+k2knVd5o/nat3PeXgsKsLHdKABDC?=
+ =?us-ascii?Q?WZwqR0leO9LelyIPgVdRYfuLxjIuu6KhsBnvJoEgaUBNV825vk1yWYwFCxr9?=
+ =?us-ascii?Q?Uw=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89c00973-de8c-4f40-f45f-08dc6812b57d
+X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 06:07:54.5843
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nX2kB7L3uufcq1r5H/muhTkW8IC/D1lLLZXKFNQ3tTNyZ9AtoBtsI+13PeooY8Ygw+e7TJfL+2AMRx0VPMkPoKL+6uU1qQ+jxHsNVfZV+d8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1278
 
-On 26/04/2024 23:51, Rob Herring (Arm) wrote:
-> Define "regulator-[0-9]v[0-9]" as the preferred node name for fixed
-> regulators. Other suffixes with names are also accepted. Combined,
-> these make up about half of the existing names in use.
-> 
-> For now this only serves as documentation as the schema still allows
-> anything to avoid lots of additional warnings for something low priority
-> to fix. Once a "no deprecated" mode is added to the tools, warnings can
-> be enabled selectively.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+This patch series fix a bug caused by freeing a stack buffer in RSA
+module and skip some unneeded steps in StarFive crypto driver.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Jia Jie Ho (4):
+  crypto: starfive - Skip dma setup for zeroed message
+  crypto: starfive: Skip unneeded fallback allocation
+  crypto: starfive: Do not free stack buffer
+  crypto: starfive: Use fallback for unaligned dma access
 
-Best regards,
-Krzysztof
+ drivers/crypto/starfive/jh7110-aes.c | 16 +++++++++++-----
+ drivers/crypto/starfive/jh7110-rsa.c | 11 ++++-------
+ 2 files changed, 15 insertions(+), 12 deletions(-)
+
+-- 
+2.40.1
 
