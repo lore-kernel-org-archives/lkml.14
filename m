@@ -1,89 +1,93 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D145517B506;
-	Mon, 29 Apr 2024 21:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0241B17BB1C
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 21:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714424571; cv=none; b=NnDo6yxuadxQC7u/HmUPnWtg5VbDjcF8FyByiGGsB3U8pJnJi/o2MfeA/LCJnKaT1xOTaZNjvofGo8RCteBpJA6gRr2235EJ1MpkCrEWaMvZsbWsSKdbrKib761YbG7dyMNBDJ058eUKXqn//gpFvuEYXfqK9lE7PRXk62ycNkY=
+	t=1714424577; cv=none; b=mVUIl9C/fbG6hs6tH5EyKkCpK+zTLy9eX50MUU+zEzxpUSfOENLRRJg0F26/JRlLLd3141c+dWdF7/cwi+h4z2RNO+GWsYUrn13CjDBEiVJJ53wfAwLHKyUp13aElV/dVjYrPZrJMSgulCAjMzjX1s8RO4CRTl3/ucGw4/xUVKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714424571; c=relaxed/simple;
-	bh=go6kYlHFsYB74kl/8I+T1MsHa88jU15QVf/yTl3oup4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MmI7bV3EHOjs/C5R0k9n2z6pX1zuuw/rrhhclET5bbJ+5hwSw8bKVq6261ReKL4Rsi/SeR7xGy0v5hb8y0GVlHVSfAPFoSq8hQRN9ecZT/ZxpSOooKpxvTX4+IgKwp4zCtc15Pf3TH1lzB3ETte1zXG1eT0e6KetGmlyaqA9LjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=U1ak6Uvm; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1714424577; c=relaxed/simple;
+	bh=PPVNvn0DIhv6FGN+XyDmmtWyNnzYHJ1RnYM4N8RhC9c=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oLzVMgmLKg474epmwBrfeF0ZfosQm38SNjgzupg/rVK4g7B6Bf11VZ8a5wgXDL43xxUDvNA13rack0ndijl7bBBWbbbQ/hcflGPKWtNx9l/u+50hs3ivnBtdjfIdMqpQ6u3XHXQBX7PG0pNTGXo32onKx6xqbgHubzhy/bFVzXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d0cvUxCU; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="U1ak6Uvm"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4VSwl41tMbz9sVm;
-	Mon, 29 Apr 2024 23:02:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1714424560;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cVauk+VnSvpEomOaaZ84W2esQ3BuTML2YO68AJLinVg=;
-	b=U1ak6UvmPza8W1SDteiXJrHNjmnBm0B1b3nBLu1KGy+d6fQetJxAoa+/bJ7RUmEiNPAyfS
-	HoS3MZ22Jj5ktWujk3WY+hZziIF/GDt5iX/zLiNw3d/46mrNxn4VVxgiK/C8v8Ne7FdMAS
-	m0ZJ5gHUYPAeyt0Dn1h2KKbaAmH6rXPcTvOXIIlA69z0AeZJcUa2Wdhx1llkSz8jNEUHn9
-	/SS2kCHB5qGZJx13HA2FM1D6799dYqv+jHlULMJT74UPU7Hym41Jd92hlxEPAnneQ/AJrg
-	wnhAgLhx+pwkyd7xaAJj1fZl6uCzjR+dhqFNcWPCJC+kwM2CHkrwurLrsmTLlQ==
-Date: Mon, 29 Apr 2024 21:02:36 +0000
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: willy@infradead.org, djwong@kernel.org, brauner@kernel.org,
-	david@fromorbit.com, chandan.babu@oracle.com,
-	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-	hare@suse.de, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-xfs@vger.kernel.org, mcgrof@kernel.org, gost.dev@samsung.com,
-	p.raghav@samsung.com
-Subject: Re: [PATCH v4 07/11] iomap: fix iomap_dio_zero() for fs bs > system
- page size
-Message-ID: <20240429210236.jfmhk4uboiqidr35@quentin>
-References: <20240425113746.335530-1-kernel@pankajraghav.com>
- <20240425113746.335530-8-kernel@pankajraghav.com>
- <ZitIK5OnR7ZNY0IG@infradead.org>
- <20240426114301.rtrqsv653a6vkbh6@quentin>
- <ZiyJITld-KdZeOrC@infradead.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d0cvUxCU"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2a5c5e69461so5989208a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714424575; x=1715029375; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xw3vIJGY2NNuKaQ6MudNnqR6rpTRdltf5mCEUSFWvc4=;
+        b=d0cvUxCUEqzsngCAPrB36e/r44+gq9tjbGqxxj3oQhk5/cAMIVHxxqzOhRduJhcr2/
+         6UfwTs7WOqFCw0m5oKcS5uFMb17XVkNYWdhdntj3hYG73UMRP23sIS3WpM8M/udsy+HT
+         ew8SoxkHyS3WJ90IlG4STUDHv3mYRnyYAxMuFj2+hEGz36GDTwidr3KYsKSkRRoXSEHI
+         8cNjvasB/ODaWhd9KCy48VO+4kNgWC6AFYGI2bS/8eStafqDpsH4wqtza9Z0kYyFtdjU
+         h8bnLiRGMdZYt2ijgiI3QX5FWYZWYb7bvh9zQ4x0PGIx8wuAwsxRsZdpfAXfWOOBxue+
+         nCpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714424575; x=1715029375;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xw3vIJGY2NNuKaQ6MudNnqR6rpTRdltf5mCEUSFWvc4=;
+        b=IDndM9KgIz/tSq4WqBexR4z3n4/eOsn7qpCtFRYbbys56NWP+zvonqTKXu6UgeH4y5
+         +t0rvTpjUsp9vIIwA0YuJnDMB9JruBJZ4bb6oqaNUx1fYTAQAUbAIR0qWWi0vi5h1uDX
+         DDM0Pvep18lT46WssCLy8nSepN0aOfoUHUCth864lt+FZ0e3euhDzzPYrDMuxeyo3HlI
+         IGJSvgNXLriOqfCoCvUL6ZKCefFH4SO4h5WzAMTh0O+4+gqTWmBUKirKnPjTWhv1ogjF
+         YEjYw1K/Opvk9qDxNMI/+Xlz+ft9KmoBnRPeuDjkRznqoc2D6VLK+0t7qw8zLqQYaZX3
+         cIJg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2Ykbvp3eHYZv6hrDo5tFDXdRJpy6bg7/YYAfhiHnHr+olKHKkaz9IdU8j8CMwHHUoAnDLwkwbx1eFVuGQQPLBdREttcBdy6pwNPEG
+X-Gm-Message-State: AOJu0YySiTtL69zG3QrqdsBRpmpP4Xf9Mj5rUlyuBp3S7bBfuH5n7fiG
+	MDEb3PYBIXdjl7SpW6KegHl6jtGSU8jyeQ1LnAiyQOSLl2Z28vUeQLwFhNtsphqI/Sx8OGi/17b
+	SQQ==
+X-Google-Smtp-Source: AGHT+IFAPa05P5Phibajkpgu95FpzO3FVIMmtbzX/atvNPTvVmV0SeqoPEqwME76DtqNEjJ0m8ryHAcldiI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:d509:b0:1eb:7b9:4f7d with SMTP id
+ b9-20020a170902d50900b001eb07b94f7dmr971010plg.11.1714424575332; Mon, 29 Apr
+ 2024 14:02:55 -0700 (PDT)
+Date: Mon, 29 Apr 2024 13:45:25 -0700
+In-Reply-To: <20240423190308.2883084-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiyJITld-KdZeOrC@infradead.org>
+Mime-Version: 1.0
+References: <20240423190308.2883084-1-seanjc@google.com>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Message-ID: <171442341918.161544.2844726781684658994.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: selftest: Define _GNU_SOURCE for all selftests code
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Apr 26, 2024 at 10:12:01PM -0700, Christoph Hellwig wrote:
-> On Fri, Apr 26, 2024 at 11:43:01AM +0000, Pankaj Raghav (Samsung) wrote:
-> > Because allocating it during runtime will defeat the purpose.
+On Tue, 23 Apr 2024 12:03:08 -0700, Sean Christopherson wrote:
+> Define _GNU_SOURCE is the base CFLAGS instead of relying on selftests to
+> manually #define _GNU_SOURCE, which is repetitive and error prone.  E.g.
+> kselftest_harness.h requires _GNU_SOURCE for asprintf(), but if a selftest
+> includes kvm_test_harness.h after stdio.h, the include guards result in
+> the effective version of stdio.h consumed by kvm_test_harness.h not
+> defining asprintf():
 > 
-> Well, what runtime?  Either way it seems like we have the infrastructure
-> now based on the comment from willy.
+> [...]
 
-As willy pointed out in that reply, it is allocated on demand, so it
-might still fail and we might have to revert back to looping.
-And if we end up using the huge zero page, we should also make sure to
-decrement to reference in iomap_dio_bio_end_io(), which is not needed
-when we use ZERO_PAGE.
+Applied to kvm-x86 selftests_utils, thanks!
 
-FWIW, I did a prototype with mm_huge_zero_page() in one of the older series.
-[1] (I forgot to decrement reference in end_io()) but I did not get final
-response if that is the direction we want to go.
+[1/1] KVM: selftest: Define _GNU_SOURCE for all selftests code
+      https://github.com/kvm-x86/linux/commit/730cfa45b5f4
 
-Let me know your thoughts.
-
-[1]https://lore.kernel.org/linux-xfs/3pqmgrlewo6ctcwakdvbvjqixac5en6irlipe5aiz6vkylfyni@2luhrs36ke5r/#r
-> 
-> > In anycase, I would like to pursue huge_zero_page folio separately
-> > from this series. Also iomap_dio_zero() only pads a fs block with
-> > zeroes, which should never be > 64k for XFS.
-> 
-> Only if you are limited to 64k block size.
-> 
+--
+https://github.com/kvm-x86/linux/tree/next
