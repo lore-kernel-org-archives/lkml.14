@@ -1,81 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDD7DDB1;
-	Mon, 29 Apr 2024 05:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997D7DDD8;
+	Mon, 29 Apr 2024 05:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714370086; cv=none; b=HGh6J94B7U+Jqhj6cqL5/kdkBEDeBtmWMl8eAVfF3qfywo4xYqhy9OY7pT4l44E8aCGir05uNWZUr20hHY+zsImK63yi1Ssnrr16LCPybcgigrAy2ia0tmC3SZr5eq++OKTFmRcNB6t/SfwiOhvijjkcOmPtZSrOYMLkTBqgIeY=
+	t=1714370104; cv=none; b=HrIdWDSeoJe+YXeCJzbrdJCKnnglBsVNR8mZAO2FRR8UMIsUfad+De2tRkSDR7IFh25ai1UwFq77qqS6X1OxzdjIJA7Jl7ULrbKLiAs1gdJyySALWZHM+QqRhh2auSiZOee9qdgg3n3YOOdyLEp1XFb7j5k1Pk0yzwZ8yTWczNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714370086; c=relaxed/simple;
-	bh=KygCcw1hhniytw++trr1oIl8MgJAAzVCuTLV+BjlSfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YOfotNDSBuCW0yVclyABt8nSVDYEpMihAtuxhgzCKzk3Ariibp6pLkC6nClgZuVXagvZ5blGJfHWJ9JrGrPJcpIGIwUCYa98PN34VahlO10aA/UZHP0r7fpb7T8A0LLtU3KBrh8TxjI1yKsx34m+nzbGZKUx1sCA9FgoMv3xoAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JeumaphG; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714370104; c=relaxed/simple;
+	bh=B/8yaOKjqm4lDksZDUxYpsKoDBodUyrAGmiPUBu0eq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FcNKF+ueXNakm4DpS4za8oO071WDj2py2B3Z4G6pa7tkUVJOL0IGKAnSfDhPIhsSDhhnV9CjQtMoRvpiUgWLtrTI/rc5o4CutUIoYgSeX9pq3tYnrYSHxDsexvTkvXllYn5kOyQS6gpnHJw36140PmaaF7M4AQWR3DNcasdnHwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=w9+EPYWQ; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JeumaphG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714370085; x=1745906085;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KygCcw1hhniytw++trr1oIl8MgJAAzVCuTLV+BjlSfo=;
-  b=JeumaphGQTAb7+4YH46KXBuFgNB+t2ezhoAcoUrFaxO5sSYXK/aoXS31
-   vdYvCk+P/GvP0o99sQIaGvAuN4Uy4zdEiYbi1upOkfk1HF1PmGPlzlsLL
-   gYIGhxDYI1HXW8x72J+pucD5zpaT3OHdewUhUDh8kO0LZX63s3j0kPpnx
-   S+wPq3Ckd/ubU5/X+fUXgJag+10E1WY4DLFlMwUmHspqxPXwMpD/9SEX8
-   fXnmGFRbqyVU8UAt0BQmY5JlbdFJjzuDx0TfipPdRITQQXO61ekhWarrP
-   OKWSJy4hjQ8v/KEcmZ/BaIyJJfVB840IYkN2WIUzZVrMNVqh08qfY2KqA
-   g==;
-X-CSE-ConnectionGUID: Xr5sjo2EQr6DvAfR0NzZAg==
-X-CSE-MsgGUID: QySg7LLsR3Wfo0LkHstnWg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="10129318"
-X-IronPort-AV: E=Sophos;i="6.07,238,1708416000"; 
-   d="scan'208";a="10129318"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2024 22:54:44 -0700
-X-CSE-ConnectionGUID: 6o34SmsNQRaOBDnFFVaOlQ==
-X-CSE-MsgGUID: LigLZAAERTqT919KFbD8qw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,238,1708416000"; 
-   d="scan'208";a="26410927"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2024 22:54:42 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id EC81311F830;
-	Mon, 29 Apr 2024 08:54:38 +0300 (EEST)
-Date: Mon, 29 Apr 2024 05:54:38 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] device property: Fix a typo in the description of
- device_get_child_node_count()
-Message-ID: <Zi82Ho69tYm8Hyu6@kekkonen.localdomain>
-References: <369e7f6898c4a442d45aa15d7d969131d61e9cee.1714323747.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w9+EPYWQ"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43T5s82Q052960;
+	Mon, 29 Apr 2024 00:54:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714370048;
+	bh=9z+5mrcooFlbXR+nO+DTW5Jb0Y5LWwkCd9vReQSQTeA=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=w9+EPYWQ6GGF8dZ+J2fGTL2TArMBiqkkvdCS/SdNjSfGehyDyEIIFNgydFTJ5qJn9
+	 wqtCy7lD4trk/O+Tf+u6Qi9wLdqvlxsH/lmf6DShIvU6XOeqy+AkL6NI6eiNUrZKEZ
+	 AhWTL7a7MLqN3lh7Bxu9KDN8HIyTD2beCNDboNnI=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43T5s873114950
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Apr 2024 00:54:08 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Apr 2024 00:54:08 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Apr 2024 00:54:08 -0500
+Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43T5s2m5029844;
+	Mon, 29 Apr 2024 00:54:03 -0500
+Message-ID: <c138f315-ed9d-4c10-b9b6-e88cc3ec5e8c@ti.com>
+Date: Mon, 29 Apr 2024 11:24:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <369e7f6898c4a442d45aa15d7d969131d61e9cee.1714323747.git.christophe.jaillet@wanadoo.fr>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] net: ti: icssg_prueth: Add SW TX / RX Coalescing
+ based on hrtimers
+Content-Language: en-US
+To: Simon Horman <horms@kernel.org>
+CC: Dan Carpenter <dan.carpenter@linaro.org>,
+        Heiner Kallweit
+	<hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jan Kiszka
+	<jan.kiszka@siemens.com>,
+        Diogo Ivo <diogo.ivo@siemens.com>, Paolo Abeni
+	<pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+	<edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>, <r-gunasekaran@ti.com>,
+        Roger Quadros <rogerq@kernel.org>
+References: <20240424091823.1814136-1-danishanwar@ti.com>
+ <20240427134120.GJ516117@kernel.org>
+From: MD Danish Anwar <danishanwar@ti.com>
+In-Reply-To: <20240427134120.GJ516117@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Sun, Apr 28, 2024 at 07:02:37PM +0200, Christophe JAILLET wrote:
-> s/cound/count/
+
+
+On 27/04/24 7:11 pm, Simon Horman wrote:
+> On Wed, Apr 24, 2024 at 02:48:23PM +0530, MD Danish Anwar wrote:
+>> Add SW IRQ coalescing based on hrtimers for RX and TX data path for ICSSG
+>> driver, which can be enabled by ethtool commands:
+>>
+>> - RX coalescing
+>>   ethtool -C eth1 rx-usecs 50
+>>
+>> - TX coalescing can be enabled per TX queue
+>>
+>>   - by default enables coalesing for TX0
+>>   ethtool -C eth1 tx-usecs 50
+>>   - configure TX0
+>>   ethtool -Q eth0 queue_mask 1 --coalesce tx-usecs 100
+>>   - configure TX1
+>>   ethtool -Q eth0 queue_mask 2 --coalesce tx-usecs 100
+>>   - configure TX0 and TX1
+>>   ethtool -Q eth0 queue_mask 3 --coalesce tx-usecs 100 --coalesce
+>> tx-usecs 100
+>>
+>> Minimum value for both rx-usecs and tx-usecs is 20us.
+>>
+>> Comapared to gro_flush_timeout and napi_defer_hard_irqs this patch
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> nit: Compared
+> 
+>> allows to enable IRQ coalescing for RX path separately.
+>>
+>> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+> 
+> ...
+> 
+>> @@ -190,19 +191,35 @@ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
+>>  	return num_tx;
+>>  }
+>>  
+>> +static enum hrtimer_restart emac_tx_timer_callback(struct hrtimer *timer)
+>> +{
+>> +	struct prueth_tx_chn *tx_chns =
+>> +			container_of(timer, struct prueth_tx_chn, tx_hrtimer);
+>> +
+>> +	enable_irq(tx_chns->irq);
+>> +	return HRTIMER_NORESTART;
+>> +}
+>> +
+>>  static int emac_napi_tx_poll(struct napi_struct *napi_tx, int budget)
+>>  {
+>>  	struct prueth_tx_chn *tx_chn = prueth_napi_to_tx_chn(napi_tx);
+>>  	struct prueth_emac *emac = tx_chn->emac;
+>> +	bool tdown = false;
+>>  	int num_tx_packets;
+>>  
+>> -	num_tx_packets = emac_tx_complete_packets(emac, tx_chn->id, budget);
+>> +	num_tx_packets = emac_tx_complete_packets(emac, tx_chn->id, budget, &tdown);
+> 
+> Please consider limiting lines to 80 columns wide in Networking code.
+> 
+>>  
+>>  	if (num_tx_packets >= budget)
+>>  		return budget;
+>>  
+>> -	if (napi_complete_done(napi_tx, num_tx_packets))
+>> -		enable_irq(tx_chn->irq);
+>> +	if (napi_complete_done(napi_tx, num_tx_packets)) {
+>> +		if (unlikely(tx_chn->tx_pace_timeout_ns && !tdown))
+>> +			hrtimer_start(&tx_chn->tx_hrtimer,
+>> +				      ns_to_ktime(tx_chn->tx_pace_timeout_ns),
+>> +				      HRTIMER_MODE_REL_PINNED);
+>> +		else
+>> +			enable_irq(tx_chn->irq);
+>> +	}
+>>  
+>>  	return num_tx_packets;
+>>  }
+> 
+> ...
+> 
+>> @@ -870,7 +889,12 @@ int emac_napi_rx_poll(struct napi_struct *napi_rx, int budget)
+>>  	}
+>>  
+>>  	if (num_rx < budget && napi_complete_done(napi_rx, num_rx))
+>> -		enable_irq(emac->rx_chns.irq[rx_flow]);
+>> +		if (unlikely(emac->rx_pace_timeout_ns))
+>> +			hrtimer_start(&emac->rx_hrtimer,
+>> +				      ns_to_ktime(emac->rx_pace_timeout_ns),
+>> +				      HRTIMER_MODE_REL_PINNED);
+>> +		else
+>> +			enable_irq(emac->rx_chns.irq[rx_flow]);
+> 
+> clang-18 and gcc-13 both complain about the if/else logic above.
+> I think it would be best to add {} to the outer if statement.
+> 
+>>  
+>>  	return num_rx;
+>>  }
+> 
+> ...
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Sure Simon, I'll fix all this and send v2.
 
 -- 
-Sakari Ailus
+Thanks and Regards,
+Danish
