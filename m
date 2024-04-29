@@ -1,93 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from rere.qmqm.pl (rere.qmqm.pl [91.227.64.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616427F46C;
-	Mon, 29 Apr 2024 14:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B543A7EEF2
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.64.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714401939; cv=none; b=JYXjlzyiAySk9ewbCXTIjvnKFnCOJFiaQN/O3F+tW9Hj043xNRj71DjJ/2gUcHc6nRC5nqt5OK39nz1Lq/9hcs5Z/KG5ZPDrL86NJHxwqBsrbYtKX0LOFSwiFuMxCBsS9kPiCi1YbNRio9037eSCiR9lBXKU98d9JA833cnoXxs=
+	t=1714401939; cv=none; b=ThKzgorVI5hgSDcY24CgY+XtNuGkhCX59kbihEM6aQL57lRxGysDB0Qs0Df8ub24C84mEpMWxzhD/9TeZw+tvYw7tWcklCPkhpGCNbA4Mbt8gUZKwwcoMhEN3bPzydiFtYJcY2gLe6S5tWEwRPqZSnWFdvuHTyTV4kT0iWVTB/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714401939; c=relaxed/simple;
-	bh=HQFQVk/aUt7EGazaH6NoJ7OsnpPabPfhVzUB2hmzT9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s/I7Mooe1IEybAHMsOqNGcxS5KNPWHH8aL0/N1x4r+2mR5F3osu6vmOnRFIer1QEoS3btujHRKZ3ENVKEtF2RcTKpB5pyP17Q/HPa5EziQPeSk3GGmvLTpoV4dN8qPj1aTJIKby1AY46evSyIpMmddwJ/awsO+3hz6ey/+WNHWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gB8vs2w9; arc=none smtp.client-ip=10.30.226.201
+	bh=oAPaEdKRQbl/ibo90AYRSlwVYUinifQpfpKWtnOvN/A=;
+	h=Date:Message-Id:In-Reply-To:References:Subject:MIME-Version:
+	 Content-Type:From:To:Cc; b=AQu5p4RnIQ7DMjCMjIk5jTexyU9Bg44HKvj2svPPTVqmwij0usTHXe8umITztDvxObFyZrLC06LbbpYJ3ZivQ+XfiM8J6SaJ9Nq7HoJ3WH3wCGrxk1pruMOAvEtkUCSCwN8EZzNUb6YcO3LEgTcG/SYo7dmQS4h+s35W3vwTpR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl; spf=pass smtp.mailfrom=rere.qmqm.pl; dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b=FVCfwT2p; arc=none smtp.client-ip=91.227.64.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rere.qmqm.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gB8vs2w9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0810C4AF1C;
-	Mon, 29 Apr 2024 14:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714401939;
-	bh=HQFQVk/aUt7EGazaH6NoJ7OsnpPabPfhVzUB2hmzT9A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gB8vs2w9acQgZ/W/pBv8sEYf7kYQGoGXQovwX3dDNem++Cui0NbKVh4o/aYcv7XDa
-	 P7ImS8mIsQ3AsX9dg1B9pMcdpx0qwB0jRUKGiNfLyPa4LeCLLgpSmsCjGjYEvAGsmD
-	 pYnz2FZBhzpjuso7K1IcCl9tXJUwajF12cphURy+GQllvrTlY9WivRNJ4b1+tJMpCA
-	 d2Q4cUEZNJi4kPGzqvQksLxhpCK0CDODJPuIOLH8bAh+k8wCGxpy8ZfaXCge2mYRzA
-	 6DP/nekSmWlgKjO33JkecU++lLEdoGSUJ6iIbVJ07eHdCUrP6WhBqBh4ELR5iH0SeV
-	 z6agpkn7PqvdQ==
-Date: Mon, 29 Apr 2024 23:45:36 +0900
-From: Mark Brown <broonie@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-phy@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Drop unnecessary quotes on keys
-Message-ID: <Zi-ykPmrPqBxiHNz@finisterre.sirena.org.uk>
-References: <20240426202239.2837516-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="FVCfwT2p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+	t=1714401931; bh=oAPaEdKRQbl/ibo90AYRSlwVYUinifQpfpKWtnOvN/A=;
+	h=Date:In-Reply-To:References:Subject:From:To:Cc:From;
+	b=FVCfwT2pcWQbEzQZAKCwef4vL5Hp2sOFYIYwrvf+EHnhMljwfuPLC1XYCTS62fuiP
+	 iKmtyjgu0FrWUjNyIDqgb2HWVAt7HhIUGS5xZj5oxK7aPqSLy7pGhd3ZgEYIn0RLrb
+	 XG18UynlNtHlgxalBGlyamLWJpUiAucmgsHEpwKFNSGImkvCVMV3IWxnYnE6LkaWQG
+	 2c/BlHV82yisJyfFmeteeajWxyN6Me94IT+bikBXLPKSM9EOqmInCgr81A7Xz6MRQ2
+	 z27g70IlD5QEyrCs+AzugC1GyCtrCxPCqAkJCek9As/WwELskw8YbB2bNtDmzESQBf
+	 QbweTCQCQJAxw==
+Received: from remote.user (localhost [127.0.0.1])
+	by rere.qmqm.pl (Postfix) with ESMTPSA id 4VSmMv4mg6zbr;
+	Mon, 29 Apr 2024 16:45:31 +0200 (CEST)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 1.0.5 at mail
+Date: Mon, 29 Apr 2024 16:45:31 +0200
+Message-Id: <cb786b54b2a5554693022939b9e34851a7c590f9.1714399603.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1714399603.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1714399603.git.mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2 09/12] regulator/tps68470: use rdev_get_drvdata()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BUMTG6XEkN0Ut87X"
-Content-Disposition: inline
-In-Reply-To: <20240426202239.2837516-1-robh@kernel.org>
-X-Cookie: TANSTAAFL
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+From:	=?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+To:	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Cc:	linux-kernel@vger.kernel.org
 
+Replace uses of rdev->reg_data with the official wrapper.
 
---BUMTG6XEkN0Ut87X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/regulator/tps68470-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Fri, Apr 26, 2024 at 03:22:37PM -0500, Rob Herring (Arm) wrote:
-> The yamllint quoted-strings check wasn't checking keys for quotes, but
-> support for checking keys was added in 1.34 release. Fix all the errors
-> found when enabling the check.
+diff --git a/drivers/regulator/tps68470-regulator.c b/drivers/regulator/tps68470-regulator.c
+index de7db7690f6b..326a3b942488 100644
+--- a/drivers/regulator/tps68470-regulator.c
++++ b/drivers/regulator/tps68470-regulator.c
+@@ -56,7 +56,7 @@ static const struct linear_range tps68470_core_ranges[] = {
+ 
+ static int tps68470_regulator_enable(struct regulator_dev *rdev)
+ {
+-	struct tps68470_regulator_data *data = rdev->reg_data;
++	struct tps68470_regulator_data *data = rdev_get_drvdata(rdev);
+ 	int ret;
+ 
+ 	/* The Core buck regulator needs the PMIC's PLL to be enabled */
+@@ -73,7 +73,7 @@ static int tps68470_regulator_enable(struct regulator_dev *rdev)
+ 
+ static int tps68470_regulator_disable(struct regulator_dev *rdev)
+ {
+-	struct tps68470_regulator_data *data = rdev->reg_data;
++	struct tps68470_regulator_data *data = rdev_get_drvdata(rdev);
+ 
+ 	if (rdev->desc->id == TPS68470_CORE)
+ 		clk_disable_unprepare(data->clk);
+-- 
+2.39.2
 
-Acked-by: Mark Brown <broonie@kernel.org>
-
---BUMTG6XEkN0Ut87X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYvspAACgkQJNaLcl1U
-h9AK6gf/Xc+HslmuppG3Hp8ImYKauCbY+zuC48rT6Z0ZCBxjrjhiGQ1U1+BJdVkZ
-FZGn1bnIqVJ+yOq8uAy7L7v6DZs3NuPGLMAUJofSho2NZow1jZwDxH0Dt7L4DqRh
-SErFMkHo8rTw7YGdwLp3HI0XFlkm02oJz3HJ2v+O4RLkMgkGCRgvV5iOYjupfau/
-NscyXAgaFlf7wRz2rfHIP7xCsRmSNMf8M1Z4fK7miUk6iDnK6g/8CbXUMyPcrLfd
-f3S5/7ZM+MjizWf5ZLYoIxPTfhoX2BfRdjb6Upu9il2gZjoLDIlrtyyJL8XZJ2Tx
-FvUc+ybdxp4Ggo1kEUDK1LgU13YYOQ==
-=F/JM
------END PGP SIGNATURE-----
-
---BUMTG6XEkN0Ut87X--
