@@ -1,118 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81ED5474D;
-	Mon, 29 Apr 2024 12:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18502535A4;
+	Mon, 29 Apr 2024 12:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714392811; cv=none; b=GyDI2KQK0B3hLqzsqVgBXjq9IwhphvQTYdgwLcfYhF5HU8kd8AXFGZXnvPdKWJWvp+ZtTU5WIn0WdSxbp99d32y/ZF/T5/T6d8TMxXkbYavYPz56TYFy7svwTgiNZFshOgR97AYmZoNi9D+SFPRlfMezG6MIfLGZuzoNRCoPCUg=
+	t=1714392884; cv=none; b=QayZPJi/TVGOQfHwwcCUM6L0KsEctDHzJAaioYDw7Xf/bpKtXtO7i4TkYIstHQbT1019/ZEhzo6FwwUzILrEMLEa98TYqYyb7ymcnbIp+cjMWpOXCUz+aZ2IKHngrXt5STXxugUfnQfdRbnTRv5nat3u3lpHggBsZaxAZDqt10k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714392811; c=relaxed/simple;
-	bh=0IDV4wwXjhB7GAsTZK4UtfbDqgXcZqHx4iXcoFYyL98=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TS9X8pJR6x5DFnuolRv40z7zM7FuEkUELyMTWMoymacsfULxCB9OJKB9cK0VqdZxjbEGlpsKorW32Km3lv8zlYm/LM7nlsRsZYD9qF7Cb3NrLCr8gmhMfBAzQQtnuUrQdj4nsNhb+BZo8Ji3xtrQlevhnfAWnLAIdlsqG6gJCOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j8u6Ry/C; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j8u6Ry/C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714392810; x=1745928810;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0IDV4wwXjhB7GAsTZK4UtfbDqgXcZqHx4iXcoFYyL98=;
-  b=j8u6Ry/Cd1X3xeoM9dPpMUPXf2MzXrN9NnTIhdxYeSha1g8xW5NVexew
-   gzp5YZoNZxZdtYghF+N4FhU0BHSHCHTb5jMnSCyEMvy6DscOgdki5B4OD
-   jtdeQbKJ4JgRtyijMrdzUQdbSFlCL3hDlP047sqJXyD+GvZZ2+Pz051DN
-   oph6+n1PKzUcmsCccRzJdh7TH8lnAHBS7OEe8hXjq973YpPWLQjc4lVMk
-   A9MVXrR//dLPUnB+km2770Ul8e4+PPL3m8PjO5pnWAghhlLgdkm3NeUy+
-   lAHQPs0GHWfs6zZGxcVxFsDW7ClktpX1NgXxUl3ZQfUVA4URrW55FeTbc
-   g==;
-X-CSE-ConnectionGUID: nV1uzaFQQ/Gm3SBINfkdBA==
-X-CSE-MsgGUID: vJSuUidrQFyG6KLVVYr92Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="35440894"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="35440894"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 05:13:29 -0700
-X-CSE-ConnectionGUID: HP79hpQ0TC2blCYLTzid+g==
-X-CSE-MsgGUID: iY5ZkRPpRS2Ky2XYZSEJfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="26603701"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 29 Apr 2024 05:13:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 23FDA15B; Mon, 29 Apr 2024 15:13:24 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Alexei Starovoitov <ast@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] bpf: Use struct_size()
-Date: Mon, 29 Apr 2024 15:13:22 +0300
-Message-ID: <20240429121323.3818497-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	s=arc-20240116; t=1714392884; c=relaxed/simple;
+	bh=TY0BbP/ydR9gp4nj26TsMUiKKoe0SHMu2mZIdj/+l9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZzOAcpvHl9pRvdGK7+BRBP19qh1iOr2aLoYHf+URlTw47cjWxzHXyN8izK8cbNp0M1pdfOaCFxhIbzgHgvHtW2c3qU32DbyIoDN6yuOvx++qfI2i+7u7MKoh3jbnnBAL79ANsDKgp2d/ogJlUnwVdDn4V5svV4uL7NvdcfNYcd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D8602F4;
+	Mon, 29 Apr 2024 05:15:09 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61A223F73F;
+	Mon, 29 Apr 2024 05:14:41 -0700 (PDT)
+Date: Mon, 29 Apr 2024 13:14:38 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/8] spi: sun4i: use 'time_left' variable with
+ wait_for_completion_timeout()
+Message-ID: <20240429131438.1f036341@donnerap.manchester.arm.com>
+In-Reply-To: <20240429112843.67628-7-wsa+renesas@sang-engineering.com>
+References: <20240429112843.67628-1-wsa+renesas@sang-engineering.com>
+	<20240429112843.67628-7-wsa+renesas@sang-engineering.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Use struct_size() instead of hand writing it.
-This is less verbose and more robust.
+On Mon, 29 Apr 2024 13:28:39 +0200
+Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- kernel/bpf/core.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+> There is a confusing pattern in the kernel to use a variable named 'timeout' to
+> store the result of wait_for_completion_timeout() causing patterns like:
+> 
+> 	timeout = wait_for_completion_timeout(...)
+> 	if (!timeout) return -ETIMEDOUT;
+> 
+> with all kinds of permutations. Use 'time_left' as a variable to make the code
+> self explaining.
+> 
+> Fix to the proper variable type 'unsigned long' while here.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 778775bdbb2e..6047979d5be6 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -25,6 +25,7 @@
- #include <linux/bpf.h>
- #include <linux/btf.h>
- #include <linux/objtool.h>
-+#include <linux/overflow.h>
- #include <linux/rbtree_latch.h>
- #include <linux/kallsyms.h>
- #include <linux/rcupdate.h>
-@@ -2455,13 +2456,14 @@ EXPORT_SYMBOL(bpf_empty_prog_array);
- 
- struct bpf_prog_array *bpf_prog_array_alloc(u32 prog_cnt, gfp_t flags)
- {
--	if (prog_cnt)
--		return kzalloc(sizeof(struct bpf_prog_array) +
--			       sizeof(struct bpf_prog_array_item) *
--			       (prog_cnt + 1),
--			       flags);
-+	struct bpf_prog_array *p;
- 
--	return &bpf_empty_prog_array.hdr;
-+	if (prog_cnt)
-+		p = kzalloc(struct_size(p, items, prog_cnt + 1), flags);
-+	else
-+		p = &bpf_empty_prog_array.hdr;
-+
-+	return p;
- }
- 
- void bpf_prog_array_free(struct bpf_prog_array *progs)
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre
+
+> ---
+>  drivers/spi/spi-sun4i.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
+> index 11d8bd27b3e9..2ee6755b43f5 100644
+> --- a/drivers/spi/spi-sun4i.c
+> +++ b/drivers/spi/spi-sun4i.c
+> @@ -206,7 +206,8 @@ static int sun4i_spi_transfer_one(struct spi_controller *host,
+>  				  struct spi_transfer *tfr)
+>  {
+>  	struct sun4i_spi *sspi = spi_controller_get_devdata(host);
+> -	unsigned int mclk_rate, div, timeout;
+> +	unsigned int mclk_rate, div;
+> +	unsigned long time_left;
+>  	unsigned int start, end, tx_time;
+>  	unsigned int tx_len = 0;
+>  	int ret = 0;
+> @@ -327,10 +328,10 @@ static int sun4i_spi_transfer_one(struct spi_controller *host,
+>  
+>  	tx_time = max(tfr->len * 8 * 2 / (tfr->speed_hz / 1000), 100U);
+>  	start = jiffies;
+> -	timeout = wait_for_completion_timeout(&sspi->done,
+> -					      msecs_to_jiffies(tx_time));
+> +	time_left = wait_for_completion_timeout(&sspi->done,
+> +						msecs_to_jiffies(tx_time));
+>  	end = jiffies;
+> -	if (!timeout) {
+> +	if (!time_left) {
+>  		dev_warn(&host->dev,
+>  			 "%s: timeout transferring %u bytes@%iHz for %i(%i)ms",
+>  			 dev_name(&spi->dev), tfr->len, tfr->speed_hz,
 
