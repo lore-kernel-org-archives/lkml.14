@@ -1,93 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1794F6E5EF
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92B46F510
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714395733; cv=none; b=XpizbJE/qvO0AReS5g0yOdnw4hekA7UUyxijCBlddZ55XSQzZkXQwupErclixj5CnFVRBvn0kfxwYZEpIi/wgBkKAMb3yTDdKsBT9putPnYoXVv3zDIg9oc8qjvduBH4va3ilf1JYZyH+kYKqLjBUN7KR7/qf8pwwQ6v6FVR2KI=
+	t=1714395753; cv=none; b=sCMeSlMp49JZs2hISmaFK9UwAtQ15Rr6xTZkC3g9Ghx/nJ4/qfekmHHVz7u9wgr0IxNe/epVxX/bphLg5A3wrOG73V/nu8wa1aaC91pShR7RJzb2iFjuU4Ao9WTt/dMP+oo8PepUNRCa/X3cwhdSGGXDZ8dc5pgU05rVbMOWQXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714395733; c=relaxed/simple;
-	bh=XHEQAft4tZaQ2JdNqTSsJ60xy1/uNy4H7i3u5WPmZVk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W88Wb+RD3d/G0KzZt5G0Y/7MFgRDe49951v+LIoXe2LziqeT0LJx9ZL2lvzye2p7dlKuoLHbM9rEDRzWQH4L1knkmiLyslsxpc3CmHwVO056McP41jaZlmprFiUy5J0js6pxpJlaZEZt/groLzgePAgyRJi5tjZeXnYb9zsjimw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fNu4S6J+; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714395753; c=relaxed/simple;
+	bh=vZpR7m7Frapq/eUfEPgB6QGB4p1PqtXPlfS7j+Aqdqk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NNr6wuNzDqPIvn/IKjWBETj3VJnB1uFmXGBjy6e2MfwHpHKNfca++LbH1cMzstcgMp90hW3OEsIi0+C8DV6uM57uG/1YNJLr/W4ykO1k3jyuywbrAGDEFUz6YrvwiqQwqua4eZVB8zkfYqyL0UdYwZlSvpfeDcmCndiqxZzfi1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KdITw+wm; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fNu4S6J+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714395732; x=1745931732;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XHEQAft4tZaQ2JdNqTSsJ60xy1/uNy4H7i3u5WPmZVk=;
-  b=fNu4S6J+VvcIxGYPd02J7ac77ITSXHxKmQGslLj1t6BBHLvEc4jsgIFN
-   gHu+ZjemRaRIAsxTC6Xty4X1bupFf/ikx5Z5Euuzg+v9lvdr6LT3x/v+I
-   /zd4oBWCNMAAwFZfmffA4MLJDECWbkj68fF/sZhz5SdHgaxSrVKhi3WJJ
-   beY1dTUCDR0e0wVmj+MrryPOuF1BGufyQBKtSjWfaB8c11Jd+4da5IT6i
-   itDoGS4hX3kKqvNQAuZQ5i31ZL4Pd4UjJvZ5Qm5j0/YeXtXiPUOqFxd3f
-   BP/jLAQSsipZ8SuXQgXwBybjTU6mIsUXR1OKMQbmyILsKkL92+k5iUHT5
-   w==;
-X-CSE-ConnectionGUID: UkKW/IYlRFS4AkxADYWvXA==
-X-CSE-MsgGUID: THZnSlxURLa8HpkGuIzQ+A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="12986991"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="12986991"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 06:02:12 -0700
-X-CSE-ConnectionGUID: Wcmsk7B3SPyVEee2IPaVZw==
-X-CSE-MsgGUID: TgdXCZUOTT2TppTd1Nyopw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="26507223"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 29 Apr 2024 06:02:09 -0700
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	stable@kernel.org
-Subject: [PATCH v1 15/15] intel_th: pci: Add Lunar Lake support
-Date: Mon, 29 Apr 2024 16:01:19 +0300
-Message-ID: <20240429130119.1518073-16-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240429130119.1518073-1-alexander.shishkin@linux.intel.com>
-References: <20240429130119.1518073-1-alexander.shishkin@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KdITw+wm"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a58e787130fso309091066b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 06:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714395750; x=1715000550; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ogo3L1JklJSYYhpVNqxf6VY7w+66Me1qoHniLda2rEU=;
+        b=KdITw+wmF2FLuEFvaDJ5wPkkt7P2B/up+Dm3O5qjibIG345nNH/VWNMlf1okIC9QQw
+         Sylsp84z/SCMO2cEy0f3y3FTBIFA5YXz/eLHwc6YvMu6BAES2ikv+xdTC/fwFpoqMrr6
+         rpySdLE05pmpXZn7pQQvHOHHqhCrMepeQTkdwmKVQVwrme52BKEMmXX1dWeNt2ERWhyv
+         OPue1ElUk80kVQwtPx/Voyc/K3woKwfbQiDv7DkWvgYUnWxn/S4ivFwsxQRyh/1xe29l
+         QguQGhA2yZnAK62ueP0nLcVL0rtEz89SXr4+5oQJ6kLhEbF1eSi21vJC1IUQywG46BMO
+         lY9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714395750; x=1715000550;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ogo3L1JklJSYYhpVNqxf6VY7w+66Me1qoHniLda2rEU=;
+        b=aCV7L0qyEGddNOUJvnf3gSFyBsXqqZOib9rLtCbcS/C6qQ5rQtndiz8iaBdNnEd/i0
+         j5LzkhYklu2OHUEiGMNLdaatq2eloN504smXctf1B+hLtjODHTBV5F/zqFFQjHH7akMQ
+         N0XgoR8Ec24DcSC/gFB5Buzs8ky+/hpwC5Hmq7d1XfeCMsolc+w2hzdLvJVPiJQYJ1N7
+         WBywNJX2PaFRHPGwxRzPnVSsitgfGx3tQijlo+sRrrdc+3gymWAsn+2CLFx/RlW9wuAN
+         q8DWaKocKTuSCjW4PR01lDnWYvXIyfumvfdEjXIWK0gtRjtdJyiTHdTOsPtkA09bgEup
+         ouyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUw9SiYfATawJ6vGucqdXZ21kXw+NLkSfxA9DAB8osm3cnZrvebfMoRXury42m8hImCbDpiP5lhGOveSauNFbeueSwa4MOBWHi8TeV4
+X-Gm-Message-State: AOJu0YzLmaJTIHxp55KmbqdlP+5dLjg1yCnntaKQ1tyzg3jwlFmCQQFE
+	TwuDTr2dBs9aOdq1sFyPTRnKWChFL27CTA1YdPvAM5HV772EXKoJS70ZOzDAkbI=
+X-Google-Smtp-Source: AGHT+IGHhf12WYBtN3Oqqbi5rMXCmEiK5wGhireFLP3cm7o9zO82fZWwtzHKExEGBj0AxAdjElja8Q==
+X-Received: by 2002:a17:906:4815:b0:a51:abd8:8621 with SMTP id w21-20020a170906481500b00a51abd88621mr6553751ejq.19.1714395750052;
+        Mon, 29 Apr 2024 06:02:30 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id dk21-20020a170907941500b00a55aee4bf74sm9976074ejc.79.2024.04.29.06.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 06:02:29 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Subject: [PATCH v3 0/3] HSI2 support for Google Tensor gs101
+Date: Mon, 29 Apr 2024 14:02:16 +0100
+Message-Id: <20240429-hsi0-gs101-v3-0-f233be0a2455@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAFiaL2YC/23MQQqDMBCF4avIrJuSTNRIV71H6WI0UQeKKUkJL
+ eLdm7iq0OV78P0rRBfYRbhUKwSXOLJf8tCnCoaZlskJtnkDSqxljVrMkaWYopJKEBnT6Vb1IxF
+ k8Axu5Pceu93znjm+fPjs7aTK+zeTlJACB21t38jBoLw+eKHgzz5MUDoJf217sFisaoylrm+10
+ we7bdsX8bKcUOEAAAA=
+To: Peter Griffin <peter.griffin@linaro.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.12.4
 
-Add support for the Trace Hub in Lunar Lake.
+This patch series enables the HSI2 (high speed interfaces) for gs101:
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@kernel.org
+- HSI2 feeds PCIe and UFS
+
+The parts added here have been verified to work OK without the
+clk_ignore_unused kernel command line option.
+
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- drivers/hwtracing/intel_th/pci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes in v3:
+- Drop HSI0-related changes as already applied
+- s/ufs_embd/ufs and s/mmc_card/mmc (Tudor, Krzysztof)
+- collect tags
+- drop my own R-b tag, due to SoB
+- Link to v2: https://lore.kernel.org/r/20240426-hsi0-gs101-v2-0-2157da8b63e3@linaro.org
 
-diff --git a/drivers/hwtracing/intel_th/pci.c b/drivers/hwtracing/intel_th/pci.c
-index 0db8ff9b1c48..0d7b9839e5b6 100644
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -324,6 +324,11 @@ static const struct pci_device_id intel_th_pci_id_table[] = {
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x3456),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Lunar Lake */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa824),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{
- 		/* Alder Lake CPU */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x466f),
+Changes in v2:
+- My v1 just contained HSI0, but due due to changing similar areas in the
+  code, I've also added Peter's HSI2 clock patches from
+  https://lore.kernel.org/all/20240423205006.1785138-1-peter.griffin@linaro.org
+  to this series so as to preempt any merge conflicts. Namely:
+  * hsi2 bindings
+  * hsi2 DT
+  * hsi2 cmu clock driver
+- drop patch 'dt-bindings: clock: google,gs101-clock: add HSI0 clock
+  management unit' as already applied
+- cometic updates to patch 4: 'clk: samsung: gs101: add support for
+  cmu_hsi0' (macro name, a whitespace, subject line)
+- Link to v1: https://lore.kernel.org/r/20240423-hsi0-gs101-v1-0-2c3ddb50c720@linaro.org
+
+---
+Peter Griffin (3):
+      dt-bindings: clock: google,gs101-clock: add HSI2 clock management unit
+      arm64: dts: exynos: gs101: enable cmu-hsi2 clock controller
+      clk: samsung: gs101: add support for cmu_hsi2
+
+ .../bindings/clock/google,gs101-clock.yaml         |  26 ++
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi       |  12 +
+ drivers/clk/samsung/clk-gs101.c                    | 507 +++++++++++++++++++++
+ include/dt-bindings/clock/google,gs101.h           |  62 +++
+ 4 files changed, 607 insertions(+)
+---
+base-commit: b0a2c79c6f3590b74742cbbc76687014d47972d8
+change-id: 20240423-hsi0-gs101-aa778361bfaa
+
+Best regards,
 -- 
-2.43.0
+André Draszik <andre.draszik@linaro.org>
 
