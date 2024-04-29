@@ -1,117 +1,85 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727A913BC2B
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E5C13C3D3;
+	Mon, 29 Apr 2024 19:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714420617; cv=none; b=f15S5+ayqLlzxTqsXs9Y32xg8EYN0QpIx8EtbvsZCmnh8bQvfRngm2B37xPTWpO+QqHiPoQykJ9KaXKet9hEp8rbDFwkl4eYWrr/SYMeZHaTX7ly3nGznNwYjAZEQo+c50J85+WRjXxeSPWog+WiROojHMKOg680b7gonF23wLo=
+	t=1714420723; cv=none; b=imcEWBzdSVIJP99vvOdgEg/EuuFwLNA5lTcQTMb8BdiOqAvNh9lFlsJwGvT9WNr+huai4eW2KuRpqdJHoIkMBHd38IJKFkGI9bRDFym+konNO46UhjmNM1GGkfRwYpsBRd4IciPv1kQEPjtIYF2VX9MhSl89BOH3ysedgKc076c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714420617; c=relaxed/simple;
-	bh=Oz/47XesLfkXt3OtQ8v9MvqsWPB9C7AkbnLE6S4xd+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxKtKGyvx7VDmnX8hmtW+e0qjBi4uPr5RNBxZNvnxVVcx2UgnTYnvfPWFm5U9QLRf9dfJN7pTYbVQO5G01S6MOb5zSLvWdiUmCXoaNcP4rQI8cfNWR1/Zz1sEC/r9R+0eQqVrVTRONUUTGFJJJV32dhsGpkyHCRI5mRW/5UfETE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JsvB94Cz; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714420723; c=relaxed/simple;
+	bh=FJvmQIwnYA1NbnDbtlcuaDAxLcWJKfCmQ1jIuMLA13E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IlVd5HtOAXTTZvoqMhPmKa+0kTMYzHvIVFIHiPv/UUCR5QAIxyV6G9LErfIWg3NFo8MvV4TTUlylu6sYMILqCmoZh0RyXqHbrNB37AhroR6m9ubr/j8NwCR9FBHgyp+a8yDVtP5nMeO0cP4eGV0a+y8L2P8iTQmfW38dlAkCnwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3eU3oM1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JsvB94Cz"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5afb498d9faso477011eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714420615; x=1715025415; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wzh3iHAkozkq9gOCrjq5RtMClk8JbO8nQV/YvwV7pkc=;
-        b=JsvB94Cz6WnIh1RlkEGNxgEezpzne+ubUr/OV9Vpk062DbWJ3hkngLFckDrVlw/WVm
-         ubDQpwitE4Mcg2Vq8pD5ukDd8G6G4Esz5Ujb/ElSJ5NO+4FZ74gnm//727RV4lVNercC
-         MB9hVtr5/RiqrZz15WqE5FHZmnFGXXvEyjquY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714420615; x=1715025415;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wzh3iHAkozkq9gOCrjq5RtMClk8JbO8nQV/YvwV7pkc=;
-        b=H9l2bLuyk0EVpCZe8ZHmHBceT+ki6y6kdVojIW7Fu4Q5qF1x6spTvzwrNmI2fq/Wtk
-         rMoDVE25p4uSxWlfFyP2CQp07/bi3pnxqU8an3WwnpqkV5SwoQoYGx5LqpyaXGX/0pbL
-         Vxl2Zvm7OBtaIyAB6HZRPTF2tEmOvQSM79t4THAxy0vW4jAvMWvQC58y+/06W+zmU0ji
-         XUg+9u2XhPrxk0PD/VUdUfJv52t97AjPxbAelVMoZpEq0DBAvRVm8zvu4rMZClDCloWb
-         NDVx85yohRuGDyEHyiaz/rpWHZfzDYHzaNxF3NjE9/NbNIJEHCXO2Vg2/sJZHxF7lqkI
-         4vbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGYPkmHSnL2bsGjNYL6mhSHZ37jGw+UHrDBcBJDHTXw+4283D2Dw2o04odcmLJy63MiUYt4KqEk4BypnF+O7t6Qwv5u9udX9YFhyEF
-X-Gm-Message-State: AOJu0YxyuO+ZU6H8oYxltXBGf3MQ2c0fxjuqjnaLJudt7lxh7dwbAPi0
-	3+eCTuybcqEFjkSZFJdQ7nbw2JBW1yMB4KY5ZYII05j/8qLCA4doYp7dVqhSGQ==
-X-Google-Smtp-Source: AGHT+IGIIBDxgLzwela6Btq0sEBd7W1pqx3IiWnUloNQkWiaGW4i8tZehT+xlO6+NtB/zC3tsLMgMg==
-X-Received: by 2002:a05:6358:3916:b0:18a:62fd:b874 with SMTP id y22-20020a056358391600b0018a62fdb874mr11846383rwd.17.1714420615575;
-        Mon, 29 Apr 2024 12:56:55 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f13-20020a63380d000000b00615707f8078sm723421pga.17.2024.04.29.12.56.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 12:56:55 -0700 (PDT)
-Date: Mon, 29 Apr 2024 12:56:54 -0700
-From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] Bluetooth: hci_conn, hci_sync: Use
- __counted_by() in multiple structs and avoid -Wfamnae warnings
-Message-ID: <202404291253.106D020@keescook>
-References: <ZiwwPmCvU25YzWek@neat>
- <202404291110.6159F7EA5@keescook>
- <b09450f9-c42f-41f8-a2f6-eea3515eaa2f@embeddedor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3eU3oM1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F26C113CD;
+	Mon, 29 Apr 2024 19:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714420722;
+	bh=FJvmQIwnYA1NbnDbtlcuaDAxLcWJKfCmQ1jIuMLA13E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s3eU3oM1QkXwXD4bjZjWdebdBqh+YAh+y6kNKuXcwFeYdzF6ubphSDkHtEIy7869I
+	 da8Xut/07eWgM1D/OWqW0DzsNVFCHBm/uloHAXoo297odUnumA3hEC5hFa/NOEsePt
+	 CAKTXl+cWH8Rp8hvhst5LbJkwBD5KPdDDbzcZz7xTWO6MxAxVDva+bBFTRpByD5Sjy
+	 hjjML/kFThMgthiLScU5A2sR4nEVbKgF3mIhOw7uvjcn72VSEZyDx2t35pc0gUFhVX
+	 macpGAarGQhIovNycizSug07OBs8o+A8Bv7wDLjvX4+Os+fRiaNn8bv4GdjgR23Hcb
+	 YpnnlIjIhWf0Q==
+Date: Mon, 29 Apr 2024 20:58:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: ogustavo@usp.br, lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] iio: adc: ad799x: Fix warning generated by
+ checkpatch
+Message-ID: <20240429205831.662da28a@jic23-huawei>
+In-Reply-To: <3f8880a7c7bf6be0458ce2ec2deedeb505c4427f.camel@gmail.com>
+References: <20240428194326.2836387-1-ogustavo@usp.br>
+	<3f8880a7c7bf6be0458ce2ec2deedeb505c4427f.camel@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b09450f9-c42f-41f8-a2f6-eea3515eaa2f@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 29, 2024 at 01:50:46PM -0600, Gustavo A. R. Silva wrote:
-> 
-> > > diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> > > index fe23e862921d..c4c6b8810701 100644
-> > > --- a/include/net/bluetooth/hci.h
-> > > +++ b/include/net/bluetooth/hci.h
-> > > @@ -2026,7 +2026,7 @@ struct hci_cp_le_set_ext_adv_data {
-> > >   	__u8  operation;
-> > >   	__u8  frag_pref;
-> > >   	__u8  length;
-> > > -	__u8  data[];
-> > > +	__u8  data[] __counted_by(length);
-> > >   } __packed;
-> > 
-> > I noticed some of the other structs here aren't flexible arrays, so it
-> > made me go take a look at these ones. I see that the only user of struct
-> > hci_cp_le_set_ext_adv_data uses a fixed-size array:
-> > 
-> >          struct {
-> >                  struct hci_cp_le_set_ext_adv_data cp;
-> >                  u8 data[HCI_MAX_EXT_AD_LENGTH];
-> >          } pdu;
-> > 
-> > Let's just change this from a flex array to a fixed-size array?
-> 
-> mmh... not sure about this. It would basically mean reverting this commit:
-> 
-> c9ed0a707730 ("Bluetooth: Fix Set Extended (Scan Response) Data")
+On Mon, 29 Apr 2024 09:28:25 +0200
+Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
 
-That change doesn't seem to need to make them flex arrays, though --
-there's no savings at all (the same amount is stack allocated).
+> On Sun, 2024-04-28 at 16:43 -0300, ogustavo@usp.br wrote:
+> > From: Gustavo Rodrigues <ogustavo@usp.br>
+> >=20
+> > Clean code of iio:adc:ad799x to cease warning messages pointed by
+> > checkpatch. These include proper variable declaration 'unsigned' to=20
+> > 'unsigned int', add blank line and use of octal permission instead of=20
+> > symbolic.
+> >=20
+> > Gustavo (3):
+> > =C2=A0 iio: adc: ad799x: change 'unsigned' to 'unsigned int' declaration
+> > =C2=A0 iio: adc: ad799x.c: add blank line to avoid warning messages
+> > =C2=A0 iio: adc: ad799x: Prefer to use octal permission instead of symb=
+olic
+> >=20
+> > =C2=A0drivers/iio/adc/ad799x.c | 7 ++++---
+> > =C2=A01 file changed, 4 insertions(+), 3 deletions(-)
+> >  =20
+>=20
+> Patches look good. Just one note... It seems Marcelo gave some feedback o=
+n a
+> previous iterations so it looks like this should have been marked as v2?
+>=20
+> Anyways,
+>=20
+> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+>=20
 
-Anyway, not a big deal, I guess. It's an improvement to be using
-__counted_by, so good! :)
+Indeed on v2.  Anyhow, applied to the togreg branch of iio.git and pushed
+out as testing for the autobuilders to see if we missed anything,
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Thanks,
 
--- 
-Kees Cook
+Jonathan
