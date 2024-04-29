@@ -1,174 +1,113 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349F6146A6C
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 20:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4405E13F006
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 20:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714420974; cv=none; b=Ygs3wdRihx8WZYCH15/iC0YLcxYbp7zo5SgbG6Cowf2aj3MuLnXIxVzLULIFk7bjKZKcfkDObTBzMkgjKnBCcqjMR1g1GGMJr9UH7iqkb3CHNMb/3J5PheOICapOd1Te5BjUv/UjoX+Grcr1i+dqNtyI/S0hIGsMZbDbWl4U6WQ=
+	t=1714421085; cv=none; b=LFwtNaV00RAkUIWE7MEQjwdbc7v/t2JWdK/Kr6rgwgIxUCrEpE4whWWz9iAQFsFh6PXsCSMYmdVKruYwzXf1Slgpm2ygEtdONkGTzWoEnVrugtcKAqe+rILmkVXuXlHEwH7oWiyKLRIfMmniAiJ1gqHr+jgqiVDR+KIDFcbaGWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714420974; c=relaxed/simple;
-	bh=Unxtsgv9pMjovJEC2q3+izNqU1jvDayjR6yTMLvqpEc=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=moXajjcXs9n8rOTtf4PxYt7sa4ptDoAlPd3734yCWCWLjwqfYSddTPWppcOoHvaDlTprTmFqplgY+lFaylB6Ci8EcPZnJQtv2erh6Umiz4UiFlzKcgsF1a7klalFOJzBx3tRwv29O/ygd2mZVeLRpYqNL9G5WNxtxNBq1oVdqRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jyCg1iCF; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1714421085; c=relaxed/simple;
+	bh=OHbOYwGssa/uRbe/4TDCDGAgML0a+7L1EyAmdQh+g64=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KNzX4+YjnUl9PtvZKMMvFoWKpa+HwpxA6Oor+dPIxtnR+D+oRB8yM1145dRXY1qy1WwYvJI+yIRUoM9gb0b1gJnLF7G9na+YfLO8G0PAlJSixdqp+MswpkxSpjcLorO8LQhIuWQ7hle6eI+gbryzrRg/OEChkPu6zGf6noKnE9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lejVN1pm; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jyCg1iCF"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be8f9ca09so859037b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:02:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lejVN1pm"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso6189379a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:04:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714420972; x=1715025772; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sNfu8Xy7Q56dzltFDRS+tQNs0guv+YCXtYt4P68p4eQ=;
-        b=jyCg1iCFJC+rXZABCEfXaVW54lDhrlfHLxgtPNayFNAElh35jD4CicQSUVjvwxxwl4
-         7Nbnf+OuApgqu5OOKhG6tofS9aQzeCunz6LtIKf6Ax5tMcND6u3Fod7WWakMrRqEPVL4
-         JxDSneHO6ag2Od98jzvwC+SYt+Ho9DJihTnOBSckGcN4lMf1Aw1WcV6u4jx9nCynECqB
-         t8eQ1R7YI5ck6oqijst4wG7mJYk0seEqLMuBlDojwq72OiAoWx9iinCibGhocNH1FvpN
-         m8jmFj2ap3Hs/zCPcWoG7+acebLS0NzZSDmkq/c27moeDWXkKz6D7IyfbNmbCSZ3sOLo
-         r4yQ==
+        d=linaro.org; s=google; t=1714421081; x=1715025881; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RQWtsOUn4uiQZnL3yK4nvk33ev/xiP7OrIVV8S/1ztQ=;
+        b=lejVN1pmdCs9djr/uPulAKWG4nL/LH83NUNGxvkQ1YmnxE1eq3ZoI1rGUekKB/zhM+
+         he+2gS9YymFw6vCs2g0lH68sdJYSmg7aT3k16yDQ+CNj6OjXB5zlO+PXT85+Y3zMKFtm
+         pYbetVbUvJuOpD5t+9pxz/JKQVxAyuFNImxl6yQrTwt0FcNUJQj5SvSHrhi96dIDtr+m
+         fLptuB8kPidw+7egxjQL0ry4ymlyjVDOD+JYxfixW0MedSUJ7JHQHdvx7+TRA03/4dQ4
+         oTDYWgF42B7ZtdN2OZd9vQDPLYAv7i7iz+oyP84uAzIqvfBH/jIS9fPBZogdBoRA5bQp
+         XF9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714420972; x=1715025772;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sNfu8Xy7Q56dzltFDRS+tQNs0guv+YCXtYt4P68p4eQ=;
-        b=Kyb/V1fDVMCUCz7JQn8UG+7OV+mr26RO3tVAm/zkM2NcpMD6zG1bgDeuEfo4FGI16F
-         8/Iu987AZBMmN9yhSaf2N1obf47jgzvlIiqBViprg0RnOlY/s5j6e4zbonWxJu/M82C3
-         dXBGVTKNsHMgrpLUVTdQo1VJFTS6iRXiTKjYxkJs65WYe2PDO25y9aemmafn8VCc4ZRV
-         1fpIZ7Cl1ubLN6NyGe0lC6KOks4EoAUNpAHDfRbe8ViiHbRT0/2aueR/9DOU+ZOJpeMl
-         MvgNR5doDw6K25UPNF5isNMqGV7ZwsB9zfUDIf+i+DcDR0626UiEpvWMSyN4KNDB29+z
-         z8qw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8B0kALuFhwBdieHIRkDnw3aSRSoo6oqOxl3TkU6NdNTMim0M55jQaTU8tpJc+m9SRNuXO44fE2KQKsBIQ+nxJdI3GTBQUJFugBlY3
-X-Gm-Message-State: AOJu0YzR7jT8O7+rzE02oFMjVbURZKQUv3JzzorGw1EsAWipQG27esi7
-	+sJKbsp4IQnz9WFbSlPhDhYBex9lL0lqblkh7Hc7nBt05HkHLJe4xchIzxniUiZpktMqph087bZ
-	9kD5AJg==
-X-Google-Smtp-Source: AGHT+IGsVhZGsNjKtERvwq/fiWI1kJ9TCPCN8BzaO5p7q3MXouSFdqmTCi5SbWmF4ilVx8kgfLeJYQulq5YF
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:c137:aa10:25e1:8f1e])
- (user=irogers job=sendgmr) by 2002:a0d:dd81:0:b0:618:9007:a15d with SMTP id
- g123-20020a0ddd81000000b006189007a15dmr3201802ywe.9.1714420972132; Mon, 29
- Apr 2024 13:02:52 -0700 (PDT)
-Date: Mon, 29 Apr 2024 13:02:25 -0700
-In-Reply-To: <20240429200225.1271876-1-irogers@google.com>
-Message-Id: <20240429200225.1271876-7-irogers@google.com>
+        d=1e100.net; s=20230601; t=1714421082; x=1715025882;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RQWtsOUn4uiQZnL3yK4nvk33ev/xiP7OrIVV8S/1ztQ=;
+        b=prTSgwMqb0xLJ2kHAdzgUSY1KHHLwqjSYDTbnlA827XQXQDhSrM7y4ByesQk87olMW
+         Bzrg94jP7HGVfZasIPUskQi0C0+IApPmcb7fAtL4EQpC8t2a0hAmXRxJOpX9xs4zUWXT
+         yDQE5CnIPXZBJ0tIYDPgbld6XjL+EnMgILFxI1jomREhjQuNX7vUJ+NV5z30gyKlByZa
+         bS97GuVFvIpxrmOD9wqvqzEdl8tvxY4hhGZ5Xl//dHwXPY1zGcKJHnkAbmio7HQ4LWEi
+         vfotcOdo9wT4dyoOkQSnrSRTtF1L1ybgudjgG39Qc5fWon1MI/Q5kDj0vES06Ix+eEWw
+         1b8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVsxvTRP4H1bgCe98g0K/FNWa4PPws6ap+e/ynYRfxe00s8l7GK9NFfp8EL5yAdH9SoMQVm/K+5ZRTc/kNpNl2YEM5BG0iLKaiiuISM
+X-Gm-Message-State: AOJu0Yw5hM86Ttf1CoNJeovVkFh6MdnEbZfpDtTuvxMs47nGRgP4Q7ub
+	YufgXDhB5FTvNvuRDU2SWvTauGmMbdRwGpUDYr+sDRCoRqQRD+wwkJ0zfwL8jRU=
+X-Google-Smtp-Source: AGHT+IFsmQSYOFVjcKWYh/rZ5pUC4+f3wl6DJmPFZQR9y7Tr1ohZh/1ga/miQdBObNWVEFyvQNtsdg==
+X-Received: by 2002:a17:906:eb14:b0:a55:63d8:8ab with SMTP id mb20-20020a170906eb1400b00a5563d808abmr7892433ejb.11.1714421081688;
+        Mon, 29 Apr 2024 13:04:41 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id ld4-20020a170906f94400b00a5906d14c31sm1140887ejb.64.2024.04.29.13.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 13:04:41 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Mon, 29 Apr 2024 21:04:38 +0100
+Subject: [PATCH 1/4] arm64: dts: exynos: gs101: specify bus clock for
+ pinctrl (far) alive
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240429200225.1271876-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Subject: [PATCH v3 6/6] perf pmu: Assume sysfs events are always the same case
-From: Ian Rogers <irogers@google.com>
-To: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240429-samsung-pinctrl-busclock-dts-v1-1-5e935179f3ca@linaro.org>
+References: <20240429-samsung-pinctrl-busclock-dts-v1-0-5e935179f3ca@linaro.org>
+In-Reply-To: <20240429-samsung-pinctrl-busclock-dts-v1-0-5e935179f3ca@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, 
+ Sam Protsenko <semen.protsenko@linaro.org>, kernel-team@android.com, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.12.4
 
-Perf event names aren't case sensitive. For sysfs events the entire
-directory of events is read then iterated comparing names in a case
-insensitive way, most often to see if an event is present.
+This bus clock is needed for pinctrl register access to work. Add it.
 
-Consider:
-$ perf stat -e inst_retired.any true
-
-The event inst_retired.any may be present in any PMU, so every PMU's
-sysfs events are loaded and then searched with strcasecmp to see if
-any match. This event is only present on the cpu PMU as a json event
-so a lot of events were loaded from sysfs unnecessarily just to prove
-an event didn't exist there.
-
-This change avoids loading all the events by assuming sysfs event
-names are always either lower or uppercase. It uses file exists and
-only loads the events when the desired event is present.
-
-For the example above, the number of openat calls measured by perf
-trace on a tigerlake laptop goes from 325 down to 255. The reduction
-will be larger for machines with many PMUs, particularly replicated
-uncore PMUs.
-
-Ensure pmu_aliases_parse is called before all uses of the aliases
-list, but remove some "pmu->sysfs_aliases_loaded" tests as they are
-now part of the function.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- tools/perf/util/pmu.c | 31 ++++++++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7849be4bfea1..7275076e6d83 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -425,9 +425,30 @@ static struct perf_pmu_alias *perf_pmu__find_alias(struct perf_pmu *pmu,
- {
- 	struct perf_pmu_alias *alias;
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+index e3b068c1a2c1..f2c7c2a4ce1c 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
++++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+@@ -1348,6 +1348,8 @@ pmu_system_controller: system-controller@17460000 {
+ 		pinctrl_gpio_alive: pinctrl@174d0000 {
+ 			compatible = "google,gs101-pinctrl";
+ 			reg = <0x174d0000 0x00001000>;
++			clocks = <&cmu_apm CLK_GOUT_APM_APBIF_GPIO_ALIVE_PCLK>;
++			clock-names = "pclk";
  
--	if (load && !pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
-+	if (load && !pmu->sysfs_aliases_loaded) {
-+		bool has_sysfs_event;
-+		char event_file_name[FILENAME_MAX + 8];
+ 			wakeup-interrupt-controller {
+ 				compatible = "google,gs101-wakeup-eint",
+@@ -1359,6 +1361,8 @@ wakeup-interrupt-controller {
+ 		pinctrl_far_alive: pinctrl@174e0000 {
+ 			compatible = "google,gs101-pinctrl";
+ 			reg = <0x174e0000 0x00001000>;
++			clocks = <&cmu_apm CLK_GOUT_APM_APBIF_GPIO_FAR_ALIVE_PCLK>;
++			clock-names = "pclk";
  
-+		/*
-+		 * Test if alias/event 'name' exists in the PMU's sysfs/events
-+		 * directory. If not skip parsing the sysfs aliases. Syfs event
-+		 * name must be all lower or all upper case.
-+		 */
-+		scnprintf(event_file_name, sizeof(event_file_name), "events/%s", name);
-+		for (size_t i = 7, n = 7 + strlen(name); i < n; i++)
-+			event_file_name[i] = tolower(event_file_name[i]);
-+
-+		has_sysfs_event = perf_pmu__file_exists(pmu, event_file_name);
-+		if (!has_sysfs_event) {
-+			for (size_t i = 7, n = 7 + strlen(name); i < n; i++)
-+				event_file_name[i] = toupper(event_file_name[i]);
-+
-+			has_sysfs_event = perf_pmu__file_exists(pmu, event_file_name);
-+		}
-+		if (has_sysfs_event)
-+			pmu_aliases_parse(pmu);
-+
-+	}
- 	list_for_each_entry(alias, &pmu->aliases, list) {
- 		if (!strcasecmp(alias->name, name))
- 			return alias;
-@@ -1717,9 +1738,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
- {
- 	size_t nr;
- 
--	if (!pmu->sysfs_aliases_loaded)
--		pmu_aliases_parse(pmu);
--
-+	pmu_aliases_parse(pmu);
- 	nr = pmu->sysfs_aliases;
- 
- 	if (pmu->cpu_aliases_added)
-@@ -1778,6 +1797,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 	struct strbuf sb;
- 
- 	strbuf_init(&sb, /*hint=*/ 0);
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		size_t buf_used;
-@@ -2193,6 +2213,7 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
- 	if (!pmu)
- 		return NULL;
- 
-+	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	list_for_each_entry(event, &pmu->aliases, list) {
- 		struct perf_event_attr attr = {.config = 0,};
+ 			wakeup-interrupt-controller {
+ 				compatible = "google,gs101-wakeup-eint",
+
 -- 
 2.44.0.769.g3c40516874-goog
 
