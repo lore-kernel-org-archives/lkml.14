@@ -1,276 +1,188 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0896B7F487;
-	Mon, 29 Apr 2024 15:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18FC764CC0
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714404801; cv=none; b=iN6p4h1E/0n94MLYKfKal+LTdSuyLPMwyEeyEY6NdjDQMoZ54MWXdusMz+QFcwc1SYI0UKOmPX8nJffm+Uxn8CW+ks573yHF/hs8BsYKA8BQ99P3UGkZsWAQMFQCXZUx6yHcxKvmJoPDDCX9X/Z7VTSGAayFSiUEow8I4LoKzUs=
+	t=1714404900; cv=none; b=QjSLgRWOf0O3R5kFwZCrttufZA10kJSppYm6O1YsBcKotfpd/0HRGIONuLNZOLLe/ffFnngxggAK76uWYyLe0vkncnxmk9nVTiRfxY5aoIKlTPWgHneV2RB/V6+OIWWcc4Y3kKTLH6iA2iO55IWOpYXBf/4CUY1W/iAIHjt/y3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714404801; c=relaxed/simple;
-	bh=5lUrzbRnav5ASy/K91woXmOubyfpP/gFyJtvSyPlnPI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=c/3lmJXWgtmr4SbIZc2DdaUSAJe8nc6B79FqZuJ1XCJZWdNygNNuiqmdHLTORZGLgBpE4MWCNjOqmkph/lYcMWv2UAzQgR2Qm1SDhBxkJGEB9knZd47ef/DS8qwNId7/mu93TbFAeGhg6XwQs7qcXz0KDTX4DsnuhWpQJKCwhFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=L4T1hQZL; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="L4T1hQZL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=7Klarb4qZOjJN4ysw7kPerEyVRGPC0HwcmCCWjik+kQ=; b=L4T1hQZLQ1rernFS2URgulJUpj
-	WYuwM58IbdB7VaSzlhLb5dN+iTprtebgB/jktzM3TmoIkYdWc2hn5SeiVp/eTLWMSH8zHJ5Z0HlG/
-	xlNj+sUHp8XYd2jkIVtFl3NOXEK+0WPtSLdhj6aGfKWbsTYqwTaDPgbOmDY2nhY/56S1GKzMEcyN9
-	H6nSIdoTuP1Cn+QYG38dnhamZrpmDr8z6P2Lg/LKZwrqnhKQKo0S/8xOKthmtmG3xo+Z+dHZRc5LX
-	Gpv7f0Lb3cXPeC9l0UIBL3uhq+Sa1BIVZun/k6PO6RGcJUKXXTXG2TUXky0Z3anH5bpt0AgozhvM8
-	f6YW6I7g==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1s1SfO-000N2m-02; Mon, 29 Apr 2024 17:11:42 +0200
-Received: from [178.197.249.41] (helo=linux.home)
-	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1s1SfN-004ZCo-06;
-	Mon, 29 Apr 2024 17:11:41 +0200
-Subject: Re: [PATCH net] udp: fix segmentation crash for GRO packet without
- fraglist
-To: =?UTF-8?B?TGVuYSBXYW5nICjnjovlqJwp?= <Lena.Wang@mediatek.com>,
- "maze@google.com" <maze@google.com>,
- "willemdebruijn.kernel@gmail.com" <willemdebruijn.kernel@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
- "kuba@kernel.org" <kuba@kernel.org>,
- =?UTF-8?B?U2hpbWluZyBDaGVuZyAo5oiQ6K+X5piOKQ==?=
- <Shiming.Cheng@mediatek.com>, "pabeni@redhat.com" <pabeni@redhat.com>,
- "edumazet@google.com" <edumazet@google.com>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "yan@cloudflare.com" <yan@cloudflare.com>
-References: <20240415150103.23316-1-shiming.cheng@mediatek.com>
- <66227ce6c1898_116a9b294be@willemb.c.googlers.com.notmuch>
- <CANP3RGfxeKDUmGwSsZrAs88Fmzk50XxN+-MtaJZTp641aOhotA@mail.gmail.com>
- <6622acdd22168_122c5b2945@willemb.c.googlers.com.notmuch>
- <9f097bcafc5bacead23c769df4c3f63a80dcbad5.camel@mediatek.com>
- <6627ff5432c3a_1759e929467@willemb.c.googlers.com.notmuch>
- <274c7e9837e5bbe468d19aba7718cc1cf0f9a6eb.camel@mediatek.com>
- <66291716bcaed_1a760729446@willemb.c.googlers.com.notmuch>
- <c28a5c635f38a47f1be266c4328e5fbba44ff084.camel@mediatek.com>
- <662a63aeee385_1de39b294fd@willemb.c.googlers.com.notmuch>
- <752468b66d2f5766ea16381a0c5d7b82ab77c5c4.camel@mediatek.com>
- <ae0ba22a-049a-49c1-d791-d0e953625904@iogearbox.net>
- <662cfd6db06df_28b9852949a@willemb.c.googlers.com.notmuch>
- <afa6e302244a87c2a834fcc31d48b377e19a34a2.camel@mediatek.com>
- <5cc1c662-1cec-101c-8184-c32c210eeadc@iogearbox.net>
- <bd9d5fef2fa6154e162e963f5d669ff618b95229.camel@mediatek.com>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <880367ab-e9a2-d9b4-c6d6-9e2efdf04a0f@iogearbox.net>
-Date: Mon, 29 Apr 2024 17:11:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	s=arc-20240116; t=1714404900; c=relaxed/simple;
+	bh=1+k1quiOkszeSfEDn/ofRri5lvYBYUzIqrPAxFaeW2E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OmSAYwShl3L5X//xBrtLaOm+s2/+d69QtNpg2pp2yVj1DXS1CMJIfe+YnYVGWXu86y20x7L2Jg/3/oRqqysT1wQiqmIN3bosKYoN0BpExA0PmHazP4oaZA1eMZfieos0NgpDZUPCEXlBQz/EVtKmoUZu1urQ5Mm+6ou7i/dtq+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29D292F4;
+	Mon, 29 Apr 2024 08:35:25 -0700 (PDT)
+Received: from [10.57.65.53] (unknown [10.57.65.53])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 623AE3F793;
+	Mon, 29 Apr 2024 08:34:57 -0700 (PDT)
+Message-ID: <99384a25-9ff5-43c9-b09d-5a048c456d02@arm.com>
+Date: Mon, 29 Apr 2024 16:34:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <bd9d5fef2fa6154e162e963f5d669ff618b95229.camel@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm: Fix race between __split_huge_pmd_locked() and
+ GUP-fast
+Content-Language: en-GB
+To: Zi Yan <ziy@nvidia.com>
+Cc: John Hubbard <jhubbard@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Zi Yan <zi.yan@cs.rutgers.edu>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240425170704.3379492-1-ryan.roberts@arm.com>
+ <17956e0f-1101-42d7-9cba-87e196312484@nvidia.com>
+ <2C9D897B-0E96-42F0-B3C4-9926E6DF5F4B@nvidia.com>
+ <328b2b69-e4ab-4a00-9137-1f7c3dc2d195@nvidia.com>
+ <23fbca83-a175-4d5a-8cf7-ed54c1830d37@arm.com>
+ <64037B35-3E80-4367-BA0B-334356373A78@nvidia.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <64037B35-3E80-4367-BA0B-334356373A78@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27260/Mon Apr 29 10:23:47 2024)
 
-On 4/29/24 1:45 PM, Lena Wang (王娜) wrote:
-> On Mon, 2024-04-29 at 12:15 +0200, Daniel Borkmann wrote:
->>   	
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
->>   On 4/28/24 9:48 AM, Lena Wang (王娜) wrote:
->>> On Sat, 2024-04-27 at 09:28 -0400, Willem de Bruijn wrote:
->>>>    
->>>> External email : Please do not click links or open attachments
->> until
->>>> you have verified the sender or the content.
->>>>    
->>>> Daniel Borkmann wrote:
->>>>> On 4/26/24 11:52 AM, Lena Wang (王娜) wrote:
->>>>> [...]
->>>>>>>>    From 301da5c9d65652bac6091d4cd64b751b3338f8bb Mon Sep 17
->>>> 00:00:00
->>>>>>> 2001
->>>>>>>> From: Shiming Cheng <shiming.cheng@mediatek.com>
->>>>>>>> Date: Wed, 24 Apr 2024 13:42:35 +0800
->>>>>>>> Subject: [PATCH net] net: prevent BPF pulling SKB_GSO_FRAGLIST
->>>> skb
->>>>>>>>
->>>>>>>> A SKB_GSO_FRAGLIST skb can't be pulled data
->>>>>>>> from its fraglist as it may result an invalid
->>>>>>>> segmentation or kernel exception.
->>>>>>>>
->>>>>>>> For such structured skb we limit the BPF pulling
->>>>>>>> data length smaller than skb_headlen() and return
->>>>>>>> error if exceeding.
->>>>>>>>
->>>>>>>> Fixes: 3a1296a38d0c ("net: Support GRO/GSO fraglist
->> chaining.")
->>>>>>>> Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
->>>>>>>> Signed-off-by: Lena Wang <lena.wang@mediatek.com>
->>>>>>>> ---
->>>>>>>>     net/core/filter.c | 5 +++++
->>>>>>>>     1 file changed, 5 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/net/core/filter.c b/net/core/filter.c
->>>>>>>> index 8adf95765cdd..8ed4d5d87167 100644
->>>>>>>> --- a/net/core/filter.c
->>>>>>>> +++ b/net/core/filter.c
->>>>>>>> @@ -1662,6 +1662,11 @@ static DEFINE_PER_CPU(struct
->>>> bpf_scratchpad,
->>>>>>>> bpf_sp);
->>>>>>>>     static inline int __bpf_try_make_writable(struct sk_buff
->>>> *skb,
->>>>>>>>       unsigned int write_len)
->>>>>>>>     {
->>>>>>>> +if (skb_is_gso(skb) &&
->>>>>>>> +    (skb_shinfo(skb)->gso_type & SKB_GSO_FRAGLIST) &&
->>>>>>>> +     write_len > skb_headlen(skb)) {
->>>>>>>> +return -ENOMEM;
->>>>>>>> +}
->>>>>>>>     return skb_ensure_writable(skb, write_len);
+On 29/04/2024 15:45, Zi Yan wrote:
+> On 29 Apr 2024, at 5:29, Ryan Roberts wrote:
+> 
+>> On 27/04/2024 20:11, John Hubbard wrote:
+>>> On 4/27/24 8:14 AM, Zi Yan wrote:
+>>>> On 27 Apr 2024, at 0:41, John Hubbard wrote:
+>>>>> On 4/25/24 10:07 AM, Ryan Roberts wrote:
+>>>>>> __split_huge_pmd_locked() can be called for a present THP, devmap or
+>>>>>> (non-present) migration entry. It calls pmdp_invalidate()
+>>>>>> unconditionally on the pmdp and only determines if it is present or not
+>>>>>> based on the returned old pmd. This is a problem for the migration entry
+>>>>>> case because pmd_mkinvalid(), called by pmdp_invalidate() must only be
+>>>>>> called for a present pmd.
+>>>>>>
+>>>>>> On arm64 at least, pmd_mkinvalid() will mark the pmd such that any
+>>>>>> future call to pmd_present() will return true. And therefore any
+>>>>>> lockless pgtable walker could see the migration entry pmd in this state
+>>>>>> and start interpretting the fields as if it were present, leading to
+>>>>>> BadThings (TM). GUP-fast appears to be one such lockless pgtable walker.
+>>>>>> I suspect the same is possible on other architectures.
+>>>>>>
+>>>>>> Fix this by only calling pmdp_invalidate() for a present pmd. And for
 >>>>>
->>>>> Dumb question, but should this guard be more generically part of
->>>> skb_ensure_writable()
->>>>> internals, presumably that would be inside
->> pskb_may_pull_reason(),
->>>> or only if we ever
->>>>> see more code instances similar to this?
+>>>>> Yes, this seems like a good design decision (after reading through the
+>>>>> discussion that you all had in the other threads).
 >>>>
->>>> Good point. Most callers of skb_ensure_writable correctly pull
->> only
->>>> headers, so wouldn't cause this problem. But it also adds coverage
->> to
->>>> things like tc pedit.
+>>>> This will only be good for arm64 and does not prevent other arch developers
+>>>> to write code breaking arm64, since only arm64's pmd_mkinvalid() can turn
+>>>> a swap entry to a pmd_present() entry.
 >>>
->>> Updated:
->>>
->>>   From 3be30b8cf6e629f2615ef4eafe3b2a1c0d68c530 Mon Sep 17 00:00:00
->> 2001
->>> From: Shiming Cheng <shiming.cheng@mediatek.com>
->>> Date: Sun, 28 Apr 2024 15:03:12 +0800
->>> Subject: [PATCH net] net: prevent pulling SKB_GSO_FRAGLIST skb
->>>
->>> BPF or TC callers may pull in a length longer than skb_headlen()
->>> for a SKB_GSO_FRAGLIST skb. The data in fraglist will be pulled
->>> into the linear space. However it destroys the skb's structure
->>> and may result in an invalid segmentation or kernel exception.
->>>
->>> So we should add protection to stop the operation and return
->>> error to remind callers.
->>>
->>> Fixes: 3a1296a38d0c ("net: Support GRO/GSO fraglist chaining.")
->>> Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
->>> Signed-off-by: Lena Wang <lena.wang@mediatek.com>
->>> ---
->>>    include/linux/skbuff.h | 6 ++++++
->>>    1 file changed, 6 insertions(+)
->>>
->>> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
->>> index 9d24aec064e8..3eef65b3db24 100644
->>> --- a/include/linux/skbuff.h
->>> +++ b/include/linux/skbuff.h
->>> @@ -2740,6 +2740,12 @@ pskb_may_pull_reason(struct sk_buff *skb,
->>> unsigned int len)
->>>    if (unlikely(len > skb->len))
->>>    return SKB_DROP_REASON_PKT_TOO_SMALL;
->>>    
->>> +if (skb_is_gso(skb) &&
->>> +    (skb_shinfo(skb)->gso_type & SKB_GSO_FRAGLIST) &&
->>> +     write_len > skb_headlen(skb)) {
->>> +return SKB_DROP_REASON_NOMEM;
->>> +}
+>>> Well, let's characterize it in a bit more detail, then:
 >>
->> The 'write_len > skb_headlen(skb)' test is redundant, no ?
+>> Hi All,
 >>
->> It is covered by the earlier test :
+>> Thanks for all the feedback! I had thought that this patch would be entirely
+>> uncontraversial - obviously I was wrong :)
 >>
->>           if (likely(len <= skb_headlen(skb)))
->>                   return SKB_NOT_DROPPED_YET;
+>> I've read all the emails, and trying to summarize a way forward here...
 >>
-> Daniel, it is not redundant. The bpf pulls a len between
-> skb_headlen(skb) and skb->len that results in error. Here it will stop
-> this operation. For other skbs(not SKB_GSO_FRAGLIST) it could be a
-> normal behaviour and will continue to do next pulling.
+>>>
+>>> 1) This patch will make things better for arm64. That's important!
+>>>
+>>> 2) Equally important, this patch does not make anything worse for
+>>>    other CPU arches.
+>>>
+>>> 3) This patch represents a new design constraint on the CPU arch
+>>>    layer, and thus requires documentation and whatever enforcement
+>>>    we can provide, in order to keep future code out of trouble.
+>>
+>> I know its only semantics, but I don't view this as a new design constraint. I
+>> see it as an existing constraint that was previously being violated, and this
+>> patch aims to fix that. The generic version of pmdp_invalidate() unconditionally
+>> does a tlb invalidation on the address range covered by the pmd. That makes no
+>> sense unless the pmd was previously present. So my conclusion is that the
+>> function only expects to be called for present pmds.
+>>
+>> Additionally Documentation/mm/arch_pgtable_helpers.rst already says this:
+>>
+>> "
+>> | pmd_mkinvalid             | Invalidates a mapped PMD [1]                     |
+>> "
+>>
+>> I read "mapped" to be a synonym for "present". So I think its already
+>> documented. Happy to explcitly change "mapped" to "present" though, if it helps?
+>>
+>> Finally, [1] which is linked from Documentation/mm/arch_pgtable_helpers.rst,
+>> also implies this constraint, although it doesn't explicitly say it.
+>>
+>> [1] https://lore.kernel.org/linux-mm/20181017020930.GN30832@redhat.com/
+>>
+>>>
+>>> 3.a) See the VM_WARN_ON() hunks below.
+>>
+>> It sounds like everybody would be happy if I sprinkle these into the arches that
+>> override pmdp_invalidate[_ad]()? There are 3 arches that have their own version
+>> of pmdp_invalidate(); powerpc, s390 and sparc. And 1 that has its own version of
+>> pmdp_invalidate_ad(); x86. I'll add them in all of those.
+>>
+>> I'll use VM_WARN_ON_ONCE() as suggested by John.
+>>
+>> I'd rather not put it directly into pmd_mkinvalid() since that would set a
+>> precedent for adding them absolutely everywhere. (e.g. pte_mkdirty(), ...).
+> 
+> I understand your concern here. I assume you also understand the potential issue
+> with this, namely it does not prevent one from using pmd_mkinvalid() improperly
+> and causing a bug and the bug might only appear on arm64.
 
-I meant something like the below. The len <= skb_headlen(skb) case you
-already return earlier with SKB_NOT_DROPPED_YET. Willem, do you see a
-case where this should not live in pskb_may_pull_reason() but rather
-specifically in skb_ensure_writable()?
+Are you saying that arm64 is the *only* arch where pmd_mkinvalid() can turn a
+swap pte into a present pte? I hadn't appreciated that; in your first reply to
+this patch you said "I notice that x86, risc-v, mips behave the same" - I
+thought you were saying they behaved the same as arm64, but on re-reading, I
+think I've taken that out of context.
 
-Thanks,
-Daniel
+But in spite of that, it still remains my view that making arm64's
+pmd_mkinvalid() robust to non-present ptes is not the right fix - or at least
+not sufficient on its own. That change on its own would still result in issuing
+a TLBI for the non-present pte from pmdp_invalidate(). That's not a correctness
+issue, but certainly could be a performance concern.
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 517e546a120a..ef2a0328ff2b 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -1687,6 +1687,11 @@ int skb_zerocopy_iter_stream(struct sock *sk, struct sk_buff *skb,
-  /* Internal */
-  #define skb_shinfo(SKB)	((struct skb_shared_info *)(skb_end_pointer(SKB)))
+I think its much better to have the design constraint that pmd_mkinvalid(),
+pmdp_invalidate() and pmdp_invalidate_ad() can only be called for present ptes.
+And I think the combination of WARNs and docs that we've discussed should be
+enough to allay your concerns about introduction of arm64-specific bugs.
 
-+static inline bool skb_is_gso(const struct sk_buff *skb)
-+{
-+	return skb_shinfo(skb)->gso_size;
-+}
-+
-  static inline struct skb_shared_hwtstamps *skb_hwtstamps(struct sk_buff *skb)
-  {
-  	return &skb_shinfo(skb)->hwtstamps;
-@@ -2740,6 +2745,10 @@ pskb_may_pull_reason(struct sk_buff *skb, unsigned int len)
-  	if (unlikely(len > skb->len))
-  		return SKB_DROP_REASON_PKT_TOO_SMALL;
+> 
+>>
+>>>
+>>> 3.b) I like the new design constraint, because it is reasonable and
+>>>      clearly understandable: don't invalidate a non-present page
+>>>      table entry.
+>>>
+>>> I do wonder if there is somewhere else that this should be documented?
+>>
+>> If I change:
+>>
+>> "
+>> | pmd_mkinvalid             | Invalidates a mapped PMD [1]                     |
+>> "
+>>
+>> To:
+>>
+>> "
+>> | pmd_mkinvalid             | Invalidates a present PMD; do not call for       |
+>> |                             non-present pmd [1]                              |
+>> "
+>>
+>> Is that sufficient? (I'll do the same for pud_mkinvalid() too.
+> 
+> Sounds good to me.
+> 
+> Also, if you move pmdp_invalidate(), please move the big comment with it to
+> avoid confusion. Thanks.
 
-+	if (unlikely(skb_is_gso(skb) &&
-+		     (skb_shinfo(skb)->gso_type & SKB_GSO_FRAGLIST)))
-+		return SKB_DROP_REASON_FRAGLIST_PULL;
-+
-  	if (unlikely(!__pskb_pull_tail(skb, len - skb_headlen(skb))))
-  		return SKB_DROP_REASON_NOMEM;
+Yes good spot, I'll move it.
 
-@@ -4953,11 +4962,6 @@ static inline struct sec_path *skb_sec_path(const struct sk_buff *skb)
-  #endif
-  }
+> 
+> --
+> Best Regards,
+> Yan, Zi
 
--static inline bool skb_is_gso(const struct sk_buff *skb)
--{
--	return skb_shinfo(skb)->gso_size;
--}
--
-  /* Note: Should be called only if skb_is_gso(skb) is true */
-  static inline bool skb_is_gso_v6(const struct sk_buff *skb)
-  {
-diff --git a/include/net/dropreason-core.h b/include/net/dropreason-core.h
-index 9707ab54fdd5..9d6c97a6b2b6 100644
---- a/include/net/dropreason-core.h
-+++ b/include/net/dropreason-core.h
-@@ -418,6 +418,12 @@ enum skb_drop_reason {
-  	 * iterations.
-  	 */
-  	SKB_DROP_REASON_TC_RECLASSIFY_LOOP,
-+	/**
-+	 * @SKB_DROP_REASON_FRAGLIST_PULL: attempting to pull GSO fraglist
-+	 * which destroys the skb's structure and may then result in an
-+	 * invalid segmentation or kernel exception.
-+	 */
-+	SKB_DROP_REASON_FRAGLIST_PULL,
-  	/**
-  	 * @SKB_DROP_REASON_MAX: the maximum of core drop reasons, which
-  	 * shouldn't be used as a real 'reason' - only for tracing code gen
--- 
-2.21.0
