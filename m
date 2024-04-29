@@ -1,62 +1,61 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03D354BEB
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CB65338D
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714395105; cv=none; b=C/vwuqv71qcy54Rxp/YZs17cV2XvRBFmoooBk7sBTxw6JtmBx2MqP8ZVrGN1b6Qh8uKGj73S7l1f8UCKguZHTHVqAvt0YT03nykLD08MxQa6uqvrePcLwnGjv7INs8ASQVwA9whvxfpcBYnjwVkNbLNeUcwbbsZF7WOf5tmo26Y=
+	t=1714395133; cv=none; b=pdAyVk3nPx2FS5F6ZezhWLfCm2yOQJJCgM3S93qYajd+FztY3kTvmW8tgWy8AfIYHOxaNOS0YuDG8jDiyYJ8wl51byM8ukoePWoWPqOKj0T0uz7DzS/XunR4JOuwfwA1En/B8w9Wd5EqGsvVtwj4TPQK+pXAdsY4m2PJZjpm938=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714395105; c=relaxed/simple;
-	bh=qqwGQi68EVY5RX0H0R8vNiawzg9y+DRdgcn9cG5wVsA=;
+	s=arc-20240116; t=1714395133; c=relaxed/simple;
+	bh=7lbRgFPIQxBCnpdJT0ebmHKskPiCKX5emjUFiRvEJtA=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jkgH5wHEA62SVTa5xQ/hMAb9iypyXm5H+5R7HowdMhl1H6hW/ACViOxx0dRB/7WOv8eY2lmBMImezNulc8XpvIvhUdR8ZOiO/d9IHlgtaAUtwo8dlZcKeCaVwhJ1zKQjR490idC2SBI9sxfzZoDMZG6EBbjP9lSFvcIwAqXkoMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fTB5iHV2; arc=none smtp.client-ip=209.85.221.48
+	 In-Reply-To:Content-Type; b=nl6kJFAy8FwrB/g6FScpHkIf14j9SeXjL0qka5Kpey2VxfCHoMT4Sa3guof+fPZZPI8nULvvNcGf8rYsju7HWhmY9o2aCgIgB81xjBPAtRGKIUwlg8nJFAeolgv+QIQDqAY9+3Nsic4IsbXLkXnKiuRcHSJ1csaiqn4D1AkvC3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=beXvTYLh; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fTB5iHV2"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-34c9e7955b5so1711213f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 05:51:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="beXvTYLh"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41bab13ca81so26112395e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 05:52:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714395102; x=1714999902; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1714395130; x=1714999930; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oYI4k9pCItW5lrimx9sxd2j1r+nQpXwV3dgJ6rGtekI=;
-        b=fTB5iHV2SOeu2kZI1NjeRycQ4DR+eMhRSypjYtRzLuZfWdig90J6qNWU/YyuwjNm+P
-         vClM9rGT7rkL/wjSbTFyuOxOup1FgMiX4leYaJTCe02tnwBaJwqdxq/ZXQBjWv++SR+o
-         MPwzulbms53nQMY+bbMZTuz5mpmi/Be9/00KrMVwJyvhFmW6mV6eLsUb+Cxx1r/WyP+w
-         n71VO8nB6+wU+SJ10IZQNmLwk6Z99HxpHh6v+0sjCeshw5lhe7lpgaC//42yC6e2P4nT
-         RVWK8W3kWGm4CUnRZcU+pQhwnv0XYEcF4Jng03Ff7nHmlwNw+9hEM8S6dEWZVWXAZlSa
-         ihTA==
+        bh=81ad4FqPdXOFXNwRNhIxfIPt+h8Wtrz4rsWIYuMSywY=;
+        b=beXvTYLhfKfS5EAOr+UAFuw0Uj72oXlSo+/Rx5pem+GZAzHZwqeurKAwGtgKMLxLKs
+         rBwBtndkeOA1UNwgzKxLv7ZzGeYv5sfn9yQb4UzvJvlVdfCAtxR3tejyQgCI+1e5I2ix
+         dFszoNjLkkcaBKOXeoRB4dlheCCupGGObt/2iHqmts9NUUypRAlxdftF4Ai5XiifDTVT
+         HjnSZtg7b0rxVLQ01vKS5UBsi/yeJxzvVcjVqFbUMvxAcD9FLmecwiJ6puA9w+tCUGYM
+         AKxe8+GwXr6m77HqMtzo0VxueuN1na6+DgJQ1sHQEWzkkHJGDv93aFewcKgsrg1grh78
+         LzVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714395102; x=1714999902;
+        d=1e100.net; s=20230601; t=1714395130; x=1714999930;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=oYI4k9pCItW5lrimx9sxd2j1r+nQpXwV3dgJ6rGtekI=;
-        b=r9QBcRzpLkyxPA9wFkxxHIm7P6t0WwTymruMTxyi75TytfdDcMdCCAKZvRrAGqb3eO
-         dnXJtfPxkUVvaY9AUgDv/Vbbvv1eQksdyRsmd+xB/fVEmzxnIgNbPKS5+sMx+VCICcja
-         NGf32xHW6CkKbBn5HrQInqXvlsxa9b+4dBR8kFZ/HPhjnyq5jtN7bnLA6KaKqfMOu2rc
-         tIOA0tNY8aH3cqMlVew3aieu8rgZnecvt68OiziYGnOEYkGoNX2SuwTylk7WR5J5VA0v
-         LrqqN+28iNvBi72tzbNEdOjqFN6MNiFBqLlSINNvLCCuPdgaqVGI2idfP3+LJlKjsQYZ
-         KEkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyCKQp/v+fIMPsA0i24K1a3d5H7bqKewwTqE3ifMnfOsGsHdhl/kcmtCBlp2R1/CNzTPE2vrfIIwK6/oLz7Mvp3xCya6AIG/jnNjac
-X-Gm-Message-State: AOJu0YzA2DnTt9aejTRT6isq8Et/WeFzVXV0ZQ0QoxJ5uMVi7JfI1pK6
-	9HaCuuhnkCYLvWZ0R+uGbWNWZ39YbHWfeXLbYhdJ6KhDX6fRqZrCD7ZGRGmq5qpodzsnSRAfBi/
-	hH4lwLg==
-X-Google-Smtp-Source: AGHT+IFnTUke6Z0EtJwvJogtHF0lsKSXib3C+tvYJm5AkYh0EOABQUQIgEXPicDk5lq1YO84VySmTw==
-X-Received: by 2002:a05:6000:712:b0:34c:d816:6a82 with SMTP id bs18-20020a056000071200b0034cd8166a82mr4467141wrb.47.1714395102060;
-        Mon, 29 Apr 2024 05:51:42 -0700 (PDT)
+        bh=81ad4FqPdXOFXNwRNhIxfIPt+h8Wtrz4rsWIYuMSywY=;
+        b=lzKMiSVzuxbux1KyoZIl5ZTy0S5Z4UmyuKMggiZGSyX01DN4MNBzC/rQpBwi0T7/8n
+         tx3rNUDdScf3jTIhlzEtLiF1ttjx1M9UmqiMerZ9C0nzJvL0z5brPDeQrxYtSDzITzhS
+         ViCi6eAHOyGqNUYenE5tsAbADLZ7bEjyy8juYNjsTLEPYgGFzNZCqCQG9UdwGtEgtoS0
+         sIeVo+3gXLvoIFVs23lqD7R+NNkwTN3I0wENf2nBefiwaV1OuqCmXDslni4Guvd64yDI
+         s5SDdvgJeMHHzKX+Nc9R7JUdVTny8gqwht+f3SdoGK27OfEQc3gHcOf+wz/DfXI+ODvs
+         R2rw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdYtFH1CCf2fEjcuylZTTMHL4ntPmMzSfOJEpc7kaza95IYC6qJfhDrQV7LKiGFXYAr/kHjQ79A5VgGXf2gawE/2zk77VAwqzCepcp
+X-Gm-Message-State: AOJu0YycXSCaYLqQhJJerrcMgDyguZvElMzmsfoqtz05Jq+AxKuHu/8Y
+	lG0YB5wCiMa/1jeLt3kqTblGkPWl09vBdPj2S/LBo4FN2nFA2ItYsX+g2K3kIQE=
+X-Google-Smtp-Source: AGHT+IFOPRxuHqRfeh33GhbmxDm+R/MTda18L0UeRgbusvUdJP3xLhPX9SiEJ3yvuP6kwQ9imcZQrA==
+X-Received: by 2002:a05:600c:4f8e:b0:41a:fa9a:d863 with SMTP id n14-20020a05600c4f8e00b0041afa9ad863mr10318868wmq.9.1714395130525;
+        Mon, 29 Apr 2024 05:52:10 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:cad:2140:d72:4b40:65fa:89e6? ([2a01:e0a:cad:2140:d72:4b40:65fa:89e6])
-        by smtp.gmail.com with ESMTPSA id f15-20020a5d4dcf000000b0034ccf959d6asm4541218wru.74.2024.04.29.05.51.40
+        by smtp.gmail.com with ESMTPSA id bg11-20020a05600c3c8b00b0041a9c3444a6sm25209788wmb.28.2024.04.29.05.52.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 05:51:41 -0700 (PDT)
-Message-ID: <81ecfb4f-fd65-4448-b342-372ae25a0e0b@linaro.org>
-Date: Mon, 29 Apr 2024 14:51:40 +0200
+        Mon, 29 Apr 2024 05:52:10 -0700 (PDT)
+Message-ID: <55622c35-badb-4b4c-a91f-e487d9eb8fc2@linaro.org>
+Date: Mon, 29 Apr 2024 14:52:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,7 +65,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 03/12] arm64: dts: qcom: sm8450: move USB graph to the SoC
+Subject: Re: [PATCH 04/12] arm64: dts: qcom: sm8550: move USB graph to the SoC
  dtsi
 To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
  Bjorn Andersson <andersson@kernel.org>,
@@ -75,7 +74,7 @@ To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20240429-usb-link-dtsi-v1-0-87c341b55cdf@linaro.org>
- <20240429-usb-link-dtsi-v1-3-87c341b55cdf@linaro.org>
+ <20240429-usb-link-dtsi-v1-4-87c341b55cdf@linaro.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -102,7 +101,7 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20240429-usb-link-dtsi-v1-3-87c341b55cdf@linaro.org>
+In-Reply-To: <20240429-usb-link-dtsi-v1-4-87c341b55cdf@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -112,105 +111,198 @@ On 29/04/2024 14:43, Dmitry Baryshkov wrote:
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->   arch/arm64/boot/dts/qcom/sm8450-hdk.dts | 25 +++----------------------
->   arch/arm64/boot/dts/qcom/sm8450.dtsi    | 11 +++++++++++
->   2 files changed, 14 insertions(+), 22 deletions(-)
+>   arch/arm64/boot/dts/qcom/sm8550-hdk.dts                     | 13 -------------
+>   arch/arm64/boot/dts/qcom/sm8550-mtp.dts                     | 13 -------------
+>   arch/arm64/boot/dts/qcom/sm8550-qrd.dts                     | 13 -------------
+>   arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts |  8 --------
+>   arch/arm64/boot/dts/qcom/sm8550.dtsi                        |  4 ++++
+>   5 files changed, 4 insertions(+), 47 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8450-hdk.dts b/arch/arm64/boot/dts/qcom/sm8450-hdk.dts
-> index 3be46b56c723..9926294e4f84 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8450-hdk.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8450-hdk.dts
-> @@ -674,17 +674,10 @@ &mdss_dsi0_phy {
->   
->   &mdss_dp0 {
->   	status = "okay";
-> +};
->   
-> -	ports {
-> -		port@1 {
-> -			reg = <1>;
-> -
-> -			mdss_dp0_out: endpoint {
-> -				data-lanes = <0 1>;
-> -				remote-endpoint = <&usb_1_qmpphy_dp_in>;
-> -			};
-> -		};
-> -	};
-> +&mdss_dp0_out {
-> +	data-lanes = <0 1>;
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> index 12d60a0ee095..f786d9114936 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> @@ -940,7 +940,6 @@ &mdss_dp0 {
 >   };
 >   
->   &pcie0 {
-> @@ -1114,10 +1107,6 @@ &usb_1_dwc3_hs {
+>   &mdss_dp0_out {
+> -	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+>   	data-lanes = <0 1>;
+>   };
+>   
+> @@ -1267,10 +1266,6 @@ &usb_1_dwc3_hs {
 >   	remote-endpoint = <&pmic_glink_hs_in>;
 >   };
 >   
 > -&usb_1_dwc3_ss {
-> -	remote-endpoint = <&usb_1_qmpphy_usb_ss_in>;
+> -	remote-endpoint = <&usb_dp_qmpphy_usb_ss_in>;
 > -};
 > -
 >   &usb_1_hsphy {
+>   	vdd-supply = <&vreg_l1e_0p88>;
+>   	vdda12-supply = <&vreg_l3e_1p2>;
+> @@ -1289,18 +1284,10 @@ &usb_dp_qmpphy {
 >   	status = "okay";
->   
-> @@ -1135,18 +1124,10 @@ &usb_1_qmpphy {
->   	orientation-switch;
 >   };
 >   
-> -&usb_1_qmpphy_dp_in {
+> -&usb_dp_qmpphy_dp_in {
 > -	remote-endpoint = <&mdss_dp0_out>;
 > -};
 > -
->   &usb_1_qmpphy_out {
+>   &usb_dp_qmpphy_out {
 >   	remote-endpoint = <&pmic_glink_ss_in>;
 >   };
 >   
-> -&usb_1_qmpphy_usb_ss_in {
+> -&usb_dp_qmpphy_usb_ss_in {
 > -	remote-endpoint = <&usb_1_dwc3_ss>;
 > -};
 > -
->   &vamacro {
->   	pinctrl-0 = <&dmic01_default>, <&dmic23_default>;
->   	pinctrl-names = "default";
-> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> index 616461fcbab9..d138b90bb280 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> @@ -2321,6 +2321,7 @@ port@1 {
+>   &xo_board {
+>   	clock-frequency = <76800000>;
+>   };
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+> index 3d4ad5aac70f..56800ab903a1 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+> @@ -736,7 +736,6 @@ &mdss_dp0 {
+>   
+>   &mdss_dp0_out {
+>   	data-lanes = <0 1>;
+> -	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+>   };
+>   
+>   &pcie_1_phy_aux_clk {
+> @@ -960,10 +959,6 @@ &usb_1_dwc3_hs {
+>   	remote-endpoint = <&pmic_glink_hs_in>;
+>   };
+>   
+> -&usb_1_dwc3_ss {
+> -	remote-endpoint = <&usb_dp_qmpphy_usb_ss_in>;
+> -};
+> -
+>   &usb_1_hsphy {
+>   	vdd-supply = <&vreg_l1e_0p88>;
+>   	vdda12-supply = <&vreg_l3e_1p2>;
+> @@ -982,18 +977,10 @@ &usb_dp_qmpphy {
+>   	status = "okay";
+>   };
+>   
+> -&usb_dp_qmpphy_dp_in {
+> -	remote-endpoint = <&mdss_dp0_out>;
+> -};
+> -
+>   &usb_dp_qmpphy_out {
+>   	remote-endpoint = <&pmic_glink_ss_in>;
+>   };
+>   
+> -&usb_dp_qmpphy_usb_ss_in {
+> -	remote-endpoint = <&usb_1_dwc3_ss>;
+> -};
+> -
+>   &xo_board {
+>   	clock-frequency = <76800000>;
+>   };
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> index 92f015017418..d0b373da39d4 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+> @@ -807,7 +807,6 @@ &mdss_dp0 {
+>   
+>   &mdss_dp0_out {
+>   	data-lanes = <0 1>;
+> -	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+>   };
+>   
+>   &pcie_1_phy_aux_clk {
+> @@ -1144,10 +1143,6 @@ &usb_1_dwc3_hs {
+>   	remote-endpoint = <&pmic_glink_hs_in>;
+>   };
+>   
+> -&usb_1_dwc3_ss {
+> -	remote-endpoint = <&usb_dp_qmpphy_usb_ss_in>;
+> -};
+> -
+>   &usb_1_hsphy {
+>   	vdd-supply = <&vreg_l1e_0p88>;
+>   	vdda12-supply = <&vreg_l3e_1p2>;
+> @@ -1166,18 +1161,10 @@ &usb_dp_qmpphy {
+>   	status = "okay";
+>   };
+>   
+> -&usb_dp_qmpphy_dp_in {
+> -	remote-endpoint = <&mdss_dp0_out>;
+> -};
+> -
+>   &usb_dp_qmpphy_out {
+>   	remote-endpoint = <&redriver_ss_in>;
+>   };
+>   
+> -&usb_dp_qmpphy_usb_ss_in {
+> -	remote-endpoint = <&usb_1_dwc3_ss>;
+> -};
+> -
+>   &xo_board {
+>   	clock-frequency = <76800000>;
+>   };
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+> index 85e0d3d66e16..7a8d5c34e9e6 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+> @@ -746,10 +746,6 @@ &usb_1_dwc3_hs {
+>   	remote-endpoint = <&pmic_glink_hs_in>;
+>   };
+>   
+> -&usb_1_dwc3_ss {
+> -	remote-endpoint = <&usb_dp_qmpphy_usb_ss_in>;
+> -};
+> -
+>   &usb_1_hsphy {
+>   	vdd-supply = <&pm8550vs_2_l1>;
+>   	vdda12-supply = <&pm8550vs_2_l3>;
+> @@ -770,10 +766,6 @@ &usb_dp_qmpphy_out {
+>   	remote-endpoint = <&pmic_glink_ss_in>;
+>   };
+>   
+> -&usb_dp_qmpphy_usb_ss_in {
+> -	remote-endpoint = <&usb_1_dwc3_ss>;
+> -};
+> -
+>   &xo_board {
+>   	clock-frequency = <76800000>;
+>   };
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> index bc5aeb05ffc3..3ada5a30ecb7 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> @@ -2910,6 +2910,7 @@ mdss_dp0_in: endpoint {
+>   					port@1 {
+>   						reg = <1>;
+>   						mdss_dp0_out: endpoint {
+> +							remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+>   						};
+>   					};
+>   				};
+> @@ -3186,6 +3187,7 @@ port@1 {
 >   					reg = <1>;
 >   
->   					usb_1_qmpphy_usb_ss_in: endpoint {
+>   					usb_dp_qmpphy_usb_ss_in: endpoint {
 > +						remote-endpoint = <&usb_1_dwc3_ss>;
 >   					};
 >   				};
 >   
-> @@ -2328,6 +2329,7 @@ port@2 {
+> @@ -3193,6 +3195,7 @@ port@2 {
 >   					reg = <2>;
 >   
->   					usb_1_qmpphy_dp_in: endpoint {
+>   					usb_dp_qmpphy_dp_in: endpoint {
 > +						remote-endpoint = <&mdss_dp0_out>;
 >   					};
 >   				};
 >   			};
-> @@ -3119,6 +3121,14 @@ mdss_dp0_in: endpoint {
->   							remote-endpoint = <&dpu_intf0_out>;
->   						};
->   					};
-> +
-> +					port@1 {
-> +						reg = <1>;
-> +
-> +						mdss_dp0_out: endpoint {
-> +							remote-endpoint = <&usb_1_qmpphy_dp_in>;
-> +						};
-> +		};
->   				};
->   
->   				dp_opp_table: opp-table {
-> @@ -4584,6 +4594,7 @@ port@1 {
+> @@ -3280,6 +3283,7 @@ port@1 {
 >   						reg = <1>;
 >   
 >   						usb_1_dwc3_ss: endpoint {
-> +							remote-endpoint = <&usb_1_qmpphy_usb_ss_in>;
+> +							remote-endpoint = <&usb_dp_qmpphy_usb_ss_in>;
 >   						};
 >   					};
 >   				};
