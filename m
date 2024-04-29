@@ -1,96 +1,115 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.schimsalabim.eu (vps01.schimsalabim.eu [85.214.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A2D13D600
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7DF13D88C;
+	Mon, 29 Apr 2024 19:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714420191; cv=none; b=qBGdn+IoMpIsMlcCzFou8NjnXykj1CIh0BVnpqnYhw4vp0QTDsej+0XYN1FknZQi3Qod7suTNL6oaT3ziM6x2FjP0v4hACI9qdryJCSzcp7yiE2uhH6RFgEKUs4h4SMgfE1zyEtnP3Qezrm2aw/rTLXRPATdrPTiwThKyKIVwAg=
+	t=1714420210; cv=none; b=JODHLSuzkihBHnpbCJDbMVsNsjZ5t47zbPtBK3FMLDwRVqXNyVyZPVoxBU2vUg4AbUR6aGg7rz5HMy1V0KcXCZyvFFvoeOMas1ZF56SqTBwtlDTsi0jT279G2wesZPZjOhl81RzAPmL2e5IbZUPasbWblWHQzK8rT8quOyeMMDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714420191; c=relaxed/simple;
-	bh=fLy9wuUj7qj/KLGKoiK5/omRxQbXTc/lSN/3AugUd4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ETch7SN8Y8vfo3g4zy4lpVMbxJYOg4FsOy6sdPtc0OGYYyLG+wDaNE1lbQJxNKkuUbOgJhREcUUIY1iNM7CT2LXJw/rHIu8s+eFt0yG2SMyEfplPCF72ydQutjcyB5JLplIkNNdV4vT+Q10ydNjKcKw9XgbButLnSrWUao59oyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hFBGjjrm; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hFBGjjrm"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f3f6aa1437so1646490b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714420189; x=1715024989; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HdmEYuDR/RJEQB35GPv4tDo/+p4YFOvYsLxCcDQQsi4=;
-        b=hFBGjjrmupEELOGBImuHMuFkbG6kgsEK4o9GXNq7ILpZ4p6QC3OhT9FOjIhH3+muUE
-         RlX5i60LxP0MZuHjW28H2rDZ+d70mD6jbBtAxMwbyI6EFOVz0FiXpeD8MG9cJ5nEwVtj
-         qavG754xc3mvGTYUJe2eVq6lSM1H7QAio1xPQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714420189; x=1715024989;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HdmEYuDR/RJEQB35GPv4tDo/+p4YFOvYsLxCcDQQsi4=;
-        b=EbmIYrL+YnqAk1cEdf6rhEpAatPucfLVNYj6XHpdushJSDbRRKImPKUOPbII9ov6on
-         AA2KrD1IN5HEOfKUskde+ug7CrXVIEWHsEw+2SsQxbF+1s1vGYNU17pJugrPwplgbgvC
-         LFADT6wfH4B68gF11Eh8Wj/8NRqfvamVJllsfn9H5jZPPI5NPod1yWxdTNuGXSRurq2P
-         qEN8lX37cpCGqiZVOXhn0xcY9AFpKGI26jaEdhLSj/43IZeCF/IosCEjPZsMgO0qqBVZ
-         TAv53bMirv9z5fI616WKJvqoa1o4Vwjdrm+Y3tDPIWvs2bzIet6vcu8Z5umDYduAWWY2
-         REYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUatfMV8tgM/CSE6yCX8q/1rZktKfBtTFVO050MXT75sKPHg7Hxvc6KJH4KFE3/7zHTIUIPf1s5AZMR2J98KwKsobdnkbzgzpCETVTm
-X-Gm-Message-State: AOJu0Yz/JV2JhhpJWHxoUj6AytYTOU7taFC764GDVIKfLAlgfmbbYyp+
-	tfI3bz65+Pfn5WXVz00XH/1pEsmr+Yr5DBRzzwTIUSoa0fZ9gqmV5wjTb2qD5Q==
-X-Google-Smtp-Source: AGHT+IHMkhSs/5SnSlE9LvmWTc+i3WLtTxQUmkaAPchto2E1fkXuXDdc1dfuIKTAOn3H+oooC1kLow==
-X-Received: by 2002:a05:6a20:9f8b:b0:1a7:7358:f108 with SMTP id mm11-20020a056a209f8b00b001a77358f108mr14742494pzb.24.1714420189565;
-        Mon, 29 Apr 2024 12:49:49 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q5-20020a170902a3c500b001e8532292a6sm21156271plb.195.2024.04.29.12.49.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 12:49:49 -0700 (PDT)
-Date: Mon, 29 Apr 2024 12:49:48 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
-	linux-hardening@vger.kernel.org, Finn Thain <fthain@linux-m68k.org>
-Subject: Re: [PATCH v6] checkpatch: add check for snprintf to scnprintf
-Message-ID: <202404291249.078D924@keescook>
-References: <20240429-snprintf-checkpatch-v6-1-354c62c88290@google.com>
+	s=arc-20240116; t=1714420210; c=relaxed/simple;
+	bh=zj3KU5WojxV+uFClMlpfJ5QoCeWL4Ou+kVZkLfofrs4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iO4x0ai8BPCoKxrzJ+rRWD4/YPSqt7a835Zf5gdFWqnMYOM+uCgSpnfpJl2clROXhMr8FEG3QUJQal0jp9nK6Hie8CJ8nGnSAZoBXYzUzBcKXDOBKELViSVOLJqTvAuDBeIMOgOA4DYj2V8bggOFyDj6PBriHjSZgft5fhj2tbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=schimsalabim.eu; spf=pass smtp.mailfrom=schimsalabim.eu; arc=none smtp.client-ip=85.214.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=schimsalabim.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=schimsalabim.eu
+Received: from localhost.localdomain (82-217-109-137.cable.dynamic.v4.ziggo.nl [82.217.109.137])
+	(authenticated bits=0)
+	by h2374449.stratoserver.net (8.14.7/8.14.7) with ESMTP id 43TJnPPQ000764
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 29 Apr 2024 21:49:30 +0200
+From: Joao Schim <joao@schimsalabim.eu>
+To: Ban Tao <fengzheng923@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ASoC: sunxi: DMIC: Add controls for adjusting the mic gains
+Date: Mon, 29 Apr 2024 21:49:20 +0200
+Message-Id: <20240429194920.1596257-1-joao@schimsalabim.eu>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240429-snprintf-checkpatch-v6-1-354c62c88290@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 29, 2024 at 06:39:28PM +0000, Justin Stitt wrote:
-> I am going to quote Lee Jones who has been doing some snprintf ->
-> scnprintf refactorings:
-> 
-> "There is a general misunderstanding amongst engineers that
-> {v}snprintf() returns the length of the data *actually* encoded into the
-> destination array.  However, as per the C99 standard {v}snprintf()
-> really returns the length of the data that *would have been* written if
-> there were enough space for it.  This misunderstanding has led to
-> buffer-overruns in the past.  It's generally considered safer to use the
-> {v}scnprintf() variants in their place (or even sprintf() in simple
-> cases).  So let's do that."
-> 
-> To help prevent new instances of snprintf() from popping up, let's add a
-> check to checkpatch.pl.
-> 
-> Suggested-by: Finn Thain <fthain@linux-m68k.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+The AllWinner H6 and later SoCs that sport a DMIC block contain a set of registers to control
+the gain (left + right) of each of the four supported channels.
 
-Thanks!
+Add ASoC controls for changing each of the stereo channel gains using alsamixer and alike
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Joao Schim <joao@schimsalabim.eu>
+---
+ sound/soc/sunxi/sun50i-dmic.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
+diff --git a/sound/soc/sunxi/sun50i-dmic.c b/sound/soc/sunxi/sun50i-dmic.c
+index c76628bc86c6..dd32780fb6a4 100644
+--- a/sound/soc/sunxi/sun50i-dmic.c
++++ b/sound/soc/sunxi/sun50i-dmic.c
+@@ -14,6 +14,7 @@
+ #include <sound/dmaengine_pcm.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
++#include <sound/tlv.h>
+ 
+ #define SUN50I_DMIC_EN_CTL			(0x00)
+ 	#define SUN50I_DMIC_EN_CTL_GLOBE			BIT(8)
+@@ -43,6 +44,17 @@
+ 	#define SUN50I_DMIC_CH_NUM_N_MASK			GENMASK(2, 0)
+ #define SUN50I_DMIC_CNT				(0x2c)
+ 	#define SUN50I_DMIC_CNT_N				(1 << 0)
++#define SUN50I_DMIC_D0D1_VOL_CTR		(0x30)
++	#define SUN50I_DMIC_D0D1_VOL_CTR_0R			(0)
++	#define SUN50I_DMIC_D0D1_VOL_CTR_0L			(8)
++	#define SUN50I_DMIC_D0D1_VOL_CTR_1R			(16)
++	#define SUN50I_DMIC_D0D1_VOL_CTR_1L			(24)
++#define SUN50I_DMIC_D2D3_VOL_CTR                (0x34)
++        #define SUN50I_DMIC_D2D3_VOL_CTR_2R                     (0)
++        #define SUN50I_DMIC_D2D3_VOL_CTR_2L                     (8)
++        #define SUN50I_DMIC_D2D3_VOL_CTR_3R                     (16)
++        #define SUN50I_DMIC_D2D3_VOL_CTR_3L                     (24)
++
+ #define SUN50I_DMIC_HPF_CTRL			(0x38)
+ #define SUN50I_DMIC_VERSION			(0x50)
+ 
+@@ -273,8 +285,30 @@ static const struct of_device_id sun50i_dmic_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, sun50i_dmic_of_match);
+ 
++static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(sun50i_dmic_vol_scale, -12000, 75, 1);
++
++static const struct snd_kcontrol_new sun50i_dmic_controls[] = {
++
++        SOC_DOUBLE_TLV("DMIC Channel 0 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
++                       SUN50I_DMIC_D0D1_VOL_CTR_0L, SUN50I_DMIC_D0D1_VOL_CTR_0R,
++                       0xFF, 0, sun50i_dmic_vol_scale),
++        SOC_DOUBLE_TLV("DMIC Channel 1 Capture Volume", SUN50I_DMIC_D0D1_VOL_CTR,
++                       SUN50I_DMIC_D0D1_VOL_CTR_1L, SUN50I_DMIC_D0D1_VOL_CTR_1R,
++                       0xFF, 0, sun50i_dmic_vol_scale),
++        SOC_DOUBLE_TLV("DMIC Channel 2 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
++                       SUN50I_DMIC_D2D3_VOL_CTR_2L, SUN50I_DMIC_D2D3_VOL_CTR_2R,
++                       0xFF, 0, sun50i_dmic_vol_scale),
++        SOC_DOUBLE_TLV("DMIC Channel 3 Capture Volume", SUN50I_DMIC_D2D3_VOL_CTR,
++                       SUN50I_DMIC_D2D3_VOL_CTR_3L, SUN50I_DMIC_D2D3_VOL_CTR_3R,
++                       0xFF, 0, sun50i_dmic_vol_scale),
++
++
++};
++
+ static const struct snd_soc_component_driver sun50i_dmic_component = {
+ 	.name           = "sun50i-dmic",
++	.controls	= sun50i_dmic_controls,
++	.num_controls	= ARRAY_SIZE(sun50i_dmic_controls),
+ };
+ 
+ static int sun50i_dmic_runtime_suspend(struct device *dev)
 -- 
-Kees Cook
+2.25.1
+
