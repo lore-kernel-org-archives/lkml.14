@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6147610A17;
-	Mon, 29 Apr 2024 06:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52155F516;
+	Mon, 29 Apr 2024 06:07:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714370614; cv=none; b=qVfuiSDx5gWpxbw7Y9KiWfxTVPSRsn9VpUDif0wmCVinwZgvX4Nwd3bc1WtzyulgOAX7GFPSB49UqDvXmXoRhODnfdEzb0OfPbPnWHuWnTJAkGVSHzNJa5M68KiQP0Y7+xO+hVzA82qmt91vdxwcbPvt493MrM8nMKu0I/IwbAo=
+	t=1714370825; cv=none; b=CPDdl1lMt6KgROqM6mJW7L6qb2jj09Cn8viCSMRT2fCFwMAwExXSLgQ5tvPsN1iehb/IL0xqWNjUFQ0TUIpb96Taf8js96MOoala4a8tLBsAr8w0G52TsAuKebRobFp1EaVfW/MHLGokCkx+EOpgBUdb+5sqUtlrwCcx0Ykw3Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714370614; c=relaxed/simple;
-	bh=CCQ14BOX8lYmY87/Bd32IyYzzmdAz5MRlMjIkZTvFTo=;
+	s=arc-20240116; t=1714370825; c=relaxed/simple;
+	bh=jBCpCNdD8WhN5nL16G66F9uSW0Nz/YUWHg32z316dVA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s7u9j1AkundPzvoSdwNcueB+ItqVxOPOk+N4/i0BX9AhLOQJDZszobnyIut1cjigfJ0P36uHTwj92piTxoKDj2Rvh8GjleZO2oxoESyZ1CCZEEXQWx/zVfIyujmyqZEgWNw3r+QQft7xWd7wjnZHotXqP8ouQKKzJ5W+IgS5Q1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJbPcGfa; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=fcspZmjaNEPUIeREDiHmlZi5pAPHb2dKraybuxr0DvWqARK56g44reNCGOPgmVx1/VT9YEXmTYZJMSTuSW/7+7gzpveWvm3Ca/WM4AYLSv1XHNM2TPgVPZggPOPQUN3vhVeVkKVK0KGxfeh00Rm/ilvS2rv6uEFYUhlAcnzRXWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0ggKTKy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJbPcGfa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 997D1C113CD;
-	Mon, 29 Apr 2024 06:03:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0ggKTKy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52638C113CD;
+	Mon, 29 Apr 2024 06:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714370613;
-	bh=CCQ14BOX8lYmY87/Bd32IyYzzmdAz5MRlMjIkZTvFTo=;
+	s=k20201202; t=1714370824;
+	bh=jBCpCNdD8WhN5nL16G66F9uSW0Nz/YUWHg32z316dVA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dJbPcGfaHhewkFjJoQ5Ul9JRgfxN9LXdJ1NiOvUSJzPnKCC1or24GesGYhyr05UlF
-	 u1z7Xwg4bJb21HgoUZLn0ta9tBDdBD/mhmioyGyUe7rvratwNqsRn+23VT6Ru0+FIf
-	 io9OF2vvuNEurSPjJeSyBHMPGyaLDpmU2he7hjMapejxHCKftk4kM6zOzXdSwsv6s/
-	 iqR1kfdA1sCIGHN2JAyxhQMNatrvx3Zk2iRalgNHNOD7VlU1XeIIo+VFeB7JGcum4U
-	 zoQVzurzSz3D9S3JfiJ4aALm32nR+N9CajQevnmvmPqQN3P+Z6FX/n3Ct2SU6BvfRo
-	 Cyyrr6ut4zT5g==
-Message-ID: <6d21da37-8be7-467c-8878-d57af0b0201b@kernel.org>
-Date: Mon, 29 Apr 2024 08:03:24 +0200
+	b=t0ggKTKy1to7LqkKvwf++mJSfbzNpp/G28x2eRRc02UkUZ+M9G6Z1lGtjifjZdoKU
+	 CWyJfHaCXut7khDkZtxv94q+WOsfen1BBqQ8l9dQfWSzIfASs+/5+QYf33Xa3aw5yF
+	 MTsuRiS/HCwygTIaKXdR19uqsjflESEZ1n+g56amN+4HJGYtGfbk99AGlM5icHfqGO
+	 Jc6ixAQ9lGjUpKmyneGG83zD0wC4LNLNFMGGfW4pd9FisqJub7+Ve1QdON+wzO+BED
+	 J8s3iBEN7K7JSaTWhlwkGy0ub5mRd+7Ow+ag7KI5V7u7+fVglr8sdTF46Aq774b8lH
+	 /Vtb1Nd55l2VA==
+Message-ID: <2023dd55-33d8-4904-8724-97d89c130010@kernel.org>
+Date: Mon, 29 Apr 2024 08:06:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,27 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/16] dt-bindings: mfd: mediatek: Add codec property
- for MT6357 PMIC
-To: Alexandre Mergnat <amergnat@baylibre.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-References: <20240226-audio-i350-v4-0-082b22186d4c@baylibre.com>
- <20240226-audio-i350-v4-3-082b22186d4c@baylibre.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Convert lp873x.txt to json-schema
+To: Nathan Morrisson <nmorrisson@phytec.com>, lee@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, nm@ti.com,
+ vigneshr@ti.com, kristo@kernel.org, j-keerthy@ti.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, upstream@lists.phytec.de,
+ w.egorov@phytec.de
+References: <20240426172155.10860-1-nmorrisson@phytec.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -101,27 +88,114 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240226-audio-i350-v4-3-082b22186d4c@baylibre.com>
+In-Reply-To: <20240426172155.10860-1-nmorrisson@phytec.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/04/2024 19:22, Alexandre Mergnat wrote:
->    regulators:
->      type: object
->      $ref: /schemas/regulator/mediatek,mt6357-regulator.yaml
-> @@ -83,6 +111,12 @@ examples:
->              interrupt-controller;
->              #interrupt-cells = <2>;
->  
-> +            audio-codec {
-> +                mediatek,micbias0-microvolt = <1700000>;
-> +                mediatek,micbias1-microvolt = <1700000>;
-> +                vaud28-supply = <&mt6357_vaud28_reg>;
+On 26/04/2024 19:21, Nathan Morrisson wrote:
+> Convert the lp873x binding to DT schema format. Converted with
+> minimal corrections.
+> 
+> Signed-off-by: Nathan Morrisson <nmorrisson@phytec.com>
 
-And now you should see how odd it looks. Supplies are part of entire
-chip, not subblock, even if they supply dedicated domain within that chip.
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching.
 
-That's why I asked to put it in the parent node.
+
+...
+
+> -};
+> diff --git a/Documentation/devicetree/bindings/mfd/lp873x.yaml b/Documentation/devicetree/bindings/mfd/lp873x.yaml
+> new file mode 100644
+> index 000000000000..87fefdc3126b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/lp873x.yaml
+
+Missing vendor prefix. Name it after compatible, so ti,lp8732.yaml
+
+> @@ -0,0 +1,114 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/lp873x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI LP873X PMIC MFD drivers
+
+
+MFD is Linuxism, 'drivers' is not a hardware usually. Please provide
+title matching hardware.
+
+> +
+> +maintainers:
+> +  - J Keerthy <j-keerthy@ti.com>
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +  PMIC with two high-current buck converters and two linear regulators.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,lp8732
+> +      - ti,lp8733
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  regulators:
+> +    description:
+> +      List of child nodes that specify the regulator initialization data.
+> +    type: object
+> +    patternProperties:
+> +      "^buck[01]|ldo[01]$":
+> +        type: object
+> +        $ref: /schemas/regulator/regulator.yaml#
+> +        unevaluatedProperties: false
+> +    additionalProperties: false
+> +
+> +patternProperties:
+> +  '^(buck[01]|ldo[01])-in-supply$':
+> +    description: Phandle to parent supply of each regulator populated under regulators node.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - regulators
+
+Several other properties are required and you did not mention changes in
+the conversion.
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        i2c@0 {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            reg = <0>;
+> +
+> +            pmic: lp8733@60 {
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+That's usually pmic
+
 
 Best regards,
 Krzysztof
