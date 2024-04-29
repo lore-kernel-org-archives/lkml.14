@@ -1,119 +1,73 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21033D56D;
-	Mon, 29 Apr 2024 09:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832E0224EA
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714382050; cv=none; b=ZUFgqAq6xpbbpOeP0jXn7kUBoWWsTdogPjer5HCGQ9EvVHoLmcvr5GeXsCh19d3Kbl6G+Z633baUgsPDtVgouleL7A/mOQFNoL5Twu4KI4xxw2j5cMwX6kxuGENVdwsRl9LTOv95h/AqPw2fNyKhtvsUejht5R98H+/a3jGWzsI=
+	t=1714382094; cv=none; b=m6RP4160ajSGRwNCnoavgEQpdHRu7/st5Yga9qXsBRjZWyOBUe6R0n0xilnAElyml9GAFcPXFzSLn4l3KDsZ/LQuQdA4E3PIo3taXiYBGQIxL35bv6HRtJguvSHupjzKqIFpNrc3ooWhBQNaVlaBBdUhH5zBhAfycn9ECPqcnk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714382050; c=relaxed/simple;
-	bh=tWU2BU/VIih2YxAqvdx1kb5sfcozOkwpSjAqB11L+t8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qrveq1zA9yoZ+y2adCuxJqs48dpQhX4lRCzesk8Bh1QlFSED3DiB+CxVQQlDjqIv6UvTCKIHuxqNCecDoCB12Jgx9uqdale20bN88wceb8rswi37O7HlNtxetUxQ6tNzeih/RxWnEgM2Mg/bedNXSXH6gd8Gf5txzsHkZuTr5p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UglhMCpM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UglhMCpM"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43T93VeB005503;
-	Mon, 29 Apr 2024 09:14:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=GRKvny6x6M4OyXmACjGVGBDoz6g3KofbC8eaFeoyW5A=; b=Ug
-	lhMCpM+cL7Ml59PQgD3zcvs8l3sXLD7AwXLsnxEGp9XuJglWu5tvSCJ8T9p0dOk4
-	gl4nMiccrBxwpecyTQMJIEh81qIiXbI9G6WDBv285UxFYJPIr+SfGBr9dbr80sej
-	LMu/cEs310v3IovKXqHtiCLg4zAwbFeTcSUAB7tBHjWtv2D5Bx+NU8foHsooSxHS
-	Ud6c8546ADQlMr4Wtbq70V6oNdCGP4052AyGgbq6bxDfbLUX1iR4OH3vgLQVX8Jc
-	zb/h+Zg2DxRfmqp7WdjP+EuUN1qXdN9UTIGmQbmNf1eKv82CkevtAeepH80HIFMz
-	SNQeaa4aHUUIoKv7uJlg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xt8jm00x6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:14:05 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43T9E4bD008748
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:14:04 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 29 Apr 2024 02:13:59 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <andersson@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <djakov@kernel.org>,
-        <dmitry.baryshkov@linaro.org>, <quic_varada@quicinc.com>,
-        <quic_anusha@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: [PATCH v10 6/6] arm64: dts: qcom: ipq9574: Add icc provider ability to gcc
-Date: Mon, 29 Apr 2024 14:43:14 +0530
-Message-ID: <20240429091314.761900-7-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240429091314.761900-1-quic_varada@quicinc.com>
-References: <20240429091314.761900-1-quic_varada@quicinc.com>
+	s=arc-20240116; t=1714382094; c=relaxed/simple;
+	bh=TwIt8dL4+4FciE3Jbqznx0mwOtJY9K54EjWjrWQb+TQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=TSUJwPNSPXvcQma9bj5jLw44jEuXtCiLeRRzmIPdh3EHg3t+x6RuJ7qSL3pl3TInUx/cnlefxm77/3cOrvLrHQRaIROBJEgqteM9om1D0YUnLi4WtnCymOeWDN1wqVg+F0k6rp5l16TJhgu76X3r/WLvBkZKbihrXw5ckFyMNHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-83-8-pfOq6XNPGGCsa-FnWE_A-1; Mon, 29 Apr 2024 10:14:43 +0100
+X-MC-Unique: 8-pfOq6XNPGGCsa-FnWE_A-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 29 Apr
+ 2024 10:14:06 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Mon, 29 Apr 2024 10:14:06 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Jiri Slaby' <jirislaby@kernel.org>, Hugo Villeneuve <hugo@hugovil.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jon Ringle
+	<jringle@gridpoint.com>
+CC: "ria.freelander@gmail.com" <ria.freelander@gmail.com>, Hugo Villeneuve
+	<hvilleneuve@dimonoff.com>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org"
+	<linux-serial@vger.kernel.org>
+Subject: RE: [PATCH] serial: sc16is7xx: fix bug in sc16is7xx_set_baud() when
+ using prescaler
+Thread-Topic: [PATCH] serial: sc16is7xx: fix bug in sc16is7xx_set_baud() when
+ using prescaler
+Thread-Index: AQHamf/sWZGWHPbUOU+NpCCP8YCCu7F+9eqA
+Date: Mon, 29 Apr 2024 09:14:06 +0000
+Message-ID: <6ea689ace38d47f285efe026772efcae@AcuMS.aculab.com>
+References: <20240426135937.3810959-1-hugo@hugovil.com>
+ <17d2cc58-cf68-430d-9248-25abe4c5b0f0@kernel.org>
+In-Reply-To: <17d2cc58-cf68-430d-9248-25abe4c5b0f0@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: JtSJuynIpJGxJwZ9GRAatKXFoLJOcqns
-X-Proofpoint-ORIG-GUID: JtSJuynIpJGxJwZ9GRAatKXFoLJOcqns
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-29_06,2024-04-26_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 adultscore=0 malwarescore=0
- mlxlogscore=997 spamscore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404290057
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-IPQ SoCs dont involve RPM in managing NoC related clocks and
-there is no NoC scaling. Linux itself handles these clocks.
-However, these should not be exposed as just clocks and align
-with other Qualcomm SoCs that handle these clocks from a
-interconnect provider.
-
-Hence include icc provider capability to the gcc node so that
-peripherals can use the interconnect facility to enable these
-clocks.
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
- arch/arm64/boot/dts/qcom/ipq9574.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-index c5abadf94975..0aba4c60e850 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-@@ -8,6 +8,7 @@
- 
- #include <dt-bindings/clock/qcom,apss-ipq.h>
- #include <dt-bindings/clock/qcom,ipq9574-gcc.h>
-+#include <dt-bindings/interconnect/qcom,ipq9574.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/qcom,ipq9574-gcc.h>
- #include <dt-bindings/clock/qcom,ipq9574-nsscc.h>
-@@ -457,6 +458,7 @@ gcc: clock-controller@1800000 {
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-+			#interconnect-cells = <1>;
- 		};
- 
- 		tcsr_mutex: hwlock@1905000 {
--- 
-2.34.1
+RnJvbTogSmlyaSBTbGFieQ0KPiBTZW50OiAyOSBBcHJpbCAyMDI0IDA3OjM5DQouLi4NCj4gPiAt
+CXU4IHByZXNjYWxlciA9IDA7DQo+ID4gKwlpbnQgcHJlc2NhbGVyID0gMTsNCj4gDQo+IFVnaCwg
+d2h5IGRvIHlvdSBtb3ZlIHRvIHNpZ25lZCBhcml0aG1ldGljcz8NCg0KQW55IGFyaXRobWV0aWMg
+d291bGQgYWx3YXlzIGhhdmUgYmVlbiBzaWduZWQuDQp1OCBpcyBwcm9tb3RlZCB0byAnc2lnbmVk
+IGludCcgYmVmb3JlIGJlaW5nIHVzZWQgZm9yIHByZXR0eSBtdWNoIGFueXRoaW5nLg0KDQondW5z
+aWduZWQgaW50IHByZXNjYWxlcicgbWlnaHQgaGF2ZSBjaGFuZ2VkIGFyaXRobWV0aWMgdG8gYmUg
+dW5zaWduZWQuDQoNCk9UT0ggeW91IHByb2JhYmx5IGRvbid0IHdhbnQgYSB1OCAtIHRoYXQgbWln
+aHQgcmVxdWlyZSB0aGUgY29tcGlsZXINCm1hc2sgYW4gYXJpdGhtZXRpYyByZXN1bHQgdG8gOCBi
+aXRzLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5
+IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRp
+b24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
