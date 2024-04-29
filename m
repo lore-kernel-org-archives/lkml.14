@@ -1,300 +1,107 @@
-Received: from rere.qmqm.pl (rere.qmqm.pl [91.227.64.183])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD44F80633
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.64.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3627682D66
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714401942; cv=none; b=jy2JancY3p+I1HPfJaMWnH+MmCiNWfFj0fBU8Qa+X8qM9uW11W1einQsSW8Fx62oEnmVp+71qsWs7G+UvzwNQ1IWf57RQ2IGL70pr3BKh60eVNzz1icjP3QsW1N7eopPtFqi0R++wuN+Z8vEzvCKBeDGvaJwh7hd/VC3x3Q25Xs=
+	t=1714401944; cv=none; b=M3e2Mjz2Rg9z0uvv2q+W+YAtULlUarBI9LhRCfgGh2O28EOIZydTko0d5QbHe3Iy7CPABJ1cYpFZKiEmEwwsfZ2LxVLzhFU+3xg0RvAF4Ng2CsTiAIP3Gmbp0A61mEeKMTyZ24gPWsz2BwYlZBZlAaZrdrSrCAduvO/9qHEjgKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714401942; c=relaxed/simple;
-	bh=XOjGi/2Lne6XOZ5e5aW/2dU32ukuNR6WyG/LG7Qn0N4=;
-	h=Date:Message-Id:In-Reply-To:References:Subject:MIME-Version:
-	 Content-Type:From:To:Cc; b=P9R4+SI4Vo505ZmPpeNzPDJjJeJ3goXAOYqsstp4sa1nvieZSk9j/xlucmJVE6ZmQth3R8tVyQswdLtGefY2aUoWSIN8SKAEB/drM0CZ5rAJ04+p9WxxyAjpgsvOOCG2f9rcyG76fe0wJ4tyVxSFNjVXqGpjlPmfyeVm8cdqw6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl; spf=pass smtp.mailfrom=rere.qmqm.pl; dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b=UuMwGh6L; arc=none smtp.client-ip=91.227.64.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rere.qmqm.pl
+	s=arc-20240116; t=1714401944; c=relaxed/simple;
+	bh=F3uL5MsmUALtcFiI0QIew6cRHX+r6COGBnKC/XZwBKk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lia8n6cWxzXpMPhnEJbG0lMq9EnF43Il7D4pPO/ItnEtDsqP0bHzl09JkRoBPHda9+BUFoDY0wdHTl7f3E62qrPRSOs1GoGr9cruEeV6UM8HFk+0RP0xIXUCedOHqhgKAqmMrtRGRwLjwHRVsKkS4olwxZ6YNQMAx6ypsfDCcjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FUNn8bg9; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="UuMwGh6L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-	t=1714401932; bh=XOjGi/2Lne6XOZ5e5aW/2dU32ukuNR6WyG/LG7Qn0N4=;
-	h=Date:In-Reply-To:References:Subject:From:To:Cc:From;
-	b=UuMwGh6LUoMayHam9P7nJfARkeY0zPPQJWQneeIFexxCFe/Su5sQFB1jEkeXKqbiR
-	 9CM+rCS7457f6hH501JhBNeV+fnQZC+n+7UcBQMuCwofDMMoDfPJCVlrVG3gEpHrbf
-	 1W/r13ev/HyAFRY3ij+R8ed6YnPWNwvuv+Rqvr2Psw00urBe5LQh2OlZ6ce0GFiraj
-	 GqVoU64kqcoGBTLg5nftioWxqGQN+EMexLOOdxDHCRZQrAIRRfDW6D91TCiMiCCNLW
-	 ui1jzJGhEoaWLT0mgpSqcJZrQTMZCtN2/S5/PWA2l5wOXOi2vxmYXOrRezsv36wqIG
-	 nB1L1LRoh1Jmw==
-Received: from remote.user (localhost [127.0.0.1])
-	by rere.qmqm.pl (Postfix) with ESMTPSA id 4VSmMw4JStzd3;
-	Mon, 29 Apr 2024 16:45:32 +0200 (CEST)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.0.5 at mail
-Date: Mon, 29 Apr 2024 16:45:32 +0200
-Message-Id: <90c898494b540d51767a108574cf76b7477085e5.1714399603.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1714399603.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1714399603.git.mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 10/12] regulator/core: use dev_to_rdev() for device ->
- regulator_dev cast
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FUNn8bg9"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 988B940E0187;
+	Mon, 29 Apr 2024 14:45:39 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id jEjCQhPIYrru; Mon, 29 Apr 2024 14:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1714401934; bh=zZZ5uIl7gam0sGKCdhwGGAI2qvhYN93EKC+r3/GxU7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FUNn8bg9UGoZX4EhU2jeGeFFFlf7QDHM+ueU/sCj+9gGAJJZ+ukCF7gmLndn3W/T7
+	 4wo6lFaRBzYuoMZxNEOxZDHlaQQVIGpI+JuoAoHdE+y5mL8n+yRz3WhUr6h1PGygj7
+	 ZxwFiqR+ReP4lmSemEYnF2ywcqgTZuZifGr2+Tl51SVgiD8cLnZUhst/8Aet9ARSx8
+	 SyeE44n7EzN9aIHV6RM/VYemsLUZ/mpZiwpawD38w+G9iWJNd48S6WZfxq3S2BbR/e
+	 mHQD1jEOyrd8V3zgfNjviPj3x7Imq5QQ13rDDBvYHsPf8nxZmO4gn53/MPB4/6P/qc
+	 eJ948igKRf4i05fxNhN7XUc6DBmaWnkqk4jb8EqF8ckEJT+Qz/VwpjOAIr8+6FWVc6
+	 a8aegJ1S3eXyZMQspheuU4KSquSlQHkg97gZKZ6fVYfnoIepRMzQzYUg0Thg0eAtP1
+	 3TRwkRehYHz9+Av2qXTC4HhtVzgLw9CMdGeHPulRGTNh+ahz2ptH0WY0tinNdfZHdg
+	 1j0VXg8ljcNktUTniiXGKiW36ISjlip+f/FJbpP19sDGVkpqolIEpHW3lwzqH64T06
+	 YYRwBGaB2Agmht8+OaiU5fRNib5gJAM+FyFqoeVMlkixNUDjda8OwVkFAaFkZ1eqfZ
+	 jXwe/f5Ydu72Ky5gacB+n9Cc=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A689B40E00C7;
+	Mon, 29 Apr 2024 14:45:14 +0000 (UTC)
+Date: Mon, 29 Apr 2024 16:45:08 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	Kai Huang <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv10 05/18] x86/kexec: Keep CR4.MCE set during kexec for
+ TDX guest
+Message-ID: <20240429144454.GHZi-yZkD0boKk5N17@fat_crate.local>
+References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
+ <20240409113010.465412-6-kirill.shutemov@linux.intel.com>
+ <ZhVPIDDLkjOB96fI@google.com>
+ <3q6jv3g4tezybmd667mqxio7ty22akxv7okrznmzx3tju2u4qo@2alzjkbgm2lh>
+ <20240428171111.GKZi6DLy_ZwuZsZdFq@fat_crate.local>
+ <e35yxpa2xdynm7focg6k4u2bjzojn24bmeaszh2jz52e4szc5f@6mgtrdnkewhe>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-From:	=?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-To:	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Cc:	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e35yxpa2xdynm7focg6k4u2bjzojn24bmeaszh2jz52e4szc5f@6mgtrdnkewhe>
 
-There is 1:1 relationship between regulator_dev and device (rdev->dev)
-structures.  Since we already have dev_to_rdev() to follow from
-&rdev->dev to the rdev, use it instead of dereferencing a pointer.
+On Mon, Apr 29, 2024 at 04:17:38PM +0300, Kirill A. Shutemov wrote:
+> As I mentioned above, clearing CR4.MCE triggers #VE. It is quirk of the
+> platform.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/regulator/core.c | 51 ++++++++++++++++++++--------------------
- 1 file changed, 25 insertions(+), 26 deletions(-)
+You mean when identity_mapped() runs as part of a kexec-ed kernel, it
+might clear CR4.MCE and that would trigger the #VE?
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 431e1c164b11..d7192530d3e0 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -650,7 +650,7 @@ regulator_get_suspend_state_check(struct regulator_dev *rdev, suspend_state_t st
- static ssize_t microvolts_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 	int uV;
- 
- 	regulator_lock(rdev);
-@@ -666,7 +666,7 @@ static DEVICE_ATTR_RO(microvolts);
- static ssize_t microamps_show(struct device *dev,
- 			      struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return sprintf(buf, "%d\n", _regulator_get_current_limit(rdev));
- }
-@@ -675,7 +675,7 @@ static DEVICE_ATTR_RO(microamps);
- static ssize_t name_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return sprintf(buf, "%s\n", rdev_get_name(rdev));
- }
-@@ -704,7 +704,7 @@ static ssize_t regulator_print_opmode(char *buf, int mode)
- static ssize_t opmode_show(struct device *dev,
- 			   struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return regulator_print_opmode(buf, _regulator_get_mode(rdev));
- }
-@@ -723,7 +723,7 @@ static ssize_t regulator_print_state(char *buf, int state)
- static ssize_t state_show(struct device *dev,
- 			  struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 	ssize_t ret;
- 
- 	regulator_lock(rdev);
-@@ -737,7 +737,7 @@ static DEVICE_ATTR_RO(state);
- static ssize_t status_show(struct device *dev,
- 			   struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 	int status;
- 	char *label;
- 
-@@ -784,7 +784,7 @@ static DEVICE_ATTR_RO(status);
- static ssize_t min_microamps_show(struct device *dev,
- 				  struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	if (!rdev->constraints)
- 		return sprintf(buf, "constraint not defined\n");
-@@ -796,7 +796,7 @@ static DEVICE_ATTR_RO(min_microamps);
- static ssize_t max_microamps_show(struct device *dev,
- 				  struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	if (!rdev->constraints)
- 		return sprintf(buf, "constraint not defined\n");
-@@ -808,7 +808,7 @@ static DEVICE_ATTR_RO(max_microamps);
- static ssize_t min_microvolts_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	if (!rdev->constraints)
- 		return sprintf(buf, "constraint not defined\n");
-@@ -820,7 +820,7 @@ static DEVICE_ATTR_RO(min_microvolts);
- static ssize_t max_microvolts_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	if (!rdev->constraints)
- 		return sprintf(buf, "constraint not defined\n");
-@@ -832,7 +832,7 @@ static DEVICE_ATTR_RO(max_microvolts);
- static ssize_t requested_microamps_show(struct device *dev,
- 					struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 	struct regulator *regulator;
- 	int uA = 0;
- 
-@@ -849,7 +849,7 @@ static DEVICE_ATTR_RO(requested_microamps);
- static ssize_t num_users_show(struct device *dev, struct device_attribute *attr,
- 			      char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 	return sprintf(buf, "%d\n", rdev->use_count);
- }
- static DEVICE_ATTR_RO(num_users);
-@@ -857,7 +857,7 @@ static DEVICE_ATTR_RO(num_users);
- static ssize_t type_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	switch (rdev->desc->type) {
- 	case REGULATOR_VOLTAGE:
-@@ -872,7 +872,7 @@ static DEVICE_ATTR_RO(type);
- static ssize_t suspend_mem_microvolts_show(struct device *dev,
- 					   struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return sprintf(buf, "%d\n", rdev->constraints->state_mem.uV);
- }
-@@ -881,7 +881,7 @@ static DEVICE_ATTR_RO(suspend_mem_microvolts);
- static ssize_t suspend_disk_microvolts_show(struct device *dev,
- 					    struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return sprintf(buf, "%d\n", rdev->constraints->state_disk.uV);
- }
-@@ -890,7 +890,7 @@ static DEVICE_ATTR_RO(suspend_disk_microvolts);
- static ssize_t suspend_standby_microvolts_show(struct device *dev,
- 					       struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return sprintf(buf, "%d\n", rdev->constraints->state_standby.uV);
- }
-@@ -899,7 +899,7 @@ static DEVICE_ATTR_RO(suspend_standby_microvolts);
- static ssize_t suspend_mem_mode_show(struct device *dev,
- 				     struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return regulator_print_opmode(buf,
- 		rdev->constraints->state_mem.mode);
-@@ -909,7 +909,7 @@ static DEVICE_ATTR_RO(suspend_mem_mode);
- static ssize_t suspend_disk_mode_show(struct device *dev,
- 				      struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return regulator_print_opmode(buf,
- 		rdev->constraints->state_disk.mode);
-@@ -919,7 +919,7 @@ static DEVICE_ATTR_RO(suspend_disk_mode);
- static ssize_t suspend_standby_mode_show(struct device *dev,
- 					 struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return regulator_print_opmode(buf,
- 		rdev->constraints->state_standby.mode);
-@@ -929,7 +929,7 @@ static DEVICE_ATTR_RO(suspend_standby_mode);
- static ssize_t suspend_mem_state_show(struct device *dev,
- 				      struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return regulator_print_state(buf,
- 			rdev->constraints->state_mem.enabled);
-@@ -939,7 +939,7 @@ static DEVICE_ATTR_RO(suspend_mem_state);
- static ssize_t suspend_disk_state_show(struct device *dev,
- 				       struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return regulator_print_state(buf,
- 			rdev->constraints->state_disk.enabled);
-@@ -949,7 +949,7 @@ static DEVICE_ATTR_RO(suspend_disk_state);
- static ssize_t suspend_standby_state_show(struct device *dev,
- 					  struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	return regulator_print_state(buf,
- 			rdev->constraints->state_standby.enabled);
-@@ -959,7 +959,7 @@ static DEVICE_ATTR_RO(suspend_standby_state);
- static ssize_t bypass_show(struct device *dev,
- 			   struct device_attribute *attr, char *buf)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 	const char *report;
- 	bool bypass;
- 	int ret;
-@@ -983,7 +983,7 @@ static DEVICE_ATTR_RO(bypass);
- 	{										\
- 		int ret;								\
- 		unsigned int flags;							\
--		struct regulator_dev *rdev = dev_get_drvdata(dev);			\
-+		struct regulator_dev *rdev = dev_to_rdev(dev);				\
- 		ret = _regulator_get_error_flags(rdev, &flags);				\
- 		if (ret)								\
- 			return ret;							\
-@@ -5278,7 +5278,7 @@ static const struct attribute_group *regulator_dev_groups[] = {
- 
- static void regulator_dev_release(struct device *dev)
- {
--	struct regulator_dev *rdev = dev_get_drvdata(dev);
-+	struct regulator_dev *rdev = dev_to_rdev(dev);
- 
- 	debugfs_remove_recursive(rdev->debugfs);
- 	kfree(rdev->constraints);
-@@ -5588,7 +5588,6 @@ regulator_register(struct device *dev,
- 		goto rinse;
- 	}
- 	device_initialize(&rdev->dev);
--	dev_set_drvdata(&rdev->dev, rdev);
- 	rdev->dev.class = &regulator_class;
- 	spin_lock_init(&rdev->err_lock);
- 
+So, if that is correct, you basically want to *preserve* the CR4.MCE
+setting across kexec?
+
+But then __mcheck_cpu_init_generic() will go and set it
+unconditionally.
+
+So what exactly is the correct flow here?
+
+Thx.
+
 -- 
-2.39.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
