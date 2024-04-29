@@ -1,150 +1,225 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2108.outbound.protection.outlook.com [40.107.20.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAA773526
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714397753; cv=none; b=vA0MGiL2XJ1Nbmta6GsoDaaynjo8dCVla1SMju7NC+LVnvVJn7uraV+QpZXdbtONVdeJe1XdGQl2R5syrW9x+S4GeFlWVF4ggpyZX3Iy7e5uvp54rYkaErDNomzLGZvp4gtmyelxr3N4Q8HQr3cnYcEaAGTLnv98W0hkbcAbMm4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714397753; c=relaxed/simple;
-	bh=q/7i0vEiRXzsOzZ/VjbON+CPYtHY2WpILRjc+82oZlE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eO1TkalVSKYh+tYG5hGS1u5ENaf4psdCK/NCu2DSwsgKHLbnfdvbok8YZBYyQO2r2tax6NZtMclsOimEvrNPJvwuoNvML89h9k+xFmnBP0/vebsRn91awqqk61kGoc/SmSDkt7yJQ2470YgP3CFwAjLD7kEKpJcQCjok7Ficqe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kjVwLeMQ; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD266F510;
+	Mon, 29 Apr 2024 13:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.108
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714397775; cv=fail; b=eowleGmRqBf5GW/ct8c1SefFfVPCPeUWMeFQO5j77MgS4i9M3/66rNp2Cz05+SzcvfAf48woLZnkW/ZK9tWP6DfBIwreq7vJKhXFyKkvB/+4L0bxtREfkNgvdJBlhd2kXUDb8zhhiHueZMN/41JmL+2nCLc2z/O4IsusB/te9hc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714397775; c=relaxed/simple;
+	bh=b2fB4JTmGhN4zOjp698Eto1qzkFTqwYPsBdkK8M4Pdo=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=SPoADhrklBPYVDqYZtV0lfY+vt/kc44hfPjX8suO2KVxqxHczvtI+UrSCq2LoyrEekaWu3+psr8BrhHJ9TW28PaLa2GUdMANsP5saFVDJStEgAXIQ+UGKTOZ8XvCfTqTDmKkeleYOghUXg2XyD94XQeEoQTd4CThuhVy+ZSTZdM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=ubie8qzf; arc=fail smtp.client-ip=40.107.20.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kjVwLeMQ"
-Message-ID: <e03c8cbb-ddbf-4721-8e71-01e96379b0cc@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714397747;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CpibBkIcCucywmvveltGrcNm6gkhi3AFYlJMmTa/ji8=;
-	b=kjVwLeMQiLMkGlNGJd0b5ixNqnjqiUNPnOYnjL8yxl1OSm36So93zAYloGs8NUj4+OeFdb
-	sPHbtVepDk3g22o8wgOOfXoQ0G8HWE2iiA+sIkkXLvp/ZsS+6MOt9fFCLi2mzFBR1IX8ER
-	UV+HQ4cE5AiYyLAN4OdhJ5nbnpzxFzU=
-Date: Mon, 29 Apr 2024 21:35:34 +0800
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="ubie8qzf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B/qHW8o5dmXOmsYNM1CX2TjxMIa6QyX816i1sHZULeZD7titPL3P3/Mhzj8b5ZO0yl+xbx5fYGov905GUvKyw47rBAaqqEQrPBiNkWq5VUyBcOyhtoYZsIfPt8zYHF6bgqWtma/Wn0b0qubF4pl8RFXklyMtjKnEkHNJ8/sRKae6VohSGWjNMxC/DyKcn4Ced8MqTLb7HZebzirORGsnol+l/UHN/25FutSTtoxprvZbxTN0OrQbsBL8XxKBsFIE9mCw/m8TwbHMiJ6d6W60H5NI2HDXILULGLwq29U36cNwuGsZDC6JuiRyniDWUn41CqEd8ELUeXWeYjo4ewdkVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LTA1lxa/g4Z5bd0fFvP0OdfIlgtGE3qIljn6t1PH5Io=;
+ b=A7oPPpcTOM8MYDeAOH6Lwkaooq4SDgPWlzXMOFkMDoUMmPYw0eu/2jec9KatfpxkzlvJB0YpGy6kpjm9R4NtCx4nNf6gAODbIc165lx8FfRiimpqihjDZKI9sBhmstwhNanWSPJuLLQVUE/V/bkQZjcwCSEG5fklHIGiaW6qpno38z6jWKdo8mYSc9BItO24N4TlPLn9wXAb6GOp5ZWCqqdSZQpPvcTAIiutyVAtLxbpEKlfYX+RVBv81mk95xjjDWSlCkyIyy3hIXsVsoT9epQ/1/fZZkqr0LhjVob99kgx0r09x4e/qRyzaGqxxVUNxmtY2DjMp340FG+yq1xWdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wolfvision.net; dmarc=pass action=none
+ header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LTA1lxa/g4Z5bd0fFvP0OdfIlgtGE3qIljn6t1PH5Io=;
+ b=ubie8qzfIGk6Th0bxbUdWVmvNI3/Aiovu3j2H2uXk2Z/9fbgeX39IIJRaXaVcdNZd/l9BlZ3+lrCfnKbbbbqgHbqsJM+RMVsqTC7p42jSTH+KzX/RBpUh6doEiSqHiaTjm4G0L6IqpZgha11D0ANFEXlc05h6P5y+yDjJYXvCM4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wolfvision.net;
+Received: from VE1PR08MB4974.eurprd08.prod.outlook.com (2603:10a6:803:111::15)
+ by AS8PR08MB6119.eurprd08.prod.outlook.com (2603:10a6:20b:290::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
+ 2024 13:36:10 +0000
+Received: from VE1PR08MB4974.eurprd08.prod.outlook.com
+ ([fe80::6621:68a6:ab00:c040]) by VE1PR08MB4974.eurprd08.prod.outlook.com
+ ([fe80::6621:68a6:ab00:c040%6]) with mapi id 15.20.7519.021; Mon, 29 Apr 2024
+ 13:36:10 +0000
+From: Javier Carrasco <javier.carrasco@wolfvision.net>
+Subject: [PATCH v3 0/3] usb: typec: tipd: fix event checking in interrupt
+ service routines
+Date: Mon, 29 Apr 2024 15:35:56 +0200
+Message-Id: <20240429-tps6598x_fix_event_handling-v3-0-4e8e58dce489@wolfvision.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADyiL2YC/42OQQ7CIBREr9L8tRgKYqkr72GaRuXT/qSBBgjWN
+ L27WC/g8k0mb2aFiIEwwqVaIWCmSN4VkIcKnuPdDcjIFAbBxYlLoVma41m1euktLT1mdKkvPTO
+ RG5iUrTbSaGG1gmKYA5bWbr91hUeKyYf3Ppbrb/qfN9eMM8VFI2prG64e15ef7O/s0WGCbtu2D
+ 5mhZ+bLAAAA
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Abdel Alkuor <abdelalkuor@geotab.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco@wolfvision.net>, stable@vger.kernel.org
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714397770; l=2623;
+ i=javier.carrasco@wolfvision.net; s=20240320; h=from:subject:message-id;
+ bh=b2fB4JTmGhN4zOjp698Eto1qzkFTqwYPsBdkK8M4Pdo=;
+ b=OIRHfLncoY7lBQvv5icf2+TtoTiMCH7K8BfKppz3ZZTkBcjpiEkri/pMKdugfVJjCnRM/iAJb
+ QP7AW/tHDD/AfP4kOsBqQBQQ/3jgFMj8nYQyWtRCy1cJbrmposvKgmP
+X-Developer-Key: i=javier.carrasco@wolfvision.net; a=ed25519;
+ pk=Vxk2/0sGIxM8rsKnceszFuSuHVfQwa1Yo8+is7BX2nY=
+X-ClientProxiedBy: VE1PR03CA0005.eurprd03.prod.outlook.com
+ (2603:10a6:802:a0::17) To VE1PR08MB4974.eurprd08.prod.outlook.com
+ (2603:10a6:803:111::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] slub: Fixes freepointer encoding for single free
-To: Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>,
- Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: cl@linux.com, penberg@kernel.org, rientjes@google.com,
- iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, roman.gushchin@linux.dev,
- 42.hyeyoo@gmail.com, Xiongwei Song <xiongwei.song@windriver.com>
-References: <Zij_fGjRS_rK-65r@archlinux>
- <f9c133a9-8886-4c86-a24f-4778997547f2@linux.dev>
- <bbf2063f-54d4-43f0-84b3-1ea789470914@clip-os.org>
- <5c34b253-b476-494a-96c9-fe3c95b9b74d@linux.dev>
- <6f977874-2a18-44ef-b207-9eb0baad9d66@suse.cz>
- <d17d7b20-b99e-46ce-b7bf-fb7058a66e79@clip-os.org>
- <7074c0b4-62d4-444d-8e59-e23bbbccf9b8@clip-os.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <7074c0b4-62d4-444d-8e59-e23bbbccf9b8@clip-os.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR08MB4974:EE_|AS8PR08MB6119:EE_
+X-MS-Office365-Filtering-Correlation-Id: d287b70a-b275-4548-401a-08dc685154a7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|52116005|1800799015|376005|366007|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SGlQenpzNC9WVXMxaE5IZzBpVHA5MmEvRkxKdmhIbnFUbFZGejk2VUlZYWxp?=
+ =?utf-8?B?SG1zVWRFYmtPYitKU2F0SnFtZ09pQmJDTm5yMFhyUCtWaW1weFZ0U0VSNUlS?=
+ =?utf-8?B?MmhZQ3VwcDdndDI3Ti9CY3p2dk4vMWZQcXFoelg0c3ZBbnc3b0FRRnQ1QWpz?=
+ =?utf-8?B?bXQ5VTllZjFPcllMWnFSdllOcmJuczJoZE5mSXp5bVEyOHVjK2pxd0RzMGVR?=
+ =?utf-8?B?cTcxWks2cVlyLzVoTERob1VCb3JTb2ZRVTBGbFRwN2QwTERFYkpjNFNxNTNP?=
+ =?utf-8?B?NkRPYUhGS0JFaDVYdmtHS2RZV2ZXVU9hZU4wbCtIZ3l1Nnh2Y3hLL0tVWi92?=
+ =?utf-8?B?bjRmcjJ6bENqYVI4Y3lDQXF3K3doVWtFS3I0QmRBU3RQVTBRakRiZHFJeUgz?=
+ =?utf-8?B?OC9wRVZwZ0QrTHJzUExaSGRRS0JIeVJKZ1BZcW5lTHNOc09GTExSWitGRUsw?=
+ =?utf-8?B?ZUhyLzg3cFlhM250SWtPcGJ1Nm9iOGhreHdIbFJ2N29lT1A1TUc0RHR3WE01?=
+ =?utf-8?B?UENWM0NWM3B2cHZHbm5pcC9HZm9iZnRzeER0TUpzdmRjTW9VQ0ZiTEhuS0h6?=
+ =?utf-8?B?dFBBVlJJOFRTd2M1UkJjdW5vb3hOc1owZll4eFlrRS9PSHdFZnAza1BuM0hl?=
+ =?utf-8?B?cllKaEx4QWdLTUxQTFk1ejlabnNvVVRYR2pycmUwdXZTRFJOM1RHbHV2SUxz?=
+ =?utf-8?B?eHQvQVlWOVZHejFiVHdsZHNVTWdlazl4SVpLNktUZXRrblVHOFRvbDVDeTRo?=
+ =?utf-8?B?RW56cGt5N2ZyNUJKNnhvdlFwWllKemhLanR4ZTdrcklwN2dTaDg1d2FpWUV2?=
+ =?utf-8?B?QllreTVpb3IvZmxJcW1xTVdQMmVaVGxPaFlJWUUvNHFTTStCd2cwUUxMZUhn?=
+ =?utf-8?B?ekZHY05CaWQrY3pZdml0a2VBZFc5ejAvKzYvSTZvdHBkM3Y3RVJ1VmN1RFBS?=
+ =?utf-8?B?bVRPSWlCRWYzUk5kYkVFak5uRDdRMUZieFpLVFE5RzRGR2VtaGJLZ0FobThk?=
+ =?utf-8?B?MzhYZzduOUtSRlVaNlFUN0Izb3ZLVjFMRXJLOFprUWJ1ajBMZ1B0MVNLbkxF?=
+ =?utf-8?B?SWFHVFRxRTk4NHlQTnB0K2RqQ3RJNTQvNGh0VytiRkRURER4QVdRTTlUMjls?=
+ =?utf-8?B?NU4ySjlNRUtoczFkbGh2MW01d1pLc1h4YWZIOEpCcE5BcEVuWklSYXVEUFo0?=
+ =?utf-8?B?a2hYbEdxQklnZUx6YzF4YmdCdVYvK09Nb0xTRW1zdFJVOEl0YVZvMm5lcWxF?=
+ =?utf-8?B?NzVFdDBxOUVrOWtVbVczMFI2WFE0R3V3dUlJN0dpQnd2b2ZUUFZsSHMyVFA2?=
+ =?utf-8?B?N3ZWSTdNcWUzNHBzU2k2M0dyenlWQzl4R3MxeWtJb1VWb2FZNmVWSmpIb2FV?=
+ =?utf-8?B?dUQxM3Z5bENnc284S2xKSnhiSnFLcVAwUmViWnk3eDlzWEUzQWhzSlIvWFdp?=
+ =?utf-8?B?akQzcVNUSWMvLzRVa0c5WEZJV3l6bXg0YkJ6d25McFZnR1FLK0RZa05YOENV?=
+ =?utf-8?B?RGFGdWNYYUVxcmlYSi81TGV6VTBoOU9PWCs1YUtLQ3ZybWNiMUx3elZjQmdo?=
+ =?utf-8?B?dGRKYjFZWlFLNHMvbG92b052c016RTcramNWbjhENUNES0VZYVpkRE9kM1RZ?=
+ =?utf-8?B?MjFzSkUvNm15NzFGWTU2OUxqYWhvRTJXWlBadXVBUHNIME90QitNOTVkTjZG?=
+ =?utf-8?B?WDNiSFdjMDVmYzNNdUxGeHpDdWpsVHM5Y2RtOXBHQUJJVUs5M0dXVTZRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4974.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(376005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZjlvaUJES0ZNZzlERk5iM2NnSXl2VUo3cTdWdG1tU3d1U3BOMk5yQS81Y2dM?=
+ =?utf-8?B?bWI3bXJPRDdFK21sT200aXM3c2Q2NG5jeVMrS3BENFBRbzVMbHJob2xoTkk2?=
+ =?utf-8?B?QmdtWFRKVWtmbEUvT0JtUWZqL0IvS21FNm9SSTlJUXM2bUFNN29FV0wzcWNV?=
+ =?utf-8?B?cXZ6d01FbS8wWXRUVld3aVpXRTg4TUlja3V4WS96M0FwOFpZQ3NqMkZKSVY5?=
+ =?utf-8?B?bXBMYkxSdUZQdmVTRU9xR1VZU01UV0NZVGthaHNoWDBzTkNsYS9vbnRmcnFh?=
+ =?utf-8?B?dDBsQzBrOURMOXhDVk1tNktlY0Z6eDBvL1hHQWQwV244QktpN2I0aFQzQTRh?=
+ =?utf-8?B?bWpDUjVBYVY1c3VxeFEvdjZDUmxnM1cwMHhuaFZYdEJLS2pDUGNVZGlXTFNn?=
+ =?utf-8?B?SEphbTNkZEFReUcyVFNSVEpuQ1dwMmtLejhSNnVUZWdpVEtDb3cwWCtMRGFE?=
+ =?utf-8?B?SGQrd3BzUmtxRE5oSEtpNmg2VjYxNE9YQ3ExbzZ6dytaNjVPQ0VQUVo3VWNS?=
+ =?utf-8?B?bkhGYmNXS05uR3lVdHRoMi9HRWNQUkJkT1FQT0ZvWXdtSGdwOFA3dEVDQXZi?=
+ =?utf-8?B?bTkxOFpaYkxKWExFQlVqWnY0TkVEYmQxU0JyUXRaL3pvR0lDMHkvTWFWUWJn?=
+ =?utf-8?B?V2JIWWRGUk50bi9iN3FOOUU3MmxhMEZ1UVhuQnYzMkZWNCtXMkhaUkphTTZ2?=
+ =?utf-8?B?TERvaExYNFdVT2VhU2Noc29YQUdWS004dFFSSG5IeXlEcEpWanVVTjJnZHNB?=
+ =?utf-8?B?amt6RjMxV2lUdDA5djVQMWMwQWdIZVlGeHVFR1NNMEVaR1ppRkFNRTZIOUZk?=
+ =?utf-8?B?WVNYN2lEQWkxSGJmSXlhVnE0RWFMWFFWeHFHOVdSSlJMbTJocWQ4NHlQNWI1?=
+ =?utf-8?B?eVIxUkxxS0RGVUs3eFZhK0JWNjdGYUlpSGFxcFJOVHRPZGM2bHNncmJKRkk0?=
+ =?utf-8?B?UXZzY3hpQ3pqVWYvS3JieWJaNHFOcGFrbzB1KzlybVpCLzVCeUdaYjh1dlJN?=
+ =?utf-8?B?WXZsMVVHUkNjYlFlRERyVHZDSFRHbDByaXdGdVhZR2FhdUtKMldZY0xnS1NJ?=
+ =?utf-8?B?NGtYZDlMYWhXWUN6bHN6a0VYcXVpcHRuZkVhcFhlUkV1bDZzMEdNQjh3d2J4?=
+ =?utf-8?B?UzdrRGpXTEk3RVNEdklJS0hWdlVmNGc0YmJEeWdhVzNSMm9vdHJuT01JaFRw?=
+ =?utf-8?B?eHl6S2VmU3ZaSmU5blRFczgwbDJyOHU1TW4zMVNpcXZrQndXVG11QmcvYWhQ?=
+ =?utf-8?B?VWp1MGY4ZVVIMmRKc3d1T3NCVUVhMnNMMVB5UGtUY0k3NHI5QlpLSHpUclVy?=
+ =?utf-8?B?cFdrUjE3MzR2MThmMjVLb1Zod1BFcTYwWGVpS2RwSHp2V2F4dlU4OHZCamdZ?=
+ =?utf-8?B?WStDaFpDU281cklqUXcrdUdqNnlia3NnckZvV3VXRWV5YWxHMHgyUmxkVDdF?=
+ =?utf-8?B?amU4SGpiajE2QjhzRHRuSzhVYzNCbmhIS3psUWRSUVdOUEpiS2RJY1EzWmU5?=
+ =?utf-8?B?bURVeDQ4M2Y4S3l6ZE4rWVBJd0ovRHZjUUtvZ2RDWWdNS2dlUXUrWkg5dndL?=
+ =?utf-8?B?NG10eHlPTm9Hb1pTcEd0cE5ybUMwbjNka08vZmFaSXdwZHRxaGQxMGQ0ci9k?=
+ =?utf-8?B?T04vb3ErRnY2Z2dXZzF3MmhFTytZWUtod25QSlUxNnZzeG5LdTBOMVZaTEVz?=
+ =?utf-8?B?T0xGNnRKNDJYVWgzcXZ0MDdzWHAzNU9YdzFHUFhGMUgycU9UNElyWEdkUy9V?=
+ =?utf-8?B?a2d0L2o1R1VXRVlQUmNvNklvSkJOOEE2MWE2Z0U4YzllWFBjZmZNbW9ucW9N?=
+ =?utf-8?B?NnpRVGxlMncyMlZ5Z0hacXM1b1lWR0xuOHNDNW8zNjFXMEIwMStGekRRanBF?=
+ =?utf-8?B?cnB3aTNxT0lZcEl4RzN2OU5GMUZuVTViaHIyekYwaUhEZHlWdys4U3BwK3BR?=
+ =?utf-8?B?Vkl2amVNMFcvK2JYa1JBSTNpUWhqN2xqOURaanZVakRQNGpsSThtRUNRTWhP?=
+ =?utf-8?B?QkJpWFVjTWFiQk9US0Y2eUNudjgrenRhY2VEU0hvQ2xNaXNKVythdFNPcGNt?=
+ =?utf-8?B?Qk94ckpMQlRqeXNSL2x0YzJ2VWN1bHkzWWtYaUNqanpSQTgrMWRuNzJTaWVj?=
+ =?utf-8?B?aXRkbm5xK2FWd2xJVVdiRTd6a29oTU8wOTFhZ3BhRzdVQklJQUF5c1ZBTnAw?=
+ =?utf-8?Q?8dNG2qJuCCFZBcNjAO9eV7g=3D?=
+X-OriginatorOrg: wolfvision.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: d287b70a-b275-4548-401a-08dc685154a7
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR08MB4974.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 13:36:10.3010
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YeTuIxSFXDHdxf+zae/5a9umXaqa5vWdIphZScN02FewQOpeNiEk7JprAufuwednzLHCyQcix7M1HX/bC89WNA2OvJdP2I32dY1uN3ykFUU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6119
 
-On 2024/4/29 20:59, Nicolas Bouchinet wrote:
-> 
-> On 4/29/24 11:09, Nicolas Bouchinet wrote:
->> Hi Vlastimil,
->>
->> thanks for your review and your proposal.
->>
->> On 4/29/24 10:52, Vlastimil Babka wrote:
->>> On 4/25/24 5:14 PM, Chengming Zhou wrote:
->>>> On 2024/4/25 23:02, Nicolas Bouchinet wrote:
->>> Thanks for finding the bug and the fix!
->>>
->>>>> Hy,
->>>>>
->>>>> First of all, thanks a lot for your time.
->>>>>
->>>>> On 4/25/24 10:36, Chengming Zhou wrote:
->>>>>> On 2024/4/24 20:47, Nicolas Bouchinet wrote:
->>>>>>> From: Nicolas Bouchinet<nicolas.bouchinet@ssi.gouv.fr>
->>>>>>>
->>>>>>> Commit 284f17ac13fe ("mm/slub: handle bulk and single object freeing
->>>>>>> separately") splits single and bulk object freeing in two functions
->>>>>>> slab_free() and slab_free_bulk() which leads slab_free() to call
->>>>>>> slab_free_hook() directly instead of slab_free_freelist_hook().
->>>>>> Right.
->>>>>> y not suitable for a stable-candidate fix we need
->>>>>>> If `init_on_free` is set, slab_free_hook() zeroes the object.
->>>>>>> Afterward, if `slub_debug=F` and `CONFIG_SLAB_FREELIST_HARDENED` are
->>>>>>> set, the do_slab_free() slowpath executes freelist consistency
->>>>>>> checks and try to decode a zeroed freepointer which leads to a
->>>>>>> "Freepointer corrupt" detection in check_object().
->>>>>> IIUC, the "freepointer" can be checked on the free path only when
->>>>>> it's outside the object memory. Here slab_free_hook() zeroed the
->>>>>> freepointer and caused the problem.
->>>>>>
->>>>>> But why we should zero the memory outside the object_size? It seems
->>>>>> more reasonable to only zero the object_size when init_on_free is set?
->>>>> The original purpose was to avoid leaking information through the object and its metadata / tracking information as described in init_on_free initial Commit 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options").
->>>>>
->>>>> I have to admit I didn't read the entire lore about the original patchset yet, though it could be interesting to know a bit more the threat models, specifically regarding the object metadata init.
->>>> Thank you for the reference! I also don't get why it needs to zero
->>>> the metadata and tracking information.
->>> Hmm taking a step back, it seems really suboptimal to initialize the
->>> outside-object freepointer as part of init_on_free:
->>>
->>> - the freeing itself will always set it one way or another, in this case
->>> free_to_partial_list() will do set_freepointer() after free_debug_processing()
->>>
->>> - we lose the ability to detect if the allocated slab object's user wrote to
->>> it, which is a buffer overflow
+The ISRs of the tps25750 and tps6598x do not handle generated events
+properly under all circumstances.
 
-Ah, right, this ability seems important for debugging overflow problem.
+The tps6598x ISR does not read all bits of the INT_EVENTX registers in
+newer devices (tps65987 and tps65988, which have 11-byte interrupt
+registers), leaving events signaled with bits above 64 unattended.
+Moreover, these events are not cleared, leaving the interrupt enabled.
 
->>>
->>> So the best option to me would be to adjust the init in slab_free_hook() to
->>> avoid the outside-object freepointer similarly to how it avoids the red zone.
+The tps25750 reads all bits of the INT_EVENT1 register, but the event
+checking is not right because the same event is checked in two different
+regions of the same register by means of an OR operation.
 
-Agree.
+This series aims to fix both issues by reading all bits of the
+INT_EVENTX registers, and limiting the event checking to the region
+where the supported events are defined (currently they are limited to
+the first 64 bits of the registers, as the are defined as BIT_ULL()).
 
->>>
->>> We'll still not have the buffer overflow detection ability for bulk free
->>> where slab_free_freelist_hook() will set the free pointer before we reach
->>> the checks, but changing that is most likely not worth the trouble, and
->>> especially not suitable for a stable-candidate fix we need here.
->>
->> It seems like a good alternative to me, I'll push a V2 patch with those changes.
->>
->> I help maintaining the Linux-Hardened patchset in which we have a slab object canary feature that helps detecting overflows. It is located just after the object freepointer.
-> 
-> 
-> I've tried a patch where the freepointer is avoided but it results in the same bug. It seems that the commit 0f181f9fbea8bc7ea ("mm/slub.c: init_on_free=1 should wipe freelist ptr for bulk allocations") inits the freepointer on allocation if init_on_free is set in order to return a clean initialized object to the caller.
-> 
+In order to identify the interrupt register size, a simple mechanism has
+been added to read the version register and select the right size
+accordingly. This mechanism has been tested with a TPS65987DDHRSHR (DH
+variant) which returned the expected value (0xF7).
 
-Good catch! You may need to change maybe_wipe_obj_freeptr() too,
-I haven't tested this, not sure whether it works for you. :)
+If the need for events above the first 64 bits of the INT_EVENTX
+registers arises, a different mechanism might be required. But for the
+current needs, all definitions can be left as they are.
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 3e33ff900d35..3f250a167cb5 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3796,7 +3796,8 @@ static void *__slab_alloc_node(struct kmem_cache *s,
- static __always_inline void maybe_wipe_obj_freeptr(struct kmem_cache *s,
-                                                   void *obj)
- {
--       if (unlikely(slab_want_init_on_free(s)) && obj)
-+       if (unlikely(slab_want_init_on_free(s)) && obj &&
-+           !freeptr_outside_object(s))
-                memset((void *)((char *)kasan_reset_tag(obj) + s->offset),
-                        0, sizeof(void *));
- }
+When at it, an explicit device_get_match_data() (which is already
+contained in i2c_get_match_data()) has been removed.
 
-Thanks!
+Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
+---
+Changes in v3:
+- Remove explicit usage of device_get_match_data() (new patch).
+- Fix series versioning (last resend should have been v2).
+- Keep 64 bit reads in the interrupt handler for tps65981/2/6 by reading
+  the version register.
+- Link to v2: https://lore.kernel.org/r/20240328-tps6598x_fix_event_handling-v1-0-502721ff705b@wolfvision.net
+
+Changes in v2:
+- Add Cc tag for 'stable' (fixes).
+- Link to v1: https://lore.kernel.org/r/20240325-tps6598x_fix_event_handling-v1-0-633fe0c87cc8@wolfvision.net/
+
+---
+Javier Carrasco (3):
+      usb: typec: tipd: fix event checking for tps25750
+      usb: typec: tipd: fix event checking for tps6598x
+      usb: typec: tipd: rely on i2c_get_match_data()
+
+ drivers/usb/typec/tipd/core.c     | 56 +++++++++++++++++++++++++--------------
+ drivers/usb/typec/tipd/tps6598x.h | 11 ++++++++
+ 2 files changed, 47 insertions(+), 20 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240328-tps6598x_fix_event_handling-3398d3d82f85
+
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco@wolfvision.net>
+
