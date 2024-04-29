@@ -1,99 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35097F7C3
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF68D7E105
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714401753; cv=none; b=NJQyEsSfixhbdjyaygK9kUiwtsm4/qCQf/wFA7WqPJJjIzek0iuSjF6QcFDq1dfu7DyvJbJ0RdQNiDb+l5sUVnALMsOk9stYQCg5A1WDdUfh6gHIvSEM/bCCjpNNSjrPL8BCeH17t++KgyUPTKMVOBYgcil/A+boGD70GT7fYas=
+	t=1714401777; cv=none; b=ccvbrn0C9HggkryE9rZJM+p5j5KwDAFqkTb3PF9P/kvWtuPBPIqgSRwP0PUdG8IzeL61d1qJw8sk6+ZBw8NKV06XfFxajEMCayc2W0RSzEm+8gcXzR9eIiyCta8o6u6xPvQiCEj3ZDyIvDP2OIzakSCGIcobZwBt94sTtlxamms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714401753; c=relaxed/simple;
-	bh=T92NaU3ReD2/fnkEdWIwmoqOz2RSZmJeMWeVVAK+yE0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YzZwGHHhqVJ+tIK6PPYiMJ54Xy8Qp1fxnD81Bru7Trw+XDXRywQQIrtGtDaKF35PBKGigN6ZY98U+1lnQVqSCQ4aX0rMSBqh9Lt41gj0gL8mbUuh09XGNkAEL9l3GonGI7oBY3gaW5e9njJ368BFLKeNEQmsWwcHkyuV3ZrVG0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bjWpkTwD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bjWpkTwD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00776C113CD;
-	Mon, 29 Apr 2024 14:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714401753;
-	bh=T92NaU3ReD2/fnkEdWIwmoqOz2RSZmJeMWeVVAK+yE0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=bjWpkTwD4eSDfStdQ1m4FdYpmAfjLkv6d5qNjnFzJ9phi9VYM10Nk//w7uYFzEmn2
-	 nisxDg74vLHcvnLH+wPZ+uZs4p4EDLnLsjS2PuecadJQDfocMbY6HEyd01P+9pCHvN
-	 aWSKiF8dBZlqMNtn5sq0AgruXic/1Vwps0NUtUH/QyO46vDdr1h6iUD0xPOHBa7dcm
-	 V5gdxm/+DxaMdTKU6+E4jLoaRYWSsdOqCZA07pX8SuCfZi3tk7HIbOeOyyymQsiUQq
-	 E1DlNmF1c9Mrpv+gl1JfRiPe5IrGdXHzp++RsEEvi4ts7FuR0k5/NxUdG+UZ13r4Ju
-	 9EnpLHc8YMOIQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: "Michael Walle" <mwalle@kernel.org>
-Cc: "Pratyush Yadav" <pratyush@kernel.org>,  "Tudor Ambarus"
- <tudor.ambarus@linaro.org>,  "Miquel Raynal" <miquel.raynal@bootlin.com>,
-  "Richard Weinberger" <richard@nod.at>,  "Vignesh Raghavendra"
- <vigneshr@ti.com>,  "Dan Carpenter" <dan.carpenter@linaro.org>,
-  <linux-mtd@lists.infradead.org>,  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mtd: spi-nor: replace unnecessary div64_u64() with
- div_u64()
-In-Reply-To: <D0WNIVK1DBL5.3KQOD1K2O128P@kernel.org> (Michael Walle's message
-	of "Mon, 29 Apr 2024 15:47:13 +0200")
-References: <20240429121113.803703-1-mwalle@kernel.org>
-	<mafs05xw0cn8v.fsf@kernel.org> <D0WNIVK1DBL5.3KQOD1K2O128P@kernel.org>
-Date: Mon, 29 Apr 2024 16:42:30 +0200
-Message-ID: <mafs0mspcb57t.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1714401777; c=relaxed/simple;
+	bh=4KHo3K0yMqAtatyZFcanNVB7mzLD4SlZydyr9+0iJPc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L1Tb6KyZbAVxHy8ShV+MnHH3Nk8XzXZ9lzFx+Fy79Ppua5+IKOkoui7RmLS+gB66uAQVAc/AKuzmQJnJzkC/hDEoU8TcHFOTbF5Y0yy8RaHLn6bmGpodxCVYNJckOX2vQH+nuiSQ8lVtYNM849ar4NqrRONcKl1B+PIqtkylIT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-61be4b986aaso2532007b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 07:42:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714401774; x=1715006574;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w9Gzfsp8ljXq//x61giKmA5xlVQsBt5j2vtHzz0iF6k=;
+        b=QP3q505S5TZnpnDx9hpy7Dnl1A6aEukK9nX2DYq5R7gwPWhV6/KP3BL4w0hbyoqVvG
+         LmFxNit85C3YYFJ/UUlB5jkK5jTLnsbKuW+A5xvq+PsEAQf+7Q8BiylMNYTDr5q2PCxy
+         hGQkD0ArZ2bdzJxhLCNtZ8aidKOsI7ZB+Q1uQG6t4aMsmo53dmrtRYxiBlR+5nsiIgEp
+         S2wm/F01gfeHCYLHSNZizCvanfe5LRwdI+4EfclhXatdacKIey+SyWu57iw+enn5Dt6P
+         ArPWKvJxMR3sfw8DIjQCBeN76DJFThvOVNGpqgR4bYr3IRgXpPdUpXE6s3KKofsXqx9a
+         gLyA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1F3vLrAbaXgIbkK1Trvx7J1KGeOB8iUTiGhhewVTVXHX+V3V1t0Dr0bH/D7aif44H58KBT+RSeGkf+mIzU2KdNbcZOiIJdzUcDsVy
+X-Gm-Message-State: AOJu0YxjTaAlODUmF1Z67c3VD+1cLO+C/Bi+JriLwUM/QKr2JF54WG5Q
+	CaWq9Ger1Pt0/mf9yqMT9FZT3yMyxCmlSsMbUtj9arfL8oMSUqqqnPcZzkAf
+X-Google-Smtp-Source: AGHT+IHU9KWt1ZrDIAJYSsZ0DUJ4dojY5EZPSjlSsTLUI54iDWNcIuMyDPugFY0Sq08kPlNXxbgTKA==
+X-Received: by 2002:a05:690c:708e:b0:618:91a0:70f with SMTP id jg14-20020a05690c708e00b0061891a0070fmr9320444ywb.6.1714401774377;
+        Mon, 29 Apr 2024 07:42:54 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id u17-20020a81b611000000b0060a046c50f1sm5447110ywh.58.2024.04.29.07.42.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Apr 2024 07:42:54 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-de5a7b18acdso3714387276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 07:42:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXMsFDvmMc6TV4dXunDQ0M2Y71RYxSakhgMhFRax0AzrpjawGibrD169ik1u8OX0G0LU16pnzJkTxxTbV/4iGhxP3y7P9GcWqCl+2dP
+X-Received: by 2002:a25:b286:0:b0:dcd:2f89:6aac with SMTP id
+ k6-20020a25b286000000b00dcd2f896aacmr11362965ybj.10.1714401773859; Mon, 29
+ Apr 2024 07:42:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240330175720.126122-2-thorsten.blum@toblux.com>
+In-Reply-To: <20240330175720.126122-2-thorsten.blum@toblux.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 29 Apr 2024 16:42:42 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW==FUNJe79TPi_3r8VP1jUo6LOL1MvJgEr4uRgd1yr3w@mail.gmail.com>
+Message-ID: <CAMuHMdW==FUNJe79TPi_3r8VP1jUo6LOL1MvJgEr4uRgd1yr3w@mail.gmail.com>
+Subject: Re: [PATCH] m68k: amiga: Use str_plural() to fix Coccinelle warning
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, linux-m68k@lists.linux-m68k.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 29 2024, Michael Walle wrote:
+On Sat, Mar 30, 2024 at 6:58=E2=80=AFPM Thorsten Blum <thorsten.blum@toblux=
+.com> wrote:
+> Fixes the following Coccinelle/coccicheck warning reported by
+> string_choices.cocci:
+>
+>         opportunity for str_plural(zorro_num_autocon)
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 
-> Hi,
->
-> On Mon Apr 29, 2024 at 3:27 PM CEST, Pratyush Yadav wrote:
->> On Mon, Apr 29 2024, Michael Walle wrote:
->>
->> > Both occurences of div64_u64() just have a u8 or u32 divisor. Use
->> > div_u64() instead.
->>
->> Does this improve performance or is this only for correctness?
->
-> See function doc for div_u64():
->
->  * This is the most common 64bit divide and should be used if possible,
->  * as many 32bit archs can optimize this variant better than a full 64bit
->  * divide.
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+i.e. will queue in the m68k tree for v6.10.
 
-Thanks. I think it would be good to add this to the commit message:
+Gr{oetje,eeting}s,
 
-    Both occurences of div64_u64() just have a u8 or u32 divisor. Use
-    div_u64() instead. Many 32 bit architectures can optimize this
-    variant better than a full 64 bit divide.
+                        Geert
 
-No need to resend, I can do this when applying.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
->
->> Patch LGTM otherwise.
->>
->> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
->>
->> BTW, I also noticed that there is a do_div() call in spi_nor_write()
->> that also uses a u64 dividend and u32 divisor. I was wondering why it
->> uses do_div() and not div_u64() (I am not sure what the difference
->> between the two is) but I suppose it doesn't matter much since your
->> spring cleaning series will delete that code anyway.
->
-> do_div() is a macro and is modifying the dividend in place, whereas
-> div_u64() will return it. do_div() is using u32 for the divisor
-> anyway.
->
-> -michael
->
-
--- 
-Regards,
-Pratyush Yadav
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
