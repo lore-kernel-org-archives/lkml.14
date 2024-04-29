@@ -1,25 +1,50 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CE57E573
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 05:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89513372
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 05:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714367271; cv=none; b=VAOoz2TJWcTrWPB9yv3APywE88uGZedE6D4S9vHPNTmCT30T4gMBCcnMOP64BoO0kKhg4JRq89xgkiR7HhdPc83EPKyy9Zz3G9jYqGg0GrRaEPinGDGPaxnIxwCjy6nxvYWuHIClEOrVV85kmZ8PbQmdDcYhho99JtwC5zP9uH8=
+	t=1714367327; cv=none; b=Vv7hV2YMeo/e9NNncFLB0viySAiid9HTZ8Dy/x6mOO5TzDn/7oWOCy21W+nzPbm2dCBVGEZUQNJgF6B8AYZdDF7aEHNZqJ2j4NGkHn3V7nNNE0cbg2XfqnPNkY6WKpNDSdxwF4fHf36yH1FLvQHbp4lurRYpimDbZ3vnKWytmLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714367271; c=relaxed/simple;
-	bh=L1B3vk6TyTRh+NjtiUVnxHdKmDWYBNH7CVWeMCzBc9M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ob2zF4NLZN+CORjI2bgGdJU8+H8D+QrBlN5mk89nhv8vpRzlt2Epml8Z3RBsBWbJnFSNealLD7tNchNLje3Tq8NOLKcl6CICKPO/n+0Wfa4Ph4RIfl1KcckEuN94+WFPmXWBO+/kd7FlPm7jKrop201TWaZOxYKBpjbq77e3I3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFDA32F4;
-	Sun, 28 Apr 2024 22:08:14 -0700 (PDT)
-Received: from [10.162.42.72] (a077893.blr.arm.com [10.162.42.72])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5DD43F793;
-	Sun, 28 Apr 2024 22:07:45 -0700 (PDT)
-Message-ID: <38cc14e0-e534-499a-a04f-463871e559de@arm.com>
-Date: Mon, 29 Apr 2024 10:37:42 +0530
+	s=arc-20240116; t=1714367327; c=relaxed/simple;
+	bh=mxVSpiVc3CFUOue6xPqdNIQrLke23NOIAqrrjzMXkAs=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CIV0n1tyWy/AkScIGNqCxS1oD5XchMgiWtpo+b8wjmvUFdzPq6rqdI4acxnU8l9s5TwzX34oLZr1ZmdFsvpBKGJExukqxUFHar3S5vbVlmUe1rVLRCsphMRhJkWt2YhBkT8xbkv2APbx0UiLZmwnpsbMMpLQK58jSLZQO7W8U6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D4M9Bo93; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D4M9Bo93"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714367325; x=1745903325;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mxVSpiVc3CFUOue6xPqdNIQrLke23NOIAqrrjzMXkAs=;
+  b=D4M9Bo93kRtN3dPEHi0OyuOEg8Bw4QJZAXhog8AXzXBn/bDwCwQFc0+/
+   i4NajLl9Ql4WDgtWS6rE2WqmT2jEh3sgmKiU0W5vf21HGBxPmcjQXTXYn
+   lbLk3MZMfnMkd25dYRjE8AT85LumPsd7pew+yIB3R9/shKmcwZ2fa8EJ/
+   1joq0oT13BucEx3+M2OJBj0nfj5bFT3D5DbxdBwSZQ2r8IXOVeOy0H9nm
+   owz+Ds9TZunF98liw2oMY/GHUTKhVmyTtIvlX3yGuSr03pCtXprQvwzY7
+   +Y6tJkZCVhb6gfxCN9EwnspKCCPA+4ERLZ4qt5rvhkEKpfquQ0eE6U7Tj
+   w==;
+X-CSE-ConnectionGUID: oQUMRHsfQsupX+hsiWwuBw==
+X-CSE-MsgGUID: WhIPc9yJTWyBYWPpo7sfUQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="10231760"
+X-IronPort-AV: E=Sophos;i="6.07,238,1708416000"; 
+   d="scan'208";a="10231760"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2024 22:08:44 -0700
+X-CSE-ConnectionGUID: mvNirE5RSEyXwSzpR9HIbw==
+X-CSE-MsgGUID: lTA8GHIvRQ+tyNNKpDF9ag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,238,1708416000"; 
+   d="scan'208";a="26630786"
+Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
+  by orviesa008.jf.intel.com with ESMTP; 28 Apr 2024 22:08:42 -0700
+Message-ID: <001d6fa8-d2f5-4011-988d-d2bc4f43a1aa@linux.intel.com>
+Date: Mon, 29 Apr 2024 13:07:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,251 +52,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm: Fix race between __split_huge_pmd_locked() and
- GUP-fast
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Nicolin Chen <nicolinc@nvidia.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Joel Granados <j.granados@samsung.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "virtualization@lists.linux-foundation.org"
+ <virtualization@lists.linux-foundation.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/9] iommu: Replace sva_iommu with iommu_attach_handle
+To: "Tian, Kevin" <kevin.tian@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240403011519.78512-1-baolu.lu@linux.intel.com>
+ <20240403011519.78512-3-baolu.lu@linux.intel.com>
+ <20240403115913.GC1363414@ziepe.ca>
+ <e3f526e3-6474-49ff-b8d6-995aaf1c1830@linux.intel.com>
+ <20240408141946.GB223006@ziepe.ca>
+ <86e723e7-c3be-41b1-95d8-dbdf86bbdab5@linux.intel.com>
+ <20240409234800.GD223006@ziepe.ca>
+ <5871aaec-b81a-4ad4-8eb1-656a04d04bda@linux.intel.com>
+ <BN9PR11MB5276F89C1C21BD03207A044F8C1B2@BN9PR11MB5276.namprd11.prod.outlook.com>
 Content-Language: en-US
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Zi Yan <zi.yan@cs.rutgers.edu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240425170704.3379492-1-ryan.roberts@arm.com>
- <39d0236c-4297-4001-bc7e-f516bc674f7b@arm.com>
- <87df74b7-2352-4ad6-b9f9-baed9291cbed@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <87df74b7-2352-4ad6-b9f9-baed9291cbed@arm.com>
-Content-Type: text/plain; charset=UTF-8
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <BN9PR11MB5276F89C1C21BD03207A044F8C1B2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 4/26/24 13:13, Ryan Roberts wrote:
-> On 26/04/2024 05:19, Anshuman Khandual wrote:
->> On 4/25/24 22:37, Ryan Roberts wrote:
->>> __split_huge_pmd_locked() can be called for a present THP, devmap or
->>> (non-present) migration entry. It calls pmdp_invalidate()
->>> unconditionally on the pmdp and only determines if it is present or not
->>> based on the returned old pmd. This is a problem for the migration entry
->>> case because pmd_mkinvalid(), called by pmdp_invalidate() must only be
->>> called for a present pmd.
+On 4/29/24 10:39 AM, Tian, Kevin wrote:
+>> From: Baolu Lu <baolu.lu@linux.intel.com>
+>> Sent: Sunday, April 28, 2024 6:22 PM
 >>
->> pmdp_invalidate() must be called only for present PMD - is this expected
->> by core MM ? Does this cause any problem otherwise ?
-> 
-> I'm saying that only calling pmdp_invalidate() on a pte_present()==true pte is
-> the only semantic that makes sense. And, yes, it causes a problem if called on a
-> pte_present()==false pte - that's exactly what I'm describing in this commit log.
-> 
-> To labour the point, this is the logical type hierachy of PTEs (and block-mapped
-> PMDs) as I see it:
-> 
-> ---8<----
-> 
-> pte
->  |- present
->  |   |- valid
->  |   |- invalid
->  |
->  |- not_present
->      |- none
->      |- swap_pte
-> 
-> present: All fields must be interpretted the way the HW sees them. e.g.
->          pte_pfn(), pte_write(), pte_dirty(), pte_young(), pte_mkwrite(),
->          pte_mkold() can all be legitimately used to query and modify the pte.
-> 
->   valid: The HW may access the pte, interpret the fields and create a TLB entry,
->          etc.
-> 
->   invalid: The HW will never access the pte or create a TLB entry for it.
-> 
-> not_present: The fields are SW-defined. HW never accesses the PTE.
-> 
->   none: Unused; represents a hole
-> 
->   swap_pte: Contains a swap entry and swap pte bits. The contained swap entry
->             may 1 of a few different types e.g. actual swap entry, migration
->             entry, hw poison, etc.
-
-Sure, makes sense.
-
-> 
-> ---8<----
-> 
-> We test present vs not_present with pte_present()
-> 
-> We test none vs swap_pte with pte_none()
-
-Agreed.
-
-> 
-> valid vs invalid is slightly more vague. The core-mm can move a PMD from valid
-> -> invalid by calling pmd_mkinvalid(). But it can't query the state. And it
-> can't do this generically for a PTE.
-> 
-> 
-> Based on that lot, it makes no sense to me that we should permit calling
-> pmd_mkinvalid() on a non-present pte. Indeed, we don't permit calling
-> pte_mkwrite() etc on a non-present pte. And those functions are not defensive;
-> they don't check that the pte is present before making the change. They just
-> trust that the core-mm will not call them for non-present ptes.
-> 
-> The alternative approach would be to make pmdp_invalidate() defensive so that it
-> checks the pmd is present before making any changes. But it doesn't semantically
-> make sense to invalidate a non-present pmd in the first place so why call it
-> under these circumstances? There is also a practical problem in that some arches
-> implement their own pmdp_invalidate() so you would want to make all those
-> defensive too, which would grow the size of the change.
-
-I would suggest adding warnings in such arch specific pmdp_invalidate() helpers
-to catch further unexpected calls in non present PMD state ?
-
-> 
-> 
+>> On 2024/4/10 7:48, Jason Gunthorpe wrote:
+>>> On Tue, Apr 09, 2024 at 10:11:28AM +0800, Baolu Lu wrote:
+>>>> On 4/8/24 10:19 PM, Jason Gunthorpe wrote:
+>>>>> On Sat, Apr 06, 2024 at 02:09:34PM +0800, Baolu Lu wrote:
+>>>>>> On 4/3/24 7:59 PM, Jason Gunthorpe wrote:
+>>>>>>> On Wed, Apr 03, 2024 at 09:15:12AM +0800, Lu Baolu wrote:
+>>>>>>>> +	/* A bond already exists, just take a reference`. */
+>>>>>>>> +	handle = iommu_attach_handle_get(group, iommu_mm-
+>>> pasid);
+>>>>>>>> +	if (handle) {
+>>>>>>>> +		mutex_unlock(&iommu_sva_lock);
+>>>>>>>> +		return handle;
+>>>>>>>>      	}
+>>>>>>> At least in this context this is not enough we need to ensure that the
+>>>>>>> domain on the PASID is actually an SVA domain and it was installed by
+>>>>>>> this mechanism, not an iommufd domain for instance.
+>>>>>>>
+>>>>>>> ie you probably need a type field in the iommu_attach_handle to tell
+>>>>>>> what the priv is.
+>>>>>>>
+>>>>>>> Otherwise this seems like a great idea!
+>>>>>> Yes, you are right. For the SVA case, I will add the following changes.
+>>>>>> The IOMMUFD path will also need such enhancement. I will update it in
+>>>>>> the next version.
+>>>>> The only use for this is the PRI callbacks right? Maybe instead of
+>>>>> adding a handle type let's just check domain->iopf_handler  ?
+>>>>>
+>>>>> Ie SVA will pass &ommu_sva_iopf_handler as its "type"
+>>>> Sorry that I don't fully understand the proposal here.
+>>> I was talking specifically about the type field you suggested adding
+>>> to the handle struct.
+>>>
+>>> Instead of adding a type field check the domain->iopf_handler to
+>>> determine the domain and thus handle type.
+>>>
+>>>> The problem is that the context code (SVA, IOMMUFD, etc.) needs to
+>> make
+>>>> sure that the attach handle is really what it has installed during
+>>>> domain attachment. The context code needs some mechanism to include
+>> some
+>>>> kind of "owner cookie" in the attach handle, so that it could check
+>>>> against it later for valid use.
+>>> Right, you have a derived struct for each user and you need a way to
+>>> check if casting from the general handle struct to the derived struct
+>>> is OK.
+>>>
+>>> I'm suggesting using domain->iopf_handle as the type key.
 >>
->>>
->>> On arm64 at least, pmd_mkinvalid() will mark the pmd such that any
->>> future call to pmd_present() will return true. And therefore any
+>> After removing the refcount from the attach handle, I am trying to make
+>> the code look like this,
 >>
->> IIRC the following semantics needs to be followed as expected by core MM.
+>>           /* A bond already exists, just take a reference`. */
+>>           handle = iommu_attach_handle_get(group, iommu_mm->pasid);
+>>           if (handle) {
+>>                   if (handle->domain->iopf_handler !=
+>> iommu_sva_iopf_handler) {
+>>                           ret = -EBUSY;
+>>                           goto out_unlock;
+>>                   }
 >>
->> -------------------------------------------------------------------------
->> |	PMD states	|	pmd_present	|	pmd_trans_huge	|
->> -------------------------------------------------------------------------
->> |	Mapped		|	Yes		|	Yes		|
->> -------------------------------------------------------------------------
->> |	Splitting	|	Yes		|	Yes		|
->> -------------------------------------------------------------------------
->> |	Migration/Swap	|	No		|	No		|
->> -------------------------------------------------------------------------
-> 
-> Indeed, the problem, as I see it, is if pmd_mkinvalid() is called on a
-> "Migration/Swap" pmd, then a future call to pmd_present() will return Yes, which
-> is clearly wrong. pmd_trans_huge() will also return Yes due to:
-> 
-> static inline int pmd_trans_huge(pmd_t pmd)
-> {
-> 	return pmd_val(pmd) && pmd_present(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT);
-> }
-
-Agreed pmd_mkinvalid() on "Migration/Swap" entries making any subsequent
-pmd_present() and pmd_trans_huge() return true is problematic. As you said,
-the solution is to prevent pmd_mkinvalid() on "Migration/Swap" entries.
-
-> 
-> At least this happens for arm64. Although Zi suggests other arches look like
-> they will do this too in the other email.
-> 
-> The reason is that arm64's pmd_mkinvalid() unconditionally sets
-> PMD_PRESENT_INVALID (bit 59) and clears PMD_SECT_VALID (bit 0) in the pte. So
-> next time pmd_present() is called it will see PMD_PRESENT_INVALID is set and
-> return true.
-
-> 
+>>                   refcount_inc(&handle->users);
+>>                   mutex_unlock(&iommu_sva_lock);
+>>                   return handle;
+>>           }
 >>
+>> But it appears that this code is not lock safe. If the domain on the
+>> PASID is not a SVA domain, the check of "handle->domain->iopf_handler !=
+>> iommu_sva_iopf_handler" could result in a use-after-free issue as the
+>> other thread might detach the domain in between the fetch and check
+>> lines.
 >>
->>> lockless pgtable walker could see the migration entry pmd in this state
->>> and start interpretting the fields as if it were present, leading to
->>> BadThings (TM). GUP-fast appears to be one such lockless pgtable walker.
+>> Probably we still need to keep the refcount in the attach handle?
 >>
->> Could you please explain how bad things might happen ?
 > 
-> See 2 places where pmdp_get_lockless() is called in gup.c, without the PTL.
-> These could both return the swap pte for which pmd_mkinvalid() has been called.
-> In both cases, this would lead to the pmd_present() check eroneously returning
-> true, eventually causing incorrect interpretation of the pte fields. e.g.:
+> What about Jason's another comment in his original replies?
 > 
-> gup_pmd_range()
->   pmd_t pmd = pmdp_get_lockless(pmdp);
->   gup_huge_pmd(pmd, ...)
->     page = nth_page(pmd_page(orig), (addr & ~PMD_MASK) >> PAGE_SHIFT);
+> "
+> Though I'm not convinced the refcount should be elevated into the core
+> structure. The prior patch I showed you where the caller can provide
+> the memory for the handle and we don't have a priv would make it easy
+> to put the refcount in a SVA dervied handle struct without more
+> allocation. Then we don't need this weirdness.
+> "
 > 
-> page is guff.
-> 
-> Let me know what you think!
+> That sounds like we'll need a iommu_sva like structure to hold
+> its own refcnt. Then we don't need this type check and refcnt
+> in the core.
 
-Agreed, the page here might not be valid any more for the GUP as the migration
-would have changed the pfn in the mean time.
+The problem I'm facing isn't about who allocates the handle memory.
+Instead, there's no mechanism to synchronize access between two threads.
+One thread might remove the handle while another fetches and reads a
+member of its structure.
 
-> 
-> Thanks,
-> Ryan
-> 
-> 
->>  
->>> I suspect the same is possible on other architectures.
->>>
->>> Fix this by only calling pmdp_invalidate() for a present pmd. And for
->>> good measure let's add a warning to the generic implementation of
->>> pmdp_invalidate(). I've manually reviewed all other
->>> pmdp_invalidate[_ad]() call sites and believe all others to be
->>> conformant.
->>>
->>> This is a theoretical bug found during code review. I don't have any
->>> test case to trigger it in practice.
->>>
->>> Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
->>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->>> ---
->>>
->>> Applies on top of v6.9-rc5. Passes all the mm selftests on arm64.
->>>
->>> Thanks,
->>> Ryan
->>>
->>>
->>>  mm/huge_memory.c     | 5 +++--
->>>  mm/pgtable-generic.c | 2 ++
->>>  2 files changed, 5 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->>> index 89f58c7603b2..80939ad00718 100644
->>> --- a/mm/huge_memory.c
->>> +++ b/mm/huge_memory.c
->>> @@ -2513,12 +2513,12 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
->>>  	 * for this pmd), then we flush the SMP TLB and finally we write the
->>>  	 * non-huge version of the pmd entry with pmd_populate.
->>>  	 */
->>> -	old_pmd = pmdp_invalidate(vma, haddr, pmd);
->>>
->>> -	pmd_migration = is_pmd_migration_entry(old_pmd);
->>> +	pmd_migration = is_pmd_migration_entry(*pmd);
->>>  	if (unlikely(pmd_migration)) {
->>>  		swp_entry_t entry;
->>>
->>> +		old_pmd = *pmd;
->>>  		entry = pmd_to_swp_entry(old_pmd);
->>>  		page = pfn_swap_entry_to_page(entry);
->>>  		write = is_writable_migration_entry(entry);
->>> @@ -2529,6 +2529,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
->>>  		soft_dirty = pmd_swp_soft_dirty(old_pmd);
->>>  		uffd_wp = pmd_swp_uffd_wp(old_pmd);
->>>  	} else {
->>> +		old_pmd = pmdp_invalidate(vma, haddr, pmd);
->>>  		page = pmd_page(old_pmd);
->>>  		folio = page_folio(page);
->>>  		if (pmd_dirty(old_pmd)) {
->>> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
->>> index 4fcd959dcc4d..74e34ea90656 100644
->>> --- a/mm/pgtable-generic.c
->>> +++ b/mm/pgtable-generic.c
->>> @@ -198,6 +198,7 @@ pgtable_t pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp)
->>>  pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
->>>  		     pmd_t *pmdp)
->>>  {
->>> +	VM_WARN_ON(!pmd_present(*pmdp));
->>>  	pmd_t old = pmdp_establish(vma, address, pmdp, pmd_mkinvalid(*pmdp));
->>>  	flush_pmd_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
->>>  	return old;
->>> @@ -208,6 +209,7 @@ pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
->>>  pmd_t pmdp_invalidate_ad(struct vm_area_struct *vma, unsigned long address,
->>>  			 pmd_t *pmdp)
->>>  {
->>> +	VM_WARN_ON(!pmd_present(*pmdp));
->>>  	return pmdp_invalidate(vma, address, pmdp);
->>>  }
->>>  #endif
->>> --
->>> 2.25.1
->>>
->>>
-> 
+A similar issue exists with iommu_get_domain_for_dev_pasid(). It fetches
+and returns a domain, but there's no guarantee that the domain will
+*not* be freed while the caller is still using it.
+
+One reason I introduced the reference count for attach handles is to
+potentially replace iommu_get_domain_for_dev_pasid(), allowing the
+domain to be accessible without any potential UAF issue.
+
+Best regards,
+baolu
