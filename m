@@ -1,57 +1,57 @@
 Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B27F82871
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240088287E
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714403110; cv=none; b=JsEwRKjEGhKfiX4kOZN8ZqEb0rqjhEzzegMqtwusyBlmqha1reZTeCZxesVkf3t1AL2eiFe+0aedQdEj2uAApUcjTymL3CSynHzLqlg+WbpwYWLrS7oOQfLJRANvpBOf2heL59LehOmV9bP8xMcB+1phmRqgBRqV4VNTM27xXcg=
+	t=1714403115; cv=none; b=OhK1Zgf4eob60oiWVrSHRY3I/Sa8ts7Zpr4k7254k7gFYK2CPHXvL3CsdKlSjT4l6DVS/boV81kDXMVQtU95n16KU5BEVvya0ceCogf36jejvxDc3pnOst0HzegExo2akhLX9TvXqRkg7w3EhaEF0yo4d0J5hYbLMRFLymoJRyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714403110; c=relaxed/simple;
-	bh=NKspkx+WjefJTC0T9GdQgMYdznykMk+osWwLYrp0b/0=;
+	s=arc-20240116; t=1714403115; c=relaxed/simple;
+	bh=A2Ua3QkuJFffFg1BMdgqwGEYAvUbwmxlzRDyBr/ON+U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZRKphY2RFX9kVWJX0vIXLPuZzDOhd/PgAj0n3Mcirt19QrydTW15xcUV1GndgE6QruBwWuhAu6FrXlY6YYbHxkRtWduZCad7o87LWyDbweiFpaWibW80293iiUtqepItmk6pJ9Z7tzDpxTuN5gUR62LdCFO2fLRQxXsLcX4MfMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=E1FBg9/1; arc=none smtp.client-ip=209.85.222.177
+	 In-Reply-To:To:Cc; b=cnNh3AhWZWBhKaMtoPV83CqmsaoAuSBRufP7a44pGgerdlLKY0J+nAsM6GYrDh7ndrGdSUcbDVrYIAZKAN8PDtr0zigGbB73jiypI2gNc0IkGM/tpmkw6RnpTe3H4SHjJX6kJKcUAy4ZCyMW8DfodYkbzJHnbleTq9bz4+z+YxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NnBwWPhn; arc=none smtp.client-ip=209.85.222.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E1FBg9/1"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7906782388aso306572985a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:05:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NnBwWPhn"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-790ff1fa7b3so45309285a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:05:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714403102; x=1715007902; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714403106; x=1715007906; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kyue/FRqn/p1WnqrFE53P+Zy+G2t8IVLierFxkwHoc8=;
-        b=E1FBg9/1I+B6TEEXT0XhsPz7sdop9ckKMI3HUqhe5jk08uLflkPhkCh95thI5P8l4x
-         r2HbZgB+uM7D+FtBmUYz+PDJyfh8n4lMuA4Iu6XsMNcEt0Wy6S1j7uWjESt4ayi5dB7L
-         o+P//GUnrVHn52c2ySBHr2kP6hsxJhSao2c4Y=
+        bh=H+ICFE9T0WtFgFxAAIzneJg+RkmVbFrs0mrpkqFICS0=;
+        b=NnBwWPhnDPlXn/K1WZixKEy0quXxOUtNmvo6ldziFdsnve3fpTeshXWBDx4Z1FM7fh
+         ebMk9p6iZYfiY8oW8nawpshyR4wv7l6PAnXJq6x9fNOylg+3oxu+MMddTGjw3AG3hiqd
+         yhcIrxAT1IqVLvrOaSlwKbu5DO8k9+n1ZJEYE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714403102; x=1715007902;
+        d=1e100.net; s=20230601; t=1714403106; x=1715007906;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kyue/FRqn/p1WnqrFE53P+Zy+G2t8IVLierFxkwHoc8=;
-        b=I83Y3zvM4ycsJ7zgXGi7WIwvuxzTh04ncRtT0P9WHK9U6p+kEIUbo4T9FndmCH7jCF
-         Z/3aqxJzrTOuJTJxdN/r4G3nHbbw/Lpw/Fx9KSNPcHaJ+SX9Dsv7kXbBQIHqmSUG/pCp
-         Y3nn8XFhAA9RKHU67HDXBEItxz93pULf/2NokfJPAr3NpAX7BxFexWUiRdGBVuco61nk
-         ZmCUXlJ2CWn2p0I8o2JSBASgwuPp5nDqt5E/Mb66GWjcK9AgYbTUJ0TErXD7YWc1TMV1
-         AlzpTQSr7YI3NsdfUg6MB5DUIP9GeYugrbEUft1pu5hPci/QJsJtVGKABVwLqJVSzMNB
-         wT5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUiB32Mfnp0OiTqaC8PvJITbEN49lYJv1iBaq2wKzhX3I+QDJnL1QMZNql4+j8H6K5/l1iWyvopdgOyDZOFk0+f/w6N5Kn0FRgzfxca
-X-Gm-Message-State: AOJu0YwxITruHwUxheHw1zR2qtXtKBIsrat10olGdYa7kPPyQQvp3Mvp
-	jzd4Jn+2uhPkkHubcLDySkW/u7hrprGVTCE/ytt74ipYQCpKJI7AbTMaJ30TKQ==
-X-Google-Smtp-Source: AGHT+IGL4vooVVR+0mzZmPQqvYaly6q1aVJv7Kw4xqkfiCYuQPEweu/zlD5u/57ahvXotSjFXGqNNw==
-X-Received: by 2002:a05:620a:2059:b0:790:a36b:477d with SMTP id d25-20020a05620a205900b00790a36b477dmr9906478qka.35.1714403101530;
-        Mon, 29 Apr 2024 08:05:01 -0700 (PDT)
+        bh=H+ICFE9T0WtFgFxAAIzneJg+RkmVbFrs0mrpkqFICS0=;
+        b=b7NIrNDHOCN7zBsIM297w9wIJTr/a6Y2mQ2fxJ7Y10PfsL3kLJK2t3IGxznhk97kM7
+         WgC2xNTm8csXCUkGi2pnM/S7hngkmHay6BKy1z32J0DUuiLXHnk6Mx9+M7R1rBkEL0VP
+         jWbOmElddGSA71fQ6XSW2Bc9f16UOR9M0DoAp5eqB8UWZnwAuXeva+TOex4i2wFMn8T+
+         +PiIKACibOCUiFhE+PaF3ciSkhTJWcvUxPx6DT12Oj2sIBxXGwpv/CXINqFahgpe79cC
+         xOCwWr3sR/C+ll4c6gCLn1vE/8viK6aKfPzD7pyDLbvfLl9i/OxU1s9UlADG1xDKt0Ik
+         8dsw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJE0kfTdqI/tcs6iSw1KYBa87SNQCMU6ND0LGo4BLZA4htb6eUQSWvL37xIpkr8QUvrS0EJ4Oo2AkOKtv85i02vDyuDhqRxbgemzfH
+X-Gm-Message-State: AOJu0YwN/IMabPz1GNKuxtTB7E07yWxH2mDajKKbvQaJG0ls9LunRYVi
+	vBidvIMC+LTV73zIpg4FtcwWMlE0jdNTj+bHvYJQk/hhoLRikV9/7PANlhs6vg==
+X-Google-Smtp-Source: AGHT+IE1jrRBd5HK/tPuhHP5Hku+rmhJzqzd24VfyQoPlWIHBef+7Xc9RHcUZ/XfTRZVrVfoGNJ+0A==
+X-Received: by 2002:a05:620a:57d6:b0:790:b2a3:f86c with SMTP id wl22-20020a05620a57d600b00790b2a3f86cmr8844059qkn.34.1714403106175;
+        Mon, 29 Apr 2024 08:05:06 -0700 (PDT)
 Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
-        by smtp.gmail.com with ESMTPSA id p7-20020a05620a056700b0078d3b9139edsm10568591qkp.97.2024.04.29.08.05.00
+        by smtp.gmail.com with ESMTPSA id p7-20020a05620a056700b0078d3b9139edsm10568591qkp.97.2024.04.29.08.05.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 08:05:01 -0700 (PDT)
+        Mon, 29 Apr 2024 08:05:05 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 29 Apr 2024 15:04:57 +0000
-Subject: [PATCH v3 18/26] media: gspca: cpia1: Use min macro
+Date: Mon, 29 Apr 2024 15:05:01 +0000
+Subject: [PATCH v3 22/26] media: tc358746: Use the correct div_ function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240429-fix-cocci-v3-18-3c4865f5a4b0@chromium.org>
+Message-Id: <20240429-fix-cocci-v3-22-3c4865f5a4b0@chromium.org>
 References: <20240429-fix-cocci-v3-0-3c4865f5a4b0@chromium.org>
 In-Reply-To: <20240429-fix-cocci-v3-0-3c4865f5a4b0@chromium.org>
 To: Martin Tuma <martin.tuma@digiteqautomotive.com>, 
@@ -100,33 +100,30 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-Simplifies the code.
+fin does not fit in 32 bits in some arches.
 
 Found by cocci:
-drivers/media/usb/gspca/cpia1.c:607:30-31: WARNING opportunity for min()
+drivers/media/i2c/tc358746.c:847:2-8: WARNING: do_div() does a 64-by-32 division, please consider using div64_ul instead.
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/usb/gspca/cpia1.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/media/i2c/tc358746.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/gspca/cpia1.c b/drivers/media/usb/gspca/cpia1.c
-index 5f5fa851ca64..14aaf36cde6e 100644
---- a/drivers/media/usb/gspca/cpia1.c
-+++ b/drivers/media/usb/gspca/cpia1.c
-@@ -604,10 +604,8 @@ static int find_over_exposure(int brightness)
- 	MaxAllowableOverExposure = FLICKER_MAX_EXPOSURE - brightness -
- 				   FLICKER_BRIGHTNESS_CONSTANT;
+diff --git a/drivers/media/i2c/tc358746.c b/drivers/media/i2c/tc358746.c
+index d676adc4401b..edf79107adc5 100644
+--- a/drivers/media/i2c/tc358746.c
++++ b/drivers/media/i2c/tc358746.c
+@@ -844,8 +844,7 @@ static unsigned long tc358746_find_pll_settings(struct tc358746 *tc358746,
+ 			continue;
  
--	if (MaxAllowableOverExposure < FLICKER_ALLOWABLE_OVER_EXPOSURE)
--		OverExposure = MaxAllowableOverExposure;
--	else
--		OverExposure = FLICKER_ALLOWABLE_OVER_EXPOSURE;
-+	OverExposure = min(MaxAllowableOverExposure,
-+			   FLICKER_ALLOWABLE_OVER_EXPOSURE);
+ 		tmp = fout * postdiv;
+-		do_div(tmp, fin);
+-		mul = tmp;
++		mul = div64_ul(tmp, fin);
+ 		if (mul > 511)
+ 			continue;
  
- 	return OverExposure;
- }
 
 -- 
 2.44.0.769.g3c40516874-goog
