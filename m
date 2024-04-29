@@ -1,60 +1,81 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9BC1773A
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDDCC2C8
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714380622; cv=none; b=TLwIieNk2Hn+A35w6IiUmrglliyYpxgHZMQOxrSQ1xrC6d3kBs+5S1SFUr9iB4ZB4D5hE2hzOaRpy7ma0YqagPaba8Zk9vJeQgnJnU2rD+vzb4T0OJWc61337WCjSUt8TRDVBovwmYawXQqgzNTmmhga3jch1sU41O5+GxAnKtw=
+	t=1714380773; cv=none; b=hbPkHmToPYbq9yKlbT4aBCzXvzIARHUNPiGeZJKHcMp2BzxzdHlupYaY3jBx5Y1RItByUCj1FLbMK4fWYPAk6sCDSzf0DL9gI78nJ8mJjWI04m+jZIM8v0ReYQCUNecsnnhS5ubrXglANpcTPZhwI1IMJIocNDHfa5cnP9L9xzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714380622; c=relaxed/simple;
-	bh=UEftw4bypC83j5FB26vPGAB+xWzHocHd3cthIUjvWEI=;
+	s=arc-20240116; t=1714380773; c=relaxed/simple;
+	bh=4TE710Ycv0ek1rz+R8n2+LlA2UNzWtdUp8Db7p7CkKs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e9vj/4m+5pvOBcidjRLCM3kZUKls8Bg3msWGMBdLZDZ2v9LdPDT/RzzEeD7/RUoduE5L7nPmReFRVMfGucg4ujo7ZJe/tlHQXNkfgFgZ7xg1HzXOReQBU9Yg7W4+YKZIsSadALUzb7RW4/vPr11pw7PVkQUNkHXwELY/II8iz8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VmS3j3Te; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=jLOFy9NgGuy1w/i5AM9falL/nHLAHCAiLW2AS3XZ8xccHJUFQ76hRKsE/aMT++TmDA22FPEVFX1L/OJP9+lsr2jI95KmAXWeftRQDLZua3R2jF5MvB6/lntfuSCrOsfYLn3ztu7uSCyXX3it5RnhF1jXRk89HdKG1Z9WvgReQe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UoXm3SJO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YEYHKUm9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UoXm3SJO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YEYHKUm9; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VmS3j3Te"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-571ba432477so4274689a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 01:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714380619; x=1714985419; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=wJ2dspUAZTJIyxNFJe36YLQ9sGiLmUwzrDU28IFnD3g=;
-        b=VmS3j3TeZucmT3Txa+S2mUR5sex2g2k+WEmA7FBd3KEssyXdYISx467GcRTg5PTYNQ
-         taHuq6PSTog2A++LGuLmooDO0bZJQ2pv3PC5LZ/Slv3bK0sovUqyNgTAmk+Xl4OkeIsm
-         3D/bWVLLvoOcnKL3YD5YLw/JQcc2hrw6PBVB/Lwwev8o3E8rOGzXae/DjJJhdQfFQay6
-         DELvCjj7GzgH5FuYT0qXRXNcVLKV1WjRqj2HQVaOfetBmoLpK+HY/Gbpzyqz5NnCjB3I
-         orYtHMCz8/RfxzhWIMd+BoK9yqEX0ztsIMMN4vvN4BDjvsurROhZRxEVb9BWlMFa9Jz2
-         NtMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714380619; x=1714985419;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wJ2dspUAZTJIyxNFJe36YLQ9sGiLmUwzrDU28IFnD3g=;
-        b=rZhm01GB+vUt9qy2kubpvg0YTed+b0jUeBU5qwW/oVkZGJ7jhunc77ZEfIZui5q1cU
-         HGApKa+s0GacaBtqMYGvAvpQNlxaxodQ8KDXmThO8b7tMXOSknF6h4cpTdKZaCOPndGW
-         xDM8wKPM/hdPN21+Y2xhxdtIi58xyBNgSYYu4h+Aawm77Ply+zGrDaWKIAZKa130AQ81
-         xwkGSEXUsXEv+rII+d30OFoC8xlt8oAAEdKNRFwmmjvf0XTmnshRdEGc3azJzgV6RBTj
-         sMkrsEIx8vIOb8WK9ZJZkAOmk3XMb8I2frMOSN3YHv/U91FWEyQm5h1hG0DnAUhL008K
-         lDVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWGGEMND/huuu/mjCbdDFN17QkXLeOWOc+MLZ2K8kzGP6c5vn4y8OaLQfGR6AD8/Kyk4j2vXYj+Jl5gFagxllXY6eaTN77hUUnQvoKu
-X-Gm-Message-State: AOJu0YwJTma3ntqGNn+CqWgyiN8I2DqAjBQc4EJr8f0ZiR7Ch5rVPrWx
-	PyRMQiQALjp1KO2aBBkiND9/b+5PcPwTwkVtEOj/kMD+U56uWSQzQKGmgrJSo0c=
-X-Google-Smtp-Source: AGHT+IHNAnbf391vNLLOtI6hxFOkSeLXRESnQKTCG64z/DXXxuzgWUbtk/MtLOKlaj/4RAIJ9uGvMw==
-X-Received: by 2002:a17:906:786:b0:a52:6cb2:9347 with SMTP id l6-20020a170906078600b00a526cb29347mr5390414ejc.8.1714380618670;
-        Mon, 29 Apr 2024 01:50:18 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id d13-20020a170906640d00b00a5267ee40efsm13879801ejm.18.2024.04.29.01.50.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 01:50:18 -0700 (PDT)
-Message-ID: <a105ba2b-a809-4a6e-84fc-f67eb11606be@linaro.org>
-Date: Mon, 29 Apr 2024 10:50:16 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UoXm3SJO";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YEYHKUm9";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UoXm3SJO";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YEYHKUm9"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 01045203D9;
+	Mon, 29 Apr 2024 08:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1714380769; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Jx6yaNpr8hmPTIwWZh3UfYxX9haWFezt31WoNCFnLlE=;
+	b=UoXm3SJO1i2QQIjjp0O3vI+EXhdZsHtQ5gPTVHO35ZZr/HEJo+bBQHxLaxi20UITokkzoA
+	pYumOzrxQNxNllXQQ9lXZPHuiOCJ8CD0HznWH3RyuBOFczthFj5jE/WtpuADAJc6Zgtmzc
+	lHFUmArXlBlQToi4tykgeqX84YpvoGE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1714380769;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Jx6yaNpr8hmPTIwWZh3UfYxX9haWFezt31WoNCFnLlE=;
+	b=YEYHKUm9ZXiEL5jl50Y9vStDzLI4ooVdj1RKVZiQ58v8snhUeazkPk/frNScluZW5MFC4W
+	hDYiByUPdExI04CQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UoXm3SJO;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=YEYHKUm9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1714380769; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Jx6yaNpr8hmPTIwWZh3UfYxX9haWFezt31WoNCFnLlE=;
+	b=UoXm3SJO1i2QQIjjp0O3vI+EXhdZsHtQ5gPTVHO35ZZr/HEJo+bBQHxLaxi20UITokkzoA
+	pYumOzrxQNxNllXQQ9lXZPHuiOCJ8CD0HznWH3RyuBOFczthFj5jE/WtpuADAJc6Zgtmzc
+	lHFUmArXlBlQToi4tykgeqX84YpvoGE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1714380769;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Jx6yaNpr8hmPTIwWZh3UfYxX9haWFezt31WoNCFnLlE=;
+	b=YEYHKUm9ZXiEL5jl50Y9vStDzLI4ooVdj1RKVZiQ58v8snhUeazkPk/frNScluZW5MFC4W
+	hDYiByUPdExI04CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DC7DC138A7;
+	Mon, 29 Apr 2024 08:52:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 6YowNeBfL2arEwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 29 Apr 2024 08:52:48 +0000
+Message-ID: <6f977874-2a18-44ef-b207-9eb0baad9d66@suse.cz>
+Date: Mon, 29 Apr 2024 10:52:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,102 +83,208 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sh: j2: drop incorrect SPI controller max frequency
- property
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- devicetree@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Kousik Sanagavarapu <five231003@gmail.com>
-References: <20240322064221.25776-1-krzysztof.kozlowski@linaro.org>
- <d6b562f336b3750c131830a984b148ea7103ab0d.camel@physik.fu-berlin.de>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] slub: Fixes freepointer encoding for single free
 Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <d6b562f336b3750c131830a984b148ea7103ab0d.camel@physik.fu-berlin.de>
+To: Chengming Zhou <chengming.zhou@linux.dev>,
+ Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Cc: cl@linux.com, penberg@kernel.org, rientjes@google.com,
+ iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, roman.gushchin@linux.dev,
+ 42.hyeyoo@gmail.com, Xiongwei Song <xiongwei.song@windriver.com>
+References: <Zij_fGjRS_rK-65r@archlinux>
+ <f9c133a9-8886-4c86-a24f-4778997547f2@linux.dev>
+ <bbf2063f-54d4-43f0-84b3-1ea789470914@clip-os.org>
+ <5c34b253-b476-494a-96c9-fe3c95b9b74d@linux.dev>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <5c34b253-b476-494a-96c9-fe3c95b9b74d@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	XM_UA_NO_VERSION(0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,windriver.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 01045203D9
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -3.00
 
-On 29/04/2024 10:16, John Paul Adrian Glaubitz wrote:
-> On Fri, 2024-03-22 at 07:42 +0100, Krzysztof Kozlowski wrote:
->> The J2 SPI controller bindings never allowed spi-max-frequency property
->> in the controller node.  Neither old spi-bus.txt bindings, nor new DT
->> schema allows it.  Linux driver does not parse that property from
->> controller node, thus drop it from DTS as incorrect hardware
->> description.  The SPI child device has already the same property with
->> the same value, so functionality should not be affected.
->>
->> Cc: Kousik Sanagavarapu <five231003@gmail.com>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
->>  arch/sh/boot/dts/j2_mimas_v2.dts | 2 --
->>  1 file changed, 2 deletions(-)
->>
->> diff --git a/arch/sh/boot/dts/j2_mimas_v2.dts b/arch/sh/boot/dts/j2_mimas_v2.dts
->> index fa9562f78d53..faf884f53804 100644
->> --- a/arch/sh/boot/dts/j2_mimas_v2.dts
->> +++ b/arch/sh/boot/dts/j2_mimas_v2.dts
->> @@ -71,8 +71,6 @@ spi0: spi@40 {
->>  			#address-cells = <1>;
->>  			#size-cells = <0>;
->>  
->> -			spi-max-frequency = <25000000>;
->> -
->>  			reg = <0x40 0x8>;
->>  
->>  			sdcard@0 {
+On 4/25/24 5:14 PM, Chengming Zhou wrote:
+> On 2024/4/25 23:02, Nicolas Bouchinet wrote:
+
+Thanks for finding the bug and the fix!
+
+>> Hy,
+>> 
+>> First of all, thanks a lot for your time.
+>> 
+>> On 4/25/24 10:36, Chengming Zhou wrote:
+>>> On 2024/4/24 20:47, Nicolas Bouchinet wrote:
+>>>> From: Nicolas Bouchinet<nicolas.bouchinet@ssi.gouv.fr>
+>>>>
+>>>> Commit 284f17ac13fe ("mm/slub: handle bulk and single object freeing
+>>>> separately") splits single and bulk object freeing in two functions
+>>>> slab_free() and slab_free_bulk() which leads slab_free() to call
+>>>> slab_free_hook() directly instead of slab_free_freelist_hook().
+>>> Right.
+>>>
+>>>> If `init_on_free` is set, slab_free_hook() zeroes the object.
+>>>> Afterward, if `slub_debug=F` and `CONFIG_SLAB_FREELIST_HARDENED` are
+>>>> set, the do_slab_free() slowpath executes freelist consistency
+>>>> checks and try to decode a zeroed freepointer which leads to a
+>>>> "Freepointer corrupt" detection in check_object().
+>>> IIUC, the "freepointer" can be checked on the free path only when
+>>> it's outside the object memory. Here slab_free_hook() zeroed the
+>>> freepointer and caused the problem.
+>>>
+>>> But why we should zero the memory outside the object_size? It seems
+>>> more reasonable to only zero the object_size when init_on_free is set?
+>> 
+>> The original purpose was to avoid leaking information through the object and its metadata / tracking information as described in init_on_free initial Commit 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options").
+>> 
+>> I have to admit I didn't read the entire lore about the original patchset yet, though it could be interesting to know a bit more the threat models, specifically regarding the object metadata init.
 > 
-> It seems that spi-bus.txt has been replaced by spi-controller.yaml now, so
-> I think we should update the filename in the commit message, shouldn't we?
+> Thank you for the reference! I also don't get why it needs to zero
+> the metadata and tracking information.
 
-I think commit msg properly says what is old and what is new....
+Hmm taking a step back, it seems really suboptimal to initialize the
+outside-object freepointer as part of init_on_free:
 
-Best regards,
-Krzysztof
+- the freeing itself will always set it one way or another, in this case
+free_to_partial_list() will do set_freepointer() after free_debug_processing()
+
+- we lose the ability to detect if the allocated slab object's user wrote to
+it, which is a buffer overflow
+
+So the best option to me would be to adjust the init in slab_free_hook() to
+avoid the outside-object freepointer similarly to how it avoids the red zone.
+
+We'll still not have the buffer overflow detection ability for bulk free
+where slab_free_freelist_hook() will set the free pointer before we reach
+the checks, but changing that is most likely not worth the trouble, and
+especially not suitable for a stable-candidate fix we need here.
+
+>> 
+>> The patch could also be optimized a bit by restricting set_freepointer() call to the `CONFIG_SLAB_FREELIST_HARDENED` option value.
+>> 
+> 
+> Yeah. Maybe memcg_alloc_abort_single() needs this too.
+> 
+> Thanks.
+> 
+>> Thanks again, Nicolas
+>> 
+>>>
+>>> Thanks.
+>>>
+>>>> Object's freepointer thus needs to be properly set using
+>>>> set_freepointer() after init_on_free.
+>>>>
+>>>> To reproduce, set `slub_debug=FU init_on_free=1 log_level=7` on the
+>>>> command line of a kernel build with `CONFIG_SLAB_FREELIST_HARDENED=y`.
+>>>>
+>>>> dmesg sample log:
+>>>> [   10.708715] =============================================================================
+>>>> [   10.710323] BUG kmalloc-rnd-05-32 (Tainted: G    B           T ): Freepointer corrupt
+>>>> [   10.712695] -----------------------------------------------------------------------------
+>>>> [   10.712695]
+>>>> [   10.712695] Slab 0xffffd8bdc400d580 objects=32 used=4 fp=0xffff9d9a80356f80 flags=0x200000000000a00(workingset|slab|node=0|zone=2)
+>>>> [   10.716698] Object 0xffff9d9a80356600 @offset=1536 fp=0x7ee4f480ce0ecd7c
+>>>> [   10.716698]
+>>>> [   10.716698] Bytes b4 ffff9d9a803565f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>>> [   10.720703] Object   ffff9d9a80356600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>>> [   10.720703] Object   ffff9d9a80356610: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>>> [   10.724696] Padding  ffff9d9a8035666c: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>>> [   10.724696] Padding  ffff9d9a8035667c: 00 00 00 00                                      ....
+>>>> [   10.724696] FIX kmalloc-rnd-05-32: Object at 0xffff9d9a80356600 not freed
+>>>>
+>>>> Signed-off-by: Nicolas Bouchinet<nicolas.bouchinet@ssi.gouv.fr>
+>>>> ---
+>>>>   mm/slub.c | 8 +++++++-
+>>>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/slub.c b/mm/slub.c
+>>>> index 3aa12b9b323d9..71dbff9ad8f17 100644
+>>>> --- a/mm/slub.c
+>>>> +++ b/mm/slub.c
+>>>> @@ -4342,10 +4342,16 @@ static __fastpath_inline
+>>>>   void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
+>>>>              unsigned long addr)
+>>>>   {
+>>>> +    bool init = false;
+>>>> +
+>>>>       memcg_slab_free_hook(s, slab, &object, 1);
+>>>> +    init = slab_want_init_on_free(s);
+>>>>   -    if (likely(slab_free_hook(s, object, slab_want_init_on_free(s))))
+>>>> +    if (likely(slab_free_hook(s, object, init))) {
+>>>> +        if (init)
+>>>> +            set_freepointer(s, object, NULL);
+>>>>           do_slab_free(s, slab, object, object, 1, addr);
+>>>> +    }
+>>>>   }
+>>>>     static __fastpath_inline
 
