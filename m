@@ -1,145 +1,61 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D060386626;
-	Mon, 29 Apr 2024 17:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB43683CBA;
+	Mon, 29 Apr 2024 17:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714410960; cv=none; b=Xhc3N9rmoXqzQyNIY++JSPNsVdDa4N3NKfR3CDEvX72Awkc7SfJ+hSDQKWebu43AaEnLKYlduci77mdgnPIvXmrPMcA7aghTinjdBdPHaEmEVz5G0CK66rY/M3NJKo+thTBldrCscu4wyUvD4IiKu0Mb5cQ4eIT9nuF5uqxUfrs=
+	t=1714411009; cv=none; b=DWDoVNBN50RGlvVRhx0dnoi1i6KC1k+Gu38n4pEjBDkgfhj+E+++xyYGE0Fj6fA8R/i1QpMSdb8wlK90k0kqHGKyB4xU9GIYA4T1bKYLGRrGRpZQGFn0tIndARF4cTm3wMS6Eupt0FU3lWZ4zCf3/tq98O3UDp2Q9t64YJSrBWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714410960; c=relaxed/simple;
-	bh=a44/BSmG3RBpZbPjmIXq4XJfaUsc1AETKifkN/jhmU8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Kq3QW4wKlcjKbialo5ojxvuKVzD8ZsUcupvEiOtFEe+A2q5QiUSncqDjFn+euScOqvFflUWyTFx0WzrY8ETcGKomkajf9YOe0kG5tZFtC3N5ztm7rnEz0N5z3FD9Q+JQyVhbxulATbUn8rSU7Pup/hrJAUrj3UXox8GV51Pb1/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ONnyqKhu; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714411009; c=relaxed/simple;
+	bh=Jf99MEr0EpcNQAp05QOEx0Ed6w8E09DIYgzKMwWYMdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=phoYOXISRSMn0Ea87bqfp/asPpN0hWsjTJGSTf8kBvWwWsFCdjfP/k3J8x6qw2cgkhGlRyLYyRNkComGBBhLPF7EZ7f0JAdSiKu7Zd9t+RO8U3TJ2GLwF1msc4YPkuNnrcclEvugQF1rXMInzhJizMwY4rmZkGb1E/Khwbgq6xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUJtqOK1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONnyqKhu"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ecec796323so4495867b3a.3;
-        Mon, 29 Apr 2024 10:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714410958; x=1715015758; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TVaastLuiUoz2XHZ9eDginCg+npialPTvah0q9bKA9k=;
-        b=ONnyqKhuxGtEBcRe1+GCzMfTthmC7gXt10q6MDz5cGMgkPYnkSleFRhw506rM0T0UB
-         ksmnb7AJNPfpkSZIFC9/4wfMhqiwAZHx93I2UtAR6FikvYqbyBtv6SajpSq5Q2WkCT+5
-         1p2U8NEfT62yoajcFs+vgXt04Utfkm6nM3CoJQyo7itR5ATKl2OTWLl8MyhjJg8QJXMU
-         hpbNAF4ZZ59pqIRtN5urHRYkbh8pvMBIKG+FjKdE/pMg9Wiiw8YHg/cHfr6Iw4GE9jla
-         rlDhVmJaFs107zTJsXO1jtlFGxpIe4hEM2exolB67N8zB4F3hln7qBftx01S7FmqlLlB
-         WjOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714410958; x=1715015758;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TVaastLuiUoz2XHZ9eDginCg+npialPTvah0q9bKA9k=;
-        b=TotfGMXpfeNiO/5maNULO59AoTte+WQAOgzpQwn++JHh7v4T1F0nnGKUJPMq5Kik4i
-         HzEVJmYjLb5PX5admm1uvv3Vlah1P0dqLM0BpTMr17TpIF3Sodf+GTRkVJlKPAWTEUJh
-         p/mtHmm4BLp9hB7Lfus8slo2b8OiK1zp33W596r0M+LTKikAmD6NxDUI8YFnF4csOJsM
-         GoQk4xubnvQEtIRd0n8iVSie0LlY1HJbYQ9/STTAd/9geiyDEY3A+/MqWNe38+EGhAcF
-         4iulQyNkCIybTJ6gqiJEO3/x2MduYbAJRplybHHvkCb2Om4mKB98pzZoJlZnJeCaNeCW
-         2VOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ18aOiwzp1OTw3fUh3TNBxzvksd8e1sU8JFm8kelVR6FdBw6FkJ/IQFabwrm2/UCv0wSXMhIrO4+wAS5n3IzrDS/9tN/t6IFe745T
-X-Gm-Message-State: AOJu0YwNokUJL1A7Ymcz+YZoO3JeMf3lGPPr57SKsT6TEaNj/7VHgWrw
-	MIuih6USnGjDk2khiivCA+2LLbUsEh3z8jn7eZsqMsYIvjyU7aCQ
-X-Google-Smtp-Source: AGHT+IGbAQIKG6CNvuNdecrgw2pq5aamlFEwnyBkM6dmNuhC/YgjId0qnj3RkgktkcGrLFI+5hWW4A==
-X-Received: by 2002:a05:6a00:92a0:b0:6ea:bf1c:9dfd with SMTP id jw32-20020a056a0092a000b006eabf1c9dfdmr14531935pfb.27.1714410958017;
-        Mon, 29 Apr 2024 10:15:58 -0700 (PDT)
-Received: from dev.. ([2402:e280:214c:86:9744:8dfe:8ee3:9c0a])
-        by smtp.gmail.com with ESMTPSA id gu8-20020a056a004e4800b006f3eee787d5sm4386210pfb.18.2024.04.29.10.15.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 10:15:57 -0700 (PDT)
-From: R Sundar <prosunofficial@gmail.com>
-To: mripard@kernel.org,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	R Sundar <prosunofficial@gmail.com>,
-	Julia Lawall <julia.lawall@inria.fr>
-Subject: [PATCH linux-next] media:cdns-csi2tx: replace of_node_put() with __free
-Date: Mon, 29 Apr 2024 22:45:43 +0530
-Message-Id: <20240429171543.13032-1-prosunofficial@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUJtqOK1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8A6DC113CD;
+	Mon, 29 Apr 2024 17:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714411009;
+	bh=Jf99MEr0EpcNQAp05QOEx0Ed6w8E09DIYgzKMwWYMdI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mUJtqOK1t9bYyIOz16i4YaVlAB03uNUlv1ln53D5j8C0+THNP26tsWaytERDaM8bl
+	 sF+HbyO4U2QD0MU/QpCaZkoL7LJ6keopNVaReHU7RuG7ojYW5lTuH6eBX1jE0bdWry
+	 WFC+qAI/oHyK1d9HWAOMr9v2Q/b0E1rvFjNP8zfUk7XGSC6aeht1J6jah9WuSnHMVB
+	 nSWf2XEGpuR66IOUTIyS1PEap9vOw+NHORGWN6CdfYjSKkAr3Otsd/tn/spJUfyXvb
+	 3wUAifAU8XmvX2WtrDRsBJn984bQMMtmx8izdAa53uD0mSqBcdcPP79n+Lt5A5oZva
+	 Zpx80WQrAgT8w==
+Date: Mon, 29 Apr 2024 10:16:47 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, Christian
+ Brauner <brauner@kernel.org>, Mark Brown <broonie@kernel.org>, Shengyu Li
+ <shengyu.li.evgeny@gmail.com>, Shuah Khan <shuah@kernel.org>, "David S .
+ Miller" <davem@davemloft.net>, =?UTF-8?B?R8O8bnRoZXI=?= Noack
+ <gnoack@google.com>, Will Drewry <wad@chromium.org>, kernel test robot
+ <oliver.sang@intel.com>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 4/9] selftests/harness: Fix interleaved scheduling
+ leading to race conditions
+Message-ID: <20240429101647.756a1ac7@kernel.org>
+In-Reply-To: <202404290852.C327596A@keescook>
+References: <20240429130931.2394118-1-mic@digikod.net>
+	<20240429130931.2394118-5-mic@digikod.net>
+	<202404290852.C327596A@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Use the new cleanup magic to replace of_node_put() with
-__free(device_node) marking to auto release when they get out of scope.
+On Mon, 29 Apr 2024 08:52:36 -0700 Kees Cook wrote:
+> > +/* Wait for the child process to end but without sharing memory mapping. */
+> > +static pid_t __attribute__((__unused__)) clone3_vfork(void)  
+> 
+> Why "unused"?
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: R Sundar <prosunofficial@gmail.com>
----
- drivers/media/platform/cadence/cdns-csi2tx.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/media/platform/cadence/cdns-csi2tx.c b/drivers/media/platform/cadence/cdns-csi2tx.c
-index 3d98f91f1bee..88aed2f299fd 100644
---- a/drivers/media/platform/cadence/cdns-csi2tx.c
-+++ b/drivers/media/platform/cadence/cdns-csi2tx.c
-@@ -496,48 +496,43 @@ static int csi2tx_get_resources(struct csi2tx_priv *csi2tx,
- static int csi2tx_check_lanes(struct csi2tx_priv *csi2tx)
- {
- 	struct v4l2_fwnode_endpoint v4l2_ep = { .bus_type = 0 };
--	struct device_node *ep;
- 	int ret, i;
--
--	ep = of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
-+	struct device_node *ep __free(device_node) =
-+		of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
-+
- 	if (!ep)
- 		return -EINVAL;
- 
- 	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
- 	if (ret) {
- 		dev_err(csi2tx->dev, "Could not parse v4l2 endpoint\n");
--		goto out;
-+		return ret;
- 	}
- 
- 	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
- 		dev_err(csi2tx->dev, "Unsupported media bus type: 0x%x\n",
- 			v4l2_ep.bus_type);
--		ret = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	csi2tx->num_lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
- 	if (csi2tx->num_lanes > csi2tx->max_lanes) {
- 		dev_err(csi2tx->dev,
- 			"Current configuration uses more lanes than supported\n");
--		ret = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	for (i = 0; i < csi2tx->num_lanes; i++) {
- 		if (v4l2_ep.bus.mipi_csi2.data_lanes[i] < 1) {
- 			dev_err(csi2tx->dev, "Invalid lane[%d] number: %u\n",
- 				i, v4l2_ep.bus.mipi_csi2.data_lanes[i]);
--			ret = -EINVAL;
--			goto out;
-+			return -EINVAL;
- 		}
- 	}
- 
- 	memcpy(csi2tx->lanes, v4l2_ep.bus.mipi_csi2.data_lanes,
- 	       sizeof(csi2tx->lanes));
- 
--out:
--	of_node_put(ep);
- 	return ret;
- }
- 
--- 
-2.34.1
-
+Right, static inline is enough
