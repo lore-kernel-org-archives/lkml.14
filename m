@@ -1,126 +1,136 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1436839FD;
-	Mon, 29 Apr 2024 19:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF2B17597;
+	Mon, 29 Apr 2024 19:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714419525; cv=none; b=GcExgvUvyOMagyLtHgfTZLMOU6s01TTiU15OHbNrzOYMkc8xetRasHjVTMv34UCsOG3PTB3EoDQvMxobc7/Zq54Hm+EBnw4jtho0vr6URuDgRBpBiYOtqMLEZAiemDOTV7p0ZFeRKcKrhSQb90ioYZHpewD+UPaL4jiiTDTQLTA=
+	t=1714419563; cv=none; b=PQClUZRzU6kzmtxVqULRT1ydYenbAVN+yLDKHwBqPEfgP9qZyY215yxBp7BoDPtXyXDwPSl2qjhOTXQ1rqAQGCVDyKvXsrGeqQKp3VdXjrZdyo4/fa0hV5mXBJ+fhQsgNtOA+UxKU5AhnieH14Kx8kEB8Pp5UqSr8a3/7+1plv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714419525; c=relaxed/simple;
-	bh=6sOyCYbmudXxqIfu8q2gns5cKCCQS7+LZ0HN4mbWG3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P8/OIMloDTBk8zR51T6wqWyXSwvsx0KQxu6JzjDHDoCugHXORIR8rTr10pfiZ7QoDSEaEKqLLk/PwEbJwrpVzMNGpAEW/BwO/7VtSz3EI8zdgi68xRZJ3i/4mibpV+ZOEHEzomqdydcus0xdYnTZDOQ5xMU+osdWSIfTIM5Cjbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bF9BfMwu; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1714419563; c=relaxed/simple;
+	bh=WhgcW/bisSpMZeVcT/iQoAmlUPS83pZyhBZcNJvwjkI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XCNlnRHqYYpI6nuP82mzU5vPR4JWzReA0GtyG+x56o5Kot3O5VnzWQ1Nned3xADh3CWGNFWntX1ZPNv9EApIaXL/ORIbF3v+t/zmxaSvFb/OnsCzYM85CbwpHn2tK6gW0l/NqxTvh9jL/0Li1MrwSUPskZDhzmlv2xeFswXqwUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xWbJ9Vy0; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bF9BfMwu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=mhiR8BMDH8TnfXdcMJSpEG42MjSDkV9S8051r036NMU=; b=bF9BfMwuyaFnCeeHNcd0cOmAmf
-	q1RgqnXFU2/R6KGuz4/E1f9q4VMiepPinqDu6cjHubiBD04zcEAN4Rni0rDM6hyRrWhIx43uopdH1
-	cWk1GjHdPRXGBno/F9VK5h4Z9dnQmK2/Tdf3n6PnjDatZTr0lTEwHZ+GxwLOEtR/63AgCWs7kCXpP
-	QE7q9I0Tkw+1XHiKQaA0h6ionXFdrR0OCWD3LVEO49BFTKF1NGIWsNFEJ7zds7iR+zzZLi3s62lJA
-	oUJyeb2Yx4ZrJFHOtXh6aZa5ba+pDl/HL45PvoosF6z+RNko6DIL3ZXAqt8HunQcOXOGPU8oIlxcR
-	mK5eZJxA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1Wpf-0000000DBQI-3MMq;
-	Mon, 29 Apr 2024 19:38:35 +0000
-Date: Mon, 29 Apr 2024 20:38:35 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: Kairui Song <ryncsn@gmail.com>, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Huang, Ying" <ying.huang@intel.com>, Chris Li <chrisl@kernel.org>,
-	Barry Song <v-songbaohua@oppo.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Neil Brown <neilb@suse.de>,
-	Minchan Kim <minchan@kernel.org>, Hugh Dickins <hughd@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-nilfs@vger.kernel.org
-Subject: Re: [PATCH v3 02/12] nilfs2: drop usage of page_index
-Message-ID: <Zi_3OxP6xKjBWBLO@casper.infradead.org>
-References: <20240429190500.30979-1-ryncsn@gmail.com>
- <20240429190500.30979-3-ryncsn@gmail.com>
- <Zi_xeKUSD6C8TNYK@casper.infradead.org>
- <CAMgjq7D5zwksHxh5c00U82BCsLxYj-_GevZZtAM8xNZO7p-RQQ@mail.gmail.com>
- <CAKFNMomdPzaF4AL5qHCZovtgdefd3V35D_qFDPoMeXyWCZtzUg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xWbJ9Vy0"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43TJdCRA025117;
+	Mon, 29 Apr 2024 14:39:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714419552;
+	bh=lVO2rgJjLq4yw9Oul8jln9aM6c3F0zQr/8SSJzsApYQ=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=xWbJ9Vy0/d5ip39xkTzF8xujH1O01/X1GWBuwV2fAnFSrT8ogcV6GvYb0X4p8VCOw
+	 crR45GlvB0XLGWRFmD4QFYxUAhA4aO/0QCqn360r9l1AuTONz+smPNY5m7i0QIuU9k
+	 0E5wMpnrQi90uHe70pSfMLydPDf9BY+n4qoKwP70=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43TJdCfU109555
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Apr 2024 14:39:12 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Apr 2024 14:39:12 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Apr 2024 14:39:11 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43TJdBQE093494;
+	Mon, 29 Apr 2024 14:39:11 -0500
+Date: Mon, 29 Apr 2024 14:39:11 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Chintan Vankar <c-vankar@ti.com>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh@kernel.org>, Tero
+ Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <s-vadapalli@ti.com>
+Subject: Re: [PATCH v6 5/5] arm64: dts: ti: k3-j784s4: Add overlay for dual
+ port USXGMII mode
+Message-ID: <20240429193911.crcrasbcxnhxonlh@altitude>
+References: <20240329053130.2822129-1-c-vankar@ti.com>
+ <20240329053130.2822129-6-c-vankar@ti.com>
+ <1cf7f439-45cc-42cb-b707-4c87c00015ac@linaro.org>
+ <f406bac9-f4c1-4289-8239-82420cd300b8@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKFNMomdPzaF4AL5qHCZovtgdefd3V35D_qFDPoMeXyWCZtzUg@mail.gmail.com>
+In-Reply-To: <f406bac9-f4c1-4289-8239-82420cd300b8@ti.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, Apr 30, 2024 at 04:28:41AM +0900, Ryusuke Konishi wrote:
-> On Tue, Apr 30, 2024 at 4:22 AM Kairui Song <ryncsn@gmail.com> wrote:
-> >
-> > On Tue, Apr 30, 2024 at 3:14 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > >
-> > > On Tue, Apr 30, 2024 at 03:04:50AM +0800, Kairui Song wrote:
-> > > > From: Kairui Song <kasong@tencent.com>
-> > > >
-> > > > page_index is only for mixed usage of page cache and swap cache, for
-> > > > pure page cache usage, the caller can just use page->index instead.
-> > > >
-> > > > It can't be a swap cache page here (being part of buffer head),
-> > > > so just drop it, also convert it to use folio.
-> > > >
-> > > > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > > > Cc: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-> > > > Cc: linux-nilfs@vger.kernel.org
-> > > > ---
-> > > >  fs/nilfs2/bmap.c | 5 ++---
-> > > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/fs/nilfs2/bmap.c b/fs/nilfs2/bmap.c
-> > > > index 383f0afa2cea..f4e5df0cd720 100644
-> > > > --- a/fs/nilfs2/bmap.c
-> > > > +++ b/fs/nilfs2/bmap.c
-> > > > @@ -453,9 +453,8 @@ __u64 nilfs_bmap_data_get_key(const struct nilfs_bmap *bmap,
-> > > >       struct buffer_head *pbh;
-> > > >       __u64 key;
-> > > >
-> > > > -     key = page_index(bh->b_page) << (PAGE_SHIFT -
-> > > > -                                      bmap->b_inode->i_blkbits);
-> > > > -     for (pbh = page_buffers(bh->b_page); pbh != bh; pbh = pbh->b_this_page)
-> > > > +     key = bh->b_folio->index << (PAGE_SHIFT - bmap->b_inode->i_blkbits);
-> > > > +     for (pbh = folio_buffers(bh->b_folio); pbh != bh; pbh = pbh->b_this_page)
-> > > >               key++;
-> > > >
-> > > >       return key;
-> > >
-> > > Why isn't this entire function simply:
-> > >
-> > >         return bh->b_blocknr;
-> > >
-> >
-> > Nice idea, I didn't plan for extra clean up and test for fs code, but
-> > this might be OK to have, will check it.
+On 17:16-20240429, Chintan Vankar wrote:
 > 
-> Wait a minute.
 > 
-> This function returns a key that corresponds to the cache offset of
-> the data block, not the disk block number.
+> On 29/04/24 16:01, Krzysztof Kozlowski wrote:
+> > On 29/03/2024 06:31, Chintan Vankar wrote:
+> > > From: Siddharth Vadapalli <s-vadapalli@ti.com>
+> > > 
+> > > The CPSW9G instance of the CPSW Ethernet Switch supports USXGMII mode
+> > > with MAC Ports 1 and 2 of the instance, which are connected to ENET
+> > > Expansion 1 and ENET Expansion 2 slots on the EVM respectively, through
+> > > the Serdes2 instance of the SERDES.
+> > > 
+> > > Enable CPSW9G MAC Ports 1 and 2 in fixed-link configuration USXGMII mode
+> > > at 5 Gbps each.
+> > > 
+> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> > > Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+> > > ---
+> > > 
+> > > Link to v5:
+> > > https://lore.kernel.org/r/20240314072129.1520475-6-c-vankar@ti.com/
+> > > 
+> > > Changes from v5 to v6:
+> > > - Updated order of properties in Device Nodes based on
+> > >    https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
+> > > 
+> > >   arch/arm64/boot/dts/ti/Makefile               |  6 +-
+> > >   .../ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso   | 81 +++++++++++++++++++
+> > >   2 files changed, 86 insertions(+), 1 deletion(-)
+> > >   create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+> > > index f8e47278df43..2d798ef415e4 100644
+> > > --- a/arch/arm64/boot/dts/ti/Makefile
+> > > +++ b/arch/arm64/boot/dts/ti/Makefile
+> > > @@ -101,6 +101,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
+> > >   dtb-$(CONFIG_ARCH_K3) += k3-am69-sk.dtb
+> > >   dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
+> > >   dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-quad-port-eth-exp1.dtbo
+> > > +dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-usxgmii-exp1-exp2.dtbo
+> > >   # Build time test only, enabled by CONFIG_OF_ALL_DTBS
+> > >   k3-am625-beagleplay-csi2-ov5640-dtbs := k3-am625-beagleplay.dtb \
+> > > @@ -148,6 +149,8 @@ k3-j721s2-evm-pcie1-ep-dtbs := k3-j721s2-common-proc-board.dtb \
+> > >   	k3-j721s2-evm-pcie1-ep.dtbo
+> > >   k3-j784s4-evm-quad-port-eth-exp1-dtbs := k3-j784s4-evm.dtb \
+> > >   	k3-j784s4-evm-quad-port-eth-exp1.dtbo
+> > > +k3-j784s4-evm-usxgmii-exp1-exp2.dtbs := k3-j784s4-evm.dtb \
+> > > +	k3-j784s4-evm-usxgmii-exp1-exp2.dtbo\
+> > 
+> > I have doubts this commit was ever built. It clearly fails, just like
+> > now linux-next fails.
+> > 
 > 
-> Why is returning to bh->b_blocknr an alternative ?
-> Am I missing something?
+> Apologies for the syntax error here, I will fix it and post next
+> version.
 
-Sorry, I forgot how b_blocknr was used.  What I meant was:
+Series dropped. Looks like it slipped my checker as well :(
 
-	u64 key = bh->b_folio->index << (PAGE_SHIFT - bmap->b_inode->i_blkbits);
-
-	return key + bh_offset(bh) >> bmap->b_inode->i_blkbits;
-
-The point is to get rid of the loop.  We could simplify this (and make
-it ready for bs>PS) by doing:
-
-	loff_t pos = folio_pos(bh->b_folio) + bh_offset(bh);
-	return pos >> bmap->b_inode->i_blkbits;
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
