@@ -1,75 +1,109 @@
-Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [207.211.30.44])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2449770CAA
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.211.30.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE837441C
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714398436; cv=none; b=NXY4QH97sgzc0p5p9TJ3/zoZoKCwLMFPUgs0UDgRh1UmmgOIMsXDoZGLcZTv0n1VJo2ziBrSQp2+P9Pxoy/05eZ3R6i4qVAFRl7JcRly2DKgdtxuwGGiuchSTdLRLHm2eK3KGO3A1IlsJcgb/I5jZxLFdUb4apNDniWMjiOhgR4=
+	t=1714398449; cv=none; b=WbHPqfugNrfvznnO+bITV3h36z4fN7sm5kN+4TxofKLbfreXvuYTldyFG40R5iZWzU4QOQyg9jo4jlKNxeDh3yRz4V5MjGWDdmTREDgS0YaTDdjXvzX+rMwuaPI19DNu7cA7ORPHm8mnnRI0LR1WhhMrc95Y6wzvcZLimuNGhn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714398436; c=relaxed/simple;
-	bh=mqkQEedfFiq4cug1djlG7kSNVF8ghbsq4vxofuBAmJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=edabafXwS9Iy509PMA28vzall1fGu6vrP6VsuabIhgbMaKKC1f4mwM3NsSPYnv9lzL/L/bQF4iiLnrH4L3At6PnjDcjE0gmkyd5YiVm+8gaw5lFsejjwLt6SXAut3gOkGhXWZ+jRqJM8wiOR7txTCr7oP0KJgkfdMhuzmAXysuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=none smtp.mailfrom=queasysnail.net; arc=none smtp.client-ip=207.211.30.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=queasysnail.net
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-67-4r_Zqm5cNX-Ns80srMWlQQ-1; Mon, 29 Apr 2024 09:47:08 -0400
-X-MC-Unique: 4r_Zqm5cNX-Ns80srMWlQQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	s=arc-20240116; t=1714398449; c=relaxed/simple;
+	bh=uh0m1xTwaxTzp8bpZx2WJen8mopZjaMqhRmcw3r8MFg=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bl9A3srP32qH7Az/3uPJDUqcY+qTc7+GJL7UDnzdLDcHHn2NaPDtW375UQ1tqVWZ/UzimhjEPYMxHwk5VYVbvwvW36s5nEo1CYeyf/SfJaK7lDZYGRLwx+R0yqBgmRoq7G9oXivE3MfKoQidRZ6LnbyJig3ZlX2OFxQ/5RKV63o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Hi7ItRKy; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Hi7ItRKy"
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8713B104B506;
-	Mon, 29 Apr 2024 13:47:07 +0000 (UTC)
-Received: from hog (unknown [10.39.193.137])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 39E59202450F;
-	Mon, 29 Apr 2024 13:47:06 +0000 (UTC)
-Date: Mon, 29 Apr 2024 15:47:05 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Breno Leitao <leitao@debian.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	leit@meta.com,
-	"open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: loopback: Do not allocate tstats explicitly
-Message-ID: <Zi-k2cAjbSMdIDjs@hog>
-References: <20240429085559.2841918-1-leitao@debian.org>
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id BB7CB3FD43
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:47:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1714398446;
+	bh=vPe2VoBRc5KJIfuEGnKBAiJXDs81y/WyrmgODkiYq9Y=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=Hi7ItRKyxwvkLed5tfDcrf9haM/Qn4W80r4TR81ZztrmQ7XkpN/NLTY5qZ2kf2GV7
+	 pUwH6dZovQ1cL8LeWULFbhx0JKXej1MiVKZJdeRwtMZzPBZZA5c3x7bepu6syylXiV
+	 Tphuvv4ONuVqH416PQkeZuaNdMXrPlzKoNYCRxgRQDGte8nm69gHsE8jOTbZrUcxwf
+	 MvTJZKibgMxgerI/UytSRONrvmPWBSDli6InxTzmyZTotWU/ICBG96wbVaDnb5SHeO
+	 yzvXu50dzmQW0DpIFrEbiiaNqyEJ+CkEhYImkQdNiP3RG1YMr6J7hULq3ynHTfAyNV
+	 oK5nrNXsy/iUA==
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4396267ee26so104758481cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 06:47:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714398444; x=1715003244;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vPe2VoBRc5KJIfuEGnKBAiJXDs81y/WyrmgODkiYq9Y=;
+        b=ph0pJSsZRSUHebkg24bwbQ6zQ+YxVbYUlcy3WuSlXV8irdrbhqfFLBqVvqamfKaQhf
+         +AXNKPWmYJpgvlb3Z1BOM5MzfsnHnFkNCu0evrPEgcTQonfiXuAyTilvUZbZcetoirkT
+         x7I10p98ZJZts1/7rvWOcKb2MIpQpaoJ9Chb0jj/ruUYCP2CTwxJMM1+6FOozXs+MuwF
+         lwXz6vIGvnT7WeXpNxmDoyOFF4oL868OzBxODN1nCL4q6a8VETyKGPNhVHUInyD2XxUY
+         eBc5sMb6ljOo2k92SiSPUsf5NDBhV70f/akbt+2C/ntPt1SduBE2oM9LSWy69qG8GmB1
+         CtWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXEIDsTcgjoe27VxWKRVyPLzXFMYqj4K2H+OLaNbLI6CyUrg9fYxXjCdLj5ImwjKk5uAC9LjfLLqKA+IxuGb5/QHCS/i8qL6UtyWtJw
+X-Gm-Message-State: AOJu0YzokZVWlIof84zdNFrfS+PNjtNICuSPoo1yivmqWG1Ypw/W2amq
+	NORb9SoacnoNYSCyTa7f3jRB/Sn/9LXZ2WiOd8kxzNbJ4XwrHJMffEsikIfSue/Bzoz+MMWQSWs
+	z5+NojDGtkApj7X28BOroREshzfKcuY6Na4PLPaf91kpXVp7If3Pq3qE9OzCxga9aXrwxdiLt4s
+	IUEM83drWI8EAJ8MuUEaOs4G5C7+I+gsg3JMsGUE+BAeYSBimS9jvt
+X-Received: by 2002:ac8:5ac8:0:b0:43b:758:6d0 with SMTP id d8-20020ac85ac8000000b0043b075806d0mr1471482qtd.0.1714398443610;
+        Mon, 29 Apr 2024 06:47:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8xb8MBQPl+w0n6G4E/6PSSCVvVKCj058nDjmR95TemmORiesDJfSh1k5bwOiMTIeHe1UFlwrkwdUpuedliyo=
+X-Received: by 2002:ac8:5ac8:0:b0:43b:758:6d0 with SMTP id d8-20020ac85ac8000000b0043b075806d0mr1471446qtd.0.1714398443156;
+ Mon, 29 Apr 2024 06:47:23 -0700 (PDT)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 29 Apr 2024 08:47:22 -0500
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20240429001317.432-7-jszhang@kernel.org>
+References: <20240429001317.432-1-jszhang@kernel.org> <20240429001317.432-7-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240429085559.2841918-1-leitao@debian.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Mime-Version: 1.0
+Date: Mon, 29 Apr 2024 08:47:22 -0500
+Message-ID: <CAJM55Z-te=b2ADP6vqjB+GSLUs5_T+hTCQVu2jCTqp-zqanJwA@mail.gmail.com>
+Subject: Re: [PATCH v4 6/8] riscv: dts: starfive: visionfive 2: add
+ "disable-wp" for tfcard
+To: Jisheng Zhang <jszhang@kernel.org>, Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Emil Renner Berthing <kernel@esmil.dk>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-(nit on the subject: you mention "tstats", but the code actually uses
-lstats. I guess that's not worth a v2)
+Jisheng Zhang wrote:
+> No physical write-protect line is present, so setting "disable-wp".
+>
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> ---
+>  arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
+> index b6030d63459d..e19f26628054 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
+> @@ -304,6 +304,7 @@ &mmc1 {
+>  	no-sdio;
+>  	no-mmc;
+>  	cd-gpios = <&sysgpio 41 GPIO_ACTIVE_LOW>;
+> +	disable-wp;
 
-2024-04-29, 01:55:58 -0700, Breno Leitao wrote:
-> With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
-> convert veth & vrf"), stats allocation could be done on net core
-> instead of in this driver.
-> 
-> With this new approach, the driver doesn't have to bother with error
-> handling (allocation failure checking, making sure free happens in the
-> right spot, etc). This is core responsibility now.
-> 
-> Remove the allocation in the loopback driver and leverage the network
-> core allocation instead.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+Same nit as patch 5/6, but in any case:
 
-Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
--- 
-Sabrina
-
+>  	cap-sd-highspeed;
+>  	post-power-on-delay-ms = <200>;
+>  	pinctrl-names = "default";
+> --
+> 2.43.0
+>
