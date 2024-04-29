@@ -1,87 +1,99 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9F817BB4;
-	Mon, 29 Apr 2024 08:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A487717BB4;
+	Mon, 29 Apr 2024 08:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714380934; cv=none; b=q/ZNrih6LhLgG/WMiRHL8lm5earSxScPWjBwK1dQwX9r9rUPQCyQMmImAmnbBnVzyshfCNde4ESHqsrBGfZtZ6agsCFhdRUcx0T1js5b53AdGtwYDbNYNXSyLoP6+SJaQt6gog2hH8MaBAttoXdUxKc8xs8EUuiAF4veQ5REi5U=
+	t=1714380956; cv=none; b=snu6KPFyEn7MWeN45ZVvaPNmlPX23fHi/9wYI0GJZt+WLv9b3VYCWYGl4DTrERNzxYGkKjxkHYPq842PyEDd2tamGSernrlkFhP3zIAtxjkO6vuEm3iftzMYhi2zJv7qG5GOzuIIFUeNlD0303dCeafA182K5QjcnEbIAiMpa1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714380934; c=relaxed/simple;
-	bh=rns7ha14qTiupCx4x3Wcc8y0CTICI8sh1Se/YizYD0I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CW7AqSLXNYSW+lXM8aRHPCe1+rSLgjbcdzCIvs0ocEWR82MedR6ov8cvBkMg9lmYr8oTBmvsRNgm/JHVWdN0syXdoc5CLB/UgdXdlzppIKshYm2pizndTdQY6qeTAgbFbyqO1zSe40jtgcB5cxtFIHtrdsGImUClC3sEcv2fHvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowAB3fgJpYC9mH+MbBw--.23909S2;
-	Mon, 29 Apr 2024 16:55:06 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: srinivas.pandruvada@linux.intel.com,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	even.xu@intel.com,
-	lixu.zhang@intel.com,
-	kai.heng.feng@canonical.com,
-	hongyan.song@intel.com
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] HID: intel-ish-hid: ipc: Add check for pci_alloc_irq_vectors
-Date: Mon, 29 Apr 2024 16:54:22 +0800
-Message-Id: <20240429085422.2434036-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1714380956; c=relaxed/simple;
+	bh=l8Xof23BbhSzLfOSXDkmbn8p+6qq1fPgKfJxk7WsIQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s3qEJI7lWPtvm6XFvc6cjGRg1rK1kxccCqmyx6LsHAG6M9avXfE9khcxwlMgzvRKQallHt0Vd9WU7Q0n4ueQtYU7vy7P57NQbjhp/NM3l6in4LDUmjbpSpLhi6Nv7wol2Tr/B6pO/31XANGRAMspXBRaeKGWegGz8lYzSbGdK7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ZciszVDJ; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ZciszVDJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714380931; x=1714985731; i=markus.elfring@web.de;
+	bh=l8Xof23BbhSzLfOSXDkmbn8p+6qq1fPgKfJxk7WsIQI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ZciszVDJL+Cfft0UBUcPRH7hJ48Q85n5943psKjryJugXdgh8XhJP+TNVljqXUms
+	 BIom+RgdMWRWlumtjXc5OmgxM07bJA3Qo3BbjxXyQUo1hzkns5+n/Y1xq7gJSYpNb
+	 yzqgOK/brRsLtNg7nLCAOt2r5BInpPWXyH08lk1tEvBo2D4rE9bjC9xRv+z9jFml+
+	 qMxJoGegZoRtRcErky6bK0bxyPIW8AYbwceHhGdTKlR6d0y1IbKFGPGEs24T90wqj
+	 vmBFiV/Ri6QLfa8ePRMXxE9nw64aNfgxa0NwjuWO1Q/GQHqWuuufwK8W/iA30RaNI
+	 AeOQbJefAKy/ajo1fQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MSZHv-1s7b9W1mFF-00T4oM; Mon, 29
+ Apr 2024 10:55:31 +0200
+Message-ID: <ace70750-6f58-4bd9-a18f-9889dae30061@web.de>
+Date: Mon, 29 Apr 2024 10:55:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAB3fgJpYC9mH+MbBw--.23909S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jr4xtF43GFW3GF1kKrW3ZFb_yoWDJFgEkF
-	y0vw4xurZ7trs3trnFkry7ArW2vrW0gry8W34IqryakF97Aw47XrW8ZryrJFWfWryqyF1D
-	XFWDZr1rAF17ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7VUbqQ6JUUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [1/2] cxl/region: Fix potential invalid pointer dereference
+To: Li Zhijian <lizhijian@fujitsu.com>, linux-cxl@vger.kernel.org,
+ kernel-janitors@vger.kernel.org,
+ Alison Schofield <alison.schofield@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240429013154.368118-1-lizhijian@fujitsu.com>
+ <1df4e8d4-733f-43d9-a9d7-3764b6df7ed7@web.de>
+ <bbcab973-46b5-4d91-b8b3-c91d43c0f58b@fujitsu.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <bbcab973-46b5-4d91-b8b3-c91d43c0f58b@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:B9QWJts4awVPIctxoxeBFcWVCQbZFqFvtDiFDwvRjStPFwA9s7w
+ Yt57WdkqEGnhbxG19RpDG3LLuVvkVmeSfjJyZ+uFMjfe2c0DTDMiYPILQj0YEx4pwogeF1s
+ mfChOtNiLMLbaipx/gdmEiUpwPDU7ywZOfWj5d4+jz7c/D3KoZyJMdakWAWhcjoEs/11zxH
+ 4jJi+Y5FDTlAlXVRrl6ZQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:mPqRFujCFQI=;EnfOIVo2BLueNwmCRkDBAiaorcL
+ hwM4eo45Mf4J6+w7XznnHRFYtultKYv7pK2voUv8nq2EGZy8TcxT3vdmPjV30V4j1XSHKmupY
+ h1D11FtG/gKuG0rTalH4eNCkc60BK7+KuFNYphsuEKu89hBoSYHNg+w/qAHrmYYmrMVmFBmWC
+ FQt+CaXlupuhpD8LuhyD0SSyxN+sKfibZ9YIrvWyJIWFmOLa6/aiQVU+33IJ1cethzhdPGCGi
+ g+0OSinfnyjSUBwUKZyKK0BVB7eN65IK9LedqduZJCY+cNE19MoKSQoCpJqcjTYi6BjL4C6zS
+ G48YMqt2kZBnuGo3iq178IUovHhiCjgaGhpWOMqlXfBLts9EBA9eN+tvlVoso7orAxsmXxImU
+ rljHF6Wu5nz1m+mWOE/dyg1JqVh7u3GW+K+hIAp36Hwf2nQtO+uIZG7rFiD+Jz9QI/dOyXeM7
+ fMcqUsEtv3udvUX9L64W9fWzC986AuO6pzZQybGLAludfLZjN2yCZMiNqce1vMj83I0sN6aDs
+ tnoBzWHqgbxQkG8tQJbloaLSvAiH1QXyIeuDRHXJBDSuBtdY48Rvin9Q6BwMnFw0/jwKgiF0x
+ CHC4tRbXpoykIbHRkOZIV6QolBY5yGyU/HNVKZItmgyz/EK53BrD1uJuYaGpI7HgKS87v87RL
+ Zvt4aVU4FnjwF+xqV1yfzgpUQPdK7lHL3IGGAiZf0KDvdw1nYsc1SiMgcywLGUNAD0JK0Fhoj
+ 0m1dUgL+WSHNq8baD3EdQLHYxwiDCoRY+lbr6vaPzFLVhDdfLLphmUK/X+jy4kwAWnUOVTP+W
+ F9LaPHuY3gFq+wzlEj0KW+NOfAnjqaPGYxhhfRg3Y0Wl0=
 
-Add check for the return value of pci_alloc_irq_vectors() and return
-the error if it fails in order to catch the error.
+>> I suggest to simplify such source code by using a conditional operator =
+expression.
+>
+> Thanks for your suggestion. Do you mean something like:
+> cxlr =3D region_dev ? to_cxl_region(region_dev) : construct_region(cxlrd=
+, cxled);
 
-Fixes: 74fbc7d371d9 ("HID: intel-ish-hid: add MSI interrupt support")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/hid/intel-ish-hid/ipc/pci-ish.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Yes.
 
-diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-index e79d72f7db2a..9b9bc58f0524 100644
---- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-+++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-@@ -174,6 +174,11 @@ static int ish_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	/* request and enable interrupt */
- 	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
-+	if (ret < 0) {
-+		dev_err(dev, "ISH: Failed to allocate IRQ vectors\n");
-+		return ret;
-+	}
-+
- 	if (!pdev->msi_enabled && !pdev->msix_enabled)
- 		irq_flag = IRQF_SHARED;
- 
--- 
-2.25.1
 
+> If so, I'm open to this option, but the kernel does not always obey this=
+ convention.
+
+Involved developers present different coding style preferences.
+I hope that further source code parts can become a bit more succinct.
+
+Regards,
+Markus
