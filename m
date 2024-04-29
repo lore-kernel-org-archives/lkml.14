@@ -1,40 +1,41 @@
 Received: from rere.qmqm.pl (rere.qmqm.pl [91.227.64.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9DD80637
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE5780630
 	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:45:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.64.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714401940; cv=none; b=biH7wKO1xwPRTDK4M05gEXnfQSxzYSsqO0Vqy3npZf8s6Rgd0EaR+uvWY6Ssr8iZkSG7N4mq/GF2ELSqEf4bu4JoaKZKOfQYXkAqq2UuWXJQrcvPUbTEsHD89arhO4OLy3rUMKQawJlGztdymn1YAmedo1gj3Lpjqwv6FepcTvU=
+	t=1714401942; cv=none; b=MysiyK6O1QSwB6h6VBoNwh+Qt8zxB6Bpi4BEThgGq7kElAY1e3BU2o1Mj9wzNP3dhGCZaLVEmUleZanqAcbeNgn4+jIVU/mbR02jvVJv/leQ5jFcxCVPaEnnFLZAKtbuRfBxDX7vwqUWfxg2dkgJaXpqUKpsE5jxRrQ6EHDMvZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714401940; c=relaxed/simple;
-	bh=DmXR99HJmp8ntT6M7eWZkiJS2A4EI6AFe4l7VHsorYU=;
+	s=arc-20240116; t=1714401942; c=relaxed/simple;
+	bh=k7yssPLl4cYxHXyuaFfTk1eIg9XDOAgEkwYZs+A/6+Y=;
 	h=Date:Message-Id:In-Reply-To:References:Subject:MIME-Version:
-	 Content-Type:From:To:Cc; b=ex5RvKCN67jE1j6YRrYdHXUTHPjZoX4yuEW0PVfAEmsLHkQIMS5XOFvvIRCopAR3KW5X712k1htC+SuEZR7VQcFoSQE5BOWuqKhb99ZfnTwLlInLGYAFfbq90a7mVzcRTrfrwpBA1LgzpktoTSUI0bAO7zuGwU2a9RityIhhFEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl; spf=pass smtp.mailfrom=rere.qmqm.pl; dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b=KGMr4KWU; arc=none smtp.client-ip=91.227.64.183
+	 Content-Type:From:To:Cc; b=Upo9rjNLD8poYag7dp059SOqFWtZ+ziX96y2XY2AF4bmI11mGNzq9B90EWyNqHxFyzZ3VUMyRLUM8WLlwe92xdstpc1PTnSfRMphyj2xdFDVu5EvFkb8/h6P1wUplS4cYa3xu+gIBgc6mKGad91I77PTq5KJsBN2gLpaFYD6P0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl; spf=pass smtp.mailfrom=rere.qmqm.pl; dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b=K/6yZKWl; arc=none smtp.client-ip=91.227.64.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rere.qmqm.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="KGMr4KWU"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="K/6yZKWl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-	t=1714401933; bh=DmXR99HJmp8ntT6M7eWZkiJS2A4EI6AFe4l7VHsorYU=;
+	t=1714401929; bh=k7yssPLl4cYxHXyuaFfTk1eIg9XDOAgEkwYZs+A/6+Y=;
 	h=Date:In-Reply-To:References:Subject:From:To:Cc:From;
-	b=KGMr4KWU9Epg0duIA8sCnxE6z2DBCDqjdqqYeyVyNM2JXuYHjdQWm5sFyqHQDSqzw
-	 4Q2hGab7SCvh0HVk+885DV2/cS0qpdjjNPB1578yOx1UKnYYKmxZ0/EJ1mQCsGy0jS
-	 eQwaTrtUm8OLYxOXlf+jnN1dqfCGRnkEJRIBcpi31FMQRhpgWxSe1d7efzfSWxf27z
-	 qN50S6so7z3cmk924vaAnyj4JDhpRiM9FptmkCCqFOLT2QNzJlju6Zag4c2QPj97IL
-	 gfbYfLODHEfc94IqYuj2tyVIPgEYigRL+yP4xQpZUSyMhN4WiknucfDCATrDBkJ8rl
-	 beQvkYudK2ibA==
+	b=K/6yZKWlXnXuIAKoHr8Up9gv8Xr1P9W4PDTG7JgJoiRBvl00GyLGx8jdDUfHnFTlb
+	 JgIFTglD3fLXds8DHiufcvT4RF9DF7XNXdtsnT+sCLJEGzXLnjKWGpV3iytmFBJK3w
+	 yASZcniKZ8d9qgxf0S3xMjICRi7clmRUQ7AE1bpedNPviPbsskDL80xX7GaxD6sVn7
+	 zAdS4iP6GBOYaDqSQxq6xwUyoICJ7D8oK0LWN240MPqhk8wuCsOJvqx/9XBWkVZXEf
+	 hJl3MhDbym+ZaSEWl7N2V9ZP4jt9j1sium6WqLffrI74nLhK0OsLGcqXLfsPo0l95v
+	 sXjXGztBpywKg==
 Received: from remote.user (localhost [127.0.0.1])
-	by rere.qmqm.pl (Postfix) with ESMTPSA id 4VSmMx03SpzsP;
-	Mon, 29 Apr 2024 16:45:33 +0200 (CEST)
+	by rere.qmqm.pl (Postfix) with ESMTPSA id 4VSmMs287zzFK;
+	Mon, 29 Apr 2024 16:45:29 +0200 (CEST)
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 1.0.5 at mail
-Date: Mon, 29 Apr 2024 16:45:32 +0200
-Message-Id: <0c86e0d9585a4153049ac3eb0b9b8b1793a62e75.1714399603.git.mirq-linux@rere.qmqm.pl>
+Date: Mon, 29 Apr 2024 16:45:29 +0200
+Message-Id: <43306deb3b0200298dded485bfa4057f37f1e7a5.1714399603.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1714399603.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1714399603.git.mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 11/12] regulator/core: remove regulator_get/set_drvdata
+Subject: [PATCH v2 05/12] regulator/core: regulator_ena_gpio_ctrl: pull in
+ ena_gpio state handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,83 +49,62 @@ To:	Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>
 Cc:	linux-kernel@vger.kernel.org
 
-There are no users of accessing regulator driver data via `struct
-regulator` and there shouldn't be any as the struct is representing
-a power consumer not the regulator itself.
+Deduplicate `ena_gpio_state` handling by pulling it into
+regulator_ena_gpio_ctrl().
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/regulator/core.c           | 24 ------------------------
- include/linux/regulator/consumer.h | 14 --------------
- 2 files changed, 38 deletions(-)
+ drivers/regulator/core.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index d7192530d3e0..010f4db2ce60 100644
+index a1573a7ff2b2..4cb30e49c03d 100644
 --- a/drivers/regulator/core.c
 +++ b/drivers/regulator/core.c
-@@ -5908,30 +5908,6 @@ void *rdev_get_drvdata(struct regulator_dev *rdev)
- }
- EXPORT_SYMBOL_GPL(rdev_get_drvdata);
+@@ -2625,6 +2625,10 @@ static int regulator_ena_gpio_ctrl(struct regulator_dev *rdev, bool enable)
+ 	if (!pin)
+ 		return -EINVAL;
  
--/**
-- * regulator_get_drvdata - get regulator driver data
-- * @regulator: regulator
-- *
-- * Get regulator driver private data. This call can be used in the consumer
-- * driver context when non API regulator specific functions need to be called.
-- */
--void *regulator_get_drvdata(struct regulator *regulator)
--{
--	return regulator->rdev->reg_data;
--}
--EXPORT_SYMBOL_GPL(regulator_get_drvdata);
--
--/**
-- * regulator_set_drvdata - set regulator driver data
-- * @regulator: regulator
-- * @data: data
-- */
--void regulator_set_drvdata(struct regulator *regulator, void *data)
--{
--	regulator->rdev->reg_data = data;
--}
--EXPORT_SYMBOL_GPL(regulator_set_drvdata);
--
- /**
-  * rdev_get_id - get regulator ID
-  * @rdev: regulator
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-index 4660582a3302..ee84adba390a 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -268,10 +268,6 @@ int regulator_suspend_disable(struct regulator_dev *rdev,
- int regulator_set_suspend_voltage(struct regulator *regulator, int min_uV,
- 				  int max_uV, suspend_state_t state);
++	if (rdev->ena_gpio_state == enable)
++		return 0;
++	rdev->ena_gpio_state = enable;
++
+ 	if (enable) {
+ 		/* Enable GPIO at initial use */
+ 		if (pin->enable_count == 0)
+@@ -2744,12 +2748,9 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
+ 	}
  
--/* driver data - core doesn't touch */
--void *regulator_get_drvdata(struct regulator *regulator);
--void regulator_set_drvdata(struct regulator *regulator, void *data);
--
- /* misc helpers */
+ 	if (rdev->ena_pin) {
+-		if (!rdev->ena_gpio_state) {
+-			ret = regulator_ena_gpio_ctrl(rdev, true);
+-			if (ret < 0)
+-				return ret;
+-			rdev->ena_gpio_state = 1;
+-		}
++		ret = regulator_ena_gpio_ctrl(rdev, true);
++		if (ret < 0)
++			return ret;
+ 	} else if (rdev->desc->ops->enable) {
+ 		ret = rdev->desc->ops->enable(rdev);
+ 		if (ret < 0)
+@@ -2963,13 +2964,9 @@ static int _regulator_do_disable(struct regulator_dev *rdev)
+ 	trace_regulator_disable(rdev_get_name(rdev));
  
- void regulator_bulk_set_supply_names(struct regulator_bulk_data *consumers,
-@@ -607,16 +603,6 @@ static inline int regulator_set_suspend_voltage(struct regulator *regulator,
- 	return -EINVAL;
- }
- 
--static inline void *regulator_get_drvdata(struct regulator *regulator)
--{
--	return NULL;
--}
+ 	if (rdev->ena_pin) {
+-		if (rdev->ena_gpio_state) {
+-			ret = regulator_ena_gpio_ctrl(rdev, false);
+-			if (ret < 0)
+-				return ret;
+-			rdev->ena_gpio_state = 0;
+-		}
 -
--static inline void regulator_set_drvdata(struct regulator *regulator,
--	void *data)
--{
--}
--
- static inline int regulator_count_voltages(struct regulator *regulator)
- {
- 	return 0;
++		ret = regulator_ena_gpio_ctrl(rdev, false);
++		if (ret < 0)
++			return ret;
+ 	} else if (rdev->desc->ops->disable) {
+ 		ret = rdev->desc->ops->disable(rdev);
+ 		if (ret != 0)
 -- 
 2.39.2
 
