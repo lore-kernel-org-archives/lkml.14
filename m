@@ -1,93 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F157BAF0
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C604254730;
+	Mon, 29 Apr 2024 12:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714392582; cv=none; b=Uiu/HaYxqThi/YpI6OD8e3WDupM8Lam4cuuUooUmT9Dq8Llule0/p3m5XIWvHiB19dVHe5y/c74ZWrejBf3Gp1MNG5It15X41AZssfEXfQTM2m8crNEpqcGQsuqD6y+P99xZjuLPxNBU3wDcSyTN9SGofcu+h3H/kzUSfjyz5lg=
+	t=1714392589; cv=none; b=HhPSdLC0lOc4xh4CtDazpSABBODEVf1IzWM8DpWQtqYfBRyW6vr03ViiVa05r1MQyLUDb+xe6pqQ8QsDS8MsWE70lKcW/k4t6qCUDd3mjjqZQrQAyTE12avgo+xc5C1NM8lwRkEvpS64BOSE48Z3M0iISzYl9sm6k3hH+A7M76c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714392582; c=relaxed/simple;
-	bh=XHEQAft4tZaQ2JdNqTSsJ60xy1/uNy4H7i3u5WPmZVk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h+kfgVEWnqCRkf6UgfIlzz0QTlKwZXlNEMpf6gkFYQaZG/GUN6jpiicUHGDtb2XieAQti7kQ6c+5mQtUkVYKY/73eBv5Z7lYI3OZlJfqMv+0o/+FzMu681fScj+BCbBHJzqPR53qu1aGzF3DwpHTNRPIeqr0y5JjsdubqGPysU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LX6crxyU; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714392589; c=relaxed/simple;
+	bh=5aRnSGcpCnvn8mGlt8kJeLwgq1dMAP+dd2bf2oZQm80=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mapNNoKQCvAq+eL1uxszwQzRCe02mHy/iyQm3h0Dmxn8FvncH8pHtYtir1p2O3tYCtfmF2o5dbj9e+S2/i1dBgHP7stKzh4JppR2xQAY+7buOhyclDfC/Ynzwxh+KpNIdD66Tf4rqambV1uIDupozbrJKePZnFwOV3WmLooi/R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oa2FblC0; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LX6crxyU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714392582; x=1745928582;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XHEQAft4tZaQ2JdNqTSsJ60xy1/uNy4H7i3u5WPmZVk=;
-  b=LX6crxyUDHH60d1smChuQaPDWHvYwGqNVVEuYIdrHZX0U9j+dNmPD8d9
-   XFdVNy6NPN8QGm4VE7pXhFd/0g7KxGY1vJZTW5EVjlmHDHaInXqBWQD1m
-   MTreowtuRM87/Ot4UiusJMtYn7Sals5ZFvLeQX/ebNASc5PvlqzJN5ZWu
-   GlmzPzJ9SytyFd+94c/LQ3mVCyPbuhn09OJu51FsFqTvTVN/6BFst584o
-   6Og9XHMVdSgRazAJ1E9p6m/T1rtlZN+RPlHLteStAOKiqLPJ4njS6CgFN
-   2QSqGK6ryMS4JFz5qD/c+Y5o/5lFb18+0g1fdHfBJQNdZuAmStg0rWH61
-   g==;
-X-CSE-ConnectionGUID: QJdr9GNZSkeytM+7yWo9OA==
-X-CSE-MsgGUID: FmOOn1M+ThaIIoOPedxtnw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="9908290"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="9908290"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 05:09:41 -0700
-X-CSE-ConnectionGUID: PJE1vwbLRg6Jcp8QmDf5LA==
-X-CSE-MsgGUID: Dw/naGPRSFCY9zv9oRLF0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="26166667"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 29 Apr 2024 05:09:39 -0700
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	stable@kernel.org
-Subject: [PATCH 14/14] intel_th: pci: Add Lunar Lake support
-Date: Mon, 29 Apr 2024 15:09:08 +0300
-Message-ID: <20240429120908.3723458-15-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240429120908.3723458-1-alexander.shishkin@linux.intel.com>
-References: <20240429120908.3723458-1-alexander.shishkin@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oa2FblC0"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43TC9b42023668;
+	Mon, 29 Apr 2024 07:09:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714392577;
+	bh=Vm62BWXRBUN5Z2NXUfRDFZ+4KArLLz3rG4pECulTNUQ=;
+	h=From:To:CC:Subject:Date;
+	b=oa2FblC0WSZqVPpJ/qf7rVkjtHar6AhUkKnqn9FvQKep0gUS2ODZ7luipUG2azLRY
+	 P32Tta3HUth5CYm1IgNvf2iy3PJuZsxeSEPWc5PLor4lqzQGAyxGBunXY1n4V19Zlc
+	 lYRIiCaz7VdullnoJK9kMn5cRKrC1aEbXNcBzwoY=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43TC9bwG009187
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Apr 2024 07:09:37 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Apr 2024 07:09:36 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Apr 2024 07:09:36 -0500
+Received: from uda0500640.dal.design.ti.com (uda0500640.dhcp.ti.com [172.24.227.88])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43TC9XrE012367;
+	Mon, 29 Apr 2024 07:09:33 -0500
+From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <srk@ti.com>, <rogerq@kernel.org>,
+        <r-gunasekaran@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] Add USB support for J722S EVM
+Date: Mon, 29 Apr 2024 17:39:29 +0530
+Message-ID: <20240429120932.11456-1-r-gunasekaran@ti.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add support for the Trace Hub in Lunar Lake.
+J722S has two USB instances. This series enables USB support for
+both instances.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@kernel.org
----
- drivers/hwtracing/intel_th/pci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Ravi Gunasekaran (3):
+  arm64: dts: ti: k3-j722s: Add support for SERDES0
+  arm64: dts: ti: k3-j722s: Redefine USB1 node description
+  arm64: dts: ti: k3-j722s-evm: Update USB0 and USB1 configuration for
+    EVM
 
-diff --git a/drivers/hwtracing/intel_th/pci.c b/drivers/hwtracing/intel_th/pci.c
-index 0db8ff9b1c48..0d7b9839e5b6 100644
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -324,6 +324,11 @@ static const struct pci_device_id intel_th_pci_id_table[] = {
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x3456),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Lunar Lake */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa824),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{
- 		/* Alder Lake CPU */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x466f),
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 58 +++++++++++++++
+ arch/arm64/boot/dts/ti/k3-j722s.dtsi    | 93 +++++++++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-serdes.h      |  7 ++
+ 3 files changed, 158 insertions(+)
+
+
+base-commit: b0a2c79c6f3590b74742cbbc76687014d47972d8
 -- 
-2.43.0
+2.17.1
 
