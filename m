@@ -1,42 +1,75 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from fout6-smtp.messagingengine.com (fout6-smtp.messagingengine.com [103.168.172.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6540C946C;
-	Mon, 29 Apr 2024 04:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451D6372
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 04:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714364663; cv=none; b=X+3Og/tJzkV78SVlH9od0QaB3boI/4EO0kLlekQl34D0cijdLLjO8klY9uNNSKxS1AF+Es49Ny7f2bw2HspY89Q0eBCtXOzU2SEGJPAqgVVVJe7LotdaloxJcfPllYnOGefil90L5YrHfwxpkEx/IzwemQLcqnRlBjFfS1Lb8Wg=
+	t=1714365147; cv=none; b=BIXgbO/UIKq36nW1O+PCjO0DYw2HajDxKueCB9Dyf+iHCqUo5mHPdP4jiDWenheu5HCkxN0xLBZjFkPHyWlNT0Jy6oVMk8yzNk4R7XwHPPhvuWXvBv6RhtQO/qiNIcDyJWyAqaq/MYFwusZ5xO0PWVe88LcnmAAAPJQcFkd8HMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714364663; c=relaxed/simple;
-	bh=JGOwRwb3wGY35/7bkooHaUwoAyvkcfcIq1Fea0jPVvo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HW9jgnhaxgcdQEQj5SNe+gOX8JruoHXhICXkjItVhrXagdUBa2qEC08h3kh0+Cv+HtOL0xEpfvqFaoQCARCzfsubZ5B+SF/M1bs5uQ+XOZZBlHTIYkZmV7X6ovBD0vaVy2OOUHcVL/v0GZpCjl6Hsg3ESWty097W3HpFZ2Js0HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowABnbRnkIC9mz_ISAQ--.33589S2;
-	Mon, 29 Apr 2024 12:24:05 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: cezary.rojewski@intel.com,
-	pierre-louis.bossart@linux.intel.com,
-	liam.r.girdwood@linux.intel.com,
-	peter.ujfalusi@linux.intel.com,
-	yung-chuan.liao@linux.intel.com,
-	ranjani.sridharan@linux.intel.com,
-	kai.vehmanen@linux.intel.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	maarten.lankhorst@linux.intel.com,
-	amadeuszx.slawinski@linux.intel.com
-Cc: alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] ASoC: intel: skylake: Add check for dma_set_max_seg_size
-Date: Mon, 29 Apr 2024 12:23:20 +0800
-Message-Id: <20240429042320.2150567-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1714365147; c=relaxed/simple;
+	bh=ox/62EbT5oj8f7xt9MKcSewdgkEtXx/74onEea31BCM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nvauZ7zG4WAhaKHS+hQAyblPXwZ6thmoFx9NG1tL4iK4lUf/gu6F5zdhuGLmQNSfn9ug1/OWQNg50NKbN4OQt8iz3UBDiiyvcVw8sRNb/Oa5aeBP5p4755r/4qIVXsVePheokk3KEYPLxFQ+HXEpC5E5HL3ObRrcMb7iuCpL0Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=IYdEDpOa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XWtCMm3X; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="IYdEDpOa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XWtCMm3X"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 46A831380228;
+	Mon, 29 Apr 2024 00:32:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Mon, 29 Apr 2024 00:32:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
+	:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm3; t=1714365143; x=1714451543; bh=SOhiZLaSJM
+	K3vRwXHVf80avqHnvi4hJiW4QMdFB5tDo=; b=IYdEDpOalzPZbEZWa3eINnTYv8
+	vrwutmxYOYrGrhUl8ZRkMmgvTcQKnr5cPPsMCwNXPGq/TN8wXIUk5O/8auutTncO
+	A8DiQR4xHgaLVLJs/stCK80DS7KyeCAE913DSg9VvJQuQ9Csj+wZqzxkwzDq4RQ2
+	nZD9ZcTQJ2uXLIRX8wksGI8CREOPZkrgwvI/Tv5OcZwdlI8qYxKsIElBLq5WQ2ZH
+	vRgx2bngFmk0qBg0wmkcMfoipjEQnnUqgHovp9SBe5yu3AXvB62dL3jJj4eiM2mz
+	Iv/61JytAp4uNtrMRcnP/XLYYn/5io2w7cf+59yrZ/3CBc2KIXO14+myRHAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714365143; x=1714451543; bh=SOhiZLaSJMK3vRwXHVf80avqHnvi
+	4hJiW4QMdFB5tDo=; b=XWtCMm3XCG3Pi8vbCsp6ih+BY8w+rqdO2u2dHd9BGywE
+	NJgUpGETTb6ToJuXEuJwWp+pfD6o3W8ziW1M9YUpWQ8rrcPHz3Ej2OCzlFT/XW87
+	z1RH35nTl7zKXel40F6ONWWNe5h9+u1Cc/H69jWhRE6X/U6XsyGL/TrQfCh5VArJ
+	LUms+OzzdgXdIvs+Rth7tP6ng4/i11MmXLY8RM88DrQVJiVSm2fuW7UMNWco8LQD
+	SPgxy6OS0M0KB2tQOwyuQqHalnp4QXptbGmSsU7z1E1orsRLzZ3eMlrM+fl5fRsp
+	DmTU529PNI1yaTS3WTEkpLgElyyB4oTmtOKaIMpuqw==
+X-ME-Sender: <xms:1yIvZo4TJMBShdOty7YQF9qWl8wJL3ToH3-AUggp7dH4hTPqWlBKGQ>
+    <xme:1yIvZp4DzKtypy3bfqQXFaoVr1YVbTLiLNwQQGeAl3V8jkWfjBvfanJ9eSM0cSr4-
+    JB5zIPhpSfNh9NVW-0>
+X-ME-Received: <xmr:1yIvZnfWJcI0jvM1F6OIQh3yS0QYkK9Wut3NcnUKEvTnu3kvY1qc6ASO2jdb0RJkNbckLfdAjGlTwX2es_fKjt0-ztuP2B6lUlW_u0tyA4ggIw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddtledgtdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghs
+    hhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeeggfehleehje
+    eileehveefkefhtdeffedtfeeghfekffetudevjeegkeevhfdvueenucffohhmrghinhep
+    khgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjph
+X-ME-Proxy: <xmx:1yIvZtKmYtVRBqZY0WQISGaNIQS8sNCVI07p3e1CAp2WG-CJov3ywg>
+    <xmx:1yIvZsJ3vZ5CGODP9Aa88Q2ezF-ljH1dVJ3tkh4JuE8gmrMAkaWpYg>
+    <xmx:1yIvZuzlAvQbYXM6sBji1Dd3QYNCiOjoFfek3LqA8W9RJ86aRbTczA>
+    <xmx:1yIvZgJ_-4_XksZ0KycyF3dmmBwd1Yfw8zhjCPgt9jAOMn_GIjfh6A>
+    <xmx:1yIvZjX7oq1zWA8vNxis0y--8L7YmUOSCKrxPBjG00PKnTwvxiUDZpi4>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Apr 2024 00:32:22 -0400 (EDT)
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: linux1394-devel@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] firewire: add tracepoints events for asynchronous transaction
+Date: Mon, 29 Apr 2024 13:32:13 +0900
+Message-ID: <20240429043218.609398-1-o-takashi@sakamocchi.jp>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,49 +77,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABnbRnkIC9mz_ISAQ--.33589S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xry3uF47GrW8Xr4rZr47Jwb_yoWDXrX_Kw
-	n5G3s5Wa4UW3yI9wnrKr43CF42qws7ZFyDXFyvq3WfA343GrZ8GFWvqFnruFWku34Fqry0
-	v3ZIvrWDC348XjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc2xSY4AK67AK6r45MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7VUj_-BtUUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Add check for the return value of dma_set_max_seg_size() and return
-the error if it fails in order to catch the error.
+Hi,
 
-Fixes: c22a8086b384 ("ASoC: intel: skylake: Set max DMA segment size")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- sound/soc/intel/skylake/skl.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The series of changes in this patchse is to revise the previous RFC:
+https://lore.kernel.org/lkml/20240418092303.19725-1-o-takashi@sakamocchi.jp/
 
-diff --git a/sound/soc/intel/skylake/skl.c b/sound/soc/intel/skylake/skl.c
-index 117125187793..8edc13795462 100644
---- a/sound/soc/intel/skylake/skl.c
-+++ b/sound/soc/intel/skylake/skl.c
-@@ -943,7 +943,9 @@ static int skl_first_init(struct hdac_bus *bus)
- 	/* allow 64bit DMA address if supported by H/W */
- 	if (dma_set_mask_and_coherent(bus->dev, DMA_BIT_MASK(64)))
- 		dma_set_mask_and_coherent(bus->dev, DMA_BIT_MASK(32));
--	dma_set_max_seg_size(bus->dev, UINT_MAX);
-+	err = dma_set_max_seg_size(bus->dev, UINT_MAX);
-+	if (err)
-+		return err;
- 
- 	/* initialize streams */
- 	snd_hdac_ext_stream_init_all
+In a view of IEEE 1394 bus, the main function of kernel core is to
+provide transaction service to the bus. It is helpful to have some
+mechanisms to trace any action of the service.
+
+This series of changes adds some tracepoints events for the purpose.
+It adds the following tracepoints events via 'firewire' subsystem:
+
+* For outbound transactions (e.g. initiated by user process)
+    * async_request_outbound_initiate
+    * async_request_outbound_complete
+    * async_response_inbound
+* For inbound transactions (e.g. initiated by the other nodes in the bus)
+    * async_request_inbound
+    * async_response_outbound_initiate
+    * async_response_outbound_complete
+
+When probing these tracepoints events, the content of 'struct fw_packet'
+passed between the core function and 1394 OHCI driver is recorded with
+the fields of header and packet data. For example of the outbound
+split transaction:
+
+async_request_outbound_initiate: \
+    transaction=0xffff955fc6a07b30 generation=5 scode=2 dst_id=0xffc0 \
+    tlabel=18 tcode=9 src_id=0xffc1 offset=0xfffff0000984 \
+    header={0xffc04990,0xffc1ffff,0xf0000984,0x80002} data={0x81,0x80}
+async_request_outbound_complete: \
+    transaction=0xffff955fc6a07b30 generation=5 scode=2 status=2 \
+    timestamp=0xeabf
+async_response_inbound: \
+    transaction=0xffff955fc6a07b30 generation=5 scode=2 status=1 \
+    timestamp=0xeac2 dst_id=0xffc1 tlabel=18 tcode=11 src_id=0xffc0 \
+    rcode=0 header={0xffc149b0,0xffc00000,0x0,0x40002} data={0x81}
+
+Takashi Sakamoto (5):
+  firewire: core: add support for Linux kernel tracepoints
+  firewire: core: add tracepoints events for asynchronous outbound
+    request
+  firewire: core: add tracepoints event for asynchronous inbound
+    response
+  firewire: core: add tracepoint event for asynchronous inbound request
+  firewire: core: add tracepoints events for asynchronous outbound
+    response
+
+ drivers/firewire/Makefile           |   2 +-
+ drivers/firewire/core-trace.c       |   5 +
+ drivers/firewire/core-transaction.c |  93 +++++++-----
+ include/trace/events/firewire.h     | 211 ++++++++++++++++++++++++++++
+ 4 files changed, 276 insertions(+), 35 deletions(-)
+ create mode 100644 drivers/firewire/core-trace.c
+ create mode 100644 include/trace/events/firewire.h
+
 -- 
-2.25.1
+2.43.0
 
