@@ -1,198 +1,172 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080D484E1B;
-	Mon, 29 Apr 2024 16:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F8385643
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 16:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714408665; cv=none; b=YE7jFgrQnhzg1/SedOzXOCJp/Y31NkeSWOOx4Qpy8AWytIPFjc1GXjP2HOc+slu90I4akCiBUr6goRz+EVAsUIXmIMztL85qHWPephQhN6KgNOhy0b92Hj7oABWCk1rRrEoYVRG7fnBatrcbS/pQ3L9+iq+UIItxWKDPunjLhsM=
+	t=1714408716; cv=none; b=sxQMHbfIXsf5OTta5doSSHZEoyCzS4V4mp53rB1q0tGLpIoEP0MkhcjZ/AkcJFUmFg+ya9EZOa2UWjHcJWhWhJJkoKhNvbxkDbYebD3t5Uv2fYszaiREoiBnooLBQCI9rPhzdWkv01/vvapBfhUe7XO87SfVf3om0rT6/e0+kiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714408665; c=relaxed/simple;
-	bh=OeUx0WulkbmAUZTlM5p+CWWRdM6Y3YIPpKpm4CojpHA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mnQmQvdMSEXSW4992K/n+Cbps4steuHTBNiOPK9WjfGoYV9fWNq50UvdjwJsTFtgsZQ09ZqnRAOWalEjRnxDQxWiO0CXDjok/7XrNru+bP5jmsJcRkp8pPenVijO6c1qrtrwWnFizwH5OOQdsUVKu9s0hfXSOrtADlexK5Z7EH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ToXBhwQk; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714408716; c=relaxed/simple;
+	bh=zzQLDSf8QCqzlsm92G/iDCAL1afFjJirvI3oBkxEXl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rZ7/qSucmodK6jUfww9hfsh4fzUccfJqD7+8SupSAFvri5qTVZ12boj2zagHX8DEV2pqkAzxR0y4pQVSHeGXO/iAB/0uX0FVAHofkZIJW1y9ASQbD2/FhHBknuoHr3GSAh/cDIHcwbjHADQa/lAg+IcGlmrv7T0Vxz1rTbb7V/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LEhubX+9; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToXBhwQk"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e8f68f8e0dso33584905ad.3;
-        Mon, 29 Apr 2024 09:37:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LEhubX+9"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so25488035ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714408663; x=1715013463; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nh1QMqmY0q3lT8X1D2igxqckoalEPLGeYeihyTrpcK0=;
-        b=ToXBhwQkPQmTheD21Mqkvdkl2AzXXbuVAk1D2j1v4egELW+5juOeIYptI8RX8PdeuG
-         PuRO4f9/I1RJCoToAgTNIujXnSwtmR/vd7Dhr0U3Kg9ujy1CxJP4VDMFSjTiB9oYl562
-         QuKS1V0NqMgn4WSSioAYVADEYvBMv9xBj8gC4dOIegmwVqBsPaTeccuJzazZjIsj/4aG
-         W73A75gh0ImGNYC6Tyhj+d5kbMYWANufq7LQZYPhcmXzV/Wg1ur+7IAvJcZJhuC2/tjk
-         eYE8tqUG7v2fAZDqRH93ppgtX8A+8hZkioYllzRsnNhUwKnbqMZgO5vXM4R/xPi1RLEm
-         bYhQ==
+        d=chromium.org; s=google; t=1714408713; x=1715013513; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oWPJdB/cSlyp73RwVZm1H6IMvyasz+OHn5rJwfM1czU=;
+        b=LEhubX+9Alqj/OCVgnQgK0olQchR1Iu6SqvPor+QeQex7v6Sffv9Dq8znnlJjqjhjt
+         Oj4XxzimahDvZ5Wx3c59dLo3ygLh6TIF8RY9EnY8xxS1wI9AbIdG303M/O4HCNMUEx8K
+         whNQprGHEib09Bl/qQdmN4q8ism14AGC3nLRk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714408663; x=1715013463;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nh1QMqmY0q3lT8X1D2igxqckoalEPLGeYeihyTrpcK0=;
-        b=jTiH1YGuF3URxtGAs7Xfxa3OWcQ+ZsHrQdd2LxAt9/29FzxtCpGDfSj6JdW27pqZNu
-         0H7rTaUUVpoYxGlsV6mD3W5hwrQnDsQV7iVZKdrw+sInkje1Z7cO6DA0O7h17CQWb9q9
-         ZHVtGSuTC3/XMFnoFhHL4Hdes519mP2CQZxpWlQnxIoKDwsSn3IzLkYUPv3BeOmmjy8S
-         +Fon+4oZ83x3eC6lk9jhNnuhKF5f32Q4/V8spLMCtAzW3e/6hans72EvPHlpQXGpqhSd
-         dcJN1jDzTVR6tWuLeNeqFsC24xpQfa4ro60Gakd5xqlU6s46DLppsw6nVityD7p2NPmU
-         oLyg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDPe1Pi7Dt4YOHnuO73ffcyUCD+8ZfXzmMO045LuuZw6cMjvqqbRu88TMKbIT+wSJMBuCYyUkd6Cu0HIcTIRDd8b+729ko1y/Y6/Si
-X-Gm-Message-State: AOJu0YwiDaK2JMODgJJw2zgFIFEBvoNOvkZGsZoUL0e4mk2agimlzBY7
-	2H5+rIBbfT8QWHuJi6fQ/sXyqyT71giegL5XXElU+j67vIcjGz/y
-X-Google-Smtp-Source: AGHT+IGBZ46HBSYk/xVb2U8JQjbSO6DNoTWbYpVh0rnlkofznPRkH9XvOBXYRt0Fj4c0gn/RnB740w==
-X-Received: by 2002:a17:902:ce08:b0:1e5:62:7abe with SMTP id k8-20020a170902ce0800b001e500627abemr9677273plg.3.1714408663207;
-        Mon, 29 Apr 2024 09:37:43 -0700 (PDT)
-Received: from dev.. ([2402:e280:214c:86:9744:8dfe:8ee3:9c0a])
-        by smtp.gmail.com with ESMTPSA id e13-20020a170902ed8d00b001e4464902bcsm20539571plj.60.2024.04.29.09.37.40
+        d=1e100.net; s=20230601; t=1714408713; x=1715013513;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oWPJdB/cSlyp73RwVZm1H6IMvyasz+OHn5rJwfM1czU=;
+        b=BW4crMk9quXNOzznL2RyKzx2psCHu/BG0R3JJZpu3W1KDe9/9kJ6HFHIB5re3vK7Xm
+         1qxOvOESsCCEHlX9aQNrLLqHWiLzcQtUzGFlRaZoCNtem0vgGStR0YZ10+ieO1jA1eNZ
+         rw5LvvQNlehsgrDMTvV5d23KbiHVcRaI7nZRnbwZL43wZaqIKH6Pk0jZZ3n4p1OqzgoC
+         +HbM0XyCKRQP2NW1kKgDBAJtmWkznyozicVpBtB2ZsQZbBE8zyah6mDNtX6qmzjm6fnA
+         WnaPQS27jnGgl6HnvNvhFVYXKr3jf47SNfIhE19ePGIdZ/ByJZmYG1HfZjk4Yify4XBI
+         TJVA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzMcPY/slmM+WGuFuFpDqkKqqOeejNydaSYPjibo5u6ByouVkYSTWcXxUH4GasJv0/SCyVe9K7Ip8NoexEtqOV9tUm2kkRN6nKAhqG
+X-Gm-Message-State: AOJu0YxFzkF0AkcZvYR1fvNLWu0WcesU/neOya7HvImh8+rNvLTB+/Tg
+	x077ZNf3BKcXgKGhW7I4TUSwsSsSN0urIHJjudd2r8nHrSmBlLyTxenwhD4IsA==
+X-Google-Smtp-Source: AGHT+IH/1T9jHNNNCaTcEgyVwTWxxXD0FLNfQwEJ2iZeJ96Js8aCUDwFpJsdmhmvt08FTazyJSQEiA==
+X-Received: by 2002:a17:902:cccb:b0:1ea:f7d4:2327 with SMTP id z11-20020a170902cccb00b001eaf7d42327mr15393377ple.9.1714408713045;
+        Mon, 29 Apr 2024 09:38:33 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w8-20020a170902a70800b001dd82855d47sm20510893plq.265.2024.04.29.09.38.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 09:37:42 -0700 (PDT)
-From: R Sundar <prosunofficial@gmail.com>
-To: benjamin.mugnier@foss.st.com,
-	sylvain.petinot@foss.st.com,
-	mchehab@kernel.org,
-	sakari.ailus@linux.intel.com,
-	laurent.pinchart@ideasonboard.com
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	R Sundar <prosunofficial@gmail.com>,
-	Julia Lawall <julia.lawall@inria.fr>
-Subject: [PATCH v2 linux-next] media: i2c: st-mipid02: replace of_node_put() with __free
-Date: Mon, 29 Apr 2024 22:07:36 +0530
-Message-Id: <20240429163736.11544-1-prosunofficial@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 29 Apr 2024 09:38:32 -0700 (PDT)
+Date: Mon, 29 Apr 2024 09:38:31 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] rpmsg: glink: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <202404290937.C22567C1@keescook>
+References: <ZgG8bbEzhmX5nGRE@neat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgG8bbEzhmX5nGRE@neat>
 
-Use the new cleanup magic to replace of_node_put() with
-__free(device_node) marking to auto release and to simplify the error
-paths.
+On Mon, Mar 25, 2024 at 12:03:25PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
+> 
+> There is currently an object (`msg`) in multiple structures that
+> contains a flexible structure (`struct glink_msg`), for example:
+> 
+> struct glink_defer_cmd {
+>         ...
+> 
+>         struct glink_msg msg;
+>         u8 data[];
+> };
+> 
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of another structure, we use the `__struct_group()` helper
+> to separate the flexible array from the rest of the members in the
+> flexible structure:
+> 
+> struct glink_msg {
+>         __struct_group(glink_msg_hdr, hdr, __packed,
+> 
+>         ... the rest of members
+> 
+>         );
+>         u8 data[];
+> } __packed;
+> 
+> With the change described above, we now declare objects of the type of
+> the tagged struct, in this case `struct glink_msg_hdr`, without
+> embedding flexible arrays in the middle of other structures:
+> 
+> struct glink_defer_cmd {
+>         ...
+> 
+>         struct glink_msg_hdr msg;
+>         u8 data[];
+> };
+> 
+> Also, use `container_of()` to retrieve a pointer to the flexible structure.
+> 
+> We also use the `DEFINE_RAW_FLEX()` helper for an in-stack definition of
+> a flexible structure where the size of the flexible-array member is known
+> at compile-time.
+> 
+> So, with these changes, fix the following warnings:
+> drivers/rpmsg/qcom_glink_native.c:51:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:459:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:846:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:968:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:1380:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/rpmsg/qcom_glink_native.c | 38 ++++++++++++++++---------------
+>  1 file changed, 20 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+> index 82d460ff4777..878e3461bce1 100644
+> --- a/drivers/rpmsg/qcom_glink_native.c
+> +++ b/drivers/rpmsg/qcom_glink_native.c
+> @@ -30,9 +30,12 @@
+>  #define RPM_GLINK_CID_MAX	65536
+>  
+>  struct glink_msg {
+> -	__le16 cmd;
+> -	__le16 param1;
+> -	__le32 param2;
+> +	/* New members must be added within the __struct_group() macro below. */
+> +	__struct_group(glink_msg_hdr, hdr, __packed,
+> +		__le16 cmd;
+> +		__le16 param1;
+> +		__le32 param2;
+> +	);
+>  	u8 data[];
+>  } __packed;
+>  
+> @@ -48,7 +51,7 @@ struct glink_msg {
+>  struct glink_defer_cmd {
+>  	struct list_head node;
+>  
+> -	struct glink_msg msg;
+> +	struct glink_msg_hdr msg;
+>  	u8 data[];
+>  };
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: R Sundar <prosunofficial@gmail.com>
----
+Instead of this change (and the container_of() uses below), I think you
+can just simply drop "data" here. I don't see anything using it except
+the struct_size()s which can all change their "data" argument to
+msg.data. e.g.:
 
-Changes since v1 - 
+-       dcmd = kzalloc(struct_size(dcmd, data, extra), GFP_ATOMIC);
++       dcmd = kzalloc(struct_size(dcmd, msg.data, extra), GFP_ATOMIC);
 
-- Added missed out __free() marking in mipid02_parse_tx_ep().
-- In mipid02_parse_tx_ep(), In error case, return value is always -EINVAL.  so
-sending the -EINVAL instead of ret variable value. 
+With those changed, I think this patch becomes more readable.
 
-Link to v1 - https://lore.kernel.org/all/20240427095643.11486-1-prosunofficial@gmail.com/#t
+-Kees
 
- drivers/media/i2c/st-mipid02.c | 37 +++++++++-------------------------
- 1 file changed, 9 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
-index f250640729ca..bd3cf94f8534 100644
---- a/drivers/media/i2c/st-mipid02.c
-+++ b/drivers/media/i2c/st-mipid02.c
-@@ -715,31 +715,28 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
- 	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
- 	struct i2c_client *client = bridge->i2c_client;
- 	struct v4l2_async_connection *asd;
--	struct device_node *ep_node;
- 	int ret;
- 
- 	/* parse rx (endpoint 0) */
--	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
--						0, 0);
-+	struct device_node *ep_node __free(device_node) =
-+		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 0, 0);
- 	if (!ep_node) {
- 		dev_err(&client->dev, "unable to find port0 ep");
--		ret = -EINVAL;
--		goto error;
-+		return -EINVAL;
- 	}
- 
- 	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
- 	if (ret) {
- 		dev_err(&client->dev, "Could not parse v4l2 endpoint %d\n",
- 			ret);
--		goto error_of_node_put;
-+		return ret;
- 	}
- 
- 	/* do some sanity checks */
- 	if (ep.bus.mipi_csi2.num_data_lanes > 2) {
- 		dev_err(&client->dev, "max supported data lanes is 2 / got %d",
- 			ep.bus.mipi_csi2.num_data_lanes);
--		ret = -EINVAL;
--		goto error_of_node_put;
-+		return -EINVAL;
- 	}
- 
- 	/* register it for later use */
-@@ -750,7 +747,6 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
- 	asd = v4l2_async_nf_add_fwnode_remote(&bridge->notifier,
- 					      of_fwnode_handle(ep_node),
- 					      struct v4l2_async_connection);
--	of_node_put(ep_node);
- 
- 	if (IS_ERR(asd)) {
- 		dev_err(&client->dev, "fail to register asd to notifier %ld",
-@@ -764,46 +760,31 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
- 		v4l2_async_nf_cleanup(&bridge->notifier);
- 
- 	return ret;
--
--error_of_node_put:
--	of_node_put(ep_node);
--error:
--
--	return ret;
- }
- 
- static int mipid02_parse_tx_ep(struct mipid02_dev *bridge)
- {
- 	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_PARALLEL };
- 	struct i2c_client *client = bridge->i2c_client;
--	struct device_node *ep_node;
- 	int ret;
- 
- 	/* parse tx (endpoint 2) */
--	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
--						2, 0);
-+	struct device_node *ep_node __free(device_node) =
-+		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 2, 0);
- 	if (!ep_node) {
- 		dev_err(&client->dev, "unable to find port1 ep");
--		ret = -EINVAL;
--		goto error;
-+		return -EINVAL;
- 	}
- 
- 	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
- 	if (ret) {
- 		dev_err(&client->dev, "Could not parse v4l2 endpoint\n");
--		goto error_of_node_put;
-+		return -EINVAL;
- 	}
- 
--	of_node_put(ep_node);
- 	bridge->tx = ep;
- 
- 	return 0;
--
--error_of_node_put:
--	of_node_put(ep_node);
--error:
--
--	return -EINVAL;
- }
- 
- static int mipid02_probe(struct i2c_client *client)
 -- 
-2.34.1
-
+Kees Cook
