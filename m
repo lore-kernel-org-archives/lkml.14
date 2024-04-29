@@ -1,127 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950C237719;
-	Mon, 29 Apr 2024 10:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035B137169
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 10:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714386518; cv=none; b=rUIU5gOShcvSbIpPKRVtkgl3AjAuMXmQYIxELEPKgNThGJKplUJJ6RAU695VZTVpb6/YnMue8EDYRFZa5QMrQJClPLepjesqib2Dza6i5N0NmtDFkwm/tRsI3Rjr8W5WJcI4ouoDdrrJ2SW3admNAr87KipkhL0l8JqbmpuL43k=
+	t=1714386539; cv=none; b=kAoB/ZHWlwfWbPoyPDC3qtL1JxwEMkcPCCJquLIrk8Zuw8C1FJScVm1QWy+dGOAbPk1BKXCjcOhdonLn/3mjiOSgwyjycfKOvsCuWuklVOuyXLP7esqtTv+Qet/IGkejTGscsxQh4YCKW3Rsj5LawNC4OPXurFVGWjSejyxvv1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714386518; c=relaxed/simple;
-	bh=OFNiBQJBXqxnaxJp8Nrh3y4ZV1pJrBCQPTfNCADbwVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U4q/hadZ09KjLlOdwyQ4XEq/RVaohAFkPgUc+TVqlxK1yqpQ5Od8RkA9aGBm2a+x5Mf7HZzAWOMglC9MujRC7jMA2n8QSyD0qJkblMsfmw3MY6jbSg8nyeYrCK9H8SdSNt+wX1JULyDYrXCZQGD0DbxA/a951WHlEk8AP12eXtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YxQVr7V4; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714386539; c=relaxed/simple;
+	bh=2IDhjsMhb5aYhiqCE9TtV8L5uKIoVLzCbnj3R6GZewg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=dJO8sV4QmI8KegNCwsXCvgS2bfg6iEVu06fKGtpk1UdrmCcE5Clm3DiCnU4KTPb9N/fHFVaKRu9SRWTQBG5Q2Tk2lxBvJJDzxkMlCYyr2sgtcKNugNrLip+eVws8Hv9ZiPeLeqn3ESenZkWJYdgBHLQ2Is5ENhC50wCB5icVVRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sY1jqojp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YxQVr7V4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714386517; x=1745922517;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=OFNiBQJBXqxnaxJp8Nrh3y4ZV1pJrBCQPTfNCADbwVg=;
-  b=YxQVr7V4JU+0eu7N+nHkFT3FRyhmi6JqH9dCnPNUnN40U3Evq90BJcpv
-   6K0gFrF6rJZLw8tX1kJg/Ojo7eVZ4ugWwdCI+IT437dCQdEutUK7OCxPH
-   7JK0CFgFmbUCoMyVNBhnEUUwhOcWcSxjcfPQg5PGOpGlHyS2tBtf5WaEc
-   VmOWe29xwqdx2za7044fuiouF/pyaRAVHc+SH9Qh9+ZOT4B2ssVqQ7Q5n
-   I4DKjKINcoR9ipNYSqKqPzJinD55o5AaGVmYh+7zC76et/baKc3uQJxeg
-   uuOlVKBxT43MbSt/Xmj8Ef1pWRRZlvVKw5/SOH/g2R0vSswqtqmn25W5a
-   Q==;
-X-CSE-ConnectionGUID: 0jqB35mKRe2K42Bbkj0VJg==
-X-CSE-MsgGUID: OuIeb1A6SGqaNCz7HouSBg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="10150704"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="10150704"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 03:28:37 -0700
-X-CSE-ConnectionGUID: EMaThyTEQoO+YZhlN+F56A==
-X-CSE-MsgGUID: UsQujk3XQLmXxuxcXPUMnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="26141366"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 03:28:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s1OFM-00000002INO-1dNa;
-	Mon, 29 Apr 2024 13:28:32 +0300
-Date: Mon, 29 Apr 2024 13:28:32 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH RFC] i2c: Add a void pointer to i2c_device_id
-Message-ID: <Zi92UCnZa90DXAI9@smile.fi.intel.com>
-References: <20240426213832.915485-2-u.kleine-koenig@pengutronix.de>
- <Zi9gRVVw7qbKSL5k@smile.fi.intel.com>
- <youkuwbynndjpcoux2zaxwjp5gquj647leub3bat37a4wtho6p@ypir6ay3vhaw>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sY1jqojp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 622B0C113CD;
+	Mon, 29 Apr 2024 10:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714386538;
+	bh=2IDhjsMhb5aYhiqCE9TtV8L5uKIoVLzCbnj3R6GZewg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=sY1jqojp/kNqy2FM9Lm1z573PZOVnyeHLmzSq7ogYyxtBy0m5ixrh6NysQ1yFBrUB
+	 /jdEGixdLOyQWB7C9Do0QQm7v56/9D+yZdwKEmu4C4uvou35VlRccRXsd3QlEqY7Ml
+	 aBT5zlzXIJZUFwQd2WAT3dl3778e1U9/W5oc7KiiCML25nYNtp1RRxK/0vbzFk+RFA
+	 GNeNXwqK+7lGdRIMCf10rbq0goSC1K1awPNqDdE3qojDmPzm5oGARRWS1yYCLWdGFh
+	 OHlSD7m2WsbeEU9lDex4S2zEoZi209QeB9EBSp5/3HRrlLZpEjU4Iv37TO5ZQ7SJsA
+	 L/k9+oZIm4ezw==
+From: Robert Foss <rfoss@kernel.org>
+To: Jonas Karlman <jonas@kwiboo.se>, David Airlie <airlied@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, Neil Armstrong <neil.armstrong@linaro.org>, Daniel Vetter <daniel@ffwll.ch>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>, Maxime Ripard <mripard@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+In-Reply-To: <20240426122259.46808-1-luca.ceresoli@bootlin.com>
+References: <20240426122259.46808-1-luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH RESEND] Revert "drm/bridge: ti-sn65dsi83: Fix enable error path"
+Message-Id: <171438653511.2566805.2252397252665472830.b4-ty@kernel.org>
+Date: Mon, 29 Apr 2024 12:28:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <youkuwbynndjpcoux2zaxwjp5gquj647leub3bat37a4wtho6p@ypir6ay3vhaw>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Mailer: b4 0.10.1
 
-On Mon, Apr 29, 2024 at 12:21:05PM +0200, Uwe Kleine-König wrote:
-> On Mon, Apr 29, 2024 at 11:54:29AM +0300, Andy Shevchenko wrote:
-> > On Fri, Apr 26, 2024 at 11:38:33PM +0200, Uwe Kleine-König wrote:
-
-...
-
-> > >  static const struct i2c_device_id wlf_gf_module_id[] = {
-> > > -	{ "wlf-gf-module", 0 },
-> > > +	{ "wlf-gf-module", },
-> > 
-> > In such cases the inner comma is redundant as well.
+On Fri, 26 Apr 2024 14:22:59 +0200, Luca Ceresoli wrote:
+> This reverts commit 8a91b29f1f50ce7742cdbe5cf11d17f128511f3f.
 > 
-> I would tend to keep the comma, but no strong opinion on my side.
-
-It's just a confusing leftover in my opinion.
-
-> If another member init is added later, the line has to be touched
-> anyhow, but in the layout:
+> The regulator_disable() added by the original commit solves one kind of
+> regulator imbalance but adds another one as it allows the regulator to be
+> disabled one more time than it is enabled in the following scenario:
 > 
-> 	... = {
-> 		{
-> 			"wlf-gf-module",
-> 		},
-> 		{ }
-> 	}
+>  1. Start video pipeline -> sn65dsi83_atomic_pre_enable -> regulator_enable
+>  2. PLL lock fails -> regulator_disable
+>  3. Stop video pipeline -> sn65dsi83_atomic_disable -> regulator_disable
 > 
-> I'd keep it for sure.
+> [...]
 
-That's not what I object. Here I am 100% with you.
+Applied, thanks!
 
-> > >  	{ }
-> > >  };
+[1/1] Revert "drm/bridge: ti-sn65dsi83: Fix enable error path"
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=2940ee03b232
 
-...
 
-> > In general idea might be okay, but I always have the same Q (do we have it
-> > being clarified in the documentation, btw): is an ID table the ABI or not?
-> > In another word, how should we treat the changes there, because ID tables
-> > are being used by the user space tools.
-> 
-> Note that the layout doesn't change and the traditional interpretation
-> of the data still works fine. Or do you see something that I miss?
 
-Do we have any configurations / architectures / etc when
-sizeof(kernel_ulong_t) != sizeof(void *) ? If not, we are fine.
-
-(Different endianess seems impossible.)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Rob
 
