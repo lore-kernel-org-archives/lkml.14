@@ -1,40 +1,41 @@
 Received: from rere.qmqm.pl (rere.qmqm.pl [91.227.64.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54797EEF3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA91180624
 	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:45:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.64.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714401940; cv=none; b=NincPjF+qOtD+r1AaSQRanOn+o19WVbvMNolffhUmYcQ1JaLJl7ylk1rXPseI4i7A6+hM1NI0Ns8lWd+96YhYKsj0K0v3OMS/HT0uOSIz4KntILqOLQ/ByYOTtRVrnowC3rZGhuJq8+qCJK0ZJUM1VdM//Oc5atB63DG+Vuqy+o=
+	t=1714401941; cv=none; b=jRCVTWr2rWMeGta7guolOr5kmlfEN91wvPxQbapSFIiQxpnHXVEs6yLpxBrqv8kiAUP4iaUVBhdiGbg5bXNPyPl+81gxcl7bcu5ZxbhYan8LnKTVKJ/eIvTM7qLOKJqcws3uhRCPP02Gr8QSKuzUgcInKQqyNaivGRN4Ze5Z/z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714401940; c=relaxed/simple;
-	bh=4JtJTSbLrjwGebjthC7c0OCkQzqG8Bgaqe/Z3Spl0fM=;
+	s=arc-20240116; t=1714401941; c=relaxed/simple;
+	bh=SQFjFnDvj4pBVC5wVcGxU/7jwPxTwAo0q5RMDCeQAH4=;
 	h=Date:Message-Id:In-Reply-To:References:Subject:MIME-Version:
-	 Content-Type:From:To:Cc; b=ffQwr3jnjGxy8/E7oowSbNzAsAAwJinjIzDNsuiSekuKRXO71wRCifIDrJRnjNdf73LfCHrXP5fETGwN3/upiq1uvlRc7DzI77TgLLZoBUL5PmgfCIvynGWiSoHoEcKfdx2kEm+9zZSb4rHL/8YIqEkBMOUyK/CaWlAdRUUgUOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl; spf=pass smtp.mailfrom=rere.qmqm.pl; dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b=cNpCRKZT; arc=none smtp.client-ip=91.227.64.183
+	 Content-Type:From:To:Cc; b=kfjsIT/5rW1V9Y8Nt2YtjVaJV9H+Nxew8V4Q32ZrtUpEr9Ai+gsN5yDbOOvuIVEMQvuk3fmyeWBrR+HZOQaUQXcKlb7Gf3ugQyVZnBRxyyzt7HhnzqU+U6VsAChf06DZ/kSP4PSQ1iVTdMEF2GtKM4SVx7gVrjVCZxFT1ODGFRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl; spf=pass smtp.mailfrom=rere.qmqm.pl; dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b=ff8RvQJf; arc=none smtp.client-ip=91.227.64.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rere.qmqm.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="cNpCRKZT"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ff8RvQJf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-	t=1714401933; bh=4JtJTSbLrjwGebjthC7c0OCkQzqG8Bgaqe/Z3Spl0fM=;
+	t=1714401931; bh=SQFjFnDvj4pBVC5wVcGxU/7jwPxTwAo0q5RMDCeQAH4=;
 	h=Date:In-Reply-To:References:Subject:From:To:Cc:From;
-	b=cNpCRKZTS4BT2Od/tQPePf91WPup7BuhEp3AVYFZFz9c5JCdKO4qRNMTCzKcgSe6D
-	 W0lWHX3wjCC0RUZB1bPj6nl5w4lKjtx0vLcB6MTI3Mq/zJjphah1DMDtgmcuHK8Tpy
-	 kHWfmXJl+WzlHiOmI0WYQfogbEErXjXmHhFQd8ueAEyjxMia03mPSkti3q2ZF+ZGZf
-	 bHFpPRfnMW8OePhcquVFtGNlPED7rPf0UobN8IEKueDi/xIIpMMIPIvbGrtYg835T2
-	 3F+UeNrfT0hQXJNWZVCObFFLMZ5/ilZez1jZ32DD0qh30VxtJ8jWLKMytjt2JpU4un
-	 ZttaTsMPR1lBQ==
+	b=ff8RvQJfgPFfPn3n24LNh7YmnyyvRDaQfxk3WY6L3jXeNXHFfERWjsGno2mQ/BuJr
+	 YFuVwwptDS9hNmqExoO14nmqD6mpb4RTF6dsnSB3n6Ue1m2wWzquBec2KpCtScaDW1
+	 Ts1XsxxhPbQNIa49oY6O8jMeZPEg81FsRfn5RUNpktsQ9Jse55xP4PlTkkW4TK/x5Z
+	 0piKBUn5ngKrY65OK67wmi9LmpXNfX4VbuQerQ5RDSLW5qMFGCe/lX5g9C7qJwolJU
+	 KFYdGSkLlDwQUhA+YqdtGJk18CDz1olvhq++djjwxJGXgtlo21EnYYu6ngUh0c79MO
+	 rNp3uu+duAgdQ==
 Received: from remote.user (localhost [127.0.0.1])
-	by rere.qmqm.pl (Postfix) with ESMTPSA id 4VSmMx487bz1M1;
-	Mon, 29 Apr 2024 16:45:33 +0200 (CEST)
+	by rere.qmqm.pl (Postfix) with ESMTPSA id 4VSmMv0rxTzbm;
+	Mon, 29 Apr 2024 16:45:31 +0200 (CEST)
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 1.0.5 at mail
-Date: Mon, 29 Apr 2024 16:45:33 +0200
-Message-Id: <0a480abe4913f0169f9693f6f959fbe1a397ae93.1714399603.git.mirq-linux@rere.qmqm.pl>
+Date: Mon, 29 Apr 2024 16:45:30 +0200
+Message-Id: <92a354a86ceb572c4fde35047177c5681d83f81f.1714399603.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1714399603.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1714399603.git.mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 12/12] regulator/core: use rdev->dev.driver_data
+Subject: [PATCH v2 08/12] regulator/core: set_consumer_device_supply: avoid
+ copying const data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,88 +49,45 @@ To:	Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>
 Cc:	linux-kernel@vger.kernel.org
 
-Move rdev->reg_data to rdev->dev.driver_data to follow the linux device
-model more closely.
+As consumer_dev_name might as well be const, don't copy it if not
+required.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/regulator/core.c          | 15 +--------------
- include/linux/regulator/driver.h  |  8 +++++---
- include/linux/regulator/machine.h |  2 +-
- 3 files changed, 7 insertions(+), 18 deletions(-)
+ drivers/regulator/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 010f4db2ce60..ea2a5efd9a4b 100644
+index efb68a5c85af..431e1c164b11 100644
 --- a/drivers/regulator/core.c
 +++ b/drivers/regulator/core.c
-@@ -5630,7 +5630,7 @@ regulator_register(struct device *dev,
- 	}
+@@ -1747,7 +1747,7 @@ static int set_consumer_device_supply(struct regulator_dev *rdev,
+ 	new_node->supply = supply;
  
- 	ww_mutex_init(&rdev->mutex, &regulator_ww_class);
--	rdev->reg_data = config->driver_data;
-+	dev_set_drvdata(&rdev->dev, config->driver_data);
- 	rdev->owner = regulator_desc->owner;
- 	rdev->desc = regulator_desc;
- 	if (config->regmap)
-@@ -5895,19 +5895,6 @@ void regulator_has_full_constraints(void)
+ 	if (consumer_dev_name != NULL) {
+-		new_node->dev_name = kstrdup(consumer_dev_name, GFP_KERNEL);
++		new_node->dev_name = kstrdup_const(consumer_dev_name, GFP_KERNEL);
+ 		if (new_node->dev_name == NULL) {
+ 			kfree(new_node);
+ 			return -ENOMEM;
+@@ -1782,7 +1782,7 @@ static int set_consumer_device_supply(struct regulator_dev *rdev,
+ 
+ fail:
+ 	mutex_unlock(&regulator_list_mutex);
+-	kfree(new_node->dev_name);
++	kfree_const(new_node->dev_name);
+ 	kfree(new_node);
+ 	return -EBUSY;
  }
- EXPORT_SYMBOL_GPL(regulator_has_full_constraints);
- 
--/**
-- * rdev_get_drvdata - get rdev regulator driver data
-- * @rdev: regulator
-- *
-- * Get rdev regulator driver private data. This call can be used in the
-- * regulator driver context.
-- */
--void *rdev_get_drvdata(struct regulator_dev *rdev)
--{
--	return rdev->reg_data;
--}
--EXPORT_SYMBOL_GPL(rdev_get_drvdata);
--
- /**
-  * rdev_get_id - get regulator ID
-  * @rdev: regulator
-diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index c1334601cf02..680c23b13249 100644
---- a/include/linux/regulator/driver.h
-+++ b/include/linux/regulator/driver.h
-@@ -632,8 +632,6 @@ struct regulator_dev {
- 
- 	struct delayed_work disable_work;
- 
--	void *reg_data;		/* regulator_dev data */
--
- 	struct dentry *debugfs;
- 
- 	struct regulator_enable_gpio *ena_pin;
-@@ -707,7 +705,11 @@ void regulator_irq_helper_cancel(void **handle);
- int regulator_irq_map_event_simple(int irq, struct regulator_irq_data *rid,
- 				   unsigned long *dev_mask);
- 
--void *rdev_get_drvdata(struct regulator_dev *rdev);
-+static inline void *rdev_get_drvdata(const struct regulator_dev *rdev)
-+{
-+	return dev_get_drvdata(&rdev->dev);
-+}
-+
- struct device *rdev_get_dev(struct regulator_dev *rdev);
- struct regmap *rdev_get_regmap(struct regulator_dev *rdev);
- int rdev_get_id(struct regulator_dev *rdev);
-diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index 7c39dbc33290..378f051d4e70 100644
---- a/include/linux/regulator/machine.h
-+++ b/include/linux/regulator/machine.h
-@@ -274,7 +274,7 @@ struct regulator_consumer_supply {
-  * @num_consumer_supplies: Number of consumer device supplies.
-  * @consumer_supplies: Consumer device supply configuration.
-  *
-- * @driver_data: Pointer copied to regulator_dev.reg_data.
-+ * @driver_data: Pointer copied to regulator_dev's drvdata.
-  */
- struct regulator_init_data {
- 	const char *supply_regulator;        /* or NULL for system supply */
+@@ -1794,7 +1794,7 @@ static void unset_regulator_supplies(struct regulator_dev *rdev)
+ 	list_for_each_entry_safe(node, n, &regulator_map_list, list) {
+ 		if (rdev == node->regulator) {
+ 			list_del(&node->list);
+-			kfree(node->dev_name);
++			kfree_const(node->dev_name);
+ 			kfree(node);
+ 		}
+ 	}
 -- 
 2.39.2
 
