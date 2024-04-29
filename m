@@ -1,105 +1,276 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D99A7BAF0
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0896B7F487;
+	Mon, 29 Apr 2024 15:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714404781; cv=none; b=mNyWKKCpjLOiSzTbjPzwFhHhDrSbhmNhQF4MteWX/easxAq5LdmxKUTK4d5HLxjERjvR+nY24D0GyliwVHFocumEvbYhgg2ooS2GaQo5cdG21OmSWTK17Xu93nAc+I6ORzeB7S4q3hsPZqWr9BfATH7/5NDAXajXnoB+t6BSj0g=
+	t=1714404801; cv=none; b=iN6p4h1E/0n94MLYKfKal+LTdSuyLPMwyEeyEY6NdjDQMoZ54MWXdusMz+QFcwc1SYI0UKOmPX8nJffm+Uxn8CW+ks573yHF/hs8BsYKA8BQ99P3UGkZsWAQMFQCXZUx6yHcxKvmJoPDDCX9X/Z7VTSGAayFSiUEow8I4LoKzUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714404781; c=relaxed/simple;
-	bh=wDxA9I9+VmVVSI9BroVzQWlSN5RXJEUSc5DnHUzQWGg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZRO/+LPQOrQGuBi/ksLB+o+hciKt/aihZlC+LQic9uhoI5vmBTtFeuGEp0Imh690+Vek+1X41u5CzyUS1Ov4FIB34Q7HYjgJAdAIhvgczOtO7oF3lO9ZUXmULwAxnhlkQAZvBBCG1xM/3WOA7JbJQ/KC4kNdeSqiUnJgg5cK2XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DHUUMOVt; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1714404801; c=relaxed/simple;
+	bh=5lUrzbRnav5ASy/K91woXmOubyfpP/gFyJtvSyPlnPI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=c/3lmJXWgtmr4SbIZc2DdaUSAJe8nc6B79FqZuJ1XCJZWdNygNNuiqmdHLTORZGLgBpE4MWCNjOqmkph/lYcMWv2UAzQgR2Qm1SDhBxkJGEB9knZd47ef/DS8qwNId7/mu93TbFAeGhg6XwQs7qcXz0KDTX4DsnuhWpQJKCwhFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=L4T1hQZL; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DHUUMOVt"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a58c89bda70so388134666b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1714404777; x=1715009577; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F8YJLjrLtk5N3O9qDCOgLkM7hm+XAZ4QGYxxZrlDK20=;
-        b=DHUUMOVtK5sWyfMohMF8oYVp2cRIN+8yptDQo9Tnv/wKjzOAqovy6ZLXlNt0wtfHm6
-         kyt0k+t+IQs786MWtRjyKff4rHU2S3Qft3AokPoTkhQ7heYk5Tfrsxhsva6MwmvA4ATz
-         HfXuPa5hfqoeeDOwcy0GO5sUEBD2XFfErd3hU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714404777; x=1715009577;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F8YJLjrLtk5N3O9qDCOgLkM7hm+XAZ4QGYxxZrlDK20=;
-        b=L75hlpwCMZ/5PuqXYXZxL++UfUoA0J87heNa0bA7UVVyGzxGFNuxRWvMMe2RJIjbFd
-         QhMxhzvrWOmA4Ni9modWatHvFUuqobKAtvKNZ9qHrcM9ThrlF/LbBTrGEgJ/Dj9DwU+e
-         M6OYbG055Ygkx4smgnvEqQEtRPmluDd0m5wXdyTYWVdMjORn1SofRz6Hg6SjWf47OjzF
-         38cIx3pkrCb811cLYDwv5JUHiVVvWdmOziiQ4EKiyY/Z7RSuCBzVoxjEQCGEL6w4OhSk
-         VcA5wllVm1HAcrJMiWJcjpR1hpRUa+++MHmWzWvZCDCgO3QgpiO6aiCEUgQksiG4pCIn
-         5SDA==
-X-Gm-Message-State: AOJu0YxpA4mBv59SGJOTxHwAvWDhaFpkYpMUEUJlub9JAktj8OdxAG90
-	NdNFFRs72apSvsC742m+zz3xXkDQIeOAAj+un26Nwue3AyyPy+AKE+JobMgBK/ptggXKhmdbbse
-	Z62bogg==
-X-Google-Smtp-Source: AGHT+IG7Zn172TezdjbML23ZVcjV6Ku8PkW1lem7ykhZnxa41DiF14Hyrj8h3jr2bsiOHz1Clu0dtQ==
-X-Received: by 2002:a17:906:dfc5:b0:a58:bd1b:a05f with SMTP id jt5-20020a170906dfc500b00a58bd1ba05fmr7343465ejc.68.1714404777390;
-        Mon, 29 Apr 2024 08:32:57 -0700 (PDT)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
-        by smtp.gmail.com with ESMTPSA id wt8-20020a170906ee8800b00a55ac292b66sm10271117ejb.219.2024.04.29.08.32.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 08:32:56 -0700 (PDT)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a55b3d57277so556715866b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:32:56 -0700 (PDT)
-X-Received: by 2002:a17:906:12c1:b0:a55:3707:781d with SMTP id
- l1-20020a17090612c100b00a553707781dmr6533136ejb.73.1714404776259; Mon, 29 Apr
- 2024 08:32:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="L4T1hQZL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=7Klarb4qZOjJN4ysw7kPerEyVRGPC0HwcmCCWjik+kQ=; b=L4T1hQZLQ1rernFS2URgulJUpj
+	WYuwM58IbdB7VaSzlhLb5dN+iTprtebgB/jktzM3TmoIkYdWc2hn5SeiVp/eTLWMSH8zHJ5Z0HlG/
+	xlNj+sUHp8XYd2jkIVtFl3NOXEK+0WPtSLdhj6aGfKWbsTYqwTaDPgbOmDY2nhY/56S1GKzMEcyN9
+	H6nSIdoTuP1Cn+QYG38dnhamZrpmDr8z6P2Lg/LKZwrqnhKQKo0S/8xOKthmtmG3xo+Z+dHZRc5LX
+	Gpv7f0Lb3cXPeC9l0UIBL3uhq+Sa1BIVZun/k6PO6RGcJUKXXTXG2TUXky0Z3anH5bpt0AgozhvM8
+	f6YW6I7g==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1s1SfO-000N2m-02; Mon, 29 Apr 2024 17:11:42 +0200
+Received: from [178.197.249.41] (helo=linux.home)
+	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1s1SfN-004ZCo-06;
+	Mon, 29 Apr 2024 17:11:41 +0200
+Subject: Re: [PATCH net] udp: fix segmentation crash for GRO packet without
+ fraglist
+To: =?UTF-8?B?TGVuYSBXYW5nICjnjovlqJwp?= <Lena.Wang@mediatek.com>,
+ "maze@google.com" <maze@google.com>,
+ "willemdebruijn.kernel@gmail.com" <willemdebruijn.kernel@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+ "steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
+ "kuba@kernel.org" <kuba@kernel.org>,
+ =?UTF-8?B?U2hpbWluZyBDaGVuZyAo5oiQ6K+X5piOKQ==?=
+ <Shiming.Cheng@mediatek.com>, "pabeni@redhat.com" <pabeni@redhat.com>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "yan@cloudflare.com" <yan@cloudflare.com>
+References: <20240415150103.23316-1-shiming.cheng@mediatek.com>
+ <66227ce6c1898_116a9b294be@willemb.c.googlers.com.notmuch>
+ <CANP3RGfxeKDUmGwSsZrAs88Fmzk50XxN+-MtaJZTp641aOhotA@mail.gmail.com>
+ <6622acdd22168_122c5b2945@willemb.c.googlers.com.notmuch>
+ <9f097bcafc5bacead23c769df4c3f63a80dcbad5.camel@mediatek.com>
+ <6627ff5432c3a_1759e929467@willemb.c.googlers.com.notmuch>
+ <274c7e9837e5bbe468d19aba7718cc1cf0f9a6eb.camel@mediatek.com>
+ <66291716bcaed_1a760729446@willemb.c.googlers.com.notmuch>
+ <c28a5c635f38a47f1be266c4328e5fbba44ff084.camel@mediatek.com>
+ <662a63aeee385_1de39b294fd@willemb.c.googlers.com.notmuch>
+ <752468b66d2f5766ea16381a0c5d7b82ab77c5c4.camel@mediatek.com>
+ <ae0ba22a-049a-49c1-d791-d0e953625904@iogearbox.net>
+ <662cfd6db06df_28b9852949a@willemb.c.googlers.com.notmuch>
+ <afa6e302244a87c2a834fcc31d48b377e19a34a2.camel@mediatek.com>
+ <5cc1c662-1cec-101c-8184-c32c210eeadc@iogearbox.net>
+ <bd9d5fef2fa6154e162e963f5d669ff618b95229.camel@mediatek.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <880367ab-e9a2-d9b4-c6d6-9e2efdf04a0f@iogearbox.net>
+Date: Mon, 29 Apr 2024 17:11:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240429144807.3012361-1-willy@infradead.org>
-In-Reply-To: <20240429144807.3012361-1-willy@infradead.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 29 Apr 2024 08:32:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whEMvpPLrzsi6BoH=o+-ScRKuuqxrdWSnrTtGEi=JvcNA@mail.gmail.com>
-Message-ID: <CAHk-=whEMvpPLrzsi6BoH=o+-ScRKuuqxrdWSnrTtGEi=JvcNA@mail.gmail.com>
-Subject: Re: [PATCH] bounds: Use the right number of bits for power-of-two CONFIG_NR_CPUS
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, 
-	=?UTF-8?B?0JzQuNGF0LDQuNC7INCd0L7QstC+0YHQtdC70L7Qsg==?= <m.novosyolov@rosalinux.ru>, 
-	=?UTF-8?B?0JjQu9GM0YTQsNGCINCT0LDQv9GC0YDQsNGF0LzQsNC90L7Qsg==?= <i.gaptrakhmanov@rosalinux.ru>, 
-	stable@vger.kernel.org, Rik van Riel <riel@surriel.com>, 
-	Mel Gorman <mgorman@techsingularity.net>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <bd9d5fef2fa6154e162e963f5d669ff618b95229.camel@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27260/Mon Apr 29 10:23:47 2024)
 
-On Mon, 29 Apr 2024 at 07:48, Matthew Wilcox (Oracle)
-<willy@infradead.org> wrote:
->
-> bits_per() rounds up to the next power of two when passed a power of
-> two.  This causes crashes on some machines and configurations.
+On 4/29/24 1:45 PM, Lena Wang (王娜) wrote:
+> On Mon, 2024-04-29 at 12:15 +0200, Daniel Borkmann wrote:
+>>   	
+>> External email : Please do not click links or open attachments until
+>> you have verified the sender or the content.
+>>   On 4/28/24 9:48 AM, Lena Wang (王娜) wrote:
+>>> On Sat, 2024-04-27 at 09:28 -0400, Willem de Bruijn wrote:
+>>>>    
+>>>> External email : Please do not click links or open attachments
+>> until
+>>>> you have verified the sender or the content.
+>>>>    
+>>>> Daniel Borkmann wrote:
+>>>>> On 4/26/24 11:52 AM, Lena Wang (王娜) wrote:
+>>>>> [...]
+>>>>>>>>    From 301da5c9d65652bac6091d4cd64b751b3338f8bb Mon Sep 17
+>>>> 00:00:00
+>>>>>>> 2001
+>>>>>>>> From: Shiming Cheng <shiming.cheng@mediatek.com>
+>>>>>>>> Date: Wed, 24 Apr 2024 13:42:35 +0800
+>>>>>>>> Subject: [PATCH net] net: prevent BPF pulling SKB_GSO_FRAGLIST
+>>>> skb
+>>>>>>>>
+>>>>>>>> A SKB_GSO_FRAGLIST skb can't be pulled data
+>>>>>>>> from its fraglist as it may result an invalid
+>>>>>>>> segmentation or kernel exception.
+>>>>>>>>
+>>>>>>>> For such structured skb we limit the BPF pulling
+>>>>>>>> data length smaller than skb_headlen() and return
+>>>>>>>> error if exceeding.
+>>>>>>>>
+>>>>>>>> Fixes: 3a1296a38d0c ("net: Support GRO/GSO fraglist
+>> chaining.")
+>>>>>>>> Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+>>>>>>>> Signed-off-by: Lena Wang <lena.wang@mediatek.com>
+>>>>>>>> ---
+>>>>>>>>     net/core/filter.c | 5 +++++
+>>>>>>>>     1 file changed, 5 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/net/core/filter.c b/net/core/filter.c
+>>>>>>>> index 8adf95765cdd..8ed4d5d87167 100644
+>>>>>>>> --- a/net/core/filter.c
+>>>>>>>> +++ b/net/core/filter.c
+>>>>>>>> @@ -1662,6 +1662,11 @@ static DEFINE_PER_CPU(struct
+>>>> bpf_scratchpad,
+>>>>>>>> bpf_sp);
+>>>>>>>>     static inline int __bpf_try_make_writable(struct sk_buff
+>>>> *skb,
+>>>>>>>>       unsigned int write_len)
+>>>>>>>>     {
+>>>>>>>> +if (skb_is_gso(skb) &&
+>>>>>>>> +    (skb_shinfo(skb)->gso_type & SKB_GSO_FRAGLIST) &&
+>>>>>>>> +     write_len > skb_headlen(skb)) {
+>>>>>>>> +return -ENOMEM;
+>>>>>>>> +}
+>>>>>>>>     return skb_ensure_writable(skb, write_len);
+>>>>>
+>>>>> Dumb question, but should this guard be more generically part of
+>>>> skb_ensure_writable()
+>>>>> internals, presumably that would be inside
+>> pskb_may_pull_reason(),
+>>>> or only if we ever
+>>>>> see more code instances similar to this?
+>>>>
+>>>> Good point. Most callers of skb_ensure_writable correctly pull
+>> only
+>>>> headers, so wouldn't cause this problem. But it also adds coverage
+>> to
+>>>> things like tc pedit.
+>>>
+>>> Updated:
+>>>
+>>>   From 3be30b8cf6e629f2615ef4eafe3b2a1c0d68c530 Mon Sep 17 00:00:00
+>> 2001
+>>> From: Shiming Cheng <shiming.cheng@mediatek.com>
+>>> Date: Sun, 28 Apr 2024 15:03:12 +0800
+>>> Subject: [PATCH net] net: prevent pulling SKB_GSO_FRAGLIST skb
+>>>
+>>> BPF or TC callers may pull in a length longer than skb_headlen()
+>>> for a SKB_GSO_FRAGLIST skb. The data in fraglist will be pulled
+>>> into the linear space. However it destroys the skb's structure
+>>> and may result in an invalid segmentation or kernel exception.
+>>>
+>>> So we should add protection to stop the operation and return
+>>> error to remind callers.
+>>>
+>>> Fixes: 3a1296a38d0c ("net: Support GRO/GSO fraglist chaining.")
+>>> Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+>>> Signed-off-by: Lena Wang <lena.wang@mediatek.com>
+>>> ---
+>>>    include/linux/skbuff.h | 6 ++++++
+>>>    1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+>>> index 9d24aec064e8..3eef65b3db24 100644
+>>> --- a/include/linux/skbuff.h
+>>> +++ b/include/linux/skbuff.h
+>>> @@ -2740,6 +2740,12 @@ pskb_may_pull_reason(struct sk_buff *skb,
+>>> unsigned int len)
+>>>    if (unlikely(len > skb->len))
+>>>    return SKB_DROP_REASON_PKT_TOO_SMALL;
+>>>    
+>>> +if (skb_is_gso(skb) &&
+>>> +    (skb_shinfo(skb)->gso_type & SKB_GSO_FRAGLIST) &&
+>>> +     write_len > skb_headlen(skb)) {
+>>> +return SKB_DROP_REASON_NOMEM;
+>>> +}
+>>
+>> The 'write_len > skb_headlen(skb)' test is redundant, no ?
+>>
+>> It is covered by the earlier test :
+>>
+>>           if (likely(len <= skb_headlen(skb)))
+>>                   return SKB_NOT_DROPPED_YET;
+>>
+> Daniel, it is not redundant. The bpf pulls a len between
+> skb_headlen(skb) and skb->len that results in error. Here it will stop
+> this operation. For other skbs(not SKB_GSO_FRAGLIST) it could be a
+> normal behaviour and will continue to do next pulling.
 
-Bah. Your patch is *still* wrong, because bits_per() thinks you need
-one bit for a zero value, so when you do
+I meant something like the below. The len <= skb_headlen(skb) case you
+already return earlier with SKB_NOT_DROPPED_YET. Willem, do you see a
+case where this should not live in pskb_may_pull_reason() but rather
+specifically in skb_ensure_writable()?
 
-        bits_per(CONFIG_NR_CPUS - 1)
+Thanks,
+Daniel
 
-and some insane person has enabled SMP and managed to set
-CONFIG_NR_CPUS to 1, the math is *still* broken.
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 517e546a120a..ef2a0328ff2b 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1687,6 +1687,11 @@ int skb_zerocopy_iter_stream(struct sock *sk, struct sk_buff *skb,
+  /* Internal */
+  #define skb_shinfo(SKB)	((struct skb_shared_info *)(skb_end_pointer(SKB)))
 
-The right thing to do is
++static inline bool skb_is_gso(const struct sk_buff *skb)
++{
++	return skb_shinfo(skb)->gso_size;
++}
++
+  static inline struct skb_shared_hwtstamps *skb_hwtstamps(struct sk_buff *skb)
+  {
+  	return &skb_shinfo(skb)->hwtstamps;
+@@ -2740,6 +2745,10 @@ pskb_may_pull_reason(struct sk_buff *skb, unsigned int len)
+  	if (unlikely(len > skb->len))
+  		return SKB_DROP_REASON_PKT_TOO_SMALL;
 
-        order_base_2(CONFIG_NR_CPUS)
++	if (unlikely(skb_is_gso(skb) &&
++		     (skb_shinfo(skb)->gso_type & SKB_GSO_FRAGLIST)))
++		return SKB_DROP_REASON_FRAGLIST_PULL;
++
+  	if (unlikely(!__pskb_pull_tail(skb, len - skb_headlen(skb))))
+  		return SKB_DROP_REASON_NOMEM;
 
-and 'bits_per()' should be avoided, having completely crazy semantics
-(you can tell how almost all users actually do "x-1" as the argument).
+@@ -4953,11 +4962,6 @@ static inline struct sec_path *skb_sec_path(const struct sk_buff *skb)
+  #endif
+  }
 
-We should probably get rid of that horrid bits_per(() entirely.
-
-I applied your patch with that fixed (which admittedly make it all
-*my* patch, but applying it as yours just to get the changelog).
-
-               Linus
+-static inline bool skb_is_gso(const struct sk_buff *skb)
+-{
+-	return skb_shinfo(skb)->gso_size;
+-}
+-
+  /* Note: Should be called only if skb_is_gso(skb) is true */
+  static inline bool skb_is_gso_v6(const struct sk_buff *skb)
+  {
+diff --git a/include/net/dropreason-core.h b/include/net/dropreason-core.h
+index 9707ab54fdd5..9d6c97a6b2b6 100644
+--- a/include/net/dropreason-core.h
++++ b/include/net/dropreason-core.h
+@@ -418,6 +418,12 @@ enum skb_drop_reason {
+  	 * iterations.
+  	 */
+  	SKB_DROP_REASON_TC_RECLASSIFY_LOOP,
++	/**
++	 * @SKB_DROP_REASON_FRAGLIST_PULL: attempting to pull GSO fraglist
++	 * which destroys the skb's structure and may then result in an
++	 * invalid segmentation or kernel exception.
++	 */
++	SKB_DROP_REASON_FRAGLIST_PULL,
+  	/**
+  	 * @SKB_DROP_REASON_MAX: the maximum of core drop reasons, which
+  	 * shouldn't be used as a real 'reason' - only for tracing code gen
+-- 
+2.21.0
