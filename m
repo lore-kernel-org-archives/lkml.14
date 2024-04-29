@@ -1,124 +1,170 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B071674404;
-	Mon, 29 Apr 2024 13:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459F83EA71
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714396701; cv=none; b=Q/skNZEUV07BRMCzKnqML/vlQ3yPToFl2Fff8oR5rtmTGf0xuHbzuiYhkCLT1vBN65gMqDbIt6IL331DXxkhCvmu8uAV5l9bozmt80JZl3TZExX4+fXp9tJdpKS8uIm1ZBW3ygOf3S28NkVIodgE+7vBnza1cTicectnhzaIprs=
+	t=1714396713; cv=none; b=jqlQ7eC1Q5vzuaTjZ5WyG93p6N6VpsRSSzvTFqR9eKypOzjxzWhFzLtfTpS+JtL+krV6Ka6WvO8qWAv7gAUpQp9MEja1DGLhxSGPWtwupfy5EsUKVL4wqMCeN10qdcWIZf4JaScTNZRGCJX/EhzVQFvSZ9TQ8noD6BpwcAHFvmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714396701; c=relaxed/simple;
-	bh=EUNYM67ljV/1+l6ugAx8BfuV7yZemSgbjdsgHuN1rzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ta39qU74o4aQRWbPSlinkK+n0d/sOVbKQsiNKNX6qENo9nu5/bqhLVbAVwJC0MU/SQIw6Tn+MJPyUupwEz9FmrJWrTuoP2ocmVq9RhWYQ+WDVpfrA7PPiTWhC0xL9I554ekr/XiZWorH0zIeFW4CsJJKcKC+cgThCEBa7WyKkZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=FGEd0IUV; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="FGEd0IUV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D4C1DC0005;
-	Mon, 29 Apr 2024 13:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1714396691;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6WIxTn0pRjbZXHgFG8AwaR4joGVxkdi8wOuc1SO7gIs=;
-	b=FGEd0IUVUimnHqEMC3oAwvto00HNVnMflL0L7Ph/Ryrk7N/JOd8t1z4bbBPy5b58KRO9k5
-	I3szYcCy8KVwRYHA1I6NfbF0HWGffDxy9+baoG19copWjA/jxRvbpIWFAaMDBDjyaWLWXk
-	IKPn/HbPA4OqlW2+y/DGE85RCCMAklQrxnr+rWemcMa7T4IlOjaPDGsuV3y00M+UGoipOp
-	Lsv/aCYhblt5FsBnUNpFA/1mLETUrUj0KaEnJ+E/2UYRMLXP3yc6HN0o0gYxq4oRf5EWh1
-	txO81TyFcNZxEJVl4hf3JCF+BaPQlmyEXsv00J6rxXu9sd40YeFXkPafTdvXzg==
-Message-ID: <f5eb359a-fdbf-4b0a-8df5-be034da1aca3@arinc9.com>
-Date: Mon, 29 Apr 2024 16:17:40 +0300
+	s=arc-20240116; t=1714396713; c=relaxed/simple;
+	bh=nAUzRtyfZc+YT5p13LOMII3XWYViOuMI7MpfCz3tj4o=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=iROAcpyP0H0xrAnwhjn7eRrs/uRmqqRrtCmD9pRW64bBaFv4lNdwbwXgjHVSP9BN8ny9qVdOx+ZiEvKmQE3Ty11ZjSz6UsdCOSc3gM8WkhszftxDgXgecPMK73zdktc44zEPkfV4hTcsPO9eCp11/IrmVMARYXGT/Rcsw0kFwe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36b3b387b4eso53668745ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 06:18:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714396711; x=1715001511;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cuCBf4tttiDsG5JpIj8SVgWDFkDZthGhW/tj0MoVwMg=;
+        b=MHHvRZEUtbZJyDNLT5b41JFfXCumriaUzKhrCoRooztxon+sfnI7OA/x9doRCaWnfs
+         YHUDfbx9fcseC/6g+ix0ChwCbDx7UU1CHtW34h0zbtKi3qBghTvIfLGRg5eWCk84nGMy
+         bwV3Lf1SrNXr+yG14JlQhBF9yBF1CySYwP1MO80u56s62WkrLgkFmeqOsDCJklUOFv+x
+         tXLyNw32Rm8WdqPyo5wRdvme8svavOcHIyL8wPuLRTADnrEguulgZswjkWQTZJR2702C
+         +EZIbf89tIpIRjqrsBep0/4iCI1CZ0ZRUl15c+eYmCfJwNdlHjRRovOg2FuwX00ooLTY
+         WmFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ+hsxV9AMDBYct36ZCtJ6qwDIhaEYS7IsKpnED+HyvqzjHDeaVIOrDTdw4iVGxG8Zj05e1xItZjPeVDl2oksxHC38xhyBVSJd1i5P
+X-Gm-Message-State: AOJu0YydUJx/888dAOzGr5lcHgfN9O5LEkJbG5WYB1MZs++zTXOQq8Ie
+	WlvxHoei0U/lZpYYMPiF/X+KYPYBTkydmW2mSDkLTbcsYJYU9qattG0yVRabIXk+CBR0CAvraEw
+	eUNOjkye0n9KFJfozFbOL51IlxudOO6TRgg9dG6HHry9ORBcnGlv7oRU=
+X-Google-Smtp-Source: AGHT+IEc9AYzqZHLbQbZ7KmYBDG+f4zarqd82Oo976ESfl5shCzSxxJmxbO/HTKf8LTXt1Kl8i0LgwCW43xzQav+DCEsXuEQthuM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: dsa: mt7530: detect PHY muxing when PHY is
- defined on switch MDIO bus
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
- <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240429-b4-for-netnext-mt7530-use-switch-mdio-bus-for-phy-muxing-v1-1-1f775983e155@arinc9.com>
- <Zi9vYLwgekd0Pmzn@shell.armlinux.org.uk>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <Zi9vYLwgekd0Pmzn@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+X-Received: by 2002:a05:6e02:1a43:b0:36c:5029:1925 with SMTP id
+ u3-20020a056e021a4300b0036c50291925mr124207ilv.0.1714396711562; Mon, 29 Apr
+ 2024 06:18:31 -0700 (PDT)
+Date: Mon, 29 Apr 2024 06:18:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ff44c506173c1642@google.com>
+Subject: [syzbot] [nilfs?] kernel BUG in nilfs_delete_entry
+From: syzbot <syzbot+32c3706ebf5d95046ea1@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, konishi.ryusuke@gmail.com, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nilfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 29.04.2024 12:58, Russell King (Oracle) wrote:
-> On Mon, Apr 29, 2024 at 12:46:43PM +0300, Arınç ÜNAL via B4 Relay wrote:
->> From: Arınç ÜNAL <arinc.unal@arinc9.com>
->>
->> Currently, the MT7530 DSA subdriver configures the MT7530 switch to provide
->> direct access to switch PHYs, meaning, the switch PHYs listen on the MDIO
->> bus the switch listens on. The PHY muxing feature makes use of this.
->>
->> This is problematic as the PHY may be probed before the switch is
->> initialised, in which case attaching the PHY will fail.
->>
->> Since commit 91374ba537bd ("net: dsa: mt7530: support OF-based registration
->> of switch MDIO bus"), we can describe the switch PHYs on the MDIO bus of
->> the switch on the device tree. Extend the check to detect PHY muxing when
->> the PHY is defined on the MDIO bus of the switch on the device tree.
->>
->> When the PHY is described this way, the switch will be initialised first,
->> then the switch MDIO bus will be registered. Only after these steps, the
->> PHY will be probed.
-> 
-> Looking at the commit description and the patch, I'm not sure whether
-> you really mean "probed" or whether you mean "attached".
-> 
-> PHY drivers will bind to PHY devices when they are detected on the MDIO
-> bus (either by scanning or instantiating firmware description) and the
-> devices are registered. As each device is registered, the drivers for
-> the bus type are scanned and any matches will have their probe function
-> called. This happens outside of any control of the DSA driver if the
-> DSA device is on the same MDIO bus.
-> 
-> This is separate from the process of looking up a PHY and attaching the
-> PHY.
-> 
-> So, I think there is probably a terminology issue with the patch
-> description. I suspect you don't mean "probing" as in phy_probe() being
-> called. Looking at the code, it looks like the driver is making
-> decisions based on how PHYs are connected to the ethernet MACs in the
-> device tree, and you're making decisions based on that. I wouldn't call
-> that "probing" a PHY.
+Hello,
 
-Yes, I meant to say "looking up a PHY and attaching the PHY" by probing a
-PHY. I'll adjust the patch log to below, thanks.
+syzbot found the following issue on:
 
-Currently, the MT7530 DSA subdriver configures the MT7530 switch to provide
-direct access to switch PHYs, meaning, the switch PHYs listen on the MDIO
-bus the switch listens on. The PHY muxing feature makes use of this.
+HEAD commit:    5eb4573ea63d Merge tag 'soc-fixes-6.9-2' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1591a5e8980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3d46aa9d7a44f40d
+dashboard link: https://syzkaller.appspot.com/bug?extid=32c3706ebf5d95046ea1
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1213956b180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ac32ef180000
 
-This is problematic as the PHY may be attached before the switch is
-initialised, in which case, the PHY will fail to be attached.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/7e4c1378cbb1/disk-5eb4573e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/8e4487ecdd86/vmlinux-5eb4573e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d84518ee028f/bzImage-5eb4573e.xz
+mounted in repro #1: https://storage.googleapis.com/syzbot-assets/350446baf90d/mount_0.gz
+mounted in repro #2: https://storage.googleapis.com/syzbot-assets/e66542e7352f/mount_2.gz
 
-Since commit 91374ba537bd ("net: dsa: mt7530: support OF-based registration
-of switch MDIO bus"), we can describe the switch PHYs on the MDIO bus of
-the switch on the device tree. Extend the check to detect PHY muxing when
-the PHY is defined on the MDIO bus of the switch on the device tree.
+The issue was bisected to:
 
-When the PHY is described this way, the switch will be initialised first,
-then the switch MDIO bus will be registered. Only after these steps, the
-PHY will be attached.
+commit 602ce7b8e1343b19c0cf93a3dd1926838ac5a1cc
+Author: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Date:   Fri Jan 27 13:22:02 2023 +0000
 
-Arınç
+    nilfs2: prevent WARNING in nilfs_dat_commit_end()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15d757d8980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=17d757d8980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13d757d8980000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+32c3706ebf5d95046ea1@syzkaller.appspotmail.com
+Fixes: 602ce7b8e134 ("nilfs2: prevent WARNING in nilfs_dat_commit_end()")
+
+------------[ cut here ]------------
+kernel BUG at fs/nilfs2/dir.c:545!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 PID: 5115 Comm: syz-executor410 Not tainted 6.9.0-rc5-syzkaller-00296-g5eb4573ea63d #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:nilfs_delete_entry+0x349/0x350 fs/nilfs2/dir.c:545
+Code: 8d fe e9 de fd ff ff 44 89 f9 80 e1 07 fe c1 38 c1 0f 8c 20 ff ff ff 4c 89 ff e8 f2 a6 8d fe e9 13 ff ff ff e8 68 56 2c fe 90 <0f> 0b 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc900036078b8 EFLAGS: 00010293
+RAX: ffffffff8369aa08 RBX: 0000000000000050 RCX: ffff888018339e00
+RDX: 0000000000000000 RSI: 00000000fffffffb RDI: 0000000000000000
+RBP: 00000000fffffffb R08: ffffffff8369a8de R09: 1ffff1100806d722
+R10: dffffc0000000000 R11: ffffed100806d723 R12: ffffea00010fed80
+R13: ffff888043fb6038 R14: 0000000000000020 R15: ffff888043fb6020
+FS:  00007fa2992ee6c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd3dbd8b98 CR3: 0000000024b86000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ nilfs_rename+0x57d/0xaf0 fs/nilfs2/namei.c:413
+ vfs_rename+0xbdb/0xf00 fs/namei.c:4880
+ do_renameat2+0xd94/0x13f0 fs/namei.c:5037
+ __do_sys_renameat2 fs/namei.c:5071 [inline]
+ __se_sys_renameat2 fs/namei.c:5068 [inline]
+ __x64_sys_renameat2+0xd2/0xf0 fs/namei.c:5068
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa299358f49
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fa2992ee218 EFLAGS: 00000246 ORIG_RAX: 000000000000013c
+RAX: ffffffffffffffda RBX: 00007fa2993e16d8 RCX: 00007fa299358f49
+RDX: 0000000000000006 RSI: 0000000020000100 RDI: 0000000000000005
+RBP: 00007fa2993e16d0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000020000580 R11: 0000000000000246 R12: 00007fa2993ade20
+R13: 00007fa2993adb68 R14: 0030656c69662f2e R15: 3e2efc42dc31fca1
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:nilfs_delete_entry+0x349/0x350 fs/nilfs2/dir.c:545
+Code: 8d fe e9 de fd ff ff 44 89 f9 80 e1 07 fe c1 38 c1 0f 8c 20 ff ff ff 4c 89 ff e8 f2 a6 8d fe e9 13 ff ff ff e8 68 56 2c fe 90 <0f> 0b 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc900036078b8 EFLAGS: 00010293
+
+RAX: ffffffff8369aa08 RBX: 0000000000000050 RCX: ffff888018339e00
+RDX: 0000000000000000 RSI: 00000000fffffffb RDI: 0000000000000000
+RBP: 00000000fffffffb R08: ffffffff8369a8de R09: 1ffff1100806d722
+R10: dffffc0000000000 R11: ffffed100806d723 R12: ffffea00010fed80
+R13: ffff888043fb6038 R14: 0000000000000020 R15: ffff888043fb6020
+FS:  00007fa2992ee6c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa2993149f0 CR3: 0000000024b86000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
