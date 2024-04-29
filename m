@@ -1,125 +1,88 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FD61119F;
-	Mon, 29 Apr 2024 05:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE74DDD8;
+	Mon, 29 Apr 2024 05:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714370116; cv=none; b=dUeIsbg9bQ1NiqsIZOU+3Z0OQ1gDNGlBnaeAv9BlCkTrKU0tijTWiWQB0BR7Qk3BRgvsXX15s9j3n3/4L7mh9jTePo2+1Ek2Lf3L88J/IziUxlSANcUca8pOxxa6cDOHwjtDvL/DalKv3e2r1WXgXQC4KborQKKCzHIVhjAcF7s=
+	t=1714370235; cv=none; b=PHw91w2wBcXruHLvrlSKil8QC1+DMRpJY3CYcNQc+3VC+t9U3hhQHXDUfioM0+tXFkekYPvt+fbjuJsP07VyD/dUxu4hZ6SgEDtdkGnjXpo5T4aqlBVs6VmRlaUN0000yIjSY+B4shnuTZL0p/Can1qEPs+b6pIxpvXuAvF1j70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714370116; c=relaxed/simple;
-	bh=RpSffKBYdZJHtJT6BEJldCAqUGT6J1+z9IACpC9e4bw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OEz5UmKDmzljTDXlMG5guRZf1dBFGMPZeT0wQZspLHtMMAIY2cgJhBq7mtUyTF/RU3sUtIHvRLaodEg2QWhZBPx7QFK+zOe/wPZTlrTWsPeyxYuUnglBdu6bkKquNdACG1kRX+K8fDzf3ruaot7KD6i2cGlTbnyukUXkkp9NEtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Adpq5CPz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1714370235; c=relaxed/simple;
+	bh=Y3JTxXiA/2VBJh7i4el44QgN8SPiNeyLeGOOlvqfmP0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nJgdMVa12/SirUBkEmIefz/rcY4OfqqxvNkrGTRX0F3y4Wv4yYbnPRTPXRoCqXJN/IDhacqDCKtel12xYqCpgLUD4qgCLI95jqOlzr726OmYD5jDCFS8p652OE/9LlDIfJvnh1KB52pxx4lRHQPvsPtRxEEMuP10PxXL+CLS5NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i2OoIamw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Adpq5CPz"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43T4oJnU021349;
-	Mon, 29 Apr 2024 05:54:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=cNxs2TQAt/Gjy+68TESEKnKwZfqi+c0s1TOQ+rGD0Gc=;
- b=Adpq5CPzUBrV/q5gLBQPQQyEirSZeqT+8f+l91DONSXqux+zPmw+gPVtMakAEErAbSXD
- kqXdcpCKCVNvN5cLfAVjpXKTSrAbqliXrlkJN2fRD+T3cBNSJW0+SWQWao1jWxahk/dr
- agdgHaUmrZ2TUxB46Zj419pTwEMEgc2zJSBnt1RjfBjyOREcvMqM2HmyFno+Md3p2FN6
- axNFtzHDCJQyioRjHoogAWbesBTJxn7XtBjJSFPGiiGwkyUXizhnehpngM8+nOHhDx5s
- Ob3egMdqnRbL5LU4KSRMUD1aYR8eFcp5U79UJ3H/fzNij8nbeVzzpzo0z+L95J90EiFm gA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt1yn8ahu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 05:54:31 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43T5sVDL018481;
-	Mon, 29 Apr 2024 05:54:31 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt1yn8ahp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 05:54:31 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43T1qmHC015545;
-	Mon, 29 Apr 2024 05:54:30 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsed2n5we-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 05:54:30 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43T5sQhC43385190
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Apr 2024 05:54:28 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 575FD2004E;
-	Mon, 29 Apr 2024 05:54:26 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 444CD2004D;
-	Mon, 29 Apr 2024 05:54:26 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 29 Apr 2024 05:54:26 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
-	id D00CEE082E; Mon, 29 Apr 2024 07:54:25 +0200 (CEST)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/core: Test online status in available_idle_cpu()
-Date: Mon, 29 Apr 2024 07:54:15 +0200
-Message-Id: <20240429055415.3278672-1-svens@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i2OoIamw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95946C113CD;
+	Mon, 29 Apr 2024 05:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714370234;
+	bh=Y3JTxXiA/2VBJh7i4el44QgN8SPiNeyLeGOOlvqfmP0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=i2OoIamw2CGACWO/JQNbAGxyr7rJdGVbGok+nc8nzzVIZxeZvjG0Qr9HYAF5x1zO6
+	 oJb/RNUsBYCfzCGKKylsm5WBZK8QmyjceFnIyDuj33+CEgD2AX82GDJBFmq8sOxpDt
+	 GpXyVmV0jgPa4B+6HfVu7lrJWocleE4an4FaCmwXDmRCxZzrE4EWcZhtUjnLIqDzTF
+	 yLnH8XfVKc5qNZOY6ouR16LRwSm+fr50ek46uPWZIEIyfy2iCpfN6UHNOEcTRPvqSs
+	 nuPY1Gdu6ek6en/jw4r5cKNXDzAeUgvZ+EgltFrnweJ924jq2OB+ivLkQ5qUnwevFC
+	 LWWJCOR8HpWlA==
+Message-ID: <ce49c67c24f57ffab166d688a1c9e3139733f412.camel@kernel.org>
+Subject: Re: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
+ failure
+From: PJ Waskiewicz <ppwaskie@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sun, 28 Apr 2024 22:57:13 -0700
+In-Reply-To: <20240409132241.GA2071709@bhelgaas>
+References: <20240409132241.GA2071709@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: It9T9tFBeBRTt7wpgRGL86vUJr4uVOoq
-X-Proofpoint-ORIG-GUID: -qZoA8vCQ80tkAysgnCFlRyAJAlThVxg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-29_03,2024-04-26_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- lowpriorityscore=0 phishscore=0 malwarescore=0 bulkscore=0 impostorscore=0
- mlxscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404290038
 
-The current implementation of available_idle_cpu() doesn't test
-whether a possible cpu is offline. On s390 this dereferences a
-NULL pointer in arch_vcpu_is_preempted() because lowcore is not
-allocated for offline cpus. On x86, tracing also shows calls to
-available_idle_cpu() after a cpu is disabled, but it looks like
-this isn't causing any (obvious) issue. Nevertheless, add a check
-and return early if the cpu isn't online.
+On Tue, 2024-04-09 at 08:22 -0500, Bjorn Helgaas wrote:
+> On Sun, Apr 07, 2024 at 02:05:26PM -0700, ppwaskie@kernel.org=C2=A0wrote:
+> > From: PJ Waskiewicz <ppwaskie@kernel.org>
+> >=20
+> > Currently, Type 3 CXL devices (CXL.mem) can train using host CXL
+> > drivers on Emerald Rapids systems.=C2=A0 However, on some production
+> > systems from some vendors, a buggy BIOS exists that improperly
+> > populates the ACPI =3D> PCI mappings.
+>=20
+> Can you be more specific about what this ACPI =3D> PCI mapping is?
+> If you already know what the problem is, I'm sure this is obvious,
+> but
+> otherwise it's not.
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
----
- kernel/sched/core.c | 3 +++
- 1 file changed, 3 insertions(+)
+Apologies for the delay in response.  Things got a bit busy with travel
+and whatnot...
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7019a40457a6..1d9b80411594 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7434,6 +7434,9 @@ int idle_cpu(int cpu)
-  */
- int available_idle_cpu(int cpu)
- {
-+	if (!cpu_online(cpu))
-+		return 0;
-+
- 	if (!idle_cpu(cpu))
- 		return 0;
- 
--- 
-2.40.1
+On one of these particular hosts, in /sys/bus/acpi/devices/ACPI0016:00,
+for example, the UID would be something like CX01.  It isn't an u64 at
+all, and there's no atoi() or other conversions that would match what
+the UID should be.
 
+In my case, /sys/bus/acpi/devices/ACPI0016:02/ is my CXL device in
+question. The UID that is presented from enumeration was CX02.=20
+However, if I scour the CEDT manually, the UID of my particular CXL
+device is really UID 49.
+
+So, if I went from the PCI/CXL device side, and called something along
+the lines of to_cxl_host_bridge() and tried to go from the pci_dev to
+the acpi_handle, I'd get CX02 back.  Then trying to use that to call
+acpi_table_parse_cedt() would fail.
+
+The BIOS fix from the vendor corrected the UID enumeration on the ACPI
+side.  This allowed things to properly line up when traversing through
+the kernel APIs and parsing the ACPI tables.
+
+Let me know if this helps clarify!  If not, I can try and get more
+detailed info.
+
+-PJ
