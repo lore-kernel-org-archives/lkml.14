@@ -1,127 +1,95 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5D917A93B
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 21:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B8F17B4F1
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 21:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714424551; cv=none; b=W9sVkIC22xuoxmf98CVMOdpWuFm3jwGEo4b1hqK5QcmCrH1IEuD+DlwgdRYkX9fyP4egfNNKXB4mZtj/QCbJTZ/hsAK+2pgwK8eIJVxc3KJbS68FjYUUcX1mu1XDJrB/ttl3hiNccuHfA/SFWHNl7802nx5MPqFZz6FKoZEWpNA=
+	t=1714424555; cv=none; b=LbQsLv6yWPfaIJOfnQ86KnDYprq8VuocH1rYMZVvI4N5eP4Habb3Q/5793N0K2+B3MyfYwNqmPZaEL9JxwOFiA0QQcvdZzcwuZtECp0nXh7EM7uEhnvErSbxXo6IvvnmZheoFeQMWOz3KK3b5xhBXV0pBcfi4Ci+JycDiMbbJvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714424551; c=relaxed/simple;
-	bh=R6DQE5EsEveF1QxT6jB+aOWRYl3SVpGaiivWdByl6x0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lDYc14ley32gJiy8eoEzRnXJTjymzaEEU7GbNAnr3WQxBWnPB8PsuXUUkJSRnLyVbgDUUxTwMuQRwf/bpXHymoSq9HPAebGkMpsCdgbUY88dq01dK6nxJ0tSVXe39C4Mgxqbc9/AlBYR7sA7F/Inca6aSKlVfco3v65BJ+uvlDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YAeGuRwV; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1714424555; c=relaxed/simple;
+	bh=cs85e2r4NJuUFXJ/ldnOg8vnp9GecWksd3tK2JQDKYI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qdIpSH9C3MuAbHjSow+ieCPvJjyKbhRts+lSgsi8PmrCwQDNmO9Loyrx3opZpbtUiTi9IO7dRe+YwRmx+5VmbApOm1PcGOLQZxMNeZHPLe8XvThVvpndbLSepi30FYSiDTsSXlNZCdPg8EQBsUxwu8kZPjrELSsc0yKnMaJc2Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bJCE/hbG; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YAeGuRwV"
-Date: Mon, 29 Apr 2024 14:02:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714424548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RRdids+X4QRv+bPxbj1QerCDqrODkmUYAv3YKJoUxHE=;
-	b=YAeGuRwVvnWMG41yijYTcJnXo+X+/idGkOR6uQlipgLmiPtOJmm94Fy2Hp3PXZzq1MhaEY
-	B2HdecrVJDxj9XN6NPrb7ronHcEwd0ONYsx+x+HVunOXNfYcMMcdTACiR2w4Y1/ci2iaN/
-	qMvcmUyyj/lTsdvaFCvu3GvbNDQOEmU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] memcg: dynamically allocate lruvec_stats
-Message-ID: <ZjAK32S2eG_sI-kv@P9FQF9L96D>
-References: <20240427003733.3898961-1-shakeel.butt@linux.dev>
- <20240427003733.3898961-3-shakeel.butt@linux.dev>
- <Zi_BsznrtoC1N_lq@P9FQF9L96D>
- <fs26xbxmaylxwpv35pb3aak2ilb352glnabsi3wq4havqzlg4j@62cltkwiup4z>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bJCE/hbG"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso4241574a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714424553; x=1715029353; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SX25Rd2lbFP13Ouj4hjSpg1j1YlpURzrsvt1/pd7SEw=;
+        b=bJCE/hbGf7LCkQvt6kZFmwcD5JhaYP+0i4oaXMbOFcfr0WSapye4XOt7+ySE5595nC
+         atT+luuKncc1AtsHJiskqxa6bGzjUoJHyOFR2rigunpsitbB7x1FaXpyAU5JXv0zrY46
+         UAZmajliXieFSHxnxLf7/5720sccRVlgOANE729LMcQi9NHJI57hgZFtSBWoZ0iLPy5V
+         Qm1ZTlp0xPbtdkHm4FXPk4XgiZqURU3c6CrMOf3R8pJXrQsCx94stkn9RuJsaO8O+oYC
+         1oGzzj2jiRlPjRLly5slP0JWXQqZo4BiLSFa7peldGRNLD0Ix94sp+3ZXNoFD3b8nszk
+         EYtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714424553; x=1715029353;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SX25Rd2lbFP13Ouj4hjSpg1j1YlpURzrsvt1/pd7SEw=;
+        b=JWhFRZV4wOZQ6+dyQ5gvu7N4dLN0UsbJCQW6PwcFDeq7Ffo5NuueFk8jywIQZ4Q9Dk
+         jnc35AMHh2wMZJJd4s4vGMgAGVByURo0ptEzhE+AQQV7cFYvF+r2y4yfy4YCvfr6JXT+
+         fX5dKGIehf55CMk8lgw5yKa7/8IVeSQX1P5ewjU+VzpmV12csLHdWGMXFxY0+KKEg0En
+         udWi2RoPw0avRqHI7exnvTZgMS839W5O1hW9+SExi7Ozcd2fpOpmptW0Be56W8sfrQzn
+         pXovEXkt/35ueS+TqigopVRw09S7CR884FYCtt8yzNeQdGB8+46fevb7aBD/RgCC2PEk
+         zw5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWM3/AEuVAvOvbSf6y97rlNd0qJzQYelqfELQx1PT6NBwUlhNtugekaAFQOHDHtFrwvOXnfj85fVkyO+o49g282Ly4Urbkx1mFMq3KD
+X-Gm-Message-State: AOJu0YxfCct2w9xzYcCihK2eAcbRbDlfMwAHJmnP+sxogeOjwg6L1InG
+	tzhK6sQmd70VJ/RvOAhDaktJP82CbDIepboHnNxIyVKPcGRoZ3aj5xt1eHPxrJGlsTE4GZrmSmQ
+	jnA==
+X-Google-Smtp-Source: AGHT+IFMZmLPYd3OCdFQUIxyCcTMBThyalheYS1duqyNYxxDIfX1rQU6Ae0fjGk9raqmcxnsGbT5WX6Vz9g=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:36c9:0:b0:5e8:65ae:1142 with SMTP id
+ d192-20020a6336c9000000b005e865ae1142mr2278pga.4.1714424553453; Mon, 29 Apr
+ 2024 14:02:33 -0700 (PDT)
+Date: Mon, 29 Apr 2024 13:45:23 -0700
+In-Reply-To: <20240314185459.2439072-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fs26xbxmaylxwpv35pb3aak2ilb352glnabsi3wq4havqzlg4j@62cltkwiup4z>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+References: <20240314185459.2439072-1-seanjc@google.com>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Message-ID: <171442342393.161664.6093030957550923677.b4-ty@google.com>
+Subject: Re: [PATCH 0/5] KVM: selftests: Introduce vcpu_arch_put_guest()
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Apr 29, 2024 at 12:46:32PM -0700, Shakeel Butt wrote:
-> On Mon, Apr 29, 2024 at 08:50:11AM -0700, Roman Gushchin wrote:
-> > On Fri, Apr 26, 2024 at 05:37:28PM -0700, Shakeel Butt wrote:
+On Thu, 14 Mar 2024 11:54:53 -0700, Sean Christopherson wrote:
+> The end goal of this series is to add a regression test for commit
+> 910c57dfa4d1 ("KVM: x86: Mark target gfn of emulated atomic instruction
+> as dirty"), *without* polluting the common dirty_log_test.c code with
+> gory x86 details.
+> 
+> The regression test requires forcing KVM to emulate a guest atomic RMW
+> access, which is done via a magic instruction prefix/opcode that is
+> guarded by an off-by-default KVM module param.
+> 
 > [...]
-> 
-> > > +	return x;
-> > > +}
-> > > +
-> > >  /* Subset of vm_event_item to report for memcg event stats */
-> > >  static const unsigned int memcg_vm_event_stat[] = {
-> > >  	PGPGIN,
-> > > @@ -5492,18 +5546,25 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
-> > >  	if (!pn)
-> > >  		return 1;
-> > >  
-> > > +	pn->lruvec_stats = kzalloc_node(sizeof(struct lruvec_stats), GFP_KERNEL,
-> > > +					node);
-> > 
-> > Why not GFP_KERNEL_ACCOUNT?
-> > 
-> 
-> Previously struct lruvec_stats was part of struct mem_cgroup_per_node
-> and we use GFP_KERNEL to allocate struct mem_cgroup_per_node. I kept the
-> behavior same and if we want to switch to GFP_KERNEL_ACCOUNT, I think it
-> should be a separate patch.
 
-Agree. Here is the patch:
+Applied to kvm-x86 selftests_utils, thanks!
+
+[1/5] KVM: selftests: Provide a global pseudo-RNG instance for all tests
+      https://github.com/kvm-x86/linux/commit/cb6c6914788f
+[2/5] KVM: selftests: Provide an API for getting a random bool from an RNG
+      https://github.com/kvm-x86/linux/commit/73369acd9fbd
+[3/5] KVM: selftests: Add global snapshot of kvm_is_forced_emulation_enabled()
+      https://github.com/kvm-x86/linux/commit/e1ff11525d3c
+[4/5] KVM: selftests: Add vcpu_arch_put_guest() to do writes from guest code
+      https://github.com/kvm-x86/linux/commit/2f2bc6af6aa8
+[5/5] KVM: selftests: Randomly force emulation on x86 writes from guest code
+      https://github.com/kvm-x86/linux/commit/87aa264cd89d
 
 --
-
-From fd6854c0b272c5314bce6c9dee7d3c8f8cee3a86 Mon Sep 17 00:00:00 2001
-From: Roman Gushchin <roman.gushchin@linux.dev>
-Date: Mon, 29 Apr 2024 13:57:26 -0700
-Subject: [PATCH] mm: memcg: account memory used for memcg vmstats and lruvec
- stats
-
-The percpu memory used by memcg's memory statistics is already accounted.
-For consistency, let's enable accounting for vmstats and lruvec stats
-as well.
-
-Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
----
- mm/memcontrol.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index d11536ef59ef..2fe25d49cfaa 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5661,8 +5661,8 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
- 	if (!pn)
- 		return 1;
- 
--	pn->lruvec_stats = kzalloc_node(sizeof(struct lruvec_stats), GFP_KERNEL,
--					node);
-+	pn->lruvec_stats = kzalloc_node(sizeof(struct lruvec_stats),
-+					GFP_KERNEL_ACCOUNT, node);
- 	if (!pn->lruvec_stats)
- 		goto fail;
- 
-@@ -5733,7 +5733,8 @@ static struct mem_cgroup *mem_cgroup_alloc(struct mem_cgroup *parent)
- 		goto fail;
- 	}
- 
--	memcg->vmstats = kzalloc(sizeof(struct memcg_vmstats), GFP_KERNEL);
-+	memcg->vmstats = kzalloc(sizeof(struct memcg_vmstats),
-+				 GFP_KERNEL_ACCOUNT);
- 	if (!memcg->vmstats)
- 		goto fail;
- 
--- 
-2.43.2
-
+https://github.com/kvm-x86/linux/tree/next
