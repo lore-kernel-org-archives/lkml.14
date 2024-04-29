@@ -1,113 +1,204 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F849468;
-	Mon, 29 Apr 2024 14:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1599468;
+	Mon, 29 Apr 2024 14:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714399985; cv=none; b=Tve5/F7aP6rrnKVc3h+1t47wMEVRueUuPlJ79CHcvgy6eCbYIQ5XzLYjjQa57ROryMEPa8QgnULhA9prOQ60EpTiEELbhBCJtVLJ579h4LN3f9a55FpINeVm+DdiBb5bMVJeqDLInPZIBuuTtYCoQp9sKdPH2JzgginDiZ8y94U=
+	t=1714400001; cv=none; b=ri/jecn9OnSYSciJF5a7k406M++DuHJwpD6r8qWSj8H1wwTlRUuuOqlwWVay5RT5S72D8JmSAhNGEngFxNeaccs399Esxga5U1o6WiIqHDaGNx2P1JzBtGu1caCv49cte6kWwir7aZRiVxqRVptmoVtglBcWbSglwWPO6QHyYek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714399985; c=relaxed/simple;
-	bh=3gAkZO77w6Vg/FEj8UDrJXdxtegquGNjwt6XnnvslHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s9CfZk/YMsoOZkKM0ZmHnIXlo++0HwhLUq/p5lk3vXILc89V0opFIPvj40LwYK8Iv2lQjcP6XqKTHaj+soeiwSGuQSdVIq3fcsrm3UVnOrZlYqkt0BBRphCUhHw9r8w1dP0rwAN8SIWHDt9q6uifustlXDvromKecRoormRlr7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YcUNS3Iq; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1714400001; c=relaxed/simple;
+	bh=618JHK33NfWpe17uC+zkMyziNzW0BIM5OKg4SY19Z4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iHLdib8hjmK1JNF2wnJh0whtn4eYBpY5xMML8bh3Jdv2zXydXCma8kToWMueceahc+/WAHv7DcW1WJ50prkjqxuLdf+mW6Q+Ne2sY6Bde+rJt1dL6gInTRV60WOwydEQUYApj1g+zRlk2SsnvnfV9IgtzUMwGmM3XC5vwKZXpYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRi/v7m6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YcUNS3Iq"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9263C40E0187;
-	Mon, 29 Apr 2024 14:13:01 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BnmjDi5cs7Hs; Mon, 29 Apr 2024 14:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1714399977; bh=oE13an3Sp1ZiL8L+oexSnFWbk2LomH2Gdl8IFWAPmBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YcUNS3IqG3cdvTCOxDmGgWIHR4cqdTpT1EMz/hhxhrAtUIroLJN6O5oOM/P+81bQX
-	 PiZ3Txn0Zd6S1auEhZwouMkK0TJo4C/Xm6YUhdWt79m3rgJd1mkiRPNOn4tmA4ebqv
-	 eC8REkxxV8dSmk4CnNps/FHnRwl3qWl3a1+zhpHsQzr86PcQ/Eqid1G8Gu7NrHvfW2
-	 sF0ib0TZaCAltoXUULIXWSIqvU7045bR2nKrnjvuA86ffxpzhQ/atUYILCpcQxZh9g
-	 eo01CuXplF3hMPmAZppm06XFP4esrw7SJRFwmMpbI0HpOWT6sqXlhJnKJtPiWZEKks
-	 1b0wJYAm1g6x1gOS8nNkgBZo2+KG9j9iJIGyPbapIF1+/vrPvw6prD82q1xlj1/dEq
-	 XCTiYl0PUaGWbaTrYe9GMelYVstUQXKzh6TeDgAoS5T4Xdq3ko8yJtlxDQ9PzZOBwB
-	 zaIEmdDbpD3HzFO+cK0LH3isfShMuvewJ1MeMOjIxWLoSJS9lUuAadpfXTBtOcER0I
-	 rZAclthPHh/xurXgnmRqTm/a7IL4O/VppU+lUIYEX1TZrEHZKpTodOFYGSV4F8FODt
-	 DohmsijoYWhzat0KupGj7+jZwOnyz0cpEOJy8Fld54BFT0lC7hfykCbRdZPCN73EwB
-	 DSYP+P1gX9dQd4V7VIj5Edkc=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 66DC240E016B;
-	Mon, 29 Apr 2024 14:12:49 +0000 (UTC)
-Date: Mon, 29 Apr 2024 16:12:44 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: robert.richter@amd.com, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
-	Avadhut.Naik@amd.com, John.Allen@amd.com
-Subject: Re: [PATCH v2 07/16] x86/mce/amd: Simplify DFR handler setup
-Message-ID: <20240429141244.GGZi-q3NdmI17pai4N@fat_crate.local>
-References: <20240404151359.47970-1-yazen.ghannam@amd.com>
- <20240404151359.47970-8-yazen.ghannam@amd.com>
- <20240424190658.GHZilYUvw1KfSfVd_e@fat_crate.local>
- <e0d10606-4472-4cde-b55d-34180efad42b@amd.com>
- <20240429125956.GNZi-ZzN1Izxps8ztT@fat_crate.local>
- <d1e329da-6a04-47f7-bdab-ea6c4f584802@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRi/v7m6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06CDC113CD;
+	Mon, 29 Apr 2024 14:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714400001;
+	bh=618JHK33NfWpe17uC+zkMyziNzW0BIM5OKg4SY19Z4o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pRi/v7m69mn8YjGwqv5JxC0uIfVArly6v1eFC5p2vwvEERWe47HOeeZv9VFHvg8oy
+	 ceOoJLDgAWB8NlyggIdoUfXpf1IdFvvdtvX1xqGlhs1ymXqGrJuILz5ZgDqb/Tb3uY
+	 cZZTFB3BZ5736Z9/wwc0OD55Qg+f7JhJakp3ufd5XubEM8sNCYpUvY+OdBrmc1F0T2
+	 STml+I0UGIK4YMkQHmzKPdt4RdL/3i3OfBUfYRSkK0yPNlS4aKkoq9NQ9oR09J5mbx
+	 mrMxE6GeYQQOG68nIxBIaH1GiHVidZGwFgN8xHiWQcfe93DuacfCx8pjkSOFPVG1Co
+	 8ieLALYIWNNMQ==
+Message-ID: <c3531f5f-7aaa-4363-8bfe-ac90521d7a0e@kernel.org>
+Date: Mon, 29 Apr 2024 17:13:13 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d1e329da-6a04-47f7-bdab-ea6c4f584802@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/7] soc: mediatek: Add MediaTek DVFS Resource
+ Collector (DVFSRC) driver
+Content-Language: en-US
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+ keescook@chromium.org, gustavoars@kernel.org, henryc.chen@mediatek.com,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, kernel@collabora.com,
+ wenst@chromium.org, amergnat@baylibre.com,
+ Dawei Chien <dawei.chien@mediatek.com>
+References: <20240424095416.1105639-1-angelogioacchino.delregno@collabora.com>
+ <20240424095416.1105639-5-angelogioacchino.delregno@collabora.com>
+From: Georgi Djakov <djakov@kernel.org>
+In-Reply-To: <20240424095416.1105639-5-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 29, 2024 at 09:56:56AM -0400, Yazen Ghannam wrote:
-> Right, I mean we should do things the simpler way unless there's a real issue
-> to address.
-
-You need to pay attention to past issues before you go, simplify it and
-break it again.
-
-> I'm not opposed to this, but I don't understand what is at risk.
+On 24.04.24 12:54, AngeloGioacchino Del Regno wrote:
+> The Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC) is a
+> Hardware module used to collect all the requests from both software and the
+> various remote processors embedded into the SoC and decide about a minimum
+> operating voltage and a minimum DRAM frequency to fulfill those requests in
+> an effort to provide the best achievable performance per watt.
 > 
-> Is it that the function pointer may not be written atomically? So even if we
-> write it again with the same value, a concurrent interrupt on another core may
-> see a partially updated (corrupt) pointer?
-
-Yes, it won't happen, they say as it is guaranteed by the
-architecture. But I've heard those "promises".
-
-> intel_init_cmci() does not do this check. So is it more at risk, or is the AMD
-> code just more cautious?
+> This hardware IP is capable of transparently performing direct register R/W
+> on all of the DVFSRC-controlled regulators and SoC bandwidth knobs.
 > 
-> Again I'm not against the current code. I just think we should simplify it, if
-> possible.
+> This driver includes support for MT8183, MT8192 and MT8195.
+> 
+> Co-Developed-by: Dawei Chien <dawei.chien@mediatek.com>
+> [Angelo: Partial refactoring and cleanups]
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-So in looking at the INTR_CFG MSR, I think we should do a function which
-does MCA init stuff only on the BSP exactly for things like that.
+Thanks for reviving this patchset!
 
-There you can set the interrupt handler pointer, the INTR_CFG MSR and so
-on. And we don't have such function and I've needed a function like that
-in the past.
+> ---
+>   drivers/soc/mediatek/Kconfig             |  11 +
+>   drivers/soc/mediatek/Makefile            |   1 +
+>   drivers/soc/mediatek/mtk-dvfsrc.c        | 551 +++++++++++++++++++++++
+>   include/linux/soc/mediatek/dvfsrc.h      |  36 ++
+>   include/linux/soc/mediatek/mtk_sip_svc.h |   3 +
+>   5 files changed, 602 insertions(+)
+>   create mode 100644 drivers/soc/mediatek/mtk-dvfsrc.c
+>   create mode 100644 include/linux/soc/mediatek/dvfsrc.h
+> 
+[..]
+> +++ b/drivers/soc/mediatek/mtk-dvfsrc.c
+> @@ -0,0 +1,551 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2021 MediaTek Inc.
+> + * Copyright (c) 2024 Collabora Ltd.
+> + *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> + */
+> +
+> +#include <linux/arm-smccc.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/soc/mediatek/dvfsrc.h>
+> +#include <linux/soc/mediatek/mtk_sip_svc.h>
+> +
+> +/* DVFSRC_LEVEL */
+> +#define DVFSRC_V1_LEVEL_TARGET_LEVEL	GENMASK(15, 0)
+> +#define DVFSRC_TGT_LEVEL_IDLE		0x00
+> +#define DVFSRC_V1_LEVEL_CURRENT_LEVEL	GENMASK(31, 16)
+> +
+> +/* DVFSRC_SW_REQ, DVFSRC_SW_REQ2 */
+> +#define DVFSRC_V1_SW_REQ2_DRAM_LEVEL	GENMASK(1, 0)
+> +#define DVFSRC_V1_SW_REQ2_VCORE_LEVEL	GENMASK(3, 2)
+> +
+> +#define DVFSRC_V2_SW_REQ_DRAM_LEVEL	GENMASK(3, 0)
+> +#define DVFSRC_V2_SW_REQ_VCORE_LEVEL	GENMASK(6, 4)
+> +
+> +/* DVFSRC_VCORE */
+> +#define DVFSRC_V2_VCORE_REQ_VSCP_LEVEL	GENMASK(14, 12)
+> +
+> +#define KBPS_TO_MBPS(x)			((x) / 1000)
+> +
+> +#define DVFSRC_POLL_TIMEOUT_US		1000
+> +#define STARTUP_TIME_US			1
+> +
+> +#define MTK_SIP_DVFSRC_INIT		0x0
+> +#define MTK_SIP_DVFSRC_START		0x1
+> +
+> +struct dvfsrc_bw_constraints {
+> +	u16 max_dram_nom_bw;
+> +	u16 max_dram_peak_bw;
+> +	u16 max_dram_hrt_bw;
+> +};
+> +
+> +struct dvfsrc_opp {
+> +	u32 vcore_opp;
+> +	u32 dram_opp;
+> +};
+> +
+> +struct dvfsrc_opp_desc {
+> +	const struct dvfsrc_opp *opps;
+> +	u32 num_opp;
+> +};
+> +
+> +struct dvfsrc_soc_data;
+> +struct mtk_dvfsrc {
+> +	struct device *dev;
+> +	struct platform_device *icc;
+> +	struct platform_device *regulator;
+> +	const struct dvfsrc_soc_data *dvd;
+> +	const struct dvfsrc_opp_desc *curr_opps;
+> +	void __iomem *regs;
+> +	int dram_type;
+> +};
+> +
+> +struct dvfsrc_soc_data {
+> +	const int *regs;
+> +	const struct dvfsrc_opp_desc *opps_desc;
+> +	u32 (*get_target_level)(struct mtk_dvfsrc *dvfsrc);
+> +	u32 (*get_current_level)(struct mtk_dvfsrc *dvfsrc);
+> +	u32 (*get_vcore_level)(struct mtk_dvfsrc *dvfsrc);
+> +	u32 (*get_vscp_level)(struct mtk_dvfsrc *dvfsrc);
+> +	void (*set_dram_bw)(struct mtk_dvfsrc *dvfsrc, u64 bw);
+> +	void (*set_dram_peak_bw)(struct mtk_dvfsrc *dvfsrc, u64 bw);
+> +	void (*set_dram_hrt_bw)(struct mtk_dvfsrc *dvfsrc, u64 bw);
+> +	void (*set_opp_level)(struct mtk_dvfsrc *dvfsrc, u32 level);
+> +	void (*set_vcore_level)(struct mtk_dvfsrc *dvfsrc, u32 level);
+> +	void (*set_vscp_level)(struct mtk_dvfsrc *dvfsrc, u32 level);
+> +	int (*wait_for_opp_level)(struct mtk_dvfsrc *dvfsrc, u32 level);
+> +	int (*wait_for_vcore_level)(struct mtk_dvfsrc *dvfsrc, u32 level);
+> +	const struct dvfsrc_bw_constraints *bw_constraints;
+> +};
+> +
+> +static u32 dvfsrc_readl(struct mtk_dvfsrc *dvfs, u32 offset)
+> +{
+> +	return readl(dvfs->regs + dvfs->dvd->regs[offset]);
+> +}
+> +
+> +static void dvfsrc_writel(struct mtk_dvfsrc *dvfs, u32 offset, u32 val)
+> +{
+> +	writel(val, dvfs->regs + dvfs->dvd->regs[offset]);
+> +}
+> +
+> +#define dvfsrc_rmw(dvfs, offset, val, mask, shift) \
+> +	dvfsrc_writel(dvfs, offset, \
+> +		(dvfsrc_readl(dvfs, offset) & ~(mask << shift)) | (val << shift))
 
-And just for the general goal of not doing ugly code which should run
-only once but is run per-CPU just because our infrastructure doesn't
-allow it.
+Nit: The above macro seems unused?
 
-Wanna give that a try?
+BR,
+Georgi
 
-Thx.
+> +enum dvfsrc_regs {
+> +	DVFSRC_SW_REQ,
+> +	DVFSRC_SW_REQ2,
+> +	DVFSRC_LEVEL,
+> +	DVFSRC_TARGET_LEVEL,
+> +	DVFSRC_SW_BW,
+> +	DVFSRC_SW_PEAK_BW,
+> +	DVFSRC_SW_HRT_BW,
+> +	DVFSRC_VCORE,
+> +	DVFSRC_REGS_MAX,
+> +};
+> +
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
