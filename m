@@ -1,59 +1,37 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A21710971
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806E1537EC
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714395541; cv=none; b=g5GjE61z4Lo4pNfaoXa/ixH687UQQ0CHzQVey94v3a1BUeyjR/ryxbCRrvHsfwaOVtlXlOinmpTkSMDyDNRYJeDncW0PWtkiQq6NX2DQTpVpC7TWy482UiFYkdXnz7coeqvz/34BtlfPzOQBXgfF4MXT2rSDhR0Fb0RFAkGAL0c=
+	t=1714395585; cv=none; b=EVqKUZ04buW7xsP8PWxzwQ85YhJkl1f66NRWYPagqh5doYNdJqhWYaIT9nIf9CKGAj7yK1InRpGXTZ6Qb1ej+aRnk5k0EVbjYiOggYJKYgGcU3pGa6Mfoy9pphl2Q4Wjkt8iGB9BJYJWbNF+ZRlzUBzlprc43jLI9tg2GL2UQHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714395541; c=relaxed/simple;
-	bh=vCbFiVFJCuRka58hjPNbWGQzUqLA0O+7ieiUkSok1nA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A/dDTlDaOm70wIeFSR4kAy0At7Fi6lb5EP4MXl57Zs8/ErMR6402FUVfdlPALz2S/C9LDfHVdJUB8tuejAOnTovPKsQJlopwij5YlCUjEewSqlpXiiEc8s+EkTYkU+CzQpJeocYE0ktbJqMwixjQUdL+8mqs0pYD376s6+5rOuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9Kj/NFQ; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714395585; c=relaxed/simple;
+	bh=QcW7kMURZ5fF2uTQoIT6ZXw2xc+0QISZgUNZU80Y/ZY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=V8qHn/TIe7gbmqg7hT4/JRFOehYeIQb4V1FBBNztv57+BwzofmuoFeE8aAAW7jxWlYksb6GsH6EjRrG1q/C+rdZCUaf0TBCHaLUkRg8xZFnmhotkp/HxhRnpG0+l5FgorH571MhhJduvRwIf7webEK2D3wO38b5ymBCVQWb9+zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=kBizUQ4V; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9Kj/NFQ"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-518a56cdbcfso6919497e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 05:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714395538; x=1715000338; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7EKWBgytODZQU31rywUVJiOdjv7GH+YZfkGd8P3Apls=;
-        b=B9Kj/NFQGK6hzBgDBfuvjxp+UvHzyiv2BW4BpWkSmfC3rKNWCwGq3/wX8X2Uybi5/F
-         PqWXPA97KZT5PWuFqTBgXJSsJ8sqtDN3HPVBTdiYJkR3XsOExneWHfNbv+BdPO9EbTaX
-         EC9Je2b+sBvB4ABkcCwhAed1SExvoXzsqq5HIe9UnTZ7YErY41gO9/jGPM6JrJXD/ka5
-         4dmi+D/NVUMSqyhN+DFQkpY++1dCylfAKDZnAmyF4+uSU3ldvw8rivTu5nZFrtr/wCWI
-         AK9p9uGaQ8ALON2eAyG1EQNS53a0T1PHAKXuuYdBp/5d+d+x9IOCgUNUEZwebVrcMZx4
-         xFtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714395538; x=1715000338;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7EKWBgytODZQU31rywUVJiOdjv7GH+YZfkGd8P3Apls=;
-        b=mGm9+39Y0DqC762oyCmT4rboQIYxsi4ls+T/bqPFP8QNpUpZKmsCrp/2aDLASR9umJ
-         Ac7I3bi72Y49+XeKgISp3Eysj85UomPJ3rODLyZ4eHhliM7hlhikabiHpz9oq6WJMja4
-         0PzPt4CIDHU9A0Rcp7TXIfC74/o776AaiJIVq+8SXFd2yARqZmfXUeHGagxpVTRljUND
-         +CsetfNN1nnyFjIAAFCwpGN1ve4pzTtupqRV4X6KgvEYTsl/L/vUBYE6hzwicvoqe1li
-         wRoTvOZgSiFkLTiyuYGFgHLJLA4IPhA92sah35jg5WazbKzYpfjEf+8HBjYmovB17eB8
-         eeoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtGBwkhdEBS695UTT3fInBcdrcxopL9t2HLg1nwa171a4/Bz96JFBmdqxFETkgkjQ8RPMUcccm+1KNpoZQD7OVjyk5/hpEZAUsRa90
-X-Gm-Message-State: AOJu0YytFP0xZ2yoBpV+yyR/NrGvM47sjy5Fx5W6WHOZ1O5MMBW1EukA
-	28Vn2dVkVReJ7LVUfUw2PHjJGRNA9ep1nFehJumM9bhCizbQ4fmX
-X-Google-Smtp-Source: AGHT+IEj2BMZHDIBuNJn1hbnu7Hgi2WDKZTw2Vu62n0umPjAWJzgMApXkwlF0Akz0AeulTOhq8uyRg==
-X-Received: by 2002:ac2:5b9c:0:b0:51d:3acb:1d8b with SMTP id o28-20020ac25b9c000000b0051d3acb1d8bmr4865274lfn.62.1714395537432;
-        Mon, 29 Apr 2024 05:58:57 -0700 (PDT)
-Received: from [10.214.35.248] ([109.245.231.121])
-        by smtp.gmail.com with ESMTPSA id v12-20020a056512348c00b0051af75b5b93sm3037276lfr.226.2024.04.29.05.58.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 05:58:57 -0700 (PDT)
-Message-ID: <f90f5352-30ed-419f-803b-7885b4298868@gmail.com>
-Date: Mon, 29 Apr 2024 14:57:35 +0200
+	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="kBizUQ4V"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8A007E0002;
+	Mon, 29 Apr 2024 12:59:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
+	t=1714395575;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6jSnqT7ikJtsnT7a8wUgvbHGyx8IAD/OHjf9GzKJDVI=;
+	b=kBizUQ4VJRjisKhAL3KPmoRsGGJvwuoRH6lurnhhl/Y9IznZb5l66ELv7BaHqyiYZCAZYy
+	LtRY8Tw+8WHHt1MaYSlJqj7m6GLPXEop8KvL+2ELrPDGVdPdqRubogODoTY8y9F7gZSeof
+	Kous1US5twXkRihCmm9wC1724TnI7KK5cr3T7avTKBxY6BH1lyV5cpGYdEs1yzCL1Ai8rY
+	ZTmqnoGp1KhNxV/Q5pJd0z+wZTxyOaKeADqhuvPt4iSKtvOb4G14Z9P3xzotEcQP4ujGg8
+	ibJtf7TO4d2mvw6Y0U+8IrD7ACl7qiMlXUs+Hbmam4KasdMk328oAMbx1XD7yg==
+Message-ID: <7074c0b4-62d4-444d-8e59-e23bbbccf9b8@clip-os.org>
+Date: Mon, 29 Apr 2024 14:59:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,81 +39,186 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm: kasan: clear stale stack poison
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- =?UTF-8?B?Qm95IFd1ICjlkLPli4Poqrwp?= <Boy.Wu@mediatek.com>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "andreyknvl@gmail.com" <andreyknvl@gmail.com>,
- "dvyukov@google.com" <dvyukov@google.com>,
- "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
- =?UTF-8?B?SXZlcmxpbiBXYW5nICjnjovoi7PpnJYp?= <Iverlin.Wang@mediatek.com>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- =?UTF-8?B?TGlnaHQgQ2hlbiAo6Zmz5pix5YWJKQ==?= <Light.Chen@mediatek.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "glider@google.com"
- <glider@google.com>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
- "angelogioacchino.delregno@collabora.com"
- <angelogioacchino.delregno@collabora.com>
-References: <20240410073044.23294-1-boy.wu@mediatek.com>
- <CACRpkdZ5iK+LnQ0GJjZpxROCDT9GKVbe9m8hDSSh2eMXp3do0Q@mail.gmail.com>
- <Zi5hDV6e0oMTyFfr@shell.armlinux.org.uk>
- <292f9fe4bab26028aa80f63bf160e0f2b874a17c.camel@mediatek.com>
- <Zi+Vu29rmNZ0MIFG@shell.armlinux.org.uk>
+Subject: Re: [PATCH] slub: Fixes freepointer encoding for single free
+From: Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>
+To: Vlastimil Babka <vbabka@suse.cz>,
+ Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Cc: cl@linux.com, penberg@kernel.org, rientjes@google.com,
+ iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, roman.gushchin@linux.dev,
+ 42.hyeyoo@gmail.com, Xiongwei Song <xiongwei.song@windriver.com>
+References: <Zij_fGjRS_rK-65r@archlinux>
+ <f9c133a9-8886-4c86-a24f-4778997547f2@linux.dev>
+ <bbf2063f-54d4-43f0-84b3-1ea789470914@clip-os.org>
+ <5c34b253-b476-494a-96c9-fe3c95b9b74d@linux.dev>
+ <6f977874-2a18-44ef-b207-9eb0baad9d66@suse.cz>
+ <d17d7b20-b99e-46ce-b7bf-fb7058a66e79@clip-os.org>
 Content-Language: en-US
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-In-Reply-To: <Zi+Vu29rmNZ0MIFG@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <d17d7b20-b99e-46ce-b7bf-fb7058a66e79@clip-os.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: nicolas.bouchinet@clip-os.org
 
 
-
-On 4/29/24 14:42, Russell King (Oracle) wrote:
-> On Mon, Apr 29, 2024 at 07:51:49AM +0000, Boy Wu (吳勃誼) wrote:
->> On Sun, 2024-04-28 at 15:45 +0100, Russell King (Oracle) wrote:
->>>  On Fri, Apr 12, 2024 at 10:37:06AM +0200, Linus Walleij wrote:
->>>> On Wed, Apr 10, 2024 at 9:31 AM boy.wu <boy.wu@mediatek.com> wrote:
+On 4/29/24 11:09, Nicolas Bouchinet wrote:
+> Hi Vlastimil,
+>
+> thanks for your review and your proposal.
+>
+> On 4/29/24 10:52, Vlastimil Babka wrote:
+>> On 4/25/24 5:14 PM, Chengming Zhou wrote:
+>>> On 2024/4/25 23:02, Nicolas Bouchinet wrote:
+>> Thanks for finding the bug and the fix!
+>>
+>>>> Hy,
 >>>>
->>>>> From: Boy Wu <boy.wu@mediatek.com>
+>>>> First of all, thanks a lot for your time.
+>>>>
+>>>> On 4/25/24 10:36, Chengming Zhou wrote:
+>>>>> On 2024/4/24 20:47, Nicolas Bouchinet wrote:
+>>>>>> From: Nicolas Bouchinet<nicolas.bouchinet@ssi.gouv.fr>
+>>>>>>
+>>>>>> Commit 284f17ac13fe ("mm/slub: handle bulk and single object freeing
+>>>>>> separately") splits single and bulk object freeing in two functions
+>>>>>> slab_free() and slab_free_bulk() which leads slab_free() to call
+>>>>>> slab_free_hook() directly instead of slab_free_freelist_hook().
+>>>>> Right.
+>>>>> y not suitable for a stable-candidate fix we need
+>>>>>> If `init_on_free` is set, slab_free_hook() zeroes the object.
+>>>>>> Afterward, if `slub_debug=F` and `CONFIG_SLAB_FREELIST_HARDENED` are
+>>>>>> set, the do_slab_free() slowpath executes freelist consistency
+>>>>>> checks and try to decode a zeroed freepointer which leads to a
+>>>>>> "Freepointer corrupt" detection in check_object().
+>>>>> IIUC, the "freepointer" can be checked on the free path only when
+>>>>> it's outside the object memory. Here slab_free_hook() zeroed the
+>>>>> freepointer and caused the problem.
 >>>>>
->>>>> We found below OOB crash:
+>>>>> But why we should zero the memory outside the object_size? It seems
+>>>>> more reasonable to only zero the object_size when init_on_free is 
+>>>>> set?
+>>>> The original purpose was to avoid leaking information through the 
+>>>> object and its metadata / tracking information as described in 
+>>>> init_on_free initial Commit 6471384af2a6 ("mm: security: introduce 
+>>>> init_on_alloc=1 and init_on_free=1 boot options").
 >>>>
->>>> Thanks for digging in!
->>>>
->>>> Pleas put this patch into Russell's patch tracker so he can apply
->>> it:
->>>> https://www.armlinux.org.uk/developer/patches/
->>>
->>> Is this a bug fix? If so, having a Fixes: tag would be nice...
->>>
+>>>> I have to admit I didn't read the entire lore about the original 
+>>>> patchset yet, though it could be interesting to know a bit more the 
+>>>> threat models, specifically regarding the object metadata init.
+>>> Thank you for the reference! I also don't get why it needs to zero
+>>> the metadata and tracking information.
+>> Hmm taking a step back, it seems really suboptimal to initialize the
+>> outside-object freepointer as part of init_on_free:
 >>
->> This is a patch for cpuidle flow when KASAN enable, that is in ARM64
->> but not in ARM, so add to ARM.
+>> - the freeing itself will always set it one way or another, in this case
+>> free_to_partial_list() will do set_freepointer() after 
+>> free_debug_processing()
 >>
->> The reference commits did not mention fix any commits.
->> [1] commit 0d97e6d8024c ("arm64: kasan: clear stale stack poison")
->> [2] commit d56a9ef84bd0 ("kasan, arm64: unpoison stack only with
->> CONFIG_KASAN_STACK")
-> 
-> These are not suitable for use as a Fixes: tag because these commits
-> refer to code in another part of the tree that has nothing to do with
-> the BUG() dump that is contained within your commit message.
-> 
-> I ask again... Is this a bug fix?
-> 
-> Is it a regression?
-> 
-> Is it something that used to work that no longer works?
-> 
-> When did it break?
-> 
-> Has it always been broken?
-> 
-> Has it been broken since KASAN was introduced on 32-bit ARM?
-> 
+>> - we lose the ability to detect if the allocated slab object's user 
+>> wrote to
+>> it, which is a buffer overflow
+>>
+>> So the best option to me would be to adjust the init in 
+>> slab_free_hook() to
+>> avoid the outside-object freepointer similarly to how it avoids the 
+>> red zone.
+>>
+>> We'll still not have the buffer overflow detection ability for bulk free
+>> where slab_free_freelist_hook() will set the free pointer before we 
+>> reach
+>> the checks, but changing that is most likely not worth the trouble, and
+>> especially not suitable for a stable-candidate fix we need here.
+>
+> It seems like a good alternative to me, I'll push a V2 patch with 
+> those changes.
+>
+> I help maintaining the Linux-Hardened patchset in which we have a slab 
+> object canary feature that helps detecting overflows. It is located 
+> just after the object freepointer.
 
-Yes, this is a bug fix and it has been broken since KASAN was introduced on 32-bit ARM.
-So, I think this should be
-	Fixes: 5615f69bc209 ("ARM: 9016/2: Initialize the mapping of KASan shadow memory")
+
+I've tried a patch where the freepointer is avoided but it results in 
+the same bug. It seems that the commit 0f181f9fbea8bc7ea ("mm/slub.c: 
+init_on_free=1 should wipe freelist ptr for bulk allocations") inits the 
+freepointer on allocation if init_on_free is set in order to return a 
+clean initialized object to the caller.
+
+
+>
+>>
+>>>> The patch could also be optimized a bit by restricting 
+>>>> set_freepointer() call to the `CONFIG_SLAB_FREELIST_HARDENED` 
+>>>> option value.
+>>>>
+>>> Yeah. Maybe memcg_alloc_abort_single() needs this too.
+>>>
+>>> Thanks.
+>>>
+>>>> Thanks again, Nicolas
+>>>>
+>>>>> Thanks.
+>>>>>
+>>>>>> Object's freepointer thus needs to be properly set using
+>>>>>> set_freepointer() after init_on_free.
+>>>>>>
+>>>>>> To reproduce, set `slub_debug=FU init_on_free=1 log_level=7` on the
+>>>>>> command line of a kernel build with 
+>>>>>> `CONFIG_SLAB_FREELIST_HARDENED=y`.
+>>>>>>
+>>>>>> dmesg sample log:
+>>>>>> [   10.708715] 
+>>>>>> =============================================================================
+>>>>>> [   10.710323] BUG kmalloc-rnd-05-32 (Tainted: G B           T ): 
+>>>>>> Freepointer corrupt
+>>>>>> [   10.712695] 
+>>>>>> -----------------------------------------------------------------------------
+>>>>>> [   10.712695]
+>>>>>> [   10.712695] Slab 0xffffd8bdc400d580 objects=32 used=4 
+>>>>>> fp=0xffff9d9a80356f80 
+>>>>>> flags=0x200000000000a00(workingset|slab|node=0|zone=2)
+>>>>>> [   10.716698] Object 0xffff9d9a80356600 @offset=1536 
+>>>>>> fp=0x7ee4f480ce0ecd7c
+>>>>>> [   10.716698]
+>>>>>> [   10.716698] Bytes b4 ffff9d9a803565f0: 00 00 00 00 00 00 00 00 
+>>>>>> 00 00 00 00 00 00 00 00  ................
+>>>>>> [   10.720703] Object   ffff9d9a80356600: 00 00 00 00 00 00 00 00 
+>>>>>> 00 00 00 00 00 00 00 00  ................
+>>>>>> [   10.720703] Object   ffff9d9a80356610: 00 00 00 00 00 00 00 00 
+>>>>>> 00 00 00 00 00 00 00 00  ................
+>>>>>> [   10.724696] Padding  ffff9d9a8035666c: 00 00 00 00 00 00 00 00 
+>>>>>> 00 00 00 00 00 00 00 00  ................
+>>>>>> [   10.724696] Padding  ffff9d9a8035667c: 00 00 00 
+>>>>>> 00                                      ....
+>>>>>> [   10.724696] FIX kmalloc-rnd-05-32: Object at 
+>>>>>> 0xffff9d9a80356600 not freed
+>>>>>>
+>>>>>> Signed-off-by: Nicolas Bouchinet<nicolas.bouchinet@ssi.gouv.fr>
+>>>>>> ---
+>>>>>>    mm/slub.c | 8 +++++++-
+>>>>>>    1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/mm/slub.c b/mm/slub.c
+>>>>>> index 3aa12b9b323d9..71dbff9ad8f17 100644
+>>>>>> --- a/mm/slub.c
+>>>>>> +++ b/mm/slub.c
+>>>>>> @@ -4342,10 +4342,16 @@ static __fastpath_inline
+>>>>>>    void slab_free(struct kmem_cache *s, struct slab *slab, void 
+>>>>>> *object,
+>>>>>>               unsigned long addr)
+>>>>>>    {
+>>>>>> +    bool init = false;
+>>>>>> +
+>>>>>>        memcg_slab_free_hook(s, slab, &object, 1);
+>>>>>> +    init = slab_want_init_on_free(s);
+>>>>>>    -    if (likely(slab_free_hook(s, object, 
+>>>>>> slab_want_init_on_free(s))))
+>>>>>> +    if (likely(slab_free_hook(s, object, init))) {
+>>>>>> +        if (init)
+>>>>>> +            set_freepointer(s, object, NULL);
+>>>>>>            do_slab_free(s, slab, object, object, 1, addr);
+>>>>>> +    }
+>>>>>>    }
+>>>>>>      static __fastpath_inline
+> Thanks again for your review,
+>
+> Nicolas
+>
