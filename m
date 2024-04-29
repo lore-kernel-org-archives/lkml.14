@@ -1,215 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CBD3BBC7;
-	Mon, 29 Apr 2024 10:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E0D39AC3
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 10:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714386955; cv=none; b=QlMFiUdwHbJD5LEN3csoY5QbPAiaz1XRZycOV7CPWDaMKbxPuNWA3pFcIEuQe8aMypMDV6w68qBg9xrq6XQ9aA8HQF3FRzwmKpM0nG+nLibJlT+bjvS8mcIniSZV5jPNIamWEJfKd0viwvqh1KO456sHjWciQz3GbdRMusY3h7Y=
+	t=1714386956; cv=none; b=U3JFFZC+VmYOkWhY+RIrhFyUdOYb1BJHFFbSLrOIWmBxV+pvbAv4nniWPIln9RFyrrjMc4whrHaa+LwWN94q34g3EfE8XFace57vNCc5/ggHUT7chL/op/jQVzr5PgghAWPOKXAS7eWTWdGI0QzDwmg2lHyzDeQA+MI35XY/SWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714386955; c=relaxed/simple;
-	bh=lorneWCfie5zAf/sR1Ivkns2EJjrI2HUJb9y/9+fSJk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gpX/B8jXDGSdaGdM63uMhTUVAp88UZCT2JszhvVPQksXM7hyZCHqQAcJCzad2IHR1NziMDNVx3TnvRAMU3eoNjHbaUsYMJGMOkTYIUUdvGlG1481Srp0h5CnJZgzp/Z+XSjETMV1obEbqPNklRLLbEQFVDRa5v3xOWxQSoV7E0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=t2mHGuw1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714386956; c=relaxed/simple;
+	bh=D4hROTlU0kdQTa7T42f1g071O1XrjI4wtd36yDhM8oc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TdnnrAC/FyIIqk9esK6gdo1BaLYyb1TqmMi4ttO3zTMDi9daidvrAoc6QZ6OPg9jx7/uyEA7FLtbafsWlYyBzqRDaOfFNs7cg+LQ9POKfEskE2q+6zUPCuDYiKC0fZqx/9WlPxqYafeVok5bufmCbiVFT3GsrDMHJMtHnLlNTN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=osimp+Wi; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="t2mHGuw1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5372C4AF1B;
-	Mon, 29 Apr 2024 10:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1714386955;
-	bh=lorneWCfie5zAf/sR1Ivkns2EJjrI2HUJb9y/9+fSJk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t2mHGuw149tJgw1/0AERhWuhw23DgnO1bkTOsXOvfh94zkGdCY1hp/7j+DoLfGS0f
-	 4n/Jl/8ZLOzzCjyuFRBqiR8c2jiAqskbmzNNegD1zlankqNKM5zb/2p1v0BluJJCor
-	 8XlPF3l3iUukGEga+W43zzfMmBFkZDtztcW7pM9U=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	torvalds@linux-foundation.org,
-	stable@vger.kernel.org
-Cc: lwn@lwn.net,
-	jslaby@suse.cz,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.1.89
-Date: Mon, 29 Apr 2024 12:35:50 +0200
-Message-ID: <2024042915-lustfully-hardness-1f6c@gregkh>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <2024042914-steadfast-skirmish-6b76@gregkh>
-References: <2024042914-steadfast-skirmish-6b76@gregkh>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="osimp+Wi"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a5878caeb9eso530350366b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 03:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714386951; x=1714991751; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1P++aQSPc6pWnY3non1DpBZNviMvxG8QQjODyNDwQzI=;
+        b=osimp+WiytLxDG8KJBdBU4qUKR0yFjLp58CqKkInZ1buLLuJWQgY0k8JHLCnx+1ko0
+         qM8YpGjINTPHivPOYGB5dEzTxgRmGFpIDTCvo8mFfjqQTuaQmBW9an3CWRhtBBxSWa0o
+         8kJszKALlUxg7PPdm2EpddNFndP6tDLx/aeNyCCJEKIunzOGbxXRccxnyNpnwgZwVZeW
+         ck/yDREus4+8srQ/CRAjVwHnAv5aoiPyc87yGz7yFv53maGkQFebOTKnuK2xPb2ksRcH
+         RHImQckeOZPJQgXI0oHcTTOVkWmYHYg364lMOG5KiJGcrQKIHTVUVItZjhCWfY/potfw
+         H1JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714386951; x=1714991751;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1P++aQSPc6pWnY3non1DpBZNviMvxG8QQjODyNDwQzI=;
+        b=tD3IJj3gb0i0V1dhPDw0urz9Lssjp0yMOHpi+LgKbIFkEFkoaKxSc/PGMmJZP55bzf
+         fP3g/9ta5n/mhQ/ijYu2JtPf8F9BwmAgxLcvftWk22q5fjGlxdbyCbdYJx1Cvv5cOe+c
+         zyQJjykGdcsSaJvPTx0NOhm8lkJw5R0tR2trQdCoHrpG/pAROboLHOyjQfXU41Q/qapZ
+         L82KCcub6Rp62fWhfDOAI8jrBK5N0jT8WtgK0yJmvqJJoobSizcGL74IR7EKuu3ssuz7
+         6o8z28TryHRSskByTiA5IrDiIU1/c7uiMstNT4UtzgKJqSPfr4Ij1htjcqBSzLGsWS2T
+         869w==
+X-Forwarded-Encrypted: i=1; AJvYcCXHa+hBB3mv4FfogSSZvqFZpSgBmrRJzkFDhzWh0aei/5DDFtAiqpx/60L005ZSWcOZyy7zAW8FwwAL44yDuwUiXuQRkw2Z9CtEzfkm
+X-Gm-Message-State: AOJu0Yx2zKhxuRbZylwT3+26rEM7+9eO5LogNGxX7F633WHc+Yf1jUQl
+	NwT7fFvNLLaS2DnFuNPnSBvAn9IkrWBCzv6I0rTYS6Xevos6QNHPJwdoVwyyisjyVDLCsQRIssB
+	6lis=
+X-Google-Smtp-Source: AGHT+IG2LaIhBRpKrhiNyxNfVcTeKVZT84nL2xVtGWqcgk4hja1Hk5xHRR/xQujTgEuZrNki/5RqzQ==
+X-Received: by 2002:a17:906:5fd3:b0:a58:e8c7:c0b8 with SMTP id k19-20020a1709065fd300b00a58e8c7c0b8mr4308756ejv.7.1714386951704;
+        Mon, 29 Apr 2024 03:35:51 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id a7-20020a170906670700b00a522bef9f06sm13717707ejp.181.2024.04.29.03.35.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 03:35:51 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Mon, 29 Apr 2024 11:35:49 +0100
+Subject: [PATCH v2 1/2] arm64: dts: exynos: gs101: add USB & USB-phy nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240429-usb-dts-gs101-v2-1-7c1797c9db80@linaro.org>
+References: <20240429-usb-dts-gs101-v2-0-7c1797c9db80@linaro.org>
+In-Reply-To: <20240429-usb-dts-gs101-v2-0-7c1797c9db80@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, Roy Luo <royluo@google.com>, 
+ kernel-team@android.com, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.12.4
 
-diff --git a/Makefile b/Makefile
-index c73cb678fb9a..a0472e1cf715 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 6
- PATCHLEVEL = 1
--SUBLEVEL = 88
-+SUBLEVEL = 89
- EXTRAVERSION =
- NAME = Curry Ramen
+Add the USB 3.1 Dual Role Device (DRD) controller and USB-PHY nodes for
+Google Tensor GS101.
+
+The USB 3.1 DRD controller has the following features:
+* compliant with both USB device 3.1 and USB device 2.0 standards
+* compliant with USB host 3.1 and USB host 2.0 standards
+* supports USB device 3.1 and USB device 2.0 interfaces
+* supports USB host 3.1 and USB host 2.0 interfaces
+* full-speed (12 Mbps) and high-speed (480 Mbps) modes with USB device
+  2.0 interface
+* super-speed (5 Gbps) mode with USB device 3.1 Gen1 interface
+* super-speed plus (10 Gbps) mode with USB device 3.1 Gen2 interface
+* single USB port which can be used for USB 3.1 or USB 2.0
+* on-chip USB PHY transceiver
+* DWC3 compatible
+* supports up to 16 bi-directional endpoints
+* compliant with xHCI 1.1 specification
+
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+
+---
+v2: fix commit message
+---
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi | 41 ++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+index 9755a0bb70a1..217699477b32 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
++++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+@@ -1261,6 +1261,47 @@ cmu_hsi0: clock-controller@11000000 {
+ 				      "usbdpdbg";
+ 		};
  
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 44da1e14a374..9deba798cc91 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -257,19 +257,9 @@ static struct platform_device pandora_backlight = {
- 	.id	= -1,
- };
- 
--static struct gpiod_lookup_table pandora_soc_audio_gpios = {
--	.dev_id = "soc-audio",
--	.table = {
--		GPIO_LOOKUP("gpio-112-127", 6, "dac", GPIO_ACTIVE_HIGH),
--		GPIO_LOOKUP("gpio-0-15", 14, "amp", GPIO_ACTIVE_HIGH),
--		{ }
--	},
--};
--
- static void __init omap3_pandora_legacy_init(void)
- {
- 	platform_device_register(&pandora_backlight);
--	gpiod_add_lookup_table(&pandora_soc_audio_gpios);
- }
- #endif /* CONFIG_ARCH_OMAP3 */
- 
-diff --git a/sound/soc/ti/omap3pandora.c b/sound/soc/ti/omap3pandora.c
-index fa92ed97dfe3..a287e9747c2a 100644
---- a/sound/soc/ti/omap3pandora.c
-+++ b/sound/soc/ti/omap3pandora.c
-@@ -7,7 +7,7 @@
- 
- #include <linux/clk.h>
- #include <linux/platform_device.h>
--#include <linux/gpio/consumer.h>
-+#include <linux/gpio.h>
- #include <linux/delay.h>
- #include <linux/regulator/consumer.h>
- #include <linux/module.h>
-@@ -21,11 +21,12 @@
- 
- #include "omap-mcbsp.h"
- 
-+#define OMAP3_PANDORA_DAC_POWER_GPIO	118
-+#define OMAP3_PANDORA_AMP_POWER_GPIO	14
++		usbdrd31_phy: phy@11100000 {
++			compatible = "google,gs101-usb31drd-phy";
++			reg = <0x11100000 0x0100>,
++			      <0x110f0000 0x0800>,
++			      <0x110e0000 0x2800>;
++			reg-names = "phy", "pcs", "pma";
++			clocks = <&cmu_hsi0 CLK_GOUT_HSI0_USB31DRD_ACLK_PHYCTRL>,
++				 <&cmu_hsi0 CLK_GOUT_HSI0_USB31DRD_I_USB20_PHY_REFCLK_26>,
++				 <&cmu_hsi0 CLK_GOUT_HSI0_UASC_HSI0_CTRL_ACLK>,
++				 <&cmu_hsi0 CLK_GOUT_HSI0_UASC_HSI0_CTRL_PCLK>,
++				 <&cmu_hsi0 CLK_GOUT_HSI0_USB31DRD_I_USBDPPHY_SCL_APB_PCLK>;
++			clock-names = "phy", "ref", "ctrl_aclk", "ctrl_pclk", "scl_pclk";
++			samsung,pmu-syscon = <&pmu_system_controller>;
++			#phy-cells = <1>;
++			status = "disabled";
++		};
 +
- #define PREFIX "ASoC omap3pandora: "
- 
- static struct regulator *omap3pandora_dac_reg;
--static struct gpio_desc *dac_power_gpio;
--static struct gpio_desc *amp_power_gpio;
- 
- static int omap3pandora_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_pcm_hw_params *params)
-@@ -77,9 +78,9 @@ static int omap3pandora_dac_event(struct snd_soc_dapm_widget *w,
- 			return ret;
- 		}
- 		mdelay(1);
--		gpiod_set_value(dac_power_gpio, 1);
-+		gpio_set_value(OMAP3_PANDORA_DAC_POWER_GPIO, 1);
- 	} else {
--		gpiod_set_value(dac_power_gpio, 0);
-+		gpio_set_value(OMAP3_PANDORA_DAC_POWER_GPIO, 0);
- 		mdelay(1);
- 		regulator_disable(omap3pandora_dac_reg);
- 	}
-@@ -91,9 +92,9 @@ static int omap3pandora_hp_event(struct snd_soc_dapm_widget *w,
- 	struct snd_kcontrol *k, int event)
- {
- 	if (SND_SOC_DAPM_EVENT_ON(event))
--		gpiod_set_value(amp_power_gpio, 1);
-+		gpio_set_value(OMAP3_PANDORA_AMP_POWER_GPIO, 1);
- 	else
--		gpiod_set_value(amp_power_gpio, 0);
-+		gpio_set_value(OMAP3_PANDORA_AMP_POWER_GPIO, 0);
- 
- 	return 0;
- }
-@@ -228,10 +229,35 @@ static int __init omap3pandora_soc_init(void)
- 
- 	pr_info("OMAP3 Pandora SoC init\n");
- 
-+	ret = gpio_request(OMAP3_PANDORA_DAC_POWER_GPIO, "dac_power");
-+	if (ret) {
-+		pr_err(PREFIX "Failed to get DAC power GPIO\n");
-+		return ret;
-+	}
++		usbdrd31: usb@11110000 {
++			compatible = "google,gs101-dwusb3";
++			clocks = <&cmu_hsi0 CLK_GOUT_HSI0_USB31DRD_BUS_CLK_EARLY>,
++				<&cmu_hsi0 CLK_GOUT_HSI0_USB31DRD_I_USB31DRD_SUSPEND_CLK_26>,
++				<&cmu_hsi0 CLK_GOUT_HSI0_UASC_HSI0_LINK_ACLK>,
++				<&cmu_hsi0 CLK_GOUT_HSI0_UASC_HSI0_LINK_PCLK>;
++			clock-names = "bus_early", "susp_clk", "link_aclk", "link_pclk";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x11110000 0x10000>;
++			status = "disabled";
 +
-+	ret = gpio_direction_output(OMAP3_PANDORA_DAC_POWER_GPIO, 0);
-+	if (ret) {
-+		pr_err(PREFIX "Failed to set DAC power GPIO direction\n");
-+		goto fail0;
-+	}
++			usbdrd31_dwc3: usb@0 {
++				compatible = "snps,dwc3";
++				clocks = <&cmu_hsi0 CLK_GOUT_HSI0_USB31DRD_I_USB31DRD_REF_CLK_40>;
++				clock-names = "ref";
++				reg = <0x0 0x10000>;
++				interrupts = <GIC_SPI 463 IRQ_TYPE_LEVEL_HIGH 0>;
++				phys = <&usbdrd31_phy 0>, <&usbdrd31_phy 1>;
++				phy-names = "usb2-phy", "usb3-phy";
++				status = "disabled";
++			};
++		};
 +
-+	ret = gpio_request(OMAP3_PANDORA_AMP_POWER_GPIO, "amp_power");
-+	if (ret) {
-+		pr_err(PREFIX "Failed to get amp power GPIO\n");
-+		goto fail0;
-+	}
-+
-+	ret = gpio_direction_output(OMAP3_PANDORA_AMP_POWER_GPIO, 0);
-+	if (ret) {
-+		pr_err(PREFIX "Failed to set amp power GPIO direction\n");
-+		goto fail1;
-+	}
-+
- 	omap3pandora_snd_device = platform_device_alloc("soc-audio", -1);
- 	if (omap3pandora_snd_device == NULL) {
- 		pr_err(PREFIX "Platform device allocation failed\n");
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto fail1;
- 	}
- 
- 	platform_set_drvdata(omap3pandora_snd_device, &snd_soc_card_omap3pandora);
-@@ -242,20 +268,6 @@ static int __init omap3pandora_soc_init(void)
- 		goto fail2;
- 	}
- 
--	dac_power_gpio = devm_gpiod_get(&omap3pandora_snd_device->dev,
--					"dac", GPIOD_OUT_LOW);
--	if (IS_ERR(dac_power_gpio)) {
--		ret = PTR_ERR(dac_power_gpio);
--		goto fail3;
--	}
--
--	amp_power_gpio = devm_gpiod_get(&omap3pandora_snd_device->dev,
--					"amp", GPIOD_OUT_LOW);
--	if (IS_ERR(amp_power_gpio)) {
--		ret = PTR_ERR(amp_power_gpio);
--		goto fail3;
--	}
--
- 	omap3pandora_dac_reg = regulator_get(&omap3pandora_snd_device->dev, "vcc");
- 	if (IS_ERR(omap3pandora_dac_reg)) {
- 		pr_err(PREFIX "Failed to get DAC regulator from %s: %ld\n",
-@@ -271,7 +283,10 @@ static int __init omap3pandora_soc_init(void)
- 	platform_device_del(omap3pandora_snd_device);
- fail2:
- 	platform_device_put(omap3pandora_snd_device);
--
-+fail1:
-+	gpio_free(OMAP3_PANDORA_AMP_POWER_GPIO);
-+fail0:
-+	gpio_free(OMAP3_PANDORA_DAC_POWER_GPIO);
- 	return ret;
- }
- module_init(omap3pandora_soc_init);
-@@ -280,6 +295,8 @@ static void __exit omap3pandora_soc_exit(void)
- {
- 	regulator_put(omap3pandora_dac_reg);
- 	platform_device_unregister(omap3pandora_snd_device);
-+	gpio_free(OMAP3_PANDORA_AMP_POWER_GPIO);
-+	gpio_free(OMAP3_PANDORA_DAC_POWER_GPIO);
- }
- module_exit(omap3pandora_soc_exit);
- 
+ 		pinctrl_hsi1: pinctrl@11840000 {
+ 			compatible = "google,gs101-pinctrl";
+ 			reg = <0x11840000 0x00001000>;
+
+-- 
+2.44.0.769.g3c40516874-goog
+
