@@ -1,312 +1,234 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from esa3.fujitsucc.c3s2.iphmx.com (esa3.fujitsucc.c3s2.iphmx.com [68.232.151.212])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E90481BB;
-	Mon, 29 Apr 2024 10:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714386332; cv=none; b=RmLT4UuNzrra/p7xz3MM6q5oLWqx4vUmzpoEC9pmKqgO6NK0JpGS+dvXz46lhv0siN32G+h4AZQzw0b1P6J+s7rFldJFfgaEtwLNiGHlxz1K3nJcYXgJEdv68EiL7yHMrrpaJ1kj36rylBsBQZTqNVPBGe6gDq9lNec4hwZN5oA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714386332; c=relaxed/simple;
-	bh=LIvkjHjII+w/YIjWTkZSqs4gt20HyUr04K+dyazYQ+c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RgagMJ2oNgkJwUWS3CueW2BIl4NVbb/v9ATTxB50j9s1a56yWmS5UBTxa9M1QZSWuftjrie3OjmcYXrejxxq/Uw4cMW+Vy/zGC7rOE42F1kduh3bqJGb9nTBLT15oUkiXvhN3WpTSrqNFJmyRZz29t/+8iKDoBejL/G7iuvQ6c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b2fzXdHE; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDDE2940C;
+	Mon, 29 Apr 2024 10:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.151.212
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714386418; cv=fail; b=lBJweor6aKEvYkzl3cHukuHPxC4+wbINBQ4jqsiteL7TPQvRsTE4nwP9RtomQFw/hy2lFPZxl8lghft+rOxSOv162t1Ivxh8mz9kzeC01+R6ew80pzbMMfzKrvo6oXddJXq+TZ5xQ2Doekj66rdXcU6Mc+HLvXSFxaDQZigqALc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714386418; c=relaxed/simple;
+	bh=ZJhvFnqYQDolVW+AVtWsgxLMDca/9muDkYDmMFoAvNg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fnUpAMbwp+EsBnDM9m2KzFoiWd6I6jrrB6d5ydmrhGyA2GgVtN5XEq1mbWe7ZjUHFe2yglAQNkeRvn//NQ+C475+4unQVCjs3ip+wRHIu08xwQr5YIz7bLguHROHbITahjpakznUE8ssFgpOTHEjaoD6ge5gdADazL4mBYXF2Ww=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=i7svhM+g; arc=fail smtp.client-ip=68.232.151.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b2fzXdHE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714386331; x=1745922331;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LIvkjHjII+w/YIjWTkZSqs4gt20HyUr04K+dyazYQ+c=;
-  b=b2fzXdHExp9FNOUaEDjVtqp1eNkfEr9d2uv+WgT6jhP8Sj4nT0/EOk7k
-   wbLDafqMeTG6g1awzPOoBe47c1n8Nr9aeDgfavmZYxVSYusDgYHVEqIaA
-   9QEJEYWJxIGNDignHGQmY9O6l+W0RR+MkgJTImORLiILtPklK9P/BEwB0
-   KM5CJDHX7c77gixH/WDtnC0ZozNqVyyoNhxVGAKf/CKRJEvq7x+ngc5Q+
-   Zx6p695V+Hg7/fEpuPIH9hAa6QlPh/6NKUx3gXn+jmej0zT6v4fGkqJQC
-   zNjJptpfVIMWleRKcp8chp9PoFQkqe+dCV93jQTy7ITscDT3lt6uPVB7A
-   Q==;
-X-CSE-ConnectionGUID: Ym77BXNwSZqv1TbAn7Iohg==
-X-CSE-MsgGUID: HvHyO5ouQs2HYHvcLp53Mg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="13827951"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="13827951"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 03:25:29 -0700
-X-CSE-ConnectionGUID: Z088nAtaQXWtNHpchgLpJw==
-X-CSE-MsgGUID: hJ+YXbotRPu8C/D8hqLxIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="26475181"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 29 Apr 2024 03:25:21 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id CFCF82F2; Mon, 29 Apr 2024 13:25:11 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Cc: Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Yue Wang <yue.wang@Amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Xiaowei Song <songxiaowei@hisilicon.com>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-Subject: [PATCH v3 5/5] PCI: kirin: Convert to agnostic GPIO API
-Date: Mon, 29 Apr 2024 13:23:22 +0300
-Message-ID: <20240429102510.2665280-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240429102510.2665280-1-andriy.shevchenko@linux.intel.com>
-References: <20240429102510.2665280-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="i7svhM+g"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1714386414; x=1745922414;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ZJhvFnqYQDolVW+AVtWsgxLMDca/9muDkYDmMFoAvNg=;
+  b=i7svhM+gFznvuTzzayJz/5TYrVHkcuiuY1+fnO4FNqdLvi5CKDNFk9WG
+   XgwkILaT+22+bU2trxonLICmJX5o+YnzNp377JAWpXA5jb9FbDRbpJPH3
+   mEHjIk27XMm25JeUFqi1KASe/Qru+ziTQyThdpJJI+4LQXHzjuzK641k4
+   5pZjHQTy/wzCcF27erAkBeqabsSDWxXLw3GKGYkaNyT7pWwekmNkSXLlJ
+   aKWqLGP39mcIUTAKuZGdIx4gP5sKZ+CkiwYvZhU5u6jGixM6QlFGfwk/0
+   iUT5Wc1kp48PHxrsihF80z/gLLxdElrQZk0v4NHqxVRK4aOb1R9PQNS7V
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="29305768"
+X-IronPort-AV: E=Sophos;i="6.07,239,1708354800"; 
+   d="scan'208";a="29305768"
+Received: from mail-japaneastazlp17011004.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.4])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 19:25:39 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h5h+pgqJNxbyNal4QH7EWoyWflb5GKyNXTVYd/t/NrGvWZYpSMycuieR2SCNH2DxeEek5q8u7f9IqnHVDpZ2a6eFahV/J3iqanNnQ1jXEMjyUd/CRcHyZe4aQEe5wFBRFNxH7lhvC4Jr8dTPhC7ee4MZ1+dXsjB01CgPUcqjaXlMAY3hQfYXEDQz4XXmXMH/+Yp75RbidKUHT7G63xOn/dm82nkcQ7dsYGi783scUZm0r1MKQ70Z/hij/1KUeZIk/YM40vEHRuMfL23EmeCWp1QvjKXzC2pw0rCsAHxbxk7oJdhpLOXFc08oNjNJKZqBdLEKiAwXe76Hlx9GX1lkNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZJhvFnqYQDolVW+AVtWsgxLMDca/9muDkYDmMFoAvNg=;
+ b=ZRC3F5zUuidCf3htRyOW5V8zH1UuDPF3rTt5426ch3y/lgZU/0yITIdnAnBVg0VNO/QUsA+iLGb4Jt/dGFtgAOKziZwCwRUUl00FopmAkOvoNyAJIDPyCQvKlzRaHsCtHxFDy/Ox0Qrae+kWmeUE29MHJtwxAtvLACO+9zd9hCe0xZrvQ9oxHSF+JRI4y9bSmBb21KN5pZp3hl0dCM1/35L+NL3AG6VXi2NDyGLyZuAg89c6ZgO+5lkdThLxeqAHTDMlXDpnWpWIb/gAik2qHFuCNEMpO79tz9TaazTD+OxRI9+wKUeBl15bKo06wBrCHM6lPHvTAebc8iyXHi3EPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (2603:1096:403:6::12)
+ by OS3PR01MB10138.jpnprd01.prod.outlook.com (2603:1096:604:1e3::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
+ 2024 10:25:36 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::d9ba:425a:7044:6377]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::d9ba:425a:7044:6377%5]) with mapi id 15.20.7519.031; Mon, 29 Apr 2024
+ 10:25:36 +0000
+From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: "dave@stgolabs.net" <dave@stgolabs.net>, "jonathan.cameron@huawei.com"
+	<jonathan.cameron@huawei.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
+	<ira.weiny@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] cxl/region: Fix potential invalid pointer dereference
+Thread-Topic: [PATCH 1/2] cxl/region: Fix potential invalid pointer
+ dereference
+Thread-Index: AQHamdUJpJYyJtkDbUeNFeBCzHKRtLF/B10AgAAEHAA=
+Date: Mon, 29 Apr 2024 10:25:35 +0000
+Message-ID: <576dccd9-1f8d-4c69-bc7f-497413b87b9d@fujitsu.com>
+References: <20240429013154.368118-1-lizhijian@fujitsu.com>
+ <18a295a2-b734-45dd-9c95-660a9e1f58e4@moroto.mountain>
+In-Reply-To: <18a295a2-b734-45dd-9c95-660a9e1f58e4@moroto.mountain>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY1PR01MB1562:EE_|OS3PR01MB10138:EE_
+x-ms-office365-filtering-correlation-id: b34fe062-2a24-4daa-6f59-08dc6836b53e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|1800799015|7416005|376005|366007|38070700009|1580799018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?QVNZbkJjRzgyZHc5cmkxNWlRdjUwZzYyaDhQdWhkQk95UzB1a0lSVGh3cndI?=
+ =?utf-8?B?bjlXWlg5eW1sZ0diOXBYeXVjOExQTUcyYnc5KzhCRXdJS0FBQnRoZGpRWWRv?=
+ =?utf-8?B?Rnh2TUJMZTZtSk1yT1B6RXVyQ0xSNXVLbis5ZDlxVndFcjFYK2tVaHU0MndZ?=
+ =?utf-8?B?anBmcE40d204ZkNLcjhBSzJCOFZoaHIwREY0UTBROVUzSFViZmJxbW01ODh6?=
+ =?utf-8?B?QncyRmoxeTgzUGhHaExnd05iQkdIbWw2eHJhOHJxZk00S0Y0TWdKbTdjNzla?=
+ =?utf-8?B?SEFzNENXbkFRZVU2MnI0VythdWlVTzlKQTJERndXUXp3QysvSjZKS0lkektm?=
+ =?utf-8?B?QzFvM3ZSWnQwbGZwdDRMTGFvRWs1N2h0OXZuQzNtYk00Ym1ZMS9BM1ZIUWZI?=
+ =?utf-8?B?ckhBYVpOOXBzblNFWTRWdUt6a0dQU2VwSDR5LzdzRFErZEZOeEJ2MVF5dnQ2?=
+ =?utf-8?B?NGdocWUvdEs0V2x2OGZyNzh6dEJhNDZRK24wUHRMUDlzUmZKajdDRk5RQ1hN?=
+ =?utf-8?B?YW9UbUlGT28rTVhwQUs3TG0rTkRFSEU1cHovbDlvdndxMktOaHkxQ3JON2FD?=
+ =?utf-8?B?WkRwWXdhL1NmRGdqci9TZHhaMnJqRzNjS28vZGV4dHdOekIvU1BWU3ZMcUpv?=
+ =?utf-8?B?V1AwMzcwVUdEcEx1NDFNdzZldVdibHhJbEF5elBRSGdFSCtlQU10WU1UU2Nw?=
+ =?utf-8?B?M1dGOWJBL2ZXaG0yTkh1REhMTElwYkVIM0pKbnJuREl1S3FCdzM2Q2RMZEh0?=
+ =?utf-8?B?NXNXby9ZYnpVMXFTUUZtODM0cjVoZVU0UjlwNUVCWVhPeWhUMm8raEhubkNa?=
+ =?utf-8?B?SklaWHdBUS9ocllxenVGSEpBdElEVkNZalRqeVJOQldiWWhXakNoamJCMVMx?=
+ =?utf-8?B?bk81NmowMGVKNHpaWlJxd2pLL2xUY3NjYmZ3cWxWKzVFOU1SQ0hvZ055NEdK?=
+ =?utf-8?B?QVBRSEp2M2tTZ3YxeDhXK0Jqd3A5OTZVZk52U01wVjlaNkQxNTUrZ2JONzY5?=
+ =?utf-8?B?Y0dZdzJFNmZ2OVFOQTBKUW9obDVhdnFLQU1BeDU5aGVkRjZsTWwzTXFDT3Aw?=
+ =?utf-8?B?WFJsdkEwK2dTYlgyeFBlVURRelN0K1JFK0FTQjViYmlndVVwZ3hEL2liTmk0?=
+ =?utf-8?B?cnlnNGRNelYreW1lMXREeDFUaXUvaElTNDlHbXd4dEdQZjJiTjdRY1pVUGNk?=
+ =?utf-8?B?T2xYTkdGNXMreDlQUDdraERFcjRkdkUyRjZhbTllM0NHSFJNWldqTkRlcGNn?=
+ =?utf-8?B?M0FDZ1B0c2J1WEVwZGlRcC9zelJOb1UrY0RncEZGejVNYmx4NThRYXV0UVlL?=
+ =?utf-8?B?eVM5UU94SVBDUWU3cEliTE1DUktHQ3hIUHVEdUI1aWo4djN6Tnhza2VCdG5L?=
+ =?utf-8?B?dGs1NDNsT1BkU1V0TlVtcXA3VTI4NTR2NVBPZ25lc20zSytPaUhnM240bmtv?=
+ =?utf-8?B?MWxSaFFjbXFrSmI5VkwwMG9BbEtaWTJCWFJMOWtnUDdpdFZPZ2RmOFZWRGxB?=
+ =?utf-8?B?QWs4Y2VWSGRIU2YwQWhpWWMvQk1kWDJBdkJXNFRDVkYrMWM4OERZZkprUEdT?=
+ =?utf-8?B?VFRuMDJRd2t0SkdsL05UWkFZM2hRYy9Mdlk2cnNhTXBZbkdRcUtoQVdGSzI0?=
+ =?utf-8?B?QS95S1RnNnlGVzNxelB5eEIrSG9TSHRGUUNUWHJIRC9pYWxJOHMraldDQ0Y1?=
+ =?utf-8?B?N2JkanIxTFpMWG5Oa2ZzZHFqU3M2TDJIWWdnb3JNWFZBZyt3eTFmTWdzUXE3?=
+ =?utf-8?B?eHk2V2gvby9aQlVmTWFVbjZCRlVHdXRHOGU5eVR6VmZmN2hTb2hSSEkrQ1lr?=
+ =?utf-8?Q?ix7i+w4y1MnEoWaGxm1VosR1tLZsOat5Bwbb0=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007)(38070700009)(1580799018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?bmtTMmh6L2ZubWIvOFV1OUNCMmFrK3h3THJmZXZlRGFoYTVjUHBrVVF4ZTFF?=
+ =?utf-8?B?TDZGbHlrUlhNNG00RHRzL1AzbmZEbFNwMnJIMFRvbGVNeVp2M2NMYk9Pc1J4?=
+ =?utf-8?B?Wll1ZFg4bjRqbG0yUTNwOTlwb3p1K1o3dkJ0MGpDYS9hS3h4d1VGUnEwa21m?=
+ =?utf-8?B?czZ0T3ZXSlErQzcvNmJtb1pieXRiOXhuQ1RGVlMrQm5qMUxrR3dEYWFIeldF?=
+ =?utf-8?B?bHhheVdSRFY5cVRjUXV0UmdQZVdmVHVZdzRuM2IxUm8rQWFJVXl6cGpYbExG?=
+ =?utf-8?B?My9NbEZNUHpSQ3M1VnJ4ZlZ4OTdFZHlsd1Vkc2lNRXE2TGNkbStPcnA1Ky9Y?=
+ =?utf-8?B?TEVjbUIxalpnQmg1alV3cWkzNzdnSi9MRFB5K2k2UlZxTS9KaFZ1RUI4QTR4?=
+ =?utf-8?B?d3dkWDFsNjd1cE12VG1PMXgwWlZvRkRzVmdtWkVsZFNUUU5SYzdNTnFQR1M1?=
+ =?utf-8?B?c0NhTCtZaUZYZzNqaGwxdDJvbGhJV0cyNTcyYXJ3WFl6d2YrZE8ydkdGTW5m?=
+ =?utf-8?B?LzJDMTF1QVJ2N2NBY3VobWhobVV6MEVWeFovSTBZbU9yWHBsYXJTeWVFRUhJ?=
+ =?utf-8?B?amtoNVpWdUVGMU95SHdZdDRINVMzaTdxajc3QXNYRlgvZkRLYm81dVpLU1ZH?=
+ =?utf-8?B?aVkvaVNURDgrek9LNmIzdU42MzNIR0UwTGpKN256bWxkR1l3M2h6cVJkZDJJ?=
+ =?utf-8?B?VWNGSE9UaVJFNERITTdPbk1YQU9KZG5jVVEveVFmeHBaSSsvcnRiZy8vMXhJ?=
+ =?utf-8?B?dE1LY290enc1aE5IZlBiVm01MEJpeExPNzdPbmtaa05pcEoyVmd4eHRiemtm?=
+ =?utf-8?B?N09RREwxczhiamRvemlzVW91eGN3VFBvN0k2QlFOamVIcitidXBhSEkwRkNI?=
+ =?utf-8?B?RXZKdjBXQ2Y0VVJ3OEFtREhsQ0t6STdMMVBVTENPRkN6dXpqdFV2KzMzYTdE?=
+ =?utf-8?B?UDNlRE1FYXBqOE9VcGx6L1o4OENlTE55cEJqWmtnblBWSDZ6azh6UDFDZlpt?=
+ =?utf-8?B?Q25DeHI4ZStBMDNCa3NvZDA0bnVkQ0FjcDlrTlQwU21QVi93UytyOHBCblNC?=
+ =?utf-8?B?d00rSnhMYkZTNnBqK1lHdHBlM2wrOWllUFVINGVKMmZBNFZoRmppakluSjVE?=
+ =?utf-8?B?ZitQYVhkWHpYNTFYWUwybnRZUFVQNWtoRzdudmtDcnhnU0VvZDFDR0Mxc2I5?=
+ =?utf-8?B?amVIQkdlTmZjWEl1bGpwOFk3b1BVekZBd0ZpL3VoTVhxYkRLNm5zeXZUMW9l?=
+ =?utf-8?B?ZnN6clhyMGhuZUlHWm5IRDYzN0g2V0dqUEVyU3hWV2ZmR2R0MjlEZjNONVdv?=
+ =?utf-8?B?RUtEQllYZSs1SGVwS2h5aDBRS29IdmE3bnljcDRudFBKclpDaStpZ3JOVDZF?=
+ =?utf-8?B?N3BQblA0WGRnaldJWVlJSzhtaVBlZzZlNGU3cWZzT0pnSSs2aWc2aGZvU1Vs?=
+ =?utf-8?B?QWgvQXN0WjBKejdLakZKMEY4YzEySFVvTVhjSVNBdWFnNEQ5V0lqWUxEY05h?=
+ =?utf-8?B?Vk1oVlM1RXhieE8zWjNZMHp4OHoxb1F1cW9Ma3FkclJlYTh4ZlB5ZFZpZ29l?=
+ =?utf-8?B?ZTdjL3FiR0NtV2JjWHR1OWlqUjBFMmtBSjZFMkxrakFBWlBKMXZHeHh6bzBS?=
+ =?utf-8?B?Syt1MHRxYkQ2eHVzd1B1Q3VSclRUQW0xQTFFUkFPZFhRK3UrK2pYZDhjdXA0?=
+ =?utf-8?B?QXl3N0IwYW9uL0hIYjNqT0RQQXIyc2Q4dVJjWU5iYk9IcmVSYkJNUndla3Yx?=
+ =?utf-8?B?cXRxWlZhSjAyUW52TjBYVHdGakJCNmNRUnRVOTlnODl4UTUrRDJ5Z1lsamF3?=
+ =?utf-8?B?ZE4vcU1uQzd2M0Zjemg4L0hyV21FNlV0K3BrNEZSUGtxZ0xDOGxZRWg5Mzdm?=
+ =?utf-8?B?RjdjaDU0ZU12MGZNaVQvbjJaYzVyYmhmejhYckxTdGowd0dXMUloMkRBVDgw?=
+ =?utf-8?B?RnhWS05NNEwwQUhXMVg3NHh4ZEs5UXY4WFhzS25YQWpFNFNuTTVleHNWN0dQ?=
+ =?utf-8?B?QnRsVFlvamk1VTJQbXhmazYxanpXbThhUTJyQlVPUklzS3VIdTIxQWdCdGps?=
+ =?utf-8?B?NThhRUFoNEJrazVFNTZnaEwvNndmcXB4Q0x4bGRMWlJnek8rem1yOE5SNzlC?=
+ =?utf-8?B?ampLOXl5cG96a2lXeDlKVUJRRzk4ajUxZW4rSDJEVWN2OGhITTFvRzFoMWQx?=
+ =?utf-8?B?Tnc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <154DD3C63543B94B8B1EDF0526384BF5@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	9LHiy0sDV0XcIkFgzbpk+9aTkkybJh/CwXJ0Fd+/tYu4DDU0s2vKmckhtK8/0MxUyK1h+Ca4Y9z2SllwV2YCvmNaCTR3oZNLIAndYxEBnO5mOqyauTRU+mZMfZJti0KmccLjkQDUK/Lreid84MX6CPQpkRUVTmi53vPG/frYbEK+sm+iOpfHMliwdLNFykc+F8eLbG0WgtlGDEJ50LgFUfZW5rzrnUcu0qWC8wZ3HEzA0t8Z8q3aHX8REOiP8G7ImID4qAoGwUK6T+tkLiM8MbzeOi+3YkOruYcfBlgGuFUN2kihLdjPahoRW+5oVPAR4FYcBLMf2Bn1CwrfPrbV2j4Vd40KkaFK9WHRlgurRRIi2qkZQIb8lF9PzXAw2/c09AXFw5su86fXuESRBgyZzK3wgM9fk8FwoNs027QgD2Li1YYqxVPY3VyS5+eUPOjAMiQEk3ou/omWmENWOz4dTtG9idynkY0q6WNEDrp7q9xb2AdFj3llZ8fSkpeTQoJYRdR3RTmxCd9GYxtwGig9q0JjNkfea9OooaaLxTW6EUM40qAha1WuQdHomBufuHth5JhFVM2xd8rkTz8v7v3aKdJrAZpBH01Nu4D7/GWmsKbDzTHd7rmgrIXJGtNsuu0L
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY1PR01MB1562.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b34fe062-2a24-4daa-6f59-08dc6836b53e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2024 10:25:35.7483
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hegL7JDs46ecByuBbPgO3ZR8+00JUfI8R3lvEUJI4xoBTLkx2pqw+YBdTURtblOeopWm6SETFfjA683zgyHA0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB10138
 
-The of_gpio.h is going to be removed. In preparation of that convert
-the driver to the agnostic API.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pci/controller/dwc/pcie-kirin.c | 105 ++++++++----------------
- 1 file changed, 35 insertions(+), 70 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index d5523f302102..d1f54f188e71 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -12,12 +12,10 @@
- #include <linux/compiler.h>
- #include <linux/delay.h>
- #include <linux/err.h>
--#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/mfd/syscon.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/of_pci.h>
- #include <linux/phy/phy.h>
- #include <linux/pci.h>
-@@ -78,16 +76,16 @@ struct kirin_pcie {
- 	void		*phy_priv;	/* only for PCIE_KIRIN_INTERNAL_PHY */
- 
- 	/* DWC PERST# */
--	int		gpio_id_dwc_perst;
-+	struct gpio_desc *id_dwc_perst_gpio;
- 
- 	/* Per-slot PERST# */
- 	int		num_slots;
--	int		gpio_id_reset[MAX_PCI_SLOTS];
-+	struct gpio_desc *id_reset_gpio[MAX_PCI_SLOTS];
- 	const char	*reset_names[MAX_PCI_SLOTS];
- 
- 	/* Per-slot clkreq */
- 	int		n_gpio_clkreq;
--	int		gpio_id_clkreq[MAX_PCI_SLOTS];
-+	struct gpio_desc *id_clkreq_gpio[MAX_PCI_SLOTS];
- 	const char	*clkreq_names[MAX_PCI_SLOTS];
- };
- 
-@@ -381,15 +379,20 @@ static int kirin_pcie_get_gpio_enable(struct kirin_pcie *pcie,
- 	pcie->n_gpio_clkreq = ret;
- 
- 	for (i = 0; i < pcie->n_gpio_clkreq; i++) {
--		pcie->gpio_id_clkreq[i] = of_get_named_gpio(dev->of_node,
--						    "hisilicon,clken-gpios", i);
--		if (pcie->gpio_id_clkreq[i] < 0)
--			return pcie->gpio_id_clkreq[i];
-+		pcie->id_clkreq_gpio[i] = devm_gpiod_get_index(dev,
-+							"hisilicon,clken", i,
-+							GPIOD_OUT_LOW);
-+		if (IS_ERR(pcie->id_clkreq_gpio[i]))
-+			return dev_err_probe(dev, PTR_ERR(pcie->id_clkreq_gpio[i]),
-+					     "unable to get a valid clken gpio\n");
- 
- 		pcie->clkreq_names[i] = devm_kasprintf(dev, GFP_KERNEL,
- 						       "pcie_clkreq_%d", i);
- 		if (!pcie->clkreq_names[i])
- 			return -ENOMEM;
-+
-+		gpiod_set_consumer_name(pcie->id_clkreq_gpio[i],
-+					pcie->clkreq_names[i]);
- 	}
- 
- 	return 0;
-@@ -407,10 +410,16 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
- 		for_each_available_child_of_node(parent, child) {
- 			i = pcie->num_slots;
- 
--			pcie->gpio_id_reset[i] = of_get_named_gpio(child,
--							"reset-gpios", 0);
--			if (pcie->gpio_id_reset[i] < 0)
--				continue;
-+			pcie->id_reset_gpio[i] = devm_fwnode_gpiod_get_index(dev,
-+							 of_fwnode_handle(child),
-+							 "reset", 0, GPIOD_OUT_LOW,
-+							 NULL);
-+			if (IS_ERR(pcie->id_reset_gpio[i])) {
-+				if (PTR_ERR(pcie->id_reset_gpio[i]) == -ENOENT)
-+					continue;
-+				return dev_err_probe(dev, PTR_ERR(pcie->id_reset_gpio[i]),
-+						     "unable to get a valid reset gpio\n");
-+			}
- 
- 			pcie->num_slots++;
- 			if (pcie->num_slots > MAX_PCI_SLOTS) {
-@@ -434,6 +443,9 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
- 				ret = -ENOMEM;
- 				goto put_node;
- 			}
-+
-+			gpiod_set_consumer_name(pcie->id_reset_gpio[i],
-+						pcie->reset_names[i]);
- 		}
- 	}
- 
-@@ -463,14 +475,11 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
- 		return PTR_ERR(kirin_pcie->apb);
- 
- 	/* pcie internal PERST# gpio */
--	kirin_pcie->gpio_id_dwc_perst = of_get_named_gpio(dev->of_node,
--							  "reset-gpios", 0);
--	if (kirin_pcie->gpio_id_dwc_perst == -EPROBE_DEFER) {
--		return -EPROBE_DEFER;
--	} else if (!gpio_is_valid(kirin_pcie->gpio_id_dwc_perst)) {
--		dev_err(dev, "unable to get a valid gpio pin\n");
--		return -ENODEV;
--	}
-+	kirin_pcie->id_dwc_perst_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(kirin_pcie->id_dwc_perst_gpio))
-+		return dev_err_probe(dev, PTR_ERR(kirin_pcie->id_dwc_perst_gpio),
-+				     "unable to get a valid gpio pin\n");
-+	gpiod_set_consumer_name(kirin_pcie->id_dwc_perst_gpio, "pcie_perst_bridge");
- 
- 	ret = kirin_pcie_get_gpio_enable(kirin_pcie, pdev);
- 	if (ret)
-@@ -553,7 +562,7 @@ static int kirin_pcie_add_bus(struct pci_bus *bus)
- 
- 	/* Send PERST# to each slot */
- 	for (i = 0; i < kirin_pcie->num_slots; i++) {
--		ret = gpio_direction_output(kirin_pcie->gpio_id_reset[i], 1);
-+		ret = gpiod_direction_output_raw(kirin_pcie->id_reset_gpio[i], 1);
- 		if (ret) {
- 			dev_err(pci->dev, "PERST# %s error: %d\n",
- 				kirin_pcie->reset_names[i], ret);
-@@ -623,44 +632,6 @@ static int kirin_pcie_host_init(struct dw_pcie_rp *pp)
- 	return 0;
- }
- 
--static int kirin_pcie_gpio_request(struct kirin_pcie *kirin_pcie,
--				   struct device *dev)
--{
--	int ret, i;
--
--	for (i = 0; i < kirin_pcie->num_slots; i++) {
--		if (!gpio_is_valid(kirin_pcie->gpio_id_reset[i])) {
--			dev_err(dev, "unable to get a valid %s gpio\n",
--				kirin_pcie->reset_names[i]);
--			return -ENODEV;
--		}
--
--		ret = devm_gpio_request(dev, kirin_pcie->gpio_id_reset[i],
--					kirin_pcie->reset_names[i]);
--		if (ret)
--			return ret;
--	}
--
--	for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++) {
--		if (!gpio_is_valid(kirin_pcie->gpio_id_clkreq[i])) {
--			dev_err(dev, "unable to get a valid %s gpio\n",
--				kirin_pcie->clkreq_names[i]);
--			return -ENODEV;
--		}
--
--		ret = devm_gpio_request(dev, kirin_pcie->gpio_id_clkreq[i],
--					kirin_pcie->clkreq_names[i]);
--		if (ret)
--			return ret;
--
--		ret = gpio_direction_output(kirin_pcie->gpio_id_clkreq[i], 0);
--		if (ret)
--			return ret;
--	}
--
--	return 0;
--}
--
- static const struct dw_pcie_ops kirin_dw_pcie_ops = {
- 	.read_dbi = kirin_pcie_read_dbi,
- 	.write_dbi = kirin_pcie_write_dbi,
-@@ -680,7 +651,7 @@ static int kirin_pcie_power_off(struct kirin_pcie *kirin_pcie)
- 		return hi3660_pcie_phy_power_off(kirin_pcie);
- 
- 	for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++)
--		gpio_direction_output(kirin_pcie->gpio_id_clkreq[i], 1);
-+		gpiod_direction_output_raw(kirin_pcie->id_clkreq_gpio[i], 1);
- 
- 	phy_power_off(kirin_pcie->phy);
- 	phy_exit(kirin_pcie->phy);
-@@ -707,10 +678,6 @@ static int kirin_pcie_power_on(struct platform_device *pdev,
- 		if (IS_ERR(kirin_pcie->phy))
- 			return PTR_ERR(kirin_pcie->phy);
- 
--		ret = kirin_pcie_gpio_request(kirin_pcie, dev);
--		if (ret)
--			return ret;
--
- 		ret = phy_init(kirin_pcie->phy);
- 		if (ret)
- 			goto err;
-@@ -723,11 +690,9 @@ static int kirin_pcie_power_on(struct platform_device *pdev,
- 	/* perst assert Endpoint */
- 	usleep_range(REF_2_PERST_MIN, REF_2_PERST_MAX);
- 
--	if (!gpio_request(kirin_pcie->gpio_id_dwc_perst, "pcie_perst_bridge")) {
--		ret = gpio_direction_output(kirin_pcie->gpio_id_dwc_perst, 1);
--		if (ret)
--			goto err;
--	}
-+	ret = gpiod_direction_output_raw(kirin_pcie->id_dwc_perst_gpio, 1);
-+	if (ret)
-+		goto err;
- 
- 	usleep_range(PERST_2_ACCESS_MIN, PERST_2_ACCESS_MAX);
- 
--- 
-2.43.0.rc1.1336.g36b5255a03ac
-
+DQoNCk9uIDI5LzA0LzIwMjQgMTg6MTAsIERhbiBDYXJwZW50ZXIgd3JvdGU6DQo+IE9uIE1vbiwg
+QXByIDI5LCAyMDI0IGF0IDA5OjMxOjUzQU0gKzA4MDAsIExpIFpoaWppYW4gd3JvdGU6DQo+PiBj
+b25zdHJ1Y3RfcmVnaW9uKCkgY291bGQgcmV0dXJuIGEgUFRSX0VSUigpIHdoaWNoIGNhbm5vdCBi
+ZSBkZXJlZmVybmNlZC4NCj4+IE1vdmluZyB0aGUgZGVyZWZlcmVuY2UgYmVoaW5kIHRoZSBlcnJv
+ciBjaGVja2luZyB0byBtYWtlIHN1cmUgdGhlDQo+PiBwb2ludGVyIGlzIHZhbGlkLg0KPj4NCj4g
+DQo+IE5vLCB0aGlzIHBhdGNoIGlzIHVubmVjZXNzYXJ5Lg0KDQpBZ3JlZSwNCg0KDQo+IA0KPiBk
+cml2ZXJzL2N4bC9jb3JlL3JlZ2lvbi5jDQo+ICAgIDMwODAgICAgICAgICAgLyoNCj4gICAgMzA4
+MSAgICAgICAgICAgKiBFbnN1cmUgdGhhdCBpZiBtdWx0aXBsZSB0aHJlYWRzIHJhY2UgdG8gY29u
+c3RydWN0X3JlZ2lvbigpIGZvciBAaHBhDQo+ICAgIDMwODIgICAgICAgICAgICogb25lIGRvZXMg
+dGhlIGNvbnN0cnVjdGlvbiBhbmQgdGhlIG90aGVycyBhZGQgdG8gdGhhdC4NCj4gICAgMzA4MyAg
+ICAgICAgICAgKi8NCj4gICAgMzA4NCAgICAgICAgICBtdXRleF9sb2NrKCZjeGxyZC0+cmFuZ2Vf
+bG9jayk7DQo+ICAgIDMwODUgICAgICAgICAgcmVnaW9uX2RldiA9IGRldmljZV9maW5kX2NoaWxk
+KCZjeGxyZC0+Y3hsc2QuY3hsZC5kZXYsIGhwYSwNCj4gICAgMzA4NiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgbWF0Y2hfcmVnaW9uX2J5X3JhbmdlKTsNCj4gICAgMzA4
+NyAgICAgICAgICBpZiAoIXJlZ2lvbl9kZXYpIHsNCj4gICAgMzA4OCAgICAgICAgICAgICAgICAg
+IGN4bHIgPSBjb25zdHJ1Y3RfcmVnaW9uKGN4bHJkLCBjeGxlZCk7DQo+ICAgIDMwODkgICAgICAg
+ICAgICAgICAgICByZWdpb25fZGV2ID0gJmN4bHItPmRldjsNCj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBeXl5eXl5eXl5eXg0KPiBUaGlzIGlzIG5vdCBhIGRlcmVmZXJl
+bmNlLCBpdCdzIGp1c3QgcG9pbnRlciBtYXRoLiAgSW4gaW4gdGhpcyBjYXNlIGl0J3MNCj4gdGhl
+IHNhbWUgYXMgc2F5aW5nOg0KPiANCj4gCQlyZWdpb25fZGV2ID0gKHZvaWQgKiljeGxyOw0KDQoN
+CllvdSBhcmUgcmlnaHQsIGEgZXF1aXZhbGVudCBjb2RlIGNvdWxkIGJlOg0KCQlyZWdpb25fZGV2
+ID0gKChjaGFyICopY3hscikgKyBvZmZzZXRvZihzdHJ1Y3QgY3hsX3JlZ2lvbiwgZGV2KTsNCg0K
+DQpUaGFua3MNCg0KDQo+IA0KPiAgICAzMDkwICAgICAgICAgIH0gZWxzZQ0KPiAgICAzMDkxICAg
+ICAgICAgICAgICAgICAgY3hsciA9IHRvX2N4bF9yZWdpb24ocmVnaW9uX2Rldik7DQo+ICAgIDMw
+OTIgICAgICAgICAgbXV0ZXhfdW5sb2NrKCZjeGxyZC0+cmFuZ2VfbG9jayk7DQo+ICAgIDMwOTMN
+Cj4gICAgMzA5NCAgICAgICAgICByYyA9IFBUUl9FUlJfT1JfWkVSTyhjeGxyKTsNCj4gICAgICAg
+ICAgICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl4NCj4gVGhpcyBjaGVjayBtZWFu
+cyB0aGF0IGlmIGN4bHIgaXMgYW4gZXJyb3IgcG9pbnRlciB0aGVuIHdlIHdpbGwgY2xlYW4gdXAN
+Cj4gYW5kIHJldHVybiBhbiBlcnJvci4NCj4gDQo+IHJlZ2FyZHMsDQo+IGRhbiBjYXJwZW50ZXIN
+Cj4gDQo+ICAgIDMwOTUgICAgICAgICAgaWYgKHJjKQ0KPiAgICAzMDk2ICAgICAgICAgICAgICAg
+ICAgZ290byBvdXQ7DQo+ICAgIDMwOTcNCj4gICAgMzA5OCAgICAgICAgICBhdHRhY2hfdGFyZ2V0
+KGN4bHIsIGN4bGVkLCAtMSwgVEFTS19VTklOVEVSUlVQVElCTEUpOw0KPiAgICAzMDk5DQo+ICAg
+IDMxMDAgICAgICAgICAgZG93bl9yZWFkKCZjeGxfcmVnaW9uX3J3c2VtKTsNCj4gICAgMzEwMSAg
+ICAgICAgICBwID0gJmN4bHItPnBhcmFtczsNCj4gICAgMzEwMiAgICAgICAgICBhdHRhY2ggPSBw
+LT5zdGF0ZSA9PSBDWExfQ09ORklHX0NPTU1JVDsNCj4gICAgMzEwMyAgICAgICAgICB1cF9yZWFk
+KCZjeGxfcmVnaW9uX3J3c2VtKTsNCj4gICAgMzEwNA0KPiAgICAzMTA1ICAgICAgICAgIGlmIChh
+dHRhY2gpIHsNCj4gICAgMzEwNiAgICAgICAgICAgICAgICAgIC8qDQo+ICAgIDMxMDcgICAgICAg
+ICAgICAgICAgICAgKiBJZiBkZXZpY2VfYXR0YWNoKCkgZmFpbHMgdGhlIHJhbmdlIG1heSBzdGls
+bCBiZSBhY3RpdmUgdmlhDQo+ICAgIDMxMDggICAgICAgICAgICAgICAgICAgKiB0aGUgcGxhdGZv
+cm0tZmlybXdhcmUgbWVtb3J5IG1hcCwgb3RoZXJ3aXNlIHRoZSBkcml2ZXIgZm9yDQo+ICAgIDMx
+MDkgICAgICAgICAgICAgICAgICAgKiByZWdpb25zIGlzIGxvY2FsIHRvIHRoaXMgZmlsZSwgc28g
+ZHJpdmVyIG1hdGNoaW5nIGNhbid0IGZhaWwuDQo+ICAgIDMxMTAgICAgICAgICAgICAgICAgICAg
+Ki8NCj4gICAgMzExMSAgICAgICAgICAgICAgICAgIGlmIChkZXZpY2VfYXR0YWNoKCZjeGxyLT5k
+ZXYpIDwgMCkNCj4gICAgMzExMiAgICAgICAgICAgICAgICAgICAgICAgICAgZGV2X2VycigmY3hs
+ci0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSwgcmFuZ2U6ICVwclxuIiwNCj4gICAgMzExMyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwLT5yZXMpOw0KPiAgICAzMTE0ICAgICAgICAg
+IH0NCj4gICAgMzExNQ0KPiAgICAzMTE2ICAgICAgICAgIHB1dF9kZXZpY2UocmVnaW9uX2Rldik7
+DQo+ICAgIDMxMTcgIG91dDoNCj4gICAgMzExOCAgICAgICAgICBwdXRfZGV2aWNlKGN4bHJkX2Rl
+dik7DQo+ICAgIDMxMTkgICAgICAgICAgcmV0dXJuIHJjOw0KPiAgICAzMTIwICB9DQo+IA0KPiA=
