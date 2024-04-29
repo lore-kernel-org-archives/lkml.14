@@ -1,200 +1,124 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC3FF516;
-	Mon, 29 Apr 2024 06:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714370860; cv=fail; b=vARt3mQtynO2MOhyBTG1vpRCuUfPj7tqQaQvMNb7LnsoKG1CbYbnq51RL6DAnJlN95k+YpT1K4CaqPA7XJgDs/jvVbgO9IFwyXi6/h24a7T09xDRbEtcowYk7Yen+UQzGmDaH9rTMjG8cHXkuMqq8MlI0axemPRspmadmhzbfUk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714370860; c=relaxed/simple;
-	bh=4GTBc++k2m1XYiFM32SwGZHESot6HGtdnGTDCbjdcyY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kzOdVWiHePlbnVUAnhqmsYQTUwUrg3PNf8G5wAP96hMd+k5qOipEvS0ULguhWwP7fKRi8ERvkgeEc+DVvdQWsU2TTTTbgJJ8/1GwtZFzOaGcNyQY3d85SdR+jLN2vTp1WFDOTXEG0aeyBKxOujtYF4eOvzElJPc3kcyebL2ySTE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LTBubW4O; arc=fail smtp.client-ip=40.107.223.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6FC10A13
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 06:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714370912; cv=none; b=X7mWDoEUIQtrmxxofJYQeVzdP6hEE+fEfxxVRDRuBS91XVCCG2MtOSLPaCZE0Kmt1Y3oj9qiYhkHaWiJpbgIXj0H0J3GkujXzLwkLYbKo+Q1HAH0o4HcWgehYud97XIYDnJmN0EE16f0/Nv54zy21W/2w5a7LCH4qpI6VQn+VMg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714370912; c=relaxed/simple;
+	bh=G7TJdPY3qO2t92qGYbMZeZhZTuxjKGLg9eU1x0YjY10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=faVR6GML1B2nC5/oUuEL3M4sn3y7Gn204H2F2qwds9ZymYKhd6Ls5MHwMLfaYWH3HhxtR5FFxGDQ1oBj2aPhJnZ/hubSqw+cap+0hNZOZ1R8luLS7UUD3exmV7FKjE+EXE1gTLV9Pe2jJm2RnEB1EyHgLCrWwnsx5nR5pfpHFAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZyLZ0FPU; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LTBubW4O"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dv6OrrtaUJXu3JVpy3hR2vYtOTgK8h0PMN16i/5mG7vxS+AAWF0uxGbIxfgEhlV6UTnULnLXBAAvIhvoRYK/pisaGWt8B7zrJ1yewle/8QWji6w8Wq0vUGcyP9wzPgcJqx3R9uvdL4xMmnDV8K/29Hn3bVH9yK9IHvHxGEJm3u3Dt71a6Tx3aBOP9KOaogHqzRPwv71jC/6Q9ThXqXbcqIOWVNX9n+WXW7C03r5MhIBsZ9fUZZvRCLB9TAuFPpsMmAb+LRMHW5RF7O9ofttoGmexOejrXzBEzvy3yMc99C2FBdBN7U1gj2j7s5e/zK0BNXgU4hVTpNqjeASD/Sb6tA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2XmpS2cjGKvUPZ8u7fu3URtVwMyJcRwfEpuYWePsRHw=;
- b=YXnCcGm+RX/oliAMTofa501upEeIhZiyDWKgZwjgNES3jRvDCpxFYOrpxVfxhL+EBOMo2ajE+WNeGUXbp+MMOS6C2HGWMfLdtATds5fhI3ZG2lSVyWGtJ7WgH1aXuRWyZwdUPjyLHKN4JDzs2JAFPTud3vvo1Y/wV7i6/v5EbHnZ977LrgfV0iWrZK5Qrqbm8cbZX4hYg5hvEdzaoyl9SmPHhDHM7LY5KN4EOGaleUQgBBYcrwWax4oZgZyvKn3S8oakwm8KeedPddawWIl75m4pPbLHlDDKYWfyvqM2ik+I+Wk0WJcAG3quTyik2WNLVdxS5dV5v06KmnMoXpQm0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2XmpS2cjGKvUPZ8u7fu3URtVwMyJcRwfEpuYWePsRHw=;
- b=LTBubW4O1Z69vM67HiiEFTVBFB3iD3Ce22uSSLB/lASiJcGi9VGjn2ebVHXVsdIEQd7dtK2clfwv9FJ4rOjcOs/B8A3nU06aCSTjfa2OSANp9JJKTwmrTVtxgA4e82Fm72Z8swARPE6KbslpWp8/k/EStqPJ0DPFTLhKYEvPQ0U=
-Received: from CH0PR04CA0118.namprd04.prod.outlook.com (2603:10b6:610:75::33)
- by PH8PR12MB6915.namprd12.prod.outlook.com (2603:10b6:510:1bc::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
- 2024 06:07:36 +0000
-Received: from CH2PEPF00000147.namprd02.prod.outlook.com
- (2603:10b6:610:75:cafe::4f) by CH0PR04CA0118.outlook.office365.com
- (2603:10b6:610:75::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.35 via Frontend
- Transport; Mon, 29 Apr 2024 06:07:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF00000147.mail.protection.outlook.com (10.167.244.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Mon, 29 Apr 2024 06:07:35 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 29 Apr
- 2024 01:07:26 -0500
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
-	<thomas.lendacky@amd.com>
-CC: <ravi.bangoria@amd.com>, <hpa@zytor.com>, <rmk+kernel@armlinux.org.uk>,
-	<peterz@infradead.org>, <james.morse@arm.com>, <lukas.bulwahn@gmail.com>,
-	<arjan@linux.intel.com>, <j.granados@samsung.com>, <sibs@chinatelecom.cn>,
-	<nik.borisov@suse.com>, <michael.roth@amd.com>, <nikunj.dadhania@amd.com>,
-	<babu.moger@amd.com>, <x86@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <santosh.shukla@amd.com>,
-	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
-Subject: [PATCH 3/3] KVM SVM: Add Bus Lock Detect support
-Date: Mon, 29 Apr 2024 11:36:43 +0530
-Message-ID: <20240429060643.211-4-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240429060643.211-1-ravi.bangoria@amd.com>
-References: <20240429060643.211-1-ravi.bangoria@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZyLZ0FPU"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e47843cc7so3876095a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 23:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714370909; x=1714975709; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pvCfGDKq3NkKQAZVcl3gvcyNhlZM/4Uefp4v92bTZ8E=;
+        b=ZyLZ0FPU4n+cG1abmoWrih9jSVtdKwbw45Wy2UQREyArXF1+TRVQG3jYPOEF5zYp4e
+         iSphrrqM9wvG7RE/ABRKqn8Tx5YLfHWnoiuIAooTP8JG60JPxRLH1/7z52n5ZuBbduV6
+         mudnjnOWZl43OlP3jFvYrIob4bjqsCuHJLoA2JLSsEtr1IFPGqvfTH+0IgA2emc8aldy
+         1md2tiBpCLdNE/SzgODf5UeTu1UKRZWbCk2fUlBiWniC2EaQ7+iRXjNuhwDfGgAc8Erc
+         dWrDpXwVlRHRwp54BPm3YfAd4O0KCv2lWOxFauHKEqaOJzYTTb6Df4+eoOFY8u5iOnPV
+         cSBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714370909; x=1714975709;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pvCfGDKq3NkKQAZVcl3gvcyNhlZM/4Uefp4v92bTZ8E=;
+        b=Punve5LxPdC/6UBT1nZfRusMsPpi18v0DfhDlokvjHXfa3YLJXey27ihlBmEXAbuWc
+         edrcPeC4swLMVpp/JoXmarXI9TH9AliqoIF60SxJqpH9jxRIih1eVcZc35DVY5HNZvY/
+         gNOW3mJmV3EPS1yLdwlHQf87zgx4UzmALFV45hYM9eBZxWM6cIK+5N9Hso1atog/wX4N
+         hpjZmvczytsCTMdVfQ1Z9cMrDkdn9fQ0HVd+O0SBTxrSHyTVN3qbQlp8R6y+MS/1cyEG
+         uKEYa45jMBCe8lbFz2/MFQL/plVpKdNLApH7e4rJDQXGYh1hJaUypSYWG6fN2U38/N7A
+         ItlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPHBAseaD6GU45Tck9yvFS0rzx3fVPqg6T2jSL12ITT5AaGhS+GMyLzhURxfUlPvR8ncjiKLu9Iw5gIzIp+qIQRRnHpcyH1Q+LP0ce
+X-Gm-Message-State: AOJu0YwSLmlTDN4DlhNe0+IYM84mW5vY++yjbHaz+W+HPWed96YItVnV
+	3ruJ+omZnbCYETav/NmFgxJmLBiqVyQutp76PzyIzqvhVBvxOoe8E4NoXZ/1jMg=
+X-Google-Smtp-Source: AGHT+IGXHWZJ0k9VgResxd/8nAAasZ5KzykP6pPgXMGjd/2HPcVWuqQtBjRpxFXW+yVkCtBfMc2gcA==
+X-Received: by 2002:a50:d496:0:b0:571:d380:95fd with SMTP id s22-20020a50d496000000b00571d38095fdmr5722874edi.28.1714370908456;
+        Sun, 28 Apr 2024 23:08:28 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id v10-20020a056402184a00b005722cb1dd6fsm5920503edy.27.2024.04.28.23.08.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Apr 2024 23:08:28 -0700 (PDT)
+Date: Mon, 29 Apr 2024 09:08:24 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Christoph Lameter <cl@linux.com>, Peter Zijlstra <peterz@infradead.org>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] mm/slab: make __free(kfree) accept error pointers
+Message-ID: <571761df-fe50-49e8-8d56-65fbdec9a185@moroto.mountain>
+References: <285fee25-b447-47a1-9e00-3deb8f9af53e@moroto.mountain>
+ <Zi8N66yehahl6D59@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000147:EE_|PH8PR12MB6915:EE_
-X-MS-Office365-Filtering-Correlation-Id: 454b48fd-9cb8-4fb5-9341-08dc6812aa7a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|7416005|1800799015|82310400014|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?uH/9SplJFFNqlTWRWDC3aV3xOAENrUtClnibOYyzXybl0vXm06woaLINNC55?=
- =?us-ascii?Q?Q2znFcoLyaXhWpxFuXTfd5Yp++HXNcn6GiUN3hd6ex7xlbwkKBAdOvI6TTfh?=
- =?us-ascii?Q?VuSWY1LZdEh90G35EE1itOGaTeOHOv4Qf99Gp2JBFmCQSIWBBk4lDmap47K1?=
- =?us-ascii?Q?b8q7T0pXas49QC9U5Rj5h2CVQePMBoIwPevDoiiR03ZprxQxcSl2BMXlcmxl?=
- =?us-ascii?Q?PS191bsMv52CV/kDV8qzLn+6czNP/lQ8E46DESfwJhSs3qmuOt9yn7iceuYG?=
- =?us-ascii?Q?dHBDUKM9gvKKlWDKy7iHIGgHKUU2xAFIRpdIHtPBjIqx2cQirhjHVV+lPNm6?=
- =?us-ascii?Q?b5QljqIEELNlCgu2/KWfK0OkZBuIIUlfZJH2WTPQkjeJk+06H4k6FkXtU+2e?=
- =?us-ascii?Q?bUdD3yfzcVCW5MQutIy8hP0X6QCnj1yg+oHRjq+TuQLHs7hv/C48vAFsVQnO?=
- =?us-ascii?Q?3BUiI/amGvHSDIH4Isn3qMrVt3eukZ7iLCmqxRFkTP+fv6bwE5pE/kR993Lz?=
- =?us-ascii?Q?ypFzK49oPLVOQLyTLd6peUJ5jnwJCPAmoJZOjfVtdvKVqJ2bh4n0AmGq2jgd?=
- =?us-ascii?Q?f9FJwSdJ11JjcGcP1GPNWs3KG3GVRa4/y+/HDFjFQ61Jgq62xoBpjqtIUr9d?=
- =?us-ascii?Q?QeclBKFvXO8gyzn3o5koX/KeKCexQOt6EuW9omNU+qOYwHFNMfiuX+6J5jeR?=
- =?us-ascii?Q?jP9tlFJsZEDDmO4xpoZF3unPfeADImc/9kCjB+GXCEbulaoMZ1+WgPV/+FHf?=
- =?us-ascii?Q?eiozHo0aTYw370HCiLfkQ9Zn5rYmGR1Y4JwVPo4W4EPkkNTHwgwps6KYq3g3?=
- =?us-ascii?Q?X1RAAtD0a8X5OtUKBb1izRKpoymfbjhZv56t+irnX4vIPsSPWh1BrtfVUzCE?=
- =?us-ascii?Q?RmlIwW0V8FeB2g+tlQHODjiXuwaecUisO6JSq2WttrrrLl73NJouFdGZ+IGD?=
- =?us-ascii?Q?eCkXjXghPLNCJFKJhIPBMF79i//HS51v7uwy/Iqo4rzIx+FpqgBqpoDnjNRz?=
- =?us-ascii?Q?5qVSB+Vz84YrGfqrrTit0d/2S0245sVtYkbO4m4ZB1//a1+2MXeg89eHTrZ9?=
- =?us-ascii?Q?xmMUnA8mgV/bVg8RsXwr25quTtOEeiKchctgBdeI8vS/W7WD44Y3EPOTYR3f?=
- =?us-ascii?Q?m1GmQqyv2WvOHpRuMpzL+Ez5TB2Ln4ksAPOmABSW6GXZCpmTocGOIT6AcFLo?=
- =?us-ascii?Q?FfPEzGamoGxgU0ApFytjcjYlMDCPmSZNM7ysqh0UYOTBqopGFPhwx6fOozMa?=
- =?us-ascii?Q?SLjutZMzuomgDVRugzbaeOBNaw1PJf+ONS00ECUOlnmkh1yE8ZhS+5PHaB2o?=
- =?us-ascii?Q?t7FkgRvgmn1CaXtkpWd2yRY64ugvgtzGokCqmUmANNojzs7Z+60nuOKVWyLn?=
- =?us-ascii?Q?wH567Wg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 06:07:35.8002
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 454b48fd-9cb8-4fb5-9341-08dc6812aa7a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000147.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6915
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zi8N66yehahl6D59@casper.infradead.org>
 
-Upcoming AMD uarch will support Bus Lock Detect. Add support for it
-in KVM. Bus Lock Detect is enabled through MSR_IA32_DEBUGCTLMSR and
-MSR_IA32_DEBUGCTLMSR is virtualized only if LBR Virtualization is
-enabled. Add this dependency in the KVM.
+On Mon, Apr 29, 2024 at 04:03:07AM +0100, Matthew Wilcox wrote:
+> > diff --git a/include/linux/slab.h b/include/linux/slab.h
+> > index 4cc37ef22aae..5f5766219375 100644
+> > --- a/include/linux/slab.h
+> > +++ b/include/linux/slab.h
+> > @@ -279,7 +279,7 @@ void kfree(const void *objp);
+> >  void kfree_sensitive(const void *objp);
+> >  size_t __ksize(const void *objp);
+> >  
+> > -DEFINE_FREE(kfree, void *, if (_T) kfree(_T))
+> > +DEFINE_FREE(kfree, void *, if (!IS_ERR_OR_NULL(_T)) kfree(_T))
+> 
+> Wait, why do we check 'if (_T)' at all?  kfree() already handles NULL
+> pointers just fine.  I wouldn't be averse to making it handle error
+> pointers either.
+> 
+> > -DEFINE_FREE(kvfree, void *, if (_T) kvfree(_T))
+> > +DEFINE_FREE(kvfree, void *, if (!IS_ERR_OR_NULL(_T)) kvfree(_T))
+> 
+> Ditto kvfree().  Fixing kfree() would fix both of these.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- arch/x86/kvm/svm/nested.c |  3 ++-
- arch/x86/kvm/svm/svm.c    | 16 +++++++++++++++-
- 2 files changed, 17 insertions(+), 2 deletions(-)
+I've always thought freeing pointers that have not been allocated is
+sloppy so I like that kfree() doesn't allow error pointers.  We always
+catch it before it reaches production and that teaches people better
+habbits.  Personally, I like how free_netdev() only accepts valid
+pointers.
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 55b9a6d96bcf..6e93c2d9e7df 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -586,7 +586,8 @@ static void nested_vmcb02_prepare_save(struct vcpu_svm *svm, struct vmcb *vmcb12
- 	/* These bits will be set properly on the first execution when new_vmc12 is true */
- 	if (unlikely(new_vmcb12 || vmcb_is_dirty(vmcb12, VMCB_DR))) {
- 		vmcb02->save.dr7 = svm->nested.save.dr7 | DR7_FIXED_1;
--		svm->vcpu.arch.dr6  = svm->nested.save.dr6 | DR6_ACTIVE_LOW;
-+		/* DR6_RTM is not supported on AMD as of now. */
-+		svm->vcpu.arch.dr6  = svm->nested.save.dr6 | DR6_FIXED_1 | DR6_RTM;
- 		vmcb_mark_dirty(vmcb02, VMCB_DR);
- 	}
- 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index d1a9f9951635..60f3af9bdacb 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1038,7 +1038,8 @@ void svm_update_lbrv(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	bool current_enable_lbrv = svm->vmcb->control.virt_ext & LBR_CTL_ENABLE_MASK;
--	bool enable_lbrv = (svm_get_lbr_vmcb(svm)->save.dbgctl & DEBUGCTLMSR_LBR) ||
-+	u64 dbgctl_buslock_lbr = DEBUGCTLMSR_BUS_LOCK_DETECT | DEBUGCTLMSR_LBR;
-+	bool enable_lbrv = (svm_get_lbr_vmcb(svm)->save.dbgctl & dbgctl_buslock_lbr) ||
- 			    (is_guest_mode(vcpu) && guest_can_use(vcpu, X86_FEATURE_LBRV) &&
- 			    (svm->nested.ctl.virt_ext & LBR_CTL_ENABLE_MASK));
- 
-@@ -3119,6 +3120,10 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
- 		if (data & DEBUGCTL_RESERVED_BITS)
- 			return 1;
- 
-+		if ((data & DEBUGCTLMSR_BUS_LOCK_DETECT) &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_BUS_LOCK_DETECT))
-+			return 1;
-+
- 		svm_get_lbr_vmcb(svm)->save.dbgctl = data;
- 		svm_update_lbrv(vcpu);
- 		break;
-@@ -5157,6 +5162,15 @@ static __init void svm_set_cpu_caps(void)
- 
- 	/* CPUID 0x8000001F (SME/SEV features) */
- 	sev_set_cpu_caps();
-+
-+	/*
-+	 * LBR Virtualization must be enabled to support BusLockTrap inside the
-+	 * guest, since BusLockTrap is enabled through MSR_IA32_DEBUGCTLMSR and
-+	 * MSR_IA32_DEBUGCTLMSR is virtualized only if LBR Virtualization is
-+	 * enabled.
-+	 */
-+	if (!lbrv)
-+		kvm_cpu_cap_clear(X86_FEATURE_BUS_LOCK_DETECT);
- }
- 
- static __init int svm_hardware_setup(void)
--- 
-2.44.0
+But I won't fight you on that if you want to change it.  People have
+discussed this in the past, but no one has actually sent the patch.  It
+would probably be merged.
 
+The __free() stuff is different because it's supposed to be transparent.
+
+Btw, I'm hoping we can officially declare small allocations as NOFAIL so
+then we can start doing allocations in the declaration block and remove
+the error checking and the cleanup.
+
+#define __ALLOC(p) p __free(kfree) = kmalloc(sizeof(*p), GFP_SMALL)
+#define __ZALLOC(p) p __free(kfree) = kzalloc(sizeof(*p), GFP_SMALL)
+
+	struct foo *__ZALLOC(p);
+
+regards,
+dan carpenter
