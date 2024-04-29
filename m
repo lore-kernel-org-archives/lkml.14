@@ -1,340 +1,477 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C09814A8D;
-	Mon, 29 Apr 2024 08:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725EB15E85
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714377659; cv=none; b=H17bLcYpkh11/CMrF/c96NtP811fw546asOGYYi9OcIenpqjYbW1jibDDJ13REc1eQm0ghZC9NwRVrn4COuZCDQyW4wrISlwno2U06QPmpMXe9mYgp29FykpZEuc+Ww/EW4IoGCnPcyhpGtmabttalXYJokeHW8lFHCPQgqcGwc=
+	t=1714377770; cv=none; b=RTIGJPNjrFYd5MpaDx44aUuwTCVDRKxoG6HKcPWfhsyUPKLaXszxiKXp+ML8yojzvC9mOUN3QGp8SsblR/SkqkI04bSOXq+JsrwOVs/1jh0HgFqIOZ22KSopTuqa+zz+ABHiuzWKw2F1RylVLUFW373lcFEH/yBdJ5osCd7XDIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714377659; c=relaxed/simple;
-	bh=XPeJX+Fp9+O76h6hmQ5WiXULYABz5dq/6CK9CQDq5DM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p5L6MSaYzoeRLWVuyT0XKVDMA8+6QjJy40CF63YpfaxsAord/C5YlB8qlC/grvYNTSyyw9OvUP69Eg0FxQcuIdENlGuOTS9hmkHBqybAzE1LJS6+awkVBJL2qsFZN7COgxYXdp8/IskTYorK5Z4A/WR9/HHbsVpuA5UoA8ofOEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HRHy/cCA; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714377770; c=relaxed/simple;
+	bh=9HoXmHzHQZ9ELzIrBrYKNCb/oWvWn5TWjSoHPopcX6E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mAiozZXzJ2DB2NGSfv9kEIGCfInTwSzKsAcp7ik+/eUA60/mfdLbv/R3YR9xmdIWgSLpg0Zn+WOfPg45UiaB3WtiHvsdNNOabVN0K+Hbh2eRzHe2H15UF0F3IaUmUakVw+hTBj7Lb7B26PKkVFuRF/aEgqBntAKUnbP7cFWwbr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=uLrmyNoi; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRHy/cCA"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5176f217b7bso6939396e87.0;
-        Mon, 29 Apr 2024 01:00:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="uLrmyNoi"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-34a42d6e216so902979f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 01:02:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714377655; x=1714982455; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714377767; x=1714982567; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+j62qIUnszPg6Zk+bFKXpqij8+kdOVWoS/e1ryACzWU=;
-        b=HRHy/cCAhhz6Wid6O/Eg4d7gGUFVZsL9SBzKJIPKE2sdXdo7CGkCobGmclg8Oa1sX5
-         I4kCqKWM8IpjRrwvLHhbWnlIRNcZ7QB7HfBFMjGbHgMJAYlLcPoPOK7wnSrw+ccDM0KO
-         gAXGs7QhIwZvTiGdqJhCgITVHJqcghD26y7geo2CfQE6YsrNC+Y2zVBsJy6Ju/GQSiwn
-         cwU9DM95GaF5VJ4PdwPLyzqP4H3/ENguK+PHetDWvHTt9Q6Y5IAE4oBbNq7tcGr+lmxw
-         GkGx7o0RGLweqPuT/O5zwjOSLgxb/OCRw3jsbejJ2pdTHVF5CHDJeg+YzApvM9csymUe
-         Yjfg==
+        bh=9lk6J9c7nceHYPPSuxHCl/jFNOuQDl39RqYLkN6g2zo=;
+        b=uLrmyNoivx3LSuqSymvFaYWv9E98dWMFdUXz055tfEppaax/syZeM6hnC9AyWAziau
+         ohUoc62nwq4ReIlXzWipN31JfYleJL7l0i7T4RYimDyfDBulsM2uB1xMPwPCj6uxxe7L
+         n+9pzABtdkovUUKWLRDzKywvfya03I/uhaC8WiWG+2ap84BnjuR39Vd1J/tYESQ70h2F
+         HInkAfX8L7Tfa8LNnTzAGfpxlpcdWLcYZxRkly+O3iw1u1Zcdk4kdTfms0G4v8zVUx56
+         6ybgjL4EFBOrcwvt2IsGybTv8lHIuKiEcnXdfZrfKJjI1NvKIPPXe2W7d4KGPRHsy6st
+         zI0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714377655; x=1714982455;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
+        d=1e100.net; s=20230601; t=1714377767; x=1714982567;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+j62qIUnszPg6Zk+bFKXpqij8+kdOVWoS/e1ryACzWU=;
-        b=XbNR+1Mg5lwNT3Ja2V1xlY/rmU/eBgCesUZ/+WXW6ur5CRV0qMuUk9Pv81riq44zEL
-         2ryyBRPkYyQhgQhuHeR7jMo+u260Mb+Lw/UhLQ+TPA5qLXg2UEXXNvRR96qvXCsEEGrE
-         by57sXgoUMHTlNpT9RUHgweI9jw8SfcO2NbaQLs0H736dJYDG0wr0P3SoCZnghuz2v0w
-         q1+tCaDySBeEJ1W3HvBMwkucqvH+I5lw/2x8MwqRE4EUjaxWD/iqF/xYnLIk0HkLmcY9
-         jBXT6H3zlAoGAN/swQW09PX85Bxw503xkh7/LQ+F7TYlcfzM+ZIHWxurnQdAuPoYnKxG
-         t/bA==
-X-Forwarded-Encrypted: i=1; AJvYcCW96ra4QIr7/LTH8YjtFB3YP57rRXL+veScNwEhwSUL8PMqn0Xb7cGKCLIigowFFzRDfYUVkr1aqarnGcOPRyxb7gZrKZtnbhbcSnz6eqSYKUaINaPfxN3ETRisSMibIa6l
-X-Gm-Message-State: AOJu0YwOEFo0nGG33vbEGi0YbqUCuLgN6/kX1mIAjbuRsqx5WGUikZBP
-	02FGh45LV5f/F3Hd0AVw4xOd8G6ZLyrF5EKM5M5xcVk8g8Klz+iF
-X-Google-Smtp-Source: AGHT+IGAwxjD9GjWfv3PN4b7ZYgQnCy/zm7JieZYZQCwuzh/QbGl4ZnRHzYHuisGZMCptSe7ycUYuQ==
-X-Received: by 2002:a05:6512:baa:b0:51d:d630:365c with SMTP id b42-20020a0565120baa00b0051dd630365cmr1231462lfv.4.1714377654950;
-        Mon, 29 Apr 2024 01:00:54 -0700 (PDT)
-Received: from gmail.com (1F2EF175.nat.pool.telekom.hu. [31.46.241.117])
-        by smtp.gmail.com with ESMTPSA id fw5-20020a170906c94500b00a5908cb01b4sm345991ejb.17.2024.04.29.01.00.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 01:00:53 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Mon, 29 Apr 2024 10:00:51 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Hillf Danton <hdanton@sina.com>, Andy Lutomirski <luto@amacapital.net>,
-	Peter Anvin <hpa@zytor.com>, Adrian Bunk <bunk@kernel.org>,
-	syzbot <syzbot+83e7f982ca045ab4405c@syzkaller.appspotmail.com>,
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-	andrii@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: [PATCH] x86/mm: Remove broken vsyscall emulation code from the page
- fault code
-Message-ID: <Zi9Ts1HcqiKzy9GX@gmail.com>
-References: <0000000000009dfa6d0617197994@google.com>
- <20240427231321.3978-1-hdanton@sina.com>
- <CAHk-=wjBvNvVggy14p9rkHA8W1ZVfoKXvW0oeX5NZWxWUv8gfQ@mail.gmail.com>
- <20240428232302.4035-1-hdanton@sina.com>
- <CAHk-=wjma_sSghVTgDCQxHHd=e2Lqi45PLh78oJ4WeBj8erV9Q@mail.gmail.com>
- <CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com>
+        bh=9lk6J9c7nceHYPPSuxHCl/jFNOuQDl39RqYLkN6g2zo=;
+        b=sifcMqSauDBqK9GnTuVh6vmHwoGLeX3VK2iBTAzRck1FS+r9jmPu55zI7nroyu+Abx
+         mdT0PwoaF+YtrjkFxhQONYPQ3R7k9CeFBo8t8crnVH5P4u7KVdbjZT/LgCMwaUhR272n
+         LaG2+m6RjSJU48MrSXe1zgZCxirsZzFep/usUr78oJn+zshd4ttL7HJze25QUiyy5VTW
+         0JmmmaS+Ew0b6iWY3nqXqPeKLSlX6v2z+NnFdV0aCZP7Uuy8Bn/1tdAmeZLXYR91GIdi
+         +FqCBCoqUgVSLTHF+GKG9/LKrsfZ/VgPqLgVB1iOlpnn5p3MvBf89Puyd+8RX1nV0NWA
+         uRXA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4J+9HzLlz3wIZ2aaPzsWVHw+wZODLN1Vvtw5+67ICDcrZIlexdb6tGwRnBa0rK74hbAPg/t+eFjpuMDsiw3jo06Rs/ADxOLMrVKkT
+X-Gm-Message-State: AOJu0YzZKa+TNZijFVP7xwvPBQnhZu8iy1QcuOsstSV7i4KiiQvPvhAd
+	V8Mw2A4ddtCjiVrP1MEPHKmHcdFN3KrPsVOMWW1ghacVSrTCW/G0TA6ZRz7z/90=
+X-Google-Smtp-Source: AGHT+IGd/GTek2EtViHRdRFeIXZn3n2LYf5CPBHrEQdxd9jjHLyUtqDgKKXlzgWCD9IG4KWRHuQ70A==
+X-Received: by 2002:adf:eb88:0:b0:34c:a12:8722 with SMTP id t8-20020adfeb88000000b0034c0a128722mr6358975wrn.1.1714377766520;
+        Mon, 29 Apr 2024 01:02:46 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:999:a3a0:2fec:d20:2b60:e334? ([2a01:e0a:999:a3a0:2fec:d20:2b60:e334])
+        by smtp.gmail.com with ESMTPSA id n8-20020a5d6b88000000b0034c462f920csm8446915wrx.40.2024.04.29.01.02.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Apr 2024 01:02:45 -0700 (PDT)
+Message-ID: <7b2b8045-b814-4f93-a9ce-4e3d087c8f0e@rivosinc.com>
+Date: Mon, 29 Apr 2024 10:02:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/11] riscv: add ISA extensions validation
+To: Conor Dooley <conor@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>,
+ Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
+References: <20240423124326.2532796-1-cleger@rivosinc.com>
+ <20240423124326.2532796-3-cleger@rivosinc.com>
+ <20240426-smugly-jury-e933a4ef035c@spud>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20240426-smugly-jury-e933a4ef035c@spud>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com>
 
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> The attached patch is ENTIRELY UNTESTED, but looks like the
-> ObviouslyCorrect(tm) thing to do.
+On 26/04/2024 16:23, Conor Dooley wrote:
+> On Tue, Apr 23, 2024 at 02:43:16PM +0200, Clément Léger wrote:
+>> Since a few extensions (Zicbom/Zicboz) already needs validation and
+>> future ones will need it as well (Zc*) add a validate() callback to
+>> struct riscv_isa_ext_data. This require to rework the way extensions are
+>> parsed and split it in two phases. First phase is isa string or isa
+>> extension list parsing and consists in enabling all the extensions in a
+>> temporary bitmask without any validation. The second step "resolves" the
+>> final isa bitmap, handling potential missing dependencies. The mechanism
+>> is quite simple and simply validate each extension described in the
+>> temporary bitmap before enabling it in the final isa bitmap. This
+>> process takes place until the final isa bitmap reaches a stable state.
+>> In order to avoid any potential infinite looping, allow looping a
+>> maximum of the number of extension we handle. Zicboz and Zicbom
+>> extensions are modified to use this validation mechanism.
 > 
-> NOTE! This broken code goes back to commit 4fc3490114bb ("x86-64: Set
-> siginfo and context on vsyscall emulation faults") in 2011, and back
-> then the reason was to get all the siginfo details right. Honestly, I
-> do not for a moment believe that it's worth getting the siginfo
-> details right here, but part of the commit says
-> 
->     This fixes issues with UML when vsyscall=emulate.
-> 
-> and so my patch to remove this garbage will probably break UML in this
-> situation.
-> 
-> I cannot find it in myself to care, since I do not believe that
-> anybody should be running with vsyscall=emulate in 2024 in the first
-> place, much less if you are doing things like UML. But let's see if
-> somebody screams.
-> 
-> Also, somebody should obviously test my COMPLETELY UNTESTED patch.
->
-> Did I make it clear enough that this is UNTESTED and just does
-> crapectgomy on something that is clearly broken?
-> 
->            Linus "UNTESTED" Torvalds
+> Yaknow, seeing the implemtation I'm having second thoughts. I think
+> there's two pretty separate actions going on here - the first is things
+> like Zicbom or Zicboz where we are looking at the DT to find some extra
+> properties which we can do exactly once. The other is the Zc* case,
+> where we are making sure that extensions they depend on are enabled.
+> I understand that the latter may need to loop, but I don't think there's
+> a reason to loop in the Zicbom or Zicboz case.
 
-I did some Simple Testing™, and nothing seemed to break in any way visible 
-to me, and the diffstat is lovely:
+That's a good point, we could potentially avoid that by specifying
+different return values for the validate callback (Similar to what is
+done by platform driver probing):
 
-    3 files changed, 3 insertions(+), 56 deletions(-)
+- 0 -> Ok, enable the extension
+- -EDEFER -> Try to probe again later
+- -E<whatever> -> Disabled the extension once for all in the original
+ISA bitmap so the callback won't get called again.
 
-Might stick this into tip:x86/mm and see what happens?
-
-I'd love to remove the rest of the vsyscall emulation code as well. I don't 
-think anyone cares about vsyscall emulation anymore (let alone in an UML 
-context), IIRC it requires ancient glibc I don't think we even support 
-anymore (but I'm unsure about the exact version cutoff).
-
-I created a changelog from your email, editing parts of it, and added your 
-Net-Yet-Signed-off-by tag.
+That would also allows to get rid of at least the extra loop that is
+done to verify the stability of the ISA even if there were no defered
+probed extensions.
 
 Thanks,
 
-	Ingo
+Clément
 
-===================================>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 28 Apr 2024 18:33:41 -0700
-Subject: [PATCH] x86/mm: Remove broken vsyscall emulation code from the page fault code
-
-The syzbot-reported stack trace from hell in this discussion thread
-actually has three nested page faults:
-
-  https://lore.kernel.org/r/000000000000d5f4fc0616e816d4@google.com
-
-... and I think that's actually the important thing here:
-
- - the first page fault is from user space, and triggers the vsyscall 
-   emulation.
-
- - the second page fault is from __do_sys_gettimeofday(), and that should 
-   just have caused the exception that then sets the return value to 
-   -EFAULT
-
- - the third nested page fault is due to _raw_spin_unlock_irqrestore() -> 
-   preempt_schedule() -> trace_sched_switch(), which then causes a BPF 
-   trace program to run, which does that bpf_probe_read_compat(), which 
-   causes that page fault under pagefault_disable().
-
-It's quite the nasty backtrace, and there's a lot going on.
-
-The problem is literally the vsyscall emulation, which sets
-
-        current->thread.sig_on_uaccess_err = 1;
-
-and that causes the fixup_exception() code to send the signal *despite* the 
-exception being caught.
-
-And I think that is in fact completely bogus.  It's completely bogus 
-exactly because it sends that signal even when it *shouldn't* be sent - 
-like for the BPF user mode trace gathering.
-
-In other words, I think the whole "sig_on_uaccess_err" thing is entirely 
-broken, because it makes any nested page-faults do all the wrong things.
-
-Now, arguably, I don't think anybody should enable vsyscall emulation any 
-more, but this test case clearly does.
-
-I think we should just make the "send SIGSEGV" be something that the 
-vsyscall emulation does on its own, not this broken per-thread state for 
-something that isn't actually per thread.
-
-The x86 page fault code actually tried to deal with the "incorrect nesting" 
-by having that:
-
-                if (in_interrupt())
-                        return;
-
-which ignores the sig_on_uaccess_err case when it happens in interrupts, 
-but as shown by this example, these nested page faults do not need to be 
-about interrupts at all.
-
-IOW, I think the only right thing is to remove that horrendously broken 
-code.
-
-The attached patch looks like the ObviouslyCorrect(tm) thing to do.
-
-NOTE! This broken code goes back to this commit in 2011:
-
-  4fc3490114bb ("x86-64: Set siginfo and context on vsyscall emulation faults")
-
-... and back then the reason was to get all the siginfo details right. 
-Honestly, I do not for a moment believe that it's worth getting the siginfo 
-details right here, but part of the commit says:
-
-    This fixes issues with UML when vsyscall=emulate.
-
-... and so my patch to remove this garbage will probably break UML in this 
-situation.
-
-I do not believe that anybody should be running with vsyscall=emulate in 
-2024 in the first place, much less if you are doing things like UML. But 
-let's see if somebody screams.
-
-Not-Yet-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com
----
- arch/x86/entry/vsyscall/vsyscall_64.c | 25 ++-----------------------
- arch/x86/include/asm/processor.h      |  1 -
- arch/x86/mm/fault.c                   | 33 +--------------------------------
- 3 files changed, 3 insertions(+), 56 deletions(-)
-
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index a3c0df11d0e6..3b0f61b2ea6d 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -98,11 +98,6 @@ static int addr_to_vsyscall_nr(unsigned long addr)
- 
- static bool write_ok_or_segv(unsigned long ptr, size_t size)
- {
--	/*
--	 * XXX: if access_ok, get_user, and put_user handled
--	 * sig_on_uaccess_err, this could go away.
--	 */
--
- 	if (!access_ok((void __user *)ptr, size)) {
- 		struct thread_struct *thread = &current->thread;
- 
-@@ -123,7 +118,6 @@ bool emulate_vsyscall(unsigned long error_code,
- 	struct task_struct *tsk;
- 	unsigned long caller;
- 	int vsyscall_nr, syscall_nr, tmp;
--	int prev_sig_on_uaccess_err;
- 	long ret;
- 	unsigned long orig_dx;
- 
-@@ -234,12 +228,8 @@ bool emulate_vsyscall(unsigned long error_code,
- 		goto do_ret;  /* skip requested */
- 
- 	/*
--	 * With a real vsyscall, page faults cause SIGSEGV.  We want to
--	 * preserve that behavior to make writing exploits harder.
-+	 * With a real vsyscall, page faults cause SIGSEGV.
- 	 */
--	prev_sig_on_uaccess_err = current->thread.sig_on_uaccess_err;
--	current->thread.sig_on_uaccess_err = 1;
--
- 	ret = -EFAULT;
- 	switch (vsyscall_nr) {
- 	case 0:
-@@ -262,23 +252,12 @@ bool emulate_vsyscall(unsigned long error_code,
- 		break;
- 	}
- 
--	current->thread.sig_on_uaccess_err = prev_sig_on_uaccess_err;
--
- check_fault:
- 	if (ret == -EFAULT) {
- 		/* Bad news -- userspace fed a bad pointer to a vsyscall. */
- 		warn_bad_vsyscall(KERN_INFO, regs,
- 				  "vsyscall fault (exploit attempt?)");
--
--		/*
--		 * If we failed to generate a signal for any reason,
--		 * generate one here.  (This should be impossible.)
--		 */
--		if (WARN_ON_ONCE(!sigismember(&tsk->pending.signal, SIGBUS) &&
--				 !sigismember(&tsk->pending.signal, SIGSEGV)))
--			goto sigsegv;
--
--		return true;  /* Don't emulate the ret. */
-+		goto sigsegv;
- 	}
- 
- 	regs->ax = ret;
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 811548f131f4..78e51b0d6433 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -472,7 +472,6 @@ struct thread_struct {
- 	unsigned long		iopl_emul;
- 
- 	unsigned int		iopl_warn:1;
--	unsigned int		sig_on_uaccess_err:1;
- 
- 	/*
- 	 * Protection Keys Register for Userspace.  Loaded immediately on
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 6b2ca8ba75b8..f26ecabc9424 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -724,39 +724,8 @@ kernelmode_fixup_or_oops(struct pt_regs *regs, unsigned long error_code,
- 	WARN_ON_ONCE(user_mode(regs));
- 
- 	/* Are we prepared to handle this kernel fault? */
--	if (fixup_exception(regs, X86_TRAP_PF, error_code, address)) {
--		/*
--		 * Any interrupt that takes a fault gets the fixup. This makes
--		 * the below recursive fault logic only apply to a faults from
--		 * task context.
--		 */
--		if (in_interrupt())
--			return;
--
--		/*
--		 * Per the above we're !in_interrupt(), aka. task context.
--		 *
--		 * In this case we need to make sure we're not recursively
--		 * faulting through the emulate_vsyscall() logic.
--		 */
--		if (current->thread.sig_on_uaccess_err && signal) {
--			sanitize_error_code(address, &error_code);
--
--			set_signal_archinfo(address, error_code);
--
--			if (si_code == SEGV_PKUERR) {
--				force_sig_pkuerr((void __user *)address, pkey);
--			} else {
--				/* XXX: hwpoison faults will set the wrong code. */
--				force_sig_fault(signal, si_code, (void __user *)address);
--			}
--		}
--
--		/*
--		 * Barring that, we can do the fixup and be happy.
--		 */
-+	if (fixup_exception(regs, X86_TRAP_PF, error_code, address))
- 		return;
--	}
- 
- 	/*
- 	 * AMD erratum #91 manifests as a spurious page fault on a PREFETCH
+> 
+> That said, I do actually like the idea of having specific callbacks for
+> extensions that require them, rather than calling extension_check()
+> unconditionally.
+> 
+> I've not reviewed the actual code here FWIW, just spent some time
+> thinking about the idea. I might do that later on this revision, or on
+> another, depending on what you think of splitting the Zicbom and Zicboz
+> type extra prop checking from dependency related stuff like Zc*.
+> 
+> Cheers,
+> Conor.
+> 
+>>
+>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>> ---
+>>  arch/riscv/include/asm/cpufeature.h |   1 +
+>>  arch/riscv/kernel/cpufeature.c      | 201 ++++++++++++++++------------
+>>  2 files changed, 118 insertions(+), 84 deletions(-)
+>>
+>> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
+>> index 347805446151..328f895f6b8f 100644
+>> --- a/arch/riscv/include/asm/cpufeature.h
+>> +++ b/arch/riscv/include/asm/cpufeature.h
+>> @@ -70,6 +70,7 @@ struct riscv_isa_ext_data {
+>>  	const char *property;
+>>  	const unsigned int *subset_ext_ids;
+>>  	const unsigned int subset_ext_size;
+>> +	bool (*validate)(const struct riscv_isa_ext_data *data, const unsigned long *isa_bitmap);
+>>  };
+>>  
+>>  extern const struct riscv_isa_ext_data riscv_isa_ext[];
+>> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+>> index 115ba001f1bc..6d238c8dbccf 100644
+>> --- a/arch/riscv/kernel/cpufeature.c
+>> +++ b/arch/riscv/kernel/cpufeature.c
+>> @@ -72,51 +72,62 @@ bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, unsigned i
+>>  }
+>>  EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+>>  
+>> -static bool riscv_isa_extension_check(int id)
+>> +static bool riscv_isa_extension_valid(int id)
+>>  {
+>> -	switch (id) {
+>> -	case RISCV_ISA_EXT_ZICBOM:
+>> -		if (!riscv_cbom_block_size) {
+>> -			pr_err("Zicbom detected in ISA string, disabling as no cbom-block-size found\n");
+>> -			return false;
+>> -		} else if (!is_power_of_2(riscv_cbom_block_size)) {
+>> -			pr_err("Zicbom disabled as cbom-block-size present, but is not a power-of-2\n");
+>> -			return false;
+>> -		}
+>> -		return true;
+>> -	case RISCV_ISA_EXT_ZICBOZ:
+>> -		if (!riscv_cboz_block_size) {
+>> -			pr_err("Zicboz detected in ISA string, disabling as no cboz-block-size found\n");
+>> -			return false;
+>> -		} else if (!is_power_of_2(riscv_cboz_block_size)) {
+>> -			pr_err("Zicboz disabled as cboz-block-size present, but is not a power-of-2\n");
+>> -			return false;
+>> -		}
+>> -		return true;
+>> -	case RISCV_ISA_EXT_INVALID:
+>> +	return id != RISCV_ISA_EXT_INVALID;
+>> +}
+>> +
+>> +static bool riscv_ext_zicbom_validate(const struct riscv_isa_ext_data *data,
+>> +				      const unsigned long *isa_bitmap)
+>> +{
+>> +	if (!riscv_cbom_block_size) {
+>> +		pr_err_once("Zicbom detected in ISA string,"
+>> +			    "disabling as no cbom-block-size found\n");
+>> +		return false;
+>> +	} else if (!is_power_of_2(riscv_cbom_block_size)) {
+>> +		pr_err_once("Zicbom disabled as cbom-block-size present,"
+>> +			    "but is not a power-of-2\n");
+>>  		return false;
+>>  	}
+>> +	return true;
+>> +}
+>>  
+>> +static bool riscv_ext_zicboz_validate(const struct riscv_isa_ext_data *data,
+>> +				      const unsigned long *isa_bitmap)
+>> +{
+>> +	if (!riscv_cboz_block_size) {
+>> +		pr_err_once("Zicboz detected in ISA string,"
+>> +			    "disabling as no cboz-block-size found\n");
+>> +		return false;
+>> +	} else if (!is_power_of_2(riscv_cboz_block_size)) {
+>> +		pr_err_once("Zicboz disabled as cboz-block-size present,"
+>> +			    "but is not a power-of-2\n");
+>> +		return false;
+>> +	}
+>>  	return true;
+>>  }
+>>  
+>> -#define _RISCV_ISA_EXT_DATA(_name, _id, _subset_exts, _subset_exts_size) {	\
+>> -	.name = #_name,								\
+>> -	.property = #_name,							\
+>> -	.id = _id,								\
+>> -	.subset_ext_ids = _subset_exts,						\
+>> -	.subset_ext_size = _subset_exts_size					\
+>> +#define _RISCV_ISA_EXT_DATA(_name, _id, _subset_exts, _subset_exts_size, _validate) {	\
+>> +	.name = #_name,									\
+>> +	.property = #_name,								\
+>> +	.id = _id,									\
+>> +	.subset_ext_ids = _subset_exts,							\
+>> +	.subset_ext_size = _subset_exts_size,						\
+>> +	.validate = _validate								\
+>>  }
+>>  
+>> -#define __RISCV_ISA_EXT_DATA(_name, _id) _RISCV_ISA_EXT_DATA(_name, _id, NULL, 0)
+>> +#define __RISCV_ISA_EXT_DATA(_name, _id) _RISCV_ISA_EXT_DATA(_name, _id, NULL, 0, NULL)
+>>  
+>>  /* Used to declare pure "lasso" extension (Zk for instance) */
+>>  #define __RISCV_ISA_EXT_BUNDLE(_name, _bundled_exts) \
+>> -	_RISCV_ISA_EXT_DATA(_name, RISCV_ISA_EXT_INVALID, _bundled_exts, ARRAY_SIZE(_bundled_exts))
+>> +	_RISCV_ISA_EXT_DATA(_name, RISCV_ISA_EXT_INVALID, _bundled_exts, \
+>> +			    ARRAY_SIZE(_bundled_exts), NULL)
+>>  
+>>  /* Used to declare extensions that are a superset of other extensions (Zvbb for instance) */
+>>  #define __RISCV_ISA_EXT_SUPERSET(_name, _id, _sub_exts) \
+>> -	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts))
+>> +	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts), NULL)
+>> +#define __RISCV_ISA_EXT_SUPERSET_VALIDATE(_name, _id, _sub_exts, _validate) \
+>> +	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts), _validate)
+>>  
+>>  static const unsigned int riscv_zk_bundled_exts[] = {
+>>  	RISCV_ISA_EXT_ZBKB,
+>> @@ -247,8 +258,10 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>>  	__RISCV_ISA_EXT_DATA(c, RISCV_ISA_EXT_c),
+>>  	__RISCV_ISA_EXT_DATA(v, RISCV_ISA_EXT_v),
+>>  	__RISCV_ISA_EXT_DATA(h, RISCV_ISA_EXT_h),
+>> -	__RISCV_ISA_EXT_SUPERSET(zicbom, RISCV_ISA_EXT_ZICBOM, riscv_xlinuxenvcfg_exts),
+>> -	__RISCV_ISA_EXT_SUPERSET(zicboz, RISCV_ISA_EXT_ZICBOZ, riscv_xlinuxenvcfg_exts),
+>> +	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zicbom, RISCV_ISA_EXT_ZICBOM, riscv_xlinuxenvcfg_exts,
+>> +					  riscv_ext_zicbom_validate),
+>> +	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zicboz, RISCV_ISA_EXT_ZICBOZ, riscv_xlinuxenvcfg_exts,
+>> +					  riscv_ext_zicboz_validate),
+>>  	__RISCV_ISA_EXT_DATA(zicntr, RISCV_ISA_EXT_ZICNTR),
+>>  	__RISCV_ISA_EXT_DATA(zicond, RISCV_ISA_EXT_ZICOND),
+>>  	__RISCV_ISA_EXT_DATA(zicsr, RISCV_ISA_EXT_ZICSR),
+>> @@ -310,33 +323,70 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>>  
+>>  const size_t riscv_isa_ext_count = ARRAY_SIZE(riscv_isa_ext);
+>>  
+>> -static void __init match_isa_ext(const struct riscv_isa_ext_data *ext, const char *name,
+>> -				 const char *name_end, struct riscv_isainfo *isainfo)
+>> +static void riscv_isa_set_ext(const struct riscv_isa_ext_data *ext, unsigned long *bitmap)
+>>  {
+>> -	if ((name_end - name == strlen(ext->name)) &&
+>> -	     !strncasecmp(name, ext->name, name_end - name)) {
+>> -		/*
+>> -		 * If this is a bundle, enable all the ISA extensions that
+>> -		 * comprise the bundle.
+>> -		 */
+>> -		if (ext->subset_ext_size) {
+>> -			for (int i = 0; i < ext->subset_ext_size; i++) {
+>> -				if (riscv_isa_extension_check(ext->subset_ext_ids[i]))
+>> -					set_bit(ext->subset_ext_ids[i], isainfo->isa);
+>> -			}
+>> +	/*
+>> +	 * This is valid even for bundle extensions which uses the RISCV_ISA_EXT_INVALID id
+>> +	 * (rejected by riscv_isa_extension_valid()).
+>> +	 */
+>> +	if (riscv_isa_extension_valid(ext->id))
+>> +		set_bit(ext->id, bitmap);
+>> +
+>> +	for (int i = 0; i < ext->subset_ext_size; i++) {
+>> +		if (riscv_isa_extension_valid(ext->subset_ext_ids[i]))
+>> +			set_bit(ext->subset_ext_ids[i], bitmap);
+>> +	}
+>> +}
+>> +
+>> +static void __init riscv_resolve_isa(const unsigned long *isa_bitmap, struct riscv_isainfo *isainfo,
+>> +				     unsigned long *this_hwcap, unsigned long *isa2hwcap)
+>> +{
+>> +	const struct riscv_isa_ext_data *ext;
+>> +	DECLARE_BITMAP(prev_bitmap, RISCV_ISA_EXT_MAX);
+>> +	int max_loop_count = riscv_isa_ext_count + 1;
+>> +
+>> +	do {
+>> +		if (max_loop_count-- < 0) {
+>> +			pr_err("Failed to reach a stable ISA state\n");
+>> +			return;
+>>  		}
+>> +		memcpy(prev_bitmap, isainfo->isa, sizeof(prev_bitmap));
+>> +		for (int i = 0; i < riscv_isa_ext_count; i++) {
+>> +			ext = &riscv_isa_ext[i];
+>> +
+>> +			/* Bundle extensions ids are invalid*/
+>> +			if (!riscv_isa_extension_valid(ext->id))
+>> +				continue;
+>> +
+>> +			if (!test_bit(ext->id, isa_bitmap) || test_bit(ext->id, isainfo->isa))
+>> +				continue;
+>> +
+>> +			if (ext->validate && !ext->validate(ext, isainfo->isa))
+>> +				continue;
+>>  
+>> -		/*
+>> -		 * This is valid even for bundle extensions which uses the RISCV_ISA_EXT_INVALID id
+>> -		 * (rejected by riscv_isa_extension_check()).
+>> -		 */
+>> -		if (riscv_isa_extension_check(ext->id))
+>>  			set_bit(ext->id, isainfo->isa);
+>> +
+>> +			/* Only single letter extensions get set in hwcap */
+>> +			if (ext->id < RISCV_ISA_EXT_BASE)
+>> +				*this_hwcap |= isa2hwcap[ext->id];
+>> +		}
+>> +	} while (memcmp(prev_bitmap, isainfo->isa, sizeof(prev_bitmap)));
+>> +}
+>> +
+>> +static void __init match_isa_ext(const char *name, const char *name_end, unsigned long *bitmap)
+>> +{
+>> +	for (int i = 0; i < riscv_isa_ext_count; i++) {
+>> +		const struct riscv_isa_ext_data *ext = &riscv_isa_ext[i];
+>> +
+>> +		if ((name_end - name == strlen(ext->name)) &&
+>> +		    !strncasecmp(name, ext->name, name_end - name)) {
+>> +			riscv_isa_set_ext(ext, bitmap);
+>> +			break;
+>> +		}
+>>  	}
+>>  }
+>>  
+>> -static void __init riscv_parse_isa_string(unsigned long *this_hwcap, struct riscv_isainfo *isainfo,
+>> -					  unsigned long *isa2hwcap, const char *isa)
+>> +static void __init riscv_resolve_isa_string(const char *isa, unsigned long *bitmap)
+>>  {
+>>  	/*
+>>  	 * For all possible cpus, we have already validated in
+>> @@ -349,7 +399,7 @@ static void __init riscv_parse_isa_string(unsigned long *this_hwcap, struct risc
+>>  	while (*isa) {
+>>  		const char *ext = isa++;
+>>  		const char *ext_end = isa;
+>> -		bool ext_long = false, ext_err = false;
+>> +		bool ext_err = false;
+>>  
+>>  		switch (*ext) {
+>>  		case 's':
+>> @@ -389,7 +439,6 @@ static void __init riscv_parse_isa_string(unsigned long *this_hwcap, struct risc
+>>  			 * character itself while eliminating the extensions version number.
+>>  			 * A simple re-increment solves this problem.
+>>  			 */
+>> -			ext_long = true;
+>>  			for (; *isa && *isa != '_'; ++isa)
+>>  				if (unlikely(!isalnum(*isa)))
+>>  					ext_err = true;
+>> @@ -469,17 +518,8 @@ static void __init riscv_parse_isa_string(unsigned long *this_hwcap, struct risc
+>>  
+>>  		if (unlikely(ext_err))
+>>  			continue;
+>> -		if (!ext_long) {
+>> -			int nr = tolower(*ext) - 'a';
+>>  
+>> -			if (riscv_isa_extension_check(nr)) {
+>> -				*this_hwcap |= isa2hwcap[nr];
+>> -				set_bit(nr, isainfo->isa);
+>> -			}
+>> -		} else {
+>> -			for (int i = 0; i < riscv_isa_ext_count; i++)
+>> -				match_isa_ext(&riscv_isa_ext[i], ext, ext_end, isainfo);
+>> -		}
+>> +		match_isa_ext(ext, ext_end, bitmap);
+>>  	}
+>>  }
+>>  
+>> @@ -501,6 +541,7 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
+>>  	for_each_possible_cpu(cpu) {
+>>  		struct riscv_isainfo *isainfo = &hart_isa[cpu];
+>>  		unsigned long this_hwcap = 0;
+>> +		DECLARE_BITMAP(isa_bitmap, RISCV_ISA_EXT_MAX) = { 0 };
+>>  
+>>  		if (acpi_disabled) {
+>>  			node = of_cpu_device_node_get(cpu);
+>> @@ -523,7 +564,7 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
+>>  			}
+>>  		}
+>>  
+>> -		riscv_parse_isa_string(&this_hwcap, isainfo, isa2hwcap, isa);
+>> +		riscv_resolve_isa_string(isa, isa_bitmap);
+>>  
+>>  		/*
+>>  		 * These ones were as they were part of the base ISA when the
+>> @@ -531,10 +572,10 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
+>>  		 * unconditionally where `i` is in riscv,isa on DT systems.
+>>  		 */
+>>  		if (acpi_disabled) {
+>> -			set_bit(RISCV_ISA_EXT_ZICSR, isainfo->isa);
+>> -			set_bit(RISCV_ISA_EXT_ZIFENCEI, isainfo->isa);
+>> -			set_bit(RISCV_ISA_EXT_ZICNTR, isainfo->isa);
+>> -			set_bit(RISCV_ISA_EXT_ZIHPM, isainfo->isa);
+>> +			set_bit(RISCV_ISA_EXT_ZICSR, isa_bitmap);
+>> +			set_bit(RISCV_ISA_EXT_ZIFENCEI, isa_bitmap);
+>> +			set_bit(RISCV_ISA_EXT_ZICNTR, isa_bitmap);
+>> +			set_bit(RISCV_ISA_EXT_ZIHPM, isa_bitmap);
+>>  		}
+>>  
+>>  		/*
+>> @@ -548,9 +589,11 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
+>>  		if (acpi_disabled && riscv_cached_mvendorid(cpu) == THEAD_VENDOR_ID &&
+>>  		    riscv_cached_marchid(cpu) == 0x0) {
+>>  			this_hwcap &= ~isa2hwcap[RISCV_ISA_EXT_v];
+>> -			clear_bit(RISCV_ISA_EXT_v, isainfo->isa);
+>> +			clear_bit(RISCV_ISA_EXT_v, isa_bitmap);
+>>  		}
+>>  
+>> +		riscv_resolve_isa(isa_bitmap, isainfo, &this_hwcap, isa2hwcap);
+>> +
+>>  		/*
+>>  		 * All "okay" hart should have same isa. Set HWCAP based on
+>>  		 * common capabilities of every "okay" hart, in case they don't
+>> @@ -579,6 +622,7 @@ static int __init riscv_fill_hwcap_from_ext_list(unsigned long *isa2hwcap)
+>>  		unsigned long this_hwcap = 0;
+>>  		struct device_node *cpu_node;
+>>  		struct riscv_isainfo *isainfo = &hart_isa[cpu];
+>> +		DECLARE_BITMAP(isa_bitmap, RISCV_ISA_EXT_MAX) = { 0 };
+>>  
+>>  		cpu_node = of_cpu_device_node_get(cpu);
+>>  		if (!cpu_node) {
+>> @@ -598,22 +642,11 @@ static int __init riscv_fill_hwcap_from_ext_list(unsigned long *isa2hwcap)
+>>  						     ext->property) < 0)
+>>  				continue;
+>>  
+>> -			if (ext->subset_ext_size) {
+>> -				for (int j = 0; j < ext->subset_ext_size; j++) {
+>> -					if (riscv_isa_extension_check(ext->subset_ext_ids[i]))
+>> -						set_bit(ext->subset_ext_ids[j], isainfo->isa);
+>> -				}
+>> -			}
+>> -
+>> -			if (riscv_isa_extension_check(ext->id)) {
+>> -				set_bit(ext->id, isainfo->isa);
+>> -
+>> -				/* Only single letter extensions get set in hwcap */
+>> -				if (strnlen(riscv_isa_ext[i].name, 2) == 1)
+>> -					this_hwcap |= isa2hwcap[riscv_isa_ext[i].id];
+>> -			}
+>> +			riscv_isa_set_ext(ext, isa_bitmap);
+>>  		}
+>>  
+>> +		riscv_resolve_isa(isa_bitmap, isainfo, &this_hwcap, isa2hwcap);
+>> +
+>>  		of_node_put(cpu_node);
+>>  
+>>  		/*
+>> -- 
+>> 2.43.0
+>>
