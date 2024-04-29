@@ -1,134 +1,80 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A234B2D05D
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 10:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E8828398;
+	Mon, 29 Apr 2024 10:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714386080; cv=none; b=lad/MWJ1ORz8rWK43HOsKGnSNtFyHU+QzptRUE6nn5x8MT14Nb0yXHXx4G/1cuA4e/m1WbxTTGhI3yBnctUG+DadTWWuKj2TfY7mTcwq7dtPGL7JFSYk+HonyquNPJ08P3rfzGiWCcVZwxYJSYKa59fhV7vorT57sE6Q6g+tBSA=
+	t=1714386179; cv=none; b=cDYd0rDxYdHgC7BOqxyNoR7/qqm/iPAYk1t6gaCgViB/ew6tn6yzZyhOLLW1coHIWgLL0QpJLbR/T8ZYf4O4m46C9b3NaUPoIXyg5iJptbfQuDw6/TcIushvMQh0YeGnhTmlmoLu9aKEoWNyd0ebWx/qkIz9UxQVP+xqItK90Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714386080; c=relaxed/simple;
-	bh=9zXkXARb0Y7OThiBiWvdEzXLPbICHSg8JrvKpqC7LCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fsfan/hjne4NJPJUePJyFJSuTyCujkkB7SOymBbYWgjlpajZ0B1MwO68gjZUJ6/d1FAUVeS30Fe9WU8lxf8wUkAL6rbMgw48UuXgujRyw+ufBVnwLtKjrIhAfsKWMvU3Ku9wY8W9UNhbohPxjr20r4pgKPDT6gwO9Z8w5SnHNF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s1O8B-0005bP-Ut; Mon, 29 Apr 2024 12:21:07 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s1O8A-00ExbE-2L; Mon, 29 Apr 2024 12:21:06 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s1O89-00BJHy-3B;
-	Mon, 29 Apr 2024 12:21:05 +0200
-Date: Mon, 29 Apr 2024 12:21:05 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-i2c@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH RFC] i2c: Add a void pointer to i2c_device_id
-Message-ID: <youkuwbynndjpcoux2zaxwjp5gquj647leub3bat37a4wtho6p@ypir6ay3vhaw>
-References: <20240426213832.915485-2-u.kleine-koenig@pengutronix.de>
- <Zi9gRVVw7qbKSL5k@smile.fi.intel.com>
+	s=arc-20240116; t=1714386179; c=relaxed/simple;
+	bh=gq2L+qagD+ctbJ1g03h2JM87K7EUppTIEWwY830mVMo=;
+	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=FszKUFPrartoiCyPmWqPI2UUulFYJmDTFCSUpQYQ5Vh20p7rEFGD4jO2VOVJkPBUw1Bh+16DkX35USO0eeJP0wCo5tMMSMMjp5okLu4K2Wk8+F6GZrLk+ckcwqIfp1QV46XNWJsxSNWmAqRAsUSFB/MOcfs3az7RaWuVMukPnzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JwORV+FM; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JwORV+FM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714386178; x=1745922178;
+  h=from:date:to:cc:subject:message-id:mime-version;
+  bh=gq2L+qagD+ctbJ1g03h2JM87K7EUppTIEWwY830mVMo=;
+  b=JwORV+FM8nckhGKRrp9F0wmfiZsYoZVO+MG85KEN4wWvg2OSwkmGda3I
+   3Pt6358NSovhgMvwXjMuzvZ86HRNiJgy+jukRSSqpsUSzyQuwJgZTpYVi
+   zoN7x43Irqpwp/qLxzPLmpR/V97q3Yzl2lLD/WYeUpOn4cV8W7kz1Z7nb
+   bDUPyXLAMaoS6cK8aZTIgpcjjCfbSEob3HqU6jrRkalY7cnnsaw/YN+p4
+   CUe8dUKo9Uv3c52CI+Ux/Nfyxl/ScNv61VGdF8KOEHVinpzb10rwwRZn0
+   NKuI0GvCL9ARLTKPIL5K5+SbRDBQgbZAJeQQwlcmCqn9Ub7hnyhQ95rAn
+   A==;
+X-CSE-ConnectionGUID: YaSJdj7CRZ2KB+kQtG79Yg==
+X-CSE-MsgGUID: 8MNCFNhRR6iocIHVZ9vt5w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="13827729"
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="13827729"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 03:22:56 -0700
+X-CSE-ConnectionGUID: lnQIrUnfT9GJEjU2pXHkRw==
+X-CSE-MsgGUID: IrMbYg+TRdeC7MOd8b+6RQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="26474871"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.45])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 03:22:53 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 29 Apr 2024 13:22:50 +0300 (EEST)
+To: Ryder Lee <ryder.lee@mediatek.com>, 
+    Jianjun Wang <jianjun.wang@mediatek.com>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+    linux-pci@vger.kernel.org
+cc: LKML <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
+Subject: pcie-mediatek slot calculation correct?
+Message-ID: <9ea20705-8536-738b-4f1f-60feb2c092fa@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yfivxb4d4fdixn6l"
-Content-Disposition: inline
-In-Reply-To: <Zi9gRVVw7qbKSL5k@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+
+Hi all,
+
+I was doing Conf Type 0/1 helper generalization when I ran into this code 
+in drivers/pci/controller/pcie-mediatek.c:
+
+	u32 func = PCI_FUNC(port->slot);
+	u32 slot = PCI_SLOT(port->slot << 3);
+
+With that code, function is effectively duplicated into slot, is this 
+correct behavior?
+
+...Adjustments made in the history of this code fragment didn't exactly 
+inspire confidence on the correctness of this code. :-/
 
 
---yfivxb4d4fdixn6l
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+-- 
+ i.
 
-Hello,
-
-On Mon, Apr 29, 2024 at 11:54:29AM +0300, Andy Shevchenko wrote:
-> On Fri, Apr 26, 2024 at 11:38:33PM +0200, Uwe Kleine-K=F6nig wrote:
-> > Traditionally a struct i2c_device_id has a kernel_ulong_t member to
-> > store some chip variant data. Some drivers use it to store an enum,
-> > others to store a pointer. In the latter case there is some ugly(?)
-> > casting involved. To improve that, add a void pointer in an anonymous
-> > union together with the integer driver_data.
-> >=20
-> > This way a i2c_device_id requires usage of a designated initializer when
-> > the driver_data or data member should be initialized, but IMHO that's
-> > fine and you might even consider that an advantage.
->=20
-> ...
->=20
-> >  static const struct i2c_device_id wlf_gf_module_id[] =3D {
-> > -	{ "wlf-gf-module", 0 },
-> > +	{ "wlf-gf-module", },
->=20
-> In such cases the inner comma is redundant as well.
-
-I would tend to keep the comma, but no strong opinion on my side.
-If another member init is added later, the line has to be touched
-anyhow, but in the layout:
-
-	... =3D {
-		{
-			"wlf-gf-module",
-		},
-		{ }
-	}
-
-I'd keep it for sure.
-
-
-> >  	{ }
-> >  };
->=20
-> ...
->=20
-> In general idea might be okay, but I always have the same Q (do we have it
-> being clarified in the documentation, btw): is an ID table the ABI or not?
-> In another word, how should we treat the changes there, because ID tables
-> are being used by the user space tools.
-
-Note that the layout doesn't change and the traditional interpretation
-of the data still works fine. Or do you see something that I miss?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---yfivxb4d4fdixn6l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYvdJAACgkQj4D7WH0S
-/k5SrAf/UQu0T91ViSkNd60kQV/AoTviGlvx8F5UlQbv/Vqu3BH9V2qGdpKpBhZh
-rp4lcTa2z6SegBoH6yctMYp9vfPWE1MB0URyTm2Hvzj9zCxOB7bu2gtuAzYeKvLG
-UyAzHCqa9K+AwWgSAb/rH3aqy3pHwxL3JoB+FSgcu75SBgpPkRukZgJDrCB7gWzb
-AUlb0Z3LrSjRUGSVvxxSxNy5S69CSDMQ20cvK8of7mno8uL0MYJ/RKCRfx+XGsvm
-V0HZwZgSI+D/oNCIKLtB9DoH/3W9xGCZIgnfBDWbtKGizCt9A9bDujaR8cYAdGrR
-dM19ko2kATgu3pL2e/Jf1ly3N97j1Q==
-=eVcX
------END PGP SIGNATURE-----
-
---yfivxb4d4fdixn6l--
