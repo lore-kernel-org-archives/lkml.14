@@ -1,112 +1,79 @@
-Received: from out0-212.mail.aliyun.com (out0-212.mail.aliyun.com [140.205.0.212])
+Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCED7F;
-	Mon, 29 Apr 2024 02:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.212
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73B8376
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 02:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714357735; cv=none; b=MwgczTHvdh+ZLlNb5wFA5u6Ned2/tFomZQDN3UjzZjirOfBYNFOZlUqkGf+NCYy7op/nJMGUYfR5rHAehaEUoyAkMgpooxRExgjyKbWPh0hbDzyiiClTBuB1Od+tIJjKf1Lmpf1ULXS0nBSdDDuvLOdqU5mnPBxxTijL3SHR36k=
+	t=1714357832; cv=none; b=G2jH4HTiM2yP9lCiqausTRhKLOrxXmxReLEEnZkuAP3GL4jt12j0iVeZYEY+YxJSUXzIQPTH6rqZ+t6fQc+sDEquZ6qbC6HooRVJxV4pHOmpMjJ7MGmRK+T65g7g9J2ZwYdjam3RxWRN1vtXfOZaK6szhKslsd0y/cVVQGny6/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714357735; c=relaxed/simple;
-	bh=rgmPIBtv04xS/NJZfML1GPnR64jTHK95wha30aKgRC4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=aSGm0At9IskOcQstmx1ZV1AGxdeIQCnKHNkhzxlErXgQJyZLFWMYswbeVZLVbdHaAOfY3v8kCvpSqwQme/J13MKAZaJLhOT4uJELY3OeHCxBsTEG8mDR3FWfbEqlU0+nHScPrG1k/B3kbw7w0XrBKFSJ+GcfJBg+FANygltFGI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=i0VpV/Ky; arc=none smtp.client-ip=140.205.0.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1714357832; c=relaxed/simple;
+	bh=3ohJ3/2hrxmI8wIW26hyhWEdxBpoWnozaUBh1OBgC5Q=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=WIFk6n2VhXaNz3FnJV5SxGtEol/jL7UB1fEcuX6xdjGGOlouTBDJ2vl6fAY6/yrv+MCykpWFUSP4y3mxWla2Qh/5pojyCNW0Hxg5WmBoIdG7ML57o0hL9TFNgwOE5yQQX5ShJJwXMDgm/DHcY4ca1sQ8Xk0XLJjIf0+zj71yoo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=s9WHkqZa; arc=none smtp.client-ip=203.205.221.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="i0VpV/Ky"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1714357723; h=Content-Type:Mime-Version:Subject:From:Date:Message-Id:To;
-	bh=jT7mAVU8gcg5YtFTPn+gZh0CF87ozRgd/5PRarkdmMI=;
-	b=i0VpV/KyTRQi8K95bjKOx/1QLAyxIicE2syfgPkD5XOEvDPUcLg7J7cwP8RaexXxHUQCfExiECdSy7/Qp044us0jD5ThWHSAurp760LQW6uUFQNM6MyInLcqf4+a9yWj2+JtA8oXynxs9nUh9K197Egn6gV0rZH2S/tS5eZQSJs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047201;MF=zhubojun.zbj@antgroup.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---.XNqNRHq_1714357403;
-Received: from smtpclient.apple(mailfrom:zhubojun.zbj@antgroup.com fp:SMTPD_---.XNqNRHq_1714357403)
-          by smtp.aliyun-inc.com;
-          Mon, 29 Apr 2024 10:23:24 +0800
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="s9WHkqZa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1714357520; bh=g/W9MeVv6E272U0RiQZkE7LuD/jReUyY/39514QJAjg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=s9WHkqZabR7FnhMdajGDJsc2ZQV7/ayoAB2V9pV6ARj9uCPus1HASJKRO3hr5YWwB
+	 dcsBqlpSSljqPDwyJzb+iaxCa0pQQyGKGfwursq2mOLUVuniAplGOsiQQcJJ/TtJdx
+	 Tx3eAD2ziQazXR8HLobnlQtSdcBvhyQTfih2+bms=
+Received: from localhost.localdomain ([58.213.8.145])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 65112406; Mon, 29 Apr 2024 10:25:17 +0800
+X-QQ-mid: xmsmtpt1714357517t7qfl32cq
+Message-ID: <tencent_7D666329DA16C3E9303F1DB5A06B0AB2A407@qq.com>
+X-QQ-XMAILINFO: MtM+4b/on8CsByaGpei1ONbA9jExRLHmGwvWQNPx1a1uCjbAKj/xXbClsNv0o8
+	 3umyoJS4ldbaSd7SoT8O5UAf6YRKtdBXqx3duoBuonlLxIYw0QfW389Ua1sWmT+z2kvYHmjcKkfe
+	 81g+BjWE8HZmYbnh8IfdFaLFlKEEapFwtpfIDBeDYYt4wJFcI7A1IiPEBBPsvkhmVhrdvhXf09fJ
+	 GG+g/W2CVvp6JfFmBv1agMW/irYwz6i2N1+ohSGvgMJdfaVPXoNypK44jnVJoStqyf1jhZP/zJFK
+	 PCRmtf3tD01Le3RSkn5pyyFXEUtN96pvhWFzZJY+KYSWYlH47njqDpK551vPXoWOylmaz1+bAshm
+	 bQ3zN1GRtfTjpn4qn2dI3ATFelqbkBrtV8ruhaohoR8toffpMaTZRyNFVmjScmNb19X1X6qO1M/A
+	 xJ6TVqrugZcdgJvWNKJJvf07IH92TNiuSR9/yfaVmxkiUwrXERu5FcwA6peAprU8DQRV4QHdnEc0
+	 rARL1e7iYe1YrNo7bwBXstf9epaHVRoaQf4MD5sc5IPcjSvxeWKlyqnfHxTMyW3SjBWCg0Dq0SVy
+	 WYt1pAmymRH92o9ySe2foKr2P8E/Yu9chGwfm9nQsqYTlAiSFp38wRMjjyIVQyV9ydqX+KWPj0T3
+	 Bl18NzMuMhra8MydwE77rLXKP4SWPG5iw4Sy7rR7BsCmaD726M440s+bijJ5AVcojA4vmlHn7N3M
+	 zGluW+fTjwaFTEIN9WZ9Wi24CtY7qVLhoBEf2LVTva8/NLqziXTyzs7D2uwFDfx2cQ3FAHkiHA7u
+	 LAqJsfHqfQnyL92xC4NrwA+WAhxI/590o5NtaC31pj89kq0+bWOWqlLW7bP57xaJk1j+eiU1FIzx
+	 lDJX7br0ZOm2Nv367huOeE5zoT5kNaQhNY2EyDnVVKR5I21PcCjepkTuV87izSS14niJhu3dLYAJ
+	 VKuK5trBXN+hJuXHx5HRl93jOubGZWDYhwgEd3mRf97hyDj273obqMmk9TrnjirkELwcb1C8umtW
+	 drcaQ1r3Ewt0WtA/Z+P8NOZNqIt9mv+lbez3fE5A==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: linke li <lilinke99@qq.com>
+To: rientjes@google.com
+Cc: 42.hyeyoo@gmail.com,
+	akpm@linux-foundation.org,
+	cl@linux.com,
+	iamjoonsoo.kim@lge.com,
+	lilinke99@qq.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	penberg@kernel.org,
+	roman.gushchin@linux.dev,
+	vbabka@suse.cz,
+	xujianhao01@gmail.com
+Subject: Re: [PATCH] mm/slub: mark racy access on slab->freelist
+Date: Mon, 29 Apr 2024 10:25:15 +0800
+X-OQ-MSGID: <20240429022515.46685-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <1096134d-df6f-185d-240f-8a774d66f98f@google.com>
+References: <1096134d-df6f-185d-240f-8a774d66f98f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.100.2.1.4\))
-Subject: Re: [RFC PATCH v2 1/1] x86/sgx: Explicitly give up the CPU in EDMM's
- ioctl() to avoid softlockup
-From: "Bojun Zhu" <zhubojun.zbj@antgroup.com>
-In-Reply-To: <30415ed3-a05a-454d-9077-c8674617f291@intel.com>
-Date: Mon, 29 Apr 2024 10:23:12 +0800
-Cc:  <linux-kernel@vger.kernel.org>,
-   <linux-sgx@vger.kernel.org>,
-  "Jarkko Sakkinen" <jarkko@kernel.org>,
-   <dave.hansen@linux.intel.com>,
-  "=?UTF-8?B?Q2hhdHJlLCBSZWluZXR0ZQ==?=" <reinette.chatre@intel.com>,
-  "=?UTF-8?B?5YiY5Y+MKOi9qeWxuSk=?=" <ls123674@antgroup.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F7EBCAA4-6412-42AE-9A56-36914E22B4A1@antgroup.com>
-References: <20240426141823.112366-1-zhubojun.zbj@antgroup.com>
- <20240426141823.112366-2-zhubojun.zbj@antgroup.com>
- <30415ed3-a05a-454d-9077-c8674617f291@intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-X-Mailer: Apple Mail (2.3774.100.2.1.4)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Dave,
+> Thanks!  Do you have a data race report to copy+paste into the commit 
+> description so people can search for it if they stumble across the same 
+> thing?
 
-Appreciate for your review!
+I don't have a data race report, just try to analyze the code statically
+and then check it manually. I hope I could help in some way.
 
-> On Apr 27, 2024, at 01:06, Dave Hansen <dave.hansen@intel.com> wrote:
->=20
-> On 4/26/24 07:18, Bojun Zhu wrote:
->> 	for (c =3D 0 ; c < modp->length; c +=3D PAGE_SIZE) {
->> +		if (sgx_check_signal_and_resched()) {
->> +			if (!c)
->> +				ret =3D -ERESTARTSYS;
->> +
->> +			goto out;
->> +		}
->=20
-> This construct is rather fugly.  Let's not perpetuate it, please.  Why
-> not do:
->=20
-> 	int ret =3D -ERESTARTSYS;
->=20
-> 	...
-> 	for (c =3D 0 ; c < modp->length; c +=3D PAGE_SIZE) {
-> 		if (sgx_check_signal_and_resched())
-> 			goto out;
->=20
-> Then, voila, when c=3D=3D0 on the first run through the loop, you'll =
-get a
-> ret=3D-ERESTARTSYS.
->=20
-
-Okay, I will refine it later.
-
-> But honestly, it seems kinda silly to annotate all these loops with
-> explicit cond_resched()s.  I'd much rather do this once and, for
-> instance, just wrap the enclave locks:
->=20
-> -	  mutex_lock(&encl->lock);
-> +	  sgx_lock_enclave(encl);
->=20
-> and then have the lock function do the rescheds.  I assume that
-> mutex_lock() isn't doing this generically for performance reasons.  =
-But
-> we don't care in SGX land and can just resched to our heart's content.
-
-
-`mutex_lock(&encl->lock)` appears in everywhere in SGX in-tree driver.
-But it seems that we only need to additionally invoke `cond_resched()` =
-for
-the sgx_enclave_{restrict_permissions | modify_types | remove_pages }=20
-and sgx_ioc_add_pages()=E2=80=99s ioctl()s.=20
-
-Shall we replace all the `mutex_lock(&encl->lock) with =
-`sgx_lock_enclave(encl)`=20
-in SGX in-tree driver and then wrap reschedule operation in
-`sgx_lock_enclave()` ?=20
-
-Regards,
-Bojun=
