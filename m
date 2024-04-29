@@ -1,57 +1,57 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40C213C671;
-	Mon, 29 Apr 2024 19:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9F213C81A;
+	Mon, 29 Apr 2024 19:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714417267; cv=none; b=CtDoXRWBb+nNZJUGom0zDZ3HLbVOO9EA7hTT/7fOn5NJ5IjuqRIdAU4fcQSgBtxsfykn9g49dkObaz/S6kssM/ri/dmz02LLDcqkRrQwnoovE6zIy+R73fYxHKYCC996U7FIJPNoM45LpdEIp7v0+LuSxdMf+Zj4XPsQXFl9oMo=
+	t=1714417269; cv=none; b=AL9OL+pU05ncvf2zCWuyFHpaVkF49ZJHBE3IpnVJyvIG1DUXldV6rNes5AkGVmAA26sAzkf/vbKnFv9Ozo/5b2BRNe5SIgZhSOC5hwSAYwDCSEr2GalikMaFyUl3q8k3EtC4RitZQ5Yq64WaBw4uQSZ1Cj1HGEJ3HI/0aeHeQug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714417267; c=relaxed/simple;
-	bh=NOrJb6p7v7/w/7jahStUJxBEPe+89T748ZsfhUu2POc=;
+	s=arc-20240116; t=1714417269; c=relaxed/simple;
+	bh=7zD37O0cMqXfyAeXmkYzCAM0i0bqFUH6QgRBHqF6ofo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sRc+vRc33nwCpn+/6sR4KePQkjepiNv7SeXYdd46djvTK8Ju9lVam0VKzukeI57RK7e80gYVlkBudAW5mR9MyF5FuAOdS6s8VTK/sqMnS0TanGpMHvPLRFwDwjZSbyOiP8xYTlUimmNay32K58CAA+MSW0JJtbGaAK8bLHuSSw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UIFVNKCT; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=DaB2H3WPR/AB0SgdWBs0LOxmMGR4hbNCL2PWVExnxX/4ovNQKCe4ztW+V3lc2ckXOxFaib47TfDlS21/Dxsqt7tvaUi9NbF2RlVNJbWe/0nUSvQgW3zwDMu2YjDpg+Asqlm8yNlsdb+JmJa/BNvbMHFsSnRyeu5BlcqZ+5Ts9r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iSguUk/V; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIFVNKCT"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-34d13789e2fso994980f8f.3;
-        Mon, 29 Apr 2024 12:01:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSguUk/V"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51bafbe7509so6818655e87.1;
+        Mon, 29 Apr 2024 12:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714417264; x=1715022064; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714417266; x=1715022066; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9G5hRyuWFdVeJfPqoqlg4bo6BPBFgmGTi1O6KMvVv+Q=;
-        b=UIFVNKCT50aJ2SqRfD3Wy+yIxFG8L6JqFlK31L9TsvYz1g4ZYcaXCIsHskgNGi/hQp
-         Y9ZUXdpDycqZS6xfwJHbXM1ePI4RLqr+CatDtox+lp9kn6jFaHKCwXoO13JNkExbVD2n
-         3gYqQyHiMT5n2hxJ2GAYUmOExXBOxA3kUyLZ7t8Qc5HcNpqs6NCbiW+pJHng0A3FKTtQ
-         D5U7xSBlqDvE9U73WmlcWEjpW91PWeW7bxjFkIWLhDYe+Xq5uWqF60ehDP6bk97qimZk
-         ubgmEQpQMHROa6FYjMlNj/ywaaroQDFaZwmF1FS8W+AmpEUmwKqAG9gA2H3g3/RAAHYw
-         ygSg==
+        bh=Mwn2MMGvK9G2qY6gm++WhwbYwYr8tU2LoZssFpAE/v0=;
+        b=iSguUk/V67KHG18VNe9dNBMikuC8WtWcZxAqXR3QNuruD0YIx5h9B+ybZyHe4YhEE7
+         i4w5bg2Qzp0gfY1ZliCm8u3pePRmbYf2woyJXujLHApSTSrRroopBuwOTTLv44buJWHH
+         8C2bUV0pU+c+uMiiCuC82dYom9xGDYwNVadOSPFFrwHlY6/siUoxThYeczFn9SMiU0xV
+         fsceINeeFeC62DZNxFUfHm7VxsRiYHxx91JPtH9skgTtOYk2v2gVmq73LBQWkIHI+XOC
+         /jCT+tk4l2gF039hAMwNSns11Ufw3NIWB0G8VEZl0dkJI/3T/s5pzXJfsoFtom455CGX
+         RY+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714417264; x=1715022064;
+        d=1e100.net; s=20230601; t=1714417266; x=1715022066;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9G5hRyuWFdVeJfPqoqlg4bo6BPBFgmGTi1O6KMvVv+Q=;
-        b=Zr9QHP53fBjL0s219dBY27/H+rsXNlzFBVK/HkRA9EQ11Jg+IHO5bjI4XeKdhWkGCy
-         OrRulLTMfSuJLhOdjsKiXNNVhd0tgS5rCVKH35Xfs5Q9coMmalUFWJ6WW25FubPSA8Su
-         D2ZVQhq5PK+EMXpqfezFkQAdMMjHB6yUcDNMHLhUk+9jVeBhg850dry/QOJA/S9F43XX
-         1bW6YcNybIYGg7/AiTnAi0ynUeeZSm42c7lYbqwZlTv6d6MmYIj8cWrxZ6/msHejSIXJ
-         JqvuZ4E7jU1yluIGuMIA5wi9VzezxiWE8SkbKffPduJ/YxuLc/4gPDKjD0UG8MLzKn4R
-         c83w==
-X-Forwarded-Encrypted: i=1; AJvYcCWwpGcweoBUhkz71pV0ddpGHcXapj58BlAv2aMZk+kjIA72FOR2jBxaQ4oInV7bRiw6CdwI0CYeFCxpDgXU310+OVMeZvImxg9mocuGd0ALyloD0Ud0wO28Yckih3Va9tNmjqf5yIu6
-X-Gm-Message-State: AOJu0YxaTl43igqzUdHMjlMl5G6YkxnmDimrDMtQcJzozZuk8kX+BcWN
-	yWPfiMG+visfrWpztFwqbCl3BemY6Fsvhu+miYFg7LNr+8glkttG
-X-Google-Smtp-Source: AGHT+IETR4IWEKTl5LAaTBFHjCqIkPl5Pe31CYpkAyFrfX65RMvDe5sLd2th/Nur0SOUdhv9ZUOC4A==
-X-Received: by 2002:a5d:444d:0:b0:34c:c66c:5624 with SMTP id x13-20020a5d444d000000b0034cc66c5624mr338749wrr.35.1714417264233;
-        Mon, 29 Apr 2024 12:01:04 -0700 (PDT)
+        bh=Mwn2MMGvK9G2qY6gm++WhwbYwYr8tU2LoZssFpAE/v0=;
+        b=W8REo9dwRwTIadXdVi8sh0Ax224za4vGZUg0XyvChYWOhdZMc0+ZZ26XCq8HxTT8bd
+         NAoMgplIWChIw/edm6lKoB8VXN9Oq+bNEYSIxFxQr59Qq7+YqAkCMvXl1GnYqajG/G/C
+         NWFTzuOSCx06QXVdrjM47VilxSLvDbtcWBjRmwiUBpAO4MH5ci8G8gEL+88c3smVSdRJ
+         17d0QV/gcH9IvU7YqZwTnkNX+jqa4/uDyto0j4crcDg5UfkKnMIE+bN/xRSUxVg65Tea
+         R/YspN9uneJSswxoeWn26P4XTCPeN/9VMwnYVcYn4CppAr8qUK3bOKsE1MdiedJ1QfDm
+         C9HA==
+X-Forwarded-Encrypted: i=1; AJvYcCXhYTNht/wPczsQwigHOQ0SWgs5Pj/LNsoZsYomMJq1cmU9N2oNyWkRk+BN1W/pZuF3aTr+KB0MkKsmzFKeI4rVxmvuzVcZmrGFCJADoT4rY3sFvBAerXxPd3AEawH5xFskKWIn61Tj
+X-Gm-Message-State: AOJu0Yz8xv+qPnZ5KvRWB8r+waafuD1mR/q2O6KPGDEiKPrmK7VAPVlV
+	IpJzBImSs4+wO4lF4M8L9AyLxxZGz9oCpdn7kZvmfBwOxKBNFgwd
+X-Google-Smtp-Source: AGHT+IH9nzto04uH8933cCAEYLrUBd1ZEEDmgvM68qUx5wNp/TVq3+OMpWrPvi7mr6g+QkZfz1rUZA==
+X-Received: by 2002:a05:6512:23a7:b0:51d:a1ab:98bc with SMTP id c39-20020a05651223a700b0051da1ab98bcmr4138196lfv.2.1714417266439;
+        Mon, 29 Apr 2024 12:01:06 -0700 (PDT)
 Received: from localhost.localdomain ([2a04:ee41:82:7577:abbf:c98a:cf84:d14c])
-        by smtp.gmail.com with ESMTPSA id x2-20020adfdd82000000b0034c78bba70bsm8469456wrl.72.2024.04.29.12.01.03
+        by smtp.gmail.com with ESMTPSA id x2-20020adfdd82000000b0034c78bba70bsm8469456wrl.72.2024.04.29.12.01.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 12:01:03 -0700 (PDT)
+        Mon, 29 Apr 2024 12:01:06 -0700 (PDT)
 From: Vasileios Amoiridis <vassilisamir@gmail.com>
 To: jic23@kernel.org
 Cc: lars@metafoo.de,
@@ -66,11 +66,10 @@ Cc: lars@metafoo.de,
 	semen.protsenko@linaro.org,
 	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Vasileios Amoiridis <vassilisamir@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v5 07/10] iio: pressure: bmp280: Introduce new cleanup routines
-Date: Mon, 29 Apr 2024 21:00:43 +0200
-Message-Id: <20240429190046.24252-8-vassilisamir@gmail.com>
+	Vasileios Amoiridis <vassilisamir@gmail.com>
+Subject: [PATCH v5 09/10] iio: pressure: bmp280: Add SCALE, RAW values in channels and refactorize them
+Date: Mon, 29 Apr 2024 21:00:45 +0200
+Message-Id: <20240429190046.24252-10-vassilisamir@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240429190046.24252-1-vassilisamir@gmail.com>
 References: <20240429190046.24252-1-vassilisamir@gmail.com>
@@ -82,218 +81,158 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce new linux/cleanup.h with the guard(mutex) functionality
-in the {read,write}_raw() functions.
+Add extra IIO_CHAN_INFO_SCALE and IIO_CHAN_INFO_RAW channels in order
+to be able to calculate the processed value with standard userspace
+IIO tools. Can be used for triggered buffers as well.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Even though it is not a good design choice to have SCALE, RAW and
+PROCESSED together, the PROCESSED channel is kept for ABI compatibility.
+
+While at it, separate BMPxxx and BMExxx device channels since BME
+supports also humidity measurements.
+
 Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
 ---
- drivers/iio/pressure/bmp280-core.c | 125 +++++++++++++----------------
- 1 file changed, 54 insertions(+), 71 deletions(-)
+ drivers/iio/pressure/bmp280-core.c | 86 +++++++++++++++++++++++++++---
+ 1 file changed, 78 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index 5ebce38e99f6..f14277bb882d 100644
+index 668c4e8a2ebf..e349ed87aad6 100644
 --- a/drivers/iio/pressure/bmp280-core.c
 +++ b/drivers/iio/pressure/bmp280-core.c
-@@ -27,6 +27,7 @@
- 
- #include <linux/bitops.h>
- #include <linux/bitfield.h>
-+#include <linux/cleanup.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -501,77 +502,67 @@ static int bme280_read_humid(struct bmp280_data *data, int *val, int *val2)
- 	return IIO_VAL_INT;
- }
- 
--static int bmp280_read_raw(struct iio_dev *indio_dev,
--			   struct iio_chan_spec const *chan,
--			   int *val, int *val2, long mask)
-+static int bmp280_read_raw_impl(struct iio_dev *indio_dev,
-+				struct iio_chan_spec const *chan,
-+				int *val, int *val2, long mask)
- {
- 	struct bmp280_data *data = iio_priv(indio_dev);
--	int ret;
- 
--	pm_runtime_get_sync(data->dev);
--	mutex_lock(&data->lock);
-+	guard(mutex)(&data->lock);
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_PROCESSED:
- 		switch (chan->type) {
- 		case IIO_HUMIDITYRELATIVE:
--			ret = data->chip_info->read_humid(data, val, val2);
--			break;
-+			return data->chip_info->read_humid(data, val, val2);
- 		case IIO_PRESSURE:
--			ret = data->chip_info->read_press(data, val, val2);
--			break;
-+			return data->chip_info->read_press(data, val, val2);
- 		case IIO_TEMP:
--			ret = data->chip_info->read_temp(data, val, val2);
--			break;
-+			return data->chip_info->read_temp(data, val, val2);
+@@ -137,17 +137,45 @@ enum {
+ static const struct iio_chan_spec bmp280_channels[] = {
+ 	{
+ 		.type = IIO_PRESSURE,
++		/* PROCESSED maintained for ABI backwards compatibility */
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
++				      BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+ 	},
+ 	{
+ 		.type = IIO_TEMP,
++		/* PROCESSED maintained for ABI backwards compatibility */
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
++				      BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE) |
++				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
++	},
++};
++
++static const struct iio_chan_spec bme280_channels[] = {
++	{
++		.type = IIO_PRESSURE,
++		/* PROCESSED maintained for ABI backwards compatibility */
++		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
++				      BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE) |
++				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
++	},
++	{
++		.type = IIO_TEMP,
++		/* PROCESSED maintained for ABI backwards compatibility */
++		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
++				      BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+ 	},
+ 	{
+ 		.type = IIO_HUMIDITYRELATIVE,
++		/* PROCESSED maintained for ABI backwards compatibility */
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
++				      BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+ 	},
+ };
+@@ -155,21 +183,20 @@ static const struct iio_chan_spec bmp280_channels[] = {
+ static const struct iio_chan_spec bmp380_channels[] = {
+ 	{
+ 		.type = IIO_PRESSURE,
++		/* PROCESSED maintained for ABI backwards compatibility */
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
++				      BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+ 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+ 					   BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
+ 	},
+ 	{
+ 		.type = IIO_TEMP,
++		/* PROCESSED maintained for ABI backwards compatibility */
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
+-				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+-		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+-					   BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
+-	},
+-	{
+-		.type = IIO_HUMIDITYRELATIVE,
+-		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
++				      BIT(IIO_CHAN_INFO_RAW) |
++				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+ 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+ 					   BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
+@@ -529,6 +556,49 @@ static int bmp280_read_raw_impl(struct iio_dev *indio_dev,
  		default:
--			ret = -EINVAL;
--			break;
-+			return -EINVAL;
+ 			return -EINVAL;
  		}
--		break;
++	case IIO_CHAN_INFO_RAW:
++		switch (chan->type) {
++		case IIO_HUMIDITYRELATIVE:
++			ret = data->chip_info->read_humid(data, &chan_value);
++			if (ret < 0)
++				return ret;
++
++			*val = chan_value;
++			return IIO_VAL_INT;
++		case IIO_PRESSURE:
++			ret = data->chip_info->read_press(data, &chan_value);
++			if (ret < 0)
++				return ret;
++
++			*val = chan_value;
++			return IIO_VAL_INT;
++		case IIO_TEMP:
++			ret = data->chip_info->read_temp(data, &chan_value);
++			if (ret < 0)
++				return ret;
++
++			*val = chan_value;
++			return IIO_VAL_INT;
++		default:
++			return -EINVAL;
++		}
++	case IIO_CHAN_INFO_SCALE:
++		switch (chan->type) {
++		case IIO_HUMIDITYRELATIVE:
++			*val = data->chip_info->humid_coeffs[0];
++			*val2 = data->chip_info->humid_coeffs[1];
++			return data->chip_info->humid_coeffs_type;
++		case IIO_PRESSURE:
++			*val = data->chip_info->press_coeffs[0];
++			*val2 = data->chip_info->press_coeffs[1];
++			return data->chip_info->press_coeffs_type;
++		case IIO_TEMP:
++			*val = data->chip_info->temp_coeffs[0];
++			*val2 = data->chip_info->temp_coeffs[1];
++			return data->chip_info->temp_coeffs_type;
++		default:
++			return -EINVAL;
++		}
  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
  		switch (chan->type) {
  		case IIO_HUMIDITYRELATIVE:
- 			*val = 1 << data->oversampling_humid;
--			ret = IIO_VAL_INT;
--			break;
-+			return IIO_VAL_INT;
- 		case IIO_PRESSURE:
- 			*val = 1 << data->oversampling_press;
--			ret = IIO_VAL_INT;
--			break;
-+			return IIO_VAL_INT;
- 		case IIO_TEMP:
- 			*val = 1 << data->oversampling_temp;
--			ret = IIO_VAL_INT;
--			break;
-+			return IIO_VAL_INT;
- 		default:
--			ret = -EINVAL;
--			break;
-+			return -EINVAL;
- 		}
--		break;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		if (!data->chip_info->sampling_freq_avail) {
--			ret = -EINVAL;
--			break;
--		}
-+		if (!data->chip_info->sampling_freq_avail)
-+			return -EINVAL;
+@@ -895,7 +965,7 @@ const struct bmp280_chip_info bme280_chip_info = {
+ 	.num_chip_id = ARRAY_SIZE(bme280_chip_ids),
+ 	.regmap_config = &bmp280_regmap_config,
+ 	.start_up_time = 2000,
+-	.channels = bmp280_channels,
++	.channels = bme280_channels,
+ 	.num_channels = 3,
  
- 		*val = data->chip_info->sampling_freq_avail[data->sampling_freq][0];
- 		*val2 = data->chip_info->sampling_freq_avail[data->sampling_freq][1];
--		ret = IIO_VAL_INT_PLUS_MICRO;
--		break;
-+		return IIO_VAL_INT_PLUS_MICRO;
- 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
--		if (!data->chip_info->iir_filter_coeffs_avail) {
--			ret = -EINVAL;
--			break;
--		}
-+		if (!data->chip_info->iir_filter_coeffs_avail)
-+			return -EINVAL;
- 
- 		*val = (1 << data->iir_filter_coeff) - 1;
--		ret = IIO_VAL_INT;
--		break;
-+		return IIO_VAL_INT;
- 	default:
--		ret = -EINVAL;
--		break;
-+		return -EINVAL;
- 	}
-+}
- 
--	mutex_unlock(&data->lock);
-+static int bmp280_read_raw(struct iio_dev *indio_dev,
-+			   struct iio_chan_spec const *chan,
-+			   int *val, int *val2, long mask)
-+{
-+	struct bmp280_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	pm_runtime_get_sync(data->dev);
-+	ret = bmp280_read_raw_impl(indio_dev, chan, val, val2, mask);
- 	pm_runtime_mark_last_busy(data->dev);
- 	pm_runtime_put_autosuspend(data->dev);
- 
-@@ -703,12 +694,13 @@ static int bmp280_write_iir_filter_coeffs(struct bmp280_data *data, int val)
- 	return -EINVAL;
- }
- 
--static int bmp280_write_raw(struct iio_dev *indio_dev,
--			    struct iio_chan_spec const *chan,
--			    int val, int val2, long mask)
-+static int bmp280_write_raw_impl(struct iio_dev *indio_dev,
-+				 struct iio_chan_spec const *chan,
-+				 int val, int val2, long mask)
- {
- 	struct bmp280_data *data = iio_priv(indio_dev);
--	int ret = 0;
-+
-+	guard(mutex)(&data->lock);
- 
- 	/*
- 	 * Helper functions to update sensor running configuration.
-@@ -718,45 +710,36 @@ static int bmp280_write_raw(struct iio_dev *indio_dev,
- 	 */
- 	switch (mask) {
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
--		pm_runtime_get_sync(data->dev);
--		mutex_lock(&data->lock);
- 		switch (chan->type) {
- 		case IIO_HUMIDITYRELATIVE:
--			ret = bme280_write_oversampling_ratio_humid(data, val);
--			break;
-+			return bme280_write_oversampling_ratio_humid(data, val);
- 		case IIO_PRESSURE:
--			ret = bmp280_write_oversampling_ratio_press(data, val);
--			break;
-+			return bmp280_write_oversampling_ratio_press(data, val);
- 		case IIO_TEMP:
--			ret = bmp280_write_oversampling_ratio_temp(data, val);
--			break;
-+			return bmp280_write_oversampling_ratio_temp(data, val);
- 		default:
--			ret = -EINVAL;
--			break;
-+			return -EINVAL;
- 		}
--		mutex_unlock(&data->lock);
--		pm_runtime_mark_last_busy(data->dev);
--		pm_runtime_put_autosuspend(data->dev);
--		break;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		pm_runtime_get_sync(data->dev);
--		mutex_lock(&data->lock);
--		ret = bmp280_write_sampling_frequency(data, val, val2);
--		mutex_unlock(&data->lock);
--		pm_runtime_mark_last_busy(data->dev);
--		pm_runtime_put_autosuspend(data->dev);
--		break;
-+		return bmp280_write_sampling_frequency(data, val, val2);
- 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
--		pm_runtime_get_sync(data->dev);
--		mutex_lock(&data->lock);
--		ret = bmp280_write_iir_filter_coeffs(data, val);
--		mutex_unlock(&data->lock);
--		pm_runtime_mark_last_busy(data->dev);
--		pm_runtime_put_autosuspend(data->dev);
--		break;
-+		return bmp280_write_iir_filter_coeffs(data, val);
- 	default:
- 		return -EINVAL;
- 	}
-+}
-+
-+static int bmp280_write_raw(struct iio_dev *indio_dev,
-+			 struct iio_chan_spec const *chan,
-+			 int val, int val2, long mask)
-+{
-+	struct bmp280_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	pm_runtime_get_sync(data->dev);
-+	ret = bmp280_write_raw_impl(indio_dev, chan, val, val2, mask);
-+	pm_runtime_mark_last_busy(data->dev);
-+	pm_runtime_put_autosuspend(data->dev);
- 
- 	return ret;
- }
+ 	.oversampling_temp_avail = bmp280_oversampling_avail,
 -- 
 2.25.1
 
