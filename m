@@ -1,110 +1,125 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1101411DD
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 20:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DED21411D0
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 20:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714421206; cv=none; b=DHjlJ5a+GBX32fdUSY/Ri5OoL8/gNc3CKhPR1D8lHSF72hcy7jmy9N3KyKnTWI3+t0VS+3szkt0jmRklzVaqAnbvUSuzeYZOaqCWma3U4cFc40/usiyh9gn4xRWo0g0/LVFqL7J1K3tfx7hAZDuNs+k/A4vIm6yh4Eof322uefg=
+	t=1714421216; cv=none; b=EcVwXaxGTfIYeEBw7j4Ed3jvBStBXZlNgAYWmMx2rjhqdytRbem4Fnh/wIyWkBOXrc+EpGER1dIVB4VqQow/RRNiQNFlRoiIwvbuNPEBWBzzBT534MgnXuNZBEbbzH4HdrIdKTemb28mYawBcsM9eaYoAbb+oXXxdRDbFshPiZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714421206; c=relaxed/simple;
-	bh=8jUOgi1XXZrbwIAYkNr9gAmLVkhI5hRZK/P2iEf8yFY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qHNh/woxNfHK/CZEiKIybDAS1qiHCkyP0Ie+YJXHyU+BBXl7lyOZGMkM56JlcruHYNLXCyFrkG02JBOcFbpf6V8u3UCXZ8ANCW8jFP+DBsW3XZpxP7WQhw+t+3C9No/z6vlyTDgN7i/dBtpec1M6JR1b+oKrQ17izo7LUo3YNDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IH0tPWo7; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714421216; c=relaxed/simple;
+	bh=ZQkpSdpmt4mYDJwdDVa8RfLmPSrJrAufaXCOysNf5gk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UBR/DCrYqEFPeW+Ptoqg6f1YRxGQTJswX1uswlsreRA0AhMSUuBbAMlAbwHSEfHmf7Qe5Kva+BHURRWSyKzPYhg9L3AgZF0hdckC8vgo/N70JBjdDkMdLABrm7rEXupuQKVvzMbyjssNngmaM+WxIs6lPm0a7ke5Z/KtwQ5fgMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B4M3XXzP; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IH0tPWo7"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41b4ff362a8so44494105e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:06:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B4M3XXzP"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de549a4ea65so8620574276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:06:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714421204; x=1715026004; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8jUOgi1XXZrbwIAYkNr9gAmLVkhI5hRZK/P2iEf8yFY=;
-        b=IH0tPWo7ar8LriYX/sf9mw4BjARP1yv1gRmiiyCucXTP3pX6TRx9BaOYRJSoC7N5gK
-         3KaGqCb70J7d7ftVT2T9fOzhjnMGDSKOzwf5+sPzP4ZPaL5grNj4pTGBgTxb1R+wwGNK
-         5JaGSyPUFruHWPgQP33tvK7jHW4D6rJmj6XFqzWnAY+QV20rHS3+B4ufR2rCiF7INgTp
-         8VgjPqqg3zF//W5QCyQrAJcWcDriRmnquwLiWzhO5x7qvREP30oAFityuNAfIxltU7mh
-         dhcAh27QJ/kGjfpr2CTW4SNVObT/jAO86zrju8ndGXbex1TGohmiM5bGZ6QhGoA23q2l
-         OicQ==
+        d=google.com; s=20230601; t=1714421214; x=1715026014; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5r9jrj7lJ8K2c/A/X813S+F4evPMkrfmwuk9AJ2VgE=;
+        b=B4M3XXzP2iQXxgSV+N1tdLcL/ldPIxZodk+z9Ek9SwtVBjUFW6+VNMRyK1R/LKqYhR
+         6/KTDP0RvVxXm1MLemFV9ktyTwvBaJagz6twaL7B8IowpxNlqe8brVePneBxgasLYX40
+         +ME6R8X+skT3ZKPKXSiXtP5euoxxmHFDh/z2GxT1TSm07Il3k7j4MPKg7HPv5hsQNBry
+         TU3LsxD4EpXtD61LEo2KGE6DXCORI89Iu1U0pSBthH1nSTaYkC9C/w8M6sjDpKr8Foe5
+         Nv+VE6G99Ly9aY0PFYRaTF8JiRkFBLgnXn2AUKQ8Y1GxB+eQgiAyWc5MN3O/ZzqV8ahQ
+         5+rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714421204; x=1715026004;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8jUOgi1XXZrbwIAYkNr9gAmLVkhI5hRZK/P2iEf8yFY=;
-        b=esPCJfw1WHCd6NDPnXrwbXbNpIzowz3LfoHd3m5Iom5zcwzJtPJStyFvTC0P8+P06Z
-         n2/znUSLywHqm4Zc4XWqNeZ4ty+EhAhRJi2m1nCSrpMhOuldljBtgWGoobSywPCOxuvP
-         l69uOAoJnj7burzWHOGX2FatCpnlEniwKSZhdiukrsdCgca7hjQN2/YgFCCu2F8Acdv3
-         e5lCDEYaCbA1ANWxGQoRw+weesRmj0yQ11ySaRq+PZ5WtdlBxbZDIEfg6I750wLKnzql
-         zTs93lyTRjRtf4kwv0MW+rPbo0chRSEak8RRKh1wYBuXN5JXiSRW3949WdufWVd6W9MH
-         Nk4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU/fEy9PNJo3lUUnuSSr1C9LdeGd1ezmhqSDBSe3ZULTuiuOIiMCYNyaUHCkTsInpcLE51C7WRdokeTLdUc1d3Fh3ZCS8zKm+8ORh6B
-X-Gm-Message-State: AOJu0YwyKJdJQf3dnDsz803ZDKfSq9EguCEJJEodDOmnRa7t54YE8ImM
-	oa3nwF8ELkVE9P/JZeIGSkaIcSVLVf1PzykhoA4XbQ3HdcQV7rdJzXXwD1XFKOk=
-X-Google-Smtp-Source: AGHT+IG/JkC3NmGrBVKnO/crSew2RZ93tKu5q64K7Be/fwVJ6UWNWK9tDLgS4WLRBO92OWd/6DjpYQ==
-X-Received: by 2002:a05:600c:198c:b0:415:540e:74e3 with SMTP id t12-20020a05600c198c00b00415540e74e3mr10044316wmq.40.1714421203786;
-        Mon, 29 Apr 2024 13:06:43 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id s20-20020adfa294000000b003455e5d2569sm9432577wra.0.2024.04.29.13.06.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 13:06:43 -0700 (PDT)
-Message-ID: <8309a9a8906d3b910f775c6d55d9f75681b03802.camel@linaro.org>
-Subject: Re: [PATCH v3 0/2] clock support for Samsung Exynos pin controller
- (Google Tensor gs101)
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij
- <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,  Peter Griffin
- <peter.griffin@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker
-	 <willmcvicker@google.com>, Sam Protsenko <semen.protsenko@linaro.org>, 
-	kernel-team@android.com, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 29 Apr 2024 21:06:41 +0100
-In-Reply-To: <479aeb87-ddc1-421a-a451-d9e62893eef5@linaro.org>
-References: <20240426-samsung-pinctrl-busclock-v3-0-adb8664b8a7e@linaro.org>
-	 <171441172281.306662.17546797534297489946.b4-ty@linaro.org>
-	 <479aeb87-ddc1-421a-a451-d9e62893eef5@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3-1 
+        d=1e100.net; s=20230601; t=1714421214; x=1715026014;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5r9jrj7lJ8K2c/A/X813S+F4evPMkrfmwuk9AJ2VgE=;
+        b=fVNFmTZZ8z1FgwkvIbTIaILjT1JoJJ7eNcujzlkAjJR5PILljHWEvc5t/qwacDsdtM
+         jkAVVKfWoW0+caB+3WQswLFozeNlbneFMiz/4Ue/CXlH8aPE7sxFg4bZieOuN7KxMhC1
+         FoQWGxEL1lvpAt2O3ZWpaI0T8Mdid16Tl2phJTViJGjefZwDIhBNWU3eM5+mGNxa8yh8
+         PnaRte3UcQ5/hZWFAR5AyeZYdIwy2kDxWKjSeoMkeO+JK/NCNlRUlFyrbtriuN+ER7S1
+         N/shwvhJG7w6HsiEuBhzAOWz7XeYw+4HVVrR5yQmgJl7viX1AxqMKVGY+dS+Zc3Vc3SQ
+         m1hA==
+X-Forwarded-Encrypted: i=1; AJvYcCWstnBs+NgW9iQlQdYC45ZbDu2dPOFDvkTdKDOi6pJBIr4NinQ+j6SGAzTbX4Px23JeyZBidptRY/3uQokXitGbiB7qreNY6qrXeaWr
+X-Gm-Message-State: AOJu0YxYPDzxJawlmZgQ2jc8n69ghcV2LX+EKPj5R50kVFI7+KacpneB
+	FSJWWIOXzOjrJgZbbpBE0/cd02GUucbfPejuXLKqVe4QGCGawMjreAQ1IQAor/MDpsBo4oThxS6
+	Tdg==
+X-Google-Smtp-Source: AGHT+IFf8IzkssAjSX9+E+pyZ8b6wCf8T3MVnGnh3lV3JTeTnffbD7Ts+m4DeJyAG04Wpn1kmZbYGRXnX+g=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:c12:b0:dc6:cd85:bcd7 with SMTP id
+ fs18-20020a0569020c1200b00dc6cd85bcd7mr3946933ybb.3.1714421214393; Mon, 29
+ Apr 2024 13:06:54 -0700 (PDT)
+Date: Mon, 29 Apr 2024 13:06:52 -0700
+In-Reply-To: <b2bfc0d157929b098dde09b32c9a3af18835ec57.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <Zib76LqLfWg3QkwB@google.com> <6e83e89f145aee496c6421fc5a7248aae2d6f933.camel@intel.com>
+ <d0563f077a7f86f90e72183cf3406337423f41fe.camel@intel.com>
+ <ZifQiCBPVeld-p8Y@google.com> <61ec08765f0cd79f2d5ea1e2acf285ea9470b239.camel@intel.com>
+ <9c6119dacac30750defb2b799f1a192c516ac79c.camel@intel.com>
+ <ZiqFQ1OSFM4OER3g@google.com> <b605722ac1ffb0ffdc1d3a4702d4e987a5639399.camel@intel.com>
+ <Zircphag9i1h-aAK@google.com> <b2bfc0d157929b098dde09b32c9a3af18835ec57.camel@intel.com>
+Message-ID: <Zi_93AF1qRapsUOq@google.com>
+Subject: Re: [PATCH v19 023/130] KVM: TDX: Initialize the TDX module when
+ loading the KVM intel kernel module
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: Tina Zhang <tina.zhang@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
+	Bo2 Chen <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Erdem Aktas <erdemaktas@google.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, 
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Krzysztof,
+On Mon, Apr 29, 2024, Kai Huang wrote:
+> On Thu, 2024-04-25 at 15:43 -0700, Sean Christopherson wrote:
+> > > And the odd is currently the common SEAMCALL functions, a.k.a,
+> > > __seamcall() and seamcall() (the latter is a mocro actually), both return
+> > > u64, so if we want to have such CR4.VMX check code in the common code, we
+> > > need to invent a new error code for it.
+> > 
+> > Oh, I wasn't thinking that we'd check CR4.VMXE before *every* SEAMCALL, just
+> > before the TDH.SYS.LP.INIT call, i.e. before the one that is most likely to fail
+> > due to a software bug that results in the CPU not doing VMXON before enabling
+> > TDX.
+> > 
+> > Again, my intent is to add a simple, cheap, and targeted sanity check to help
+> > deal with potential failures in code that historically has been less than rock
+> > solid, and in function that has a big fat assumption that the caller has done
+> > VMXON on the CPU.
+> 
+> I see.
+> 
+> (To be fair, personally I don't recall that we ever had any bug due to
+> "cpu not in post-VMXON before SEAMCALL", but maybe it's just me. :-).)
+> 
+> But if tdx_enable() doesn't call tdx_cpu_enable() internally, then we will
+> have two functions need to handle.
 
-On Mon, 2024-04-29 at 19:45 +0200, Krzysztof Kozlowski wrote:
-> On 29/04/2024 19:28, Krzysztof Kozlowski wrote:
-> >=20
-> > On Fri, 26 Apr 2024 14:25:13 +0100, Andr=C3=A9 Draszik wrote:
-> > > This series enables clock support on the Samsung Exynos pin controlle=
-r
-> > > driver.
-> > >=20
-> > > This is required on Socs like Google Tensor gs101, which implement
-> > > fine-grained clock control / gating, and as such a running bus clock =
-is
-> > > required for register access to work.
-> > >=20
->=20
-> Where's the DTS?
+Why?  I assume there will be exactly one caller of TDH.SYS.LP.INIT.
 
-Here: https://lore.kernel.org/r/20240429-samsung-pinctrl-busclock-dts-v1-0-=
-5e935179f3ca@linaro.org
+> For tdx_enable(), given it's still good idea to disable CPU hotplug around
+> it, we can still do some check for all online cpus at the beginning, like:
+> 
+> 	on_each_cpu(check_cr4_vmx(), &err, 1);
 
-(I was waiting to see how the HSI2 patches pan out)
+If it gets to that point, just omit the check.  I really think you're making much
+ado about nothing.  My suggestion is essentially "throw in a CR4.VMXE check before
+TDH.SYS.LP.INIT if it's easy".  If it's not easy for some reason, then don't do
+it.
 
-
-Thanks,
-Andre
+> Btw, please also see my last reply to Chao why I don't like calling
+> tdx_cpu_enable() inside tdx_enable():
+> 
+> https://lore.kernel.org/lkml/1fd17c931d5c2effcf1105b63deac8e3fb1664bc.camel@intel.com/
+> 
+> That being said, I can try to add additional patch(es) to do CR4.VMX check
+> if you want, but personally I found hard to have a strong justification to
+> do so.
+> 
