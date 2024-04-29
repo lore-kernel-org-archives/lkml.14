@@ -1,242 +1,100 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D8A17C79;
-	Mon, 29 Apr 2024 09:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F9112E7F
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714382194; cv=none; b=uI08aOqkLqLadBowdms7XiFgPh0ufp+7dg1FuovP8Kyg3UEEe9yu9ahEIZD8D4dswH1K7OVTbuJAjQmj1XRcdKXrRRg9rXg6HtcHa/FkPdwsJVog2xyORHq8aqKMS4p48/SG0s2VzJsxae1hNGMm9FrEd3ISNfDVeHUdXFX4ygQ=
+	t=1714382412; cv=none; b=oMz/Gsc61VvWjo2DP7ya19+55iJjm6xVLl5U7yzKP3DsDkme8rnOAWHPINYP+HpQoCdk5NAopQS3WvcbLjrtDQTAPs4oTyCCPJyBTtPtnKpcJkG2tD53xAkol5yowIIV8krqv3WRZNjePYDJKLxDOMMcsUlXIN9qmZj1C6f1L8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714382194; c=relaxed/simple;
-	bh=TZaXfDgPaZgcxEi+ra9/iPiMANbZYn4vjy5qATk3lbw=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=T9CIM7coBGpJkR7OauBS6TpKZcfsd6et+ZSTTFFak9jlAeHNVWEifk3cRS22ZJHmWl5dWvQdvNULJ3ztje2+0cSxHSo1eCmFOxQ+VEDp5p2OcXuARNrPksfBgOnjb7zsO83Yl8VnXXsxOwII+CJJpYIKuR/5zST5e7dqPzzU9ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VSd482mZtz4xPGH;
-	Mon, 29 Apr 2024 17:16:24 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl2.zte.com.cn with SMTP id 43T9Fti6063422;
-	Mon, 29 Apr 2024 17:15:55 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp03[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 29 Apr 2024 17:15:57 +0800 (CST)
-Date: Mon, 29 Apr 2024 17:15:57 +0800 (CST)
-X-Zmail-TransId: 2afb662f654d799-db7cc
-X-Mailer: Zmail v1.0
-Message-ID: <20240429171557482x0zswaWhCLkpHecR3bZqb@zte.com.cn>
+	s=arc-20240116; t=1714382412; c=relaxed/simple;
+	bh=Y4bDuRSz6TSLz3mVCCjXzVCR5pym+nGoMR5ch9kpkR0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fxHvRsXVRKxsyrQWwLvCaUaIK0k5zis9IZ/LdED/Zg0ndthFdfknjxHWN9NNJTZzJiMfr5PcQ0ZHCLdYNpwGpmgojZLDbL+FXmA/8l5NnTAdJaP3kXueyoRjpT32gFtTXTkfV6bVCumUYuCffMSvPXvUb6wA78h3L90Pq1BUKuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JeBcUTjG; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JeBcUTjG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714382410; x=1745918410;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Y4bDuRSz6TSLz3mVCCjXzVCR5pym+nGoMR5ch9kpkR0=;
+  b=JeBcUTjG7BEFUqrncqvszHvEVjDqfNylQP6nYHEsy6FWZGmJd7T2IrzQ
+   W4XK6g+fPRJrbZ2cDJYEhk63lfTBBIYh72lGjtGA+qb8l1lnO0U0whkom
+   Q7/8sV7JYbLICwOnBQ+Hp5aualkd5wLK3ZTNXNwFN5qjadx0mDS+Gc4Nh
+   ZMM1ajDTJQR9j5I+LVZwgIRTIECM5imPPIl1CaW4xt/OGn+LjZwRUA8pn
+   OOr1DayFa0FxITbFqmfsxVWL65B7i4bt10L3sunib/5S7hQQevISIPpic
+   vsd379jrfdxgX6KI4SKCA4btaMYipy2TQLPHHuV36202xbmdsa00OKXuR
+   A==;
+X-CSE-ConnectionGUID: xsfdljZ4TlCj8U20W8hVlA==
+X-CSE-MsgGUID: mvrjThVnTnqEWWC1/MVZnw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="9958800"
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="9958800"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:20:10 -0700
+X-CSE-ConnectionGUID: whTviabCQ5apEoLo5b0/eQ==
+X-CSE-MsgGUID: dKioqKMaQBq/p9WyJJh/VQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="26461169"
+Received: from aantonov-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.167])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:20:02 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ lvzhaoxiong@huaqin.corp-partner.google.com, Hsin-Yi Wang
+ <hsinyi@google.com>, Javier Martinez Canillas <javierm@redhat.com>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Joel Selvaraj <jo@jsfamily.in>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Cong Yang
+ <yangcong5@huaqin.corp-partner.google.com>, Sam Ravnborg
+ <sam@ravnborg.org>, Douglas Anderson <dianders@chromium.org>, Daniel
+ Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] drm/mipi-dsi: Reduce bloat and add funcs for
+ cleaner init seqs
+In-Reply-To: <20240426235857.3870424-1-dianders@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240426235857.3870424-1-dianders@chromium.org>
+Date: Mon, 29 Apr 2024 12:20:00 +0300
+Message-ID: <87jzkg4jb3.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <edumazet@google.com>, <kuba@kernel.org>
-Cc: <horms@kernel.org>, <davem@davemloft.net>, <rostedt@goodmis.org>,
-        <mhiramat@kernel.org>, <dsahern@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
-        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <kerneljasonxing@gmail.com>, <fan.yu9@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <ran.xiaokai@zte.com.cn>,
-        <zhang.run@zte.com.cn>, <wang.haoyi@zte.com.cn>, <si.hao@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY4XSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZMKgwqA=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 43T9Fti6063422
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 662F6568.003/4VSd482mZtz4xPGH
+MIME-Version: 1.0
+Content-Type: text/plain
 
-From: Peilin He <he.peilin@zte.com.cn>
+On Fri, 26 Apr 2024, Douglas Anderson <dianders@chromium.org> wrote:
+> The consensus of many DRM folks is that we want to move away from DSI
+> drivers defining tables of init commands. Instead, we want to move to
+> init functions that can use common DRM functions. The issue thus far
+> has been that using the macros mipi_dsi_generic_write_seq() and
+> mipi_dsi_dcs_write_seq() bloats the driver using them.
+>
+> While trying to solve bloat, we realized that the majority of the it
+> was easy to solve. This series solves the bloat for existing drivers
+> by moving the printout outside of the macro.
+>
+> During discussion of my v1 patch to fix the bloat [1], we also decided
+> that we really want to change the way that drivers deal with init
+> sequences to make it clearer. In addition to being cleaner, a side
+> effect of moving drivers to the new style reduces bloat _even more_.
+>
+> This series also contains a few minor fixes / cleanups that I found
+> along the way.
 
-Introduce a tracepoint for icmp_send, which can help users to get more
-detail information conveniently when icmp abnormal events happen.
+FWIW, I like the general approach taken here. Thanks!
 
-1. Giving an usecase example:
-=============================
-When an application experiences packet loss due to an unreachable UDP
-destination port, the kernel will send an exception message through the
-icmp_send function. By adding a trace point for icmp_send, developers or
-system administrators can obtain detailed information about the UDP
-packet loss, including the type, code, source address, destination address,
-source port, and destination port. This facilitates the trouble-shooting
-of UDP packet loss issues especially for those network-service
-applications.
+BR,
+Jani.
 
-2. Operation Instructions:
-==========================
-Switch to the tracing directory.
-        cd /sys/kernel/tracing
-Filter for destination port unreachable.
-        echo "type==3 && code==3" > events/icmp/icmp_send/filter
-Enable trace event.
-        echo 1 > events/icmp/icmp_send/enable
 
-3. Result View:
-================
- udp_client_erro-11370   [002] ...s.12   124.728002:
- icmp_send: icmp_send: type=3, code=3.
- From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
- skbaddr=00000000589b167a
-
-Change log
-=========
-v7->v8:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iKNtKmN5im8K4dSZGqAV8=e3bZb
-Z5AhxbcNbjFxk5V1Jw@mail.gmail.com/
-1.Combine all variable definitions together without mixing 
-code and variables.
-
-v6->v7:
-Some fixes according to
-https://lore.kernel.org/all/20240425081210.720a4cd9@kernel.org/
-1. Fix patch format issues.
-
-v5->v6:
-Some fixes according to
-https://lore.kernel.org/all/20240413161319.GA853376@kernel.org/
-1.Resubmit patches based on the latest net-next code.
-
-v4->v5:
-Some fixes according to
-https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pc
-Cqs7sFm0y9aK-Eehg@mail.gmail.com/
-1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
-
-v3->v4:
-Some fixes according to
-https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJz
-BzkJFVgCTdXBx=YBg@mail.gmail.com/
-1.Add legality check for UDP header in SKB.
-2.Target this patch for net-next.
-
-v2->v3:
-Some fixes according to
-https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
-1. Change the tracking directory to/sys/kernel/tracking.
-2. Adjust the layout of the TP-STRUCT_entry parameter structure.
-
-v1->v2:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHu
-FQTJvJsv-nz1xPDw@mail.gmail.com/
-1. adjust the trace_icmp_send() to more protocols than UDP.
-2. move the calling of trace_icmp_send after sanity checks
-in __icmp_send().
-
-Signed-off-by: Peilin He <he.peilin@zte.com.cn>
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
-Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
-Cc: Yang Yang <yang.yang29@zte.com.cn>
-Cc: Liu Chun <liu.chun2@zte.com.cn>
-Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
----
- include/trace/events/icmp.h | 67 +++++++++++++++++++++++++++++++++++++
- net/ipv4/icmp.c             |  4 +++
- 2 files changed, 71 insertions(+)
- create mode 100644 include/trace/events/icmp.h
-
-diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
-new file mode 100644
-index 000000000000..31559796949a
---- /dev/null
-+++ b/include/trace/events/icmp.h
-@@ -0,0 +1,67 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM icmp
-+
-+#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_ICMP_H
-+
-+#include <linux/icmp.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(icmp_send,
-+
-+		TP_PROTO(const struct sk_buff *skb, int type, int code),
-+
-+		TP_ARGS(skb, type, code),
-+
-+		TP_STRUCT__entry(
-+			__field(const void *, skbaddr)
-+			__field(int, type)
-+			__field(int, code)
-+			__array(__u8, saddr, 4)
-+			__array(__u8, daddr, 4)
-+			__field(__u16, sport)
-+			__field(__u16, dport)
-+			__field(unsigned short, ulen)
-+		),
-+
-+		TP_fast_assign(
-+			struct iphdr *iph = ip_hdr(skb);
-+			struct udphdr *uh = udp_hdr(skb);
-+			int proto_4 = iph->protocol;
-+			__be32 *p32;
-+
-+			__entry->skbaddr = skb;
-+			__entry->type = type;
-+			__entry->code = code;
-+
-+			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
-+				(u8 *)uh + sizeof(struct udphdr)
-+				> skb_tail_pointer(skb)) {
-+				__entry->sport = 0;
-+				__entry->dport = 0;
-+				__entry->ulen = 0;
-+			} else {
-+				__entry->sport = ntohs(uh->source);
-+				__entry->dport = ntohs(uh->dest);
-+				__entry->ulen = ntohs(uh->len);
-+			}
-+
-+			p32 = (__be32 *) __entry->saddr;
-+			*p32 = iph->saddr;
-+
-+			p32 = (__be32 *) __entry->daddr;
-+			*p32 = iph->daddr;
-+		),
-+
-+		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
-+			__entry->type, __entry->code,
-+			__entry->saddr, __entry->sport, __entry->daddr,
-+			__entry->dport, __entry->ulen, __entry->skbaddr)
-+);
-+
-+#endif /* _TRACE_ICMP_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-+
-diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index 8cebb476b3ab..30b302492613 100644
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -92,6 +92,8 @@
- #include <net/inet_common.h>
- #include <net/ip_fib.h>
- #include <net/l3mdev.h>
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/icmp.h>
-
- /*
-  *	Build xmit assembly blocks
-@@ -762,6 +764,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 	if (!fl4.saddr)
- 		fl4.saddr = htonl(INADDR_DUMMY);
-
-+	trace_icmp_send(skb_in, type, code);
-+
- 	icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
- ende:
- 	ip_rt_put(rt);
 -- 
-2.17.1
+Jani Nikula, Intel
