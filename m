@@ -1,57 +1,57 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E98918130F;
-	Mon, 29 Apr 2024 21:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906CE1791ED;
+	Mon, 29 Apr 2024 21:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714424524; cv=none; b=rnmw8k+GRkDfxGjspBL5BDMcDHAz8GVoU3cxC+IHAnWN63k717cICyL+6G9rbCHes1RginuMSWFcVlqUuBjFU3wwuKFTYKNdEdNU149E94/LJheI7Em+kprsgOxMWUiJUCPc9WfrTAtHU10J+ZMoA11iJHU08WwJmmPA3xmkIr0=
+	t=1714424523; cv=none; b=uzyaCV3FCEa7ikTo5H5JGkjKHB4YkA6Si0Y4X/R5aZOkZMkSRXirS8Zhxk4nw1HcJ6gHAofoNAKPy/Bf51r30odWUdZOtV9kAnqXtI2ScKDyI+dCfHbJTUYNHuW6HUgZsDXx0xYrruQ884b/r09MJhxcCTz11Rs9LDpxOkJzLes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714424524; c=relaxed/simple;
-	bh=gPvvzMSRDgj7FivzqDBmOCGvulFZ6OlOKdEnSDIAaXA=;
+	s=arc-20240116; t=1714424523; c=relaxed/simple;
+	bh=+PcrL+V8WZ93rEFGnXLBpS0GFOfuEJLaJgYBCPGckMo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ef/EfWobSo0ArREGV22kGoC7I1ULH8HQcQ8fRVboWydV2OBi+n6S8ICc1RxNUuzi4IWL7XqNB+ZmfgUtqUShVWVKLSO95HQMtMZQHewW5jYTZJ2UFTq9+h25PQnzReqR8pzn4EiplSHgBpkHK60vhK03UkeWZdeCSlt4DRD4DOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PVjzyu8U; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=PQ5ZGhV3kLYA6wFr7TQYCcZ/lyQcZ90BS8sijmAQLJiE4M4yGfP6gW+ovwS3DqS06qexY5qRBs2iL//1QkhPP/S0L6kIMbAS26RDOBRVe+fVb1KCkYNboGQ4rho9YCQvfcdNuo83rUx0f/X/QSNNaoPRigIrYzdk/ADeY6hTOsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=d/SJZe4j; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PVjzyu8U"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43TKs6MS019885;
-	Mon, 29 Apr 2024 21:01:50 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="d/SJZe4j"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43TL150w008330;
+	Mon, 29 Apr 2024 21:01:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=tYCWNfX9l1yguWDgLtgGGbM0l6DgIRxcLhlsD76wZVQ=;
- b=PVjzyu8UYe+hEiA7T1A4i96jxxMm8oFbx9xSMCT0tZLyW9mbxbJGPSpDfK9tk8/dd60u
- sYfoI5Z0EIRSOZaEC/NV3Lh8Rf0aAQuBiLKJlQGfjDQq4ZQ0vNBf4RkwRWLAjkf8c1Yo
- Y50AAnHmChuH241+Y50R1H/l1PTHUdWXVX2alZH48dJWsf4Ah5T1UK+ugYVZwsRI0SGM
- rnq4FAybwTJIBxlkXWg78+LIxWkmmX2YfKo4CBAYYOBxz3Gbo87qGA4YC3U4RIy92jV2
- 5+xf9AwRTrt7gglBShBnKyxHuzkFBUt5dQi0cdChnsnXCS3HaXWTZjA/BHhTmjdfGvIS aQ== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xtjyj01d8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 21:01:50 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43TJVJY5015603;
-	Mon, 29 Apr 2024 21:01:49 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsed2s47n-1
+ bh=c1Or7G1IEacGxNxUTtWUHezP3JSRPKUxlqHBidZTStE=;
+ b=d/SJZe4jxSo6rnANTHco8y0m8fokY5aiFZkHhLYqH41JNK8dxSeF46j9kC6+LsoAwxv1
+ QJJgLMYY5HAVCed432Sj2MhD+iut7+fy9LdnW1jMrT5NiB3/PJ5epOLIIzhJqnBTdcQQ
+ wDZEA8j0XwNJT2XtSm4C4K9608BmeXCZjQ5QUxNGpavGpqmM/e/VdFfKBR5tijRPCVq0
+ jQNtdvqJrJ6L9vV6tSXkuY6A26dfVusy3+4ATRe+VbNP/P7SUOcV2ZxuFSHxGiJ9tfAa
+ ZgwqO7mVgUxRVDy/An0bW9Jk/cSXOYXHarCWy4wFGmRdJwIs6ySP02+mmqYTqxAeee2w Ew== 
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xtjy9g0gq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 29 Apr 2024 21:01:49 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43THgYqV027556;
+	Mon, 29 Apr 2024 21:01:47 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xsc309npx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Apr 2024 21:01:47 +0000
 Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43TL1kdF18744014
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43TL1ihK60228038
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Apr 2024 21:01:48 GMT
+	Mon, 29 Apr 2024 21:01:46 GMT
 Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 274165805B;
-	Mon, 29 Apr 2024 21:01:46 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 5CA5258059;
+	Mon, 29 Apr 2024 21:01:44 +0000 (GMT)
 Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 637D158066;
-	Mon, 29 Apr 2024 21:01:45 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 829AC5806F;
+	Mon, 29 Apr 2024 21:01:43 +0000 (GMT)
 Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.151.254])
 	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 29 Apr 2024 21:01:45 +0000 (GMT)
+	Mon, 29 Apr 2024 21:01:43 +0000 (GMT)
 From: Eddie James <eajames@linux.ibm.com>
 To: linux-aspeed@lists.ozlabs.org
 Cc: eajames@linux.ibm.com, devicetree@vger.kernel.org,
@@ -60,9 +60,9 @@ Cc: eajames@linux.ibm.com, devicetree@vger.kernel.org,
         lakshmiy@us.ibm.com, robh@kernel.org, krzk+dt@kernel.org,
         conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
         andi.shyti@kernel.org
-Subject: [PATCH v4 15/17] fsi: occ: Get device number from FSI minor number API
-Date: Mon, 29 Apr 2024 16:01:29 -0500
-Message-Id: <20240429210131.373487-16-eajames@linux.ibm.com>
+Subject: [PATCH v4 13/17] ARM: dts: aspeed: Add IBM P11 Blueridge BMC system
+Date: Mon, 29 Apr 2024 16:01:27 -0500
+Message-Id: <20240429210131.373487-14-eajames@linux.ibm.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240429210131.373487-1-eajames@linux.ibm.com>
 References: <20240429210131.373487-1-eajames@linux.ibm.com>
@@ -74,143 +74,1738 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: cJXIH8TCSemLCXOH89YtJKHCwIMReHC8
-X-Proofpoint-GUID: cJXIH8TCSemLCXOH89YtJKHCwIMReHC8
+X-Proofpoint-ORIG-GUID: obVXsDfRtpSPZRE5voskMMZbyqinGNaX
+X-Proofpoint-GUID: obVXsDfRtpSPZRE5voskMMZbyqinGNaX
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-04-29_18,2024-04-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- mlxscore=0 suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
- adultscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 bulkscore=0 phishscore=0 suspectscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2404010000 definitions=main-2404290138
 
-Remove the IDA indexing for OCC devices and instead use the FSI
-minor number API. This will make the OCC numbering consistent
-with other FSI engines and make the "reg" device tree property
-unnecessary.
+Add the device tree for the new BMC system. The Blueridge is a
+P11 system with four processors.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- drivers/fsi/fsi-occ.c | 47 +++++++++----------------------------------
- 1 file changed, 9 insertions(+), 38 deletions(-)
+Changes since v3:
+ - Fix node names to be generic
+ - Re-order properties to be consistent
 
-diff --git a/drivers/fsi/fsi-occ.c b/drivers/fsi/fsi-occ.c
-index da35ca9e84a6..2023355b3980 100644
---- a/drivers/fsi/fsi-occ.c
-+++ b/drivers/fsi/fsi-occ.c
-@@ -4,9 +4,9 @@
- #include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/fs.h>
-+#include <linux/fsi.h>
- #include <linux/fsi-sbefifo.h>
- #include <linux/gfp.h>
--#include <linux/idr.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/miscdevice.h>
-@@ -44,6 +44,7 @@ struct occ {
- 	struct device *sbefifo;
- 	char name[32];
- 	int idx;
-+	dev_t devt;
- 	bool platform_hwmon;
- 	u8 sequence_number;
- 	void *buffer;
-@@ -75,8 +76,6 @@ struct occ_client {
- 
- #define to_client(x)	container_of((x), struct occ_client, xfr)
- 
--static DEFINE_IDA(occ_ida);
--
- static int occ_open(struct inode *inode, struct file *file)
- {
- 	struct occ_client *client = kzalloc(sizeof(*client), GFP_KERNEL);
-@@ -622,7 +621,6 @@ static int occ_unregister_of_child(struct device *dev, void *data)
- static int occ_probe(struct platform_device *pdev)
- {
- 	int rc;
--	u32 reg;
- 	char child_name[32];
- 	struct occ *occ;
- 	struct platform_device *hwmon_dev = NULL;
-@@ -637,6 +635,10 @@ static int occ_probe(struct platform_device *pdev)
- 	if (!occ)
- 		return -ENOMEM;
- 
-+	rc = fsi_get_new_minor(to_fsi_dev(dev->parent), fsi_dev_occ, &occ->devt, &occ->idx);
-+	if (rc)
-+		return rc;
+ arch/arm/boot/dts/aspeed/Makefile             |    1 +
+ .../dts/aspeed/aspeed-bmc-ibm-blueridge.dts   | 1689 +++++++++++++++++
+ 2 files changed, 1690 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-blueridge.dts
+
+diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
+index 715106b3baa1..5eab2bdff394 100644
+--- a/arch/arm/boot/dts/aspeed/Makefile
++++ b/arch/arm/boot/dts/aspeed/Makefile
+@@ -33,6 +33,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-facebook-yamp.dtb \
+ 	aspeed-bmc-facebook-yosemitev2.dtb \
+ 	aspeed-bmc-facebook-yosemite4.dtb \
++	aspeed-bmc-ibm-blueridge.dtb \
+ 	aspeed-bmc-ibm-bonnell.dtb \
+ 	aspeed-bmc-ibm-everest.dtb \
+ 	aspeed-bmc-ibm-rainier.dtb \
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-blueridge.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-blueridge.dts
+new file mode 100644
+index 000000000000..9af499b27ef1
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-blueridge.dts
+@@ -0,0 +1,1689 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// Copyright 2024 IBM Corp.
++/dts-v1/;
 +
- 	/* SBE words are always four bytes */
- 	occ->buffer = kvmalloc(OCC_MAX_RESP_WORDS * 4, GFP_KERNEL);
- 	if (!occ->buffer)
-@@ -651,24 +653,6 @@ static int occ_probe(struct platform_device *pdev)
- 	 */
- 	occ->sequence_number = (u8)((jiffies % 0xff) + 1);
- 	mutex_init(&occ->occ_lock);
--
--	if (dev->of_node) {
--		rc = of_property_read_u32(dev->of_node, "reg", &reg);
--		if (!rc) {
--			/* make sure we don't have a duplicate from dts */
--			occ->idx = ida_simple_get(&occ_ida, reg, reg + 1,
--						  GFP_KERNEL);
--			if (occ->idx < 0)
--				occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX,
--							  GFP_KERNEL);
--		} else {
--			occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX,
--						  GFP_KERNEL);
--		}
--	} else {
--		occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX, GFP_KERNEL);
--	}
--
- 	platform_set_drvdata(pdev, occ);
- 
- 	snprintf(occ->name, sizeof(occ->name), "occ%d", occ->idx);
-@@ -680,7 +664,7 @@ static int occ_probe(struct platform_device *pdev)
- 	rc = misc_register(&occ->mdev);
- 	if (rc) {
- 		dev_err(dev, "failed to register miscdevice: %d\n", rc);
--		ida_simple_remove(&occ_ida, occ->idx);
-+		fsi_free_minor(occ->devt);
- 		kvfree(occ->buffer);
- 		return rc;
- 	}
-@@ -719,7 +703,7 @@ static int occ_remove(struct platform_device *pdev)
- 	else
- 		device_for_each_child(&pdev->dev, NULL, occ_unregister_of_child);
- 
--	ida_simple_remove(&occ_ida, occ->idx);
-+	fsi_free_minor(occ->devt);
- 
- 	return 0;
- }
-@@ -746,20 +730,7 @@ static struct platform_driver occ_driver = {
- 	.remove = occ_remove,
- };
- 
--static int occ_init(void)
--{
--	return platform_driver_register(&occ_driver);
--}
--
--static void occ_exit(void)
--{
--	platform_driver_unregister(&occ_driver);
--
--	ida_destroy(&occ_ida);
--}
--
--module_init(occ_init);
--module_exit(occ_exit);
-+module_platform_driver(occ_driver);
- 
- MODULE_AUTHOR("Eddie James <eajames@linux.ibm.com>");
- MODULE_DESCRIPTION("BMC P9 OCC driver");
++#include <dt-bindings/gpio/aspeed-gpio.h>
++#include <dt-bindings/i2c/i2c.h>
++#include <dt-bindings/leds/leds-pca955x.h>
++#include "aspeed-g6.dtsi"
++#include "ibm-power11-quad.dtsi"
++
++/ {
++	model = "Blueridge";
++	compatible = "ibm,blueridge-bmc", "aspeed,ast2600";
++
++	aliases {
++		serial4 = &uart5;
++		i2c16 = &i2c2mux0;
++		i2c17 = &i2c2mux1;
++		i2c18 = &i2c2mux2;
++		i2c19 = &i2c2mux3;
++		i2c20 = &i2c4mux0chn0;
++		i2c21 = &i2c4mux0chn1;
++		i2c22 = &i2c4mux0chn2;
++		i2c23 = &i2c5mux0chn0;
++		i2c24 = &i2c5mux0chn1;
++		i2c25 = &i2c6mux0chn0;
++		i2c26 = &i2c6mux0chn1;
++		i2c27 = &i2c6mux0chn2;
++		i2c28 = &i2c6mux0chn3;
++		i2c29 = &i2c11mux0chn0;
++		i2c30 = &i2c11mux0chn1;
++	};
++
++	chosen {
++		stdout-path = &uart5;
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x80000000 0x40000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		event_log: region@b3d00000 {
++			reg = <0xb3d00000 0x100000>;
++			no-map;
++		};
++
++		ramoops@b3e00000 {
++			compatible = "ramoops";
++			reg = <0xb3e00000 0x200000>; /* 16 * (4 * 0x8000) */
++			record-size = <0x8000>;
++			console-size = <0x8000>;
++			ftrace-size = <0x8000>;
++			pmsg-size = <0x8000>;
++			max-reason = <3>; /* KMSG_DUMP_EMERG */
++		};
++
++		/* LPC FW cycle bridge region requires natural alignment */
++		flash_memory: region@b4000000 {
++			reg = <0xb4000000 0x04000000>; /* 64M */
++			no-map;
++		};
++
++		/* VGA region is dictated by hardware strapping */
++		vga_memory: region@bf000000 {
++			compatible = "shared-dma-pool";
++			reg = <0xbf000000 0x01000000>;  /* 16M */
++			no-map;
++		};
++	};
++
++	i2c-mux {
++		compatible = "i2c-mux-gpio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-parent = <&i2c2>;
++		idle-state = <0>;
++		mux-gpios = <&gpio0 ASPEED_GPIO(G, 4) GPIO_ACTIVE_HIGH>,
++			    <&gpio0 ASPEED_GPIO(G, 5) GPIO_ACTIVE_HIGH>;
++
++		i2c2mux0: i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c2mux1: i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c2mux2: i2c@2 {
++			reg = <2>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c2mux3: i2c@3 {
++			reg = <3>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		/* BMC Card fault LED at the back */
++		led-bmc-ingraham0 {
++			gpios = <&gpio0 ASPEED_GPIO(H, 1) GPIO_ACTIVE_LOW>;
++		};
++
++		/* Enclosure ID LED at the back */
++		led-rear-enc-id0 {
++			gpios = <&gpio0 ASPEED_GPIO(H, 2) GPIO_ACTIVE_LOW>;
++		};
++
++		/* Enclosure fault LED at the back */
++		led-rear-enc-fault0 {
++			gpios = <&gpio0 ASPEED_GPIO(H, 3) GPIO_ACTIVE_LOW>;
++		};
++
++		/* PCIE slot power LED */
++		led-pcieslot-power {
++			gpios = <&gpio0 ASPEED_GPIO(P, 4) GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-keys-polled {
++		compatible = "gpio-keys-polled";
++		poll-interval = <1000>;
++
++		event-fan0-presence {
++			gpios = <&pca0 6 GPIO_ACTIVE_LOW>;
++			label = "fan0-presence";
++			linux,code = <6>;
++		};
++
++		event-fan1-presence {
++			gpios = <&pca0 7 GPIO_ACTIVE_LOW>;
++			label = "fan1-presence";
++			linux,code = <7>;
++		};
++
++		event-fan2-presence {
++			gpios = <&pca0 8 GPIO_ACTIVE_LOW>;
++			label = "fan2-presence";
++			linux,code = <8>;
++		};
++
++		event-fan3-presence {
++			gpios = <&pca0 9 GPIO_ACTIVE_LOW>;
++			label = "fan3-presence";
++			linux,code = <9>;
++		};
++
++		event-fan4-presence {
++			gpios = <&pca0 10 GPIO_ACTIVE_LOW>;
++			label = "fan4-presence";
++			linux,code = <10>;
++		};
++
++		event-fan5-presence {
++			gpios = <&pca0 11 GPIO_ACTIVE_LOW>;
++			label = "fan5-presence";
++			linux,code = <11>;
++		};
++	};
++
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc1 7>;
++	};
++};
++
++&adc1 {
++	status = "okay";
++	aspeed,int-vref-microvolt = <2500000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc8_default &pinctrl_adc9_default
++		&pinctrl_adc10_default &pinctrl_adc11_default
++		&pinctrl_adc12_default &pinctrl_adc13_default
++		&pinctrl_adc14_default &pinctrl_adc15_default>;
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&uhci {
++	status = "okay";
++};
++
++&gpio0 {
++	gpio-line-names =
++	/*A0-A7*/	"","","","","","","","",
++	/*B0-B7*/	"bmc-management-ready","","","","","","checkstop","",
++	/*C0-C7*/	"","","","","","","","",
++	/*D0-D7*/	"","","","","","","","",
++	/*E0-E7*/	"","","","","","","","",
++	/*F0-F7*/	"","","rtc-battery-voltage-read-enable","reset-cause-pinhole","","","factory-reset-toggle","",
++	/*G0-G7*/	"","","","","","","","",
++	/*H0-H7*/	"","bmc-ingraham0","rear-enc-id0","rear-enc-fault0","","","","",
++	/*I0-I7*/	"","","","","","","bmc-secure-boot","",
++	/*J0-J7*/	"","","","","","","","",
++	/*K0-K7*/	"","","","","","","","",
++	/*L0-L7*/	"","","","","","","","",
++	/*M0-M7*/	"","","","","","","","",
++	/*N0-N7*/	"","","","","","","","",
++	/*O0-O7*/	"","","","usb-power","","","","",
++	/*P0-P7*/	"","","","","pcieslot-power","","","",
++	/*Q0-Q7*/	"cfam-reset","","regulator-standby-faulted","","","","","",
++	/*R0-R7*/	"bmc-tpm-reset","power-chassis-control","power-chassis-good","","","","","",
++	/*S0-S7*/	"presence-ps0","presence-ps1","presence-ps2","presence-ps3",
++	"power-ffs-sync-history","","","",
++	/*T0-T7*/	"","","","","","","","",
++	/*U0-U7*/	"","","","","","","","",
++	/*V0-V7*/	"","","","","","","","",
++	/*W0-W7*/	"","","","","","","","",
++	/*X0-X7*/	"","","","","","","","",
++	/*Y0-Y7*/	"","","","","","","","",
++	/*Z0-Z7*/	"","","","","","","","";
++
++	i2c3-mux-oe-n-hog {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 6) GPIO_ACTIVE_LOW>;
++		line-name = "I2C3_MUX_OE_N";
++		output-high;
++	};
++
++	usb-power-hog {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(O, 3) GPIO_ACTIVE_LOW>;
++		output-high;
++	};
++};
++
++&emmc_controller {
++	status = "okay";
++};
++
++&pinctrl_emmc_default {
++	bias-disable;
++};
++
++&emmc {
++	status = "okay";
++	clk-phase-mmc-hs200 = <180>, <180>;
++};
++
++&ibt {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++	};
++
++	gpio@20 {
++		compatible = "ti,tca9554";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		gpio-line-names = "",
++			"RUSSEL_FW_I2C_ENABLE_N",
++			"RUSSEL_OPPANEL_PRESENCE_N",
++			"BLYTH_OPPANEL_PRESENCE_N",
++			"CPU_TPM_CARD_PRESENT_N",
++			"DASD_BP2_PRESENT_N",
++			"DASD_BP1_PRESENT_N",
++			"DASD_BP0_PRESENT_N";
++	};
++};
++
++&i2c1 {
++	status = "okay";
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++
++	power-supply@68 {
++		compatible = "ibm,cffps";
++		reg = <0x68>;
++	};
++
++	power-supply@69 {
++		compatible = "ibm,cffps";
++		reg = <0x69>;
++	};
++
++	led-controller@61 {
++		compatible = "nxp,pca9552";
++		reg = <0x61>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		gpio-line-names =
++			"SLOT0_PRSNT_EN_RSVD", "SLOT1_PRSNT_EN_RSVD",
++			"SLOT2_PRSNT_EN_RSVD", "SLOT3_PRSNT_EN_RSVD",
++			"SLOT4_PRSNT_EN_RSVD", "SLOT0_EXPANDER_PRSNT_N",
++			"SLOT1_EXPANDER_PRSNT_N", "SLOT2_EXPANDER_PRSNT_N",
++			"SLOT3_EXPANDER_PRSNT_N", "SLOT4_EXPANDER_PRSNT_N",
++			"", "", "", "", "", "";
++	};
++};
++
++&i2c4 {
++	status = "okay";
++
++	temperature-sensor@48 {
++		compatible = "ti,tmp275";
++		reg = <0x48>;
++	};
++
++	temperature-sensor@49 {
++		compatible = "ti,tmp275";
++		reg = <0x49>;
++	};
++
++	temperature-sensor@4a {
++		compatible = "ti,tmp275";
++		reg = <0x4a>;
++	};
++
++	i2c-mux@70 {
++		compatible = "nxp,pca9546";
++		reg = <0x70>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c4mux0chn0: i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@50 {
++				compatible = "atmel,24c64";
++				reg = <0x50>;
++			};
++
++			led-controller@60 {
++				compatible = "nxp,pca9551";
++				reg = <0x60>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				led@0 {
++					reg = <0>;
++					default-state = "keep";
++					label = "cablecard0-cxp-top";
++					retain-state-shutdown;
++					type = <PCA955X_TYPE_LED>;
++				};
++
++				led@1 {
++					reg = <1>;
++					default-state = "keep";
++					label = "cablecard0-cxp-bot";
++					retain-state-shutdown;
++					type = <PCA955X_TYPE_LED>;
++				};
++			};
++		};
++
++		i2c4mux0chn1: i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@51 {
++				compatible = "atmel,24c64";
++				reg = <0x51>;
++			};
++		};
++
++		i2c4mux0chn2: i2c@2 {
++			reg = <2>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@52 {
++				compatible = "atmel,24c64";
++				reg = <0x52>;
++			};
++		};
++	};
++};
++
++&i2c5 {
++	status = "okay";
++
++	temperature-sensor@48 {
++		compatible = "ti,tmp275";
++		reg = <0x48>;
++	};
++
++	temperature-sensor@49 {
++		compatible = "ti,tmp275";
++		reg = <0x49>;
++	};
++
++	i2c-mux@70 {
++		compatible = "nxp,pca9546";
++		reg = <0x70>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c5mux0chn0: i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@50 {
++				compatible = "atmel,24c64";
++				reg = <0x50>;
++			};
++
++			led-controller@60 {
++				compatible = "nxp,pca9551";
++				reg = <0x60>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				led@0 {
++					reg = <0>;
++					default-state = "keep";
++					label = "cablecard3-cxp-top";
++					retain-state-shutdown;
++					type = <PCA955X_TYPE_LED>;
++				};
++
++				led@1 {
++					reg = <1>;
++					default-state = "keep";
++					label = "cablecard3-cxp-bot";
++					retain-state-shutdown;
++					type = <PCA955X_TYPE_LED>;
++				};
++			};
++		};
++
++		i2c5mux0chn1: i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@51 {
++				compatible = "atmel,24c64";
++				reg = <0x51>;
++			};
++
++			led-controller@61 {
++				compatible = "nxp,pca9551";
++				reg = <0x61>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				led@0 {
++					reg = <0>;
++					default-state = "keep";
++					label = "cablecard4-cxp-top";
++					retain-state-shutdown;
++					type = <PCA955X_TYPE_LED>;
++				};
++
++				led@1 {
++					reg = <1>;
++					default-state = "keep";
++					label = "cablecard4-cxp-bot";
++					retain-state-shutdown;
++					type = <PCA955X_TYPE_LED>;
++				};
++			};
++		};
++	};
++};
++
++&i2c6 {
++	status = "okay";
++
++	temperature-sensor@48 {
++		compatible = "ti,tmp275";
++		reg = <0x48>;
++	};
++
++	temperature-sensor@4a {
++		compatible = "ti,tmp275";
++		reg = <0x4a>;
++	};
++
++	temperature-sensor@4b {
++		compatible = "ti,tmp275";
++		reg = <0x4b>;
++	};
++
++	i2c-mux@70 {
++		compatible = "nxp,pca9546";
++		reg = <0x70>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c6mux0chn0: i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@53 {
++				compatible = "atmel,24c64";
++				reg = <0x53>;
++			};
++		};
++
++		i2c6mux0chn1: i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@52 {
++				compatible = "atmel,24c64";
++				reg = <0x52>;
++			};
++		};
++
++		i2c6mux0chn2: i2c@2 {
++			reg = <2>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@50 {
++				compatible = "atmel,24c64";
++				reg = <0x50>;
++			};
++		};
++
++		i2c6mux0chn3: i2c@3 {
++			reg = <3>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@51 {
++				compatible = "atmel,24c64";
++				reg = <0x51>;
++			};
++		};
++	};
++};
++
++&i2c7 {
++	multi-master;
++	status = "okay";
++
++	led-controller@30 {
++		compatible = "ibm,pca9552";
++		reg = <0x30>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		led@0 {
++			reg = <0>;
++			default-state = "keep";
++			label = "pcieslot0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@1 {
++			reg = <1>;
++			default-state = "keep";
++			label = "pcieslot1";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@2 {
++			reg = <2>;
++			default-state = "keep";
++			label = "pcieslot2";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@3 {
++			reg = <3>;
++			default-state = "keep";
++			label = "pcieslot3";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			default-state = "keep";
++			label = "pcieslot4";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@5 {
++			reg = <5>;
++			default-state = "keep";
++			label = "cpu1";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@6 {
++			reg = <6>;
++			default-state = "keep";
++			label = "cpu-vrm1";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@8 {
++			reg = <8>;
++			default-state = "keep";
++			label = "lcd-russel";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++	};
++
++	led-controller@31 {
++		compatible = "ibm,pca9552";
++		reg = <0x31>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		led@0 {
++			reg = <0>;
++			default-state = "keep";
++			label = "ddimm0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@1 {
++			reg = <1>;
++			default-state = "keep";
++			label = "ddimm1";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@2 {
++			reg = <2>;
++			default-state = "keep";
++			label = "ddimm2";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@3 {
++			reg = <3>;
++			default-state = "keep";
++			label = "ddimm3";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			default-state = "keep";
++			label = "ddimm4";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@5 {
++			reg = <5>;
++			default-state = "keep";
++			label = "ddimm5";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@6 {
++			reg = <6>;
++			default-state = "keep";
++			label = "ddimm6";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@7 {
++			reg = <7>;
++			default-state = "keep";
++			label = "ddimm7";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@8 {
++			reg = <8>;
++			default-state = "keep";
++			label = "ddimm8";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@9 {
++			reg = <9>;
++			default-state = "keep";
++			label = "ddimm9";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@10 {
++			reg = <10>;
++			default-state = "keep";
++			label = "ddimm10";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@11 {
++			reg = <11>;
++			default-state = "keep";
++			label = "ddimm11";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@12 {
++			reg = <12>;
++			default-state = "keep";
++			label = "ddimm12";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			default-state = "keep";
++			label = "ddimm13";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@14 {
++			reg = <14>;
++			default-state = "keep";
++			label = "ddimm14";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@15 {
++			reg = <15>;
++			default-state = "keep";
++			label = "ddimm15";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++	};
++
++	led-controller@32 {
++		compatible = "ibm,pca9552";
++		reg = <0x32>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		led@0 {
++			reg = <0>;
++			default-state = "keep";
++			label = "ddimm16";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@1 {
++			reg = <1>;
++			default-state = "keep";
++			label = "ddimm17";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@2 {
++			reg = <2>;
++			default-state = "keep";
++			label = "ddimm18";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@3 {
++			reg = <3>;
++			default-state = "keep";
++			label = "ddimm19";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			default-state = "keep";
++			label = "ddimm20";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@5 {
++			reg = <5>;
++			default-state = "keep";
++			label = "ddimm21";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@6 {
++			reg = <6>;
++			default-state = "keep";
++			label = "ddimm22";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@7 {
++			reg = <7>;
++			default-state = "keep";
++			label = "ddimm23";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@8 {
++			reg = <8>;
++			default-state = "keep";
++			label = "ddimm24";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@9 {
++			reg = <9>;
++			default-state = "keep";
++			label = "ddimm25";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@10 {
++			reg = <10>;
++			default-state = "keep";
++			label = "ddimm26";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@11 {
++			reg = <11>;
++			default-state = "keep";
++			label = "ddimm27";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@12 {
++			reg = <12>;
++			default-state = "keep";
++			label = "ddimm28";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			default-state = "keep";
++			label = "ddimm29";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@14 {
++			reg = <14>;
++			default-state = "keep";
++			label = "ddimm30";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@15 {
++			reg = <15>;
++			default-state = "keep";
++			label = "ddimm31";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++	};
++
++	led-controller@33 {
++		compatible = "ibm,pca9552";
++		reg = <0x33>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		led@0 {
++			reg = <0>;
++			default-state = "keep";
++			label = "planar";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@1 {
++			reg = <1>;
++			default-state = "keep";
++			label = "cpu0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@3 {
++			reg = <3>;
++			default-state = "keep";
++			label = "dasd-pyramid0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			default-state = "keep";
++			label = "dasd-pyramid1";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@5 {
++			reg = <5>;
++			default-state = "keep";
++			label = "dasd-pyramid2";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@6 {
++			reg = <6>;
++			default-state = "keep";
++			label = "cpu0-vrm0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@7 {
++			reg = <7>;
++			default-state = "keep";
++			label = "rtc-battery";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@8 {
++			reg = <8>;
++			default-state = "keep";
++			label = "base-blyth";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@9 {
++			reg = <9>;
++			default-state = "keep";
++			label = "pcieslot6";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@10 {
++			reg = <10>;
++			default-state = "keep";
++			label = "pcieslot7";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@11 {
++			reg = <11>;
++			default-state = "keep";
++			label = "pcieslot8";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@12 {
++			reg = <12>;
++			default-state = "keep";
++			label = "pcieslot9";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			default-state = "keep";
++			label = "pcieslot10";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@14 {
++			reg = <14>;
++			default-state = "keep";
++			label = "pcieslot11";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@15 {
++			reg = <15>;
++			default-state = "keep";
++			label = "tpm-wilson";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++	};
++
++	humidity-sensor@40 {
++		compatible = "silabs,si7020";
++		reg = <0x40>;
++	};
++
++	temperature-sensor@48 {
++		compatible = "ti,tmp275";
++		reg = <0x48>;
++	};
++
++	pwm@52 {
++		compatible = "maxim,max31785a";
++		reg = <0x52>;
++	};
++
++	led-controller@60 {
++		compatible = "nxp,pca9551";
++		reg = <0x60>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		led@0 {
++			reg = <0>;
++			default-state = "keep";
++			label = "front-sys-id0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@1 {
++			reg = <1>;
++			default-state = "keep";
++			label = "front-check-log0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@2 {
++			reg = <2>;
++			default-state = "keep";
++			label = "front-enc-fault1";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@3 {
++			reg = <3>;
++			default-state = "keep";
++			label = "front-sys-pwron0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++	};
++
++	pca0: led-controller@61 {
++		compatible = "nxp,pca9552";
++		reg = <0x61>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		led@0 {
++			reg = <0>;
++			default-state = "keep";
++			label = "fan0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@1 {
++			reg = <1>;
++			default-state = "keep";
++			label = "fan1";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@2 {
++			reg = <2>;
++			default-state = "keep";
++			label = "fan2";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@3 {
++			reg = <3>;
++			default-state = "keep";
++			label = "fan3";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			default-state = "keep";
++			label = "fan4";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@5 {
++			reg = <5>;
++			default-state = "keep";
++			label = "fan5";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++	};
++
++	lcd-controller@62 {
++		compatible = "ibm,op-panel";
++		reg = <(0x62 | I2C_OWN_SLAVE_ADDRESS)>;
++	};
++
++	pressure-sensor@76 {
++		compatible = "infineon,dps310";
++		reg = <0x76>;
++		#io-channel-cells = <0>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++	};
++};
++
++&i2c8 {
++	status = "okay";
++
++	pmic@11 {
++		compatible = "ti,ucd90320";
++		reg = <0x11>;
++	};
++
++	rtc@32 {
++		compatible = "epson,rx8900";
++		reg = <0x32>;
++	};
++
++	temperature-sensor@48 {
++		compatible = "ti,tmp275";
++		reg = <0x48>;
++	};
++
++	temperature-sensor@4a {
++		compatible = "ti,tmp275";
++		reg = <0x4a>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++	};
++
++	led-controller@60 {
++		compatible = "nxp,pca9552";
++		reg = <0x60>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		gpio-line-names =
++			"", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "power-config-full-load", "";
++	};
++
++	led-controller@61 {
++		compatible = "nxp,pca9552";
++		reg = <0x61>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		gpio-line-names =
++			"SLOT6_PRSNT_EN_RSVD", "SLOT7_PRSNT_EN_RSVD",
++			"SLOT8_PRSNT_EN_RSVD", "SLOT9_PRSNT_EN_RSVD",
++			"SLOT10_PRSNT_EN_RSVD", "SLOT11_PRSNT_EN_RSVD",
++			"SLOT6_EXPANDER_PRSNT_N", "SLOT7_EXPANDER_PRSNT_N",
++			"SLOT8_EXPANDER_PRSNT_N", "SLOT9_EXPANDER_PRSNT_N",
++			"SLOT10_EXPANDER_PRSNT_N", "SLOT11_EXPANDER_PRSNT_N",
++			"", "", "", "";
++	};
++
++};
++
++&i2c9 {
++	status = "okay";
++
++	temperature-sensor@4c {
++		compatible = "ti,tmp423";
++		reg = <0x4c>;
++	};
++
++	temperature-sensor@4d {
++		compatible = "ti,tmp423";
++		reg = <0x4d>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c128";
++		reg = <0x50>;
++	};
++};
++
++&i2c10 {
++	status = "okay";
++
++	temperature-sensor@4c {
++		compatible = "ti,tmp423";
++		reg = <0x4c>;
++	};
++
++	temperature-sensor@4d {
++		compatible = "ti,tmp423";
++		reg = <0x4d>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c128";
++		reg = <0x50>;
++	};
++};
++
++&i2c11 {
++	status = "okay";
++
++	temperature-sensor@48 {
++		compatible = "ti,tmp275";
++		reg = <0x48>;
++	};
++
++	temperature-sensor@49 {
++		compatible = "ti,tmp275";
++		reg = <0x49>;
++	};
++
++	i2c-mux@70 {
++		compatible = "nxp,pca9546";
++		reg = <0x70>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c11mux0chn0: i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@50 {
++				compatible = "atmel,24c64";
++				reg = <0x50>;
++			};
++
++			led-controller@60 {
++				compatible = "nxp,pca9551";
++				reg = <0x60>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				led@0 {
++					reg = <0>;
++					default-state = "keep";
++					label = "cablecard10-cxp-top";
++					retain-state-shutdown;
++					type = <PCA955X_TYPE_LED>;
++				};
++
++				led@1 {
++					reg = <1>;
++					default-state = "keep";
++					label = "cablecard10-cxp-bot";
++					retain-state-shutdown;
++					type = <PCA955X_TYPE_LED>;
++				};
++			};
++		};
++
++		i2c11mux0chn1: i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@51 {
++				compatible = "atmel,24c64";
++				reg = <0x51>;
++			};
++		};
++	};
++};
++
++&i2c12 {
++	status = "okay";
++
++	tpm@2e {
++		compatible = "nuvoton,npct75x", "tcg,tpm-tis-i2c";
++		reg = <0x2e>;
++		memory-region = <&event_log>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++};
++
++&i2c13 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++
++	led-controller@60 {
++		compatible = "nxp,pca9552";
++		reg = <0x60>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		led@0 {
++			reg = <0>;
++			default-state = "keep";
++			label = "nvme0";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@1 {
++			reg = <1>;
++			default-state = "keep";
++			label = "nvme1";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@2 {
++			reg = <2>;
++			default-state = "keep";
++			label = "nvme2";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@3 {
++			reg = <3>;
++			default-state = "keep";
++			label = "nvme3";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			default-state = "keep";
++			label = "nvme4";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@5 {
++			reg = <5>;
++			default-state = "keep";
++			label = "nvme5";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@6 {
++			reg = <6>;
++			default-state = "keep";
++			label = "nvme6";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@7 {
++			reg = <7>;
++			default-state = "keep";
++			label = "nvme7";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++	};
++};
++
++&i2c14 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++
++	led-controller@60 {
++		compatible = "nxp,pca9552";
++		reg = <0x60>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		led@0 {
++			reg = <0>;
++			default-state = "keep";
++			label = "nvme8";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@1 {
++			reg = <1>;
++			default-state = "keep";
++			label = "nvme9";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@2 {
++			reg = <2>;
++			default-state = "keep";
++			label = "nvme10";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@3 {
++			reg = <3>;
++			default-state = "keep";
++			label = "nvme11";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			default-state = "keep";
++			label = "nvme12";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@5 {
++			reg = <5>;
++			default-state = "keep";
++			label = "nvme13";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@6 {
++			reg = <6>;
++			default-state = "keep";
++			label = "nvme14";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@7 {
++			reg = <7>;
++			default-state = "keep";
++			label = "nvme15";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++	};
++};
++
++&i2c15 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++
++	led-controller@60 {
++		compatible = "nxp,pca9552";
++		reg = <0x60>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		led@0 {
++			reg = <0>;
++			default-state = "keep";
++			label = "nvme16";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@1 {
++			reg = <1>;
++			default-state = "keep";
++			label = "nvme17";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@2 {
++			reg = <2>;
++			default-state = "keep";
++			label = "nvme18";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@3 {
++			reg = <3>;
++			default-state = "keep";
++			label = "nvme19";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			default-state = "keep";
++			label = "nvme20";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@5 {
++			reg = <5>;
++			default-state = "keep";
++			label = "nvme21";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@6 {
++			reg = <6>;
++			default-state = "keep";
++			label = "nvme22";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++
++		led@7 {
++			reg = <7>;
++			default-state = "keep";
++			label = "nvme23";
++			retain-state-shutdown;
++			type = <PCA955X_TYPE_LED>;
++		};
++	};
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&vuart1 {
++	status = "okay";
++};
++
++&vuart2 {
++	status = "okay";
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++};
++
++&mac2 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii3_default>;
++	clocks = <&syscon ASPEED_CLK_GATE_MAC3CLK>,
++		 <&syscon ASPEED_CLK_MAC3RCLK>;
++	clock-names = "MACCLK", "RCLK";
++	use-ncsi;
++};
++
++&mac3 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii4_default>;
++	clocks = <&syscon ASPEED_CLK_GATE_MAC4CLK>,
++		 <&syscon ASPEED_CLK_MAC4RCLK>;
++	clock-names = "MACCLK", "RCLK";
++	use-ncsi;
++};
++
++&wdt1 {
++	aspeed,reset-type = "none";
++	aspeed,external-signal;
++	aspeed,ext-push-pull;
++	aspeed,ext-active-high;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdtrst1_default>;
++};
++
++&wdt2 {
++	status = "okay";
++};
++
++&xdma {
++	status = "okay";
++	memory-region = <&vga_memory>;
++};
++
++&kcs2 {
++	status = "okay";
++	aspeed,lpc-io-reg = <0xca8 0xcac>;
++};
++
++&kcs3 {
++	status = "okay";
++	aspeed,lpc-io-reg = <0xca2>;
++	aspeed,lpc-interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++};
 -- 
 2.39.3
 
