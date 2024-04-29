@@ -1,119 +1,163 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2057.outbound.protection.outlook.com [40.107.14.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1846810FF
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 06:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714372259; cv=none; b=q50ViepftY4UgZW0UhMciRy7idS6Qp/oPFI6RSuWucsKBMA3x0aXTwHnJhXcrpt8exHHFUhMXuAyQzqyjIliUyqaBKT75YmM2KHPF+kOi0Th8BvK7JfQWtaf9YOhDXieZgqBRpCF9qkSx1g8bv37N3drpb4r5TzpvJ8KBEJ3QxA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714372259; c=relaxed/simple;
-	bh=R7C5wr96MqWDYR44Ry+prYbPTSvDWaKrG2gXzaFYjI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SgxxySwu+oQA2KcnPEPrJ/xNQY8fHH4tI/ex2qW26+3tyU8hqe+uCXerOhA+mCxPxVzIkaqlWbZITD4p8N33GdlAfKj8woq9hX3G7D5D8OnKp+E6A8kv1GoFVxaGfJpeOo2FDG/80aGiZIn+5d2qa4RItEaSOTiO2l3uoMw7uVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s1KXJ-0007Fa-Dv; Mon, 29 Apr 2024 08:30:49 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s1KXI-00Evg4-9u; Mon, 29 Apr 2024 08:30:48 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s1KXI-00BDAk-0h;
-	Mon, 29 Apr 2024 08:30:48 +0200
-Date: Mon, 29 Apr 2024 08:30:47 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Trevor Gamblin <tgamblin@baylibre.com>, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, michael.hennerich@analog.com, nuno.sa@analog.com, 
-	dlechner@baylibre.com, devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org
-Subject: Re: [PATCH 1/2 v5] dt-bindings: pwm: Add AXI PWM generator
-Message-ID: <sjgqbftxfz763qoj33p2diba4ify4lae2vc2amcpaudjtdlse7@buk2wrofz3fp>
-References: <20240424125850.4189116-1-tgamblin@baylibre.com>
- <20240424125850.4189116-2-tgamblin@baylibre.com>
- <8bc13253-db16-4801-9f69-b06ba4e129be@baylibre.com>
- <148f8e69-ad44-40f8-b277-69c289b94c68@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D452564;
+	Mon, 29 Apr 2024 06:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714372291; cv=fail; b=TjCdyIoJfg3PUEbQJaITZk64Lm4oj50jFec1vBwGsy/h3WQTju7ulAM5T9NnC+4zaJV4r20vfxZpZzBAErE4XyrZ6ivK75udRw2BfZu/QRthBtwG11ovlSjst5INMD8lCRBw+wgvIsjYG+ZC8Hd+mNPuuBFZ8b8JAgnIwsZPIjY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714372291; c=relaxed/simple;
+	bh=1SNdOcDtAyJ7YLSmVD5NXfBQnBCWbA8J/3E5xdbjgYg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=JZGtkN4ec/HSeeyWuGh3/9Ba183ptw/Jy2yuqQ+rW99kJiIBo2ldY0hB1xPsSKwpFQPD3m4t2nGEwKAY0pdDKbGuSj1VTA3CMsJDEhWplL/5n80ddTyvc3vhO/dISf3gkIQuKVLrcDNCjzhZMPYg0pS38hVc+jh95E2aRZh/gdA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=IjzzQ2IO; arc=fail smtp.client-ip=40.107.14.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IjzzQ2IO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=djzkbuATJDKey2eNFctSkeukR1wVfGGN8v7QZSFjogJ6JNzr4IdGHJgPiW1NiXXlotjWIS64ZehkPY2yK8PlUHTpiXhm7rqBkO5rzmnj3PWNC+J8AzExOVJ2p/1k6PHssD3W9OW91dC8TSBNiuTqNMpGH7NggJ90x4YTW+7VfW3KY/rPGFhjjtfBrnpTbF8AbFTzlzCaWc/jV2H66mmJep9SfzpY7vn/nSCRxepvx3HDy5iieg8YOG4ugVQ61Fg/6AYAF/nFFws9t/dHsD52Mm1UfuEHrWngWkK4aFMlykcXfEXnT57indj0yF5C8fFAPByMQsuz5yt+JHB8OGw4JQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ilba0+wjvJEz+gOwt6MA86RvZdp3T1VrWIo2DzN9fvA=;
+ b=lSy/ia0O4VIZtG5cPgMj+0OFKuDHuFO2HN5unmDuilXOERCt3hHGw/kHcsX5eKShDXYFtJYMmCm/sYV5hyjiPwvktXr2QNNrXoIhjiP63aVTwehplMcPFwsT1talsIiylSPRoSKWF9D5s5kYLiqEiVdpSTmFBUcxqDBkLla2GPBiMeLbgPQPR/AGzMf5WY06hjWr7aaOyt2Nhknac0bFJ8SR7ckYbm/7KaeZ7kSK4szwjemQIrmnZ17wInyt9XbyV+CVW/27FzsK4JUBdUjBy0AXcLW50xxlIW6YhEX0kB5sM5B2MzDo3bWoFHu3canqSC5WJ9k1Lld7lUrhb5QjNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ilba0+wjvJEz+gOwt6MA86RvZdp3T1VrWIo2DzN9fvA=;
+ b=IjzzQ2IO8xjidKbQ35Oxif/9vtTMD51S0c/5/hX8inSp7ahLumqOlBqtRD8qBRnzzpv5WgGG2jomCB5nZmpn+RpMTcI009Rg50fppxvGxENCxjNG2B3NKd5/wdZ3Ihhi4I6L/+xzkApvotsc96n/PbDcC0ROCdeFD4JOnVml//E=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com (2603:10a6:20b:43b::21)
+ by DUZPR04MB9919.eurprd04.prod.outlook.com (2603:10a6:10:4d9::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
+ 2024 06:31:25 +0000
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::33cc:db75:c850:63a4]) by AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::33cc:db75:c850:63a4%2]) with mapi id 15.20.7519.031; Mon, 29 Apr 2024
+ 06:31:25 +0000
+From: Pankaj Gupta <pankaj.gupta@nxp.com>
+To: gaurav.jain@nxp.com,
+	horia.geanta@nxp.com,
+	V.Sethi@nxp.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	iuliana.prodan@nxp.com,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-imx@nxp.com
+Cc: Pankaj Gupta <pankaj.gupta@nxp.com>
+Subject: [PATCH v4 0/2] caam: init-clk based on caam-page0-access
+Date: Mon, 29 Apr 2024 11:58:50 +0530
+Message-Id: <20240429062855.923595-1-pankaj.gupta@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0008.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::10) To AM9PR04MB8604.eurprd04.prod.outlook.com
+ (2603:10a6:20b:43b::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gvrldjymnq56fhzd"
-Content-Disposition: inline
-In-Reply-To: <148f8e69-ad44-40f8-b277-69c289b94c68@linaro.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8604:EE_|DUZPR04MB9919:EE_
+X-MS-Office365-Filtering-Correlation-Id: 02814461-1fb3-431d-3efe-08dc6815fe5b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|52116005|1800799015|376005|366007|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wAgC+9kqRe1LE3MFZdfAlNpnkO0J8WOS4W8l/03m4+uiaDmG7jwYGTeRCX3w?=
+ =?us-ascii?Q?V+30lDTyJtHCGiAiISi17eKo6HpZcv5yM7XOjGzrz6V66boBwgbgICFeWidz?=
+ =?us-ascii?Q?STpESdhSwqdyFW4ikKYa0CQmpada7kehUWAaxi1KW0nRTkzAouV8Oqflq6hB?=
+ =?us-ascii?Q?quQtsXVx9ZyQNqgFTq/T1HUP8CLuiyV45MOORZ0sWU0a4unQN84ADuggpWFI?=
+ =?us-ascii?Q?SwIQ7s75ypwjm6JVbWLTlCHUf3SYp7GKY6bQtig4Fr4jNtcWbUuX2etxmWRl?=
+ =?us-ascii?Q?tdDK/dPDCcNl2Tr0/pzjzerXZX0JNy2Ania66QiPY+VWbbeuqj5uJo+lMd3b?=
+ =?us-ascii?Q?Qj3uFpBj62PRfD3PK9HL5uQ7X1/u9Hrtc4bZsyR5Qe+v9DJnZfBsdVnAtigj?=
+ =?us-ascii?Q?lDuoQq9ShhxyH2/sB4zHIfqOMByZUV2hdzSNlqZOIPsYhYbYmymIXmMtptSv?=
+ =?us-ascii?Q?ZgDYNoR5s1DG2qUii/jgBbzG3YQE1JfXbs8q7HTULCQS2IUSnVAjov730pRJ?=
+ =?us-ascii?Q?3oZr/UOk2UqL1whpnY6c8L+dpKW1Ivrf6zKoFOU0RxlQL6AzNFA5edcj3Weu?=
+ =?us-ascii?Q?NbXg89KSdKZRbDroWlfHc92BGi0juWNymapgYs474xKi0zswK7+NaDPn/BGu?=
+ =?us-ascii?Q?7n2gf73ukHLy3XlfTDPRQHqacoSOd/2vrRLT052THGeBCc9L91Czfo6PRQ1T?=
+ =?us-ascii?Q?9IJyoDpFNHEPOkn0sS9AmT4ucAAwjtKR1T59DLr2PU/QoCz+tZ0iLSx0j6o8?=
+ =?us-ascii?Q?2fdTfYY9R0u9H6Ymh7KzjN18VqYaH8b1GB1q6eX7p6WHIbD9wM5UFz4cuXeD?=
+ =?us-ascii?Q?UYSmFJCP/aZOv7lyFPVMKQlSYiauDTucmMl6GecbLK6mLSlMGkicBb7jeXbB?=
+ =?us-ascii?Q?j+iPwZAMqqcCZiwoP+2VI1o5eqcW9++0UMpWtzNbweqH5WRxUq+gnTsy5lW8?=
+ =?us-ascii?Q?fnChZNrqBY73wbN9CLDcQcJUGn3SHkwtYyzXL0GUbzByLgajjbbSGI/hKuI/?=
+ =?us-ascii?Q?7KhrzgR1ttF4ZJILNARVt9oTBq8ZlGXdGqnM03mOMeOjwUL0EoofRMf5qHyb?=
+ =?us-ascii?Q?/Pg0NYvarjboy97DkLU990C0mgovUpn7/0MGtZw3iMhWDj9Sy3mgCUTzNXPE?=
+ =?us-ascii?Q?1OdYnzQ1DCslaBIGO814poGFhbejzE3S2lNC0wuAduDfiTU3dWh4IR1p5VaX?=
+ =?us-ascii?Q?pCr8bH5jx2rQOP/qyOLFZVI+g0eNh6nicG1y+f4/1Yr8dzNA1IeurBA8HznG?=
+ =?us-ascii?Q?p1Usnldrx/hPGYLrrajj0zofqb/qLdxaLmQRIWV+F9GfVAAmhJsB8x08AaM3?=
+ =?us-ascii?Q?DRa/8Llsqiq408VEYkBuiSZwvBKVkacrF4gXRGUONuoHMg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8604.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(376005)(366007)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KV5bHbpDvJib1oeG8JuTMIiPCIEzvlII40qcP9qm+s7oUNuLa10srEaKCpBI?=
+ =?us-ascii?Q?73hejcFHVkZQ/cu9BKhFAQgZfGVzuvBM0AFVZcht1l5/d4hDQCCeG5XtqR4w?=
+ =?us-ascii?Q?Kd4om+jwPSV7LK+RuHsu5nmbnohrvX8I9tfgJMcAiLz2hCb61m9UJSa87egE?=
+ =?us-ascii?Q?0uVIIVORQTW3hG7qNB6ghvLN2/sPtQ/XBStUKiW0EmN+ySDb4BgV/9RO036F?=
+ =?us-ascii?Q?hFSQF1F/5Z6cNBklNed/ZrYq2nMg7ow/cpGFySxZrM4C1HJXPjBXvLl+Mn89?=
+ =?us-ascii?Q?NzJ4NKIlZsRjyQmJYwXIBu//pKzMYaMep8ERUTHYcGDNZ7tZ4gxkJeBwXNj5?=
+ =?us-ascii?Q?ETmKwmMZirQUY4ca5udSoVsoIXg7QnIJ12p772d0WWpvonBgdJGwkMTWvV1M?=
+ =?us-ascii?Q?JkdBObIBlnx7bMo+ve6NjWiAksocGh19HVa62LN16hKewT4oNBfMF6GFECM1?=
+ =?us-ascii?Q?3J3p5+2PjmXLt8rGMTb7sBU/d77PukXFqX55wl9IkQljv1WT3A5EfR4xcoIG?=
+ =?us-ascii?Q?G7+7bUzR0SrD5M7bvNPeUik5c6vGCqUHU6vl+o7jx49LrfYGTsKSLc4xyT9s?=
+ =?us-ascii?Q?fpVEb1EHoBji6+j4JAZ8WZ9WRqo4lvW3vYwf25rRr5qC7FodID347qqsnvbZ?=
+ =?us-ascii?Q?hIxWxftQQO3MPMIXWHp3FE3tfX9tFcbpA5U5bEwhMruEwfdVKOQPIRdUngl0?=
+ =?us-ascii?Q?zsadeWXAS1eAm9TuSAEMbtrqcYfGqf+EPDWE/DQ2D6NHhT7kIVnZeo9csbsW?=
+ =?us-ascii?Q?5ra+7CDgxgdzWulCrHF54Ptgwp/RL7h2aJ6r8xoMw8qwnQhShtVcNYz6qJ4X?=
+ =?us-ascii?Q?iNY2o8T8O7+Q5VV1BI8jSjzVlQr2UrOyuXWkNBeifQrsdFEWLtwaoDPwmnPJ?=
+ =?us-ascii?Q?KuSN1LoEKO07UhAW+let2M8JhGRAgH+RIkLUAbu8sXvN3S5yzvddbF+Q7/Cq?=
+ =?us-ascii?Q?DxLTns8cvs6WAWDn7F9o8X5A+i/cGSDSrblnN8Aw6zW2eF48p9k/g4AZfYOR?=
+ =?us-ascii?Q?JjJVTLJ7S7cEOK16pHZ4+lBK3TaCSPwreo5oDyjgVrlKgaiAa2yQzY17WnYn?=
+ =?us-ascii?Q?oU9odOMdsAeJ5Q6WX1g3IfVXhJ69N7SntwGGngP7mnI6YfKZPRhWfrwjj0D8?=
+ =?us-ascii?Q?KSZe23CLoXbMyyhkYcvkVjXvUu7V7P0LyNKN0TAvf3Y7A3Ae/F0xwJHEOp9G?=
+ =?us-ascii?Q?HzNUN0hJq7TJRf7/aL6gSlRS6qSHr+8s6alNWRVgSwVJmuagYSqLJ1D7ZJLI?=
+ =?us-ascii?Q?qiMEeeoArEJtZRoBgxGV/t3QMsLzzLosmt/aIbNudo0KilsBp4Ujl8s4Dvz3?=
+ =?us-ascii?Q?qswhOZ7Pt4UXBzoVT6r3Mi14EuKu7tmJ//g+TQmHwCs/LHlZGIqRC0KxLj/U?=
+ =?us-ascii?Q?gJQNFSt7DXXXb2M2sf/EB+rdIwzWgdHSfdywApknOST9sGgGJmDddMG+ZUGx?=
+ =?us-ascii?Q?3z7JwklFPeLm/haKRp0I1fZ2+ouUBHY0N/Rva4lkNYIPyiiS7i9WDCu7jN7K?=
+ =?us-ascii?Q?F7rUHtA+FBbJylO5tK90HxGxyzmX59/IKbg8NcX0kzrfGnrS8aDCu4cpAKAc?=
+ =?us-ascii?Q?yyunLAuvBEC218dCUi8aV1qQIRaawBMqMJG0oVKo?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02814461-1fb3-431d-3efe-08dc6815fe5b
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8604.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 06:31:25.6048
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dc2XBULi4fNRie00TK/bl9oWr7e4LJZCHOfvtxJBatLt9WEEtjXgb5ov8rfB+WImy4af0bbi4soalPxuVzyi6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9919
 
+v4:
+ - Correct the null pointer checking
 
---gvrldjymnq56fhzd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v3:
+ - Splitting the patch into two.
+ - Disposed-off comments received on v2.
 
-Hello Krzysztof,
+v2:
+ - Considering the OPTEE enablement check too, for setting the
+   variable 'reg_access'.
 
-On Mon, Apr 29, 2024 at 08:23:19AM +0200, Krzysztof Kozlowski wrote:
-> On 26/04/2024 22:11, Trevor Gamblin wrote:
-> >=20
-> > On 2024-04-24 8:58 a.m., Trevor Gamblin wrote:
-> >> From: Drew Fustini <dfustini@baylibre.com>
-> >>
-> >> Add Analog Devices AXI PWM generator.
-> >>
-> >> Link: https://wiki.analog.com/resources/fpga/docs/axi_pwm_gen
-> >> Signed-off-by: Drew Fustini <dfustini@baylibre.com>
-> >> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >> Co-developed-by: Trevor Gamblin <tgamblin@baylibre.com>
-> >> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
-> > Note that I missed the following two acks from the v4 series when=20
-> > preparing v5:
-> >=20
-> > Acked-by: Michael Hennerich<michael.hennerich@analog.com>
-> > Acked-by: Nuno Sa<nuno.sa@analog.com>
->=20
-> You cannot add other people's tags that way. By default b4 ignores it.
+Pankaj Gupta (2):
+  caam: init-clk based on caam-page0-access
+  drivers: crypto: caam: i.MX8ULP donot have CAAM page0 access
 
-I'm aware that I have to pay attention to that detail (i.e. using b4 am
--S). Full disclosure: I asked off-list if Trevor missed to add these
-Acks and requested to add them this way if yes.
+ drivers/crypto/caam/ctrl.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-> Also, don't modify the tags...
+-- 
+2.34.1
 
-you mean the missing space between name and email address? I can fix
-that up when (and if) I apply the patches.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---gvrldjymnq56fhzd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYvPpcACgkQj4D7WH0S
-/k7SUQf7BzKSUujDtEWtqcp4TGtptEioI6AM59Ll/ritKfTWBnFnWKdX7u4WnDJD
-3p5P4fNBG/KKUsJoRJTYUT397NhSkot00rGWFHgGDOwFTggpPjEt8BE8Kut+k0QX
-Nohl2BxUw6/UAeDG0zut9ObxmR9oGecTwtswRr9nK7Ol+5QOxlPQJn5jdwhiVAe4
-8UeF1Hp/zt7WeDkCHWw3q8wM6hlFvqclE/4WYB1h5UfQ3ZLXxFd/2kltlyZwAtFm
-YTuG2t/Ku/KnXlB07a+VIDFyHUPUj7xMXM3R7siYli+hZClqP+q12CK91dDu6fTh
-G1Wbqcs033VybfJGNg3u+24MJaGyiw==
-=6L5Y
------END PGP SIGNATURE-----
-
---gvrldjymnq56fhzd--
