@@ -1,57 +1,57 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D25D13CF88;
-	Mon, 29 Apr 2024 19:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27E313D267;
+	Mon, 29 Apr 2024 19:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714419579; cv=none; b=KI6QNgq8JtNaVT8t7EeaYPS3Ql3Iuh7NN0nNUWr0fi/Zaay0LRekdZie3O3fGXAN7tLJHkhDqWRm3StsbReq8YORVyA4Q8Lfw5DIKT+L7ika2vKFhRB9QnZZM4kFZ45aP3Wbdi/MUKPgn5hrIww5P5oPvwNKwgArbH9ywlk5Ha8=
+	t=1714419582; cv=none; b=XnyplDRv4XCpboGRO4wG81fA586zPqcAgqcDozq7LlNYC7dKBS/8qG38A8//bho+P0MCThn/kGaHtif7eFAWsZJzkRzb32ywicVZwjJsw0ze2xJ3Y+puxYSEW1gWlGz6l3U7CJ9txPfA+zIM5tcKyvRuLqXyGuSOkBSg20kvfig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714419579; c=relaxed/simple;
-	bh=6oHaX5tczKiiZM5vyksZ3rUPAVmC5VfvW8KCqG5sAWo=;
+	s=arc-20240116; t=1714419582; c=relaxed/simple;
+	bh=yy+cEM8e/rdBfX564thDF5ITGSohMnbYYqys5EU7+Y0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ObB3k5sphNtXmj5Ep2bBKnAPkfqRTezB5GgAVYCxYIKNNO43f4LsGBaSJRVTmmyCWaHBpRmO4EYiRThumLskUQugaxZaiP3I4LhZwToVr3/0DB0WsRTqWX5isAaMSoZ1rFOUq8zIj2w+qlYsSM+Zhp9os62Gx9oKPlPKbOF2uek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FjZlpbib; arc=none smtp.client-ip=209.85.166.50
+	 MIME-Version; b=Cw/kKfDw/YgzWxEFCvqaISSC7W3PIqWKHdpKIc8xhUa8HXvn22yW9UXbQ9UB0O/EOEqgs4IbEiBOQ/kOkDTN2VKEHK2CU0YlYrDW5Hj9LtVvUZVwAHFHfxCXIjUWJc26FJj3rDAK5SPLT87Wq6VjC0anv8dIRyzhIUJjrACnsi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OcelNvCm; arc=none smtp.client-ip=209.85.166.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjZlpbib"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7dec786b0a7so49976039f.1;
-        Mon, 29 Apr 2024 12:39:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OcelNvCm"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7da939572b5so197143439f.2;
+        Mon, 29 Apr 2024 12:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714419576; x=1715024376; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714419580; x=1715024380; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xsk6wFmyYbt14YO4ncMIjEQV7uyunoDHYxXESUpDG9U=;
-        b=FjZlpbibacfo5PKAcb7IPlZggwPnY2wSs/TxhBUKQlS74pEO+k18SYWwPstN5teird
-         nTcs207w/KClCFPVAhavYu1yANEV9QUD5Od2BPhD+qjb2eyORn7y78yzKjruUd+WPPhW
-         nKh20OuqyEjaavh3i0aKuKFUiprGUnRHNrMXMwDKSgzqVZu43xKhgPPGhCscpBwTTyBd
-         HInw7F5cNzYO4KwuKG82I0H2f9qsUQsiNpx/AIOnS/P3ST1raCqR0AdSc5Aa6SyckFBU
-         zVTDsemsqKnxdPtQjcHBHpDY+wKe/1w7GmO8FX80KESilIQf1RkycUZz9gOzfrdxwpzN
-         mpog==
+        bh=a0MeHEZcsgFBBOIcW96muUaq6331rE39MA9kEHJFHdU=;
+        b=OcelNvCmlRlN9Vi4Y64rikKlThM2Qly/EWdJO2IolpAsJoJBjX6WtZzMXWW9t/87r+
+         v67LrERXJZ3LEkFX9P1Grdw2/3wVUO0y/WURFnRKfz7CJBkN2Z1OskXlPSxLcgR6uEy/
+         5QUHLbeYFpuH23H48jbu8L+A/WMOfwjMubm/k2OdpGUTnDXiZgCiONZGAzacPdLSQcT8
+         FDZpxXaQqGYvAtXGNKoOCnonI3P7OsS77pDI8cNJP58RjYOQ7kTlo+K1dYCzIdgXevdg
+         FAO8CuPod89JJjpF3K3HvZvoGGoG4Jt1plud3R48v6jW2QNeXmc49XQ4q+7qg8ZiNZwm
+         EnDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714419576; x=1715024376;
+        d=1e100.net; s=20230601; t=1714419580; x=1715024380;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xsk6wFmyYbt14YO4ncMIjEQV7uyunoDHYxXESUpDG9U=;
-        b=Ie4++Re7b73vItfEfpQJm0PWbL39wc/RHysqeIx+aRo4o6SgoblH2Hl/EGD6DUj3Tl
-         5IY0rG8KrT8xffa/wwAwcf0NEDb52LMUvcdReKrY2lrzG3ExS1xAMGA6FMfCaG+K1UMz
-         T7yku58dCtRkGnI2LgDtBaDpAtv9Lky3jjhsLoxVeufQvBq6fz3IBb7nigHayaW/nX57
-         8qwznh4w/PamPIs3miP3wemYKB7a/SUTRdAR0jdLRTMcZg6yF1VmdXqTZkXHFeuwBXo0
-         PVtiba+6BFIg2fmySY1nf//Rxu27BfbUwTVCwkMpLru4utYP66AoLGTidUjIiSAUI+us
-         AQXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2Pch03bKcPA/1JqPQ63mOpVdqbJT05m71sk3fyDUV0MPbI+AqSTsGwnY1ujf7x3pgzGX3dqChrT8Sx9Sdv7OzLdKRH8eum7tLdNwkdSW/LqndOXjvMqr05NxIgsaKg4OoAYpH7os4
-X-Gm-Message-State: AOJu0YwQawVZe0SHShPyyTn0kQbGJGAkdJW+UXC+e2uFelKX8ZLbBFKV
-	FkVgty5S+cW9Zo7RLSAn7sV2LchXDLBbSAWk6RozOT5q/YMh4jzQ
-X-Google-Smtp-Source: AGHT+IFLCml7VJa3thVzim744t9VtphWf2fPKNQQnr7CEhnJRINbvibP9AjA+PIPiDOlMLU7xx3G4w==
-X-Received: by 2002:a6b:d20c:0:b0:7de:cf4d:b7c6 with SMTP id q12-20020a6bd20c000000b007decf4db7c6mr585980iob.4.1714419576271;
-        Mon, 29 Apr 2024 12:39:36 -0700 (PDT)
+        bh=a0MeHEZcsgFBBOIcW96muUaq6331rE39MA9kEHJFHdU=;
+        b=kzZE4ysNofIkAs6NzP323JR5mcphesfSMF1QF/3cA/Cfx2DP8u5++vg/AcgnXi3J48
+         XDaqrB6XurI7yMvkP5bYo8TObXtU5LxGt+yrHopnw66/eBp4Jce/yUo6A53eN3+yrSmW
+         ADBhLWJ4SOmzjboNN7Util5TByonybXzA9036f+9MXqVaWb6zwpnr/v+tzGUQ8pQoUP1
+         tyxAFC28uELOs7HEL8tUEDFwOyjofHXCkeMRpx8IJSEzaMv4e2sQhxL+/44D/RYatOHP
+         CPttYqVWAD5sEj4W+zTygnZm9KopB4XWYI55XUxKRQBbsikdC1FxuGsXjBwYvvYaYG7j
+         0+Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlS0tLl6IQjQ+PDKr7jdqwtn3Ld4b/YRr9oLdsFk3tMzSOKNI0zuHI/IhYPPr2rOkcDxnE5mztTyCKs8GOomDpW1OqK8BNNv2PHheh+Ma+lZHHyx3J8IsG3tucX7y1GuMqyYpiajr4
+X-Gm-Message-State: AOJu0YwGdpgs4sFCO0WfSFnewatf/ipwIdpFqFKIuyg7EKEe0IKaFvqE
+	lR5JWfNE3ozrY+Px1RHAkVk16ORvBsNt/0Lg+fGnUe4iZP/YD3fL
+X-Google-Smtp-Source: AGHT+IHlUVq3kyXnqc/U6UIcx1yMtr80xS3S0rVakdXkFmPbZcga6S+Hk2XVAzZ4ytI76/jmWP6Ckg==
+X-Received: by 2002:a05:6602:275a:b0:7de:d935:de0a with SMTP id b26-20020a056602275a00b007ded935de0amr1639049ioe.0.1714419579920;
+        Mon, 29 Apr 2024 12:39:39 -0700 (PDT)
 Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
-        by smtp.googlemail.com with ESMTPSA id y16-20020a056602165000b007de9f92dc57sm2325105iow.16.2024.04.29.12.39.35
+        by smtp.googlemail.com with ESMTPSA id y16-20020a056602165000b007de9f92dc57sm2325105iow.16.2024.04.29.12.39.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 12:39:35 -0700 (PDT)
+        Mon, 29 Apr 2024 12:39:39 -0700 (PDT)
 From: Jim Cromie <jim.cromie@gmail.com>
 To: jbaron@akamai.com,
 	gregkh@linuxfoundation.org,
@@ -72,9 +72,9 @@ Cc: ukaszb@chromium.org,
 	yanivt@google.com,
 	bleung@google.com,
 	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v8 27/35] selftests-dyndbg: test dyndbg-to-tracefs
-Date: Mon, 29 Apr 2024 13:39:13 -0600
-Message-ID: <20240429193921.66648-8-jim.cromie@gmail.com>
+Subject: [PATCH v8 30/35] drm+drivers: adapt to use DYNDBG_CLASSMAP_{DEFINE,USE}
+Date: Mon, 29 Apr 2024 13:39:16 -0600
+Message-ID: <20240429193921.66648-11-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240429193921.66648-1-jim.cromie@gmail.com>
 References: <20240429193921.66648-1-jim.cromie@gmail.com>
@@ -84,497 +84,198 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a series of trace-tests: test_actual_trace() etc, to validate that
-the dyndbg-to-tracefs feature (using +T flag) works as intended.  The
-1st test uses the global tracebuf, the rest use/excercise private
-tracebufs.
+Follow dynamic_debug API change from DECLARE_DYNDBG_CLASSMAP to
+DYNDBG_CLASSMAP_{DEFINE,USE}.
 
-These tests are currently optional, via "TRACE" arg1, because the
-feature code is in-the-lab.  But its an objective test, and pretty
-user-interface oriented.
+Prior to this, we used DECLARE_DYNDBG_CLASSMAP, which was preserved to
+decouple DRM conversion.  I'm unsure of the full functionality
+in-between, a round of lkp-testing will help.
 
-IOW this passes:
-  :#> ./tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
-but this fails:
-  :#> ./tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh TRACE
-
-So its won't break selftests success.
-
-This allows the patch to be committed now w/o inducing selftest
-failures, and the tests enabled later, with the promised code.
+Fixes: f158936b60a7 ("drm: POC drm on dyndbg - use in core, 2 helpers, 3 drivers.")
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-Co-developed-by: Łukasz Bartosik <ukaszb@chromium.org>
-Signed-off-by: Łukasz Bartosik <ukaszb@chromium.org>
 ---
- .../dynamic_debug/dyndbg_selftest.sh          | 435 ++++++++++++++++++
- 1 file changed, 435 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 12 +-----------
+ drivers/gpu/drm/display/drm_dp_helper.c | 12 +-----------
+ drivers/gpu/drm/drm_crtc_helper.c       | 12 +-----------
+ drivers/gpu/drm/drm_print.c             | 25 +++++++++++++------------
+ drivers/gpu/drm/i915/i915_params.c      | 12 +-----------
+ drivers/gpu/drm/nouveau/nouveau_drm.c   | 12 +-----------
+ include/drm/drm_print.h                 |  8 ++++++++
+ 7 files changed, 26 insertions(+), 67 deletions(-)
 
-diff --git a/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh b/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
-index 54acee58cb4e..65f31418870f 100755
---- a/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
-+++ b/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
-@@ -308,6 +308,405 @@ function test_mod_submod {
-     check_match_ct =p 14 -v
- }
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index e4277298cf1a..b287f0cfd8fa 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -217,17 +217,7 @@ int amdgpu_damage_clips = -1; /* auto */
  
-+# tests below here are all actually using dyndbg->trace,
-+# and verifying the writes
-+
-+function test_actual_trace {
-+    echo -e "${GREEN}# TEST_ACTUAL_TRACE ${NC}"
-+    ddcmd =_
-+    echo > /sys/kernel/tracing/trace
-+    echo 1 >/sys/kernel/tracing/tracing_on
-+    echo 1 >/sys/kernel/tracing/events/dyndbg/enable
-+    modprobe test_dynamic_debug dyndbg=class,D2_CORE,+T:0
-+    search_trace "D2_CORE msg"
-+    search_trace_name 0 1 "D2_CORE msg"
-+    check_match_ct =T 1
-+    tmark "trace-mark"
-+    search_trace "trace-mark"
-+    doprints
-+    search_trace "D2_CORE msg"
-+    ifrmmod test_dynamic_debug
-+}
-+
-+function self_start {
-+    echo \# open, modprobe +T:selftest
-+    ddcmd open selftest
-+    check_trace_instance_dir selftest 1
-+    is_trace_instance_opened selftest
-+    modprobe test_dynamic_debug dyndbg=+T:selftest.mf
-+    check_match_ct =T:selftest.mf 5
-+}
-+
-+function self_end_normal {
-+    echo \# disable -T:selftest, rmmod, close
-+    ddcmd module test_dynamic_debug -T:selftest # leave mf
-+    check_match_ct =:selftest.mf 5 -v
-+    ddcmd module test_dynamic_debug +:0
-+    ddcmd close selftest
-+    is_trace_instance_closed selftest
-+    ifrmmod test_dynamic_debug
-+}
-+
-+function self_end_disable_anon {
-+    echo \# disable, close, rmmod
-+    ddcmd module test_dynamic_debug -T
-+    check_match_ct =:selftest.mf 5
-+    ddcmd module test_dynamic_debug +:0
-+    ddcmd close selftest
-+    is_trace_instance_closed selftest
-+    ifrmmod test_dynamic_debug
-+}
-+
-+function self_end_disable_anon_mf {
-+    echo \# disable, close, rmmod
-+    ddcmd module test_dynamic_debug -Tf
-+    check_match_ct =:selftest.m 5
-+    ddcmd module test_dynamic_debug +:0
-+    ddcmd close selftest
-+    is_trace_instance_closed selftest
-+    ifrmmod test_dynamic_debug
-+}
-+
-+function self_end_nodisable {
-+    echo \# SKIPPING: ddcmd module test_dynamic_debug -T:selftest
-+    ddcmd close selftest fail # close fails because selftest is still being used
-+    check_err_msg "Device or resource busy"
-+    check_match_ct =T:selftest.mf 5
-+    rmmod test_dynamic_debug
-+    ddcmd close selftest # now selftest can be closed because rmmod removed
-+                         # all callsites which were using it
-+    is_trace_instance_closed selftest
-+}
-+
-+function self_end_delete_directory {
-+    del_trace_instance_dir selftest 0
-+    check_err_msg "Device or resource busy"
-+    ddcmd module test_dynamic_debug -mT:selftest
-+    check_match_ct =:selftest.f 5
-+    del_trace_instance_dir selftest 0
-+    check_err_msg "Device or resource busy"
-+    ddcmd module test_dynamic_debug +:0
-+    ddcmd close selftest
-+    check_trace_instance_dir selftest 1
-+    is_trace_instance_closed selftest
-+    del_trace_instance_dir selftest 1
-+    check_trace_instance_dir selftest 0
-+}
-+
-+function test_early_close () {
-+    ddcmd open kparm_stream
-+    ddcmd module usbcore +T:kparm_stream.mf
-+    check_match_ct =T:usb_stream.mf 161
-+    echo ":not-running # ddcmd module usbcore -T:kparm_stream.mf"
-+    ddcmd close kparm_stream
-+}
-+
-+function self_test_ {
-+    echo "# SELFTEST $1"
-+    self_start
-+    self_end_$1
-+}
-+
-+function cycle_tests_normal {
-+    echo -e "${GREEN}# CYCLE_TESTS_NORMAL ${NC}"
-+    self_test_ normal           # ok
-+    self_test_ disable_anon     # ok
-+    self_test_ normal           # ok
-+    self_test_ disable_anon_mf  # ok
-+}
-+
-+function cycle_not_best_practices {
-+    echo -e "${GREEN}# CYCLE_TESTS_PROBLEMS ${NC}"
-+    self_test_ nodisable
-+    self_test_ normal
-+    self_test_ delete_directory
-+}
-+
-+# proper life cycle - open, enable:named, disable:named, close
-+function test_private_trace_simple_proper {
-+    echo -e "${GREEN}# TEST_PRIVATE_TRACE_1 ${NC}"
-+    # ddcmd close kparm_stream
-+    ddcmd open kparm_stream
-+    ddcmd module params +T:kparm_stream.mf
-+    check_match_ct =T:kparm_stream.mf 4
-+    ddcmd module params -T:kparm_stream.mf
-+    check_match_ct =T:kparm_stream.mf 0
-+    is_trace_instance_opened kparm_stream
-+    ddcmd module params +:0
-+    ddcmd close kparm_stream
-+    is_trace_instance_closed kparm_stream
-+    ddcmd =_
-+    check_trace_instance_dir kparm_stream 1
-+    is_trace_instance_closed kparm_stream
-+    del_trace_instance_dir kparm_stream 1
-+    check_trace_instance_dir kparm_stream 0
-+}
-+
-+function test_private_trace_2 {
-+    echo -e "${GREEN}# TEST_PRIVATE_TRACE_2 ${NC}"
-+    ddcmd =_
-+    echo > /sys/kernel/tracing/trace
-+    echo 1 >/sys/kernel/tracing/tracing_on
-+    echo 1 >/sys/kernel/tracing/events/dyndbg/enable
-+    ddcmd open foo
-+    is_trace_instance_opened foo
-+    check_trace_instance_dir foo 1
-+
-+    modprobe test_dynamic_debug
-+    ddcmd class,D2_CORE,+T:foo.l,%class,D2_KMS,+fT:foo.ml
-+    check_match_ct =T:foo.l 1
-+    check_match_ct =T:foo.mfl 1
-+
-+    # purpose ?
-+    echo 1 >/sys/kernel/tracing/tracing_on
-+    echo 1 >/sys/kernel/tracing/events/dyndbg/enable
-+
-+    tmark test_private_trace about to do_prints
-+    search_trace "test_private_trace about to do_prints"
-+    search_trace_name "0" 1 "test_private_trace about to do_prints"
-+
-+    doprints
-+    ddcmd class,D2_CORE,-T:foo
-+    ddcmd close foo fail
-+    check_err_msg "Device or resource busy"
-+    ddcmd class,D2_KMS,-T:foo
-+    ddcmd close foo
-+    check_trace_instance_dir foo 1
-+    is_trace_instance_closed foo
-+    ddcmd close bar fail
-+    check_err_msg "No such file or directory"
-+    ifrmmod test_dynamic_debug
-+    search_trace_name foo 2 "D2_CORE msg"
-+    search_trace_name foo 1 "D2_KMS msg"
-+    del_trace_instance_dir foo 1
-+    check_trace_instance_dir foo 0
-+}
-+
-+function test_private_trace_3 {
-+    echo -e "${GREEN}# TEST_PRIVATE_TRACE_3 ${NC}"
-+    ddcmd =_
-+    echo > /sys/kernel/tracing/trace
-+    echo 1 >/sys/kernel/tracing/tracing_on
-+    echo 1 >/sys/kernel/tracing/events/dyndbg/enable
-+    ddcmd open foo \; open bar
-+    is_trace_instance_opened foo
-+    is_trace_instance_opened bar
-+    modprobe test_dynamic_debug
-+    ddcmd class,D2_CORE,+T:foo
-+    ddcmd class,D2_KMS,+T:foo
-+    ddcmd class D2_CORE +T:foo \; class D2_KMS +T:foo
-+    ddcmd "class,D2_CORE,+T:foo;,class,D2_KMS,+T:foo"
-+    ddcmd class,D2_CORE,+T:foo\;class,D2_KMS,+T:foo
-+    check_match_ct =T 2 -v
-+    check_match_ct =Tl 0
-+    check_match_ct =Tmf 0
-+    echo 1 >/sys/kernel/tracing/tracing_on
-+    echo 1 >/sys/kernel/tracing/events/dyndbg/enable
-+    tmark test_private_trace_2 about to do_prints
-+    doprints
-+    rmmod test_dynamic_debug
-+    ddcmd "close bar;close foo"
-+    is_trace_instance_closed bar
-+    is_trace_instance_closed foo
-+    search_trace_name foo 2 "D2_CORE msg"
-+    search_trace_name foo 1 "D2_KMS msg"
-+    del_trace_instance_dir foo 1
-+    check_trace_instance_dir foo 0
-+    search_trace "test_private_trace_2 about to do_prints"
-+    del_trace_instance_dir bar 1
-+    check_trace_instance_dir bar 0
-+}
-+
-+function test_private_trace_4 {
-+    echo -e "${GREEN}# TEST_PRIVATE_TRACE_4 ${NC}"
-+    ddcmd =_
-+    echo > /sys/kernel/tracing/trace
-+    echo 1 >/sys/kernel/tracing/tracing_on
-+    echo 1 >/sys/kernel/tracing/events/dyndbg/enable
-+
-+    ddcmd open foo
-+    modprobe test_dynamic_debug dyndbg=class,D2_CORE,+T:foo%class,D2_KMS,+T:foo
-+    check_match_ct =Tl 0
-+    check_match_ct =Tmf 0
-+    check_match_ct =T 2
-+
-+    # are these 2 doing anything ?
-+    echo 1 >/sys/kernel/tracing/tracing_on
-+    echo 1 >/sys/kernel/tracing/events/dyndbg/enable
-+
-+    tmark should be ready
-+    search_trace_name "0" 0 "should be ready"	# in global trace
-+
-+    doprints
-+    search_trace_name foo 2 "D2_CORE msg"	# in private buf
-+    search_trace_name foo 1 "D2_KMS msg"
-+
-+    # premature delete
-+    del_trace_instance_dir foo 0
-+    check_trace_instance_dir foo 1	# doesn't delete
-+    ifrmmod test_dynamic_debug
-+
-+    ddcmd "close foo"
-+    is_trace_instance_closed foo
-+    del_trace_instance_dir foo 1	# delete works now
-+
-+    check_trace_instance_dir foo 0
-+    search_trace "should be ready"
-+}
-+
-+# $1 - trace-buf-name (or "0")
-+# $2 - reference-buffer
-+function search_in_trace_for {
-+    bufname=$1; shift;
-+    ref=$2;
-+    ref2=$(echo $ref | cut -c20-)
-+    echo $ref2
-+}
-+
-+function test_private_trace_mixed_class {
-+    echo -e "${GREEN}# TEST_PRIVATE_TRACE_5 ${NC}"
-+    ddcmd =_
-+    ddcmd module,params,+T:unopened fail
-+    check_err_msg "Invalid argument"
-+    is_trace_instance_closed unopened
-+    check_trace_instance_dir unopened 0
-+
-+    ddcmd open bupkus
-+    is_trace_instance_opened bupkus
-+    check_trace_instance_dir bupkus 1
-+    modprobe test_dynamic_debug \
-+	     dyndbg=class,D2_CORE,+T:bupkus.mf%class,D2_KMS,+T:bupkus.mf%class,V3,+T:bupkus.mf
-+
-+    # test various name misses
-+    ddcmd "module params =T:bupkus1" fail	# miss on name
-+    check_err_msg "Invalid argument"
-+    ddcmd "module params =T:unopened" fail	# unopened
-+    check_err_msg "Invalid argument"
-+
-+    ddcmd "module params =mlfT:bupkus."		# we allow dot at the end of flags
-+    ddcmd "module params =T:bupkus."
-+    ddcmd "module params =:bupkus."
-+    ddcmd "module params =:0."
-+
-+    check_match_ct =T:bupkus.mf 3		# the 3 classes enabled above
-+    # enable the 5 non-class'd pr_debug()s
-+    ddcmd "module test_dynamic_debug =T:bupkus"
-+    check_match_ct =T:bupkus 8 -r		# 8=5+3
-+
-+    doprints
-+    ddcmd close,bupkus fail
-+    check_err_msg "Device or resource busy"
-+    ddcmd "module * -T:0"			# misses class'd ones
-+    ddcmd close,bupkus fail
-+
-+    ddcmd class,D2_CORE,-T:0%class,D2_KMS,-T:0%class,V3,-T:0 # turn off class'd and set dest to 0
-+    ddcmd close,bupkus
-+    is_trace_instance_closed bupkus
-+
-+    # check results
-+    eyeball_ref=<<EOD
-+        modprobe-1173    [001] .....   7.781008: 0: test_dynamic_debug:do_cats: test_dd: D2_CORE msg
-+        modprobe-1173    [001] .....   7.781010: 0: test_dynamic_debug:do_cats: test_dd: D2_KMS msg
-+        modprobe-1173    [001] .....   7.781010: 0: test_dynamic_debug:do_levels: test_dd: V3 msg
-+             cat-1214    [001] .....   7.905494: 0: test_dd: doing categories
-+             cat-1214    [001] .....   7.905495: 0: test_dynamic_debug:do_cats: test_dd: D2_CORE msg
-+             cat-1214    [001] .....   7.905496: 0: test_dynamic_debug:do_cats: test_dd: D2_KMS msg
-+             cat-1214    [001] .....   7.905497: 0: test_dd: doing levels
-+             cat-1214    [001] .....   7.905498: 0: test_dynamic_debug:do_levels: test_dd: V3 msg
-+EOD
-+
-+    # validate the 3 enabled class'd sites, with mf prefix
-+    search_trace_name bupkus 0 "test_dynamic_debug:do_cats: test_dd: D2_CORE msg"
-+    search_trace_name bupkus 0 "test_dynamic_debug:do_cats: test_dd: D2_KMS msg"
-+    search_trace_name bupkus 0 "test_dynamic_debug:do_levels: test_dd: V3 msg"
-+
-+    search_trace_name bupkus 0 "test_dd: doing levels"
-+    search_trace_name bupkus 0 "test_dd: doing categories"
-+
-+    # reopen wo error
-+    ddcmd open bupkus
-+    is_trace_instance_opened bupkus
-+    check_trace_instance_dir bupkus 1
-+
-+    ddcmd "module test_dynamic_debug =T:bupkus"	# rearm the 5 plain-old prdbgs
-+    check_match_ct =T:bupkus 5
-+
-+    doprints # 2nd time
-+    search_trace_name bupkus 0 "test_dd: doing categories"
-+    search_trace_name bupkus 0 "test_dd: doing levels""
-+    search_trace_name bupkus 2 "test_dd: doing categories"
-+    search_trace_name bupkus 1 "test_dd: doing levels""
-+
-+    ddcmd close,bupkus fail
-+    check_err_msg "Device or resource busy"
-+    del_trace_instance_dir bupkus 0
-+    check_err_msg "Device or resource busy"
-+    check_trace_instance_dir bupkus 1
-+    is_trace_instance_opened bupkus
-+    check_trace_instance_dir bupkus 1
-+
-+    # drop last users, now delete works
-+    ddcmd "module * -T:0"
-+    ddcmd close,bupkus
-+    is_trace_instance_closed bupkus
-+    del_trace_instance_dir bupkus 1
-+    check_trace_instance_dir bupkus 0
-+    ifrmmod test_dynamic_debug
-+}
-+
-+function test_private_trace_overlong_name {
-+    echo -e "${GREEN}# TEST_PRIVATE_TRACE_overlong_name ${NC}"
-+    ddcmd =_
-+    name="A_bit_lengthy_trace_instance_name"
-+    ddcmd open $name
-+    is_trace_instance_opened $name
-+    check_trace_instance_dir $name 1
-+
-+    ddcmd "file kernel/module/main.c +T:$name.mf "
-+    check_match_ct =T:A_bit_lengthy_trace_....mf 14
-+
-+    ddcmd "module * -T"
-+    check_match_ct =:A_bit_lengthy_trace_....mf 14
-+    check_match_ct kernel/module/main.c 14 -r		# to be certain
-+
-+    ddcmd "module * -T:0"
-+    ddcmd close,$name
-+    is_trace_instance_closed $name
-+    del_trace_instance_dir $name 1
-+    check_trace_instance_dir $name 0
-+}
-+
-+function test_private_trace_fill_trace_index {
-+    echo -e "${GREEN}# TEST_PRIVATE_TRACE_fill_trace_index ${NC}"
-+    ddcmd =_
-+    name="trace_instance_"
-+    for i in {1..63}
-+    do
-+        ddcmd open $name$i
-+	is_trace_instance_opened $name$i
-+        check_trace_instance_dir $name$i 1
-+    done
-+    # catch the 1-too-many err
-+    ddcmd "open too_many" fail
-+    check_err_msg "No space left on device"
-+
-+    ddcmd 'file kernel/module/main.c =T:trace_instance_63.m'
-+    check_match_ct =T:trace_instance_63.m 14
-+
-+    for i in {1..62}
-+    do
-+        ddcmd close $name$i
-+        is_trace_instance_closed $name$i
-+        del_trace_instance_dir $name$i 1
-+        check_trace_instance_dir $name$i 0
-+    done
-+    ddcmd "module * -T:0"
-+    ddcmd close,trace_instance_63
-+    is_trace_instance_closed trace_instance_63
-+    del_trace_instance_dir trace_instance_63 1
-+    check_trace_instance_dir trace_instance_63 0
-+}
-+
- tests_list=(
-     basic_tests
-     # these require test_dynamic_debug*.ko
-@@ -315,9 +714,28 @@ tests_list=(
-     test_percent_splitting
-     test_mod_submod
- )
-+trace_tests=(
-+    # these tests write to tracebuf, and check its contents
-+    test_actual_trace
-+    cycle_tests_normal
-+    cycle_not_best_practices
-+    test_private_trace_1
-+    test_private_trace_simple_proper
-+    test_private_trace_2
-+    test_private_trace_3
-+    test_private_trace_4
-+    test_private_trace_mixed_class
-+    test_private_trace_mixed_class  # again, to test pre,post conditions
-+
-+    test_private_trace_overlong_name
-+
-+    # works, takes 30 sec
-+    test_private_trace_fill_trace_index
-+)
+ static void amdgpu_drv_delayed_reset_work_handler(struct work_struct *work);
  
- # Run tests
+-DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
+-			"DRM_UT_CORE",
+-			"DRM_UT_DRIVER",
+-			"DRM_UT_KMS",
+-			"DRM_UT_PRIME",
+-			"DRM_UT_ATOMIC",
+-			"DRM_UT_VBL",
+-			"DRM_UT_STATE",
+-			"DRM_UT_LEASE",
+-			"DRM_UT_DP",
+-			"DRM_UT_DRMRES");
++DRM_CLASSMAP_USE(drm_debug_classes);
  
-+# rmmod modules to clear their possibly modified state
- ifrmmod test_dynamic_debug_submod
- ifrmmod test_dynamic_debug
+ struct amdgpu_mgpu_info mgpu_info = {
+ 	.mutex = __MUTEX_INITIALIZER(mgpu_info.mutex),
+diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/display/drm_dp_helper.c
+index f5d4be897866..d3a7df09846f 100644
+--- a/drivers/gpu/drm/display/drm_dp_helper.c
++++ b/drivers/gpu/drm/display/drm_dp_helper.c
+@@ -41,17 +41,7 @@
  
-@@ -326,5 +744,22 @@ do
-     $test
-     echo ""
- done
+ #include "drm_dp_helper_internal.h"
+ 
+-DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
+-			"DRM_UT_CORE",
+-			"DRM_UT_DRIVER",
+-			"DRM_UT_KMS",
+-			"DRM_UT_PRIME",
+-			"DRM_UT_ATOMIC",
+-			"DRM_UT_VBL",
+-			"DRM_UT_STATE",
+-			"DRM_UT_LEASE",
+-			"DRM_UT_DP",
+-			"DRM_UT_DRMRES");
++DRM_CLASSMAP_USE(drm_debug_classes);
+ 
+ struct dp_aux_backlight {
+ 	struct backlight_device *base;
+diff --git a/drivers/gpu/drm/drm_crtc_helper.c b/drivers/gpu/drm/drm_crtc_helper.c
+index 2dafc39a27cb..e9d229a393f4 100644
+--- a/drivers/gpu/drm/drm_crtc_helper.c
++++ b/drivers/gpu/drm/drm_crtc_helper.c
+@@ -50,17 +50,7 @@
+ 
+ #include "drm_crtc_helper_internal.h"
+ 
+-DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
+-			"DRM_UT_CORE",
+-			"DRM_UT_DRIVER",
+-			"DRM_UT_KMS",
+-			"DRM_UT_PRIME",
+-			"DRM_UT_ATOMIC",
+-			"DRM_UT_VBL",
+-			"DRM_UT_STATE",
+-			"DRM_UT_LEASE",
+-			"DRM_UT_DP",
+-			"DRM_UT_DRMRES");
++DRM_CLASSMAP_USE(drm_debug_classes);
+ 
+ /**
+  * DOC: overview
+diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
+index 699b7dbffd7b..4a5f2317229b 100644
+--- a/drivers/gpu/drm/drm_print.c
++++ b/drivers/gpu/drm/drm_print.c
+@@ -55,18 +55,19 @@ MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug cat
+ #if !defined(CONFIG_DRM_USE_DYNAMIC_DEBUG)
+ module_param_named(debug, __drm_debug, ulong, 0600);
+ #else
+-/* classnames must match vals of enum drm_debug_category */
+-DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
+-			"DRM_UT_CORE",
+-			"DRM_UT_DRIVER",
+-			"DRM_UT_KMS",
+-			"DRM_UT_PRIME",
+-			"DRM_UT_ATOMIC",
+-			"DRM_UT_VBL",
+-			"DRM_UT_STATE",
+-			"DRM_UT_LEASE",
+-			"DRM_UT_DP",
+-			"DRM_UT_DRMRES");
++/* classnames must match value-symbols of enum drm_debug_category */
++DRM_CLASSMAP_DEFINE(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS,
++		    DRM_UT_CORE,
++		    "DRM_UT_CORE",
++		    "DRM_UT_DRIVER",
++		    "DRM_UT_KMS",
++		    "DRM_UT_PRIME",
++		    "DRM_UT_ATOMIC",
++		    "DRM_UT_VBL",
++		    "DRM_UT_STATE",
++		    "DRM_UT_LEASE",
++		    "DRM_UT_DP",
++		    "DRM_UT_DRMRES");
+ 
+ static struct ddebug_class_param drm_debug_bitmap = {
+ 	.bits = &__drm_debug,
+diff --git a/drivers/gpu/drm/i915/i915_params.c b/drivers/gpu/drm/i915/i915_params.c
+index de43048543e8..dccf12d05105 100644
+--- a/drivers/gpu/drm/i915/i915_params.c
++++ b/drivers/gpu/drm/i915/i915_params.c
+@@ -29,17 +29,7 @@
+ #include "i915_params.h"
+ #include "i915_drv.h"
+ 
+-DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
+-			"DRM_UT_CORE",
+-			"DRM_UT_DRIVER",
+-			"DRM_UT_KMS",
+-			"DRM_UT_PRIME",
+-			"DRM_UT_ATOMIC",
+-			"DRM_UT_VBL",
+-			"DRM_UT_STATE",
+-			"DRM_UT_LEASE",
+-			"DRM_UT_DP",
+-			"DRM_UT_DRMRES");
++DRM_CLASSMAP_USE(drm_debug_classes);
+ 
+ #define i915_param_named(name, T, perm, desc) \
+ 	module_param_named(name, i915_modparams.name, T, perm); \
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index a947e1d5f309..27995c0c9b31 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -72,17 +72,7 @@
+ #include "nouveau_uvmm.h"
+ #include "nouveau_sched.h"
+ 
+-DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
+-			"DRM_UT_CORE",
+-			"DRM_UT_DRIVER",
+-			"DRM_UT_KMS",
+-			"DRM_UT_PRIME",
+-			"DRM_UT_ATOMIC",
+-			"DRM_UT_VBL",
+-			"DRM_UT_STATE",
+-			"DRM_UT_LEASE",
+-			"DRM_UT_DP",
+-			"DRM_UT_DRMRES");
++DRM_CLASSMAP_USE(drm_debug_classes);
+ 
+ MODULE_PARM_DESC(config, "option string to pass to driver core");
+ static char *nouveau_config;
+diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
+index 9cc473e5d353..905fc25bf65a 100644
+--- a/include/drm/drm_print.h
++++ b/include/drm/drm_print.h
+@@ -140,6 +140,14 @@ enum drm_debug_category {
+ 	DRM_UT_DRMRES
+ };
+ 
++#ifdef CONFIG_DRM_USE_DYNAMIC_DEBUG
++#define DRM_CLASSMAP_DEFINE(...) DYNDBG_CLASSMAP_DEFINE(__VA_ARGS__)
++#define DRM_CLASSMAP_USE(name)   DYNDBG_CLASSMAP_USE(name)
++#else
++#define DRM_CLASSMAP_DEFINE(...)
++#define DRM_CLASSMAP_USE(name)
++#endif
 +
-+if [[ "$1" = "TRACE" ]] ; then
-+
-+    # rmmod modules to clear their possibly modified state
-+    ifrmmod test_dynamic_debug_submod
-+    ifrmmod test_dynamic_debug
-+
-+    for test in "${trace_tests[@]}"
-+    do
-+	$test
-+	echo ""
-+    done
-+fi
-+
-+# leave modules in place at end
-+# so that evidence of mishap is present
-+
- echo -en "${GREEN}# Done on: "
- date
+ static inline bool drm_debug_enabled_raw(enum drm_debug_category category)
+ {
+ 	return unlikely(__drm_debug & BIT(category));
 -- 
 2.44.0
 
