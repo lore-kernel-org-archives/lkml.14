@@ -1,57 +1,57 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B839713C905;
-	Mon, 29 Apr 2024 19:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E09613BAEE;
+	Mon, 29 Apr 2024 19:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714419577; cv=none; b=uVEexxTvrT1spvZxy9Vb2ES4RrBbUi7uJwv2xQ8DYoZokDfcvX2RU/mS38SwnrXsWZQc80AmQVieMVBuahBcYrJg9a7SwGbEAGKNPJ9XFX7tfBVrnqhX53gwaR62JFpOZg16k0WuFuCxlSRRoUjRn3ciMMyfXtbAUoOH9GKIFME=
+	t=1714419579; cv=none; b=qD/Mbtwnw/PraB9ZkjeGcicag0/6bijEBxvJm/w5aX5ePtAAcLNB+9ioeGHG+fq3ah/8pNtC5JmoeN/wE0FNvv7HDxDmNBXcHj85aFBJqMbZYQxudAYkfUrMzE5oexcIN+1LuhgNwDOxh452A/70fdgfP6waxAljvs/2rtlYyJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714419577; c=relaxed/simple;
-	bh=cbGNy8oRP5j6w2LmDVqbEZBzv/tKmE/tTg++QyjnhhA=;
+	s=arc-20240116; t=1714419579; c=relaxed/simple;
+	bh=hDuGJYbSCuq3w/gVpmXJ6pwkCmpr+qtFTnd3/EzNJNk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kgMbJOIMSjNy4HN1ZgTNior2fXyVTLZQRmfIfr1acQ12Mcdom27WQzpL9yU5r2r5tG1ow9GGb/Lx15Zz69IyRejhSCxY/0tBOiEkc0Vds5wY32sAJTyiJb5UIXyUnqQPONyq/hINzDUEOcTepwwR59pMar1MJl3+PedhbOS+/mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ikArP1aG; arc=none smtp.client-ip=209.85.166.54
+	 MIME-Version; b=lo9bH6iAh/TsHwtydsc/RE3+VzWftSOcuiqbzAfrnnsvCWeCtKh/3eWT+6mbzLIlS88lLH7hp9rmkamLKugBWDdr31B9Rs+YKRuw07Bg6jNKeAG09DievpNsFOibSBJy+3dc2hVpgzyqjQ38v4mGkwyChRuyKX3LM//iJ3ou2wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7CU3nDV; arc=none smtp.client-ip=209.85.166.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikArP1aG"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7de95c7851dso238409539f.3;
-        Mon, 29 Apr 2024 12:39:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7CU3nDV"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7da3ec3e044so232698739f.2;
+        Mon, 29 Apr 2024 12:39:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714419575; x=1715024375; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714419577; x=1715024377; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f7XDhXTeJoMWhkzTMSqQ0RhDu3HmDRaZUb49U4GCNsc=;
-        b=ikArP1aGs/QNps2aKA+ZWWCyPNOjaTe0GEkYvUEWEXhR4a4l7CppPCPZFpDajrk5tf
-         X6FARrkL6Ahj22CEaTgLFTSna0OQpHh4xZRiPLtHnFJI+MV0aoaUzn8QI2T+UKFwkU5X
-         wO5cKV2ednluuzpDvnbfcQfO5IfZM5aF+8Jk0FC8Chu5+QcOusz28FP8jWwleONSirV9
-         dKeTHn09jlHBGrHZXBCoowWQEdt3NtjuGOvODl2W4Ul12veBmOMHK1t0CsHU5KVLVLQA
-         NmkXpMCbdLrtLMoU/BmpFTbC9PF/G/LVOalvzYcigo5GSPYr3UUWJ1XIKvjIMTEM7XH0
-         aexA==
+        bh=8dgWj2cFA2MU3UxaMwN/AH6DmAyC9gLaTAViD4Tt0Ck=;
+        b=B7CU3nDV2a5VcNgMakmzUo5JBGVd+xiUhz1qyD52BzSEmUEPHreJwIiWsDVpyOou3o
+         kWSG3GOwZ5mGKFm4fuVayjoxe/1lZOxl9TEfJeLNVYgOz67IsT9JOmRnlKEm4FuhojFa
+         +kuWws718f1D23ovpskipV+yEJb9UFwH053h06nK/3fVg7hdHAESxwvLX6ovYI7rdfsM
+         ZCd1tWZIwlIlujmOCKXj3XGslhnfWTU+oWEEP10+jQBFooIx+XRmgFJyVcWmiRWbYzbx
+         O37TI3SyICUXc9GRHAG5nEqaR/t9bM5yYot6IhmP9RVlNBgnh3SMdor6baUUmnSnvB7J
+         SWIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714419575; x=1715024375;
+        d=1e100.net; s=20230601; t=1714419577; x=1715024377;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f7XDhXTeJoMWhkzTMSqQ0RhDu3HmDRaZUb49U4GCNsc=;
-        b=vqGhf+9QonXFXMJSPijyN0a10tm/kIrpM8QPNxCMuN6LSN7rMkA37sgoMHY1QN9w14
-         WCGOW51F/ngHFU0V7Uj4Wfv0TWdVw6AgfPdHl/DlC147ZYOeDQJIpX8Fu6ABuoM5V9hR
-         qRtZefXWdjnWfjJt7l0jGWm/sDTyaGqIoL7S80r6TwZgYTEMklKsBhDxfaosWaHLYu2v
-         19g6ghXMgRq9nqDBYtpByuZDbjf7yz5pFaEEude2attC7SIocSdFHAk8YcRPKqZHN4G6
-         tRiX0Qkb7/Sgc8m5N5MgsOxJjjjVqR8wAHzulWuFXwhS2u9fADrL8cdI8HJYtVPxsNBJ
-         Injw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnxsY4NBpDrlThg1h5Ythx0hotczwEXKEnVUW2VTon5icgG7X/GJy5l5DqmJGrOccTDtR6KtD1pEeKc2bo1n830zFgLdlzn09QHAALisPaFnYRKd9nknIoBqF5A1AWapi95fIHPnF6
-X-Gm-Message-State: AOJu0YxMkz1iWc861KkvbDpmrq0nOMUnVr1Hn1r0vWpPcZ6i7t0hWCwy
-	LrbV2HBpmEOo+/EiJZpe4gM+KRVxdMtSRqzYvYazuKBY4WLpDLXi
-X-Google-Smtp-Source: AGHT+IHJ/J5CefPQItxbTqpcVctn5XpjkZ7VwJHP2udddod5gEHQAu9X47g8K13Y1gCMh2a+kWL2bg==
-X-Received: by 2002:a5e:d717:0:b0:7de:da98:4d10 with SMTP id v23-20020a5ed717000000b007deda984d10mr998566iom.17.1714419575074;
-        Mon, 29 Apr 2024 12:39:35 -0700 (PDT)
+        bh=8dgWj2cFA2MU3UxaMwN/AH6DmAyC9gLaTAViD4Tt0Ck=;
+        b=oBzN1bU73IG3YmrmoaGkoz1dreFe2KTdNgUXnwTjP+tCQKEm6I8tSTBlYZx7Nx2bku
+         6+e2E8G+S/vl0uQLe1PTPVkRWwyncRYvEzpnlmzihyoW5l5kKpHJFYPLXBNSbUaqz4Bk
+         eh2w39TTIf8SXOAmAbYQlMvy9W8Skj3BHG7V4DaSg4Ow2k3wqs24mpAXUcfrpA43kKgB
+         SmzspKefGUNHvYumj2lxKq+1BMxZxy22SdkQPZB4Sh8nP96Hafh0/kJxy+FJlIQNaVLC
+         MH+Kaq3Df/n91bd+PmUACPpXjXKzcSZBN34bdXZmsbOnziOmxTbWcR6hPOYuA4FSi7MF
+         z0rA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDNqrRRwX0w1++HLZNZ4I823EngH3Qz4D+f8d3BLRqZA6NpKOfYYHDtNcNEcgNVsyLtjgEZ2aOuPI5rDwRADEV4Qe3/ctucMuzw7imQ0PfdqRxG8J5iVCOKLrNLQVOeVfnTj/b4TWH
+X-Gm-Message-State: AOJu0YzqQbS2tmk/MMq3/IOwliznOffcGOTWmvQOINlvExAVlaqbg4qy
+	bdeF3ApcrtSmnGo+1DXHvopxvvJnicZFSy6fk3iIbLmqUeWfjv5w
+X-Google-Smtp-Source: AGHT+IEs24YTwILUt5MHKr0F0OyxCq+SxhIGz3ARX0AwMIA0GR+8INeYUiHTkHCKHU43qMQt+OxxMA==
+X-Received: by 2002:a05:6602:4b0f:b0:7de:c308:76e2 with SMTP id eo15-20020a0566024b0f00b007dec30876e2mr976745iob.3.1714419577342;
+        Mon, 29 Apr 2024 12:39:37 -0700 (PDT)
 Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
-        by smtp.googlemail.com with ESMTPSA id y16-20020a056602165000b007de9f92dc57sm2325105iow.16.2024.04.29.12.39.33
+        by smtp.googlemail.com with ESMTPSA id y16-20020a056602165000b007de9f92dc57sm2325105iow.16.2024.04.29.12.39.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 12:39:33 -0700 (PDT)
+        Mon, 29 Apr 2024 12:39:36 -0700 (PDT)
 From: Jim Cromie <jim.cromie@gmail.com>
 To: jbaron@akamai.com,
 	gregkh@linuxfoundation.org,
@@ -72,9 +72,9 @@ Cc: ukaszb@chromium.org,
 	yanivt@google.com,
 	bleung@google.com,
 	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v8 26/35] selftests-dyndbg: add test_mod_submod
-Date: Mon, 29 Apr 2024 13:39:12 -0600
-Message-ID: <20240429193921.66648-7-jim.cromie@gmail.com>
+Subject: [PATCH v8 28/35] dyndbg-doc: explain flags parse 1st
+Date: Mon, 29 Apr 2024 13:39:14 -0600
+Message-ID: <20240429193921.66648-9-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240429193921.66648-1-jim.cromie@gmail.com>
 References: <20240429193921.66648-1-jim.cromie@gmail.com>
@@ -86,112 +86,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This new test-fn runs 3 module/submodule modprobe scenarios, variously
-using both the generic dyndbg=<queries> modprobe arg, and the
-test-module's classmap-params to manipulate the test-mod*'s pr_debugs.
-In all cases, the current flag-settings are counted and tested vs
-expectations.
+When writing queries to >control, flags are parsed 1st, since they are
+the only required field.  So if the flags draw an error, then keyword
+errors aren't reported.  This can be mildly confusing/annoying, so
+explain it instead.
 
-The 3rd scenario recapitulates the DRM_USE_DYNAMIC_DEBUG=y failure.
-
-1. 2 modprobes (super then sub), with separate dyndbg=class-settings
-   check module specific flag settings
-
-2. modprobe submod, supermod is auto-loaded
-   set supermod class-params
-   check expected enablements in super & submod
-
-3. modprobe super, with param=setting (like drm.debug=0x1ef)
-   modprobe submod
-   validate submod's class'd pr_debugs get properly enabled
-
-The test uses multi-queries, with both commas and percents (to avoid
-spaces and quoting).  This is the main reason the test wasn't earlier
-in the patchset, closer to the classmap patches its validating.
-
-With some tedium, the tests could be refactored to split out early
-tests which avoid multi-cmds, and test only the class-params.
+This note could be moved up to just after the grammar id's the flags,
+and before the match-spec is detailed.  Opinions ?
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- .../dynamic_debug/dyndbg_selftest.sh          | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ Documentation/admin-guide/dynamic-debug-howto.rst | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh b/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
-index ddb04c0a7fd2..54acee58cb4e 100755
---- a/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
-+++ b/tools/testing/selftests/dynamic_debug/dyndbg_selftest.sh
-@@ -250,10 +250,70 @@ function test_percent_splitting {
-     ifrmmod test_dynamic_debug
- }
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index 7b570f29ae98..ccf3704f2143 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -106,6 +106,16 @@ The match-spec's select *prdbgs* from the catalog, upon which to apply
+ the flags-spec, all constraints are ANDed together.  An absent keyword
+ is the same as keyword "*".
  
-+function test_mod_submod {
-+    echo -e "${GREEN}# TEST_MOD_SUBMOD ${NC}"
-+    ifrmmod test_dynamic_debug_submod
-+    ifrmmod test_dynamic_debug
-+    ddcmd =_
++Note: because the match-spec can be empty, the flags are checked 1st,
++then the pairs of keyword values.  Flag errs will hide keyword errs:
 +
-+    # modprobe with class enablements
-+    modprobe test_dynamic_debug dyndbg=class,D2_CORE,+pf%class,D2_KMS,+pt%class,D2_ATOMIC,+pm
-+    check_match_ct '\[test_dynamic_debug\]' 23 -r
-+    check_match_ct =pf 1
-+    check_match_ct =pt 1
-+    check_match_ct =pm 1
++  bash-5.2# ddcmd mod bar +foo
++  dyndbg: read 13 bytes from userspace
++  dyndbg: query 0: "mod bar +foo" mod:*
++  dyndbg: unknown flag 'o'
++  dyndbg: flags parse failed
++  dyndbg: processed 1 queries, with 0 matches, 1 errs
 +
-+    modprobe test_dynamic_debug_submod
-+    check_match_ct test_dynamic_debug_submod 23 -r
-+    check_match_ct '\[test_dynamic_debug\]' 23 -r
-+    check_match_ct test_dynamic_debug 46 -r
-+
-+    # change classes again, this time submod too
-+    ddcmd class,D2_CORE,+mf%class,D2_KMS,+lt%class,D2_ATOMIC,+ml "# add some prefixes"
-+    check_match_ct =pmf 1 -v
-+    check_match_ct =plt 1 -v
-+    check_match_ct =pml 1 -v
-+    #  submod changed too
-+    check_match_ct =mf 1 -v
-+    check_match_ct =lt 1 -v
-+    check_match_ct =ml 1 -v
-+
-+    # now work the classmap-params
-+    # fresh start, to clear all above flags (test-fn limits)
-+    ifrmmod test_dynamic_debug_submod
-+    ifrmmod test_dynamic_debug
-+    modprobe test_dynamic_debug_submod # get supermod too
-+
-+    echo 1 > /sys/module/test_dynamic_debug/parameters/p_disjoint_bits
-+    echo 4 > /sys/module/test_dynamic_debug/parameters/p_level_num
-+    # 2 mods * ( V1-3 + D2_CORE )
-+    check_match_ct =p 8 -v
-+    echo 3 > /sys/module/test_dynamic_debug/parameters/p_disjoint_bits
-+    echo 0 > /sys/module/test_dynamic_debug/parameters/p_level_num
-+    # 2 mods * ( D2_CORE, D2_DRIVER )
-+    check_match_ct =p 4 -v
-+    echo 0x16 > /sys/module/test_dynamic_debug/parameters/p_disjoint_bits
-+    echo 0 > /sys/module/test_dynamic_debug/parameters/p_level_num
-+    # 2 mods * ( D2_DRIVER, D2_KMS, D2_ATOMIC )
-+    check_match_ct =p 6 -v
-+
-+    # recap DRM_USE_DYNAMIC_DEBUG regression
-+    ifrmmod test_dynamic_debug_submod
-+    ifrmmod test_dynamic_debug
-+    # set super-mod params
-+    modprobe test_dynamic_debug p_disjoint_bits=0x16 p_level_num=5
-+    check_match_ct =p 7 -v
-+    modprobe test_dynamic_debug_submod
-+    # see them picked up by submod
-+    check_match_ct =p 14 -v
-+}
-+
- tests_list=(
-     basic_tests
-+    # these require test_dynamic_debug*.ko
-     comma_terminator_tests
-     test_percent_splitting
-+    test_mod_submod
- )
- 
- # Run tests
+ A match specification is a keyword, which selects the attribute of
+ the callsite to be compared, and a value to compare against.  Possible
+ keywords are:::
 -- 
 2.44.0
 
