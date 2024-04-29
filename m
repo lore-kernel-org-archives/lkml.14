@@ -1,123 +1,118 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF07A12B73;
-	Mon, 29 Apr 2024 19:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB33B12B73
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714418551; cv=none; b=GlOIVpjHpfLwAJZ237mj6OZN+dDu4rmCKi+GUtbdIgDdNcYyJzjmHzqk1cIvaYaGuZQjEMgSj8zSmoHWUy2dTeeGtUQyw1CPo3dKLayxTMwzrD1ddm3z2oGU8T6BxH3acoFIaa/Vd7dItchJjRjsCUrw9TQMZbBg90IFSo+Fz1o=
+	t=1714418746; cv=none; b=Q5MFNlV4yWk5FzyQU0goD5qyoJ2J+0F2j/cIHDnAOpxf+5qMV1PKNXnFRjhj4JWG4DtiHqboR+Fg2/Iy2iQx/zh8813o9jwWCHcX/wdJC7zUT0InjUA18pUjGOybHg8N7Qt33I/edXzSDFjvd/wTOuupQEhjvkGsBhc4NthE6nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714418551; c=relaxed/simple;
-	bh=6/2fDYkZ0Fc/sJSvHR4r/NMjtwcjsKhDUHRFLAmNtSc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nVtDbaA7FJJpdNLnF2zERXkU1VFcD2/Zmjv78YSlXEH9kwdgm7erf7CP+Wa1hEmrUPNQ6KHZFP+vbuCDvqmuofAZVROR5xis+yV7QYT8+fIuzS5/I8C6zGIqhb7KiUTgx1qp0nYZfWh/l3adVLO4tIizGLt0fYrkATa7AHI+bH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QbI2AEXd; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714418746; c=relaxed/simple;
+	bh=3PXhxV7iXwVfyBsouE+oC23MF65qM+eZR7kMA49Oe2w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HCHuIde0PQBvMH03n67+qkkJEKq0FiQyFGHsYBpFJH72CeL6At0m+klRoo410+s19caHcqSiS3ZUR1SRGSJXGcgL1YV+RuQoA/ZsiN50PUaeIqfWuhtNzXcEwnOEUlGLldWS//uk/R1XklYzUA+zOpAQpOTv9wJtiFFnEBr5RCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=M8CMfpj1; arc=none smtp.client-ip=45.157.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbI2AEXd"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e0933d3b5fso14139841fa.2;
-        Mon, 29 Apr 2024 12:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714418548; x=1715023348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cpd1WYildkuoLom26860P+BikCx3lu1sKsq7QDlDPG8=;
-        b=QbI2AEXdTTDJQB662zdIT1aekFHJfEt14OcrX2kZOv0gw1Ud01Ziz3SalF24haOlrD
-         Tr8icVrTMUs/6anFU1xd79it5Xvu+bNtzkIwNxa932qHaqJ/bJkc1ga9TBGixl7l4zk2
-         xHEpSHMvbMvPNzPvh43d49hYzrIjrowKxvDux7DmHDiTc8T3VuaG5fGdkje5qvkTmaOJ
-         U/4Zm0m9D6kK9NBxvYAFku74mDYhHLZRKwCMFod9sP/5OvHmT4NiLLDh1IyxOGGcSoZV
-         lvNVjqaYIWw8g1BFkmjL7cqscEYqBF/ZrUd/dcFVA/N0a92do3mBm2PwXlt0YxyIYRBv
-         Wlkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714418548; x=1715023348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cpd1WYildkuoLom26860P+BikCx3lu1sKsq7QDlDPG8=;
-        b=g2ELdxRPQQOldc+9tl49txyWOA/yp/AWCthINvOSZaGO43D5fEcXJZ/SLU3sIC/ume
-         MHh5/zat8UTndih5KheO9+Q02yKowjuWfsqqlz1OnVRyBPJP7/OTPRh2guCEB7VNgdwX
-         f4BSyRMjJg99LQBBdi5KyGGRBkfp7dmurPgEgck5d2ZzZ8SiUDpSVy6r80aY868z0EXt
-         nqPLjS6ejTGSL1rjZXyPJ4pccOZQ/yempJD/niSlBD3/jL4+YrAW1c1pRsEhylY7dUov
-         MEfPfAmcofIMiNvGjwMxIOpx4XuMu3R0n8jWmV7ErDZxuXLl/VZu2jeCobN2+rANP/bv
-         LM/g==
-X-Forwarded-Encrypted: i=1; AJvYcCX9XNRoZ2ew52jmZplaxDNG5ldpMIW6nAQ9Gwse+qu/W3dieaN+V+jFUbkj+jxt7pGEvRr8ZQm1T16i2RmEWxvtnQGBOXXO0iAX6bjr1aGfpHUxNzFK7FjQ5Wiali2dlH/m2JvOlcB5A2zEK91gAlhL4bIP/tuGFDDS8a9Rt7ZuNvfR24fMkLBf
-X-Gm-Message-State: AOJu0Yy9mzOovZcdcq260h9QQdlzKXo6QAfyZxwocNEy0tktqa4eWS3Z
-	tZvYeYxYW9mr84NF/uqUbyez4fqypTh3iXQDksikrpJuFZmRwjBj8bfNUGREgmMoIE92tWYpmRj
-	7qKzFdy8F4N3PX4wfeDRbFDtL6F4=
-X-Google-Smtp-Source: AGHT+IGSowF/+xWsJ96Y/dHBc0kV+WSElRsdFJhZmSTk9Dz1YbSkQSIgU2LDwJkdHchcBZki+qVTxZok5w4qnCfrVlQ=
-X-Received: by 2002:a2e:b6d1:0:b0:2d6:e2aa:6801 with SMTP id
- m17-20020a2eb6d1000000b002d6e2aa6801mr6798806ljo.46.1714418547561; Mon, 29
- Apr 2024 12:22:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="M8CMfpj1"
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VStRv0dmzzCTK;
+	Mon, 29 Apr 2024 21:19:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1714418362;
+	bh=3PXhxV7iXwVfyBsouE+oC23MF65qM+eZR7kMA49Oe2w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=M8CMfpj1OT5bUx1X0iG6sJ409K/5jXoYP9l431ZQqVxYSgbIFO8GxqSowRMASLcmM
+	 /D+uQppb1BHgHFBtunS1XH/NvP/Dk+syLdQMsAu/3QH0FqT9pXMifVwvOHwmRiiH1U
+	 fsgm5Kwsys0ttBfdiunMjFerVtbMjxKUbP9Vgu4E=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VStRt3TLWzXPb;
+	Mon, 29 Apr 2024 21:19:22 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Mark Brown <broonie@kernel.org>,
+	Shengyu Li <shengyu.li.evgeny@gmail.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	"David S . Miller" <davem@davemloft.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Will Drewry <wad@chromium.org>,
+	kernel test robot <oliver.sang@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v3 8/9] selftests/harness: Share _metadata between forked processes
+Date: Mon, 29 Apr 2024 21:19:10 +0200
+Message-ID: <20240429191911.2552580-9-mic@digikod.net>
+In-Reply-To: <20240429191911.2552580-1-mic@digikod.net>
+References: <20240429191911.2552580-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240429190500.30979-1-ryncsn@gmail.com> <20240429190500.30979-3-ryncsn@gmail.com>
- <Zi_xeKUSD6C8TNYK@casper.infradead.org>
-In-Reply-To: <Zi_xeKUSD6C8TNYK@casper.infradead.org>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 30 Apr 2024 03:22:10 +0800
-Message-ID: <CAMgjq7D5zwksHxh5c00U82BCsLxYj-_GevZZtAM8xNZO7p-RQQ@mail.gmail.com>
-Subject: Re: [PATCH v3 02/12] nilfs2: drop usage of page_index
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	"Huang, Ying" <ying.huang@intel.com>, Chris Li <chrisl@kernel.org>, 
-	Barry Song <v-songbaohua@oppo.com>, Ryan Roberts <ryan.roberts@arm.com>, Neil Brown <neilb@suse.de>, 
-	Minchan Kim <minchan@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	David Hildenbrand <david@redhat.com>, Yosry Ahmed <yosryahmed@google.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	linux-nilfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Tue, Apr 30, 2024 at 3:14=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Tue, Apr 30, 2024 at 03:04:50AM +0800, Kairui Song wrote:
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > page_index is only for mixed usage of page cache and swap cache, for
-> > pure page cache usage, the caller can just use page->index instead.
-> >
-> > It can't be a swap cache page here (being part of buffer head),
-> > so just drop it, also convert it to use folio.
-> >
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > Cc: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-> > Cc: linux-nilfs@vger.kernel.org
-> > ---
-> >  fs/nilfs2/bmap.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/fs/nilfs2/bmap.c b/fs/nilfs2/bmap.c
-> > index 383f0afa2cea..f4e5df0cd720 100644
-> > --- a/fs/nilfs2/bmap.c
-> > +++ b/fs/nilfs2/bmap.c
-> > @@ -453,9 +453,8 @@ __u64 nilfs_bmap_data_get_key(const struct nilfs_bm=
-ap *bmap,
-> >       struct buffer_head *pbh;
-> >       __u64 key;
-> >
-> > -     key =3D page_index(bh->b_page) << (PAGE_SHIFT -
-> > -                                      bmap->b_inode->i_blkbits);
-> > -     for (pbh =3D page_buffers(bh->b_page); pbh !=3D bh; pbh =3D pbh->=
-b_this_page)
-> > +     key =3D bh->b_folio->index << (PAGE_SHIFT - bmap->b_inode->i_blkb=
-its);
-> > +     for (pbh =3D folio_buffers(bh->b_folio); pbh !=3D bh; pbh =3D pbh=
-->b_this_page)
-> >               key++;
-> >
-> >       return key;
->
-> Why isn't this entire function simply:
->
->         return bh->b_blocknr;
->
+Unconditionally share _metadata between all forked processes, which
+enables to actually catch errors which were previously ignored.
 
-Nice idea, I didn't plan for extra clean up and test for fs code, but
-this might be OK to have, will check it.
+This is required for a following commit replacing vfork() with clone3()
+and CLONE_VFORK (i.e. not sharing the full memory) .  It should also be
+useful to share _metadata to extend expectations to test process's
+forks.  For instance, this change identified a wrong expectation in
+pidfd_setns_test.
+
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Will Drewry <wad@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20240429191911.2552580-9-mic@digikod.net
+---
+
+Changes since v1:
+* Extract change from a bigger patch (suggested by Kees).
+---
+ tools/testing/selftests/kselftest_harness.h | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 201040207c85..abf2ffd2094f 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -430,19 +430,17 @@ static inline pid_t clone3_vfork(void)
+ 			kill(getpid(), WTERMSIG(status)); \
+ 		__test_check_assert(_metadata); \
+ 	} \
+-	static struct __test_metadata \
+-		      _##fixture_name##_##test_name##_object = { \
+-		.name = #test_name, \
+-		.fn = &wrapper_##fixture_name##_##test_name, \
+-		.fixture = &_##fixture_name##_fixture_object, \
+-		.termsig = signal, \
+-		.timeout = tmout, \
+-		.teardown_parent = false, \
+-	 }; \
+ 	static void __attribute__((constructor)) \
+ 			_register_##fixture_name##_##test_name(void) \
+ 	{ \
+-		__register_test(&_##fixture_name##_##test_name##_object); \
++		struct __test_metadata *object = mmap(NULL, sizeof(*object), \
++			PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0); \
++		object->name = #test_name; \
++		object->fn = &wrapper_##fixture_name##_##test_name; \
++		object->fixture = &_##fixture_name##_fixture_object; \
++		object->termsig = signal; \
++		object->timeout = tmout; \
++		__register_test(object); \
+ 	} \
+ 	static void fixture_name##_##test_name( \
+ 		struct __test_metadata __attribute__((unused)) *_metadata, \
+-- 
+2.44.0
+
