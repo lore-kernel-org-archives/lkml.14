@@ -1,191 +1,250 @@
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535A4EED4
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 07:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895E112E7C
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 07:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714376501; cv=none; b=GyrlJP+P7fbTxykEfYS+YMY3lJQ9btQyPLGREeOjxCmgPMqG5xXP35qUXqUEi1OoMUEuDY3fOZE0zsvgobiDdhMLIJwfFekpDQ0e7NfcSi3tC2FLBQ+8Fk/PE/f/mfW/qfJfgMUefrQaVeYFTG7w7adCc7E7iyWhdWnwfSAFFoI=
+	t=1714376755; cv=none; b=JN82MLADRoAj24ST/M+GX24BPomq8aUhhIkDDTpykdG3ug/O3LXAlAzsF25j3HilG+AMIWmh1VNRdraq19plXAaFgq5OLJnmEr2HaIjklv9xqSXIpj0pjfbyWSwAb9u+dxPiNIRxOfOfvsvLGsJbTxNoQeSaYZUi1HPBa5//Y1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714376501; c=relaxed/simple;
-	bh=6snhrLpZm5fXvKkspgAPrTi0Vx4FvzZhbR2jxq0lRkU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RmQXpNkuMzCObydCnBHeyVI2kN27GrFIZc0x1JxCUPbuR80rviDVWdLkxJp/4DwNScIKGHmhoXjIB7O/CxGZ+IKNQkllmj689LIiegwH0GBxgsJJ1hE2ju7v7SAitGcY6Qtg4Fu0aMXC622iyJVLBeSSQZ4bBghHNwPdph+B5lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 29 Apr
- 2024 15:36:25 +0800
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Apr
- 2024 15:36:25 +0800
-Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Mon, 29 Apr 2024 15:36:24 +0800
-From: Billy Tsai <billy_tsai@aspeedtech.com>
-To: <alexandre.belloni@bootlin.com>, <dylan_hung@aspeedtech.com>,
-	<gustavoars@kernel.org>, <keescook@chromium.org>,
-	<billy_tsai@aspeedtech.com>, <linux-i3c@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] i3c: dw: Add hot-join support.
-Date: Mon, 29 Apr 2024 15:36:24 +0800
-Message-ID: <20240429073624.256830-1-billy_tsai@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1714376755; c=relaxed/simple;
+	bh=f0rWuCd3N1DHxBQyLLk4t0jedNeLgIopaOYz6BLW66w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oVUMgKnCeUTccJRmdKohMKWmG53IPoDKH15XrB46DOA1H+6b4CbzG2W7nOE1jhpb275srFM/FkMPrh0LlHfIuQcR1Ed7D2FQeyuyg98p6e/+3yo+Ri3btpph5jTmVKOClKuL73OCMzONLLEG3Q0tUGutVt8sJIeYKDJFDVZ3xvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VSZzy1DMwz1RBGN;
+	Mon, 29 Apr 2024 15:42:38 +0800 (CST)
+Received: from kwepemm600020.china.huawei.com (unknown [7.193.23.147])
+	by mail.maildlp.com (Postfix) with ESMTPS id 10AEF180065;
+	Mon, 29 Apr 2024 15:45:46 +0800 (CST)
+Received: from [10.174.179.160] (10.174.179.160) by
+ kwepemm600020.china.huawei.com (7.193.23.147) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 29 Apr 2024 15:45:44 +0800
+Message-ID: <e936b9cd-39ce-1ae1-b348-3000f7e47a45@huawei.com>
+Date: Mon, 29 Apr 2024 15:45:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: Fail (TWMBX02.aspeed.com: domain of billy_tsai@aspeedtech.com
- does not designate 192.168.10.10 as permitted sender)
- receiver=TWMBX02.aspeed.com; client-ip=192.168.10.10;
- helo=twmbx02.aspeed.com;
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [RFC PATCH v2 1/2] percpu_counter: introduce atomic mode for
+ percpu_counter
+Content-Language: en-US
+To: Dennis Zhou <dennisszhou@gmail.com>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<akpm@linux-foundation.org>, <shakeelb@google.com>, <jack@suse.cz>,
+	<surenb@google.com>, <kent.overstreet@linux.dev>, <mhocko@suse.cz>,
+	<vbabka@suse.cz>, <yuzhao@google.com>, <yu.ma@intel.com>,
+	<wangkefeng.wang@huawei.com>, <sunnanyong@huawei.com>
+References: <20240418142008.2775308-1-zhangpeng362@huawei.com>
+ <20240418142008.2775308-2-zhangpeng362@huawei.com>
+ <ZithwiPpjke2qbrv@snowbird>
+From: "zhangpeng (AS)" <zhangpeng362@huawei.com>
+In-Reply-To: <ZithwiPpjke2qbrv@snowbird>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600020.china.huawei.com (7.193.23.147)
 
-Add hot-join support for dw i3c master controller.
-By default, the hot-join acknowledgment is disabled, and the hardware will
-automatically send the DISEC CCC when it receives the hot-join request.
-Users can use the sys entry to enable it.
+On 2024/4/26 16:11, Dennis Zhou wrote:
 
-Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
----
- drivers/i3c/master/dw-i3c-master.c | 67 ++++++++++++++++++++++++------
- drivers/i3c/master/dw-i3c-master.h |  2 +
- 2 files changed, 56 insertions(+), 13 deletions(-)
+> On Thu, Apr 18, 2024 at 10:20:07PM +0800, Peng Zhang wrote:
+>> From: ZhangPeng <zhangpeng362@huawei.com>
+>>
+>> Depending on whether counters is NULL, we can support two modes:
+>> atomic mode and perpcu mode. We implement both modes by grouping
+>> the s64 count and atomic64_t count_atomic in a union. At the same time,
+>> we create the interface for adding and reading in atomic mode and for
+>> switching atomic mode to percpu mode.
+>>
+>> Suggested-by: Jan Kara <jack@suse.cz>
+>> Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>>   include/linux/percpu_counter.h | 43 +++++++++++++++++++++++++++++++---
+>>   lib/percpu_counter.c           | 31 ++++++++++++++++++++++--
+>>   2 files changed, 69 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
+>> index 3a44dd1e33d2..160f9734c0bb 100644
+>> --- a/include/linux/percpu_counter.h
+>> +++ b/include/linux/percpu_counter.h
+>> @@ -21,7 +21,13 @@
+>>   
+>>   struct percpu_counter {
+>>   	raw_spinlock_t lock;
+>> -	s64 count;
+>> +	/* Depending on whether counters is NULL, we can support two modes,
+>> +	 * atomic mode using count_atomic and perpcu mode using count.
+>> +	 */
+>> +	union {
+>> +		s64 count;
+>> +		atomic64_t count_atomic;
+>> +	};
+>>   #ifdef CONFIG_HOTPLUG_CPU
+>>   	struct list_head list;	/* All percpu_counters are on a list */
+>>   #endif
+>> @@ -32,14 +38,14 @@ extern int percpu_counter_batch;
+>>   
+>>   int __percpu_counter_init_many(struct percpu_counter *fbc, s64 amount,
+>>   			       gfp_t gfp, u32 nr_counters,
+>> -			       struct lock_class_key *key);
+>> +			       struct lock_class_key *key, bool switch_mode);
+> Nit: the lock_class_key at the end.
 
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index 276153e10f5a..0ec00e644bd4 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -1136,6 +1136,23 @@ static void dw_i3c_master_free_ibi(struct i3c_dev_desc *dev)
- 	data->ibi_pool = NULL;
- }
- 
-+static void dw_i3c_master_enable_sir_signal(struct dw_i3c_master *master, bool enable)
-+{
-+	u32 reg;
-+
-+	reg = readl(master->regs + INTR_STATUS_EN);
-+	reg &= ~INTR_IBI_THLD_STAT;
-+	if (enable)
-+		reg |= INTR_IBI_THLD_STAT;
-+	writel(reg, master->regs + INTR_STATUS_EN);
-+
-+	reg = readl(master->regs + INTR_SIGNAL_EN);
-+	reg &= ~INTR_IBI_THLD_STAT;
-+	if (enable)
-+		reg |= INTR_IBI_THLD_STAT;
-+	writel(reg, master->regs + INTR_SIGNAL_EN);
-+}
-+
- static void dw_i3c_master_set_sir_enabled(struct dw_i3c_master *master,
- 					  struct i3c_dev_desc *dev,
- 					  u8 idx, bool enable)
-@@ -1170,23 +1187,34 @@ static void dw_i3c_master_set_sir_enabled(struct dw_i3c_master *master,
- 	}
- 	writel(reg, master->regs + IBI_SIR_REQ_REJECT);
- 
--	if (global) {
--		reg = readl(master->regs + INTR_STATUS_EN);
--		reg &= ~INTR_IBI_THLD_STAT;
--		if (enable)
--			reg |= INTR_IBI_THLD_STAT;
--		writel(reg, master->regs + INTR_STATUS_EN);
--
--		reg = readl(master->regs + INTR_SIGNAL_EN);
--		reg &= ~INTR_IBI_THLD_STAT;
--		if (enable)
--			reg |= INTR_IBI_THLD_STAT;
--		writel(reg, master->regs + INTR_SIGNAL_EN);
--	}
-+	if (global)
-+		dw_i3c_master_enable_sir_signal(master, enable);
-+
- 
- 	spin_unlock_irqrestore(&master->devs_lock, flags);
- }
- 
-+static int dw_i3c_master_enable_hotjoin(struct i3c_master_controller *m)
-+{
-+	struct dw_i3c_master *master = to_dw_i3c_master(m);
-+
-+	dw_i3c_master_enable_sir_signal(master, true);
-+	writel(readl(master->regs + DEVICE_CTRL) & ~DEV_CTRL_HOT_JOIN_NACK,
-+	       master->regs + DEVICE_CTRL);
-+
-+	return 0;
-+}
-+
-+static int dw_i3c_master_disable_hotjoin(struct i3c_master_controller *m)
-+{
-+	struct dw_i3c_master *master = to_dw_i3c_master(m);
-+
-+	writel(readl(master->regs + DEVICE_CTRL) | DEV_CTRL_HOT_JOIN_NACK,
-+	       master->regs + DEVICE_CTRL);
-+
-+	return 0;
-+}
-+
- static int dw_i3c_master_enable_ibi(struct i3c_dev_desc *dev)
- {
- 	struct dw_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
-@@ -1326,6 +1354,8 @@ static void dw_i3c_master_irq_handle_ibis(struct dw_i3c_master *master)
- 
- 		if (IBI_TYPE_SIRQ(reg)) {
- 			dw_i3c_master_handle_ibi_sir(master, reg);
-+		} else if (IBI_TYPE_HJ(reg)) {
-+			queue_work(master->base.wq, &master->hj_work);
- 		} else {
- 			len = IBI_QUEUE_STATUS_DATA_LEN(reg);
- 			dev_info(&master->base.dev,
-@@ -1393,6 +1423,8 @@ static const struct i3c_master_controller_ops dw_mipi_i3c_ibi_ops = {
- 	.enable_ibi = dw_i3c_master_enable_ibi,
- 	.disable_ibi = dw_i3c_master_disable_ibi,
- 	.recycle_ibi_slot = dw_i3c_master_recycle_ibi_slot,
-+	.enable_hotjoin = dw_i3c_master_enable_hotjoin,
-+	.disable_hotjoin = dw_i3c_master_disable_hotjoin,
- };
- 
- /* default platform ops implementations */
-@@ -1412,6 +1444,14 @@ static const struct dw_i3c_platform_ops dw_i3c_platform_ops_default = {
- 	.set_dat_ibi = dw_i3c_platform_set_dat_ibi_nop,
- };
- 
-+static void dw_i3c_hj_work(struct work_struct *work)
-+{
-+	struct dw_i3c_master *master =
-+		container_of(work, typeof(*master), hj_work);
-+
-+	i3c_master_do_daa(&master->base);
-+}
-+
- int dw_i3c_common_probe(struct dw_i3c_master *master,
- 			struct platform_device *pdev)
- {
-@@ -1469,6 +1509,7 @@ int dw_i3c_common_probe(struct dw_i3c_master *master,
- 	if (master->ibi_capable)
- 		ops = &dw_mipi_i3c_ibi_ops;
- 
-+	INIT_WORK(&master->hj_work, dw_i3c_hj_work);
- 	ret = i3c_master_register(&master->base, &pdev->dev, ops, false);
- 	if (ret)
- 		goto err_assert_rst;
-diff --git a/drivers/i3c/master/dw-i3c-master.h b/drivers/i3c/master/dw-i3c-master.h
-index ab862c5d15fe..4ab94aa72252 100644
---- a/drivers/i3c/master/dw-i3c-master.h
-+++ b/drivers/i3c/master/dw-i3c-master.h
-@@ -57,6 +57,8 @@ struct dw_i3c_master {
- 
- 	/* platform-specific data */
- 	const struct dw_i3c_platform_ops *platform_ops;
-+
-+	struct work_struct hj_work;
- };
- 
- struct dw_i3c_platform_ops {
+Got it.
+
+>>   
+>>   #define percpu_counter_init_many(fbc, value, gfp, nr_counters)		\
+>>   	({								\
+>>   		static struct lock_class_key __key;			\
+>>   									\
+>>   		__percpu_counter_init_many(fbc, value, gfp, nr_counters,\
+>> -					   &__key);			\
+>> +					   &__key, false);		\
+>>   	})
+>>   
+>>   
+>> @@ -130,6 +136,20 @@ static inline bool percpu_counter_initialized(struct percpu_counter *fbc)
+>>   	return (fbc->counters != NULL);
+>>   }
+>>   
+>> +static inline s64 percpu_counter_atomic_read(struct percpu_counter *fbc)
+>> +{
+>> +	return atomic64_read(&fbc->count_atomic);
+>> +}
+>> +
+>> +static inline void percpu_counter_atomic_add(struct percpu_counter *fbc,
+>> +					     s64 amount)
+>> +{
+>> +	atomic64_add(amount, &fbc->count_atomic);
+>> +}
+>> +
+>> +int percpu_counter_switch_to_pcpu_many(struct percpu_counter *fbc,
+>> +				       u32 nr_counters);
+>> +
+>>   #else /* !CONFIG_SMP */
+>>   
+>>   struct percpu_counter {
+>> @@ -260,6 +280,23 @@ static inline bool percpu_counter_initialized(struct percpu_counter *fbc)
+>>   static inline void percpu_counter_sync(struct percpu_counter *fbc)
+>>   {
+>>   }
+>> +
+>> +static inline s64 percpu_counter_atomic_read(struct percpu_counter *fbc)
+>> +{
+>> +	return fbc->count;
+>> +}
+>> +
+>> +static inline void percpu_counter_atomic_add(struct percpu_counter *fbc,
+>> +					     s64 amount)
+>> +{
+>> +	percpu_counter_add(fbc, amount);
+>> +}
+>> +
+>> +static inline int percpu_counter_switch_to_pcpu_many(struct percpu_counter *fbc,
+>> +						     u32 nr_counters)
+>> +{
+>> +	return 0;
+>> +}
+>>   #endif	/* CONFIG_SMP */
+>>   
+>>   static inline void percpu_counter_inc(struct percpu_counter *fbc)
+>> diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
+>> index 44dd133594d4..95c4e038051a 100644
+>> --- a/lib/percpu_counter.c
+>> +++ b/lib/percpu_counter.c
+>> @@ -153,7 +153,7 @@ EXPORT_SYMBOL(__percpu_counter_sum);
+>>   
+>>   int __percpu_counter_init_many(struct percpu_counter *fbc, s64 amount,
+>>   			       gfp_t gfp, u32 nr_counters,
+>> -			       struct lock_class_key *key)
+>> +			       struct lock_class_key *key, bool switch_mode)
+>>   {
+>>   	unsigned long flags __maybe_unused;
+>>   	size_t counter_size;
+>> @@ -174,7 +174,8 @@ int __percpu_counter_init_many(struct percpu_counter *fbc, s64 amount,
+>>   #ifdef CONFIG_HOTPLUG_CPU
+>>   		INIT_LIST_HEAD(&fbc[i].list);
+>>   #endif
+>> -		fbc[i].count = amount;
+>> +		if (likely(!switch_mode))
+>> +			fbc[i].count = amount;
+>>   		fbc[i].counters = (void *)counters + (i * counter_size);
+>>   
+>>   		debug_percpu_counter_activate(&fbc[i]);
+>> @@ -357,6 +358,32 @@ bool __percpu_counter_limited_add(struct percpu_counter *fbc,
+>>   	return good;
+>>   }
+>>   
+>> +/*
+>> + * percpu_counter_switch_to_pcpu_many: Converts struct percpu_counters from
+>> + * atomic mode to percpu mode.
+>> + */
+>> +int percpu_counter_switch_to_pcpu_many(struct percpu_counter *fbc,
+>> +				       u32 nr_counters)
+>> +{
+>> +	static struct lock_class_key __key;
+> This is an improper use of lockdep. Now all of the percpu_counters
+> initialized on this path will key off of this lock_class_key.
+
+Sorry, I don't know much about lock_class_key. I may not understand the reason
+why it's not appropriate here. Could you please help me with the details?
+
+>> +	unsigned long flags;
+>> +	bool ret = 0;
+>> +
+>> +	if (percpu_counter_initialized(fbc))
+>> +		return 0;
+>> +
+>> +	preempt_disable();
+>> +	local_irq_save(flags);
+>> +	if (likely(!percpu_counter_initialized(fbc)))
+>> +		ret = __percpu_counter_init_many(fbc, 0,
+>> +					GFP_ATOMIC|__GFP_NOWARN|__GFP_ZERO,
+>> +					nr_counters, &__key, true);
+>> +	local_irq_restore(flags);
+>> +	preempt_enable();
+>> +
+>> +	return ret;
+>> +}
+> I'm staring at this API and I'm not in love with it. I think it hinges
+> on that there's one user of mm_stats prior hence it's safe. Generically
+> though, I can't see why this is safe.
+>
+> I need to give this a little more thought, but my gut reaction is I'd
+> rather this look like percpu_refcount where we can init dead minus the
+> percpu allocation. Maybe that's not quite right, but I'd feel better
+> about it than requiring external synchronization on a percpu_counter to
+> ensure that it's correct.
+
+Maybe it would be better if I change this API to the internal function of
+mm counter.
+
+Sorry again, maybe percpu_refcount is better, but I don't understand this
+sentence "we can init dead minus the percpu allocation." Please forgive my
+ignorance...
+
+Thank you very much for your review and valuable comments!
+
+>> +
+>>   static int __init percpu_counter_startup(void)
+>>   {
+>>   	int ret;
+>> -- 
+>> 2.25.1
+>>
+> Thanks,
+> Dennis
+
 -- 
-2.25.1
+Best Regards,
+Peng
 
