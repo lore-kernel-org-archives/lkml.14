@@ -1,267 +1,147 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2042.outbound.protection.outlook.com [40.107.236.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B5077F32;
-	Mon, 29 Apr 2024 12:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714395048; cv=fail; b=qyQqIMnkMv6kI0ZXzWvTbp13Oy5Ex2BHA1y1GhOMuOVVYOHnp3mq1VZgXQpq2/aWaBNFHsjFUMhIlgsiExhN6JpnhVv/Hpieyc9u7x3rCyKT1StJ7jx+0jHFjyFE3Su1VugsDQE2+buGU6Blu/q+8BUVsaKFAhS2O9YGugM3Qsc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714395048; c=relaxed/simple;
-	bh=xu0ScFGHprQXGjeUjrlrMdsxsUwApZ59SWPq1CbOlj8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dIZHGIDhr2/xTg+sEKjSOIpRPUr6ccQNXyXLII+Bgx+wBqyXhsluyQ4rwCG8btfIr/Wgnf93oNWbZ62fd74R64BVJqdfBdA/BWZNc7ORNq6lX/my+NyZ0IhlVhWW/KX6AY4dbFNMJl4UX4bE2MMELB5yaSq4k7njetCx2v/iTGo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YMV+j2UB; arc=fail smtp.client-ip=40.107.236.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A08F6A34D
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714395059; cv=none; b=EZcJtBCWcifNoWwxEIl9c2s/ZeHBwZT3Izpfw+4Yl+WSLYDf11pOHd9ZOULaybGln5MFOK6qExAW7IwW/GOCOOTB95YMdzipOj5PaA7SZxEiTQJiODrwCmV/5Um4lZh2WKfp6fOtqJlKl9GzXgWzvHSiMbOMvOMIA3MbTidhb84=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714395059; c=relaxed/simple;
+	bh=Q/n8MfFKrWNP33DkOJ6Xv++diH3GrJ11n9LhjBaX2wg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=MELebCCmJypdfV3KSjzR2inHjHPqL6XUzIsu/2dVnhahf5x0nm8PtwuJA7bnYgoQBNRjwplab9uxXfBJDiq5juUB+AhvA2KyvjzK8iEPWPJNVeQaLni8yMNEFo2S75mhCecDUVbQzqGDcHQZHNxDMfQefAo5cl/EL9x1zLumUYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OL5HXIwx; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YMV+j2UB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NdaLFMI4M0wpFtgx5GMtv8M1yx+It5C2s2tfG+RyRhYtzQCC8vQgGwsdpkmQUQ5fwWdPXFysDXB+tcg8XMEQuXaKixqpKyiRtJJdvqjTUGP+vhxruMOHlK+mdGSttlSj6N1oKDRe9BgGDMB2J8Gw6zxPLm3mpu5Pamkx+sxENPSmYFAmgzcTPZwM2gBoeyOg/mZbC0xNnntCt+TVN2sKCspXkQNFN6GsOKD4saPEOC4O/Dyf4iQ1/LPwKkfB6K1sZAPOfCBPFTADsBfV9AfOG25NN/elrxpxILZM4VJkcZlhxT2CnsJpAm3+uFRsBHhsregnTV8j01nG4lHnXRPO+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=auFNcIrPvH7HK9lxyY6YgTh7dndOSGd2/26TlLLxI9s=;
- b=HNoqhNIp4cBLrxLJ8yqcJTM0yGUUxJaJOVzzRf2Ml/fRBXCeECdDv1r7LxpyQieJt/jVmpCsbKBUOk76I1HEiItlqsLavGjGTYi+IV2toSDgoSVjdLIkdKyfAXr8ivROiwp8+pcQoZxBZWy0+ZX7kESdPQlxwGb+6qqMEPBmx0tw8b+T9KsYpRJfkkkUOTkTKi5vrLrZ2ySY3qzCiFDfVt96rUF7PGAd6AdN+2YCRPZvleTFYa8sxkYMGV6zWaMTKCSJqX7pKkOk/8QhUf6d6rsUxlZKf79H7AsqWUBnJ28FMko254shP6Ghty70eRiBlFX9hrzRmabRNZ3/6S9iuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=auFNcIrPvH7HK9lxyY6YgTh7dndOSGd2/26TlLLxI9s=;
- b=YMV+j2UBXNoKZ7WajVx4KHhl+Hjw0W/SH6bXsxV62MTa9Lw3cFJptvCeQ2Uk+T0JlXKrUXxnitkTm3w06XEyo2pr20GC5iZ1kSJjed2U5KkTrcRZDnwFk2E86TZxf1wRrDWzsex3N4kImUuEejx5991ixrFTFtgOS426mcIzkxs=
-Received: from BN0PR03CA0048.namprd03.prod.outlook.com (2603:10b6:408:e7::23)
- by MN0PR12MB6271.namprd12.prod.outlook.com (2603:10b6:208:3c1::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
- 2024 12:50:44 +0000
-Received: from BN3PEPF0000B373.namprd21.prod.outlook.com
- (2603:10b6:408:e7:cafe::4b) by BN0PR03CA0048.outlook.office365.com
- (2603:10b6:408:e7::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.35 via Frontend
- Transport; Mon, 29 Apr 2024 12:50:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B373.mail.protection.outlook.com (10.167.243.170) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7519.0 via Frontend Transport; Mon, 29 Apr 2024 12:50:44 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 29 Apr
- 2024 07:50:42 -0500
-From: Robert Richter <rrichter@amd.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Dave Hansen <dave.hansen@linux.intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, Robert Richter <rrichter@amd.com>, Len Brown
-	<lenb@kernel.org>
-Subject: [PATCH v5 7/7] ACPI/NUMA: Print CXL Early Discovery Table (CEDT)
-Date: Mon, 29 Apr 2024 14:49:55 +0200
-Message-ID: <20240429124955.2294014-8-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240429124955.2294014-1-rrichter@amd.com>
-References: <20240429124955.2294014-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OL5HXIwx"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-34d05100927so734139f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 05:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714395056; x=1714999856; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AA8Wnhnd2h9AIkFPnW/qgu9YDhSqFrPxytoNRCePneg=;
+        b=OL5HXIwxUCFg8xnUnMQu5dStaND2cHhPjFyWhkt4V1dL5HWL/D6sfkUUNFeqwEtFGy
+         qM94pvWjoUVLlbTUrMcuOsKIS+87KlecHbjJI/uJslD9oFpnhCLwctQCvM8wiuOw4sWm
+         +8Y6hTbm15NfUYkkAkhBrrydG3njkRgYvbYqQYCK+YVb7ueBPB/dqf23JWbgTZYy9mA4
+         TlMR8UXZOioP/+SxmlrkEziAp/ta5OWZ9UWsRh9hRJf7hDSPUZOv2G1Q1F0hdXPIhU30
+         uj1IbxUdEQR+bxBh7XviFzlSWKI/wIAeZ0g84hwftUur/SItFRulQnnTTQalCokdNXuv
+         c38Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714395056; x=1714999856;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AA8Wnhnd2h9AIkFPnW/qgu9YDhSqFrPxytoNRCePneg=;
+        b=Y3siiX5iGXb0yKk78Fury5LVug5Nhc8SK+5BCWvB8eTt2obff7dITCHLb2vhdSu3EE
+         kEJRY5dIS87QRKbA5Hd9P0T2hPlpuesxb6Y6NnGjYPLFr7R4SRmiv8kSIdiuXJP6UXde
+         kLXShqDHKO3+12Si0PZQaCOFUdepaMHsTRzmqqaQB2QEjLyoHiw+MDYJduBzEPmvtLtq
+         Yfzshf5lGvDKvh0zKmwRbY8SUrX0rhx036s2o6NBMecR4gQbkOLDHOxDpLFATMM1heuw
+         rdkLMesW+mSEkzn5rxtJg4Df9yjLKNWGuHzLDgrza/B9/80Oe/fmc3O5nsfw5iL6X7wX
+         qBqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQJVZLZOwSx3sL7bOkDfvNfnx4WmVIMQX/u+PajiqcYfpPbcbdbhh4aIxj3Lo4t0ChkWGQPmoGwO556VIGrN7QGezChLtDyPLPUawc
+X-Gm-Message-State: AOJu0YwUnJzwu7lG4n+9PxVsO/2OBQVy7+A9Mi+ninFnZjbQialOtE5N
+	AeOhHxjTIJ+QSa72+oiEtWFAVJsrhLHFowUKXGseJ1hXUUz9k3D1nDRgs2wBlLk=
+X-Google-Smtp-Source: AGHT+IEEq7lEnzH6sgqanAD/D/n9q/1O0O8UpYp8nAQiO9ag/ZJ5EaG2BzJxFdMlOO/w23lHUScG3A==
+X-Received: by 2002:a05:6000:1786:b0:33e:800d:e87a with SMTP id e6-20020a056000178600b0033e800de87amr6941241wrg.34.1714395056325;
+        Mon, 29 Apr 2024 05:50:56 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:cad:2140:d72:4b40:65fa:89e6? ([2a01:e0a:cad:2140:d72:4b40:65fa:89e6])
+        by smtp.gmail.com with ESMTPSA id f15-20020a5d4dcf000000b0034ccf959d6asm4539608wru.74.2024.04.29.05.50.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Apr 2024 05:50:55 -0700 (PDT)
+Message-ID: <9f68e310-9cf6-4f62-affe-44ebbf93db97@linaro.org>
+Date: Mon, 29 Apr 2024 14:50:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B373:EE_|MN0PR12MB6271:EE_
-X-MS-Office365-Filtering-Correlation-Id: 541ea7a0-c5ca-414a-b352-08dc684afbfe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|376005|82310400014|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?k+ieKL60/rDgFXHpeghkJTXxZz8eGj7jvk6AsY9Nh9+FSpbW7GEN+h7Slgj8?=
- =?us-ascii?Q?Ul1VgaDmsO6jLg3LAIVlGJ11C+YwGqNaaIMdhqgd/urKt6p2H3PlY/vlUXh4?=
- =?us-ascii?Q?aEGejH+OyOHMIoOMXWxZKs0uRFIwiiRWwsauBcNoyP9qpk6ym/kE7UfQGyyy?=
- =?us-ascii?Q?TQyiH3orWZlOcPsocM+HKoyjQP8fSFpxdD1WCW7MbVmqXwBOi/A3lXDP730q?=
- =?us-ascii?Q?IK+nzjXL0KFuBUktuXYe+v074N5F/vCbckqlJn5DgGE5G2n7Egx1vVNMP7za?=
- =?us-ascii?Q?295KusKAra2lqIqVYkyRrZ6ovSBghqdQIThTxVPckjSEk5qN9GfJS+c5Nsx5?=
- =?us-ascii?Q?vouEkcU6yqASqTh2whwGjNkEaQbhSawAmZg18WiY4CRPD7X5aKfdhF0UQd6w?=
- =?us-ascii?Q?tW8OQwNZ+2I3ihcRPSfD7yhx/UHwN7eabX5LwGxC63uawSMUykiR/0UtBAwf?=
- =?us-ascii?Q?9ZHgURBXJtQ3Jnv0a3PbQR9qj+ZGtC/qO4ifwa1hwoJP0W6BUk+98l83C4rF?=
- =?us-ascii?Q?6R9G2SKT6XcrXqui3mMu35ANfOF/1NIwy48AYuIM/RvRFUntAk+QSmqkHzCK?=
- =?us-ascii?Q?8mlJZq8ZDf77M2KnaTVDEzebaYCOcKQynbyoIf/pidPrmkxmqih9JszCxm7o?=
- =?us-ascii?Q?tB3gXl8HJfwaj1FixTvEq6uDzHBV2XAGi1vuGIjhNE8ByeX8/KzPGXs6Xorl?=
- =?us-ascii?Q?wnrxz7TWQP+rrMbiXMruompR7sPXfiF7X3lCAjghbZllli4hOWE/m7S+4Tdi?=
- =?us-ascii?Q?wW2TaA5CCZ3yFcQdhX/TO6rEqdxr1fjB9HmMcZ86YW54/i+Ztm+qshUVeNwg?=
- =?us-ascii?Q?hc4IJsGzP56NdBqvoYluZgJx98dN62k4QA312BjnGEEdYcQeUtcB2ka/qq7c?=
- =?us-ascii?Q?S1UsEZXQB33Sq8FrlC6T+Bj4dXMWse/RSY+JAgq+pwvs8c7ENgRNMY6Zr016?=
- =?us-ascii?Q?nex0ZFLMSccy9RAS5yXWtd0GfpjQ8+6UYqkSH5O78jLsh6K1W0wcwWtXx04x?=
- =?us-ascii?Q?yxAiVXfawiePk8ZRaIpwPl30xwOYcPSJKAJUCGn3b2z4AiYyrUUx22Ea1CgF?=
- =?us-ascii?Q?cMWKkAFIrOkDtZ6zxMkFU6nZIMoiqzwMJmUBvkBHwqCAxblF5eVj6mmy96dW?=
- =?us-ascii?Q?1qS/P7gjaEWZv9caYUq/bdiEDQ0My/eMCpoAuDScKozDNa6BAFGHRGTfAaIc?=
- =?us-ascii?Q?dxEv4+PTLY1dD1oFmCmYplVG3IfbIpjMkw4GyLouGIr+VU/5nscOxe9RvM/1?=
- =?us-ascii?Q?UHkq1eZJvf1PmuvlcqWjZQc9BgzF1UvcIRtenUZAofLWYog5m0WFNmx/ytqW?=
- =?us-ascii?Q?Dlt3F0Cv5i7dTHInkDorZwnN6iQj/58g+q9V8rx0/o1EI9UiVsblpzQnfF6k?=
- =?us-ascii?Q?Ba86iPA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 12:50:44.3940
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 541ea7a0-c5ca-414a-b352-08dc684afbfe
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B373.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6271
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 09/12] arm64: dts: qcom: sm8650: move PHY's
+ orientation-switch to SoC dtsi
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240429-usb-link-dtsi-v1-0-87c341b55cdf@linaro.org>
+ <20240429-usb-link-dtsi-v1-9-87c341b55cdf@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240429-usb-link-dtsi-v1-9-87c341b55cdf@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The CEDT contains similar entries as the SRAT. For diagnostic reasons
-print the CEDT same style as the SRAT.
+On 29/04/2024 14:43, Dmitry Baryshkov wrote:
+> The orientation-switch of the USB+DP QMP PHY is not a property of the
+> board, it is a design property of the QMP PHY itself. Move the property
+> from board DTS to SoC DTSI.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   arch/arm64/boot/dts/qcom/sm8650-qrd.dts | 2 --
+>   arch/arm64/boot/dts/qcom/sm8650.dtsi    | 2 ++
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+> index 65ee00db5622..f93de21a26ad 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+> @@ -1223,8 +1223,6 @@ &usb_dp_qmpphy {
+>   	vdda-phy-supply = <&vreg_l3i_1p2>;
+>   	vdda-pll-supply = <&vreg_l3g_0p91>;
+>   
+> -	orientation-switch;
+> -
+>   	status = "okay";
+>   };
+>   
+> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> index 4624ea4906d9..9dd66c28c588 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> @@ -3751,6 +3751,8 @@ usb_dp_qmpphy: phy@88e8000 {
+>   			#clock-cells = <1>;
+>   			#phy-cells = <1>;
+>   
+> +			orientation-switch;
+> +
+>   			status = "disabled";
+>   
+>   			ports {
+> 
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/acpi/numa/srat.c | 111 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 111 insertions(+)
-
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 34ecf2dc912f..fa21d4d5fccf 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -320,6 +320,114 @@ acpi_parse_memory_affinity(union acpi_subtable_headers *header,
- 	return 0;
- }
- 
-+static int __init
-+__acpi_table_print_cedt_entry(union acpi_subtable_headers *__header,
-+			      void *arg, const unsigned long table_end)
-+{
-+	struct acpi_cedt_header *header = (struct acpi_cedt_header *)__header;
-+
-+	switch (header->type) {
-+	case ACPI_CEDT_TYPE_CHBS:
-+		{
-+			struct acpi_cedt_chbs *p =
-+				(struct acpi_cedt_chbs *)header;
-+
-+			if (header->length < sizeof(struct acpi_cedt_chbs)) {
-+				pr_warn("CEDT: unsupported CHBS entry: size %d\n",
-+					 header->length);
-+				break;
-+			}
-+
-+			pr_debug("CEDT: CHBS (0x%llx length 0x%llx uid %lu) %s (%d)\n",
-+				(unsigned long long)p->base,
-+				(unsigned long long)p->length,
-+				(unsigned long)p->uid,
-+				(p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11) ?
-+				"cxl11" :
-+				(p->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20) ?
-+				"cxl20" :
-+				"unsupported version",
-+				p->cxl_version);
-+		}
-+		break;
-+	case ACPI_CEDT_TYPE_CFMWS:
-+		{
-+			struct acpi_cedt_cfmws *p =
-+				(struct acpi_cedt_cfmws *)header;
-+			int eiw_to_ways[] = {1, 2, 4, 8, 16, 3, 6, 12};
-+			int targets = -1;
-+
-+			if (header->length < sizeof(struct acpi_cedt_cfmws)) {
-+				pr_warn("CEDT: unsupported CFMWS entry: size %d\n",
-+					header->length);
-+				break;
-+			}
-+
-+			if (p->interleave_ways < ARRAY_SIZE(eiw_to_ways))
-+				targets = eiw_to_ways[p->interleave_ways];
-+			if (header->length < struct_size(
-+					p, interleave_targets, targets))
-+				targets = -1;
-+
-+			pr_debug("CEDT: CFMWS (0x%llx length 0x%llx) with %d target%s",
-+				(unsigned long long)p->base_hpa,
-+				(unsigned long long)p->window_size,
-+				targets, targets > 1 ? "s" : "");
-+			for (int i = 0; i < targets; i++)
-+				pr_cont("%s%lu", i ? ", " : " (",
-+					(unsigned long)p->interleave_targets[i]);
-+			pr_cont("%s%s%s%s%s%s\n",
-+				targets > 0 ? ")" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2) ?
-+				" type2" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE3) ?
-+				" type3" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE) ?
-+				" volatile" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_PMEM) ?
-+				" pmem" : "",
-+				(p->restrictions & ACPI_CEDT_CFMWS_RESTRICT_FIXED) ?
-+				" fixed" : "");
-+		}
-+		break;
-+	case ACPI_CEDT_TYPE_CXIMS:
-+		{
-+			struct acpi_cedt_cxims *p =
-+				(struct acpi_cedt_cxims *)header;
-+
-+			if (header->length < sizeof(struct acpi_cedt_cxims)) {
-+				pr_warn("CEDT: unsupported CXIMS entry: size %d\n",
-+					header->length);
-+				break;
-+			}
-+
-+			pr_debug("CEDT: CXIMS (hbig %u nr_xormaps %u)\n",
-+				(unsigned int)p->hbig,
-+				(unsigned int)p->nr_xormaps);
-+		}
-+		break;
-+	default:
-+		pr_warn("CEDT: Found unsupported entry (type = 0x%x)\n",
-+			header->type);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __init acpi_table_print_cedt_entry(enum acpi_cedt_type id)
-+{
-+	acpi_table_parse_cedt(id, __acpi_table_print_cedt_entry, NULL);
-+}
-+
-+static void __init acpi_table_print_cedt(void)
-+{
-+	/* Print only implemented CEDT types */
-+	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CHBS);
-+	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CFMWS);
-+	acpi_table_print_cedt_entry(ACPI_CEDT_TYPE_CXIMS);
-+}
-+
- static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 				   void *arg, const unsigned long table_end)
- {
-@@ -518,6 +626,9 @@ int __init acpi_numa_init(void)
- 	/* SLIT: System Locality Information Table */
- 	acpi_table_parse(ACPI_SIG_SLIT, acpi_parse_slit);
- 
-+	/* CEDT: CXL Early Discovery Table */
-+	acpi_table_print_cedt();
-+
- 	/*
- 	 * CXL Fixed Memory Window Structures (CFMWS) must be parsed
- 	 * after the SRAT. Create NUMA Nodes for CXL memory ranges that
--- 
-2.39.2
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
