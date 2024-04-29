@@ -1,96 +1,123 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4710217798F
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 22:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3654917798F
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 22:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714428482; cv=none; b=GPDipHRWfDJfbJrjX47eTn7zamVJSyHBziLIXkiuu1umP2+gnmy2vQdjfiNLHPXQA0XQG4fdI3Sy3jzeLrFLlL94oHXnn665K+RuxFcg1Eb3L2GB9NU4otrZFveCSb5UxW26M+Aq4ZEXZgHRHymtBKsQKDA44vXATbyC/eSXQso=
+	t=1714428645; cv=none; b=dPdFychQu2ISX/X3nHJzRBUyHY5W/50sKuxXiyJ8uKXUUdbuQ+3CciHRUHKQ3b1M7W79a9LWvUxRbSf0X0q1cn5b5fkgH6sQVE82LXwdbm9CA345gwfTF7P/sCcoCcF87fd6eCJC8gBh4hyMOYbjF/HPee1b3nlkAst8a2LHOTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714428482; c=relaxed/simple;
-	bh=c6DOXNFSE9LC756AIalg/cV64lMokKtaCuXo91v+i34=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=cgJigREYGyhCfz4lRsbepmK34k/IPA2utOLoLejPkjG8/dXLvaXYXDlHD57AI1ktCuIxt4wixruAlo+LS7MRkBFY7tV7F2LHeRJ1Sris7Gqcg/BtruzCYjbyepAQIXTmuXwHnyz1n3FzJTnc5VdQ1mcRsNaOf1vjC14Rn4V8CGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elsk.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SMMJ4PDT; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elsk.bounces.google.com
+	s=arc-20240116; t=1714428645; c=relaxed/simple;
+	bh=p6gukMxZDntCqADMyEuUTYHm6UthqrT9QCj3+/JbR5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=l0YvXcrIwHo6ebBx9K4F3gJTHlUdaHipWQRFnTU6suvm6tvGjgeEnfG2th6GUv1jtWHnOOeoT5Mh0nJkhYbZSYr8gwmX5oG7JOGR9GmgY464nmL6pmou6QTpDD0vOQLrqjbFzt/pDSSwcKeV29mAG0YziOndXGVh/uvnQlaBNW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z/X/DKRk; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SMMJ4PDT"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de60cd96bf3so1025442276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:08:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/X/DKRk"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso4213950a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:10:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714428480; x=1715033280; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FA8V8gAzYFmHUQzg7LC2FwIVOm15GM/FHQJrgNvwAkE=;
-        b=SMMJ4PDTcv7H2i4o0zGzlZV8x1icw8CD0NzK9zl8mpEWyXeXFn3frAbLOVUUcyaysA
-         NwWUcL+uMl1kJ9IJ6ecIp0v3do1ONpTluevTTEJhWkFPSt7qGJAaZrCE9H3eBeruE4Vg
-         peOUvT1GeHvCPjoccobTY9zhOuI4cVCSOG3HD0Ysa1Lc18S/QPuDTGOJbxqxrnSSpTjB
-         4jSla7YurIdmJZOd0f4uhgHHLduj4lVggtUlKVWP2V1etTjjI3LYG7erRzMmtR7bi7Yw
-         yo0ryGQj0oyN1a6LEq0nzx1Di0RdnxcQzeLJ8vzSG21Y8ZM2kjy5WhHenaFo4q81XtT7
-         H9CA==
+        d=gmail.com; s=20230601; t=1714428643; x=1715033443; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=/WdJAlLlsoz3LuH9C0ELWJKBveFBAT8xLGCI8cyDMAE=;
+        b=Z/X/DKRk2mg3gjXqr6OAWWhDSkZn+SYGGJ81Iy3abJFZ6d017WHBsHLEZmMkrR4HKJ
+         DrdSFc8ZAwJ9lLbFRPJpX/qYdRbU+eCgblZp8KF2DrFQwPd7D0KJWKjIWBukrWOKKr+m
+         UAUKGR9PjIZCkCAbCO/OwwjF4dbSPHoiNumAmqNQ3nU/dx31NxsdadLDFqhR+82DAwuR
+         rP7bjkQWZjxJs6gYGWrhmTXgMUMuRjYqEWIs10ufj35oZq0PSEIfA2pX9pcQvIwjK7hj
+         rBnvAh6aq0IZlytNo9HX0nOGmC5G178f0FNx2p3x6Q1aSw2KSm+IClpfXxz9kce+YrqW
+         2kuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714428480; x=1715033280;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FA8V8gAzYFmHUQzg7LC2FwIVOm15GM/FHQJrgNvwAkE=;
-        b=LjTO9V18IfAUW9coyIJ1B+SsfMdXocXnf9I6Xpn7U3xFyRGyPbi80+9oYQHK59/cq0
-         qYK8YB9GvBgq3KNornIyXcZDitIQrKICAOXy+Uns8TGHW4NtFKsQMnNe0WaRTypnLodM
-         6wAl4mjy6ecEKvyfqQtAS19JCNCCZhabgc1qdT+TTIjvROJA2VzW+GN/59utrYBuEl/x
-         bZZPoVrfyaS2tkGkLRIMIxUubuDB0FjpARV7+HiaoXuHTH5JinFtZN7eBTn3WPd0pMYn
-         1vAIk0PmeoSpJx3tIMI5OLTHHi64uE339idwEYHpUEJMcY6fKawSyjJ6VbzkZT+R2+LF
-         X2yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVd56pm2sd727O0T2h2Ub3P17uRK0eKOzzg1vgHNv6qSx1x0UolSmm2GAvG4HQzjRFqY/gSys07ga6QmMIVFBbhdPPV/wV0u+WVmih
-X-Gm-Message-State: AOJu0YyRHsbZ87kpAKijaGweI8z6/cSrv5VI3xN2VgXD9uKJ6ziYxUFj
-	584gcdeNlROm+jcAyS6cwAJdlbc+Hyq8WFgcm0QUAZ28nlgoBOTSmWzMlWxrYyI/FavZ+A==
-X-Google-Smtp-Source: AGHT+IE+uWIumkI/51wfaF//38ql/5Ay511pPM+gcPsmGC0cRdqsl57WUREGxwArKrVla/CcvxgSb9Cn
-X-Received: from elsk.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:dbd])
- (user=elsk job=sendgmr) by 2002:a05:6902:c04:b0:dd9:20c1:85b6 with SMTP id
- fs4-20020a0569020c0400b00dd920c185b6mr310500ybb.2.1714428480334; Mon, 29 Apr
- 2024 15:08:00 -0700 (PDT)
-Date: Mon, 29 Apr 2024 22:07:56 +0000
+        d=1e100.net; s=20230601; t=1714428643; x=1715033443;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/WdJAlLlsoz3LuH9C0ELWJKBveFBAT8xLGCI8cyDMAE=;
+        b=GJnPziivFZzEZnGKcDjDAAZTaQG/y8vvkIVyfqAK14PQbXa7GvzxAjWi5C6c++k6ow
+         8+pYoYXP85VUqhB9kBZYYBlHMBi2GZYavnmd06UlYVcJrAVaXWk1P1Y1O9aOWeLmA2xx
+         rrucS+S/QTftyJIUl/hy8OM7kT+RVLgRnI2qLepJrDx8RqDYJhD9+SStN7bemtrRVTZK
+         VWLkPoFMzIIix4PCs6JP7wmMbnseExyPv29d3Zh0Gi8m2yrknfcGxk7wk3hvFzN8TTLz
+         b9tRIxKg2a8HWY6R1immRS4fqwp0eBQUZG40IeszGORGDPjl9j1TtBIlDajDuYu9tTp/
+         gnfw==
+X-Gm-Message-State: AOJu0Yzb1JtiKEto9oEFnbyiAShWR/bIKydsTXwN1qrZ5gAPNm4tPgL1
+	z/HpMDIfjlz2QRSxaoMc/1V6n87I5dcX3cimCgkBAGDcusAD8XnI
+X-Google-Smtp-Source: AGHT+IFMzkT49MI5b7YtiJedpxRllklPZjsqJ+206xLsCQChR8hev7yHiJ3gCDnJUkp4P+2Jh7ddWw==
+X-Received: by 2002:a05:6a20:431d:b0:1ac:e379:52fd with SMTP id h29-20020a056a20431d00b001ace37952fdmr15694494pzk.14.1714428643351;
+        Mon, 29 Apr 2024 15:10:43 -0700 (PDT)
+Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
+        by smtp.gmail.com with ESMTPSA id a4-20020a170902ecc400b001eac9aa55edsm8180437plh.250.2024.04.29.15.10.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 15:10:43 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 29 Apr 2024 12:10:41 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [GIT PULL] workqueue: Fixes for v6.9-rc6
+Message-ID: <ZjAa4eL2plDnP-tD@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240429220756.979347-2-elsk@google.com>
-Subject: [PATCH] kernel/configs: Disable LTO on kernel/configs.o
-From: Yifan Hong <elsk@google.com>
-To: Yifan Hong <elsk@google.com>
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This solves an incremental
-build issue that, when a config changes, config_data
-and config_data.gz is rebuilt, but because the
-.thinlto-cache cannot be updated, the config is not
-reflected in the final vmlinux binary.
+The following changes since commit b1e6ec0a0fd0252af046e542f91234cd6c30b2cb:
 
-The issue is described in
-https://github.com/ClangBuiltLinux/linux/issues/2021.
+  Merge tag 'docs-6.9-fixes' of git://git.lwn.net/linux (2024-04-02 12:44:09 -0700)
 
-Signed-off-by: Yifan Hong <elsk@google.com>
----
- kernel/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+are available in the Git repository at:
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 10ef068f598d..76d9acc49c5f 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -140,6 +140,10 @@ obj-$(CONFIG_SCF_TORTURE_TEST) += scftorture.o
- 
- $(obj)/configs.o: $(obj)/config_data.gz
- 
-+# Disable LTO on configs.o so changes in .config is reflected in vmlinux. See
-+# https://github.com/ClangBuiltLinux/linux/issues/2021
-+CFLAGS_REMOVE_configs.o += $(CC_FLAGS_LTO)
-+
- targets += config_data config_data.gz
- $(obj)/config_data.gz: $(obj)/config_data FORCE
- 	$(call if_changed,gzip)
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git/ tags/wq-for-6.9-rc6-fixes
 
+for you to fetch changes up to 91f098704c25106d88706fc9f8bcfce01fdb97df:
+
+  workqueue: Fix divide error in wq_update_node_max_active() (2024-04-24 07:23:06 -1000)
+
+----------------------------------------------------------------
+workqueue: Fixes for v6.9-rc6
+
+Two doc update patches and the following three fixes:
+
+- On single node systems, the default pool is used but the node_nr_active
+  for the default pool was set to min_active. This effectively limited the
+  max concurrency of unbound pools on single node systems to 8 causing
+  performance regressions on some workloads. Fixed by setting the default
+  pool's node_nr_active to max_active.
+
+- wq_update_node_max_active() could trigger divide-by-zero if the
+  intersection between the allowed CPUs for an unbound workqueue and online
+  CPUs becomes empty.
+
+- When kick_pool() was trying to repatriate a worker to a CPU in its pod by
+  setting task->wake_cpu, it didn't consider whether the CPU being selected
+  is online or not which obviously can lead to subobtimal behaviors. On
+  s390, this triggered a crash in arch code. The workqueue patch removes the
+  gross misbehavior but doesn't fix the crash completely as there's a race
+  window in which CPUs can go down after wake_cpu is set. Need to decide
+  whether the fix should be on the core or arch side.
+
+----------------------------------------------------------------
+Audra Mitchell (1):
+      Documentation/core-api: Update events_freezable_power references.
+
+Lai Jiangshan (1):
+      workqueue: Fix divide error in wq_update_node_max_active()
+
+Sven Schnelle (1):
+      workqueue: Fix selection of wake_cpu in kick_pool()
+
+Tejun Heo (1):
+      workqueue: The default node_nr_active should have its max set to max_active
+
+Xingyou Chen (1):
+      docs/zh_CN: core-api: Update translation of workqueue.rst to 6.9-rc1
+
+ Documentation/core-api/workqueue.rst               |   6 +-
+ .../translations/zh_CN/core-api/workqueue.rst      | 398 +++++++++++++++++++--
+ kernel/workqueue.c                                 |  19 +-
+ 3 files changed, 390 insertions(+), 33 deletions(-)
