@@ -1,594 +1,439 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4918B17798F;
-	Mon, 29 Apr 2024 22:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A1319069A
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 22:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714429019; cv=none; b=N+pBWHLAsNFPPIjWzZFmfovueF3OGIAMFmk6449DUzUnmvxXgUtwh/2fZsV8Jm1UsystmB7FdzL9gGdlI1rI1SghZrQIv7zrT/fMZcPh2d77K4galSlT52K9FFFJJW4ZQuRc97xCEBjffgYYa0cIOaFhBO1tb4HsQoWom0fIAdc=
+	t=1714429040; cv=none; b=kAHCWesoJqNBg1j4rYLbFvFwJ1mYR1i+1ihEPqdSicLi+F/YZwktCUwabOvW9B1WtqAKUEG7WFmANzHq3EBny+8ltf0z5RAYIdEfyiQcHaok9u3r/RusyGAlTHLfB+PZBAq0iZ94PDSVysZ5YvgWLMaQXfY/PB4Itt6pnznm/PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714429019; c=relaxed/simple;
-	bh=4X7GwcLc8yxmxxc5I9ttQQzqzVh1dSVqNfsQ0+7jX7I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gG3YrmONX83oVXYlCYZ5omtQYh5xRe+WjC/kc7DuhWDZcUgtJBnZukmDz9psQaTo8Q8K+RkmNW92QYzRo5ocNOaS+c1LXWumpMcbWvXgCP0RbpjHDwMNsEtI35PSgFRkoO8H2tmbVFTHmHQAMmCwZSlZaTHmOxDH7XTCn2TtIFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51abf1a9332so6831141e87.3;
-        Mon, 29 Apr 2024 15:16:57 -0700 (PDT)
+	s=arc-20240116; t=1714429040; c=relaxed/simple;
+	bh=oBVqI12B9dk8m32PErPVKEZP3bzYUd+pYrIzHdiB2lg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BJFuIy68NFD6MSmG6owtZIr3Ufg3r6IqWywSGQw9nfEcNNGoRxxRS+YH5VPO4/rSE7Q/N4JNSdbTDZT2rPwEEnt5hUU8AlOyv6v9sbXNwTnVVMDIuK+4skuKmNTqXerFsmChD5iIJLMmcip51AafR/pad2rz9sWGx/7huNXIhk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qftsq9t3; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qftsq9t3"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e5715a9ebdso41825255ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714429037; x=1715033837; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EZhleW+Ps4WRPrVdrP1CYU/kHoFoEgDlGeETjkUbRe4=;
+        b=Qftsq9t3NZOYf14vcLbiQBDNy0EF9D/rB4IsjR9DngDV9UpGa/preuRyujK090kw6N
+         iPHd6AfYpeDbJZIfFf0YB7y8Fw0h4IN06DzDo7h+TQ7U1ZgNBJ19wSPM0jMVZbR+cFpu
+         rYQBFMpA6Sfixi9iYoy2mMfeH6yIocNpGkUq52GDoH4rLSzDoVc+EYTbnmfLHwmlwNbo
+         xh+4JSWKd3TLyWBJiblnWlDKI6B+kmIuGNjL5hHDsFzTZNGIjFl+j3z0QIMcHR2RwpYA
+         Zv5MvKuTMYxtoVcLrinP0PK2+roue0Qpd5tnZTT+iyOiz8vy+7enOMElPVtkRDsPEyfp
+         /VAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714429015; x=1715033815;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vDTwbZhCJRdU1G4mvD1N+DmlAPyioR4zaFFnbRYQr/4=;
-        b=FzwtUhXu/nWGWcFn3SSjSjoo3voj0lf9YCAJq22w/Akw8fGlxbOTLi4VUjRHMgb40W
-         xVtvliEem0F/pjzXmjnd9XFMRTCu+9I6uCekdR5j7nXurcq7ooBXyw3M5JeLlku1uKde
-         SsnS7aw+xEmQUidoabCCfNOI9POKPF4DFNJFSdHsJHLnJR4usIJh4ny8o6s7S6cJL+jf
-         5NZFclbC7vp8/fstNqkDh/CDpoMTDpDEmdnDk8NVSl4+NO+6llFTKLhM51skZo30Up7l
-         RTWd1IX1Xj3IUciE2OzBmG5GPB+MbyUpy3NFf69ja6SpaDQUvRYbG0rLmqxM9EbhLzTd
-         PHIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWB6WroFeQT299pJByEMZqRsZWJcS7Kzbn/1qKKKFsOfgRMaZD+x1tFrA5cFQNP4HOorhXDul6fjcqoRFEQz02Ivi9Xx7ELD434GEe9Bfe6cs69Z3Rbt7AtprhhOOCaYw0eMq7usD1U4uWw44oL
-X-Gm-Message-State: AOJu0YyHYkh/Gf+RoLyXhojBwUEhRoLFMkPcvzCEwfoen4EY0kdN2Ctn
-	vUDdZCgW+ubULOyev+B1liSUZcfyMcMpoSlEovg3fwt06dBQYqcTcp23H6fS/iE=
-X-Google-Smtp-Source: AGHT+IFnZuI4ODIy+uR85m0109vDoNTUMvRpHYt5JgfsQsPP7d6FVKpzwz/TKLucT4KQonRHFQ2rcg==
-X-Received: by 2002:ac2:5504:0:b0:51c:22fb:182f with SMTP id j4-20020ac25504000000b0051c22fb182fmr7440315lfk.13.1714429014964;
-        Mon, 29 Apr 2024 15:16:54 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id k10-20020a05651210ca00b0051d77bf5465sm721351lfg.67.2024.04.29.15.16.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 15:16:54 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51abf1a9332so6831123e87.3;
-        Mon, 29 Apr 2024 15:16:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXdNtJrWTlK0dehrqYfJFm2rWRSSWbqRKAlP46pxgZ9ucC6zt+En9kqeewpKTXWf6zAPgSxiYkrnBkf5qokh2cCBrBT5giYk5L3e5traG9ogkSmPRW8DVKklDcI/DtcihZ9KetvV0J1Yq4iARKt
-X-Received: by 2002:ac2:58ca:0:b0:518:e69b:25a2 with SMTP id
- u10-20020ac258ca000000b00518e69b25a2mr6796426lfo.45.1714429014394; Mon, 29
- Apr 2024 15:16:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714429037; x=1715033837;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EZhleW+Ps4WRPrVdrP1CYU/kHoFoEgDlGeETjkUbRe4=;
+        b=p4UI3+5mDcn8wxGtlob3ihTj8S8CyGdD/POMpX2SPnscTCLy4G5j7aEOV8Q6d2perY
+         9TTAXt+g0/jD0akpd6Dybqr94ebHhwQYyU+ag7mM8Ov3mvXjc5YC9RjBToiQmWZNMQJy
+         2Z9bCDfeLXRWb2kXPuRUQq3j6fPYoMYCl58nYlSBEq0pYQrIpBOnljIXzUs/Zoo/Oeut
+         JTFTmu+QSuP8HEe4gRcS0nmRPNtmavu3D7hJH7I1pJnqx4Dz5M5b0ui9BM36wkIVW4gD
+         AAFJUzN/nTXr5BDOLWw+MbSKTVjy5F2JfZgA+o4iPlFG1GW+f+dQfeh7psPbhx7FUi3l
+         /O7w==
+X-Forwarded-Encrypted: i=1; AJvYcCX3Mmht8CDP4eTpHxxPCPjAuU25rllnURzfeXDBb3w9VIGwLft6FingIyhAGxLzRywF9g6V37vEblyjuQGT0zchqjQSHAKNTr5nlVT7
+X-Gm-Message-State: AOJu0YwAKF6ZWI3jT8ysfpRIyjV8cfSSWzlZJKIzhKK+flz8+FFWM2in
+	75gVw8eiFfxs8yyd+mjWSOj40i4zNbw4PB7fn3iS5faiStL9xGDUmPYleTlxNzY=
+X-Google-Smtp-Source: AGHT+IH+MfK5HUbzYyMP7HAxYBTBpvjoDI8KPFVUXaywGlC17QuAZLhZK7OiLAHejhmAsM08nY+r9w==
+X-Received: by 2002:a17:903:187:b0:1e5:a3b2:4ba3 with SMTP id z7-20020a170903018700b001e5a3b24ba3mr11936145plg.56.1714429036489;
+        Mon, 29 Apr 2024 15:17:16 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c00c:2308:970:8782:f539:c9c7])
+        by smtp.gmail.com with ESMTPSA id i15-20020a170902c94f00b001eb30118300sm5713396pla.132.2024.04.29.15.17.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 15:17:16 -0700 (PDT)
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+To: lkft-triage@lists.linaro.org,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: jhs@mojatatu.com,
+	xiyou.wangcong@gmail.com,
+	jiri@resnulli.us,
+	dcaratti@redhat.com,
+	cpaasch@apple.com,
+	pabeni@redhat.com,
+	xmu@redhat.com,
+	maxim@isovalent.com,
+	edumazet@google.com,
+	anders.roxell@linaro.org,
+	dan.carpenter@linaro.org,
+	arnd@arndb.de,
+	Linux Kernel Functional Testing <lkft@linaro.org>
+Subject: selftests: tc-testing: tdc.sh:  WARNING: at kernel/locking/lockdep.c:1226 lockdep_register_key
+Date: Tue, 30 Apr 2024 03:47:06 +0530
+Message-Id: <20240429221706.1492418-1-naresh.kamboju@linaro.org>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240428015834.2485653-1-iam@sung-woo.kim> <CABBYNZJ21uzmWiksD6CLDBuEe2pfPzFGsbn5quZ4edz3W0Wv=g@mail.gmail.com>
-In-Reply-To: <CABBYNZJ21uzmWiksD6CLDBuEe2pfPzFGsbn5quZ4edz3W0Wv=g@mail.gmail.com>
-From: Sungwoo Kim <iam@sung-woo.kim>
-Date: Mon, 29 Apr 2024 18:16:38 -0400
-X-Gmail-Original-Message-ID: <CAJNyHp+S2BvX6kWy8Y4Vfkmkw+SEQiy1oB6OAn9t-8gRy+is9Q@mail.gmail.com>
-Message-ID: <CAJNyHp+S2BvX6kWy8Y4Vfkmkw+SEQiy1oB6OAn9t-8gRy+is9Q@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: msft: fix slab-use-after-free in msft_do_close()
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: daveti@purdue.edu, Marcel Holtmann <marcel@holtmann.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Dear Luiz,
-Thank you for reviewing.
+While running selftests: tc-testing: tdc.sh the following kernel warnings,
+kernel Bug, kernel oops and kernel panic noticed with Linux next-20240429
+tag kernel as per the available data.
 
-On Mon, Apr 29, 2024 at 12:43=E2=80=AFPM Luiz Augusto von Dentz
-<luiz.dentz@gmail.com> wrote:
->
-> Hi Sungwoo,
->
-> On Sat, Apr 27, 2024 at 10:03=E2=80=AFPM Sungwoo Kim <iam@sung-woo.kim> w=
-rote:
-> >
-> > Hi, could you review this patch?
-> > Now *not static* msft functions hold and put hdev->msft_data.
-> > It prevents from potential and real use-after-free bugs.
-> >
-> > How msft is used after freed:
-> >
-> > [use]
-> > msft_do_close()
-> >   msft =3D hdev->msft_data;
-> >   if (!msft)                      ...(1) <- passed.
-> >     return;
-> >   mutex_lock(&msft->filter_lock); ...(4) <- used after freed.
-> >
-> > [free]
-> > msft_unregister()
-> >   msft =3D hdev->msft_data;
-> >   hdev->msft_data =3D NULL;         ...(2)
-> >   kfree(msft);                    ...(3) <- msft is freed.
-> >
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > BUG: KASAN: slab-use-after-free in __mutex_lock_common kernel/locking/m=
-utex.c:587 [inline]
-> > BUG: KASAN: slab-use-after-free in __mutex_lock+0x8f/0xc30 kernel/locki=
-ng/mutex.c:752
-> > Read of size 8 at addr ffff888106cbbca8 by task kworker/u5:2/309
-> >
-> > CPU: 0 PID: 309 Comm: kworker/u5:2 Not tainted 6.9.0-rc5+ #5
-> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04=
-/01/2014
-> > Workqueue: hci4 hci_error_reset
-> > Call Trace:
-> >  <TASK>
-> >  __dump_stack lib/dump_stack.c:88 [inline]
-> >  dump_stack_lvl+0xcd/0x140 lib/dump_stack.c:114
-> >  print_address_description mm/kasan/report.c:377 [inline]
-> >  print_report+0x191/0x560 mm/kasan/report.c:488
-> >  kasan_report+0xe2/0x120 mm/kasan/report.c:601
-> >  __asan_report_load8_noabort+0x18/0x20 mm/kasan/report_generic.c:381
-> >  __mutex_lock_common kernel/locking/mutex.c:587 [inline]
-> >  __mutex_lock+0x8f/0xc30 kernel/locking/mutex.c:752
-> >  mutex_lock_nested+0x1f/0x30 kernel/locking/mutex.c:804
-> >  msft_do_close+0x292/0x700 net/bluetooth/msft.c:694
-> >  hci_dev_close_sync+0x906/0xf10 net/bluetooth/hci_sync.c:5168
-> >  hci_dev_do_close net/bluetooth/hci_core.c:554 [inline]
-> >  hci_error_reset+0x152/0x410 net/bluetooth/hci_core.c:1091
-> >  process_one_work kernel/workqueue.c:3254 [inline]
-> >  process_scheduled_works+0x90f/0x1530 kernel/workqueue.c:3335
-> >  worker_thread+0x926/0xe70 kernel/workqueue.c:3416
-> >  kthread+0x2e3/0x380 kernel/kthread.c:388
-> >  ret_from_fork+0x5c/0x90 arch/x86/kernel/process.c:147
-> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> >  </TASK>
-> >
-> > Allocated by task 7328:
-> >  kasan_save_stack mm/kasan/common.c:47 [inline]
-> >  kasan_save_track+0x30/0x70 mm/kasan/common.c:68
-> >  kasan_save_alloc_info+0x3c/0x50 mm/kasan/generic.c:565
-> >  poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
-> >  __kasan_kmalloc+0xa2/0xc0 mm/kasan/common.c:387
-> >  kasan_kmalloc include/linux/kasan.h:211 [inline]
-> >  kmalloc_trace+0x20c/0x3e0 mm/slub.c:3997
-> >  kmalloc include/linux/slab.h:628 [inline]
-> >  kzalloc include/linux/slab.h:749 [inline]
-> >  msft_register+0x66/0x1d0 net/bluetooth/msft.c:760
-> >  hci_register_dev+0x85e/0x9a0 net/bluetooth/hci_core.c:2737
-> >  __vhci_create_device drivers/bluetooth/hci_vhci.c:438 [inline]
-> >  vhci_create_device+0x390/0x720 drivers/bluetooth/hci_vhci.c:480
-> >  vhci_get_user drivers/bluetooth/hci_vhci.c:537 [inline]
-> >  vhci_write+0x39b/0x460 drivers/bluetooth/hci_vhci.c:617
-> >  call_write_iter include/linux/fs.h:2110 [inline]
-> >  new_sync_write fs/read_write.c:497 [inline]
-> >  vfs_write+0x8eb/0xb50 fs/read_write.c:590
-> >  ksys_write+0x106/0x1f0 fs/read_write.c:643
-> >  __do_sys_write fs/read_write.c:655 [inline]
-> >  __se_sys_write fs/read_write.c:652 [inline]
-> >  __x64_sys_write+0x84/0xa0 fs/read_write.c:652
-> >  x64_sys_call+0x271a/0x2ce0 arch/x86/include/generated/asm/syscalls_64.=
-h:2
-> >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-> >  do_syscall_64+0x9c/0x130 arch/x86/entry/common.c:83
-> >  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> >
-> > Freed by task 7332:
-> >  kasan_save_stack mm/kasan/common.c:47 [inline]
-> >  kasan_save_track+0x30/0x70 mm/kasan/common.c:68
-> >  kasan_save_free_info+0x44/0x50 mm/kasan/generic.c:579
-> >  poison_slab_object+0x11a/0x190 mm/kasan/common.c:240
-> >  __kasan_slab_free+0x3b/0x60 mm/kasan/common.c:256
-> >  kasan_slab_free include/linux/kasan.h:184 [inline]
-> >  slab_free_hook mm/slub.c:2106 [inline]
-> >  slab_free mm/slub.c:4280 [inline]
-> >  kfree+0x13c/0x330 mm/slub.c:4390
-> >  msft_unregister+0x9d/0x120 net/bluetooth/msft.c:785
-> >  hci_unregister_dev+0x1d9/0x520 net/bluetooth/hci_core.c:2771
-> >  vhci_release+0x8c/0xe0 drivers/bluetooth/hci_vhci.c:674
-> >  __fput+0x36f/0x750 fs/file_table.c:422
-> >  ____fput+0x1e/0x30 fs/file_table.c:450
-> >  task_work_run+0x1da/0x280 kernel/task_work.c:180
-> >  exit_task_work include/linux/task_work.h:38 [inline]
-> >  do_exit+0x856/0x2210 kernel/exit.c:878
-> >  do_group_exit+0x201/0x2c0 kernel/exit.c:1027
-> >  get_signal+0x12ff/0x1380 kernel/signal.c:2911
-> >  arch_do_signal_or_restart+0x3b/0x650 arch/x86/kernel/signal.c:310
-> >  exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
-> >  exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
-> >  __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
-> >  syscall_exit_to_user_mode+0xcc/0x2a0 kernel/entry/common.c:218
-> >  do_syscall_64+0xa8/0x130 arch/x86/entry/common.c:89
-> >  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> >
-> > The buggy address belongs to the object at ffff888106cbbc00
-> >  which belongs to the cache kmalloc-256 of size 256
-> > The buggy address is located 168 bytes inside of
-> >  freed 256-byte region [ffff888106cbbc00, ffff888106cbbd00)
-> >
-> > The buggy address belongs to the physical page:
-> > page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x10=
-6cba
-> > head: order:1 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-> > flags: 0x17ffffe0000840(slab|head|node=3D0|zone=3D2|lastcpupid=3D0x3fff=
-ff)
-> > page_type: 0xffffffff()
-> > raw: 0017ffffe0000840 ffff888100042040 ffffea00042de590 ffffea00041b3e1=
-0
-> > raw: 0000000000000000 00000000000a000a 00000001ffffffff 000000000000000=
-0
-> > head: 0017ffffe0000840 ffff888100042040 ffffea00042de590 ffffea00041b3e=
-10
-> > head: 0000000000000000 00000000000a000a 00000001ffffffff 00000000000000=
-00
-> > head: 0017ffffe0000001 ffffea00041b2e81 dead000000000122 00000000ffffff=
-ff
-> > head: 0000000200000000 0000000000000000 00000000ffffffff 00000000000000=
-00
-> > page dumped because: kasan: bad access detected
-> >
-> > Memory state around the buggy address:
-> >  ffff888106cbbb80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> >  ffff888106cbbc00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > >ffff888106cbbc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >                                   ^
-> >  ffff888106cbbd00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> >  ffff888106cbbd80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >
-> > Fixes: 9e14606d8f38 ("Bluetooth: disable advertisement filters during s=
-uspend")
-> > Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
-> > ---
-> > v2: Move BT_DBG after null checking in msft_data_hold_unless_zero()
-> >
-> >  net/bluetooth/msft.c | 124 ++++++++++++++++++++++++++++++++++---------
-> >  1 file changed, 99 insertions(+), 25 deletions(-)
-> >
-> > diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
-> > index 9612c5d1b..1f79e7980 100644
-> > --- a/net/bluetooth/msft.c
-> > +++ b/net/bluetooth/msft.c
-> > @@ -132,10 +132,45 @@ struct msft_data {
-> >         __u8 filter_enabled;
-> >         /* To synchronize add/remove address filter and monitor device =
-event.*/
-> >         struct mutex filter_lock;
-> > +       struct kref     kref;
->
-> NAK, the lifetime of this object should be tied to hdev which already
-> has a kref.
+This build config is from kselftest merge config[1].
 
-I got this.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
->
-> >  };
-> >
-> > +static void msft_data_free(struct kref *kref);
-> > +
-> > +static struct msft_data *msft_data_hold_unless_zero(struct msft_data *=
-msft)
-> > +{
-> > +       if (!msft)
-> > +               return NULL;
-> > +
-> > +       BT_DBG("msft %p orig refcnt %u", msft, kref_read(&msft->kref));
-> > +
-> > +       if (!kref_get_unless_zero(&msft->kref))
-> > +               return NULL;
-> > +
-> > +       return msft;
-> > +}
-> > +
-> > +static void msft_data_put(struct msft_data *msft)
-> > +{
-> > +       BT_DBG("msft %p orig refcnt %u", msft, kref_read(&msft->kref));
-> > +
-> > +       kref_put(&msft->kref, msft_data_free);
-> > +}
-> > +
-> > +static void msft_data_free(struct kref *kref)
-> > +{
-> > +       struct msft_data *msft =3D container_of(kref, struct msft_data,=
- kref);
-> > +
-> > +       BT_DBG("msft %p", msft);
-> > +
-> > +       kfree(msft->evt_prefix);
-> > +       mutex_destroy(&msft->filter_lock);
-> > +       kfree(msft);
-> > +}
-> > +
-> >  bool msft_monitor_supported(struct hci_dev *hdev)
-> >  {
-> > +       /* msft_get_features() holds and put hdev->msft_data */
-> >         return !!(msft_get_features(hdev) & MSFT_FEATURE_MASK_LE_ADV_MO=
-NITOR);
-> >  }
-> >
-> > @@ -449,12 +484,17 @@ static int msft_remove_monitor_sync(struct hci_de=
-v *hdev,
-> >  /* This function requires the caller holds hci_req_sync_lock */
-> >  int msft_suspend_sync(struct hci_dev *hdev)
-> >  {
-> > -       struct msft_data *msft =3D hdev->msft_data;
-> > +       struct msft_data *msft;
-> >         struct adv_monitor *monitor;
-> >         int handle =3D 0;
-> >
-> > -       if (!msft || !msft_monitor_supported(hdev))
-> > +       msft =3D msft_data_hold_unless_zero(hdev->msft_data);
-> > +       if (!msft)
-> >                 return 0;
-> > +       if (!msft_monitor_supported(hdev)) {
-> > +               msft_data_put(msft);
-> > +               return 0;
-> > +       }
-> >
-> >         msft->suspending =3D true;
-> >
-> > @@ -471,6 +511,7 @@ int msft_suspend_sync(struct hci_dev *hdev)
-> >         /* All monitors have been removed */
-> >         msft->suspending =3D false;
-> >
-> > +       msft_data_put(msft);
-> >         return 0;
-> >  }
-> >
-> > @@ -608,11 +649,17 @@ static void reregister_monitor(struct hci_dev *hd=
-ev)
-> >  /* This function requires the caller holds hci_req_sync_lock */
-> >  int msft_resume_sync(struct hci_dev *hdev)
-> >  {
-> > -       struct msft_data *msft =3D hdev->msft_data;
-> > +       struct msft_data *msft;
-> >
-> > -       if (!msft || !msft_monitor_supported(hdev))
-> > +       msft =3D msft_data_hold_unless_zero(hdev->msft_data);
-> > +       if (!msft)
-> >                 return 0;
-> >
-> > +       if (!msft_monitor_supported(hdev)) {
-> > +               msft_data_put(msft);
-> > +               return 0;
-> > +       }
-> > +
-> >         hci_dev_lock(hdev);
-> >
-> >         /* Clear already tracked devices on resume. Once the monitors a=
-re
-> > @@ -625,17 +672,19 @@ int msft_resume_sync(struct hci_dev *hdev)
-> >
-> >         reregister_monitor(hdev);
-> >
-> > +       msft_data_put(msft);
-> >         return 0;
-> >  }
-> >
-> >  /* This function requires the caller holds hci_req_sync_lock */
-> >  void msft_do_open(struct hci_dev *hdev)
-> >  {
-> > -       struct msft_data *msft =3D hdev->msft_data;
-> > +       struct msft_data *msft;
-> >
-> >         if (hdev->msft_opcode =3D=3D HCI_OP_NOP)
-> >                 return;
-> >
-> > +       msft =3D msft_data_hold_unless_zero(hdev->msft_data);
-> >         if (!msft) {
-> >                 bt_dev_err(hdev, "MSFT extension not registered");
-> >                 return;
-> > @@ -650,8 +699,7 @@ void msft_do_open(struct hci_dev *hdev)
-> >         msft->features =3D 0;
-> >
-> >         if (!read_supported_features(hdev, msft)) {
-> > -               hdev->msft_data =3D NULL;
-> > -               kfree(msft);
-> > +               msft_data_put(msft);
-> >                 return;
-> >         }
-> >
-> > @@ -663,15 +711,17 @@ void msft_do_open(struct hci_dev *hdev)
-> >                  */
-> >                 reregister_monitor(hdev);
-> >         }
-> > +       msft_data_put(msft);
-> >  }
-> >
-> >  void msft_do_close(struct hci_dev *hdev)
-> >  {
-> > -       struct msft_data *msft =3D hdev->msft_data;
-> > +       struct msft_data *msft;
-> >         struct msft_monitor_advertisement_handle_data *handle_data, *tm=
-p;
-> >         struct msft_monitor_addr_filter_data *address_filter, *n;
-> >         struct adv_monitor *monitor;
-> >
-> > +       msft =3D msft_data_hold_unless_zero(hdev->msft_data);
-> >         if (!msft)
-> >                 return;
-> >
-> > @@ -705,6 +755,8 @@ void msft_do_close(struct hci_dev *hdev)
-> >         hdev->advmon_pend_notify =3D false;
-> >         msft_monitor_device_del(hdev, 0, NULL, 0, true);
-> >
-> > +       msft_data_put(msft);
-> > +
-> >         hci_dev_unlock(hdev);
-> >  }
-> >
-> > @@ -767,6 +819,7 @@ void msft_register(struct hci_dev *hdev)
-> >         INIT_LIST_HEAD(&msft->address_filters);
-> >         hdev->msft_data =3D msft;
-> >         mutex_init(&msft->filter_lock);
-> > +       kref_init(&msft->kref);
-> >  }
-> >
-> >  void msft_unregister(struct hci_dev *hdev)
-> > @@ -779,10 +832,7 @@ void msft_unregister(struct hci_dev *hdev)
-> >         bt_dev_dbg(hdev, "Unregister MSFT extension");
-> >
-> >         hdev->msft_data =3D NULL;
-> > -
-> > -       kfree(msft->evt_prefix);
-> > -       mutex_destroy(&msft->filter_lock);
-> > -       kfree(msft);
-> > +       msft_data_put(msft);
-> >  }
-> >
-> >  /* This function requires the caller holds hdev->lock */
-> > @@ -1068,10 +1118,11 @@ static void msft_monitor_device_evt(struct hci_=
-dev *hdev, struct sk_buff *skb)
-> >
-> >  void msft_vendor_evt(struct hci_dev *hdev, void *data, struct sk_buff =
-*skb)
-> >  {
-> > -       struct msft_data *msft =3D hdev->msft_data;
-> > +       struct msft_data *msft;
-> >         u8 *evt_prefix;
-> >         u8 *evt;
-> >
-> > +       msft =3D msft_data_hold_unless_zero(hdev->msft_data);
-> >         if (!msft)
-> >                 return;
-> >
-> > @@ -1081,21 +1132,21 @@ void msft_vendor_evt(struct hci_dev *hdev, void=
- *data, struct sk_buff *skb)
-> >         if (msft->evt_prefix_len > 0) {
-> >                 evt_prefix =3D msft_skb_pull(hdev, skb, 0, msft->evt_pr=
-efix_len);
-> >                 if (!evt_prefix)
-> > -                       return;
-> > +                       goto done;
-> >
-> >                 if (memcmp(evt_prefix, msft->evt_prefix, msft->evt_pref=
-ix_len))
-> > -                       return;
-> > +                       goto done;
-> >         }
-> >
-> >         /* Every event starts at least with an event code and the rest =
-of
-> >          * the data is variable and depends on the event code.
-> >          */
-> >         if (skb->len < 1)
-> > -               return;
-> > +               goto done;
-> >
-> >         evt =3D msft_skb_pull(hdev, skb, 0, sizeof(*evt));
-> >         if (!evt)
-> > -               return;
-> > +               goto done;
-> >
-> >         hci_dev_lock(hdev);
-> >
-> > @@ -1112,13 +1163,24 @@ void msft_vendor_evt(struct hci_dev *hdev, void=
- *data, struct sk_buff *skb)
-> >         }
-> >
-> >         hci_dev_unlock(hdev);
-> > +
-> > +done:
-> > +       msft_data_put(msft);
-> >  }
-> >
-> >  __u64 msft_get_features(struct hci_dev *hdev)
-> >  {
-> > -       struct msft_data *msft =3D hdev->msft_data;
-> > +       struct msft_data *msft;
-> > +       unsigned long long features;
-> > +
-> > +       msft =3D msft_data_hold_unless_zero(hdev->msft_data);
-> > +       if (!msft)
-> > +               return 0;
-> > +
-> > +       features =3D msft->features;
-> >
-> > -       return msft ? msft->features : 0;
-> > +       msft_data_put(msft);
-> > +       return features;
-> >  }
-> >
-> >  static void msft_le_set_advertisement_filter_enable_cb(struct hci_dev =
-*hdev,
-> > @@ -1152,37 +1214,48 @@ static void msft_le_set_advertisement_filter_en=
-able_cb(struct hci_dev *hdev,
-> >  /* This function requires the caller holds hci_req_sync_lock */
-> >  int msft_add_monitor_pattern(struct hci_dev *hdev, struct adv_monitor =
-*monitor)
-> >  {
-> > -       struct msft_data *msft =3D hdev->msft_data;
-> > +       struct msft_data *msft;
-> > +       int err;
-> >
-> > +       msft =3D msft_data_hold_unless_zero(hdev->msft_data);
-> >         if (!msft)
-> >                 return -EOPNOTSUPP;
-> >
-> > -       if (msft->resuming || msft->suspending)
-> > +       if (msft->resuming || msft->suspending) {
-> > +               msft_data_put(msft);
-> >                 return -EBUSY;
-> > +       }
-> >
-> > -       return msft_add_monitor_sync(hdev, monitor);
-> > +       err =3D msft_add_monitor_sync(hdev, monitor);
-> > +       msft_data_put(msft);
-> > +       return err;
-> >  }
-> >
-> >  /* This function requires the caller holds hci_req_sync_lock */
-> >  int msft_remove_monitor(struct hci_dev *hdev, struct adv_monitor *moni=
-tor)
-> >  {
-> > -       struct msft_data *msft =3D hdev->msft_data;
-> > +       struct msft_data *msft;
-> > +       int err;
-> >
-> > +       msft =3D msft_data_hold_unless_zero(hdev->msft_data);
-> >         if (!msft)
-> >                 return -EOPNOTSUPP;
-> >
-> >         if (msft->resuming || msft->suspending)
-> >                 return -EBUSY;
-> >
-> > -       return msft_remove_monitor_sync(hdev, monitor);
-> > +       err =3D msft_remove_monitor_sync(hdev, monitor);
-> > +       msft_data_put(msft);
-> > +       return err;
-> >  }
-> >
-> >  int msft_set_filter_enable(struct hci_dev *hdev, bool enable)
-> >  {
-> >         struct msft_cp_le_set_advertisement_filter_enable cp;
-> > -       struct msft_data *msft =3D hdev->msft_data;
-> > +       struct msft_data *msft;
-> >         int err;
-> >
-> > +       msft =3D msft_data_hold_unless_zero(hdev->msft_data);
-> >         if (!msft)
-> >                 return -EOPNOTSUPP;
-> >
-> > @@ -1193,6 +1266,7 @@ int msft_set_filter_enable(struct hci_dev *hdev, =
-bool enable)
-> >
-> >         msft_le_set_advertisement_filter_enable_cb(hdev, &cp, err);
-> >
-> > +       msft_data_put(msft);
-> >         return 0;
-> >  }
-> >
-> > --
-> > 2.34.1
->
-> Looks at the current code I do wonder if the order is incorrect since we =
-do:
->
->     msft_unregister(hdev);
->
->     hci_dev_do_close(hdev);
->
-> Anyway msft_unregister shall probably be renamed to msft_release and
+selftests: tc-testing: tdc.sh log and crash log
+---------------
 
-It could be a nitpick but how about making msft_unregister() static
-and wrapping this with msft_release() for consistency?
-Since msft_register is there, it may look inconsistent if
-msft_unregister() doesn't exist.
+[ 1826.047350] kselftest: Running tests in tc-testing
+TAP version 13
+1..1
+# timeout set to 900
+# selftests: tc-testing: tdc.sh
+# netdevsim
+[ 1826.536738] Mirror/redirect action on
+[ 1826.704305] Simple TC action Loaded
+[ 1827.053726] u32 classifier
+[ 1827.056463]     Performance counters on
+[ 1827.060324]     input device check on
+[ 1827.064007]     Actions configured
+# Module em_ipset not found... skipping.
+# em_ipt
 
-> then called from hci_release_dev instead since that is where we free
-> fields of hdev, not on unregister.
->
-> --
-> Luiz Augusto von Dentz
->
+<trim>
 
-Best,
-Sungwoo.
+# sch_hhf
+# sch_htb
+# sch_teql
+#  -- ns/SubPlugin.__init__
+#  -- scapy/SubPlugin.__init__
+# Executing 1099 tests in parallel and 60 in serial
+# Using 36 batches and 4 workers
+[ 1834.080968] tc (27632) used greatest stack depth: 9848 bytes left
+[ 1844.138708] ------------[ cut here ]------------
+[ 1844.143341] WARNING: CPU: 0 PID: 27197 at kernel/locking/lockdep.c:1226 lockdep_register_key (kernel/locking/lockdep.c:1226 (discriminator 1)) 
+[ 1844.152735] Modules linked in: algif_hash sch_teql sch_htb sch_hhf sch_hfsc sch_gred sch_fq_pie sch_pie sch_ets sch_etf sch_drr sch_codel sch_choke sch_cbs sch_cake em_u32 em_text em_nbyte em_meta em_ipt em_cmp em_canid cls_u32 cls_route cls_matchall cls_flow cls_basic act_vlan act_tunnel_key act_skbmod act_skbedit act_simple act_sample act_police act_nat act_mpls act_mirred act_gate act_ctinfo act_ct nf_flow_table act_connmark act_csum act_pedit cls_fw xt_mark xt_length nft_compat nft_tproxy nf_tproxy_ipv6 nf_tproxy_ipv4 nft_socket nf_socket_ipv4 nf_socket_ipv6 nf_tables veth x86_pkg_temp_thermal fuse configfs
+[ 1844.206814] CPU: 0 PID: 27197 Comm: python3 Not tainted 6.9.0-rc6-next-20240429 #1
+[ 1844.214382] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS 2.7 12/07/2021
+[ 1844.221774] RIP: 0010:lockdep_register_key (kernel/locking/lockdep.c:1226 (discriminator 1)) 
+[ 1844.226826] Code: 0f 84 e3 00 00 00 4a 8b 04 e5 80 b1 bf 9f 48 85 c0 75 11 e9 a8 00 00 00 48 8b 00 48 85 c0 0f 84 9c 00 00 00 48 39 c3 75 ef 90 <0f> 0b 90 8b 3d 91 51 ad 04 85 ff 75 2c 9c 58 f6 c4 02 0f 85 ee 00
+All code
+========
+   0:	0f 84 e3 00 00 00    	je     0xe9
+   6:	4a 8b 04 e5 80 b1 bf 	mov    -0x60404e80(,%r12,8),%rax
+   d:	9f 
+   e:	48 85 c0             	test   %rax,%rax
+  11:	75 11                	jne    0x24
+  13:	e9 a8 00 00 00       	jmpq   0xc0
+  18:	48 8b 00             	mov    (%rax),%rax
+  1b:	48 85 c0             	test   %rax,%rax
+  1e:	0f 84 9c 00 00 00    	je     0xc0
+  24:	48 39 c3             	cmp    %rax,%rbx
+  27:	75 ef                	jne    0x18
+  29:	90                   	nop
+  2a:*	0f 0b                	ud2    		<-- trapping instruction
+  2c:	90                   	nop
+  2d:	8b 3d 91 51 ad 04    	mov    0x4ad5191(%rip),%edi        # 0x4ad51c4
+  33:	85 ff                	test   %edi,%edi
+  35:	75 2c                	jne    0x63
+  37:	9c                   	pushfq 
+  38:	58                   	pop    %rax
+  39:	f6 c4 02             	test   $0x2,%ah
+  3c:	0f                   	.byte 0xf
+  3d:	85 ee                	test   %ebp,%esi
+	...
+
+Code starting with the faulting instruction
+===========================================
+   0:	0f 0b                	ud2    
+   2:	90                   	nop
+   3:	8b 3d 91 51 ad 04    	mov    0x4ad5191(%rip),%edi        # 0x4ad519a
+   9:	85 ff                	test   %edi,%edi
+   b:	75 2c                	jne    0x39
+   d:	9c                   	pushfq 
+   e:	58                   	pop    %rax
+   f:	f6 c4 02             	test   $0x2,%ah
+  12:	0f                   	.byte 0xf
+  13:	85 ee                	test   %ebp,%esi
+	...
+[ 1844.245573] RSP: 0018:ffffb881880734f8 EFLAGS: 00010046
+[ 1844.250797] RAX: ffff9d321d473690 RBX: ffff9d321d473690 RCX: 0000000080000000
+[ 1844.257923] RDX: 0000000000000001 RSI: ffffffff9b35030d RDI: ffffffff9b35030d
+[ 1844.265053] RBP: ffffb88188073520 R08: 0000000000000001 R09: 00000000ffffffff
+[ 1844.272203] R10: 0000000000000000 R11: 0000000000000001 R12: 000000000000078b
+[ 1844.279329] R13: ffff9d32063c9d00 R14: 0000000000000206 R15: ffffffff9fbfedd8
+[ 1844.286461] FS:  00007f751447b4c0(0000) GS:ffff9d3567a00000(0000) knlGS:0000000000000000
+[ 1844.294546] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1844.300282] CR2: 00007f75135b0450 CR3: 00000001063d4006 CR4: 00000000003706f0
+[ 1844.307408] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1844.314539] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1844.321664] Call Trace:
+[ 1844.324108]  <TASK>
+[ 1844.326205] ? show_regs (arch/x86/kernel/dumpstack.c:479) 
+[ 1844.329613] ? __warn (kernel/panic.c:693) 
+[ 1844.332844] ? lockdep_register_key (kernel/locking/lockdep.c:1226 (discriminator 1)) 
+[ 1844.337291] ? report_bug (lib/bug.c:180 lib/bug.c:219) 
+[ 1844.340957] ? handle_bug (arch/x86/kernel/traps.c:239) 
+[ 1844.344449] ? exc_invalid_op (arch/x86/kernel/traps.c:260 (discriminator 1)) 
+[ 1844.348288] ? asm_exc_invalid_op (arch/x86/include/asm/idtentry.h:621) 
+[ 1844.352478] ? __is_module_percpu_address (kernel/module/main.c:449 (discriminator 3)) 
+[ 1844.357527] ? __is_module_percpu_address (kernel/module/main.c:449 (discriminator 3)) 
+[ 1844.362580] ? lockdep_register_key (kernel/locking/lockdep.c:1226 (discriminator 1)) 
+[ 1844.367053] qdisc_alloc (include/linux/spinlock.h:326 net/sched/sch_generic.c:949) 
+[ 1844.370569] ? lock_acquire (kernel/locking/lockdep.c:467 (discriminator 4) kernel/locking/lockdep.c:5756 (discriminator 4) kernel/locking/lockdep.c:5719 (discriminator 4)) 
+[ 1844.374315] qdisc_create_dflt (net/sched/sch_generic.c:1003 (discriminator 1)) 
+[ 1844.378327] dev_activate (net/sched/sch_generic.c:1169 include/linux/netdevice.h:2503 net/sched/sch_generic.c:1186 net/sched/sch_generic.c:1245) 
+[ 1844.381995] __dev_open (net/core/dev.c:1468) 
+[ 1844.385486] __dev_change_flags (net/core/dev.c:8763) 
+[ 1844.389671] ? arch_stack_walk (arch/x86/kernel/stacktrace.c:27) 
+[ 1844.393686] dev_change_flags (net/core/dev.c:8836) 
+[ 1844.397524] do_setlink (net/core/rtnetlink.c:2886) 
+[ 1844.401106] ? stack_depot_save (lib/stackdepot.c:687) 
+[ 1844.405116] ? __nla_validate_parse (include/net/netlink.h:1267 lib/nlattr.c:622) 
+[ 1844.409560] ? rtnl_newlink (net/core/rtnetlink.c:3724) 
+[ 1844.413218] ? rtnetlink_rcv_msg (net/core/rtnetlink.c:6594) 
+[ 1844.417489] ? netlink_rcv_skb (net/netlink/af_netlink.c:2564) 
+[ 1844.421493] ? rtnetlink_rcv (net/core/rtnetlink.c:6613) 
+[ 1844.425238] ? netlink_unicast (net/netlink/af_netlink.c:1335 net/netlink/af_netlink.c:1361) 
+[ 1844.429329] ? netlink_sendmsg (net/netlink/af_netlink.c:1905) 
+[ 1844.433419] ? __sys_sendto (net/socket.c:730 (discriminator 1) net/socket.c:745 (discriminator 1) net/socket.c:2191 (discriminator 1)) 
+[ 1844.437259] ? __x64_sys_sendto (net/socket.c:2199) 
+[ 1844.441272] ? x64_sys_call (arch/x86/entry/syscall_64.c:33) 
+[ 1844.445290] __rtnl_newlink (net/core/rtnetlink.c:3680) 
+[ 1844.449138] ? preempt_count_sub (kernel/sched/core.c:5889 kernel/sched/core.c:5885 kernel/sched/core.c:5907) 
+[ 1844.453243] rtnl_newlink (net/core/rtnetlink.c:3728) 
+[ 1844.456733] rtnetlink_rcv_msg (net/core/rtnetlink.c:6594) 
+[ 1844.460835] ? __pfx_rtnetlink_rcv_msg (net/core/rtnetlink.c:6488) 
+[ 1844.465452] netlink_rcv_skb (net/netlink/af_netlink.c:2564) 
+[ 1844.469287] rtnetlink_rcv (net/core/rtnetlink.c:6613) 
+[ 1844.472863] netlink_unicast (net/netlink/af_netlink.c:1335 net/netlink/af_netlink.c:1361) 
+[ 1844.476788] netlink_sendmsg (net/netlink/af_netlink.c:1905) 
+[ 1844.480718] __sys_sendto (net/socket.c:730 (discriminator 1) net/socket.c:745 (discriminator 1) net/socket.c:2191 (discriminator 1)) 
+[ 1844.484397] __x64_sys_sendto (net/socket.c:2199) 
+[ 1844.488246] x64_sys_call (arch/x86/entry/syscall_64.c:33) 
+[ 1844.492083] do_syscall_64 (arch/x86/entry/common.c:52 (discriminator 1) arch/x86/entry/common.c:83 (discriminator 1)) 
+[ 1844.495747] ? trace_napi_poll (include/trace/events/napi.h:14 (discriminator 2)) 
+[ 1844.499677] ? __napi_poll.constprop.0 (net/core/dev.c:6714 (discriminator 1)) 
+[ 1844.504382] ? net_rx_action (net/core/dev.c:6777 net/core/dev.c:6893) 
+[ 1844.508311] ? trace_preempt_on (kernel/trace/trace_preemptirq.c:105) 
+[ 1844.512320] ? __do_softirq (kernel/softirq.c:401 (discriminator 2) kernel/softirq.c:583 (discriminator 2)) 
+[ 1844.516159] ? __local_bh_enable (kernel/softirq.c:343 (discriminator 1)) 
+[ 1844.520262] ? irqentry_exit_to_user_mode (kernel/entry/common.c:234) 
+[ 1844.525227] ? irqentry_exit (kernel/entry/common.c:367) 
+[ 1844.528978] ? common_interrupt (arch/x86/kernel/irq.c:247) 
+[ 1844.532990] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130) 
+[ 1844.538050] RIP: 0033:0x7f7514586b93
+[ 1844.541658] Code: 8b 15 71 72 0c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b8 0f 1f 00 80 3d 51 fa 0c 00 00 41 89 ca 74 14 b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 75 c3 0f 1f 40 00 55 48 83 ec 30 44 89 4c 24
+All code
+========
+   0:	8b 15 71 72 0c 00    	mov    0xc7271(%rip),%edx        # 0xc7277
+   6:	f7 d8                	neg    %eax
+   8:	64 89 02             	mov    %eax,%fs:(%rdx)
+   b:	48 c7 c0 ff ff ff ff 	mov    $0xffffffffffffffff,%rax
+  12:	eb b8                	jmp    0xffffffffffffffcc
+  14:	0f 1f 00             	nopl   (%rax)
+  17:	80 3d 51 fa 0c 00 00 	cmpb   $0x0,0xcfa51(%rip)        # 0xcfa6f
+  1e:	41 89 ca             	mov    %ecx,%r10d
+  21:	74 14                	je     0x37
+  23:	b8 2c 00 00 00       	mov    $0x2c,%eax
+  28:	0f 05                	syscall 
+  2a:*	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax		<-- trapping instruction
+  30:	77 75                	ja     0xa7
+  32:	c3                   	retq   
+  33:	0f 1f 40 00          	nopl   0x0(%rax)
+  37:	55                   	push   %rbp
+  38:	48 83 ec 30          	sub    $0x30,%rsp
+  3c:	44                   	rex.R
+  3d:	89                   	.byte 0x89
+  3e:	4c                   	rex.WR
+  3f:	24                   	.byte 0x24
+
+Code starting with the faulting instruction
+===========================================
+   0:	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax
+   6:	77 75                	ja     0x7d
+   8:	c3                   	retq   
+   9:	0f 1f 40 00          	nopl   0x0(%rax)
+   d:	55                   	push   %rbp
+   e:	48 83 ec 30          	sub    $0x30,%rsp
+  12:	44                   	rex.R
+  13:	89                   	.byte 0x89
+  14:	4c                   	rex.WR
+  15:	24                   	.byte 0x24
+[ 1844.560401] RSP: 002b:00007ffc23a81e48 EFLAGS: 00000202 ORIG_RAX: 000000000000002c
+[ 1844.567970] RAX: ffffffffffffffda RBX: 00007ffc23a81ef8 RCX: 00007f7514586b93
+[ 1844.575101] RDX: 0000000000000020 RSI: 00007f7511b49260 RDI: 0000000000000010
+[ 1844.582224] RBP: 0000000000000000 R08: 00007ffc23a81f70 R09: 000000000000000c
+[ 1844.589349] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
+[ 1844.596474] R13: ffffffffc4653600 R14: 0000000000000000 R15: 0000000000000000
+[ 1844.603612]  </TASK>
+[ 1844.605799] irq event stamp: 224795
+[ 1844.609292] hardirqs last enabled at (224795): _raw_spin_unlock_irqrestore (arch/x86/include/asm/irqflags.h:42 arch/x86/include/asm/irqflags.h:77 arch/x86/include/asm/irqflags.h:135 include/linux/spinlock_api_smp.h:151 kernel/locking/spinlock.c:194) 
+[ 1844.618937] hardirqs last disabled at (224794): _raw_spin_lock_irqsave (include/linux/spinlock_api_smp.h:108 (discriminator 1) kernel/locking/spinlock.c:162 (discriminator 1)) 
+[ 1844.628150] softirqs last enabled at (224790): __dev_open (net/core/dev.c:1467) 
+[ 1844.636495] softirqs last disabled at (224788): __dev_open (include/linux/bottom_half.h:20 (discriminator 1) include/linux/netdevice.h:4497 (discriminator 1) net/core/dev.c:8689 (discriminator 1) net/core/dev.c:1466 (discriminator 1)) 
+[ 1844.644843] ---[ end trace 0000000000000000 ]---
+[ 1846.004811] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[ 1846.011772] #PF: supervisor write access in kernel mode
+[ 1846.016998] #PF: error_code(0x0002) - not-present page
+[ 1846.022131] PGD 0 P4D 0
+[ 1846.024670] Oops: Oops: 0002 [#1] PREEMPT SMP PTI
+[ 1846.029375] CPU: 0 PID: 23358 Comm: kworker/u16:5 Tainted: G        W          6.9.0-rc6-next-20240429 #1
+[ 1846.038933] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS 2.7 12/07/2021
+[ 1846.046318] Workqueue: netns cleanup_net
+[ 1846.050244] RIP: 0010:lockdep_unregister_key (include/linux/list.h:988 (discriminator 2) include/linux/rculist.h:513 (discriminator 2) kernel/locking/lockdep.c:6460 (discriminator 2)) 
+[ 1846.055469] Code: c0 4c 89 2d f1 41 ad 04 75 11 e9 f5 00 00 00 48 8b 00 48 85 c0 0f 84 e9 00 00 00 48 39 c3 75 ef 48 8b 10 48 8b 48 08 48 85 d2 <48> 89 11 74 04 48 89 4a 08 48 b9 22 01 00 00 00 00 ad de ba 01 00
+All code
+========
+   0:	c0 4c 89 2d f1       	rorb   $0xf1,0x2d(%rcx,%rcx,4)
+   5:	41 ad                	rex.B lods %ds:(%rsi),%eax
+   7:	04 75                	add    $0x75,%al
+   9:	11 e9                	adc    %ebp,%ecx
+   b:	f5                   	cmc    
+   c:	00 00                	add    %al,(%rax)
+   e:	00 48 8b             	add    %cl,-0x75(%rax)
+  11:	00 48 85             	add    %cl,-0x7b(%rax)
+  14:	c0 0f 84             	rorb   $0x84,(%rdi)
+  17:	e9 00 00 00 48       	jmpq   0x4800001c
+  1c:	39 c3                	cmp    %eax,%ebx
+  1e:	75 ef                	jne    0xf
+  20:	48 8b 10             	mov    (%rax),%rdx
+  23:	48 8b 48 08          	mov    0x8(%rax),%rcx
+  27:	48 85 d2             	test   %rdx,%rdx
+  2a:*	48 89 11             	mov    %rdx,(%rcx)		<-- trapping instruction
+  2d:	74 04                	je     0x33
+  2f:	48 89 4a 08          	mov    %rcx,0x8(%rdx)
+  33:	48 b9 22 01 00 00 00 	movabs $0xdead000000000122,%rcx
+  3a:	00 ad de 
+  3d:	ba                   	.byte 0xba
+  3e:	01 00                	add    %eax,(%rax)
+
+Code starting with the faulting instruction
+===========================================
+   0:	48 89 11             	mov    %rdx,(%rcx)
+   3:	74 04                	je     0x9
+   5:	48 89 4a 08          	mov    %rcx,0x8(%rdx)
+   9:	48 b9 22 01 00 00 00 	movabs $0xdead000000000122,%rcx
+  10:	00 ad de 
+  13:	ba                   	.byte 0xba
+  14:	01 00                	add    %eax,(%rax)
+[ 1846.074217] RSP: 0018:ffffb88184affbd8 EFLAGS: 00010046
+[ 1846.079442] RAX: ffff9d321d473690 RBX: ffff9d321d473690 RCX: 0000000000000000
+[ 1846.086573] RDX: 0000000000000000 RSI: ffffffff9b35030d RDI: ffffffff9b35030d
+[ 1846.093699] RBP: ffffb88184affbf8 R08: 0000000000000001 R09: 0000000000000004
+[ 1846.100831] R10: 0000000000000000 R11: 0000000000000000 R12: 000000000000078b
+[ 1846.107964] R13: ffff9d3204285680 R14: 0000000000000246 R15: ffff9d321d4b9000
+[ 1846.115097] FS:  0000000000000000(0000) GS:ffff9d3567a00000(0000) knlGS:0000000000000000
+[ 1846.123183] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1846.128927] CR2: 0000000000000000 CR3: 00000001158be005 CR4: 00000000003706f0
+[ 1846.136065] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1846.143220] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1846.150352] Call Trace:
+[ 1846.152796]  <TASK>
+[ 1846.154895] ? show_regs (arch/x86/kernel/dumpstack.c:479) 
+[ 1846.158301] ? __die (arch/x86/kernel/dumpstack.c:421 arch/x86/kernel/dumpstack.c:434) 
+[ 1846.161360] ? page_fault_oops (arch/x86/mm/fault.c:715) 
+[ 1846.165463] ? do_user_addr_fault (arch/x86/mm/fault.c:1267) 
+[ 1846.169826] ? trace_irq_disable (include/trace/events/preemptirq.h:36 (discriminator 2)) 
+[ 1846.173926] ? exc_page_fault (arch/x86/include/asm/irqflags.h:26 arch/x86/include/asm/irqflags.h:67 arch/x86/include/asm/irqflags.h:127 arch/x86/mm/fault.c:1520 arch/x86/mm/fault.c:1570) 
+[ 1846.177853] ? asm_exc_page_fault (arch/x86/include/asm/idtentry.h:623) 
+[ 1846.182067] ? __is_module_percpu_address (kernel/module/main.c:449 (discriminator 3)) 
+[ 1846.187141] ? __is_module_percpu_address (kernel/module/main.c:449 (discriminator 3)) 
+[ 1846.192196] ? lockdep_unregister_key (include/linux/list.h:988 (discriminator 2) include/linux/rculist.h:513 (discriminator 2) kernel/locking/lockdep.c:6460 (discriminator 2)) 
+[ 1846.196815] __qdisc_destroy (net/sched/sch_generic.c:1074) 
+[ 1846.200653] qdisc_put (net/sched/sch_generic.c:1100) 
+[ 1846.203884] shutdown_scheduler_queue (net/sched/sch_generic.c:1154) 
+[ 1846.208418] dev_shutdown (include/linux/netdevice.h:2502 (discriminator 1) net/sched/sch_generic.c:1484 (discriminator 1)) 
+[ 1846.211998] unregister_netdevice_many_notify (include/net/tcx.h:169 net/core/dev.c:11196) 
+[ 1846.217401] default_device_exit_batch (net/core/dev.c:11743) 
+[ 1846.222201] ops_exit_list (net/core/net_namespace.c:175) 
+[ 1846.225778] cleanup_net (net/core/net_namespace.c:636 (discriminator 3)) 
+[ 1846.229358] process_one_work (kernel/workqueue.c:3222) 
+[ 1846.233373] worker_thread (kernel/workqueue.c:3297 (discriminator 2) kernel/workqueue.c:3384 (discriminator 2)) 
+[ 1846.237122] ? __pfx_worker_thread (kernel/workqueue.c:3330) 
+[ 1846.241395] kthread (kernel/kthread.c:389) 
+[ 1846.244540] ? __pfx_kthread (kernel/kthread.c:342) 
+[ 1846.248294] ret_from_fork (arch/x86/kernel/process.c:147) 
+[ 1846.251872] ? __pfx_kthread (kernel/kthread.c:342) 
+[ 1846.255627] ret_from_fork_asm (arch/x86/entry/entry_64.S:257) 
+[ 1846.259557]  </TASK>
+[ 1846.261751] Modules linked in: algif_hash sch_teql sch_htb sch_hhf sch_hfsc sch_gred sch_fq_pie sch_pie sch_ets sch_etf sch_drr sch_codel sch_choke sch_cbs sch_cake em_u32 em_text em_nbyte em_meta em_ipt em_cmp em_canid cls_u32 cls_route cls_matchall cls_flow cls_basic act_vlan act_tunnel_key act_skbmod act_skbedit act_simple act_sample act_police act_nat act_mpls act_mirred act_gate act_ctinfo act_ct nf_flow_table act_connmark act_csum act_pedit cls_fw xt_mark xt_length nft_compat nft_tproxy nf_tproxy_ipv6 nf_tproxy_ipv4 nft_socket nf_socket_ipv4 nf_socket_ipv6 nf_tables veth x86_pkg_temp_thermal fuse configfs
+[ 1846.315824] CR2: 0000000000000000
+[ 1846.319135] ---[ end trace 0000000000000000 ]---
+[ 1846.323752] RIP: 0010:lockdep_unregister_key (include/linux/list.h:988 (discriminator 2) include/linux/rculist.h:513 (discriminator 2) kernel/locking/lockdep.c:6460 (discriminator 2)) 
+[ 1846.328980] Code: c0 4c 89 2d f1 41 ad 04 75 11 e9 f5 00 00 00 48 8b 00 48 85 c0 0f 84 e9 00 00 00 48 39 c3 75 ef 48 8b 10 48 8b 48 08 48 85 d2 <48> 89 11 74 04 48 89 4a 08 48 b9 22 01 00 00 00 00 ad de ba 01 00
+All code
+========
+   0:	c0 4c 89 2d f1       	rorb   $0xf1,0x2d(%rcx,%rcx,4)
+   5:	41 ad                	rex.B lods %ds:(%rsi),%eax
+   7:	04 75                	add    $0x75,%al
+   9:	11 e9                	adc    %ebp,%ecx
+   b:	f5                   	cmc    
+   c:	00 00                	add    %al,(%rax)
+   e:	00 48 8b             	add    %cl,-0x75(%rax)
+  11:	00 48 85             	add    %cl,-0x7b(%rax)
+  14:	c0 0f 84             	rorb   $0x84,(%rdi)
+  17:	e9 00 00 00 48       	jmpq   0x4800001c
+  1c:	39 c3                	cmp    %eax,%ebx
+  1e:	75 ef                	jne    0xf
+  20:	48 8b 10             	mov    (%rax),%rdx
+  23:	48 8b 48 08          	mov    0x8(%rax),%rcx
+  27:	48 85 d2             	test   %rdx,%rdx
+  2a:*	48 89 11             	mov    %rdx,(%rcx)		<-- trapping instruction
+  2d:	74 04                	je     0x33
+  2f:	48 89 4a 08          	mov    %rcx,0x8(%rdx)
+  33:	48 b9 22 01 00 00 00 	movabs $0xdead000000000122,%rcx
+  3a:	00 ad de 
+  3d:	ba                   	.byte 0xba
+  3e:	01 00                	add    %eax,(%rax)
+
+Code starting with the faulting instruction
+===========================================
+   0:	48 89 11             	mov    %rdx,(%rcx)
+   3:	74 04                	je     0x9
+   5:	48 89 4a 08          	mov    %rcx,0x8(%rdx)
+   9:	48 b9 22 01 00 00 00 	movabs $0xdead000000000122,%rcx
+  10:	00 ad de 
+  13:	ba                   	.byte 0xba
+  14:	01 00                	add    %eax,(%rax)
+[ 1846.347724] RSP: 0018:ffffb88184affbd8 EFLAGS: 00010046
+[ 1846.352952] RAX: ffff9d321d473690 RBX: ffff9d321d473690 RCX: 0000000000000000
+[ 1846.360094] RDX: 0000000000000000 RSI: ffffffff9b35030d RDI: ffffffff9b35030d
+[ 1846.367226] RBP: ffffb88184affbf8 R08: 0000000000000001 R09: 0000000000000004
+[ 1846.374358] R10: 0000000000000000 R11: 0000000000000000 R12: 000000000000078b
+[ 1846.381491] R13: ffff9d3204285680 R14: 0000000000000246 R15: ffff9d321d4b9000
+[ 1846.388623] FS:  0000000000000000(0000) GS:ffff9d3567a00000(0000) knlGS:0000000000000000
+[ 1846.396708] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1846.402445] CR2: 0000000000000000 CR3: 00000001158be005 CR4: 00000000003706f0
+[ 1846.409569] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1846.416693] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1846.423818] Kernel panic - not syncing: Fatal exception
+[ 1846.429068] Kernel Offset: 0x1a000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[ 1846.439851] ---[ end Kernel panic - not syncing: Fatal exception ]---
+
+
+metadata:
+---
+git_ref: master
+git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+git_sha: b0a2c79c6f3590b74742cbbc76687014d47972d8
+git_describe: next-20240429
+kernel_version: 6.9.0-rc6
+kernel-config:
+[1]  https://storage.tuxsuite.com/public/linaro/lkft/builds/2flbq1tpkBZoI95SsSfbE7zCTse/config
+
+Links:
+---
+- Test log: https://lkft.validation.linaro.org/scheduler/job/7524858#L1919
+- Build: https://storage.tuxsuite.com/public/linaro/lkft/builds/2flbq1tpkBZoI95SsSfbE7zCTse/
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240429/testrun/23711809/suite/log-parser-test/tests/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
