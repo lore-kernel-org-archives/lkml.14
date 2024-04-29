@@ -1,153 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D159D86263;
-	Mon, 29 Apr 2024 16:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF28D33C7;
+	Mon, 29 Apr 2024 16:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714409268; cv=none; b=CB4W613AE/SSLGso4+ddWc5N/9mjGyySk8z1Gd04TSw/FkMj+n4AnZcNaLTB/QzP4T4POZyS0ayjV+e0uyPs9uXq3d7yQ2nsZXIUjO4p5IKQ2YKPMlcdkBFgjUWvvEFy27LK2p7WLs0SMs5epJCpgByBLx76G7GQXZSHMIsm8mQ=
+	t=1714409511; cv=none; b=PjKvtG1Pg5joiQMpVhiDpsV8mGIxEOIZsaUoz1Q0pdk4TjnEJ53q1U1T4sngh5aMslWvlj/lR75EbtlfFwDrOEpePyjn43U4KGpJgontIqAGg04Cgg1X38pgHzYMgzDCZxR9VJV0OyoSzoRIEMP8Bfop317KKsKpX78sdvaUzrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714409268; c=relaxed/simple;
-	bh=MnL4wwFBRvxFYhZtbQtQFPVVePliJZwB8rJPvvbxlWM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Ao6xCaD0QY/56Bp6gg1R8xyjdLuSX9UJohsfcLd8S0eQZSMr/59SEApAjU88Y4Gnvlx+NBUkvNaViYvfJUl+lJ6ZX0ch+spGllSu3PBozWWZZc/AYMrxk1Nf4lkYPay5WYuA3E6D1Q4gftdCdeweUNiH9dqNy05r4B7sZHgX48A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WtMGH4um; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714409511; c=relaxed/simple;
+	bh=QJLySMYgKPWaWMPyrh9HHankw97JNTA7XxHF8MoanDU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pOG++BM63Kf3fSSGuJ4TepB3I1v4HevdIeeCh1TXwwxBq9F2wh0x77iNlxxx1ii6fF12NvqCL+a6DM4JOP04Wl9kX80rGXVD7n4ybMwzQ6b+KlNyVLPdonThGfP1Rl0NtKhv5Vcnq6YSatutVAf2LLTrWYud6xG5ut/1PcUhH/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cgnxoZev; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtMGH4um"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E46AEC4AF19;
-	Mon, 29 Apr 2024 16:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714409268;
-	bh=MnL4wwFBRvxFYhZtbQtQFPVVePliJZwB8rJPvvbxlWM=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=WtMGH4umkJiv7TxZC4NwF2f/L6qfRGBXLugLSVN5AfESsLdT+e8T+jzyG57A6XNtR
-	 REjScJ0KUPTHpyjFHMeAncsIVIzRHaMHhDzB0ymn5eu/RIm+L7xu5JwBdwAWBK6G5C
-	 d0KptMD0defaOHVS+cc80oaBjNUBwnBuYc0e3zg5UnCbkscN76TCo5uJ1EOwuqid3O
-	 7ET+d4rmLCXxxfAtbqAL9J6jHPukkcKpKUg8E+D5AxHUJz6Iv6veu509/HcHGeVpBf
-	 QtphIbzIo8/nJfDKdIDm5nXObYELxDAzJ7xNG1aOldAkjX/zLVcpLI4Igf11WX4anS
-	 rHYsqkxiH8ZZA==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cgnxoZev"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2b24dbd1bb6so289643a91.3;
+        Mon, 29 Apr 2024 09:51:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714409509; x=1715014309; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xFhiFPiemiTSARcy05czXiciKI4zhthcV3gzUyhyfZo=;
+        b=cgnxoZevKBHCWyO4V0kUqkFjvWflm3ETUDKQMYGaRRhRjeXkFLoZU/xhGr65VkM+UX
+         lqmCi0Jod8H91daMj8lZZEztamwFaH8yYHfRqf0cXik7yB+vAWnUqgeX/p/IXAk3k6uP
+         u3T0+mG3NkfAV0H2+AI3niAQZgS9Osr1QYJsj8bIrj7OYMGkdplAeUO0JUVG5MrNUzrY
+         vD4p62tdNkBWwaAPVzMt2MvLISAruivZcLhDVn8aP7FC9097q3my8GuwdVPtHdajYX2F
+         d6GmBd/TRYUgPyymajazWZqVLWyGjEe0cunyj0uADlD0VJIXUMUtjLMY1c76dRcYsHLz
+         q5Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714409509; x=1715014309;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xFhiFPiemiTSARcy05czXiciKI4zhthcV3gzUyhyfZo=;
+        b=bDUI2yh46XysM2CCS7afxGidMluOAMVBWLG0O8eoY+zDzNWlrptOAk8+JPS428OJPm
+         EmR/Oe+OD3Oxl2bb1QgVRg9xNQkANRyKRJJLAzkL8VmC2bLFiS5pEUXxL27jYqJ1bL01
+         hcp2KFSqcMckPh7mHfmt7PbTT0rZGUuCYteqYem2cMuZoWA8OthZ/8Bx0SXSJfs+E6mh
+         CpdWRq6J2vGS5bHldkuHM7+UuW3otfmw7MHfvczE1mr1K8fxLFIFrzBCknnF6q5GF7Ys
+         G2yczd4DewsbD0Y//mOcBvJaGr34LKGkDUMrDrVjLJ7execS77kfiOqW/A3FYaQciCXD
+         G4Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkLgqOEF1Y5RwHzeWepPSJHYtwEwv63XClKiT/mSmSGerPJq3DlV63xRcgG4QLWzo7LPv4a+Xyy9pLe73oohSeQP9P8zd+miMVL6H6DoDYmllJZY5zT8BUQu4MvklXA2fPJyuoeWfdMy3hZlg+0kOCVPSWTpbP9+Bjm8STXvVwi5ZgZcfJ5dwq
+X-Gm-Message-State: AOJu0YyN7GuVWv4/UDTbwgbp72xZwZFuDAXu95We3orKZY2HBE1z9Qjd
+	jLXFO6zC8QIYR9KolmSkIF6Sg0Dzv/ZVLqZoSCAupLZBMJSTYxM3
+X-Google-Smtp-Source: AGHT+IFTHhZzxxN0MM3ENYoF4u8yyFHcB9HiImRHm+ynCmr7bAYBJup8q1ytVzkGxYOxHJRUEbZB/Q==
+X-Received: by 2002:a17:90a:2f21:b0:2ad:eb55:2e39 with SMTP id s30-20020a17090a2f2100b002adeb552e39mr9524317pjd.49.1714409508881;
+        Mon, 29 Apr 2024 09:51:48 -0700 (PDT)
+Received: from 0xff07.hitronhub.home ([2407:4d00:3c04:80be:64cb:3685:54f4:1445])
+        by smtp.googlemail.com with ESMTPSA id p7-20020a17090a348700b002a55198259fsm5322473pjb.0.2024.04.29.09.51.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 09:51:47 -0700 (PDT)
+From: "Yo-Jung (Leo) Lin" <0xff07@gmail.com>
+To: skhan@linuxfoundation.org
+Cc: 0xff07@gmail.com,
+	Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: kselftest: fix codeblock
+Date: Tue, 30 Apr 2024 00:50:47 +0800
+Message-Id: <20240429165047.16088-1-0xff07@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 29 Apr 2024 19:47:44 +0300
-Message-Id: <D0WRD3IZ3AJC.GWZHZLHHBJ5B@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <lukas@wunner.de>
-Subject: Re: [PATCH v2] crypto: ecc - Prevent ecc_digits_from_bytes from
- reading too many bytes
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Stefan Berger" <stefanb@linux.ibm.com>, <keyrings@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <herbert@gondor.apana.org.au>,
- <davem@davemloft.net>
-X-Mailer: aerc 0.17.0
-References: <20240429161316.3146626-1-stefanb@linux.ibm.com>
-In-Reply-To: <20240429161316.3146626-1-stefanb@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon Apr 29, 2024 at 7:13 PM EEST, Stefan Berger wrote:
-> Prevent ecc_digits_from_bytes from reading too many bytes from the input
-> byte array in case an insufficient number of bytes is provided to fill th=
-e
-> output digit array of ndigits. Therefore, initialize the most significant
-> digits with 0 to avoid trying to read too many bytes later on. Convert th=
-e
-> function into a regular function since it is getting too big for an inlin=
-e
-> function.
->
-> If too many bytes are provided on the input byte array the extra bytes
-> are ignored since the input variable 'ndigits' limits the number of digit=
-s
-> that will be filled.
->
-> Fixes: d67c96fb97b5 ("crypto: ecdsa - Convert byte arrays with key coordi=
-nates to digits")
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->
-> ---
->
-> v2:
->  - un-inline function
->  - use memset
-> ---
->  crypto/ecc.c                  | 22 ++++++++++++++++++++++
->  include/crypto/internal/ecc.h | 15 ++-------------
->  2 files changed, 24 insertions(+), 13 deletions(-)
->
-> diff --git a/crypto/ecc.c b/crypto/ecc.c
-> index c1d2e884be1e..fe761256e335 100644
-> --- a/crypto/ecc.c
-> +++ b/crypto/ecc.c
-> @@ -68,6 +68,28 @@ const struct ecc_curve *ecc_get_curve(unsigned int cur=
-ve_id)
->  }
->  EXPORT_SYMBOL(ecc_get_curve);
-> =20
+Add extra colon to mark command in the next paragraph as codeblock
 
-Just a minor nit:
+Signed-off-by: Yo-Jung (Leo) Lin <0xff07@gmail.com>
+---
+ Documentation/dev-tools/kselftest.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-For exported symbol you need to document the function,including
-the parameters [1].
+diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
+index ff10dc6eef5d..dcf634e411bd 100644
+--- a/Documentation/dev-tools/kselftest.rst
++++ b/Documentation/dev-tools/kselftest.rst
+@@ -183,7 +183,7 @@ expected time it takes to run a test. If you have control over the systems
+ which will run the tests you can configure a test runner on those systems to
+ use a greater or lower timeout on the command line as with the `-o` or
+ the `--override-timeout` argument. For example to use 165 seconds instead
+-one would use:
++one would use::
+ 
+    $ ./run_kselftest.sh --override-timeout 165
+ 
+-- 
+2.34.1
 
-> +void ecc_digits_from_bytes(const u8 *in, unsigned int nbytes,
-> +			   u64 *out, unsigned int ndigits)
-> +{
-> +	int diff =3D ndigits - DIV_ROUND_UP(nbytes, sizeof(u64));
-> +	unsigned int o =3D nbytes & 7;
-> +	__be64 msd =3D 0;
-> +
-> +	/* diff > 0: not enough input bytes: set most significant digits to 0 *=
-/
-> +	if (diff > 0) {
-> +		ndigits -=3D diff;
-> +		memset(&out[ndigits - 1], 0, diff * sizeof(u64));
-> +	}
-> +
-> +	if (o) {
-> +		memcpy((u8 *)&msd + sizeof(msd) - o, in, o);
-> +		out[--ndigits] =3D be64_to_cpu(msd);
-> +		in +=3D o;
-> +	}
-> +	ecc_swap_digits(in, out, ndigits);
-> +}
-> +EXPORT_SYMBOL(ecc_digits_from_bytes);
-> +
->  static u64 *ecc_alloc_digits_space(unsigned int ndigits)
->  {
->  	size_t len =3D ndigits * sizeof(u64);
-> diff --git a/include/crypto/internal/ecc.h b/include/crypto/internal/ecc.=
-h
-> index 7ca1f463d1ec..f7e75e1e71f3 100644
-> --- a/include/crypto/internal/ecc.h
-> +++ b/include/crypto/internal/ecc.h
-> @@ -64,19 +64,8 @@ static inline void ecc_swap_digits(const void *in, u64=
- *out, unsigned int ndigit
->   * @out       Output digits array
->   * @ndigits:  Number of digits to create from byte array
->   */
-> -static inline void ecc_digits_from_bytes(const u8 *in, unsigned int nbyt=
-es,
-> -					 u64 *out, unsigned int ndigits)
-> -{
-> -	unsigned int o =3D nbytes & 7;
-> -	__be64 msd =3D 0;
-> -
-> -	if (o) {
-> -		memcpy((u8 *)&msd + sizeof(msd) - o, in, o);
-> -		out[--ndigits] =3D be64_to_cpu(msd);
-> -		in +=3D o;
-> -	}
-> -	ecc_swap_digits(in, out, ndigits);
-> -}
-> +void ecc_digits_from_bytes(const u8 *in, unsigned int nbytes,
-> +			   u64 *out, unsigned int ndigits);
-> =20
->  /**
->   * ecc_is_key_valid() - Validate a given ECDH private key
-
-[1] https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
-
-BR, Jarkko
