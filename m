@@ -1,222 +1,116 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CD7D530;
-	Mon, 29 Apr 2024 06:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD051171A;
+	Mon, 29 Apr 2024 06:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714373827; cv=none; b=HTg8oxnaY1YQEo2QjmsL6Mkv6kIK5ISagP8jkXjnrni5/kzhR+GSYKMXFM2Umg8dtx9A/TuEcMJddZKilniJQdesLHOD810SPld7z9Px5n+xUfI4tEFa6bnSqzwFGvtFUhYR5I08zovYAEVoc8+ugxgwkwb7hhhRwb90Fu3CfFs=
+	t=1714373831; cv=none; b=cGbiH89T5WUOf8pRie63r6+5bmL7HYXPTKr1ckD2ypxTu4Doz2kVBLWdIOgHbrGlCjtwRFiOJW8fWDkTxnSkJX0ysR3Yix0CGgAT0hEbUvQpi+LFrmS6fm9GLVrjBgTbbJlELgdeTiLxrmomCDLXvd5rkFrQZ8uQ7Sim4t935MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714373827; c=relaxed/simple;
-	bh=09FThBTM6Hwa/xsabgjmzwu4MaDIcTHSgg/+eqvr7L8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W7+L4VNe3vFj/2MIY2PNPUc1j+Wd1dy5Cc8C9qlyh9hDbPaMKPObXLEq5YUsM4KqwwTvKJgqE+6q7ivwoNWcKPLDhIC0Hk3fplTv6tz1ESy5eVqd3gSzhkkaKrY3F67uQCeMnHqALAXMy+t2c5e4QOQEV89gVkMTAudz4pnrix8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OJtApqpI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GNFMWpF+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OJtApqpI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GNFMWpF+; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OJtApqpI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GNFMWpF+";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OJtApqpI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GNFMWpF+"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 73D4D229E1;
-	Mon, 29 Apr 2024 06:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714373821; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=foSFvja1xtZKhFfCb1ELz3yeDCDBi6VORfN0RMsU5pA=;
-	b=OJtApqpIPGDK99iFXGxcMgAEKKSpnM04GzeAMgKa2KYTtHV2N5fgr5FwKZcqya773HSXu6
-	51Yuz6es2QA/gM88Razf4OefFkQliUzDjRexy4Q5ImYaQlh0Z1SWxn5VN348qvzftAkX1H
-	xMYJpgUYptBOswYZmmf2ysYF9QoScuI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714373821;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=foSFvja1xtZKhFfCb1ELz3yeDCDBi6VORfN0RMsU5pA=;
-	b=GNFMWpF+hD8jdZO3NGTur7+AX8P0TG8hhl97FjQtoFv8BAptI92Y6TI4srZUqvpGhG56FQ
-	OaByZXcdFnunNzDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714373821; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=foSFvja1xtZKhFfCb1ELz3yeDCDBi6VORfN0RMsU5pA=;
-	b=OJtApqpIPGDK99iFXGxcMgAEKKSpnM04GzeAMgKa2KYTtHV2N5fgr5FwKZcqya773HSXu6
-	51Yuz6es2QA/gM88Razf4OefFkQliUzDjRexy4Q5ImYaQlh0Z1SWxn5VN348qvzftAkX1H
-	xMYJpgUYptBOswYZmmf2ysYF9QoScuI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714373821;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=foSFvja1xtZKhFfCb1ELz3yeDCDBi6VORfN0RMsU5pA=;
-	b=GNFMWpF+hD8jdZO3NGTur7+AX8P0TG8hhl97FjQtoFv8BAptI92Y6TI4srZUqvpGhG56FQ
-	OaByZXcdFnunNzDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D1700138A7;
-	Mon, 29 Apr 2024 06:57:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gBRzMbxEL2YQbQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 29 Apr 2024 06:57:00 +0000
-Date: Mon, 29 Apr 2024 08:57:12 +0200
-Message-ID: <87o79s1ws7.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "Rajashekar Kuruva (Temp)" <quic_kuruva@quicinc.com>
-Cc: <srinivas.kandagatla@linaro.org>,
-	<mathias.nyman@intel.com>,
-	<perex@perex.cz>,
-	<conor+dt@kernel.org>,
-	<corbet@lwn.net>,
-	<lgirdwood@gmail.com>,
-	<andersson@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>,
-	<gregkh@linuxfoundation.org>,
-	<Thinh.Nguyen@synopsys.com>,
-	<broonie@kernel.org>,
-	<bgoswami@quicinc.com>,
-	<tiwai@suse.com>,
-	<robh@kernel.org>,
-	<konrad.dybcio@linaro.org>,
-	<linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>,
-	<linux-usb@vger.kernel.org>,
-	<linux-arm-msm@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>,
-	<alsa-devel@alsa-project.org>
-Subject: Re: [PATCH] [RFC PATCH] ALSA: usb-audio: endpoint: Prevent NULL pointer deference in snd_usb_endpoint_close
-In-Reply-To: <64ed9496-577c-4f31-b061-9f3dcaca4b26@quicinc.com>
-References: <20240426122511.547755-1-quic_kuruva@quicinc.com>
-	<877cgks399.wl-tiwai@suse.de>
-	<64ed9496-577c-4f31-b061-9f3dcaca4b26@quicinc.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1714373831; c=relaxed/simple;
+	bh=MR5pQ4oGzc/Gg45kvMMaZTUyVg/11QT5xq/OzfSgyB8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nMpmD8UnQOaCm+J24xAuQEEfLP/lDNLiySa5uqkLXr0PZgxk7Dbq823K1MU79VhLuZMvI9QXErvY7Mxsw6X56oC/Pj6pyUsuHmIP+igI6VKwfge9Vgt3tZmzxB3WW1Q0fwTo5EoxjOwUfKpPUp1obzsQVuQxN9G+hwwbJ7PxRtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 43T6uZUW13163003, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 43T6uZUW13163003
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 29 Apr 2024 14:56:35 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 29 Apr 2024 14:56:35 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 29 Apr 2024 14:56:35 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::d5b2:56ba:6b47:9975]) by
+ RTEXMBS01.realtek.com.tw ([fe80::d5b2:56ba:6b47:9975%5]) with mapi id
+ 15.01.2507.035; Mon, 29 Apr 2024 14:56:35 +0800
+From: Ricky WU <ricky_wu@realtek.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+CC: "wenchao.chen@unisoc.com" <wenchao.chen@unisoc.com>,
+        "ricardo@marliere.net" <ricardo@marliere.net>,
+        "marex@denx.de"
+	<marex@denx.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] mmc: core: resume not check card exist before powerup
+Thread-Topic: [PATCH] mmc: core: resume not check card exist before powerup
+Thread-Index: AQHaf/Di2MMAmClaHUaVpFhOVxydUrFMk6cAgAHWPUCAIOE18IAJkr8AgAYkPkA=
+Date: Mon, 29 Apr 2024 06:56:35 +0000
+Message-ID: <7cb1e8d8b1f64aa0a9a5c7c63929b95f@realtek.com>
+References: <20240327024545.138351-1-ricky_wu@realtek.com>
+ <CAPDyKFo3dkzDDEU7Lk14zH0td0AP=z2RJQibj8SP6JeUuz=iFA@mail.gmail.com>
+ <8b966794f2bb4fda8cc7d3e111bfef70@realtek.com>
+ <CAPDyKFp=prNyPE8hT_9irx0DyFCboF8Ms6uh4Euxe0oyPq79fg@mail.gmail.com>
+In-Reply-To: <CAPDyKFp=prNyPE8hT_9irx0DyFCboF8Ms6uh4Euxe0oyPq79fg@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -1.80
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linaro.org,intel.com,perex.cz,kernel.org,lwn.net,gmail.com,linuxfoundation.org,synopsys.com,quicinc.com,suse.com,vger.kernel.org,alsa-project.org];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[]
+MIME-Version: 1.0
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Mon, 29 Apr 2024 08:23:27 +0200,
-Rajashekar Kuruva (Temp) wrote:
-> 
-> 
-> On 4/26/2024 6:13 PM, Takashi Iwai wrote:
-> > On Fri, 26 Apr 2024 14:25:11 +0200,
-> > Rajashekar kuruva wrote:
-> >> When multiple plug-in and plug-out events occur,
-> >> there is a risk of encountering a NULL pointer dereference
-> >> leading to a kernel panic during a headset use-case.
-> >> this issue arises in the snd_usb_endpoint_close function
-> > Such a scenario can't happen: ep->iface_ref is changed only in
-> > chip->mutex lock, hence it can't be NULL there.
-> > 
-> > 
-> > thanks,
-> > 
-> > Takashi
-> 
-> Hi Takashi,
-> 
-> Actually we are facing NULL pointer deference while running headset
-> case when i checked call trace the last running function is
-> snd_usb_endpoint_close where iface_ref and clock_ref both are 0x0
-> 
-> [75703.933104][T10585] Unable to handle kernel NULL pointer
-> dereference at virtual address 0000000000000004
-> [75703.933113][T10585] [RB/E]rb_sreason_str_set: sreason_str set NULL
-> pointer dereference
-> [75703.933116][T10585] Mem abort info:
-> [75703.933117][T10585]   ESR = 0x0000000096000005
-> [75703.933119][T10585]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [75703.933120][T10585]   SET = 0, FnV = 0
-> [75703.933121][T10585]   EA = 0, S1PTW = 0
-> [75703.933123][T10585]   FSC = 0x05: level 1 translation fault
-> [75703.933124][T10585] Data abort info:
-> [75703.933124][T10585]   ISV = 0, ISS = 0x00000005
-> [75703.933125][T10585]   CM = 0, WnR = 0
-> …
-> [75703.933676][T10585] CPU: 3 PID: 10585 Comm: kworker/u17:0 Tainted:
-> G S      W  OE 6.1.43-android14-11-ga2fa77d36d26-ab11204829 #1
-> [75703.933697][T10585] pstate: 62400005 (nZCv daif +PAN -UAO +TCO -DIT
-> -SSBS BTYPE=--)
-> [75703.933700][T10585] pc : snd_usb_endpoint_close+0x30/0x104
-> [75703.933721][T10585] lr : snd_usb_endpoint_close+0x28/0x104
-> [75703.933724][T10585] sp : ffffffc04b2bb740
-> [75703.933725][T10585] x29: ffffffc04b2bb740 x28: ffffff8024e3ba78
-> x27: ffffffd266e91da0
-> [75703.933728][T10585] x26: ffffffc04b2bb7a8 x25: ffffff89bec5be00
-> x24: 00000000ffffffea
-> [75703.933730][T10585] x23: 0000000000000002 x22: ffffff885d568008
-> x21: ffffff8024e3ba78
-> [75703.933732][T10585] x20: ffffff885d568000 x19: ffffff8024e3bb18
-> x18: ffffffd26db2d140
-> [75703.933734][T10585] x17: 00000000f01b0818 x16: 00000000f01b0818
-> x15: 0000000000000008
-> [75703.933736][T10585] x14: ffffff8a3e2b5780 x13: ffffff8a3e2b5780
-> x12: ffffffd26cbd2770
-> [75703.933738][T10585] x11: 0000000000000001 x10: ffffff8984320000 x9
-> : 4f43b86e946b4e00
-> [75703.933740][T10585] x8 : 0000000000000000 x7 : 0000000000000001 x6
-> : fffffffdef8e8b70
-> [75703.933742][T10585] x5 : 0000000000000001 x4 : 0000000000000000 x3
-> : ffffff8024e3bb28
-> [75703.933743][T10585] x2 : 00000001011fa7c9 x1 : ffffffc04b2bb680 x0
-> : 0000000000000000
-> [75703.933746][T10585] Call trace:
-> [75703.933747][T10585]  snd_usb_endpoint_close+0x30/0x104
-
-Who is actually calling snd_usb_endpoint_close()?
-I guess that's rather a bug in the call pattern, not the code in
-USB-audio driver itself.
-
-snd_usb_endpoint_close() is supposed to be called only for a really
-opened endpoint.  So, if any, it's rather a race (or a bug) in the
-caller side, and it should be addressed there instead.
-
-
-thanks,
-
-Takashi
+PiA+DQo+ID4gU29mdCByZW1pbmRlcg0KPiA+DQo+ID4gSWYgdGhpcyBzb2x1dGlvbiwgeW91IHN0
+aWxsIGhhdmUgY29uY2VydCBvbiBzZC5jLg0KPiA+IGNhbiB3ZSBqdXN0IGRvIHRoaXMgY2hlY2sg
+Y2FyZCBmbG93IGluIG1tYyBob3N0IHBvd2VyIHVwIGNhbGxfYmFjaz8NCj4gPg0KPiA+ID4gPiA+
+DQo+ID4gPiA+ID4gX21tY19zZF9yZXN1bWUNCj4gPiA+ID4gPiBhZGQgZ2V0X2NkIGJlZm9yZSBj
+YWxsIHBvd2VydXAsIG1ha2Ugc3VyZSB0aGUgY2FyZCBleGlzdA0KPiA+ID4gPg0KPiA+ID4gPiBQ
+bGVhc2UgZWxhYm9yYXRlIG1vcmUgb24gd2hhdCBwcm9ibGVtIHlvdSBhcmUgdHJ5aW5nIHRvIHNv
+bHZlLCB0aGUNCj4gPiA+ID4gYWJvdmUgZG9lc24ndCBtYWtlIG11Y2ggc2Vuc2UgdG8gbWUsIHNv
+cnJ5Lg0KPiA+ID4gPg0KPiA+ID4gPiBZZXMsIHRoZSBjYXJkIG1heSBiZSByZW1vdmVkIHdoaWxl
+IHRoZSBzeXN0ZW0gaXMgc3VzcGVuZGVkLiBUaGVuLCBldmVuDQo+ID4gPiA+IGlmIC0+Z2V0X2Nk
+KCkgaW5kaWNhdGVzIHRoYXQgdGhlcmUgaXMgbm8gY2FyZCBpbnNlcnRlZCBpbiB0aGUNCj4gPiA+
+ID4gU0QtY2FyZC1zbG90LCB3ZSBtYXkgc3RpbGwgaGF2ZSB0aGUgY2FyZCBiZWluZyByZWdpc3Rl
+cmVkIC0gYW5kIHRoZW4NCj4gPiA+ID4gd2UgbmVlZCB0byB1bnJlZ2lzdGVyIGl0Lg0KPiA+ID4g
+PiBUaGF0IHNhaWQsIHdlIG5lZWQgdG8gY2FsbCBtbWNfcG93ZXJfdXAoKSBpbiBvcmRlciB0byB0
+cnkgdG8NCj4gPiA+ID4gY29tbXVuaWNhdGUgd2l0aCB0aGUgY2FyZCBhZ2Fpbi4gQXQgbGVhc3Qg
+dGhhdCBpcyB3aGF0IHRoZQ0KPiA+ID4gPiBtbWNfcmVzY2FuKCkgd29yayBhc3N1bWVzIHdoZW4g
+aXQgcnVucyB0aGUgYnVzX29wcy0+ZGV0ZWN0KCkgY2FsbGJhY2sNCj4gPiA+ID4gYXQgc29tZSBw
+b2ludCBsYXRlciBpbiB0aW1lLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IFdlIHNhdyB0aGUgcG93
+ZXIgdXAgaW4gYSBzaG9ydCB0aW1lIGZyb20gd2F2ZWZvcm0gd2hlbiByZW1vdmluZyB0aGUNCj4g
+Y2FyZCwNCj4gPiA+IFNvIHdlIHNhdyBtbWNfc2RfcmVzdW1lIGNhbGwgdGhlIHBvd2VyIHVwIGRp
+ZCBub3QgY2hlY2sgdGhlIGNhcmQgZXhpc3QuDQo+IA0KPiBXZWxsLCB0aGF0IGRvZXNuJ3QgcmVh
+bGx5IHRlbGwgbWUgaWYgdGhhdCBpcyBhIHByb2JsZW0gb3Igbm90Pw0KPiANCj4gRG9lc24ndCB0
+aGUgZmlyc3QgY29tbWFuZCBzZW50IHRvIHRoZSBTRCBjYXJkICh0aGF0IGhhcyBiZWVuIHJlbW92
+ZWQpDQo+IGZhaWwgaWYgdGhlcmUgaXMgbm8gY2FyZCBpbnNlcnRlZCBhbnl3YXk/DQo+IA0KPiA+
+ID4NCj4gPiA+IFdlIHRoaW5rIHRoaXMgdGhlIHNob3J0IHRpbWUgcG93ZXIgdXAgbWF5YmUgY2F1
+c2UgT0NQIGlmIG5vIGNhcmQgZXhpc3QuDQo+IA0KPiBPQ1A/DQoNCk9DUDogb3ZlciBjdXJyZW50
+IHByb3RlY3Rpb24NCldlIHRoaW5rIHRoaXMgc2hvcnQgdGltZSBwb3dlciB1cCBoYXMgc2hvcnQg
+Y2lyY3VpdCByaXNrIHdoZW4gbm8gY2FyZCBleGlzdA0KVGhhdCBpcyB3aHkgd2Ugd2FudCB0byBj
+aGVjayBjYXJkIGV4aXN0IG9yIG5vdCB3aGVuIHBvd2VyIHVwIA0KDQoNCj4gDQo+ID4gPiBBbmQg
+dGhpcyBwb3dlciB1cCB3ZSB0aGluayBpcyB1bm5lY2Vzc2FyeSB3aGVuIG5vIGNhcmQgZXhpc3Qu
+DQo+IA0KPiBJdCBtYXkgbm90IGJlIG5lY2Vzc2FyeSwgYnV0IGluIHdoYXQgd2F5IGRvZXMgaXQg
+aHVydD8NCj4gDQo+ID4gPg0KPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IFJpY2t5IFd1IDxyaWNreV93dUByZWFsdGVrLmNvbT4NCj4gPiA+ID4gPiAtLS0NCj4gPiA+
+ID4gPiAgZHJpdmVycy9tbWMvY29yZS9zZC5jIHwgMyArKysNCj4gPiA+ID4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvbW1jL2NvcmUvc2QuYyBiL2RyaXZlcnMvbW1jL2NvcmUvc2QuYyBpbmRleA0KPiA+
+ID4gPiA+IDFjODE0OGNkZGE1MC4uMzVlMDM2NjcyY2ZiIDEwMDY0NA0KPiA+ID4gPiA+IC0tLSBh
+L2RyaXZlcnMvbW1jL2NvcmUvc2QuYw0KPiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMvbW1jL2NvcmUv
+c2QuYw0KPiA+ID4gPiA+IEBAIC0xNzUwLDYgKzE3NTAsOSBAQCBzdGF0aWMgaW50IF9tbWNfc2Rf
+cmVzdW1lKHN0cnVjdA0KPiBtbWNfaG9zdA0KPiA+ID4gPiAqaG9zdCkNCj4gPiA+ID4gPiAgICAg
+ICAgIGlmICghbW1jX2NhcmRfc3VzcGVuZGVkKGhvc3QtPmNhcmQpKQ0KPiA+ID4gPiA+ICAgICAg
+ICAgICAgICAgICBnb3RvIG91dDsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICsgICAgICAgaWYgKGhv
+c3QtPm9wcy0+Z2V0X2NkICYmICFob3N0LT5vcHMtPmdldF9jZChob3N0KSkNCj4gPiA+ID4gPiAr
+ICAgICAgICAgICAgICAgZ290byBvdXQ7DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICAgICAgICAg
+bW1jX3Bvd2VyX3VwKGhvc3QsIGhvc3QtPmNhcmQtPm9jcik7DQo+ID4gPiA+ID4gICAgICAgICBl
+cnIgPSBtbWNfc2RfaW5pdF9jYXJkKGhvc3QsIGhvc3QtPmNhcmQtPm9jciwgaG9zdC0+Y2FyZCk7
+DQo+ID4gPiA+ID4gICAgICAgICBtbWNfY2FyZF9jbHJfc3VzcGVuZGVkKGhvc3QtPmNhcmQpOw0K
+PiA+ID4gPiA+IC0tDQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0K
