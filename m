@@ -1,33 +1,32 @@
 Received: from smtpcmd13147.aruba.it (smtpcmd13147.aruba.it [62.149.156.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C436179A8
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB40C2C8
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714380457; cv=none; b=jztAvCsNvRHtMtsrhGvItnt1jepM7GsbEgzaS5p5NpDgxHLpljqlK4l1BMVpfEB19xNSJF04I5CphWbbEiGdDDlw2r6V8MicaZJwZj5iJi2ijJtXI7OXsYQl8nMFxiVWfybcOjHj/JQJPZs3LiAO2BA1rt2gu3PrRzwdRzMelfY=
+	t=1714380457; cv=none; b=bWgW9Q+lHr8SOKrTOXqZjMIirCcofFpYgO0wS7mpkguE1OCOs9NqcJ4Tr23e2/hZIcy367phWPRpAUrttO4hfaKF+HxdoCcH5xJ/RndhqiifHHAdhYRourDW6Oa7khuaxgLXovataza7ySquc4NWIRnu1Qd+9QhfLHfH0DoCBBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714380457; c=relaxed/simple;
-	bh=FfU2/VmdwOCYJk5ygqerKdlzjtUJBdYAJKCiSEkMOOs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kcfdCj81oY92GtktC0x3cVNgi1z6ZiI52sc6s2K5voHdAsSo6wdcuvgamV4oWmbZCyRLoA3Y2DDB5x0H82IICFejBA0ulWxDGTyPxFc17FwN46wlMvC6v+qW/SVRzTYUgt++tiz3JPYuz76bxTGJ4vNosF1L9Y0fPAXE6uO+2qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=cPbIcjPb; arc=none smtp.client-ip=62.149.156.147
+	bh=iBfSG1Z55LzWjpgCDWCYWUujtAFFgjE9Z2IZOD3zx94=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nqbNe3Ti5QPE9wXx4Z03pfHqhWOGnbL+CC8SuppqROEcDCwbsfcgpazWACnSMA/woCXNnCZz7CRGnnvsAJdRBO5GwlX3oj26MvcMn41rQ+XLlqsMEQKldlubhlPtk1N+nPRGh1IAJEbjyhiRCzppcAlekJ5Uk8NUobC43ypSCzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=ZJHLrDfV; arc=none smtp.client-ip=62.149.156.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="cPbIcjPb"
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="ZJHLrDfV"
 Received: from engicam.com ([146.241.8.107])
 	by Aruba Outgoing Smtp  with ESMTPSA
-	id 1McasUO2u8U421McbsNcfl; Mon, 29 Apr 2024 10:44:26 +0200
+	id 1McasUO2u8U421McasNcew; Mon, 29 Apr 2024 10:44:25 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1714380266; bh=FfU2/VmdwOCYJk5ygqerKdlzjtUJBdYAJKCiSEkMOOs=;
+	t=1714380265; bh=iBfSG1Z55LzWjpgCDWCYWUujtAFFgjE9Z2IZOD3zx94=;
 	h=From:To:Subject:Date:MIME-Version;
-	b=cPbIcjPbS7M2cyrm5NJDGr3fOVwoy1JILmS1O7YvJiZ1JUU2YvXHy7ZARc7We3IQp
-	 JCzW3wlhcnogV9iObY44rmHkxK1NXw4U/A2VnU9KIH/C497U7wPhO4+fbV/LrRum83
-	 fkLuF85JTqShlYZ48o+7L+eCjN5FeX/b5e/5xzFAnSi6RLMWUDfcbFYa42I3prPIaq
-	 l8tlWwnvqm7b6IuFzJEvpnMlNwwh0tmkpSH4kuvjOA2LP9aWl/G2QFBczHBCFA8saN
-	 LvqM8Rt2xSI2OfRuczU6Zfw9MSJBYoElxlcCqk1a0CTSejp5rsNwAB052BYaTP0nqN
-	 /Tcp1IAbIFgbg==
+	b=ZJHLrDfVPOAzeM1Bwxb3gwk+yjIP+uOaw+iE5o5TQCmUb5pcJA/nF1vxBCxpTxrGd
+	 arsAFJrFrwUbvUevcnGfBm9ZdDfeUgN2a9FB+CzaHJHEXXTgh0A232Qqfj9Te6J5RD
+	 u5LAHSaUjBgibhMgfgfo9X2Rl0hcjl+mowHpUvl6QQvwEh97cbNlgBX1fXlrURVoNT
+	 L/ahZCXS8MPbtF1xN7lNTumUZoBxrB09I6y2j29CfS2pmgaqcTrbUfUdB9hLnkkWUP
+	 wJHIGC/Q/Oo4qW7CVFvdwwXl42Vh75XIfDHoJ7onpVh7A1reIWbmrUf6N6CaUcElxA
+	 Qv8U0ySh0wnyg==
 From: Fabio Aiuto <fabio.aiuto@engicam.com>
 To: Shawn Guo <shawnguo@kernel.org>,
 	Sascha Hauer <s.hauer@pengutronix.de>,
@@ -38,17 +37,11 @@ Cc: devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Fabio Aiuto <fabio.aiuto@engicam.com>,
-	Matteo Lisi <matteo.lisi@engicam.com>,
-	Mirko Ardinghi <mirko.ardinghi@engicam.com>,
-	Krzysztof Kozlowsky <krzk@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v7 1/3] dt-bindings: arm: fsl: add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
-Date: Mon, 29 Apr 2024 10:44:20 +0200
-Message-Id: <20240429084422.8369-2-fabio.aiuto@engicam.com>
+	Fabio Aiuto <fabio.aiuto@engicam.com>
+Subject: [PATCH v7 0/3] arm64: dts: imx93: add i.Core MX93 EDIMM 2.0 board
+Date: Mon, 29 Apr 2024 10:44:19 +0200
+Message-Id: <20240429084422.8369-1-fabio.aiuto@engicam.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240429084422.8369-1-fabio.aiuto@engicam.com>
-References: <20240429084422.8369-1-fabio.aiuto@engicam.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,57 +49,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfM6qNwel1KC5Si4WV3IGnUXaGcpR6YEHXiOIiAuUFsY1bQRS6gecJCiTq2qoJBmJJHGpdS6/C740iEWDu9gKfGYUVjJTyVYFZfuQabiccvxolxEUmSEK
- A6iMqCJr7lT1g7NCz/HzjbEvWQi/gXHUPfMkrr0kA0b1CA5VZ1JS+QPtXvyOBciMrllnF7cHmPM53Bgtd0QbrrNOoHSODp3foKFKOzFCT9ba751lfn5XZPvj
- DxJb/6hV7mL3vb6SKyu48/zMioDFJ57bNN1Q9vVfnXsjR6RT3t1k+hTeDPOe7EbWJO5u0slmQGlxoM3gwg5NcBwYVmo0bSpq4sYezapMGxla9YSkGUHF/gJb
- IKEEDB9CJjt63PMbQxXU6q+dIXOVsxu5M3p6eKocQAeqQSCrT0NayflzAPeMND8gpva2YJYTG2oOiwOnS+uUH3EsscF/u1szlXPM7LSXdL2f3AqFrrR8c0sF
- gg454zM8/4SmJ5wuSe/a+FrmbPZ0dcdZRrutBmxBsN2JJIMch+IUsJvgVm7OJNM3Hoz1tVj88U91otEVmq2bOmfX1LnahgiETIKKms9QDGM5W0tetoMOKSSP
- HFcdJov2RXnXheh2rbou/Cpr1MKGkipRmX5rsgb02KSYQSvvs7ZnB+GnLVZUTj49ASr/RX4JQsoGRKDppBUKbH6h
+X-CMAE-Envelope: MS4xfL4xsqUjG2/KzKynxLSLT/YltDoPaQriW1ShrLPlbrDtT04jHN1UKRXpRGtvgwCBrItj37o9iwd1PMerrUSWHKq8CuR3i/eF+r+bFwDr8nRWDfQGLge/
+ MppHEoo7AmTjsDs2J3TYeZ7P2Gst54/0B1vfW3ncXtWMrssbkdrb1pJ+QYiZUC92YtHstWhvmJ1SsWGXTaaLunk1hi7SdbhrY1G3k9iwdGc7IKwv8NOoWdiz
+ 9EwbT7uM+JdqvA7Qz4CUCPklcPUhOnt5lgAJvimf/mZ+Py7bmj9+dvYjSHyYJHQ8EnIicDjq4pLHCly1+2ogliRKOru7wmod5Q84HZzkNylO3OS7POuF8y2x
+ Yy+hAJdxETw7MkCLQtniTbjCD/hvmly0aHMHxd75dQ3mVN4dec5qd3G2HovwNONT3TG3fcapSCdjn4Oh2zIm3MMHP4jJco6w/QeoVwIfLiKKE9UE7fc+iQMZ
+ zgk4t+8u7MOfBD9LpmPzmNRpP2JJK41WqhK9e3m/77mgyFlK/tchaFLnh/w=
 
-i.Core MX93 is a NXP i.MX93 based EDIMM SoM by Engicam.
+Hello all,
 
-EDIMM 2.0 Starter Kit is an EDIMM 2.0 Form Factor Capacitive
-Evaluation Board by Engicam.
+this patchset adds support for i.Core MX93 EDIMM 2.0 Starter Kit,
+a SoM + Evaluation Board combination from Engicam.
 
-i.Core MX93 needs to be mounted on top of EDIMM 2.0 Starter Kit
-to get the full i.Core MX93 EDIMM 2.0 Starter Kit board.
+The number of patch has diminished to 3, for I dropped the
+patch introducing a change in nxp,pca9450 binding which has
+been already submitted in regulator tree.
 
-Add bindings for this board.
+(Dropped also regulator tree maintainers as recipients for
+they aren't anymore involved in this patchset)
 
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
-Reviewed-by: Krzysztof Kozlowsky <krzk@kernel.org>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
+This patchset introduces just basic functionality for board.
+
+Thanks in advance,
+
+fabio
 ---
-v3 ---> v7:
-        - no changes
+v6 ---> v7:
+	- removed max-frequency property in wifi node
+	- removed pinctrl-{1,2} in usdhc3 node
+v5 ---> v6:
+        - added property in lpuart5 node
+        - removed unused sai1 node
+v4 ---> v5:
+        - done some property reorder, indentation fixes,
+          node rename, drop/add new-lines
+        - fixed line wrap in 2nd patch commit log
+        - added Reviewed-by tag
+v3 ---> v4:
+        - drop wl_reg_on regulator in favor of
+          mmc-pwrseq-simple
 v2 ---> v3:
-        - added {Reviewed,Acked}-by tags
+        - fixed dtschema warnings
+        - added Acked/Reviewed-by tags
+        - removed regulator-always-on on
+          bt_reg_on
+        - fixed clock rate assignment on
+          sgtl5000 node
+        - added wdog_b-warm-reset; property in pmic
+        - fixed indentation issue
 v1 ---> v2:
-        - no changes
+        - dropped patch updating nxp,pca9450 binding
+        - fixed indentation issue
+        - fixed missing space issue
+        - improved naming of regulator nodes
+        - removed unneeded include
+        - fixed email recipients
 
- Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+Fabio Aiuto (3):
+  dt-bindings: arm: fsl: add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+  arm64: dts: imx93: add Engicam i.Core MX93 SoM
+  arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 0027201e19f8..b497a01c7418 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -1265,6 +1265,13 @@ properties:
-               - fsl,imx93-11x11-evk       # i.MX93 11x11 EVK Board
-           - const: fsl,imx93
- 
-+      - description: Engicam i.Core MX93 based Boards
-+        items:
-+          - enum:
-+              - engicam,icore-mx93-edimm2         # i.MX93 Engicam i.Core MX93 EDIMM 2.0 Starter Kit
-+          - const: engicam,icore-mx93             # i.MX93 Engicam i.Core MX93 Som
-+          - const: fsl,imx93
-+
-       - description: i.MXRT1050 based Boards
-         items:
-           - enum:
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx93-icore-mx93-edimm2.dts | 321 ++++++++++++++++++
+ .../boot/dts/freescale/imx93-icore-mx93.dtsi  | 269 +++++++++++++++
+ 4 files changed, 598 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93.dtsi
+
 -- 
 2.34.1
 
