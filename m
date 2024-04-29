@@ -1,49 +1,56 @@
-Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDC853E08
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93053EA71;
+	Mon, 29 Apr 2024 13:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714396548; cv=none; b=YyZJXspcV2H/qMRnXT9+vFf5ZacRLcC9doPBLTV29dWAirutsEOh7KFhpmyk2ZbeLeAvEKeX3IZiL1FPr7GXJ494sGgg7GKEzO7KtJ0Rk3K/FjCXtsaYlXz+00WDfZId2peNSVp42OG8n8Z2UGIXz4n7NuegH7/LhklwqI3uwbM=
+	t=1714396623; cv=none; b=mQ7ChSUn/fl8ZCYCLL9SC6lnhW9cPbHsPFoD1+xh1NFC934jgyniGRk4t7lnRIsXD35pyKYTyIHgmcwDsv9tTHw2oFTuIA/C8RyKeQ6CREEW9hNfYUvc/EqXW8fQQwRce5SpgM8LXvpAjr/iVn5HnsUtDuxE5MuTy1vUOtPBqC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714396548; c=relaxed/simple;
-	bh=+mGGfv+rNyQbPZbgK4ev9Hsh3jIoZFvo3k1FnAnnDJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KI0zzRyG1YvJhGpnKrW4lzuwFf36j1cB5dcyrryDicVLQ6GPS3xf0xgGJ0EMQzM4e/mzZbin2MAQ8i4Py5tyLkl7FX/8nzZMNoMTq5bwACp0uMNtBL9Ygnq2SMb48IOTkuBTRfuLUawR7YnYaMh/ckz6MtP9ahYDQtWUTOO+HkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=vd/U/wPA; arc=none smtp.client-ip=185.125.25.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1714396623; c=relaxed/simple;
+	bh=K2caPeF0LKtMastSJ6K3MVqGt0i4ZwtzFf13eZFnB0w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=eeVv6rqRrN9z3KMjEUbu+WreFmY7PZ4nNhwTN/9xUEXQJ/aPD+pf53B46ozqU6d1V6e8noVZX8eyuhWkJd+TirA4L0RW4g70R7hvWYriq7T9EIpTcOB/CCXmnVfFrWejxCWXSrJbE7+U8CiF7W1A3NYgoh5cxWY8jp3Q85OoCnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBuqgQIO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="vd/U/wPA"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VSkFF53VWzLTD;
-	Mon, 29 Apr 2024 15:09:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1714396177;
-	bh=+mGGfv+rNyQbPZbgK4ev9Hsh3jIoZFvo3k1FnAnnDJ8=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBuqgQIO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 036A7C113CD;
+	Mon, 29 Apr 2024 13:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714396623;
+	bh=K2caPeF0LKtMastSJ6K3MVqGt0i4ZwtzFf13eZFnB0w=;
 	h=From:To:Cc:Subject:Date:From;
-	b=vd/U/wPAQJbV8RNav7swjB+xojeIfqXA8MfCiEX9qgLcgqFEfB0gogoIoMLGFtrOt
-	 ezZVXEpQ4Js1Ktt1iU0YGGT6TknNJTv7TD8qJMp4wuqDmLnqrKdhYInwrWK49L9Ygb
-	 TPwxWGPpcnCFN5AIsVusx2TKST1TyEkFvI+xBYOo=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VSkFD3SZczdD1;
-	Mon, 29 Apr 2024 15:09:36 +0200 (CEST)
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Christian Brauner <brauner@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Mark Brown <broonie@kernel.org>,
-	Shengyu Li <shengyu.li.evgeny@gmail.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	"David S . Miller" <davem@davemloft.net>,
-	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	Will Drewry <wad@chromium.org>,
-	kernel test robot <oliver.sang@intel.com>,
+	b=eBuqgQIOPyvC82nYwsijdosmn4WUwYusmDxAFKuzzeJrAHIrkz+W8unctWIIW9St8
+	 aHF2705D6AvN3jhfvs/IOnW50D428MXXrzmblvenEUN/Q/vWh/tI60iBsMqhXvtt1J
+	 tm3EaUgQsylTuHc+DjDRoF3yEci7iBKmrAIrdog6JWywhq3MnuBXmrIxZBVsUKhzoh
+	 lcje+Q4bDKNpX+kSHeNpz2ST3eX3z5QqOfm3IGgmNYojBwc1HW3OcjIl8AyE8oZlKe
+	 N3TvUJ0t87lVqd48HgfnLAWy0dXDde77qO2BRheHJUxiDNNvqc7ZXfl+PKLtrsNpXS
+	 X9hwc2aILIjGQ==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Zi Shen Lim <zlim.lnx@gmail.com>,
+	Xu Kuohai <xukuohai@huawei.com>,
+	Florent Revest <revest@chromium.org>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 0/5] Fix Kselftest's vfork() side effects
-Date: Mon, 29 Apr 2024 15:09:22 +0200
-Message-ID: <20240429130931.2394118-1-mic@digikod.net>
+	bpf@vger.kernel.org
+Cc: puranjay12@gmail.com
+Subject: [PATCH bpf-next v4 0/2] bpf, arm64: Support per-cpu instruction
+Date: Mon, 29 Apr 2024 13:16:45 +0000
+Message-Id: <20240429131647.50165-1-puranjay@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,65 +59,110 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
 
-Hi,
+Changes in v3 -> v4:
+v3: https://lore.kernel.org/all/20240426121349.97651-1-puranjay@kernel.org/
+- Fix coding style issue related to C89 standards.
 
-As reported by Kernel Test Robot [1], some pidfd tests fail.  This is
-due to the use of vfork() which introduced some side effects.
-Similarly, while making it more generic, a previous commit made some
-Landlock file system tests flaky, and subject to the host's file system
-mount configuration.
+Changes in v2 -> v3:
+v2: https://lore.kernel.org/all/20240424173550.16359-1-puranjay@kernel.org/
+- Fixed the xlated dump of percpu mov to "r0 = &(void __percpu *)(r0)"
+- Made ARM64 and x86-64 use the same code for inlining. The only difference
+  that remains is the per-cpu address of the cpu_number.
 
-This series fixes all these side effects by replacing vfork() with
-clone3() and CLONE_VFORK, which is cleaner (no arbitrary shared memory)
-and makes the Kselftest framework more robust.
+Changes in v1 -> v2:
+v1: https://lore.kernel.org/all/20240405091707.66675-1-puranjay12@gmail.com/
+- Add a patch to inline bpf_get_smp_processor_id()
+- Fix an issue in MRS instruction encoding as pointed out by Will
+- Remove CONFIG_SMP check because arm64 kernel always compiles with CONFIG_SMP
 
-I tried different approaches and I found this one to be the cleaner and
-less invasive for current test cases.
+This series adds the support of internal only per-CPU instructions and
+inlines the bpf_get_smp_processor_id() helper call for ARM64 BPF JIT.
 
-This second series split the latest patch into 5 patches.
+Here is an example of calls to bpf_get_smp_processor_id() and
+percpu_array_map_lookup_elem() before and after this series.
 
-I successfully ran the following tests (using TEST_F and
-fork/clone/clone3) with this series:
-- landlock:fs_test
-- landlock:net_test
-- landlock:ptrace_test
-- move_mount_set_group:move_mount_set_group_test
-- net/af_unix:scm_pidfd
-- perf_events:remove_on_exec
-- pidfd:pidfd_getfd_test
-- pidfd:pidfd_setns_test
-- seccomp:seccomp_bpf
-- user_events:abi_test
+                                         BPF
+                                        =====
+              BEFORE                                       AFTER
+             --------                                     -------
 
-[1] https://lore.kernel.org/oe-lkp/202403291015.1fcfa957-oliver.sang@intel.com
-
-Previous version:
-v1: https://lore.kernel.org/r/20240426172252.1862930-1-mic@digikod.net
-
-Regards,
-
-Mickaël Salaün (9):
-  selftests/pidfd: Fix config for pidfd_setns_test
-  selftests/landlock: Fix FS tests when run on a private mount point
-  selftests/harness: Fix fixture teardown
-  selftests/harness: Fix interleaved scheduling leading to race
-    conditions
-  selftests/landlock: Do not allocate memory in fixture data
-  selftests/harness: Constify fixture variants
-  selftests/pidfd: Fix wrong expectation
-  selftests/harness: Share _metadata between forked processes
-  selftests/harness: Fix vfork() side effects
-
- tools/testing/selftests/kselftest_harness.h   | 113 +++++++++++++-----
- tools/testing/selftests/landlock/fs_test.c    |  83 ++++++++-----
- tools/testing/selftests/pidfd/config          |   2 +
- .../selftests/pidfd/pidfd_setns_test.c        |   2 +-
- 4 files changed, 135 insertions(+), 65 deletions(-)
+int cpu = bpf_get_smp_processor_id();           int cpu = bpf_get_smp_processor_id();
+(85) call bpf_get_smp_processor_id#229032       (18) r0 = 0xffff800082072008
+                                                (bf) r0 = &(void __percpu *)(r0)
+                                                (61) r0 = *(u32 *)(r0 +0)
 
 
-base-commit: e67572cd2204894179d89bd7b984072f19313b03
+p = bpf_map_lookup_elem(map, &zero);            p = bpf_map_lookup_elem(map, &zero);
+(18) r1 = map[id:78]                            (18) r1 = map[id:153]
+(18) r2 = map[id:82][0]+65536                   (18) r2 = map[id:157][0]+65536
+(85) call percpu_array_map_lookup_elem#313512   (07) r1 += 496
+                                                (61) r0 = *(u32 *)(r2 +0)
+                                                (35) if r0 >= 0x1 goto pc+5
+                                                (67) r0 <<= 3
+                                                (0f) r0 += r1
+                                                (79) r0 = *(u64 *)(r0 +0)
+                                                (bf) r0 = &(void __percpu *)(r0)
+                                                (05) goto pc+1
+                                                (b7) r0 = 0
+
+
+                                      ARM64 JIT
+                                     ===========
+
+              BEFORE                                       AFTER
+             --------                                     -------
+
+int cpu = bpf_get_smp_processor_id();           int cpu = bpf_get_smp_processor_id();
+mov     x10, #0xfffffffffffff4d0                mov     x7, #0xffff8000ffffffff
+movk    x10, #0x802b, lsl #16                   movk    x7, #0x8207, lsl #16
+movk    x10, #0x8000, lsl #32                   movk    x7, #0x2008
+blr     x10                                     mrs     x10, tpidr_el1
+add     x7, x0, #0x0                            add     x7, x7, x10
+                                                ldr     w7, [x7]
+
+
+p = bpf_map_lookup_elem(map, &zero);            p = bpf_map_lookup_elem(map, &zero);
+mov     x0, #0xffff0003ffffffff                 mov     x0, #0xffff0003ffffffff
+movk    x0, #0xce5c, lsl #16                    movk    x0, #0xe0f3, lsl #16
+movk    x0, #0xca00                             movk    x0, #0x7c00
+mov     x1, #0xffff8000ffffffff                 mov     x1, #0xffff8000ffffffff
+movk    x1, #0x8bdb, lsl #16                    movk    x1, #0xb0c7, lsl #16
+movk    x1, #0x6000                             movk    x1, #0xe000
+mov     x10, #0xffffffffffff3ed0                add     x0, x0, #0x1f0
+movk    x10, #0x802d, lsl #16                   ldr     w7, [x1]
+movk    x10, #0x8000, lsl #32                   cmp     x7, #0x1
+blr     x10                                     b.cs    0x0000000000000090
+add     x7, x0, #0x0                            lsl     x7, x7, #3
+                                                add     x7, x7, x0
+                                                ldr     x7, [x7]
+                                                mrs     x10, tpidr_el1
+                                                add     x7, x7, x10
+                                                b       0x0000000000000094
+                                                mov     x7, #0x0
+
+              Performance improvement found using benchmark[1]
+
+             BEFORE                                       AFTER
+            --------                                     -------
+
+glob-arr-inc   :   23.817 ± 0.019M/s      glob-arr-inc   :   24.631 ± 0.027M/s [+ 3.41%]
+arr-inc        :   23.253 ± 0.019M/s      arr-inc        :   23.742 ± 0.023M/s [+ 2.10%]
+hash-inc       :   12.258 ± 0.010M/s      hash-inc       :   12.625 ± 0.004M/s [+ 3.00%]
+
+[1] https://github.com/anakryiko/linux/commit/8dec900975ef
+
+Puranjay Mohan (2):
+  arm64, bpf: add internal-only MOV instruction to resolve per-CPU addrs
+  bpf, arm64: inline bpf_get_smp_processor_id() helper
+
+ arch/arm64/include/asm/insn.h |  7 +++++++
+ arch/arm64/lib/insn.c         | 11 +++++++++++
+ arch/arm64/net/bpf_jit.h      |  6 ++++++
+ arch/arm64/net/bpf_jit_comp.c | 14 ++++++++++++++
+ kernel/bpf/verifier.c         | 27 ++++++++++++++++++++-------
+ 5 files changed, 58 insertions(+), 7 deletions(-)
+
 -- 
-2.44.0
+2.40.1
 
