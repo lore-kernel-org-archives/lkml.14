@@ -1,229 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D2881AB1;
-	Mon, 29 Apr 2024 15:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D239F81741
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714403327; cv=none; b=b27KXvaqXpoa6OkW0R78j4Bed6/bhGJinEKRSwS3WzHkhy8WY1Ll5/EO0Ce5c4Y33R+FHlTLu9LTar24Drl/J8I4FrtFo3U6mNbn9SK9oOMD6XLT4KTN1zp9LM4QqB3b2MCLgTjioFH5UziyqC6LoR/MKLigMA7YpVJfog420YM=
+	t=1714403444; cv=none; b=fqH9dayZq/39EHbBmSiMtESrcqzC8ogeZvnKsaaRK/HckOVZ7pIcbsoBm13ma1qDrwY4rFlU3ThQ2+u4Qi7rOAdwQCI4UGOgKpE3A+cYkS8E6sb6dyxxwkEBUE349A7bwQ1M1DlTRhtHxwUGmLe/SvBBTUViVH3KdutAKjpWxAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714403327; c=relaxed/simple;
-	bh=Bjx5gl49VFSc1mqMjIvCV5QyXb/r8anmZ/JpE0QNtUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SBkfRHdgey3TyJy8MLKVR+c4RVxDuU6mQCt4mUt/I6UsiY1u5tShMKL2epPMtqRLRls8ApPtoVZH33bfAi710p/0w82LgEYpw38gTgHiyowUCTPSgzKG8ywxXa6N0EfZirNTWEAnIwkXHMwYY1VTDNJRswUtZoGXK9v1I3rgVMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=us7LGmTF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714403444; c=relaxed/simple;
+	bh=bCoBgmgV8dCb8hR3cJnCl/iPYukuJ9RDEq26jOafRzY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=gDmrQ50NkzBr44IrVroJGuEADIPCPDJ2K1/KXO+VnRpkPcuhEi4vrjm4G23HMuNOcwNPINr3TOrwHOv3mmYBewSWfP6WPbU/XcO70SpLAQuxzxvAMU4c84sBdpL3bnyUfPSjqweeZRtrf0ZypYpnCXH9/WMDPkjSaSROOcj1Pfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VQlUN/Jo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="us7LGmTF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04FDC113CD;
-	Mon, 29 Apr 2024 15:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714403327;
-	bh=Bjx5gl49VFSc1mqMjIvCV5QyXb/r8anmZ/JpE0QNtUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=us7LGmTFUvR9qlbeUavr2vBJcXJDL8YupNIJWRuGGcSIHSRK4yNIbx4/nUELan+bZ
-	 QVsidnDrL639ZmuSN3im/wf0UNl6w2TSUCXIJFRvewc0mLD5fuR26XScAWn5avm3XV
-	 A0ROdl0dX1LU0BNMhth7be8WguEn8VJnJEtUkP1P1liOaGQX6GmG3FKWWM9n6aKZsb
-	 B/7mN+rhOnzjJFTgAikEbyPTvJxYtFLfNFqdj0UqDlC6CtZnbdBHngvSU07lni3+xX
-	 fTJnQHpcZxlg10cVvTU1OB/CAjY1g0Oy1kxilp6iNBSZ8Wr4L+2OjYPySzjolPDRGE
-	 CIqox8Qm+aG/A==
-Date: Mon, 29 Apr 2024 10:08:42 -0500
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 08/11] PCI: imx: Config look up table(LUT) to support
- MSI ITS and IOMMU for i.MX95
-Message-ID: <20240429150842.GC1709920-robh@kernel.org>
-References: <20240402-pci2_upstream-v3-0-803414bdb430@nxp.com>
- <20240402-pci2_upstream-v3-8-803414bdb430@nxp.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VQlUN/Jo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714403442; x=1745939442;
+  h=date:from:to:cc:subject:message-id;
+  bh=bCoBgmgV8dCb8hR3cJnCl/iPYukuJ9RDEq26jOafRzY=;
+  b=VQlUN/JoJ0XvssqEqFDU1GxXWzeXT7kNJW8Keaww5Dx62dBewhB5PHVE
+   9BDBFPSn0vRxbtEp0Gx5JuozQkAFY9bgQa3L3BCFxzuV4utKYYPsMckwo
+   3P3Y45zEipcu7fEVpGqPsNcopI9rq8cBCG9UxDFPCGb1Jw6zCESEltKun
+   ExY6gpkqVj4iuCCn/CtRWIpYkLnU8csAURRKd5eiMIrdi5IzF6tylLtpf
+   oALBYvMq2SMVlroYQS7dMWGwMlKA7JmWgSmXz81GwWCSTn7YestX5cpx7
+   iwdhqxpILSWrew+h3N3Q3AIzNkjsb69bRw+8PVrDuKXyxQP9Ns/g24pMH
+   A==;
+X-CSE-ConnectionGUID: x+7mAiAESq2h4gXT378pLQ==
+X-CSE-MsgGUID: j+v1drdDTJaF0JWuylv0Hw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="21485073"
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="21485073"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 08:07:44 -0700
+X-CSE-ConnectionGUID: jzxW89D9STerfINdBh5c/A==
+X-CSE-MsgGUID: x/kkK5UiQr62wFtEv6CArA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="26643233"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 29 Apr 2024 08:07:44 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s1SbU-0007Ff-2M;
+	Mon, 29 Apr 2024 15:07:40 +0000
+Date: Mon, 29 Apr 2024 23:07:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/urgent] BUILD SUCCESS
+ 1dd1eff161bd55968d3d46bc36def62d71fb4785
+Message-ID: <202404292317.NFxImwdl-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240402-pci2_upstream-v3-8-803414bdb430@nxp.com>
 
-On Tue, Apr 02, 2024 at 10:33:44AM -0400, Frank Li wrote:
-> i.MX95 need config LUT to convert bpf to stream id. IOMMU and ITS use the
-> same stream id. Check msi-map and smmu-map and make sure the same PCI bpf
-> map to the same stream id. Then config LUT related registers.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pcie-imx.c | 175 ++++++++++++++++++++++++++++++++++
->  1 file changed, 175 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-imx.c b/drivers/pci/controller/dwc/pcie-imx.c
-> index af0f960f28757..653d8e8ee1abc 100644
-> --- a/drivers/pci/controller/dwc/pcie-imx.c
-> +++ b/drivers/pci/controller/dwc/pcie-imx.c
-> @@ -55,6 +55,22 @@
->  #define IMX95_PE0_GEN_CTRL_3			0x1058
->  #define IMX95_PCIE_LTSSM_EN			BIT(0)
->  
-> +#define IMX95_PE0_LUT_ACSCTRL			0x1008
-> +#define IMX95_PEO_LUT_RWA			BIT(16)
-> +#define IMX95_PE0_LUT_ENLOC			GENMASK(4, 0)
-> +
-> +#define IMX95_PE0_LUT_DATA1			0x100c
-> +#define IMX95_PE0_LUT_VLD			BIT(31)
-> +#define IMX95_PE0_LUT_DAC_ID			GENMASK(10, 8)
-> +#define IMX95_PE0_LUT_STREAM_ID			GENMASK(5, 0)
-> +
-> +#define IMX95_PE0_LUT_DATA2			0x1010
-> +#define IMX95_PE0_LUT_REQID			GENMASK(31, 16)
-> +#define IMX95_PE0_LUT_MASK			GENMASK(15, 0)
-> +
-> +#define IMX95_SID_MASK				GENMASK(5, 0)
-> +#define IMX95_MAX_LUT				32
-> +
->  #define to_imx_pcie(x)	dev_get_drvdata((x)->dev)
->  
->  enum imx_pcie_variants {
-> @@ -217,6 +233,159 @@ static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
->  	return 0;
->  }
->  
-> +static int imx_pcie_update_lut(struct imx_pcie *imx_pcie, int index, u16 reqid, u16 mask, u8 sid)
-> +{
-> +	struct dw_pcie *pci = imx_pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	u32 data1, data2;
-> +
-> +	if (sid >= 64) {
-> +		dev_err(dev, "Too big stream id: %d\n", sid);
-> +		return -EINVAL;
-> +	}
-> +
-> +	data1 = FIELD_PREP(IMX95_PE0_LUT_DAC_ID, 0);
-> +	data1 |= FIELD_PREP(IMX95_PE0_LUT_STREAM_ID, sid);
-> +	data1 |= IMX95_PE0_LUT_VLD;
-> +
-> +	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, data1);
-> +
-> +	data2 = mask;
-> +	data2 |= FIELD_PREP(IMX95_PE0_LUT_REQID, reqid);
-> +
-> +	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, data2);
-> +
-> +	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, index);
-> +
-> +	return 0;
-> +}
-> +
-> +struct imx_of_map {
-> +	u32 bdf;
-> +	u32 phandle;
-> +	u32 sid;
-> +	u32 sid_len;
-> +};
-> +
-> +static int imx_check_msi_and_smmmu(struct imx_pcie *imx_pcie,
-> +				   struct imx_of_map *msi_map, u32 msi_size, u32 msi_map_mask,
-> +				   struct imx_of_map *smmu_map, u32 smmu_size, u32 smmu_map_mask)
-> +{
-> +	struct dw_pcie *pci = imx_pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	int i;
-> +
-> +	if (msi_map && smmu_map) {
-> +		if (msi_size != smmu_size)
-> +			return -EINVAL;
-> +		if (msi_map_mask != smmu_map_mask)
-> +			return -EINVAL;
-> +
-> +		for (i = 0; i < msi_size / sizeof(*msi_map); i++) {
-> +			if (msi_map->bdf != smmu_map->bdf) {
-> +				dev_err(dev, "bdf setting is not match\n");
-> +				return -EINVAL;
-> +			}
-> +			if ((msi_map->sid & IMX95_SID_MASK) != smmu_map->sid) {
-> +				dev_err(dev, "sid setting is not match\n");
-> +				return -EINVAL;
-> +			}
-> +			if ((msi_map->sid_len & IMX95_SID_MASK) != smmu_map->sid_len) {
-> +				dev_err(dev, "sid_len setting is not match\n");
-> +				return -EINVAL;
-> +			}
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Simple static config lut according to dts settings DAC index and stream ID used as a match result
-> + * of LUT pre-allocated and used by PCIes.
-> + *
-> + * Currently stream ID from 32-64 for PCIe.
-> + * 32-40: first PCI bus.
-> + * 40-48: second PCI bus.
-> + *
-> + * DAC_ID is index of TRDC.DAC index, start from 2 at iMX95.
-> + * ITS [pci(2bit): streamid(6bits)]
-> + *	pci 0 is 0
-> + *	pci 1 is 3
-> + */
-> +static int imx_pcie_config_sid(struct imx_pcie *imx_pcie)
-> +{
-> +	struct imx_of_map *msi_map = NULL, *smmu_map = NULL, *cur;
-> +	int i, j, lut_index, nr_map, msi_size = 0, smmu_size = 0;
-> +	u32 msi_map_mask = 0xffff, smmu_map_mask = 0xffff;
-> +	struct dw_pcie *pci = imx_pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	u32 mask;
-> +	int size;
-> +
-> +	of_get_property(dev->of_node, "msi-map", &msi_size);
-> +	if (msi_size) {
-> +		msi_map = devm_kzalloc(dev, msi_size, GFP_KERNEL);
-> +		if (!msi_map)
-> +			return -ENOMEM;
-> +
-> +		if (of_property_read_u32_array(dev->of_node, "msi-map", (u32 *)msi_map,
-> +					       msi_size / sizeof(u32)))
-> +			return -EINVAL;
-> +
-> +		of_property_read_u32(dev->of_node, "msi-map-mask", &msi_map_mask);
-> +	}
-> +
-> +	cur = msi_map;
-> +	size = msi_size;
-> +	mask = msi_map_mask;
-> +
-> +	of_get_property(dev->of_node, "iommu-map", &smmu_size);
-> +	if (smmu_size) {
-> +		smmu_map = devm_kzalloc(dev, smmu_size, GFP_KERNEL);
-> +		if (!smmu_map)
-> +			return -ENOMEM;
-> +
-> +		if (of_property_read_u32_array(dev->of_node, "iommu-map", (u32 *)smmu_map,
-> +					       smmu_size / sizeof(u32)))
-> +			return -EINVAL;
-> +
-> +		of_property_read_u32(dev->of_node, "iommu_map_mask", &smmu_map_mask);
-> +	}
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/urgent
+branch HEAD: 1dd1eff161bd55968d3d46bc36def62d71fb4785  softirq: Fix suspicious RCU usage in __do_softirq()
 
-You should not be doing your own parsing of these properties.
+elapsed time: 720m
 
-Rob
+configs tested: 155
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240429   gcc  
+arc                   randconfig-002-20240429   gcc  
+arc                        vdk_hs38_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                         at91_dt_defconfig   clang
+arm                                 defconfig   clang
+arm                   randconfig-001-20240429   clang
+arm                   randconfig-002-20240429   clang
+arm                   randconfig-003-20240429   clang
+arm                   randconfig-004-20240429   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240429   clang
+arm64                 randconfig-002-20240429   gcc  
+arm64                 randconfig-003-20240429   clang
+arm64                 randconfig-004-20240429   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240429   gcc  
+csky                  randconfig-002-20240429   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240429   clang
+hexagon               randconfig-002-20240429   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240429   clang
+i386         buildonly-randconfig-002-20240429   clang
+i386         buildonly-randconfig-003-20240429   gcc  
+i386         buildonly-randconfig-004-20240429   clang
+i386         buildonly-randconfig-005-20240429   gcc  
+i386         buildonly-randconfig-006-20240429   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240429   clang
+i386                  randconfig-002-20240429   clang
+i386                  randconfig-003-20240429   clang
+i386                  randconfig-004-20240429   clang
+i386                  randconfig-005-20240429   gcc  
+i386                  randconfig-006-20240429   clang
+i386                  randconfig-011-20240429   gcc  
+i386                  randconfig-012-20240429   gcc  
+i386                  randconfig-013-20240429   clang
+i386                  randconfig-014-20240429   gcc  
+i386                  randconfig-015-20240429   clang
+i386                  randconfig-016-20240429   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240429   gcc  
+loongarch             randconfig-002-20240429   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        mvme16x_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                       rbtx49xx_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240429   gcc  
+nios2                 randconfig-002-20240429   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                  or1klitex_defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240429   gcc  
+parisc                randconfig-002-20240429   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      chrp32_defconfig   clang
+powerpc                   currituck_defconfig   clang
+powerpc                 mpc834x_itx_defconfig   clang
+powerpc               randconfig-001-20240429   gcc  
+powerpc               randconfig-002-20240429   gcc  
+powerpc               randconfig-003-20240429   gcc  
+powerpc                     tqm8548_defconfig   clang
+powerpc                         wii_defconfig   gcc  
+powerpc64             randconfig-001-20240429   clang
+powerpc64             randconfig-002-20240429   clang
+powerpc64             randconfig-003-20240429   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240429   gcc  
+riscv                 randconfig-002-20240429   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240429   gcc  
+s390                  randconfig-002-20240429   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          polaris_defconfig   gcc  
+sh                    randconfig-001-20240429   gcc  
+sh                    randconfig-002-20240429   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                           se7751_defconfig   gcc  
+sh                           sh2007_defconfig   gcc  
+sh                        sh7757lcr_defconfig   gcc  
+sh                   sh7770_generic_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240429   gcc  
+sparc64               randconfig-002-20240429   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240429   gcc  
+um                    randconfig-002-20240429   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240429   gcc  
+xtensa                randconfig-002-20240429   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
