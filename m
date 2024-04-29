@@ -1,137 +1,112 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DB4130E46
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3519E85620
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 15:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714403211; cv=none; b=uDul7nfKYM05/Ale2svykA9r1QlUnpIUkK+swAoMCOjdzHN5YVMKG8v/8e6rEo9fhBzXG/nKFlpw8MbTjwZ7Qv+pBoAE1vGIqJr5l8+/h07lX2H2bDpOnU+jOEo1CQ/KUiZ1RyGunQqBCSH8zH8QiP5Sudcbtc8qCUWH+yds8H0=
+	t=1714403227; cv=none; b=uxEZt6Bg7j0nBmhkpWgLSrCiwMoTOUegRMnRTJpj4RBZxSic7rTxrZ7p/E6tYrcqMI7YvQSuUuSWMtzzaxt+prID6JivlhzFAFTSpeUaakMU10HVeBX4tknDaOiNM8GHNtAgKetqA1V5beaKJBiOZcwgIIfGZ5DUGU9goh3nMHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714403211; c=relaxed/simple;
-	bh=x/hf7mR8S0PaebbZDXn5tmxtag3p7rdZEs+HYwpAhAM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qbnUuFt9xwxwIQVNuyWUgbu1EL6MqCD5jdnc7/atyNbFLQWAMHJxBeR3Knu85HATG9h9J9ntMlwsH/2Y5H53H/Bar/G2EvsBZkrgIHk3mQiwYZOCNrSnpJ6gY1rEHyGetwAxyUhlY5JjWlcp487QBoJLSX1wX3x+Ljzyyfqp2Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=WI4NjaNI; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1714403227; c=relaxed/simple;
+	bh=/3w9Zil+4uYrNOmcYMZkGVooAinr9yG2hncXQUB9lek=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=DQdQmBC5XyhAOMgRvwOiQSWN4gdD/m7Ct9ZaziwyJIpCrOb9laYhkTd+63rSf+J8OvHnFzPXepomFvNiqaL+sRmDdwV3+RerDQUgWRExKoAINRGgy4+r2qVheJ7OL6myAHrcec2bT+5RwBI/bX+k14fM+/niYZillkteXAHhK9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SSBJCj33; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="WI4NjaNI"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d874b89081so11368501fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:06:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SSBJCj33"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5afbd1c3ffeso169931eaf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:07:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714403208; x=1715008008; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OClMR/8Jm3sCmLbe455uZIaBUTeeLegIVNx5rAADYDc=;
-        b=WI4NjaNIpmg+51bm9FMdVU5cxeVBc8EiIvXMVQeCCALSltV7xBOJkBot45wewGJGzv
-         1wZ9A0nzs0eYPFyv9kWfiCjW3OQjUyfWWy7V3lB+0bRvGx9WitUO/DrOqkyelbIcCYsA
-         l5WUPhBcZHusmAsGVkNUcCjFrPm7ulsQ5UFFnmYWke/16L13XQ0mL7D/U73fcBA97GKM
-         8SdhU0AIBI2LNPtFXOZy2NICizXod4oR59q1BafERRGaMdreNfmTNGywlnwgEvHtzWyg
-         Wb600DRtC+JvqGfpshcXpO1O+Km2t9ZOcgEg1eMxkL5O9KLbFteuCMEPI6dZ7ZEzLT74
-         gyIw==
+        d=linaro.org; s=google; t=1714403225; x=1715008025; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Kq/mDhjDx0haJOXMYO5ieP1vWAdfCIwGNjDIS1vV1ns=;
+        b=SSBJCj33wTOkplIYXXTrBH1dfnmej++IA3IfLzKSr1OamipqtOtg7teRlYWm89buCn
+         vTrudaHhHdNk6UJhLMcmZAQHMRGCYcfvfLxMQX7F9ud5yYfDlkxSMSOQCjiHCJHFaeWZ
+         KR/seCPbtu7kkH8EbwJ5rvZE7Hc7Ca/huQaPKEKeRecQV5NJ1kzUADoRgchDIVExbWiY
+         u27kaT0NocbEgG5m8U0mZKqcZ7tf/I+3yoOsC4d7+sEegRNBoq0bZeYeDRR29fjbYxmw
+         pszBjUQMleOBE352RJ8iBOpefWSN87IkwwIF5K54IMLZdyIQZNvoRID9uYR5FaIMCISZ
+         DCiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714403208; x=1715008008;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OClMR/8Jm3sCmLbe455uZIaBUTeeLegIVNx5rAADYDc=;
-        b=IdSljH+MPRtH7TipbtsGAHa9/+qgI7mNe4HI0GRpCmwSr/a5aMAaT7f8fFhw08kZFd
-         iSG3K/vMKhmkjgHadtJiQc31S0X/tosXdtXzz+or+t+4+j1jqlK0CR+b2EIvQ07hV/o4
-         vwA34XgkSuGw5AUjmhGftlN7KBOInRDrt3yvlsYljCgLtpuos5wNmjrmdN0OQPOLECdj
-         fEnTjUnPZaD0mw/eCV/rx6xSMwqpJn+f7WxbfcpXpIEB2fX+DAL1nSCRiOZRaALjR6Kn
-         LCfc91E+1YDFMwG++uIQkYzsskbA7Nx4VNP4XmWjDLVjVg27j++Oc49ngpl1qve/AhwE
-         TZ+A==
-X-Forwarded-Encrypted: i=1; AJvYcCU4jxU14elBiJnLrYxmDCFCn9cyBaaaSBvYu8KeqdXAONEfns+Ht7Yh3YQSuvoVAfMe0ZYYvQT+RRmyfzQ13Zeu1xgScsI0E6+zMVtm
-X-Gm-Message-State: AOJu0YyLCFJb2BtZNvpXb4RgItBmfWqbh3aq1yRyPI5LtAVCAjttWM23
-	P7gEuXRL1jHsucCojMFsMj2esz/h458+pG1F8pWK/mtFg7BYGqbJV6yxWIIqS9A=
-X-Google-Smtp-Source: AGHT+IFUPbNj9asOLzqFLPgus0GUY/Odrs/fM5IrKod7ciE1XYceryhw7TEo0KRJRFoqh4qbjQ5JMQ==
-X-Received: by 2002:a2e:9586:0:b0:2dd:c6c8:dff1 with SMTP id w6-20020a2e9586000000b002ddc6c8dff1mr6069010ljh.4.1714403207977;
-        Mon, 29 Apr 2024 08:06:47 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:2fec:d20:2b60:e334])
-        by smtp.gmail.com with ESMTPSA id l23-20020a05600c1d1700b00418f99170f2sm39646638wms.32.2024.04.29.08.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 08:06:47 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Anup Patel <anup@brainfault.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 11/11] KVM: riscv: selftests: Add Zcmop extension to get-reg-list test
-Date: Mon, 29 Apr 2024 17:05:04 +0200
-Message-ID: <20240429150553.625165-12-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240429150553.625165-1-cleger@rivosinc.com>
-References: <20240429150553.625165-1-cleger@rivosinc.com>
+        d=1e100.net; s=20230601; t=1714403225; x=1715008025;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Kq/mDhjDx0haJOXMYO5ieP1vWAdfCIwGNjDIS1vV1ns=;
+        b=Yda7Da1YpVevL4G4H6KwbqBJt98jDFgqW0q20tT/XeX6TDHwtuErWsU5qu6aXLsOVW
+         htbAcGoVRDfImxCvRtLyJ9vf0mc7zQzd9HDoxAKtff2u/BFENy/kSE/UoGnGDmFhC6uj
+         FfSzQRA/zudsGbZglPf56wYrLUZQIG/WT5m3pMFEDQSppLeM+d867o30QdlxTwlXvi/2
+         eCwix8KzGYasDYklcLlRXB1Vz95YcFXaMbk+g53bECs0qonkwYkys7sGC2qyTlGx3X82
+         SMDW129sIxb5UzzOxb4xZS0gUpfxdesT1L+T8uL559bKkpX0FdpA3jefo//lsKUQ2ygk
+         MHlg==
+X-Gm-Message-State: AOJu0YzmQESvgJrxADhR8/0cMytpnTBWuvjaPlaaby4AY0JCpQ2f7NDl
+	yM6ov0jnjfsHaCc+rVrVnGBh0xX/LpS0MieQpSAzX9qNdGIRySVZZ+iM0BJXy/lwdV96c5B7/r3
+	DN6xqZNtXcIO+QRSyQ8VlghHle7wlQ7jtaYiQ3V0g6UvTw4zBwf0=
+X-Google-Smtp-Source: AGHT+IGi7klXrfkLGYDk0bH46vsiOhdwy/HLQn/JmrZKyHF7xJC4yozyKeAYx8uVrhCWOCacbYNZwg87iwhAtb2HZSs=
+X-Received: by 2002:a05:6358:5d91:b0:186:3fcb:8da9 with SMTP id
+ s17-20020a0563585d9100b001863fcb8da9mr11016997rwm.21.1714403224770; Mon, 29
+ Apr 2024 08:07:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 29 Apr 2024 20:36:53 +0530
+Message-ID: <CA+G9fYu7Ug0K8h9QJT0WbtWh_LL9Juc+VC0WMU_Z_vSSPDNymg@mail.gmail.com>
+Subject: nouveau: r535.c:1266:3: error: label at end of compound statement
+ default: with gcc-8
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, nouveau@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Cc: Timur Tabi <ttabi@nvidia.com>, Danilo Krummrich <dakr@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-The KVM RISC-V allows Zcmop extension for Guest/VM so add this
-extension to get-reg-list test.
+Following build warnings / errors noticed on Linux next-20240429 tag on the
+arm64, arm and riscv with gcc-8 and gcc-13 builds pass.
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Acked-by: Anup Patel <anup@brainfault.org>
----
- tools/testing/selftests/kvm/riscv/get-reg-list.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-index 61cad4514197..9604c8ece787 100644
---- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
-+++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-@@ -59,6 +59,7 @@ bool filter_reg(__u64 reg)
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCB:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCD:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCF:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCMOP:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFA:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFH:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFHMIN:
-@@ -429,6 +430,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
- 		KVM_ISA_EXT_ARR(ZCB),
- 		KVM_ISA_EXT_ARR(ZCD),
- 		KVM_ISA_EXT_ARR(ZCF),
-+		KVM_ISA_EXT_ARR(ZCMOP),
- 		KVM_ISA_EXT_ARR(ZFA),
- 		KVM_ISA_EXT_ARR(ZFH),
- 		KVM_ISA_EXT_ARR(ZFHMIN),
-@@ -957,6 +959,7 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zca, ZCA),
- KVM_ISA_EXT_SIMPLE_CONFIG(zcb, ZCB),
- KVM_ISA_EXT_SIMPLE_CONFIG(zcd, ZCD),
- KVM_ISA_EXT_SIMPLE_CONFIG(zcf, ZCF),
-+KVM_ISA_EXT_SIMPLE_CONFIG(zcmop, ZCMOP);
- KVM_ISA_EXT_SIMPLE_CONFIG(zfa, ZFA);
- KVM_ISA_EXT_SIMPLE_CONFIG(zfh, ZFH);
- KVM_ISA_EXT_SIMPLE_CONFIG(zfhmin, ZFHMIN);
-@@ -1017,6 +1020,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
- 	&config_zcb,
- 	&config_zcd,
- 	&config_zcf,
-+	&config_zcmop,
- 	&config_zfa,
- 	&config_zfh,
- 	&config_zfhmin,
--- 
-2.43.0
+Commit id:
+ b58a0bc904ff nouveau: add command-line GSP-RM registry support
 
+Buids:
+--
+  gcc-8-arm64-defconfig - Fail
+  gcc-8-arm-defconfig - Fail
+  gcc-8-riscv-defconfig - Fail
+
+Build log:
+----
+drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c: In function 'build_registry':
+drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1266:3: error: label at
+end of compound statement
+   default:
+   ^~~~~~~
+make[7]: *** [scripts/Makefile.build:244:
+drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.o] Error 1
+
+metadata:
+  git_describe: next-20240429
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_short_log: b0a2c79c6f35 ("Add linux-next specific files for 20240429")
+  arch: arm64, arm, riscv
+  toolchain: gcc-8
+
+Steps to reproduce:
+----
+# tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
+--kconfig defconfig
+
+Links:
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2flcoOuqVJfhTvX4AOYsWMd5hqe/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240429/testrun/23704376/suite/build/test/gcc-8-defconfig/history/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240429/testrun/23705756/suite/build/test/gcc-8-defconfig/details/
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
