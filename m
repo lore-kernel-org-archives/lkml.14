@@ -1,111 +1,92 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BBD101CF;
-	Mon, 29 Apr 2024 03:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB188BEE;
+	Mon, 29 Apr 2024 03:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714361948; cv=none; b=eUJeZOsmimKVUmYvmXE+Fyv3HhMvuT30U3oQ2JisnNtIs/dilx25BHyQAmdm1NbrdIjatSs0AZfjf1CyTLT0fSllOgZr2fXkY+qj4NSx1DepvsqUaWuSe5WU/eKYhk+EMT1Vc2xLpK1Vjsi0iF7RccZ9hh5bAiEoRNFMUDYl2zU=
+	t=1714361976; cv=none; b=GK7VC4c6TLmjqH9NgijEnMG3Wjs+7w1LI59UsWm0yE0hvl/Vmh47rRHmSwNawEkhLL6IaK/j1q8V2xnK2sxhzterGjm4iNQ43ffr9uY5p/u5rELFhaV6qb/eH4w6Taqc+OxfAGyEypWprHon9Z7gk6+IUabC3ze/wFYhS/kyCD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714361948; c=relaxed/simple;
-	bh=iakWI7Mf4uRK/ih2cOJxcuO2fyIzQOI0yNm5bLeIEsk=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JkTw2I2QNN+iEPee9BvPizXWNjdyAjFG/b3ZURBVxxEbHE7EOO2KCa+8kIVNu+k2JF/ekAqOQIV45nfbcJdNOfO9Fdfne+xaHVZFEF4NF93jKeOAjN/rvVKi+Ps/xXAhLJ6E+5YGLR32hjUxLR9PFpKVEi54r0/+V37ynKKSflg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoKFQTIP; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoKFQTIP"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5aa2a74c238so2981039eaf.3;
-        Sun, 28 Apr 2024 20:39:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714361946; x=1714966746; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xt+OQWGykPEfjSn0Znwm2hVPzDYvMYT7oTvPMGqtVzk=;
-        b=JoKFQTIPS0+5WQ3EPJizfitUDE4rQCTUZp6o6/OnHFII+eWt42gCmW1TVPpXg6ByL4
-         E2s7tVrEHJLH/GKjKzno2ECbIzWSfssnuhj3AI2C9mg3LAIUSdnoFCXJZuWQr7mk9XnT
-         GpGCQs+naDzoTPjndgyLN4BEOr7cJCpo3INxBJZwyYnSga5m/ORtNyaYQXiQAmocLyqh
-         aRttKVTZ3lINMxOQ0wy2jVgmDSPiDXcgvAGRHl80scPjymPMEa4cJzeLyGLv/0FjXt6e
-         CGNrCZC2ZT+SEeNEU561EnM8JIyLJaycQEE5ZQMbGvDC5KQp28FjbdgTPVr4WOHpjU7V
-         h3Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714361946; x=1714966746;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xt+OQWGykPEfjSn0Znwm2hVPzDYvMYT7oTvPMGqtVzk=;
-        b=MCBf7yBpfCCs6DyeeKRNLI4xRwuFrpGJ0zDx8ugXBkR5CeWZGh94QoUCfPQ7jSy5LJ
-         jOE63M0kjbLVbQpCdLoh0frDEtNu0zLz5v8J6Xf2s56LHLWSPtSLNrhMIopHL80YgmBP
-         //gI4S+FbqGBpyZy2LYnkgL5e7rGZVOlDx94QF8/YAZsfr0KHr8Jh3/cUVy8gK0ZYlKi
-         gudjzr6aYcC9JEjkq6qxz3IFMPeeohvVSpSW5uz5EStjyuJ45Je5zOO776kREuyohyCk
-         9oJH2eR2GcDaJvbSg9pamrdDEpNrUzgCSPdZxpZXSClUKpRDTTelGSwAh4FQOt5Q+bZa
-         4FNg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlopQsbjxhFVVlf9nSIwLPtQpKkdnQis9bfSEkbNEjp37Aq1GJVijCEVaFvp9BKwPVkhF5G7f/tp7QUc627OW4yXzeHbb/EhbdKV9QTLSGAl3kqHmKzOQPmnwYFPfmNQO5vUCK5GFJYpurGKPbix+wFp+HiGcM5Ut8PNaC7qdA16E2f151olCk+ACDdmXf5QIeVTyOSXzQe5uMnBM+eRQVAom/RmQf40Z1gJSXmFwuDoKBj0Lv3pObcVoA
-X-Gm-Message-State: AOJu0YzHnLPY5ibsLP9kEFe+5RBBl+/QSez0HUAMAD8xgj9pZOgplOsc
-	w47JLuM2g32zXT2zXj4C/e4tTE8bPJEEZB4uipSj7YNwcPjbg5oD
-X-Google-Smtp-Source: AGHT+IETkAsL9CVDORGdHIgNdYFvgwMLk9YtxEKXpKPPlV6+NYPwFjuxGJSVouMAJ7OElJcLMi5jwA==
-X-Received: by 2002:a05:6358:9604:b0:18d:787a:4155 with SMTP id a4-20020a056358960400b0018d787a4155mr9654379rwb.1.1714361946013;
-        Sun, 28 Apr 2024 20:39:06 -0700 (PDT)
-Received: from peter-bmc.dhcpserver.bu9bmc.local (2001-b400-e2aa-928c-7bf0-01bb-028d-772b.emome-ip6.hinet.net. [2001:b400:e2aa:928c:7bf0:1bb:28d:772b])
-        by smtp.gmail.com with ESMTPSA id i28-20020a63585c000000b005d5445349edsm17835424pgm.19.2024.04.28.20.39.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Apr 2024 20:39:05 -0700 (PDT)
-From: Peter Yin <peteryin.openbmc@gmail.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Cosmo Chou <chou.cosmo@gmail.com>,
-	Marek Vasut <marex@denx.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH v3 2/2] dt-bindings: hwmon: Add infineon xdp710 driver bindings
-Date: Mon, 29 Apr 2024 11:38:26 +0800
-Message-Id: <20240429033833.895122-3-peteryin.openbmc@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240429033833.895122-1-peteryin.openbmc@gmail.com>
-References: <20240429033833.895122-1-peteryin.openbmc@gmail.com>
+	s=arc-20240116; t=1714361976; c=relaxed/simple;
+	bh=FaREJWqWPzE5jXZHdIFuOj2dzhTwN1KejCtwF4xk/+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=op7KIr6KM8lTRuCFenKOUdsgOdHPPErad4q+pYomklLeVLK27IS3ESk2SZ9xjhcNaYLQovvv7W7mBSNNhmA0JPjgZCAkSkH5lwA6DwEFKtzkJotxf0TQVe+HcewXCX0AGyNtg3lOOxw+OmuMfPw6WXklqkqWtGaZCLe0AmyonCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 839C23000E443;
+	Mon, 29 Apr 2024 05:30:37 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 610752165EA; Mon, 29 Apr 2024 05:30:37 +0200 (CEST)
+Date: Mon, 29 Apr 2024 05:30:37 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Stefan Berger <stefanb@linux.ibm.com>, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
+	davem@davemloft.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: ecc - Protect ecc_digits_from_bytes from reading
+ too many bytes
+Message-ID: <Zi8UXS1MD5V58dnN@wunner.de>
+References: <20240426225553.3038070-1-stefanb@linux.ibm.com>
+ <D0W3MTR0CY08.Q2UIYE4N274L@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D0W3MTR0CY08.Q2UIYE4N274L@kernel.org>
 
-Add a device tree bindings for xdp710 device
+On Mon, Apr 29, 2024 at 01:12:00AM +0300, Jarkko Sakkinen wrote:
+> On Sat Apr 27, 2024 at 1:55 AM EEST, Stefan Berger wrote:
+> > Protect ecc_digits_from_bytes from reading too many bytes from the input
+> > byte array in case an insufficient number of bytes is provided to fill the
+> > output digit array of ndigits. Therefore, initialize the most significant
+> > digits with 0 to avoid trying to read too many bytes later on.
+> >
+> > If too many bytes are provided on the input byte array the extra bytes
+> > are ignored since the input variable 'ndigits' limits the number of digits
+> > that will be filled.
+> >
+> > Fixes: d67c96fb97b5 ("crypto: ecdsa - Convert byte arrays with key coordinates to digits")
+> > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> > ---
+> >  include/crypto/internal/ecc.h | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/include/crypto/internal/ecc.h b/include/crypto/internal/ecc.h
+> > index 7ca1f463d1ec..56215f14ff96 100644
+> > --- a/include/crypto/internal/ecc.h
+> > +++ b/include/crypto/internal/ecc.h
+> > @@ -67,9 +67,16 @@ static inline void ecc_swap_digits(const void *in, u64 *out, unsigned int ndigit
+> >  static inline void ecc_digits_from_bytes(const u8 *in, unsigned int nbytes,
+> >  					 u64 *out, unsigned int ndigits)
+> >  {
+> > +	int diff = ndigits - DIV_ROUND_UP(nbytes, sizeof(u64));
+> >  	unsigned int o = nbytes & 7;
+> >  	__be64 msd = 0;
+> >  
+> > +	/* diff > 0: not enough input bytes: set most significant digits to 0 */
+> > +	while (diff > 0) {
+> > +		out[--ndigits] = 0;
+> > +		diff--;
+> > +	}
+> 
+> Could be just trivial for-loop:
+> 
+> for (i = 0; i < diff; i++)
+> 	out[--ndigits] = 0;
+> 
+> Or also simpler while-loop could work:
+> 
+> while (diff-- > 0)
+> 	out[--ndigits] = 0;
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
----
- Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index e07be7bf8395..f982de168c4c 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -134,6 +134,8 @@ properties:
-           - infineon,irps5401
-             # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
-           - infineon,tlv493d-a1b6
-+            # Infineon Hot-swap controller xdp710
-+          - infineon,xdp710
-             # Infineon Multi-phase Digital VR Controller xdpe11280
-           - infineon,xdpe11280
-             # Infineon Multi-phase Digital VR Controller xdpe12254
--- 
-2.25.1
-
+Or just use memset(), which uses optimized instructions on many arches.
