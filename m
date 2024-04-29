@@ -1,181 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D9993A1CB;
-	Mon, 29 Apr 2024 10:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F017BA2E;
+	Mon, 29 Apr 2024 10:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714386809; cv=none; b=aCRkZ3ztHdyWUBNqa15o7bTpGVvzDomlE0tNj9jtVKUX2EHycwCpK3PHB22B51GAT9oWzyBpVVHupR1R1Ap9CUjj4rD9H2juO0z8FI/QGRLYJbHiJTDvug5V5CkGK6qQIu+6JzTgLHzN86uA8zUJHERghZr5no4GO1r9zxM1Brk=
+	t=1714386879; cv=none; b=pDhW+zWBbDPiiE58If/JjDgI/dheepte58HB2xl8184PmDDuR/kdg77iPbCjGL30nNMApaVqRf2QLCAZUSuFESugfvwrrFvDP6lEBynID5E1VCjJVWJPNJh/nov/YVnxy++C8anNvuQAqyxgtLoXHP62sPAY8H/f+0vD1ZpbeVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714386809; c=relaxed/simple;
-	bh=oupRboKjBufdsvm0Be1u/ags3rlLK/JIk49zQPYmDH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ANkyprROwmlC/fwbxh1B2qCwssGMZL8jxSfZwnSU+JmF5CjioSEarVSTlGMluTThiFe0MBWy7y8bgU7duye5IVtXps9lGqCCwjd7TQO++PNmDW6uIzR1AtkcFcqsn0UyX3LrwztsgxRQxAhMafMa0xOdAHJ/QhzDpgHktO7ULTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B5832F4;
-	Mon, 29 Apr 2024 03:33:53 -0700 (PDT)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D13E23F793;
-	Mon, 29 Apr 2024 03:33:24 -0700 (PDT)
-Date: Mon, 29 Apr 2024 11:33:21 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: linux-sunxi@lists.linux.dev, wens@csie.org, jernej.skrabec@gmail.com,
- samuel@sholland.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: allwinner: Add cache information to the SoC
- dtsi for A64
-Message-ID: <20240429113321.1f4da653@donnerap.manchester.arm.com>
-In-Reply-To: <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
-References: <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1714386879; c=relaxed/simple;
+	bh=Kstemt5Z21Vosm5/6thPt/7hYzc7lcLYUCfUJsumT6g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=usXhG6Oefu31BUSpNnnEgrB8Agl85QIGpXHdd4jRDUNzx0Gqb4EqOJXh1rk0+5fGxzo1Z3wZdC2lO/xkaregPj6F3FZq0lLAWuttUTmaaniyR7yY5m1ZiFM7qmZYytX03zesLj50Jo5O48jyz3b/nNIu5cZVOAyIpwFB0YsZskg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GXh2ZPU5; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GXh2ZPU5"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43TAYLGf005164;
+	Mon, 29 Apr 2024 05:34:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714386861;
+	bh=5ppUcfn4J8w9laTurDj/YW82wqBCBTbBVOmQQGnJTHg=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=GXh2ZPU5lmnqbagpXkLWU+3DeZQadjHfQyfZZ3ahYx1B/932AlFygG1cAg7qsHbmC
+	 kIcgj3ahYVMZvSdpg0eR9vCeVbB6tcEIO3lBUQDKSn/pcfl/2rvazbZK0mBJVaIFbR
+	 sFlCQ+MiH5N8JmOkQN26dGYA5NMoeZ/te6j91KI0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43TAYLZu068643
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Apr 2024 05:34:21 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Apr 2024 05:34:21 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Apr 2024 05:34:21 -0500
+Received: from [172.24.227.88] (uda0500640.dhcp.ti.com [172.24.227.88])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43TAYG9S110863;
+	Mon, 29 Apr 2024 05:34:17 -0500
+Message-ID: <f37bf7e9-78c7-9382-01af-4d8f37ec2ba9@ti.com>
+Date: Mon, 29 Apr 2024 16:04:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-am642-evm-icssg1-dualemac: add
+ overlay for mii mode
+Content-Language: en-US
+To: MD Danish Anwar <danishanwar@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
+CC: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Tero Kristo <kristo@kernel.org>, <srk@ti.com>,
+        Roger Quadros <rogerq@kernel.org>,
+        Ravi Gunasekaran
+	<r-gunasekaran@ti.com>
+References: <20240429092919.657629-1-danishanwar@ti.com>
+From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+In-Reply-To: <20240429092919.657629-1-danishanwar@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Sun, 28 Apr 2024 13:40:35 +0200
-Dragan Simic <dsimic@manjaro.org> wrote:
 
-Hi,
 
-thanks for taking care of this!
-
-> Add missing cache information to the Allwinner A64 SoC dtsi, to allow
-> the userspace, which includes lscpu(1) that uses the virtual files provided
-> by the kernel under the /sys/devices/system/cpu directory, to display the
-> proper A64 cache information.
+On 4/29/24 2:59 PM, MD Danish Anwar wrote:
+> Add device tree overlay to enable both ICSSG1 ports available on AM64x-EVM
+> in MII mode.
 > 
-> While there, use a more self-descriptive label for the L2 cache node, which
-> also makes it more consistent with other SoC dtsi files.
-> 
-> The cache parameters for the A64 dtsi were obtained and partially derived
-> by hand from the cache size and layout specifications found in the following
-> datasheets and technical reference manuals:
-> 
->   - Allwinner A64 datasheet, version 1.1
->   - ARM Cortex-A53 revision r0p3 TRM, version E
-> 
-> For future reference, here's a brief summary of the documentation:
-> 
->   - All caches employ the 64-byte cache line length
->   - Each Cortex-A53 core has 32 KB of L1 2-way, set-associative instruction
->     cache and 32 KB of L1 4-way, set-associative data cache
->   - The entire SoC has 512 KB of unified L2 16-way, set-associative cache
-
-So that looks correct when checking the manuals, and the per-CPU
-entries below match both between themselves and with that description
-above.
-However I have some level of distrust towards the Allwinner manuals,
-regarding the cache sizes (which are chosen by Allwinner).
-So while I haven't measured this myself, nor checked the cache type
-registers, tinymembench's memory latency test supports those sizes are
-correct:
-https://github.com/ssvb/tinymembench/wiki/PINE64-(Allwinner-A64)
-
-> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
-
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-
-Cheers,
-Andre
-
+> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
 > ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 37 ++++++++++++++++---
->  1 file changed, 32 insertions(+), 5 deletions(-)
+> This is v2 of the series v1 [1]
+> Changes from v1 to v2:
+> *) Rebased the patch on next-20240429 linux-next tag.
+> *) Added "GPL-2.0-only OR MIT" in the license as pointed out by
+>    Ravi Gunasekaran <r-gunasekaran@ti.com>
 > 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 57ac18738c99..86074d03afa9 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -51,49 +51,76 @@ cpu0: cpu@0 {
->  			device_type = "cpu";
->  			reg = <0>;
->  			enable-method = "psci";
-> -			next-level-cache = <&L2>;
->  			clocks = <&ccu CLK_CPUX>;
->  			clock-names = "cpu";
->  			#cooling-cells = <2>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2_cache>;
->  		};
->  
->  		cpu1: cpu@1 {
->  			compatible = "arm,cortex-a53";
->  			device_type = "cpu";
->  			reg = <1>;
->  			enable-method = "psci";
-> -			next-level-cache = <&L2>;
->  			clocks = <&ccu CLK_CPUX>;
->  			clock-names = "cpu";
->  			#cooling-cells = <2>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2_cache>;
->  		};
->  
->  		cpu2: cpu@2 {
->  			compatible = "arm,cortex-a53";
->  			device_type = "cpu";
->  			reg = <2>;
->  			enable-method = "psci";
-> -			next-level-cache = <&L2>;
->  			clocks = <&ccu CLK_CPUX>;
->  			clock-names = "cpu";
->  			#cooling-cells = <2>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2_cache>;
->  		};
->  
->  		cpu3: cpu@3 {
->  			compatible = "arm,cortex-a53";
->  			device_type = "cpu";
->  			reg = <3>;
->  			enable-method = "psci";
-> -			next-level-cache = <&L2>;
->  			clocks = <&ccu CLK_CPUX>;
->  			clock-names = "cpu";
->  			#cooling-cells = <2>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2_cache>;
->  		};
->  
-> -		L2: l2-cache {
-> +		l2_cache: l2-cache {
->  			compatible = "cache";
->  			cache-level = <2>;
->  			cache-unified;
-> +			cache-size = <0x80000>;
-> +			cache-line-size = <64>;
-> +			cache-sets = <512>;
->  		};
->  	};
->  
+> [1] https://lore.kernel.org/all/20240423090028.1311635-1-danishanwar@ti.com/
+> 
+>  arch/arm64/boot/dts/ti/Makefile               |   4 +
+>  .../ti/k3-am642-evm-icssg1-dualemac-mii.dtso  | 101 ++++++++++++++++++
+>  2 files changed, 105 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am642-evm-icssg1-dualemac-mii.dtso
 > 
 
+Reviewed-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+
+-- 
+Regards,
+Ravi
