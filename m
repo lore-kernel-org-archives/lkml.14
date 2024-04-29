@@ -1,98 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900E838396;
-	Mon, 29 Apr 2024 13:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D33C2E401
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 13:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714398667; cv=none; b=adxZkuDyTVHMZrIxAj71AZNP/YVeJpjw290x/tKPqPq2u/PHES0LGXB9zW/MsM0AnpnlbgvAZvSP9OpoW8PQzC64pYe7lBS01/2yt1z/M2XqOWk1kzovbIj7//9Vw1UjkzExnJ2Nz43wYx6/iuuD7blzh4VWONxDj2fOElbRos4=
+	t=1714398679; cv=none; b=RhDo50IS5+Peqpz/oZRaARRnnt6Dwg/cliWDWdS0N3gFfn8lqsuYnM/MSl1GHJfT/XvDxstP6jvQqBOaX9nUIzRmqnwnWSTqSEZQ6ZDLvhQPbZejFk2HhGFVfPssOjVtE5J31KdnTNUZ2ex38rpRYcCDhON488daUFJPOckoJG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714398667; c=relaxed/simple;
-	bh=SfcHmwJ9/qeOnlINiA2lp6iCE7NPd5EAtSbkcuF48oU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cNp/szrrb6Hhi8Fp0z2qBvEUf9k7pvoILNcvSAWh+21Cx/PBbfCtdNBvZnwrXf1gqH7Tkka01ZLK0pP4tHBgKdroNsv99ZMIukheRRiL1rAemHUaoWkJ0RU7HZ8XoTkYe1eIqdGTnZ1aOXwFN/ThW0o/zo/FSmXsD0+mYzEA3Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d/KvCXXg; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714398679; c=relaxed/simple;
+	bh=/jIJCnMvgZY5Up4X3Z7+dau8RuABLbiQc/6Wav+cbRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eqFVzgR9jEGIftKrfLb40KKj+w23uzz1zF0KB1BP7NQM5Ff3S13Rh/zg0j800iwcqX2I/0LQOfxtgRUv8KMR8Lb9Ri8WJTJo+PMiSwXOMX+AGxaGiqOrIUT3D3+8Q3LVJtXGRf5o3bwrSkLSWy7OGb9tlpewVX+DjJGdWSrKfN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T1GjTcmX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d/KvCXXg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714398666; x=1745934666;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SfcHmwJ9/qeOnlINiA2lp6iCE7NPd5EAtSbkcuF48oU=;
-  b=d/KvCXXgn1bxVo8E/u7aAky5RXSYghs3tMX3E3LcloFeFYRE2w575nzD
-   2KTpJSVpNefpDcLU2a2FBh/baa1scVBoR9oUYYsGhshX58glU0Odz9LxD
-   /sPzC8j0hJI3xz6XDn30W7NHnJONyRXb77UWvipvrvDAO64d8xCOsRKSQ
-   8c54JpitntSWgxIqs7E8hFf939nnhwUsEc1Y4dLQi6Gf3Kk8FnFUSOMGg
-   Ymy6Xbmh7sp17x/yrGiTzgsI0u2POKdJHy0cU011ojhECigA1Kfru1kxF
-   PF0xRAHpizDVLnpLFA3WbPexDXst9ltqqks1TqDpftjFlm2io7Up+o4G+
-   Q==;
-X-CSE-ConnectionGUID: Q9gMaagBRGOaWMj6x1fDCw==
-X-CSE-MsgGUID: T0X1xRoZTteH4U5I2Vxn0Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="35451181"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="35451181"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 06:51:05 -0700
-X-CSE-ConnectionGUID: msfFMoLeQ4G5ddfShgcwpw==
-X-CSE-MsgGUID: DBnAue/DRauazKeYDE7axw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="30569070"
-Received: from pingchan-mobl.amr.corp.intel.com (HELO [10.212.49.248]) ([10.212.49.248])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 06:51:04 -0700
-Message-ID: <c0120da6-ac95-46c6-94d5-471f31e7c857@linux.intel.com>
-Date: Mon, 29 Apr 2024 08:51:03 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T1GjTcmX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714398677;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8tbMD2h7PJ3lWi6PtX11/1+14job09F9/bpkbzHIXK8=;
+	b=T1GjTcmXBqkFmfEFLhls6bEKwVwFv6gvsbJsAhcH74JOXfQ3BJCrPaqltyTbUF0snPKKoO
+	BwWBF11Rj8Myg0imCJtQLSENaCfkYlX6dTiWt3nfKQjJtryx3TETE940HSegDwuSykiZ8H
+	gdYAn/EOWKhFLUHmBWP3lilUqhZxZvE=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-202-Xw74E2WjOaGfQ788Kgabvg-1; Mon, 29 Apr 2024 09:51:14 -0400
+X-MC-Unique: Xw74E2WjOaGfQ788Kgabvg-1
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-61bb2b4204eso5536587b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 06:51:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714398674; x=1715003474;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8tbMD2h7PJ3lWi6PtX11/1+14job09F9/bpkbzHIXK8=;
+        b=Ow4O8a+QIrZ9eG3eWwBuAiLtCMIKJYXmKqwnzlI5ZGVpRMvjNj0CrKQB/9DXc9DZC1
+         y3E68tMo+2tgkErzfepdaHqrBXZupYNKo9cOwL5ttWQbtxuoH0hR8TW+e6/W2led1j3q
+         MKH/39HPhZSIvhb9Wzy8dm0dC37WHmoMRsn0hcZ7oNBflxPlM5WLFnyPWHl3eOYu1f1q
+         GcJ2mN5FD7eWN0AkJkEjIX7wpN1MHHGrP/FIFAB30IK7cTBXog9wvLMpAN5XWgIa/Utp
+         vp96ZSwSh3KM3OTwSdy2uGb73AIdXwDcpzfpiPUNaBWMoLX/c5NWwzCg9Dy6jFFblAzo
+         OIdg==
+X-Gm-Message-State: AOJu0Yy4Agu5c+UN/DtWBnCp/khqCxQrM1+fptIInhmAK+j6+faDph+g
+	B/z3evQkBro8P5dCjUOrLovA5KUd2NaK6aWa8QRdBkE8FtvSYbfyoxL57ODc1x7FJwUAE2sadgy
+	LcHA4zMR2bDi/4uHp/U4D5i8vlYYsktgzNlccsyZCSyFqP/2RMnFSqvhC253Q7Q==
+X-Received: by 2002:a25:b29f:0:b0:de4:5c38:40b8 with SMTP id k31-20020a25b29f000000b00de45c3840b8mr9172214ybj.6.1714398673780;
+        Mon, 29 Apr 2024 06:51:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFzbclBqcimK4lAEWdX1Uas2H83fsLI+db0WSQp/ICCVyIzSWiD5cYwnQ01wud/FLiGmgLing==
+X-Received: by 2002:a25:b29f:0:b0:de4:5c38:40b8 with SMTP id k31-20020a25b29f000000b00de45c3840b8mr9172187ybj.6.1714398673284;
+        Mon, 29 Apr 2024 06:51:13 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id fu48-20020a05622a5db000b0043781985244sm10433284qtb.59.2024.04.29.06.51.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 06:51:13 -0700 (PDT)
+Date: Mon, 29 Apr 2024 09:51:10 -0400
+From: Peter Xu <peterx@redhat.com>
+To: David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+	Muchun Song <muchun.song@linux.dev>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH 2/2] mm/selftests: Don't prefault in gup_longterm tests
+Message-ID: <Zi-lzjgoEiBGlsrX@x1n>
+References: <20240428190151.201002-1-peterx@redhat.com>
+ <20240428190151.201002-3-peterx@redhat.com>
+ <4171dbb6-81c0-4553-a405-a55f75be4cb7@redhat.com>
+ <Zi-cONgqV4_kUIE4@x1n>
+ <2338119d-060b-4127-9199-5ff39fd62fc4@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ALSA: hda: intel-dsp-config: Fix Huawei Matebook D14
- NBLB-WAX9N quirk detection
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Takashi Iwai <tiwai@suse.de>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Brady Norander <bradynorander@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Mark Brown <broonie@kernel.org>, Mark Hasemeyer <markhas@chromium.org>,
- Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
- stable@vger.kernel.org
-References: <5e6ba980c0738199589749b68b83f2d730512107.1713430105.git.mchehab@kernel.org>
- <20240418110453.10efcb60@sal.lan>
- <848bcc94-3a31-4fb4-81bc-bd3f138e12f6@linux.intel.com>
- <87edaopdlt.wl-tiwai@suse.de> <Zi-RpauZjcWg0t_q@smile.fi.intel.com>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <Zi-RpauZjcWg0t_q@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2338119d-060b-4127-9199-5ff39fd62fc4@redhat.com>
 
-
-
-On 4/29/24 07:25, Andy Shevchenko wrote:
-> On Mon, Apr 29, 2024 at 02:17:34PM +0200, Takashi Iwai wrote:
->> On Thu, 18 Apr 2024 15:24:10 +0200,
->> Pierre-Louis Bossart wrote:
->>> On 4/18/24 05:04, Mauro Carvalho Chehab wrote:
+On Mon, Apr 29, 2024 at 03:26:22PM +0200, David Hildenbrand wrote:
+> > The test patch here doesn't need to rush. David, how about you prepare a
+> > better and verified patch and post it separately, making sure to cover all
+> > the things we used to cover plus the unshare?  IIUC it used to be not
+> > touched because of pte_write() always returns true with a write prefault.
+> > 
+> > Then we let patch 1 go through first, and drop this one?
 > 
-> ...
-> 
->>> Andy, what do you think and what would be your recommendation?
->>
->> This one is still pending, and I'd like to hear the decision from
->> Intel people.  Let me know if this hack is acceptable.
-> 
-> IIRC it was resolved on GitHub by Pierre, anything else I need to contribute?
+> Whatever you prefer!
 
-This initial patch was replaced by the one I sent on Friday
-"[PATCH] ALSA: hda: intel-dsp-config: harden I2C/I2S codec detection"
+Thanks!
 
-I should have made it clearer in the commit message, sorry.
+Andrew, would you consider taking patch 1 but ignore this patch 2? Or do
+you prefer me to resend?
+
+-- 
+Peter Xu
 
