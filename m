@@ -1,134 +1,148 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA78EED4;
-	Mon, 29 Apr 2024 07:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B5614AA3
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 07:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714377306; cv=none; b=R5Uq92SNtWI0/PjD78Hn/x+j1hmhkzg0Up/ReHnA2xXCXccnbCAk1csDk+3OYrY1Y+bR2W/c9nuGmISBH30JVtnGLkVoB7cw84+G/WhCTu526P2BFfxlbEVBw8hhxELAvqyxJ4Q+6YQTI4zv+I1RUTfYBmB1njhQlVHxI/kfERw=
+	t=1714377369; cv=none; b=LRPAV+8GZsvZCmeDeCHBouU+GSIGtjp1bj9ab4WTL95342QptGSNXvbLxf3v3uDuqrBlTE05ZcYUu3C8XLMCC8aD57fUJ3QsAzM+fS/rVp2E+NnJiJbDgS/VObw7y5Qt9Qc+yLoWaznaRqjwfSrq+piYTbeHLpPym7HVH9uamkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714377306; c=relaxed/simple;
-	bh=tiKshYUIgU+C4Jc8N+hBsmNQ/hFvFexXKDmBYginrA0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tbD6sI9+KOfmDilU7A8YJgasJGMZrvkDYeobAfsu6oEBCOAeSOseefQixRlkWQ5V+gYKfzFM753FWyx+mOD1PU1nOXQa1LlPuuyyVs/TrS8eoYlB3yZivh/ZdGqx+9XqH0p5wirGmAherOBRGkECOnTUivgGvWWjV2OEWHQjZ+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0b2J07E; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714377369; c=relaxed/simple;
+	bh=eWilt8G5gLl7+AXu+4/dX6hli8GN8Nanfu09syNcIdA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XxLNg3xq2u5QJtSvcJbvIAzKbperFjPFvLH/MnOWgqqp0JScAwhfD966IutCbJoej7lhqoVZzKK1MFBSToP7+rrzpYEkd1o7GwOxCcRWIaM2oCEff+jn7T+ANIR3B06NOY7878tQElxJuYHSJ/3JFiu9KB3qJ/TKQt6xrm9gQ7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=ZVb+L3fw; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0b2J07E"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-34c0f5f5cd0so3329397f8f.2;
-        Mon, 29 Apr 2024 00:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714377303; x=1714982103; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tiKshYUIgU+C4Jc8N+hBsmNQ/hFvFexXKDmBYginrA0=;
-        b=m0b2J07E5PTjff6MrdcAzfx2aX4vwVjCH8BZM970tQhtt15VNhuaEXi/lqhbvjmCim
-         4vaMwL/vkCEoIUhhkzf7F8z5u4YTYikRow3PeStEPsQ0fmIod/FfJMCqRfG275+qbxSm
-         2eMfOjfLTr8FleQXG5CqFZI6lMStS4xRoqtTdoBAs6aL4TLb1tKDk7I1Kf7F2wy1E3Rm
-         XfIiCVaU/xewKZY6CRuWeYFWOWUNr/6cM0G/zvh24TK5nR4ZpVQHT5BWb2d091XevFWP
-         ecGNbypBfZBOqviPVUj7UsoWs7k3fYF2PP0ny3Ppv7XcLV3RX11bHmlksntK04Rn667r
-         jU6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714377303; x=1714982103;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tiKshYUIgU+C4Jc8N+hBsmNQ/hFvFexXKDmBYginrA0=;
-        b=KlnqI4YnF5SZZacnBq+yTFwsfA/LVGjGoIBQqNc0n1PTgQ+cL9jRuyxcfUu56uuO46
-         prug8LrLZxjKgR3cTwg6UlbWjDsiHQNh3/X3pv2yqm+owNhXtQmU+hVVuwFaxGkvk9XA
-         dTTuIh43gG4hEALD/1Jc4XFtab9xnf/IOgLux0zA4bVlINXocgDwLleYKgHVV/oMm03o
-         TLGgLFajJnd+KYmTP5PZxpDBJ/qPiDyJt6Gnpg4/fnerjw3qCZ8eiw/Y9txBVILu1V43
-         SItXDXF44Jc7N3lBElhb63z0gBjgYfQ3yfukCgeBubkjGlAnH2kM1+8/AxFBednPpkAQ
-         +KwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXOCsCgPcs2LgSbwVscTU4RSzcCGrYUr8IuSwxxf8p8a7BwMz4uzPXAHiZJJxDSEpd1SpK5kogEOk5xdCrMa1dcgHchejII0nJlj45vYZ3cNKNzzskk04EEq8xGFvzLuuH8xUpWeFVk2C9M0ihnRn+ZRq/IEVZ4FHt4yxuqu24JpQ==
-X-Gm-Message-State: AOJu0YzPkealz2TtPT8Iw5Ro3V6H/0B1W+jyBxMGolFJMwkcOH6dNx8f
-	JhlWQUNUalgEES34Wi2K96S72UxUpaFxp3vbzSTVkFZazk4iTQy+L0aRsaoNH/8=
-X-Google-Smtp-Source: AGHT+IE1t/q4f+QGWHixnNA2MQJglgBMGgcEo52I+k0yP1J/yswyQvKvQcaKnXxVRdS5zUr48uGRCA==
-X-Received: by 2002:a05:6000:1ac8:b0:34d:a9:6642 with SMTP id i8-20020a0560001ac800b0034d00a96642mr2166868wry.28.1714377303111;
-        Mon, 29 Apr 2024 00:55:03 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
-        by smtp.gmail.com with ESMTPSA id k21-20020adfb355000000b0034c6b368aecsm7480380wrd.26.2024.04.29.00.55.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 00:55:02 -0700 (PDT)
-Message-ID: <e62f8df4b06abc371b1e9fe3232cb593e468d54c.camel@gmail.com>
-Subject: Re: [PATCH 4/5] iio: adis16480: add support for adis16545/7 families
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>, Ramona Gradinariu
-	 <ramona.bolboaca13@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
- linux-doc@vger.kernel.org, devicetree@vger.kernel.org, corbet@lwn.net, 
- conor+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, robh@kernel.org,
- Ramona Gradinariu <ramona.gradinariu@analog.com>, Nuno
- =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>
-Date: Mon, 29 Apr 2024 09:58:40 +0200
-In-Reply-To: <20240428162555.3ddf31ea@jic23-huawei>
-References: <20240423084210.191987-1-ramona.gradinariu@analog.com>
-	 <20240423084210.191987-5-ramona.gradinariu@analog.com>
-	 <20240428162555.3ddf31ea@jic23-huawei>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 
+	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="ZVb+L3fw"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2F26160005;
+	Mon, 29 Apr 2024 07:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
+	t=1714377358;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qRFrm6wJpTdJo02mNwFpZgTYCwsjhC4CDet4zevy5n8=;
+	b=ZVb+L3fwl4phMyrApv6CGFbaRYimX1adE0s/u893Huzsi1cR9O/9q8yOIyvqdp+yDwWoFv
+	abkLETToqKRrwLM1ecrEyLXs6IJDiDu/ajqjfNntI6qLAk9KHd6nE6TRZqMHHKexLQmy3g
+	Pdrfkdr8CjpBqmdzcThNs2fTAn4oCrC4eUPVyP5r9/uMGt6ObZXo4UEGElZD268RBXgSwr
+	B4v1XR7mPz6LBsGtgTrkveLfhTK5BjXYZHdWu1Otpr8egk9e2jLtpQeafik03iC+unr5N/
+	pg8fIe1yMk4DN0xjO+fOTi4lTM3rUaV0m73eQ5W5jRzwPvvjLS/SFEjwUn3+fQ==
+Message-ID: <1136cf64-c1b6-4909-b64e-0c754276024c@clip-os.org>
+Date: Mon, 29 Apr 2024 09:55:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-On Sun, 2024-04-28 at 16:25 +0100, Jonathan Cameron wrote:
-> On Tue, 23 Apr 2024 11:42:09 +0300
-> Ramona Gradinariu <ramona.bolboaca13@gmail.com> wrote:
->=20
-> > The ADIS16545 and ADIS16547 are a complete inertial system that
-> > includes a triaxis gyroscope and a triaxis accelerometer.
-> > The serial peripheral interface (SPI) and register structure provide a
-> > simple interface for data collection and configuration control.
-> >=20
-> > These devices are similar to the ones already supported in the driver,
-> > with changes in the scales, timings and the max spi speed in burst
-> > mode.
-> > Also, they support delta angle and delta velocity readings in burst
-> > mode, for which support was added in the trigger handler.
-> >=20
-> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
->=20
-> What is Nuno's relationship to this patch?=C2=A0 You are author and the s=
-ender
-> which is fine, but in that case you need to make Nuno's involvement expli=
-cit.
-> Perhaps a Co-developed-by or similar is appropriate?
->=20
-> > Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
-> A few comments inline.=C2=A0 Biggest one is I'd like a clear statement of=
- why you
-> can't do a burst of one type, then a burst of other.=C2=A0 My guess is th=
-at the
-> transition is very time consuming?=C2=A0 If so, that is fine, but you sho=
-uld be
-> able
-> to let available_scan_masks handle the disjoint channel sets.
-
-Yeah, the burst message is a special spi transfer that brings you all of th=
-e
-channels data at once but for the accel/gyro you need to explicitly configu=
-re
-the chip to either give you the "normal vs "delta" readings. Re-configuring=
- the
-chip and then do another burst would destroy performance I think. We could =
-do
-the manual readings as we do in adis16475 for chips not supporting burst32.=
- But
-in the burst32 case those manual readings should be minimal while in here w=
-e
-could have to do 6 of them which could also be very time consuming...
-
-Now, why we don't use available_scan_masks is something I can't really reme=
-mber
-but this implementation goes in line with what we have in the adis16475 dri=
-ver.
-
-- Nuno S=C3=A1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] slub: Fixes freepointer encoding for single free
+To: Xiongwei Song <sxwjean@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, cl@linux.com,
+ penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+ akpm@linux-foundation.org, vbabka@suse.cz, roman.gushchin@linux.dev,
+ 42.hyeyoo@gmail.com
+References: <Zij_fGjRS_rK-65r@archlinux>
+ <CAEVVKH8Oagbih8E8YNPpNhyh75fWnBLdod+eEGQm9i8ciNv7sQ@mail.gmail.com>
+ <47011bf2-4000-4fd8-9dd3-4c6b6a1c4a80@clip-os.org>
+ <CAEVVKH9rwS6vR5_AjHyjS0vknyZvHabooE+c+k_5XNn2Rdac6w@mail.gmail.com>
+Content-Language: en-US
+From: Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>
+In-Reply-To: <CAEVVKH9rwS6vR5_AjHyjS0vknyZvHabooE+c+k_5XNn2Rdac6w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: nicolas.bouchinet@clip-os.org
 
 
+On 4/26/24 15:14, Xiongwei Song wrote:
+> On Fri, Apr 26, 2024 at 8:18 PM Nicolas Bouchinet
+> <nicolas.bouchinet@clip-os.org> wrote:
+>> On 4/26/24 11:20, Xiongwei Song wrote:
+>>> On Wed, Apr 24, 2024 at 8:48 PM Nicolas Bouchinet
+>>> <nicolas.bouchinet@clip-os.org> wrote:
+>>>> From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+>>>>
+>>>> Commit 284f17ac13fe ("mm/slub: handle bulk and single object freeing
+>>>> separately") splits single and bulk object freeing in two functions
+>>>> slab_free() and slab_free_bulk() which leads slab_free() to call
+>>>> slab_free_hook() directly instead of slab_free_freelist_hook().
+>>>>
+>>>> If `init_on_free` is set, slab_free_hook() zeroes the object.
+>>>> Afterward, if `slub_debug=F` and `CONFIG_SLAB_FREELIST_HARDENED` are
+>>>> set, the do_slab_free() slowpath executes freelist consistency
+>>>> checks and try to decode a zeroed freepointer which leads to a
+>>>> "Freepointer corrupt" detection in check_object().
+>>>>
+>>>> Object's freepointer thus needs to be properly set using
+>>>> set_freepointer() after init_on_free.
+>>>>
+>>>> To reproduce, set `slub_debug=FU init_on_free=1 log_level=7` on the
+>>>> command line of a kernel build with `CONFIG_SLAB_FREELIST_HARDENED=y`.
+>>>>
+>>>> dmesg sample log:
+>>>> [   10.708715] =============================================================================
+>>>> [   10.710323] BUG kmalloc-rnd-05-32 (Tainted: G    B           T ): Freepointer corrupt
+>>>> [   10.712695] -----------------------------------------------------------------------------
+>>>> [   10.712695]
+>>>> [   10.712695] Slab 0xffffd8bdc400d580 objects=32 used=4 fp=0xffff9d9a80356f80 flags=0x200000000000a00(workingset|slab|node=0|zone=2)
+>>>> [   10.716698] Object 0xffff9d9a80356600 @offset=1536 fp=0x7ee4f480ce0ecd7c
+>>> If init_on_free is set,  slab_free_hook() zeros the object first, then
+>>> do_slab_free() calls
+>>> set_freepointer() to set the fp value, so there are 8 bytes non-zero
+>>> at the moment?
+>>> Hence, the issue is not related to init_on_free?
+>>>
+>>> The fp=0x7ee4f480ce0ecd7c here is beyond kernel memory space, is the issue from
+>>> CONFIG_SLAB_FREELIST_HARDENED enabled?
+>> My understanding of the bug is that slab_free_hook() indeed zeroes the
+>> object and its metadata first, then calls do_slab_free() and directly
+>> calls __slab_free(), head an tail parameters being set to the object.
+>>
+>> If `slub_debug=F` (SLAB_CONSISTENCY_CHECKS) is set, the following call
+>> path can be executed :
+>>
+>> free_to_partial_list() ->
+>>
+>> free_debug_processing() ->
+>>
+>> free_consistency_checks() ->
+>>
+>> check_object() ->
+>>
+>> check_valid_pointer(get_freepointer())
+> I understand the call path. I meant here the freepointer is not ZERO
+> but an illegal
+> value( fp=0x7ee4f480ce0ecd7c),
+
+
+Yes this is the reason of this patch. The freepointer is an illegal 
+value because the memory range where it sits has been overridden by 
+zeroes, set_freepointer() is never called and thus the freepointer is 
+never properly set.
+
+
+  The illegal value is obtained after zeroes has been decoded by 
+get_freepointer()->freelist_ptr_decode().
+
+
+>   then check_valid_pointer return 1 with
+> it's last line
+> and then check_object() printed out the error message. I'm not sure if I
+> misunderstood you.
+
+
+check_valid_pointer() returns 0 since object < base, the object being 
+the decoded fp (0x7ee4f480ce0ecd7c < 0xffff.* base addr), hence 
+check_object() returns 0, not 1.
+
+This is why the "Object at 0x%p not freed" slab_fix() is called in 
+free_debug_processing().
+
+
+>
+> Thank,
+> Xiongwei
+>
