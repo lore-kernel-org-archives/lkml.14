@@ -1,208 +1,140 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [207.211.30.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD66DC2C8;
-	Mon, 29 Apr 2024 08:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6601D17C60
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 08:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.211.30.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714380827; cv=none; b=vGXj9E4wMqBaXp3btfGJYQVWf3zNcnvGoq1xwtpo3zcafV//4yBCIplf5WhVGUth0/CSjRZJqrcksQ+zajX7Pau1MV8o3cr66HhUgRrPbd9q949Xgzd02rq8oHtxLW/lW0ruf+MI/AjceyPQ1kKr00rzj3qmPDvTQdLYt0laLUY=
+	t=1714380851; cv=none; b=LP9atLziaDX5SexHXBdl6FRNEhJBHfi4YadbeHr8HNY08OtiQB4H32zuwYe1oPCgWC8wqVtz68Yt84DHIyJmzgm0owjQ5NYxQGHDz5s50U2FEq05LHqBMVnhSvxrOhjgiKCsxFmEhMiCm3ZIAhDiLyDwOOZPPWFFGo7XJExT7zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714380827; c=relaxed/simple;
-	bh=XxJMGad54tR9sirQj06vDhJW0TOP5mpqMJiFYt+RuPo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ipM1+vYFuaYs3sNBwOHjF+1jXS1C2SlEDHup3aQcWn0NAlzPsH/GS/zPV4sa+GUD5byTqbq0DiE8xFiPgwF9G6vKgnlNvrDcp0j8XwfF6dLpaMJc/5Hc2QNT+4wty0cd2ZRD3j0jz60DOdmNK4QnchHyQzhrGzFhijDcCWKTYxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=cx8ZJd96; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="cx8ZJd96"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43T7ixZ9007532;
-	Mon, 29 Apr 2024 10:53:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=PDnBIULbsSxakTpOd1Nm1WtFrD4kcum3r6evgJ4f4ys=; b=cx
-	8ZJd96Uhy5fsInDA28xxjsDp188fEYLlEWtAt6Oe1LxNo3O6j1QyWLiHHiGYuJ57
-	y3WtM0kRFbKbkeqRJ2Q2up7MfiST9GM/suENhxKwlO7PLFl/4bIYOgq2hOLdZEKU
-	m5PE2G29eymm6Xl9xFrxOy7GOENbjgvF2mNKAX06OlsLkhUudwemF1ueAgsCTUnU
-	KUmHHPKMGzKPAFTVtoGnC1ToIlHWgEXk3mY1PIzC+iQtSxybuPh3k6N4U9v6UuMy
-	3ZSccP+1zXRPv3xFzTHjLCTiRpkPstvmUh61P0ACcaDSOCua4zVzkKlzBsbepBAY
-	IozdqzjusGz4+6Algqmw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xscahufgs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 10:53:18 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AD1524004B;
-	Mon, 29 Apr 2024 10:53:12 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3E7D6216837;
-	Mon, 29 Apr 2024 10:52:35 +0200 (CEST)
-Received: from [10.130.72.241] (10.130.72.241) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 29 Apr
- 2024 10:52:34 +0200
-Message-ID: <d2432381-827f-4825-a450-9954f8291576@foss.st.com>
-Date: Mon, 29 Apr 2024 10:52:34 +0200
+	s=arc-20240116; t=1714380851; c=relaxed/simple;
+	bh=39/LY3r7dvVvCjMdt27gl95vbrEuu8DvmfjktGo/Bk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EidkIx4rUdeqxd/02GloyLbiujy1MTFXBDhM/uO2midyk5/f6dAde/VfA04UbPfcbFS/NZeE2/+j2wI4yjEVjybqYn9Zq/BVY8/pBHtq2441DLnELZ62w57M4WUppJwS510nnMgYr9ccNx3zQOGYorEWOOgqkuLiRxS7Fht4BqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=none smtp.mailfrom=queasysnail.net; arc=none smtp.client-ip=207.211.30.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=queasysnail.net
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-ZW5VIqNkMmGdttBEc-vIJA-1; Mon,
+ 29 Apr 2024 04:54:00 -0400
+X-MC-Unique: ZW5VIqNkMmGdttBEc-vIJA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9E4A538000A9;
+	Mon, 29 Apr 2024 08:53:58 +0000 (UTC)
+Received: from hog (unknown [10.39.193.137])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B198740BB4E;
+	Mon, 29 Apr 2024 08:53:48 +0000 (UTC)
+Date: Mon, 29 Apr 2024 10:53:47 +0200
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: j.granados@samsung.com
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	David Ahern <dsahern@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Allison Henderson <allison.henderson@oracle.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>,
+	Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+	linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, bridge@lists.linux.dev,
+	lvs-devel@vger.kernel.org
+Subject: Re: [PATCH v5 1/8] net: Remove the now superfluous sentinel elements
+ from ctl_table array
+Message-ID: <Zi9gG82_OKnLlFI2@hog>
+References: <20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com>
+ <20240426-jag-sysctl_remset_net-v5-1-e3b12f6111a6@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH linux-next] media: i2c: st-mipid02: replace of_node_put()
- with __free
-To: R Sundar <prosunofficial@gmail.com>, <sylvain.petinot@foss.st.com>,
-        <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <skhan@linuxfoundation.org>, <javier.carrasco.cruz@gmail.com>,
-        Julia Lawall
-	<julia.lawall@inria.fr>
-References: <20240427095643.11486-1-prosunofficial@gmail.com>
-Content-Language: en-US
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <20240427095643.11486-1-prosunofficial@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-29_06,2024-04-26_02,2023-05-22_02
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240426-jag-sysctl_remset_net-v5-1-e3b12f6111a6@samsung.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-Hi,
+2024-04-26, 12:46:53 +0200, Joel Granados via B4 Relay wrote:
+> diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
+> index 6973dda3abda..a84690b13bb9 100644
+> --- a/net/core/sysctl_net_core.c
+> +++ b/net/core/sysctl_net_core.c
+[...]
+> @@ -723,12 +722,11 @@ static __net_init int sysctl_core_net_init(struct net *net)
+>  		if (tbl == NULL)
+>  			goto err_dup;
+>  
+> -		for (tmp = tbl; tmp->procname; tmp++)
+> -			tmp->data += (char *)net - (char *)&init_net;
 
-Thank you for your patch.
+Some coding style nits in case you re-post:
 
-On 4/27/24 11:56, R Sundar wrote:
-> Use the new cleanup magic to replace of_node_put() with
-> __free(device_node) marking to auto release and to simplify the error
-> paths.
-> 
-> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-> Signed-off-by: R Sundar <prosunofficial@gmail.com>
+> +		for (int i = 0; i < table_size; ++i)
 
-I was not aware of this kind of auto release mechanism. Thanks for
-bringing that to my eyes.
+move the declaration of int i out of the for (), it's almost never
+written this way (at least in networking)
 
-Now I looked in /drivers/media and couldn't find such structure. All
-drivers seem to follow the goto error_of_node_put style.
-As I'm unsure if we want to introduce such magic, could either Laurent
-or Sakari comment on this ?
+> +			(tbl + i)->data += (char *)net - (char *)&init_net;
 
-> ---
->  drivers/media/i2c/st-mipid02.c | 37 +++++++++-------------------------
->  1 file changed, 9 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
-> index f250640729ca..d42a306530f3 100644
-> --- a/drivers/media/i2c/st-mipid02.c
-> +++ b/drivers/media/i2c/st-mipid02.c
-> @@ -715,31 +715,28 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
->  	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
->  	struct i2c_client *client = bridge->i2c_client;
->  	struct v4l2_async_connection *asd;
-> -	struct device_node *ep_node;
->  	int ret;
+                        tbl[i].data = ...
+
+is more in line with other similar functions in the rest of net/
+
+
+[...]
+> diff --git a/net/mpls/af_mpls.c b/net/mpls/af_mpls.c
+> index 6dab883a08dd..ecc849678e7b 100644
+> --- a/net/mpls/af_mpls.c
+> +++ b/net/mpls/af_mpls.c
+[...]
+> @@ -2674,6 +2673,7 @@ static const struct ctl_table mpls_table[] = {
 >  
->  	/* parse rx (endpoint 0) */
-> -	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
-> -						0, 0);
-> +	struct device_node *ep_node __free(device_node) =
-> +		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 0, 0);
->  	if (!ep_node) {
->  		dev_err(&client->dev, "unable to find port0 ep");
-> -		ret = -EINVAL;
-> -		goto error;
-> +		return -EINVAL;
->  	}
->  
->  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
->  	if (ret) {
->  		dev_err(&client->dev, "Could not parse v4l2 endpoint %d\n",
->  			ret);
-> -		goto error_of_node_put;
-> +		return ret;
->  	}
->  
->  	/* do some sanity checks */
->  	if (ep.bus.mipi_csi2.num_data_lanes > 2) {
->  		dev_err(&client->dev, "max supported data lanes is 2 / got %d",
->  			ep.bus.mipi_csi2.num_data_lanes);
-> -		ret = -EINVAL;
-> -		goto error_of_node_put;
-> +		return -EINVAL;
->  	}
->  
->  	/* register it for later use */
-> @@ -750,7 +747,6 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
->  	asd = v4l2_async_nf_add_fwnode_remote(&bridge->notifier,
->  					      of_fwnode_handle(ep_node),
->  					      struct v4l2_async_connection);
-> -	of_node_put(ep_node);
->  
->  	if (IS_ERR(asd)) {
->  		dev_err(&client->dev, "fail to register asd to notifier %ld",
-> @@ -764,46 +760,31 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
->  		v4l2_async_nf_cleanup(&bridge->notifier);
->  
->  	return ret;
-> -
-> -error_of_node_put:
-> -	of_node_put(ep_node);
-> -error:
-> -
-> -	return ret;
->  }
->  
->  static int mipid02_parse_tx_ep(struct mipid02_dev *bridge)
+>  static int mpls_net_init(struct net *net)
 >  {
->  	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_PARALLEL };
->  	struct i2c_client *client = bridge->i2c_client;
-> -	struct device_node *ep_node;
->  	int ret;
->  
->  	/* parse tx (endpoint 2) */
-> -	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
-> -						2, 0);
-> +	struct device_node *ep_node =
-> +		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 2, 0);
+> +	size_t table_size = ARRAY_SIZE(mpls_table);
 
-Shouldn't there be a '__free' here too ?
-
->  	if (!ep_node) {
->  		dev_err(&client->dev, "unable to find port1 ep");
-> -		ret = -EINVAL;
-> -		goto error;
-> +		return -EINVAL;
->  	}
->  
->  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
->  	if (ret) {
->  		dev_err(&client->dev, "Could not parse v4l2 endpoint\n");
-> -		goto error_of_node_put;
-> +		return ret;
->  	}
->  
-> -	of_node_put(ep_node);
->  	bridge->tx = ep;
->  
->  	return 0;
-> -
-> -error_of_node_put:
-> -	of_node_put(ep_node);
-> -error:
-> -
-> -	return -EINVAL;
->  }
->  
->  static int mipid02_probe(struct i2c_client *client)
+This table still has a {} as its final element. It should be gone too?
 
 -- 
-Regards,
+Sabrina
 
-Benjamin
