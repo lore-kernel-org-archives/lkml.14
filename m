@@ -1,186 +1,136 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EC58527B;
-	Mon, 29 Apr 2024 16:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651B7824AA
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 16:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714407677; cv=none; b=lPmjKWcuHbyF6iAKtIgQKgn3RNdZVOQR504G8oSiy2jrUkRoAZa0o8O6qmuJQKPlmurVlEG6AiJdLZEzctFGthvFph0pTqZD+8NsM2n3tumYi/pWNYJdxlgiGD26rTzVujEQQIENtRC2roU6KlOwGO+MAGdhEuBv9PUnUzu3dDI=
+	t=1714407759; cv=none; b=Bq2Z8Wvhw5O0O6V18j1ajct1zm+RGfaU59bR3Jd5CfRpwtju9rkvfbCGH6D6kYCW5fi9bbG7QMe24QYcZvnaDhx2lCYE+OpUD24WCoqZIl+cKauzVrLy0Jl3AaSi3EOTpGzD8b3AUIpbCUYmIq8c59moKsOt/aDHMds1N9uEVtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714407677; c=relaxed/simple;
-	bh=BJnIv1DpUlOAm3uUdON/hwBbK3NHx46WC+YwG2mcP3E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QGIWpstWLgcCOZRM0it3QyaGHMsRdX3Me9hfGHcXKMid0HcA/GVgqge5fSOZJapppAhCdCHbtvxLO5K6/THXPYSj2beZeqIfKJkkt5DZbLVoOZvUAsjZKvfaN91Lqxd94hIr8SmOQbIe5gyzU7mevdiQeE9htFGW232aAVZPbv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WkY1JcKa; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714407759; c=relaxed/simple;
+	bh=u0+/7vXRxiPmei0+kpf17a4ntZLaXDuHi6UGR+lOk/Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QtG3tS1xgSmOdituFBAJQUG/iGd9nWtbDM9XOVPhBLtDSdJFdKY2BWzDi1zmw+qQpA1UkFNl6HKouYM4ecbM6MFgkMVlYl6QMi5yyceXYlwsDz5iUcfdvGDrXxs/dPbn59yEhjgjxnhqgD+htW7d2sQERqPRf7PQ9/5GzlobtMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=gXWJHXrs; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WkY1JcKa"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43TCmd7q012911;
-	Mon, 29 Apr 2024 16:21:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=UWwlQqoDNh8WALwZk4WVoviquNS6upXFaFzaQztjFHQ=; b=Wk
-	Y1JcKa3Xg9LPU5MNXIVC3GImaTuCvoR1LutFHEoQxyB49sJpZxSv86aNtY/IlzcZ
-	RlDmUGAqhdflpnvyEIG5mPupLI81kzAspEHhHljHF1hXNY+/ph3pQhBC1+9J0/vn
-	KQYIV8OPtDdstpYW0/pvNrcvWVE8Io7Sl5YKWbQFJeGEYzdqzp5BxyIvrR0FX2q1
-	7GMpiIYzO9XAfb/+1jImIlAz+fPCflpauda+bO8N71fIQ0XuOXy/BS1F+j/EWJqq
-	SXfIRGNCKcg6sdm9T7emjg4ukJ1KK7Ajez5aGL65jClSpyaCaQmeIY7fZv5Lai4a
-	8c8IRHi1vL9raRiqDazg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xtbv89b1c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 16:21:07 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43TGL6K3021974
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 16:21:06 GMT
-Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 29 Apr 2024 09:21:02 -0700
-From: Krishna Kurapati <quic_kriskura@quicinc.com>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Johan Hovold
-	<johan@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <quic_ppratap@quicinc.com>,
-        <quic_jackp@quicinc.com>, Krishna Kurapati <quic_kriskura@quicinc.com>
-Subject: [PATCH v16 1/2] arm64: dts: qcom: sc8280xp: Add USB DWC3 Multiport controller
-Date: Mon, 29 Apr 2024 21:50:47 +0530
-Message-ID: <20240429162048.2133512-2-quic_kriskura@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240429162048.2133512-1-quic_kriskura@quicinc.com>
-References: <20240429162048.2133512-1-quic_kriskura@quicinc.com>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="gXWJHXrs"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5af27a0dde1so2964132eaf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:22:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1714407756; x=1715012556; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZFh9S8iYJPFidlD2u3WsMVkPvkc/JSLTc7zLKFIpkEo=;
+        b=gXWJHXrsZOEnbVt2QKFadctgumwxQslwZLFt5FLI7/SsKhAtUqbQ7/YwpzrCAoXsks
+         DBC4QaRByfgkNiR1tENzUC+Piw9P6SwE+KdcNv6fRJotMrqVm6cn2NUxBUydlIxHKdKy
+         vmbCodz6ZqyIraPnXo1bjI7AKipTu7OFx/jbkvG/nCmWQ/s1TYrTcS8pwliThYqX9LcS
+         4/WCR5Myo2FpBsJmGMRcLan4Q13vSE7cxj6pqvQDw4gqMbUUny07Nnsp/Jd9B0PyqwI/
+         bhkPLYqyAge/Q3gjK8RpKa1I3OK8IO8UnsSg2AAxDNB700hEuf2evR5eUKOjS+6nDO6D
+         NYxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714407756; x=1715012556;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZFh9S8iYJPFidlD2u3WsMVkPvkc/JSLTc7zLKFIpkEo=;
+        b=U9gAgEe0WDlFmC6nz71xnVFDsGRTbWfzNqYHpUaDMgvao2KME2bYWPr03s1IEYkjs4
+         fTv3pI3b1May5Hk7ZpPso1PEFs+GJbUJaXxmqsLROfkwXXCpSGRgH5SOk/dgNsytySGh
+         SvmfsyklO6Qq6MgHwDdQCRGJh+ph8W99p1NqJBHfELpID59X6T6eAJb0eGV1epKHE5S9
+         vMzj3VJ5Bb5/K/fjWzNvRyCdmMacDz+g5VEnAarhiRhOdlRbPvKfsUJZPXIgmYtpoQWI
+         oY3J5j3tlkoK+b+ob+mylmhK7fslNipCuxo8+9y+VLwpzGg0xNTdpyAZi7J5Ee8Pr1H0
+         WoTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsagA6WCgWv1zqDqYkb7fCDN+v7Yy0NwgNrUzZCwrqFKikSt4HIt5qDgsMr2seOX8LTdKp0bEPxEuhKAsOqJvZtjqlus84LRymKUQV
+X-Gm-Message-State: AOJu0YxvlUqMDKtwzE7sAZ0tVPOBvILfYpP99e7jD6w8ruVizNXajrVX
+	oN37rl+BnCeXeqkV/O2nRr9oDVTgSvHGVV0eSlQ32g1YvpbYpQQ10bDHq2wjz/A2V3F64MbXhWn
+	dmPe0Ch5GczBJa7A0rGEsRPJDYm4rhJONqZg41Q==
+X-Google-Smtp-Source: AGHT+IFKgLGHx+BKJCv5SD2jm/e2+vh+LMFxfwH0dJjRXsjjJLUlmmNC4x7PzAmlyxFpMw53xJhAl3d5oxwc0MIYzj4=
+X-Received: by 2002:a4a:44c6:0:b0:5ac:9f86:cc0d with SMTP id
+ o189-20020a4a44c6000000b005ac9f86cc0dmr12775696ooa.6.1714407756077; Mon, 29
+ Apr 2024 09:22:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6AntANpSWqIoJttieZaiwQfhYCXi-8kl
-X-Proofpoint-GUID: 6AntANpSWqIoJttieZaiwQfhYCXi-8kl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-29_14,2024-04-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404290104
+References: <20240226065113.1690534-1-nick.hu@sifive.com> <CAPDyKFph3WsZMmALnzBQKE4S_80Ji5h386Wi0vHda37QUsjMtg@mail.gmail.com>
+In-Reply-To: <CAPDyKFph3WsZMmALnzBQKE4S_80Ji5h386Wi0vHda37QUsjMtg@mail.gmail.com>
+From: Nick Hu <nick.hu@sifive.com>
+Date: Tue, 30 Apr 2024 00:22:25 +0800
+Message-ID: <CAKddAkDcdaXKzpcKN=LCCx9S4Trv+joLX2s=nyhzaRtM5HorqA@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle: riscv-sbi: Add cluster_pm_enter()/exit()
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: palmer@dabbelt.com, anup@brainfault.org, rafael@kernel.org, 
+	daniel.lezcano@linaro.org, paul.walmsley@sifive.com, linux-pm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	zong.li@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add USB and DWC3 node for tertiary port of SC8280 along with
-Multiport interrupts and PHYs.
+Hi Ulf
 
-Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 82 ++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-index a5b194813079..dca8dc695f9f 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-@@ -3337,6 +3337,88 @@ system-cache-controller@9200000 {
- 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		usb_2: usb@a4f8800 {
-+			compatible = "qcom,sc8280xp-dwc3-mp", "qcom,dwc3";
-+			reg = <0 0x0a4f8800 0 0x400>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_CFG_NOC_USB3_MP_AXI_CLK>,
-+				 <&gcc GCC_USB30_MP_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_MP_AXI_CLK>,
-+				 <&gcc GCC_USB30_MP_SLEEP_CLK>,
-+				 <&gcc GCC_USB30_MP_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_AGGRE_USB_NOC_AXI_CLK>,
-+				 <&gcc GCC_AGGRE_USB_NOC_NORTH_AXI_CLK>,
-+				 <&gcc GCC_AGGRE_USB_NOC_SOUTH_AXI_CLK>,
-+				 <&gcc GCC_SYS_NOC_USB_AXI_CLK>;
-+			clock-names = "cfg_noc", "core", "iface", "sleep", "mock_utmi",
-+				      "noc_aggr", "noc_aggr_north", "noc_aggr_south", "noc_sys";
-+
-+			assigned-clocks = <&gcc GCC_USB30_MP_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_MP_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <200000000>;
-+
-+			interrupts-extended = <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&intc GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&intc GIC_SPI 857 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&intc GIC_SPI 856 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&intc GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&intc GIC_SPI 860 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&intc GIC_SPI 859 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&pdc 127 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 126 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 129 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 128 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 131 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 130 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 133 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 132 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 16 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&pdc 17 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			interrupt-names = "pwr_event_1", "pwr_event_2",
-+					  "pwr_event_3", "pwr_event_4",
-+					  "hs_phy_1",	 "hs_phy_2",
-+					  "hs_phy_3",	 "hs_phy_4",
-+					  "dp_hs_phy_1", "dm_hs_phy_1",
-+					  "dp_hs_phy_2", "dm_hs_phy_2",
-+					  "dp_hs_phy_3", "dm_hs_phy_3",
-+					  "dp_hs_phy_4", "dm_hs_phy_4",
-+					  "ss_phy_1",	 "ss_phy_2";
-+
-+			power-domains = <&gcc USB30_MP_GDSC>;
-+			required-opps = <&rpmhpd_opp_nom>;
-+
-+			resets = <&gcc GCC_USB30_MP_BCR>;
-+
-+			interconnects = <&aggre1_noc MASTER_USB3_MP 0 &mc_virt SLAVE_EBI1 0>,
-+					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3_MP 0>;
-+			interconnect-names = "usb-ddr", "apps-usb";
-+
-+			wakeup-source;
-+
-+			status = "disabled";
-+
-+			usb_2_dwc3: usb@a400000 {
-+				compatible = "snps,dwc3";
-+				reg = <0 0x0a400000 0 0xcd00>;
-+				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+				iommus = <&apps_smmu 0x800 0x0>;
-+				phys = <&usb_2_hsphy0>, <&usb_2_qmpphy0>,
-+				       <&usb_2_hsphy1>, <&usb_2_qmpphy1>,
-+				       <&usb_2_hsphy2>,
-+				       <&usb_2_hsphy3>;
-+				phy-names = "usb2-0", "usb3-0",
-+					    "usb2-1", "usb3-1",
-+					    "usb2-2",
-+					    "usb2-3";
-+				dr_mode = "host";
-+			};
-+		};
-+
- 		usb_0: usb@a6f8800 {
- 			compatible = "qcom,sc8280xp-dwc3", "qcom,dwc3";
- 			reg = <0 0x0a6f8800 0 0x400>;
--- 
-2.34.1
-
+On Mon, Apr 29, 2024 at 10:32=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.or=
+g> wrote:
+>
+> On Mon, 26 Feb 2024 at 07:51, Nick Hu <nick.hu@sifive.com> wrote:
+> >
+> > When the cpus in the same cluster are all in the idle state, the kernel
+> > might put the cluster into a deeper low power state. Call the
+> > cluster_pm_enter() before entering the low power state and call the
+> > cluster_pm_exit() after the cluster woken up.
+> >
+> > Signed-off-by: Nick Hu <nick.hu@sifive.com>
+>
+> I was not cced this patch, but noticed that this patch got queued up
+> recently. Sorry for not noticing earlier.
+>
+> If not too late, can you please drop/revert it? We should really move
+> away from the CPU cluster notifiers. See more information below.
+>
+> > ---
+> >  drivers/cpuidle/cpuidle-riscv-sbi.c | 24 ++++++++++++++++++++++--
+> >  1 file changed, 22 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cpuidle/cpuidle-riscv-sbi.c b/drivers/cpuidle/cpui=
+dle-riscv-sbi.c
+> > index e8094fc92491..298dc76a00cf 100644
+> > --- a/drivers/cpuidle/cpuidle-riscv-sbi.c
+> > +++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
+> > @@ -394,6 +394,7 @@ static int sbi_cpuidle_pd_power_off(struct generic_=
+pm_domain *pd)
+> >  {
+> >         struct genpd_power_state *state =3D &pd->states[pd->state_idx];
+> >         u32 *pd_state;
+> > +       int ret;
+> >
+> >         if (!state->data)
+> >                 return 0;
+> > @@ -401,6 +402,10 @@ static int sbi_cpuidle_pd_power_off(struct generic=
+_pm_domain *pd)
+> >         if (!sbi_cpuidle_pd_allow_domain_state)
+> >                 return -EBUSY;
+> >
+> > +       ret =3D cpu_cluster_pm_enter();
+> > +       if (ret)
+> > +               return ret;
+>
+> Rather than using the CPU cluster notifiers, consumers of the genpd
+> can register themselves to receive genpd on/off notifiers.
+>
+> In other words, none of this should be needed, right?
+>
+Thanks for the feedback!
+Maybe I miss something, I'm wondering about a case like below:
+If we have a shared L2 cache controller inside the cpu cluster power
+domain and we add this controller to be a consumer of the power
+domain, Shouldn't the genpd invoke the domain idle only after the
+shared L2 cache controller is suspended?
+Is there a way that we can put the L2 cache down while all cpus in the
+same cluster are idle?
+> [...]
+>
+> Kind regards
+> Uffe
