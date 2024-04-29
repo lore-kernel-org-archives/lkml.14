@@ -1,126 +1,194 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3BF83CAE
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 16:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4E3839FF;
+	Mon, 29 Apr 2024 16:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714406734; cv=none; b=PxjpF3WTcSSFtzIVYQ+EdlLDGzcahf8s55codlJHl2WW46ChZoBJ86igszhwBkCA/lhmcAgzbeAtZC8P2y2js72W7s9D/BNT2eOurWRUNYZhKavlu/+b4FXAwtmUyZ7MEBb65RzrBXxq6VSeCXX17Nh7cyPNDwRHDzz97O/Z/HU=
+	t=1714406733; cv=none; b=VfABcwvX9C/jshJ22kfh9AOEIFir39o85Dh9FwwGmkmo2w4YqPI+X+HZFwWyUjmRF7sI8a+QDQ5BGuCJvWri0RE2Yb+6BR8GMGF88q2vKKtG+ajb+zfcZwihJi+ID68yXs5tHtORgqVuAsA+YillFAu1fA3iv2nRYWWWfTcd6vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714406734; c=relaxed/simple;
-	bh=hiRsBpZoZcTi5qoEJ1/IvH/Ifa7hifEK7POZMgl74j0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rKaBLWxdAx+93Ypz1cl+IrYmp1CziEc4mXoquMLyzSKlOFd8TysV2gDO1UmhdaeWppR9ahj9zHfbvnG3PteoZ76AEGJfX9M5FKcYPrsyRKGqCotoQkBI+WaDKhpjl5rTrgUk+oeWYTzZCd4eGNTbnIj5UaR/iBcweFBuDhxm5IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7dece812270so113276639f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:05:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714406732; x=1715011532;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=93rlfPbij6l5AfI5569BrabwgqGsAA8Z5rOA/e+b6Xo=;
-        b=XDTzCocJ3YV5Ey8PYkh6w7DQLw2vJOK5NcXW6eiHl5Nxvl9/mL6LLdFWMBAsMg6+VU
-         7QgMELEF0RYJ9Q2nY1xfshTbOtip1IAlcCCgGLBVUWXAqr/gmEmta7hUXWL9+WT4uTu7
-         kFVZK0b//zM/5EkX3emMDLbE5e1PBGPidD+hnWgA6FvlwXD76W6qPvV5HhmTMMeFHqaX
-         7CeFfewMF5TA0orLcllAHUOQStG7LxV/VkQjT9IAIHVP66vHfkzbVyN0bOsuB+dF6MeB
-         ksz/vjnMwsCakRG0xYVR3tt9D0G8VM2PzqgVY//vPtZCu3nH/klyFzKSHmxtRn/eZuEX
-         e5Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGKBaRFrdT+NMrI0ehKa3VlW+Kd53AKMtJp8w2H0Sx30ykm1Ad2PYOpDRv6r+T++2Ybcg5OqLIZ0Ls3iv//oR0vYKRZAw40/aRIdYP
-X-Gm-Message-State: AOJu0Yzvssu9j67T9vuznE0oYYhEAxIVBR+4oD7iEKB2JWuEIjufafjD
-	4QwVhUH7fjurPqr2pFSYvbKnfKuL3NwqLAbYnVgBBMgvPddQwc/ZX9cn+9jIp92bxqpmSmLJEjR
-	D1NV7XyZsI4Izox0Tu7S5JP5WzN7B8D7h1KITriI56Ar+e1/amt8dnG4=
-X-Google-Smtp-Source: AGHT+IGv85KPokVkT162yvZpYCbRMU9EmRQ9fqyjXZXn1tM/O9TOHf/WV0VlbQPMLkv8KF8jnGZmSeiDnkJq+lhTd/gzX8sv5s4J
+	s=arc-20240116; t=1714406733; c=relaxed/simple;
+	bh=YD/OxqV+lEnK7x1x1U/zl0bii0aWAk483FiEemFo+Fo=;
+	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
+	 Message-ID:In-Reply-To; b=l7p8Mzsm6+QuH39k4dXlurDGV949xEM5Ewwn0Sa/5o8JFCW3+JtN644803hMFwF9MA9276bIlxclQvUh1I64CMpY1sgqsrk/BrAZ1tJdiiUn3yjkbfbEdByFLb+RfUSTdaHMvz8lQmOwAZFXnX1O1A1bRCrsZm1L89ChDNaEOLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bTuJhVWN; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bTuJhVWN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714406732; x=1745942732;
+  h=to:cc:subject:references:date:mime-version:
+   content-transfer-encoding:from:message-id:in-reply-to;
+  bh=YD/OxqV+lEnK7x1x1U/zl0bii0aWAk483FiEemFo+Fo=;
+  b=bTuJhVWNhicWyNdQICvu1ORlN1R+rP2ALR8OqJKSDMEVg2/S/R42KPFn
+   wE23rVRgpmIF8ggx02W72VqIYpmlYy0EL2YWiGOkS0wtQk26myrCsZ+DX
+   L59LIR1fIwOFoOCpIUSUK/2na4gyDmggIx4ODrY85+xGgRa9evkcHRpBD
+   r/BuN2hEynxfeCTnckCxcWu+vcmACCBTC2MCGPmbcfdGpkm5wAuLPf9cD
+   x5Bh+1J1sjqYPzsnhX7gcnES2Dfn5oIAPwz0rMqzzib/BxrPHVXY8N5d9
+   V1o/3lbLjGiucr5MZ5gY5LHlwKHavzvnZ+Wg5G4oWgho6RqRDqNzY6uyY
+   g==;
+X-CSE-ConnectionGUID: zMC3DCQdQ1OCPDOH8byl1Q==
+X-CSE-MsgGUID: FmI4aMRDQuiGHoM3LjzPbg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="21227659"
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="21227659"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 09:05:26 -0700
+X-CSE-ConnectionGUID: 67nfouXGRO+tO2l77+282Q==
+X-CSE-MsgGUID: Tg2PHMGkRXSTk8vOSprIGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="30977079"
+Received: from hhuan26-mobl.amr.corp.intel.com ([10.125.99.222])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 29 Apr 2024 09:05:23 -0700
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To: "hpa@zytor.com" <hpa@zytor.com>, "tim.c.chen@linux.intel.com"
+ <tim.c.chen@linux.intel.com>, "linux-sgx@vger.kernel.org"
+ <linux-sgx@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "jarkko@kernel.org" <jarkko@kernel.org>, "cgroups@vger.kernel.org"
+ <cgroups@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "mkoutny@suse.com" <mkoutny@suse.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "Mehta, Sohil"
+ <sohil.mehta@intel.com>, "tj@kernel.org" <tj@kernel.org>, "mingo@redhat.com"
+ <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "Huang, Kai"
+ <kai.huang@intel.com>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com"
+ <anakrish@microsoft.com>, "Zhang, Bo" <zhanb@microsoft.com>,
+ "kristen@linux.intel.com" <kristen@linux.intel.com>, "yangjie@microsoft.com"
+ <yangjie@microsoft.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
+ "chrisyan@microsoft.com" <chrisyan@microsoft.com>
+Subject: Re: [PATCH v12 12/14] x86/sgx: Turn on per-cgroup EPC reclamation
+References: <20240416032011.58578-1-haitao.huang@linux.intel.com>
+ <20240416032011.58578-13-haitao.huang@linux.intel.com>
+ <524cf9b081d86ae61342fdfc370a3639d0010f94.camel@intel.com>
+Date: Mon, 29 Apr 2024 11:05:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3d86:b0:487:30aa:adb6 with SMTP id
- ci6-20020a0566383d8600b0048730aaadb6mr15264jab.2.1714406732068; Mon, 29 Apr
- 2024 09:05:32 -0700 (PDT)
-Date: Mon, 29 Apr 2024 09:05:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000440b0a06173e6ca8@google.com>
-Subject: [syzbot] [ext4?] KMSAN: uninit-value in ext4_inlinedir_to_tree
-From: syzbot <syzbot+eaba5abe296837a640c0@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+From: "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel
+Message-ID: <op.2mzyy7ktwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <524cf9b081d86ae61342fdfc370a3639d0010f94.camel@intel.com>
+User-Agent: Opera Mail/1.0 (Win32)
 
-Hello,
+On Mon, 29 Apr 2024 05:49:13 -0500, Huang, Kai <kai.huang@intel.com> wrote:
 
-syzbot found the following issue on:
+>
+>> +/*
+>> + * Get the per-cgroup or global LRU list that tracks the given  
+>> reclaimable page.
+>> + */
+>>  static inline struct sgx_epc_lru_list *sgx_lru_list(struct  
+>> sgx_epc_page *epc_page)
+>>  {
+>> +#ifdef CONFIG_CGROUP_MISC
+>> +	/*
+>> +	 * epc_page->sgx_cg here is never NULL during a reclaimable epc_page's
+>> +	 * life between sgx_alloc_epc_page() and sgx_free_epc_page():
+>> +	 *
+>> +	 * In sgx_alloc_epc_page(), epc_page->sgx_cg is set to the return from
+>> +	 * sgx_get_current_cg() which is the misc cgroup of the current task,  
+>> or
+>> +	 * the root by default even if the misc cgroup is disabled by kernel
+>> +	 * command line.
+>> +	 *
+>> +	 * epc_page->sgx_cg is only unset by sgx_free_epc_page().
+>> +	 *
+>> +	 * This function is never used before sgx_alloc_epc_page() or after
+>> +	 * sgx_free_epc_page().
+>> +	 */
+>> +	return &epc_page->sgx_cg->lru;
+>> +#else
+>>  	return &sgx_global_lru;
+>> +#endif
+>>  }
+>>
+>>  /*
+>> @@ -42,7 +63,8 @@ static inline struct sgx_epc_lru_list  
+>> *sgx_lru_list(struct sgx_epc_page *epc_pag
+>>   */
+>>  static inline bool sgx_can_reclaim(void)
+>>  {
+>> -	return !list_empty(&sgx_global_lru.reclaimable);
+>> +	return !sgx_cgroup_lru_empty(misc_cg_root()) ||
+>> +	       !list_empty(&sgx_global_lru.reclaimable);
+>>  }
+>
+> Shouldn't this be:
+>
+> 	if (IS_ENABLED(CONFIG_CGROUP_MISC))
+> 		return !sgx_cgroup_lru_empty(misc_cg_root());
+> 	else
+> 		return !list_empty(&sgx_global_lru.reclaimable);
+> ?
+>
+> In this way, it is consistent with the sgx_reclaim_pages_global() below.
+>
 
-HEAD commit:    e88c4cfcb7b8 Merge tag 'for-6.9-rc5-tag' of git://git.kern..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=12fbc980980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=776c05250f36d55c
-dashboard link: https://syzkaller.appspot.com/bug?extid=eaba5abe296837a640c0
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13e2cd27180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1741a028980000
+I changed to this way because sgx_cgroup_lru_empty() is now defined in  
+both KConfig cases.
+And it seems better to minimize use of the KConfig variables based on  
+earlier feedback (some are yours).
+Don't really have strong preference here. So let me know one way of the  
+other.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/76771e00ba79/disk-e88c4cfc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c957ed943a4f/vmlinux-e88c4cfc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e719306ed8e3/bzImage-e88c4cfc.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/9d3c2a1fa449/mount_0.gz
+>>
+>>  static atomic_long_t sgx_nr_free_pages = ATOMIC_LONG_INIT(0);
+>> @@ -404,7 +426,10 @@ static bool sgx_should_reclaim(unsigned long  
+>> watermark)
+>>
+>>  static void sgx_reclaim_pages_global(struct mm_struct *charge_mm)
+>>  {
+>> -	sgx_reclaim_pages(&sgx_global_lru, charge_mm);
+>> +	if (IS_ENABLED(CONFIG_CGROUP_MISC))
+>> +		sgx_cgroup_reclaim_pages(misc_cg_root(), charge_mm);
+>> +	else
+>> +		sgx_reclaim_pages(&sgx_global_lru, charge_mm);
+>>  }
+>>
+>>  /*
+>> @@ -414,6 +439,14 @@ static void sgx_reclaim_pages_global(struct  
+>> mm_struct *charge_mm)
+>>   */
+>>  void sgx_reclaim_direct(void)
+>>  {
+>> +	struct sgx_cgroup *sgx_cg = sgx_get_current_cg();
+>> +
+>> +	/* Make sure there are some free pages at cgroup level */
+>> +	if (sgx_cg && sgx_cgroup_should_reclaim(sgx_cg)) {
+>> +		sgx_cgroup_reclaim_pages(misc_from_sgx(sgx_cg), current->mm);
+>> +		sgx_put_cg(sgx_cg);
+>> +	}
+>
+> Empty line.
+>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+eaba5abe296837a640c0@syzkaller.appspotmail.com
+Sure
 
-EXT4-fs (loop0): mounted filesystem 00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode: none.
-EXT4-fs warning (device loop0): __ext4fs_dirhash:270: inode #12: comm syz-executor253: Siphash requires key
-=====================================================
-BUG: KMSAN: uninit-value in ext4_inlinedir_to_tree+0xde2/0x15a0 fs/ext4/inline.c:1415
- ext4_inlinedir_to_tree+0xde2/0x15a0 fs/ext4/inline.c:1415
- ext4_htree_fill_tree+0x1941/0x1cd0 fs/ext4/namei.c:1210
- ext4_dx_readdir fs/ext4/dir.c:597 [inline]
- ext4_readdir+0x4bbf/0x5b00 fs/ext4/dir.c:142
- iterate_dir+0x688/0x870 fs/readdir.c:110
- __do_sys_getdents64 fs/readdir.c:409 [inline]
- __se_sys_getdents64+0x169/0x530 fs/readdir.c:394
- __x64_sys_getdents64+0x96/0xe0 fs/readdir.c:394
- x64_sys_call+0x343d/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:218
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> +	/* Make sure there are some free pages at global level */
+>>  	if (sgx_should_reclaim(SGX_NR_LOW_PAGES))
+>
+> Looking at the code, to me sgx_should_reclaim() is a little bit vague
+> because from the name we don't know whether it interally checks the
+> current cgroup or the global.  
+> It's better to rename to sgx_should_reclaim_global().
+>
+> Ditto for sgx_can_reclaim() -> sgx_can_reclaim_global().
+>
+> And I think you can do the renaming in the previous patch, because in the
+> changelog of your previous patch, it seems you have called out the two
+> functions are for global reclaim.
+>
 
-Local variable hinfo created at:
- ext4_htree_fill_tree+0x52/0x1cd0 fs/ext4/namei.c:1185
- ext4_dx_readdir fs/ext4/dir.c:597 [inline]
- ext4_readdir+0x4bbf/0x5b00 fs/ext4/dir.c:142
+ok
 
-CPU: 1 PID: 5020 Comm: syz-executor253 Not tainted 6.9.0-rc5-syzkaller-00042-ge88c4cfcb7b8 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks
+Haitao
