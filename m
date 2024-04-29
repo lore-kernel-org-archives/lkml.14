@@ -1,100 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F9112E7F
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F97C12E7F;
+	Mon, 29 Apr 2024 09:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714382412; cv=none; b=oMz/Gsc61VvWjo2DP7ya19+55iJjm6xVLl5U7yzKP3DsDkme8rnOAWHPINYP+HpQoCdk5NAopQS3WvcbLjrtDQTAPs4oTyCCPJyBTtPtnKpcJkG2tD53xAkol5yowIIV8krqv3WRZNjePYDJKLxDOMMcsUlXIN9qmZj1C6f1L8E=
+	t=1714382498; cv=none; b=dwz1PVOxLrFpbbYcy0uDL1/nS6tjTKWyWTTcOVx2gOUmbA3gqBeCfD1PakWQgltf7F4WU51DIn7jvwGeYKZJFE5BZiC5Kf6O04UJ4DBONRUsS2kZMNejGIlPquV4MwWmxf5Wy9LR+3WWrc1JSflGkcvK/31J1hFpMSUgqCp943Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714382412; c=relaxed/simple;
-	bh=Y4bDuRSz6TSLz3mVCCjXzVCR5pym+nGoMR5ch9kpkR0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fxHvRsXVRKxsyrQWwLvCaUaIK0k5zis9IZ/LdED/Zg0ndthFdfknjxHWN9NNJTZzJiMfr5PcQ0ZHCLdYNpwGpmgojZLDbL+FXmA/8l5NnTAdJaP3kXueyoRjpT32gFtTXTkfV6bVCumUYuCffMSvPXvUb6wA78h3L90Pq1BUKuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JeBcUTjG; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JeBcUTjG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714382410; x=1745918410;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=Y4bDuRSz6TSLz3mVCCjXzVCR5pym+nGoMR5ch9kpkR0=;
-  b=JeBcUTjG7BEFUqrncqvszHvEVjDqfNylQP6nYHEsy6FWZGmJd7T2IrzQ
-   W4XK6g+fPRJrbZ2cDJYEhk63lfTBBIYh72lGjtGA+qb8l1lnO0U0whkom
-   Q7/8sV7JYbLICwOnBQ+Hp5aualkd5wLK3ZTNXNwFN5qjadx0mDS+Gc4Nh
-   ZMM1ajDTJQR9j5I+LVZwgIRTIECM5imPPIl1CaW4xt/OGn+LjZwRUA8pn
-   OOr1DayFa0FxITbFqmfsxVWL65B7i4bt10L3sunib/5S7hQQevISIPpic
-   vsd379jrfdxgX6KI4SKCA4btaMYipy2TQLPHHuV36202xbmdsa00OKXuR
-   A==;
-X-CSE-ConnectionGUID: xsfdljZ4TlCj8U20W8hVlA==
-X-CSE-MsgGUID: mvrjThVnTnqEWWC1/MVZnw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="9958800"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="9958800"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:20:10 -0700
-X-CSE-ConnectionGUID: whTviabCQ5apEoLo5b0/eQ==
-X-CSE-MsgGUID: dKioqKMaQBq/p9WyJJh/VQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="26461169"
-Received: from aantonov-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.167])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:20:02 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- lvzhaoxiong@huaqin.corp-partner.google.com, Hsin-Yi Wang
- <hsinyi@google.com>, Javier Martinez Canillas <javierm@redhat.com>, Neil
- Armstrong <neil.armstrong@linaro.org>, Joel Selvaraj <jo@jsfamily.in>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Cong Yang
- <yangcong5@huaqin.corp-partner.google.com>, Sam Ravnborg
- <sam@ravnborg.org>, Douglas Anderson <dianders@chromium.org>, Daniel
- Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] drm/mipi-dsi: Reduce bloat and add funcs for
- cleaner init seqs
-In-Reply-To: <20240426235857.3870424-1-dianders@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240426235857.3870424-1-dianders@chromium.org>
-Date: Mon, 29 Apr 2024 12:20:00 +0300
-Message-ID: <87jzkg4jb3.fsf@intel.com>
+	s=arc-20240116; t=1714382498; c=relaxed/simple;
+	bh=psU9IiCnjLKZ0N5EAzULiwZffDrrX9StQx6qKklgmuY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lZdWHpeFMErwxFTNC6Emlsqh8NfoWXnR9LB0KZDq7RsX2z2yNMgFYuwd2LlrFieLwpHlGEW6JER0rUmSnE0vcpGRavy7BCcK7G/al4HaQRLw31S8PbFS+spk5U9cOF4DO3F/yWKnm7TsCPrHoaCv4FEPwJ6N+crKKbYMsapiTB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VSd751DX3z6K6pc;
+	Mon, 29 Apr 2024 17:18:57 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 21420140B63;
+	Mon, 29 Apr 2024 17:21:34 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 29 Apr
+ 2024 10:21:33 +0100
+Date: Mon, 29 Apr 2024 10:21:31 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Marc Zyngier <maz@kernel.org>, <linuxarm@huawei.com>
+CC: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, "James Morse"
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Hanjun Guo
+	<guohanjun@huawei.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>, "Lorenzo
+ Pieralisi" <lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v8 11/16] irqchip/gic-v3: Add support for ACPI's
+ disabled but 'online capable' CPUs
+Message-ID: <20240429101938.000027b2@huawei.com>
+In-Reply-To: <87frv5u3p8.wl-maz@kernel.org>
+References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
+	<20240426135126.12802-12-Jonathan.Cameron@huawei.com>
+	<87il04t7j2.wl-maz@kernel.org>
+	<20240426192858.000033d9@huawei.com>
+	<87frv5u3p8.wl-maz@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 26 Apr 2024, Douglas Anderson <dianders@chromium.org> wrote:
-> The consensus of many DRM folks is that we want to move away from DSI
-> drivers defining tables of init commands. Instead, we want to move to
-> init functions that can use common DRM functions. The issue thus far
-> has been that using the macros mipi_dsi_generic_write_seq() and
-> mipi_dsi_dcs_write_seq() bloats the driver using them.
->
-> While trying to solve bloat, we realized that the majority of the it
-> was easy to solve. This series solves the bloat for existing drivers
-> by moving the printout outside of the macro.
->
-> During discussion of my v1 patch to fix the bloat [1], we also decided
-> that we really want to change the way that drivers deal with init
-> sequences to make it clearer. In addition to being cleaner, a side
-> effect of moving drivers to the new style reduces bloat _even more_.
->
-> This series also contains a few minor fixes / cleanups that I found
-> along the way.
+On Sun, 28 Apr 2024 12:28:03 +0100
+Marc Zyngier <maz@kernel.org> wrote:
 
-FWIW, I like the general approach taken here. Thanks!
+> On Fri, 26 Apr 2024 19:28:58 +0100,
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > 
+> > 
+> > I'll not send a formal v9 until early next week, so here is the current state
+> > if you have time to take another look before then.  
+> 
+> Don't bother resending this on my account -- you only sent it on
+> Friday and there hasn't been much response to it yet. There is still a
+> problem (see below), but looks otherwise OK.
+> 
+> [...]
+> 
+> > @@ -2363,11 +2381,25 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
+> >  				(struct acpi_madt_generic_interrupt *)header;
+> >  	u32 reg = readl_relaxed(acpi_data.dist_base + GICD_PIDR2) & GIC_PIDR2_ARCH_MASK;
+> >  	u32 size = reg == GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_64K * 2;
+> > +	int cpu = get_cpu_for_acpi_id(gicc->uid);  
+> 
+> I already commented that get_cpu_for_acpi_id() can...
 
-BR,
-Jani.
+Indeed sorry - I blame Friday syndrome for me failing to address that.
+
+> 
+> >  	void __iomem *redist_base;
+> >  
+> > -	if (!acpi_gicc_is_usable(gicc))
+> > +	/* Neither enabled or online capable means it doesn't exist, skip it */
+> > +	if (!(gicc->flags & (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
+> >  		return 0;
+> >  
+> > +	/*
+> > +	 * Capable but disabled CPUs can be brought online later. What about
+> > +	 * the redistributor? ACPI doesn't want to say!
+> > +	 * Virtual hotplug systems can use the MADT's "always-on" GICR entries.
+> > +	 * Otherwise, prevent such CPUs from being brought online.
+> > +	 */
+> > +	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
+> > +		pr_warn("CPU %u's redistributor is inaccessible: this CPU can't be brought online\n", cpu);
+> > +		cpumask_set_cpu(cpu, &broken_rdists);  
+> 
+> ... return -EINVAL, and then be passed to cpumask_set_cpu(), with
+> interesting effects. It shouldn't happen, but I trust anything that
+> comes from firmware tables as much as I trust a campaigning
+> politician's promises. This should really result in the RD being
+> considered unusable, but without affecting any CPU (there is no valid
+> CPU the first place).
+> 
+> Another question is what get_cpu_for acpi_id() returns for a disabled
+> CPU. A valid CPU number? Or -EINVAL?
+It's a match function that works by iterating over 0 to nr_cpu_ids and
+
+if (uid == get_acpi_id_for_cpu(cpu))
+
+So the question become does get_acpi_id_for_cpu() return a valid CPU
+number for a disabled CPU.
+
+That uses acpi_cpu_get_madt_gicc(cpu)->uid so this all gets a bit circular.
+That looks it up via cpu_madt_gicc[cpu] which after the proposed updated
+patch is set if enabled or online capable.  There are however a few other
+error checks in acpi_map_gic_cpu_interface() that could lead to it
+not being set (MPIDR validity checks). I suspect all of these end up being
+fatal elsewhere which is why this hasn't blown up before.
+
+If any of those cases are possible we could get a null pointer
+dereference.
+
+Easy to harden this case via the following (which will leave us with
+-EINVAL.  There are other call sites that might trip over this.
+I'm inclined to harden them as a separate issue though so as not
+to get in the way of this patch set.
 
 
--- 
-Jani Nikula, Intel
+diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+index bc9a6656fc0c..a407f9cd549e 100644
+--- a/arch/arm64/include/asm/acpi.h
++++ b/arch/arm64/include/asm/acpi.h
+@@ -124,7 +124,8 @@ static inline int get_cpu_for_acpi_id(u32 uid)
+        int cpu;
+
+        for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+-               if (uid == get_acpi_id_for_cpu(cpu))
++               if (acpi_cpu_get_madt_gicc(cpu) &&
++                   uid == get_acpi_id_for_cpu(cpu))
+                        return cpu;
+
+        return -EINVAL;
+
+I'll spin an additional patch to make that change after testing I haven't
+messed it up.
+
+At the call site in gic_acpi_parse_madt_gicc() I'm not sure we can do better
+than just skipping setting broken_rdists. I'll also pull the declaration of
+that cpu variable down into this condition so it's more obvious we only
+care about it in this error path.
+
+Jonathan
+
+
+
+
+
+> 
+> Thanks,
+> 
+> 	M.
+> 
+
