@@ -1,80 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF83914291E;
-	Mon, 29 Apr 2024 23:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E3D335A7;
+	Mon, 29 Apr 2024 23:22:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714432831; cv=none; b=dcs8vmwc+o9YlZVsKwiEMyYVuxjoRaOXWfuDbMQQXjkUychfeCOe0a78+U2zL5wP6GzpY/w4bePgFvt9VQyId4/5C3X7VAd+69iBfFnGJ4xFLd30ebLhCyYW2+b/O/TE7dX2DJ6HKbzw+4zIjcADZWEa0yUnt48GNTGms4FLDrE=
+	t=1714432924; cv=none; b=uOA3kQL5N8bZO0xdmondEkHY2vY0a8K47wwdJonLfal/5z3jp2+8FKNK4EpEOdP2W8VliCbIrsD9S/qgmzzuxn8mfz1S/lH1t6ThmZWXvxJgzzeP+ZrC6cy3Cftn+qsTWgzs62e3I3n3/05zAsOj/wvDCYHmj2RUgWGvESZBWCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714432831; c=relaxed/simple;
-	bh=aWlqmfsjdDprFD1QPHeYvmyvfs26WsVNyAegz3z+Sz4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=iuZaPUkjy/KwaXotrKAS8uu+lR2M6JQkw2FvWf+Wk3Zq55s9wrCIWDHKWeKC8OUAisR0yMZ3vPvJvMhRtvM1snJzl7CR1OsSWtd2akHVSmy4tyL6fjtlLw5MXTfZltoKSr57P5l6MfSmFMIvcFE49bPKdvj4ZByuLzvEQGSZmOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVILryaw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714432924; c=relaxed/simple;
+	bh=A7LMOLKCsAZ4qqkqFakSPa39jisM1x5hfA4rCg+XE3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LGVc35UthAXFHYtOK8HZAaPJG+UCsm3STpGT51TSV6kcDgoum4bbQ13mtS1JZQDHUlIss74l5QT7iKiUELB8X9DRaGODyBy/wwu+GPdRcjaRVtFeKZODsqmgS8vkR92osOisSoZWMETftmoA4jreb9zslMs+SKGhXx0IyKVTPvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KToNGRgI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVILryaw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7C313C4AF1A;
-	Mon, 29 Apr 2024 23:20:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KToNGRgI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C2F3C113CD;
+	Mon, 29 Apr 2024 23:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714432830;
-	bh=aWlqmfsjdDprFD1QPHeYvmyvfs26WsVNyAegz3z+Sz4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=OVILryaw2x3rvars8w+/RnZlFd+RjOVwnHts3BoHgtWUvyt6mxP3G8VItJo7IJp2q
-	 mYY4mMzF18Ly0/gYQAJQknJ0YP3eUvnCofI8mvGxgWwgmhBQEJwyd15rNwiyZmX6nF
-	 0k8qVAkFMn/2adgiDT2+GxAqqfiNXpSQqTKPArskgD/4ZHdMN9TomZDYXG7iWH5x1R
-	 3wK2VFPE8uJxFgMCYHDO685Kj6xxpX/oA0OEDK2SpPgfpmHUke1CsmtiAAzNTIfCOt
-	 qVGm2amt45s7VBoug/Vq3llMKZ04vOWgD7YPERSZVBI86dddmwLdInTwUGP3+7WN4/
-	 RBAhU7Wz+/agw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6AF7FC54BA4;
-	Mon, 29 Apr 2024 23:20:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1714432924;
+	bh=A7LMOLKCsAZ4qqkqFakSPa39jisM1x5hfA4rCg+XE3o=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=KToNGRgIxyv+sP1bfRfFXAlXElYZI5F6ubz8J6Zni/+vq+mAxjRqMW6HuvnzVBF7P
+	 ORuw/ydLE8gyHm2/5rNVOXSdSxcMof3MsansVXePzWDiY8jm8i7K7+2W07E2qsnWoN
+	 CwoBje7YvfXUST/oTzUIGknZYnSOfraYbU5oeUhKKCmNj9uGED0sXLrsnw4zsK+LJI
+	 BDG5SpYhTgyv0Sb9REpRQsjmxWqsS1c6aQYkFaoAzTrdpi1+j9wmwu5jN1de/6lC/G
+	 m2qbCOecn7w5j1uC4STdpzzFvMeFUpCBy1hI7d3cJfJSHThVuiFMb1KdgEDwHikD4U
+	 8oFbQfgNO+t8A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id CB5B8CE0B6B; Mon, 29 Apr 2024 16:22:03 -0700 (PDT)
+Date: Mon, 29 Apr 2024 16:22:03 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Zhouyi Zhou <zhouzhouyi@gmail.com>
+Cc: linux-kernel@vger.kernel.org, frederic@kernel.org, boqun.feng@gmail.com,
+	joel@joelfernandes.org, neeraj.upadhyay@amd.com,
+	qiang.zhang1211@gmail.com, rcu@vger.kernel.org, lance@osuosl.org
+Subject: Re: [PATCH] x86/rcutorture move CONFIG_HYPERVISOR_GUEST to
+ kvm-test-1-run.sh
+Message-ID: <059d36ce-6453-42be-a31e-895abd35d590@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240427005626.1365935-1-zhouzhouyi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] samples: bpf: Add valid info for VMLINUX_BTF
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171443283043.1398.11744904571177428676.git-patchwork-notify@kernel.org>
-Date: Mon, 29 Apr 2024 23:20:30 +0000
-References: <20240428161032.239043-1-chen.dylane@gmail.com>
-In-Reply-To: <20240428161032.239043-1-chen.dylane@gmail.com>
-To: Tao Chen <chen.dylane@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, song@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240427005626.1365935-1-zhouzhouyi@gmail.com>
 
-Hello:
-
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Mon, 29 Apr 2024 00:10:32 +0800 you wrote:
-> When i use the command 'make M=samples/bpf' to compile samples/bpf code
-> in ubuntu 22.04, the error info occured:
-> Cannot find a vmlinux for VMLINUX_BTF at any of "  /home/ubuntu/code/linux/vmlinux",
-> build the kernel or set VMLINUX_BTF or VMLINUX_H variable
+On Sat, Apr 27, 2024 at 12:56:26AM +0000, Zhouyi Zhou wrote:
+> CONFIG_HYPERVISOR_GUEST is a x86 specific kernel option, move to
+> kvm-test-1-run.sh to avoid ConfigFragment.diags in non-x86 platforms.
 > 
-> Others often encounter this kind of issue, new kernel has the vmlinux, so we can
-> set the path in error info which seems more intuitive, like:
-> Cannot find a vmlinux for VMLINUX_BTF at any of "  /home/ubuntu/code/linux/vmlinux",
-> buiild the kernel or set VMLINUX_BTF like "VMLINUX_BTF=/sys/kernel/btf/vmlinux" or
-> VMLINUX_H variable
+> Tested in both PPC VM of Open Source lab of Oregon State University and
+> local x86_64 server.
 > 
-> [...]
+> Fixes: a6fda6dab93c ("rcutorture: Tweak kvm options")
+> Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
 
-Here is the summary with links:
-  - samples: bpf: Add valid info for VMLINUX_BTF
-    https://git.kernel.org/bpf/bpf-next/c/397658ddc88c
+I like this general approach, but why not have something like a
+CFCOMMON.arch for the various "arch"s that need it?
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Better yet, I bet that there is already something somewhere in the
+Linux kernel source tree that knows what hypervisor Kconfig options
+each architecture needs.  If so, it would be most excellent to reuse
+that information instead of maintaining it separately in RCU.
 
+							Thanx, Paul
 
+> ---
+>  tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 4 ++++
+>  tools/testing/selftests/rcutorture/configs/rcu/CFcommon  | 1 -
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+> index b33cd8753689..75774bc70be7 100755
+> --- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+> +++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+> @@ -68,6 +68,10 @@ config_override_param "--gdb options" KcList "$TORTURE_KCONFIG_GDB_ARG"
+>  config_override_param "--kasan options" KcList "$TORTURE_KCONFIG_KASAN_ARG"
+>  config_override_param "--kcsan options" KcList "$TORTURE_KCONFIG_KCSAN_ARG"
+>  config_override_param "--kconfig argument" KcList "$TORTURE_KCONFIG_ARG"
+> +if uname -a | grep -q x86
+> +then
+> +	config_override_param "x86 specific option" KcList "CONFIG_HYPERVISOR_GUEST=y"
+> +fi
+>  cp $T/KcList $resdir/ConfigFragment
+>  
+>  base_resdir=`echo $resdir | sed -e 's/\.[0-9]\+$//'`
+> diff --git a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
+> index 0e92d85313aa..cf0387ae5358 100644
+> --- a/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
+> +++ b/tools/testing/selftests/rcutorture/configs/rcu/CFcommon
+> @@ -1,6 +1,5 @@
+>  CONFIG_RCU_TORTURE_TEST=y
+>  CONFIG_PRINTK_TIME=y
+> -CONFIG_HYPERVISOR_GUEST=y
+>  CONFIG_PARAVIRT=y
+>  CONFIG_KVM_GUEST=y
+>  CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n
+> -- 
+> 2.34.1
+> 
