@@ -1,316 +1,213 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6979013BC0B;
-	Mon, 29 Apr 2024 19:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714419357; cv=none; b=pXCrwjkA3eI+6YYfzR8hdFkb0kZE+p32tss0jqGQ/061dPW2VoKD/0xNBFC2DxGCL4n6YtkwzbpzKEiCqGV1ta4KGCUn/BjsHNh3/27T1mou+xmbgEvFcUEveePgITUMXjIpA4pQv0ExEWEuniCtZMbY/7BwiuFkduMpfSXM7qc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714419357; c=relaxed/simple;
-	bh=sOL4C2CD6D6nECoTaUzRWarkuT1bhXHq9ZTnsG5db60=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RU0eLayEWkGbO4UDrbp4jR4Fb6h5G12gnnk3beJtWsoCkNzUOvjaWvqno5dqbj8sRn89wDg9v58vWvlIhPIRcEMTQPFEyJ8ehuu56Tu2WOiIbAPVStjfg3te508CqqvlIebJKd7sKQulyByBsYtccNSmqxRd36fZmea0qoZ/uOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dwsXo9I2; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4372839FD;
+	Mon, 29 Apr 2024 19:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714419477; cv=fail; b=IhvwRVBY3/bcNZypj4e56LgsrBblEZSLNgLHV9hQMYaPF+w6P0pMtSOFgIk8wAlBs6Bmatv68sthVgC1jGZGtPMz7tJf7NqmE3P4nf2Sd0wrVVJmtHEtkEGakjB+RxVwXOOt/oh2uBlG6DFlIB2zO0mTWhEhfSqw8pkOzhkhBcA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714419477; c=relaxed/simple;
+	bh=86mQsfYJ30u8Tt1N6JKNurxz4i2hF7gOFyFzPXiMY3g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZvoAXcS7gfV/mcdDmesXiMwsmJlFMOyE9uGaJPvgoIUz8c4z/XyjEHHd8w19jTqJ1J3h6VutaniDXUkxvtK9tx/NwsHxZXjkmjeFx4wxC+IR0AUp0FyBtQxPX+kzulikV2vjF/19lvTk17XVnkXjAQBkiru/nJ3UBQV9ZsUNcHI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=fqKkUfeT; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=zcBnGKH8; arc=fail smtp.client-ip=216.71.154.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dwsXo9I2"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2b2768f5bb4so72906a91.0;
-        Mon, 29 Apr 2024 12:35:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="fqKkUfeT";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="zcBnGKH8"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1714419475; x=1745955475;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=86mQsfYJ30u8Tt1N6JKNurxz4i2hF7gOFyFzPXiMY3g=;
+  b=fqKkUfeTV8pz5gI/iFzjjHGQa8lJBy+KPRtFmvN2ISKbdJoWhlQQnJbq
+   aMGzRoXfJ55ppBI6U9Q0BO+xM8ACIPoFHmqFFMEFWzKbNSVfxKNl3n3SC
+   XFB+C1xDTcnRjE3EQm5tAQxpi3Gs5XHKdQbp5HOGOoLztl1CwTuFesn4A
+   BRg3/d1u4l2D4Zk61OuFBxlFM5lNdr03W9YtsimsWQxk7H1YFqwx2uyZZ
+   Xtd7lyuAKCO+yUJwxJ9I0YIP0DEMhfnJNxAD6STecU1GpHep2FzfyiKws
+   QSozntIL7E/h4ce27jU4afUcpmsTZX67xCKuMPVQy0Jiie3r9qnTLdX6Z
+   Q==;
+X-CSE-ConnectionGUID: +fr0igQaTE+L0cgEfcTZpA==
+X-CSE-MsgGUID: S3v4u69sQmqm8I4+7gMt6w==
+X-IronPort-AV: E=Sophos;i="6.07,240,1708358400"; 
+   d="scan'208";a="14530778"
+Received: from mail-co1nam11lp2169.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.169])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Apr 2024 03:36:46 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=azvbLiCMnTDFqy1WUJqVv4ewOowVUBQvjp6+j6E8/SqbHsUItFFkA0uTAj9rSus/9sa427nEolI8s4tnOXMz937nJK40g78VsyOucOpfxdl7AzwVu7Xi2M0zzFSc06Vo5S/Vwlql1i/Hl09Duw8Co9Y0boE3OEgQ42GlIkWdZGYKpFX6wp8hQipObUX2fhu4MmIbWej82LkDuRagBSV950F782jDnA8FNAQXWyzPegvfDV2k2/zPi5K3RkdMbDkdj37he5r2n44m2/xIMM308r1d5XQEcgDD8kNuiUCjrh5Cnt7YF2KBn27uKn6ZgFpR38cWt2K6/Pgwxcya2GeGBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=86mQsfYJ30u8Tt1N6JKNurxz4i2hF7gOFyFzPXiMY3g=;
+ b=exWIs4EqtbYmR2GlGx8x/n0BHmawv15ic0/Bz0Y4nWTx5bPxz63oBxh5eEPVvSby201pmvj+zj4t0STUU+oZ/VZ3giKJ0lbpz7T+7dB1ZM4+ywTUnxfJkWYbbbHqpU9uZ307olXwL379JWmOVG3l1rHbVbIOLrRL1EQIEwOVD0jH8ghaQkfX3TdBPlQg6IPWjFXkDY7FEbMNomcP2RWimGmCEyT4bL9TDF6LTPxhdb6AISZvtoCpogGZ0nDVvqs1B1C9ENN5pBJVnj7rmYhNyPI8dd/Pfe1i06jGw1ED2fXrTmQ1AUzg2Ov/6OZAZRPZcP4aPqFyN0MLRp6/w1ERNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714419356; x=1715024156; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XF8yuZv+DK2aAgaoYhc3ri4A9rf79jjwQh6bAXq7ZuI=;
-        b=dwsXo9I2/zn8nAk06oyc+KpfIr1pvJD/+pU6HeViBGOECGRRKrvAm/kdWf+G/ny5BW
-         b+MQ+tA0WXUib/3cHQaHcsX8Hafa8QxnF8aV5DKNbHpqBDKVifxBhzro79Brts4MrTDI
-         Jrb6krSNahL1lPkNFQiBxp/6VHYQjsdHAxWxl2Kszi4N8lPYdFjHQ0KwVF9T4peTPBcS
-         lpRi8EqWISU3nexg8ZqBimK6JCIlBs20n5RqfaOFh6I84USS68YPyehDGS/XR+ixVwO9
-         sTf23BISiRCHHokYJ1BhQw04+mp2DoQxQchhFSTmWhhORc+w9nLbap9aHmhsnWe3Mcfa
-         1gsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714419356; x=1715024156;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XF8yuZv+DK2aAgaoYhc3ri4A9rf79jjwQh6bAXq7ZuI=;
-        b=vBGxM8FN0gyyblFN6uufKnmZyXbpy3zOBfHWZVlPyWMrmLNZUZ9fiSDhfqJWrpQq/V
-         v6A7ZgVcE2L7dSoSYCvU8gntItvjWMqYEiv5rWVotm1ZG7TH19FYx/+TThtxQ4dALSMN
-         qy67tZm4w2bwSsHXB6bfdmCtMUWcplopRJxxtC5PB6GOhMg/9d0XNFYapKq3X1vTM4/X
-         4w2uSQOxTOT6A/hz40dVF45oqPgoIrP60Os9jUGNj7RBO9ae0cCFsslfGvt8icgYCGwu
-         H1fLj5n/4Lu79to54Eff6Z35DyuAOWz/ePODzh1GKiSEJQwcINocH1qeVa3RyCMbR271
-         UpXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpaOIuoRz4vKOrMD+QjF1sxY7XYShhJDW9ZGvjv5F9vlCPbwf8P9ZTbuhFoyi26s7YF5/SCySCEsFanN0NKxbSFTO1X95nIc2um2eyNqkNxNmCskM7jVZ3T3vlLMERLbwBo0e3zKxlBoM=
-X-Gm-Message-State: AOJu0Yz/qKZYNvZ3Hl3owzEfYWP73XBXm1B0iCnHy0CSc+4eZjNVRbqN
-	Mk11l/jwLJ7rwEFTY2J36bmhU/2nGZ72nokUn+bPVNhVyjGqrHOq
-X-Google-Smtp-Source: AGHT+IF5zQ0Hxo/Bgon8qAIy4p/42q6waPaSFtNDf3tfATu2HShb3HbeJXsp6TjkfjMxGCO48vSG1g==
-X-Received: by 2002:a17:90a:68cd:b0:2ad:1e60:502a with SMTP id q13-20020a17090a68cd00b002ad1e60502amr10608331pjj.38.1714419355573;
-        Mon, 29 Apr 2024 12:35:55 -0700 (PDT)
-Received: from thought.. ([186.139.89.143])
-        by smtp.gmail.com with ESMTPSA id x5-20020a17090a388500b002a53b33afa3sm23516755pjb.8.2024.04.29.12.35.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 12:35:54 -0700 (PDT)
-From: Manuel Barrio Linares <mbarriolinares@gmail.com>
-To: 
-Cc: Manuel Barrio Linares <mbarriolinares@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Geraldo Nascimento <geraldogabriel@gmail.com>,
-	dengxiang <dengxiang@nfschina.com>,
-	Jussi Laako <jussi@sonarnerd.net>,
-	Christos Skevis <xristos.thes@gmail.com>,
-	Alexander Tsoy <alexander@tsoy.me>,
-	Jeremie Knuesel <knuesel@gmail.com>,
-	WhaleChang <whalechang@google.com>,
-	Sean Young <sean@mess.org>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ALSA: usb-audio: Add sampling rates support for Mbox3
-Date: Mon, 29 Apr 2024 16:35:00 -0300
-Message-ID: <20240429193522.10380-1-mbarriolinares@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <87il00pdsz.wl-tiwai@suse.de>
-References: <87il00pdsz.wl-tiwai@suse.de>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=86mQsfYJ30u8Tt1N6JKNurxz4i2hF7gOFyFzPXiMY3g=;
+ b=zcBnGKH89+HBEfD50lLJIjATpJKAXNMlJXGdNo7llnFhEBDAzFaM/kCeiJrX006WW0l4dnXFBwBPm7X+tTrwiqIuMsGX3g1ppQM7cBi6b2UIy0e6WWI3a4B1aIEmNri21w41/8Vt6T0bacTVVOuj2I6vsQW45+cynesBHpTqA5c=
+Received: from DM6PR04MB6575.namprd04.prod.outlook.com (2603:10b6:5:1b7::7) by
+ BN8PR04MB6372.namprd04.prod.outlook.com (2603:10b6:408:dd::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7519.35; Mon, 29 Apr 2024 19:36:44 +0000
+Received: from DM6PR04MB6575.namprd04.prod.outlook.com
+ ([fe80::5395:f1:f080:8605]) by DM6PR04MB6575.namprd04.prod.outlook.com
+ ([fe80::5395:f1:f080:8605%3]) with mapi id 15.20.7519.035; Mon, 29 Apr 2024
+ 19:36:44 +0000
+From: Avri Altman <Avri.Altman@wdc.com>
+To: Jens Wiklander <jens.wiklander@linaro.org>, Manuel Traut <manut@mecka.net>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	"op-tee@lists.trustedfirmware.org" <op-tee@lists.trustedfirmware.org>, Shyam
+ Saini <shyamsaini@linux.microsoft.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>, Jerome Forissier
+	<jerome.forissier@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, Ilias
+ Apalodimas <ilias.apalodimas@linaro.org>, Bart Van Assche
+	<bvanassche@acm.org>, Randy Dunlap <rdunlap@infradead.org>, Ard Biesheuvel
+	<ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Tomas Winkler <tomas.winkler@intel.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>
+Subject: RE: [PATCH v5 2/3] mmc: block: register RPMB partition with the RPMB
+ subsystem
+Thread-Topic: [PATCH v5 2/3] mmc: block: register RPMB partition with the RPMB
+ subsystem
+Thread-Index: AQHalJZBAWmedfkP9UyAX8ZNIG7ZZrF4r/kAgAHg8oCABHiXgIAAB8KAgACeLfA=
+Date: Mon, 29 Apr 2024 19:36:44 +0000
+Message-ID:
+ <DM6PR04MB6575AC5DEB3A46D1AE11705FFC1B2@DM6PR04MB6575.namprd04.prod.outlook.com>
+References: <20240422091936.3714381-1-jens.wiklander@linaro.org>
+ <20240422091936.3714381-3-jens.wiklander@linaro.org>
+ <ZioXkvnIw5V5MXBU@mecka.net>
+ <CAHUa44Fojanryuc+ciJrVZUopRLcTt2teS_pC4BBjt1Wmy240A@mail.gmail.com>
+ <Zi9rKzz8u8z7cIy0@mecka.net>
+ <CAHUa44HHtcaYXhcWg5zL5EQ8pEP7aEDKS+yjpaMJH8vTtF3xFw@mail.gmail.com>
+In-Reply-To:
+ <CAHUa44HHtcaYXhcWg5zL5EQ8pEP7aEDKS+yjpaMJH8vTtF3xFw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM6PR04MB6575:EE_|BN8PR04MB6372:EE_
+x-ms-office365-filtering-correlation-id: f0fec506-e8f8-4fb1-5a91-08dc6883b3bf
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|376005|7416005|1800799015|366007|38070700009;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?eXNaTktuT1dYK3FJV0UxSnhXZHhzekQ1SHdwV0FSdURsZDYyUXlTamZjTUhN?=
+ =?utf-8?B?TGlma00xazV2Q3kwOE4wWDJaakl0QWRHRDhNSUpySklwV29UelBSTVhjWlI2?=
+ =?utf-8?B?VGhkMklBU2RqSFp6ZDBNQ2dkODFoSGJBMFpqditYZFFENUlNSWdiMnh5cXhT?=
+ =?utf-8?B?dGdaZWpHNEJlbzl4TTUvNVJvT01SZTN2NnhmZUtiVk5ualJVOW5hTGhrKzRl?=
+ =?utf-8?B?endBOVRhUW5qQlNyRnlZMEdMUnVyaGV0UXRYUURPR1lDaisrN3YvQUJvKzJo?=
+ =?utf-8?B?dzBUN3hzcElEUngyV1NxcmEzY2xqSzRpZzltYk51SWc3eWNFS1Q0OWhKRlFv?=
+ =?utf-8?B?dk9MVWZsbjl6bm5TSmhqQ2lXWHdVU3hvY1JYNHlubHN2NVNxamhQYktJcmlC?=
+ =?utf-8?B?THVSdlc1UTBubHRLUmJVQTM0ZmVZU2tZb1RZbXNKancyWS90SzdwUkhhWlE1?=
+ =?utf-8?B?M05HSjI0OFBVeTkySnFBWmtEamtqb0pTaktPRWl4TEtjUGdpd0JRTEkzZUox?=
+ =?utf-8?B?c0IrUXROenhCNlJKeEF0ZnpQMXhhaDM2WGlGaCtUbXJaOTV2SnBvL3NqZlN5?=
+ =?utf-8?B?bnZRbmlDeTQvcitXSFBPRVFqdUVvRjQ4MFF0cURzN1c5T2l0NmNQWXR5NXNJ?=
+ =?utf-8?B?bFF0QTVJT2ExUkh2czZtMFFFMlJjWEc3QVI1QS9rQzRwTExRTU9sdlVraHZh?=
+ =?utf-8?B?bTZodUVSemFXanM4ckcxVVZDNjR6Z08zR01lWEp5U0k3QjQraS8wTHIrZFNR?=
+ =?utf-8?B?YllVRkZYTFh1VFIzWkZKNDJWMG9CNjdKdFhOOVlHenk4V3lzQWZNaU96Qkxz?=
+ =?utf-8?B?bzN4QkV5bkR5ekVnVnRIQ1BhNXlwcHNnS3VRZGtxUUpaWWFhVFdiNG1xdHU1?=
+ =?utf-8?B?TGFaV3Fua0RFWVJpWkdmL1c2dy9oaDhyR05MYTc5dHpJK1ZDS3IxZlhFRlRN?=
+ =?utf-8?B?bGJFR0N2NTBnM2RLYUFMSXJjUklKTE90bzUwdzJWNUVJQ2Vlc3J1TWJpdTRi?=
+ =?utf-8?B?cmxvVGhnSnlBbVJLWno4dmJvV1JzcXUwWFAvRzdESHlqVlJNWW1hUkY3NkpS?=
+ =?utf-8?B?ZmVKdXlCQngxS2NKYTFNTHJoeDlTVFFRUXFPL0hsTkx3NmxYVW5aQVRuQ1pn?=
+ =?utf-8?B?WFZBYk9FOWtmaVpRZURqU2llWVF5R3lBa1lVSGlYb1E2bGsrUUVYK1hUeFVs?=
+ =?utf-8?B?eVBIT3g5Rm5zUXFvbXJTcHIrYWpuMEFCTHNYTDFqVTlmemVidmIveWY0dGtT?=
+ =?utf-8?B?bWpTNUo2a2ZuRndiSnNuZW44WFduL0U4SG0wZThqNzhkQjRYcHFjZWdNNTZP?=
+ =?utf-8?B?elF5L3pCNWcvdUVqKzNZMGZkM1hSNE12cWd3MDIyeVlpTk5naFBHZzErUW0z?=
+ =?utf-8?B?WHN3eFZ2QkhOS3NGKzlUTkZEOW1ZQ3RzMHdIclBkZGljbVRBTTdKUWxESG95?=
+ =?utf-8?B?U0dHQTArYlgrVXZ3SkJXNFQrR21uWi9OS2JYT1k4emp6UkE5TE4vZXRwOWNy?=
+ =?utf-8?B?NHh0WU12ZlJmeWtKVjZEMHRvTUpacWVRd3dIb0RBRlVQaWpZT2U2dlNFak9x?=
+ =?utf-8?B?S2hLYnp1L1J4WkRWUTdFRWdYOWx0VG9iWC9JbFZTdUdCMXNrZEhicXRoTXFS?=
+ =?utf-8?B?RVU5emlReGxleTBkekVES09HZjEremluL0lqSmk3QUg0Y3NyQmZaR0JzUEdZ?=
+ =?utf-8?B?SWhkZWxHZG93WFBQL05rT3BvckxTUXFhQmNaZWFxMnZXZllLRnNnb1ZFdVdm?=
+ =?utf-8?B?QnR0bzR3MWpycUxZMGFIYzVTSmY2ay9nR05hNmJ0OFhtSmNXYVpRT3d0ck45?=
+ =?utf-8?B?dTR1Q1JKOENxeEw4ZEVvZz09?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6575.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?MkRkcGpZcVpqUTVabU16eVV2RnZhSEVJRktTaHlaMzdaalUyb3FYcVVTaXlT?=
+ =?utf-8?B?WWwyN3B5QmZaekx0cWgwbnR2SVJ4bXF3cXdNNjFtbDF3NTRHaGVwazIxYnhy?=
+ =?utf-8?B?bkpva1dlV0gvSnNEc3VFejY0UzNyczY0bFJETU9lWDRrbkgzVUJqWSticFhr?=
+ =?utf-8?B?cUJ4NXREWGU1NEhkTkVtNXFsSTFaU0xLMHZ4RW41WlkxUDNjNTZsQUlNZ3ZJ?=
+ =?utf-8?B?U1FqV3lHUWtWd21zY2NHYTJYK2Zuemh4Yi9kOW50L2FzQ0tsNDBheDNPejJU?=
+ =?utf-8?B?THhka2p0OW1mSUdmNFR3Zmg2b0Y4c1E4Sk9hM1pkQUtvN1M1RFJ3cEtCRzFo?=
+ =?utf-8?B?K0lEdGhXS0hCazdSSUZqaGpnbkVqblNzRmJwU1hoL0NtUFd5RkxablFVZHJT?=
+ =?utf-8?B?dXdTWk81ZDdqclJkejNEU1ZpSHh1aTZDdVVsN0E4aWtWYk0xalNqTDM1N3Vm?=
+ =?utf-8?B?VkxUYkVlVVVIT3BYKzVLT2Jyem55VDI2OUlMZ1h2cEYvMmlRc2t2N3VYR0ha?=
+ =?utf-8?B?am9wVWFUUzRRQ0oyaEhDd3NlWWplZHB1ZVBNd3I1THVaVjUrSmhGWndRUjVL?=
+ =?utf-8?B?WnNuNnlJTUw0ejY4NUdTZGdGMURSb1ROejJGT3JscnZEMkw5aE93VjQrTFo4?=
+ =?utf-8?B?YStxSEtWdEFVRDQwczFhditicmFmemJWVEhNTEJSUE9RNTJpWWFPdTM2ck5o?=
+ =?utf-8?B?cGhpdlhFWWkxZVc2L29tblA5M2lsT2NrMGgrNXUxK1pSUkVaNGEvRDJkSTkr?=
+ =?utf-8?B?VWdrRklwTnVYNUN0eUR5NmhoYytNaGJoVTZFNWtiU3BtVFMxV3BPamN2eWVO?=
+ =?utf-8?B?bGtPTUNWb3F3eXlHcVU2NlhtQlpLaEVReXZ4SlcrN3d2NFJ3cnUyNWVoU2pC?=
+ =?utf-8?B?TlFHazdwbitSaldiNU5VM1hDU0pScnR2OE9IL1FWd3RXa1hDTUR6M1lKNWV5?=
+ =?utf-8?B?YTJPQlFuZ3p2UnJaZGx3OHpXSW1td3BwaFVSejBYSlpBTHgyZzBSdWpVcXRG?=
+ =?utf-8?B?NWRaR3ZWVVYrcU8xOG5BSnZlWS9ualNEU2wzcjJjNmxZcmF4Ty9sMjRYbnFW?=
+ =?utf-8?B?cTNmbEt3ZGZtU2Z2VWpxdDE5d2NrMGJHQk96RHdDdjd6bmxmZzlWUlRPaUdW?=
+ =?utf-8?B?dFQ5RUFBRi9sc2NRTUdyd2tkaUNRT2JDSkVmT1Y2Nll0akNHNXNwdEtRRmox?=
+ =?utf-8?B?bjcrcmdESXNJRE92MC85SUZneW9HT0FCTTlDbzJrR21ndHNsRkZZc0FLdTVO?=
+ =?utf-8?B?aGdONTFweElzTHUzRmdrVTViaDhaK2lyTlNwMXF4aUp4OXBEK1VFT01oY0w0?=
+ =?utf-8?B?SWR6djd0MWhObG9ueS9hS01ud0ZzY1A1Z1ZlL2d4d1dYT2Z4ODdiV3NtWmdI?=
+ =?utf-8?B?YlFxL0hJSS92R3R0eUc0Qkg4My9GdmZtdEtUS0JyY0dRU2huT2VUYTQwQjRq?=
+ =?utf-8?B?bWtXc0Q3V29ESGNOaTZvQnR5ZkdMaFg5bEV3YS81cGFsSUdoWHZBbUxScVNM?=
+ =?utf-8?B?T2RaM25tbVhucFM3Sm9uRkJPZmM0cjFTMkZTSGg3dDhua3dac21qdjQ4MW5J?=
+ =?utf-8?B?bnlaZkVGeUVBc1A4clU2QXROM3ZISFB6T3BIUFBYUjhidlpHMUxiTllKekJF?=
+ =?utf-8?B?UngrRmlJSjZkclk0bVkxZHlhbytrOHFrODlKZTZwMzZWNm13MUVua0p5YWVK?=
+ =?utf-8?B?bHJ6Q0ZmMERRbGg3V3RnKzNLRGp1VE1xYkQ5anAvdVFNSTFtZ1hUZVdaMmpn?=
+ =?utf-8?B?bFZ6K3NqMjVHY1c2ZURMeExBcndhemZtaFBkRzVkVWYyVlpCeW1DUW5FN0t3?=
+ =?utf-8?B?Q1VWMkYxSFZDMTF3WENsM0ZpK2MxWG9TdFlGNnVCNjVjTGpOWjhuU2h4OW5S?=
+ =?utf-8?B?RTlsSE1vWGlsYlJIRG01aHViblhTRjBia0ZsLzlGZkppQ212Q3B2Tzc5cm45?=
+ =?utf-8?B?Vlo2WnI1SEs4YkxYS2hZbFVWOU5nOUo2dWQ5bm1IVGpIZS9xMFZteDRZbGY2?=
+ =?utf-8?B?NWFuRmNCVmltQ3ptbElKSndFU2ZGSGJhc3BFVm5EM2dsM0lDNmkvM1YzWmpo?=
+ =?utf-8?B?Q3JKMzJtTTFoNHN3bFhjUHV0aEpUNk5IRzZ1Ti9Ma1FlWGFiSnM5cThCN283?=
+ =?utf-8?Q?pgl0zE0U9neLjTaHiDYFrOFaU?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	IDRcuM86Z5sM5wrA7r1B9f7UgtAlAQA5ahj+MsHWOISx47SFs5/CSHUXe0sHLR5QiVI4jbh9stmdGvfD3Pm41n+PQ6NKnJ5M9QJizNNoWde8dAwuVl9cGzn1rEVmkpuuKv+V8S3UGhun/Q1heeEolv/hvnKTcw+OaXIWrrXnKgr4lzQ9MeSMncL+GVDf8xEet2qmYkyyju6eKeHReZJJaAFPSQlq9YaG7pO9VSggzTnyC+tsT+cv0KJgRNhoBNUODUeRTqWqw3oKIdvymnN292WYtCE9qm2bO8dAu2tCDasj6NK60skrTDPamLjxR6GgrE7TFh/xZqT/PZhqfkZrCD+vLWu1M4YAJ1jbYr30UueJ9muoeFd8MSbVV2dMoibg3julCQA35V2PKvLxgvdoxh2By/kDmf6VG/iMMHVznZeV7e5AvH+rM1oXze3CWPEjVfcJyIMQe3+zwBdygC29plzy2EjLUA4P2ipmpT+kGUyk8pbSpv12e7K77Kc8gMX+FRcGeFNccTAhgRNdHpbZ4PkPM5RtU+NO0du+CMWGEipkes2XEaA0+aRuKhEeRo+UPOOc8tRPNpD2wyMdwBgEeYnNfn3C373/aZwL9kH1+o9kSwd5uVOmtKXU+H8E6W4g
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6575.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0fec506-e8f8-4fb1-5a91-08dc6883b3bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2024 19:36:44.5027
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: H3a3eZFfQFPaLjH4IVIO10v3HClLMTG3fEG/JCdYKRa0jH4L65unpvsn3I+9+shWjBT/IfTY7RdGG2lfiSUo5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR04MB6372
 
-This adds support for all sample rates supported by the hardware,
-Digidesign Mbox 3 supports: {44100, 48000, 88200, 96000}
-
-Fixes syncing clock issues that presented as pops. To test this, without
-this patch playing 440hz tone produces pops.
-
-Clock is now synced between playback and capture interfaces so no more
-latency drift issue when using pipewire pro-profile.
-(https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/3900)
-
-Signed-off-by: Manuel Barrio Linares <mbarriolinares@gmail.com>
----
- sound/usb/quirks-table.h | 38 +++++++++++++--------
- sound/usb/quirks.c       | 74 +++++++++++++++++++++++++++++++---------
- 2 files changed, 81 insertions(+), 31 deletions(-)
-
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index 5d72dc8441cb..73abc38a5400 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3013,21 +3013,28 @@ YAMAHA_DEVICE(0x7010, "UB99"),
- 				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
- 				.data = &(const struct audioformat) {
- 					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.fmt_bits = 24,
- 					.channels = 4,
- 					.iface = 2,
- 					.altsetting = 1,
- 					.altset_idx = 1,
- 					.attributes = 0x00,
--					.endpoint = 0x01,
-+					.endpoint = USB_RECIP_INTERFACE | USB_DIR_OUT,
- 					.ep_attr = USB_ENDPOINT_XFER_ISOC |
- 						USB_ENDPOINT_SYNC_ASYNC,
--					.rates = SNDRV_PCM_RATE_48000,
--					.rate_min = 48000,
--					.rate_max = 48000,
--					.nr_rates = 1,
-+					.rates = SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000 |
-+							SNDRV_PCM_RATE_88200 | SNDRV_PCM_RATE_96000,
-+					.rate_min = 44100,
-+					.rate_max = 96000,
-+					.nr_rates = 4,
- 					.rate_table = (unsigned int[]) {
--						48000
--					}
-+						44100, 48000, 88200, 96000
-+					},
-+					.sync_ep = USB_RECIP_INTERFACE | USB_DIR_IN,
-+					.sync_iface = 3,
-+					.sync_altsetting = 1,
-+					.sync_ep_idx = 1,
-+					.implicit_fb = 1,
- 				}
- 			},
- 			{
-@@ -3035,22 +3042,25 @@ YAMAHA_DEVICE(0x7010, "UB99"),
- 				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
- 				.data = &(const struct audioformat) {
- 					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.fmt_bits = 24,
- 					.channels = 4,
- 					.iface = 3,
- 					.altsetting = 1,
- 					.altset_idx = 1,
--					.endpoint = 0x81,
- 					.attributes = 0x00,
-+					.endpoint = USB_RECIP_INTERFACE | USB_DIR_IN,
- 					.ep_attr = USB_ENDPOINT_XFER_ISOC |
- 						USB_ENDPOINT_SYNC_ASYNC,
- 					.maxpacksize = 0x009c,
--					.rates = SNDRV_PCM_RATE_48000,
--					.rate_min = 48000,
--					.rate_max = 48000,
--					.nr_rates = 1,
-+					.rates = SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000 |
-+							SNDRV_PCM_RATE_88200 | SNDRV_PCM_RATE_96000,
-+					.rate_min = 44100,
-+					.rate_max = 96000,
-+					.nr_rates = 4,
- 					.rate_table = (unsigned int[]) {
--						48000
--					}
-+						44100, 48000, 88200, 96000
-+					},
-+					.implicit_fb = 0,
- 				}
- 			},
- 			{
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 09712e61c606..71190d732e0e 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -984,21 +984,13 @@ static int snd_usb_axefx3_boot_quirk(struct usb_device *dev)
- 	return 0;
- }
- 
--static void mbox3_setup_48_24_magic(struct usb_device *dev)
-+static void mbox3_setup_defaults(struct usb_device *dev)
- {
- 	/* The Mbox 3 is "little endian" */
- 	/* max volume is: 0x0000. */
- 	/* min volume is: 0x0080 (shown in little endian form) */
- 
--
--	/* Load 48000Hz rate into buffer */
--	u8 com_buff[4] = {0x80, 0xbb, 0x00, 0x00};
--
--	/* Set 48000Hz sample rate */
--	snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
--			0x01, 0x21, 0x0100, 0x0001, &com_buff, 4);  //Is this really needed?
--	snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
--			0x01, 0x21, 0x0100, 0x8101, &com_buff, 4);
-+	u8 com_buff[2];
- 
- 	/* Deactivate Tuner */
- 	/* on  = 0x01*/
-@@ -1008,6 +1000,8 @@ static void mbox3_setup_48_24_magic(struct usb_device *dev)
- 		0x01, 0x21, 0x0003, 0x2001, &com_buff, 1);
- 
- 	/* Set clock source to Internal (as opposed to S/PDIF) */
-+	/* Internal  = 0x01*/
-+	/* S/PDIF    = 0x02*/
- 	com_buff[0] = 0x01;
- 	snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
- 			1, 0x21, 0x0100, 0x8001, &com_buff, 1);
-@@ -1113,9 +1107,11 @@ static void mbox3_setup_48_24_magic(struct usb_device *dev)
- 			1, 0x21, 0x0107, 0x4201, &com_buff, 2);
- 
- 	/* Toggle allowing host control */
-+	/* Not needed
- 	com_buff[0] = 0x02;
- 	snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev, 0),
- 			3, 0x21, 0x0000, 0x2001, &com_buff, 1);
-+	 */
- 
- 	/* Do not dim fx returns */
- 	com_buff[0] = 0x00;
-@@ -1259,26 +1255,27 @@ static int snd_usb_mbox3_boot_quirk(struct usb_device *dev)
- 	descriptor_size = le16_to_cpu(get_cfg_desc(config)->wTotalLength);
- 
- 	if (descriptor_size != MBOX3_DESCRIPTOR_SIZE) {
--		dev_err(&dev->dev, "Invalid descriptor size=%d.\n", descriptor_size);
-+		dev_err(&dev->dev, "MBOX3: Invalid descriptor size=%d.\n", descriptor_size);
- 		return -ENODEV;
- 	}
- 
--	dev_dbg(&dev->dev, "device initialised!\n");
-+	dev_dbg(&dev->dev, "MBOX3: device initialised!\n");
- 
- 	err = usb_get_descriptor(dev, USB_DT_DEVICE, 0,
- 		&dev->descriptor, sizeof(dev->descriptor));
- 	config = dev->actconfig;
- 	if (err < 0)
--		dev_dbg(&dev->dev, "error usb_get_descriptor: %d\n", err);
-+		dev_dbg(&dev->dev, "MBOX3: error usb_get_descriptor: %d\n", err);
- 
- 	err = usb_reset_configuration(dev);
- 	if (err < 0)
--		dev_dbg(&dev->dev, "error usb_reset_configuration: %d\n", err);
--	dev_dbg(&dev->dev, "mbox3_boot: new boot length = %d\n",
-+		dev_dbg(&dev->dev, "MBOX3: error usb_reset_configuration: %d\n", err);
-+
-+	dev_dbg(&dev->dev, "MBOX3: new boot length = %d\n",
- 		le16_to_cpu(get_cfg_desc(config)->wTotalLength));
- 
--	mbox3_setup_48_24_magic(dev);
--	dev_info(&dev->dev, "Digidesign Mbox 3: 24bit 48kHz");
-+	mbox3_setup_defaults(dev);
-+	dev_info(&dev->dev, "MBOX3: Initialized.");
- 
- 	return 0; /* Successful boot */
- }
-@@ -1734,6 +1731,46 @@ static int pioneer_djm_set_format_quirk(struct snd_usb_substream *subs,
- 	return 0;
- }
- 
-+static void mbox3_set_format_quirk(struct snd_usb_substream *subs,
-+				const struct audioformat *fmt)
-+{
-+	__le32 buff4 = 0;
-+	__le32 set_rate;
-+	u8 buff1 = 0x01;
-+	u32 new_rate = subs->data_endpoint->cur_rate;
-+
-+	// Get current rate from card and check if changing it is needed
-+	snd_usb_ctl_msg(subs->dev, usb_sndctrlpipe(subs->dev, 0),
-+					0x01, 0x21 | USB_DIR_IN, 0x0100, 0x8101, &buff4, 4);
-+	dev_dbg(&subs->dev->dev,
-+			 "MBOX3: Current configured sample rate: %d", le32_to_cpu(buff4));
-+	if (le32_to_cpu(buff4) == new_rate) {
-+		dev_dbg(&subs->dev->dev,
-+			"MBOX3: No change needed, current rate:%d == new rate:%d",
-+			le32_to_cpu(buff4), new_rate);
-+		return;
-+	}
-+
-+	// Set new rate
-+	dev_info(&subs->dev->dev,
-+			 "MBOX3: Changing sample rate to: %d", new_rate);
-+	set_rate = cpu_to_le32(new_rate);
-+	snd_usb_ctl_msg(subs->dev, usb_sndctrlpipe(subs->dev, 0),
-+					0x01, 0x21, 0x0100, 0x8101, &set_rate, 4);
-+
-+	// Set clock source to Internal
-+	snd_usb_ctl_msg(subs->dev, usb_sndctrlpipe(subs->dev, 0),
-+					0x01, 0x21, 0x0100, 0x8001, &buff1, 1);
-+
-+	// Check whether the change was successful
-+	buff4 = 0;
-+	snd_usb_ctl_msg(subs->dev, usb_sndctrlpipe(subs->dev, 0),
-+					0x01, 0x21 | USB_DIR_IN, 0x0100, 0x8101, &buff4, 4);
-+	set_rate = le32_to_cpu(buff4);
-+	if (new_rate != set_rate)
-+		dev_warn(&subs->dev->dev, "MBOX3: Couldn't set the sample rate");
-+}
-+
- void snd_usb_set_format_quirk(struct snd_usb_substream *subs,
- 			      const struct audioformat *fmt)
- {
-@@ -1755,6 +1792,9 @@ void snd_usb_set_format_quirk(struct snd_usb_substream *subs,
- 	case USB_ID(0x08e4, 0x0163): /* Pioneer DJM-850 */
- 		pioneer_djm_set_format_quirk(subs, 0x0086);
- 		break;
-+	case USB_ID(0x0dba, 0x5000):
-+		mbox3_set_format_quirk(subs, fmt); /* Digidesign Mbox 3 */
-+		break;
- 	}
- }
- 
--- 
-2.44.0
-
+PiA+ID4gPg0KPiA+ID4gPiBJcyBpdCBwb3NzaWJsZSB0aGF0IGlkYXRhLT5idWYgaXMgbm90IERN
+QSBjYXBhYmxlPyBBbnkgb3RoZXIgaWRlYXM/DQo+ID4gPg0KPiA+ID4gVGhhbmtzIGZvciB0ZXN0
+aW5nLiBJIGRvbid0IGtub3csIHRoZSBpZGF0YS0+YnVmIGlzIGFsbG9jYXRlZCB1c2luZw0KPiA+
+ID4gYWxsb2NfcGFnZXNfZXhhY3QobnJfcGFnZXMgKiBQQUdFX1NJWkUsIEdGUF9LRVJORUwgfCBf
+X0dGUF9aRVJPKTsgaW4NCj4gPiA+IG9wdGVlX3Bvb2xfb3BfYWxsb2NfaGVscGVyKCkuDQo+ID4N
+Cj4gPiBJcyB0aGlzIHJlYWxseSB0cnVlIGZvciBpZGF0YS0+YnVmIG9yIGlzbnQgdGhlIGNvbXBs
+ZXRlIFJQTUIgZnJhbWUNCj4gPiBtZW1vcnkgYWxsb2NhdGVkIGxpa2UgdGhpcyBhbmQgdGhlcmVm
+b3JlIGlkYXRhLT5idWYgbm90IHBhZ2UgYWxpZ25lZD8NCj4gDQo+IFlvdSdyZSByaWdodC4NCk1h
+eWJlIGFkZCBhbiBhc3NlcnQgb2YgUEFHRV9BTElHTkVEKGlkYXRhLT5idWYpPw0KDQpUaGFua3Ms
+DQpBdnJpDQoNCj4gDQo+ID4NCj4gPiBGb3IgUlBNQiB2aWEgdGVlLXN1cHBsaWNhbnQgdGhlIGlk
+YXRhLT5idWYgaXMgYWxsb2NhdGVkIHdpdGhpbg0KPiA+IG1lbWR1cF91c2VyIGFuZCB0aGVyZWZv
+cmUgcGFnZSBhbGlnbmVkLg0KPiANCj4gWWVzLCB0aGF0J3MgYSBkaWZmZXJlbmNlLiBIYXZlIHlv
+dSB0ZXN0ZWQgd2l0aCBwYWdlLWFsaWduZWQgYnVmZmVycyB0byBzZWUgaWYgaXQNCj4gaGVscHM/
+DQo=
