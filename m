@@ -1,107 +1,92 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3627682D66
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA3680022
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714401944; cv=none; b=M3e2Mjz2Rg9z0uvv2q+W+YAtULlUarBI9LhRCfgGh2O28EOIZydTko0d5QbHe3Iy7CPABJ1cYpFZKiEmEwwsfZ2LxVLzhFU+3xg0RvAF4Ng2CsTiAIP3Gmbp0A61mEeKMTyZ24gPWsz2BwYlZBZlAaZrdrSrCAduvO/9qHEjgKY=
+	t=1714401987; cv=none; b=esBVaaAsgzbtt/vLvkT8cN7DtWmqLE6NPji3oj1Q4sZFXqhW0aJTYPJMHAkLsio3Jt6kxt4fN/NVWkhIVkwB+sg5BdHGNoXvNPSAqfN78QgxsQkulvZpw2+SBWFm7xoSEmXggsVMIa/9YXBRAj9jRRmqZXXqqcaN8M7q7S0nKGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714401944; c=relaxed/simple;
-	bh=F3uL5MsmUALtcFiI0QIew6cRHX+r6COGBnKC/XZwBKk=;
+	s=arc-20240116; t=1714401987; c=relaxed/simple;
+	bh=7ffg10nGRai65DzA6Sm+DBPvuVwQZ6AScKW/4TvgHFo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lia8n6cWxzXpMPhnEJbG0lMq9EnF43Il7D4pPO/ItnEtDsqP0bHzl09JkRoBPHda9+BUFoDY0wdHTl7f3E62qrPRSOs1GoGr9cruEeV6UM8HFk+0RP0xIXUCedOHqhgKAqmMrtRGRwLjwHRVsKkS4olwxZ6YNQMAx6ypsfDCcjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FUNn8bg9; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=b4FyxNy8jrHRGTJc22UIin7VD0HHPsYzgS9KNzZrYjVg7uA7UaaQae0+8clADP9QPNRpS+lUdnv8HCK/ud6R+/wLJB5oPYoEPkIof3boVLske0OeNWfRNPFDgb9tf8+dPgHXLeMi3wryi0lKfuyZoV2dGqn8zTYC1jrhLTsiIYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=SmVtEDzt; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FUNn8bg9"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 988B940E0187;
-	Mon, 29 Apr 2024 14:45:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jEjCQhPIYrru; Mon, 29 Apr 2024 14:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1714401934; bh=zZZ5uIl7gam0sGKCdhwGGAI2qvhYN93EKC+r3/GxU7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FUNn8bg9UGoZX4EhU2jeGeFFFlf7QDHM+ueU/sCj+9gGAJJZ+ukCF7gmLndn3W/T7
-	 4wo6lFaRBzYuoMZxNEOxZDHlaQQVIGpI+JuoAoHdE+y5mL8n+yRz3WhUr6h1PGygj7
-	 ZxwFiqR+ReP4lmSemEYnF2ywcqgTZuZifGr2+Tl51SVgiD8cLnZUhst/8Aet9ARSx8
-	 SyeE44n7EzN9aIHV6RM/VYemsLUZ/mpZiwpawD38w+G9iWJNd48S6WZfxq3S2BbR/e
-	 mHQD1jEOyrd8V3zgfNjviPj3x7Imq5QQ13rDDBvYHsPf8nxZmO4gn53/MPB4/6P/qc
-	 eJ948igKRf4i05fxNhN7XUc6DBmaWnkqk4jb8EqF8ckEJT+Qz/VwpjOAIr8+6FWVc6
-	 a8aegJ1S3eXyZMQspheuU4KSquSlQHkg97gZKZ6fVYfnoIepRMzQzYUg0Thg0eAtP1
-	 3TRwkRehYHz9+Av2qXTC4HhtVzgLw9CMdGeHPulRGTNh+ahz2ptH0WY0tinNdfZHdg
-	 1j0VXg8ljcNktUTniiXGKiW36ISjlip+f/FJbpP19sDGVkpqolIEpHW3lwzqH64T06
-	 YYRwBGaB2Agmht8+OaiU5fRNib5gJAM+FyFqoeVMlkixNUDjda8OwVkFAaFkZ1eqfZ
-	 jXwe/f5Ydu72Ky5gacB+n9Cc=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A689B40E00C7;
-	Mon, 29 Apr 2024 14:45:14 +0000 (UTC)
-Date: Mon, 29 Apr 2024 16:45:08 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	Kai Huang <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv10 05/18] x86/kexec: Keep CR4.MCE set during kexec for
- TDX guest
-Message-ID: <20240429144454.GHZi-yZkD0boKk5N17@fat_crate.local>
-References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
- <20240409113010.465412-6-kirill.shutemov@linux.intel.com>
- <ZhVPIDDLkjOB96fI@google.com>
- <3q6jv3g4tezybmd667mqxio7ty22akxv7okrznmzx3tju2u4qo@2alzjkbgm2lh>
- <20240428171111.GKZi6DLy_ZwuZsZdFq@fat_crate.local>
- <e35yxpa2xdynm7focg6k4u2bjzojn24bmeaszh2jz52e4szc5f@6mgtrdnkewhe>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SmVtEDzt"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c8641b41e7so807469b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 07:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1714401985; x=1715006785; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PL6tZzyAQb/T1bd4KCzi312ESM92EvfA0363dcOQhRE=;
+        b=SmVtEDztMGKiJha93yc3YzWgOimowBu5KUyLGBxxDTLWJqPXUofvnlaadzFiaJCRby
+         i+0vD3qO18KYmzKrCRS8U33f1TJ8JxZ+jtkNbvDS2fgngM1BoPdhZ60Yz8VJID/YsgUK
+         t73vSALFj0ZuJBn0UxxtKERyn9nzXuRs23ajZx+9Ok3MIVEPxo+S8NmG9+tG9sDJe5Ht
+         5r44OzK2qilLvtef3lR9W3DXENwSQQpuA67arusaR4sUGOHXKqezz2rzdIDRdYhuSa2I
+         lS2v5dsf6A0zeiZ1GsubbwLJy2ncGfhXEDrHMiy2MxKRZL7EV0OXF+ZHpYVh9gK1I4dR
+         +djw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714401985; x=1715006785;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PL6tZzyAQb/T1bd4KCzi312ESM92EvfA0363dcOQhRE=;
+        b=lvA1vPaA4cu9U/8QnvA48b5BTIjwGe9nCPwEwTp2Jv1EyRmZ5xnNYdsSjklHR1nf7W
+         AvekSNITG81koGTdCcmJgubaQKfos/B5YXY1lFuF5H8BWbXeKK/v63jhGNNOpFYcPnQE
+         AHdwsZlPmF07etCD7/2QixxjTChQaltB8jPhMQqnbEOKDi7OBgWM4TbASQZk3EA3UVGl
+         LlZuHU/rqQJJPck5+BrW9ujE+IIvkXH0LcvwwjYSXb+GjI/YOhKyZZZRc9sj2V6P71XE
+         k0z8e+wi1xt/fZoieLgTo72IpI4mR2eadCvS//lxn0m227aIJk5uBcfEYRpxXT/D7u7r
+         1/kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmX0aJvK9Hgu/Gbvq6lyfgn5keEe13yShmlnOoXBJLC14KjeQtj5MueWCFVhIk7xvHK1EKkmUg7ll6GJfMQ2MDPsqt81E9gx1JEeB6
+X-Gm-Message-State: AOJu0Yz0W9UWXGSqxw7EwAWVzMWuGG3u3i5eN3xNK9S12rmd6qEY49+G
+	5FPwFMMQdra82UfLbC/vseCmN3x3LI6PAHoQaZFOv4gKJlWo1hxl+u1gzIxno7s=
+X-Google-Smtp-Source: AGHT+IFOe6gG5Zd5JVe9dZoFq+NoColD5kYFlBUlxnFkxrkFHFXSMMmhpY3dNxMYFJzSXNRqXqK1iQ==
+X-Received: by 2002:a54:408f:0:b0:3c7:45db:3ad2 with SMTP id i15-20020a54408f000000b003c745db3ad2mr31396oii.16.1714401985232;
+        Mon, 29 Apr 2024 07:46:25 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id mi23-20020a056214559700b0069b4cc9780fsm3071361qvb.2.2024.04.29.07.46.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 07:46:24 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1s1SGt-001ToN-OO;
+	Mon, 29 Apr 2024 11:46:23 -0300
+Date: Mon, 29 Apr 2024 11:46:23 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: David Hildenbrand <david@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rientjes@google.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
+	will@kernel.org, robin.murphy@arm.com, iommu@lists.linux.dev
+Subject: Re: [RFC v2 0/3] iommu/intel: Free empty page tables on unmaps
+Message-ID: <20240429144623.GN231144@ziepe.ca>
+References: <20240426034323.417219-1-pasha.tatashin@soleen.com>
+ <2daf168e-e2b2-4b19-9b39-d58b358c8cd9@redhat.com>
+ <CA+CK2bC4SWTCG2bnA16Xe+gX7=N=UYWB1wSns-K-jNqC1yrdvQ@mail.gmail.com>
+ <9bf62e97-dfdd-4537-8fb0-b5f293856f59@redhat.com>
+ <ZiwC4snk03ptUQij@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e35yxpa2xdynm7focg6k4u2bjzojn24bmeaszh2jz52e4szc5f@6mgtrdnkewhe>
+In-Reply-To: <ZiwC4snk03ptUQij@casper.infradead.org>
 
-On Mon, Apr 29, 2024 at 04:17:38PM +0300, Kirill A. Shutemov wrote:
-> As I mentioned above, clearing CR4.MCE triggers #VE. It is quirk of the
-> platform.
+On Fri, Apr 26, 2024 at 08:39:14PM +0100, Matthew Wilcox wrote:
 
-You mean when identity_mapped() runs as part of a kexec-ed kernel, it
-might clear CR4.MCE and that would trigger the #VE?
+> I think there's a lot of space in the struct page that can be used.
+> These are iommu page tables, not cpu page tables, so things are a bit
+> different for them.  But should they be converted to use ptdesc?  Maybe!
 
-So, if that is correct, you basically want to *preserve* the CR4.MCE
-setting across kexec?
+Definately! Someday we will need more stuff in here..
 
-But then __mcheck_cpu_init_generic() will go and set it
-unconditionally.
-
-So what exactly is the correct flow here?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Jason
