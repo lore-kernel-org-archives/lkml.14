@@ -1,178 +1,149 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F9B67A14;
-	Mon, 29 Apr 2024 18:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37FA67A14
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 18:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714415926; cv=none; b=GgoYfTNBiJc7UBjxByGeCx9ES1G7kRaMlirI/b3nf/ZZuh/hdcDlcTQIhk4Ju0pqX3NQmK70P9YOQP7UWedRYdMjH1GvZLAbHQMlQyALzN8NR6eCAlgdl+EQHFcFd5znVUu/akpnlER1ggGalc9EazbJrhCjYBAS4NXnkbPrWxQ=
+	t=1714415974; cv=none; b=bwtUSPO6DFiZRtW3x1dHpCJPTAasriK65flxhYD88CxgQtuQHps5H/P8PyVteEOHPr+0qBYUYnwVKyqyaWFoL6f8bXyNZ+vQKy73+LEc95LxfQyUmEcX1UW+qktBZTcBy+SOGXca8F4fHDHnrDcqSnU/C0MuGB/QbKeO7WfymzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714415926; c=relaxed/simple;
-	bh=195C9nIwNh1lmaOXqjfZD4ItUOxg/XueSkuoCzneoWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SY4lugn/FemBNQXWtEQWN5z5fjxLZKsywW/qO0c3h9qn1depEPDs5bZRchwSMRoMDrF+19ElVWTHcTIQ7Ink3vk2YYhHLqqQuQZNxXUhEvC37ay8u8CwkMJm456n6kOEZQH8qM6eokTp41BbtbMca1v4No6k4f68Vv7Iu3QXmQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n2Sigmal; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1714415974; c=relaxed/simple;
+	bh=QBdZBMXCVF0uuM31zTQeK3OKrbEfxdu1leuRI7upUEs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=N2AG7B+/QV4FX1izUyUKKsUY4rIPpJuIV+Rqr8BXKvANKfvnxZh80pnWtAXn0Zd/SIc1iI30zhyMdWHXSGDvqeWnkjAy6ijNsMsrSzk5WZI0CJJfLCpKrTLaBshFzLVS8Q37A82nDo8ErJv+ShEoxW1CHIk71fkwuWo4b8KKN0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dBqaOHmB; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2Sigmal"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Un8ngqywrftT4NxpkTUiNzqeWjbiCXUSCQfTmTunVeQ=; b=n2SigmalDCeek8ry5sud7+wrNg
-	jLEW9gVIj3LtZCcbB4u3TclX75PGVogMBEzvslg4nQBEtFlYwfz7Y7Uio2F+AGnVZZU4UsMsvDkfj
-	dT2CV2H+/kv76TLykHa42wLq64Iy9r92eZ9b2GkrVBZAJSsqP17CGFSLrwer+8lXMVrvLbsbrjYSz
-	77GQU55gtpQrv39XZnCaaZDrOlPbaC37GV8dkGlo2KHyZkPQpqQ4QbPA9hzfUmx92Mzs1LPhalpKr
-	5bBzMbQPXU5aWuWxvgjgOl1MDDGSzgCn+9e3H3QKW/jifURER2TizGLIzbM9TYG4Kj4A/TFJPBq4a
-	FN+HX5IA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1Vtk-00000003tLh-2HjW;
-	Mon, 29 Apr 2024 18:38:44 +0000
-Date: Mon, 29 Apr 2024 11:38:44 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Allen Pais <apais@linux.microsoft.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	jack@suse.cz, ebiederm@xmission.com, keescook@chromium.org,
-	j.granados@samsung.com
-Subject: Re: [RFC PATCH] fs/coredump: Enable dynamic configuration of max
- file note size
-Message-ID: <Zi_pNF0OMgKViIWe@bombadil.infradead.org>
-References: <20240429172128.4246-1-apais@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dBqaOHmB"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61acc68c1bdso58777347b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 11:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714415971; x=1715020771; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wSYJcoyaTi79NbRMVjq5HHUnz6U3D46cE4KoRFu8N2A=;
+        b=dBqaOHmBucHXMhnKlV/DCWeSaXeIXjBKTxe3/wiANSsIfjQw7HWGFT/SjVfo182qh7
+         FqlXrnA8ZbaV58nkv9CJrIIMOvViFARPDAc4i2piCrSWtRXthCTXuep3TL7P+SjMU13Z
+         8g0yJSq0lc85VBHEIZBEjVFz94aNEQyrT42HZfGa7XeHkvmQ0l/Tbfo7FS32mPlk+2Tg
+         jWzHvUIha5JMPfuN1ofLQ+AveQwiqP0CyQVtpjmWr2g/MkXNnHhq3aWpnhYcR/kTsEso
+         IkEvFTbzMlFmwrx9B8U/MLBdCcpIbWDrvIRV6Ko83WXDUsr+wZySb1YF/gN47QOh9JK0
+         ZqZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714415971; x=1715020771;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wSYJcoyaTi79NbRMVjq5HHUnz6U3D46cE4KoRFu8N2A=;
+        b=IqNGJNlvUKvkkGqYHTzFO0hBxag4ryOIvQgtCPFBq56cZxvVACBOqfLJScMktB0prL
+         x0SVANdOubCFY4qOsYbJJAhzStSJNDKsisnEgGQft3rLRB1GRwv5FcvI0V1Xh5cDA4Tc
+         jtLCQ00eEwpLfr++3F5AINHKlj7cnBSrX0mdQlSM3e7nyvXlqUqmRqpUe3ZxerG+SPyh
+         +cIQ8wFg7tWwwXAc0doiaRN1Luq3JUCQC6yF8+V6W+b3CKXeM1nDjcRs4CjcfWfDXP2Y
+         kFg5ogyjFGFQNtmLIrrcU/moofRGsNlgUCFyu6Gb+hBV+lD8pa0xAZgqyDnugdlWIXX6
+         PWuQ==
+X-Gm-Message-State: AOJu0Yy9MFl5Q3N30aTAkt8D9mwTod7E7eNaDygBk4EbjvgRczxuX7HJ
+	3WBIFYOmTM4G/k9cav4zhLWGFxfy2b/QF3t7cBEut1p6TfAqeNsD7CBMYbB6Iyz8B4j8q/pOmLR
+	YLT9kbtSH/mcBmvT2zxu5kA==
+X-Google-Smtp-Source: AGHT+IHANfFH7TFflKbRryihtyZjur78IWuaWQA8CIlpRzlcXweRhaGAdP48CqTQpxlMGfUxNSjq3zDgCuJMsX2ulA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:690c:290a:b0:61b:6c2:392c with
+ SMTP id eg10-20020a05690c290a00b0061b06c2392cmr91397ywb.0.1714415970772; Mon,
+ 29 Apr 2024 11:39:30 -0700 (PDT)
+Date: Mon, 29 Apr 2024 18:39:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240429172128.4246-1-apais@linux.microsoft.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAGDpL2YC/43QzWrDMAzA8VcpPs/Dlj8S77T3GD3YjpKYbXGwQ
+ 1gpefepvXQjYez4F+gn0JVVLAkrezldWcE11ZQnCvt0YnH004A8ddQMBGgBIHmd5pKmpedxxPg
+ ++yWO3LdWY2cbDJ1gtDkX7NPXXX07U4+pLrlc7kdWeZv+7a2SS658NAJMMM7K1yHn4QOfY/5kN
+ 3CFfyBAiAseSeg8KrFD1ANR0hwjihCvjcTGWq2E3SH6gWjRHiOakNa6Jjrro9Nhh5gfCMAxYgj pJToR+kbSv38h27Z9A8yGVKrLAQAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714415970; l=2913;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=QBdZBMXCVF0uuM31zTQeK3OKrbEfxdu1leuRI7upUEs=; b=YWO1yUokL7cw7iVMCGuxveXQyCZ9XwuqGLpFjp5iFwgxyVtsjIrneZua/7/APlJDwqUkzDw7A
+ 3S3WB1l//IrDVBY7Es6i4nZH2WMTn0MmXhislWJPUGPOueoQGl/zR+n
+X-Mailer: b4 0.12.3
+Message-ID: <20240429-snprintf-checkpatch-v6-1-354c62c88290@google.com>
+Subject: [PATCH v6] checkpatch: add check for snprintf to scnprintf
+From: Justin Stitt <justinstitt@google.com>
+To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	Finn Thain <fthain@linux-m68k.org>, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Apr 29, 2024 at 05:21:28PM +0000, Allen Pais wrote:
-> Introduce the capability to dynamically configure the maximum file
-> note size for ELF core dumps via sysctl. This enhancement removes
-> the previous static limit of 4MB, allowing system administrators to
-> adjust the size based on system-specific requirements or constraints.
-> 
-> - Remove hardcoded `MAX_FILE_NOTE_SIZE` from `fs/binfmt_elf.c`.
-> - Define `max_file_note_size` in `fs/coredump.c` with an initial value set to 4MB.
-> - Declare `max_file_note_size` as an external variable in `include/linux/coredump.h`.
-> - Add a new sysctl entry in `kernel/sysctl.c` to manage this setting at runtime.
-> 
-> $ sysctl -a | grep max_file_note_size
-> kernel.max_file_note_size = 4194304
-> 
-> $ sysctl -n kernel.max_file_note_size
-> 4194304
-> 
-> $echo 519304 > /proc/sys/kernel/max_file_note_size
-> 
-> $sysctl -n kernel.max_file_note_size
-> 519304
+I am going to quote Lee Jones who has been doing some snprintf ->
+scnprintf refactorings:
 
-This doesn't highlight anything about *why*. So in practice you must've
-hit a use case where ELF notes are huge, can you give an example of
-that? The commit should also describe that this is only used in the path
-of a coredump on ELF binaries via elf_core_dump().
+"There is a general misunderstanding amongst engineers that
+{v}snprintf() returns the length of the data *actually* encoded into the
+destination array.  However, as per the C99 standard {v}snprintf()
+really returns the length of the data that *would have been* written if
+there were enough space for it.  This misunderstanding has led to
+buffer-overruns in the past.  It's generally considered safer to use the
+{v}scnprintf() variants in their place (or even sprintf() in simple
+cases).  So let's do that."
 
-More below.
+To help prevent new instances of snprintf() from popping up, let's add a
+check to checkpatch.pl.
 
-> Signed-off-by: Vijay Nag <nagvijay@microsoft.com>
-> Signed-off-by: Allen Pais <apais@linux.microsoft.com>
-> ---
->  fs/binfmt_elf.c          | 3 +--
->  fs/coredump.c            | 3 +++
->  include/linux/coredump.h | 1 +
->  kernel/sysctl.c          | 8 ++++++++
->  4 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index 5397b552fbeb..5fc7baa9ebf2 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -1564,7 +1564,6 @@ static void fill_siginfo_note(struct memelfnote *note, user_siginfo_t *csigdata,
->  	fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
->  }
->  
-> -#define MAX_FILE_NOTE_SIZE (4*1024*1024)
->  /*
->   * Format of NT_FILE note:
->   *
-> @@ -1592,7 +1591,7 @@ static int fill_files_note(struct memelfnote *note, struct coredump_params *cprm
->  
->  	names_ofs = (2 + 3 * count) * sizeof(data[0]);
->   alloc:
-> -	if (size >= MAX_FILE_NOTE_SIZE) /* paranoia check */
-> +	if (size >= max_file_note_size) /* paranoia check */
->  		return -EINVAL;
->  	size = round_up(size, PAGE_SIZE);
->  	/*
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index be6403b4b14b..a83c6cc893fc 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -56,10 +56,13 @@
->  static bool dump_vma_snapshot(struct coredump_params *cprm);
->  static void free_vma_snapshot(struct coredump_params *cprm);
->  
-> +#define MAX_FILE_NOTE_SIZE (4*1024*1024)
-> +
->  static int core_uses_pid;
->  static unsigned int core_pipe_limit;
->  static char core_pattern[CORENAME_MAX_SIZE] = "core";
->  static int core_name_size = CORENAME_MAX_SIZE;
-> +unsigned int max_file_note_size = MAX_FILE_NOTE_SIZE;
->  
->  struct core_name {
->  	char *corename;
-> diff --git a/include/linux/coredump.h b/include/linux/coredump.h
-> index d3eba4360150..e1ae7ab33d76 100644
-> --- a/include/linux/coredump.h
-> +++ b/include/linux/coredump.h
-> @@ -46,6 +46,7 @@ static inline void do_coredump(const kernel_siginfo_t *siginfo) {}
->  #endif
->  
->  #if defined(CONFIG_COREDUMP) && defined(CONFIG_SYSCTL)
-> +extern unsigned int max_file_note_size;
->  extern void validate_coredump_safety(void);
->  #else
->  static inline void validate_coredump_safety(void) {}
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 81cc974913bb..80cdc37f2fa2 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -63,6 +63,7 @@
->  #include <linux/mount.h>
->  #include <linux/userfaultfd_k.h>
->  #include <linux/pid.h>
-> +#include <linux/coredump.h>
->  
->  #include "../lib/kstrtox.h"
->  
-> @@ -1623,6 +1624,13 @@ static struct ctl_table kern_table[] = {
->  		.mode		= 0644,
->  		.proc_handler	= proc_dointvec,
->  	},
-> +	{
-> +		.procname       = "max_file_note_size",
-> +		.data           = &max_file_note_size,
-> +		.maxlen         = sizeof(unsigned int),
-> +		.mode           = 0644,
-> +		.proc_handler   = proc_dointvec,
-> +	},
->  #ifdef CONFIG_PROC_SYSCTL
+Suggested-by: Finn Thain <fthain@linux-m68k.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v6:
+- move capture group to only include symbol name (not spaces or paren)
+- Link to v5: https://lore.kernel.org/r/20240422-snprintf-checkpatch-v5-1-f1e90bf7164e@google.com
 
-No, please move this to coredump_sysctls in fs/coredump.c. And there is
-no point in supporting int, this is unisgned int right? So use the right
-proc handler for it.
+Changes in v5:
+- use capture groups to let the user know which variation they used
+- Link to v4: https://lore.kernel.org/r/20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com
 
-If we're gonna do this, it makes sense to document the ELF note binary
-limiations. Then, consider a defense too, what if a specially crafted
-binary with a huge elf note are core dumped many times, what then?
-Lifting to 4 MiB puts in a situation where abuse can lead to many silly
-insane kvmalloc()s. Is that what we want? Why?
+Changes in v4:
+- also check for vsnprintf variant (thanks Bill)
+- Link to v3: https://lore.kernel.org/r/20240315-snprintf-checkpatch-v3-1-a451e7664306@google.com
 
-  Luis
+Changes in v3:
+- fix indentation
+- add reference link (https://github.com/KSPP/linux/issues/105) (thanks Joe)
+- Link to v2: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com
+
+Changes in v2:
+- Had a vim moment and deleted a character before sending the patch.
+- Replaced the character :)
+- Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1-3ac5025b5961@google.com
+---
+From a discussion here [1].
+
+[1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org/
+---
+ scripts/checkpatch.pl | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9c4c4a61bc83..bdae8a7ae5ed 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -7012,6 +7012,12 @@ sub process {
+ 			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
+ 		}
+ 
++# {v}snprintf uses that should likely be {v}scnprintf
++		if ($line =~ /\b((v|)snprintf)\s*\(/) {
++			WARN("SNPRINTF",
++			     "Prefer ${2}scnprintf over $1 - see: https://github.com/KSPP/linux/issues/105\n" . $herecurr);
++		}
++
+ # ethtool_sprintf uses that should likely be ethtool_puts
+ 		if ($line =~ /\bethtool_sprintf\s*\(\s*$FuncArg\s*,\s*$FuncArg\s*\)/) {
+ 			if (WARN("PREFER_ETHTOOL_PUTS",
+
+---
+base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+change-id: 20240221-snprintf-checkpatch-a864ed67ebd0
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
