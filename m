@@ -1,103 +1,95 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519F4194C72
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 23:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7A7194C72
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 23:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714434061; cv=none; b=gPmBVBHahuCVEhLxZ0HKbRdyNhCG3K4o/EaZ2hbOgDPCYVCMPwBlGk+xalEj1X6iSMW4tOx1bsR9Ago1+9PD6NRUgcQWmfZPlOEHwodg1PTxUhreqloeJ5ZtzrnbUBPoqOObCknuBSaPXs+tIH34hcQt78erextztMXoXZ5aqag=
+	t=1714434398; cv=none; b=Jxa7m7IIJP3Sy+pqC9Bk8qenjDoaQmzoXLXrL3yeV4hkCIGQmYvbOJ/AxuSDyToQLYJGMrdbnvkqIpqpkMwipUHIh3BX/n3RA0QHQeSERpSsOtDpBvkMxAuqFx70SDOz4WDAE8V6ijGYOCAoVBqzMtMz/Ssrc5b8S8hRzobF9hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714434061; c=relaxed/simple;
-	bh=9MO1ID6/Dni98gXftjcdPKVRf1xgWDaDWvJs3kq8WcM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vEXBdkHmdh5lnQN7+WT2kBsnyIx5US3sLocVAOX2ncdFaUU7rBpgFZDUVwCf8kHhrJ84ndQviQdmMauCSjWlEuD4vTYE9YXVZqOoxuNd+6rZ7ZAAUuyHYNMmIElcXJmRkUFN9y0A9ocIhrDZoxKtE8UDQPsctKXxetjgbZ1Vi4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ayMTo6Tm; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714434398; c=relaxed/simple;
+	bh=eegKWMCzrzmAYKZZgWikTznQIF2vb+MOg4eHgNWHlvI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kenXCO+lai1Eij4dFodVxG2MMLAZqlysXoOsdJl90tTKRZPKpF8D+MFAILaDwQd/kEl9nkJK3tRSAjV21kff6PGGkbUrGcA4v7N5BzYdGdl+152DxILH/AwoSNq5/3xpojKTX/nR1CRChgeONHkbpsPn/ihYQSmxocTtAN0pJXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eHSBEGvW; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ayMTo6Tm"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41b2119da94so41190565e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 16:41:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eHSBEGvW"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5d8bff2b792so5100873a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 16:46:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714434059; x=1715038859; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZLAA8r7OMJ9LI4fbMG9YMmoxVfYzPxAZqvpO6GyTP90=;
-        b=ayMTo6TmDbAQvPIU5ZVbCDyaWMSgjDmiLYIw+lHqdFudSQkzRaoSlsWxmLKD5Z8Tp3
-         SuIOCsNVLYoHPHtrkeIzm1/OFXPz5wiOsUUJunfio8KrdrIa5e8RpcXlPr+OBShieOBr
-         VU4Rw0wbUyqMSyORfvO7TziFuxmislvqIr2nIEj590lUTsj5NRK1VRh1mcSTkt10VmkK
-         yNyu2RUiydSDfleWykKZuZNE7+wYGNopDQlwDnXmUxbK6+hNQOXXfp2yjlY6YIGVgR/K
-         JV9srGtmJ1+AyatM+ieiEbnjYv55nwXN4ccDSNpNBKFTCZp4xa+YTGRjG+TWqBAu/lfT
-         MShA==
+        d=google.com; s=20230601; t=1714434395; x=1715039195; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VBKZZVwka2zaA5v6QzXM0lkoNOh+22WGqQQ6UgQ50cs=;
+        b=eHSBEGvWL15RNxpFN1o/z2TsCBOpM5PHzbyWILQxF0RW4NMO7OT7Cq9fHtRMNUe0/a
+         N1z9R6ipNPuqj0ovEDGBSg+k3W8o6pSHmOshm3DkN80xfwOP+jboIc9EydSgRyXY55oE
+         CeM5gF0xV+WH+gPvlWPjMYzu1URutmcL3+kgLrLkZrBHvVzjgMYQXDeIheRDQkjiDeJU
+         2kzUbmXYA5fKB5pJWmXrS9QY4NZNrEijtCDsSx29Ln8wSvlvJN0mXyVKQc9d5i7dB80P
+         5MPYLvBp+JV6B0wzEDppsc+K8oPjGiDhB/BqYmyYlMfzhPFQuWUOY7GzTlm5UYX3xKcO
+         e68A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714434059; x=1715038859;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZLAA8r7OMJ9LI4fbMG9YMmoxVfYzPxAZqvpO6GyTP90=;
-        b=ouEgZ0MSSZUJWZ3NwvxdL544krMXW11QFgUqYlnujkKsxNzTeWyjfWoIOaUVWvjyH9
-         pLltUtQY6GGPe3kEuk/CT1EFYfZMhFsaH1GykZn8G77UGzQh0/P0B+EkHNAOkVnRixBG
-         i5OKaR75PcGepCX6qIRX50YFaUW8Tm/Y19ZPrG7e5Wu3nK8MKHY0lCMYvJuVwKZl6x29
-         HDMfiOGJmgyoPy/7LwkFJtro3AsusJ+0LWQK+y9LViyhzbDD3fnGRURSd7B8yCHXxEdk
-         caZhC43JpeMDtH/fTGT/hz4kcfmqgdM75O3tXi+ez856/UJdXIavFl5sAANYb4p0RcE0
-         7hkw==
-X-Gm-Message-State: AOJu0Yxv453b+rMZwd23OmKlBdxrFDDlXMRlbUAAQ7/zlkfcUdSAUliu
-	rOwsGcdZelcgm9fVeaOEpddIOycoo3NbYedKZzV/d5pe3I1NuvZl5u4YBfslOmM=
-X-Google-Smtp-Source: AGHT+IHw76QNirOES/5P2hd6Dx6Wf7Xfab/S+qu6ZJw5C+dTUqXBmmJDCE8Q4AXh+LWLhhp930kfsQ==
-X-Received: by 2002:a05:600c:458e:b0:418:dbad:c57d with SMTP id r14-20020a05600c458e00b00418dbadc57dmr687758wmo.28.1714434058600;
-        Mon, 29 Apr 2024 16:40:58 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id z10-20020a05600c220a00b0041bef325c4esm5309725wml.1.2024.04.29.16.40.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 16:40:58 -0700 (PDT)
-Message-ID: <ce8b3277-a371-41f5-ab61-181a05f38058@linaro.org>
-Date: Tue, 30 Apr 2024 01:40:57 +0200
+        d=1e100.net; s=20230601; t=1714434395; x=1715039195;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VBKZZVwka2zaA5v6QzXM0lkoNOh+22WGqQQ6UgQ50cs=;
+        b=oDWuDtBTdwpGvPK16A9H5RHSsQrqOYMwKzAo/b2DCY/Pzk9MfBr3HD9FqrxDfKE/Vq
+         VHW5qLqkOYZ8NcP5gePaZ2TD5Mo+lSPhtsNzpR5IGqfmpbcQhJ6U0Mqi85wJNd5DNe6C
+         hf7tgTVubSR1GFCWiPhusTTScBXC7TpUg9YcEdCeo3qIQhX0n7RWAXP9XlFFPG8DFobu
+         2q/SaPgziLEBK556YGOcQcfQknWtv3B8gCA7DBsbTQS0aZqLpfCnnHDvBgbR6//gPBqz
+         PjHRL8ShAv3h3daNtGBESS8tsPxr0SLOvoaB2F+/YNhjGzDEDHrnXmuzs/ewzCdUKp1m
+         d8Jw==
+X-Gm-Message-State: AOJu0Yyl7seOM4lEnDlavir7RQbG/sKXti14S4cipCZDfH8EjtevTFKq
+	QGfX6kzLNMUSMI8mvEz7+hdWe5LYsGmSB6yiF5pIYoVkRYGY9vqEMoGACOFCwFWiAjz+kZ35pO6
+	X208M60EBdtij+7hsiMnVwGgwVPfQd1Psl3oUpym0sXG+YHfZarjnPrxIGrr6LZc4PBYbvkSFkO
+	D/oTg7Ic5BQ7vW32OxaPHJpH10CygDTFbtLXSnhVyW
+X-Google-Smtp-Source: AGHT+IHmoAnjMd09Wlv6UL5QKa6QxWL7QFhCXyeHDXlfoY9FtEuKDfIaCrjFq4GlMUJN9085xhFmBcBtaf0=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a63:f508:0:b0:5f7:9783:12ed with SMTP id
+ w8-20020a63f508000000b005f7978312edmr49147pgh.10.1714434394810; Mon, 29 Apr
+ 2024 16:46:34 -0700 (PDT)
+Date: Mon, 29 Apr 2024 23:46:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Add OSTM support for Renesas RZ/V2H(P) SoC
-Content-Language: en-US
-To: Prabhakar <prabhakar.csengg@gmail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Chris Brandt <chris.brandt@renesas.com>,
- Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240322151219.885832-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20240322151219.885832-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Message-ID: <20240429234610.191144-1-edliaw@google.com>
+Subject: [PATCH] selftests/kcmp: Remove unused open mode
+From: Edward Liaw <edliaw@google.com>
+To: linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, Cyrill Gorcunov <gorcunov@openvz.org>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kselftest@vger.kernel.org, kernel-team@android.com, 
+	Edward Liaw <edliaw@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 22/03/2024 16:12, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Hi,
-> 
-> This patch series aims to add OSTM support for Renesas RZ/V2H(P) SoC.
-> RZ/V2H(P) SoC has 8 GTM channels.
-> 
-> v1->v2
-> - Inlcuded Ack/RB tag
-> - Updated commit description for patch 2/2
-> 
-> v1: https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240318160731.33960-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+Android bionic warns that open modes are ignored if O_CREAT or O_TMPFILE
+aren't specified.  The permissions for the file are set above:
 
-Applied, thanks
+	fd1 = open(kpath, O_RDWR | O_CREAT | O_TRUNC, 0644);
 
+Fixes: d97b46a64674 ("syscalls, x86: add __NR_kcmp syscall")
+Signed-off-by: Edward Liaw <edliaw@google.com>
+---
+ tools/testing/selftests/kcmp/kcmp_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/kcmp/kcmp_test.c b/tools/testing/selftests/kcmp/kcmp_test.c
+index 25110c7c0b3e..d7a8e321bb16 100644
+--- a/tools/testing/selftests/kcmp/kcmp_test.c
++++ b/tools/testing/selftests/kcmp/kcmp_test.c
+@@ -91,7 +91,7 @@ int main(int argc, char **argv)
+ 		ksft_print_header();
+ 		ksft_set_plan(3);
+ 
+-		fd2 = open(kpath, O_RDWR, 0644);
++		fd2 = open(kpath, O_RDWR);
+ 		if (fd2 < 0) {
+ 			perror("Can't open file");
+ 			ksft_exit_fail();
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.44.0.769.g3c40516874-goog
 
