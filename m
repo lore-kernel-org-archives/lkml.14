@@ -1,146 +1,128 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2037.outbound.protection.outlook.com [40.92.46.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76CF4D5A2;
-	Mon, 29 Apr 2024 12:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714392125; cv=fail; b=ClUlz28tKFnlWgxVlmsyDI/G6u+yQBe79d90RLHhIGgc6n3k1015BVHp4ks0tj0jWQuwvc0+VIfgHRkwbFf2XdEvcjrfjYQz9HZFJHX5vGe7U6SeTxjfgtAurbBmDwPK3ExES54uvwvFp71lBVPCLmP5LGL4Gp6ufrJZGywKoz4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714392125; c=relaxed/simple;
-	bh=YDh7WctT2SJpU9q7CEY//29XCijyuvP/EnZCQWiUdnM=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dlKR95FmSPeixt8+QDe6iSUA/LiBJvoxXuT306CRcZFkcAu+e2QuaQtSTXDpRPFKyNq230JRpy5BZXw7L0FfnGsimx6SrgHkGvSB3Q2Rpc9AmFbY5NqolAL5+6e1oCggItO+mnUtGPsYQokCvwjKvfJiXVpu0e1Gq7/dTFVJMTg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=HTh7Yj1i; arc=fail smtp.client-ip=40.92.46.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D448953383;
+	Mon, 29 Apr 2024 12:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714392151; cv=none; b=Xpt3+bEs7o8meSIQ6hUAqOfCT5X4hffYfw1RFHpgUU9JXw0A4hSl5KKoLdVC9rJyD1TXL4SKfL0ygyeQ/BUz41s1FQ06e2HDevy1AZdV8exHPC/11SH2QJ9TcGj5fyS8/3oOKhP8oSeIxl3PTVbeeM7gj2jSY0S6+Lsc05qbQrQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714392151; c=relaxed/simple;
+	bh=y+5yRp4hZZlhcS8Hnh7ujBkkvEUXh6QrchD4YdBX1c4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bZTAeccMMiY6wsEGnEb3/7azF8tD2wiHWO68ZQ/34elF4SujY3sj/Rk92WyUW3yU0A3a2k8oB5SRlISFbXOlXUz7mDVlhb4f+Fj8KzzfXVFzySuZEx/oXEpahp5Fn7GBn+uONoSpyTL3OzdaT4h1rU9KQugTct3NJXy+dxdwYgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LWhZaw0X; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="HTh7Yj1i"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G2CPp2SqwJ9OP9t/WBfU+kQiSasXULimQhNV1jpUl1iMsyHRKExGN8ykfws0HkVIgssJXLXW5aEE41xlzcZRQ1ThZ48qfGwlXFgvdr5c7efmHzWzX1wy2cJ36lgVi7icmPHj9wWMLtBEZzMOE38qt9BCWVuydRwua/C1vDQLpykrGr0SaAlIX1qQ4XoTvMTBB6xNkKWTbrQFfwQasssE96KSSQyIpgDo+GVbnEEU9Li/Rwn9KpFCfHc7sBnbdiexhMjMykg4EO20bNcflzI/o5yi80sakwrA7vch9DNh/gH+HhLVO8SX8JhkMbD0LEyWzBVh/hEYPpmDAWI9FdZRpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qMmIiNT4JeFmaRpD+/fumuSYavXjz7QLk1/BI5/wU+c=;
- b=g5McVnUbxNA71WVpCKGckEwAeUud610IJQz4A+8gR9c8QZKdF3RGOs8IXWlw+u6amVYo4scud/cY9V0wJr37ajSyny5wsx7VAMgeL1JnaqqB4L1eeMnguuYmMBZdiGIebDd7CDoPV8HfCAo0cBb6539oEOX3aX5kqyLE/LF7H4Zj9lNPhl7GiSsm0gWlnLFehLfcLEt2L3cu3Pfq4Ncb2dGXpYmcON4whtPvuXuEEG0kSKE1u8wYtDS1v0ZuB0c16sa6OpoIVG2tzAU3rBOZgy0BBJeI7NLYHf5XYcJ4PdZvpmBjxcXymG5gpaRZQ76oeQS3zklDPtD+2pyJ8y04gQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qMmIiNT4JeFmaRpD+/fumuSYavXjz7QLk1/BI5/wU+c=;
- b=HTh7Yj1iX6Wy5MXNHdWgQWfNFRY2M6hLzFDB5k+ISC0gi5NFBtpvQvUcUUkmVRGDyn3GdCR/vjt4Y38cuj1UusK/tNgyMXepfuVmVt0q5PKmPKvxVxovfj3j2vL0MsqkSUdhjeEGbo1Y1nVw9gBXHmB/HRLinzW1djZ/qTFTGY9vY9c2aeY0EE24iXnJIZUVpweZJktlnHxzOwacwO71rQLMudoGdG1KzAnq2h9R8GsEdjuF43GEaHwrlNHb6p5nP5tNDbV1aEYiuB2gpqwaaWfthwd2kE8Zuz7qPrqX7nt5aC30TcCiBdfrDPl3kmqrA+aCRZgCfBR5L0FH/49WjQ==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by LV8PR20MB7474.namprd20.prod.outlook.com (2603:10b6:408:222::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
- 2024 12:02:01 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819%2]) with mapi id 15.20.7519.031; Mon, 29 Apr 2024
- 12:02:01 +0000
-From: Inochi Amaoto <inochiama@outlook.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH v3 0/2] riscv: sophgo: Add SG2042 external hardware monitor support
-Date: Mon, 29 Apr 2024 20:02:27 +0800
-Message-ID:
- <IA1PR20MB4953D1C509CC7F23620CCA01BB1B2@IA1PR20MB4953.namprd20.prod.outlook.com>
-X-Mailer: git-send-email 2.44.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [sykP7YURQ61I+OrrzXNHKwk5htWbf/WRIfOEZniSYaE=]
-X-ClientProxiedBy: TY2PR0101CA0017.apcprd01.prod.exchangelabs.com
- (2603:1096:404:92::29) To IA1PR20MB4953.namprd20.prod.outlook.com
- (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <20240429120229.858167-1-inochiama@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWhZaw0X"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-571ba432477so4505635a12.1;
+        Mon, 29 Apr 2024 05:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714392148; x=1714996948; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GLFNprZuwHsZtlRkA4qR4RqYKlel9cjffFWXRNhhgPc=;
+        b=LWhZaw0XMiw565y0MyIEcFalbvRHGcpZXDoZYn3+S4SJxQnhtDiFGLcva1Id+uahns
+         JVFPnJ0m/EFA/l2xENsBNeVUbLFjVAuxYGX/cKQmq64NEnrI243BiGIEU2Vnthym2faZ
+         4l0neufTvUgDukl+C1Rs8Vk06oXKJMMueZHEQw5xNz56/O42isaMHPSivmb+aBhK3wZa
+         gW6pMvLSS94UEedDgCpkFk8SIjsXAAXJu2vmso/cxllKzixxd1ZAdtR7iXDHBuEvuOT/
+         Ey2duNswZdqQR2Qn0atDcQpqK4OA9v9V0/ZfiyxXdnNJ1gveh6w4iY0jJaaZ1HSZAXNs
+         s+6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714392148; x=1714996948;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GLFNprZuwHsZtlRkA4qR4RqYKlel9cjffFWXRNhhgPc=;
+        b=cpxHmwKi3iAOwL4Pe4FKZop8n1S24ZxLxVlBn1vx1qe5bVVTCqs3BTSmOkLuAYcFd8
+         0C5xwtU43A0fGsGPy4g7RL43LfnBy18kmaJe/dQ7FV6DUk+gDLD9lgy0hoU7YBI0VoBk
+         5fOw6CU3hDwWLIGTuA7Fmp5idP28+lfFxbtW/+CgZwzDxqLKCXM1F42lpSvgielBlOhY
+         T0oPI2PSQR7PfZhdaCIs+Q/LITd5ya7v6Mo3fr+1QkbsBhOqXP9faI4KpMNkKBcY3zbY
+         oeSF/bpU3/nojgaHN/hgbd8OizffDhQdRfyaIcmVTIq9dT7j9KMl0VwiqWPzmIbTQ8qe
+         dtvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFHSYPC82QGnjHi9V1autPXVF72G3gq+sNbAv6rriyqUthodIDql1UEoPHDUy9fcxLbaJb5pPZ/8yXXob6ejj4AEHVJx+wValwGgQaUKSnmeuKhoTOOktg0a1nMPlty7RpnpCnsSeT
+X-Gm-Message-State: AOJu0YwFRdRXGofv2+5INU4/C+KR232R3Rd+hzB2E+/WBSOwa7za7EFi
+	y1DmT20Pl+3kgeK0tZ5NkqH/75oLq/0VmuTB9go+kxJ9cqlhSa/E
+X-Google-Smtp-Source: AGHT+IHCwhcy1snUeqwen+Ie6UtT4Ir4L5ehHoHd1ao15B6fwE9gQFFI/3DtMTy2yR2SLjPrJk5b1w==
+X-Received: by 2002:a50:8747:0:b0:572:71b2:e200 with SMTP id 7-20020a508747000000b0057271b2e200mr3427265edv.22.1714392147757;
+        Mon, 29 Apr 2024 05:02:27 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
+        by smtp.gmail.com with ESMTPSA id 15-20020a508e0f000000b005726e5e8765sm2640289edw.3.2024.04.29.05.02.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 05:02:27 -0700 (PDT)
+Message-ID: <1d9cdfa05150a389433aa399b44fcbcff5bed258.camel@gmail.com>
+Subject: Re: [PATCH 1/8] iio: adc: ad_sigma_delta: use 'time_left' variable
+ with wait_for_completion_timeout()
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-iio@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 29 Apr 2024 14:06:05 +0200
+In-Reply-To: <20240429113313.68359-2-wsa+renesas@sang-engineering.com>
+References: <20240429113313.68359-1-wsa+renesas@sang-engineering.com>
+	 <20240429113313.68359-2-wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|LV8PR20MB7474:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8c0590e-6692-4b16-2abc-08dc68442d5a
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|1602099003|3412199016|440099019|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	zhYBmxOvTpSFrdc9s9SVMA4er3YQo0EIAWKh8B5++QjSc8us8S3e9j//szS0dDy6UHxda5SxLmRfOLl7VXGMjLYZzDtwQHRmR99SGmt4ZTwvgXXEMD1RNmz4y3bhX+wNnspSQSccXXG2lm5EKaPoO2tUwzRl1/xOEU8xo61vDrMS58uGlyzudVucjmrs4wwBKu3ptzpE7R7MzlNngaRvUXHfJlGjCOgOvnNm0+2KTdibBTiEYsrITwmGK3HnJN5x68ETOlfNGv3hggPFRvLWQAcQxKqbh4aoz/vixaSJR6M+Iq/zVjnRANi6LANoHXoOdEREocATcFWmHJFXqVHIow6MFDD1FjnYk9xbB+UoESVjIMgQ7j1v7J9fwwTyQfnjtVxDG/fORTJzM/zrUGx/S6hu8mvVgo8LslUO8aYRBsDutPIspe94STwQllWcgVeMhO7kx5wAj1CCJBl1gHfAGQj54rNM+hqDPQnk9CkBxJLxkvSLSiyNiz9KRsANDL3/RYQJne5lsHhKF7UlCV9j//priJt2FyHn04Re62CG1/jsZf46rI1I+6AT8IdYW6xJ/1GNKjPiz90IKS2FVWFy9XRckt58YRf73q8Mz6fgLitZR7wqFHJkqsTNWdm4PJxw0ntQ8ly7LFz0h/NBVvMXCZudxUy/5+zS9hT1Wb+iQdJzRe0rMYLPTHqzT6W322T7hS9dDfPtG+609F/XItMo8BLruzW8S+0HyTCHzDGRQJYB2ssaFT1ux+3M/l0QU+Uo
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NHdsXmPmTKdPtupiL2/yRxwf4HuzCingOrfzAZV1RvoBlEjEUE4WBKlrT40L?=
- =?us-ascii?Q?ibxkfZ/Y57V/a4yqg7Wu+0cJyx4nuDyZ4xyN6rwWx7ZwnT4Ma0Au4ACoajdP?=
- =?us-ascii?Q?utHIizw+zfcfvWhxaC4D7AXYDUAgjy3SJK7bfJRQmS4qZTyEwGDQsonbPbd5?=
- =?us-ascii?Q?WYxbOH+2vcfzR9IK2shfCx1bo2Q45GuQqKxTbJRXWuavADhzKobF/vpjRmNq?=
- =?us-ascii?Q?cJ3z/r0gsvlcH+cFEnF77/6MU2jnBhvD87CQVsFDuCauQUm2dxU91mhfUps1?=
- =?us-ascii?Q?Jdd4CSlOuWa4WWRWZqly0kKfKM/jjOkYF8oEsHyIkd/QbFmVnJO5UQxqMC0D?=
- =?us-ascii?Q?UaeM6OmfFNymdL4tAF9WC/7sSaLuZuVTEveIrmGUowIFdhdoBrIuT7UjvUV1?=
- =?us-ascii?Q?desyNmKGDzp5URlcgTEc75Tz3E8FICsyxN20iJtCnlDCkvReuXPhiMAswMnt?=
- =?us-ascii?Q?y0PeHS9c94yIlpl5cfPe+ZwRlPhFqIHWidWvel1mh2ROywMqDP855RtVFUKO?=
- =?us-ascii?Q?2BZ1TetEHYQZQbvY9m7WmhbL86EPvK3vxjM4ct2peHvLwwqZeYa9e+YkvMIW?=
- =?us-ascii?Q?uUpl8LgpUHRGOFXQgl85L92Y/zPB9DbRrxGl1Jn7VdO72cHotml+IhPgCyfL?=
- =?us-ascii?Q?f/G9KWq4n+epO5bQdCPvsVBBbHGXl6zM5yrd8xySEtauxRjhyzDDz137I5B7?=
- =?us-ascii?Q?NMopBhyjgAJzktS2/9J4dC4WiklSJPQYTql0atC+BHumN8GEeDNgOjqANz9F?=
- =?us-ascii?Q?18FQyYcdfa6O32mgkNBMxBn+AbEMvQvF23ZJHJhD4fmqYz8o4shCRc+5FL5q?=
- =?us-ascii?Q?5s0WFgXxPsWzG4uJpC5Uml4pz/2H15LUCcLiWWKnLvfh27QlbfU4exAci5we?=
- =?us-ascii?Q?PEZ5ZDEu7rBKattOIvoZsI7IXem3uS7tVUudR7mM9YybngQSLAEL4oTPlust?=
- =?us-ascii?Q?tgzZGq8yrWClWWETmq2VuTi5O/8vOhH/yPcEj61q0kwklcxwyerLyxnEmYnF?=
- =?us-ascii?Q?96bOjZHP0wxv/ULjXWr1H5loHsKWGZYQkc+SZ5RlIGkrE9sbRoZKou622rE/?=
- =?us-ascii?Q?kAn8h8WtEQaIWeCoNzhoDJGbtDZOS2AbSQ6kvab+FxmmjKymGLafvZYlvhtE?=
- =?us-ascii?Q?5e6TlVHXA4rmS8Yz7La6GEpFoRNO1zJ4i4b3oKhdiNwzTwZLyMh2vagN1ndx?=
- =?us-ascii?Q?6FzVOUMrV9fWUytPrgn8fJxEhwkKcxMHA+byv6hiPcmnoDmY0d6AkTN/KC3H?=
- =?us-ascii?Q?3lT+MLpqcmIGtYvW0zGB?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8c0590e-6692-4b16-2abc-08dc68442d5a
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 12:02:01.0275
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR20MB7474
 
-Add support for the onboard hardware monitor for SG2042.
+On Mon, 2024-04-29 at 13:33 +0200, Wolfram Sang wrote:
+> There is a confusing pattern in the kernel to use a variable named 'timeo=
+ut'
+> to
+> store the result of wait_for_completion_timeout() causing patterns like:
+>=20
+> 	timeout =3D wait_for_completion_timeout(...)
+> 	if (!timeout) return -ETIMEDOUT;
+>=20
+> with all kinds of permutations. Use 'time_left' as a variable to make the=
+ code
+> self explaining.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
 
-Related SBI patch:
-https://lists.infradead.org/pipermail/opensbi/2024-April/006849.html
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-Changed from v2:
-1. fix bindings id path.
-
-Changed from v1:
-1. Move patch from soc to hwmon.
-2. Fix typo.
-
-Inochi Amaoto (2):
-  dt-bindings: hwmon: Add Sophgo SG2042 external hardware monitor
-    support
-  drivers: hwmon: sophgo: Add SG2042 external hardware monitor support
-
- .../hwmon/sophgo,sg2042-hwmon-mcu.yaml        |  40 ++
- drivers/hwmon/Kconfig                         |  11 +
- drivers/hwmon/Makefile                        |   1 +
- drivers/hwmon/sg2042-hwmon-mcu.c              | 531 ++++++++++++++++++
- 4 files changed, 583 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/sophgo,sg2042-hwmon-mcu.yaml
- create mode 100644 drivers/hwmon/sg2042-hwmon-mcu.c
-
---
-2.44.0
+> =C2=A0drivers/iio/adc/ad_sigma_delta.c | 6 +++---
+> =C2=A01 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/ad_sigma_delta.c
+> b/drivers/iio/adc/ad_sigma_delta.c
+> index a602429cdde4..40ba6506bfc1 100644
+> --- a/drivers/iio/adc/ad_sigma_delta.c
+> +++ b/drivers/iio/adc/ad_sigma_delta.c
+> @@ -206,7 +206,7 @@ int ad_sd_calibrate(struct ad_sigma_delta *sigma_delt=
+a,
+> =C2=A0	unsigned int mode, unsigned int channel)
+> =C2=A0{
+> =C2=A0	int ret;
+> -	unsigned long timeout;
+> +	unsigned long time_left;
+> =C2=A0
+> =C2=A0	ret =3D ad_sigma_delta_set_channel(sigma_delta, channel);
+> =C2=A0	if (ret)
+> @@ -223,8 +223,8 @@ int ad_sd_calibrate(struct ad_sigma_delta *sigma_delt=
+a,
+> =C2=A0
+> =C2=A0	sigma_delta->irq_dis =3D false;
+> =C2=A0	enable_irq(sigma_delta->spi->irq);
+> -	timeout =3D wait_for_completion_timeout(&sigma_delta->completion, 2 *
+> HZ);
+> -	if (timeout =3D=3D 0) {
+> +	time_left =3D wait_for_completion_timeout(&sigma_delta->completion, 2 *
+> HZ);
+> +	if (time_left =3D=3D 0) {
+> =C2=A0		sigma_delta->irq_dis =3D true;
+> =C2=A0		disable_irq_nosync(sigma_delta->spi->irq);
+> =C2=A0		ret =3D -EIO;
 
