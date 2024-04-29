@@ -1,104 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352EE84E1B;
-	Mon, 29 Apr 2024 16:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990AE1DA23;
+	Mon, 29 Apr 2024 16:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714408598; cv=none; b=n4TYRqOLE863M5/+dOKeIV0NxB7WEfr7XZnWatqHCSUW3ilkl/q9nK9G9iDR0QS98TWArBjvEP8kqrj3hNLMwT9wogxX+4IKFL3U+bHk+/BUFVgft5mWDRLn8aUL0fHv9Wysq1Xfs9PYp5rOHdzw2OjzvQoA0AZZdjn2uhW4Ko4=
+	t=1714408622; cv=none; b=nUkbmstQNwSKZs93600Z0HEVm1H2Aa5TrsWv/npm+t67nuTlveSChtIelhCwNV5VetbyNdj3b8Xspjw0Ua/xB034A6xWtJ+L6+iPuSebdzlHoPqIUyyVTcdrfS4P4V1QqpEule4qs/2lgsFWwUZbcbXrShQix4uWI73Gvd90wmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714408598; c=relaxed/simple;
-	bh=fgSKb2lwvDBvPMmVmRJwxhth9YzFQDQdsEr9HfbL5yE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iibVxYdeWYCp+ibUpkPiYDdiXuSWw1fdp7e5pwIRY4zDH8qwxJU8hmq4cCBQPelHS5hxxMk11WlDszwENfJn0HM/WJpMZ28Q2gRnHOSj9v3hoZ1i52HcJXnNN77tlhfgU3L68OQr/0yNoZDZRq3AofEGCCorpj1UCIcytHkWxn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDHwpBwM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714408622; c=relaxed/simple;
+	bh=GgbnJ2uyHhln7lnt6LGmn6tsCC7xILAAm0bvDzHW3Qo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PuOMDLS8CALiqbUiUysvMihB8vV9+alRHj41Eawy/MbhVDNw75qIAKw1Y9lYNAcgKyDkmLvOKIsC+KjYwh9hlDtHkyfWByITzFz/4vmMBx0xWsY5+Il5a9ju5/rhaha35hJKWFFt+NQIO6qpYRLjKNNYlcILINLWp6ntdZXLukc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=lpAw96FC; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDHwpBwM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA721C4AF18;
-	Mon, 29 Apr 2024 16:36:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714408597;
-	bh=fgSKb2lwvDBvPMmVmRJwxhth9YzFQDQdsEr9HfbL5yE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WDHwpBwM0YY0dIOhxTwSvBih1XHfmxFemrNC7H1vsZlRU9dtpxx+3aGi8e6qGXSet
-	 ++0V0LqyYXCYxdCJbv/FJtIqcUxL+tIm9bLc9lziMj1QFk6JJo9oG4MP7R25D9+gWS
-	 GoFcqyCB2oYcF45xMN1Tfvgf6YxbNmKJTXlPFDTgsNektWqutM5oXTGFPrsX+xLBsc
-	 9HAYUsH4KqkjGYt9dy3SWzopNfYlE9svOuR7WTvN12yJqF15MLOSDDKSq6Mj80iLUw
-	 RswJOryh47sAEEpxriPPbqALSbvVRmP2UmXWDXO12grOycXywOeSNeUgx3EO6hy+17
-	 fbvSEa5+nanbg==
-Date: Mon, 29 Apr 2024 17:36:30 +0100
-From: Simon Horman <horms@kernel.org>
-To: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, saeedm@nvidia.com, anthony.l.nguyen@intel.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	andrew@lunn.ch, corbet@lwn.net, linux-doc@vger.kernel.org,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	horatiu.vultur@microchip.com, ruanjinjie@huawei.com,
-	steen.hegelund@microchip.com, vladimir.oltean@nxp.com,
-	UNGLinuxDriver@microchip.com, Thorsten.Kummermehr@microchip.com,
-	Pier.Beruto@onsemi.com, Selvamani.Rajagopal@onsemi.com,
-	Nicolas.Ferre@microchip.com, benjamin.bigler@bernformulastudent.ch
-Subject: Re: [PATCH net-next v4 02/12] net: ethernet: oa_tc6: implement
- register write operation
-Message-ID: <20240429163630.GA516117@kernel.org>
-References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
- <20240418125648.372526-3-Parthiban.Veerasooran@microchip.com>
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="lpAw96FC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gWMCZexn4RteI9COZUts2t/BaJMozgbrr3bR8ZgmLfQ=; b=lpAw96FCpWs8KLgHuinZjVQwel
+	FMOwKp/HirLlZeoYNDUWYwzBIRSsEOKJxuXXUBxISMLkPV/drXd0FQErvfVJeYHMDqYiEGvKXYieZ
+	gfxA0tWQUnHX1M4SVWTnQUlPhZBnCMFrOl57I/Ul0uqoJpoLzJ7+dOv1xnPawiH76utFaxufFLpMi
+	O2ViGlM7NBHodI8chHcaUHm6V4aBPk+8y96ivN02XBOxlk/KpN1FuV3iu19A2slDikPJZ1s++1F4+
+	POghbukADBIkXTd6+209dOudHj5PZEXMEXO7OCJzF49OnKsgthG3mzzq6qR0vI1AO5uI69YGI5ETg
+	f97tAsyg==;
+Received: from [167.98.27.226] (helo=ct-lt-2504.office.codethink.co.uk)
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1s1TNp-001jlJ-AS; Mon, 29 Apr 2024 16:57:37 +0100
+From: Ivan Orlov <ivan.orlov@codethink.co.uk>
+To: naveen.n.rao@linux.ibm.com,
+	anil.s.keshavamurthy@intel.com,
+	davem@davemloft.net,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	corbet@lwn.net
+Cc: Ivan Orlov <ivan.orlov@codethink.co.uk>,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH] docs, kprobes: Add riscv as supported architecture
+Date: Mon, 29 Apr 2024 16:57:34 +0100
+Message-Id: <20240429155735.68781-1-ivan.orlov@codethink.co.uk>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418125648.372526-3-Parthiban.Veerasooran@microchip.com>
+Content-Transfer-Encoding: 8bit
+Sender: ivan.orlov@codethink.co.uk
 
-On Thu, Apr 18, 2024 at 06:26:38PM +0530, Parthiban Veerasooran wrote:
-> Implement register write operation according to the control communication
-> specified in the OPEN Alliance 10BASE-T1x MACPHY Serial Interface
-> document. Control write commands are used by the SPI host to write
-> registers within the MAC-PHY. Each control write commands are composed of
-> a 32 bits control command header followed by register write data.
-> 
-> The MAC-PHY ignores the final 32 bits of data from the SPI host at the
-> end of the control write command. The write command and data is also
-> echoed from the MAC-PHY back to the SPI host to enable the SPI host to
-> identify which register write failed in the case of any bus errors.
-> Control write commands can write either a single register or multiple
-> consecutive registers. When multiple consecutive registers are written,
-> the address is automatically post-incremented by the MAC-PHY. Writing to
-> any unimplemented or undefined registers shall be ignored and yield no
-> effect.
-> 
-> Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+Support of kprobes and kretprobes for riscv was introduced 3 years ago
+by the following change:
 
-...
+commit c22b0bcb1dd0 ("riscv: Add kprobes supported")
 
-> diff --git a/drivers/net/ethernet/oa_tc6.c b/drivers/net/ethernet/oa_tc6.c
+Add riscv to the list of supported architectures.
 
-...
+Signed-off-by: Ivan Orlov <ivan.orlov@codethink.co.uk>
+---
+ Documentation/trace/kprobes.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +/**
-> + * oa_tc6_write_registers - function for writing multiple consecutive registers.
-> + * @tc6: oa_tc6 struct.
-> + * @address: address of the first register to be written in the MAC-PHY.
-> + * @value: values to be written from the starting register address @address.
-> + * @length: number of consecutive registers to be written from @address.
-> + *
-> + * Maximum of 128 consecutive registers can be written starting at @address.
-> + *
-> + * Returns 0 on success otherwise failed.
+diff --git a/Documentation/trace/kprobes.rst b/Documentation/trace/kprobes.rst
+index e1636e579c9c..5e606730cec6 100644
+--- a/Documentation/trace/kprobes.rst
++++ b/Documentation/trace/kprobes.rst
+@@ -322,6 +322,7 @@ architectures:
+ - s390
+ - parisc
+ - loongarch
++- riscv
+ 
+ Configuring Kprobes
+ ===================
+-- 
+2.34.1
 
-Nit: I think you need a ':' after "Returns" (or "Return")
-     in order for kernel-doc -Wall to recognise this as a return section.
-
-Likewise elsewhere in this patch(set).
-
-> + */
-> +int oa_tc6_write_registers(struct oa_tc6 *tc6, u32 address, u32 value[],
-> +			   u8 length)
-> +{
-
-...
