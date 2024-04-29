@@ -1,112 +1,88 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B46134BF;
-	Mon, 29 Apr 2024 07:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724B0134BF;
+	Mon, 29 Apr 2024 08:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714377488; cv=none; b=XOqd87Zrxi10ZYHMw4qi5yfs/Rcgo3A4w1LL+gFYW5gUVltyoQ6zlih51O22O8fm1Tnq2pGirkWQRbA/nMLYYv6ZZtp+b1KxbgR1YZRypb7iBYv2hD9XLPqICEzJ7a8bT7mqODpHkjpGULJIi7Tq/WL1AAgs1ZVCb/UKCyY73Hc=
+	t=1714377642; cv=none; b=AtZxpKuevIS3FB8+m24yZy4RBIX9rQw+8jA8Sgqyzg5UPJNla7446S1Tquy6hXVUGLMk6sVGDrwFiB+QWdQAFl1le3Gu4kUeHAucL/azs1U49uI8ZfyTPIE0en33w/lUUKQRQN+Jv5fIehLk1chSr4ol5vyzu+tdyNYJagAJAzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714377488; c=relaxed/simple;
-	bh=xYM2yXWnRhqySCaj8k34zqA1nOe3QZmh3OR/nz2Lfss=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y+a1SxCGCM7j89kPg2aSmbCGbRhosWxd8HBAYgP2q4s9BWcsOfwO1efTGzI2fe9W8dv2lEQdXCUKcVPCSWos0cEuUrKm2fa3kmXW/AN28ilwk7LcD/POq21Hhu7JFO+i1BO4pMyDeDLOJB0C6pLNfpE+3W8i5+qCVTt5+V+T5sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YIcFffME; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714377642; c=relaxed/simple;
+	bh=ytNJzJus/OX0eTS5w3imJL1s23mJSeiZOAp1S/ZJ+5Y=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=VKw//VVqMZolOC/+cWkdrKnViVCe+n7mQH36puHzmYOUIJVB5PMBqgLkTFvzv8oN/amJmfPDDieNT4cHP49No3Z0O7JaD3CtI5dKkv6b8zk5bcj3b+Ms9UTcBfJQtmRWdreyb6q/8+z0uJTk4LVob1D+ahGknJWZKb9VuzgSEN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=L+UCv0iJ; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIcFffME"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41adf3580dbso23261875e9.0;
-        Mon, 29 Apr 2024 00:58:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714377485; x=1714982285; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xYM2yXWnRhqySCaj8k34zqA1nOe3QZmh3OR/nz2Lfss=;
-        b=YIcFffMEYRPDlYaxvtquul+IbmqRUsE6J4yvtU7trJmU7vKOu+bDq80uQj8R9P+Dbw
-         +o5ilkUmTaEy3c8zdBO4WvVxM7Ul634TIosTRqieLWXF9LZh8mnc+qhGU7JwJYIdtXSt
-         GfiHGodRjr3+QHz7SaAeLp2B1r1L86RL4CbHINtMAOe7+LfoaXfvNbC1UiySfx2ZlN1k
-         rDyrL3MWgTQ75fS4f7O4HzXH8uSWc5CY2zrL7ss2jW2ROBhL0IFspjeyNloQqIFb92ig
-         4O5Cy9M/yZc4V8DLY230z3Yks2Oa+rT5+c55DBrql8ah/SzdFxbT/LssrJTXvs87t8AW
-         dWOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714377485; x=1714982285;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xYM2yXWnRhqySCaj8k34zqA1nOe3QZmh3OR/nz2Lfss=;
-        b=RR1e9efHxbaaf6ih96nhZjuQ2Nl5OqjWqKDdd04fgLQgjzbq4hW2/S9UP8EXat1FFf
-         eAOHSz0jnA3VuE+BSxZe4zKplug1CQ1KD0tew54PPg/NY/HzLjhMCSYLKW3F+qN7oqww
-         tsooMr1eSW835zlit4B+N3dvMB7kBbBiNGjEKP29MbPKCds2lro4WXEyKVHaK9Dy1IfD
-         0456aqQGAT8kcGi2KpVuTRIXmkZ4QUewzJR/VRMPmEkjZkpMhfTl/KKJJp0aVp8cSOe0
-         wvICyTT2/4mTnBm7zl/1xE70Lx8BB2PNBQdxFthCUjbfTpnAzHciclJUr3BDLRTSHBFq
-         gN9w==
-X-Forwarded-Encrypted: i=1; AJvYcCXcUzQTXosWvUBuTIIXFDSbiZ3OebIZDrVZKtpAGZbYe2LGB5/jHvLny3/b8ZNe5wXSvlrxAL32PiO3sMVSlkfB68eqXqRMEhKYrzGt51iK6RA1w4P2Gaa6puntokWUSDjsQZT7TUrAS7B1j2kKbH7QJx3GIzBaiZqSCRdQvgYftg==
-X-Gm-Message-State: AOJu0YzW4mhK9bf33vqN/5HJrZ0FhNmEdOTn4dDDNiVn959Vvj8axOxD
-	hMddIwaJlJq1gLsb1112As8u0g7qynCnbwzfiUAYSsBWU/rmcExs
-X-Google-Smtp-Source: AGHT+IHUXWkWmSGPpEjYl3wk64uAdREH56IKk99xgzW0ANzW0yF5B6m46aVyp4rUqYCBMTndgimAVA==
-X-Received: by 2002:a05:600c:3507:b0:41c:13f6:1ee1 with SMTP id h7-20020a05600c350700b0041c13f61ee1mr2877367wmq.4.1714377484714;
-        Mon, 29 Apr 2024 00:58:04 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
-        by smtp.gmail.com with ESMTPSA id o14-20020a05600c510e00b00419f572671dsm32010568wms.20.2024.04.29.00.58.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 00:58:04 -0700 (PDT)
-Message-ID: <51bb337457b6deab93bb1cc3652d8168763f6aa1.camel@gmail.com>
-Subject: Re: [PATCH 4/5] iio: adis16480: add support for adis16545/7 families
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>, Ramona Gradinariu
-	 <ramona.bolboaca13@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
- linux-doc@vger.kernel.org, devicetree@vger.kernel.org, corbet@lwn.net, 
- conor+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, robh@kernel.org,
- Ramona Gradinariu <ramona.gradinariu@analog.com>, Nuno
- =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>
-Date: Mon, 29 Apr 2024 10:01:42 +0200
-In-Reply-To: <20240428162555.3ddf31ea@jic23-huawei>
-References: <20240423084210.191987-1-ramona.gradinariu@analog.com>
-	 <20240423084210.191987-5-ramona.gradinariu@analog.com>
-	 <20240428162555.3ddf31ea@jic23-huawei>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="L+UCv0iJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714377621; x=1714982421; i=markus.elfring@web.de;
+	bh=ytNJzJus/OX0eTS5w3imJL1s23mJSeiZOAp1S/ZJ+5Y=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=L+UCv0iJTkk+lxEPI4XkvpcVBn4lsIYWxRTOx5d9lQsXI9CKDNPMK9E4O36kJEsb
+	 T5nQAVpmGy+fEnD4Y1o0ZFdUyAxhsBEquPg7vRf03Lvu5L5awk6D4o1zD+ybYK3zP
+	 XrYrdsy90gOOqtZC+If0yGEHY/5Kc4aYoBolFzuCJJrI8whib56zKCvwQADbnz0Gm
+	 Y40fd3h89in8xbK6caS1iO66dlz1JaGcoJ6HDIrePj2u7GgfxePVp/FbNIQIBiUho
+	 MmaRO5wU3Zi3RD5YYGsWP8LjP9BF5zFxwT1ImUj7SyaPgxTncBmxIxu9xbK8L2uOv
+	 zsj+VPc6bgcnq0gjVw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MPKB5-1sJhd222l3-00PPx0; Mon, 29
+ Apr 2024 10:00:21 +0200
+Message-ID: <bdfa663d-9a00-484c-80f7-75d7fa130cd3@web.de>
+Date: Mon, 29 Apr 2024 10:00:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Li Zhijian <lizhijian@fujitsu.com>, linux-cxl@vger.kernel.org,
+ kernel-janitors@vger.kernel.org,
+ Alison Schofield <alison.schofield@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240429013154.368118-2-lizhijian@fujitsu.com>
+Subject: Re: [PATCH 2/2] cxl/region: Fix missing put_device(region_dev)
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240429013154.368118-2-lizhijian@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GXJxPJq9phTQRXcUyaeFAvuvRS+7JX8ekPpml2Yk7eZhmvv1bjt
+ gXJN7ITMHKefGrdyq914ydscy60sNG/EqUJeWMwhy6LqUYXAyL435uUY1ZGllSTBYqR970s
+ MkKxUpa4/ntK6adN+fF07JuN4EFeh5Q+ffzoj8IyUqQE5PMtjGYQ2POsroBERpCrcB1kTz7
+ Q/GpLi9oOrBqY5F1Gw6Zg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lK0LdDbRUGE=;dkRCz2+qsnwLrte2eAF7p/XE+2c
+ ma2Q10FgbvtxYyfWWtW0ZKtgSyP/2OPTxmRja9jHkMGyMaX7LDe43lwIZxumzffgHuCEUf5Yu
+ N3iIciV1wIfBUqwFdsU5UWrBoBJYyPvBomeiu/OsATkq7Egt9LiQC4kxhpj6mxcrA5bH6Y6+o
+ 8Uyp1W/TqcyQB79U+jGNZaLS3OqRmPyCt3PcZGOMQxhO6HxC0KDdCDlfDRDqrb/U03irGnak6
+ x5X0kr8eRiCl75pmm/AVPUrzZS8JVaSRGYOznZSyNJIB7/RjVh1UJ0gsNGemiPuVfMh3nqI7s
+ xG3QwXXnZOq+WEaUd39O3gq85jm4XUUiZlmdiZB0JtI7QXNuCKF15OeUV6jxcge8vfVQiyMxd
+ pbUg1RwtcBL12VtpF3F6Ad+U7+Mailel8YuRzctdr9bHu+TKuepTE4THmOK/gsZnnkJgkz1an
+ AoV1XhHCcVxFVmVwYbBtb3shDVR9QGHhc6rDw2MOfw7xtQH3UjX27C132jEBgnFZxPkxwrZiH
+ irV2xW/q/9brIKg7nKXP68aW/zgFIV6ZW7RAcLE4YN2AwsMyrQha8dFkyhboJPvAnHZFqtFYJ
+ NMZwCODI8E3B48R7bo0YA9mednC2ZWA3GH7lQJjRCjLNMfTPumSiTptqebq0tT/ZjDpCWQtAx
+ WAuZrKNaU0KH0Lm8g4jAjzcxbBpuiV8QsoseFEKqLCoYTvpEglkZ3ipRur9PNeKU4Klz6+eLZ
+ 5PFtkPSl/s7+hstFP/HR3a+CgGqxMLiDMtHOqCWPrEZiz/eZX5Apn5c8PkxfiUxxp5OIzuLbC
+ kAHTVVqXlKT2Yk2wEtnD6s2Z6GliCN4g92kx/omm5xzXg=
 
-On Sun, 2024-04-28 at 16:25 +0100, Jonathan Cameron wrote:
-> On Tue, 23 Apr 2024 11:42:09 +0300
-> Ramona Gradinariu <ramona.bolboaca13@gmail.com> wrote:
->=20
-> > The ADIS16545 and ADIS16547 are a complete inertial system that
-> > includes a triaxis gyroscope and a triaxis accelerometer.
-> > The serial peripheral interface (SPI) and register structure provide a
-> > simple interface for data collection and configuration control.
-> >=20
-> > These devices are similar to the ones already supported in the driver,
-> > with changes in the scales, timings and the max spi speed in burst
-> > mode.
-> > Also, they support delta angle and delta velocity readings in burst
-> > mode, for which support was added in the trigger handler.
-> >=20
-> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
->=20
-> What is Nuno's relationship to this patch?=C2=A0 You are author and the s=
-ender
-> which is fine, but in that case you need to make Nuno's involvement expli=
-cit.
-> Perhaps a Co-developed-by or similar is appropriate?
->=20
+=E2=80=A6
+> Simply put_device(region_dev) if region_dev is valid in the error path.
 
-Ah and regarding this is that I guess Ramona just modified my internal patc=
-hes
-adding support for these parts long ago (when they were not public yet). No=
-t
-sure how much did she changed but a Co-developed-by looks the way to go...
+Please improve the change description with a corresponding imperative word=
+ing.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.9-rc5#n94
 
-- Nuno S=C3=A1
->=20
-
+Regards,
+Markus
