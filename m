@@ -1,66 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtpcmd13147.aruba.it (smtpcmd13147.aruba.it [62.149.156.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A316817C8D
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FC01805A
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714381270; cv=none; b=WGNnrcRMxm5vdq9YdTW7BBRYIBetbF+UHDYNKvNWCgiHL99BDQc3RWrOsNDUmRTo8Lc/jDWp4SX/nkvDObQ7vSqj0aiH0o2EarQyuLEjZ0mVd0RMTagCWFsTKm8h4jIS6zytZVTAlEyZGhQyPtpUhd0okKFBzs9+hQHwzRCijrs=
+	t=1714381320; cv=none; b=lRKwCBnIGimpZtk5LQ9Nbopotv/pPXedP6SLRL7P4ghAoh50bGhaRjHKtssJ+oDooNvqVBdTVLD6sQBzw4Fl4RSMoWMiqQSJl4jvykl5XUNeOmf/GZ86ctbek2XfItP5LD2afmfv6+bhX1kZmB8mh9/AYvZc4S1hX49CQMeDpZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714381270; c=relaxed/simple;
-	bh=3bknnk4LrD1mdHceJ8bAPbqx4BAk8TNBu4OWYtRtEm4=;
+	s=arc-20240116; t=1714381320; c=relaxed/simple;
+	bh=i8FmGMtJzlikw6wB6ZqFhjg0Ookvgh8byAh8XQNT4xM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SA6DF2+R48vcGFINbGxTAchG9qOC+O0rDDl0bIDC/F3su8f1whHpoEzfd0mm21EEIC29qea/ZiAhP2lUukjSzJZWlH0mVKjA69qKBf6SBNPSOPCh0Ua4o9X+XE4gUN5TORh8cC8ERkL9O9/WBXmlwY7V2O/7YOjf54AXJ+mQ48w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RXMfz7Gp; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cRvNp6Nrnv1K4LngOCKMsV0gf0Q2zssH25dKa22OsSehLB1zJDP38AYsNXX09HUDvmTVOvtQe+foGzIqIznHlx891vvz9zJG8U0yBhd/OpBujBNWapRG8bwcgR6VgNv4jy6Ba6XXtZTXRwTPDMa+mxgJK19pAC/RCVToCUDIchQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=ibvMJ9rh; arc=none smtp.client-ip=62.149.156.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RXMfz7Gp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714381268; x=1745917268;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3bknnk4LrD1mdHceJ8bAPbqx4BAk8TNBu4OWYtRtEm4=;
-  b=RXMfz7Gp3T8pDX8LwshNnD8mSD45Ax5+TqSMNo59WqQUIKGohxxetU7B
-   OpSvsaYwPVSbbI1eh9UpSgDZgIZQ5OURHNjcxj+JlEVOfDp0SzLgTviE0
-   Dfym8+9ppuRgxWKq5GkU5lID8w3Mev9YlfwCObTr1Rxmpsz4zkXR2OllK
-   oG6bI2SLGWY6mlvDgseq9iYMHzoKodTNI7S01x6XnF38YQHmXt2yLyISS
-   jLqvVsS9HN1e8Uxh7X5fBcwjwq6j/GdYY3UbWjmApRLI9VLoPA/Qj1mL0
-   P0Mp3Qgy9McWXkr0+zIZ3mKRDgZ75dcG1x1pPOGm9neRhiSstbzXSPIk5
-   A==;
-X-CSE-ConnectionGUID: TaG4o7LJQpuKBQfCl7FasQ==
-X-CSE-MsgGUID: xLRWOd8fQmebXpirhCvLbg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="10251249"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="10251249"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:01:03 -0700
-X-CSE-ConnectionGUID: Rn3Odvd/Swuy90tipAcstw==
-X-CSE-MsgGUID: ZPwZp9eTQ5CR4MBbzdxKKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="49266888"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:00:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s1MsB-00000002GOa-0QRQ;
-	Mon, 29 Apr 2024 12:00:31 +0300
-Date: Mon, 29 Apr 2024 12:00:30 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Shenghao Ding <shenghao-ding@ti.com>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-	pierre-louis.bossart@linux.intel.com, 13916275206@139.com,
-	mimperial@lenovo.com, alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org, liam.r.girdwood@intel.com,
-	bard.liao@intel.com, yung-chuan.liao@linux.intel.com,
-	kevin-lu@ti.com, cameron.berkenpas@gmail.com, tiwai@suse.de,
-	baojun.xu@ti.com, soyer@irl.hu, Baojun.Xu@fpt.com
-Subject: Re: [PATCH v1] ALSA: ASoc/tas2781: fixed wrong loading calibrated
- data sequence
-Message-ID: <Zi9hrs3G3i4dNtro@smile.fi.intel.com>
-References: <20240427052858.265-1-shenghao-ding@ti.com>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="ibvMJ9rh"
+Received: from engicam ([146.241.8.107])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id 1MtVsUi4M8U421MtXsNpBr; Mon, 29 Apr 2024 11:01:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1714381315; bh=i8FmGMtJzlikw6wB6ZqFhjg0Ookvgh8byAh8XQNT4xM=;
+	h=Date:From:To:Subject:MIME-Version:Content-Type;
+	b=ibvMJ9rh0OCgLdxohI3Ogn7GPFrgHH7Zh4NtOvH3em67+cf/WumXdiyu47PwgrSeb
+	 X+oZf5yYe1k+/xNGTD6buuJwCaOPh428ZvArNUOJ1HxWkKtgchr15QaADpn1OUHleL
+	 6ax4sRhw92dcrjZbmob9KqEQKK+ozrUqbf1NghauGymfqjBMV3zwHjH+VGaegBe//p
+	 dagsiTstE4MOXkFc0Cndm2LOqIiSBDWn0hXbo3MMMMMktth3o90WD6UNkBKybw2Bfq
+	 BDINZiDZrhaU69K4Ysa1r3AqgwQbmwz8a3jQgG5jb0YrpGuBhhTyGhNHSQ0yG8S7mx
+	 RdsHJSf7j/PCA==
+Date: Mon, 29 Apr 2024 11:01:53 +0200
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Matteo Lisi <matteo.lisi@engicam.com>,
+	Mirko Ardinghi <mirko.ardinghi@engicam.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v7 1/3] dt-bindings: arm: fsl: add Engicam i.Core MX93
+ EDIMM 2.0 Starter Kit
+Message-ID: <Zi9iAZjrq13X4K/C@engicam>
+References: <20240429084422.8369-1-fabio.aiuto@engicam.com>
+ <20240429084422.8369-2-fabio.aiuto@engicam.com>
+ <07fa8910-da6e-49f3-a3d3-b7a55c48224a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,41 +53,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240427052858.265-1-shenghao-ding@ti.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <07fa8910-da6e-49f3-a3d3-b7a55c48224a@kernel.org>
+X-CMAE-Envelope: MS4xfM10U/MOtBvDDGkxGerqcBNsZW7E4daaxkkWp8r5fj1+fdoePgGL2cwE3Dw4du4mDHmao1Fng1rbN42v/Yzk1ka8X4kq/K92BBG9GjC19EozEZ7TSwVY
+ 4uLJdcjAxdzvPDwLcqXECYxk/qWQJ6p5r+dk0+EwDAcxBWbjlttF8EfyZOUppLeKzYjzku8mUadXD9AAA7vs9GLBv1FLbJczUsDQQLZKWvGp34oZSMqfalrJ
+ FwmklNtXrCZbmaZAdYIa9EpHZSrbIZFiiWHz67u/UbbRaeKjNqtQl4eHeqICHSpqUqCJdw+nxC7yPmFPfMMiV3sFzd8iZqj7rHqPE1MZ1ODB5YAMBEgQxqJg
+ NXpugTNtwDkL3KmUZ8cAncVdxkwvdn9fJziGuMLNgWFI//6fEQUjEFBcpol0PQgs6GFiHFXYwpC/0fLJj9PTh4fUIvhvPaM9Trs7nXwy8Mi7rK+LrjxK6z66
+ 9Vu57r75tHkyKjYxE+KORu6MImhYLW5BW/yX5rsETJkFy0fSz/nicjUw7mwuB2yyk7ElLUfPtXmFaYzdLsYTCnQg5OKvLmjB0AvZlfG/iOhm7fpbtHlR6WxY
+ ISOYSlBMUP4MvUP0Guto/mcWVcbH415LKwY75QrWwC6mqQ==
 
-On Sat, Apr 27, 2024 at 01:28:57PM +0800, Shenghao Ding wrote:
+Dear Krzysztof,
 
-In the Subject:  fixed --> Fix
+Il Mon, Apr 29, 2024 at 10:53:08AM +0200, Krzysztof Kozlowski ha scritto:
+> On 29/04/2024 10:44, Fabio Aiuto wrote:
+> > i.Core MX93 is a NXP i.MX93 based EDIMM SoM by Engicam.
+> > 
+> > EDIMM 2.0 Starter Kit is an EDIMM 2.0 Form Factor Capacitive
+> > Evaluation Board by Engicam.
+> > 
+> > i.Core MX93 needs to be mounted on top of EDIMM 2.0 Starter Kit
+> > to get the full i.Core MX93 EDIMM 2.0 Starter Kit board.
+> > 
+> > Add bindings for this board.
+> > 
+> > Cc: Matteo Lisi <matteo.lisi@engicam.com>
+> > Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
+> > Reviewed-by: Krzysztof Kozlowsky <krzk@kernel.org>
+> 
+> What the hell? Why are you changing tags?
 
-> Calibrated data will be set to default after loading dsp config params,
+I fear I don't understand your comment. Did you gave me
+your Reviewed-by: tag, didn't you?
 
-DSP
+When Conor gave me his Acked-by in v2 told me to pick up
+yours too...
 
-> which will cause speaker protection work abnormally. Reload calibrated
-> data after loading dsp config params.
+that's all
 
-DSP
+kr,
 
-...
+fabio
 
-> -// Copyright (C) 2022 - 2023 Texas Instruments Incorporated
-> +// Copyright (C) 2022 - 2024 Texas Instruments Incorporated
-
-> -// Copyright 2023 Texas Instruments, Inc.
-> +// Copyright 2023 - 2024 Texas Instruments, Inc.
-
-Seems unrelated changes, but harmless.
-
-...
-
-> +						load_calib_data(tas_priv,
-> +							&(cal->dev_data));
-
-Why do you need parentheses for & (dereference) operator?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
+> This is corrupted since v3!
+> 
+> NAK.
+> 
+> Best regards,
+> Krzysztof
+> 
