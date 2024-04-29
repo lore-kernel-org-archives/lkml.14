@@ -1,112 +1,118 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B3F181CF3;
-	Mon, 29 Apr 2024 21:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068A1181332
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 21:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714425522; cv=none; b=Wmec7BXn+431ZtFFKW481pgFpLFCQ4M1V+LATF1+PuyFnU/YpbGue+3rgdsgNoxGQyjHyBzpUGaMEra3xGmXF0TrqARi5P7/DfGHfYb3+nOLfeWtiVWNVIcnsuRXCy3j0dvrFH+hHHo9AcSB3g1v5bcMyRlWpOmaHF5CKMKERUg=
+	t=1714425602; cv=none; b=Wa8SWAs7xbcWb8QVVbnOoQBx/u2EY97QZCeeg28MuWcrFFaJm+rh8ixmwKC70ui9oSV7uPp5neAn/F9dazZDa+K/Kdcw7/aVcZCenBnP63ANqa5o9CLMi7v40j4am18DouQIL7Hnhv8MbMD4Owe8JreQ1qulkdyHBkXgD7MdA3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714425522; c=relaxed/simple;
-	bh=ESIhUM0Me2la+2/P2WPSmXeUM6PKTqZO50yn8kA+1E4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FU8TE1FV5ZkJySLvrsWMp4K3kNQ1i5ymGWiB3osyEg+RhEm7A7XGUkmQx6Grf8zt5AiV7f3Wm6ZvkW3q6BM+TA9g/JF+BTsgpJCyTj4y0+vf+vsBrkvWyGM4KCn8BqIy+01vR7YdReY4CglWyWeXl8iwvyk5aZuSuk1tAG8+UK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OL9HWZki; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1714425602; c=relaxed/simple;
+	bh=7aixiPWAUGT/ZAvZfH65Uhx9mhW9+M/65jQ0Vz/6pQg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=GvD2DvX/dNrQ4N2oZL9v6w+QuXm94lolCJgLM0Fy/8UiNQvFsfi2hqLwUK1AfWsEoWSnOHu1sDqhnEIacY7+E3486N5zPprQfFlT4MZndWY1fgtM+OBu+x5OWqiqPrF5jJXuPnIiTueuPGe6TzARG0yLn4FxnhPkj3fIx6yy6F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DPBroeAG; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OL9HWZki"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43TLHuae018385;
-	Mon, 29 Apr 2024 21:18:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=nC+cB5yrNkvDyUeFXe6XTNRDlerLmGEW/AtczBfuvmw=;
- b=OL9HWZkiNAqZ+qi79TLo6fpKJq/bEZt07Zkgya/CQWP1xUGZRr7n2R+qAAx80dO4ZGCA
- ayr5Olx/4aAOOkEv5J/Y7ZgSIo0fh5x2OJqlSkACF2Af27U8IwTYvmD6SkcLdzHN6UgC
- udnZ/uv0KBvL5pznPWTMR6x8gCDYhP0PHnJlU853uctZtygBLpVCj2XJbkHAr9Qfrrea
- mYmRylpAathSaoGGFLXgRjCF+tmpoOfV8OW8r4l2ywj9MegkXr9B8csL1tJPI30TNGHU
- 5t0FAuhfguy94nz+m9tn/7HrFqVnkZFOqjtyeodcgl2GBkCnpCjCxRmOt52jmkZHrDQe iA== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xtkb3g01q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 21:18:31 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43TJZqEm015548;
-	Mon, 29 Apr 2024 21:01:50 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsed2s47v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 21:01:50 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43TL1lXe34013472
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Apr 2024 21:01:49 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A4A458068;
-	Mon, 29 Apr 2024 21:01:47 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3D0655804B;
-	Mon, 29 Apr 2024 21:01:46 +0000 (GMT)
-Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.151.254])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 29 Apr 2024 21:01:46 +0000 (GMT)
-From: Eddie James <eajames@linux.ibm.com>
-To: linux-aspeed@lists.ozlabs.org
-Cc: eajames@linux.ibm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-        linux-spi@vger.kernel.org, linux-i2c@vger.kernel.org,
-        lakshmiy@us.ibm.com, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-        andi.shyti@kernel.org
-Subject: [PATCH v4 16/17] fsi: occ: Find next available child rather than node name match
-Date: Mon, 29 Apr 2024 16:01:30 -0500
-Message-Id: <20240429210131.373487-17-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240429210131.373487-1-eajames@linux.ibm.com>
-References: <20240429210131.373487-1-eajames@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DPBroeAG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714425601; x=1745961601;
+  h=date:from:to:cc:subject:message-id;
+  bh=7aixiPWAUGT/ZAvZfH65Uhx9mhW9+M/65jQ0Vz/6pQg=;
+  b=DPBroeAGdF5kgkGV3oxUHCoUpW0b2wF+/dfga3afzJWcBeVgePWrfDSg
+   qkhijCcYTF3KHg92QDkXUaUeTeMyUR4SS0JRT3jezHtn2DrPdR4DHP4Kn
+   gqoF7Asf9mgnvYZNe91mMurWwnYsoC+ySsjYnWlJFC30oABO+ek7GXiMm
+   aSmT5dKImA4QRKUVQd886hTZnB9Y6EW5t3A7Laz1nWd+onMquT7E1I+Fc
+   vWopsxtxmmioauYGMJDdcd32KLbNI2nF+hrx3hmKm22Hp4UJcgXk/vCIE
+   C405ANf46lSON2O/m8i5ajYaMyHKo2EkOHqL7ClQPRF8mfEUYfymoEPsN
+   Q==;
+X-CSE-ConnectionGUID: enIC9RaITrGEwgbPrSH+ZA==
+X-CSE-MsgGUID: OA/SOhnRSSqBze40w5EaEQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="27557755"
+X-IronPort-AV: E=Sophos;i="6.07,240,1708416000"; 
+   d="scan'208";a="27557755"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 14:20:01 -0700
+X-CSE-ConnectionGUID: n8ckxYP+T9KQVXTEOd322g==
+X-CSE-MsgGUID: L3yKQvHmSqmNptPeMqOTqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,240,1708416000"; 
+   d="scan'208";a="30877063"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 29 Apr 2024 14:19:59 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s1YPl-0007RY-1G;
+	Mon, 29 Apr 2024 21:19:57 +0000
+Date: Tue, 30 Apr 2024 05:19:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ 2eda374e883ad297bd9fe575a16c1dc850346075
+Message-ID: <202404300552.UPIZdKyy-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Dj8vAuAgfvZSc5GQV3sy0Rps-QY0LOYm
-X-Proofpoint-ORIG-GUID: Dj8vAuAgfvZSc5GQV3sy0Rps-QY0LOYm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-29_18,2024-04-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- priorityscore=1501 suspectscore=0 spamscore=0 impostorscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=885 lowpriorityscore=0
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404290140
 
-There's no reason to restrict the creation of the hwmon device to
-a matching child node name. Just get the first available one. There
-should only be one child node anyway.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/cpu
+branch HEAD: 2eda374e883ad297bd9fe575a16c1dc850346075  x86/mm: Switch to new Intel CPU model defines
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- drivers/fsi/fsi-occ.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+elapsed time: 729m
 
-diff --git a/drivers/fsi/fsi-occ.c b/drivers/fsi/fsi-occ.c
-index 2023355b3980..9a3658d86379 100644
---- a/drivers/fsi/fsi-occ.c
-+++ b/drivers/fsi/fsi-occ.c
-@@ -669,7 +669,7 @@ static int occ_probe(struct platform_device *pdev)
- 		return rc;
- 	}
- 
--	hwmon_node = of_get_child_by_name(dev->of_node, hwmon_dev_info.name);
-+	hwmon_node = of_get_next_available_child(dev->of_node, NULL);
- 	if (hwmon_node) {
- 		snprintf(child_name, sizeof(child_name), "%s.%d", hwmon_dev_info.name, occ->idx);
- 		hwmon_dev = of_platform_device_create(hwmon_node, child_name, dev);
+configs tested: 41
+configs skipped: 135
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240429   clang
+i386         buildonly-randconfig-002-20240429   clang
+i386         buildonly-randconfig-003-20240429   gcc  
+i386         buildonly-randconfig-004-20240429   clang
+i386         buildonly-randconfig-005-20240429   gcc  
+i386         buildonly-randconfig-006-20240429   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240429   clang
+i386                  randconfig-002-20240429   clang
+i386                  randconfig-003-20240429   clang
+i386                  randconfig-004-20240429   clang
+i386                  randconfig-005-20240429   gcc  
+i386                  randconfig-006-20240429   clang
+i386                  randconfig-011-20240429   gcc  
+i386                  randconfig-012-20240429   gcc  
+i386                  randconfig-013-20240429   clang
+i386                  randconfig-014-20240429   gcc  
+i386                  randconfig-015-20240429   clang
+i386                  randconfig-016-20240429   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240429   clang
+x86_64       buildonly-randconfig-002-20240429   gcc  
+x86_64       buildonly-randconfig-003-20240429   clang
+x86_64       buildonly-randconfig-004-20240429   gcc  
+x86_64       buildonly-randconfig-005-20240429   clang
+x86_64       buildonly-randconfig-006-20240429   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240429   clang
+x86_64                randconfig-002-20240429   gcc  
+x86_64                randconfig-003-20240429   clang
+x86_64                randconfig-004-20240429   gcc  
+x86_64                randconfig-005-20240429   clang
+x86_64                randconfig-006-20240429   gcc  
+x86_64                randconfig-011-20240429   gcc  
+x86_64                randconfig-012-20240429   gcc  
+x86_64                randconfig-013-20240429   gcc  
+x86_64                          rhel-8.3-rust   clang
+
 -- 
-2.39.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
