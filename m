@@ -1,113 +1,63 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from rdns0.nona.1cooldns.com (rdns0.nona.1cooldns.com [31.192.235.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005A112AAC9
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F274412AAC9
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=31.192.235.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714420147; cv=none; b=XT/hZlPBatalh5oKLdgAWoeRzu5fyDNs+Lp+ZIQNDnWU+A8slPkVBCrEme0ARKfwGlni5FR6YzLhmxT5vS41yPVPqhgoBTLudst6TpyPKm3yW3SVLlUeQWoVZVEPt7KEVKYNJYib7moLxF4usiDsdNQjF8rU23snQl/aWtjfbrE=
+	t=1714420170; cv=none; b=pvspYrnsQMd36TXN4WdW/unLnf4yHl5J3VUFs9ANgYmFW2SVFKxfoHXeMOrhi4TczUheH3XsHg8g3GPHW8BxxMDPo7EwFhn4z90K0dL6USpvLKHDm5fooLxMBRvjl0boH2PA0sulLqBCYYg3vPtrLM65lp9RK1WC2313r/tasnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714420147; c=relaxed/simple;
-	bh=G5w+y4k/0B/MIhP3OIdnfnaBZzVFiznSU5o3Q+eJJrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=exeMrZvkIzXy9H35RQ5kTMXGwe7lSsKDjcgMTpAKmqeCaCtgphAeUhyzWE2rAQhYEofdRsJ7EE98dOLXwuIRmu2nQK+68Mw/hmha44hQys0N+asBYdKa4BkYzls662CYiZrGMDTOxNkcBfZOfkvezB5FLEcqNYzTXRB+ZPRMZmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OUtm69vX; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714420170; c=relaxed/simple;
+	bh=JG0SV9hXY/1TtbjjSQkLyMvYYfN5KWdFuiRFpI+nqE8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FB7RX9U/gg17/OUBAXTud+noze8lDZi+2j/MIYeSIkii0vjoN9fwlqjiVVi853MbZ4PXm4mCQpV4qIJR/J7TN0ml4hxuQcnbcrEyuddCR/LnU5parRMnJkmzKJ0VD02oRJ+bOe7Bd4rN8496CCXfVyklNasPGHbUT9KB5Ttv+bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=nona.1cooldns.com; spf=pass smtp.mailfrom=nona.1cooldns.com; dkim=pass (1024-bit key) header.d=nona.1cooldns.com header.i=ghim@nona.1cooldns.com header.b=HzGYvP+J; arc=none smtp.client-ip=31.192.235.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=nona.1cooldns.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nona.1cooldns.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OUtm69vX"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e51398cc4eso44089855ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 12:49:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714420145; x=1715024945; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jxlmAhxfEfZT8bTyeNiSvqaH1zNJ82/SnYCLRCDDuj4=;
-        b=OUtm69vXtxg/bF9L249dalzDtwsmmtcLzd+zQkMs/QcakiD8ydFCtA7GRRQSu1QrRL
-         Qv9yHiwgXQSn/eGX5eMaeDLHMNaj6ZokcYfG2duXxtIAMQPDhWiuf02yjt/l/kmqWShp
-         r0Xf177p1IPZc7ebLfcf7y2P/gQdC3aTCVRNc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714420145; x=1715024945;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jxlmAhxfEfZT8bTyeNiSvqaH1zNJ82/SnYCLRCDDuj4=;
-        b=KBdC58P2I6z9YTpMUCdX9DzMhQZBlDxg/9rwbvETXXs7cPd/x8icKry0IjDStJwB9U
-         VsUAnYZbbCkbK7I/hF+MPvvANkHcK+PXvFffpLcGo8fpNoILSGR9z6wfqbjXkVla+o7z
-         NfdgQlL6W+3NX9L0185yfeR+uo0acd1py4H1/VcmFWTJMl56q74fLlfAIqrjmCVow90u
-         O4SiNdShWz9IX5wjdYcJ+uXt14WTazUWAp/cVIUr4jG2R6vUZUY4omlQOxTFS9pIMlAY
-         qj6kjSoSqmelyNHMcyBJ1QWKy4vgiAzp/arhPlYWAZO9VH0r6f49dt8oxMxZX4AIEkch
-         Fx4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUNMRGRGzCQd5a6uphu9gVGFEAxm/2QkhguBriPOEVV5/WRdSpVBGBMf4NTSKpVb4ByLkG/PlwVQP6hkmTahAaKz5VeXWVgkQGBW5sc
-X-Gm-Message-State: AOJu0YyFvDW42SMrINLAH1OMkx9guLNsLQnjdcrMUXZLO04wtez6wnx5
-	SS0n2yqj1dgbA5DR7I75TWY9lWIhGsfrOi8m5i8mNjATvKFyiYqZsoidp/AN8w==
-X-Google-Smtp-Source: AGHT+IECRu8g8bwToaxRHQbb2UWAgCPjLtsrdSUmHlot5oVJviA+DDbB+NRaMqmFHCB9C3nFU7igXg==
-X-Received: by 2002:a17:902:ce87:b0:1eb:7285:d6fe with SMTP id f7-20020a170902ce8700b001eb7285d6femr8741775plg.23.1714420145374;
-        Mon, 29 Apr 2024 12:49:05 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s1-20020a170902ea0100b001e3d2314f3csm20739290plg.141.2024.04.29.12.49.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 12:49:04 -0700 (PDT)
-Date: Mon, 29 Apr 2024 12:49:04 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Allen Pais <apais@linux.microsoft.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	jack@suse.cz, ebiederm@xmission.com, mcgrof@kernel.org,
-	j.granados@samsung.com
-Subject: Re: [RFC PATCH] fs/coredump: Enable dynamic configuration of max
- file note size
-Message-ID: <202404291245.18281A6D@keescook>
-References: <20240429172128.4246-1-apais@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=nona.1cooldns.com header.i=ghim@nona.1cooldns.com header.b="HzGYvP+J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=nona.1cooldns.com;
+ h=Reply-To:From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:
+ Content-Transfer-Encoding; i=ghim@nona.1cooldns.com;
+ bh=JG0SV9hXY/1TtbjjSQkLyMvYYfN5KWdFuiRFpI+nqE8=;
+ b=HzGYvP+J6awhy3kKZmOPqijZOgynyQB/zet8FaZE6ZBwOM5uchpidL9sya9wgmVEe25kvwym+d8x
+   6ACEvGR4b8Py6Pov1Go14KcPxHeIeKdYBtrQsUIyN2oOBKSmBZ59WIDz0AJ1RYJoPV/WbY952Nkb
+   RmCCCUExosnEhAqsdgw=
+Reply-To: stanislav.marcel@aliancegroup-se.com
+From: "Support" <ghim@nona.1cooldns.com>
+To: linux-kernel@vger.kernel.org
+Subject: request for quote from sweden
+Date: 30 Apr 2024 05:49:25 +1000
+Message-ID: <20240430054924.5D0C06B00D3A50E9@nona.1cooldns.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240429172128.4246-1-apais@linux.microsoft.com>
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 29, 2024 at 05:21:28PM +0000, Allen Pais wrote:
-> Introduce the capability to dynamically configure the maximum file
-> note size for ELF core dumps via sysctl. This enhancement removes
-> the previous static limit of 4MB, allowing system administrators to
-> adjust the size based on system-specific requirements or constraints.
+Hello,
 
-Under what conditions is this actually needed?
+My name is Stanislav Head of Department, purchase. We would
+like to know if you export to Sweden, as we need some of your
+products for our client, kindly gives us a reply so we can send
+you the full specifications and details of what we would like to
+purchase.
 
-> [...]
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 81cc974913bb..80cdc37f2fa2 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -63,6 +63,7 @@
->  #include <linux/mount.h>
->  #include <linux/userfaultfd_k.h>
->  #include <linux/pid.h>
-> +#include <linux/coredump.h>
->  
->  #include "../lib/kstrtox.h"
->  
-> @@ -1623,6 +1624,13 @@ static struct ctl_table kern_table[] = {
->  		.mode		= 0644,
->  		.proc_handler	= proc_dointvec,
->  	},
-> +	{
-> +		.procname       = "max_file_note_size",
-> +		.data           = &max_file_note_size,
-> +		.maxlen         = sizeof(unsigned int),
-> +		.mode           = 0644,
-> +		.proc_handler   = proc_dointvec,
-> +	},
 
-Please don't add new sysctls to kernel/sysctl.c. Put this in fs/coredump.c
-instead, and name it "core_file_note_size_max". (A "max" suffix is more
-common than prefixes, and I'd like it clarified that it relates to the
-coredumper with the "core" prefix that match the other coredump sysctls.
+We would appreciate your prompt attention to this request, as we
+should begin a cooperation as soon as possible.
 
--Kees
 
--- 
-Kees Cook
+thanks & best regards.
+
+
+Sten Arnlund
+
+Purchase Manager
+stanislav.marcel@aliancegrup-se.com
+
+
+a: Veddige by 2, Holmerskulle, 432 68 Sweden.
