@@ -1,193 +1,375 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2051.outbound.protection.outlook.com [40.107.255.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE30D502
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 03:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714361930; cv=fail; b=DjBkwDrlOOwSWuEjRraA1qSpvsYRQF5mYqDauy1sOyvvdTjaVWLlESuakoI+11DH+zuLmXJ1Btb2BmgnkXvjQcIxN6YD0oVJpxMLDv0mCqe4mgcOsSBZo2s9uBXZ+hZNpkAa6l6ymGtCb8j7frL7CVzQRNnd9boJ66w+hxwUhCc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714361930; c=relaxed/simple;
-	bh=nczn/bn3MxIioEDZQSqiKQwhSCoZra468qkMsCeSoXw=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Uu+Csaa8NOJcxAkdZe3BlG5ij4fW49L3pP3CPoogwBVw7wyF83N3mSusRnVDYkh5cMAxHx95nLaihfS9NrFLNn487lzPBkIxNs5tAS6MKarOl4Nmh8tGxBVKLyODqfqtDzcVDBORipyR5fjj5a7FLd3dUQ9kbLlTfIuXhBV/HRc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=H2Sqj924; arc=fail smtp.client-ip=40.107.255.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CF6DDB1;
+	Mon, 29 Apr 2024 03:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714361937; cv=none; b=YdSdThF1//AD8+JA+GcbC8Fg8n80PdVcWuN6sVkSBlZLuEhWGIRTlky0mXWCM+axOy9OjVoiTk+1hHgc8RUV0q1sJBqgszCJRVcz9mDliBuunIaEsrQ1k9xxd242MO09t+0rezx5mZPfEjD8270AY4IgQCCHwwE5g7IN810+RpI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714361937; c=relaxed/simple;
+	bh=r814HZU727uw5VpF3+eqf46Ue4MN1yT0GSx7wB8yVoA=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LxLi5xHpCA3A3UmNgFKoJCqVwihwsMfM5PuHW9e8OLKWtkmURfr4coHq5gEoow88RPklPoHzVwxJjaok1WP8d3znSo7epVlhmhguD+9zkPeR+eHPKLdMPmaTVwUasdKFOGgAjzW8kZvURakx5yZYlcXyiAjubqLEzbHl9wzMkfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hkbR3fl/; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="H2Sqj924"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oNteqcj6aapmRml7jR25eioCeZ7NFzFFuJkLM920qvoJ7mUYzQvsgIXEmgRZRlyhiVrD8jVbYBXJZ0f1QaMEydTKq1RMkWSQyKZKIls/PtfJG8NeCqgg40yWYuXc6FMdmMsWDEEg4ca2k5u5W58VG9fg3QmmecFalPkC805Pf+J1NgE2e8dyuj0h1W6igul12mQVjysauvKIv+CLTkTZHOX0K+eLFxzk1J4w7w9Eteuje9MXRAT5dGBDJODczdYoGTuI+vZcaE5fgvjktqV7c81SMDkxEHtR4G9ZDcufpafMigltRJzTZaBLDvR/qLrXhn4Tf1jMnDLX4jlXZoOZ+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UA6GbvdGWwzQBd2O7IaYVnPbL4rbwkSkUTzujbKwIWs=;
- b=Xmblv7os79Sv7d9NBMVjP141Ri1JRO7OVrFf6bfkxArGGPC9ZxuP7+UVw1+/qZcBiYydsGkEZyqiGLe6DqS+rKeKOLRfZIfbGwc8BdzkPlQvxufZKTYsox7t0VLdWw1T+sAYczNhpHesxGpDecg1kACE/tHbsV6SmzdBomvuGfIqiVq0Pv/GIxorUszrFcXW+d4x2mTaSl3kcUtaAoGIo2704qgSHCVLa14URGHV7THUqGgVf2qEwLLzjg9PVEY9JqTQ/322j3O5rbnQVr3cEmWd7uGlGYB2CzZp+2SZNBVoyEW9YWqnjWWfDLzhtiociIXqHULaA9Yp82uzVlZYaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UA6GbvdGWwzQBd2O7IaYVnPbL4rbwkSkUTzujbKwIWs=;
- b=H2Sqj924TMABmd9d2zZkEDPQKT6AGxLcb+PgJKbGJBgMOoQXBeWBldOLuVrt+thhI6SpXsKDt5F9KBlhBTxX9G+7swVbt51vC6/mQ17iSxefjqamyuriCoxkOKqTPMbJT/qf7JYLbl2ICHkLamUD/Q2BwVDDevclNy/nTGfl9RUxs//aNGYGUhgi6k693osP4KQZ0lMF1SRekBY+w+vNh9MwIXXPal1Tam6f7EWxHWYkVr8EGnwnjQZk2UPYmZQNZo/4OTQFt659chwak/E9flNXuIk6F3lbq7BfUvOMiMcoQ6rc/PWOVVLydnRUHEOd6zG7a91ZHjFSm6bREO2FfA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from PSAPR06MB4486.apcprd06.prod.outlook.com (2603:1096:301:89::11)
- by TYUPR06MB6194.apcprd06.prod.outlook.com (2603:1096:400:346::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
- 2024 03:38:44 +0000
-Received: from PSAPR06MB4486.apcprd06.prod.outlook.com
- ([fe80::43cb:1332:afef:81e5]) by PSAPR06MB4486.apcprd06.prod.outlook.com
- ([fe80::43cb:1332:afef:81e5%5]) with mapi id 15.20.7519.031; Mon, 29 Apr 2024
- 03:38:44 +0000
-From: Wu Bo <bo.wu@vivo.com>
-To: Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkbR3fl/"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c74ff209f6so2778614b6e.0;
+        Sun, 28 Apr 2024 20:38:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714361934; x=1714966734; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=10mfu4ttUvuh6EHI5b+iXWndc27sFkN2OOMRBjB4xKs=;
+        b=hkbR3fl/fxKzEPh5x+5KtIP/idH4vT+8imfFpHaBjbmMJ+fFjLbdCxhTw48T4N0On7
+         9qFr56Tz9D/L+o9F1DZzq3y3R71DeQqxGVlj5G8J7ZXgYF7M9DIWihh4EbxUh+ygfNka
+         gaguiZEIRTmGRxxe29hVSB9gD5r8oN+YpLolaSbusvWwRerHcqnAxV+5ftT0TC7RdFcO
+         DS/umP8QzhuF5SpMUfoJXdfRvl048uFXXVdxEBE02J0k+eNC7lTskOoV/zVnj82Hw/Ca
+         h5lU8xmxoTndUNWamjPiXONTCU2I9Q30V69g6siFkctGfgiSYdNmXoayLgvL5SoIk6kz
+         fZNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714361934; x=1714966734;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=10mfu4ttUvuh6EHI5b+iXWndc27sFkN2OOMRBjB4xKs=;
+        b=iDays40+XW0OQ368tA+VQYSP2RwdS2KfaO26hosfbpp4grlVam/WDQT42+F0W+Di1q
+         DgMjBsfS2BnDYVeISbiFmlU+/Lq+bwlxnHaBfP32ORys5g4p6Vs+/sBKqMrZoym6uNCN
+         4YZO7oWZBErLordESiPbHZR4m5XO+Wc1NTw4lmwHvin00SOySB0CnppS7SNL/6ILDTae
+         UUWKdwMDdKsWmb2Qye1gYVT6aeXhumz59lGbeWsVNjlhgS3J0tQDKkXB0C0SiPDAmcRq
+         hzKNObv0NwPIAzT8xSLNFRTF6l4xJn2HZNkOj8HHvIfJs7na4lBPwUWFHr4FpT91MY/x
+         hNnw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8xChuhZKbD0Z+BL4lJwAudcj4QWeeNyEnJ+ZIX0loLjFIHkqrw9IIjNXZMdHtg41I9RJlQSuBhfSm+RgJNwlpNBTZo/OOWLTV1JRR8i0kJE+rpnPc5zCJte05PoMFSwcvKNZaKCmmHIr/oyAnBbr1s9Lg67kha3RkyF4p5dG7pKUtJIkuRRd6Yd6yXSXE056h005m3rkn509skBqHVPSImesnmFGPhm9GShOqAdI+y4K7rr5w+Pwy2HEH
+X-Gm-Message-State: AOJu0YxvV4w3wGfApWeQyxDZXZhQ3M8HyllMxUoXFrIyGG3K/HkxnTee
+	YPAAvx91h1SDZnvzHa0GKAjtvgrVFgEi0abQF7edkPaedyrPXIRm
+X-Google-Smtp-Source: AGHT+IHxPLs28ZwT7FYgmK44KZ2aKFo4KAeQxqkTRA0aj9S+WdCE4NvQKViEw87pAGsvvpR/AmbftQ==
+X-Received: by 2002:a05:6808:5c4:b0:3c8:4aff:b4f3 with SMTP id d4-20020a05680805c400b003c84affb4f3mr11330796oij.43.1714361934310;
+        Sun, 28 Apr 2024 20:38:54 -0700 (PDT)
+Received: from peter-bmc.dhcpserver.bu9bmc.local (2001-b400-e2aa-928c-7bf0-01bb-028d-772b.emome-ip6.hinet.net. [2001:b400:e2aa:928c:7bf0:1bb:28d:772b])
+        by smtp.gmail.com with ESMTPSA id i28-20020a63585c000000b005d5445349edsm17835424pgm.19.2024.04.28.20.38.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Apr 2024 20:38:53 -0700 (PDT)
+From: Peter Yin <peteryin.openbmc@gmail.com>
+To: patrick@stwcx.xyz,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Andre Werner <andre.werner@systec-electronic.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Wu Bo <wubo.oduw@gmail.com>,
-	Wu Bo <bo.wu@vivo.com>,
-	Liao Yuanhong <liaoyuanhong@vivo.com>
-Subject: [PATCH v2] f2fs: fix block migration when section is not aligned to pow2
-Date: Sun, 28 Apr 2024 21:51:42 -0600
-Message-Id: <20240429035142.706356-1-bo.wu@vivo.com>
+	linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH v3 1/2] hwmon: (pmbus) Add support for Infineon XDP710
+Date: Mon, 29 Apr 2024 11:38:25 +0800
+Message-Id: <20240429033833.895122-2-peteryin.openbmc@gmail.com>
 X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0125.apcprd02.prod.outlook.com
- (2603:1096:4:188::13) To PSAPR06MB4486.apcprd06.prod.outlook.com
- (2603:1096:301:89::11)
+In-Reply-To: <20240429033833.895122-1-peteryin.openbmc@gmail.com>
+References: <20240429033833.895122-1-peteryin.openbmc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PSAPR06MB4486:EE_|TYUPR06MB6194:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b34974c-5086-4e6b-b760-08dc67fdde94
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|366007|52116005|1800799015|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EI3fG8ry2q02F+AdUDJndXNwKCKqE3swjIgYSR2THAOh/fJ53t4v2X4AZFsM?=
- =?us-ascii?Q?1Ggvvo+JRgRepjY+xxWR+1lPdUObEkT0WBOX08sxqa9CeJ5PFgVDAjgmCe+G?=
- =?us-ascii?Q?Jx5VSX0EIHHNL5PcPfuxydNBwdEBsOlAprw3cMEBGpxzSxp82Ech6z3oVjlD?=
- =?us-ascii?Q?JXhEO9m+bjhZUHYLZZAqNLmDkVk4L8pEoXEkjJ5l0gUhIV/bK/AcVPMsERhl?=
- =?us-ascii?Q?DoJA6wcBy9orInBQG/GvBsBO6T+S9SWa72tZ8I5HKwJQ1W8u4vE6i4bjtIOt?=
- =?us-ascii?Q?s8LpCahhkvg8DMc4JWm0ADUVI0d8Ic3NofS36OVY4RJwiXZwdQSp5RxdVi1I?=
- =?us-ascii?Q?YBPuOQYyQcHdVo2zoQtsaVpN+2Z5zJE+ulyRbiaXurOv3g1+nWHp/rLkHuy6?=
- =?us-ascii?Q?bs2xxGlrYOLkglsa+VAweSVETc/cghb3xdSh9OwiwRUr1poBn5xQu7tRabXM?=
- =?us-ascii?Q?ctM3Ed1s0LHIIsYVzTF82Jb1hqr9GgWctfF4/IfHfnpyHtyEfxL0UTSflQF0?=
- =?us-ascii?Q?OQT6u0gUaUJRi/j2NcgRJySAhdh+IgkLO5yCBbs6dOz+pugho76CnESPDbtM?=
- =?us-ascii?Q?AjU1mSXfmVl/dgHDZUSLMmFDjcQlMafI4Nk8Az0EyyPfMIw28V76xUMRtQ5b?=
- =?us-ascii?Q?QNpjJ5IO8QXfHRcps4QMdLwtR4Y7G3TyBnQguS4sSO69E0m5JM0sXRYRSMXK?=
- =?us-ascii?Q?cMuZn5tYvm6IZkEW3UD0G+W7vTk8DTLT6j769fb2Jg0XnCJk8TJCYJ0MkC/l?=
- =?us-ascii?Q?Dlux9KjKNunegVs9UJk35W0Jo3iTJV7a2ExvFOdz1ZU5JQ/V1Sm/N47LIgZn?=
- =?us-ascii?Q?eFkCBREMFnbskw0/aKIjh6zcmgC6JEuVHuJzDxDQfBkDe0Lmobph5/vYueJe?=
- =?us-ascii?Q?gwJFGArU2e8JhtRoJQDzv2eJrFH/GMSrndW5hQZrZJLLWzLq1vRTgkucwRwZ?=
- =?us-ascii?Q?q6kVM8GhjpjN+7pOajUnklPmGyrckrILv5CG/FMLjVYSc+OfaehoeU9v6qZp?=
- =?us-ascii?Q?t9H0io4QIlTBb/nJNx6TdYznUE8Ky6wR9aW+EnwjNN4Aa2FAwyD+r7IgbryQ?=
- =?us-ascii?Q?+AArbOTnzlw/NlInGqMgZRrXIZpttb081zhLLRBoJyT8O6iQckQaSw5moAow?=
- =?us-ascii?Q?oPiqNUkkTYQrsmItzS9JjilX+0yDcq/rnN0tTkL7bp/CbSqrlS+lWb9/oZ6I?=
- =?us-ascii?Q?NBBSX3v4t8OWKRE06qrDVy6gwjgihwb7kKl0yjeXOxdl1YjYBcHpa3wDNhzY?=
- =?us-ascii?Q?li//6JlIvkfFliCVBvU2uj6kE1bhe9LX0gyZ5EJCX9Wco177PGsUHHWa4zU2?=
- =?us-ascii?Q?yEFGVeEHkJ+efjpEwg77iejSFAo0KJ8oQtKrURrERiKwnA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR06MB4486.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(52116005)(1800799015)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?2b+WxJhnAIw2+7vMhujuH7mfNqswX18wLGSswyiELszv3aO6GGVdlzmy/hYh?=
- =?us-ascii?Q?elkCnE4gtbqmgqhIwuLGlfiZTyhVzHSP60GhJWdONnjB4s++BJimdieDp1q9?=
- =?us-ascii?Q?PtLi5WGBd6juK5HPq2lSuTg2pyO2CnixmRWCqeVqipLLdz8UPm/MEV4agMES?=
- =?us-ascii?Q?D70r6+gqLW0yCKzr9HLP7h8PDmwWkDg/qsG/tCCE35eoFeh4zoxoPsAhVizz?=
- =?us-ascii?Q?0p4yDKvrTpVAfXJf/FDaVRGhAarNySF8/fCJG6oTP7Y733LRh0YFvIkCBowp?=
- =?us-ascii?Q?pt17fkI/X7mllrB93VKW2sgzwBCNagQLq5m7Etae64VxSQo/XYo3+nBVJ4S9?=
- =?us-ascii?Q?YWfNZJwL9NiCPOf1avkUU+PgQq0tio0Z+gtKiWMcmoFiAAhJy+5q/VEorHQC?=
- =?us-ascii?Q?OV/UpCt1bIj2SgwzXfzqkwB5ZnQdmPnsS0OQV7ZcM0k11NTs7+M/Kf7n9KD8?=
- =?us-ascii?Q?wa6bx9vBHhsBZ4dws4qGtFL2BLoD2OuFp6jKDYlUmLTN0Wsmo647KMGuVQZh?=
- =?us-ascii?Q?KSDGnJpd5ugjkMbJfz6nn71lrvQ/90Y/83zXGm3290Ad39xD+HojP54xTba2?=
- =?us-ascii?Q?6lFkhxMYJTtvP0tayC82iepmsdxpQPksT06AGjVdCVZfeH8UAAQDgIeseNaL?=
- =?us-ascii?Q?P825Jc50PULcbcfbdOpEtA21+bIti32jkw/x6KW5vmUIJBoYoDZDFXqAWbvS?=
- =?us-ascii?Q?KaXvs2MC7xt/BkG8ZgJWgU38HORk7gyq/z67eNoEwHVwuo8B00/b+C1ei/Ki?=
- =?us-ascii?Q?5mdet5xjA9RShk4ZX/pLIoPsjDCibB4maATPfArSfWACT5AEk6ZbvfAkmar9?=
- =?us-ascii?Q?imobb1jBoHpqTj3Sqh0149UfDxOusTIv9XPFtS3zIqCOMwg9FHY2DmOOy+Xd?=
- =?us-ascii?Q?7H3hKCexkCJ+2DZhmEvG7/UFdKjwbnFJZA8cyyFs+OA+87DTbKXP9fi1qjrA?=
- =?us-ascii?Q?aLo3tFez8d5gz28V077FnNZCYWIIpPAXAuidIv/zdbIQDt8cZ4UcrvjGZDmY?=
- =?us-ascii?Q?Iu+V83wy6nqn0alns3JJemJ1EQArOJ6t4OyEPokLX7/fI0ZVfLev2jYMYhfe?=
- =?us-ascii?Q?b6Ke7VoEXc5rA7Y3G2chcjCAK+g1wD5UUP4vymCHojg8vwDYBHyGKHqEHRhL?=
- =?us-ascii?Q?8L1wcjykrJy9VwY2xnESQd8VCc+HKbWvuMunDK+LqGCbhgi+PkmcnJoc3PAC?=
- =?us-ascii?Q?A5CijzJIkKvWmoIHuRO0zpHgm425RwhGlMWoyMWcxRpeKtxi9CW6J2iQpFSD?=
- =?us-ascii?Q?XwvFAFwuf/PL6fSnG5Cw+5uTuiL68vus4QNZoESyHozWSdq+N6IUsx4Hp+Mi?=
- =?us-ascii?Q?lvfV94h3mg6Qnxuht+/t93UMEAea7QqU8UTBadISO7viI1HbjhqDpe7w2VzM?=
- =?us-ascii?Q?Ga3WMtPIh2wBCIUQ3Fo/p3szkusfrEn65XoKfwCwe77zpiSLy18yoFyVoLgS?=
- =?us-ascii?Q?8wRv+SQQiBi/kD3GvgtQFtk/m9SqhqiUdhW1aWPgQnmTq+Ckm+PokBeybxeu?=
- =?us-ascii?Q?DZu5nWJOMUWj3oHRnIKDj2Z9rBssUbrbUp3/iVkGZ1GtbwSOAoSojjPC0KiV?=
- =?us-ascii?Q?4NFbl2uktnN6J3qydNiO7fVBlOn1JJHEE7ZASudQ?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b34974c-5086-4e6b-b760-08dc67fdde94
-X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4486.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 03:38:44.0175
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +qDf0Vvq/CKIN9dKR/6VN/brz+0c267Ej70ozOE6pqZWGH/a2whxdDQhC2GWJq6XllMYkI5C1G2BH/DoSz9RtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR06MB6194
+Content-Transfer-Encoding: 8bit
 
-As for zoned-UFS, f2fs section size is forced to zone size. And zone
-size may not aligned to pow2.
+Add support for Infineon XDP710.This is a Hot-Swap Controller.
 
-Fixes: 859fca6b706e ("f2fs: swap: support migrating swapfile in aligned write mode")
-Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
-Signed-off-by: Wu Bo <bo.wu@vivo.com>
+Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
 ---
-v2:
-Fix arch-i386 build error.
-https://lore.kernel.org/oe-kbuild-all/202404290041.jfIs3zkw-lkp@intel.com/
----
- fs/f2fs/data.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ Documentation/hwmon/index.rst  |   1 +
+ Documentation/hwmon/xdp710.rst |  83 +++++++++++++++++++++
+ drivers/hwmon/pmbus/Kconfig    |   9 +++
+ drivers/hwmon/pmbus/Makefile   |   1 +
+ drivers/hwmon/pmbus/xdp710.c   | 132 +++++++++++++++++++++++++++++++++
+ 5 files changed, 226 insertions(+)
+ create mode 100644 Documentation/hwmon/xdp710.rst
+ create mode 100644 drivers/hwmon/pmbus/xdp710.c
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index bee1e45f76b8..6fd877c69c03 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -3916,15 +3916,14 @@ static int check_swap_activate(struct swap_info_struct *sis,
- 	struct address_space *mapping = swap_file->f_mapping;
- 	struct inode *inode = mapping->host;
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
--	sector_t cur_lblock;
--	sector_t last_lblock;
--	sector_t pblock;
--	sector_t lowest_pblock = -1;
--	sector_t highest_pblock = 0;
-+	block_t cur_lblock;
-+	block_t last_lblock;
-+	block_t pblock;
-+	block_t lowest_pblock = -1;
-+	block_t highest_pblock = 0;
- 	int nr_extents = 0;
--	unsigned long nr_pblocks;
-+	unsigned int nr_pblocks;
- 	unsigned int blks_per_sec = BLKS_PER_SEC(sbi);
--	unsigned int sec_blks_mask = BLKS_PER_SEC(sbi) - 1;
- 	unsigned int not_aligned = 0;
- 	int ret = 0;
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+index 1ca7a4fe1f8f..b2546925fb15 100644
+--- a/Documentation/hwmon/index.rst
++++ b/Documentation/hwmon/index.rst
+@@ -250,6 +250,7 @@ Hardware Monitoring Kernel Drivers
+    wm831x
+    wm8350
+    xgene-hwmon
++   xdp710
+    xdpe12284
+    xdpe152c4
+    zl6100
+diff --git a/Documentation/hwmon/xdp710.rst b/Documentation/hwmon/xdp710.rst
+new file mode 100644
+index 000000000000..083891f27818
+--- /dev/null
++++ b/Documentation/hwmon/xdp710.rst
+@@ -0,0 +1,83 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++Kernel driver xdp710
++====================
++
++Supported chips:
++
++  * Infineon XDP710
++
++    Prefix: 'xdp710'
++
++  * Datasheet
++
++    Publicly available at the Infineon website : https://www.infineon.com/dgdl/Infineon-XDP710-001-DataSheet-v01_00-EN.pdf?fileId=8ac78c8c8412f8d301848a5316290b97
++
++Author:
++
++	Peter Yin <peteryin.openbmc@gmail.com>
++
++Description
++-----------
++
++This driver implements support for Infineon XDP710 Hot-Swap Controller.
++
++Device compliant with:
++
++- PMBus rev 1.3 interface.
++
++Device supports direct and linear format for reading input voltage,
++output voltage, output current, input power and temperature.
++
++The driver exports the following attributes via the 'sysfs' files
++for input voltage:
++
++**in1_input**
++
++**in1_label**
++
++**in1_max**
++
++**in1_max_alarm**
++
++**in1_min**
++
++**in1_min_alarm**
++
++The driver provides the following attributes for output voltage:
++
++**in2_input**
++
++**in2_label**
++
++**in2_alarm**
++
++The driver provides the following attributes for output current:
++
++**curr1_input**
++
++**curr1_label**
++
++**curr1_alarm**
++
++**curr1_max**
++
++The driver provides the following attributes for input power:
++
++**power1_input**
++
++**power1_label**
++
++**power1_alarm**
++
++The driver provides the following attributes for temperature:
++
++**temp1_input**
++
++**temp1_max**
++
++**temp1_max_alarm**
++
++**temp1_crit**
++
++**temp1_crit_alarm**
+diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+index 557ae0c414b0..c775128c2ea7 100644
+--- a/drivers/hwmon/pmbus/Kconfig
++++ b/drivers/hwmon/pmbus/Kconfig
+@@ -511,6 +511,15 @@ config SENSORS_UCD9200
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called ucd9200.
  
-@@ -3962,8 +3961,8 @@ static int check_swap_activate(struct swap_info_struct *sis,
- 		pblock = map.m_pblk;
- 		nr_pblocks = map.m_len;
- 
--		if ((pblock - SM_I(sbi)->main_blkaddr) & sec_blks_mask ||
--				nr_pblocks & sec_blks_mask ||
-+		if ((pblock - SM_I(sbi)->main_blkaddr) % blks_per_sec ||
-+				nr_pblocks % blks_per_sec ||
- 				!f2fs_valid_pinned_area(sbi, pblock)) {
- 			bool last_extent = false;
- 
++config SENSORS_XDP710
++	tristate "Infineon XDP710 family"
++	help
++	  If you say yes here you get hardware monitoring support for Infineon
++	  XDP710.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called xdp710.
++
+ config SENSORS_XDPE152
+ 	tristate "Infineon XDPE152 family"
+ 	help
+diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+index f14ecf03ad77..4fe630793721 100644
+--- a/drivers/hwmon/pmbus/Makefile
++++ b/drivers/hwmon/pmbus/Makefile
+@@ -51,6 +51,7 @@ obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
+ obj-$(CONFIG_SENSORS_TPS546D24)	+= tps546d24.o
+ obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
+ obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
++obj-$(CONFIG_SENSORS_XDP710)	+= xdp710.o
+ obj-$(CONFIG_SENSORS_XDPE122)	+= xdpe12284.o
+ obj-$(CONFIG_SENSORS_XDPE152)	+= xdpe152c4.o
+ obj-$(CONFIG_SENSORS_ZL6100)	+= zl6100.o
+diff --git a/drivers/hwmon/pmbus/xdp710.c b/drivers/hwmon/pmbus/xdp710.c
+new file mode 100644
+index 000000000000..4f858eafc5e8
+--- /dev/null
++++ b/drivers/hwmon/pmbus/xdp710.c
+@@ -0,0 +1,132 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Driver for Infineon XDP710 Hot-Swap Controller
++ */
++
++#include <linux/bitops.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include "pmbus.h"
++
++#define XDP710_REG_CFG		0xD3
++#define XDP710_V_SNS_CFG	0xD4
++#define XDP710_CS_RNG		0xD5
++
++/*
++ * The table to map configuration register values
++ * to sense resistor values
++ */
++const int micro_ohm_rsense[] = {
++	200, 250, 300, 330, 400, 470, 500, 600,
++	670, 700, 750, 800, 900, 1000, 1100, 1200,
++	1250, 1300, 1400, 1500, 1600, 1700, 1800, 1900,
++	2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700,
++	2800, 3000, 3100, 3200, 3300, 3400, 3500, 3600,
++	3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400,
++	4500, 4600, 4700, 4800, 4900, 5000, 5500, 6000,
++	6500, 7000, 7500, 8000, 8500, 9000, 9500, 10000
++};
++
++static struct pmbus_driver_info xdp710_info = {
++	.pages = 1,
++	.format[PSC_VOLTAGE_IN] = direct,
++	.format[PSC_VOLTAGE_OUT] = direct,
++	.format[PSC_CURRENT_OUT] = direct,
++	.format[PSC_POWER] = direct,
++	.format[PSC_TEMPERATURE] = direct,
++	.m[PSC_VOLTAGE_IN] = 4653,
++	.b[PSC_VOLTAGE_IN] = 0,
++	.R[PSC_VOLTAGE_IN] = -2,
++	.m[PSC_VOLTAGE_OUT] = 4653,
++	.b[PSC_VOLTAGE_OUT] = 0,
++	.R[PSC_VOLTAGE_OUT] = -2,
++	.m[PSC_CURRENT_OUT] = 23165,
++	.b[PSC_CURRENT_OUT] = 0,
++	.R[PSC_CURRENT_OUT] = -2,
++	.m[PSC_POWER] = 4211,
++	.b[PSC_POWER] = 0,
++	.R[PSC_POWER] = -2,
++	.m[PSC_TEMPERATURE] = 52,
++	.b[PSC_TEMPERATURE] = 14321,
++	.R[PSC_TEMPERATURE] = -1,
++	.func[0] =
++		PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_PIN |
++		PMBUS_HAVE_TEMP | PMBUS_HAVE_IOUT |
++		PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP,
++};
++
++static int xdp710_probe(struct i2c_client *client)
++{
++	struct pmbus_driver_info *info;
++	u8 cs_rng;
++	u8 vtlm_rng;
++	int rsense;
++	int ret;
++	int m = 0;
++
++	info = devm_kmemdup(&client->dev, &xdp710_info, sizeof(*info),
++			    GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	ret = i2c_smbus_read_word_data(client, XDP710_CS_RNG);
++	if (ret < 0) {
++		dev_err(&client->dev, "Can't get CS_RNG");
++		return ret;
++	}
++	cs_rng = (ret >> 6) & GENMASK(1, 0);
++
++	ret = i2c_smbus_read_word_data(client, XDP710_V_SNS_CFG);
++	if (ret < 0) {
++		dev_err(&client->dev, "Can't get V_SNS_CFG");
++		return ret;
++	}
++	vtlm_rng = ret & GENMASK(1, 0);
++
++	ret = i2c_smbus_read_word_data(client, XDP710_REG_CFG);
++	if (ret < 0) {
++		dev_err(&client->dev, "Can't get REG_CFG");
++		return ret;
++	}
++	ret &= GENMASK(5, 0);
++	rsense = micro_ohm_rsense[ret];
++
++	info->m[PSC_VOLTAGE_IN] <<= vtlm_rng;
++	info->m[PSC_VOLTAGE_OUT] <<= vtlm_rng;
++
++	m = info->m[PSC_CURRENT_OUT];
++	info->m[PSC_CURRENT_OUT] = DIV_ROUND_CLOSEST(m * rsense >> cs_rng,
++						     1000);
++
++	m = info->m[PSC_POWER];
++	info->m[PSC_POWER] = DIV_ROUND_CLOSEST(m * rsense >> cs_rng, 1000);
++
++	return pmbus_do_probe(client, info);
++}
++
++static const struct of_device_id xdp710_of_match[] = {
++	{ .compatible = "infineon,xdp710" },
++	{}
++};
++
++static const struct i2c_device_id xdp710_id[] = {
++	{"xdp710", 0},
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, xdp710_id);
++
++static struct i2c_driver xdp710_driver = {
++	.driver = {
++		   .name = "xdp710",
++		   .of_match_table = xdp710_of_match,
++	},
++	.probe = xdp710_probe,
++	.id_table = xdp710_id,
++};
++module_i2c_driver(xdp710_driver);
++
++MODULE_AUTHOR("Peter Yin <peter.yin@quantatw.com>");
++MODULE_DESCRIPTION("PMBus driver for XDP710 HSC");
++MODULE_LICENSE("GPL");
++MODULE_IMPORT_NS(PMBUS);
 -- 
 2.25.1
 
