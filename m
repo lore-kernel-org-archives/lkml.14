@@ -1,111 +1,186 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAA410A1D
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 07:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CFD134BE;
+	Mon, 29 Apr 2024 07:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714374800; cv=none; b=dURBiluibz40OymdPU3uf2bsEnXj/D6MV+2kT+xBPKvfpNcb1Nn8mz2F6pUtdcHxa1zYqUVz4KASADTPbgBUNn1O4A+lyBnRjEE5L5LZqGdT4M0bI/wcySGK+O4HbvRiRJLMPj1F7NfYn2jjh9bmP6KPLOuMKeva8nb3vTT5DYk=
+	t=1714374824; cv=none; b=QcB7gGjkComIGkkK+qUkiqVPK2BymbRggbGtgSAbMzTwrMbgc3ksbeijMdu8tPSeaen+opaDuPgX/K+1MoYvRUs1+X2m9IT/avM/9GPzXyVkbfNbdlOKdTR00lPpasslswHtOyJLDZ4oUK8oOnYMPO5SpF36lx/PDKAQbrpdGjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714374800; c=relaxed/simple;
-	bh=ckBKhFZBzN81l8RNVvXQmvyvSCSw0g6m221rKjyVgU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYutc5u9Lig63cm59RZ4nWuapKftoipPMKCyyP6JvHlEO1hzoauiPG7oT8EZkyN3MLwzJGnC2KXfPtg13WppCSFQ0Z0w1EYjUpffKzQB2pR4AKvKNqgSRWYlAo/DO+lqqh6HMzlQIvdMZ4mUkyZ6WLHWs96DbgZesobeNr++AzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s1LCN-0003X3-D1; Mon, 29 Apr 2024 09:13:15 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s1LCM-00Ew6a-KC; Mon, 29 Apr 2024 09:13:14 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s1LCM-00BDsA-1j;
-	Mon, 29 Apr 2024 09:13:14 +0200
-Date: Mon, 29 Apr 2024 09:13:14 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 7/8] intel_th: Convert to platform remove callback
- returning void
-Message-ID: <rucgdqb5ejtttsd2ksvph3toeow652rdiqnohdsg6ndp6qgcwu@c3rz275bofqg>
-References: <20231107202818.4005791-1-u.kleine-koenig@pengutronix.de>
- <20231107202818.4005791-8-u.kleine-koenig@pengutronix.de>
- <i3oybmf3axeyk5rcef5kgfdb4cucd63h24gup6idn62nq3vvav@4mfzwzyamq27>
- <jawceotzgdydpz74qr2e5dwgfumwjmt4wxvi43qlwldlbgemzf@v3qa2hoopawv>
- <qiiln66o6uy2nsqdjcykygp3yumonn7jqp7q4wxf56i6pazics@iqfaiglmsgwt>
- <87edd5y7lz.fsf@ubik.fi.intel.com>
- <rnybbv5sddkgtnxzad7sg2jyosr77vvud6t7ii3sssfsi7td2u@3b5nbhsprcaf>
- <875xwjxgsk.fsf@ubik.fi.intel.com>
+	s=arc-20240116; t=1714374824; c=relaxed/simple;
+	bh=+hqrct1glvL58HkQZQ62f7MQqOS2zEStZd8S2vqKT2A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fUKj58IfnotxCfLIpWe4xI+FdQaKoB/vSKfR4E9gElzKvOdcFl8ozoC0O91dwVJQjIa0ra6dpEf8qN0QfEyL7k/BadSV+k43Oy4XH+5AkOIvkh+XGkW/ZzLYIruUyZJR1mN2AYn17YpFC/g/QX+s/7rzohGTt9clW9Ib8pASBic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ILkP7k7U; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILkP7k7U"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41a1d2a7b81so27963375e9.0;
+        Mon, 29 Apr 2024 00:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714374821; x=1714979621; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+hqrct1glvL58HkQZQ62f7MQqOS2zEStZd8S2vqKT2A=;
+        b=ILkP7k7Uq6hw9+PRDnk+1gbzT2LG6/1GGl6mq6GxhiAkcsY9FfkRFQuAL4heHIDDmn
+         CIesBEU9dJgSBpkkdOnvRqrbpU/aQ6tGgzkouSEo/U0vbFoLEs/3DSY+9bgEhjOcODFk
+         C7LUtfgvjO/vQHKTFElWNw7emV6ELvAjCspisUJEoMhpYwwx0xbxTs672ZGBjTHrTBat
+         YJ7vXL3Yn6fsmrbni4o1xeQBEI12VgYf3gpE/ILcoUyTS4nAQzloXLnKXY4iSp1ttenw
+         jH3Bnigr7m9hzwnR2VNZL26rGlHc6xnM0pJYidXRqZAzjk2zJfdh15ADontBtDB2buGQ
+         r92A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714374821; x=1714979621;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+hqrct1glvL58HkQZQ62f7MQqOS2zEStZd8S2vqKT2A=;
+        b=Omx0A2NRJuS3kzWM7IOxNLVdrmu8Q020JiF2sRa+idUUWYD4V0vCEDSNjLh0a3+Ilt
+         nlXXVDeSxLLX8PV+rLudHYIiZ/RGwptsgPzMH8ndn24vN70/yHJ6z/B2UjQnG8Zyi4UV
+         yydZ4hlQFnYnVKJNZMa7NHzNWnUFGTXQiHeBspR9sYYhcWKAeAYTSB5ZEMkQEf2wxI6f
+         XjIpm48kKVc8OaMbTtnu5huxBR6mzthJ2Vk0URuUdvaTGKMnn/Qj17pEnfJdqwbfILlf
+         XxxDu01kX638NuFwBPYik2greqYDTxHW9scE6D7wDB+5XQOUSylgaaaXpRc+qH4G32YS
+         T/5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUeEsM01ye77CWolQ/YV6dMYbeqKEXkujlRuLaPH3TKT3+gMn2s49G4srdNggqh2mlHNUjGMAkDBuG1TX0NPMPcTKdwHoUQKLuVP5R7PGsHMLyt6FJrrW41PsZDAgWydh6aE+oikWCa
+X-Gm-Message-State: AOJu0Yy4k7ViP0779JMhnq7ZrEk1NiA+X/X9ZVVQEEHoI2peGBwPdegy
+	GHhB8yGU3E2SwBd4lU9AIRWl8Mc5tJZ5+dwXtYsUOPz5Qh/6033C
+X-Google-Smtp-Source: AGHT+IHsnOgDmNCZDHXtkTu23Oi6Kkv6U6smYB4eXQYcS48Rr+6Ht7ybUGYjW3UEpoXwMQOT/fjbHA==
+X-Received: by 2002:a05:600c:458b:b0:41c:ab7:fa22 with SMTP id r11-20020a05600c458b00b0041c0ab7fa22mr3191722wmo.5.1714374820550;
+        Mon, 29 Apr 2024 00:13:40 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
+        by smtp.gmail.com with ESMTPSA id a4-20020a5d5084000000b0034c6077c625sm7581519wrt.29.2024.04.29.00.13.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 00:13:40 -0700 (PDT)
+Message-ID: <9d1ac78951439bbcdc2f294713f55ee34e30f84e.camel@gmail.com>
+Subject: Re: [PATCH 0/3] iio: cleanup masklength usage
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>, David Lechner
+ <dlechner@baylibre.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>,  Fabio Estevam <festevam@gmail.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Date: Mon, 29 Apr 2024 09:17:18 +0200
+In-Reply-To: <20240428142343.5067c898@jic23-huawei>
+References: 
+	<20240425-b4-iio-masklength-cleanup-v1-0-d3d16318274d@baylibre.com>
+	 <2630ef8c8363b4fa772a2ff2c95cf115ad3c509d.camel@gmail.com>
+	 <CAMknhBGQB4MC8ejEs_uLgb=iKehXkoetgHjZnCvCKQbuua5kfA@mail.gmail.com>
+	 <20240428142343.5067c898@jic23-huawei>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lhk5mqvpojsayxfv"
-Content-Disposition: inline
-In-Reply-To: <875xwjxgsk.fsf@ubik.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-
---lhk5mqvpojsayxfv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Alex,
-
-On Mon, Apr 15, 2024 at 09:48:27AM +0300, Alexander Shishkin wrote:
-> Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> writes:
-> > Given there are not that many patches left (~50) as of today's next, I'd
-> > like to see this patch going in during the next merge window, that I can
-> > finalize the (next step of the) quest around platform_driver::remove.
-> >
-> > Is sending this patch to Greg still on your todo list?
+On Sun, 2024-04-28 at 14:23 +0100, Jonathan Cameron wrote:
+> On Fri, 26 Apr 2024 10:26:31 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
 >=20
-> Yes, as soon as I finalize other patches on my series. Should be soon.
+> > On Fri, Apr 26, 2024 at 2:13=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail=
+.com> wrote:
+> > >=20
+> > > On Thu, 2024-04-25 at 10:03 -0500, David Lechner wrote:=C2=A0=20
+> > > > While working on other patches I noticed that a few drivers are set=
+ting
+> > > > the masklength field of struct iio_dev even though it is marked as
+> > > > [INTERN]. It looks like maybe this was not always the case, but we =
+can
+> > > > safely clean it up now without breaking anything.
+> > > >=20
+> > > > ---
+> > > > David Lechner (3):
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad7266: don't set maskleng=
+th
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: mxs-lradc-adc: don't set m=
+asklength
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: buffer: initialize masklength a=
+ccumulator to 0
+> > > >=20
+> > > > =C2=A0drivers/iio/adc/ad7266.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 1 -
+> > > > =C2=A0drivers/iio/adc/mxs-lradc-adc.c=C2=A0=C2=A0 | 1 -
+> > > > =C2=A0drivers/iio/industrialio-buffer.c | 2 +-
+> > > > =C2=A03 files changed, 1 insertion(+), 3 deletions(-)
+> > > > ---
+> > > > base-commit: b80ad8e3cd2712b78b98804d1f59199680d8ed91
+> > > > change-id: 20240425-b4-iio-masklength-cleanup-86b632b19901
+> > > > =C2=A0
+> > >=20
+> > > Hi David,
+> > >=20
+> > > Nice cleanup. The patches look good to me but there's one thing missi=
+ng
+> > > :). As you
+> > > correctly noted, the field should be internal to the IIO core and dri=
+vers
+> > > should not
+> > > touch it. Hence, you need to make sure not driver is using it so we c=
+an
+> > > move it into
+> > > struct iio_dev_opaque [1]. That's the place all the intern fields sho=
+uld,
+> > > eventually,
+> > > end up.
+> > >=20
+> > > Now, quite some drivers in the trigger handler will read the maskleng=
+th
+> > > for looping
+> > > with for_each_set_bit(). Hence, the straight thing would be an helper=
+ to
+> > > get it.
+> > > Maybe there's a clever way...
+> > >=20
+> > > I know this is more work than what you had in mind but I think it sho=
+uld
+> > > be fairly
+> > > simple (hopefully) and since you started it :), maybe we can get the =
+whole
+> > > thing done
+> > > and remove another [INTERN] member from the iio_dev struct.
+> > >=20
+> > > [1]:
+> > > https://elixir.bootlin.com/linux/latest/source/include/linux/iio/iio-=
+opaque.h#L42
+> > >=20
+> > > - Nuno S=C3=A1=C2=A0=20
+> >=20
+> > Sounds like fun. :-p
+> >=20
+> > I will look into it.
+>=20
+> I think this one might be miss marked as [INTERN]. It should be constant =
+from
+> the driver
+> point of view, but given active_scan_masks is meant to be visible to the
+> driver,
+> it's length should probably be as well.
+>=20
 
-I know neither your nor Greg's plans, but I wonder if this patch will
-make it into v6.10-rc1 given that it still didn't land in next yet.
+Yeah, that did crossed my mind. I guess we should just make it [DRIVER] the=
+n
+(likely with RO statement).
 
-I intend to change the prototype of platform_driver::remove() after the
-merge window leading to v6.10-rc1 closes to cook in next for some time.
-If this patch doesn't make it into the mainline before, I'll send it
-together with the change adapting the remove callback. That will go in
-via Greg's tree, too.
+> Sure every driver should be able to trivially work this out for themselve=
+s,
+> but
+> do we care about stopping them using this?
+>=20
+> It might be worth some nice iterator wrappers with names like
+> iio_for_each_active_channel() though I'd expect those to still be accessi=
+ng
+> these
 
-Best regards
-Uwe
+That looks like a good idea. It would make it more clear that member is not=
+ to
+be directly accessed.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+- Nuno S=C3=9Fa
 
---lhk5mqvpojsayxfv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYvSIkACgkQj4D7WH0S
-/k5xgQf9GEfJ+cnKLoD4gYUvF8t+rH375B0ZR+kq0oSbf0hhrhr1ncqgNJK3Cdl5
-l7WIUPHrdUoj+QGNbedQlS2crcmrgPPVKtwR7RZZW82iXcSgg2V6VGpoKy9WVrE6
-IWQBBISYl3l84jrvT1I7nmyoYSV4ZYjVIcqdRTXkL11dNfVcYL0AXdRxhVatl1LO
-Xcprbq1tMy/nCQF/BViMB8gI9Miz/IXQK4sB0yM6jI/XEeCWDwJo4Y0oZjTxwbNx
-YlJUzI/jl8keD8LMlmq1eNE/xZLabryVldy93WMGPeY1u97ezIiRV4gTBHSHcQ6Y
-+XfCkwWuWrImDaYUPSyQ8KufaY5Irw==
-=5vjS
------END PGP SIGNATURE-----
-
---lhk5mqvpojsayxfv--
