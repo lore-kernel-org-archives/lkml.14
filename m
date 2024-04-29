@@ -1,221 +1,124 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpcmd13146.aruba.it (smtpcmd13146.aruba.it [62.149.156.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8726614A8C
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC5C23746
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714383235; cv=none; b=VQzVLvO9xrsBrcMDp3eaPF+wxpTlxBEc4ZEXRaA6Pz2ld6+x+AnTmBVmZ+kLQ90n316UY0j5Jx7Z9UEEXXLO3rq1c7R2wxZuPA05KOvjB5K+ixB6OfwUqSmYQaVQMSdGc/vjflWCq7Qm8SeHCjlK3fuYQb3RlPla9qcBItuTeyI=
+	t=1714383270; cv=none; b=Iakf6XE+TbaMnaRuz+rqApCqlADAyHawBJbUn5UpM1e1Pzxav/DhkehGJzjLEF9lCSU8FbiB35q1Xd/WkunurGseEbrlbDE6VOTCAqkqt57Rm1cAks7Ck/22HSv6hE6qwB6WaT0GMaksPdHWOzoXbupJ/gvcMq8qVpZ7NcQ5MvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714383235; c=relaxed/simple;
-	bh=amrymcDQCXPE5yRwTJ9bogpBgJMIQ6mc2UUPWFjMYEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PgpEsDkoagHp/lpTfLXzVLyjkhSnZ2hbpI2ujPUeO0mEErNsj2PpW+5qgApxyIXvOc/OorN1ZsV4zLXi3dhoN6rwoBqrvSTUXfwIE3uSQHa2HK90JPOOHM4el4mWRXLC6LazHEAv2rsOdaxhFqngui4f9HXIrovi+VaMiEi0qVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=mm/qCV//; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1714383270; c=relaxed/simple;
+	bh=jYtPjcFKCu49Meh/96iQOtFJ3WgWReEYMDANoDirFZw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kxNtU7fUhQ0nlTSeZdvq1YWPAnManTmqJ4hw/JCz2esCeUGLloaG1zIp7d/JnjEqmoM0rARbG+Uj2wwnwJ928r2zkCrxIqqyHMW2Ux4uN7HLO3EYCLug4ghyCJpM4oeYSEB6F+94wb7G+5v6Hx3ebzSXoqTPrUp+FGo9VbuTehI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=Qm7aHLwO; arc=none smtp.client-ip=62.149.156.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="mm/qCV//"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a58d0aea14cso342114766b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 02:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1714383232; x=1714988032; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EU5DwD+o4qYG2LMifv0uxvcF3WJYCYks9+vxzfiwTyo=;
-        b=mm/qCV//X6HaL3F3qHsIWnUs/z8FKVXOviZQvvgF+/D0XG7Kr7nN8XTPB7H6cb2aGe
-         3Y1Nt62BZyeJm+xCe5MIcsaWZbcsKlsl8qD6uoKwYsciN2gr4mRDq1EOZeDu03MAERHr
-         0ytUJxjcab6ocn6zosPSizyUemiUNg/xjtxUo+4I9nbUVjpLEZZE/VPvyYs/Xag4n/g+
-         mYn23Rzof0jlTgzNdNk+Xcp24smsMIRuZNVUJil3iTHEokcot+qCsH5qGyfrHPva6jKH
-         JfvDby7j4jnhKGWXokejnGZQiIiKRgn1wkKpZRxgnQLWqwTCgNZYm906rmHoiAZqM9dr
-         uNYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714383232; x=1714988032;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EU5DwD+o4qYG2LMifv0uxvcF3WJYCYks9+vxzfiwTyo=;
-        b=PyZeuvv8Ij8HconBmfL8st4KrhhWgpeKpHHvHiJCjWdgI4zDHCwGMpNZIvbwXJLYUE
-         4QWIKTLw/HMS8u5MQ7WPthho1LBgRemYql+WD5DT6HcLBfCpxYyRv+WTj+18CLglWatw
-         YIkwAlTcbmvN9aChhWcEKbRer3lMgr3Th0sPGyzHWw3DJAP0ma1Zl71F74Jmgy+kzneM
-         CWW7VFgnbBcNCYVjcdTbz/mPLVkpFXLInlJ3GjCsmUSIfDWE5jAA/aeXB5Qt/dkRJq47
-         gddUArwD/1TMtfuPM/KQ9AUJqbL1o6w3kWeGnHfT6KenRHRjmqmB1qHz4fLeXNIKY4Ff
-         QN8A==
-X-Forwarded-Encrypted: i=1; AJvYcCXGDQQafOy5np29HuWFhOkFSUTfNOjvfpjMQiED4EBNXqvQZpS3/yJX0c8glXVwQKc8DDUxJfzqs9dWjooU0lgcB96dg3Fk0ohZUAjl
-X-Gm-Message-State: AOJu0Yzw/IFPCSzZZboacIYP7xgPT8+wRov/CbSX+GszVZ7VDM4aVMGu
-	4spb/aD8/5WNE/0G4oMbF9WoO8SZ1eMstgbNzIsPytMQytMJIih4VLy2aGHHxSo=
-X-Google-Smtp-Source: AGHT+IERuDfoXTZsVEZYtHEP0m8zcYtgaeZ/2E5V9D4Cg4n2UY/ovyyJ51522Jpbw2aKwxKXDxdzFg==
-X-Received: by 2002:a17:906:57c4:b0:a58:e969:1472 with SMTP id u4-20020a17090657c400b00a58e9691472mr3749136ejr.40.1714383231850;
-        Mon, 29 Apr 2024 02:33:51 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id bi10-20020a170906a24a00b00a54c12de34dsm13629698ejb.188.2024.04.29.02.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 02:33:51 -0700 (PDT)
-Date: Mon, 29 Apr 2024 11:33:50 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
-	Conor Dooley <conor@kernel.org>, Conor Dooley <conor.dooley@microchip.com>, 
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, Evan Green <evan@rivosinc.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] riscv: cpufeature: Fix thead vector hwcap removal
-Message-ID: <20240429-f6438977f19e44966d0dd879@orel>
-References: <20240426-cpufeature_fixes-v2-0-7377442b1327@rivosinc.com>
- <20240426-cpufeature_fixes-v2-1-7377442b1327@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="Qm7aHLwO"
+Received: from engicam.com ([146.241.8.107])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id 1NLxsVDmQ8U421NLxsOAgQ; Mon, 29 Apr 2024 11:31:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1714383078; bh=jYtPjcFKCu49Meh/96iQOtFJ3WgWReEYMDANoDirFZw=;
+	h=From:To:Subject:Date:MIME-Version;
+	b=Qm7aHLwOPA1QVs35D3wFDBBlLtkwHlytRBQ+kY8iVpCozYQP7x1ztf1Ce4oERhSEl
+	 tO7uluXF8JL9wBrdGAu9dtgDmMW01YsR+dXl7pyXR1W5Azk7dzFRnpRRTbE10sfsty
+	 itr2WpaRtZ0LYqB7HGParUBZKin/4cahkJCudAqzRcAyK4Wmr3KZBMiwmUzmLNi15l
+	 CNMrXlm5KkhMiAEsjydI8YBb6v2zNIGqAz88Sntnuaxs14xI5f+umB117fpysgWdto
+	 RiHET7UUNQSwLTHrCVIVYexGAnlwQlCuLUGZSAHNZDfBKuuKwXbo5c/dlPESTMO9L2
+	 GyeEBQRjiLmLw==
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Fabio Aiuto <fabio.aiuto@engicam.com>
+Subject: [PATCH v8 0/3] arm64: dts: imx93: add i.Core MX93 EDIMM 2.0 board
+Date: Mon, 29 Apr 2024 11:31:13 +0200
+Message-Id: <20240429093116.9346-1-fabio.aiuto@engicam.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240426-cpufeature_fixes-v2-1-7377442b1327@rivosinc.com>
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfMjEokuSxgu8rdo8B5Qc0dov8DNzpZcvyqv6+gfR2HKlxrQ68OwtsPw4qkPkQEvVb9ieCpuD6onS8zCEfZUo2DzrqdIh/8fRMov3EVHb70alJErf1fym
+ eecV1keRTq/FsblcekPrdttk6ifFOScwZ0J7aIifahP6Y4ftTh8NUL6ZD7IIRIJpqEfxYtbP6EdEvrjIMZ1C0n+G/Hty8BM0kjHRTNmkOsf1932Pt42rdoLd
+ rITS8Zo8J2NHyYevRUbuJfUKFZ4cjit2KngmkmZKA38ET0V/PnrACw6elmA9YmdszW8Xg4RzVqcF+Gts17osb5/smxv7qQlnh0pNmnUniu1pXk2pco7p18BU
+ lvuYDJ0vZ1mxf4rLUcbyHmBlJqLBUU4/kthtfXkXGOoqmVIM0ovXmKWHb1i+Mokaomvd8xerUb0zJ36jT02AFwLRJP0ahih4LneYM+JApYIQq3vmPcE3tkvn
+ et9rNdL1HBIhSrx2LEpPRTr/NSJWzAJzuWbgxUy+XVCePnHTLUxD812LC4Q=
 
-On Fri, Apr 26, 2024 at 02:58:54PM GMT, Charlie Jenkins wrote:
-> The riscv_cpuinfo struct that contains mvendorid and marchid is not
-> populated until all harts are booted which happens after the DT parsing.
-> Use the vendorid/archid values from the DT if available or assume all
-> harts have the same values as the boot hart as a fallback.
-> 
-> Fixes: d82f32202e0d ("RISC-V: Ignore V from the riscv,isa DT property on older T-Head CPUs")
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> Reviewed-by: Guo Ren <guoren@kernel.org>
-> ---
->  arch/riscv/include/asm/sbi.h   |  2 ++
->  arch/riscv/kernel/cpu.c        | 40 ++++++++++++++++++++++++++++++++++++----
->  arch/riscv/kernel/cpufeature.c | 11 +++++++++--
->  3 files changed, 47 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index 6e68f8dff76b..0fab508a65b3 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -370,6 +370,8 @@ static inline int sbi_remote_fence_i(const struct cpumask *cpu_mask) { return -1
->  static inline void sbi_init(void) {}
->  #endif /* CONFIG_RISCV_SBI */
->  
-> +unsigned long riscv_get_mvendorid(void);
-> +unsigned long riscv_get_marchid(void);
->  unsigned long riscv_cached_mvendorid(unsigned int cpu_id);
->  unsigned long riscv_cached_marchid(unsigned int cpu_id);
->  unsigned long riscv_cached_mimpid(unsigned int cpu_id);
-> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-> index d11d6320fb0d..c1f3655238fd 100644
-> --- a/arch/riscv/kernel/cpu.c
-> +++ b/arch/riscv/kernel/cpu.c
-> @@ -139,6 +139,34 @@ int riscv_of_parent_hartid(struct device_node *node, unsigned long *hartid)
->  	return -1;
->  }
->  
-> +unsigned long __init riscv_get_marchid(void)
-> +{
-> +	struct riscv_cpuinfo *ci = this_cpu_ptr(&riscv_cpuinfo);
-> +
-> +#if IS_ENABLED(CONFIG_RISCV_SBI)
-> +	ci->marchid = sbi_spec_is_0_1() ? 0 : sbi_get_marchid();
-> +#elif IS_ENABLED(CONFIG_RISCV_M_MODE)
-> +	ci->marchid = csr_read(CSR_MARCHID);
-> +#else
-> +	ci->marchid = 0;
-> +#endif
-> +	return ci->marchid;
-> +}
-> +
-> +unsigned long __init riscv_get_mvendorid(void)
-> +{
-> +	struct riscv_cpuinfo *ci = this_cpu_ptr(&riscv_cpuinfo);
-> +
-> +#if IS_ENABLED(CONFIG_RISCV_SBI)
-> +	ci->mvendorid = sbi_spec_is_0_1() ? 0 : sbi_get_mvendorid();
-> +#elif IS_ENABLED(CONFIG_RISCV_M_MODE)
-> +	ci->mvendorid = csr_read(CSR_MVENDORID);
-> +#else
-> +	ci->mvendorid = 0;
-> +#endif
-> +	return ci->mvendorid;
-> +}
-> +
->  DEFINE_PER_CPU(struct riscv_cpuinfo, riscv_cpuinfo);
->  
->  unsigned long riscv_cached_mvendorid(unsigned int cpu_id)
-> @@ -170,12 +198,16 @@ static int riscv_cpuinfo_starting(unsigned int cpu)
->  	struct riscv_cpuinfo *ci = this_cpu_ptr(&riscv_cpuinfo);
->  
->  #if IS_ENABLED(CONFIG_RISCV_SBI)
-> -	ci->mvendorid = sbi_spec_is_0_1() ? 0 : sbi_get_mvendorid();
-> -	ci->marchid = sbi_spec_is_0_1() ? 0 : sbi_get_marchid();
-> +	if (!ci->mvendorid)
-> +		ci->mvendorid = sbi_spec_is_0_1() ? 0 : sbi_get_mvendorid();
-> +	if (!ci->marchid)
-> +		ci->marchid = sbi_spec_is_0_1() ? 0 : sbi_get_marchid();
->  	ci->mimpid = sbi_spec_is_0_1() ? 0 : sbi_get_mimpid();
->  #elif IS_ENABLED(CONFIG_RISCV_M_MODE)
-> -	ci->mvendorid = csr_read(CSR_MVENDORID);
-> -	ci->marchid = csr_read(CSR_MARCHID);
-> +	if (!ci->mvendorid)
-> +		ci->mvendorid = csr_read(CSR_MVENDORID);
-> +	if (!ci->marchid)
-> +		ci->marchid = csr_read(CSR_MARCHID);
->  	ci->mimpid = csr_read(CSR_MIMPID);
->  #else
->  	ci->mvendorid = 0;
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index 3ed2359eae35..500a9bd70f51 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -490,6 +490,8 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
->  	struct acpi_table_header *rhct;
->  	acpi_status status;
->  	unsigned int cpu;
-> +	u64 boot_vendorid;
-> +	u64 boot_archid;
->  
->  	if (!acpi_disabled) {
->  		status = acpi_get_table(ACPI_SIG_RHCT, 0, &rhct);
-> @@ -497,6 +499,9 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
->  			return;
->  	}
->  
-> +	boot_vendorid = riscv_get_mvendorid();
-> +	boot_archid = riscv_get_marchid();
-> +
->  	for_each_possible_cpu(cpu) {
->  		struct riscv_isainfo *isainfo = &hart_isa[cpu];
->  		unsigned long this_hwcap = 0;
-> @@ -543,9 +548,11 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
->  		 * version of the vector specification put "v" into their DTs.
->  		 * CPU cores with the ratified spec will contain non-zero
->  		 * marchid.
-> +		 *
-> +		 * Assume that if the boot hart is T-Head, then all harts in the
-> +		 * SoC are also T-Head and have the same archid.
+Hello all,
 
-The movement of the comment is only half of my suggestion. The other
-suggestion is to remove the 'Assume' because we don't have to assume
-anything. We can simply state that if the boot hart is T-HEAD, then we
-don't want to enable V on any hart. (We don't need to assume the other
-hart IDs are the same, because we don't care what they are. They're
-not going to get V, no matter what.)
+this patchset adds support for i.Core MX93 EDIMM 2.0 Starter Kit,
+a SoM + Evaluation Board combination from Engicam.
 
-Thanks,
-drew
+The number of patch has diminished to 3, for I dropped the
+patch introducing a change in nxp,pca9450 binding which has
+been already submitted in regulator tree.
 
->  		 */
-> -		if (acpi_disabled && riscv_cached_mvendorid(cpu) == THEAD_VENDOR_ID &&
-> -		    riscv_cached_marchid(cpu) == 0x0) {
-> +		if (acpi_disabled && boot_vendorid == THEAD_VENDOR_ID && boot_archid == 0x0) {
->  			this_hwcap &= ~isa2hwcap[RISCV_ISA_EXT_v];
->  			clear_bit(RISCV_ISA_EXT_v, isainfo->isa);
->  		}
-> 
-> -- 
-> 2.44.0
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+(Dropped also regulator tree maintainers as recipients for
+they aren't anymore involved in this patchset)
+
+This patchset introduces just basic functionality for board.
+
+Thanks in advance,
+
+fabio
+---
+v7 ---> v8:
+	- fixed tag name in commit message
+v6 ---> v7:
+        - removed max-frequency property in wifi node
+        - removed pinctrl-{1,2} in usdhc3 node
+v5 ---> v6:
+        - added property in lpuart5 node
+        - removed unused sai1 node
+v4 ---> v5:
+        - done some property reorder, indentation fixes,
+          node rename, drop/add new-lines
+        - fixed line wrap in 2nd patch commit log
+        - added Reviewed-by tag
+v3 ---> v4:
+        - drop wl_reg_on regulator in favor of
+          mmc-pwrseq-simple
+v2 ---> v3:
+        - fixed dtschema warnings
+        - added Acked/Reviewed-by tags
+        - removed regulator-always-on on
+          bt_reg_on
+        - fixed clock rate assignment on
+          sgtl5000 node
+        - added wdog_b-warm-reset; property in pmic
+        - fixed indentation issue
+v1 ---> v2:
+        - dropped patch updating nxp,pca9450 binding
+        - fixed indentation issue
+        - fixed missing space issue
+        - improved naming of regulator nodes
+        - removed unneeded include
+        - fixed email recipients
+
+Fabio Aiuto (3):
+  dt-bindings: arm: fsl: add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+  arm64: dts: imx93: add Engicam i.Core MX93 SoM
+  arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx93-icore-mx93-edimm2.dts | 321 ++++++++++++++++++
+ .../boot/dts/freescale/imx93-icore-mx93.dtsi  | 269 +++++++++++++++
+ 4 files changed, 598 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93.dtsi
+
+-- 
+2.34.1
+
