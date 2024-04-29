@@ -1,63 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3B813AA32;
-	Mon, 29 Apr 2024 19:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121AA13AA45
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714417809; cv=none; b=QpMhsvvdjqO9AG0pQZJa7xPgGdgNtTGLdWwfkvXxci+IUW987bmDYW+Bi+CtKOT7ezK3+D41UlKpSdzQw8YEfVR8oahRpxGEeXlpgnF4JlmRRhLNZGSpGM0yqWNmiVIkaA9/yjo50DiH6AYd7cLWXEVPsrYhYfGWixN2tPKJRC4=
+	t=1714417843; cv=none; b=doHtOF1fg1JnsQ1B7EBZ62g3FBbbKyj7VyNR3VAef2zwQXuHbSCEz7lInzBjlk16ZesLa2Kkp3j6VPSByyQZODgPz2P22BfBv0L+CKqbJRzAVCK73uFGTcpOKXqn+ZT0ZaYP9HY3D13g+3HoCrCXlXL9F8ruqIi1hc+lkuBCqbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714417809; c=relaxed/simple;
-	bh=7Z6qYhI5Trwqo9MHjeMgaQy7lxx2FGG+iuvgKY0yDd4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=lEmujjYTWuM49gcix3Xseg0JTHhyc19+dEHEl6lTWyTwGbYw+Ed61MQ4qfNKcV6ZkypJ2gvP2tg6o7marK2YWScyNUtxeVMGWVRVC7OJhlpttOzfStC0OS/0U0JsFjdeWYpN/dVgFtNdhq4P+p1vWG68dQCWXya9/EG66CEbmYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOnlPp/0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714417843; c=relaxed/simple;
+	bh=YAT1esnGQFxlBOBg2MJkgKGoRoHJC6inoN61Uetw544=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=eFeuW0YyVMexcChTWCrSniff/dozqGJQowowoKpeQRRkyRucwRoBC/OBMQb8oMaiWHFhOq4f4391YYw/eDwjqqFusu48dGwXW6osmLKKeK8sK2OZ72IT3Oe/KRDZKuXlnKXHpDgNjuKDQJzkpbH3hemqxofsXN6lvbOh5p8zWLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=d7OkmbtW; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOnlPp/0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D4399C113CD;
-	Mon, 29 Apr 2024 19:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714417808;
-	bh=7Z6qYhI5Trwqo9MHjeMgaQy7lxx2FGG+iuvgKY0yDd4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=DOnlPp/0g7qcHYebD/6aZe+8b6OhPm18KQJENH9L+iGbjZjw3WqprLM8cXpbHb6kK
-	 Jg09lQQYRjq7gtm5KbzwVcHjYm7RTQUPEgV8EqkXz1IP5eoVTgGOzfGIwFTHInmIea
-	 jQsDMwV+k+1YkRMKlGP3m92U/+nzlgDBANIgvITZDKs2eqgKpCu6++AmTunY3gL8dz
-	 im6ha9PxCw6gom+oZLkLzPLneOac15aK5V1QFS8Ys2n/QZFmNtpgE9fSIA/wYYObrP
-	 OwzxpRb6vIrWBnDq2nZn8difUFGR7NHQrchRyS/Dmk/B94CAXo2IL2npA9+cC2xFXa
-	 OUXEAoRMSgD/w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B7B54E2D48A;
-	Mon, 29 Apr 2024 19:10:08 +0000 (UTC)
-Subject: Re: [GIT PULL] Bugfixes for Linux 6.9
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <230320fbf8c4a3fe3fcce24695aa4af65875bdf3.camel@hammerspace.com>
-References: <230320fbf8c4a3fe3fcce24695aa4af65875bdf3.camel@hammerspace.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <230320fbf8c4a3fe3fcce24695aa4af65875bdf3.camel@hammerspace.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.9-2
-X-PR-Tracked-Commit-Id: 24457f1be29f1e7042e50a7749f5c2dde8c433c8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9e4bc4bcae012c98964c3c2010debfbd9e5b229f
-Message-Id: <171441780874.14808.6356000318708895546.pr-tracker-bot@kernel.org>
-Date: Mon, 29 Apr 2024 19:10:08 +0000
-To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>, "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="d7OkmbtW"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 43TJA7nP467894
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 29 Apr 2024 12:10:08 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 43TJA7nP467894
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024041401; t=1714417808;
+	bh=0Qr2TuS4+t5kKZBgsNQn7deRV1PrUlg46GbHzRW8Rw8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=d7OkmbtWo90bCAysnl25EJnml4KhN0qnj7hHlsttVZeHAw5KZHfygrkVfRYvD+pcd
+	 iCjO+l1+bsbBEOs4bLmPlDm5lpFw7C360Jt16ZO0/1cWtvdvrVQRgbXoGaHs+Zzlyp
+	 7opK/ZjhkdAYpMRxIWggcJ53Eb9JMqLAHQvUinTK5v8hAHE4C/HvdNhuOi4VVEBH/W
+	 7fPqSqxdHHwXStFHy66a2YhukwZG6uyu7dA45OUiFQ2t1eqfIAuBJYskwQ8GrWd0Kk
+	 69DCHXV0lnZIXz4FUd/e3LwrFQqq3ligrm43UkDk86nmsGlHW5qB0porQJ73LxbUNx
+	 pBFlpY0GsiKww==
+Date: Mon, 29 Apr 2024 12:10:03 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Kees Cook <keescook@chromium.org>
+CC: Xin Li <xin@zytor.com>, Andrew Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+Subject: Re: x86: dynamic pt_regs pointer and kernel stack randomization
+User-Agent: K-9 Mail for Android
+In-Reply-To: <202404290859.99763AA1@keescook>
+References: <a793c733-267d-4930-8ee2-0fc0f24c3538@zytor.com> <202404290859.99763AA1@keescook>
+Message-ID: <4994087F-1CB6-40ED-BA6D-B0545AD754DD@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Mon, 29 Apr 2024 18:59:26 +0000:
+On April 29, 2024 9:09:02 AM PDT, Kees Cook <keescook@chromium=2Eorg> wrote=
+:
+>On Sun, Apr 28, 2024 at 03:28:44PM -0700, H=2E Peter Anvin wrote:
+>> So the issue of having an explicit pointer to the user space pt_regs
+>> structure has come up in the context of future FRED extensions, which m=
+ay
+>> increase the size of the exception stack frame under some circumstances=
+,
+>> which may not be constant in the first place=2E
+>>=20
+>> It struck me that this can be combined with kernel stack randomization =
+in
+>> such a way that it mostly amortizes the cost of both=2E
+>
+>I've tried to go get up to speed with what FRED changes in x86, and IIUC
+>it effectively redefines the interrupt handling? Does it also change
+>syscall entry? (I got the impression it does not, but the mention of
+>syscalls later in your email make me think I've gotten this wrong=2E)
+>
+>I think currently kstack randomization isn't applied to interrupts (but
+>it should be), so I'm all for finding a way to make this happen=2E
+>
+>> Downside: for best performance, it should be pushed into assembly entry=
+/exit
+>> code, although that is technically not *required* (and it is of course
+>> possible to do it in C on IDT but in the one single assembly entry stub=
+ for
+>> FRED=2E)
+>>=20
+>> In the FRED code it would look like [simplified]:
+>>=20
+>> asm_fred_entrypoint_user:
+>> 	/* Current code */
+>> 	/* =2E=2E=2E */
+>> 	movq %rsp,%rdi		/* part of FRED_ENTER */
+>>=20
+>> 	/* New code */
+>> 	movq %rdi,PER_CPU_VAR(user_pt_regs_ptr)	/* [1] */
+>> #ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+>> 	subq PER_CPU_VAR(kstack_offset),%rsp	/* [2] */
+>> #endif
+>> 	/* CFI annotation */
+>>=20
+>> 	/* Current code */
+>> 	call fred_entry_from_user
+>>=20
+>> asm_fred_exit_uTser:
+>> 	/* New code */
+>> 	movq PER_CPU_VAR(user_pt_regs_ptr),%rsp
+>> 	/* CFI annotation */
+>>=20
+>> 	/* Current code */
+>> 	/* =2E=2E=2E */
+>> 	ERETU
+>
+>If I'm understanding FRED correctly, I think this exit path
+>would need to call choose_random_kstack_offset() as well=2E (For
+>syscalls, add_random_kstack_offset() is used on entry and
+>choose_random_kstack_offset() is used on exit, so I think we'd want the
+>same pattern for interrupt handling=2E)
+>
+>> [1] - This instruction can be pushed into the C code in
+>> fred_entry_from_user() without changing the functionality in any way=2E
+>>=20
+>> [2] - This is the ONLY instruction in this sequence that would be speci=
+fic
+>> to CONFIG_RANDOMIZE_KSTACK_OFFSET, and it probably isn't even worth pat=
+ching
+>> out=2E
+>>=20
+>> This requires a 64-bit premasked value to be generated byc
+>> choose_random_kstack_offset() which would seem to be a better option fo=
+r
+>> performance, especially since there is already arithmetic done at that =
+time=2E
+>> Otherwise it requires three instructions=2E This means the randomness
+>> accumulator ends up being in a separate variable from the premasked val=
+ue=2E
+>> This could be further very slightly optimized by adding the actual stac=
+k
+>> location and making this a movq, but then that value has to be
+>> context-switched; this is probably not all that useful=2E
+>
+>Yeah, having a pre-masked value ready to go seems fine to me=2E It's
+>simply a space trade-off=2E
+>
+>> The masking needs to consider alignment, which the current code doesn't=
+;
+>> that by itself adds additional code to the current code sequences=2E
+>>=20
+>>=20
+>> That is literally *all* the code that is needed to replace
+>> add_random_kstack_offset()=2E It doesn't block tailcall optimization an=
+ywhere=2E
+>> If user_pt_regs_ptr and kstack_offset share a cache line it becomes eve=
+n
+>> cheaper=2E
+>>=20
+>> Note that at least in the FRED case this code would be invoked even on
+>> events other than system calls, some of which may be controllable by th=
+e
+>> user, like page faults=2E I am guessing that this is actually a plus=2E
+>
+>Yeah, I'd like greater coverage for ring 3->0 transitions=2E We do want t=
+o
+>double-check the original design choices, though=2E I *think* they still
+>stand (see the comments for choose_random_kstack_offset() about entropy
+>location (per-cpu area), and lifetime (across userspace execution)=2E
+>
+>-Kees
+>
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.9-2
+FRED replaces ALL exception handling and ring transitions, including syste=
+m calls and call gates=2E=20
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9e4bc4bcae012c98964c3c2010debfbd9e5b229f
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+You can't enter ring 0 without going through the FRED entry point (and you=
+ can't enter rings 1 or 2 at all, officially deprecating them from the arch=
+itecture=2E)
