@@ -1,75 +1,91 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311A314A9F
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 07:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBF514AA3;
+	Mon, 29 Apr 2024 07:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714377090; cv=none; b=G22wMZRCbbJDE4Tjzmvss8NW8hh9XHpcumR282pGKiQI1D5jDW3jVtUArr3MES66pzwdirPqPCqclJT74T0y0/VEQpuO0/1wWjgRcNlFK6O8/3+rnih8zy0cJ1E6/xPRaW3/987bnqbE5CFjOLCqMTShGA8N/Hqy9waHa+1rwuc=
+	t=1714377103; cv=none; b=UacXx7Q/r5HLjexo0hTQYKfHvExqDrDd/uTCY/rEFspemZYrjlinGNGZMEKhNmXR0ZNbTw32jW0LOVhGjJkfADpFqa0qVBFj8/YKii5G2OZsTB1kK/N7mxkFsVmtDHzHsDHy+BdKrin/NUIqzIfgTlcGjlTq6npmpsFy8hdwkxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714377090; c=relaxed/simple;
-	bh=BWyVfoj+iRD2BnNonBeIbbnRWHTLN/2uky74f6rSTMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rFSRPzU0kKg5X/dl9EwaKlgusQ4rOQDOe7N9PCIXqp2D7IwLRS5WfgYQZU1EpjOve1qCi+AjI3NDySRfFzm0p96oHfuB5kCAvuE01NzJeDLKwaMhg/5L+XHELg/vjKJdgekOxhtmgF7RihBzR8Usp3T7aWbNWjz3qTb4TJ9+5Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=eIcN00Ac; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1714377103; c=relaxed/simple;
+	bh=xp1MqptAb4gk4u0qt7wVJibOwKdhPFQMAPrlbTDArvw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=utijv4bKhL5d9sdI0NmPzzniMLqCbokQF8Un7Gc6egJPxL7hS1chGcV/wxcEFbBsrgHTVTpwJrFHv8UtbKISCK12mJUhy2akucFwKUI17Y+Mt/YwwPDwqONRTU0iFynZfHx306dThL5IZLjw0Cg5b/62lC8/YpSxh+nLkbuP608=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fWgtLpMB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="eIcN00Ac"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1714377087;
-	bh=BWyVfoj+iRD2BnNonBeIbbnRWHTLN/2uky74f6rSTMw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eIcN00AcO1/ueDSjKGy87DThfsuMl5E5GNHL0dRxWRtsy3V36PwaGFbPx7fvJYv2l
-	 yJ3fUmYM7wPdbNfweFEsZdl0MHzL0PzgWMSN8KHL/AuBXHCZRA7UpMocxP5wJVG3j4
-	 Te/Bay7g2F9lMl3PbDaUL3uVkuR6K/Pe6zSArOPzqz4RscaGmv/8u81PnEZu7pIbLc
-	 KGiTgCzYlWz5TD5YUae9xbd1FC2fJEn9SVOeglEJdxPnMNsFBq1W8gmo8s5RwetOtP
-	 O1NBeBpFXdMf3OHaOnVzPqKNm61XPuNPY5nolcTc1el7TOvwLeuHs25xGM4BaZ7uAp
-	 4KnUgN7FaaOHw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 24F77378203F;
-	Mon, 29 Apr 2024 07:51:26 +0000 (UTC)
-Message-ID: <16ae9734-3c02-446b-9b9e-93c531c91f5e@collabora.com>
-Date: Mon, 29 Apr 2024 09:51:25 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fWgtLpMB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C890AC113CD;
+	Mon, 29 Apr 2024 07:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714377103;
+	bh=xp1MqptAb4gk4u0qt7wVJibOwKdhPFQMAPrlbTDArvw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fWgtLpMBpQoMdaRdU/8FfIbs9vPp0v81fsIp0nrwxg/aLfIg80ZSEX/UtNqotnhEw
+	 TlhB0C88NSYB7Df9hCM5oA8q+pHQE5GVuEpysM0O/gIF+xO6JNnzsdEjgnseonhHJ9
+	 DmQ+S9AG1IKKznQZPbKgKMQF2FI9iokRWrtv00TU=
+Date: Mon, 29 Apr 2024 09:51:40 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	stable@vger.kernel.org, workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] docs: stable-kernel-rules: create special tag to
+ flag 'no backporting'
+Message-ID: <2024042914-bleep-imbecile-5f68@gregkh>
+References: <cover.1714367921.git.linux@leemhuis.info>
+ <35989d3b2f3f8cf23828b0c84fde9b17a74be97c.1714367921.git.linux@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mailbox: mtk-cmdq: Fix pm_runtime_get_sync() warning in
- mbox shutdown
-To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>,
- Jassi Brar <jassisinghbrar@gmail.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jason-ch Chen <jason-ch.chen@mediatek.com>,
- Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
- Shawn Sung <shawn.sung@mediatek.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20240426020121.5273-1-jason-jh.lin@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240426020121.5273-1-jason-jh.lin@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35989d3b2f3f8cf23828b0c84fde9b17a74be97c.1714367921.git.linux@leemhuis.info>
 
-Il 26/04/24 04:01, Jason-JH.Lin ha scritto:
-> The return value of pm_runtime_get_sync() in cmdq_mbox_shutdown()
-> will return 1 when pm runtime state is active, and we don't want to
-> get the warning message in this case.
+On Mon, Apr 29, 2024 at 09:18:30AM +0200, Thorsten Leemhuis wrote:
+> Document a new variant of the stable tag developers can use to make the
+> stable team's tools ignore a change[1].
 > 
-> So we change the return value < 0 for WARN_ON().
+> That way developers can use 'Fixes:' tags without fearing the changes
+> might be backported in semi-automatic fashion. Such concerns are the
+> reason why some developers deliberately omit the 'Fixes:' tag in
+> changes[2] -- which somewhat undermines the reason for the existence of
+> that tag and might be unwise in the long term[3].
 > 
-> Fixes: 8afe816b0c99 ("mailbox: mtk-cmdq-mailbox: Implement Runtime PM with autosuspend")
-> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+> Link: https://lore.kernel.org/all/b452fd54-fdc6-47e4-8c26-6627f6b7eff3@leemhuis.info/ [1]
+> Link: https://lore.kernel.org/all/cover.1712226175.git.antony.antony@secunet.com/ [2]
+> Link: https://lore.kernel.org/all/dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info/ [3]
+> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+> 
+> ---
+> 
+> A patch to make one of the stable-script honor the flag can be found in
+> https://lore.kernel.org/all/655ce2a3-eb04-4ade-999e-23fc5dc5fb3a@leemhuis.info/
+> 
+> For autosel I was unable to locate the code.
+> ---
+>  Documentation/process/stable-kernel-rules.rst | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/process/stable-kernel-rules.rst b/Documentation/process/stable-kernel-rules.rst
+> index ebf4152659f2d0..9ca8083b41c7f1 100644
+> --- a/Documentation/process/stable-kernel-rules.rst
+> +++ b/Documentation/process/stable-kernel-rules.rst
+> @@ -129,6 +129,12 @@ comment to pass arbitrary or predefined notes:
+>  
+>      Cc: <stable@vger.kernel.org> # see patch description, needs adjustments for <= 6.3
+>  
+> +There furthermore is a variant of the stable tag you can use to make the stable
+> +team's backporting tools (e.g AUTOSEL or scripts that look for commits
+> +containing a 'Fixes:' tag) ignore a change::
+> +
+> +     Cc: <stable+noautosel@kernel.org> # reason goes here, and must be present
+> +
+>  .. _option_2:
+>  
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Thanks for seeing this through:
 
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
