@@ -1,90 +1,66 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2075.outbound.protection.outlook.com [40.107.92.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AF312BEBB;
-	Mon, 29 Apr 2024 17:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E1612D765;
+	Mon, 29 Apr 2024 17:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714413099; cv=fail; b=RpnfrmKT43XpPgLe/u0U0ttyVFN3t+0fpaeY3fBsdfqSo9mvh/rdThCsKNFRCEU8rHFK/n4Rk7xFWSe+j+DU/wVOrzEV3N6veeA16+9JoPHCgf/aZYjtDqeuluYZEEBnyDhrJ/5P7RwtbPJe4u9bwRi6mSI1WCqeTO0g4lsoDPM=
+	t=1714413104; cv=fail; b=gdwVuu87F27yhLkLk44ME5C2KupjkNl6PC2vXe5M3H3S9cAOynfDi+vbSm1XTYLTBfrt3U8ip5WIgpBPrWzEMMlkBZIzoEQQDOwuJsdTPInRMwokI/qOgO/TRBaGDyp7+6necig9BoFIa/c2VYfbI6qfbYjarYSDdaRevJV19Wc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714413099; c=relaxed/simple;
-	bh=WyGggRr2b/045rvam9wvV/tiYirHJlYKPkAjhqRa0mk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YatEZeT0Ht56WKGjzZkMOsD99S9SBIL17Yc+0fyia6QFQERo3cywJrfa5QeT/Z88bJxu9LYQxF0LNtTOffzY12sBYHjvfa8jH5noSxkeYQDhxMePNK4xQ4q+PXqIEeByNZJ5Di0X+9pIMrJXzpabtlMQCt/4G/qDiN1RfHxfumU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=bHgazVpq; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=HhNIqA2y; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1714413104; c=relaxed/simple;
+	bh=ww+NjG0KPRNiXuyCrfHJu4xl9jqILTbIdAph1xRMFEU=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JzyhXs7ujyHeedn+lIQQPyP1IbZwtw/i6M1sHR9rD0i7lkPzlfMs1NhLMYn31YR8Tygtd0tJ7FNCW0Qj8CtkbqzC5MQtrLvwqlmQg4WxPuUv3wPeJm3RuEsmZOWYCVdb/40Qi6yyuhGl4rae0EqJViNBkHiicwf8ma/WLDhWs9A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=S982/I9/; arc=fail smtp.client-ip=40.107.92.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bHgazVpq";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="HhNIqA2y"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43TGxRa7020045;
-	Mon, 29 Apr 2024 17:48:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version;
- s=corp-2023-11-20; bh=S8m9/G07q7toMjQ0Prow/pJ53GLzLkvO8Dt5ruPctuU=;
- b=bHgazVpqckKDo3DGUG0sCxP1VJkKDy1AY/LBwzcT0seMPUEXKxOkRRSQ5jPmSLhL+cGU
- 0nUF/x4lPiYvABBFG4oHmGdoPyR4I57dTZz6K6xwz/zlm4HviIRIHKreOzhYG2Z0OS3r
- 7VHeI1fSMCMAcCoSvYgJ2XsqffKDr4O08A9qHccG/+vlHB64w3ADylEpUcuhl+iqS+EK
- 2gnqH6Cz7iz6qKQ1KlBZrg4P22EiTGw2HHckyjyeh0E9h2pl94e1UahErDo9HXaLlcTy
- E/jvhpwp6yhFLZmCQPz5MHw6VXClJH4hNwdTT+ZhR0Vdeh/8a5mcKT6g6iEw7kLOtF/g pA== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xrs8ck68a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Apr 2024 17:48:29 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43THkxUU004324;
-	Mon, 29 Apr 2024 17:48:28 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xrqtc7ns0-6
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Apr 2024 17:48:28 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="S982/I9/"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KBEEkzJTUXnNRT7o9XnS4bcAqvUiHe+IfrP2o8CGAk3sEOO+YIzDHt98jZZ0NUWxsSed1Ftap3C7unenXpXyGKgY3LpYW71HxtI/h7SQWqvl1wTixmvYv85nrxOMEKAJ0BjeTPOycXSWpvB/9enxCoisiKkqcI2ya8ndbZdhWQ5TQrdbXdv7A+gTkwprK3K5cR9RBwasKKvyQRtAgXTkP4e/bpBjXmN8CWXTtYPeHEtlH6KBhNlLNM4rSboqZmM4sWNDTBAhw1crbVTj8HziZhQ302vH4xOoC3STbksqRSg0Rt2vSKsJMpsCTMEiiMfSXaIjVpLqZVJV3VjtYyREWg==
+ b=I9e3Hp4cuQazknc2Dk4cGEklqlz65bGvVQjml0TgJ694emj8sFoB6VhqBbY/XrOW9hJ7ZWqTcZynphuy6G0k1pZtdlNjIcEZVMpF7cZ2wgxntd1ppdZMgEuqK4gPl8/w63s+wAI3+vSI8m2nYqts1E6tjzxuxsvpjmYxPRqakhja9ub2qEa5d54PS3t+l4m3CoJm2JiJ7UO+nbzEz0Az/gmdmduRwB5l9aoKfqw9tWCdkvO/HsnnT0owF/qILDQ/MN4xojsU9DM0pyhXPV8JBElNvaiJ48aoBndlZs6uXHXGMjxoJpTgSTznMMKS9fF22AkfDesAEUGdRm6JwEyuVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S8m9/G07q7toMjQ0Prow/pJ53GLzLkvO8Dt5ruPctuU=;
- b=I4AmwZoSUPl8jaKsjiLiZr0cZpI1L0MkErWQmcY5bK2QjHbOu2Pq7z0iOKh10ktsoLO2L/Tu2ABdtOLmAr45g75pjbDpYQqnJZe7K8YnGUd0x23QiKJ6n8KM5ymE3JGdAqSZ3OjV3qZsKeYppOM75WD9BNqMoiQb0Gf00wLoXM+dLqNLMV8dvr62znhpdIatriW3vNnCyBpVPQx2cwHO9/wziIDpa6tHlMxXVeYNWAOyP2arTDXbScKELpTI3Zk+ZJCaAlifOuyuch2pB8WAGQPkgBbQa3dvu/XndZP3w6LtU4WsEoq9M4fa99AaGccATW1sSCyUJNkJG/vkMNT5rg==
+ bh=Rxi21PtpxM6cK3Bfr2v5+48xmPNReedw/o6ZAEaXCvU=;
+ b=iXliDqzNeNrkRNCucnkvo1esRZezxuAsnzuLHLzQfpAg5n9M+G0EFH4F7GZlKzkWnbcve51w39DCBOBmXXRY1G9FmH6wtY9tTwig2nSY4B1RssVoV8QpJ0t4gXRjq2XkaaO6mTckEphmaCErtioeWmlnaogpZtCzHteQx4PY/CuZICt+p3bWai0svGsrKryua5VvDbNVBgi22IHBNMxzFOCbiQvr6gu2aymLJR/rTV6/LIEEYkk53CuKHb9yqjv9pciPWRBlsi4+CSqmp4a7SB6iStzGsxXZGEfTX4zt/PUmLQmKc2a74cnRL+I7XxuvWtuQxbK+7zBZkRjZghdKPg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S8m9/G07q7toMjQ0Prow/pJ53GLzLkvO8Dt5ruPctuU=;
- b=HhNIqA2y4eMJ7XM8Aw4axshRL8kM6XFiOIl+aaBWNWiEEksDCUdAkCKTveOE+5YUQipj2k/Z62CJgTCc+3OcZzIFuywUH8yvNxbSwhOqb13eknJhvg+l03/HIEWv6ulm3fQEHNfQ2p8VOkpOMHfQjYMRBNGSyBQu06irP2zQ+t4=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by SA1PR10MB6389.namprd10.prod.outlook.com (2603:10b6:806:255::21) with
+ bh=Rxi21PtpxM6cK3Bfr2v5+48xmPNReedw/o6ZAEaXCvU=;
+ b=S982/I9/FJsBQIm08EoOT6ZCtSbg3u/eDy/cAmjGIkNXiKkxpNq5HKKXHWtkZJwCu8OuXZTqOVzsxxqjhiloxeB0fEz+17Ob6BxvxwRSnHLxKVMh7b3689p3n7re/QZyn5uzNpnbWTdVuxkND8LC66BFOfVJnqTyp+KTbW5jh9M=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by PH0PR12MB5606.namprd12.prod.outlook.com (2603:10b6:510:141::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Mon, 29 Apr
- 2024 17:48:17 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%4]) with mapi id 15.20.7519.031; Mon, 29 Apr 2024
- 17:48:17 +0000
-From: John Garry <john.g.garry@oracle.com>
-To: david@fromorbit.com, djwong@kernel.org, hch@lst.de,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-        chandan.babu@oracle.com, willy@infradead.org
-Cc: axboe@kernel.dk, martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-        ojaswin@linux.ibm.com, ritesh.list@gmail.com, mcgrof@kernel.org,
-        p.raghav@samsung.com, linux-xfs@vger.kernel.org,
-        catherine.hoang@oracle.com, Dave Chinner <dchinner@redhat.com>,
-        John Garry <john.g.garry@oracle.com>
-Subject: [PATCH v3 06/21] xfs: introduce forced allocation alignment
-Date: Mon, 29 Apr 2024 17:47:31 +0000
-Message-Id: <20240429174746.2132161-7-john.g.garry@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240429174746.2132161-1-john.g.garry@oracle.com>
-References: <20240429174746.2132161-1-john.g.garry@oracle.com>
+ 2024 17:51:35 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7519.031; Mon, 29 Apr 2024
+ 17:51:34 +0000
+Message-ID: <bcd4fc9f-8900-46bc-9577-d95fa67adc25@amd.com>
+Date: Mon, 29 Apr 2024 12:51:31 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] platform/x86: dell-laptop: Implement platform_profile
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Lyndon Sanche <lsanche@lyndeno.ca>
+Cc: pali@kernel.org, W_Armin@gmx.de, srinivas.pandruvada@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, Matthew Garrett <mjg59@srcf.ucam.org>,
+ Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
+ <20240429164844.7544-2-lsanche@lyndeno.ca>
+ <5cbb8981-5e24-4dce-a78f-1cabc29f08e3@amd.com>
+Content-Language: en-US
+In-Reply-To: <5cbb8981-5e24-4dce-a78f-1cabc29f08e3@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR05CA0054.namprd05.prod.outlook.com
- (2603:10b6:a03:74::31) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+X-ClientProxiedBy: SA1P222CA0128.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c2::10) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,207 +68,457 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SA1PR10MB6389:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6d79cae-188e-4f9f-8ed7-08dc68748d4a
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH0PR12MB5606:EE_
+X-MS-Office365-Filtering-Correlation-Id: b70ac3cd-879c-45db-b985-08dc68750270
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|376005|366007;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?dBkPToG/AAFhSY+vJ79OAnxbHyUlKVRWpkt+sUowzCE+oJm1yAU+MMacqk3J?=
- =?us-ascii?Q?LjmzzDUzyVLQ2mICXvEcKa7M8wpczs6DyaX8U/n+bkRyBYipFx5H74EPFH5x?=
- =?us-ascii?Q?W5sa1FMZ7G+BPCIeLg9Jf5FBzVGQXt2JzfVCTseJ7QUT0faenv0TYrAeyGby?=
- =?us-ascii?Q?IjUKKMSyWKn6LYoP/iGR2EejAORZAKaLo5n1d6kz2V9iiab81UhKd/4wefA3?=
- =?us-ascii?Q?Yi8vbi6eP28Aa6YQPo1VJ92PwE1zAD32wdqCjhkROBFGmAChqzkoZEZN62Ov?=
- =?us-ascii?Q?V9PbWY69+A77wVFKkbI0V/nHaWUH41dUvaJjTzF3dVHFu37J5Pwqw8Cwvskw?=
- =?us-ascii?Q?6oVBAxQrA6rhQN6wbiohk9RObgjMwGQrifT9Im0ESpa5cw5/ldy98fHoAGKM?=
- =?us-ascii?Q?DEamwuIuT89hsO41MDvfDP2hLXU8QQR5DAdj8TiAgzmmJkk8roFctNxKMQ5y?=
- =?us-ascii?Q?wwnXCsh+RfgD0LnYvzQY/wLc+oC/7iLz+S3QgT6hE/jpl+Co8XlwiDQPcAAG?=
- =?us-ascii?Q?ZryzE/TVUgnpm1nEHAAwjC5brIq0HEuPEmlXcdn3s1Q4D1n4CXJlH8NVhPnI?=
- =?us-ascii?Q?sR4vFMMbm2e63LgUrg5olZxRz7uPx8kjBZQB3Az8eyCs6hxt+/FciZtvwPWh?=
- =?us-ascii?Q?6NtwS/xFwlYRszQqxIbQxgc5aRyEi59W15x+ucTUXnpF/C68aiFNijgfSwV5?=
- =?us-ascii?Q?ewrPRVJSr0XyqXfkOjyfrrGA4s0qjnVhTUtaghDYzJrMIUZEoiN/impoX9Sz?=
- =?us-ascii?Q?oZmxivFKawDtJ1MK463DHkam8RCSh1VnIQWMUYpnUWF4ml7be+9QtZBd5ni4?=
- =?us-ascii?Q?iVQjF3SO2zHVrmsmhFXmNA7DVacrF2hIdpr2N1quTwLVR0/VVrCDazktTH2F?=
- =?us-ascii?Q?b/GbnEoP97VltMK35OBEyMhNz1cCPNDTDTKCWRbhQOekOcq9gTdZ7DCqYv+a?=
- =?us-ascii?Q?86y8mZzKrIp7jvjPobQGlAImjtz1ZfbzQfWsZE6k45Xgq4fbUvdYRS2qL3i9?=
- =?us-ascii?Q?M1JYTDpmMlGaVqa/VUhrSj9I5LMn8LyaZ+e2yw5FGBVqc2rqcp+ILvKv2z17?=
- =?us-ascii?Q?p0yTIKiBJSrLiL3M1ly/HGfzqXH6N9ZJZOstm7vnCp464diPc8SVDXWRm+9p?=
- =?us-ascii?Q?lzbdsHgZOcd4e7dEr9oNF16s1G4m95gBXhsOm0KPAJ8VMZWvcuTqqF+H2XrH?=
- =?us-ascii?Q?vi1zOdLkWJiHnyunBmMHglB/vm0ugdi87T7ED6Ap5ZhWNFGsT1cKCJn0HU54?=
- =?us-ascii?Q?VQ5oGIatZ5HzBk5eWd8WBywwtRZ8bmXIL077Y2ZIGA=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|7416005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T0ZHMCt4QWRFYkNEN2ZLNWgvK1J0RHdmeEZhYStYeHEzUFkyeHRUTW9jMVNH?=
+ =?utf-8?B?Nm4vQ016emt5Y285MXc1MTR5cThYd29WMmxWY05lcWJzZHFqQlFVd1oyVEhW?=
+ =?utf-8?B?VCs1NlM5OVJjZ0k1TUlsKzUxWFdGMWZCZHZuWHltWE1JZlhkRTJJUHlEWEhL?=
+ =?utf-8?B?UlF6OThHZHg5YXZTZnYxdjVUM3J1UVJYdWNoSlRLMS82MklOTUQvaEJkQnRE?=
+ =?utf-8?B?YjNndTEyNElSN2s3a2tMVXgrQzJUemFuaXhheDdFemx6dTJiWURxRzREeFRa?=
+ =?utf-8?B?WDJrR05PTWpEMkcrMTA1bjlYbUd4R3lZUFdhM1ZGa0JtNU1lanJlWVIyWUJ6?=
+ =?utf-8?B?UDVmK3hweXpUZm1rT0h6dzNSZTl6T3dKVHpmWHczbGdIdlVmbGRITDAxekF3?=
+ =?utf-8?B?bVRTTjlLaXpybGpqMHV0OEoweitqakZBbWZ2d01mVDJhQnkycDVHN0JDVGhL?=
+ =?utf-8?B?WHdQdURscXRQYnRHV29lNDNBTTgvamoxcElkbmRFaytXb0x1Zk5XQmZ3NWtu?=
+ =?utf-8?B?U1ZodTBVVFZRdDRUU1lHOCtIWlZrQ2xFZjE0Z1dHN2JKRE4yQ09mcFFGWmdj?=
+ =?utf-8?B?TjhDNkg4S0tVWHJWamx3REhoQkpBakZwTWFKWmpNVXZLNm1pMEl3WXQ5UGp2?=
+ =?utf-8?B?eHNwS25EdHEvRDJuYXFmVTZKSzZHbitqWXRreGxJL2ZRUHlEcUxXMWcrQi9T?=
+ =?utf-8?B?Unk0SlNGMkcrVWhaVU8xNkpuTWRzN1hyZHJ1TE94cTJrdkNlc25lN0pRejJt?=
+ =?utf-8?B?YXpaeDJ5ODFZSE11MkZUZ1YvVFVkaFkyN3hlejMvaitjQXB4b2Mva3dkZGVO?=
+ =?utf-8?B?Qk1WL01zL1BhcFIzUUY3R2E3NU1oY1MrNVM2ZVdnZzk2MWc2dTJrNkNxVTN6?=
+ =?utf-8?B?aVIzTzEyelh5dGF5TExHSzZIazhTQ0kxaVNiWEFrUkxZdzJvdUJ2SUZkNzF2?=
+ =?utf-8?B?RkxkMmhtTUNxbUdZWGJaUzNKRm9obkd5WFNyNlkwbU1td3BGTm5uQ1RmZm1q?=
+ =?utf-8?B?dmRjdEx4K2pWNEdETW1hT0UweFhjVzk3K2NzTXB5bGxPRGlxYW1IUDRFWnlq?=
+ =?utf-8?B?YTlxWHpQakJteVRGaVp0bEk2VTFheC81SXpkenVWQW9Id3VOajRvZTJwcHBL?=
+ =?utf-8?B?QXFSMXdpK3kwd2VMWWY3RjZBWjZnZ0tNaW92R3V3bW9Cd3VtbThmMDdSUStt?=
+ =?utf-8?B?ZThSQ2tBMlJtNnM1dHhJQzR0WmR3a1FoeVZHclNqeXg1NDFkSGJhY3M3aHE1?=
+ =?utf-8?B?OEp5aks0U2YwT0JoWU5ud0NlUk9HK0NNcHZ5TkQzMWJyUE5xZCthYTFsQmRS?=
+ =?utf-8?B?RlVHQ0h2RTlQczdsOWovd1E3SFNDVXQ5SVBIdUIxYVhpd0ZUUkE2NEdTaUtl?=
+ =?utf-8?B?MStxQ21RL0R2Ykk4aFRlSlRKeTRYcGN4alA2bngybksvSkVXaWVCZDAvclNO?=
+ =?utf-8?B?alpCNUl4RTRib2kwcDhuUkxLQ2Vqb3I5NEJ4RDJIZ2VNbnN5V3EzTnRLbjEr?=
+ =?utf-8?B?MzI2enl0cmpyZmlWWmhYbGJjTlFXUk9uakhwSVlSZjJkVlplcGptKzBjM3BP?=
+ =?utf-8?B?cGNYZmhIcTdEbk04RTBqK2ZxVEdSMFVqeXY2Wk9JQS9WdVE0dUN2WDdSZW5t?=
+ =?utf-8?B?enloZW1KU01BN2lSb2x1ZklKYWNaMzRGUEhHdTJRSlgyR1ZvZzFROVhHY3NF?=
+ =?utf-8?B?U3B6enBMcG02dFZFNXBGbUZSNW1lMitGWmptTHNNMnFLWEs2bS9LaWx3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(366007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?oyc/F0sF16A89CVp1PTPCzB8qRLLGqIiwyL4161XQpO8JVPzBPJqbyYbGDFl?=
- =?us-ascii?Q?87fMRbt+f/FfnV1JtZAx8uvav0PjYQTfKDt7jqIMGwC54VHcJxecq2yAI8fz?=
- =?us-ascii?Q?nyQ5wbC20J728+uO1pTgPg9dWaffyFUEKCHvlEWg0EBu7eI0Mjz70/Ks0wVD?=
- =?us-ascii?Q?8M+864iTse+KBXnqY05IBA2u5AUv3jOj4wgo/5/xC1VC9nBTQOa6b6AO7OLT?=
- =?us-ascii?Q?4mWeYzudiZMy9pMuaP6tER5Go+HhHZvlV+6ValXQhraAqeofRkTfsCW9wdsf?=
- =?us-ascii?Q?EBziJeYAuDjH3BuFxAI0rhKmvBUzJwOb4VTfocc6zjSJSS6m/wAwqQYJ+PtC?=
- =?us-ascii?Q?6jt+5OtwxVlV7PNVBALXJFD6mzD7W7Ae6/UNgJZOb7YNOOygxqIJlCqVuINM?=
- =?us-ascii?Q?k14osYx37cT/6JL7gZN02xy52ZzGgCwnIv/YMekcWkfv/0z7ZN5lgPZd5ECT?=
- =?us-ascii?Q?QUSr6RKEGlOEVByr6qP69/fkUF0NmdOVXDwvY/A0x0jw6C2jKlXjRzFl53Hn?=
- =?us-ascii?Q?IWRx1BZPvRmKEUvlUe9w76TOB6G+LAa5jUIJ/JylOjQiHaXQTho0JON03hUk?=
- =?us-ascii?Q?b2QJQOfMk3OXjhtTMfBPi8vo0w8iT7uZIhr9+w4EJbAro1Q/gM8p9OprmyWN?=
- =?us-ascii?Q?SCAYOA9/bopEs3qe5mqhYlIOtAtXr5SU74DUj3abXioP7j1JRk+ciDXqhjyA?=
- =?us-ascii?Q?CE+tGcsuqfZXTZVasx7o4S97E/KpK5y/bXIT6DgRI5FJ7krJwhR0LRrzlMKT?=
- =?us-ascii?Q?dDcH9gMlTW5XObdGksZuwBDL5AOykfkbB8oky5vGBXRObA7GB4kVTco836cR?=
- =?us-ascii?Q?BmWjt9LZMrtpfeAPXP1PNAjOepBySoaJ/KBv0GuEldywRHXx/3rORe9kuuUN?=
- =?us-ascii?Q?iGWvJlCLhp8cnxaPoOHXnCG0qZWg/j87zS28dki4o5MnWfNQqKa0xlLCWdoK?=
- =?us-ascii?Q?iOiMajzKTKhTWgOpGX/qpl3MZVH0OPlg6s/aVaY4xn1P+Txqjb9KmbSjGC4z?=
- =?us-ascii?Q?GZEet7KqOepCREdxI+IJc+v1ACluvS217rVKU4mNyKo491uVnUKj+uxJR/Cg?=
- =?us-ascii?Q?vOd02+9O5NU89YwuZm56g1cruxTgQX/lrRwopcEn4frPwsxQYI1nixU+JayJ?=
- =?us-ascii?Q?siVuhuER38nH4IkAh+CXpmnXwPx747sGZ2ydeRQZ0AA1W0/B8O+HGCpzBO9v?=
- =?us-ascii?Q?etCDJ/xmZMUa5XTLTxwQisVDMoUwyHgCio0H62NQOiVugZN/c7vVkDgjDMhs?=
- =?us-ascii?Q?AbOEOw4vRSoIKYTQpV6mD310r6aqm2zK5KaF+8EoawsBDyVqYS4aAHfrAVTl?=
- =?us-ascii?Q?ajghG1drrKzqou+JbtSV7CjXAbZrbXo01cJyViiwYxE0XRtaOrlBjp4bt4Be?=
- =?us-ascii?Q?lCrW9z3QMz4Cyq+DZjb/ixPglc+aCtUYYV8UBCxzJl81NAw0Hv+UGy/PykTC?=
- =?us-ascii?Q?tv7oIBdZqn54zFfaDxZSUB54IMSuNwEIWtxxUYmtfdxLIDVxkOYLssVLB7eJ?=
- =?us-ascii?Q?8JUU5XLnocqdQzyLv2ZIHnjrlterCErKgbX4uIWCGshfO+xEhzRwBsFKSJVf?=
- =?us-ascii?Q?NvxPJfno0GDvwDubQMVsbHNlbfJWHM2tOg09FUVBfE4ty0dVP8jcliNdM372?=
- =?us-ascii?Q?bw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	uEsHoWnwkINPXZ3GZaxRR7JTeKnkXa8Bcqxxnh9i2g1NqA9/s+QgDUY9hJxJlSoOU9MkF+7GZndXuXdHzgkEgFs6wkuFXNW3LMHW1ymBnhg0T7lLx8CTnK1HLfWp0SSQDpsLQQLG26I2mGhiVSaT76vkTQm/GFY6CPgsL3GbSZvhfpSwRBfeML76xhhjgkxcTx78Wx+uJX0TRqW2vqVo7VTjdziNNuma4Tqnp8Iab1Igrrc5C5IZbKYq2e2JiigoJufWu7qMLI7q+a9B2OKCAX410MHUEA0nlgIpuWnFhaaceXfGQ4bOgbtLuURDG+BIptTy0traqLH5QmpcY8lp1iaawZW0QYXtQqsEU7wH2wlpXNEth5NAfa6qUIEpxFLxifUjYnsvOhsyaEfLwQSpOF+gqBXVzzgHHRy4puhYs/S/IyG5zUjjVST2vSxTS5aEWrNSK1Ge0IvfxQl2bY3C6gJr5Yu7e8Y2sM3K35tabJSJfUQY7chjEJvl3EkAF50nLJmPlIjdxS++L8TVMKAjtdMTyj6IGsxBBfBpOAmXdnlbnYFemPhuCicv7ojkpZOIDwrjuFN9c44kIIn0QI5bzWO/AoNVSxPvgUDZEGThbiY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6d79cae-188e-4f9f-8ed7-08dc68748d4a
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?M0IrUnBLajRWZTVkRHdISE9ocDZkTkt6a2R2ZVhaMDNpVFhBOXQ1bWY4T0k1?=
+ =?utf-8?B?Uk04K3RYR25YclpzdGwyamtqcGpoZzRqU2x0elRMcWoybVFob2NFeFdhRVBl?=
+ =?utf-8?B?dCttSU5OUHkySDU1elgwUjl4NFdobnFqUFpLYVB1NGZNRkZMbkN6SmpWNnhm?=
+ =?utf-8?B?ZWhvb0szOW1oL2x5UTFCakg5NGVaVnZhUmJQMTZaelR4RlU3ak5KQlowVlZw?=
+ =?utf-8?B?VjExVXFmaUZOSnJjdDlqcElRM3JDMlhNbDVGZU9sbnNueUl4c3NCMzhmRENv?=
+ =?utf-8?B?b3RNZTRULy9GdHJyWnd1dkxWdzhWMjlMUy8xbEwwUk1IYnMycCtoVkltMmRt?=
+ =?utf-8?B?ek5wcXZLcHZpZUQwYUVmV3NBZ3doaFRvM0dDS1FlWWM2bjlYSlliSDh1Y2JJ?=
+ =?utf-8?B?SkNtaU03N2hRMGxJbFdDR1FxRldhZnFKOWZvN1NRaXoyc0MwREZOaHBnS1Zh?=
+ =?utf-8?B?eGJZdGFSQ1l2b0NNOUkrdmU4ano3NmlYMzFIbTBoeEVubnI2RC9SenJJQkFG?=
+ =?utf-8?B?ajM0NkkxaGhiRHhiemdTVWVCWnhvK0RtS3dNcEdIYkN4VFZkcm5yUXJ2Qlh6?=
+ =?utf-8?B?Y2tVYWNFSXY2ZXg5RVZONGR3UElrWEl3Wm1iUHIyb09nTm1GZjBicGhlMnp2?=
+ =?utf-8?B?eTFyZTVYK3V6STRUcDVJZjVEVHRCRGVMdndVWGl1bFZHSDNSajhJTFZMNUc2?=
+ =?utf-8?B?QW9jMEg3VklVaVdPdzkzQ28xNFU0dTR0R003dkhKNm1pN252bDVEWUJOMU40?=
+ =?utf-8?B?YzNIVjhPVk5va1Q5Mk5WZFRxakowOGxWaFc3bTQ3eDdaVyt5Unc3bWljeTRU?=
+ =?utf-8?B?amdLMlU5bjZleU00RVFZVFgzUUxjdVYrRG5RWWlrODlOcWdwSHc5QmxMSXkx?=
+ =?utf-8?B?L1lZVVFqSURTTFpCM3oyM1Jod3hnejJKcjVrT0gzV01FcVhYREFBZ0RYbGNu?=
+ =?utf-8?B?VGhSWlZ2eE1YcjJyUWtIbUlraGtuNE9GWTFnWHlqUW5tTnJ6WnE5UVUxclQ1?=
+ =?utf-8?B?Q1dQNkFheFIvRTdhUFFGZ3llMlNUMXBqTkNRYmhtR3JrcDFlOEgwcTFpVEpD?=
+ =?utf-8?B?Ujhnd1MyT2VhNk4rdU5EcFdDMzhTdkhZWURJUGxHZE8zTHB2YXdqRnR0SjM0?=
+ =?utf-8?B?cWlBamRMc3Z5QXh3dVZLTmZsdU1ycFAvSmRpcmJQRHBWT1FUOWJROFkrQ1Js?=
+ =?utf-8?B?b1FFRElOZXYxckhTcjNGNEdhU1pBMnB0REpOVmRKblJDcnNQamxPWHFORFh3?=
+ =?utf-8?B?c3JrZ24zTUhwbUpNN2RkK0dwcVFHbEY4SkpuSXo0amRuUExVV2tORlRrMjla?=
+ =?utf-8?B?WHhGRHFPczVLWWFkaERrVUpvbm5OZDVtaHhLTmxDMVRWdVdNaWtZS0lWUWdz?=
+ =?utf-8?B?NGIwRjZ1ZTloa0FFWktsMmlFQ1hqbldzR0JyTXlPVXNWajcyNXJBdzMySUI0?=
+ =?utf-8?B?QXppSFBwYUlBU1hMUStYK1Z0Smh4b202aENMTXVIWmF2UEJKb2xkN0Yzc3dS?=
+ =?utf-8?B?NWhkZmtHazB4QWZBOXQrckt6K3BxMnVGblRrTCtJaVJIS3JFR2liT09jMGZC?=
+ =?utf-8?B?bTZpMm9yYnVFbGdUakk0eEZNUUtuY1FlMjhZV0NBdGpvV210UUYrbFVSQ0V2?=
+ =?utf-8?B?clAraytVNjlhZk9waFBKMTJucGY2MGtKVXd6QXZQbUorLzVmNmdKaFoveVUz?=
+ =?utf-8?B?dVRRanVMSTJuejdkVEJla1I5Z1pMclVGd1NDbXVRQkdDcUpHdWxTV085UFZ6?=
+ =?utf-8?B?cjN3WW5acXA0dDhlbVJVZUdEWUQxaVNESG5sUlpRcTFmb2s3WVZPbWNGNG5U?=
+ =?utf-8?B?djRrby8xWWtpL0pHVWtzRnNqU2pVMmR1SzIvTlcwSHByWHMzK2ZVYlhaUGF0?=
+ =?utf-8?B?bWNidGJsWXByUmpVYW50by8rV1FnbjcxcWlrckNHalpLLzVFRnNHM0d1SUUr?=
+ =?utf-8?B?VnZMMDliT0F5SGcxZ1R4ZjVBYjh3MDNYc2o1SktyeStMNm5UNzNxd0VxYnZP?=
+ =?utf-8?B?MVNaRkg3L1hONkUrUytRSVlCUXczT01ySlZiZm84R29hTXdxNnBEWVN5WU5Q?=
+ =?utf-8?B?NlU1Vm1ITTd0VUZFWHJZRTJMWUovc0JGTzcyR2FSVnRqSGhqSXRPNEtCVEVH?=
+ =?utf-8?Q?oHOJWM15BJtkyJri4ZXdWR2wt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b70ac3cd-879c-45db-b985-08dc68750270
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 17:48:17.6631
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2024 17:51:34.2196
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BIsw0gVw9s1C5RZj699Ddr7E3exsvewoAYA52h+c/4ZA3IRffW09/N4bhRkgwjAkwTZVn8lSoRkRBS+Rfn87lw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6389
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-29_15,2024-04-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404290115
-X-Proofpoint-GUID: LJIaQDbXh59l6_0Dw2nVUOUldAxl7pNF
-X-Proofpoint-ORIG-GUID: LJIaQDbXh59l6_0Dw2nVUOUldAxl7pNF
+X-MS-Exchange-CrossTenant-UserPrincipalName: zzxp2+LuXJ0KI9NNvqgp9WGHrhBlKyKMADnSeDEHeiruA8xqKD6I4KaASsq7al/QtkdBkwU6o4+15mciGP1thA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5606
 
-From: Dave Chinner <dchinner@redhat.com>
+On 4/29/2024 12:45, Mario Limonciello wrote:
+> On 4/29/2024 11:48, Lyndon Sanche wrote:
+>> Some Dell laptops support configuration of preset fan modes through
+>> smbios tables.
+>>
+>> If the platform supports these fan modes, set up platform_profile to
+>> change these modes. If not supported, skip enabling platform_profile.
+>>
+>> Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
+>> ---
+>> v3:
+>>   - Convert smbios-thermal-ctl docs to multiline comment and wrap
+>>   - Change thermal_mode_bits enum to directly be BIT() values
+>>    - Convert related code to use this
+>>   - Use FIELD_GET/PREP and GENNMASK for getting/setting thermal modes
+>>    - Correct offset for getting current ACC mode, setting offset
+>>         unchanged
+>>   - Check if thermal_handler is allocated before freeing and
+>>      unregistering platform_profile
+>> v2:
+>>   - Wrap smbios-thermal-ctl comment
+>>   - Return proper error code when invalid state returned
+>>   - Simplify platform_profile_get returns
+>>   - Propogate ENOMEM error
+>> ---
+>>   drivers/platform/x86/dell/dell-laptop.c | 232 ++++++++++++++++++++++++
+>>   drivers/platform/x86/dell/dell-smbios.h |   1 +
+>>   2 files changed, 233 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/dell/dell-laptop.c 
+>> b/drivers/platform/x86/dell/dell-laptop.c
+>> index 42f7de2b4522..fa58e7751d06 100644
+>> --- a/drivers/platform/x86/dell/dell-laptop.c
+>> +++ b/drivers/platform/x86/dell/dell-laptop.c
+>> @@ -27,6 +27,8 @@
+>>   #include <linux/i8042.h>
+>>   #include <linux/debugfs.h>
+>>   #include <linux/seq_file.h>
+>> +#include <linux/platform_profile.h>
+>> +#include <linux/bitfield.h>
+> 
+> These should be inserted in alphabetical order.
+> 
+>>   #include <acpi/video.h>
+>>   #include "dell-rbtn.h"
+>>   #include "dell-smbios.h"
+>> @@ -95,6 +97,7 @@ static struct backlight_device *dell_backlight_device;
+>>   static struct rfkill *wifi_rfkill;
+>>   static struct rfkill *bluetooth_rfkill;
+>>   static struct rfkill *wwan_rfkill;
+>> +static struct platform_profile_handler *thermal_handler;
+>>   static bool force_rfkill;
+>>   static bool micmute_led_registered;
+>>   static bool mute_led_registered;
+>> @@ -2199,6 +2202,227 @@ static int mute_led_set(struct led_classdev 
+>> *led_cdev,
+>>       return 0;
+>>   }
+>> +/* Derived from smbios-thermal-ctl
+>> + *
+>> + * cbClass 17
+>> + * cbSelect 19
+>> + * User Selectable Thermal Tables(USTT)
+>> + * cbArg1 determines the function to be performed
+>> + * cbArg1 0x0 = Get Thermal Information
+>> + *  cbRES1         Standard return codes (0, -1, -2)
+>> + *  cbRES2, byte 0  Bitmap of supported thermal modes. A mode is 
+>> supported if
+>> + *                  its bit is set to 1
+>> + *     Bit 0 Balanced
+>> + *     Bit 1 Cool Bottom
+>> + *     Bit 2 Quiet
+>> + *     Bit 3 Performance
+>> + *  cbRES2, byte 1 Bitmap of supported Active Acoustic Controller 
+>> (AAC) modes.
+>> + *                 Each mode corresponds to the supported thermal 
+>> modes in
+>> + *                  byte 0. A mode is supported if its bit is set to 1.
+>> + *     Bit 0 AAC (Balanced)
+>> + *     Bit 1 AAC (Cool Bottom
+>> + *     Bit 2 AAC (Quiet)
+>> + *     Bit 3 AAC (Performance)
+>> + *  cbRes3, byte 0 Current Thermal Mode
+>> + *     Bit 0 Balanced
+>> + *     Bit 1 Cool Bottom
+>> + *     Bit 2 Quiet
+>> + *     Bit 3 Performanc
+>> + *  cbRes3, byte 1  AAC Configuration type
+>> + *          0       Global (AAC enable/disable applies to all 
+>> supported USTT modes)
+>> + *          1       USTT mode specific
+>> + *  cbRes3, byte 2  Current Active Acoustic Controller (AAC) Mode
+>> + *     If AAC Configuration Type is Global,
+>> + *          0       AAC mode disabled
+>> + *          1       AAC mode enabled
+>> + *     If AAC Configuration Type is USTT mode specific (multiple bits 
+>> may be set),
+>> + *          Bit 0 AAC (Balanced)
+>> + *          Bit 1 AAC (Cool Bottom
+>> + *          Bit 2 AAC (Quiet)
+>> + *          Bit 3 AAC (Performance)
+>> + *  cbRes3, byte 3  Current Fan Failure Mode
+>> + *     Bit 0 Minimal Fan Failure (at least one fan has failed, one 
+>> fan working)
+>> + *     Bit 1 Catastrophic Fan Failure (all fans have failed)
+>> + *  cbArg1 0x1   (Set Thermal Information), both desired thermal mode 
+>> and
+>> + *               desired AAC mode shall be applied
+>> + *  cbArg2, byte 0  Desired Thermal Mode to set
+>> + *                  (only one bit may be set for this parameter)
+>> + *     Bit 0 Balanced
+>> + *     Bit 1 Cool Bottom
+>> + *     Bit 2 Quiet
+>> + *     Bit 3 Performance
+>> + *  cbArg2, byte 1  Desired Active Acoustic Controller (AAC) Mode to set
+>> + *     If AAC Configuration Type is Global,
+>> + *         0  AAC mode disabled
+>> + *         1  AAC mode enabled
+>> + *
+>> + *     If AAC Configuration Type is USTT mode specific
+>> + *     (multiple bits may be set for this parameter),
+>> + *         Bit 0 AAC (Balanced)
+>> + *         Bit 1 AAC (Cool Bottom
+>> + *         Bit 2 AAC (Quiet)
+>> + *         Bit 3 AAC (Performance)
+>> + */
+>> +
+>> +#define DELL_ACC_GET_FIELD GENMASK(19, 16)
+>> +#define DELL_ACC_SET_FIELD GENMASK(11, 8)
+>> +#define DELL_THERMAL_SUPPORTED GENMASK(3, 0)
+>> +
+>> +enum thermal_mode_bits {
+>> +    DELL_BALANCED = BIT(0),
+>> +    DELL_COOL_BOTTOM = BIT(1),
+>> +    DELL_QUIET = BIT(2),
+>> +    DELL_PERFORMANCE = BIT(3),
+>> +};
+>> +
+>> +static int thermal_get_mode(void)
+>> +{
+>> +    struct calling_interface_buffer buffer;
+>> +    int state;
+>> +    int ret;
+>> +
+>> +    dell_fill_request(&buffer, 0x0, 0, 0, 0);
+>> +    ret = dell_send_request(&buffer, CLASS_INFO, 
+>> SELECT_THERMAL_MANAGEMENT);
+>> +    if (ret)
+>> +        return ret;
+>> +    state = buffer.output[2];
+>> +    if (state & DELL_BALANCED)
+>> +        return DELL_BALANCED;
+>> +    else if (state & DELL_COOL_BOTTOM)
+>> +        return DELL_COOL_BOTTOM;
+>> +    else if (state & DELL_QUIET)
+>> +        return DELL_QUIET;
+>> +    else if (state & DELL_PERFORMANCE)
+>> +        return DELL_PERFORMANCE;
+>> +    else
+>> +        return -ENXIO;
+>> +}
+>> +
+>> +static int thermal_get_supported_modes(int *supported_bits)
+>> +{
+>> +    struct calling_interface_buffer buffer;
+>> +    int ret;
+>> +
+>> +    dell_fill_request(&buffer, 0x0, 0, 0, 0);
+>> +    ret = dell_send_request(&buffer, CLASS_INFO, 
+>> SELECT_THERMAL_MANAGEMENT);
+>> +    if (ret)
+>> +        return ret;
+>> +    *supported_bits = FIELD_GET(DELL_THERMAL_SUPPORTED, 
+>> buffer.output[1]);
+>> +    return 0;
+>> +}
+>> +
+>> +static int thermal_get_acc_mode(int *acc_mode)
+>> +{
+>> +    struct calling_interface_buffer buffer;
+>> +    int ret;
+>> +
+>> +    dell_fill_request(&buffer, 0x0, 0, 0, 0);
+>> +    ret = dell_send_request(&buffer, CLASS_INFO, 
+>> SELECT_THERMAL_MANAGEMENT);
+>> +    if (ret)
+>> +        return ret;
+>> +    *acc_mode = FIELD_GET(DELL_ACC_GET_FIELD, buffer.output[3]);
+>> +    return 0;
+>> +}
+>> +
+>> +static int thermal_set_mode(enum thermal_mode_bits state)
+>> +{
+>> +    struct calling_interface_buffer buffer;
+>> +    int ret;
+>> +    int acc_mode;
+>> +
+>> +    ret = thermal_get_acc_mode(&acc_mode);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    dell_fill_request(&buffer, 0x1, FIELD_PREP(DELL_ACC_SET_FIELD, 
+>> acc_mode) | state, 0, 0);
+>> +    ret = dell_send_request(&buffer, CLASS_INFO, 
+>> SELECT_THERMAL_MANAGEMENT);
+>> +    return ret;
+>> +}
+>> +
+>> +static int thermal_platform_profile_set(struct 
+>> platform_profile_handler *pprof,
+>> +                    enum platform_profile_option profile)
+>> +{
+>> +    switch (profile) {
+>> +    case PLATFORM_PROFILE_BALANCED:
+>> +        return thermal_set_mode(DELL_BALANCED);
+>> +    case PLATFORM_PROFILE_PERFORMANCE:
+>> +        return thermal_set_mode(DELL_PERFORMANCE);
+>> +    case PLATFORM_PROFILE_QUIET:
+>> +        return thermal_set_mode(DELL_QUIET);
+>> +    case PLATFORM_PROFILE_COOL:
+>> +        return thermal_set_mode(DELL_COOL_BOTTOM);
+>> +    default:
+>> +        return -EOPNOTSUPP;
+>> +    }
+>> +}
+>> +
+>> +static int thermal_platform_profile_get(struct 
+>> platform_profile_handler *pprof,
+>> +                    enum platform_profile_option *profile)
+>> +{
+>> +    int ret = thermal_get_mode();
+>> +
+>> +    if (ret < 0)
+>> +        return ret;
+>> +
+>> +    switch (ret) {
+>> +    case DELL_BALANCED:
+>> +        *profile = PLATFORM_PROFILE_BALANCED;
+>> +        break;
+>> +    case DELL_PERFORMANCE:
+>> +        *profile = PLATFORM_PROFILE_PERFORMANCE;
+>> +        break;
+>> +    case DELL_COOL_BOTTOM:
+>> +        *profile = PLATFORM_PROFILE_COOL;
+>> +        break;
+>> +    case DELL_QUIET:
+>> +        *profile = PLATFORM_PROFILE_QUIET;
+>> +        break;
+>> +    default:
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +int thermal_init(void)
+>> +{
+>> +    int ret;
+>> +    int supported_modes;
+>> +
+>> +    ret = thermal_get_supported_modes(&supported_modes);
+>> +    if (ret || !supported_modes)
+>> +        return 0;
+>> +
+>> +    thermal_handler = kzalloc(sizeof(*thermal_handler), GFP_KERNEL);
+>> +    if (!thermal_handler)
+>> +        return -ENOMEM;
+>> +    thermal_handler->profile_get = thermal_platform_profile_get;
+>> +    thermal_handler->profile_set = thermal_platform_profile_set;
+>> +
+>> +    if (supported_modes & DELL_QUIET)
+>> +        set_bit(PLATFORM_PROFILE_QUIET, thermal_handler->choices);
+>> +    if (supported_modes & DELL_COOL_BOTTOM)
+>> +        set_bit(PLATFORM_PROFILE_COOL, thermal_handler->choices);
+>> +    if (supported_modes & DELL_BALANCED)
+>> +        set_bit(PLATFORM_PROFILE_BALANCED, thermal_handler->choices);
+>> +    if (supported_modes & DELL_PERFORMANCE)
+>> +        set_bit(PLATFORM_PROFILE_PERFORMANCE, thermal_handler->choices);
+>> +
+>> +    // Clean up but do not fail
+> 
+> Switch comment style to /* */
+> 
+>> +    if (platform_profile_register(thermal_handler))
+>> +        kfree(thermal_handler);
+> 
+> Don't you also want to return an error in this case?  Because this means 
+> that the platform supports thermal modes but it failed to setup due to 
+> other issues.
+> 
+> It's different than the case of no supported modes in which case 
+> returning 0 makes sense.
+> 
+> Maybe like this:
+> 
+> 
+> ret = platform_profile_register(thermal_handler);
+> if (ret)
+>      kfree(thermal_handler);
+> 
+> return ret;
+> 
+> 
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +void thermal_cleanup(void)
+>> +{
+>> +    if (thermal_handler) {
+>> +        platform_profile_remove();
+>> +        kfree(thermal_handler);
+>> +    }
+>> +}
+>> +
+>>   static struct led_classdev mute_led_cdev = {
+>>       .name = "platform::mute",
+>>       .max_brightness = 1,
+>> @@ -2238,6 +2462,11 @@ static int __init dell_init(void)
+>>           goto fail_rfkill;
+>>       }
+>> +    // Do not fail module if thermal modes not supported, just skip
+> 
+> Switch comment style to /* */
+> 
+>> +    ret = thermal_init();
+>> +    if (ret)
+>> +        goto fail_thermal;
+>> +
+>>       if (quirks && quirks->touchpad_led)
+>>           touchpad_led_init(&platform_device->dev);
+>> @@ -2317,6 +2546,8 @@ static int __init dell_init(void)
+>>           led_classdev_unregister(&mute_led_cdev);
+>>   fail_led:
+>>       dell_cleanup_rfkill();
+>> +fail_thermal:
+>> +    thermal_cleanup();
+>>   fail_rfkill:
+>>       platform_device_del(platform_device);
+>>   fail_platform_device2:
+>> @@ -2344,6 +2575,7 @@ static void __exit dell_exit(void)
+>>           platform_device_unregister(platform_device);
+>>           platform_driver_unregister(&platform_driver);
+>>       }
+>> +    thermal_cleanup();
+>>   }
+>>   /* dell-rbtn.c driver export functions which will not work correctly 
+>> (and could
+>> diff --git a/drivers/platform/x86/dell/dell-smbios.h 
+>> b/drivers/platform/x86/dell/dell-smbios.h
+>> index eb341bf000c6..585d042f1779 100644
+>> --- a/drivers/platform/x86/dell/dell-smbios.h
+>> +++ b/drivers/platform/x86/dell/dell-smbios.h
+>> @@ -19,6 +19,7 @@
+>>   /* Classes and selects used only in kernel drivers */
+>>   #define CLASS_KBD_BACKLIGHT 4
+>>   #define SELECT_KBD_BACKLIGHT 11
+>> +#define SELECT_THERMAL_MANAGEMENT 19
 
-When forced allocation alignment is specified, the extent will
-be aligned to the extent size hint size rather than stripe
-alignment. If aligned allocation cannot be done, then the allocation
-is failed rather than attempting non-aligned fallbacks.
+I think you should insert this into dell-smbios-base.c under 
+call_blacklist.  This will prevent userspace from fighting with the 
+kernel on the same data when this code goes in.
 
-Note: none of the per-inode force align configuration is present
-yet, so this just triggers off an "always false" wrapper function
-for the moment.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: John Garry <john.g.garry@oracle.com>
----
- fs/xfs/libxfs/xfs_alloc.h |  1 +
- fs/xfs/libxfs/xfs_bmap.c  | 29 +++++++++++++++++++++++------
- fs/xfs/xfs_inode.h        |  5 +++++
- 3 files changed, 29 insertions(+), 6 deletions(-)
-
-diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-index aa2c103d98f0..7de2e6f64882 100644
---- a/fs/xfs/libxfs/xfs_alloc.h
-+++ b/fs/xfs/libxfs/xfs_alloc.h
-@@ -66,6 +66,7 @@ typedef struct xfs_alloc_arg {
- #define XFS_ALLOC_USERDATA		(1 << 0)/* allocation is for user data*/
- #define XFS_ALLOC_INITIAL_USER_DATA	(1 << 1)/* special case start of file */
- #define XFS_ALLOC_NOBUSY		(1 << 2)/* Busy extents not allowed */
-+#define XFS_ALLOC_FORCEALIGN		(1 << 3)/* forced extent alignment */
- 
- /* freespace limit calculations */
- unsigned int xfs_alloc_set_aside(struct xfs_mount *mp);
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index c2ddf1875e52..7a0ef0900097 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -3411,9 +3411,10 @@ xfs_bmap_alloc_account(
-  * Calculate the extent start alignment and the extent length adjustments that
-  * constrain this allocation.
-  *
-- * Extent start alignment is currently determined by stripe configuration and is
-- * carried in args->alignment, whilst extent length adjustment is determined by
-- * extent size hints and is carried by args->prod and args->mod.
-+ * Extent start alignment is currently determined by forced inode alignment or
-+ * stripe configuration and is carried in args->alignment, whilst extent length
-+ * adjustment is determined by extent size hints and is carried by args->prod
-+ * and args->mod.
-  *
-  * Low level allocation code is free to either ignore or override these values
-  * as required.
-@@ -3426,11 +3427,18 @@ xfs_bmap_compute_alignments(
- 	struct xfs_mount	*mp = args->mp;
- 	xfs_extlen_t		align = 0; /* minimum allocation alignment */
- 
--	/* stripe alignment for allocation is determined by mount parameters */
--	if (mp->m_swidth && xfs_has_swalloc(mp))
-+	/*
-+	 * Forced inode alignment takes preference over stripe alignment.
-+	 * Stripe alignment for allocation is determined by mount parameters.
-+	 */
-+	if (xfs_inode_has_forcealign(ap->ip)) {
-+		args->alignment = xfs_get_extsz_hint(ap->ip);
-+		args->datatype |= XFS_ALLOC_FORCEALIGN;
-+	} else if (mp->m_swidth && xfs_has_swalloc(mp)) {
- 		args->alignment = mp->m_swidth;
--	else if (mp->m_dalign)
-+	} else if (mp->m_dalign) {
- 		args->alignment = mp->m_dalign;
-+	}
- 
- 	if (ap->flags & XFS_BMAPI_COWFORK)
- 		align = xfs_get_cowextsz_hint(ap->ip);
-@@ -3617,6 +3625,11 @@ xfs_bmap_btalloc_low_space(
- {
- 	int			error;
- 
-+	if (args->alignment > 1 && (args->datatype & XFS_ALLOC_FORCEALIGN)) {
-+		args->fsbno = NULLFSBLOCK;
-+		return 0;
-+	}
-+
- 	args->alignment = 1;
- 	if (args->minlen > ap->minlen) {
- 		args->minlen = ap->minlen;
-@@ -3668,6 +3681,8 @@ xfs_bmap_btalloc_filestreams(
- 
- 	/* Attempt non-aligned allocation if we haven't already. */
- 	if (!error && args->fsbno == NULLFSBLOCK && args->alignment > 1)  {
-+		if (args->datatype & XFS_ALLOC_FORCEALIGN)
-+			return error;
- 		args->alignment = 1;
- 		error = xfs_alloc_vextent_near_bno(args, ap->blkno);
- 	}
-@@ -3726,6 +3741,8 @@ xfs_bmap_btalloc_best_length(
- 
- 	/* Attempt non-aligned allocation if we haven't already. */
- 	if (!error && args->fsbno == NULLFSBLOCK && args->alignment > 1)  {
-+		if (args->datatype & XFS_ALLOC_FORCEALIGN)
-+			return error;
- 		args->alignment = 1;
- 		error = xfs_alloc_vextent_start_ag(args, ap->blkno);
- 	}
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index ab46ffb3ac19..67f10349a6ed 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -311,6 +311,11 @@ static inline bool xfs_inode_has_large_extent_counts(struct xfs_inode *ip)
- 	return ip->i_diflags2 & XFS_DIFLAG2_NREXT64;
- }
- 
-+static inline bool xfs_inode_has_forcealign(struct xfs_inode *ip)
-+{
-+	return false;
-+}
-+
- /*
-  * Return the buftarg used for data allocations on a given inode.
-  */
--- 
-2.31.1
+>>   /* Tokens used in kernel drivers, any of these
+>>    * should be filtered from userspace access
+> 
 
