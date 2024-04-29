@@ -1,188 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89513372
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 05:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ED4DF42
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 05:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714367327; cv=none; b=Vv7hV2YMeo/e9NNncFLB0viySAiid9HTZ8Dy/x6mOO5TzDn/7oWOCy21W+nzPbm2dCBVGEZUQNJgF6B8AYZdDF7aEHNZqJ2j4NGkHn3V7nNNE0cbg2XfqnPNkY6WKpNDSdxwF4fHf36yH1FLvQHbp4lurRYpimDbZ3vnKWytmLc=
+	t=1714367403; cv=none; b=Mhrz+8orFJiFVgnIuGGSyikpSK5VkApsbECmiTlXLUy7aJW2hCSxQJwnoODKql1x/Ay5ENrbXmYsOhK9JzmKdSVN2cBaIIksJl4hRszpDQA5Tau5zMfzls1lpMUo1LT+GLHs2dsP4xGsdncmdE0yMk4a4SjrJO9a6VDi7nYtr2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714367327; c=relaxed/simple;
-	bh=mxVSpiVc3CFUOue6xPqdNIQrLke23NOIAqrrjzMXkAs=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CIV0n1tyWy/AkScIGNqCxS1oD5XchMgiWtpo+b8wjmvUFdzPq6rqdI4acxnU8l9s5TwzX34oLZr1ZmdFsvpBKGJExukqxUFHar3S5vbVlmUe1rVLRCsphMRhJkWt2YhBkT8xbkv2APbx0UiLZmwnpsbMMpLQK58jSLZQO7W8U6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D4M9Bo93; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714367403; c=relaxed/simple;
+	bh=uDXiZfQhRsyw1ft6MX0V67niOKlXGrJmWIAmhFCeVsU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QdQXUCVbSZU+KfCNyxKI7y6HMrw7ooNcoSVV4H7spuiJbcwes1T6//t6HBxvofiusSmIOrY+m76pgdUQB8byyF+vg/2N0bip4TlterI9J5DlY6Z0bMxqCD7aJruko8xjjXEvkBAaOpWEaRKqMkpDD6UrpbtQvP8lmCQtuI5S3Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hB7rhtam; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D4M9Bo93"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714367325; x=1745903325;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mxVSpiVc3CFUOue6xPqdNIQrLke23NOIAqrrjzMXkAs=;
-  b=D4M9Bo93kRtN3dPEHi0OyuOEg8Bw4QJZAXhog8AXzXBn/bDwCwQFc0+/
-   i4NajLl9Ql4WDgtWS6rE2WqmT2jEh3sgmKiU0W5vf21HGBxPmcjQXTXYn
-   lbLk3MZMfnMkd25dYRjE8AT85LumPsd7pew+yIB3R9/shKmcwZ2fa8EJ/
-   1joq0oT13BucEx3+M2OJBj0nfj5bFT3D5DbxdBwSZQ2r8IXOVeOy0H9nm
-   owz+Ds9TZunF98liw2oMY/GHUTKhVmyTtIvlX3yGuSr03pCtXprQvwzY7
-   +Y6tJkZCVhb6gfxCN9EwnspKCCPA+4ERLZ4qt5rvhkEKpfquQ0eE6U7Tj
-   w==;
-X-CSE-ConnectionGUID: oQUMRHsfQsupX+hsiWwuBw==
-X-CSE-MsgGUID: WhIPc9yJTWyBYWPpo7sfUQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="10231760"
-X-IronPort-AV: E=Sophos;i="6.07,238,1708416000"; 
-   d="scan'208";a="10231760"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2024 22:08:44 -0700
-X-CSE-ConnectionGUID: mvNirE5RSEyXwSzpR9HIbw==
-X-CSE-MsgGUID: lTA8GHIvRQ+tyNNKpDF9ag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,238,1708416000"; 
-   d="scan'208";a="26630786"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa008.jf.intel.com with ESMTP; 28 Apr 2024 22:08:42 -0700
-Message-ID: <001d6fa8-d2f5-4011-988d-d2bc4f43a1aa@linux.intel.com>
-Date: Mon, 29 Apr 2024 13:07:14 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hB7rhtam"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so2101282a12.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 22:10:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714367401; x=1714972201; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zPfeZpHIqAor5KhZbagcI8P8T5SPnMSuPapyOCbP/Xo=;
+        b=hB7rhtamw/9svgCPh/wrjk65gyxLr/r2nvp8tU4z35FyICQKD1dniGsuEYnNcol16+
+         plxqU6LCvUCBda1fqlituIek0ZCJW4CtANgigWYSBrmcZ2B3krSuH/EBn0xlxMHP6B4e
+         mcCWOmK/ku6CuR5h4wM243TGVjzz1YO4ILBHDXzGeDvy2LS8HMGAN2edNH2MHspIYOyz
+         8oOeNrop++Bl9v4/tXyYwGuueGStaOUUoL5JHCHQIU3cllcTrnCN4eJeXrxm1ZyytDyw
+         x8MfWsZPhCVxPfZd0U0UbLhEhLrPdh5uFznVMsZsR36boryqtpjHRoGPvqvx8RMZ+rNh
+         kubQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714367401; x=1714972201;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zPfeZpHIqAor5KhZbagcI8P8T5SPnMSuPapyOCbP/Xo=;
+        b=TL26kPAmY/pr5aesR17nL0/jgGwcsGkjvwlRUYUAXgAUrMfi1a5LxCw7wr07mmUWag
+         eY5wAgTnu+rv6qKaYfe9rtPIy4vfjD0Hs/IsJLkumMTirbDL67E/BbcJovPxXzLHJ8JB
+         Gfmu7ohqAEFyQ0LHeSQinShHPQJlLBeVHbHqxEPcs7lzHkoI3XchZxB10GvnD8+mv6oa
+         yF6Fu22w8OGm1tyGDhgzEtMpWzC6buWBxYkUojP+YuylES7tvhcDrd3YjDtquEtfUB6P
+         66Z6MoPB99ak9S7LmC0/sUd0GcNmpBSYsTF91+0WjZLbaHWwZs2pav8BFGxi0EB9qtcb
+         Ny1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUDYufO7zn63LCwJhpuX81dqJJhbTTqREjJ11cT6U6MIeOBEb6Dy9H7aYWIiPs2eAnxXNUEyPntmAKZqPe/LnikD3sL5HHgefVsUG2r
+X-Gm-Message-State: AOJu0YzrbNyz5jZB1hWaSEV+FKLRU9VOsCjxkHZy3RTqQ9dekf8Cqunz
+	Okpjn+Tv9ke2JmK0LpXoj8+/plMtss28ji3zbz5Tn0+NZzEKz9cGmnupKrwCEOsq3ZQKYNM9gpF
+	/zrB+MHvnorL0tEtBGoY/+RZBRiE=
+X-Google-Smtp-Source: AGHT+IHZP9ujjyfE3gCmyzLzNyoIYQIZE/JAdcqnmQzPoRZZP8xJlGf2zY6G4Vij6uNG/z+sNBCfhtNTwhesx/iJx/Q=
+X-Received: by 2002:a05:6a20:968d:b0:1a9:5ba1:3713 with SMTP id
+ hp13-20020a056a20968d00b001a95ba13713mr9145913pzc.19.1714367400927; Sun, 28
+ Apr 2024 22:10:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Nicolin Chen <nicolinc@nvidia.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
- Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Joel Granados <j.granados@samsung.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "virtualization@lists.linux-foundation.org"
- <virtualization@lists.linux-foundation.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/9] iommu: Replace sva_iommu with iommu_attach_handle
-To: "Tian, Kevin" <kevin.tian@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
-References: <20240403011519.78512-1-baolu.lu@linux.intel.com>
- <20240403011519.78512-3-baolu.lu@linux.intel.com>
- <20240403115913.GC1363414@ziepe.ca>
- <e3f526e3-6474-49ff-b8d6-995aaf1c1830@linux.intel.com>
- <20240408141946.GB223006@ziepe.ca>
- <86e723e7-c3be-41b1-95d8-dbdf86bbdab5@linux.intel.com>
- <20240409234800.GD223006@ziepe.ca>
- <5871aaec-b81a-4ad4-8eb1-656a04d04bda@linux.intel.com>
- <BN9PR11MB5276F89C1C21BD03207A044F8C1B2@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB5276F89C1C21BD03207A044F8C1B2@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240319010920.125192-1-21cnbao@gmail.com> <0df6028c-3e7d-461c-85bd-8ba1bf06e2a6@roeck-us.net>
+In-Reply-To: <0df6028c-3e7d-461c-85bd-8ba1bf06e2a6@roeck-us.net>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Date: Sun, 28 Apr 2024 22:09:49 -0700
+Message-ID: <CAMo8BfJTutHPByNZcpjb-2xeUX-Nu2XkjN0DWE6w5xV=zg__Kg@mail.gmail.com>
+Subject: Re: [PATCH v2] xtensa: remove redundant flush_dcache_page and
+ ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE macros
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Barry Song <21cnbao@gmail.com>, chris@zankel.net, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, willy@infradead.org, dennis@kernel.org, 
+	alexghiti@rivosinc.com, Barry Song <v-songbaohua@oppo.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/29/24 10:39 AM, Tian, Kevin wrote:
->> From: Baolu Lu <baolu.lu@linux.intel.com>
->> Sent: Sunday, April 28, 2024 6:22 PM
->>
->> On 2024/4/10 7:48, Jason Gunthorpe wrote:
->>> On Tue, Apr 09, 2024 at 10:11:28AM +0800, Baolu Lu wrote:
->>>> On 4/8/24 10:19 PM, Jason Gunthorpe wrote:
->>>>> On Sat, Apr 06, 2024 at 02:09:34PM +0800, Baolu Lu wrote:
->>>>>> On 4/3/24 7:59 PM, Jason Gunthorpe wrote:
->>>>>>> On Wed, Apr 03, 2024 at 09:15:12AM +0800, Lu Baolu wrote:
->>>>>>>> +	/* A bond already exists, just take a reference`. */
->>>>>>>> +	handle = iommu_attach_handle_get(group, iommu_mm-
->>> pasid);
->>>>>>>> +	if (handle) {
->>>>>>>> +		mutex_unlock(&iommu_sva_lock);
->>>>>>>> +		return handle;
->>>>>>>>      	}
->>>>>>> At least in this context this is not enough we need to ensure that the
->>>>>>> domain on the PASID is actually an SVA domain and it was installed by
->>>>>>> this mechanism, not an iommufd domain for instance.
->>>>>>>
->>>>>>> ie you probably need a type field in the iommu_attach_handle to tell
->>>>>>> what the priv is.
->>>>>>>
->>>>>>> Otherwise this seems like a great idea!
->>>>>> Yes, you are right. For the SVA case, I will add the following changes.
->>>>>> The IOMMUFD path will also need such enhancement. I will update it in
->>>>>> the next version.
->>>>> The only use for this is the PRI callbacks right? Maybe instead of
->>>>> adding a handle type let's just check domain->iopf_handler  ?
->>>>>
->>>>> Ie SVA will pass &ommu_sva_iopf_handler as its "type"
->>>> Sorry that I don't fully understand the proposal here.
->>> I was talking specifically about the type field you suggested adding
->>> to the handle struct.
->>>
->>> Instead of adding a type field check the domain->iopf_handler to
->>> determine the domain and thus handle type.
->>>
->>>> The problem is that the context code (SVA, IOMMUFD, etc.) needs to
->> make
->>>> sure that the attach handle is really what it has installed during
->>>> domain attachment. The context code needs some mechanism to include
->> some
->>>> kind of "owner cookie" in the attach handle, so that it could check
->>>> against it later for valid use.
->>> Right, you have a derived struct for each user and you need a way to
->>> check if casting from the general handle struct to the derived struct
->>> is OK.
->>>
->>> I'm suggesting using domain->iopf_handle as the type key.
->>
->> After removing the refcount from the attach handle, I am trying to make
->> the code look like this,
->>
->>           /* A bond already exists, just take a reference`. */
->>           handle = iommu_attach_handle_get(group, iommu_mm->pasid);
->>           if (handle) {
->>                   if (handle->domain->iopf_handler !=
->> iommu_sva_iopf_handler) {
->>                           ret = -EBUSY;
->>                           goto out_unlock;
->>                   }
->>
->>                   refcount_inc(&handle->users);
->>                   mutex_unlock(&iommu_sva_lock);
->>                   return handle;
->>           }
->>
->> But it appears that this code is not lock safe. If the domain on the
->> PASID is not a SVA domain, the check of "handle->domain->iopf_handler !=
->> iommu_sva_iopf_handler" could result in a use-after-free issue as the
->> other thread might detach the domain in between the fetch and check
->> lines.
->>
->> Probably we still need to keep the refcount in the attach handle?
->>
-> 
-> What about Jason's another comment in his original replies?
-> 
-> "
-> Though I'm not convinced the refcount should be elevated into the core
-> structure. The prior patch I showed you where the caller can provide
-> the memory for the handle and we don't have a priv would make it easy
-> to put the refcount in a SVA dervied handle struct without more
-> allocation. Then we don't need this weirdness.
-> "
-> 
-> That sounds like we'll need a iommu_sva like structure to hold
-> its own refcnt. Then we don't need this type check and refcnt
-> in the core.
+On Sat, Apr 27, 2024 at 12:05=E2=80=AFPM Guenter Roeck <linux@roeck-us.net>=
+ wrote:
+>
+> Hi,
+>
+> On Tue, Mar 19, 2024 at 02:09:20PM +1300, Barry Song wrote:
+> > From: Barry Song <v-songbaohua@oppo.com>
+> >
+> > xtensa's flush_dcache_page() can be a no-op sometimes. There is a
+> > generic implementation for this case in include/asm-generic/
+> > cacheflush.h.
+> >  #ifndef ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+> >  static inline void flush_dcache_page(struct page *page)
+> >  {
+> >  }
+> >
+> >  #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+> >  #endif
+> >
+> > So remove the superfluous flush_dcache_page() definition, which also
+> > helps silence potential build warnings complaining the page variable
+> > passed to flush_dcache_page() is not used.
+> >
+> >    In file included from crypto/scompress.c:12:
+> >    include/crypto/scatterwalk.h: In function 'scatterwalk_pagedone':
+> >    include/crypto/scatterwalk.h:76:30: warning: variable 'page' set but=
+ not used [-Wunused-but-set-variable]
+> >       76 |                 struct page *page;
+> >          |                              ^~~~
+> >    crypto/scompress.c: In function 'scomp_acomp_comp_decomp':
+> > >> crypto/scompress.c:174:38: warning: unused variable 'dst_page' [-Wun=
+used-variable]
+> >      174 |                         struct page *dst_page =3D sg_page(re=
+q->dst);
+> >          |
+> >
+> > The issue was originally reported on LoongArch by kernel test
+> > robot (Huacai fixed it on LoongArch), then reported by Guenter
+> > and me on xtensa.
+> >
+> > This patch also removes lots of redundant macros which have
+> > been defined by asm-generic/cacheflush.h.
+> >
+> > Cc: Huacai Chen <chenhuacai@loongson.cn>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202403091614.NeUw5zcv-lkp=
+@intel.com/
+> > Reported-by: Barry Song <v-songbaohua@oppo.com>
+> > Closes: https://lore.kernel.org/all/CAGsJ_4yDk1+axbte7FKQEwD7X2oxUCFrEc=
+9M5YOS1BobfDFXPA@mail.gmail.com/
+> > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > Closes: https://lore.kernel.org/all/aaa8b7d7-5abe-47bf-93f6-40794243647=
+2@roeck-us.net/
+> > Fixes: 77292bb8ca69 ("crypto: scomp - remove memcpy if sg_nents is 1 an=
+d pages are lowmem")
+> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>
+> The mainline kernel still fails to build xtensa:allmodconfig.
+>
+> Building xtensa:allmodconfig ... failed
+> --------------
+> Error log:
+> crypto/scompress.c: In function 'scomp_acomp_comp_decomp':
+> crypto/scompress.c:174:38: error: unused variable 'dst_page' [-Werror=3Du=
+nused-variable]
+>   174 |                         struct page *dst_page =3D sg_page(req->ds=
+t);
+>
+> This patch fixes the problem. Is there a chance to get it applied to the
+> upstream kernel, or should I just stop build testing xtensa:allmodconfig =
+?
 
-The problem I'm facing isn't about who allocates the handle memory.
-Instead, there's no mechanism to synchronize access between two threads.
-One thread might remove the handle while another fetches and reads a
-member of its structure.
+Applied to my xtensa tree.
+I was still hoping to see rationale for why this is a useful warning.
 
-A similar issue exists with iommu_get_domain_for_dev_pasid(). It fetches
-and returns a domain, but there's no guarantee that the domain will
-*not* be freed while the caller is still using it.
-
-One reason I introduced the reference count for attach handles is to
-potentially replace iommu_get_domain_for_dev_pasid(), allowing the
-domain to be accessible without any potential UAF issue.
-
-Best regards,
-baolu
+--=20
+Thanks.
+-- Max
