@@ -1,175 +1,172 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121AA13AA45
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB3513A3E5;
+	Mon, 29 Apr 2024 19:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714417843; cv=none; b=doHtOF1fg1JnsQ1B7EBZ62g3FBbbKyj7VyNR3VAef2zwQXuHbSCEz7lInzBjlk16ZesLa2Kkp3j6VPSByyQZODgPz2P22BfBv0L+CKqbJRzAVCK73uFGTcpOKXqn+ZT0ZaYP9HY3D13g+3HoCrCXlXL9F8ruqIi1hc+lkuBCqbM=
+	t=1714417914; cv=none; b=pCAyk5Ie0fp9DKJRXTyUH4JKX24cS61BmHPIRbQ/fVbCm5Agav76SHlDEsHHXCE/Bv8gOWsFGRpGtYJiCC9x29/zMX6jtmKaWz8Y5pmmwvktkQL4OozGCYaiypYVDyyE7z/gY5duRsKIefAQqoJnii/en9jLbMywL87mq3vbDlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714417843; c=relaxed/simple;
-	bh=YAT1esnGQFxlBOBg2MJkgKGoRoHJC6inoN61Uetw544=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=eFeuW0YyVMexcChTWCrSniff/dozqGJQowowoKpeQRRkyRucwRoBC/OBMQb8oMaiWHFhOq4f4391YYw/eDwjqqFusu48dGwXW6osmLKKeK8sK2OZ72IT3Oe/KRDZKuXlnKXHpDgNjuKDQJzkpbH3hemqxofsXN6lvbOh5p8zWLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=d7OkmbtW; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1714417914; c=relaxed/simple;
+	bh=aBlwHG+XSz2inbaFgGCXbG0yr6uY/trtijVmQNmku2w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u5wMI8c0A669c0cdX1r0aZiK4Ahux5KXCzes6kzNmnXGf5feI8huUIcXKN03klo5xwaEQ1rsXD0e6whfHcNQk5QibRGyQ1YJhTE/I7uQw488kwNFW2epLtX0vUgfx7qk3spZcb5pBrZ3NM0BELTztKdAqdP+0hZ2ceZsSWab2l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IcS4ErJs; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="d7OkmbtW"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 43TJA7nP467894
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 29 Apr 2024 12:10:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 43TJA7nP467894
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024041401; t=1714417808;
-	bh=0Qr2TuS4+t5kKZBgsNQn7deRV1PrUlg46GbHzRW8Rw8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=d7OkmbtWo90bCAysnl25EJnml4KhN0qnj7hHlsttVZeHAw5KZHfygrkVfRYvD+pcd
-	 iCjO+l1+bsbBEOs4bLmPlDm5lpFw7C360Jt16ZO0/1cWtvdvrVQRgbXoGaHs+Zzlyp
-	 7opK/ZjhkdAYpMRxIWggcJ53Eb9JMqLAHQvUinTK5v8hAHE4C/HvdNhuOi4VVEBH/W
-	 7fPqSqxdHHwXStFHy66a2YhukwZG6uyu7dA45OUiFQ2t1eqfIAuBJYskwQ8GrWd0Kk
-	 69DCHXV0lnZIXz4FUd/e3LwrFQqq3ligrm43UkDk86nmsGlHW5qB0porQJ73LxbUNx
-	 pBFlpY0GsiKww==
-Date: Mon, 29 Apr 2024 12:10:03 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Kees Cook <keescook@chromium.org>
-CC: Xin Li <xin@zytor.com>, Andrew Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: x86: dynamic pt_regs pointer and kernel stack randomization
-User-Agent: K-9 Mail for Android
-In-Reply-To: <202404290859.99763AA1@keescook>
-References: <a793c733-267d-4930-8ee2-0fc0f24c3538@zytor.com> <202404290859.99763AA1@keescook>
-Message-ID: <4994087F-1CB6-40ED-BA6D-B0545AD754DD@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcS4ErJs"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6f0b9f943cbso4028539b3a.0;
+        Mon, 29 Apr 2024 12:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714417912; x=1715022712; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/1bORWOEMtQqR5EeJUVgL0AX3aI0603PhY0Dzu9DVzE=;
+        b=IcS4ErJsjpy550acoJoLVe0uzHganOhk2s7EDEfUqDM+WzbntpTp6/ukob6/n0TvkM
+         1jAdHlpdfesbTsmR06/xHMbbofY4ECH/7U+UG/jzB/ARt+n61Xht6gv2Bt6k1JO8VzQU
+         rei8uXlOBarMQ3GSdnMTOvDyNeKT8mejVfKbhfvUCNo/CIxvIBoyU9BtFJcbbv/haVdc
+         7svK4EZCIhe9EoUHQ9WhwnsWq4URAB67D83M3wzEzBcIYYN6YB+BsNDTdyxpxXadHmnS
+         vqapbA8lyUbjHjU1OiPMXOtnz/8M/xnKFw3U10Uzlw0hWJYf8HlVlPphpv1n7jO+8V3f
+         R3Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714417912; x=1715022712;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/1bORWOEMtQqR5EeJUVgL0AX3aI0603PhY0Dzu9DVzE=;
+        b=Sf3h//fxHy4BIfZoMWcsjlVcpfMkW8Um6iP6S9YA5xOWGpLMiSzIO8KmUFbjosKqvu
+         l7UDf2gZtOT2eEHkXZDV1R9wAD4Z9SQBxP/972WT3vhYpLT1IQdub4cb2keYPAdUCZL/
+         E+Br7JvZa9rdu3qhXsu96J5jA9bMtt9+E3TVtyHt2e150s733E5/7QpPuxS66/EZxwMG
+         /jOKTE3zbxO3qFosgMXZN+U1nButWrFNFYdHybpX3dvhB6mN59L7ersbEAs2QfJAd4e+
+         NOIWxeMR/qy/qpBzlEhiCgatKd3h1sdM8Murw2T4nNvCNoiwv5yUOmeiC+RrUAo7ibVG
+         DdiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNW5p5hBSvUY+D8IJHknE1GV+07QaVpTkl7lsJGhE3dBAS+4XnfkXzJmouJ8nK7fRNpYYkaGDYRBjlOxwXNQpUh3mRhxk0CEFDwmgbtWRizIY5xdBpwcMEU9Y2+S9W3TMPzBFKQo1ljaL3hw==
+X-Gm-Message-State: AOJu0YzbGT8c+ebb8xSTVyihUga99Krw/fzmWkpkmxrr/d39VvJq+Bdp
+	zFYdQF3NYmHh802exOzb3WiYeMWQEmxj0XaxShzAjUULcwyV/N49
+X-Google-Smtp-Source: AGHT+IGx8aY8FR50gdhXj18Vz7j7jddJ8qW0aYfCyeOPPSYXuiUjoJ/c7FOQYDIpxGDCtkTEqeM7Ww==
+X-Received: by 2002:a05:6a00:2186:b0:6ed:cd4c:cc11 with SMTP id h6-20020a056a00218600b006edcd4ccc11mr431263pfi.25.1714417912024;
+        Mon, 29 Apr 2024 12:11:52 -0700 (PDT)
+Received: from KASONG-MB2.tencent.com ([1.203.116.31])
+        by smtp.gmail.com with ESMTPSA id e10-20020aa7980a000000b006ed38291aebsm20307988pfl.178.2024.04.29.12.11.48
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 29 Apr 2024 12:11:51 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Chris Li <chrisl@kernel.org>,
+	Barry Song <v-songbaohua@oppo.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Neil Brown <neilb@suse.de>,
+	Minchan Kim <minchan@kernel.org>,
+	Hugh Dickins <hughd@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH v3 08/12] nfs: drop usage of folio_file_pos
+Date: Tue, 30 Apr 2024 03:11:34 +0800
+Message-ID: <20240429191138.34123-1-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240429190500.30979-1-ryncsn@gmail.com>
+References: <20240429190500.30979-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On April 29, 2024 9:09:02 AM PDT, Kees Cook <keescook@chromium=2Eorg> wrote=
-:
->On Sun, Apr 28, 2024 at 03:28:44PM -0700, H=2E Peter Anvin wrote:
->> So the issue of having an explicit pointer to the user space pt_regs
->> structure has come up in the context of future FRED extensions, which m=
-ay
->> increase the size of the exception stack frame under some circumstances=
-,
->> which may not be constant in the first place=2E
->>=20
->> It struck me that this can be combined with kernel stack randomization =
-in
->> such a way that it mostly amortizes the cost of both=2E
->
->I've tried to go get up to speed with what FRED changes in x86, and IIUC
->it effectively redefines the interrupt handling? Does it also change
->syscall entry? (I got the impression it does not, but the mention of
->syscalls later in your email make me think I've gotten this wrong=2E)
->
->I think currently kstack randomization isn't applied to interrupts (but
->it should be), so I'm all for finding a way to make this happen=2E
->
->> Downside: for best performance, it should be pushed into assembly entry=
-/exit
->> code, although that is technically not *required* (and it is of course
->> possible to do it in C on IDT but in the one single assembly entry stub=
- for
->> FRED=2E)
->>=20
->> In the FRED code it would look like [simplified]:
->>=20
->> asm_fred_entrypoint_user:
->> 	/* Current code */
->> 	/* =2E=2E=2E */
->> 	movq %rsp,%rdi		/* part of FRED_ENTER */
->>=20
->> 	/* New code */
->> 	movq %rdi,PER_CPU_VAR(user_pt_regs_ptr)	/* [1] */
->> #ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
->> 	subq PER_CPU_VAR(kstack_offset),%rsp	/* [2] */
->> #endif
->> 	/* CFI annotation */
->>=20
->> 	/* Current code */
->> 	call fred_entry_from_user
->>=20
->> asm_fred_exit_uTser:
->> 	/* New code */
->> 	movq PER_CPU_VAR(user_pt_regs_ptr),%rsp
->> 	/* CFI annotation */
->>=20
->> 	/* Current code */
->> 	/* =2E=2E=2E */
->> 	ERETU
->
->If I'm understanding FRED correctly, I think this exit path
->would need to call choose_random_kstack_offset() as well=2E (For
->syscalls, add_random_kstack_offset() is used on entry and
->choose_random_kstack_offset() is used on exit, so I think we'd want the
->same pattern for interrupt handling=2E)
->
->> [1] - This instruction can be pushed into the C code in
->> fred_entry_from_user() without changing the functionality in any way=2E
->>=20
->> [2] - This is the ONLY instruction in this sequence that would be speci=
-fic
->> to CONFIG_RANDOMIZE_KSTACK_OFFSET, and it probably isn't even worth pat=
-ching
->> out=2E
->>=20
->> This requires a 64-bit premasked value to be generated byc
->> choose_random_kstack_offset() which would seem to be a better option fo=
-r
->> performance, especially since there is already arithmetic done at that =
-time=2E
->> Otherwise it requires three instructions=2E This means the randomness
->> accumulator ends up being in a separate variable from the premasked val=
-ue=2E
->> This could be further very slightly optimized by adding the actual stac=
-k
->> location and making this a movq, but then that value has to be
->> context-switched; this is probably not all that useful=2E
->
->Yeah, having a pre-masked value ready to go seems fine to me=2E It's
->simply a space trade-off=2E
->
->> The masking needs to consider alignment, which the current code doesn't=
-;
->> that by itself adds additional code to the current code sequences=2E
->>=20
->>=20
->> That is literally *all* the code that is needed to replace
->> add_random_kstack_offset()=2E It doesn't block tailcall optimization an=
-ywhere=2E
->> If user_pt_regs_ptr and kstack_offset share a cache line it becomes eve=
-n
->> cheaper=2E
->>=20
->> Note that at least in the FRED case this code would be invoked even on
->> events other than system calls, some of which may be controllable by th=
-e
->> user, like page faults=2E I am guessing that this is actually a plus=2E
->
->Yeah, I'd like greater coverage for ring 3->0 transitions=2E We do want t=
-o
->double-check the original design choices, though=2E I *think* they still
->stand (see the comments for choose_random_kstack_offset() about entropy
->location (per-cpu area), and lifetime (across userspace execution)=2E
->
->-Kees
->
+From: Kairui Song <kasong@tencent.com>
 
-FRED replaces ALL exception handling and ring transitions, including syste=
-m calls and call gates=2E=20
+folio_file_pos is only needed for mixed usage of page cache and
+swap cache, for pure page cache usage, the caller can just use
+folio_pos instead.
 
-You can't enter ring 0 without going through the FRED entry point (and you=
- can't enter rings 1 or 2 at all, officially deprecating them from the arch=
-itecture=2E)
+After commit e1209d3a7a67 ("mm: introduce ->swap_rw and use it for
+reads from SWP_FS_OPS swap-space"), swap cache is never exposed to
+nfs and it can't be a swap cache page here, so just drop it and
+use folio_pos instead.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
+---
+ fs/nfs/file.c     | 2 +-
+ fs/nfs/nfstrace.h | 4 ++--
+ fs/nfs/write.c    | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 407c6e15afe2..02741c32e114 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -588,7 +588,7 @@ static vm_fault_t nfs_vm_page_mkwrite(struct vm_fault *vmf)
+ 
+ 	dfprintk(PAGECACHE, "NFS: vm_page_mkwrite(%pD2(%lu), offset %lld)\n",
+ 		 filp, filp->f_mapping->host->i_ino,
+-		 (long long)folio_file_pos(folio));
++		 (long long)folio_pos(folio));
+ 
+ 	sb_start_pagefault(inode->i_sb);
+ 
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index afedb449b54f..d249741452e1 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -960,7 +960,7 @@ DECLARE_EVENT_CLASS(nfs_folio_event,
+ 			__entry->fileid = nfsi->fileid;
+ 			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
+ 			__entry->version = inode_peek_iversion_raw(inode);
+-			__entry->offset = folio_file_pos(folio);
++			__entry->offset = folio_pos(folio);
+ 			__entry->count = nfs_folio_length(folio);
+ 		),
+ 
+@@ -1008,7 +1008,7 @@ DECLARE_EVENT_CLASS(nfs_folio_event_done,
+ 			__entry->fileid = nfsi->fileid;
+ 			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
+ 			__entry->version = inode_peek_iversion_raw(inode);
+-			__entry->offset = folio_file_pos(folio);
++			__entry->offset = folio_pos(folio);
+ 			__entry->count = nfs_folio_length(folio);
+ 			__entry->ret = ret;
+ 		),
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 5de85d725fb9..fc782d889449 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -281,7 +281,7 @@ static void nfs_grow_file(struct folio *folio, unsigned int offset,
+ 	end_index = ((i_size - 1) >> folio_shift(folio)) << folio_order(folio);
+ 	if (i_size > 0 && folio_index(folio) < end_index)
+ 		goto out;
+-	end = folio_file_pos(folio) + (loff_t)offset + (loff_t)count;
++	end = folio_pos(folio) + (loff_t)offset + (loff_t)count;
+ 	if (i_size >= end)
+ 		goto out;
+ 	trace_nfs_size_grow(inode, end);
+@@ -1362,7 +1362,7 @@ int nfs_update_folio(struct file *file, struct folio *folio,
+ 	nfs_inc_stats(inode, NFSIOS_VFSUPDATEPAGE);
+ 
+ 	dprintk("NFS:       nfs_update_folio(%pD2 %d@%lld)\n", file, count,
+-		(long long)(folio_file_pos(folio) + offset));
++		(long long)(folio_pos(folio) + offset));
+ 
+ 	if (!count)
+ 		goto out;
+@@ -2073,7 +2073,7 @@ int nfs_wb_folio_cancel(struct inode *inode, struct folio *folio)
+  */
+ int nfs_wb_folio(struct inode *inode, struct folio *folio)
+ {
+-	loff_t range_start = folio_file_pos(folio);
++	loff_t range_start = folio_pos(folio);
+ 	loff_t range_end = range_start + (loff_t)folio_size(folio) - 1;
+ 	struct writeback_control wbc = {
+ 		.sync_mode = WB_SYNC_ALL,
+-- 
+2.44.0
+
