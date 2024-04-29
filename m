@@ -1,119 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584DD126F1E
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 17:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5E0126F2C
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 17:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714412523; cv=none; b=bSujPgWIGXnc8oGK95gVIP0jj3yos5XBgLjsGNOkeixYoc/D7kn3ZnAS1P/9HI38Joda2Q5lHafn8QgIQxqT700JQvhpHk7jQ8iz4Ro3x7RwoHYjBoqKITxmtBOg4wIXRFug5YYbrobYNbv7cyJf2cAug1thSuUYhUw5HFtJ1b0=
+	t=1714412668; cv=none; b=bFyhEmZgF2WBcLfNWmI7Y0fo4WN/znHoLaAC1P5q/xJdX35STgkWrxVUCwhSIMvyOt1nFqcC3FxlYQW4ODr0To2yc6emKn9374Wx45hRSLoY62L4MiMSkEqraJlPYfDKZcdwcq7rueKTbaLkXJ+DanEOyJZ78gR8g8yvUrwlhGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714412523; c=relaxed/simple;
-	bh=yakMz0hoQgUZe2Te30CXUQdBv3i+eTPVugrRBpkhO2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SO6o3uoKYc9w3cPMaeqUsW5CFtKsLUT2AOsqZp5fa9lfKctfrDcEl8p0DSCovO0bO3aAtwmKql1fUadtuHB6hh5+KcWt/9uvtVpXCNbXygnqpZWEl32GkgAbLY84bkOJNhEWZsB/2McITIRhqd4VHtlZyNt68z1mC9yo4WY4+E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hStxyTpT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714412668; c=relaxed/simple;
+	bh=OHfQy3ul0uJldKkAAD2jEbA5GG0EwQWPkz9F2GwnSwk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UkhLkRhvq34GMccBMPBA5ueGCRLDpb0e9+qRJ3c4eb6jp+pu+ijOHZ/DSO30iIMoNjsHH8WlEAK0NYsil8sCgTRypGlsQPewk/LIrrzlGdmRdK21lRLil64i9IKhw8Fkoi5bMuACMrOqFh1rhNoP4JCSMMs2pgq5G0rZ07VUHtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=CpVuOMEf; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hStxyTpT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A87AC113CD;
-	Mon, 29 Apr 2024 17:42:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714412522;
-	bh=yakMz0hoQgUZe2Te30CXUQdBv3i+eTPVugrRBpkhO2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hStxyTpTfnLBwdqXiQlRLFW8Gl4zI5C6dALu44IQL4xttAJBcsC0KeMCg64+Z5sE+
-	 tuI3LnRRLRjzcKrrpkoZLah4tCBrUMBIAHmHc1qsw4hTQiY6eKfZQLzf5eJmX/kEIR
-	 lJOXCx1PWz2LAqI/xLrs6NkArYbrGPygrxThyBEpZkEZZ/JlKLjily3ZqfT0Q3IGqj
-	 aMMxG9u6JcNWQE9372Cc2ZFWqrmHRX288M4QrkKLQjCbqT7r4HXIwEHnoF5nMDweGW
-	 yWa1hm85jn1rsQAnbXD1QsKVtkz7TnxkHTiy6FPIqs0FPijcGLJ/BzUvg9HKqQwDrX
-	 de+oih0b1BRRw==
-Date: Mon, 29 Apr 2024 17:42:01 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Wu Bo <bo.wu@vivo.com>
-Cc: Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org, Wu Bo <wubo.oduw@gmail.com>,
-	Liao Yuanhong <liaoyuanhong@vivo.com>
-Subject: Re: [PATCH] f2fs: fix block migration when section is not aligned to
- pow2
-Message-ID: <Zi_b6alGIb2wAkb5@google.com>
-References: <20240426104156.321701-1-bo.wu@vivo.com>
- <Zi_a0wEZpCNW8jHL@google.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="CpVuOMEf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1714412658; x=1714671858;
+	bh=OHfQy3ul0uJldKkAAD2jEbA5GG0EwQWPkz9F2GwnSwk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=CpVuOMEfhiBareejLuxq0hLh7zbxrwQ/GykeqzJcLa9ebtFMNbCTm5s9VZmyzm9bJ
+	 tWzL14T21dzBgZ5z5/rNuWVj4TZEd9GzWJjGuX1u1Jhno3ElH0uila5jsDJh1mi3XH
+	 +r9pe5EwjbfhtdafPXMH9B1tS3/9CUv9ovw+F5o7N8xcUZGamFlIGYVNZEcJo5YK/h
+	 1325U5sWLn0qkAdkbNqU0puyQX2AHmrsf9wtc9D0ZQ+cQP0BNBiM0xfup1ycCtD4as
+	 vVwJEEE1/pQkN0juSqP/GBmZAOu7oNnPVjPh7wYBbSdQurgUHL1X3blaAO2YzO9HeT
+	 K8eJBTDgtwFEw==
+Date: Mon, 29 Apr 2024 17:44:13 +0000
+To: Gary Guo <gary@garyguo.net>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] rust: init: add re-initialization functions
+Message-ID: <d264de17-acc2-4345-96be-d5f4bcd3cffc@proton.me>
+In-Reply-To: <20240429132415.3039940d@eugeo>
+References: <20240425213419.3904105-1-benno.lossin@proton.me> <20240425213419.3904105-2-benno.lossin@proton.me> <20240429132415.3039940d@eugeo>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: e96a42a100e9fa8aa33d798ae6d460c115f85155
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zi_a0wEZpCNW8jHL@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 04/29, Jaegeuk Kim wrote:
-> On 04/26, Wu Bo wrote:
-> > As for zoned-UFS, f2fs section size is forced to zone size. And zone
-> > size may not aligned to pow2.
-> > 
-> > Fixes: 859fca6b706e ("f2fs: swap: support migrating swapfile in aligned write mode")
-> > Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
-> > Signed-off-by: Wu Bo <bo.wu@vivo.com>
-> > ---
-> >  fs/f2fs/data.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> > index d9494b5fc7c1..7ff5ad3fd5dc 100644
-> > --- a/fs/f2fs/data.c
-> > +++ b/fs/f2fs/data.c
-> > @@ -3904,7 +3904,6 @@ static int check_swap_activate(struct swap_info_struct *sis,
-> >  	int nr_extents = 0;
-> >  	unsigned long nr_pblocks;
-> >  	unsigned int blks_per_sec = BLKS_PER_SEC(sbi);
-> > -	unsigned int sec_blks_mask = BLKS_PER_SEC(sbi) - 1;
-> >  	unsigned int not_aligned = 0;
-> >  	int ret = 0;
-> >  
-> > @@ -3942,8 +3941,8 @@ static int check_swap_activate(struct swap_info_struct *sis,
-> >  		pblock = map.m_pblk;
-> >  		nr_pblocks = map.m_len;
-> >  
-> > -		if ((pblock - SM_I(sbi)->main_blkaddr) & sec_blks_mask ||
-> > -				nr_pblocks & sec_blks_mask ||
-> > +		if ((pblock - SM_I(sbi)->main_blkaddr) % blks_per_sec ||
-> > +				nr_pblocks % blks_per_sec ||
-> 
-> Modified a bit to address udiv issue like below. Let's see.
+On 29.04.24 14:24, Gary Guo wrote:
+> On Thu, 25 Apr 2024 21:34:44 +0000
+> Benno Lossin <benno.lossin@proton.me> wrote:
+>=20
+>> Sometimes it is necessary to split allocation and initialization into
+>> two steps. One such situation is when reusing existing allocations
+>> obtained via `Box::drop_contents`. See [1] for an example.
+>> In order to support this use case add `re_[pin_]init` functions to the
+>> pin-init API. These functions operate on already allocated smart
+>> pointers that contain `MaybeUninit<T>`.
+>>
+>> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+>> Link: https://lore.kernel.org/rust-for-linux/f026532f-8594-4f18-9aa5-57a=
+d3f5bc592@proton.me/ [1]
+>=20
+>=20
+> I don't find the re_init name very intuitive. From the name I would
+> imagine these functions be taking a `Box<T>` and a `impl Init<T, E>`,
+> dropping the content and produces a `Box<T>` again.
 
-Ok, I took v2 instead of this.
+I see your point, but if you look at the link [1] from above, you will
+see that there such a function wouldn't be helpful.
 
-> 
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -3923,8 +3923,8 @@ static int check_swap_activate(struct swap_info_struct *sis,
->         sector_t highest_pblock = 0;
->         int nr_extents = 0;
->         unsigned long nr_pblocks;
-> +       u32 align;
->         unsigned int blks_per_sec = BLKS_PER_SEC(sbi);
-> -       unsigned int sec_blks_mask = BLKS_PER_SEC(sbi) - 1;
->         unsigned int not_aligned = 0;
->         int ret = 0;
-> 
-> @@ -3961,10 +3961,10 @@ static int check_swap_activate(struct swap_info_struct *sis,
-> 
->                 pblock = map.m_pblk;
->                 nr_pblocks = map.m_len;
-> +               div_u64_rem(nr_pblocks, blks_per_sec, &align);
-> 
-> -               if ((pblock - SM_I(sbi)->main_blkaddr) & sec_blks_mask ||
-> -                               nr_pblocks & sec_blks_mask ||
-> -                               !f2fs_valid_pinned_area(sbi, pblock)) {
-> +               if ((pblock - SM_I(sbi)->main_blkaddr) % blks_per_sec ||
-> +                               align || !f2fs_valid_pinned_area(sbi, pblock)) {
->                         bool last_extent = false;
-> 
->                         not_aligned++;
-> 
-> >  				!f2fs_valid_pinned_area(sbi, pblock)) {
-> >  			bool last_extent = false;
-> >  
-> > -- 
-> > 2.25.1
+> Would it make more to rename the existing functions to have `new` in
+> their name to indiciate that they allocate, e.g. `pin_new`, and have
+> these functions that only does initialisation `init`/`pin_init`?
+
+Since we now have full control over `Box::new` (via `BoxExt`), we could
+also make it take a `impl Init<T, E>` instead of just `T`.
+And we could also provide `fn pin(impl PinInit<T>) -> Pin<Box<T>>`.
+
+I would happily rename the `re_init` functions to `init` in that case.
+But if we don't want to do the other rename, then I think it would be
+confusing to have the functions `new(T)`, `pin(T)`,
+`pin_new(impl PinInit<T, E>)` and `new_in_place(impl Init<T, E>)`...
+
+--
+Cheers,
+Benno
+
