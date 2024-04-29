@@ -1,44 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9594085945;
-	Mon, 29 Apr 2024 23:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC82126F07
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 23:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714433828; cv=none; b=Oy66IbQppxczs4q/D/V2WzmQsMM8S4QXhxfFLJeitSuwVgi5XKUwn4J3ZcpbWz9Tb07J+Mi1KrhE3+qqUz+Pr1w+hux5gfLFEaRSZWWLjAMrxoslQz/2HkccLDNPKvfZHj5ZqsvN5wUTSdNBH9oy4wrpQrrCFkIYbuvhqhE6oJ8=
+	t=1714433994; cv=none; b=UEdSM8bqUMdqO2fFJ/hn9kdMpUD938WdpK2ksK+EulS7uZF66MIlOm+o6sx4fl+2XCD6hnuwJdt2Ybjiop4gN9Se/GnvyY+ZXGcTnPEYQ9jwxGwehzBbqw7tlk25YSe24Jn7On3OBIW9BMkYVXGmYPvqZ93U4giLatcuUxmWpEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714433828; c=relaxed/simple;
-	bh=8Izqy6wmN7d6G+VKdDnydx8YVjPo7ETQXmEV8pw8ae0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SE7itYD4BUEAIbcszcXugFRoKMN+dyyKEkr2QR2kiQOthpN76ySv90AIMjpttVDxkEqzos/+QajUlx98z3Ze6mXhR3ISQcvsba7x5dCzaXYAgvwEFzDNnkiNgiYKsEY7FDMNvHX/0u/jD9kAWAMiS6T1RdA7FX12EScyQFvYwtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSEkZM6h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714433994; c=relaxed/simple;
+	bh=Y7MgXOGlVLSsruR66RDz0IenAw3Zic8P5DPuYKlA2zs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rmi8HXVEIZtfiwIMAuh8pVrKKk9KEesrTi9+MhccgNcQUt2PO2Qu9iq0/AuUTAbt/u8GKJ1TvVVwzvciDTZ+OCEJk9ZrMQvqy8mvtgHLlRQvIvi3KC1bRgfG9xkyTY+goqHpOQ62Kq8M0jShviwUXG5uGUoU38vsulPcXX83W9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf; spf=pass smtp.mailfrom=kl.wtf; dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b=GntLG5WU; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kl.wtf
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSEkZM6h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D189C113CD;
-	Mon, 29 Apr 2024 23:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714433828;
-	bh=8Izqy6wmN7d6G+VKdDnydx8YVjPo7ETQXmEV8pw8ae0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BSEkZM6hPsYKjtpV1/E7dgKyuSPi4LQmjP2FoDwk5M+OyvdSY/poOi5ooOKoML1Q0
-	 5fMlTsYcdlaUVZne6EJqfD26BAEdxlyhK3CEb/q/UN9EdGSoBndNeCnBiVIrIpnmq6
-	 E1lE9ORzUIspHIRLvE6PvkeAr10xPXHimM+zVgtuFav49JH8B9TMVyaITTcYU2F63y
-	 YrRIFEW1gw3VyQA8xkBhjxY00VHHJXwrE08coHuy1+3LMqWuKzaeO8vBdfnpNiovmd
-	 rLPTcjORtoVkeqt442RD8UUSbySOCgPgvdGWZHOEwM1QmeCFy2dIDZuMirBHeFkm5s
-	 QlGGbA34UESlg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2] tools lib subcmd: Show parent options in help
-Date: Mon, 29 Apr 2024 16:37:07 -0700
-Message-ID: <20240429233707.1511175-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+	dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="GntLG5WU"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=key1;
+	t=1714433990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y7MgXOGlVLSsruR66RDz0IenAw3Zic8P5DPuYKlA2zs=;
+	b=GntLG5WU9G8fjuihI2/3E0+kZcpvbOcLU18obq99uFSk9GQh0bPHBGrpB+1DCup/7uHTvW
+	ipsdy5wJBmDw/Gh27VbmnYROtS8GpeM2gUY2rL4wfb5pjxoampsQMYoZmiKjwEhVO/D8/P
+	+FxSeq/pUzZ9p9QxUXQVfrsYpA6l/35l4XkkKF6MAcSfnzYAQZ5WZv84t6Td4ZuE7xwr0P
+	R34o93lu/QzSq6w8esw7wQ0L97Q395BcXOv9PzKJEzqWNQbgMemAgKYU07igkeoOsK1Gmk
+	yo7quLl8vvxmhFfXKaGryrYqY2b1fCwLYdzcisMwlzj/2J31yQ6Tj70+URTE7w==
+From: Kenny Levinsen <kl@kl.wtf>
+To: Jiri Kosina <jikos@kernel.org>,
+	Dmitry Torokhov <dtor@chromium.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Radoslaw Biernacki <rad@chromium.org>,
+	Lukasz Majczak <lma@chromium.org>
+Cc: Kenny Levinsen <kl@kl.wtf>
+Subject: [PATCH 0/2] HID: i2c-hid: Unify device wake-up logic
+Date: Tue, 30 Apr 2024 01:33:13 +0200
+Message-ID: <20240429233924.6453-1-kl@kl.wtf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,99 +51,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-I've just realized that help message in a subcommand didn't show one
-in the parent command.  Since the option parser understands the parent,
-display code should do the same.  For example, `perf ftrace latency -h`
-should show options in the `perf ftrace` command too.
+Third time was not the charm[0]. After Dmitry's comment[1], and after
+looking some more at the I2C drivers, I have given up on removing the
+smbus probe for now. We can always revisit this later if the situation
+improves enough, but there are more important things to fix.
 
-Before:
+Instead, go all in on the address probe with retry and use it for both
+initial probe and resume, replacing the previous retry on power on
+commands. This gives us consistency and a single place to update and
+document.
 
-  $ perf ftrace latency -h
-
-   Usage: perf ftrace [<options>] [<command>]
-      or: perf ftrace [<options>] -- [<command>] [<options>]
-      or: perf ftrace {trace|latency} [<options>] [<command>]
-      or: perf ftrace {trace|latency} [<options>] -- [<command>] [<options>]
-
-      -b, --use-bpf         Use BPF to measure function latency
-      -n, --use-nsec        Use nano-second histogram
-      -T, --trace-funcs <func>
-                            Show latency of given function
-
-After:
-
-  $ perf ftrace latency -h
-
-   Usage: perf ftrace [<options>] [<command>]
-      or: perf ftrace [<options>] -- [<command>] [<options>]
-      or: perf ftrace {trace|latency} [<options>] [<command>]
-      or: perf ftrace {trace|latency} [<options>] -- [<command>] [<options>]
-
-      -a, --all-cpus        System-wide collection from all CPUs
-      -b, --use-bpf         Use BPF to measure function latency
-      -C, --cpu <cpu>       List of cpus to monitor
-      -n, --use-nsec        Use nano-second histogram
-      -p, --pid <pid>       Trace on existing process id
-      -T, --trace-funcs <func>
-                            Show latency of given function
-      -v, --verbose         Be more verbose
-          --tid <tid>       Trace on existing thread id (exclusive to --pid)
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-*v2: remove goto and add comments  (Ian)
-
- tools/lib/subcmd/parse-options.c | 36 +++++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 12 deletions(-)
-
-diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-index 9fa75943f2ed..eb896d30545b 100644
---- a/tools/lib/subcmd/parse-options.c
-+++ b/tools/lib/subcmd/parse-options.c
-@@ -806,18 +806,30 @@ static int option__cmp(const void *va, const void *vb)
- 
- static struct option *options__order(const struct option *opts)
- {
--	int nr_opts = 0, nr_group = 0, len;
--	const struct option *o = opts;
--	struct option *opt, *ordered, *group;
--
--	for (o = opts; o->type != OPTION_END; o++)
--		++nr_opts;
--
--	len = sizeof(*o) * (nr_opts + 1);
--	ordered = malloc(len);
--	if (!ordered)
--		goto out;
--	memcpy(ordered, opts, len);
-+	int nr_opts = 0, nr_group = 0, nr_parent = 0, len;
-+	const struct option *o, *p = opts;
-+	struct option *opt, *ordered = NULL, *group;
-+
-+	/* flatten the options that have parents */
-+	for (p = opts; p != NULL; p = o->parent) {
-+		for (o = p; o->type != OPTION_END; o++)
-+			++nr_opts;
-+
-+		/*
-+		 * the length is given by the number of options plus a null
-+		 * terminator for the last loop iteration.
-+		 */
-+		len = sizeof(*o) * (nr_opts + !o->parent);
-+		group = realloc(ordered, len);
-+		if (!group)
-+			goto out;
-+		ordered = group;
-+		memcpy(&ordered[nr_parent], p, sizeof(*o) * (nr_opts - nr_parent));
-+
-+		nr_parent = nr_opts;
-+	}
-+	/* copy the last OPTION_END */
-+	memcpy(&ordered[nr_opts], o, sizeof(*o));
- 
- 	/* sort each option group individually */
- 	for (opt = group = ordered; opt->type != OPTION_END; opt++) {
--- 
-2.44.0.769.g3c40516874-goog
+[0]: https://lore.kernel.org/all/20240426225739.2166-1-kl@kl.wtf/
+[1]: https://lore.kernel.org/all/ZixvUNooESC02cJK@google.com/
 
