@@ -1,124 +1,160 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6FC10A13
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 06:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DB1D530
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 06:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714370912; cv=none; b=X7mWDoEUIQtrmxxofJYQeVzdP6hEE+fEfxxVRDRuBS91XVCCG2MtOSLPaCZE0Kmt1Y3oj9qiYhkHaWiJpbgIXj0H0J3GkujXzLwkLYbKo+Q1HAH0o4HcWgehYud97XIYDnJmN0EE16f0/Nv54zy21W/2w5a7LCH4qpI6VQn+VMg=
+	t=1714370967; cv=none; b=N/MFhtSMcKd5t0uLJX7cgrz17zAGmJHC4KXH/zX71/nr/V1a5Rx80nR9rlDyPKogdEUb/CAbKszLpo7cOMvEXD3+Fp67i74C1bK2C1gyCGV6ZXef9BJtNlC2wsmkcmmeRTzs3SF7bjL1FE9nPPL1ALT9ksE0o+wdF2Ly8gTmBng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714370912; c=relaxed/simple;
-	bh=G7TJdPY3qO2t92qGYbMZeZhZTuxjKGLg9eU1x0YjY10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=faVR6GML1B2nC5/oUuEL3M4sn3y7Gn204H2F2qwds9ZymYKhd6Ls5MHwMLfaYWH3HhxtR5FFxGDQ1oBj2aPhJnZ/hubSqw+cap+0hNZOZ1R8luLS7UUD3exmV7FKjE+EXE1gTLV9Pe2jJm2RnEB1EyHgLCrWwnsx5nR5pfpHFAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZyLZ0FPU; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1714370967; c=relaxed/simple;
+	bh=/6it5xkGgIhTojVNnH4p2CS+/918qvpnvDXjSgLr4lE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FXNddWNHXx4ZkPKe+kNyQERMJv+K8xemk46nSEQP9HmDxGuXYBKJfRxMbw5Wq5mTpf89On0LgqbQF56+Gpw+JopxjwPgksAjQpqr6/jaF0lx7S497U2ixpIA5O4VwHWSEhENlq8TLlNsSj21siu5wjXe/jqVehrDSlEEYYkEFFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gGP6dD41; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZyLZ0FPU"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e47843cc7so3876095a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 23:08:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gGP6dD41"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so6177936a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Apr 2024 23:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714370909; x=1714975709; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pvCfGDKq3NkKQAZVcl3gvcyNhlZM/4Uefp4v92bTZ8E=;
-        b=ZyLZ0FPU4n+cG1abmoWrih9jSVtdKwbw45Wy2UQREyArXF1+TRVQG3jYPOEF5zYp4e
-         iSphrrqM9wvG7RE/ABRKqn8Tx5YLfHWnoiuIAooTP8JG60JPxRLH1/7z52n5ZuBbduV6
-         mudnjnOWZl43OlP3jFvYrIob4bjqsCuHJLoA2JLSsEtr1IFPGqvfTH+0IgA2emc8aldy
-         1md2tiBpCLdNE/SzgODf5UeTu1UKRZWbCk2fUlBiWniC2EaQ7+iRXjNuhwDfGgAc8Erc
-         dWrDpXwVlRHRwp54BPm3YfAd4O0KCv2lWOxFauHKEqaOJzYTTb6Df4+eoOFY8u5iOnPV
-         cSBw==
+        d=linaro.org; s=google; t=1714370963; x=1714975763; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=BqXTuUT+Z0n9gqAKDYWzZZWlnbSrS2cciknsCfpUpLo=;
+        b=gGP6dD41U7u/TdxXkXO5jYC0fpO4l5d/Vi/E2XOoZSTR2b3D7Fp9fysmGEYCRhVw/J
+         LT4nWvLJRY6xwXqonX3JVq7IHfP+w2KegLrSgL/qYUqmP5tS9GoFb7z535OxZKFDTVAz
+         RqTP5DTm4DZNNE+JsWZRFu0vH+yR0giAqPtl6U7ZDhyJ/sajFmNv80u8R02PuuiVcNXr
+         MmgnPoeaXE5TAEn1EwRDs+yUEkYNYHbQgyzHdzSqbe4HaaBXTaGjPxPle6en37borY2b
+         /EvoSY7mizTm0PzVAn3v9EH2wQnMhbruHnDnvdhukbgSnuWLaeT4gfvOSmZWCjuPXSWt
+         mRzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714370909; x=1714975709;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pvCfGDKq3NkKQAZVcl3gvcyNhlZM/4Uefp4v92bTZ8E=;
-        b=Punve5LxPdC/6UBT1nZfRusMsPpi18v0DfhDlokvjHXfa3YLJXey27ihlBmEXAbuWc
-         edrcPeC4swLMVpp/JoXmarXI9TH9AliqoIF60SxJqpH9jxRIih1eVcZc35DVY5HNZvY/
-         gNOW3mJmV3EPS1yLdwlHQf87zgx4UzmALFV45hYM9eBZxWM6cIK+5N9Hso1atog/wX4N
-         hpjZmvczytsCTMdVfQ1Z9cMrDkdn9fQ0HVd+O0SBTxrSHyTVN3qbQlp8R6y+MS/1cyEG
-         uKEYa45jMBCe8lbFz2/MFQL/plVpKdNLApH7e4rJDQXGYh1hJaUypSYWG6fN2U38/N7A
-         ItlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPHBAseaD6GU45Tck9yvFS0rzx3fVPqg6T2jSL12ITT5AaGhS+GMyLzhURxfUlPvR8ncjiKLu9Iw5gIzIp+qIQRRnHpcyH1Q+LP0ce
-X-Gm-Message-State: AOJu0YwSLmlTDN4DlhNe0+IYM84mW5vY++yjbHaz+W+HPWed96YItVnV
-	3ruJ+omZnbCYETav/NmFgxJmLBiqVyQutp76PzyIzqvhVBvxOoe8E4NoXZ/1jMg=
-X-Google-Smtp-Source: AGHT+IGXHWZJ0k9VgResxd/8nAAasZ5KzykP6pPgXMGjd/2HPcVWuqQtBjRpxFXW+yVkCtBfMc2gcA==
-X-Received: by 2002:a50:d496:0:b0:571:d380:95fd with SMTP id s22-20020a50d496000000b00571d38095fdmr5722874edi.28.1714370908456;
-        Sun, 28 Apr 2024 23:08:28 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id v10-20020a056402184a00b005722cb1dd6fsm5920503edy.27.2024.04.28.23.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Apr 2024 23:08:28 -0700 (PDT)
-Date: Mon, 29 Apr 2024 09:08:24 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Christoph Lameter <cl@linux.com>, Peter Zijlstra <peterz@infradead.org>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] mm/slab: make __free(kfree) accept error pointers
-Message-ID: <571761df-fe50-49e8-8d56-65fbdec9a185@moroto.mountain>
-References: <285fee25-b447-47a1-9e00-3deb8f9af53e@moroto.mountain>
- <Zi8N66yehahl6D59@casper.infradead.org>
+        d=1e100.net; s=20230601; t=1714370963; x=1714975763;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BqXTuUT+Z0n9gqAKDYWzZZWlnbSrS2cciknsCfpUpLo=;
+        b=EJstYPOh3r/fJyCyYgRvEEUT7ReuL4VmsuGBVvDXytbw7i1Df7+AZVnDpALEqwf7Qf
+         SufNBJKUbqXbOVC+SZQHapCzl28SBG++brdAAA9yUnUQq4KJsODbd0CTr6x+z9zfpwuV
+         GWSZBIsc91hZQIVUsIRcFLxnkZ/O8LTzEd5jSUvyZnu6wSzQST4FY7XK1hJxaRDYMOHw
+         +KjmHdNTvWCKMgMGKoGiFE9ihqDm/1Sne1vu0UOTWfiTIGej/O7LwGyooMuQgY4bHQe8
+         vctbJVKrgcPITnda0UQbti8wOZyy2MP5/mlCxU4HvaajyYjGo+yePVHtOtng1LOOaTXy
+         ZoAA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2FS/teYqMG3O8cj0Wa3x0ZYC7v8PPyotM7dqtMPFn/e+0dnPIlOKZ83/VNO6eXMrAMBHsJAbOVV1c2hjwQFRomYmDNgv5XnxI4wcZ
+X-Gm-Message-State: AOJu0YwcO2UcTvYs120jH6NDTFKJrcKM5KzAtpkw+YZvqIc2OkOhn9gr
+	Ci6XoK4mYUnxhP4TuYV7EXYpjPWYR17tq2eqF6WK+k9yyuyyOMRvMHcpWfSP8NU=
+X-Google-Smtp-Source: AGHT+IECChsKhf55fBtX6MdjJsWmkvH0gni/8kFfqEZTQt7C8ELWQYu33MUQ5UwDbmguloQAoK+eag==
+X-Received: by 2002:a50:9987:0:b0:570:35e:9a09 with SMTP id m7-20020a509987000000b00570035e9a09mr8369944edb.7.1714370963427;
+        Sun, 28 Apr 2024 23:09:23 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id eo14-20020a056402530e00b0057259943ba2sm3217129edb.12.2024.04.28.23.09.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Apr 2024 23:09:22 -0700 (PDT)
+Message-ID: <d5b4b3fc-8fbf-48ec-87d1-758a2d877f11@linaro.org>
+Date: Mon, 29 Apr 2024 08:09:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zi8N66yehahl6D59@casper.infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 13/12] net: lan865x: optional hardware reset
+To: =?UTF-8?Q?Ram=C3=B3n_Nordin_Rodriguez?=
+ <ramon.nordin.rodriguez@ferroamp.se>,
+ Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, saeedm@nvidia.com,
+ anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, andrew@lunn.ch, corbet@lwn.net,
+ linux-doc@vger.kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, horatiu.vultur@microchip.com,
+ ruanjinjie@huawei.com, steen.hegelund@microchip.com,
+ vladimir.oltean@nxp.com, UNGLinuxDriver@microchip.com,
+ Thorsten.Kummermehr@microchip.com, Pier.Beruto@onsemi.com,
+ Selvamani.Rajagopal@onsemi.com, Nicolas.Ferre@microchip.com,
+ benjamin.bigler@bernformulastudent.ch
+References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
+ <Zi68sDje4wfgftyZ@builder>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <Zi68sDje4wfgftyZ@builder>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 29, 2024 at 04:03:07AM +0100, Matthew Wilcox wrote:
-> > diff --git a/include/linux/slab.h b/include/linux/slab.h
-> > index 4cc37ef22aae..5f5766219375 100644
-> > --- a/include/linux/slab.h
-> > +++ b/include/linux/slab.h
-> > @@ -279,7 +279,7 @@ void kfree(const void *objp);
-> >  void kfree_sensitive(const void *objp);
-> >  size_t __ksize(const void *objp);
-> >  
-> > -DEFINE_FREE(kfree, void *, if (_T) kfree(_T))
-> > +DEFINE_FREE(kfree, void *, if (!IS_ERR_OR_NULL(_T)) kfree(_T))
+On 28/04/2024 23:16, Ramón Nordin Rodriguez wrote:
+> From c65e42982684d5fd8b2294eb6acf755aa0fcab83 Mon Sep 17 00:00:00 2001
+> From: =?UTF-8?q?Ram=C3=B3n=20Nordin=20Rodriguez?=
+>  <ramon.nordin.rodriguez@ferroamp.se>
+> Date: Sun, 28 Apr 2024 22:25:12 +0200
+> Subject: [PATCH net-next v4 13/12] net: lan865x: optional hardware reset
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=UTF-8
+> Content-Transfer-Encoding: 8bit
 > 
-> Wait, why do we check 'if (_T)' at all?  kfree() already handles NULL
-> pointers just fine.  I wouldn't be averse to making it handle error
-> pointers either.
+> This commit optionally enables a hardware reset of the lan8650/1
+> mac-phy. These chips have a software reset that is discourage from use
+> in the manual since it only resets the internal phy.
 > 
-> > -DEFINE_FREE(kvfree, void *, if (_T) kvfree(_T))
-> > +DEFINE_FREE(kvfree, void *, if (!IS_ERR_OR_NULL(_T)) kvfree(_T))
-> 
-> Ditto kvfree().  Fixing kfree() would fix both of these.
+> Signed-off-by: Ramón Nordin Rodriguez <ramon.nordin.rodriguez@ferroamp.se>
+> ---
+>  .../bindings/net/microchip,lan865x.yaml       |  4 +++
+>  .../net/ethernet/microchip/lan865x/lan865x.c  | 28 +++++++++++++++++++
 
-I've always thought freeing pointers that have not been allocated is
-sloppy so I like that kfree() doesn't allow error pointers.  We always
-catch it before it reaches production and that teaches people better
-habbits.  Personally, I like how free_netdev() only accepts valid
-pointers.
+Please run scripts/checkpatch.pl and fix reported warnings. Then please
+run `scripts/checkpatch.pl --strict` and (probably) fix more warnings.
+Some warnings can be ignored, especially from --strict run, but the code
+here looks like it needs a fix. Feel free to get in touch if the warning
+is not clear.
 
-But I won't fight you on that if you want to change it.  People have
-discussed this in the past, but no one has actually sent the patch.  It
-would probably be merged.
+Best regards,
+Krzysztof
 
-The __free() stuff is different because it's supposed to be transparent.
-
-Btw, I'm hoping we can officially declare small allocations as NOFAIL so
-then we can start doing allocations in the declaration block and remove
-the error checking and the cleanup.
-
-#define __ALLOC(p) p __free(kfree) = kmalloc(sizeof(*p), GFP_SMALL)
-#define __ZALLOC(p) p __free(kfree) = kzalloc(sizeof(*p), GFP_SMALL)
-
-	struct foo *__ZALLOC(p);
-
-regards,
-dan carpenter
