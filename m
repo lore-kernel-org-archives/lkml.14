@@ -1,289 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BD677109;
-	Tue, 30 Apr 2024 14:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFCC1527A4;
+	Tue, 30 Apr 2024 14:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714488325; cv=none; b=SwgLMSEfUhmLe+JAvrkWQw63AlpRON6qLOufCZZMIeELuR1yOlOR37dTWlV+W1hx39vpB2ebYdwV/iMLhLhRkLKBRWGALc1e7SFOgOqbhQqZRoSua3jwrhzBHLUL7up+IlE0Uf4ZWZXgUIUVOiqkENM26rjMfEiogw264rlQtuc=
+	t=1714488366; cv=none; b=LdamtPPw8GL/rweQY6Bx27USDHW4xh1ve9rnVkdkVDp/PfrFPl5ptG/N249TANabJCPrA/R2bcoMIjB9E6642cU0/YoeQNdF9ti0vLJu3sGLayxBeL/DdSGT9ixDqOEs3fEkXFmWFo/7g1Y0N5VIPyohDrLhRb6Jiah5i6SpJ+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714488325; c=relaxed/simple;
-	bh=GO3JqT8vODgdjJL18arG9BEgpjAliVjYhrBCpB/dLvA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GNEql8dkCDAu4tqqbITFkcxOa6ujjZWJbGaGaeKpkXRCpISQ3Dc9h+WcWgaUbwrEkfjqOTzMLS2EWFiDurAJ3AJUelR4QuQS3KdqO/Q7k6DQUkCYKbmOudHOW+3jaRHu+VT3pEyK2lllZx+gwKD0pIWEHjimo1xxbIQqwaZkp/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yn371kQb; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714488366; c=relaxed/simple;
+	bh=sBXF+gjdjkRUhUS5Q4VYAIn7ZZ0+/7CQzrsCxXjL5dU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhpBoW0G5zbpiGyGtk5+IxtO8wvxOmt1rz4CpbEt9+4rRkDJkQZZGDNu2tYy9fdmNmlKIvbIjV7MdAdJTpbdUCtboQF8Y2K/V0JEbh8kcOZnbZu3HB1G2oBc9rQGYjuJ8MHDEEtJ1R7l1tOxApxFbp/AsCPJlK0l2xmlyEb0JOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HRoXQHpF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yn371kQb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714488324; x=1746024324;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GO3JqT8vODgdjJL18arG9BEgpjAliVjYhrBCpB/dLvA=;
-  b=Yn371kQbD/cdimhXXi2QPcaquh0EwkmXQrAlFD3Q8ClS8U46ds3MunSu
-   HSNdL4npnc+kvDKch9+kSqSuoCwFzidDbLg4/gPgu4o0iDnk9XLTzTaqv
-   oZ/qhJWONFMjVeREyDYwEWioukUiHOgGxU43ss3Hn8bgPCcB6NsX6EMbg
-   zVVv0XtSbMYsdvhFsucseuEalpLOE24dRSjdvhYZ1LQVH2jt1HAG/VHyc
-   391lA+rQs0OD69FX6Yjih40+shuqCzZdvNFgHLj6OGuBafC7c9mTCi/WN
-   9xrBU6LWLfUnn4RKU+Mqs5izO3zLqc4DV1bZll3hSWtAug6AnEkcoAebK
-   w==;
-X-CSE-ConnectionGUID: x2i2zLUYTTub7r//AC45ZA==
-X-CSE-MsgGUID: UOEzPH1IRJOv7EoTjE3ccQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="14025512"
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="14025512"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 07:45:24 -0700
-X-CSE-ConnectionGUID: p7IfGD9fS0OzmfhDsU+daA==
-X-CSE-MsgGUID: 04tj7VsLTmCw6qYFqInTuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="26566817"
-Received: from mehlow-prequal01.jf.intel.com ([10.54.102.156])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 07:45:22 -0700
-From: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>
-To: jarkko@kernel.org
-Cc: dave.hansen@linux.intel.com,
-	dmitrii.kuvaiskii@intel.com,
-	haitao.huang@linux.intel.com,
-	kai.huang@intel.com,
-	kailun.qin@intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-sgx@vger.kernel.org,
-	mona.vij@intel.com,
-	mwk@invisiblethingslab.com,
-	reinette.chatre@intel.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86/sgx: Resolve EAUG race where losing thread returns SIGBUS
-Date: Tue, 30 Apr 2024 07:37:01 -0700
-Message-Id: <20240430143701.902597-1-dmitrii.kuvaiskii@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <D0WMM3MYQODE.3A89L7D6OVG3E@kernel.org>
-References: <D0WMM3MYQODE.3A89L7D6OVG3E@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRoXQHpF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85AA7C2BBFC;
+	Tue, 30 Apr 2024 14:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714488365;
+	bh=sBXF+gjdjkRUhUS5Q4VYAIn7ZZ0+/7CQzrsCxXjL5dU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HRoXQHpFRApacG9ybBX6B95wKslmuE4UrGaFexMEbtIm4t0uAJWO5tcrZym/VeE6c
+	 /S830uVslcO9IbwPhqveybIosTrozBqM7h3wLkepcAlo/OU8tSPtYbhSNFrRkBmJoY
+	 coUyqlE3pvWN7L+ZADP0BArwUBwm0ZuPyscvkM+nbLTP2FFxQjOkqSGzrLP0nmF59c
+	 HpkI+8ke0LG7xCL9EukPGz03r7pzDIngxJliSGTTyZzTiGidd9jyzpgZOskOd14X1g
+	 RsWX+jRkJXkQXTcPdZpK1YXzqklzIBXOuEYb0AbCkvsNf+KksxsobnCLpsLMJhDf6m
+	 zrcNcrPKbwG0Q==
+Date: Tue, 30 Apr 2024 23:46:03 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Sebastian Fricke <sebastian.fricke@collabora.com>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, hverkuil@xs4all.nl,
+	sakari.ailus@iki.fi, tfiga@chromium.org, m.szyprowski@samsung.com,
+	mchehab@kernel.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com, festevam@gmail.com, nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+	alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v15 00/16] Add audio support in v4l2 framework
+Message-ID: <ZjEEKyvb02CWz3l4@finisterre.sirena.org.uk>
+References: <1710834674-3285-1-git-send-email-shengjiu.wang@nxp.com>
+ <20240430082112.jrovosb6lgblgpfg@basti-XPS-13-9310>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Organization: Intel Deutschland GmbH - Registered Address: Am Campeon 10, 85579 Neubiberg, Germany
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="8QM/NXLseGhLxhjD"
+Content-Disposition: inline
+In-Reply-To: <20240430082112.jrovosb6lgblgpfg@basti-XPS-13-9310>
+X-Cookie: lisp, v.:
 
-On Mon, Apr 29, 2024 at 04:04:24PM +0300, Jarkko Sakkinen wrote:
-> On Mon Apr 29, 2024 at 1:43 PM EEST, Dmitrii Kuvaiskii wrote:
-> > Two enclave threads may try to access the same non-present enclave page
-> > simultaneously (e.g., if the SGX runtime supports lazy allocation). The
-> > threads will end up in sgx_encl_eaug_page(), racing to acquire the
-> > enclave lock. The winning thread will perform EAUG, set up the page
-> > table entry, and insert the page into encl->page_array. The losing
-> > thread will then get -EBUSY on xa_insert(&encl->page_array) and proceed
-> > to error handling path.
-> 
-> And that path removes page. Not sure I got gist of this tbh.
 
-Well, this is not about a redundant EREMOVE performed. This is about the
-enclave page becoming inaccessible due to a bug triggered with a data race.
+--8QM/NXLseGhLxhjD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Consider some enclave page not yet added to the enclave. The enclave
-performs a memory access to it at the same time on CPU1 and CPU2. Since the
-page does not yet have a corresponding PTE, the #PF handler on both CPUs
-calls sgx_vma_fault(). Scenario proceeds as follows:
+On Tue, Apr 30, 2024 at 10:21:12AM +0200, Sebastian Fricke wrote:
 
-/*
- * Fault on CPU1
- */
-sgx_vma_fault() {
+> first of all thanks for all of this work and I am very sorry for only
+> emerging this late into the series, I sadly didn't notice it earlier.
 
-  xa_load(&encl->page_array) == NULL ->
+It might be worth checking out the discussion on earlier versions...
 
-  sgx_encl_eaug_page() {
+> 1. The biggest objection is, that the Linux Kernel has a subsystem
+> specifically targeted for audio devices, adding support for these
+> devices in another subsystem are counterproductive as they work around
+> the shortcomings of the audio subsystem while forcing support for a
+> device into a subsystem that was never designed for such devices.
+> Instead, the audio subsystem has to be adjusted to be able to support
+> all of the required workflows, otherwise, the next audio driver with
+> similar requirements will have to move to the media subsystem as well,
+> the audio subsystem would then never experience the required change and
+> soon we would have two audio subsystems.
 
-    ...                            /*
-                                    * Fault on CPU2
-                                    */
-                                   sgx_vma_fault() {
+The discussion around this originally was that all the audio APIs are
+very much centered around real time operations rather than completely
+async memory to memory operations and that it's not clear that it's
+worth reinventing the wheel simply for the sake of having things in
+ALSA when that's already pretty idiomatic for the media subsystem.  It
+wasn't the memory to memory bit per se, it was the disconnection from
+any timing.
 
-                                     xa_load(&encl->page_array) == NULL ->
+> So instead of hammering a driver into the wrong destination, I would
+> suggest bundling our forces and implementing a general memory-to-memory
+> framework that both the media and the audio subsystem can use, that
+> addresses the current shortcomings of the implementation and allows you
+> to upload the driver where it is supposed to be.
 
-                                     sgx_encl_eaug_page() {
+That doesn't sound like an immediate solution to maintainer overload
+issues...  if something like this is going to happen the DRM solution
+does seem more general but I'm not sure the amount of stop energy is
+proportionate.
 
-                                       ...
+--8QM/NXLseGhLxhjD
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                                       mutex_lock(&encl->lock);
-                                       /*
-                                        * alloc encl_page
-                                        */
-                                       /*
-                                        * alloc EPC page
-                                        */
-                                       epc_page = sgx_alloc_epc_page(...);
-                                       /*
-                                        * add page_to enclave's xarray
-                                        */
-                                       xa_insert(&encl->page_array, ...);
-                                       /*
-                                        * add page to enclave via EAUG
-                                        * (page is in pending state)
-                                        */
-                                       /*
-                                        * add PTE entry
-                                        */
-                                       vmf_insert_pfn(...);
+-----BEGIN PGP SIGNATURE-----
 
-                                       mutex_unlock(&encl->lock);
-                                       return VM_FAULT_NOPAGE;
-                                     }
-                                   }
-     mutex_lock(&encl->lock);
-     /*
-      * alloc encl_page
-      */
-     /*
-      * alloc EPC page
-      */
-     epc_page = sgx_alloc_epc_page(...);
-     /*
-      * add page_to enclave's xarray,
-      * this fails with -EBUSY
-      */
-     xa_insert(&encl->page_array, ...);
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYxBCsACgkQJNaLcl1U
+h9Cv4gf/cXnSe2CcRqekxdvf3QpCLrReELvBj5Ryx0es6jh5p0iXtGjTAa+m1l2U
+Qn6JhhdVxr6YDApk3yXTkGvTElhB2RPjdxhHGklWqfXFTwKhZtFYKmx2GqfKxLXZ
+6N4OhJv/OYSeLGuGQDh3WLEJW44PKKQUfDg6zdCCu2xeTqt42IeZOPA4NLU9lBvm
+6vzvRoB9ddXzdqIJ5tPx89c3PXrCKBHhFIz9FQ1QLpE9p/26fkpsjYkB9cTQhAGq
+kMvWcqfITh7e8JEEPsVzlYMNOcsCCegJqJwniSw2OV3fQDBUDoHaO/I1hYidAzVS
+IndFbuEtQpfHjpRlfXAsGrrxDysAfw==
+=/WXD
+-----END PGP SIGNATURE-----
 
-   err_out_shrink:
-     sgx_encl_free_epc_page(epc_page) {
-       /*
-        * remove page via EREMOVE
-        */
-       /*
-        * free EPC page
-        */
-       sgx_free_epc_page(epc_page);
-     }
-
-      mutex_unlock(&encl->lock);
-      return VM_FAULT_SIGBUS;
-    }
-  }
-
-CPU2 added the enclave page (in pending state) to the enclave and installed
-the PTE. The kernel gives control back to the user space, without raising a
-signal. The user space on CPU2 retries the memory access and induces a page
-fault, but now with the SGX bit set in the #PF error code. The #PF handler
-calls do_user_addr_fault(), which calls access_error() and ultimately
-raises a SIGSEGV. The userspace SIGSEGV handler is supposed to perform
-EACCEPT, after which point the enclave page becomes accessible.
-
-CPU1 however jumps to the error handling path because the page was already
-inserted into the enclave's xarray. This error handling path EREMOVEs the
-page and also raises a SIGBUS signal to user space. The PTE entry is not
-removed.
-
-After CPU1 performs EREMOVE, this enclave page becomes perpetually
-inaccessible (until an SGX_IOC_ENCLAVE_REMOVE_PAGES ioctl). This is because
-the page is marked accessible in the PTE entry but is not EAUGed. Because
-of this combination, the #PF handler sees the SGX bit set in the #PF error
-code and does not call sgx_vma_fault() but instead raises a SIGSEGV. The
-userspace SIGSEGV handler cannot perform EACCEPT because the page was not
-EAUGed. Thus, the user space is stuck with the inaccessible page.
-
-Also note that in the scenario, CPU1 raises a SIGBUS signal to user space
-unnecessarily. This signal is spurious because a page-access retry on CPU2
-will also raise the SIGBUS signal. That said, this side effect is less
-severe because it affects only user space. Therefore, it could be
-circumvented in user space alone, but it seems reasonable to fix it in this
-patch.
-
-> > This error handling path contains two bugs: (1) SIGBUS is sent to
-> > userspace even though the enclave page is correctly installed by another
-> > thread, and (2) sgx_encl_free_epc_page() is called that performs EREMOVE
-> > even though the enclave page was never intended to be removed. The first
-> > bug is less severe because it impacts only the user space; the second
-> > bug is more severe because it also impacts the OS state by ripping the
-> > page (added by the winning thread) from the enclave.
-> >
-> > Fix these two bugs (1) by returning VM_FAULT_NOPAGE to the generic Linux
-> > fault handler so that no signal is sent to userspace, and (2) by
-> > replacing sgx_encl_free_epc_page() with sgx_free_epc_page() so that no
-> > EREMOVE is performed.
-> 
-> What is the collateral damage caused by ENCLS[EREMOVE]?
-
-As explained above, the damage is that the SGX driver leaves the enclave
-page metadata in an inconsistent state: on the one hand, the PTE entry is
-installed which forces the generic Linux fault handler to raise SIGSEGV,
-and on the other hand, the page is not in a correct state to be EACCEPTed
-(i.e., EAUG was not performed on this page).
-
-> > Fixes: 5a90d2c3f5ef ("x86/sgx: Support adding of pages to an initialized enclave")
-> > Cc: stable@vger.kernel.org
-> > Reported-by: Marcelina Kościelnicka <mwk@invisiblethingslab.com>
-> > Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-> > Signed-off-by: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>
-> > ---
-> >  arch/x86/kernel/cpu/sgx/encl.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
-> > index 279148e72459..41f14b1a3025 100644
-> > --- a/arch/x86/kernel/cpu/sgx/encl.c
-> > +++ b/arch/x86/kernel/cpu/sgx/encl.c
-> > @@ -382,8 +382,11 @@ static vm_fault_t sgx_encl_eaug_page(struct vm_area_struct *vma,
-> >  	 * If ret == -EBUSY then page was created in another flow while
-> >  	 * running without encl->lock
-> >  	 */
-> > -	if (ret)
-> > +	if (ret) {
-> > +		if (ret == -EBUSY)
-> > +			vmret = VM_FAULT_NOPAGE;
-> >  		goto err_out_shrink;
-> > +	}
-> >  
-> >  	pginfo.secs = (unsigned long)sgx_get_epc_virt_addr(encl->secs.epc_page);
-> >  	pginfo.addr = encl_page->desc & PAGE_MASK;
-> > @@ -419,7 +422,7 @@ static vm_fault_t sgx_encl_eaug_page(struct vm_area_struct *vma,
-> >  err_out_shrink:
-> >  	sgx_encl_shrink(encl, va_page);
-> >  err_out_epc:
-> > -	sgx_encl_free_epc_page(epc_page);
-> > +	sgx_free_epc_page(epc_page);
-> 
-> This ignores check for the page being reclaimer tracked, i.e. it does
-> changes that have been ignored in the commit message.
-
-Indeed, sgx_encl_free_epc_page() performs the following check:
-
-  WARN_ON_ONCE(page->flags & SGX_EPC_PAGE_RECLAIMER_TRACKED);
-
-However, the EPC page is allocated in sgx_encl_eaug_page() and has
-zeroed-out flags in all error-handling paths. In other words, the page is
-marked as reclaimable only in the happy path of sgx_encl_eaug_page().
-Therefore, in the particular code path that I changed this "page reclaimer
-tracked" condition is always false, and the warning is never printed.
-
-Do you want me to explain this in the commit message?
-
----
-
-(Below questions are from follow-up emails, I add them to this reply email
-to have all discussions in one place.)
-
-> > > > What is the collateral damage caused by ENCLS[EREMOVE]?
-> >
-> > Have you measured cost of eremove on an empty page?
-> >
-> > I tried to lookup for a thread from lore because I have a faint memory
-> > that it was concluded that its cost irrelevant. Please correct if I'm
-> > wrong.
-> 
-> Also pseudocode for EREMOVE supports this as it just returns without
-> actually doing anything.
-
-I have not measured the cost of EREMOVE on an empty page. This cost may be
-negligible. But as stated above, my patch does not get rid of EREMOVE
-simply for performance reasons. My patch removes a data race that leads to
-a forever-inaccessible enclave page.
-
---
-Dmitrii Kuvaiskii
+--8QM/NXLseGhLxhjD--
