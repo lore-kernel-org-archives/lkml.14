@@ -1,179 +1,72 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85A014AAD
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5831017589
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714453827; cv=none; b=a5PTyHM44BP1V5V5OEXhGp9uYveDwm93PXu0ZkTdVfGa9Omwq0x+HGigeAf2BR3HcnB+Ua+od+dChMhCqhlNXGLsYDIoBRKiwq7lDIIkUIfvuHEDby1wUeDU+DINw4138GOm/NwlF0IzCyArG+9muXyjHGXbvYMCUw+5GRUXU9s=
+	t=1714453849; cv=none; b=ZPO0qVQEeN/0N+2ydYhyna/sYyM2ESzepu5L2DjOeKSHuhqD28vARtzT4pyy6wRPSU33ZBO81YqrSyTwjvOgnYCB3JVfr1Xv4O1jo686KYJ/7nBhR4S+3kiv2POeSq6K4nfdCdch4oUOtRT2s6Rf2HxZCAsSfjQZtnBp3GcbhoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714453827; c=relaxed/simple;
-	bh=SzgFI/v7Mph6bz64Ohfi7yL2xE/FtnoTbuqrAwoH0Ww=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U34dwmf7Yz5mepS2Qqco22Vw+cUqSILa9mq2C/8lm1MDPxzKl3U7iNx3f2Q0BI6WM1yE+YF6htSw/TvfMP+CeCiANqnB0qS+554SZihJ7RnflfU7ydTxckBiYYNAi4Rt+D+nVBfcJPl0/3LEu6DZ/HxI4vXBl+YfjPYglDx+bzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MkxC/Khp; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714453849; c=relaxed/simple;
+	bh=VSb98eDGVt9SRHwNWupysddHqD5t16DQXrkFIt7miX8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NVvBD+rmysD5XCgaQthJM52Jvs2MkvNZgT5HPkT/IMIGt+5GmxbBxlgkuIRxKkowp5AXrYKIOB/V/oOWDz4l8QNefWc6DgQcAlsueKQ4YWqs1KbgftmA17TslyOe+c2qupzMVzVeQSnYlsacPRphCcw4ntG/Bb0Gv0a3X20HZ8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmLLtt1I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkxC/Khp"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51967f75729so6215621e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 22:10:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714453824; x=1715058624; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nm5KSte9EtNP2GBwmXuE8/J8iLTK3PcKydXJnqqMM4g=;
-        b=MkxC/KhpfMFWT4uW4IrHjP+iMcb0BZWYnvek7AM9hKYzmMSI87mWWYyZWsEBZFBfvN
-         ToVeITf6ZZW03E/3ZoVqBLWgzwkyaReELSIMmIn7Kr+2ZYCxhNNUMOfV8FGbce6Sn3Zz
-         9ToA/qdRMpf+9QRQX9KWvT49IYDH+AtPYt9lFgWgOOQOlPgrMMxkLP8MKBi/WxR7WzjF
-         JH9JpREE03yzdRHIriZtKBoaF5Rp5JajWUS7PxZTo3IrUSFymMpJMALyAjVan8VfW00G
-         ec3EXMu/jkU5XLFSPntM55ulCmo6TE0qrtlX0N6fruPvwPGZZ+wgepzXKJoEiUdydPA1
-         nWZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714453824; x=1715058624;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nm5KSte9EtNP2GBwmXuE8/J8iLTK3PcKydXJnqqMM4g=;
-        b=vOPXJxqSzDU+B/NmjjTOvLG1bKCyTcOx8NOxcaojx7ksn2bfIh+rtHf0wQKn5IE77Z
-         xCKtfemzoT/JReFpG4rtgZBiogczo3a2vz2Vd//lsdz/fA8jb5c+k+lFbvMDZUOnqFpr
-         g+nA3FvyLNdU+zkok+GQXIwhyIcl6aRzGFbpM/vPpyaaArF9xd/sNymbc5gXea4jUCTd
-         jax1d3AOkU+uothI70VP2qY7DxWYr/fLGkLli2MukWpd1JBHq9YyfIWwwvw5MHTybQCZ
-         ATe5XLvf6VhIMxh6P7mZyLR2xH7nmVz+gCjrsFXg5i4iQyn4zCp26NIJxgtMGTn8cHq/
-         ZpFA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8laSuJPGRfKBOJphaqemDsav+loAvvztX9xK/ks33s26ND9GZ0rfNZmyHJ7ultAtxurOFRmZEHymE7uw5YGx/jlXKi9HkNpPviiu0
-X-Gm-Message-State: AOJu0YwpRzc33PEM3TmZkyyi10h1gDzWHiJnEh5Mx8uVjEZd73izgQ9d
-	Feue/c4tM0onbA9zybpT8gN0ziW2fBc5dY3TO6bVghINgASfGlwzeUi8WEpmoHDoWFSoW+PA267
-	EYqtMDWaszmdarlxHdp36DPzvXds=
-X-Google-Smtp-Source: AGHT+IFlfuijYlZUPjalT0bDu+MnlCDwx6EUmLuwJiu1cUJxg8OL495gJRHS9/N1pnZDUvSNoNy44ns4wxPnk4L5vS8=
-X-Received: by 2002:a05:6512:3294:b0:51b:567e:7ea4 with SMTP id
- p20-20020a056512329400b0051b567e7ea4mr998553lfe.26.1714453823614; Mon, 29 Apr
- 2024 22:10:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmLLtt1I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92E3BC2BBFC;
+	Tue, 30 Apr 2024 05:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714453849;
+	bh=VSb98eDGVt9SRHwNWupysddHqD5t16DQXrkFIt7miX8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=mmLLtt1IjTxdV3+ONX64hPElmV2URptISu3dJ9Ur/sPFTsnfI8psoqvcGlu8HPapq
+	 9pWz3+Q5BvmxMqzMjVJXRM06NFj5htoZtgPInMX4JAfM1O8Q4WzBSgTCtoupH10xmV
+	 ZGpUZb/RjyKYZowxX/FyikB01620CxhBT/6tkye8bdDGJVj9IPk56ve4ktHND4JnYj
+	 XF3Pgpu32kWK1xWGp4hvH94/fQuwhqw09ykTuyr9obaJ2PSSRMy7MJKY7V4NKia+IU
+	 VBLO7woLLoC2CfRb8S0OfmsCF43lItdaVjIwqe4f5cIFRFXWcPuy09TLxMBtMByYvN
+	 F2mO584cEi5Cg==
+X-Mailer: emacs 29.3 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
+Cc: npiggin@gmail.com, naveen.n.rao@linux.ibm.com,
+	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: powerpc: Remove Aneesh
+In-Reply-To: <20240430044228.49015-1-mpe@ellerman.id.au>
+References: <20240430044228.49015-1-mpe@ellerman.id.au>
+Date: Tue, 30 Apr 2024 10:40:42 +0530
+Message-ID: <yq5attjj306l.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430021753.385089-1-brookxu.cn@gmail.com> <8379e4a9-3114-4d35-9d1f-81ca61351b85@nvidia.com>
-In-Reply-To: <8379e4a9-3114-4d35-9d1f-81ca61351b85@nvidia.com>
-From: =?UTF-8?B?6K645pil5YWJ?= <brookxu.cn@gmail.com>
-Date: Tue, 30 Apr 2024 13:10:11 +0800
-Message-ID: <CADtkEechcseDatdzoPDrYBapvQ5iTKo3E-tsdiwj2B7euLLwnQ@mail.gmail.com>
-Subject: Re: [PATCH] nvme-fabrics: use reserved tag for reg read/write command
-To: Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, "hch@lst.de" <hch@lst.de>, 
-	"kbusch@kernel.org" <kbusch@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "axboe@kernel.dk" <axboe@kernel.dk>, 
-	"sagi@grimberg.me" <sagi@grimberg.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Chaitanya Kulkarni <chaitanyak@nvidia.com> =E4=BA=8E2024=E5=B9=B44=E6=9C=88=
-30=E6=97=A5=E5=91=A8=E4=BA=8C 11:47=E5=86=99=E9=81=93=EF=BC=9A
+Michael Ellerman <mpe@ellerman.id.au> writes:
+
+> Aneesh is stepping down from powerpc maintenance.
 >
-> On 4/29/2024 7:17 PM, brookxu.cn wrote:
-> > From: Chunguang Xu <chunguang.xu@shopee.com>
-> >
-> > In some scenarios, if too many commands are issued by nvme command in
-> > the same time by user tasks, this may exhaust all tags of admin_q. If
-> > a reset (nvme reset or IO timeout) occurs before these commands finish,
-> > reconnect routine may fail to update nvme regs due to insufficient tags=
-,
-> > which will cause kernel hang forever. In order to workaround this issue=
-,
-> > maybe we can let reg_read32()/reg_read64()/reg_write32() use reserved
-> > tags. This maybe safe for nvmf:
-> >
-> > 1. For the disable ctrl path,  we will not issue connect command
-> > 2. For the enable ctrl / fw activate path, since connect and reg_xx()
-> >     are called serially.
-> >
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+
+Acked-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+
+> ---
+>  MAINTAINERS | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> Given the complexity of the scenario described above, is it possible to
-> write a script for this scenario that will trigger this and submit to
-> blktest ? not that this is a blocker to get this patch reviewed, but
-> believe it is needed in long run, WDYT ?
-
-Thanks for you reply, I can easily reproduce it in my VMs by following step=
-s:
-STEP 1. In order to reduce the complexity of reproduction, I reduce
-NVME_AQ_MQ_TAG_DEPTH from 31 to 8
-
-STEP 2. Create a nvme device by NVMe over tcp, such as following command:
-nvme connect -t tcp -a 192.168.122.20 -s 4420 -n
-nqn.2014-08.org.nvmexpress.mytest
-
-STEP 3. Buind and run the c++ program issues nvme commands as followed:
-#include <sys/types.h>
-#include <signal.h>
-#include <unistd.h>
-#include <vector>
-#include <set>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-const int concurrency =3D 64;
-std::set<pid_t> chlds;
-
-int __exit =3D 0;
-void  sigint_proc(int signo)
-{
-        __exit =3D 1;
-}
-
-int main(int argc, char **argv)
-{
-        signal(SIGINT, sigint_proc);
-
-        for (auto i  =3D 0; i < concurrency; i++) {
-                auto pid =3D fork();
-                if (!pid) {
-                        while (true) {
-                                system("nvme list -o json 2>&1 > /dev/null"=
-);
-                        }
-                }
-
-                chlds.insert(pid);
-        }
-
-        while (!__exit) {
-                if (chlds.empty())
-                        break;
-
-                for (auto pid : chlds) {
-                        int wstatus, ret;
-                        ret =3D waitpid(pid, &wstatus, WNOWAIT);
-                        if (ret > 0) {
-                                chlds.erase(pid);
-                                break;
-                        }
-                }
-                usleep(1000);
-        }
-
-        // exit
-        for (auto pid : chlds)
-                kill(pid, SIGKILL);
-
-        return 0;
-}
-
-STEP 4. Open a new console, running the followed command:
-while [ true ]; do nvme reset /dev/nvme0; sleep `echo "$RANDOM%1" | bc`; do=
-ne
-
-We will reproduce this issue soon.
->
-> > So the reserved tags may still be enough while reg_xx() use reserved ta=
-gs.
-> >
-> > Signed-off-by: Chunguang Xu <chunguang.xu@shopee.com>
-> > ---
->
-> -ck
->
->
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7c121493f43d..93af33ee8541 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12478,7 +12478,6 @@ LINUX FOR POWERPC (32-BIT AND 64-BIT)
+>  M:	Michael Ellerman <mpe@ellerman.id.au>
+>  R:	Nicholas Piggin <npiggin@gmail.com>
+>  R:	Christophe Leroy <christophe.leroy@csgroup.eu>
+> -R:	Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+>  R:	Naveen N. Rao <naveen.n.rao@linux.ibm.com>
+>  L:	linuxppc-dev@lists.ozlabs.org
+>  S:	Supported
+> -- 
+> 2.44.0
