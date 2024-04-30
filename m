@@ -1,367 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E601219DF5F
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 20:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46C61A0AEA;
+	Tue, 30 Apr 2024 20:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714509659; cv=none; b=bdMrFNQpCfwnzHAMACj5ppxiygg55RFnXYpDX4OyODHmW/PDOnV82fLJkUCZeuSaRWYrMOJ9/FGMi80VgB273gCxtwn8CTSZzB6YhjPR9Z55K7ZlLxEOQz4fk2/E/CA1BlfchLclMed1srOcRtSKpw4p2MJw2HbpIgt2dtpRSwI=
+	t=1714509717; cv=none; b=O5pKhy5JRDEpRb5kMqGoKkvBcZgJ3HcOgYlPw3KVpG/fsBMxZP0sHFqo8vdrhjScM73bOMiqbWi7w97YTULRvu54JwzqlZxIxFc8sMZUQ8t5RXSCXfGUXOWk/n9x1n0dqQZf0zTeawR3UhLoUxVRMH8Dehnro4xZT2WUIt5zh3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714509659; c=relaxed/simple;
-	bh=s2teqHkSCL4uWbpb45KCyW7j7hKCwXNJuAVEbr6+omE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZweoqYKMcMX5dQ47OdQq7aPeYlwq20qtLCr8Ro9wrqLNtv/aOkBKH5IGrku9LXBvG2au267CGbwJREWzHKZtf4AWtb9myToPHP8Vt4d4x/541u3706a/5ZQHZcuHCLXwhKH3H6p6hIrIYwKlCqQmuQumpND3nTYdjAx3Xv8qGrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VnQqwCcC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714509717; c=relaxed/simple;
+	bh=6KkGmVGtEf1S9YCVVMjzBf8rNFUKRe7dKZ6pSfJJJPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=igNzkvCcXu6jrLK/bO1bhpuYr35l3ZC3e/7uU36nabvhizaturNqWSYoQewHMbmjW/B53NqXbDyA6Vw/iebrB8Z1l3hu0NIqlVCjPAyW5vikbeCks3a86hssPc/aRHZaF+nBBL7nYZ+EUntXzeuIIbNwFBf+P3CJaJwJPpSmoGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TcvAmx6W; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VnQqwCcC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714509656;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vOAuKWIwQi6S2JtNyAUQzZVVkPkPSxcwLLbIo1CKxCo=;
-	b=VnQqwCcCsf3GLX4RKXaIICaVIiRd/PobnbGI+Svat5LvRxvFY5V+o1RW5M74D2Qy2kpOZ5
-	HpQzz32R9ErP0ez76x7K3dV9HdgIMmoFKEIzdHLe9pJxsgOCs2qdxU3NDXuZMtNXwC/V6c
-	aa8ucqj8QnsNjOZMeliaqM/RadDEsVM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-81-1amwTavyN7Ot0XE5cRcD2A-1; Tue, 30 Apr 2024 16:40:53 -0400
-X-MC-Unique: 1amwTavyN7Ot0XE5cRcD2A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BE26480E95D;
-	Tue, 30 Apr 2024 20:40:52 +0000 (UTC)
-Received: from t14s.fritz.box (unknown [10.39.192.75])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id CDAC6C15771;
-	Tue, 30 Apr 2024 20:40:47 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v1 1/2] mm/memory: cleanly support zeropage in vm_insert_page*(), vm_map_pages*() and vmf_insert_mixed()
-Date: Tue, 30 Apr 2024 22:40:43 +0200
-Message-ID: <20240430204044.52755-2-david@redhat.com>
-In-Reply-To: <20240430204044.52755-1-david@redhat.com>
-References: <20240430204044.52755-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TcvAmx6W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714509715; x=1746045715;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6KkGmVGtEf1S9YCVVMjzBf8rNFUKRe7dKZ6pSfJJJPA=;
+  b=TcvAmx6WNQ62iIW1awqRuWh2evjBN4FhHCtAUM8I2ocpn9DtkzIayz7u
+   V9Q/eAyECf8UonqpFHHS8OlZ9mM/zzUmbqoYHDxD8UrknC6sFxwSjwVcZ
+   zzdBx47k0Czh/IVye/u5nuQgQUEtLXG4kCRG9RCIYDbfT+AfU7WbOgI/B
+   pvU/RXTmYOwPxblNg4Q5SY3OMown6kIxnNltL4xzg5QI+KRIbCsFGxy4N
+   v+EL+9uDgQKmi9hoWnKQtWlXTCYv6ykS7NCYJX/tK+mKGA9ZqcJqJf1ir
+   sfGM91D0suE7VdTSMlooGMiwqu3EuABZwoz9JnIty2ODsbdsEnEalKHXL
+   g==;
+X-CSE-ConnectionGUID: NBoqiOvjTiaMdcj7+nmHAA==
+X-CSE-MsgGUID: J/PZ2xP7QqSltgGfhosPfg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10088131"
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="10088131"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 13:41:54 -0700
+X-CSE-ConnectionGUID: DoNSVnHNR7qo3OlcPeksNA==
+X-CSE-MsgGUID: eTAAwBdGTzW6SRtK8slPDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="31060846"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 30 Apr 2024 13:41:52 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s1uIQ-0008WV-2e;
+	Tue, 30 Apr 2024 20:41:50 +0000
+Date: Wed, 1 May 2024 04:41:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Dimitri Fedrau <dima.fedrau@gmail.com>,
+	Andrew Hepp <andrew.hepp@ahepp.dev>,
+	Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] iio: temperature: mcp9600: add threshold events
+ support
+Message-ID: <202405010420.2KNGPYh5-lkp@intel.com>
+References: <20240430120535.46097-6-dima.fedrau@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240430120535.46097-6-dima.fedrau@gmail.com>
 
-For now we only get the (small) zeropage mapped to user space in four
-cases (excluding VM_PFNMAP mappings, such as /proc/vmstat):
+Hi Dimitri,
 
-(1) Read page faults in anonymous VMAs (MAP_PRIVATE|MAP_ANON):
-    do_anonymous_page() will not refcount it and map it pte_mkspecial()
-(2) UFFDIO_ZEROPAGE on anonymous VMA or COW mapping of shmem
-    (MAP_PRIVATE). mfill_atomic_pte_zeropage() will not refcount it and
-    map it pte_mkspecial().
-(3) KSM in mergeable VMA (anonymous VMA or COW mapping).
-    cmp_and_merge_page() will not refcount it and map it
-    pte_mkspecial().
-(4) FSDAX as an optimization for holes.
-    vmf_insert_mixed()->__vm_insert_mixed() might end up calling
-    insert_page() without CONFIG_ARCH_HAS_PTE_SPECIAL, refcounting the
-    zeropage and not mapping it pte_mkspecial(). With
-    CONFIG_ARCH_HAS_PTE_SPECIAL, we'll call insert_pfn() where we will
-    not refcount it and map it pte_mkspecial().
+kernel test robot noticed the following build errors:
 
-In case (4), we might not have VM_MIXEDMAP set: while fs/fuse/dax.c sets
-VM_MIXEDMAP, we removed it for ext4 fsdax in commit e1fb4a086495 ("dax:
-remove VM_MIXEDMAP for fsdax and device dax") and for XFS in commit
-e1fb4a086495 ("dax: remove VM_MIXEDMAP for fsdax and device dax").
+[auto build test ERROR on jic23-iio/togreg]
+[also build test ERROR on linus/master v6.9-rc6 next-20240430]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Without CONFIG_ARCH_HAS_PTE_SPECIAL and with VM_MIXEDMAP, vm_normal_page()
-would currently return the zeropage. We'll refcount the zeropage when
-mapping and when unmapping.
+url:    https://github.com/intel-lab-lkp/linux/commits/Dimitri-Fedrau/iio-temperature-mcp9600-set-channel2-member/20240430-200914
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20240430120535.46097-6-dima.fedrau%40gmail.com
+patch subject: [PATCH 5/5] iio: temperature: mcp9600: add threshold events support
+config: i386-buildonly-randconfig-005-20240501 (https://download.01.org/0day-ci/archive/20240501/202405010420.2KNGPYh5-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240501/202405010420.2KNGPYh5-lkp@intel.com/reproduce)
 
-Without CONFIG_ARCH_HAS_PTE_SPECIAL and without VM_MIXEDMAP,
-vm_normal_page() would currently refuse to return the zeropage.
-So we'd refcount it when mapping but not when unmapping it ... do we
-have fsdax without CONFIG_ARCH_HAS_PTE_SPECIAL in practice? Hard to
-tell.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405010420.2KNGPYh5-lkp@intel.com/
 
-Independent of that, we should never refcount the zeropage when we might
-be holding that reference for a long time, because even without an
-accounting imbalance we might overflow the refcount. As there is interest
-in using the zeropage also in other VM_MIXEDMAP mappings, let's add clean
-support for that in the cases where it makes sense:
+All errors (new ones prefixed by >>):
 
-(A) Never refcount the zeropage when mapping it:
+   drivers/iio/temperature/mcp9600.c: In function 'mcp9600_probe_alerts':
+>> drivers/iio/temperature/mcp9600.c:407:28: error: implicit declaration of function 'irq_get_trigger_type' [-Werror=implicit-function-declaration]
+     407 |                 irq_type = irq_get_trigger_type(irq);
+         |                            ^~~~~~~~~~~~~~~~~~~~
+>> drivers/iio/temperature/mcp9600.c:408:33: error: 'IRQ_TYPE_EDGE_RISING' undeclared (first use in this function)
+     408 |                 if (irq_type == IRQ_TYPE_EDGE_RISING)
+         |                                 ^~~~~~~~~~~~~~~~~~~~
+   drivers/iio/temperature/mcp9600.c:408:33: note: each undeclared identifier is reported only once for each function it appears in
+   cc1: some warnings being treated as errors
 
-In insert_page(), special-case the zeropage, do not refcount it, and
-use pte_mkspecial(). Don't involve insert_pfn(), adjusting insert_page()
-looks cleaner than branching off to insert_pfn().
 
-(B) Never refcount the zeropage when unmapping it:
+vim +/irq_get_trigger_type +407 drivers/iio/temperature/mcp9600.c
 
-In vm_normal_page(), also don't return the zeropage in a
-VM_MIXEDMAP mapping without CONFIG_ARCH_HAS_PTE_SPECIAL. Add a
-VM_WARN_ON_ONCE() sanity check if we'd ever return the zeropage,
-which could happen if someone forgets to set pte_mkspecial() when
-mapping the zeropage. Document that.
+   382	
+   383	static int mcp9600_probe_alerts(struct iio_dev *indio_dev)
+   384	{
+   385		struct mcp9600_data *data = iio_priv(indio_dev);
+   386		struct i2c_client *client = data->client;
+   387		struct device *dev = &client->dev;
+   388		struct fwnode_handle *fwnode = dev_fwnode(dev);
+   389		unsigned int irq_type;
+   390		int ret, irq, i;
+   391		u8 val;
+   392	
+   393		/*
+   394		 * alert1: hot junction, rising temperature
+   395		 * alert2: hot junction, falling temperature
+   396		 * alert3: cold junction, rising temperature
+   397		 * alert4: cold junction, falling temperature
+   398		 */
+   399		for (i = 0; i < MCP9600_ALERT_COUNT; i++) {
+   400			data->irq[i] = 0;
+   401			mutex_init(&data->lock[i]);
+   402			irq = fwnode_irq_get_byname(fwnode, mcp9600_alert_name[i]);
+   403			if (irq <= 0)
+   404				continue;
+   405	
+   406			val = 0;
+ > 407			irq_type = irq_get_trigger_type(irq);
+ > 408			if (irq_type == IRQ_TYPE_EDGE_RISING)
+   409				val |= MCP9600_ALERT_CFG_ACTIVE_HIGH;
+   410	
+   411			if (i == MCP9600_ALERT2 || i == MCP9600_ALERT4)
+   412				val |= MCP9600_ALERT_CFG_FALLING;
+   413	
+   414			if (i == MCP9600_ALERT3 || i == MCP9600_ALERT4)
+   415				val |= MCP9600_ALERT_CFG_COLD_JUNCTION;
+   416	
+   417			ret = i2c_smbus_write_byte_data(client,
+   418							MCP9600_ALERT_CFG(i + 1),
+   419							val);
+   420			if (ret < 0)
+   421				return ret;
+   422	
+   423			ret = devm_request_threaded_irq(dev, irq, NULL,
+   424							mcp9600_alert_handler,
+   425							IRQF_ONESHOT, "mcp9600",
+   426							indio_dev);
+   427			if (ret)
+   428				return ret;
+   429	
+   430			data->irq[i] = irq;
+   431		}
+   432	
+   433		return 0;
+   434	}
+   435	
 
-(C) Allow the zeropage only where reasonable
-
-s390x never wants the zeropage in some processes running legacy
-KVM guests that make use of storage keys. So disallow that.
-
-Further, using the zeropage in COW mappings is unproblematic (just what
-we do for other COW mappings), because FAULT_FLAG_UNSHARE can just
-unshare it and GUP with FOLL_LONGTERM would work as expected.
-
-Similarly, mappings that can never have writable PTEs (implying no
-write faults) are also not problematic, because nothing could end
-up mapping the PTE writable by mistake later. But in case we could have
-writable PTEs, we'll only allow the zeropage in FSDAX VMAs, that
-are incompatible with GUP and are blocked there completely.
-
-We'll always require the zeropage to be mapped with pte_special().
-GUP-fast will reject the zeropage that way, but GUP-slow will allow
-it. (Note that GUP does not refcount the zeropage with FOLL_PIN,
-because there were issues with overflowing the refcount in the past).
-
-Add sanity checks to can_change_pte_writable() and wp_page_reuse(), to
-catch early during testing if we'd ever find a zeropage unexpectedly in
-code that wants to upgrade write permissions.
-
-Convert the BUG_ON in vm_mixed_ok() to an ordinary check and simply fail
-with VM_FAULT_SIGBUS, like we do for other sanity checks. Drop the
-stale comment regarding reserved pages from insert_page().
-
-Note that:
-* we won't mess with VM_PFNMAP mappings for now. remap_pfn_range() and
-  vmf_insert_pfn() would allow the zeropage in some cases and
-  not refcount it.
-* vmf_insert_pfn*() will reject the zeropage in VM_MIXEDMAP
-  mappings and we'll leave that alone for now. People can simply use
-  one of the other interfaces.
-* we won't bother with the huge zeropage for now. It's never
-  PTE-mapped and also GUP does not special-case it yet.
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory.c   | 92 +++++++++++++++++++++++++++++++++++++++------------
- mm/mprotect.c |  2 ++
- 2 files changed, 73 insertions(+), 21 deletions(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index eea6e4984eaef..5fffc9bd3febd 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -575,10 +575,13 @@ static void print_bad_pte(struct vm_area_struct *vma, unsigned long addr,
-  * VM_MIXEDMAP mappings can likewise contain memory with or without "struct
-  * page" backing, however the difference is that _all_ pages with a struct
-  * page (that is, those where pfn_valid is true) are refcounted and considered
-- * normal pages by the VM. The disadvantage is that pages are refcounted
-- * (which can be slower and simply not an option for some PFNMAP users). The
-- * advantage is that we don't have to follow the strict linearity rule of
-- * PFNMAP mappings in order to support COWable mappings.
-+ * normal pages by the VM. The only exception are zeropages, which are
-+ * *never* refcounted.
-+ *
-+ * The disadvantage is that pages are refcounted (which can be slower and
-+ * simply not an option for some PFNMAP users). The advantage is that we
-+ * don't have to follow the strict linearity rule of PFNMAP mappings in
-+ * order to support COWable mappings.
-  *
-  */
- struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
-@@ -616,6 +619,8 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
- 		if (vma->vm_flags & VM_MIXEDMAP) {
- 			if (!pfn_valid(pfn))
- 				return NULL;
-+			if (is_zero_pfn(pfn))
-+				return NULL;
- 			goto out;
- 		} else {
- 			unsigned long off;
-@@ -641,6 +646,7 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
- 	 * eg. VDSO mappings can cause them to exist.
- 	 */
- out:
-+	VM_WARN_ON_ONCE(is_zero_pfn(pfn));
- 	return pfn_to_page(pfn);
- }
- 
-@@ -1983,10 +1989,47 @@ pte_t *__get_locked_pte(struct mm_struct *mm, unsigned long addr,
- 	return pte_alloc_map_lock(mm, pmd, addr, ptl);
- }
- 
--static int validate_page_before_insert(struct page *page)
-+static bool vm_mixed_zeropage_allowed(struct vm_area_struct *vma)
-+{
-+	VM_WARN_ON_ONCE(vma->vm_flags & VM_PFNMAP);
-+	/*
-+	 * Whoever wants to forbid the zeropage after some zeropages
-+	 * might already have been mapped has to scan the page tables and
-+	 * bail out on any zeropages. Zeropages in COW mappings can
-+	 * be unshared using FAULT_FLAG_UNSHARE faults.
-+	 */
-+	if (mm_forbids_zeropage(vma->vm_mm))
-+		return false;
-+	/* zeropages in COW mappings are common and unproblematic. */
-+	if (is_cow_mapping(vma->vm_flags))
-+		return true;
-+	/* Mappings that do not allow for writable PTEs are unproblematic. */
-+	if (!(vma->vm_flags & (VM_WRITE | VM_MAYWRITE)))
-+		return false;
-+	/*
-+	 * Why not allow any VMA that has vm_ops->pfn_mkwrite? GUP could
-+	 * find the shared zeropage and longterm-pin it, which would
-+	 * be problematic as soon as the zeropage gets replaced by a different
-+	 * page due to vma->vm_ops->pfn_mkwrite, because what's mapped would
-+	 * now differ to what GUP looked up. FSDAX is incompatible to
-+	 * FOLL_LONGTERM and VM_IO is incompatible to GUP completely (see
-+	 * check_vma_flags).
-+	 */
-+	return vma->vm_ops && vma->vm_ops->pfn_mkwrite &&
-+	       (vma_is_fsdax(vma) || vma->vm_flags & VM_IO);
-+}
-+
-+static int validate_page_before_insert(struct vm_area_struct *vma,
-+				       struct page *page)
- {
- 	struct folio *folio = page_folio(page);
- 
-+	if (unlikely(is_zero_folio(folio))) {
-+		if (!vm_mixed_zeropage_allowed(vma))
-+			return -EINVAL;
-+		return 0;
-+	}
-+
- 	if (folio_test_anon(folio) || folio_test_slab(folio) ||
- 	    page_has_type(page))
- 		return -EINVAL;
-@@ -1998,24 +2041,23 @@ static int insert_page_into_pte_locked(struct vm_area_struct *vma, pte_t *pte,
- 			unsigned long addr, struct page *page, pgprot_t prot)
- {
- 	struct folio *folio = page_folio(page);
-+	pte_t pteval;
- 
- 	if (!pte_none(ptep_get(pte)))
- 		return -EBUSY;
- 	/* Ok, finally just insert the thing.. */
--	folio_get(folio);
--	inc_mm_counter(vma->vm_mm, mm_counter_file(folio));
--	folio_add_file_rmap_pte(folio, page, vma);
--	set_pte_at(vma->vm_mm, addr, pte, mk_pte(page, prot));
-+	pteval = mk_pte(page, prot);
-+	if (unlikely(is_zero_folio(folio))) {
-+		pteval = pte_mkspecial(pteval);
-+	} else {
-+		folio_get(folio);
-+		inc_mm_counter(vma->vm_mm, mm_counter_file(folio));
-+		folio_add_file_rmap_pte(folio, page, vma);
-+	}
-+	set_pte_at(vma->vm_mm, addr, pte, pteval);
- 	return 0;
- }
- 
--/*
-- * This is the old fallback for page remapping.
-- *
-- * For historical reasons, it only allows reserved pages. Only
-- * old drivers should use this, and they needed to mark their
-- * pages reserved for the old functions anyway.
-- */
- static int insert_page(struct vm_area_struct *vma, unsigned long addr,
- 			struct page *page, pgprot_t prot)
- {
-@@ -2023,7 +2065,7 @@ static int insert_page(struct vm_area_struct *vma, unsigned long addr,
- 	pte_t *pte;
- 	spinlock_t *ptl;
- 
--	retval = validate_page_before_insert(page);
-+	retval = validate_page_before_insert(vma, page);
- 	if (retval)
- 		goto out;
- 	retval = -ENOMEM;
-@@ -2043,7 +2085,7 @@ static int insert_page_in_batch_locked(struct vm_area_struct *vma, pte_t *pte,
- 
- 	if (!page_count(page))
- 		return -EINVAL;
--	err = validate_page_before_insert(page);
-+	err = validate_page_before_insert(vma, page);
- 	if (err)
- 		return err;
- 	return insert_page_into_pte_locked(vma, pte, addr, page, prot);
-@@ -2149,7 +2191,8 @@ EXPORT_SYMBOL(vm_insert_pages);
-  * @page: source kernel page
-  *
-  * This allows drivers to insert individual pages they've allocated
-- * into a user vma.
-+ * into a user vma. The zeropage is supported in some VMAs,
-+ * see vm_mixed_zeropage_allowed().
-  *
-  * The page has to be a nice clean _individual_ kernel allocation.
-  * If you allocate a compound page, you need to have marked it as
-@@ -2195,6 +2238,8 @@ EXPORT_SYMBOL(vm_insert_page);
-  * @offset: user's requested vm_pgoff
-  *
-  * This allows drivers to map range of kernel pages into a user vma.
-+ * The zeropage is supported in some VMAs, see
-+ * vm_mixed_zeropage_allowed().
-  *
-  * Return: 0 on success and error code otherwise.
-  */
-@@ -2410,8 +2455,11 @@ vm_fault_t vmf_insert_pfn(struct vm_area_struct *vma, unsigned long addr,
- }
- EXPORT_SYMBOL(vmf_insert_pfn);
- 
--static bool vm_mixed_ok(struct vm_area_struct *vma, pfn_t pfn)
-+static bool vm_mixed_ok(struct vm_area_struct *vma, pfn_t pfn, bool mkwrite)
- {
-+	if (unlikely(is_zero_pfn(pfn_t_to_pfn(pfn))) &&
-+	    (mkwrite || !vm_mixed_zeropage_allowed(vma)))
-+		return false;
- 	/* these checks mirror the abort conditions in vm_normal_page */
- 	if (vma->vm_flags & VM_MIXEDMAP)
- 		return true;
-@@ -2430,7 +2478,8 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
- 	pgprot_t pgprot = vma->vm_page_prot;
- 	int err;
- 
--	BUG_ON(!vm_mixed_ok(vma, pfn));
-+	if (!vm_mixed_ok(vma, pfn, mkwrite))
-+		return VM_FAULT_SIGBUS;
- 
- 	if (addr < vma->vm_start || addr >= vma->vm_end)
- 		return VM_FAULT_SIGBUS;
-@@ -3178,6 +3227,7 @@ static inline void wp_page_reuse(struct vm_fault *vmf, struct folio *folio)
- 	pte_t entry;
- 
- 	VM_BUG_ON(!(vmf->flags & FAULT_FLAG_WRITE));
-+	VM_WARN_ON(is_zero_pfn(pte_pfn(vmf->orig_pte)));
- 
- 	if (folio) {
- 		VM_BUG_ON(folio_test_anon(folio) &&
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 8c6cd88252738..888ef66468dbd 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -71,6 +71,8 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
- 		return page && PageAnon(page) && PageAnonExclusive(page);
- 	}
- 
-+	VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
-+
- 	/*
- 	 * Writable MAP_SHARED mapping: "clean" might indicate that the FS still
- 	 * needs a real write-fault for writenotify
 -- 
-2.44.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
