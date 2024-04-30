@@ -1,193 +1,322 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2081.outbound.protection.outlook.com [40.107.94.81])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2085.outbound.protection.outlook.com [40.107.8.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF79F17F5;
-	Tue, 30 Apr 2024 08:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F7A127B77;
+	Tue, 30 Apr 2024 08:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.85
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466245; cv=fail; b=fTiiBL8ujNc/TPRyY505Vh1j3i5pEn42ymalgEJSvPot/ROLGjIwkQLZbn0DzYfX8Fcwbx8L21EXxfuq5ZswZoET0hEXs5Ol0LvYbByfdVIPaahUvo+MDhHzXNpczRWOb6ehxwKo1g5oUwkNfiW51uOAAv5aJ06mFQNjzO5fmM4=
+	t=1714466251; cv=fail; b=hERsyyQtEh0NUUB16XTl4QnGYV7r2SIpvJjqTJ5/MZkTCxl0qcSmlWgZk6IXLKVOJy+OUIN1/T7TV17FzL+0gxNzwQtWgzCpXjGN38fCPkY90glRgR9FDQD0JCtfqRH+6CGJTfAg4xdNcW0EUkW81Px0Ev2xy4RJvSZtKhX5QJg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466245; c=relaxed/simple;
-	bh=B1TI5WFMjMIkYD5EBG9A4mDjZ3CWqJ/rlk0+r/a55JM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dBLq6shqyf4PJpvFD32J82CSd/WcTHARfOXsGZ03MXF+51+raUhspfrU0sqUALGNIlcqbjAjn1uqTrTnYzenLRIPw4yYY8AyI8XiECLN1f93mW+hvf7DbnQylIPokSZFhe3ouz7bYHYu0l4dF0Ink3LpLrKoDNvLHHRQEleOPf4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WbkQsvh8; arc=fail smtp.client-ip=40.107.94.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1714466251; c=relaxed/simple;
+	bh=UjlzGIoREkBEkzNdoJLhKxVWeiZbQH3xpd/ax7ACe/Y=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Gw+uNmTfa3zoxraUwTiVyAZWXlxJYsS4vzUstDhmUpecx0NkUgv5p9taywv88pGk3XIv1frXSTgmvDOe9Jt2iUcm3o605CfxThHWfpc9m6WXAQCq8TjlpKF0OqIZ1HNy1vZlxBtewNqf1sXhRq3YHlCS7yMEhFpgLGFszFACl9I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=db+rGjmJ; arc=fail smtp.client-ip=40.107.8.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WbkQsvh8"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="db+rGjmJ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b8Dkuohqid87VoWE6UHmpb7i3JxS7tMrF2p+LGRG2p3ChIwcssLxflQuhooam3b9RYqUMTcYzis7GhGA3q+F5TdSaPuc13hpxreT+OV2nmefxmwAtjT448gwG5jDuMw3lXWZZd5izRZyAkGux8SEmDo373/wiiIek0YCR0eh1cAWWBRgY4Qc07jVZPckJlojHPqdabZSN8xDwWWLmd901eVlVUttCMw3p0LVFKU4SoJT5vtbIBQ/F9q+LwF3CieAagCR1KyGOfl/jLlBxTLHBounx1VuqHWhJ5t9QfnQoiyYmL2Os+M+c48y3r5Sx6o73BpvwZpLvzO/S6dIOUYzNA==
+ b=UrCe7kUIxjN8OiMIfv/ugsWeSgFaK3MBUw/e+ytP5z+cUDfjzI0H7LmaAnuaxMoxkTbv44Ro2C3M9WOrgynnzQMDhr+lrznGpHDrTF9zG2E/erualUJXSl40diTZrmxIiXPKbV44bG80koct/3ir3PWpxYOYbHEojqCu51Ajzfeor1a2oewgm7AMtnr7FuDQUU98DHqCJFSuwZcD3r7ZyxNWpkqRsjlkdYN2MU+XK/11zOHwExPlyZ/yi7cnltIkgGqNDHs1n3wgsT6pjLYPyp56lJRj5G4ctTZ0ZI6FQJ9xOsJVCeEQ1LyIgkZU1PDZz0l/mKVwLijx6vFgI/yzvQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=czOPGs/aQBYCMQQyGaf/1BOHlY6yjvrwBR4yYLY47PY=;
- b=hb4SoJN8aP0ohqf6fOcHqTNQE23wmuly7rvZx5/603IkuxWA9U+Ea7Ho2D/RRyTUuObCZeOuk1V5dXcd956lJGeiEXo8ZPrNPfVG9NMsRYfwOJrFOFNo/NO5s7VTzB8vvwboy0HRubGnATmN4RfXgU4Ol1Qxdkax4y5R+GsdaB2ZFjfzpwb2SCHhl/ANBGuo5j6lPzp2f39wbqIJW06mP+PrxdnfB8OKEQuJduy2WjE6/Inwupoq6cRp7I1GMjMMvfNqg3TCNF0Dg60vn4s2USPHkLPMUkjyN3EurhPjI681MzkXQH5pj2qiqR13IVER3tROQ6o4Olrrs6we11OVxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=xc65M1gJYltW12CM0JT3ob4bHCkLeG+ISdOD3LP8hj0=;
+ b=ecogX6y0s6nkiXEL3mMWl6tFOAoSFCtgM0WeRceeJmHoAJU6iHWBbNOk9Ijq1Pk27rVY/j+M+p/tOKlEbdwyilW6ZWwvnljDKjMUCFdIpqcJqbZaNDbHZRzfCRjz6xNRtCc4I34O49aV8enC+jMeh/kqnF+z1jv6fFpfU6EhDLRz3FZRB6eTAxhuXzyZcsTLo+SCKIOPkxaD+GjWUUvwVoqVsY3TGfun7GOcGi5guoOg0Jen66gLi3vkqC9o9bj2wBTeEU1TfIUXqj8DDYluDgsM68EEFkk50rM3sRkT8LHWzNeux37U48XX4zWye7kYe/Y5AQmaBdKUWnJOxbqTwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=czOPGs/aQBYCMQQyGaf/1BOHlY6yjvrwBR4yYLY47PY=;
- b=WbkQsvh8zOUC01SonHLj6d4ixoh9WpEShkdK1xc+BrV3pOTO0DUchW/gc8yAIgHt9JpTgG71Vn43SVcYPSlz46pElzId+gHS+d0mCIUSgfurh/TuKc/nqCSmge4gBkDHcJLPWZ3IrLHe5MsO/JNe3OH7qvfp0sYZR8hIsBPokec=
-Received: from BN9PR03CA0638.namprd03.prod.outlook.com (2603:10b6:408:13b::13)
- by IA1PR12MB6529.namprd12.prod.outlook.com (2603:10b6:208:3a6::16) with
+ bh=xc65M1gJYltW12CM0JT3ob4bHCkLeG+ISdOD3LP8hj0=;
+ b=db+rGjmJSRUREOZRtbVYo6UVdsMe0f/NFwTTusRsuV+LhRMuuwzVv+KO7WeiZQ0Q0kDbmyHK1a6cljd7/CdMVR8YF6A4NfV5pFFVr6OTkoMBYCb8PVwDWwdAXE05EaJ2HqGTa1q1bUYgQLsw15slZo881JEUpL1LQihzo1ChyPg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
+ by GV1PR04MB10241.eurprd04.prod.outlook.com (2603:10a6:150:1a4::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.32; Tue, 30 Apr
- 2024 08:37:21 +0000
-Received: from BN2PEPF0000449E.namprd02.prod.outlook.com
- (2603:10b6:408:13b:cafe::e5) by BN9PR03CA0638.outlook.office365.com
- (2603:10b6:408:13b::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34 via Frontend
- Transport; Tue, 30 Apr 2024 08:37:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF0000449E.mail.protection.outlook.com (10.167.243.149) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Tue, 30 Apr 2024 08:37:21 +0000
-Received: from BLR-L-DUGWEKAR.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 30 Apr
- 2024 03:37:17 -0500
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-To: <trenn@suse.com>, <shuah@kernel.org>
-CC: <ananth.narayan@amd.com>, <gautham.shenoy@amd.com>,
-	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<Mario.Limonciello@amd.com>, <rafael@kernel.org>, <Perry.Yuan@amd.com>,
-	Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, Ananth Narayan
-	<Ananth.Narayan@amd.com>
-Subject: [PATCH] tools/power/cpupower: Fix Pstate frequency reporting on AMD Family 1Ah CPUs
-Date: Tue, 30 Apr 2024 14:07:06 +0530
-Message-ID: <20240430083706.69641-1-Dhananjay.Ugwekar@amd.com>
-X-Mailer: git-send-email 2.34.1
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36; Tue, 30 Apr
+ 2024 08:37:23 +0000
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::8589:eb00:ecf3:b4ca]) by PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::8589:eb00:ecf3:b4ca%6]) with mapi id 15.20.7519.035; Tue, 30 Apr 2024
+ 08:37:23 +0000
+Message-ID: <c1580fc5-457d-465b-b533-37bda8c69181@oss.nxp.com>
+Date: Tue, 30 Apr 2024 16:43:39 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] media: v4l2-ctrls: Add average qp control
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+ Ming Qian <ming.qian@nxp.com>, mchehab@kernel.org, hverkuil-cisco@xs4all.nl
+Cc: shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de,
+ kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+ xiahong.bao@nxp.com, eagle.zhou@nxp.com, tao.jiang_2@nxp.com,
+ imx@lists.linux.dev, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240425065011.105915-1-ming.qian@nxp.com>
+ <c9fdf07d-f434-430e-bb41-8bc8f6bf1bb8@collabora.com>
+ <383b6e30-1266-4db1-9c5d-10db7ab17957@oss.nxp.com>
+ <a839b292-6776-4ecb-8d8a-a25e58816787@collabora.com>
+Content-Language: en-US
+From: ming qian <ming.qian@oss.nxp.com>
+In-Reply-To: <a839b292-6776-4ecb-8d8a-a25e58816787@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR03CA0008.eurprd03.prod.outlook.com
+ (2603:10a6:208:14::21) To PAXPR04MB8254.eurprd04.prod.outlook.com
+ (2603:10a6:102:1cd::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF0000449E:EE_|IA1PR12MB6529:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1b877413-2db7-4693-0b5d-08dc68f0c0dc
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|GV1PR04MB10241:EE_
+X-MS-Office365-Filtering-Correlation-Id: 06087668-b0f7-44c6-989b-08dc68f0c1a0
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|376005|82310400014|1800799015;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|366007|376005;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?p9d4kgHtHorQO3j0CfYsC3bimkvYstdxcelotUcmUbwWMsKXk7Bq7gHt0tMp?=
- =?us-ascii?Q?46k68IhIn6I9NGCVsS6dNqDEOJk5sgFTIHT/zBCuTyVO48Z4+rLxlXTNo+4F?=
- =?us-ascii?Q?50piuyKQIbNcLQ4TA2VOSwr0R3SKTibJ3U1xtOAdFiQfEbCThVdkxirZU5Dy?=
- =?us-ascii?Q?qOOCVfX0mBx4COYodOxVbHFFoYZrrZhRCQHd0Cr2HvSWIn5hxl3aECs3iCGh?=
- =?us-ascii?Q?0rYJphSeQuNiXZCdcQFRh8KAnE/oOWHY6J1hiH6gaM2WDYAT7N7jssLri7By?=
- =?us-ascii?Q?6TTcerU3pKWVU071kkeJxku2WfDeix8Q956U8uE4pWDHCsdDIH+nvLzGmX9I?=
- =?us-ascii?Q?sV4oJ+QdP5kQy84MpItkYYryACRmTN+xA/7JNJbbEBaiplVH/FZj8czBgDNd?=
- =?us-ascii?Q?Tm/myNyk07+dXYbbq+4+I42QmdbhHXSOhmxUIrIWn/rzyfSY+WSJz6Vh4jwb?=
- =?us-ascii?Q?hoYJAa7aFXNnTyZr/ODjkznDPU/Ywk/ULPJ3DkMgpldiAQYFTDu19rcJnd/7?=
- =?us-ascii?Q?Fm2v3DNiVvvpNlK3HSycvfXRoFJWjFj8+7VBaka1+xuSDR7R6r1V1Pn5Z0JE?=
- =?us-ascii?Q?nt1Tuh/3t3VvNN0a42BgZrA6bMxWMLUKCyrmzr6ZLqfCcLQXTq+jYXUnE3jd?=
- =?us-ascii?Q?FRyP410JN/g+3s/KLIbKJH1sNTPeb8UNdk+n2vOyt40zAwhyFbLrfhWM8eJW?=
- =?us-ascii?Q?07X6B3hZvVDOX9DhV7pi25depx2tXFzIRdsVL/5EWQkcQ7F2icBPKPenL6hC?=
- =?us-ascii?Q?/0wIHafffJVReW1GpgfUU62QobQGMUwCXpRcyAq2q6lqWormoR2dwizRSDeM?=
- =?us-ascii?Q?NA2SKRg/hE0Q8ah4drLWAvatekVTFYnztbh4SLacaoiIhMN2OGDupklS1dWd?=
- =?us-ascii?Q?2shRocLukmn1OJDiD5xw/XwdqJXNe2bHsucX6bjm6+QHa/Op+jlCOUfqfctF?=
- =?us-ascii?Q?BgplN497FH14Xfzq5osqmgPrNU6nBEyhzOp/RMbT2IGfms9fWH8IxQFbIaMV?=
- =?us-ascii?Q?xo5qAaKvdSjV1d0i9i0oLTlO0rBkuZpAxCa34XwGhTmxPQ6MtKliT0FbyYmB?=
- =?us-ascii?Q?a2uj9WZwu2VZD2Tsri2dLnJFaKYocbQzmAcBDtwaX9oONmGBVpOKZ0NOpbU9?=
- =?us-ascii?Q?yihGlXtVnDp3rtDANp6UkKpfraVLD5r6CW6wFc/oQCkGAsfmB0h4ZVWiVuSD?=
- =?us-ascii?Q?KkONHKtpcxUk45E/A4MnO90gHwckj4fEAFd2l2AGUYbJv6o4VGjQ29RUotbH?=
- =?us-ascii?Q?Coj5EXhrLTKsmK27sa9SaL1EcnWQ2pTmjisPogPtKQLHVQIkyN54e+P1pgkm?=
- =?us-ascii?Q?jAxNGClVxkl8oKS/yw6eWwv2PxqkSmTJ7euSH8cGCL746ibmxBvO3Jh2ZO2p?=
- =?us-ascii?Q?W06nkbGXdmBgdpEOfWF8T/dj9hXk?=
+	=?utf-8?B?VE5OdzZib20rUDRoczY1VEhoYVBML0N3ZFNsWUIrM0FvdGpXYytNakNjRkdY?=
+ =?utf-8?B?U2VnWVpZYUIvYnd3cGY2UjFJdW5aaVV0WGsvdWFndmdSem1QY05aZ25BZ0dZ?=
+ =?utf-8?B?YzNRMU0rejNReW9KbEhuaUJXUCtXcDByRlRQWTZvTFpWSUdhUStjSWRCWGlP?=
+ =?utf-8?B?eUFiVmRKL1E3Vkxxdjk0ajhPakk4T3F6TnRSQTF5TGxhalZQNFd0cW53djk0?=
+ =?utf-8?B?SkRBc3YxMkpMWlgwVmZ5dVA5aGF6WUR5UjVHMTU2SDBVdE5INUpydFBZK2JK?=
+ =?utf-8?B?dFdjd0l1eFlQNUg3UTc3NCt3a0ZEa3Qwb3ROZXlsWDhXVitGNkJuUit2Z1ZP?=
+ =?utf-8?B?MmtSUDkwTndLYlhSNG1GdW81SFpJaGRXbyt5RnZOUUtaZEZPTTVtMCtVMXJj?=
+ =?utf-8?B?TWpYQ0tBWTBnSFEveHFkcW9hYzJRaXpKLzZ1UVBLeE9SZFdscGg2SnpJTXJ2?=
+ =?utf-8?B?MmJsaTlZbUh1VmJZdEhKeWoyd1ZwcmxWZ3JyUDVhak1tdXRNVlIvcFh1bE5u?=
+ =?utf-8?B?bHVOR3N4Uk1SWXNJNElrVDE2eXpacHNjVlMxNW9FS1dmdXBQaW9NdFhDemtE?=
+ =?utf-8?B?UldtajI1ZTB6NWNUdGloZE5XcnhRMW91dk52cm9EVG5XZm9qUTBFSUZtQlE1?=
+ =?utf-8?B?cmVOUmVZR2ZldUZMS000YlMvYTVwTWxOU3VSSy9XTGk5T2VEa2R3SUQzSytr?=
+ =?utf-8?B?VUpMMFpsWTQ3TU5XMGRXR0gyZ3EwR09UVnNkSmpicVE2Ryt6Tnl4aDRvTzFG?=
+ =?utf-8?B?bDkxUERyd1lZcncybUtYR3o0Tk1kbmkwL1RITWkzOUlscWx1S1BpeWlkVXJP?=
+ =?utf-8?B?SERNdjNISityeTk2RjBxNkFPRE5vZzM1WlhCTk5aZDJlcFRHaGxMNjczbk5N?=
+ =?utf-8?B?RXpocStrekk1YnZOUStJdXN4NVliVFFzTkZ6U2xVazBrL2RxRjFqTEFqeHN3?=
+ =?utf-8?B?SWsrV3dmUG1xdFR6M3A2RWV6UFBTRmhza0RHMHlJSWllUXBkeVJvMDgvSmcw?=
+ =?utf-8?B?cTZzQytNcUZ4bVBwL29YNTRQN2xFY1Y0ZTN4OTA3akZPZENOMEQ5UzFOZEJp?=
+ =?utf-8?B?ejZudTRURGRMK2FKN1I5Q3ZCT2MzUGR2WVZ6U1ZZVnZnbjZWaFZsOVlzc2pT?=
+ =?utf-8?B?RUFpWjZ4NkpEZjdkSTJuZXQ4am9iT3JXclVteFpKZk40RHRqcTk4U3RsOU1p?=
+ =?utf-8?B?cW1hbjltUW1mbEhLTzlhRHNNcWRtNCt6bjE2amZpcGtxYnNOS21ndHgzbWpD?=
+ =?utf-8?B?MTdZSnZwaldSU0dsNzlHZTBMSnFyMkVQTmxEeTZsQk1KMXJSZzd2VzV4YzRk?=
+ =?utf-8?B?eTlIbVFLdkVvQUU0aHUvRVlIcFZlL24zbm9xZkRneDZoU0xWbVpLR3N3WjVa?=
+ =?utf-8?B?VFBVbXA0M3NVTnJZN1R6WklQMGJHWU8vZlJmWTRGblRHRmNUYjlyaUx1blNz?=
+ =?utf-8?B?ek9oV0k1VDF4cjZvL1ZXdUdwNzFlajdIMlRYM3d0ZytTS2d1S0Mva3VPQmda?=
+ =?utf-8?B?Q2I4Zjl5cDdmSEV3TmQ4Q0k5VEdCYUg2MnVIbURLMEFYYkNVRzk2by9JMDl2?=
+ =?utf-8?B?blRRWjY0RHNqb2pHODd6dXRTS2swclFlMG10Rk8zakFURWhmRDBGWUoxMm1a?=
+ =?utf-8?B?cWc1UE5sT0ZrOGhKaXJtZG1EWmp6SFBiUkQ1NWNqNDdsVUVKcUpFUDQxbm1S?=
+ =?utf-8?B?SUFWaG1IMXhRK0g0Z1hMOTJ3SUFLQWdOOGRkZ1NCOXZzOHhBaFd2WGpRPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(82310400014)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2024 08:37:21.6385
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NzhweTJ1WjZxN3lkakhzdGhNaTcrcXFOZEV5OGRNbUFLa1hBSWNUSzJyZCtS?=
+ =?utf-8?B?T3FxOWtmOFplU0V0bGtrUUc5WGhROTBpTWtwNHRqZGNCSkh4dWVSNHlSRHZF?=
+ =?utf-8?B?aFF5b01jWGduTzh4QllGK2hVYTh6TFRJVjA2Um9FTnZ6ZlFzYVZXNkE0MVB4?=
+ =?utf-8?B?dEhwckV2eHNSb1dYeHNIUS8xTEliWjhZWkd0RTFHM3dUOUw0SlcvbDgzdU1o?=
+ =?utf-8?B?ME5BWWdQZ21MS2FDcjlXWFJpano1c3djUmRjSjZyai9USnNvdGcrenEwazd5?=
+ =?utf-8?B?MXhWbkJXeDBKQ3FLR1R5a1VwTGV0Z2hET3FuNWxNMGMrcDZFUVhBM3RUOXlJ?=
+ =?utf-8?B?WktWQXN4NFFiTTl1YmJwbUJqZ0s1WnFJSWNMbDJVbjhuMUFoWlBxTDRsUENP?=
+ =?utf-8?B?MUFoZXRUMi9NOFRQaGMwL2tXM1owLzVtb2RoQlh2UmFOSnJGdWdGSUhtN2RB?=
+ =?utf-8?B?bkRkSjVjT3FWRUpoMnpwYzJnd0o4RTJKZFRhbHY4QzBkbVJDbklzVlFtR2o0?=
+ =?utf-8?B?SHRHZVZTSUlsVnFUL2F1S0dSWTdiQWJLY2krTDdHUGFkUmVkY2hYTnM1dUVa?=
+ =?utf-8?B?UUdYbDM4K042WVdaYWdpUEYyL3pkeFVoOXIyNVNQdTVhZW5GelBsMzRoTXRU?=
+ =?utf-8?B?QnF5V3NPeGNxM2trOWx1dzdTNVdoVHdxUEtzaHJGRGdIdkZReWxnTUx6ZHEx?=
+ =?utf-8?B?ZVRZN1pNVjkyT091Qi9pQW0rZFRiMWxJMDlURDVZY202QzBqSkUwMUs4dnJE?=
+ =?utf-8?B?cXFGTWZLNTVHTWRTdkNNb1dqOTFtU0pHck9Qd2lUY3ViZ2FWSGxhUjREN1c3?=
+ =?utf-8?B?QkZmUmJOSVVRK1pTZjJtTUUwdHJUdWxlQ2hiWEVlWVo1SmVWcklqbXU5dnd2?=
+ =?utf-8?B?Qm5HQ1Y5ZGVpRXNNOXFZM2N3T1ZCUCtRRnZ2aWlkeGtMcFoxemJzSkwybjRN?=
+ =?utf-8?B?blpReFkwRk5wNmtENjBYYjAwUmRQa1pBODhTeDVrQjlTQ0gxMi8yV3dER2I3?=
+ =?utf-8?B?T0RNZHNEMUo2QzIrOHozQlN4YlhmM21YWm9ib3dzNHpuNW03SjVnWDRlN1JM?=
+ =?utf-8?B?QW93dXBZMGNqY2pBODZsbFJxNUVzT1JGUE9kdFBDaDZxSiszL3g0aENVaU5Z?=
+ =?utf-8?B?cUdGMlgySjlIUmt5a01ET3FKNTNZWk1tQTArYktYZ2lhcGxXbjh5NjRySjZM?=
+ =?utf-8?B?dmtLUlZvUmUrNUNmbmo4bHMyMk5xNzlLYmViQTlCcWljdS9xT0hRL1pvMFZr?=
+ =?utf-8?B?VzVJR2FvK1BKWUpjY1d0Tkg5UFJPVDNyS1YxMXQ2Qk5ieFVKMm41SXdtUFRR?=
+ =?utf-8?B?cXZnQjlMRThmeXFBMlhQTFRFUGFWUmlGQWRiMnNCeE9XZjBtS1g0MUZoalcr?=
+ =?utf-8?B?Z1cxTkdRdGZuS1VmUFRGL1B0cDRvNTNiMk5Dc2t6WWZ2SWxmdVdJb0JpdWk3?=
+ =?utf-8?B?YmlzYklVZVNCdUNpYXdzT1JMVnJzY2tpTXJlN1FkM0dsRm1qVXhmcElqY0F2?=
+ =?utf-8?B?YitVMEUzcER0VGVDZjExV253TUpPakRvRDR5SHEyMDhkRmdPTlpOS29kOWc4?=
+ =?utf-8?B?aUh0eXZ5L0JaMmdGd1VueFJld2Y2UFRpa0VnSUVuVUxrZDZCUFgrZk10N3k5?=
+ =?utf-8?B?bU0yZXhmQmpPclhleFQrVVovd040WldDV0cwMXRYWDYwbHAzL2JlMHgveWZu?=
+ =?utf-8?B?a0hHa29wWGtQVmo4OEVUUjkvMi9DNnI0dnRrU1NienllajdONVEvZzJpR09Q?=
+ =?utf-8?B?dVhRbUhOUW9nNzBqY1pha0FTWjJWdThsZmdKeUh1Ungvd25sd09jY2x2NnRr?=
+ =?utf-8?B?OUY0b0tZTEoraHBXZVRJV1ZFSmhQV0pPQ0pubWlvQmRqd3BZUVhxQmJhZksx?=
+ =?utf-8?B?VWZCdWdJSVA3SUpmYmJURTN3ZFI2ZExHbHlITnlFeDh0MFBZd2dnQ203VE1F?=
+ =?utf-8?B?bi9jV1UrU1FLNFNzZnNpR2RoeDRmdzl1L3ZYNXJxdkloeWpEVmNoTHkrdWtN?=
+ =?utf-8?B?MUpjYktsWDRmNEQwS0ZTUlo4bk9RdFBqcnRDelZqS1NhMUN3S2FUMDkvc2hn?=
+ =?utf-8?B?NVB4ZnJXY2hFQkllZmszTWcwbnl0OThIdktNcGEwYndidzdoa1hodFlSN3RI?=
+ =?utf-8?Q?uMD4f2uLyANfqP//9vfwhTmHu?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06087668-b0f7-44c6-989b-08dc68f0c1a0
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2024 08:37:23.2743
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b877413-2db7-4693-0b5d-08dc68f0c0dc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF0000449E.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6529
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fp/ErYY9KaHZR5cY0mZ/xTghvyQGSQwo05FFXQHJiWv+sky5MYIR/b4d3wihCWa2qC3BaWWzm++Dv4oPeggJvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10241
 
-Update cpupower's P-State frequency calculation and reporting with AMD 
-Family 1Ah+ processors, when using the acpi-cpufreq driver. This is due 
-to a change in the PStateDef MSR layout in AMD Family 1Ah+.
+Hi Andrzej,
 
-[ dhananjay: commit log, tested on 4th and 5th Gen AMD EPYC system ]
+> Hi Ming,
+> 
+> W dniu 30.04.2024 o 04:20, ming qian pisze:
+>>
+>> Hi Andrzej,
+>>
+>>> Hi Ming Qian,
+>>>
+>>> W dniu 25.04.2024 o 08:50, Ming Qian pisze:
+>>>> Add a control V4L2_CID_MPEG_VIDEO_AVERAGE_QP to report the average qp
+>>>> value of current encoded frame. the value applies to the last dequeued
+>>>> capture buffer.
+>>>>
+>>>> Signed-off-by: Ming Qian <ming.qian@nxp.com>
+>>>> ---
+>>>> v2
+>>>>   - improve document description according Hans's comments
+>>>>   - drop volatile flag
+>>>>
+>>>>   Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 5 +++++
+>>>>   drivers/media/v4l2-core/v4l2-ctrls-defs.c                 | 5 +++++
+>>>>   include/uapi/linux/v4l2-controls.h                        | 2 ++
+>>>>   3 files changed, 12 insertions(+)
+>>>>
+>>>> diff --git 
+>>>> a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst 
+>>>> b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>>>> index 2a165ae063fb..7d82ab14b8ba 100644
+>>>> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>>>> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>>>> @@ -1653,6 +1653,11 @@ enum 
+>>>> v4l2_mpeg_video_h264_hierarchical_coding_type -
+>>>>       Quantization parameter for a P frame for FWHT. Valid range: 
+>>>> from 1
+>>>>       to 31.
+>>>> +``V4L2_CID_MPEG_VIDEO_AVERAGE_QP (integer)``
+>>>> +    This read-only control returns the average QP value of the 
+>>>> currently
+>>>> +    encoded frame. The value applies to the last dequeued capture 
+>>>> buffer
+>>>> +    (VIDIOC_DQBUF). Applicable to encoders.
+>>>> +
+>>>
+>>> What is the intended range of the values? And why? Is your intention 
+>>> to make it
+>>> a hardware-agnostic control or a hardware-specific control?
+>>>
+>>> Regrds,
+>>>
+>>> Andrzej
+>>>
+>>
+>> The value range depends on the format,
+>> For H264, it's [V4L2_CID_MPEG_VIDEO_H264_MIN_QP, 
+>> V4L2_CID_MPEG_VIDEO_H264_MIN_QP],
+>> usually this is [0, 51].
+>> For HEVC, it's [V4L2_CID_MPEG_VIDEO_HEVC_MIN_QP, 
+>> V4L2_CID_MPEG_VIDEO_HEVC_MAX_QP],
+>> usually it's from 0 to 51 for 8 bit and from 0 to 63 for 10 bit.
+>> For H263 and MPEG4, it may be from 1 to 31.
+>> For VPX, it may be from 1 to 128.
+>>
+>> I think the driver that supports this ctrl can set an appropriate value
+>> range based on the format it supports.
+>>
+>> Users also need to read the value of this ctrl according to the format
+>> they set.
+> 
+> What happens if the user does not set the format or until they set it?
+> 
+> This looks like a contextual control, where the context is a cross
+> product between setting or not setting the format and which particular
+> format is actually set.
+> 
+> I don't want to voice strong opinions about whether this should or
+> should not be accepted, but this kind of behavior should definitely
+> be documented so that driver writers know how to implement this control.
+> Right now reading the documentation in the *.rst file as a driver writer
+> I would be puzzled. So, from a driver writer's perspective I'd expect
+> these additions to the doc:
+> 
+> - the range of returned values
+> - the expected behavior when format has not been set
+> - the expected behavior when no frames have been processed yet (so 
+> there's no QP
+> to be read back from the hardware)
+> 
+> Regards,
+> 
+> Andrzej
+> 
 
-Signed-off-by: Ananth Narayan <Ananth.Narayan@amd.com>
-Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
----
- tools/power/cpupower/utils/helpers/amd.c | 26 +++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+The ctrl value only applies to the last dequeued capture buffer. It
+requires that the format has been set and the streaming has been
+started. Before that, the value is meaningless, and the driver can set a
+default value by itself.
 
-diff --git a/tools/power/cpupower/utils/helpers/amd.c b/tools/power/cpupower/utils/helpers/amd.c
-index c519cc89c97f..0a56e22240fc 100644
---- a/tools/power/cpupower/utils/helpers/amd.c
-+++ b/tools/power/cpupower/utils/helpers/amd.c
-@@ -41,6 +41,16 @@ union core_pstate {
- 		unsigned res1:31;
- 		unsigned en:1;
- 	} pstatedef;
-+	/* since fam 1Ah: */
-+	struct {
-+		unsigned fid:12;
-+		unsigned res1:2;
-+		unsigned vid:8;
-+		unsigned iddval:8;
-+		unsigned idddiv:2;
-+		unsigned res2:31;
-+		unsigned en:1;
-+	} pstatedef2;
- 	unsigned long long val;
- };
- 
-@@ -48,6 +58,10 @@ static int get_did(union core_pstate pstate)
- {
- 	int t;
- 
-+	/* Fam 1Ah onward do not use did */
-+	if (cpupower_cpu_info.family >= 0x1A)
-+		return 0;
-+
- 	if (cpupower_cpu_info.caps & CPUPOWER_CAP_AMD_PSTATEDEF)
- 		t = pstate.pstatedef.did;
- 	else if (cpupower_cpu_info.family == 0x12)
-@@ -61,12 +75,18 @@ static int get_did(union core_pstate pstate)
- static int get_cof(union core_pstate pstate)
- {
- 	int t;
--	int fid, did, cof;
-+	int fid, did, cof = 0;
- 
- 	did = get_did(pstate);
- 	if (cpupower_cpu_info.caps & CPUPOWER_CAP_AMD_PSTATEDEF) {
--		fid = pstate.pstatedef.fid;
--		cof = 200 * fid / did;
-+		if (cpupower_cpu_info.family >= 0x1A) {
-+			fid = pstate.pstatedef2.fid;
-+			if (fid > 0x0f)
-+				cof = (fid * 5);
-+		} else {
-+			fid = pstate.pstatedef.fid;
-+			cof = 200 * fid / did;
-+		}
- 	} else {
- 		t = 0x10;
- 		fid = pstate.pstate.fid;
--- 
-2.34.1
+I agree that it's better to add the value range description in the
+document, but as discussed above, it's not a fixed value, maybe I can
+add some description according to format.
 
+Best regards,
+Ming
+
+>>
+>> Best regards,
+>> Ming
+>>
+>>>>   .. raw:: latex
+>>>>       \normalsize
+>>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls-defs.c 
+>>>> b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
+>>>> index 8696eb1cdd61..1ea52011247a 100644
+>>>> --- a/drivers/media/v4l2-core/v4l2-ctrls-defs.c
+>>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
+>>>> @@ -970,6 +970,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>>>>       case V4L2_CID_MPEG_VIDEO_LTR_COUNT:            return "LTR 
+>>>> Count";
+>>>>       case V4L2_CID_MPEG_VIDEO_FRAME_LTR_INDEX:        return "Frame 
+>>>> LTR Index";
+>>>>       case V4L2_CID_MPEG_VIDEO_USE_LTR_FRAMES:        return "Use 
+>>>> LTR Frames";
+>>>> +    case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:            return "Average 
+>>>> QP Value";
+>>>>       case V4L2_CID_FWHT_I_FRAME_QP:                return "FWHT 
+>>>> I-Frame QP Value";
+>>>>       case V4L2_CID_FWHT_P_FRAME_QP:                return "FWHT 
+>>>> P-Frame QP Value";
+>>>> @@ -1507,6 +1508,10 @@ void v4l2_ctrl_fill(u32 id, const char 
+>>>> **name, enum v4l2_ctrl_type *type,
+>>>>           *max = 0xffffffffffffLL;
+>>>>           *step = 1;
+>>>>           break;
+>>>> +    case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:
+>>>> +        *type = V4L2_CTRL_TYPE_INTEGER;
+>>>> +        *flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>>>> +        break;
+>>>>       case V4L2_CID_PIXEL_RATE:
+>>>>           *type = V4L2_CTRL_TYPE_INTEGER64;
+>>>>           *flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>>>> diff --git a/include/uapi/linux/v4l2-controls.h 
+>>>> b/include/uapi/linux/v4l2-controls.h
+>>>> index 99c3f5e99da7..974fd254e573 100644
+>>>> --- a/include/uapi/linux/v4l2-controls.h
+>>>> +++ b/include/uapi/linux/v4l2-controls.h
+>>>> @@ -898,6 +898,8 @@ enum v4l2_mpeg_video_av1_level {
+>>>>       V4L2_MPEG_VIDEO_AV1_LEVEL_7_3 = 23
+>>>>   };
+>>>> +#define V4L2_CID_MPEG_VIDEO_AVERAGE_QP  (V4L2_CID_CODEC_BASE + 657)
+>>>> +
+>>>>   /*  MPEG-class control IDs specific to the CX2341x driver as 
+>>>> defined by V4L2 */
+>>>>   #define V4L2_CID_CODEC_CX2341X_BASE (V4L2_CTRL_CLASS_CODEC | 0x1000)
+>>>>   #define V4L2_CID_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE 
+>>>> (V4L2_CID_CODEC_CX2341X_BASE+0)
+>>>
+> 
