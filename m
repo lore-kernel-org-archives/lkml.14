@@ -1,130 +1,280 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CC21A38DE
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 23:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4D529A2;
+	Tue, 30 Apr 2024 23:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714518466; cv=none; b=JFfHaD00sdI0/UouOFA/W2En4zu3v5KjY+F5SL3VCOG/BZFKviGJzhl5vAN1I20Iu85myf1bhFCRt4z5TIY10SVy+D+1xNwt0OHK1sy2aAw/DHSKVKgHK73sta5fm6hmLRqPDChiPOnCQtfQYZX+16mEOE6je0stW5sxP1OxSTI=
+	t=1714519117; cv=none; b=Ml+3JDv2Nmkq7pmpDDJwEVmqtpBdDmNt7ASEC/MSxeiTEfYCehOb4X/lassQ37wE3RZqzJZlgf6mAnWNRtpebbJK/0wR/Tueybitz2IKS1VT5GcW+yLo2sA/WjTr9UMFu18y4yPagk7SBzgQc3dTa/4LXamhiHgtlj8QyJEnBbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714518466; c=relaxed/simple;
-	bh=uPucxD96zlnvHpGfo/0h9rz4gjVxdwhwNcSJTZ2X/ng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IOy1ZXJKh02XQPHe1kPWrFF5WQxy71TLCQyPXDWzvLxJqb6wTO6mRaihMXGNQBfA7mFCSKSOJYRKGcjxTEcLUoAIqPnv92GqqJPiu9GcYkd6zVnGpMLwQlfjdqeG2QgtbKwNThV1x4iLCEIwukaDASBQWyR8QOAgElORbXChsaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wl3R5p/X; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714519117; c=relaxed/simple;
+	bh=oFjvU2St6BfKnmi9TYObMAzCNbHryiv8r8qxZQHdaHw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=m5G2MEiZ4DwsUbjGCtVPudDxHBXwaupNseMjNWbef6Lsr7DnxLej6T6RXf6PWrv7XpfccpVTbvEiALfBb1I32rTWwabbXb0jWf1fMORagv/5FvOjRHzJ0j2rOZnC1/T379TaHXs/98r9lq3KhLSVIQZmU/NJ+ADV0gNrRHhlZAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JYRCyzsV; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wl3R5p/X"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a58eb9a42d9so483466466b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:07:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714518463; x=1715123263; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hWHSx8x3CglXCpDsqd2sqLojUv7uUIhFAB1g3nMJgVQ=;
-        b=Wl3R5p/XX1iuunawwp/dkVu1MR4D33X+xxoxG9o5GlAUCgF8R0iOj2iajOvRFmYUg2
-         aRGLjJMAsVb+MKk9nZDqwntjseq64TjAUi/niCUNYdic4wRUFbOqm2PSW5qoaGHJjAyj
-         NgnbpOvFGEJyM/ICzJ0ZSQ3o/gg76T4vsQ9i8jYAv1tDJcL1gWzsN9UV9wAVKFE6wJIF
-         /WdQ2jtCW5CWHQCEsMhHZZVGptiVsF3yZHpMBwuuLZQlter5FAC1jlrV8xzKyY96OO9T
-         tGdGsqDvCM625bSqqxV98v4BKpEKl0DhmwhxNo7jZkjRtaa6VBbs8o5PqpWR0DvQN+vw
-         stAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714518463; x=1715123263;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hWHSx8x3CglXCpDsqd2sqLojUv7uUIhFAB1g3nMJgVQ=;
-        b=QGAs1AJ3U61JasKngwHuj7mWHLooA6VJ5GOjd317+5IyhzgJLoC92Y6htOC02w6iqm
-         UgbSUEylkJK88XSxXjyotzJPs6YSey9Xp78ElEdo4w93a0fP2fQXhrTdbd8v2ZtMoCRk
-         afeOy6idRklLjOQVydOEQaz9jg/G248IX7EPRMcdOpUyQrherJ3/NcAKduXnQQ/EQuKt
-         ZbTSFQn7Vfz7FyTV3by6+Q443WVm4NE5olt2utwV5fe+j9tplfM194JYgGQeds1pRTnJ
-         /Gg7t990567gCmmT6lQXxYhZC4eeB5EF6Jqr1IrFp66m4gIoaoTXqFeeRF9LN6vEj7Rf
-         UJ0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVRbzi48VC3unRSjw0jGmxoTTEPCTmxm6+uQaB0RcrlhD6ivyw2KrBeWV1WXYhXo08wosAjPYmeZ4ejz3WJa8XnEb2Le4Z13XMoEHL6
-X-Gm-Message-State: AOJu0Yys7OjXvWuZO8t4s7K6BtrIQveoIPb1F/7ryJZ9pzB6ofNTQeI9
-	jCGZ/7k2v9CmiHPob/6M1ZA1Vx2IvjMlY1/lUthy5Suun/XNSSDiQh36wcHyCQW0jQ8IoXqkEOk
-	DFjXrp29moiJfYMwTG7qI4vQmp2l8RwdXFxGU
-X-Google-Smtp-Source: AGHT+IGA4OCcGROuejRidml9TPv3K1lykvce1DRnVEz/IoowhfwrU1qPRaqaxWUMBc5Cjk0KUTlQ2N0VCZ1aAbsKciE=
-X-Received: by 2002:a17:906:b351:b0:a59:674:a297 with SMTP id
- cd17-20020a170906b35100b00a590674a297mr692168ejb.64.1714518462865; Tue, 30
- Apr 2024 16:07:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JYRCyzsV"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43UMeXDu020995;
+	Tue, 30 Apr 2024 23:18:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=M2DfN/umz6WZ9H7G0RG+9oLTt4u+Pvx1ZqJX6AjiFlg=; b=JY
+	RCyzsV09nf1UtKfQlAuGxYbFrbFQVYR9FIanF6DJ5RQH92T4alyeGfz6UYfEbQaP
+	/Tfj3v2Q1u8g/Nt3BkZ+0yCTUiFuZzapoPJvV9wWWEG80WmD60Vcss+ieuSxsbQs
+	JU2qprplx6WuPeP5bCkjYWKSO+rbyzY5UrG/bx3SyipAsN6Ooke87T9HE+Y39SV8
+	RXyQz3MUzHp5SbEb/TmrtyPPFz7e/Jw7eFAl5isnmr1emK+XPxFWbakYH7Z8xiyF
+	1qXrBtdFsYIHlJvOTK0yDxeb0cIJtPN7TIyWtnQgGVKzVdQMPiUR2ARwTGpMGqoW
+	ehExxYa8bCR6NDz3q40Q==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xttw3jcr9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 23:18:29 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43UNISHO022691
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 23:18:28 GMT
+Received: from [10.110.59.215] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 30 Apr
+ 2024 16:18:27 -0700
+Message-ID: <172ab19b-4643-6ac0-53ab-d2d1e217171c@quicinc.com>
+Date: Tue, 30 Apr 2024 16:18:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430060612.2171650-1-shakeel.butt@linux.dev>
- <20240430060612.2171650-5-shakeel.butt@linux.dev> <CAJD7tkZnXY+Nbip8e6c7WC4qoYC21x=MHop_hT4NqYLKL8Fp6Q@mail.gmail.com>
- <u3okwix7ovvzzfossbmfalwpq23qa3bmv3secg7tpjk7ghyemq@w3ngvr526rc2>
- <CAJD7tkZh-bLHQhaPsU7h1WUmK3xwHVoacVcR=P55i+7d0FzfFw@mail.gmail.com> <gmel2s2pysaavfetoqit3zq7grcrsbbfqh7sitg577yip7knwh@bufhf7ymlyd7>
-In-Reply-To: <gmel2s2pysaavfetoqit3zq7grcrsbbfqh7sitg577yip7knwh@bufhf7ymlyd7>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Tue, 30 Apr 2024 16:07:05 -0700
-Message-ID: <CAJD7tkbue8S86YZE3y_1qOF5ee14F9MCuh2iJ0BNBZC8QpL=_Q@mail.gmail.com>
-Subject: Re: [PATCH v3 4/8] memcg: reduce memory for the lruvec and memcg stats
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, "T . J . Mercier" <tjmercier@google.com>, kernel-team@meta.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH V1] soc: qcom: smp2p: Introduce tracepoint support
+To: Sudeepgoud Patil <quic_sudeepgo@quicinc.com>, <quic_bjorande@quicinc.com>,
+        <andersson@kernel.org>, <mathieu.poirier@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <quic_deesin@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        "Konrad
+ Dybcio" <konrad.dybcio@linaro.org>
+References: <20240429075528.1723133-1-quic_sudeepgo@quicinc.com>
+Content-Language: en-US
+From: Chris Lew <quic_clew@quicinc.com>
+In-Reply-To: <20240429075528.1723133-1-quic_sudeepgo@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 4128fbrGdGInk7_zkltSriGwJvKIaQCZ
+X-Proofpoint-ORIG-GUID: 4128fbrGdGInk7_zkltSriGwJvKIaQCZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-30_14,2024-04-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ lowpriorityscore=0 clxscore=1015 phishscore=0 impostorscore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404300165
 
-On Tue, Apr 30, 2024 at 4:00=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
-v> wrote:
->
-> On Tue, Apr 30, 2024 at 10:41:01AM -0700, Yosry Ahmed wrote:
-> > On Tue, Apr 30, 2024 at 10:38=E2=80=AFAM Shakeel Butt <shakeel.butt@lin=
-ux.dev> wrote:
-> > >
-> > > On Tue, Apr 30, 2024 at 01:41:38AM -0700, Yosry Ahmed wrote:
-> > > > On Mon, Apr 29, 2024 at 11:06=E2=80=AFPM Shakeel Butt <shakeel.butt=
-@linux.dev> wrote:
-> > > > >
-> > > [...]
-> > > > > +
-> > > > > +#define NR_MEMCG_NODE_STAT_ITEMS ARRAY_SIZE(memcg_node_stat_item=
-s)
-> > > > > +#define NR_MEMCG_STATS (NR_MEMCG_NODE_STAT_ITEMS + ARRAY_SIZE(me=
-mcg_stat_items))
-> > > > > +static int8_t mem_cgroup_stats_index[MEMCG_NR_STAT] __read_mostl=
-y;
-> > > >
-> > > > NR_MEMCG_STATS and MEMCG_NR_STAT are awfully close and have differe=
-nt
-> > > > meanings. I think we should come up with better names (sorry nothin=
-g
-> > > > comes to mind) or add a comment to make the difference more obvious=
-.
-> > > >
-> > >
-> > > How about the following comment?
-> >
-> > The comment LGTM. I prefer renaming them though if someone can come up
-> > with better names.
-> >
->
-> I will be posting v4 and will change the name (still thinking about the
-> name) becasuse:
->
-> > > > > +static void init_memcg_stats(void)
-> > > > > +{
-> > > > > +       int8_t i, j =3D 0;
-> > > > > +
-> > > > > +       /* Switch to short once this failure occurs. */
-> > > > > +       BUILD_BUG_ON(NR_MEMCG_STATS >=3D 127 /* INT8_MAX */);
->
-> The above should be MEMCG_NR_STAT instead of NR_MEMCG_STATS.
 
-Yeah it's pretty confusing :)
 
-How about something explicit like:
+On 4/29/2024 12:55 AM, Sudeepgoud Patil wrote:
+> Introduce tracepoint support for smp2p providing useful logging
+> for communication between clients.
+> 
 
-NR_MEMCG_POSSIBLE_STAT_ITEMS / MEMCG_MAX_STAT_ITEM
-NR_MEMCG_ACTUAL_STAT_ITEMS / MEMCG_ACTUAL_NR_STAT
+Let's add some more description as to why these tracepoint are useful. 
+Do they help us track latency? debugging information for us? for clients?
 
-They look ugly, but I can't think of anything better. Maybe they will
-inspire something better :)
+> Signed-off-by: Sudeepgoud Patil <quic_sudeepgo@quicinc.com>
+> Signed-off-by: Deepak Kumar Singh <quic_deesin@quicinc.com>
+
+As Elliot mentioned in the internal review, your Signed-off-by should be 
+last. I would suggest removing Deepak's Signed-off-by and letting him 
+reply with Reviewed-by since he was the main reviewer internally.
+
+> ---
+>   drivers/soc/qcom/Makefile      |  1 +
+>   drivers/soc/qcom/smp2p.c       | 10 ++++
+>   drivers/soc/qcom/trace-smp2p.h | 99 ++++++++++++++++++++++++++++++++++
+>   3 files changed, 110 insertions(+)
+>   create mode 100644 drivers/soc/qcom/trace-smp2p.h
+> 
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index ca0bece0dfff..30c1bf645501 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -23,6 +23,7 @@ qcom_rpmh-y			+= rpmh.o
+>   obj-$(CONFIG_QCOM_SMD_RPM)	+= rpm-proc.o smd-rpm.o
+>   obj-$(CONFIG_QCOM_SMEM) +=	smem.o
+>   obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
+> +CFLAGS_smp2p.o := -I$(src)
+>   obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
+>   obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
+>   obj-$(CONFIG_QCOM_SOCINFO)	+= socinfo.o
+> diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
+> index a21241cbeec7..dde8513641ae 100644
+> --- a/drivers/soc/qcom/smp2p.c
+> +++ b/drivers/soc/qcom/smp2p.c
+> @@ -20,6 +20,9 @@
+>   #include <linux/soc/qcom/smem_state.h>
+>   #include <linux/spinlock.h>
+>   
+> +#define CREATE_TRACE_POINTS
+> +#include "trace-smp2p.h"
+> +
+>   /*
+>    * The Shared Memory Point to Point (SMP2P) protocol facilitates communication
+>    * of a single 32-bit value between two processors.  Each value has a single
+> @@ -191,6 +194,7 @@ static void qcom_smp2p_do_ssr_ack(struct qcom_smp2p *smp2p)
+>   	struct smp2p_smem_item *out = smp2p->out;
+>   	u32 val;
+>   
+> +	trace_smp2p_ssr_ack(smp2p->remote_pid);
+>   	smp2p->ssr_ack = !smp2p->ssr_ack;
+>   
+>   	val = out->flags & ~BIT(SMP2P_FLAGS_RESTART_ACK_BIT);
+> @@ -213,6 +217,7 @@ static void qcom_smp2p_negotiate(struct qcom_smp2p *smp2p)
+>   			smp2p->ssr_ack_enabled = true;
+>   
+>   		smp2p->negotiation_done = true;
+> +		trace_smp2p_negotiate(smp2p->remote_pid, smp2p->ssr_ack_enabled);
+
+since this tracepoint is for negotiating, maybe we should capture all of 
+the features (out->features) instead of just the ssr_ack feature.
+
+>   	}
+>   }
+>   
+> @@ -251,6 +256,8 @@ static void qcom_smp2p_notify_in(struct qcom_smp2p *smp2p)
+>   		status = val ^ entry->last_value;
+>   		entry->last_value = val;
+>   
+> +		trace_smp2p_notify_in(smp2p->remote_pid, entry->name, status, val);
+> +
+>   		/* No changes of this entry? */
+>   		if (!status)
+>   			continue;
+> @@ -406,6 +413,9 @@ static int smp2p_update_bits(void *data, u32 mask, u32 value)
+>   	writel(val, entry->value);
+>   	spin_unlock_irqrestore(&entry->lock, flags);
+>   
+> +	trace_smp2p_update_bits(entry->smp2p->remote_pid,
+> +		entry->name, orig, val);
+> +
+>   	if (val != orig)
+>   		qcom_smp2p_kick(entry->smp2p);
+>   
+> diff --git a/drivers/soc/qcom/trace-smp2p.h b/drivers/soc/qcom/trace-smp2p.h
+> new file mode 100644
+> index 000000000000..c61afab23f0c
+> --- /dev/null
+> +++ b/drivers/soc/qcom/trace-smp2p.h
+> @@ -0,0 +1,99 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM qcom_smp2p
+> +
+> +#if !defined(__QCOM_SMP2P_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ)
+> +#define __QCOM_SMP2P_TRACE_H__
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +TRACE_EVENT(smp2p_ssr_ack,
+> +	TP_PROTO(unsigned int remote_pid),
+
+Is there any way we can map the remote pid's to a string? I feel like 
+the tracepoints would be more useful if they called out modem, adsp, etc 
+instead of an integer value.
+
+> +	TP_ARGS(remote_pid),
+> +	TP_STRUCT__entry(
+> +		__field(u32, remote_pid)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->remote_pid = remote_pid;
+> +	),
+> +	TP_printk("%d: SSR detected, doing SSR Handshake",
+> +		__entry->remote_pid
+> +	)
+> +);
+> +
+> +TRACE_EVENT(smp2p_negotiate,
+> +	TP_PROTO(unsigned int remote_pid, bool ssr_ack_enabled),
+> +	TP_ARGS(remote_pid, ssr_ack_enabled),
+> +	TP_STRUCT__entry(
+> +		__field(u32, remote_pid)
+> +		__field(bool, ssr_ack_enabled)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->remote_pid = remote_pid;
+> +		__entry->ssr_ack_enabled = ssr_ack_enabled;
+> +	),
+> +	TP_printk("%d: state=open ssr_ack=%d",
+> +		__entry->remote_pid,
+> +		__entry->ssr_ack_enabled
+> +	)
+> +);
+> +
+> +TRACE_EVENT(smp2p_notify_in,
+> +	TP_PROTO(unsigned int remote_pid, const char *name, unsigned long status, u32 val),
+> +	TP_ARGS(remote_pid, name, status, val),
+> +	TP_STRUCT__entry(
+> +		__field(u32, remote_pid)
+> +		__string(name, name)
+> +		__field(unsigned long, status)
+> +		__field(u32, val)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->remote_pid = remote_pid;
+> +		__assign_str(name, name);
+> +		__entry->status = status;
+> +		__entry->val = val;
+> +	),
+> +	TP_printk("%d: %s: status:0x%0lx val:0x%0x",
+> +		__entry->remote_pid,
+> +		__get_str(name),
+> +		__entry->status,
+> +		__entry->val
+> +	)
+> +);
+> +
+> +TRACE_EVENT(smp2p_update_bits,
+> +	TP_PROTO(unsigned int remote_pid, const char *name, u32 orig, u32 val),
+> +	TP_ARGS(remote_pid, name, orig, val),
+> +	TP_STRUCT__entry(
+> +		__field(u32, remote_pid)
+> +		__string(name, name)
+> +		__field(u32, orig)
+> +		__field(u32, val)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->remote_pid = remote_pid;
+> +		__assign_str(name, name);
+> +		__entry->orig = orig;
+> +		__entry->val = val;
+> +	),
+> +	TP_printk("%d: %s: orig:0x%0x new:0x%0x",
+> +		__entry->remote_pid,
+> +		__get_str(name),
+> +		__entry->orig,
+> +		__entry->val
+> +	)
+> +);
+> +
+> +#endif /* __QCOM_SMP2P_TRACE_H__ */
+> +
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH .
+> +
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE trace-smp2p
+> +
+> +#include <trace/define_trace.h>
