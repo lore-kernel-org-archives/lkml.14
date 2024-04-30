@@ -1,198 +1,79 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CAC1754B
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB17BC14F
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714455411; cv=none; b=Qp4wUhcMYdXZi5TIXUihkccehK2D/ZqtK7Sr4nL1GZFll5Xl7zwcnW9UmlodLAZIvgssmdDHDVVnWMxnURIX6tb9qGGCI/VX0uo5iYyDrYEB2ygzPDbgg5rmODF8OPocXnVCz+b7L+8fhwiVj37wJ+AwnMmjLbn/+U6gf1WpUX8=
+	t=1714455626; cv=none; b=fa2rjtaiEbPLrqvl/jfERf/24xlMImH3RGpCdA3rmazeyuDaaVvtEVlg5f/xtd8wWRIvKn/eo1jFoHsKdJt+mEE56TVX+0/EB2y0uPuf3DSi+OYgk+n51HkQeLQlDPckyBbLvnit25dc0XZqzRVmCRd59EzWW27jsME3ivHEGzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714455411; c=relaxed/simple;
-	bh=ic45Ly5iOqM2hN40D+e1MnLz2cah/7zHv0WBtywKiU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FNg6cPZ8Qp35AeZOA/eU+eQ2lmHqNaJJGL4eIzM+4druCQS9IF4K1Te3AXw5BBzYRIv7NUQhFlVLPzG4wNmorypgbIUwWpIa+ovUc5kE5GN1bxV+bqHxNn9TYlNjZyY5G+aNsqXF11HOnDF3+vO4hJvMnF8rlvczUadhL+OSxZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kUvPO+dy; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714455626; c=relaxed/simple;
+	bh=o2mkoohmWSqXxEQKCsPzfVpPezIXDWDYgvj5CKYjwaM=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Dwz6vmDuxdy6FSfScibBBhNthhypnahoYCzPHfJ19wDzlA3iLJFSm7kmHDyz8B1BTQu83l8wJoXqOJ43hQpfhNrMZ6gNVzNkjxjLH4pOFw4eMTK3FftBJZXHrnRLtfuP0Bqtd1BRLF6/DZUCBgmjhPg2eKOg+ZDMEYuGfSDg6lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=SChbnixO; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kUvPO+dy"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e40042c13eso35892295ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 22:36:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714455409; x=1715060209; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tfcUvly+FIvb0j4uFmsdXOeKUl+PlbA1SIU5IPSmRRs=;
-        b=kUvPO+dyIdUtHDCRCw+bSVBv2FNq1I4DEqiMAbE7LqxbvlX9XhLkoU/x11Z0H5eM0g
-         09LOmvnCr/JFaspzk7Y/Czo/QXMif/fwLWt88ODWVO5c84y9i50lPDZI7toB5OQVGf3+
-         jelFypwwof1N5v3dgB4teLsKIyc6LqXyH+uFg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714455409; x=1715060209;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tfcUvly+FIvb0j4uFmsdXOeKUl+PlbA1SIU5IPSmRRs=;
-        b=YKZ6Tu23/ldvnnoWktpFltjesprhiKvGH/UUklh2rYaj5ABVYfu0s+qQ9SeU0XIG9N
-         Q3H7g5TPiHlS+ih6bmTAZBWOv6jZPSPmir0Wg7yvgeGRC2l42Tx/2t4FGIuTcuvXzzOG
-         a7yI9BugZIsAS6cHk5mh3pp747L8+HWCu1apbqI8n3ixFDi814PEBn2Jo2c6zDV520ia
-         UVFVQ9Lmkc9h8+9JjuuIWL7I6A3Mi6hzk/j9gg0WY9UL2dViFh0VrYWci44lDvpjUSFA
-         okozXvKhGUUaJ8B5tda8TYPmp1MEKzJ4qT8EXT47mp1cjigHol9zEjve6OXVmz90/YEW
-         PqxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUh5w3pI3FCI3t1bujKtnD0E/czQ+MlOO1OQTC0Zg2ogAuhJqkd0WO8WTHqmhRyzgTOweS/dtG5IFk9QCIMzbwc/vGZmSooiJ234oVg
-X-Gm-Message-State: AOJu0YwC0HZSsCOyWjCXTVFfCVaVIgu0ztOXsgYkh5Vy1ObzOS1SUNPM
-	KKKhrB+h1c93F/Y7/5q8ZMCWWWcDQYjuVfL7NpaxY85UG5CmwrkD97e8ERFBQg==
-X-Google-Smtp-Source: AGHT+IEI1xCl5MgJCRf5jfTPqNjC35t8O+Ee/g+Asor/wizBcjvlYPWp+LqGt/RJxxnu3iJri6Tn1w==
-X-Received: by 2002:a17:903:487:b0:1dc:a605:5435 with SMTP id jj7-20020a170903048700b001dca6055435mr12028201plb.31.1714455409417;
-        Mon, 29 Apr 2024 22:36:49 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n1-20020a170902d2c100b001e2a7e90321sm21334480plc.224.2024.04.29.22.36.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 22:36:48 -0700 (PDT)
-Date: Mon, 29 Apr 2024 22:36:48 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Allen <allen.lkml@gmail.com>
-Cc: Allen Pais <apais@linux.microsoft.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	ebiederm@xmission.com, mcgrof@kernel.org, j.granados@samsung.com
-Subject: Re: [RFC PATCH] fs/coredump: Enable dynamic configuration of max
- file note size
-Message-ID: <202404292236.568F42D3C@keescook>
-References: <20240429172128.4246-1-apais@linux.microsoft.com>
- <202404291245.18281A6D@keescook>
- <CAOMdWS+k63T9TQ=Zvev-+Q3Zw-wuEUv_f63=YiTx0nK1J9Jfwg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="SChbnixO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1714455612; bh=cE2Z8F+T6CzTKmHgax54sOHcrGaYMhSaBGLMxBBiY+s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=SChbnixObmb8XynVH9453ILUYgKvqEpeja+KfIQxkFTHeT187xoXHK6TRm8MH3IrM
+	 Rwsg2VZekgAEY7F+Y5ACo3In/7I/NunWibOupldDprZMN3pVdUUGj7mLHL2QbFNFx6
+	 q+WiEeTzs+yv8U8kBiIVY4jSjYzjF+wqJR1EO3BU=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 8820A65A; Tue, 30 Apr 2024 13:34:02 +0800
+X-QQ-mid: xmsmtpt1714455242tc59767xk
+Message-ID: <tencent_7437344BBA742F76EB67C63D0F362897D209@qq.com>
+X-QQ-XMAILINFO: OQhZ3T0tjf0ae1WvG5xAKJHC8YjbpJpaMz3BzFnLFo/y+C2ulx/8PKYcoYL+hv
+	 UBOO6f+HAp0Jwc8pJzI4OnzZhytTmYapkVaIz1n+gJTGj1/OkdCiTeSEy18InFotE1Rl9+yk4w/G
+	 53kM6CFmtsNZSFVf3O08X5jyg+eePeDTdtglQpnrz9JGOWsJbNWlOyZuUC58i4ifu+r3r3Azfxwk
+	 wpfHOE12f1rxJ6u7q2e7uzfbqqay8z2r/l63B9acJW+Q+5H86VtbTCyIQi0JpYCfIN1EAyAASVD5
+	 sTj9Vbp6qLfKyRVefT86qPZw26d9wHzvZYwDpkl7SIeATpIbYZcpmbDJlrq2jLdTPz9VeeV0ccsF
+	 ZdyeIcpUnRbdw4w1F0t4cVUW0nrMdEQr2V8PUsqGRKOG12f6zopbdhezqLKDiWeZt7k+QF+InNCQ
+	 4v0ytbgPvf62FlN6CT/TNpo1gu7lLNKzAndCG+Kl21L9TpMvC9RkCR1fC4K1uOLXI6q22TH0uawN
+	 hLbJwNkhKLoqoCSdnVNr35tOXi0zmEv9ogbb6U3JpXjKXxQRszpQTHT3ZrFBPw5Yq90ggFtA+tf+
+	 qZMlfS57R2eB2ISF0hyVLz/5OgP5u1mbFvDulJcSOZG3IezMCdSKADalKjBW2ZB3lNPOTVMv57LD
+	 ApVOWIw/QGmTNddTbbEfEdRj7beK066n1a3vnqZhpfhVAXQiUnlfkpJZYVPrC+AB7BGqtSnL8Kef
+	 A/KieRNOxOcbZ6HHHYOKS456C4s2rBKG9p4NR2/m9tM/PRkUuTTPf7RH43pfyGcgEAkWcbKGzOSO
+	 f8VwsaEIeJ8PaBJi40YezQkz4rJg0Pp77vJrvSaYWJ11wpISM8Is5KMY9UnNpzQ2i/9jsZGWA4PD
+	 q3ScgEpWF38SQOk3X+vILUn81EiEFwAFmXJ5q6rW+IyBWyXeM7UnHcbAcIex7fuj0s4PLq91Bn
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+eaba5abe296837a640c0@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [ext4?] KMSAN: uninit-value in ext4_inlinedir_to_tree
+Date: Tue, 30 Apr 2024 13:34:02 +0800
+X-OQ-MSGID: <20240430053401.562396-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000440b0a06173e6ca8@google.com>
+References: <000000000000440b0a06173e6ca8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOMdWS+k63T9TQ=Zvev-+Q3Zw-wuEUv_f63=YiTx0nK1J9Jfwg@mail.gmail.com>
 
-On Mon, Apr 29, 2024 at 03:35:01PM -0700, Allen wrote:
-> On Mon, Apr 29, 2024 at 12:49 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Mon, Apr 29, 2024 at 05:21:28PM +0000, Allen Pais wrote:
-> > > Introduce the capability to dynamically configure the maximum file
-> > > note size for ELF core dumps via sysctl. This enhancement removes
-> > > the previous static limit of 4MB, allowing system administrators to
-> > > adjust the size based on system-specific requirements or constraints.
-> >
-> > Under what conditions is this actually needed?
-> 
->  I addressed this in the email I sent out before this.
-> 
-> >
-> > > [...]
-> > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > > index 81cc974913bb..80cdc37f2fa2 100644
-> > > --- a/kernel/sysctl.c
-> > > +++ b/kernel/sysctl.c
-> > > @@ -63,6 +63,7 @@
-> > >  #include <linux/mount.h>
-> > >  #include <linux/userfaultfd_k.h>
-> > >  #include <linux/pid.h>
-> > > +#include <linux/coredump.h>
-> > >
-> > >  #include "../lib/kstrtox.h"
-> > >
-> > > @@ -1623,6 +1624,13 @@ static struct ctl_table kern_table[] = {
-> > >               .mode           = 0644,
-> > >               .proc_handler   = proc_dointvec,
-> > >       },
-> > > +     {
-> > > +             .procname       = "max_file_note_size",
-> > > +             .data           = &max_file_note_size,
-> > > +             .maxlen         = sizeof(unsigned int),
-> > > +             .mode           = 0644,
-> > > +             .proc_handler   = proc_dointvec,
-> > > +     },
-> >
-> > Please don't add new sysctls to kernel/sysctl.c. Put this in fs/coredump.c
-> > instead, and name it "core_file_note_size_max". (A "max" suffix is more
-> > common than prefixes, and I'd like it clarified that it relates to the
-> > coredumper with the "core" prefix that match the other coredump sysctls.
-> >
-> > -Kees
-> 
-> Makes sense. Let me know if the below looks fine,
-> 
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index 5397b552fbeb..6aebd062b92b 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -1564,7 +1564,6 @@ static void fill_siginfo_note(struct memelfnote
-> *note, user_siginfo_t *csigdata,
->         fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
->  }
-> 
-> -#define MAX_FILE_NOTE_SIZE (4*1024*1024)
->  /*
->   * Format of NT_FILE note:
->   *
-> @@ -1592,7 +1591,7 @@ static int fill_files_note(struct memelfnote
-> *note, struct coredump_params *cprm
-> 
->         names_ofs = (2 + 3 * count) * sizeof(data[0]);
->   alloc:
-> -       if (size >= MAX_FILE_NOTE_SIZE) /* paranoia check */
-> +       if (size >= core_file_note_size_max) /* paranoia check */
->                 return -EINVAL;
->         size = round_up(size, PAGE_SIZE);
->         /*
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index be6403b4b14b..2108eb93acb9 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -56,10 +56,13 @@
->  static bool dump_vma_snapshot(struct coredump_params *cprm);
->  static void free_vma_snapshot(struct coredump_params *cprm);
-> 
-> +#define MAX_FILE_NOTE_SIZE (4*1024*1024)
-> +
->  static int core_uses_pid;
->  static unsigned int core_pipe_limit;
->  static char core_pattern[CORENAME_MAX_SIZE] = "core";
->  static int core_name_size = CORENAME_MAX_SIZE;
-> +unsigned int core_file_note_size_max = MAX_FILE_NOTE_SIZE;
-> 
->  struct core_name {
->         char *corename;
-> @@ -1020,6 +1023,13 @@ static struct ctl_table coredump_sysctls[] = {
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec,
->         },
-> +       {
-> +               .procname       = "core_file_note_size_max",
-> +               .data           = &core_file_note_size_max,
-> +               .maxlen         = sizeof(unsigned int),
-> +               .mode           = 0644,
-> +               .proc_handler   = proc_douintvec,
-> +       },
->  };
-> 
->  static int __init init_fs_coredump_sysctls(void)
-> diff --git a/include/linux/coredump.h b/include/linux/coredump.h
-> index d3eba4360150..14c057643e7f 100644
-> --- a/include/linux/coredump.h
-> +++ b/include/linux/coredump.h
-> @@ -46,6 +46,7 @@ static inline void do_coredump(const
-> kernel_siginfo_t *siginfo) {}
->  #endif
-> 
->  #if defined(CONFIG_COREDUMP) && defined(CONFIG_SYSCTL)
-> +extern unsigned int core_file_note_size_max;
->  extern void validate_coredump_safety(void);
->  #else
->  static inline void validate_coredump_safety(void) {}
+please test uv in ext4_inlinedir_to_tree
 
-Yes; thank you! I like this naming (and sysctl location) now. :)
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
--Kees
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index 5e4f65c14dfb..3611952570a7 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1182,7 +1182,7 @@ static int htree_dirblock_to_tree(struct file *dir_file,
+ int ext4_htree_fill_tree(struct file *dir_file, __u32 start_hash,
+ 			 __u32 start_minor_hash, __u32 *next_hash)
+ {
+-	struct dx_hash_info hinfo;
++	struct dx_hash_info hinfo = {};
+ 	struct ext4_dir_entry_2 *de;
+ 	struct dx_frame frames[EXT4_HTREE_LEVEL], *frame;
+ 	struct inode *dir;
 
--- 
-Kees Cook
