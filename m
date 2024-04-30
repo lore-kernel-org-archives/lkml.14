@@ -1,530 +1,431 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDED14535E;
-	Tue, 30 Apr 2024 12:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B941813D618;
+	Tue, 30 Apr 2024 12:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714478765; cv=none; b=g+m6f2wQn56paakrXHV+HWyVuJQpA4bUEZ9NLn9ZhDrcccKsp3qygF3rZYUFqCbH0ezAeO0NChM6pQOfq+ZyQ8m5++48QYFYpOrfsq3UwmG3XXazI1HilWkFlxSsFAAktMxyBh7w2pkXEu2kApdxvycwNlygwi2vm2scxA/jyMU=
+	t=1714478822; cv=none; b=eTV/DwsddQf7l0d3xr8W0dlQmxw5WOw/AhqRYnDDLiIzmiJqFNL4tVel6+iMMsmZq2izANjVEke+TwGcIRF+uRS3xJTBnP8Rmiq4wkhC3xFgr0tz0RMljicjDSeiii5DvIFqKBn1kd6dMfLFCZxAHMNIeNQCtzpPstSgpUwGm6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714478765; c=relaxed/simple;
-	bh=h51PIdWJMbhHLXoQSCH/hNxJQjBIStdp9I7ajhbwaM0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tVIhldt+WiSJZxrzE65gDBZOGjCxi8bIsfPLEfYyk8H3f/eGPoQyiGYBhmXf9fE4lVUlSC9isb50ZFQYA9sYNYGq56MXpUmd7qFXwKIqyKFagsxoksUb47sKUUeJo8wzM1vri2oZTOtbfh6+jrHQDdr+rCRoCFIFrrmgvQLirHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AwpY4sh7; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714478822; c=relaxed/simple;
+	bh=ElzSrTKOj6zwtSbpZR2Y47gK3jz3hIX2JxW3yJpVA3Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MrR8lIMMlOGtIZwyBc58micDKd4sLyqTRwBRd71xvyr/p1Naz3oEPpVE7ghC6iFjbbdrpkhNyzRf9P0ncYwQXI9Uf1LjYTiV50JMAChmR0eB3WGAPTHYxzXylBOgXlK68FONH13yp0owrPP9DsRPsGzh6Jhaj05upMb0RWeKXNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AoXsyqUy; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwpY4sh7"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51b09c3a111so7912668e87.1;
-        Tue, 30 Apr 2024 05:06:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714478761; x=1715083561; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XVfmzv9+M83+3dtszQOFJXPN2DCqsj2JOs+0IqmE2GE=;
-        b=AwpY4sh7MTlEOEbaLhrRD7TGZFhdHaIBfh7DcCSuXzafHZXuzn3F9ZPKNOyK2NFMNa
-         oETHuPrYniuVbUE+LHFHtnCfe2FGuZ+UDBkpQTJPBpFAG+MBGGO2NBUgDdq7Vvt1DVE5
-         C/GgXCgo00SV9W9vETZLlVMZQUv2DdqygGt5Xn91AdkOOnvPb2xploLZjR5JJQJ+nzP/
-         za7eEUq1z76KleKc5KHz0dI4mAT7jNONGvlddWZZHgv3G2Btil65ar6vQzkVQ/k6R/eD
-         BDbUi5DLGoeFvAASXpMIEqVFtj5fT5n5juBzVTkJ1fetnVK7gSO1nykbl7lT0r5ibz6M
-         Hxsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714478761; x=1715083561;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XVfmzv9+M83+3dtszQOFJXPN2DCqsj2JOs+0IqmE2GE=;
-        b=vxilPoRMZMyH5dsFP+2M2mofC+BJjAH0bsrpVM+t+BnBFZR+ZI/Rl8W48OiTFnXYPl
-         ZPBGyTiXlmwgIrGSNomVAq4RAljkIpYghlFVwAkbWQX8jUP8uGhw6OdDAcYf1CZoF2WW
-         3zdgVuacNa5SxtlomK0W2CGd3QiJkadBkA1k5thBBhoALv2JEAql6Xr+zwNC/vJiQQn7
-         2SGIAihvMLTg1RZ7gChRgW4ikL3rTw2gUZeX0FISoEsFChcJmiqxCeF4OJEg0kaBULZk
-         B6aWokJLYkO0UlcF1f0433vyCDi8CgYXfvqDAv0Y0ACLKaixnKaKzaZ+x67NrSvqYa0P
-         YhGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPT8klSfJueKZuf3x1hX1NFWhrfibkpkkSJBClGqKo6p57weRquL04Il/+m3SdCJyMelOnCX26pIM+JcZMAam1LZ0t6s5R502sLlftzoO4IaetQAOm0Qg0A8p4yHaei+S4hxigv+91
-X-Gm-Message-State: AOJu0YwL3SpZiePq0Oc8to0+mO1q0WLD6y4PqDGF9ZyHfh+3xA9NC1LB
-	pClvMyQyRBKaL4v+YqOgc01q28zOGUEnoThmk4+C6A7moMsNQJJf
-X-Google-Smtp-Source: AGHT+IHR0YLkYkN7kcebQLnWolrqsg1wtV6tlAVJCIRtmojLPrO5oCvuyJQod00OjkCNOEdZB3EHkA==
-X-Received: by 2002:ac2:5235:0:b0:51d:4260:4bf8 with SMTP id i21-20020ac25235000000b0051d42604bf8mr4738999lfl.35.1714478760811;
-        Tue, 30 Apr 2024 05:06:00 -0700 (PDT)
-Received: from debian.fritz.box ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id r21-20020a05600c35d500b0041bf45c0665sm11054324wmq.15.2024.04.30.05.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 05:06:00 -0700 (PDT)
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: 
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Andrew Hepp <andrew.hepp@ahepp.dev>,
-	Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] iio: temperature: mcp9600: add threshold events support
-Date: Tue, 30 Apr 2024 14:05:35 +0200
-Message-Id: <20240430120535.46097-6-dima.fedrau@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240430120535.46097-1-dima.fedrau@gmail.com>
-References: <20240430120535.46097-1-dima.fedrau@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AoXsyqUy"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43UC6c2S019884;
+	Tue, 30 Apr 2024 07:06:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714478798;
+	bh=tcUCvNxzuyXMP7T6wVE8YtL/6igb/ha5hCDb+AUyyKQ=;
+	h=From:To:CC:Subject:Date;
+	b=AoXsyqUymYdSpWu16DC54hITwlfo6UjAOxsrf9HyXGq7LTVbVucJxU3bC4BBfHjxo
+	 1pC1W6+o5TcIH5MKHEznAvrfEy7JH91KppACGFJ19pdHVkb5r5ElETe3jQ7zkA2YXT
+	 RGTG5MhyzAFHVQGILH7dy6Kr5b4kLvFaA7gq3gLU=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43UC6cPt082146
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 30 Apr 2024 07:06:38 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 30
+ Apr 2024 07:06:37 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 30 Apr 2024 07:06:37 -0500
+Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43UC6bhf043702;
+	Tue, 30 Apr 2024 07:06:37 -0500
+Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 43UC6a7C024808;
+	Tue, 30 Apr 2024 07:06:36 -0500
+From: MD Danish Anwar <danishanwar@ti.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+        Heiner Kallweit
+	<hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jan Kiszka
+	<jan.kiszka@siemens.com>,
+        Diogo Ivo <diogo.ivo@siemens.com>, Paolo Abeni
+	<pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+	<edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>, <r-gunasekaran@ti.com>,
+        Roger Quadros <rogerq@kernel.org>, Simon Horman <horms@kernel.org>,
+        MD Danish Anwar <danishanwar@ti.com>
+Subject: [PATCH net-next v3] net: ti: icssg_prueth: Add SW TX / RX Coalescing based on hrtimers
+Date: Tue, 30 Apr 2024 17:36:34 +0530
+Message-ID: <20240430120634.1558998-1-danishanwar@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The device has four programmable temperature alert outputs which can be
-used to monitor hot or cold-junction temperatures and detect falling and
-rising temperatures. It supports up to 255 degree celsius programmable
-hysteresis. Each alert can be individually configured by setting following
-options in the associated alert configuration register:
-  - monitor hot or cold junction temperature
-  - monitor rising or falling temperature
-  - set comparator or interrupt mode
-  - set output polarity
-  - enable alert
+Add SW IRQ coalescing based on hrtimers for RX and TX data path for ICSSG
+driver, which can be enabled by ethtool commands:
 
-This patch binds alert outputs to iio events:
-  - alert1: hot junction, rising temperature
-  - alert2: hot junction, falling temperature
-  - alert3: cold junction, rising temperature
-  - alert4: cold junction, falling temperature
+- RX coalescing
+  ethtool -C eth1 rx-usecs 50
 
-All outputs are set in comparator mode and polarity depends on interrupt
-configuration.
+- TX coalescing can be enabled per TX queue
 
-Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+  - by default enables coalescing for TX0
+  ethtool -C eth1 tx-usecs 50
+  - configure TX0
+  ethtool -Q eth0 queue_mask 1 --coalesce tx-usecs 100
+  - configure TX1
+  ethtool -Q eth0 queue_mask 2 --coalesce tx-usecs 100
+  - configure TX0 and TX1
+  ethtool -Q eth0 queue_mask 3 --coalesce tx-usecs 100 --coalesce
+tx-usecs 100
+
+Minimum value for both rx-usecs and tx-usecs is 20us.
+
+Compared to gro_flush_timeout and napi_defer_hard_irqs this patch allows
+to enable IRQ coalescing for RX path separately.
+
+Benchmarking numbers:
+ ===============================================================
+| Method                  | Tput_TX | CPU_TX | Tput_RX | CPU_RX |
+| ==============================================================
+| Default Driver           943 Mbps    31%      517 Mbps  38%   |
+| IRQ Coalescing (Patch)   943 Mbps    28%      518 Mbps  25%   |
+ ===============================================================
+
+Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/iio/temperature/mcp9600.c | 358 +++++++++++++++++++++++++++++-
- 1 file changed, 354 insertions(+), 4 deletions(-)
+Changes from v2 [2] to v3:
+*) Collected RB tag from Andrew Lunn <andrew@lunn.ch>
+*) Fixed warning caused by {} missing for outer if conditions in
+   emac_napi_tx_poll() and emac_napi_rx_poll() APIs.
+*) Fixed spelling mistake.
 
-diff --git a/drivers/iio/temperature/mcp9600.c b/drivers/iio/temperature/mcp9600.c
-index cb1c1c1c361d..f7e1b4e3253d 100644
---- a/drivers/iio/temperature/mcp9600.c
-+++ b/drivers/iio/temperature/mcp9600.c
-@@ -6,21 +6,80 @@
-  * Author: <andrew.hepp@ahepp.dev>
-  */
- 
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
- #include <linux/err.h>
- #include <linux/i2c.h>
- #include <linux/init.h>
-+#include <linux/math.h>
-+#include <linux/minmax.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/units.h>
- 
-+#include <linux/iio/events.h>
- #include <linux/iio/iio.h>
- 
- /* MCP9600 registers */
--#define MCP9600_HOT_JUNCTION 0x0
--#define MCP9600_COLD_JUNCTION 0x2
--#define MCP9600_DEVICE_ID 0x20
-+#define MCP9600_HOT_JUNCTION		0x0
-+#define MCP9600_COLD_JUNCTION		0x2
-+#define MCP9600_STATUS			0x4
-+#define MCP9600_STATUS_ALERT(x)		BIT(x)
-+#define MCP9600_ALERT_CFG1		0x8
-+#define MCP9600_ALERT_CFG(x)		(MCP9600_ALERT_CFG1 + (x - 1))
-+#define MCP9600_ALERT_CFG_ENABLE	BIT(0)
-+#define MCP9600_ALERT_CFG_ACTIVE_HIGH	BIT(2)
-+#define MCP9600_ALERT_CFG_FALLING	BIT(3)
-+#define MCP9600_ALERT_CFG_COLD_JUNCTION	BIT(4)
-+#define MCP9600_ALERT_HYSTERESIS1	0xc
-+#define MCP9600_ALERT_HYSTERESIS(x)	(MCP9600_ALERT_HYSTERESIS1 + (x - 1))
-+#define MCP9600_ALERT_LIMIT1		0x10
-+#define MCP9600_ALERT_LIMIT(x)		(MCP9600_ALERT_LIMIT1 + (x - 1))
-+
-+#define MCP9600_DEVICE_ID		0x20
- 
- /* MCP9600 device id value */
--#define MCP9600_DEVICE_ID_MCP9600 0x40
-+#define MCP9600_DEVICE_ID_MCP9600	0x40
-+
-+#define MCP9600_ALERT_COUNT		4
-+
-+#define MCP9600_MIN_TEMP_HOT_JUNCTION	-200
-+#define MCP9600_MAX_TEMP_HOT_JUNCTION	1800
-+
-+#define MCP9600_MIN_TEMP_COLD_JUNCTION	-40
-+#define MCP9600_MAX_TEMP_COLD_JUNCTION	125
-+
-+enum mcp9600_alert {
-+	MCP9600_ALERT1,
-+	MCP9600_ALERT2,
-+	MCP9600_ALERT3,
-+	MCP9600_ALERT4
-+};
-+
-+static const char * const mcp9600_alert_name[MCP9600_ALERT_COUNT] = {
-+	[MCP9600_ALERT1] = "alert1",
-+	[MCP9600_ALERT2] = "alert2",
-+	[MCP9600_ALERT3] = "alert3",
-+	[MCP9600_ALERT4] = "alert4",
-+};
-+
-+static const struct iio_event_spec mcp9600_events[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE) |
-+				 BIT(IIO_EV_INFO_VALUE) |
-+				 BIT(IIO_EV_INFO_HYSTERESIS),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_FALLING,
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE) |
-+				 BIT(IIO_EV_INFO_VALUE) |
-+				 BIT(IIO_EV_INFO_HYSTERESIS),
-+	},
-+};
- 
- static const struct iio_chan_spec mcp9600_channels[] = {
- 	{
-@@ -30,6 +89,8 @@ static const struct iio_chan_spec mcp9600_channels[] = {
- 		.modified = 1,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),
-+		.event_spec = mcp9600_events,
-+		.num_event_specs = ARRAY_SIZE(mcp9600_events),
- 	},
- 	{
- 		.type = IIO_TEMP,
-@@ -38,11 +99,15 @@ static const struct iio_chan_spec mcp9600_channels[] = {
- 		.modified = 1,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),
-+		.event_spec = mcp9600_events,
-+		.num_event_specs = ARRAY_SIZE(mcp9600_events),
- 	},
- };
- 
- struct mcp9600_data {
- 	struct i2c_client *client;
-+	struct mutex lock[MCP9600_ALERT_COUNT];
-+	int irq[MCP9600_ALERT_COUNT];
- };
- 
- static int mcp9600_read(struct mcp9600_data *data,
-@@ -83,10 +148,292 @@ static int mcp9600_read_raw(struct iio_dev *indio_dev,
- 	}
+Changes from v1 [1] to v2:
+*) Added Benchmarking numbers in the commit message as suggested by
+   Andrew Lunn <andrew@lunn.ch>. Full logs [3]
+*) Addressed comments given by Simon Horman <horms@kernel.org> in v1.
+
+[1] https://lore.kernel.org/all/20240424091823.1814136-1-danishanwar@ti.com/
+[2] https://lore.kernel.org/all/20240429071501.547680-1-danishanwar@ti.com/
+[3] https://gist.githubusercontent.com/danish-ti/47855631be9f3635cee994693662a988/raw/94b4eb86b42fe243ab03186a88a314e0cb272fd0/gistfile1.txt
+
+ drivers/net/ethernet/ti/icssg/icssg_common.c  | 41 ++++++--
+ drivers/net/ethernet/ti/icssg/icssg_ethtool.c | 93 +++++++++++++++++++
+ drivers/net/ethernet/ti/icssg/icssg_prueth.c  | 18 +++-
+ drivers/net/ethernet/ti/icssg/icssg_prueth.h  | 11 ++-
+ 4 files changed, 155 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
+index 284f97876054..088ab8076db4 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_common.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
+@@ -122,7 +122,7 @@ void prueth_xmit_free(struct prueth_tx_chn *tx_chn,
  }
  
-+static int mcp9600_get_alert_index(int channel2, enum iio_event_direction dir)
-+{
-+	switch (channel2) {
-+	case IIO_MOD_TEMP_OBJECT:
-+		if (dir == IIO_EV_DIR_RISING)
-+			return MCP9600_ALERT1;
-+		else
-+			return MCP9600_ALERT2;
-+	case IIO_MOD_TEMP_AMBIENT:
-+		if (dir == IIO_EV_DIR_RISING)
-+			return MCP9600_ALERT3;
-+		else
-+			return MCP9600_ALERT4;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int mcp9600_read_event_config(struct iio_dev *indio_dev,
-+				     const struct iio_chan_spec *chan,
-+				     enum iio_event_type type,
-+				     enum iio_event_direction dir)
-+{
-+	struct mcp9600_data *data = iio_priv(indio_dev);
-+	struct i2c_client *client = data->client;
-+	int i, ret;
-+
-+	i = mcp9600_get_alert_index(chan->channel2, dir);
-+	if (i < 0)
-+		return i;
-+
-+	ret = i2c_smbus_read_byte_data(client, MCP9600_ALERT_CFG(i + 1));
-+	if (ret < 0)
-+		return ret;
-+
-+	return (ret & MCP9600_ALERT_CFG_ENABLE);
-+}
-+
-+static int mcp9600_write_event_config(struct iio_dev *indio_dev,
-+				      const struct iio_chan_spec *chan,
-+				      enum iio_event_type type,
-+				      enum iio_event_direction dir,
-+				      int state)
-+{
-+	struct mcp9600_data *data = iio_priv(indio_dev);
-+	struct i2c_client *client = data->client;
-+	int i, ret;
-+
-+	i = mcp9600_get_alert_index(chan->channel2, dir);
-+	if (i < 0)
-+		return i;
-+
-+	ret = i2c_smbus_read_byte_data(client, MCP9600_ALERT_CFG(i + 1));
-+	if (ret < 0)
-+		return ret;
-+
-+	if (state)
-+		ret |= MCP9600_ALERT_CFG_ENABLE;
-+	else
-+		ret &= ~MCP9600_ALERT_CFG_ENABLE;
-+
-+	return i2c_smbus_write_byte_data(client, MCP9600_ALERT_CFG(i + 1), ret);
-+}
-+
-+static int mcp9600_read_thresh(struct iio_dev *indio_dev,
-+			       const struct iio_chan_spec *chan,
-+			       enum iio_event_type type,
-+			       enum iio_event_direction dir,
-+			       enum iio_event_info info, int *val, int *val2)
-+{
-+	struct mcp9600_data *data = iio_priv(indio_dev);
-+	struct i2c_client *client = data->client;
-+	s32 ret;
-+	int i;
-+
-+	i = mcp9600_get_alert_index(chan->channel2, dir);
-+	if (i < 0)
-+		return i;
-+
-+	guard(mutex)(&data->lock[i]);
-+	ret = i2c_smbus_read_word_swapped(client, MCP9600_ALERT_LIMIT(i + 1));
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Temperature is stored in two’s complement format in bits(15:2),
-+	 * LSB is 0.25 degree celsius.
-+	 */
-+	*val = sign_extend32(ret, 15) >> 2;
-+	*val2 = 4;
-+	if (info == IIO_EV_INFO_VALUE)
-+		return IIO_VAL_FRACTIONAL;
-+
-+	ret = i2c_smbus_read_byte_data(client, MCP9600_ALERT_HYSTERESIS(i + 1));
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Hysteresis is stored as offset which is not signed, therefore we have
-+	 * to include directions when calculating the real hysteresis value.
-+	 */
-+	if (dir == IIO_EV_DIR_RISING)
-+		*val -= (*val2 * ret);
-+	else
-+		*val += (*val2 * ret);
-+
-+	return IIO_VAL_FRACTIONAL;
-+}
-+
-+static int mcp9600_write_thresh(struct iio_dev *indio_dev,
-+				const struct iio_chan_spec *chan,
-+				enum iio_event_type type,
-+				enum iio_event_direction dir,
-+				enum iio_event_info info, int val, int val2)
-+{
-+	struct mcp9600_data *data = iio_priv(indio_dev);
-+	struct i2c_client *client = data->client;
-+	int s_val, s_thresh, i;
-+	s16 thresh;
-+	s32 ret;
-+	u8 hyst;
-+
-+	/* Scale value to include decimal part into calculations */
-+	s_val = (val < 0) ? ((val * (int)MICRO) - val2) :
-+			    ((val * (int)MICRO) + val2);
-+
-+	/* Hot junction temperature range is from –200 to 1800 degree celsius */
-+	if (chan->channel2 == IIO_MOD_TEMP_OBJECT &&
-+	   (s_val < (MCP9600_MIN_TEMP_HOT_JUNCTION * (int)MICRO) ||
-+	    s_val > (MCP9600_MAX_TEMP_HOT_JUNCTION * (int)MICRO)))
-+		return -EINVAL;
-+
-+	/* Cold junction temperature range is from –40 to 125 degree celsius */
-+	if (chan->channel2 == IIO_MOD_TEMP_AMBIENT &&
-+	   (s_val < (MCP9600_MIN_TEMP_COLD_JUNCTION * (int)MICRO) ||
-+	    s_val > (MCP9600_MAX_TEMP_COLD_JUNCTION * (int)MICRO)))
-+		return -EINVAL;
-+
-+	i = mcp9600_get_alert_index(chan->channel2, dir);
-+	if (i < 0)
-+		return i;
-+
-+	guard(mutex)(&data->lock[i]);
-+	if (info == IIO_EV_INFO_VALUE) {
-+		/*
-+		 * Shift length 4 bits = 2(15:2) + 2(0.25 LSB), temperature is
-+		 * stored in two’s complement format.
-+		 */
-+		thresh = (s16)(s_val / (int)(MICRO >> 4));
-+		return i2c_smbus_write_word_swapped(client,
-+						    MCP9600_ALERT_LIMIT(i + 1),
-+						    thresh);
-+	}
-+
-+	/* Read out threshold, hysteresis is stored as offset */
-+	ret = i2c_smbus_read_word_swapped(client, MCP9600_ALERT_LIMIT(i + 1));
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Shift length 4 bits = 2(15:2) + 2(0.25 LSB), see above. */
-+	s_thresh = sign_extend32(ret, 15) * (int)(MICRO >> 4);
-+
-+	/*
-+	 * Hysteresis is stored as offset, for rising temperatures, the
-+	 * hysteresis range is below the alert limit where, as for falling
-+	 * temperatures, the hysteresis range is above the alert limit.
-+	 */
-+	hyst = min(255, abs(s_thresh - s_val) / MICRO);
-+
-+	return i2c_smbus_write_byte_data(client,
-+					 MCP9600_ALERT_HYSTERESIS(i + 1),
-+					 hyst);
-+}
-+
- static const struct iio_info mcp9600_info = {
- 	.read_raw = mcp9600_read_raw,
-+	.read_event_config = mcp9600_read_event_config,
-+	.write_event_config = mcp9600_write_event_config,
-+	.read_event_value = mcp9600_read_thresh,
-+	.write_event_value = mcp9600_write_thresh,
- };
+ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
+-			     int budget)
++			     int budget, bool *tdown)
+ {
+ 	struct net_device *ndev = emac->ndev;
+ 	struct cppi5_host_desc_t *desc_tx;
+@@ -145,6 +145,7 @@ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
+ 		if (cppi5_desc_is_tdcm(desc_dma)) {
+ 			if (atomic_dec_and_test(&emac->tdown_cnt))
+ 				complete(&emac->tdown_complete);
++			*tdown = true;
+ 			break;
+ 		}
  
-+static irqreturn_t mcp9600_alert_handler(int irq, void *private)
+@@ -190,19 +191,37 @@ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
+ 	return num_tx;
+ }
+ 
++static enum hrtimer_restart emac_tx_timer_callback(struct hrtimer *timer)
 +{
-+	struct iio_dev *indio_dev = private;
-+	struct mcp9600_data *data = iio_priv(indio_dev);
-+	enum iio_event_direction dir;
-+	enum iio_modifier mod;
-+	int i, ret;
++	struct prueth_tx_chn *tx_chns =
++			container_of(timer, struct prueth_tx_chn, tx_hrtimer);
 +
-+	for (i = 0; i < MCP9600_ALERT_COUNT; i++) {
-+		if (data->irq[i] == irq)
-+			break;
-+	}
-+
-+	if (i >= MCP9600_ALERT_COUNT)
-+		return IRQ_NONE;
-+
-+	ret = i2c_smbus_read_byte_data(data->client, MCP9600_STATUS);
-+	if (ret < 0)
-+		return IRQ_HANDLED;
-+
-+	switch (ret & MCP9600_STATUS_ALERT(i)) {
-+	case 0:
-+		return IRQ_NONE;
-+	case MCP9600_STATUS_ALERT(MCP9600_ALERT1):
-+		mod = IIO_MOD_TEMP_OBJECT;
-+		dir = IIO_EV_DIR_RISING;
-+		break;
-+	case MCP9600_STATUS_ALERT(MCP9600_ALERT2):
-+		mod = IIO_MOD_TEMP_OBJECT;
-+		dir = IIO_EV_DIR_FALLING;
-+		break;
-+	case MCP9600_STATUS_ALERT(MCP9600_ALERT3):
-+		mod = IIO_MOD_TEMP_AMBIENT;
-+		dir = IIO_EV_DIR_RISING;
-+		break;
-+	case MCP9600_STATUS_ALERT(MCP9600_ALERT4):
-+		mod = IIO_MOD_TEMP_AMBIENT;
-+		dir = IIO_EV_DIR_FALLING;
-+		break;
-+	default:
-+		return IRQ_HANDLED;
-+	}
-+
-+	iio_push_event(indio_dev,
-+		       IIO_MOD_EVENT_CODE(IIO_TEMP, 0, mod,
-+					  IIO_EV_TYPE_THRESH, dir),
-+		       iio_get_time_ns(indio_dev));
-+
-+	return IRQ_HANDLED;
++	enable_irq(tx_chns->irq);
++	return HRTIMER_NORESTART;
 +}
 +
-+static int mcp9600_probe_alerts(struct iio_dev *indio_dev)
-+{
-+	struct mcp9600_data *data = iio_priv(indio_dev);
-+	struct i2c_client *client = data->client;
-+	struct device *dev = &client->dev;
-+	struct fwnode_handle *fwnode = dev_fwnode(dev);
-+	unsigned int irq_type;
-+	int ret, irq, i;
-+	u8 val;
-+
-+	/*
-+	 * alert1: hot junction, rising temperature
-+	 * alert2: hot junction, falling temperature
-+	 * alert3: cold junction, rising temperature
-+	 * alert4: cold junction, falling temperature
-+	 */
-+	for (i = 0; i < MCP9600_ALERT_COUNT; i++) {
-+		data->irq[i] = 0;
-+		mutex_init(&data->lock[i]);
-+		irq = fwnode_irq_get_byname(fwnode, mcp9600_alert_name[i]);
-+		if (irq <= 0)
-+			continue;
-+
-+		val = 0;
-+		irq_type = irq_get_trigger_type(irq);
-+		if (irq_type == IRQ_TYPE_EDGE_RISING)
-+			val |= MCP9600_ALERT_CFG_ACTIVE_HIGH;
-+
-+		if (i == MCP9600_ALERT2 || i == MCP9600_ALERT4)
-+			val |= MCP9600_ALERT_CFG_FALLING;
-+
-+		if (i == MCP9600_ALERT3 || i == MCP9600_ALERT4)
-+			val |= MCP9600_ALERT_CFG_COLD_JUNCTION;
-+
-+		ret = i2c_smbus_write_byte_data(client,
-+						MCP9600_ALERT_CFG(i + 1),
-+						val);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = devm_request_threaded_irq(dev, irq, NULL,
-+						mcp9600_alert_handler,
-+						IRQF_ONESHOT, "mcp9600",
-+						indio_dev);
-+		if (ret)
-+			return ret;
-+
-+		data->irq[i] = irq;
+ static int emac_napi_tx_poll(struct napi_struct *napi_tx, int budget)
+ {
+ 	struct prueth_tx_chn *tx_chn = prueth_napi_to_tx_chn(napi_tx);
+ 	struct prueth_emac *emac = tx_chn->emac;
++	bool tdown = false;
+ 	int num_tx_packets;
+ 
+-	num_tx_packets = emac_tx_complete_packets(emac, tx_chn->id, budget);
++	num_tx_packets = emac_tx_complete_packets(emac, tx_chn->id, budget,
++						  &tdown);
+ 
+ 	if (num_tx_packets >= budget)
+ 		return budget;
+ 
+-	if (napi_complete_done(napi_tx, num_tx_packets))
+-		enable_irq(tx_chn->irq);
++	if (napi_complete_done(napi_tx, num_tx_packets)) {
++		if (unlikely(tx_chn->tx_pace_timeout_ns && !tdown)) {
++			hrtimer_start(&tx_chn->tx_hrtimer,
++				      ns_to_ktime(tx_chn->tx_pace_timeout_ns),
++				      HRTIMER_MODE_REL_PINNED);
++		} else {
++			enable_irq(tx_chn->irq);
++		}
 +	}
+ 
+ 	return num_tx_packets;
+ }
+@@ -226,6 +245,9 @@ int prueth_ndev_add_tx_napi(struct prueth_emac *emac)
+ 		struct prueth_tx_chn *tx_chn = &emac->tx_chns[i];
+ 
+ 		netif_napi_add_tx(emac->ndev, &tx_chn->napi_tx, emac_napi_tx_poll);
++		hrtimer_init(&tx_chn->tx_hrtimer, CLOCK_MONOTONIC,
++			     HRTIMER_MODE_REL_PINNED);
++		tx_chn->tx_hrtimer.function = &emac_tx_timer_callback;
+ 		ret = request_irq(tx_chn->irq, prueth_tx_irq,
+ 				  IRQF_TRIGGER_HIGH, tx_chn->name,
+ 				  tx_chn);
+@@ -871,8 +893,15 @@ int emac_napi_rx_poll(struct napi_struct *napi_rx, int budget)
+ 			break;
+ 	}
+ 
+-	if (num_rx < budget && napi_complete_done(napi_rx, num_rx))
+-		enable_irq(emac->rx_chns.irq[rx_flow]);
++	if (num_rx < budget && napi_complete_done(napi_rx, num_rx)) {
++		if (unlikely(emac->rx_pace_timeout_ns)) {
++			hrtimer_start(&emac->rx_hrtimer,
++				      ns_to_ktime(emac->rx_pace_timeout_ns),
++				      HRTIMER_MODE_REL_PINNED);
++		} else {
++			enable_irq(emac->rx_chns.irq[rx_flow]);
++		}
++	}
+ 
+ 	return num_rx;
+ }
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_ethtool.c b/drivers/net/ethernet/ti/icssg/icssg_ethtool.c
+index ca20325d4d3e..c8d0f45cc5b1 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_ethtool.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_ethtool.c
+@@ -201,6 +201,93 @@ static void emac_get_rmon_stats(struct net_device *ndev,
+ 	rmon_stats->hist_tx[4] = emac_get_stat_by_name(emac, "tx_bucket5_frames");
+ }
+ 
++static int emac_get_coalesce(struct net_device *ndev,
++			     struct ethtool_coalesce *coal,
++			     struct kernel_ethtool_coalesce *kernel_coal,
++			     struct netlink_ext_ack *extack)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth_tx_chn *tx_chn;
++
++	tx_chn = &emac->tx_chns[0];
++
++	coal->rx_coalesce_usecs = emac->rx_pace_timeout_ns / 1000;
++	coal->tx_coalesce_usecs = tx_chn->tx_pace_timeout_ns / 1000;
 +
 +	return 0;
 +}
 +
- static int mcp9600_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
-@@ -109,6 +456,8 @@ static int mcp9600_probe(struct i2c_client *client)
- 	data = iio_priv(indio_dev);
- 	data->client = client;
- 
-+	mcp9600_probe_alerts(indio_dev);
++static int emac_get_per_queue_coalesce(struct net_device *ndev, u32 queue,
++				       struct ethtool_coalesce *coal)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth_tx_chn *tx_chn;
 +
- 	indio_dev->info = &mcp9600_info;
- 	indio_dev->name = "mcp9600";
- 	indio_dev->modes = INDIO_DIRECT_MODE;
-@@ -140,6 +489,7 @@ static struct i2c_driver mcp9600_driver = {
- };
- module_i2c_driver(mcp9600_driver);
++	if (queue >= PRUETH_MAX_TX_QUEUES)
++		return -EINVAL;
++
++	tx_chn = &emac->tx_chns[queue];
++
++	coal->tx_coalesce_usecs = tx_chn->tx_pace_timeout_ns / 1000;
++
++	return 0;
++}
++
++static int emac_set_coalesce(struct net_device *ndev,
++			     struct ethtool_coalesce *coal,
++			     struct kernel_ethtool_coalesce *kernel_coal,
++			     struct netlink_ext_ack *extack)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth *prueth = emac->prueth;
++	struct prueth_tx_chn *tx_chn;
++
++	tx_chn = &emac->tx_chns[0];
++
++	if (coal->rx_coalesce_usecs &&
++	    coal->rx_coalesce_usecs < ICSSG_MIN_COALESCE_USECS) {
++		dev_info(prueth->dev, "defaulting to min value of %dus for rx-usecs\n",
++			 ICSSG_MIN_COALESCE_USECS);
++		coal->rx_coalesce_usecs = ICSSG_MIN_COALESCE_USECS;
++	}
++
++	if (coal->tx_coalesce_usecs &&
++	    coal->tx_coalesce_usecs < ICSSG_MIN_COALESCE_USECS) {
++		dev_info(prueth->dev, "defaulting to min value of %dus for tx-usecs\n",
++			 ICSSG_MIN_COALESCE_USECS);
++		coal->tx_coalesce_usecs = ICSSG_MIN_COALESCE_USECS;
++	}
++
++	emac->rx_pace_timeout_ns = coal->rx_coalesce_usecs * 1000;
++	tx_chn->tx_pace_timeout_ns = coal->tx_coalesce_usecs * 1000;
++
++	return 0;
++}
++
++static int emac_set_per_queue_coalesce(struct net_device *ndev, u32 queue,
++				       struct ethtool_coalesce *coal)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth *prueth = emac->prueth;
++	struct prueth_tx_chn *tx_chn;
++
++	if (queue >= PRUETH_MAX_TX_QUEUES)
++		return -EINVAL;
++
++	tx_chn = &emac->tx_chns[queue];
++
++	if (coal->tx_coalesce_usecs &&
++	    coal->tx_coalesce_usecs < ICSSG_MIN_COALESCE_USECS) {
++		dev_info(prueth->dev, "defaulting to min value of %dus for tx-usecs for tx-%u\n",
++			 ICSSG_MIN_COALESCE_USECS, queue);
++		coal->tx_coalesce_usecs = ICSSG_MIN_COALESCE_USECS;
++	}
++
++	tx_chn->tx_pace_timeout_ns = coal->tx_coalesce_usecs * 1000;
++
++	return 0;
++}
++
+ const struct ethtool_ops icssg_ethtool_ops = {
+ 	.get_drvinfo = emac_get_drvinfo,
+ 	.get_msglevel = emac_get_msglevel,
+@@ -209,6 +296,12 @@ const struct ethtool_ops icssg_ethtool_ops = {
+ 	.get_ethtool_stats = emac_get_ethtool_stats,
+ 	.get_strings = emac_get_strings,
+ 	.get_ts_info = emac_get_ts_info,
++	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
++				     ETHTOOL_COALESCE_TX_USECS,
++	.get_coalesce = emac_get_coalesce,
++	.set_coalesce = emac_set_coalesce,
++	.get_per_queue_coalesce = emac_get_per_queue_coalesce,
++	.set_per_queue_coalesce = emac_set_per_queue_coalesce,
+ 	.get_channels = emac_get_channels,
+ 	.set_channels = emac_set_channels,
+ 	.get_link_ksettings = emac_get_link_ksettings,
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+index 186b0365c2e5..7c9e9518f555 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+@@ -243,6 +243,16 @@ static void emac_adjust_link(struct net_device *ndev)
+ 	}
+ }
  
-+MODULE_AUTHOR("Dimitri Fedrau <dima.fedrau@gmail.com>");
- MODULE_AUTHOR("Andrew Hepp <andrew.hepp@ahepp.dev>");
- MODULE_DESCRIPTION("Microchip MCP9600 thermocouple EMF converter driver");
- MODULE_LICENSE("GPL");
++static enum hrtimer_restart emac_rx_timer_callback(struct hrtimer *timer)
++{
++	struct prueth_emac *emac =
++			container_of(timer, struct prueth_emac, rx_hrtimer);
++	int rx_flow = PRUETH_RX_FLOW_DATA;
++
++	enable_irq(emac->rx_chns.irq[rx_flow]);
++	return HRTIMER_NORESTART;
++}
++
+ static int emac_phy_connect(struct prueth_emac *emac)
+ {
+ 	struct prueth *prueth = emac->prueth;
+@@ -582,8 +592,10 @@ static int emac_ndo_stop(struct net_device *ndev)
+ 		netdev_err(ndev, "tx teardown timeout\n");
+ 
+ 	prueth_reset_tx_chan(emac, emac->tx_ch_num, true);
+-	for (i = 0; i < emac->tx_ch_num; i++)
++	for (i = 0; i < emac->tx_ch_num; i++) {
+ 		napi_disable(&emac->tx_chns[i].napi_tx);
++		hrtimer_cancel(&emac->tx_chns[i].tx_hrtimer);
++	}
+ 
+ 	max_rx_flows = PRUETH_MAX_RX_FLOWS;
+ 	k3_udma_glue_tdown_rx_chn(emac->rx_chns.rx_chn, true);
+@@ -591,6 +603,7 @@ static int emac_ndo_stop(struct net_device *ndev)
+ 	prueth_reset_rx_chan(&emac->rx_chns, max_rx_flows, true);
+ 
+ 	napi_disable(&emac->napi_rx);
++	hrtimer_cancel(&emac->rx_hrtimer);
+ 
+ 	cancel_work_sync(&emac->rx_mode_work);
+ 
+@@ -801,6 +814,9 @@ static int prueth_netdev_init(struct prueth *prueth,
+ 	ndev->features = ndev->hw_features;
+ 
+ 	netif_napi_add(ndev, &emac->napi_rx, emac_napi_rx_poll);
++	hrtimer_init(&emac->rx_hrtimer, CLOCK_MONOTONIC,
++		     HRTIMER_MODE_REL_PINNED);
++	emac->rx_hrtimer.function = &emac_rx_timer_callback;
+ 	prueth->emac[mac] = emac;
+ 
+ 	return 0;
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+index 82e38ef5635b..a78c5eb75fb8 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+@@ -108,6 +108,8 @@ struct prueth_tx_chn {
+ 	u32 descs_num;
+ 	unsigned int irq;
+ 	char name[32];
++	struct hrtimer tx_hrtimer;
++	unsigned long tx_pace_timeout_ns;
+ };
+ 
+ struct prueth_rx_chn {
+@@ -127,6 +129,9 @@ struct prueth_rx_chn {
+ 
+ #define PRUETH_MAX_TX_TS_REQUESTS	50 /* Max simultaneous TX_TS requests */
+ 
++/* Minimum coalesce time in usecs for both Tx and Rx */
++#define ICSSG_MIN_COALESCE_USECS 20
++
+ /* data for each emac port */
+ struct prueth_emac {
+ 	bool is_sr1;
+@@ -183,6 +188,10 @@ struct prueth_emac {
+ 
+ 	struct delayed_work stats_work;
+ 	u64 stats[ICSSG_NUM_STATS];
++
++	/* RX IRQ Coalescing Related */
++	struct hrtimer rx_hrtimer;
++	unsigned long rx_pace_timeout_ns;
+ };
+ 
+ /**
+@@ -320,7 +329,7 @@ void prueth_ndev_del_tx_napi(struct prueth_emac *emac, int num);
+ void prueth_xmit_free(struct prueth_tx_chn *tx_chn,
+ 		      struct cppi5_host_desc_t *desc);
+ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
+-			     int budget);
++			     int budget, bool *tdown);
+ int prueth_ndev_add_tx_napi(struct prueth_emac *emac);
+ int prueth_init_tx_chns(struct prueth_emac *emac);
+ int prueth_init_rx_chns(struct prueth_emac *emac,
+
+base-commit: 9f02bb6d7a229058ffaba4f6dd78e0f7b06b799c
 -- 
-2.39.2
+2.34.1
 
