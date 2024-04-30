@@ -1,151 +1,179 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC5417582;
-	Tue, 30 Apr 2024 05:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85A014AAD
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714453757; cv=none; b=VcoOSjB7C/7qQXzBrAJHY+BZlGXQ8WtDhANL4d9cf6IwpYcH8wZcp01rgBRHqqjrn/IdyGD0HjwA6kuFu3igC7e/vUTVvTrnn/AmJfV4sO0nO0y3m4V6klPBtbA9cENZbeGCPjhxxGHrbhAPiqZLfVhskxOH5izP6H030RYmZB8=
+	t=1714453827; cv=none; b=a5PTyHM44BP1V5V5OEXhGp9uYveDwm93PXu0ZkTdVfGa9Omwq0x+HGigeAf2BR3HcnB+Ua+od+dChMhCqhlNXGLsYDIoBRKiwq7lDIIkUIfvuHEDby1wUeDU+DINw4138GOm/NwlF0IzCyArG+9muXyjHGXbvYMCUw+5GRUXU9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714453757; c=relaxed/simple;
-	bh=V4JU0kcWhtn/tWTZ81/g5DtXt4pOFjRVoYRQ1OkLVxc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jqo9imjHEdo81ai65a+tytkraQRatIV2tHEnO8oN8hsF7D4A3rSaofXUa3w5Sc2qukXZ1CxY7Mb8oODA4Y5aBAd31W1/nP6u5I14tdLYLEmuI08cOqkRy2s09vtXn3+wKayuGKn3f3inM+eDf6BzULztJMwlOz3t/DxOliM196g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=c0vbkMDZ; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1714453827; c=relaxed/simple;
+	bh=SzgFI/v7Mph6bz64Ohfi7yL2xE/FtnoTbuqrAwoH0Ww=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U34dwmf7Yz5mepS2Qqco22Vw+cUqSILa9mq2C/8lm1MDPxzKl3U7iNx3f2Q0BI6WM1yE+YF6htSw/TvfMP+CeCiANqnB0qS+554SZihJ7RnflfU7ydTxckBiYYNAi4Rt+D+nVBfcJPl0/3LEu6DZ/HxI4vXBl+YfjPYglDx+bzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MkxC/Khp; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="c0vbkMDZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1714453755; x=1745989755;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=V4JU0kcWhtn/tWTZ81/g5DtXt4pOFjRVoYRQ1OkLVxc=;
-  b=c0vbkMDZLxGg+QgjRsapBW5iwaH1xTsX+wm+Dwh5k1ggErKfBsrKxtQB
-   GPN9ufh6kGHQRArgWIIQtC/VfJ1giPGE5uAXWUHZ9LJU0pufzZ8OVptMZ
-   o3TRwOyHnHt54jS1kV+hKtx19sHimh+9S6jQUTbc35TW3TXqooQ0Mzu8I
-   Kthc7Aiag9XFJ2v0VaR1aQKsFyBSKQYwGDPlOudjrQxRsLM7cFQNZvZnv
-   jVCWGbztu6yYaRW4YbrzNFjWXATOsRmOBTL/ryx5elB6IBqTBRhNt9FVD
-   kmMrFf/a3X689H8QBXAgm5y/Ba4ffuYkeRHSSSs5woNQdKvcipwP1W3j3
-   Q==;
-X-CSE-ConnectionGUID: fZdkBnDSTq2nhZklP2dv1A==
-X-CSE-MsgGUID: 9iD+Qmn4TB2zQWR/4qxDNA==
-X-IronPort-AV: E=Sophos;i="6.07,241,1708412400"; 
-   d="scan'208";a="23827299"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Apr 2024 22:09:13 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 29 Apr 2024 22:09:02 -0700
-Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 29 Apr 2024 22:08:58 -0700
-From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-To: <netdev@vger.kernel.org>
-CC: <lxu@maxlinear.com>, <andrew@lunn.ch>, <hkallweit1@gmail.com>,
-	<linux@armlinux.org.uk>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <linux-kernel@vger.kernel.org>,
-	<UNGLinuxDriver@microchip.com>
-Subject: [PATCH net-next] net: phy: add wol config options in phy device
-Date: Tue, 30 Apr 2024 10:36:35 +0530
-Message-ID: <20240430050635.46319-1-Raju.Lakkaraju@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MkxC/Khp"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51967f75729so6215621e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 22:10:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714453824; x=1715058624; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nm5KSte9EtNP2GBwmXuE8/J8iLTK3PcKydXJnqqMM4g=;
+        b=MkxC/KhpfMFWT4uW4IrHjP+iMcb0BZWYnvek7AM9hKYzmMSI87mWWYyZWsEBZFBfvN
+         ToVeITf6ZZW03E/3ZoVqBLWgzwkyaReELSIMmIn7Kr+2ZYCxhNNUMOfV8FGbce6Sn3Zz
+         9ToA/qdRMpf+9QRQX9KWvT49IYDH+AtPYt9lFgWgOOQOlPgrMMxkLP8MKBi/WxR7WzjF
+         JH9JpREE03yzdRHIriZtKBoaF5Rp5JajWUS7PxZTo3IrUSFymMpJMALyAjVan8VfW00G
+         ec3EXMu/jkU5XLFSPntM55ulCmo6TE0qrtlX0N6fruPvwPGZZ+wgepzXKJoEiUdydPA1
+         nWZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714453824; x=1715058624;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nm5KSte9EtNP2GBwmXuE8/J8iLTK3PcKydXJnqqMM4g=;
+        b=vOPXJxqSzDU+B/NmjjTOvLG1bKCyTcOx8NOxcaojx7ksn2bfIh+rtHf0wQKn5IE77Z
+         xCKtfemzoT/JReFpG4rtgZBiogczo3a2vz2Vd//lsdz/fA8jb5c+k+lFbvMDZUOnqFpr
+         g+nA3FvyLNdU+zkok+GQXIwhyIcl6aRzGFbpM/vPpyaaArF9xd/sNymbc5gXea4jUCTd
+         jax1d3AOkU+uothI70VP2qY7DxWYr/fLGkLli2MukWpd1JBHq9YyfIWwwvw5MHTybQCZ
+         ATe5XLvf6VhIMxh6P7mZyLR2xH7nmVz+gCjrsFXg5i4iQyn4zCp26NIJxgtMGTn8cHq/
+         ZpFA==
+X-Forwarded-Encrypted: i=1; AJvYcCW8laSuJPGRfKBOJphaqemDsav+loAvvztX9xK/ks33s26ND9GZ0rfNZmyHJ7ultAtxurOFRmZEHymE7uw5YGx/jlXKi9HkNpPviiu0
+X-Gm-Message-State: AOJu0YwpRzc33PEM3TmZkyyi10h1gDzWHiJnEh5Mx8uVjEZd73izgQ9d
+	Feue/c4tM0onbA9zybpT8gN0ziW2fBc5dY3TO6bVghINgASfGlwzeUi8WEpmoHDoWFSoW+PA267
+	EYqtMDWaszmdarlxHdp36DPzvXds=
+X-Google-Smtp-Source: AGHT+IFlfuijYlZUPjalT0bDu+MnlCDwx6EUmLuwJiu1cUJxg8OL495gJRHS9/N1pnZDUvSNoNy44ns4wxPnk4L5vS8=
+X-Received: by 2002:a05:6512:3294:b0:51b:567e:7ea4 with SMTP id
+ p20-20020a056512329400b0051b567e7ea4mr998553lfe.26.1714453823614; Mon, 29 Apr
+ 2024 22:10:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20240430021753.385089-1-brookxu.cn@gmail.com> <8379e4a9-3114-4d35-9d1f-81ca61351b85@nvidia.com>
+In-Reply-To: <8379e4a9-3114-4d35-9d1f-81ca61351b85@nvidia.com>
+From: =?UTF-8?B?6K645pil5YWJ?= <brookxu.cn@gmail.com>
+Date: Tue, 30 Apr 2024 13:10:11 +0800
+Message-ID: <CADtkEechcseDatdzoPDrYBapvQ5iTKo3E-tsdiwj2B7euLLwnQ@mail.gmail.com>
+Subject: Re: [PATCH] nvme-fabrics: use reserved tag for reg read/write command
+To: Chaitanya Kulkarni <chaitanyak@nvidia.com>
+Cc: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, "hch@lst.de" <hch@lst.de>, 
+	"kbusch@kernel.org" <kbusch@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "axboe@kernel.dk" <axboe@kernel.dk>, 
+	"sagi@grimberg.me" <sagi@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce a new member named 'wolopts' to the 'phy_device' structure to
-store the user-specified Wake-on-LAN (WOL) settings. Update this member
-within the phy driver's 'set_wol()' function whenever the WOL configuration
-is modified by the user.
+Chaitanya Kulkarni <chaitanyak@nvidia.com> =E4=BA=8E2024=E5=B9=B44=E6=9C=88=
+30=E6=97=A5=E5=91=A8=E4=BA=8C 11:47=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 4/29/2024 7:17 PM, brookxu.cn wrote:
+> > From: Chunguang Xu <chunguang.xu@shopee.com>
+> >
+> > In some scenarios, if too many commands are issued by nvme command in
+> > the same time by user tasks, this may exhaust all tags of admin_q. If
+> > a reset (nvme reset or IO timeout) occurs before these commands finish,
+> > reconnect routine may fail to update nvme regs due to insufficient tags=
+,
+> > which will cause kernel hang forever. In order to workaround this issue=
+,
+> > maybe we can let reg_read32()/reg_read64()/reg_write32() use reserved
+> > tags. This maybe safe for nvmf:
+> >
+> > 1. For the disable ctrl path,  we will not issue connect command
+> > 2. For the enable ctrl / fw activate path, since connect and reg_xx()
+> >     are called serially.
+> >
+>
+> Given the complexity of the scenario described above, is it possible to
+> write a script for this scenario that will trigger this and submit to
+> blktest ? not that this is a blocker to get this patch reviewed, but
+> believe it is needed in long run, WDYT ?
 
-Currently, when the system resumes from sleep, the 'phy_init_hw()' function
-resets the PHY's configuration and interrupts, which leads to problems upon
-subsequent WOL attempts. By retaining the desired WOL settings in 'wolopts',
-we can ensure that the PHY's WOL configuration is correctly reapplied
-through 'phy_ethtool_set_wol()' before a system suspend, thereby resolving
-the issue
+Thanks for you reply, I can easily reproduce it in my VMs by following step=
+s:
+STEP 1. In order to reduce the complexity of reproduction, I reduce
+NVME_AQ_MQ_TAG_DEPTH from 31 to 8
 
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
----
- drivers/net/phy/mxl-gpy.c    | 5 +++++
- drivers/net/phy/phy_device.c | 5 +++++
- include/linux/phy.h          | 2 ++
- 3 files changed, 12 insertions(+)
+STEP 2. Create a nvme device by NVMe over tcp, such as following command:
+nvme connect -t tcp -a 192.168.122.20 -s 4420 -n
+nqn.2014-08.org.nvmexpress.mytest
 
-diff --git a/drivers/net/phy/mxl-gpy.c b/drivers/net/phy/mxl-gpy.c
-index b2d36a3a96f1..6edb29a1d77e 100644
---- a/drivers/net/phy/mxl-gpy.c
-+++ b/drivers/net/phy/mxl-gpy.c
-@@ -680,6 +680,7 @@ static int gpy_set_wol(struct phy_device *phydev,
- 	struct net_device *attach_dev = phydev->attached_dev;
- 	int ret;
- 
-+	phydev->wolopts = 0;
- 	if (wol->wolopts & WAKE_MAGIC) {
- 		/* MAC address - Byte0:Byte1:Byte2:Byte3:Byte4:Byte5
- 		 * VPSPEC2_WOL_AD45 = Byte0:Byte1
-@@ -725,6 +726,8 @@ static int gpy_set_wol(struct phy_device *phydev,
- 		ret = phy_read(phydev, PHY_ISTAT);
- 		if (ret < 0)
- 			return ret;
-+
-+		phydev->wolopts |= WAKE_MAGIC;
- 	} else {
- 		/* Disable magic packet matching */
- 		ret = phy_clear_bits_mmd(phydev, MDIO_MMD_VEND2,
-@@ -748,6 +751,8 @@ static int gpy_set_wol(struct phy_device *phydev,
- 		if (ret & (PHY_IMASK_MASK & ~PHY_IMASK_LSTC))
- 			phy_trigger_machine(phydev);
- 
-+		phydev->wolopts |= WAKE_PHY;
-+
- 		return 0;
- 	}
- 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 616bd7ba46cb..9740f08ad98e 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -2038,6 +2038,11 @@ int phy_suspend(struct phy_device *phydev)
- 	if (phydev->suspended)
- 		return 0;
- 
-+	if (phydev->wolopts) {
-+		wol.wolopts = phydev->wolopts;
-+		phy_ethtool_set_wol(phydev, &wol);
-+	}
-+
- 	phy_ethtool_get_wol(phydev, &wol);
- 	phydev->wol_enabled = wol.wolopts || (netdev && netdev->wol_enabled);
- 	/* If the device has WOL enabled, we cannot suspend the PHY */
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 3ddfe7fe781a..4a628202699c 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -615,6 +615,7 @@ struct macsec_ops;
-  *                 handling shall be postponed until PHY has resumed
-  * @irq_rerun: Flag indicating interrupts occurred while PHY was suspended,
-  *             requiring a rerun of the interrupt handler after resume
-+ * @wolopts: User requested wake-on-lan configuration
-  * @interface: enum phy_interface_t value
-  * @possible_interfaces: bitmap if interface modes that the attached PHY
-  *			 will switch between depending on media speed.
-@@ -687,6 +688,7 @@ struct phy_device {
- 
- 	u32 dev_flags;
- 
-+	u32 wolopts;
- 	phy_interface_t interface;
- 	DECLARE_PHY_INTERFACE_MASK(possible_interfaces);
- 
--- 
-2.34.1
+STEP 3. Buind and run the c++ program issues nvme commands as followed:
+#include <sys/types.h>
+#include <signal.h>
+#include <unistd.h>
+#include <vector>
+#include <set>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
+const int concurrency =3D 64;
+std::set<pid_t> chlds;
+
+int __exit =3D 0;
+void  sigint_proc(int signo)
+{
+        __exit =3D 1;
+}
+
+int main(int argc, char **argv)
+{
+        signal(SIGINT, sigint_proc);
+
+        for (auto i  =3D 0; i < concurrency; i++) {
+                auto pid =3D fork();
+                if (!pid) {
+                        while (true) {
+                                system("nvme list -o json 2>&1 > /dev/null"=
+);
+                        }
+                }
+
+                chlds.insert(pid);
+        }
+
+        while (!__exit) {
+                if (chlds.empty())
+                        break;
+
+                for (auto pid : chlds) {
+                        int wstatus, ret;
+                        ret =3D waitpid(pid, &wstatus, WNOWAIT);
+                        if (ret > 0) {
+                                chlds.erase(pid);
+                                break;
+                        }
+                }
+                usleep(1000);
+        }
+
+        // exit
+        for (auto pid : chlds)
+                kill(pid, SIGKILL);
+
+        return 0;
+}
+
+STEP 4. Open a new console, running the followed command:
+while [ true ]; do nvme reset /dev/nvme0; sleep `echo "$RANDOM%1" | bc`; do=
+ne
+
+We will reproduce this issue soon.
+>
+> > So the reserved tags may still be enough while reg_xx() use reserved ta=
+gs.
+> >
+> > Signed-off-by: Chunguang Xu <chunguang.xu@shopee.com>
+> > ---
+>
+> -ck
+>
+>
