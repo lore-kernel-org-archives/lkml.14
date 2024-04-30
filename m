@@ -1,208 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B635D22618;
-	Tue, 30 Apr 2024 10:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A0B1292C8
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 10:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714471940; cv=none; b=KTCh2xdqtxFORkcX6DlJW/AeuJxtkGCvr1WHKXJ8qS8xFekV5BGFmqf4KMEytDxINdyXAru/sOo9mroKaYSa9qCpQSNEusoOj4hvO3ebzjULlJK/gRWCBLV/rDQUUWjbj2C/3kQkt4HeUzFZ5iWNQ68s7TH1tHchOz9wqQ/m/rQ=
+	t=1714471984; cv=none; b=JC2eNcUxfWdnXAgM6+MdA4Bl1kyHH+BFr9KOZlGaJzecV5hHCHocNrZGXT4xx8iIbEAQ8HH6Fz3ctTyINGj2K/bsV0dDHZ/C5dvVyNWe6o04j6CbOmjtsFe9EXQZEGT3xCcGNxyGP3wXDJBBOof0bvbcsTYlY/en/z4ufhdRvns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714471940; c=relaxed/simple;
-	bh=NURsOywy6CZA9cVVjd03JDCKuIynBZF1dYZyedRQp4A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MabhvcXM5m4MI1SP9Sak27I6m3FrCSphwbxbcBI8tpJ77Gldtv5f2ME9qCjgng5XXmQbWtkBr0fA+u45ZjVhNPzN8SqsRH/a+k+NHANdgwJweSwRL900Qmy4QxStgnKsK/6LZRcYZfJos6WXNucBR0/Hb+Bk/p9QpS+3+HfnpUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+vqZZvO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714471984; c=relaxed/simple;
+	bh=c3oCz/hNloXup2zcmbrJly+6BVi1NnWIUKqEaHhRJcs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mcFr7ukjlTQGhTKFQr/YA0NirTRIwWy6rfUF6/WHsH2fLR+JHkg/cBuDKelexPTmsvneiux2MlwqXV62K2kQVcmr5uWSni/PA1W3V4ePCk3SM+3K2mbaUFva/bS8Cd8b6xWcOlKyUHONnxVczIK7vMNvZsatuQ3lPrOLzfbAMb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JMoe7coj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+vqZZvO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FDFBC4AF1A;
-	Tue, 30 Apr 2024 10:12:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714471940;
-	bh=NURsOywy6CZA9cVVjd03JDCKuIynBZF1dYZyedRQp4A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=X+vqZZvOjZypgq0mBbFOU/tDwtRlo20JPY8W7/+T5hEB0EU1kBFvrjrXDoD4LVL9U
-	 nXvbZl2/jb3FB5uawtClONaKcEkIhs8Il0/LrR5sGfphOqy0iROZ8iXzElUPONM0YI
-	 JhZnUe1n8K8hiV+HA719XaWokj3xQp8wSlDLpm9IIyOZQ2FfvMiae63ZxnGe5b/U9V
-	 1BQAUSZhoQo8YR8IYNRsg8um71Aa8K92G9QCazzVpJ5LtEq1HmU3DyU4jpJ1eKvunb
-	 HEhkZ5HWCjr9sz+mBoNCAN+HGbn/jSsz8PeeVKXKAWLlTowQ0bWldxkeoa56jXG7k1
-	 NPRWpilKAM0rg==
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6ee5ee29423so181788a34.2;
-        Tue, 30 Apr 2024 03:12:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUfJjlaUs1ToTQgIcLWsmfHe+qXBaXo8Q21ZRJqwmTy5fcJLDAMDTtJxmC2Qwwx5bJboEgaWuSP8UfwbM/Wmd3WKOtPNhVIsdy4JPnfUoAXgyFDdgNxig8gdVJF+zpZkqTvDXs4r/EplTjIEJdI0wt5PBx7TUV990la3YVSxMMAeHWbnh3Jrkg9P0JngWs3jHTDgAHvTlKULzQ/xidl9A==
-X-Gm-Message-State: AOJu0YxCoLzMkY90KjGRlEiUJ7OKdOcId/smjQzqditQ948Wz8Now0Gt
-	r50IWN1dhxv1VCjbBijAUJXIJK1ycY1N2oKaSx5BGfW6KbNpItEwiEqFzzM1HdnznoOJFpSY7L+
-	shVEvM6M1CwbLKD4oXQ7Ki2qfTtQ=
-X-Google-Smtp-Source: AGHT+IEkOTp4jMU7eudwtXqkvXjt6cTTGERhb/sNQV/MqoRF8MN5nzaetIoEPLvwr3sNLlYci5wgFWtcOQTdv18nlQ0=
-X-Received: by 2002:a4a:9287:0:b0:5af:be60:ccdc with SMTP id
- i7-20020a4a9287000000b005afbe60ccdcmr3516316ooh.0.1714471939510; Tue, 30 Apr
- 2024 03:12:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JMoe7coj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714471982;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2GzIAX1apMfrJy1ajxehnLgS+pyXtcpMXuXBJ+ivWZ0=;
+	b=JMoe7cojMLTmUO6dLt6fVSciSvWfv1qiOgpxg10F6gmsw1ZcWpFa6iXj7ZjSkImSfbARIb
+	NaJa341kL3KNrMlIYRYGiNvdAsBfHtLyUQ19w48Y556fScj5oE5qaKyGr+dnbysdi/YP/E
+	sHD8ilojUsy9lXXB2OYD1XEzpWpyD4A=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-1-Cj9_SKMJMWiljMuuWhr-0Q-1; Tue, 30 Apr 2024 06:13:00 -0400
+X-MC-Unique: Cj9_SKMJMWiljMuuWhr-0Q-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-34d92c4cdd9so37094f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 03:12:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714471978; x=1715076778;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2GzIAX1apMfrJy1ajxehnLgS+pyXtcpMXuXBJ+ivWZ0=;
+        b=wbeIVQuhsm6fuEf6POwGEn7Uw5MXBbb8M/eFtzFDZrvRgknRfnJrfi25Slq+8z+lPK
+         IEeaFFEmO6+/qmCS482V+qlkWLp09/9w9gidB/31wPVW4o/EsjGKu+SGEsD2oEUEgO8B
+         OSjWfIVHameS8eH740OVkGmGEZdeIuCNE/U13n/GNG/pcZi9BqLox0RgfzEKhzogl+2K
+         CdQJPPpKv+JjX2TNonttOtuG6uhKFMTXTl7axGB7GAKvmqlQ/22BKF0H9cPQ9+Qea6py
+         mzTf92WtteV5id5tGgyLHrcvA6PDhpUEgUvZD1Svy1yv/VqJEXRJwtOgKs4Eq/MujvOV
+         fBEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdJyq45WA3uLVQNsLLs2rfQ5fCE909ih0cp0gYu9HvxwFFtopuvh3sY4f+nYBsq8YdwypZ9rSqeVjSt6t7YkHfGiGoycTk7O4qlX9L
+X-Gm-Message-State: AOJu0YwKzb4EhX0o2M8JhbpMCC27Ujf+UX9lwNlKwIMzQHDh7LPV7SBh
+	FFblIlVwjUeDGU6IjEjvDZfEw1a0oCuzBUT569osKIL9dsf4O++3P/ZPd0m3YmTyHcuCVJR0++1
+	9K3bLrJNCvAgjQvT7kCcnToHL9so+ZbBWMZdGmV9Z5Vgk/Ry7l5DJNY0kj3f8BQ==
+X-Received: by 2002:a05:600c:1e25:b0:41b:fdf9:98b5 with SMTP id ay37-20020a05600c1e2500b0041bfdf998b5mr5887056wmb.4.1714471978609;
+        Tue, 30 Apr 2024 03:12:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE2JkyLdQO1ckGUp9sZHpLi8RtlsiXIzuC2cLAFTWukApXZN7bGlBrfA4y8T0dRGJD4ZoRGtA==
+X-Received: by 2002:a05:600c:1e25:b0:41b:fdf9:98b5 with SMTP id ay37-20020a05600c1e2500b0041bfdf998b5mr5887035wmb.4.1714471978116;
+        Tue, 30 Apr 2024 03:12:58 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3341:b0ae:6a10::f71])
+        by smtp.gmail.com with ESMTPSA id l23-20020a05600c1d1700b00418f99170f2sm42438481wms.32.2024.04.30.03.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 03:12:57 -0700 (PDT)
+Message-ID: <e590ba4608c9810d3d75fefdcbba9f2a02c23a0f.camel@redhat.com>
+Subject: Re: [PATCH v4 net-next v4 6/6] net: add heuristic for enabling TCP
+ fraglist GRO
+From: Paolo Abeni <pabeni@redhat.com>
+To: Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org, Eric Dumazet
+ <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>, David Ahern
+ <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Cc: willemdebruijn.kernel@gmail.com, linux-kernel@vger.kernel.org
+Date: Tue, 30 Apr 2024 12:12:56 +0200
+In-Reply-To: <20240427182305.24461-7-nbd@nbd.name>
+References: <20240427182305.24461-1-nbd@nbd.name>
+	 <20240427182305.24461-7-nbd@nbd.name>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240426135126.12802-1-Jonathan.Cameron@huawei.com>
- <20240426135126.12802-5-Jonathan.Cameron@huawei.com> <80a2e07f-ecb2-48af-b2be-646f17e0e63e@redhat.com>
- <20240430102838.00006e04@Huawei.com>
-In-Reply-To: <20240430102838.00006e04@Huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 30 Apr 2024 12:12:07 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iKU8ra9jR+EmgxbuNm=Uwx2m1-8vn_RAZ+aCiUVLe3Pw@mail.gmail.com>
-Message-ID: <CAJZ5v0iKU8ra9jR+EmgxbuNm=Uwx2m1-8vn_RAZ+aCiUVLe3Pw@mail.gmail.com>
-Subject: Re: [PATCH v8 04/16] ACPI: processor: Move checks and availability of
- acpi_processor earlier
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Gavin Shan <gshan@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, x86@kernel.org, Russell King <linux@armlinux.org.uk>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, 
-	James Morse <james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com, justin.he@arm.com, 
-	jianyong.wu@arm.com, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Sudeep Holla <sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 30, 2024 at 11:28=E2=80=AFAM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Tue, 30 Apr 2024 14:17:24 +1000
-> Gavin Shan <gshan@redhat.com> wrote:
->
-> > On 4/26/24 23:51, Jonathan Cameron wrote:
-> > > Make the per_cpu(processors, cpu) entries available earlier so that
-> > > they are available in arch_register_cpu() as ARM64 will need access
-> > > to the acpi_handle to distinguish between acpi_processor_add()
-> > > and earlier registration attempts (which will fail as _STA cannot
-> > > be checked).
-> > >
-> > > Reorder the remove flow to clear this per_cpu() after
-> > > arch_unregister_cpu() has completed, allowing it to be used in
-> > > there as well.
-> > >
-> > > Note that on x86 for the CPU hotplug case, the pr->id prior to
-> > > acpi_map_cpu() may be invalid. Thus the per_cpu() structures
-> > > must be initialized after that call or after checking the ID
-> > > is valid (not hotplug path).
-> > >
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > >
-> > > ---
-> > > v8: On buggy bios detection when setting per_cpu structures
-> > >      do not carry on.
-> > >      Fix up the clearing of per cpu structures to remove unwanted
-> > >      side effects and ensure an error code isn't use to reference the=
-m.
-> > > ---
-> > >   drivers/acpi/acpi_processor.c | 79 +++++++++++++++++++++-----------=
----
-> > >   1 file changed, 48 insertions(+), 31 deletions(-)
-> > >
-> > > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_proces=
-sor.c
-> > > index ba0a6f0ac841..3b180e21f325 100644
-> > > --- a/drivers/acpi/acpi_processor.c
-> > > +++ b/drivers/acpi/acpi_processor.c
-> > > @@ -183,8 +183,38 @@ static void __init acpi_pcc_cpufreq_init(void) {=
-}
-> > >   #endif /* CONFIG_X86 */
-> > >
-> > >   /* Initialization */
-> > > +static DEFINE_PER_CPU(void *, processor_device_array);
-> > > +
-> > > +static bool acpi_processor_set_per_cpu(struct acpi_processor *pr,
-> > > +                                  struct acpi_device *device)
-> > > +{
-> > > +   BUG_ON(pr->id >=3D nr_cpu_ids);
-> >
-> > One blank line after BUG_ON() if we need to follow original implementat=
-ion.
->
-> Sure unintentional - I'll put that back.
->
-> >
-> > > +   /*
-> > > +    * Buggy BIOS check.
-> > > +    * ACPI id of processors can be reported wrongly by the BIOS.
-> > > +    * Don't trust it blindly
-> > > +    */
-> > > +   if (per_cpu(processor_device_array, pr->id) !=3D NULL &&
-> > > +       per_cpu(processor_device_array, pr->id) !=3D device) {
-> > > +           dev_warn(&device->dev,
-> > > +                    "BIOS reported wrong ACPI id %d for the processo=
-r\n",
-> > > +                    pr->id);
-> > > +           /* Give up, but do not abort the namespace scan. */
-> >
-> > It depends on how the return value is handled by the caller if the name=
-space
-> > is continued to be scanned. The caller can be acpi_processor_hotadd_ini=
-t()
-> > and acpi_processor_get_info() after this patch is applied. So I think t=
-his
-> > specific comment need to be moved to the caller.
->
-> Good point. This gets messy and was an unintended change.
->
-> Previously the options were:
-> 1) acpi_processor_get_info() failed for other reasons - this code was nev=
-er called.
-> 2) acpi_processor_get_info() succeeded without acpi_processor_hotadd_init=
- (non hotplug)
->    this code then ran and would paper over the problem doing a bunch of c=
-leanup under err.
-> 3) acpi_processor_get_info() succeeded with acpi_processor_hotadd_init ca=
-lled.
->    This code then ran and would paper over the problem doing a bunch of c=
-leanup under err.
->
-> We should maintain that or argue cleanly against it.
+On Sat, 2024-04-27 at 20:23 +0200, Felix Fietkau wrote:
+> When forwarding TCP after GRO, software segmentation is very expensive,
+> especially when the checksum needs to be recalculated.
+> One case where that's currently unavoidable is when routing packets over
+> PPPoE. Performance improves significantly when using fraglist GRO
+> implemented in the same way as for UDP.
+>=20
+> When NETIF_F_GRO_FRAGLIST is enabled, perform a lookup for an established
+> socket in the same netns as the receiving device. While this may not
+> cover all relevant use cases in multi-netns configurations, it should be
+> good enough for most configurations that need this.
+>=20
+> Here's a measurement of running 2 TCP streams through a MediaTek MT7622
+> device (2-core Cortex-A53), which runs NAT with flow offload enabled from
+> one ethernet port to PPPoE on another ethernet port + cake qdisc set to
+> 1Gbps.
+>=20
+> rx-gro-list off: 630 Mbit/s, CPU 35% idle
+> rx-gro-list on:  770 Mbit/s, CPU 40% idle
+>=20
+> Signe-off-by: Felix Fietkau <nbd@nbd.name>
+> ---
+>  net/ipv4/tcp_offload.c   | 32 ++++++++++++++++++++++++++++++++
+>  net/ipv6/tcpv6_offload.c | 35 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 67 insertions(+)
+>=20
+> diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
+> index 87ae9808e260..3e9b8c6f9c8c 100644
+> --- a/net/ipv4/tcp_offload.c
+> +++ b/net/ipv4/tcp_offload.c
+> @@ -407,6 +407,36 @@ void tcp_gro_complete(struct sk_buff *skb)
+>  }
+>  EXPORT_SYMBOL(tcp_gro_complete);
+> =20
+> +static void tcp4_check_fraglist_gro(struct list_head *head, struct sk_bu=
+ff *skb,
+> +				    struct tcphdr *th)
+> +{
+> +	const struct iphdr *iph;
+> +	struct sk_buff *p;
+> +	struct sock *sk;
+> +	struct net *net;
+> +	int iif, sdif;
+> +
+> +	if (!(skb->dev->features & NETIF_F_GRO_FRAGLIST))
 
-The return value needs to be propagated to acpi_processor_add() so it
-can decide what to do with it.
+Should we add an 'unlikely()' here to pair with unlikely(is_flist) in
+*gro_receive / *gro_complete?
 
-Now, acpi_processor_add() can only return 1 if the CPU has been
-successfully registered and initialized, so it is regarded as
-available (but it may not be online to start with).
+Should this test be moved into the caller, to avoid an unconditional
+function call in the ipv6 code?
 
-Returning 0 from it may get messy, because acpi_default_enumeration()
-will get called and it will attempt to create a platform device for
-the CPU, so in all cases in which the CPU is not regarded as available
-when acpi_processor_add() returns, it should return an error code (the
-exact value doesn't matter for its caller so long as it is negative).
+(Also waiting for explicit ack from Eric)
 
-> This isn't helped the the fact I have no idea which cases we care about f=
-or that bios
-> bug handling.  Do any of those bios's ever do hotplug?  Guess we have to =
-try and maintain
-> whatever protection this was offering.
->
-> Also, the original code leaks data in some paths and I have limited idea
-> of whether it is intentional or not. So to tidy the issue up that you've =
-identified
-> I'll need to try and make that code consistent first.
+Thank,
 
-I agree.
+Paolo
 
-> I suspect the only way to do that is going to be to duplicate the allocat=
-ions we
-> 'want' to leak to deal with the bios bug detection.
->
-> For example acpi_processor_get_info() failing leaks pr and pr->throttling=
-.shared_cpu_map
-> before this series. After this series we need pr to leak because it's use=
-d for the detection
-> via processor_device_array.
->
-> I'll work through this but it's going to be tricky to tell if we get righ=
-t.
-> Step 1 will be closing the existing leaks and then we will have something
-> consistent to build on.
-
-Sounds good to me.
