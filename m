@@ -1,181 +1,111 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D4215AAA4;
-	Tue, 30 Apr 2024 11:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C3212CD90;
+	Tue, 30 Apr 2024 11:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714477526; cv=none; b=lCkTVzdahBfJus+cBsuFHubo10n0TtTHIJeHIZKumTaNaPPvTpgEST8kUSsspd6iW7Ebl32DwQMzrADlnzYXTQ+kJyvpHCqeGcCGbjKNZLnDD1InduSezKssHxhE5K+YwZcRExWJZB0JVmv0omK6KNLDAapSzdk22iXAPtdc/9o=
+	t=1714477539; cv=none; b=eXyYl6whfNIPnLkmG3VjEHS1GRNAxEh1pZF2zKcDdFxYz7Bw4HVOSfJhiVcKvazp+IucetBVcUalvqi10xy7/vzxVoYdjNDgN4erVIidYP123PrxsiEAkC5Jjdk5RuDbVgrxTEIAEcUrZcEHjEVgKOD/nG53dljRhDbsOCRRHqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714477526; c=relaxed/simple;
-	bh=fHd/tvgknZmDQ1B+dKw15+R47eqN73inFJLNupe/g1s=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QA/PFD3R8JoYdeASZQzBoBwSIjymw11vSZtgVu6dq26EmR9m371G+ekj/IEnXBgC2mwK6+SeXlQNnqGGgPHHm1f64PlfDjDIJPGa99zrVYO709hhgAFEhBOoSQLzHoYZTJ8jKKXBKN2mx6GbqN8Hy4RkXMk801OTZio0RNqVqjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=A25zNcBP; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1714477539; c=relaxed/simple;
+	bh=LMWMwIrhoja/mjJ97z4DdQVv6xt1vL+14RxvDcfeu+U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R6CyYpeqUx+RLwb4MN9WlaMem9mtmy6H4mBPUBsSCYaMgm1W+B6iEcJmYxZonqB/6kqAj+mfkEVOlyK6xR9j8Q0Fkqo3EqM06R0yrs3poXwpUOb9s/V52ZlXqbL65YLIwKOc12vumtAm+PA79cp1iuJGusp47tQcpkMN6mg0ReA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PiPVix9N; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="A25zNcBP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1714477524; x=1746013524;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fHd/tvgknZmDQ1B+dKw15+R47eqN73inFJLNupe/g1s=;
-  b=A25zNcBPz5slS+g+28gjb5qbg+h28Q5qBrTNou6vSMHIM+rsq9nPmLaN
-   BDMceGe5qICILFvTb7eGU555TFRWpABws4BEXnyWFQA1S7yX5Ao000Pf6
-   lRWquYf79ym7aj5Ewkzo1/DpsTOOZVeDeXxKTpbBjthxl0VcEXLzMW7e6
-   eefnSYWtD/k9JgJdebKOUe4SMK3Wsn6IaHzq8Igb8cCYDj9H1gIHNmYp9
-   7x5TQwYH8QAePViA7kCTKh8o0S2nDjwypczQ0zRuFzkj/beGsq8hkK7Ow
-   mfG1TvbfnPmiwBhF+afQC8Yl9LOmtigQnAV/vyuLO3RCHVa45emsJlb8d
-   w==;
-X-CSE-ConnectionGUID: rJqdjKizQQ68Np9QZCjhLw==
-X-CSE-MsgGUID: kyLwJnyCT2SNMFyBqjKUEg==
-X-IronPort-AV: E=Sophos;i="6.07,242,1708412400"; 
-   d="asc'?scan'208";a="190592988"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Apr 2024 04:45:22 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 30 Apr 2024 04:44:50 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Tue, 30 Apr 2024 04:44:47 -0700
-Date: Tue, 30 Apr 2024 12:44:30 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-CC: Conor Dooley <conor@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Anup Patel
-	<anup@brainfault.org>, Shuah Khan <shuah@kernel.org>, Atish Patra
-	<atishp@atishpatra.org>, <linux-doc@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<kvm-riscv@lists.infradead.org>, <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v4 02/11] riscv: add ISA extensions validation
-Message-ID: <20240430-payable-famished-6711765d5ca4@wendy>
-References: <20240429150553.625165-1-cleger@rivosinc.com>
- <20240429150553.625165-3-cleger@rivosinc.com>
- <20240429-subtext-tabby-3a1532f058a5@spud>
- <5d5febd5-d113-4e8c-9535-9e75acf23398@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PiPVix9N"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6181d032bf9so52865407b3.3;
+        Tue, 30 Apr 2024 04:45:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714477537; x=1715082337; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LMWMwIrhoja/mjJ97z4DdQVv6xt1vL+14RxvDcfeu+U=;
+        b=PiPVix9N1yb10opGXeYCroy7n8EgyaLrdYQeB0gjD0uLq4maw3uMzBkT2SfW6xiuI0
+         E1iDbeaaOZaNDN18RpITglH8fQtraPjjc5frwA1XO29QAGuxPg8iV/2dKkRXX2nSKo6Z
+         NZgbksvxUrSPVv1TNvlfMGUAoCqWqWUBKmJDQtNUMi4IYbpOWccbnZOZVyJh8e0dd4V8
+         b9ltfQLnrhl6h27IwRSOCN110VZYiynb3r8ZCKpv9xkkPk4OhjS8ty0mU7h1EXNpoGUZ
+         j5VSNSEApw7xYF3YqgIa5ZG/wdFdBXP2wqQWZzQj2Pfty0j1tbsgLHYTq8famibG9ikx
+         3NMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714477537; x=1715082337;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LMWMwIrhoja/mjJ97z4DdQVv6xt1vL+14RxvDcfeu+U=;
+        b=wPqJMUT/eZFvlZDFQSLY8kttlqGHtK+5l3Bz8O4Qpjyn7YQNeaoE+V30GWcjH9jlhI
+         t35LXoZO/oAzKQgBxJxXLW11iqppkltes1hbEUts/M+jcoZkig0gMs4Ftp6vR0ItAO0S
+         eWpD4SnM7dDENn+O/si7qJm/cjGtTKFcWFHPeB44rn12v2PRC3019DSUe0ey9BbHOh1d
+         7BK2hd4lBVHZtrxPxh4GXb8oj0j+nC9oVpgPygRlXkRT4d/RlA0f89DI+4P0lmyJ6QwW
+         GocN6exZ6JUn7m6//39hXwqX5PDGGkl3sFvT0uusPd+zL98YbA6zPRhIIZgGQG/bFPbp
+         vvoA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8zKjoOoJLCNyvYOuhpbrFTycGOese8oMVZp/iZRkw8R2JR9Qg0k4ZLywok1h2/SZy78cFLQZi9DmW/3l4xvWWBh/AKjScKQw/H9GDDrxQRe3tqS92wv4UzZlzBGeukfSn6Xo9K5P87rU=
+X-Gm-Message-State: AOJu0YxkQ/ngkrVKk6ATdeNOOZW2Uf9SP18vAjjYDow6kANGoBNKQHe7
+	uAT7vUVDh5+ynhr5+OwOeYsmbB4FPVyTfMCTeC3KChIVHu/RWlnZ5rW3MUjfkm1+CKWaySdPbWe
+	KGab9abK5I0alwZMWMtfv4avXJNQ=
+X-Google-Smtp-Source: AGHT+IFWLTsceRYhi9/QmpyJz0woosjkTHL1KGvFF1YijYKO8GYKfCOxMxGlv6J7qjRlI6WEtNMdz4TuS1BN+EvgbfE=
+X-Received: by 2002:a05:6902:2304:b0:dcc:693e:b396 with SMTP id
+ do4-20020a056902230400b00dcc693eb396mr14627529ybb.2.1714477537033; Tue, 30
+ Apr 2024 04:45:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o3hC9HS35D3JsI9f"
-Content-Disposition: inline
-In-Reply-To: <5d5febd5-d113-4e8c-9535-9e75acf23398@rivosinc.com>
-
---o3hC9HS35D3JsI9f
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <271372d6-e665-4e7f-b088-dee5f4ab341a@oracle.com>
+ <20240418160652.68df1a86@namcao> <87ttjywxv5.wl-tiwai@suse.de>
+ <a7843657-c3f6-4d2e-8c36-5541d4c52956@gmx.de> <878r19voks.wl-tiwai@suse.de>
+ <5febb249-1d4d-4ea7-b031-1df4d14620d2@oracle.com> <8734rhvlr2.wl-tiwai@suse.de>
+ <CAMeQTsbEjUyOYDAF-kFwTcovLr+8gHQGa27jPkeeJqmLhwbTag@mail.gmail.com> <20240419173443.6c49706e@namcao>
+In-Reply-To: <20240419173443.6c49706e@namcao>
+From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Date: Tue, 30 Apr 2024 13:45:25 +0200
+Message-ID: <CAMeQTsZJdiyLZvY07gup0ib4SvTQ83p36mLDMRv4C6BH5M69XA@mail.gmail.com>
+Subject: Re: [bug-report] task info hung problem in fb_deferred_io_work()
+To: Nam Cao <namcao@linutronix.de>
+Cc: Takashi Iwai <tiwai@suse.de>, Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, 
+	Helge Deller <deller@gmx.de>, Thomas Zimmermann <tzimmermann@suse.de>, Daniel Vetter <daniel@ffwll.ch>, 
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	bigeasy@linutronix.de, LKML <linux-kernel@vger.kernel.org>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, George Kennedy <george.kennedy@oracle.com>, 
+	Darren Kenny <darren.kenny@oracle.com>, chuansheng.liu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 30, 2024 at 09:18:47AM +0200, Cl=E9ment L=E9ger wrote:
->=20
->=20
-> On 30/04/2024 00:15, Conor Dooley wrote:
-> > On Mon, Apr 29, 2024 at 05:04:55PM +0200, Cl=E9ment L=E9ger wrote:
-> >> Since a few extensions (Zicbom/Zicboz) already needs validation and
-> >> future ones will need it as well (Zc*) add a validate() callback to
-> >> struct riscv_isa_ext_data. This require to rework the way extensions a=
-re
-> >> parsed and split it in two phases. First phase is isa string or isa
-> >> extension list parsing and consists in enabling all the extensions in a
-> >> temporary bitmask without any validation. The second step "resolves" t=
-he
-> >> final isa bitmap, handling potential missing dependencies. The mechani=
-sm
-> >> is quite simple and simply validate each extension described in the
-> >> temporary bitmap before enabling it in the final isa bitmap. validate()
-> >> callbacks can return either 0 for success, -EPROBEDEFER if extension
-> >> needs to be validated again at next loop. A previous ISA bitmap is kept
-> >> to avoid looping mutliple times if an extension dependencies are never
-> >> satisfied until we reach a stable state. In order to avoid any potenti=
-al
-> >> infinite looping, allow looping a maximum of the number of extension we
-> >> handle. Zicboz and Zicbom extensions are modified to use this validati=
-on
-> >> mechanism.
-> >=20
-> > Your reply to my last review only talked about part of my comments,
-> > which is usually what you do when you're gonna implement the rest, but
-> > you haven't.
-> > I like the change you've made to shorten looping, but I'd at least like
-> > a response to why a split is not worth doing :)
->=20
-> Hi Conor,
->=20
-> Missed that point since I was feeling that my solution actually
-> addresses your concerns. Your argument was that there is no reason to
-> loop for Zicbom/Zicboz but that would also apply to Zcf in case we are
-> on RV64 as well (since zcf is not supported on RV64). So for Zcf, that
-> would lead to using both mecanism or additional ifdefery with little to
-> no added value since the current solution actually solves both cases:
->=20
-> - We don't have any extra looping if all validation callback returns 0
-> (except the initial one on riscv_isa_ext, which is kind of unavoidable).
-> - Zicbom, Zicboz callbacks will be called only once (which was one of
-> your concern).
->=20
-> Adding a second kind of callback for after loop validation would only
-> lead to a bunch of additional macros/ifdefery for extensions with
-> validate() callback, with validate_end() or with both (ie Zcf)). For
-> these reasons, I do not think there is a need for a separate mechanism
-> nor additional callback for such extensions except adding extra code
-> with no real added functionality.
->=20
-> AFAIK, the platform driver probing mechanism works the same, the probe()
-> callback is actually called even if for some reason properties are
-> missing from nodes for platform devices and thus the probe() returns
-> -EINVAL or whatever.
->=20
-> Hope this answers your question,
+On Fri, Apr 19, 2024 at 5:34=E2=80=AFPM Nam Cao <namcao@linutronix.de> wrot=
+e:
+>
+> On 2024-04-19 Patrik Jakobsson wrote:
+> > Neither cancel_delayed_work_sync() or flush_delayed_work() prevent new
+> > work from being scheduled after they return.
+>
+> flush_delayed_work() is called during device closing. And because no
+> writes are performed after the device has been closed, no new work
+> should be queued after flush_delayed_work().
 
-Yeah, pretty much I am happy with just an "it's not worth doing it"
-response. Given it wasn't your first choice, I doubt you're overly happy
-with it either, but I really would like to avoid looping to closure to
-sort out dependencies - particularly on the boot CPU before we bring
-anyone else up, but if the code is now more proactive about breaking
-out, I suppose that'll have to do :)
-I kinda wish we didn't do this at all, but I think we've brought this
-upon ourselves via hwprobe. I'm still on the fence as to whether things
-that are implied need to be handled in this way. I think I'll bring this
-up tomorrow at the weekly call, because so far it's only been you and I
-discussing this really and it's a policy decision that hwprobe-ists
-should be involved in I think.
+Yes, nothing should write after the device is closed but the events
+are asynchronous so in theory the order is not guaranteed. I also find
+it unlikely but I have no other theory at this point.
 
-Implied extensions aside, I think we will eventually need this stuff
-anyway, for extensions that make no sense to consider if a config option
-for a dependency is disabled.
-=46rom talking to Eric Biggers the other week about
-riscv_isa_extension_available() I'm of the opinion that we need to do
-better with that interface w.r.t. extension and config dependencies,
-and what seems like a good idea to me at the moment is putting tests for
-IS_ENABLED(RISCV_ISA_FOO) into these validate hooks.
+>
+> > But
+> > cancel_delayed_work_sync() at least makes sure the queue is empty so
+> > the problem becomes less apparent.
+> >
+> > Could this explain what we're seeing?
+>
+> I suspect that cancel_delayed_work_sync() is only treating the symptoms
+> by preventing the deferred work from running. The real bug is "someone"
+> giving fb_deferred_io_work() invalid pages to work with. But that's
+> just a blind guess.
 
-I'll try to look at the actual implementation here tomorrow.
+Trying to figure out when the page goes away in relation to when the
+work is triggered might be a good place to start.
 
-Cheers,
-Conor.
-
---o3hC9HS35D3JsI9f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjDZngAKCRB4tDGHoIJi
-0jaXAQDZLEWybBZ6OTc/u2wI/xhLxITFoBF1IWTZ2CPcg9nOugD/e972YLWSGflR
-ZM//z1//gOap3OewaAJgMnP4nvYeEA4=
-=U5u8
------END PGP SIGNATURE-----
-
---o3hC9HS35D3JsI9f--
+>
+> Best regards,
+> Nam
