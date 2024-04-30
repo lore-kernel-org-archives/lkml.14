@@ -1,87 +1,130 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61348BF1;
-	Tue, 30 Apr 2024 01:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59911113;
+	Tue, 30 Apr 2024 01:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714440545; cv=none; b=Nx2vT6zzRQLUcXDyHqZfwtEkeJGOb5t30+hcqWvqzXjFWcv6uAByY4rG1rb8e4hQaZCIsw+uuGtJfNZdQxI+giC0k8ZfYdqirpQ1HgdzrsWV6R0NBBZpBHfR3SXRzHea8DyKYImNY1Y6VYXoYbbD/JRRR1VUxX+HidUZIb4gKaI=
+	t=1714440688; cv=none; b=YBWmxEK4+j2Bl/4vrfoPbgMcyZjw3FFWZ6xOGp4NKolB7sxcuJavbM1SvQ0Z6Tmi5tdMB7cLn4hNbkP9ZGorjc0kkvUT4AlQBR0h1LEjr5hNFo/zCd5H7ni8NjLynrOnBsgbNreDFdawPzm1yZDrdtA6IUA/JOg3F+hM7anHhrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714440545; c=relaxed/simple;
-	bh=WSfmy11+lqUedQvW+3vlN6eQYVz87591hh4ZeujPvIA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Tv41A4uvxQbRj3MUokVU6dRdfxRnnS8e0nWIMmsT2CrAKX+IqPXoya0tliP6+2otkzW2n7grTGStxrbXJGen293gFByYcnlqtaBOSt57L+tT9cS5vAXWpMA22+aTJaYcPE5QrqMA8F7hGmjjx5XnswyCQxuK8b++e1kt1SusuxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=D0EyxTPc; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1714440688; c=relaxed/simple;
+	bh=qKjIDr0gSCslbsaRgOgQsyWYbY2pEVDT1J9XP6b6+os=;
+	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
+	 Message-ID:In-Reply-To; b=YOV4hKd9odnIScNCD2D4l7gA3HnHS9nEbOtcxdKNfTNeFkJS3O5zfBZU321sYQGH7yzc3P+1QQ3XB2w8c/pgrVsekfDSsRyjvevzHMz+TgVRYShz5GNgju81D76XmE0tyqN+cXaJDa3h6l8vFRO2xuH+5IVKapxYT72lpi3ZN7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HwHpHHcw; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="D0EyxTPc"
-Received: from [192.168.68.112] (ppp14-2-127-66.adl-apt-pir-bras32.tpg.internode.on.net [14.2.127.66])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 51C2F200EF;
-	Tue, 30 Apr 2024 09:28:58 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1714440540;
-	bh=Q6Ex8FW3hDftsHNtIMRsxpmNZfxAv4l73py6egD+IxQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=D0EyxTPcMwYBqFmz2Na1yMb6CPy0gJyty1jVgNaxNK4sZYjbXYIlVZzUBvL0liit0
-	 zHKQqPEpsninhnbtHGOQ8ETWfYMDC75bgdR4w6c/d40OZrE6FpqGENUvtXMGjDUI1Q
-	 Rhut/Y4vLCCpN6TKeNxSbgGVKcTIxAlo+kw5H0imVDaZ1V0ymsXK83trB/o7A+glg7
-	 EpYIt005boD7lD4PERpXCG5lkJ0K4uPTo8h0qZH5rqfinNS6Dnb3gEOBPVksPEtAq2
-	 x5DRBmH2N0Pscp9pxblydCV8YTzXvRO7C1LhyqTkfrXUlHJWAluu8Hk1G3uItdcyAN
-	 w65Ra0rzbQuSw==
-Message-ID: <6b69a2bbfa713374e0bbd9f306ee554ee99f70d3.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v6 1/2] dt-bindings: arm: aspeed: add ASUS X4TF board
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Kelly Hung <ppighouse@gmail.com>, robh+dt@kernel.org
-Cc: krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- openbmc@lists.ozlabs.org, kelly_hung@asus.com, Allenyy_Hsu@asus.com,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring
- <robh@kernel.org>, Zev Weiss <zweiss@equinix.com>, Conor Dooley
- <conor.dooley@microchip.com>
-Date: Tue, 30 Apr 2024 10:58:57 +0930
-In-Reply-To: <20240326103549.2413515-2-Kelly_Hung@asus.com>
-References: <20240326103549.2413515-1-Kelly_Hung@asus.com>
-	 <20240326103549.2413515-2-Kelly_Hung@asus.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HwHpHHcw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714440687; x=1745976687;
+  h=to:cc:subject:references:date:mime-version:
+   content-transfer-encoding:from:message-id:in-reply-to;
+  bh=qKjIDr0gSCslbsaRgOgQsyWYbY2pEVDT1J9XP6b6+os=;
+  b=HwHpHHcwN1pY4XH3ydmcBhvf2V8U+rjqrP4g/dDb3aDEOWhtWbd1dT4m
+   K5iaotV7UV9ptYo1h85Ohnr5HDI5OSz2CM/XexPQ9/pbGta6v9P8doCN/
+   CvCvwpp+SSJfjrFaCjVml+me/aV8eyoBM3Uz83xWXZwIq1v3QIM8Qfjg+
+   xbHf+EsPZyBGKOILl6dp3+LFVTM65k67FoVxM8Ez+w9OieA0kRcw4s3aA
+   K+2w9DbfpHM7QNCQoCO32hbfUrGMTD3j87XMPlrUW0Tfe/h11sySfm8ga
+   pvooxU3o8xmcVdHDtAgENpPMRVZGs1VLdr1EAemJQGd9TNjZdHBp26y1M
+   A==;
+X-CSE-ConnectionGUID: HqC68nzVR/yAs5WawPyUZA==
+X-CSE-MsgGUID: t1PFNj7DQjmo8xCsEXzigA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10002835"
+X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
+   d="scan'208";a="10002835"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 18:31:26 -0700
+X-CSE-ConnectionGUID: VfkDAxQQSUC4TLRF3ROS6Q==
+X-CSE-MsgGUID: NTnYZp61RaOTpwE9o4cFJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
+   d="scan'208";a="26158313"
+Received: from hhuan26-mobl.amr.corp.intel.com ([10.125.99.222])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 29 Apr 2024 18:31:23 -0700
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To: "hpa@zytor.com" <hpa@zytor.com>, "tim.c.chen@linux.intel.com"
+ <tim.c.chen@linux.intel.com>, "linux-sgx@vger.kernel.org"
+ <linux-sgx@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "jarkko@kernel.org" <jarkko@kernel.org>, "cgroups@vger.kernel.org"
+ <cgroups@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "mkoutny@suse.com" <mkoutny@suse.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "Mehta, Sohil"
+ <sohil.mehta@intel.com>, "tj@kernel.org" <tj@kernel.org>, "mingo@redhat.com"
+ <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "Huang, Kai"
+ <kai.huang@intel.com>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com"
+ <anakrish@microsoft.com>, "Zhang, Bo" <zhanb@microsoft.com>,
+ "kristen@linux.intel.com" <kristen@linux.intel.com>, "yangjie@microsoft.com"
+ <yangjie@microsoft.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
+ "chrisyan@microsoft.com" <chrisyan@microsoft.com>
+Subject: Re: [PATCH v12 12/14] x86/sgx: Turn on per-cgroup EPC reclamation
+References: <20240416032011.58578-1-haitao.huang@linux.intel.com>
+ <20240416032011.58578-13-haitao.huang@linux.intel.com>
+ <524cf9b081d86ae61342fdfc370a3639d0010f94.camel@intel.com>
+ <op.2mzyy7ktwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <5836260d-600d-4802-9f6a-b0bdb19ddbac@intel.com>
+Date: Mon, 29 Apr 2024 20:31:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+From: "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel
+Message-ID: <op.2m0o6j2bwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <5836260d-600d-4802-9f6a-b0bdb19ddbac@intel.com>
+User-Agent: Opera Mail/1.0 (Win32)
 
-On Tue, 2024-03-26 at 18:35 +0800, Kelly Hung wrote:
-> Document the new compatibles used on ASUS X4TF.
->=20
-> Signed-off-by: Kelly Hung <Kelly_Hung@asus.com>
+On Mon, 29 Apr 2024 17:18:05 -0500, Huang, Kai <kai.huang@intel.com> wrote:
 
-In addition to the concerns of others, your author email is not the
-same as your SoB email. checkpatch warns:
+>
+>>>>  /*
+>>>> @@ -42,7 +63,8 @@ static inline struct sgx_epc_lru_list  
+>>>> *sgx_lru_list(struct sgx_epc_page *epc_pag
+>>>>   */
+>>>>  static inline bool sgx_can_reclaim(void)
+>>>>  {
+>>>> -    return !list_empty(&sgx_global_lru.reclaimable);
+>>>> +    return !sgx_cgroup_lru_empty(misc_cg_root()) ||
+>>>> +           !list_empty(&sgx_global_lru.reclaimable);
+>>>>  }
+>>>
+>>> Shouldn't this be:
+>>>
+>>>     if (IS_ENABLED(CONFIG_CGROUP_MISC))
+>>>         return !sgx_cgroup_lru_empty(misc_cg_root());
+>>>     else
+>>>         return !list_empty(&sgx_global_lru.reclaimable);
+>>> ?
+>>>
+>>> In this way, it is consistent with the sgx_reclaim_pages_global()  
+>>> below.
+>>>
+>>  I changed to this way because sgx_cgroup_lru_empty() is now defined in  
+>> both KConfig cases.
+>> And it seems better to minimize use of the KConfig variables based on  
+>> earlier feedback (some are yours).
+>> Don't really have strong preference here. So let me know one way of the  
+>> other.
+>>
+>
+> But IMHO your code could be confusing, e.g., it can be interpreted as:
+>
+>    The EPC pages can be managed by both the cgroup LRUs and the
+>    sgx_global_lru simultaneously at runtime when CONFIG_CGROUP_MISC
+>    is on.
+>
+> Which is not true.
+>
+> So we should make the code clearly reflect the true behaviour.
+>
 
-```
-WARNING: From:/Signed-off-by: email address mismatch: 'From: Kelly Hung
-<ppighouse@gmail.com>' !=3D 'Signed-off-by: Kelly Hung
-<Kelly_Hung@asus.com>'
-
-total: 0 errors, 1 warnings, 7 lines checked
-
-NOTE: For some of the reported defects, checkpatch may be able to
-      mechanically convert to the typical style using --fix or --fix-
-inplace.
-
-Commit bb035db4c70a ("dt-bindings: arm: aspeed: add ASUS X4TF board")
-has style problems, please review.
-
-NOTE: If any of the errors are false positives, please report
-      them to the maintainer, see CHECKPATCH in MAINTAINERS.
-```
-
-Please fix this issue for both patches in the series and resend.
-
-Thanks,
-
-Andrew
+Ok, I'll change back.
+Thanks
+Haitao
