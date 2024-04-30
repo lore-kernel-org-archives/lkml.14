@@ -1,124 +1,123 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 278481E52C;
-	Tue, 30 Apr 2024 21:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B782B1E52C;
+	Tue, 30 Apr 2024 21:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714513223; cv=none; b=fD1lLi0XJxU4B1BqBr3yDiGtXcJaqVzfrl8L9Tmm8QZbe0JZvqImqxlG1SIAq7FWoxXJ1NFSOLhLD/JPkDE3b8uI8RmyKp5pCbbIz7eOmPSlZPcy7uPEchW7rJiOEuGHPtbUwiVp6dBiOXAqxfdx1okv7WmPdMv2sJv0G1F7mhE=
+	t=1714513279; cv=none; b=As7W+g85etL3pjbzVQuNV8xoAAa8BMTPsYClcKN1LrHdUM9Ft6zlCpMRant4g0Oa2i7dN6tSHpF7X27BzBvuh5dFKjoDd1qsiuEoxZK5Eq2FefBPiojAVUHPy7kZIrN5axEhKA+F4nXQ266U+paoldTLsol6nv0m/tspN1Br2wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714513223; c=relaxed/simple;
-	bh=Mrs/Piw8jse4ek5sQYu6v7Fpg89TSqWrpsLnLI2WElU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hqv/+ta/HVir39jC1ikuZoSUTuIiP04N7Kf/RRI7D+oWSwO3c+FIu8BhzGjZOzI6kEIkpSZG5ptD1Sy2sZpuGjmEdY/QalrU/MfynklI+c8RgTiXcaa2kTloNVPFJV6YWqYP+xTEdwe71AUhYEOnl8b3sXQWHaVJhVItce1cbt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dsoh69Pe; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1714513279; c=relaxed/simple;
+	bh=9/DOjDzMqqIpe1Cr5IpxE30sH9jmN38JRgc2UZCcRY4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZUvnTqOLqNuAGkfUW9QBYfGcG7z+nmvT66KAN4UdbHIE4Qz3WrpioDIPP0jKy/OyCydSiE8uD7+nI4IwP5lo8uveIqxdsymOCHI40RFm4XM/qxQcyONWFSsfSNERkiY5EbPUKOhpebPfPEzWvE1VTYSpCMDXgmQeRL6EMYV9YX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZBBbcPhV; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dsoh69Pe"
-Received: from [100.65.32.120] (unknown [20.236.11.185])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2953021112E1;
-	Tue, 30 Apr 2024 14:40:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2953021112E1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1714513221;
-	bh=N5FvQ/TypNHdjNMqYFIqXh66AahkR8SgB9HzMwk5dOg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dsoh69PeBK5TTLU3vn54yAjgk6HEgw6uX5/96K1j6MEq+uhUAt3mt7u2D+71GOFNI
-	 WvGANH7w+I/8RenBbMN5ykkWz3Uk5CrLxIasJ2xUAitAkekfx5YEX9aKxDjas/zyYs
-	 t0b5kEvCuz8TxGtWmnMzMga/jwInlSVIoFyEUWbA=
-Message-ID: <92189a8c-00dc-4b79-8fd0-3670b80d0db2@linux.microsoft.com>
-Date: Tue, 30 Apr 2024 14:40:18 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZBBbcPhV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714513278; x=1746049278;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9/DOjDzMqqIpe1Cr5IpxE30sH9jmN38JRgc2UZCcRY4=;
+  b=ZBBbcPhVltPj7begrFMCcJ4Urnu/JjGWAJKfCqmDDs1cxPEx4XcK+1wx
+   YHTn4FDmNgV4jxV/81KiYDD1uAsPAXEwhhK7DvpZ9vCHkaEB5lw+woEZg
+   1+PNp8OA0taz4o/RfAFfMkPDmeR3zSV33qK5t8eZXLBMcsEQoBcZf7g20
+   w+Uzu3LOMbgUnfuFNRJrXY4/0hIgF80wZ/8txfdwO0WcGmNZiO5xwNhRL
+   7ix0getK9FVGwx9BYlxkJpVrn4zb0kYrlR357RRAaD1tq8Ad4WFFwv2Fr
+   rhIAvBTnKcbPbbD/q+uGdtW7fLX40jQiOaIHcuON5EPH5p089l+sjDaW9
+   g==;
+X-CSE-ConnectionGUID: PW5ojW1QTvu6gmapnjZ93A==
+X-CSE-MsgGUID: au6V1T2pRSaXsqq2WXX8bw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="14023056"
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="14023056"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 14:41:17 -0700
+X-CSE-ConnectionGUID: jyIqOWrdSd6haZJlHP9tDQ==
+X-CSE-MsgGUID: 8vyoVP9ORxifald+d/axjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="26693363"
+Received: from chang-linux-3.sc.intel.com ([172.25.66.175])
+  by fmviesa006.fm.intel.com with ESMTP; 30 Apr 2024 14:41:16 -0700
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	tony.luck@intel.com,
+	ashok.raj@intel.com,
+	jithu.joseph@intel.com,
+	chang.seok.bae@intel.com
+Subject: [PATCH 0/2] x86/fpu: Extend kernel_fpu_begin_mask() for the In-Field Scan driver
+Date: Tue, 30 Apr 2024 14:25:06 -0700
+Message-Id: <20240430212508.105117-1-chang.seok.bae@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/12] drm/i915: Make I2C terminology more inclusive
-To: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Zhenyu Wang <zhenyuw@linux.intel.com>,
- Zhi Wang <zhi.wang.linux@gmail.com>,
- "open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS"
- <intel-gfx@lists.freedesktop.org>,
- "open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS"
- <intel-xe@lists.freedesktop.org>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL GVT-g DRIVERS (Intel GPU Virtualization)"
- <intel-gvt-dev@lists.freedesktop.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
- "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS"
- <nouveau@lists.freedesktop.org>,
- "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
- "open list:BTTV VIDEO4LINUX DRIVER" <linux-media@vger.kernel.org>,
- "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>
-References: <20240430173812.1423757-1-eahariha@linux.microsoft.com>
- <20240430173812.1423757-4-eahariha@linux.microsoft.com>
- <ZjFUwjMFMcvJr5KI@intel.com>
-Content-Language: en-CA
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-In-Reply-To: <ZjFUwjMFMcvJr5KI@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/30/2024 1:29 PM, Rodrigo Vivi wrote:
-> On Tue, Apr 30, 2024 at 05:38:02PM +0000, Easwar Hariharan wrote:
->> I2C v7, SMBus 3.2, and I3C 1.1.1 specifications have replaced "master/slave"
->> with more appropriate terms. Inspired by and following on to Wolfram's
->> series to fix drivers/i2c/[1], fix the terminology for users of
->> I2C_ALGOBIT bitbanging interface, now that the approved verbiage exists
->> in the specification.
->>
->> Compile tested, no functionality changes intended
->>
->> [1]: https://lore.kernel.org/all/20240322132619.6389-1-wsa+renesas@sang-engineering.com/
->>
->> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> 
-> I'm glad to see this change!
-> 
-> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> 
->> ---
->>  drivers/gpu/drm/i915/display/dvo_ch7017.c     | 14 ++++-----
->>  drivers/gpu/drm/i915/display/dvo_ch7xxx.c     | 18 +++++------
->>  drivers/gpu/drm/i915/display/dvo_ivch.c       | 16 +++++-----
->>  drivers/gpu/drm/i915/display/dvo_ns2501.c     | 18 +++++------
->>  drivers/gpu/drm/i915/display/dvo_sil164.c     | 18 +++++------
->>  drivers/gpu/drm/i915/display/dvo_tfp410.c     | 18 +++++------
->>  drivers/gpu/drm/i915/display/intel_bios.c     | 22 +++++++-------
->>  drivers/gpu/drm/i915/display/intel_ddi.c      |  2 +-
->>  .../gpu/drm/i915/display/intel_display_core.h |  2 +-
->>  drivers/gpu/drm/i915/display/intel_dsi.h      |  2 +-
->>  drivers/gpu/drm/i915/display/intel_dsi_vbt.c  | 20 ++++++-------
->>  drivers/gpu/drm/i915/display/intel_dvo.c      | 14 ++++-----
->>  drivers/gpu/drm/i915/display/intel_dvo_dev.h  |  2 +-
->>  drivers/gpu/drm/i915/display/intel_gmbus.c    |  4 +--
->>  drivers/gpu/drm/i915/display/intel_sdvo.c     | 30 +++++++++----------
->>  drivers/gpu/drm/i915/display/intel_vbt_defs.h |  4 +--
->>  drivers/gpu/drm/i915/gvt/edid.c               | 28 ++++++++---------
->>  drivers/gpu/drm/i915/gvt/edid.h               |  4 +--
->>  drivers/gpu/drm/i915/gvt/opregion.c           |  2 +-
->>  19 files changed, 119 insertions(+), 119 deletions(-)
-> 
-> The chances of conflicts are high with this many changes,
-> but should be easy enough to deal with later, so feel free
-> to move with this i915 patch on any other tree and we catch-up
-> later.
-> 
-> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> 
+The recent update [1] in the SDM highlights the requirement of
+initializing the AMX state for executing the scan test:
+    "... maintaining AMX state in a non-initialized state ... will
+     prevent the execution of In-Field Scan tests."
+which is one of CPU state conditions required for the test's execution.
 
-Thanks for the review and ack! I actually thought that this might end up going in as individual
-patches via the various respective trees since it's now completely independent of Wolfram's enabling
-series with the drop of the final patch that was treewide.
+In situations where AMX workloads are running, the switched-away active
+user AMX state remains due to the optimization to reduce the state
+switching cost. A user state reload is fully completed right before
+returning to userspace. Consequently, if the switched-in kernel task is
+executing the scan test, this non-initialized AMX state causes the test
+to be unable to start.
 
-What do you think?
+Given the benefit of the scan test in detecting hardware faults, ensuring
+its seamless execution is not negligible. This necessitates a proper API
+for the driver code to initialize AMX states. Although fpu_idle_fpregs()
+may initialize the AMX state, its primary usage should be limited to
+sleep state handling, making it unsuitable for the scan test.
+
+The across-architecture FPU API, kernel_fpu_begin()/kernel_fpu_end(), is
+universally established for floating-point SIMD code in the kernel. On
+x86, kernel_fpu_begin_mask() is available, with kernel_fpu_begin()
+serving as a wrapper to it for initializing legacy states by default.
+
+The proposed solution extends kernel_fpu_begin_mask() to accept a new
+option for initializing the AMX state. Additionally, it introduces custom
+FPU handling wrappers for the In-Field Scan driver, which are variants of
+kernel_fpu_begin()/kernel_fpu_end(). This approach is considerably
+compliant with established semantics, following the EFI case with
+efi_fpu_begin/efi_fpu_end().
 
 Thanks,
-Easwar
+Chang
+
+[1] Intel Software Development Manual as of March 2024, Section 18.2
+    RECOMMENDATIONS FOR SYSTEM SOFTWARE of Vol. 1.
+    https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html
+
+Chang S. Bae (2):
+  x86/fpu: Extend kernel_fpu_begin_mask() to initialize AMX state
+  platform/x86/intel/ifs: Initialize AMX state for the scan test
+
+ arch/x86/include/asm/fpu/api.h           |  1 +
+ arch/x86/kernel/fpu/core.c               |  3 +++
+ drivers/platform/x86/intel/ifs/ifs.h     | 14 ++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c |  6 ++++++
+ 4 files changed, 24 insertions(+)
+
+
+base-commit: e67572cd2204894179d89bd7b984072f19313b03
+-- 
+2.34.1
 
