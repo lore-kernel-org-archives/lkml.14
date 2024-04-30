@@ -1,170 +1,104 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B180417F36D
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 17:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572111802B5;
+	Tue, 30 Apr 2024 17:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714497850; cv=none; b=ECixsSU9tQ5hKbmfvJ7i9Ts35YdtxLA8snNLsp/ZCOjVbRpFenjkTTmdPO+d3kFF7gBsKLU1QQyUnvZnJoQ30MxurwFH+JUYBW8W/GzgqVzJr1oWMU/Lm3csx5zHn0BTyPCOQb7/tzEMutvn1XjRrLdRfCshsOQZF6HdvY8Th3E=
+	t=1714497857; cv=none; b=RPZgycQjbdnjGi+EL5zBeYuEyqdurCGHVWjZg7tBZkvvsya95JgMHWVmEzAlFfNSNG16jgP+KV6M23WffukywLiOIN7OnGY/LHdkBf4c23FKbBKd73B96osqJY+2vGDZdZIPwfy8ffdnnOBjlbhPZHwz1fqDO+pswbRTfpYdn18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714497850; c=relaxed/simple;
-	bh=fXQhpvSF4TzilrKDASFj5NiPiqtys1Dtb4u68VR2dQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ncHzf0Pendu9/GZ8lwJhftv+jJXFVeLkgxiDoBGyvh7mWiGq7115xzWdL9smbyQ4CKxOt3y+KP6ni8zeuQzG6/gbAErRjAm5hkjCv4HfrI0rSFtF44rso/yvIFA+W+siC+91fxb49G7V4HCBrWMy5B/LCy4mWsSuICsv65Ziyz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nWbc+g7k; arc=none smtp.client-ip=209.85.219.180
+	s=arc-20240116; t=1714497857; c=relaxed/simple;
+	bh=8c5E28VHtG6A/vJvFkJYiy9fvK9sNN/lCptMz5ClFbQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uSLjihXR43su/eaOgf+CGBwpL1mjeeIhBhYu7f7xVTT6DyXj58Rg3gwZNwenicvSdGKS2C3bENpE8IYWaqe439jzzkjENNiBnNJTEU2nCqcHNSkHPG75hTvA+hyVpr6bdrx8z9Mv8/GkBKT6RGDpCSiKIrVQoGRJRWysvSu2aXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mjvo1DNN; arc=none smtp.client-ip=209.85.222.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWbc+g7k"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-de5acdb3838so5042746276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 10:24:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mjvo1DNN"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78f0e3b6feeso211613185a.1;
+        Tue, 30 Apr 2024 10:24:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714497847; x=1715102647; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iD63vFyJsuwO/ZEyTcDwZyYFWU/Yx7AB35okaZAiqfQ=;
-        b=nWbc+g7kZMX/FFSO9YzXzNf6Gah5lpqoNxTCO/Gz6PU2D+PgMKjzmwLxQljNT2P+1f
-         3/IacbXXZXtoNdGCKgNMXDdbJjY92T/RCfwPTh+yPmSy7S4L8ok89vGssdLte26GZ22W
-         rt416kP42CckA1NldcryMrKyfkFxMYBpnGY+naceKK94DDZ16A6srAZgrGu8e1yqXkNp
-         vcBGXKUOFVFGiYFEV5vIWlm4U9684pTAfPLmGjp9BOEg4wLJqn9uzOsDFbqz0KmtKYVZ
-         yuCH9kfljQ5oek4ilnrEPVGB0Ue0FFmg7okOLBJgLFGqmsTGEsFKQmqFz725JL+/+iC1
-         +1Ww==
+        d=gmail.com; s=20230601; t=1714497855; x=1715102655; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gC3Wisg+vFkvbQKP24bf+0UkU9wju72UQF1jovD9/R4=;
+        b=Mjvo1DNNOFsrgwXcN64Oo3BzZAee8h118lJOUqbfjKy0qjpjW8s1u1/0xpmCy+Ws0w
+         ngzMgicm3yN/UbTrLzcjV9nJexyStRZY/rbS7QiCKJQ09zF1FPTTsHcTsiNAGaB/55BQ
+         QxD01gP6/P/YDKPaRgY6RASUrWgIU2g4OEdyt9M2+hLDZ2fm2mE5uiIcDyGcON/DN/7C
+         06vipr4ORDQPFlxAaMZMrxd9cjqUzEha9PUZQr6VOaXx5S56WbdsW8MFm+G4lpiEjDyo
+         n8+jmeexY/CKpgOVKFacV1vmcomkLcWo5cROQan4BXdeWK5AqyQY/jbNb2ezjM7y5GSP
+         Raxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714497847; x=1715102647;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iD63vFyJsuwO/ZEyTcDwZyYFWU/Yx7AB35okaZAiqfQ=;
-        b=eZKz5j7PU60qmAo12ofTCoiFlwvAx9L/N5v9XtXl8JFmmbMuepF63i5L8LVOirq+lS
-         wgXLdk3k3RITPScuudZkWce7b7T2YI+qpwowu9AGptf734yez+RMU44vSq9UxzIV3ATu
-         4GJuEK0euXAaGNdKcN9rVXrVf95nxR/4e1FNMdSIVHFFzrTveQEc9RJykKufElC4FXkE
-         NovWnCcfcPlKkSQ+LfP+kC3eCTqDa51DNdrETbk0uG/tNA73LleIieEovxuET2Z/N9Ep
-         dxM6E+cqgJW9jwWYZBaAxpeDT7LPvmgvhlSo/iAan9QuOLkMBry6dEh9MjJ6+P0+c/Lk
-         YX1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWfG2q98owMLkPzj63u1/NUYY4JBxQux9Z1vkEdHspmAWXHAYHI7GU3+2vxN77a8kX0yjGfVfjeNjkuL9UvGvGRZ9Ooug8U2pBlmmNc
-X-Gm-Message-State: AOJu0YxhM31Kr9OEEDQ34mny98fKsTsHWhYPhnm7HKEbEShRmYDgzdd1
-	MQRJ66lLATl3loGG/F4Ws2JJJJmpNiWWj/eRGAzAOQjG0BHMr2B3
-X-Google-Smtp-Source: AGHT+IGTPepDZUE+0dXJ27OX66rP4xx/9iEYMJ3wlFjMS2tdMXgcxrgvDm7YCVeylSv9I7wc/EHD6g==
-X-Received: by 2002:a25:6b11:0:b0:de5:670a:9c1f with SMTP id g17-20020a256b11000000b00de5670a9c1fmr238958ybc.19.1714497845471;
-        Tue, 30 Apr 2024 10:24:05 -0700 (PDT)
-Received: from localhost ([69.73.66.55])
-        by smtp.gmail.com with ESMTPSA id o17-20020a258d91000000b00de55b84ab49sm3828943ybl.43.2024.04.30.10.24.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 10:24:04 -0700 (PDT)
-Date: Tue, 30 Apr 2024 10:24:03 -0700
-From: Yury Norov <yury.norov@gmail.com>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: akpm@linux-foundation.org, linux@rasmusvillemoes.dk,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] lib/find_bit_benchmark: Add benchmark test for
- fns()
-Message-ID: <ZjEpMy3hFXqfavva@yury-ThinkPad>
-References: <20240430054912.124237-1-visitorckw@gmail.com>
- <20240430054912.124237-2-visitorckw@gmail.com>
+        d=1e100.net; s=20230601; t=1714497855; x=1715102655;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gC3Wisg+vFkvbQKP24bf+0UkU9wju72UQF1jovD9/R4=;
+        b=NziHEEXbpFOkcOHf0HGODE/neK0NJWfqqE+VWLHgMUVBCQFIVW9weD8y3sZb2mXaL0
+         k1nIlxHhO+Px2UwQzObU2Y6VmDCUS18Gus2Z3w8295QuBebDq3gkzwhug3ULGscFYCZ/
+         DTiFhaiXQyHhZKSHRI/qR7Rx91FZ4aV7c20TNjdPDvlC2bkweY0SLt3CrkeGfuHnWSaP
+         RK1+XhOv1uSuhdF6oMUmM6WzX0NrqCfFLxPQul9vWqgtkWzxGGzgccCLqhyeCXk/azek
+         xNWzTH5nPTokbVjAi+9hWQPjEtyxBUY6vHLpVvUGZL4cx1ijuoKav6DElMbS0j6nsUjm
+         /TeA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0HKStnE6pnTZbk5EH7Ys5BrI7pwnad9uU0w5ajz6qvjITGRG4aqPBh5g1RDPS3ToEDw/IGtXa0urN58Vm9oGEP2rbvwhW2mNyZMmRmkntf+qKngykb2D3F2yCn09MDwwybz36
+X-Gm-Message-State: AOJu0Yyq4nXMn1OzAl3gLjWAQwKVncGvtgmvgpjOJjqHyP0CDIVygZ+I
+	eHqukuXmPrxoBY9KzrsnRsF+uAZwJsbnF1tkeKeBkoK+Jmh1oOJ7
+X-Google-Smtp-Source: AGHT+IHz9lvNYsSw+CvuqUMUtxWUkw7sPyOBE1PtcyqOo0C+WKn1PnKvtaHa9EZUEusZtIhHDiEc5A==
+X-Received: by 2002:a37:c206:0:b0:78b:d7a8:84f0 with SMTP id i6-20020a37c206000000b0078bd7a884f0mr16060504qkm.46.1714497854998;
+        Tue, 30 Apr 2024 10:24:14 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id o15-20020a05620a0d4f00b0078ee090baa3sm11577575qkl.10.2024.04.30.10.24.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 10:24:14 -0700 (PDT)
+Message-ID: <84ef302f-2d49-4465-b5c4-91ea4c8fbdb6@gmail.com>
+Date: Tue, 30 Apr 2024 10:24:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430054912.124237-2-visitorckw@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.10 000/137] 5.10.216-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+References: <20240430134024.771744897@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240430134024.771744897@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 30, 2024 at 01:49:11PM +0800, Kuan-Wei Chiu wrote:
-> Introduce a benchmark test for the fns(). It measures the total time
-> taken by fns() to process 1,000,000 test data generated using
-> get_random_long() for each n in the range [0, BITS_PER_LONG].
-
-Can you also print an example of test output?
- 
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> ---
->  lib/find_bit_benchmark.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+On 4/30/24 06:43, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.10.216 release.
+> There are 137 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> diff --git a/lib/find_bit_benchmark.c b/lib/find_bit_benchmark.c
-> index d3fb09e6eff1..8712eacf3bbd 100644
-> --- a/lib/find_bit_benchmark.c
-> +++ b/lib/find_bit_benchmark.c
-> @@ -146,6 +146,28 @@ static int __init test_find_next_and_bit(const void *bitmap,
->  	return 0;
->  }
->  
-> +static int __init test_fns(void)
-> +{
-> +	const unsigned long round = 1000000;
-> +	s64 time[BITS_PER_LONG + 1];
-> +	unsigned int i, n;
-> +	volatile unsigned long x, y;
-> +
-> +	for (n = 0; n <= BITS_PER_LONG; n++) {
+> Responses should be made by Thu, 02 May 2024 13:40:03 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.216-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-n == BITS_PER_LONG is an error. Testing error case together with
-normal cases is even worse error because it fools readers.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-> +		time[n] = ktime_get();
-> +		for (i = 0; i < round; i++) {
-> +			x = get_random_long();
-> +			y = fns(x, n);
-> +		}
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-Here you count fns() + get_random_long() time. For your microbench
-purposes it would be better exclude a random number generation
-overhead.
-
-> +		time[n] = ktime_get() - time[n];
-> +	}
-> +
-> +	for (n = 0; n <= BITS_PER_LONG; n++)
-> +		pr_err("fns: n = %2u: %12lld ns\n", n, time[n]);
-
-Nah, not like that. Each test in there prints one line in the
-report. Let's keep it that way for test_fns() too. Unless we have
-a strong evidence that fns() for a particular input is worth to be
-tracked separately, let's just print a total gross?
-
-> +
-> +	return 0;
-> +}
-
-I'd suggest to modify it like:
-
-        static unsigned long buf[1000000];
-
-        static int __init test_fns(void)
-        {
-                get_random_bytes(buf, ARRAY_SIZE(buf));
-                time = ktime_get();
-
-                for (n = 0; n < BITS_PER_LONG; n++)
-                        for (i = 0; i < 1000000; i++)
-                                fns(buf[i], n);
-
-                time = ktime_get() - time;
-                pr_err(...);
-        }
-
->  static int __init find_bit_test(void)
->  {
->  	unsigned long nbits = BITMAP_LEN / SPARSE;
-> @@ -186,6 +208,9 @@ static int __init find_bit_test(void)
->  	test_find_first_and_bit(bitmap, bitmap2, BITMAP_LEN);
->  	test_find_next_and_bit(bitmap, bitmap2, BITMAP_LEN);
->  
-> +	pr_err("\nStart testing for fns()\n");
-> +	test_fns();
-
-There are 2 sections in the test - one for regular, and another for
-sparse data. Adding a new section for a just one function doesn't look
-like a good idea.
-
-Even more, the fns() is already tested here. Maybe test_bitops is a
-better place for this test?
-
-> +
->  	/*
->  	 * Everything is OK. Return error just to let user run benchmark
->  	 * again without annoying rmmod.
-> -- 
-> 2.34.1
