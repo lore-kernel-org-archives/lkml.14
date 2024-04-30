@@ -1,106 +1,76 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20CE1EA74
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0F041C89
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714495815; cv=none; b=YIsPTFWZGlrnAtWPwUtgiQsySg5I3yIC/OIfI1MPJ04HpzmrF+Riri0JAC7uk2s8MfKKi2oShmk+dNj1YBtuOA9JmfNfXCXjsJ0cb9pw2OtWX5ZDB22/M/hsQMCVqqE4ZsHJ5D4fFjlfLvLAaAUOKt9mZHwOA7OU/T3MFu+4Ow8=
+	t=1714495832; cv=none; b=Ibs0MKRTLLnM6F+u2mYf8GDfkziBGvJqIScYBmpF+CaG7PUYSyQz4RDB+41yILXGy9Ue6RkaK+RhELew9XqbK2h/feSr5BY9qA6ATVuxNmZAAlv1lcxiUG4xXh44a42+UNXhvPko2G14OicvkpNvPsT3YHU44Dw1e75wpL+GHl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714495815; c=relaxed/simple;
-	bh=B9pKs/nyNrJf9S9E7C6a6HGmfe6zf+FJV6/BPMT48fg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBrjcpPTr7Y1mTr3QunxwgW+l3BMsg/2Ots0uBtTdUwjuxKBol4rX9MpaaqwponGu/Hc7uY3a2c7j5rB3auwOuXL82n/4bXN5NXBTbBehjcNmh46pKQRNHpdbSGtOt04tdE7l20v7ExFhQNyD9duqVR73KcLF/Jai8Kye+0jt94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MwqJNSEx; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714495832; c=relaxed/simple;
+	bh=fPGBRAa9PRhY++IOfBaDFzp2Jm7p85+AAVua+geoEOc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R0bGuXS1TZV5gJhcDqNU0NP2u1bs0Jj3vyRokuuCVnZtk4v5GH7FRWtLWeWBJYJlB1LK06Or9Mu/1EdFHhuFfFicnyy/vVNR5jG31o/popDmb+hW9B0iCP84w9mOuXD4yBD4I1GDFgOeCqKHzUG8JUEKSKNzeSUvtWjXq44jcH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SjRUCGc6; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MwqJNSEx"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2390335b67cso1749417fac.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:50:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714495813; x=1715100613; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tIrMLB4msMRuE/7a2kEwzm2wzpyZXm5c5jjcBesFl94=;
-        b=MwqJNSExZ5uNVylV+qzYSX6bi3e+demjBLsVZr9DW0+gQ3n9V8vTRUEEGtf3+mCu8G
-         qXOMJWO/kQeWc5voSmF84tG1Fb227xzVQLw9v1zguLRwdpKoPh0aMAaqN0p68R0Tyo9O
-         E4FC3lnbj+TPArb2e4KTbVQ4uuLdS6FmfHzvo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714495813; x=1715100613;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tIrMLB4msMRuE/7a2kEwzm2wzpyZXm5c5jjcBesFl94=;
-        b=N/cBHFFwzJfJ+CqXFNLKp1yN89wgb+66TNVT5hBVtOZxfVIy92fDLCbIttrUDy+zCC
-         V5q1kRZHB/cgh1/EILGKnsXfcQmOb6F0qIul0K8khqlhkYacYIwxuzj34PBbCtmfmi0d
-         4e5Y3/RTkDIn8E8SLZ8br/mjf4KpVVXzcvK3LND+9ualTDX71jYEI51IvRDWWzb6sHPT
-         9H4DOczmPHK2zeuIiH43hsDfpMJNE8e/U/+/hrZiu1zPro+q8Er2eKHKkf3RoUECC/jC
-         2uxLmcizpIaVwldWEwvvSsmcyNjiJ50Ae+Tf9UGxpqlj9rnDICciQqLgUdlLanQ8JQJb
-         Q16Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXLZGnOSvjeiChud64SQ7R+YP4MoSLL25oYyOS/g1rb9NSdUzof1cFbCuhHZnWWmSod0i6/QHplAs9yfppq2GaD/WrT/jSNnXuIoOqj
-X-Gm-Message-State: AOJu0YyDLAWlOa/57PH6e93ZznbrcuudmlDHx2iEznPjIHOW6nknLBO8
-	zhKqvw+QWngGKL8tMJOIXpjtKWUWdtpvJBs7RbWU7zSQfDT0XE2jS8ndkAXfJQ==
-X-Google-Smtp-Source: AGHT+IEY6xgEVGkDB6bSjnp7aQznpujQEsy2JLgZMLFYQpA3hLHbk4RWYYAtkQVDlOPq8nMQM55x/w==
-X-Received: by 2002:a05:6870:8707:b0:229:6d0e:203b with SMTP id k7-20020a056870870700b002296d0e203bmr11449246oam.50.1714495812769;
-        Tue, 30 Apr 2024 09:50:12 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ge3-20020a056a00838300b006ecfc3a5f2dsm21255300pfb.46.2024.04.30.09.50.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 09:50:12 -0700 (PDT)
-Date: Tue, 30 Apr 2024 09:50:11 -0700
-From: Kees Cook <keescook@chromium.org>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc: Jakub Kicinski <kuba@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Shengyu Li <shengyu.li.evgeny@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-	Will Drewry <wad@chromium.org>,
-	kernel test robot <oliver.sang@intel.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 0/9] Fix Kselftest's vfork() side effects
-Message-ID: <202404300949.28CC6811C0@keescook>
-References: <20240429191911.2552580-1-mic@digikod.net>
- <20240430.eudae0Mahbie@digikod.net>
- <20240430081304.0cc6bd8d@kernel.org>
- <20240430.joh2lae1Ooch@digikod.net>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SjRUCGc6"
+Message-ID: <54be9c58-3e14-42c1-8fe4-4b03b630d1ac@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714495828;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lFJZeubY0pH8XJB+NDsWHv5pVnm39sgZ/JqOBa9DJ8o=;
+	b=SjRUCGc6H5+LA2XHJrXgHFE0vv/DjJUP0keVPI9OKuB6DqHmWMChS69yqn7wJmwcfxxuWN
+	RQLJeBrsglP16SZJGsHEZSf+SmhZ63a2k4/kqu86Uafki6vsXRg+uRClV22PRQiZtI7wLd
+	jDVP8x2s8YvWFmuREo1yInmy7J9Pgjo=
+Date: Wed, 1 May 2024 00:50:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240430.joh2lae1Ooch@digikod.net>
+Subject: Re: [v1,2/3] drm/panel: ili9341: Respect deferred probe
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Randy Dunlap <rdunlap@infradead.org>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg
+ <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+References: <20240425142706.2440113-3-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <20240425142706.2440113-3-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 30, 2024 at 06:38:40PM +0200, Mickaël Salaün wrote:
-> On Tue, Apr 30, 2024 at 08:13:04AM -0700, Jakub Kicinski wrote:
-> > On Tue, 30 Apr 2024 15:54:38 +0200 Mickaël Salaün wrote:
-> > > Jakub, can you please review it?
-> > 
-> > I looked thru it. I don't have the cycles to investigate and suggest 
-> > a better approach but the sprinkling of mmaps(), if nothing else, feels
-> > a bit band-aid-y 🤷️
-> 
-> The only mmap that could have side effects on existing tests in the
-> _metadata one, but in fact it would reveal issues in tests, so at the
-> end I think it's a good thing.
-> 
-> I'd like "self" to not be conditionally shared but that would require
-> changes in several tests.  Let's keep that for another release. :)
-> 
-> I also noticed that mmap() is already used in test_harness_run() with
-> results.
+Hi,
 
-Yeah, I was initially worried about adding this complexity, but at the
-end of the day it actually makes things more robust. I'm in favor of it.
 
--Kees
+On 2024/4/25 22:26, Andy Shevchenko wrote:
+> GPIO controller might not be available when driver is being probed.
+> There are plenty of reasons why, one of which is deferred probe.
+>
+> Since GPIOs are optional, return any error code we got to the upper
+> layer, including deferred probe. With that in mind, use dev_err_probe()
+> in order to avoid spamming the logs.
+>
+> Fixes: 5a04227326b0 ("drm/panel: Add ilitek ili9341 panel driver")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+
+
+Reviewed-by: Sui Jingfeng <sui.jingfeng@linux.dev>
 
 -- 
-Kees Cook
+Best regards,
+Sui
+
