@@ -1,142 +1,201 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FE41C233E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1071C0DE4
 	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714485792; cv=none; b=p5Uq2DPxNFdch5IKESRRVtwxPf/hUAJPjeHEtf2/lFIXZIq2X2GcuAWB2kkXwqtLnaJsqBAepSCJnG20h3I11Na3Ew/+wXyJSDHl3dFAD9g4RdmEfr3Seopjjhnc2VZkUBjRSP1VdM78pGwg2k1mYwoEEbM05ltryrSr2XMnzz4=
+	t=1714485794; cv=none; b=M4HTX2NkriWayDxuT4Po7tYfB6L6LBNm5HkAAtTXvX6ix4Q/ACb0d4yf3/Ub+YxxzQuNR0GaS6mgJeJvcUojceP7QLAEhNXRWqr8tbmVBqAQISFTUiHsWjhQqU6LJ1/s0fT6gIKvr9jaCUtosDETydCNkINPrGwbteq1+ExXR1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714485792; c=relaxed/simple;
-	bh=XOQ3D1Q+qL3SzysXsYcm80LUwBWHBaXzmlHz6/Wj4iY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ifi5aPwRhlCTGsZUCwZvl1JkKSmL9ODbVgZC6qX5FdM5tKb1I0BgwUIIrDhjoHXLDKFC5+anUei8kuNHTC7BTTzFFh+Q74vS+g1pNtYU7Q0aLJuUcbSSom/dwSagi/Mq8fQfffE+3LjvW0VajLCGEfwxAdvFcJy1M23r/sLnQXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=POFKTWs1; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714485794; c=relaxed/simple;
+	bh=E/ivUfkmIyl4ZjgkCSb7BSDvBomq0Vmk2KQ3GmFIX44=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=byx7xW09j3RMD+/OlPWPlVzuZnpQcFOREEdU4Pg+kAWpEZDN2UTcq/syC4HgpgqGIE9yxNk/W4/dMZ9dSOVbegA+TQ/4RNY1Jny2/q/AlREmWZpLtKGDGYLXMBvJPTd1ozi+jODIyaqfz1oiLy1bpuEnU4uyqIq0l7W3jzgEBHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f0T3ElAE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POFKTWs1"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e1f3462caso7438373a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:03:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714485787; x=1715090587; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xJJbSwuzaR0w7NGJdc7U0qNxw71mhhvz2h+n/8bje3M=;
-        b=POFKTWs12Tc02ab3xQdrltXnjezd8qZowxHju4xh8sOAvreJlbZp/nFZDi4H2rbj6U
-         5DB/J8LnaCZC58y7iO6PPeLTqv8Xn1R/XC40jggUPo2zh1ozO/w/Rmai3c54meLWZftH
-         rb9bYWn9s3NVXqVk78WkLrcp9lCMoGUHkqZka/5x+lJolpqVqOaUHlqgeVnBzHbYSbWs
-         vtXrjyFazTXYJVQYMMWByGYWcbdTWg4mhJKxtXc13VKYMegNICZWQBUnkF4JN9PNtTXF
-         xYh76YA8SV0dESMeSqr+/fVMheZM9L4mua3m/Imu2WFvpAybvusXkFEbdNmGJ9iSXpQ+
-         3bzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714485787; x=1715090587;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xJJbSwuzaR0w7NGJdc7U0qNxw71mhhvz2h+n/8bje3M=;
-        b=uE6H4axRVgz/SZqErBgKRl6U7luEGzASoYFrFtXXbsphqUAl4hvV9b3RCT2LM6WV4L
-         y0mNETn86w0ux7gLuM37ZsMV8q0rZmJD3p3D3R7z7/k/zpjsL7KXYySmM8j/SJuaxX+8
-         ZJz7WRRyAF8XD6JTAkVFWCCtElMWot6h9fyD2XEbBB3henlLj8yG1Xgjj5AwulsolyQL
-         GwY2KD/8mkF/ArZlkUmWGSDpeygOuDM+c/CYtRCfWE+Q8mcCPWMRDqqiwC4df8REsBlR
-         vEOOcBvCm/2+GwbGrTG5cv2pr0rUYczSYTM815RoEytQdaf8K5nwO/D+SFFAaqkvsTAA
-         egvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEd1XwdnLThb4c2a7PkMvhf+jyg9LdEBhzE/wnGUTOTNB/yjhWUzAIhy44yfK9wXwI/o5eYWUwi0j2QyDlBqAOakSq094CikZNMVYN
-X-Gm-Message-State: AOJu0Yzqgu8M2+WMyUAwd7VBeEExabw/2JIGD/RHm8EA3V2ejpy5Ekz4
-	On1N92tIoKgm1tF9aJCHQC3gBVsY5ttYTAJdnd5DfWL45G89K5I59HmeoKvFkOE=
-X-Google-Smtp-Source: AGHT+IGuEd/p4bNUH8qGU+eaFSK8VAtxB3CIFoT6x1kpuMcKSCXiGNBYxe9tpKOFHZ0t3goA5+TDFQ==
-X-Received: by 2002:a17:906:5d1:b0:a52:5460:a1c6 with SMTP id t17-20020a17090605d100b00a525460a1c6mr8141356ejt.48.1714485786717;
-        Tue, 30 Apr 2024 07:03:06 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id pv27-20020a170907209b00b00a5940af3f67sm31434ejb.16.2024.04.30.07.03.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 07:03:06 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Tue, 30 Apr 2024 16:02:17 +0200
-Subject: [PATCH 08/13] ASoC: kirkwood: Use snd_soc_substream_to_rtd() for
- accessing private_data
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f0T3ElAE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714485787;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RVKnlQo0k8LYSKy/5xkID19zXhvzF8VfogUxkP/ClX8=;
+	b=f0T3ElAEtMxOf40Tgaj3PCGx0FRrSIC7PQCSP9q1HRlASmIFwXax/3hHOmAO0qggY9tQZz
+	U4xRDRX3kjUFbAqkxUUddvbXeHcNhC2loS/WCR9N4RH5EFLwqrgws+4DraZVCFbAAscq6X
+	CHLgeCaDJBXBSvvqqmBcxk/YNYpJyaI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-611-0FXqmQelOLGG4J2V-HVVnQ-1; Tue,
+ 30 Apr 2024 10:03:00 -0400
+X-MC-Unique: 0FXqmQelOLGG4J2V-HVVnQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 20E123819C42;
+	Tue, 30 Apr 2024 14:02:12 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 417FE1121312;
+	Tue, 30 Apr 2024 14:02:09 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 16/22] netfs, afs: Implement helpers for new write code
+Date: Tue, 30 Apr 2024 15:00:47 +0100
+Message-ID: <20240430140056.261997-17-dhowells@redhat.com>
+In-Reply-To: <20240430140056.261997-1-dhowells@redhat.com>
+References: <20240430140056.261997-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-asoc-snd-substream-clean-v1-8-6f8a8902b479@linaro.org>
-References: <20240430-asoc-snd-substream-clean-v1-0-6f8a8902b479@linaro.org>
-In-Reply-To: <20240430-asoc-snd-substream-clean-v1-0-6f8a8902b479@linaro.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
- Jarkko Nikula <jarkko.nikula@bitmer.com>, Daniel Mack <daniel@zonque.org>, 
- Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Robert Jarzmik <robert.jarzmik@free.fr>, 
- Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
- Fabio Estevam <festevam@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Ban Tao <fengzheng923@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev, 
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=764;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=XOQ3D1Q+qL3SzysXsYcm80LUwBWHBaXzmlHz6/Wj4iY=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmMPn0JcifyNVMar6zygwpR2fCs5/vlSNdY5zrU
- P/gTARf59qJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjD59AAKCRDBN2bmhouD
- 1zGnD/4/+HNhnrisX+IxTCcgOIYVGlhMNGY5vKejxjMo983A81khcr7uNg3V39Ut/IpxeMUDDM2
- Rk6W37xxCNkLbnV8wmT6q0+6JYwo8P4avbWhlcyWX4f/X54F3DagobrxkUqSfNm3z/Ohm2iMNsI
- 5ugz6Ay/15M8khl/LqKWzwuHNFkFgmxkcWkPSduL9KTHrRilAIDNLYrHPm02HPDdxNLtZNU+BHW
- HTvM9E0VR5hTDhkw7zVMnhr+YV3QpwCclGbZOhu0Cp0nBuhuyLS6jviuYyHCMCY6GkcreN+twHB
- cXmh7Xs1u91x/WYnyYmDtSjzvRIkkxVrWxw/QN9qTHQ1RYB/Xx60ra0zeLmBEmOfRz9SMfyGoUn
- vRlI/JhDNPgNBYSjjkyIBwajOY5i3uiToFIm6XjRwuDnhvfIY1W7C/uwA0GMStEoF+JFVDyw8pW
- XIHJD1hjJyGYX0RH/SbX84Zx3pQWMS27eL7z7lzWdJWctPFRnKSWOGotjeOgM72adhckEHzGgIF
- QJDjo4+G5LVVPbCJwrxnbN0CSfbzPMsVVru2jraEYMcMNH7CzrolNQXfdPgbEj/6nlHJvhm8a5t
- qifBptWPRDKql5mFD1fojt0Pdiv7EWmzeVOR/7d4Fw5AkjTCjcEbUzTHSDxxQlJZ3JQ4G9+PKsH
- o8NVxPN16vhnqFQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Do not open-code snd_soc_substream_to_rtd().
+Implement the helpers for the new write code in afs.  There's now an
+optional ->prepare_write() that allows the filesystem to set the parameters
+for the next write, such as maximum size and maximum segment count, and an
+->issue_write() that is called to initiate an (asynchronous) write
+operation.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
 ---
- sound/soc/kirkwood/kirkwood-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/kirkwood/kirkwood-dma.c b/sound/soc/kirkwood/kirkwood-dma.c
-index ef00792e1d49..036b42058272 100644
---- a/sound/soc/kirkwood/kirkwood-dma.c
-+++ b/sound/soc/kirkwood/kirkwood-dma.c
-@@ -19,7 +19,7 @@
+Notes:
+    Changes
+    =======
+    ver #2)
+     - Don't do the StoreData RPC inline, but keep doing it from a workqueue.
+
+ fs/afs/file.c     |  3 +++
+ fs/afs/internal.h |  3 +++
+ fs/afs/write.c    | 54 +++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 60 insertions(+)
+
+diff --git a/fs/afs/file.c b/fs/afs/file.c
+index dfd8f60f5e1f..db9ebae84fa2 100644
+--- a/fs/afs/file.c
++++ b/fs/afs/file.c
+@@ -400,6 +400,9 @@ const struct netfs_request_ops afs_req_ops = {
+ 	.update_i_size		= afs_update_i_size,
+ 	.invalidate_cache	= afs_netfs_invalidate_cache,
+ 	.create_write_requests	= afs_create_write_requests,
++	.begin_writeback	= afs_begin_writeback,
++	.prepare_write		= afs_prepare_write,
++	.issue_write		= afs_issue_write,
+ };
  
- static struct kirkwood_dma_data *kirkwood_priv(struct snd_pcm_substream *subs)
- {
--	struct snd_soc_pcm_runtime *soc_runtime = subs->private_data;
-+	struct snd_soc_pcm_runtime *soc_runtime = snd_soc_substream_to_rtd(subs);
- 	return snd_soc_dai_get_drvdata(snd_soc_rtd_to_cpu(soc_runtime, 0));
+ static void afs_add_open_mmap(struct afs_vnode *vnode)
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index b93aa026daa4..dcf0ae0323d3 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -1598,6 +1598,9 @@ extern int afs_check_volume_status(struct afs_volume *, struct afs_operation *);
+ /*
+  * write.c
+  */
++void afs_prepare_write(struct netfs_io_subrequest *subreq);
++void afs_issue_write(struct netfs_io_subrequest *subreq);
++void afs_begin_writeback(struct netfs_io_request *wreq);
+ extern int afs_writepages(struct address_space *, struct writeback_control *);
+ extern int afs_fsync(struct file *, loff_t, loff_t, int);
+ extern vm_fault_t afs_page_mkwrite(struct vm_fault *vmf);
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index 1bc26466eb72..34595f482718 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -194,6 +194,60 @@ void afs_create_write_requests(struct netfs_io_request *wreq, loff_t start, size
+ 		netfs_queue_write_request(subreq);
  }
  
-
--- 
-2.43.0
++/*
++ * Writeback calls this when it finds a folio that needs uploading.  This isn't
++ * called if writeback only has copy-to-cache to deal with.
++ */
++void afs_begin_writeback(struct netfs_io_request *wreq)
++{
++	wreq->io_streams[0].avail = true;
++}
++
++/*
++ * Prepare a subrequest to write to the server.  This sets the max_len
++ * parameter.
++ */
++void afs_prepare_write(struct netfs_io_subrequest *subreq)
++{
++	//if (test_bit(NETFS_SREQ_RETRYING, &subreq->flags))
++	//	subreq->max_len = 512 * 1024;
++	//else
++	subreq->max_len = 256 * 1024 * 1024;
++}
++
++/*
++ * Issue a subrequest to write to the server.
++ */
++static void afs_issue_write_worker(struct work_struct *work)
++{
++	struct netfs_io_subrequest *subreq = container_of(work, struct netfs_io_subrequest, work);
++	struct afs_vnode *vnode = AFS_FS_I(subreq->rreq->inode);
++	ssize_t ret;
++
++	_enter("%x[%x],%zx",
++	       subreq->rreq->debug_id, subreq->debug_index, subreq->io_iter.count);
++
++#if 0 // Error injection
++	if (subreq->debug_index == 3)
++		return netfs_write_subrequest_terminated(subreq, -ENOANO, false);
++
++	if (!test_bit(NETFS_SREQ_RETRYING, &subreq->flags)) {
++		set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
++		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
++	}
++#endif
++
++	ret = afs_store_data(vnode, &subreq->io_iter, subreq->start);
++	netfs_write_subrequest_terminated(subreq, ret < 0 ? ret : subreq->len, false);
++}
++
++void afs_issue_write(struct netfs_io_subrequest *subreq)
++{
++	subreq->work.func = afs_issue_write_worker;
++	if (!queue_work(system_unbound_wq, &subreq->work))
++		WARN_ON_ONCE(1);
++}
++
+ /*
+  * write some of the pending data back to the server
+  */
 
