@@ -1,98 +1,112 @@
-Received: from mail-io1-f67.google.com (mail-io1-f67.google.com [209.85.166.67])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1839117B4F1;
-	Tue, 30 Apr 2024 15:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5EB143750
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 15:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714490862; cv=none; b=lfdJDxY7Vkq6oOBobSFk7q4kvD5EK0IHdFzIPLCkgRZjuP9iyoH0Ozpb1XXBVEVUh//E3m7dPnB0Q3pLfOk8xFRAigAQ2vb4mFsEjn/aq02CinJGcAlZQEBS9LQ5YOqq2y0O1nUF5MLafjNzM8FbePPQWvas4JnIg8fGoEnEgh4=
+	t=1714490992; cv=none; b=knXAEgG0dnXeHAiDzSYORXfwGRk2uu4hVs1oSK+Nio1TXrrACR5OKSGMEH8QWI11VMguYW8Q07Bv/Bb5ghYxIajeAIs/LvG9ER+hEnScx4JJiabNKoG0wyskMDgMtbqdOdJqH1qNrKq2j/2I51vMdaol8HcbovC1eg+vU+lGfNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714490862; c=relaxed/simple;
-	bh=jWF+R6k2K8uFH2ZwLb7M5SwfeSLuAYQBwMI3KrqqS9o=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QebiqatfXUIiuFAYm8anjWTEXJpSJKNrT3V93TK+T2gnaXEEZBkT9zENj+DN806Tx5BWo7acTnTJVefCKgB8TjDONK2uT/+FeeyOeZsbv9AXIH3HpDMfDRdTWEprBlXSiXU0giktt1arDFk6ZX7071yFxZmch4cGkds5yYvvxk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/Oq/jVM; arc=none smtp.client-ip=209.85.166.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714490992; c=relaxed/simple;
+	bh=7E++P3NE3gX/uG8sJhez163L//hFb7dWE0h0h4Q6OTA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F2yFEWoPeU8CmOOa1DJyDb9kGZQFMhVPGX/hQmEdjMO8CAjeCiy4I2As48gf7Ls2GuYTwagQPZB3lnhcSSDq5prksmcXvDSY/sivTTBqg8BiovfmvIbijEFHTliU2qBhWmqntDTb7eGhy0nfvkUDEaj/chg32Ht6xSw2lj/v+Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=RyioEbOf; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/Oq/jVM"
-Received: by mail-io1-f67.google.com with SMTP id ca18e2360f4ac-7da04b08b82so161583239f.0;
-        Tue, 30 Apr 2024 08:27:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="RyioEbOf"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a5557e3ebcaso957581466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 08:29:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714490860; x=1715095660; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=S6EiQe0sO4zpsi2K9SK5LkhEBFfWw4caydHufI3cd9g=;
-        b=K/Oq/jVMUmhDzXuWEYpTr+AqNe0D4lhc6yJwQESDsSLH70cOD+D580khWgnG/MA8eu
-         TboDGuAZFay+ZVQQbLzi2sWcEt5zMBUvCpaEXJ+uly/kIEV7Pt1dQh2hL+upwfVS70jN
-         6cHwHM3gMRbYRFHhVYBvWNMxu623BCHhjmsQELXspXP6ALSokPFxbK4onpNhcANJArc1
-         61rf/j4eHVWCm2y6PY2zdMWvnUAz/oiKJ0vdnA2ui7Y2jypZFSsEN6R6i31CpcvCpwni
-         eVv6mHSCMTU3oOAAt98HC1hKtaZGdlbkfk5IXB7mLsKyPN41ePF1Ijn4Zar9kpxYEua5
-         eoOg==
+        d=ionos.com; s=google; t=1714490988; x=1715095788; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BL1pmIo7s1MX4N9LU8kIbt0i/wU5mZK2rTJkOzRk4Zc=;
+        b=RyioEbOfhOuUwUTTbZfuYJfVfNI8Y/V6HZ5oj6G3g76P4fl+HA3ZV5B5serMh4Pjve
+         dIf0fqQKDwYCQqo6n20WsoeTL3Q0AJO6rR8TX/CEBFGtqkul/YsaOJ9wUXU7F+/JeWLT
+         POq61OZrOgvqTFi3Kr9HaG4Dnzp0Pejf0uJMl49B3wL9eCmu2+rB8VMOqXSisavqNUUH
+         z2agXgIsZ1UUTK/JmBO5O2sZTocYSPWdaZajLK4CTmcY2yWSd1PapGFNmTDeraUMJSo5
+         PyHyunGLinx77JWwgO1SCrFKw9Shv/HpZVF/TMmtb5UK9IO5fs52iQnTIcTWeIVSmvbi
+         JrxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714490860; x=1715095660;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S6EiQe0sO4zpsi2K9SK5LkhEBFfWw4caydHufI3cd9g=;
-        b=qPd8hJGdtnWboYkP4sqMH3vyv1JjSm7xT7NRHfGGMwsHAANGHu8KO0Sq344K3NQxsj
-         62bKBkwB5EieKo/zP5c9mLB6iuXs5WseqNBxzJuHW4prF7FTs+n60BazaTd0R1lxsPG5
-         zFyvb3WnY1xOnwWUglzsKnimrgUv5FB9P7SagwP/QsiINdAgfI9wIlJ8WauVwsFruyAU
-         MHTb5YuK1BLwKzEUKf9OCpeir74bjaaam7ksCcdbed/UplmsaAbg0b3+iY27ZHUibB3a
-         E2pugyaRxE+sQbWt+Drkk0fXcwX2LKFDYYRWUpQE01aehCUB6SpzAFa9R20V+h2DO8TX
-         xwpw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnAOLLzfoWRxBvlVWcZIvqKco2EVtAzKut3n2usxPuTYgSJ3+1R6l6nr0Xepr3Du19i2qDemVCsEzC/7mpYFf0RBDtWxUBnsqLHvF7iewmCPx5pFOYQIPSq0b6088rrgOmvd0P6qs45g==
-X-Gm-Message-State: AOJu0Yx1OrQMsmOMvAvghyPiVlXirEbdgWy0FKCiTTg83yF/xfST86JQ
-	d52KADQ0yqVtTf3wJhTjivUkxYxDrIE4tXLkbwfyUCXEplS7C3jaZsR45K5ybC0KfvMeWNfbusW
-	R0fnHVRXqM8ZkiKJaGuJ2pvBKE+e7fmzPRz4=
-X-Google-Smtp-Source: AGHT+IE0//FQwR5UIdVVFw2WGgKiJkdMJcXHNiF4QNIpntmkbmTTI+WUxzf9IYa+Nz70K6B3N/w9svoZP0aAL9JqlIM=
-X-Received: by 2002:a5e:924b:0:b0:7d5:dd91:4b47 with SMTP id
- z11-20020a5e924b000000b007d5dd914b47mr171678iop.7.1714490860191; Tue, 30 Apr
- 2024 08:27:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714490988; x=1715095788;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BL1pmIo7s1MX4N9LU8kIbt0i/wU5mZK2rTJkOzRk4Zc=;
+        b=trIn6RV+qCPJlb/M2mchE4QDPaC9BROl1ExJe8m6HqGz7d/eno7AYt28mV4axm2eoN
+         7/R24DBCJ6+HP5sQ2wDKTXk5Kee6Sf7baUiYqBaXQpEFNikKx7NwC1Y26mTf0fC8OVMx
+         mM9J2mV/DN93kmk52OKcR2PryRAeRss0j9SI1ToqlSDcXBL5cOW2zPL8NundM8t0Djga
+         r9PcT5IFKgulYq11kfEzTgcA3RmN+RgFjgQmgUJY828YmUEO1pio5aeNMnfvqs67jsbO
+         BP7D5kMJU4iWFqwojc6Kk75YWSAGfvOaszmFaH1j90zG4IL5A3rASlsnzbcNa3mWhK+P
+         Hjfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTboxGWkZyBaZURkTT7ilTqIHrczqD69tURaujdYd+FcFZYTBJQPyepRqDWstfZ2dU1R7qOqRsX0BvYP1dbk4oATCkDHkVi2AAOdtW
+X-Gm-Message-State: AOJu0YxEzT9vB4W6WnkFODXeMLKHJqHgtcCPrWSos/lAaFfy+VjVs0u0
+	MGza3iIxSflIqjuP+EmvaR8BfoiRXVE7DX/eISGPLFDbM97K/VpdxeMcdkUjbxQ=
+X-Google-Smtp-Source: AGHT+IEW+xyzMx8jxewoCp249tqIKHcWbH/ig6zu0O/DkMK1GMuq9gY2JfVyTZrq9nEYSpf+eKduvQ==
+X-Received: by 2002:a17:907:7892:b0:a51:abd8:8621 with SMTP id ku18-20020a170907789200b00a51abd88621mr2974749ejc.19.1714490988661;
+        Tue, 30 Apr 2024 08:29:48 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f06e100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f06:e100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id a10-20020a1709066d4a00b00a52567ca1b6sm15278137ejt.94.2024.04.30.08.29.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 08:29:47 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: willy@infradead.org,
+	sfr@canb.auug.org,
+	david@redhat.com.au,
+	Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH v5 02/15] include/drm/drm_gem.h: add poll_table_struct forward declaration
+Date: Tue, 30 Apr 2024 17:29:18 +0200
+Message-Id: <20240430152931.1137975-3-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240430152931.1137975-1-max.kellermann@ionos.com>
+References: <20240430152931.1137975-1-max.kellermann@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Petar Stoykov <pd.pstoykov@gmail.com>
-Date: Tue, 30 Apr 2024 17:27:27 +0200
-Message-ID: <CADFWO8Ghcmno8rgJ1WGyEvcjdrTEZr4_TXfhLjXQymzmR5FKPQ@mail.gmail.com>
-Subject: [PATCH v2 3/3] MAINTAINERS: Add Sensirion SDP500
-To: linux-iio@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Angel Iglesias <ang.iglesiasg@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From c4437fd0ea296c4c964b1fb924144ae24a2ce443 Mon Sep 17 00:00:00 2001
-From: Petar Stoykov <pd.pstoykov@gmail.com>
-Date: Mon, 15 Jan 2024 14:57:57 +0100
-Subject: [PATCH 3/3] MAINTAINERS: Add Sensirion SDP500
+After eliminating includes of linux/mm.h, the following build failure
+occurred:
 
-Add myself as a maintainer for Sensirion SDP500 pressure sensor driver
+ ./include/drm/drm_file.h:443:45: warning: ‘struct poll_table_struct’ declared inside parameter list will not be visible outside of this definition or declaration
+   443 | __poll_t drm_poll(struct file *filp, struct poll_table_struct *wait);
+       |                                             ^~~~~~~~~~~~~~~~~
+ In file included from drivers/gpu/drm/imagination/pvr_gem.h:12,
+                  from drivers/gpu/drm/imagination/pvr_fw.h:9:
+ ./include/drm/drm_gem.h:447:27: error: initialization of ‘__poll_t (*)(struct file *, struct poll_table_struct *)’ {aka ‘unsigned int (*)(struct file *, struct poll_table_struct *)’} from incompatible pointer type ‘__poll_t (*)(struct file *, struct poll_table_struct *)’ {aka ‘unsigned int (*)(struct file *, struct poll_table_struct *)’} [-Werror=incompatible-pointer-types]
+   447 |         .poll           = drm_poll,\
+       |                           ^~~~~~~~
 
-Signed-off-by: Petar Stoykov <pd.pstoykov@gmail.com>
+The compiler is confused, and that can be fixed easily by
+forward-declaring the struct expicitly.
+
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/drm/drm_file.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 40c754b4c39c..11e8f353dc9e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19533,6 +19533,12 @@ S:    Maintained
- F:    Documentation/devicetree/bindings/iio/chemical/sensirion,scd4x.yaml
- F:    drivers/iio/chemical/scd4x.c
-
-+SENSIRION SDP500 DIFFERENTIAL PRESSURE SENSOR DRIVER
-+M:    Petar Stoykov <pd.pstoykov@gmail.com>
-+S:    Maintained
-+F:    Documentation/devicetree/bindings/iio/pressure/sdp500.yaml
-+F:    drivers/iio/pressure/sdp500.c
-+
- SENSIRION SGP40 GAS SENSOR DRIVER
- M:    Andreas Klinger <ak@it-klinger.de>
- S:    Maintained
+diff --git a/include/drm/drm_file.h b/include/drm/drm_file.h
+index ab230d3af138..f24ade9f766f 100644
+--- a/include/drm/drm_file.h
++++ b/include/drm/drm_file.h
+@@ -44,6 +44,7 @@ struct drm_device;
+ struct drm_printer;
+ struct device;
+ struct file;
++struct poll_table_struct;
+ 
+ /*
+  * FIXME: Not sure we want to have drm_minor here in the end, but to avoid
 -- 
-2.30.2
+2.39.2
+
