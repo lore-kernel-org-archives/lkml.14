@@ -1,77 +1,51 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0D8152797;
-	Tue, 30 Apr 2024 14:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7BB181323;
+	Tue, 30 Apr 2024 14:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714487439; cv=none; b=WENa1qnK5WYM1bCUC9K6noKTGBKCgVqKot+brvZRHis2OAPm4BiAzqmmwzKC1zBfppwFVwEzSHPUDYQ+4yLOTX+iEt6DwM2pd2qnah1Oeg3eqm21j/+aOAtT/3IYJ3Kjwu83WsJwI1p57WXdYIsGJiLdF4DcesXxzUSQVEzIYdM=
+	t=1714487449; cv=none; b=lXtgVuF9Rb20A210xEJHgzwYlWmO4h/x2lxuNFiMtv113AooVr5rOcw2bCS0K+WlXzEfQJbr/vE6xJLrgiGJveiQB4YwAAuOBb+A11yisFjJmAiByGfnG9yPZXZT+uXKX8v0XzVuNK+5Zmj1m2cFS+xuMPLr+rsdWjWWUpPc92w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714487439; c=relaxed/simple;
-	bh=507ao6veJvos8djQ/vkxSB93Ylf4TIG2MPrbWPIoPeg=;
+	s=arc-20240116; t=1714487449; c=relaxed/simple;
+	bh=yY98P/N6n2yJ+hh0iMOlAtnctYZ4RYhJchDwGQX4eZ0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NIx76JtmYGHr1tE5EaBFYQlaHD3RPJgBoHGUcyN4wOOJ3i1xN4eipafLG8b+kkMswIa+aexnXbmxKfCcTxGT5kf7JGumW047UdrzCnnvqv5qI4/Fe9HCzruDE7T2yhj//NgvsVJ6i0kxax4IJTvbxkxxxCMXQdm9sc13Ea17p6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ftLxwIR3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ftLxwIR3"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43UDm6CO024573;
-	Tue, 30 Apr 2024 14:30:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=NQg0UhSk2EZ0C6RKEJX8xxVV5b+m49TUFbA2iV97yq4=; b=ft
-	LxwIR3fCazztuWaEUZucoj0U8ssR4OTl+nq+9PwIziFFn/cOWvApjjwNGu3USL0G
-	59SU8xQvp6eG7pX1aXJUh1mZ3SB5/1XTFF12V8t22w4XD+xEx/l1bGhGLlb3Sm+H
-	K/yQqkPglPrwpbZLYUwHsZ1nIcFrKmW1eqwXuT4hdSVHAbo575u+qmXNM/+Inz8p
-	WIolr2p+/yi5ef6LJEaN2fQpp/esGeY3WItPmMT0vaP70X10TzO+OLMieP7gSGKD
-	UUkfk/VRo74nazlLxUPYX8bYIiRdiz3+pJF7jkiIznMBCjpNMm4Ky7N/acRCrkmG
-	VhMXq2Ezz7jH7ba6RNTw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xtvf7h1da-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 14:30:34 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43UEUXeJ024338
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 14:30:33 GMT
-Received: from hu-jkona-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+	 MIME-Version:Content-Type; b=M7aO8J2/80Az8D6D6IrxkxxxNYipCI+dXqrXqX9aabgIkOF1DytwyNAwpGwpz4YoAULflLvKUcHJ+e4VzERQrifiDLjVl+PJ+hYqLLLfQnyL3ySrp4JIhSb87UhvHYysxBH9saX0HQs3YIhK+CiOLn/femZjfkRE0dz4dGIvWgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTMxJ6WjMz6J77T;
+	Tue, 30 Apr 2024 22:28:04 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id B57E8140CB9;
+	Tue, 30 Apr 2024 22:30:45 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 30 Apr 2024 07:30:28 -0700
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Vladimir Zapolskiy
-	<vladimir.zapolskiy@linaro.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        "Satya
- Priya Kakitapalli" <quic_skakitap@quicinc.com>,
-        Ajit Pandey
-	<quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Dmitry
- Baryshkov" <dmitry.baryshkov@linaro.org>
-Subject: [PATCH V3 3/8] clk: qcom: videocc-sm8550: Add support for videocc XO clk ares
-Date: Tue, 30 Apr 2024 19:57:52 +0530
-Message-ID: <20240430142757.16872-4-quic_jkona@quicinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240430142757.16872-1-quic_jkona@quicinc.com>
-References: <20240430142757.16872-1-quic_jkona@quicinc.com>
+ 15.1.2507.35; Tue, 30 Apr 2024 15:30:44 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin Shan
+	<gshan@redhat.com>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v9 12/19] arm64: acpi: Harden get_cpu_for_acpi_id() against missing CPU entry
+Date: Tue, 30 Apr 2024 15:24:27 +0100
+Message-ID: <20240430142434.10471-13-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
+References: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,53 +54,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: GB1ckkfAUYMPR-G461qCFop5mRbmJ4t-
-X-Proofpoint-ORIG-GUID: GB1ckkfAUYMPR-G461qCFop5mRbmJ4t-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-30_08,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
- phishscore=0 mlxscore=0 adultscore=0 bulkscore=0 clxscore=1011
- suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404300103
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Add support for videocc XO clk ares for consumer drivers to be
-able to request this reset.
+In a review discussion of the changes to support vCPU hotplug where
+a check was added on the GICC being enabled if was was online, it was
+noted that there is need to map back to the cpu and use that to index
+into a cpumask. As such, a valid ID is needed.
 
-Fixes: f53153a37969 ("clk: qcom: videocc-sm8550: Add video clock controller driver for SM8550")
-Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+If an MPIDR check fails in acpi_map_gic_cpu_interface() it is possible
+for the entry in cpu_madt_gicc[cpu] == NULL.  This function would
+then cause a NULL pointer dereference.   Whilst a path to trigger
+this has not been established, harden this caller against the
+possibility.
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/clk/qcom/videocc-sm8550.c | 3 ++-
+v9: New patch in response to a question from Marc Zyngier.
+    Taking the easy way out - harden against a possible condition rather
+    than establishing it never happens!
+---
+ arch/arm64/include/asm/acpi.h | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/videocc-sm8550.c b/drivers/clk/qcom/videocc-sm8550.c
-index d73f747d2474..25133cf5a2b8 100644
---- a/drivers/clk/qcom/videocc-sm8550.c
-+++ b/drivers/clk/qcom/videocc-sm8550.c
-@@ -10,7 +10,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
+diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+index bc9a6656fc0c..a407f9cd549e 100644
+--- a/arch/arm64/include/asm/acpi.h
++++ b/arch/arm64/include/asm/acpi.h
+@@ -124,7 +124,8 @@ static inline int get_cpu_for_acpi_id(u32 uid)
+ 	int cpu;
  
--#include <dt-bindings/clock/qcom,sm8450-videocc.h>
-+#include <dt-bindings/clock/qcom,sm8650-videocc.h>
+ 	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+-		if (uid == get_acpi_id_for_cpu(cpu))
++		if (acpi_cpu_get_madt_gicc(cpu) &&
++		    uid == get_acpi_id_for_cpu(cpu))
+ 			return cpu;
  
- #include "clk-alpha-pll.h"
- #include "clk-branch.h"
-@@ -380,6 +380,7 @@ static const struct qcom_reset_map video_cc_sm8550_resets[] = {
- 	[CVP_VIDEO_CC_MVS1C_BCR] = { 0x8074 },
- 	[VIDEO_CC_MVS0C_CLK_ARES] = { .reg = 0x8064, .bit = 2, .udelay = 1000 },
- 	[VIDEO_CC_MVS1C_CLK_ARES] = { .reg = 0x8090, .bit = 2, .udelay = 1000 },
-+	[VIDEO_CC_XO_CLK_ARES] = { .reg = 0x8124, .bit = 2, .udelay = 100 },
- };
- 
- static const struct regmap_config video_cc_sm8550_regmap_config = {
+ 	return -EINVAL;
 -- 
-2.43.0
+2.39.2
 
