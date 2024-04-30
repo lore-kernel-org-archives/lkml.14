@@ -1,509 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0D717592;
-	Tue, 30 Apr 2024 11:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0432912D20F
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714476143; cv=none; b=ZUMfmQ1BYyB6WnCi6+R2xR3vSSMzk8g1EA2ODsabGvmsnjiTw7+NgyHKqcYPQ4Dhj4HQvv+J+dpHQeCUcg0BvJsMhfon4v7b/WiDXaQDYzdEEJWp27yg0FlT3ts2h0YysIHzkkv9z0E4vTJvplhVNa3kUCIWSEWvyXRX5n0XCqE=
+	t=1714476241; cv=none; b=dEN4qP/KPOFZb6XcVqgUZv2ucIZKz/OYwBO46pBLkPCF/21bGIcsC+vhUNtVlrpzQ89drfWZUqp5ko4Q/TL3CvVMDijVLDHb1CGXSOMx1rLfQpwb01RybPcvDp1T6eDrhHrCw2Nmi7wckUhkwHQFYldzO/VuEObPqFQQV4FDdcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714476143; c=relaxed/simple;
-	bh=p0kvrDbPU/v69fdfC284RJWU9tTWpBkrY+vjeH4kpAI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q/NhWsCES6jRo365y5U+YmVfKPMc4rzCDVOfTFJuzihMCn3NFL4kK1dAjc1+Fhfn4KVekXEu687j5QH92oHtFEd5CRsUnjcUmmQukfF3xdgeFEWXXvmDJxlAGUwAE6Mej6M9cvSc5/8KL4vl74YGwSjfDSHplPJoubfUHEwTHVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KoS2otgb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714476241; c=relaxed/simple;
+	bh=Xc/E1muDcRTkULpV7kIzSbWB3pDGQ/49fUGW3LpDLU8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eraxJ37BxS5AnKjZwv4JyG/knHtJDAiCCR2C8T23gf3if81O/WLGkcgGQABjMOwT2B1R8h8s3cYlL5SNjbPem/kTdKHx5gab4HXwc4gokXmZbcQL97jkSjM66etxRm+oaPHndARFJKzR1Mov5wXjY60t5SiSdi9Onx6S55e9SY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wteN+2xH; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KoS2otgb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B46C2BBFC;
-	Tue, 30 Apr 2024 11:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1714476142;
-	bh=p0kvrDbPU/v69fdfC284RJWU9tTWpBkrY+vjeH4kpAI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KoS2otgb/Md+B1Wfc7eKEARFE3es8GvcAV+EKBFjOd2nlaqqUx/hSd5hbxjDX5aTO
-	 t6uQKpQiojiZ5r4F1ITkWC3CHrQgMjVk9WLScjVudNx/izckAn+9T/sucqk2brYghR
-	 8AhP/f3GeHxgAZuVcWmVM8ZzeDl7L254I7J4LsMU=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org
-Subject: [PATCH 5.4 000/107] 5.4.275-rc1 review
-Date: Tue, 30 Apr 2024 12:39:20 +0200
-Message-ID: <20240430103044.655968143@linuxfoundation.org>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wteN+2xH"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a51addddbd4so607890366b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 04:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714476238; x=1715081038; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=XWLp1lMkRn/z9F/qb1rRBcveVv86YGGLdJozbQqO3w4=;
+        b=wteN+2xHbalmfFAhfIYncc9nUNXG3OakploFfLqKyDj5sYIQ/2o1lJju8YtzVrq67t
+         yqG33atk6u7e9dj0XNA6S8yyN1dmmHtHJs2+HCrhMdn7AaU/LyleeU7FuSbNB8oJVmKS
+         8D8fpVzAscJEJPQpjk5gIu1u91kG3vEcdru2OtPicMawjpa85Tspdcm8WlgtLaYwNwx6
+         DobvZb7fQVrb+gp161Hu3EB9fmKTvNr7/LdXzWXMDdWdu0Kgw9QLL5bs1TGQJ83Wfknn
+         v1XUTx4gnMI/z/sx1+XpIN1Gi09NE1qFN7jbvY9a6COHxwYG3PtnMf2WyXfOoQiRvbV6
+         vODA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714476238; x=1715081038;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XWLp1lMkRn/z9F/qb1rRBcveVv86YGGLdJozbQqO3w4=;
+        b=OHw8hePX+XUR8601NLy+y1h056uopu/n6bX5IcX4tAAuGsXNhhRUXDPUYYH8PHUuhV
+         ur2ggB9WwpuH7DcbeAYmeOZ1RjKVHUuLFJyjd/SCl0tG5/oenYLViZAYt4lFnWw6yLS2
+         TLDNE7XMipNNxxKA16NLMtDJf7kreGCSO7+JfWwezzq25X/VCFFBcNPIuWXgpt37SbgA
+         fH5eWX9XXr8jRj4sQ7DS+R9QY1Q4n59dzy8/Phb/+DI86ROoy5lcB1BOYPNTvHmZhhyx
+         XrtuABOSONhuoJyZWp82zFN2hvwRf8DogUDG9AYzmfA6dfEtNJySPKdjIdn5xUcIwOgL
+         4Mlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWWwYk/FsCclhhccWG/lmyU2ad/FmK1yO0Ez35myMkJW6OfplBiilaRsiUCPT+Xx/jRGdSCI2qIvWJcCd9FsCYqByEefKBylWsE/SuO
+X-Gm-Message-State: AOJu0Yyu1pG2xWEaEHnlJFbsIO+5s5rfJxlQuHcZwTwUWyZwPhEjjbVB
+	YT2mlByXdaTAGxO/YISKg2wm59rBT3NgeTpTBBlBWq+PVhwgkxh/RJC7vfKm6Vc=
+X-Google-Smtp-Source: AGHT+IEDXRI6x5rnf8Dk6QVa3UjpA/rv05QLyf2+PdfnSyuNQlVzzUXFdifCUi0+BsM1CU66n5It8w==
+X-Received: by 2002:a17:906:1113:b0:a55:b7b2:2d42 with SMTP id h19-20020a170906111300b00a55b7b22d42mr8852366eja.24.1714476238348;
+        Tue, 30 Apr 2024 04:23:58 -0700 (PDT)
+Received: from [192.168.114.15] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id h6-20020a170906110600b00a5827d2f6f4sm9482718eja.115.2024.04.30.04.23.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 04:23:57 -0700 (PDT)
+Message-ID: <95760e2b-ec38-4f04-8f86-e4f935d24a83@linaro.org>
+Date: Tue, 30 Apr 2024 13:23:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.275-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.275-rc1
-X-KernelTest-Deadline: 2024-05-02T10:30+00:00
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/5] sched: Rename arch_update_thermal_pressure into
+ arch_update_hw_pressure
+To: Vincent Guittot <vincent.guittot@linaro.org>, linux@armlinux.org.uk,
+ catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com,
+ rafael@kernel.org, viresh.kumar@linaro.org, agross@kernel.org,
+ andersson@kernel.org, mingo@redhat.com, peterz@infradead.org,
+ juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com,
+ mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com,
+ corbet@lwn.net, gregkh@linuxfoundation.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Qais Yousef <qyousef@layalina.io>, Bjorn Andersson
+ <andersson@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20240326091616.3696851-1-vincent.guittot@linaro.org>
+ <20240326091616.3696851-5-vincent.guittot@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240326091616.3696851-5-vincent.guittot@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 5.4.275 release.
-There are 107 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Thu, 02 May 2024 10:30:27 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.275-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.275-rc1
-
-Randy Dunlap <rdunlap@infradead.org>
-    serial: core: fix kernel-doc for uart_port_unlock_irqrestore()
-
-Yick Xie <yick.xie@gmail.com>
-    udp: preserve the connected status if only UDP cmsg
-
-Mikulas Patocka <mpatocka@redhat.com>
-    dm: limit the number of targets and parameter size area
-
-Matthew Wilcox (Oracle) <willy@infradead.org>
-    bounds: Use the right number of bits for power-of-two CONFIG_NR_CPUS
-
-Nam Cao <namcao@linutronix.de>
-    HID: i2c-hid: remove I2C_HID_READ_PENDING flag to prevent lock-up
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: smbus: fix NULL function pointer dereference
-
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    idma64: Don't try to serve interrupts when device is powered off
-
-Arnd Bergmann <arnd@arndb.de>
-    dmaengine: owl: fix register access functions
-
-Eric Dumazet <edumazet@google.com>
-    tcp: Fix NEW_SYN_RECV handling in inet_twsk_purge()
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    tcp: Clean up kernel listener's reqsk in inet_twsk_purge()
-
-Arnd Bergmann <arnd@arndb.de>
-    mtd: diskonchip: work around ubsan link failure
-
-Andrey Ryabinin <ryabinin.a.a@gmail.com>
-    stackdepot: respect __GFP_NOLOCKDEP allocation flag
-
-Peter Münster <pm@a16n.net>
-    net: b44: set pause params only when interface is up
-
-Rahul Rameshbabu <rrameshbabu@nvidia.com>
-    ethernet: Add helper for assigning packet type when dest address does not match device address
-
-Guanrui Huang <guanrui.huang@linux.alibaba.com>
-    irqchip/gic-v3-its: Prevent double free on error
-
-Mukul Joshi <mukul.joshi@amd.com>
-    drm/amdgpu: Fix leak when GPU memory allocation fails
-
-Iskander Amara <iskander.amara@theobroma-systems.com>
-    arm64: dts: rockchip: enable internal pull-up for Q7_THRM# on RK3399 Puma
-
-Johannes Thumshirn <johannes.thumshirn@wdc.com>
-    btrfs: fix information leak in btrfs_ioctl_logical_to_ino()
-
-WangYuli <wangyuli@uniontech.com>
-    Bluetooth: btusb: Add Realtek RTL8852BE support ID 0x0bda:0x4853
-
-Nathan Chancellor <nathan@kernel.org>
-    Bluetooth: Fix type of len in {l2cap,sco}_sock_getsockopt_old()
-
-Robin H. Johnson <robbat2@gentoo.org>
-    tracing: Increase PERF_MAX_TRACE_SIZE to handle Sentinel1 and docker together
-
-Robin H. Johnson <robbat2@gentoo.org>
-    tracing: Show size of requested perf buffer
-
-Shifeng Li <lishifeng@sangfor.com.cn>
-    net/mlx5e: Fix a race in command alloc flow
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "crypto: api - Disallow identical driver names"
-
-xinhui pan <xinhui.pan@amd.com>
-    drm/amdgpu: validate the parameters of bo mapping operations more clearly
-
-Chia-I Wu <olvaffe@gmail.com>
-    amdgpu: validate offset_in_bo of drm_amdgpu_gem_va
-
-Rajneesh Bhardwaj <rajneesh.bhardwaj@amd.com>
-    drm/amdgpu: restrict bo mapping within gpu address limits
-
-Emil Kronborg <emil.kronborg@protonmail.com>
-    serial: mxs-auart: add spinlock around changing cts state
-
-Thomas Gleixner <tglx@linutronix.de>
-    serial: core: Provide port lock wrappers
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    af_unix: Suppress false-positive lockdep splat for spin_lock() in __unix_gc().
-
-Sudheer Mogilappagari <sudheer.mogilappagari@intel.com>
-    iavf: Fix TC config comparison with existing adapter TC config
-
-Sindhu Devale <sindhu.devale@intel.com>
-    i40e: Do not use WQ_MEM_RECLAIM flag for workqueue
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix memory leak when canceling rehash work
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix incorrect list API usage
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix warning during rehash
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix memory leak during rehash
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Rate limit error message
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix possible use-after-free during rehash
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix possible use-after-free during activity update
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix race during rehash delayed work
-
-Hyunwoo Kim <v4bel@theori.io>
-    net: openvswitch: Fix Use-After-Free in ovs_ct_exit
-
-Ismael Luceno <iluceno@suse.de>
-    ipvs: Fix checksumming on GSO of SCTP packets
-
-Hyunwoo Kim <v4bel@theori.io>
-    net: gtp: Fix Use-After-Free in gtp_dellink
-
-Eric Dumazet <edumazet@google.com>
-    net: usb: ax88179_178a: stop lying about skb->truesize
-
-Paul Geurts <paul_geurts@live.nl>
-    NFC: trf7970a: disable all regulators on removal
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: core: Unregister EMAD trap using FORWARD action
-
-David Bauer <mail@david-bauer.net>
-    vxlan: drop packets from invalid src-address
-
-Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-    ARC: [plat-hsdk]: Remove misplaced interrupt-cells property
-
-Rafał Miłecki <rafal@milecki.pl>
-    arm64: dts: mediatek: mt2712: fix validation errors
-
-Biao Huang <biao.huang@mediatek.com>
-    arm64: dts: mt2712: add ethernet device node
-
-Rafał Miłecki <rafal@milecki.pl>
-    arm64: dts: mediatek: mt7622: drop "reset-names" from thermal block
-
-Rafał Miłecki <rafal@milecki.pl>
-    arm64: dts: mediatek: mt7622: fix ethernet controller "compatible"
-
-Rafał Miłecki <rafal@milecki.pl>
-    arm64: dts: mediatek: mt7622: fix IR nodename
-
-Ikjoon Jang <ikjn@chromium.org>
-    arm64: dts: mediatek: mt8183: Add power-domains properity to mfgcfg
-
-Quentin Schulz <quentin.schulz@theobroma-systems.com>
-    arm64: dts: rockchip: enable internal pull-up on PCIE_WAKE# for RK3399 Puma
-
-Iskander Amara <iskander.amara@theobroma-systems.com>
-    arm64: dts: rockchip: fix alphabetical ordering RK3399 puma
-
-Vitaly Kuznetsov <vkuznets@redhat.com>
-    KVM: async_pf: Cleanup kvm_setup_async_pf()
-
-Jeongjun Park <aha310510@gmail.com>
-    nilfs2: fix OOB in nilfs_set_de_type
-
-Dave Airlie <airlied@redhat.com>
-    nouveau: fix instmem race condition around ptr stores
-
-Alan Stern <stern@rowland.harvard.edu>
-    fs: sysfs: Fix reference leak in sysfs_break_active_protection()
-
-Samuel Thibault <samuel.thibault@ens-lyon.org>
-    speakup: Avoid crash on very long word
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    usb: Disable USB3 LPM at shutdown
-
-Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
-    usb: dwc2: host: Fix dereference issue in DDMA completion flow.
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "usb: cdc-wdm: close race between read and workqueue"
-
-Daniele Palmas <dnlplm@gmail.com>
-    USB: serial: option: add Telit FN920C04 rmnet compositions
-
-Vanillan Wang <vanillanwang@163.com>
-    USB: serial: option: add Rolling RW101-GL and RW135-GL support
-
-Jerry Meng <jerry-meng@foxmail.com>
-    USB: serial: option: support Quectel EM060K sub-models
-
-Coia Prant <coiaprant@gmail.com>
-    USB: serial: option: add Lonsung U8300/U9300 product
-
-Chuanhong Guo <gch981213@gmail.com>
-    USB: serial: option: add support for Fibocom FM650/FG650
-
-bolan wang <bolan.wang@fibocom.com>
-    USB: serial: option: add Fibocom FM135-GL variants
-
-Finn Thain <fthain@linux-m68k.org>
-    serial/pmac_zilog: Remove flawed mitigation for rx irq flood
-
-Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-    comedi: vmk80xx: fix incomplete endpoint checking
-
-Carlos Llamas <cmllamas@google.com>
-    binder: check offset alignment in binder_get_object()
-
-Eric Biggers <ebiggers@google.com>
-    x86/cpufeatures: Fix dependencies for GFNI, VAES, and VPCLMULQDQ
-
-Stephen Boyd <sboyd@kernel.org>
-    clk: Get runtime PM before walking tree during disable_unused
-
-Stephen Boyd <sboyd@kernel.org>
-    clk: Initialize struct clk_core kref earlier
-
-Konrad Dybcio <konrad.dybcio@linaro.org>
-    clk: Print an info line before disabling unused clocks
-
-Claudiu Beznea <claudiu.beznea@microchip.com>
-    clk: remove extra empty line
-
-Stephen Boyd <sboyd@kernel.org>
-    clk: Mark 'all_lists' as const
-
-Stephen Boyd <sboyd@kernel.org>
-    clk: Remove prepare_lock hold assertion in __clk_release()
-
-Mikhail Kobuk <m.kobuk@ispras.ru>
-    drm: nv04: Fix out of bounds access
-
-Michael Guralnik <michaelgur@nvidia.com>
-    RDMA/mlx5: Fix port number for counter query in multi-port configuration
-
-Yanjun.Zhu <yanjun.zhu@linux.dev>
-    RDMA/rxe: Fix the problem "mutex_destroy missing"
-
-Lei Chen <lei.chen@smartx.com>
-    tun: limit printing rate when illegal packet received by tun dev
-
-Ziyang Xuan <william.xuanziyang@huawei.com>
-    netfilter: nf_tables: Fix potential data-race in __nft_expr_type_get()
-
-Siddh Raman Pant <siddh.raman.pant@oracle.com>
-    Revert "tracing/trigger: Fix to return error if failed to alloc snapshot"
-
-Zheng Yejian <zhengyejian1@huawei.com>
-    kprobes: Fix possible use-after-free issue on kprobe registration
-
-Yuanhe Shu <xiangzao@linux.alibaba.com>
-    selftests/ftrace: Limit length in subsystem-enable tests
-
-Boris Burkov <boris@bur.io>
-    btrfs: record delayed inode root in transaction
-
-Adam Dunlap <acdunlap@google.com>
-    x86/apic: Force native_apic_mem_read() to use the MOV instruction
-
-John Stultz <jstultz@google.com>
-    selftests: timers: Fix abs() warning in posix_timers test
-
-Gavin Shan <gshan@redhat.com>
-    vhost: Add smp_rmb() in vhost_vq_avail_empty()
-
-Ville Syrjälä <ville.syrjala@linux.intel.com>
-    drm/client: Fully protect modes[] with dev->mode_config.mutex
-
-Boris Burkov <boris@bur.io>
-    btrfs: qgroup: correctly model root qgroup rsv in convert
-
-David Arinzon <darinzon@amazon.com>
-    net: ena: Fix potential sign extension issue
-
-Michal Luczaj <mhal@rbox.co>
-    af_unix: Fix garbage collector racing against connect()
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    af_unix: Do not use atomic ops for unix_sk(sk)->inflight.
-
-Cosmin Ratiu <cratiu@nvidia.com>
-    net/mlx5: Properly link new fs rules into the tree
-
-Jiri Benc <jbenc@redhat.com>
-    ipv6: fix race condition between ipv6_get_ifaddr and ipv6_del_addr
-
-Arnd Bergmann <arnd@arndb.de>
-    ipv4/route: avoid unused-but-set-variable warning
-
-Arnd Bergmann <arnd@arndb.de>
-    ipv6: fib: hide unused 'pn' variable
-
-Eric Dumazet <edumazet@google.com>
-    geneve: fix header validation in geneve[6]_xmit_skb
-
-Petr Tesarik <petr@tesarici.cz>
-    u64_stats: fix u64_stats_init() for lockdep when used repeatedly in one file
-
-Ilya Maximets <i.maximets@ovn.org>
-    net: openvswitch: fix unwanted error log on timeout policy probing
-
-Arnd Bergmann <arnd@arndb.de>
-    nouveau: fix function cast warning
-
-Dmitry Antipov <dmantipov@yandex.ru>
-    Bluetooth: Fix memory leak in hci_req_sync_complete()
-
-Sven Eckelmann <sven@narfation.org>
-    batman-adv: Avoid infinite loop trying to resize local TT
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arc/boot/dts/hsdk.dts                         |   1 -
- arch/arm64/boot/dts/mediatek/mt2712-evb.dts        |  78 ++++++++++-
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |  68 ++++++++-
- arch/arm64/boot/dts/mediatek/mt7622.dtsi           |   7 +-
- arch/arm64/boot/dts/mediatek/mt8183.dtsi           |   1 +
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      |  29 +++-
- arch/x86/include/asm/apic.h                        |   3 +-
- arch/x86/kernel/cpu/cpuid-deps.c                   |   6 +-
- crypto/algapi.c                                    |   1 -
- drivers/android/binder.c                           |   4 +-
- drivers/bluetooth/btusb.c                          |   2 +
- drivers/clk/clk.c                                  | 154 ++++++++++++++++-----
- drivers/dma/idma64.c                               |   4 +
- drivers/dma/owl-dma.c                              |   4 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c   |   1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c             |  70 ++++++----
- drivers/gpu/drm/drm_client_modeset.c               |   3 +-
- drivers/gpu/drm/nouveau/nouveau_bios.c             |  13 +-
- .../gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c    |   7 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/instmem/nv50.c |   7 +-
- drivers/hid/i2c-hid/i2c-hid-core.c                 |   8 --
- drivers/i2c/i2c-core-base.c                        |  12 +-
- drivers/infiniband/hw/mlx5/mad.c                   |   3 +-
- drivers/infiniband/sw/rxe/rxe.c                    |   2 +
- drivers/irqchip/irq-gic-v3-its.c                   |   9 +-
- drivers/md/dm-core.h                               |   2 +
- drivers/md/dm-ioctl.c                              |   3 +-
- drivers/md/dm-table.c                              |   9 +-
- drivers/mtd/nand/raw/diskonchip.c                  |   4 +-
- drivers/net/ethernet/amazon/ena/ena_com.c          |   2 +-
- drivers/net/ethernet/broadcom/b44.c                |  14 +-
- drivers/net/ethernet/intel/i40e/i40e_main.c        |   2 +-
- drivers/net/ethernet/intel/iavf/iavf_main.c        |  30 +++-
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c      |  12 +-
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c  |   3 +-
- drivers/net/ethernet/mellanox/mlxsw/core.c         |   2 +-
- .../ethernet/mellanox/mlxsw/spectrum_acl_tcam.c    |  54 ++++++--
- drivers/net/geneve.c                               |   4 +-
- drivers/net/gtp.c                                  |   3 +-
- drivers/net/tun.c                                  |  18 +--
- drivers/net/usb/ax88179_178a.c                     |  11 +-
- drivers/net/vxlan.c                                |   4 +
- drivers/nfc/trf7970a.c                             |  42 +++---
- drivers/staging/comedi/drivers/vmk80xx.c           |  35 ++---
- drivers/staging/speakup/main.c                     |   2 +-
- drivers/tty/serial/mxs-auart.c                     |   8 +-
- drivers/tty/serial/pmac_zilog.c                    |  14 --
- drivers/usb/class/cdc-wdm.c                        |   6 +-
- drivers/usb/core/port.c                            |   4 +-
- drivers/usb/dwc2/hcd_ddma.c                        |   4 +-
- drivers/usb/serial/option.c                        |  40 ++++++
- drivers/vhost/vhost.c                              |  14 +-
- fs/btrfs/backref.c                                 |  12 +-
- fs/btrfs/delayed-inode.c                           |   3 +
- fs/btrfs/qgroup.c                                  |   2 +
- fs/nilfs2/dir.c                                    |   2 +-
- fs/sysfs/file.c                                    |   2 +
- include/linux/etherdevice.h                        |  25 ++++
- include/linux/serial_core.h                        |  79 +++++++++++
- include/linux/trace_events.h                       |   2 +-
- include/linux/u64_stats_sync.h                     |   6 +-
- include/net/addrconf.h                             |   4 +
- include/net/af_unix.h                              |   5 +-
- include/net/ip_tunnels.h                           |  33 +++++
- kernel/bounds.c                                    |   2 +-
- kernel/kprobes.c                                   |  18 ++-
- kernel/trace/trace_event_perf.c                    |   3 +-
- kernel/trace/trace_events_trigger.c                |   6 +-
- lib/stackdepot.c                                   |   4 +-
- net/batman-adv/translation-table.c                 |   2 +-
- net/bluetooth/hci_request.c                        |   4 +-
- net/bluetooth/l2cap_sock.c                         |   7 +-
- net/bluetooth/sco.c                                |   7 +-
- net/ethernet/eth.c                                 |  12 +-
- net/ipv4/inet_timewait_sock.c                      |  34 +++--
- net/ipv4/route.c                                   |   4 +-
- net/ipv4/udp.c                                     |   5 +-
- net/ipv6/addrconf.c                                |   7 +-
- net/ipv6/ip6_fib.c                                 |   7 +-
- net/ipv6/udp.c                                     |   5 +-
- net/netfilter/ipvs/ip_vs_proto_sctp.c              |   6 +-
- net/netfilter/nf_tables_api.c                      |   8 +-
- net/openvswitch/conntrack.c                        |   9 +-
- net/unix/af_unix.c                                 |   4 +-
- net/unix/garbage.c                                 |  35 +++--
- net/unix/scm.c                                     |   8 +-
- .../ftrace/test.d/event/subsystem-enable.tc        |   6 +-
- tools/testing/selftests/timers/posix_timers.c      |   2 +-
- virt/kvm/async_pf.c                                |  19 +--
- 90 files changed, 906 insertions(+), 340 deletions(-)
-
-
+Content-Transfer-Encoding: 7bit
+
+On 26.03.2024 10:16 AM, Vincent Guittot wrote:
+> Now that cpufreq provides a pressure value to the scheduler, rename
+> arch_update_thermal_pressure into HW pressure to reflect that it returns
+> a pressure applied by HW (i.e. with a high frequency change) and not
+> always related to thermal mitigation but also generated by max current
+> limitation as an example. Such high frequency signal needs filtering to be
+> smoothed and provide an value that reflects the average available capacity
+> into the scheduler time scale.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Reviewed-by: Qais Yousef <qyousef@layalina.io>
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> Tested-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+
+Hi, I'm not quite sure how, but this commit specifically breaks booting
+on Qualcomm platforms with EAS..
+
+https://pastebin.com/raw/1Uh7u81x
+
+Konrad
