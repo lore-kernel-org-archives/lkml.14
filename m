@@ -1,90 +1,241 @@
-Received: from mail-oi1-f195.google.com (mail-oi1-f195.google.com [209.85.167.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2057.outbound.protection.outlook.com [40.107.220.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CB7181319;
-	Tue, 30 Apr 2024 18:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714502540; cv=none; b=pgC3yyDRV4fF4sZdbXNt5z7EqbuMSoq6eQtbuEFzrcqGLUw3omjhkd93E0UiY0TupFqMM9+Nc1wUFzILlqijGfsiRzco4Y0gqqnf+62LZP3ucAXabOl2BV8W88geNHdwzRkXdBf+MqZ1Dt1zEE8cIku00BMBlCiCESd/vhEFuTY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714502540; c=relaxed/simple;
-	bh=2SWBAatX6Tq6dfCeZcUL/f9RTcVf03C+StuX5KzUDEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mRFZDVX63V43lELWPkvUcI0/PdpQKP7A4FjpcR84KTeWpFwIc792Q8ZaUdJN8TyBB76EN4fuNblmjGdoooNyLLVaPR0JumBiAUylQv6emnA1g3DdfsKPIqpTYOzlzF13DZP+RrVvJr38Kkx4dXESXBaA1lSreQqDuPNJN1qE9U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=breq.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=breq.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f195.google.com with SMTP id 5614622812f47-3c75075ad30so3876362b6e.3;
-        Tue, 30 Apr 2024 11:42:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714502537; x=1715107337;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9gRPPAtOqAwMAtylna7iyoPZyPLqxt58VXYi95JXmxo=;
-        b=HCh9IA1K6J2evLMzdmq8D+2tDZfjfHhKnmJCQEY0AE6MIjqKm4GZO9T2M4lpmjTuhf
-         /6QO5lCKZLJOfusE/AtAYM307wWIWGHCJZP4nxrHEDflD6gVmECA6qNpP0I9Lk0RVoLL
-         4VtOBK3Gu5Kw417zH1GrVQptkqxdzv7Ney0yAr30IUbi5vpJ68TasGR5c6TZpRhMjp3W
-         dbwqipxT3pb2J6TxekyD9/DmRP0vas5IyewnO+teR7qdOl+2+6RRRkPK0KLHnRirTa03
-         sk5W8v33SRv1E78Cha8cBSHp6d3750IgkTx38/T/LM/qOKj43ASFBQYPcGw91gBIQseE
-         Fj7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWyUvptXyN7TXXfjvEjzhRfUgWc2YCpmWdfNRDALeriL1Yd3jJVvyOq39dmN3VaSE5diXt/WxIEfh5FB4ymOBoY+lUq+DuXTEe1UlAS8OqR4a1HQ10nBbds4rbPwQSidcgoHf/FIRlguQ==
-X-Gm-Message-State: AOJu0YyubpZ+f6sZFsGfzNJC0zZnBCjTroTo7bPQEDyUmSm3CajnfVRr
-	HRK1F/rCPtT73kL12c3UQ7SbIwzmDhILIxzEHpzrxt2AEEjuzoih
-X-Google-Smtp-Source: AGHT+IGlHJ1jpHTqX1qio86LU7j9pVRajNIWRCPKuRkq5mR4t5v4o04BuxVmsz3zZrFDQ/LqY+2DTw==
-X-Received: by 2002:a05:6808:d52:b0:3c7:39f5:d3b5 with SMTP id w18-20020a0568080d5200b003c739f5d3b5mr541578oik.58.1714502537437;
-        Tue, 30 Apr 2024 11:42:17 -0700 (PDT)
-Received: from artemis.cable.rcn.com (146-115-84-170.s2975.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.84.170])
-        by smtp.googlemail.com with ESMTPSA id a15-20020a0ce90f000000b006a0e94eb3e9sm338920qvo.34.2024.04.30.11.42.16
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 30 Apr 2024 11:42:17 -0700 (PDT)
-From: Brooke Chalmers <breq@breq.dev>
-To: 
-Cc: breq@breq.dev,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPI: resource: Add Asus Vivobook N6506MV to irq1_level_low_skip_override
-Date: Tue, 30 Apr 2024 14:40:52 -0400
-Message-ID: <20240430184146.66887-1-breq@breq.dev>
-X-Mailer: git-send-email 2.44.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936AA181323;
+	Tue, 30 Apr 2024 18:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714502634; cv=fail; b=csAVDbl++7O79TFqLDAmav+SLWv1+KO1YC94ac/WclwXCUZkWQmPu9vxYRXD6xvAxQYTxh3vZWRdkfY06pD9yzcQ7LRvpes34qbbYmuQlTB8tfk6Gcm9CLyb78iF2wCjbCrUIOhWYdcoIj6p8EB+etwsH9ixCD/GX4pf9r/00Ys=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714502634; c=relaxed/simple;
+	bh=LHfSIr02hAZ+waNnG+G6QAadL6ene1pIwXmN8P99uJY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=j8xZhHe30rccxY6kLWkqdpafmPGS0Q9do5/+sh314K8sCzpOUM/4Jn4s3JfU4HnQZbXA15DVxUQVicgmMos4ZkjhAZt+DdC9+2MFQG7uQoztBvmmB1tgippZgGLy874lud6e8aOPlAUE8hn2fIIwQDk8GJnn2IAcgBclt5lAgkQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xecZi7dk; arc=fail smtp.client-ip=40.107.220.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xecZi7dk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gv9Es2xgJ1LgRBQ69VMBAAItlWGZ50AtfT/2Ry9DxLT3cRIjWFMnhojahqrjOifCt+EtU9f3uQQFbjWTUSjTseRb175zj2XfBJjrxwqTjWseN13DMZj+/kx57z07gF9NavjC0N0wtM8F8ShwQfJo74QJDC2n0+ul/+JzMoa3Qbc7fdlrDx59Wb0eB2cDCc9ENJ0+ropVmbGzE5p8ergpcKYNIT6H4jIplXm6hyg8xRrPa7S/VeQty5Kw0XUrFP+efpV8mHGZtYdT2FjOrzIrGojYSohR7FiscOhysxktk55+zaoNc3B3Qi6ntePfF3iGO+9qI9hPQwdtrkvvnTnO9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TPOYEOlfDD0RmvXb5Gj6PWeJh4MJiJc8xJ5IDdgw5Ss=;
+ b=n2NPr5ygKtPztMlJUEl7n8Yc6xcBgngwHcmHWDS0mF/u1uc43ehhdCDPau4YkTH+j996WOyRLhBz6JmBjJ0R7Mr33DIhm/rlJp8S5UlyjWhugncMBAZvcQ7hhabdi/l0+6FZUjp5cJAxMquQug7+G2kvRm4B+xGtc8FEDuNqmolITeJ27stQaXeKVhjgs/akFfhaT/kYNrT8M4emCi3hO7FGNKDee3h88rLdf5zAgof0GmxlRsP0kcehsGFqelVo2WlkQcx3xCL0EaIVRSXIOS4SjOw/5oIhPq4JXg3VU5Z2LPypuFw9FwTMjmvjNCD9IH7d9sdcoo0EiIKwaPuVtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TPOYEOlfDD0RmvXb5Gj6PWeJh4MJiJc8xJ5IDdgw5Ss=;
+ b=xecZi7dkiD6q9i3XaK5+ku4wGl9NFs5azy41iQpUo1gAvxHmbzKJPwm6qmuFZUrJoY4XIStgmDH8KoBWI1/ahGfI2/JUhru6OF0mfYhKFwQKlRyK5sXGjyQRRQZ9T83E+hrNIAP6Ih0SVIcN/8vI2Ss9nUT7e47B7ilQDKzZSLc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CO6PR12MB5427.namprd12.prod.outlook.com (2603:10b6:5:358::13)
+ by BL3PR12MB6619.namprd12.prod.outlook.com (2603:10b6:208:38e::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Tue, 30 Apr
+ 2024 18:43:48 +0000
+Received: from CO6PR12MB5427.namprd12.prod.outlook.com
+ ([fe80::1c2f:5c82:2d9c:6062]) by CO6PR12MB5427.namprd12.prod.outlook.com
+ ([fe80::1c2f:5c82:2d9c:6062%5]) with mapi id 15.20.7519.035; Tue, 30 Apr 2024
+ 18:43:48 +0000
+Message-ID: <be5adbf9-1277-4753-9b8a-efadeb5b019e@amd.com>
+Date: Tue, 30 Apr 2024 14:43:44 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] drm/amd/display: Fix spelling various spelling
+ mistakes
+To: Colin Ian King <colin.i.king@gmail.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Xinhui.Pan@amd.com, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240424162809.3948457-1-colin.i.king@gmail.com>
+Content-Language: en-US
+From: Harry Wentland <harry.wentland@amd.com>
+In-Reply-To: <20240424162809.3948457-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR01CA0040.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:2::12) To CO6PR12MB5427.namprd12.prod.outlook.com
+ (2603:10b6:5:358::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR12MB5427:EE_|BL3PR12MB6619:EE_
+X-MS-Office365-Filtering-Correlation-Id: 769084dc-3b2d-4b65-b6f6-08dc69457923
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZUh1bURtUVFSbEhMWU4zQjFtcDZoQTcrQ2VRbm9VTGJyLzZtcjRtMlp6QTB4?=
+ =?utf-8?B?T3N6cVVqd1QyYzRwUmxaaDRHMEdLUVRkZTZ4eWdzVmdwZzR6Umlzb0dDbGYw?=
+ =?utf-8?B?ei9sRzd6bWc1QmZqandlZE9EMS8xb2xQNlpoaTROajAvWnpSNnZxdm1jbC9t?=
+ =?utf-8?B?UkdMUVJSdXI0N2RhL3FBNHZ0RGUvQWNLU3d1NUpnSktFVEhqYWFRMkwrb3B1?=
+ =?utf-8?B?VENyaHhlNEQ1R3hmQkJxdXlRL1cxU2Fkck9OMGdIRmZOcHZTOFdxRWVlUitn?=
+ =?utf-8?B?WGZheVlIT1JiaTFXOHdoRVYyQUJSa0w5ZVBENi9uNDdaSlNJOGNPYXc4L0xL?=
+ =?utf-8?B?ZStyMXNmTytlTWpvWUcwbHFZazNJek40a0dJT1Z6YmtXb0VVTDcwR0R2UXJP?=
+ =?utf-8?B?VmVjR1BRSmtOMGhOeEphZ0t0eVVPdUdzWVZIdVk0Ni9YRFlLTFUrV0pIdkxU?=
+ =?utf-8?B?STc5SThaYWdEbG9kZmRoM3c4YVRXeGcvR1l0NVAwZ3dCTUtwclhDN3dnSUdT?=
+ =?utf-8?B?U2VnelhQUm4rL044YUJVQ0ZSa09FSWJNUUdkTk0wSk0rVHZYcjZ4QzVSR0Rt?=
+ =?utf-8?B?TG85cDUzMTI1bGhMQjlKSlNNRFJRUHQ0Y2FBVG90OXgxd2FIVDNIUHU0VFUr?=
+ =?utf-8?B?bUh2ZnE1Mlc3OXpORXAvZVp3Z1lGYzl6eWxTVWZDUlhlYjVUNG8rYkNqN2FW?=
+ =?utf-8?B?NXc5bG0raFNmRjJJUGIwcDVJUHlOOWQvdklQTHdnRW13b2g3RkZZUVBOZDRX?=
+ =?utf-8?B?TzJZSm40MVpNbXh6c3VwOWNMTTlJVTVkVDA0V1dZQVd5a0Z0OXVzaFhtWEQv?=
+ =?utf-8?B?SElhOC9JUHZWVWN3R1EzQVFEVUpvbGtWTU4wdUVHQ2xMTURXZ2dSMzVpNlVT?=
+ =?utf-8?B?eGtPNjVRUlJHbUczQ2NpZkJzZEZqZUdvNnFPMXFkTnM1bW9OenZyWmMzYjlR?=
+ =?utf-8?B?YnFQT0VmODhsYWkwanJWSldDczJNRS90VjIwRXBnWUJ1TjJyNDBZeHZwVlgz?=
+ =?utf-8?B?SkVVNDFndC8xayt1V1pBNVl5bnlNbTFydUtzZHRYMTNuVXZ2UVhmN3hRMmNX?=
+ =?utf-8?B?enFWZkplV2hmQ3Y5Y0k1VU5COFZyR0Uwd0JQRkc0YjZ5aTc3Z2RXQTAvUFhK?=
+ =?utf-8?B?aXRORUJrcFZaS1MzTDN5eXF6bm1mV1dZNjVXRDdPMjgvVWlFQ2FxYlNmdldH?=
+ =?utf-8?B?T3ljY2JlU1h2ZDlNSEcxY3NXalZZN3lOM2pjOTUwcnM1Y3FiTnBWZzJuQ1Rs?=
+ =?utf-8?B?ZTMwNDljNFo5d2t5R0M5b1RSaWNiUXVSL21uaEs1cDM4RXJ1eWJUaDlKOFB6?=
+ =?utf-8?B?d0FwMEl6UExBbnNacHFjM3d6WTgvOGpPbnBHOEJESDFwd0UzQ1RvOWVIc2pI?=
+ =?utf-8?B?Zm5WUG8wS1hDTFN1ZVVqQ0VoUmY4KzVrQ1hDdVpFQjZvYXhuQ1RnNytDaFgz?=
+ =?utf-8?B?VWVqVTBWZW8rWjdoWHVkMUhmT1Y4SEFnQmZXSXpFQkpzSFZ5RDEwVnVVS2Nm?=
+ =?utf-8?B?Q3R5d3ZYL2FadEM2cEFaQ2JNMWhwQXFLYlN0QVB5VTNVcmRXelV0MHI3cWNF?=
+ =?utf-8?B?Q0lDNk54anYxMnZhVWFnc3g2b0JDTGhzbEM3UStVaGQ0eVZQVDdRQXEvRDB5?=
+ =?utf-8?B?cXZSQnE0eEhNR2JtbTZ5dWF1bGZJd25ZYUNHK0U0S1FHQ2xmdkF2RDl1cU1D?=
+ =?utf-8?B?SGhhMXpENEdsUzJYRnh4SmkwM2JQTnZvcTBJckw2Tlgwcm5WaSs3cWtBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5427.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?c0pKQ0t2blNGVHgyemhHZWpBTE11bVRqSkNCODJySWNoT1EvbHRQWnpDQzJ0?=
+ =?utf-8?B?eGUwMFFlaFBLQ3hnRGVXRVhiL0NBRkFTR1AzNUFKa29kTHZkbC8zWlNTV0Fv?=
+ =?utf-8?B?YzJpVlRJbWlqVEY0NGtvVXBZeEpqZ2FQWU5LTW90cy9sTzRYK1p4RzRrY0h4?=
+ =?utf-8?B?YjJmMCtzM1hEZ3VVa1JuNkQ4TnM5dHlxSkM2WGVsWXBGTUpnZWdjaU1LbUZW?=
+ =?utf-8?B?YUhGOEJNSE1uendETTRwUlBQemo1L1VJcVo0Zm9mR3ZBeVd1VmxuL3FYT3RB?=
+ =?utf-8?B?UktVc0Q0bzJwbWlTMjhQcFBCbGxWNTFLQWE1ZTVMZ3l2UFN5M2o1dTBsa0RE?=
+ =?utf-8?B?RE9qdkNJdEpRR3ZJaHRkQXZPVVJpUmRwK3BYeGlHQlZVbmRIMEpyR3c4ZTVn?=
+ =?utf-8?B?QnFMVlRkNVJIWTlwSW1odkdXaTA4QU03aFk1TGc2WVN2Zjd5aGpxUjdlRnQv?=
+ =?utf-8?B?MDFldWg1Z3BxWE51VGExelpaSzJYQjA0cEdLMTBjRGM3M2pGdjRsS20wNlBP?=
+ =?utf-8?B?SWtFOHZ6aktZZjNlMmgxZzF6VkhFUkJqYlBuQ1E1aXFjbkR4YzVrL0NvaWRw?=
+ =?utf-8?B?QTFvcWJ1d245RENmdkxqbUlzdlhia3RsVUk2c3BVdGVhdGxjQnlScHBQN2lz?=
+ =?utf-8?B?TEM0Vkk1QkJ6L2ViQnVvOEczL1hDbUNWMFNHU3lCVmtSeEFUM2c0bnR5VmdC?=
+ =?utf-8?B?cTVYSUdGUW42TnlVOWdsUEN3OEV2UTNoeVVMMUFYOUxPd1FrU2lMeUZxa0Ex?=
+ =?utf-8?B?eGREWVV4c0dob2g4ZWM0eVZLcmVKRk81NzlHcU54aFF4OCtBa3RFL1VZRFNn?=
+ =?utf-8?B?SXRiQnA1RkVIMEMzTS95VEluVzdnejNMelV3em5EYUs4YWFqd3Z6RExHengz?=
+ =?utf-8?B?bTFHM0s5VENUUW8rV2k1ZlpkcEYwOVlZZkxMWHpmNnd4WHRkaGNKb2ZaS2d3?=
+ =?utf-8?B?KzFsRFVlWkhuZ3lla1U1Zk8ybm1NTmpteHRiWVhZbXRZUUFCSWdzcUp3Z0wv?=
+ =?utf-8?B?alcxd1gyUllHY01DYzFhaTB1dEVFQzNEL3hPQjgxZVlGNi9OR3dUbTA3dS9E?=
+ =?utf-8?B?bjR3a2I3ZFY0bGpKemEvMnZMTUpOWEo2QkxwVTU5TEdHS1pLU2VHaFc1eldz?=
+ =?utf-8?B?aGJpRzRhb2lvK1NJb09ObzFDa1I3KytrVHA3TVFETTVoRDlac0tsdlQ3ZENu?=
+ =?utf-8?B?a2VlOVpuSlBWc2dsaXhTam9VM2M1NlFIbHJVRjAwVnowZllyUmpyeEtIVmll?=
+ =?utf-8?B?d3lXM3lOT2JhazNsTGdXSlM1TTlQRlpCN2xkdWdOTkNYRE5raDNyYitEdXor?=
+ =?utf-8?B?dUF3eS9VN2pDRHN5OExLeS91dTdiRmVZOXhURmliRExkRkVLckltZXpmMDRJ?=
+ =?utf-8?B?WXR3SlhBWlVTZ3dHUXYvWGx2T0hwYVNuWmIvaVhnSXFzdE5wamtjOG5JNmhw?=
+ =?utf-8?B?eGh0aU1ZUzBncXI2dkk1WWxreU5jLzB0MEVRSW1maFVpYkxJYUllTUp3Uis0?=
+ =?utf-8?B?RU8yOWpOVGNaa1M5TFBTNTFwTzFoaytVbFoySHBDQjZqS2w4V05HNmRYU2tZ?=
+ =?utf-8?B?TUdBMXdNdDFLbUtsTzY4YUg5V2hEdlRGRnRmNGo1dmp6Wk5PM0xtalBocFYy?=
+ =?utf-8?B?QVZZZnVZWVZFbU9GVDRBMlEyUWVpbmtpMVNvdlhIUzhoVUN4MDNxdTVmMVRp?=
+ =?utf-8?B?RERsK1ZjSzc0dW1rYXpBNTlTQ2hVSXhLYjhHdW1XYVp5OUNoblJxV1I0YlBY?=
+ =?utf-8?B?S3QzcDd2SE5UeXhPLzhUbkdGVnI0WFVqRXVhbVpCOVhvbmxRU3NwMlloUDhm?=
+ =?utf-8?B?MGJ4b09ON3RmY2FqenJCMXhsUHVGRnNrY212MXdMUWRYcUhDelZHSGNmcXFM?=
+ =?utf-8?B?djVtZXhraE41MzNOS1VOamZrUDVTZmZncHJkaE1GMzJkb2NuNGFkd0F4Rnpm?=
+ =?utf-8?B?dS9JSjBqNVVGUVEveDdTSHRCalB5VWI5ejRLN2Z1QmZWSkwrWktDUS8vMytQ?=
+ =?utf-8?B?aUcySDVCNXQwb0Nnejh2NUVRM1JOS3plL1ZZa2E1RHptR0R2MUxWY0RBRFM2?=
+ =?utf-8?B?cVJaaFZFelNBVFdUanpNWGtLSzZHK0pubS92bFpsa3FuOHVhYTUxT1JzZnpX?=
+ =?utf-8?Q?ME7dAxg0+xGlwdBnslQ0uWcx6?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 769084dc-3b2d-4b65-b6f6-08dc69457923
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5427.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2024 18:43:48.7368
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pr/KARK8iaWLRt/bqFqt7dDZiBRWg82ywma8Rg2Xlfrk5IKEQDT8TKOg7/N9D3hJvrXSPpLcZKRGdoumds85dQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6619
 
-Override the keyboard IRQ level on Asus Vivobook N6506MV laptops to make
-the internal keyboard functional.
 
-Add a new entry to the irq1_level_low_skip_override structure, similar
-to the existing ones.
 
-Signed-off-by: Brooke Chalmers <breq@breq.dev>
----
- drivers/acpi/resource.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+On 2024-04-24 12:28, Colin Ian King wrote:
+> There are various spelling mistakes in dml2_printf messages, fix them.
+> 
 
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index 59423fe9d0f2..1097d9dd657b 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -440,6 +440,13 @@ static const struct dmi_system_id irq1_level_low_skip_override[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "S5602ZA"),
- 		},
- 	},
-+	{
-+		/* Asus Vivobook N6506MV */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "N6506MV"),
-+		},
-+	},
- 	{
- 		/* Asus ExpertBook B1402CBA */
- 		.matches = {
---
-2.44.0
+Thanks.
+
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+
+In the process of merging it into amd-staging-drm-next.
+
+Harry
+
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  .../dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c      | 6 +++---
+>  .../display/dc/dml2/dml21/src/dml2_core/dml2_core_shared.c  | 6 +++---
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c
+> index 846b0ae48596..2dea5965d02f 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c
+> @@ -5566,7 +5566,7 @@ static bool CalculatePrefetchSchedule(struct dml2_core_internal_scratch *scratch
+>  		dml2_printf("DML: Tvm: %fus - time to fetch vm\n", s->TimeForFetchingVM);
+>  		dml2_printf("DML: Tr0: %fus - time to fetch first row of data pagetables\n", s->TimeForFetchingRowInVBlank);
+>  		dml2_printf("DML: Tsw: %fus = time to fetch enough pixel data and cursor data to feed the scalers init position and detile\n", (double)s->LinesToRequestPrefetchPixelData * s->LineTime);
+> -		dml2_printf("DML: To: %fus - time for propogation from scaler to optc\n", (*p->DSTYAfterScaler + ((double)(*p->DSTXAfterScaler) / (double)p->myPipe->HTotal)) * s->LineTime);
+> +		dml2_printf("DML: To: %fus - time for propagation from scaler to optc\n", (*p->DSTYAfterScaler + ((double)(*p->DSTXAfterScaler) / (double)p->myPipe->HTotal)) * s->LineTime);
+>  		dml2_printf("DML: Tvstartup - TSetup - Tcalc - TWait - Tpre - To > 0\n");
+>  		dml2_printf("DML: Tslack(pre): %fus - time left over in schedule\n", p->VStartup * s->LineTime - s->TimeForFetchingVM - 2 * s->TimeForFetchingRowInVBlank - (*p->DSTYAfterScaler + ((double)(*p->DSTXAfterScaler) / (double)p->myPipe->HTotal)) * s->LineTime - p->TWait - p->TCalc - *p->TSetup);
+>  		dml2_printf("DML: row_bytes = dpte_row_bytes (per_pipe) = PixelPTEBytesPerRow = : %u\n", p->PixelPTEBytesPerRow);
+> @@ -7825,7 +7825,7 @@ static bool dml_core_mode_support(struct dml2_core_calcs_mode_support_ex *in_out
+>  	dml2_printf("DML::%s: mode_lib->ms.FabricClock = %f\n", __func__, mode_lib->ms.FabricClock);
+>  	dml2_printf("DML::%s: mode_lib->ms.uclk_freq_mhz = %f\n", __func__, mode_lib->ms.uclk_freq_mhz);
+>  	dml2_printf("DML::%s: max_urgent_latency_us = %f\n", __func__, mode_lib->ms.support.max_urgent_latency_us);
+> -	dml2_printf("DML::%s: urgent latency tolarance = %f\n", __func__, ((mode_lib->ip.rob_buffer_size_kbytes - mode_lib->ip.pixel_chunk_size_kbytes) * 1024 / (mode_lib->ms.DCFCLK * mode_lib->soc.return_bus_width_bytes)));
+> +	dml2_printf("DML::%s: urgent latency tolerance = %f\n", __func__, ((mode_lib->ip.rob_buffer_size_kbytes - mode_lib->ip.pixel_chunk_size_kbytes) * 1024 / (mode_lib->ms.DCFCLK * mode_lib->soc.return_bus_width_bytes)));
+>  	dml2_printf("DML::%s: ROBSupport = %u\n", __func__, mode_lib->ms.support.ROBSupport);
+>  #endif
+>  
+> @@ -10603,7 +10603,7 @@ static bool dml_core_mode_programming(struct dml2_core_calcs_mode_programming_ex
+>  				if (display_cfg->plane_descriptors[k].immediate_flip && mode_lib->mp.ImmediateFlipSupportedForPipe[k] == false) {
+>  					mode_lib->mp.ImmediateFlipSupported = false;
+>  #ifdef __DML_VBA_DEBUG__
+> -					dml2_printf("DML::%s: Pipe %0d not supporing iflip!\n", __func__, k);
+> +					dml2_printf("DML::%s: Pipe %0d not supporting iflip!\n", __func__, k);
+>  #endif
+>  				}
+>  			}
+> diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_shared.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_shared.c
+> index 0ef77a89d984..d1d4fe062d4e 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_shared.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_shared.c
+> @@ -2023,7 +2023,7 @@ bool dml2_core_shared_mode_support(struct dml2_core_calcs_mode_support_ex *in_ou
+>  	dml2_printf("DML::%s: mode_lib->ms.FabricClock = %f\n", __func__, mode_lib->ms.FabricClock);
+>  	dml2_printf("DML::%s: mode_lib->ms.uclk_freq_mhz = %f\n", __func__, mode_lib->ms.uclk_freq_mhz);
+>  	dml2_printf("DML::%s: max_urgent_latency_us = %f\n", __func__, mode_lib->ms.support.max_urgent_latency_us);
+> -	dml2_printf("DML::%s: urgent latency tolarance = %f\n", __func__, ((mode_lib->ip.rob_buffer_size_kbytes - mode_lib->ip.pixel_chunk_size_kbytes) * 1024 / (mode_lib->ms.DCFCLK * mode_lib->soc.return_bus_width_bytes)));
+> +	dml2_printf("DML::%s: urgent latency tolerance = %f\n", __func__, ((mode_lib->ip.rob_buffer_size_kbytes - mode_lib->ip.pixel_chunk_size_kbytes) * 1024 / (mode_lib->ms.DCFCLK * mode_lib->soc.return_bus_width_bytes)));
+>  	dml2_printf("DML::%s: ROBSupport = %u\n", __func__, mode_lib->ms.support.ROBSupport);
+>  #endif
+>  
+> @@ -8174,7 +8174,7 @@ static bool CalculatePrefetchSchedule(struct dml2_core_internal_scratch *scratch
+>  		dml2_printf("DML: Tvm: %fus - time to fetch vm\n", s->TimeForFetchingVM);
+>  		dml2_printf("DML: Tr0: %fus - time to fetch first row of data pagetables\n", s->TimeForFetchingRowInVBlank);
+>  		dml2_printf("DML: Tsw: %fus = time to fetch enough pixel data and cursor data to feed the scalers init position and detile\n", (double)s->LinesToRequestPrefetchPixelData * s->LineTime);
+> -		dml2_printf("DML: To: %fus - time for propogation from scaler to optc\n", (*p->DSTYAfterScaler + ((double)(*p->DSTXAfterScaler) / (double)p->myPipe->HTotal)) * s->LineTime);
+> +		dml2_printf("DML: To: %fus - time for propagation from scaler to optc\n", (*p->DSTYAfterScaler + ((double)(*p->DSTXAfterScaler) / (double)p->myPipe->HTotal)) * s->LineTime);
+>  		dml2_printf("DML: Tvstartup - TSetup - Tcalc - TWait - Tpre - To > 0\n");
+>  		dml2_printf("DML: Tslack(pre): %fus - time left over in schedule\n", p->VStartup * s->LineTime - s->TimeForFetchingVM - 2 * s->TimeForFetchingRowInVBlank - (*p->DSTYAfterScaler + ((double)(*p->DSTXAfterScaler) / (double)p->myPipe->HTotal)) * s->LineTime - p->TWait - p->TCalc - *p->TSetup);
+>  		dml2_printf("DML: row_bytes = dpte_row_bytes (per_pipe) = PixelPTEBytesPerRow = : %u\n", p->PixelPTEBytesPerRow);
+> @@ -10994,7 +10994,7 @@ bool dml2_core_shared_mode_programming(struct dml2_core_calcs_mode_programming_e
+>  				if (display_cfg->plane_descriptors[k].immediate_flip && mode_lib->mp.ImmediateFlipSupportedForPipe[k] == false) {
+>  					mode_lib->mp.ImmediateFlipSupported = false;
+>  #ifdef __DML_VBA_DEBUG__
+> -					dml2_printf("DML::%s: Pipe %0d not supporing iflip!\n", __func__, k);
+> +					dml2_printf("DML::%s: Pipe %0d not supporting iflip!\n", __func__, k);
+>  #endif
+>  				}
+>  			}
 
