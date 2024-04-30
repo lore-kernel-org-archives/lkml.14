@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A73319DF73
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:31:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755943AC16;
+	Tue, 30 Apr 2024 14:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714487492; cv=none; b=XfY3q9qWzslxV4gpO6Utjhz291ZhepSOdxa1AhtoHdYwmX4kRB1+z2yGmu7dsWfMjNP0SJl4iiT6Xua+OReLiD5BR/yXhygdUlXEfiniO3za8Z1v4uN/xVSn7h5TsQ0Hh8f9H2HX63A1P14vlhzeFWDfu/P8Pt7ei08tMq5s8m4=
+	t=1714487497; cv=none; b=jCSU8w0xHjeHz4nv67t2l33g7kjeQwelf6ibk7TdgqZa95JlWXjjulHFvwZ/YrVs5jFLiessYlxSUpnVexi0LkdWvd1njGlrvhuDq1elqXiEKhhivCBNI+TJ3ITsdbKl4n7cmzA9n/ciehRgJFupEIaA0GJpWIaBA6o0Sn6rMRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714487492; c=relaxed/simple;
-	bh=TpIld0LnjkQmQ5PsI5skb5CrdOEKjutEJsH7FAf0+NE=;
+	s=arc-20240116; t=1714487497; c=relaxed/simple;
+	bh=rAZcmLCKs6C3ZgBBEHG7AWSAjm/WmGO8airtDzp/QGk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=p0giL0Z1469YoDUZI/YYb+Fht1FVV+4TrR8RnDbrEJRQS+7gETk89W2V0KxafvLEzRrl5tkYo5xt0OFonya18XmPoElYBdInGiXtx6NU7zogSoT3KCBnuUjXNOyoYGVaCsryoNxOreXHNBAKD0U+WIrgNGdMIhv0TE2FzeelPH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fhfzw95x; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=f6Q10fQGj141PsuxPpgWcjCqZgXDIDVAJ+napG6yU3COAMGqVwmcNl3x9jA4w/sR+UK7gfiyZyB2Z8qxxRpNTvLdjU44KAqGkQMq2fQWZJMjG3ZxcDP7+A18uvMbdjlVbupk2U/HrOdDR8+wjTTu2NBtdQwzVXittzzFsOUr6BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDLYhQNv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fhfzw95x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04429C2BBFC;
-	Tue, 30 Apr 2024 14:31:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDLYhQNv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FBF9C4AF1D;
+	Tue, 30 Apr 2024 14:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714487491;
-	bh=TpIld0LnjkQmQ5PsI5skb5CrdOEKjutEJsH7FAf0+NE=;
+	s=k20201202; t=1714487496;
+	bh=rAZcmLCKs6C3ZgBBEHG7AWSAjm/WmGO8airtDzp/QGk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Fhfzw95xZd3KJTF+cCGdHv5EaYCh88EHjU8X8xTwZ8XiZqYVfYcPkaRQIohdggJPy
-	 WmRAfI/LaTfKGjSQP1hyncVMwFyA8Sjw0pWDoNgp8LVjWtUZGhTP2JpzjCw+8n2t0u
-	 5+CzBUAJRvmzeeENLs9h3wUE0UFAXZw1yWN1kf4qwal+onpYkR8VfpWkNVFuJuJcH5
-	 ueJ88sdZ8zG2RBw5pmuOTlQnkkwi7n7dHsuWoZlax1sN3te04Oix8U3fOq8PrYZBXY
-	 uI3BLckXTXKzLTAz3frfU+05s+09aa9IiXJ0W8BH1il+W7oBRKNKP75YtSy44fXAiS
-	 LAcE/5vF+PgEQ==
+	b=WDLYhQNvf2fu44bGta60FeP2ltWuqBq25yIETMyjyaRLOf0R0dBo3EkBFcjSGYYKl
+	 sjZHjwCmwL7y2zunGhlRgrA9L5PD5yGRwBQqpFpI0vHYcw9dPrilRXDxHSYRLIty6M
+	 eCPTh+REpLaMHnsPNucEPeSLJHfiIEWNdTywAgPYi35Sjx53lK+SPmmwpCqgnFhmED
+	 UMuniQnAz5+7tCJD4m4bl3JH73h9+muxvPBhRwEo2Z87PWvoZuoQkNUTrHeGO6AUCy
+	 w7wf01nrJILxMHp4lPHq9Nw0VvUv3q5YxFeMRvpT0rBg5jawK3SQT+RrjnZgabGkc4
+	 EaNnnu/rqisow==
 From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>
-Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, 
- linux-amlogic@lists.infradead.org
-In-Reply-To: <20240426134150.3053741-1-jbrunet@baylibre.com>
-References: <20240426134150.3053741-1-jbrunet@baylibre.com>
-Subject: Re: [PATCH] ASoC: meson: cards: select SND_DYNAMIC_MINORS
-Message-Id: <171448748960.1870439.10234664957673529561.b4-ty@kernel.org>
-Date: Tue, 30 Apr 2024 23:31:29 +0900
+To: Ban Tao <fengzheng923@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, Joao Schim <joao@schimsalabim.eu>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240429194920.1596257-1-joao@schimsalabim.eu>
+References: <20240429194920.1596257-1-joao@schimsalabim.eu>
+Subject: Re: [PATCH v2] ASoC: sunxi: DMIC: Add controls for adjusting the
+ mic gains
+Message-Id: <171448749392.1870439.1399491803158865203.b4-ty@kernel.org>
+Date: Tue, 30 Apr 2024 23:31:33 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,16 +50,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14-dev
 
-On Fri, 26 Apr 2024 15:41:47 +0200, Jerome Brunet wrote:
-> Amlogic sound cards do create a lot of pcm interfaces, possibly more than
-> 8. Some pcm interfaces are internal (like DPCM backends and c2c) and not
-> exposed to userspace.
+On Mon, 29 Apr 2024 21:49:20 +0200, Joao Schim wrote:
+> The AllWinner H6 and later SoCs that sport a DMIC block contain a set of registers to control
+> the gain (left + right) of each of the four supported channels.
 > 
-> Those interfaces still increase the number passed to snd_find_free_minor(),
-> which eventually exceeds 8 causing -EBUSY error on card registration if
-> CONFIG_SND_DYNAMIC_MINORS=n and the interface is exposed to userspace.
+> Add ASoC controls for changing each of the stereo channel gains using alsamixer and alike
 > 
-> [...]
+> 
 
 Applied to
 
@@ -63,8 +64,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: meson: cards: select SND_DYNAMIC_MINORS
-      commit: 6db26f9ea4edd8a17d39ab3c20111e3ccd704aef
+[1/1] ASoC: sunxi: DMIC: Add controls for adjusting the mic gains
+      commit: 9a8cadddd9303ae15d1d518c4f2ddf00ee668729
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
