@@ -1,73 +1,35 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D1817A931;
-	Tue, 30 Apr 2024 14:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A072C17BB1F;
+	Tue, 30 Apr 2024 14:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714488020; cv=none; b=tJcfIe3iT+aezY27pOtpTzCGci718c0RKY8AUh4SwmYDl42A6AaR0VeLGT5GzesEUj4whGlke43sc+m0YE1RCKaSihClFC309ZZBgiBxab7p6hjdaLx/lwxAB+NhuiresSQNKa9zJVwN9OPpuMfSqyPehaT1ReG8MKfZSrI/0jo=
+	t=1714488032; cv=none; b=XkyhBnZM7SzM2Ft3sBdsNalVGsZ3D7W/3GICMVeCiycMKQ9GG5+VakdgZmIcNoFbN0DlIp8oIrJLBUHQToW4ov17HBDQ3H0sAUu/3CsqPlNkJgiT7xJ6QJv1nbQSmhG5DEWVKtRWt64qIodyAcFgstp2tY4f877hRbAwZ2H+tLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714488020; c=relaxed/simple;
-	bh=LX/cja2FJFFGw7iFNRlpntXAi8MvhPRZ3BEfjetYX9k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kKBifYl31h1zIAasX1rbAtyojLg5C0l8e1qrW9rr1pnRNFWCar+3IQO/rQim1MzPavxl7QrPlKZdZ+Wyfdz0vUxmGrFrzjn4hXThruLbmUAvCa6EZr9f2JTFxvKlqwJG/vWbasFhmQnuZ5qQ6eMTWU1bIhogQOQEK+2H6o2swOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c0dYtZZ3; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714488032; c=relaxed/simple;
+	bh=wZ3H0M96hj1P2m3kZarPeySiAcASDaF12cW1p+c4xMA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=YHbr7+nD/S/mCpte55FTms5K+q5EOK/qzoXxs809lrm5lAFzMoEH0rhng92RJKuzgKbdYtAXKE3nLnz8802vMX+JkvZ/jpzhZyduc0bqjGXMFqkDwlEEroerFrtrqq1J/Ly9rcXWLzTytwEA3yJLrLAXyL7UqwNvF9xDz3F9mKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRZq1z6N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0dYtZZ3"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-41b4ff362a8so53215755e9.0;
-        Tue, 30 Apr 2024 07:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714488017; x=1715092817; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iZxd/DI5QdY6rGwP24LbbxuJiqEuZoi+ZsrSMuiWkrQ=;
-        b=c0dYtZZ3BgHiPETbdpKFPEL7FjK5j58ieJ75CDDM1lcJCtgx3f9J8PCMSqrDGRqIl1
-         mAm9LVP7QCWrC2JOiFPEuhQrPnnqNR249W9Tu5UPF+7rrAGwaDazoidsUInagmJpwgTv
-         +gXHORk8gqBD6NoBGWDRAICkjzP1z9ZTraqjALID+4yaGk16KyHSepNEF5AtXvIgapeB
-         yMdz+IUZJfuBnImOYOfDmenlwxxqbFcSKgvW8RSartAijkT8NwMtiHeXywxaSEL5z9oV
-         +KDY23FSgR80TbDUAotPqskjGHLnGVebu+MEJpDg0uJgfr5o7F7T80BzQTzjKfZInUHj
-         PEDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714488017; x=1715092817;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iZxd/DI5QdY6rGwP24LbbxuJiqEuZoi+ZsrSMuiWkrQ=;
-        b=vOV9SeVVU8AZVJJQt/uVYnRUxh5q/bCl2yMUG2RNY+OnqpEviMEXu8HkLy41Q3PYAY
-         Gpl5bAUajiAVE/Sf1O0jxccPLyP/VIfd2Rqkrm3mjPhk89TshpGV3m4gu7jefBV7gcZR
-         T1dBF03SW5i2cpfKwdnaPMxlXsgItPTXfXzvEfgUbK9CBjq/4/YGZ7LVq/mRih4PTwG4
-         RHdQOcjAY4gG4+gpZ7szgxLVWBN/qUvATBkIirHN3jD6E01pXtz0T+uY/om70F0P31L7
-         FH42I3OLyjYE6RTVS5ffDcVGXa0VlSvZOJRUiS1QB9yF4jNQP0HBCNOoTfOK7+35CzQ8
-         fL8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWYl7muIuyDnuerJB9PYnWNsZ27ZSOGE8CgHGzYLGrkZAk0rolK1ARftvo+9Pq7qFUbYhnwN+ln2ETki8TYpE9Yn+gMOx2YP6pe9YUzfioC0D0hKbNojDKSykOSKKrPjcPGmksE
-X-Gm-Message-State: AOJu0Yw8NxooLfQ2Ph7brPAQ/cZUhoZ859LDxJYRxmxL+9lJXgJ0yBEX
-	lXadDeyIgSUPfc/h0g9R4+SU2ywB8eYTvE8Vse7S8zl+mS8G+Drw
-X-Google-Smtp-Source: AGHT+IElt5ZeAiVH8HZctTdg1/Kk5OH+JkzF1XzccUyF4Lt231Cmm5evb/2WFVt18/J13+oAtC4k3Q==
-X-Received: by 2002:a05:600c:198c:b0:415:540e:74e3 with SMTP id t12-20020a05600c198c00b00415540e74e3mr12217850wmq.40.1714488017142;
-        Tue, 30 Apr 2024 07:40:17 -0700 (PDT)
-Received: from localhost ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id h9-20020a5d4309000000b0034c78001f6asm10353790wrq.109.2024.04.30.07.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 07:40:16 -0700 (PDT)
-From: Richard Gobert <richardbgobert@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	dsahern@kernel.org,
-	willemdebruijn.kernel@gmail.com,
-	alobakin@pm.me,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Richard Gobert <richardbgobert@gmail.com>
-Subject: [PATCH net v4 2/2] net: gro: add flush check in udp_gro_receive_segment
-Date: Tue, 30 Apr 2024 16:35:55 +0200
-Message-Id: <20240430143555.126083-3-richardbgobert@gmail.com>
-In-Reply-To: <20240430143555.126083-1-richardbgobert@gmail.com>
-References: <20240430143555.126083-1-richardbgobert@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRZq1z6N"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 30A38C4AF1C;
+	Tue, 30 Apr 2024 14:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714488031;
+	bh=wZ3H0M96hj1P2m3kZarPeySiAcASDaF12cW1p+c4xMA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=NRZq1z6NUxOKrltdgSSWxu90z8zc4alucw8nLYzgOyuNuYLRQDk89pewC9JiUbPdr
+	 eOh8H04skdS23+aFzuXbPpQ3sAvtDQnPO4xLw2fvSFgQmDOgo67v9QzFjOIRO/JP/3
+	 dVDFjzojQX70GRinruiJOxUwIc+FdZgIGdinafU0+HvLDe2uXFWVBSOu6XfOT+eaYF
+	 3S3hiF9l8NdJqX8dpfrNzfJcEfPOgr1j9ZY+cofIVcnBR0eOwUP3DF01avnRPhVa1W
+	 81oA70NOYZ5e90+iFCUfxnrLgBmInIxedeHDmLldQMXXcrFZfY20vZGhVzSQtnwOso
+	 JGAnGb6PxjfbQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 18390C43617;
+	Tue, 30 Apr 2024 14:40:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,53 +37,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v3 0/3] bpf_wq followup series
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171448803109.2160.14624766767267201976.git-patchwork-notify@kernel.org>
+Date: Tue, 30 Apr 2024 14:40:31 +0000
+References: <20240430-bpf-next-v3-0-27afe7f3b17c@kernel.org>
+In-Reply-To: <20240430-bpf-next-v3-0-27afe7f3b17c@kernel.org>
+To: Benjamin Tissoires <bentiss@kernel.org>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@google.com, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com,
+ shuah@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
 
-GRO-GSO path is supposed to be transparent and as such L3 flush checks are
-relevant to all UDP flows merging in GRO. This patch uses the same logic
-and code from tcp_gro_receive, terminating merge if flush is non zero.
+Hello:
 
-Fixes: e20cf8d3f1f7 ("udp: implement GRO for plain UDP sockets.")
-Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
----
- net/ipv4/udp_offload.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+This series was applied to bpf/bpf-next.git (master)
+by Daniel Borkmann <daniel@iogearbox.net>:
 
-diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
-index fd29d21d579c..8721fe5beca2 100644
---- a/net/ipv4/udp_offload.c
-+++ b/net/ipv4/udp_offload.c
-@@ -471,6 +471,7 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
- 	struct sk_buff *p;
- 	unsigned int ulen;
- 	int ret = 0;
-+	int flush;
- 
- 	/* requires non zero csum, for symmetry with GSO */
- 	if (!uh->check) {
-@@ -504,13 +505,22 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
- 			return p;
- 		}
- 
-+		flush = NAPI_GRO_CB(p)->flush;
-+
-+		if (NAPI_GRO_CB(p)->flush_id != 1 ||
-+		    NAPI_GRO_CB(p)->count != 1 ||
-+		    !NAPI_GRO_CB(p)->is_atomic)
-+			flush |= NAPI_GRO_CB(p)->flush_id;
-+		else
-+			NAPI_GRO_CB(p)->is_atomic = false;
-+
- 		/* Terminate the flow on len mismatch or if it grow "too much".
- 		 * Under small packet flood GRO count could elsewhere grow a lot
- 		 * leading to excessive truesize values.
- 		 * On len mismatch merge the first packet shorter than gso_size,
- 		 * otherwise complete the GRO packet.
- 		 */
--		if (ulen > ntohs(uh2->len)) {
-+		if (ulen > ntohs(uh2->len) || flush) {
- 			pp = p;
- 		} else {
- 			if (NAPI_GRO_CB(skb)->is_flist) {
+On Tue, 30 Apr 2024 12:43:23 +0200 you wrote:
+> Few patches that should have been there from day 1.
+> 
+> Anyway, they are coming now.
+> 
+> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+> ---
+> Changes in v3:
+> - fixed bpf_test module not being able to be removed, because the bpf_wq
+>   was never freed
+> - Link to v2: https://lore.kernel.org/r/20240430-bpf-next-v2-0-140aa50f0f19@kernel.org
+> 
+> [...]
+
+Here is the summary with links:
+  - [bpf-next,v3,1/3] bpf: do not walk twice the map on free
+    https://git.kernel.org/bpf/bpf-next/c/b98a5c68ccaa
+  - [bpf-next,v3,2/3] bpf: do not walk twice the hash map on free
+    https://git.kernel.org/bpf/bpf-next/c/a891711d0166
+  - [bpf-next,v3,3/3] selftests/bpf: drop an unused local variable
+    https://git.kernel.org/bpf/bpf-next/c/05cbc217aafb
+
+You are awesome, thank you!
 -- 
-2.36.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
