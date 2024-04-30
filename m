@@ -1,170 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B598F70;
-	Tue, 30 Apr 2024 00:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CFF33D1
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 00:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714437956; cv=none; b=sJdzwaUDIe7tqHdc6srHcpaWJj6aHXE5WtqeTb826z/4jADoWDBc0t7AYyX3Cbw2SHF9nfmtHGlQy6bUhk76x95lpht1L6eZFqnePEbqxK03FhWetkIrTTxT5MCI8EHMSsUA8hyWZOPVSbzAAa4vouLvIjSbY5swhmv1WjUA3ik=
+	t=1714438166; cv=none; b=RCpA61whepzzUUMbH6Wq6blIWSbeey/nDYASHR5DSeLpA5BHcB171vT8I33geQHr24rv0xl1BqpfjNCaNFdkvd52DYCoyk6CbVdF9cVhLyG+/tLIrNNtyetZ4mGONECRlQIsjNiUJ3H8p6P0+rMqLxRi2Qgo8tsLrLoURA/SL9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714437956; c=relaxed/simple;
-	bh=n2JglvBaxDyC5t2TPzmaPHp6aarsIDz+KXhW0XBtZuE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nZDBHTj3374y73cnC93hf+FlvZ1eSAtph9v5HO/ORRi4B8WrXwjh25bH71TGzFv2YP/j51fph8iF64cuHkNQY8Bst42CDFXAnefg/pZToQ8UbwnePD7JjKm6LvbOTImUy4sAIbpzeC5cQ+ahUTUyAzZhGMX4iwIltZN3CRJOvPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kL7t7aZo; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714438166; c=relaxed/simple;
+	bh=CQZ+rutb34tlCcqKjJD9BEd+5QtdQSwRC5IuvL3355o=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Qd2O7EelKsg5LMyP5SulqJpdRsGTg+nwHSNV1PtyCz7lQi4o0n0lFkJFmyyc3SQgHcxBpseUm9NJ1Phk8TaEh7/KhmR3eD4ial/O+gPKXXGITv6h2RN9nND76cWnhAwoRY/SES4Hd3Czg05kNFiyF+13k25qyEcJmuJXcLpTSpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GaYb4yUX; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kL7t7aZo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714437955; x=1745973955;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=n2JglvBaxDyC5t2TPzmaPHp6aarsIDz+KXhW0XBtZuE=;
-  b=kL7t7aZo6tFeHyWexlzRZUkj/sOjnB5/C02aAeFMigKTXAd3SW+iiCIa
-   AxOa+7dnevZuqD1sF+KERMRKh9fVoD6fLJUfrQoraof2s603iof2ZfyB4
-   x+wluHhKRt3Kag9ohgFmFTsSeXyth8MPEPwPD9GBSuCsz3iSQmRWxG/U6
-   LBdM0wwNcjUflZO+kmggFWxJr7nVYjuoEOFXSvGOaJIhIzZfDOoEqf2Z5
-   HDR7PqK823IHh7V4d4WrrgjZ1MV4lfJrmQcMkv2JFKGyw8do9hZCWV6K3
-   5LMW/9jmBHgXxmUj+uCBquZYzHJ/bb8AWEMaeMKTn85iAccmsk+Q3prd6
-   Q==;
-X-CSE-ConnectionGUID: KxL9vE8MRsmjdiR/Nca0Bw==
-X-CSE-MsgGUID: 81OQq7hiQTqToaOzLLfN5Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10658602"
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="10658602"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 17:45:55 -0700
-X-CSE-ConnectionGUID: CnOKC37JQEuGplvgNu4MSg==
-X-CSE-MsgGUID: jPppx7dLRkSggHSBWngtqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="31079849"
-Received: from unknown (HELO dmi-pnp-i7.sh.intel.com) ([10.239.159.155])
-  by orviesa005.jf.intel.com with ESMTP; 29 Apr 2024 17:45:52 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jim Mattson <jmattson@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Xiong Zhang <xiong.y.zhang@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Like Xu <like.xu.linux@gmail.com>,
-	Jinrong Liang <cloudliang@tencent.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 2/2] KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with macros
-Date: Tue, 30 Apr 2024 08:52:39 +0800
-Message-Id: <20240430005239.13527-3-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240430005239.13527-1-dapeng1.mi@linux.intel.com>
-References: <20240430005239.13527-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GaYb4yUX"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61bbd6578f9so43573117b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 17:49:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714438164; x=1715042964; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=o1ppiacHBGt4deDldEbdpGFMwipyVa+kEjFesHxd+4M=;
+        b=GaYb4yUXbCmmbmZV6ysZZs3f85p6iLWfuWgI9fS5K2ZeZmCp4PxqsgegMZtVKPTZW+
+         Yp87VNUXr2ekbURwSsyjeAYb0fxIDLY0jiOLbNjH8dPRFZ/WTKGF6/3I5Q/2xWeTYSXb
+         EXQvwPHeIKgoqx4ADeEaf9NuFygAycrodBhZQ8Na55etqhDBb+tH7Ib7G67yct/saZUW
+         Jytl5bsyBo1I+W8m5b/9LL0HTY74A9Xc6GwRT24tvpK3Sf+jgdbXzP3FjJkqwBhjw2vr
+         29o6eQlK2J5ZXkejW4ZPAPu0zFcZbTOVoLGN+eDa1fL1r6VvEqHYsUfVTAUQcoUdh26u
+         QdRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714438164; x=1715042964;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o1ppiacHBGt4deDldEbdpGFMwipyVa+kEjFesHxd+4M=;
+        b=ElHT5KOrmG+52uRyn00IakGSf7xubBiZzUp0M3v0nqBbhA0TVvO2T1FCRXaKgviM+h
+         7P9+jwu9qVuX/AC9tm6MkZ3rmxORwJGMSRebvCPdGuyQIPSAPK2Ir5efyljtfy9pPmQx
+         yy0O2TBeBR5LgtSEqogbDQK19sspTMgcexOIvx6DF+adEpYMUU//yWqeT2yCtf4Au0hi
+         H10yCRzqJDJclcM4U8cnbouRQtwkWNEOfJXU79dhNG58NDk19r1ka5OZCqHiYhipFhMp
+         W43Qi0lxshsQHUd/fINGF0sdrvXzaYBog4nKsLwkTX9ZLeQVL4i2TxH6+rjA+JI9m+Us
+         2XJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBQPD+CWjlVYiCQ/B8tKc0tYDYpUchgIOc5kB9A1ImkgnRh1Y+LyjVsWnlHByd+3SpZerNe+ZQqj/JTORbNaXw/qF+BcVvwmoiPLwR
+X-Gm-Message-State: AOJu0Yyk0iTepLrLG5NV9rveCnMO7Q0SV7EVGeUV/byHh9xgtJL9d7/f
+	+KXMPVAa4DvIT8I9shrH4qwXt3eAByT9884lydOtS25rSLSKW5U4s9CUU3kGRmNBqpFpyJQnywS
+	cUg==
+X-Google-Smtp-Source: AGHT+IENnLlqrYtXCXtylGWiSBp8/4kI2FR3F2c3tGK00X6zJWwQq7PGDw9yYT+bwAFRgrPuE9Ry+c7gJvM=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a05:6902:20ca:b0:dc6:d233:ffdd with SMTP id
+ dj10-20020a05690220ca00b00dc6d233ffddmr4176106ybb.0.1714438164494; Mon, 29
+ Apr 2024 17:49:24 -0700 (PDT)
+Date: Tue, 30 Apr 2024 00:49:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Message-ID: <20240430004909.425336-1-edliaw@google.com>
+Subject: [PATCH] kselftest: Add a ksft_perror() helper
+From: Edward Liaw <edliaw@google.com>
+To: stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>
+Cc: kernel-team@android.com, Mark Brown <broonie@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Edward Liaw <edliaw@google.com>, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Magic numbers are used to manipulate the bit fields of
-FIXED_CTR_CTRL MSR. This makes reading code become difficult, so use
-pre-defined macros to replace these magic numbers.
+From: Mark Brown <broonie@kernel.org>
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+[ Upstream commit 907f33028871fa7c9a3db1efd467b78ef82cce20 ]
+
+The standard library perror() function provides a convenient way to print
+an error message based on the current errno but this doesn't play nicely
+with KTAP output. Provide a helper which does an equivalent thing in a KTAP
+compatible format.
+
+nolibc doesn't have a strerror() and adding the table of strings required
+doesn't seem like a good fit for what it's trying to do so when we're using
+that only print the errno.
+
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Stable-dep-of: 071af0c9e582 ("selftests: timers: Convert posix_timers test to generate KTAP output")
+Signed-off-by: Edward Liaw <edliaw@google.com>
 ---
- arch/x86/kvm/pmu.c           | 10 +++++-----
- arch/x86/kvm/pmu.h           |  6 ++++--
- arch/x86/kvm/vmx/pmu_intel.c | 12 +++++++++---
- 3 files changed, 18 insertions(+), 10 deletions(-)
+ tools/testing/selftests/kselftest.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index afbd67ca782c..0314a4fe8b2d 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -469,11 +469,11 @@ static int reprogram_counter(struct kvm_pmc *pmc)
- 	if (pmc_is_fixed(pmc)) {
- 		fixed_ctr_ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl,
- 						  pmc->idx - KVM_FIXED_PMC_BASE_IDX);
--		if (fixed_ctr_ctrl & 0x1)
-+		if (fixed_ctr_ctrl & INTEL_FIXED_0_KERNEL)
- 			eventsel |= ARCH_PERFMON_EVENTSEL_OS;
--		if (fixed_ctr_ctrl & 0x2)
-+		if (fixed_ctr_ctrl & INTEL_FIXED_0_USER)
- 			eventsel |= ARCH_PERFMON_EVENTSEL_USR;
--		if (fixed_ctr_ctrl & 0x8)
-+		if (fixed_ctr_ctrl & INTEL_FIXED_0_ENABLE_PMI)
- 			eventsel |= ARCH_PERFMON_EVENTSEL_INT;
- 		new_config = (u64)fixed_ctr_ctrl;
- 	}
-@@ -846,8 +846,8 @@ static inline bool cpl_is_matched(struct kvm_pmc *pmc)
- 	} else {
- 		config = fixed_ctrl_field(pmc_to_pmu(pmc)->fixed_ctr_ctrl,
- 					  pmc->idx - KVM_FIXED_PMC_BASE_IDX);
--		select_os = config & 0x1;
--		select_user = config & 0x2;
-+		select_os = config & INTEL_FIXED_0_KERNEL;
-+		select_user = config & INTEL_FIXED_0_USER;
- 	}
- 
- 	/*
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 2eab8ea610db..d54741fe4bdd 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -14,7 +14,8 @@
- 					  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
- 
- /* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
--#define fixed_ctrl_field(ctrl_reg, idx) (((ctrl_reg) >> ((idx)*4)) & 0xf)
-+#define fixed_ctrl_field(ctrl_reg, idx) \
-+	(((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
- 
- #define VMWARE_BACKDOOR_PMC_HOST_TSC		0x10000
- #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
-@@ -170,7 +171,8 @@ static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
- 
- 	if (pmc_is_fixed(pmc))
- 		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
--					pmc->idx - KVM_FIXED_PMC_BASE_IDX) & 0x3;
-+					pmc->idx - KVM_FIXED_PMC_BASE_IDX) &
-+					(INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER);
- 
- 	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+diff --git a/tools/testing/selftests/kselftest.h b/tools/testing/selftests/kselftest.h
+index e8eecbc83a60..ad7b97e16f37 100644
+--- a/tools/testing/selftests/kselftest.h
++++ b/tools/testing/selftests/kselftest.h
+@@ -48,6 +48,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <stdarg.h>
++#include <string.h>
+ #include <stdio.h>
+ #include <sys/utsname.h>
+ #endif
+@@ -156,6 +157,19 @@ static inline void ksft_print_msg(const char *msg, ...)
+ 	va_end(args);
  }
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index eaee9a08952e..846a4e7fd34a 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -501,8 +501,14 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 			((u64)1 << edx.split.bit_width_fixed) - 1;
- 	}
  
--	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
--		pmu->fixed_ctr_ctrl_rsvd &= ~(0xbull << (i * 4));
-+	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
-+		pmu->fixed_ctr_ctrl_rsvd &=
-+			 ~intel_fixed_bits_by_idx(i,
-+						  INTEL_FIXED_0_KERNEL |
-+						  INTEL_FIXED_0_USER |
-+						  INTEL_FIXED_0_ENABLE_PMI);
-+	}
++static inline void ksft_perror(const char *msg)
++{
++#ifndef NOLIBC
++	ksft_print_msg("%s: %s (%d)\n", msg, strerror(errno), errno);
++#else
++	/*
++	 * nolibc doesn't provide strerror() and it seems
++	 * inappropriate to add one, just print the errno.
++	 */
++	ksft_print_msg("%s: %d)\n", msg, errno);
++#endif
++}
 +
- 	counter_rsvd = ~(((1ull << pmu->nr_arch_gp_counters) - 1) |
- 		(((1ull << pmu->nr_arch_fixed_counters) - 1) << KVM_FIXED_PMC_BASE_IDX));
- 	pmu->global_ctrl_rsvd = counter_rsvd;
-@@ -548,7 +554,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 			pmu->reserved_bits &= ~ICL_EVENTSEL_ADAPTIVE;
- 			for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
- 				pmu->fixed_ctr_ctrl_rsvd &=
--					~(1ULL << (KVM_FIXED_PMC_BASE_IDX + i * 4));
-+					~intel_fixed_bits_by_idx(i, ICL_FIXED_0_ADAPTIVE);
- 			}
- 			pmu->pebs_data_cfg_rsvd = ~0xff00000full;
- 		} else {
+ static inline void ksft_test_result_pass(const char *msg, ...)
+ {
+ 	int saved_errno = errno;
 -- 
-2.40.1
+2.44.0.769.g3c40516874-goog
 
