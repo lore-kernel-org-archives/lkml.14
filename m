@@ -1,321 +1,209 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E9331A8F
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642E1374E3
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714461874; cv=none; b=rLRUFVjvdtzWoFB9CDitw/urHdsRsW3bOGDYsnuulRlzZgpXB2FfDEEYaq1NEqGVCIP+ByCytu0owVLiYOHEhjfHz5GiZWG6Y/nN/3kOARG+dn8yO7QMh7UlsYA/Wt9vD2EaOvHgN3M5a8t/dXXzqdTqRDjM23Qoi7Sx36Gbh+U=
+	t=1714461991; cv=none; b=bsO0ZDM5RUBuWez2Vkn7DJsX6DP1lNpwBAfU9231bf5m8QYbwHLLUuHNO68CaVSgniReTCfwJkN4TLcquVBve/S9YfohUpHe3g0OL+5HeiDzsia1vwHaFJ+SYhSK87FjRE76m0yvjBWcrkGiBraM/W8gahlUVgADm6xTd1qTLVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714461874; c=relaxed/simple;
-	bh=yyZjb6uJBHtfQDi9vcRqAluwv7g2WUi3qhsCuCrRV1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ohI61dWIboFfX82SAFowPnkJQESvfbw8pwPADcBh2eVoVNMlyQrOd4ck/15mGmdaphGklbklSuc5J6jHcmIK98Q40KWG3DNDac0gOUNJnaibx0ytr0Ejx/1Vv80AEQclFx3KEo0REQQ5bIwAAddrNGSfkhYLbQNLyyE+2aw8Bqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fURv/6Zr; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714461991; c=relaxed/simple;
+	bh=uebO/s6LVxhG0opGGRAkrg4m1oP1SCiyjdL2AO+Foz0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jIJZQ7RtauA1zuCQdnC8r2YG0XMxhSdxyBgSoy7W95Cddo26KeQ1KEYJ5hUTFFOQDg+8lg6wtxesFLQndrkPmZH/EQ4vagjjHrW8pHl4NouSrCWo7xl1bW46+X++W3v0EWTOifsz1aQW77Zq5t+c+YIw9wCv6cq7Sx4tPlnH+XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=h4abnvZ+; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fURv/6Zr"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5723edf0ae5so5650734a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 00:24:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="h4abnvZ+"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2db239711ebso13031421fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 00:26:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714461870; x=1715066670; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/7s89Ib+yw/GmKuXOIYBvUFt2qfG5QHiPGhNhFrnzGQ=;
-        b=fURv/6ZruI1ZKi8M8i0IZen5i6WOQQT5uGO/idIBENJ5vNjkbcIsT5Warv0Ym5qzgG
-         Dth0/ZuQxvrmCrrtpxnX58iYhuDPbYUSmEWgnZYkg8KG4WNNbSNVGh+Rwo3HF3/z7B/i
-         r55OMpEiTIl1GH0DJi8kZEKE4gLV5iCmHCvPiyy8aspAk05LgzkHHzOhGQnyfLXU6tEe
-         7kWsFzgAfF0c1BvtD3ODsj6R8gWQdR6r7iWa2BI0ihw7rDgzv+z6o6a+5rcudnozwpE6
-         EM8iGO6kI09513x2dIP8+L2Rixxc7oLT6gGjdMNfqbl9Zu/dQHMvLZ6qynbbvCacOHH5
-         WsWA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714461987; x=1715066787; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WvyI3HdmRjoW+CLhdf/TdUb0HyFLPhU7rZbG7Bu9wO4=;
+        b=h4abnvZ+UUUPUnNEAfn90fnbQ2jU1Sh26JF+QCyw2vxc4+gdfjUuTu06iUDBjBls4J
+         T+CASH33Vcc5t10yBvPN9X7HJrWeQaGdbr1V39fT/NssMr9wfxp0lTsHGdDiU6MkEqSX
+         WHb/Eo4hn5zZoR87hzMRyWWvxhaHG8EhUSy5OaTG9dk5fg+Z3w3kz4yvMp8mSEEFAbaD
+         2O2fqTISYo7tfenKIPubJh+bOq/DAfUs87h2MItFR/kphebbJtnGVoKSLcZBC0SH5YEj
+         P3cJje/DlRZMGiqoM7GKZJSRi9nBXy7cz/W6R4VN1xdStEGuR5tUN1QYpUn8zjol7Oeg
+         f0Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714461870; x=1715066670;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/7s89Ib+yw/GmKuXOIYBvUFt2qfG5QHiPGhNhFrnzGQ=;
-        b=hAnKvr+KzJSCOuB1koTc/nA8Y1VUX2feU+rkWxvSeH918jmHlMd1XuBPdMnAFAXuld
-         ozVak8Kz2ehgS4eh9uc3GDwg3AsdpT04D32yM/BmB16sc7dT7JHRxORyu66UjFV1oXAe
-         U1x050ELuT/iTxqp1OPyh7X0+N5irg4k9nMK7z7d7THJS0gwtxM8GG6P5Y62y4qTTB7E
-         OeXXdLPHEfFluE1w/bYQgkWvT94+Nc1A9m/Yl/mccGGtszgSmoKqHIgxi0fndX4lw30C
-         HIeRgg0jcE7ZokkPb6sl5Oq2DdWwYPjCspO1I0fBM6P1FieVqlbkBpL6W8nacGuXrMky
-         Ce9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVlRCV4bCYsPEcxTrZ67FJ0D3VRZvTbvQSWgAT55o3mzBJk2anGAIl8PNq3C2k9xHSJoBW9NCzOpLXb4iuvCvq+Ty74X+FTtWcbg8tH
-X-Gm-Message-State: AOJu0Yxqqh7X34LgHlVCZ0Es0JDPqzJb6l0z4I4HTy3EmX6MO+MVU/ZF
-	D49NmFLcXnzS4PC5aQIQ1J1mAHRMeEiXbDCMSLUvZH7QYHvTp4YHj12YRn7dV+Q=
-X-Google-Smtp-Source: AGHT+IEnyAcN6JEupMPAax6ZOgByVwP2oJqMT6SUvW+cb6CrU28YZX/Ub7ZnrT1/7sFjFCoZOg1jwA==
-X-Received: by 2002:a05:6402:1a4d:b0:572:8aab:4420 with SMTP id bf13-20020a0564021a4d00b005728aab4420mr2380881edb.39.1714461869687;
-        Tue, 30 Apr 2024 00:24:29 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id e12-20020a056402104c00b00571c12b388dsm13389893edu.35.2024.04.30.00.24.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 00:24:29 -0700 (PDT)
-Date: Tue, 30 Apr 2024 10:24:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Kemeng Shi <shikemeng@huaweicloud.com>,
-	willy@infradead.org, akpm@linux-foundation.org, jack@suse.cz,
-	tj@kernel.org
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/10] writeback: factor out wb_dirty_exceeded to remove
- repeated code
-Message-ID: <6d3471cd-f491-4949-ba75-9fae63198b59@moroto.mountain>
+        d=1e100.net; s=20230601; t=1714461987; x=1715066787;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WvyI3HdmRjoW+CLhdf/TdUb0HyFLPhU7rZbG7Bu9wO4=;
+        b=bSEJXcXUP2MQLnDEjWUFtZ89veFWqmIuz5q66lcRtEDRTNWM1iGdB+rBMadcZXMw2n
+         SKbw/m9/p53AbwxOFIhgDCdJeDtPQUcrSiXSruKDAD+GpyU8oiA1SFYtVZ1YoTuL8VM+
+         29jaqOBGUj9jgTxKkxzePTmc8ihBuro2Hic5spyAwRw3uahyrcXe+HZr4hTwi2RFbJuo
+         zKL05Lgyb2XkObGKUoPntxH95NyhYNXbAZwBGqmQmCfcHJuXT5Nm7tG+MH3hJ4v+rIpH
+         nEMreocHP12hO/ZveUgAE78ernPO7v873PlfzQcVThzN2nYsJLqbs3oJKNTYFl/47T1R
+         4MXA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0Ni5ZUSEJBNm0Ua6fx+dJNqUIwQ+OPcW8xa234qaQS9eiVVbbbIvgds/mA5aygf/glhM2wq/uJM1XLTJ6N8+d70aOeaIYiYeZuvKT
+X-Gm-Message-State: AOJu0YzoVLjTWAD/HC+MQYLk0c23UOH72E7SGuKNJPb0HZ2lvbZtePnz
+	vvcZ8pXfUD+ZiV3YeZg/mJD0UmCVPxz5qbJGG8BJbNlRm/R2tfEhqXMwVoE7Ef0=
+X-Google-Smtp-Source: AGHT+IF2/6JmkhuEesT0rXrPHpRH7kD8BY37pMN1aCWhBwhe5bjgiO3RpG2IZ9ZZSdnOrjhKRv7i/A==
+X-Received: by 2002:a2e:9254:0:b0:2dd:374d:724e with SMTP id v20-20020a2e9254000000b002dd374d724emr7481828ljg.1.1714461987258;
+        Tue, 30 Apr 2024 00:26:27 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:999:a3a0:c21b:67fd:90ab:9053? ([2a01:e0a:999:a3a0:c21b:67fd:90ab:9053])
+        by smtp.gmail.com with ESMTPSA id r7-20020a05600c35c700b0041bff91ea43sm9651380wmq.37.2024.04.30.00.26.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 00:26:26 -0700 (PDT)
+Message-ID: <99d3eabc-0289-4ace-90a8-ad02dbffd6d2@rivosinc.com>
+Date: Tue, 30 Apr 2024 09:26:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240429034738.138609-10-shikemeng@huaweicloud.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/7] riscv: kvm: add support for FWFT SBI extension
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
+ linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, Ved Shanbhogue <ved@rivosinc.com>
+References: <20240418142701.1493091-1-cleger@rivosinc.com>
+ <20240418142701.1493091-2-cleger@rivosinc.com>
+ <Ziw8c0X0K3mXjJWK@debug.ba.rivosinc.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <Ziw8c0X0K3mXjJWK@debug.ba.rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Kemeng,
 
-kernel test robot noticed the following build warnings:
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 27/04/2024 01:44, Deepak Gupta wrote:
+> On Thu, Apr 18, 2024 at 04:26:40PM +0200, Clément Léger wrote:
+>> Add support for FWFT extension in KVM
+>>
+>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>> ---
+>> arch/riscv/include/asm/kvm_host.h          |   5 +
+>> arch/riscv/include/asm/kvm_vcpu_sbi.h      |   1 +
+>> arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h |  37 ++++++
+>> arch/riscv/include/uapi/asm/kvm.h          |   1 +
+>> arch/riscv/kvm/Makefile                    |   1 +
+>> arch/riscv/kvm/vcpu.c                      |   5 +
+>> arch/riscv/kvm/vcpu_sbi.c                  |   4 +
+>> arch/riscv/kvm/vcpu_sbi_fwft.c             | 136 +++++++++++++++++++++
+>> 8 files changed, 190 insertions(+)
+>> create mode 100644 arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
+>> create mode 100644 arch/riscv/kvm/vcpu_sbi_fwft.c
+>>
+>> diff --git a/arch/riscv/include/asm/kvm_host.h
+>> b/arch/riscv/include/asm/kvm_host.h
+>> index 484d04a92fa6..be60aaa07f57 100644
+>> --- a/arch/riscv/include/asm/kvm_host.h
+>> +++ b/arch/riscv/include/asm/kvm_host.h
+>> @@ -19,6 +19,7 @@
+>> #include <asm/kvm_vcpu_fp.h>
+>> #include <asm/kvm_vcpu_insn.h>
+>> #include <asm/kvm_vcpu_sbi.h>
+>> +#include <asm/kvm_vcpu_sbi_fwft.h>
+>> #include <asm/kvm_vcpu_timer.h>
+>> #include <asm/kvm_vcpu_pmu.h>
+>>
+>> @@ -169,6 +170,7 @@ struct kvm_vcpu_csr {
+>> struct kvm_vcpu_config {
+>>     u64 henvcfg;
+>>     u64 hstateen0;
+>> +    u64 hedeleg;
+>> };
+>>
+>> struct kvm_vcpu_smstateen_csr {
+>> @@ -261,6 +263,9 @@ struct kvm_vcpu_arch {
+>>     /* Performance monitoring context */
+>>     struct kvm_pmu pmu_context;
+>>
+>> +    /* Firmware feature SBI extension context */
+>> +    struct kvm_sbi_fwft fwft_context;
+>> +
+>>     /* 'static' configurations which are set only once */
+>>     struct kvm_vcpu_config cfg;
+>>
+>> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h
+>> b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+>> index b96705258cf9..3a33bbacc233 100644
+>> --- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
+>> +++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+>> @@ -86,6 +86,7 @@ extern const struct kvm_vcpu_sbi_extension
+>> vcpu_sbi_ext_srst;
+>> extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_hsm;
+>> extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_dbcn;
+>> extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_sta;
+>> +extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_fwft;
+>> extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_experimental;
+>> extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_vendor;
+>>
+>> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
+>> b/arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
+>> new file mode 100644
+>> index 000000000000..7dc1b80c7e6c
+>> --- /dev/null
+>> +++ b/arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
+>> @@ -0,0 +1,37 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (c) 2023 Rivos Inc
+>> + *
+>> + * Authors:
+>> + *     Atish Patra <atishp@rivosinc.com>
+> 
+> nit: probably need to fix Copyright year and Authors here :-)
+> Same in all new files being introduced.
+> 
+>> + */
+>> +
+>> +#ifndef __KVM_VCPU_RISCV_FWFT_H
+>> +#define __KVM_VCPU_RISCV_FWFT_H
+>> +
+>> +#include <asm/sbi.h>
+>> +
+>> +#define KVM_SBI_FWFT_FEATURE_COUNT    1
+>> +
+>> +static int kvm_sbi_fwft_set(struct kvm_vcpu *vcpu,
+>> +                enum sbi_fwft_feature_t feature,
+>> +                unsigned long value, unsigned long flags)
+>> +{
+>> +    struct kvm_sbi_fwft_config *conf = kvm_sbi_fwft_get_config(vcpu,
+>> +                                   feature);
+>> +    if (!conf)
+>> +        return SBI_ERR_DENIED;
+> 
+> Curious,
+> Why denied and not something like NOT_SUPPORTED NOT_AVAILABLE here?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kemeng-Shi/writeback-factor-out-wb_bg_dirty_limits-to-remove-repeated-code/20240429-114903
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20240429034738.138609-10-shikemeng%40huaweicloud.com
-patch subject: [PATCH 09/10] writeback: factor out wb_dirty_exceeded to remove repeated code
-config: i386-randconfig-141-20240429 (https://download.01.org/0day-ci/archive/20240430/202404300231.bnb28iB8-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+Hey Deepak,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202404300231.bnb28iB8-lkp@intel.com/
+So indeed, the return value is not totally correct since the spec states
+that we return  EDENIED if feature is reserved or is platform-specific
+and unimplemented. But in that case it dos not distinguish between
+defined features and reserved one. I'll add a check for that.
 
-New smatch warnings:
-mm/page-writeback.c:1903 balance_dirty_pages() error: we previously assumed 'mdtc' could be null (see line 1886)
+Thanks,
 
-vim +/mdtc +1903 mm/page-writeback.c
+Clément
 
-fe6c9c6e3e3e33 Jan Kara        2022-06-23  1800  static int balance_dirty_pages(struct bdi_writeback *wb,
-fe6c9c6e3e3e33 Jan Kara        2022-06-23  1801  			       unsigned long pages_dirtied, unsigned int flags)
-^1da177e4c3f41 Linus Torvalds  2005-04-16  1802  {
-2bc00aef030f4f Tejun Heo       2015-05-22  1803  	struct dirty_throttle_control gdtc_stor = { GDTC_INIT(wb) };
-c2aa723a609363 Tejun Heo       2015-05-22  1804  	struct dirty_throttle_control mdtc_stor = { MDTC_INIT(wb, &gdtc_stor) };
-2bc00aef030f4f Tejun Heo       2015-05-22  1805  	struct dirty_throttle_control * const gdtc = &gdtc_stor;
-c2aa723a609363 Tejun Heo       2015-05-22  1806  	struct dirty_throttle_control * const mdtc = mdtc_valid(&mdtc_stor) ?
-c2aa723a609363 Tejun Heo       2015-05-22  1807  						     &mdtc_stor : NULL;
-c2aa723a609363 Tejun Heo       2015-05-22  1808  	struct dirty_throttle_control *sdtc;
-c8a7ee1b73042a Kemeng Shi      2024-04-23  1809  	unsigned long nr_dirty;
-83712358ba0a14 Wu Fengguang    2011-06-11  1810  	long period;
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1811  	long pause;
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1812  	long max_pause;
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1813  	long min_pause;
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1814  	int nr_dirtied_pause;
-143dfe8611a630 Wu Fengguang    2010-08-27  1815  	unsigned long task_ratelimit;
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1816  	unsigned long dirty_ratelimit;
-dfb8ae56783542 Tejun Heo       2015-05-22  1817  	struct backing_dev_info *bdi = wb->bdi;
-5a53748568f796 Maxim Patlasov  2013-09-11  1818  	bool strictlimit = bdi->capabilities & BDI_CAP_STRICTLIMIT;
-e98be2d599207c Wu Fengguang    2010-08-29  1819  	unsigned long start_time = jiffies;
-fe6c9c6e3e3e33 Jan Kara        2022-06-23  1820  	int ret = 0;
-^1da177e4c3f41 Linus Torvalds  2005-04-16  1821  
-^1da177e4c3f41 Linus Torvalds  2005-04-16  1822  	for (;;) {
-83712358ba0a14 Wu Fengguang    2011-06-11  1823  		unsigned long now = jiffies;
-83712358ba0a14 Wu Fengguang    2011-06-11  1824  
-c8a7ee1b73042a Kemeng Shi      2024-04-23  1825  		nr_dirty = global_node_page_state(NR_FILE_DIRTY);
-5fce25a9df4865 Peter Zijlstra  2007-11-14  1826  
-204c26b42a22b8 Kemeng Shi      2024-04-29  1827  		balance_domain_limits(gdtc, strictlimit);
-204c26b42a22b8 Kemeng Shi      2024-04-29  1828  		if (mdtc)
-c2aa723a609363 Tejun Heo       2015-05-22  1829  			/*
-c2aa723a609363 Tejun Heo       2015-05-22  1830  			 * If @wb belongs to !root memcg, repeat the same
-c2aa723a609363 Tejun Heo       2015-05-22  1831  			 * basic calculations for the memcg domain.
-c2aa723a609363 Tejun Heo       2015-05-22  1832  			 */
-204c26b42a22b8 Kemeng Shi      2024-04-29  1833  			balance_domain_limits(mdtc, strictlimit);
-5a53748568f796 Maxim Patlasov  2013-09-11  1834  
-ea6813be07dcdc Jan Kara        2022-06-23  1835  		/*
-ea6813be07dcdc Jan Kara        2022-06-23  1836  		 * In laptop mode, we wait until hitting the higher threshold
-ea6813be07dcdc Jan Kara        2022-06-23  1837  		 * before starting background writeout, and then write out all
-ea6813be07dcdc Jan Kara        2022-06-23  1838  		 * the way down to the lower threshold.  So slow writers cause
-ea6813be07dcdc Jan Kara        2022-06-23  1839  		 * minimal disk activity.
-ea6813be07dcdc Jan Kara        2022-06-23  1840  		 *
-ea6813be07dcdc Jan Kara        2022-06-23  1841  		 * In normal mode, we start background writeout at the lower
-ea6813be07dcdc Jan Kara        2022-06-23  1842  		 * background_thresh, to keep the amount of dirty memory low.
-ea6813be07dcdc Jan Kara        2022-06-23  1843  		 */
-c8a7ee1b73042a Kemeng Shi      2024-04-23  1844  		if (!laptop_mode && nr_dirty > gdtc->bg_thresh &&
-ea6813be07dcdc Jan Kara        2022-06-23  1845  		    !writeback_in_progress(wb))
-ea6813be07dcdc Jan Kara        2022-06-23  1846  			wb_start_background_writeback(wb);
-ea6813be07dcdc Jan Kara        2022-06-23  1847  
-16c4042f08919f Wu Fengguang    2010-08-11  1848  		/*
-c2aa723a609363 Tejun Heo       2015-05-22  1849  		 * If memcg domain is in effect, @dirty should be under
-c2aa723a609363 Tejun Heo       2015-05-22  1850  		 * both global and memcg freerun ceilings.
-16c4042f08919f Wu Fengguang    2010-08-11  1851  		 */
-c474a90dc076a7 Kemeng Shi      2024-04-29  1852  		if (gdtc->freerun && (!mdtc || mdtc->freerun)) {
-a37b0715ddf300 NeilBrown       2020-06-01  1853  			unsigned long intv;
-a37b0715ddf300 NeilBrown       2020-06-01  1854  			unsigned long m_intv;
-a37b0715ddf300 NeilBrown       2020-06-01  1855  
-a37b0715ddf300 NeilBrown       2020-06-01  1856  free_running:
-c474a90dc076a7 Kemeng Shi      2024-04-29  1857  			intv = domain_poll_intv(gdtc, strictlimit);
-a37b0715ddf300 NeilBrown       2020-06-01  1858  			m_intv = ULONG_MAX;
-c2aa723a609363 Tejun Heo       2015-05-22  1859  
-83712358ba0a14 Wu Fengguang    2011-06-11  1860  			current->dirty_paused_when = now;
-83712358ba0a14 Wu Fengguang    2011-06-11  1861  			current->nr_dirtied = 0;
-c2aa723a609363 Tejun Heo       2015-05-22  1862  			if (mdtc)
-c474a90dc076a7 Kemeng Shi      2024-04-29  1863  				m_intv = domain_poll_intv(mdtc, strictlimit);
-c2aa723a609363 Tejun Heo       2015-05-22  1864  			current->nr_dirtied_pause = min(intv, m_intv);
-16c4042f08919f Wu Fengguang    2010-08-11  1865  			break;
-83712358ba0a14 Wu Fengguang    2011-06-11  1866  		}
-16c4042f08919f Wu Fengguang    2010-08-11  1867  
-ea6813be07dcdc Jan Kara        2022-06-23  1868  		/* Start writeback even when in laptop mode */
-bc05873dccd27d Tejun Heo       2015-05-22  1869  		if (unlikely(!writeback_in_progress(wb)))
-9ecf4866c018ae Tejun Heo       2015-05-22  1870  			wb_start_background_writeback(wb);
-143dfe8611a630 Wu Fengguang    2010-08-27  1871  
-97b27821b4854c Tejun Heo       2019-08-26  1872  		mem_cgroup_flush_foreign(wb);
-97b27821b4854c Tejun Heo       2019-08-26  1873  
-c2aa723a609363 Tejun Heo       2015-05-22  1874  		/*
-c2aa723a609363 Tejun Heo       2015-05-22  1875  		 * Calculate global domain's pos_ratio and select the
-c2aa723a609363 Tejun Heo       2015-05-22  1876  		 * global dtc by default.
-c2aa723a609363 Tejun Heo       2015-05-22  1877  		 */
-aab09fbaa2dd34 Kemeng Shi      2024-04-29  1878  		wb_dirty_freerun(gdtc, strictlimit);
-aab09fbaa2dd34 Kemeng Shi      2024-04-29  1879  		if (gdtc->freerun)
-a37b0715ddf300 NeilBrown       2020-06-01  1880  			goto free_running;
-a37b0715ddf300 NeilBrown       2020-06-01  1881  
-8b8bf84233eccf Kemeng Shi      2024-04-29  1882  		wb_dirty_exceeded(gdtc, strictlimit);
-daddfa3cb30ebf Tejun Heo       2015-05-22  1883  		wb_position_ratio(gdtc);
-c2aa723a609363 Tejun Heo       2015-05-22  1884  		sdtc = gdtc;
-e98be2d599207c Wu Fengguang    2010-08-29  1885  
-c2aa723a609363 Tejun Heo       2015-05-22 @1886  		if (mdtc) {
-                                                                ^^^^^^^^^^^
-This code assumes mdtc can be NULL
-
-c2aa723a609363 Tejun Heo       2015-05-22  1887  			/*
-c2aa723a609363 Tejun Heo       2015-05-22  1888  			 * If memcg domain is in effect, calculate its
-c2aa723a609363 Tejun Heo       2015-05-22  1889  			 * pos_ratio.  @wb should satisfy constraints from
-c2aa723a609363 Tejun Heo       2015-05-22  1890  			 * both global and memcg domains.  Choose the one
-c2aa723a609363 Tejun Heo       2015-05-22  1891  			 * w/ lower pos_ratio.
-c2aa723a609363 Tejun Heo       2015-05-22  1892  			 */
-aab09fbaa2dd34 Kemeng Shi      2024-04-29  1893  			wb_dirty_freerun(mdtc, strictlimit);
-aab09fbaa2dd34 Kemeng Shi      2024-04-29  1894  			if (mdtc->freerun)
-a37b0715ddf300 NeilBrown       2020-06-01  1895  				goto free_running;
-aab09fbaa2dd34 Kemeng Shi      2024-04-29  1896  
-8b8bf84233eccf Kemeng Shi      2024-04-29  1897  			wb_dirty_exceeded(mdtc, strictlimit);
-c2aa723a609363 Tejun Heo       2015-05-22  1898  			wb_position_ratio(mdtc);
-c2aa723a609363 Tejun Heo       2015-05-22  1899  			if (mdtc->pos_ratio < gdtc->pos_ratio)
-c2aa723a609363 Tejun Heo       2015-05-22  1900  				sdtc = mdtc;
-c2aa723a609363 Tejun Heo       2015-05-22  1901  		}
-daddfa3cb30ebf Tejun Heo       2015-05-22  1902  
-8b8bf84233eccf Kemeng Shi      2024-04-29 @1903  		wb->dirty_exceeded = gdtc->dirty_exceeded || mdtc->dirty_exceeded;
-                                                                                                             ^^^^^^
-Unchecked dereference
-
-20792ebf3eeb82 Jan Kara        2021-09-02  1904  		if (time_is_before_jiffies(READ_ONCE(wb->bw_time_stamp) +
-45a2966fd64147 Jan Kara        2021-09-02  1905  					   BANDWIDTH_INTERVAL))
-fee468fdf41cdf Jan Kara        2021-09-02  1906  			__wb_update_bandwidth(gdtc, mdtc, true);
-e98be2d599207c Wu Fengguang    2010-08-29  1907  
-c2aa723a609363 Tejun Heo       2015-05-22  1908  		/* throttle according to the chosen dtc */
-20792ebf3eeb82 Jan Kara        2021-09-02  1909  		dirty_ratelimit = READ_ONCE(wb->dirty_ratelimit);
-c2aa723a609363 Tejun Heo       2015-05-22  1910  		task_ratelimit = ((u64)dirty_ratelimit * sdtc->pos_ratio) >>
-3a73dbbc9bb3fc Wu Fengguang    2011-11-07  1911  							RATELIMIT_CALC_SHIFT;
-c2aa723a609363 Tejun Heo       2015-05-22  1912  		max_pause = wb_max_pause(wb, sdtc->wb_dirty);
-a88a341a73be4e Tejun Heo       2015-05-22  1913  		min_pause = wb_min_pause(wb, max_pause,
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1914  					 task_ratelimit, dirty_ratelimit,
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1915  					 &nr_dirtied_pause);
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1916  
-3a73dbbc9bb3fc Wu Fengguang    2011-11-07  1917  		if (unlikely(task_ratelimit == 0)) {
-83712358ba0a14 Wu Fengguang    2011-06-11  1918  			period = max_pause;
-c8462cc9de9e92 Wu Fengguang    2011-06-11  1919  			pause = max_pause;
-143dfe8611a630 Wu Fengguang    2010-08-27  1920  			goto pause;
-e50e37201ae2e7 Wu Fengguang    2010-08-11  1921  		}
-83712358ba0a14 Wu Fengguang    2011-06-11  1922  		period = HZ * pages_dirtied / task_ratelimit;
-83712358ba0a14 Wu Fengguang    2011-06-11  1923  		pause = period;
-83712358ba0a14 Wu Fengguang    2011-06-11  1924  		if (current->dirty_paused_when)
-83712358ba0a14 Wu Fengguang    2011-06-11  1925  			pause -= now - current->dirty_paused_when;
-83712358ba0a14 Wu Fengguang    2011-06-11  1926  		/*
-83712358ba0a14 Wu Fengguang    2011-06-11  1927  		 * For less than 1s think time (ext3/4 may block the dirtier
-83712358ba0a14 Wu Fengguang    2011-06-11  1928  		 * for up to 800ms from time to time on 1-HDD; so does xfs,
-83712358ba0a14 Wu Fengguang    2011-06-11  1929  		 * however at much less frequency), try to compensate it in
-83712358ba0a14 Wu Fengguang    2011-06-11  1930  		 * future periods by updating the virtual time; otherwise just
-83712358ba0a14 Wu Fengguang    2011-06-11  1931  		 * do a reset, as it may be a light dirtier.
-83712358ba0a14 Wu Fengguang    2011-06-11  1932  		 */
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1933  		if (pause < min_pause) {
-5634cc2aa9aebc Tejun Heo       2015-08-18  1934  			trace_balance_dirty_pages(wb,
-c2aa723a609363 Tejun Heo       2015-05-22  1935  						  sdtc->thresh,
-c2aa723a609363 Tejun Heo       2015-05-22  1936  						  sdtc->bg_thresh,
-c2aa723a609363 Tejun Heo       2015-05-22  1937  						  sdtc->dirty,
-c2aa723a609363 Tejun Heo       2015-05-22  1938  						  sdtc->wb_thresh,
-c2aa723a609363 Tejun Heo       2015-05-22  1939  						  sdtc->wb_dirty,
-ece13ac31bbe49 Wu Fengguang    2010-08-29  1940  						  dirty_ratelimit,
-ece13ac31bbe49 Wu Fengguang    2010-08-29  1941  						  task_ratelimit,
-ece13ac31bbe49 Wu Fengguang    2010-08-29  1942  						  pages_dirtied,
-83712358ba0a14 Wu Fengguang    2011-06-11  1943  						  period,
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1944  						  min(pause, 0L),
-ece13ac31bbe49 Wu Fengguang    2010-08-29  1945  						  start_time);
-83712358ba0a14 Wu Fengguang    2011-06-11  1946  			if (pause < -HZ) {
-83712358ba0a14 Wu Fengguang    2011-06-11  1947  				current->dirty_paused_when = now;
-83712358ba0a14 Wu Fengguang    2011-06-11  1948  				current->nr_dirtied = 0;
-83712358ba0a14 Wu Fengguang    2011-06-11  1949  			} else if (period) {
-83712358ba0a14 Wu Fengguang    2011-06-11  1950  				current->dirty_paused_when += period;
-83712358ba0a14 Wu Fengguang    2011-06-11  1951  				current->nr_dirtied = 0;
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1952  			} else if (current->nr_dirtied_pause <= pages_dirtied)
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1953  				current->nr_dirtied_pause += pages_dirtied;
-57fc978cfb61ed Wu Fengguang    2011-06-11  1954  			break;
-e50e37201ae2e7 Wu Fengguang    2010-08-11  1955  		}
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1956  		if (unlikely(pause > max_pause)) {
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1957  			/* for occasional dropped task_ratelimit */
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1958  			now += min(pause - max_pause, max_pause);
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1959  			pause = max_pause;
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1960  		}
-143dfe8611a630 Wu Fengguang    2010-08-27  1961  
-143dfe8611a630 Wu Fengguang    2010-08-27  1962  pause:
-5634cc2aa9aebc Tejun Heo       2015-08-18  1963  		trace_balance_dirty_pages(wb,
-c2aa723a609363 Tejun Heo       2015-05-22  1964  					  sdtc->thresh,
-c2aa723a609363 Tejun Heo       2015-05-22  1965  					  sdtc->bg_thresh,
-c2aa723a609363 Tejun Heo       2015-05-22  1966  					  sdtc->dirty,
-c2aa723a609363 Tejun Heo       2015-05-22  1967  					  sdtc->wb_thresh,
-c2aa723a609363 Tejun Heo       2015-05-22  1968  					  sdtc->wb_dirty,
-ece13ac31bbe49 Wu Fengguang    2010-08-29  1969  					  dirty_ratelimit,
-ece13ac31bbe49 Wu Fengguang    2010-08-29  1970  					  task_ratelimit,
-ece13ac31bbe49 Wu Fengguang    2010-08-29  1971  					  pages_dirtied,
-83712358ba0a14 Wu Fengguang    2011-06-11  1972  					  period,
-ece13ac31bbe49 Wu Fengguang    2010-08-29  1973  					  pause,
-ece13ac31bbe49 Wu Fengguang    2010-08-29  1974  					  start_time);
-fe6c9c6e3e3e33 Jan Kara        2022-06-23  1975  		if (flags & BDP_ASYNC) {
-fe6c9c6e3e3e33 Jan Kara        2022-06-23  1976  			ret = -EAGAIN;
-fe6c9c6e3e3e33 Jan Kara        2022-06-23  1977  			break;
-fe6c9c6e3e3e33 Jan Kara        2022-06-23  1978  		}
-499d05ecf990a7 Jan Kara        2011-11-16  1979  		__set_current_state(TASK_KILLABLE);
-f814bdda774c18 Jan Kara        2024-01-23  1980  		bdi->last_bdp_sleep = jiffies;
-d25105e8911bff Wu Fengguang    2009-10-09  1981  		io_schedule_timeout(pause);
-87c6a9b253520b Jens Axboe      2009-09-17  1982  
-83712358ba0a14 Wu Fengguang    2011-06-11  1983  		current->dirty_paused_when = now + pause;
-83712358ba0a14 Wu Fengguang    2011-06-11  1984  		current->nr_dirtied = 0;
-7ccb9ad5364d6a Wu Fengguang    2011-11-30  1985  		current->nr_dirtied_pause = nr_dirtied_pause;
-83712358ba0a14 Wu Fengguang    2011-06-11  1986  
-ffd1f609ab1053 Wu Fengguang    2011-06-19  1987  		/*
-2bc00aef030f4f Tejun Heo       2015-05-22  1988  		 * This is typically equal to (dirty < thresh) and can also
-2bc00aef030f4f Tejun Heo       2015-05-22  1989  		 * keep "1000+ dd on a slow USB stick" under control.
-ffd1f609ab1053 Wu Fengguang    2011-06-19  1990  		 */
-1df647197c5b8a Wu Fengguang    2011-11-13  1991  		if (task_ratelimit)
-ffd1f609ab1053 Wu Fengguang    2011-06-19  1992  			break;
-499d05ecf990a7 Jan Kara        2011-11-16  1993  
-c5c6343c4d75f9 Wu Fengguang    2011-12-02  1994  		/*
-f0953a1bbaca71 Ingo Molnar     2021-05-06  1995  		 * In the case of an unresponsive NFS server and the NFS dirty
-de1fff37b2781f Tejun Heo       2015-05-22  1996  		 * pages exceeds dirty_thresh, give the other good wb's a pipe
-c5c6343c4d75f9 Wu Fengguang    2011-12-02  1997  		 * to go through, so that tasks on them still remain responsive.
-c5c6343c4d75f9 Wu Fengguang    2011-12-02  1998  		 *
-3f8b6fb7f279c7 Masahiro Yamada 2017-02-27  1999  		 * In theory 1 page is enough to keep the consumer-producer
-c5c6343c4d75f9 Wu Fengguang    2011-12-02  2000  		 * pipe going: the flusher cleans 1 page => the task dirties 1
-de1fff37b2781f Tejun Heo       2015-05-22  2001  		 * more page. However wb_dirty has accounting errors.  So use
-93f78d882865cb Tejun Heo       2015-05-22  2002  		 * the larger and more IO friendly wb_stat_error.
-c5c6343c4d75f9 Wu Fengguang    2011-12-02  2003  		 */
-2bce774e8245e9 Wang Long       2017-11-15  2004  		if (sdtc->wb_dirty <= wb_stat_error())
-c5c6343c4d75f9 Wu Fengguang    2011-12-02  2005  			break;
-c5c6343c4d75f9 Wu Fengguang    2011-12-02  2006  
-499d05ecf990a7 Jan Kara        2011-11-16  2007  		if (fatal_signal_pending(current))
-499d05ecf990a7 Jan Kara        2011-11-16  2008  			break;
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2009  	}
-fe6c9c6e3e3e33 Jan Kara        2022-06-23  2010  	return ret;
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2011  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+> 
+>> +
+>> +    if ((flags & ~SBI_FWFT_SET_FLAG_LOCK) != 0)
+>> +        return SBI_ERR_INVALID_PARAM;
+>> +
+>> +    if (conf->flags & SBI_FWFT_SET_FLAG_LOCK)
+>> +        return SBI_ERR_DENIED;
+>> +
+>> +    conf->flags = flags;
+>> +
+>> +    return conf->feature->set(vcpu, conf, value);
+>> +}
+>> +
