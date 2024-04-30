@@ -1,95 +1,91 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D672610E4
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 00:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23639161;
+	Tue, 30 Apr 2024 00:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714437812; cv=none; b=nwMFdvAJzpRymxTi6IyuOsDZ/E+wcXuhYRA+Q86Dxlc7Wd2Z8yAXR5QVmoyI0cn+Xp/1OjTZjMZ7zDFVur4p8cfGXDzs2hUGfQNMwQg1gbX/ycBTgopWIo0irFZI70Dn2uPK4lWTu+oxsHJGqHYelF/EHCbwFkl0LCrG/2LoRiU=
+	t=1714437950; cv=none; b=IF9PCNoYQfv3VzuAkhRnTdrdkI6y87UfHwQJ02UMo/qYEYljUSGmTjDDmSjH0E+XDm7Z6EIiT+rMjv9raNBdF9oNqtAHvVC6xzeXXoj70uC7/cyDnkONGWio7eUoZHaBl9E2JEFweqXJMyvzkbRCLJtzHnN0cmMfbQTeEF+s1dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714437812; c=relaxed/simple;
-	bh=Nl3vIVccFoXuhiVoNsPjYFj7L+CWbBMwdwLms1/tMfk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IDRyVgymutGdLQI108u/hqgFH101EtDhmeKzXwfOIugk5dGyTHk4LyF7GwbUFxpN+ChqcQ2Zr16LxfzFHcDILO7gwXdZBNeBbMY0FYRrqYVMYlxxMGsHu5ULv0ZH/mvtTln+iBY22LAcCuhxtG8ZqwxpyITRvxJb0Rd6BcaBFX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YTtTM5sY; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714437950; c=relaxed/simple;
+	bh=IETNoJ731yGtO8YaT0vZ74KAZZVPCO5X4Qoc3W+b/do=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UuoDSonr0YTcl4f3UjTmdwBi5Mn6MMT+nYJ924skz6KJlqEjA94p/dIrmcbmdyt7z5NMUv+SaT74O/CMqi9ABneieo2b220Fu9S0V8fdq2OBIvCtGO2zc7uX9n4gFuPGuMjt8mTpNnC/dMXKa89DqtKKA7/SxV85QsT6TDoh3VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PNQcTRA5; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YTtTM5sY"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5727c9b47e7so3977a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 17:43:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714437809; x=1715042609; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nl3vIVccFoXuhiVoNsPjYFj7L+CWbBMwdwLms1/tMfk=;
-        b=YTtTM5sY/SaIpVZ1prp8+958RMMgCod35fuDBJMx3+5JoZ64JTbtVUMEGu0fhmoYKX
-         RoC6GndTQ+myCIS/afsbUnjyhxREdwJ8fDXxdPn4vQ/rElD6cNjsGS+y8jERVfCnzf7D
-         2r5VX8bi3GRXUyb8J8aJl9pNpmZ3sItw7T9t8iDM40TS26idoIXLCm/W6oSV5b8O78G0
-         pk+2xDUPZSPZv1ehs7CTuVNNwoYkrjy5kxYWF28ZckBNHNTNhXJsLgFEny+vWD6M5c6Y
-         LaHsKhtBYL10nGkSY+NQ3KWmb4t1zx4/h7Y8LC8H+GfcY5OizGRYK3hJF7up4/eXBUzK
-         0rGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714437809; x=1715042609;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Nl3vIVccFoXuhiVoNsPjYFj7L+CWbBMwdwLms1/tMfk=;
-        b=qWsMD44fG2K+YbxOimv344ImKGNey4BvgjtycMT3d7fdWm7MFgpoMPA0IKhvqyL091
-         nbFPowDuDLUrr2EvRV7QD6Uh9geDUTmArq9GX1pAG6Eg5x+IUMnwweuAPy2SF/uA9etJ
-         y9nMMIlL2AZou5RsUB6I5ySFA15Ya7bkF/JvIMfI/UZK86279B4laAkCBIUR+Suql8bQ
-         Q8TjbQ9CO3239lc9mtKjGPgJpjgqYQQOyghQWvwJwMH+Kq09J5sktz1yewc+hSS6blcB
-         iVvoQnSTrTDrgK9WyGi0r3zbDFLfmwxffGtW5NOT9f79zO2pN75s83LftZXy3NpOiVOS
-         Q6kg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMXy/zjiywL7ra7/YoypkFGd4EU6jClaHutkEMLxXNAsiyUWhQBdUB18bHXbAIo/g4PhXOdM+2IqTtKtXyeC0yVexwPWZbPgvC3Rmw
-X-Gm-Message-State: AOJu0YyNkob4gJp9i/eWC7mSggkJ9wzYOycBd+EB+X4otsXOfqrtMe59
-	aC4I4pSiUZSbKtD3th4CriiiWOBiGfagR31H4r0u9CerEMLapP/O0ycAhrCgI0lIRvYDUSpGGtc
-	3Se9NBgCjsuKV16kf+0eyCiHkcNDbSr/rwMvp
-X-Google-Smtp-Source: AGHT+IGt9PUEdlFEraByU733LKE7yYh5IRg0/NQ/C1cyVJcW9jesZtQayq8ssQfHwZsnICq7HDA59pz98jE9Gf64snQ=
-X-Received: by 2002:a50:ed0d:0:b0:572:3fb6:3d0c with SMTP id
- j13-20020a50ed0d000000b005723fb63d0cmr90047eds.4.1714437809040; Mon, 29 Apr
- 2024 17:43:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PNQcTRA5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714437949; x=1745973949;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IETNoJ731yGtO8YaT0vZ74KAZZVPCO5X4Qoc3W+b/do=;
+  b=PNQcTRA5rGbu6dBIyslDfNPLqHtMw1Z9n8I9HTo8jBxqdWCV0WmgXnAA
+   14c0QmrqCy9Zv6X4gG1PYBqTCHcsam8kAxN7XbXmbWDNrkHMeSPgSY8D+
+   dV97Z3F5AyvFJJ/o9TLTcRaJafRUhdYVID8bARmpnNkBXlYWNf+kF2Dc1
+   2oWMwyVZ7nQm0Rc7msv7aRlBe79iuxI9b5RZpeS92OHEJGsAv01f4CqX6
+   T8OmIPo1jaqC52my0B1N6UJNOiYQZiWfeI5nHPNh5QIjY70qU5to4iLyS
+   jjACeNExv8h9KovjOKlMO202B0WEL/izFYjqkkiGbwAWH5qzvfJrnAkCG
+   g==;
+X-CSE-ConnectionGUID: 2xtlqSBpQYO6k9gwk6Je4A==
+X-CSE-MsgGUID: 9gh2D53oTT2YlyXMFWM34Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10658579"
+X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
+   d="scan'208";a="10658579"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 17:45:48 -0700
+X-CSE-ConnectionGUID: MKyKWB56SYGsWdNZKZHgDw==
+X-CSE-MsgGUID: XzWcFw9oSlSGxP+NQA+HAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
+   d="scan'208";a="31079781"
+Received: from unknown (HELO dmi-pnp-i7.sh.intel.com) ([10.239.159.155])
+  by orviesa005.jf.intel.com with ESMTP; 29 Apr 2024 17:45:46 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jim Mattson <jmattson@google.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	Jinrong Liang <cloudliang@tencent.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH 0/2] vPMU code refines
+Date: Tue, 30 Apr 2024 08:52:37 +0800
+Message-Id: <20240430005239.13527-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424014821.4154159-2-jthies@google.com> <6e028bfa-9063-42ac-b40f-cf17a81c2af2@web.de>
- <2024042547-shimmy-guileless-c7f2@gregkh>
-In-Reply-To: <2024042547-shimmy-guileless-c7f2@gregkh>
-From: Jameson Thies <jthies@google.com>
-Date: Mon, 29 Apr 2024 17:43:16 -0700
-Message-ID: <CAMFSARfOYWy0a_iZyuh9e8++xHdAYXcs2pT1_yJaJ60tHR17xQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] usb: typec: ucsi: Fix null deref in trace
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Markus Elfring <Markus.Elfring@web.de>, 
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, linux-usb@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-	Benson Leung <bleung@google.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
-	Hans de Goede <hdegoede@redhat.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Prashant Malani <pmalani@chromium.org>, Rajaram Regupathy <rajaram.regupathy@intel.com>, 
-	Saranya Gopal <saranya.gopal@intel.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Dmitry,
-what are your thoughts on Abhishek's comment? I think we should
-attempt to register the alternate mode when CONFIG_TYPEC_DP_ALTMODE is
-not enabled. It would give us a more accurate representation of the
-partner in user space. I understand your point about ignoring a
-potential EOPNOTSUPP response from the non-stub function. What if we
-leave ucsi.c alone, and replace the stub function's null return with a
-call to typec_port_register_altmode(). That would register DP altmode
-as an unsupported mode when CONFIG_TYPEC_DP_ALTMODE is not enabled,
-and fix the null pointer dereference. But, it won't change behavior
-when CONFIG_TYPEC_DP_ALTMODE is enabled.
+This small patchset refines the ambiguous naming in kvm_pmu structure
+and use macros instead of magic numbers to manipulate FIXED_CTR_CTRL MSR
+to increase readability.
 
-Hi Markus,
-thanks for your feedback. I'll update the commit message to say "null
-pointer dereference" when I upload a v3 series.
+No logic change is introduced in this patchset.
 
-Thanks,
-Jameson
+Dapeng Mi (2):
+  KVM: x86/pmu: Change ambiguous _mask suffix to _rsvd in kvm_pmu
+  KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with macros
+
+ arch/x86/include/asm/kvm_host.h | 10 ++++-----
+ arch/x86/kvm/pmu.c              | 26 ++++++++++++------------
+ arch/x86/kvm/pmu.h              |  8 +++++---
+ arch/x86/kvm/svm/pmu.c          |  4 ++--
+ arch/x86/kvm/vmx/pmu_intel.c    | 36 +++++++++++++++++++--------------
+ 5 files changed, 46 insertions(+), 38 deletions(-)
+
+
+base-commit: 7b076c6a308ec5bce9fc96e2935443ed228b9148
+-- 
+2.40.1
+
