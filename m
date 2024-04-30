@@ -1,125 +1,76 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEC41292CE
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568771292CE;
+	Tue, 30 Apr 2024 09:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714469770; cv=none; b=Q8g4Kx5CppSBUZL2PTFKVjyYIYBYL7+QzddjrTiC4aZSC2tVhvWJoCSPSotH2p8Hvq+lDKEtkWC4hwgmzs82tRCR80L+pAKrZredMHXQMWv9oyCSB62yqd6TKDdbD8K85zOqYYwwfkBDmbmW3rDkX18wxivH7XfUgxJHK60tIw4=
+	t=1714469776; cv=none; b=MRRhs7Sq/Rdx3cMheMtuPHbg23Awvp1cmDW14lXP7osZ0/u6Az5Qob6zE86ROb95mxtG68MAWCXPmyDInfpmrLdfgVrNMGN8CZjx8hUiJDd+2zigXnC62FOkcJTaOj1+Qc9E4vc8s1/EUXXoXU9PFAw6WJ12TjbArviFeRdLITE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714469770; c=relaxed/simple;
-	bh=8PmFHibtiheDakcFOeAVMKCG5ekxoLcxc7oTv8LL+l0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rBXetRPu9IjkRPQqAwPBuJTn4vEBCYtbd6sO3ijF2W1oGPbQHE5coh3kqPFMDFLv0XiAYpsAHLDqYgABFd8WaWxJ6E+bRPVr2i5sjd7UKhGXlbcLPtsdOMSQzhGRbva7SDwelpj/V7U6xy5i5lELH8Z+MkVSxh94M6gpgX4pfN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wVhLDDGr; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714469776; c=relaxed/simple;
+	bh=3l20woefNrUTmYr2WXVuXJsLYYGk9ONQKilh/0kO8iQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FfDre1ZhayB4HWfrxOMm9nlpwmaHawrk6dC69qP8M/6nfG1jUIJuRSr4+UsLphNhI7XyaG6oalwKJBg40SfNcvyuGN0BUadb3/n6UpNE804Hk4s0kXAeb+S/R3H1/lu5RsAgr99LBszQX5WZRxlAUpprsgYI6XIsk+aGwFP7f90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyX+AXMA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wVhLDDGr"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so8503965a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 02:36:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714469767; x=1715074567; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=l6OP6UMIGuPuXOxnGZWdqmp2g6zw3irzbWHGu1N7wL4=;
-        b=wVhLDDGrcweunftEeQIQozLtATOl8r2Ic2MmRGjbhkkBvO91+c0EQouJGOSvjVv06A
-         TGqpDxcZzBc2Qv4+vjY8cKuXZvt73Dk2aiIAE1wu2XpHqnoxqZgbLhCIfbhS/QuEwG2o
-         yWN4ko49+ARd+u3l/Zn072DUPRk7HO0SmV/FxGcd/UOX7qV10ZqamqPiGH6QBJaYBfl0
-         8UfO/a/YsHHZH7HZIUqjxjNTvdrjH3a53sf9/NppAK4ro8/AM0ci8RzS2mS1o4qk+S3N
-         Y27D5qdSDDkwcPQu+QMu8y/vx/Wsg8/jwsZ1TYxxu7YHZl87pXMammpevVTgQIsn6OK0
-         N+6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714469767; x=1715074567;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l6OP6UMIGuPuXOxnGZWdqmp2g6zw3irzbWHGu1N7wL4=;
-        b=I2q4BUUCkRgV0Sk6UL7f4G2FJ5+D32ZRy3TS/RBkHh0s1xqvxwwaInkakLCugCPuFc
-         pih7Mz24viYjkCACdkh58YFi7iMmF5GAw9Xp5iK+J/KlP45vUbUBBpv4tYK8VpleWgGE
-         hcsZzBxi4G888siS7tVqrRngQhXyrEDnGtPAB+lVBvr2Becl1h7YOpfYsHdNy40rNAdB
-         y2RsDmbqNmu6rXcrBsx7LAX7BidK1SJoJ/TkSRlM9do4FsZ4GRQd/+ezI8ZS1BFkSr7u
-         djEtFtSTkRsC/y1hqOieWH0Q7oKjPcXy7v9f1eTkWXjbtSDUY36u7+NSZ2+N6c/+Ettx
-         Cp1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVE+NxQH47lmqpF1/W8oucP9YYwxESdo68hXxw4Q2DQcWwDo9fdiYOb7sOzILFlQraRd6VaAGFwLC+U8rmpp29YjNO1Wwd5zPAr7tpA
-X-Gm-Message-State: AOJu0Yy7T2DPLcLtnNTDlrnFmiXso8PfOvnqRwYesW4J9p1a/A3YmsTY
-	hVXQLBgoLhoSl5lpsbUaJMIu1k2k9BMtNj4mRqJcD/7tQV+3/dDl26ZWGZ0W65E=
-X-Google-Smtp-Source: AGHT+IFRVFG3WbtIpuKNyLAY0k9Fcw9AYg2TsIIXrwULQIvk7bCUxzVDnXytrF1YXWbfo7z2bvaMzg==
-X-Received: by 2002:a50:9317:0:b0:572:9eba:848a with SMTP id m23-20020a509317000000b005729eba848amr653566eda.20.1714469767077;
-        Tue, 30 Apr 2024 02:36:07 -0700 (PDT)
-Received: from [192.168.114.15] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id j17-20020aa7c0d1000000b005729c4c2501sm296992edp.24.2024.04.30.02.36.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Apr 2024 02:36:06 -0700 (PDT)
-Message-ID: <388a8d2c-b316-4630-98d8-854a8b608820@linaro.org>
-Date: Tue, 30 Apr 2024 11:36:05 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyX+AXMA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 647EEC2BBFC;
+	Tue, 30 Apr 2024 09:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714469775;
+	bh=3l20woefNrUTmYr2WXVuXJsLYYGk9ONQKilh/0kO8iQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gyX+AXMA9YSULYnBC+gtH6mJufvYQCBvx6Ht5xJUrQvYCrX49bBiw6tH+Xj6k01im
+	 Rmo5vvSa1PYWEDPmetLVJZCJqSxWc2rl/4x3WGZ0Urr3ZHirbdjZxcLwT35sJVJWA0
+	 oZGrVOL5ET+QVSwNr+1Bphxt6zLbUjS+lCHYMy4wdrernxtiLWEmdYvhCWcc6hKMD9
+	 r7OByvdGgwnHbb5Row0k7R4W/2AticzWeWOpyut759IWQSdvxGVNMp4+7Ypp2pVoBn
+	 t2c/FtoCBv2qm91Sph9G79mT1SovRErqRlHEKvx6Zg5DYmO7IgQMjDI1Q0Mx7OLKW0
+	 BxQLptzD3DobQ==
+Date: Tue, 30 Apr 2024 11:36:12 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, 
+	linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Jan Dabros <jsd@semihalf.com>, Lee Jones <lee@kernel.org>, 
+	Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Duanqiang Wen <duanqiangwen@net-swift.com>, 
+	"open list:SYNOPSYS DESIGNWARE I2C DRIVER" <linux-i2c@vger.kernel.org>, "open list:WANGXUN ETHERNET DRIVER" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3 4/5] mfd: intel_quark_i2c_gpio: Utilize
+ i2c-designware.h
+Message-ID: <fidbc7locp32lypdui67crj3qkj3nbcp5vpxcnlxrdmme2sn4c@npdan5ncxxog>
+References: <20240425214438.2100534-1-florian.fainelli@broadcom.com>
+ <20240425214438.2100534-5-florian.fainelli@broadcom.com>
+ <Ziu6gDOqhEYQNhcH@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/12] arm64: dts: qcom: sm8650: move PHY's
- orientation-switch to SoC dtsi
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240429-usb-link-dtsi-v1-0-87c341b55cdf@linaro.org>
- <20240429-usb-link-dtsi-v1-9-87c341b55cdf@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
- BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
- HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
- TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
- zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
- MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
- t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
- UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
- aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
- kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
- Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
- R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
- BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
- yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
- xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
- 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
- GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
- mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
- x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
- BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
- mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
- Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
- xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
- AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
- 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
- jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
- cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
- jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
- cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
- bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
- YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
- bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
- nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
- izWDgYvmBE8=
-In-Reply-To: <20240429-usb-link-dtsi-v1-9-87c341b55cdf@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Ziu6gDOqhEYQNhcH@smile.fi.intel.com>
 
-On 29.04.2024 2:43 PM, Dmitry Baryshkov wrote:
-> The orientation-switch of the USB+DP QMP PHY is not a property of the
-> board, it is a design property of the QMP PHY itself. Move the property
-> from board DTS to SoC DTSI.
+Hi Andy,
+
+On Fri, Apr 26, 2024 at 05:30:24PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 25, 2024 at 02:44:37PM -0700, Florian Fainelli wrote:
+> > Rather than open code the i2c_designware string, utilize the newly
+> > defined constant in i2c-designware.h.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> P.S>
+> Note, my tags for MFD patches does not imply that I agree on the general idea
+> of this series, it's just in case if it will be approved by the respective
+> maintainers (I²C / MFD / etc).
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+I waited a bit to see if more comments were coming.
 
-Konrad
+Do you have a better approach in mind?
+
+Andi
