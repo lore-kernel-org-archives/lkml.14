@@ -1,175 +1,123 @@
-Received: from hi1smtp01.de.adit-jv.com (smtp1.de.adit-jv.com [93.241.18.167])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A6B17107C
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.241.18.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C3C171668
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714483098; cv=none; b=iYH+SlCWhCwdQ6+azfh35nMLwhjII2y+9ukOcYo/VjdvqCngiyjhcYnGr/SyfE366BAn+hHffn6lo9C5lvS6uxXoaEF5L9RxFXQNtjTcc7qa8M290iJGO3kXjpXRI85noE/azKzXKdl7odQdcOWxwX3CUG5t4olE5tRov0PbtuY=
+	t=1714483176; cv=none; b=OyQTr0rgbKsLpg12Xmiugm35XkdtNmZPqpuZioDLCCLTIG5D1/RNjtT1igu2OhPFACHRKLTRealWVgDqL+79g3DHgY+dNs7/lkPwTiR1H55v5Qc9N9bEpzWq0Bqg6rkq6z3BCqbpmW3JzY+cA7kaD//rfkeRFEYOnw9p2dEUKSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714483098; c=relaxed/simple;
-	bh=87xMadzi3+AHnIOAzl3v2td19EDukezvR3UMXomLmaI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V5Iu5RksfBsRIW0jXGYdpg237VE7TiCn4T+C54jKMGTGN6sOP/KJQWUIDJ3A7EbuDWk9IqX/5Qc9U6Ph7QYNp4NHCYhDHtAP64WZdFVuzSi7K+UkGgu0RzcAoCTdjVDCopb/qC1gSAeiu4LHsoo94i2hDLhFkxeXm+/ECpdtPrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com; spf=pass smtp.mailfrom=de.adit-jv.com; arc=none smtp.client-ip=93.241.18.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.adit-jv.com
-Received: from hi2exch02.adit-jv.com (hi2exch02.adit-jv.com [10.72.92.28])
-	by hi1smtp01.de.adit-jv.com (Postfix) with ESMTP id 39B16520150;
-	Tue, 30 Apr 2024 15:18:13 +0200 (CEST)
-Received: from mypc (10.72.94.1) by hi2exch02.adit-jv.com (10.72.92.28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.37; Tue, 30 Apr
- 2024 15:18:12 +0200
-Date: Tue, 30 Apr 2024 15:18:08 +0200
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Eugeniu Rosca <erosca@de.adit-jv.com>, Dirk Behme
-	<dirk.behme@de.bosch.com>, <linux-kernel@vger.kernel.org>, Rafael J Wysocki
-	<rafael@kernel.org>, <syzbot+ffa8143439596313a85a@syzkaller.appspotmail.com>,
-	Eugeniu Rosca <eugeniu.rosca@bosch.com>, Eugeniu Rosca
-	<roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] drivers: core: Make dev->driver usage safe in
- dev_uevent()
-Message-ID: <20240430131808.GA5272@mypc>
-References: <20240430045531.4062232-1-dirk.behme@de.bosch.com>
- <2024043030-remnant-plenty-1eeb@gregkh>
- <20240430081754.GA1927@mypc>
- <2024043038-haunt-fastball-6db3@gregkh>
+	s=arc-20240116; t=1714483176; c=relaxed/simple;
+	bh=flc38teKNx+GZo7NmJ5kYlP5ydouaYSS4d1wDV2Fd1M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Jsu29EymGgUhvw9PI7a9lfC0K97xm3xsE2O4xCdWv+TnQFVMc28aiUyroQD0AMo3WYnVkQI22asXOQZA8hFUTm5dus53t/j4KAGVfPC+fxn45HSiK/Ehr94bFQLcKn7pelb1gEnKn5tXsL/mGq9yX7feFJhu0t1Ex+uvuCmRvcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QSyykgKc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QSyykgKc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714483174;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=flc38teKNx+GZo7NmJ5kYlP5ydouaYSS4d1wDV2Fd1M=;
+	b=QSyykgKc7Bgy8t5tvngWwlBbbdBY265iy2lXdQiCw7j1NXN41Rey6FcPwssyC/FUF9ZOms
+	XS7yzv1nM181GqtVcW2maxSWoyUfuq/6SrH3a5PI183B3It8nUkp7lIiK4gm26/fKTNbGF
+	sDuAiZa27czZbrTwtYrZ8KPVlQ+ubSY=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-573-qzEtkfj2OjqvElhoCiGK6A-1; Tue, 30 Apr 2024 09:19:32 -0400
+X-MC-Unique: qzEtkfj2OjqvElhoCiGK6A-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5728683a63cso244823a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 06:19:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714483171; x=1715087971;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=flc38teKNx+GZo7NmJ5kYlP5ydouaYSS4d1wDV2Fd1M=;
+        b=PxFVzkMd/GkcBUJBXL6JYyVfGQn4XwDrkfG2uoulTfJbTHnUdncHNSJCdtP8xG3+IB
+         Lpho5+N3FioikMPBOEBZk/eh3Cw8whMIgZA//WywHUMvtBd1HerJRKdTSb3tlApDYWFA
+         3ijOjjIlVt068E2jwIiDu3y1pQV0pp7V4oOoZ2ur1UrlGGiFLMM/VmOuf9rLpe01yQeq
+         +mQCT9+EWjAeQmIjTfG6KYSs/wDZqFVPKjhN9Z2cNKHAWi/Ut0MXLlanGaHRCuzEfKp3
+         niRhCBKzz8VvSzXbOXqA8sKpxLdiDdNeVSmG525GNW1XIBn75RviAJX8H4+BeKXkhz10
+         AIkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgWeyKxb2vDkPItGon1UgcU5mcSJxmLwtN/qHfyYi/WcUNeOIIyDbizWuU5a6Ik54Pz4R90G+n5cpsH+8TqZIPWosMfnJiVQogyPrG
+X-Gm-Message-State: AOJu0YzCDj2bT7s5J8AI5T6KkzGbRC7Vu07NWaqWARRlA13X1ahMDZ9a
+	qwAK2luRVC7C3i/w3vflzuewZi6ZtxyDOeqyE+PjuGYAKWshaucTMkV6jrWK0vCulBhb5quTBzd
+	hvGDXkH7ap4NJ4SDiyKE384yO7rqw4awuLIaQQ0uYJV/66xb3NJJ2XhQsMw3/sQ==
+X-Received: by 2002:a17:907:31c2:b0:a58:a102:14c9 with SMTP id xf2-20020a17090731c200b00a58a10214c9mr10029941ejb.1.1714483171184;
+        Tue, 30 Apr 2024 06:19:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGh4K4utBzJoK8EabmELqU4eU7xXvQ9Tvf1P7sU4CiIYaYLxbNlXgftXkCnmG96HMMAft3zHA==
+X-Received: by 2002:a17:907:31c2:b0:a58:a102:14c9 with SMTP id xf2-20020a17090731c200b00a58a10214c9mr10029918ejb.1.1714483170818;
+        Tue, 30 Apr 2024 06:19:30 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3341:b0ae:6a10::f71])
+        by smtp.gmail.com with ESMTPSA id j21-20020a170906431500b00a521e5856f6sm15163433ejm.51.2024.04.30.06.19.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 06:19:30 -0700 (PDT)
+Message-ID: <e273971a5219cc240c4e9dda1adbbdf7a5ee6812.camel@redhat.com>
+Subject: Re: [PATCH v2] rxrpc: Fix using alignmask being zero for
+ __page_frag_alloc_align()
+From: Paolo Abeni <pabeni@redhat.com>
+To: David Howells <dhowells@redhat.com>
+Cc: Alexander Duyck <alexander.duyck@gmail.com>, 
+ linux-afs@lists.infradead.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>, Marc
+ Dionne <marc.dionne@auristor.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>
+Date: Tue, 30 Apr 2024 15:19:28 +0200
+In-Reply-To: <20240428111640.27306-1-linyunsheng@huawei.com>
+References: <20240428111640.27306-1-linyunsheng@huawei.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2024043038-haunt-fastball-6db3@gregkh>
-X-ClientProxiedBy: hi2exch02.adit-jv.com (10.72.92.28) To
- hi2exch02.adit-jv.com (10.72.92.28)
 
-Hello Greg,
+On Sun, 2024-04-28 at 19:16 +0800, Yunsheng Lin wrote:
+> rxrpc_alloc_data_txbuf() may be called with data_align being
+> zero in none_alloc_txbuf() and rxkad_alloc_txbuf(), data_align
+> is supposed to be an order-based alignment value, but zero is
+> not a valid order-based alignment value, and '~(data_align - 1)'
+> doesn't result in a valid mask-based alignment value for
+> __page_frag_alloc_align().
+>=20
+> Fix it by passing a valid order-based alignment value in
+> none_alloc_txbuf() and rxkad_alloc_txbuf().
+>=20
+> Also use page_frag_alloc_align() expecting an order-based
+> alignment value in rxrpc_alloc_data_txbuf() to avoid doing the
+> alignment converting operation and to catch possible invalid
+> alignment value in the future. Remove the 'if (data_align)'
+> checking too, as it is always true for a valid order-based
+> alignment value.
+>=20
+> Fixes: 6b2536462fd4 ("rxrpc: Fix use of changed alignment param to page_f=
+rag_alloc_align()")
+> Fixes: 49489bb03a50 ("rxrpc: Do zerocopy using MSG_SPLICE_PAGES and page =
+frags")
+> CC: David Howells <dhowells@redhat.com>
+> CC: Alexander Duyck <alexander.duyck@gmail.com>
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> Acked-by: David Howells <dhowells@redhat.com>
 
-On Tue, Apr 30, 2024 at 10:27:19AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Apr 30, 2024 at 10:17:54AM +0200, Eugeniu Rosca wrote:
-> > Hi Greg,
-> > 
-> > On Tue, Apr 30, 2024 at 09:20:10AM +0200, Greg Kroah-Hartman wrote:
-> > > On Tue, Apr 30, 2024 at 06:55:31AM +0200, Dirk Behme wrote:
-> > > > Inspired by the function dev_driver_string() in the same file make sure
-> > > > in case of uninitialization dev->driver is used safely in dev_uevent(),
-> > > > as well.
-> > > 
-> > > I think you are racing and just getting "lucky" with your change here,
-> > > just like dev_driver_string() is doing there (that READ_ONCE() really
-> > > isn't doing much to protect you...)
-> > 
-> > I hope below details shed more details on the repro:
-> > https:// gist.github.com/erosca/1e8a87fbcc9e5ad0fecd32ebcb6266c3
-> 
-> Sometimes I only have access to email, nothing else, please include in
-> the email the full details.
+Double checking before doing dumb mistakes...
 
-Will follow your preference in the future.
+@David: I assume from your ack you are fine with this patch being
+merged via the net tree, am I correct?
 
-> 
-> > To improve the occurrence rate:
-> >  - a dummy ds90ux9xx-dummy driver was used
-> >  - a dummy i2c node was added to DTS
-> >  - a dummy pr_alert() was added to dev_uevent() @ drivers/base/core.c
-> >  - UBSAN + KASAN enabled in .config
-> 
-> So this is entirely fake?  No real device or driver ever causes this
-> problem?
+Thanks,
 
-Of course not. This issue is impacting the end user by resetting the HW
-target once in a couple of months. Our synthetic test-case tries to
-emulate the end user's scenario, for quicker reproduction & validation
-of potential/candidate solutions.
+Paolo
 
-Dirk's synthetic scenario leads to the same logs as shared by the user.
-Based on that evidence, we believe we found the root cause.
-
-> 
-> Why would you add a pr_alert() call?  What is that for?
-> 
-> totally confused.
-
-pr_alert() acts as a simple delay, accelerating the reproduction.
-
-> 
-> 
-> > 
-> > > > This change is based on the observation of the following race condition:
-> > > > 
-> > > > Thread #1:
-> > > > ==========
-> > > > 
-> > > > really_probe() {
-> > > > ...
-> > > > probe_failed:
-> > > > ...
-> > > > device_unbind_cleanup(dev) {
-> > > >       ...
-> > > >       dev->driver = NULL;   // <= Failed probe sets dev->driver to NULL
-> > > >       ...
-> > > >       }
-> > > > ...
-> > > > }
-> > > > 
-> > > > Thread #2:
-> > > > ==========
-> > > > 
-> > > > dev_uevent() {
-> > > 
-> > > Wait, how can dev_uevent() be called if probe fails?  Who is calling
-> > > that?
-> > 
-> > dev_uevent() is called by reading /sys/bus/i2c/devices/<dev>/uevent.
-> > Not directly triggered by the probe failure.
-> > Please, kindly check the above gist/notes.
-> 
-> Again, put the info in the email so we can properly quote and read it,
-> and it's present for the history involved (web pages disappear, email is
-> for forever.)
-
-Agreed & will follow in the future (did not want to clutter the e-mail)
-
-> 
-> So you have userspace hammering on a uevent file?  Why is it being
-> called if userspace hasn't even been notified that the device has a
-> driver bound to it yet?  What causes this action?
-
-We know that uevent subsystem is involved, based on the post-mortem logs.
-Hence, reading sysfs was the easiest way to translate the real-life
-use-case to a synthetic one.
-
-> > 
-> > [--- cut ---]
-> > 
-> > > > -	if (dev->driver)
-> > > > -		add_uevent_var(env, "DRIVER=%s", dev->driver->name);
-> > > > +	/* dev->driver can change to NULL underneath us because of unbinding
-> > > > +	 * or failing probe(), so be careful about accessing it.
-> > > > +	 */
-> > > > +	drv = READ_ONCE(dev->driver);
-> > > > +	if (drv)
-> > > > +		add_uevent_var(env, "DRIVER=%s", drv->name);
-> > > 
-> > > Again, you are just reducing the window here.  Maybe a bit, but not all
-> > > that much overall as there is no real lock present.
-> > 
-> > The main objective of the patch is to "cache" dev->driver, such
-> > that it is not cleared asynchronously from a parallel thread.
-> > A refined/minimal locking alternative (if feasible) is welcome.
-> 
-> "cacheing" a stale pointer still results in a stale pointer :(
-
-Agreed. So, likely minimal/least-intrusive locking will be necessary.
-
-> 
-> thanks,
-> 
-> greg k-h
-
-BR, Eugeniu
