@@ -1,128 +1,160 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DB51C6615
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 08:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEAD14AA9
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 08:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466385; cv=none; b=VMc3npfIV+esDTbsCyT8U8Kd+3B567/rJ97XShpGXJa8ZCGKWIP+xjBRTDwbFaMO5xlvNqdJgrHyvUJCTAWVgoG2ME8zqfbXLmyrMA53rofCBioN3J7jsXXd6QriwKxfAa8TEJ70qg/LCMhCkljyb8mdyvtA169i2oQb7zvH1yE=
+	t=1714466520; cv=none; b=Q8MTacwvSHGbdmnLytNpI1NINP9fRCUZj+aMv0laQLIi/cYps3BXFpjBmWihf4x2rW34uEmjxqIR5xvs+dtX/4SXwSvXZFHLkbUzaMk63X7EaZ/dpnyAgndLhD5pRMGmALCJwezRuz5TcmritqtrjKncQuCzYHUuEv89pU5mHFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466385; c=relaxed/simple;
-	bh=WWFnrSc8+9eCmftDNV7T5kPmDsgc2uC6sffBiuC6UVY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SMqYo9mT2ogwgOiwz6RClddxezoHl0aPLEHMRLvIwuXbCSp8gTAwR6gUADkOU8mTRoDYVqd3HU90NvAxQKL+caj0MXdrcglwkNv4cTcLP/YSG0A+j41knHzzgUcl30SgKXw4cXmb4RMDVvG5IklB2JXfi+UhdXmeOcf2Wj+b4Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=sxfTy8XJ; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1714466520; c=relaxed/simple;
+	bh=eU4BEL813SSfzhmhOv0qY+7cCKqYSvoayxxfsT+WB9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ln8+vbhv7uSD+Veg6kBfEVnxSzNl4mbRm40aW5aUMjMEreAHh+mopXV7HyTEAlUAAw29ZsLUxIRWqlErivawoIBpv2BIECiamp3UYt2g75YbrOicB5UxuZiZBMa/YRRN4a23l41xugnj+yHIcbfUD9vEKBHzQSQdIX2vLD1WmQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T7jbNjB7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sxfTy8XJ"
-X-UUID: 2d3d3e8806cd11ef8065b7b53f7091ad-20240430
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=LwZIKlQJP95UHeQU2CW1tpdwHn1XGE1fySMMHl57I3A=;
-	b=sxfTy8XJ6m1N2aPEeXn/4HG8LP6QH265ngj+9Tz/nc9Anvjf/l3Y3Pfl4+YNIzHQrpQwkZjE0PfGt5ewJzbeIh6Pb0DoGdjGEO0b3oF6yqyRaLel9ZVFzc9ROXpk67MlBkbIlqCAa8rR4TqnCogautjY6J5J8ast7fjx7dqZEIg=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:fc59f32b-2338-41c5-9c3b-2f1377258e9d,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:82c5f88,CLOUDID:498c4883-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 2d3d3e8806cd11ef8065b7b53f7091ad-20240430
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2099143406; Tue, 30 Apr 2024 16:39:36 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 30 Apr 2024 16:39:35 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Tue, 30 Apr 2024 16:39:35 +0800
-From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>, Chun-Kuang Hu
-	<chunkuang.hu@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-CC: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jason-ch Chen <jason-ch.chen@mediatek.com>, "Jason-JH . Lin"
-	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
- Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH] mailbox: mtk-cmdq: Fix sleeping function called from invalid context
-Date: Tue, 30 Apr 2024 16:39:34 +0800
-Message-ID: <20240430083934.26980-1-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T7jbNjB7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6042C2BBFC;
+	Tue, 30 Apr 2024 08:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714466520;
+	bh=eU4BEL813SSfzhmhOv0qY+7cCKqYSvoayxxfsT+WB9o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T7jbNjB7OAZlaajfiNzx0NmvYYdqcLDUMbLZaqMpsx6vdiNb8hv2VOLtVUS7w2Arr
+	 K+Jsjpag19cNXAxwR/Zkpg6P1KSEAb+3zE1LzGh24JKs1vbzyTJejVkoKpFI8iTX7L
+	 2wPAmpynjMfPvSbztOSy9Dp07FF2KkV3MhIY+ePQ=
+Date: Tue, 30 Apr 2024 10:41:57 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: linux-kernel@vger.kernel.org, Rafael J Wysocki <rafael@kernel.org>,
+	syzbot+ffa8143439596313a85a@syzkaller.appspotmail.com,
+	Eugeniu Rosca <eugeniu.rosca@bosch.com>
+Subject: Re: [PATCH] drivers: core: Make dev->driver usage safe in
+ dev_uevent()
+Message-ID: <2024043041-arrange-defy-30de@gregkh>
+References: <20240430045531.4062232-1-dirk.behme@de.bosch.com>
+ <2024043030-remnant-plenty-1eeb@gregkh>
+ <eadf2812-85c8-4458-b504-10a60a16d1ea@de.bosch.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eadf2812-85c8-4458-b504-10a60a16d1ea@de.bosch.com>
 
-When we run kernel with lockdebug option, we will get the BUG below:
-[  106.692124] BUG: sleeping function called from invalid context at drivers/base/power/runtime.c:1164
-[  106.692190] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 3616, name: kworker/u17:3
-[  106.692226] preempt_count: 1, expected: 0
-[  106.692254] RCU nest depth: 0, expected: 0
-[  106.692282] INFO: lockdep is turned off.
-[  106.692306] irq event stamp: 0
-[  106.692331] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-[  106.692376] hardirqs last disabled at (0): [<ffffffee15d37fa0>] copy_process+0xc90/0x2ac0
-[  106.692429] softirqs last  enabled at (0): [<ffffffee15d37fc4>] copy_process+0xcb4/0x2ac0
-[  106.692473] softirqs last disabled at (0): [<0000000000000000>] 0x0
-[  106.692513] CPU: 1 PID: 3616 Comm: kworker/u17:3 Not tainted 6.1.87-lockdep-14133-g26e933aca785 #1 6839942e1cf34914b0a366137843dd2366f52aa9
-[  106.692556] Hardware name: Google Ciri sku0/unprovisioned board (DT)
-[  106.692586] Workqueue: imgsys_runner imgsys_runner_func
-[  106.692638] Call trace:
-[  106.692662]  dump_backtrace+0x100/0x120
-[  106.692702]  show_stack+0x20/0x2c
-[  106.692737]  dump_stack_lvl+0x84/0xb4
-[  106.692775]  dump_stack+0x18/0x48
-[  106.692809]  __might_resched+0x354/0x4c0
-[  106.692847]  __might_sleep+0x98/0xe4
-[  106.692883]  __pm_runtime_resume+0x70/0x124
-[  106.692921]  cmdq_mbox_send_data+0xe4/0xb1c
-[  106.692964]  msg_submit+0x194/0x2dc
-[  106.693003]  mbox_send_message+0x190/0x330
-[  106.693043]  imgsys_cmdq_sendtask+0x1618/0x2224
-[  106.693082]  imgsys_runner_func+0xac/0x11c
-[  106.693118]  process_one_work+0x638/0xf84
-[  106.693158]  worker_thread+0x808/0xcd0
-[  106.693196]  kthread+0x24c/0x324
-[  106.693231]  ret_from_fork+0x10/0x20
+On Tue, Apr 30, 2024 at 10:23:36AM +0200, Dirk Behme wrote:
+> Hi Greg,
+> 
+> On 30.04.2024 09:20, Greg Kroah-Hartman wrote:
+> > On Tue, Apr 30, 2024 at 06:55:31AM +0200, Dirk Behme wrote:
+> > > Inspired by the function dev_driver_string() in the same file make sure
+> > > in case of uninitialization dev->driver is used safely in dev_uevent(),
+> > > as well.
+> > 
+> > I think you are racing and just getting "lucky" with your change here,
+> > just like dev_driver_string() is doing there (that READ_ONCE() really
+> > isn't doing much to protect you...)
+> > 
+> > > This change is based on the observation of the following race condition:
+> > > 
+> > > Thread #1:
+> > > ==========
+> > > 
+> > > really_probe() {
+> > > ...
+> > > probe_failed:
+> > > ...
+> > > device_unbind_cleanup(dev) {
+> > >        ...
+> > >        dev->driver = NULL;   // <= Failed probe sets dev->driver to NULL
+> > >        ...
+> > >        }
+> > > ...
+> > > }
+> > > 
+> > > Thread #2:
+> > > ==========
+> > > 
+> > > dev_uevent() {
+> > 
+> > Wait, how can dev_uevent() be called if probe fails?  Who is calling
+> > that?
+> > 
+> > > ...
+> > > if (dev->driver)
+> > >        // If dev->driver is NULLed from really_probe() from here on,
+> > >        // after above check, the system crashes
+> > >        add_uevent_var(env, "DRIVER=%s", dev->driver->name);
+> > > 
+> > > dev_driver_string() can't be used here because we want NULL and not
+> > > anything else in the non-init case.
+> > > 
+> > > Similar cases are reported by syzkaller in
+> > > 
+> > > https://syzkaller.appspot.com/bug?extid=ffa8143439596313a85a
+> > > 
+> > > But these are regarding the *initialization* of dev->driver
+> > > 
+> > > dev->driver = drv;
+> > > 
+> > > As this switches dev->driver to non-NULL these reports can be considered
+> > > to be false-positives (which should be "fixed" by this commit, as well,
+> > > though).
+> > > 
+> > > Fixes: 239378f16aa1 ("Driver core: add uevent vars for devices of a class")
+> > > Cc: syzbot+ffa8143439596313a85a@syzkaller.appspotmail.com
+> > > Reviewed-by: Eugeniu Rosca <eugeniu.rosca@bosch.com>
+> > > Tested-by: Eugeniu Rosca <eugeniu.rosca@bosch.com>
+> > > Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+> > > ---
+> > >   drivers/base/core.c | 9 +++++++--
+> > >   1 file changed, 7 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > index 5f4e03336e68..99ead727c08f 100644
+> > > --- a/drivers/base/core.c
+> > > +++ b/drivers/base/core.c
+> > > @@ -2639,6 +2639,7 @@ static const char *dev_uevent_name(const struct kobject *kobj)
+> > >   static int dev_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
+> > >   {
+> > >   	const struct device *dev = kobj_to_dev(kobj);
+> > > +	struct device_driver *drv;
+> > >   	int retval = 0;
+> > >   	/* add device node properties if present */
+> > > @@ -2667,8 +2668,12 @@ static int dev_uevent(const struct kobject *kobj, struct kobj_uevent_env *env)
+> > >   	if (dev->type && dev->type->name)
+> > >   		add_uevent_var(env, "DEVTYPE=%s", dev->type->name);
+> > > -	if (dev->driver)
+> > > -		add_uevent_var(env, "DRIVER=%s", dev->driver->name);
+> > > +	/* dev->driver can change to NULL underneath us because of unbinding
+> > > +	 * or failing probe(), so be careful about accessing it.
+> > > +	 */
+> > > +	drv = READ_ONCE(dev->driver);
+> > > +	if (drv)
+> > > +		add_uevent_var(env, "DRIVER=%s", drv->name);
+> > 
+> > Again, you are just reducing the window here.  Maybe a bit, but not all
+> > that much overall as there is no real lock present.
+> > 
+> > So how is this actually solving anything?
+> 
+> 
+> Looking at dev_driver_string() I hoped that it just reads *once*. I.e. we
+> don't care if we read NULL or any valid pointer, as long as this pointer
+> read is done only once ("atomically"?). If READ_ONCE() doesn't do that, I
+> agree, it's not the (race) fix we are looking for.
 
-We found that there is a spin_lock_irqsave protection in msg_submit()
-of mailbox.c.
-So when cmdq driver calls pm_runtime_get_sync() in cmdq_mbox_send_data(),
-it will get this BUG report.
+Yes, what if you read it, and then it is unloaded from the system before
+you attempt to access drv->name?  not good.
 
-Add pm_runtime_irq_safe() to let pm_runtime callbacks is safe in atomic
-context with interrupts disabled.
+> Initially, I was thinking about anything like [1] below. I.e. adding a mutex
+> lock.  But not sure if that is better (acceptable?).
 
-Fixes: 8afe816b0c99 ("mailbox: mtk-cmdq-mailbox: Implement Runtime PM with autosuspend")
-Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
- 1 file changed, 1 insertion(+)
+a proper lock is the only way to correctly solve this.
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index ead2200f39ba..3b4f19633c83 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -694,6 +694,7 @@ static int cmdq_probe(struct platform_device *pdev)
- 
- 	pm_runtime_set_autosuspend_delay(dev, CMDQ_MBOX_AUTOSUSPEND_DELAY_MS);
- 	pm_runtime_use_autosuspend(dev);
-+	pm_runtime_irq_safe(dev);
- 
- 	return 0;
- }
--- 
-2.18.0
+thanks,
 
+greg k-h
