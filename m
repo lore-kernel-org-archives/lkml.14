@@ -1,340 +1,150 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AAE1C8FA3;
-	Tue, 30 Apr 2024 14:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70030172BBF;
+	Tue, 30 Apr 2024 14:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714486516; cv=none; b=XeI1iybcz1f9wIwU8a4BcWiwcOuuQQp3RCfb5hZ3WsVRKsv3qh7jzdD8Ayv5Nen4EfwsPTICL5Z+AbgCrMI54gYbG3N/OS++TT0D7aP5uY0a6e+Q08lzNHKtj3W167tIVN6aVNcah/N7MwtUK+duCUwYC4MGUl0sNW18onrEt54=
+	t=1714486592; cv=none; b=Pmx9adVH8aulzjjPCxBSvRMz8B1nQ5i47+RXVGa67dz2s8koJcBWXVn+S8JuzF1zF4+1QF8mgaAV1dXI+mBUrCWu5P/4QPimtGCwvI80MMey+6c1DFjJASPoiQ2VvR1MeBpFNWZNPFzGhIONB4OTChg8MdMHbtUYbJNCk5INpZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714486516; c=relaxed/simple;
-	bh=MuncWkwuwfVa8wYmiFLN1XCnZXYluzh649G4ohOiNVI=;
+	s=arc-20240116; t=1714486592; c=relaxed/simple;
+	bh=VnGje2vsuNNX86eGecKjoz4Ax6Vr3kuQDPJzyTb3N4E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s8HFn8Pnsf5XoelJfcN7dta84dfnwta9m1LQP7r0L287uA3+D0KZxmYddSB5L/H5AHb28D9ZsbgOHNrzNSzdK2czq8FetsiSlVdwMq78t17Iibq+y/5oJ7dKvR5J/EKxpeaOFBZIkW2YmcjkkP7cBjtl2JiczLEF7PxexSEpteE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dYEUoiKA; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=Npfk3x1e2J4ds/2y1UbFeWxxGhEw1jQoPzNOpDTxRy7BAZQEaObQGf8x4p/SsuNp61NrZ2iBAEmsEiJsOVP9J/NsLshU/UQgrCN6h5LjVzfmI4aasHyGKkL5O7xjPGIjF4VZ6x01y6FRZC4g+nQQHkHFriexOpNf88tERopiq50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eM33BEt2; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYEUoiKA"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ad8919ba0cso5053941a91.0;
-        Tue, 30 Apr 2024 07:15:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714486514; x=1715091314; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5kv+AH2AjQwed6PGaED+AOOlkw433dBO11c9HZx9xXs=;
-        b=dYEUoiKArK9Fqbx9LUPEFFpu8QLKfKrGr3TfeAsFk1zE3dtU/f/CXBPhxjmXEvCxf3
-         mz4FixZqcmc6fUEJldYRHClQE7uFxAkfl7UxE3oZR9BMs+vKV66+UuMFNuqffQANkRP/
-         QfTy4A+akhvdAHZOxFNgLCJm1DuAYkcnFLwMG+r5Dq4WZ4Tt89diR0jmeuL4+ILMKpDL
-         /KbAZ9rAHwE9CjgodekjbOyNdPb+gJbDB5nM7+OuuPGDvRIZIouWUXoWoHbV6b+fl3p/
-         +/CF9WzvMXz2zwQigZdbntPXxVsYymXp8Ut+0Kr97+0QLE+asB+Px6gQspLkA7CyiXm8
-         0nvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714486514; x=1715091314;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5kv+AH2AjQwed6PGaED+AOOlkw433dBO11c9HZx9xXs=;
-        b=c8ngFHDtrmzK8DbBeqKwxrQRGo1AsgQd2PIIYWR07nfcYKqs3qzOa/ZLeVc8Q5pkai
-         yP2qyq7YoP3tdx2ZwasbFYt1B4UwUjdX+jdaXQHFf/mnm69iu2Nh2ztEQmqSuPbJm6lk
-         +O7v1WTboh6slbvjhKrxdJoHQ0X+78cbuTv5Yo+x0Sw5pX3t2+6uKrZN1J4ZQEQSIg1r
-         3/lArMwyj/TYLkpEaIX/Ip5eFdSvPi/7JrjkgkfNwqYQbLF3pbV5LMcyE6aw4xEloCt1
-         X3CJ1qWv4JS3MIjsrzQTxuJVjduz8Da3NDqdYjfVblvDmXzjmSYPG8jAUtJwkvjEn26N
-         rByA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3DZDjYQ1sVoL+L9fjmKkLHLSgA2mqvN8eXwBdQkhDom3VkC8kX0zb0tjFPkubLLpaJWIV6u7jTlgORxsLpDrfRuBHRq/WwNVGPmJsTeeFy85dDeIfYKg3W6eOx55fEKRAz2e1OI0QhpDyMNW9
-X-Gm-Message-State: AOJu0Yyj3QwqyHaj33592301PmXVqblvmqOesiXiLKMPvpk/4RM8+MJw
-	4sSJG/gYzaJRTfIPM7kZHhyF6jJiEmOQZbcf10kgOOh3OnKf/iDz
-X-Google-Smtp-Source: AGHT+IGJbxv+kbcFM+zqC0SF72sh/VAH4+dUGSFPQasHNb9jjjyVSODWR9oXdJEidc1M951AMnto+Q==
-X-Received: by 2002:a17:90b:4c49:b0:2b0:7f15:9155 with SMTP id np9-20020a17090b4c4900b002b07f159155mr3003910pjb.31.1714486513677;
-        Tue, 30 Apr 2024 07:15:13 -0700 (PDT)
-Received: from prasmi.domain.name ([103.219.60.80])
-        by smtp.gmail.com with ESMTPSA id az24-20020a17090b029800b0029bacd0f271sm22883227pjb.31.2024.04.30.07.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 07:15:13 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 2/2] irqchip/renesas-rzg2l: Add support for RZ/Five SoC
-Date: Tue, 30 Apr 2024 15:14:38 +0100
-Message-Id: <20240430141438.132838-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240430141438.132838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240430141438.132838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eM33BEt2"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43UECFHR010344;
+	Tue, 30 Apr 2024 14:16:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=aYJ3Kt9c1VzZVEbwIY2J3w38JrUTcaE16SfYcftkq5k=;
+ b=eM33BEt2s1CrqyJ8/PJsfz8A5enMTgibxiszTdTzQts6IxnOZqknRg1NPl0YuiEDzjQb
+ EdKvgSQ9LwfWZF94EHYEDJRjkKepuXKpfJ5B64k3plmxZpFCVdGi7ekIdnVqr+SwDCqN
+ QoMTZQg5Z6Cnj0Kj5PLxXsz6eGyLFv/+wh02SkqVvSpRCTw+pqK6DZzDL0NVODIQMdKV
+ xOZi34UqOTiu1JiAl+Xs07zAbQ97sYAh5J5QwZC804JaFk/Ah1cbGhoS0sYPmQ435Cp0
+ xx411gqN7oyeuCBRm9lc5bp57s1TOXRaNmp3Xahj3WjuLbeXIVmFv+7yMHfj00stm225 QQ== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xu221r0x5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 14:16:15 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43UE0G77022177;
+	Tue, 30 Apr 2024 14:16:14 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xsd6mn90s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 14:16:14 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43UEGAT536241686
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Apr 2024 14:16:12 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4F67B20073;
+	Tue, 30 Apr 2024 14:16:10 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E6BF92004D;
+	Tue, 30 Apr 2024 14:16:09 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 30 Apr 2024 14:16:09 +0000 (GMT)
+From: Heiko Carstens <hca@linux.ibm.com>
+To: linux-s390@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, lkft-triage@lists.linaro.org,
+        Linux Regressions <regressions@lists.linux.dev>, imx@lists.linux.dev,
+        Abel Vesa <abelvesa@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>, peng.fan@nxp.com
+Subject: [PATCH] clk: imx: imx8mp: Add missing CONFIG_PM ifdefs
+Date: Tue, 30 Apr 2024 16:16:09 +0200
+Message-Id: <20240430141609.2244416-1-hca@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <CA+G9fYuP7S+a89Ep5g5_Ad69EMwRkJ8nM+MMTzbEcP+6H2oMXQ@mail.gmail.com>
+References: <CA+G9fYuP7S+a89Ep5g5_Ad69EMwRkJ8nM+MMTzbEcP+6H2oMXQ@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: pJou94LF_Dl22Dca5rhnWdRvx8EVHD0a
+X-Proofpoint-ORIG-GUID: pJou94LF_Dl22Dca5rhnWdRvx8EVHD0a
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-30_08,2024-04-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ lowpriorityscore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
+ impostorscore=0 clxscore=1011 bulkscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404300101
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Add missing CONFIG_PM ifdefs to fix this allmodconfig compile error:
 
-The IX45 block has additional mask registers (NMSK/IMSK/TMSK) compared
-to the RZ/G2L (family) SoC.
+drivers/clk/imx/clk-imx8mp-audiomix.c:356:12: error:
+'clk_imx8mp_audiomix_runtime_suspend' defined but not used
+[-Werror=unused-function]
+  356 | static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
-A new rzfive_irqc_chip irq_chip is introduced for RZ/Five, where function
-pointers for irq_(un)mask and irq_(dis/en)able handle the (un)masking
-of the interrupts. The irq_chip pointer is now passed as an init callback
-and stored in the priv pointer to differentiate between RZ/G2L and RZ/Five.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Closes: https://lore.kernel.org/r/CA+G9fYuP7S+a89Ep5g5_Ad69EMwRkJ8nM+MMTzbEcP+6H2oMXQ@mail.gmail.com
+Fixes: 1496dd413b2e ("clk: imx: imx8mp: Add pm_runtime support for power saving")
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 ---
-v3->v4
-- Renamed rzg2l_irqc_init_helper -> rzg2l_irqc_common_init
-- Moved the locks into callers for (un)mask and (en/dis)able functions
-- Collected RB tag from Geert
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-v2->v3
-- Added RZ/Five specific irqchip instead of polluting the functions
-- Fixed review comments pointed by Biju and Geert
-- Updated commit message
-- moved locking to respective read/write functions
-
-v1->v2
-- Added IRQCHIP_MATCH() for RZ/Five
-- Retaining a copy of OF data in priv
-- Rebased the changes
----
- drivers/irqchip/irq-renesas-rzg2l.c | 148 +++++++++++++++++++++++++++-
- 1 file changed, 145 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
-index f6484bf15e0b..98a6a339fe43 100644
---- a/drivers/irqchip/irq-renesas-rzg2l.c
-+++ b/drivers/irqchip/irq-renesas-rzg2l.c
-@@ -37,6 +37,8 @@
- #define TSSEL_SHIFT(n)			(8 * (n))
- #define TSSEL_MASK			GENMASK(7, 0)
- #define IRQ_MASK			0x3
-+#define IMSK				0x10010
-+#define TMSK				0x10020
+diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+index 574a032309c1..6549e55e94c9 100644
+--- a/drivers/clk/imx/clk-imx8mp-audiomix.c
++++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+@@ -217,6 +217,8 @@ struct clk_imx8mp_audiomix_priv {
+ 	struct clk_hw_onecell_data clk_data;
+ };
  
- #define TSSR_OFFSET(n)			((n) % 4)
- #define TSSR_INDEX(n)			((n) / 4)
-@@ -69,12 +71,14 @@ struct rzg2l_irqc_reg_cache {
- /**
-  * struct rzg2l_irqc_priv - IRQ controller private data structure
-  * @base:	Controller's base address
-+ * @irqchip:	Pointer to struct irq_chip
-  * @fwspec:	IRQ firmware specific data
-  * @lock:	Lock to serialize access to hardware registers
-  * @cache:	Registers cache for suspend/resume
-  */
- static struct rzg2l_irqc_priv {
- 	void __iomem			*base;
-+	const struct irq_chip		*irqchip;
- 	struct irq_fwspec		fwspec[IRQC_NUM_IRQ];
- 	raw_spinlock_t			lock;
- 	struct rzg2l_irqc_reg_cache	cache;
-@@ -138,6 +142,111 @@ static void rzg2l_irqc_eoi(struct irq_data *d)
- 	irq_chip_eoi_parent(d);
++#ifdef CONFIG_PM
++
+ static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
+ {
+ 	struct clk_imx8mp_audiomix_priv *priv = dev_get_drvdata(dev);
+@@ -232,6 +234,8 @@ static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
+ 	}
  }
  
-+static void rzfive_irqc_mask_irq_interrupt(struct rzg2l_irqc_priv *priv,
-+					   unsigned int hwirq)
-+{
-+	u32 bit = BIT(hwirq - IRQC_IRQ_START);
++#endif /* CONFIG_PM */
 +
-+	writel_relaxed(readl_relaxed(priv->base + IMSK) | bit, priv->base + IMSK);
-+}
-+
-+static void rzfive_irqc_unmask_irq_interrupt(struct rzg2l_irqc_priv *priv,
-+					     unsigned int hwirq)
-+{
-+	u32 bit = BIT(hwirq - IRQC_IRQ_START);
-+
-+	writel_relaxed(readl_relaxed(priv->base + IMSK) & ~bit, priv->base + IMSK);
-+}
-+
-+static void rzfive_irqc_mask_tint_interrupt(struct rzg2l_irqc_priv *priv,
-+					    unsigned int hwirq)
-+{
-+	u32 bit = BIT(hwirq - IRQC_TINT_START);
-+
-+	writel_relaxed(readl_relaxed(priv->base + TMSK) | bit, priv->base + TMSK);
-+}
-+
-+static void rzfive_irqc_unmask_tint_interrupt(struct rzg2l_irqc_priv *priv,
-+					      unsigned int hwirq)
-+{
-+	u32 bit = BIT(hwirq - IRQC_TINT_START);
-+
-+	writel_relaxed(readl_relaxed(priv->base + TMSK) & ~bit, priv->base + TMSK);
-+}
-+
-+static void rzfive_irqc_mask(struct irq_data *d)
-+{
-+	struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
-+	unsigned int hwirq = irqd_to_hwirq(d);
-+
-+	raw_spin_lock(&priv->lock);
-+	if (hwirq >= IRQC_IRQ_START && hwirq <= IRQC_IRQ_COUNT)
-+		rzfive_irqc_mask_irq_interrupt(priv, hwirq);
-+	else if (hwirq >= IRQC_TINT_START && hwirq < IRQC_NUM_IRQ)
-+		rzfive_irqc_mask_tint_interrupt(priv, hwirq);
-+	raw_spin_unlock(&priv->lock);
-+	irq_chip_mask_parent(d);
-+}
-+
-+static void rzfive_irqc_unmask(struct irq_data *d)
-+{
-+	struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
-+	unsigned int hwirq = irqd_to_hwirq(d);
-+
-+	raw_spin_lock(&priv->lock);
-+	if (hwirq >= IRQC_IRQ_START && hwirq <= IRQC_IRQ_COUNT)
-+		rzfive_irqc_unmask_irq_interrupt(priv, hwirq);
-+	else if (hwirq >= IRQC_TINT_START && hwirq < IRQC_NUM_IRQ)
-+		rzfive_irqc_unmask_tint_interrupt(priv, hwirq);
-+	raw_spin_unlock(&priv->lock);
-+	irq_chip_unmask_parent(d);
-+}
-+
-+static void rzfive_tint_irq_endisable(struct irq_data *d, bool enable)
-+{
-+	struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
-+	unsigned int hwirq = irqd_to_hwirq(d);
-+
-+	if (hwirq >= IRQC_TINT_START && hwirq < IRQC_NUM_IRQ) {
-+		u32 offset = hwirq - IRQC_TINT_START;
-+		u32 tssr_offset = TSSR_OFFSET(offset);
-+		u8 tssr_index = TSSR_INDEX(offset);
-+		u32 reg;
-+
-+		raw_spin_lock(&priv->lock);
-+		if (enable)
-+			rzfive_irqc_unmask_tint_interrupt(priv, hwirq);
-+		else
-+			rzfive_irqc_mask_tint_interrupt(priv, hwirq);
-+		reg = readl_relaxed(priv->base + TSSR(tssr_index));
-+		if (enable)
-+			reg |= TIEN << TSSEL_SHIFT(tssr_offset);
-+		else
-+			reg &= ~(TIEN << TSSEL_SHIFT(tssr_offset));
-+		writel_relaxed(reg, priv->base + TSSR(tssr_index));
-+		raw_spin_unlock(&priv->lock);
-+	} else {
-+		raw_spin_lock(&priv->lock);
-+		if (enable)
-+			rzfive_irqc_unmask_irq_interrupt(priv, hwirq);
-+		else
-+			rzfive_irqc_mask_irq_interrupt(priv, hwirq);
-+		raw_spin_unlock(&priv->lock);
-+	}
-+}
-+
-+static void rzfive_irqc_irq_disable(struct irq_data *d)
-+{
-+	rzfive_tint_irq_endisable(d, false);
-+	irq_chip_disable_parent(d);
-+}
-+
-+static void rzfive_irqc_irq_enable(struct irq_data *d)
-+{
-+	rzfive_tint_irq_endisable(d, true);
-+	irq_chip_enable_parent(d);
-+}
-+
- static void rzg2l_tint_irq_endisable(struct irq_data *d, bool enable)
+ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
  {
- 	unsigned int hw_irq = irqd_to_hwirq(d);
-@@ -321,7 +430,7 @@ static struct syscore_ops rzg2l_irqc_syscore_ops = {
- 	.resume		= rzg2l_irqc_irq_resume,
- };
- 
--static const struct irq_chip irqc_chip = {
-+static const struct irq_chip rzg2l_irqc_chip = {
- 	.name			= "rzg2l-irqc",
- 	.irq_eoi		= rzg2l_irqc_eoi,
- 	.irq_mask		= irq_chip_mask_parent,
-@@ -338,6 +447,23 @@ static const struct irq_chip irqc_chip = {
- 				  IRQCHIP_SKIP_SET_WAKE,
- };
- 
-+static const struct irq_chip rzfive_irqc_chip = {
-+	.name			= "rzfive-irqc",
-+	.irq_eoi		= rzg2l_irqc_eoi,
-+	.irq_mask		= rzfive_irqc_mask,
-+	.irq_unmask		= rzfive_irqc_unmask,
-+	.irq_disable		= rzfive_irqc_irq_disable,
-+	.irq_enable		= rzfive_irqc_irq_enable,
-+	.irq_get_irqchip_state	= irq_chip_get_parent_state,
-+	.irq_set_irqchip_state	= irq_chip_set_parent_state,
-+	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_set_type		= rzg2l_irqc_set_type,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.flags			= IRQCHIP_MASK_ON_SUSPEND |
-+				  IRQCHIP_SET_TYPE_MASKED |
-+				  IRQCHIP_SKIP_SET_WAKE,
-+};
-+
- static int rzg2l_irqc_alloc(struct irq_domain *domain, unsigned int virq,
- 			    unsigned int nr_irqs, void *arg)
- {
-@@ -369,7 +495,7 @@ static int rzg2l_irqc_alloc(struct irq_domain *domain, unsigned int virq,
- 	if (hwirq > (IRQC_NUM_IRQ - 1))
- 		return -EINVAL;
- 
--	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &irqc_chip,
-+	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq, priv->irqchip,
- 					    (void *)(uintptr_t)tint);
- 	if (ret)
- 		return ret;
-@@ -401,7 +527,8 @@ static int rzg2l_irqc_parse_interrupts(struct rzg2l_irqc_priv *priv,
+ 	struct clk_imx8mp_audiomix_priv *priv;
+@@ -353,6 +357,8 @@ static int clk_imx8mp_audiomix_remove(struct platform_device *pdev)
  	return 0;
  }
  
--static int rzg2l_irqc_init(struct device_node *node, struct device_node *parent)
-+static int rzg2l_irqc_common_init(struct device_node *node, struct device_node *parent,
-+				  const struct irq_chip *irq_chip)
- {
- 	struct irq_domain *irq_domain, *parent_domain;
- 	struct platform_device *pdev;
-@@ -422,6 +549,8 @@ static int rzg2l_irqc_init(struct device_node *node, struct device_node *parent)
- 	if (!rzg2l_irqc_data)
- 		return -ENOMEM;
- 
-+	rzg2l_irqc_data->irqchip = irq_chip;
++#ifdef CONFIG_PM
 +
- 	rzg2l_irqc_data->base = devm_of_iomap(&pdev->dev, pdev->dev.of_node, 0, NULL);
- 	if (IS_ERR(rzg2l_irqc_data->base))
- 		return PTR_ERR(rzg2l_irqc_data->base);
-@@ -472,8 +601,21 @@ static int rzg2l_irqc_init(struct device_node *node, struct device_node *parent)
- 	return ret;
+ static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
+ {
+ 	clk_imx8mp_audiomix_save_restore(dev, true);
+@@ -367,6 +373,8 @@ static int clk_imx8mp_audiomix_runtime_resume(struct device *dev)
+ 	return 0;
  }
  
-+static int __init rzg2l_irqc_init(struct device_node *node,
-+				  struct device_node *parent)
-+{
-+	return rzg2l_irqc_common_init(node, parent, &rzg2l_irqc_chip);
-+}
++#endif /* CONFIG_PM */
 +
-+static int __init rzfive_irqc_init(struct device_node *node,
-+				   struct device_node *parent)
-+{
-+	return rzg2l_irqc_common_init(node, parent, &rzfive_irqc_chip);
-+}
-+
- IRQCHIP_PLATFORM_DRIVER_BEGIN(rzg2l_irqc)
- IRQCHIP_MATCH("renesas,rzg2l-irqc", rzg2l_irqc_init)
-+IRQCHIP_MATCH("renesas,r9a07g043f-irqc", rzfive_irqc_init)
- IRQCHIP_PLATFORM_DRIVER_END(rzg2l_irqc)
- MODULE_AUTHOR("Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>");
- MODULE_DESCRIPTION("Renesas RZ/G2L IRQC Driver");
+ static const struct dev_pm_ops clk_imx8mp_audiomix_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(clk_imx8mp_audiomix_runtime_suspend,
+ 			   clk_imx8mp_audiomix_runtime_resume, NULL)
 -- 
-2.34.1
+2.40.1
 
