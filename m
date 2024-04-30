@@ -1,99 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D4F13F43D;
-	Tue, 30 Apr 2024 12:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111F817107D
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714480836; cv=none; b=kDjq1IQ++tJIhaEpOslMYWYLLhMTXYWYfwjfnYt115NufxMQpLgQ9At1JVQ/JWU69zcw01CpjpdD2dv+ZJoGWOPlBB68f5tr2pSBJ0R0SOw/wunsrWczKHw/4YTUabjX/z02qHT8Dh95ahtECGHdIV0jqT0Bq9O5ojgguhV7Lwc=
+	t=1714480891; cv=none; b=rqmYU2mj1n5Mh2qlc0vodHnD0iFjjzJRZQYgONDHU7HuaP7p4L9HyJt9XmyNh5+wNP8TQg/Ur/FcalLdFarp/cbZUT0IhJm+iGFtIdCuwZYAGKOT8fJ9nYDwwuenMNku5eBP27OWVvVDfNwoP0BKSil8kIJYfRH3ARd5Ywd7GDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714480836; c=relaxed/simple;
-	bh=L1Aic3xKzmIUnbMtx7dn18xXuu7pZty9NcrqDKTeuSY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OKWd8ssXUeHCKWJblb1Ji+myyXaGb2PNhm5hBeuynOW4E60IkE4J74JnTdZSMcuhbA1AAB4/GtqLjmBd+K5QxyeBgfwGKW0IPZVtatOGsIhRLFk4S++7e4V4nS2g2W0sEWp4B4y97ys5aXi+h/9JevxAuzh/S3nFgZLSd0cPIJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFPOBSoY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714480891; c=relaxed/simple;
+	bh=EAkzlUPf87vK95pHRAftB3pj+wg3xtsMqv6zZ2xItvQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gGn20xYNfz8oTK/1XBTKgp1Un4RwVH04uh+46B7cmiOD9GalZDllN0zLk8QY3Jq3Qpo12M53vWRhL5CoSc2DN3Cr7oAcJtiSpI29pGEtY/4dnsakfp5MiKRVaStjRGi9SKu0XNB8tutTZT3AijItAYkFTaIPNAMMMZRjQu4G+XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rCUkLJkh; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFPOBSoY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31BEFC2BBFC;
-	Tue, 30 Apr 2024 12:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714480835;
-	bh=L1Aic3xKzmIUnbMtx7dn18xXuu7pZty9NcrqDKTeuSY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZFPOBSoYBWDlnA1pUzMNku5YhKYgJIyeFt+nCXrgIDzAbVv6chpGNDPF2tp25cwSt
-	 bOgUAhhMoZlvRJEgG9hu86gODCfiDkPOj9YQpIJ/kA/NLknUP7pKeJw8DgYQFEeL21
-	 r4edywvo2zCazHNSN+o/2YibPIBxeacaHPl5VKu6Nk8Vn7Oz/SracQ9Q4VqUSsA3ca
-	 dGEMBNGZ3/H9dJ7lUFFn6VaYOC9btjdPKDqc5t8YioS1Jj/11mSgYl1eqZ3wNAB3OA
-	 j3yMoy211eF0DNz6lld3xsQT4gZ+mbOOJW9I76K0V/y3/wktoX+j2qElTEOaPOOn3j
-	 gGRw3ouNI+Vng==
-From: Christian Brauner <brauner@kernel.org>
-To: cgzones@googlemail.com,
-	cgoettsche@seltendoof.de
-Cc: Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	io-uring@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] fs: rename struct xattr_ctx to kernel_xattr_ctx
-Date: Tue, 30 Apr 2024 14:40:15 +0200
-Message-ID: <20240430-machbar-jogginganzug-7fd3cff2c3ed@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240426162042.191916-2-cgoettsche@seltendoof.de>
-References: <20240426162042.191916-1-cgoettsche@seltendoof.de> <20240426162042.191916-2-cgoettsche@seltendoof.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rCUkLJkh"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51d62b0ecb7so4351918e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714480887; x=1715085687; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z1zoRl9JNX91wxTFZ95WC2aOVdcvQqQ9ebO1YgbX9Wg=;
+        b=rCUkLJkhLTkgj0vZihEKMMlayMlyQ0cFd5TjQa4r0Jddy9PM8aCO1E3l7kk3Jz+SUF
+         GTxeTJy6Av4km5bpOTg+yOSdPvXLSxOOjQOnHQ2TvI4NWTmDRXUzyCtCI6w4n7BCRqGX
+         v4+oj/UExjkdmINHO5kKztJkDTG3sBR9dELu5NYmlYuEYKnM0rCgpyyvYeDrL9ZYplzq
+         iS3G0yI2yJVRGCkMXuuwWC4nn+VzEi5zzi8/pE6CeziV9EPrz4BvedgrUJ9mrXQ5Csgr
+         13a2BhyUlVwR/HKh44guz0Y+9aQRhc91cb/h1t+FvIAqWHgb/xjcLN8z5V0kus9g72LW
+         4QRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714480887; x=1715085687;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z1zoRl9JNX91wxTFZ95WC2aOVdcvQqQ9ebO1YgbX9Wg=;
+        b=VifFfzon+Yc7bZepPLtverQVV4WKGw62nBrme/An10Ra/E1De42thJwMxbynGT1EuX
+         cLElEPfE/VeSv/xkf/L5ztlx+6NYILz/DqKmz7mBKnRcPRjHVVGVw/yONK3KJI21iHuN
+         cI6sHuHpKMv7WMo+mJ+Uh6LnO6kEfVYtimR7mWlgmqCzHV58m0G3PvNBdNwUysRl4O5M
+         gfQImQHADDfmdiwvQpmgTFe/bL1yGJZgr/BbrFiLQCQ5GWlR+zv9UQZwJuF/IuOMbfl2
+         nzhMlB1eMWLx4OqfCBXyVNy9YAo/+YWcNxlDzC1TEhJ3X1tWOHVqC+RDjaEmsKqu9WD2
+         z9ww==
+X-Forwarded-Encrypted: i=1; AJvYcCXYZRp/7SzmJGgmQ0eIz4dAVZWymhtTSjsKjfoGmgWhk9TenmChGOuXMCgiNyYfhdxpyh6IalZjK9Mqtr1NvNc8XAH+ILldrTL5GY7E
+X-Gm-Message-State: AOJu0Yww+Q+DcLC835lK3xcGha2vGgjZ5+68YdGmb7qm8+NEZMZLtFPL
+	SyX0TMhDSe5rLCMUsYxl5YuJyLMAURR4KtttM2QuQLuiH0rcwXNPmnURo/m2uE0=
+X-Google-Smtp-Source: AGHT+IE/W9/dkxBso0irV5VrVX3LkNO5o5h+kLfYM+38G90SJ9h02blz/dj31DJFXSXcVMXms6NQew==
+X-Received: by 2002:a05:6512:45c:b0:51c:2c7e:ac92 with SMTP id y28-20020a056512045c00b0051c2c7eac92mr11527071lfk.23.1714480887229;
+        Tue, 30 Apr 2024 05:41:27 -0700 (PDT)
+Received: from [192.168.69.100] (mab78-h01-176-184-55-179.dsl.sta.abo.bbox.fr. [176.184.55.179])
+        by smtp.gmail.com with ESMTPSA id i27-20020a17090639db00b00a58eab2bf0fsm3928326eje.179.2024.04.30.05.41.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 05:41:26 -0700 (PDT)
+Message-ID: <c5248d22-672d-4acc-9b12-86815d6e22dc@linaro.org>
+Date: Tue, 30 Apr 2024 14:41:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1792; i=brauner@kernel.org; h=from:subject:message-id; bh=L1Aic3xKzmIUnbMtx7dn18xXuu7pZty9NcrqDKTeuSY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQZPNvp2Bi3a/usql//CnpXfvbykf/aFlH/fJNtQJZt1 AoHUz2mjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIk4MDAy/FdaeEPxYKpuavrU /9sigo+8NnrBq22wZLL4tO7pdg+UtjEyXGvwW6Z/6keDpOsz0fh52/4klhgsb/H6cMnXN9vo/EJ hJgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 05/16] module: make module_memory_{alloc,free} more
+ self-contained
+To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
+ Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Michael Ellerman
+ <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Russell King <linux@armlinux.org.uk>, Sam Ravnborg <sam@ravnborg.org>,
+ Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+ linux-mm@kvack.org, linux-modules@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+References: <20240429121620.1186447-1-rppt@kernel.org>
+ <20240429121620.1186447-6-rppt@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+In-Reply-To: <20240429121620.1186447-6-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Fri, 26 Apr 2024 18:20:15 +0200, Christian Göttsche wrote:
-> Rename the struct xattr_ctx to increase distinction with the about to be
-> added user API struct xattr_args.
+On 29/4/24 14:16, Mike Rapoport wrote:
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 > 
-> No functional change.
+> Move the logic related to the memory allocation and freeing into
+> module_memory_alloc() and module_memory_free().
 > 
-> 
+> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> ---
+>   kernel/module/main.c | 64 +++++++++++++++++++++++++++-----------------
+>   1 file changed, 39 insertions(+), 25 deletions(-)
 
-So I've picked that series up as this is still a useful addition.
-Obviously too late for this merge window.
+Nice code simplification.
 
-However, I stated multiple times that we're not going to add *xattrat()
-variants that allow to set or get xattrs with AT_EMPTY_PATH on O_PATH
-file descriptors. Not just because conceptually setting and getting
-xattrs should be treated akin to read/write wrt to O_PATH but also
-because it makes the concept of an O_PATH more and more meaningless if
-we can do ever more things we it.
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
-But it will also break assumptions of code that would be surprised if an
-O_PATH fd suddenly can be used to set and get xattr. So I'll fix it up
-so AT_EMPTY_PATH is handled to exclude O_PATH file descriptors.
-
----
-
-Applied to the vfs.xattr branch of the vfs/vfs.git tree.
-Patches in the vfs.xattr branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.xattr
-
-[1/2] fs: rename struct xattr_ctx to kernel_xattr_ctx
-      https://git.kernel.org/vfs/vfs/c/836c8e8bb147
-[2/2] fs/xattr: add *at family syscalls
-      https://git.kernel.org/vfs/vfs/c/71491cbe0205
