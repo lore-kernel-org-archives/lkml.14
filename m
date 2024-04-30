@@ -1,183 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C91171660
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714482647; cv=fail; b=N3mFlq0ewUYAzaBVTlZfJCqj2+hyMjOCKOAg/RzQsqAIbaBrn+l2Nb2waWVUdMgo3UEBAwa68tXtj4l5woYs8GU6ajrxMxc0OB+VmMAbNgoskcMVOPE9l9YghOo3+jiOQJxkUfCjh6NhJbYu2iq4xueEnf/fKv2jPxllDT+F0wg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714482647; c=relaxed/simple;
-	bh=VvPAFVmk9yGfpGkj7RvOzBZPyO7iLnNQTa04POTkUm4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sac4+CF1TPwerZqqBnfWK++oGaQhUVADhuNsq9WjfuqFPOnKs9iAt9wUpTpKoQri+V7PQ2pUfVKmw4iJ12JiceaIi8jCVMXhez8VWfnOIZl9GkHUwP7XJtHSeKFHb/aC5hBi2YEVTmcwcD1x8RAWwSlR35mfmh1T6gNNEmDQpXc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QXCPWDML; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F9617164B
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714482669; cv=none; b=T+UW8fJ/8kLK72W+uBDRR89CYwwbAMmJW/ZKq4dcWf7wcYPJE5b+wKsXBVqn4XMOiPVgpkLUqq51sWKHUmXYFbvbLITLikDKOPchNAlaX/gRL5pbpbeSRpWfOSJ5YuqfKB6Apu4umxNwOYpM3G4VbkxcPe+2pYGovrBOmutUhlU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714482669; c=relaxed/simple;
+	bh=LH9AX72f5F1IwKelNUFpMKjWIxxueo6ysl0dj3hRCjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N1Rm5T7O+gw75yQPFYVJmom+1Qowe0mQR5v0Pa+Pto4iRS5hi+n4rJ+X7uujr+eSRJjIOpj/Fc1o/yumqXvCppqS6w1DAXuhTSaEp8A3L0165CpJg6d+FXBuNsvP79Dlq49mX4dVPFqMDtlCLjPzsDF+Yk9f+sgnv/SDxU4ptRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=LYg6KpbA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HwktPQ2o; arc=none smtp.client-ip=64.147.123.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QXCPWDML"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714482646; x=1746018646;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=VvPAFVmk9yGfpGkj7RvOzBZPyO7iLnNQTa04POTkUm4=;
-  b=QXCPWDMLQ1fSlYWKpVFlu0n+UeU02m7P1X9IoQ8+8790fP2sXH6W5mbC
-   5MSAOCa2KyMlJdnjJuTpgZDpvtkneDK+pqUs6OLSCThhDvtngVo4bYuV3
-   vUV5+BJJfkv3tCUjL3vZ2PkKHeMbhyzzolCMFM/RqsYmxYqOhQ5gvv6p4
-   Rz6HuoVF7WfdV7YsfQrr16UBP0ZzqZgpPR5FtI9DG1BMgx6Er+1j3jdd9
-   +h6YO+LDO0YdLIU+MIhfRjPXqi2A55I6GWecGSF5V+DfuJFETjgXqeAi/
-   iMS+cPXznMtr2kv815fY0Bx+vCYfISEkU78Qnm+8q/FEUIYTw75pdi1rW
-   w==;
-X-CSE-ConnectionGUID: xqk39U2wRBelOARQt9ZapQ==
-X-CSE-MsgGUID: W2TP7PQEQ32KkzHJWYuBAA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10349600"
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="10349600"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 06:10:01 -0700
-X-CSE-ConnectionGUID: 92iZnua7Q0apKGTCxiSMDA==
-X-CSE-MsgGUID: ObpcJTP6TOWtB1h9f/E5JA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="49659836"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Apr 2024 06:10:00 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 30 Apr 2024 06:09:37 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 30 Apr 2024 06:09:37 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 30 Apr 2024 06:09:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bpyomEjQjsAoiYYHZx7Jkf5dxik5Tf0HkNR6Q3QU1NBuz6cT7a+5xX/SHJood244C2A1VyCpOk3m0OrQY58dCjTcn6moweE7lMQrUj6Isrul6J2i5VpYzR5W1ljSXR1uCgE+6uAv9RGXlt37RgHaVDljNTP7ThkdwpW6r0PXhL0nkiLlHta09Hslflo2BaTBMl/+AcVZ6v15DXKA04svt/xkh+SNYDYHbGxySmNnAHMwddhZK/hCkAg11NaVTArlHYMrJ1cKurqERkvff/CXb0MwOs/LUHarO1Xa8tfE5oSL6WBW5mIbWITpxM1eQMN/am0KICFVnU+KJ+S8/vN+3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PsSwZwGV+pWT9icAJQzyclozgxrEXDOFs0m0CiJA1qU=;
- b=J3pdaD05MtQeAVHkyjtAmixN8Yrik5WB2SyyjtyRdDu2WKlM9oti/hxv3adeUGycrCXkmYck63Qil8DHCwwOYMs0yfssVXLdg38GI9B4mBp2YQFiCoOtHGyULEBnQjgaq2YNlRXcPacKJzAHz1DW5ITl6lhj66XPlbUQf3HpCwtqWeU+WZQhwGR3w1AaLCVY5TOPxHQ8A/Jg87YqL+tVNm7VDM2tLFRo7IZDsfsr0+gRDdBTFnIPlDS1z2sHwJH1/UBej4Ct+Pzwni1xggl6vl169BlY/Nf/8FeOR6ZrsMG08uYU1WygnUSFfqqLR/SXhqMsyfpGOMc56hV7xttEVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN6PR11MB3230.namprd11.prod.outlook.com (2603:10b6:805:b8::29)
- by CH3PR11MB7761.namprd11.prod.outlook.com (2603:10b6:610:148::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.35; Tue, 30 Apr
- 2024 13:09:27 +0000
-Received: from SN6PR11MB3230.namprd11.prod.outlook.com
- ([fe80::35d6:c016:dbf5:478e]) by SN6PR11MB3230.namprd11.prod.outlook.com
- ([fe80::35d6:c016:dbf5:478e%7]) with mapi id 15.20.7519.031; Tue, 30 Apr 2024
- 13:09:27 +0000
-Date: Tue, 30 Apr 2024 21:09:20 +0800
-From: Philip Li <philip.li@intel.com>
-To: Jens Axboe <axboe@kernel.dk>
-CC: kernel test robot <lkp@intel.com>, <oe-kbuild-all@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: WARNING: modpost: vmlinux: section mismatch in reference:
- ipc_imem_handle_irq+0x292 (section: .text) -> .L0 (section: .init.text)
-Message-ID: <ZjDtgFVuPv1ApZFj@rli9-mobl>
-References: <202404301338.VtPxCQfW-lkp@intel.com>
- <78ae53dd-f927-43ce-8370-a437a9d0fdbe@kernel.dk>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <78ae53dd-f927-43ce-8370-a437a9d0fdbe@kernel.dk>
-X-ClientProxiedBy: SG2PR04CA0153.apcprd04.prod.outlook.com (2603:1096:4::15)
- To SN6PR11MB3230.namprd11.prod.outlook.com (2603:10b6:805:b8::29)
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="LYg6KpbA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HwktPQ2o"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.west.internal (Postfix) with ESMTP id CBF0D1800125;
+	Tue, 30 Apr 2024 09:11:05 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 30 Apr 2024 09:11:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1714482665; x=
+	1714569065; bh=bmnKQg4HJkWbFP4JL8uFAX2dV8OePxoK7bLCssuU2AM=; b=L
+	Yg6KpbA+V1II8lfo6lP55lmlhmiEuA6l8bX7Dp7maQnHeH0M5GwH8qBVk8thF3ch
+	2WD3S2xINi4Xd/j6a4DjlyVNsRz7RdQSlMlfIgeWM6aib9B8C5d54HDHLQKc5PpX
+	h7aIpjHA/loWoYLSeoIs5pRL4INvMr0AQlkRYBB8VFDaZjC6mxljYuunqYYGcqTw
+	9n2xLi2PHJEfP01utISe6mD22tSGBMNJbjaEfgzKSL9Hmfy+8HaX4xeb6FoghYZ/
+	3c3bCtGceKIv8I/hHAzYNKGN9eH49kRgv3DXcI2sXsipVn7KqY+C63inWB3B3OGg
+	LtRtW5ObuC7zAJGitU0ZA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714482665; x=1714569065; bh=bmnKQg4HJkWbFP4JL8uFAX2dV8Oe
+	PxoK7bLCssuU2AM=; b=HwktPQ2okoRBy4AHIGDduYT6OvhyROLH4YRWdPWm4NG8
+	DHkNpR4kICMaVH/HIFjmSsG00Ro/rw3I8SSLcp/ZqW4Z4D0OZmM5FZxhKfDtw3pr
+	CPu7c7G9s0m/CCAG6PmtrNMjqTN0PAxB2yruOneWIqN6klClNCi97WnnU49WbZtd
+	RexK50EohYPO3JzY6rzHWeL83cK5jAPjTo/iiiOpZRuvDRttIgIoaIdu75zZvUVR
+	30uOz96aZ2P5hlelTdlOmeRVs4C+AgrkEJHOCAYbr0dN7Nf1b5LIILwSC2GqOu0v
+	oh5brEsXDE8bF3t336pXZrdbpOyDdUjUp5EL0JtrNQ==
+X-ME-Sender: <xms:6O0wZiRYlb0qMSGVf1T-YeVK0nPqyVpQ7jMn8EEufqdCnbeFGywnig>
+    <xme:6O0wZnz77KYaJAq0AuWNGuMy0iXAuLqi-lJEvYn2N27-hZftzNCBtQl5x8MSiySra
+    yDRjGMKztQZ_3SfDT8>
+X-ME-Received: <xmr:6O0wZv3TiFKuiTXhC1gnfllexyVXN-H7qm-NaOUAqjJYmG26aP2Ym3bfe6gtEPwbqXY_C5h46-cMtKSWS1n6laXeMK-RE-96mQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddufedgiedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfhfgggtuggjsehttd
+    ertddttddvnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghk
+    rghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeehhffhte
+    etgfekvdeiueffveevueeftdelhfejieeitedvleeftdfgfeeuudekueenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
+    hsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:6O0wZuD81ipGu2q4Crkx_nvTfUcQFoAxFPVUHmT5vD8o1Y1RFugW8g>
+    <xmx:6O0wZrivfv9-3g6GbDlXSXblFjM8Ow8BCwSLHNev9JetuORs_1L8Lw>
+    <xmx:6O0wZqq9Vqk2myGp7clUvOwyfdpCifYm2YZylSrHHWJr74yrKBM-4g>
+    <xmx:6O0wZugOq79va1niiKWHFE8FUwvXLA4aFh9kvzMx0CPgMqQ7Umfc-Q>
+    <xmx:6e0wZuv72gg2jrw5w-nNp7cBHnOedeAVkXqsWucxJAe0YXgNHnn9REwm>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 30 Apr 2024 09:11:03 -0400 (EDT)
+Date: Tue, 30 Apr 2024 22:11:00 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: linux1394-devel@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] firewire: core/cdev: add tracepoints events for
+ asynchronous phy packet
+Message-ID: <20240430131100.GA7699@workstation.local>
+Mail-Followup-To: linux1394-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+References: <20240430001404.734657-1-o-takashi@sakamocchi.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR11MB3230:EE_|CH3PR11MB7761:EE_
-X-MS-Office365-Filtering-Correlation-Id: f2ae7d5d-939e-4909-7833-08dc6916c3c3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?OLnn2J5IClzMy3nQtO4vrYiwTGWmRIPaMw4njbu2Zxb/Ua73CJ3rjj1TrbRq?=
- =?us-ascii?Q?kD0uddwNWqhymdZOVHvBvG+S7HlZ5bfPD81t4CC3+u2QDbnutXVQW7IqHGvg?=
- =?us-ascii?Q?AGBdJy1HOKm+nsQV8gg/GcS7hLLLCzuhDUwOaWHnTaKFHx5k9dJOtqi7Ci4x?=
- =?us-ascii?Q?H/5YGYWRYXg0vLP8VPf3ST4PnmUrladjQ3iwBNCOe3m1On97JyVkMPSJ7aRE?=
- =?us-ascii?Q?jHZPgJ0WXQexohT85R+26280bo6QTpLba6dwzkA0KxDGdBiVaqkEw4+Zso6H?=
- =?us-ascii?Q?+jSygj0mRt+ot5rmFkvflOzHp8laL3tJIzT+lZK6oNOAN/2T0DGf6xppffbm?=
- =?us-ascii?Q?GCIqQasJCeG5tbVN2AurvQfX4xVDS00U4VaaUsJvS1N/KfyCv+TKwWPCGt9y?=
- =?us-ascii?Q?xN94cYwW5LFb6NxtT9bSDko3pmBDBxiOFbw7LR1NpwQT/je23E5Wc1tZzx7q?=
- =?us-ascii?Q?4hRShwW0wWoBKnF3yni1D9/kCWv9sxoa3zG+DPxkCXw6MDSuEuoq/L0HUl1h?=
- =?us-ascii?Q?m0IBjcfQfIIKtsZzkVY+dEzAFmSJnTLEZE5G4/dDEtr1HAGhf13Vf9vWkHXN?=
- =?us-ascii?Q?rKGhOcQWcCrXKpCuvNymvUf4+OO2T0TxYPkql6DVTIjiS1Lg+p9J0dxhry66?=
- =?us-ascii?Q?ooFJxc5wgr8ypsFW7CSwUzzMYpT9Hb/YkDXh9pgGgO87+nRoY3t6szKue3ul?=
- =?us-ascii?Q?zZFaeO0WwQTjl0inUAKGLz9W4fFFiGwz0lcWE0QiA1hdLoTFoWXYPzJ/RW0S?=
- =?us-ascii?Q?bqTcW50zyZDUz6aAn9cWa/9Gvk8aeFBeEp4HcQN0IL9Psp4FCewQDA/DCqje?=
- =?us-ascii?Q?ffsxlawIH3mhqrGCronZxO8zZDhabhzjrItXTCxpa8RerTJ6havuspDYhTjY?=
- =?us-ascii?Q?AX/3ouLON3OLz75O6B1UxdrrywgWqGHLxt8zYe+XpKSRzHbPGqbGkDWHYnLq?=
- =?us-ascii?Q?rqxGeX0YjsuW0yAoeibkuh3PMAh9kjLK43Nx0/EbyCwcb8qFYG2dYNjqDL+m?=
- =?us-ascii?Q?bijqAebIIZ+IBiKDpyU7mAfxB1WrO+Acse720sTWJBCact1cpFdCHv4KUtwE?=
- =?us-ascii?Q?pw+3rZypJ64CeuRCZNPTd611Ex8tG3lNo3VrzQjMaXCmBYVsEcmULdaZrNMF?=
- =?us-ascii?Q?QEGTMdUhrBUJ4D67avSOmqNGnY85JF7pdz1rV+r5JzKtsKpGPmYJlynbp89Q?=
- =?us-ascii?Q?x8L1mSMW6OMMmZZnNzdmpC8kdoGujWKOTRjnZ0lBbjHAE0IXAn0rAKyW3os?=
- =?us-ascii?Q?=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3230.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jM9PVPOmkh8lHmWb24+Z8vkWfTYkMOkN52lWinpSHT8arR/qITs2+QXIxASV?=
- =?us-ascii?Q?SNK+1IYNehsVg2hNIRcKm6qyM6uzC9kSITQCo5mEkFZSFRUy9gXdhjo2g5tN?=
- =?us-ascii?Q?2Gi0mxo1fFDtlX2QZN9J7fAy3Gb6iF2fZIHR9qK+AsSVLk7Zg2pYohnOeLiW?=
- =?us-ascii?Q?2riPEkPsIdoPTqA7uT/yJ7l9sPVhc2aV5utNtXvcTksYFSV6LEvOXwWmKELy?=
- =?us-ascii?Q?xlRVe6j7CZtzH991ybaOclhRpPTBUecvnv7avo58f5MsCsQwTmcWAFNMzfJR?=
- =?us-ascii?Q?RT86xRLYZ/P7qZ+JfwW2BO8W6ejSbEw8C/UNYwoLfD45IDAUhJByVv3fTBo2?=
- =?us-ascii?Q?EsPY5z+bSGJamvKAUPFQwwBRcnHqMYP2daKq7Gj5iUo7JK2IYvcP4uV7yy00?=
- =?us-ascii?Q?x0WPdgRoFgK/ObcnpOjGTaZJbULtoAphWvGV09NRxlT9FQsfrygREBdmM1cT?=
- =?us-ascii?Q?kLMQeXdK76P425UYfgwuJWQVmogcDY/zDnu8S9MiAZ95zsErVbeRd//Svlw6?=
- =?us-ascii?Q?4qw5VRmokqKWDS9rKsJr2UOk6H1nqExIn98c/O2eCSvTapQfzHiHHoLLlgwL?=
- =?us-ascii?Q?HLNA5hR/80lEzcW192MkebesYvjuKepY2aSszwUmwtmClCMe2l6046bfOjsZ?=
- =?us-ascii?Q?SJqZ4O0WQSfJli0jUhJYmPOla4BNjJ/W1ioEYZgfW7qKLpA5dqn0p7DaOBg0?=
- =?us-ascii?Q?IeIw54raLBXRGC+Oao6zOWQWnhduhSJF+oeMlq4J/zjRIQpRrHy/Pci2PXJ/?=
- =?us-ascii?Q?mmGqKma2MrW1K0aLNGnQLnb+yYf4WXXOqWYqL8Q9IhU1Djyw7XnNaUGVrmSJ?=
- =?us-ascii?Q?xw9B5ZWaMxiGDsKTijBijBKWHiky9D1hTyqMzYJU8Ox5D4F7JgRqJitsUd1h?=
- =?us-ascii?Q?5sHw8g4q8Vxzh/cDoxLsDtYuM1c09J7UO+/QUI2IanfDp0+JXKzSMPlE0pDM?=
- =?us-ascii?Q?+sZLFL9T+b0dVdBjN5JwQPrmLh/ovwyLYhku1XAQ+RsdkckaSzUnctc+6fuE?=
- =?us-ascii?Q?EvSiwu4EdLi+56GE9Wde0IBEr1t0aCbn339PeTYb+DFYocJFLnUmXfQqOW1y?=
- =?us-ascii?Q?BBbuh2GvjKa1vzz4YBZx7m7TJQ/OQ6N685rbkiWerGd3c3k5EfVs5vOaWuwd?=
- =?us-ascii?Q?1E0Pe/P/b+kiuWNZCWUVt82E15kwoWPWcyhSOShSlZnj6e9tdqkyWusAN6AN?=
- =?us-ascii?Q?J/85xkMkxviayIdPBGZ2E356x4XyXu3dith0bbk3rnrpufoF4TTqOm92AmvY?=
- =?us-ascii?Q?++Yi7Fzfxz0rrfHX2Ai+xHPC8IkKpcu9zeybsU5NWlh0EnVDthbCWnehMC6x?=
- =?us-ascii?Q?WXwbLJrb4irDNGDZWntTjgyo3NkQMIa1D0keae0XcZHcN2ezmwb9AWi7MXuD?=
- =?us-ascii?Q?ZcorMPgIPYIPhDiIvJsxNTr7jCDRCvFEsVeQxkmBFaPOCzeIp9LVz+sS0oHE?=
- =?us-ascii?Q?KtAQLN5slFzDzCfOIk0Qxay4i0iWWmZXs3m6HglXmDVn3CAFh+rpmIeBdhX3?=
- =?us-ascii?Q?AraJPnM3b21RqCDfcLYEQcY9i+h7F/pdBAoXGMxVtAV+MAy6917y20dzOrQI?=
- =?us-ascii?Q?gp4XADQrgLzj+tPb0WJ7XwnO+dm2MaRObSfi5FNZ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2ae7d5d-939e-4909-7833-08dc6916c3c3
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3230.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2024 13:09:27.5108
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cCKM4dqlEGlvzPVqQzbHUt3mbZkYLMVjnMA/VS/zbqyL2CBJ1bRYZmOcBab4BSkQxCpSM6EKsJHhrcL8+XIKGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7761
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240430001404.734657-1-o-takashi@sakamocchi.jp>
 
-On Tue, Apr 30, 2024 at 06:52:10AM -0600, Jens Axboe wrote:
-> On 4/29/24 11:13 PM, kernel test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   98369dccd2f8e16bf4c6621053af7aa4821dcf8e
-> > commit: 561e4f9451d65fc2f7eef564e0064373e3019793 io_uring/kbuf: hold io_buffer_list reference over mmap
+On Tue, Apr 30, 2024 at 09:14:02AM +0900, Takashi Sakamoto wrote:
+> Hi,
 > 
-> Definitely not related at all.
+> In IEEE 1394 bus, the type of asynchronous packet without any offset to
+> node address space is called as phy packet. The destination of packet is
+> IEEE 1394 phy itself. This type of packet is used for several purposes,
+> mainly for selfID at the state of bus reset, to force selection of root
+> node, and to adjust gap count.
+> 
+> This series of changes is to add tracepoints events for this kind of
+> asynchronous packets.
+> 
+> Takashi Sakamoto (2):
+>   firewire: core/cdev: add tracepoints events for asynchronous phy
+>     packet
+>   firewire: core: add tracepoints event for asynchronous inbound phy
+>     packet
+> 
+>  drivers/firewire/core-cdev.c        |  7 +++
+>  drivers/firewire/core-transaction.c |  8 +++
+>  include/trace/events/firewire.h     | 78 +++++++++++++++++++++++++++++
+>  3 files changed, 93 insertions(+)
 
-Sorry about the false report. We will look into to fix the bot side.
+Applied to for-next branch.
 
-> 
-> -- 
-> Jens Axboe
-> 
-> 
+
+Regards
+
+Takashi Sakamoto
