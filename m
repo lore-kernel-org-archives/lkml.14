@@ -1,113 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A5112B73;
-	Tue, 30 Apr 2024 19:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58F3199E80
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 19:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714506584; cv=none; b=LcwHWbDSx6LNGGwpsFStj0sMej4tJH4hMz5fdTADTp2CCIFYsU+3lpWs1pQFzJVAieAqpPtGIsNSSu7OxU+XoxcgBPiwEKMdbjWxp7ELoQ1PpjLj7XyQJEgrIESpw134K8peii7Rz2/pslEAkOE68cj4BK/Pacq53+Q9W8aU14k=
+	t=1714506667; cv=none; b=s4PXDiZtUO3jzIHnKT+wzHPy2pZ02ypM2iumjXH0tcDADnGiJZcet+90qq8s4uCVPsHBr5RGbsLdLIIjKG184l2wfmWzN4GysL/tl01Mkkm7jVHDjqQs8XhrNY2jTteqc0oZdnby8T5C60dEYJrb0g97dZMOZPlqiwvWJJ8MzKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714506584; c=relaxed/simple;
-	bh=L44UUlMJiMRqZ33YFvdDMIt0qg//D0t3qFogmLwOHbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nEBl1E2OLSAVDzBEqPtRJu1VzyT9+wx83Wh5F9KvRZIhgviWUxSnWUeZ0iJDKvaOqA+K8Yn3Sk7UWM/f3JCJ3I27kvo+ulY7sTVo3Xf6OZYStoWJeIxUOC2WqclALkkWoTQC4pH9xhKbsKlvqnBF45ps4J9A/FmcuLBn7vnPHpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lu0o802u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714506667; c=relaxed/simple;
+	bh=pZkNSqQimNQ+c8QfbZSIETCjRj3NWobbupgjMbXV758=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=huCwkh2/WXSpP3Qdp5ffqWXWT78FyiZG3bdNr/IygNfxBA2t39G9owuCUjoRG2thp+vC77SkZ/0xgIBKcRpwZBBitkjSdATC9HAUDw87zy1bO4Nbuu2nfzTsygreR9g4SdWIv+ee3uLqRzzFCWGAUWslGkYWk17EODmY1xEWljA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PL/lPr2j; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lu0o802u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6810CC2BBFC;
-	Tue, 30 Apr 2024 19:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714506584;
-	bh=L44UUlMJiMRqZ33YFvdDMIt0qg//D0t3qFogmLwOHbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lu0o802uikMvRSH2hVH/ntKAqjFEhQuKLi1pEvnAjtUk6qCI0wuLmfnLNsySFVH9r
-	 VtB1Gv3hjuFMKSfFYNM+xpcWj50TZDx2yntBcJC8ll4BfP1M95bZN7+DagyNX1dG4b
-	 Fa/jCNaS+C9EyCa5mhI7PyXYV8j6ajxQEhourAW3rkvlkzpyr8kwtoqeIg6YgTsVOd
-	 /BxpzCpawAPpQmIhnGqsJahpsq1/8LLTYMNaud7rV7t6AAqQ7pjsXHlNZUQBB6AXh5
-	 nGJka9NLm0yhgp4lmwtNR7/hJ07hEOOx+3+6AjSnQWGTL139ib/LUyNwnprn8aZPj9
-	 6RDkUflamtg/Q==
-Date: Tue, 30 Apr 2024 20:49:38 +0100
-From: Simon Horman <horms@kernel.org>
-To: MD Danish Anwar <danishanwar@ti.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>, Jan Kiszka <jan.kiszka@siemens.com>,
-	Diogo Ivo <diogo.ivo@siemens.com>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, srk@ti.com,
-	Vignesh Raghavendra <vigneshr@ti.com>, r-gunasekaran@ti.com,
-	Roger Quadros <rogerq@kernel.org>
-Subject: Re: [PATCH net-next v3] net: ti: icssg_prueth: Add SW TX / RX
- Coalescing based on hrtimers
-Message-ID: <20240430194938.GD2575892@kernel.org>
-References: <20240430120634.1558998-1-danishanwar@ti.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PL/lPr2j"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso9316355276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:51:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714506664; x=1715111464; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bRW5S0ts0YJ1jBUFnS/VETT+cE0ujqNsSJB9yVriaWg=;
+        b=PL/lPr2jLWSHcg+xeljNhz2y/TggnpaQ9U5qxpDv/k+bW7YLS/jdxk1G5e0UWbzW8X
+         L/gCaPYZJvZQEG0i0PFlqARiQUvQGO4BExmQU61nhKwdVqXBisUARLVruhhI+ZkU4/nM
+         dAfPh43w+BLGdgtXwjo8yvfFjK1vBl+y+V1deYFeUvQPoI8AHwTUpVoSvtKXHFCag8qa
+         pq3nYVGymOo6tvU3855RJdQx3Pnw+jmO0IlBkxc1n28VIiWxbJUebVfclcS/WNv+iIac
+         sflP/4nzmIeJOT+YmTa9CsuhmxtArRBILHXWbvKQE4Fd3cE0O6qLMlpIp3QQyAhT9PgT
+         LpWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714506664; x=1715111464;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bRW5S0ts0YJ1jBUFnS/VETT+cE0ujqNsSJB9yVriaWg=;
+        b=veD35VfC5Nh317NOWGF0oos2kCDvWOUiAEDOYCC+SrrekUSgmJB1jTPjFf4obtBEOT
+         TcS+QGo8g9P1UPKe+E7m1flsGHc1nuyD/XBxc67LNDOam1mIniFlCYyRr0o95DavdlLP
+         CnFXqFE4kM1QIho+lR6bFrShHJhfjqe9QIBICpqj2EAinroPMXH8zFnvPTBdttIqHCJZ
+         7CUkAieZvekB6nkzdcgz72uBtg4zpYvZhTTzTX/vDEsgfRFaTD2wj/2LsmC7skP7RzX1
+         NYEdVoV8cHpMF5WP55bJ2lxRJIdZb9tStzK4lJ3BqXRFFng+TwF2WExk9f6MS3jeRxXE
+         pWYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdtNdoEo0f14wNr8k9UpviM4ccqN7ZSb7pGNpJSZph4X1bB+u4Ybm6nYwWfPmMWV16mWpjpvH6OGUyHD6NyOzOnrgTfpWfOlDJ9h4c
+X-Gm-Message-State: AOJu0YwUrZV/eHEbhrk+4IFEOM8Zfo7O2pCGm9kFkSIQmaoM0dMhdCHg
+	6LCFt3FzYR0DIARSsE9kBZoqRo8jVC2CB09Es+iOdjI88IRvq9/vt+dvJgcdq62TKr2EalE9dNs
+	woQ==
+X-Google-Smtp-Source: AGHT+IF4RivS1EjTDpEBzk4powVofAbI6FibOEO3YCH+mzhy8p2ZRX8re13LLSKcvM/uElHlANx+oqumZuY=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:c584:0:b0:dcc:6065:2b3d with SMTP id
+ v126-20020a25c584000000b00dcc60652b3dmr138504ybe.8.1714506664545; Tue, 30 Apr
+ 2024 12:51:04 -0700 (PDT)
+Date: Tue, 30 Apr 2024 12:51:02 -0700
+In-Reply-To: <20240430193211.GEZjFHO0ayDXtgvbE7@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430120634.1558998-1-danishanwar@ti.com>
+Mime-Version: 1.0
+References: <202404302233.f27f91b2-oliver.sang@intel.com> <20240430172313.GCZjEpAfUECkEZ9S5L@fat_crate.local>
+ <ZjE7DkTBSbPlBN8k@google.com> <20240430193211.GEZjFHO0ayDXtgvbE7@fat_crate.local>
+Message-ID: <ZjFLpkgI3Zl4dsXs@google.com>
+Subject: Re: [tip:x86/alternatives] [x86/alternatives] ee8962082a: WARNING:at_arch/x86/kernel/cpu/cpuid-deps.c:#do_clear_cpu_cap
+From: Sean Christopherson <seanjc@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
+	Srikanth Aithal <sraithal@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Apr 30, 2024 at 05:36:34PM +0530, MD Danish Anwar wrote:
-> Add SW IRQ coalescing based on hrtimers for RX and TX data path for ICSSG
-> driver, which can be enabled by ethtool commands:
+On Tue, Apr 30, 2024, Borislav Petkov wrote:
+> On Tue, Apr 30, 2024 at 11:40:14AM -0700, Sean Christopherson wrote:
+> > Hmm, I don't think the problem is that init_ia32_feat_ctl() is called too late.
+> > It too is called from the BSP prior to alternative_instructions():
+> > 
+> >   arch_cpu_finalize_init()
+> >   |
+> >   -> identify_boot_cpu()
+> >      |
+> >      -> identify_cpu()
+> >         |
+> >         -> .c_init() => init_intel()
 > 
-> - RX coalescing
->   ethtool -C eth1 rx-usecs 50
+> Yeah, but look at the his stacktrace:
 > 
-> - TX coalescing can be enabled per TX queue
+> [ 0.055225][ T0] init_intel (arch/x86/include/asm/msr.h:146 arch/x86/include/asm/msr.h:300 arch/x86/kernel/cpu/intel.c:583
+> +arch/x86/kernel/cpu/intel.c:687)
+> [ 0.055225][ T0] identify_cpu (arch/x86/kernel/cpu/common.c:1824)
+> [ 0.055225][ T0] identify_secondary_cpu (arch/x86/kernel/cpu/common.c:1949)
+> [ 0.055225][ T0] smp_store_cpu_info (arch/x86/kernel/smpboot.c:333)
 > 
->   - by default enables coalescing for TX0
->   ethtool -C eth1 tx-usecs 50
->   - configure TX0
->   ethtool -Q eth0 queue_mask 1 --coalesce tx-usecs 100
->   - configure TX1
->   ethtool -Q eth0 queue_mask 2 --coalesce tx-usecs 100
->   - configure TX0 and TX1
->   ethtool -Q eth0 queue_mask 3 --coalesce tx-usecs 100 --coalesce
-> tx-usecs 100
+> That's after alternatives.
+>
+> > Ah, and the WARN even specifically checks for the case where there's divergence
+> > from the boot CPU:
+> > 
+> > 	if (boot_cpu_has(feature))
+> > 		WARN_ON(alternatives_patched);
 > 
-> Minimum value for both rx-usecs and tx-usecs is 20us.
+> Funny you should mention that - I have this check in
+> setup_force_cpu_cap() too which works on boot_cpu_data *BUT*, actually,
+> the test in do_clear_cpu_cap() should be:
 > 
-> Compared to gro_flush_timeout and napi_defer_hard_irqs this patch allows
-> to enable IRQ coalescing for RX path separately.
+>         if (c && cpu_has(c, feature))
+>                 WARN_ON(alternatives_patched);
 > 
-> Benchmarking numbers:
->  ===============================================================
-> | Method                  | Tput_TX | CPU_TX | Tput_RX | CPU_RX |
-> | ==============================================================
-> | Default Driver           943 Mbps    31%      517 Mbps  38%   |
-> | IRQ Coalescing (Patch)   943 Mbps    28%      518 Mbps  25%   |
->  ===============================================================
+> because setting a feature flag in *any* CPU's cap field is wrong after
+> alternatives because as explained earlier.
 > 
-> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> ---
-> Changes from v2 [2] to v3:
-> *) Collected RB tag from Andrew Lunn <andrew@lunn.ch>
-> *) Fixed warning caused by {} missing for outer if conditions in
->    emac_napi_tx_poll() and emac_napi_rx_poll() APIs.
-> *) Fixed spelling mistake.
-
-Thanks for the updates.
-This one looks good to me.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
-> 
-> Changes from v1 [1] to v2:
-> *) Added Benchmarking numbers in the commit message as suggested by
->    Andrew Lunn <andrew@lunn.ch>. Full logs [3]
-> *) Addressed comments given by Simon Horman <horms@kernel.org> in v1.
-> 
-> [1] https://lore.kernel.org/all/20240424091823.1814136-1-danishanwar@ti.com/
-> [2] https://lore.kernel.org/all/20240429071501.547680-1-danishanwar@ti.com/
-> [3] https://gist.githubusercontent.com/danish-ti/47855631be9f3635cee994693662a988/raw/94b4eb86b42fe243ab03186a88a314e0cb272fd0/gistfile1.txt
+> I know, our feature flags handling is a major mess.
 
 ...
+
+> my guess would be no and that init_ia32_feat_ctl() really needs to go
+> before alternatives have been patched because it clears flags.
+
+But that would just mask the underlying problem, it wouldn't actually fix anything
+other than making the WARN go away.  Unless I'm misreading the splat+code, the
+issue isn't that init_ia32_feat_ctl() clears VMX late, it's that the BSP sees
+VMX as fully enabled, but at least one AP sees VMX as disabled.
+
+I don't see how the kernel can expect to function correctly with divergent feature
+support across CPUs, i.e. the WARN is a _good_ thing in this case, because it
+alerts the user that their system is messed up, e.g. has a bad BIOS or something.
