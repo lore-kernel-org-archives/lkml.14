@@ -1,115 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FD0173359;
-	Tue, 30 Apr 2024 15:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFE6174EC8;
+	Tue, 30 Apr 2024 15:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714492197; cv=none; b=PQhxX2m1c32TgGD/M6UF4VnFLUcbJEqi68u4UYbDcgg4yG0FoE7tW56N1lT6jG+kIV6qFb3y1zgNEqkO+iEuuKFivR6ZcD4dYOdOXrtOSwbMjYOn9sGl11od+XBlzs4ecwUBwS4fklONz9DybAC9QSHqGWF3QHAGc9Fd33Sm/fQ=
+	t=1714492237; cv=none; b=fTgq8GwGWNbwS53OG770sdMICEkyH1jh/WPlL4HWJ+IEXN6pGcUgAPysEuFTCoWp1aUYwfLzozaAku+LVjcG65eC+P/dgyOk38JLE27S/4oZI//oX16mBggCGu/ya2cP6Pg0HOwO7lZL3Kt5SVEwkZwxTtqpQi5Czo3ZSpKSxGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714492197; c=relaxed/simple;
-	bh=DIzesGh2roiGWEHGWPtLfOY92kVqmfuIinVegaspor0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yd5PVhd+l1zDbpba0JJ9g774HPfjjOZCl/PIYmFSXHKKulddfKpDZuEqFQinIxTWMSQsl6Q5yaeTROYcDEVBxS4Iw9/XE7Uofwb/0EnqlYTSUB7TByiDg8sMQocK4TSZzO5yn7iidr4iue8eNZ+eMu0l6I1eBvrd7UV2j5AF5YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Alt3MrFS; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714492237; c=relaxed/simple;
+	bh=+7AuBfrkVfvvlqBbnWwiB4WC75JvgZX/iPRvTxQaD3g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=HyOT7wQgD15OC8rU6pkdG7dBorHohSmpG5/XfjOC5/Xdz9XSt/X0sOnfuYDKyqziVoez+5ZyPwQ0YCTvxdRPGsBB0dzNL1iEAm3rM3LjAGnqqFdlX3GqpdBW2T5KhjPayG10SZLT2I82si7fqB1HptPhUAZmaHpXpyWe2rp4XHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cQv6DODq; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Alt3MrFS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714492196; x=1746028196;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DIzesGh2roiGWEHGWPtLfOY92kVqmfuIinVegaspor0=;
-  b=Alt3MrFShDDAKdTyfA6Dxiejhn8wbcWtISsjtmPoyQGgdUHjERfo8MQn
-   y5X9YwASIhC3mytinddIY+wvVMETWHlcH3oB0bnrChIPa4pPWjfntM/z+
-   NxeXgJcYfiAW7SE0WA4LRylxdzaoUe5GM3Hzx5ecNpeCDLWVpvR60TjH5
-   QTse19t5iIlNgM/iUmH7bD4HE8e/Q4hKLK2uDgXmAZ3a4+aCSJOdaJ7EX
-   ucoWx9SwNtCGU0THQkovTYli6Wn+PtD5qXkZAvQ1bzfk9K5Zsf1LMQmVm
-   LrKtT/uDnGKChanmCjUqSUvaEmYKwaBoxSRXHs/fJ9i1oA/FceE1kRNSp
-   Q==;
-X-CSE-ConnectionGUID: Ddmemf79Q5enX04UntmPCA==
-X-CSE-MsgGUID: x8KvHZjzSLyTiCwGzhy7ew==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="14033220"
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="14033220"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 08:49:56 -0700
-X-CSE-ConnectionGUID: DXmM3eFxSiiqtBly7KNEog==
-X-CSE-MsgGUID: u0gtpmB4T0S/qCepwvi6RQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="63987709"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.17.48])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 08:49:55 -0700
-Date: Tue, 30 Apr 2024 08:49:53 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Robert Richter <rrichter@amd.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v6 6/7] ACPI/NUMA: Add log messages for memory ranges
- found in CEDT
-Message-ID: <ZjETISx1g72Bft26@aschofie-mobl2>
-References: <20240430092200.2335887-1-rrichter@amd.com>
- <20240430092200.2335887-7-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cQv6DODq"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1D26020012;
+	Tue, 30 Apr 2024 15:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1714492230;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OvSPqbTravq+uXV8NX6wI95ClFv5FR4JYxaALnEYaFI=;
+	b=cQv6DODqcZWJwBTr/wY/weMptMLuiwSPto0Yd/hiCUCOq10cb/2SEcS7iiwOIFrxTWtANo
+	7yjtiAvM6mU36MV0dmHZFhEZCKEW4tXv3s5uB49XkBYlC0xcgGkVvo50Pzg51ya2yvxir3
+	ihoAaCUdBoR22qolgAQhGZcaJWyHiHdusceE9iJL6yC1aN1rwnl+p0NoqQQdliTQyldvNh
+	SgVJoyeobp7Wm8GIqA0w5h6UJ0fhT3i1kRHJRtOJnMTIF+4plVBf4qxYB+CKMvpobfJ+wW
+	1xsUBxBPdfvGd1K/CtEHJywt0WtaOOXhwCLMcqBQUCDbb9o3nH4PMnruHrz6Ow==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Tue, 30 Apr 2024 17:49:47 +0200
+Subject: [PATCH net-next v12 04/13] net: Make net_hwtstamp_validate
+ accessible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430092200.2335887-7-rrichter@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240430-feature_ptp_netnext-v12-4-2c5f24b6a914@bootlin.com>
+References: <20240430-feature_ptp_netnext-v12-0-2c5f24b6a914@bootlin.com>
+In-Reply-To: <20240430-feature_ptp_netnext-v12-0-2c5f24b6a914@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Tue, Apr 30, 2024 at 11:21:59AM +0200, Robert Richter wrote:
-> Adding a pr_info() when successfully adding a CFMWS memory range.
+Make the net_hwtstamp_validate function accessible in prevision to use
+it from ethtool to validate the hwtstamp configuration before setting it.
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
 
-> 
-> Suggested-by: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/acpi/numa/srat.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index 76b39a6d3aef..34ecf2dc912f 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -339,8 +339,12 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  	 * window.
->  	 */
->  	modified = numa_fill_memblks(start, end);
-> -	if (modified != NUMA_NO_MEMBLK)
-> +	if (modified != NUMA_NO_MEMBLK) {
-> +		if (modified)
-> +			pr_info("CEDT: memblk extended [mem %#010Lx-%#010Lx]\n",
-> +				(unsigned long long) start, (unsigned long long) end - 1);
->  		return 0;
-> +	}
->  
->  	/* No SRAT description. Create a new node. */
->  	node = acpi_map_pxm_to_node(*fake_pxm);
-> @@ -355,8 +359,13 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
->  			node, start, end);
->  	}
-> +
->  	node_set(node, numa_nodes_parsed);
->  
-> +	pr_info("CEDT: Node %u PXM %u [mem %#010Lx-%#010Lx]\n",
-> +		node, *fake_pxm,
-> +		(unsigned long long) start, (unsigned long long) end - 1);
-> +
->  	/* Set the next available fake_pxm value */
->  	(*fake_pxm)++;
->  	return 0;
-> -- 
-> 2.39.2
-> 
+Change in v8:
+- New patch
+
+Change in v10:
+- Remove export symbol as ethtool can't be built as a module.
+- Move the declaration to net/core/dev.h instead of netdevice.h
+---
+ net/core/dev.h       | 1 +
+ net/core/dev_ioctl.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/core/dev.h b/net/core/dev.h
+index 2236b14b798f..44004f17b32b 100644
+--- a/net/core/dev.h
++++ b/net/core/dev.h
+@@ -172,5 +172,6 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
+ 			    struct netlink_ext_ack *extack);
+ int dev_get_hwtstamp_phylib(struct net_device *dev,
+ 			    struct kernel_hwtstamp_config *cfg);
++int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg);
+ 
+ #endif
+diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+index b8cf8c55fa2d..6aaa8326bf8f 100644
+--- a/net/core/dev_ioctl.c
++++ b/net/core/dev_ioctl.c
+@@ -184,7 +184,7 @@ static int dev_ifsioc_locked(struct net *net, struct ifreq *ifr, unsigned int cm
+ 	return err;
+ }
+ 
+-static int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg)
++int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg)
+ {
+ 	enum hwtstamp_tx_types tx_type;
+ 	enum hwtstamp_rx_filters rx_filter;
+
+-- 
+2.34.1
+
