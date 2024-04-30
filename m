@@ -1,109 +1,177 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6857A171E69
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470CD17279C;
+	Tue, 30 Apr 2024 12:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714481751; cv=none; b=SC6/cjnjtUIqZKJr85sEUFj3K7GJjXepb8b46lkmKAwil00S2B7H65dMzikuFwJzHwv9+W462xDY1JLISvDUT+sWRaUDKEZH0z9/2gdj66uAF6Jp6vJlvT0Zw1+01JqEZ353QiZ/743xCuD0HYLJ/IMmQvz4UuyaomKWWTbjI9M=
+	t=1714481753; cv=none; b=CkwTiMwyWOuq7coOE1aMeOvRuqxOadIAeE2k/StM/kStq3AFaGg6LugHmH6mSAgtRCDLdbdNzIGBhq6qWurt9+d5A8Ztjpy0rQWQrPp93HYegpMlcmI+3HPcJSLfrv29/UFHdmydwkmvqAMzw9Y8WeXfKFoHd9rjSYq0lJs/cOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714481751; c=relaxed/simple;
-	bh=xV1K4KLPnklnDF7lOie2R6AQ5cvRhbfpv/8EnvxSB74=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IAwIwU1sECQOus9XybXOofewFAx6aLdA9DnHpz5CR8fGahZTY4B+Z7jmShqkABcNwZBFOH8GjP8ZHGU7c3YzafqiXutA2/eQ8qMlJEMLCQPEctq9YjrxF0di4UPQRAsNTaNkNUyxE4tnNJxQ8HTi3GuhY+2SngCqwxGkLTIzEv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KdBCq68q; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714481753; c=relaxed/simple;
+	bh=h1L/HFA86d8yYp7QrNCUAGu7UScmEPtBVcWRfNzKEnY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CmiubbLhj9Yw3/BbtK/WVvgSUYhAWwkfpwCcOJ9jKWnSVq5hC7ZV8Vf3/zDTRjnmrzKGFoaCESA1/gVuoZKb61WF2/CFWUeYxml3Fv4youWqQnMJH66+y0hKoRXzbKDl5JT7jFSb2Xsks9DkhGRcijx/HYERjabjh66Eck44hmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=pRrgql8g; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KdBCq68q"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-78edc3ad5fdso481320985a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714481749; x=1715086549; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/GcAbiNwsFkaasnu7HjDiQ9YZzAJwofieKdp6b+SC5I=;
-        b=KdBCq68qghDeddcHy9merFA2tKDmVR5kcetHWX+YIP9xGutiSSmBcEsFwdD+SLZyTe
-         nz5NYdloKrNOwHaP3uJVAr72LY5nhi50lrCBm7EgJRWvev7sJXBxvInIUW9GLi0AO7Mp
-         4dFMJ8oqmmxNWCG6ZZBd5hmcMn+JPjkyG1VA8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714481749; x=1715086549;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/GcAbiNwsFkaasnu7HjDiQ9YZzAJwofieKdp6b+SC5I=;
-        b=GrhuiF91dP2SVl118tCcb7oejOCdmip6nqHAjo2BSGB//tOTIWvWL8id9VxFi+kzba
-         R1bc7C4aF5OQiIMRsCmznIvAZ9uFONsgTxB0EHLZvquaeSB2gvw7NYVtMgafH6FP3Jrd
-         VXL6pzyCl3vFlz4LYspIIFmqkjWh5ajzS+umpWqTjbjUTAlZB8X8+ZB4VjGPRJ2kgsLr
-         6a9trzWz+PltbHDjFDfVJFCpn8EeVQwxLficOjQcHUdqQ7gy/q3vTx5sKhrSULeqsj/q
-         CpECC7iBnEUt9ogfGGeoAHI+tKDU5lihHk2cM+BlSzWh2ntoPXbdIwYL9zBsuNWvmOW5
-         v3cg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqxAi7qyHz09MqkHSXAUA3YAVe4YiW7x+IpM0WnPsqLMtQdJI5VTO7vooyGEEnJVlwi9zIL9jwRqADlitObl3mtT4qtInzcfblVEou
-X-Gm-Message-State: AOJu0YzqriNVCNFe0fjLdsu4TZBsT4R5/LLNUbMttUo7TFUzj5NuUrLh
-	i17u1vQq4PEmA/igsbhbhLsyNw46dIqjLFlirHlppTzvR7jAMx5Q08aKA/a/BX6+mb4HQ3dt2JV
-	fGg==
-X-Google-Smtp-Source: AGHT+IHNUD/YiHktyxC/S/O2UQl0N67mb9RwGDBuz8dW13b6LjI/xcWOtt6224r6GWtpcizS5VcWeQ==
-X-Received: by 2002:a05:620a:40c1:b0:790:77d4:5e7a with SMTP id g1-20020a05620a40c100b0079077d45e7amr4364674qko.20.1714481749374;
-        Tue, 30 Apr 2024 05:55:49 -0700 (PDT)
-Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
-        by smtp.gmail.com with ESMTPSA id o16-20020a05620a111000b00790f90ffc32sm1553667qkk.22.2024.04.30.05.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 05:55:48 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 30 Apr 2024 12:55:35 +0000
-Subject: [PATCH 3/4] media: intel/ipu6: Fix direct dependency Kconfig error
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pRrgql8g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1714481392;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rwUo9fW2TVE8Ef255vklCN/02eGVq/9QqsXdrnT9H4A=;
+	b=pRrgql8gXGvkBcFrqAfrVkBEdBtDICNZvNLy29XU8ZUF5SRr5aoK8WgojRsT2aOLGS52Uh
+	84Ok/Vzr/82s8p+FIfxrabWY+HgGdoDDRX/e1JfdXR5n/6PABifzC5YGvfzOk0C2rltE9O
+	tnRDIpTubyB8TDEDfL5haERyG2zYtcU=
+Message-ID: <1a72ad2d6f72805de2c99db8ba8ea984711da81b.camel@crapouillou.net>
+Subject: Re: [PATCH 11/15] i2c: jz4780: use 'time_left' variable with
+ wait_for_completion_timeout()
+From: Paul Cercueil <paul@crapouillou.net>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-i2c@vger.kernel.org
+Cc: Andi Shyti <andi.shyti@kernel.org>, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 30 Apr 2024 14:49:50 +0200
+In-Reply-To: <20240427203611.3750-12-wsa+renesas@sang-engineering.com>
+References: <20240427203611.3750-1-wsa+renesas@sang-engineering.com>
+	 <20240427203611.3750-12-wsa+renesas@sang-engineering.com>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
+ qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
+ JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
+ 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
+ X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
+ AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
+ Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
+ Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
+ McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
+ 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
+ LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-fix-ipu6-v1-3-9b31fbbce6e4@chromium.org>
-References: <20240430-fix-ipu6-v1-0-9b31fbbce6e4@chromium.org>
-In-Reply-To: <20240430-fix-ipu6-v1-0-9b31fbbce6e4@chromium.org>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Bingbu Cao <bingbu.cao@intel.com>, Tianshu Qiu <tian.shu.qiu@intel.com>
-Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Hans Verkuil <hverkuil@xs4all.nl>, Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.12.4
 
-VIDEO_INTEL_IPU6 selects IPU6_BRIDGE, but they have different set of
-dependencies.
+Le samedi 27 avril 2024 =C3=A0 22:36 +0200, Wolfram Sang a =C3=A9crit=C2=A0=
+:
+> There is a confusing pattern in the kernel to use a variable named
+> 'timeout' to
+> store the result of wait_for_completion_timeout() causing patterns
+> like:
+>=20
+> 	timeout =3D wait_for_completion_timeout(...)
+> 	if (!timeout) return -ETIMEDOUT;
+>=20
+> with all kinds of permutations. Use 'time_left' as a variable to make
+> the code
+> self explaining.
+>=20
+> Fix to the proper variable type 'unsigned long' while here.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Fixes:
-WARNING: unmet direct dependencies detected for IPU_BRIDGE
-  Depends on [n]: MEDIA_SUPPORT [=y] && PCI [=y] && MEDIA_PCI_SUPPORT [=y] && I2C [=y] && ACPI [=n]
-  Selected by [y]:
-  - VIDEO_INTEL_IPU6 [=y] && MEDIA_SUPPORT [=y] && PCI [=y] && MEDIA_PCI_SUPPORT [=y] && (ACPI [=n] || COMPILE_TEST [=y]) && VIDEO_DEV [=y] && X86 [=y] && X86_64 [=y] && HAS_DMA [=y]
+Acked-by: Paul Cercueil <paul@crapouillou.net>
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/pci/intel/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Cheers,
+-Paul
 
-diff --git a/drivers/media/pci/intel/Kconfig b/drivers/media/pci/intel/Kconfig
-index 04cb3d253486..d9fcddce028b 100644
---- a/drivers/media/pci/intel/Kconfig
-+++ b/drivers/media/pci/intel/Kconfig
-@@ -6,7 +6,8 @@ source "drivers/media/pci/intel/ivsc/Kconfig"
- 
- config IPU_BRIDGE
- 	tristate "Intel IPU Bridge"
--	depends on I2C && ACPI
-+	depends on ACPI || COMPILE_TEST
-+	depends on I2C
- 	help
- 	  The IPU bridge is a helper library for Intel IPU drivers to
- 	  function on systems shipped with Windows.
-
--- 
-2.44.0.769.g3c40516874-goog
+> ---
+> =C2=A0drivers/i2c/busses/i2c-jz4780.c | 22 +++++++++++-----------
+> =C2=A01 file changed, 11 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-jz4780.c
+> b/drivers/i2c/busses/i2c-jz4780.c
+> index 55035cca0ae5..7951891d6b97 100644
+> --- a/drivers/i2c/busses/i2c-jz4780.c
+> +++ b/drivers/i2c/busses/i2c-jz4780.c
+> @@ -565,7 +565,7 @@ static inline int jz4780_i2c_xfer_read(struct
+> jz4780_i2c *i2c,
+> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int idx)
+> =C2=A0{
+> =C2=A0	int ret =3D 0;
+> -	long timeout;
+> +	unsigned long time_left;
+> =C2=A0	int wait_time =3D JZ4780_I2C_TIMEOUT * (len + 5);
+> =C2=A0	unsigned short tmp;
+> =C2=A0	unsigned long flags;
+> @@ -600,10 +600,10 @@ static inline int jz4780_i2c_xfer_read(struct
+> jz4780_i2c *i2c,
+> =C2=A0
+> =C2=A0	spin_unlock_irqrestore(&i2c->lock, flags);
+> =C2=A0
+> -	timeout =3D wait_for_completion_timeout(&i2c->trans_waitq,
+> -					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> msecs_to_jiffies(wait_time));
+> +	time_left =3D wait_for_completion_timeout(&i2c->trans_waitq,
+> +						msecs_to_jiffies(wai
+> t_time));
+> =C2=A0
+> -	if (!timeout) {
+> +	if (!time_left) {
+> =C2=A0		dev_err(&i2c->adap.dev, "irq read timeout\n");
+> =C2=A0		dev_dbg(&i2c->adap.dev, "send cmd count:%d=C2=A0 %d\n",
+> =C2=A0			i2c->cmd, i2c->cmd_buf[i2c->cmd]);
+> @@ -627,7 +627,7 @@ static inline int jz4780_i2c_xfer_write(struct
+> jz4780_i2c *i2c,
+> =C2=A0{
+> =C2=A0	int ret =3D 0;
+> =C2=A0	int wait_time =3D JZ4780_I2C_TIMEOUT * (len + 5);
+> -	long timeout;
+> +	unsigned long time_left;
+> =C2=A0	unsigned short tmp;
+> =C2=A0	unsigned long flags;
+> =C2=A0
+> @@ -655,14 +655,14 @@ static inline int jz4780_i2c_xfer_write(struct
+> jz4780_i2c *i2c,
+> =C2=A0
+> =C2=A0	spin_unlock_irqrestore(&i2c->lock, flags);
+> =C2=A0
+> -	timeout =3D wait_for_completion_timeout(&i2c->trans_waitq,
+> -					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> msecs_to_jiffies(wait_time));
+> -	if (timeout && !i2c->stop_hold) {
+> +	time_left =3D wait_for_completion_timeout(&i2c->trans_waitq,
+> +						msecs_to_jiffies(wai
+> t_time));
+> +	if (time_left && !i2c->stop_hold) {
+> =C2=A0		unsigned short i2c_sta;
+> =C2=A0		int write_in_process;
+> =C2=A0
+> -		timeout =3D JZ4780_I2C_TIMEOUT * 100;
+> -		for (; timeout > 0; timeout--) {
+> +		time_left =3D JZ4780_I2C_TIMEOUT * 100;
+> +		for (; time_left > 0; time_left--) {
+> =C2=A0			i2c_sta =3D jz4780_i2c_readw(i2c,
+> JZ4780_I2C_STA);
+> =C2=A0
+> =C2=A0			write_in_process =3D (i2c_sta &
+> JZ4780_I2C_STA_MSTACT) ||
+> @@ -673,7 +673,7 @@ static inline int jz4780_i2c_xfer_write(struct
+> jz4780_i2c *i2c,
+> =C2=A0		}
+> =C2=A0	}
+> =C2=A0
+> -	if (!timeout) {
+> +	if (!time_left) {
+> =C2=A0		dev_err(&i2c->adap.dev, "write wait timeout\n");
+> =C2=A0		ret =3D -EIO;
+> =C2=A0	}
 
