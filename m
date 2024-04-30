@@ -1,322 +1,177 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2085.outbound.protection.outlook.com [40.107.8.85])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F7A127B77;
-	Tue, 30 Apr 2024 08:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466251; cv=fail; b=hERsyyQtEh0NUUB16XTl4QnGYV7r2SIpvJjqTJ5/MZkTCxl0qcSmlWgZk6IXLKVOJy+OUIN1/T7TV17FzL+0gxNzwQtWgzCpXjGN38fCPkY90glRgR9FDQD0JCtfqRH+6CGJTfAg4xdNcW0EUkW81Px0Ev2xy4RJvSZtKhX5QJg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466251; c=relaxed/simple;
-	bh=UjlzGIoREkBEkzNdoJLhKxVWeiZbQH3xpd/ax7ACe/Y=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Gw+uNmTfa3zoxraUwTiVyAZWXlxJYsS4vzUstDhmUpecx0NkUgv5p9taywv88pGk3XIv1frXSTgmvDOe9Jt2iUcm3o605CfxThHWfpc9m6WXAQCq8TjlpKF0OqIZ1HNy1vZlxBtewNqf1sXhRq3YHlCS7yMEhFpgLGFszFACl9I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=db+rGjmJ; arc=fail smtp.client-ip=40.107.8.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="db+rGjmJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UrCe7kUIxjN8OiMIfv/ugsWeSgFaK3MBUw/e+ytP5z+cUDfjzI0H7LmaAnuaxMoxkTbv44Ro2C3M9WOrgynnzQMDhr+lrznGpHDrTF9zG2E/erualUJXSl40diTZrmxIiXPKbV44bG80koct/3ir3PWpxYOYbHEojqCu51Ajzfeor1a2oewgm7AMtnr7FuDQUU98DHqCJFSuwZcD3r7ZyxNWpkqRsjlkdYN2MU+XK/11zOHwExPlyZ/yi7cnltIkgGqNDHs1n3wgsT6pjLYPyp56lJRj5G4ctTZ0ZI6FQJ9xOsJVCeEQ1LyIgkZU1PDZz0l/mKVwLijx6vFgI/yzvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xc65M1gJYltW12CM0JT3ob4bHCkLeG+ISdOD3LP8hj0=;
- b=ecogX6y0s6nkiXEL3mMWl6tFOAoSFCtgM0WeRceeJmHoAJU6iHWBbNOk9Ijq1Pk27rVY/j+M+p/tOKlEbdwyilW6ZWwvnljDKjMUCFdIpqcJqbZaNDbHZRzfCRjz6xNRtCc4I34O49aV8enC+jMeh/kqnF+z1jv6fFpfU6EhDLRz3FZRB6eTAxhuXzyZcsTLo+SCKIOPkxaD+GjWUUvwVoqVsY3TGfun7GOcGi5guoOg0Jen66gLi3vkqC9o9bj2wBTeEU1TfIUXqj8DDYluDgsM68EEFkk50rM3sRkT8LHWzNeux37U48XX4zWye7kYe/Y5AQmaBdKUWnJOxbqTwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xc65M1gJYltW12CM0JT3ob4bHCkLeG+ISdOD3LP8hj0=;
- b=db+rGjmJSRUREOZRtbVYo6UVdsMe0f/NFwTTusRsuV+LhRMuuwzVv+KO7WeiZQ0Q0kDbmyHK1a6cljd7/CdMVR8YF6A4NfV5pFFVr6OTkoMBYCb8PVwDWwdAXE05EaJ2HqGTa1q1bUYgQLsw15slZo881JEUpL1LQihzo1ChyPg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
- by GV1PR04MB10241.eurprd04.prod.outlook.com (2603:10a6:150:1a4::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36; Tue, 30 Apr
- 2024 08:37:23 +0000
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::8589:eb00:ecf3:b4ca]) by PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::8589:eb00:ecf3:b4ca%6]) with mapi id 15.20.7519.035; Tue, 30 Apr 2024
- 08:37:23 +0000
-Message-ID: <c1580fc5-457d-465b-b533-37bda8c69181@oss.nxp.com>
-Date: Tue, 30 Apr 2024 16:43:39 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] media: v4l2-ctrls: Add average qp control
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
- Ming Qian <ming.qian@nxp.com>, mchehab@kernel.org, hverkuil-cisco@xs4all.nl
-Cc: shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de,
- kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
- xiahong.bao@nxp.com, eagle.zhou@nxp.com, tao.jiang_2@nxp.com,
- imx@lists.linux.dev, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240425065011.105915-1-ming.qian@nxp.com>
- <c9fdf07d-f434-430e-bb41-8bc8f6bf1bb8@collabora.com>
- <383b6e30-1266-4db1-9c5d-10db7ab17957@oss.nxp.com>
- <a839b292-6776-4ecb-8d8a-a25e58816787@collabora.com>
-Content-Language: en-US
-From: ming qian <ming.qian@oss.nxp.com>
-In-Reply-To: <a839b292-6776-4ecb-8d8a-a25e58816787@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR03CA0008.eurprd03.prod.outlook.com
- (2603:10a6:208:14::21) To PAXPR04MB8254.eurprd04.prod.outlook.com
- (2603:10a6:102:1cd::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45E741C89;
+	Tue, 30 Apr 2024 08:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714466290; cv=none; b=DlZ2AJngrLxkbBkw8Ba2JZa7i3d3PZpDZ6xT0ZYvVBDqgptJr49JW4xGIZ0Zd+KcVuiWnk32WBY7RsERybJnThDTxoLnR74eAu3oD3LQYr31qiuClAihaINW2/Vdsy9z7ByHAfSy7kpYi6iUgeUCvv56Y16pxl/L85enXiyliWU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714466290; c=relaxed/simple;
+	bh=xNcZOSiAAXecA4vl6PK9ATXJbcLGbUIzFmTD/xGg1OM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h89Fz8a4EqYQ8h62njpHrEhquMT8+T//+7v2NYDJKEOQbc20Fg+0tIRDrVylhk9Nr4RdQWmhbhk3wH5MHMW/3YGGkBDKYXHyfSUdqHOpiVYNFmJTRK3EVNsFt4kXuXd+99Yuq5PMeETaiJf2eVujJQZvbxX6v+vxBNcB8VqKqLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EA1E0C0005;
+	Tue, 30 Apr 2024 08:37:59 +0000 (UTC)
+Message-ID: <0049995a-07d0-4aaa-abc7-5bfc0dc22ace@ghiti.fr>
+Date: Tue, 30 Apr 2024 10:37:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|GV1PR04MB10241:EE_
-X-MS-Office365-Filtering-Correlation-Id: 06087668-b0f7-44c6-989b-08dc68f0c1a0
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|366007|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VE5OdzZib20rUDRoczY1VEhoYVBML0N3ZFNsWUIrM0FvdGpXYytNakNjRkdY?=
- =?utf-8?B?U2VnWVpZYUIvYnd3cGY2UjFJdW5aaVV0WGsvdWFndmdSem1QY05aZ25BZ0dZ?=
- =?utf-8?B?YzNRMU0rejNReW9KbEhuaUJXUCtXcDByRlRQWTZvTFpWSUdhUStjSWRCWGlP?=
- =?utf-8?B?eUFiVmRKL1E3Vkxxdjk0ajhPakk4T3F6TnRSQTF5TGxhalZQNFd0cW53djk0?=
- =?utf-8?B?SkRBc3YxMkpMWlgwVmZ5dVA5aGF6WUR5UjVHMTU2SDBVdE5INUpydFBZK2JK?=
- =?utf-8?B?dFdjd0l1eFlQNUg3UTc3NCt3a0ZEa3Qwb3ROZXlsWDhXVitGNkJuUit2Z1ZP?=
- =?utf-8?B?MmtSUDkwTndLYlhSNG1GdW81SFpJaGRXbyt5RnZOUUtaZEZPTTVtMCtVMXJj?=
- =?utf-8?B?TWpYQ0tBWTBnSFEveHFkcW9hYzJRaXpKLzZ1UVBLeE9SZFdscGg2SnpJTXJ2?=
- =?utf-8?B?MmJsaTlZbUh1VmJZdEhKeWoyd1ZwcmxWZ3JyUDVhak1tdXRNVlIvcFh1bE5u?=
- =?utf-8?B?bHVOR3N4Uk1SWXNJNElrVDE2eXpacHNjVlMxNW9FS1dmdXBQaW9NdFhDemtE?=
- =?utf-8?B?UldtajI1ZTB6NWNUdGloZE5XcnhRMW91dk52cm9EVG5XZm9qUTBFSUZtQlE1?=
- =?utf-8?B?cmVOUmVZR2ZldUZMS000YlMvYTVwTWxOU3VSSy9XTGk5T2VEa2R3SUQzSytr?=
- =?utf-8?B?VUpMMFpsWTQ3TU5XMGRXR0gyZ3EwR09UVnNkSmpicVE2Ryt6Tnl4aDRvTzFG?=
- =?utf-8?B?bDkxUERyd1lZcncybUtYR3o0Tk1kbmkwL1RITWkzOUlscWx1S1BpeWlkVXJP?=
- =?utf-8?B?SERNdjNISityeTk2RjBxNkFPRE5vZzM1WlhCTk5aZDJlcFRHaGxMNjczbk5N?=
- =?utf-8?B?RXpocStrekk1YnZOUStJdXN4NVliVFFzTkZ6U2xVazBrL2RxRjFqTEFqeHN3?=
- =?utf-8?B?SWsrV3dmUG1xdFR6M3A2RWV6UFBTRmhza0RHMHlJSWllUXBkeVJvMDgvSmcw?=
- =?utf-8?B?cTZzQytNcUZ4bVBwL29YNTRQN2xFY1Y0ZTN4OTA3akZPZENOMEQ5UzFOZEJp?=
- =?utf-8?B?ejZudTRURGRMK2FKN1I5Q3ZCT2MzUGR2WVZ6U1ZZVnZnbjZWaFZsOVlzc2pT?=
- =?utf-8?B?RUFpWjZ4NkpEZjdkSTJuZXQ4am9iT3JXclVteFpKZk40RHRqcTk4U3RsOU1p?=
- =?utf-8?B?cW1hbjltUW1mbEhLTzlhRHNNcWRtNCt6bjE2amZpcGtxYnNOS21ndHgzbWpD?=
- =?utf-8?B?MTdZSnZwaldSU0dsNzlHZTBMSnFyMkVQTmxEeTZsQk1KMXJSZzd2VzV4YzRk?=
- =?utf-8?B?eTlIbVFLdkVvQUU0aHUvRVlIcFZlL24zbm9xZkRneDZoU0xWbVpLR3N3WjVa?=
- =?utf-8?B?VFBVbXA0M3NVTnJZN1R6WklQMGJHWU8vZlJmWTRGblRHRmNUYjlyaUx1blNz?=
- =?utf-8?B?ek9oV0k1VDF4cjZvL1ZXdUdwNzFlajdIMlRYM3d0ZytTS2d1S0Mva3VPQmda?=
- =?utf-8?B?Q2I4Zjl5cDdmSEV3TmQ4Q0k5VEdCYUg2MnVIbURLMEFYYkNVRzk2by9JMDl2?=
- =?utf-8?B?blRRWjY0RHNqb2pHODd6dXRTS2swclFlMG10Rk8zakFURWhmRDBGWUoxMm1a?=
- =?utf-8?B?cWc1UE5sT0ZrOGhKaXJtZG1EWmp6SFBiUkQ1NWNqNDdsVUVKcUpFUDQxbm1S?=
- =?utf-8?B?SUFWaG1IMXhRK0g0Z1hMOTJ3SUFLQWdOOGRkZ1NCOXZzOHhBaFd2WGpRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NzhweTJ1WjZxN3lkakhzdGhNaTcrcXFOZEV5OGRNbUFLa1hBSWNUSzJyZCtS?=
- =?utf-8?B?T3FxOWtmOFplU0V0bGtrUUc5WGhROTBpTWtwNHRqZGNCSkh4dWVSNHlSRHZF?=
- =?utf-8?B?aFF5b01jWGduTzh4QllGK2hVYTh6TFRJVjA2Um9FTnZ6ZlFzYVZXNkE0MVB4?=
- =?utf-8?B?dEhwckV2eHNSb1dYeHNIUS8xTEliWjhZWkd0RTFHM3dUOUw0SlcvbDgzdU1o?=
- =?utf-8?B?ME5BWWdQZ21MS2FDcjlXWFJpano1c3djUmRjSjZyai9USnNvdGcrenEwazd5?=
- =?utf-8?B?MXhWbkJXeDBKQ3FLR1R5a1VwTGV0Z2hET3FuNWxNMGMrcDZFUVhBM3RUOXlJ?=
- =?utf-8?B?WktWQXN4NFFiTTl1YmJwbUJqZ0s1WnFJSWNMbDJVbjhuMUFoWlBxTDRsUENP?=
- =?utf-8?B?MUFoZXRUMi9NOFRQaGMwL2tXM1owLzVtb2RoQlh2UmFOSnJGdWdGSUhtN2RB?=
- =?utf-8?B?bkRkSjVjT3FWRUpoMnpwYzJnd0o4RTJKZFRhbHY4QzBkbVJDbklzVlFtR2o0?=
- =?utf-8?B?SHRHZVZTSUlsVnFUL2F1S0dSWTdiQWJLY2krTDdHUGFkUmVkY2hYTnM1dUVa?=
- =?utf-8?B?UUdYbDM4K042WVdaYWdpUEYyL3pkeFVoOXIyNVNQdTVhZW5GelBsMzRoTXRU?=
- =?utf-8?B?QnF5V3NPeGNxM2trOWx1dzdTNVdoVHdxUEtzaHJGRGdIdkZReWxnTUx6ZHEx?=
- =?utf-8?B?ZVRZN1pNVjkyT091Qi9pQW0rZFRiMWxJMDlURDVZY202QzBqSkUwMUs4dnJE?=
- =?utf-8?B?cXFGTWZLNTVHTWRTdkNNb1dqOTFtU0pHck9Qd2lUY3ViZ2FWSGxhUjREN1c3?=
- =?utf-8?B?QkZmUmJOSVVRK1pTZjJtTUUwdHJUdWxlQ2hiWEVlWVo1SmVWcklqbXU5dnd2?=
- =?utf-8?B?Qm5HQ1Y5ZGVpRXNNOXFZM2N3T1ZCUCtRRnZ2aWlkeGtMcFoxemJzSkwybjRN?=
- =?utf-8?B?blpReFkwRk5wNmtENjBYYjAwUmRQa1pBODhTeDVrQjlTQ0gxMi8yV3dER2I3?=
- =?utf-8?B?T0RNZHNEMUo2QzIrOHozQlN4YlhmM21YWm9ib3dzNHpuNW03SjVnWDRlN1JM?=
- =?utf-8?B?QW93dXBZMGNqY2pBODZsbFJxNUVzT1JGUE9kdFBDaDZxSiszL3g0aENVaU5Z?=
- =?utf-8?B?cUdGMlgySjlIUmt5a01ET3FKNTNZWk1tQTArYktYZ2lhcGxXbjh5NjRySjZM?=
- =?utf-8?B?dmtLUlZvUmUrNUNmbmo4bHMyMk5xNzlLYmViQTlCcWljdS9xT0hRL1pvMFZr?=
- =?utf-8?B?VzVJR2FvK1BKWUpjY1d0Tkg5UFJPVDNyS1YxMXQ2Qk5ieFVKMm41SXdtUFRR?=
- =?utf-8?B?cXZnQjlMRThmeXFBMlhQTFRFUGFWUmlGQWRiMnNCeE9XZjBtS1g0MUZoalcr?=
- =?utf-8?B?Z1cxTkdRdGZuS1VmUFRGL1B0cDRvNTNiMk5Dc2t6WWZ2SWxmdVdJb0JpdWk3?=
- =?utf-8?B?YmlzYklVZVNCdUNpYXdzT1JMVnJzY2tpTXJlN1FkM0dsRm1qVXhmcElqY0F2?=
- =?utf-8?B?YitVMEUzcER0VGVDZjExV253TUpPakRvRDR5SHEyMDhkRmdPTlpOS29kOWc4?=
- =?utf-8?B?aUh0eXZ5L0JaMmdGd1VueFJld2Y2UFRpa0VnSUVuVUxrZDZCUFgrZk10N3k5?=
- =?utf-8?B?bU0yZXhmQmpPclhleFQrVVovd040WldDV0cwMXRYWDYwbHAzL2JlMHgveWZu?=
- =?utf-8?B?a0hHa29wWGtQVmo4OEVUUjkvMi9DNnI0dnRrU1NienllajdONVEvZzJpR09Q?=
- =?utf-8?B?dVhRbUhOUW9nNzBqY1pha0FTWjJWdThsZmdKeUh1Ungvd25sd09jY2x2NnRr?=
- =?utf-8?B?OUY0b0tZTEoraHBXZVRJV1ZFSmhQV0pPQ0pubWlvQmRqd3BZUVhxQmJhZksx?=
- =?utf-8?B?VWZCdWdJSVA3SUpmYmJURTN3ZFI2ZExHbHlITnlFeDh0MFBZd2dnQ203VE1F?=
- =?utf-8?B?bi9jV1UrU1FLNFNzZnNpR2RoeDRmdzl1L3ZYNXJxdkloeWpEVmNoTHkrdWtN?=
- =?utf-8?B?MUpjYktsWDRmNEQwS0ZTUlo4bk9RdFBqcnRDelZqS1NhMUN3S2FUMDkvc2hn?=
- =?utf-8?B?NVB4ZnJXY2hFQkllZmszTWcwbnl0OThIdktNcGEwYndidzdoa1hodFlSN3RI?=
- =?utf-8?Q?uMD4f2uLyANfqP//9vfwhTmHu?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06087668-b0f7-44c6-989b-08dc68f0c1a0
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2024 08:37:23.2743
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fp/ErYY9KaHZR5cY0mZ/xTghvyQGSQwo05FFXQHJiWv+sky5MYIR/b4d3wihCWa2qC3BaWWzm++Dv4oPeggJvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10241
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] init: fix allocated page overlapping with PTR_ERR
+Content-Language: en-US
+To: Nam Cao <namcao@linutronix.de>, Joel Granados <j.granados@samsung.com>
+Cc: Mike Rapoport <rppt@kernel.org>, Andreas Dilger <adilger@dilger.ca>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+ linux-riscv@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "ndesaulniers @ google . com" <ndesaulniers@google.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
+ Krister Johansen <kjlx@templeofstupid.com>,
+ Changbin Du <changbin.du@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240418102943.180510-1-namcao@linutronix.de>
+ <CGME20240429125236eucas1p24219f2d332e0267794a2f87dea9f39c4@eucas1p2.samsung.com>
+ <20240429125230.s5pbeye24iw5aurz@joelS2.panther.com>
+ <20240430073056.bEG4-yk8@linutronix.de>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240430073056.bEG4-yk8@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
-Hi Andrzej,
+Hi Joel, Nam,
 
-> Hi Ming,
-> 
-> W dniu 30.04.2024 o 04:20, ming qian pisze:
->>
->> Hi Andrzej,
->>
->>> Hi Ming Qian,
+On 30/04/2024 09:31, Nam Cao wrote:
+> On Mon, Apr 29, 2024 at 02:52:30PM +0200, Joel Granados wrote:
+>> On Thu, Apr 18, 2024 at 12:29:43PM +0200, Nam Cao wrote:
+>>> There is nothing preventing kernel memory allocators from allocating a
+>>> page that overlaps with PTR_ERR(), except for architecture-specific
+>>> code that setup memblock.
 >>>
->>> W dniu 25.04.2024 o 08:50, Ming Qian pisze:
->>>> Add a control V4L2_CID_MPEG_VIDEO_AVERAGE_QP to report the average qp
->>>> value of current encoded frame. the value applies to the last dequeued
->>>> capture buffer.
->>>>
->>>> Signed-off-by: Ming Qian <ming.qian@nxp.com>
->>>> ---
->>>> v2
->>>>   - improve document description according Hans's comments
->>>>   - drop volatile flag
->>>>
->>>>   Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 5 +++++
->>>>   drivers/media/v4l2-core/v4l2-ctrls-defs.c                 | 5 +++++
->>>>   include/uapi/linux/v4l2-controls.h                        | 2 ++
->>>>   3 files changed, 12 insertions(+)
->>>>
->>>> diff --git 
->>>> a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst 
->>>> b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>>> index 2a165ae063fb..7d82ab14b8ba 100644
->>>> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>>> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>>> @@ -1653,6 +1653,11 @@ enum 
->>>> v4l2_mpeg_video_h264_hierarchical_coding_type -
->>>>       Quantization parameter for a P frame for FWHT. Valid range: 
->>>> from 1
->>>>       to 31.
->>>> +``V4L2_CID_MPEG_VIDEO_AVERAGE_QP (integer)``
->>>> +    This read-only control returns the average QP value of the 
->>>> currently
->>>> +    encoded frame. The value applies to the last dequeued capture 
->>>> buffer
->>>> +    (VIDIOC_DQBUF). Applicable to encoders.
->>>> +
+>>> It was discovered that RISCV architecture doesn't setup memblock
+>>> corectly, leading to a page overlapping with PTR_ERR() being allocated,
+>>> and subsequently crashing the kernel (link in Close: )
 >>>
->>> What is the intended range of the values? And why? Is your intention 
->>> to make it
->>> a hardware-agnostic control or a hardware-specific control?
+>>> The reported crash has nothing to do with PTR_ERR(): the last page
+>>> (at address 0xfffff000) being allocated leads to an unexpected
+>>> arithmetic overflow in ext4; but still, this page shouldn't be
+>>> allocated in the first place.
 >>>
->>> Regrds,
+>>> Because PTR_ERR() is an architecture-independent thing, we shouldn't
+>>> ask every single architecture to set this up. There may be other
+>>> architectures beside RISCV that have the same problem.
 >>>
->>> Andrzej
+>>> Fix this one and for all by reserving the physical memory page that
+>>> may be mapped to the last virtual memory page as part of low memory.
 >>>
->>
->> The value range depends on the format,
->> For H264, it's [V4L2_CID_MPEG_VIDEO_H264_MIN_QP, 
->> V4L2_CID_MPEG_VIDEO_H264_MIN_QP],
->> usually this is [0, 51].
->> For HEVC, it's [V4L2_CID_MPEG_VIDEO_HEVC_MIN_QP, 
->> V4L2_CID_MPEG_VIDEO_HEVC_MAX_QP],
->> usually it's from 0 to 51 for 8 bit and from 0 to 63 for 10 bit.
->> For H263 and MPEG4, it may be from 1 to 31.
->> For VPX, it may be from 1 to 128.
->>
->> I think the driver that supports this ctrl can set an appropriate value
->> range based on the format it supports.
->>
->> Users also need to read the value of this ctrl according to the format
->> they set.
-> 
-> What happens if the user does not set the format or until they set it?
-> 
-> This looks like a contextual control, where the context is a cross
-> product between setting or not setting the format and which particular
-> format is actually set.
-> 
-> I don't want to voice strong opinions about whether this should or
-> should not be accepted, but this kind of behavior should definitely
-> be documented so that driver writers know how to implement this control.
-> Right now reading the documentation in the *.rst file as a driver writer
-> I would be puzzled. So, from a driver writer's perspective I'd expect
-> these additions to the doc:
-> 
-> - the range of returned values
-> - the expected behavior when format has not been set
-> - the expected behavior when no frames have been processed yet (so 
-> there's no QP
-> to be read back from the hardware)
-> 
-> Regards,
-> 
-> Andrzej
-> 
+>>> Unfortunately, this means if there is actual memory at this reserved
+>>> location, that memory will become inaccessible. However, if this page
+>>> is not reserved, it can only be accessed as high memory, so this
+>>> doesn't matter if high memory is not supported. Even if high memory is
+>>> supported, it is still only one page.
+>>>
+>>> Closes: https://lore.kernel.org/linux-riscv/878r1ibpdn.fsf@all.your.base.are.belong.to.us
+>>> Signed-off-by: Nam Cao <namcao@linutronix.de>
+>>> Cc: <stable@vger.kernel.org> # all versions
+>>> ---
+>>>   init/main.c | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/init/main.c b/init/main.c
+>>> index 881f6230ee59..f8d2793c4641 100644
+>>> --- a/init/main.c
+>>> +++ b/init/main.c
+>>> @@ -900,6 +900,7 @@ void start_kernel(void)
+>>>   	page_address_init();
+>>>   	pr_notice("%s", linux_banner);
+>>>   	early_security_init();
+>>> +	memblock_reserve(__pa(-PAGE_SIZE), PAGE_SIZE); /* reserve last page for ERR_PTR */
+>>>   	setup_arch(&command_line);
+>>>   	setup_boot_config();
+>>>   	setup_command_line(command_line);
+>>> -- 
+>>> 2.39.2
+>>>
+>> I received a similar(ish) report recently
+>> https://lore.kernel.org/oe-kbuild-all/202404211031.J6l2AfJk-lkp@intel.com/
+>> regarding RISC-V in init/mail.c. Here is the meat of the report in case
+>> you want to avoid going to the actual link:
+> This issue doesn't look like it has anything to do with this patch: this
+> patch is about overlapping of dynamically allocated memory, while I think
+> the issue is about overlapping sections during linking (maybe something
+> wrong with riscv linker script?)
+>
+> Also, FWIW, this patch is not going to be in mainline because of a
+> regression.
+>
+> Nonetheless, I will have a look at this later.
 
-The ctrl value only applies to the last dequeued capture buffer. It
-requires that the format has been set and the streaming has been
-started. Before that, the value is meaningless, and the driver can set a
-default value by itself.
 
-I agree that it's better to add the value range description in the
-document, but as discussed above, it's not a fixed value, maybe I can
-add some description according to format.
+The config shows that it is a XIP kernel that comes with its own 
+limitations (text is limited to 32MB for example), so I'm not surprised 
+to see those overlaps.
 
-Best regards,
-Ming
+We already discussed the removal of randconfig builds on XIP configs, 
+but IIRC it is not possible.
 
+Alex
+
+
+>
+> Best regards,
+> Nam
+>
+>> "
+>> ...
+>>     riscv64-linux-ld: section .data LMA [000000000099b000,0000000001424de7] overlaps section .text LMA [0000000000104040,000000000213c543]
+>>     riscv64-linux-ld: section .data..percpu LMA [00000000024e2000,00000000026b46e7] overlaps section .rodata LMA [000000000213c580,000000000292d0dd]
+>>     riscv64-linux-ld: section .rodata VMA [ffffffff8213c580,ffffffff8292d0dd] overlaps section .data VMA [ffffffff82000000,ffffffff82a89de7]
+>>     init/main.o: in function `rdinit_setup':
+>>>> init/main.c:613:(.init.text+0x358): relocation truncated to fit: R_RISCV_GPREL_I against symbol `__setup_start' defined in .init.rodata section in .tmp_vmlinux.kallsyms1
+>>     net/ipv4/ipconfig.o: in function `ic_dhcp_init_options':
+>>     net/ipv4/ipconfig.c:682:(.init.text+0x9b4): relocation truncated to fit: R_RISCV_GPREL_I against `ic_bootp_cookie'
+>>     net/sunrpc/auth_gss/gss_krb5_mech.o: in function `gss_krb5_prepare_enctype_priority_list':
+>>>> net/sunrpc/auth_gss/gss_krb5_mech.c:213:(.text.gss_krb5_prepare_enctype_priority_list+0x9c): relocation truncated to fit: R_RISCV_GPREL_I against `gss_krb5_enctypes.0'
+>>     lib/maple_tree.o: in function `mas_leaf_max_gap':
+>>>> lib/maple_tree.c:1512:(.text.mas_leaf_max_gap+0x2b8): relocation truncated to fit: R_RISCV_GPREL_I against `mt_pivots'
+>>     lib/maple_tree.o: in function `ma_dead_node':
+>>>> lib/maple_tree.c:560:(.text.mas_data_end+0x110): relocation truncated to fit: R_RISCV_GPREL_I against `mt_pivots'
+>>     lib/maple_tree.o: in function `mas_extend_spanning_null':
+>>>> lib/maple_tree.c:3662:(.text.mas_extend_spanning_null+0x69c): relocation truncated to fit: R_RISCV_GPREL_I against `mt_pivots'
+>>     lib/maple_tree.o: in function `mas_mab_cp':
+>>>> lib/maple_tree.c:1943:(.text.mas_mab_cp+0x248): relocation truncated to fit: R_RISCV_GPREL_I against `mt_pivots'
+>>     lib/maple_tree.o: in function `mab_mas_cp':
+>>>> lib/maple_tree.c:2000:(.text.mab_mas_cp+0x15c): relocation truncated to fit: R_RISCV_GPREL_I against `mt_pivots'
+>>     lib/maple_tree.o: in function `mas_reuse_node':
+>>>> lib/maple_tree.c:3416:(.text.mas_reuse_node+0x17c): relocation truncated to fit: R_RISCV_GPREL_I against `mt_slots'
+>>     lib/maple_tree.o: in function `mt_free_walk':
+>>>> lib/maple_tree.c:5238:(.text.mt_free_walk+0x15c): relocation truncated to fit: R_RISCV_GPREL_I against `mt_slots'
+>>     lib/maple_tree.o: in function `mtree_lookup_walk':
+>>     lib/maple_tree.c:3700:(.text.mtree_lookup_walk+0x94): additional relocation overflows omitted from the output
+>> ...
 >>
->> Best regards,
->> Ming
+>> "
 >>
->>>>   .. raw:: latex
->>>>       \normalsize
->>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls-defs.c 
->>>> b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
->>>> index 8696eb1cdd61..1ea52011247a 100644
->>>> --- a/drivers/media/v4l2-core/v4l2-ctrls-defs.c
->>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
->>>> @@ -970,6 +970,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->>>>       case V4L2_CID_MPEG_VIDEO_LTR_COUNT:            return "LTR 
->>>> Count";
->>>>       case V4L2_CID_MPEG_VIDEO_FRAME_LTR_INDEX:        return "Frame 
->>>> LTR Index";
->>>>       case V4L2_CID_MPEG_VIDEO_USE_LTR_FRAMES:        return "Use 
->>>> LTR Frames";
->>>> +    case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:            return "Average 
->>>> QP Value";
->>>>       case V4L2_CID_FWHT_I_FRAME_QP:                return "FWHT 
->>>> I-Frame QP Value";
->>>>       case V4L2_CID_FWHT_P_FRAME_QP:                return "FWHT 
->>>> P-Frame QP Value";
->>>> @@ -1507,6 +1508,10 @@ void v4l2_ctrl_fill(u32 id, const char 
->>>> **name, enum v4l2_ctrl_type *type,
->>>>           *max = 0xffffffffffffLL;
->>>>           *step = 1;
->>>>           break;
->>>> +    case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:
->>>> +        *type = V4L2_CTRL_TYPE_INTEGER;
->>>> +        *flags |= V4L2_CTRL_FLAG_READ_ONLY;
->>>> +        break;
->>>>       case V4L2_CID_PIXEL_RATE:
->>>>           *type = V4L2_CTRL_TYPE_INTEGER64;
->>>>           *flags |= V4L2_CTRL_FLAG_READ_ONLY;
->>>> diff --git a/include/uapi/linux/v4l2-controls.h 
->>>> b/include/uapi/linux/v4l2-controls.h
->>>> index 99c3f5e99da7..974fd254e573 100644
->>>> --- a/include/uapi/linux/v4l2-controls.h
->>>> +++ b/include/uapi/linux/v4l2-controls.h
->>>> @@ -898,6 +898,8 @@ enum v4l2_mpeg_video_av1_level {
->>>>       V4L2_MPEG_VIDEO_AV1_LEVEL_7_3 = 23
->>>>   };
->>>> +#define V4L2_CID_MPEG_VIDEO_AVERAGE_QP  (V4L2_CID_CODEC_BASE + 657)
->>>> +
->>>>   /*  MPEG-class control IDs specific to the CX2341x driver as 
->>>> defined by V4L2 */
->>>>   #define V4L2_CID_CODEC_CX2341X_BASE (V4L2_CTRL_CLASS_CODEC | 0x1000)
->>>>   #define V4L2_CID_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE 
->>>> (V4L2_CID_CODEC_CX2341X_BASE+0)
->>>
-> 
+>> Could the fix that you have posted here be related to that report?
+>> Comments are greatly appreciated.
+>>
+>> Best
+>> --
+>>
+>> Joel Granados
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
