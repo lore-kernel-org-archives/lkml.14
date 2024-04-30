@@ -1,59 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73803194C79
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232B0199E85
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714495901; cv=none; b=bDeGhIRlN86DkFL/nBVauF3N6hOYfgdpuqMJo1LwdL3T0PYslP00fsd+CE6HpXViB8/AYkR7GqbgBH6x7wlncyyxnnBwWKvS2cD6ttEu6/U4aPyWIAM62YcqdHwonFOmgWenkDf6EnPZ0rW2HxifyHuRL+errOA9zcNgf2n+1tE=
+	t=1714495901; cv=none; b=WMiOkRH9iUnWz2ZA1iWJFUmLvAkpk7UnhJ/UBgqFQyuOyoNWy4MoTOo8pyJOTAX0MIkr0oakEGwYohjaXJJi2ohA96Vl95YckcuEvSI+L0iZ7Mz582YWq3rvnbGRsMcTnPwb0KiFtszrY6WeHja34mueMhQ6jW7BDaqw5uI7ZFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714495901; c=relaxed/simple;
-	bh=q3BBtHJVAXkjvTLokwR5tXg0C/b4tgQNWa/vTlNkxd8=;
+	bh=o94uwlfooWAFAb9a0zSupQqjH4F0Kx+XTQ+2KGCPpF4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Oa3Gp8DbAI0EoCrT004iyEKNd61BQ/P40zQTP45ygEDEgoAWdu605BMhK6cFbpQOwQWS0kElubDlVPiMm0lHXsCze3VeNakx+GgznRNHeIsXwBa2PirMm9YbpFu4CUDQvToGA9cTzSpfCuWoIxUkUs3goRuUnPgEuxlA9rFdVsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mI29TojT; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=sp6lGb1Lmt9tZ7Du/AAlK3b8vcqHPRt+D8v/go1aR2qxNCCXTxbtkFDkAlYpb9ZGdjJhgCoTFp11mgj1hdtxCG2wrUsbStUCasq9GHL7Gx37xso8SVXwwYXaOPZaGft6EUkfFMo1pHUSpO8B5/aNCPk3Lmu97dyy+biLo95lzs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H6Oc8uUH; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mI29TojT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H6Oc8uUH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1714495900; x=1746031900;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=q3BBtHJVAXkjvTLokwR5tXg0C/b4tgQNWa/vTlNkxd8=;
-  b=mI29TojT5Gz+WMaTKG9Okgagzbov3e1f1SG6J5AIs8ap2JljL57WsIIm
-   IvegmyAZvAn0m5ymgE6/kXf+F2c8C3lDaHgDjqbvqvMCS28g4TmWRUNMW
-   KnwF3dTkf2d/stcsdrFLORtOI8DD+UY7S4fuH6Qpq7w9yMs7Zd5t5vlz+
-   u7Cb2Qn+GlkY25MVkCo7CnwSKPCdaFLd/j5zr05pCt4ZdZ9c3+fN3aYcj
-   mosn6p2ADnLjmwairKHgoj5izTPbTk2IFu0rQNOmT0HYmXRXtDDVfb4Ye
-   U7b/dhaxzrm43te+YREreIWN8jLYttistzT7TiTn1Ak0/1m3JdE0CcPQT
+  bh=o94uwlfooWAFAb9a0zSupQqjH4F0Kx+XTQ+2KGCPpF4=;
+  b=H6Oc8uUHX998IyYD616Nxq1msbMwoTxGVH7XMp2ZcritDQtBJTi9z9G9
+   j59gYItP10wso8Af9TzgpGbX+0GHGkDsBwri9P/i7nIniae4k7echkq84
+   /mTU1hYafaFaFTvObOjpH0vYeeoewjChufW5SMKyikLUV/kPlrDCjirtQ
+   kn71Acwws30P6UJR1udKKrKlaxXuIUUlzxvad0k0DOvza+7ZFrm12ZOFT
+   j5wEf5ZYygnHhoIO6aWhzpoDTwg/LYfa4slq4o1W2Bnfv+nhh0EORTpmE
+   Y7dyeOsjRUeqXS+RHx3GXQgk8NG2zxME9P3rPzMZPoph2fdmd/rFhFEny
    A==;
-X-CSE-ConnectionGUID: arBBb1zfQjCQdu7m1zlE+g==
-X-CSE-MsgGUID: 3bfJs7w9RsWXhdDQpJbmlw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10075678"
+X-CSE-ConnectionGUID: q9bEP2pUS2eQ7toGfX7h1A==
+X-CSE-MsgGUID: TQwnmb16TjeCCuZRdepJ1w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10075692"
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="10075678"
+   d="scan'208";a="10075692"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:21 -0700
-X-CSE-ConnectionGUID: PbPaOW5yRoug4yZgIP17dA==
-X-CSE-MsgGUID: 6nsfq/q0RUuHJS+QLF9HmQ==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:22 -0700
+X-CSE-ConnectionGUID: qfzK5AcFScaZEd2llae08g==
+X-CSE-MsgGUID: jjq2A11tQRyQS0Eav/sjmA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="26515443"
+   d="scan'208";a="26515468"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:13 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:18 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Borislav Petkov <bp@alien8.de>
 Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 	Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v5 16/47] platform/x86: intel-uncore-freq: Switch to new Intel CPU model defines
-Date: Tue, 30 Apr 2024 09:50:29 -0700
-Message-ID: <20240430165100.73491-16-tony.luck@intel.com>
+Subject: [PATCH v5 21/47] platform/x86: p2sb: Switch to new Intel CPU model defines
+Date: Tue, 30 Apr 2024 09:50:34 -0700
+Message-ID: <20240430165100.73491-21-tony.luck@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240430165100.73491-1-tony.luck@intel.com>
 References: <20240430164913.73473-1-tony.luck@intel.com>
@@ -69,79 +68,24 @@ Content-Transfer-Encoding: 8bit
 New CPU #defines encode vendor and family as well as model.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Acked-by: Hans de Goede <hdegoede@redhat.com>
 ---
- .../intel/uncore-frequency/uncore-frequency.c | 56 +++++++++----------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+ drivers/platform/x86/p2sb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-index b89c0dda9e5d..b80feaf5828f 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-@@ -197,34 +197,34 @@ static struct notifier_block uncore_pm_nb = {
- };
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index 3d66e1d4eb1f..8cfbf0bbd346 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -24,7 +24,7 @@
+ #define SPI_DEVFN_GOLDMONT	PCI_DEVFN(13, 2)
  
- static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_G,	NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,	NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D,	NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,	NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,	NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,	NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(ARROWLAKE, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(ARROWLAKE_H, NULL),
--	X86_MATCH_INTEL_FAM6_MODEL(LUNARLAKE_M, NULL),
-+	X86_MATCH_VFM(INTEL_BROADWELL_G,	NULL),
-+	X86_MATCH_VFM(INTEL_BROADWELL_X,	NULL),
-+	X86_MATCH_VFM(INTEL_BROADWELL_D,	NULL),
-+	X86_MATCH_VFM(INTEL_SKYLAKE_X,	NULL),
-+	X86_MATCH_VFM(INTEL_ICELAKE_X,	NULL),
-+	X86_MATCH_VFM(INTEL_ICELAKE_D,	NULL),
-+	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X, NULL),
-+	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X, NULL),
-+	X86_MATCH_VFM(INTEL_KABYLAKE, NULL),
-+	X86_MATCH_VFM(INTEL_KABYLAKE_L, NULL),
-+	X86_MATCH_VFM(INTEL_COMETLAKE, NULL),
-+	X86_MATCH_VFM(INTEL_COMETLAKE_L, NULL),
-+	X86_MATCH_VFM(INTEL_CANNONLAKE_L, NULL),
-+	X86_MATCH_VFM(INTEL_ICELAKE, NULL),
-+	X86_MATCH_VFM(INTEL_ICELAKE_L, NULL),
-+	X86_MATCH_VFM(INTEL_ROCKETLAKE, NULL),
-+	X86_MATCH_VFM(INTEL_TIGERLAKE, NULL),
-+	X86_MATCH_VFM(INTEL_TIGERLAKE_L, NULL),
-+	X86_MATCH_VFM(INTEL_ALDERLAKE, NULL),
-+	X86_MATCH_VFM(INTEL_ALDERLAKE_L, NULL),
-+	X86_MATCH_VFM(INTEL_RAPTORLAKE, NULL),
-+	X86_MATCH_VFM(INTEL_RAPTORLAKE_P, NULL),
-+	X86_MATCH_VFM(INTEL_RAPTORLAKE_S, NULL),
-+	X86_MATCH_VFM(INTEL_METEORLAKE, NULL),
-+	X86_MATCH_VFM(INTEL_METEORLAKE_L, NULL),
-+	X86_MATCH_VFM(INTEL_ARROWLAKE, NULL),
-+	X86_MATCH_VFM(INTEL_ARROWLAKE_H, NULL),
-+	X86_MATCH_VFM(INTEL_LUNARLAKE_M, NULL),
+ static const struct x86_cpu_id p2sb_cpu_ids[] = {
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT, P2SB_DEVFN_GOLDMONT),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT, P2SB_DEVFN_GOLDMONT),
  	{}
  };
- MODULE_DEVICE_TABLE(x86cpu, intel_uncore_cpu_ids);
+ 
 -- 
 2.44.0
 
