@@ -1,78 +1,79 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E49171E5F
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB2E172BBF
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714483180; cv=none; b=MluF4nY7UI23lnOg7imuGWCrA63olE+P5laW2DAx1zrsLKWuCRSMdeGiMGPyBs1ddx2TfcizaRwsV0tAx5ZhPS+IuLyA6bCbSgVr1RG/UvTXKvoAJAbIEEF1+e+mEQbzJ+9QQlfelRGonbdv8vsvbB/011+m4f4ry/yUSvXhWPw=
+	t=1714483183; cv=none; b=qZ45ce6rohJp6OQHGMF47VvgeauxaLCEimQw9YAGYacDRZMhMfsnEvRx/xAdR8OwKkDe0S4kuL173USfXEBQwJiOf5+lR9flSjhSfv+bfEvOUIdMaMnHAOQTFW7IMxROenL+LNc9iN5A2kiAoA3ptgA2ZkHenVttwHj7sWWJLT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714483180; c=relaxed/simple;
-	bh=nnJzm8T74bjJ2sBzbnniv95zAmpWRjbeC6PVsOH9sNE=;
+	s=arc-20240116; t=1714483183; c=relaxed/simple;
+	bh=C6Zn8VOHwXTgHLQaPeMnYxE2OulkefG+XkQTMoyYnpo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n/pVS/Ja1/HYYVXw1/u9biGUTQCmiPCBG9P71fTNykSRJfWsuh8CtqR5WEzCrsmY7RTOcayPQ8X9xJIfMkva0DLbmQKeOo5Uzf/NocGNaFQm2PET8qX3wOqEKMOiheP1G5WVkySa9blfEZrko+WbUX+fXlEnnXUmoJmakCv1QW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ow52n/2o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tZ9xmj9T; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ow52n/2o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tZ9xmj9T; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=YmsTmPX+voc8u+oVTWik5EuZ5FVcLOtB8BPiazTH02BUz/1szX2Sna6exGIN72HSifcfcsASYRkKzZeqkLBDYOflrPNxuvmo9Eq2q3uNJdptIwA6l+1iUndiZc+5knaMN7G9xGUUAlHT+GVJTfZSKMdpQ/aW7oiQ1tWlshxqKlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lYt3wGrT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YW3g6yvJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lYt3wGrT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YW3g6yvJ; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ow52n/2o";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tZ9xmj9T";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ow52n/2o";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tZ9xmj9T"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lYt3wGrT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YW3g6yvJ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lYt3wGrT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YW3g6yvJ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C6BED34067;
-	Tue, 30 Apr 2024 13:19:36 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E68CC3406F;
+	Tue, 30 Apr 2024 13:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714483176; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1714483178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Egnbg/DT6A5u2Qw0Nt3LBJd28TckgI7kfiP2XhNJy5g=;
-	b=ow52n/2oFtu02yz2vRtJnSihMASyHM9UIMzcy1kN6PtHx9Yqnq2eOl77vmm6Bx9Pfdmg/b
-	a0bsbU65IysmiMiPKdx2GJDx/gxrU1d0kLNtDyrAHvCyn1zdMqXlq9DQUpUTIdqEm3ME0O
-	FQ/H3qz8SB0PdEJZh+eVsLjMrE85Ve4=
+	bh=D5rUttiao1gfgHiNuULv3j0RH1kQuIhcL6vcbzvshaQ=;
+	b=lYt3wGrT8Fgv/Byww9jQhKoS1wZ2QJUuruYZsLj+dh+S3PET2l47ijL/TujEB2mwRAdhOi
+	6KFeAcGH6BYnqj9Xbi7HnBIAAdjTzgrjNrhK2HzBVDBqMBYCeZPlosAczMarh6RyZuJlP9
+	ALs81uj2apNenS9ourAbKt8W7o8HMVs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714483176;
+	s=susede2_ed25519; t=1714483178;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Egnbg/DT6A5u2Qw0Nt3LBJd28TckgI7kfiP2XhNJy5g=;
-	b=tZ9xmj9TECWwTe8+WDIr1DvQdkOz8v8o4e/dlGmRQtZJjPPEcLtx1zHIJMl2EIme2WjwCY
-	ttHLMY6AEEk24kCg==
+	bh=D5rUttiao1gfgHiNuULv3j0RH1kQuIhcL6vcbzvshaQ=;
+	b=YW3g6yvJEPm5Y3U3HAheci9Sv1O8U4Lz5jPkw7DtF88iByTsVA+5WqVRpKrzORicSv7SkZ
+	SbmbBefnwTLf4nDw==
 Authentication-Results: smtp-out1.suse.de;
-	none
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lYt3wGrT;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=YW3g6yvJ
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714483176; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1714483178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Egnbg/DT6A5u2Qw0Nt3LBJd28TckgI7kfiP2XhNJy5g=;
-	b=ow52n/2oFtu02yz2vRtJnSihMASyHM9UIMzcy1kN6PtHx9Yqnq2eOl77vmm6Bx9Pfdmg/b
-	a0bsbU65IysmiMiPKdx2GJDx/gxrU1d0kLNtDyrAHvCyn1zdMqXlq9DQUpUTIdqEm3ME0O
-	FQ/H3qz8SB0PdEJZh+eVsLjMrE85Ve4=
+	bh=D5rUttiao1gfgHiNuULv3j0RH1kQuIhcL6vcbzvshaQ=;
+	b=lYt3wGrT8Fgv/Byww9jQhKoS1wZ2QJUuruYZsLj+dh+S3PET2l47ijL/TujEB2mwRAdhOi
+	6KFeAcGH6BYnqj9Xbi7HnBIAAdjTzgrjNrhK2HzBVDBqMBYCeZPlosAczMarh6RyZuJlP9
+	ALs81uj2apNenS9ourAbKt8W7o8HMVs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714483176;
+	s=susede2_ed25519; t=1714483178;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Egnbg/DT6A5u2Qw0Nt3LBJd28TckgI7kfiP2XhNJy5g=;
-	b=tZ9xmj9TECWwTe8+WDIr1DvQdkOz8v8o4e/dlGmRQtZJjPPEcLtx1zHIJMl2EIme2WjwCY
-	ttHLMY6AEEk24kCg==
+	bh=D5rUttiao1gfgHiNuULv3j0RH1kQuIhcL6vcbzvshaQ=;
+	b=YW3g6yvJEPm5Y3U3HAheci9Sv1O8U4Lz5jPkw7DtF88iByTsVA+5WqVRpKrzORicSv7SkZ
+	SbmbBefnwTLf4nDw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B53EB133A7;
-	Tue, 30 Apr 2024 13:19:36 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D25D4133A7;
+	Tue, 30 Apr 2024 13:19:38 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jqfBKujvMGZzMAAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Tue, 30 Apr 2024 13:19:36 +0000
+	id GObnMervMGZ7MAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 30 Apr 2024 13:19:38 +0000
 From: Daniel Wagner <dwagner@suse.de>
 To: Christoph Hellwig <hch@lst.de>
 Cc: Keith Busch <kbusch@kernel.org>,
@@ -81,11 +82,10 @@ Cc: Keith Busch <kbusch@kernel.org>,
 	Hannes Reinecke <hare@suse.de>,
 	linux-nvme@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Hannes Reinecke <hare@kernel.org>,
 	Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v7 2/5] nvmet: return DHCHAP status codes from nvmet_setup_auth()
-Date: Tue, 30 Apr 2024 15:19:25 +0200
-Message-ID: <20240430131928.29766-3-dwagner@suse.de>
+Subject: [PATCH v7 5/5] nvme: do not retry authentication failures
+Date: Tue, 30 Apr 2024 15:19:28 +0200
+Message-ID: <20240430131928.29766-6-dwagner@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240430131928.29766-1-dwagner@suse.de>
 References: <20240430131928.29766-1-dwagner@suse.de>
@@ -97,303 +97,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Flag: NO
-X-Spam-Score: -2.80
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: E68CC3406F
 X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
+	MX_GOOD(-0.01)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
 	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email]
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:email]
 
-From: Hannes Reinecke <hare@kernel.org>
+When the key is invalid there is no point in retrying. Because the auth
+code returns kernel error codes only, we can't test on the DNR bit.
 
-A failure in nvmet_setup_auth() does not mean that the NVMe
-authentication command failed, so we should rather return a protocol
-error with a 'failure1' response than an NVMe status.
-
-Also update the type used for dhchap_step and dhchap_status to u8 to
-avoid confusions with nvme status. Furthermore, split dhchap_status and
-nvme status so we don't accidentally mix these return values.
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-[dwagner: - use u8 as type for dhchap_{step|status}
-          - separate nvme status from dhcap_status]
 Signed-off-by: Daniel Wagner <dwagner@suse.de>
 ---
- drivers/nvme/target/auth.c             | 20 +++++------
- drivers/nvme/target/fabrics-cmd-auth.c | 49 +++++++++++++-------------
- drivers/nvme/target/fabrics-cmd.c      | 11 +++---
- drivers/nvme/target/nvmet.h            |  8 ++---
- 4 files changed, 43 insertions(+), 45 deletions(-)
+ drivers/nvme/host/auth.c    | 6 +++---
+ drivers/nvme/host/fabrics.c | 6 ++++++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/target/auth.c b/drivers/nvme/target/auth.c
-index 9afc28f1ffac..53bf1a084469 100644
---- a/drivers/nvme/target/auth.c
-+++ b/drivers/nvme/target/auth.c
-@@ -126,12 +126,11 @@ int nvmet_setup_dhgroup(struct nvmet_ctrl *ctrl, u8 dhgroup_id)
- 	return ret;
- }
- 
--int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
-+u8 nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- {
- 	int ret = 0;
- 	struct nvmet_host_link *p;
- 	struct nvmet_host *host = NULL;
--	const char *hash_name;
- 
- 	down_read(&nvmet_config_sem);
- 	if (nvmet_is_disc_subsys(ctrl->subsys))
-@@ -149,13 +148,16 @@ int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- 	}
- 	if (!host) {
- 		pr_debug("host %s not found\n", ctrl->hostnqn);
--		ret = -EPERM;
-+		ret = NVME_AUTH_DHCHAP_FAILURE_FAILED;
- 		goto out_unlock;
- 	}
- 
- 	ret = nvmet_setup_dhgroup(ctrl, host->dhchap_dhgroup_id);
--	if (ret < 0)
-+	if (ret < 0) {
- 		pr_warn("Failed to setup DH group");
-+		ret = NVME_AUTH_DHCHAP_FAILURE_DHGROUP_UNUSABLE;
-+		goto out_unlock;
-+	}
- 
- 	if (!host->dhchap_secret) {
- 		pr_debug("No authentication provided\n");
-@@ -166,12 +168,6 @@ int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- 		pr_debug("Re-use existing hash ID %d\n",
- 			 ctrl->shash_id);
- 	} else {
--		hash_name = nvme_auth_hmac_name(host->dhchap_hash_id);
--		if (!hash_name) {
--			pr_warn("Hash ID %d invalid\n", host->dhchap_hash_id);
--			ret = -EINVAL;
--			goto out_unlock;
--		}
- 		ctrl->shash_id = host->dhchap_hash_id;
- 	}
- 
-@@ -180,7 +176,7 @@ int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- 	ctrl->host_key = nvme_auth_extract_key(host->dhchap_secret + 10,
- 					       host->dhchap_key_hash);
- 	if (IS_ERR(ctrl->host_key)) {
--		ret = PTR_ERR(ctrl->host_key);
-+		ret = NVME_AUTH_DHCHAP_FAILURE_NOT_USABLE;
- 		ctrl->host_key = NULL;
- 		goto out_free_hash;
- 	}
-@@ -198,7 +194,7 @@ int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- 	ctrl->ctrl_key = nvme_auth_extract_key(host->dhchap_ctrl_secret + 10,
- 					       host->dhchap_ctrl_key_hash);
- 	if (IS_ERR(ctrl->ctrl_key)) {
--		ret = PTR_ERR(ctrl->ctrl_key);
-+		ret = NVME_AUTH_DHCHAP_FAILURE_NOT_USABLE;
- 		ctrl->ctrl_key = NULL;
- 		goto out_free_hash;
- 	}
-diff --git a/drivers/nvme/target/fabrics-cmd-auth.c b/drivers/nvme/target/fabrics-cmd-auth.c
-index ee76491e8b12..cb34d644ed08 100644
---- a/drivers/nvme/target/fabrics-cmd-auth.c
-+++ b/drivers/nvme/target/fabrics-cmd-auth.c
-@@ -31,7 +31,7 @@ void nvmet_auth_sq_init(struct nvmet_sq *sq)
- 	sq->dhchap_step = NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE;
- }
- 
--static u16 nvmet_auth_negotiate(struct nvmet_req *req, void *d)
-+static u8 nvmet_auth_negotiate(struct nvmet_req *req, void *d)
- {
- 	struct nvmet_ctrl *ctrl = req->sq->ctrl;
- 	struct nvmf_auth_dhchap_negotiate_data *data = d;
-@@ -109,7 +109,7 @@ static u16 nvmet_auth_negotiate(struct nvmet_req *req, void *d)
- 	return 0;
- }
- 
--static u16 nvmet_auth_reply(struct nvmet_req *req, void *d)
-+static u8 nvmet_auth_reply(struct nvmet_req *req, void *d)
- {
- 	struct nvmet_ctrl *ctrl = req->sq->ctrl;
- 	struct nvmf_auth_dhchap_reply_data *data = d;
-@@ -172,7 +172,7 @@ static u16 nvmet_auth_reply(struct nvmet_req *req, void *d)
- 	return 0;
- }
- 
--static u16 nvmet_auth_failure2(void *d)
-+static u8 nvmet_auth_failure2(void *d)
- {
- 	struct nvmf_auth_dhchap_failure_data *data = d;
- 
-@@ -186,6 +186,7 @@ void nvmet_execute_auth_send(struct nvmet_req *req)
- 	void *d;
- 	u32 tl;
- 	u16 status = 0;
-+	u8 dhchap_status;
- 
- 	if (req->cmd->auth_send.secp != NVME_AUTH_DHCHAP_PROTOCOL_IDENTIFIER) {
- 		status = NVME_SC_INVALID_FIELD | NVME_SC_DNR;
-@@ -237,30 +238,32 @@ void nvmet_execute_auth_send(struct nvmet_req *req)
- 	if (data->auth_type == NVME_AUTH_COMMON_MESSAGES) {
- 		if (data->auth_id == NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE) {
- 			/* Restart negotiation */
--			pr_debug("%s: ctrl %d qid %d reset negotiation\n", __func__,
--				 ctrl->cntlid, req->sq->qid);
-+			pr_debug("%s: ctrl %d qid %d reset negotiation\n",
-+				 __func__, ctrl->cntlid, req->sq->qid);
- 			if (!req->sq->qid) {
--				if (nvmet_setup_auth(ctrl) < 0) {
--					status = NVME_SC_INTERNAL;
--					pr_err("ctrl %d qid 0 failed to setup"
--					       "re-authentication",
-+				dhchap_status = nvmet_setup_auth(ctrl);
-+				if (dhchap_status) {
-+					pr_err("ctrl %d qid 0 failed to setup re-authentication\n",
- 					       ctrl->cntlid);
--					goto done_failure1;
-+					req->sq->dhchap_status = dhchap_status;
-+					req->sq->dhchap_step =
-+						NVME_AUTH_DHCHAP_MESSAGE_FAILURE1;
-+					goto done_kfree;
- 				}
- 			}
--			req->sq->dhchap_step = NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE;
-+			req->sq->dhchap_step =
-+				NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE;
- 		} else if (data->auth_id != req->sq->dhchap_step)
- 			goto done_failure1;
- 		/* Validate negotiation parameters */
--		status = nvmet_auth_negotiate(req, d);
--		if (status == 0)
-+		dhchap_status = nvmet_auth_negotiate(req, d);
-+		if (dhchap_status == 0)
- 			req->sq->dhchap_step =
- 				NVME_AUTH_DHCHAP_MESSAGE_CHALLENGE;
- 		else {
- 			req->sq->dhchap_step =
- 				NVME_AUTH_DHCHAP_MESSAGE_FAILURE1;
--			req->sq->dhchap_status = status;
--			status = 0;
-+			req->sq->dhchap_status = dhchap_status;
- 		}
- 		goto done_kfree;
- 	}
-@@ -284,15 +287,14 @@ void nvmet_execute_auth_send(struct nvmet_req *req)
- 
- 	switch (data->auth_id) {
- 	case NVME_AUTH_DHCHAP_MESSAGE_REPLY:
--		status = nvmet_auth_reply(req, d);
--		if (status == 0)
-+		dhchap_status = nvmet_auth_reply(req, d);
-+		if (dhchap_status == 0)
- 			req->sq->dhchap_step =
- 				NVME_AUTH_DHCHAP_MESSAGE_SUCCESS1;
- 		else {
- 			req->sq->dhchap_step =
- 				NVME_AUTH_DHCHAP_MESSAGE_FAILURE1;
--			req->sq->dhchap_status = status;
--			status = 0;
-+			req->sq->dhchap_status = dhchap_status;
- 		}
- 		goto done_kfree;
- 	case NVME_AUTH_DHCHAP_MESSAGE_SUCCESS2:
-@@ -301,13 +303,12 @@ void nvmet_execute_auth_send(struct nvmet_req *req)
- 			 __func__, ctrl->cntlid, req->sq->qid);
- 		goto done_kfree;
- 	case NVME_AUTH_DHCHAP_MESSAGE_FAILURE2:
--		status = nvmet_auth_failure2(d);
--		if (status) {
-+		dhchap_status = nvmet_auth_failure2(d);
-+		if (dhchap_status) {
- 			pr_warn("ctrl %d qid %d: authentication failed (%d)\n",
--				ctrl->cntlid, req->sq->qid, status);
--			req->sq->dhchap_status = status;
-+				ctrl->cntlid, req->sq->qid, dhchap_status);
-+			req->sq->dhchap_status = dhchap_status;
- 			req->sq->authenticated = false;
--			status = 0;
- 		}
- 		goto done_kfree;
- 	default:
-diff --git a/drivers/nvme/target/fabrics-cmd.c b/drivers/nvme/target/fabrics-cmd.c
-index f6714453b8bb..69d77d34bec1 100644
---- a/drivers/nvme/target/fabrics-cmd.c
-+++ b/drivers/nvme/target/fabrics-cmd.c
-@@ -211,7 +211,7 @@ static void nvmet_execute_admin_connect(struct nvmet_req *req)
- 	struct nvmf_connect_data *d;
- 	struct nvmet_ctrl *ctrl = NULL;
- 	u16 status;
--	int ret;
-+	u8 dhchap_status;
- 
- 	if (!nvmet_check_transfer_len(req, sizeof(struct nvmf_connect_data)))
+diff --git a/drivers/nvme/host/auth.c b/drivers/nvme/host/auth.c
+index a264b3ae078b..371e14f0a203 100644
+--- a/drivers/nvme/host/auth.c
++++ b/drivers/nvme/host/auth.c
+@@ -730,7 +730,7 @@ static void nvme_queue_auth_work(struct work_struct *work)
+ 					 NVME_AUTH_DHCHAP_MESSAGE_CHALLENGE);
+ 	if (ret) {
+ 		chap->status = ret;
+-		chap->error = -ECONNREFUSED;
++		chap->error = -EKEYREJECTED;
  		return;
-@@ -251,11 +251,12 @@ static void nvmet_execute_admin_connect(struct nvmet_req *req)
+ 	}
  
- 	uuid_copy(&ctrl->hostid, &d->hostid);
+@@ -797,7 +797,7 @@ static void nvme_queue_auth_work(struct work_struct *work)
+ 					 NVME_AUTH_DHCHAP_MESSAGE_SUCCESS1);
+ 	if (ret) {
+ 		chap->status = ret;
+-		chap->error = -ECONNREFUSED;
++		chap->error = -EKEYREJECTED;
+ 		return;
+ 	}
  
--	ret = nvmet_setup_auth(ctrl);
--	if (ret < 0) {
--		pr_err("Failed to setup authentication, error %d\n", ret);
-+	dhchap_status = nvmet_setup_auth(ctrl);
-+	if (dhchap_status) {
-+		pr_err("Failed to setup authentication, dhchap status %u\n",
-+		       dhchap_status);
- 		nvmet_ctrl_put(ctrl);
--		if (ret == -EPERM)
-+		if (dhchap_status == NVME_AUTH_DHCHAP_FAILURE_FAILED)
- 			status = (NVME_SC_CONNECT_INVALID_HOST | NVME_SC_DNR);
- 		else
- 			status = NVME_SC_INTERNAL;
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 257cace53924..5d6adb5c2fc0 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -113,8 +113,8 @@ struct nvmet_sq {
- 	bool			authenticated;
- 	struct delayed_work	auth_expired_work;
- 	u16			dhchap_tid;
--	u16			dhchap_status;
--	int			dhchap_step;
-+	u8			dhchap_status;
-+	u8			dhchap_step;
- 	u8			*dhchap_c1;
- 	u8			*dhchap_c2;
- 	u32			dhchap_s1;
-@@ -721,7 +721,7 @@ void nvmet_execute_auth_receive(struct nvmet_req *req);
- int nvmet_auth_set_key(struct nvmet_host *host, const char *secret,
- 		       bool set_ctrl);
- int nvmet_auth_set_host_hash(struct nvmet_host *host, const char *hash);
--int nvmet_setup_auth(struct nvmet_ctrl *ctrl);
-+u8 nvmet_setup_auth(struct nvmet_ctrl *ctrl);
- void nvmet_auth_sq_init(struct nvmet_sq *sq);
- void nvmet_destroy_auth(struct nvmet_ctrl *ctrl);
- void nvmet_auth_sq_free(struct nvmet_sq *sq);
-@@ -740,7 +740,7 @@ int nvmet_auth_ctrl_exponential(struct nvmet_req *req,
- int nvmet_auth_ctrl_sesskey(struct nvmet_req *req,
- 			    u8 *buf, int buf_size);
- #else
--static inline int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
-+static inline u8 nvmet_setup_auth(struct nvmet_ctrl *ctrl)
+@@ -818,7 +818,7 @@ static void nvme_queue_auth_work(struct work_struct *work)
+ 	ret = nvme_auth_process_dhchap_success1(ctrl, chap);
+ 	if (ret) {
+ 		/* Controller authentication failed */
+-		chap->error = -ECONNREFUSED;
++		chap->error = -EKEYREJECTED;
+ 		goto fail2;
+ 	}
+ 
+diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
+index 36d3e2ff27f3..c6ad2148c2e0 100644
+--- a/drivers/nvme/host/fabrics.c
++++ b/drivers/nvme/host/fabrics.c
+@@ -567,12 +567,18 @@ EXPORT_SYMBOL_GPL(nvmf_connect_io_queue);
+  *
+  * - the DNR bit is set and the specification states no further connect
+  *   attempts with the same set of paramenters should be attempted.
++ *
++ * - when the authentication attempt fails, because the key was invalid.
++ *   This error code is set on the host side.
+  */
+ bool nvmf_should_reconnect(struct nvme_ctrl *ctrl, int status)
  {
- 	return 0;
- }
+ 	if (status > 0 && (status & NVME_SC_DNR))
+ 		return false;
+ 
++	if (status == -EKEYREJECTED)
++		return false;
++
+ 	if (ctrl->opts->max_reconnects == -1 ||
+ 	    ctrl->nr_reconnects < ctrl->opts->max_reconnects)
+ 		return true;
 -- 
 2.44.0
 
