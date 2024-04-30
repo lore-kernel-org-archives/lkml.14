@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C2F1BED72;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942AE1BED6D;
 	Tue, 30 Apr 2024 21:41:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714513281; cv=none; b=tKhl29IidyCP+0D+T+YKCiGRoEJcbhrZTIFJeNniI5e+7P2G1q4FQIdxH3xVTkKK7FJfvKS3TOeHkxnVwZwyznf1l2p4Xse2LQ0rm0lvEmPHGOAWcZbdCySNU0wEpDoP7AqeFF5rZfiRJ7T/xfZ8jIuH2ehhhyERQJtp0EV5cjI=
+	t=1714513282; cv=none; b=JuxuP4wiiQzz6kqcPMzz9l+v9GdngqtKNgEoYoOvBmX7cXXmBjDFSGZOZmNFQ2uvEg2fszfeEgKZDzGXNGZeN25fS7JtBFqIW692T/GXI7D9NnYYV6dsBtz8ZMyLnlXVOLYSpRoX2TbZu/XUYbufuYir3TlvO+1aKr/azcWQmec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714513281; c=relaxed/simple;
-	bh=x7Ol+/+g8MWI3KkMdPC4Pmi13hhCIxwJQ+316xO7RcI=;
+	s=arc-20240116; t=1714513282; c=relaxed/simple;
+	bh=PTZpohI08U4VqJLNYyA6wzPE2YPghuHCUzUfnzQcpMc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qUlnFqOIYjbycesd+C6FKmvBEYVW7oJCOZ6cVBV9+Olz3MWKw+7w1Ih8XAsH/iuFFxNkImHf4jT+JB0mWd34H3TIjJ5Obuo4bWtxef0anzUblPSBU8ujzfIhoYGHF7n1cIqnLsIV/sRdUaBbS03X/P5vBh4DCopkasXgTSanwtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X3PZEtef; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=uv95/fIObPkZlN2z9W1on4xcuMc4qPH9IV6wRMc56b+Zsjs8H3wr35UVrfo1GSCS+eJT0BPBDO9LxHzu/eYecNzhMVZF1S2EyDJHmZ+4CqRTEqq6GG8r9KoQpuUYQKFXOAuzsqgPGmrAF84AKvz7HSGeeWrmpUarosYTZ1xQhQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m2sjxXgD; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X3PZEtef"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m2sjxXgD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1714513280; x=1746049280;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=x7Ol+/+g8MWI3KkMdPC4Pmi13hhCIxwJQ+316xO7RcI=;
-  b=X3PZEtefjIB5pZ4D/cGC0wdKUaLQD4fvCRwGYjkv6+HGcIQQyQ6pRyGn
-   a3q0MIRgD9QU3UoCOktyku13K/nJSm2e/3LZfTyEXm1ZnIx7An8FUqaaI
-   J8oWC9txNVkTodXfpP0TKLGmZzkIGw0LjcRN5T3xoUSuMbexLYgnUVkRi
-   pY/DeG3eDpYWIVX1fno2Kd3nxyr8bx8LY4DHpowfiDqLgyGtChnw+ELiK
-   byXdAfQZdWlg9rdMxQjdO+wbPcNlw+Y5zrq5A8U9w5w887tPCudaZ5T+j
-   U72PScvvVCSM0QihcyuOG3DWoairr6470AIcvrZFHPhQ8CxhxpNDNt+Jh
-   A==;
-X-CSE-ConnectionGUID: Gl+b9rkJTPaYUzPpwwvRJw==
-X-CSE-MsgGUID: OTOfVkqESimO5Mp6vyBkNw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="14023068"
+  bh=PTZpohI08U4VqJLNYyA6wzPE2YPghuHCUzUfnzQcpMc=;
+  b=m2sjxXgDOiPIwcNNL5rhVCftthbTgKecq8BACpb+EsMpCHpyzEywzpGo
+   SMUni9AERnr10waMIklyuEeGYqkRDgum13FuYi/tA/WYc1buNLYVhLxYC
+   DCVU0t2wFE+oo452N56drIaW91e/0uKwl1Q93nKOEWx3eqhpvHqcwAa9w
+   kOUX3UGkotqtZ/jFdjQXBeT6M9/NFn3Pn2brOvOF2Y4IvZCbEYetUAT7D
+   v0KPHTqmmhe9Mnzn53sKFQ1VAG23HYd9NeNR2OeeMng0+lQDrI5wscqt+
+   /FyzYIenqWmIBUvJn1O4jMhvvmi59/CkLX3hLifpWs3UdbG6/CEAluTqd
+   g==;
+X-CSE-ConnectionGUID: aURfvLmATl2aXBt62+P9Zw==
+X-CSE-MsgGUID: Rnrsm3HpSuOWuEQEuKe6Bw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="14023059"
 X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
-   d="scan'208";a="14023068"
+   d="scan'208";a="14023059"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 14:41:19 -0700
-X-CSE-ConnectionGUID: BcMoaQbpRk2UsSYVt72q+Q==
-X-CSE-MsgGUID: ey6uZY7xQGm4lU/ZlAi9mw==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 14:41:18 -0700
+X-CSE-ConnectionGUID: udkPZf87Ssy5uirRfe0Kdg==
+X-CSE-MsgGUID: kXfKgquQRsel4DEzkXv9Bw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
-   d="scan'208";a="26693375"
+   d="scan'208";a="26693371"
 Received: from chang-linux-3.sc.intel.com ([172.25.66.175])
-  by fmviesa006.fm.intel.com with ESMTP; 30 Apr 2024 14:41:19 -0700
+  by fmviesa006.fm.intel.com with ESMTP; 30 Apr 2024 14:41:17 -0700
 From: "Chang S. Bae" <chang.seok.bae@intel.com>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org,
@@ -57,9 +57,9 @@ Cc: x86@kernel.org,
 	ashok.raj@intel.com,
 	jithu.joseph@intel.com,
 	chang.seok.bae@intel.com
-Subject: [PATCH 2/2] platform/x86/intel/ifs: Initialize AMX state for the scan test
-Date: Tue, 30 Apr 2024 14:25:08 -0700
-Message-Id: <20240430212508.105117-3-chang.seok.bae@intel.com>
+Subject: [PATCH 1/2] x86/fpu: Extend kernel_fpu_begin_mask() to initialize AMX state
+Date: Tue, 30 Apr 2024 14:25:07 -0700
+Message-Id: <20240430212508.105117-2-chang.seok.bae@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240430212508.105117-1-chang.seok.bae@intel.com>
 References: <20240430212508.105117-1-chang.seok.bae@intel.com>
@@ -71,74 +71,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The scan test does not start when the AMX state remains active and is not
-re-initialized. With the extension of kernel_fpu_begin_mask(), the driver
-code can now initialize the state properly.
+The In-Field Scan [1] test does not start its operation when the CPU is
+unprepared. If the AMX state is uninitialized, the scan test will
+immediately terminate. Therefore, a proper initialization of the AMX
+state is necessary to run the test.
 
-Introduce custom FPU handling wrappers to ensure compliant with the
-established FPU API semantics, as kernel_fpu_begin() exclusively sets
-legacy states. This follows the EFI case from commit b0dc553cfc9d
-("x86/fpu: Make the EFI FPU calling convention explicit").
+Although fpu_idle_fpregs() initializes the state, its usage should be
+limited to specialized cases, primarily before entering the sleep state.
+The restore_fpregs_from_fpstate() function offers a suitable mechanism
+for initializing fpstate in general, which remains within the core code.
 
-Then, use these wrappers to surround the MSR_ACTIVATE_SCAN write to
-minimize the critical section. To prevent unnecessary delays, invoke
-ifs_fpu_begin() before entering the rendezvous loop.
+Extend kernel_fpu_begin_mask() to include AMX state initialization,
+providing the in-field scan driver code access to the appropriate
+initialization method while maintaining compliance with established FPU
+API semantics.
 
+[1] https://docs.kernel.org/arch/x86/ifs.html
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Reviewed-by: Jithu Joseph <jithu.joseph@intel.com>
-Tested-by: Jithu Joseph <jithu.joseph@intel.com>
 ---
- drivers/platform/x86/intel/ifs/ifs.h     | 14 ++++++++++++++
- drivers/platform/x86/intel/ifs/runtest.c |  6 ++++++
- 2 files changed, 20 insertions(+)
+The necessity for AMX initialization is clarified in the Intel Software
+Development Manual as of March 2024, particularly in Section 18.2
+RECOMMENDATIONS FOR SYSTEM SOFTWARE of Vol. 1.
 
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index 56b9f3e3cf76..71d8b50854b2 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -325,4 +325,18 @@ int do_core_test(int cpu, struct device *dev);
- extern struct attribute *plat_ifs_attrs[];
- extern struct attribute *plat_ifs_array_attrs[];
+Side note: restore_fpregs_from_fpstate() also sets the x87 state to a
+fixed value. However, this only applies to AMD CPUs with the FXSAVE_LEAK
+quirk.
+---
+ arch/x86/include/asm/fpu/api.h | 1 +
+ arch/x86/kernel/fpu/core.c     | 3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
+index a2be3aefff9f..67887fc45c24 100644
+--- a/arch/x86/include/asm/fpu/api.h
++++ b/arch/x86/include/asm/fpu/api.h
+@@ -25,6 +25,7 @@
+ /* Kernel FPU states to initialize in kernel_fpu_begin_mask() */
+ #define KFPU_387	_BITUL(0)	/* 387 state will be initialized */
+ #define KFPU_MXCSR	_BITUL(1)	/* MXCSR will be initialized */
++#define KFPU_AMX	_BITUL(2)	/* AMX will be initialized */
  
-+static inline void ifs_fpu_begin(void)
-+{
-+	/*
-+	 * The AMX state must be initialized prior to executing In-Field
-+	 * Scan tests, according to Intel SDM.
-+	 */
-+	kernel_fpu_begin_mask(KFPU_AMX);
-+}
-+
-+static inline void ifs_fpu_end(void)
-+{
-+	kernel_fpu_end();
-+}
-+
- #endif
-diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-index 95b4b71fab53..a35eac7c0b44 100644
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -188,6 +188,9 @@ static int doscan(void *data)
- 	/* Only the first logical CPU on a core reports result */
- 	first = cpumask_first(cpu_smt_mask(cpu));
+ extern void kernel_fpu_begin_mask(unsigned int kfpu_mask);
+ extern void kernel_fpu_end(void);
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 520deb411a70..0c0235b4a901 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -440,6 +440,9 @@ void kernel_fpu_begin_mask(unsigned int kfpu_mask)
  
-+	/* Prepare FPU state before entering the rendezvous loop*/
-+	ifs_fpu_begin();
+ 	if (unlikely(kfpu_mask & KFPU_387) && boot_cpu_has(X86_FEATURE_FPU))
+ 		asm volatile ("fninit");
 +
- 	wait_for_sibling_cpu(&scan_cpus_in, NSEC_PER_SEC);
++	if (unlikely(kfpu_mask & KFPU_AMX) && boot_cpu_has(X86_FEATURE_AMX_TILE))
++		restore_fpregs_from_fpstate(&init_fpstate, XFEATURE_MASK_XTILE);
+ }
+ EXPORT_SYMBOL_GPL(kernel_fpu_begin_mask);
  
- 	/*
-@@ -199,6 +202,9 @@ static int doscan(void *data)
- 	 * are processed in a single pass) before it retires.
- 	 */
- 	wrmsrl(MSR_ACTIVATE_SCAN, params->activate->data);
-+
-+	ifs_fpu_end();
-+
- 	rdmsrl(MSR_SCAN_STATUS, status.data);
- 
- 	trace_ifs_status(ifsd->cur_batch, start, stop, status.data);
 -- 
 2.34.1
 
