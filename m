@@ -1,90 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC259182C3;
-	Tue, 30 Apr 2024 20:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1755199E9B;
+	Tue, 30 Apr 2024 20:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714507821; cv=none; b=BAipFtDjk+jCJsVJbptCpSZhRoqbO028Jp40kTpTqcgsKGGdCYDYXNabUE4VkjbGLl4f0kAemB5diy2n8PmrID0xfxiMDQuM7lijUUeif8niIBh5w6NuelpvFip7AjC/IdoDMuoQrJeAyl5JGB+gxvMT2iI1+QLTvSLe+/vmGow=
+	t=1714507920; cv=none; b=mb5ZnCr8rBqZOI1RL7cUTERU+r4KBO+g1ek4bJZg+RVbNzJvEjI+FlWvS4K9o3c8DyaPtXD+tt0NWy7R7o7SB81gu+9hI8oGSXcgkIVu0G7SSofPfajY0C0oQJN2rCSRuPgUlvNC2nGzq3E/oLuBvNKJYmXFz4y7ibxH7moTohQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714507821; c=relaxed/simple;
-	bh=58CBaYeu4exH4ljqyrgLewfHjjrJsr+lwEV4eBnRRBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g75nd/95qxcb3wizd6G3VGiJ6SNr0k8mzVW4viBbOMPRAY3hIBo7Rpc9LL7dJMe0Ea73x5G7gtQe/83tJCQQVdDBgxQVj3aKNCEYIf8wp/XiwkyMgLazT8UuWKLeXQC9xLQrDfrZ/BnfaVIynXr96XETMy7nzCA2cq5D5CkIoZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WImPU34v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714507920; c=relaxed/simple;
+	bh=US6PgPuYBkBHBzzJOfK04Hwg/abY8CZ7Jk3Z2bpKCqs=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HXbtt5H8oeU09DNTnTnPVUYIAGaJLeDST03LgvTXaDpL+wcYp05BdiLQaVgOj6MMH2PQzckZZtUt0CTbqqTiX/PBlwBUR9lSlJq06YaN639Z10e0Z3hLr0thiZZI8pwf0WB9ul2+Bqm9MT/JIiKdKs1PNqUKYsatog0zJmThQEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LxBjMBR1; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WImPU34v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C0CC2BBFC;
-	Tue, 30 Apr 2024 20:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714507821;
-	bh=58CBaYeu4exH4ljqyrgLewfHjjrJsr+lwEV4eBnRRBY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WImPU34vi9oog0mmRTYwMKyo1ISHKsDV6YPWI+6u3+xUXQD8qpYdkh3C/41+D6CJw
-	 k6UKJmZXrLyk5BK2449OfE1cJpyzZgF9BxLmxWHNjFuDNGZudLuAXQSJKMr8FdYCQV
-	 cIEig5Y9rFDOqmC2AJQLvqY3T39W804ABIfyx3tLU0gZeu1lre7MEyjzk+57HmK9OT
-	 mYlEXGZh2NVuCp9T1OIwqLDSqmZV580TjPigcNNiN6CtS4oF6eVQHiZ3WNf0YPsEbu
-	 W4pzjqjzlUQ7Y9m+2ZqyTh7DDtM1ly32OG7YCKWgtLAsuBKB4WT4rvc+6gb628z1ZP
-	 H8aC6Gjk+siug==
-Date: Tue, 30 Apr 2024 21:08:44 +0100
-From: Simon Horman <horms@kernel.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	Felix Fietkau <nbd@nbd.name>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Landen Chao <Landen.Chao@mediatek.com>, devicetree@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net] net: dsa: mt7530: fix impossible MDIO address and
- issue warning
-Message-ID: <20240430200844.GE2575892@kernel.org>
-References: <e615351aefba25e990215845e4812e6cb8153b28.1714433716.git.daniel@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LxBjMBR1"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43UK2Xpa007507;
+	Tue, 30 Apr 2024 20:11:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=yBhQkttHnEyL5cv2acTqp19DVPXSx5tGvkMc8RzjqEA=;
+ b=LxBjMBR1WhMCimHmYhDo6ZYa3DBTOr6EYmh2Ts3p1cRnWXa/gzQHIjwqhI5xl4kqglJj
+ C89i8ff/eBHBPmN5vkvdxElIPUoZOMAJRbyV6kYg3ioFyCVpT9eLQG7mvDoMn7DRh8JS
+ GdCg3SQVCwEFTknfRUjxTh3ag0vtz+y8eHQepodRCtcZQmSTeA8kWIMQ/LDjeRF2NX2a
+ X6KZSuad6UQXgmGsc1QoNWvPW+ldr4ZcwQAw8GnzcKnTL2eSqSU/Rxl7vVNDB7tC7/M3
+ djj2l0Rgctu2yo1OTnWdSUY9wp/iem6rN2hPoiADs72TZM5HISTDqlXGnY0xxCHlm7l2 LQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xu7aw80ry-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 20:11:41 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43UKBfVm020065;
+	Tue, 30 Apr 2024 20:11:41 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xu7aw80ru-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 20:11:41 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43UGtH7m003210;
+	Tue, 30 Apr 2024 20:06:39 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xscppey66-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 20:06:39 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43UK6XCw50659668
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Apr 2024 20:06:35 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C204B20043;
+	Tue, 30 Apr 2024 20:06:33 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6B80D20040;
+	Tue, 30 Apr 2024 20:06:30 +0000 (GMT)
+Received: from ltcd48-lp2.aus.stglabs.ibm.com (unknown [9.3.101.175])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 30 Apr 2024 20:06:30 +0000 (GMT)
+Subject: [RFC PATCH v2 4/6] vfio/spapr: Always clear TCEs before unsetting the
+ window
+From: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+To: mpe@ellerman.id.au, tpearson@raptorengineering.com,
+        alex.williamson@redhat.com, linuxppc-dev@lists.ozlabs.org, aik@amd.com
+Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
+        naveen.n.rao@linux.ibm.com, gbatra@linux.vnet.ibm.com,
+        brking@linux.vnet.ibm.com, sbhat@linux.ibm.com, aik@ozlabs.ru,
+        jgg@ziepe.ca, ruscur@russell.cc, robh@kernel.org,
+        linux-kernel@vger.kernel.org, joel@jms.id.au, kvm@vger.kernel.org,
+        msuchanek@suse.de, oohall@gmail.com, mahesh@linux.ibm.com,
+        jroedel@suse.de, vaibhav@linux.ibm.com, svaidy@linux.ibm.com
+Date: Tue, 30 Apr 2024 15:06:29 -0500
+Message-ID: <171450758612.10851.13609092281484392070.stgit@linux.ibm.com>
+In-Reply-To: <171450753489.10851.3056035705169121613.stgit@linux.ibm.com>
+References: <171450753489.10851.3056035705169121613.stgit@linux.ibm.com>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e615351aefba25e990215845e4812e6cb8153b28.1714433716.git.daniel@makrotopia.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: v2Ee3IWtSfGXxFnGrk9v1eDWCkNWoWr8
+X-Proofpoint-GUID: w1ScwEyd33lLBSZOVCzp4v6AovvoB6ET
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-30_12,2024-04-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ spamscore=0 impostorscore=0 mlxscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxlogscore=862 suspectscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404300145
 
-On Tue, Apr 30, 2024 at 12:45:46AM +0100, Daniel Golle wrote:
-> The MDIO address of the MT7530 and MT7531 switch ICs can be configured
-> using bootstrap pins. However, there are only 4 possible options for the
-> switch itself: 7, 15, 23 and 31 (ie. only 3 and 4 can be configured, bit
-> 0~2 are always 111). Practically all boards known as of today use the
-> default setting which is to have the switch respond to address 31, while
-> the built-in switch PHYs respond to address 0~4 in this case.
-> 
-> However, even in MediaTek's SDK the address of the switch is wrongly
-> stated in the device trees as 0 (while in reality it is 31), so warn the
-> user about such broken device tree and make a good guess what was
-> actually intended.
-> 
-> This is imporant to not break compatibility with older Device Trees as
-> with commit 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY address of
-> switch from device tree") the address in device tree will be taken into
-> account. Doing so instead of assuming the switch is always at
-> address 31 which was previously hard-coded will obviously break things
-> for many existing downstream device trees as they contain the wrong
-> address (0) which previously didn't matter.
-> 
-> Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+The PAPR expects the TCE table to have no entries at the time of
+unset window(i.e. remove-pe). The TCE clear right now is done
+before freeing the iommu table. On pSeries, the unset window
+makes those entries inaccessible to the OS and the H_PUT/GET calls
+fail on them with H_CONSTRAINED.
 
-The cited commit is present in net-next but not net.
-So I think this patch should target net-next.
+On PowerNV, this has no side effect as the TCE clear can be done
+before the DMA window removal as well.
 
-...
+Signed-off-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+---
+ drivers/vfio/vfio_iommu_spapr_tce.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
+index a94ec6225d31..5f9e7e477078 100644
+--- a/drivers/vfio/vfio_iommu_spapr_tce.c
++++ b/drivers/vfio/vfio_iommu_spapr_tce.c
+@@ -364,7 +364,6 @@ static void tce_iommu_release(void *iommu_data)
+ 		if (!tbl)
+ 			continue;
+ 
+-		tce_iommu_clear(container, tbl, tbl->it_offset, tbl->it_size);
+ 		tce_iommu_free_table(container, tbl);
+ 	}
+ 
+@@ -720,6 +719,8 @@ static long tce_iommu_remove_window(struct tce_container *container,
+ 
+ 	BUG_ON(!tbl->it_size);
+ 
++	tce_iommu_clear(container, tbl, tbl->it_offset, tbl->it_size);
++
+ 	/* Detach groups from IOMMUs */
+ 	list_for_each_entry(tcegrp, &container->group_list, next) {
+ 		table_group = iommu_group_get_iommudata(tcegrp->grp);
+@@ -738,7 +739,6 @@ static long tce_iommu_remove_window(struct tce_container *container,
+ 	}
+ 
+ 	/* Free table */
+-	tce_iommu_clear(container, tbl, tbl->it_offset, tbl->it_size);
+ 	tce_iommu_free_table(container, tbl);
+ 	container->tables[num] = NULL;
+ 
+@@ -1197,9 +1197,14 @@ static void tce_iommu_release_ownership(struct tce_container *container,
+ 		return;
+ 	}
+ 
+-	for (i = 0; i < IOMMU_TABLE_GROUP_MAX_TABLES; ++i)
+-		if (container->tables[i])
++	for (i = 0; i < IOMMU_TABLE_GROUP_MAX_TABLES; ++i) {
++		if (container->tables[i]) {
++			tce_iommu_clear(container, container->tables[i],
++					container->tables[i]->it_offset,
++					container->tables[i]->it_size);
+ 			table_group->ops->unset_window(table_group, i);
++		}
++	}
+ }
+ 
+ static long tce_iommu_take_ownership(struct tce_container *container,
+
+
