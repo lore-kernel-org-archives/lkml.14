@@ -1,168 +1,205 @@
-Received: from nbd.name (nbd.name [46.4.11.11])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A09129A7B;
-	Tue, 30 Apr 2024 10:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2502913D240
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 10:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714472868; cv=none; b=Lu/I7gYi6+A4zjhBovp9sdib8lljtseQ1esWXlkZqjBiwegV8sB1Sp41S5S/tLsqXvy9XMFG3MR+LeF6+SeKxD003qSMcsWvh8VaS/cRfyQM5GxM/pYLDD8ARmLNEaOwI41wvITe3VmGdFkZfkdeRMvxgAsJd4ypsqiSDlQMenw=
+	t=1714472900; cv=none; b=s+KiXUleTxc+WL5vpOZENROvBd1g0Y5YXtjv8WbcCxyJUxn28bWg+QqsEy07MMMIniJqWZa4W17lfgUVVWw4j/idoE7pHB4MiBadhJZudI0/GH4TSTFDNzaK1eIdNMIB2oImUozTumVLiQFk5+vFAoEuNN5dExjOzsiR90xYwlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714472868; c=relaxed/simple;
-	bh=qrAZSPLY9V2e06HjvA6dDash3QU5DWCWBNfcSaTwLlk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j/4lqDFI5d5ZebB9j/CaDGUmXb7OHuBdwAIV5/k+dtmX9XaDVMQ/l4tGCWpURnIqWmIWrdpJcE67uh4CxYcYc5BMzSXJlSXOGuwMTibM4ExeNtPkpbT5rNbj5wg+Djv4h1lUTvEOM6ymZ8+wVs0OaLH51Ar0wwmSEwiOG/dXeDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=eMII8GUm; arc=none smtp.client-ip=46.4.11.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="eMII8GUm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=m9GOdwLtpGgxawicx0NC7KEnv3fWXOtUkoh5EDjZVXU=; b=eMII8GUmErLDjMspTFvaSuFQ8F
-	lvhUXbYeHhp2ihgR5wtRfChJ9L4wEiZ3K2AAwDjDCztrpWzqad3Umva32I0nlpQbwxt4RL7QzK5Mb
-	aHug0jQawIytTEU+2cQWYmTOY1R792jBUe3mDEbDGlpuUnwCE0NlrKmVggK9ugjs0w/c=;
-Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=nf.local)
-	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <nbd@nbd.name>)
-	id 1s1ki4-00AEZo-32;
-	Tue, 30 Apr 2024 12:27:41 +0200
-Message-ID: <9e686cb4-ed1f-4886-a0b7-328367e62757@nbd.name>
-Date: Tue, 30 Apr 2024 12:27:40 +0200
+	s=arc-20240116; t=1714472900; c=relaxed/simple;
+	bh=17TzqhMYzGeft7fLUsMzLJTT61KYGgxRAOmEk0hDiTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=htMkJ6XvMTg1+Tqe/Ib13m5HCsHpQbzhrPzxfgpkjSCPxrOELpw3kx68Ts9KVxNOor7/NbGY8bjXmgCrsQGPger3+LuNYUuvIG1Tfo1fcQanMNsKfQFHWTmBzlsN62RUt32tBsYM18LBXxr6FZGp+gkUTKDaL3swsEao4fytdCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1s1kiT-00011g-Lh; Tue, 30 Apr 2024 12:28:05 +0200
+Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1s1kiS-00F92s-3T; Tue, 30 Apr 2024 12:28:04 +0200
+Received: from pengutronix.de (unknown [172.20.34.65])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 0D24D2C4A51;
+	Tue, 30 Apr 2024 09:10:59 +0000 (UTC)
+Date: Tue, 30 Apr 2024 11:10:58 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Vitor Soares <ivitro@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Thomas Kopp <thomas.kopp@microchip.com>, Wolfgang Grandegger <wg@grandegger.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Vitor Soares <vitor.soares@toradex.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3] can: mcp251xfd: fix infinite loop when xmit fails
+Message-ID: <20240430-curassow-of-improbable-poetry-1611f8-mkl@pengutronix.de>
+References: <20240311121143.306403-1-ivitro@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 net-next v4 2/6] net: add support for segmenting TCP
- fraglist GSO packets
-To: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
- David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: willemdebruijn.kernel@gmail.com, linux-kernel@vger.kernel.org
-References: <20240427182305.24461-1-nbd@nbd.name>
- <20240427182305.24461-3-nbd@nbd.name>
- <a20a0f0479cedc7f2f6abaf26e46ca7642e70958.camel@redhat.com>
-Content-Language: en-US
-From: Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
- cL98efvrjdstUfTCP2pfetyN
-In-Reply-To: <a20a0f0479cedc7f2f6abaf26e46ca7642e70958.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kyt4gwwqp74cbnux"
+Content-Disposition: inline
+In-Reply-To: <20240311121143.306403-1-ivitro@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 30.04.24 12:19, Paolo Abeni wrote:
-> On Sat, 2024-04-27 at 20:22 +0200, Felix Fietkau wrote:
->> Preparation for adding TCP fraglist GRO support. It expects packets to be
->> combined in a similar way as UDP fraglist GSO packets.
->> For IPv4 packets, NAT is handled in the same way as UDP fraglist GSO.
->> 
->> Signed-off-by: Felix Fietkau <nbd@nbd.name>
->> ---
->>  net/ipv4/tcp_offload.c   | 67 ++++++++++++++++++++++++++++++++++++++++
->>  net/ipv6/tcpv6_offload.c | 58 ++++++++++++++++++++++++++++++++++
->>  2 files changed, 125 insertions(+)
->> 
->> diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
->> index fab0973f995b..affd4ed28cfe 100644
->> --- a/net/ipv4/tcp_offload.c
->> +++ b/net/ipv4/tcp_offload.c
->> @@ -28,6 +28,70 @@ static void tcp_gso_tstamp(struct sk_buff *skb, unsigned int ts_seq,
->>  	}
->>  }
->>  
->> +static void __tcpv4_gso_segment_csum(struct sk_buff *seg,
->> +				     __be32 *oldip, __be32 newip,
->> +				     __be16 *oldport, __be16 newport)
->> +{
->> +	struct tcphdr *th;
->> +	struct iphdr *iph;
->> +
->> +	if (*oldip == newip && *oldport == newport)
->> +		return;
->> +
->> +	th = tcp_hdr(seg);
->> +	iph = ip_hdr(seg);
->> +
->> +	inet_proto_csum_replace4(&th->check, seg, *oldip, newip, true);
->> +	inet_proto_csum_replace2(&th->check, seg, *oldport, newport, false);
->> +	*oldport = newport;
->> +
->> +	csum_replace4(&iph->check, *oldip, newip);
->> +	*oldip = newip;
->> +}
->> +
->> +static struct sk_buff *__tcpv4_gso_segment_list_csum(struct sk_buff *segs)
->> +{
->> +	const struct tcphdr *th;
->> +	const struct iphdr *iph;
->> +	struct sk_buff *seg;
->> +	struct tcphdr *th2;
->> +	struct iphdr *iph2;
->> +
->> +	seg = segs;
->> +	th = tcp_hdr(seg);
->> +	iph = ip_hdr(seg);
->> +	th2 = tcp_hdr(seg->next);
->> +	iph2 = ip_hdr(seg->next);
->> +
->> +	if (!(*(const u32 *)&th->source ^ *(const u32 *)&th2->source) &&
->> +	    iph->daddr == iph2->daddr && iph->saddr == iph2->saddr)
->> +		return segs;
->> +
->> +	while ((seg = seg->next)) {
->> +		th2 = tcp_hdr(seg);
->> +		iph2 = ip_hdr(seg);
->> +
->> +		__tcpv4_gso_segment_csum(seg,
->> +					 &iph2->saddr, iph->saddr,
->> +					 &th2->source, th->source);
->> +		__tcpv4_gso_segment_csum(seg,
->> +					 &iph2->daddr, iph->daddr,
->> +					 &th2->dest, th->dest);
->> +	}
->> +
->> +	return segs;
->> +}
-> 
-> AFAICS, all the above is really alike the UDP side, except for the
-> transport header zero csum.
-> 
-> What about renaming the udp version of this helpers as 'tcpudpv4_...',
-> move them in common code, add an explicit argument for
-> 'zerocsum_allowed' and reuse such helper for both tcp and udp?
-> 
-> The same for the ipv6 variant.
 
-Wouldn't that make it more convoluted when taking into account that the 
-checksum field offset is different for tcp vs udp?
-How would you handle that?
+--kyt4gwwqp74cbnux
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Felix
+On 11.03.2024 12:11:43, Vitor Soares wrote:
+> From: Vitor Soares <vitor.soares@toradex.com>
+>=20
+> When the mcp251xfd_start_xmit() function fails, the driver stops
+> processing messages, and the interrupt routine does not return,
+> running indefinitely even after killing the running application.
+>=20
+> Error messages:
+> [  441.298819] mcp251xfd spi2.0 can0: ERROR in mcp251xfd_start_xmit: -16
+> [  441.306498] mcp251xfd spi2.0 can0: Transmit Event FIFO buffer not empt=
+y. (seq=3D0x000017c7, tef_tail=3D0x000017cf, tef_head=3D0x000017d0, tx_head=
+=3D0x000017d3).
+> ... and repeat forever.
+>=20
+> The issue can be triggered when multiple devices share the same
+> SPI interface. And there is concurrent access to the bus.
+>=20
+> The problem occurs because tx_ring->head increments even if
+> mcp251xfd_start_xmit() fails. Consequently, the driver skips one
+> TX package while still expecting a response in
+> mcp251xfd_handle_tefif_one().
+>=20
+> This patch resolves the issue by decreasing tx_ring->head if
+> mcp251xfd_start_xmit() fails. With the fix, if we trigger the issue and
+> the err =3D -EBUSY, the driver returns NETDEV_TX_BUSY. The network stack
+> retries to transmit the message.
+> Otherwise, it prints an error and discards the message.
+>=20
+> Fixes: 55e5b97f003e ("can: mcp25xxfd: add driver for Microchip MCP25xxFD =
+SPI CAN")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
+> ---
+>=20
+> V2->V3:
+>   - Add tx_dropped stats.
+>   - netdev_sent_queue() only if can_put_echo_skb() succeed.
+>=20
+> V1->V2:
+>   - Return NETDEV_TX_BUSY if mcp251xfd_tx_obj_write() =3D=3D -EBUSY.
+>   - Rework the commit message to address the change above.
+>   - Change can_put_echo_skb() to be called after mcp251xfd_tx_obj_write()=
+ succeed.
+>     Otherwise, we get Kernel NULL pointer dereference error.
+>=20
+>  drivers/net/can/spi/mcp251xfd/mcp251xfd-tx.c | 34 ++++++++++++--------
+>  1 file changed, 21 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-tx.c b/drivers/net/c=
+an/spi/mcp251xfd/mcp251xfd-tx.c
+> index 160528d3cc26..146c44e47c60 100644
+> --- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-tx.c
+> +++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-tx.c
+> @@ -166,6 +166,7 @@ netdev_tx_t mcp251xfd_start_xmit(struct sk_buff *skb,
+>  				 struct net_device *ndev)
+>  {
+>  	struct mcp251xfd_priv *priv =3D netdev_priv(ndev);
+> +	struct net_device_stats *stats =3D &ndev->stats;
+>  	struct mcp251xfd_tx_ring *tx_ring =3D priv->tx;
+>  	struct mcp251xfd_tx_obj *tx_obj;
+>  	unsigned int frame_len;
+> @@ -181,25 +182,32 @@ netdev_tx_t mcp251xfd_start_xmit(struct sk_buff *sk=
+b,
+>  	tx_obj =3D mcp251xfd_get_tx_obj_next(tx_ring);
+>  	mcp251xfd_tx_obj_from_skb(priv, tx_obj, skb, tx_ring->head);
+> =20
+> -	/* Stop queue if we occupy the complete TX FIFO */
+>  	tx_head =3D mcp251xfd_get_tx_head(tx_ring);
+> -	tx_ring->head++;
+> -	if (mcp251xfd_get_tx_free(tx_ring) =3D=3D 0)
+> -		netif_stop_queue(ndev);
+> -
+>  	frame_len =3D can_skb_get_frame_len(skb);
+> -	err =3D can_put_echo_skb(skb, ndev, tx_head, frame_len);
+> -	if (!err)
+> -		netdev_sent_queue(priv->ndev, frame_len);
+> +
+> +	tx_ring->head++;
+> =20
+>  	err =3D mcp251xfd_tx_obj_write(priv, tx_obj);
+> -	if (err)
+> -		goto out_err;
+> +	if (err) {
+> +		tx_ring->head--;
+> =20
+> -	return NETDEV_TX_OK;
+> +		if (err =3D=3D -EBUSY)
+> +			return NETDEV_TX_BUSY;
+> =20
+> - out_err:
+> -	netdev_err(priv->ndev, "ERROR in %s: %d\n", __func__, err);
+> +		stats->tx_dropped++;
+> +
+> +		if (net_ratelimit())
+> +			netdev_err(priv->ndev,
+> +				   "ERROR in %s: %d\n", __func__, err);
+> +	} else {
+> +		err =3D can_put_echo_skb(skb, ndev, tx_head, frame_len);
+> +		if (!err)
+> +			netdev_sent_queue(priv->ndev, frame_len);
+> +
+> +		/* Stop queue if we occupy the complete TX FIFO */
+> +		if (mcp251xfd_get_tx_free(tx_ring) =3D=3D 0)
+> +			netif_stop_queue(ndev);
+> +	}
+
+Once you have sent the TX objects to the chip, it can trigger a TX
+complete IRQ. This is not very likely as the SPI sends asynchronously
+and the xmit handler cannot sleep.
+
+This means you have to call can_put_echo_skb() and stop the queue if
+needed, _before_ you call mcp251xfd_tx_obj_write(). In case of an error,
+you have to roll-back these.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--kyt4gwwqp74cbnux
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmYwtZMACgkQKDiiPnot
+vG8c8Af7B+kXfKdty6H3EChYBzrzZZFfPSb4H/y7hspY16T0JGasHn4yiY5AzDxf
+QlaTBrx2ritE5JLosJD4TRs/5yUw52Dd3fJCEXp50VP5ziT6t332RCSHMrHfT2aF
+aq5xU0srFHnfMgpiHgYidmfG/EIQXBAxGUlYFqnry7Q/JklyjOtYdrcyUQWaJ5R0
+CgqkjzYeaQ1vOu2C0pNXblx54xiu0cGsTio9/Zmn4rNrB/u3PvdMwVNYJan3uhIH
+HDOvKO/dvPkjfymriQutKSeUfLcnoiaFp44hglhfeKDnLDbQNFs7yIhzaKXUc9g3
+UScv9TaxR3r/0LHab+IThgsRIgTmZQ==
+=6kq0
+-----END PGP SIGNATURE-----
+
+--kyt4gwwqp74cbnux--
