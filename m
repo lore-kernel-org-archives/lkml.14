@@ -1,177 +1,408 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED28211C
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3498A17592;
+	Tue, 30 Apr 2024 11:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714475665; cv=none; b=nDD8baknKwTXwvqPehRXU4VbHYxgLEMPxbJEyl/HuccxgaiiIQsW4eQBh8S28UtKpnrPUXF7lnLr5f05DPBLIkeujQ/g3F36a77MlRLR0Rr9rO6wSnTXgVQLyDx8vecXaoa04dHO1PSc8XkTjROonVNkJttY+rinN8zM+Kw5de0=
+	t=1714475842; cv=none; b=EDGjiqaRFjVGBIfihaxf7jhq9wQYXZP7YiRVgEIKmLucuOEh4dFilZlFkJC0xV5e1JmMJJ1yE7A1/01SbnED9bwf+CCZefga3N3yBGTxma/XC7t0xWkQIvEUjTpmSirnsiX+lZ2s0FdXb6Jsaf94HjST6KGz9w4BqBC1qMW6OiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714475665; c=relaxed/simple;
-	bh=1v3iKbYRwkoqF4GswqbZSAc/O4twc8pg1X2WdcHj6nc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ochi7l9nWRGZXSKFRcPKc4u9j8OK8VSSX8j8MluG9uDW7wmMErO0UO7JCLaRGPlbnu2lgPcctIchS4iPOvBT2xmlEXawjf8y+VtSIX4zojXhQB+Gzj4xBQxsUA2nQ6LHtWATuLVUwHR3IsJua+sy0x5x6rWuoRQjwt8P6mwcO0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XwRzUtj6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714475842; c=relaxed/simple;
+	bh=1N5fAmswOW2CJAUBi9CmqK5Jt65hx7NoDrXGCzh+IS4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Rc/JMsmlB4rR3TXm3oxIL5L2G02DKpvPLbSQSFjerEksGPcmeRvYf/HdRL7rRXGcqXef/WAs+2+lJoc2u2pEgPCENKSYouIeteWjhKzOlnaAjikUeLxtC0Xsd9dVfM/xNnWi2bDYGNKG6Ole1e0w3k+sFUDUI2tffKlIQoPf3A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JXHRDrDu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XwRzUtj6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714475662;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZKlqsYerCfpJBU242kuBh82/O/c7RiKM2R2B8jV0WP8=;
-	b=XwRzUtj63ckv1z3IsMaAJK8uuDiv9Tk298IvytjS/f3cF2aOEHjEMGv5CjFgGd6gDes2Ms
-	sqXpPpnJfFylehyuNaXUCDj8GBI8LT+N07MKlcPhTTqtk329Gl9rtDuTxFTvhQ9xvLxiCN
-	ojU81zFqUCXnyoFYBr+/yas/ig/dIcA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-9V-8a6TuN--pj2crQtJMXg-1; Tue, 30 Apr 2024 07:14:21 -0400
-X-MC-Unique: 9V-8a6TuN--pj2crQtJMXg-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-34d9627ffd0so66831f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 04:14:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714475660; x=1715080460;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZKlqsYerCfpJBU242kuBh82/O/c7RiKM2R2B8jV0WP8=;
-        b=DKcVM5kDBSh6FoHaM2IpnBV6uyBPtddfLbwIozt4AbZ/qB7M9aF1turOpNy1tjxhx0
-         hD+Zp5XCGWNNUueox9Y592KL4o6DJbsXPwV3XYu2FklSzdk+PWv9iT81yWCGPCXd1g1K
-         EJirvD75pb9lZ2pqwU9mOF3tH9BfxTOoOAzjq3AUcU3yqDYZuNE/YN6yD63C60wuXRzI
-         I77U8kCoWLor9jRdNXqWhfvCcpUbG3eBkk9HkPr0zgpfRf2jhbnegQfBL9n8q69pdqVw
-         +G1fgqA6KsJuXbCiuHbPse3mxy/QFc2hfRHZIpmJEQScDqGvbgqCQHAAaWSHZMifIjdx
-         bzkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFZDiOmUfRswUTc35k3AAGPHb1QxNlXE6xogL/sAijY7Zlf4LVzLMG/MR7xd/n+bvKMZU/S6ouXiJkS9TofvkUUFsq4LTUrdT63GfA
-X-Gm-Message-State: AOJu0Yz1xHT7UwQtnAcZtq5THVxR7H4ogSuYrNDrLutJtQQfQ+e4yIIo
-	cKNcLBuFoWoXkAZpwZXsnyWLnNOrFO6InkmRphjtpJrG7N9v6xGMnPS+HmeBwcV2FSPbwY9zjAp
-	xQ4l7hU4IF5ZGL2+X3HpF4cRqYgtIXstaI40Y2tj5HDeGAAsC+M247DX0Fv5iFQ==
-X-Received: by 2002:a5d:42cb:0:b0:34d:8ccf:c9ce with SMTP id t11-20020a5d42cb000000b0034d8ccfc9cemr1046326wrr.5.1714475659999;
-        Tue, 30 Apr 2024 04:14:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFGw/FQ4V7WgwOjQMrGJp7DK9lZTOj0lhUWJqhOwmJTT8pE4hscFbpaG6PtCgjwPrMgGRMyQ==
-X-Received: by 2002:a5d:42cb:0:b0:34d:8ccf:c9ce with SMTP id t11-20020a5d42cb000000b0034d8ccfc9cemr1046311wrr.5.1714475659527;
-        Tue, 30 Apr 2024 04:14:19 -0700 (PDT)
-Received: from gerbillo.redhat.com ([2a0d:3341:b0ae:6a10::f71])
-        by smtp.gmail.com with ESMTPSA id j9-20020a5d4489000000b0034d9605eb70sm965095wrq.49.2024.04.30.04.14.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 04:14:19 -0700 (PDT)
-Message-ID: <e598e9eee3827fd173e3cd6f525df133eb3b54ec.camel@redhat.com>
-Subject: Re: [PATCH v4 net-next v4 6/6] net: add heuristic for enabling TCP
- fraglist GRO
-From: Paolo Abeni <pabeni@redhat.com>
-To: Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org, Eric Dumazet
- <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>, David Ahern
- <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: willemdebruijn.kernel@gmail.com, linux-kernel@vger.kernel.org
-Date: Tue, 30 Apr 2024 13:14:17 +0200
-In-Reply-To: <63c1cb0e-bd63-43da-b451-5383bb4a0f5f@nbd.name>
-References: <20240427182305.24461-1-nbd@nbd.name>
-	 <20240427182305.24461-7-nbd@nbd.name>
-	 <e590ba4608c9810d3d75fefdcbba9f2a02c23a0f.camel@redhat.com>
-	 <e3a3a499-11b3-4906-b0f1-b94e70825ca9@nbd.name>
-	 <18dee53b6ae7cd75196141e4c5d8984bc0f3296f.camel@redhat.com>
-	 <63c1cb0e-bd63-43da-b451-5383bb4a0f5f@nbd.name>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JXHRDrDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80AC5C2BBFC;
+	Tue, 30 Apr 2024 11:17:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714475842;
+	bh=1N5fAmswOW2CJAUBi9CmqK5Jt65hx7NoDrXGCzh+IS4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JXHRDrDus4hTQu6dQUEt/791+NPUJY8C7PUlvJcysgEIZLSYtWDymI98oBhIA/S90
+	 prxDYWEh10IEpleo9PIc8z4u/MpAcaU/nou/rf6lDdddiPfSdmYSpFkwzdV1MUuXaN
+	 t8I2pgykTr0ANPrjrfqak78zBbcSmsfZjDatasDA=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com,
+	broonie@kernel.org
+Subject: [PATCH 5.15 00/80] 5.15.158-rc1 review
+Date: Tue, 30 Apr 2024 12:39:32 +0200
+Message-ID: <20240430103043.397234724@linuxfoundation.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.158-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.15.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.15.158-rc1
+X-KernelTest-Deadline: 2024-05-02T10:30+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-04-30 at 12:55 +0200, Felix Fietkau wrote:
-> On 30.04.24 12:31, Paolo Abeni wrote:
-> > On Tue, 2024-04-30 at 12:23 +0200, Felix Fietkau wrote:
-> > > On 30.04.24 12:12, Paolo Abeni wrote:
-> > > > On Sat, 2024-04-27 at 20:23 +0200, Felix Fietkau wrote:
-> > > > > When forwarding TCP after GRO, software segmentation is very expe=
-nsive,
-> > > > > especially when the checksum needs to be recalculated.
-> > > > > One case where that's currently unavoidable is when routing packe=
-ts over
-> > > > > PPPoE. Performance improves significantly when using fraglist GRO
-> > > > > implemented in the same way as for UDP.
-> > > > >=20
-> > > > > When NETIF_F_GRO_FRAGLIST is enabled, perform a lookup for an est=
-ablished
-> > > > > socket in the same netns as the receiving device. While this may =
-not
-> > > > > cover all relevant use cases in multi-netns configurations, it sh=
-ould be
-> > > > > good enough for most configurations that need this.
-> > > > >=20
-> > > > > Here's a measurement of running 2 TCP streams through a MediaTek =
-MT7622
-> > > > > device (2-core Cortex-A53), which runs NAT with flow offload enab=
-led from
-> > > > > one ethernet port to PPPoE on another ethernet port + cake qdisc =
-set to
-> > > > > 1Gbps.
-> > > > >=20
-> > > > > rx-gro-list off: 630 Mbit/s, CPU 35% idle
-> > > > > rx-gro-list on:  770 Mbit/s, CPU 40% idle
-> > > > >=20
-> > > > > Signe-off-by: Felix Fietkau <nbd@nbd.name>
-> > > > > ---
-> > > > >  net/ipv4/tcp_offload.c   | 32 ++++++++++++++++++++++++++++++++
-> > > > >  net/ipv6/tcpv6_offload.c | 35 ++++++++++++++++++++++++++++++++++=
-+
-> > > > >  2 files changed, 67 insertions(+)
-> > > > >=20
-> > > > > diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
-> > > > > index 87ae9808e260..3e9b8c6f9c8c 100644
-> > > > > --- a/net/ipv4/tcp_offload.c
-> > > > > +++ b/net/ipv4/tcp_offload.c
-> > > > > @@ -407,6 +407,36 @@ void tcp_gro_complete(struct sk_buff *skb)
-> > > > >  }
-> > > > >  EXPORT_SYMBOL(tcp_gro_complete);
-> > > > > =20
-> > > > > +static void tcp4_check_fraglist_gro(struct list_head *head, stru=
-ct sk_buff *skb,
-> > > > > +				    struct tcphdr *th)
-> > > > > +{
-> > > > > +	const struct iphdr *iph;
-> > > > > +	struct sk_buff *p;
-> > > > > +	struct sock *sk;
-> > > > > +	struct net *net;
-> > > > > +	int iif, sdif;
-> > > > > +
-> > > > > +	if (!(skb->dev->features & NETIF_F_GRO_FRAGLIST))
-> > > >=20
-> > > > Should we add an 'unlikely()' here to pair with unlikely(is_flist) =
-in
-> > > > *gro_receive / *gro_complete?
-> > > Not sure if unlikely() will make any difference here. I think it make=
-s=20
-> > > more sense in the other places than here.
-> >=20
-> > Why? AFAICS this will be called for every packet on the wire, exactly
-> > as the code getting this annotation in patch 3/6.
->=20
-> I had compared assembly after adding an annotation and didn't see a=20
-> difference. However, my annotation was wrong.
-> When I add: if (likely(!(skb->dev->features & NETIF_F_GRO_FRAGLIST)))
-> the generated code is different, and I probably should use that.
+This is the start of the stable review cycle for the 5.15.158 release.
+There are 80 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-I read the above as you intend to send a new revision. If so, feel free
-to add=20
+Responses should be made by Thu, 02 May 2024 10:30:27 +0000.
+Anything received after that time might be too late.
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.158-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+and the diffstat can be found below.
 
-to the whole series.
+thanks,
 
-Otherwise, please LMK, I think we can merge it as-is and ev. follow-up.
+greg k-h
 
-Thanks,
+-------------
+Pseudo-Shortlog of commits:
 
-Paolo
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.15.158-rc1
+
+Randy Dunlap <rdunlap@infradead.org>
+    serial: core: fix kernel-doc for uart_port_unlock_irqrestore()
+
+Yick Xie <yick.xie@gmail.com>
+    udp: preserve the connected status if only UDP cmsg
+
+Matthew Wilcox (Oracle) <willy@infradead.org>
+    bounds: Use the right number of bits for power-of-two CONFIG_NR_CPUS
+
+Nam Cao <namcao@linutronix.de>
+    HID: i2c-hid: remove I2C_HID_READ_PENDING flag to prevent lock-up
+
+Nam Cao <namcao@linutronix.de>
+    fbdev: fix incorrect address computation in deferred IO
+
+Wolfram Sang <wsa+renesas@sang-engineering.com>
+    i2c: smbus: fix NULL function pointer dereference
+
+Samuel Holland <samuel.holland@sifive.com>
+    riscv: Fix TASK_SIZE on 64-bit NOMMU
+
+Baoquan He <bhe@redhat.com>
+    riscv: fix VMALLOC_START definition
+
+Fenghua Yu <fenghua.yu@intel.com>
+    dmaengine: idxd: Fix oops during rmmod on single-CPU platforms
+
+Sean Anderson <sean.anderson@linux.dev>
+    dma: xilinx_dpdma: Fix locking
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    idma64: Don't try to serve interrupts when device is powered off
+
+Arnd Bergmann <arnd@arndb.de>
+    dmaengine: owl: fix register access functions
+
+Eric Dumazet <edumazet@google.com>
+    tcp: Fix NEW_SYN_RECV handling in inet_twsk_purge()
+
+Kuniyuki Iwashima <kuniyu@amazon.com>
+    tcp: Clean up kernel listener's reqsk in inet_twsk_purge()
+
+Arnd Bergmann <arnd@arndb.de>
+    mtd: diskonchip: work around ubsan link failure
+
+Andrey Ryabinin <ryabinin.a.a@gmail.com>
+    stackdepot: respect __GFP_NOLOCKDEP allocation flag
+
+Peter Münster <pm@a16n.net>
+    net: b44: set pause params only when interface is up
+
+Rahul Rameshbabu <rrameshbabu@nvidia.com>
+    ethernet: Add helper for assigning packet type when dest address does not match device address
+
+Guanrui Huang <guanrui.huang@linux.alibaba.com>
+    irqchip/gic-v3-its: Prevent double free on error
+
+Mukul Joshi <mukul.joshi@amd.com>
+    drm/amdgpu: Fix leak when GPU memory allocation fails
+
+Alex Deucher <alexander.deucher@amd.com>
+    drm/amdgpu/sdma5.2: use legacy HDP flush for SDMA2/3
+
+Iskander Amara <iskander.amara@theobroma-systems.com>
+    arm64: dts: rockchip: enable internal pull-up for Q7_THRM# on RK3399 Puma
+
+Sean Christopherson <seanjc@google.com>
+    cpu: Re-enable CPU mitigations by default for !X86 architectures
+
+Johannes Thumshirn <johannes.thumshirn@wdc.com>
+    btrfs: fix information leak in btrfs_ioctl_logical_to_ino()
+
+Mantas Pucka <mantas@8devices.com>
+    mmc: sdhci-msm: pervent access to suspended controller
+
+Johan Hovold <johan+linaro@kernel.org>
+    Bluetooth: qca: fix NULL-deref on non-serdev suspend
+
+WangYuli <wangyuli@uniontech.com>
+    Bluetooth: btusb: Add Realtek RTL8852BE support ID 0x0bda:0x4853
+
+Nathan Chancellor <nathan@kernel.org>
+    Bluetooth: Fix type of len in {l2cap,sco}_sock_getsockopt_old()
+
+David Kaplan <david.kaplan@amd.com>
+    x86/cpu: Fix check for RDPKRU in __show_regs()
+
+Robin H. Johnson <robbat2@gentoo.org>
+    tracing: Increase PERF_MAX_TRACE_SIZE to handle Sentinel1 and docker together
+
+Robin H. Johnson <robbat2@gentoo.org>
+    tracing: Show size of requested perf buffer
+
+Shifeng Li <lishifeng@sangfor.com.cn>
+    net/mlx5e: Fix a race in command alloc flow
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "crypto: api - Disallow identical driver names"
+
+Zack Rusin <zack.rusin@broadcom.com>
+    drm/vmwgfx: Fix crtc's atomic check conditional
+
+Jim Cromie <jim.cromie@gmail.com>
+    drm-print: add drm_dbg_driver to improve namespace symmetry
+
+Emil Kronborg <emil.kronborg@protonmail.com>
+    serial: mxs-auart: add spinlock around changing cts state
+
+Thomas Gleixner <tglx@linutronix.de>
+    serial: core: Provide port lock wrappers
+
+Kuniyuki Iwashima <kuniyu@amazon.com>
+    af_unix: Suppress false-positive lockdep splat for spin_lock() in __unix_gc().
+
+Jason Reeder <jreeder@ti.com>
+    net: ethernet: ti: am65-cpts: Fix PTPv1 message type on TX packets
+
+Sudheer Mogilappagari <sudheer.mogilappagari@intel.com>
+    iavf: Fix TC config comparison with existing adapter TC config
+
+Erwan Velu <e.velu@criteo.com>
+    i40e: Report MFS in decimal base instead of hex
+
+Sindhu Devale <sindhu.devale@intel.com>
+    i40e: Do not use WQ_MEM_RECLAIM flag for workqueue
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nf_tables: honor table dormant flag from netdev release event path
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix memory leak when canceling rehash work
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix incorrect list API usage
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix warning during rehash
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix memory leak during rehash
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Rate limit error message
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix possible use-after-free during rehash
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix possible use-after-free during activity update
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix race during rehash delayed work
+
+Hyunwoo Kim <v4bel@theori.io>
+    net: openvswitch: Fix Use-After-Free in ovs_ct_exit
+
+Ismael Luceno <iluceno@suse.de>
+    ipvs: Fix checksumming on GSO of SCTP packets
+
+Hyunwoo Kim <v4bel@theori.io>
+    net: gtp: Fix Use-After-Free in gtp_dellink
+
+Eric Dumazet <edumazet@google.com>
+    net: usb: ax88179_178a: stop lying about skb->truesize
+
+Eric Dumazet <edumazet@google.com>
+    ipv4: check for NULL idev in ip_route_use_hint()
+
+Paul Geurts <paul_geurts@live.nl>
+    NFC: trf7970a: disable all regulators on removal
+
+Hangbin Liu <liuhangbin@gmail.com>
+    bridge/br_netlink.c: no need to return void function
+
+Eric Dumazet <edumazet@google.com>
+    icmp: prevent possible NULL dereferences from icmp_build_probe()
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: core: Unregister EMAD trap using FORWARD action
+
+David Bauer <mail@david-bauer.net>
+    vxlan: drop packets from invalid src-address
+
+Miri Korenblit <miriam.rachel.korenblit@intel.com>
+    wifi: iwlwifi: mvm: return uid from iwl_mvm_build_scan_cmd
+
+Avraham Stern <avraham.stern@intel.com>
+    wifi: iwlwifi: mvm: remove old PASN station when adding a new one
+
+Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+    ARC: [plat-hsdk]: Remove misplaced interrupt-cells property
+
+Rafał Miłecki <rafal@milecki.pl>
+    arm64: dts: mediatek: mt2712: fix validation errors
+
+Rafał Miłecki <rafal@milecki.pl>
+    arm64: dts: mediatek: mt7622: drop "reset-names" from thermal block
+
+Rafał Miłecki <rafal@milecki.pl>
+    arm64: dts: mediatek: mt7622: fix ethernet controller "compatible"
+
+Rafał Miłecki <rafal@milecki.pl>
+    arm64: dts: mediatek: mt7622: fix IR nodename
+
+Rafał Miłecki <rafal@milecki.pl>
+    arm64: dts: mediatek: mt7622: fix clock controllers
+
+Felix Fietkau <nbd@nbd.name>
+    arm64: dts: mediatek: mt7622: introduce nodes for Wireless Ethernet Dispatch
+
+Felix Fietkau <nbd@nbd.name>
+    arm64: dts: mediatek: mt7622: add support for coherent DMA
+
+Ikjoon Jang <ikjn@chromium.org>
+    arm64: dts: mediatek: mt8183: Add power-domains properity to mfgcfg
+
+Dragan Simic <dsimic@manjaro.org>
+    arm64: dts: rockchip: Remove unsupported node from the Pinebook Pro dts
+
+Quentin Schulz <quentin.schulz@theobroma-systems.com>
+    arm64: dts: rockchip: enable internal pull-up on PCIE_WAKE# for RK3399 Puma
+
+Iskander Amara <iskander.amara@theobroma-systems.com>
+    arm64: dts: rockchip: fix alphabetical ordering RK3399 puma
+
+Quentin Schulz <quentin.schulz@theobroma-systems.com>
+    arm64: dts: rockchip: enable internal pull-up on Q7_USB_ID for RK3399 Puma
+
+Yaraslau Furman <yaro330@gmail.com>
+    HID: logitech-dj: allow mice to use all types of reports
+
+Zhang Lixu <lixu.zhang@intel.com>
+    HID: intel-ish-hid: ipc: Fix dev_err usage with uninitialized dev->devc
+
+Takayuki Nagata <tnagata@redhat.com>
+    cifs: reinstate original behavior again for forceuid/forcegid
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: fix rename(2) regression against samba
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/Kconfig                                       |  8 +++
+ arch/arc/boot/dts/hsdk.dts                         |  1 -
+ arch/arm64/boot/dts/mediatek/mt2712-evb.dts        |  8 +--
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |  3 +-
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi           | 62 +++++++++++------
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           |  1 +
+ .../boot/dts/rockchip/rk3399-pinebook-pro.dts      |  1 -
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      | 31 ++++++---
+ arch/riscv/include/asm/pgtable.h                   |  4 +-
+ arch/x86/Kconfig                                   | 11 +--
+ arch/x86/kernel/process_64.c                       |  2 +-
+ crypto/algapi.c                                    |  1 -
+ drivers/bluetooth/btusb.c                          |  2 +
+ drivers/bluetooth/hci_qca.c                        |  3 +
+ drivers/dma/idma64.c                               |  4 ++
+ drivers/dma/idxd/perfmon.c                         |  9 +--
+ drivers/dma/owl-dma.c                              |  4 +-
+ drivers/dma/xilinx/xilinx_dpdma.c                  | 13 +++-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c   |  1 +
+ drivers/gpu/drm/amd/amdgpu/sdma_v5_2.c             | 24 ++++---
+ drivers/gpu/drm/vmwgfx/vmwgfx_kms.c                | 11 ++-
+ drivers/hid/hid-logitech-dj.c                      |  4 +-
+ drivers/hid/i2c-hid/i2c-hid-core.c                 |  8 ---
+ drivers/hid/intel-ish-hid/ipc/ipc.c                |  2 +-
+ drivers/i2c/i2c-core-base.c                        | 12 ++--
+ drivers/irqchip/irq-gic-v3-its.c                   |  9 +--
+ drivers/mmc/host/sdhci-msm.c                       | 16 ++++-
+ drivers/mtd/nand/raw/diskonchip.c                  |  4 +-
+ drivers/net/ethernet/broadcom/b44.c                | 14 ++--
+ drivers/net/ethernet/intel/i40e/i40e_main.c        |  6 +-
+ drivers/net/ethernet/intel/iavf/iavf_main.c        | 30 +++++++-
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c      | 12 ++--
+ drivers/net/ethernet/mellanox/mlxsw/core.c         |  2 +-
+ .../ethernet/mellanox/mlxsw/spectrum_acl_tcam.c    | 54 ++++++++++++---
+ drivers/net/ethernet/ti/am65-cpts.c                |  5 ++
+ drivers/net/gtp.c                                  |  3 +-
+ drivers/net/usb/ax88179_178a.c                     | 11 +--
+ drivers/net/vxlan/vxlan_core.c                     |  4 ++
+ .../net/wireless/intel/iwlwifi/mvm/ftm-initiator.c |  2 +
+ drivers/net/wireless/intel/iwlwifi/mvm/scan.c      |  3 +-
+ drivers/nfc/trf7970a.c                             | 42 ++++++------
+ drivers/tty/serial/mxs-auart.c                     |  8 ++-
+ drivers/video/fbdev/core/fb_defio.c                |  2 +-
+ fs/btrfs/backref.c                                 | 12 +---
+ fs/cifs/cifsfs.c                                   |  1 +
+ fs/cifs/fs_context.c                               | 12 ++++
+ fs/cifs/fs_context.h                               |  2 +
+ include/drm/drm_print.h                            |  3 +-
+ include/linux/etherdevice.h                        | 25 +++++++
+ include/linux/serial_core.h                        | 79 ++++++++++++++++++++++
+ include/linux/trace_events.h                       |  2 +-
+ include/net/af_unix.h                              |  3 +
+ kernel/bounds.c                                    |  2 +-
+ kernel/cpu.c                                       |  4 +-
+ kernel/trace/trace_event_perf.c                    |  3 +-
+ lib/stackdepot.c                                   |  4 +-
+ net/bluetooth/l2cap_sock.c                         |  7 +-
+ net/bluetooth/sco.c                                |  7 +-
+ net/bridge/br_netlink.c                            |  2 +-
+ net/ethernet/eth.c                                 | 12 +---
+ net/ipv4/icmp.c                                    | 12 +++-
+ net/ipv4/inet_timewait_sock.c                      | 34 ++++++----
+ net/ipv4/route.c                                   |  3 +
+ net/ipv4/udp.c                                     |  5 +-
+ net/ipv6/udp.c                                     |  5 +-
+ net/netfilter/ipvs/ip_vs_proto_sctp.c              |  6 +-
+ net/netfilter/nft_chain_filter.c                   |  4 +-
+ net/openvswitch/conntrack.c                        |  4 +-
+ net/unix/garbage.c                                 |  2 +-
+ 70 files changed, 503 insertions(+), 213 deletions(-)
+
 
