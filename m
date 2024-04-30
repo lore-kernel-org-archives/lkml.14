@@ -1,193 +1,289 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D29E6FB1
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 06:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDB26FB1;
+	Tue, 30 Apr 2024 06:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714457780; cv=none; b=tu9bunWNS+aQTct6nERaOw6TUevtb05Vv5PKFSfrRPgULpa92DyNEpL69D3QWcJs21tO8xA8G9+oFUot53sgaGDadaa7SyplQEuwhNL0t3te0Bne8Rc/P9CT2harAwID8hDz/wIX2ouqzQYboNMh3JOtJICrRDB1D++x8Sk6Q3Q=
+	t=1714457790; cv=none; b=ghjypSCXfelcyFYjK5qIYz9xVLbXyPv/cNsxECy6mE6/37LjeL7bnF1/Tp5T2J5z14kYdx0huGq9RXzmTXZFfPkSnYe6OQ+VrlEyOfPXmByUu6yw5La3bY/f7k+t+i3uEalsgUUoO1Drul3w0Ma7HjUtOkM6v28d9qPHEQR6cy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714457780; c=relaxed/simple;
-	bh=ERTc2l5kU1GMYxtzdHJN1SeKinqluPnbKrRIhtd5mSo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tVWeHp+Sg5F2oPOIBjZrV7u1tb+3vi/J6E9j2AUTXBnAty5fRgds3b6Qq/JSCB+uylJtOPGvgCdYECSkZsVUlcOCOEop7etmlScjY10TkiFDXBJPCAPOyTeorGMqcNctcRkUZH76Rqp9kz1DihR8AsxuA8HUtd57chMFoGX65yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Mk/i/Cpo; arc=none smtp.client-ip=45.254.50.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1714457790; c=relaxed/simple;
+	bh=w1FtgFGbKATPky80HMgAKnT9l8yQIMkdWVHQFIOZAeU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Y58EuFJ/dPGaBrcT74O1PN7C6BGUx+nZxnAC7Z8GY8Acd25gKMrZG75N+39KPlSmW2nAg6f+RSmiYL1m8wPnUA3gOkYHgBH54SYrL8I0Vl3wr3e8Kd+TKNEpnlxoWxO6RXxVtlcCXfLYdrOAS7SNbYvAO72jVNjQw9Fl7NSPyz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qVyyusBt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZkZ2ZP0S; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Mk/i/Cpo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=OykVS
-	bzCv4+d4dPQLDypPadwOtIhxe1BrterZQ+EVfc=; b=Mk/i/CporQhNjM1Pb4Fxn
-	JzDrNc4n/H6i6Uz/6EZ+8yQgmt26tYyrfSqBhYGHAu/ubD170GE/f2+fQ2XzKy8k
-	+t995s0ICyjIoM/UQJktZ4tYUBOt7rgYAcT5UU020DHxF6e+CgfTL2v5iQ8GwkiH
-	TGxBUVX71rndtgrfXtIBus=
-Received: from localhost.localdomain (unknown [111.35.187.227])
-	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wD3v3dtjDBmw0B8Cw--.43676S4;
-	Tue, 30 Apr 2024 14:15:18 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: dreaming.about.electric.sheep@gmail.com,
-	airlied@redhat.com,
-	kraxel@redhat.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch
-Cc: virtualization@lists.linux.dev,
-	spice-devel@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	David Wang <00107082@163.com>
-Subject: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM events:qxl_gc_work [qxl]
-Date: Tue, 30 Apr 2024 14:13:37 +0800
-Message-Id: <20240430061337.764633-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qVyyusBt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZkZ2ZP0S"
+Date: Tue, 30 Apr 2024 06:16:25 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1714457786;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yfrut0KQA7/LT2MTh/hFrudkeTIS+9cJoSYnPXB8YII=;
+	b=qVyyusBtE9afiQOzeWux2Im959q/Wh0eWz9BVUfSeyAEVI7D/EEXGVs5+vheCGYJElQsZc
+	I1u9QwV3raojSF6skVeBKXNjoIDJgA9jYQ+J+GxdqF4mNRlO6hnfHYQc3sJNtZc3eKOV5e
+	e74Q/PJEaCTtxSjPlD4tJhhptJXHZ9iC6UsvKs71hJNNyTY6fabtw6MWDytDo6xO3rV9lP
+	Pbbt1scK06vbW9zGICTHusX6q9ORzDRiANWcMoxJ+hgbnfkytsbpDLr/9zdGarmGdmyvDP
+	QYOKJd1wA4xpQQZO4ODrrmBKiVGrSgtIasgFunDjr4yx9LvZOPurzm2tftURxg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1714457786;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yfrut0KQA7/LT2MTh/hFrudkeTIS+9cJoSYnPXB8YII=;
+	b=ZkZ2ZP0SgbGk3bEVZ958dFw29DAyP04IYiw7VO3YEBz1ha1+siZw0aKUsHnfWNwCwmXixx
+	xplI+t4dEk0XTdDA==
+From: "tip-bot2 for Linus Torvalds" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/mm: Remove broken vsyscall emulation code from
+ the page fault code
+Cc: syzbot+83e7f982ca045ab4405c@syzkaller.appspotmail.com,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To:
+ <CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com>
+References:
+ <CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:_____wD3v3dtjDBmw0B8Cw--.43676S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW3JrWkWF4kWry3AFWrKw13CFg_yoWxuF1Dpr
-	yYyF109FWrJw1qya1kJr1Fyws2qFsF9FWUZFyfGr10k3W5XF1rJa13Ga43KrWUCr9rJFW7
-	Awnrta4YyFnrAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUUhL8UUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiMw7PqmXAk7vy7wABsJ
+Message-ID: <171445778590.10875.11181834195203165765.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi,
-I got following kernel WARNING when the my 2-core KVM(6.9.0-rc6) is under h=
-igh cpu load.
+The following commit has been merged into the x86/urgent branch of tip:
 
-	[Mon Apr 29 21:36:04 2024] ------------[ cut here ]------------
-	[Mon Apr 29 21:36:04 2024] workqueue: WQ_MEM_RECLAIM ttm:ttm_bo_delayed_de=
-lete [ttm] is flushing !WQ_MEM_RECLAIM events:qxl_gc_work [qxl]
-	[Mon Apr 29 21:36:04 2024] WARNING: CPU: 1 PID: 792 at kernel/workqueue.c:=
-3728 check_flush_dependency+0xfd/0x120
-	[Mon Apr 29 21:36:04 2024] Modules linked in: xt_conntrack(E) nft_chain_na=
-t(E) xt_MASQUERADE(E) nf_nat(E) nf_conntrack_netlink(E) xfrm_user(E) xfrm_a=
-lgo(E) xt_addrtype(E) nft_compat(E) nf_tables(E) br_netfilter(E) bridge(E) =
-stp(E) llc(E) ip_set(E) nfnetlink(E) ip_vs_sh(E) ip_vs_wrr(E) ip_vs_rr(E) i=
-p_vs(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) intel_rapl_msr(=
-E) intel_rapl_common(E) crct10dif_pclmul(E) ghash_clmulni_intel(E) snd_hda_=
-codec_generic(E) snd_hda_intel(E) snd_intel_dspcfg(E) sha512_ssse3(E) snd_h=
-da_codec(E) sha512_generic(E) sha256_ssse3(E) overlay(E) sha1_ssse3(E) snd_=
-hda_core(E) snd_hwdep(E) aesni_intel(E) snd_pcm(E) crypto_simd(E) pcspkr(E)=
- cryptd(E) joydev(E) qxl(E) snd_timer(E) drm_ttm_helper(E) ttm(E) evdev(E) =
-snd(E) iTCO_wdt(E) serio_raw(E) sg(E) virtio_balloon(E) virtio_console(E) i=
-TCO_vendor_support(E) soundcore(E) qemu_fw_cfg(E) drm_kms_helper(E) button(=
-E) binfmt_misc(E) fuse(E) drm(E) configfs(E) virtio_rng(E) rng_core(E) ip_t=
-ables(E) x_tables(E) autofs4(E) ext4(E) crc16(E) mbcache(E) jbd2(E)
-	[Mon Apr 29 21:36:04 2024]  hid_generic(E) usbhid(E) hid(E) sr_mod(E) cdro=
-m(E) ahci(E) libahci(E) virtio_net(E) net_failover(E) failover(E) virtio_bl=
-k(E) libata(E) xhci_pci(E) crc32_pclmul(E) crc32c_intel(E) scsi_mod(E) scsi=
-_common(E) lpc_ich(E) i2c_i801(E) xhci_hcd(E) psmouse(E) i2c_smbus(E) virti=
-o_pci(E) usbcore(E) virtio_pci_legacy_dev(E) virtio_pci_modern_dev(E) usb_c=
-ommon(E) virtio(E) mfd_core(E) virtio_ring(E)
-	[Mon Apr 29 21:36:04 2024] CPU: 1 PID: 792 Comm: kworker/u13:4 Tainted: G =
-           E      6.9.0-rc6-linan-5 #197
-	[Mon Apr 29 21:36:04 2024] Hardware name: QEMU Standard PC (Q35 + ICH9, 20=
-09), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-	[Mon Apr 29 21:36:04 2024] Workqueue: ttm ttm_bo_delayed_delete [ttm]
-	[Mon Apr 29 21:36:04 2024] RIP: 0010:check_flush_dependency+0xfd/0x120
-	[Mon Apr 29 21:36:04 2024] Code: 8b 45 18 48 8d b2 c0 00 00 00 49 89 e8 48=
- 8d 8b c0 00 00 00 48 c7 c7 68 30 a4 a7 c6 05 9b 12 6e 01 01 48 89 c2 e8 53=
- b9 fd ff <0f> 0b e9 1e ff ff ff 80 3d 86 12 6e 01 00 75 93 e9 4a ff ff ff =
-66
-	[Mon Apr 29 21:36:04 2024] RSP: 0018:ffff9d31805abce8 EFLAGS: 00010086
-	[Mon Apr 29 21:36:04 2024] RAX: 0000000000000000 RBX: ffff8c8c4004ee00 RCX=
-: 0000000000000000
-	[Mon Apr 29 21:36:04 2024] RDX: 0000000000000003 RSI: 0000000000000027 RDI=
-: 00000000ffffffff
-	[Mon Apr 29 21:36:04 2024] RBP: ffffffffc0b53570 R08: 0000000000000000 R09=
-: 0000000000000003
-	[Mon Apr 29 21:36:04 2024] R10: ffff9d31805abb80 R11: ffffffffa7cc1108 R12=
-: ffff8c8c42eb8000
-	[Mon Apr 29 21:36:04 2024] R13: ffff8c8c48077900 R14: ffff8c8cbbd30b80 R15=
-: 0000000000000001
-	[Mon Apr 29 21:36:04 2024] FS:  0000000000000000(0000) GS:ffff8c8cbbd00000=
-(0000) knlGS:0000000000000000
-	[Mon Apr 29 21:36:04 2024] CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
-33
-	[Mon Apr 29 21:36:04 2024] CR2: 00007ffd38bb3ff8 CR3: 000000010217a000 CR4=
-: 0000000000350ef0
-	[Mon Apr 29 21:36:04 2024] Call Trace:
-	[Mon Apr 29 21:36:04 2024]  <TASK>
-	[Mon Apr 29 21:36:04 2024]  ? __warn+0x7c/0x120
-	[Mon Apr 29 21:36:04 2024]  ? check_flush_dependency+0xfd/0x120
-	[Mon Apr 29 21:36:04 2024]  ? report_bug+0x18d/0x1c0
-	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
-	[Mon Apr 29 21:36:04 2024]  ? handle_bug+0x3c/0x80
-	[Mon Apr 29 21:36:04 2024]  ? exc_invalid_op+0x13/0x60
-	[Mon Apr 29 21:36:04 2024]  ? asm_exc_invalid_op+0x16/0x20
-	[Mon Apr 29 21:36:04 2024]  ? __pfx_qxl_gc_work+0x10/0x10 [qxl]
-	[Mon Apr 29 21:36:04 2024]  ? check_flush_dependency+0xfd/0x120
-	[Mon Apr 29 21:36:04 2024]  ? check_flush_dependency+0xfd/0x120
-	[Mon Apr 29 21:36:04 2024]  __flush_work.isra.0+0xc0/0x270
-	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
-	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
-	[Mon Apr 29 21:36:04 2024]  ? __queue_work.part.0+0x18b/0x3d0
-	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
-	[Mon Apr 29 21:36:04 2024]  qxl_queue_garbage_collect+0x7f/0x90 [qxl]
-	[Mon Apr 29 21:36:04 2024]  qxl_fence_wait+0x9c/0x180 [qxl]
-	[Mon Apr 29 21:36:04 2024]  dma_fence_wait_timeout+0x61/0x130
-	[Mon Apr 29 21:36:04 2024]  dma_resv_wait_timeout+0x6d/0xd0
-	[Mon Apr 29 21:36:04 2024]  ttm_bo_delayed_delete+0x26/0x80 [ttm]
-	[Mon Apr 29 21:36:04 2024]  process_one_work+0x18c/0x3b0
-	[Mon Apr 29 21:36:04 2024]  worker_thread+0x273/0x390
-	[Mon Apr 29 21:36:04 2024]  ? __pfx_worker_thread+0x10/0x10
-	[Mon Apr 29 21:36:04 2024]  kthread+0xdd/0x110
-	[Mon Apr 29 21:36:04 2024]  ? __pfx_kthread+0x10/0x10
-	[Mon Apr 29 21:36:04 2024]  ret_from_fork+0x30/0x50
-	[Mon Apr 29 21:36:04 2024]  ? __pfx_kthread+0x10/0x10
-	[Mon Apr 29 21:36:04 2024]  ret_from_fork_asm+0x1a/0x30
-	[Mon Apr 29 21:36:04 2024]  </TASK>
-	[Mon Apr 29 21:36:04 2024] ---[ end trace 0000000000000000 ]---
+Commit-ID:     c9e1dc9825319392b44d3c22493dc543075933b9
+Gitweb:        https://git.kernel.org/tip/c9e1dc9825319392b44d3c22493dc543075933b9
+Author:        Linus Torvalds <torvalds@linux-foundation.org>
+AuthorDate:    Mon, 29 Apr 2024 10:00:51 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 30 Apr 2024 08:08:30 +02:00
 
-I find that the exact warning message mentioned in
- https://lore.kernel.org/lkml/20240404181448.1643-1-dreaming.about.electric=
-.sheep@gmail.com/T/#m8c2ecc83ebba8717b1290ec28d4dc15f2fa595d5
-And confirmed that the warning is caused by 07ed11afb68d94eadd4ffc082b97c23=
-31307c5ea and reverting it can fix.
+x86/mm: Remove broken vsyscall emulation code from the page fault code
 
+The syzbot-reported stack trace from hell in this discussion thread
+actually has three nested page faults:
 
-It seems that under heavy load, qxl_queue_garbage_collect would be called w=
-ithin
-a WQ_MEM_RECLAIM worker, and flush qxl_gc_work which is a
-!WQ_MEM_RECLAIM worker. This will trigger the kernel WARNING by
-check_flush_dependency.
+  https://lore.kernel.org/r/000000000000d5f4fc0616e816d4@google.com
 
-And I tried following changes, setting flush flag to false.
-The warning is gone, but I am not sure whether there is any other side-effe=
-ct,
-especially the issue mentioned in=20
-https://lore.kernel.org/lkml/20240404181448.1643-2-dreaming.about.electric.=
-sheep@gmail.com/T/#m988ffad2000c794dcfdab7e60b03db93d8726391
+... and I think that's actually the important thing here:
 
-Signed-off-by: David Wang <00107082@163.com>
+ - the first page fault is from user space, and triggers the vsyscall
+   emulation.
+
+ - the second page fault is from __do_sys_gettimeofday(), and that should
+   just have caused the exception that then sets the return value to
+   -EFAULT
+
+ - the third nested page fault is due to _raw_spin_unlock_irqrestore() ->
+   preempt_schedule() -> trace_sched_switch(), which then causes a BPF
+   trace program to run, which does that bpf_probe_read_compat(), which
+   causes that page fault under pagefault_disable().
+
+It's quite the nasty backtrace, and there's a lot going on.
+
+The problem is literally the vsyscall emulation, which sets
+
+        current->thread.sig_on_uaccess_err = 1;
+
+and that causes the fixup_exception() code to send the signal *despite* the
+exception being caught.
+
+And I think that is in fact completely bogus.  It's completely bogus
+exactly because it sends that signal even when it *shouldn't* be sent -
+like for the BPF user mode trace gathering.
+
+In other words, I think the whole "sig_on_uaccess_err" thing is entirely
+broken, because it makes any nested page-faults do all the wrong things.
+
+Now, arguably, I don't think anybody should enable vsyscall emulation any
+more, but this test case clearly does.
+
+I think we should just make the "send SIGSEGV" be something that the
+vsyscall emulation does on its own, not this broken per-thread state for
+something that isn't actually per thread.
+
+The x86 page fault code actually tried to deal with the "incorrect nesting"
+by having that:
+
+                if (in_interrupt())
+                        return;
+
+which ignores the sig_on_uaccess_err case when it happens in interrupts,
+but as shown by this example, these nested page faults do not need to be
+about interrupts at all.
+
+IOW, I think the only right thing is to remove that horrendously broken
+code.
+
+The attached patch looks like the ObviouslyCorrect(tm) thing to do.
+
+NOTE! This broken code goes back to this commit in 2011:
+
+  4fc3490114bb ("x86-64: Set siginfo and context on vsyscall emulation faults")
+
+... and back then the reason was to get all the siginfo details right.
+Honestly, I do not for a moment believe that it's worth getting the siginfo
+details right here, but part of the commit says:
+
+    This fixes issues with UML when vsyscall=emulate.
+
+... and so my patch to remove this garbage will probably break UML in this
+situation.
+
+I do not believe that anybody should be running with vsyscall=emulate in
+2024 in the first place, much less if you are doing things like UML. But
+let's see if somebody screams.
+
+Reported-and-tested-by: syzbot+83e7f982ca045ab4405c@syzkaller.appspotmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lore.kernel.org/r/CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com
 ---
- drivers/gpu/drm/qxl/qxl_release.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/vsyscall/vsyscall_64.c | 25 +-------------------
+ arch/x86/include/asm/processor.h      |  1 +-
+ arch/x86/mm/fault.c                   | 33 +--------------------------
+ 3 files changed, 3 insertions(+), 56 deletions(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_re=
-lease.c
-index 9febc8b73f09..f372085c5aad 100644
---- a/drivers/gpu/drm/qxl/qxl_release.c
-+++ b/drivers/gpu/drm/qxl/qxl_release.c
-@@ -76,7 +76,7 @@ static long qxl_fence_wait(struct dma_fence *fence, bool =
-intr,
- 	qxl_io_notify_oom(qdev);
-=20
- 	for (count =3D 0; count < 11; count++) {
--		if (!qxl_queue_garbage_collect(qdev, true))
-+		if (!qxl_queue_garbage_collect(qdev, false))
- 			break;
-=20
- 		if (dma_fence_is_signaled(fence))
---=20
-2.39.2
-
-
-
-David
-
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index a3c0df1..3b0f61b 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -98,11 +98,6 @@ static int addr_to_vsyscall_nr(unsigned long addr)
+ 
+ static bool write_ok_or_segv(unsigned long ptr, size_t size)
+ {
+-	/*
+-	 * XXX: if access_ok, get_user, and put_user handled
+-	 * sig_on_uaccess_err, this could go away.
+-	 */
+-
+ 	if (!access_ok((void __user *)ptr, size)) {
+ 		struct thread_struct *thread = &current->thread;
+ 
+@@ -123,7 +118,6 @@ bool emulate_vsyscall(unsigned long error_code,
+ 	struct task_struct *tsk;
+ 	unsigned long caller;
+ 	int vsyscall_nr, syscall_nr, tmp;
+-	int prev_sig_on_uaccess_err;
+ 	long ret;
+ 	unsigned long orig_dx;
+ 
+@@ -234,12 +228,8 @@ bool emulate_vsyscall(unsigned long error_code,
+ 		goto do_ret;  /* skip requested */
+ 
+ 	/*
+-	 * With a real vsyscall, page faults cause SIGSEGV.  We want to
+-	 * preserve that behavior to make writing exploits harder.
++	 * With a real vsyscall, page faults cause SIGSEGV.
+ 	 */
+-	prev_sig_on_uaccess_err = current->thread.sig_on_uaccess_err;
+-	current->thread.sig_on_uaccess_err = 1;
+-
+ 	ret = -EFAULT;
+ 	switch (vsyscall_nr) {
+ 	case 0:
+@@ -262,23 +252,12 @@ bool emulate_vsyscall(unsigned long error_code,
+ 		break;
+ 	}
+ 
+-	current->thread.sig_on_uaccess_err = prev_sig_on_uaccess_err;
+-
+ check_fault:
+ 	if (ret == -EFAULT) {
+ 		/* Bad news -- userspace fed a bad pointer to a vsyscall. */
+ 		warn_bad_vsyscall(KERN_INFO, regs,
+ 				  "vsyscall fault (exploit attempt?)");
+-
+-		/*
+-		 * If we failed to generate a signal for any reason,
+-		 * generate one here.  (This should be impossible.)
+-		 */
+-		if (WARN_ON_ONCE(!sigismember(&tsk->pending.signal, SIGBUS) &&
+-				 !sigismember(&tsk->pending.signal, SIGSEGV)))
+-			goto sigsegv;
+-
+-		return true;  /* Don't emulate the ret. */
++		goto sigsegv;
+ 	}
+ 
+ 	regs->ax = ret;
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 811548f..78e51b0 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -472,7 +472,6 @@ struct thread_struct {
+ 	unsigned long		iopl_emul;
+ 
+ 	unsigned int		iopl_warn:1;
+-	unsigned int		sig_on_uaccess_err:1;
+ 
+ 	/*
+ 	 * Protection Keys Register for Userspace.  Loaded immediately on
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 622d12e..bba4e02 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -723,39 +723,8 @@ kernelmode_fixup_or_oops(struct pt_regs *regs, unsigned long error_code,
+ 	WARN_ON_ONCE(user_mode(regs));
+ 
+ 	/* Are we prepared to handle this kernel fault? */
+-	if (fixup_exception(regs, X86_TRAP_PF, error_code, address)) {
+-		/*
+-		 * Any interrupt that takes a fault gets the fixup. This makes
+-		 * the below recursive fault logic only apply to a faults from
+-		 * task context.
+-		 */
+-		if (in_interrupt())
+-			return;
+-
+-		/*
+-		 * Per the above we're !in_interrupt(), aka. task context.
+-		 *
+-		 * In this case we need to make sure we're not recursively
+-		 * faulting through the emulate_vsyscall() logic.
+-		 */
+-		if (current->thread.sig_on_uaccess_err && signal) {
+-			sanitize_error_code(address, &error_code);
+-
+-			set_signal_archinfo(address, error_code);
+-
+-			if (si_code == SEGV_PKUERR) {
+-				force_sig_pkuerr((void __user *)address, pkey);
+-			} else {
+-				/* XXX: hwpoison faults will set the wrong code. */
+-				force_sig_fault(signal, si_code, (void __user *)address);
+-			}
+-		}
+-
+-		/*
+-		 * Barring that, we can do the fixup and be happy.
+-		 */
++	if (fixup_exception(regs, X86_TRAP_PF, error_code, address))
+ 		return;
+-	}
+ 
+ 	/*
+ 	 * AMD erratum #91 manifests as a spurious page fault on a PREFETCH
