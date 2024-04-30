@@ -1,110 +1,195 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6397D171669
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1DE171094
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714481898; cv=none; b=NlZsJZZMAsJ+uQ6968uRAiL+Hzg+A7TPWn5CjQ1Mzt2sE6kIVRRp6VpL1FH+9mTRiEBzFR6pIEm9bJdK8BREGBHGEb4OIpLkbug7mLcGiv/mdWgFNKvW0B4UzHbxNXEp8x94apyTQT3d6I2mjOeja8TXS28W+3gVVhAMcz/driM=
+	t=1714481926; cv=none; b=aSlTf45yYVJ7CSvkQ0S2Zbe2+Unxcl+DKF9mU9D3whVPe+o1BmPNQdPy+OOqNGsUWAPmyVsn1DH9FX1aN/7E22jr487ilpoUnRaI8Ejop2Gqt5a4cx1S1QGabnf9HSCsWHKsHg8jcZZYodDtOtmqAmbVyMymNzxwOKW2SSwl92U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714481898; c=relaxed/simple;
-	bh=6u+FWsINnrfSGtCwyNnQlvbx5yJBBCmbil7RE1EkMdo=;
+	s=arc-20240116; t=1714481926; c=relaxed/simple;
+	bh=bdVDQywRN9q+0TGpC16hr/Ent22htelHX9ET+XuhSHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R6jTyxc06e6AMDdc3yAbpebAU1+FRFmcs+VCbnbmR6ItZ5aSdxVLJizE0oebqpjL+KEB7lUOjWJnZ3dZK1wqBHR42sErHme0wgjItGsBmcCqo9d6gNMhfUzjBejsHFIcpGZkhnhIIxIco/biIX7IJcFW16vCwcLNuhbfcTO9ym8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=k0hz+6Yi; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=cSCUCEAN4j9Mo1qD2to46qw8hh1JaYYYNSw7cBUuwG755DMWRiCjSQIbD90X3lnqAgoeUB0VMngM3ZmnWNTEvHV9Aav9TIaxKUOlzFAuXWUESd7I7c2b/g2ZdToj4w1wOnNobJeOWs0t4gjTYbWvHlPULVt2nnDJmomKszz1VpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=T0o0xMM/; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="k0hz+6Yi"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BD00D40E00B2;
-	Tue, 30 Apr 2024 12:58:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ZV3pt-UnzM2i; Tue, 30 Apr 2024 12:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1714481890; bh=JIpGJ222f6DlJRq4eDp7EoEORpRjHOTnZ9jXZzNPKUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k0hz+6YiJrTAJEVtCM44lX+k6fS0nhtBTM7sNoVHfqYqDltk9uRgnk05/peANK4Xw
-	 DY34QJaWudiQm121U/c2t8W9sEFjrtGuAllZvb9yd6NnZOvydLsGezVRgEZ8WKtd0J
-	 AlUwp1g0Vpq9x5deLTXx8qHmrAyEMVQQki1fARM4o3YIuhF4f5RTgZBmkk/h7utIgs
-	 ERZvpCAJpzbElAae/y10YkkGASFA94BjvJO2TbYLWwKOtCtsWy3CnZe/uian3x3y63
-	 /rLaLb4RnEs0KNL9O/1vJWSbEETl3egE9GeE6s1cncuMM8FAk+Q/8S1b+9fKt8gabi
-	 iPQoSYgmOWupQU8E2vUFZTj6ztwyzt6qcC58Gp6nkowShdJRbvLwEGNt+qgufoxC2V
-	 BSJ34iFpEpqUkQ5PJf/nCNAVbzs++JNLutcdMVAiA7Mw5wg9P9T4e62l/5sr/nQ7rJ
-	 ucRyNe40IPf7uvX55ZYNdyn8DAYJeau5s/qCxKUsc+f0N25+8lPKxZ/vnRWTbd22yQ
-	 VdzC5qJ2io5JiDh8EQUR2OORscxfnjDuiQzyRdm4abg8tl/ULDMf5o13YZnYRwBifr
-	 22oeZvMnpDmhujKIXyfkN+AXuWCT77avEaGABW3EQqG1WbUIKnCZjlU+nAdu+UqTML
-	 sFmaxBKupr32m8kBpVxTKI88=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5CE0740E016B;
-	Tue, 30 Apr 2024 12:57:50 +0000 (UTC)
-Date: Tue, 30 Apr 2024 14:57:44 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	Kai Huang <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv10 05/18] x86/kexec: Keep CR4.MCE set during kexec for
- TDX guest
-Message-ID: <20240430125744.GQZjDqyM3k_peEw-bc@fat_crate.local>
-References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
- <20240409113010.465412-6-kirill.shutemov@linux.intel.com>
- <ZhVPIDDLkjOB96fI@google.com>
- <3q6jv3g4tezybmd667mqxio7ty22akxv7okrznmzx3tju2u4qo@2alzjkbgm2lh>
- <20240428171111.GKZi6DLy_ZwuZsZdFq@fat_crate.local>
- <e35yxpa2xdynm7focg6k4u2bjzojn24bmeaszh2jz52e4szc5f@6mgtrdnkewhe>
- <20240429144454.GHZi-yZkD0boKk5N17@fat_crate.local>
- <yh7wbdce5o35l4nkrkml3jp7tyzvzxwnfji2vmvnvaczsl6gdr@6qnwpw7g76a3>
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="T0o0xMM/"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-346407b8c9aso1230971f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:58:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1714481922; x=1715086722; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pK7jmZXxRZeTb+AiO8D/UYyBdofUQEfkt6S+4jnJTKQ=;
+        b=T0o0xMM/FBO9X7XNfKLT4ERa6RY0sS7ZfCMEH7LIv8iF5RbtAJnulVgeD85RU7J8pY
+         8ivrGbbl/7ylk1i6Em9MRy/P3igoodu7Wsn76yLkN+8PLESMci0Jai626Nz6POpJqrdv
+         8VLN1ehXSyZD1dHqCRP5wocjSWvpiw2TD4Oro=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714481922; x=1715086722;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pK7jmZXxRZeTb+AiO8D/UYyBdofUQEfkt6S+4jnJTKQ=;
+        b=jKg0oLhqXrBIxtgvgPJ3zgdQ3CgzMp9ADVAyp7tN7/u7phVRJS7sf3ur44Qtf2ujCI
+         UPoHG2DlRdzO7grxxjr63YlwR2+Ex/au3Ki+N4teWUQwSMS1eZktV2W5MHw9aUR2t47d
+         kNGLuvmCnFA62xvNEEzSx0R2AOKSkDuqXUF4tPSKq5j6wquT6heZT4GUWrhJV13XIpEf
+         P30BxMlU1Ait3KE/Dgi9NYwtKNVseLdyVdugwTXHsFM3e1LCPIJkm6IODwLVzpMTGkui
+         RTISIwPCbBCV4gcimMBGE14IcrsXgcyxHXEwb0lLsjBurXhLP1BiE2816dBh3o+5P4pS
+         MUqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvNKhtyZX48BTTm7+s7sOA9KqNHjHds/2wRqczUAQWfCRZL65ItWFBlBuDXV1W5hHStVNoUkVqoQ+67UY2L3Y+1mxMOTnqHRc1KNZ5
+X-Gm-Message-State: AOJu0YwmRIWt9BB0bCM1V9UlJfFwsVwKco2Og0Sro954on1h/SbbcM7i
+	lpcSGa9slOi92XAhNJDdHXsX2jmQaHsUVW64/ul4we0HxWZjHISk556frtxomcw=
+X-Google-Smtp-Source: AGHT+IGzObgQhOrn5Cn9hPdb+5X//u9rqtohoWnLNXTakga6PCKYPoCjKQwOZZ22G6y8vztfVi4+nA==
+X-Received: by 2002:a5d:5692:0:b0:34d:7d77:36fa with SMTP id f18-20020a5d5692000000b0034d7d7736famr1189021wrv.5.1714481922347;
+        Tue, 30 Apr 2024 05:58:42 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id p1-20020adfcc81000000b0034d8c60c10bsm1359080wrj.92.2024.04.30.05.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 05:58:41 -0700 (PDT)
+Date: Tue, 30 Apr 2024 14:58:39 +0200
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Jocelyn Falempe <jfalempe@redhat.com>
+Cc: daniel@ffwll.ch, tzimmermann@suse.de, airlied@redhat.com, deller@gmx.de,
+	geert@linux-m68k.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] lib/fonts: Allow to select fonts for drm_panic
+Message-ID: <ZjDq_1t8iRf40dRa@phenom.ffwll.local>
+Mail-Followup-To: Jocelyn Falempe <jfalempe@redhat.com>,
+	tzimmermann@suse.de, airlied@redhat.com, deller@gmx.de,
+	geert@linux-m68k.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+References: <20240419132243.154466-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <yh7wbdce5o35l4nkrkml3jp7tyzvzxwnfji2vmvnvaczsl6gdr@6qnwpw7g76a3>
+In-Reply-To: <20240419132243.154466-1-jfalempe@redhat.com>
+X-Operating-System: Linux phenom 6.6.15-amd64 
 
-On Mon, Apr 29, 2024 at 06:16:54PM +0300, Kirill A. Shutemov wrote:
-> Yes, that's what happens in current upstream.
+On Fri, Apr 19, 2024 at 03:20:19PM +0200, Jocelyn Falempe wrote:
+> drm_panic has been introduced recently, and uses the same fonts as
+> FRAMEBUFFER_CONSOLE.
+> 
+> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
 
-Let's rewrite that commit message then:
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-"TDX guests run with MCA enabled (CR4.MCE=1b) from the very start. If
-that bit is cleared during CR4 register reprogramming during boot or
-kexec flows, a #VE exception will be raised which the guest kernel
-cannot handle that early.
+lib/fonts/ doesn't seem to have a designated maintainer, so please push
+this through drm-misc.
 
-Therefore, make sure the CR4.MCE setting is preserved over kexec too and
-avoid raising any #VEs."
-
-without that bit about TDX guests might be allowed to clear CR4.MCE
-which is only confusing and unnecessary.
-
-Thx.
+Thanks, Sima
+> ---
+>  lib/fonts/Kconfig | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/lib/fonts/Kconfig b/lib/fonts/Kconfig
+> index 7e945fdcbf11..befcb463f738 100644
+> --- a/lib/fonts/Kconfig
+> +++ b/lib/fonts/Kconfig
+> @@ -10,7 +10,7 @@ if FONT_SUPPORT
+>  
+>  config FONTS
+>  	bool "Select compiled-in fonts"
+> -	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE
+> +	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE || DRM_PANIC
+>  	help
+>  	  Say Y here if you would like to use fonts other than the default
+>  	  your frame buffer console usually use.
+> @@ -23,7 +23,7 @@ config FONTS
+>  
+>  config FONT_8x8
+>  	bool "VGA 8x8 font" if FONTS
+> -	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE
+> +	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE || DRM_PANIC
+>  	default y if !SPARC && !FONTS
+>  	help
+>  	  This is the "high resolution" font for the VGA frame buffer (the one
+> @@ -46,7 +46,7 @@ config FONT_8x16
+>  
+>  config FONT_6x11
+>  	bool "Mac console 6x11 font (not supported by all drivers)" if FONTS
+> -	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE
+> +	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE || DRM_PANIC
+>  	default y if !SPARC && !FONTS && MAC
+>  	help
+>  	  Small console font with Macintosh-style high-half glyphs.  Some Mac
+> @@ -54,7 +54,7 @@ config FONT_6x11
+>  
+>  config FONT_7x14
+>  	bool "console 7x14 font (not supported by all drivers)" if FONTS
+> -	depends on FRAMEBUFFER_CONSOLE
+> +	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
+>  	help
+>  	  Console font with characters just a bit smaller than the default.
+>  	  If the standard 8x16 font is a little too big for you, say Y.
+> @@ -62,7 +62,7 @@ config FONT_7x14
+>  
+>  config FONT_PEARL_8x8
+>  	bool "Pearl (old m68k) console 8x8 font" if FONTS
+> -	depends on FRAMEBUFFER_CONSOLE
+> +	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
+>  	default y if !SPARC && !FONTS && AMIGA
+>  	help
+>  	  Small console font with PC-style control-character and high-half
+> @@ -70,7 +70,7 @@ config FONT_PEARL_8x8
+>  
+>  config FONT_ACORN_8x8
+>  	bool "Acorn console 8x8 font" if FONTS
+> -	depends on FRAMEBUFFER_CONSOLE
+> +	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
+>  	default y if !SPARC && !FONTS && ARM && ARCH_ACORN
+>  	help
+>  	  Small console font with PC-style control characters and high-half
+> @@ -90,7 +90,7 @@ config FONT_6x10
+>  
+>  config FONT_10x18
+>  	bool "console 10x18 font (not supported by all drivers)" if FONTS
+> -	depends on FRAMEBUFFER_CONSOLE
+> +	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
+>  	help
+>  	  This is a high resolution console font for machines with very
+>  	  big letters. It fits between the sun 12x22 and the normal 8x16 font.
+> @@ -105,7 +105,7 @@ config FONT_SUN8x16
+>  
+>  config FONT_SUN12x22
+>  	bool "Sparc console 12x22 font (not supported by all drivers)"
+> -	depends on FRAMEBUFFER_CONSOLE && (!SPARC && FONTS || SPARC)
+> +	depends on (FRAMEBUFFER_CONSOLE && (!SPARC && FONTS || SPARC)) || DRM_PANIC
+>  	help
+>  	  This is the high resolution console font for Sun machines with very
+>  	  big letters (like the letters used in the SPARC PROM). If the
+> @@ -113,7 +113,7 @@ config FONT_SUN12x22
+>  
+>  config FONT_TER16x32
+>  	bool "Terminus 16x32 font (not supported by all drivers)"
+> -	depends on FRAMEBUFFER_CONSOLE && (!SPARC && FONTS || SPARC)
+> +	depends on (FRAMEBUFFER_CONSOLE && (!SPARC && FONTS || SPARC)) || DRM_PANIC
+>  	help
+>  	  Terminus Font is a clean, fixed width bitmap font, designed
+>  	  for long (8 and more hours per day) work with computers.
+> @@ -122,7 +122,7 @@ config FONT_TER16x32
+>  
+>  config FONT_6x8
+>  	bool "OLED 6x8 font" if FONTS
+> -	depends on FRAMEBUFFER_CONSOLE
+> +	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
+>  	help
+>  	  This font is useful for small displays (OLED).
+>  
+> 
+> base-commit: a35e92ef04c07bd473404b9b73d489aea19a60a8
+> -- 
+> 2.44.0
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
