@@ -1,161 +1,71 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A084338DFC;
-	Tue, 30 Apr 2024 07:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F309B211C
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714462474; cv=none; b=MkpNJAg0w/uK86HKolLowmQQyXznlhrSVOlgEzbUMQ5arO0+F0Oz0TVsuwVFVw5E8I1th0gEo6fISeAiN9nauXH8sYJ9N0Z3ZhbA3bv6h8AVf2ej20Z0og4bCevdxSpoRIxW+FosjRgM/dG+6Jz3GmZu7j0vMOcy+TolfuQqB2I=
+	t=1714462509; cv=none; b=EZQZYsN9N/66C4UmRsas8lzKUip5Umu2IWm8zPP/ZiQmtjtYNY52gNjqen58mQ8LNNMwWKS7RqOx4eXYBEWqFHK8QtZ81chI8v1Pzq6IoluJafo+UfNLwkjLLdYmsohUd/6XIhb0hfXWYq4BiZSybOF3t5/XCF1qjrB98rwHXqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714462474; c=relaxed/simple;
-	bh=9BdL5rz1siwVikdm61Qcl+hhIn7YQCw3RRQ5IFAXeD4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MyChhcAx0e1YHWpNdDMMX+uU/S2yLxJl7cPIFqjr6EOQ25n9ssOSukLItkavmQvPNR5a9QkLGPXrxM0YiNRmvlrexPYXqWL4uwbvCdxjI5LLyn2qtg/vW5ciFyAxJCekrmPd4yhoJkKiIvykMTPV9ypzZObx8TgeWlcrNVPCsOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZswrpLQ+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JVxkGGSI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZswrpLQ+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JVxkGGSI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZswrpLQ+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JVxkGGSI";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZswrpLQ+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JVxkGGSI"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CA30C1F7C6;
-	Tue, 30 Apr 2024 07:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714462470; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=71/GVDgdlfEFcv6CwQsH1RgBK1dMGCf8k3QOq5VUuuA=;
-	b=ZswrpLQ+ieWPRt1Eok+gO8PidsBh1j9m32vFqBj0b+9U1Y9tyf0FotzPgxdEfZbyk5lh9Z
-	CislQ5L3mWZd5ZIr1yGIRX5aUlWY+9Dx6PdeVYJVnE4zeTUW0lA/m/3cEzBcwCD042x64m
-	KXMV0J3u7xgRlT91U9W016pMe2MtmT0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714462470;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=71/GVDgdlfEFcv6CwQsH1RgBK1dMGCf8k3QOq5VUuuA=;
-	b=JVxkGGSI4nJShR/JrRSMO3a3J7TH71N+5Jf8K1arv4T62Vrz8V4GHn/+sEGvFADa25JNeR
-	tnfmHp9juR+cGmBQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ZswrpLQ+;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=JVxkGGSI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714462470; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=71/GVDgdlfEFcv6CwQsH1RgBK1dMGCf8k3QOq5VUuuA=;
-	b=ZswrpLQ+ieWPRt1Eok+gO8PidsBh1j9m32vFqBj0b+9U1Y9tyf0FotzPgxdEfZbyk5lh9Z
-	CislQ5L3mWZd5ZIr1yGIRX5aUlWY+9Dx6PdeVYJVnE4zeTUW0lA/m/3cEzBcwCD042x64m
-	KXMV0J3u7xgRlT91U9W016pMe2MtmT0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714462470;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=71/GVDgdlfEFcv6CwQsH1RgBK1dMGCf8k3QOq5VUuuA=;
-	b=JVxkGGSI4nJShR/JrRSMO3a3J7TH71N+5Jf8K1arv4T62Vrz8V4GHn/+sEGvFADa25JNeR
-	tnfmHp9juR+cGmBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6A64D133A7;
-	Tue, 30 Apr 2024 07:34:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4i4kGAafMGbyNQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 30 Apr 2024 07:34:30 +0000
-Date: Tue, 30 Apr 2024 09:34:42 +0200
-Message-ID: <87cyq7nw19.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Manuel Barrio Linares <mbarriolinares@gmail.com>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Geraldo Nascimento <geraldogabriel@gmail.com>,
-	dengxiang <dengxiang@nfschina.com>,
-	Jussi Laako <jussi@sonarnerd.net>,
-	Christos Skevis <xristos.thes@gmail.com>,
-	Alexander Tsoy <alexander@tsoy.me>,
-	Jeremie Knuesel <knuesel@gmail.com>,
-	WhaleChang <whalechang@google.com>,
-	Sean Young <sean@mess.org>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ALSA: usb-audio: Add sampling rates support for Mbox3
-In-Reply-To: <20240429193522.10380-1-mbarriolinares@gmail.com>
-References: <87il00pdsz.wl-tiwai@suse.de>
-	<20240429193522.10380-1-mbarriolinares@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1714462509; c=relaxed/simple;
+	bh=9UPeIh7mtYBQzrxTBiA3FDDJwCgiBGosV6I2nCmr1GA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=sV2NzUAdENMfvsu2cwr5VSBLNM34aiKbcXc//cWC26n2CDDQhukFzW0dH7T+WJ0VSN0KR+6xBxEM/ABk2htJKw4lXvSiM93GZXxb6CEQevjkkn9q7RcszD0Ir5Uhf5Yf7E/VbBNr0INP26YrbsQLZtmKX9v7fcj1udH2I6Zwk3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7da3d17a35cso559280039f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 00:35:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714462507; x=1715067307;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HJ9K/yhR7kV7qTCkX9qsmoF4Z0K/0agFCXAnN8s+pRI=;
+        b=CghG60DwLliMKBrK2zDMGUbFfJkJqPQaqO+Xxrgkk8AL8tWBcysIfTLUMTfHnAsPCS
+         1xZke2HS3u2yguo1s1x78V1zpOikM7KS5qGw+2rSwjZYholBw19lp81FgKmM1EtAAxjG
+         uiqo4bUN/Jct+sOL0ukNoXLiY6cI/y5WHb0PyDyfrF9JbSDB+JuIPQCTMSh0P2545vDk
+         lZcreeJoJ+gK23V/Md9vnOrXoh35vQym69UYsyAsJoKa21xlJ3fdCGHLIkNCM6lQtYJ4
+         eU5L2uYcHGHM3/5uWodHnII5JLu9YryZD61SUyFB8SzIcMJ9VCHU2/zNy6JgluuYB2SX
+         flCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyCNyrfA/xiW3JDaGbyJcj1Yrw8ezN9Ow2dGbU6s3jmlYO575e/Y0Z2E57PDdA2X2XqsKDx+quUyCamZsHvYM38Nkv9/JZyrJ0aV9f
+X-Gm-Message-State: AOJu0YzeWVNxDuPUrWcgFFkVvnahlVIpHVP+nrj+ev01WZd4JyEP6EH+
+	asm1UWmLH4KDuZZoTKSthc4xZ4mrVdtp2uGKTRkGwgYwbMKmMzg/fuRXD1NrPad59/KgUedOzU+
+	/SVj2Yn7H2NayU89p4Tm+Fv+c7ozneyPEpRaz7BzNpZF+0nxF5wvkVNM=
+X-Google-Smtp-Source: AGHT+IFh16A3UfNvvKTyJfZ+0v1lmG9Pzb2jtFqVdhwPBKMVD9B44IWqrk6VXExoNjA5XRQd88smD1GzqegvQjM36M/zjcIhjiAS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -3.98
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: CA30C1F7C6
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.98 / 50.00];
-	BAYES_HAM(-2.97)[99.88%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[perex.cz,suse.com,gmail.com,nfschina.com,sonarnerd.net,tsoy.me,google.com,mess.org,vger.kernel.org];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:29d0:b0:7da:18b8:397c with SMTP id
+ z16-20020a05660229d000b007da18b8397cmr295497ioq.0.1714462507190; Tue, 30 Apr
+ 2024 00:35:07 -0700 (PDT)
+Date: Tue, 30 Apr 2024 00:35:07 -0700
+In-Reply-To: <tencent_7437344BBA742F76EB67C63D0F362897D209@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b8e00706174b683c@google.com>
+Subject: Re: [syzbot] [ext4?] KMSAN: uninit-value in ext4_inlinedir_to_tree
+From: syzbot <syzbot+eaba5abe296837a640c0@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 29 Apr 2024 21:35:00 +0200,
-Manuel Barrio Linares wrote:
-> 
-> +	set_rate = le32_to_cpu(buff4);
-> +	if (new_rate != set_rate)
+Hello,
 
-Those two lines cause sparse warnings, unfortunately.
-You can't assign int to __le32 type directly, and you can't compare
-between those types directly, either.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-That said, it should be rather like
+Reported-and-tested-by: syzbot+eaba5abe296837a640c0@syzkaller.appspotmail.com
 
-	if (new_rate != le32_to_cpu(buff4))
-		dev_warn(...);
+Tested on:
 
+commit:         98369dcc Merge tag 'wq-for-6.9-rc6-fixes' of git://git..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=12ca42f8980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bbf567496022057b
+dashboard link: https://syzkaller.appspot.com/bug?extid=eaba5abe296837a640c0
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=100abe7f180000
 
-You can check the sparse warning by yourself by passing C=1 argument
-to make, too.
-
-
-thanks,
-
-Takashi
+Note: testing is done by a robot and is best-effort only.
