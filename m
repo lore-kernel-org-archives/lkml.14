@@ -1,94 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3E01527B9;
-	Tue, 30 Apr 2024 14:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DBB770F6;
+	Tue, 30 Apr 2024 14:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714488737; cv=none; b=AYe6RhT0xJjN6lQxh1bnKQJauaO2InxuEAX71OemCm6tEW+tkUub1kUtaXWq6pac6GKkdgn9j9Q74QdXCh6mg73XscbTA3gWoTKka3V6fZMEa/a6/OhUo1/ROA089NFY9UABkUySBn37Ul/cuPCTK0Ck4w7or2bl8NRL3HX/3Qw=
+	t=1714488825; cv=none; b=jX5lmmihccs6cdGyQblduQZ6PvfW1fGvxoP8F/RYOGP85ppft2lbB2tcA4asHok0Wf6YYZwHmFaxuyC0aOn/KLzXryN7xmPiTjn+10IIXSS0Hy7u8HGuUjVDj3klXFhf/kkKVz6ic7Msb2wxkfuT91yL44kYQ5YikMXef9gXF54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714488737; c=relaxed/simple;
-	bh=53TYS050ekFY+hCRJgoRydEbdy9KAeSVM7IKbSuCNm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IHUPowBgoZh+qA37mdfJ+HdEVGWpLOhesulJT6eZY7drCon3kEWrn0OXJrB1k+Iw+eMoMqeLnMTywIMwkaf9hvXp5Wz5HdyQlzit9x+Tm0IYUtbOJAFo8Gnx0BK14GCPaxLtnM59aTuStY+pPWAjpFixo0Qr4pnDeesibcaJLj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8Epojar; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8Epojar"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE075C2BBFC;
-	Tue, 30 Apr 2024 14:52:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714488737;
-	bh=53TYS050ekFY+hCRJgoRydEbdy9KAeSVM7IKbSuCNm0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j8EpojarNlsedEwjtCKTA3iSWhwIXd1JliB+DGEha/dE/3eOHpABarJ3X6CsV34oh
-	 R6XeCaqV9rb7U1+yOJlq91YEse8pLKIC23K0OM/P4fkwLlQ/pz2Jk02BcYOPKFC8GR
-	 12gKzm7gdPWZy6VWSrzFFLC2OZFte3RCATIjoUPFDNzE7j+6vj8EYlHQqFcjTucrrT
-	 4RLrx+O+oXVYrbqfckBnv2YirNQBq4mBezBK3+cb2ILpQh8h0uOlI/AGpQKmuvNtMc
-	 nZHpHinrEbMLEJFEgjKio8xHNJjV54Nml8e7VTqLa6RY0x1NRm4YdEgYdPqhYmywzb
-	 VfNe3d1e0lhNg==
-Date: Tue, 30 Apr 2024 23:52:15 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Bhargav Raviprakash <bhargav.r@ltts.com>
-Cc: dan.carpenter@linaro.org, arnd@arndb.de, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, eblanc@baylibre.com,
-	gregkh@linuxfoundation.org, jpanis@baylibre.com, kristo@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, lee@kernel.org,
-	lgirdwood@gmail.com, linus.walleij@linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, nm@ti.com,
-	robh+dt@kernel.org, vigneshr@ti.com
-Subject: Re: [PATCH v7 08/10] regulator: tps6594-regulator: Add TI TPS65224
- PMIC regulators
-Message-ID: <ZjEFn43dNf1UFn3f@finisterre.sirena.org.uk>
-References: <54eca1ac-288c-4f88-8c06-f5859bfa715c@moroto.mountain>
- <0109018f2f1bd112-3d9df5c2-8ed6-47dd-97fe-d724da6d2bed-000000@ap-south-1.amazonses.com>
+	s=arc-20240116; t=1714488825; c=relaxed/simple;
+	bh=L5mon1Yu+E8bjEo2vY62s8u5PvtYfuTOVJM9FG3z8cw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k46vUKCXv7DwaVuHlkDlhl2hUIySEaVNTsaJChiKgO/moltScBuAdiX0k3gmW4yvynGDRGCV2Ous+OsDh2nqCYHgfeeF0Z77Cqz6311AUZVDnGnz1O5ecJL7SAGeXVJlmYemR5tVVLw2gydT8/KmMMtQrh6gpGW97Dwnel6o0MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTNRp0dvDz6GD56;
+	Tue, 30 Apr 2024 22:51:02 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 65191140A87;
+	Tue, 30 Apr 2024 22:53:39 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 30 Apr
+ 2024 15:53:38 +0100
+Date: Tue, 30 Apr 2024 15:53:37 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Robert Richter <rrichter@amd.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>, Len Brown
+	<lenb@kernel.org>
+Subject: Re: [PATCH v6 2/7] ACPI/NUMA: Remove architecture dependent
+ remainings
+Message-ID: <20240430155337.00007a28@Huawei.com>
+In-Reply-To: <20240430092200.2335887-3-rrichter@amd.com>
+References: <20240430092200.2335887-1-rrichter@amd.com>
+	<20240430092200.2335887-3-rrichter@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3y5hQ7/3IW5AFlAE"
-Content-Disposition: inline
-In-Reply-To: <0109018f2f1bd112-3d9df5c2-8ed6-47dd-97fe-d724da6d2bed-000000@ap-south-1.amazonses.com>
-X-Cookie: lisp, v.:
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Tue, 30 Apr 2024 11:21:55 +0200
+Robert Richter <rrichter@amd.com> wrote:
 
---3y5hQ7/3IW5AFlAE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> With the removal of the Itanium architecture [1] the last architecture
+> dependent functions:
+> 
+>  acpi_numa_slit_init(), acpi_numa_memory_affinity_init()
+> 
+> were removed. Remove its remainings in the header files too and make
+> them static.
+> 
+> [1] commit cf8e8658100d ("arch: Remove Itanium (IA-64) architecture")
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+Trivial comment inline.
 
-On Tue, Apr 30, 2024 at 01:05:03PM +0000, Bhargav Raviprakash wrote:
-> Hello,
->=20
-> On Thu, 25 Apr 2024 10:59:22 +0300, Dan Carpenter wrote:
-> > On Wed, Apr 17, 2024 at 11:49:59AM +0000, Bhargav Raviprakash wrote:
-> > > From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
-> > >=20
-> > > Add support for TPS65224 regulators (bucks and LDOs) to TPS6594 drive=
-r as
-> > > they have significant functional overlap. TPS65224 PMIC has 4 buck
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+> ---
+>  drivers/acpi/numa/srat.c | 16 ++--------------
+>  include/linux/acpi.h     |  5 -----
+>  2 files changed, 2 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 3b09fd39eeb4..e4d53e3660fd 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -213,13 +213,12 @@ __weak int __init numa_fill_memblks(u64 start, u64 end)
+>  	return NUMA_NO_MEMBLK;
+>  }
+>  
+> -#if defined(CONFIG_X86) || defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
+>  /*
+>   * Callback for SLIT parsing.  pxm_to_node() returns NUMA_NO_NODE for
 
---3y5hQ7/3IW5AFlAE
-Content-Type: application/pgp-signature; name="signature.asc"
+Doesn't like like a callback to me. It's just a normal function.
 
------BEGIN PGP SIGNATURE-----
+>   * I/O localities since SRAT does not list them.  I/O localities are
+>   * not supported at this point.
+>   */
+> -void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
+> +static void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
+>  {
+>  	int i, j;
+>  
+> @@ -241,11 +240,7 @@ void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
+>  	}
+>  }
+>  
+> -/*
+> - * Default callback for parsing of the Proximity Domain <-> Memory
+> - * Area mappings
+> - */
+> -int __init
+> +static int __init
+>  acpi_numa_memory_affinity_init(struct acpi_srat_mem_affinity *ma)
+>  {
+>  	u64 start, end;
+> @@ -345,13 +340,6 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  	(*fake_pxm)++;
+>  	return 0;
+>  }
+> -#else
+> -static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+> -				   void *arg, const unsigned long table_end)
+> -{
+> -	return 0;
+> -}
+> -#endif /* defined(CONFIG_X86) || defined (CONFIG_ARM64) */
+>  
+>  static int __init acpi_parse_slit(struct acpi_table_header *table)
+>  {
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 34829f2c517a..2c227b61a452 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -242,9 +242,6 @@ static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interrupt *gicc)
+>  	return gicc->flags & ACPI_MADT_ENABLED;
+>  }
+>  
+> -/* the following numa functions are architecture-dependent */
+> -void acpi_numa_slit_init (struct acpi_table_slit *slit);
+> -
+>  #if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
+>  void acpi_numa_processor_affinity_init (struct acpi_srat_cpu_affinity *pa);
+>  #else
+> @@ -267,8 +264,6 @@ static inline void
+>  acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
+>  #endif
+>  
+> -int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
+> -
+>  #ifndef PHYS_CPUID_INVALID
+>  typedef u32 phys_cpuid_t;
+>  #define PHYS_CPUID_INVALID (phys_cpuid_t)(-1)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYxBZ4ACgkQJNaLcl1U
-h9DXMwf+PKODDwDeqON9VM4u0juqL+7Z/SE5lYR5NQ1gvMYOMKzPTld8bz/PB2kf
-gC8pX8P1Y4oKkxn8V3Cnr+eVnkvo6i5bvj7rOmZErI9gSmAEihBztBT9PLUyrhH5
-5EMosMXHlpPoN8GOC8isaz3MkASPD1fRa84BaIx0UxwH7ELiV0cmFsTzoU/nk1Vj
-T2cqzZG0so1FqOQlJqyDsUzUOqSphIbZt8SPQ9CmgC3d//RJt8bBA6HX2+F5tAiV
-3DuTuQOOaEV8XN2zJGJIUra5ZS3ye1Xq/qmEO0giCur0fNf9LnkUPLiiXbhm/qFu
-w0yBjxzDbztR1l/3YBiBdL8QZUOqlA==
-=HFcV
------END PGP SIGNATURE-----
-
---3y5hQ7/3IW5AFlAE--
