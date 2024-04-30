@@ -1,219 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8889C17BB0C
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20CE1EA74
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714495774; cv=none; b=Oi71cKe2qcBB+QrR7z1PGI4TyMNVZk2wUnf2MVZZEgh8uv1U4yiSoeKoHtmp4JHaa9zZ4e3Z+owGcbLp5IU4uom1VqBHrJdYGz8tqtidWrB8WxPG4WZhHBmYc7gdG0gld4Cl9ieKAatPf7MGxfqheoLagyQWlL9nyZftUnwoxvo=
+	t=1714495815; cv=none; b=YIsPTFWZGlrnAtWPwUtgiQsySg5I3yIC/OIfI1MPJ04HpzmrF+Riri0JAC7uk2s8MfKKi2oShmk+dNj1YBtuOA9JmfNfXCXjsJ0cb9pw2OtWX5ZDB22/M/hsQMCVqqE4ZsHJ5D4fFjlfLvLAaAUOKt9mZHwOA7OU/T3MFu+4Ow8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714495774; c=relaxed/simple;
-	bh=HRcvpI2ezzKBbjW9f8dqpgmXP7k0gJMpiCOz5DWBB+c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t3Qgqd3dHR7kHOlcy8iS9u06aL4l4tBp2Znaxo7gNdwjkK82qtpiRM8RFep5Y9k4MTJIxObyE3kdbeWinyDgF1rnL9wfqAQP/OF3AZRI/SevpOky20fX/SS9UPkg0DIL4w6Uc7JFpTj5utl744u8B9RWSZJKYgnz+7uSdT237iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XmnAM6vA; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714495815; c=relaxed/simple;
+	bh=B9pKs/nyNrJf9S9E7C6a6HGmfe6zf+FJV6/BPMT48fg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBrjcpPTr7Y1mTr3QunxwgW+l3BMsg/2Ots0uBtTdUwjuxKBol4rX9MpaaqwponGu/Hc7uY3a2c7j5rB3auwOuXL82n/4bXN5NXBTbBehjcNmh46pKQRNHpdbSGtOt04tdE7l20v7ExFhQNyD9duqVR73KcLF/Jai8Kye+0jt94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MwqJNSEx; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XmnAM6vA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714495773; x=1746031773;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=HRcvpI2ezzKBbjW9f8dqpgmXP7k0gJMpiCOz5DWBB+c=;
-  b=XmnAM6vA6vHsl8bHK1E+Dnmc0R0Yjv8vilzeH2t/GzbUZ8mVQ28fIntj
-   63kE3OfnHpxYkQCZabYVblmMacz6Zh7jXcFHl+hF19Wnr0U590O4+/XTh
-   wiomKs8YjW913fBMhIPeJzelTzJoEuRmJICfBsG933lWqKWFXpfuN96PY
-   zTySWcj3OB3Suzzppvcsj0VV8xWPSpWdBUNgsSHu9kPssQBW/ZgvmORtW
-   sLxzTeL0hPfKw9qdBQxwvBsLw9GR5F8XCLBBpvsFYyggnxNq/oWroWnmH
-   qxm3ZvGITpVdOev1qxehOShPQuY7g1tlOT/L2ZIbOJtGA2nJf1CUSPDI3
-   g==;
-X-CSE-ConnectionGUID: yjij2Z8gR1S0J1CNObdKng==
-X-CSE-MsgGUID: tMJnzxjnS5217LLFCgkYrg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="13141515"
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="13141515"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:49:25 -0700
-X-CSE-ConnectionGUID: M0ryI9tzSNSm3Y14hnRqvg==
-X-CSE-MsgGUID: IQCyXoqyRl+g+60dqcWw7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="31230992"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:49:24 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v5 00/47] New Intel CPUID families
-Date: Tue, 30 Apr 2024 09:49:13 -0700
-Message-ID: <20240430164913.73473-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MwqJNSEx"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2390335b67cso1749417fac.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714495813; x=1715100613; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tIrMLB4msMRuE/7a2kEwzm2wzpyZXm5c5jjcBesFl94=;
+        b=MwqJNSExZ5uNVylV+qzYSX6bi3e+demjBLsVZr9DW0+gQ3n9V8vTRUEEGtf3+mCu8G
+         qXOMJWO/kQeWc5voSmF84tG1Fb227xzVQLw9v1zguLRwdpKoPh0aMAaqN0p68R0Tyo9O
+         E4FC3lnbj+TPArb2e4KTbVQ4uuLdS6FmfHzvo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714495813; x=1715100613;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tIrMLB4msMRuE/7a2kEwzm2wzpyZXm5c5jjcBesFl94=;
+        b=N/cBHFFwzJfJ+CqXFNLKp1yN89wgb+66TNVT5hBVtOZxfVIy92fDLCbIttrUDy+zCC
+         V5q1kRZHB/cgh1/EILGKnsXfcQmOb6F0qIul0K8khqlhkYacYIwxuzj34PBbCtmfmi0d
+         4e5Y3/RTkDIn8E8SLZ8br/mjf4KpVVXzcvK3LND+9ualTDX71jYEI51IvRDWWzb6sHPT
+         9H4DOczmPHK2zeuIiH43hsDfpMJNE8e/U/+/hrZiu1zPro+q8Er2eKHKkf3RoUECC/jC
+         2uxLmcizpIaVwldWEwvvSsmcyNjiJ50Ae+Tf9UGxpqlj9rnDICciQqLgUdlLanQ8JQJb
+         Q16Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXLZGnOSvjeiChud64SQ7R+YP4MoSLL25oYyOS/g1rb9NSdUzof1cFbCuhHZnWWmSod0i6/QHplAs9yfppq2GaD/WrT/jSNnXuIoOqj
+X-Gm-Message-State: AOJu0YyDLAWlOa/57PH6e93ZznbrcuudmlDHx2iEznPjIHOW6nknLBO8
+	zhKqvw+QWngGKL8tMJOIXpjtKWUWdtpvJBs7RbWU7zSQfDT0XE2jS8ndkAXfJQ==
+X-Google-Smtp-Source: AGHT+IEY6xgEVGkDB6bSjnp7aQznpujQEsy2JLgZMLFYQpA3hLHbk4RWYYAtkQVDlOPq8nMQM55x/w==
+X-Received: by 2002:a05:6870:8707:b0:229:6d0e:203b with SMTP id k7-20020a056870870700b002296d0e203bmr11449246oam.50.1714495812769;
+        Tue, 30 Apr 2024 09:50:12 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ge3-20020a056a00838300b006ecfc3a5f2dsm21255300pfb.46.2024.04.30.09.50.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 09:50:12 -0700 (PDT)
+Date: Tue, 30 Apr 2024 09:50:11 -0700
+From: Kees Cook <keescook@chromium.org>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc: Jakub Kicinski <kuba@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Shengyu Li <shengyu.li.evgeny@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Will Drewry <wad@chromium.org>,
+	kernel test robot <oliver.sang@intel.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 0/9] Fix Kselftest's vfork() side effects
+Message-ID: <202404300949.28CC6811C0@keescook>
+References: <20240429191911.2552580-1-mic@digikod.net>
+ <20240430.eudae0Mahbie@digikod.net>
+ <20240430081304.0cc6bd8d@kernel.org>
+ <20240430.joh2lae1Ooch@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240430.joh2lae1Ooch@digikod.net>
 
-See notes below on which patches can be applied to current cycle x86/cpu
-branch, and which would have conflicts with other tip branches or linux-next.
+On Tue, Apr 30, 2024 at 06:38:40PM +0200, Mickaël Salaün wrote:
+> On Tue, Apr 30, 2024 at 08:13:04AM -0700, Jakub Kicinski wrote:
+> > On Tue, 30 Apr 2024 15:54:38 +0200 Mickaël Salaün wrote:
+> > > Jakub, can you please review it?
+> > 
+> > I looked thru it. I don't have the cycles to investigate and suggest 
+> > a better approach but the sprinkling of mmaps(), if nothing else, feels
+> > a bit band-aid-y 🤷️
+> 
+> The only mmap that could have side effects on existing tests in the
+> _metadata one, but in fact it would reveal issues in tests, so at the
+> end I think it's a good thing.
+> 
+> I'd like "self" to not be conditionally shared but that would require
+> changes in several tests.  Let's keep that for another release. :)
+> 
+> I also noticed that mmap() is already used in test_harness_run() with
+> results.
 
-See notes below on which patches can be applied to current cycle x86/cpu
-branch, and which would have conflicts with other tip branches or linux-next.
+Yeah, I was initially worried about adding this complexity, but at the
+end of the day it actually makes things more robust. I'm in favor of it.
 
-Full cover letter here:
-Link: https://lore.kernel.org/all/20240416211941.9369-1-tony.luck@intel.com/
+-Kees
 
-But the tl;dr version is that some surgery is required to make adding
-CPUs with new CPUID "family" values elegant.
-
-This series also available with:
- $ git fetch git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux.git new_families_v5
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-
-Changes since v4:
-Link: https://lore.kernel.org/all/20240424181245.41141-1-tony.luck@intel.com/
-
-* More patches from this series have been applied to TIP x86/cpu so I
-  have dropped them from this posting. Down to 47 from 74. Yay!
-
-* Base commit for this series is now:
-        2eda374e883a ("x86/mm: Switch to new Intel CPU model defines")
-
-* PECI patches have been merged into one refactored patch that properly
-  converts to using vendor-family-model instead of extracting the model
-  from the Intel #define.
-
-* A bunch more Acked-by and Reviewed-by tags applied. Note that Hans
-  de Goede explicitly said it was OK to take the patches he has ACked
-  through TIP tree. That's 0002..0003, 0005, 0015..0023.
-
-* Re-ordered remaining patches like this:
-  0001..0023: Have Acked/Reviewed tags and do not conflict with any
-              patches currently in the linux-next tree.
-  0024..0037: Awaiting Acks (though there are a few x86 patches in this
-              set, and I'm the maintainer for the four EDAC patches,
-              I'm fine with those going through TIP).
-  0038..0045: Conflict with linux-next. I will fix post v6.10-rc1
-  0046..0047: Delete unused INTEL_FAM6 stuff. Must wait until all
-              other patches have been applied.
-
-Tony Luck (47):
-  tpm: Switch to new Intel CPU model defines
-  platform/x86/intel/ifs: Switch to new Intel CPU model defines
-  media: atomisp: Switch to new Intel CPU model defines
-  ASoC: Intel: avs: es8336: Switch to new Intel CPU model defines
-  platform/x86: intel_scu_wdt: Switch to new Intel CPU model defines
-  KVM: x86/pmu: Switch to new Intel CPU model defines
-  KVM: VMX: Switch to new Intel CPU model defines
-  cpufreq: Switch to new Intel CPU model defines
-  intel_idle: Switch to new Intel CPU model defines
-  PCI: PM: Switch to new Intel CPU model defines
-  powercap: intel_rapl: Switch to new Intel CPU model defines
-  ASoC: Intel: Switch to new Intel CPU model defines
-  thermal: intel: intel_tcc_cooling: Switch to new Intel CPU model
-    defines
-  x86/platform/intel-mid: Switch to new Intel CPU model defines
-  platform/x86: intel_speed_select_if: Switch to new Intel CPU model
-    defines
-  platform/x86: intel-uncore-freq: Switch to new Intel CPU model defines
-  platform/x86: intel_ips: Switch to new Intel CPU model defines
-  platform/x86: intel_telemetry: Switch to new Intel CPU model defines
-  platform/x86: intel: telemetry: Switch to new Intel CPU model defines
-  platform/x86: intel_turbo_max_3: Switch to new Intel CPU model defines
-  platform/x86: p2sb: Switch to new Intel CPU model defines
-  platform/x86/intel: pmc: Switch to new Intel CPU model defines
-  platform/x86/intel/pmc: Switch to new Intel CPU model defines
-  crypto: x86/poly1305 - Switch to new Intel CPU model defines
-  crypto: x86/twofish - Switch to new Intel CPU model defines
-  x86/cpu/intel: Switch to new Intel CPU model defines
-  x86/PCI: Switch to new Intel CPU model defines
-  x86/virt/tdx: Switch to new Intel CPU model defines
-  perf/x86/intel: Switch to new Intel CPU model defines
-  x86/platform/atom: Switch to new Intel CPU model defines
-  x86/cpu: Switch to new Intel CPU model defines
-  x86/boot: Switch to new Intel CPU model defines
-  EDAC/i10nm: Switch to new Intel CPU model defines
-  EDAC, pnd2: Switch to new Intel CPU model defines
-  EDAC/sb_edac: Switch to new Intel CPU model defines
-  EDAC/skx: Switch to new Intel CPU model defines
-  extcon: axp288: Switch to new Intel CPU model defines
-  ACPI: LPSS: Switch to new Intel CPU model defines
-  cpufreq: intel_pstate: Switch to new Intel CPU model defines
-  powercap: intel_rapl: Switch to new Intel CPU model defines
-  tools/power/turbostat: Switch to new Intel CPU model defines
-  platform/x86: ISST: Switch to new Intel CPU model defines
-  perf/x86/rapl: Switch to new Intel CPU model defines
-  peci, hwmon: Switch to new Intel CPU model defines
-  ACPI: x86: Switch to new Intel CPU model defines
-  x86/cpu/vfm: Delete X86_MATCH_INTEL_FAM6_MODEL[_STEPPING]() macros
-  x86/cpu/vfm: Delete all the *_FAM6_ CPU #defines
-
- .../atomisp/include/linux/atomisp_platform.h  |  27 +--
- include/linux/peci-cpu.h                      |  24 ++
- include/linux/peci.h                          |   6 +-
- include/linux/platform_data/x86/soc.h         |  12 +-
- arch/x86/include/asm/cpu_device_id.h          |  28 +--
- arch/x86/include/asm/intel-family.h           |  85 +------
- drivers/char/tpm/tpm.h                        |   2 +-
- drivers/char/tpm/tpm_tis_core.h               |   2 +-
- drivers/peci/internal.h                       |   6 +-
- arch/x86/boot/cpucheck.c                      |   2 +-
- arch/x86/crypto/poly1305_glue.c               |   4 +-
- arch/x86/crypto/twofish_glue_3way.c           |  10 +-
- arch/x86/events/intel/core.c                  | 212 +++++++++---------
- arch/x86/events/rapl.c                        |  84 +++----
- arch/x86/kernel/cpu/intel.c                   | 108 +++++----
- arch/x86/kvm/pmu.c                            |   8 +-
- arch/x86/kvm/vmx/vmx.c                        |  20 +-
- arch/x86/pci/intel_mid_pci.c                  |   4 +-
- arch/x86/platform/atom/punit_atom_debug.c     |  11 +-
- arch/x86/platform/intel-mid/intel-mid.c       |   7 +-
- arch/x86/virt/vmx/tdx/tdx.c                   |   8 +-
- drivers/acpi/acpi_lpss.c                      |   4 +-
- drivers/acpi/x86/utils.c                      |  42 ++--
- drivers/cpufreq/intel_pstate.c                |  90 ++++----
- drivers/cpufreq/speedstep-centrino.c          |   8 +-
- drivers/edac/i10nm_base.c                     |  20 +-
- drivers/edac/pnd2_edac.c                      |   4 +-
- drivers/edac/sb_edac.c                        |  14 +-
- drivers/edac/skx_base.c                       |   2 +-
- drivers/extcon/extcon-axp288.c                |   2 +-
- drivers/hwmon/peci/cputemp.c                  |   8 +-
- drivers/idle/intel_idle.c                     | 116 +++++-----
- drivers/pci/pci-mid.c                         |   4 +-
- drivers/peci/core.c                           |   5 +-
- drivers/peci/cpu.c                            |  21 +-
- drivers/peci/device.c                         |   3 +-
- drivers/platform/x86/intel/ifs/core.c         |  15 +-
- drivers/platform/x86/intel/pmc/core.c         |  46 ++--
- drivers/platform/x86/intel/pmc/pltdrv.c       |  16 +-
- .../intel/speed_select_if/isst_if_common.c    |   4 +-
- .../intel/speed_select_if/isst_if_mbox_msr.c  |   2 +-
- .../platform/x86/intel/telemetry/debugfs.c    |   4 +-
- drivers/platform/x86/intel/telemetry/pltdrv.c |   4 +-
- drivers/platform/x86/intel/turbo_max_3.c      |   4 +-
- .../intel/uncore-frequency/uncore-frequency.c |  56 ++---
- drivers/platform/x86/intel_ips.c              |   3 +-
- drivers/platform/x86/intel_scu_wdt.c          |   2 +-
- drivers/platform/x86/p2sb.c                   |   2 +-
- drivers/powercap/intel_rapl_common.c          | 118 +++++-----
- drivers/powercap/intel_rapl_msr.c             |  16 +-
- drivers/thermal/intel/intel_soc_dts_thermal.c |   2 +-
- drivers/thermal/intel/intel_tcc_cooling.c     |  30 +--
- sound/soc/intel/avs/boards/es8336.c           |   8 +-
- tools/power/x86/turbostat/turbostat.c         | 161 +++++++------
- 54 files changed, 716 insertions(+), 790 deletions(-)
-
-
-base-commit: 2eda374e883ad297bd9fe575a16c1dc850346075
 -- 
-2.44.0
-
+Kees Cook
