@@ -1,72 +1,64 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204A01A38C8
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68891BED6D
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468734; cv=none; b=ODuejsMAD8aN32uFFvp6ImIahJNdi9SvxCqjGvAFPlj4fQjpSICMScBM6vuGnxGB0mUj9jSTudZ8BkSaMoUPx36FnG0Iuv4JmjdQW+nkVdomEw3twEuZVzIbTqqwf9b6OnjpLroTixWicDY+v61jDWTgk4pp5vV4e5EiSuPnXUM=
+	t=1714468735; cv=none; b=a/ORxvEaDLaz1J6JT2hKzgV9OMmqpmRla0sF7Ci7W8yez9wh5ozid1RhiAh6+nLGQDBQ6vLF0iv17bKHRwHpXZjRzgiMCjCKYlWDlj3SmfyHU9W2xTdeM2eaKfOeZ0blA1WZqDgDy7RcFv+Y8ubbNUFeoqgSVmk8oelz1ufsYYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468734; c=relaxed/simple;
-	bh=6vCWF7Tfvr7FzBo6hwj6h7DuLM/a/FiiZZjBqdsOSYw=;
+	s=arc-20240116; t=1714468735; c=relaxed/simple;
+	bh=pXYuBf/no3D++5JfAuxUjhyr9k0cvSL2Fvh5M9LRvfs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aOppsVYzC/jpBKYPTqY7XXidMtKGffJINHk/KPx+W3YAcu7WnoHi2sq9AVc6nZepI7XjXRsTvfPgQBCRAiUQKMO4J9y9JA9mE+Nt1swVulRPwiqEuYzZYKZ2X47BaUJEJj/5kUHjpFjw1JRPH7u9xk7JuqMyzMbNqQ5PN21D+Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkSXlvd9; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=b+p4hWKJhn5uZQ06MmCFbn10+SIMrCzjOM7QVfVUVgK57FG8Nxw3qBfnnGnTW+8G2WVdY7VQSw2UcSjbFIMwwJx3pfTrnQQPdIqxT6bIMY73C0/JKaaNPOhcagD0vqftrhX73NdK6IfqUnPAhEilli94VCTq6TrAgus31k/c96w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z+Bl4Hd/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkSXlvd9"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2def8e5ae60so62404141fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 02:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714468730; x=1715073530; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qr4Ktmncw5KoRokZExfBuNW0/i+XS2TcRisLXwnWQEk=;
-        b=WkSXlvd9cx2bZif5XVFib7qaIdAYGesTf63WuR/zufi2f+UMDiqXnYc3lZb3LWUjic
-         X3mhYASZjxGUBvnYXcRbwfcG/l+BG0s/pYGLD3BIBpJziirjiCo/2gFWBj1QhuUHNfv9
-         BI628rnFAsjlSuBI+QScfnNPqybLCHa/4+4jpQ6L2wNSmn8SYEs/41U1VNYMrydwwYfx
-         NditLqZ7QZ3gD7rmN4wJr2X46M0KxH3bCyPUZ8Vs3CKUpgVO8UZARYhffzf15ZqOzmu6
-         nsoi0GyThi0gC+7Ft2MDTDek/si7WeLm8CeZ5vQgXtzKmCo9Wwh4FzCKs2egLHHKVFBt
-         NFpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714468730; x=1715073530;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qr4Ktmncw5KoRokZExfBuNW0/i+XS2TcRisLXwnWQEk=;
-        b=j03EuTQ07RsJPo0+kMd/aaV+C1kxDBx54ieAhJgqE2EVWwvDVjf7vIDSyJRYA4b6EH
-         1TkqAJgM3DJSQkmZ7tL9K3N83+2SsUHE4SZcpydNE47jt3UrnbKpwTMzqiLawuZFfVgH
-         eqlIQp5WdqWHKzNx6Ey8/ux9FcepiKJ5XY2UzZWDnFpsdwbXWo7VWtsWbh6RKZQI2+px
-         tRI4J+OA/zfF3flSRqWKWJaHG9TWhub6xZbvXPYrVIv03zaiPDqoUfCajqRos4Mu6V2n
-         guvLwxd1Y33caYbeWwuNbHwl4RX3MwB3cwHYhcPPRrdkjwPGiJ75fxqf0QKpicPwEupx
-         989g==
-X-Forwarded-Encrypted: i=1; AJvYcCUMvSIOu/JOkfWeKin/yn3Asy5mfvSV+CriIgjLEuaycdMlXmmmR5fIWDW2G6uUHLVsLHJpi/2ul7LD44mC0mxBw0je6h2sntN6UEsw
-X-Gm-Message-State: AOJu0YwOdXkx0M+b1gt/6WLSpe1UHtzK1Gqt9UK/hnKch096DMbiNBNU
-	taRf8uicrPsfi54wts0cblkh4cVZm5+3fbFlOFY25r0kbR0E1Rl7
-X-Google-Smtp-Source: AGHT+IEgcZkxWJQ/X9BGaoo2nA/DY+i16BPhCILU82zCnN3ZvUcWkRT6fQn4ObLSV/2V8M3VK80Xdw==
-X-Received: by 2002:a05:651c:327:b0:2e1:18d:5b4f with SMTP id b7-20020a05651c032700b002e1018d5b4fmr640631ljp.42.1714468730125;
-        Tue, 30 Apr 2024 02:18:50 -0700 (PDT)
-Received: from fedora.iskraemeco.si ([193.77.86.250])
-        by smtp.gmail.com with ESMTPSA id h3-20020a05600c314300b0041abdaf8c6asm26324458wmo.13.2024.04.30.02.18.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 02:18:49 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z+Bl4Hd/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714468732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0Acnvg5m0QI7jC0qpMYe1ycEQuPijsttmR1AejYIGro=;
+	b=Z+Bl4Hd/UoSOUnn6tiRCpc4XSvnorsHzXcnN26RA5+COA/7Dlgu3s+vogilL1TAxynrr/v
+	IZa2+PYLOa0vfDgFzhlFWhzMwqYK6OB7oxqvNDj6HfX7PcPsIvsaxT4zgbrl9ZIXLfZZso
+	vwntFOKmpNsaLSasA/v/HAnw7jWKSaU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-640-upcu8rZ-O5C6VeIGzzUM_A-1; Tue, 30 Apr 2024 05:18:48 -0400
+X-MC-Unique: upcu8rZ-O5C6VeIGzzUM_A-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C5AA78032FA;
+	Tue, 30 Apr 2024 09:18:47 +0000 (UTC)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.193.247])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5D77A492BC7;
+	Tue, 30 Apr 2024 09:18:45 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: rcu@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH -tip 5/5] x86/percpu: Fix operand constraint modifier in __raw_cpu_write()
-Date: Tue, 30 Apr 2024 11:17:24 +0200
-Message-ID: <20240430091833.196482-5-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240430091833.196482-1-ubizjak@gmail.com>
-References: <20240430091833.196482-1-ubizjak@gmail.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>
+Subject: [PATCH v2 15/27] rcu: Rename rcu_dynticks_eqs_online() into rcu_watching_eqs_online()
+Date: Tue, 30 Apr 2024 11:17:19 +0200
+Message-ID: <20240430091740.1826862-16-vschneid@redhat.com>
+In-Reply-To: <20240430091740.1826862-1-vschneid@redhat.com>
+References: <20240430091740.1826862-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,39 +66,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-__raw_cpu_write() with !USE_X86_SEG_SUPPORT config uses read/write
-operand constraint modifier "+" for its memory location. This signals
-the compiler that the location is both read and written by the asm.
-This is not true, because MOV insn only writes to the output.
+The context_tracking.state RCU_DYNTICKS subvariable has been renamed to
+RCU_WATCHING, reflect that change in the related helpers.
 
-Correct the modifier to "=" to inform the compiler that the memory
-location is only written to. This also prevents the compiler from
-value tracking the undefined value from the uninitialized memory.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
- arch/x86/include/asm/percpu.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/tree.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index d20255138426..c77393cd0273 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -178,7 +178,7 @@ do {									\
- 		(void)pto_tmp__;					\
- 	}								\
- 	asm qual(__pcpu_op2_##size("mov", "%[val]", __percpu_arg([var])) \
--	    : [var] "+m" (__my_cpu_var(_var))				\
-+	    : [var] "=m" (__my_cpu_var(_var))				\
- 	    : [val] __pcpu_reg_imm_##size(pto_val__));			\
- } while (0)
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index bb0d9dd8b6d3a..fe2beb7d2e82d 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -280,7 +280,7 @@ void rcu_softirq_qs(void)
+ }
  
+ /*
+- * Reset the current CPU's ->dynticks counter to indicate that the
++ * Reset the current CPU's RCU_WATCHING counter to indicate that the
+  * newly onlined CPU is no longer in an extended quiescent state.
+  * This will either leave the counter unchanged, or increment it
+  * to the next non-quiescent value.
+@@ -289,7 +289,7 @@ void rcu_softirq_qs(void)
+  * of the ->dynticks counter are manipulated only by the corresponding CPU,
+  * or when the corresponding CPU is offline.
+  */
+-static void rcu_dynticks_eqs_online(void)
++static void rcu_watching_eqs_online(void)
+ {
+ 	if (ct_rcu_watching() & CT_RCU_WATCHING)
+ 		return;
+@@ -5051,7 +5051,7 @@ void rcutree_report_cpu_starting(unsigned int cpu)
+ 	rnp = rdp->mynode;
+ 	mask = rdp->grpmask;
+ 	arch_spin_lock(&rcu_state.ofl_lock);
+-	rcu_dynticks_eqs_online();
++	rcu_watching_eqs_online();
+ 	raw_spin_lock(&rcu_state.barrier_lock);
+ 	raw_spin_lock_rcu_node(rnp);
+ 	WRITE_ONCE(rnp->qsmaskinitnext, rnp->qsmaskinitnext | mask);
 -- 
-2.44.0
+2.43.0
 
