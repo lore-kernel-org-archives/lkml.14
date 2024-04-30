@@ -1,515 +1,457 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2087.outbound.protection.outlook.com [40.107.95.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from c180-44.smtp-out.ap-south-1.amazonses.com (c180-44.smtp-out.ap-south-1.amazonses.com [76.223.180.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5DA184133;
-	Tue, 30 Apr 2024 16:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714494954; cv=fail; b=RgSL1KDD/3d/Vcjzo0HxkeLw92sgnHkAQhoHLg25GPw5Lj9i03TPy4Zejq8jMiPUpGpgEESycSLpoEuRNqQMYriKDJ/y2CO4QZ09XObVXGvgwjyKtZdDzBz6WtzKcwJERhArwrUNJ4aQQ60E1K+9E+/8mqdyFfyjJpHujWImBEU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714494954; c=relaxed/simple;
-	bh=+nddv1SbChNDGQKEXwbBjS/2SRNPxO+ETw07qphAc3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=CACO3Asvs9DyuDYKw7UhfngUFQ+fCKiKOymlYdpbbOvmfLJvoXzIhn1KGDBs3etU2GLIF0UOBaCCdZoQSkSJLAgpcnzMG1WIWt5g/rpMwkOqWS7wKNyKjCOp/CczRS/udjaKsU/KtqQpKg6xgLrPnTVTIkf3KGqcz4yoV5vGDIs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OERjnFA4; arc=fail smtp.client-ip=40.107.95.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF88190682;
+	Tue, 30 Apr 2024 16:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714494961; cv=none; b=EMkRiNg6ddF83GCWi2bJrDNKO1f9v8pgeOUuxcFgB8KuMiOjGFJCJ5yioY9C5v3IzifRNdx+LgW5+9RcH9NrRSi7JRcHUoMmvT2VMvWp+Z0TOuES/0DqhkRtvjNBAkradmzTI/57VsbAZ2FPHCVeLq8pBMmIMYsJCTQ2erI+gtY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714494961; c=relaxed/simple;
+	bh=U5q5fjCota3r7fGv2m8SgLC4EOAJNecaWYcS23E9BkM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hwOPIbhMx4M3sCCmADXPGcVRkDLlG7HuBN3F9iRpaVNPTv20raFZf9r7jmYEMUUyNsIJqdFhvAU0LJtSfOm7H9I8UwYgP/vlmihW1tQdOORvi4xr44s6UHsm8aT2FCTi/tIagvjLtDeEkQzryo08rfMOgU0cE8w7s9jhF+Z8jWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=GgkSqMcb; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=kdMlCHWc; arc=none smtp.client-ip=76.223.180.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ap-south-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OERjnFA4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HohTbs7FVvDzvW/+BzSKIDI8nx80Zi2GG6th6ifxG9FZvrNhxt3rSiPkBIL4qWvCDOQpAkF9JG2H3a1GRPoSrY/3zkR/YiEZoAFSCUsK9fowyysoXPEx1tuYVOL1tWTCsROZ7h2Lq+dDhXMB0ULNVLP2+PZPCJCwuJNGbW7CeRlG+KQG3n7agx/X7HHmlo8YMWhKTfdUGKGyJ1y0SrKLQqgYIpFdvPerDhr1GVdHzfPb9Gbz5QpSTsPKQDUDXIBheaKS1gwGBzuoywh8e2G8EWZ5g2Boyfr2RTgIdnrg+1/LQ46XmHTOiJ6uuLEZfSXnjm9xxk+TG7GMIQsajpVaFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bg4I3Fr20dtLv3BAl4ttkOQkvDnPE59fyxPVZy2aUZw=;
- b=CNQkgmf0VhOGXENBBkt35yL40pvua+2Q47REcynxsas9P4qluHt/J087WIpepZPFWqlJZpNLBht6pzthLN0kBb9LG+/ct+iTo+Jzttgm9ndJJARwc0hQcXe/qS49exVVeRgyFUWXGlFUi2656DlRKdJs9p2fL0rns/HzcfFziMHAowdTmcodO82DeheMWZWHMMaqm+SeIo3wIsGg/U8Tt1CnEjZuF31gBv5BeBLdbcZxMOsq+C3B+1trOdLoJOp1/h8HQT7jrqi4GatWjAfypMLi5e6DNY5Ns7Kcb6qQudW4VqI0/7c/LL0eNLOX82j5sEJV2QnLORY1ZyJK6LFcxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bg4I3Fr20dtLv3BAl4ttkOQkvDnPE59fyxPVZy2aUZw=;
- b=OERjnFA4jqTzVqhYDzhsyKz9vV3aIget91jUOJcUJlklDXzLvPEtU4vIcOPiFuQ75g9CcURG7I2Sj3TnduTFR6el5JZQjv+/9zLYQDlT+IqORbaOQj58fB4Uno2fzkcdvx67VXBCDqgNLGCrVh6PFOIc791U/nyGYBMqj877yYfCWZH//+Gp81I1qQQXyJ/JvDLVHUrUoZmyXaDWqo6/cG6H3D8EZaQE4B9I8pEJsPACC68Y7KtaaIrGRoBgeUxtP0nTGRzqMehDBsmj4MI8GoF2LjKvAR9EQ0AVCyntJ7Nv9KhimoRHsM75r76ouQX8/ra4s1wi0BlaeQtsmspaAw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by MW4PR12MB7264.namprd12.prod.outlook.com (2603:10b6:303:22e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.35; Tue, 30 Apr
- 2024 16:35:46 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e%3]) with mapi id 15.20.7519.031; Tue, 30 Apr 2024
- 16:35:46 +0000
-Date: Tue, 30 Apr 2024 13:35:45 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] iommu/arm-smmu-v3: Add in-kernel support for
- NVIDIA Tegra241 (Grace) CMDQV
-Message-ID: <20240430163545.GS941030@nvidia.com>
-References: <cover.1714451595.git.nicolinc@nvidia.com>
- <63414546b1eafdf8032ac1b95ea514da6d206d63.1714451595.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63414546b1eafdf8032ac1b95ea514da6d206d63.1714451595.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: MN2PR20CA0049.namprd20.prod.outlook.com
- (2603:10b6:208:235::18) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="GgkSqMcb";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="kdMlCHWc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1714494956;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=U5q5fjCota3r7fGv2m8SgLC4EOAJNecaWYcS23E9BkM=;
+	b=GgkSqMcbiYsyfUZ1ePkGkBkR4Sgfk7Cp/69idJmCKfP/MyU30VTWSRRfTS8sc/PY
+	FFm86QwYpTABa2LqhaZpfRVUek5RzIESsCsD0kbcFKsOATHeokUkqhVu/DDfMtCf4eH
+	DlMNQc2dRvAaACqZK/K0xSTMicQyJLWbqQKBSjss+bG5A9J4HjLfy7YWlJ5tzhr7La3
+	kVboOdCQXTn3GhS824bLcPmzYPSGIPC9YsaIPfUjmCetiPX5H/Ul0LZ2E2j5xoo8nV0
+	PtU/sdZ3+CEpMkOHPq6YXeazjjR4RRd6weWws2BtI/KIzp8fIiFXovtkKY9KyfOZ8XH
+	39JAZ1zc4w==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=zpkik46mrueu52d3326ufxxchortqmoc; d=amazonses.com; t=1714494956;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+	bh=U5q5fjCota3r7fGv2m8SgLC4EOAJNecaWYcS23E9BkM=;
+	b=kdMlCHWc9+xrft0WY4usqB3jCLx2MLaryQWMEx0L1l9bHHvrkj/mxXIKkN/3IVeg
+	uLYVOdVxoOV7ehgkio0lw1B5VAjTEUQFh53djP+g5b8cCPlRKhSoz8dpxlmsX3jv4DJ
+	02StRNhl+o2Ir5czVgab453qHFUZ28tXBHvTOkMI=
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: linux-kernel@vger.kernel.org
+Cc: bhargav.r@ltts.com, arnd@arndb.de, broonie@kernel.org, 
+	conor+dt@kernel.org, devicetree@vger.kernel.org, eblanc@baylibre.com, 
+	gregkh@linuxfoundation.org, jpanis@baylibre.com, kristo@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, lee@kernel.org, 
+	lgirdwood@gmail.com, linus.walleij@linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	m.nirmaladevi@ltts.com, nm@ti.com, robh+dt@kernel.org, 
+	vigneshr@ti.com
+Subject: [PATCH v8 09/10] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
+Date: Tue, 30 Apr 2024 16:35:55 +0000
+Message-ID: <0109018f2fdce15d-c13bd809-a11b-4202-9b7f-c9380d51b070-000000@ap-south-1.amazonses.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <0109018f2f24c15e-c50bfc29-5f1d-4368-a4b8-2c9f1d398abb-000000@ap-south-1.amazonses.com>
+References: <0109018f2f24c15e-c50bfc29-5f1d-4368-a4b8-2c9f1d398abb-000000@ap-south-1.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|MW4PR12MB7264:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b623616-19c6-4d93-0552-08dc69339617
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IpKFsWUjkRAmooQPTLFRmhFSnrMIc44Lp6X7HLunVlokCugaKY7yQY64jOh8?=
- =?us-ascii?Q?RyFQst1PzgVhmkqBOvn3446JmFZaCy8UUxeUCmsFMUBtjx9egdkVPDZJs9JU?=
- =?us-ascii?Q?GBAHYyPGfiT8xhTRztAREVapOIeYR/2hkQCk/iUhzJPhPlzAUdbzaKh3DKbx?=
- =?us-ascii?Q?dvwmWkF9EmiWAROZyViyIKfNkz72hBRV7pFelckUr5dxFB1PM71B4jY7t7kz?=
- =?us-ascii?Q?UgpXWV9L1L6odWPyExzhFaro62hLk330iQEdGcsIz9CZ76JAwTT6A9jX5nDB?=
- =?us-ascii?Q?Q7a29OhV1UiCoBbolIZv9kmq7VEtIA1y3QTnARi5+78snAEparZU6gPnWiE2?=
- =?us-ascii?Q?o8aYd6atTwLfBiyLPBtm6irRb0CWtm34E6p12WljnnGm12rS860kwqilJCmb?=
- =?us-ascii?Q?8Ztq1nhHE8ir7J1upCfF6GQTc5Lif9zZVBeS7PtaRZGenQgXCtZr/lwaqPRE?=
- =?us-ascii?Q?YDF6RbN7D8XB0RDlTEG42zN1tjHrcQH++rfUCDzBmvFoxlsc9mG9ul3zOqhO?=
- =?us-ascii?Q?kc13ysOL69fszUt4Td8tSp/pt0Y41de7eH2n7DN6GCiKmnVebdP8dp7YkKlR?=
- =?us-ascii?Q?opJB/W+qYNsErBLdCTKxEp2s8GhBIjbPwrgOPJbUSimFlmOwYr1LQgLhMyNp?=
- =?us-ascii?Q?aO0bafZO80cmOWQQIQYI2J83YB6W/t4gXXtC5BNlDGhhmYt9LjL4rXu1xQzp?=
- =?us-ascii?Q?hWRoNSKacLSahkyGCS8otyAJWkPB3P06odbfhgVIpaJqQc5HHFsl+I/cowwY?=
- =?us-ascii?Q?sYBpQW/2cBzS7jJ47sV9AldBaEX4/BIV2e8SqTzm03alrQVEAz0MlBH45FJn?=
- =?us-ascii?Q?/p41pFijFdL6Du6hIIhMU4iRacaQwF9FMCNx2vr4Mznjdo5/5ywgbadSScAb?=
- =?us-ascii?Q?PkR9UgcgABTPyd3swY3lsdwedV+FMIqS/qF+3Po1c75P4mseFBcQqFhtYMsE?=
- =?us-ascii?Q?qMj1Yt4qL+tMM24xdBO3/jbeRtVqFPN/KBEGEZsAr57vCBgpHdwebXYlU8Nv?=
- =?us-ascii?Q?vB5ultb3EHI0XYZaiztOJSmkUNv9vOhejTuUTfdh7Mm6LnGL8CaIC8bOS0pg?=
- =?us-ascii?Q?Id35pYzZ2+XVgTWkXAWjsANZiVxb3De/mEdxZ/PRSIEjfC8CAndc71hd7oye?=
- =?us-ascii?Q?BbAHVI6dQLL5nKmQt42X9R9UaK65J3isFUydnjspT/e/njXodQtTJeQOENHg?=
- =?us-ascii?Q?sKtxU8tiL2McGNh5ZnoploqhY9u6e0tsInwPUm+il7hKq/Ukh4Y+LT0cUD6Q?=
- =?us-ascii?Q?aWsl0wWfXWQMKRCNXmYO3V0otH9gewiWtjKa5/LRfg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?z1SitkVbIQ65Sc13NwLPMdOJoIfI0gUdlOVDSEdiVKSOGukStV8OsL79/DQM?=
- =?us-ascii?Q?Yl2plVNyI2TG2sxkjub/30EmN55vwZPwTPKT013IAv0wcrm8gkzf2z7UWgm3?=
- =?us-ascii?Q?DwKSlhrS//LriNp54RGfp5xHfyThp/jwiC2kLnblg12zDR2oHZVNE8kLQzu9?=
- =?us-ascii?Q?GW68LbRV1W0Ve555LWKZFnEIFV7CeTC73xdqsO0ylUTvuNEDi5VpH7CnOLQJ?=
- =?us-ascii?Q?igEmkg7bit8Bl+SIIDK0z/qkf1HkfciF38JwWDjyD7I59jvh1DAIsfCfdgzc?=
- =?us-ascii?Q?OHYDwScvOClN1u3clGFWDN9xlaPTd+AoP5h8G1TIV7oFD7jKJkzoh0PsKi6m?=
- =?us-ascii?Q?9ZRG4/z7bP7JpT9+V5g64u9Wy1XX+hKqTZ/FTCV/Tw+Y4qslS3o7iApI9t00?=
- =?us-ascii?Q?GpBRmxBPRi/J0Se1g4k/DnM/DAmnTOKU7ImYJ8aWnddZnOI2j83TsqcKI5IK?=
- =?us-ascii?Q?k0rEc6x1ui9j7zl9Iow9dMGlQlj/csEhJIti36KJDGpSmFid6TmfC886AC1V?=
- =?us-ascii?Q?2JSI91OT8oHhzvr0b0e6mmasJ3keUrfAlMjXAOgcMlnkjWohn+pP7y1KBVNI?=
- =?us-ascii?Q?EJdcEP/BY4Y9akC6YRZWJ1be1VECvRq7fsy4W+e873iMVUhxLV/rHEKSU2sq?=
- =?us-ascii?Q?lVlg2+fodTa9oPk2MjxSR/Pp9ULZZrFgwDNYw89xP4+8aBuLAvJEprM2UZ9m?=
- =?us-ascii?Q?Std3dQLIvDzikXu5tHWFwIjiolAXltn16GYuwGvDx3yCXbR4WK4X6Pc9FQKb?=
- =?us-ascii?Q?qds795sjABQmh3Qczt8Mx02LVz7GO+Nu8F1znRLQ5xuLLWe4wjjSAp/yydGw?=
- =?us-ascii?Q?cIad3NslBTIlcAgklIHax+GzlRPZkoARyBFA6KAyHs1WNiFAwbPJ+CsxhFvM?=
- =?us-ascii?Q?Z0ymuFlEcuIJc9/p2QvK5Pnk263VIbwDmhEt2yVDkOq/dxhyM4dVdMaYSgeZ?=
- =?us-ascii?Q?tF/+Tvq94TXbJP+9WJrrI4qWyZFlE3Yxag+BwoPNXR9SvzZFZFk5A4nKBBgs?=
- =?us-ascii?Q?VywX97MP/JO4/dLTjvTMyzDCa27+xcmsd7RHxb5Sstq2SIfEPz+krWjumEGr?=
- =?us-ascii?Q?gLRuxs/sT/SnjcAmCutS94W1c0NW/3PSL5q6qu8onIriRRnVAtaJk4HSpHR8?=
- =?us-ascii?Q?87cjftN6vYP1LnFxPrWZx7BC3bbVm0kVSyMLzy52tkvTDH0KxvF1Xs5bRvhg?=
- =?us-ascii?Q?mQWCXf1BflTMQkY3x/uHXe/TAva3/GrxX4bp9Um/+ZofADfVso0qvSDcrheV?=
- =?us-ascii?Q?To9Lo8Y2JesPQHrewcUrI6LbAaTMF4TPhEd7KrW/E6FHIp8vVCb07qx1Hfd+?=
- =?us-ascii?Q?D7wfH/WneXPL5beQyNUP7jSdzg3b59jo7/aFdZiCqOQgVgu+rcjDb3xKTPAF?=
- =?us-ascii?Q?jqxM6zVr7GclDMSqKXFdozIrKd0gRrkMXIlXVpe+adqMg3nju/NlDRQS3pFA?=
- =?us-ascii?Q?HIlVjNoiuIW42I6UMxgzUbw5yM557ETWSecMeydAo44V/4UPT2nXtQ+S40zG?=
- =?us-ascii?Q?OjOr3y+lhIqQEXAGZmeXZWAqXMrQvAgwAJR1xJ3JEZk7cqMYbAdixSmqN3fl?=
- =?us-ascii?Q?3I/3lMDX6jLdjgrFN+ym3ct0a2S/wzaurXEgDRKk?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b623616-19c6-4d93-0552-08dc69339617
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2024 16:35:46.4094
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WRnXNVj9rtIUVSOQ0SKwFhSfbbXc1Vbc0KOvM+wjTHFGlw2px7nJG7XiakFYQ6hx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7264
+Content-Transfer-Encoding: 8bit
+Feedback-ID: 1.ap-south-1./RC/PI2M8xOxQmTMPi0M1Q8h2FX69egpT62QKSaMPIA=:AmazonSES
+X-SES-Outgoing: 2024.04.30-76.223.180.44
 
-On Mon, Apr 29, 2024 at 09:43:48PM -0700, Nicolin Chen wrote:
+From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
 
-> static struct arm_smmu_cmdq *arm_smmu_get_cmdq(struct arm_smmu_device *smmu)
-> {
-> +	if (smmu->tegra241_cmdqv)
-> +		return tegra241_cmdqv_get_cmdq(smmu);
+Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
+significant functional overlap.
+TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
+dedicated device functions.
 
-Since it is compile time optional it would make some sense to optimize
-this (in all the places) too:
+Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/pinctrl-tps6594.c | 277 ++++++++++++++++++++++++------
+ 1 file changed, 225 insertions(+), 52 deletions(-)
 
-if (arm_smmu_has_smmu_tegra241_cmdqv(smmu))
-   [..]
+diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-tps6594.c
+index 66985e54b..085047320 100644
+--- a/drivers/pinctrl/pinctrl-tps6594.c
++++ b/drivers/pinctrl/pinctrl-tps6594.c
+@@ -14,8 +14,6 @@
+ 
+ #include <linux/mfd/tps6594.h>
+ 
+-#define TPS6594_PINCTRL_PINS_NB 11
+-
+ #define TPS6594_PINCTRL_GPIO_FUNCTION 0
+ #define TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
+ #define TPS6594_PINCTRL_TRIG_WDOG_FUNCTION 1
+@@ -40,17 +38,40 @@
+ #define TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8 3
+ #define TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9 3
+ 
++/* TPS65224 pin muxval */
++#define TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION 1
++#define TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
++#define TPS65224_PINCTRL_VMON1_FUNCTION 1
++#define TPS65224_PINCTRL_VMON2_FUNCTION 1
++#define TPS65224_PINCTRL_WKUP_FUNCTION 1
++#define TPS65224_PINCTRL_NSLEEP2_FUNCTION 2
++#define TPS65224_PINCTRL_NSLEEP1_FUNCTION 2
++#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION 2
++#define TPS65224_PINCTRL_NERR_MCU_FUNCTION 2
++#define TPS65224_PINCTRL_NINT_FUNCTION 3
++#define TPS65224_PINCTRL_TRIG_WDOG_FUNCTION 3
++#define TPS65224_PINCTRL_PB_FUNCTION 3
++#define TPS65224_PINCTRL_ADC_IN_FUNCTION 3
++
++/* TPS65224 Special muxval for recalcitrant pins */
++#define TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5 1
++#define TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5 4
++#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5 3
++
+ #define TPS6594_OFFSET_GPIO_SEL 5
+ 
+-#define FUNCTION(fname, v)									\
++#define TPS65224_NGPIO_PER_REG 6
++#define TPS6594_NGPIO_PER_REG  8
++
++#define FUNCTION(dev_name, fname, v)							\
+ {											\
+ 	.pinfunction = PINCTRL_PINFUNCTION(#fname,					\
+-					tps6594_##fname##_func_group_names,		\
+-					ARRAY_SIZE(tps6594_##fname##_func_group_names)),\
++					dev_name##_##fname##_func_group_names,		\
++					ARRAY_SIZE(dev_name##_##fname##_func_group_names)),\
+ 	.muxval = v,									\
+ }
+ 
+-static const struct pinctrl_pin_desc tps6594_pins[TPS6594_PINCTRL_PINS_NB] = {
++static const struct pinctrl_pin_desc tps6594_pins[] = {
+ 	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
+ 	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
+ 	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
+@@ -143,30 +164,127 @@ static const char *const tps6594_syncclkin_func_group_names[] = {
+ 	"GPIO9",
+ };
+ 
++static const struct pinctrl_pin_desc tps65224_pins[] = {
++	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
++	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
++	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
++};
++
++static const char *const tps65224_gpio_func_group_names[] = {
++	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
++};
++
++static const char *const tps65224_sda_i2c2_sdo_spi_func_group_names[] = {
++	"GPIO0",
++};
++
++static const char *const tps65224_nsleep2_func_group_names[] = {
++	"GPIO0", "GPIO5",
++};
++
++static const char *const tps65224_nint_func_group_names[] = {
++	"GPIO0",
++};
++
++static const char *const tps65224_scl_i2c2_cs_spi_func_group_names[] = {
++	"GPIO1",
++};
++
++static const char *const tps65224_nsleep1_func_group_names[] = {
++	"GPIO1", "GPIO2", "GPIO3",
++};
++
++static const char *const tps65224_trig_wdog_func_group_names[] = {
++	"GPIO1",
++};
++
++static const char *const tps65224_vmon1_func_group_names[] = {
++	"GPIO2",
++};
++
++static const char *const tps65224_pb_func_group_names[] = {
++	"GPIO2",
++};
++
++static const char *const tps65224_vmon2_func_group_names[] = {
++	"GPIO3",
++};
++
++static const char *const tps65224_adc_in_func_group_names[] = {
++	"GPIO3", "GPIO4",
++};
++
++static const char *const tps65224_wkup_func_group_names[] = {
++	"GPIO4", "GPIO5",
++};
++
++static const char *const tps65224_syncclkin_func_group_names[] = {
++	"GPIO4", "GPIO5",
++};
++
++static const char *const tps65224_nerr_mcu_func_group_names[] = {
++	"GPIO5",
++};
++
+ struct tps6594_pinctrl_function {
+ 	struct pinfunction pinfunction;
+ 	u8 muxval;
+ };
+ 
++struct muxval_remap {
++	unsigned int group;
++	u8 muxval;
++	u8 remap;
++};
++
++struct muxval_remap tps65224_muxval_remap[] = {
++	{5, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5},
++	{5, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5},
++	{5, TPS65224_PINCTRL_NSLEEP2_FUNCTION, TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5},
++};
++
++struct muxval_remap tps6594_muxval_remap[] = {
++	{8, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8},
++	{8, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8},
++	{9, TPS6594_PINCTRL_CLK32KOUT_FUNCTION, TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9},
++};
++
+ static const struct tps6594_pinctrl_function pinctrl_functions[] = {
+-	FUNCTION(gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
+-	FUNCTION(nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
+-	FUNCTION(nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
+-	FUNCTION(wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
+-	FUNCTION(wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
+-	FUNCTION(scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
+-	FUNCTION(nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
+-	FUNCTION(trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
+-	FUNCTION(sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
+-	FUNCTION(clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
+-	FUNCTION(nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
+-	FUNCTION(sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
+-	FUNCTION(sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
+-	FUNCTION(nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
+-	FUNCTION(syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
+-	FUNCTION(disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
+-	FUNCTION(pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
+-	FUNCTION(syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
++	FUNCTION(tps6594, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
++	FUNCTION(tps6594, nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
++	FUNCTION(tps6594, nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
++	FUNCTION(tps6594, wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
++	FUNCTION(tps6594, wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
++	FUNCTION(tps6594, scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
++	FUNCTION(tps6594, nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
++	FUNCTION(tps6594, trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
++	FUNCTION(tps6594, sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
++	FUNCTION(tps6594, clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
++	FUNCTION(tps6594, nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
++	FUNCTION(tps6594, sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
++	FUNCTION(tps6594, sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
++	FUNCTION(tps6594, nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
++	FUNCTION(tps6594, syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
++	FUNCTION(tps6594, disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
++	FUNCTION(tps6594, pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
++	FUNCTION(tps6594, syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
++};
++
++static const struct tps6594_pinctrl_function tps65224_pinctrl_functions[] = {
++	FUNCTION(tps65224, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
++	FUNCTION(tps65224, sda_i2c2_sdo_spi, TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
++	FUNCTION(tps65224, nsleep2, TPS65224_PINCTRL_NSLEEP2_FUNCTION),
++	FUNCTION(tps65224, nint, TPS65224_PINCTRL_NINT_FUNCTION),
++	FUNCTION(tps65224, scl_i2c2_cs_spi, TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
++	FUNCTION(tps65224, nsleep1, TPS65224_PINCTRL_NSLEEP1_FUNCTION),
++	FUNCTION(tps65224, trig_wdog, TPS65224_PINCTRL_TRIG_WDOG_FUNCTION),
++	FUNCTION(tps65224, vmon1, TPS65224_PINCTRL_VMON1_FUNCTION),
++	FUNCTION(tps65224, pb, TPS65224_PINCTRL_PB_FUNCTION),
++	FUNCTION(tps65224, vmon2, TPS65224_PINCTRL_VMON2_FUNCTION),
++	FUNCTION(tps65224, adc_in, TPS65224_PINCTRL_ADC_IN_FUNCTION),
++	FUNCTION(tps65224, wkup, TPS65224_PINCTRL_WKUP_FUNCTION),
++	FUNCTION(tps65224, syncclkin, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION),
++	FUNCTION(tps65224, nerr_mcu, TPS65224_PINCTRL_NERR_MCU_FUNCTION),
+ };
+ 
+ struct tps6594_pinctrl {
+@@ -175,6 +293,31 @@ struct tps6594_pinctrl {
+ 	struct pinctrl_dev *pctl_dev;
+ 	const struct tps6594_pinctrl_function *funcs;
+ 	const struct pinctrl_pin_desc *pins;
++	int func_cnt;
++	int num_pins;
++	u8 mux_sel_mask;
++	unsigned int remap_cnt;
++	struct muxval_remap *remap;
++};
++
++static struct tps6594_pinctrl tps65224_template_pinctrl = {
++	.funcs = tps65224_pinctrl_functions,
++	.func_cnt = ARRAY_SIZE(tps65224_pinctrl_functions),
++	.pins = tps65224_pins,
++	.num_pins = ARRAY_SIZE(tps65224_pins),
++	.mux_sel_mask = TPS65224_MASK_GPIO_SEL,
++	.remap = tps65224_muxval_remap,
++	.remap_cnt = ARRAY_SIZE(tps65224_muxval_remap),
++};
++
++static struct tps6594_pinctrl tps6594_template_pinctrl = {
++	.funcs = pinctrl_functions,
++	.func_cnt = ARRAY_SIZE(pinctrl_functions),
++	.pins = tps6594_pins,
++	.num_pins = ARRAY_SIZE(tps6594_pins),
++	.mux_sel_mask = TPS6594_MASK_GPIO_SEL,
++	.remap = tps6594_muxval_remap,
++	.remap_cnt = ARRAY_SIZE(tps6594_muxval_remap),
+ };
+ 
+ static int tps6594_gpio_regmap_xlate(struct gpio_regmap *gpio,
+@@ -201,7 +344,9 @@ static int tps6594_gpio_regmap_xlate(struct gpio_regmap *gpio,
+ 
+ static int tps6594_pmx_func_cnt(struct pinctrl_dev *pctldev)
+ {
+-	return ARRAY_SIZE(pinctrl_functions);
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	return pinctrl->func_cnt;
+ }
+ 
+ static const char *tps6594_pmx_func_name(struct pinctrl_dev *pctldev,
+@@ -229,10 +374,16 @@ static int tps6594_pmx_set(struct tps6594_pinctrl *pinctrl, unsigned int pin,
+ 			   u8 muxval)
+ {
+ 	u8 mux_sel_val = muxval << TPS6594_OFFSET_GPIO_SEL;
++	u8 mux_sel_mask = pinctrl->mux_sel_mask;
++
++	if (pinctrl->tps->chip_id == TPS65224 && pin == 5) {
++		/* GPIO6 has a different mask in TPS65224*/
++		mux_sel_mask = TPS65224_MASK_GPIO_SEL_GPIO6;
++	}
+ 
+ 	return regmap_update_bits(pinctrl->tps->regmap,
+ 				  TPS6594_REG_GPIOX_CONF(pin),
+-				  TPS6594_MASK_GPIO_SEL, mux_sel_val);
++				  mux_sel_mask, mux_sel_val);
+ }
+ 
+ static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
+@@ -240,16 +391,14 @@ static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
+ {
+ 	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
+ 	u8 muxval = pinctrl->funcs[function].muxval;
+-
+-	/* Some pins don't have the same muxval for the same function... */
+-	if (group == 8) {
+-		if (muxval == TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION)
+-			muxval = TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8;
+-		else if (muxval == TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION)
+-			muxval = TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8;
+-	} else if (group == 9) {
+-		if (muxval == TPS6594_PINCTRL_CLK32KOUT_FUNCTION)
+-			muxval = TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9;
++	unsigned int remap_cnt = pinctrl->remap_cnt;
++	struct muxval_remap *remap = pinctrl->remap;
++
++	for (unsigned int i = 0; i < remap_cnt; i++) {
++		if (group == remap[i].group && muxval == remap[i].muxval) {
++			muxval = remap[i].remap;
++			break;
++		}
+ 	}
+ 
+ 	return tps6594_pmx_set(pinctrl, group, muxval);
+@@ -276,7 +425,9 @@ static const struct pinmux_ops tps6594_pmx_ops = {
+ 
+ static int tps6594_groups_cnt(struct pinctrl_dev *pctldev)
+ {
+-	return ARRAY_SIZE(tps6594_pins);
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	return pinctrl->num_pins;
+ }
+ 
+ static int tps6594_group_pins(struct pinctrl_dev *pctldev,
+@@ -318,33 +469,54 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
+ 	pctrl_desc = devm_kzalloc(dev, sizeof(*pctrl_desc), GFP_KERNEL);
+ 	if (!pctrl_desc)
+ 		return -ENOMEM;
+-	pctrl_desc->name = dev_name(dev);
+-	pctrl_desc->owner = THIS_MODULE;
+-	pctrl_desc->pins = tps6594_pins;
+-	pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
+-	pctrl_desc->pctlops = &tps6594_pctrl_ops;
+-	pctrl_desc->pmxops = &tps6594_pmx_ops;
+ 
+ 	pinctrl = devm_kzalloc(dev, sizeof(*pinctrl), GFP_KERNEL);
+ 	if (!pinctrl)
+ 		return -ENOMEM;
+-	pinctrl->tps = dev_get_drvdata(dev->parent);
+-	pinctrl->funcs = pinctrl_functions;
+-	pinctrl->pins = tps6594_pins;
+-	pinctrl->pctl_dev = devm_pinctrl_register(dev, pctrl_desc, pinctrl);
+-	if (IS_ERR(pinctrl->pctl_dev))
+-		return dev_err_probe(dev, PTR_ERR(pinctrl->pctl_dev),
+-				     "Couldn't register pinctrl driver\n");
++
++	switch (tps->chip_id) {
++	case TPS65224:
++		pctrl_desc->pins = tps65224_pins;
++		pctrl_desc->npins = ARRAY_SIZE(tps65224_pins);
++
++		*pinctrl = tps65224_template_pinctrl;
++
++		config.ngpio = ARRAY_SIZE(tps65224_gpio_func_group_names);
++		config.ngpio_per_reg = TPS65224_NGPIO_PER_REG;
++		break;
++	case TPS6593:
++	case TPS6594:
++		pctrl_desc->pins = tps6594_pins;
++		pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
++
++		*pinctrl = tps6594_template_pinctrl;
++
++		config.ngpio = ARRAY_SIZE(tps6594_gpio_func_group_names);
++		config.ngpio_per_reg = TPS6594_NGPIO_PER_REG;
++		break;
++	default:
++		break;
++	}
++
++	pinctrl->tps = tps;
++
++	pctrl_desc->name = dev_name(dev);
++	pctrl_desc->owner = THIS_MODULE;
++	pctrl_desc->pctlops = &tps6594_pctrl_ops;
++	pctrl_desc->pmxops = &tps6594_pmx_ops;
+ 
+ 	config.parent = tps->dev;
+ 	config.regmap = tps->regmap;
+-	config.ngpio = TPS6594_PINCTRL_PINS_NB;
+-	config.ngpio_per_reg = 8;
+ 	config.reg_dat_base = TPS6594_REG_GPIO_IN_1;
+ 	config.reg_set_base = TPS6594_REG_GPIO_OUT_1;
+ 	config.reg_dir_out_base = TPS6594_REG_GPIOX_CONF(0);
+ 	config.reg_mask_xlate = tps6594_gpio_regmap_xlate;
+ 
++	pinctrl->pctl_dev = devm_pinctrl_register(dev, pctrl_desc, pinctrl);
++	if (IS_ERR(pinctrl->pctl_dev))
++		return dev_err_probe(dev, PTR_ERR(pinctrl->pctl_dev),
++				     "Couldn't register pinctrl driver\n");
++
+ 	pinctrl->gpio_regmap = devm_gpio_regmap_register(dev, &config);
+ 	if (IS_ERR(pinctrl->gpio_regmap))
+ 		return dev_err_probe(dev, PTR_ERR(pinctrl->gpio_regmap),
+@@ -369,5 +541,6 @@ static struct platform_driver tps6594_pinctrl_driver = {
+ module_platform_driver(tps6594_pinctrl_driver);
+ 
+ MODULE_AUTHOR("Esteban Blanc <eblanc@baylibre.com>");
++MODULE_AUTHOR("Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>");
+ MODULE_DESCRIPTION("TPS6594 pinctrl and GPIO driver");
+ MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
-static inline bool arm_smmu_has_smmu_tegra241_cmdqv(struct arm_smmu_device *smmu)
-{
-	return IS_ENABLED(CONFIG_TEGRA241_CMDQV) && smmu->tegra241_cmdqv;
-}
-
-> @@ -3105,12 +3108,10 @@ static struct iommu_ops arm_smmu_ops = {
->  };
->  
->  /* Probing and initialisation functions */
-> -static int arm_smmu_init_one_queue(struct arm_smmu_device *smmu,
-> -				   struct arm_smmu_queue *q,
-> -				   void __iomem *page,
-> -				   unsigned long prod_off,
-> -				   unsigned long cons_off,
-> -				   size_t dwords, const char *name)
-> +int arm_smmu_init_one_queue(struct arm_smmu_device *smmu,
-> +			    struct arm_smmu_queue *q, void __iomem *page,
-> +			    unsigned long prod_off, unsigned long cons_off,
-> +			    size_t dwords, const char *name)
->  {
->  	size_t qsz;
-
-This hunk and the .h file part should be moved to the prior patch that
-is de-exporting things.
-
-> +/* MMIO helpers */
-> +#define cmdqv_readl(reg) \
-> +	readl(cmdqv->base + TEGRA241_CMDQV_##reg)
-> +#define cmdqv_readl_relaxed(reg) \
-> +	readl_relaxed(cmdqv->base + TEGRA241_CMDQV_##reg)
-> +#define cmdqv_writel(val, reg) \
-> +	writel((val), cmdqv->base + TEGRA241_CMDQV_##reg)
-> +#define cmdqv_writel_relaxed(val, reg) \
-> +	writel_relaxed((val), cmdqv->base + TEGRA241_CMDQV_##reg)
-
-Please don't hide access to a stack variable in a macro, and I'm not
-keen on the ##reg scheme either - it makes it much harder to search
-for things.
-
-Really this all seems like alot of overkill to make a little bit of
-shorthand. It is not so wordy just to type it out:
-
-  readl(vintf->base + TEGRA241_VINTF_CONFIG) 
-
-> +/* Logging helpers */
-> +#define cmdqv_warn(fmt, ...) \
-> +	dev_warn(cmdqv->dev, "CMDQV: " fmt, ##__VA_ARGS__)
-> +#define cmdqv_err(fmt, ...) \
-> +	dev_err(cmdqv->dev, "CMDQV: " fmt, ##__VA_ARGS__)
-> +#define cmdqv_info(fmt, ...) \
-> +	dev_info(cmdqv->dev, "CMDQV: " fmt, ##__VA_ARGS__)
-> +#define cmdqv_dbg(fmt, ...) \
-> +	dev_dbg(cmdqv->dev, "CMDQV: " fmt, ##__VA_ARGS__)
-
-Really not sure these are necessary, same remark about the stack
-variable.
-
-Also cmdqv->dev is the wrong thing to print, this is part of the smmu driver,
-it should print cmdqv->smmu->dev for consistency
-
-> +#define vintf_warn(fmt, ...) \
-> +	dev_warn(vintf->cmdqv->dev, "VINTF%u: " fmt, vintf->idx, ##__VA_ARGS__)
-> +#define vintf_err(fmt, ...) \
-> +	dev_err(vintf->cmdqv->dev, "VINTF%u: " fmt, vintf->idx, ##__VA_ARGS__)
-> +#define vintf_info(fmt, ...) \
-> +	dev_info(vintf->cmdqv->dev, "VINTF%u: " fmt, vintf->idx, ##__VA_ARGS__)
-> +#define vintf_dbg(fmt, ...) \
-> +	dev_dbg(vintf->cmdqv->dev, "VINTF%u: " fmt, vintf->idx, ##__VA_ARGS__)
-> +
-> +#define vcmdq_warn(fmt, ...)                                                   \
-> +	({                                                                     \
-> +		struct tegra241_vintf *vintf = vcmdq->vintf;                   \
-> +		if (vintf)                                                     \
-> +			vintf_warn("VCMDQ%u/LVCMDQ%u: " fmt,                   \
-> +				   vcmdq->idx, vcmdq->lidx,                    \
-> +				   ##__VA_ARGS__);                             \
-> +		else                                                           \
-> +			dev_warn(vcmdq->cmdqv->dev, "VCMDQ%u: " fmt,           \
-> +				 vcmdq->idx, ##__VA_ARGS__);                   \
-> +	})
-> +#define vcmdq_err(fmt, ...)                                                    \
-> +	({                                                                     \
-> +		struct tegra241_vintf *vintf = vcmdq->vintf;                   \
-> +		if (vintf)                                                     \
-> +			vintf_err("VCMDQ%u/LVCMDQ%u: " fmt,                    \
-> +				  vcmdq->idx, vcmdq->lidx,                     \
-> +				  ##__VA_ARGS__);                              \
-> +		else                                                           \
-> +			dev_err(vcmdq->cmdqv->dev, "VCMDQ%u: " fmt,            \
-> +				vcmdq->idx, ##__VA_ARGS__);                    \
-> +	})
-> +#define vcmdq_info(fmt, ...)                                                   \
-> +	({                                                                     \
-> +		struct tegra241_vintf *vintf = vcmdq->vintf;                   \
-> +		if (vintf)                                                     \
-> +			vintf_info("VCMDQ%u/LVCMDQ%u: " fmt,                   \
-> +				   vcmdq->idx, vcmdq->lidx,                    \
-> +				   ##__VA_ARGS__);                             \
-> +		else                                                           \
-> +			dev_info(vcmdq->cmdqv->dev, "VCMDQ%u: " fmt,           \
-> +				 vcmdq->idx, ##__VA_ARGS__);                   \
-> +	})
-> +#define vcmdq_dbg(fmt, ...)                                                    \
-> +	({                                                                     \
-> +		struct tegra241_vintf *vintf = vcmdq->vintf;                   \
-> +		if (vintf)                                                     \
-> +			vintf_dbg("VCMDQ%u/LVCMDQ%u: " fmt,                    \
-> +				  vcmdq->idx, vcmdq->lidx,                     \
-> +				  ##__VA_ARGS__);                              \
-> +		else                                                           \
-> +			dev_dbg(vcmdq->cmdqv->dev, "VCMDQ%u: " fmt,            \
-> +				vcmdq->idx, ##__VA_ARGS__);                    \
-> +	})
-
-Some of these are barely used, is it worth all these macros??
-
-> +
-> +/* Configuring and polling helpers */
-> +#define tegra241_cmdqv_write_config(_owner, _OWNER, _regval)                   \
-> +	({                                                                     \
-> +		bool _en = (_regval) & _OWNER##_EN;                            \
-> +		u32 _status;                                                   \
-> +		int _ret;                                                      \
-> +		writel((_regval), _owner->base + TEGRA241_##_OWNER##_CONFIG);  \
-> +		_ret = readl_poll_timeout(                                     \
-> +			_owner->base + TEGRA241_##_OWNER##_STATUS, _status,    \
-> +			_en ? (_regval) & _OWNER##_ENABLED :                   \
-> +			      !((_regval) & _OWNER##_ENABLED),                 \
-> +			1, ARM_SMMU_POLL_TIMEOUT_US);                          \
-> +		if (_ret)                                                      \
-> +			_owner##_err("failed to %sable, STATUS = 0x%08X\n",    \
-> +				     _en ? "en" : "dis", _status);             \
-> +		atomic_set(&_owner->status, _status);                          \
-> +		_ret;                                                          \
-> +	})
-
-I feel like this could be an actual inline function without the macro
-wrapper with a little fiddling.
-
-> +
-> +#define cmdqv_write_config(_regval) \
-> +	tegra241_cmdqv_write_config(cmdqv, CMDQV, _regval)
-> +#define vintf_write_config(_regval) \
-> +	tegra241_cmdqv_write_config(vintf, VINTF, _regval)
-> +#define vcmdq_write_config(_regval) \
-> +	tegra241_cmdqv_write_config(vcmdq, VCMDQ, _regval)
-
-More hidden access to stack values
-
-> +/**
-> + * struct tegra241_cmdqv - CMDQ-V for SMMUv3
-> + * @smmu: SMMUv3 pointer
-> + * @dev: Device pointer
-
-This should probably be clarified as the device pointer to the ACPI
-companion device
-
-> +static void tegra241_cmdqv_handle_vintf0_error(struct tegra241_cmdqv *cmdqv)
-> +{
-> +	struct tegra241_vintf *vintf = cmdqv->vintfs[0];
-> +	int i;
-> +
-> +	/* Cache status to bypass VCMDQs until error is recovered */
-> +	atomic_set(&vintf->status, vintf_readl(STATUS));
-> +
-> +	for (i = 0; i < 4; i++) {
-> +		u32 lvcmdq_err_map = vintf_readl_relaxed(CMDQ_ERR_MAP(i));
-> +
-> +		while (lvcmdq_err_map) {
-> +			int lidx = ffs(lvcmdq_err_map) - 1;
-> +			struct tegra241_vcmdq *vcmdq = vintf->vcmdqs[lidx];
-> +			u32 gerrorn, gerror;
-> +
-> +			lvcmdq_err_map &= ~BIT(lidx);
-> +
-> +			__arm_smmu_cmdq_skip_err(cmdqv->smmu, &vcmdq->cmdq.q);
-> +
-> +			gerrorn = vcmdq_page0_readl_relaxed(GERRORN);
-> +			gerror = vcmdq_page0_readl_relaxed(GERROR);
-> +
-> +			vcmdq_page0_writel(gerror, GERRORN);
-> +		}
-> +	}
-> +
-> +	/* Now error status should be clean, cache it again */
-> +	atomic_set(&vintf->status, vintf_readl(STATUS));
-> +}
-> +
-> +static irqreturn_t tegra241_cmdqv_isr(int irq, void *devid)
-> +{
-> +	struct tegra241_cmdqv *cmdqv = (struct tegra241_cmdqv *)devid;
-> +	u32 vintf_errs[2];
-> +	u32 vcmdq_errs[4];
-> +
-> +	vintf_errs[0] = cmdqv_readl_relaxed(VINTF_ERR_MAP);
-> +	vintf_errs[1] = cmdqv_readl_relaxed(VINTF_ERR_MAP + 0x4);
-> +
-> +	vcmdq_errs[0] = cmdqv_readl_relaxed(VCMDQ_ERR_MAP(0));
-> +	vcmdq_errs[1] = cmdqv_readl_relaxed(VCMDQ_ERR_MAP(1));
-> +	vcmdq_errs[2] = cmdqv_readl_relaxed(VCMDQ_ERR_MAP(2));
-> +	vcmdq_errs[3] = cmdqv_readl_relaxed(VCMDQ_ERR_MAP(3));
-> +
-> +	cmdqv_warn("unexpected cmdqv error reported\n");
-> +	cmdqv_warn(" vintf_map: 0x%08X%08X\n", vintf_errs[1], vintf_errs[0]);
-> +	cmdqv_warn(" vcmdq_map: 0x%08X%08X%08X%08X\n",
-> +		   vcmdq_errs[3], vcmdq_errs[2], vcmdq_errs[1], vcmdq_errs[0]);
-
-Put warnings in one print only, spreading them like this just
-increases the risk of tearing.. It doesn't need to be all pretty.
-
-> +struct arm_smmu_cmdq *tegra241_cmdqv_get_cmdq(struct arm_smmu_device *smmu)
-> +{
-> +	struct tegra241_cmdqv *cmdqv = smmu->tegra241_cmdqv;
-> +	struct tegra241_vintf *vintf = cmdqv->vintfs[0];
-> +	struct tegra241_vcmdq *vcmdq;
-> +	u16 lidx;
-> +
-> +	if (bypass_vcmdq)
-
-READ_ONCE 
-
-> +		return &smmu->cmdq;
-> +
-> +	/* Use SMMU CMDQ if vintfs[0] is uninitialized */
-> +	if (!FIELD_GET(VINTF_ENABLED, atomic_read(&vintf->status)))
-> +		return &smmu->cmdq;
-> +
-> +	/* Use SMMU CMDQ if vintfs[0] has error status */
-> +	if (FIELD_GET(VINTF_STATUS, atomic_read(&vintf->status)))
-> +		return &smmu->cmdq;
-
-Why atomic_read? The unlocked interaction with
-tegra241_cmdqv_handle_vintf0_error() doesn't seem especially sane IMHO
-
-> +static void tegra241_vcmdq_hw_deinit(struct tegra241_vcmdq *vcmdq)
-> +{
-> +	u32 gerrorn, gerror;
-> +
-> +	if (vcmdq_write_config(0)) {
-> +		vcmdq_err("GERRORN=0x%X\n", vcmdq_page0_readl_relaxed(GERRORN));
-> +		vcmdq_err("GERROR=0x%X\n", vcmdq_page0_readl_relaxed(GERROR));
-> +		vcmdq_err("CONS=0x%X\n", vcmdq_page0_readl_relaxed(CONS));
-
-Less prints, include a unique message about why this is being
-printed..
-
-> +	}
-> +	vcmdq_page0_writel_relaxed(0, PROD);
-> +	vcmdq_page0_writel_relaxed(0, CONS);
-> +	vcmdq_page1_writeq_relaxed(0, BASE);
-> +	vcmdq_page1_writeq_relaxed(0, CONS_INDX_BASE);
-> +
-> +	gerrorn = vcmdq_page0_readl_relaxed(GERRORN);
-> +	gerror = vcmdq_page0_readl_relaxed(GERROR);
-> +	if (gerror != gerrorn) {
-> +		vcmdq_info("Uncleared error detected, resetting\n");
-> +		vcmdq_page0_writel(gerror, GERRORN);
-> +	}
-> +
-> +	vcmdq_dbg("deinited\n");
-> +}
-> +
-> +static int tegra241_vcmdq_hw_init(struct tegra241_vcmdq *vcmdq)
-> +{
-> +	int ret;
-> +
-> +	/* Configure and enable the vcmdq */
-> +	tegra241_vcmdq_hw_deinit(vcmdq);
-> +
-> +	vcmdq_page1_writeq_relaxed(vcmdq->cmdq.q.q_base, BASE);
-> +
-> +	ret = vcmdq_write_config(VCMDQ_EN);
-> +	if (ret) {
-> +		vcmdq_err("GERRORN=0x%X\n", vcmdq_page0_readl_relaxed(GERRORN));
-> +		vcmdq_err("GERROR=0x%X\n", vcmdq_page0_readl_relaxed(GERROR));
-> +		vcmdq_err("CONS=0x%X\n", vcmdq_page0_readl_relaxed(CONS));
-> +		return ret;
-
-Same print?
-
-> +static void tegra241_vcmdq_free_smmu_cmdq(struct tegra241_vcmdq *vcmdq)
-> +{
-> +	struct tegra241_cmdqv *cmdqv = vcmdq->cmdqv;
-> +	struct arm_smmu_queue *q = &vcmdq->cmdq.q;
-> +	size_t nents = 1 << q->llq.max_n_shift;
-> +
-> +	dmam_free_coherent(cmdqv->smmu->dev, (nents * CMDQ_ENT_DWORDS) << 3,
-> +			   q->base, q->base_dma);
-
-If we are calling dmam_free, do we really need devm at all?
-
-> +static struct tegra241_vcmdq *
-> +tegra241_vintf_lvcmdq_alloc(struct tegra241_vintf *vintf, u16 lidx)
-> +{
-> +	struct tegra241_cmdqv *cmdqv = vintf->cmdqv;
-> +	struct tegra241_vcmdq *vcmdq;
-> +	int ret;
-> +
-> +	vcmdq = devm_kzalloc(cmdqv->dev, sizeof(*vcmdq), GFP_KERNEL);
-> +	if (!vcmdq)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	ret = tegra241_vintf_lvcmdq_init(vintf, lidx, vcmdq);
-> +	if (ret)
-> +		goto free_vcmdq;
-> +
-> +	/* Setup struct arm_smmu_cmdq data members */
-> +	ret = tegra241_vcmdq_alloc_smmu_cmdq(vcmdq);
-> +	if (ret)
-> +		goto deinit_lvcmdq;
-> +
-> +	ret = tegra241_vcmdq_hw_init(vcmdq);
-> +	if (ret)
-> +		goto free_queue;
-> +
-> +	vcmdq_dbg("allocated\n");
-> +	return vcmdq;
-> +free_queue:
-> +	tegra241_vcmdq_free_smmu_cmdq(vcmdq);
-> +deinit_lvcmdq:
-> +	tegra241_vintf_lvcmdq_deinit(vcmdq);
-> +free_vcmdq:
-> +	devm_kfree(cmdqv->dev, vcmdq);
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static void tegra241_vintf_lvcmdq_free(struct tegra241_vcmdq *vcmdq)
-> +{
-> +	tegra241_vcmdq_hw_deinit(vcmdq);
-> +	tegra241_vcmdq_free_smmu_cmdq(vcmdq);
-> +	tegra241_vintf_lvcmdq_deinit(vcmdq);
-> +	devm_kfree(vcmdq->cmdqv->dev, vcmdq);
-
-Ditto for devm_kfree.
-
-> +struct tegra241_cmdqv *
-> +tegra241_cmdqv_acpi_probe(struct arm_smmu_device *smmu, int id)
-
-id is a u32. 
-
-It might be clearer to just pass in the struct
-acpi_iort_node *?
-
-> +{
-> +	struct tegra241_cmdqv *cmdqv;
-> +
-> +	cmdqv = tegra241_cmdqv_find_resource(smmu, id);
-> +	if (!cmdqv)
-> +		return NULL;
-> +
-> +	if (tegra241_cmdqv_probe(cmdqv)) {
-> +		if (cmdqv->irq > 0)
-> +			devm_free_irq(smmu->dev, cmdqv->irq, cmdqv);
-> +		devm_iounmap(smmu->dev, cmdqv->base);
-> +		devm_kfree(smmu->dev, cmdqv);
-> +		return NULL;
-
-Oh. Please don't use devm at all in this code then, it is not attached
-to a probed driver with the proper scope, devm isn't going to work in
-sensible way.
-
-Jason
