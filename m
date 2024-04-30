@@ -1,57 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D48D1C2325
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17211C6602
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714495911; cv=none; b=CMZc7PE1LK4SNXyMZjfkKAeozhU7MHhTMyLUCZ5e92PFlLUuJ3p/6fEXqF/5obUHdERpMrxAfnns0Kw6UUrvVyIq6tJDmSynLjP/wR4FMQx1AVKtXwIHAfjOLF63X4+GkT4De8kohrpXgT5kM3VeNn7JL2mK4MrsZmpzxMYXrfA=
+	t=1714495911; cv=none; b=T7+91g/khUScbL2J8ZIMpqSYnglpR/uE8FvVNIQFTula/1hPUb/i/dlhqpl7NbOk7BAPhkqLUomyqHwDD74J+vA6CUbsfLDpe2aop5qTmaVqpyQbG0c1ws9C386Eknci/435/TGSXKtgzjZQ2/S88cpCIN+JYAE8xXMxNz4g4X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714495911; c=relaxed/simple;
-	bh=/JbFqsT4QboTVC5nN5+7Tn0VrIVjmy0ALnM5ZmCJwqg=;
+	bh=nsRNTDx4whD1GLA/xKi0WFK0CbOb/U+ApM/A8sRWWZE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sfFW5EVDaNNbMYUASDKWUGyQylLIVnM3IhPYZlgv7z70b50MnxBsXZRVqubbAp6hZEnk7hiWG6yhAaTmNSYerFHZh7VTHE3hz/K8HiipqJm5440AjGuLJzHnwGo/mcHCJQnPRVZjNj3o0BwFZ8ymWlBdXO9EZFxRNEYFLEVS4F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iTCBa/Hi; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=cf4JCm8ynEMay5CicUcQ1dny8US1Dxz+X+BEHEvjhHuHJ7UnA7cNDcxSOxsH6KzL5mkg6qtWZW4vaoimz+9NItj+L/5hbUG4lm8X0T6QAG3pWTc+c6VWb7UelVlBEF3pS6DS4ZC6GBohdSqW8DiYmjBboCJ8lYjXWo2AnNYkN7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q6Hw7UeU; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iTCBa/Hi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q6Hw7UeU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714495908; x=1746031908;
+  t=1714495910; x=1746031910;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/JbFqsT4QboTVC5nN5+7Tn0VrIVjmy0ALnM5ZmCJwqg=;
-  b=iTCBa/Hi8L5TvxCkWRdSqBZSuwKfwL4x2ZIRxGCh2ZsUiEQrGfn6MAyB
-   qt7UoLNuWRUgrC0gy71I7A8ksXFo/Dc23lThZfJQzzV8Si3VTJeigEtQ/
-   yC6o33edMPNgm5u2c+gboV0ci2+t/AJb429xq812e91PHVXlXcT86Ka2Z
-   E7H/pJ1AsXQ0pMTp88kJvSL92JtJoTLABRQfwpa+pQP4crkwJopbRMB/k
-   +9k0+fVUZoBWZNV1j17EHopSiRHWIaaD9uW4g1d3TmbasTrKcnaTj5iZc
-   iPeSvJaF+aEKD0aJ67mxnmlbyl8LdtdI1vqkqnHPvrSjrf5jev8Tgc40Q
+  bh=nsRNTDx4whD1GLA/xKi0WFK0CbOb/U+ApM/A8sRWWZE=;
+  b=Q6Hw7UeU1u3C5EGRjC4GNMl7U7GkFCpKMlQmEtgqU8fUgKrf+DUg8gh2
+   OGrH0PFf1BPP9L1Euck8Tb+xd0c+dm0dRQZnshb6OVETLEtvmt4WC0Ynx
+   QBMbcbfzvDMPYq2+M6I6z4HDLlDLF2jY/4RhA469Ctla4T37OMI/kUD5V
+   GJQMj20Z2OuZzdTENf07nYLCqg3cbUd7OvKHuAoo6hV1ITFa4FAr8wWjf
+   xB2dXtwTv+y+mlzqqACw5vYJyFbJ5XdTjORkdszyWCKKiS3tO0KJ08fvu
+   ngM+jkRr3WtzNi+lwDPyjtcqvlDG4kBjNSuC/glK6zkEF3kGRzaCqVGpy
    w==;
-X-CSE-ConnectionGUID: JLWAxO49SdyXDo/95wHLrQ==
-X-CSE-MsgGUID: xtkBO9yDQWmLC5ro1flVRA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10075772"
+X-CSE-ConnectionGUID: 8FI4bPD3QAyyN6vWLEv2+w==
+X-CSE-MsgGUID: 3ji5XxxlRYOIbe8yTp6jBg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10075798"
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="10075772"
+   d="scan'208";a="10075798"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:23 -0700
-X-CSE-ConnectionGUID: R7a3kwDARDe5wiji/wbUkw==
-X-CSE-MsgGUID: bg3AbzpATYiqGL4g0vHHAw==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:24 -0700
+X-CSE-ConnectionGUID: 0a/n0OrbSICH8BLXMPVv3g==
+X-CSE-MsgGUID: t1HIG+daTtWIV/5ZVMP4bA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="26515501"
+   d="scan'208";a="26515516"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:19 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:20 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Borislav Petkov <bp@alien8.de>
 Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v5 33/47] EDAC/i10nm: Switch to new Intel CPU model defines
-Date: Tue, 30 Apr 2024 09:50:46 -0700
-Message-ID: <20240430165100.73491-33-tony.luck@intel.com>
+	Tony Luck <tony.luck@intel.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v5 40/47] powercap: intel_rapl: Switch to new Intel CPU model defines
+Date: Tue, 30 Apr 2024 09:50:53 -0700
+Message-ID: <20240430165100.73491-40-tony.luck@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240430165100.73491-1-tony.luck@intel.com>
 References: <20240430164913.73473-1-tony.luck@intel.com>
@@ -67,41 +68,140 @@ Content-Transfer-Encoding: 8bit
 New CPU #defines encode vendor and family as well as model.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/edac/i10nm_base.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/powercap/intel_rapl_common.c | 118 +++++++++++++--------------
+ 1 file changed, 59 insertions(+), 59 deletions(-)
 
-diff --git a/drivers/edac/i10nm_base.c b/drivers/edac/i10nm_base.c
-index 3fd22a1eb1a9..24dd896d9a9d 100644
---- a/drivers/edac/i10nm_base.c
-+++ b/drivers/edac/i10nm_base.c
-@@ -942,16 +942,16 @@ static struct res_config gnr_cfg = {
+diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
+index a28d54fd5222..59c36ea55712 100644
+--- a/drivers/powercap/intel_rapl_common.c
++++ b/drivers/powercap/intel_rapl_common.c
+@@ -1220,65 +1220,65 @@ static const struct rapl_defaults rapl_defaults_amd = {
  };
  
- static const struct x86_cpu_id i10nm_cpuids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ATOM_TREMONT_D,	X86_STEPPINGS(0x0, 0x3), &i10nm_cfg0),
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ATOM_TREMONT_D,	X86_STEPPINGS(0x4, 0xf), &i10nm_cfg1),
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ICELAKE_X,		X86_STEPPINGS(0x0, 0x3), &i10nm_cfg0),
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ICELAKE_X,		X86_STEPPINGS(0x4, 0xf), &i10nm_cfg1),
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ICELAKE_D,		X86_STEPPINGS(0x0, 0xf), &i10nm_cfg1),
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(SAPPHIRERAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &spr_cfg),
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(EMERALDRAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &spr_cfg),
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(GRANITERAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ATOM_CRESTMONT_X,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
--	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ATOM_CRESTMONT,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_ATOM_TREMONT_D,	X86_STEPPINGS(0x0, 0x3), &i10nm_cfg0),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_ATOM_TREMONT_D,	X86_STEPPINGS(0x4, 0xf), &i10nm_cfg1),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_ICELAKE_X,	X86_STEPPINGS(0x0, 0x3), &i10nm_cfg0),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_ICELAKE_X,	X86_STEPPINGS(0x4, 0xf), &i10nm_cfg1),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_ICELAKE_D,	X86_STEPPINGS(0x0, 0xf), &i10nm_cfg1),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_SAPPHIRERAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &spr_cfg),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_EMERALDRAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &spr_cfg),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_GRANITERAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_ATOM_CRESTMONT_X,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
-+	X86_MATCH_VFM_STEPPINGS(INTEL_ATOM_CRESTMONT,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, i10nm_cpuids);
+ static const struct x86_cpu_id rapl_ids[] __initconst = {
+-	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE_X,	&rapl_defaults_core),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE_X,		&rapl_defaults_core),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(HASWELL,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_L,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_G,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_X,		&rapl_defaults_hsw_server),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_G,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,		&rapl_defaults_hsw_server),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&rapl_defaults_hsw_server),
+-	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&rapl_defaults_hsw_server),
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		&rapl_defaults_hsw_server),
+-	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GRACEMONT,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        &rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&rapl_defaults_spr_server),
+-	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&rapl_defaults_spr_server),
+-	X86_MATCH_INTEL_FAM6_MODEL(LUNARLAKE_M,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ARROWLAKE,		&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(LAKEFIELD,		&rapl_defaults_core),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&rapl_defaults_byt),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&rapl_defaults_cht),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID,	&rapl_defaults_tng),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT_MID,	&rapl_defaults_ann),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&rapl_defaults_core),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&rapl_defaults_core),
+-
+-	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&rapl_defaults_hsw_server),
+-	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&rapl_defaults_hsw_server),
++	X86_MATCH_VFM(INTEL_SANDYBRIDGE,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_SANDYBRIDGE_X,	&rapl_defaults_core),
++
++	X86_MATCH_VFM(INTEL_IVYBRIDGE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_IVYBRIDGE_X,	&rapl_defaults_core),
++
++	X86_MATCH_VFM(INTEL_HASWELL,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_HASWELL_L,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_HASWELL_G,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_HASWELL_X,		&rapl_defaults_hsw_server),
++
++	X86_MATCH_VFM(INTEL_BROADWELL,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_BROADWELL_G,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_BROADWELL_D,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_BROADWELL_X,	&rapl_defaults_hsw_server),
++
++	X86_MATCH_VFM(INTEL_SKYLAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_SKYLAKE_L,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_SKYLAKE_X,		&rapl_defaults_hsw_server),
++	X86_MATCH_VFM(INTEL_KABYLAKE_L,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_KABYLAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_CANNONLAKE_L,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ICELAKE_L,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ICELAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ICELAKE_NNPI,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ICELAKE_X,		&rapl_defaults_hsw_server),
++	X86_MATCH_VFM(INTEL_ICELAKE_D,		&rapl_defaults_hsw_server),
++	X86_MATCH_VFM(INTEL_COMETLAKE_L,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_COMETLAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_TIGERLAKE_L,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_TIGERLAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ROCKETLAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ALDERLAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ALDERLAKE_L,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ATOM_GRACEMONT,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_RAPTORLAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,        &rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_METEORLAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&rapl_defaults_spr_server),
++	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&rapl_defaults_spr_server),
++	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ARROWLAKE,		&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_LAKEFIELD,		&rapl_defaults_core),
++
++	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT,	&rapl_defaults_byt),
++	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,	&rapl_defaults_cht),
++	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID, &rapl_defaults_tng),
++	X86_MATCH_VFM(INTEL_ATOM_AIRMONT_MID,	&rapl_defaults_ann),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_PLUS,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_D,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ATOM_TREMONT,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ATOM_TREMONT_D,	&rapl_defaults_core),
++	X86_MATCH_VFM(INTEL_ATOM_TREMONT_L,	&rapl_defaults_core),
++
++	X86_MATCH_VFM(INTEL_XEON_PHI_KNL,	&rapl_defaults_hsw_server),
++	X86_MATCH_VFM(INTEL_XEON_PHI_KNM,	&rapl_defaults_hsw_server),
+ 
+ 	X86_MATCH_VENDOR_FAM(AMD, 0x17, &rapl_defaults_amd),
+ 	X86_MATCH_VENDOR_FAM(AMD, 0x19, &rapl_defaults_amd),
 -- 
 2.44.0
 
