@@ -1,56 +1,65 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB17BC14F
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD03917582
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714455626; cv=none; b=fa2rjtaiEbPLrqvl/jfERf/24xlMImH3RGpCdA3rmazeyuDaaVvtEVlg5f/xtd8wWRIvKn/eo1jFoHsKdJt+mEE56TVX+0/EB2y0uPuf3DSi+OYgk+n51HkQeLQlDPckyBbLvnit25dc0XZqzRVmCRd59EzWW27jsME3ivHEGzw=
+	t=1714456160; cv=none; b=TwaRkJolah9KDPPrd9FVLURWumTtYPmv0vUKbjqgB2zO+vHBXClz0mRMaPIUnREKfSeHn1eq/5Z8JKkff0XWSkGg5PmK3mjJ6w6UfxMYjKJZ89R+4lObfv9fsi5O3syVzKiN4GVBv7n/6O9rUhH2+JGNr5Hf0LPLGMWhxjkPmJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714455626; c=relaxed/simple;
-	bh=o2mkoohmWSqXxEQKCsPzfVpPezIXDWDYgvj5CKYjwaM=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=Dwz6vmDuxdy6FSfScibBBhNthhypnahoYCzPHfJ19wDzlA3iLJFSm7kmHDyz8B1BTQu83l8wJoXqOJ43hQpfhNrMZ6gNVzNkjxjLH4pOFw4eMTK3FftBJZXHrnRLtfuP0Bqtd1BRLF6/DZUCBgmjhPg2eKOg+ZDMEYuGfSDg6lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=SChbnixO; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1714456160; c=relaxed/simple;
+	bh=PKavDLHA7akrSiYv3ddEc5JsYq3c/1MGnBbU+XVGTK0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YOROElmOHVt68SNImjwschS+pB4pSNpTGqg+31W1MYOlitDCOcMvQTWrLVQqPmtCXbzvZlFI4Raizqc9H2DqwhkxTP0ZHNeTtofaqDxYffYW41R9V4RJhWW4yF1PAV+cfmsqU1xXoW+3RgpESBPe9Lqcc8YTTSEtxhlyWvU1lyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lMQwkc9m; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="SChbnixO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1714455612; bh=cE2Z8F+T6CzTKmHgax54sOHcrGaYMhSaBGLMxBBiY+s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SChbnixObmb8XynVH9453ILUYgKvqEpeja+KfIQxkFTHeT187xoXHK6TRm8MH3IrM
-	 Rwsg2VZekgAEY7F+Y5ACo3In/7I/NunWibOupldDprZMN3pVdUUGj7mLHL2QbFNFx6
-	 q+WiEeTzs+yv8U8kBiIVY4jSjYzjF+wqJR1EO3BU=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id 8820A65A; Tue, 30 Apr 2024 13:34:02 +0800
-X-QQ-mid: xmsmtpt1714455242tc59767xk
-Message-ID: <tencent_7437344BBA742F76EB67C63D0F362897D209@qq.com>
-X-QQ-XMAILINFO: OQhZ3T0tjf0ae1WvG5xAKJHC8YjbpJpaMz3BzFnLFo/y+C2ulx/8PKYcoYL+hv
-	 UBOO6f+HAp0Jwc8pJzI4OnzZhytTmYapkVaIz1n+gJTGj1/OkdCiTeSEy18InFotE1Rl9+yk4w/G
-	 53kM6CFmtsNZSFVf3O08X5jyg+eePeDTdtglQpnrz9JGOWsJbNWlOyZuUC58i4ifu+r3r3Azfxwk
-	 wpfHOE12f1rxJ6u7q2e7uzfbqqay8z2r/l63B9acJW+Q+5H86VtbTCyIQi0JpYCfIN1EAyAASVD5
-	 sTj9Vbp6qLfKyRVefT86qPZw26d9wHzvZYwDpkl7SIeATpIbYZcpmbDJlrq2jLdTPz9VeeV0ccsF
-	 ZdyeIcpUnRbdw4w1F0t4cVUW0nrMdEQr2V8PUsqGRKOG12f6zopbdhezqLKDiWeZt7k+QF+InNCQ
-	 4v0ytbgPvf62FlN6CT/TNpo1gu7lLNKzAndCG+Kl21L9TpMvC9RkCR1fC4K1uOLXI6q22TH0uawN
-	 hLbJwNkhKLoqoCSdnVNr35tOXi0zmEv9ogbb6U3JpXjKXxQRszpQTHT3ZrFBPw5Yq90ggFtA+tf+
-	 qZMlfS57R2eB2ISF0hyVLz/5OgP5u1mbFvDulJcSOZG3IezMCdSKADalKjBW2ZB3lNPOTVMv57LD
-	 ApVOWIw/QGmTNddTbbEfEdRj7beK066n1a3vnqZhpfhVAXQiUnlfkpJZYVPrC+AB7BGqtSnL8Kef
-	 A/KieRNOxOcbZ6HHHYOKS456C4s2rBKG9p4NR2/m9tM/PRkUuTTPf7RH43pfyGcgEAkWcbKGzOSO
-	 f8VwsaEIeJ8PaBJi40YezQkz4rJg0Pp77vJrvSaYWJ11wpISM8Is5KMY9UnNpzQ2i/9jsZGWA4PD
-	 q3ScgEpWF38SQOk3X+vILUn81EiEFwAFmXJ5q6rW+IyBWyXeM7UnHcbAcIex7fuj0s4PLq91Bn
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+eaba5abe296837a640c0@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ext4?] KMSAN: uninit-value in ext4_inlinedir_to_tree
-Date: Tue, 30 Apr 2024 13:34:02 +0800
-X-OQ-MSGID: <20240430053401.562396-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000440b0a06173e6ca8@google.com>
-References: <000000000000440b0a06173e6ca8@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lMQwkc9m"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2af37c18c10so1286387a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 22:49:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714456158; x=1715060958; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dpy361oIB3q72pLwZ2bKiieKmkru5Dup93g/6xzldv0=;
+        b=lMQwkc9mgF56kMCo3ZR26n6TEbpPf/ZJiZCDB7QGn2VAmM+JxPW9HX7w/DZE1Lxi/o
+         m+WbPsBU/HO86u1/gIs5kY0sry+uWaurDXxSbWAw5Tb3FC37Z0AYCB7T2KGKI593kPqE
+         ObdF1S7jKQb6gvlibUEmh/ou6ifU9Y0YnZhFASp5V2Wh3lLoGikrTK1GpYudddig6JcU
+         nstj/hfnJG1i9chTYtd4rTyAf4Vc05WTc2COVbJuEFqhRglTAxgY+Yx6PfUr4lCsmcGT
+         iG5IW3Fh8tiPpCJuWb7EcuyNqozX4TlBsqa62ISHv6F1IMijapZzu9BM3tZVsUtve5qU
+         DZ1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714456158; x=1715060958;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Dpy361oIB3q72pLwZ2bKiieKmkru5Dup93g/6xzldv0=;
+        b=aNPKt0j2qS2LtX/OxCyuhNOYkp2rxbuk98i1MqPcSkdwMXDPRuwLj2GDp2g3VVzo+2
+         bnKPpuPZVflbJIsl9zeW9R4Fyuef0rZSZgamk86lJ9zs2u/VD8gwFyj5vad184BGnwC3
+         5OVC2vhMF3UTNvZazmYdmmuxpPukh10HVaK2sJYhA1Kz/qfhyai8kiuLy0ba+aNAfZfR
+         sR/6Tl2VNsJC65w02peYAWA76W83nwcaGX096G9gIDKeIYDJ5ah6W096Q9nsIMILaa2D
+         Q+ofDQ/oqX4WHzYqQwTQMSSmsMxW7TydFtQPbaYUY6BhtNqMtBcxtle26IMKw/M1xztZ
+         c0DA==
+X-Forwarded-Encrypted: i=1; AJvYcCXDBamZRdiFJ0pljJo5KN6ScLtXQPZbzyIFGvt0k2QwToJ9bGWqOWnyR0X73e9PfiyOB97PuOkM0ntFNw+DNDPnb3LMHAG/CHv6YzZN
+X-Gm-Message-State: AOJu0YxhwHYsz14KJywAXuVkRowHeGu21kMeGQNjfO5mOuYUlAFSLRhV
+	iSrLg8IzF+sWHzLrMDx1UX+nMDQDzw2AEyNA5WEPe3hQIaFuHScS
+X-Google-Smtp-Source: AGHT+IECS/AUeClgPUXQv2ctZBuAY39CVd5tT4ASKQev7MnMM1vBtPcx0JboiOpSdPot59rqAmAxlg==
+X-Received: by 2002:a05:6a21:7894:b0:1ae:4145:a250 with SMTP id bf20-20020a056a21789400b001ae4145a250mr14891313pzc.3.1714456158066;
+        Mon, 29 Apr 2024 22:49:18 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id u12-20020a17090adb4c00b0029df9355e79sm20471652pjx.13.2024.04.29.22.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 22:49:17 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: akpm@linux-foundation.org,
+	yury.norov@gmail.com
+Cc: linux@rasmusvillemoes.dk,
+	linux-kernel@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH v2 0/2] bitops: Optimize fns() for improved performance
+Date: Tue, 30 Apr 2024 13:49:10 +0800
+Message-Id: <20240430054912.124237-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,21 +68,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-please test uv in ext4_inlinedir_to_tree
+Hello,
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+This patch series optimizes the fns() function by avoiding repeated
+calls to __ffs(). Additionally, tests for fns() have been added in
+lib/find_bit_benchmark.c.
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index 5e4f65c14dfb..3611952570a7 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1182,7 +1182,7 @@ static int htree_dirblock_to_tree(struct file *dir_file,
- int ext4_htree_fill_tree(struct file *dir_file, __u32 start_hash,
- 			 __u32 start_minor_hash, __u32 *next_hash)
- {
--	struct dx_hash_info hinfo;
-+	struct dx_hash_info hinfo = {};
- 	struct ext4_dir_entry_2 *de;
- 	struct dx_frame frames[EXT4_HTREE_LEVEL], *frame;
- 	struct inode *dir;
+Changes in v2:
+- Add benchmark test for fns() in lib/find_bit_benchmark.c.
+- Change the loop in fns() by counting down from n to 0.
+- Add find_bit benchmark result for find_nth_bit in commit message.
+
+Link to v1: https://lkml.kernel.org/20240406235532.613696-1-visitorckw@gmail.com
+
+Kuan-Wei Chiu (2):
+  lib/find_bit_benchmark: Add benchmark test for fns()
+  bitops: Optimize fns() for improved performance
+
+ include/linux/bitops.h   | 12 +++---------
+ lib/find_bit_benchmark.c | 25 +++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 9 deletions(-)
+
+-- 
+2.34.1
 
