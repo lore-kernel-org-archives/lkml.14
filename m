@@ -1,254 +1,112 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F821BF6FD
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 23:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E731C2303
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 23:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714521072; cv=none; b=daVy4b2i2MgH9tgWTqnYo93Awh9dwIpyWa4rTiNqGWf42Rm7ajKTykL0290rRmz+/oF4hPUZnvJRKOmCJLePK/V9Z+cnUjjrNNY0pTFnFHsX1B0ym0fxDRrb/UdZTE7jnvGCmOUwUvXJ9J2wumrAE/0g/dO+EhI9lsXoD83oBgo=
+	t=1714521075; cv=none; b=NiaNpTu1dgTTaNgL6FPHmgphPAls5nYbAXq4AFKRVuCpNJzq8eNIT7CdIQJhyR4aRbtqaplYWbF1N+7tnbUkrlu2CIJEO8Txsl2h8cv7FGbDv069QuzIAcdCtpKTBj8LM8Qt2XrO/09SoyE+RhSXwhN/e5Ol6Dl/EADV9iqpwcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714521072; c=relaxed/simple;
-	bh=tunHIi+g2h7hRr+bYsKyFGkeHCMhNPEBpe1sdelouTg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W9Qvg0h3xX7tshg3hX18+rnvVYsXlCLwQm+1jWyI/DHBdqE5BE97wov21HD210yzw9X5aRhMJEz7mbmN9Eflk+QdvmHM47F5UZ6VFtsgRri3l08TfQStAJSBKfnkaB+CE8OgMwTee9RFth1O0kDD8P0dpUMIyFEcPZPpLWWziKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TZXjNx01; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714521075; c=relaxed/simple;
+	bh=/OcbhMlACXwRbL6eMCAvatfg5p5nh1NZCgFVS7GD4sU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=hnn2EurES4zrZNkc+m3XS2+mwvKbRWrLBQEoarhLXB7Upv4+Lt+XqTLO11NjKR2Lc3nmXGtMsG2TgxZxcY6z17wrtFNSsJ9CqRK9WBhHIsTaip45cLCwYV8q4B87RWQS1G17pK/0GyTEC/ozULAXqQrtbV1awWPtLEoz5tlyCy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MuiAn0/q; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TZXjNx01"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1eab16c8d83so51217625ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MuiAn0/q"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61bef0accddso19408037b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714521070; x=1715125870; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=isr0o1p4ELV76Jirfa57BN8xYD44bT1jEX3qsKxUGp4=;
-        b=TZXjNx01q5qy/ApWAmYvX+nYqST8E7t3BKYVDm+Q7duaFc9yQMbjcbgP4Js7nnRb+T
-         6tvYkvS76go7sAYWH6cYeieYNpWF9cUTgQllh7DU+PCUqgo5OdkekAkFdGnMjkqYgtv9
-         +NPHstN4xRN4XM8p+HX3UqfMxjNlAih+8cDMU=
+        d=google.com; s=20230601; t=1714521073; x=1715125873; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YOEM0xvLtojrhcgEFvmPYdUJPLv6ivSzHSsLdLUXzrI=;
+        b=MuiAn0/qsBtu3KzYeWQ6rO0SKehAfnui30iwYKoNWfpt5LKwPXeceP3tXZ1Dh36CJV
+         +HJ3D6AyRPPquGH7WVhc8jLK+6E+W8V34lcQMUZyEgfYiyXXNn8amasvLx5zxjRnqhip
+         hPA8KsZMNuJhheC0i2LP8KB1c2KhlgxRB5KJjAmbz6Yjr4sCQbG+UuCfX5e0wzVjWhvV
+         0+c8jtWHRxIYxPza8yXL8alsS1dyRAdqVExY5PL4V3HUlN/k5rSETrWWylh2NfA5uitp
+         PWi8OJO/T4GyWtiamrxFEQS2NdLMj3maWYe9Rt5muEw3LUfB5hmOpIrRVeBBkZsGyN2i
+         7/2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714521070; x=1715125870;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=isr0o1p4ELV76Jirfa57BN8xYD44bT1jEX3qsKxUGp4=;
-        b=wR46FyjMiFStQ2cgVtcBzwVKARrzSjTnV7v3j8YWv1VVRa9JlyJsTddeqmFe8Vn9wH
-         o589802pTpLwFmauk9ziiXOaj+QnoXosBii8xWn3ODk9CazoYfVaYB6VMC1pF+MFlIuy
-         q4Sk4JiZGhdOuCao1R0J5FRAGWmi+ayjksCLjYglCa+F0EKso+UGIGf4fJfaM+bjRluz
-         gLpAcQTt4ap8HAUfF0opurEajvA6bbJIIgnLEOLC4fuF9yv8ibxA0OsbjumzoOfInvso
-         OFVN28Yk+zubvktcCc9ZL+LSCBAx9erBWcDG6TOUsPREhEl/Ty31Pk71UJg3m2AvvN3t
-         qH+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWKbQAkd2LnjfGgjdpn9NjDLYT+EMjv2EmusFPzek/RPWmJWYVPzbmmGEx/9FVjSrHiCfEgYcUMniNEuOErt/VimIVHPZcH/jxxr4Q5
-X-Gm-Message-State: AOJu0YysqVDCnQ2W0ROtpKS5Krgq5+/a4r7DJFxOls8qbkQ0588t4I8E
-	ppYjqbhQpw6bbKAgyk+1Dt5M2sTmVSO3dWoicKamIhCHjY4Yt6w/ifX4hJZidWQvDnJtGT9p9SM
-	=
-X-Google-Smtp-Source: AGHT+IH90Ds04cXqGvOTz/xvAuPZEwT9EaB4/+RTFJR4vtPYxtkx7KGrZQQDM1QDaxjXGjsjbGU2pA==
-X-Received: by 2002:a17:902:6807:b0:1ea:f7d4:b613 with SMTP id h7-20020a170902680700b001eaf7d4b613mr805421plk.62.1714521070144;
-        Tue, 30 Apr 2024 16:51:10 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b4-20020a170903228400b001eb50fdc38asm7168999plh.44.2024.04.30.16.51.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 16:51:09 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Youling Tang <tangyouling@loongson.cn>,
-	Jinyang He <hejinyang@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] objtool: Provide origin hint for elf_init_reloc_text_sym() errors
-Date: Tue, 30 Apr 2024 16:51:07 -0700
-Message-Id: <20240430235106.work.680-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1714521073; x=1715125873;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YOEM0xvLtojrhcgEFvmPYdUJPLv6ivSzHSsLdLUXzrI=;
+        b=gUdSMwQxizO6LzqKCOlewdnk4PdIdjSoTjepZe2NF4PdGHjYd2AJRZRTVNJQcyEeVj
+         uCiSJKemDAUJBtLmYzjlcfawm0KLpMNYwFkQFGPyRVKpyOqGwN5mPlywcXVZyeArGbOu
+         Jtm/1l8rBeGq4raOsPkrCVv1CuutoX+Bn052FxPIxd0idk2UEgBCGf9x048iBl4KU2uY
+         qXLGYKnPterUg4fVfCCAbP+jm3cuubVgooitaCGAu3pu3bekWjujd/nuIWd0O+fuWilN
+         WRL3NRsPTlWRidJaANHtONEy7XvjFxUz2DSSDxzoocmxoK58kKmgaAX1uoyZex2H6wip
+         tPXg==
+X-Gm-Message-State: AOJu0YzQiyVALMBub/1xyn6DTC8Idqf2QhY0Wvj5gRww0E74oFxmZPd8
+	1NX2ofaRURnF2PCZ0YWrHUwGqD7q6zcOStFoE5tvcLD+8MhbLcL/DEQyVsPn6LrmCc96ZOe2a2I
+	r4w==
+X-Google-Smtp-Source: AGHT+IFJXIs/Lt+BtxjY7jBxKzzWVBtTxh64x30GUOCc5Tw5J5fH56D2Gr2lUi2tRLPjityAGVOjM5YrN70=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a0d:d614:0:b0:61c:89a4:dd5f with SMTP id
+ y20-20020a0dd614000000b0061c89a4dd5fmr271833ywd.0.1714521073133; Tue, 30 Apr
+ 2024 16:51:13 -0700 (PDT)
+Date: Tue, 30 Apr 2024 23:50:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6645; i=keescook@chromium.org;
- h=from:subject:message-id; bh=tunHIi+g2h7hRr+bYsKyFGkeHCMhNPEBpe1sdelouTg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmMYPrFZhhJqgTHe31lU/lPWd3vclwC9PT7FsyF
- r+aO2OF1bCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZjGD6wAKCRCJcvTf3G3A
- JjH3D/93D7B2VgAUWKPs2GTAsZRLnXfau8FLf1TYKcdznYTjQLDVyfDs4sAyJmgpNiOCYncI2/t
- gSCvPfIQxJgtyP+6Tftd791ObK1gFGUMQgF3alZbmSdzvsZYmgDdXGiaAc2iFe1vjzwlZavo2LR
- WN1YpwWMXPEjaxb8gDxjQE/MYINUHMNsdvHlK5WvwTpep+Fkqf1br/hR15hCh4XPxXseOGrwnlx
- tRwJkg0+zfnBQsxkC5nE8hzdd90LiziciYh3QWLAhU0eKgr6aOnRzFovjsl9rMcPDWonR7m/w/V
- djE1vW6fWhakb3v7SMAG+5WhaAeiDj/7YMr2tsDx2LUw18KZpuTMVkpNObketrTjhi7eeIS98aD
- HJkXruFmTIQsJ1deObfTjxtiMEb8w5pCGTJXcEowAQA6bks8nJQChY7Q/ifl1EduXTxVHTKhWJ3
- Sy9dbfywC085SYsyPOe8ZX8mDEwqjbHy4TtTfj4gmKl8iehutZSl3gaFOHM3YHM7lsJpAdbIt2t
- jKqBw5luPyCIzRnYXSpjA5NyizM1jjVv5bm1jXeXGd8eLcsR4edyco9HNzRI8y2YcpFuqhJkuE1
- /Bp+Z+bHraYp6DI1eEaTxVYEIh2q2c5c7rrlCAT+gsHgd3IIww/a8o06swlCiDasunF/hEjfpaw
- b1cL414 veJe4s0Q==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
+Message-ID: <20240430235057.1351993-1-edliaw@google.com>
+Subject: [PATCH v1 00/10] Define _GNU_SOURCE for sources using
+From: Edward Liaw <edliaw@google.com>
+To: shuah@kernel.org, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+	Takashi Iwai <tiwai@suse.com>, Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <bentiss@kernel.org>, Sean Christopherson <seanjc@google.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Bongsu Jeon <bongsu.jeon@samsung.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Edward Liaw <edliaw@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com, linux-sound@vger.kernel.org, 
+	linux-input@vger.kernel.org, kvm@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-An error report from elf_init_reloc_text_sym() doesn't say what list of
-symbols it is working on. Include this on the caller's side so it can be
-reported when pathological conditions are encountered.
+809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
+asprintf into kselftest_harness.h, which is a GNU extension and needs
+_GNU_SOURCE to either be defined prior to including headers or with the
+-D_GNU_SOURCE flag passed to the compiler.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-I added this to confirm debugging of
-https://lore.kernel.org/lkml/202308301532.d7acf63e-oliver.sang@intel.com/
----
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Youling Tang <tangyouling@loongson.cn>
-Cc: Jinyang He <hejinyang@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/objtool/arch/loongarch/orc.c  |  3 ++-
- tools/objtool/arch/x86/orc.c        |  3 ++-
- tools/objtool/check.c               | 21 +++++++++++++--------
- tools/objtool/elf.c                 |  7 ++++---
- tools/objtool/include/objtool/elf.h |  3 ++-
- 5 files changed, 23 insertions(+), 14 deletions(-)
+Edward Liaw (10):
+  selftests/sgx: Compile with -D_GNU_SOURCE
+  selftests/alsa: Compile with -D_GNU_SOURCE
+  selftests/hid: Compile with -D_GNU_SOURCE
+  selftests/kvm: Define _GNU_SOURCE
+  selftests/nci: Compile with -D_GNU_SOURCE
+  selftests/net: Define _GNU_SOURCE
+  selftests/prctl: Compile with -D_GNU_SOURCE
+  selftests/rtc: Compile with -D_GNU_SOURCE
+  selftests/tdx: Compile with -D_GNU_SOURCE
+  selftests/user_events: Compiled with -D_GNU_SOURCE
 
-diff --git a/tools/objtool/arch/loongarch/orc.c b/tools/objtool/arch/loongarch/orc.c
-index 873536d009d9..5ed9c1bb2de3 100644
---- a/tools/objtool/arch/loongarch/orc.c
-+++ b/tools/objtool/arch/loongarch/orc.c
-@@ -110,7 +110,8 @@ int write_orc_entry(struct elf *elf, struct section *orc_sec,
- 	memcpy(orc, o, sizeof(*orc));
- 
- 	/* populate reloc for ip */
--	if (!elf_init_reloc_text_sym(elf, ip_sec, idx * sizeof(int), idx,
-+	if (!elf_init_reloc_text_sym("orc_list", elf, ip_sec,
-+				     idx * sizeof(int), idx,
- 				     insn_sec, insn_off))
- 		return -1;
- 
-diff --git a/tools/objtool/arch/x86/orc.c b/tools/objtool/arch/x86/orc.c
-index b6cd943e87f9..68a78ad0d99e 100644
---- a/tools/objtool/arch/x86/orc.c
-+++ b/tools/objtool/arch/x86/orc.c
-@@ -111,7 +111,8 @@ int write_orc_entry(struct elf *elf, struct section *orc_sec,
- 	orc->bp_offset = bswap_if_needed(elf, orc->bp_offset);
- 
- 	/* populate reloc for ip */
--	if (!elf_init_reloc_text_sym(elf, ip_sec, idx * sizeof(int), idx,
-+	if (!elf_init_reloc_text_sym("orc_list", elf, ip_sec,
-+				     idx * sizeof(int), idx,
- 				     insn_sec, insn_off))
- 		return -1;
- 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 0a33d9195b7a..e7f7300ba88b 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -701,7 +701,7 @@ static int create_static_call_sections(struct objtool_file *file)
- 	list_for_each_entry(insn, &file->static_call_list, call_node) {
- 
- 		/* populate reloc for 'addr' */
--		if (!elf_init_reloc_text_sym(file->elf, sec,
-+		if (!elf_init_reloc_text_sym("static_call_list", file->elf, sec,
- 					     idx * sizeof(*site), idx * 2,
- 					     insn->sec, insn->offset))
- 			return -1;
-@@ -782,7 +782,8 @@ static int create_retpoline_sites_sections(struct objtool_file *file)
- 	idx = 0;
- 	list_for_each_entry(insn, &file->retpoline_call_list, call_node) {
- 
--		if (!elf_init_reloc_text_sym(file->elf, sec,
-+		if (!elf_init_reloc_text_sym("retpoline_call_list",
-+					     file->elf, sec,
- 					     idx * sizeof(int), idx,
- 					     insn->sec, insn->offset))
- 			return -1;
-@@ -820,7 +821,8 @@ static int create_return_sites_sections(struct objtool_file *file)
- 	idx = 0;
- 	list_for_each_entry(insn, &file->return_thunk_list, call_node) {
- 
--		if (!elf_init_reloc_text_sym(file->elf, sec,
-+		if (!elf_init_reloc_text_sym("return_thunk_list",
-+					     file->elf, sec,
- 					     idx * sizeof(int), idx,
- 					     insn->sec, insn->offset))
- 			return -1;
-@@ -874,7 +876,8 @@ static int create_ibt_endbr_seal_sections(struct objtool_file *file)
- 		     !strcmp(sym->name, "cleanup_module")))
- 			WARN("%s(): not an indirect call target", sym->name);
- 
--		if (!elf_init_reloc_text_sym(file->elf, sec,
-+		if (!elf_init_reloc_text_sym("endbr_list",
-+					     file->elf, sec,
- 					     idx * sizeof(int), idx,
- 					     insn->sec, insn->offset))
- 			return -1;
-@@ -922,7 +925,7 @@ static int create_cfi_sections(struct objtool_file *file)
- 		if (strncmp(sym->name, "__cfi_", 6))
- 			continue;
- 
--		if (!elf_init_reloc_text_sym(file->elf, sec,
-+		if (!elf_init_reloc_text_sym(".cfi_sites", file->elf, sec,
- 					     idx * sizeof(unsigned int), idx,
- 					     sym->sec, sym->offset))
- 			return -1;
-@@ -966,8 +969,10 @@ static int create_mcount_loc_sections(struct objtool_file *file)
- 
- 		struct reloc *reloc;
- 
--		reloc = elf_init_reloc_text_sym(file->elf, sec, idx * addr_size, idx,
--					       insn->sec, insn->offset);
-+		reloc = elf_init_reloc_text_sym("mcount_loc_list",
-+						file->elf, sec,
-+						idx * addr_size, idx,
-+						insn->sec, insn->offset);
- 		if (!reloc)
- 			return -1;
- 
-@@ -1007,7 +1012,7 @@ static int create_direct_call_sections(struct objtool_file *file)
- 	idx = 0;
- 	list_for_each_entry(insn, &file->call_list, call_node) {
- 
--		if (!elf_init_reloc_text_sym(file->elf, sec,
-+		if (!elf_init_reloc_text_sym("call_list", file->elf, sec,
- 					     idx * sizeof(unsigned int), idx,
- 					     insn->sec, insn->offset))
- 			return -1;
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 3d27983dc908..8615672e2ff9 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -881,7 +881,8 @@ static struct reloc *elf_init_reloc(struct elf *elf, struct section *rsec,
- 	return reloc;
- }
- 
--struct reloc *elf_init_reloc_text_sym(struct elf *elf, struct section *sec,
-+struct reloc *elf_init_reloc_text_sym(const char *origin,
-+				      struct elf *elf, struct section *sec,
- 				      unsigned long offset,
- 				      unsigned int reloc_idx,
- 				      struct section *insn_sec,
-@@ -891,8 +892,8 @@ struct reloc *elf_init_reloc_text_sym(struct elf *elf, struct section *sec,
- 	int addend = insn_off;
- 
- 	if (!(insn_sec->sh.sh_flags & SHF_EXECINSTR)) {
--		WARN("bad call to %s() for data symbol %s",
--		     __func__, sym->name);
-+		WARN("bad call to %s() for %s symbol %s",
-+		     __func__, origin, sym->name);
- 		return NULL;
- 	}
- 
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index 2b8a69de4db8..d026e707806d 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -115,7 +115,8 @@ struct section *elf_create_section_pair(struct elf *elf, const char *name,
- 
- struct symbol *elf_create_prefix_symbol(struct elf *elf, struct symbol *orig, long size);
- 
--struct reloc *elf_init_reloc_text_sym(struct elf *elf, struct section *sec,
-+struct reloc *elf_init_reloc_text_sym(const char *origin,
-+				      struct elf *elf, struct section *sec,
- 				      unsigned long offset,
- 				      unsigned int reloc_idx,
- 				      struct section *insn_sec,
--- 
-2.34.1
+ tools/testing/selftests/alsa/Makefile                   | 1 +
+ tools/testing/selftests/hid/Makefile                    | 2 +-
+ tools/testing/selftests/kvm/x86_64/fix_hypercall_test.c | 2 ++
+ tools/testing/selftests/nci/Makefile                    | 2 +-
+ tools/testing/selftests/net/bind_wildcard.c             | 1 +
+ tools/testing/selftests/net/ip_local_port_range.c       | 1 +
+ tools/testing/selftests/net/reuseaddr_ports_exhausted.c | 2 ++
+ tools/testing/selftests/prctl/Makefile                  | 1 +
+ tools/testing/selftests/rtc/Makefile                    | 2 +-
+ tools/testing/selftests/sgx/Makefile                    | 2 +-
+ tools/testing/selftests/sgx/sigstruct.c                 | 2 --
+ tools/testing/selftests/tdx/Makefile                    | 2 +-
+ tools/testing/selftests/user_events/Makefile            | 2 +-
+ tools/testing/selftests/user_events/abi_test.c          | 1 -
+ 14 files changed, 14 insertions(+), 9 deletions(-)
+
+--
+2.45.0.rc0.197.gbae5840b3b-goog
 
