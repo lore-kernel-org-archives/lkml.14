@@ -1,57 +1,57 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0958917335E
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 15:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC79FF9D6
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 15:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714490997; cv=none; b=cbVBACAn/nU3aAwqefnZ3eRWtFOLXFTDnOnNFGIhr+FRK0PIAZF8/TgxV0Ak0Vwt7m3Gcsw4U/jqDllRRkTrITjtpWA56KRNV+zEi2RzhnmvOLBGer/0kffnXptSPWrxa7n3ZAQs/JdbbohAP5MK8kJSYddb9XBiggomj/N9Gwg=
+	t=1714490996; cv=none; b=BfeyLJY8tCN+ZrOWoep5p45Anl+cXZcUXdKe2cZsuvFp3Ra50MzxibPhirEMAhwznU/9IluYn+c+EU7+Sy8PxjVpavxpvuDD6vo2QGVfNzeLYZw/ly6qwbE6c7ulAg6g+lSLsSZJchQIN+69gq7YgxqLdSeFGC9xqoorXM0GnrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714490997; c=relaxed/simple;
-	bh=7LXsGdFyTAadwH3oT2EvB28RNXw9kvsQ28WEFgDNWwE=;
+	s=arc-20240116; t=1714490996; c=relaxed/simple;
+	bh=Ll7p6UOKLjdHtcpla9yO+6RYjH04Rsqo4d6kOR4adL0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XyfkGrLnKnlOPBH5u+vyLeu3z64/SVc5BdDkfZjQZB85t+x6CnDp8gPRilhTbTFbtfxfp6PrkBMXwYMhI8F1PpV3l2ge2EtspGpxb7Ef2R0OjHqF4cT+AgvU9nmYZy0UUVTBHgX+YEamIXJHhDRMCPl621F6bWCNMDFApMm634A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=aPObLAnB; arc=none smtp.client-ip=209.85.208.44
+	 MIME-Version; b=Kd9273dmrVNlJTHOjVACkgACPnhSQSzF1yqAPFWbOAtQH1gAWvqt8pOAGMESBJnDVglvR4jg2CG0WPxelDv7ggOQWzZVFU1SogXe00lVEuNjctnGD4pbvcZAs2VUPsybA8ZmiF+5nGGSasX+ihymU949+SgE9QPcv79DIpkVNKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=LEbFh+6P; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="aPObLAnB"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e1bbdb362so6275910a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 08:29:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="LEbFh+6P"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2db2f6cb312so91587871fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 08:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1714490993; x=1715095793; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1714490992; x=1715095792; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IXKxrCtgCvr5klQOAqmpVlw6+TXQtqNqSxD0Fn0GyUc=;
-        b=aPObLAnB5jbXgQD+blDSDNuMbuOG5AKAxmr/vlYtWgykeQTO7X/2DTYfp8T7y0Wdqh
-         DM07VpFIyl2CDk9N3pnBGNlGH59rPk7+LIQA38+WH7s6uAaFyilwdA5WbgnQSerCfbBE
-         f3PEdKwRoZ1Tsry3VS0oD1EZ+uSC6NACKK4x8HsfTDC+O5vW+X3eGOwfr6YQB2Y3yfXr
-         2q6SLRm2w1zi51tB72fv/LDXuC755HW0unv5IMijLuHEelksYKn6slSX3iizOEzzDPhH
-         pew9SAXIOb/B9BozlIuEGpk2v5p4FEEqVkRuO9NolhtsFlMf1DBHoT0EjeQlB34G4e/a
-         qIqw==
+        bh=clS/QN9E/f3CIYj6dWbs31v4GElV2ZW9RMM74gwG6WM=;
+        b=LEbFh+6Pdmim2Fe07m5tFQaGBSNOKufeAajU9BpzFD6RisYHyjZ7Rp5NcI4vZTbKMq
+         nkoei+IGu2Q1c0JkuFowuI23kaHrW5a+O+9dhxU+xRsuvR2pUmXJ9XaliExPfrV0cOr1
+         nNlPyhB06kKGMoKvhf7HvMoQBzaTgq9tBvemIEokz3SA6HRZVfm5mnLoj/Z6uLfTVyCl
+         Hetm6vDNtIcpgXNiCyYuOPWkCPRiE0W1yOLuLKH5/hNTkkZ3FLf7nJOppxc9uwtB6GnL
+         aCkUjk1qtDppxz0vUtk6qOFenrC3/o4PiEHYqQ8PEiYsG//zWpCHYu65/qi8/d+qWxNM
+         JYFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714490993; x=1715095793;
+        d=1e100.net; s=20230601; t=1714490992; x=1715095792;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IXKxrCtgCvr5klQOAqmpVlw6+TXQtqNqSxD0Fn0GyUc=;
-        b=o6WGj8bDrje+uuBkMDteFbE+iEwoWAcGV+z9Y/Xo8GlKBR2ARDD1g/M3Trwlo0AfhV
-         6mXQEncqcH9HYpEP24/R1o09zNOLkL7PWaxDla/6zXe6m/9NqAZt0fI9noTiVDKFI/0m
-         HWeZqx1VkH2OjA+y/stEsmf6bto58J8+tnzDfXOjD6KtqcTJJ+2ZuDHdVRvGLjMPuuKu
-         I8SwNkblmpR+N3zZCd8n8m7y5S3cQMFJ8pjhMu1CwXfMdbdaS8boaWICkmBHA9CJBKAo
-         /TsVfecx45cDrwXE5t2MgP1UO78tuyY1EFbLZ3tFCLD+O3jUbDXlG5H64rAP3XDmVDDB
-         2jwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWSdZrhpdqUFF6JcdS978OKAyGe/wVBvej3wetutZMVXmuZQFvBEl2/KDIAaafjcKgnCgYJ4IxrCGV9GSgO5FUt+lBXIRZbQyPrQKh
-X-Gm-Message-State: AOJu0Yy2oq4RGbmrTusltu0FyD0EG/5YtuoHvKUZ0RL1E713yoeN2lFg
-	SKezTdL85XnQJrwT5wvJPmaFKnWLkacjvhCF09Nqae7gxF4lkjJ1GQgh54S0zcg=
-X-Google-Smtp-Source: AGHT+IF1Kcn+grgqk4BRBsySeGH9c4NPl6D/AQSw5d/hYpB6grkidjHbqos9xjspf6/C70Q2HKf7vQ==
-X-Received: by 2002:a17:906:40c9:b0:a58:9a74:57fc with SMTP id a9-20020a17090640c900b00a589a7457fcmr56836ejk.15.1714490993267;
-        Tue, 30 Apr 2024 08:29:53 -0700 (PDT)
+        bh=clS/QN9E/f3CIYj6dWbs31v4GElV2ZW9RMM74gwG6WM=;
+        b=mqmdbBhWxOPE7cQ9IVkOby6qoh7RFQsOFv2HyJTrJdrMVOqbdMieCQNPVk8p0Ax/+p
+         Pv9XWJbBFcE9cndGCvjTop0iF7wNCPwOsXTnWUjEcpl0xWoFp4OKx4DjzFzMTgt4MuEr
+         BRN2Ynpq5Rv+qbcN9LO4R6OC+rZniPON1F78KeUroTwfCQYvC/CPpBEqlQVF6eieLweb
+         wb2ESUnu44t6z7M9euEwnd2av9Ciim8Qo5tlfcl92wvp/w3hQovXwrx6sRDfvs9fdvRv
+         bnx9dUnxQ0P0vRDfkRWp+hOPu+1ZPCOEQCF3OIcaB1QCQUYhKdNyPuIsezz7TcDyPhm2
+         aA0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVlSkbV/ZSTmN5KkBmG3m40cqb19CHFS0wlQlLwBiUm9NkjQRGd7udFU+R4oQJqJtfI19KC897nPY0+TtV158hqGvsYr3rOi8RwuaPH
+X-Gm-Message-State: AOJu0YxuBSO7JLE18ISrUUT83mHhBYuYzYlGb6HQrlcqkVpGTnOa7VEv
+	Yvagw7EF6L5H4bsbBJEOSNQ8HLMuYl+O+2MZR4Fk7HQmhaY1bgWXk5im0BndTOQ=
+X-Google-Smtp-Source: AGHT+IGfQ5JNalek9HZZ3ibOKrJ4dtXixxHgZ4g+rJgs4EkRdUsgSMPxDzg87sbWnCFbN8mWikNP9g==
+X-Received: by 2002:a2e:9c06:0:b0:2df:c395:4482 with SMTP id s6-20020a2e9c06000000b002dfc3954482mr34300lji.32.1714490991730;
+        Tue, 30 Apr 2024 08:29:51 -0700 (PDT)
 Received: from raven.intern.cm-ag (p200300dc6f06e100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f06:e100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id a10-20020a1709066d4a00b00a52567ca1b6sm15278137ejt.94.2024.04.30.08.29.52
+        by smtp.gmail.com with ESMTPSA id a10-20020a1709066d4a00b00a52567ca1b6sm15278137ejt.94.2024.04.30.08.29.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 08:29:52 -0700 (PDT)
+        Tue, 30 Apr 2024 08:29:51 -0700 (PDT)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
@@ -60,9 +60,9 @@ Cc: willy@infradead.org,
 	sfr@canb.auug.org,
 	david@redhat.com.au,
 	Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v5 08/15] linux/mm.h: move folio_next() to mm/folio_next.h
-Date: Tue, 30 Apr 2024 17:29:24 +0200
-Message-Id: <20240430152931.1137975-9-max.kellermann@ionos.com>
+Subject: [PATCH v5 06/15] linux/mm.h: move page_address() and others to mm/page_address.h
+Date: Tue, 30 Apr 2024 17:29:22 +0200
+Message-Id: <20240430152931.1137975-7-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240430152931.1137975-1-max.kellermann@ionos.com>
 References: <20240430152931.1137975-1-max.kellermann@ionos.com>
@@ -76,94 +76,196 @@ Content-Transfer-Encoding: 8bit
 
 Prepare to reduce dependencies on linux/mm.h.
 
-folio_next() is used by linux/bio.h.  Moving it to a separate lean
-header will allow us to avoid the dependency on linux/mm.h.
+page_address() is used by the following popular headers:
 
-Having a one-function header may seem excessive, but there is hardly
-another way if we want to distangle linux/mm.h from linux/bio.h.  If
-one day, say, folio_prev() gets added, we can still rename the header
-to something like folio_iterator.h, but until that happens, this
-folio_next.h header seems like the best trade-off to reduce
-dependencies.
+- linux/bio.h
+- linux/bvec.h
+- linux/highmem.h
+- linux/scatterlist.h
+- linux/skbuff.h
+
+Moving it to a separate lean header will allow us to avoid the
+dependency on linux/mm.h.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/mm.h            | 20 +-------------------
- include/linux/mm/folio_next.h | 27 +++++++++++++++++++++++++++
- 2 files changed, 28 insertions(+), 19 deletions(-)
- create mode 100644 include/linux/mm/folio_next.h
+ include/linux/mm.h              | 56 +-------------------------
+ include/linux/mm/page_address.h | 71 +++++++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+), 55 deletions(-)
+ create mode 100644 include/linux/mm/page_address.h
 
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index d5019aed8330..5b3d56454344 100644
+index 84013f24a6a7..0dea734194aa 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -2,6 +2,7 @@
+@@ -2,7 +2,7 @@
  #ifndef _LINUX_MM_H
  #define _LINUX_MM_H
  
-+#include <linux/mm/folio_next.h>
- #include <linux/mm/folio_size.h>
- #include <linux/mm/page_address.h>
+-#include <linux/mm/page_kasan_tag.h>
++#include <linux/mm/page_address.h>
  #include <linux/mm/page_section.h>
-@@ -1924,25 +1925,6 @@ static inline void set_page_links(struct page *page, enum zone_type zone,
- #define MAX_FOLIO_NR_PAGES	MAX_ORDER_NR_PAGES
+ #include <linux/errno.h>
+ #include <linux/mmdebug.h>
+@@ -105,10 +105,6 @@ extern int mmap_rnd_compat_bits __read_mostly;
+ #define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
  #endif
  
--/**
-- * folio_next - Move to the next physical folio.
-- * @folio: The folio we're currently operating on.
-- *
-- * If you have physically contiguous memory which may span more than
-- * one folio (eg a &struct bio_vec), use this function to move from one
-- * folio to the next.  Do not use it if the memory is only virtually
-- * contiguous as the folios are almost certainly not adjacent to each
-- * other.  This is the folio equivalent to writing ``page++``.
-- *
-- * Context: We assume that the folios are refcounted and/or locked at a
-- * higher level and do not adjust the reference counts.
-- * Return: The next struct folio.
-- */
--static inline struct folio *folio_next(struct folio *folio)
+-#ifndef page_to_virt
+-#define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
+-#endif
+-
+ #ifndef lm_alias
+ #define lm_alias(x)	__va(__pa_symbol(x))
+ #endif
+@@ -212,14 +208,6 @@ int overcommit_kbytes_handler(struct ctl_table *, int, void *, size_t *,
+ int overcommit_policy_handler(struct ctl_table *, int, void *, size_t *,
+ 		loff_t *);
+ 
+-#if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
+-#define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
+-#define folio_page_idx(folio, p)	(page_to_pfn(p) - folio_pfn(folio))
+-#else
+-#define nth_page(page,n) ((page) + (n))
+-#define folio_page_idx(folio, p)	((p) - &(folio)->page)
+-#endif
+-
+ /* to align the pointer to the (next) page boundary */
+ #define PAGE_ALIGN(addr) ALIGN(addr, PAGE_SIZE)
+ 
+@@ -2182,44 +2170,6 @@ static inline int arch_make_folio_accessible(struct folio *folio)
+  */
+ #include <linux/vmstat.h>
+ 
+-#if defined(CONFIG_HIGHMEM) && !defined(WANT_PAGE_VIRTUAL)
+-#define HASHED_PAGE_VIRTUAL
+-#endif
+-
+-#if defined(WANT_PAGE_VIRTUAL)
+-static inline void *page_address(const struct page *page)
 -{
--	return (struct folio *)folio_page(folio, folio_nr_pages(folio));
+-	return page->virtual;
+-}
+-static inline void set_page_address(struct page *page, void *address)
+-{
+-	page->virtual = address;
+-}
+-#define page_address_init()  do { } while(0)
+-#endif
+-
+-#if defined(HASHED_PAGE_VIRTUAL)
+-void *page_address(const struct page *page);
+-void set_page_address(struct page *page, void *virtual);
+-void page_address_init(void);
+-#endif
+-
+-static __always_inline void *lowmem_page_address(const struct page *page)
+-{
+-	return page_to_virt(page);
 -}
 -
- /**
-  * folio_likely_mapped_shared - Estimate if the folio is mapped into the page
-  *				tables of more than one MM
-diff --git a/include/linux/mm/folio_next.h b/include/linux/mm/folio_next.h
+-#if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
+-#define page_address(page) lowmem_page_address(page)
+-#define set_page_address(page, address)  do { } while(0)
+-#define page_address_init()  do { } while(0)
+-#endif
+-
+-static inline void *folio_address(const struct folio *folio)
+-{
+-	return page_address(&folio->page);
+-}
+-
+ extern pgoff_t __page_file_index(struct page *page);
+ 
+ /*
+@@ -2282,10 +2232,6 @@ static inline void clear_page_pfmemalloc(struct page *page)
+  */
+ extern void pagefault_out_of_memory(void);
+ 
+-#define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
+-#define offset_in_thp(page, p)	((unsigned long)(p) & (thp_size(page) - 1))
+-#define offset_in_folio(folio, p) ((unsigned long)(p) & (folio_size(folio) - 1))
+-
+ /*
+  * Parameter block passed down to zap_pte_range in exceptional cases.
+  */
+diff --git a/include/linux/mm/page_address.h b/include/linux/mm/page_address.h
 new file mode 100644
-index 000000000000..7016e303439c
+index 000000000000..630fc4e2be95
 --- /dev/null
-+++ b/include/linux/mm/folio_next.h
-@@ -0,0 +1,27 @@
++++ b/include/linux/mm/page_address.h
+@@ -0,0 +1,71 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_MM_FOLIO_NEXT_H
-+#define _LINUX_MM_FOLIO_NEXT_H
++#ifndef _LINUX_MM_PAGE_ADDRESS_H
++#define _LINUX_MM_PAGE_ADDRESS_H
 +
-+#include <linux/mm/folio_size.h> // for folio_nr_pages()
-+#include <linux/mm/page_address.h> // for nth_page(), needed by folio_page()
++#include <linux/mm_types.h> // for struct page
++#include <linux/mm/page_kasan_tag.h> // needed by the page_to_virt() macro on some architectures (e.g. arm64)
++#include <asm/page.h> // for PAGE_MASK, page_to_virt()
 +
-+/**
-+ * folio_next - Move to the next physical folio.
-+ * @folio: The folio we're currently operating on.
-+ *
-+ * If you have physically contiguous memory which may span more than
-+ * one folio (eg a &struct bio_vec), use this function to move from one
-+ * folio to the next.  Do not use it if the memory is only virtually
-+ * contiguous as the folios are almost certainly not adjacent to each
-+ * other.  This is the folio equivalent to writing ``page++``.
-+ *
-+ * Context: We assume that the folios are refcounted and/or locked at a
-+ * higher level and do not adjust the reference counts.
-+ * Return: The next struct folio.
-+ */
-+static inline struct folio *folio_next(struct folio *folio)
++#if defined(CONFIG_FLATMEM)
++#include <linux/mmzone.h> // for memmap (used by __pfn_to_page())
++#elif defined(CONFIG_SPARSEMEM_VMEMMAP)
++#include <asm/pgtable.h> // for vmemmap (used by __pfn_to_page())
++#elif defined(CONFIG_SPARSEMEM)
++#include <linux/mm/page_section.h> // for page_to_section() (used by __page_to_pfn())
++#endif
++
++#ifndef page_to_virt
++#define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
++#endif
++
++#if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
++#define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
++#define folio_page_idx(folio, p)	(page_to_pfn(p) - folio_pfn(folio))
++#else
++#define nth_page(page,n) ((page) + (n))
++#define folio_page_idx(folio, p)	((p) - &(folio)->page)
++#endif
++
++#if defined(CONFIG_HIGHMEM) && !defined(WANT_PAGE_VIRTUAL)
++#define HASHED_PAGE_VIRTUAL
++#endif
++
++#if defined(WANT_PAGE_VIRTUAL)
++static inline void *page_address(const struct page *page)
 +{
-+	return (struct folio *)folio_page(folio, folio_nr_pages(folio));
++	return page->virtual;
++}
++static inline void set_page_address(struct page *page, void *address)
++{
++	page->virtual = address;
++}
++#define page_address_init()  do { } while(0)
++#endif
++
++#if defined(HASHED_PAGE_VIRTUAL)
++void *page_address(const struct page *page);
++void set_page_address(struct page *page, void *virtual);
++void page_address_init(void);
++#endif
++
++static __always_inline void *lowmem_page_address(const struct page *page)
++{
++	return page_to_virt(page);
 +}
 +
-+#endif /* _LINUX_MM_FOLIO_NEXT_H */
++#if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
++#define page_address(page) lowmem_page_address(page)
++#define set_page_address(page, address)  do { } while(0)
++#define page_address_init()  do { } while(0)
++#endif
++
++static inline void *folio_address(const struct folio *folio)
++{
++	return page_address(&folio->page);
++}
++
++#define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
++#define offset_in_thp(page, p)	((unsigned long)(p) & (thp_size(page) - 1))
++#define offset_in_folio(folio, p) ((unsigned long)(p) & (folio_size(folio) - 1))
++
++#endif /* _LINUX_MM_PAGE_ADDRESS_H */
 -- 
 2.39.2
 
