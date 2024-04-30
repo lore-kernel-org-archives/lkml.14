@@ -1,39 +1,38 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC25B39FEF;
-	Tue, 30 Apr 2024 07:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A145738396;
+	Tue, 30 Apr 2024 07:29:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714462151; cv=none; b=aj3+9tM/Q0rtMGbQ41xC7WT4eIVC0PxhRQoeEUUrTwLLunGbvGVVaORnM2j8HjF7KIrvkkuCGNIBu/JVkbJyM5pWQeC4+OjZwJ98zJMfDYjf2ZDo44FB94mt3kwhyG5dpBNmy2jfOTcdiDxhF7FHiS0CTSZpoX0yKQrLhJjxhoc=
+	t=1714462151; cv=none; b=pd2RjY5PqxBLapYorjLp+uwgF4IXG7K0yBKK6y5fWnXjxEwT0K9lIQHksz4dWdQL+jVi11W1Mp5+5S4BgvJFRUbH3byo9QldPZsYX1Xhl3yAY87/nAIEkq8co88oYPt2hvZ3L9XwyBUGfZxyiE5Fh6ZCurnBhZCxpARL4MR6JyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714462151; c=relaxed/simple;
-	bh=wqQBKvD/8mW1etTfTpBxYw2E+JdyqE03VV3MwM6d0K8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HI3A1dDr9h2/76hcZpxfQAcZbE9+aYtEUJkHygYLOO5m1AqYEQLAPgJ2pond58CZzEtbrte78GBQITxD9ZnuvvCE8ZqeATiJf8m8yA+brbeXHHdZeTvlpwuu16bRTT0vfc0JvPls4aUdrm3bB4E2YDk9sclNchnz4N6nzHoUTzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZxwuCRRb; arc=none smtp.client-ip=217.70.183.193
+	bh=GL8N92QAeMgFt4XkyNeVeTu8Ol0R9O7pT2ilKco2X2o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=B/0gcGO6a2cTSwWq419n2mWAk0csxMVE3yr7W1Mrgx67ZJoUdudbHB8yVG9o95pjt2gyTdyh1M3HSdD9iP8EZWHRtqureMLv2b7GItZgTY+bJAkavBjQ5neQLt/i5aNZ+FOrxy7DfmdedJJRlpHGPVGlzujJASLSHaKxV+2pb9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IjzVdc4P; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZxwuCRRb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 319CF24000B;
-	Tue, 30 Apr 2024 07:29:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IjzVdc4P"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 267F4240005;
+	Tue, 30 Apr 2024 07:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714462147;
+	t=1714462144;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Quwz6Y6DCJb6oI8QivjHVeJ8W6gP2+As4r5PbpcMIik=;
-	b=ZxwuCRRbn1FQlBI4z2c9GSAvPY/TW1CMBCxRD+iRIiteCUzjtF+IQ4XvRXzA/TeRQbyojZ
-	Rrp3s1TWVVeyGCBCwMd4y9jTQG14n56nB6m+ILT0XBATUXn9G88e2bheoEKc1ByN5lP9Ql
-	WnQyfPmWAOdArHELhHYAVH71FPH+pI3pqEpNas/kF0+XvsgIQEJfT07qbTSd6nTKfrzKRe
-	rIPIDNup+s4Ez3ptqXYR4Gs45cAkb0L9RucYO03U1W2aBlTatCwTa9shguXaA0E6FCsedZ
-	jsqZNnusVtA8SdVHVeLSFFNCKqMo7ZppyHuEaKF1jIJHxOkKmQVQTd3Kn/uflQ==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fQD1CJTNwkZwiLmvdXIT1s+F6Ra4eUNZk70fwrI5wTU=;
+	b=IjzVdc4PuCxZ+uSFw5LswCv0DEOq/AyAdyVaqT4ZupNdm6A6jlGx9Gq0D08uKlR2kn9Kgy
+	fZ83fXhMV08UcaKRPWPmHDaDgeb7Aok7KTMXVGD0L7s3yIoqY4wG3K+59xvRoPxjQ5Rzfb
+	887jjJH7gROIDxb1YplcAuyWmyh4Q6ZTQFrIoxneGxCXkg++0eMAnxG2EL76eq+SiDMbz2
+	4JqdCkOlgFHSyJUGuLdlLoFNk8hfEdTfiSf/7ORVMZeqEvs3BBZ+YrxRHtFYUSIzx5buwc
+	K0a74n9zsjVFwxJ9eTY+rQ+YjD60BECTq7wjhAVB5DXmkKXMe7Cu2+nd5r3A/g==
 From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Tue, 30 Apr 2024 09:29:42 +0200
-Subject: [PATCH net-next v5 2/7] net: stmmac: Add dedicated XPCS cleanup
- method
+Subject: [PATCH net-next v5 0/7] net: stmmac: Add support for RZN1 GMAC
+ devices
+Date: Tue, 30 Apr 2024 09:29:40 +0200
+Message-Id: <20240430-rzn1-gmac1-v5-0-62f65a84f418@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +40,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-rzn1-gmac1-v5-2-62f65a84f418@bootlin.com>
-References: <20240430-rzn1-gmac1-v5-0-62f65a84f418@bootlin.com>
-In-Reply-To: <20240430-rzn1-gmac1-v5-0-62f65a84f418@bootlin.com>
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAOWdMGYC/23NzW7DIBAE4FeJOJcK1ksNPfU9ohzwenGQGoiwZ
+ eVHfvcin2y5x9Hom3mLkUvkUXyf3qLwHMeYUw3m4yTo6tPAMvY1C1CAChXI8kpaDjdPWn5ZQ8G
+ 2rukViwruhUN8rGNnkXiSiR+TuNTmGscpl+f6Muu1/29w1lJJ0zF0YB32ln66nKffmD4p39ahG
+ bbY7TBU3DryaAIEat0RNxuszQ43FftOQwBCVLo/YtxgwB3Giq0BX4+JFak9XpblD8vZmUpnAQA
+ A
 To: "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
  Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
@@ -62,101 +63,88 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
  linux-arm-kernel@lists.infradead.org, 
- Romain Gantois <romain.gantois@bootlin.com>
+ Romain Gantois <romain.gantois@bootlin.com>, 
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>
 X-Mailer: b4 0.13.0
 X-GND-Sasl: romain.gantois@bootlin.com
 
-From: Serge Semin <fancer.lancer@gmail.com>
+Hello everyone,
 
-Currently the XPCS handler destruction is performed in the
-stmmac_mdio_unregister() method. It doesn't look good because the handler
-isn't originally created in the corresponding protagonist
-stmmac_mdio_unregister(), but in the stmmac_xpcs_setup() function. In
-order to have more coherent MDIO and XPCS setup/cleanup procedures,
-let's move the DW XPCS destruction to the dedicated stmmac_pcs_clean()
-method.
+This is version five of my series that adds support for a Gigabit Ethernet
+controller featured in the Renesas r9a06g032 SoC, of the RZ/N1 family. This
+GMAC device is based on a Synopsys IP and is compatible with the stmmac driver.
 
-This method will also be used to cleanup PCS hardware using the
-pcs_exit() callback that will be introduced to stmmac in a subsequent
-patch.
+My former colleague Clément Léger originally sent a series for this driver,
+but an issue in bringing up the PCS clock had blocked the upstreaming
+process. This issue has since been resolved by the following series:
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Co-developed-by: Romain Gantois <romain.gantois@bootlin.com>
-Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+https://lore.kernel.org/all/20240326-rxc_bugfix-v6-0-24a74e5c761f@bootlin.com/
+
+This series consists of a devicetree binding describing the RZN1 GMAC
+controller IP, a node for the GMAC1 device in the r9a06g032 SoC device
+tree, and the GMAC driver itself which is a glue layer in stmmac.
+
+There are also two patches by Russell that improve pcs initialization handling
+in stmmac.
+
+Best Regards,
+
+Romain Gantois
+
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac.h      |  1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |  6 +++++-
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 12 +++++++++---
- 3 files changed, 15 insertions(+), 4 deletions(-)
+Changes in v5:
+- Refactored the stmmac_xpcs_setup() function to group together XPCS and PCS
+  setup logic.
+- Added a stmmac_pcs_clean() function as a counterpart to stmmac_pcs_setup()
+- Link to v4: https://lore.kernel.org/r/20240424-rzn1-gmac1-v4-0-852a5f2ce0c0@bootlin.com
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index dddcaa9220cc3..7e0d727ed795b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -361,6 +361,7 @@ int stmmac_mdio_unregister(struct net_device *ndev);
- int stmmac_mdio_register(struct net_device *ndev);
- int stmmac_mdio_reset(struct mii_bus *mii);
- int stmmac_xpcs_setup(struct mii_bus *mii);
-+void stmmac_pcs_clean(struct stmmac_priv *priv);
- void stmmac_set_ethtool_ops(struct net_device *netdev);
- 
- int stmmac_init_tstamp_counter(struct stmmac_priv *priv, u32 systime_flags);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 59bf83904b62d..2a55c5d07f6b8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -7789,8 +7789,9 @@ int stmmac_dvr_probe(struct device *device,
- 
- error_netdev_register:
- 	phylink_destroy(priv->phylink);
--error_xpcs_setup:
- error_phy_setup:
-+	stmmac_pcs_clean(priv);
-+error_xpcs_setup:
- 	if (priv->hw->pcs != STMMAC_PCS_TBI &&
- 	    priv->hw->pcs != STMMAC_PCS_RTBI)
- 		stmmac_mdio_unregister(ndev);
-@@ -7832,6 +7833,9 @@ void stmmac_dvr_remove(struct device *dev)
- 	if (priv->plat->stmmac_rst)
- 		reset_control_assert(priv->plat->stmmac_rst);
- 	reset_control_assert(priv->plat->stmmac_ahb_rst);
-+
-+	stmmac_pcs_clean(priv);
-+
- 	if (priv->hw->pcs != STMMAC_PCS_TBI &&
- 	    priv->hw->pcs != STMMAC_PCS_RTBI)
- 		stmmac_mdio_unregister(ndev);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 0542cfd1817e6..508bd39cbe2b3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -523,6 +523,15 @@ int stmmac_xpcs_setup(struct mii_bus *bus)
- 	return 0;
- }
- 
-+void stmmac_pcs_clean(struct stmmac_priv *priv)
-+{
-+	if (!priv->hw->xpcs)
-+		return;
-+
-+	xpcs_destroy(priv->hw->xpcs);
-+	priv->hw->xpcs = NULL;
-+}
-+
- /**
-  * stmmac_mdio_register
-  * @ndev: net device structure
-@@ -679,9 +688,6 @@ int stmmac_mdio_unregister(struct net_device *ndev)
- 	if (!priv->mii)
- 		return 0;
- 
--	if (priv->hw->xpcs)
--		xpcs_destroy(priv->hw->xpcs);
--
- 	mdiobus_unregister(priv->mii);
- 	priv->mii->priv = NULL;
- 	mdiobus_free(priv->mii);
+Changes in v4:
+- Removed the second parameters of the new pcs_init/exit() callbacks
+- Removed unnecessary interrupt-parent reference in gmac1 device node
+- Link to v3: https://lore.kernel.org/r/20240415-rzn1-gmac1-v3-0-ab12f2c4401d@bootlin.com
 
+Changes in v3:
+- Fixed a typo in the socfpga patch
+- Link to v2: https://lore.kernel.org/r/20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com
+
+Changes in v2:
+- Add pcs_init/exit callbacks in stmmac to solve race condition
+- Use pcs_init/exit callbacks in dwmac_socfpga glue layer
+- Miscellaneous device tree binding corrections
+- Link to v1: https://lore.kernel.org/r/20240402-rzn1-gmac1-v1-0-5be2b2894d8c@bootlin.com
+
+---
+Clément Léger (3):
+      dt-bindings: net: renesas,rzn1-gmac: Document RZ/N1 GMAC support
+      net: stmmac: add support for RZ/N1 GMAC
+      ARM: dts: r9a06g032: describe GMAC1
+
+Russell King (Oracle) (2):
+      net: stmmac: introduce pcs_init/pcs_exit stmmac operations
+      net: stmmac: dwmac-socfpga: use pcs_init/pcs_exit
+
+Serge Semin (2):
+      net: stmmac: Add dedicated XPCS cleanup method
+      net: stmmac: Make stmmac_xpcs_setup() generic to all PCS devices
+
+ .../devicetree/bindings/net/renesas,rzn1-gmac.yaml |  66 +++++++++++++
+ MAINTAINERS                                        |   6 ++
+ arch/arm/boot/dts/renesas/r9a06g032.dtsi           |  18 ++++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |  12 +++
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c   |  86 +++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 107 ++++++++++-----------
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   3 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  14 +--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  |  48 ++++++---
+ include/linux/stmmac.h                             |   2 +
+ 11 files changed, 287 insertions(+), 76 deletions(-)
+---
+base-commit: dd1941f801bc958d2ee13f5be8b38db6b034b806
+change-id: 20240402-rzn1-gmac1-685cf8793d0e
+
+Best regards,
 -- 
-2.44.0
+Romain Gantois <romain.gantois@bootlin.com>
 
