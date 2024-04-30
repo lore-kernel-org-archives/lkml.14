@@ -1,181 +1,187 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE960175552
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA2A176FB7
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714485746; cv=none; b=RZEjDxkkI5+5xUAVRa1qiqzLxr/5vnUGfrM0YVMGwa4DZ1nZ2wIlYQRdq7rDVshuSzg6kLfMikmyTXviqVRAcXaqBxwGwUaHApQS0beavOClQQKAABIDDdvQHtQth+SkMvccojxOKZcy2R2v6tBV3gYZOTAjaNy1H05LkokRpo8=
+	t=1714485760; cv=none; b=IyEIaOKDENxKBbde8LhzIV+3HVZIGwxdaRZ2A8c3mB6m5DtBXnqq4XGhN1sm8hOHoCjeKrxt7aqGslTiXwGVItvVu3ic7a7gcXjUhkTewDGgOAPRMsK72fW6znQ/WlOKzEMaSPI+hSnELsqxqU1c7PUoMkVndOWJncqp0rWrx/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714485746; c=relaxed/simple;
-	bh=Mt++4EgrW5QL/1p0a/K7dTkVzqMG5gPOaKUqb1NXBPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JErKDbGqNWsa3ArIHyBUq4qVblasJfk1WzjSdtzALHHT77JxSd+7xTXO0Kg6PAHxvLhOVL8Sb5wHYwYmjQspxGwwpllRfFtY0OEq0ClP5oylKFZvB/8MDuLncX7i+U8Y9NM5ZSQpjn6/fVxWXXIDO+0J4DjnP2gxpDCO7Ahf8xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59D322F4;
-	Tue, 30 Apr 2024 07:02:50 -0700 (PDT)
-Received: from [10.1.38.140] (XHFQ2J9959.cambridge.arm.com [10.1.38.140])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 566923F793;
-	Tue, 30 Apr 2024 07:02:22 -0700 (PDT)
-Message-ID: <96fc0d1a-0c5f-4ca3-ad99-a64346990536@arm.com>
-Date: Tue, 30 Apr 2024 15:02:21 +0100
+	s=arc-20240116; t=1714485760; c=relaxed/simple;
+	bh=nmVD9KKu0onQCo4+scSWvtThsneJsuva2ZwAC2itQ+Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HSi5U6OevATeHilpNQHhcPRE+nuMTJ3bnXPGE53+jqcmuYF3uEF96yhs2hR4PMqR2SQTCes6OHYj6rSlK4RSPWse9S302ZALjHkYjusbVjLkSS0Fbeq96nZEMLWtc7eW0jEkESEAULs9zQV0JBkqe+2I9hb3g1IFBpz3I8mhDDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uURYEKHs; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uURYEKHs"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5176f217b7bso10094674e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:02:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714485756; x=1715090556; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7ziKPpXLYR2zn3+NU5Pk66H9ism9mr6GLdkSFbxKAZ4=;
+        b=uURYEKHs0OmqJtN9EAn5CF/TOc9bYf9qtp+CQ32+UL4VhuHQW8e6TaSz/C7Ioqzdjx
+         r5vp9oWDKWGKK6l9wGBldJH2x/K/1gi6Cv8ZqS61aWEHQTBJhuTrx2UWbImcLaAnll5e
+         AY1MbP4st8kxB2g4/nysu0/GrDciwxWjFtjuSFEjDR9LPDZLji7MphpuDvlbBGJvO4G2
+         mbp7QeepcGOI95KaCUD22gxFbtpYmglCzELqSPSeN3ZWtovrYdoJLFuF5TdmoSmuxalC
+         9YfluVoanlW/7OYSPRqY7OUQz8kI4QdIVaVmgUrLCu6zT+G44qBZ37acAC7HSqV6KMSE
+         GJdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714485756; x=1715090556;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7ziKPpXLYR2zn3+NU5Pk66H9ism9mr6GLdkSFbxKAZ4=;
+        b=hKl+sSTGBi8nbIGSK4n6JIdK61bJp0BzquoQx/Bh0E29yDZpbvBL+TUL2u3xxJkkEP
+         mh5Oj88gbZ0L/BDd5xizg80m+BNLMypwYbzB7ih4o+bSvWOnoRPbkuxD5A98904Ic0Hc
+         Fz5o6zLUeTRMpHlO3+VnuKMGFqm8hI1R4du8LH8AXBkem6qnnqd90bhvoiv9Mx/5cJk2
+         LtceudedpY/Kh5pT1g9nxVs0V3sLtLA/+X7eUg9LlQwLdZTclhv5KdQZSQICmLoAGuA7
+         yI0aSA7fkKQkpXTS4P61WS2rxAFHS71mFt0z/Fl0us06CdVcXLAWGKYyIt2CMuum7oDc
+         ls7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXhLogLxSr9kcgYXiZXQ78kOStC7Wzudazcax6TtIZxRZQbfFl9lsujMtZh1kZEKEuecKMJuLt0neHG+CeqPzwiZNmb8wfJPf25beQ7
+X-Gm-Message-State: AOJu0Yylys72ePl4cJg8D8BG9+LjNxmTlKr2XvFNVGvaeoz+HPG1OLEl
+	/Px3g3fx8lGJNkkswm5NCZWdYltyOCmc0QchkyCR0vEapRvmmzuR25rDl3eMles=
+X-Google-Smtp-Source: AGHT+IFxX6RMrPFkE+iKjGFWGX6uNErIhwrc6ioCbIidZRB0tmw4GxAmrC5NZWl96iLeoUrVLfRGvw==
+X-Received: by 2002:ac2:47f0:0:b0:51d:70d9:f844 with SMTP id b16-20020ac247f0000000b0051d70d9f844mr5882908lfp.22.1714485756019;
+        Tue, 30 Apr 2024 07:02:36 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id pv27-20020a170907209b00b00a5940af3f67sm31434ejb.16.2024.04.30.07.02.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 07:02:35 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 00/13] ASoC: Use snd_soc_substream_to_rtd() for accessing
+ private_data
+Date: Tue, 30 Apr 2024 16:02:09 +0200
+Message-Id: <20240430-asoc-snd-substream-clean-v1-0-6f8a8902b479@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] arm64/mm: Refactor PMD_PRESENT_INVALID and
- PTE_PROT_NONE bits
-Content-Language: en-GB
-To: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Joey Gouly
- <joey.gouly@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- David Hildenbrand <david@redhat.com>, Peter Xu <peterx@redhat.com>,
- Mike Rapoport <rppt@linux.ibm.com>, Shivansh Vij <shivanshvij@outlook.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240429140208.238056-1-ryan.roberts@arm.com>
- <20240429140208.238056-2-ryan.roberts@arm.com>
- <20240430133037.GA13848@willie-the-truck>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240430133037.GA13848@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOL5MGYC/x3MTQrCMBBA4auUWTuQxEhqryIu8jPRgZqUTBWh5
+ O4Gl9/ivQOEGpPAMh3Q6MPCtQzo0wTx6cuDkNMwGGWssmeFXmpEKQnlHWRv5F8YV/IFr8YGp12
+ a88XCyLdGmb//9e3e+w9CANGvagAAAA==
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
+ Jarkko Nikula <jarkko.nikula@bitmer.com>, Daniel Mack <daniel@zonque.org>, 
+ Haojian Zhuang <haojian.zhuang@gmail.com>, 
+ Robert Jarzmik <robert.jarzmik@free.fr>, 
+ Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
+ Fabio Estevam <festevam@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Ban Tao <fengzheng923@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
+ linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev, 
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3547;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=nmVD9KKu0onQCo4+scSWvtThsneJsuva2ZwAC2itQ+Q=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmMPnp5GgNlhBx+/I3aG9tNIg/czLIulpjsgqB+
+ gIo9+t++USJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjD56QAKCRDBN2bmhouD
+ 1/7LEACEfk8kijEA2LTMQcsqwb/zKSF+KUnI8xKuCriVzrabC5ANnLec53cOfXlJiZr0ORRQZu1
+ 470KfeDgCK0rPa+5rmHArn0RjNORLJGv3UY9o33TRjgnRKnhemsjjVBOY2q2aSGa12PGCdgZZ2W
+ 9lYT6gbghyhPF8NwejTYWU67cXXHzw57qZrigi06wTI2UMEzGCAPqjVhM2lDMHiEyCTYsFh5fZC
+ rR2QeMZ5pK1z03KZd5SaMByAHa4DJKQOESKs+zVprbQfv5lzpQpn0EVjmxu4IuLRoQxBzfNJhPt
+ 36FgoerUfQRcpNoGC21+oBlav8jvX4KPs07WDOuNAmbmOtgXCpWnMgFcFwHmF3waXKQHwzOjK+/
+ 2KrHGzOUV9Xbz/fFxxDvcrJ9KdrqfbWpHM0xl7iwulLPWb1KsQr+/NFKNg6MfijGBKz4sC0Zqt8
+ vQP4on/GzYRbye0DENyAmvUZGrWaBcF6ARh875j/Wtbgf4akwjlz1IziblIY+5XW/H1pl10EmuK
+ rZVUZawHpK9VaDDe13ybwYLFC6jLwchoLTS52Pq2adjWzHJ+DAX0kMA60ACfugVQyPnugr0zBEz
+ B7kqe01ESwCaFe3059W+GzYuXFpqQpOOJOqIoNfu7R23l0QqyopaR9hd/2Y62EwfsI/mkovGRET
+ HqyQWjcO1YItmKQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On 30/04/2024 14:30, Will Deacon wrote:
-> Hey Ryan,
-> 
-> Just a couple of comments on this:
-> 
-> On Mon, Apr 29, 2024 at 03:02:05PM +0100, Ryan Roberts wrote:
->> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
->> index dd9ee67d1d87..de62e6881154 100644
->> --- a/arch/arm64/include/asm/pgtable-prot.h
->> +++ b/arch/arm64/include/asm/pgtable-prot.h
->> @@ -18,14 +18,7 @@
->>  #define PTE_DIRTY		(_AT(pteval_t, 1) << 55)
->>  #define PTE_SPECIAL		(_AT(pteval_t, 1) << 56)
->>  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
->> -#define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
->> -
->> -/*
->> - * This bit indicates that the entry is present i.e. pmd_page()
->> - * still points to a valid huge page in memory even if the pmd
->> - * has been invalidated.
->> - */
->> -#define PMD_PRESENT_INVALID	(_AT(pteval_t, 1) << 59) /* only when !PMD_SECT_VALID */
->> +#define PTE_INVALID		(_AT(pteval_t, 1) << 59) /* only when !PTE_VALID */
-> 
-> So this now overlaps with AttrIndx[3] if FEAT_AIE is implemented. Although
-> this shouldn't matter on the face of things because it's only used for
-> invalid entries, we originally moved the PROT_NONE bit from 2 to 57 back
-> in 3676f9ef5481 ("arm64: Move PTE_PROT_NONE higher up") because it was
-> possible to change the memory type for PROT_NONE mappings via some
-> drivers.
+Hi,
 
-I'm not sure I follow your argument.
+Do not open-code snd_soc_substream_to_rtd() when accessing
+snd_pcm_substream->private_data.  This makes code more consistent with
+rest of ASoC and allows in the future to move the field to any other
+place or add additional checks in snd_soc_substream_to_rtd().
 
- 1. We don't support FEAT_AIE (currently) so AttrIndx[3] is always going to be 0
-for valid ptes. Drivers are only calling our helpers (e.g.
-pgprot_writecombine(), right?) and those only know how to set AttrIndx[2:0].
+Best regards,
+Krzysztof
 
- 2. PMD_PRESENT_INVALID was already occupying bit 59. So wouldn't the same shape
-of concern apply there too for PMDs that have been invalidated, where the driver
-then comes along and changes the memory type? (Perhaps because
-PMD_PRESENT_INVALID is only set while the PTL is held this can't happen).
+---
+Krzysztof Kozlowski (13):
+      ASoC: qcom: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: tegra: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: ti: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: arm: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: amd: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: fsl: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: img: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: kirkwood: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: loongson: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: mediatek: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: meson: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: samsung: Use snd_soc_substream_to_rtd() for accessing private_data
+      ASoC: sunxi: Use snd_soc_substream_to_rtd() for accessing private_data
 
- 3. I had this same vague concern about confusion due to overlapping bit 59,
-which is why in the next patch, I'm moving it to the NS bit.
+ sound/arm/pxa2xx-pcm-lib.c                 |  4 ++--
+ sound/soc/amd/acp/acp-mach-common.c        |  2 +-
+ sound/soc/amd/acp3x-rt5682-max9836.c       |  2 +-
+ sound/soc/amd/ps/ps-sdw-dma.c              |  2 +-
+ sound/soc/fsl/fsl-asoc-card.c              |  2 +-
+ sound/soc/fsl/imx-card.c                   |  6 +++---
+ sound/soc/fsl/imx-hdmi.c                   |  2 +-
+ sound/soc/fsl/imx-pcm-rpmsg.c              |  6 +++---
+ sound/soc/img/img-i2s-in.c                 |  2 +-
+ sound/soc/img/img-i2s-out.c                |  2 +-
+ sound/soc/kirkwood/kirkwood-dma.c          |  2 +-
+ sound/soc/loongson/loongson_card.c         |  2 +-
+ sound/soc/loongson/loongson_dma.c          |  2 +-
+ sound/soc/mediatek/mt7986/mt7986-afe-pcm.c |  4 ++--
+ sound/soc/mediatek/mt8186/mt8186-afe-pcm.c | 14 +++++++-------
+ sound/soc/mediatek/mt8186/mt8186-mt6366.c  |  2 +-
+ sound/soc/mediatek/mt8188/mt8188-afe-pcm.c |  8 ++++----
+ sound/soc/mediatek/mt8188/mt8188-mt6359.c  |  6 +++---
+ sound/soc/mediatek/mt8195/mt8195-afe-pcm.c | 10 +++++-----
+ sound/soc/mediatek/mt8195/mt8195-mt6359.c  |  4 ++--
+ sound/soc/meson/aiu-fifo.c                 |  2 +-
+ sound/soc/meson/axg-fifo.c                 |  2 +-
+ sound/soc/qcom/apq8016_sbc.c               |  4 ++--
+ sound/soc/qcom/qdsp6/q6apm-dai.c           |  2 +-
+ sound/soc/qcom/sc7180.c                    | 10 +++++-----
+ sound/soc/qcom/sc7280.c                    | 12 ++++++------
+ sound/soc/qcom/sc8280xp.c                  |  8 ++++----
+ sound/soc/qcom/sdw.c                       |  8 ++++----
+ sound/soc/qcom/sm8250.c                    | 10 +++++-----
+ sound/soc/qcom/x1e80100.c                  |  8 ++++----
+ sound/soc/samsung/midas_wm1811.c           |  2 +-
+ sound/soc/sunxi/sun50i-dmic.c              |  2 +-
+ sound/soc/tegra/tegra_asoc_machine.c       |  2 +-
+ sound/soc/tegra/tegra_pcm.c                |  6 +++---
+ sound/soc/ti/omap-hdmi.c                   |  2 +-
+ 35 files changed, 82 insertions(+), 82 deletions(-)
+---
+base-commit: 82415cf72c7e224be7a6496f3a53c0b365c2fe9d
+change-id: 20240430-asoc-snd-substream-clean-924b717d8f54
 
-Experience tells me that when I'm arguing confidently with someone who is much
-more expert than me, then I'm using wrong... so what have I missed? :)
-
-> 
-> Moving the field to the NS bit (as you do later in the series) resolves
-> this, but the architecture currently says that the NS bit is RES0. How
-> can we guarantee that it won't be repurposed by hardware in future?
-
-Well it remains free for use in valid entries of course. So I guess you are
-asking how to guarantee we won't also need to be able to modify it on the fly
-for PROT_NONE entries? I don't have a definite answer, but I've been working on
-the assumption that the architecture introducing a feature that is only needed
-in states where NS is not needed is unlikely (so using that bit for the feature
-is also unlikely). And then needing to manipulate that feature dyanically for
-PROT_NONE mappings is even less likely.
-
-If all else fails we could move it to nG (bit 11) to free up bit 5. But that
-requires a bit more fiddling with the swap pte format.
-
-> 
->>  #define _PROT_DEFAULT		(PTE_TYPE_PAGE | PTE_AF | PTE_SHARED)
->>  #define _PROT_SECT_DEFAULT	(PMD_TYPE_SECT | PMD_SECT_AF | PMD_SECT_S)
->> @@ -103,7 +96,7 @@ static inline bool __pure lpa2_is_enabled(void)
->>  		__val;							\
->>  	 })
->>  
->> -#define PAGE_NONE		__pgprot(((_PAGE_DEFAULT) & ~PTE_VALID) | PTE_PROT_NONE | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
->> +#define PAGE_NONE		__pgprot(((_PAGE_DEFAULT) & ~PTE_VALID) | PTE_INVALID | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
->>  /* shared+writable pages are clean by default, hence PTE_RDONLY|PTE_WRITE */
->>  #define PAGE_SHARED		__pgprot(_PAGE_SHARED)
->>  #define PAGE_SHARED_EXEC	__pgprot(_PAGE_SHARED_EXEC)
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index afdd56d26ad7..8dd4637d6b56 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -105,7 +105,7 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
->>  /*
->>   * The following only work if pte_present(). Undefined behaviour otherwise.
->>   */
->> -#define pte_present(pte)	(!!(pte_val(pte) & (PTE_VALID | PTE_PROT_NONE)))
->> +#define pte_present(pte)	(pte_valid(pte) || pte_invalid(pte))
->>  #define pte_young(pte)		(!!(pte_val(pte) & PTE_AF))
->>  #define pte_special(pte)	(!!(pte_val(pte) & PTE_SPECIAL))
->>  #define pte_write(pte)		(!!(pte_val(pte) & PTE_WRITE))
->> @@ -132,6 +132,7 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
->>  #define pte_dirty(pte)		(pte_sw_dirty(pte) || pte_hw_dirty(pte))
->>  
->>  #define pte_valid(pte)		(!!(pte_val(pte) & PTE_VALID))
->> +#define pte_invalid(pte)	((pte_val(pte) & (PTE_VALID | PTE_INVALID)) == PTE_INVALID)
->>  /*
->>   * Execute-only user mappings do not have the PTE_USER bit set. All valid
->>   * kernel mappings have the PTE_UXN bit set.
->> @@ -261,6 +262,13 @@ static inline pte_t pte_mkpresent(pte_t pte)
->>  	return set_pte_bit(pte, __pgprot(PTE_VALID));
->>  }
->>  
->> +static inline pte_t pte_mkinvalid(pte_t pte)
->> +{
->> +	pte = set_pte_bit(pte, __pgprot(PTE_INVALID));
->> +	pte = clear_pte_bit(pte, __pgprot(PTE_VALID));
->> +	return pte;
->> +}
->> +
->>  static inline pmd_t pmd_mkcont(pmd_t pmd)
->>  {
->>  	return __pmd(pmd_val(pmd) | PMD_SECT_CONT);
->> @@ -469,7 +477,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
->>   */
->>  static inline int pte_protnone(pte_t pte)
->>  {
->> -	return (pte_val(pte) & (PTE_VALID | PTE_PROT_NONE)) == PTE_PROT_NONE;
->> +	return pte_invalid(pte) && !pte_user(pte) && !pte_user_exec(pte);
->>  }
-> 
-> Why do we need to check pte_user_*() here? Isn't PROT_NONE the only case
-> in which a pte will have PTE_INVALID set?
-
-I guess for *ptes* this is technically correct. But I was trying to make the
-format generic and reusable for *pmds* too. (pmd_protnone() wraps
-pte_protnone()). For pmds, PTE_INVALID also represents invalid-but-present PMDs
-(i.e. pmds on which pmd_mkinvalid() has been called).
-
-The intention is that PTE_INVALID indicates "present but not valid in HW". And
-(!pte_user(pte) && !pte_user_exec(pte)) indicates the PROT_NONE permission.
-
-> 
-> Will
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
