@@ -1,321 +1,171 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E865D172BAF;
-	Tue, 30 Apr 2024 13:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B40171E74;
+	Tue, 30 Apr 2024 13:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714483728; cv=none; b=cnn1WhrzcmLCXMKMJHYuhnH3Q62HQylZSAi2PTP9RpeU65zZaoxNiQwPafXEjCIGK6inxNDalu+EE3AEZBS8j28/Et5SNvxH28LduhXu1aemKzVPVcA6El2tJtfSrbdo0ZAfS/IQT0I1S26CkybYdlLOgn8jPaIZSmt/7c8/dhc=
+	t=1714483842; cv=none; b=TwCepnXg6MMEmRe720y4VYVywEcXidD0PHfH9+5YI15U4bbPHhsQGJr8rAUnlxENc3R+EPhOnON58HdP6rvPYfjqWALazkLfnUB00wyHFD/ckTGGIoniNdeb53N7ZnRrVXo4QqaW5z+qQ038q6UjxiCBAyIvQEoOvekmJk6vLgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714483728; c=relaxed/simple;
-	bh=SalhTQ3GnQAEknRfJhFsrFnTUp9pGE96j9CqLBM0nIU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=sajU7Q9M0aUDoO99M3w6943Z9mHxdgUAaNr1pwI2jvXu9a8Qd3sKgCli5de6xfN3Ud7zj9Xu2wuPnl1pqTLj3zCNwmH6Bjrrym+FwNYXQnWD2+oPskOsgaii76CulU3KkLjJJC1ZEj0rp8qazQeu0n3BcDhmdvl3XnRXkYML1G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aO2zYnwA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zxC3KWWh; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1714483842; c=relaxed/simple;
+	bh=hnUteZUlIfzfOm6FLXQVLAeHoh++k/AfwiOugSEGcms=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=FFen6H6EYDD/cj97jSkv1IZ6ckC1tMSR1ahsdrAgEUENkvNy+iPMDYGCWbYDKO4ktWlSZ36IJVEK+0ADJ8NFyXXucwXjXICcFHDs+6xImxEN2p77suyyN1eiSySI8L2CpV2Pho/82fj0sfFQRU6FelT+No1f7gCctkzrvv7BCnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I8Bm+oH5; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aO2zYnwA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zxC3KWWh"
-Date: Tue, 30 Apr 2024 13:28:42 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1714483723;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mwErHmG4UO8ztPuhK0kP17O1Xx8eTHCjts15RwKqDbg=;
-	b=aO2zYnwAU0Tts7+s+eH/Id+Ue9Lcbtu1qiMv0gRkZOiDOn0cvdyNiPTa0xBUkYjC+zJ0T9
-	ScUUt4mjYsBsNpTn/bxMlOEk2AQbAoHVQcXSAEBVW6A+Qlo8rVj/jvq+ZR8GRz2Di8n6+L
-	4k2vdsxiU0N+6NS6AK2GE/wCsiOzgL8oveY6jWDV5zRmoSoDnKxeO/W6XPlxzPKGWffaq9
-	YtSeLLwfFV3th+RdcDAc2JRFMWGAW7iFYQKUF0yorZqbCasXhvl06osXGIzBZlR0LyTrN7
-	QM4NgOj3rBccZXp8WR3zDGyRDQoKReHn63YJPJlRZ5pWGjK97jhyrBHNApX20g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1714483723;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mwErHmG4UO8ztPuhK0kP17O1Xx8eTHCjts15RwKqDbg=;
-	b=zxC3KWWh8sNaJnqmF6JtKAMmNA29ldl9kzJZQzWxW6avRIeIlW6kL+i8zCddyhK5F/8IWX
-	wRJ9C8O2FWIowuAA==
-From: "tip-bot2 for Jacob Pan" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/irq] KVM: VMX: Move posted interrupt descriptor out of VMX code
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Sean Christopherson <seanjc@google.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240423174114.526704-2-jacob.jun.pan@linux.intel.com>
-References: <20240423174114.526704-2-jacob.jun.pan@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I8Bm+oH5"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43UD8u6K013161;
+	Tue, 30 Apr 2024 13:30:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=/N+KEWOlYNdnDE15usheC2AQQq2OILk3vqXwsDWUnv4
+	=; b=I8Bm+oH5dtp1koo6b2FXCmIbB5qcidZZK5YxfJKzFaaPhgphQvIJyZbpLjY
+	VG3ygfy/F/8hPI6ztrDs7PWpvDRESJeH0Hh0gDbyHGeNJlZWurJdJjGY/xdzQrMD
+	YZIVVdQpWSU6C4kvh27eOMU2I36zMMagrN5bYeNddQCOpoU3eOQp2Pf2kCK1hQjH
+	g3qr4Hkq+0vLPYinOJ1FV7hV0EhLOfHbDZ+4ejlbPk80uD4Vp9wxUyvs4CVkw0OG
+	puCRk3djQnliGliYY3Hu6FwPOKFQLJSfQtjaopURNiyrn6vPCHkQw1oatPt3KFbX
+	feYDJW78Livd+MXEdA/riOazclg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xu199018v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 13:30:28 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43UDURXY021835
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 13:30:27 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 30 Apr
+ 2024 06:30:27 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Tue, 30 Apr 2024 06:30:20 -0700
+Subject: [PATCH 1/2] wifi: ath11k: refactor CE remap & unmap
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171448372295.10875.12289588267834639461.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20240430-ce-unmap-v1-1-e468328f95d9@quicinc.com>
+References: <20240430-ce-unmap-v1-0-e468328f95d9@quicinc.com>
+In-Reply-To: <20240430-ce-unmap-v1-0-e468328f95d9@quicinc.com>
+To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ZUXB3rjOkBNFDaSdMamiSZyKj7rHutcr
+X-Proofpoint-GUID: ZUXB3rjOkBNFDaSdMamiSZyKj7rHutcr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-30_07,2024-04-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404300095
 
-The following commit has been merged into the x86/irq branch of tip:
+Currently the logic that handles hw_params->ce_remap is inline code,
+both for doing the remap and the unmap. An upcoming change needs to do
+the unmap in a second place, so refactor the unmap logic into a
+separate function. And although it is only called from one place,
+refactor the remap logic as well to have functional symmetry.
 
-Commit-ID:     699f67512f04cbaee965fad872702c06eaf440f6
-Gitweb:        https://git.kernel.org/tip/699f67512f04cbaee965fad872702c06eaf440f6
-Author:        Jacob Pan <jacob.jun.pan@linux.intel.com>
-AuthorDate:    Tue, 23 Apr 2024 10:41:03 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 30 Apr 2024 00:54:42 +02:00
+No functional changes, compile tested only.
 
-KVM: VMX: Move posted interrupt descriptor out of VMX code
-
-To prepare native usage of posted interrupts, move the PID declarations out
-of VMX code such that they can be shared.
-
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Sean Christopherson <seanjc@google.com>
-Link: https://lore.kernel.org/r/20240423174114.526704-2-jacob.jun.pan@linux.intel.com
-
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 ---
- arch/x86/include/asm/posted_intr.h | 88 +++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/posted_intr.h     | 93 +-----------------------------
- arch/x86/kvm/vmx/vmx.c             |  1 +-
- arch/x86/kvm/vmx/vmx.h             |  2 +-
- 4 files changed, 91 insertions(+), 93 deletions(-)
- create mode 100644 arch/x86/include/asm/posted_intr.h
+ drivers/net/wireless/ath/ath11k/ahb.c | 52 +++++++++++++++++++++++------------
+ 1 file changed, 34 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/include/asm/posted_intr.h b/arch/x86/include/asm/posted_intr.h
-new file mode 100644
-index 0000000..f0324c5
---- /dev/null
-+++ b/arch/x86/include/asm/posted_intr.h
-@@ -0,0 +1,88 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _X86_POSTED_INTR_H
-+#define _X86_POSTED_INTR_H
-+
-+#define POSTED_INTR_ON  0
-+#define POSTED_INTR_SN  1
-+
-+#define PID_TABLE_ENTRY_VALID 1
-+
-+/* Posted-Interrupt Descriptor */
-+struct pi_desc {
-+	u32 pir[8];     /* Posted interrupt requested */
-+	union {
-+		struct {
-+				/* bit 256 - Outstanding Notification */
-+			u16	on	: 1,
-+				/* bit 257 - Suppress Notification */
-+				sn	: 1,
-+				/* bit 271:258 - Reserved */
-+				rsvd_1	: 14;
-+				/* bit 279:272 - Notification Vector */
-+			u8	nv;
-+				/* bit 287:280 - Reserved */
-+			u8	rsvd_2;
-+				/* bit 319:288 - Notification Destination */
-+			u32	ndst;
-+		};
-+		u64 control;
-+	};
-+	u32 rsvd[6];
-+} __aligned(64);
-+
-+static inline bool pi_test_and_set_on(struct pi_desc *pi_desc)
-+{
-+	return test_and_set_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_and_clear_on(struct pi_desc *pi_desc)
-+{
-+	return test_and_clear_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_and_clear_sn(struct pi_desc *pi_desc)
-+{
-+	return test_and_clear_bit(POSTED_INTR_SN, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_and_set_pir(int vector, struct pi_desc *pi_desc)
-+{
-+	return test_and_set_bit(vector, (unsigned long *)pi_desc->pir);
-+}
-+
-+static inline bool pi_is_pir_empty(struct pi_desc *pi_desc)
-+{
-+	return bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS);
-+}
-+
-+static inline void pi_set_sn(struct pi_desc *pi_desc)
-+{
-+	set_bit(POSTED_INTR_SN, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline void pi_set_on(struct pi_desc *pi_desc)
-+{
-+	set_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline void pi_clear_on(struct pi_desc *pi_desc)
-+{
-+	clear_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline void pi_clear_sn(struct pi_desc *pi_desc)
-+{
-+	clear_bit(POSTED_INTR_SN, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_on(struct pi_desc *pi_desc)
-+{
-+	return test_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_sn(struct pi_desc *pi_desc)
-+{
-+	return test_bit(POSTED_INTR_SN, (unsigned long *)&pi_desc->control);
-+}
-+
-+#endif /* _X86_POSTED_INTR_H */
-diff --git a/arch/x86/kvm/vmx/posted_intr.h b/arch/x86/kvm/vmx/posted_intr.h
-index 2699207..6b2a022 100644
---- a/arch/x86/kvm/vmx/posted_intr.h
-+++ b/arch/x86/kvm/vmx/posted_intr.h
-@@ -1,98 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __KVM_X86_VMX_POSTED_INTR_H
- #define __KVM_X86_VMX_POSTED_INTR_H
--
--#define POSTED_INTR_ON  0
--#define POSTED_INTR_SN  1
--
--#define PID_TABLE_ENTRY_VALID 1
--
--/* Posted-Interrupt Descriptor */
--struct pi_desc {
--	u32 pir[8];     /* Posted interrupt requested */
--	union {
--		struct {
--				/* bit 256 - Outstanding Notification */
--			u16	on	: 1,
--				/* bit 257 - Suppress Notification */
--				sn	: 1,
--				/* bit 271:258 - Reserved */
--				rsvd_1	: 14;
--				/* bit 279:272 - Notification Vector */
--			u8	nv;
--				/* bit 287:280 - Reserved */
--			u8	rsvd_2;
--				/* bit 319:288 - Notification Destination */
--			u32	ndst;
--		};
--		u64 control;
--	};
--	u32 rsvd[6];
--} __aligned(64);
--
--static inline bool pi_test_and_set_on(struct pi_desc *pi_desc)
--{
--	return test_and_set_bit(POSTED_INTR_ON,
--			(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_and_clear_on(struct pi_desc *pi_desc)
--{
--	return test_and_clear_bit(POSTED_INTR_ON,
--			(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_and_clear_sn(struct pi_desc *pi_desc)
--{
--	return test_and_clear_bit(POSTED_INTR_SN,
--			(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_and_set_pir(int vector, struct pi_desc *pi_desc)
--{
--	return test_and_set_bit(vector, (unsigned long *)pi_desc->pir);
--}
--
--static inline bool pi_is_pir_empty(struct pi_desc *pi_desc)
--{
--	return bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS);
--}
--
--static inline void pi_set_sn(struct pi_desc *pi_desc)
--{
--	set_bit(POSTED_INTR_SN,
--		(unsigned long *)&pi_desc->control);
--}
--
--static inline void pi_set_on(struct pi_desc *pi_desc)
--{
--	set_bit(POSTED_INTR_ON,
--		(unsigned long *)&pi_desc->control);
--}
--
--static inline void pi_clear_on(struct pi_desc *pi_desc)
--{
--	clear_bit(POSTED_INTR_ON,
--		(unsigned long *)&pi_desc->control);
--}
--
--static inline void pi_clear_sn(struct pi_desc *pi_desc)
--{
--	clear_bit(POSTED_INTR_SN,
--		(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_on(struct pi_desc *pi_desc)
--{
--	return test_bit(POSTED_INTR_ON,
--			(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_sn(struct pi_desc *pi_desc)
--{
--	return test_bit(POSTED_INTR_SN,
--			(unsigned long *)&pi_desc->control);
--}
-+#include <asm/posted_intr.h>
+diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
+index 60b4c2800a33..aa62ed710090 100644
+--- a/drivers/net/wireless/ath/ath11k/ahb.c
++++ b/drivers/net/wireless/ath/ath11k/ahb.c
+@@ -949,6 +949,36 @@ static int ath11k_ahb_setup_msa_resources(struct ath11k_base *ab)
+ 	return 0;
+ }
  
- void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu);
- void vmx_vcpu_pi_put(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 22411f4..273d264 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -70,6 +70,7 @@
- #include "x86.h"
- #include "smm.h"
- #include "vmx_onhyperv.h"
-+#include "posted_intr.h"
++static int ath11k_ahb_ce_remap(struct ath11k_base *ab)
++{
++	const struct ce_remap *ce_remap = ab->hw_params.ce_remap;
++	struct platform_device *pdev = ab->pdev;
++
++	if (!ce_remap) {
++		/* no separate CE register space */
++		ab->mem_ce = ab->mem;
++		return 0;
++	}
++
++	/* ce register space is moved out of wcss unlike ipq8074 or ipq6018
++	 * and the space is not contiguous, hence remapping the CE registers
++	 * to a new space for accessing them.
++	 */
++	ab->mem_ce = ioremap(ce_remap->base, ce_remap->size);
++	if (!ab->mem_ce) {
++		dev_err(&pdev->dev, "ce ioremap error\n");
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static void ath11k_ahb_ce_unmap(struct ath11k_base *ab)
++{
++	if (ab->hw_params.ce_remap)
++		iounmap(ab->mem_ce);
++}
++
+ static int ath11k_ahb_fw_resources_init(struct ath11k_base *ab)
+ {
+ 	struct ath11k_ahb *ab_ahb = ath11k_ahb_priv(ab);
+@@ -1141,21 +1171,9 @@ static int ath11k_ahb_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_core_free;
  
- MODULE_AUTHOR("Qumranet");
- MODULE_LICENSE("GPL");
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 90f9e44..7e48336 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -7,10 +7,10 @@
- #include <asm/kvm.h>
- #include <asm/intel_pt.h>
- #include <asm/perf_event.h>
-+#include <asm/posted_intr.h>
+-	ab->mem_ce = ab->mem;
+-
+-	if (ab->hw_params.ce_remap) {
+-		const struct ce_remap *ce_remap = ab->hw_params.ce_remap;
+-		/* ce register space is moved out of wcss unlike ipq8074 or ipq6018
+-		 * and the space is not contiguous, hence remapping the CE registers
+-		 * to a new space for accessing them.
+-		 */
+-		ab->mem_ce = ioremap(ce_remap->base, ce_remap->size);
+-		if (!ab->mem_ce) {
+-			dev_err(&pdev->dev, "ce ioremap error\n");
+-			ret = -ENOMEM;
+-			goto err_core_free;
+-		}
+-	}
++	ret = ath11k_ahb_ce_remap(ab);
++	if (ret)
++		goto err_core_free;
  
- #include "capabilities.h"
- #include "../kvm_cache_regs.h"
--#include "posted_intr.h"
- #include "vmcs.h"
- #include "vmx_ops.h"
- #include "../cpuid.h"
+ 	ret = ath11k_ahb_fw_resources_init(ab);
+ 	if (ret)
+@@ -1243,9 +1261,7 @@ static void ath11k_ahb_free_resources(struct ath11k_base *ab)
+ 	ath11k_ahb_release_smp2p_handle(ab);
+ 	ath11k_ahb_fw_resource_deinit(ab);
+ 	ath11k_ce_free_pipes(ab);
+-
+-	if (ab->hw_params.ce_remap)
+-		iounmap(ab->mem_ce);
++	ath11k_ahb_ce_unmap(ab);
+ 
+ 	ath11k_core_free(ab);
+ 	platform_set_drvdata(pdev, NULL);
+
+-- 
+2.42.0
+
