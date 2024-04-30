@@ -1,187 +1,218 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178961C9ECE
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C80127E3F;
+	Tue, 30 Apr 2024 09:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468772; cv=none; b=seIjjeMLBsuSpRWhFrt0jwXUzOkmcwqrmM+kGT331BeCXqvb5tlqz7N+K/hLOrZKAA1cCtz8n60jGHzVWIHS4aFPFN+ct2cXRYN6fluK9VOzlopZyRV++j++cdbTXAHQ2Jk8CueHxeDXi3waK0wn0b8dMhqdgZOYgYTBsCWr4gA=
+	t=1714468803; cv=none; b=C/CCA3P9FoN6KARpQfh6yFXlKiJtwOh3vdmYIAKpHu6eE3/fZOEBnQI/afY+TtnsauAShB/6IiTAvPj3lO1+ZSibmDsVZNwJWE/WlIE4JyUMi/ID4iQRMse3m8lhzBlxsTPX798jzTRK6VB1a7Re+Fzps5knrrDBxOp24yV5XsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468772; c=relaxed/simple;
-	bh=0AIN0FxrkZVcCjn0a65UMKn2nPTgCcIbQIZjTmSgp2g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bJ62EjbKnk/VtCtI4pUlC+fh+RdhWnSuVFARb7+UbvA8D9bWM6II/znh3b9frLKLEQzje0sJY9BdxWbA8CYibMjes0bhmVPnVd6oqk1RtlQKogiRhPv+n8/zF6IBYv6U++zgXMxFHmcP0ObSV8h5k0Tn8+yATiInXekxGOo88f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KJG0ZNsQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KJG0ZNsQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714468770;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BnbC8oA7effdEeuXBD+j3dpz74Y9QoJKPm2R7w8invk=;
-	b=KJG0ZNsQNBrB90r/ewa/QJqK3OWehEWfdsG9hHadp6+XNJu8Di8G6ICo9+L4d0m+SZ5bsh
-	P1SiK04/ZiXCgVTsPkC+45iozIorntvZGH4cY4G8Cax2QhNx+PIa21dMMbmKENot15ObJz
-	8wuygG61Cf/KaF3dxhhkvIoFbzpaeXo=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-127-lN9Jff67MvyPhvG9gTpdiQ-1; Tue,
- 30 Apr 2024 05:19:22 -0400
-X-MC-Unique: lN9Jff67MvyPhvG9gTpdiQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8021E3806738;
-	Tue, 30 Apr 2024 09:19:21 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.193.247])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D561840C5C2;
-	Tue, 30 Apr 2024 09:19:18 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: [PATCH v2 27/27] context_tracking, rcu: Rename rcu_dyntick trace event into rcu_watching
-Date: Tue, 30 Apr 2024 11:17:31 +0200
-Message-ID: <20240430091740.1826862-28-vschneid@redhat.com>
-In-Reply-To: <20240430091740.1826862-1-vschneid@redhat.com>
-References: <20240430091740.1826862-1-vschneid@redhat.com>
+	s=arc-20240116; t=1714468803; c=relaxed/simple;
+	bh=dbDHJ4rWVH/u6iJ4V5hPVrSwoNqEatmwKmR5Txwe1I4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rIrFeufLoUYdX3EtJ+ilJENa5yQ+7P6LK0V4VqDigVy64ffqmIfu5SWAsIrC+DHByDfH0YIedE3bQzX0rnocBSLydu4T7d8reqksL9kAuTJ7THN4ewHCgmpPKygX4lUhtbBbeOsvIoiZgFY9VxqSqFjYAouyXeO1WGVnLxoKxNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VTF4V0FMPzccVR;
+	Tue, 30 Apr 2024 17:18:50 +0800 (CST)
+Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 593D718007D;
+	Tue, 30 Apr 2024 17:19:57 +0800 (CST)
+Received: from [10.67.111.172] (10.67.111.172) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 30 Apr 2024 17:19:57 +0800
+Message-ID: <37581090-ae63-46c4-98c1-76e9138e6b6e@huawei.com>
+Date: Tue, 30 Apr 2024 17:19:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] media: dvb-usb: Fix unexpected infinite loop in
+ dvb_usb_read_remote_control()
+Content-Language: en-US
+To: Sean Young <sean@mess.org>
+CC: <mchehab@kernel.org>, <linux-media@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240412135256.1546051-1-zhengyejian1@huawei.com>
+ <5c0359c7-502f-fe8b-c1ee-3470b36b586c@huawei.com>
+ <ZjCl97Ww6NrzJQCB@gofer.mess.org>
+From: Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <ZjCl97Ww6NrzJQCB@gofer.mess.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 
-The "rcu_dyntick" naming convention has been turned into "rcu_watching" for
-all helpers now, align the trace event to that.
+On 2024/4/30 16:04, Sean Young wrote:
+> On Mon, Apr 29, 2024 at 07:24:21PM +0800, Zheng Yejian wrote:
+>> On 2024/4/12 21:52, Zheng Yejian wrote:
+>>> Infinite log printing occurs during fuzz test:
+>>>
+>>>     rc rc1: DViCO FusionHDTV DVB-T USB (LGZ201) as ...
+>>>     ...
+>>>     dvb-usb: schedule remote query interval to 100 msecs.
+>>>     dvb-usb: DViCO FusionHDTV DVB-T USB (LGZ201) successfully initialized ...
+>>>     dvb-usb: bulk message failed: -22 (1/0)
+>>>     dvb-usb: bulk message failed: -22 (1/0)
+>>>     dvb-usb: bulk message failed: -22 (1/0)
+>>>     ...
+>>>     dvb-usb: bulk message failed: -22 (1/0)
+>>>
+>>> Looking into the codes, there is a loop in dvb_usb_read_remote_control(),
+>>> that is in rc_core_dvb_usb_remote_init() create a work that will call
+>>> dvb_usb_read_remote_control(), and this work will reschedule itself at
+>>> 'rc_interval' intervals to recursively call dvb_usb_read_remote_control(),
+>>> see following code snippet:
+>>>
+>>>     rc_core_dvb_usb_remote_init() {
+>>>       ...
+>>>       INIT_DELAYED_WORK(&d->rc_query_work, dvb_usb_read_remote_control);
+>>>       schedule_delayed_work(&d->rc_query_work,
+>>>                             msecs_to_jiffies(rc_interval));
+>>>       ...
+>>>     }
+>>>
+>>>     dvb_usb_read_remote_control() {
+>>>       ...
+>>>       err = d->props.rc.core.rc_query(d);
+>>>       if (err)
+>>>         err(...)  // Did not return even if query failed
+>>>       schedule_delayed_work(&d->rc_query_work,
+>>>                             msecs_to_jiffies(rc_interval));
+>>>     }
+>>>
+>>> When the infinite log printing occurs, the query callback
+>>> 'd->props.rc.core.rc_query' is cxusb_rc_query(). And the log is due to
+>>> the failure of finding a valid 'generic_bulk_ctrl_endpoint'
+>>> in usb_bulk_msg(), see following code snippet:
+>>>
+>>>     cxusb_rc_query() {
+>>>       cxusb_ctrl_msg() {
+>>>         dvb_usb_generic_rw() {
+>>>           ret = usb_bulk_msg(d->udev, usb_sndbulkpipe(d->udev,
+>>>                              d->props.generic_bulk_ctrl_endpoint),...);
+>>>           if (ret)
+>>>             err("bulk message failed: %d (%d/%d)",ret,wlen,actlen);
+>>>             ...
+>>>         }
+>>>     ...
+>>>     }
+>>>
+>>> By analyzing the corresponding USB descriptor, it shows that the
+>>> bNumEndpoints is 0 in its interface descriptor, but
+>>> the 'generic_bulk_ctrl_endpoint' is 1, that means user don't configure
+>>> a valid endpoint for 'generic_bulk_ctrl_endpoint', therefore this
+>>> 'invalid' USB device should be rejected before it calls into
+>>> dvb_usb_read_remote_control().
+>>>
+>>> To fix it, iiuc, we can add endpoint check in dvb_usb_adapter_init().
+>>>
+>>> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+>>> ---
+>>>    drivers/media/usb/dvb-usb/dvb-usb-init.c | 8 ++++++++
+>>>    1 file changed, 8 insertions(+)
+>>>
+>>> Hi, I'm not very familiar with USB driver, and I'm not sure the
+>>> type check is appropriate or not here. Would be any device properties
+>>> that allow 'generic_bulk_ctrl_endpoint' not being configured, or would
+>>> it be configured late after init ? :)
+>>>
+>>
+>> Kindly ping :)
+>> Hi, Mauro, would you mind taking a look at this code ?
+>>
+>> --
+>> Thanks,
+>> Zheng Yejian
+>>
+>>> diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+>>> index fbf58012becd..48e7b9fb93dd 100644
+>>> --- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
+>>> +++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+>>> @@ -104,6 +104,14 @@ static int dvb_usb_adapter_init(struct dvb_usb_device *d, short *adapter_nrs)
+>>>    	 * sometimes a timeout occurs, this helps
+>>>    	 */
+>>>    	if (d->props.generic_bulk_ctrl_endpoint != 0) {
+>>> +		ret = usb_pipe_type_check(d->udev, usb_sndbulkpipe(d->udev,
+>>> +					  d->props.generic_bulk_ctrl_endpoint));
+>>> +		if (ret)
+>>> +			goto frontend_init_err;
+>>> +		ret = usb_pipe_type_check(d->udev, usb_rcvbulkpipe(d->udev,
+>>> +					  d->props.generic_bulk_ctrl_endpoint));
+>>> +		if (ret)
+>>> +			goto frontend_init_err;
+>>>    		usb_clear_halt(d->udev, usb_sndbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+>>>    		usb_clear_halt(d->udev, usb_rcvbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+>>>    	}
+>>
+> 
+> Thank you for your patch.
+> 
+> I think your change looks good. The only comment I have is that the same
+> check should be done for generic_bulk_ctrl_endpoint_response as well; the
+> usb_clear_halt() should be done as well, I think.
+> 
 
-To add to the confusion, the strings passed to the trace event are now
-reversed: when RCU "starts" the dyntick / EQS state, it "stops" watching.
+Thanks for your suggestion!
+Do you mean the following change? If it is ok, I'll send a v2!
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- include/trace/events/rcu.h | 16 ++++++++--------
- kernel/context_tracking.c  | 10 +++++-----
- 2 files changed, 13 insertions(+), 13 deletions(-)
+diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+index fbf58012becd..2a8395d6373c 100644
+--- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+@@ -23,6 +23,23 @@ static int dvb_usb_force_pid_filter_usage;
+  module_param_named(force_pid_filter_usage, dvb_usb_force_pid_filter_usage, int, 0444);
+  MODULE_PARM_DESC(force_pid_filter_usage, "force all dvb-usb-devices to use a PID filter, if any (default: 0).");
 
-diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-index 4066b6d51e46a..e51ef658437f0 100644
---- a/include/trace/events/rcu.h
-+++ b/include/trace/events/rcu.h
-@@ -466,40 +466,40 @@ TRACE_EVENT(rcu_stall_warning,
- /*
-  * Tracepoint for dyntick-idle entry/exit events.  These take 2 strings
-  * as argument:
-- * polarity: "Start", "End", "StillNonIdle" for entering, exiting or still not
-+ * polarity: "Start", "End", "StillWatching" for entering, exiting or still not
-  *            being in dyntick-idle mode.
-  * context: "USER" or "IDLE" or "IRQ".
-  * NMIs nested in IRQs are inferred with nesting > 1 in IRQ context.
-  *
-  * These events also take a pair of numbers, which indicate the nesting
-  * depth before and after the event of interest, and a third number that is
-- * the ->dynticks counter.  Note that task-related and interrupt-related
-+ * the RCU_WATCHING counter.  Note that task-related and interrupt-related
-  * events use two separate counters, and that the "++=" and "--=" events
-  * for irq/NMI will change the counter by two, otherwise by one.
-  */
--TRACE_EVENT_RCU(rcu_dyntick,
-+TRACE_EVENT_RCU(rcu_watching,
- 
--	TP_PROTO(const char *polarity, long oldnesting, long newnesting, int dynticks),
-+	TP_PROTO(const char *polarity, long oldnesting, long newnesting, int counter),
- 
--	TP_ARGS(polarity, oldnesting, newnesting, dynticks),
-+	TP_ARGS(polarity, oldnesting, newnesting, counter),
- 
- 	TP_STRUCT__entry(
- 		__field(const char *, polarity)
- 		__field(long, oldnesting)
- 		__field(long, newnesting)
--		__field(int, dynticks)
-+		__field(int, counter)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->polarity = polarity;
- 		__entry->oldnesting = oldnesting;
- 		__entry->newnesting = newnesting;
--		__entry->dynticks = dynticks;
-+		__entry->counter = counter;
- 	),
- 
- 	TP_printk("%s %lx %lx %#3x", __entry->polarity,
- 		  __entry->oldnesting, __entry->newnesting,
--		  __entry->dynticks & 0xfff)
-+		  __entry->counter & 0xfff)
- );
- 
- /*
-diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-index dfa64f21d900d..fdbb584b8e797 100644
---- a/kernel/context_tracking.c
-+++ b/kernel/context_tracking.c
-@@ -137,7 +137,7 @@ static void noinstr ct_kernel_exit(bool user, int offset)
- 
- 	instrumentation_begin();
- 	lockdep_assert_irqs_disabled();
--	trace_rcu_dyntick(TPS("Start"), ct_nesting(), 0, ct_rcu_watching());
-+	trace_rcu_watching(TPS("End"), ct_nesting(), 0, ct_rcu_watching());
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
- 	rcu_preempt_deferred_qs(current);
- 
-@@ -182,7 +182,7 @@ static void noinstr ct_kernel_enter(bool user, int offset)
- 	// instrumentation for the noinstr ct_kernel_enter_state()
- 	instrument_atomic_write(&ct->state, sizeof(ct->state));
- 
--	trace_rcu_dyntick(TPS("End"), ct_nesting(), 1, ct_rcu_watching());
-+	trace_rcu_watching(TPS("Start"), ct_nesting(), 1, ct_rcu_watching());
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
- 	WRITE_ONCE(ct->nesting, 1);
- 	WARN_ON_ONCE(ct_nmi_nesting());
-@@ -219,7 +219,7 @@ void noinstr ct_nmi_exit(void)
- 	 * leave it in non-RCU-idle state.
- 	 */
- 	if (ct_nmi_nesting() != 1) {
--		trace_rcu_dyntick(TPS("--="), ct_nmi_nesting(), ct_nmi_nesting() - 2,
-+		trace_rcu_watching(TPS("--="), ct_nmi_nesting(), ct_nmi_nesting() - 2,
- 				  ct_rcu_watching());
- 		WRITE_ONCE(ct->nmi_nesting, /* No store tearing. */
- 			   ct_nmi_nesting() - 2);
-@@ -228,7 +228,7 @@ void noinstr ct_nmi_exit(void)
- 	}
- 
- 	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
--	trace_rcu_dyntick(TPS("Startirq"), ct_nmi_nesting(), 0, ct_rcu_watching());
-+	trace_rcu_watching(TPS("Endirq"), ct_nmi_nesting(), 0, ct_rcu_watching());
- 	WRITE_ONCE(ct->nmi_nesting, 0); /* Avoid store tearing. */
- 
- 	// instrumentation for the noinstr ct_kernel_exit_state()
-@@ -294,7 +294,7 @@ void noinstr ct_nmi_enter(void)
- 		instrumentation_begin();
- 	}
- 
--	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
-+	trace_rcu_watching(incby == 1 ? TPS("Startirq") : TPS("++="),
- 			  ct_nmi_nesting(),
- 			  ct_nmi_nesting() + incby, ct_rcu_watching());
- 	instrumentation_end();
--- 
-2.43.0
++static int dvb_usb_clear_halt(struct dvb_usb_device *d, u8 endpoint)
++{
++       if (endpoint) {
++               int ret;
++
++               ret = usb_pipe_type_check(d->udev, usb_sndbulkpipe(d->udev, endpoint));
++               if (ret)
++                       return ret;
++               ret = usb_pipe_type_check(d->udev, usb_rcvbulkpipe(d->udev, endpoint));
++               if (ret)
++                       return ret;
++               usb_clear_halt(d->udev, usb_sndbulkpipe(d->udev, endpoint));
++               usb_clear_halt(d->udev, usb_rcvbulkpipe(d->udev, endpoint));
++       }
++       return 0;
++}
++
+  static int dvb_usb_adapter_init(struct dvb_usb_device *d, short *adapter_nrs)
+  {
+         struct dvb_usb_adapter *adap;
+@@ -103,10 +120,12 @@ static int dvb_usb_adapter_init(struct dvb_usb_device *d, short *adapter_nrs)
+          * when reloading the driver w/o replugging the device
+          * sometimes a timeout occurs, this helps
+          */
+-       if (d->props.generic_bulk_ctrl_endpoint != 0) {
+-               usb_clear_halt(d->udev, usb_sndbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+-               usb_clear_halt(d->udev, usb_rcvbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+-       }
++       ret = dvb_usb_clear_halt(d, d->props.generic_bulk_ctrl_endpoint);
++       if (ret)
++               goto frontend_init_err;
++       ret = dvb_usb_clear_halt(d, d->props.generic_bulk_ctrl_endpoint_response);
++       if (ret)
++               goto frontend_init_err;
+
+         return 0;
+
+--
+Thanks,
+Zheng Yejian
+
+> Thanks
+> 
+> Sean
 
