@@ -1,74 +1,79 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD1C7710C;
-	Tue, 30 Apr 2024 15:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3B777118
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 15:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714489391; cv=none; b=FPIegBhMZm3yd4l6OdPlhO7xI1uwgn4Jn9FuL2Z0b243zzbWM/KzTmhPEikZuC7BudgkegxWMWtof528x6ulM70a9yxd+OIdbD0fLVTlY/toucUDc2txiGfTQc4dH4A/ryCWsztQD7/EWzHy3RBTrTnUdnH3uRqZCCov9qfrkZA=
+	t=1714489445; cv=none; b=fELCUMUPJk1MrigM+k2XyPNi7D+kTJ4KwXbLQchz+zKhshhqV1EJdyIGXnmpyJNqtVLFRKEC8EqnSJdO0m1ZiovjbXMCHf3eYCsaHh91p+MhRh0Wly5eFUD7we8ZNofP1C/CyxgmCSRkN3MxwgRsSq6Pwv22kKOeTTzLUFYBeYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714489391; c=relaxed/simple;
-	bh=a7XKkABB2gMAl6YmsWJisy73NM0mWEPEwg0CoML4T7w=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CxuE/BfLk6Y+BiwCtT/szmXFAnWvZigbRWEgMTtHQ/8HXWTplnN452VmwF/lrFnm4+B+xhNQ8ZlrhfPaClRVLIUPbxqPxU2GFQjpRRcLEKGq0FShUNQFfKljNSalGx3HaDLeP6a+tUdesH6V4GwCdSCLyzMRgF5HZuK3NDgtpTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTNfh4yYxz6GD7C;
-	Tue, 30 Apr 2024 23:00:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0C296140A08;
-	Tue, 30 Apr 2024 23:03:06 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 30 Apr
- 2024 16:03:04 +0100
-Date: Tue, 30 Apr 2024 16:03:02 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Robert Richter <rrichter@amd.com>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>, Dave Hansen
-	<dave.hansen@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>, kernel test
- robot <oliver.sang@intel.com>, Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v6 4/7] ACPI/NUMA: Squash
- acpi_numa_memory_affinity_init() into acpi_parse_memory_affinity()
-Message-ID: <20240430160302.00005fe1@Huawei.com>
-In-Reply-To: <20240430092200.2335887-5-rrichter@amd.com>
-References: <20240430092200.2335887-1-rrichter@amd.com>
-	<20240430092200.2335887-5-rrichter@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1714489445; c=relaxed/simple;
+	bh=g+eaDs/HNr91gYab7fvFMZUmUzQXEdyjAn6OH6gxOuM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=okzuJTD4+CnzbkDHz7e1/U6MvHCJ8nXPChmQQHu8D98z5cqE3uFpB50pG+hS5wlXa/kymS/C44H45+XXKQaWlLFZuQnhrsMlQ9UNdj2HEUB7z4dl+R2p5bvD/fjxQPfjyYWsKFNA7tteA4ZaIQZ1nMVdQpePfjMLVGhgbPKp3dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7dabc125bddso630337939f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 08:04:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714489443; x=1715094243;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RXCBsJ9VpJqP069pIpVcCX4AQCkHuzifZjAsyl3v/7A=;
+        b=pTIxPqvsNOTC3akNOFaoTkSdm3QqqpPfpzftW4QDHUIJH2JTllLs0IwcpBOsB7WUHY
+         5ecqeXLxPEq+4A1IuJXhVyyfKBRHxiea7DT/xxqjRCu+QCyhk/vaOFeG2ybJC392PPHe
+         3jTawbY1RAvY/LhLbZD4LLzwTU/ssS7AJi6vEW49460RKzKvNifOKhzAWXBw8f9BfCXQ
+         UP1wV9DTJi00oU2MrYzsXXrnzO6bgq+oGGgTVO/mDI2O7ZvIlQCwJDl/haRwAYWAaHLY
+         rbXN0Y5Rja+eTA3b8ouCreM2CBZkaE/ZAUXlIpGWQp3MrLkm/uvh8E87bDNzshARu2jN
+         PtFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaR65J4CdQbJvxPLdmiaaRtiGOklsM5aSu0Q5plYSVW/pDLWivWI1jBckZLM5alQXXTDU55BB+i9VAKpaiJNayvlU7TE6OfD0P5Jko
+X-Gm-Message-State: AOJu0YxW3jvoOK1R50cS50efLD2Jo8YTmkNNGOtGhGyTa01Aee2D+CfS
+	xrQ+IWEzIOMk6TKqReIs5D4tJ9fzdeMDOnqHcERI7Puv6YL21FEvU5Dw2Gry1txpgpnDXVMMccL
+	xBvyd5+DH3GhbFT3siqd9Uu2AEeKHIvQg5QVXdjZY7HfgIQBzTV4uMrs=
+X-Google-Smtp-Source: AGHT+IGkd8oAm76xqllvXiuSWamFxZZiYiLXM1NPguwb9PwGX3UzuHCPrjUn7xv8FxEBtfkwICP8m65fHvN8Z8HUb/km2DGAfMWu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-Received: by 2002:a05:6638:37a9:b0:487:ea0:dc07 with SMTP id
+ w41-20020a05663837a900b004870ea0dc07mr1194901jal.0.1714489443214; Tue, 30 Apr
+ 2024 08:04:03 -0700 (PDT)
+Date: Tue, 30 Apr 2024 08:04:03 -0700
+In-Reply-To: <00000000000072c6ba06174b30b7@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003bf5be061751ae70@google.com>
+Subject: Re: [syzbot] [ext4?] WARNING in mb_cache_destroy
+From: syzbot <syzbot+dd43bd0f7474512edc47@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, jack@suse.cz, libaokun1@huawei.com, 
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, nathan@kernel.org, 
+	ndesaulniers@google.com, ritesh.list@gmail.com, 
+	syzkaller-bugs@googlegroups.com, trix@redhat.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 30 Apr 2024 11:21:57 +0200
-Robert Richter <rrichter@amd.com> wrote:
+syzbot has bisected this issue to:
 
-> After removing architectural code the helper function
-> acpi_numa_memory_affinity_init() is no longer needed. Squash it into
-> acpi_parse_memory_affinity(). No functional changes intended.
-> 
-> While at it, fixing checkpatch complaints in code moved.
-> 
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202403220943.96dde419-oliver.sang@intel.com
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+commit 67d7d8ad99beccd9fe92d585b87f1760dc9018e3
+Author: Baokun Li <libaokun1@huawei.com>
+Date:   Thu Jun 16 02:13:56 2022 +0000
 
-Looks good to me. Printing an SRAT entry we then throw away is a bit
-odd but it always did that.
+    ext4: fix use-after-free in ext4_xattr_set_entry
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1011bcf8980000
+start commit:   b947cc5bf6d7 Merge tag 'erofs-for-6.9-rc7-fixes' of git://..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1211bcf8980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1411bcf8980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d2f00edef461175
+dashboard link: https://syzkaller.appspot.com/bug?extid=dd43bd0f7474512edc47
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d2957f180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1620ca40980000
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reported-by: syzbot+dd43bd0f7474512edc47@syzkaller.appspotmail.com
+Fixes: 67d7d8ad99be ("ext4: fix use-after-free in ext4_xattr_set_entry")
 
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
