@@ -1,76 +1,77 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1348920DC5
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BAF20DC5
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714461084; cv=none; b=oPcic/bHvy5G6K1nNZjlPFiXrK38bdY7GS9CsKZgcE1GA7xhtubFUhAwkUuAQr6RICxTNu1HkCzcTpnz9kojuZ4lfJGWIoF3TcPiunjqn5ViybChqI0GKJxEUeOD4yq5e/EeGLGUUbOww9ZdoAOD3dgv76Os4hS1Ba5G4SegRJs=
+	t=1714461149; cv=none; b=WikEA8prcz59DnwgQ9UVj9W9LXyRsXCbYO4UB7uP9UcQwgSdfvFjIEZkJYA3BhG5xd6lfek3OK/hwXAbjWUXA5plNau5OkKphaLYiXcQsm0MDfo30xN9XGSxitmmzGPIMwl8dLAXmtM9P4cS66Gc1L/lZTGYKm6qNnwts8uZxVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714461084; c=relaxed/simple;
-	bh=KFRDWWtjbuEunsWn3Gk/CgLfeQoKhGLxSJv8cTIwpLU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jqRqd16+/Ez2NhiMGv21stcwUmHFsWEm3XsMyd9/7Fk2IPJlpBkehoVDPp5JhvA3D0m81nWXylv6O3IOR6YBraIRP6n6SR7nfNVT/xaWtrmomZLmU65FUDAdxSPtTbG1IvwQFX56WiQK8XKYOP/YAUN//QMBPgwTFml7YGexZNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+	s=arc-20240116; t=1714461149; c=relaxed/simple;
+	bh=YKbHQ7+DrpuKs/BKqxo5iJkOTSM9So8QbVCvBQj2fEQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HqSenCQGSnosuBSzgEkIzVYKdyAF/X00EJEnvsJ1WTGKZp6EqPpFx+uQSf/xRIdj8eiDRrop7YaUN5dTVaM16rpGy3MYYsM6mx49hA7u6iqGSM7VIAEWOCNGMGC57KBe0+Sit1ltUmodk3ALgFvpKwMvzafrFA1l7spAyqsFRRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7da41c44e78so576886139f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 00:11:22 -0700 (PDT)
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d9d0936d6aso611882139f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 00:12:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714461082; x=1715065882;
+        d=1e100.net; s=20230601; t=1714461147; x=1715065947;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=V8prKtnl50HvoW4z73hJBAJwWMydf63uzm6sVs9PfG4=;
-        b=lsCqhuKfJDrl7qmqho/1HeixK0+dSWrP4hmOgM0ra+uYJ79dd4clYiZ42p5P0X0/gx
-         Wz+rVfxf2CHmvHhgWXHOLp7X1ATA4+HqS3DENR6Bq5xVGOihao5GUHhLVSTCMLqDOAw+
-         8tGX6nMcsGtMtiv++KsJZSGauIHusKgS96FNZ2d6Hyjz+AVtJqUQvKk99GigPJwtq/3L
-         UAnGv0KGH3kJVGtJZ9VRC9Shg9c1TDNURtys9DrcPnOQcj4VQWIEG3uKOKgs1pJDOWL9
-         Ja27gk84ZhtbeUBfg+/34vGs1DDSaXLlJYpV2AcKguxsJudIrAo1ZedRzQv1umU9hsrf
-         ZNbw==
-X-Gm-Message-State: AOJu0Yz4W2VPFkOyasS0SXjylho/7gZlyfSQIeJjqaedgV5Rl5QtjbnV
-	SCX/0BA0EN385IjBAyexQDW9nDm5Plq4sCP1g+BbyQWhL9awxP2PEktRu6/GMTn/ZQ7ZQZ925Jk
-	VFsv/zWuAyy4iDvQChGu0W3yo4djfItHEQBTMrFDRNGZu7gRjiAQ+ajE=
-X-Google-Smtp-Source: AGHT+IGt2ZOvcXEOznWBkcFV/R7eTOFVtsKc+DW0+Fh1XcaPz7gTKboNqDVymTV8LLw4ZeGLruitvuw1r3prgapH46mzITTYt096
+        bh=4r/M9mVoHzgKMM4Alitf2mS+gYX2JYeQm5phPBvoZ5E=;
+        b=xConavxsNMed++p2AU8CN30c33OPp6R9INyItrPML1A+5PJNBZ/vG+PpKh33BUHtby
+         SGOX4yUd+paNzykJirwgCw0N8ZTNiSkq+99Fj3+DXiSUTT32GC+U9rqBlbZkLEW1B/Ml
+         2Fg7KWUW7hY+SS7mwvoPbr1Qtt8igDBvge5AjZgL3uK3T1lj6feRkXdDYAZNBbaNhkTA
+         tEyN7deY41QPRe7zwpl1pZ2dOQCSnpfXD5oFhuGximX4Dfwy7o+7Nwrz4J/Kgjo1o9l2
+         SaFT9aI6WJWpMRY6O8bTWrKeiW3KZWCY2++M0OHEGJzVfuSg23muaV6VqlQRgAUVbItO
+         aq1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWap5RzRwJwwWvvsN6cRIx7/IsiuU/lUCefGfscjOQecuN6o0Sf0mm/rus9OoWNtYMWnLp4eauD+o8UYgfCpIY5hpHi40g42uotCtcb
+X-Gm-Message-State: AOJu0Ywkxv7eAtHsle2WqeeYCyzPYa39m5xRdhbssFUDhdOJnR5vKWs7
+	dNfJ0kehvwoxntT+ezi0GByfzex5eM8MdndUhDGSFpRVLR+NfOK/XdNKeHwt/Qfv83vgP20iopl
+	MJdbWxoEiSpB2H89p/1MkxSbkqsT/aTwVIoYEUd2UsnP7SpuofJl+ZHU=
+X-Google-Smtp-Source: AGHT+IFj9e8GCmj+12GcGndXBWrtWWwI61rth8HpP5Zyg7gSTF+bE1SVfqk714WViOFbyNrWPHiOHIi+Aaz4Ustz5xBH7NsNzZES
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:948b:b0:487:3dc3:c47f with SMTP id
- kz11-20020a056638948b00b004873dc3c47fmr669110jab.6.1714461082346; Tue, 30 Apr
- 2024 00:11:22 -0700 (PDT)
-Date: Tue, 30 Apr 2024 00:11:22 -0700
+X-Received: by 2002:a05:6602:2c8d:b0:7de:e182:ddf1 with SMTP id
+ i13-20020a0566022c8d00b007dee182ddf1mr30462iow.0.1714461147810; Tue, 30 Apr
+ 2024 00:12:27 -0700 (PDT)
+Date: Tue, 30 Apr 2024 00:12:27 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cb776406174b137a@google.com>
-Subject: [syzbot] Monthly trace report (Apr 2024)
-From: syzbot <syzbot+list303abcf8101ed15610df@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000b25bef06174b1755@google.com>
+Subject: [syzbot] Monthly arm report (Apr 2024)
+From: syzbot <syzbot+listc3adb3676e5a9d135247@syzkaller.appspotmail.com>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello trace maintainers/developers,
+Hello arm maintainers/developers,
 
-This is a 31-day syzbot report for the trace subsystem.
+This is a 31-day syzbot report for the arm subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+https://syzkaller.appspot.com/upstream/s/arm
 
-During the period, 3 new issues were detected and 2 were fixed.
-In total, 9 issues are still open and 34 have been fixed so far.
+During the period, 2 new issues were detected and 0 were fixed.
+In total, 7 issues are still open and 4 have been fixed so far.
 
 Some of the still happening issues:
 
 Ref Crashes Repro Title
-<1> 471     Yes   WARNING in format_decode (3)
-                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
-<2> 26      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-<3> 26      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<4> 13      No    possible deadlock in __send_signal_locked
-                  https://syzkaller.appspot.com/bug?extid=6e3b6eab5bd4ed584a38
-<5> 7       Yes   WARNING in get_probe_ref
-                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+<1> 1634    Yes   BUG: bad usercopy in fpa_set
+                  https://syzkaller.appspot.com/bug?extid=cb76c2983557a07cdb14
+<2> 350     Yes   INFO: task hung in lookup_slow (3)
+                  https://syzkaller.appspot.com/bug?extid=7cfc6a4f6b025f710423
+<3> 37      No    WARNING in delayed_work_timer_fn
+                  https://syzkaller.appspot.com/bug?extid=e13e654d315d4da1277c
+<4> 18      Yes   BUG: unable to handle kernel paging request in trans_pgd_create_copy
+                  https://syzkaller.appspot.com/bug?extid=2d1f5a94167d430a3bd7
+<5> 9       No    WARNING in do_sve_acc
+                  https://syzkaller.appspot.com/bug?extid=95ffb6a83b20ea7f4f55
 
 ---
 This report is generated by a bot. It may contain errors.
