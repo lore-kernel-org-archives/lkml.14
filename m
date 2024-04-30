@@ -1,76 +1,150 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0F041C89
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1602D3E478;
+	Tue, 30 Apr 2024 16:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714495832; cv=none; b=Ibs0MKRTLLnM6F+u2mYf8GDfkziBGvJqIScYBmpF+CaG7PUYSyQz4RDB+41yILXGy9Ue6RkaK+RhELew9XqbK2h/feSr5BY9qA6ATVuxNmZAAlv1lcxiUG4xXh44a42+UNXhvPko2G14OicvkpNvPsT3YHU44Dw1e75wpL+GHl8=
+	t=1714495838; cv=none; b=O+jDpQ3ZdoSZrmQDOnz/mkGDjCCOLH/XZPHfN4fzd/OuGtVphadR53/dwme8idrp6PaH3JZrszEiPCo+r2dQey/4Z/WT6uMgpmSaGIK/nrV9oONtLpXlRYYji8Tlx9b0XheHlyc2yrmcqLe6bmiTnFRDYAujB62RrOR90qrRyN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714495832; c=relaxed/simple;
-	bh=fPGBRAa9PRhY++IOfBaDFzp2Jm7p85+AAVua+geoEOc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R0bGuXS1TZV5gJhcDqNU0NP2u1bs0Jj3vyRokuuCVnZtk4v5GH7FRWtLWeWBJYJlB1LK06Or9Mu/1EdFHhuFfFicnyy/vVNR5jG31o/popDmb+hW9B0iCP84w9mOuXD4yBD4I1GDFgOeCqKHzUG8JUEKSKNzeSUvtWjXq44jcH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SjRUCGc6; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1714495838; c=relaxed/simple;
+	bh=+8BHDhVWwVu3GS/P6257Ar2vN5PR5hR2kbbOEXpfh2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Thb/Bc3PKN5aZ1YwRkOXHC0H7xVZpTMH38qc8oAZ2I1avwmUB1Li0OQsA6zdt375UcbKNQRnj6fEBMzxLztJ+WXQnxQWNYSg33QSbtG/arTU/MMSTIK45DGC/MJ3Bz97Ymsy810WhpD25BMdBnjdzEkEguL2uJLVqEtcF+IKsXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYw/+70G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SjRUCGc6"
-Message-ID: <54be9c58-3e14-42c1-8fe4-4b03b630d1ac@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714495828;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lFJZeubY0pH8XJB+NDsWHv5pVnm39sgZ/JqOBa9DJ8o=;
-	b=SjRUCGc6H5+LA2XHJrXgHFE0vv/DjJUP0keVPI9OKuB6DqHmWMChS69yqn7wJmwcfxxuWN
-	RQLJeBrsglP16SZJGsHEZSf+SmhZ63a2k4/kqu86Uafki6vsXRg+uRClV22PRQiZtI7wLd
-	jDVP8x2s8YvWFmuREo1yInmy7J9Pgjo=
-Date: Wed, 1 May 2024 00:50:20 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYw/+70G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 614C8C4AF19;
+	Tue, 30 Apr 2024 16:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714495837;
+	bh=+8BHDhVWwVu3GS/P6257Ar2vN5PR5hR2kbbOEXpfh2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GYw/+70GS/6au2WPmHmgN6Thwkz1jyh5nzE0aVBcHp5R8AGFkbDg/60lLzUON2yOr
+	 0AA7m/Ip0KSjiWokQcRrwufFC2GQiOyYI8peFJVct9i286zTth0Mx3Mj9cO6cYNz0y
+	 SsnJgtdb2oTF9hYObwXKidRNrvCby7x/CqBtrcDEy0JuLqL9XefxqiWRls+HVTudYd
+	 NCwaGXjTbF6CqXi0o++rYtH2vq+E4Q9L+3ZmetFrQsombmGf0Xw/J6tp2J7MTyt9MT
+	 dDdtGCrNSnpPOZ789+Ya2cdSdmR+c4ngEMCL9aSMWZq0RbZWWCB0a/0/avw3rGCUUt
+	 q+Zq1rc0nel8A==
+Date: Tue, 30 Apr 2024 17:50:33 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Petar Stoykov <pd.pstoykov@gmail.com>
+Cc: linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Angel Iglesias <ang.iglesiasg@gmail.com>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: iio: pressure: Add Sensirion SDP500
+Message-ID: <20240430-unnamable-wrench-16c9ad780df1@spud>
+References: <CADFWO8GC6RP6A7H-Cq5UZHfBY3VJZTCqssdZet61hH031euhwQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [v1,2/3] drm/panel: ili9341: Respect deferred probe
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Randy Dunlap <rdunlap@infradead.org>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg
- <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-References: <20240425142706.2440113-3-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <20240425142706.2440113-3-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-
-Hi,
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7vbJGUJ6hTxURdMU"
+Content-Disposition: inline
+In-Reply-To: <CADFWO8GC6RP6A7H-Cq5UZHfBY3VJZTCqssdZet61hH031euhwQ@mail.gmail.com>
 
 
-On 2024/4/25 22:26, Andy Shevchenko wrote:
-> GPIO controller might not be available when driver is being probed.
-> There are plenty of reasons why, one of which is deferred probe.
->
-> Since GPIOs are optional, return any error code we got to the upper
-> layer, including deferred probe. With that in mind, use dev_err_probe()
-> in order to avoid spamming the logs.
->
-> Fixes: 5a04227326b0 ("drm/panel: Add ilitek ili9341 panel driver")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+--7vbJGUJ6hTxURdMU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 30, 2024 at 05:27:20PM +0200, Petar Stoykov wrote:
+> From 60f5cc7f65b07124f19428a713c3bc33b9e4a7a7 Mon Sep 17 00:00:00 2001
+> From: Petar Stoykov <pd.pstoykov@gmail.com>
+> Date: Mon, 15 Jan 2024 14:29:25 +0100
+> Subject: [PATCH 1/3] dt-bindings: iio: pressure: Add Sensirion SDP500
+>=20
+> Sensirion SDP500 is a digital differential pressure sensor. It provides
+> a digital I2C output. Add devicetree bindings requiring the compatible
+> string and I2C slave address (reg).
+>=20
+> Signed-off-by: Petar Stoykov <pd.pstoykov@gmail.com>
+> ---
+>  .../iio/pressure/sensirion,sdp500.yaml        | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/iio/pressure/sensirion,sdp500.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/pressure/sensirion,sdp=
+500.yaml
+> b/Documentation/devicetree/bindings/iio/pressure/sensirion,sdp500.yaml
+> new file mode 100644
+> index 000000000000..3cdf17df7d52
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/pressure/sensirion,sdp500.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/pressure/sdp500.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: sdp500/sdp510 pressure sensor with I2C bus interface
+> +
+> +maintainers:
+> +  - Petar Stoykov <pd.pstoykov@gmail.com>
+> +
+> +description: |
+> +  Pressure sensor from Sensirion with I2C bus interface.
+> +  There is no software difference between sdp500 and sdp510.
 
-Reviewed-by: Sui Jingfeng <sui.jingfeng@linux.dev>
+I see no mention of the sdp510 elsewhere in this patch though..
+If you're trying to add support for both, then add a compatible for the
+sdp510 that falls back to the sdp500.
 
--- 
-Best regards,
-Sui
+> +
+> +properties:
+> +  compatible:
+> +    const: sensirion,sdp500
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
 
+Other than the fact that a fallback compatible might be required here,
+this looks like a candidate for trivial-devices.yaml.
+
+Cheers,
+Conor.
+
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +      pressure@40 {
+> +        compatible =3D "sensirion,sdp500";
+> +        reg =3D <0x40>;
+> +        vdd-supply =3D <&foo>;
+> +      };
+> +    };
+> --=20
+> 2.30.2
+
+--7vbJGUJ6hTxURdMU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjEhWQAKCRB4tDGHoIJi
+0iePAQCM8ZdEYabBqAZ3/N0J6SbfM2u1yiUsZg8ucnxWo5QYVAD/V4T5PyyBpItg
+Cao4KMUjPMkbCG/iloziUb8n6okN8w4=
+=tRMX
+-----END PGP SIGNATURE-----
+
+--7vbJGUJ6hTxURdMU--
