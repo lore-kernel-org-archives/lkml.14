@@ -1,94 +1,52 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED43B171E7F
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59732171E49;
+	Tue, 30 Apr 2024 13:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714483181; cv=none; b=T6SNQpYs5X+Yd+r0Sqh18MUqEGQyI3YqayNeRKSO6F06QjYmHydwGuYuIfWvbgaO/iYQNm1VF7qiRPaGY4+SiJohLnF66ERwBACOk93fWP4cwGIFNf0fo64R7GkqKEAX39AWplKE/zG/uP7v+Dv+KvqSA6idwt/F6nQxp1UpSqU=
+	t=1714483234; cv=none; b=RZcxYVIgB9LBNVVp/pklICeYTUob943GBaq5marRora/JscYkteSZ5YANRxX8AgUKYllDf1VsveXUuBi8zw0SXyou+w1feTlwoh+CNHQQTi5FTvP1CNym99PhM9oHUExGuH2C9HlsfVAivBhHXCSkO9SU3q8rijNSw18IBKGUEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714483181; c=relaxed/simple;
-	bh=lS7wUqdc0VdIs9OvvUYxXJpNZuU+GdXvqqQEbOZ+6HI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ESdeKL/wEoAG7TnlVjkagloDctmPutC0+7/OHgRac5HICZ8qIr1EOI6eyjayDhvwwM2KhOh50Uiz/lBuBUfGjIDQttqMfBpahRIicSreusMTyhXhG7ybXfFGovWEyLOjbRes0wvgstR/VkeWNQdVz81XtsNanZospVlVFSu49cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uHODIbNc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=f9be0gWD; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uHODIbNc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=f9be0gWD; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1714483234; c=relaxed/simple;
+	bh=F7Xc0i5LqTLUVcR9pEW59UMkv6QivjdXaw/5qjYRNRc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uQ4s3el1nCDVj91LxWmmD9F0SjpiJcnCm/Ih0RrGL9nngXHnAFFkDBoJsATH071e/fKdln6Vo1aZUkIvDcL1F/NerVNd+vT/JWB29I2k5psbxWht51dzRLjITwAn2M1R5wGD0Xy1qNTCho7xFySm6S9AoJPsrFQtO2AqEc4bUQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=2FRRSI97; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uHODIbNc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="f9be0gWD";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uHODIbNc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="f9be0gWD"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="2FRRSI97"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1714483231;
+	bh=F7Xc0i5LqTLUVcR9pEW59UMkv6QivjdXaw/5qjYRNRc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=2FRRSI97EyrjLf6V/HzElSGlP6DxmuRR3fimjBPDltPbzbX8opYM9qzG1IvHSf97I
+	 6e1CkM3HS06J4ApHqhNLWBvmFVr8CIHGrYGKNnvR9WwmC48FzmrTGtYrMX/Xw6CEtX
+	 RrFi5ZB2+5LBLljd+KWX71ciC4LYHFm+eRFp8KJveHQ8pISGOjMDTWODCUXnPE0LwP
+	 8Oj5NVFj1KKDOUeRIM5dn6LBLNNaUtRZl5JxfS3AhR4AxpnYoxkj0YqwhYrhWnsDSv
+	 JQ8Bgh+E/d6ArxPuVi20LO3H0cV4t0Z1nB3+ULeZlAi+g4UpWP6l6/pphVffx7B8RE
+	 UEpn2JcpmFQqA==
+Received: from apertis.home (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 398D41F7E7;
-	Tue, 30 Apr 2024 13:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714483178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cYsmsTTRr0wN/+5f5fuIh8FMdmRxcT7Afz3setUoM2s=;
-	b=uHODIbNcJXuVyuxNXawudk3JJ59yo8h2edon2YFFlVjA/Fi03OtL+3FOLZNIi9o29gaJvO
-	9oGaUol4SR42+RJZG1Rqsr9qoe9Ckhy06zdhvW+Kk404Va4c439d2Gi6TL3K8eaPP/ShLm
-	XlMWZwxYurwcjBnkEKMs/Sv99ztOn90=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714483178;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cYsmsTTRr0wN/+5f5fuIh8FMdmRxcT7Afz3setUoM2s=;
-	b=f9be0gWDoXkYo8tZsyNNLEDRWVgH7PFZJ1kg1PE17MCgPrVn0/X35748XG0Cl9lJwJFUGs
-	EhZnbXpFhRZsewDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=uHODIbNc;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=f9be0gWD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714483178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cYsmsTTRr0wN/+5f5fuIh8FMdmRxcT7Afz3setUoM2s=;
-	b=uHODIbNcJXuVyuxNXawudk3JJ59yo8h2edon2YFFlVjA/Fi03OtL+3FOLZNIi9o29gaJvO
-	9oGaUol4SR42+RJZG1Rqsr9qoe9Ckhy06zdhvW+Kk404Va4c439d2Gi6TL3K8eaPP/ShLm
-	XlMWZwxYurwcjBnkEKMs/Sv99ztOn90=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714483178;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cYsmsTTRr0wN/+5f5fuIh8FMdmRxcT7Afz3setUoM2s=;
-	b=f9be0gWDoXkYo8tZsyNNLEDRWVgH7PFZJ1kg1PE17MCgPrVn0/X35748XG0Cl9lJwJFUGs
-	EhZnbXpFhRZsewDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 28517133A7;
-	Tue, 30 Apr 2024 13:19:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6zJnCOrvMGZ5MAAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Tue, 30 Apr 2024 13:19:38 +0000
-From: Daniel Wagner <dwagner@suse.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	James Smart <james.smart@broadcom.com>,
-	Hannes Reinecke <hare@suse.de>,
-	linux-nvme@lists.infradead.org,
+	(Authenticated sender: jmassot)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BC2F137813E3;
+	Tue, 30 Apr 2024 13:20:30 +0000 (UTC)
+From: Julien Massot <julien.massot@collabora.com>
+To: linux-media@vger.kernel.org,
+	sakari.ailus@iki.fi
+Cc: devicetree@vger.kernel.org,
+	kernel@collabora.com,
 	linux-kernel@vger.kernel.org,
-	Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v7 4/5] nvme-fabrics: short-circuit reconnect retries
-Date: Tue, 30 Apr 2024 15:19:27 +0200
-Message-ID: <20240430131928.29766-5-dwagner@suse.de>
+	mchehab@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	Julien Massot <julien.massot@collabora.com>
+Subject: [PATCH v7 0/5] Add support for MAX96714/F and MAX96717/F GMSL2 ser/des
+Date: Tue, 30 Apr 2024 15:19:26 +0200
+Message-ID: <20240430131931.166012-1-julien.massot@collabora.com>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240430131928.29766-1-dwagner@suse.de>
-References: <20240430131928.29766-1-dwagner@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,287 +54,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:email]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 398D41F7E7
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -5.01
 
-From: Hannes Reinecke <hare@suse.de>
+Change since v6:
+  - Remove mention of C-PHY for MAX96717, this serializer is D-PHY only
+  - Remove bus-type requirement for MAX96717
+  - Minor changes requested by Sakari
+  - Workaround a MAX96717 issue, which occurs when stopping
+    the CSI source before stopping the MAX96717 CSI receiver.
 
-Returning a nvme status from nvme_tcp_setup_ctrl() indicates that the
-association was established and we have received a status from the
-controller; consequently we should honour the DNR bit. If not any future
-reconnect attempts will just return the same error, so we can
-short-circuit the reconnect attempts and fail the connection directly.
+Power management is not included in this patchset. The GMSL link is
+not always resuming when the deserializer is suspended without
+suspending the serializer.
 
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-[dwagner: - extended nvme_should_reconnect]
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
- drivers/nvme/host/fabrics.c | 14 +++++++++++++-
- drivers/nvme/host/fabrics.h |  2 +-
- drivers/nvme/host/fc.c      |  4 +---
- drivers/nvme/host/rdma.c    | 19 ++++++++++++-------
- drivers/nvme/host/tcp.c     | 22 ++++++++++++++--------
- 5 files changed, 41 insertions(+), 20 deletions(-)
+Change since v5:
+ - Reverse fallback logic: max9671{4,7} can fallback to max9671{4,7}F
+ - use const instead of enum for max9671{4,7}f compatible as suggested
 
-diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
-index f7eaf9580b4f..36d3e2ff27f3 100644
---- a/drivers/nvme/host/fabrics.c
-+++ b/drivers/nvme/host/fabrics.c
-@@ -559,8 +559,20 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, u16 qid)
- }
- EXPORT_SYMBOL_GPL(nvmf_connect_io_queue);
- 
--bool nvmf_should_reconnect(struct nvme_ctrl *ctrl)
-+/*
-+ * Evaluate the status information returned by the transport in order to decided
-+ * if a reconnect attempt should be scheduled.
-+ *
-+ * Do not retry when:
-+ *
-+ * - the DNR bit is set and the specification states no further connect
-+ *   attempts with the same set of paramenters should be attempted.
-+ */
-+bool nvmf_should_reconnect(struct nvme_ctrl *ctrl, int status)
- {
-+	if (status > 0 && (status & NVME_SC_DNR))
-+		return false;
-+
- 	if (ctrl->opts->max_reconnects == -1 ||
- 	    ctrl->nr_reconnects < ctrl->opts->max_reconnects)
- 		return true;
-diff --git a/drivers/nvme/host/fabrics.h b/drivers/nvme/host/fabrics.h
-index 37c974c38dcb..602135910ae9 100644
---- a/drivers/nvme/host/fabrics.h
-+++ b/drivers/nvme/host/fabrics.h
-@@ -223,7 +223,7 @@ int nvmf_register_transport(struct nvmf_transport_ops *ops);
- void nvmf_unregister_transport(struct nvmf_transport_ops *ops);
- void nvmf_free_options(struct nvmf_ctrl_options *opts);
- int nvmf_get_address(struct nvme_ctrl *ctrl, char *buf, int size);
--bool nvmf_should_reconnect(struct nvme_ctrl *ctrl);
-+bool nvmf_should_reconnect(struct nvme_ctrl *ctrl, int status);
- bool nvmf_ip_options_match(struct nvme_ctrl *ctrl,
- 		struct nvmf_ctrl_options *opts);
- void nvmf_set_io_queues(struct nvmf_ctrl_options *opts, u32 nr_io_queues,
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index a5b29e9ad342..f0b081332749 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -3310,12 +3310,10 @@ nvme_fc_reconnect_or_delete(struct nvme_fc_ctrl *ctrl, int status)
- 		dev_info(ctrl->ctrl.device,
- 			"NVME-FC{%d}: reset: Reconnect attempt failed (%d)\n",
- 			ctrl->cnum, status);
--		if (status > 0 && (status & NVME_SC_DNR))
--			recon = false;
- 	} else if (time_after_eq(jiffies, rport->dev_loss_end))
- 		recon = false;
- 
--	if (recon && nvmf_should_reconnect(&ctrl->ctrl)) {
-+	if (recon && nvmf_should_reconnect(&ctrl->ctrl, status)) {
- 		if (portptr->port_state == FC_OBJSTATE_ONLINE)
- 			dev_info(ctrl->ctrl.device,
- 				"NVME-FC{%d}: Reconnect attempt in %ld "
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 366f0bb4ebfc..821ab3e0fd3b 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -982,7 +982,8 @@ static void nvme_rdma_free_ctrl(struct nvme_ctrl *nctrl)
- 	kfree(ctrl);
- }
- 
--static void nvme_rdma_reconnect_or_remove(struct nvme_rdma_ctrl *ctrl)
-+static void nvme_rdma_reconnect_or_remove(struct nvme_rdma_ctrl *ctrl,
-+					  int status)
- {
- 	enum nvme_ctrl_state state = nvme_ctrl_state(&ctrl->ctrl);
- 
-@@ -992,7 +993,7 @@ static void nvme_rdma_reconnect_or_remove(struct nvme_rdma_ctrl *ctrl)
- 		return;
- 	}
- 
--	if (nvmf_should_reconnect(&ctrl->ctrl)) {
-+	if (nvmf_should_reconnect(&ctrl->ctrl, status)) {
- 		dev_info(ctrl->ctrl.device, "Reconnecting in %d seconds...\n",
- 			ctrl->ctrl.opts->reconnect_delay);
- 		queue_delayed_work(nvme_wq, &ctrl->reconnect_work,
-@@ -1104,10 +1105,12 @@ static void nvme_rdma_reconnect_ctrl_work(struct work_struct *work)
- {
- 	struct nvme_rdma_ctrl *ctrl = container_of(to_delayed_work(work),
- 			struct nvme_rdma_ctrl, reconnect_work);
-+	int ret;
- 
- 	++ctrl->ctrl.nr_reconnects;
- 
--	if (nvme_rdma_setup_ctrl(ctrl, false))
-+	ret = nvme_rdma_setup_ctrl(ctrl, false);
-+	if (ret)
- 		goto requeue;
- 
- 	dev_info(ctrl->ctrl.device, "Successfully reconnected (%d attempts)\n",
-@@ -1120,7 +1123,7 @@ static void nvme_rdma_reconnect_ctrl_work(struct work_struct *work)
- requeue:
- 	dev_info(ctrl->ctrl.device, "Failed reconnect attempt %d\n",
- 			ctrl->ctrl.nr_reconnects);
--	nvme_rdma_reconnect_or_remove(ctrl);
-+	nvme_rdma_reconnect_or_remove(ctrl, ret);
- }
- 
- static void nvme_rdma_error_recovery_work(struct work_struct *work)
-@@ -1145,7 +1148,7 @@ static void nvme_rdma_error_recovery_work(struct work_struct *work)
- 		return;
- 	}
- 
--	nvme_rdma_reconnect_or_remove(ctrl);
-+	nvme_rdma_reconnect_or_remove(ctrl, 0);
- }
- 
- static void nvme_rdma_error_recovery(struct nvme_rdma_ctrl *ctrl)
-@@ -2169,6 +2172,7 @@ static void nvme_rdma_reset_ctrl_work(struct work_struct *work)
- {
- 	struct nvme_rdma_ctrl *ctrl =
- 		container_of(work, struct nvme_rdma_ctrl, ctrl.reset_work);
-+	int ret;
- 
- 	nvme_stop_ctrl(&ctrl->ctrl);
- 	nvme_rdma_shutdown_ctrl(ctrl, false);
-@@ -2179,14 +2183,15 @@ static void nvme_rdma_reset_ctrl_work(struct work_struct *work)
- 		return;
- 	}
- 
--	if (nvme_rdma_setup_ctrl(ctrl, false))
-+	ret = nvme_rdma_setup_ctrl(ctrl, false);
-+	if (ret)
- 		goto out_fail;
- 
- 	return;
- 
- out_fail:
- 	++ctrl->ctrl.nr_reconnects;
--	nvme_rdma_reconnect_or_remove(ctrl);
-+	nvme_rdma_reconnect_or_remove(ctrl, ret);
- }
- 
- static const struct nvme_ctrl_ops nvme_rdma_ctrl_ops = {
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index fdbcdcedcee9..3e0c33323320 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -2155,7 +2155,8 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
- 	nvme_tcp_destroy_io_queues(ctrl, remove);
- }
- 
--static void nvme_tcp_reconnect_or_remove(struct nvme_ctrl *ctrl)
-+static void nvme_tcp_reconnect_or_remove(struct nvme_ctrl *ctrl,
-+		int status)
- {
- 	enum nvme_ctrl_state state = nvme_ctrl_state(ctrl);
- 
-@@ -2165,13 +2166,14 @@ static void nvme_tcp_reconnect_or_remove(struct nvme_ctrl *ctrl)
- 		return;
- 	}
- 
--	if (nvmf_should_reconnect(ctrl)) {
-+	if (nvmf_should_reconnect(ctrl, status)) {
- 		dev_info(ctrl->device, "Reconnecting in %d seconds...\n",
- 			ctrl->opts->reconnect_delay);
- 		queue_delayed_work(nvme_wq, &to_tcp_ctrl(ctrl)->connect_work,
- 				ctrl->opts->reconnect_delay * HZ);
- 	} else {
--		dev_info(ctrl->device, "Removing controller...\n");
-+		dev_info(ctrl->device, "Removing controller (%d)...\n",
-+			 status);
- 		nvme_delete_ctrl(ctrl);
- 	}
- }
-@@ -2252,10 +2254,12 @@ static void nvme_tcp_reconnect_ctrl_work(struct work_struct *work)
- 	struct nvme_tcp_ctrl *tcp_ctrl = container_of(to_delayed_work(work),
- 			struct nvme_tcp_ctrl, connect_work);
- 	struct nvme_ctrl *ctrl = &tcp_ctrl->ctrl;
-+	int ret;
- 
- 	++ctrl->nr_reconnects;
- 
--	if (nvme_tcp_setup_ctrl(ctrl, false))
-+	ret = nvme_tcp_setup_ctrl(ctrl, false);
-+	if (ret)
- 		goto requeue;
- 
- 	dev_info(ctrl->device, "Successfully reconnected (%d attempt)\n",
-@@ -2268,7 +2272,7 @@ static void nvme_tcp_reconnect_ctrl_work(struct work_struct *work)
- requeue:
- 	dev_info(ctrl->device, "Failed reconnect attempt %d\n",
- 			ctrl->nr_reconnects);
--	nvme_tcp_reconnect_or_remove(ctrl);
-+	nvme_tcp_reconnect_or_remove(ctrl, ret);
- }
- 
- static void nvme_tcp_error_recovery_work(struct work_struct *work)
-@@ -2295,7 +2299,7 @@ static void nvme_tcp_error_recovery_work(struct work_struct *work)
- 		return;
- 	}
- 
--	nvme_tcp_reconnect_or_remove(ctrl);
-+	nvme_tcp_reconnect_or_remove(ctrl, 0);
- }
- 
- static void nvme_tcp_teardown_ctrl(struct nvme_ctrl *ctrl, bool shutdown)
-@@ -2315,6 +2319,7 @@ static void nvme_reset_ctrl_work(struct work_struct *work)
- {
- 	struct nvme_ctrl *ctrl =
- 		container_of(work, struct nvme_ctrl, reset_work);
-+	int ret;
- 
- 	nvme_stop_ctrl(ctrl);
- 	nvme_tcp_teardown_ctrl(ctrl, false);
-@@ -2328,14 +2333,15 @@ static void nvme_reset_ctrl_work(struct work_struct *work)
- 		return;
- 	}
- 
--	if (nvme_tcp_setup_ctrl(ctrl, false))
-+	ret = nvme_tcp_setup_ctrl(ctrl, false);
-+	if (ret)
- 		goto out_fail;
- 
- 	return;
- 
- out_fail:
- 	++ctrl->nr_reconnects;
--	nvme_tcp_reconnect_or_remove(ctrl);
-+	nvme_tcp_reconnect_or_remove(ctrl, ret);
- }
- 
- static void nvme_tcp_stop_ctrl(struct nvme_ctrl *ctrl)
+Change since v4:
+ - Add support for MAX96717 and MAX96714 and use them as a fallback for
+   MAX96717F and MAX96714F respectively
+ - The drivers are now compatible with MAX96717 and MAX96714 since no change in
+   the logic is needed
+ - Reference 'i2c-gate' instead of 'i2c-controller' in the bindings
+
+Change since v3:
+- bindings
+  - Renamed bindings to drop the 'f' suffix
+  - Add bus type to MAX96717 and remove from MAX9674
+  - Add lane-polarities to both bindings
+
+- drivers
+  - Address changes requested by Sakari in v3
+  - use v4l2_subdev_s_stream_helper for MAX96714
+  - do not init regmap twice in the MAX96714 driver
+  - Fix compilations on 32 bits platforms
+
+Change since v2:
+- Convert drivers to use CCI helpers
+- Use generic node name
+- Use 'powerdown' as gpio name instead of 'enable'
+- Add pattern generator support for MAX96714
+
+These patches add support for Maxim MAX96714F deserializer and
+MAX96717F serializer.
+
+MAX96714F has one GMSL2 input port and one CSI2 4 lanes output port,
+MAX96717F has one CSI2 input port and one GMSL2 output port.
+
+The drivers support the tunnel mode where all the
+CSI2 traffic coming from an imager is replicated through the deserializer
+output port.
+
+Both MAX96714F and MAX96717F are limited to a 3Gbps forward link rate
+leaving a maximum of 2.6Gbps for the video payload.
+
+Julien Massot (9):
+  dt-bindings: media: add Maxim MAX96717 GMSL2 Serializer
+  dt-bindings: media: add Maxim MAX96714 GMSL2 Deserializer
+  media: i2c: add MAX96717 driver
+  media: i2c: add MAX96714 driver
+  drivers: media: max96717: stop the csi receiver before the source
+
+ .../bindings/media/i2c/maxim,max96714.yaml    |  174 +++
+ .../bindings/media/i2c/maxim,max96717.yaml    |  157 +++
+ MAINTAINERS                                   |   14 +
+ drivers/media/i2c/Kconfig                     |   34 +
+ drivers/media/i2c/Makefile                    |    2 +
+ drivers/media/i2c/max96714.c                  | 1024 +++++++++++++++++
+ drivers/media/i2c/max96717.c                  |  927 +++++++++++++++
+ 7 files changed, 2332 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+ create mode 100644 drivers/media/i2c/max96714.c
+ create mode 100644 drivers/media/i2c/max96717.c
+
 -- 
 2.44.0
 
