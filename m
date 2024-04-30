@@ -1,126 +1,241 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D458141995;
-	Tue, 30 Apr 2024 12:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4A8145FEA;
+	Tue, 30 Apr 2024 12:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714478763; cv=none; b=EuZvLhHMl9XvB6qkHIQtQz7OcDy2XxbkB2phDwJJMln4QstQxiqnJC4Fhlsyj55nJxg9R0VUXPLhSva0EC9IzGGMwOSotpJDHfdgkgMOAfj7MZuVxacjZi+cK1R+DYW0bEtNrl5FOELn/ehx72u0EsRcoUBJ0ktp7IGsMwvKzz8=
+	t=1714478767; cv=none; b=L6MQtfjuRmmh0DCuzMYpz1a6pWzzpdM4UaliaA8Vj/OjV7owBYZyc49UA3R9y5L4SbJ44syNOv8hbdLfGrIeqASZ+/Xq2F9Tqq7KnHrc5Yi3TTQAiiHR8l+HY4UdsXnzCebHgbtOVgh6ZbmwakBxqnbJOtVxazrRQVihC6dUN4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714478763; c=relaxed/simple;
-	bh=nRD3dR3XiS4O2pkMTYgKRZdJOJRmKsBkVoKSFraFbCQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qVnl8tItWFTw7zbRa2WYP/DP3PuGzaBbxojj0fukV0MY2YteyXL5LA5hYdTBXfg/h6piXIIcLF8/yX5c+5vaulIIuRPIPPaHl+k4uyba8VRUbiSM7fsiaD/fu7ZPR15iZnZ9dcGpXJoURToxWt9/oeRQyAXHavFURhlrWsbfM4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HvvdYvaH; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvvdYvaH"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51e1b9fba81so1610569e87.3;
-        Tue, 30 Apr 2024 05:06:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714478760; x=1715083560; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XXZzTP12Y0hh4c4gYikxBkSiOjWjQelhhWRiIzMHGTs=;
-        b=HvvdYvaHsVXAuN1zYbelFwbvwAnmYwP3xCEJloO8gipAB/Yp6hXUk4Et5XpmPmOTb1
-         o1KYv1Cr1u4i4aS3Pcj4MWF49KmFFH2vbnkgMEC1OySoh0xjGqOTTbSVLH6DKIP+4Mhq
-         kA2uBHw9TORn0+eOyiO5IKQHNv1bNM/95yQG2bB9TUvxJcAurcH+pYS5afJApL7zk0yB
-         QFzauopdsX852skMpWMazIatnAgnKwnpufuZo8K4affToyYd7N5Gkb6Dtu4+OPUsIygn
-         Z9UjEIRcHnB6qH0dZGSP51XhffEGdAAZE5BE+ubOmmnFTPpB//Ct++frmAADIpydlwPK
-         S+Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714478760; x=1715083560;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XXZzTP12Y0hh4c4gYikxBkSiOjWjQelhhWRiIzMHGTs=;
-        b=T1zh/XZUvPxS6aNU6RS6fzzAdFR/C/VPVLNIKoXBhWrW88177xz3Fn5nbvG2+gBsxA
-         PXJM2/wOEfugffgS00MZHpPSPuW4IekWK/g8tCWmdhsQUF7HyMHvjI6YeZMKny0vuT+W
-         7I48zx9LNbK28LuIz9Ke7Bv5s63TiCnZ5tPuZNVy82mT92tM4SvmwJTt22i/9XSH3UjP
-         i39B5ZXxRTNpa/ZMfzK18PJKZ272yNNJJEowa4YsUXaVocMq/pJDL1UqJaqPQ15w4ATt
-         WvS3d4uKncNJLHDABcd+FbPavt1xbKj4ge3Ko7BiTmpozdQhw1667zJu9JGSL8ctSOKI
-         7bAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUkV2hBuarJQlS1ZfetzQQhr5cTwyv81PhjDk4PCN9wIaF2w2NXhZ9O24EXpSaaI4zMfZRcPgrKRvP6xcYqlc5uGuo/EwIsHqiWw7cPi7xeeoFcps+eejQBgcZtsY2MnIt2kO3yvd6C
-X-Gm-Message-State: AOJu0YxwdQifq68EWttDsQslDcBxZkd0giV3l6dRpjj+XUqclewE1GXV
-	9s9aYaayqhUXoviuHwPCeoVFvVzSaTFebwMsDvGy0Ls5P3BMtvAC
-X-Google-Smtp-Source: AGHT+IEOERiyJM9ihi0i3SchdhZahYeOxvdDGTzEg0Ou9/KbolawOiew6JV38L4WA7hzczR15+SlGg==
-X-Received: by 2002:a19:5219:0:b0:51e:2e0a:c38c with SMTP id m25-20020a195219000000b0051e2e0ac38cmr2248733lfb.45.1714478759717;
-        Tue, 30 Apr 2024 05:05:59 -0700 (PDT)
-Received: from debian.fritz.box ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id r21-20020a05600c35d500b0041bf45c0665sm11054324wmq.15.2024.04.30.05.05.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 05:05:59 -0700 (PDT)
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: 
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Andrew Hepp <andrew.hepp@ahepp.dev>,
-	Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] iio: temperature: mcp9600: Fix line exceeding 80 columns
-Date: Tue, 30 Apr 2024 14:05:34 +0200
-Message-Id: <20240430120535.46097-5-dima.fedrau@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240430120535.46097-1-dima.fedrau@gmail.com>
-References: <20240430120535.46097-1-dima.fedrau@gmail.com>
+	s=arc-20240116; t=1714478767; c=relaxed/simple;
+	bh=rd5lbS+IalayXX6x4yeF3tUq8etrw3SCMH7NlmYfv20=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=BB1XwfAErG35J+OUQQMAnkYKeUpZVVosU7H3RUwkghgonU7aiJQST/0KMouTfFpinkHaSItDjxIllF3AFpLUt6dVPP6qb0uSrslVHnZGMm061kVljD7z82tJAoEOMEp1YeBcx9rke3B+Ir79DJnb5vmM9i73FWoEiLkhzbllTqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VTJjj6MKHzvRBm;
+	Tue, 30 Apr 2024 20:02:49 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 805DB140485;
+	Tue, 30 Apr 2024 20:05:59 +0800 (CST)
+Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
+ (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 30 Apr
+ 2024 20:05:59 +0800
+Subject: Re: [PATCH net-next v2 09/15] mm: page_frag: reuse MSB of 'size'
+ field for pfmemalloc
+To: Alexander Duyck <alexander.duyck@gmail.com>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, <linux-mm@kvack.org>
+References: <20240415131941.51153-1-linyunsheng@huawei.com>
+ <20240415131941.51153-10-linyunsheng@huawei.com>
+ <37d012438d4850c3d7090e784e09088d02a2780c.camel@gmail.com>
+ <8b7361c2-6f45-72e8-5aca-92e8a41a7e5e@huawei.com>
+ <17066b6a4f941eea3ef567767450b311096da22b.camel@gmail.com>
+ <c45fdd75-44be-82a6-8e47-42bbc5ee4795@huawei.com>
+ <efd21f1d-8c67-b060-5ad2-0d500fac2ba6@huawei.com>
+ <CAKgT0UfQWEkaWM_mfk=FhCErTL_ZS3RL6x3iMzPdEP3FD+9zZQ@mail.gmail.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <ceb36a97-31b5-62df-a216-8598210bbba8@huawei.com>
+Date: Tue, 30 Apr 2024 20:05:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKgT0UfQWEkaWM_mfk=FhCErTL_ZS3RL6x3iMzPdEP3FD+9zZQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-Fix line exceeding 80 columns by introducing new variable "dev" and
-apply it wherever possible in mcp9600_probe.
+On 2024/4/29 22:49, Alexander Duyck wrote:
 
-Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
----
- drivers/iio/temperature/mcp9600.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+...
 
-diff --git a/drivers/iio/temperature/mcp9600.c b/drivers/iio/temperature/mcp9600.c
-index 4003bc8c83d3..cb1c1c1c361d 100644
---- a/drivers/iio/temperature/mcp9600.c
-+++ b/drivers/iio/temperature/mcp9600.c
-@@ -89,19 +89,20 @@ static const struct iio_info mcp9600_info = {
- 
- static int mcp9600_probe(struct i2c_client *client)
- {
-+	struct device *dev = &client->dev;
- 	struct iio_dev *indio_dev;
- 	struct mcp9600_data *data;
- 	int ret;
- 
- 	ret = i2c_smbus_read_byte_data(client, MCP9600_DEVICE_ID);
- 	if (ret < 0)
--		return dev_err_probe(&client->dev, ret, "Failed to read device ID\n");
-+		return dev_err_probe(dev, ret, "Failed to read device ID\n");
- 
- 	if (ret != MCP9600_DEVICE_ID_MCP9600)
--		dev_warn(&client->dev, "Expected ID %x, got %x\n",
--				MCP9600_DEVICE_ID_MCP9600, ret);
-+		dev_warn(dev, "Expected ID %x, got %x\n",
-+			 MCP9600_DEVICE_ID_MCP9600, ret);
- 
--	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
-@@ -114,7 +115,7 @@ static int mcp9600_probe(struct i2c_client *client)
- 	indio_dev->channels = mcp9600_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(mcp9600_channels);
- 
--	return devm_iio_device_register(&client->dev, indio_dev);
-+	return devm_iio_device_register(dev, indio_dev);
- }
- 
- static const struct i2c_device_id mcp9600_id[] = {
--- 
-2.39.2
+>>>
+>>
+>> After considering a few different layouts for 'struct page_frag_cache',
+>> it seems the below is more optimized:
+>>
+>> struct page_frag_cache {
+>>         /* page address & pfmemalloc & order */
+>>         void *va;
+> 
+> I see. So basically just pack the much smaller bitfields in here.
+> 
+>>
+>> #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE) && (BITS_PER_LONG <= 32)
+>>         u16 pagecnt_bias;
+>>         u16 size;
+>> #else
+>>         u32 pagecnt_bias;
+>>         u32 size;
+>> #endif
+>> }
+>>
+>> The lower bits of 'va' is or'ed with the page order & pfmemalloc instead
+>> of offset or pagecnt_bias, so that we don't have to add more checking
+>> for handling the problem of not having enough space for offset or
+>> pagecnt_bias for PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE and 32 bits system.
+>> And page address & pfmemalloc & order is unchanged for the same page
+>> in the same 'page_frag_cache' instance, it makes sense to fit them
+>> together.
+>>
+>> Also, it seems it is better to replace 'offset' with 'size', which indicates
+>> the remaining size for the cache in a 'page_frag_cache' instance, and we
+>> might be able to do a single 'size >= fragsz' checking for the case of cache
+>> being enough, which should be the fast path if we ensure size is zoro when
+>> 'va' == NULL.
+> 
+> I'm not sure the rename to size is called for as it is going to be
+> confusing. Maybe something like "remaining"?
 
+Yes, using 'size' for that is a bit confusing.
+Beside the above 'remaining', by googling, it seems we may have below
+options too:
+'residual','unused', 'surplus'
+
+> 
+>> Something like below:
+>>
+>> #define PAGE_FRAG_CACHE_ORDER_MASK      GENMASK(1, 0)
+>> #define PAGE_FRAG_CACHE_PFMEMALLOC_BIT  BIT(2)
+> 
+> The only downside is that it is ossifying things so that we can only
+
+There is 12 bits that is always useful, we can always extend ORDER_MASK
+to more bits if lager order number is needed.
+
+> ever do order 3 as the maximum cache size. It might be better to do a
+> full 8 bytes as on x86 it would just mean accessing the low end of a
+> 16b register. Then you can have pfmemalloc at bit 8.
+
+I am not sure I understand the above as it seems we may have below option:
+1. Use somthing like the above ORDER_MASK and PFMEMALLOC_BIT.
+2. Use bitfield as something like below:
+
+unsigned long va:20;---or 52 for 64bit system
+unsigned long pfmemalloc:1
+unsigned long order:11;
+
+Or is there a better idea in your mind?
+
+> 
+>> struct page_frag_cache {
+>>         /* page address & pfmemalloc & order */
+>>         void *va;
+>>
+> 
+> When you start combining things like this we normally would convert va
+> to an unsigned long.
+
+Ack.
+
+> 
+>> #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE) && (BITS_PER_LONG <= 32)
+>>         u16 pagecnt_bias;
+>>         u16 size;
+>> #else
+>>         u32 pagecnt_bias;
+>>         u32 size;
+>> #endif
+>> };
+>>
+>>
+>> static void *__page_frag_cache_refill(struct page_frag_cache *nc,
+>>                                       unsigned int fragsz, gfp_t gfp_mask,
+>>                                       unsigned int align_mask)
+>> {
+>>         gfp_t gfp = gfp_mask;
+>>         struct page *page;
+>>         void *va;
+>>
+>> #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>>         /* Ensure free_unref_page() can be used to free the page fragment */
+>>         BUILD_BUG_ON(PAGE_FRAG_CACHE_MAX_ORDER > PAGE_ALLOC_COSTLY_ORDER);
+>>
+>>         gfp_mask = (gfp_mask & ~__GFP_DIRECT_RECLAIM) |  __GFP_COMP |
+>>                    __GFP_NOWARN | __GFP_NORETRY | __GFP_NOMEMALLOC;
+>>         page = alloc_pages_node(NUMA_NO_NODE, gfp_mask,
+>>                                 PAGE_FRAG_CACHE_MAX_ORDER);
+>>         if (likely(page)) {
+>>                 nc->size = PAGE_FRAG_CACHE_MAX_SIZE - fragsz;
+> 
+> I wouldn't pass fragsz here. Ideally we keep this from having to get
+> pulled directly into the allocator and can instead treat this as a
+> pristine page. We can do the subtraction further down in the actual
+> frag alloc call.
+
+Yes for the maintanability point of view.
+But for performance point of view, doesn't it make sense to do the
+subtraction here, as doing the subtraction in the actual frag alloc
+call may involve more load/store operation to do the subtraction?
+
+> 
+>>                 va = page_address(page);
+>>                 nc->va = (void *)((unsigned long)va |
+>>                                   PAGE_FRAG_CACHE_MAX_ORDER |
+>>                                   (page_is_pfmemalloc(page) ?
+>>                                    PAGE_FRAG_CACHE_PFMEMALLOC_BIT : 0));
+>>                 page_ref_add(page, PAGE_FRAG_CACHE_MAX_SIZE);
+>>                 nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE;
+>>                 return va;
+>>         }
+>> #endif
+>>         page = alloc_pages_node(NUMA_NO_NODE, gfp, 0);
+>>         if (likely(page)) {
+>>                 nc->size = PAGE_SIZE - fragsz;
+>>                 va = page_address(page);
+>>                 nc->va = (void *)((unsigned long)va |
+>>                                   (page_is_pfmemalloc(page) ?
+>>                                    PAGE_FRAG_CACHE_PFMEMALLOC_BIT : 0));
+>>                 page_ref_add(page, PAGE_FRAG_CACHE_MAX_SIZE);
+>>                 nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE;
+>>                 return va;
+>>         }
+>>
+>>         nc->va = NULL;
+>>         nc->size = 0;
+>>         return NULL;
+>> }
+>>
+>> void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
+>>                                  unsigned int fragsz, gfp_t gfp_mask,
+>>                                  unsigned int align_mask)
+>> {
+>> #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>>         unsigned long page_order;
+>> #endif
+>>         unsigned long page_size;
+>>         unsigned long size;
+>>         struct page *page;
+>>         void *va;
+>>
+>>         size = nc->size & align_mask;
+>>         va = nc->va;
+>> #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>>         page_order = (unsigned long)va & PAGE_FRAG_CACHE_ORDER_MASK;
+>>         page_size = PAGE_SIZE << page_order;
+>> #else
+>>         page_size = PAGE_SIZE;
+>> #endif
+> 
+> So I notice you got rid of the loops within the function. One of the
+> reasons for structuring it the way it was is to enable better code
+> caching. By unfolding the loops you are increasing the number of
+> instructions that have to be fetched and processed in order to
+> allocate the buffers.
+
+I am not sure I understand what does 'the loops' means here, as there
+is not 'while' or 'for' here. I suppose you are referring to the 'goto'
+here?
+
+> 
