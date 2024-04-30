@@ -1,206 +1,163 @@
-Received: from out203-205-221-192.mail.qq.com (out203-205-221-192.mail.qq.com [203.205.221.192])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E6F12CD90;
-	Tue, 30 Apr 2024 13:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.192
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F17171E49;
+	Tue, 30 Apr 2024 13:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714483660; cv=none; b=FXbkORVg+ZJ0XUnLb2R7bXDe7g4d1g0cJCIyJObRDVUuH9Pic7dZDVZ5YifDd6gwH5ALOa+lFw6RyJLRCE9NT86q0p3mo1+RXwFPqOG9eEr73xtMPVBG/iqcMYS9tH+gotztHcbRrW/2SaqPI30Ssif7eWNkdx2cZoW/5jhAe/s=
+	t=1714483724; cv=none; b=S4zVEvgb3FWBrl+ryvS/T6knlCvCZu90PfBz1/dTBYu3n1sfzE7+VE1R7WpIdsS+IUdw/QOoNZfYXmFH2HXUQ6/Z/1Tnhv4XXFHI2REaFm1zeO27qfFreoo7LR7RYBVa9742iGfSBlXlwfoUs9IspbvtfKulapEG9m9mZOcEWzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714483660; c=relaxed/simple;
-	bh=Upd0uZ+rILIoqrP7UwNwjenI04CLhFcHiFAA6RSjlpQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=kTU4MLsQKsfJ2dtwENOHenmmlTQ+QyyaHYOzmsq/AfooIAZXqY9J5IgDzMtUkd/DFbCCVb/JL3xC5fbkcBCfyqVuuWM28vxzM7zHIZfo2be43/gjN875MfoVPcAfmuB38TR0PeBmXfkLQW2C3NaWZnwd0K1EqqgjEdInK60hSEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=YMeY0niL; arc=none smtp.client-ip=203.205.221.192
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1714483724; c=relaxed/simple;
+	bh=htYB9Po1AVLCw4Jh6B2CAoEV3kz532qWQEyUEtUfCYU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=B2bVvbYOH9zvtSH+qle4mCTWv9fZoh78jVG8XnffFpCmJhe/CZ9JFlUaVxJYyMB3JkVdYZPhN2t/13t+rm+PbPQlOIKlullbvdcMvIYE1UjQ6+ESwlb6BPBdsjegz5YhKtMtckpneNt++CF7KVM+khpsQRpBUeJmQXy4kDSdq8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=21FiEKPs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hDx+F4P/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="YMeY0niL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1714483649; bh=pZTVlx2s1vNyEH6TmvcHFEZALJwqesPQAcM4Ml3108o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YMeY0niLkSqzBFNzXwMURVfZudTddOyjq5gkqYb8Pc366QFIoIPqPsgtzN+PE8aSh
-	 bu4fFeYOOPxywM25G8fHDmalYpdpbGfB2YCYH2pCBObrKFPixXv4dlfSmWT6yCCe+Y
-	 r6wBMwiZ34SOVIfAF8+e3y5xGNkf5c92l4jw/vyE=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 145262F5; Tue, 30 Apr 2024 21:05:05 +0800
-X-QQ-mid: xmsmtpt1714482305tgjwejboe
-Message-ID: <tencent_4271296B83A6E4413776576946DAB374E305@qq.com>
-X-QQ-XMAILINFO: ND42uzdxTIzrMsG1rW4qAKlH+bvUst3osNeAf4kpH86R3LvT/OrDnMAtDwuURB
-	 b0s/cURRHUiOF8+oLulDl9Lb23y3KpWSwcTUKretVrG72SNzY0U4YxRTKgyK54PGOT1u6eBOf+aO
-	 +7Q8kljhpERzVuWa+Jm63VLgan+FeMxQehR6eT8GzIjVjvd2vSCBkRNkbEwJJf/nL9mEc7Qhh370
-	 aXl0iaZVUqbZv9hUqLhANcRhOktwhtmhiexbkWoxaDWZRjNq2keT8IAZCtjVlqgWCeiZAfHjG6Us
-	 CaBt+cLifksGk4TKl1S63SfLb/sjWlvH+YaqXIXFAGQnig9wVmNyovv1nHOv9pjRNVfi/7dUrl5b
-	 ohu03S7WStP723qCQyDXBT/ZFhe295cDqAxhkmqpCQGGWCJtjiRPlG/cSf1+n0p/sQwIUx0xV2V7
-	 8OjxYdv59ZAlic0HlUVO/Hn9FcSTWhywlztVAQx8j5I6z4bctXYuOojbypIoANM0BxHYUZOsYr1I
-	 CJmtKhrPsP+wCAhxmwh/NhnEhcN/OE0/6TOI6Q5FjnO4P4zKOcYkvEmA6o6gBBroBBo5JsvDVRVl
-	 tTQ6rfmY+3uuCNfjWykJDJ5Xx9YhmUXasDDOBZVkuIp9xLL4hPzWPSDAIt0SXJz6aYkT443lyJoY
-	 n6FiCSjRFteG/r+CRDk/+bnKDsK7LICu4THuSfFzrki/bbrr83trgXP3EIlC1lXvV6RK05mXH7is
-	 J6BDvn8mc8DZ7H+T3UpAF2kX/L7UtuWH1gLmMaGfW12SK3aNr2PmvT2mE6RE3Ov+oeXTg2+v/HM0
-	 lI78MJYa8wlGMPJifAYwwnwfvf+csWqHhwryqaRwx6MEvRbRezgy+5Umo/zT/lQ7MhIikXMsU9Sx
-	 QsSsUjDCIQBbz3dqf+ELwVK9lDJxUMikqDtwaRQnn8vqdO0BhGt7m52R3hxRDPyhUv94KKKCMiXo
-	 6oxi2RkeI=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+98edc2df894917b3431f@syzkaller.appspotmail.com
-Cc: jasowang@redhat.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	michael.christie@oracle.com,
-	mst@redhat.com,
-	netdev@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	virtualization@lists.linux.dev
-Subject: [PATCH next] vhost_task: after freeing vhost_task it should not be accessed in vhost_task_fn
-Date: Tue, 30 Apr 2024 21:05:06 +0800
-X-OQ-MSGID: <20240430130505.1040283-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000a9613006174c1c4c@google.com>
-References: <000000000000a9613006174c1c4c@google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="21FiEKPs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hDx+F4P/"
+Date: Tue, 30 Apr 2024 13:28:41 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1714483721;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VZtTmOK9NzEwgaw9REzfC1I3oQmDy6NDfONWezZRQ2w=;
+	b=21FiEKPsKasYGAutIgDdYjbl16GGLb60QNjQrLpDm/NijzbTPFaT/yvzNhArM7xEMiM2xo
+	N+3ZuzVXNIRlBb41DnmLKA3J7jb2ihiMKVVmubLAqmBdMcV2679JjLDgr0AQ64YVnoPmP+
+	T2eGXIhj4BCkkwA/T5x/veKRZ9XMOSNxF+qzkBVb0rN/S7vY2FiiGVD9YzRq+1pJkGL1hM
+	7FuNIZQY3+hEn52K0tOJ1H5xeJKiWxr+Ou7eTdFc0tmPC7+trhSe/86frX2Gm90bK6s2hn
+	ZkkPnJq7VaQV6c44PbxVtykKO6o4adz1CbFo421aaz/whoMrGZsjeYWm3cH/cA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1714483721;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VZtTmOK9NzEwgaw9REzfC1I3oQmDy6NDfONWezZRQ2w=;
+	b=hDx+F4P/YBdfsZO3oNUKMJamLKRESPrx8e0vleeMTj7TBp4XCC6zB28UQTZl9Qe5qhlx24
+	somgB0fP43M21+CQ==
+From: "tip-bot2 for Jacob Pan" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/irq] x86/irq: Factor out common code for checking pending
+ interrupts
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240423174114.526704-10-jacob.jun.pan@linux.intel.com>
+References: <20240423174114.526704-10-jacob.jun.pan@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <171448372145.10875.6906928487300074547.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-[syzbot reported]
-BUG: KASAN: slab-use-after-free in instrument_atomic_read include/linux/instrumented.h:68 [inline]
-BUG: KASAN: slab-use-after-free in atomic_long_read include/linux/atomic/atomic-instrumented.h:3188 [inline]
-BUG: KASAN: slab-use-after-free in __mutex_unlock_slowpath+0xef/0x750 kernel/locking/mutex.c:921
-Read of size 8 at addr ffff888023632880 by task vhost-5104/5105
+The following commit has been merged into the x86/irq branch of tip:
 
-CPU: 0 PID: 5105 Comm: vhost-5104 Not tainted 6.9.0-rc5-next-20240426-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:488
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
- instrument_atomic_read include/linux/instrumented.h:68 [inline]
- atomic_long_read include/linux/atomic/atomic-instrumented.h:3188 [inline]
- __mutex_unlock_slowpath+0xef/0x750 kernel/locking/mutex.c:921
- vhost_task_fn+0x3bc/0x3f0 kernel/vhost_task.c:65
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+Commit-ID:     fef05a078b6fa1e9047e0486f1f6daf70664fd12
+Gitweb:        https://git.kernel.org/tip/fef05a078b6fa1e9047e0486f1f6daf70664fd12
+Author:        Jacob Pan <jacob.jun.pan@linux.intel.com>
+AuthorDate:    Tue, 23 Apr 2024 10:41:11 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 30 Apr 2024 00:54:43 +02:00
 
-Allocated by task 5104:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
- __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387
- kasan_kmalloc include/linux/kasan.h:211 [inline]
- kmalloc_trace_noprof+0x19c/0x2b0 mm/slub.c:4146
- kmalloc_noprof include/linux/slab.h:660 [inline]
- kzalloc_noprof include/linux/slab.h:778 [inline]
- vhost_task_create+0x149/0x300 kernel/vhost_task.c:134
- vhost_worker_create+0x17b/0x3f0 drivers/vhost/vhost.c:667
- vhost_dev_set_owner+0x563/0x940 drivers/vhost/vhost.c:945
- vhost_dev_ioctl+0xda/0xda0 drivers/vhost/vhost.c:2108
- vhost_vsock_dev_ioctl+0x2bb/0xfa0 drivers/vhost/vsock.c:875
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+x86/irq: Factor out common code for checking pending interrupts
 
-Freed by task 5104:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:579
- poison_slab_object+0xe0/0x150 mm/kasan/common.c:240
- __kasan_slab_free+0x37/0x60 mm/kasan/common.c:256
- kasan_slab_free include/linux/kasan.h:184 [inline]
- slab_free_hook mm/slub.c:2190 [inline]
- slab_free mm/slub.c:4430 [inline]
- kfree+0x149/0x350 mm/slub.c:4551
- vhost_worker_destroy drivers/vhost/vhost.c:629 [inline]
- vhost_workers_free drivers/vhost/vhost.c:648 [inline]
- vhost_dev_cleanup+0x9b0/0xba0 drivers/vhost/vhost.c:1051
- vhost_vsock_dev_release+0x3aa/0x410 drivers/vhost/vsock.c:751
- __fput+0x406/0x8b0 fs/file_table.c:422
- __do_sys_close fs/open.c:1555 [inline]
- __se_sys_close fs/open.c:1540 [inline]
- __x64_sys_close+0x7f/0x110 fs/open.c:1540
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[Fix]
-Delete the member exit_mutex from the struct vhost_task and replace it with a
-declared global static mutex.
+Use a common function for checking pending interrupt vector in APIC IRR
+instead of duplicated open coding them.
 
-Fixes: a3df30984f4f ("vhost_task: Handle SIGKILL by flushing work and exiting")
-Reported--by: syzbot+98edc2df894917b3431f@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Additional checks for posted MSI vectors can then be contained in this
+function.
+
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240423174114.526704-10-jacob.jun.pan@linux.intel.com
+
 ---
- kernel/vhost_task.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/apic.h   | 11 +++++++++++
+ arch/x86/kernel/apic/vector.c |  5 ++---
+ arch/x86/kernel/irq.c         |  5 ++---
+ 3 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/vhost_task.c b/kernel/vhost_task.c
-index 48c289947b99..375356499867 100644
---- a/kernel/vhost_task.c
-+++ b/kernel/vhost_task.c
-@@ -20,10 +20,10 @@ struct vhost_task {
- 	struct completion exited;
- 	unsigned long flags;
- 	struct task_struct *task;
--	/* serialize SIGKILL and vhost_task_stop calls */
--	struct mutex exit_mutex;
- };
- 
-+static DEFINE_MUTEX(exit_mutex); //serialize SIGKILL and vhost_task_stop calls
-+
- static int vhost_task_fn(void *data)
- {
- 	struct vhost_task *vtsk = data;
-@@ -51,7 +51,7 @@ static int vhost_task_fn(void *data)
- 			schedule();
- 	}
- 
--	mutex_lock(&vtsk->exit_mutex);
-+	mutex_lock(&exit_mutex);
- 	/*
- 	 * If a vhost_task_stop and SIGKILL race, we can ignore the SIGKILL.
- 	 * When the vhost layer has called vhost_task_stop it's already stopped
-@@ -62,7 +62,7 @@ static int vhost_task_fn(void *data)
- 		vtsk->handle_sigkill(vtsk->data);
- 	}
- 	complete(&vtsk->exited);
--	mutex_unlock(&vtsk->exit_mutex);
-+	mutex_unlock(&exit_mutex);
- 
- 	do_exit(0);
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index e6ab0cf..50f9781 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -500,6 +500,17 @@ static inline bool lapic_vector_set_in_irr(unsigned int vector)
+ 	return !!(irr & (1U << (vector % 32)));
  }
-@@ -88,12 +88,12 @@ EXPORT_SYMBOL_GPL(vhost_task_wake);
-  */
- void vhost_task_stop(struct vhost_task *vtsk)
- {
--	mutex_lock(&vtsk->exit_mutex);
-+	mutex_lock(&exit_mutex);
- 	if (!test_bit(VHOST_TASK_FLAGS_KILLED, &vtsk->flags)) {
- 		set_bit(VHOST_TASK_FLAGS_STOP, &vtsk->flags);
- 		vhost_task_wake(vtsk);
- 	}
--	mutex_unlock(&vtsk->exit_mutex);
-+	mutex_unlock(&exit_mutex);
  
- 	/*
- 	 * Make sure vhost_task_fn is no longer accessing the vhost_task before
-@@ -135,7 +135,6 @@ struct vhost_task *vhost_task_create(bool (*fn)(void *),
- 	if (!vtsk)
- 		return NULL;
- 	init_completion(&vtsk->exited);
--	mutex_init(&vtsk->exit_mutex);
- 	vtsk->data = arg;
- 	vtsk->fn = fn;
- 	vtsk->handle_sigkill = handle_sigkill;
--- 
-2.43.0
-
++static inline bool is_vector_pending(unsigned int vector)
++{
++	unsigned int irr;
++
++	irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
++	if (irr  & (1 << (vector % 32)))
++		return true;
++
++	return false;
++}
++
+ /*
+  * Warm reset vector position:
+  */
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index 185738c..9eec529 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -965,7 +965,7 @@ static void __vector_cleanup(struct vector_cleanup *cl, bool check_irr)
+ 	lockdep_assert_held(&vector_lock);
+ 
+ 	hlist_for_each_entry_safe(apicd, tmp, &cl->head, clist) {
+-		unsigned int irr, vector = apicd->prev_vector;
++		unsigned int vector = apicd->prev_vector;
+ 
+ 		/*
+ 		 * Paranoia: Check if the vector that needs to be cleaned
+@@ -979,8 +979,7 @@ static void __vector_cleanup(struct vector_cleanup *cl, bool check_irr)
+ 		 * fixup_irqs() was just called to scan IRR for set bits and
+ 		 * forward them to new destination CPUs via IPIs.
+ 		 */
+-		irr = check_irr ? apic_read(APIC_IRR + (vector / 32 * 0x10)) : 0;
+-		if (irr & (1U << (vector % 32))) {
++		if (check_irr && is_vector_pending(vector)) {
+ 			pr_warn_once("Moved interrupt pending in old target APIC %u\n", apicd->irq);
+ 			rearm = true;
+ 			continue;
+diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+index 578e4f6..385e3a5 100644
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -484,7 +484,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_posted_msi_notification)
+ /* A cpu has been removed from cpu_online_mask.  Reset irq affinities. */
+ void fixup_irqs(void)
+ {
+-	unsigned int irr, vector;
++	unsigned int vector;
+ 	struct irq_desc *desc;
+ 	struct irq_data *data;
+ 	struct irq_chip *chip;
+@@ -511,8 +511,7 @@ void fixup_irqs(void)
+ 		if (IS_ERR_OR_NULL(__this_cpu_read(vector_irq[vector])))
+ 			continue;
+ 
+-		irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
+-		if (irr  & (1 << (vector % 32))) {
++		if (is_vector_pending(vector)) {
+ 			desc = __this_cpu_read(vector_irq[vector]);
+ 
+ 			raw_spin_lock(&desc->lock);
