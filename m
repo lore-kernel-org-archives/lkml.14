@@ -1,209 +1,129 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8822B8BF0
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 02:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108838BE0;
+	Tue, 30 Apr 2024 02:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714443009; cv=none; b=JHCzzbD454Ebk9vqaPbR3Y21lJVY0BfloDHEWzbYHRbDG6QjlqoLKfv9zw9Y9lMpABm8ds7nxT5BX7YbGrP/hTl0L4uYBP/cQChvfFzgrf3wplkrfaPdrUrkWIb5bJZnRnAKsKqO0o4H5GDKybnURli8WRNYvhjfM2ddDMt4e18=
+	t=1714443041; cv=none; b=DiQS+U8ER584UnkzEy3x4iyPy+p833DhliWUT4HoSiWHaOMyc6zN5ebbjQmDcPsYBL3J1rPyvOlCiOPtr04A4VXzg6JfzZ/e+xevbglkDOQZM+zkQawOcAgj4BR9yv2+vYwYm8A+VV87/APg39+lsBUxXTj/SFcQHVQOHYiVL60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714443009; c=relaxed/simple;
-	bh=T2GiyAIYVxyvxo/l72UT9pmsLbki5Zd42Ig819Ygi2Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jWZKqNlClbncJJThffPEa34gs7GT0D4ROUoz1E8gsYa2WLAFSDXCqY28fCdUDDriaiUKDAeIBlMlOBUC9kvxDmXEabcExLp1ANmibeuOUYP/u6Cq46CMTR0DVOpLiEc3vw6soOE7JInNYSiJksO4gEcWcrD31H6awwFRaSf6DAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p4RQnYyj; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714443041; c=relaxed/simple;
+	bh=dvVt9mbg5Q83WZTxwUjAQKXP4dhJpQF20wwvz/KIFAU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qCibO5/dOovQNd3m+bT9/6GgpqpkeCdueio3Uu+GfocEKm6F0S0uEl40coi771xg09gjJOsBNuO8RLYfRh4J/OubQeSijZSd/s6kxH5VeZBBh9/2APWgwLWPk3Vr6qWmzIVjC+DtCrplAigcl1ngi3nMJ5daHACP1FGppY+6I6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pz0xd5nm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p4RQnYyj"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1eb1cb1a8f1so51885ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714443007; x=1715047807; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uCP17/haR0L7iG9nZZgQ33wSIOc8yXlNcZy4lZ7Ob5s=;
-        b=p4RQnYyjE6tslv2Qc2rdylyt5WFDf3E6JwhWlul0LVikYVsZ9wvLsEvZ5DLEYaEWVa
-         Lp5yyG7AzDNC9pstmo1RoEfqXJssUNhcDLjFB/fm4otRpJXjlWiLuz1qSdSutmXhMsOJ
-         l4QYD5LWcCSHKtPYVz55ocIfJLr5gYCvplLizeNIKL0tdtirSNEwuaW5xM6SUj+i2hyB
-         g48rITgcgv5WYRCF5VSqyrwobzsILjx0I1VCJ3KKVzBQI9JGy+g5adyyvwUI2pVoHTiD
-         wZwKnsmHKBUnMo/mehBvt/s9WouqJgVXBDcRmckXZCYfn2L70Gt8ssQVQ73nvNTb7B2T
-         Wrqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714443007; x=1715047807;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uCP17/haR0L7iG9nZZgQ33wSIOc8yXlNcZy4lZ7Ob5s=;
-        b=IJQdEye0VjRFt+s85CxBbtau4nmGYYvw78W4CdC0Svex8jYdSFg8ry8ekxjtqL561u
-         jlHMvSmvlfcr1bf2J1O2GG+iEsrsuPcjEqrSeiLvSYFG19YuDF+T7j/Cge91Ni0nL2Sq
-         KDTUdMo5Kvq5nvt9hSpNvC/1RrOTLTD67pi8He2/pyH50CTgmJ+KQsirCANoF8V7Vpug
-         /6UcrJkj9IUNw2uFBbRQTRjb/Ytcj3LDnqP8o9KhSln/pWJyW0EM+9W2bOFe32G+Yb8l
-         QCasoo70nd2UXT2DkphJmFPmhRRIdW/+54+7dVIi5WoG1AMNvr9LaDzFLEdHwUUeeGi8
-         k3rg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYtxWa3ariXQT99NeSKkKQDFDlQMyGtujNv5nxB8lig7yTsalY7pPHKyZipSRZGqo8QPDKjdG/6bI2yCZFSQCevdGtmMZ5aUtoWPaz
-X-Gm-Message-State: AOJu0YyNC8QFs86VC6FarovkU7ngbbZ9b0CPC9vJUUOEGWvgZftVO1eW
-	BC9rhIVw+G6RsAUSRBaHy+KfjNLA7cQhhsa8HNv3+Ha5ZnWLLDX6f8AgRT9hSxgdSkDwoz2Hg2j
-	ybzenXF2RphVBi545qg22g20kvzGDyUswf9ZK
-X-Google-Smtp-Source: AGHT+IG/2d5wn5uEu9Iu1VjgVFowAP2+uQ62d9LK474lixlQzZIupw98Hp4b/h1uWUf8YJsPCfBVn1Hi8ka3gr/R/qg=
-X-Received: by 2002:a17:902:ecd0:b0:1e5:869a:9449 with SMTP id
- a16-20020a170902ecd000b001e5869a9449mr77725plh.5.1714443006224; Mon, 29 Apr
- 2024 19:10:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pz0xd5nm"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43U212PZ014147;
+	Tue, 30 Apr 2024 02:10:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=AXHgkuMeUpBVRyhQ1R+VL
+	aiFPquzwwH6d+cvmTbZBbc=; b=pz0xd5nmBLFTDi9AkswiutbQDBi6/FwkXxXtF
+	taIr1YQFRJWs3eH/ocNv0I2+m8O3o6DlqMDxTzjIXu0tOus6yF5Vz763rxXK/bDQ
+	cQ9fmPJGHkVWw6EVzPf06sPELIRxXSuIoOBNaAPNPmYjg9yubnsbXkgN6ZlhzdsK
+	lFuk2AnFtJmFijQeZaLjJ6AjfCzY9y2Rd2HKfLc4Vj1F8nnv9IaEF9Usxm4TGL+V
+	e6cjYI9GyesZUyMtFe2FjcvjrVgpfHpMTsLql4Evx1GSR7oQGMkMt8pgXT695AAf
+	/PyB1/uFUzoFhSQYqVWxEXwsqhRMejS72lauOaLuq8APIetXw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xtaf2m2xh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 02:10:32 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43U2AWaU026156
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 02:10:32 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 29 Apr 2024 19:10:31 -0700
+Date: Mon, 29 Apr 2024 19:10:30 -0700
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+CC: <linux-i2c@vger.kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Andi Shyti <andi.shyti@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 12/15] i2c: qcom-geni: use 'time_left' variable with
+ wait_for_completion_timeout()
+Message-ID: <ZjBTFo1Jm23gkWvf@hu-bjorande-lv.qualcomm.com>
+References: <20240427203611.3750-1-wsa+renesas@sang-engineering.com>
+ <20240427203611.3750-13-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240429225738.1491791-1-namhyung@kernel.org>
-In-Reply-To: <20240429225738.1491791-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 29 Apr 2024 19:09:54 -0700
-Message-ID: <CAP-5=fWeFyihQNMEJ2BQpm6hmNBmPuwFk3rGgVh+jV0mKd7myg@mail.gmail.com>
-Subject: Re: [PATCH] perf maps: Remove check_invariants() from maps__lock()
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240427203611.3750-13-wsa+renesas@sang-engineering.com>
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dGr2oXP3QIeFPEBxurCEMtbCT_E8oMHk
+X-Proofpoint-GUID: dGr2oXP3QIeFPEBxurCEMtbCT_E8oMHk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-29_22,2024-04-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ clxscore=1011 adultscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404300015
 
-On Mon, Apr 29, 2024 at 3:57=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> I found that the debug build was a lot slowed down by the maps lock code
-> since it checks the invariants whenever it gets the pointer to the lock.
-> This means it checks twice the invariants before and after the access.
->
-> Instead, let's move the checking code within the lock area but after any
-> modification and remove it from the read paths.  This would remove (more
-> than) the half of the maps lock overhead.
->
-> The time for perf report with a huge data file (200k+ of MMAP2 events).
->
->   Non-debug     Before      After
->   ---------   --------   --------
->      2m 43s     6m 45s     4m 21s
+On Sat, Apr 27, 2024 at 10:36:04PM +0200, Wolfram Sang wrote:
+> There is a confusing pattern in the kernel to use a variable named 'timeout' to
+> store the result of wait_for_completion_timeout() causing patterns like:
+> 
+> 	timeout = wait_for_completion_timeout(...)
+> 	if (!timeout) return -ETIMEDOUT;
+> 
+> with all kinds of permutations. Use 'time_left' as a variable to make the code
+> self explaining.
+> 
+> Fix to the proper variable type 'unsigned long' while here.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Thanks Namhyung, I think the change makes sense. There is an issue
-that a user of a map may mutate it in a way that breaks the maps
-sorting, symbol code would be a likely culprit of such a thing. A fix
-for such a breakage would be to just set the unsorted flag on maps.
-We'd be less likely to spot such an issue after this change, but it is
-simple enough to add the function call when needed. Another option
-would be to add another make flag like PARSER_DEBUG for these kind of,
-"be paranoid," type things. Anyway, let's try to fix those problems
-when they exist.
+Reviewed-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Regards,
+Bjorn
 
-Thanks,
-Ian
-
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/util/maps.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> index 725300896f38..61eb742d91e3 100644
-> --- a/tools/perf/util/maps.c
-> +++ b/tools/perf/util/maps.c
-> @@ -211,11 +211,6 @@ void maps__set_unwind_libunwind_ops(struct maps *map=
-s, const struct unwind_libun
->
->  static struct rw_semaphore *maps__lock(struct maps *maps)
+>  drivers/i2c/busses/i2c-qcom-geni.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index 090b4846ed62..0a8b95ce35f7 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -586,7 +586,8 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
 >  {
-> -       /*
-> -        * When the lock is acquired or released the maps invariants shou=
-ld
-> -        * hold.
-> -        */
-> -       check_invariants(maps);
->         return &RC_CHK_ACCESS(maps)->lock;
->  }
->
-> @@ -358,6 +353,7 @@ static int map__strcmp(const void *a, const void *b)
->  static int maps__sort_by_name(struct maps *maps)
->  {
->         int err =3D 0;
-> +
->         down_write(maps__lock(maps));
->         if (!maps__maps_by_name_sorted(maps)) {
->                 struct map **maps_by_name =3D maps__maps_by_name(maps);
-> @@ -384,6 +380,7 @@ static int maps__sort_by_name(struct maps *maps)
->                         maps__set_maps_by_name_sorted(maps, true);
->                 }
->         }
-> +       check_invariants(maps);
->         up_write(maps__lock(maps));
->         return err;
->  }
-> @@ -502,6 +499,7 @@ int maps__insert(struct maps *maps, struct map *map)
->
->         down_write(maps__lock(maps));
->         ret =3D __maps__insert(maps, map);
-> +       check_invariants(maps);
->         up_write(maps__lock(maps));
->         return ret;
->  }
-> @@ -536,6 +534,7 @@ void maps__remove(struct maps *maps, struct map *map)
->  {
->         down_write(maps__lock(maps));
->         __maps__remove(maps, map);
-> +       check_invariants(maps);
->         up_write(maps__lock(maps));
->  }
->
-> @@ -602,6 +601,7 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(=
-struct map *map, void *data
->                 else
->                         i++;
->         }
-> +       check_invariants(maps);
->         up_write(maps__lock(maps));
->  }
->
-> @@ -942,6 +942,8 @@ int maps__copy_from(struct maps *dest, struct maps *p=
-arent)
->                         map__put(new);
->                 }
->         }
-> +       check_invariants(dest);
-> +
->         up_read(maps__lock(parent));
->         up_write(maps__lock(dest));
->         return err;
-> @@ -1097,6 +1099,7 @@ void maps__fixup_end(struct maps *maps)
->                 map__set_end(maps_by_address[n - 1], ~0ULL);
->
->         RC_CHK_ACCESS(maps)->ends_broken =3D false;
-> +       check_invariants(maps);
->
->         up_write(maps__lock(maps));
->  }
-> @@ -1147,6 +1150,8 @@ int maps__merge_in(struct maps *kmaps, struct map *=
-new_map)
->             map__start(kmaps_maps_by_address[first_after_]) >=3D map__end=
-(new_map)) {
->                 /* No overlap so regular insert suffices. */
->                 int ret =3D __maps__insert(kmaps, new_map);
-> +
-> +               check_invariants(kmaps);
->                 up_write(maps__lock(kmaps));
->                 return ret;
->         }
-> @@ -1184,6 +1189,7 @@ int maps__merge_in(struct maps *kmaps, struct map *=
-new_map)
->                 map__zput(kmaps_maps_by_address[i]);
->
->         free(kmaps_maps_by_address);
-> +       check_invariants(kmaps);
->         up_write(maps__lock(kmaps));
->         return 0;
->  }
-> --
-> 2.44.0.769.g3c40516874-goog
->
+>  	struct dma_slave_config config = {};
+>  	struct gpi_i2c_config peripheral = {};
+> -	int i, ret = 0, timeout;
+> +	int i, ret = 0;
+> +	unsigned long time_left;
+>  	dma_addr_t tx_addr, rx_addr;
+>  	void *tx_buf = NULL, *rx_buf = NULL;
+>  	const struct geni_i2c_clk_fld *itr = gi2c->clk_fld;
+> @@ -629,8 +630,8 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
+>  
+>  		dma_async_issue_pending(gi2c->tx_c);
+>  
+> -		timeout = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
+> -		if (!timeout)
+> +		time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
+> +		if (!time_left)
+>  			gi2c->err = -ETIMEDOUT;
+>  
+>  		if (gi2c->err) {
+> -- 
+> 2.43.0
+> 
