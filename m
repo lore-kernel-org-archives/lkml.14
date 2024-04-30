@@ -1,92 +1,107 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE191527B9;
-	Tue, 30 Apr 2024 14:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF6317B51F;
+	Tue, 30 Apr 2024 14:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714487202; cv=none; b=SVJX7BslTloeFAaMHZyzsGYW4PKpkWiPgM1J6wBo8M8pOalDCwXzl772LiTUgRZN4lUtrosuoON+tjcTWYE0yt5uqp2/M5gZDotYkmfYXZWwaGcEPH4VFgptW37jE3PPtM+2z/JHmn4znyAj5wLlhimN8DRTitISSNCjLQbWFmc=
+	t=1714487213; cv=none; b=XAemE22s6yXtzGs/zv/fIobhbR3iAzkfomImN8s+vVHFyZHfuiVRpYaE6hQF7+34QoDzjf/hDscPZuZ6ZyKOp3BPHgfbNCCuPGEZhjF6TugqyrfV2YlfYLBPk4q/fVhzykO4GqRvSniOC7SQNaqg1Lu1PA7w8PCMn4VRltwwa4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714487202; c=relaxed/simple;
-	bh=++tTBu/3iosilBm8q623VgJey1KjvjPLHE3HQskF/j4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UE1XS1vIa6VQXAg8Pmlcm9wPbDpZBlwwnF6mzV2NwmNgbLhGix2z8abDQqGU+JPcasJBT52wXEgepTrTbL8iUBISd4PQoacdFrdgr1ezpuK6A1kONIr2l1o+UpTenDs7XLqIjg3JVhG7s4tGnjPRr2MPV+UWvYalg5HWrhSI8os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTMvK1bnTz6DB5S;
-	Tue, 30 Apr 2024 22:26:21 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 47CF4140A08;
-	Tue, 30 Apr 2024 22:26:39 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 30 Apr 2024 15:26:38 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
-	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin Shan
-	<gshan@redhat.com>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v9 04/19] ACPI: processor: Return an error if acpi_processor_get_info() fails in processor_add()
-Date: Tue, 30 Apr 2024 15:24:19 +0100
-Message-ID: <20240430142434.10471-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
-References: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1714487213; c=relaxed/simple;
+	bh=YHCQtjphXshwVqzUSAjOkDLpjpy5GbeBEQC3/9BHAXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PumrwMFJhLWxxG1F22huZHL2N3eBiriYrOFNTvlEWD2Jf72Gj7Z67w5owV5jEm8VRz62mVd+sTOl8rXOzV8g9SVtDWBWbBsCCrFZsxn8w1IYw+VEMaOfvZ19aAtQPeTO2eFwlsooeMFzRnuV+88NMlSWHNsUCxB85FpMbgewN0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OUp7ugBJ; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUp7ugBJ"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6eb6b9e1808so2699399a34.3;
+        Tue, 30 Apr 2024 07:26:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714487210; x=1715092010; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i8khSCxXJCwi9khL8crRhkrXjbgJsoFGy/y55ZpSA9U=;
+        b=OUp7ugBJaSP8os3B2+84lyE+eZLrMAqjTSXOd7UEweoWbbQfd3Hm0hTw0nLSU7+Tyk
+         XDxrgq2hg3xghYNv46ur/K9Ok2yB1RvQcPa0ZKVZMwYMz4/pZJZuwBVm/3Zx+IzM/cI+
+         2QOYBPbd4QfpdiIdBuy7gLsHuofI2ej+7YIf+vDZwmNrH7MWyhjAdlNRcQgTZzOpal1R
+         fNNAwx3Hhrpn3StJSwCTK35a1bovo/iKBHDL3v/Fw8EpJ2/w0qnK3AjWPG0+thp7pZeN
+         bvdNu/Y/rdlaBkdzzqvbJ9NAptpjRh2e818k3SWSVfCLzESyFZ9I5UA6YWwORuBnBJTF
+         W+uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714487210; x=1715092010;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i8khSCxXJCwi9khL8crRhkrXjbgJsoFGy/y55ZpSA9U=;
+        b=sOOM83u98L7ExInXRjW5ZODGYg1Pb63BWmm69+Ow8WwchZ+mYXecISC/gIVB0ZMnDK
+         5UKgvcooex5G9+2z5rLV+nJRcW2Z+F9OLasq4a64bW1gskV4MRLL0ui35wb+8AKd63jy
+         qDizCwR9ZsFKwW9aoyf7PiosCgrS23UAf+F7Vswi+eHd7DzJyCYMoS+dKQ3Ez1Mo4oAk
+         Tg2XYTVkICJa9hikm+st3UTdhcd6BmaKxEv9Tv85t0SDNFI0l0p3IUzpfmrBc6R8gFhE
+         JLv2p+sjBD1m4XJ/MCSn5ggNmu+L0/7Q2+jLK0HneCGuEG3o78dW88NAkYb5gQmuGVfy
+         4m9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVeA/s8gSZaNz4jYsI5NMNTbcD6iBp6klVeW0+5ipx5Zp2opXkqa5nq0hpjESkXXjdUkdakzKf0KYE3UGn0ix6Xo7kcRyjwAT6/+aRepBRWTOLIpWmCM8/5ByToC98yA9Jdh717QfUy
+X-Gm-Message-State: AOJu0YwCJhqqmFi82tZAEGZ/9KT1K98/iApFtixtTjLqSngqJqDjz2QH
+	dh21a/i4mbeCRcUyIZRP+QQ0xX8o1B+MAXUlQ7HNkhHBsMoeNoNsgmpGygpcoXUkN8ZI75HNeFJ
+	10VniXNUiKmEXuyIhLzTbn+qWPT7bqg==
+X-Google-Smtp-Source: AGHT+IH9x0LG2biuI13dWDJBzAICvj25gjg6iNMjcBSP/8vXYZmMMiKm8HjOEkEslMfStmh69O4cVv79dJWr5R/mIyA=
+X-Received: by 2002:a9d:7502:0:b0:6ee:21cc:ac91 with SMTP id
+ r2-20020a9d7502000000b006ee21ccac91mr7492491otk.32.1714487210673; Tue, 30 Apr
+ 2024 07:26:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+References: <20240430131330.1555849-1-marc.ferland@sonatest.com> <20240430145935.0000055d@Huawei.com>
+In-Reply-To: <20240430145935.0000055d@Huawei.com>
+From: Marc Ferland <marc.ferland@gmail.com>
+Date: Tue, 30 Apr 2024 10:26:38 -0400
+Message-ID: <CAMRMzCBva+o5Mgkxue5F3o5AnAokDAXMhCNXqacPOPTGWwisCQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: dac: ad5592r: fix temperature scale
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Marc Ferland <marc.ferland@sonatest.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Rafael observed [1] that returning 0 from processor_add() will result in
-acpi_default_enumeration() being called which will attempt to create a
-platform device, but that makes little sense when the processor is known
-to be not available.  So just return the error code from acpi_processor_get_info()
-instead.
+On Tue, Apr 30, 2024 at 9:59=E2=80=AFAM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Tue, 30 Apr 2024 09:13:30 -0400
+> marc.ferland@gmail.com wrote:
+>
+> > From: Marc Ferland <marc.ferland@sonatest.com>
+> >
+> > For temperature readings, the remainder is returned as nano Celsius
+> > _but_ we mark it as IIO_VAL_INT_PLUS_MICRO. This results in incorrect
+> > temperature reporting through hwmon for example. I have a board here
+> > which reports the following when running 'sensors':
+> >
+> > iio_hwmon-isa-0000
+> > Adapter: ISA adapter
+> > temp1:        +93.3=C2=B0C
+> >
+> > With the patch applied, it returns the correct temperature:
+> >
+> > iio_hwmon-isa-0000
+> > Adapter: ISA adapter
+> > temp1:        +30.5=C2=B0C
+> >
+> > Signed-off-by: Marc Ferland <marc.ferland@sonatest.com>
+>
+> IIO temperature units are milli celcius, so I'm not following
+> the argument here.  The driver might be reporting in pico celcius
+> I suppose?  Call out that this is the scale factor though, so
+> it corresponds to 1LSB hence a small number is certainly plausible..
+>
+> Reasonable to argue it's taking the integer and dividing by 10^9 hence
+> INT_PLUS_NANO is the right answer, but it isn't nano celsius.
+>
 
-Link: https://lore.kernel.org/all/CAJZ5v0iKU8ra9jR+EmgxbuNm=Uwx2m1-8vn_RAZ+aCiUVLe3Pw@mail.gmail.com/ [1]
-Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
----
-v9: New patch following through from Gavin pointing out a memory leak later
-    in the series.
----
- drivers/acpi/acpi_processor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index 161c95c9d60a..5f062806ca40 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -393,7 +393,7 @@ static int acpi_processor_add(struct acpi_device *device,
- 
- 	result = acpi_processor_get_info(device);
- 	if (result) /* Processor is not physically present or unavailable */
--		return 0;
-+		return result;
- 
- 	BUG_ON(pr->id >= nr_cpu_ids);
- 
--- 
-2.39.2
-
+Oups! you're obviously right. I'll update my commit message and resend.
+Marc
