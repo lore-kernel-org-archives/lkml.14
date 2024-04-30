@@ -1,196 +1,279 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBBA1802DA
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 18:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAFE180A65;
+	Tue, 30 Apr 2024 18:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714501391; cv=none; b=SD28byru84Oe0Fal3qPNtIJ2lgaP6ODimN4a9eYeAlmwLGWjNxHu2oZ8LtA3+ZGMR09sxyxFyaYGYhlqojyqZ1a4ywA4isbYG+6RkqvhhuKgjx18jQqUW6aXzQx9A2GwlwZGsRUaanYPylh5eCRMZwWbZG3KL1+7aGrH/ol28Y0=
+	t=1714501609; cv=none; b=T+n1a1GVvu0klJ356eMduInehHbiy7CgZ9KEFguoUxXdWqj4osJY+HXLWNRsSbQuG3JI0X0QOFYc2c+4EQUVfGWhl5zLPCzzmM3fjuwGXLFOMQ65i5i1UT34VR7cUg3nIeawQsh0/fzy7hC2IxAZrUTMo5HZrr3erJscd1gsjUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714501391; c=relaxed/simple;
-	bh=iBJZnHrXNYarliDg/M9giVZGmfwYrEdgs799HsjQpUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NIunP530o5T82ywgMks36seQ3uhYhaW8zAUmNQmk76X7x+2ufG0Mzg55mD9uhqTkqNbYr9UCqT2kDq5YhGoxMpRW4ioepHKbxCJWGdBKu2kkC7P1gvapqLbwlddX0OFiiQizaRHfayFeBG4Bggau9jD4Dq3W71QY0H+LNizi4Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ThUC4bRR; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714501609; c=relaxed/simple;
+	bh=q6GSO0vShRvzB0fJQFwWUZC3SEy36XnWlE2lgKvUMOI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=l3hNg67ds1MhrMlWGjrYwhTFSb6HKESUS2ZTSeRtwqu9ZXi16GMGMwREEmrLPJqqb8Q46P6muQJIBHfZA5YZWI/pbYJ4eY1DlBdjT7sJFatQZSllJ7mGrN8bmcA2KzRNSqoHkySHj8WDuscqeH5xLw38GHmCLP9uXWA9UMmo6J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l/1ARkfa; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ThUC4bRR"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6184acc1ef3so57135557b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:23:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714501388; x=1715106188; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JW3+FSPpt+/opwIJ6LOrfIys0S22EmOBe3yi/ffGuSo=;
-        b=ThUC4bRRcRgH+PNEMXgfNCqG0R6cbLCaRvSri69/CXAReNdNz/iDRd3K9UgUFHBNvn
-         thhUZkbKpHOYT5sl96tJO/kvCkRg7RKLFm18el8nEzC4Jgz8DLFOhHFWgo2JqO6SpNlm
-         wsVqO3tZ2ByWrc7MY4e5UAvLGdNQI25oU1QelNnQYNNrLbDCnerKJO37xyt+tYLgTbO7
-         Io0hWN9UapHp5+mzZeT7vZJSQiwJrc7lDtvsJOdXSvNp6JomfCKPuQh2zlxYJsJHZ++v
-         Ya26qB3WTtlVNaITS64SDXpth0Lh+8LvVV35WeIWVQJ7XLnWUHvqyuDktZ0nlyq/8UHi
-         Tn/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714501388; x=1715106188;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JW3+FSPpt+/opwIJ6LOrfIys0S22EmOBe3yi/ffGuSo=;
-        b=NtgiSi9a7L+LxipVDxPVJxjbnM0tfzI6Unq5/GBRmEXI7eZCBKwPPPRH/oiuj8t9xl
-         LEvaSH0Anq0XJEJq7uyw+Ai77DYpAnOeQivb7WkJUvnQ5oJLLEjtAvsgINK76BGTAOeP
-         7v6N+3mvNDI1WBhwiG5vfT462DSX4iXDXGezmv8GgUn7U3qUEuid/nWR7Ei5GaEuk5ZP
-         IGopkChTEDB57uGZw4iEkGR3QnrXrboGDvqJ/3bRCf2eXhUgCG0FurX4Zuki8byCjhfp
-         KWlCAMzOKh1bXZHbRX1j0IeYdLCIpVP7dcxzp3iiicXCQzaNi73mBcvx54lDIjoTpBJ6
-         K99g==
-X-Forwarded-Encrypted: i=1; AJvYcCVvjzxmcENjrxEnpCm12RlM42nCptTfVEZ96ReB1bzLQK8qu32AclHXb25v3qgpomAmZx9ZkMocfnK5kLirvUos2mZVGxs7Hz02tnWW
-X-Gm-Message-State: AOJu0Yxsxx/lpIvRPtBXDBKzzDVwazolUH3jsxkur6+Ef5/Ob4GdV2ZU
-	sdAEu/TYjXOdmZxT5EHix+6ozxANtBESGoisPvYXgWkNyiSIG33h
-X-Google-Smtp-Source: AGHT+IGR7Bcs9X+gvTGcQYUe5hJK+mYgUTTy07UlAHsmIleZfDkEr1UASKRkbQ9DmS8JSBnnJrebpw==
-X-Received: by 2002:a05:690c:368e:b0:61a:b038:6d34 with SMTP id fu14-20020a05690c368e00b0061ab0386d34mr408457ywb.24.1714501388568;
-        Tue, 30 Apr 2024 11:23:08 -0700 (PDT)
-Received: from localhost ([69.73.66.55])
-        by smtp.gmail.com with ESMTPSA id bg20-20020a05690c031400b0061bd6a13a34sm1048450ywb.24.2024.04.30.11.23.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 11:23:08 -0700 (PDT)
-Date: Tue, 30 Apr 2024 11:23:07 -0700
-From: Yury Norov <yury.norov@gmail.com>
-To: Ankit Jain <ankit-aj.jain@broadcom.com>
-Cc: linux@rasmusvillemoes.dk, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, juri.lelli@redhat.com,
-	pauld@redhat.com, ajay.kaher@broadcom.com,
-	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com,
-	Paul Turner <pjt@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH] lib/cpumask: Boot option to disable tasks distribution
- within cpumask
-Message-ID: <ZjE3C9UgeZR02Jyy@yury-ThinkPad>
-References: <20240430090431.1619622-1-ankit-aj.jain@broadcom.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l/1ARkfa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714501607; x=1746037607;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=q6GSO0vShRvzB0fJQFwWUZC3SEy36XnWlE2lgKvUMOI=;
+  b=l/1ARkfac6Jt67bP/5TYe//BdQsoj29tBtjsjTLkudS704PHp5/T4sDo
+   UFlm+4DB0JDniMucV1BHJpJ5I58QQz1oyEncxi8OwXdcdhEqN3Zzu6gEL
+   i+P9LibGVrcpeLiyuofCxDvRgtEsPqzxaFKsP0VrMJQFIuDD+0pWliydd
+   rcPC9+5lBSU1DctCa2YucUgbk8KlSA8JIclQG8xG2+KliL10+kk8YTGzQ
+   AVbRXI6O0xd+71+/Camn7wkXLCc43XpJDL33xpJajvJED/4JxMD8ix75/
+   2Acrg1MFscd1IGT5YXzM/kfnmohV7tSTVBguWMNJDWrP3BaNteEX8ExUx
+   A==;
+X-CSE-ConnectionGUID: 9jL/dwm9TvKohmSwhEdZVg==
+X-CSE-MsgGUID: lcJ6d/eOSQiNp9ErExh5wQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10399388"
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="10399388"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 11:26:46 -0700
+X-CSE-ConnectionGUID: CB56jFGiQqaNSbfdW3guLA==
+X-CSE-MsgGUID: BxU+BYfJTQ6TWewJCU8Ecw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="26556260"
+Received: from jdwelch-mobl.amr.corp.intel.com ([10.209.113.84])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 11:26:47 -0700
+Message-ID: <af74b8d4f1f7072ffebc8a7f5cf392140da73dc7.camel@linux.intel.com>
+Subject: Re: [PATCH v5 4/4] PCI/ASPM: Fix L1.2 parameters when enable link
+ state
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>, 
+ Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>, Damien Le Moal
+ <dlemoal@kernel.org>,  Nirmal Patel <nirmal.patel@linux.intel.com>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>,  linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Tue, 30 Apr 2024 11:26:46 -0700
+In-Reply-To: <CAPpJ_ecOah=gYfYJVX-TypRiK8+oons3rKOVOATb4epm6sGZaw@mail.gmail.com>
+References: <20240424110223.21799-2-jhp@endlessos.org>
+	 <f111371300624b6f94f0746dbae66bd49f405eea.camel@linux.intel.com>
+	 <CAPpJ_ecOah=gYfYJVX-TypRiK8+oons3rKOVOATb4epm6sGZaw@mail.gmail.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430090431.1619622-1-ankit-aj.jain@broadcom.com>
 
-On Tue, Apr 30, 2024 at 02:34:31PM +0530, Ankit Jain wrote:
-> commit 46a87b3851f0 ("sched/core: Distribute tasks within affinity masks")
-> and commit 14e292f8d453 ("sched,rt: Use cpumask_any*_distribute()")
-> introduced the logic to distribute the tasks within cpumask upon initial
-> wakeup.
+On Tue, 2024-04-30 at 15:46 +0800, Jian-Hong Pan wrote:
+> David E. Box <david.e.box@linux.intel.com> =E6=96=BC 2024=E5=B9=B44=E6=9C=
+=8827=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=888:03=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> >=20
+> > Hi Jian-Hong,
+> >=20
+> > On Wed, 2024-04-24 at 19:02 +0800, Jian-Hong Pan wrote:
+> > > Currently, when enable link's L1.2 features with
+> > > __pci_enable_link_state(),
+> > > it configs the link directly without ensuring related L1.2 parameters=
+,
+> > > such
+> > > as T_POWER_ON, Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD have =
+been
+> > > programmed.
+> > >=20
+> > > This leads the link's L1.2 between PCIe Root Port and child device ge=
+ts
+> > > wrong configs when a caller tries to enabled it.
+> > >=20
+> > > Here is a failed example on ASUS B1400CEAE with enabled VMD:
+> > >=20
+> > > 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor P=
+CIe
+> > > Controller (rev 01) (prog-if 00 [Normal decode])
+> > > =C2=A0=C2=A0=C2=A0 ...
+> > > =C2=A0=C2=A0=C2=A0 Capabilities: [200 v1] L1 PM Substates
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 L1SubCap: PCI-PM_L1.2+ PCI=
+-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
+> > > L1_PM_Substates+
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PortCommonModeRestoreTime=3D45us PortTPow=
+erOnTime=3D50us
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 L1SubCtl1: PCI-PM_L1.2- PC=
+I-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 T_CommonMode=3D45us LTR1.2_Threshol=
+d=3D101376ns
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 L1SubCtl2: T_PwrOn=3D50us
+> > >=20
+> > > 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN=
+550
+> > > NVMe
+> > > SSD (rev 01) (prog-if 02 [NVM Express])
+> > > =C2=A0=C2=A0=C2=A0 ...
+> > > =C2=A0=C2=A0=C2=A0 Capabilities: [900 v1] L1 PM Substates
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 L1SubCap: PCI-PM_L1.2+ PCI=
+-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > > L1_PM_Substates+
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PortCommonModeRestoreTime=3D32us PortTPow=
+erOnTime=3D10us
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 L1SubCtl1: PCI-PM_L1.2- PC=
+I-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 T_CommonMode=3D0us LTR1.2_Threshold=
+=3D0ns
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 L1SubCtl2: T_PwrOn=3D10us
+> > >=20
+> > > According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the=
+ PCIe
+> > > Root Port and the child NVMe, they should be programmed with the same
+> > > LTR1.2_Threshold value. However, they have different values in this c=
+ase.
+> > >=20
+> > > Invoke aspm_calc_l12_info() to program the L1.2 parameters properly b=
+efore
+> > > enable L1.2 bits of L1 PM Substates Control Register in
+> > > __pci_enable_link_state().
+> > >=20
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> > > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > > ---
+> > > v2:
+> > > - Prepare the PCIe LTR parameters before enable L1 Substates
+> > >=20
+> > > v3:
+> > > - Only enable supported features for the L1 Substates part
+> > >=20
+> > > v4:
+> > > - Focus on fixing L1.2 parameters, instead of re-initializing whole L=
+1SS
+> > >=20
+> > > v5:
+> > > - Fix typo and commit message
+> > > - Split introducing aspm_get_l1ss_cap() to "PCI/ASPM: Introduce
+> > > =C2=A0 aspm_get_l1ss_cap()"
+> > >=20
+> > > =C2=A0drivers/pci/pcie/aspm.c | 12 ++++++++++++
+> > > =C2=A01 file changed, 12 insertions(+)
+> > >=20
+> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > index c55ac11faa73..553327dee991 100644
+> > > --- a/drivers/pci/pcie/aspm.c
+> > > +++ b/drivers/pci/pcie/aspm.c
+> > > @@ -1402,6 +1402,8 @@ EXPORT_SYMBOL(pci_disable_link_state);
+> > > =C2=A0static int __pci_enable_link_state(struct pci_dev *pdev, int st=
+ate, bool
+> > > locked)
+> > > =C2=A0{
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pcie_link_state *li=
+nk =3D pcie_aspm_get_link(pdev);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_dev *child =3D link-=
+>downstream, *parent =3D link->pdev;
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 parent_l1ss_cap, child_l1ss=
+_cap;
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!link)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+> > > @@ -1433,6 +1435,16 @@ static int __pci_enable_link_state(struct pci_=
+dev
+> > > *pdev, int state, bool locked)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 link->aspm_default |=3D ASPM_STATE_L1_1_PCIPM |
+> > > ASPM_STATE_L1;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (state & PCIE_LINK_STAT=
+E_L1_2_PCIPM)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 link->aspm_default |=3D ASPM_STATE_L1_2_PCIPM |
+> > > ASPM_STATE_L1;
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Ensure L1.2 parameters:=
+ Common_Mode_Restore_Times, T_POWER_ON
+> > > and
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * LTR_L1.2_THRESHOLD are =
+programmed properly before enable bits
+> > > for
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * L1.2, per PCIe r6.0, se=
+c 5.5.4.
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (state & link->aspm_capable =
+& ASPM_STATE_L1_2_MASK) {
+> >=20
+> > This is still mixing PCIE_LINK_STATE flags with ASPM_STATE flags.
+>=20
+> Thanks for your review, but I notice some description in PCIe spec,
+> 5.5.4 L1 PM Substates Configuration:
+> "Prior to setting either or both of the enable bits for L1.2, the
+> values for TPOWER_ON, Common_Mode_Restore_Time, and, if the ASPM L1.2
+> Enable bit is to be Set, the LTR_L1.2_THRESHOLD (both Value and Scale
+> fields) must be programmed." =3D> I think this includes both "ASPM L1.2
+> Enable" and "PCI-PM L1.2 Enable" bits.
 
-So let's add the authors in CC list?
+That's fine. While the spec clearly calls out the ASPM L1.2 Enable bit here=
+, I
+see no harm in including PCI-PM L1.2 in that check. This is what the code
+already does in aspm_l1ss_init().
 
-> For Telco RAN deployments, isolcpus are a necessity to cater to
-> the requirement of low latency applications. These isolcpus are generally
-> tickless so that high priority SCHED_FIFO tasks can execute without any
-> OS jitter. Since load balancing is disabled on isocpus, any task
-> which gets placed on these CPUs can not be migrated on its own.
-> For RT applications to execute on isolcpus, a guaranteed kubernetes pod
-> with all isolcpus becomes the requirement and these RT applications are
-> affine to execute on a specific isolcpu within the kubernetes pod.
-> However, there may be some non-RT tasks which could also schedule in the
-> same kubernetes pod without being affine to any specific CPU(inherits the
-> pod cpuset affinity).
+The issue is the mixed used of two different types of flags that don't have=
+ the
+same meaning. 'state' contains PCIE_LINK_STATE flags which are part of the
+caller API to the pci_<enabled/disable>_link_state() functions. The ASPM_ST=
+ATE
+flags are used internally to aspm.c to track all states and their meaningfu=
+l
+combinations such as ASPM_STATE_L1_2_MASK which includes ASPM L1.2 and PCI-=
+PM
+L1.2. You should not do bit operations between them.
 
-OK... It looks like adding scheduler maintainers is also a necessity to
-cater here...
+Also, you should not require that the timings be calculated only if L1_2 is
+enabled. You should calculate the timings as long as it's capable. This is =
+also
+what aspm_l1ss_init() does.
 
-> With multiple spawning and running containers inside
-> the pod, container runtime spawns several non-RT initializing tasks
-> ("runc init") inside the pod and due to above mentioned commits, these
-> non-RT tasks may get placed on any isolcpus and may starve if it happens
-> to wakeup on the same CPU as SCHED_FIFO task because RT throttling is also
-> disabled in telco setup. Thus, RAN deployment fails and eventually leads
-> to system hangs.
+The confusion might be over the fact that you are having
+__pci_enable_link_state() call aspm_calc_l12_info(). This should have been
+handled during initialization of the link in aspm_l1ss_init() and I'm not s=
+ure
+why it didn't. Maybe it's because, for VMD, ASPM default state would have
+started out all disabled and this somehow led to aspm_l1ss_init() not getti=
+ng
+called. But looking through the code I don't see it. It would be great if y=
+ou
+can confirm why they weren't calculated before.
 
-Not that I'm familiar to your setup, but this sounds like a userspace
-configuration problems. Can you try to move your non-RT tasks into a
-cgroup attached to non-RT CPUs, or something like that? 
+David
 
-> With the introduction of kernel cmdline param 'sched_pick_firstcpu',
-> there is an option provided for such usecases to disable the distribution
-> of tasks within the cpumask logic and use the previous 'pick first cpu'
-> approach for initial placement of tasks. Because many telco vendors
-> configure the system in such a way that the first cpu within a cpuset
-> of pod doesn't run any SCHED_FIFO or High priority tasks.
-> 
-> Co-developed-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
-> Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
-> Signed-off-by: Ankit Jain <ankit-aj.jain@broadcom.com>
-> ---
->  lib/cpumask.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/lib/cpumask.c b/lib/cpumask.c
-> index e77ee9d46f71..3dea87d5ec1f 100644
-> --- a/lib/cpumask.c
-> +++ b/lib/cpumask.c
-> @@ -154,6 +154,23 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
->  }
->  EXPORT_SYMBOL(cpumask_local_spread);
->  
-> +/*
-> + * Task distribution within the cpumask feature disabled?
-> + */
-> +static bool cpumask_pick_firstcpu __read_mostly;
-> +
-> +/*
-> + * Disable Tasks distribution within the cpumask feature
-> + */
-> +static int __init cpumask_pick_firstcpu_setup(char *str)
-> +{
-> +	cpumask_pick_firstcpu = 1;
-> +	pr_info("cpumask: Tasks distribution within cpumask is disabled.");
-> +	return 1;
-> +}
-> +
-> +__setup("sched_pick_firstcpu", cpumask_pick_firstcpu_setup);
-> +
->  static DEFINE_PER_CPU(int, distribute_cpu_mask_prev);
->  
->  /**
-> @@ -171,6 +188,13 @@ unsigned int cpumask_any_and_distribute(const struct cpumask *src1p,
->  {
->  	unsigned int next, prev;
->  
-> +	/*
-> +	 * Don't distribute, if tasks distribution
-> +	 * within cpumask feature is disabled
-> +	 */
-> +	if (cpumask_pick_firstcpu)
-> +		return cpumask_any_and(src1p, src2p);
+>=20
+> Jain-Hong Pan
+>=20
+> > 'state' should not even matter.
+> > The timings should always be calculated and programmed as long
+> > as L1_2 is capable. That way the timings are ready even if L1_2 isn't b=
+eing
+> > enabled now (in case the user enables it later).
+> >=20
+> > David
+> >=20
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 parent_l1ss_cap =3D aspm_get_l1ss_cap(parent);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 child_l1ss_cap =3D aspm_get_l1ss_cap(child);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap=
+);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pcie_config_aspm_link(link=
+, policy_to_aspm_state(link));
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 link->clkpm_default =3D (s=
+tate & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
+> >=20
 
-No, this is a wrong way.
-
-To begin with, this parameter shouldn't control a single random
-function. At least, the other cpumask_*_distribute() should be
-consistent to the policy.
-
-But in general... I don't think we should do things like that at all.
-Cpumask API is a simple and plain wrapper around bitmaps. If you want
-to modify a behavior of the scheduler, you could do that at scheduler
-level, not in a random helper function.
-
-Consider 2 cases:
- - Someone unrelated to scheduler would use the same helper and will
-   be affected by this parameter inadvertently.
- - Scheduler will switch to using another function to distribute CPUs,
-   and your setups will suddenly get broken again. This time deeply in
-   production.
-
-Thanks,
-Yury
-
->  	/* NOTE: our first selection will skip 0. */
->  	prev = __this_cpu_read(distribute_cpu_mask_prev);
->  
-> -- 
-> 2.23.1
