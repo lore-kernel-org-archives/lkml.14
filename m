@@ -1,77 +1,74 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BAF20DC5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B332C184
 	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714461149; cv=none; b=WikEA8prcz59DnwgQ9UVj9W9LXyRsXCbYO4UB7uP9UcQwgSdfvFjIEZkJYA3BhG5xd6lfek3OK/hwXAbjWUXA5plNau5OkKphaLYiXcQsm0MDfo30xN9XGSxitmmzGPIMwl8dLAXmtM9P4cS66Gc1L/lZTGYKm6qNnwts8uZxVw=
+	t=1714461150; cv=none; b=UJHYa7npUXYQk4AaD+pJrR002hbclusf1gavQ4axZs5xHYyTrr0QNJabXOaI+1Ix01DP5MtRUhvU+fAkA5gNUhjoQkkyBNclSKUjBcAePWXA2GmLADZvu0XXeREGqjA0XLIsx1pNg7rm0Q8eRbG8TM6390vLIMj7AgaCPlcpjNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714461149; c=relaxed/simple;
-	bh=YKbHQ7+DrpuKs/BKqxo5iJkOTSM9So8QbVCvBQj2fEQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HqSenCQGSnosuBSzgEkIzVYKdyAF/X00EJEnvsJ1WTGKZp6EqPpFx+uQSf/xRIdj8eiDRrop7YaUN5dTVaM16rpGy3MYYsM6mx49hA7u6iqGSM7VIAEWOCNGMGC57KBe0+Sit1ltUmodk3ALgFvpKwMvzafrFA1l7spAyqsFRRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+	s=arc-20240116; t=1714461150; c=relaxed/simple;
+	bh=8kOIIkTnsdnSonUhLv9/UaA+zad7K0ZVq0aEzCL8TUQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=T26HjBqx/IOIOq5oBuqOGvBkgNB/6PYH68h2N/TNKPtwfDHtkAgPZ618miqHKphcbjprf3yHrEsO4riCvK7gI7LdptTdovJmtE5D0o3r4OmLYEvyE3CogTCChsvIYef/KTosp3GCEe5EH92DzI6ReTvYOpMnqWfjII8usMN1CCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d9d0936d6aso611882139f.0
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7da41da873bso685466139f.3
         for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 00:12:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714461147; x=1715065947;
+        d=1e100.net; s=20230601; t=1714461148; x=1715065948;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4r/M9mVoHzgKMM4Alitf2mS+gYX2JYeQm5phPBvoZ5E=;
-        b=xConavxsNMed++p2AU8CN30c33OPp6R9INyItrPML1A+5PJNBZ/vG+PpKh33BUHtby
-         SGOX4yUd+paNzykJirwgCw0N8ZTNiSkq+99Fj3+DXiSUTT32GC+U9rqBlbZkLEW1B/Ml
-         2Fg7KWUW7hY+SS7mwvoPbr1Qtt8igDBvge5AjZgL3uK3T1lj6feRkXdDYAZNBbaNhkTA
-         tEyN7deY41QPRe7zwpl1pZ2dOQCSnpfXD5oFhuGximX4Dfwy7o+7Nwrz4J/Kgjo1o9l2
-         SaFT9aI6WJWpMRY6O8bTWrKeiW3KZWCY2++M0OHEGJzVfuSg23muaV6VqlQRgAUVbItO
-         aq1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWap5RzRwJwwWvvsN6cRIx7/IsiuU/lUCefGfscjOQecuN6o0Sf0mm/rus9OoWNtYMWnLp4eauD+o8UYgfCpIY5hpHi40g42uotCtcb
-X-Gm-Message-State: AOJu0Ywkxv7eAtHsle2WqeeYCyzPYa39m5xRdhbssFUDhdOJnR5vKWs7
-	dNfJ0kehvwoxntT+ezi0GByfzex5eM8MdndUhDGSFpRVLR+NfOK/XdNKeHwt/Qfv83vgP20iopl
-	MJdbWxoEiSpB2H89p/1MkxSbkqsT/aTwVIoYEUd2UsnP7SpuofJl+ZHU=
-X-Google-Smtp-Source: AGHT+IFj9e8GCmj+12GcGndXBWrtWWwI61rth8HpP5Zyg7gSTF+bE1SVfqk714WViOFbyNrWPHiOHIi+Aaz4Ustz5xBH7NsNzZES
+        bh=4bIJ2+4VC6gGGh8bBw9yymu72oC7PpvLlQwyhTnjnXY=;
+        b=JD1+FnqHFsporJ9WXZP7VihcWueNadvGmK548E89mR7t9jEzh960JGfmdbTA2PTVYt
+         mEI8fqf8p9O8/Tfuz/NdfxfqMxWYeCqVTc/OvtbOXcBctbrRKgafCogQy5c/HcpJvbwM
+         ycaIgFXHsEUbrmv62zVTppvYOVCQXQ2TGr9bVxA6dQsdRqKmmnabJGp2bgTZlZlSwi/R
+         vDoorN0+uwWzdrYTe676EqIxU5czDOu1s11JzxtweMBWbWrfMrMxADrcpFrjcBzEcMKd
+         VNXnuAvWxHJ3ZCBAvMYNZ/4dF7D6j7cVxvXVmarQXvMfprJBza/QjOzGNqoZmsBPsfm8
+         7NxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5Xq4iLm78vpifnkrnhyH+SAyrQ/9ZJKD1sj3Ar+AP0BhgOXByRN6IJ7OWxGaucbz00+WRSguEaIN1g8sPw+cCQCa6kmSzKLeRjvQT
+X-Gm-Message-State: AOJu0YwQG6SNFzOOipLr+vaLLMvlvHH5XQEggaY/9vJThDsyhxAxON2d
+	IwFKpcFq1TbK+f9AuGYlj7hCMTZqRBJw9E8x8npkv9gjYhkwg4JvzncwAtot36t5xFb/EDqk9dL
+	/5A0r2lM0LxKl2DbmC3LjAfSXi5ExUTlwUM+8VJKMDDhEtcb9TvDAfIU=
+X-Google-Smtp-Source: AGHT+IFC19oIKhGX1rlYJgjVBL1OU7Ig1NdVc43Vgmk4vIZTiGKO3wuegWsILLqMgXIqc+uAApbL2U1YHW0jZrTQd6w8v46UpXIY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2c8d:b0:7de:e182:ddf1 with SMTP id
- i13-20020a0566022c8d00b007dee182ddf1mr30462iow.0.1714461147810; Tue, 30 Apr
- 2024 00:12:27 -0700 (PDT)
-Date: Tue, 30 Apr 2024 00:12:27 -0700
+X-Received: by 2002:a05:6638:450b:b0:487:4afc:b6b with SMTP id
+ bs11-20020a056638450b00b004874afc0b6bmr647191jab.4.1714461148035; Tue, 30 Apr
+ 2024 00:12:28 -0700 (PDT)
+Date: Tue, 30 Apr 2024 00:12:28 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b25bef06174b1755@google.com>
-Subject: [syzbot] Monthly arm report (Apr 2024)
-From: syzbot <syzbot+listc3adb3676e5a9d135247@syzkaller.appspotmail.com>
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000b5c82b06174b1793@google.com>
+Subject: [syzbot] Monthly v9fs report (Apr 2024)
+From: syzbot <syzbot+liste18b65911e42aaaf2e63@syzkaller.appspotmail.com>
+To: asmadeus@codewreck.org, ericvh@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lucho@ionkov.net, 
+	syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Hello arm maintainers/developers,
+Hello v9fs maintainers/developers,
 
-This is a 31-day syzbot report for the arm subsystem.
+This is a 31-day syzbot report for the v9fs subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/arm
+https://syzkaller.appspot.com/upstream/s/v9fs
 
-During the period, 2 new issues were detected and 0 were fixed.
-In total, 7 issues are still open and 4 have been fixed so far.
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 7 issues are still open and 28 have been fixed so far.
 
 Some of the still happening issues:
 
 Ref Crashes Repro Title
-<1> 1634    Yes   BUG: bad usercopy in fpa_set
-                  https://syzkaller.appspot.com/bug?extid=cb76c2983557a07cdb14
-<2> 350     Yes   INFO: task hung in lookup_slow (3)
-                  https://syzkaller.appspot.com/bug?extid=7cfc6a4f6b025f710423
-<3> 37      No    WARNING in delayed_work_timer_fn
-                  https://syzkaller.appspot.com/bug?extid=e13e654d315d4da1277c
-<4> 18      Yes   BUG: unable to handle kernel paging request in trans_pgd_create_copy
-                  https://syzkaller.appspot.com/bug?extid=2d1f5a94167d430a3bd7
-<5> 9       No    WARNING in do_sve_acc
-                  https://syzkaller.appspot.com/bug?extid=95ffb6a83b20ea7f4f55
+<1> 2768    Yes   WARNING in v9fs_fid_get_acl
+                  https://syzkaller.appspot.com/bug?extid=a83dc51a78f0f4cf20da
+<2> 6       No    WARNING: refcount bug in p9_req_put (3)
+                  https://syzkaller.appspot.com/bug?extid=d99d2414db66171fccbb
+<3> 5       Yes   KMSAN: uninit-value in p9_client_rpc (2)
+                  https://syzkaller.appspot.com/bug?extid=ff14db38f56329ef68df
 
 ---
 This report is generated by a bot. It may contain errors.
