@@ -1,73 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B931527B2;
-	Tue, 30 Apr 2024 14:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EFA1527A8;
+	Tue, 30 Apr 2024 14:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714488174; cv=none; b=UTcSqs6BVEu9Jp8f2U/9GZEEtNOaQycuu1vbcc18L8Fh6axa10nj9Dkm4EzR2s/jHZJSlqOXRotJub0Nn4/IFOeOFkJtJU/ij78j3OP3jsoczLbWAaH0m+vKhjdrTJCBjW+xUxsk0Zk+pH0Tjx/IHf/Mt3d7easYyWW2jlNl29k=
+	t=1714488259; cv=none; b=LxI3ei0CH1JwEgnQ0ULKCbLrQDCdUi7/KhySd0k3A+3vnZjoafuUxhkV+jpGxlMT1lUgQljNpAoE20vbQnJ9luBrQOvctBV92vFo5EZgXnwjN0CkYRM8Kn1/IPktEoG2WNHJ6V8UMpwYX8dd2sF72mhD/npBL+3apmyjuDFMPPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714488174; c=relaxed/simple;
-	bh=QH1dfcYyIcPetkUCl+atKwQJ978quIcfRWzXslCTQwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lkUgWS7fOMnXw9vFwNo7EUosT9XhEUYJla+bHpVZiRjxg0ClYJ9YkIfXliHH8i6bsGbaqcyeW/V/Y+qITlhS3oF0QmVtMdcx8bGv/TLe020Bqkx0Rpj1qbE/7UXTDXolAE2lgTuTwCyop50tTDOAa4ZIfLcinEyPGdoF/jilRZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5zb0+b7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714488259; c=relaxed/simple;
+	bh=ITJBFO8fU5qCoPRWLyqfUK06OptlD/pVjoJj4mvvjlc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=diazgDPK5TDL8oQoq1cZ/rQoz1S/RYbgI4CR/+JmnL5/9GhoFJajRGt9Dt/xdrs7XJyCdFal2jFz/FGgbBZKfHXDrA1u/9ZAGjh1+Sjq/vmiCjUtlcSMw1keEz1lVxtAJNNkBHGLo0jsZZPr2Fa7WTZFyuENDhBYlw1/ksCAC0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RPtX7lVO; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5zb0+b7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E979C2BBFC;
-	Tue, 30 Apr 2024 14:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714488174;
-	bh=QH1dfcYyIcPetkUCl+atKwQJ978quIcfRWzXslCTQwI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=X5zb0+b7+f45iFblEiSD/PT3vhYkLnqmZt0lVzVvqm5be/Ryl5j5Vft1WqY9bN9vv
-	 Pg/BitOvX6C7v8nBBjjeLK4v4N1UmN5dyReZT/34rnVY0JK8/wRMuf57VbvhRkigVu
-	 ABwlzx19+Ymje6YrRjRfDsnkKL04JsgeCzJVm+O4JmuLTV6ua6BLEVXli/hl0cs+rG
-	 5GJZ4E8GKI83/KJLHc+WO8Uao8CRJzFInfiC5gkEsi0VjIzek1mgMqYpr6n53stEPy
-	 hFBOv+DeGDlc6v9sRWDYNmdaRmWSrCtKcPaI3RuIzDDeiRP1xuzsOkdW15u7sbRLzI
-	 KlG73TU8hz/+w==
-Date: Tue, 30 Apr 2024 07:42:52 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>, Casper
- Andersson <casper.casan@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Eric
- Dumazet <edumazet@google.com>, Vladimir Oltean <olteanv@gmail.com>, "David
- S. Miller" <davem@davemloft.net>, Oleksij Rempel <o.rempel@pengutronix.de>,
- Tristram.Ha@microchip.com, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Ravi Gunasekaran <r-gunasekaran@ti.com>, Simon
- Horman <horms@kernel.org>, Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
- Murali Karicheri <m-karicheri2@ti.com>, Jiri Pirko <jiri@resnulli.us>, Dan
- Carpenter <dan.carpenter@linaro.org>, Ziyang Xuan
- <william.xuanziyang@huawei.com>, Shigeru Yoshida <syoshida@redhat.com>,
- "Ricardo B. Marliere" <ricardo@marliere.net>, linux-kernel@vger.kernel.org
-Subject: Re: [net-next PATCH] hsr: Simplify code for announcing HSR nodes
- timer setup
-Message-ID: <20240430074252.2690b639@kernel.org>
-In-Reply-To: <20240430145243.34b82105@wsk>
-References: <20240425153958.2326772-1-lukma@denx.de>
-	<20240426173317.2f6228a0@kernel.org>
-	<20240429120904.2ab5248c@wsk>
-	<20240429104026.0fe3de0f@kernel.org>
-	<20240430145243.34b82105@wsk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RPtX7lVO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714488258; x=1746024258;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ITJBFO8fU5qCoPRWLyqfUK06OptlD/pVjoJj4mvvjlc=;
+  b=RPtX7lVOuIkDhJRi3CV5kiBn9svtvK0JefRJimC6nmif7bu7wvGAUX1h
+   4rjm8et5B2aZuEcJ2ZY/o5onnOWoklDFVsaDZY1wPHiF55gbawH968YH6
+   Pi+xFIiIx2uvtWerahBEP5bjpW1S3EVEhtK01mL8+bRdSft/r7qv8D5ey
+   ru3b0l6hFasIVqQy0AHDEezzFwgggRDTpSg6RkKgQTerMA2rrmn9rjnJa
+   aRHqwrsYKsC1P8zxvBfBk1L2ep2mpZ0I9A2Wyg10pz0x1OfXQojNRLDKW
+   ve9EofxtQwKYIegogKHQOi+u1rLi8jciFu32krQKy8m4CiGtxW/vRIvcB
+   g==;
+X-CSE-ConnectionGUID: cjlnOjnjT0mtOc5rUmuVAg==
+X-CSE-MsgGUID: eWjQD2fyQICMVGs8n8lkCw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10420084"
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="10420084"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 07:44:17 -0700
+X-CSE-ConnectionGUID: CgbXh7TnQSaFTyUXC+T2Nw==
+X-CSE-MsgGUID: /9seFNKQR1uxdDrqYlKm/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="26491447"
+Received: from mehlow-prequal01.jf.intel.com ([10.54.102.156])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 07:44:16 -0700
+From: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>
+To: jarkko@kernel.org
+Cc: dave.hansen@linux.intel.com,
+	dmitrii.kuvaiskii@intel.com,
+	haitao.huang@linux.intel.com,
+	kai.huang@intel.com,
+	kailun.qin@intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-sgx@vger.kernel.org,
+	mona.vij@intel.com,
+	reinette.chatre@intel.com
+Subject: Re: [PATCH 0/2] x86/sgx: Fix two data races in EAUG/EREMOVE flows
+Date: Tue, 30 Apr 2024 07:35:55 -0700
+Message-Id: <20240430143555.893316-1-dmitrii.kuvaiskii@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <D0WMNTCRUN00.TQHC8O6X6WI2@kernel.org>
+References: <D0WMNTCRUN00.TQHC8O6X6WI2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Organization: Intel Deutschland GmbH - Registered Address: Am Campeon 10, 85579 Neubiberg, Germany
+Content-Transfer-Encoding: 8bit
 
-On Tue, 30 Apr 2024 14:52:43 +0200 Lukasz Majewski wrote:
-> > Practically speaking I'm not sure if anyone uses any of the weird
-> > IFF_* flags, but they are defined in uAPI (enum net_device_flags) and
-> > I don't see much validation so presumably it's possible to flip them.  
+On Mon, Apr 29, 2024 at 04:06:39PM +0300, Jarkko Sakkinen wrote:
+> On Mon Apr 29, 2024 at 1:43 PM EEST, Dmitrii Kuvaiskii wrote:
+> > SGX runtimes such as Gramine may implement EDMM-based lazy allocation of
+> > enclave pages and may support MADV_DONTNEED semantics [1]. The former
+> > implies #PF-based page allocation, and the latter implies the usage of
+> > SGX_IOC_ENCLAVE_REMOVE_PAGES ioctl.
+> >
+> > A trivial program like below (run under Gramine and with EDMM enabled)
+> > stresses these two flows in the SGX driver and hangs:
+> >
+> > /* repeatedly touch different enclave pages at random and mix with
+> >  * `madvise(MADV_DONTNEED)` to stress EAUG/EREMOVE flows */
+> > static void* thread_func(void* arg) {
+> >     size_t num_pages = 0xA000 / page_size;
+> >     for (int i = 0; i < 5000; i++) {
+> >         size_t page = get_random_ulong() % num_pages;
+> >         char data = READ_ONCE(((char*)arg)[page * page_size]);
+> >
+> >         page = get_random_ulong() % num_pages;
+> >         madvise(arg + page * page_size, page_size, MADV_DONTNEED);
+> >     }
+> > }
+> >
+> > addr = mmap(NULL, 0xA000, PROT_READ | PROT_WRITE, MAP_ANONYMOUS, -1, 0);
+> > pthread_t threads[16];
+> > for (int i = 0; i < 16; i++)
+> >     pthread_create(&threads[i], NULL, thread_func, addr);
 > 
-> Ok, I see.
+> I'm not convinced that kernel is the problem here but it could be also
+> how Gramine is implemented.
 > 
-> Then - what would you recommend instead? The approach with manual
-> checking the previous state has described drawbacks.
+> So maybe you could make a better case of that. The example looks a bit
+> artificial to me.
 
-Add a bool somewhere to track if the timer has been scheduled?
-The NETDEV_ events in question are called under rtnl_lock, so
-no extra locking should be needed.
+I believe that these are the bugs in the kernel (in the SGX driver). I
+provided more detailed descriptions of the races and ensuing bugs in the
+other two replies, please check them.
+
+The example is a stress test written to debug very infrequent hangs of
+real-world applications that are run with Gramine, EDMM, and two
+optimizations (lazy allocation and MADV_DONTNEED semantics). We observed
+hangs of Node.js, PyTorch, R, iperf, Blender, Nginx. To root cause these
+hangs, we wrote this artificial stress test. This test succeeds on vanilla
+Linux, so ideally it should also pass on Gramine.
+
+Please also note that the optimizations of lazy allocation and
+MADV_DONTNEED provide significant performance improvement for some
+workloads that run on Gramine. For example, a Java workload with a 16GB
+enclave size has approx. 57x improvement in total runtime. Thus, we
+consider it important to permit these optimizations in Gramine, which IIUC
+requires bug fixes in the SGX driver.
+
+You can find more info at
+https://github.com/gramineproject/gramine/pull/1513.
+
+Which parts do you consider artificial, and how could I modify the stress
+test?
+
+--
+Dmitrii Kuvaiskii
