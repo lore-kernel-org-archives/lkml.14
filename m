@@ -1,526 +1,279 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B6417592;
-	Tue, 30 Apr 2024 11:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714476384; cv=none; b=MYf/IoZ/uZ6rEZtQypPz9CCtKobvSZkvc5eyXmeZpWNXwjhDJPMiHl5UxbrcOOIo+P/qtmD9tMZZhf6vFaETdCRfwStiSgxnTEMS7GG6N52Ac0TJmFlqikhZFgLqTdoh8sIrTEPn3yGDbmp4POieUXH0PXhCZUFvSOdgPwI7lVI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714476384; c=relaxed/simple;
-	bh=ww5WQt3GhBh/vrI3RBSTla9eJowdXO8nFWN/PrFrsck=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nkLOZj/XjUNlWIuS2k9ywrBWcbww2IQHQwdPpIzUoS6i8reRdfxie/qd2A0UZnd8QB6vyw3CZRe7PRe8xEG8kdm8QsC8T2z5w1jRrun4U9qFgxN2oIbx3A2Z4iYGHK0yxlDpmIAOy779HEHccWGzDDLU4PPeTXtfvtpqjp752Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2gx2rPoW; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456E812BF32;
+	Tue, 30 Apr 2024 11:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714476643; cv=fail; b=C3EbafOlpu/rDNU55LXmaX7VCo6ayyKFoMYjtkLpN1h4Hm21dZvsHrjfz5dKI6XtB13IQfA/XIZK0Dyu6ld+F46Ug4VUS9xi+RbFUPIMlwa/TKkV8vT7QC0OwW3NoD5v0cB9B/wsWZvoAcqiqTVh3/a3oiEXKM7IkpZzXbowPnw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714476643; c=relaxed/simple;
+	bh=h8FIiGNH1ycphTO3U7JeYiBwfa7IYVG1qDOOWiFwl2k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KucTpTz/cXLPtM/cxVOnAG0yt0fmN3unzghOMm+YTac7yNiFZWJhTtChMF42Ie7X9MihWqE+UdxlQ7SZUwWyOrA6eYTi4bztmy/zX8laoHeB6pS8chlT0ERp6bfx9sunqJJQ2Ehmr1rmAkHfH9tNr1lL+PNmTXqQCpTXJ5hmXqs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PEtFThCW; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=r2DvVqfw; arc=fail smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2gx2rPoW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DA47C4AF18;
-	Tue, 30 Apr 2024 11:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1714476383;
-	bh=ww5WQt3GhBh/vrI3RBSTla9eJowdXO8nFWN/PrFrsck=;
-	h=From:To:Cc:Subject:Date:From;
-	b=2gx2rPoW7AZb1OjbJeYVyZ9O5oQdt7l8flIdc5WLRnBqkII7o2uCSW9Gm30GQJdPw
-	 wl0YjKccOXwtVRdVGJRp4knJwc/P+PKUdsLn8DyJXBkkXILjHaxtK7cx3winMkrSMI
-	 0yys/eGixwforWrqK4VW4YyqEwkuSMtVbk5Qqqxg=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org
-Subject: [PATCH 6.1 000/110] 6.1.90-rc1 review
-Date: Tue, 30 Apr 2024 12:39:29 +0200
-Message-ID: <20240430103047.561802595@linuxfoundation.org>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PEtFThCW";
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="r2DvVqfw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1714476640; x=1746012640;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=h8FIiGNH1ycphTO3U7JeYiBwfa7IYVG1qDOOWiFwl2k=;
+  b=PEtFThCWgN/EDjtiujBMGjw4uMiL+KOFJ5rCUb1OB+HrYjAAyvoBJAB+
+   AcsgOIiLFsL6FP3py1+yBuvUTIvwngxcN2j5Pz7YEf4iu26P5qD12fmtn
+   ogz8hBT/LwePpmBn3kO2FxbfT7Sd7IBqIztzbQYIN2McP4oi69cb0JBbJ
+   F+JHRWKmVDpUXtcDotvEx1lWTiv53Jydy7IhDDErRWm8YGoiBXlx+Cini
+   n28B42majAET9KGjgHoGTrpCnTCRYoVxe5TlDjV3/myFgZ7iXQWjyE2Qe
+   KEBQ9Q2XGyizXfS6ZkbRlqQ40jkJFbtwfEqcAP6IphJ/Q30UVgaNTsysy
+   w==;
+X-CSE-ConnectionGUID: Z2PQcOEARHCoHqpQ9E0UCg==
+X-CSE-MsgGUID: 1nX+M3D/S1y4bHZejVgG0Q==
+X-IronPort-AV: E=Sophos;i="6.07,242,1708412400"; 
+   d="scan'208";a="190592283"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Apr 2024 04:30:36 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 30 Apr 2024 04:30:13 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (10.10.215.250)
+ by email.microchip.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 30 Apr 2024 04:30:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fuisAInQNWIOrJ1qhPplBCaC61pYVXI2MmM6eol8eYS/fExpK+GC5Qp/sllefiyZAZ9uhT+ujr64ObTmx5L7KT/s3fvgeFQW5ean2Rj8/b+haTVXtnWNMxegozKB2RhWLRo8fwHv/0b2TfI3H3buHomsfds254HrAmKlIq7jpV/6HFlXF/Bz/WqdsS582Z/1Yj8goCZRrQioXOSt/QW3TySWxpTwHeG37JBJJ27D2ggovAc5ssMEpi0LNHem4ObCRtyyAqT9yfEovCp6eA6/PGcO6vMn6Lbl/SIWid0t88h4+3zMKUkYJE/sWMC9XjPYFrBoD3ALnNINo9wiWdFSmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h8FIiGNH1ycphTO3U7JeYiBwfa7IYVG1qDOOWiFwl2k=;
+ b=kn8xeLBdmmc5SKsnmxn4Trv9kFEii18NLz2F25Eq4MSYy3OTZQe5zrQMJY9ggXdG4PYayASAHVadmk+VFi//osqpfatS7b7SWmKU6qSY76oMMNTaKgLO0KAMiX8UoVvvQ0wD9bT9aS/Jf+R5NFpdwF7utvaZCLHhT08JNQMTRPa1SbTvgNiwJ9rjQuxKLDG7M6AGnBDb3o6jNzgODrOPpH8W6o13eByzDyrPyHDW26J2UsrRnj1dWlZJWEJ3MSNHnNs/MKr5/P//07SR0HjocptaD2NA8w8YzfKLnDSR3ynMFKHMAf17EqfnbL5hCKip2zmhW1+x8lG+ghNZ98If+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h8FIiGNH1ycphTO3U7JeYiBwfa7IYVG1qDOOWiFwl2k=;
+ b=r2DvVqfwymwtAxAfXqdnP6z1+WZft1uQ2U2meFkYmMM1zbP1e0i+tmkIpEbGOjKdn7U44mY9xPpPhgwJjVBy0cvXVbp7RAu+VZYGX0YM8pzd+BZKwDLuHiSFwDBYkOaHUjxaJoGKhU3960sjZ678/6+aHwyKjEwyMrciZHjJBvsOld1xd02ZTA97wUjlJyEiwcOqH9HJuE13r78RRtNyeK913hZHy5FTD7aRWrVaZ1O2J33uyCcU4qfM1RZumddr91oJrowfJc4VZEYrt0Kv5+yButjmFcu1pWkRGAM8kEXPQ6H1M25fzgA9iyMwgr9a6sdEFLUCzB9qsngQa7k8HA==
+Received: from SA1PR11MB8278.namprd11.prod.outlook.com (2603:10b6:806:25b::19)
+ by CO1PR11MB5137.namprd11.prod.outlook.com (2603:10b6:303:92::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Tue, 30 Apr
+ 2024 11:30:10 +0000
+Received: from SA1PR11MB8278.namprd11.prod.outlook.com
+ ([fe80::84fa:e267:e389:fa9]) by SA1PR11MB8278.namprd11.prod.outlook.com
+ ([fe80::84fa:e267:e389:fa9%4]) with mapi id 15.20.7519.031; Tue, 30 Apr 2024
+ 11:30:10 +0000
+From: <Parthiban.Veerasooran@microchip.com>
+To: <horms@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <saeedm@nvidia.com>, <anthony.l.nguyen@intel.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <andrew@lunn.ch>,
+	<corbet@lwn.net>, <linux-doc@vger.kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <Horatiu.Vultur@microchip.com>,
+	<ruanjinjie@huawei.com>, <Steen.Hegelund@microchip.com>,
+	<vladimir.oltean@nxp.com>, <UNGLinuxDriver@microchip.com>,
+	<Thorsten.Kummermehr@microchip.com>, <Pier.Beruto@onsemi.com>,
+	<Selvamani.Rajagopal@onsemi.com>, <Nicolas.Ferre@microchip.com>,
+	<benjamin.bigler@bernformulastudent.ch>
+Subject: Re: [PATCH net-next v4 01/12] Documentation: networking: add OPEN
+ Alliance 10BASE-T1x MAC-PHY serial interface
+Thread-Topic: [PATCH net-next v4 01/12] Documentation: networking: add OPEN
+ Alliance 10BASE-T1x MAC-PHY serial interface
+Thread-Index: AQHakY/6sQRIWqa8eEy+60OQ1lk9aLF/fkYAgAFCCwA=
+Date: Tue, 30 Apr 2024 11:30:10 +0000
+Message-ID: <8164fe59-dde6-41b3-8e9d-8e050d1c7109@microchip.com>
+References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
+ <20240418125648.372526-2-Parthiban.Veerasooran@microchip.com>
+ <20240429161716.GZ516117@kernel.org>
+In-Reply-To: <20240429161716.GZ516117@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR11MB8278:EE_|CO1PR11MB5137:EE_
+x-ms-office365-filtering-correlation-id: cbebb434-c709-4938-c8d9-08dc6908e4e6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|7416005|376005|366007|38070700009;
+x-microsoft-antispam-message-info: =?utf-8?B?VlFqRThQMityYTRSdHZIZ0pKS2tuY3NFdlhrNGRWK3hVZmdnRXRvYVVodjhH?=
+ =?utf-8?B?NWdGVGUvRUtTVnNCQnNMNzQ2Nlg3ZUs4VERyWjY3aHhlbUx3ZUs5aTRlM0NK?=
+ =?utf-8?B?VDhBc29MWThNbWw0OG9YazMweVdQNkVneElHNVFVU2FJTWlnMGtybHBhMTh4?=
+ =?utf-8?B?d3Q3d0EyTnRlaDV1QXZRM0l6WUpxTFBNalhkVGxpckdHTW5odXJOdXROTjBk?=
+ =?utf-8?B?eG52TWdiUmtTWnFPVXZWTHNBWXhUUHR0VHpVT2FOMHpvdTFsK0U3VytlYUdn?=
+ =?utf-8?B?S2JwVjZHZkVLdDRPZW1CcWVOeVpnNmFjZjlDbUg0bklQSjkxdHFKS240YkQ0?=
+ =?utf-8?B?WkNOWUI4TkJJeUlqTllYOElmay96RG5MN2ZzUnZKaXFaWnUzblRCdmhMdlpR?=
+ =?utf-8?B?a3dNR2dRaEYrQ04yYUNBWmhhSGxtTy9XaVZyVVlKdlp6VnFlMGV1L2xIVlNi?=
+ =?utf-8?B?ek5sODdCVXhMS2JOWm5LZHVaR0h6VmtCWW9Wei9GTWlBV0VjbkNmVjdzU01m?=
+ =?utf-8?B?VldDYnVDUE5pTUR0N2JncTA1d3ZseGlJRmlxSHdEY0RvcE5oL2R0cEVjVk9m?=
+ =?utf-8?B?MVlHbERtSGpGWXVRTmJHQ0F5TzNyb3BJanJ1aVdhN2UzeHdrd2VmU2dvMytU?=
+ =?utf-8?B?am1lYTZZcSs0K0FId1FrQnA2bExuVlFjU21ZN0FCT2NlS2VReEVxUzVXRm1U?=
+ =?utf-8?B?TFNsdVR1cmtkR3pGRkg0ZDBFbXVNTmUyMlluMlduUGZLSzN3L3J2MytMTkdP?=
+ =?utf-8?B?M2FlQlZMY043bENtWDBIenJaVTJIcW94ZGd6WkRlT09QUVRmL2pkbHgxUnBa?=
+ =?utf-8?B?VzVkMzVrellZV0dXM0NmN3BnNFVBWmRwdlhRTjdqU2xvVFNCQjl1TlA5M1la?=
+ =?utf-8?B?TGRzT2IwZ29DbVFXL0VHQmx0MkM0R0pSd3VvdUFHS2JFOTBGd1dmbFF5Zm1X?=
+ =?utf-8?B?QUFJN1V6dWEvUktsL2JvRTViWTZUYVYyL2RCTmU1UW1DaFN3TUNJc3U2aFRU?=
+ =?utf-8?B?b2xaQ0t4S292WG9pVlpVeUVwUnZxdkduMXNwSW5FdFFDZG5lYlExakVGM0JW?=
+ =?utf-8?B?SGNwZFdLTUt4dzNnS3dTdHFYaDk2Wk5oMUVrOTY4NkkxRzI2SzVIZHlDb21C?=
+ =?utf-8?B?em9jTkthcVJRU2FmTlduNlNIYm1wNWt0L3RmdnZjd0g0Z2QzVHord05MT1Mx?=
+ =?utf-8?B?Vk83TC95T0hrRXM0RGNIOHQ2WWNyT0xJRlZwZms4M0dkNUdxSEJkVThweXd2?=
+ =?utf-8?B?bTRPQi9IeWhOYkR5L0s5NmEzU0tMNmF4Mk9IL3ZmNlYxN0dpSTIzNHdjK0ZX?=
+ =?utf-8?B?ZFVSdWgzUE8yckk1TGpRTDc2dTJLNWRSaFF6bk9pQUJXZm1PVU1IWGVVSW5I?=
+ =?utf-8?B?RmVYY1NGUUw2QnN0WHIyR09QMFRZOHhBS2Jkd1NGamlxS2xPNWJGeVVJSUxB?=
+ =?utf-8?B?RGxEOHVtZGZaV0VnS253NDFhNjZQQUdBdkJFK2pvRjdhazRaV2tKVkRRcUYr?=
+ =?utf-8?B?ellOdTlRZkh1cGFqSXU0NWVGVzg0cml3WlYvMi9IZExkUi91WUw3NWVPQWRU?=
+ =?utf-8?B?VTQ5N2ZLSmpLS1VEVUU5NHdCeUVGZisxemowNEZqVnlFYnJQREpmemFEbEhR?=
+ =?utf-8?B?YXEzRmtiSzhjSEJmVXBFeUk1MHdtR3JMNFRUdWlyVzFxSEhyL0VtWVRyL1ow?=
+ =?utf-8?B?cjErVmpYcmlveENydDlma2dZMGxHNlYybGFpU2hXdU5EUnQ2WEErNGR3PT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8278.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ejJ3TlpzNXVvOFBLQ3FwZUFSOFhEV00xT3RmbnVpdXl6TExOelo2WmJjVkRH?=
+ =?utf-8?B?RU1GNGRHd09mcTJMb2MyRDlreWtQM1RiWVB5bll4MjhVWXRka3hvaHNMZm9i?=
+ =?utf-8?B?bk4wWVJkMnlwT2F6UGRnenJtYU5BcEdaeXJjZk83bmt0STZ4aFNhMVBtbm9D?=
+ =?utf-8?B?enBEVEU2aG9uQmxZN01tdUp2cWJteTJSSG5tSENOQldmcnBxNC9jMmpPRWla?=
+ =?utf-8?B?aEhOVHR3d210MWJzUitsdU9lYkJvOFJWcHJ3R2tsN3JSTEthL2U3aXFaYWtH?=
+ =?utf-8?B?b0U5NnV3WDhNMkxNVUxJUzZyMWlPbVZtbCtVVDVMV0NZM2dNY05WRTkrbEN4?=
+ =?utf-8?B?OUo0amFYM21jS3h2dW10RFJ6TFZIenZHYVVMQkZicDF4Zk5xTUdYUzJFTlA5?=
+ =?utf-8?B?ZWhSTnRydlVScjdCTVZHUS9aUGxpdXk4Z0pKVjVxbUd4VDRXT2hrVW9zcWhM?=
+ =?utf-8?B?SGdNZUs2eXVqTTVUaFhrcjNPQ2twL1c4a1Jac0ZlRkFFZ01EK3lGU0tXVXk5?=
+ =?utf-8?B?TUFCMTd2dkRhWjN6N1pETzFReEZGdjZONHhaWUNIeUJqUWs5N2xWdmt6alFr?=
+ =?utf-8?B?ak1OKzI2TFBhSnladWx1TzBEakhNMW53YlgyZjZkWC9ZbW9uaU9aeGxTV2x0?=
+ =?utf-8?B?dFhjWUVYanNzNFN6bk5mOWRvbHhyNmQ4emZvYVg2R1BTdC9rY2o1R1FnWnhv?=
+ =?utf-8?B?Mkd3cTVZb0d0UU93amhXLzNhZ2FjWmxRUHE1NFN6TUtVMnZzZUZUYWc1VFdy?=
+ =?utf-8?B?MUZ3MTdsTWJPQU4waUREZWxSeHBGdVRrWEdQZmVMNzRIZHRYcm9NUmJkMzhp?=
+ =?utf-8?B?TUxOMVAySUEvN1hZSEgyME9KV0U5c0RYc2E2L3phU0J5dDhGS2tmTHFKeHdY?=
+ =?utf-8?B?MWZPWkpPY3NSUWIyenhha1ZscnpvcWk3VldvcVNXcmJCUXRWbHp0Rzg0R0lY?=
+ =?utf-8?B?M3lxdzNNUW0xbUpkUGhITGJkUU5xSXBMaXB1ejFpN3lqWjd3RHMrN2d6MXZC?=
+ =?utf-8?B?aHpkdzNzV3JhRXYxTXdkNFBkcGNKVmpFdWx6WDZya2wxWFlqSVpTNlVEd0JC?=
+ =?utf-8?B?UkRDb29vOUVYT0dPMEl2Y2JXay92NUIvVFptSnZqbmFQVi91UjgzMGgyb3pQ?=
+ =?utf-8?B?Q01PZi9XY2hHSnhqNGgwbDRvM1IvNWdCMjJQRE9RZHlPVzBEZVdiSWVSelVE?=
+ =?utf-8?B?TUJHbUQxcEpCWUNGOWpudVY5bVNNcHV3Y3lWVnB3ZUJsMDZuZFRmb3h2d244?=
+ =?utf-8?B?SkE2MkZ3bEd2VWl1TlZkT2hhYWNBaHpUN2tQSHF2K2FweERzQ2tzbWlTVUx6?=
+ =?utf-8?B?RjlVTEUzWUZoeFRnd0diSjZkZVVyUDlFODl1RVhPSmR6Y0RsMENVWVFwSnFC?=
+ =?utf-8?B?cmJ2RHNwWFNyVFJVNldlR2xpMzJVc3kyY1NyOGQwRDhmMkMxZEdkd2N6RUVK?=
+ =?utf-8?B?RE14YzZrS0xzR0h2WUh2cXBSbGFjVGtlbmtEaElaem1BZC82N1k2N3A4Qzh2?=
+ =?utf-8?B?YmZLdXBEdzNtandqeVFLcVFCb2FvRk51OUtFU1IzMjVQUFd4Mi9XVE1oSWJP?=
+ =?utf-8?B?UTNJRC9qR0Z0WnI1Z2FSRW1ZNmovcEhBTnJWM1Y5aGhWbTBjQnBDaHNsNlky?=
+ =?utf-8?B?UjJqY1VmNVA0WGNVQ2dUVGRtV3hBR3Z3cDJ4OVN4ZWRRWXpBQ0xrNnpVZGp2?=
+ =?utf-8?B?UXppdGF0M2JLaTdYcjErRUZlb1JwRHZxQUVTVFJPOFBSRTBXYzZTby9CeDZj?=
+ =?utf-8?B?bjRlMHVkSldxT1Z1N3RoWEhLRkJ6UnlLUzRiRE9TWGVrTWVDbGtNV3pRak01?=
+ =?utf-8?B?REhoVm1JbTBhNUlOcERvamdvR2RHLzZoYmgyaU8zY0RyVnBQOU9QWHVaNUFv?=
+ =?utf-8?B?dTlobi9LajRuZnB1LzBkM1N4Q3p1UkxmeWFBVGlCNDBPZTVIMzdYUGZldWM5?=
+ =?utf-8?B?RDBwQ3RTNmNaR1lvMXJWQWliSGpYblRDc0hLbU1uWURYVmNsSzNjbEJVeUxI?=
+ =?utf-8?B?dyt3cGg4MnV4SUpqSlRGcndIS2d5Q1dta3o4azRxbVlQK2g3THZrdVZtYW0y?=
+ =?utf-8?B?ZFRXK2ZjUVppbEZ3bko3VFAwVlBRVjVkRnFEeVRvdHBoNzJBN3RhSkxGVVJH?=
+ =?utf-8?B?ZGpCQU04QlUxOVV2MHVmTXFqMEljVDVJVCsvYjBuYnREUFh2NWdFcDhwSUdO?=
+ =?utf-8?B?M1E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8AB5E0D7F2C92B419F1AC59738221CA9@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.90-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.1.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.1.90-rc1
-X-KernelTest-Deadline: 2024-05-02T10:30+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 6.1.90 release.
-There are 110 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Thu, 02 May 2024 10:30:27 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.90-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.1.90-rc1
-
-Rahul Rameshbabu <rrameshbabu@nvidia.com>
-    net/mlx5e: Advertise mlx5 ethernet driver updates sk_buff md_dst for MACsec
-
-Rahul Rameshbabu <rrameshbabu@nvidia.com>
-    macsec: Detect if Rx skb is macsec-related for offloading devices that update md_dst
-
-Rahul Rameshbabu <rrameshbabu@nvidia.com>
-    macsec: Enable devices to advertise whether they update sk_buff md_dst during offloads
-
-Matthew Wilcox (Oracle) <willy@infradead.org>
-    bounds: Use the right number of bits for power-of-two CONFIG_NR_CPUS
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: smbus: fix NULL function pointer dereference
-
-Hans de Goede <hdegoede@redhat.com>
-    phy: ti: tusb1210: Resolve charger-det crash if charger psy is unregistered
-
-Samuel Holland <samuel.holland@sifive.com>
-    riscv: Fix TASK_SIZE on 64-bit NOMMU
-
-Baoquan He <bhe@redhat.com>
-    riscv: fix VMALLOC_START definition
-
-Fenghua Yu <fenghua.yu@intel.com>
-    dmaengine: idxd: Fix oops during rmmod on single-CPU platforms
-
-Sean Anderson <sean.anderson@linux.dev>
-    dma: xilinx_dpdma: Fix locking
-
-Sebastian Reichel <sebastian.reichel@collabora.com>
-    phy: rockchip-snps-pcie3: fix clearing PHP_GRF_PCIESEL_CON bits
-
-Michal Tomek <mtdev79b@gmail.com>
-    phy: rockchip-snps-pcie3: fix bifurcation on rk3588
-
-Marcel Ziswiler <marcel.ziswiler@toradex.com>
-    phy: freescale: imx8m-pcie: fix pcie link-up instability
-
-Richard Zhu <hongxing.zhu@nxp.com>
-    phy: freescale: imx8m-pcie: Refine i.MX8MM PCIe PHY driver
-
-Mikhail Kobuk <m.kobuk@ispras.ru>
-    phy: marvell: a3700-comphy: Fix hardcoded array size
-
-Mikhail Kobuk <m.kobuk@ispras.ru>
-    phy: marvell: a3700-comphy: Fix out of bounds read
-
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    idma64: Don't try to serve interrupts when device is powered off
-
-Akhil R <akhilrajeev@nvidia.com>
-    dmaengine: tegra186: Fix residual calculation
-
-Arnd Bergmann <arnd@arndb.de>
-    dmaengine: owl: fix register access functions
-
-Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-    x86/tdx: Preserve shared bit on mprotect()
-
-Aswin Unnikrishnan <aswinunni01@gmail.com>
-    rust: remove `params` from `module` macro example
-
-Arnd Bergmann <arnd@arndb.de>
-    mtd: diskonchip: work around ubsan link failure
-
-Yick Xie <yick.xie@gmail.com>
-    udp: preserve the connected status if only UDP cmsg
-
-Nam Cao <namcao@linutronix.de>
-    fbdev: fix incorrect address computation in deferred IO
-
-Andrey Ryabinin <ryabinin.a.a@gmail.com>
-    stackdepot: respect __GFP_NOLOCKDEP allocation flag
-
-Peter Münster <pm@a16n.net>
-    net: b44: set pause params only when interface is up
-
-Rahul Rameshbabu <rrameshbabu@nvidia.com>
-    ethernet: Add helper for assigning packet type when dest address does not match device address
-
-Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
-    ACPI: CPPC: Fix access width used for PCC registers
-
-Jarred White <jarredwhite@linux.microsoft.com>
-    ACPI: CPPC: Fix bit_offset shift in MASK_VAL() macro
-
-Jarred White <jarredwhite@linux.microsoft.com>
-    ACPI: CPPC: Use access_width over bit_width for system memory accesses
-
-Guanrui Huang <guanrui.huang@linux.alibaba.com>
-    irqchip/gic-v3-its: Prevent double free on error
-
-Mukul Joshi <mukul.joshi@amd.com>
-    drm/amdgpu: Fix leak when GPU memory allocation fails
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/amdgpu/sdma5.2: use legacy HDP flush for SDMA2/3
-
-Iskander Amara <iskander.amara@theobroma-systems.com>
-    arm64: dts: rockchip: enable internal pull-up for Q7_THRM# on RK3399 Puma
-
-Jiantao Shan <shanjiantao@loongson.cn>
-    LoongArch: Fix access error when read fault on a write-only VMA
-
-Huacai Chen <chenhuacai@kernel.org>
-    LoongArch: Fix callchain parse error with kernel tracepoint events
-
-Sean Christopherson <seanjc@google.com>
-    cpu: Re-enable CPU mitigations by default for !X86 architectures
-
-Johannes Thumshirn <johannes.thumshirn@wdc.com>
-    btrfs: fix information leak in btrfs_ioctl_logical_to_ino()
-
-Nam Cao <namcao@linutronix.de>
-    HID: i2c-hid: remove I2C_HID_READ_PENDING flag to prevent lock-up
-
-Steve French <stfrench@microsoft.com>
-    smb3: fix lock ordering potential deadlock in cifs_sync_mid_result
-
-Gustavo A. R. Silva <gustavoars@kernel.org>
-    smb: client: Fix struct_group() usage in __packed structs
-
-Mantas Pucka <mantas@8devices.com>
-    mmc: sdhci-msm: pervent access to suspended controller
-
-Johan Hovold <johan+linaro@kernel.org>
-    Bluetooth: qca: fix NULL-deref on non-serdev suspend
-
-WangYuli <wangyuli@uniontech.com>
-    Bluetooth: btusb: Add Realtek RTL8852BE support ID 0x0bda:0x4853
-
-Nathan Chancellor <nathan@kernel.org>
-    Bluetooth: Fix type of len in {l2cap,sco}_sock_getsockopt_old()
-
-Conor Dooley <conor.dooley@microchip.com>
-    rust: make mutually exclusive with CFI_CLANG
-
-Alice Ryhl <aliceryhl@google.com>
-    rust: don't select CONSTRUCTORS
-
-David Kaplan <david.kaplan@amd.com>
-    x86/cpu: Fix check for RDPKRU in __show_regs()
-
-Miaohe Lin <linmiaohe@huawei.com>
-    fork: defer linking file vma until vma is fully initialized
-
-Breno Leitao <leitao@debian.org>
-    virtio_net: Do not send RSS key if it is not supported
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "crypto: api - Disallow identical driver names"
-
-Kees Cook <keescook@chromium.org>
-    cifs: Replace remaining 1-element arrays
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    af_unix: Suppress false-positive lockdep splat for spin_lock() in __unix_gc().
-
-Jason Reeder <jreeder@ti.com>
-    net: ethernet: ti: am65-cpts: Fix PTPv1 message type on TX packets
-
-Sudheer Mogilappagari <sudheer.mogilappagari@intel.com>
-    iavf: Fix TC config comparison with existing adapter TC config
-
-Erwan Velu <e.velu@criteo.com>
-    i40e: Report MFS in decimal base instead of hex
-
-Sindhu Devale <sindhu.devale@intel.com>
-    i40e: Do not use WQ_MEM_RECLAIM flag for workqueue
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: honor table dormant flag from netdev release event path
-
-Jakub Kicinski <kuba@kernel.org>
-    eth: bnxt: fix counting packets discarded due to OOM and netpoll
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix memory leak when canceling rehash work
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix incorrect list API usage
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix warning during rehash
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix memory leak during rehash
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Rate limit error message
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix possible use-after-free during rehash
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix possible use-after-free during activity update
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: spectrum_acl_tcam: Fix race during rehash delayed work
-
-Hyunwoo Kim <v4bel@theori.io>
-    net: openvswitch: Fix Use-After-Free in ovs_ct_exit
-
-Ismael Luceno <iluceno@suse.de>
-    ipvs: Fix checksumming on GSO of SCTP packets
-
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-    Bluetooth: qca: set power_ctrl_enabled on NULL returned by gpiod_get_optional()
-
-Chun-Yi Lee <jlee@suse.com>
-    Bluetooth: hci_sync: Using hci_cmd_sync_submit when removing Adv Monitor
-
-Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-    Bluetooth: MGMT: Fix failing to MGMT_OP_ADD_UUID/MGMT_OP_REMOVE_UUID
-
-Hyunwoo Kim <v4bel@theori.io>
-    net: gtp: Fix Use-After-Free in gtp_dellink
-
-Eric Dumazet <edumazet@google.com>
-    net: usb: ax88179_178a: stop lying about skb->truesize
-
-Eric Dumazet <edumazet@google.com>
-    ipv4: check for NULL idev in ip_route_use_hint()
-
-Eric Dumazet <edumazet@google.com>
-    net: fix sk_memory_allocated_{add|sub} vs softirqs
-
-Adam Li <adamli@os.amperecomputing.com>
-    net: make SK_MEMORY_PCPU_RESERV tunable
-
-Duoming Zhou <duoming@zju.edu.cn>
-    ax25: Fix netdev refcount issue
-
-Paul Geurts <paul_geurts@live.nl>
-    NFC: trf7970a: disable all regulators on removal
-
-Vikas Gupta <vikas.gupta@broadcom.com>
-    bnxt_en: Fix the PCI-AER routines
-
-Vikas Gupta <vikas.gupta@broadcom.com>
-    bnxt_en: refactor reset close code
-
-Hangbin Liu <liuhangbin@gmail.com>
-    bridge/br_netlink.c: no need to return void function
-
-Eric Dumazet <edumazet@google.com>
-    icmp: prevent possible NULL dereferences from icmp_build_probe()
-
-Andrei Simion <andrei.simion@microchip.com>
-    ARM: dts: microchip: at91-sama7g5ek: Replace regulator-suspend-voltage with the valid property
-
-Ido Schimmel <idosch@nvidia.com>
-    mlxsw: core: Unregister EMAD trap using FORWARD action
-
-David Bauer <mail@david-bauer.net>
-    vxlan: drop packets from invalid src-address
-
-Miri Korenblit <miriam.rachel.korenblit@intel.com>
-    wifi: iwlwifi: mvm: return uid from iwl_mvm_build_scan_cmd
-
-Avraham Stern <avraham.stern@intel.com>
-    wifi: iwlwifi: mvm: remove old PASN station when adding a new one
-
-Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-    ARC: [plat-hsdk]: Remove misplaced interrupt-cells property
-
-Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-    arm64: dts: rockchip: regulator for sd needs to be always on for BPI-R2Pro
-
-Rafał Miłecki <rafal@milecki.pl>
-    arm64: dts: mediatek: mt2712: fix validation errors
-
-Rafał Miłecki <rafal@milecki.pl>
-    arm64: dts: mediatek: mt7622: drop "reset-names" from thermal block
-
-Rafał Miłecki <rafal@milecki.pl>
-    arm64: dts: mediatek: mt7622: fix ethernet controller "compatible"
-
-Rafał Miłecki <rafal@milecki.pl>
-    arm64: dts: mediatek: mt7622: fix IR nodename
-
-Rafał Miłecki <rafal@milecki.pl>
-    arm64: dts: mediatek: mt7622: fix clock controllers
-
-Pin-yen Lin <treapking@chromium.org>
-    arm64: dts: mediatek: mt8195-cherry: Update min voltage constraint for MT6315
-
-Pin-yen Lin <treapking@chromium.org>
-    arm64: dts: mediatek: mt8192-asurada: Update min voltage constraint for MT6315
-
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
-    arm64: dts: mediatek: mt8195: Add missing gce-client-reg to mutex
-
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
-    arm64: dts: mediatek: mt8195: Add missing gce-client-reg to vpp/vdosys
-
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
-    arm64: dts: mediatek: mt8192: Add missing gce-client-reg to mutex
-
-Ikjoon Jang <ikjn@chromium.org>
-    arm64: dts: mediatek: mt8183: Add power-domains properity to mfgcfg
-
-Dragan Simic <dsimic@manjaro.org>
-    arm64: dts: rockchip: Remove unsupported node from the Pinebook Pro dts
-
-Quentin Schulz <quentin.schulz@theobroma-systems.com>
-    arm64: dts: rockchip: enable internal pull-up on PCIE_WAKE# for RK3399 Puma
-
-Iskander Amara <iskander.amara@theobroma-systems.com>
-    arm64: dts: rockchip: fix alphabetical ordering RK3399 puma
-
-Quentin Schulz <quentin.schulz@theobroma-systems.com>
-    arm64: dts: rockchip: enable internal pull-up on Q7_USB_ID for RK3399 Puma
-
-Arınç ÜNAL <arinc.unal@arinc9.com>
-    arm64: dts: rockchip: set PHY address of MT7531 switch to 0x1f
-
-Yaraslau Furman <yaro330@gmail.com>
-    HID: logitech-dj: allow mice to use all types of reports
-
-Zhang Lixu <lixu.zhang@intel.com>
-    HID: intel-ish-hid: ipc: Fix dev_err usage with uninitialized dev->devc
-
-Takayuki Nagata <tnagata@redhat.com>
-    cifs: reinstate original behavior again for forceuid/forcegid
-
-Paulo Alcantara <pc@manguebit.com>
-    smb: client: fix rename(2) regression against samba
-
-
--------------
-
-Diffstat:
-
- Documentation/admin-guide/sysctl/net.rst           |   5 +
- Makefile                                           |   4 +-
- arch/Kconfig                                       |   8 ++
- arch/arc/boot/dts/hsdk.dts                         |   1 -
- arch/arm/boot/dts/at91-sama7g5ek.dts               |   8 +-
- arch/arm64/boot/dts/mediatek/mt2712-evb.dts        |   8 +-
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |   3 +-
- arch/arm64/boot/dts/mediatek/mt7622.dtsi           |  34 +++----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi           |   1 +
- arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi   |   6 +-
- arch/arm64/boot/dts/mediatek/mt8192.dtsi           |   1 +
- arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi    |   4 +-
- arch/arm64/boot/dts/mediatek/mt8195.dtsi           |   4 +
- .../boot/dts/rockchip/rk3399-pinebook-pro.dts      |   1 -
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      |  31 ++++--
- arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts |   6 +-
- arch/loongarch/include/asm/perf_event.h            |   8 ++
- arch/loongarch/mm/fault.c                          |   4 +-
- arch/riscv/include/asm/pgtable.h                   |   4 +-
- arch/x86/Kconfig                                   |  11 +-
- arch/x86/include/asm/coco.h                        |   5 +-
- arch/x86/include/asm/pgtable_types.h               |   3 +-
- arch/x86/kernel/process_64.c                       |   2 +-
- crypto/algapi.c                                    |   1 -
- drivers/acpi/cppc_acpi.c                           |  72 ++++++++++---
- drivers/bluetooth/btusb.c                          |   2 +
- drivers/bluetooth/hci_qca.c                        |  21 +++-
- drivers/dma/idma64.c                               |   4 +
- drivers/dma/idxd/perfmon.c                         |   9 +-
- drivers/dma/owl-dma.c                              |   4 +-
- drivers/dma/tegra186-gpc-dma.c                     |   3 +
- drivers/dma/xilinx/xilinx_dpdma.c                  |  13 ++-
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c   |   1 +
- drivers/gpu/drm/amd/amdgpu/sdma_v5_2.c             |  24 +++--
- drivers/hid/hid-logitech-dj.c                      |   4 +-
- drivers/hid/i2c-hid/i2c-hid-core.c                 |   9 --
- drivers/hid/intel-ish-hid/ipc/ipc.c                |   2 +-
- drivers/i2c/i2c-core-base.c                        |  12 +--
- drivers/irqchip/irq-gic-v3-its.c                   |   9 +-
- drivers/mmc/host/sdhci-msm.c                       |  16 ++-
- drivers/mtd/nand/raw/diskonchip.c                  |   4 +-
- drivers/net/ethernet/broadcom/b44.c                |  14 +--
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |  80 ++++++++-------
- drivers/net/ethernet/intel/i40e/i40e_main.c        |   6 +-
- drivers/net/ethernet/intel/iavf/iavf_main.c        |  30 +++++-
- .../ethernet/mellanox/mlx5/core/en_accel/macsec.c  |   1 +
- drivers/net/ethernet/mellanox/mlxsw/core.c         |   2 +-
- .../ethernet/mellanox/mlxsw/spectrum_acl_tcam.c    |  54 ++++++++--
- drivers/net/ethernet/ti/am65-cpts.c                |   5 +
- drivers/net/gtp.c                                  |   3 +-
- drivers/net/macsec.c                               |  44 ++++++--
- drivers/net/usb/ax88179_178a.c                     |  11 +-
- drivers/net/virtio_net.c                           |  28 +++++-
- drivers/net/vxlan/vxlan_core.c                     |   4 +
- .../net/wireless/intel/iwlwifi/mvm/ftm-initiator.c |   2 +
- drivers/net/wireless/intel/iwlwifi/mvm/scan.c      |   3 +-
- drivers/nfc/trf7970a.c                             |  42 ++++----
- drivers/phy/freescale/phy-fsl-imx8m-pcie.c         | 112 +++++++++++++--------
- drivers/phy/marvell/phy-mvebu-a3700-comphy.c       |   9 +-
- drivers/phy/rockchip/phy-rockchip-snps-pcie3.c     |  31 +++---
- drivers/phy/ti/phy-tusb1210.c                      |  23 +++--
- drivers/video/fbdev/core/fb_defio.c                |   2 +-
- fs/btrfs/backref.c                                 |  12 +--
- fs/smb/client/cifs_spnego.h                        |   2 +-
- fs/smb/client/cifsfs.c                             |   1 +
- fs/smb/client/cifspdu.h                            | 100 +++++++++---------
- fs/smb/client/fs_context.c                         |  12 +++
- fs/smb/client/fs_context.h                         |   2 +
- fs/smb/client/readdir.c                            |   6 +-
- fs/smb/client/smb2pdu.c                            |   4 +-
- fs/smb/client/smb2pdu.h                            |   4 +-
- fs/smb/client/transport.c                          |   3 +
- include/linux/etherdevice.h                        |  25 +++++
- include/net/af_unix.h                              |   3 +
- include/net/macsec.h                               |   1 +
- include/net/sock.h                                 |  41 ++++----
- init/Kconfig                                       |   2 +-
- kernel/bounds.c                                    |   2 +-
- kernel/cpu.c                                       |   4 +-
- kernel/fork.c                                      |  18 ++--
- lib/stackdepot.c                                   |   4 +-
- net/ax25/af_ax25.c                                 |   2 +-
- net/bluetooth/l2cap_sock.c                         |   7 +-
- net/bluetooth/mgmt.c                               |  24 +++--
- net/bluetooth/sco.c                                |   7 +-
- net/bridge/br_netlink.c                            |   2 +-
- net/core/sock.c                                    |   1 +
- net/core/sysctl_net_core.c                         |   9 ++
- net/ethernet/eth.c                                 |  12 +--
- net/ipv4/icmp.c                                    |  12 ++-
- net/ipv4/route.c                                   |   3 +
- net/ipv4/udp.c                                     |   5 +-
- net/ipv6/udp.c                                     |   5 +-
- net/netfilter/ipvs/ip_vs_proto_sctp.c              |   6 +-
- net/netfilter/nft_chain_filter.c                   |   4 +-
- net/openvswitch/conntrack.c                        |   4 +-
- net/unix/garbage.c                                 |   2 +-
- rust/macros/lib.rs                                 |  12 ---
- 98 files changed, 785 insertions(+), 456 deletions(-)
-
-
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8278.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbebb434-c709-4938-c8d9-08dc6908e4e6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2024 11:30:10.0511
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OBlkl6IXeM5nQZCaVJT05G0x1O0bM6sdSfOagHhX/0mFnLCcmYnPCJASFPHSusCTNHiU8N/DisA9SkgqR3tnwL/czeUa4psvx0lId5cPLTp6zDgvIRS+5F/E3r6clluA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5137
+
+SGkgU2ltb24sDQoNCk9uIDI5LzA0LzI0IDk6NDcgcG0sIFNpbW9uIEhvcm1hbiB3cm90ZToNCj4g
+RVhURVJOQUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVu
+bGVzcyB5b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBPbiBUaHUsIEFwciAxOCwg
+MjAyNCBhdCAwNjoyNjozN1BNICswNTMwLCBQYXJ0aGliYW4gVmVlcmFzb29yYW4gd3JvdGU6DQo+
+PiBUaGUgSUVFRSA4MDIuM2NnIHByb2plY3QgZGVmaW5lcyB0d28gMTAgTWJpdC9zIFBIWXMgb3Bl
+cmF0aW5nIG92ZXIgYQ0KPj4gc2luZ2xlIHBhaXIgb2YgY29uZHVjdG9ycy4gVGhlIDEwQkFTRS1U
+MUwgKENsYXVzZSAxNDYpIGlzIGEgbG9uZyByZWFjaA0KPj4gUEhZIHN1cHBvcnRpbmcgZnVsbCBk
+dXBsZXggcG9pbnQtdG8tcG9pbnQgb3BlcmF0aW9uIG92ZXIgMSBrbSBvZiBzaW5nbGUNCj4+IGJh
+bGFuY2VkIHBhaXIgb2YgY29uZHVjdG9ycy4gVGhlIDEwQkFTRS1UMVMgKENsYXVzZSAxNDcpIGlz
+IGEgc2hvcnQgcmVhY2gNCj4+IFBIWSBzdXBwb3J0aW5nIGZ1bGwgLyBoYWxmIGR1cGxleCBwb2lu
+dC10by1wb2ludCBvcGVyYXRpb24gb3ZlciAxNSBtIG9mDQo+PiBzaW5nbGUgYmFsYW5jZWQgcGFp
+ciBvZiBjb25kdWN0b3JzLCBvciBoYWxmIGR1cGxleCBtdWx0aWRyb3AgYnVzDQo+PiBvcGVyYXRp
+b24gb3ZlciAyNSBtIG9mIHNpbmdsZSBiYWxhbmNlZCBwYWlyIG9mIGNvbmR1Y3RvcnMuDQo+Pg0K
+Pj4gRnVydGhlcm1vcmUsIHRoZSBJRUVFIDgwMi4zY2cgcHJvamVjdCBkZWZpbmVzIHRoZSBuZXcg
+UGh5c2ljYWwgTGF5ZXINCj4+IENvbGxpc2lvbiBBdm9pZGFuY2UgKFBMQ0EpIFJlY29uY2lsaWF0
+aW9uIFN1YmxheWVyIChDbGF1c2UgMTQ4KSBtZWFudCB0bw0KPj4gcHJvdmlkZSBpbXByb3ZlZCBk
+ZXRlcm1pbmlzbSB0byB0aGUgQ1NNQS9DRCBtZWRpYSBhY2Nlc3MgbWV0aG9kLiBQTENBDQo+PiB3
+b3JrcyBpbiBjb25qdW5jdGlvbiB3aXRoIHRoZSAxMEJBU0UtVDFTIFBIWSBvcGVyYXRpbmcgaW4g
+bXVsdGlkcm9wIG1vZGUuDQo+Pg0KPj4gVGhlIGFmb3JlbWVudGlvbmVkIFBIWXMgYXJlIGludGVu
+ZGVkIHRvIGNvdmVyIHRoZSBsb3ctc3BlZWQgLyBsb3ctY29zdA0KPj4gYXBwbGljYXRpb25zIGlu
+IGluZHVzdHJpYWwgYW5kIGF1dG9tb3RpdmUgZW52aXJvbm1lbnQuIFRoZSBsYXJnZSBudW1iZXIN
+Cj4+IG9mIHBpbnMgKDE2KSByZXF1aXJlZCBieSB0aGUgTUlJIGludGVyZmFjZSwgd2hpY2ggaXMg
+c3BlY2lmaWVkIGJ5IHRoZQ0KPj4gSUVFRSA4MDIuMyBpbiBDbGF1c2UgMjIsIGlzIG9uZSBvZiB0
+aGUgbWFqb3IgY29zdCBmYWN0b3JzIHRoYXQgbmVlZCB0byBiZQ0KPj4gYWRkcmVzc2VkIHRvIGZ1
+bGZpbCB0aGlzIG9iamVjdGl2ZS4NCj4+DQo+PiBUaGUgTUFDLVBIWSBzb2x1dGlvbiBpbnRlZ3Jh
+dGVzIGFuIElFRUUgQ2xhdXNlIDQgTUFDIGFuZCBhIDEwQkFTRS1UMXggUEhZDQo+PiBleHBvc2lu
+ZyBhIGxvdyBwaW4gY291bnQgU2VyaWFsIFBlcmlwaGVyYWwgSW50ZXJmYWNlIChTUEkpIHRvIHRo
+ZSBob3N0DQo+PiBtaWNyb2NvbnRyb2xsZXIuIFRoaXMgYWxzbyBlbmFibGVzIHRoZSBhZGRpdGlv
+biBvZiBFdGhlcm5ldCBmdW5jdGlvbmFsaXR5DQo+PiB0byBleGlzdGluZyBsb3ctZW5kIG1pY3Jv
+Y29udHJvbGxlcnMgd2hpY2ggZG8gbm90IGludGVncmF0ZSBhIE1BQw0KPj4gY29udHJvbGxlci4N
+Cj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBQYXJ0aGliYW4gVmVlcmFzb29yYW4gPFBhcnRoaWJhbi5W
+ZWVyYXNvb3JhbkBtaWNyb2NoaXAuY29tPg0KPiANCj4gSGkgUGFydGhpYmFuLA0KPiANCj4gU29t
+ZSBtaW5vciBmZWVkYmFjayBmcm9tIG15IHNpZGUuDQo+IA0KPj4gLS0tDQo+PiAgIERvY3VtZW50
+YXRpb24vbmV0d29ya2luZy9vYS10YzYtZnJhbWV3b3JrLnJzdCB8IDQ5MSArKysrKysrKysrKysr
+KysrKysNCj4gDQo+IFBsZWFzZSBhZGQgb2EtdGM2LWZyYW1ld29yayB0bw0KPiANCj4gRmxhZ2dl
+ZCBieTogbWFrZSBTUEhJTlhESVJTPSJuZXR3b3JraW5nIiBodG1sZG9jcw0KT0suIFRoYW5rcyBm
+b3IgcG9pbnRpbmcgdGhpcy4gV2lsbCBjb3JyZWN0IGl0IGluIHRoZSBuZXh0IHZlcnNpb24uDQo+
+IA0KPj4gICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+IDYgKw0KPj4gICAyIGZpbGVzIGNoYW5nZWQsIDQ5NyBpbnNlcnRpb25zKCspDQo+PiAgIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL25ldHdvcmtpbmcvb2EtdGM2LWZyYW1ld29yay5y
+c3QNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9uZXR3b3JraW5nL29hLXRjNi1m
+cmFtZXdvcmsucnN0IGIvRG9jdW1lbnRhdGlvbi9uZXR3b3JraW5nL29hLXRjNi1mcmFtZXdvcmsu
+cnN0DQo+IA0KPiAuLi4NCj4gDQo+PiArRGV2aWNlIGRyaXZlcnMgQVBJDQo+PiArPT09PT09PT09
+PT09PT09PT09DQo+PiArDQo+PiArVGhlIGluY2x1ZGUvbGludXgvb2FfdGM2LmggZGVmaW5lcyB0
+aGUgZm9sbG93aW5nIGZ1bmN0aW9uczoNCj4+ICsNCj4+ICsuLiBjOmZ1bmN0aW9uOjogc3RydWN0
+IG9hX3RjNiAqb2FfdGM2X2luaXQoc3RydWN0IHNwaV9kZXZpY2UgKnNwaSwNCj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IG5ldF9kZXZpY2UgKm5l
+dGRldikNCj4gDQo+IEkgdGhpbmsgdGhhdCB5b3UgbmVlZCB0byB1c2UgYSAnXCcgdG8gZXNjYXBl
+IG5ld2xpbmVzDQo+IGZvciBhIGZvciBhIG11bHRpLWxpbmUgYzpmdW5jdGlvbi4NCj4gDQo+IGUu
+Zy4NCj4gLi4gYzpmdW5jdGlvbjo6IHN0cnVjdCBvYV90YzYgKm9hX3RjNl9pbml0KHN0cnVjdCBz
+cGlfZGV2aWNlICpzcGksIFwNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBzdHJ1Y3QgbmV0X2RldmljZSAqbmV0ZGV2KQ0KPiANCj4gTGluazogaHR0cHM6Ly93
+d3cuc3BoaW54LWRvYy5vcmcvZW4vbWFzdGVyL3VzYWdlL2RvbWFpbnMvaW5kZXguaHRtbA0KPiAN
+Cj4gRmxhZ2dlZCBieSBtYWtlIFNQSElOWERJUlM9Im5ldHdvcmtpbmciIGh0bWxkb2NzDQo+IHdo
+ZW4gdXNpbmcgU3BoaW54IDcuMi42DQpZZXMgbm90ZWQuIFdpbGwgY29ycmVjdCBpdCBpbiB0aGUg
+bmV4dCB2ZXJzaW9uLg0KDQpCZXN0IHJlZ2FyZHMsDQpQYXJ0aGliYW4gVg0KPiANCj4+ICsNCj4+
+ICtJbml0aWFsaXplIE9BIFRDNiBsaWIuDQo+PiArDQo+PiArLi4gYzpmdW5jdGlvbjo6IHZvaWQg
+b2FfdGM2X2V4aXQoc3RydWN0IG9hX3RjNiAqdGM2KQ0KPj4gKw0KPj4gK0ZyZWUgYWxsb2NhdGVk
+IE9BIFRDNiBsaWIuDQo+PiArDQo+PiArLi4gYzpmdW5jdGlvbjo6IGludCBvYV90YzZfd3JpdGVf
+cmVnaXN0ZXIoc3RydWN0IG9hX3RjNiAqdGM2LCB1MzIgYWRkcmVzcywNCj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1MzIgdmFsdWUpDQo+PiArDQo+PiArV3Jp
+dGUgYSBzaW5nbGUgcmVnaXN0ZXIgaW4gdGhlIE1BQy1QSFkuDQo+PiArDQo+PiArLi4gYzpmdW5j
+dGlvbjo6IGludCBvYV90YzZfd3JpdGVfcmVnaXN0ZXJzKHN0cnVjdCBvYV90YzYgKnRjNiwgdTMy
+IGFkZHJlc3MsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHUzMiB2YWx1ZVtdLCB1OCBsZW5ndGgpDQo+PiArDQo+PiArV3JpdGluZyBtdWx0aXBsZSBjb25z
+ZWN1dGl2ZSByZWdpc3RlcnMgc3RhcnRpbmcgZnJvbSBAYWRkcmVzcyBpbiB0aGUgTUFDLVBIWS4N
+Cj4+ICtNYXhpbXVtIG9mIDEyOCBjb25zZWN1dGl2ZSByZWdpc3RlcnMgY2FuIGJlIHdyaXR0ZW4g
+c3RhcnRpbmcgYXQgQGFkZHJlc3MuDQo+PiArDQo+PiArLi4gYzpmdW5jdGlvbjo6IGludCBvYV90
+YzZfcmVhZF9yZWdpc3RlcihzdHJ1Y3Qgb2FfdGM2ICp0YzYsIHUzMiBhZGRyZXNzLA0KPj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdTMyICp2YWx1ZSkNCj4+ICsN
+Cj4+ICtSZWFkIGEgc2luZ2xlIHJlZ2lzdGVyIGluIHRoZSBNQUMtUEhZLg0KPj4gKw0KPj4gKy4u
+IGM6ZnVuY3Rpb246OiBpbnQgb2FfdGM2X3JlYWRfcmVnaXN0ZXJzKHN0cnVjdCBvYV90YzYgKnRj
+NiwgdTMyIGFkZHJlc3MsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgdTMyIHZhbHVlW10sIHU4IGxlbmd0aCkNCj4+ICsNCj4+ICtSZWFkaW5nIG11bHRpcGxl
+IGNvbnNlY3V0aXZlIHJlZ2lzdGVycyBzdGFydGluZyBmcm9tIEBhZGRyZXNzIGluIHRoZSBNQUMt
+UEhZLg0KPj4gK01heGltdW0gb2YgMTI4IGNvbnNlY3V0aXZlIHJlZ2lzdGVycyBjYW4gYmUgcmVh
+ZCBzdGFydGluZyBhdCBAYWRkcmVzcy4NCj4+ICsNCj4+ICsuLiBjOmZ1bmN0aW9uOjogbmV0ZGV2
+X3R4X3Qgb2FfdGM2X3N0YXJ0X3htaXQoc3RydWN0IG9hX3RjNiAqdGM2LA0KPj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3Qgc2tfYnVmZiAqc2ti
+KTsNCj4+ICsNCj4+ICtUaGUgdHJhbnNtaXQgRXRoZXJuZXQgZnJhbWUgaW4gdGhlIHNrYiBpcyBv
+ciBnb2luZyB0byBiZSB0cmFuc21pdHRlZCB0aHJvdWdoDQo+PiArdGhlIE1BQy1QSFkuDQo+IA0K
+PiAuLi4NCg0K
