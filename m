@@ -1,107 +1,98 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-io1-f67.google.com (mail-io1-f67.google.com [209.85.166.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AB317A922;
-	Tue, 30 Apr 2024 15:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1839117B4F1;
+	Tue, 30 Apr 2024 15:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714490860; cv=none; b=g5lKkfNQqMGCweU9vzmbeQY2Y7+g4Y7CaNbY0Uij8imF6RT46cXJGNXxsNy/VIHILD8AIhXDFIqf4X3tbScNImtGKBohA0nIfB/FD5LCUxTYZ/vNU+xJCeT+shYOyZ3Awg8HU7flWEQEGkuJYpR3C+Rc55QBLwNfNy/Tel6cwoM=
+	t=1714490862; cv=none; b=lfdJDxY7Vkq6oOBobSFk7q4kvD5EK0IHdFzIPLCkgRZjuP9iyoH0Ozpb1XXBVEVUh//E3m7dPnB0Q3pLfOk8xFRAigAQ2vb4mFsEjn/aq02CinJGcAlZQEBS9LQ5YOqq2y0O1nUF5MLafjNzM8FbePPQWvas4JnIg8fGoEnEgh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714490860; c=relaxed/simple;
-	bh=0lUvNEoZzpGwwKad5l5LPVFc4Ky2PspYcmcv3+a9bsE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aFziMq3EDii7kjWQ7IGujj5UJGh39jAO1h23A5oai2LYxCkA0PCjHVmK0iHLNxiJKsQjc0jRNeKTIplmH3EkkCeMxxFyvl5v7jcmsitX3DKtURZR+X3kczPe2tUZDx00UArabsK3BIzS5blnuVgTf5+B/2O78Usw97Zk8JeymIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXPQ4YgI; arc=none smtp.client-ip=209.85.208.173
+	s=arc-20240116; t=1714490862; c=relaxed/simple;
+	bh=jWF+R6k2K8uFH2ZwLb7M5SwfeSLuAYQBwMI3KrqqS9o=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QebiqatfXUIiuFAYm8anjWTEXJpSJKNrT3V93TK+T2gnaXEEZBkT9zENj+DN806Tx5BWo7acTnTJVefCKgB8TjDONK2uT/+FeeyOeZsbv9AXIH3HpDMfDRdTWEprBlXSiXU0giktt1arDFk6ZX7071yFxZmch4cGkds5yYvvxk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/Oq/jVM; arc=none smtp.client-ip=209.85.166.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXPQ4YgI"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2de232989aaso70456161fa.1;
-        Tue, 30 Apr 2024 08:27:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/Oq/jVM"
+Received: by mail-io1-f67.google.com with SMTP id ca18e2360f4ac-7da04b08b82so161583239f.0;
+        Tue, 30 Apr 2024 08:27:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714490856; x=1715095656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Z0uYLrmo+RQNsrVNRCYQ80LU2B7TKkW9AZwBgm7Igg=;
-        b=lXPQ4YgIlY+RiusRDhjLdRIxNxCARE9tIYAr/Mz+HjQoZdAlV7TMIYHLuJtA93fB1J
-         j6TqqsEfVMAmxhmiocwi3jeLTP6AmTIia1NIsLdVnJtNSYdkbIkUROy8dZ9wfruE1jOl
-         AHwK6E9Rpo6nelwi+Yr2PE4aU/7b1gCyNa3ojKuP1OaQzFeBWMVGZKRqg/hhXC3dtuGK
-         Rlz/MYzm+ca72OQzmEd6JRQgFsle5FX0qYjzWSgYDvMzizlsnL8GsUMABSpxF2TB+EG1
-         6fdsxMTmHtWbJkEjCpk4TjyuEBqQ12ukp+M9PB2SKnWrOBKJ2X+ax3cC+35RrFOy3spc
-         Ihuw==
+        d=gmail.com; s=20230601; t=1714490860; x=1715095660; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=S6EiQe0sO4zpsi2K9SK5LkhEBFfWw4caydHufI3cd9g=;
+        b=K/Oq/jVMUmhDzXuWEYpTr+AqNe0D4lhc6yJwQESDsSLH70cOD+D580khWgnG/MA8eu
+         TboDGuAZFay+ZVQQbLzi2sWcEt5zMBUvCpaEXJ+uly/kIEV7Pt1dQh2hL+upwfVS70jN
+         6cHwHM3gMRbYRFHhVYBvWNMxu623BCHhjmsQELXspXP6ALSokPFxbK4onpNhcANJArc1
+         61rf/j4eHVWCm2y6PY2zdMWvnUAz/oiKJ0vdnA2ui7Y2jypZFSsEN6R6i31CpcvCpwni
+         eVv6mHSCMTU3oOAAt98HC1hKtaZGdlbkfk5IXB7mLsKyPN41ePF1Ijn4Zar9kpxYEua5
+         eoOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714490856; x=1715095656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0Z0uYLrmo+RQNsrVNRCYQ80LU2B7TKkW9AZwBgm7Igg=;
-        b=YYnZLtZrStxd5FWAdPZkgjslUVsJfQSmldpFRIa7lRVz+bndN7YuVszZBT8GMqs6sb
-         o9sW+b0RfxoZxVCQOfQwU4PnGEY2XlEliVBlgWHXRC67Bo225Mxwc8Dt+1AMvz8pVG6G
-         3aq9pLlmqIetkXoR+O0GmCRhYbK7DY/gGl7LXQWrQsFNYwXQBuc0MVmO4NANLrzDU9Ne
-         g2Z9X+yLrcOOnIMXFyHG61D+XAeDGzN2K8Hyq+iPpzpiap8SC7QBwH+MCdyVosm1qM41
-         N/3lxNHc12o5L9LGcEt4hwCarK+7+v4dHOX7xs9VMAGSsKkAlgZNNT1hHIpVdfuVUTp2
-         ypaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZw7X/SIbuKGZMHRrDOwQMwlk+NBcS0zzDHzBX4fprMDKN3KStMd6lrwFDqQSoCIOf3ZIf+VW16976yVvKTAXOshSYpz6YuEyfNiw+ETV+3YJmLv9dGemtOBIAphvp6+HOkngkY35z4UlnkA==
-X-Gm-Message-State: AOJu0Yx2bBmpkC6My1ySjPht1AhFGdGKUobvXdM9pOqV08w85U3pAys1
-	j6LsclkdsE9OW2swooiiS1wjeXTxeWp7hW04zUJnYGlpQ8Q77IYt736WlfhYdMhD1x9TMUDek5B
-	qZ8onPZTgA9oo2+9h7iZjHLWo3bA=
-X-Google-Smtp-Source: AGHT+IErQbSLUt/YpGlibFWHxAfNy9szYPfD5nGHlN8PsQLyIxU3N9pbgQdETZm+8xNM3hOh66/YaVRbgQ3WbhEuXkk=
-X-Received: by 2002:a2e:9a89:0:b0:2df:6cb8:c911 with SMTP id
- p9-20020a2e9a89000000b002df6cb8c911mr41484lji.24.1714490856431; Tue, 30 Apr
- 2024 08:27:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714490860; x=1715095660;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S6EiQe0sO4zpsi2K9SK5LkhEBFfWw4caydHufI3cd9g=;
+        b=qPd8hJGdtnWboYkP4sqMH3vyv1JjSm7xT7NRHfGGMwsHAANGHu8KO0Sq344K3NQxsj
+         62bKBkwB5EieKo/zP5c9mLB6iuXs5WseqNBxzJuHW4prF7FTs+n60BazaTd0R1lxsPG5
+         zFyvb3WnY1xOnwWUglzsKnimrgUv5FB9P7SagwP/QsiINdAgfI9wIlJ8WauVwsFruyAU
+         MHTb5YuK1BLwKzEUKf9OCpeir74bjaaam7ksCcdbed/UplmsaAbg0b3+iY27ZHUibB3a
+         E2pugyaRxE+sQbWt+Drkk0fXcwX2LKFDYYRWUpQE01aehCUB6SpzAFa9R20V+h2DO8TX
+         xwpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnAOLLzfoWRxBvlVWcZIvqKco2EVtAzKut3n2usxPuTYgSJ3+1R6l6nr0Xepr3Du19i2qDemVCsEzC/7mpYFf0RBDtWxUBnsqLHvF7iewmCPx5pFOYQIPSq0b6088rrgOmvd0P6qs45g==
+X-Gm-Message-State: AOJu0Yx1OrQMsmOMvAvghyPiVlXirEbdgWy0FKCiTTg83yF/xfST86JQ
+	d52KADQ0yqVtTf3wJhTjivUkxYxDrIE4tXLkbwfyUCXEplS7C3jaZsR45K5ybC0KfvMeWNfbusW
+	R0fnHVRXqM8ZkiKJaGuJ2pvBKE+e7fmzPRz4=
+X-Google-Smtp-Source: AGHT+IE0//FQwR5UIdVVFw2WGgKiJkdMJcXHNiF4QNIpntmkbmTTI+WUxzf9IYa+Nz70K6B3N/w9svoZP0aAL9JqlIM=
+X-Received: by 2002:a5e:924b:0:b0:7d5:dd91:4b47 with SMTP id
+ z11-20020a5e924b000000b007d5dd914b47mr171678iop.7.1714490860191; Tue, 30 Apr
+ 2024 08:27:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240429190500.30979-1-ryncsn@gmail.com> <8734r3muvb.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <8734r3muvb.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 30 Apr 2024 23:27:18 +0800
-Message-ID: <CAMgjq7AbsvWnpoEFtXixgMN-qqcG_tsGbH7qOizjw-E7f9_HTg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] mm/swap: clean up and optimize swap cache index
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Matthew Wilcox <willy@infradead.org>, Chris Li <chrisl@kernel.org>, 
-	Barry Song <v-songbaohua@oppo.com>, Ryan Roberts <ryan.roberts@arm.com>, Neil Brown <neilb@suse.de>, 
-	Minchan Kim <minchan@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	David Hildenbrand <david@redhat.com>, Yosry Ahmed <yosryahmed@google.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+From: Petar Stoykov <pd.pstoykov@gmail.com>
+Date: Tue, 30 Apr 2024 17:27:27 +0200
+Message-ID: <CADFWO8Ghcmno8rgJ1WGyEvcjdrTEZr4_TXfhLjXQymzmR5FKPQ@mail.gmail.com>
+Subject: [PATCH v2 3/3] MAINTAINERS: Add Sensirion SDP500
+To: linux-iio@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Angel Iglesias <ang.iglesiasg@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 30, 2024 at 10:47=E2=80=AFAM Huang, Ying <ying.huang@intel.com>=
- wrote:
->
-> Kairui Song <ryncsn@gmail.com> writes:
->
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > This is based on latest mm-unstable. Patch 1/12 might not be needed if
-> > f2fs converted .readahead to use folio, I included it for easier test
-> > and review.
-> >
-> > Currently we use one swap_address_space for every 64M chunk to reduce l=
-ock
-> > contention, this is like having a set of smaller swap files inside one
-> > big swap file.
->
-> I would rather to say,
->
-> "
-> this is like having a set of smaller files inside a swap device.
-> "
->
-> To avoid possible confusing in this series.  I suggest to avoid to say
-> "swap file".  Instead, we can use "swap device".
+From c4437fd0ea296c4c964b1fb924144ae24a2ce443 Mon Sep 17 00:00:00 2001
+From: Petar Stoykov <pd.pstoykov@gmail.com>
+Date: Mon, 15 Jan 2024 14:57:57 +0100
+Subject: [PATCH 3/3] MAINTAINERS: Add Sensirion SDP500
 
-Good suggestion, will update this part.
+Add myself as a maintainer for Sensirion SDP500 pressure sensor driver
 
+Signed-off-by: Petar Stoykov <pd.pstoykov@gmail.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> [snip]
->
-> --
-> Best Regards,
-> Huang, Ying
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 40c754b4c39c..11e8f353dc9e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19533,6 +19533,12 @@ S:    Maintained
+ F:    Documentation/devicetree/bindings/iio/chemical/sensirion,scd4x.yaml
+ F:    drivers/iio/chemical/scd4x.c
+
++SENSIRION SDP500 DIFFERENTIAL PRESSURE SENSOR DRIVER
++M:    Petar Stoykov <pd.pstoykov@gmail.com>
++S:    Maintained
++F:    Documentation/devicetree/bindings/iio/pressure/sdp500.yaml
++F:    drivers/iio/pressure/sdp500.c
++
+ SENSIRION SGP40 GAS SENSOR DRIVER
+ M:    Andreas Klinger <ak@it-klinger.de>
+ S:    Maintained
+-- 
+2.30.2
