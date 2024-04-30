@@ -1,168 +1,124 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD14199E9B;
-	Tue, 30 Apr 2024 20:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9642C199EA1
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 20:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714507607; cv=none; b=jshxRpQDbQ/yC6W+YgRRlZ/B6dS4F5bhC8adBj3j8SvurXT1ekqcyBBEwYr1KBr6iW4vYyaQZpAsoZrBGejU4WxI3bkNC3HJspj0laIymPW22A7kSGEpHVK4mlpX+jSjps7iZExioFH4gCEGk7GHlJ6FeHYd/y1ED89qobECIV0=
+	t=1714507621; cv=none; b=KrhI1obGZqcpiRK0aRtVW52HnmLzq7+GK3dYhw3fcYkruEr1RZ52PLPt5kk6dqa8A5Tdo5k3c4mLoHS/xH12VNiv9nUD2Ayh2z59xSJ/ElQKUaWEhE5g+khL8iqcv9QZsTPqZWXTR7i+LcmlKE2FMWD8U4c7fTO0fL0h43kUE4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714507607; c=relaxed/simple;
-	bh=UGUeKEUQ1nBBsRp8hnt0EXyp3mGbhUhQXTX/Q6dpar4=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dSCoS5qihBHNy9kcj04S9YyhBDczfhgDhk9clmyZEZQ/XrGVFF6NkXvD/dL3jNpN1ee/ZJ95F8lzQgeqGiqiXB8IZYGp/suUG71ahJpxBoqiUyWXGvprxtdz3P6P/CctUJkuEBf1/JTakz9OXard1dT5L79Vpai2VmdfE3p8cxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QQKPJXcb; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1714507621; c=relaxed/simple;
+	bh=ug3YfKik7AumLDou9Srebnw6+kedHrFJPLCWgOx1frE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TlvFix0TmZfOva+frBZwIJvogA/5GvHL6Dr7PaawFqt0HkoS/eSODPW0w41SQz0vxCjpILHr1zU0JNMKcuQA3BpOjOS0p4jflCb7bPEdp+26e4O1inss1iFq/M13pS/8QbqGRsYXx5OQJZh3eGKApu2Gr4nHU4nFW1kO4huGvM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jAq66FZ4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QQKPJXcb"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43UK2KVI014595;
-	Tue, 30 Apr 2024 20:06:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
- : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=gfHCx0QonruGjPUxFkWAYoB+5yJ1TnNAcZXRms41D74=;
- b=QQKPJXcbIQx/79gIVHv5z1XV47ss7pklLxwDmBDBiufJFvTSpT9KkTG20+OdFaIC586u
- /cW+6gfuq/0O1+1kRlLcPsykvd8yXpxryc2EsstdgqYe86nGAp1d2Q+e2o0dk2bzH27L
- BicdFs76OhKs8W9fuCCOYoifNtSEMpotjJeg2DSptc+wIC750cmRoYJ2dtYBHW0T1wRU
- nBPgmd8XqpAQ6WfaF73TdWmy4B3/F+I6th6tdMty6Aq1xVpx/3mbXWJ+gXUcFD6e+SFp
- 6X/trMn1h1++OzzjsPC3iDULzuNeoL/Oj++xpVy+h2PueUVnXmnsC3WSOTvzXkArH3yL fg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xu7axg0dj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 20:06:28 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43UK6Sar021485;
-	Tue, 30 Apr 2024 20:06:28 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xu7axg0dd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 20:06:27 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43UH4uj7022182;
-	Tue, 30 Apr 2024 20:06:26 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xsd6mpuh6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 20:06:26 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43UK6LK832440962
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 30 Apr 2024 20:06:23 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EB5452004D;
-	Tue, 30 Apr 2024 20:06:20 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 52F6520040;
-	Tue, 30 Apr 2024 20:06:17 +0000 (GMT)
-Received: from ltcd48-lp2.aus.stglabs.ibm.com (unknown [9.3.101.175])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 30 Apr 2024 20:06:17 +0000 (GMT)
-Subject: [RFC PATCH v2 3/6] powerpc/pseries/iommu: Use the iommu table[0] for
- IOV VF's DDW
-From: Shivaprasad G Bhat <sbhat@linux.ibm.com>
-To: mpe@ellerman.id.au, tpearson@raptorengineering.com,
-        alex.williamson@redhat.com, linuxppc-dev@lists.ozlabs.org, aik@amd.com
-Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
-        naveen.n.rao@linux.ibm.com, gbatra@linux.vnet.ibm.com,
-        brking@linux.vnet.ibm.com, sbhat@linux.ibm.com, aik@ozlabs.ru,
-        jgg@ziepe.ca, ruscur@russell.cc, robh@kernel.org,
-        linux-kernel@vger.kernel.org, joel@jms.id.au, kvm@vger.kernel.org,
-        msuchanek@suse.de, oohall@gmail.com, mahesh@linux.ibm.com,
-        jroedel@suse.de, vaibhav@linux.ibm.com, svaidy@linux.ibm.com
-Date: Tue, 30 Apr 2024 15:06:16 -0500
-Message-ID: <171450757310.10851.13545072850696605337.stgit@linux.ibm.com>
-In-Reply-To: <171450753489.10851.3056035705169121613.stgit@linux.ibm.com>
-References: <171450753489.10851.3056035705169121613.stgit@linux.ibm.com>
-User-Agent: StGit/1.5
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jAq66FZ4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714507618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dxTrrQAHX5LIHD8+8RfIAMS1TPkS1k3rljcnnnsPEVE=;
+	b=jAq66FZ4tlALHbPQhE/ZoM181Z5KaVwK5JqgoZvkc3hXGqI4AHAyPfmyWrljrNgyE/Xm5M
+	DH+Zv8/7YFinrf1L8i8nTQH9B1/Pa88b7oXud1+56AOGkf5dnmgj0GJE9GnYbq9A0sPE/0
+	gJfYmC3yw7JsWET72Yh01Ne4dOOk4Vc=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-122-gNReqLd6OsSRkY_4UvXOAw-1; Tue, 30 Apr 2024 16:06:57 -0400
+X-MC-Unique: gNReqLd6OsSRkY_4UvXOAw-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5723fc9eda3so3596404a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:06:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714507615; x=1715112415;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dxTrrQAHX5LIHD8+8RfIAMS1TPkS1k3rljcnnnsPEVE=;
+        b=UrKSOU1Brre/MbyiztA8k9sRLs8nWcfmZYggHiMFXabcsqK+7wBE44oHU4wgH8AFLs
+         v9CF/vbhbl5Wx7wghHHDIsPUmLKf3tHP00LcHzoBFW8rVHv0Yo0ro/besz8XuyqYlt1C
+         PgEASVYx8uYeFoVKtnGH6/3l5b5qUPlz8HQQRLV1WkB6ctGEMOMhTu/gm29PmczcW2DE
+         OKJePfuiKjlduThm6g5CszGnOnytrT95RDtx+P79lFt1wCphW1eQJiGDnWUTnp50ifX/
+         a5eQYfgTt7BixBp7Jp4ClZnqPsyDkwjg9Ga7pmj2j82ZEzjcfu5U/N7B/DwKRhWatExt
+         aJ3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVFIX563LDOkueIGk/xWOx2xegW745WBCo/y8Ou2xP3ecrzimvwJq4DnBxuIOgUESirlHU/1baDqrImPJnAkMWXKYYSrGQAhDdEBGNI
+X-Gm-Message-State: AOJu0YzPPmp2pW48O8FviKqloGBe8HsEKveaIvXZK/+Z2PCO3YtrshGE
+	BICVaqiDrdyA1bqYT288lmHIavtVZAa8c+z5dKztUCVLv4dyUaySs5L+QfkIkZb0SMbyv9jY8Gk
+	1CfkQ2U9a0gweKnl2aN8jYOtzCik581Ht87IH3kyVTuCHl7vEdarcT1wQoFKfoQ==
+X-Received: by 2002:a17:906:2a44:b0:a58:ee10:ad05 with SMTP id k4-20020a1709062a4400b00a58ee10ad05mr484895eje.69.1714507615500;
+        Tue, 30 Apr 2024 13:06:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF7ocL9+DqttG8t6q0QKC2cVrRfgcVUPqW7FLSaNzemeZLoe4wornulVDynqTC9/Zrj4O1LwA==
+X-Received: by 2002:a17:906:2a44:b0:a58:ee10:ad05 with SMTP id k4-20020a1709062a4400b00a58ee10ad05mr484881eje.69.1714507614890;
+        Tue, 30 Apr 2024 13:06:54 -0700 (PDT)
+Received: from redhat.com ([2.55.56.94])
+        by smtp.gmail.com with ESMTPSA id s8-20020a170906500800b00a4e24d259edsm15356306ejj.167.2024.04.30.13.06.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 13:06:54 -0700 (PDT)
+Date: Tue, 30 Apr 2024 16:06:50 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Darius Rad <darius@bluespec.com>
+Cc: Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] virtio_net: Warn if insufficient queue length for
+ transmitting
+Message-ID: <20240430121730-mutt-send-email-mst@kernel.org>
+References: <ZjFH7Xb5gyTtOpWd@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RK6fm06hRTZ8sq-gLswmyNIFdYveIDJ2
-X-Proofpoint-GUID: hRlu20WOBcqxXW-Q_QNn6-PyJu6vJiEf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-30_12,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 bulkscore=0 mlxscore=0 mlxlogscore=974 phishscore=0
- malwarescore=0 clxscore=1015 adultscore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404300144
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjFH7Xb5gyTtOpWd@localhost.localdomain>
 
-This patch basically brings consistency with PowerNV approach
-to use the first freely available iommu table when the default
-window is removed.
+On Tue, Apr 30, 2024 at 03:35:09PM -0400, Darius Rad wrote:
+> The transmit queue is stopped when the number of free queue entries is less
+> than 2+MAX_SKB_FRAGS, in start_xmit().  If the queue length (QUEUE_NUM_MAX)
+> is less than then this, transmission will immediately trigger a netdev
+> watchdog timeout.  Report this condition earlier and more directly.
+> 
+> Signed-off-by: Darius Rad <darius@bluespec.com>
+> ---
+>  drivers/net/virtio_net.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 115c3c5414f2..72ee8473b61c 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -4917,6 +4917,9 @@ static int virtnet_probe(struct virtio_device *vdev)
+>  			set_bit(guest_offloads[i], &vi->guest_offloads);
+>  	vi->guest_offloads_capable = vi->guest_offloads;
+>  
+> +	if (virtqueue_get_vring_size(vi->sq->vq) < 2 + MAX_SKB_FRAGS)
+> +		netdev_warn_once(dev, "not enough queue entries, expect xmit timeout\n");
+> +
 
-The pSeries iommu code convention has been that the table[0] is
-for the default 32 bit DMA window and the table[1] is for the
-64 bit DDW.
+How about actually fixing it though? E.g. by linearizing...
 
-With VFs having only 1 DMA window, the default has to be removed
-for creating the larger DMA window. The existing code uses the
-table[1] for that, while marking the table[0] as NULL. This is
-fine as long as the host driver itself uses the device.
+It also bothers me that there's practically
+/proc/sys/net/core/max_skb_frags
+and if that's low then things could actually work.
 
-For the VFIO user, on pSeries there is no way to skip table[0]
-as the VFIO subdriver uses the first freely available table.
-The window 0, when created as 64-bit DDW in that context would
-still be on table[0], as the maximum number of windows is 1.
+Finally, while originally it was just 17 typically, now it's
+configurable. So it's possible that you change the config to make big
+tcp work better and device stops working while it worked fine
+previously.
 
-This won't have any impact for the host driver as the table is
-fetched from the device's iommu_table_base.
 
-Signed-off-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
----
- arch/powerpc/platforms/pseries/iommu.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-index 5b68a4918d63..e701255560a6 100644
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -155,7 +155,7 @@ static void iommu_pseries_free_group(struct iommu_table_group *table_group,
- #endif
- 
- 	/* Default DMA window table is at index 0, while DDW at 1. SR-IOV
--	 * adapters only have table on index 1.
-+	 * adapters only have table on index 0(if not direct mapped).
- 	 */
- 	if (table_group->tables[0])
- 		iommu_tce_table_put(table_group->tables[0]);
-@@ -1519,6 +1519,11 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 			clean_dma_window(pdn, win64->value);
- 			goto out_del_list;
- 		}
-+		if (default_win_removed) {
-+			iommu_tce_table_put(pci->table_group->tables[0]);
-+			pci->table_group->tables[0] = NULL;
-+			set_iommu_table_base(&dev->dev, NULL);
-+		}
- 	} else {
- 		struct iommu_table *newtbl;
- 		int i;
-@@ -1548,15 +1553,12 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 					    1UL << len, page_shift, NULL, &iommu_table_lpar_multi_ops);
- 		iommu_init_table(newtbl, pci->phb->node, start, end);
- 
--		pci->table_group->tables[1] = newtbl;
-+		pci->table_group->tables[default_win_removed ? 0 : 1] = newtbl;
- 
- 		set_iommu_table_base(&dev->dev, newtbl);
- 	}
- 
- 	if (default_win_removed) {
--		iommu_tce_table_put(pci->table_group->tables[0]);
--		pci->table_group->tables[0] = NULL;
--
- 		/* default_win is valid here because default_win_removed == true */
- 		of_remove_property(pdn, default_win);
- 		dev_info(&dev->dev, "Removed default DMA window for %pOF\n", pdn);
-
+>  	pr_debug("virtnet: registered device %s with %d RX and TX vq's\n",
+>  		 dev->name, max_queue_pairs);
+>  
+> -- 
+> 2.39.2
 
