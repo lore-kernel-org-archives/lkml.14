@@ -1,174 +1,128 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893DE127E31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CAB128363
 	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714469681; cv=none; b=JsRtVnXyywtX0zTx/v/Q4DdyWK2xgAnOSBU8SPmodIc9cRPc3Dt9nbdgsEknz9RovjJRHBobGIXwX/D7wjTjyIm0KPGT2H2HEIxC1OlkBuwX35/AicfkvJdC5tu6NoP1PM1LwdB70P/huM/Wjq/lNmafr/vcAm4m1/YZdM/znQ8=
+	t=1714469680; cv=none; b=Zk2Y8CYMwW2mO2pONYsFyhSYZRY1SEnlQdjCitJOnjB+8cOcoayGaV18af+1s6ngcODw/lTeXHLa7JDqQWiU3ObBe6mrtNhJ6t6eM0CkkPUbR+R0CYxcwh9o0pd2oCQMzZ83C+ajsdkHWffAG/1FUkMpdRGCM7MTrzZxPyce23w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714469681; c=relaxed/simple;
-	bh=NM7ltXVgJiTvHbyePJW9hEoscG9RrRRi+f9vhsUXWrA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E5KbpJDs5XqA5bPyIe4bXzcRc8ItlF8GSY5YgzccTL8FhfVjgYNonFTcd6ed0zlRJpzU13p653N7OD+lwdLILSRD75ia5OOd/egO6KZevx8FJntjJYzglWNmEq0+NeY1nvZQZTwLyxcv64+NuC44C3yE9GpIjPr0y2a4T4nciDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VTFLT27P8zXnlG
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 17:30:57 +0800 (CST)
-Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
-	by mail.maildlp.com (Postfix) with ESMTPS id C2C5C18007C
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 17:34:35 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
- (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 30 Apr
- 2024 17:34:35 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH] genirq/irqdomain: Clean code for __irq_domain_create()
-Date: Tue, 30 Apr 2024 17:33:53 +0800
-Message-ID: <20240430093353.1919862-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1714469680; c=relaxed/simple;
+	bh=k9NWBESpvLG5vWGkgDECyGlUm6v7jCcZsE1y+XKUUCs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gsjhl9SUSdJSrpMYcwrZnu/dSK84ljX6Bn0btF60vlQ6NeAp/e0/TrOWatSTZAXQo9qwxMbyRV6bNfRfVcsLPANbwNOmX5YjZ5Zb/amgH6obM10ijy7kqNqo9TmBJa4DwK0mmtB4CDcCAx4/fAkId5U9Rof7GePeUdLZ+9gSpws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fuKfgBAf; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fuKfgBAf"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5709cb80b03so5512719a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 02:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714469677; x=1715074477; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=xpI5WAoKM9x04SKzVc9sX1ORhdeI2ZrvsKIYhkvbqIo=;
+        b=fuKfgBAfaKQaF/p+fvnGIU/0vLX4APoJVGhPFi3iPdehG+op+bOiSruEejjiqyePT/
+         IVVe7uB328aGrwiJC+aXzZBoKQQnxaTtUj1nGvh7IShSTaVOh7EU2dACZIb1BRjEPU7y
+         +KU1rIR5RkMiXUTzTgBafRf3XTd3bmYUJQxsN/WNlolUjk5oc5OKjv5dx13gNvzJoRos
+         7CdVWcGRKHX6ofpEEU+dUObBSEZ7exT4svP86a5V4a6Kf6ADzshV+SpZjF1y5MllawNc
+         FMphnMhNcrNW5ujypuL+Xp9MUtXf/prT5sylMSUarQx/MRiRwYxgHRGiTlyDPpbqfhbn
+         Mzug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714469677; x=1715074477;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xpI5WAoKM9x04SKzVc9sX1ORhdeI2ZrvsKIYhkvbqIo=;
+        b=ViUqQf3Epx1RrVEnwQDX4t7+sCZNm2ocUmgpEoavHBQsyTwVqD8ct+Ae3RD7k23+0g
+         iGNxBnWFloNcs0zT2ucr9JUKjyQs6JGlTPML+l7E1ptCRtQVpYSrKSPikXNqECAqIymm
+         34myjZ0591fxnmACeHYgkoz3EBywEXZbQhp44qQjPkDK8yGhwZz6OSSXdWVWVujVHuUh
+         oIq6fwgAW4uwtTEFOCw3T/YObi+PnzsEA2pwyDdLo1kVmahSyRIXTOTC30dcAX06CVke
+         TGPaPyt5dLwboKcpIk8o7VCIIWtgXkG/z74fTcEQIXRKrBppRI0imwtOj5+lGKtxPGiZ
+         REog==
+X-Forwarded-Encrypted: i=1; AJvYcCUOF8aUpXZCZPwmpc0WMSwopSDPhq/no8qIVPAG9HM89V+YThvP/wAr6MgEUo8e7XcJvsKdCLM9h9mN2JBGeKkm0vTYu2vTZDLuaX+i
+X-Gm-Message-State: AOJu0YzXJJqTiRC2CYtxGkH3LCd7Sdw/RyU+JXioW9RvUDbzM/4wi2VB
+	LFTJtvIHCbN8z45wujlQDFe7xULJ98p8L1Ns0NOU2BjUtv2asdROqHWhBEMwsYlzRIVBx8ZXeh3
+	9mQQ=
+X-Google-Smtp-Source: AGHT+IF1hRM0MWJpCdc02GqdalwkS9joDUtSdv8iCT6RCkzWaJB273u6HmJra4KNhwmTA9fs7r7nRw==
+X-Received: by 2002:a50:ab0d:0:b0:570:1ea8:cd1c with SMTP id s13-20020a50ab0d000000b005701ea8cd1cmr1510922edc.35.1714469676955;
+        Tue, 30 Apr 2024 02:34:36 -0700 (PDT)
+Received: from [192.168.114.15] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id r19-20020aa7cb93000000b00572031756a8sm10071242edt.16.2024.04.30.02.34.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 02:34:36 -0700 (PDT)
+Message-ID: <a35c0e9f-9f1f-44ea-8248-cc632c6db291@linaro.org>
+Date: Tue, 30 Apr 2024 11:34:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500008.china.huawei.com (7.221.188.139)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/12] arm64: dts: qcom: delete wrong usb-role-switch
+ properties
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240429-usb-link-dtsi-v1-0-87c341b55cdf@linaro.org>
+ <20240429-usb-link-dtsi-v1-11-87c341b55cdf@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
+ BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
+ HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
+ TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
+ zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
+ MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
+ t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
+ UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
+ aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
+ kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
+ Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
+ R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
+ BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
+ yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
+ xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
+ 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
+ GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
+ mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
+ x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
+ BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
+ mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
+ Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
+ xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
+ AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
+ 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
+ jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
+ cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
+ jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
+ cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
+ bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
+ YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
+ bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
+ nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
+ izWDgYvmBE8=
+In-Reply-To: <20240429-usb-link-dtsi-v1-11-87c341b55cdf@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Introduce irq_domain_alloc_name() function to handle name allocation for
-the irq domain, add "out_free_domain" label to free the irq domain, and
-when "is_fwnode_irqchip(fwnode)" is true, "domain->fwnode = fwnode" is
-the common action, so do it outside the switch, which can make the code
-more clearer.
+On 29.04.2024 2:43 PM, Dmitry Baryshkov wrote:
+> The usb-role-switch property doesn't make sense for the USB hosts which
+> are fixed to either host or peripheral USB data mode. Delete
+> usb-role-switch property being present in SoC dtsi.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
 
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- kernel/irq/irqdomain.c | 75 +++++++++++++++++++++++++-----------------
- 1 file changed, 45 insertions(+), 30 deletions(-)
+I'm more than sure all of these devices are physically capapable of
+doing both modes, but the infra to switch modes / provide VBUS as
+host was / is not hooked up or present yet
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 3dd1c871e091..49a983161340 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -127,6 +127,39 @@ void irq_domain_free_fwnode(struct fwnode_handle *fwnode)
- }
- EXPORT_SYMBOL_GPL(irq_domain_free_fwnode);
- 
-+static int irq_domain_alloc_name(struct fwnode_handle *fwnode,
-+				 struct irq_domain *domain,
-+				 int unknown_domains, char *in_name)
-+{
-+	char *name;
-+
-+	if (fwnode == NULL) {
-+		if (unknown_domains)
-+			domain->name = kasprintf(GFP_KERNEL, "unknown-%d",
-+						 unknown_domains);
-+		else
-+			domain->name = kstrdup(in_name, GFP_KERNEL);
-+		if (!domain->name)
-+			return -ENOMEM;
-+		goto out;
-+	}
-+
-+	/*
-+	 * fwnode paths contain '/', which debugfs is legitimately
-+	 * unhappy about. Replace them with ':', which does
-+	 * the trick and is not as offensive as '\'...
-+	 */
-+	name = kasprintf(GFP_KERNEL, "%pfw", fwnode);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	domain->name = strreplace(name, '/', ':');
-+
-+out:
-+	domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
-+	return 0;
-+}
-+
- static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
- 					      unsigned int size,
- 					      irq_hw_number_t hwirq_max,
-@@ -151,53 +184,31 @@ static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
- 
- 	if (is_fwnode_irqchip(fwnode)) {
- 		fwid = container_of(fwnode, struct irqchip_fwid, fwnode);
-+		domain->fwnode = fwnode;
- 
- 		switch (fwid->type) {
- 		case IRQCHIP_FWNODE_NAMED:
- 		case IRQCHIP_FWNODE_NAMED_ID:
--			domain->fwnode = fwnode;
--			domain->name = kstrdup(fwid->name, GFP_KERNEL);
--			if (!domain->name) {
--				kfree(domain);
--				return NULL;
--			}
--			domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
-+			if (irq_domain_alloc_name(NULL, domain, 0, fwid->name))
-+				goto out_free_domain;
- 			break;
- 		default:
--			domain->fwnode = fwnode;
- 			domain->name = fwid->name;
- 			break;
- 		}
- 	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode) ||
- 		   is_software_node(fwnode)) {
--		char *name;
--
--		/*
--		 * fwnode paths contain '/', which debugfs is legitimately
--		 * unhappy about. Replace them with ':', which does
--		 * the trick and is not as offensive as '\'...
--		 */
--		name = kasprintf(GFP_KERNEL, "%pfw", fwnode);
--		if (!name) {
--			kfree(domain);
--			return NULL;
--		}
--
--		domain->name = strreplace(name, '/', ':');
-+		if (irq_domain_alloc_name(fwnode, domain, 0, NULL))
-+			goto out_free_domain;
- 		domain->fwnode = fwnode;
--		domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
- 	}
- 
- 	if (!domain->name) {
- 		if (fwnode)
- 			pr_err("Invalid fwnode type for irqdomain\n");
--		domain->name = kasprintf(GFP_KERNEL, "unknown-%d",
--					 atomic_inc_return(&unknown_domains));
--		if (!domain->name) {
--			kfree(domain);
--			return NULL;
--		}
--		domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
-+		if (irq_domain_alloc_name(NULL, domain,
-+		    atomic_inc_return(&unknown_domains), NULL))
-+			goto out_free_domain;
- 	}
- 
- 	fwnode_handle_get(fwnode);
-@@ -228,6 +239,10 @@ static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
- 	irq_domain_check_hierarchy(domain);
- 
- 	return domain;
-+
-+out_free_domain:
-+	kfree(domain);
-+	return NULL;
- }
- 
- static void __irq_domain_publish(struct irq_domain *domain)
--- 
-2.34.1
-
+Konrad
