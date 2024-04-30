@@ -1,514 +1,254 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AF91A38E8;
-	Tue, 30 Apr 2024 14:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6871BED6C;
+	Tue, 30 Apr 2024 14:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714487503; cv=none; b=Xj2j0gxsCL740rK+SJHITQSABBaWrJO8WPbnaTi+8Sq9QMEnX+XIno0V0O5HxT7Jl2pgsw9Rw0Unjk4PpajNoU0v8IDpV17E8mc+PJqQ88xkQqjhlkqt2PcbZgB5QzkEowelP9QFn1fWxlxm3p0mQsf1611q+0GmvoaeljL22qE=
+	t=1714487511; cv=none; b=pEFpbgrP+t4YpDGs++7Wdm69Rb6dbo6C6tqMxh35qM8tqzFRcz5SQXRI+afRjcNU5L1N7K/aVjTgixH0x5sC6Ml392A3whXIO1TtBooCyWunP6swvCB5Xv6IWXT5Y+NUBLmmUqniWk3Jc+Q1c81MEasv680a4s6IbNuvGQuiVOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714487503; c=relaxed/simple;
-	bh=iZSs7YzdmeDxtOzBRMa6VVq7Ez9ZIeBDUvL9tgt381U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M6DL4KbKxgiP9dHUqTSo1qHbm6gsX8LrvUv+qzrNjsv3MRUD3QVNO44Ir7HopQ4ADpmix9VGcN/ftFZXdYAwof3FT4/xctGUXca6cvZsrAtGXg4rV/t2r8gNpTEoM+aXgWQB65fB2fqK5VK4qIiJ1HRl66J/zxfWYRJCmXuSLvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QvGmqrXZ; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QvGmqrXZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1714487500;
-	bh=iZSs7YzdmeDxtOzBRMa6VVq7Ez9ZIeBDUvL9tgt381U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QvGmqrXZyXG+dxqyIKWbBbZDtvuUxOwMcmKhFWz+WHsLvVPzbeZxoy6FeDBqS8LmM
-	 lZJb6oNb+S02ySRi9QHUOUUt2xkA1Efdhup/fPVQGf7aOKJGDCC8VJgxgmxWCRyKYq
-	 2sXoB2Yv+BMBDOY/ATG2wYQwzRo0ewTjluzr7Z05FUB1C2Dg9Box1XRjlh74TJak+T
-	 V1+UQHVxNVq544aeWU4i6CZ706PXZt6f4l97Hj+AKwTtuxgPHGWsA/gdKmyDLeUdhM
-	 mf1nHV+c2iUnhthuBVjHTG/9e9F7kvGm1UcI+7OWJ2rf92cqUj1QVQYIWdgXqhpLLF
-	 L0tzh6S3yIU+A==
-Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: koike)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6435137820F9;
-	Tue, 30 Apr 2024 14:31:34 +0000 (UTC)
-Message-ID: <9cfcc12f-1261-4865-930b-d0355da0e818@collabora.com>
-Date: Tue, 30 Apr 2024 11:31:32 -0300
+	s=arc-20240116; t=1714487511; c=relaxed/simple;
+	bh=zn1cnSdhKUB4p+WfqgfEWRLVL20zjMCBCGPxi19RkFw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jvNKUf6A0vA1Dt5ezPO6DmrvrCApPreaB6K554gldjwAUT+5e8yttyl8VEB+vnAm0Dc+3a/Fpf4iJHgNPhH3/MQHZ43pzslHkiKKWytI2WZkNCzNyYuu350ZOcIjrqDRnmonDxq3w0OqC7bKlX6GLB5pzrEqkVWrlvnu5iIJHrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTMyV3mpVz6J6tW;
+	Tue, 30 Apr 2024 22:29:06 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 57CF31400DC;
+	Tue, 30 Apr 2024 22:31:47 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 30 Apr 2024 15:31:46 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin Shan
+	<gshan@redhat.com>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v9 14/19] irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs
+Date: Tue, 30 Apr 2024 15:24:29 +0100
+Message-ID: <20240430142434.10471-15-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
+References: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/5] drm/ci: skip driver specific tests
-To: Vignesh Raman <vignesh.raman@collabora.com>,
- dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com, airlied@gmail.com, daniel@ffwll.ch,
- robdclark@gmail.com, david.heidelberg@collabora.com,
- guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
- dmitry.baryshkov@linaro.org, mcanal@igalia.com,
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org, amd-gfx@lists.freedesktop.org,
- linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20240430091121.508099-1-vignesh.raman@collabora.com>
- <20240430091121.508099-5-vignesh.raman@collabora.com>
-Content-Language: en-US
-From: Helen Koike <helen.koike@collabora.com>
-In-Reply-To: <20240430091121.508099-5-vignesh.raman@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+From: James Morse <james.morse@arm.com>
 
+To support virtual CPU hotplug, ACPI has added an 'online capable' bit
+to the MADT GICC entries. This indicates a disabled CPU entry may not
+be possible to online via PSCI until firmware has set enabled bit in
+_STA.
 
-On 30/04/2024 06:11, Vignesh Raman wrote:
-> Skip driver specific tests and skip kms tests for
-> panfrost driver since it is not a kms driver.
-> 
-> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
-> ---
->   .../gpu/drm/ci/xfails/amdgpu-stoney-skips.txt   | 14 +++++++++++++-
->   drivers/gpu/drm/ci/xfails/i915-amly-skips.txt   | 14 +++++++++++++-
->   drivers/gpu/drm/ci/xfails/i915-apl-skips.txt    | 14 +++++++++++++-
->   drivers/gpu/drm/ci/xfails/i915-cml-skips.txt    | 12 ++++++++++++
->   drivers/gpu/drm/ci/xfails/i915-glk-skips.txt    | 14 +++++++++++++-
->   drivers/gpu/drm/ci/xfails/i915-kbl-skips.txt    | 14 +++++++++++++-
->   drivers/gpu/drm/ci/xfails/i915-tgl-skips.txt    | 14 +++++++++++++-
->   drivers/gpu/drm/ci/xfails/i915-whl-skips.txt    | 14 +++++++++++++-
->   .../gpu/drm/ci/xfails/mediatek-mt8173-skips.txt | 12 ++++++++++++
->   .../gpu/drm/ci/xfails/mediatek-mt8183-skips.txt | 14 ++++++++++++++
->   drivers/gpu/drm/ci/xfails/meson-g12b-skips.txt  | 14 ++++++++++++++
->   drivers/gpu/drm/ci/xfails/msm-apq8016-skips.txt | 14 ++++++++++++++
->   drivers/gpu/drm/ci/xfails/msm-apq8096-skips.txt | 14 +++++++++++++-
->   .../msm-sc7180-trogdor-kingoftown-skips.txt     | 15 +++++++++++++++
->   .../msm-sc7180-trogdor-lazor-limozeen-skips.txt | 15 +++++++++++++++
->   drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt  | 15 +++++++++++++++
->   .../gpu/drm/ci/xfails/rockchip-rk3288-skips.txt | 17 ++++++++++++++++-
->   .../gpu/drm/ci/xfails/rockchip-rk3399-skips.txt | 15 +++++++++++++++
->   .../gpu/drm/ci/xfails/virtio_gpu-none-skips.txt | 15 ++++++++++++++-
->   19 files changed, 260 insertions(+), 10 deletions(-)
->   create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8173-skips.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8183-skips.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/meson-g12b-skips.txt
->   create mode 100644 drivers/gpu/drm/ci/xfails/msm-apq8016-skips.txt
-> 
-> diff --git a/drivers/gpu/drm/ci/xfails/amdgpu-stoney-skips.txt b/drivers/gpu/drm/ci/xfails/amdgpu-stoney-skips.txt
-> index e2c538a0f954..70e2f925d06f 100644
-> --- a/drivers/gpu/drm/ci/xfails/amdgpu-stoney-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/amdgpu-stoney-skips.txt
-> @@ -1,2 +1,14 @@
->   # Suspend to RAM seems to be broken on this machine
-> -.*suspend.*
-> \ No newline at end of file
-> +.*suspend.*
-> +
-> +# Skip driver specific tests
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/i915-amly-skips.txt b/drivers/gpu/drm/ci/xfails/i915-amly-skips.txt
-> index fe55540a3f9a..59f8acfaa5ba 100644
-> --- a/drivers/gpu/drm/ci/xfails/i915-amly-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/i915-amly-skips.txt
-> @@ -1,4 +1,16 @@
->   # Suspend to RAM seems to be broken on this machine
->   .*suspend.*
->   # This is generating kernel oops with divide error
-> -kms_plane_scaling@invalid-parameters
-> \ No newline at end of file
-> +kms_plane_scaling@invalid-parameters
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# GEM tests takes ~1000 hours, so skip it
-> +gem_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/i915-apl-skips.txt b/drivers/gpu/drm/ci/xfails/i915-apl-skips.txt
-> index 3430b215c06e..d97bc038b63a 100644
-> --- a/drivers/gpu/drm/ci/xfails/i915-apl-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/i915-apl-skips.txt
-> @@ -3,4 +3,16 @@
->   # This is generating kernel oops with divide error
->   kms_plane_scaling@invalid-parameters
->   # This is cascading issues
-> -kms_3d
-> \ No newline at end of file
-> +kms_3d
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# GEM tests takes ~1000 hours, so skip it
-> +gem_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/i915-cml-skips.txt b/drivers/gpu/drm/ci/xfails/i915-cml-skips.txt
-> index 6d3d7ddc377f..92c0ffee8283 100644
-> --- a/drivers/gpu/drm/ci/xfails/i915-cml-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/i915-cml-skips.txt
-> @@ -1,2 +1,14 @@
->   # This is generating kernel oops with divide error
->   kms_plane_scaling@invalid-parameters
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# GEM tests takes ~1000 hours, so skip it
-> +gem_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/i915-glk-skips.txt b/drivers/gpu/drm/ci/xfails/i915-glk-skips.txt
-> index 4c7d00ce14bc..a168722caf13 100644
-> --- a/drivers/gpu/drm/ci/xfails/i915-glk-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/i915-glk-skips.txt
-> @@ -2,4 +2,16 @@
->   .*suspend.*
->   
->   # This is generating kernel oops with divide error
-> -kms_plane_scaling@invalid-parameters
-> \ No newline at end of file
-> +kms_plane_scaling@invalid-parameters
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# GEM tests takes ~1000 hours, so skip it
-> +gem_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/i915-kbl-skips.txt b/drivers/gpu/drm/ci/xfails/i915-kbl-skips.txt
-> index 4c7d00ce14bc..a168722caf13 100644
-> --- a/drivers/gpu/drm/ci/xfails/i915-kbl-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/i915-kbl-skips.txt
-> @@ -2,4 +2,16 @@
->   .*suspend.*
->   
->   # This is generating kernel oops with divide error
-> -kms_plane_scaling@invalid-parameters
-> \ No newline at end of file
-> +kms_plane_scaling@invalid-parameters
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# GEM tests takes ~1000 hours, so skip it
-> +gem_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/i915-tgl-skips.txt b/drivers/gpu/drm/ci/xfails/i915-tgl-skips.txt
-> index 1d0621750b14..d41344627261 100644
-> --- a/drivers/gpu/drm/ci/xfails/i915-tgl-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/i915-tgl-skips.txt
-> @@ -8,4 +8,16 @@ gem_eio.*
->   kms_flip@absolute-wf_vblank@a-edp1
->   
->   # This is generating kernel oops with divide error
-> -kms_plane_scaling@invalid-parameters
-> \ No newline at end of file
-> +kms_plane_scaling@invalid-parameters
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# GEM tests takes ~1000 hours, so skip it
-> +gem_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/i915-whl-skips.txt b/drivers/gpu/drm/ci/xfails/i915-whl-skips.txt
-> index f3be0888a214..92c0ffee8283 100644
-> --- a/drivers/gpu/drm/ci/xfails/i915-whl-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/i915-whl-skips.txt
-> @@ -1,2 +1,14 @@
->   # This is generating kernel oops with divide error
-> -kms_plane_scaling@invalid-parameters
-> \ No newline at end of file
-> +kms_plane_scaling@invalid-parameters
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# GEM tests takes ~1000 hours, so skip it
-> +gem_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8173-skips.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-skips.txt
-> new file mode 100644
-> index 000000000000..db0c9dbbeb61
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8173-skips.txt
-> @@ -0,0 +1,12 @@
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/mediatek-mt8183-skips.txt b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-skips.txt
-> new file mode 100644
-> index 000000000000..7a1c8be89e5b
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/mediatek-mt8183-skips.txt
-> @@ -0,0 +1,14 @@
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> +
-> +# Panfrost is not a KMS driver, so skip the KMS tests
-> +kms_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/meson-g12b-skips.txt b/drivers/gpu/drm/ci/xfails/meson-g12b-skips.txt
-> new file mode 100644
-> index 000000000000..7a1c8be89e5b
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/meson-g12b-skips.txt
-> @@ -0,0 +1,14 @@
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> +
-> +# Panfrost is not a KMS driver, so skip the KMS tests
-> +kms_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-apq8016-skips.txt b/drivers/gpu/drm/ci/xfails/msm-apq8016-skips.txt
-> new file mode 100644
-> index 000000000000..cc0c2f1ecca7
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ci/xfails/msm-apq8016-skips.txt
-> @@ -0,0 +1,14 @@
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> +
-> +# Skip these tests as core_getrevision fails
+This means that a "usable" GIC redistributor is one that is marked as
+either enabled, or online capable. The meaning of the
+acpi_gicc_is_usable() would become less clear than just checking the
+pair of flags at call sites. As such, drop that helper function.
+The test in gic_acpi_match_gicc() remains as testing just the
+enabled bit so the count of enabled distributors is correct.
 
-DO you mean core_hotunplug in the comments?
+What about the redistributor in the GICC entry? ACPI doesn't want to say.
+Assume the worst: When a redistributor is described in the GICC entry,
+but the entry is marked as disabled at boot, assume the redistributor
+is inaccessible.
 
-> +core_hotunplug.*
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-apq8096-skips.txt b/drivers/gpu/drm/ci/xfails/msm-apq8096-skips.txt
-> index cd49c8ce2059..9ab2177df1ab 100644
-> --- a/drivers/gpu/drm/ci/xfails/msm-apq8096-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/msm-apq8096-skips.txt
-> @@ -1,2 +1,14 @@
->   # Whole machine hangs
-> -kms_cursor_legacy@all-pipes-torture-move
-> \ No newline at end of file
-> +kms_cursor_legacy@all-pipes-torture-move
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-kingoftown-skips.txt b/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-kingoftown-skips.txt
-> index 327039f70252..053810a24691 100644
-> --- a/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-kingoftown-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-kingoftown-skips.txt
-> @@ -1,2 +1,17 @@
->   # Suspend to RAM seems to be broken on this machine
->   .*suspend.*
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> +
-> +# Skip these tests as core_getrevision fails
-> +core_hotunplug.*
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-lazor-limozeen-skips.txt b/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-lazor-limozeen-skips.txt
-> index 327039f70252..053810a24691 100644
-> --- a/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-lazor-limozeen-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-lazor-limozeen-skips.txt
-> @@ -1,2 +1,17 @@
->   # Suspend to RAM seems to be broken on this machine
->   .*suspend.*
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> +
-> +# Skip these tests as core_getrevision fails
-> +core_hotunplug.*
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt b/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
-> index 618e3a3a7277..871110845b52 100644
-> --- a/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
-> @@ -5,3 +5,18 @@ kms_bw.*
->   # https://gitlab.freedesktop.org/gfx-ci/linux/-/commit/4b49f902ec6f2bb382cbbf489870573f4b43371e
->   # https://gitlab.freedesktop.org/gfx-ci/linux/-/commit/38cdf4c5559771e2474ae0fecef8469f65147bc1
->   msm_mapping@*
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> +
-> +# Skip these tests as core_getrevision fails
-> +core_hotunplug.*
-> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
-> index f20c3574b75a..c33dc95b7fc1 100644
-> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
-> @@ -49,4 +49,19 @@ kms_plane_lowres@pipe-F-tiling-y
->   kms_cursor_crc.*
->   
->   # Machine is hanging in this test, so skip it
-> -kms_pipe_crc_basic@disable-crc-after-crtc
-> \ No newline at end of file
-> +kms_pipe_crc_basic@disable-crc-after-crtc
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> +
-> +# Panfrost is not a KMS driver, so skip the KMS tests
-> +kms_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
-> index 10c3d81a919a..8a7c9464b30d 100644
-> --- a/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
-> @@ -3,3 +3,18 @@
->   
->   # Too unstable, machine ends up hanging after lots of Oopses
->   kms_cursor_legacy.*
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
-> +
-> +# Panfrost is not a KMS driver, so skip the KMS tests
-> +kms_.*
-> diff --git a/drivers/gpu/drm/ci/xfails/virtio_gpu-none-skips.txt b/drivers/gpu/drm/ci/xfails/virtio_gpu-none-skips.txt
-> index 78be18174012..6f00d3670530 100644
-> --- a/drivers/gpu/drm/ci/xfails/virtio_gpu-none-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/virtio_gpu-none-skips.txt
-> @@ -3,4 +3,17 @@
->   kms_cursor_legacy.*
->   
->   # Job just hangs without any output
-> -kms_flip@flip-vs-suspend.*
-> \ No newline at end of file
-> +kms_flip@flip-vs-suspend.*
-> +
-> +# Skip driver specific tests
-> +^amdgpu.*
-> +msm_.*
-> +nouveau_.*
-> +panfrost_.*
-> +^v3d.*
-> +^vc4.*
-> +^vmwgfx*
-> +
-> +# Skip intel specific tests
-> +gem_.*
-> +i915_.*
+The GICv3 driver doesn't support late online of redistributors, so this
+means the corresponding CPU can't be brought online either.
+Rather than modifying cpu masks that may already have been used,
+register a new cpuhp callback to fail this case. This must run earlier
+than the main gic_starting_cpu() so that this case can be rejected
+before the section of cpuhp that runs on the CPU that is coming up as
+that is not allowed to fail. This solution keeps the handling of this
+broken firmware corner case local to the GIC driver. As precise ordering
+of this callback doesn't need to be controlled as long as it is
+in that initial prepare phase, use CPUHP_BP_PREPARE_DYN.
+
+Systems that want CPU hotplug in a VM can ensure their redistributors
+are always-on, and describe them that way with a GICR entry in the MADT.
+
+Suggested-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+---
+v9: Thanks to Marc for quick follow up.
+    Fix up description and drop the acpi_gicc_is_usable() check helper
+    function in favour of checks inline, given that now doesn't
+    actually mean they are usable.
+    Only set the broken_rdists mask bit if we have a valid CPU ID with
+    which to do so.
+---
+ arch/arm64/kernel/smp.c       |  3 ++-
+ drivers/acpi/processor_core.c |  3 ++-
+ drivers/irqchip/irq-gic-v3.c  | 46 ++++++++++++++++++++++++++++++++---
+ include/linux/acpi.h          |  5 ----
+ 4 files changed, 46 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 4ced34f62dab..afe835c1cbe2 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -523,7 +523,8 @@ acpi_map_gic_cpu_interface(struct acpi_madt_generic_interrupt *processor)
+ {
+ 	u64 hwid = processor->arm_mpidr;
+ 
+-	if (!acpi_gicc_is_usable(processor)) {
++	if (!(processor->flags &
++	      (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE))) {
+ 		pr_debug("skipping disabled CPU entry with 0x%llx MPIDR\n", hwid);
+ 		return;
+ 	}
+diff --git a/drivers/acpi/processor_core.c b/drivers/acpi/processor_core.c
+index b203cfe28550..b04b684f3190 100644
+--- a/drivers/acpi/processor_core.c
++++ b/drivers/acpi/processor_core.c
+@@ -90,7 +90,8 @@ static int map_gicc_mpidr(struct acpi_subtable_header *entry,
+ 	struct acpi_madt_generic_interrupt *gicc =
+ 	    container_of(entry, struct acpi_madt_generic_interrupt, header);
+ 
+-	if (!acpi_gicc_is_usable(gicc))
++	if (!(gicc->flags &
++	      (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
+ 		return -ENODEV;
+ 
+ 	/* device_declaration means Device object in DSDT, in the
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 10af15f93d4d..cc81515c1413 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -44,6 +44,8 @@
+ 
+ #define GIC_IRQ_TYPE_PARTITION	(GIC_IRQ_TYPE_LPI + 1)
+ 
++static struct cpumask broken_rdists __read_mostly;
++
+ struct redist_region {
+ 	void __iomem		*redist_base;
+ 	phys_addr_t		phys_base;
+@@ -1293,6 +1295,18 @@ static void gic_cpu_init(void)
+ #define MPIDR_TO_SGI_RS(mpidr)	(MPIDR_RS(mpidr) << ICC_SGI1R_RS_SHIFT)
+ #define MPIDR_TO_SGI_CLUSTER_ID(mpidr)	((mpidr) & ~0xFUL)
+ 
++/*
++ * gic_starting_cpu() is called after the last point where cpuhp is allowed
++ * to fail. So pre check for problems earlier.
++ */
++static int gic_check_rdist(unsigned int cpu)
++{
++	if (cpumask_test_cpu(cpu, &broken_rdists))
++		return -EINVAL;
++
++	return 0;
++}
++
+ static int gic_starting_cpu(unsigned int cpu)
+ {
+ 	gic_cpu_init();
+@@ -1384,6 +1398,10 @@ static void __init gic_smp_init(void)
+ 	};
+ 	int base_sgi;
+ 
++	cpuhp_setup_state_nocalls(CPUHP_BP_PREPARE_DYN,
++				  "irqchip/arm/gicv3:checkrdist",
++				  gic_check_rdist, NULL);
++
+ 	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
+ 				  "irqchip/arm/gicv3:starting",
+ 				  gic_starting_cpu, NULL);
+@@ -2365,8 +2383,24 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
+ 	u32 size = reg == GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_64K * 2;
+ 	void __iomem *redist_base;
+ 
+-	if (!acpi_gicc_is_usable(gicc))
++	/* Neither enabled or online capable means it doesn't exist, skip it */
++	if (!(gicc->flags & (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
++		return 0;
++
++	/*
++	 * Capable but disabled CPUs can be brought online later. What about
++	 * the redistributor? ACPI doesn't want to say!
++	 * Virtual hotplug systems can use the MADT's "always-on" GICR entries.
++	 * Otherwise, prevent such CPUs from being brought online.
++	 */
++	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
++		int cpu = get_cpu_for_acpi_id(gicc->uid);
++
++		pr_warn("CPU %u's redistributor is inaccessible: this CPU can't be brought online\n", cpu);
++		if (cpu >= 0)
++			cpumask_set_cpu(cpu, &broken_rdists);
+ 		return 0;
++	}
+ 
+ 	redist_base = ioremap(gicc->gicr_base_address, size);
+ 	if (!redist_base)
+@@ -2413,9 +2447,12 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
+ 
+ 	/*
+ 	 * If GICC is enabled and has valid gicr base address, then it means
+-	 * GICR base is presented via GICC
++	 * GICR base is presented via GICC. The redistributor is only known to
++	 * be accessible if the GICC is marked as enabled. If this bit is not
++	 * set, we'd need to add the redistributor at runtime, which isn't
++	 * supported.
+ 	 */
+-	if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address)
++	if (gicc->flags & ACPI_MADT_ENABLED && gicc->gicr_base_address)
+ 		acpi_data.enabled_rdists++;
+ 
+ 	return 0;
+@@ -2474,7 +2511,8 @@ static int __init gic_acpi_parse_virt_madt_gicc(union acpi_subtable_headers *hea
+ 	int maint_irq_mode;
+ 	static int first_madt = true;
+ 
+-	if (!acpi_gicc_is_usable(gicc))
++	if (!(gicc->flags &
++	      (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
+ 		return 0;
+ 
+ 	maint_irq_mode = (gicc->flags & ACPI_MADT_VGIC_IRQ_MODE) ?
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 9844a3f9c4e5..cf5d2a6950ec 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -237,11 +237,6 @@ acpi_table_parse_cedt(enum acpi_cedt_type id,
+ int acpi_parse_mcfg (struct acpi_table_header *header);
+ void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
+ 
+-static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interrupt *gicc)
+-{
+-	return gicc->flags & ACPI_MADT_ENABLED;
+-}
+-
+ /* the following numa functions are architecture-dependent */
+ void acpi_numa_slit_init (struct acpi_table_slit *slit);
+ 
+-- 
+2.39.2
+
