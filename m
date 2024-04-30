@@ -1,145 +1,176 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F316112C819;
-	Tue, 30 Apr 2024 11:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5FB12D1F4
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714475449; cv=none; b=SBpbr2rEsNjsocCsvhxZzJzUXeJ9pvHGXWSoBTCI0QOTE/+ZebJ7gC84qqOP3eIsImlM0+Vomm+wS0VKp/98KYcCIAlO7cCeVV9LsOHdhT+ZZHBTTrE5v7Y9kWakdI5rHNsU/mKyX1olaeJexmNLq4JfaG9rZwCj23mDBiS8bw0=
+	t=1714475478; cv=none; b=Vs0Jg55Rmx/gYogj6ZFhxOynCLMQIGh4oQDUHzB18TIMLdxpDjH0xpTD+eL3iEB/gcSxfI1a+TkxiDX0xay1qBYYDPtmyXael/YgcWWIfv9Zu8iM0xCmIMQz4WOJ+w6tJudN7tWRhhmOYGZBVAOQkboWv/tHt7vBybW3hamAXSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714475449; c=relaxed/simple;
-	bh=5aMGY4TetrWZPSPC+bg6GoYf1PBtEi/MdRkPeSHwBkA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=mUCx+7uwZq19XeaSP6jSnF+P4KR86jfxXHQZIUmi+zD4YGFwqKxbmBqdO54pjPLFVef89NywK4eQ5d44w1NIwRDmwAnfsJUZ7wTSmIhu2NH8gsK1vVmJfnB4L0fWrxWhbQll9ac2beM5Fs3CCjYyE+XmYztjl+t0sOpz6iLxenI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=O0R+Fag+; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="O0R+Fag+"
+	s=arc-20240116; t=1714475478; c=relaxed/simple;
+	bh=SPbfDXDeO7xWFDZgyGZmSdn7p88FwpKRkRk7sN+7Wtc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gMcCq8IEyCRlO6EGeOWXDVtGHCj3MJ1oZYS2ji6tdzvbs7Bh9+q3uPbGPlcT6ulbT1Sn0jEYozrfsV9/EuThJuBAf0jIVcBUf/8UoKJaXJERH4JjZrFrPQaYw196EjNEilrRgx3yTr1M1kX79ehblRY8q0UT/epn1XmrdQouBy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8418EC4AF18;
+	Tue, 30 Apr 2024 11:11:14 +0000 (UTC)
+Date: Tue, 30 Apr 2024 12:11:12 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Will Deacon <will@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	David Hildenbrand <david@redhat.com>, Peter Xu <peterx@redhat.com>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Shivansh Vij <shivanshvij@outlook.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] arm64/mm: Refactor PMD_PRESENT_INVALID and
+ PTE_PROT_NONE bits
+Message-ID: <ZjDR0EIjLr9F2dWn@arm.com>
+References: <20240429140208.238056-1-ryan.roberts@arm.com>
+ <20240429140208.238056-2-ryan.roberts@arm.com>
+ <Zi_IzrfIcqWxt7cE@arm.com>
+ <839d6975-ce12-4fc9-aa3b-8ec5787bf577@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1714475442;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXKLEl88NqVHxINvq3HuX4hPm4pXSq+keAJ00os/VHk=;
-	b=O0R+Fag+OueqMCr1y90NL/AmfeM6wv77ctNtGipqjYYIKDwMFsAA+Bo+CFUhoucBanply6
-	SS+IUhjNc+Q0fQU69owBtO078NT5rWHaD7JOddHiO7on9Lrb7wtLwGxMr0zFafdThiYGoV
-	8ubR3tayTpRouA48EuchTCqZzMz9ciehSHajzmA1ZoB11iTOnVgObRTjQOcoWmn+jfrgKY
-	lvUbhkg52K+H5O2n/K9tqbPtVpwUEVTAs6b4Ev8G+13A7PQZK+4KMbbTWAtK9vKJMqXY49
-	tzJFSvrvFjfVKfTh2q4WQzTnbT50INSp/NRHBfAEsf7TigpL+rwL+1uviMh77g==
-Date: Tue, 30 Apr 2024 13:10:41 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: linux-sunxi@lists.linux.dev, wens@csie.org, jernej.skrabec@gmail.com,
- samuel@sholland.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: allwinner: Add cache information to the SoC
- dtsi for H6
-In-Reply-To: <20240430114627.0cfcd14a@donnerap.manchester.arm.com>
-References: <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
- <49abb93000078c692c48c0a65ff677893909361a.1714304071.git.dsimic@manjaro.org>
- <20240430001002.4797e4e3@minigeek.lan>
- <6fdeb49d57ccccca62e4f43dbe9475e3@manjaro.org>
- <20240430114627.0cfcd14a@donnerap.manchester.arm.com>
-Message-ID: <f4f4163d908c95d2a3f6f48bc3d7de49@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <839d6975-ce12-4fc9-aa3b-8ec5787bf577@arm.com>
 
-Hello Andre,
-
-On 2024-04-30 12:46, Andre Przywara wrote:
-> On Tue, 30 Apr 2024 02:01:42 +0200
-> Dragan Simic <dsimic@manjaro.org> wrote:
->> On 2024-04-30 01:10, Andre Przywara wrote:
->> > On Sun, 28 Apr 2024 13:40:36 +0200
->> > Dragan Simic <dsimic@manjaro.org> wrote:
->> >
->> >> Add missing cache information to the Allwinner H6 SoC dtsi, to allow
->> >> the userspace, which includes lscpu(1) that uses the virtual files
->> >> provided
->> >> by the kernel under the /sys/devices/system/cpu directory, to display
->> >> the
->> >> proper H6 cache information.
->> >>
->> >> Adding the cache information to the H6 SoC dtsi also makes the
->> >> following
->> >> warning message in the kernel log go away:
->> >>
->> >>   cacheinfo: Unable to detect cache hierarchy for CPU 0
->> >>
->> >> The cache parameters for the H6 dtsi were obtained and partially
->> >> derived
->> >> by hand from the cache size and layout specifications found in the
->> >> following
->> >> datasheets and technical reference manuals:
->> >>
->> >>   - Allwinner H6 V200 datasheet, version 1.1
->> >>   - ARM Cortex-A53 revision r0p3 TRM, version E
->> >>
->> >> For future reference, here's a brief summary of the documentation:
->> >>
->> >>   - All caches employ the 64-byte cache line length
->> >>   - Each Cortex-A53 core has 32 KB of L1 2-way, set-associative
->> >> instruction
->> >>     cache and 32 KB of L1 4-way, set-associative data cache
->> >>   - The entire SoC has 512 KB of unified L2 16-way, set-associative
->> >> cache
->> >>
->> >> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
->> >
->> > I can confirm that the data below matches the manuals, but also the
->> > decoding of the architectural cache type registers (CCSIDR_EL1):
->> >   L1D: 32 KB: 128 sets, 4 way associative, 64 bytes/line
->> >   L1I: 32 KB: 256 sets, 2 way associative, 64 bytes/line
->> >   L2: 512 KB: 512 sets, 16 way associative, 64 bytes/line
->> 
->> Thank you very much for reviewing my patch in such a detailed way!
->> It's good to know that the values in the Allwinner datasheets match
->> with the observed reality, so to speak. :)
+On Mon, Apr 29, 2024 at 06:15:45PM +0100, Ryan Roberts wrote:
+> On 29/04/2024 17:20, Catalin Marinas wrote:
+> > On Mon, Apr 29, 2024 at 03:02:05PM +0100, Ryan Roberts wrote:
+> >> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+> >> index dd9ee67d1d87..de62e6881154 100644
+> >> --- a/arch/arm64/include/asm/pgtable-prot.h
+> >> +++ b/arch/arm64/include/asm/pgtable-prot.h
+> >> @@ -18,14 +18,7 @@
+> >>  #define PTE_DIRTY		(_AT(pteval_t, 1) << 55)
+> >>  #define PTE_SPECIAL		(_AT(pteval_t, 1) << 56)
+> >>  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
+> >> -#define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
+> >> -
+> >> -/*
+> >> - * This bit indicates that the entry is present i.e. pmd_page()
+> >> - * still points to a valid huge page in memory even if the pmd
+> >> - * has been invalidated.
+> >> - */
+> >> -#define PMD_PRESENT_INVALID	(_AT(pteval_t, 1) << 59) /* only when !PMD_SECT_VALID */
+> >> +#define PTE_INVALID		(_AT(pteval_t, 1) << 59) /* only when !PTE_VALID */
+> > 
+> > Nitpick - I prefer the PTE_PRESENT_INVALID name as it makes it clearer
+> > it's a present pte. We already have PTE_VALID, calling it PTE_INVALID
+> > looks like a negation only.
 > 
-> YW, and yes, I like to double check things when it comes to Allwinner
-> documentation ;-) And it was comparably easy for this problem.
+> Meh, for me the pte can only be valid or invalid if it is present. So it's
+> implicit. And if you have PTE_PRESENT_INVALID you should also have
+> PTE_PRESENT_VALID.
+> 
+> We also have pte_mkinvalid(), which is core-mm-defined. In your scheme, surely
+> it should be pte_mkpresent_invalid()?
+> 
+> But you're the boss, I'll change this to PTE_PRESENT_INVALID. :-(
 
-Double checking is always good, IMHO. :)
+TBH, I don't have a strong opinion but best to avoid the bikeshedding.
+I'll leave the decision to you ;). It would match the pmd_mkinvalid()
+core code. But if you drop 'present' make sure you add a comment above
+that it's meant for present ptes.
 
-> Out of curiosity: what triggered that patch? Trying to get rid of false
-> warning/error messages?
+> >> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> >> index afdd56d26ad7..8dd4637d6b56 100644
+> >> --- a/arch/arm64/include/asm/pgtable.h
+> >> +++ b/arch/arm64/include/asm/pgtable.h
+> >> @@ -105,7 +105,7 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
+> >>  /*
+> >>   * The following only work if pte_present(). Undefined behaviour otherwise.
+> >>   */
+> >> -#define pte_present(pte)	(!!(pte_val(pte) & (PTE_VALID | PTE_PROT_NONE)))
+> >> +#define pte_present(pte)	(pte_valid(pte) || pte_invalid(pte))
+> >>  #define pte_young(pte)		(!!(pte_val(pte) & PTE_AF))
+> >>  #define pte_special(pte)	(!!(pte_val(pte) & PTE_SPECIAL))
+> >>  #define pte_write(pte)		(!!(pte_val(pte) & PTE_WRITE))
+> >> @@ -132,6 +132,7 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
+> >>  #define pte_dirty(pte)		(pte_sw_dirty(pte) || pte_hw_dirty(pte))
+> >>  
+> >>  #define pte_valid(pte)		(!!(pte_val(pte) & PTE_VALID))
+> >> +#define pte_invalid(pte)	((pte_val(pte) & (PTE_VALID | PTE_INVALID)) == PTE_INVALID)
+[...]
+> > I think it's sufficient to check PTE_PRESENT_INVALID only. We'd never
+> > have both bits set, so no need for mask and compare.
+> 
+> My rationale is that the INVALID bit may have some other HW meaning when
+> PTE_VALID is set, so its not correct to interpret it as INVALID unless VALID is
+> clear. Granted bit 59 is AttrIndex[3] or PBHA[0], neither of which we are using
+> currently so it will always be 0 when PTE_VALID=1 (and same argument when its
+> moved to NS in next patch). But it feels fragile to me. I'd rather leave it as
+> is unless you insist.
 
-Yes, one of the motivators was to get rid of the false kernel warning,
-and the other was to have the cache information nicely available through
-lscpu(1).  I already did the same for a few Rockchip SoCs, [1][2][3] so
-a couple of Allwinner SoCs were the next on my mental TODO list. :)
+You are right. It currently works but it may overlap with some hardware
+bit on valid ptes.
 
-> And do you plan to address the H616 as well? It's a bit more tricky 
-> there,
-> since there are two die revisions out: one with 256(?)KB of L2, one 
-> with
-> 1MB(!). We know how to tell them apart, so I could provide some TF-A 
-> code
-> to patch that up in the DT. The kernel DT copy could go with 256KB 
-> then.
+> >>  /*
+> >>   * Execute-only user mappings do not have the PTE_USER bit set. All valid
+> >>   * kernel mappings have the PTE_UXN bit set.
+> >> @@ -261,6 +262,13 @@ static inline pte_t pte_mkpresent(pte_t pte)
+> >>  	return set_pte_bit(pte, __pgprot(PTE_VALID));
+> >>  }
+> >>  
+> >> +static inline pte_t pte_mkinvalid(pte_t pte)
+> >> +{
+> >> +	pte = set_pte_bit(pte, __pgprot(PTE_INVALID));
+> >> +	pte = clear_pte_bit(pte, __pgprot(PTE_VALID));
+> >> +	return pte;
+> >> +}
+> > 
+> > I wonder whether we need to define this. I guess it makes sense than
+> > having the pmd_mkinvalid() use the PTE_* definitions directly, though it
+> > won't be something we need to do on a pte.
+> 
+> For me its much cleaner to do it as is because it makes it clear that the format
+> is the same across pte, pmd and pud. And we need pte_invalid() (or
+> pte_present_invalid()) for PROT_NONE so isn't it better to match it with a setter?
 
-I have no boards based on the Allwinner H616, so it wasn't on my radar.
-Though, I'd be happy to prepare and submit a similar kernel patch for
-the H616, if you'd then take it further and submit a TF-A patch that
-fixes the DT according to the detected die revision?  Did I understand
-the plan right?
+I agree. It was just a remark above.
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=67a6a98575974416834c2294853b3814376a7ce7
-[2] 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=8612169a05c5e979af033868b7a9b177e0f9fcdf
-[3] 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=b72633ba5cfa932405832de25d0f0a11716903b4
+> >>  static inline bool pmd_user_accessible_page(pmd_t pmd)
+> >>  {
+> >> -	return pmd_leaf(pmd) && !pmd_present_invalid(pmd) && (pmd_user(pmd) || pmd_user_exec(pmd));
+> >> +	return pmd_valid(pmd) && !pmd_table(pmd) && (pmd_user(pmd) || pmd_user_exec(pmd));
+> >>  }
+> > 
+> > Maybe our pmd_leaf() should actually check valid && !table instead of
+> > present and no need to change these.
+> 
+> I'm not sure that would be a great approach; pmd_leaf() is core-mm-defined. And
+> I can't imagine core-mm would want pmd_leaf() to start returning false after
+> calling pmd_mkinvalid(). You probably won't find anywhere where it actually
+> matters right now, but it would be subtly broken and could be exposed in future.
+
+True, I think it's fine currently but you never know. So after
+pmd_mkinvalid() on a leaf pmd, pmd_leaf() should still return true. It
+might be worth adding a test to pmd_thp_tests() in debug_vm_pgtable.c.
+
+> >>  static inline bool pud_user_accessible_page(pud_t pud)
+> >>  {
+> >> -	return pud_leaf(pud) && (pud_user(pud) || pud_user_exec(pud));
+> >> +	return pud_valid(pud) && !pud_table(pud) && (pud_user(pud) || pud_user_exec(pud));
+> >>  }
+> >>  #endif
+> > 
+> > Same here.
+> > 
+> > Otherwise I'm happy with the patch. Feel free to add:
+> > 
+> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+
+My reviewed-by tag still stands even if you leave the patch as is.
+
+Thanks.
+
+-- 
+Catalin
