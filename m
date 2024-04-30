@@ -1,156 +1,137 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7271C6890
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C871C8FD9
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714485798; cv=none; b=n9k338zFl+J+LgNcqJWl7CGmpvJhGmzA8xm4JbuQlxvntxujwX4UYRAud3+nJGdoVP5DfVOJ2Fu75ROdgEN303aY1mxVUvwGuUnAVU+Lxp/1GlRCa9xgd4ZnfGJxyyJ+FiFhHNWFtqGb/1qSXlXF6aFyU7pXiAV+B8z9jYsGeN8=
+	t=1714485802; cv=none; b=ayIplEzCLxHLA0c/P3CgqzHTlSMXOwMIUoTjxuyQ//vD0GvWL7mnYzmO0js3QPHHfctwA05dGThKuI1olEZNU49ea3PCdpjbMndkNsK/37Y5s675/cNHzQbhzS+GL8dRjxoGxtSyoutd85kSzlCx44C1+dNO3M8S2TbifHuGY5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714485798; c=relaxed/simple;
-	bh=b6kuGLsh7Fncnab7O/x1sZHKoAE2to9yOPoWLkFWFoc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LpIuy30eo9fri10esonn99+MqSWB9aEuISrnA7k9nyf4yJBagD0NayVRpS0udNVu47wi4B7ZAGaeMeOFAQ6HxXIBxfhscWasuAI0l/+r1bmXNqNWoDioX8gmNulX6kWH5hflpve0WOWZPonlsP2G16/h0O2/ZVVjzhcXRQxgUh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MQ+wKUqU; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714485802; c=relaxed/simple;
+	bh=SlDter0zPHMmOmVkh2bkhZIQPqVPC0ZajmJeQql/VqM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fGiCbOpU28BKp1RSAZTUN20K4x4uD9jgOoaorltAJQLHhJl9o1Va6NzRNl8bGYDX9sBAInkZYt8R4n+TkgaEHoU3n5FQfeOmZpLsuqbIAVzXs9j1nWOGnfuoXgFiTkrWZ0oAZQdiOKZQeJzrfvClFI/jtkIAPvzn+w9Vy9WA/gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DByRTjAp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MQ+wKUqU"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5176f217b7bso10096600e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714485790; x=1715090590; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HMdvqht5zOkDrEgl++6w26ILXUpiKeLdEJgBolPMUp4=;
-        b=MQ+wKUqUdmLOnrscMQ93jwOT3v+vrGXhHU6ngSRsvl7AHAoP0p9nLGueG7E10QSF1Z
-         zUSeVauiHVfgFmws6/3oJjlRtgphYI03syDm/88ZseTk46DuDTACeU95tL+UhTgDFEnJ
-         QBUWXS2ND5dHfogFpWMWRd+L7xqaBbTEqgtnXSDtcvvzJvqUDLm1HFUHbUfNfj4RHXIB
-         OyJCIttnfo3u/CZlRZfstz+dF6+PYC0gH5PJa0TXencg66snkcc+G4xEKai3AAcUTnVx
-         44fH/1rzWdRF+X30i5WwtAylxZyS5l34k5iRgL5140cu09kONKKOsaaV0UbKdnUN6W7C
-         /Rhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714485790; x=1715090590;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HMdvqht5zOkDrEgl++6w26ILXUpiKeLdEJgBolPMUp4=;
-        b=F6O6tEnDGeFQ3owP+9R9pcC5mS5fFF4TyqDH0cVFe2tOC1SyTaiwYpoAvOB51OrC9S
-         RMeBaZRlcvkM0VoxXonPnFKRcyLgIcwYJ1gQYvyjLFVmN3CRL0jUMUSe+0VTVMUwWFGo
-         670nJFKdqO2FvZD69RR8mIfA0bEmZfwQA9Jr3wd1eRAmxzogJnVMYZsdEwr7iAFAhnAR
-         xruZ12k6+rcWtf4vg1S6QQIgFord7d0KR7lrkVynY18+jNqX0IyenoxhnWeJ6lz2G0Ra
-         yp4kIynOyE+qEI4tx+tg6TNJpAlmgNgPLHbM5o2Hh22SSfldQFfoO3Sy2mwWSWqwPVMS
-         O3tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhPQGF6HOXFuxDq8qeSjv04KZBMkvau/A1evqWNQTao5ldInGnsHbV+c9XBcLrjITxq6VmN4Jr5Wj9BPyVZ9unAtG9y3pgz3l9/owQ
-X-Gm-Message-State: AOJu0YwzYIglxVv2UXZpQcwqSTpTzxvYblLfnRhg80O5SDVk+hlxqWjT
-	vfdrVRp6r46Tybp3QnyTR8CnMgdLVP6n1TavAkGAn7Ru86f7WeDVgMObZeyWez4=
-X-Google-Smtp-Source: AGHT+IHF9BCm3Hpto4qRWqGnR6LWsHIvsR6psO89D0oVIbNwL85POL6TwPmXMEZNmxvO3lf19inFfA==
-X-Received: by 2002:a05:6512:3982:b0:519:166a:d217 with SMTP id j2-20020a056512398200b00519166ad217mr13782162lfu.32.1714485789720;
-        Tue, 30 Apr 2024 07:03:09 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id pv27-20020a170907209b00b00a5940af3f67sm31434ejb.16.2024.04.30.07.03.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 07:03:08 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Tue, 30 Apr 2024 16:02:18 +0200
-Subject: [PATCH 09/13] ASoC: loongson: Use snd_soc_substream_to_rtd() for
- accessing private_data
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DByRTjAp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714485795;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=91B27U8z7Iln6XJD9uh+fX/pmahLPw16tVNP6LRoyow=;
+	b=DByRTjApMqpkyJGAgu4RQd66Vk1gSwNWYR7lrZWhbPq5Ggt+eSyP62+7mfn/zf7BtV9LD/
+	DLGv2o6egkgOuuhwYqrAFrGOwdcXYr8RJdDGL3J/KAOZf1VqvJjOW2W7mMiKTr5A4zEWct
+	R5hqi3HGfKG5JVCYB0o29MFbT639dYc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-259-9eohxlC1NuGqMNpSzIOC4g-1; Tue, 30 Apr 2024 10:03:03 -0400
+X-MC-Unique: 9eohxlC1NuGqMNpSzIOC4g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A778F823F1B;
+	Tue, 30 Apr 2024 14:02:36 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7904D1C0F133;
+	Tue, 30 Apr 2024 14:02:33 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 21/22] netfs: Miscellaneous tidy ups
+Date: Tue, 30 Apr 2024 15:00:52 +0100
+Message-ID: <20240430140056.261997-22-dhowells@redhat.com>
+In-Reply-To: <20240430140056.261997-1-dhowells@redhat.com>
+References: <20240430140056.261997-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-asoc-snd-substream-clean-v1-9-6f8a8902b479@linaro.org>
-References: <20240430-asoc-snd-substream-clean-v1-0-6f8a8902b479@linaro.org>
-In-Reply-To: <20240430-asoc-snd-substream-clean-v1-0-6f8a8902b479@linaro.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
- Jarkko Nikula <jarkko.nikula@bitmer.com>, Daniel Mack <daniel@zonque.org>, 
- Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Robert Jarzmik <robert.jarzmik@free.fr>, 
- Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
- Fabio Estevam <festevam@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Ban Tao <fengzheng923@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev, 
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1661;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=b6kuGLsh7Fncnab7O/x1sZHKoAE2to9yOPoWLkFWFoc=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmMPn1MXBzjTFYW1vw+HGX+bgAlb8xjIeAN12qT
- 8heTgZA8qOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjD59QAKCRDBN2bmhouD
- 18asD/sG4cfwm5/cvMuyWs/KhNg7FPcNnM4eFOVtUPz5xnRqVF4pt6jUcKqDJjRfrq3s5JoYJ3c
- vBUD9jgSmkuB8tYCeWM/fFAOimxAXRa1keWd3xM/+KL3qsLAqkpXIdkHwS20hkhT7fIF+E2cU34
- 35Ajyyg+q/q32ZXoeF+z7chz0oMLOUq3jDN4mGTO2PE/l4xWHZqC30HaBVtVZLYOr2WdfJN14l+
- YsJUUR1UBA5aXsr++f01Vf/m5pPIFSvYtRQcrp5YyZeaWVGm24AD0kDXcfdaYuSD6hlnoVB1j9K
- LlP/ODUgDC6zWb68dtVEkLXAfru4YUdiN9M9PLsBzBz0IIoe1aPihWRNB80Uyu2Z/lWy8ceeaX/
- rMUdGMoXE+1AcbqrE0sZvujjGVmL/5axnumRcAJRvAi4jE27qyDapAyfgL2FTvrC5fHHC0WF/Pe
- zkWTZpTx4al2ZotNljcAD9imjfQSGKB+Iovem2sQW+eZIGnWm6EeDiADskK/J5bROpHvWbfLRMM
- rXaqxY9WzOy+EFocuuu+Vq9ckAOOUcikB/3Y6YS/odwg7AZZA9hLSefMdTXWrnaJnScqKcP/bAw
- gRWnITyzDhtzuAN/vsyQ5gi3lbBmCYNL5XhK6oDlLe5BamoqScRwdbTHBthRDUiaLtaYXHQGkXj
- jOwKVSiBpozJEaw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Do not open-code snd_soc_substream_to_rtd().
+Do a couple of miscellaneous tidy ups:
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ (1) Add a qualifier into a file banner comment.
+
+ (2) Put the writeback folio traces back into alphabetical order.
+
+ (3) Remove some unused folio traces.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
 ---
- sound/soc/loongson/loongson_card.c | 2 +-
- sound/soc/loongson/loongson_dma.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/netfs/buffered_write.c    | 2 +-
+ include/trace/events/netfs.h | 6 +-----
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/loongson/loongson_card.c b/sound/soc/loongson/loongson_card.c
-index e8432d466f60..fae5e9312bf0 100644
---- a/sound/soc/loongson/loongson_card.c
-+++ b/sound/soc/loongson/loongson_card.c
-@@ -23,7 +23,7 @@ struct loongson_card_data {
- static int loongson_card_hw_params(struct snd_pcm_substream *substream,
- 				   struct snd_pcm_hw_params *params)
- {
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
- 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
- 	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
- 	struct loongson_card_data *ls_card = snd_soc_card_get_drvdata(rtd->card);
-diff --git a/sound/soc/loongson/loongson_dma.c b/sound/soc/loongson/loongson_dma.c
-index 8090662e8ff2..4fcc2868160b 100644
---- a/sound/soc/loongson/loongson_dma.c
-+++ b/sound/soc/loongson/loongson_dma.c
-@@ -226,7 +226,7 @@ static int loongson_pcm_open(struct snd_soc_component *component,
- 			     struct snd_pcm_substream *substream)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
- 	struct snd_card *card = substream->pcm->card;
- 	struct loongson_runtime_data *prtd;
- 	struct loongson_dma_data *dma_data;
-
--- 
-2.43.0
+diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
+index 43d2cbcbe75c..d435f39547ef 100644
+--- a/fs/netfs/buffered_write.c
++++ b/fs/netfs/buffered_write.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-/* Network filesystem high-level write support.
++/* Network filesystem high-level buffered write support.
+  *
+  * Copyright (C) 2023 Red Hat, Inc. All Rights Reserved.
+  * Written by David Howells (dhowells@redhat.com)
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index e7700172ae7e..4ba553a6d71b 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -141,12 +141,9 @@
+ 	EM(netfs_folio_trace_cancel_copy,	"cancel-copy")	\
+ 	EM(netfs_folio_trace_clear,		"clear")	\
+ 	EM(netfs_folio_trace_clear_cc,		"clear-cc")	\
+-	EM(netfs_folio_trace_clear_s,		"clear-s")	\
+ 	EM(netfs_folio_trace_clear_g,		"clear-g")	\
+-	EM(netfs_folio_trace_copy,		"copy")		\
+-	EM(netfs_folio_trace_copy_plus,		"copy+")	\
++	EM(netfs_folio_trace_clear_s,		"clear-s")	\
+ 	EM(netfs_folio_trace_copy_to_cache,	"mark-copy")	\
+-	EM(netfs_folio_trace_end_copy,		"end-copy")	\
+ 	EM(netfs_folio_trace_filled_gaps,	"filled-gaps")	\
+ 	EM(netfs_folio_trace_kill,		"kill")		\
+ 	EM(netfs_folio_trace_kill_cc,		"kill-cc")	\
+@@ -156,7 +153,6 @@
+ 	EM(netfs_folio_trace_mkwrite_plus,	"mkwrite+")	\
+ 	EM(netfs_folio_trace_not_under_wback,	"!wback")	\
+ 	EM(netfs_folio_trace_read_gaps,		"read-gaps")	\
+-	EM(netfs_folio_trace_redirty,		"redirty")	\
+ 	EM(netfs_folio_trace_redirtied,		"redirtied")	\
+ 	EM(netfs_folio_trace_store,		"store")	\
+ 	EM(netfs_folio_trace_store_copy,	"store-copy")	\
 
