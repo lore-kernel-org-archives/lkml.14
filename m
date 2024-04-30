@@ -1,71 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C0B101C4;
-	Tue, 30 Apr 2024 03:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851A81094E;
+	Tue, 30 Apr 2024 03:22:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714447130; cv=none; b=lsJWxasPZmOt2/kUSKVfihAShJsy1lER5c3so+Q4/IDw0H9GvYmCt/hvBjQ8QBJwPdNITTJcjvAj7K1uwtA9dTyHv0eAeoj6hCoLJo9oBlLCYKo8SbVtS5jV9o4vD8ZAAc2rioUjcDcVAjbYp0SQttSm0spiFFofErv3EVdeweU=
+	t=1714447359; cv=none; b=f9gkeK4rmFwQqX0QniidS/dfoxj7zYziF9dCjiGswBYjTAX8gXZV7xB2/x+8N0/6vvPqwfIbCYXPxRP7h68zrsTCGON8xMOIfSZJPv/HCodB5IjZzvn30lyxCSmIzGKIUL48Jn1epK4I75aDvZL/5qekcwfuJ6Gdg9G04RzQMHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714447130; c=relaxed/simple;
-	bh=jFpDU0vcTXdr0AsLdbKUE/E45SonMzpHUKonO6iy2VQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UcOCacOUXWJDp/lylfLpuxEP61BBiSZAXdleUPgum8kaMQZg+aEzoO4RFPxdwe099Qbat/ayaC3RWlWXObwifRpQbQYGwgjuhKoE1SCyLvLGcFAeOgcNLVTMhPkjM9h8MSVB7RIMCx4o/IlJnedqS7Wn9XCutsuyTl7JC0lUQp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LuZn1koE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714447359; c=relaxed/simple;
+	bh=/KpxBWy5mcEbkG7pQG0EPzcysWGUzPXDj0gBvqYdums=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TFaH6jjxIGKmFb2SeoIxsnJoJ2sWcAIKH/wbv77MtLukM64jllim8rWP/Fr3X7FsTkRLH9VJ4JDrHBxnab8iVEdn60K1zzgRWTcV/bywr3cy9WdRJb2oWIsGPpttJcgQf9Yr+hbOwwwB9DMvXrbTeRmxgJOg6DkAyvs5eSEWGo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSkKNiCX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LuZn1koE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70D4DC116B1;
-	Tue, 30 Apr 2024 03:18:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSkKNiCX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CD91C116B1;
+	Tue, 30 Apr 2024 03:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714447129;
-	bh=jFpDU0vcTXdr0AsLdbKUE/E45SonMzpHUKonO6iy2VQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LuZn1koErWxms/QDZXsWzaiYu3CyBpxnfB20cadUDPZLM9t+h+1Ngvt3b5rKhR3am
-	 0WSEoHBI+Ig9nHB1XRPaKn561cAT+rtiu8qKd1q5G+7h6kSjeyD2BSwCjWpqMOfooc
-	 xi2wvmcs4d81xgpdNGnYLg1tGoGAhA2thgiKSpT24DQp6qYM98KWj8jnDzGARIACg0
-	 KIImSkzb+CSGg9vnS5tE5U3QWIRGngkFCPknmHlVwPGjMVFNfa1rS3aU8vYdkRfJLk
-	 iE4M3cSQHjSgek3+F79vE3WtJbndjMJVmYYyN2UYO/z1PwmFaP7iTossxxI1obtT8x
-	 yVjoiGGSlev/g==
-Date: Mon, 29 Apr 2024 20:18:47 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] crypto: passing configuration parameters to comp algos
-Message-ID: <20240430031847.GB10165@sol.localdomain>
-References: <20240430030447.GE14947@google.com>
+	s=k20201202; t=1714447359;
+	bh=/KpxBWy5mcEbkG7pQG0EPzcysWGUzPXDj0gBvqYdums=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=sSkKNiCXpCcc/7pJ8gWMm5YCd3auiyTbpRyptUCMgG9FzN5zkVbZipqaxbdF3hPpx
+	 Geb61osFpYAPFdZvAxNGqTo5mLEMYXsyGz9fJGTOQKB4dNXfiAX3WjwYmz8tnaFfdD
+	 PbLFmVrwVAth+rr/5SZExtgs9UjWdtgAEGGxBbbeqdyHbLTA6xT2G6T1WL21orpZnE
+	 KzuJ9S8IryK8WpoCwKQH39ME1RvEXSwUt+981BiNi0hf4zixOLWsbwp9cB7tNZ7PJM
+	 XZLyDW94V+cfABtIkA1burVDaEciei33GzNeWzjSShKkOHpSXM8fzG7k/IDuKX3glu
+	 uTZzRAVgqnlFw==
+Date: Mon, 29 Apr 2024 20:22:37 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Danielle Ratson <danieller@nvidia.com>
+Cc: <netdev@vger.kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
+ <pabeni@redhat.com>, <corbet@lwn.net>, <linux@armlinux.org.uk>,
+ <sdf@google.com>, <kory.maincent@bootlin.com>,
+ <maxime.chevallier@bootlin.com>, <vladimir.oltean@nxp.com>,
+ <przemyslaw.kitszel@intel.com>, <ahmed.zaki@intel.com>,
+ <richardcochran@gmail.com>, <shayagr@amazon.com>,
+ <paul.greenwalt@intel.com>, <jiri@resnulli.us>,
+ <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <mlxsw@nvidia.com>, <petrm@nvidia.com>, <idosch@nvidia.com>
+Subject: Re: [PATCH net-next v5 09/10] ethtool: Add ability to flash
+ transceiver modules' firmware
+Message-ID: <20240429202237.6bbd2cb3@kernel.org>
+In-Reply-To: <20240424133023.4150624-10-danieller@nvidia.com>
+References: <20240424133023.4150624-1-danieller@nvidia.com>
+	<20240424133023.4150624-10-danieller@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430030447.GE14947@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 30, 2024 at 12:04:47PM +0900, Sergey Senozhatsky wrote:
-> Hi,
-> 
-> 	We'd like to be able to pass algorithm-specific parameters to
-> comp backends. As of this moment, crypto usees hard-coded default
-> values and does not permit any run-time algorithm configuration,
-> which in some cases simply disables the most interesting functionality.
-> E.g. zstd can be configured to use a pre-trained (in the user-space)
-> compression dictionary, which significantly changes algorithms
-> characteristics. Another, obvious and trivial example, is algorithms
-> compression level.
-> 
-> The problem is that we need to pass params to cra_init() function,
-> because for some algorithms that's the only place where configuration
-> can take place (e.g. zstd). Changing cra_init() to accept additional
-> `struct crypto_comp_params` looks to be a little intrusive so before
-> I write any patches I'd like to hear your thoughts.
-> 
+On Wed, 24 Apr 2024 16:30:22 +0300 Danielle Ratson wrote:
+> +static int
+> +module_flash_fw_schedule(struct net_device *dev, const char *file_name,
+> +			 struct ethtool_module_fw_flash_params *params,
+> +			 struct netlink_ext_ack *extack)
+> +{
+> +	struct ethtool_module_fw_flash *module_fw;
+> +	int err;
+> +
+> +	err = __module_flash_fw_schedule(dev, extack);
+> +	if (err < 0)
+> +		return err;
 
-Have you considered just using the zstd library (<linux/zstd.h>) directly?
+Basic dev validation should probably be called directly from
+ethnl_act_module_fw_flash() rather than two functions down.
 
-Which kernel subsystem are you working on that uses compression?
+> +	module_fw = kzalloc(sizeof(*module_fw), GFP_KERNEL);
+> +	if (!module_fw)
+> +		return -ENOMEM;
+> +
+> +	module_fw->params = *params;
+> +	err = request_firmware_direct(&module_fw->fw, file_name, &dev->dev);
+> +	if (err) {
+> +		NL_SET_ERR_MSG(extack,
+> +			       "Failed to request module firmware image");
+> +		goto err_request_firmware;
 
-- Eric
+Please name the labels after the actions they perform.
+
+> +	}
+> +
+> +	err = module_flash_fw_work_init(module_fw, dev, extack);
+> +	if (err < 0) {
+> +		NL_SET_ERR_MSG(extack,
+> +			       "Flashing module firmware is not supported by this device");
+
+This overwrites the more accurate extack msg already set by
+module_flash_fw_work_init()
+
+> +		goto err_work_init;
+> +	}
