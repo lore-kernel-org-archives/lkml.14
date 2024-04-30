@@ -1,58 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3714F181B8F
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70310190680
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714495899; cv=none; b=qI12vOuQepsJ4ybme2g5yw3AxMgBtcbfI+xGSzBOMGMN/Y5PiDrgBzjpznSqHy52Ryy0BR1kKsTv/UdY9sL9U8AdWR/dvehiD4hYKLijM6FYOyT138/+29CAKE6hUPvalKmYHWxp+jRh6VfjiwVv+hmdkn9xFSK1ki8dFLWAoTg=
+	t=1714495901; cv=none; b=ndWAYIvkt2gWP63iEHpxwoeLZePwycuZWzOWslCHJ6t8Rom/VzItcXoriuaVhf/acYRdsBEQa3mmC7AE5eF4NfVMRczdH40naUs8FKx8BCCWNKP7fICu9FoM/a/GsLlG9lPQq3++NBSFRfRUvmqgBfqLOP4OPNW5kUxE8Nqulu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714495899; c=relaxed/simple;
-	bh=HtLk67VJXa/9h9uLwy5bh3ooxVgpgzTrHi5Ns3ks4fg=;
+	s=arc-20240116; t=1714495901; c=relaxed/simple;
+	bh=Imj0PGiI0NRGeoHG/l7mS2RL08/4BXu/ArMN7o0JhVQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SNEWAFwg/Nm3N2qMlk+IXsmfXmZfFcMX/fkVoldKr+kfqVRX2tVGqpQpld0gLr1YDuW3ub9X2N6+2MXo8ZKXe7ZE0jdxQtF3vIvibmY8Hr4NWMIJLRr4/HVUAcrBjFkYDmXRB7HDzT4L7EXwymX8raFbxOHEgrOLfSa5REAZfF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jd2apgAy; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=QdnY6QLX7s8f1Z/kijO2I2Dzfwi+EXW5akzWb1BJU8bG8FUAGOgquh2oh5xX2AU1pZSt1jexMpR1KBgF29/rEUGqjlblw6BCrB47O/jzUXffAHqlI2x7sAc5FJxQhFKRnSQcOKUhXMnt7QxrA4fKPEC5HGapTxPYSv9H04AQDec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c4poMy0h; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jd2apgAy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c4poMy0h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714495897; x=1746031897;
+  t=1714495900; x=1746031900;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HtLk67VJXa/9h9uLwy5bh3ooxVgpgzTrHi5Ns3ks4fg=;
-  b=Jd2apgAyvOFfjx7pY6f4jDqRqwh3zF7wsuiJSSmyLvQmAI/3TzlgWpJ4
-   G9EYMONRvR/qcCcLYk1K4ukP/BYU4SxTyKzXKoc87fZPU6Z6aNARkJ3jN
-   3GFrxWi3rFPQc3dhHrlQf76lvwEF8uVrSTVF0l23WzqHECPQ1t9yOgSv2
-   U08bV3zeD0GFEhMqQISy2HSaGs1M+3PPZxcQrC2rw+8tZOnCvtjJO3nGd
-   IWSjLKAl8ZsOTMM26adHfQ2xo3rK7nnw79QHzTaKsB6WRZNKvcb5X9YxP
-   LtcvTFsIq5ZXEuSxho4ju8CLT5eA+V8PbBw3hrpXWCSaJAZvIIul81JcO
-   A==;
-X-CSE-ConnectionGUID: 7jr/FRT4QjaazwD2o7BP3g==
-X-CSE-MsgGUID: 7IXXrKgEQPauG4uyGTq8dQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10075657"
+  bh=Imj0PGiI0NRGeoHG/l7mS2RL08/4BXu/ArMN7o0JhVQ=;
+  b=c4poMy0hofCIvhgd9WTNipZfVfh6k0wAdIHB8CFS7/tYCZpPGGgoIlVc
+   4djuy/2LjyKGmtCBNmHxBveMAB+y2bUUKjvTqnt89Bl9MV+rU1KH7UfwT
+   +yf7tSpYH44+15uDRtSm3NS6S13CoK76FO777EvsceH/vL2EXuKLdT13x
+   1UJebux8pe0qXLlRphvTalgwUzbSjc/0eGeI+3b27i4aRp+HkWFdysJnc
+   TAKncuBIu322KI9aVQW2eL4Yv29b5eZI0ZbtvvZgNbqzc+lU7cPXtPYmu
+   5cCeg/4syTRzpmc7NKwNikH+s5M4RW7TKJ/4VKH1yiq2/wwY+iO58a+FU
+   g==;
+X-CSE-ConnectionGUID: bhC+rmf+SLelSxEoQqZmSw==
+X-CSE-MsgGUID: Ia9keJM2Ru+YQ3duuf9ngw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10075687"
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="10075657"
+   d="scan'208";a="10075687"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:21 -0700
-X-CSE-ConnectionGUID: 5roBhk/iTVyrCA7L6bulMQ==
-X-CSE-MsgGUID: UkpqWyzaTdmmpp60MqvYaQ==
+X-CSE-ConnectionGUID: voAVff7TQ8OXebssrs6q/g==
+X-CSE-MsgGUID: toSK2bL/TvCVli7jnesOrA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="26515424"
+   d="scan'208";a="26515458"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:12 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:18 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Borislav Petkov <bp@alien8.de>
 Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v5 09/47] intel_idle: Switch to new Intel CPU model defines
-Date: Tue, 30 Apr 2024 09:50:22 -0700
-Message-ID: <20240430165100.73491-9-tony.luck@intel.com>
+	Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v5 20/47] platform/x86: intel_turbo_max_3: Switch to new Intel CPU model defines
+Date: Tue, 30 Apr 2024 09:50:33 -0700
+Message-ID: <20240430165100.73491-20-tony.luck@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240430165100.73491-1-tony.luck@intel.com>
 References: <20240430164913.73473-1-tony.luck@intel.com>
@@ -68,155 +68,26 @@ Content-Transfer-Encoding: 8bit
 New CPU #defines encode vendor and family as well as model.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/idle/intel_idle.c | 116 +++++++++++++++++++-------------------
- 1 file changed, 58 insertions(+), 58 deletions(-)
+ drivers/platform/x86/intel/turbo_max_3.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index e486027f8b07..9aab7abc2ae9 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -1494,53 +1494,53 @@ static const struct idle_cpu idle_cpu_srf __initconst = {
- };
+diff --git a/drivers/platform/x86/intel/turbo_max_3.c b/drivers/platform/x86/intel/turbo_max_3.c
+index 892140b62898..79a0bcdeffb8 100644
+--- a/drivers/platform/x86/intel/turbo_max_3.c
++++ b/drivers/platform/x86/intel/turbo_max_3.c
+@@ -114,8 +114,8 @@ static int itmt_legacy_cpu_online(unsigned int cpu)
+ }
  
- static const struct x86_cpu_id intel_idle_ids[] __initconst = {
--	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM_EP,		&idle_cpu_nhx),
--	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM,		&idle_cpu_nehalem),
--	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM_G,		&idle_cpu_nehalem),
--	X86_MATCH_INTEL_FAM6_MODEL(WESTMERE,		&idle_cpu_nehalem),
--	X86_MATCH_INTEL_FAM6_MODEL(WESTMERE_EP,		&idle_cpu_nhx),
--	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM_EX,		&idle_cpu_nhx),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_BONNELL,	&idle_cpu_atom),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_BONNELL_MID,	&idle_cpu_lincroft),
--	X86_MATCH_INTEL_FAM6_MODEL(WESTMERE_EX,		&idle_cpu_nhx),
--	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE,		&idle_cpu_snb),
--	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE_X,	&idle_cpu_snx),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SALTWELL,	&idle_cpu_atom),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&idle_cpu_byt),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID,	&idle_cpu_tangier),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&idle_cpu_cht),
--	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE,		&idle_cpu_ivb),
--	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE_X,		&idle_cpu_ivt),
--	X86_MATCH_INTEL_FAM6_MODEL(HASWELL,		&idle_cpu_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_X,		&idle_cpu_hsx),
--	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_L,		&idle_cpu_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_G,		&idle_cpu_hsw),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_D,	&idle_cpu_avn),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL,		&idle_cpu_bdw),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_G,		&idle_cpu_bdw),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,		&idle_cpu_bdx),
--	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D,		&idle_cpu_bdx),
--	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&idle_cpu_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&idle_cpu_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&idle_cpu_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&idle_cpu_skl),
--	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&idle_cpu_skx),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&idle_cpu_icx),
--	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		&idle_cpu_icx),
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&idle_cpu_adl),
--	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&idle_cpu_adl_l),
--	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	&idle_cpu_mtl_l),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GRACEMONT,	&idle_cpu_gmt),
--	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&idle_cpu_spr),
--	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&idle_cpu_spr),
--	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&idle_cpu_knl),
--	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&idle_cpu_knl),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&idle_cpu_bxt),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&idle_cpu_bxt),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	&idle_cpu_dnv),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&idle_cpu_snr),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT,	&idle_cpu_grr),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT_X,	&idle_cpu_srf),
-+	X86_MATCH_VFM(INTEL_NEHALEM_EP,		&idle_cpu_nhx),
-+	X86_MATCH_VFM(INTEL_NEHALEM,		&idle_cpu_nehalem),
-+	X86_MATCH_VFM(INTEL_NEHALEM_G,		&idle_cpu_nehalem),
-+	X86_MATCH_VFM(INTEL_WESTMERE,		&idle_cpu_nehalem),
-+	X86_MATCH_VFM(INTEL_WESTMERE_EP,	&idle_cpu_nhx),
-+	X86_MATCH_VFM(INTEL_NEHALEM_EX,		&idle_cpu_nhx),
-+	X86_MATCH_VFM(INTEL_ATOM_BONNELL,	&idle_cpu_atom),
-+	X86_MATCH_VFM(INTEL_ATOM_BONNELL_MID,	&idle_cpu_lincroft),
-+	X86_MATCH_VFM(INTEL_WESTMERE_EX,	&idle_cpu_nhx),
-+	X86_MATCH_VFM(INTEL_SANDYBRIDGE,	&idle_cpu_snb),
-+	X86_MATCH_VFM(INTEL_SANDYBRIDGE_X,	&idle_cpu_snx),
-+	X86_MATCH_VFM(INTEL_ATOM_SALTWELL,	&idle_cpu_atom),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT,	&idle_cpu_byt),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID, &idle_cpu_tangier),
-+	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,	&idle_cpu_cht),
-+	X86_MATCH_VFM(INTEL_IVYBRIDGE,		&idle_cpu_ivb),
-+	X86_MATCH_VFM(INTEL_IVYBRIDGE_X,	&idle_cpu_ivt),
-+	X86_MATCH_VFM(INTEL_HASWELL,		&idle_cpu_hsw),
-+	X86_MATCH_VFM(INTEL_HASWELL_X,		&idle_cpu_hsx),
-+	X86_MATCH_VFM(INTEL_HASWELL_L,		&idle_cpu_hsw),
-+	X86_MATCH_VFM(INTEL_HASWELL_G,		&idle_cpu_hsw),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_D,	&idle_cpu_avn),
-+	X86_MATCH_VFM(INTEL_BROADWELL,		&idle_cpu_bdw),
-+	X86_MATCH_VFM(INTEL_BROADWELL_G,	&idle_cpu_bdw),
-+	X86_MATCH_VFM(INTEL_BROADWELL_X,	&idle_cpu_bdx),
-+	X86_MATCH_VFM(INTEL_BROADWELL_D,	&idle_cpu_bdx),
-+	X86_MATCH_VFM(INTEL_SKYLAKE_L,		&idle_cpu_skl),
-+	X86_MATCH_VFM(INTEL_SKYLAKE,		&idle_cpu_skl),
-+	X86_MATCH_VFM(INTEL_KABYLAKE_L,		&idle_cpu_skl),
-+	X86_MATCH_VFM(INTEL_KABYLAKE,		&idle_cpu_skl),
-+	X86_MATCH_VFM(INTEL_SKYLAKE_X,		&idle_cpu_skx),
-+	X86_MATCH_VFM(INTEL_ICELAKE_X,		&idle_cpu_icx),
-+	X86_MATCH_VFM(INTEL_ICELAKE_D,		&idle_cpu_icx),
-+	X86_MATCH_VFM(INTEL_ALDERLAKE,		&idle_cpu_adl),
-+	X86_MATCH_VFM(INTEL_ALDERLAKE_L,	&idle_cpu_adl_l),
-+	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&idle_cpu_mtl_l),
-+	X86_MATCH_VFM(INTEL_ATOM_GRACEMONT,	&idle_cpu_gmt),
-+	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X,	&idle_cpu_spr),
-+	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X,	&idle_cpu_spr),
-+	X86_MATCH_VFM(INTEL_XEON_PHI_KNL,	&idle_cpu_knl),
-+	X86_MATCH_VFM(INTEL_XEON_PHI_KNM,	&idle_cpu_knl),
-+	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,	&idle_cpu_bxt),
-+	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_PLUS,	&idle_cpu_bxt),
-+	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_D,	&idle_cpu_dnv),
-+	X86_MATCH_VFM(INTEL_ATOM_TREMONT_D,	&idle_cpu_snr),
-+	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT,	&idle_cpu_grr),
-+	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT_X,	&idle_cpu_srf),
+ static const struct x86_cpu_id itmt_legacy_cpu_ids[] = {
+-	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,	NULL),
+-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,	NULL),
++	X86_MATCH_VFM(INTEL_BROADWELL_X,	NULL),
++	X86_MATCH_VFM(INTEL_SKYLAKE_X,	NULL),
  	{}
  };
  
-@@ -1990,27 +1990,27 @@ static void __init intel_idle_init_cstates_icpu(struct cpuidle_driver *drv)
- {
- 	int cstate;
- 
--	switch (boot_cpu_data.x86_model) {
--	case INTEL_FAM6_IVYBRIDGE_X:
-+	switch (boot_cpu_data.x86_vfm) {
-+	case INTEL_IVYBRIDGE_X:
- 		ivt_idle_state_table_update();
- 		break;
--	case INTEL_FAM6_ATOM_GOLDMONT:
--	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
-+	case INTEL_ATOM_GOLDMONT:
-+	case INTEL_ATOM_GOLDMONT_PLUS:
- 		bxt_idle_state_table_update();
- 		break;
--	case INTEL_FAM6_SKYLAKE:
-+	case INTEL_SKYLAKE:
- 		sklh_idle_state_table_update();
- 		break;
--	case INTEL_FAM6_SKYLAKE_X:
-+	case INTEL_SKYLAKE_X:
- 		skx_idle_state_table_update();
- 		break;
--	case INTEL_FAM6_SAPPHIRERAPIDS_X:
--	case INTEL_FAM6_EMERALDRAPIDS_X:
-+	case INTEL_SAPPHIRERAPIDS_X:
-+	case INTEL_EMERALDRAPIDS_X:
- 		spr_idle_state_table_update();
- 		break;
--	case INTEL_FAM6_ALDERLAKE:
--	case INTEL_FAM6_ALDERLAKE_L:
--	case INTEL_FAM6_ATOM_GRACEMONT:
-+	case INTEL_ALDERLAKE:
-+	case INTEL_ALDERLAKE_L:
-+	case INTEL_ATOM_GRACEMONT:
- 		adl_idle_state_table_update();
- 		break;
- 	}
 -- 
 2.44.0
 
