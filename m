@@ -1,86 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F8A181B8D
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 18:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1984180A62
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 18:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714500437; cv=none; b=eixaJyNsS6tYCoMlOhgtp33C7tnu1+EL9DfbqO3xWXre3Y3BGchDCUaFCYPHnbjBDD1fFqP2zjPtyqnU0NODK5RAq7b5Yiq9uslnCwRoANMsIqMAu1rK1cx8U8H5Mj5k6Y4gyCP8fcvcYjto6Swgm3pzUnUZvkpWR4zllxpoddE=
+	t=1714500565; cv=none; b=IGeGc2AjFPiqXqTSW0ag+0MWXSEcS+caHR8XFaNrMHOBZG8OKtNMainBLicHmWHqCn3HutrhopN9icAN5CSLyUXIBtkCTSe1eMClkSpCqfj8nYTnVWlLXvq7Hc0FIivqlCLFRnSLnb0ka7W6v6Sy57jdOR1P6ELTy8D7l1Izegg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714500437; c=relaxed/simple;
-	bh=L47q4mt9kBy0wy8Q0nzUA+7b4LoDWbP6TNlD++4HcME=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CWSCBu5WCKvbAY1BeNWvGUqFmN/qH/nl3nnMoawpqrd2cv6FekuQ2PkzrEGomhDQsiyuslmUNdU+2/DXTHHVgpDAr5/1vaoIEsJrooHswYIagpXEIvifsDrx5s+k7XzXVHS7aZiD223iCfwVqZyZ5LTQvNvgzTNUXBOOqkKBwvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H0q4gROC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714500565; c=relaxed/simple;
+	bh=WMNTCdm5svpxXWjpVt60+t7ZBqUkllAdM5ompQ7ypY8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NgRNMU4l8H+N9cMWmhbOm3PF7ZJJrqXCTqqkyfUfkZQVC3Ux8ib/kZ4N9zdrgYRBIoWGWQ5r+RVw1+VBpbAcgVEG3PE5HVeTuUF8SiYgutL2YQo4bce9EJqkSKhXCLCnzCpVPukNcZBgmFQz7Rk4VTYJjAKK4K0BTx7AQ1NL6HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VSNhCnjh; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H0q4gROC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714500434;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KZBVbO66XJQeYd/bCDE0p7KhNBBtdq70G4UqPY9LxKI=;
-	b=H0q4gROCDUgFhVN1XVxWy3nvhwgV2Xcc6iz4gf3OXBbQ+0cAOpzqIaaia9RplfKDNoZwJG
-	77VUqE0wLXjSCZOapbWDCmTlybZuhxZR1sYnUz8ocZypzcXILN/it5EzRvopdN/oWuTAH9
-	FWUPgpRPROKyDuxmUOAA4MMRY4AJ+8Q=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-ZmrGJoxSOmeBgbOag4bPJQ-1; Tue, 30 Apr 2024 14:07:10 -0400
-X-MC-Unique: ZmrGJoxSOmeBgbOag4bPJQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 66275830F7E;
-	Tue, 30 Apr 2024 18:07:10 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 49BD2492BC7;
-	Tue, 30 Apr 2024 18:07:10 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fix for Linux 6.9-rc7
-Date: Tue, 30 Apr 2024 14:07:09 -0400
-Message-ID: <20240430180709.3897108-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VSNhCnjh"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61bed738438so9016547b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:09:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714500563; x=1715105363; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WMNTCdm5svpxXWjpVt60+t7ZBqUkllAdM5ompQ7ypY8=;
+        b=VSNhCnjhAsLxX4IG6kGWD2eekEQSNFADq7KFMewa8xTu7Je33HxhBdZpnHLRWfYssJ
+         v/Da1aHbJRfadOUxA3iGRfYkVpDvRAr1VMtlbPbQQI5sH3KhMTM/iiDjaURG7YQZ6eRW
+         d8eMenyChU+ZIBieTN7DgxFKM5mJXHGDFSYOLZgtUx+CiL4ku3UN9Rft9IaAGivgyqLS
+         7mlDV14CXqo5FyEj4NlEAu21l/9xcL8Wt4yzsZiEzYiwVpOcfj4xjIbpY+a79zE3dHt4
+         M02c1AJMck0rv/7e59LA4jgEb08PFE6+4dJ4O9lzURT7yMO2DqBowjXmoHP+9lGoRYSB
+         gWlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714500563; x=1715105363;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WMNTCdm5svpxXWjpVt60+t7ZBqUkllAdM5ompQ7ypY8=;
+        b=Pe8+X/H4SUZRs9jgieG6mTgA5XGx5JGMdYNjFj92Eb5/01xCK076XVP/btDG48uGfp
+         xBV90ccgoKGPnwlUQg/rTFtzgr0Qpl+gWth3fZ/FMLGBxhef5HzQfJ46UIgCtNv0FDL0
+         ++2EDW4lmADeL5XdbzR3HXBytNEDwISEKcpwar5pmlhO7yHm5YqSdqSHY9jr0VWM/Oqa
+         deV4m02ZYDyTqSPOflcbOrz9SJ7y+TGWJRj096CxQfZK8ZA187201DKS8XzPiyINpf9O
+         4HCHRWQg7OlqMqEFYsnTNtgRHzwWtBovGc4hrbmQM0geCiVj8onJ3P1gVQplQhFZlZR1
+         Qt8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXiviLCT1b7zjA3JYf0xxXic6zd3v2fKm+EOH9GxWEPIjJ+/XUqIZlYZU8doW8P3U8nvmNStUrZ3eZvt/2X39FtVJs4MYTIVldbtkhZ
+X-Gm-Message-State: AOJu0Yz775FE8Nv5TKH9/nbpRWUKuoNSl+w8mQOkLuYAqFSNuhQNqM+1
+	djQVYx+uyM3T95yrx7Mgy2sCVaYz2GV4LK/NPiPTSNNUXDdOEvA4CW5Apt2w0WdRvOdQ5Rez/5D
+	cFy17kPe3hO8pkIKHLo6J3BWnzRrqZHoT4M60
+X-Google-Smtp-Source: AGHT+IFYPUdRIGoJo2FyON4O7qgOmZLSFxrIYUi3aafzci4nIsE7insXex/Szzw+Amr7vCbEJYbG8jzOOcIngN/ttDs=
+X-Received: by 2002:a25:97c3:0:b0:de0:e7f2:a03d with SMTP id
+ j3-20020a2597c3000000b00de0e7f2a03dmr359262ybo.3.1714500562637; Tue, 30 Apr
+ 2024 11:09:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+References: <20240430060612.2171650-1-shakeel.butt@linux.dev> <20240430060612.2171650-9-shakeel.butt@linux.dev>
+In-Reply-To: <20240430060612.2171650-9-shakeel.butt@linux.dev>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Tue, 30 Apr 2024 11:09:11 -0700
+Message-ID: <CABdmKX0eC7YFbcfjW+1VtPVRfhExxZHiyQ0Dv-oPiPD3HcUfFw@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] memcg: use proper type for mod_memcg_state
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosryahmed@google.com>, kernel-team@meta.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Linus,
+On Mon, Apr 29, 2024 at 11:06=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.d=
+ev> wrote:
+>
+> The memcg stats update functions can take arbitrary integer but the
+> only input which make sense is enum memcg_stat_item and we don't
+> want these functions to be called with arbitrary integer, so replace
+> the parameter type with enum memcg_stat_item and compiler will be able
+> to warn if memcg stat update functions are called with incorrect index
+> value.
+>
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
-The following changes since commit e67572cd2204894179d89bd7b984072f19313b03:
-
-  Linux 6.9-rc6 (2024-04-28 13:47:24 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to 16c20208b9c2fff73015ad4e609072feafbf81ad:
-
-  Merge tag 'kvmarm-fixes-6.9-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2024-04-30 13:50:55 -0400)
-
-----------------------------------------------------------------
-A pretty straightforward fix for a NULL pointer dereference,
-plus the accompanying reproducer.
-
-----------------------------------------------------------------
-Oliver Upton (2):
-      KVM: arm64: vgic-v2: Check for non-NULL vCPU in vgic_v2_parse_attr()
-      KVM: selftests: Add test for uaccesses to non-existent vgic-v2 CPUIF
-
-Paolo Bonzini (1):
-      Merge tag 'kvmarm-fixes-6.9-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
-
- arch/arm64/kvm/vgic/vgic-kvm-device.c           |  8 ++--
- tools/testing/selftests/kvm/aarch64/vgic_init.c | 49 +++++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 4 deletions(-)
-
+Reviewed-by: T.J. Mercier <tjmercier@google.com>
