@@ -1,326 +1,219 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA44194C92
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 19:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F34A180A85;
+	Tue, 30 Apr 2024 19:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714504778; cv=none; b=GcWwYLrvURAjwcoIwp+Ynle4bf/+XvSl45rOhMiMhKoeU3YdF3MHnYxV9XDrYpRQj6EAKfGP4l+iPT7RBlAYv6N/yDopSnYqeKFYKRGycfL2A226FlSqCbFlPBlJDGEINX6FERH98eF4h7Beq089/EzjUzuz9azDNosITN/fW8Y=
+	t=1714504875; cv=none; b=t439x8EfymXvVQvBOoUHJ0jz0w9ZdX7aTD8Nc5qt8ekMnd9AO4eMVC/WRaUsIVQq9cUgecqgcfn7ycME1QDRD7qratNUle96wBd/TLS7KO7osrUdFwhpEIr9ZVNpr4F0SzI/p7dHKhXwZwPL6wvp++9+1paUkCs9/v/OiJkXc+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714504778; c=relaxed/simple;
-	bh=5pSVtC2ksg2Mok+LHTEgFdOKuFldFG7+niyA1NtDAbk=;
+	s=arc-20240116; t=1714504875; c=relaxed/simple;
+	bh=NwCpJ4/aGdZMBhntTpNF2is84X693tSgQ+YYuyWOaN4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pY/ehBwI3s42eyl6zKY6PR8AJ6+OzKyP4wpbS+L8VZsFe4kxBdmoBaqfim7BpJi/AhrvSaCNrRVBeZL0sTuVFQ2hJbT0xVWiITCICVl63oIe6hZk+cL0TB7g1ZnAA25y6kMkg6bQetz+bmgJCrJToCBF4Tej6LrNwJXcY+Vuw9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LLXZhjCu; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=SaRHe6G0EpFc3nfaLid0gEXxIqJd2NmA91jKrCGLluEsgbwYtu74kg4NVcbMchTn4QjssnAXZ588pZL2kYCZsf40Xj3X03xO3hZr7ZIpBx3SOdN7TDCaO/XvIYJxxhv8rBvZF9pBbu15f3xNYdMOkRDxhB5VU5z/ZTX2j1ExSao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FGivK6Xd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LLXZhjCu"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6a04bb4f6d5so38518496d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714504772; x=1715109572; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MbZQq10/Z/JPNfAxQJ6o70za+zNWi0Nqkl9SjN1VaTg=;
-        b=LLXZhjCuqzRTIGQPMCxh+mmfc1r4JKyYv9yp2fy6+QLpW/aLAfuwT84jh2fO5Hohm3
-         hUhl5LpVReNXaNYrDXWUveDpDivoFZGPUrF/loSGBbOBKa3zU5L3GeadXugUCm21Z4OO
-         GN0a3n5BTJySwdeC3PP3CrVp2VUXOrKqC7l7E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714504772; x=1715109572;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MbZQq10/Z/JPNfAxQJ6o70za+zNWi0Nqkl9SjN1VaTg=;
-        b=UM2EpzzcuNS89jTkdstMDLxHm1aoE7epkZAfEfB4ALJc56NMCpOavKbPUIqhkfdYHN
-         Mf8bodcF5bd18vdmiR5wGj5V50qSllCW8fxYM7kplbd43iBdTtIx8alcRYP6aDjyyI74
-         hniRwHIG2iwT4u5Jg77OiBk1yiCMtirf+BKM+sYezYbRgVhFGHrRZlmWHorlr9Yhp2Mu
-         Fx9Jf5Xj7EO/M3rV0+Bp1mCLBNFvV6ecNMCKeVf6lSPZ4UZNr7VS24g68BFjY/3MWL17
-         y2TCKFGc9SuSOpkvmUxn+44Vo7YJYY+qo7nd7kbuRjRC4YsNLLdEKYuOvdNjKYlPKopx
-         DwfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXW32aaFIO1/KPuuBAg6F4dq7KaUaLt3LyyTKRhxbScXYGZQl4GXbvVlbza6bDEcku9lMHqEloRi1QmwDbvFLpUTlQj9piqcdSDBMhr
-X-Gm-Message-State: AOJu0YxrkOYN8n0XMS1HMpJt1UQOyH17P454WiJtwzTT0T+Lyjs0+FGz
-	TrSGlw2E4mnxGJ9ibLsydEdcDYzKKHWIz1u+xQU/jjny00FKx02faRt4a3Dfmv07toyZvc6MyO0
-	=
-X-Google-Smtp-Source: AGHT+IFdn34aB5dumrsiemZkLi6O0WQjpLgPHSFbWaRRo0ZiU9+tDm+yHiJ7zC55QEGLIsSYoGOGNQ==
-X-Received: by 2002:a05:6214:485:b0:69b:2aa8:dc5d with SMTP id pt5-20020a056214048500b0069b2aa8dc5dmr321057qvb.64.1714504771783;
-        Tue, 30 Apr 2024 12:19:31 -0700 (PDT)
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com. [209.85.160.181])
-        by smtp.gmail.com with ESMTPSA id y7-20020a056214016700b006a0e8c1d7a5sm381127qvs.120.2024.04.30.12.19.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Apr 2024 12:19:31 -0700 (PDT)
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-436ed871225so58071cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:19:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUlTXlryGkZ3e1x68nltSexdTtiZBuEQz+IL09UaTpL+f757Y/FCDuowqDS/sWgnd3xqgYc/gCqkToEljk3bZjoYJluZ27feBGzKOLS
-X-Received: by 2002:a05:622a:1183:b0:43a:e2ea:bfa5 with SMTP id
- m3-20020a05622a118300b0043ae2eabfa5mr42527qtk.17.1714504768727; Tue, 30 Apr
- 2024 12:19:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FGivK6Xd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3528BC4AF19;
+	Tue, 30 Apr 2024 19:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714504875;
+	bh=NwCpJ4/aGdZMBhntTpNF2is84X693tSgQ+YYuyWOaN4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FGivK6XdMlE8GYQL9XYMPwVUArMvu1ZGE7XvPUSsLtq5SEaC6Fm8+ly6La5ICit2F
+	 3Nm62Sfe4F5uIupBOychwZIpUXRIORhiW0UmuOUjsonataTQy1cz2p7MRoW7C9Py2s
+	 K26e7OXc3FHXpn7W89ezL63lgPkUPTjb6HYr5YFrNfW2x1Sd4o8RnljytkWcfTTjeq
+	 7p4KZRhkpLqr+1+HDH26WGwCkhywKnowDxayb817fX9CBcZJgbDvghv7Y6vj0Wqst5
+	 5pw4Yu9CPHVpyagzXWMJ8ebnaMoDyQ7mjCx1t6zDkESE47vfjFmDfSairuKZgBEdgm
+	 xrh3bZH3OehgA==
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3c73b33383aso543375b6e.3;
+        Tue, 30 Apr 2024 12:21:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX5QWJuBQ19MgDgQROhaBl21AN1B7/mbvb9/BXGSS8H12xYI2NuDeLk36hqmhbX3yQWGJbHtND3uok1RuMQ5qyUk0Tcl0taBbkOciqDpDrPa/1lw72lLy1hF1yzixcmZNvwBRAegpFm5A==
+X-Gm-Message-State: AOJu0YxnFvsTCKTAns3fR+/L2iGRARSNDL2JFB5uHIY2wXPNzTNZS2Mu
+	E4aF/r6EovvGH4GmtXg+s+gd7NELt0XB1gip/Nt1qk8jHp1on8iRchKo1erMB9wpKPZaESQAJgl
+	wkLo/ey7JTVHm+S4VJB3C36dwjlk=
+X-Google-Smtp-Source: AGHT+IFj1FZy70S4ykIy+b2SrpBWlxIdXPP5QjFwuFLgwuOnQk3mWrQ7e+Wppfq3P/0JuOtNcJYrZswXSnHuEGZMa+M=
+X-Received: by 2002:a4a:654d:0:b0:5aa:241a:7f4b with SMTP id
+ z13-20020a4a654d000000b005aa241a7f4bmr397384oog.1.1714504874373; Tue, 30 Apr
+ 2024 12:21:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424023010.2099949-1-yangcong5@huaqin.corp-partner.google.com>
- <20240424023010.2099949-3-yangcong5@huaqin.corp-partner.google.com>
-In-Reply-To: <20240424023010.2099949-3-yangcong5@huaqin.corp-partner.google.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 30 Apr 2024 12:19:12 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VFk3epSxksh+n_LupTiZp=gK=LB2NESGy5iNF=5xFAmg@mail.gmail.com>
-Message-ID: <CAD=FV=VFk3epSxksh+n_LupTiZp=gK=LB2NESGy5iNF=5xFAmg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] drm/panel: himax-hx83102: Break out as separate driver
-To: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-Cc: sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch, 
-	linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org, 
-	robh+dt@kernel.org, conor+dt@kernel.org, airlied@gmail.com, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, xuxinxiong@huaqin.corp-partner.google.com
+References: <20240425093426.76130-1-tianruidong@linux.alibaba.com> <20240425093426.76130-2-tianruidong@linux.alibaba.com>
+In-Reply-To: <20240425093426.76130-2-tianruidong@linux.alibaba.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 30 Apr 2024 21:21:02 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i8=oTCXhAMRAckaVrTqCfOPxyYucpEguMF0tH2orY3aA@mail.gmail.com>
+Message-ID: <CAJZ5v0i8=oTCXhAMRAckaVrTqCfOPxyYucpEguMF0tH2orY3aA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] ACPICA: AEST: Add support for the AEST V2 table
+To: Ruidong Tian <tianruidong@linux.alibaba.com>
+Cc: robert.moore@intel.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
+	rafael@kernel.org, sudeep.holla@arm.com, linux-acpi@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Tue, Apr 23, 2024 at 7:30=E2=80=AFPM Cong Yang
-<yangcong5@huaqin.corp-partner.google.com> wrote:
+On Thu, Apr 25, 2024 at 11:34=E2=80=AFAM Ruidong Tian
+<tianruidong@linux.alibaba.com> wrote:
 >
-> The Starry HX83102 based mipi panel should never have been part of the bo=
-e
-> tv101wum driver. Discussion with Doug and Linus in V1 [1], we need a
-> separate driver to enable the hx83102 controller.
+> ACPICA commit ebb49799c78891cbe370f1264844664a3d8b6f35
 >
-> In hx83102 driver, add DSI commands as macros. So it can add some panels
-> with same control model in the future.
+> AEST V2 was published[1], add V2 support based on AEST V1.
 >
-> [1]: https://lore.kernel.org/all/CACRpkdbzYZAS0=3DzBQJUC4CB2wj4s1h6n6aSAZ=
-QvdMV95r3zRUw@mail.gmail.com
+> [1]: https://developer.arm.com/documentation/den0085/latest/
 >
-> Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+> Link: https://github.com/acpica/acpica/commit/ebb4979
+> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
 > ---
-> Chage since V3:
+>  include/acpi/actbl2.h | 88 ++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 82 insertions(+), 6 deletions(-)
 >
-> -  Drop excess flags and function, inital cmds use lowercasehex.
+> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+> index 007cfdfd5d29..ae747c89d92c 100644
+> --- a/include/acpi/actbl2.h
+> +++ b/include/acpi/actbl2.h
+> @@ -78,8 +78,8 @@
+>   *
+>   * AEST - Arm Error Source Table
+>   *
+> - * Conforms to: ACPI for the Armv8 RAS Extensions 1.1 Platform Design Do=
+cument
+> - * September 2020.
+> + * Conforms to: ACPI for the Armv8 RAS Extensions 1.1(Sep 2020) and
+> + * 2.0(May 2023) Platform Design Document.
+>   *
+>   ***********************************************************************=
+*******/
 >
-> V2: https://lore.kernel.org/all/20240422090310.3311429-3-yangcong5@huaqin=
-.corp-partner.google.com
+> @@ -109,7 +109,9 @@ struct acpi_aest_hdr {
+>  #define ACPI_AEST_SMMU_ERROR_NODE           2
+>  #define ACPI_AEST_VENDOR_ERROR_NODE         3
+>  #define ACPI_AEST_GIC_ERROR_NODE            4
+> -#define ACPI_AEST_NODE_TYPE_RESERVED        5  /* 5 and above are reserv=
+ed */
+> +#define ACPI_AEST_PCIE_ERROR_NODE           5
+> +#define ACPI_AEST_PROXY_ERROR_NODE          6
+> +#define ACPI_AEST_NODE_TYPE_RESERVED        7 /* 7 and above are reserve=
+d */
 >
-> ---
->  drivers/gpu/drm/panel/Kconfig                 |   9 +
->  drivers/gpu/drm/panel/Makefile                |   1 +
->  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    |  99 ----
->  drivers/gpu/drm/panel/panel-himax-hx83102.c   | 525 ++++++++++++++++++
->  4 files changed, 535 insertions(+), 99 deletions(-)
-
-It probably makes sense to base your series upon mine that reduces
-bloat / introduces a better way to do these init sequences. I'm going
-to wait one more day in case anyone else has any more comments on my
-v2 and then I'll post my v3. So far everyone has been on-board with
-the overall goal and so all we need to do is iron out the small
-details, so I don't expect it to take too long.
-
-If you want to wait a day or two and then post your patches atop my v3
-(once I post it) then that would be OK by me.
-
-
-> @@ -0,0 +1,525 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver for panels based on Himax HX83102 controller, such as:
-> + *
-> + * - Starry 10.51" WUXGA MIPI-DSI panel
-> + *
-> + * Based on drivers/gpu/drm/panel/panel-boe-tv101wum.c
-
-The above file doesn't exist? Maybe you forgot the "-nl6" suffix? I
-would also say that this driver appears to be more similar to
-`panel-himax-hx8394.c` even if the data came from
-`panel-boe-tv101wum-nl6.c`.
-
-...also, since this is based on `panel-himax-hx8394.c`, it seems like
-you're making pretty significant changes here. For instance, when this
-code was part of `panel-boe-tv101wum-nl6.c` it used to do the "init
-commands" as part of prepare. With the new driver it does it as part
-of "enable". IMO even if the new code based on `panel-himax-hx8394.c`
-is more correct, I'd rather see you change that in a separate change.
-In this change, which is supposed to be more about code refactoring, I
-think you should focus on keeping the behavior before and after your
-patch identical.
-
-
-> +/* Manufacturer specific DSI commands */
-> +#define HX83102_SETPOWER       0xb1
-> +#define HX83102_SETDISP                0xb2
-> +#define HX83102_SETCYC         0xb4
-> +#define HX83102_SETEXTC                0xb9
-> +#define HX83102_SETMIPI                0xba
-> +#define HX83102_SETVDC         0xbc
-> +#define HX83102_SETBANK                0xbd
-> +#define HX83102_UNKNOWN1       0xbe
-
-I'm not sure that the "unknown" define helps much, but I guess it's
-fine. One nit would be to call this UNKNOWN_BE based on the address so
-that if we can later replace some of the unknowns then there won't be
-gaps in the numbering.
-
-
-> +#define HX83102_SETPTBA                0xbf
-> +#define HX83102_SETSTBA                0xc0
-> +#define HX83102_SETTCON                0xc7
-> +#define HX83102_SETRAMDMY      0xc8
-> +#define HX83102_SETPWM         0xc9
-> +#define HX83102_SETCLOCK       0xcb
-> +#define HX83102_SETPANEL       0xcc
-> +#define HX83102_SETCASCADE     0xd0
-> +#define HX83102_SETPCTRL       0xd1
-> +#define HX83102_UNKNOWN2       0xd2
-> +#define HX83102_SETGIP0                0xd3
-> +#define HX83102_SETGIP1                0xd5
-> +#define HX83102_UNKNOWN3       0xd6
-
-Given everything surrounding it and given a datasheet I have for a
-similar panel, I'm going to guess UNKNOWN3 is "GIP2".
-
-
-> +#define HX83102_SETGIP3                0xd8
-> +#define HX83102_UNKNOWN4       0xe0
-
-I think UNKNOWN4 is SETGMA to set the gamma curve.
-
-
-> +static int starry_init_cmd(struct hx83102 *ctx)
-> +{
-> +       struct mipi_dsi_device *dsi =3D ctx->dsi;
+>  /*
+>   * AEST subtables (Error nodes)
+> @@ -188,6 +190,12 @@ typedef struct acpi_aest_vendor {
+>
+>  } acpi_aest_vendor;
+>
+> +struct acpi_aest_vendor_v2 {
+> +       char acpi_hid[8];
+> +       u32 acpi_uid;
+> +       u8 vendor_specific_data[16];
+> +};
 > +
-> +       mipi_dsi_dcs_write_seq(dsi, HX83102_SETEXTC, 0x83, 0x10, 0x21, 0x=
-55, 0x00);
-
-As far as I can tell from looking at a different (but similar)
-datasheet, the above means "enable extended command set". Assuming I'm
-correct, maybe you could abstract out:
-
-static int hx83102_enable_extended_cmds(struct hx83102 *ctx, bool enable)
-{
-  if (enable)
-    mipi_dsi_dcs_write_seq(dsi, HX83102_SETEXTC, 0x83, 0x10, 0x21, 0x55, 0x=
-00);
-  else
-    mipi_dsi_dcs_write_seq(dsi, HX83102_SETEXTC, 0x00, 0x00, 0x00);
-}
-
-Then your panel-specific init functions could call that?
-
-Speaking of which, some of the panels that you add to this driver seem
-to disable extended commands at the end of their init sequence, but
-this one doesn't. Should it?
-
-
-> +       mipi_dsi_dcs_write_seq(dsi, HX83102_SETPOWER, 0x2c, 0xb5, 0xb5, 0=
-x31, 0xf1, 0x31, 0xd7, 0x2f,
-> +                                                 0x36, 0x36, 0x36, 0x36,=
- 0x1a, 0x8b, 0x11, 0x65, 0x00, 0x88, 0xfa, 0xff,
-> +                                                 0xff, 0x8f, 0xff, 0x08,=
- 0x74, 0x33);
-
-nit: Can you make your indentation cleaner? Right now when a function
-call extends to multiple lines the subsequent lines are indented a
-somewhat random amount of space that probably has to do with how much
-they needed to be indented before.
-
-...though if you base on my v3 series that I'll send out tomorrow then
-probably you'd just move this over and the indentation would be right.
-
-
+>  /* 4: Gic Error */
+>
+>  typedef struct acpi_aest_gic {
+> @@ -204,6 +212,18 @@ typedef struct acpi_aest_gic {
+>  #define ACPI_AEST_GIC_ITS                   3
+>  #define ACPI_AEST_GIC_RESERVED              4  /* 4 and above are reserv=
+ed */
+>
+> +/* 5: PCIe Error */
 > +
-> +       mipi_dsi_dcs_write_seq(dsi, HX83102_SETDISP, 0x00, 0x47, 0xb0, 0x=
-80, 0x00, 0x12, 0x72, 0x3c,
-> +                                                 0xa3, 0x03, 0x03, 0x00,=
- 0x00, 0x88, 0xf5);
+> +struct acpi_aest_pcie {
+> +       u32 iort_node_reference;
+> +};
 > +
-> +       mipi_dsi_dcs_write_seq(dsi, HX83102_SETCYC, 0x76, 0x76, 0x76, 0x7=
-6, 0x76, 0x76, 0x63, 0x5c,
-> +                                                 0x63, 0x5c, 0x01, 0x9e)=
-;
-
-nit: I wouldn't have put a blank line between every function call.
-
-
-> +static int hx83102_enable(struct drm_panel *panel)
-> +{
-> +       struct hx83102 *ctx =3D panel_to_hx83102(panel);
-> +       struct mipi_dsi_device *dsi =3D ctx->dsi;
-> +       struct device *dev =3D &dsi->dev;
-> +       int ret;
+> +/* 6: Proxy Error */
 > +
-> +       ret =3D ctx->desc->init_cmds(ctx);
-> +       if (ret) {
-> +               dev_err(dev, "Panel init cmds failed: %d\n", ret);
-> +               return ret;
-> +       }
+> +struct acpi_aest_proxy {
+> +       u64 node_address;
+> +};
+> +
+>  /* Node Interface Structure */
+>
+>  typedef struct acpi_aest_node_interface {
+> @@ -219,11 +239,57 @@ typedef struct acpi_aest_node_interface {
+>
+>  } acpi_aest_node_interface;
+>
+> +/* Node Interface Structure V2 */
+> +
+> +struct acpi_aest_node_interface_header {
+> +       u8 type;
+> +       u8 group_format;
+> +       u8 reserved[2];
+> +       u32 flags;
+> +       u64 address;
+> +       u32 error_record_index;
+> +       u32 error_record_count;
+> +};
+> +
+> +#define ACPI_AEST_NODE_GROUP_FORMAT_4K          0
+> +#define ACPI_AEST_NODE_GROUP_FORMAT_16K         1
+> +#define ACPI_AEST_NODE_GROUP_FORMAT_64K         2
+> +
+> +struct acpi_aest_node_interface_common {
+> +       u32 error_node_device;
+> +       u32 processor_affinity;
+> +       u64 error_group_register_base;
+> +       u64 fault_inject_register_base;
+> +       u64 interrupt_config_register_base;
+> +};
+> +
+> +struct acpi_aest_node_interface_4k {
+> +       u64 error_record_implemented;
+> +       u64 error_status_reporting;
+> +       u64 addressing_mode;
+> +       struct acpi_aest_node_interface_common common;
+> +};
+> +
+> +struct acpi_aest_node_interface_16k {
+> +       u64 error_record_implemented[4];
+> +       u64 error_status_reporting[4];
+> +       u64 addressing_mode[4];
+> +       struct acpi_aest_node_interface_common common;
+> +};
+> +
+> +struct acpi_aest_node_interface_64k {
+> +       u64 error_record_implemented[14];
+> +       u64 error_status_reporting[14];
+> +       u64 addressing_mode[14];
+> +       struct acpi_aest_node_interface_common common;
+> +};
+> +
+>  /* Values for Type field above */
+>
+> -#define ACPI_AEST_NODE_SYSTEM_REGISTER      0
+> -#define ACPI_AEST_NODE_MEMORY_MAPPED        1
+> -#define ACPI_AEST_XFACE_RESERVED            2  /* 2 and above are reserv=
+ed */
+> +#define ACPI_AEST_NODE_SYSTEM_REGISTER                 0
+> +#define ACPI_AEST_NODE_MEMORY_MAPPED                   1
+> +#define ACPI_AEST_NODE_SINGLE_RECORD_MEMORY_MAPPED     2
+> +#define ACPI_AEST_XFACE_RESERVED                       3   /* 2 and abov=
+e are reserved */
+>
+>  /* Node Interrupt Structure */
+>
+> @@ -237,6 +303,16 @@ typedef struct acpi_aest_node_interrupt {
+>
+>  } acpi_aest_node_interrupt;
+>
+> +/* Node Interrupt Structure V2 */
+> +
+> +struct acpi_aest_node_interrupt_v2 {
+> +       u8 type;
+> +       u8 reserved[2];
+> +       u8 flags;
+> +       u32 gsiv;
+> +       u8 reserved1[4];
+> +};
+> +
+>  /* Values for Type field above */
+>
+>  #define ACPI_AEST_NODE_FAULT_HANDLING       0
+> --
 
-nit: don't call it "init_cmds" now that it's not a cmdlist anymore. In
-my patch series converting things I called it "init". Seems like
-"hx8394.c" calls it "init_sequence". Either would be fine.
-
-nit: the init function already prints errors so you don't need to.
-Just return the error without printing.
-
-
-> +       ret =3D mipi_dsi_dcs_exit_sleep_mode(dsi);
-> +       if (ret) {
-> +               dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       msleep(120);
-> +
-> +       ret =3D mipi_dsi_dcs_set_display_on(dsi);
-> +       if (ret) {
-> +               dev_err(dev, "Failed to turn on the display: %d\n", ret);
-> +               goto sleep_in;
-> +       }
-> +
-> +       msleep(130);
-> +
-> +       return 0;
-> +
-> +sleep_in:
-> +       ret =3D mipi_dsi_dcs_enter_sleep_mode(dsi);
-> +       if (!ret)
-> +               msleep(50);
-
-The above is broken (but it's also broken in the driver that you
-copied this from). Specifically imagine that the call to
-mipi_dsi_dcs_set_display_on() above failed. "ret" will have an error
-code and you'll jump to "sleep_in". Now, imagine that
-mipi_dsi_dcs_enter_sleep_mode() _didn't_ fail. Since you store the
-result in the same variable "ret" you'll clobber the error code that
-mipi_dsi_dcs_set_display_on() returned and you'll return "0" (no
-error) from this function. That's not right.
-
-
-> +static int hx83102_panel_add(struct hx83102 *ctx)
-> +{
-> +       struct device *dev =3D &ctx->dsi->dev;
-> +       int err;
-> +
-> +       ctx->avdd =3D devm_regulator_get(dev, "avdd");
-> +       if (IS_ERR(ctx->avdd))
-> +               return PTR_ERR(ctx->avdd);
-> +
-> +       ctx->avee =3D devm_regulator_get(dev, "avee");
-> +       if (IS_ERR(ctx->avee))
-> +               return PTR_ERR(ctx->avee);
-> +
-> +       ctx->pp1800 =3D devm_regulator_get(dev, "pp1800");
-> +       if (IS_ERR(ctx->pp1800))
-> +               return PTR_ERR(ctx->pp1800);
-> +
-> +       ctx->enable_gpio =3D devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW)=
-;
-> +       if (IS_ERR(ctx->enable_gpio)) {
-> +               return dev_err_probe(dev, PTR_ERR(ctx->enable_gpio), "Can=
-not get enable GPIO\n");
-> +       }
-
-nit: remove braces since the above is now one line.
+Applied as 6.10 material, thanks!
