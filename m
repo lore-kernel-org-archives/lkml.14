@@ -1,60 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A1E172BCD
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77575175558
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714486183; cv=none; b=GQbdhcyqlLbHzSUdQkfH4xTKnMVuuklYsJD+RYsHUO+5EWGOLe9bybIsUJ0IouTgMHiQ8BxJPQ1Pfp/1XqfEUZYE9UmvRckT1ipSjM/T01BxW4Eo8taVvaj4O08D2vtV4SeYX9wnW+EWA/fvrr0Oz0I3SPwq7tlZx1ncV3kNTTY=
+	t=1714486189; cv=none; b=Pn4kE2z9nnuEoI3A30E3wsYmKM8hRZ65Xm7kr5IJn2+HnS/vFjqaBoTmYgiwVjIQ4TtynYUa5ceh3zWjfJ2Swzv0ZkA7H7Y2b7dnh2W0LG9I4rfz45wydw5Jphmu9e3xqyEyX/O20gygtYKPc4mu2/GlA1Kbz4+f7Yk3qlASSrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714486183; c=relaxed/simple;
-	bh=guoF0n/Qyq6Ccmc0F12UjfRg0OG4jG9MfLIKz13ZjmA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h5ozB0bd4NfHJJQWLqoY9o+hss3dzLoBTqvNfrnlveHwi03/3eFcMfO/jmM1qVWFoWIKj+gXOPl9h2+7IirBxJB78R2iRbm8YiLw9Uy1vp5aB/DHY1NmdrEOVuikZ59hHC65lT8AH7cCnb7yi2L3y0wDfaAigkkgMgdSuoVdsRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OwZ9aAxP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714486189; c=relaxed/simple;
+	bh=H0WsvqNTNFr7LXN1miq+Dc39F6X1tipdPUEwPS+odes=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AgaA90swgMwolZzKd0D9d5HsUUOfKxcor5xdQ3OD+SvSQN8nnMn/j+otLCgS+JMyCvU5bcP+u0+lEFIYsCzEsibeiBjjKjFHnCg3bMYle3NWqcOhg+NmsKrQq6MEesNNY0d5j0uDUFU/0PICILfpoGACoOjXehWEHAAD1cuY0xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vy0gf/uC; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OwZ9aAxP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714486181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=BYP2XCJxxgqZUPz16sTT5S0sSKcpMAuqrY3IjVA78x0=;
-	b=OwZ9aAxPz9qc+I4nYqXHLRLnpX4ifMUGFVVLcpUK5WeNZiU3yR7AZRGx2+VtHGVprSY5DI
-	t4PYW+M4upAr/K68tFho1EffdCBAB8Y017yq4bk4FRQ56FAdzAPAY1+IN/Jt+2qncm1ayw
-	5debPoxC3VBZrEwKnoDJAzJMN7lXcQg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-zaVGD3DWM_CRUTCpAQQ7WA-1; Tue, 30 Apr 2024 10:09:35 -0400
-X-MC-Unique: zaVGD3DWM_CRUTCpAQQ7WA-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0C40F188CB26;
-	Tue, 30 Apr 2024 14:09:34 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 64D39492BC7;
-	Tue, 30 Apr 2024 14:09:32 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Steve French <smfrench@gmail.com>
-Cc: David Howells <dhowells@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Christian Brauner <christian@brauner.io>,
-	netfs@lists.linux.dev,
-	linux-cifs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vy0gf/uC"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56e477db7fbso9872385a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714486185; x=1715090985; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Nsi+kUuVlRwO+YscLsuVmpvv08E0sHrgn4SKq3ugFM=;
+        b=Vy0gf/uCQQNMY5LLcLc0s/sAyGwjc8uF8nN/dKcpiINfVxJWqZTZ2hf4ZNaelIEmHv
+         pklWqDJ07V2BTfnI1giEIA7OV5fCPnki633c/J6fzG/puQeU9HtNjbPH2bGmdhGXkbPc
+         a9LqLgdcsK27aEp5ZLeR30jD4HWPyeVmdAqpuLIM9d0wLHYiDs+bJJFl37/7doawo7ZF
+         X7d6hBN6OJtp1IEH8RpmoYaHY4Bc838JexYVpIlsMt+ima09UMV0zKif4yJIGikWRX3q
+         4FWKdUZgD7qO5ZpuItY1VhvHx6Tr4+NvmMLo9/b/iQEgh0J4aFcRahJPpQ10DCZS+baM
+         Fqxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714486185; x=1715090985;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2Nsi+kUuVlRwO+YscLsuVmpvv08E0sHrgn4SKq3ugFM=;
+        b=c7brJQk1YK6t6488AxvbrRLrX4x0LS4SJD2vhKlAc/WzMRS9IFfMZzHABojYxhi7eV
+         acLINtk+9GiaNfbC6J8YgEHIooFnDugDzWc6UY40bx6XfGfX8cGI9iMcHRpU11umiPoy
+         FnG0oBdfG/Z0b89oknz7Yj51icia/gGeoR+NY173eUp05tUTLSHJh7AHner+dEoN6b/a
+         S1s5N5Tx0JyZIJzk/UNee87Q5ESqNFioWrsK/Y2rVphmeWkb1pCoJ2J35pzaYw95gUho
+         x3m2SV0mEYlPu+N1tpw6j09Zxm4XcnnRDerhXVU7tG1g5Q3HL3HVP5RJW989CokYqGLS
+         83Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMO8ZUGOilRSk16nDmqueRXdET39v9GRX/XSaYO+RH+CgwzPDFW3SY/43m1+7Ix6XnbC7cRRJZkC+atAb7ho7mUc2L3S1IibAiCwgZ
+X-Gm-Message-State: AOJu0Yze3qtYMkmVhhgPlLPfCuik4r92cjv1yuTLXKL8uB3P8kn9UDBO
+	+p42+bUWIxhbLRKjQCnFT7/Xwikt0Zr/ipKt3o74N8YOUnBp4+6Ovy84xjqZ/RK+eB4/GekAuoo
+	SfHA=
+X-Google-Smtp-Source: AGHT+IFuH8UYbDq0eMy7k1NlmKVhLCy/QuY8vFKH9q5oSoeR+NsuI6ndua2QXKK/R5zCiNJG8FrWhQ==
+X-Received: by 2002:a17:906:4a8d:b0:a59:40b8:e235 with SMTP id x13-20020a1709064a8d00b00a5940b8e235mr71722eju.71.1714486185598;
+        Tue, 30 Apr 2024 07:09:45 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id a14-20020a1709062b0e00b00a58bcb55704sm6050092ejg.165.2024.04.30.07.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 07:09:45 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 00/16] netfs, cifs: Delegate high-level I/O to netfslib
-Date: Tue, 30 Apr 2024 15:09:12 +0100
-Message-ID: <20240430140930.262762-1-dhowells@redhat.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] ASoC: use inline function for type safety in snd_soc_substream_to_rtd()
+Date: Tue, 30 Apr 2024 16:09:38 +0200
+Message-ID: <20240430140938.328088-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,138 +70,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-Hi Steve,
+A common pattern in sound drivers is getting 'struct snd_soc_pcm_runtime'
+from 'struct snd_pcm_substream' opaque pointer private_data field with
+snd_soc_substream_to_rtd().  However 'private_data' appears in several
+other structures as well, including 'struct snd_compr_stream'.  The
+field might not hold the same type for every structure, although seems
+the case at least for 'struct snd_compr_stream', so code can easily make
+a mistake by using macro for wrong structures.
 
-Here are patches to convert cifs to use the netfslib library.  I've tested
-them with and without a cache.  There appears to be a signifcant
-performance improvement in buffered writeback (around 50% throughput rate
-with fio tests).
+Switch from macro to inline function, so such mistake will be build-time
+detectable.
 
-The patches remove around 2000 lines from CIFS.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ include/sound/soc.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Notes:
-
- (1) CIFS is made to use unbuffered I/O for unbuffered caching modes and
-     write-through caching for cache=strict.
-
- (2) Various cifs fallocate() function implementations have issues that
-     aren't easily fixed without enhanced protocol support.
-
- (3) It should be possible to turn on multipage folio support in CIFS now.
-
- (4) The then-unused CIFS code is removed in three patches, not one, to
-     avoid the git patch generator from producing confusing patches in
-     which it thinks code is being moved around rather than just being
-     removed.
-
-The patches can be found here also:
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=cifs-netfs
-
-Changes
-=======
-ver #7)
- - Rebased on -rc6 to absorb some fixes that have gone upstream, including
-   a fix for a leak of the fscache volume cookie.
- - Added a patch to turn on multipage folio support in cifs.
-
-ver #6)
- - The netfslib write helpers got rewritten and, consequently, some changes
-   were made here.
- - Rearranged the patch order a little to put the smaller changes first.
- - Use a different way to invalidate that doesn't use ->launder_folio().
- - Attempt to open the handle on the server READ+WRITE, even if the user
-   asks for O_WRONLY, if the mount was with "-o fsc" so that we can fill in
-   the gaps in partial folio writes; if we can't fall back to WRITE-only
-   and disable caching.
- - Fixed the cookie key to match the key used by iget5_locked() to avoid
-   "Duplicate cookie" errors.
- - Made add_credits_and_wake_if() clear the number of returned credits,
-   allowing it to be called multiple times in cleanup/error handling.
- - Made ->async_writev() not return an error directly, but always set it on
-   the subreq.
- - Fixed error handling from writethrough writing.
-
-ver #5)
- - Rebased to -rc3 plus SteveF's for-next branch as netfslib is now
-   upstream, as are a couple of patches from this series.
- - Replace the ->replay bool Shyam added with a flag on the netfs
-   subrequest.  This is tested by the code, but not currently set (see
-   above).
-
-ver #4)
- - Slimmed down the branch:
-   - Split the cifs-related patches off to a separate branch (cifs-netfs)
-   - Deferred the content-encryption to the in-progress ceph changes.
-   - Deferred the use-PG_writeback rather than PG_fscache patch
- - Rebased on a later linux-next with afs-rotation patches.
-
-ver #3)
- - Moved the fscache module into netfslib to avoid export cycles.
- - Fixed a bunch of bugs.
- - Got CIFS to pass as much of xfstests as possible.
- - Added a patch to make 9P use all the helpers.
- - Added a patch to stop using PG_fscache, but rather dirty pages on
-   reading and have writepages write to the cache.
-
-ver #2)
- - Folded the addition of NETFS_RREQ_NONBLOCK/BLOCKED into first patch that
-   uses them.
- - Folded addition of rsize member into first user.
- - Don't set rsize in ceph (yet) and set it in kafs to 256KiB.  cifs sets
-   it dynamically.
- - Moved direct_bv next to direct_bv_count in struct netfs_io_request and
-   labelled it with a __counted_by().
- - Passed flags into netfs_xa_store_and_mark() rather than two bools.
- - Removed netfs_set_up_buffer() as it wasn't used.
-
-David
-
-Link: https://lore.kernel.org/r/20231213152350.431591-1-dhowells@redhat.com/ [1]
-Link: https://lore.kernel.org/r/20231013160423.2218093-1-dhowells@redhat.com/ # v1
-Link: https://lore.kernel.org/r/20231117211544.1740466-1-dhowells@redhat.com/ # v2
-Link: https://lore.kernel.org/r/20231207212206.1379128-1-dhowells@redhat.com/ # v3
-Link: https://lore.kernel.org/r/20231213154139.432922-1-dhowells@redhat.com/ # v4
-Link: https://lore.kernel.org/r/20240205225726.3104808-1-dhowells@redhat.com/ # v5
-
-David Howells (16):
-  cifs: Use alternative invalidation to using launder_folio
-  cifs: Replace cifs_readdata with a wrapper around netfs_io_subrequest
-  cifs: Replace cifs_writedata with a wrapper around netfs_io_subrequest
-  cifs: Use more fields from netfs_io_subrequest
-  cifs: Make wait_mtu_credits take size_t args
-  cifs: Replace the writedata replay bool with a netfs sreq flag
-  cifs: Move cifs_loose_read_iter() and cifs_file_write_iter() to file.c
-  cifs: Set zero_point in the copy_file_range() and remap_file_range()
-  cifs: Add mempools for cifs_io_request and cifs_io_subrequest structs
-  cifs: Make add_credits_and_wake_if() clear deducted credits
-  cifs: Implement netfslib hooks
-  cifs: Cut over to using netfslib
-  cifs: Remove some code that's no longer used, part 1
-  cifs: Remove some code that's no longer used, part 2
-  cifs: Remove some code that's no longer used, part 3
-  cifs: Enable large folio support
-
- fs/netfs/buffered_write.c    |    6 +
- fs/netfs/io.c                |    7 +-
- fs/smb/client/Kconfig        |    1 +
- fs/smb/client/cifsfs.c       |  124 +-
- fs/smb/client/cifsfs.h       |   11 +-
- fs/smb/client/cifsglob.h     |   65 +-
- fs/smb/client/cifsproto.h    |   12 +-
- fs/smb/client/cifssmb.c      |  120 +-
- fs/smb/client/file.c         | 2898 ++++++----------------------------
- fs/smb/client/fscache.c      |  109 --
- fs/smb/client/fscache.h      |   54 -
- fs/smb/client/inode.c        |   45 +-
- fs/smb/client/smb2ops.c      |   10 +-
- fs/smb/client/smb2pdu.c      |  186 ++-
- fs/smb/client/smb2proto.h    |    5 +-
- fs/smb/client/trace.h        |  144 +-
- fs/smb/client/transport.c    |   17 +-
- include/linux/netfs.h        |    1 +
- include/trace/events/netfs.h |    1 +
- 19 files changed, 886 insertions(+), 2930 deletions(-)
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index 2a1b6c198547..cacaa92487a0 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -1215,8 +1215,12 @@ struct snd_soc_pcm_runtime {
+ /* see soc_new_pcm_runtime()  */
+ #define snd_soc_rtd_to_cpu(rtd, n)   (rtd)->dais[n]
+ #define snd_soc_rtd_to_codec(rtd, n) (rtd)->dais[n + (rtd)->dai_link->num_cpus]
+-#define snd_soc_substream_to_rtd(substream) \
+-	(struct snd_soc_pcm_runtime *)snd_pcm_substream_chip(substream)
++
++static inline struct snd_soc_pcm_runtime *
++snd_soc_substream_to_rtd(const struct snd_pcm_substream *substream)
++{
++	return substream->private_data;
++}
+ 
+ #define for_each_rtd_components(rtd, i, component)			\
+ 	for ((i) = 0, component = NULL;					\
+-- 
+2.43.0
 
