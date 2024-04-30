@@ -1,152 +1,124 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C82D13D267;
-	Tue, 30 Apr 2024 12:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C8013D630
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714478538; cv=none; b=SyQjB4TcRX/WAMfW080fdcOgJ6zhO5S+ETSzzOZeEeq4ptWPyPH076ytBC+jv1VQ2LK9FL3dBJz0WGG0qA3SXaT0keTlDrczwe3sqVqAgJNIuJiRLyA9woBc23cRqFgJV/2kma7thjzb3sSpBrcAZUZ+EGf80dxhDRzXN0nl3vE=
+	t=1714478564; cv=none; b=QTxLJC8qKzZnHvrHTM/ff4y3+qGeQsv1w92Zvio522PEB4pXSc4Q7Z1ebNzB/ENWSPoQx0+rOyZ1xhrqMCDWTGI0Nu7o4xydUh8Bl+v1OrwY8tIsp/StZJ5Zp3iOh6RcFm8Myu74GftkI0Z7qFc3p79erqEwlUf/tyvtw02oTnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714478538; c=relaxed/simple;
-	bh=79UNfhj2pKS3elAdRYb+cWvVDbeO+ck0Bf+XlOj7T44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c3JnXU5ynd86evalACIAKB0QPLb3rK5XhP5eyq28Prav1jFyQDNEUcsli18RnzN7ARuv6aDwiPiBUZnmzyglYPBFWmiV9OhqX45QeNsP4GedQOwpx+RLWBPSZQO2bKhPs0hCDOVk9MhbpZGkTqfNkAPDDpEHpEZXo01YccwN9g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PP/eEPCw; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714478564; c=relaxed/simple;
+	bh=Jp72MLJqnTI/BgAAQ1QQxc6sKckihmca/Uza3JsPHG8=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=moZpr6eyyJ64fHpQ043xJvN4T2GVGjyFBlyyybmkWA+7ezOR8yN0nTuIGrccxvX84XhVvM72dM5HXfl54kzOrjLkYgvQNPDjHxgz2CbHWbFXMZAkdCCa95zDHSTqww9EkrVavbRxtaaFYwva7QSFJCETGyPO9LbyfUKD5hATVXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Rj2m82Nx; arc=none smtp.client-ip=203.205.221.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PP/eEPCw"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51ca95db667so5240485e87.0;
-        Tue, 30 Apr 2024 05:02:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714478536; x=1715083336; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zox/qmaglXo0HD/YN8voWJNp1dns8XrdzThPKzYbfYs=;
-        b=PP/eEPCwefkzMAxI3m34BUPZBGkPJX6Esd6qK0EyholXhUf0DGH0zdSNDrRi6hajB6
-         NcO8O9wPlhO9O27BtgHItwFrOAn1ybAIgXRza9KypD4gC7nwj/7o40lT08XcBOxJmp0j
-         vvxSnhhRzroJ3dvO9qTvXEQnTB6syElH1AB5obgj31cAoCBuT5mFShgw+SNVEnp21Niu
-         M/vf5iFluGKmRikvvt/mYwyCzb47CYoLPkqfNOYBsayfKYHW2LkOAxHUBJgT6rwpOdZ6
-         V7Z0R5mVGzhttM6fnoRcIiJz341bP5XeG3tAbPgPMvHQt7wdqlHKm+9I1DpcqXevxaRu
-         uk/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714478536; x=1715083336;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zox/qmaglXo0HD/YN8voWJNp1dns8XrdzThPKzYbfYs=;
-        b=S4t3W07aXMNDyscadSR7Tulf5yaY7LoQp6YEif4f/zmpGQEx1uG7e092WIsJ/X6A0s
-         V2Thgovbq8LkrlPZswXrNOVSaddIypANcgYzzifWwT4rW9+YtM7V+UcY4sgPrEdiWR3/
-         z848qdrbLC1oQig8UArC9RtoOMPnWwgU6QgjaqpZK746QxaNofwaqY9NXGK/CKo3/gh7
-         0KRvRgkNe62C0DigljNq9ziFNHM+e6CSdD3LzQkEZGUsOUK+mG/o6Xl571Rxk5cGJrqX
-         MLvSVJfyWVpyd+4okUjyrns0KGJtwtZjxjkzRmQzFT43aisKFNRL8BU2EtRX5U5GpJxn
-         subg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkrZmOQZBz520hfFDItjCSqrIrpb61Angg3ELZHIp97NtoiI5ZC1p1irT9kr9o4fwBJEnlctkvkv5wmjTDwwqBn+PM/93twcGH9CpxuOLiBh7qJXRAk7G8Q5EmJmCRHZvo5ZGo47rpl7+xRpv4Ncvt/4UM96sgxvCWITuvjwq93p04RdRlihsz
-X-Gm-Message-State: AOJu0YyXHY3+nEracrL27qTFk3SNOiykWV0ax3s9+KK/gYun29glGlmH
-	Al83RJxXJTN8qFl9APuKuZrlKAyxy8p8zSc2WbmzvACUCy/aWzfw
-X-Google-Smtp-Source: AGHT+IEm3BEi0uEfxCxsS46zHZU+iHIkKBDuGFJu0IExFYzQtNGkHdUxuvrOiz7C2B6tfd+FYUZPSA==
-X-Received: by 2002:a05:6512:12cb:b0:51d:53fa:6530 with SMTP id p11-20020a05651212cb00b0051d53fa6530mr8597982lfg.28.1714478535490;
-        Tue, 30 Apr 2024 05:02:15 -0700 (PDT)
-Received: from fedora ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id v4-20020ac258e4000000b00516cba5b4cesm4479734lfo.46.2024.04.30.05.02.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 05:02:14 -0700 (PDT)
-Date: Tue, 30 Apr 2024 15:02:10 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: [PATCH v1 6/6] MAINTAINERS: Add ROHM BD96801 'scalable PMIC' entries
-Message-ID: <e8d27104a7c673c87583557d2e40139f2908eb01.1714478142.git.mazziesaccount@gmail.com>
-References: <cover.1714478142.git.mazziesaccount@gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Rj2m82Nx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1714478254; bh=apBtntyNajTBtp+tQish1HZy3ehq4/BVCIxhQSMBm2A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Rj2m82NxStCbb6pYFAphgcQNTvEKD2TzPoVV4+Hsj35IZp/Hl8gVww8dRR74mOE8E
+	 g1sPPH0jIB0BTZIxv7IZJrhcCSmaTj7+sjHF+nAbd0SAek8kVFXPZorxvJ1ys3Nysv
+	 21Hm+SgC+U7u7chF3UzZ1c0ibErUvQQxyXlEjd84=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id E609FE61; Tue, 30 Apr 2024 19:57:32 +0800
+X-QQ-mid: xmsmtpt1714478252t629564bj
+Message-ID: <tencent_DF766FC02FA16CC095BCE976EF5ECFE8790A@qq.com>
+X-QQ-XMAILINFO: Mdc3TkmnJyI/OQ2aS0u1J2QlfA2iTu5L8msRZhBV/G3so5r6SbgI/nebbT77Un
+	 tnIIfqo3CewX7423prb3jqsWnsHePibjgH9Agx+2fXiYgwg3l9IbWYod4Jd/iXc3jtlhVabANWTm
+	 K36q8mK68IhTn6oodgVPfl3B8fxaABG1LlIDohTUkMk2s6qRdztN/xa5qQd9ZV/4WzntHAJgbZmy
+	 ysFk6I8tpsyl2Q+2kQgw95mo6CbrPsfcLherCI9I0zgrb7QeKQ4xn7DW4NFYbIRu8W9rvzMKGN1C
+	 HocuUTJErnOWB8jZrqgfRV8uRkdvvdDFFM2SaZweW15utpW6E5awrWjFni2mM8W1X5EtLko8jw26
+	 rqjuFPkPzY0tnkgf6w3RvQJ7xku+lADWbBcW8gIXN2uZUhexolDGiKgxzpB0CD34IAZEt0ZkOu5h
+	 VXWNoA5pRMD2cmUnV7I/7lq15jwd83u4tkeNwWIrf4to9dZ73vWxFRP9S+p+N+bLEb+gFKtwx9LC
+	 5xuQudXjbOkKkfiBJxkX/V6w0EiBcZg5S+OsH4GGZKvkYQnvmEJqjk//Sb4qN+zB4obrk5zk6ZAm
+	 S+dyKaqTqQ5kiciU49OlM0/fPDJ0C1VcUlnomkLeZjEwidndk8put3kdLseyVAzEks87rn2gCJhv
+	 dNP8XH2tRWRe9dUXtktGvtmS/h5b8m8P+7/2LXMC5agnNtFIYA+GsbteX/x5yoK3Ven0jzYDvD+s
+	 fidzN3DPEKL997g/iV25GBQmRqB+Dv/17RmsJGeFDLCZ3RzrUaGihOEsXDT8VbqaYIv2hWzqfzyY
+	 WOxDXlSdBXI9KFvNWGdL0qdUoPqxhRJb5nzzPgX5aGkSh7u2fIUqGLLLEp0ldOdHpqwxzH3OnTWL
+	 Ra2r14NL9RYK0id2TeUTakAtJFDImDy8I6k/GwM/1iMPm5Tkl/Icj1geLEbFhl3vc+Wy1RykQMND
+	 M05XBzJvnHFoyXEMfo+g==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+98edc2df894917b3431f@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] [virt?] [kvm?] KASAN: slab-use-after-free Read in vhost_task_fn
+Date: Tue, 30 Apr 2024 19:57:33 +0800
+X-OQ-MSGID: <20240430115732.957611-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000a9613006174c1c4c@google.com>
+References: <000000000000a9613006174c1c4c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DwNfJbWB549XTXxk"
-Content-Disposition: inline
-In-Reply-To: <cover.1714478142.git.mazziesaccount@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+please test uaf in vhost_task_fn
 
---DwNfJbWB549XTXxk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git bb7a2467e6be
 
-Add maintainer entries for ROHM BD96801 a.k.a 'scalable PMIC'
-drivers to be reviewed by ROHM people.
+diff --git a/kernel/vhost_task.c b/kernel/vhost_task.c
+index 48c289947b99..e87d60dde323 100644
+--- a/kernel/vhost_task.c
++++ b/kernel/vhost_task.c
+@@ -21,9 +21,10 @@ struct vhost_task {
+ 	unsigned long flags;
+ 	struct task_struct *task;
+ 	/* serialize SIGKILL and vhost_task_stop calls */
+-	struct mutex exit_mutex;
+ };
+ 
++static DEFINE_MUTEX(exit_mutex);
++
+ static int vhost_task_fn(void *data)
+ {
+ 	struct vhost_task *vtsk = data;
+@@ -51,7 +52,7 @@ static int vhost_task_fn(void *data)
+ 			schedule();
+ 	}
+ 
+-	mutex_lock(&vtsk->exit_mutex);
++	mutex_lock(&exit_mutex);
+ 	/*
+ 	 * If a vhost_task_stop and SIGKILL race, we can ignore the SIGKILL.
+ 	 * When the vhost layer has called vhost_task_stop it's already stopped
+@@ -62,7 +63,7 @@ static int vhost_task_fn(void *data)
+ 		vtsk->handle_sigkill(vtsk->data);
+ 	}
+ 	complete(&vtsk->exited);
+-	mutex_unlock(&vtsk->exit_mutex);
++	mutex_unlock(&exit_mutex);
+ 
+ 	do_exit(0);
+ }
+@@ -88,12 +89,12 @@ EXPORT_SYMBOL_GPL(vhost_task_wake);
+  */
+ void vhost_task_stop(struct vhost_task *vtsk)
+ {
+-	mutex_lock(&vtsk->exit_mutex);
++	mutex_lock(&exit_mutex);
+ 	if (!test_bit(VHOST_TASK_FLAGS_KILLED, &vtsk->flags)) {
+ 		set_bit(VHOST_TASK_FLAGS_STOP, &vtsk->flags);
+ 		vhost_task_wake(vtsk);
+ 	}
+-	mutex_unlock(&vtsk->exit_mutex);
++	mutex_unlock(&exit_mutex);
+ 
+ 	/*
+ 	 * Make sure vhost_task_fn is no longer accessing the vhost_task before
+@@ -135,7 +136,6 @@ struct vhost_task *vhost_task_create(bool (*fn)(void *),
+ 	if (!vtsk)
+ 		return NULL;
+ 	init_completion(&vtsk->exited);
+-	mutex_init(&vtsk->exit_mutex);
+ 	vtsk->data = arg;
+ 	vtsk->fn = fn;
+ 	vtsk->handle_sigkill = handle_sigkill;
 
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
----
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa3b947fb080..da68144d51ae 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19111,17 +19111,21 @@ F:	drivers/gpio/gpio-bd71828.c
- F:	drivers/mfd/rohm-bd71828.c
- F:	drivers/mfd/rohm-bd718x7.c
- F:	drivers/mfd/rohm-bd9576.c
-+F:	drivers/mfd/rohm-bd96801.c
- F:	drivers/regulator/bd71815-regulator.c
- F:	drivers/regulator/bd71828-regulator.c
- F:	drivers/regulator/bd718x7-regulator.c
- F:	drivers/regulator/bd9576-regulator.c
-+F:	drivers/regulator/bd96801-regulator.c
- F:	drivers/regulator/rohm-regulator.c
- F:	drivers/rtc/rtc-bd70528.c
- F:	drivers/watchdog/bd9576_wdt.c
-+F:	drivers/watchdog/bd96801_wdt.c
- F:	include/linux/mfd/rohm-bd71815.h
- F:	include/linux/mfd/rohm-bd71828.h
- F:	include/linux/mfd/rohm-bd718x7.h
- F:	include/linux/mfd/rohm-bd957x.h
-+F:	include/linux/mfd/rohm-bd96801.h
- F:	include/linux/mfd/rohm-generic.h
- F:	include/linux/mfd/rohm-shared.h
-=20
---=20
-2.44.0
-
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---DwNfJbWB549XTXxk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmYw3cEACgkQeFA3/03a
-ocWPbggA1DOQEhF5jDsmIciK9UdDzwrr+OWE/aRtufuahdexUKICIldB1q4P2GcV
-O9S5ws0EikcsPbkE0j0qmSTF3FIj3KhAFSkq5YeyYxHYMxxLhGidoapGcN5mcGOw
-99FEDVsWsE28UE/0MrY/y0TSA6clVLw3bQaIqZVpmS5N1eMqZ4z0I/m5UC6vRfkH
-faobCFXzEvcxbqv6RJ7pRhCuVll8zmkAKIL5w0GRDuBEuPW9qq7mfsUD0px3YECy
-Bdv5r/uyx6sdS+UozfGvk0Mh5uaHlDFucSDV9diICB6P9v2LaHiR6cTyH73JpDBY
-TtD9vdoak3cZm6FCEzieay8Lg5Db2Q==
-=s5kO
------END PGP SIGNATURE-----
-
---DwNfJbWB549XTXxk--
