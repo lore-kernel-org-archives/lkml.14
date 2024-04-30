@@ -1,43 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47CB19DF5F
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 20:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E6C1A38E5
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 20:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714509654; cv=none; b=iCQF3lm+pAzpDxIieN0j4O298DGG2JnkNDk3HMO2yVOKKJsRuSGggob7IpfozywfVzOAUACV7yI0g8O8wxX7sDBueH1xgb60H+JmMc6nU0SwnzFf2M/nuEny4kbwszKezVjC7J/W5VmUsyUg9nUGM6WeSJs5WkNLKjHzxurZgpY=
+	t=1714509659; cv=none; b=lBrfQSf5ELeY4lO06OBZOoGbZIZTgR9gv8bwzTHvuPwndDS66NvsADjuTStDlyfXFQauisPcqih5CRGaZ9+QVFMscP+U37IJqs6do4x55yRzFzIv1w6uDkijFnWtPp/N75ywvnvvAr64vMftKRi4+p3JC/zFWqhyk7MaWXU0yvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714509654; c=relaxed/simple;
-	bh=w+6KTqRYqH4g82XjjMnM1W0nz4LoVWr/B/W1NuzYark=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hZXnsw/rwojiRnMmPpmqa1l327M6kmiI9RDSV//+Jj9NucjfLtZFe9o3myLiQwDWshjN3WYWFX9eHfIUvEbQeuK0iYYTheDTp8BVvQ8jRJr9iWTWusHSWVoAj3LhcbTqINx/Ps6jkn1YZGS7LExrE7uWP2/JhnbSESh6AX4Khg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QYgYGkiH; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1714509659; c=relaxed/simple;
+	bh=hUPGLZZdKc8svvazAhagE3csCx3nW1eQdg89W1BMfQk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=M+oZdzdvr6mtIgB9ZJ4STAwoAlGdodJo4nnIK87ZCnDuIQsSpeb2VgTDAiyitYuXMvogyvBByNUL4sCD0KnTpcINa5Ggk0l9bGs1OxMLK8mmj0XJ+GGiHJvYfZ5Vcnrw1kDlDnHAf7cwIO/YNrPkmg4CH+iE9RbSJQ1nthhiodo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I/kP6YaG; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QYgYGkiH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I/kP6YaG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714509651;
+	s=mimecast20190719; t=1714509657;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NgrzgAgGo8i+xwDb/b3m3FxSOTPzpaahtRRF4Q7L0yk=;
-	b=QYgYGkiHsRiJixcdlZ7RqSNalxXWFLJzRDlam8RzcixD2Pen3gTp1EWGBSdC+FZKfzjMEd
-	FIuGVzsKXd81z0HZ5hPcOu9ZdwJmeb+r3j+W1eX+k2xIeHnSus5atzIS/bAYNG8pdyh433
-	wAsF5Md7aQfEil88Ei9860HHzkNhFOk=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M+xMysOaTLOUYcuh4ijK9OYwvDDRj3hF0BT7ZxHVSLo=;
+	b=I/kP6YaGSh2+VzWxmdGxvrwfy3VGPmFArNZgEkEBum+5IuxxOEmGknGY09mH4/8R/+RYLb
+	YZWN1xu7osBDqzURnwaVuGxPFXst/ZedpdC7pz2xGzkmy+btu7Xr7cBGPWlyMmppCOYWl3
+	FKycmh52jyAS/rCo8cDEKV4rUBJRgZc=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-446-Wx_lFYOlMO2wvDeYEn4muA-1; Tue,
- 30 Apr 2024 16:40:47 -0400
-X-MC-Unique: Wx_lFYOlMO2wvDeYEn4muA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-529-YnVIUqY2MHGA4ILpxZDr4A-1; Tue,
+ 30 Apr 2024 16:40:55 -0400
+X-MC-Unique: YnVIUqY2MHGA4ILpxZDr4A-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6E3E8380673C;
-	Tue, 30 Apr 2024 20:40:47 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 093CA3C000AA;
+	Tue, 30 Apr 2024 20:40:55 +0000 (UTC)
 Received: from t14s.fritz.box (unknown [10.39.192.75])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id AA563C01595;
-	Tue, 30 Apr 2024 20:40:45 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 288E9C13FA1;
+	Tue, 30 Apr 2024 20:40:52 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -45,9 +47,11 @@ Cc: linux-mm@kvack.org,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Vincent Donnefort <vdonnefort@google.com>,
 	Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v1 0/2] mm/memory: cleanly support zeropage in vm_insert_page*(), vm_map_pages*() and vmf_insert_mixed()
-Date: Tue, 30 Apr 2024 22:40:42 +0200
-Message-ID: <20240430204044.52755-1-david@redhat.com>
+Subject: [PATCH v1 2/2] mm/rmap: sanity check that zeropages are not passed to RMAP
+Date: Tue, 30 Apr 2024 22:40:44 +0200
+Message-ID: <20240430204044.52755-3-david@redhat.com>
+In-Reply-To: <20240430204044.52755-1-david@redhat.com>
+References: <20240430204044.52755-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,44 +61,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-There is interest in mapping zeropages via vm_insert_pages() [1] into
-MAP_SHARED mappings.
+Using insert_page() we might have previously ended up passing the zeropage
+into rmap code. Make sure that won't happen again.
 
-For now, we only get zeropages in MAP_SHARED mappings via
-vmf_insert_mixed() from FSDAX code, and I think it's a bit shaky in some
-cases because we refcount the zeropage when mapping it but not necessarily
-always when unmapping it ... and we should actually never refcount it.
+Note that we won't check the huge zeropage for now, which might still
+end up in RMAP code.
 
-It's all a bit tricky, especially how zeropages in MAP_SHARED mappings
-interact with GUP (FOLL_LONGTERM), mprotect(), write-faults and s390x
-forbidding the shared zeropage (rewrite on its way upstream [2]).
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ include/linux/rmap.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-This series tries to take the careful approach of only allowing the
-zeropage where it is likely safe to use (which should cover the existing
-FSDAX use case and [1]), preventing that it could accidentially get mapped
-writable during a write fault, mprotect() etc, and preventing issues
-with FOLL_LONGTERM in the future with other users.
-
-Only very lightly tested ... because I yet have to even get fsdax running
-(I guess, file system on emulated DIMM in a VM? Hmmm :) ).
-
-[1] https://lkml.kernel.org/r/20240430111354.637356-1-vdonnefort@google.com
-[2] https://lkml.kernel.org/r/20240411161441.910170-1-david@redhat.com
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-
-David Hildenbrand (2):
-  mm/memory: cleanly support zeropage in vm_insert_page*(),
-    vm_map_pages*() and vmf_insert_mixed()
-  mm/rmap: sanity check that zeropages are not passed to RMAP
-
- include/linux/rmap.h |  3 ++
- mm/memory.c          | 92 ++++++++++++++++++++++++++++++++++----------
- mm/mprotect.c        |  2 +
- 3 files changed, 76 insertions(+), 21 deletions(-)
-
+diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+index 7229b9baf20d8..5cb0d419a1d75 100644
+--- a/include/linux/rmap.h
++++ b/include/linux/rmap.h
+@@ -200,6 +200,9 @@ static inline void __folio_rmap_sanity_checks(struct folio *folio,
+ 	/* hugetlb folios are handled separately. */
+ 	VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
+ 
++	/* When (un)mapping zeropages, we should never touch ref+mapcount. */
++	VM_WARN_ON_FOLIO(is_zero_folio(folio), folio);
++
+ 	/*
+ 	 * TODO: we get driver-allocated folios that have nothing to do with
+ 	 * the rmap using vm_insert_page(); therefore, we cannot assume that
 -- 
 2.44.0
 
