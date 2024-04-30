@@ -1,93 +1,199 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB96172BCB;
-	Tue, 30 Apr 2024 14:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE3713D29C
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714489143; cv=none; b=j0lGmgZD7CX6HGBBVxpUtrGawyVom0oOuUI6NRnO4sHwm6XkDl6pv61wc2+enKIA6zvumyZYeF3C/KxRSaPwLTDfGZI2sbCqN/gCrNu9WjzxqxrxZrANegLXLXc0f2LIiqCnOjCjw5mFLB5y+8t/8igsCrB0sIWauA7YzIsqf/4=
+	t=1714489145; cv=none; b=TBR3lheXnVoXMP5/mPUkeBiFb8jp90xGvy6eNQROyMnE2KD73vJZsNk0ht2CY52aF5/xR+wbOF+J334mOSPE65/abHkVl/EGG3s5ylytmXhC6a1WtfdTYL+Z5Ml48AEowTyrluhLDNKkBH3rxY3rOAIZ3lBAm7JZwlGIApRsHAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714489143; c=relaxed/simple;
-	bh=/e+NK6Czol+7PAxT9nfpaxf/IU9cfQ6ydxY3hYa29qI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hFtfxmKH8TldDL0BgFAUPimB7v3h+Sgj19Wo/dvwtbv1tjxuFgbe7UVWOKCDmEMPGawKjVga1CDeqdsnUGt8DBElcDFIXk9dbU5paRKh4jSVHlu7t3/Ej6aZgjsr1OKIA8g9BHOz1EWJ6Kry/C3TWYkTMroiWps0iBdS4G6LwEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=In4TrlxU; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714489145; c=relaxed/simple;
+	bh=tvoic8JEg5iwsCj9YBFoEAx3/4HZliI5/5DJbrdIfjQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KLUKHv9gJZ0j1yj8vqNDeTaehyg7EFqJ5vOhhYY7N56yOZD0fi2jF1PnyvYUj8NK6vjevGA3McJWGVRYkT35ZNXjgl++f/wab+HqNCrYAbMiT2vXo/jKdNbD1/Qnl+x+mpprFJuAVh0tTT6yd+7XF5OHVEBKNUi/cp9jjXt07fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W/7Fhh0h; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="In4TrlxU"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2dd041acff1so67257441fa.1;
-        Tue, 30 Apr 2024 07:59:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714489140; x=1715093940; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/e+NK6Czol+7PAxT9nfpaxf/IU9cfQ6ydxY3hYa29qI=;
-        b=In4TrlxUn/3B20SsfTFKsru6wYVF+M8ItJQGZTkH94H0wUQJ5Dns+FiCz42AkLS68a
-         rLL549AKp6D51F7U5X9ErsE1qsQZDbP4g70YvCAqOFX55rtOtNkCr9BnBnsep7Tpc/Lg
-         utJrYdKTccy952/EW+oZQzSpH1U9tzs7JJkutQiXoYmgw8HbgwFCA80z8zKLXIR920at
-         Yn0X8L/wnFCIHgutsihqgEiVC8nWkOUyaNED4VeUFhjfZ9IFHrybkKc8dvQHCCJcOYFP
-         r6D8YiZGbmcAl+1mFA3XXky6ICbga6InluTqSZvVmk+xSpinH/ezM0IF6of7xxqehzmL
-         qULw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714489140; x=1715093940;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/e+NK6Czol+7PAxT9nfpaxf/IU9cfQ6ydxY3hYa29qI=;
-        b=wi4xb1TOVJUFWIHw+/wql24Cqb+zEd3pTAKJMbwkFIRr/SYf3nTOatnb9TbMP8hOZb
-         nfvl4lbMkYJY8ksPwoUAN1WZs4/RfL5fernKpaHU6Xgut2hi1VIQ0xMUg9j738zRV1bH
-         hOrcA4cJ3Bfumx3nfGvIIxDygkQoDzlhjJfkJyUlTF6G6Hdmhcz+amjrph6XdwfdgRqe
-         HAof8R5+tQ2grI/TmfbFcneGiKKlN/9NmAyKdoP8lpicJZ6jRZlkg3EMAze1C5516dSR
-         tYzVqZp++lyH/Abk6PJeMhaHxfdKeCcjJlUXaO2oRI+Asnam+Cy1Cu7k8I+nA9uKzaCK
-         H0JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQLoe+DgSmyZfprIC5chJnXoywLKCiMi96n0WYEoIk2h/yPiZ+somCQYWhlcigTXLRQdjVe4w8v+vJ1NE5TFmoi16SBC64vCVEEETwIP+6XIVy0h43vSCg4c/C5H/MGCj6GDe7J0GCAzzRo1jZ0fyWiwog7WUP5qF6txCmMiW2s73+VUVOBtY=
-X-Gm-Message-State: AOJu0Ywu29FwKOFAsguDvo1B+dS+sWshtY8ohBwUGvT5QuM+jONwgfDQ
-	LjB4Pttt+Ww53d890noylN5BmYDRzcUfBEwOy7H7FfxvmcDLiO4jpE/YgQ+Eb5l4f6mPhZeGWDL
-	gukpX8YtsK5Bxx5diY1C1Wc3i7LY=
-X-Google-Smtp-Source: AGHT+IH1ix0BqVq9FIQTiQZX/OFdgb0zFuvm/XZ1HQbS+UYTDWVWBCztGEQwH9uF9Er2JGQROqanY7i0WYIkpAAzanE=
-X-Received: by 2002:a2e:7a0a:0:b0:2d8:45ff:d606 with SMTP id
- v10-20020a2e7a0a000000b002d845ffd606mr7232211ljc.50.1714489139376; Tue, 30
- Apr 2024 07:58:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W/7Fhh0h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714489144; x=1746025144;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=tvoic8JEg5iwsCj9YBFoEAx3/4HZliI5/5DJbrdIfjQ=;
+  b=W/7Fhh0hXjRgiTBXMz8u+ASSvqJiIfEU086C71E3ovDubaDgOEa8k+jh
+   CEH+rQgr7vLhg+c2csGGa6Dgc+6isAPUR+68b9GMsWH332/G9yR96/OFr
+   D013wDB78B0f6t7ePOPaR9IOz9HWLwC419lvwjFGU65tFa8bsWNxELxPn
+   fhYSMPGzZiWmBD3+b+JVMkGDUC8OwDt/pAFzZsyCsloXiB0fd9JqmM+Vq
+   5iLBXykBb7gzF8GZnhgi4DVLthHbjCoGb9PnJT0LoTVF15s+25Ht4fKlO
+   w8TxxjBov3X1g0VdG2a65jE7r4BvsRU67Rh6+b9NQMYA1zEg6ltfWc173
+   w==;
+X-CSE-ConnectionGUID: 39zVwj0pRsCHmfEMa7Z1mQ==
+X-CSE-MsgGUID: +gAPV4yJQkSeQuLflpFp6A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10059882"
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="10059882"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 07:59:04 -0700
+X-CSE-ConnectionGUID: zOA9IU/KTNumW79bdtW+wg==
+X-CSE-MsgGUID: sQV7gGqkQOOMppzb/u/Seg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="31282202"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by orviesa004.jf.intel.com with ESMTP; 30 Apr 2024 07:59:00 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	Joel Granados <j.granados@samsung.com>
+Cc: iommu@lists.linux.dev,
+	virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v5 4/9] iommufd: Add fault and response message definitions
+Date: Tue, 30 Apr 2024 22:57:05 +0800
+Message-Id: <20240430145710.68112-5-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240430145710.68112-1-baolu.lu@linux.intel.com>
+References: <20240430145710.68112-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430140930.262762-1-dhowells@redhat.com> <264960.1714488463@warthog.procyon.org.uk>
-In-Reply-To: <264960.1714488463@warthog.procyon.org.uk>
-From: Steve French <smfrench@gmail.com>
-Date: Tue, 30 Apr 2024 09:58:47 -0500
-Message-ID: <CAH2r5mspax98XVdEyYaupSFqh=M5zjcwckjta8H9=e+N-dnrmA@mail.gmail.com>
-Subject: Re: [PATCH v7 00/16] netfs, cifs: Delegate high-level I/O to netfslib
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>, Jeff Layton <jlayton@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, netfs@lists.linux.dev, 
-	linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Yes - I think it is easier for now if Christian picks up the series in
-his tree due to the VFS dependencies - if we start hitting merge
-conflicts with my tree later we can consider changing that.
+iommu_hwpt_pgfaults represent fault messages that the userspace can
+retrieve. Multiple iommu_hwpt_pgfaults might be put in an iopf group,
+with the IOMMU_PGFAULT_FLAGS_LAST_PAGE flag set only for the last
+iommu_hwpt_pgfault.
 
-On Tue, Apr 30, 2024 at 9:47=E2=80=AFAM David Howells <dhowells@redhat.com>=
- wrote:
->
-> Hi Christian,
->
-> With Steve's agreement, could you pick this set of patches up also?
->
-> Thanks,
-> David
->
+An iommu_hwpt_page_response is a response message that the userspace
+should send to the kernel after finishing handling a group of fault
+messages. The @dev_id, @pasid, and @grpid fields in the message
+identify an outstanding iopf group for a device. The @cookie field,
+which matches the cookie field of the last fault in the group, will
+be used by the kernel to look up the pending message.
 
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ include/uapi/linux/iommufd.h | 96 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
 
---=20
-Thanks,
+diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
+index 1dfeaa2e649e..83b45dce94a4 100644
+--- a/include/uapi/linux/iommufd.h
++++ b/include/uapi/linux/iommufd.h
+@@ -692,4 +692,100 @@ struct iommu_hwpt_invalidate {
+ 	__u32 __reserved;
+ };
+ #define IOMMU_HWPT_INVALIDATE _IO(IOMMUFD_TYPE, IOMMUFD_CMD_HWPT_INVALIDATE)
++
++/**
++ * enum iommu_hwpt_pgfault_flags - flags for struct iommu_hwpt_pgfault
++ * @IOMMU_PGFAULT_FLAGS_PASID_VALID: The pasid field of the fault data is
++ *                                   valid.
++ * @IOMMU_PGFAULT_FLAGS_LAST_PAGE: It's the last fault of a fault group.
++ */
++enum iommu_hwpt_pgfault_flags {
++	IOMMU_PGFAULT_FLAGS_PASID_VALID		= (1 << 0),
++	IOMMU_PGFAULT_FLAGS_LAST_PAGE		= (1 << 1),
++};
++
++/**
++ * enum iommu_hwpt_pgfault_perm - perm bits for struct iommu_hwpt_pgfault
++ * @IOMMU_PGFAULT_PERM_READ: request for read permission
++ * @IOMMU_PGFAULT_PERM_WRITE: request for write permission
++ * @IOMMU_PGFAULT_PERM_EXEC: (PCIE 10.4.1) request with a PASID that has the
++ *                           Execute Requested bit set in PASID TLP Prefix.
++ * @IOMMU_PGFAULT_PERM_PRIV: (PCIE 10.4.1) request with a PASID that has the
++ *                           Privileged Mode Requested bit set in PASID TLP
++ *                           Prefix.
++ */
++enum iommu_hwpt_pgfault_perm {
++	IOMMU_PGFAULT_PERM_READ			= (1 << 0),
++	IOMMU_PGFAULT_PERM_WRITE		= (1 << 1),
++	IOMMU_PGFAULT_PERM_EXEC			= (1 << 2),
++	IOMMU_PGFAULT_PERM_PRIV			= (1 << 3),
++};
++
++/**
++ * struct iommu_hwpt_pgfault - iommu page fault data
++ * @size: sizeof(struct iommu_hwpt_pgfault)
++ * @flags: Combination of enum iommu_hwpt_pgfault_flags
++ * @dev_id: id of the originated device
++ * @pasid: Process Address Space ID
++ * @grpid: Page Request Group Index
++ * @perm: Combination of enum iommu_hwpt_pgfault_perm
++ * @addr: Page address
++ * @length: a hint of how much data the requestor is expecting to fetch. For
++ *          example, if the PRI initiator knows it is going to do a 10MB
++ *          transfer, it could fill in 10MB and the OS could pre-fault in
++ *          10MB of IOVA. It's default to 0 if there's no such hint.
++ * @cookie: kernel-managed cookie identifying a group of fault messages. The
++ *          cookie number encoded in the last page fault of the group should
++ *          be echoed back in the response message.
++ */
++struct iommu_hwpt_pgfault {
++	__u32 size;
++	__u32 flags;
++	__u32 dev_id;
++	__u32 pasid;
++	__u32 grpid;
++	__u32 perm;
++	__u64 addr;
++	__u32 length;
++	__u32 cookie;
++};
++
++/**
++ * enum iommufd_page_response_code - Return status of fault handlers
++ * @IOMMUFD_PAGE_RESP_SUCCESS: Fault has been handled and the page tables
++ *                             populated, retry the access. This is the
++ *                             "Success" defined in PCI 10.4.2.1.
++ * @IOMMUFD_PAGE_RESP_INVALID: General error. Drop all subsequent faults
++ *                             from this device if possible. This is the
++ *                             "Response Failure" in PCI 10.4.2.1.
++ * @IOMMUFD_PAGE_RESP_FAILURE: Could not handle this fault, don't retry the
++ *                             access. This is the "Invalid Request" in PCI
++ *                             10.4.2.1.
++ */
++enum iommufd_page_response_code {
++	IOMMUFD_PAGE_RESP_SUCCESS = 0,
++	IOMMUFD_PAGE_RESP_INVALID,
++	IOMMUFD_PAGE_RESP_FAILURE,
++};
++
++/**
++ * struct iommu_hwpt_page_response - IOMMU page fault response
++ * @size: sizeof(struct iommu_hwpt_page_response)
++ * @flags: Must be set to 0
++ * @dev_id: device ID of target device for the response
++ * @pasid: Process Address Space ID
++ * @grpid: Page Request Group Index
++ * @code: One of response code in enum iommufd_page_response_code.
++ * @cookie: The kernel-managed cookie reported in the fault message.
++ */
++struct iommu_hwpt_page_response {
++	__u32 size;
++	__u32 flags;
++	__u32 dev_id;
++	__u32 pasid;
++	__u32 grpid;
++	__u32 code;
++	__u32 cookie;
++	__u32 reserved;
++};
+ #endif
+-- 
+2.34.1
 
-Steve
