@@ -1,39 +1,47 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B0B417165C;
-	Tue, 30 Apr 2024 13:31:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F28B17167A;
+	Tue, 30 Apr 2024 13:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714483914; cv=none; b=aylwXWKJsW0LjyaXXAG7meUsFJP051OP3oxpCleWxhwjtyk6hZkN54iuWnLnNvwd2yHe5akLqQdyPSi8C1KAMujQJu6rYFtBC1auxrjG0yRZflUL8sKb/OA1OWwZYnDnk+dd54k8geDICMzvkVeSkdZFqV8/PMq/Y4erw+rSIi4=
+	t=1714483977; cv=none; b=rKdg9Fpucsx14uE8ns4WdEpph44uYQF+mh5V3FCmKdvENLjX1mfmwMxwc7ySXvKWZZZOIkjVzCafPpvd3NlthDZYHxXDmd9cELPLTvs9NkoeVcJuQR80vbtiROuretUCpZmfRsoKwF0yubUyn8bFN6WsYHt89CIuUBNHCgfXpyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714483914; c=relaxed/simple;
-	bh=hD6QLqSLsE+vq7qrfMWamupfDTBtpVkRT+1l1z85hHY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c8yll/SbxCzdlNQT2vdqXBju8/iGJEqsO4vZbWx+SMaevW/WSevK6+lCKaNU/9HG7ZaPW19irr6Bg4zVlPZW/JmmDTKI+2OOC5Ovq8+8vgnCdJDCLhhJ9k7OI2ekGB1/1nWaiX1A3ZgHrLPyCeKuc+0pS8C0iHA9MByy3bZfbek=
+	s=arc-20240116; t=1714483977; c=relaxed/simple;
+	bh=zhZKdf7+QHmsXg6+Mf83SxIaH1CGfxqSn5wfEF/J79Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=miAAuMCn3FbkXtvK7tJj4Z/B5bvOODZ6dLMIc/nBpZsiIQF7vfACHIqChajLG3Wdktk3VneGPa8Soc28Ar0s+K6a3lDyReO/rtWozQFkDzb7iWM4SIU7HbPmhi/JSsH4XToSR9baMBzgk46K6baF6FXvu0WgyWOBenhek/w5Yjg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33C712F4;
-	Tue, 30 Apr 2024 06:32:18 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A9F63F793;
-	Tue, 30 Apr 2024 06:31:50 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4364A2F4;
+	Tue, 30 Apr 2024 06:33:21 -0700 (PDT)
+Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3F9C63F793;
+	Tue, 30 Apr 2024 06:32:52 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	coresight@lists.linaro.org
+Cc: James Clark <james.clark@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>,
 	Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Zi Yan <zi.yan@cs.rutgers.edu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2] arm64/mm: pmd_mkinvalid() must handle swap pmds
-Date: Tue, 30 Apr 2024 14:31:38 +0100
-Message-Id: <20240430133138.732088-1-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.25.1
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf cs-etm: Improve version detection and error reporting
+Date: Tue, 30 Apr 2024 14:32:21 +0100
+Message-Id: <20240430133221.250811-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,162 +50,172 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-__split_huge_pmd_locked() can be called for a present THP, devmap or
-(non-present) migration entry. It calls pmdp_invalidate()
-unconditionally on the pmdp and only determines if it is present or not
-based on the returned old pmd.
+When the config validation functions are warning about ETMv3, they do it
+based on "not ETMv4". If the drivers aren't all loaded or the hardware
+doesn't support Coresight it will appear as "not ETMv4" and then Perf
+will print the error message "... not supported in ETMv3 ..." which is
+wrong and confusing.
 
-But arm64's pmd_mkinvalid(), called by pmdp_invalidate(),
-unconditionally sets the PMD_PRESENT_INVALID flag, which causes future
-pmd_present() calls to return true - even for a swap pmd. Therefore any
-lockless pgtable walker could see the migration entry pmd in this state
-and start interpretting the fields (e.g. pmd_pfn()) as if it were
-present, leading to BadThings (TM). GUP-fast appears to be one such
-lockless pgtable walker.
+cs_etm_is_etmv4() is also misnamed because it also returns true for
+ETE because ETE has a superset of the ETMv4 metadata files. Although
+this was always done in the correct order so it wasn't a bug.
 
-While the obvious fix is for core-mm to avoid such calls for non-present
-pmds (pmdp_invalidate() will also issue TLBI which is not necessary for
-this case either), all other arches that implement pmd_mkinvalid() do it
-in such a way that it is robust to being called with a non-present pmd.
-So it is simpler and safer to make arm64 robust too. This approach means
-we can even add tests to debug_vm_pgtable.c to validate the required
-behaviour.
+Improve all this by making a single get version function which also
+handles not present as a separate case. Change the ETMv3 error message
+to only print when ETMv3 is detected, and add a new error message for
+the not present case.
 
-This is a theoretical bug found during code review. I don't have any
-test case to trigger it in practice.
-
-Cc: stable@vger.kernel.org
-Fixes: 53fa117bb33c ("arm64/mm: Enable THP migration")
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: James Clark <james.clark@arm.com>
 ---
+ tools/perf/arch/arm/util/cs-etm.c | 64 +++++++++++++++++++++++--------
+ 1 file changed, 48 insertions(+), 16 deletions(-)
 
-Hi all,
-
-v1 of this fix [1] took the approach of fixing core-mm to never call
-pmdp_invalidate() on a non-present pmd. But Zi Yan highlighted that only arm64
-suffers this problem; all other arches are robust. So his suggestion was to
-instead make arm64 robust in the same way and add tests to validate it. Despite
-my stated reservations in the context of the v1 discussion, having thought on it
-for a bit, I now agree with Zi Yan. Hence this post.
-
-Andrew has v1 in mm-unstable at the moment, so probably the best thing to do is
-remove it from there and have this go in through the arm64 tree? Assuming there
-is agreement that this approach is right one.
-
-This applies on top of v6.9-rc5. Passes all the mm selftests on arm64.
-
-[1] https://lore.kernel.org/linux-mm/20240425170704.3379492-1-ryan.roberts@arm.com/
-
-Thanks,
-Ryan
-
-
- arch/arm64/include/asm/pgtable.h | 12 +++++--
- mm/debug_vm_pgtable.c            | 61 ++++++++++++++++++++++++++++++++
- 2 files changed, 71 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index afdd56d26ad7..7d580271a46d 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -511,8 +511,16 @@ static inline int pmd_trans_huge(pmd_t pmd)
-
- static inline pmd_t pmd_mkinvalid(pmd_t pmd)
- {
--	pmd = set_pmd_bit(pmd, __pgprot(PMD_PRESENT_INVALID));
--	pmd = clear_pmd_bit(pmd, __pgprot(PMD_SECT_VALID));
-+	/*
-+	 * If not valid then either we are already present-invalid or we are
-+	 * not-present (i.e. none or swap entry). We must not convert
-+	 * not-present to present-invalid. Unbelievably, the core-mm may call
-+	 * pmd_mkinvalid() for a swap entry and all other arches can handle it.
-+	 */
-+	if (pmd_valid(pmd)) {
-+		pmd = set_pmd_bit(pmd, __pgprot(PMD_PRESENT_INVALID));
-+		pmd = clear_pmd_bit(pmd, __pgprot(PMD_SECT_VALID));
-+	}
-
- 	return pmd;
- }
-diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
-index 65c19025da3d..7e9c387d06b0 100644
---- a/mm/debug_vm_pgtable.c
-+++ b/mm/debug_vm_pgtable.c
-@@ -956,6 +956,65 @@ static void __init hugetlb_basic_tests(struct pgtable_debug_args *args) { }
- #endif /* CONFIG_HUGETLB_PAGE */
-
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+#if !defined(__HAVE_ARCH_PMDP_INVALIDATE) && defined(CONFIG_ARCH_ENABLE_THP_MIGRATION)
-+static void __init swp_pmd_mkinvalid_tests(struct pgtable_debug_args *args)
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 07be32d99805..2763c6758b91 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -66,9 +66,25 @@ static const char * const metadata_ete_ro[] = {
+ 	[CS_ETE_TS_SOURCE]		= "ts_source",
+ };
+ 
+-static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
++enum cs_etm_version { CS_NOT_PRESENT, CS_ETMV3, CS_ETMV4, CS_ETE };
++
++static bool cs_etm_pmu_file_present(struct auxtrace_record *itr, int cpu,
++				       const char *file);
+ static bool cs_etm_is_ete(struct auxtrace_record *itr, int cpu);
+ 
++static enum cs_etm_version cs_etm_get_version(struct auxtrace_record *itr,
++					      int cpu)
 +{
-+	unsigned long max_swap_offset;
-+	swp_entry_t swp_set, swp_clear, swp_convert;
-+	pmd_t pmd_set, pmd_clear;
++	if (cs_etm_is_ete(itr, cpu))
++		return CS_ETE;
++	else if (cs_etm_pmu_file_present(itr, cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]))
++		return CS_ETMV4;
++	else if (cs_etm_pmu_file_present(itr, cpu, metadata_etmv3_ro[CS_ETM_ETMCCER]))
++		return CS_ETMV3;
 +
-+	/*
-+	 * See generic_max_swapfile_size(): probe the maximum offset, then
-+	 * create swap entry will all possible bits set and a swap entry will
-+	 * all bits clear.
-+	 */
-+	max_swap_offset = swp_offset(pmd_to_swp_entry(swp_entry_to_pmd(swp_entry(0, ~0UL))));
-+	swp_set = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
-+	swp_clear = swp_entry(0, 0);
-+
-+	/* Convert to pmd. */
-+	pmd_set = swp_entry_to_pmd(swp_set);
-+	pmd_clear = swp_entry_to_pmd(swp_clear);
-+
-+	/*
-+	 * Sanity check that the pmds are not-present, not-huge and swap entry
-+	 * is recoverable without corruption.
-+	 */
-+	WARN_ON(pmd_present(pmd_set));
-+	WARN_ON(pmd_trans_huge(pmd_set));
-+	swp_convert = pmd_to_swp_entry(pmd_set);
-+	WARN_ON(swp_type(swp_set) != swp_type(swp_convert));
-+	WARN_ON(swp_offset(swp_set) != swp_offset(swp_convert));
-+	WARN_ON(pmd_present(pmd_clear));
-+	WARN_ON(pmd_trans_huge(pmd_clear));
-+	swp_convert = pmd_to_swp_entry(pmd_clear);
-+	WARN_ON(swp_type(swp_clear) != swp_type(swp_convert));
-+	WARN_ON(swp_offset(swp_clear) != swp_offset(swp_convert));
-+
-+	/* Now invalidate the pmd. */
-+	pmd_set = pmd_mkinvalid(pmd_set);
-+	pmd_clear = pmd_mkinvalid(pmd_clear);
-+
-+	/*
-+	 * Since its a swap pmd, invalidation should effectively be a noop and
-+	 * the checks we already did should give the same answer. Check the
-+	 * invalidation didn't corrupt any fields.
-+	 */
-+	WARN_ON(pmd_present(pmd_set));
-+	WARN_ON(pmd_trans_huge(pmd_set));
-+	swp_convert = pmd_to_swp_entry(pmd_set);
-+	WARN_ON(swp_type(swp_set) != swp_type(swp_convert));
-+	WARN_ON(swp_offset(swp_set) != swp_offset(swp_convert));
-+	WARN_ON(pmd_present(pmd_clear));
-+	WARN_ON(pmd_trans_huge(pmd_clear));
-+	swp_convert = pmd_to_swp_entry(pmd_clear);
-+	WARN_ON(swp_type(swp_clear) != swp_type(swp_convert));
-+	WARN_ON(swp_offset(swp_clear) != swp_offset(swp_convert));
++	return CS_NOT_PRESENT;
 +}
-+#else
-+static void __init swp_pmd_mkinvalid_tests(struct pgtable_debug_args *args) { }
-+#endif /* !__HAVE_ARCH_PMDP_INVALIDATE && CONFIG_ARCH_ENABLE_THP_MIGRATION */
 +
- static void __init pmd_thp_tests(struct pgtable_debug_args *args)
+ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+ 				      struct evsel *evsel, int cpu)
  {
- 	pmd_t pmd;
-@@ -982,6 +1041,8 @@ static void __init pmd_thp_tests(struct pgtable_debug_args *args)
- 	WARN_ON(!pmd_trans_huge(pmd_mkinvalid(pmd_mkhuge(pmd))));
- 	WARN_ON(!pmd_present(pmd_mkinvalid(pmd_mkhuge(pmd))));
- #endif /* __HAVE_ARCH_PMDP_INVALIDATE */
+@@ -87,7 +103,7 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+ 		return 0;
+ 
+ 	/* Not supported in etmv3 */
+-	if (!cs_etm_is_etmv4(itr, cpu)) {
++	if (cs_etm_get_version(itr, cpu) == CS_ETMV3) {
+ 		pr_err("%s: contextid not supported in ETMv3, disable with %s/contextid=0/\n",
+ 		       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+ 		return -EINVAL;
+@@ -154,7 +170,7 @@ static int cs_etm_validate_timestamp(struct auxtrace_record *itr,
+ 	      perf_pmu__format_bits(cs_etm_pmu, "timestamp")))
+ 		return 0;
+ 
+-	if (!cs_etm_is_etmv4(itr, cpu)) {
++	if (cs_etm_get_version(itr, cpu) == CS_ETMV3) {
+ 		pr_err("%s: timestamp not supported in ETMv3, disable with %s/timestamp=0/\n",
+ 		       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+ 		return -EINVAL;
+@@ -218,6 +234,11 @@ static int cs_etm_validate_config(struct auxtrace_record *itr,
+ 	}
+ 
+ 	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
++		if (cs_etm_get_version(itr, cpu.cpu) == CS_NOT_PRESENT) {
++			pr_err("%s: Not found on CPU %d. Check hardware and firmware support and that all Coresight drivers are loaded\n",
++			       CORESIGHT_ETM_PMU_NAME, cpu.cpu);
++			return -EINVAL;
++		}
+ 		err = cs_etm_validate_context_id(itr, evsel, cpu.cpu);
+ 		if (err)
+ 			break;
+@@ -548,13 +569,13 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+ 		/* Event can be "any" CPU so count all online CPUs. */
+ 		intersect_cpus = perf_cpu_map__new_online_cpus();
+ 	}
++	/* Count number of each type of ETM. Don't count if that CPU has CS_NOT_PRESENT. */
+ 	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
+-		if (cs_etm_is_ete(itr, cpu.cpu))
+-			ete++;
+-		else if (cs_etm_is_etmv4(itr, cpu.cpu))
+-			etmv4++;
+-		else
+-			etmv3++;
++		enum cs_etm_version v = cs_etm_get_version(itr, cpu.cpu);
 +
-+	swp_pmd_mkinvalid_tests(args);
++		ete   += v == CS_ETE;
++		etmv4 += v == CS_ETMV4;
++		etmv3 += v == CS_ETMV3;
+ 	}
+ 	perf_cpu_map__put(intersect_cpus);
+ 
+@@ -564,7 +585,8 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+ 	       (etmv3 * CS_ETMV3_PRIV_SIZE));
  }
-
- #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
---
-2.25.1
+ 
+-static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu)
++static bool cs_etm_pmu_file_present(struct auxtrace_record *itr, int cpu,
++				       const char *file)
+ {
+ 	bool ret = false;
+ 	char path[PATH_MAX];
+@@ -574,9 +596,7 @@ static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu)
+ 			container_of(itr, struct cs_etm_recording, itr);
+ 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+ 
+-	/* Take any of the RO files for ETMv4 and see if it present */
+-	snprintf(path, PATH_MAX, "cpu%d/%s",
+-		 cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]);
++	snprintf(path, PATH_MAX, "cpu%d/%s", cpu, file);
+ 	scan = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
+ 
+ 	/* The file was read successfully, we have a winner */
+@@ -735,21 +755,26 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
+ 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+ 
+ 	/* first see what kind of tracer this cpu is affined to */
+-	if (cs_etm_is_ete(itr, cpu)) {
++	switch (cs_etm_get_version(itr, cpu)) {
++	case CS_ETE:
+ 		magic = __perf_cs_ete_magic;
+ 		cs_etm_save_ete_header(&info->priv[*offset], itr, cpu);
+ 
+ 		/* How much space was used */
+ 		increment = CS_ETE_PRIV_MAX;
+ 		nr_trc_params = CS_ETE_PRIV_MAX - CS_ETM_COMMON_BLK_MAX_V1;
+-	} else if (cs_etm_is_etmv4(itr, cpu)) {
++		break;
++
++	case CS_ETMV4:
+ 		magic = __perf_cs_etmv4_magic;
+ 		cs_etm_save_etmv4_header(&info->priv[*offset], itr, cpu);
+ 
+ 		/* How much space was used */
+ 		increment = CS_ETMV4_PRIV_MAX;
+ 		nr_trc_params = CS_ETMV4_PRIV_MAX - CS_ETMV4_TRCCONFIGR;
+-	} else {
++		break;
++
++	case CS_ETMV3:
+ 		magic = __perf_cs_etmv3_magic;
+ 		/* Get configuration register */
+ 		info->priv[*offset + CS_ETM_ETMCR] = cs_etm_get_config(itr);
+@@ -767,6 +792,13 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
+ 		/* How much space was used */
+ 		increment = CS_ETM_PRIV_MAX;
+ 		nr_trc_params = CS_ETM_PRIV_MAX - CS_ETM_ETMCR;
++		break;
++
++	default:
++	case CS_NOT_PRESENT:
++		/* Unreachable, CPUs already validated in cs_etm_validate_config() */
++		assert(true);
++		return;
+ 	}
+ 
+ 	/* Build generic header portion */
+-- 
+2.34.1
 
