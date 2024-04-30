@@ -1,104 +1,149 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572111802B5;
-	Tue, 30 Apr 2024 17:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF1717F385;
+	Tue, 30 Apr 2024 17:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714497857; cv=none; b=RPZgycQjbdnjGi+EL5zBeYuEyqdurCGHVWjZg7tBZkvvsya95JgMHWVmEzAlFfNSNG16jgP+KV6M23WffukywLiOIN7OnGY/LHdkBf4c23FKbBKd73B96osqJY+2vGDZdZIPwfy8ffdnnOBjlbhPZHwz1fqDO+pswbRTfpYdn18=
+	t=1714497862; cv=none; b=UqA60kMxGMLZ0IL7v0rtyYjNQHZfgIO5nz14NkXR/fokFUypt7cwSi7Ly8jTAHBJPQrFHGhr5Cs1i0aNOJgauibeuZtSA9qYENZu3eBx8wlk0cGuZa75dBplFDSaPFdLdmiFDwzU4ISUfG8ikefJgM4MS/mM++U5+Ez/eDsEuEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714497857; c=relaxed/simple;
-	bh=8c5E28VHtG6A/vJvFkJYiy9fvK9sNN/lCptMz5ClFbQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uSLjihXR43su/eaOgf+CGBwpL1mjeeIhBhYu7f7xVTT6DyXj58Rg3gwZNwenicvSdGKS2C3bENpE8IYWaqe439jzzkjENNiBnNJTEU2nCqcHNSkHPG75hTvA+hyVpr6bdrx8z9Mv8/GkBKT6RGDpCSiKIrVQoGRJRWysvSu2aXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mjvo1DNN; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714497862; c=relaxed/simple;
+	bh=wyni/P2zqYEIwz4b2jPFOn7K/o20R+rMhqEI4gvwYGQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=d19M+lG+DqN1/Eutlq46JzgRgVPsHuLov1r3uyq/ietPdJW16Rrnlp6bqGD4L9LsUgwQ68U5UWG/O0MEIbs305pwaP1cMsiwFLZXP9DKPrGttK70AOYoEOlIjvFtBdu+KlIkjcBt9hvMUlb90KV9lZb2+9aqLHpkPsAXLIJWTG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=CSoyvMe5; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mjvo1DNN"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78f0e3b6feeso211613185a.1;
-        Tue, 30 Apr 2024 10:24:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="CSoyvMe5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714497855; x=1715102655; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gC3Wisg+vFkvbQKP24bf+0UkU9wju72UQF1jovD9/R4=;
-        b=Mjvo1DNNOFsrgwXcN64Oo3BzZAee8h118lJOUqbfjKy0qjpjW8s1u1/0xpmCy+Ws0w
-         ngzMgicm3yN/UbTrLzcjV9nJexyStRZY/rbS7QiCKJQ09zF1FPTTsHcTsiNAGaB/55BQ
-         QxD01gP6/P/YDKPaRgY6RASUrWgIU2g4OEdyt9M2+hLDZ2fm2mE5uiIcDyGcON/DN/7C
-         06vipr4ORDQPFlxAaMZMrxd9cjqUzEha9PUZQr6VOaXx5S56WbdsW8MFm+G4lpiEjDyo
-         n8+jmeexY/CKpgOVKFacV1vmcomkLcWo5cROQan4BXdeWK5AqyQY/jbNb2ezjM7y5GSP
-         Raxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714497855; x=1715102655;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gC3Wisg+vFkvbQKP24bf+0UkU9wju72UQF1jovD9/R4=;
-        b=NziHEEXbpFOkcOHf0HGODE/neK0NJWfqqE+VWLHgMUVBCQFIVW9weD8y3sZb2mXaL0
-         k1nIlxHhO+Px2UwQzObU2Y6VmDCUS18Gus2Z3w8295QuBebDq3gkzwhug3ULGscFYCZ/
-         DTiFhaiXQyHhZKSHRI/qR7Rx91FZ4aV7c20TNjdPDvlC2bkweY0SLt3CrkeGfuHnWSaP
-         RK1+XhOv1uSuhdF6oMUmM6WzX0NrqCfFLxPQul9vWqgtkWzxGGzgccCLqhyeCXk/azek
-         xNWzTH5nPTokbVjAi+9hWQPjEtyxBUY6vHLpVvUGZL4cx1ijuoKav6DElMbS0j6nsUjm
-         /TeA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0HKStnE6pnTZbk5EH7Ys5BrI7pwnad9uU0w5ajz6qvjITGRG4aqPBh5g1RDPS3ToEDw/IGtXa0urN58Vm9oGEP2rbvwhW2mNyZMmRmkntf+qKngykb2D3F2yCn09MDwwybz36
-X-Gm-Message-State: AOJu0Yyq4nXMn1OzAl3gLjWAQwKVncGvtgmvgpjOJjqHyP0CDIVygZ+I
-	eHqukuXmPrxoBY9KzrsnRsF+uAZwJsbnF1tkeKeBkoK+Jmh1oOJ7
-X-Google-Smtp-Source: AGHT+IHz9lvNYsSw+CvuqUMUtxWUkw7sPyOBE1PtcyqOo0C+WKn1PnKvtaHa9EZUEusZtIhHDiEc5A==
-X-Received: by 2002:a37:c206:0:b0:78b:d7a8:84f0 with SMTP id i6-20020a37c206000000b0078bd7a884f0mr16060504qkm.46.1714497854998;
-        Tue, 30 Apr 2024 10:24:14 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id o15-20020a05620a0d4f00b0078ee090baa3sm11577575qkl.10.2024.04.30.10.24.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Apr 2024 10:24:14 -0700 (PDT)
-Message-ID: <84ef302f-2d49-4465-b5c4-91ea4c8fbdb6@gmail.com>
-Date: Tue, 30 Apr 2024 10:24:11 -0700
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Z+7S7yss0Z/3HfrJHfsoOEnXPR0d6itI8idhdLjGVt8=;
+  b=CSoyvMe5xwRTMoiNMuI683b7Jk5rHr0SbfmYxPKCgJLai1z/UPqyMfsm
+   kNOpdONPLwTO+QNaP116cerg0SZxKUsJOad+FL87HaJdh8c1GeV1W2fzc
+   o0ZvYDgwl+IsXKIUDWLsjocO/xaqULgHUxKbneo06ZRlnM+DKXdKpUcqB
+   E=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.07,242,1708383600"; 
+   d="scan'208";a="86109162"
+Received: from 12-176-169-194.cust.keyyo.net (HELO hadrien) ([194.169.176.12])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 19:23:08 +0200
+Date: Tue, 30 Apr 2024 19:23:07 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: R Sundar <prosunofficial@gmail.com>
+cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, mripard@kernel.org, 
+    mchehab@kernel.org, linux-media@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
+    javier.carrasco.cruz@gmail.com
+Subject: Re: [PATCH linux-next] media:cdns-csi2tx: replace of_node_put() with
+ __free
+In-Reply-To: <f86b0c15-8fc4-4ed7-984a-3ab90c66a3eb@gmail.com>
+Message-ID: <76b3d25-2ba3-2f9f-3ed6-61a63983a225@inria.fr>
+References: <20240429171543.13032-1-prosunofficial@gmail.com> <6df5d715-3e31-40a5-9db3-2c3b9f12efac@wanadoo.fr> <f86b0c15-8fc4-4ed7-984a-3ab90c66a3eb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.10 000/137] 5.10.216-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240430134024.771744897@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240430134024.771744897@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323329-728899255-1714497787=:3106"
 
-On 4/30/24 06:43, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.10.216 release.
-> There are 137 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 02 May 2024 13:40:03 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.216-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+--8323329-728899255-1714497787=:3106
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
 
+
+On Tue, 30 Apr 2024, R Sundar wrote:
+
+> On 30/04/24 00:10, Christophe JAILLET wrote:
+> > Le 29/04/2024 à 19:15, R Sundar a écrit :
+> > > Use the new cleanup magic to replace of_node_put() with
+> > > __free(device_node) marking to auto release when they get out of scope.
+> > >
+> > > Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> > > Signed-off-by: R Sundar <prosunofficial@gmail.com>
+> > > ---
+> > >   drivers/media/platform/cadence/cdns-csi2tx.c | 19 +++++++------------
+> > >   1 file changed, 7 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/drivers/media/platform/cadence/cdns-csi2tx.c
+> > > b/drivers/media/platform/cadence/cdns-csi2tx.c
+> > > index 3d98f91f1bee..88aed2f299fd 100644
+> > > --- a/drivers/media/platform/cadence/cdns-csi2tx.c
+> > > +++ b/drivers/media/platform/cadence/cdns-csi2tx.c
+> > > @@ -496,48 +496,43 @@ static int csi2tx_get_resources(struct csi2tx_priv
+> > > *csi2tx,
+> > >   static int csi2tx_check_lanes(struct csi2tx_priv *csi2tx)
+> > >   {
+> > >       struct v4l2_fwnode_endpoint v4l2_ep = { .bus_type = 0 };
+> > > -    struct device_node *ep;
+> > >       int ret, i;
+> > > -
+> > > -    ep = of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
+> > > +    struct device_node *ep __free(device_node) =
+> > > +        of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
+> > > +
+> > >       if (!ep)
+> > >           return -EINVAL;
+> > >       ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
+> > >       if (ret) {
+> > >           dev_err(csi2tx->dev, "Could not parse v4l2 endpoint\n");
+> > > -        goto out;
+> > > +        return ret;
+> > >       }
+> > >       if (v4l2_ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
+> > >           dev_err(csi2tx->dev, "Unsupported media bus type: 0x%x\n",
+> > >               v4l2_ep.bus_type);
+> > > -        ret = -EINVAL;
+> > > -        goto out;
+> > > +        return -EINVAL;
+> > >       }
+> > >       csi2tx->num_lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
+> > >       if (csi2tx->num_lanes > csi2tx->max_lanes) {
+> > >           dev_err(csi2tx->dev,
+> > >               "Current configuration uses more lanes than supported\n");
+> > > -        ret = -EINVAL;
+> > > -        goto out;
+> > > +        return -EINVAL;
+> > >       }
+> > >       for (i = 0; i < csi2tx->num_lanes; i++) {
+> > >           if (v4l2_ep.bus.mipi_csi2.data_lanes[i] < 1) {
+> > >               dev_err(csi2tx->dev, "Invalid lane[%d] number: %u\n",
+> > >                   i, v4l2_ep.bus.mipi_csi2.data_lanes[i]);
+> > > -            ret = -EINVAL;
+> > > -            goto out;
+> > > +            return -EINVAL;
+> > >           }
+> > >       }
+> > >       memcpy(csi2tx->lanes, v4l2_ep.bus.mipi_csi2.data_lanes,
+> > >              sizeof(csi2tx->lanes));
+> > > -out:
+> > > -    of_node_put(ep);
+> > >       return ret;
+> >
+> > Hi,
+> >
+> > Nit: return 0; ?
+> >
+> > CJ
+> >
+> > >   }
+> >
+> Hi,
+>
+> In success case, ret variable value also will be zero, else for non-zero ret
+> value it will return from v4l2_fwnode_endpoint_parse()'s error case handling
+> block.
+
+Indeed, but it seems that the return ret at the end of the function always
+returns 0?  If that is the case, return 0 would be better, as one can see
+that that code is only reached in the success case.
+
+julia
+--8323329-728899255-1714497787=:3106--
