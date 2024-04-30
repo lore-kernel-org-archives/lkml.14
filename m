@@ -1,125 +1,164 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE6A190667
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 18:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B933B18044
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 18:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714502451; cv=none; b=h5ZpMUVDA5iD3IvkaiHN1VQoZ7YYvBAgdaEGnt5M9BMqpGjAyJ021UGE2U9yLWl4XoCrpsXQKR6lAoT7idhytWrPFrMlBPWC1fRoWBaraj33d+WLIxfo58Wp6CZwOBTaxYNKaj7A533ECZQwhT76wb5EpdlN3PdShoWUaw1tD3I=
+	t=1714502522; cv=none; b=Aua38bUp0rmaU47ZjopfzmMBvfKATWD+cTtZq6zjXTNwGFYl/hZwXRkjWvmz4iOmu4tVbNPwTYAmrqGDYm5JncnesjsRNxnpZu0qFEj5IhNR+9WV4L0mJt22WgXC2A/kmF6013+vDr4LiRlPs5gy7ag4IFj+efYxdbJnu8EXF0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714502451; c=relaxed/simple;
-	bh=Ffbg7WoTC8IzhJQ1hvnDnhKn4Y9a4Jx99g8Jfv72qhk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SbgNTYAZqDnaBrBFQv7zxXypklDKepIycIugno5Kq/mzCDIgXVJ7L/wQ6/D0dpaWYrUItY26+0HgtrCS03CuLcTfQwt/cy1j/hY5lKHpIdVnG68IGgFGBS+Fu5KgwLYKuXXof1ygvBMjEAorHfoors0uTCK/igitPf9LjwG/HnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJiZ6DwC; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714502522; c=relaxed/simple;
+	bh=wyd9uhmPN0GABF2K+vg3UiPa+g+PXig9NS7EoS1eKow=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=tVp96IA1IIGULFa50RlkNQREZApd2cjIva1e8ECPsP7kucQZ21HR8gsqFq8IrgO5Bo60u5Plf1xcBu7mEKcRf5+gHKcuvT0jTzwNBer5aUPR/Q9bS41Bud7pz4Q8wZE2HER97Fwq92XrmdxolJAYlxfZ6Wh4u+EIohq+evefl2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OvFFPtWL; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJiZ6DwC"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5e8470c1cb7so4112120a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:40:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OvFFPtWL"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be3f082b0so30772627b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:42:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714502449; x=1715107249; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t2suPCR+cMhZMHV/oEQ4BEenfWnmM4twKxp8OHpzJwg=;
-        b=aJiZ6DwC1YYTs5yMrEU/GlwsPdttbgAdJ/3LTCiLHmpCZ+3DrgHaxPdYnZ25g8eHLD
-         8joGBeVv/AYlnYXDCGFHMXWeQj4j3lcpCSerPaWeeTjYzprD0WTm+Ov/QzvShPWMV/wS
-         YhwnI4zVg+Dl569jrraMg914tK6V7smIO3mIyxSF8s98jwSx1u5hGCd28BTeXmI1ZRpB
-         xLcZMcsjjGJTWwqMhsSeolxd5Nmqh6Trelq9pPHokooJmu2rZOLUMJDZJ/RCvazCjfZF
-         A6B8pE/TyJauuRKcXLGaF1KaTK3lpHO7iDo+425K+vle10U7o/hRVj+JIPqc4gxAoAmp
-         GaWA==
+        d=google.com; s=20230601; t=1714502519; x=1715107319; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=raUnGt98IcYzcfkEya4Nx4nEpZUQqXvCKciWuyHjTBM=;
+        b=OvFFPtWLLLK8TOvX8IWsU/Uk/8SkiIsPQTpo2FVTXT8p48feeWN4/LIYQOQPe3T6nM
+         mW0+wzwL+AC8lRtBNGM3MogMNAupMKgnsR0ou6DZh40rPoHJzV5bNxo4kA9Fp6SHzyTH
+         RU8yqtSEvSTEE8ovL8kuAIP5zgyNcmuN5mRHPXsVKbaf3BGKZdWwSkmUoRVa8So+ikoQ
+         6lIuckel2GAoq5V+kGORp6sneAwiYn/2SdLK3P7gmKwXs99obP24XAmOAAp2ss1ONT2a
+         iHE2NPFxZPmNJh/WNv/ADomSh6AShhGrxeVRG11Xs7GlmeRNUqUtV5ZGgrInCJCm19Bs
+         zjiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714502449; x=1715107249;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t2suPCR+cMhZMHV/oEQ4BEenfWnmM4twKxp8OHpzJwg=;
-        b=abVn/V5t0m5sEyNopFvMBhjb4VqUNCgLp9qiR3eX3BDBxSo5kHIJeFUSIro12ovNLy
-         5lUDcw3j83n7p8acVyMZ+WifQY6kZGexEGHIdoS9JrtY5aRcJC20sBYm5hWPHKzORBcA
-         EFhIJMqNq/dByVNyqTxrN0RFPa7NbIZHp6xKB+M5nfJpHri0IgdbnMJmz6mghOs6wA7/
-         heUty4GMGbADYZD+82CRiwR/DWe8c8jUKrDzh1inp6k8cTKEhcpY4z2jtKudhG3x9FB5
-         L8Hfz9VquJ20F3Gyzko2veoqC/dZ/UnZLbgXyA/9fq49usqW0XEEsEroFL/7/EouE0/C
-         I+OA==
-X-Gm-Message-State: AOJu0YxFOLk5IRJbAphyagOm4VcnIrXYD0ZCksbJpVkvJchwarRNJ//8
-	Iz4Ro1tFJmAKZ0k6UbR9xNP/GBR5GFBxuJN3tYEdlTWoJED1cl9LUq2BXg==
-X-Google-Smtp-Source: AGHT+IECvwrpw/vjqVJ8bNQHU8PrBxLJl0loVDO6R1DSXeU9jawmL9CwzbZAw+QVvk9xuu4ZY2U0ag==
-X-Received: by 2002:a17:90a:c590:b0:2af:3ff7:4a81 with SMTP id l16-20020a17090ac59000b002af3ff74a81mr296907pjt.31.1714502449166;
-        Tue, 30 Apr 2024 11:40:49 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id qb13-20020a17090b280d00b002b1581a0fccsm5043895pjb.44.2024.04.30.11.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 11:40:47 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 30 Apr 2024 11:40:46 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 6.9-rc6
-Message-ID: <a432941d-8c78-41d4-89bc-71c8cdc0da2e@roeck-us.net>
-References: <CAHk-=witYatGg+jW1kVu2Moq6yF2JNFe3wn7G0sMNhE=H=9voA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1714502519; x=1715107319;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=raUnGt98IcYzcfkEya4Nx4nEpZUQqXvCKciWuyHjTBM=;
+        b=K+BIZX04ICBGe4P0+4UScdeNXeR3aykmexHFNakYKRbvO46afB9cp79I3QnrVW0OmK
+         3LfPlmddktgK6zzkP5GN20sQcXusarJdif+MNmvxzyS9ORcqU6kWezbDOoWf4Y+6qb/d
+         wFAYR1rgP/a/voM19H8xblctWRS7blmtrJXX+v7VoEXzpiVJZgRRCQOni7fMqWHe9TyE
+         jTOz00Rf27ekgD5AtzUuz8Guw6EU4IYTg2Qln5bR1AFnPltzc+Xl16SgTRCAEirMpznP
+         G0c0klXa4pMNYIkuvJU9xh68ivcLOh4JzEjsKSi1+xlWLVMRPjvSMev3ulT4TYt814FC
+         70iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlNJKd1Tc0z6yLm/TWm/l8BtRj5jEuDhRTLyG7DNWGIXsMyVZsyi1hxWo+yTB361hfuGsCwaZZTRRQCFEuA1mIofteD8NQmQQS6oqY
+X-Gm-Message-State: AOJu0Yz2aZJlSW1zK3kKw+/qM0YLwLqnVn1YBwNgXQlpocXcTJO/JUML
+	jqpWqpHnRbuMYQ032gWckC3P18fdlW16MkyxEhqi/k9k5RRldKDV+sejk2I+94pw97jGJpyXDk8
+	LvMWTww==
+X-Google-Smtp-Source: AGHT+IGTHT1sP7YaICYZuU4uWraHOYbZ2SgQw3ZkdDcqS4JSOBXL4Aj/lcZG9jZLqrosuWmv/kV9SKW3KO6u
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:273c:4116:6850:f9d3])
+ (user=irogers job=sendgmr) by 2002:a81:9206:0:b0:61b:3b02:6901 with SMTP id
+ j6-20020a819206000000b0061b3b026901mr76250ywg.9.1714502519644; Tue, 30 Apr
+ 2024 11:41:59 -0700 (PDT)
+Date: Tue, 30 Apr 2024 11:41:56 -0700
+Message-Id: <20240430184156.1824083-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=witYatGg+jW1kVu2Moq6yF2JNFe3wn7G0sMNhE=H=9voA@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
+Subject: [PATCH v1] perf lock: More strdup argument freeing
+From: Ian Rogers <irogers@google.com>
+To: zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Apr 28, 2024 at 01:58:54PM -0700, Linus Torvalds wrote:
-> Things continue to look pretty normal, and nothing here really stands
-> out. The biggest single change that stands out in the diffstat is
-> literally a documentation update, everything else looks pretty small
-> and spread out.
-> 
-> We have the usual driver updates (mainly networking and gpu but some
-> updates elsewhere), some filesystem updates (mainly smb, bcachefs,
-> nfsd reverts, and some ntfs compat updates), and misc other fixes all
-> over - wifi fixes, arm dts fixlets, yadda yadda.
-> 
-> Nothing looks particularly big or bad. Shortlog appended for details,
-> please do keep testing,
-> 
+Leak sanitizer complains about the strdup-ed arguments not being
+freed. rec_argv is reordered and duplicates inserted, meaning making
+all its contents strdup-ed and freeing them all leads to double frees
+or leaks. Add an extra array to track strup-ed arguments and free
+them. This makes address sanitier running `perf test` "kernel lock
+contention analysis test" memory leak free.
 
-Build results:
-	total: 158 pass: 157 fail: 1
-Failed builds:
-	xtensa:allmodconfig
-Qemu test results:
-	total: 537 pass: 537 fail: 0
-Unit test results:
-	pass: 213087 fail: 63
-Failed unit tests:
-	sh:rts7751r2dplus_defconfig:checksum
-	sheb:rts7751r2dplus_defconfig:checksum
-	i386:pc:test_next_pointer
-	i386:pc:slub_test
-	x86_64:q35:test_next_pointer
-	x86_64:q35:slub_test
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-lock.c | 44 +++++++++++++++++++++++----------------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
 
-Fixes to address the problems seen in my tests are:
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 230461280e45..26c059397cdf 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -2230,10 +2230,11 @@ static int __cmd_record(int argc, const char **argv)
+ 	const char *callgraph_args[] = {
+ 		"--call-graph", "fp," __stringify(CONTENTION_STACK_DEPTH),
+ 	};
+-	unsigned int rec_argc, i, j, ret;
++	unsigned int rec_argc, i, j, dups = 0, ret;
+ 	unsigned int nr_tracepoints;
+ 	unsigned int nr_callgraph_args = 0;
+ 	const char **rec_argv;
++	char **to_free;
+ 	bool has_lock_stat = true;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(lock_tracepoints); i++) {
+@@ -2270,28 +2271,25 @@ static int __cmd_record(int argc, const char **argv)
+ 	/* factor of 2 is for -e in front of each tracepoint */
+ 	rec_argc += 2 * nr_tracepoints;
+ 
+-	rec_argv = calloc(rec_argc + 1, sizeof(char *));
++	rec_argv = calloc(rec_argc + 1, sizeof(*rec_argv));
+ 	if (!rec_argv)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < ARRAY_SIZE(record_args); i++)
+-		rec_argv[i] = strdup(record_args[i]);
+-
+-	for (j = 0; j < nr_tracepoints; j++) {
+-		const char *ev_name;
++	to_free = calloc(rec_argc, sizeof(*to_free));
++	if (!to_free)
++		return -ENOMEM;
+ 
+-		if (has_lock_stat)
+-			ev_name = strdup(lock_tracepoints[j].name);
+-		else
+-			ev_name = strdup(contention_tracepoints[j].name);
+-
+-		if (!ev_name) {
+-			free(rec_argv);
+-			return -ENOMEM;
+-		}
+ 
++	for (i = 0; i < ARRAY_SIZE(record_args);) {
++		to_free[dups] = strdup(record_args[i]);
++		rec_argv[i++] = to_free[dups++];
++	}
++	for (j = 0; j < nr_tracepoints; j++) {
++		to_free[dups] = strdup(has_lock_stat
++				       ? lock_tracepoints[j].name
++				       : contention_tracepoints[j].name);
+ 		rec_argv[i++] = "-e";
+-		rec_argv[i++] = ev_name;
++		rec_argv[i++] = to_free[dups++];
+ 	}
+ 
+ 	for (j = 0; j < nr_callgraph_args; j++, i++)
+@@ -2302,7 +2300,17 @@ static int __cmd_record(int argc, const char **argv)
+ 
+ 	BUG_ON(i != rec_argc);
+ 
+-	ret = cmd_record(i, rec_argv);
++	for (i = 0; i < dups; i++) {
++		if (to_free[i] == NULL) {
++			ret = -ENOMEM;
++			goto out;
++		}
++	}
++	ret = cmd_record(rec_argc, rec_argv);
++out:
++	for (i = 0; i < dups; i++)
++		zfree(&to_free[i]);
++	free(to_free);
+ 	free(rec_argv);
+ 	return ret;
+ }
+-- 
+2.45.0.rc0.197.gbae5840b3b-goog
 
-  da7bf52309b2 usb: ohci: Prevent missed ohci interrupts
-  6314201f467f mm/slub, kunit: Use inverted data to corrupt kmem cache
-  db4ade1cccf9 m68k: fix spinlock race in kernel thread creation
-  9ea544ad0f56 net: dev_addr_lists: move locking out of init/exit in kunit
-x c2ea0ff8714f ext4: implement filesystem specific alloc_inode in unit test
-  7692d5469f1f Revert "sh: Handle calling csum_partial with misaligned data"
-x 2a1de3ca9cb6 xtensa: remove redundant flush_dcache_page and ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE macros
-
-The patches are in the 'fixes' branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
-in case anyone is interested in details. Note that the SHAs may change
-since the branch is rebased on a regular basis.
-
-Only patches marked with 'x' are regressions introduced in this release
-cycle. The other patches fix long-standing issues. Some of the unit tests
-fixed with the above patches are not included in the test results; for
-example, running ext4 unit tests without the fix results in memory
-corruptions. The m68k and usb patches fix spurious problems.
-
-Thanks,
-Guenter
