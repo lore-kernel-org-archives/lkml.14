@@ -1,122 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1004190682;
-	Tue, 30 Apr 2024 08:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBF4194C9E
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 08:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714467176; cv=none; b=Iq94sLmIPSVP9EcOoIDxUEsHYuQjpAtKXfUYe9YSJX3PjnYYkgh1Lh4BNbpx59IEhh09aFcVpRYv4a5U+fcPSaG82txhod7mPscdFfOSggdTa/S6ncQtXQipE/y4FlM4T8GguNIQHQ6t2aUsyUxMxxIjtxv5+SennK0f7vQaug4=
+	t=1714467179; cv=none; b=k90ljwCafBDW1YDlsJkw+vZrP45ixVrZhAfUVenkK/yVz0z6fJ1Y0YA3BsCWn5GSZBs2sSxjXRfcFndLdiyOnNTzz0GC8G8iU386axNpBlhPq6AiLjuw+mcGl34cvw+e7DM1tCu/e6Es9fgJJizRW3BFo4usdfjTlq5FnA9ybxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714467176; c=relaxed/simple;
-	bh=4F1lxedZEM3s7N7Auk2OfI1FJs1f0oZxEqwluHiKK4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BCwQ5DCs0Kpf9fWjFs+G0/7W4/lbdFd3X/nBxOs4ilVewpX3tEcKjkoCP15qyyFiLOjmHiWetXGGZRAnzqD4QaQZB15pdLYsL3mhk72Sge+kXdDQ5WGzS1599bs10QibsLG2MikcNDPbgEErTpzUaTOK0jO09Pyae4dIrJDJgo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AO3+690k; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714467179; c=relaxed/simple;
+	bh=FMYtqdX7LBrGeycIwufcBfemDYQ/h2L76qvKvdaCp+M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ne/n741bHvwPnSQPE7Gmr7jaW3JRP9gruYapFaCoTQz1nFGcDi4XLEkJpB55HfXEk8PKmawBScEzswt490DnGF2nc1w0KjhAGl3iPClETGCBWj10YK0pOIw3ntr4C+gxt86lEmETlzhoQ2ILlAm9JCYm2PL1TceD9e6ReBHS2XU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tky1BCLf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AO3+690k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714467175; x=1746003175;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4F1lxedZEM3s7N7Auk2OfI1FJs1f0oZxEqwluHiKK4Q=;
-  b=AO3+690kXDbsdhz6t4OVl4wIv2VBs05TH42p20m4ZgFPxqwg95hfk0Zw
-   ZBzG9WC3f7g+k+kWso5fw/+TxIk+TtGBpQCYqjHIoJCuNSeMKvC2ZrGyQ
-   SIMWtby96TKLlaf9L0Ja/yXzUALAQSrPykuGeWIwFYWxG0wHC9nIZrj83
-   9K3TArknrMwmpi/chTk1+E6aF4ZMVP8yVxJw4QIF6FNcz+vdK0WTtW+5V
-   sP6WL7fRcwAvxIrPYnuAjw5M0yOol/YiGP3LiFD4mRBOB7lzPazzUA8FY
-   ZH6Y0AuxWDTQSUcThgKoqX+koBgR2NeKpEfmbxD22LULWKFYb4wcTjHGs
-   w==;
-X-CSE-ConnectionGUID: 3nD7zGT+REygmp5J6fTgNQ==
-X-CSE-MsgGUID: I7r+7iAOTru+jDTjgxZBDQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="21311334"
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="21311334"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 01:52:54 -0700
-X-CSE-ConnectionGUID: MUWH9i2rSeG7onmR7tigcw==
-X-CSE-MsgGUID: B+FpvNxWQpm9X9W5AblC6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="26891504"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by orviesa007.jf.intel.com with ESMTP; 30 Apr 2024 01:52:47 -0700
-From: lakshmi.sowjanya.d@intel.com
-To: tglx@linutronix.de,
-	jstultz@google.com,
-	giometti@enneenne.com,
-	corbet@lwn.net,
-	linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	andriy.shevchenko@linux.intel.com,
-	eddie.dong@intel.com,
-	christopher.s.hall@intel.com,
-	jesse.brandeburg@intel.com,
-	davem@davemloft.net,
-	alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com,
-	mcoquelin.stm32@gmail.com,
-	perex@perex.cz,
-	linux-sound@vger.kernel.org,
-	anthony.l.nguyen@intel.com,
-	peter.hilber@opensynergy.com,
-	pandith.n@intel.com,
-	subramanian.mohan@intel.com,
-	thejesh.reddy.t.r@intel.com,
-	lakshmi.sowjanya.d@intel.com
-Subject: [PATCH v7 03/12] e1000e: remove convert_art_to_tsc()
-Date: Tue, 30 Apr 2024 14:22:16 +0530
-Message-Id: <20240430085225.18086-4-lakshmi.sowjanya.d@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240430085225.18086-1-lakshmi.sowjanya.d@intel.com>
-References: <20240430085225.18086-1-lakshmi.sowjanya.d@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tky1BCLf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714467175;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=4RGAMSRvGmFBURPdPPDKTgQXlqXHnKZVqOJq0Gtgi5s=;
+	b=Tky1BCLfQwpaGd5ib9Sak//zp2JnFOswX6VfWCcKUxPvWNJg4ySsqw5Ly0xZDww+cG1HxU
+	qSIUfhUa6Meb7KQguio7eHYnCNtNYR9RGdnvFHo42oaWTsQipje7WQ8yQ7RYwW+uczMDaO
+	zwVTW6rgpz5Zl3PVpGH+iJD6s2pNYwk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-563-lGP9-0rkM3uu9K3Hb14gZQ-1; Tue, 30 Apr 2024 04:52:53 -0400
+X-MC-Unique: lGP9-0rkM3uu9K3Hb14gZQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-419e3f83aeeso28102265e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 01:52:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714467172; x=1715071972;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4RGAMSRvGmFBURPdPPDKTgQXlqXHnKZVqOJq0Gtgi5s=;
+        b=C1rKB4IGkgsehIOOrv4ElbwwrDAmOKKuxMZ6dAaXqOcsdVJe/e+5fr/IQ9ap2oKpI+
+         akCzZ1c26d7+RjyeyuDmcl509N4gPs451gYV67SNzlIesN3JMmONiDJCTkYYqwM6vBb/
+         Yvkw7MN0rc5iNrnGIK040d3PFkIzSl40TaYQe4Z3KRXUfBslROjCjcgWVQasifaa5+yj
+         Uxwzp+tn7ZayE+8Um0b7OCZWTphXpzUaIY8PH1kiw/rWUAJ6Lom5Y24fjMatDGQw7KXa
+         v7R4jJ283g77hBX0r4XGZ/VrTGNEBAtiAu4EN5CFKXNdNWakepfdnAJujROD7AN9exOL
+         eUGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWd3yJqpSdnSF1J6ODqPtnoHKxFYRG5rCsL+Y+pWa3J0wN3ZUB04+z9ZWEFfN7GhF8sFN+DtdgV3hJoHTKcJcUFTxiU0Qfc7k6oPqK
+X-Gm-Message-State: AOJu0YyaO5KBaLfaEnl+c2vVCJbydDVZdEcJUDT9LWfhIZZ8U5ZUkau1
+	4FpP8NFbLLgIHf4u8ozYaiumA0rUTuJrQE281W4a7FxgZQyWyfEwmH3PZRnxBTUM5p/N/JrIcQ6
+	xNbhisMJh6KBoLWjVnE++wI0lCEkXxaU9mCdeiVK4fo8V4sfI++CjE7M6pmA3Mw==
+X-Received: by 2002:a05:600c:154b:b0:416:9b7f:7098 with SMTP id f11-20020a05600c154b00b004169b7f7098mr10267759wmg.24.1714467172343;
+        Tue, 30 Apr 2024 01:52:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEaK0DC9JY5CABrF0rmDmhJGegKoXKpgkcqasi4Ije0f/QAtIFvXUi/TqPAi4fh0cnhKDT/kQ==
+X-Received: by 2002:a05:600c:154b:b0:416:9b7f:7098 with SMTP id f11-20020a05600c154b00b004169b7f7098mr10267738wmg.24.1714467171892;
+        Tue, 30 Apr 2024 01:52:51 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id a18-20020adffad2000000b0034c9b7d406dsm8372883wrs.75.2024.04.30.01.52.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 01:52:51 -0700 (PDT)
+Message-ID: <c911ab92-1bec-4e5d-9bc8-5a6044f4948b@redhat.com>
+Date: Tue, 30 Apr 2024 10:52:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] hv_balloon: Enable hot-add for memblock sizes > 128
+ Mbytes
+To: Michael Kelley <mhklinux@outlook.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20240311181238.1241-1-mhklinux@outlook.com>
+ <30d66f75-60c8-4ebf-8451-839806400dd4@redhat.com>
+ <SN6PR02MB41571838C410EB52F328A461D4162@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157D5BB1C140D229875AB50D41B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <SN6PR02MB4157D5BB1C140D229875AB50D41B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On 29.04.24 17:30, Michael Kelley wrote:
+> From: Michael Kelley <mhklinux@outlook.com> Sent: Friday, April 26, 2024 9:36 AM
+>>>> @@ -505,8 +505,9 @@ enum hv_dm_state {
+>>>>
+>>>>    static __u8 recv_buffer[HV_HYP_PAGE_SIZE];
+>>>>    static __u8 balloon_up_send_buffer[HV_HYP_PAGE_SIZE];
+>>>> +static unsigned long ha_chunk_pgs;
+>>>
+>>> Why not stick to PAGES_IN_2M and call this
+>>>
+>>> ha_pages_in_chunk? Much easier to get than "pgs".
+>>
+>> OK.  I was trying to keep the new identifier short so that
+>> mechanically substituting it for HA_CHUNK didn't blow up
+>> the line length.
+>>
+>>>
+>>> Apart from that looks good. Some helper macros to convert size to chunks
+>>> etc. might make the code even more readable.
+>>
+>> I'll look at this.  Might help the line length problem too.
+>>
+> 
+> I didn't see any particular complexity in converting size to chunks. But
+> this slightly opaque sequence is repeated in three places:
+> 
+> 	new_inc = (residual / HA_CHUNK) * HA_CHUNK;
+> 	if (residual % HA_CHUNK)
+> 		new_inc += HA_CHUNK;
+> 
+> If HA_CHUNK (or the new memblock size based variable) is a
+> power of 2, then these can become:
+> 
+> 	new_inc = ALIGN(residual, HA_CHUNK);
+> 
+> which is a lot better.  I'll make that change, and a couple of other
+> changes where things are open coded that could be existing
+> kernel macros.
 
-The core code provides a mechanism to convert the ART base clock to the
-corresponding TSC value without requiring an architecture specific
-function.
+Cool! Make sure to CC me on v2.
 
-Store the ART clocksoure ID and the cycles value in the provided
-system_counterval structure.
+> 
+> Question:  Is memblock size guaranteed to be a power of 2?  It looks
+> to be so in the x86 code, but I can't tell on s390 and ppc.  For safety,
+> I'll add a check in the Hyper-V balloon driver init code, as the
+> communication with Hyper-V expects a power of 2.
 
-Replace the direct conversion via convert_art_to_tsc() by filling in the
-required data.
+Yes, in memory_dev_init() we make sure that the size is a power of 2, 
+and if it is not, we would panic().
 
-No functional change intended.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
----
- drivers/net/ethernet/intel/e1000e/ptp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/ptp.c b/drivers/net/ethernet/intel/e1000e/ptp.c
-index bbcfd529399b..89d57dd911dc 100644
---- a/drivers/net/ethernet/intel/e1000e/ptp.c
-+++ b/drivers/net/ethernet/intel/e1000e/ptp.c
-@@ -124,7 +124,8 @@ static int e1000e_phc_get_syncdevicetime(ktime_t *device,
- 	sys_cycles = er32(PLTSTMPH);
- 	sys_cycles <<= 32;
- 	sys_cycles |= er32(PLTSTMPL);
--	*system = convert_art_to_tsc(sys_cycles);
-+	system->cycles = sys_cycles;
-+	system->cs_id = CSID_X86_ART;
- 
- 	return 0;
- }
 -- 
-2.35.3
+Cheers,
+
+David / dhildenb
 
