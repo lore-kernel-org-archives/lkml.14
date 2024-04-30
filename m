@@ -1,40 +1,59 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C561A129E6E;
-	Tue, 30 Apr 2024 09:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B901C6610;
+	Tue, 30 Apr 2024 09:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468751; cv=none; b=Yl2JZSaAIHK0f6Rt+1hc9sjeBHpA4cXDaEWoHK9ED+iUmDt7LB9oqlf4BgyjGnEAris//qEwfJxjoWt7gETtL1uteZpxB4FDy1wd3dMGkTcX6bF0oibDTlYK0ptG9U3XVUvq5ANdBB3kmb63hXtsgpbYCeKfwlfnkIrNFdFwqIE=
+	t=1714468754; cv=none; b=F0D5hgjxiOHzkrUDTFEOnnG09/g3D1SxK++1Xza60WgncoeE3lpOv2/dFoN4xSwRTJD8FJdvdKWkpcj8d79CmF7IpyqYX2JzEGZCTBjgpFZL3f8qmAl2jsH9ojCFeVh1H6r71OMEH17R7f3wMkoxbAN3V2qSesNiZpEZHbCvdbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468751; c=relaxed/simple;
-	bh=nJLw8ZzNkHNxUi0RWmfswS2AiqmNNWu4fMk4lAvCziY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=sbRPBteVbfUpCI2fXJ7LMcLsOgsdkm70TcKFgDtkom9Syok+y8kMXUkvRZu+WGJRwOSYeX3b9LgNn+SqaFEPBzcWGsKf8S3tknHhN5w2GhqSllDEKmbOGBGcZ0qF1MZfiw5KCDb6lPlx36AZTA0SdtASNenhkD93Y4QJVoIvl3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=YA/7nQ35; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714468754; c=relaxed/simple;
+	bh=/z+mRxU6Est9710HNvuKg2PnG93anRDHiJqsjiw+mGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EoQdQlCTNC7GvMu2k2JRRdY+Zeb9YtTwTlD3jVlu+A9sAp51IMjL4nmGBS5QGkvBB8oltZjb+IsqgGRolaTnIovqCBbN6XfBWp0F3QVaP+dNK81lSIjVO3MX82Mz0PqvzhoB2U33ID7RcJ6doTkJzKKVe1M/z4SGLtQiOHdET20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mu0vEhkq; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="YA/7nQ35"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714468721; x=1715073521; i=markus.elfring@web.de;
-	bh=nJLw8ZzNkHNxUi0RWmfswS2AiqmNNWu4fMk4lAvCziY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=YA/7nQ35u0kJEg0FSF8UrZNkzte5ooB3jtBpE2Rdi+zYdC3hgcy8exhdzfyApNjY
-	 58hitwap4e8JN6RQmFY9Dlu+yms30IyXqgcL+/a1xWiWGMWgQF0K5Z1lEtoJb7UWj
-	 hYmOL5WXrqGWkbvsh6CBFD7UXUQeL4GBPSG5/HfzYzXFJnewkLeN9x6i1/bIdoxfy
-	 4YuOSxp3HX+q/dpsc3+5LdYDfJs037p1fM3WEc/rxR624GOfxZgQutsJKXZ9orgjS
-	 uaddWT4fKxTILEwNx5ynqbFnJP1GaKUyxooWuGH3wbMI3qMYhHfiFbXjy4XD87RLM
-	 M3aVQOiBt3vyTww0JQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MwjK2-1sqnog3znW-00yQhv; Tue, 30
- Apr 2024 11:18:40 +0200
-Message-ID: <7d4a29a1-26d2-4b22-8823-ce8e7f9ac534@web.de>
-Date: Tue, 30 Apr 2024 11:18:32 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mu0vEhkq"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-34ca50999cdso102242f8f.2;
+        Tue, 30 Apr 2024 02:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714468751; x=1715073551; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DWakETl+FYs5RYNH/p5NgHwu54jBOwk7iRY/vYZSzjg=;
+        b=mu0vEhkq2q1dEK0/iepAVH4jjZsKY0n+R/RbHSLpj8yFpERW9/xuFVGbls1bOorbaQ
+         52zViJwy6I0jcZoIBAZqZvBJFn07mnC9ZsKiy6No+IwpDGQbRwIqLnoICqdS8Vw8ckuL
+         cU1eeVHEI49Up4b9LU581U/NfGXd2jFNMQmAIa3xsSQ1qbR7rH/aQf1pEqvNV0B/fouO
+         MtT2C4ZD67RT1ZdGFqg62g4HBDQNi/RD1wjJ4WbklFqvCDfrsR4EuQjnqqXIo7MHnw5M
+         Ie/pwCUEiKlrzsg2ZuRSr5gdPbxMxImNVzTa2DjjW3kGk9gN+XMMjS7uBDB+6Q8tCV+p
+         P4fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714468751; x=1715073551;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DWakETl+FYs5RYNH/p5NgHwu54jBOwk7iRY/vYZSzjg=;
+        b=ssnF2e2rnyC7PqKYy194XQXgkMT3TAYMWGS7aY6/T4AD7hzQB6/bBBcR88sjJ8v1AW
+         Oy7DPUwzjxK/yXTNMcEFqr9sVOPs3hgQlH9vhEhE5pLDOfsfePxNKxydxRY9k6y5j+jR
+         kCqPP/d23GxnKWqV5QElf+vVjZAR/KSFzuW2k6NNdkEesYI82rscG5slCtDIv49gJjBf
+         c/J6sstqjS1xpfne/r7GpS8L0az192gUR0VRECETlO2c9TqvFsJBRckg9ngpiH8EaPvz
+         81HGhIqbcuM87pTLZTR9AjeNQyQM9pzQpf1Z2SGJQOez7+GIpoOt4BzTo1xoUFXW4nJN
+         ElhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKElZnkDR5XkYKY9DSf/uzMB8uVrkZDg2Xs2cd+ja9+PK+4+3y0d0xKEinQZyBl6ZFauYgg1G05ZTAaQatHnbTVo3KCtfRj1yKtHTZ3Wcxj4d/tg8xKG6KGb98PuxlmpF1A/umnZGA6AETjnLd
+X-Gm-Message-State: AOJu0YyAlp0nUwlSQMMW/hvix0/Yl8shtZY2wQDi6lXFizQMFWWebSAk
+	jQdEp4npRf9u8NtL6oec9OmNLCis+/cvI97ajxe9+JfCL3wrHPgM
+X-Google-Smtp-Source: AGHT+IEV9k0pcRpO3mYSIc4fMj1G+2ynNMf8CD16YyeCi/RMwSYzTwQzOGS8Ga/4CKrd6M9gA3CwlA==
+X-Received: by 2002:a5d:5f52:0:b0:34a:a754:eb51 with SMTP id cm18-20020a5d5f52000000b0034aa754eb51mr10007641wrb.3.1714468750866;
+        Tue, 30 Apr 2024 02:19:10 -0700 (PDT)
+Received: from ?IPV6:2a01:4b00:d20e:7300:49bb:25f0:d018:54ae? ([2a01:4b00:d20e:7300:49bb:25f0:d018:54ae])
+        by smtp.gmail.com with ESMTPSA id g17-20020a5d5551000000b0034c5e61ee82sm10513637wrw.67.2024.04.30.02.19.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 02:19:10 -0700 (PDT)
+Message-ID: <fd27b640-f807-4636-bb31-1865a1f1f775@gmail.com>
+Date: Tue, 30 Apr 2024 10:19:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,46 +61,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Kent Overstreet <kent.overstreet@linux.dev>,
- Youling Tang <tangyouling@kylinos.cn>, linux-bcachefs@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Youling Tang <youling.tang@linux.dev>
-References: <ww5fcxuzfcgttglsr6cpnrxufeusw4ixe76iqp7mab3djlyfje@zozue6qvxhzy>
-Subject: Re: bcachefs: Fix error path of bch2_link_trans()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <ww5fcxuzfcgttglsr6cpnrxufeusw4ixe76iqp7mab3djlyfje@zozue6qvxhzy>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8JGAxKe1KPyVXekngDfxeASqhnsNJcNDH5Oi18Aw2cRMyhF6Jt3
- iEPn4suDWuGcgZp7U9kX7SZpuaSz2PtLj9PCd9KWByfLbn0sudLzTEApmkJ8Z5QJEVfVr+Y
- oarf2KbY23l1hLnQKWf0P2wOIAWwK0NzF2WNuA29iKKW1nKn17bdveWhnVDt+UW1GdslcMS
- 7EqHUHolqPCCVF9cyHZvg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:kBKqZET/k9s=;aI40zUrPaZ3NOHwVe3EQtPL9N1H
- /GkmdmvCi5AY9YcgBQ08ZmsUeH3QI8YFvHJTzlyAv/IxOryjtLMQ4nSApcn9Lp90I1XfvFSRQ
- u4GSol2OxMeW1ixGekmVsNys8n9aG76Z3ooJ3KmTVwo2h+7tBZeemWLDBWxrk9S/lBdRhmMtc
- 1R0Yu9boNGtBs9ODrAg5v2OlUH1H5HxLVxz3XSuEeimH6g8Ujz+V0ihp4owzBrkoFiEO4uHbQ
- 0sRbdolTa+gAHThUOpG1ExGOIyV0oKiIAksFZgx8k1yz/VUrLKeMzWdsTJeXMrqcO+hBWHqny
- xZdBn+UINmy1mZoIwYCuwYEH21G2gj1wOEGWbJhykamWm26xb2JkfE+XGwdOj7S/7IWysr0wO
- h5cf3vsPpk9WpJaxU2fqhAtHeMRh0D38SV/RkvJxDU6O+Z+Xta0QseHdax8hapz7LytPcxckS
- uNdxfBtuYpBj69or8gUQ9TwhuLzDWBJQ7DWtU5zIdsY6zLqm1WS0EkpeoCEbLSJBRCXn9I6Qm
- CZl8NR5rk+RdTLgDRXORyomg7DE+SANCNH8DAairTHrKJovLubZumvphLhBlVjOpMrDBSksJR
- AV5jbHoKaxyq9Wh1QREfpBsB16tk9rkJX7LAi4Td+UAfoH62y1f0Mgx/6VpZcV2BIjqkBoiYs
- /TSuSK6l/lEzmx9dG2cMo95biXxql0oGipEnvFEWJNEYYE5TikNWbSEPmWfjJh67ADJ8fYghU
- LOaMEJ02dxztEsLKOZorvAcIA+jvVBIjZFSByRxafAollnLFVyI7s+bIopS0fCCcZz5Lqt64p
- mEVSNkWBJo6xLeZ7MJp9hoLjhQfOi/N+oBY73qkI1cuBA=
+Subject: Re: [PATCH] kunit: Cover 'assert.c' with tests
+To: Rae Moar <rmoar@google.com>
+Cc: brendan.higgins@linux.dev, davidgow@google.com,
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org, skhan@linuxfoundation.org
+References: <20240427220447.231475-1-ivan.orlov0322@gmail.com>
+ <CA+GJov5Ve+NksNMXrd32p6RCPcSuf0oCZ-QA8LdhcvFWA48ukA@mail.gmail.com>
+Content-Language: en-US
+From: Ivan Orlov <ivan.orlov0322@gmail.com>
+In-Reply-To: <CA+GJov5Ve+NksNMXrd32p6RCPcSuf0oCZ-QA8LdhcvFWA48ukA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> > In bch2_link_trans(), if bch2_inode_nlink_inc() fails, it needs to
-> > call bch2_trans_iter_exit() in the error path.
->
-> Thanks - applied.
+On 4/29/24 22:26, Rae Moar wrote:
+> On Sat, Apr 27, 2024 at 6:04 PM Ivan Orlov <ivan.orlov0322@gmail.com> wrote:
+>>
+>> There are multiple assertion formatting functions in the `assert.c`
+>> file, which are not covered with tests yet. Implement the KUnit test
+>> for these functions.
+>>
+>> The test consists of 11 test cases for the following functions:
+>>
+>> 1) 'is_literal'
+>> 2) 'is_str_literal'
+>> 3) 'kunit_assert_prologue', test case for multiple assert types
+>> 4) 'kunit_assert_print_msg'
+>> 5) 'kunit_unary_assert_format'
+>> 6) 'kunit_ptr_not_err_assert_format'
+>> 7) 'kunit_binary_assert_format'
+>> 8) 'kunit_binary_ptr_assert_format'
+>> 9) 'kunit_binary_str_assert_format'
+>> 10) 'kunit_assert_hexdump'
+>> 11) 'kunit_mem_assert_format'
+>>
+>> The test aims at maximizing the branch coverage for the assertion
+>> formatting functions. As you can see, it covers some of the static
+>> helper functions as well, so we have to import the test source in the
+>> `assert.c` file in order to be able to call and validate them.
+>>
+>> Signed-off-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+> 
+> Hello,
+> 
+> I'll give this a full review tomorrow. But with a quick glance and
+> test, this is looking good to me.
+> 
+> Tested-by: Rae Moar <rmoar@google.com>
+> 
+> Thanks!
+> -Rae
 
-https://evilpiepirate.org/git/bcachefs.git/commit/?id=3Dd04db1c7653dee5ee5=
-f918ce951c05eefddad7eb
+Hi Rae,
 
-Would it have been nice to add the tag =E2=80=9CFixes=E2=80=9D (besides an=
- imperative wording) accordingly?
+Thanks a lot for testing the patch.
 
-Regards,
-Markus
+Looking forward to seeing your review! :)
+
+-- 
+Kind regards,
+Ivan Orlov
+
