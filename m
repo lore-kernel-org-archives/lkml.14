@@ -1,145 +1,92 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE4D199AD;
-	Tue, 30 Apr 2024 06:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A1117731
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 06:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714459598; cv=none; b=c86ZgY58G+Dtd2QmmspOkKWY8QYkXHe5i99gFlpyNo8CzLwZitBl/muujLoh2I5uaJzY4mPAvOC8fqXCcL85+KE0aBwUe1LrLtNmFQxYbfOhkAoiKVNH3p7S8vOvfnobMpcC3W/t1hAbyBmmvlZ1d+KBPn3wBAkGscFMoSxmUX4=
+	t=1714459711; cv=none; b=j5co4c7jI2OBpLE6s6uD7WClZAXoy53DRctWFmDEOILw4kuCu2pGiKlALXEXFy2EwCxTaL0fYE4ZeHJIegeryobe4XL3Oz8nSGdQu0EoWIgvJsyWPufe9MfkYCLf1phaEcoVFpZwh/NQNvPtdvIcZPyvLOIC7JcvYIl3YDRPxkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714459598; c=relaxed/simple;
-	bh=BJHpOQBTYl2CusEmnHRWz9TzqP85OwFTue5pk4Z5ba4=;
+	s=arc-20240116; t=1714459711; c=relaxed/simple;
+	bh=QlWC6sF6a80KgWmsLCDwe8nl2naO+GsOgOEyO/ax9Rw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IILD+880TMzR5nNFg49TS8IzkmGcBIJgOP8fz6Wks6av+MTnl0jXYIa6Dy2MNWPJBPLU7IssRKs6Gie4i/hgK7AB4YXHadyH1rU7XgAY6115x1OAoe68Lrk/XnF1krOv14x7d3L+GZuQGXCV2tSvYFnmXGxqw1twDTDtDCKYOIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VbCASJSV; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbCASJSV"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f3e3d789cdso3302938b3a.1;
-        Mon, 29 Apr 2024 23:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714459596; x=1715064396; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8hCjGa0cyR+5KjlfrnK0wTPM9nmlXBCTQii4J3Gjgfc=;
-        b=VbCASJSVR7mb4y03jimQHsulDrXI5KKfUAYE9NqwPP3eN30bLLtYe5SwRPGmwgOwzx
-         sbNidX+3Qjdk2nbAPdq5aWH9tvB/syvXMuJh+inTn0SxqkrfMUcmXRfJgdYozExoB0Us
-         u2MWO22kxzVewCVqex1IXS6eiYAOqdxDG0Q3VZRLUrRhUY3+HtlNC5lV4RU3imtv0UCU
-         K35VtwMwrVPVE0MU4ah0LP9ScnhwAqrhnlsf3gX/QBbZBQ8Plw0h3bbSSLGSR5vvaInl
-         fVAHqL1/Re9q2yu641IWURD8vGuHjJt04QfS8J+ZIZrnbS+HgL99oWDoB9Iz60zdazO/
-         siSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714459596; x=1715064396;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8hCjGa0cyR+5KjlfrnK0wTPM9nmlXBCTQii4J3Gjgfc=;
-        b=xMYLfx1UOKuxps1PuSM1eRtIQyGA3TkSoMUiWEGqzK4Cl4Gz9cpwT54vNl8QWg+gJp
-         WTAQbjsaUhTkhUK4vRJGK/g0bISQLh2Ma5gaz1kNf1xcmDsFnXva/LgVN9/qsTX6k0YZ
-         8OI8BTdmhend2gjOswqbXV05Z8W5ll0yejZ9eEL+um9Bn2gSNdhFO9VWcDyGeISwuQXc
-         GEqfhPNuTgFy2GCaAY23rZzgOmXqOV6/lt3yHGYlvXq70IyEUn/MWKKxxppH2oFjs/P8
-         kbi+mt5Icc46MvSjvBLU85TKiS3MDdaYf6E+1pI+dXbxH9BxYL/dUYTFpG8iKu/cFwek
-         5B+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUc7URIviLquADjEI1w3mynFsx59wXKufdixx6LHBl6o2eY7YsPYLUVhvAi9xS7ZmLsI5ib4ietB7OL9Ouujc6lwL5NWDfTM1oe183+5wtrCvXuAubzqoZJ0kNJL+Z5+8YM+MNgcuL5Zz9VZIl/gRsDQzdCkTI0T3pXERl+8w8CkHyQZoqp/hs7n3B7bFwIN6hpKEA4XVgjv9b13900MPo8yw==
-X-Gm-Message-State: AOJu0YxSLg5iausCRyfV932p6jezrW75rCuej0PU4lp4RFy/MhlBQLt7
-	f3WnQtfpNmgnZuiy5Bm4tijJfDL2Zk3NUxNusOrT7y0DbUrhMDlv
-X-Google-Smtp-Source: AGHT+IHZptiykpZhYjFmG4OGGymocqD+APs98M8NEhYGo1chm3Kg5U9XPh+dOTwbEH1pATR3JSfM+A==
-X-Received: by 2002:a05:6a20:de96:b0:1aa:7097:49e2 with SMTP id la22-20020a056a20de9600b001aa709749e2mr12942263pzb.50.1714459596260;
-        Mon, 29 Apr 2024 23:46:36 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id u2-20020a170902e5c200b001e556734814sm21511890plf.134.2024.04.29.23.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 23:46:35 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 64E1318462BA1; Tue, 30 Apr 2024 13:46:32 +0700 (WIB)
-Date: Tue, 30 Apr 2024 13:46:32 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: John Groves <John@groves.net>, Jonathan Corbet <corbet@lwn.net>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Matthew Wilcox <willy@infradead.org>,
-	Linux CXL <linux-cxl@vger.kernel.org>,
-	Linux Filesystems Development <linux-fsdevel@vger.kernel.org>,
-	Linux NVIDMM <nvdimm@lists.linux.dev>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: John Groves <jgroves@micron.com>, john@jagalactic.com,
-	Dave Chinner <david@fromorbit.com>,
-	Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com,
-	gregory.price@memverge.com, Randy Dunlap <rdunlap@infradead.org>,
-	Jerome Glisse <jglisse@google.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	Eishan Mirakhur <emirakhur@micron.com>,
-	Ravi Shankar <venkataravis@micron.com>,
-	Srinivasulu Thanneeru <sthanneeru@micron.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Chandan Babu R <chandanbabu@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Steve French <stfrench@microsoft.com>,
-	Nathan Lynch <nathanl@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Julien Panis <jpanis@baylibre.com>,
-	Stanislav Fomichev <sdf@google.com>,
-	Dongsheng Yang <dongsheng.yang@easystack.cn>,
-	Mao Zhu <zhumao001@208suo.com>, Ran Sun <sunran001@208suo.com>,
-	Xiang wangx <wangxiang@cdjrlc.com>,
-	Shaomin Deng <dengshaomin@cdjrlc.com>,
-	Charles Han <hanchunchao@inspur.com>,
-	Attreyee M <tintinm2017@gmail.com>
-Subject: Re: [RFC PATCH v2 01/12] famfs: Introduce famfs documentation
-Message-ID: <ZjCTyOvpBDBuCg5i@archie.me>
-References: <cover.1714409084.git.john@groves.net>
- <0270b3e2d4c6511990978479771598ad62cf2ddd.1714409084.git.john@groves.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KR2SuyiUwC7NV00FV5niKg6Bl3/tvqFKiXdw9grYxR0Pfnm8XxWHLJ4TZOvUugtgseLremEJrnkzOzCno20BuJMtO67k+oWiCUGmgWcfPxIH2faNfTdkChWjDZaJ+6FIzkyy1Dnyv+0wRGwQDqEY/xmhfD+VqvTtrAlj4ZbQ9wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1s1hHt-0007c7-Bj; Tue, 30 Apr 2024 08:48:25 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1s1hHr-00F7HM-Pl; Tue, 30 Apr 2024 08:48:23 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1s1hHr-0047M1-2H;
+	Tue, 30 Apr 2024 08:48:23 +0200
+Date: Tue, 30 Apr 2024 08:48:23 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Kory Maincent <kory.maincent@bootlin.com>,
+	Kyle Swenson <kyle.swenson@est.tech>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: PoE complex usage of regulator API
+Message-ID: <ZjCUN5V516RSxgoq@pengutronix.de>
+References: <20240426124253.56fd0933@kmaincent-XPS-13-7390>
+ <Zi--4ko_vAtFSxyn@finisterre.sirena.org.uk>
+ <20240429192848.13c576b7@kmaincent-XPS-13-7390>
+ <ZjBWE5XEJjHjftsn@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="crT4BUp9nHuKakh4"
-Content-Disposition: inline
-In-Reply-To: <0270b3e2d4c6511990978479771598ad62cf2ddd.1714409084.git.john@groves.net>
-
-
---crT4BUp9nHuKakh4
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZjBWE5XEJjHjftsn@finisterre.sirena.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2024 at 12:04:17PM -0500, John Groves wrote:
-> * Introduce Documentation/filesystems/famfs.rst into the Documentation
->   tree and filesystems index
-> * Add famfs famfs.rst to the filesystems doc index
-> * Add famfs' ioctl opcodes to ioctl-number.rst
-> * Update MAINTAINERS FILE
->=20
+On Tue, Apr 30, 2024 at 11:23:15AM +0900, Mark Brown wrote:
+> On Mon, Apr 29, 2024 at 07:28:48PM +0200, Kory Maincent wrote:
+> > Mark Brown <broonie@kernel.org> wrote:
+> > > On Fri, Apr 26, 2024 at 12:42:53PM +0200, Kory Maincent wrote:
+> 
+> > That's right I was focusing on power where I could use already implemented
+> > voltage and current callbacks. Would you be interested to a new get_current()
+> > callback to know the current and allows regulator to deduce the consumed power
+> > or should it be specific to PSE subsystem.
+> 
+> That feels like it belongs in hwmon or possibly power rather than in the
+> regulator API but it does feel like it's generally useful rather than
+> PSE specific.
 
-The doc LGTM, thanks!
+I would say, it depends on use case and abilities of HW. Power
+consumption may change rapidly, so it is all about sampling rate. For
+real time current measurement you wont to use iio framework. For most
+cases and simple diagnostic are more interesting max and probably min
+values which self cleared after last read.
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+If HW provides only real time measurement, then the question is, how
+many samples are needed to provide some usable result.
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---crT4BUp9nHuKakh4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZjCTwwAKCRD2uYlJVVFO
-o6cyAP9LSH332uDKE+seiJLwDjMnIq+YE0884MKXbf8SHc2gdQEArqUm84vOu682
-HXx1CyZQ45bTEfyOQgYNRg/+bNbzpw8=
-=+4jA
------END PGP SIGNATURE-----
-
---crT4BUp9nHuKakh4--
+Regards,
+Oleksij
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
