@@ -1,42 +1,42 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0D3131BA7
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0ED0133291
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714477314; cv=none; b=NpOHpCojDUYOTAPbLhM/rZ3xBPgUFptPJy0A4VgtqdxAawEdDXWwURP7y42sf1WthxDZnpnYVuV6lGcKCChDCHAvvo5J9TPhsFcsMdddf286c0lt18DqDXm1EJpS1FqYJ/Kc8PYL8ZJ9mfqEoZEZZkYPOKt5ZafZyr2w38aZ7bE=
+	t=1714477314; cv=none; b=OjgrRlx6amp7qYhUHHrTs44yi32I+p0Gb9deH3spwQocmSpVgXO7qLXYTJ6kW7DzFt0pJj6cvDiVOpHGuMEG6rp7gAuLA5eg49A1B8ZuhejozsIB5K3gt1JTdCKfHykX19bssiAO0gtL6fMTveZJBDqsrchI4jp25+Sf77bSzTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714477314; c=relaxed/simple;
-	bh=/+yQD/1xxpt49MoQExQ1xzYhBFcnigvlM4u45hspn/k=;
+	bh=6lX6Ow8+WDkXB8QGR8oS5cwaB8Odx+W5VMP6TmmTnWg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=btuHCT5E9WW3a+ylDf0Ot/uhtGZknrpz2EgG8JDFykAxOPtT+bxnPQqROwdSGT+QVGEQyiGrgssIy0IZrVm7S28YkIHSkmbxU8YyhjcRE0Q55RWOKOMKPj1UGOFNnbWHAVchtsmPSH/fOfMhWf93Q2nQ0+UXtOK7JlDmGR4nv4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=SLz7/teq; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=qlkiP29EucpTSj4sHWuSLI372uN/qmfc6T/8JZfcFXMG83CejDMHW0fsi7KY643pl/EN06xMnH7STGD7i9mbuldw7BOi8r8mNf2BWCbn+y3/1kmAD1ALlvAbWXeoP5WfAW2u9+6VNkYYMzoLhzI5mekkDVhqpABW+WtiuB0iFw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=a1Cz8AEY; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="SLz7/teq"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="a1Cz8AEY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=Tc5X/Zoe6TzZ7ehoGlEwf656j+yN61PTSQN5v3elxi4=; b=SLz7/t
-	eqVmXqY8JhMbX+u/25uNAtIG77C2ODWZywg0PPebVQOfpySVdMQWH+zJ9xtI1ZZ/
-	5Y7PMtGvpMY0pJlWb32bpN4ofkP0I4tbxK+zmKNSJ48rzzZGaELMZgA7KxTPpWJu
-	iSaa0/sH1WVPOTM1zs0+XNBEUKP6ISPjq0glHGkm6nbP+WHpdsTUckgvKBWhNMIY
-	RGhojboqbusd3rp2+g5ZBIyYuwjLVSCstU5FVY9ib/AsvU+/7TwhlH8OJv5EotY6
-	Tyf/hQwtfZ+1n3VqG3hUEqtya1GyfaBtnIQ5HsZw/gF8c5Z3KfQyc4HSDfT8PtfE
-	KRKEVMK/KrF4pSeA==
-Received: (qmail 2617773 invoked from network); 30 Apr 2024 13:41:44 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Apr 2024 13:41:44 +0200
-X-UD-Smtp-Session: l3s3148p1@nw+x2k4XrOhehhrb
+	 s=k1; bh=yUtX8ec+dY41NIYbceVd82J6yRSNmS1VfJIrMLj50Sk=; b=a1Cz8A
+	EYPrgkxSROqZth1JA3IC3tcoMIeq28Ja9BQbRljoG5aotPKjPXq9BTsMrWz08sYP
+	fAsN7Hq0o29DXBYRshFlDIxyBxkv5m84TJv8zQbzhx1YdniH8gS/M5JIAH1UFLeF
+	G7RM638uFcXPF8o3SRCMPYOiaGmjgCsKtoR7J6YXhZvXiJn/fqc/bgM2bzAXOAG9
+	f0p7QGqDsOSSPFF0KcVoB5NEX7uQwdnBwUfVT4DstrcAQ1jb85/sCuz4BnZwu3gD
+	RDqdCSjMHBksc4qM4V/cXqumlh1ECO4W3AlRw9+mPa/wxg9x4uuOh2L0XWwz9SYo
+	X7NcZAap1VTASr+w==
+Received: (qmail 2617870 invoked from network); 30 Apr 2024 13:41:47 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Apr 2024 13:41:47 +0200
+X-UD-Smtp-Session: l3s3148p1@Tbzb2k4Xxuhehhrb
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-spi@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Mark Brown <broonie@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/8] spi: armada-3700: use 'time_left' variable with wait_for_completion_timeout()
-Date: Tue, 30 Apr 2024 13:41:33 +0200
-Message-ID: <20240430114142.28551-2-wsa+renesas@sang-engineering.com>
+Subject: [PATCH v2 4/8] spi: pic32-sqi: use 'time_left' variable with wait_for_completion_timeout()
+Date: Tue, 30 Apr 2024 13:41:36 +0200
+Message-ID: <20240430114142.28551-5-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240430114142.28551-1-wsa+renesas@sang-engineering.com>
 References: <20240430114142.28551-1-wsa+renesas@sang-engineering.com>
@@ -57,42 +57,35 @@ store the result of wait_for_completion_timeout() causing patterns like:
 with all kinds of permutations. Use 'time_left' as a variable to make the code
 self explaining.
 
-Fix to the proper variable type 'unsigned long' while here.
-
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/spi/spi-armada-3700.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/spi/spi-pic32-sqi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-armada-3700.c b/drivers/spi/spi-armada-3700.c
-index 3c9ed412932f..02c1e625742d 100644
---- a/drivers/spi/spi-armada-3700.c
-+++ b/drivers/spi/spi-armada-3700.c
-@@ -339,7 +339,7 @@ static irqreturn_t a3700_spi_interrupt(int irq, void *dev_id)
- static bool a3700_spi_wait_completion(struct spi_device *spi)
- {
- 	struct a3700_spi *a3700_spi;
--	unsigned int timeout;
+diff --git a/drivers/spi/spi-pic32-sqi.c b/drivers/spi/spi-pic32-sqi.c
+index 3f1e5b27776b..0031063a7e25 100644
+--- a/drivers/spi/spi-pic32-sqi.c
++++ b/drivers/spi/spi-pic32-sqi.c
+@@ -344,7 +344,7 @@ static int pic32_sqi_one_message(struct spi_controller *host,
+ 	struct spi_transfer *xfer;
+ 	struct pic32_sqi *sqi;
+ 	int ret = 0, mode;
+-	unsigned long timeout;
 +	unsigned long time_left;
- 	unsigned int ctrl_reg;
- 	unsigned long timeout_jiffies;
+ 	u32 val;
  
-@@ -361,12 +361,12 @@ static bool a3700_spi_wait_completion(struct spi_device *spi)
- 		     a3700_spi->wait_mask);
+ 	sqi = spi_controller_get_devdata(host);
+@@ -410,8 +410,8 @@ static int pic32_sqi_one_message(struct spi_controller *host,
+ 	writel(val, sqi->regs + PESQI_BD_CTRL_REG);
  
- 	timeout_jiffies = msecs_to_jiffies(A3700_SPI_TIMEOUT);
--	timeout = wait_for_completion_timeout(&a3700_spi->done,
--					      timeout_jiffies);
-+	time_left = wait_for_completion_timeout(&a3700_spi->done,
-+						timeout_jiffies);
- 
- 	a3700_spi->wait_mask = 0;
- 
--	if (timeout)
-+	if (time_left)
- 		return true;
- 
- 	/* there might be the case that right after we checked the
+ 	/* wait for xfer completion */
+-	timeout = wait_for_completion_timeout(&sqi->xfer_done, 5 * HZ);
+-	if (timeout == 0) {
++	time_left = wait_for_completion_timeout(&sqi->xfer_done, 5 * HZ);
++	if (time_left == 0) {
+ 		dev_err(&sqi->host->dev, "wait timedout/interrupted\n");
+ 		ret = -ETIMEDOUT;
+ 		msg->status = ret;
 -- 
 2.43.0
 
