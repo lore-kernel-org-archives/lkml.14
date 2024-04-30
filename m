@@ -1,104 +1,509 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF2812C805;
-	Tue, 30 Apr 2024 11:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0D717592;
+	Tue, 30 Apr 2024 11:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714476109; cv=none; b=Dh+oE1zh33w8mvP6MafKQF85Y+weIizikdUEXySgGiHJ2d4as/o3UiHbju7NjKlYW0PkOXNAKZVGh+G4nQ4l0h95IhDP3mRFBV6lYSHIKqkuEQa+3u8ImTbtHZII/eaWRibb2OQul/RJZGhOLOtk6qTTDhihzxq3zITm+oKz3Mw=
+	t=1714476143; cv=none; b=ZUMfmQ1BYyB6WnCi6+R2xR3vSSMzk8g1EA2ODsabGvmsnjiTw7+NgyHKqcYPQ4Dhj4HQvv+J+dpHQeCUcg0BvJsMhfon4v7b/WiDXaQDYzdEEJWp27yg0FlT3ts2h0YysIHzkkv9z0E4vTJvplhVNa3kUCIWSEWvyXRX5n0XCqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714476109; c=relaxed/simple;
-	bh=WKaRtpsKz/ipOsB0Xwln6vB6uuqXH78fHDV+CUqdYms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Osu6aithA6svxiMzAJNB1UvhoUlUbSg+4fKSiM5NxIMyyHjlTV4spJj5M6xHtCTXhvG8QVrAznKNSuFeQr8GUbo8hm3znned4aHMGIUdXvpkhN15+gFHuo5pTGqgETpqksxahRuToRc0NQZ31dx+4DZmrpangfl2IouZEkn76ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ZwF0GtvR; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714476143; c=relaxed/simple;
+	bh=p0kvrDbPU/v69fdfC284RJWU9tTWpBkrY+vjeH4kpAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q/NhWsCES6jRo365y5U+YmVfKPMc4rzCDVOfTFJuzihMCn3NFL4kK1dAjc1+Fhfn4KVekXEu687j5QH92oHtFEd5CRsUnjcUmmQukfF3xdgeFEWXXvmDJxlAGUwAE6Mej6M9cvSc5/8KL4vl74YGwSjfDSHplPJoubfUHEwTHVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KoS2otgb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ZwF0GtvR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714476084; x=1715080884; i=markus.elfring@web.de;
-	bh=JIkis/xeQt6gvJhUTXbByv/eSUeCf7Rh6o+hieRhZ00=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ZwF0GtvRyNQQovMhVo2cIHhnIG0LKMWYmb4lfoLWJhusx7aJ244eKgw7uQoahQff
-	 gbGMdpdHaJOCtyWE2ne9vO8rN8lcRSv1mUy6WPX8AQur5uODH1Ryo6+CRyytPAmKk
-	 +iG7fc2J+5VqEX1yyGMwTOBUFMnv0CpA4AK5HuBOZ0BDVYYaGtxHwbUdLdpB6eDmE
-	 E4Uzs+7ZECmBiZcyjoBtSddmJ86eFqDWVZ9qD/dZIUbeu2hXShXKgPIhu3zjvt4Kf
-	 X8dXGvfQCUjVPHDXnK2HxtsFFaIqlRbqK2pT+93oQSIxbHgUgxrkKvrCIX07R1dmv
-	 9vPqv1rA7ABJaA3Yuw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MbTH3-1sdJML0DHt-00bYL5; Tue, 30
- Apr 2024 13:21:24 +0200
-Message-ID: <230af978-c834-423b-8d42-78c164be40b9@web.de>
-Date: Tue, 30 Apr 2024 13:21:19 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KoS2otgb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B46C2BBFC;
+	Tue, 30 Apr 2024 11:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714476142;
+	bh=p0kvrDbPU/v69fdfC284RJWU9tTWpBkrY+vjeH4kpAI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KoS2otgb/Md+B1Wfc7eKEARFE3es8GvcAV+EKBFjOd2nlaqqUx/hSd5hbxjDX5aTO
+	 t6uQKpQiojiZ5r4F1ITkWC3CHrQgMjVk9WLScjVudNx/izckAn+9T/sucqk2brYghR
+	 8AhP/f3GeHxgAZuVcWmVM8ZzeDl7L254I7J4LsMU=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com,
+	broonie@kernel.org
+Subject: [PATCH 5.4 000/107] 5.4.275-rc1 review
+Date: Tue, 30 Apr 2024 12:39:20 +0200
+Message-ID: <20240430103044.655968143@linuxfoundation.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/2] scsi: qla2xxx: Optimisation of exception handling
- in qla24xx_els_dcmd_iocb
-To: Yongzhi Liu <hyperlyzcs@gmail.com>,
- GR-QLogic-Storage-Upstream@marvell.com, linux-scsi@vger.kernel.org,
- kernel-janitors@vger.kernel.org,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Nilesh Javali <njavali@marvell.com>, Saurav Kashyap <skashyap@marvell.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Himanshu Madhani <himanshu.madhani@oracle.com>, huntazhang@tencent.com,
- jitxie@tencent.com
-References: <9c711441-6e79-422f-9405-ee271929e77c@web.de>
- <20240430091144.10744-1-hyperlyzcs@gmail.com>
- <20240430091144.10744-2-hyperlyzcs@gmail.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240430091144.10744-2-hyperlyzcs@gmail.com>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.275-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.275-rc1
+X-KernelTest-Deadline: 2024-05-02T10:30+00:00
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eFrJltQP/J/o/6l1mjhzJaOrub1Aobs7ibilxBJ8ULtKgFioC2A
- DhKeHunCjVQ2TRm+Pw041lqGUNa3hYuNL79Fw4aZgee9JI3gnwL4rvfoGN33qAwNkiWkb4f
- gkKhL1j3z00cjd/ys2Z3IgS43VveJWV8voaXMP02JeTErw8qcyOgKgGx8nspwi25X3z370c
- uTDMkUIdH18nCDmmlaB4w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:y+26sjO/L/k=;dT++AxsR1DZbq3ktwVRqtOtgeof
- xqPZWhC1M6yPpDgyxaD5ZmnALcaUDWvxnNhAMRtulnyNesFAcYxpYycKRiZ/iEDinVXUb6OY4
- cqmxsEACDv34EdjA76NulH4tzks/VjjNToH2wDk17xYgV4+kqIhZ9tt2h6D/yegnK0ok+gXxr
- 98apGlE+faPp2fsdPKbk0sIsCxw0A6M0i2HBLyH3ETYSN48L0rrvTvfRccKfOgKUjXFSAXhZs
- Ux7Ct/7MlfdiZfMOWeY/UFCl9qeqeh55c0lbNCJbtLDZQfX8gSWBgy40u6KwVWV04IrNzm/I9
- CvGAyQTqvtudhfFjL4cppBlf8pxp7F97Jdq7dqNxBtQeSaXC171BqFqo34QLMWXjtQpXaZOOF
- QjlYDu1Sq0zz0xEZ6YUOnvgi/hwkk3jzHqt4eHvkfdOcBvDwc7h59pLWggjfuUbwa02cUWLh0
- dKLmmZvYeIKVom5oCZJFMRUaqLvLV2sK21Pw7AEI1R6J69oSkOoPA1yxVVNg/9c8xpPvFr8k4
- LootZYTc2MOvf1xvKFaNsbyAE5V8O9adR6hJeSPahJdpoMTxMKyG4LNXLkmdKbS2X/J8OPFuA
- FbcPKgIEgcwPmTzQQkIgHEUt2mxMbvWcxHP17EKo8qcnwt0CDcZkeLmySg9ZZ7ukHSMN/9aNK
- xrAFb9CyuX37fbiiitgrF6Fz+2hjhtKqFjFVTky6cB7ql7C1c6a7a0lGG15lt/alP9r0I339K
- qqQIYn84MLjjRE37GXFbEPkDVDOQC+dKpsmSpXcac3t2XSB9Wzj7SidZjG+JJ/kH4hLrd5OUX
- thHk3DDAG5jtARXAdI1Oho+AjqrbrFmaGKJS6neH8zSfY=
+Content-Transfer-Encoding: 8bit
 
-Would you like to use the summary phrase =E2=80=9CUse common error handlin=
-g code in qla24xx_els_dcmd_iocb()=E2=80=9D?
+This is the start of the stable review cycle for the 5.4.275 release.
+There are 107 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
+
+Responses should be made by Thu, 02 May 2024 10:30:27 +0000.
+Anything received after that time might be too late.
+
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.275-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.275-rc1
+
+Randy Dunlap <rdunlap@infradead.org>
+    serial: core: fix kernel-doc for uart_port_unlock_irqrestore()
+
+Yick Xie <yick.xie@gmail.com>
+    udp: preserve the connected status if only UDP cmsg
+
+Mikulas Patocka <mpatocka@redhat.com>
+    dm: limit the number of targets and parameter size area
+
+Matthew Wilcox (Oracle) <willy@infradead.org>
+    bounds: Use the right number of bits for power-of-two CONFIG_NR_CPUS
+
+Nam Cao <namcao@linutronix.de>
+    HID: i2c-hid: remove I2C_HID_READ_PENDING flag to prevent lock-up
+
+Wolfram Sang <wsa+renesas@sang-engineering.com>
+    i2c: smbus: fix NULL function pointer dereference
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    idma64: Don't try to serve interrupts when device is powered off
+
+Arnd Bergmann <arnd@arndb.de>
+    dmaengine: owl: fix register access functions
+
+Eric Dumazet <edumazet@google.com>
+    tcp: Fix NEW_SYN_RECV handling in inet_twsk_purge()
+
+Kuniyuki Iwashima <kuniyu@amazon.com>
+    tcp: Clean up kernel listener's reqsk in inet_twsk_purge()
+
+Arnd Bergmann <arnd@arndb.de>
+    mtd: diskonchip: work around ubsan link failure
+
+Andrey Ryabinin <ryabinin.a.a@gmail.com>
+    stackdepot: respect __GFP_NOLOCKDEP allocation flag
+
+Peter Münster <pm@a16n.net>
+    net: b44: set pause params only when interface is up
+
+Rahul Rameshbabu <rrameshbabu@nvidia.com>
+    ethernet: Add helper for assigning packet type when dest address does not match device address
+
+Guanrui Huang <guanrui.huang@linux.alibaba.com>
+    irqchip/gic-v3-its: Prevent double free on error
+
+Mukul Joshi <mukul.joshi@amd.com>
+    drm/amdgpu: Fix leak when GPU memory allocation fails
+
+Iskander Amara <iskander.amara@theobroma-systems.com>
+    arm64: dts: rockchip: enable internal pull-up for Q7_THRM# on RK3399 Puma
+
+Johannes Thumshirn <johannes.thumshirn@wdc.com>
+    btrfs: fix information leak in btrfs_ioctl_logical_to_ino()
+
+WangYuli <wangyuli@uniontech.com>
+    Bluetooth: btusb: Add Realtek RTL8852BE support ID 0x0bda:0x4853
+
+Nathan Chancellor <nathan@kernel.org>
+    Bluetooth: Fix type of len in {l2cap,sco}_sock_getsockopt_old()
+
+Robin H. Johnson <robbat2@gentoo.org>
+    tracing: Increase PERF_MAX_TRACE_SIZE to handle Sentinel1 and docker together
+
+Robin H. Johnson <robbat2@gentoo.org>
+    tracing: Show size of requested perf buffer
+
+Shifeng Li <lishifeng@sangfor.com.cn>
+    net/mlx5e: Fix a race in command alloc flow
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "crypto: api - Disallow identical driver names"
+
+xinhui pan <xinhui.pan@amd.com>
+    drm/amdgpu: validate the parameters of bo mapping operations more clearly
+
+Chia-I Wu <olvaffe@gmail.com>
+    amdgpu: validate offset_in_bo of drm_amdgpu_gem_va
+
+Rajneesh Bhardwaj <rajneesh.bhardwaj@amd.com>
+    drm/amdgpu: restrict bo mapping within gpu address limits
+
+Emil Kronborg <emil.kronborg@protonmail.com>
+    serial: mxs-auart: add spinlock around changing cts state
+
+Thomas Gleixner <tglx@linutronix.de>
+    serial: core: Provide port lock wrappers
+
+Kuniyuki Iwashima <kuniyu@amazon.com>
+    af_unix: Suppress false-positive lockdep splat for spin_lock() in __unix_gc().
+
+Sudheer Mogilappagari <sudheer.mogilappagari@intel.com>
+    iavf: Fix TC config comparison with existing adapter TC config
+
+Sindhu Devale <sindhu.devale@intel.com>
+    i40e: Do not use WQ_MEM_RECLAIM flag for workqueue
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix memory leak when canceling rehash work
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix incorrect list API usage
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix warning during rehash
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix memory leak during rehash
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Rate limit error message
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix possible use-after-free during rehash
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix possible use-after-free during activity update
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: spectrum_acl_tcam: Fix race during rehash delayed work
+
+Hyunwoo Kim <v4bel@theori.io>
+    net: openvswitch: Fix Use-After-Free in ovs_ct_exit
+
+Ismael Luceno <iluceno@suse.de>
+    ipvs: Fix checksumming on GSO of SCTP packets
+
+Hyunwoo Kim <v4bel@theori.io>
+    net: gtp: Fix Use-After-Free in gtp_dellink
+
+Eric Dumazet <edumazet@google.com>
+    net: usb: ax88179_178a: stop lying about skb->truesize
+
+Paul Geurts <paul_geurts@live.nl>
+    NFC: trf7970a: disable all regulators on removal
+
+Ido Schimmel <idosch@nvidia.com>
+    mlxsw: core: Unregister EMAD trap using FORWARD action
+
+David Bauer <mail@david-bauer.net>
+    vxlan: drop packets from invalid src-address
+
+Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+    ARC: [plat-hsdk]: Remove misplaced interrupt-cells property
+
+Rafał Miłecki <rafal@milecki.pl>
+    arm64: dts: mediatek: mt2712: fix validation errors
+
+Biao Huang <biao.huang@mediatek.com>
+    arm64: dts: mt2712: add ethernet device node
+
+Rafał Miłecki <rafal@milecki.pl>
+    arm64: dts: mediatek: mt7622: drop "reset-names" from thermal block
+
+Rafał Miłecki <rafal@milecki.pl>
+    arm64: dts: mediatek: mt7622: fix ethernet controller "compatible"
+
+Rafał Miłecki <rafal@milecki.pl>
+    arm64: dts: mediatek: mt7622: fix IR nodename
+
+Ikjoon Jang <ikjn@chromium.org>
+    arm64: dts: mediatek: mt8183: Add power-domains properity to mfgcfg
+
+Quentin Schulz <quentin.schulz@theobroma-systems.com>
+    arm64: dts: rockchip: enable internal pull-up on PCIE_WAKE# for RK3399 Puma
+
+Iskander Amara <iskander.amara@theobroma-systems.com>
+    arm64: dts: rockchip: fix alphabetical ordering RK3399 puma
+
+Vitaly Kuznetsov <vkuznets@redhat.com>
+    KVM: async_pf: Cleanup kvm_setup_async_pf()
+
+Jeongjun Park <aha310510@gmail.com>
+    nilfs2: fix OOB in nilfs_set_de_type
+
+Dave Airlie <airlied@redhat.com>
+    nouveau: fix instmem race condition around ptr stores
+
+Alan Stern <stern@rowland.harvard.edu>
+    fs: sysfs: Fix reference leak in sysfs_break_active_protection()
+
+Samuel Thibault <samuel.thibault@ens-lyon.org>
+    speakup: Avoid crash on very long word
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    usb: Disable USB3 LPM at shutdown
+
+Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+    usb: dwc2: host: Fix dereference issue in DDMA completion flow.
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "usb: cdc-wdm: close race between read and workqueue"
+
+Daniele Palmas <dnlplm@gmail.com>
+    USB: serial: option: add Telit FN920C04 rmnet compositions
+
+Vanillan Wang <vanillanwang@163.com>
+    USB: serial: option: add Rolling RW101-GL and RW135-GL support
+
+Jerry Meng <jerry-meng@foxmail.com>
+    USB: serial: option: support Quectel EM060K sub-models
+
+Coia Prant <coiaprant@gmail.com>
+    USB: serial: option: add Lonsung U8300/U9300 product
+
+Chuanhong Guo <gch981213@gmail.com>
+    USB: serial: option: add support for Fibocom FM650/FG650
+
+bolan wang <bolan.wang@fibocom.com>
+    USB: serial: option: add Fibocom FM135-GL variants
+
+Finn Thain <fthain@linux-m68k.org>
+    serial/pmac_zilog: Remove flawed mitigation for rx irq flood
+
+Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+    comedi: vmk80xx: fix incomplete endpoint checking
+
+Carlos Llamas <cmllamas@google.com>
+    binder: check offset alignment in binder_get_object()
+
+Eric Biggers <ebiggers@google.com>
+    x86/cpufeatures: Fix dependencies for GFNI, VAES, and VPCLMULQDQ
+
+Stephen Boyd <sboyd@kernel.org>
+    clk: Get runtime PM before walking tree during disable_unused
+
+Stephen Boyd <sboyd@kernel.org>
+    clk: Initialize struct clk_core kref earlier
+
+Konrad Dybcio <konrad.dybcio@linaro.org>
+    clk: Print an info line before disabling unused clocks
+
+Claudiu Beznea <claudiu.beznea@microchip.com>
+    clk: remove extra empty line
+
+Stephen Boyd <sboyd@kernel.org>
+    clk: Mark 'all_lists' as const
+
+Stephen Boyd <sboyd@kernel.org>
+    clk: Remove prepare_lock hold assertion in __clk_release()
+
+Mikhail Kobuk <m.kobuk@ispras.ru>
+    drm: nv04: Fix out of bounds access
+
+Michael Guralnik <michaelgur@nvidia.com>
+    RDMA/mlx5: Fix port number for counter query in multi-port configuration
+
+Yanjun.Zhu <yanjun.zhu@linux.dev>
+    RDMA/rxe: Fix the problem "mutex_destroy missing"
+
+Lei Chen <lei.chen@smartx.com>
+    tun: limit printing rate when illegal packet received by tun dev
+
+Ziyang Xuan <william.xuanziyang@huawei.com>
+    netfilter: nf_tables: Fix potential data-race in __nft_expr_type_get()
+
+Siddh Raman Pant <siddh.raman.pant@oracle.com>
+    Revert "tracing/trigger: Fix to return error if failed to alloc snapshot"
+
+Zheng Yejian <zhengyejian1@huawei.com>
+    kprobes: Fix possible use-after-free issue on kprobe registration
+
+Yuanhe Shu <xiangzao@linux.alibaba.com>
+    selftests/ftrace: Limit length in subsystem-enable tests
+
+Boris Burkov <boris@bur.io>
+    btrfs: record delayed inode root in transaction
+
+Adam Dunlap <acdunlap@google.com>
+    x86/apic: Force native_apic_mem_read() to use the MOV instruction
+
+John Stultz <jstultz@google.com>
+    selftests: timers: Fix abs() warning in posix_timers test
+
+Gavin Shan <gshan@redhat.com>
+    vhost: Add smp_rmb() in vhost_vq_avail_empty()
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/client: Fully protect modes[] with dev->mode_config.mutex
+
+Boris Burkov <boris@bur.io>
+    btrfs: qgroup: correctly model root qgroup rsv in convert
+
+David Arinzon <darinzon@amazon.com>
+    net: ena: Fix potential sign extension issue
+
+Michal Luczaj <mhal@rbox.co>
+    af_unix: Fix garbage collector racing against connect()
+
+Kuniyuki Iwashima <kuniyu@amazon.com>
+    af_unix: Do not use atomic ops for unix_sk(sk)->inflight.
+
+Cosmin Ratiu <cratiu@nvidia.com>
+    net/mlx5: Properly link new fs rules into the tree
+
+Jiri Benc <jbenc@redhat.com>
+    ipv6: fix race condition between ipv6_get_ifaddr and ipv6_del_addr
+
+Arnd Bergmann <arnd@arndb.de>
+    ipv4/route: avoid unused-but-set-variable warning
+
+Arnd Bergmann <arnd@arndb.de>
+    ipv6: fib: hide unused 'pn' variable
+
+Eric Dumazet <edumazet@google.com>
+    geneve: fix header validation in geneve[6]_xmit_skb
+
+Petr Tesarik <petr@tesarici.cz>
+    u64_stats: fix u64_stats_init() for lockdep when used repeatedly in one file
+
+Ilya Maximets <i.maximets@ovn.org>
+    net: openvswitch: fix unwanted error log on timeout policy probing
+
+Arnd Bergmann <arnd@arndb.de>
+    nouveau: fix function cast warning
+
+Dmitry Antipov <dmantipov@yandex.ru>
+    Bluetooth: Fix memory leak in hci_req_sync_complete()
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Avoid infinite loop trying to resize local TT
 
 
-> To avoid duplicate error handling code a bit more, use more common goto
-> chain in qla24xx_els_dcmd_iocb.
+-------------
 
-How do you think about the following wording?
+Diffstat:
 
-   Add a jump target so that a bit of exception handling can be better reu=
-sed
-   at the end of this function implementation.
+ Makefile                                           |   4 +-
+ arch/arc/boot/dts/hsdk.dts                         |   1 -
+ arch/arm64/boot/dts/mediatek/mt2712-evb.dts        |  78 ++++++++++-
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |  68 ++++++++-
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi           |   7 +-
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           |   1 +
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      |  29 +++-
+ arch/x86/include/asm/apic.h                        |   3 +-
+ arch/x86/kernel/cpu/cpuid-deps.c                   |   6 +-
+ crypto/algapi.c                                    |   1 -
+ drivers/android/binder.c                           |   4 +-
+ drivers/bluetooth/btusb.c                          |   2 +
+ drivers/clk/clk.c                                  | 154 ++++++++++++++++-----
+ drivers/dma/idma64.c                               |   4 +
+ drivers/dma/owl-dma.c                              |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c   |   1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c             |  70 ++++++----
+ drivers/gpu/drm/drm_client_modeset.c               |   3 +-
+ drivers/gpu/drm/nouveau/nouveau_bios.c             |  13 +-
+ .../gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c    |   7 +-
+ drivers/gpu/drm/nouveau/nvkm/subdev/instmem/nv50.c |   7 +-
+ drivers/hid/i2c-hid/i2c-hid-core.c                 |   8 --
+ drivers/i2c/i2c-core-base.c                        |  12 +-
+ drivers/infiniband/hw/mlx5/mad.c                   |   3 +-
+ drivers/infiniband/sw/rxe/rxe.c                    |   2 +
+ drivers/irqchip/irq-gic-v3-its.c                   |   9 +-
+ drivers/md/dm-core.h                               |   2 +
+ drivers/md/dm-ioctl.c                              |   3 +-
+ drivers/md/dm-table.c                              |   9 +-
+ drivers/mtd/nand/raw/diskonchip.c                  |   4 +-
+ drivers/net/ethernet/amazon/ena/ena_com.c          |   2 +-
+ drivers/net/ethernet/broadcom/b44.c                |  14 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c        |   2 +-
+ drivers/net/ethernet/intel/iavf/iavf_main.c        |  30 +++-
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c      |  12 +-
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c  |   3 +-
+ drivers/net/ethernet/mellanox/mlxsw/core.c         |   2 +-
+ .../ethernet/mellanox/mlxsw/spectrum_acl_tcam.c    |  54 ++++++--
+ drivers/net/geneve.c                               |   4 +-
+ drivers/net/gtp.c                                  |   3 +-
+ drivers/net/tun.c                                  |  18 +--
+ drivers/net/usb/ax88179_178a.c                     |  11 +-
+ drivers/net/vxlan.c                                |   4 +
+ drivers/nfc/trf7970a.c                             |  42 +++---
+ drivers/staging/comedi/drivers/vmk80xx.c           |  35 ++---
+ drivers/staging/speakup/main.c                     |   2 +-
+ drivers/tty/serial/mxs-auart.c                     |   8 +-
+ drivers/tty/serial/pmac_zilog.c                    |  14 --
+ drivers/usb/class/cdc-wdm.c                        |   6 +-
+ drivers/usb/core/port.c                            |   4 +-
+ drivers/usb/dwc2/hcd_ddma.c                        |   4 +-
+ drivers/usb/serial/option.c                        |  40 ++++++
+ drivers/vhost/vhost.c                              |  14 +-
+ fs/btrfs/backref.c                                 |  12 +-
+ fs/btrfs/delayed-inode.c                           |   3 +
+ fs/btrfs/qgroup.c                                  |   2 +
+ fs/nilfs2/dir.c                                    |   2 +-
+ fs/sysfs/file.c                                    |   2 +
+ include/linux/etherdevice.h                        |  25 ++++
+ include/linux/serial_core.h                        |  79 +++++++++++
+ include/linux/trace_events.h                       |   2 +-
+ include/linux/u64_stats_sync.h                     |   6 +-
+ include/net/addrconf.h                             |   4 +
+ include/net/af_unix.h                              |   5 +-
+ include/net/ip_tunnels.h                           |  33 +++++
+ kernel/bounds.c                                    |   2 +-
+ kernel/kprobes.c                                   |  18 ++-
+ kernel/trace/trace_event_perf.c                    |   3 +-
+ kernel/trace/trace_events_trigger.c                |   6 +-
+ lib/stackdepot.c                                   |   4 +-
+ net/batman-adv/translation-table.c                 |   2 +-
+ net/bluetooth/hci_request.c                        |   4 +-
+ net/bluetooth/l2cap_sock.c                         |   7 +-
+ net/bluetooth/sco.c                                |   7 +-
+ net/ethernet/eth.c                                 |  12 +-
+ net/ipv4/inet_timewait_sock.c                      |  34 +++--
+ net/ipv4/route.c                                   |   4 +-
+ net/ipv4/udp.c                                     |   5 +-
+ net/ipv6/addrconf.c                                |   7 +-
+ net/ipv6/ip6_fib.c                                 |   7 +-
+ net/ipv6/udp.c                                     |   5 +-
+ net/netfilter/ipvs/ip_vs_proto_sctp.c              |   6 +-
+ net/netfilter/nf_tables_api.c                      |   8 +-
+ net/openvswitch/conntrack.c                        |   9 +-
+ net/unix/af_unix.c                                 |   4 +-
+ net/unix/garbage.c                                 |  35 +++--
+ net/unix/scm.c                                     |   8 +-
+ .../ftrace/test.d/event/subsystem-enable.tc        |   6 +-
+ tools/testing/selftests/timers/posix_timers.c      |   2 +-
+ virt/kvm/async_pf.c                                |  19 +--
+ 90 files changed, 906 insertions(+), 340 deletions(-)
 
 
-Can the tag =E2=80=9CSuggested-by=E2=80=9D be helpful for an improved chan=
-ge description?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc6#n586
-
-Regards,
-Markus
