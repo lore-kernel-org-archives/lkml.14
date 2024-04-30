@@ -1,385 +1,135 @@
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [45.157.188.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24ED143737;
-	Tue, 30 Apr 2024 15:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370527711D
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 15:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714490544; cv=none; b=eEfoYEUA9FdrljgAXE5IOYkAx4vb2nofV5Klu5K3X5OsiGNqMh1hsKSxbVu+As9oYPWKGXzPtuzP0NQJQqViBfqQeCbG+XksWE8LsXa8osKgtBFWFXB3BWAJwwuRUgL6ZZTZ1/s5BoWzvgsqEUimqtPnOhTVuCHDseqy8eVCUEI=
+	t=1714490692; cv=none; b=IJXRHy4fGrkH9899VzN/wYGJLqEGJHGjgdkr3T1iDZW2IoZasj/wPpZFceeNhF7oXXTQIxHkiCevZ7sV8+g8WHwPPinBJoW9U0NsP8a0mXV/ThXgQjRvi8gUql1psMNPEn7fBj4U4fC1gjp8coFh/WbeG0K25ZStOg/cjtlBhWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714490544; c=relaxed/simple;
-	bh=xfSIlhknITm7Nn1Vpn8PZ3WraOqM67xMgM/4IKfddrY=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u+9Sx/NfCEe9RZsOJiQotZHMHoi22wG/p5U+zchrUaZwvCrT1c/hMXeuzEnEocgLlJfV6WMlTDUA19cO4aiZFR7mHVp1knTm67qv5qQs5j6Z4vRUPqxGan59AbQPd0j/BLuGLrAxAskRWMVvjARm4aqdsvHVDZHbila1DAhu+yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=1TI+xOV3; arc=none smtp.client-ip=212.27.42.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
+	s=arc-20240116; t=1714490692; c=relaxed/simple;
+	bh=o9tw+r7HiK2cyxfIdnEKxzsdQ/OTiilNikfU3NSHVe0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlMuWviOUxmzIH2aaIxiB2S0CyLw96R9NU/pWRGliL0G2Vq9dsJZTtlSiJo4RQa+IFyOtt809bTD2oNy3FemSZhp+Aw+yB2/M5fxR3jEYyucI6YpZ2qWXuukokAAEU07nmuj/jZpAOwd+mt4GrdDx9zgdrZcWWZJXmy9o64mgjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=dCJFfiu8; arc=none smtp.client-ip=45.157.188.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="1TI+xOV3"
-Received: from bender.morinfr.org (unknown [82.66.66.112])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id 1A9182003E0;
-	Tue, 30 Apr 2024 17:22:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
-	; s=20170427; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=dQM45eMyF7RJffXkEfhsLwlqWnYeFBAu+epsoydTVNw=; b=1TI+xOV3wyhVryjw+IYpNflVED
-	DYfMjcZBFudXQQQ53imVpl7FvtNGAdIPhaghOPg+Ty8Ox8VTM0O3KQsTV9oWnxeVUhsOlzLy5/gBH
-	Ha8zDn/nXWvevmbsFeFnCEEKHRU/XsZ1IaRrFGIDCgJ8LwWB/aRP77d93czL+DW2iT2E=;
-Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
-	(envelope-from <guillaume@morinfr.org>)
-	id 1s1pJ2-004apZ-1H;
-	Tue, 30 Apr 2024 17:22:08 +0200
-Date: Tue, 30 Apr 2024 17:22:08 +0200
-From: Guillaume Morin <guillaume@morinfr.org>
-To: David Hildenbrand <david@redhat.com>, oleg@redhat.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	muchun.song@linux.dev
-Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
-Message-ID: <ZjEMoHkbloHVeJ0h@bender.morinfr.org>
-References: <22fcde31-16c4-42d0-ad99-568173ec4dd0@redhat.com>
- <ZibOQI9kwzE98n12@bender.morinfr.org>
- <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
- <ZilvOi7ceSXmwkNq@bender.morinfr.org>
- <b1cf78f8-8480-4451-bbf8-78694ebd0438@redhat.com>
- <Zip0fEliGeL0qmID@bender.morinfr.org>
- <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
- <Zirw0uINbP6GxFiK@bender.morinfr.org>
- <385d3516-95bb-4ff9-9d60-ac4e46104130@redhat.com>
- <ZiwGovSHiVCF7z6y@bender.morinfr.org>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="dCJFfiu8"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VTPBl21DwzwK5;
+	Tue, 30 Apr 2024 17:24:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1714490687;
+	bh=o9tw+r7HiK2cyxfIdnEKxzsdQ/OTiilNikfU3NSHVe0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dCJFfiu8WGMiQ53xbHZ1FW9HOnnmCs2WrkKqstQM5CEf2ab5pQQD3GVv0pmnZJhDL
+	 8iD3bq+qImade0+0Vrdhs95JQMZcSwWLhABsB10SZlyjgeIzvySVt3evyecmyS2MXX
+	 wTmyf48w/uMNYgOBvz59alNnwDz6EJDyGZ02RIDg=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VTPBk2xCtzhtX;
+	Tue, 30 Apr 2024 17:24:46 +0200 (CEST)
+Date: Tue, 30 Apr 2024 17:24:45 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Tahera Fahimi <fahimitahera@gmail.com>
+Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, outreachy@lists.linux.dev, netdev@vger.kernel.org, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Jann Horn <jannh@google.com>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+Subject: Re: [PATCH v2] landlock: Add abstract unix socket connect
+ restrictions
+Message-ID: <20240411.ahgeefeiNg4i@digikod.net>
+References: <ZgX5TRTrSDPrJFfF@tahera-OptiPlex-5000>
+ <20240401.ieC2uqua5sha@digikod.net>
+ <ZhcRnhVKFUgCleDi@tahera-OptiPlex-5000>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZiwGovSHiVCF7z6y@bender.morinfr.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZhcRnhVKFUgCleDi@tahera-OptiPlex-5000>
+X-Infomaniak-Routing: alpha
 
-On 26 Apr 21:55, Guillaume Morin wrote:
->
-> On 26 Apr  9:19, David Hildenbrand wrote:
-> > A couple of points:
+On Wed, Apr 10, 2024 at 04:24:30PM -0600, Tahera Fahimi wrote:
+> On Tue, Apr 02, 2024 at 11:53:09AM +0200, Mickaël Salaün wrote:
+> > Thanks for this patch.  Please CC the netdev mailing list too, they may
+> > be interested by this feature. I also added a few folks that previously
+> > showed their interest for this feature.
 > > 
-> > a) Don't use page_mapcount(). Either folio_mapcount(), but likely you want
-> > to check PageAnonExclusive.
+> > On Thu, Mar 28, 2024 at 05:12:13PM -0600, TaheraFahimi wrote:
+> > > Abstract unix sockets are used for local interprocess communication without
+> > > relying on filesystem. Since landlock has no restriction for connecting to
+> > > a UNIX socket in the abstract namespace, a sandboxed process can connect to
+> > > a socket outside the sandboxed environment. Access to such sockets should
+> > > be scoped the same way ptrace access is limited.
 > > 
-> > b) If you're not following the can_follow_write_pte/_pmd model, you are
-> > doing something wrong :)
+> > This is good but it would be better to explain that Landlock doesn't
+> > currently control abstract unix sockets and that it would make sense for
+> > a sandbox.
 > > 
-> > c) The code was heavily changed in mm/mm-unstable. It was merged with t
-> > the common code.
 > > 
-> > Likely, in mm/mm-unstable, the existing can_follow_write_pte and
-> > can_follow_write_pmd checks will already cover what you want in most cases.
+> > > 
+> > > For a landlocked process to be allowed to connect to a target process, it
+> > > must have a subset of the target process’s rules (the connecting socket
+> > > must be in a sub-domain of the listening socket). This patch adds a new
+> > > LSM hook for connect function in unix socket with the related access rights.
 > > 
-> > We'd need a can_follow_write_pud() to cover follow_huge_pud() and
-> > (unfortunately) something to handle follow_hugepd() as well similarly.
-> > 
-> > Copy-pasting what we do in can_follow_write_pte() and adjusting for
-> > different PTE types is the right thing to do. Maybe now it's time to factor
-> > out the common checks into a separate helper.
-> 
-> I tried to get the hugepd stuff right but this was the first I heard
-> about it :-) Afaict follow_huge_pmd and friends were already DTRT
+> > Because of compatibility reasons, and because Landlock should be
+> > flexible, we need to extend the user space interface.  As explained in
+> > the GitHub issue, we need to add a new "scoped" field to the
+> > landlock_ruleset_attr struct. This field will optionally contain a
+> > LANDLOCK_RULESET_SCOPED_ABSTRACT_UNIX_SOCKET flag to specify that this
+> > ruleset will deny any connection from within the sandbox to its parents
+> > (i.e. any parent sandbox or not-sandboxed processes).
 
-I got it working on top of your uprobes-cow branch with the foll force
-patch sent friday. Still pretty lightly tested
+> Thanks for the feedback. Here is what I understood, please correct me if
+> I am wrong. First, I should add another field to the
+> landlock_ruleset_attr (a field like handled_access_net, but for the unix
+> sockets) with a flag LANDLOCK_ACCESS_UNIX_CONNECT (it is a flag like
+> LANDLOCK_ACCESS_NET_CONNECT_TCP but fot the unix sockets connect).
 
-I went with using one write uprobe function with some additional
-branches. I went back and forth between that and making them 2 different
-functions.
+That was the initial idea, but after thinking more about it and talking
+with some users, I now think we can get a more generic interface.
 
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 2f4e88552d3f..8a33e380f7ea 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -83,6 +83,10 @@ static const struct fs_parameter_spec hugetlb_fs_parameters[] = {
- 	{}
- };
- 
-+bool hugetlbfs_mapping(struct address_space *mapping) {
-+	return mapping->a_ops == &hugetlbfs_aops;
-+}
-+
- /*
-  * Mask used when checking the page offset value passed in via system
-  * calls.  This value will be converted to a loff_t which is signed.
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 68244bb3637a..66fdcc0b5db2 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -511,6 +511,8 @@ struct hugetlbfs_sb_info {
- 	umode_t mode;
- };
- 
-+bool hugetlbfs_mapping(struct address_space *mapping);
-+
- static inline struct hugetlbfs_sb_info *HUGETLBFS_SB(struct super_block *sb)
- {
- 	return sb->s_fs_info;
-@@ -557,6 +559,8 @@ static inline struct hstate *hstate_inode(struct inode *i)
- {
- 	return NULL;
- }
-+
-+static inline bool hugetlbfs_mapping(struct address_space *mapping) { return false; }
- #endif /* !CONFIG_HUGETLBFS */
- 
- #ifdef HAVE_ARCH_HUGETLB_UNMAPPED_AREA
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4237a7477cca..e6e93a574c39 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/highmem.h>
-+#include <linux/hugetlb.h>
- #include <linux/pagemap.h>	/* read_mapping_page */
- #include <linux/slab.h>
- #include <linux/sched.h>
-@@ -120,7 +121,7 @@ struct xol_area {
-  */
- static bool valid_vma(struct vm_area_struct *vma, bool is_register)
- {
--	vm_flags_t flags = VM_HUGETLB | VM_MAYEXEC | VM_MAYSHARE;
-+	vm_flags_t flags = VM_MAYEXEC | VM_MAYSHARE;
- 
- 	if (is_register)
- 		flags |= VM_WRITE;
-@@ -163,21 +164,21 @@ bool __weak is_trap_insn(uprobe_opcode_t *insn)
- 	return is_swbp_insn(insn);
- }
- 
--static void copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len)
-+static void copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len, unsigned long page_mask)
- {
- 	void *kaddr = kmap_atomic(page);
--	memcpy(dst, kaddr + (vaddr & ~PAGE_MASK), len);
-+	memcpy(dst, kaddr + (vaddr & ~page_mask), len);
- 	kunmap_atomic(kaddr);
- }
- 
--static void copy_to_page(struct page *page, unsigned long vaddr, const void *src, int len)
-+static void copy_to_page(struct page *page, unsigned long vaddr, const void *src, int len, unsigned long page_mask)
- {
- 	void *kaddr = kmap_atomic(page);
--	memcpy(kaddr + (vaddr & ~PAGE_MASK), src, len);
-+	memcpy(kaddr + (vaddr & ~page_mask), src, len);
- 	kunmap_atomic(kaddr);
- }
- 
--static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode)
-+static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode, unsigned long page_mask)
- {
- 	uprobe_opcode_t old_opcode;
- 	bool is_swbp;
-@@ -191,7 +192,8 @@ static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t
- 	 * is a trap variant; uprobes always wins over any other (gdb)
- 	 * breakpoint.
- 	 */
--	copy_from_page(page, vaddr, &old_opcode, UPROBE_SWBP_INSN_SIZE);
-+	copy_from_page(page, vaddr, &old_opcode, UPROBE_SWBP_INSN_SIZE,
-+		       page_mask);
- 	is_swbp = is_swbp_insn(&old_opcode);
- 
- 	if (is_swbp_insn(new_opcode)) {
-@@ -376,8 +378,8 @@ struct uwo_data {
- 	uprobe_opcode_t opcode;
- };
- 
--static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
--		unsigned long next, struct mm_walk *walk)
-+static int __write_opcode(pte_t *ptep, unsigned long vaddr,
-+			  unsigned long page_mask, struct mm_walk *walk)
- {
- 	struct uwo_data *data = walk->private;;
- 	const bool is_register = !!is_swbp_insn(&data->opcode);
-@@ -415,9 +417,12 @@ static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
- 
- 	/* Unmap + flush the TLB, such that we can write atomically .*/
- 	flush_cache_page(vma, vaddr, pte_pfn(pte));
--	pte = ptep_clear_flush(vma, vaddr, ptep);
-+	if (folio_test_hugetlb(folio))
-+		pte = huge_ptep_clear_flush(vma, vaddr, ptep);
-+	else
-+		pte = ptep_clear_flush(vma, vaddr, ptep);
- 	copy_to_page(page, data->opcode_vaddr, &data->opcode,
--		     UPROBE_SWBP_INSN_SIZE);
-+		     UPROBE_SWBP_INSN_SIZE, page_mask);
- 
- 	/* When unregistering, we may only zap a PTE if uffd is disabled ... */
- 	if (is_register || userfaultfd_missing(vma))
-@@ -443,13 +448,18 @@ static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
- 	if (!identical || folio_maybe_dma_pinned(folio))
- 		goto remap;
- 
--	/* Zap it and try to reclaim swap space. */
--	dec_mm_counter(mm, MM_ANONPAGES);
--	folio_remove_rmap_pte(folio, page, vma);
--	if (!folio_mapped(folio) && folio_test_swapcache(folio) &&
--	     folio_trylock(folio)) {
--		folio_free_swap(folio);
--		folio_unlock(folio);
-+	if (folio_test_hugetlb(folio)) {
-+		hugetlb_remove_rmap(folio);
-+		large = false;
-+	} else {
-+		/* Zap it and try to reclaim swap space. */
-+		dec_mm_counter(mm, MM_ANONPAGES);
-+		folio_remove_rmap_pte(folio, page, vma);
-+		if (!folio_mapped(folio) && folio_test_swapcache(folio) &&
-+		folio_trylock(folio)) {
-+			folio_free_swap(folio);
-+			folio_unlock(folio);
-+		}
- 	}
- 	folio_put(folio);
- 
-@@ -461,11 +471,29 @@ static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
- 	 */
- 	smp_wmb();
- 	/* We modified the page. Make sure to mark the PTE dirty. */
--	set_pte_at(mm, vaddr, ptep, pte_mkdirty(pte));
-+	if (folio_test_hugetlb(folio))
-+		set_huge_pte_at(mm , vaddr, ptep, huge_pte_mkdirty(pte),
-+				(~page_mask) + 1);
-+	else
-+		set_pte_at(mm, vaddr, ptep, pte_mkdirty(pte));
- 	return UWO_DONE;
- }
- 
-+static int __write_opcode_hugetlb(pte_t *ptep, unsigned long hmask,
-+		unsigned long vaddr,
-+		unsigned long next, struct mm_walk *walk)
-+{
-+	return __write_opcode(ptep, vaddr, hmask, walk);
-+}
-+
-+static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
-+		unsigned long next, struct mm_walk *walk)
-+{
-+	return __write_opcode(ptep, vaddr, PAGE_MASK, walk);
-+}
-+
- static const struct mm_walk_ops write_opcode_ops = {
-+	.hugetlb_entry		= __write_opcode_hugetlb,
- 	.pte_entry		= __write_opcode_pte,
- 	.walk_lock		= PGWALK_WRLOCK,
- };
-@@ -492,7 +520,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 		unsigned long opcode_vaddr, uprobe_opcode_t opcode)
- {
- 	struct uprobe *uprobe = container_of(auprobe, struct uprobe, arch);
--	const unsigned long vaddr = opcode_vaddr & PAGE_MASK;
-+	unsigned long vaddr = opcode_vaddr & PAGE_MASK;
- 	const bool is_register = !!is_swbp_insn(&opcode);
- 	struct uwo_data data = {
- 		.opcode = opcode,
-@@ -503,6 +531,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 	struct mmu_notifier_range range;
- 	int ret, ref_ctr_updated = 0;
- 	struct page *page;
-+	unsigned long page_size = PAGE_SIZE;
- 
- 	if (WARN_ON_ONCE(!is_cow_mapping(vma->vm_flags)))
- 		return -EINVAL;
-@@ -521,7 +550,14 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 	if (ret != 1)
- 		goto out;
- 
--	ret = verify_opcode(page, opcode_vaddr, &opcode);
-+
-+	if (is_vm_hugetlb_page(vma)) {
-+		struct hstate *h = hstate_vma(vma);
-+		page_size = huge_page_size(h);
-+		vaddr &= huge_page_mask(h);
-+		page = compound_head(page);
-+	}
-+	ret = verify_opcode(page, opcode_vaddr, &opcode, ~(page_size - 1));
- 	put_page(page);
- 	if (ret <= 0)
- 		goto out;
-@@ -541,12 +577,12 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 		 * be able to do it under PTL.
- 		 */
- 		mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
--					vaddr, vaddr + PAGE_SIZE);
-+					vaddr, vaddr + page_size);
- 		mmu_notifier_invalidate_range_start(&range);
- 	}
- 
- 	/* Walk the page tables and perform the actual magic. */
--	ret = walk_page_range_vma(vma, vaddr, vaddr + PAGE_SIZE,
-+	ret = walk_page_range_vma(vma, vaddr, vaddr + page_size,
- 				  &write_opcode_ops, &data);
- 
- 	if (!is_register)
-@@ -816,6 +852,7 @@ static int __copy_insn(struct address_space *mapping, struct file *filp,
- 			void *insn, int nbytes, loff_t offset)
- {
- 	struct page *page;
-+	unsigned long mask = PAGE_MASK;
- 	/*
- 	 * Ensure that the page that has the original instruction is populated
- 	 * and in page-cache. If ->read_folio == NULL it must be shmem_mapping(),
-@@ -823,12 +860,17 @@ static int __copy_insn(struct address_space *mapping, struct file *filp,
- 	 */
- 	if (mapping->a_ops->read_folio)
- 		page = read_mapping_page(mapping, offset >> PAGE_SHIFT, filp);
--	else
-+	else if (!is_file_hugepages(filp))
- 		page = shmem_read_mapping_page(mapping, offset >> PAGE_SHIFT);
-+	else {
-+		struct hstate *h = hstate_file(filp);
-+		mask = huge_page_mask(h);
-+		page = find_get_page(mapping, (offset & mask) >> PAGE_SHIFT);
-+	}
- 	if (IS_ERR(page))
- 		return PTR_ERR(page);
- 
--	copy_from_page(page, offset, insn, nbytes);
-+	copy_from_page(page, offset, insn, nbytes, mask);
- 	put_page(page);
- 
- 	return 0;
-@@ -1175,9 +1217,12 @@ static int __uprobe_register(struct inode *inode, loff_t offset,
- 	if (!uc->handler && !uc->ret_handler)
- 		return -EINVAL;
- 
--	/* copy_insn() uses read_mapping_page() or shmem_read_mapping_page() */
-+	/* copy_insn() uses read_mapping_page() or shmem/hugetlbfs specific
-+	 * logic
-+	 */
- 	if (!inode->i_mapping->a_ops->read_folio &&
--	    !shmem_mapping(inode->i_mapping))
-+	    !shmem_mapping(inode->i_mapping) &&
-+	    !hugetlbfs_mapping(inode->i_mapping))
- 		return -EIO;
- 	/* Racy, just to catch the obvious mistakes */
- 	if (offset > i_size_read(inode))
-@@ -1698,7 +1743,7 @@ void __weak arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
- 				  void *src, unsigned long len)
- {
- 	/* Initialize the slot */
--	copy_to_page(page, vaddr, src, len);
-+	copy_to_page(page, vaddr, src, len, PAGE_MASK);
- 
- 	/*
- 	 * We probably need flush_icache_user_page() but it needs vma.
-@@ -2062,7 +2107,7 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
- 	if (result < 0)
- 		return result;
- 
--	copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
-+	copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE, PAGE_MASK);
- 	put_page(page);
-  out:
- 	/* This needs to return true for any variant of the trap insn */
+Because unix sockets, signals, and other IPCs are fully controlled by
+the kernel (contrary to inet sockets that get out of the system), we can
+add ingress and egress control according to the source and the
+destination.
 
--- 
-Guillaume Morin <guillaume@morinfr.org>
+To control the direction we could add an
+LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE and a
+LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND rights (these names are a bit
+long but at least explicit).  To control the source and destination, it
+makes sense to use Landlock domain (i.e. sandboxes):
+LANDLOCK_DOMAIN_HIERARCHY_PARENT, LANDLOCK_DOMAIN_HIERARCHY_SELF, and
+LANDLOCK_DOMAIN_HIERARCHY_CHILD.  This could be used by extending the
+landlock_ruleset_attr type and adding a new
+landlock_domain_hierarchy_attr type:
+
+struct landlock_ruleset_attr ruleset_attr = {
+  .handled_access_dom = LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE | \
+                        LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND,
+}
+
+// Allows sending data to and receiving data from processes in the same
+// domain or a child domain, through abstract unix sockets.
+struct landlock_domain_hierarchy_attr dom_attr = {
+  .allowed_access = LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE | \
+                    LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND,
+  .relationship = LANDLOCK_DOMAIN_HIERARCHY_SELF | \
+                  LANDLOCK_DOMAIN_HIERARCHY_CHILD,
+};
+
+It should also work with other kind of IPCs:
+* LANDLOCK_ACCESS_DOM_UNIX_PATHNAME_RECEIVE/SEND (signal)
+* LANDLOCK_ACCESS_DOM_SIGNAL_RECEIVE/SEND (signal)
+* LANDLOCK_ACCESS_DOM_XSI_RECEIVE/SEND (XSI message queue)
+* LANDLOCK_ACCESS_DOM_MQ_RECEIVE/SEND (POSIX message queue)
+* LANDLOCK_ACCESS_DOM_PTRACE_RECEIVE/SEND (ptrace, which would be
+  limited)
+
+What do you think?
