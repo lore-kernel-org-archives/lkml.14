@@ -1,101 +1,113 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B05171E67
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F541175560
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714493612; cv=none; b=ICayA47OgyPMWDg6MRrmYNmkNQLZg4QT1qw8xBCLtHu/7QcsiyXttjKODMBiEb6bKNcy2qh4FTVBqGHMAxFqlfvjF/m9YHVhnjcAH/37hMh0vxn4tU504ZQ+qRlXa5SJUXYD4s8mJnHhuyFj9OajgoC4qiDSjke5PiD9+s22eHM=
+	t=1714493644; cv=none; b=hJwezKqdKbrO1lCLO3H1BGCtNGTUV8oUlaIWOfLPGgbUfOdp4y0Uq9BlZY/ml+KbcUjkUfIVH2fccOmfmvblkUDS/GD2303fh/EoMVb6t7Dy0joclefGD7gNAIYestaIiCcFmVzwyApGgb+6MfdCXP30NbFs0HQDz8bGJL8gFR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714493612; c=relaxed/simple;
-	bh=nIL/KvEMp4/IgWtjMvnl4C+DlegfqosHdr/T/x6z7ks=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VUXc0bDnak2n0djF9ot2FM2WbI1+VTPBK7wzU5U2H4ELGcGOTTtY5Od74AHJAIZ0HLN4yPHp4y1SHCyBQtNFqefKnxiuuOnjimXKBH9ZJ22D8Pd3FAHWthAMmEkYuED2rQwJEQdFHE3/Z7t9hnfaslkf4348xycxk2NTxTDVilc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xmu4FeYh; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1714493644; c=relaxed/simple;
+	bh=dPB5zK9sUqob7ONr7G14dO/AgkbaD3ijO6EnAMAwfdQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cZXb/nblKbQtqFxRDpC+sgIqNd99sOUYtJcTgIMFrx0WfzLyUkp6GGwrbOHk6GqB0GX1fterO3T91Wh83UK0JKzbBpQHE/fYR7qEGtum88b2te3FI4TcUsou1l2r+L/97RbQZQGuEIowkrqnnSaRI1nYhqMLDLoPDTw6hkQx/Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fwIL/r1A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZY9IU17A; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xmu4FeYh"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61bea0c36bbso19197177b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:13:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714493610; x=1715098410; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oC4A/0bhs1W5SnhQoh5JNIURRDBxbc8YV5BTwNgFvY8=;
-        b=Xmu4FeYhRxuudM7BEN/qFQSlIv/F5+ccs0tmmPu8r1zNFkK1aTbMJD+9VTmh2BPsYv
-         Xy1F0KOqCiN3EhR3ZrHFy5f+wUu0fCHVbV3B0+gcMsHee7gQz7XeJxYiuvcD0qAxpA1A
-         ZanS2H24MbGqaws/Le5l/Bbe4YCGz7e7v/m3pcKf2dAmzhnIOioztAc6eDMZwMIq1BTg
-         iQkg6oUWtx8GQS1WHk7rebTcIk3dlOVl11j85jR6FSrvdAuvRA8EF3zCw/tf2YVYVrL/
-         aPYyAkvK4Ndk7N01tk+qT789QU/HjHFRXKIggmJERHEorGtoG1y1jrAIwV1b/Q7ncuwC
-         2UbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714493610; x=1715098410;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oC4A/0bhs1W5SnhQoh5JNIURRDBxbc8YV5BTwNgFvY8=;
-        b=fyCw1/bLxjVbU4FCqAHRYIQ9cgORsaOj2augFL/hwz83fFTTpJupJzBcKVrz3bCnr3
-         pt3K0eCtMn4a+1M32aeWeuCeXLZ8MhB2YKl4DhXta7+3m9kwr+YIZNdHgo76+LLwFOKf
-         FhOI0DMpHxc5gQq4l654fOPYFUfdjkSiYm3Nqjlmwx32kys3qz21pyzwCVz0uYidS3qa
-         YYH1KEnQFVcKTcOQWMm1MdkCOJrH8gebBtokVeyQSIwdlbjezN3qSwHWdPgs1vcBsZwI
-         +YJ4tQy6nXmKqAhyteTSEwHVT9xNz3khdPWlhEHbdL1J7FD6w6qVNhOxHS146Bg9xdPG
-         XWlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWERPcU6C4ph3jmNdGs8a02J2NR9CbWMlqfXZRpyiZ7iXTHLA0jx2gmgnwtCzATbGwsqfx+u0qPATQ/hQGa10YggooFFGwAJunc1xZ/
-X-Gm-Message-State: AOJu0YyG1ZAI8+Hsj//YE4PYrCu1gk9vYslLztlBnTk9ggVNf2xD0vQa
-	6SDFjRI8spIu2hP+1ZgWM9MIYzOv5Rpq0MqgnzrCTVlFIvw0iTJP6w9VrEVv73ZcHhiLKSE65pW
-	iQQ==
-X-Google-Smtp-Source: AGHT+IHPJXOWZicEl8cUsM9FpBFXJDiuKq8bODRIST42pHLkLGvawHCwZduQ2FiFTnquT9vHhjskKOj8wYc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:83c9:0:b0:61b:ec81:3f3b with SMTP id
- t192-20020a8183c9000000b0061bec813f3bmr780ywf.5.1714493609737; Tue, 30 Apr
- 2024 09:13:29 -0700 (PDT)
-Date: Tue, 30 Apr 2024 09:13:28 -0700
-In-Reply-To: <2eab6265-3478-45db-86a5-722de6f39e74@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fwIL/r1A";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZY9IU17A"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1714493641;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bIuSOLfe5ENoYZ0SjFIuAk7cE658IewkHw8ZxtoyQ3k=;
+	b=fwIL/r1AP/mv/1jDCMWQS3c0pUCdABWFVFCqjv0Pg+NL7g5fLbitsC5dpYKbs4Y4irF0GR
+	JbYOnoCZhSHR5cjmMFWeuSisCKmxSTTxG2pRV/dve0XS/0543ZgIgMt8naauTaNfXWe5H+
+	wLRAQ9CQTvAyejmyd/JDmeQMhp69RsldMLpm1q5wZIrmgpBUon9myNwo5qHgKhKCZFzEeU
+	z29FNHFk27fKkW1EzrH4zl/8njilaqp8XOffEWUqZwXjS1R0cDiMp6/OJXyxW89zJMy0JY
+	/QKtDGfNgTwZbppXeh/vDW8NKpAe0p1z8XHDOWClCJkP0Z+K5Y3OmGw7/HZUIw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1714493641;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bIuSOLfe5ENoYZ0SjFIuAk7cE658IewkHw8ZxtoyQ3k=;
+	b=ZY9IU17AG2BjVOALYrsbKD470mM4bBYO0IezuukNaJ7YYePLyD68y7aaRY5MXkixJyngs9
+	iuHUgjA+YruhqBBw==
+To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
+Cc: Juergen Gross <jgross@suse.com>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 1/2] x86/cpu: fix BSP detection when running as Xen PV
+ guest
+In-Reply-To: <20240405123434.24822-2-jgross@suse.com>
+References: <20240405123434.24822-1-jgross@suse.com>
+ <20240405123434.24822-2-jgross@suse.com>
+Date: Tue, 30 Apr 2024 18:13:58 +0200
+Message-ID: <87ttjisu9l.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <d0563f077a7f86f90e72183cf3406337423f41fe.camel@intel.com>
- <ZifQiCBPVeld-p8Y@google.com> <61ec08765f0cd79f2d5ea1e2acf285ea9470b239.camel@intel.com>
- <9c6119dacac30750defb2b799f1a192c516ac79c.camel@intel.com>
- <ZiqFQ1OSFM4OER3g@google.com> <b605722ac1ffb0ffdc1d3a4702d4e987a5639399.camel@intel.com>
- <Zircphag9i1h-aAK@google.com> <b2bfc0d157929b098dde09b32c9a3af18835ec57.camel@intel.com>
- <Zi_93AF1qRapsUOq@google.com> <2eab6265-3478-45db-86a5-722de6f39e74@intel.com>
-Message-ID: <ZjEYqCgtt4ZgVKth@google.com>
-Subject: Re: [PATCH v19 023/130] KVM: TDX: Initialize the TDX module when
- loading the KVM intel kernel module
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: Tina Zhang <tina.zhang@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
-	Bo2 Chen <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>, 
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Erdem Aktas <erdemaktas@google.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, Apr 30, 2024, Kai Huang wrote:
-> On 30/04/2024 8:06 am, Sean Christopherson wrote:
-> > My suggestion is essentially "throw in a CR4.VMXE check before
-> > TDH.SYS.LP.INIT if it's easy".  If it's not easy for some reason, then don't do
-> > it.
-> 
-> I see.  The disconnection between us is I am not super clear why we should
-> treat TDH.SYS.LP.INIT as a special one that deserves a CR4.VMXE check but
-> not other SEAMCALLs.
+On Fri, Apr 05 2024 at 14:34, Juergen Gross wrote:
+> When booting as a Xen PV guest the boot processor isn't detected
+> correctly and the following message is shown:
+>
+>   CPU topo: Boot CPU APIC ID not the first enumerated APIC ID: 0 > 1
+>
+> Additionally this results in one CPU being ignored.
+>
+> Fix that by calling the BSP detection logic when registering the boot
+> CPU's APIC, too.
+>
+> Fixes: 5c5682b9f87a ("x86/cpu: Detect real BSP on crash kernels")
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+>  arch/x86/kernel/cpu/topology.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kernel/cpu/topology.c b/arch/x86/kernel/cpu/topology.c
+> index aaca8d235dc2..23c3db5e6396 100644
+> --- a/arch/x86/kernel/cpu/topology.c
+> +++ b/arch/x86/kernel/cpu/topology.c
+> @@ -255,7 +255,7 @@ void __init topology_register_boot_apic(u32 apic_id)
+>  	WARN_ON_ONCE(topo_info.boot_cpu_apic_id != BAD_APICID);
+>  
+>  	topo_info.boot_cpu_apic_id = apic_id;
+> -	topo_register_apic(apic_id, CPU_ACPIID_INVALID, true);
+> +	topology_register_apic(apic_id, CPU_ACPIID_INVALID, true);
 
-Because TDH.SYS.LP.INIT is done on all CPUs via an IPI function call, is a one-
-time thing, and is at the intersection of core TDX and KVM module code, e.g. the
-the core TDX code has an explicit assumption that:
+No. This does not fix anything at all. It just papers over the
+underlying problem.
 
- * This function assumes the caller has: 1) held read lock of CPU hotplug
- * lock to prevent any new cpu from becoming online; 2) done both VMXON
- * and tdx_cpu_enable() on all online cpus.
+Thanks,
 
-KVM can obviously screw up and attempt SEAMCALLs without being post-VMXON, but
-that's entirely a _KVM_ bug.  And the probability of getting all the way to
-something like TDH_MEM_SEPT_ADD without being post-VMXON is comically low, e.g.
-KVM and/or the kernel would likely crash long before that point. 
+        tglx
+---
+diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+index 27d1a5b7f571..ac41d83b38d3 100644
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -154,9 +154,9 @@ static void __init xen_pv_smp_config(void)
+ 	u32 apicid = 0;
+ 	int i;
+ 
+-	topology_register_boot_apic(apicid++);
++	topology_register_boot_apic(apicid);
+ 
+-	for (i = 1; i < nr_cpu_ids; i++)
++	for (i = 0; i < nr_cpu_ids; i++)
+ 		topology_register_apic(apicid++, CPU_ACPIID_INVALID, true);
+ 
+ 	/* Pretend to be a proper enumerated system */
+
+        
+
