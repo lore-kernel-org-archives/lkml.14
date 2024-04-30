@@ -1,64 +1,56 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EFA1EB46;
-	Tue, 30 Apr 2024 15:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E507152799;
+	Tue, 30 Apr 2024 15:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714489531; cv=none; b=NqHUFvBD0WmPDnh3PgtjnzW8NXPBJoj1iaMQitN2YS5GcyoSnymLXA6lMwbRSvUl5pDmGVVTQnWhxZbEkh6o6heYhnBgJ3XGj1l/1wqsHWBMyfR6EMwXJwuOLOYH+s1C915lkzIJpvJGQwYM0A0AMMnTjpQ+vfQRlQhLXxab/04=
+	t=1714489644; cv=none; b=Xl/Qv1ofJV2IzCN/JrjRvSyu58tgfiHrjsaXg4lGYfYD1XuPUtax/q9RERRegXSaTNWxVzpOSsJa/BnrgM5K/DnwIWmkUivYZyJZi+J2laS8xT4Xm6Rqn0bw4MOl57NnBg+hKgpQdb7BKx5Y6ItJ84vzkMGic4DZEn+JsZUbqIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714489531; c=relaxed/simple;
-	bh=sCt+UxI6TBfl++E09vA5VsETPBmweRbT9e1f9cXJ1PY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nfc5NtxH8HTvCrgNoWGubBJmk+V9+1OOuhsRvpL7+KIqPLOT3bMNoUC6ywqmyrplGbB8wDRL5W2Xg2Bb4FsE8WNfhJWBJpOvvDwkoZDiMH6KlbE5aK+FmjhbAe03U9K5hzPuNpFD6/DvabsYUxX4lSFqZdT34BypqPRVgOI1lZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GFEOmLD0; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714489644; c=relaxed/simple;
+	bh=P1Yb9UHx7qGFrtffHgDWXFAhgYxkjfHOuo9CX+hCpI4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IRkG2yisznq3Gz2NGaEfuAs8HoYfiB9wLdh5b4DuG9slMg4jN4BwCd6o7tF5tKgen0jXt5w8Kw7JqJV8LEcso7Sj/hBTahIy4duniwIOrM7UEkwtsOkKzcxADjwP68KckN8Ok36t4Fw1kKQbm3Nz5eUN8AgwqfPPWohXcWfJey8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=bvNQyhix; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=TVaBAxDq; arc=none smtp.client-ip=88.97.38.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFEOmLD0"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51ab4ee9df8so7380468e87.1;
-        Tue, 30 Apr 2024 08:05:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714489528; x=1715094328; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=L9/NJrpLsDgUKZ/eCQi2fHZjMr6fY5Jto/wmaPqbXGY=;
-        b=GFEOmLD0E7Jj8rq/PFaH2hT7WBC1GPGcj/kvIBhxdT/77teSnKettF/IGnSiqRY0mH
-         0YAecGyZiwzPJmdbv4wMu296kaDZHz9D8PdU7hDmYnaengjtdbE6LlYnN6ew/A10LHeJ
-         kg4NqTyCznzBFtViGEZk8wE5KLpVboZWEBzk++OKIATsRKHgsFXaIdctAtsv0Vwxgx8s
-         a06e8I92PLKVAPV3XrO2PJxjkNCg7RmcgWJLAB1Mb8hHip7k/VqqgodlhDRNapSkDA5g
-         oMMTgEe5wwhImmmukD1OgGceWDLNqRl2SllrXlaERTgvhygvQ/rBRct5ix51TjtPSOjI
-         nQsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714489528; x=1715094328;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=L9/NJrpLsDgUKZ/eCQi2fHZjMr6fY5Jto/wmaPqbXGY=;
-        b=m7TY3jHehwDCMvWhuu3H3XM7/x3lbfaS5/o02GgPsJkqG5o138IJ+eyI0ySwwdNiH7
-         ikd0YhK9+p9CV6F0bICkbcb7c9EWoScai2tzjxfKTsBjqDah9yc6Xx1FUKsxcpaWx84p
-         1Cmj5wN1/7qbFiDwwp0u5J2fwYrJdP2mpV2TkQtSlpbOnZHfZgdVYfSXJnsMYu8VsMmk
-         fv9OAQmWpdOBBm1re/jZlh7g/Gw1RFr+x3gIMVSEwVGH1QkK3URT3Kd1hINVF+piFzBi
-         ccbCSUuqxuHIDoQlr4TtKNCo9RJ+kOjvPjzk632s8lu842mDdwFTVZA9rGaqQ6D8Hxlh
-         riLw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ/GrzgMzthz/y4pyj7ES9hPY0EXF3TZCPSHysEkDEENWMGXuV2dRByPDX9bFpyNT5Pb/MOSRawhzFXbZgh6wtBQ5kTRrjhBHcSwXYVkml
-X-Gm-Message-State: AOJu0YyLLhd/BrB5eMGKlrm/X9or32tVxwmfON5efaSe9De/EY578Hp7
-	X3l+SbxYQq1sxbups82f2qaj5VzRw49bKdoV3XWJMdhmuxtksw==
-X-Google-Smtp-Source: AGHT+IH/OjrEvEtGCEtdKjMQgds5qVp8wVj3v4WWkPEuMpB+GcbTYq4DDv4WxL9wTC6IqWj27esR4Q==
-X-Received: by 2002:a05:6512:b96:b0:51d:497e:83d6 with SMTP id b22-20020a0565120b9600b0051d497e83d6mr7055010lfv.20.1714489527700;
-        Tue, 30 Apr 2024 08:05:27 -0700 (PDT)
-Received: from localhost.localdomain ([85.89.127.166])
-        by smtp.gmail.com with ESMTPSA id q15-20020ac246ef000000b00518ee8c7c1fsm4511533lfo.176.2024.04.30.08.05.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 08:05:27 -0700 (PDT)
-From: Shengyu Li <shengyu.li.evgeny@gmail.com>
-To: shuah@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Shengyu Li <shengyu.li.evgeny@gmail.com>
-Subject: [PATCH] selftest/tty: Use harness framework in tty
-Date: Tue, 30 Apr 2024 23:05:08 +0800
-Message-Id: <20240430150508.82467-1-shengyu.li.evgeny@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="bvNQyhix";
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="TVaBAxDq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1714489595; bh=P1Yb9UHx7qGFrtffHgDWXFAhgYxkjfHOuo9CX+hCpI4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bvNQyhixOJxDveSCSESDcnJXpADudXP+EY3U3UiW+drSxGzfBtS4WR8+qzvQalPbN
+	 kRcoFsm/hGV0p4geuzGMHgmIM+Dhf/rTLHPqKzcS1TDbsdt1h+H8hjmjSlzBWAggAY
+	 9sj/A+F7p/jnix7XILY9Lu9wJnCPAOYUYJ9AJMAjLOlxrpPBjY06enfBReQ8DmFAjH
+	 lUvSrEfqtdE27cv70BtHWbaXZ04eAif1evWmRyhQpv792NcyTnq51a02BTxSNlVfT+
+	 NaWTy2zqSgWK2ZcYOnh2wkSVw6GBiiv6eFaFl2MnZBgKVWT4KCw4l5eMQAnozJbUE2
+	 A/cN7Meii3GFw==
+Received: by gofer.mess.org (Postfix, from userid 501)
+	id CB49C1000C2; Tue, 30 Apr 2024 16:06:35 +0100 (BST)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1714489594; bh=P1Yb9UHx7qGFrtffHgDWXFAhgYxkjfHOuo9CX+hCpI4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TVaBAxDqrqd1HfdhBISAYP1yj0KARVCrzP8aUHr/A1f5nFwVMpDnlzY7d3G/d7Atw
+	 i0Gy0pCi18M5VkxttJbCh7Dj8BMSLv2ulBFLzjZmDhreTRjAQDqkVQt0UWitc2pB+A
+	 S3z9leuhqjZ3DysXu7DqEyjj8epZJHsDbKrUfvYjEZSdyjbWZORljECXWZ6D6X/Yu+
+	 qMhDlhBw7AiVF/cLd0MHARO5PD/mQstzfYBS4Bcb/zUOR8+rXtpipJ05J8GX2fy6Fb
+	 N8ZC13RBU/o087Y7S/L4Brk+gOXFBNhf/tmV7oTFN6f4uSgRhzz/XZ0o5VYvGs51Jy
+	 PKVs4COS55+wQ==
+Received: from localhost.localdomain (bigcore.local [IPv6:2a02:8011:d000:212:bc3c:1b4a:a6fa:362f])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gofer.mess.org (Postfix) with ESMTPSA id A3A1D10005B;
+	Tue, 30 Apr 2024 16:06:34 +0100 (BST)
+From: Sean Young <sean@mess.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] media: mceusb: No need for vendor/product ID in name
+Date: Tue, 30 Apr 2024 16:06:22 +0100
+Message-ID: <20240430150623.2910-1-sean@mess.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,107 +59,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Similarly, this one is based on automated tools and a very 
-small percentage of manual modifications to automatically refactor 
-the version that uses kselftest_harness.h, which is logically clearer.
+This is available in other places and doesn't belong in the name
+of the rc device.
 
-Signed-off-by: Shengyu Li <shengyu.li.evgeny@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
 ---
- .../testing/selftests/tty/tty_tstamp_update.c | 48 ++++++-------------
- 1 file changed, 14 insertions(+), 34 deletions(-)
+ drivers/media/rc/mceusb.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/tty/tty_tstamp_update.c b/tools/testing/selftests/tty/tty_tstamp_update.c
-index 9e1a40f5db17..cdaa6a15ee65 100644
---- a/tools/testing/selftests/tty/tty_tstamp_update.c
-+++ b/tools/testing/selftests/tty/tty_tstamp_update.c
-@@ -9,7 +9,7 @@
- #include <unistd.h>
- #include <linux/limits.h>
+diff --git a/drivers/media/rc/mceusb.c b/drivers/media/rc/mceusb.c
+index c76ba24c1f55..615f48898300 100644
+--- a/drivers/media/rc/mceusb.c
++++ b/drivers/media/rc/mceusb.c
+@@ -494,7 +494,6 @@ struct mceusb_dev {
+ 	u32 carrier;
+ 	unsigned char tx_mask;
  
--#include "../kselftest.h"
-+#include "../kselftest_harness.h"
+-	char name[128];
+ 	char phys[64];
+ 	enum mceusb_model_type model;
  
- #define MIN_TTY_PATH_LEN 8
+@@ -1591,16 +1590,10 @@ static struct rc_dev *mceusb_init_rc_dev(struct mceusb_dev *ir)
+ 		goto out;
+ 	}
  
-@@ -42,65 +42,45 @@ static int write_dev_tty(void)
- 	return r;
- }
- 
--int main(int argc, char **argv)
-+TEST(tty_tstamp_update)
- {
--	int r;
- 	char tty[PATH_MAX] = {};
- 	struct stat st1, st2;
--	int result = KSFT_FAIL;
- 
--	ksft_print_header();
--	ksft_set_plan(1);
+-	snprintf(ir->name, sizeof(ir->name), "%s (%04x:%04x)",
+-		 mceusb_model[ir->model].name ?
+-			mceusb_model[ir->model].name :
+-			"Media Center Ed. eHome Infrared Remote Transceiver",
+-		 le16_to_cpu(ir->usbdev->descriptor.idVendor),
+-		 le16_to_cpu(ir->usbdev->descriptor.idProduct));
 -
--	r = readlink("/proc/self/fd/0", tty, PATH_MAX);
--	if (r < 0) {
-+	ASSERT_GE(readlink("/proc/self/fd/0", tty, PATH_MAX), 0) {
- 		ksft_print_msg("readlink on /proc/self/fd/0 failed: %m\n");
--		goto out;
- 	}
+ 	usb_make_path(ir->usbdev, ir->phys, sizeof(ir->phys));
  
- 	if (!tty_valid(tty)) {
--		ksft_print_msg("invalid tty path '%s'\n", tty);
--		result = KSFT_SKIP;
--		goto out;
--
-+		ksft_print_msg("SKIP: invalid tty path '%s'\n", tty);
-+		exit(KSFT_SKIP);
- 	}
- 
--	r = stat(tty, &st1);
--	if (r < 0) {
-+	ASSERT_GE(stat(tty, &st1), 0) {
- 		ksft_print_msg("stat failed on tty path '%s': %m\n", tty);
--		goto out;
- 	}
- 
- 	/* We need to wait at least 8 seconds in order to observe timestamp change */
- 	/* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fbf47635315ab308c9b58a1ea0906e711a9228de */
- 	sleep(10);
- 
--	r = write_dev_tty();
--	if (r < 0) {
--		ksft_print_msg("failed to write to /dev/tty: %s\n",
--			       strerror(-r));
--		goto out;
-+	ASSERT_GE(write_dev_tty(), 0) {
-+		ksft_perror("failed to write to /dev/tty");
- 	}
- 
--	r = stat(tty, &st2);
--	if (r < 0) {
-+	ASSERT_GE(stat(tty, &st2), 0) {
- 		ksft_print_msg("stat failed on tty path '%s': %m\n", tty);
--		goto out;
- 	}
- 
- 	/* We wrote to the terminal so timestamps should have been updated */
--	if (st1.st_atim.tv_sec == st2.st_atim.tv_sec &&
--	    st1.st_mtim.tv_sec == st2.st_mtim.tv_sec) {
-+	ASSERT_NE(st1.st_atim.tv_sec, st2.st_atim.tv_sec) {
-+		ksft_print_msg("tty timestamps not updated\n");
-+	}
-+	ASSERT_NE(st1.st_mtim.tv_sec, st2.st_mtim.tv_sec) {
- 		ksft_print_msg("tty timestamps not updated\n");
--		goto out;
- 	}
- 
- 	ksft_print_msg(
- 		"timestamps of terminal '%s' updated after write to /dev/tty\n", tty);
--	result = KSFT_PASS;
--
--out:
--	ksft_test_result_report(result, "tty_tstamp_update\n");
--
--	ksft_finished();
- }
-+TEST_HARNESS_MAIN
+-	rc->device_name = ir->name;
++	rc->device_name = mceusb_model[ir->model].name ? :
++		"Media Center Ed. eHome Infrared Remote Transceiver";
+ 	rc->input_phys = ir->phys;
+ 	usb_to_input_id(ir->usbdev, &rc->input_id);
+ 	rc->dev.parent = dev;
 -- 
-2.25.1
+2.44.0
 
