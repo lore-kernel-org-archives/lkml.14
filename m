@@ -1,112 +1,88 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403F3172BC6;
-	Tue, 30 Apr 2024 15:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1517173344
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714492601; cv=none; b=tUf663qPBcK6sMsjOuj27t0ejndRpfjdm2OkYCH4Noau3MISih0YN8DQvQB2Gg+kJy6ryQvI4U4Ao//W1Us5VyY4azJafbwrLRk5K9SAgBJUV5ZjJ/vLriC6zCRCsn2oumzotp7rzYK7pqeHoIQ/u3VEIsRUFAm95Fyx5JQjoDU=
+	t=1714492869; cv=none; b=gWGam8un6JowYsFcl/8x6yIcvXXbMF7bKYBUW6O7n/7SfYnmU18+8R1FSXSDWFVuELbAZaipn4ClW1LoK5gF5ZysUaE7mI9cgh6p0hVIyNEyOJtgafrfk++EHJA+i3iHC4vZcMdOLt1vNR9Uzm63J6HHCl1ly+xLb5G4ud3pyiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714492601; c=relaxed/simple;
-	bh=u4IgZKgSqkJ8S3Q9RctjnjagFB4IRFtxZbCY1ltX7qM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=pEDnbE+9dtw79bx2RA+tk/I9DMh4gYlGL2wpjrxUiHD8qCdX7Gw91cAwdU4ekrTGg/1TPC2tUm4lW5WRz0as/QLY/erpAJ1F2XuCvljqWubzVtD5Rdz3EglSU3AY4Dx49ws9Rj9DTt0rhbo5mdq5S5vGRrm2d2T15jSFTS9PdDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nKHUy0nz; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1714492869; c=relaxed/simple;
+	bh=uaQtm99TTwvcVB6dE70G+TricRvh3YWN7Mj9VbhFVoM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dkoKDokeijP2NKa7P3Pk+fzxWnKRV84SwTFmCNN/qLVyP9j/XiKBaO1bWWQCxjI+06Qb0XeQk+iKu6/SqlgdHslZEICIodNeNtZRxMHOPQ3H/ZfkSgllyuFWWa2Nxsgcd0TAiu4DQ+HaEVA/Y0Pj4zXvC1kXvFMHwerxLdnJZcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MNBPjjjC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nKHUy0nz"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43UBMnse009744;
-	Tue, 30 Apr 2024 15:56:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	qcppdkim1; bh=Mpjm17i6B4MRL/9Zsqr4cHQqmIHEkNPKZyKlvRv22IU=; b=nK
-	HUy0nzhzG568t4rYqiC4q05+6iaNRhdTXDDJwms4m4l4Aw3VLQu+mKLMVEje2bjb
-	XbENnYn0obxTFSTRzxrtpjX0I0EdHcf78vjxy9V+xAcmi4ACc7M99VIIqycbV6UK
-	PKgZsSdYR1PxPK4eN9GxiSN7r4sI5vTYD8khatGSvwiTBuV8mrrgTYFbbrAqoYgY
-	Kiyw62obLhlAcybcPoTU3fyk+q5nlbRyGbEWWPxHVoMU/Bj9/BRy1uO4ldGLUuys
-	W+AzqNVcur/KWxJV+xtb2cme8xsNQrJRVpcT/s90D2tpEEC0CltB2EJZAZEN/7LF
-	nSGscyeI++7TseLxlCow==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xtyptgpba-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 15:56:32 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 43UFtqoJ032542;
-	Tue, 30 Apr 2024 15:55:52 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3xrtem1a7v-1;
-	Tue, 30 Apr 2024 15:55:52 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43UFtqMf032537;
-	Tue, 30 Apr 2024 15:55:52 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 43UFtqY6032516;
-	Tue, 30 Apr 2024 15:55:52 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
-	id C26F13BD6; Tue, 30 Apr 2024 21:25:51 +0530 (+0530)
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-To: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, konrad.dybcio@linaro.org,
-        manivannan.sadhasivam@linaro.org
-Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_schintav@quicinc.com, Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 2/3] PCI: qcom-ep: Add support for SA8775P SOC
-Date: Tue, 30 Apr 2024 21:25:38 +0530
-Message-Id: <1714492540-15419-3-git-send-email-quic_msarkar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1714492540-15419-1-git-send-email-quic_msarkar@quicinc.com>
-References: <1714492540-15419-1-git-send-email-quic_msarkar@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: AnEdzKqwuJVEYGYEyiGS5N5-umweLOek
-X-Proofpoint-ORIG-GUID: AnEdzKqwuJVEYGYEyiGS5N5-umweLOek
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-30_09,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 adultscore=0 clxscore=1015 mlxscore=0 suspectscore=0
- malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=999
- spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404300112
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MNBPjjjC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714492866;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uaQtm99TTwvcVB6dE70G+TricRvh3YWN7Mj9VbhFVoM=;
+	b=MNBPjjjCURNmbcVqrobS4wSKwj29nv/WM/CuMqz7iM+pY9h/eWgldpcTDHo9DSdJ/zL74w
+	mDui6PXeynds3oNFvZRc53eTPt6nXP+NSjy0hZFXAiPyIVDRuoofp1sym6TtERVyPiOa+u
+	L0ESnB8/ZqtXQDy0VzKjZu2lwOCdJ5o=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-483-yGeb0ux_NhCEedhVE30P2A-1; Tue, 30 Apr 2024 12:01:04 -0400
+X-MC-Unique: yGeb0ux_NhCEedhVE30P2A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 25EC480E95D;
+	Tue, 30 Apr 2024 16:01:03 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.193.71])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 119B620128EF;
+	Tue, 30 Apr 2024 16:00:58 +0000 (UTC)
+From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+To: kuba@kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	inventor500@vivaldi.net,
+	jarkko.palviainen@gmail.com,
+	jtornosm@redhat.com,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	stable@vger.kernel.org,
+	vadim.fedorenko@linux.dev
+Subject: Re: [PATCH v2] net: usb: ax88179_178a: avoid writing the mac address before first reading
+Date: Tue, 30 Apr 2024 18:00:56 +0200
+Message-ID: <20240430160057.557295-1-jtornosm@redhat.com>
+In-Reply-To: <20240430082717.65f26140@kernel.org>
+References: <20240430082717.65f26140@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Add support for SA8775P SoC to the Qualcomm PCIe Endpoint Controller
-driver. Adding new compatible string as it has different set of clocks
-compared to other SoCs.
+> v6.8.8 has 56f78615b already. We need another patch, Jose?
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 1 +
- 1 file changed, 1 insertion(+)
+Hello Jakub,
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 2fb8c15..a95c755 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -875,6 +875,7 @@ static void qcom_pcie_ep_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id qcom_pcie_ep_match[] = {
-+	{ .compatible = "qcom,sa8775p-pcie-ep", },
- 	{ .compatible = "qcom,sdx55-pcie-ep", },
- 	{ .compatible = "qcom,sm8450-pcie-ep", },
- 	{ }
--- 
-2.7.4
+I will try to analyze it during the next week (I will be out until then).
+
+In the meantime, in order to get more information about the possible
+regression:
+
+Isaac,
+Which version was it working in?
+Do you know if it was working before d2689b6a86b9 ("net: usb: ax88179_178a:
+avoid two consecutive device resets")?
+
+
+Best regards
+José Ignacio
 
