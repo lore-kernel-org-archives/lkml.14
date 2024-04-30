@@ -1,143 +1,130 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A91129E72;
-	Tue, 30 Apr 2024 23:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CC21A38DE
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 23:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714518446; cv=none; b=XRGjC46DWGowErjPeqaIHxP6trawEIXaFWGkw1qywlJlCDVvP15IlyVB80pgmgv4AdtQQLCqyAhogLHbsNa8P8RLvOqGOslzQrKmv89f9sg80EI1OfDNDaafZXTWfbfsxW+PCTpVa3suzvOAO6EkyrMjAGDREyJx4pIpbhX59EI=
+	t=1714518466; cv=none; b=JFfHaD00sdI0/UouOFA/W2En4zu3v5KjY+F5SL3VCOG/BZFKviGJzhl5vAN1I20Iu85myf1bhFCRt4z5TIY10SVy+D+1xNwt0OHK1sy2aAw/DHSKVKgHK73sta5fm6hmLRqPDChiPOnCQtfQYZX+16mEOE6je0stW5sxP1OxSTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714518446; c=relaxed/simple;
-	bh=4Fp3Qi48gxR++eU3dRna/L7sh73jrL5Mucb8Si43TsA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p+7gci46s/n/wrVK43MIDTmPu+nGwrPhSY0EXYBhplhwUFFIsX9Grr5bzpAo4iw9n23CBWFAR2HhfOh8SK/l+8VXlFQBSvK6chuWKeZVtk74e2z4teHYbAEds6G5KccMf6VAbWvfrxZ/CkUMtqhRuCqVEauscKs+2xz7A2diryI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=aNaDSg5R; arc=none smtp.client-ip=192.19.144.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1714518466; c=relaxed/simple;
+	bh=uPucxD96zlnvHpGfo/0h9rz4gjVxdwhwNcSJTZ2X/ng=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IOy1ZXJKh02XQPHe1kPWrFF5WQxy71TLCQyPXDWzvLxJqb6wTO6mRaihMXGNQBfA7mFCSKSOJYRKGcjxTEcLUoAIqPnv92GqqJPiu9GcYkd6zVnGpMLwQlfjdqeG2QgtbKwNThV1x4iLCEIwukaDASBQWyR8QOAgElORbXChsaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wl3R5p/X; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aNaDSg5R"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 3F0D2C0000E8;
-	Tue, 30 Apr 2024 16:07:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 3F0D2C0000E8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1714518437;
-	bh=4Fp3Qi48gxR++eU3dRna/L7sh73jrL5Mucb8Si43TsA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aNaDSg5RHdblYgSBb7us6jjlyD/NNQyiUjsQikhJ2I47vv4PkLpLmZYsd+FqmFWn4
-	 lCMWGOkjwVVGL3z9IGvInxQCkWYooCZLiX0KaBjrMtm/OpsHEUVCJ7GHxy0eDvQmxl
-	 EWa7ehRRBqRam2t/WiZrI9oYPG3w7JwciHguDIME=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 5C83F18041CAC7;
-	Tue, 30 Apr 2024 16:07:15 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Hauke Mehrtens <hauke@hauke-m.de>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] ARM: dts: BCM5301X: Describe PCIe controllers fully
-Date: Tue, 30 Apr 2024 16:07:14 -0700
-Message-Id: <20240430230714.3923578-3-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240430230714.3923578-1-florian.fainelli@broadcom.com>
-References: <20240430230714.3923578-1-florian.fainelli@broadcom.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wl3R5p/X"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a58eb9a42d9so483466466b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:07:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714518463; x=1715123263; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hWHSx8x3CglXCpDsqd2sqLojUv7uUIhFAB1g3nMJgVQ=;
+        b=Wl3R5p/XX1iuunawwp/dkVu1MR4D33X+xxoxG9o5GlAUCgF8R0iOj2iajOvRFmYUg2
+         aRGLjJMAsVb+MKk9nZDqwntjseq64TjAUi/niCUNYdic4wRUFbOqm2PSW5qoaGHJjAyj
+         NgnbpOvFGEJyM/ICzJ0ZSQ3o/gg76T4vsQ9i8jYAv1tDJcL1gWzsN9UV9wAVKFE6wJIF
+         /WdQ2jtCW5CWHQCEsMhHZZVGptiVsF3yZHpMBwuuLZQlter5FAC1jlrV8xzKyY96OO9T
+         tGdGsqDvCM625bSqqxV98v4BKpEKl0DhmwhxNo7jZkjRtaa6VBbs8o5PqpWR0DvQN+vw
+         stAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714518463; x=1715123263;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hWHSx8x3CglXCpDsqd2sqLojUv7uUIhFAB1g3nMJgVQ=;
+        b=QGAs1AJ3U61JasKngwHuj7mWHLooA6VJ5GOjd317+5IyhzgJLoC92Y6htOC02w6iqm
+         UgbSUEylkJK88XSxXjyotzJPs6YSey9Xp78ElEdo4w93a0fP2fQXhrTdbd8v2ZtMoCRk
+         afeOy6idRklLjOQVydOEQaz9jg/G248IX7EPRMcdOpUyQrherJ3/NcAKduXnQQ/EQuKt
+         ZbTSFQn7Vfz7FyTV3by6+Q443WVm4NE5olt2utwV5fe+j9tplfM194JYgGQeds1pRTnJ
+         /Gg7t990567gCmmT6lQXxYhZC4eeB5EF6Jqr1IrFp66m4gIoaoTXqFeeRF9LN6vEj7Rf
+         UJ0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVRbzi48VC3unRSjw0jGmxoTTEPCTmxm6+uQaB0RcrlhD6ivyw2KrBeWV1WXYhXo08wosAjPYmeZ4ejz3WJa8XnEb2Le4Z13XMoEHL6
+X-Gm-Message-State: AOJu0Yys7OjXvWuZO8t4s7K6BtrIQveoIPb1F/7ryJZ9pzB6ofNTQeI9
+	jCGZ/7k2v9CmiHPob/6M1ZA1Vx2IvjMlY1/lUthy5Suun/XNSSDiQh36wcHyCQW0jQ8IoXqkEOk
+	DFjXrp29moiJfYMwTG7qI4vQmp2l8RwdXFxGU
+X-Google-Smtp-Source: AGHT+IGA4OCcGROuejRidml9TPv3K1lykvce1DRnVEz/IoowhfwrU1qPRaqaxWUMBc5Cjk0KUTlQ2N0VCZ1aAbsKciE=
+X-Received: by 2002:a17:906:b351:b0:a59:674:a297 with SMTP id
+ cd17-20020a170906b35100b00a590674a297mr692168ejb.64.1714518462865; Tue, 30
+ Apr 2024 16:07:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240430060612.2171650-1-shakeel.butt@linux.dev>
+ <20240430060612.2171650-5-shakeel.butt@linux.dev> <CAJD7tkZnXY+Nbip8e6c7WC4qoYC21x=MHop_hT4NqYLKL8Fp6Q@mail.gmail.com>
+ <u3okwix7ovvzzfossbmfalwpq23qa3bmv3secg7tpjk7ghyemq@w3ngvr526rc2>
+ <CAJD7tkZh-bLHQhaPsU7h1WUmK3xwHVoacVcR=P55i+7d0FzfFw@mail.gmail.com> <gmel2s2pysaavfetoqit3zq7grcrsbbfqh7sitg577yip7knwh@bufhf7ymlyd7>
+In-Reply-To: <gmel2s2pysaavfetoqit3zq7grcrsbbfqh7sitg577yip7knwh@bufhf7ymlyd7>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Tue, 30 Apr 2024 16:07:05 -0700
+Message-ID: <CAJD7tkbue8S86YZE3y_1qOF5ee14F9MCuh2iJ0BNBZC8QpL=_Q@mail.gmail.com>
+Subject: Re: [PATCH v3 4/8] memcg: reduce memory for the lruvec and memcg stats
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, "T . J . Mercier" <tjmercier@google.com>, kernel-team@meta.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Tue, Apr 30, 2024 at 4:00=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
+v> wrote:
+>
+> On Tue, Apr 30, 2024 at 10:41:01AM -0700, Yosry Ahmed wrote:
+> > On Tue, Apr 30, 2024 at 10:38=E2=80=AFAM Shakeel Butt <shakeel.butt@lin=
+ux.dev> wrote:
+> > >
+> > > On Tue, Apr 30, 2024 at 01:41:38AM -0700, Yosry Ahmed wrote:
+> > > > On Mon, Apr 29, 2024 at 11:06=E2=80=AFPM Shakeel Butt <shakeel.butt=
+@linux.dev> wrote:
+> > > > >
+> > > [...]
+> > > > > +
+> > > > > +#define NR_MEMCG_NODE_STAT_ITEMS ARRAY_SIZE(memcg_node_stat_item=
+s)
+> > > > > +#define NR_MEMCG_STATS (NR_MEMCG_NODE_STAT_ITEMS + ARRAY_SIZE(me=
+mcg_stat_items))
+> > > > > +static int8_t mem_cgroup_stats_index[MEMCG_NR_STAT] __read_mostl=
+y;
+> > > >
+> > > > NR_MEMCG_STATS and MEMCG_NR_STAT are awfully close and have differe=
+nt
+> > > > meanings. I think we should come up with better names (sorry nothin=
+g
+> > > > comes to mind) or add a comment to make the difference more obvious=
+.
+> > > >
+> > >
+> > > How about the following comment?
+> >
+> > The comment LGTM. I prefer renaming them though if someone can come up
+> > with better names.
+> >
+>
+> I will be posting v4 and will change the name (still thinking about the
+> name) becasuse:
+>
+> > > > > +static void init_memcg_stats(void)
+> > > > > +{
+> > > > > +       int8_t i, j =3D 0;
+> > > > > +
+> > > > > +       /* Switch to short once this failure occurs. */
+> > > > > +       BUILD_BUG_ON(NR_MEMCG_STATS >=3D 127 /* INT8_MAX */);
+>
+> The above should be MEMCG_NR_STAT instead of NR_MEMCG_STATS.
 
-This fixes:
-arch/arm/boot/dts/broadcom/bcm4708-asus-rt-ac56u.dtb: pcie@18012000:
-'device_type' is a required property
-        from schema $id: http://devicetree.org/schemas/pci/pci-bus.yaml#
-arch/arm/boot/dts/broadcom/bcm4708-asus-rt-ac56u.dtb: pcie@18012000:
-'ranges' is a required property
-        from schema $id: http://devicetree.org/schemas/pci/pci-bus.yaml#
-arch/arm/boot/dts/broadcom/bcm4708-asus-rt-ac56u.dtb: pcie@18013000:
-'device_type' is a required property
-        from schema $id: http://devicetree.org/schemas/pci/pci-bus.yaml#
-arch/arm/boot/dts/broadcom/bcm4708-asus-rt-ac56u.dtb: pcie@18013000:
-'ranges' is a required property
-        from schema $id: http://devicetree.org/schemas/pci/pci-bus.yaml#
-arch/arm/boot/dts/broadcom/bcm4708-asus-rt-ac56u.dtb: pcie@18014000:
-'device_type' is a required property
-        from schema $id: http://devicetree.org/schemas/pci/pci-bus.yaml#
-arch/arm/boot/dts/broadcom/bcm4708-asus-rt-ac56u.dtb: pcie@18014000:
-'ranges' is a required property
-        from schema $id: http://devicetree.org/schemas/pci/pci-bus.yaml#
+Yeah it's pretty confusing :)
 
-Cc: Arınç ÜNAL <arinc.unal@arinc9.com>
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-[florian: Make it apply to the relocated PCIe node(s)]
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- arch/arm/boot/dts/broadcom/bcm-ns.dtsi | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+How about something explicit like:
 
-diff --git a/arch/arm/boot/dts/broadcom/bcm-ns.dtsi b/arch/arm/boot/dts/broadcom/bcm-ns.dtsi
-index 8f69da8d18c2..b6fc4e4bba8d 100644
---- a/arch/arm/boot/dts/broadcom/bcm-ns.dtsi
-+++ b/arch/arm/boot/dts/broadcom/bcm-ns.dtsi
-@@ -474,22 +474,40 @@ usb3_dmp: syscon@18105000 {
- 	};
- 
- 	pcie0: pcie@18012000 {
-+		compatible = "brcm,iproc-pcie";
- 		reg = <0x18012000 0x1000>;
--
-+		ranges = <0x82000000 0 0x08000000 0x08000000 0 0x08000000>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
-+		bus-range = <0x00 0xff>;
-+		device_type = "pci";
-+		#interrupt-cells = <1>;
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 	};
- 
- 	pcie1: pcie@18013000 {
-+		compatible = "brcm,iproc-pcie";
- 		reg = <0x18013000 0x1000>;
--
-+		ranges = <0x82000000 0 0x20000000 0x20000000 0 0x08000000>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
-+		bus-range = <0x00 0xff>;
-+		device_type = "pci";
-+		#interrupt-cells = <1>;
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 	};
- 
- 	pcie2: pcie@18014000 {
-+		compatible = "brcm,iproc-pcie";
- 		reg = <0x18014000 0x1000>;
--
-+		ranges = <0x82000000 0 0x28000000 0x28000000 0 0x08000000>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-+		bus-range = <0x00 0xff>;
-+		device_type = "pci";
-+		#interrupt-cells = <1>;
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 	};
--- 
-2.34.1
+NR_MEMCG_POSSIBLE_STAT_ITEMS / MEMCG_MAX_STAT_ITEM
+NR_MEMCG_ACTUAL_STAT_ITEMS / MEMCG_ACTUAL_NR_STAT
 
+They look ugly, but I can't think of anything better. Maybe they will
+inspire something better :)
