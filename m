@@ -1,126 +1,73 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099B414AA9;
-	Tue, 30 Apr 2024 05:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FD4175AE
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714453744; cv=none; b=BxRgtwqm04nIhahP5ZL9IU0GyysCMcWxq5B9ddIQ6Ga4syKdP1nHemVD6wfiRD64AKRvE+uuRlUFEB6OpWDJeV8VMm32QwiOPvDr9cLwzEahC7WpXUH6EkZzUX5SCJH1HrDQAgKblosVcBiUqE6ErTWU2tYJi6gksK8ksm7Qj34=
+	t=1714453746; cv=none; b=UYo18hILfx206AZpv37l6IyN6N99RTmBo27rWTS4kxsHTXqFtC1CIpBbHMW88GauB359YkKr7dTZbImd+TIgpLzIiiqE9mXXPAfB2SAoTo/m4mnzm4CCC3spngAEcSbr05/hBi3RVscW6px8i1hHjghlRii9I+ys6WGVz5vbZUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714453744; c=relaxed/simple;
-	bh=CSg2VMa5g/ypx5iiHOuPvmOpBdgyb8rNj1uX/JI9C9Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JS5+t6GpYSSCg+Sg0BE0alm8Y4M9DsRNBzyWqUAwPbSUdQSaLSwfzyjJjEqC1JsZAy2BMqiYHwGGZU+uFWzZ70FdJKfj9pEG89IVC+TR0A6IWhX7+fz0m0tcm0M0EJTayy+t0k3/5fuogC/DiZNTlDgLQZTnY3X4qtMEkvCII74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ma88Cy9N; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714453746; c=relaxed/simple;
+	bh=J+SzwUyls9SaMVVFBi7PpXJ+4++slrdMAi6eCnVxZ30=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=adMqiphV4JxpSjp41ad1ebKZGgsk/Kg8c1pYjdFXPWcKpeY94gWVoORGVvmo1CkK7earXz9AEMnYIIuOs5qldBiZf+nxcfVVRTFrdnRQKS/fyQc5V8HLL9032EjXpCFk+TlSZZixfZ3MyUjFdiKewBhGD9rs8XpQVWadfDSXkDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7hTHO+n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ma88Cy9N"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ed01c63657so5114681b3a.2;
-        Mon, 29 Apr 2024 22:09:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714453742; x=1715058542; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jMMnrAfTHMqJGkuKi9d3l3bjGmIWbLr+pY8N043PVx4=;
-        b=Ma88Cy9NhKYwGtWCXc57D8/my0Pfz5QVJou6FcMPB+B5hPzvv9j2UoHe8lCP3vzqVT
-         c81QaSWOBLZkdGo5A0JGtN20PEh5g/tj5NBWsfigEpzFz6vi8v5fTjxoqaW5mQ/i9vew
-         hG8YRA8DJvKBjy0IMoNaSGIdfHApc9ZBu9gnfW3fxAR1mhaQYOTRIenufvLlwbO1iNA2
-         0vdcTj1BMaOKOCLaL4504ILm51J+l6RXJ2NeNBZN55UxgbZn44pXqVXd/JJzrF3crkMT
-         HAQUC7hUOq8xqArumB45gtb0LkfWQIxkWkOEQQYDp9BSTL/54/GrZD9JCEUgiGFaftoz
-         iaew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714453742; x=1715058542;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jMMnrAfTHMqJGkuKi9d3l3bjGmIWbLr+pY8N043PVx4=;
-        b=qYIMNg0W25xpuNcVC+5MPAZEGDAjCkf4mrg1NsU1EkChE0bMoT1tugCymBAcLO3Lq+
-         G6aV7Dk/C/TIDb6LtrK4K2am0400Xcr4+KEUy5fhpGkzoNaLJll6uSFU1mdxsHdIYIda
-         M/jMOialXn8a/Es5azzy0YxOhkYyHYuEA+e5E5SXBGyx4KyNY/V4MqVINdD47NpTPb/f
-         FomOo1cNRcXoyijXEHsdaMwZ09ASMVK8vKxjt25l+k0VHS1EWxYbUAsJMGeDSlXjUZus
-         DZuNBU0V8UIcLXrk6hHl9Z3a7ETCsxOnZkav12PhP9GGGs6bnGEqV8i+S5P7Y4rNNLRl
-         85Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHcJmJ/zjTBDBJQbhSGuqOq+/BjYUrj8ao1N6Ksm+YZzPBzaR2KRPI3nRR+1RMrFNT15FwCQK5WU1D4Fr8EnqsViUvxZZxi8NbuUIK
-X-Gm-Message-State: AOJu0YxC21x8lfhNafJq3CFD5rTHeK7gHC7nPxMBPNmD8+YO99RCM/ss
-	He7vvvtXRvApPgkRxUloeybp3armbNrPgZPc1dTz9IgXg8DL5pww
-X-Google-Smtp-Source: AGHT+IGpa/rz5iYGZbLP7h4toR745SNSGJZlULfPEN7H3bwEvVB+fTEoLoO1tIrHUvaYgrtd44i8dg==
-X-Received: by 2002:a05:6a21:6704:b0:1af:4e95:ff3b with SMTP id wh4-20020a056a21670400b001af4e95ff3bmr4861498pzb.39.1714453742176;
-        Mon, 29 Apr 2024 22:09:02 -0700 (PDT)
-Received: from carrot.. (i223-218-155-26.s42.a014.ap.plala.or.jp. [223.218.155.26])
-        by smtp.gmail.com with ESMTPSA id bf5-20020a170902b90500b001e7b82f33eesm21320794plb.291.2024.04.29.22.08.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 22:09:01 -0700 (PDT)
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-nilfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH -mm] nilfs2: Remove calls to folio_set_error() and folio_clear_error()
-Date: Tue, 30 Apr 2024 14:09:01 +0900
-Message-Id: <20240430050901.3239-1-konishi.ryusuke@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7hTHO+n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 305F9C2BBFC;
+	Tue, 30 Apr 2024 05:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714453746;
+	bh=J+SzwUyls9SaMVVFBi7PpXJ+4++slrdMAi6eCnVxZ30=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=H7hTHO+nqAqz262HEwuQx9nek6KdJSHo/iMy65xKf1Q/M66hF7o7LY6ULlgljSObN
+	 CHSLsbGq9JWM+ol0UtxI1xVOmRD9zbWW4Pc2vDqDIprQlDu/EQU2dXR/BdZ93IZfeJ
+	 p7CZJEsT6PEL4VEat+QY1sPCRGhDnwumcFUTdu6CHF7l4D9YaWdrEBUfgyr7U/QaHu
+	 2v+14XmeD5GmZcUlVYSsRuauJmiBeSj5Gx2Xf1WA2xTF5HicXEKZkicogmBTj0lu3m
+	 agFpz/00UNSGr7TFj0Z/Bno9QCr174whBE07ZYyf/7bGjn+wgEFErdOuEdcm/6KVmN
+	 9YRGlkiCtKE8Q==
+X-Mailer: emacs 29.3 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Michael Ellerman <mpe@ellerman.id.au>, linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org, will@kernel.org
+Subject: Re: [PATCH] MAINTAINERS: MMU GATHER: Update Aneesh's address
+In-Reply-To: <20240430044327.49363-1-mpe@ellerman.id.au>
+References: <20240430044327.49363-1-mpe@ellerman.id.au>
+Date: Tue, 30 Apr 2024 10:38:58 +0530
+Message-ID: <yq5av83z4etx.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Michael Ellerman <mpe@ellerman.id.au> writes:
 
-Nobody checks this flag on nilfs2 folios, stop setting and clearing it.
-That lets us simplify nilfs_end_folio_io() slightly.
-
-Link: https://lkml.kernel.org/r/20240420025029.2166544-17-willy@infradead.org
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
----
-Andrew, please add this to the queue for the next merge window.
-
-This is one of Matthew's PG_error removal series, and is one that is
-encouraged to be picked up by maintainers if possible.  As expected
-for a cleanup patch, no issues have arisen.
-
-Thanks,
-Ryusuke Konishi
-
- fs/nilfs2/dir.c     | 1 -
- fs/nilfs2/segment.c | 8 +-------
- 2 files changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/fs/nilfs2/dir.c b/fs/nilfs2/dir.c
-index aee40db7a036..a002a44ff161 100644
---- a/fs/nilfs2/dir.c
-+++ b/fs/nilfs2/dir.c
-@@ -174,7 +174,6 @@ static bool nilfs_check_folio(struct folio *folio, char *kaddr)
- 		    dir->i_ino, (folio->index << PAGE_SHIFT) + offs,
- 		    (unsigned long)le64_to_cpu(p->inode));
- fail:
--	folio_set_error(folio);
- 	return false;
- }
+> Aneesh's IBM address no longer works, switch to his preferred kernel.org
+> address.
+>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
  
-diff --git a/fs/nilfs2/segment.c b/fs/nilfs2/segment.c
-index aa5290cb7467..8654ab8ad534 100644
---- a/fs/nilfs2/segment.c
-+++ b/fs/nilfs2/segment.c
-@@ -1725,14 +1725,8 @@ static void nilfs_end_folio_io(struct folio *folio, int err)
- 		return;
- 	}
+Acked-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
  
--	if (!err) {
--		if (!nilfs_folio_buffers_clean(folio))
--			filemap_dirty_folio(folio->mapping, folio);
--		folio_clear_error(folio);
--	} else {
-+	if (err || !nilfs_folio_buffers_clean(folio))
- 		filemap_dirty_folio(folio->mapping, folio);
--		folio_set_error(folio);
--	}
- 
- 	folio_end_writeback(folio);
- }
--- 
-2.34.1
-
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 93af33ee8541..f096c9fff5b3 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14898,7 +14898,7 @@ F:	drivers/phy/marvell/phy-pxa-usb.c
+>  
+>  MMU GATHER AND TLB INVALIDATION
+>  M:	Will Deacon <will@kernel.org>
+> -M:	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> +M:	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+>  M:	Nick Piggin <npiggin@gmail.com>
+>  M:	Peter Zijlstra <peterz@infradead.org>
+> -- 
+> 2.44.0
