@@ -1,117 +1,131 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C0D21C193
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 23:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8982524D4;
+	Tue, 30 Apr 2024 23:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714521127; cv=none; b=kzJtYqpxTkx5uf0+cHTQ4bYQbSVNZArVTvKWYlfBPKWNO1dfFDmAjzbgp9apU6EdX7z3KTnvxoY13Q1rjtEcLsFkWZaLMU5nv9a358TRlUyqi7Qvtnt9qQ/wQbj+fAaWKUrNntOZ++qeHws+Y9/97nbriwbrcBU6RXAGH3t/dTA=
+	t=1714521277; cv=none; b=O5N8AE7lVFQeU7xuNU0yr+IR21k1KTUXBR6Iyjo7/J9KPLtom2LurA47EheIEx+FiuK5n8tulSWzHTYBTxWs885gyV559tK3n/UV4h+pfHHgLTEUMUaaShGY625WEprudJtbb28fY/FQxXfbVu62zhlY1BL5Qu5EZ9w9PfKviwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714521127; c=relaxed/simple;
-	bh=Cwp4S5VNvQqFtoPw/nroKEGF2YpUUdO6wVGQiqGsbAY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YB3i0rSHAvy4MjzaiWe5QR1X6+rJ8hLZ+ZPeFYuJqxITTbemXBH31qhNc+0VqYwOXbO4WlzneU4rDjc7rzGJ3IjNwVrUhGEKiZ3p/j2Ky+5SPxzy+Kf9zPKYjcFeP70Qk+pXyQtc6dTprgHu0YnPEaoqCUcPIvNZg1WZADFPZcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=folleoKM; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
+	s=arc-20240116; t=1714521277; c=relaxed/simple;
+	bh=YtyCKayesUiIeIm0W0jJvwGLaTqIYSr/pR+hWFKzDcM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s04+DPwHf6vGNbO+cVUyj0Obo+WcZfKJac+0yhPTlIYRtbpQ4CarR9TPFW4qlFYDsO4vOo6vv/VKbMblzy3wsqGh9uai91VSpfueJbYnNbvYHYd/dU3gPbWheZc+rWeH0DltEAxCSVDU4MVqtSDxTNhY8ZRhtYyNi+L5mvnGrfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BGqvg/v/; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="folleoKM"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de615257412so2749945276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:52:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGqvg/v/"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-23d41245bd9so417967fac.2;
+        Tue, 30 Apr 2024 16:54:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714521124; x=1715125924; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eMZD6S1LecT7yIEbG0UvTaidEBINYi20NzKFmLDZVV4=;
-        b=folleoKMFVRvi8dW0bCiqpuMPxaVBXHSqPGhHmRQaNl6zqayRuzzzaiG2Tb3zA83iP
-         morx19xZkRe6kEGkwp1Zt+otnWqi/wra9Jb0bO1/Cm/jVdJepjsIOnu97ooL44chizIz
-         H/v35//62TlWRSkl0h+OKxiamUjvRTtlnlfn8QDJNf8qbRLbdsmF+tZPhYYzgXZZ/RSo
-         YEKSrhK5D5pa9B/One0ZHUJcy8B1+rkGOQPtDSHsZwe9h8sMxuMuxxn/eXV1AwN3nQo0
-         wbJ4oDqc8rKxRh8+Zo96DUlmHEPSLi+8zvO0fX9aMDpyv+Eyc3XFv7dDyoeSRtKfGd5h
-         YqdQ==
+        d=gmail.com; s=20230601; t=1714521275; x=1715126075; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=QaB3ubfOzdM+QesYPMjf3PyvqBfAHdvEU9TgS4uvEtU=;
+        b=BGqvg/v/SACvuqMlJntHztTEBIdwrtkUk/SCFY8XCHm1LkUZUoQ8dh5vFkrtIj05IX
+         Uzb9d+hTwp8cgAxLP4mEpaHe0YnPjlqblaU28552D/0X61So1CHTUfrGtn5lLNu6VXHB
+         fE8hltMbLEfiu1tgPjaybczgbiCvrmsqK5nbqhaVAI+aT21p5MegtIS949JqffgRZHMY
+         mt+GQBahwca0hg0ANviP2ycb9OV24g3XVvlsFOaOeNaR8LUfpcmIY83pIrp8eAe5s80l
+         wlcwl48gjvZKduY9kexYzaqprYsMDa9euHeoxsykSbM+zbR16DXLnVzouZI3WQvVNhrP
+         qi9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714521124; x=1715125924;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eMZD6S1LecT7yIEbG0UvTaidEBINYi20NzKFmLDZVV4=;
-        b=uFCwYoQxpwfh6z0r38CAJgdujhSIAFb9ZFnv5GDrHw8mQnzWAk7dLFB71BALw80A0q
-         csVaIonptRNP1UAbpO6H+lb7Ehk5S1Z7qrOtx/L3qu5FO8bXgmqWNWKK3i/k/Zmrmllb
-         D99dNkhYpVEiy4ycEajMNqr7yHL0lnaVhJ/aV+CzJG1X1MltlOqybp0f3KV+0yM1kn2Y
-         4RlRzjvknco8GhdSyrAyh0wF6CxQFJBw6zfTi5ndl57w+ktz3/xu3UU44KPIusvaohgm
-         BBKMl98lFroSKp/3l0omyESLHtufx/Rr1jSm6S2Yu3CMBJm6GS/zV7NwoHhyfcSvl8Ye
-         Skow==
-X-Gm-Message-State: AOJu0Yyq+963Nvj6TPN+SUkBMvqo2Xv9LdTb6fPAnQva57LShEErC0f/
-	E4PGP+MFvJU3ZsfbK7RDFnbB05pMYfxegfgn1DaVeonkT2ogEvQ/12WJf6vc/joNxp07iWxBTRf
-	fkg==
-X-Google-Smtp-Source: AGHT+IH4VJpB6ZdNUNwNGYphVaIrnOi2jx2Xja9WJZJclJ5U3AS0GX9uELFDr7+Yl08gZsB5HUor9KgguaE=
-X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
- (user=edliaw job=sendgmr) by 2002:a05:6902:154b:b0:de5:3003:4b7b with SMTP id
- r11-20020a056902154b00b00de530034b7bmr333229ybu.1.1714521124169; Tue, 30 Apr
- 2024 16:52:04 -0700 (PDT)
-Date: Tue, 30 Apr 2024 23:50:19 +0000
-In-Reply-To: <20240430235057.1351993-1-edliaw@google.com>
+        d=1e100.net; s=20230601; t=1714521275; x=1715126075;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QaB3ubfOzdM+QesYPMjf3PyvqBfAHdvEU9TgS4uvEtU=;
+        b=w3UOmltx2Bjuc5K7WsN8WgUorKx+SyFecXcK/bS1rxFdWb/4+apk6kIFnWcS1b1T6H
+         gIgVLWHeBYVoyWcBQvzu5T5W/807888KbTM1ZSPzMCyJ/DXyWnDN8azLDlm4hA21i26I
+         Xce91n6HprStlPFHQunD4J8ng5iR1e9cQQnswr2tgZ43EbiYD1Equ+bdZxh8DXfyFHLp
+         ObYtB3X9zn+jteT4MZtIDdgbtAHr8ls9UqVvICBb2hJnl0b/rvsf4CtTP+kqSJsKCX3I
+         QJJzlS0GxT0sTG1LN03RM0TdSgyoUo4345NsK+vu/nKXze7Q4YlbMarkZeVVieX4s1Oi
+         xHSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWV/bsROKx2tvI3TMacdXUdnfefeV1xou0vbjRaK3H9xK5AWknHx0DOOQ4OwYAYwos4y+1vjFW6jj2jT8eUeeBoZu3Xv6fLcKPsuT/9
+X-Gm-Message-State: AOJu0YxwT9oODof3qLTm77bPZccd8K2s2SaITYO7syBGxz259ZXjPXuA
+	E8EAeQcmrQvmOMz/FD/Qa1hK0R0sNLHkJNHtaMWIj29LdIIlFHxo
+X-Google-Smtp-Source: AGHT+IHekV9LCbfB20xlNq24pvNOqTDf7ZxCdh44H19GWBdBXmlyyp9EWuhnM2CAzowJEwoy0exa/w==
+X-Received: by 2002:a05:6870:9690:b0:22a:6ce3:d57 with SMTP id o16-20020a056870969000b0022a6ce30d57mr1067862oaq.25.1714521274577;
+        Tue, 30 Apr 2024 16:54:34 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g21-20020a63e615000000b005f75f325db4sm21471963pgh.29.2024.04.30.16.54.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 16:54:33 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <1fef896c-0624-4a3c-af3b-ecb43782eea7@roeck-us.net>
+Date: Tue, 30 Apr 2024 16:54:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240430235057.1351993-1-edliaw@google.com>
-X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
-Message-ID: <20240430235057.1351993-11-edliaw@google.com>
-Subject: [PATCH v1 10/10] selftests/user_events: Compiled with -D_GNU_SOURCE
-From: Edward Liaw <edliaw@google.com>
-To: shuah@kernel.org, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, Sean Christopherson <seanjc@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Bongsu Jeon <bongsu.jeon@samsung.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Edward Liaw <edliaw@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kernel-team@android.com, linux-sound@vger.kernel.org, 
-	linux-input@vger.kernel.org, kvm@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] hwmon (max6639): Use regmap
+To: Naresh Solanki <naresh.solanki@9elements.com>,
+ Jean Delvare <jdelvare@suse.com>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240430210539.935040-1-naresh.solanki@9elements.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20240430210539.935040-1-naresh.solanki@9elements.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
-asprintf into kselftest_harness.h, which is a GNU extension and needs
-_GNU_SOURCE to either be defined prior to including headers or with the
--D_GNU_SOURCE flag passed to the compiler.
+On 4/30/24 14:05, Naresh Solanki wrote:
+> Add regmap support & remove local caching.
+> 
+> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
 
-Fixes: 809216233555 ("selftests/harness: remove use of LINE_MAX")
-Signed-off-by: Edward Liaw <edliaw@google.com>
----
- tools/testing/selftests/user_events/Makefile   | 2 +-
- tools/testing/selftests/user_events/abi_test.c | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+I assume the first post was superseded due to the missing version ?
 
-diff --git a/tools/testing/selftests/user_events/Makefile b/tools/testing/selftests/user_events/Makefile
-index 10fcd0066203..344a71769113 100644
---- a/tools/testing/selftests/user_events/Makefile
-+++ b/tools/testing/selftests/user_events/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--CFLAGS += -Wl,-no-as-needed -Wall $(KHDR_INCLUDES)
-+CFLAGS += -Wl,-no-as-needed -Wall -D_GNU_SOURCE $(KHDR_INCLUDES)
- LDLIBS += -lrt -lpthread -lm
+Either case, please provide change logs with your patches.
 
- TEST_GEN_PROGS = ftrace_test dyn_test perf_test abi_test
-diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
-index 7288a05136ba..3e3a0327afdc 100644
---- a/tools/testing/selftests/user_events/abi_test.c
-+++ b/tools/testing/selftests/user_events/abi_test.c
-@@ -5,7 +5,6 @@
-  * Copyright (c) 2022 Beau Belgrave <beaub@linux.microsoft.com>
-  */
-
--#define _GNU_SOURCE
- #include <sched.h>
-
- #include <errno.h>
---
-2.45.0.rc0.197.gbae5840b3b-goog
+Thanks,
+Guenter
 
