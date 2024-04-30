@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561B7199E92
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7A61C0DD2
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 16:51:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714495902; cv=none; b=S+6Ys+MG5ZBiHBy/LJFcpY/nmgrQ/wZa9JgBZUx10e94uM7esG44OYi3X+E8AurDAXCzYXa2UUgFr98zSTLajB+Edi0WZ4My9TczN6grQVdR5ftS8KRBbTnW8svevukTYasjcJafyEnTOKG+OT3Ib+XNRd9HcX7vqbyolaRRCuM=
+	t=1714495906; cv=none; b=S38dnEMZvLvXUsML45Z08TeZTOTCWKaJtpJPjga4kDhJNL9WbCt8lhj4h6wPemjFVCaeja4+sESZNx8ATW+RYKvBuS7aONw/l1HKeiI7zuNdHB6BjoIfyAJAmsZtcP6HEycEYrSkt6NGio5KB+fQa8e5xAcau0ONJdFHnRqxIgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714495902; c=relaxed/simple;
-	bh=xbuIo3ZSM8pLcHYxBW35UJbdhVNAOT3WUu0lYAsB5RY=;
+	s=arc-20240116; t=1714495906; c=relaxed/simple;
+	bh=jeUYkmsH/AfO4Bph7ZtAqZ3oLmdEHFSMAbduKZ4WPOM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TfCssMoDUdK7XzKva9AxS3yD/jE3mnsulzAU7kULFUOR6h6MVuGI+dPOn3W50g4tuoxptb59fkt3c/bkqE84TrYcZBvaTCm4NeEzuzvuaHoq0UU/Y8z7Oz/D1yIqk7aHOKD0TW66vZDb/gl4KRrHNYBR3jbcnrgxVYGVYlIVU8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D3VuNb8I; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=fobXnWzYOZJbKdK2AWFBNczKix/D0mpN8OAW5ikkq9oRBXcUbKGHCIk4W/s3ww9AcD3dVPhlihFQsPK/BgGk7VlSqE2fkfvuTABit6KmdRCoy53p0dEPxKs61SLYg27L4CxbHTlTE5uwAe4bLR/fqXj72rzMS6UQYnE+6HVh/f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nHMZjYfP; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D3VuNb8I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nHMZjYfP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714495900; x=1746031900;
+  t=1714495905; x=1746031905;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xbuIo3ZSM8pLcHYxBW35UJbdhVNAOT3WUu0lYAsB5RY=;
-  b=D3VuNb8IJv0/CA80Pi9/DfviRK+CzVKLcIvJr4Ai9UgWTx6l/qVrNKot
-   ozBPdm+IgmnzCTLCFLr6QcfucmckAilYFDuSiu/BYk0+SdD4Ayy+U+LNh
-   lf/fQ9HZb0sOM8dxrhzoudpkZPukT3p4cQAaQgqhF1zfGWF37ykQrwyK4
-   nERw1ZEdmLkfdzwkhvMEWzYtv4RRAvPU6wmG25a/i5bnCvk+wcCPwKzcS
-   g4xOxxUSkRFbKKVW0yfuCUNBMXBKVJL+D6HhGB3rm2TV/L7zsk7irxmF+
-   yK26VVlx4IkkJmpvnNlq7gTh/KtDzTEcfA2XYNaImDm/nz0tmRA3RNXks
+  bh=jeUYkmsH/AfO4Bph7ZtAqZ3oLmdEHFSMAbduKZ4WPOM=;
+  b=nHMZjYfPaNuwi9CrPkmmCa2V2POzu2tXme8SKDyzgowv6+tRA1yU+hJv
+   xUFSUaHQi7ysfuukH+ZGEU9pAkWHYYdHAwHHgNRcEqJqHQB/nXPcrUFhY
+   4u5EsWnYiRm/zKBHqDO9dnpuNsYznL85ROM3lD1HGvht3S0SDnW+q3Pqz
+   UUDrUT0hN7K05zneJzE03LFFH+jxnDSxLDxcAdyyNF6PgCg1bsfY0pdbt
+   si4CHP4JWsBqbDt/C12xeLNtz4OZMMwo5E8SztvD6GApovh8qFJ5RYAAU
+   ElhX12YUyC1YHAuGAA2DiIxV6Jwnsi7DUOHJqCruJaik8z2HWM1cccmEB
    A==;
-X-CSE-ConnectionGUID: NFea7/9iTNmLt+kiEznldQ==
-X-CSE-MsgGUID: YgYrauDGSIurOy9gOpnV8Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10075675"
+X-CSE-ConnectionGUID: 6TyWCsjQQPS0cPguBlDD6g==
+X-CSE-MsgGUID: gjQmxkqeRFKHfORU6YDdIQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10075714"
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="10075675"
+   d="scan'208";a="10075714"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:21 -0700
-X-CSE-ConnectionGUID: bSEjbZabQuCp4NYJBO3W/g==
-X-CSE-MsgGUID: 0AccD9TpSia46l0PuLmvxw==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:22 -0700
+X-CSE-ConnectionGUID: qs/q9XQlSDGWU3pkeUT3jA==
+X-CSE-MsgGUID: qE/8UFXhRJWtBD76eLoy3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="26515451"
+   d="scan'208";a="26515474"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:13 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 09:51:18 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Borislav Petkov <bp@alien8.de>
 Cc: x86@kernel.org,
@@ -50,9 +50,9 @@ Cc: x86@kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>,
 	Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v5 18/47] platform/x86: intel_telemetry: Switch to new Intel CPU model defines
-Date: Tue, 30 Apr 2024 09:50:31 -0700
-Message-ID: <20240430165100.73491-18-tony.luck@intel.com>
+Subject: [PATCH v5 22/47] platform/x86/intel: pmc: Switch to new Intel CPU model defines
+Date: Tue, 30 Apr 2024 09:50:35 -0700
+Message-ID: <20240430165100.73491-22-tony.luck@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240430165100.73491-1-tony.luck@intel.com>
 References: <20240430164913.73473-1-tony.luck@intel.com>
@@ -70,24 +70,36 @@ New CPU #defines encode vendor and family as well as model.
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 Acked-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/intel/telemetry/debugfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel/pmc/pltdrv.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/telemetry/debugfs.c b/drivers/platform/x86/intel/telemetry/debugfs.c
-index 1d4d0fbfd63c..70e5736c44c7 100644
---- a/drivers/platform/x86/intel/telemetry/debugfs.c
-+++ b/drivers/platform/x86/intel/telemetry/debugfs.c
-@@ -308,8 +308,8 @@ static struct telemetry_debugfs_conf telem_apl_debugfs_conf = {
- };
- 
- static const struct x86_cpu_id telemetry_debugfs_cpu_ids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&telem_apl_debugfs_conf),
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&telem_apl_debugfs_conf),
-+	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,	&telem_apl_debugfs_conf),
-+	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_PLUS,	&telem_apl_debugfs_conf),
+diff --git a/drivers/platform/x86/intel/pmc/pltdrv.c b/drivers/platform/x86/intel/pmc/pltdrv.c
+index ddfba38c2104..22cfcd431987 100644
+--- a/drivers/platform/x86/intel/pmc/pltdrv.c
++++ b/drivers/platform/x86/intel/pmc/pltdrv.c
+@@ -35,14 +35,14 @@ static struct platform_device *pmc_core_device;
+  * other list may grow, but this list should not.
+  */
+ static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
+-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&pmc_core_device),
+-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&pmc_core_device),
+-	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&pmc_core_device),
+-	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&pmc_core_device),
+-	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	&pmc_core_device),
+-	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&pmc_core_device),
+-	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&pmc_core_device),
+-	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&pmc_core_device),
++	X86_MATCH_VFM(INTEL_SKYLAKE_L,		&pmc_core_device),
++	X86_MATCH_VFM(INTEL_SKYLAKE,		&pmc_core_device),
++	X86_MATCH_VFM(INTEL_KABYLAKE_L,		&pmc_core_device),
++	X86_MATCH_VFM(INTEL_KABYLAKE,		&pmc_core_device),
++	X86_MATCH_VFM(INTEL_CANNONLAKE_L,	&pmc_core_device),
++	X86_MATCH_VFM(INTEL_ICELAKE_L,		&pmc_core_device),
++	X86_MATCH_VFM(INTEL_COMETLAKE,		&pmc_core_device),
++	X86_MATCH_VFM(INTEL_COMETLAKE_L,	&pmc_core_device),
  	{}
  };
- MODULE_DEVICE_TABLE(x86cpu, telemetry_debugfs_cpu_ids);
+ MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
 -- 
 2.44.0
 
