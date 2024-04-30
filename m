@@ -1,106 +1,103 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B91623;
-	Tue, 30 Apr 2024 00:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79A6170
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 00:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714435386; cv=none; b=VGdAZRpTEcOdi2YV9wolqn4+iaHvJM5II0wmUZ1H5UJmLdE6qY88of7W3HpB1/c90J03owmi3wuLfgCMWpn/oi2EDbsurUXD5BYj6p4UCc14sD2PM7zbRKXNrmDlCIA6FZyl+WTbKdqicj61DEdccYMqSdxGItw3W2kFguYg3L4=
+	t=1714435560; cv=none; b=FRmpnF3Kt4PdEYrx4HLI6G7Ky1JrRe3b7lKIi9iE7gzMyYj+C/CF6oHWSJeDVowSl2xdLE32rA5VdVoN5/8BoFll5RxoL4SLTkhu+EcY5+sRo4pidfXE8cNtBA4MajPF2lbZ34JTYckQWP3geFtu9URSK6Pd3tAGQ2MAV5pMA1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714435386; c=relaxed/simple;
-	bh=OAALAvGgj2+eNeT14GTmZ9nctNzxrwyvFnOi6pdmdv0=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=UPhSpWWmObfMAt2dC+FF7c1mEpk37QCoVuVAOhui4+OwK0a8yXB8fH57UWTRsTsietFQZ9j1S/llGepm+Wszd6XVZE8k9Qb73thg0iNDOYNXUtyft2aexKKz02I1Rek5fWASMj7xAom+yHGPZ5WRdF4MBPiWE5XHwvAUFEs2yls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.97.1)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1s1ah2-000000003Ss-0jtq;
-	Mon, 29 Apr 2024 23:45:56 +0000
-Date: Tue, 30 Apr 2024 00:45:46 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	Felix Fietkau <nbd@nbd.name>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Landen Chao <Landen.Chao@mediatek.com>, devicetree@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net] net: dsa: mt7530: fix impossible MDIO address and issue
- warning
-Message-ID: <e615351aefba25e990215845e4812e6cb8153b28.1714433716.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1714435560; c=relaxed/simple;
+	bh=gJuDTVJm9AcKVDDIfX5i9uqqPFvs2NbSxmNtE3G0c24=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DDTOHMde0hbLajN7RRizFx+E5SsZbneu0bIzIMMqtB8cWpjiAoDdaKFEG1C+Il8aGbMwJZ6wg6o3DPZOerU6JYnzfmIkXHJJrHwi0Yj/KahecS3jWjQAc0C5Fqk5tp0hkAvpWpyW9KPUy1qjmbFh326fTw4gvtWkKhU7vyJ8g50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RV6ud2O9; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RV6ud2O9"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2db17e8767cso59719951fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 17:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1714435557; x=1715040357; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ls/x91/XqY1/yjdZUA1T/JakK/e7WGx+3CLMLeqey1k=;
+        b=RV6ud2O97o16AxkDsaWza9NUsBsd9YiP1YW6+Ax5oA05hYs6PadoC+q75C0kZntcWu
+         MGQ5RporloUf4qb9aaSVHA+pP2wzJTBWloTV1CIoBVwyyNdfkE8HARp0SlWh9yPHVKuP
+         ZuJZHZN6q7lHuBG+ZEvCdKxPaU9KtsooWOMJg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714435557; x=1715040357;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ls/x91/XqY1/yjdZUA1T/JakK/e7WGx+3CLMLeqey1k=;
+        b=fWCdE9m0nLC0Sc/tpQTMcgi/UsDpHc9AqN+bs2lm1KwGS6VIrZnb7M7AxfFpm3LD0k
+         1m3aWLb8d38zCh7fPkBDLNLx9nZ6nX20Cjb6RIHY2dTDgdI91xmEvk3tV9fmawZxK8uU
+         cCCvnsdDQZJJ1JQruDirYrPyeVmgHvBmmBrqS3iDLlkiAu3rSDgP4SulZ9ZOfSOSX91s
+         4Q6I5FtBQlbWz5ea8Npis+YuE9XNTTjXnOb59121vHzvx3aITxw+Q8a9PHtos/WBjTPk
+         6ZMn5mQhAY9W7vpElhxAssntT3pOFeBQGB0GMuw+8WUOzPQT/BBsdS6qQp+66322MfCf
+         9BfA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJxknuENTW5xyh6Td9G7qCL4j2A+Aq904DiC8yXhU6O9Kv08YsiuSl9B+qbo5HMy5Md9xlhnuwFIwG0vCIl8l3PaG7fAT0NQ+DiSp3
+X-Gm-Message-State: AOJu0Ywu37PxYeSz3IUCKaUVg5TjnEJyrPvQcMmPQe+gFDryqKczDHEZ
+	GdqfU+x025aG6OCxm+WqbxQVswe3kMmMg+F4gB23934UCq48Q92fB/d5N7J9Q0g1jGDS5R801Gg
+	hsgt8iw==
+X-Google-Smtp-Source: AGHT+IHB4BK/a/X4pZTsuezkhcwbgu0ydRpkPzMDVKKu2fEO6oK8CaZB71aWLyXqtyJODxsVZ8d2OA==
+X-Received: by 2002:a2e:b8c7:0:b0:2df:ebd2:6fdb with SMTP id s7-20020a2eb8c7000000b002dfebd26fdbmr865338ljp.28.1714435556813;
+        Mon, 29 Apr 2024 17:05:56 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id q21-20020a2e9695000000b002da25e60918sm3804641lji.18.2024.04.29.17.05.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Apr 2024 17:05:56 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51967f75729so6036787e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 17:05:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU9f5zkkhdD/rOKXoh5zXmrsyaMITW4q8+KzJabk1fCp/GqdfctYLjUmL6vyxTVS+MNo+OPO4DJxoNx6db7BStTifSHcfTlGS1/UBTw
+X-Received: by 2002:ac2:47ee:0:b0:51d:6f21:d3a4 with SMTP id
+ b14-20020ac247ee000000b0051d6f21d3a4mr624436lfp.66.1714435555174; Mon, 29 Apr
+ 2024 17:05:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <0000000000009dfa6d0617197994@google.com> <20240427231321.3978-1-hdanton@sina.com>
+ <CAHk-=wjBvNvVggy14p9rkHA8W1ZVfoKXvW0oeX5NZWxWUv8gfQ@mail.gmail.com>
+ <20240428232302.4035-1-hdanton@sina.com> <CAHk-=wjma_sSghVTgDCQxHHd=e2Lqi45PLh78oJ4WeBj8erV9Q@mail.gmail.com>
+ <CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com>
+ <Zi9Ts1HcqiKzy9GX@gmail.com> <CAHk-=wj9=+4k+sY6hNsQy2oQA4HABNA369cBPSgBNaeRHbbTZg@mail.gmail.com>
+ <CAHk-=wg63NPb-cEL7NTFTKN2=uM6Lygg_CcXwwDBTVCg=PeSRg@mail.gmail.com>
+ <CAHk-=whuH+-swynMTVd9=uCB0uuhaoanQ5kfHEX=QaRZx7UgBw@mail.gmail.com> <CALCETrXHJ7837+cmahg-wjR3iRHbDJ6JtVGaoDFC4dx-L8r8OA@mail.gmail.com>
+In-Reply-To: <CALCETrXHJ7837+cmahg-wjR3iRHbDJ6JtVGaoDFC4dx-L8r8OA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 29 Apr 2024 17:05:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiW=HyBNE2sx+rVyB2q+Xuuah+Ycp4o89+prgHUFHm_hQ@mail.gmail.com>
+Message-ID: <CAHk-=wiW=HyBNE2sx+rVyB2q+Xuuah+Ycp4o89+prgHUFHm_hQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/mm: Remove broken vsyscall emulation code from the
+ page fault code
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Ingo Molnar <mingo@kernel.org>, Hillf Danton <hdanton@sina.com>, Peter Anvin <hpa@zytor.com>, 
+	Adrian Bunk <bunk@kernel.org>, 
+	syzbot <syzbot+83e7f982ca045ab4405c@syzkaller.appspotmail.com>, 
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, andrii@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The MDIO address of the MT7530 and MT7531 switch ICs can be configured
-using bootstrap pins. However, there are only 4 possible options for the
-switch itself: 7, 15, 23 and 31 (ie. only 3 and 4 can be configured, bit
-0~2 are always 111). Practically all boards known as of today use the
-default setting which is to have the switch respond to address 31, while
-the built-in switch PHYs respond to address 0~4 in this case.
+On Mon, 29 Apr 2024 at 16:30, Andy Lutomirski <luto@amacapital.net> wrote:
+>
+> What strange page table handling do we do for XONLY?
 
-However, even in MediaTek's SDK the address of the switch is wrongly
-stated in the device trees as 0 (while in reality it is 31), so warn the
-user about such broken device tree and make a good guess what was
-actually intended.
+Ahh, I misread set_vsyscall_pgtable_user_bits(). It's used for EMULATE
+not for XONLY.
 
-This is imporant to not break compatibility with older Device Trees as
-with commit 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY address of
-switch from device tree") the address in device tree will be taken into
-account. Doing so instead of assuming the switch is always at
-address 31 which was previously hard-coded will obviously break things
-for many existing downstream device trees as they contain the wrong
-address (0) which previously didn't matter.
+And the code in pti_setup_vsyscall() is just wrong, and does it for all cases.
 
-Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
- drivers/net/dsa/mt7530-mdio.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> So I think we should remove EMULATE before removing XONLY.
 
-diff --git a/drivers/net/dsa/mt7530-mdio.c b/drivers/net/dsa/mt7530-mdio.c
-index fa3ee85a99c1..119630fd9060 100644
---- a/drivers/net/dsa/mt7530-mdio.c
-+++ b/drivers/net/dsa/mt7530-mdio.c
-@@ -193,6 +193,19 @@ mt7530_probe(struct mdio_device *mdiodev)
- 			return PTR_ERR(priv->io_pwr);
- 	}
- 
-+	/* Only MDIO bus address 7, 15, 23 and 31 are valid options */
-+	if (~(priv->mdiodev->addr & 0x7) & 0x7) {
-+		/* If the address in DT must be wrong, make a good guess about
-+		 * the most likely intention, and issue a warning.
-+		 */
-+		int correct_addr = ((((priv->mdiodev->addr - 7) & ~0x7) % 0x20) + 7) & 0x1f;
-+
-+		dev_warn(&mdiodev->dev,
-+			 "impossible switch MDIO address in device tree: %d, assuming %d\n",
-+			 priv->mdiodev->addr, correct_addr);
-+		priv->mdiodev->addr = correct_addr;
-+	}
-+
- 	regmap_config = devm_kzalloc(&mdiodev->dev, sizeof(*regmap_config),
- 				     GFP_KERNEL);
- 	if (!regmap_config)
--- 
-2.44.0
+Ok, looking at that again, I don't disagree. I misread that XONLY as
+mapping it executable, but it is actually just mapping it readable
 
+Yes, let's remove EMULATE, and keep XONLY.
+
+           Linus
