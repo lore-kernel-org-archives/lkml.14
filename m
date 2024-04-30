@@ -1,149 +1,193 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0996E85945
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 06:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D29E6FB1
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 06:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714457680; cv=none; b=kYOMdXEGeA/EpOjjfql/2dif5w3ycJyOpiukyoTXdvklnJ2Tvu/poyT8jiatuC95sEC4iSixqwRfOxrMy6JZR37HgYJMdGm2qXWXei4fjvB862YfMxaG/zI/BFwwfA1yl9EJ4oc4emoW/cLc6hEsd6CWUAiS21BbkFnpcMWhEhw=
+	t=1714457780; cv=none; b=tu9bunWNS+aQTct6nERaOw6TUevtb05Vv5PKFSfrRPgULpa92DyNEpL69D3QWcJs21tO8xA8G9+oFUot53sgaGDadaa7SyplQEuwhNL0t3te0Bne8Rc/P9CT2harAwID8hDz/wIX2ouqzQYboNMh3JOtJICrRDB1D++x8Sk6Q3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714457680; c=relaxed/simple;
-	bh=gwJkiWxyW/wamW6kH7+GRx7VSH7hXsYT3WZXX3driJ8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z+27HInfHPAVseQ/wMxmSkDxVDA2i7qdrJMK3BqwhGnKGgOxGla0OF0MXOG+tHn8CfeT2rk71OuK5WNJBOHhpfKfh9lQTt6AKNhJsweT9CCpWkN24Ys6M9gnK2iCI0Q7mT9VsrFZtuChssRkuEyqCbb0IFgaAjowlTVKUnKrOOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WWfF+HS8; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714457780; c=relaxed/simple;
+	bh=ERTc2l5kU1GMYxtzdHJN1SeKinqluPnbKrRIhtd5mSo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tVWeHp+Sg5F2oPOIBjZrV7u1tb+3vi/J6E9j2AUTXBnAty5fRgds3b6Qq/JSCB+uylJtOPGvgCdYECSkZsVUlcOCOEop7etmlScjY10TkiFDXBJPCAPOyTeorGMqcNctcRkUZH76Rqp9kz1DihR8AsxuA8HUtd57chMFoGX65yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Mk/i/Cpo; arc=none smtp.client-ip=45.254.50.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WWfF+HS8"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e834159f40so42655595ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 23:14:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714457678; x=1715062478; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zfACtQQSDUwMHO1/0RK0ntsz+YmSOQ8ynC0u7vL0q8w=;
-        b=WWfF+HS8623sWjdYlAr6UUNKZJVc2+6d8C/ash6g0yNTqoeN0Rl9EB95SE6MfDfRY0
-         jC7ZkrpedNAic7BZ0yP9AI28zwK8J5RxVG/w7g88RFmdd+lvRz/pD98VNWYouq8k69BZ
-         YUENRNNN+1F7mJKOzQiK5FiTjVqFgUt0FRl0EnBIJZpfpDMyTfc13HXsDZ06/4XCoZ80
-         P3TJYeNVqeO/aTq8Teu0n2lkeZWwwayu20gtgqPKRK6fP6u9lgMBobWC6AqK/TloVpwP
-         qXgnbiCKNQuvR4xUt6afnHTheuMcP1/n/86vCdhqmrOrycZtUMRIa0cZXbzs6UoGvsb2
-         YMOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714457678; x=1715062478;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zfACtQQSDUwMHO1/0RK0ntsz+YmSOQ8ynC0u7vL0q8w=;
-        b=m55Akui6RUVwJ03x1WNOm1d52rMFwR8j/oF/teqjlEDbe5+4B4EKzT8oGeDxCJ+Eo5
-         he+t8tVHnFy9ClBrIcKPl6Ve4XSxIGvBaxDjL617Imz4w1IYqByOYqqbsywysjGXRQVm
-         2odvwtA48hVPV+5HYAzLOGgfJB2uhAfLIiEcLuOiUW44bU+Hb1aXwmpxsoLj9ylLzrZT
-         W3UkkI3TGyYgQvvLbjroo+WlmH5gOaRqp/TEtZFV5nUClropgPQELj8N5ct8AGvc1/Uf
-         wO81grW/Y7xmbJUMXux/yKnouVdWvwLTBplFgl9HLg+EHyEX28GyW66Ty5sR2fHj/FdI
-         F5qA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpMgKx/ILKL3i8fi/HpMnF6HlE4MfhtKLi+mrhruz8JlwiFKm2atWKIUAguKZMDOyALu1InniHBoYmAyBVpqVM8xtwTpGZI4VvITCE
-X-Gm-Message-State: AOJu0Yy7a9tP0NH+fL0Hy7XVOkCWWi1EEulPEJY4AxBI+rGdojAlow4o
-	PnHf9R/PVU/Qg+1UEPwpzSaG9RHFZ9+vwXJWHGmW16dICFZi3iHmgAI45T/zGSHmk1xjXoU9+Fk
-	=
-X-Google-Smtp-Source: AGHT+IGWSiYL4QGZLQ9kxcs8EksybyJBj3Q5TS+tl4f5cOjnz0JQqoAPxUgOn1Wokxhf05hTLpZtWw==
-X-Received: by 2002:a17:902:7087:b0:1e6:68d0:d6c1 with SMTP id z7-20020a170902708700b001e668d0d6c1mr12539439plk.40.1714457678284;
-        Mon, 29 Apr 2024 23:14:38 -0700 (PDT)
-Received: from [127.0.1.1] ([220.158.156.15])
-        by smtp.gmail.com with ESMTPSA id bi2-20020a170902bf0200b001e27ad5199csm21393298plb.281.2024.04.29.23.14.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 23:14:37 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Tue, 30 Apr 2024 11:43:51 +0530
-Subject: [PATCH v4 10/10] PCI: endpoint: pci-epf-test: Handle Link Down
- event
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Mk/i/Cpo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=OykVS
+	bzCv4+d4dPQLDypPadwOtIhxe1BrterZQ+EVfc=; b=Mk/i/CporQhNjM1Pb4Fxn
+	JzDrNc4n/H6i6Uz/6EZ+8yQgmt26tYyrfSqBhYGHAu/ubD170GE/f2+fQ2XzKy8k
+	+t995s0ICyjIoM/UQJktZ4tYUBOt7rgYAcT5UU020DHxF6e+CgfTL2v5iQ8GwkiH
+	TGxBUVX71rndtgrfXtIBus=
+Received: from localhost.localdomain (unknown [111.35.187.227])
+	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wD3v3dtjDBmw0B8Cw--.43676S4;
+	Tue, 30 Apr 2024 14:15:18 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: dreaming.about.electric.sheep@gmail.com,
+	airlied@redhat.com,
+	kraxel@redhat.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch
+Cc: virtualization@lists.linux.dev,
+	spice-devel@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	David Wang <00107082@163.com>
+Subject: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM events:qxl_gc_work [qxl]
+Date: Tue, 30 Apr 2024 14:13:37 +0800
+Message-Id: <20240430061337.764633-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-pci-epf-rework-v4-10-22832d0d456f@linaro.org>
-References: <20240430-pci-epf-rework-v4-0-22832d0d456f@linaro.org>
-In-Reply-To: <20240430-pci-epf-rework-v4-0-22832d0d456f@linaro.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Jingoo Han <jingoohan1@gmail.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, mhi@lists.linux.dev, 
- linux-tegra@vger.kernel.org, Niklas Cassel <cassel@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1926;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=gwJkiWxyW/wamW6kH7+GRx7VSH7hXsYT3WZXX3driJ8=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmMIwd973TI9incgBAwvQzAk1axQR3EQfp2S+v7
- 0yLEScJY42JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZjCMHQAKCRBVnxHm/pHO
- 9W9wB/9fKbNDwL0ouS8vXUIF1ITwHRCULxFhwVZnrKt6wJZZ10YPd6A9VuBZdad+tngXVjkuP8w
- y2VLFDcc4KgVEadpMF08dctlEfIju4UbBdEFJSEWUynyOkW//VQHFnjFFqRDUzgxJGS0/HVtCOx
- DIKJ2WR27vm+b9WdcJqbVuQvS2DJ0p3qbJatfzAVrFxcVxLDH+9DGD9CeExys4NrUyu9TKYZdB0
- ZiL8A0W9pOjEvFALzu9UAY1mhQpoZxwMX4Ldz8ABwFNHKktBYLKK4nD+YcsB2OrFE3EzmJo2Ol/
- GH7xP7PBMproKqyLDV/eCbdhGxKOw/9TTP1FAzdVXKFtqbz1
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:_____wD3v3dtjDBmw0B8Cw--.43676S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW3JrWkWF4kWry3AFWrKw13CFg_yoWxuF1Dpr
+	yYyF109FWrJw1qya1kJr1Fyws2qFsF9FWUZFyfGr10k3W5XF1rJa13Ga43KrWUCr9rJFW7
+	Awnrta4YyFnrAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUUhL8UUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiMw7PqmXAk7vy7wABsJ
 
-As per the PCIe base spec r5.0, section 5.2, Link Down event can happen
-under any of the following circumstances:
+Hi,
+I got following kernel WARNING when the my 2-core KVM(6.9.0-rc6) is under h=
+igh cpu load.
 
-1. Fundamental/Hot reset
-2. Link disable transmission by upstream component
-3. Moving from L2/L3 to L0
+	[Mon Apr 29 21:36:04 2024] ------------[ cut here ]------------
+	[Mon Apr 29 21:36:04 2024] workqueue: WQ_MEM_RECLAIM ttm:ttm_bo_delayed_de=
+lete [ttm] is flushing !WQ_MEM_RECLAIM events:qxl_gc_work [qxl]
+	[Mon Apr 29 21:36:04 2024] WARNING: CPU: 1 PID: 792 at kernel/workqueue.c:=
+3728 check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024] Modules linked in: xt_conntrack(E) nft_chain_na=
+t(E) xt_MASQUERADE(E) nf_nat(E) nf_conntrack_netlink(E) xfrm_user(E) xfrm_a=
+lgo(E) xt_addrtype(E) nft_compat(E) nf_tables(E) br_netfilter(E) bridge(E) =
+stp(E) llc(E) ip_set(E) nfnetlink(E) ip_vs_sh(E) ip_vs_wrr(E) ip_vs_rr(E) i=
+p_vs(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) intel_rapl_msr(=
+E) intel_rapl_common(E) crct10dif_pclmul(E) ghash_clmulni_intel(E) snd_hda_=
+codec_generic(E) snd_hda_intel(E) snd_intel_dspcfg(E) sha512_ssse3(E) snd_h=
+da_codec(E) sha512_generic(E) sha256_ssse3(E) overlay(E) sha1_ssse3(E) snd_=
+hda_core(E) snd_hwdep(E) aesni_intel(E) snd_pcm(E) crypto_simd(E) pcspkr(E)=
+ cryptd(E) joydev(E) qxl(E) snd_timer(E) drm_ttm_helper(E) ttm(E) evdev(E) =
+snd(E) iTCO_wdt(E) serio_raw(E) sg(E) virtio_balloon(E) virtio_console(E) i=
+TCO_vendor_support(E) soundcore(E) qemu_fw_cfg(E) drm_kms_helper(E) button(=
+E) binfmt_misc(E) fuse(E) drm(E) configfs(E) virtio_rng(E) rng_core(E) ip_t=
+ables(E) x_tables(E) autofs4(E) ext4(E) crc16(E) mbcache(E) jbd2(E)
+	[Mon Apr 29 21:36:04 2024]  hid_generic(E) usbhid(E) hid(E) sr_mod(E) cdro=
+m(E) ahci(E) libahci(E) virtio_net(E) net_failover(E) failover(E) virtio_bl=
+k(E) libata(E) xhci_pci(E) crc32_pclmul(E) crc32c_intel(E) scsi_mod(E) scsi=
+_common(E) lpc_ich(E) i2c_i801(E) xhci_hcd(E) psmouse(E) i2c_smbus(E) virti=
+o_pci(E) usbcore(E) virtio_pci_legacy_dev(E) virtio_pci_modern_dev(E) usb_c=
+ommon(E) virtio(E) mfd_core(E) virtio_ring(E)
+	[Mon Apr 29 21:36:04 2024] CPU: 1 PID: 792 Comm: kworker/u13:4 Tainted: G =
+           E      6.9.0-rc6-linan-5 #197
+	[Mon Apr 29 21:36:04 2024] Hardware name: QEMU Standard PC (Q35 + ICH9, 20=
+09), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+	[Mon Apr 29 21:36:04 2024] Workqueue: ttm ttm_bo_delayed_delete [ttm]
+	[Mon Apr 29 21:36:04 2024] RIP: 0010:check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024] Code: 8b 45 18 48 8d b2 c0 00 00 00 49 89 e8 48=
+ 8d 8b c0 00 00 00 48 c7 c7 68 30 a4 a7 c6 05 9b 12 6e 01 01 48 89 c2 e8 53=
+ b9 fd ff <0f> 0b e9 1e ff ff ff 80 3d 86 12 6e 01 00 75 93 e9 4a ff ff ff =
+66
+	[Mon Apr 29 21:36:04 2024] RSP: 0018:ffff9d31805abce8 EFLAGS: 00010086
+	[Mon Apr 29 21:36:04 2024] RAX: 0000000000000000 RBX: ffff8c8c4004ee00 RCX=
+: 0000000000000000
+	[Mon Apr 29 21:36:04 2024] RDX: 0000000000000003 RSI: 0000000000000027 RDI=
+: 00000000ffffffff
+	[Mon Apr 29 21:36:04 2024] RBP: ffffffffc0b53570 R08: 0000000000000000 R09=
+: 0000000000000003
+	[Mon Apr 29 21:36:04 2024] R10: ffff9d31805abb80 R11: ffffffffa7cc1108 R12=
+: ffff8c8c42eb8000
+	[Mon Apr 29 21:36:04 2024] R13: ffff8c8c48077900 R14: ffff8c8cbbd30b80 R15=
+: 0000000000000001
+	[Mon Apr 29 21:36:04 2024] FS:  0000000000000000(0000) GS:ffff8c8cbbd00000=
+(0000) knlGS:0000000000000000
+	[Mon Apr 29 21:36:04 2024] CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
+33
+	[Mon Apr 29 21:36:04 2024] CR2: 00007ffd38bb3ff8 CR3: 000000010217a000 CR4=
+: 0000000000350ef0
+	[Mon Apr 29 21:36:04 2024] Call Trace:
+	[Mon Apr 29 21:36:04 2024]  <TASK>
+	[Mon Apr 29 21:36:04 2024]  ? __warn+0x7c/0x120
+	[Mon Apr 29 21:36:04 2024]  ? check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024]  ? report_bug+0x18d/0x1c0
+	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
+	[Mon Apr 29 21:36:04 2024]  ? handle_bug+0x3c/0x80
+	[Mon Apr 29 21:36:04 2024]  ? exc_invalid_op+0x13/0x60
+	[Mon Apr 29 21:36:04 2024]  ? asm_exc_invalid_op+0x16/0x20
+	[Mon Apr 29 21:36:04 2024]  ? __pfx_qxl_gc_work+0x10/0x10 [qxl]
+	[Mon Apr 29 21:36:04 2024]  ? check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024]  ? check_flush_dependency+0xfd/0x120
+	[Mon Apr 29 21:36:04 2024]  __flush_work.isra.0+0xc0/0x270
+	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
+	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
+	[Mon Apr 29 21:36:04 2024]  ? __queue_work.part.0+0x18b/0x3d0
+	[Mon Apr 29 21:36:04 2024]  ? srso_return_thunk+0x5/0x5f
+	[Mon Apr 29 21:36:04 2024]  qxl_queue_garbage_collect+0x7f/0x90 [qxl]
+	[Mon Apr 29 21:36:04 2024]  qxl_fence_wait+0x9c/0x180 [qxl]
+	[Mon Apr 29 21:36:04 2024]  dma_fence_wait_timeout+0x61/0x130
+	[Mon Apr 29 21:36:04 2024]  dma_resv_wait_timeout+0x6d/0xd0
+	[Mon Apr 29 21:36:04 2024]  ttm_bo_delayed_delete+0x26/0x80 [ttm]
+	[Mon Apr 29 21:36:04 2024]  process_one_work+0x18c/0x3b0
+	[Mon Apr 29 21:36:04 2024]  worker_thread+0x273/0x390
+	[Mon Apr 29 21:36:04 2024]  ? __pfx_worker_thread+0x10/0x10
+	[Mon Apr 29 21:36:04 2024]  kthread+0xdd/0x110
+	[Mon Apr 29 21:36:04 2024]  ? __pfx_kthread+0x10/0x10
+	[Mon Apr 29 21:36:04 2024]  ret_from_fork+0x30/0x50
+	[Mon Apr 29 21:36:04 2024]  ? __pfx_kthread+0x10/0x10
+	[Mon Apr 29 21:36:04 2024]  ret_from_fork_asm+0x1a/0x30
+	[Mon Apr 29 21:36:04 2024]  </TASK>
+	[Mon Apr 29 21:36:04 2024] ---[ end trace 0000000000000000 ]---
 
-When the event happens, the EPC driver capable of detecting it may pass the
-notification to the EPF driver through link_down() callback in 'struct
-pci_epc_event_ops'.
+I find that the exact warning message mentioned in
+ https://lore.kernel.org/lkml/20240404181448.1643-1-dreaming.about.electric=
+.sheep@gmail.com/T/#m8c2ecc83ebba8717b1290ec28d4dc15f2fa595d5
+And confirmed that the warning is caused by 07ed11afb68d94eadd4ffc082b97c23=
+31307c5ea and reverting it can fix.
 
-While the PCIe spec has not defined the actual behavior of the endpoint
-when the Link Down event happens, we may assume that at least the ongoing
-transactions need to be stopped as the link won't be active. So let's
-cancel the command handler work in the callback implementation
-pci_epf_test_link_down(). The work will be started again in
-pci_epf_test_link_up() once the link comes back again.
 
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
-Tested-by: Niklas Cassel <cassel@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+It seems that under heavy load, qxl_queue_garbage_collect would be called w=
+ithin
+a WQ_MEM_RECLAIM worker, and flush qxl_gc_work which is a
+!WQ_MEM_RECLAIM worker. This will trigger the kernel WARNING by
+check_flush_dependency.
+
+And I tried following changes, setting flush flag to false.
+The warning is gone, but I am not sure whether there is any other side-effe=
+ct,
+especially the issue mentioned in=20
+https://lore.kernel.org/lkml/20240404181448.1643-2-dreaming.about.electric.=
+sheep@gmail.com/T/#m988ffad2000c794dcfdab7e60b03db93d8726391
+
+Signed-off-by: David Wang <00107082@163.com>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/qxl/qxl_release.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index c8d0c51ae329..afb28df174c3 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -809,10 +809,20 @@ static int pci_epf_test_link_up(struct pci_epf *epf)
- 	return 0;
- }
- 
-+static int pci_epf_test_link_down(struct pci_epf *epf)
-+{
-+	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-+
-+	cancel_delayed_work_sync(&epf_test->cmd_handler);
-+
-+	return 0;
-+}
-+
- static const struct pci_epc_event_ops pci_epf_test_event_ops = {
- 	.epc_init = pci_epf_test_epc_init,
- 	.epc_deinit = pci_epf_test_epc_deinit,
- 	.link_up = pci_epf_test_link_up,
-+	.link_down = pci_epf_test_link_down,
- };
- 
- static int pci_epf_test_alloc_space(struct pci_epf *epf)
+diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_re=
+lease.c
+index 9febc8b73f09..f372085c5aad 100644
+--- a/drivers/gpu/drm/qxl/qxl_release.c
++++ b/drivers/gpu/drm/qxl/qxl_release.c
+@@ -76,7 +76,7 @@ static long qxl_fence_wait(struct dma_fence *fence, bool =
+intr,
+ 	qxl_io_notify_oom(qdev);
+=20
+ 	for (count =3D 0; count < 11; count++) {
+-		if (!qxl_queue_garbage_collect(qdev, true))
++		if (!qxl_queue_garbage_collect(qdev, false))
+ 			break;
+=20
+ 		if (dma_fence_is_signaled(fence))
+--=20
+2.39.2
 
--- 
-2.25.1
+
+
+David
 
