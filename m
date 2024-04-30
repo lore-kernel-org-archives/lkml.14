@@ -1,95 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F251C33;
-	Tue, 30 Apr 2024 02:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F4633D5
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 02:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714443366; cv=none; b=Yef5Wup7UwE4giVVBBNDCUSSwXbrOn09pSbt+xtUo/XGAq8KbsKx/hfYzzg+zCJUvgZCeVOxxburdb5QFrQIgGlPhHB1ocBesNgWV0mu2OcT3QF0miucUwjzs8ulCRaCjt/eMmtAkBjbI092WOFtQ2aQKUhiBv4cQVZEMmO2J+w=
+	t=1714443476; cv=none; b=JNUmeHRjZ9IMHYocIOTr2sFNJZ+7pDh8Hi09Gqrcpn3J7PRCWxZh7AsA8mPnjXFMNyzsPIQ4L0mE6901pbGL2VEu5o3seUPHpQki1CLMqFokjoHz9q7kKMRIYlDFpT192qsP6sMLOPlfm6mbhiFhD5sV186hEbhaPi3BzVzKsRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714443366; c=relaxed/simple;
-	bh=FEYx4JC+14yee2/OFeo1xzAi0y2DiicqS68he4KfFKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OA/a4jIZ7Tjysl0qfctBD9gf/1ui9FYwlRD4I9D+UIFsuHIc4GE1WT+WLFSQScHNlbUexzHcT/FWx7I6V+P0bK9+wuzx1KyiNuuYnWmC/WSb0aO7XzuD+XcD7fAWyPuklFp49tT+RhxCTibQLoIuy+a4ik+6cUBj+wab3REcC64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWJs5Rny; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714443476; c=relaxed/simple;
+	bh=A+pXMQ7LewpVRbo5DMWA5iHpn7olR3kQXZjLcapHorY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D5JcjXpC0hC20eGCj3JWI2PBAbgnnIqtX6aUDxq/VfPdwBEglf6K88oDOh3PVG5fA6w4BqXqX24h03CLIqNvlZvus/TpjXQbt5FvqPxMlGJejVGbVJR5h6fKEUMqpn7iEZEATv2XH2YctX8s99L0Qpq6IqUb3+Y3MpmACVqdk1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E2FmP045; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWJs5Rny"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714443365; x=1745979365;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FEYx4JC+14yee2/OFeo1xzAi0y2DiicqS68he4KfFKE=;
-  b=PWJs5RnyDA7l+p4uu0WHIvw57qOroAZMfHsXrB+a2dq1kCBjQZxovwGF
-   5nv8xRTFKpgSzdmHJSuTgf1VgYKNarzBbW4RATqVylnHr3vtRA3OIvtHy
-   7HSDcmFO/vJrFIhMfapPm7vQlqHirkAVU0/hd5nMwx8jv1X7+YAO49aPi
-   GUrr0xdEsJ/8MJ8iaRjxOJgTjtnKgkAvhzBSo+k5MVT8aHGITEZRFrTiO
-   FOvDlxxqobsd7qoPGkH/bw8BSb1ibdAl87ebO0gzdnww7e4EBbVCxbXoJ
-   rKUM28vAIhvIk4flU4diWEIXzoF7sWGqZxazS4nFQuWv3iobk5Q1FvJbu
-   g==;
-X-CSE-ConnectionGUID: EsFHEUz3QOKcSHgjuiQ54Q==
-X-CSE-MsgGUID: OB6TbK6bR+6w7kZXWij7fQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="20814396"
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="20814396"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 19:16:01 -0700
-X-CSE-ConnectionGUID: /EVNWWnnRDWGAFoa5okH1Q==
-X-CSE-MsgGUID: v37V+LvyQAee/Q757M641g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="26231973"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa009.fm.intel.com with ESMTP; 29 Apr 2024 19:15:58 -0700
-Date: Tue, 30 Apr 2024 10:10:29 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Colberg, Peter" <peter.colberg@intel.com>
-Cc: "Xu, Yilun" <yilun.xu@intel.com>,
-	"linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-	"mdf@kernel.org" <mdf@kernel.org>, "Wu, Hao" <hao.wu@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"russ.weight@linux.dev" <russ.weight@linux.dev>,
-	"Pagani, Marco" <marpagan@redhat.com>, "Rix, Tom" <trix@redhat.com>,
-	"matthew.gerlach@linux.intel.com" <matthew.gerlach@linux.intel.com>
-Subject: Re: [PATCH] fpga: dfl-pci: add PCI subdevice ID for Intel D5005 card
-Message-ID: <ZjBTFViASK857NHL@yilunxu-OptiPlex-7050>
-References: <20240422230257.1959-1-peter.colberg@intel.com>
- <ZispK+l5kWCxtfns@yilunxu-OptiPlex-7050>
- <0081a4ba1304f37142e6b1714d022fd4e7c9821f.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2FmP045"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5f415fd71f8so4128489a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Apr 2024 19:17:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714443474; x=1715048274; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cchrfa8eIXWEq/fb8YAhdNX//HQqlhIwVZ6NSv/uTAM=;
+        b=E2FmP045xwzRDtEtmolF3CqlTtAMs166KJlMSQCc277ZcGUVgOlen6EXfa8oRFnoFz
+         xna9FMqjAjt8dSMqb15VKt8rZSTtOaigjubVKhorZ30PkTDntBGtWDsIqEiPe+5WtVTO
+         VCQEDL6g+f6HaMiUvBqrVYpyVIQSLwgROiAubTDa7SzgChYEkHuS3SruXczG0CZb+C/T
+         DBcBw4hv3fenJ/pe1DS3IgLBV09+HUUOoAcBQmQLH4v7UIAjOlhyezzWIM9ym+bFhjPi
+         P5FnvLtdQpJ7o0CSMTyH+V+W53xxooDjDGbNve+EADQJ7fqAeXU2OuzoscEXCNIrSl73
+         0Rmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714443474; x=1715048274;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cchrfa8eIXWEq/fb8YAhdNX//HQqlhIwVZ6NSv/uTAM=;
+        b=uvue6sBEqwuyzck07pmXlbnb614kx9eA+O4g796MSfg2optKow+8v+4IOr9wux5K6G
+         EtGSE73SEfI/1xQzLrjyCEvqkUzMdmFuxJEDAb9+BAbbRKLBaG00ChW6VsGlRe/H5ZP4
+         egmi6CdpYSq5MoBHIvauUXo4+oYf3ArvN+JlCHTCk/RIAAU1edZGz13HaROMP5CvYEVT
+         A79oy1g6TCBY7BnQPmYv6nY2h0DrJS+rxjrOxH8JuJSX2dbjm0rDiFxt0CFITg/jH46u
+         uSEZ5zJsnyLALjhemhYBaCS5YeQXML2BOplQg6s5wwgCQcTguMayC2rvpYreh7+t3aAU
+         6Hdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXRaERLxHjh7evfKsu1P5ZFsC5HCg74NTXkaOm+kSH9oAxDK/Dlyxkcu5eCCzRnv+EUt6Naq7ZG51Mq9sDnEoofDyG58K1sVBWEFjx
+X-Gm-Message-State: AOJu0YxTCmeC/DUyGeJXBhIAROc2yIZl3hcsFQM2GUBWKdt7H+4Xx1rR
+	5NeWQQ7AbH7UVc+/zo+CcvFTuYBy1rBjWC/zawtq3Pej0713aydB
+X-Google-Smtp-Source: AGHT+IEF3eO70FW3TItLtjRdAj6x49nr+2Kh7RJrVnC3sLWoPwJO4yfoQOluLguDyR+oKOT9sfZO6w==
+X-Received: by 2002:a05:6a20:c70e:b0:1af:3857:e653 with SMTP id hi14-20020a056a20c70e00b001af3857e653mr8338836pzb.12.1714443474145;
+        Mon, 29 Apr 2024 19:17:54 -0700 (PDT)
+Received: from localhost.localdomain ([143.92.64.17])
+        by smtp.gmail.com with ESMTPSA id k6-20020a170902694600b001e20afa1038sm21154619plt.8.2024.04.29.19.17.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 19:17:53 -0700 (PDT)
+From: "brookxu.cn" <brookxu.cn@gmail.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] nvme-fabrics: use reserved tag for reg read/write command
+Date: Tue, 30 Apr 2024 10:17:53 +0800
+Message-Id: <20240430021753.385089-1-brookxu.cn@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0081a4ba1304f37142e6b1714d022fd4e7c9821f.camel@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 26, 2024 at 09:35:07PM +0000, Colberg, Peter wrote:
-> On Fri, 2024-04-26 at 12:10 +0800, Xu Yilun wrote:
-> > On Mon, Apr 22, 2024 at 07:02:57PM -0400, Peter Colberg wrote:
-> > > Add PCI subdevice ID for the Intel D5005 Stratix 10 FPGA card as
-> > > used with the Open FPGA Stack (OFS) FPGA Interface Manager (FIM).
-> > > 
-> > > Unlike the Intel D5005 PAC FIM which exposed a separate PCI device ID,
-> > > the OFS FIM reuses the same device ID for all DFL-based FPGA cards
-> > > and differentiates on the subdevice ID. The subdevice ID values were
-> > > chosen as the numeric part of the FPGA card names in hexadecimal.
-> > > 
-> > > Link: https://github.com/OFS/dfl-feature-id/pull/4
-> > 
-> > Any reason to put the Link in changelog. I didn't see it provide any
-> > extra info.
-> 
-> The link is provided to point to the corresponding change in the dfl-
-> pci-ids registry, for someone who might not be aware of its existence.
+From: Chunguang Xu <chunguang.xu@shopee.com>
 
-I suggest you don't put it in changelog, few people care about
-this downstream history.  Put it below '---' if really necessary. I
-deleted this link when apply.
+In some scenarios, if too many commands are issued by nvme command in
+the same time by user tasks, this may exhaust all tags of admin_q. If
+a reset (nvme reset or IO timeout) occurs before these commands finish,
+reconnect routine may fail to update nvme regs due to insufficient tags,
+which will cause kernel hang forever. In order to workaround this issue,
+maybe we can let reg_read32()/reg_read64()/reg_write32() use reserved
+tags. This maybe safe for nvmf:
 
-Thanks,
-Yilun
+1. For the disable ctrl path,  we will not issue connect command
+2. For the enable ctrl / fw activate path, since connect and reg_xx()
+   are called serially.
+
+So the reserved tags may still be enough while reg_xx() use reserved tags.
+
+Signed-off-by: Chunguang Xu <chunguang.xu@shopee.com>
+---
+ drivers/nvme/host/fabrics.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
+index 1f0ea1f32d22..f6416f8553f0 100644
+--- a/drivers/nvme/host/fabrics.c
++++ b/drivers/nvme/host/fabrics.c
+@@ -180,7 +180,7 @@ int nvmf_reg_read32(struct nvme_ctrl *ctrl, u32 off, u32 *val)
+ 	cmd.prop_get.offset = cpu_to_le32(off);
+ 
+ 	ret = __nvme_submit_sync_cmd(ctrl->fabrics_q, &cmd, &res, NULL, 0,
+-			NVME_QID_ANY, 0);
++			NVME_QID_ANY, NVME_SUBMIT_RESERVED);
+ 
+ 	if (ret >= 0)
+ 		*val = le64_to_cpu(res.u64);
+@@ -226,7 +226,7 @@ int nvmf_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
+ 	cmd.prop_get.offset = cpu_to_le32(off);
+ 
+ 	ret = __nvme_submit_sync_cmd(ctrl->fabrics_q, &cmd, &res, NULL, 0,
+-			NVME_QID_ANY, 0);
++			NVME_QID_ANY, NVME_SUBMIT_RESERVED);
+ 
+ 	if (ret >= 0)
+ 		*val = le64_to_cpu(res.u64);
+@@ -271,7 +271,7 @@ int nvmf_reg_write32(struct nvme_ctrl *ctrl, u32 off, u32 val)
+ 	cmd.prop_set.value = cpu_to_le64(val);
+ 
+ 	ret = __nvme_submit_sync_cmd(ctrl->fabrics_q, &cmd, NULL, NULL, 0,
+-			NVME_QID_ANY, 0);
++			NVME_QID_ANY, NVME_SUBMIT_RESERVED);
+ 	if (unlikely(ret))
+ 		dev_err(ctrl->device,
+ 			"Property Set error: %d, offset %#x\n",
+-- 
+2.25.1
+
