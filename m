@@ -1,671 +1,342 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98B157302
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 08:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33EE57302;
+	Tue, 30 Apr 2024 08:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714465343; cv=none; b=ftq57ZSe2+c57xuUeHSwSxF9ER3Y90zh/b6lScF0FYN8tRH+t5KHhwXAwXV4UGXXYUrQwO2UpGUEelhA6hcQbXpBzyjagwSpTyYyCJAjDGW1T1W/M5I2AA3Xj3A/Cioa24dB2RVmx/fgUuBrXQZez3TlVAaVlgkatrU5sVK8dVs=
+	t=1714465437; cv=none; b=hZenWd+QKbxc1eL89BOHMJPGAM1EYiZC3PN37PN+qkjzOpsfw7RGZcFX9DEUNBW1khE+xCRKgZw6nbABV9WHQU6DRMoIRtL7AqTod5WQGYfzEXX4ClpeU6cqYCIYlL77+GWX+3GK9DI9xvoUB8VH2PdKX/HnebZY1vIYivFIddo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714465343; c=relaxed/simple;
-	bh=Z1XHhhkPyqee2VKXCWvna+6WTwj7cZqDN7PwiCZj7GM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vEaUQ8ah31nuku3NM6q2XtAZh7nxUTF5nCPJKLDEJFN9P2iq3fJcP6P8DN3Sk3oglEPh/IPSX0MEXv9iFcYYlr4IuHcHm9RMSCy9NotAXRy2B6rY0H6W9KDH2CYPJS3gR1lfTOF9Cdm7loc+jeOHKz1/g0Tv5wV/AwFHH0IME00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=NDX62HrR; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1714465437; c=relaxed/simple;
+	bh=VsyOloioIfesdDNLYyvwCXpx/Xt5uokNkCcw7EG/nSY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fbJKMsZ1mJOo3r/RJQPWM11IuM7VguqvaWeVLTvmoQ5ELGoDqE3MK2sUr39qenI8hjXBSJhZny1th0h9eTGS6fWLwlDK1T46R66WLc7F6js3lMFx3jS7VXSJzRXVnH97IdaU2JLgnlTjs+CRA58aEq85MaFWumaCFl2YEW5+4Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sNVu0QQO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="NDX62HrR"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-51bd8d9f629so1384415e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 01:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1714465339; x=1715070139; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/H68xbHpH6fIbiHMfmPFlE9gsDjWFY9s2cCrxwlQg4w=;
-        b=NDX62HrRZBGJqTZmjbfl7wvFjeaGdOlDt9ObA1EXHpl/Ekt+mHA5FDRrdBugE8YySe
-         d4NOvmmNH8px/lH5fpu01Erg3OefyetgwT1+MgAZCSmbPZhGgdnGp52e7q39FBove8cC
-         f/3ZUzZ0WXrMfUUlG1jdSb4Vazf3FYEx5ekpY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714465339; x=1715070139;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/H68xbHpH6fIbiHMfmPFlE9gsDjWFY9s2cCrxwlQg4w=;
-        b=PJhLBQvPHXbFlvGEY5RCtyZ+fowPAV8kQ+CWNxXBEkFRAatR8ISa2HJ1Ex02+sydec
-         /I3jTdGU+NaNV9Qbo0fSAkAdwtuDoKY7ctzRNCL/wI8wE6tWOaFgI87JpbcwUvLouJtI
-         X3qntb9Snt8tWbh+DlzzIf091CcAH1QFhPwKqrrLBvYzU2nQdQV30D4ZlKtyXksO6j60
-         Y/81xLuGxBUp0RAz4o3MCo92VYwYaWYNF35HtcZkYNGSb/iWSeEYpuEKqqFJzhbjfgN7
-         jSlC3g5tf78iTEy0mh4OpPyv+6LbRsac8X606WvA1wG1ja1ATjq+pSvdwnC7xWkeg+JE
-         JzWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUh5wXCnh+P3/rZ91PcteWVvZsffJPyv+zqhP0PSS6uxlkLRj6sADeOOPRh5qTCMFnO406wA28ewgHz5DXjrl4esIlxtvq+dvvaNFeX
-X-Gm-Message-State: AOJu0YwzU9jOZwRydAd4LlUhU8uF6l7RQ6HOYMJ7JzXPJBbwx22L/zmN
-	wTrJL5dMp+AfB7TssozUq4Ef6YQitJAq37KptH0VZWDur6HZhDVjkciRlSG8ecM=
-X-Google-Smtp-Source: AGHT+IFNlDRuKmdDJzpBvFy/a4d1lL/jO+Cizbt6KCUmWCQIQX8fmP0NdU/+SDlgh2QjDxMGmiOnig==
-X-Received: by 2002:a2e:920e:0:b0:2da:320a:6739 with SMTP id k14-20020a2e920e000000b002da320a6739mr8072768ljg.1.1714465338939;
-        Tue, 30 Apr 2024 01:22:18 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id e18-20020a056000195200b003462fec9f5asm31383950wry.62.2024.04.30.01.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 01:22:18 -0700 (PDT)
-Date: Tue, 30 Apr 2024 10:22:16 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Brandon Pollack <brpol@chromium.org>
-Cc: marius.vlad@collabora.com, mairacanal@riseup.net, jshargo@chromium.org,
-	hamohammed.sa@gmail.com, rodrigosiqueiramelo@gmail.com,
-	linux-doc@vger.kernel.org, hirono@chromium.org, corbet@lwn.net,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	melissa.srw@gmail.com, mduggan@chromium.org, mripard@kernel.org,
-	tzimmermann@suse.de
-Subject: Re: [PATCH v6 5/7] drm/vkms: Support enabling ConfigFS devices
-Message-ID: <ZjCqONJlOkFuuKsP@phenom.ffwll.local>
-Mail-Followup-To: Brandon Pollack <brpol@chromium.org>,
-	marius.vlad@collabora.com, mairacanal@riseup.net,
-	jshargo@chromium.org, hamohammed.sa@gmail.com,
-	rodrigosiqueiramelo@gmail.com, linux-doc@vger.kernel.org,
-	hirono@chromium.org, corbet@lwn.net, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, melissa.srw@gmail.com,
-	mduggan@chromium.org, mripard@kernel.org, tzimmermann@suse.de
-References: <20230829053201.423261-1-brpol@chromium.org>
- <20230829053201.423261-6-brpol@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sNVu0QQO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9611FC4AF1B;
+	Tue, 30 Apr 2024 08:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714465436;
+	bh=VsyOloioIfesdDNLYyvwCXpx/Xt5uokNkCcw7EG/nSY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sNVu0QQOKZMI8vbNb/fmhAo8COt9XIKGi4NoeDAF4mthlIlpnhHbiryC0yKzPJrab
+	 ZmH0v6rhXRt1k9lftjKA/OlqnfU9LX+Q9uisRRfSrSDxDodYbLYw85mBa8GUrsnxDM
+	 BvWzS4VcFFVrIsLNpyYiughM5l41wnqeCrBt8PeFRLgPIHruP+tTWV99uC25WfuOxk
+	 p+TFiuLHBBU9GqZjbo/cxUJNpadJdX+TAwcxUgClqyYpEEZ+wWBydBUlQYtVzri+Hq
+	 sNg3nuNpH781p71npC7QZUzHS+8uwhE3of0J4Nw/0M5wjGKFamrL9ZiXDrX7q7nhvi
+	 +K6UPMbH3WxTw==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso6755524a12.2;
+        Tue, 30 Apr 2024 01:23:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUMwhXI96uLIDnnBIxkdgqKqbCbT419INFULL0hosJ21UI0ups/0UD5smKRjWgm95oVJOTj6Hn49juUuMG3G0t2gxTiestwccR21IGVNc3K0BCvVR3ndExNgAqkqnilY7QF
+X-Gm-Message-State: AOJu0YyzWcPXrdZt+nXTie1V8wuRoO5DzO3bqr3MbaSR59De3pkCwi1m
+	CsVYsyZC+airoSvz5JI4ccvY64qm/g0T126TH29K+1D+UZGWO9Ci9Fe/Xy623wvsVV8wJXZ8dVe
+	PwExPrfxeQENN5LOAiqfRFwaOzrE=
+X-Google-Smtp-Source: AGHT+IEw2cZHZLMb8FkqhXvYx5WJlkmaBw01K6YpVQYCne8PPhCZ1Mk6XfNcMI1nStR3UeFDQdJ+EjegwAp1pEddjnA=
+X-Received: by 2002:a17:907:9694:b0:a58:bb3e:937b with SMTP id
+ hd20-20020a170907969400b00a58bb3e937bmr11731440ejc.63.1714465435014; Tue, 30
+ Apr 2024 01:23:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230829053201.423261-6-brpol@chromium.org>
-X-Operating-System: Linux phenom 6.6.15-amd64 
+References: <20240430014505.2102631-1-maobibo@loongson.cn> <20240430014505.2102631-3-maobibo@loongson.cn>
+In-Reply-To: <20240430014505.2102631-3-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 30 Apr 2024 16:23:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4xN9rdBkSA4PJafr5MNqEiCbNHTgim_bj89YNaB4PFjw@mail.gmail.com>
+Message-ID: <CAAhV-H4xN9rdBkSA4PJafr5MNqEiCbNHTgim_bj89YNaB4PFjw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] LoongArch: Add steal time support in guest side
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	virtualization@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 29, 2023 at 05:30:57AM +0000, Brandon Pollack wrote:
-> From: Jim Shargo <jshargo@chromium.org>
-> 
-> VKMS now supports creating and using virtual devices!
-> 
-> In addition to the enabling logic, this commit also prevents users from
-> adding new objects once a card is registered.
-> 
-> Signed-off-by: Jim Shargo <jshargo@chromium.org>
-> Signed-off-by: Brandon Pollack <brpol@chromium.org>
+Hi, Bibo,
+
+On Tue, Apr 30, 2024 at 9:45=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> Percpu struct kvm_steal_time is added here, its size is 64 bytes and
+> also defined as 64 bytes, so that the whole structure is in one physical
+> page.
+>
+> When vcpu is onlined, function pv_enable_steal_time() is called. This
+> function will pass guest physical address of struct kvm_steal_time and
+> tells hypervisor to enable steal time. When vcpu is offline, physical
+> address is set as 0 and tells hypervisor to disable steal time.
+>
+> Here is output of vmstat on guest when there is workload on both host
+> and guest. It includes steal time stat information.
+>
+> procs -----------memory---------- -----io---- -system-- ------cpu-----
+>  r  b   swpd   free  inact active   bi    bo   in   cs us sy id wa st
+> 15  1      0 7583616 184112  72208    20    0  162   52 31  6 43  0 20
+> 17  0      0 7583616 184704  72192    0     0 6318 6885  5 60  8  5 22
+> 16  0      0 7583616 185392  72144    0     0 1766 1081  0 49  0  1 50
+> 16  0      0 7583616 184816  72304    0     0 6300 6166  4 62 12  2 20
+> 18  0      0 7583632 184480  72240    0     0 2814 1754  2 58  4  1 35
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  drivers/gpu/drm/vkms/vkms_configfs.c |  37 ++--
->  drivers/gpu/drm/vkms/vkms_crtc.c     |   4 +-
->  drivers/gpu/drm/vkms/vkms_drv.c      |   1 +
->  drivers/gpu/drm/vkms/vkms_drv.h      |   4 +-
->  drivers/gpu/drm/vkms/vkms_output.c   | 282 +++++++++++++++++++++++----
->  drivers/gpu/drm/vkms/vkms_plane.c    |  10 +-
->  6 files changed, 282 insertions(+), 56 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
-> index dae2e85d83a1..bc35dcc47585 100644
-> --- a/drivers/gpu/drm/vkms/vkms_configfs.c
-> +++ b/drivers/gpu/drm/vkms/vkms_configfs.c
-> @@ -508,29 +508,40 @@ static ssize_t device_enabled_store(struct config_item *item, const char *buf,
->  {
->  	struct vkms_configfs *configfs = item_to_configfs(item);
->  	struct vkms_device *device;
-> -	int value, ret;
-> +	int enabled, ret;
->  
-> -	ret = kstrtoint(buf, 0, &value);
-> +	ret = kstrtoint(buf, 0, &enabled);
->  	if (ret)
->  		return ret;
->  
-> -	if (value != 1)
-> -		return -EINVAL;
-> -
-> -	mutex_lock(&configfs->lock);
-> -
-> -	if (configfs->vkms_device) {
-> +	if (enabled == 0) {
-> +		mutex_lock(&configfs->lock);
-> +		if (configfs->vkms_device) {
-> +			vkms_remove_device(configfs->vkms_device);
-> +			configfs->vkms_device = NULL;
-> +		}
->  		mutex_unlock(&configfs->lock);
+>  arch/loongarch/Kconfig                |  11 +++
+>  arch/loongarch/include/asm/paravirt.h |   5 +
+>  arch/loongarch/kernel/paravirt.c      | 131 ++++++++++++++++++++++++++
+>  arch/loongarch/kernel/time.c          |   2 +
+>  4 files changed, 149 insertions(+)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 0a1540a8853e..f3a03c33a052 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -592,6 +592,17 @@ config PARAVIRT
+>           over full virtualization.  However, when run without a hypervis=
+or
+>           the kernel is theoretically slower and slightly larger.
+>
+> +config PARAVIRT_TIME_ACCOUNTING
+> +       bool "Paravirtual steal time accounting"
+> +       select PARAVIRT
+> +       help
+> +         Select this option to enable fine granularity task steal time
+> +         accounting. Time spent executing other tasks in parallel with
+> +         the current vCPU is discounted from the vCPU power. To account =
+for
+> +         that, there can be a small performance impact.
 > +
->  		return len;
->  	}
->  
-> -	device = vkms_add_device(configfs);
-> -	mutex_unlock(&configfs->lock);
-> +	if (enabled == 1) {
-> +		mutex_lock(&configfs->lock);
-> +		if (!configfs->vkms_device) {
-> +			device = vkms_add_device(configfs);
-> +			if (IS_ERR(device)) {
-> +				mutex_unlock(&configfs->lock);
-> +				return -PTR_ERR(device);
-> +			}
+> +         If in doubt, say N here.
 > +
-> +			configfs->vkms_device = device;
-> +		}
-> +		mutex_unlock(&configfs->lock);
->  
-> -	if (IS_ERR(device))
-> -		return -PTR_ERR(device);
-> +		return len;
-> +	}
->  
-> -	return len;
-> +	return -EINVAL;
->  }
->  
->  CONFIGFS_ATTR(device_, enabled);
-> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-> index 74bbd675464b..2aa1c5246b7e 100644
-> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
-> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-> @@ -279,7 +279,7 @@ static const struct drm_crtc_helper_funcs vkms_crtc_helper_funcs = {
->  
->  struct vkms_crtc *vkms_crtc_init(struct vkms_device *vkmsdev,
->  				 struct drm_plane *primary,
-> -				 struct drm_plane *cursor)
-> +				 struct drm_plane *cursor, const char *name)
->  {
->  	struct drm_device *dev = &vkmsdev->drm;
->  	struct vkms_crtc *vkms_crtc;
-> @@ -291,7 +291,7 @@ struct vkms_crtc *vkms_crtc_init(struct vkms_device *vkmsdev,
->  	vkms_crtc = &vkmsdev->output.crtcs[vkmsdev->output.num_crtcs++];
->  
->  	ret = drmm_crtc_init_with_planes(dev, &vkms_crtc->base, primary, cursor,
-> -					 &vkms_crtc_funcs, NULL);
-> +					 &vkms_crtc_funcs, name);
->  	if (ret) {
->  		DRM_ERROR("Failed to init CRTC\n");
->  		goto out_error;
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-> index 819e880a8cf7..6e7f20681890 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> @@ -275,6 +275,7 @@ struct vkms_device *vkms_add_device(struct vkms_configfs *configfs)
->  			dev, &vkms_platform_driver.driver))) {
->  		pdev = to_platform_device(dev);
->  		max_id = max(max_id, pdev->id);
-> +		put_device(dev);
->  	}
->  
->  	pdev = platform_device_register_data(NULL, DRIVER_NAME, max_id + 1,
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-> index 8cdd7949f661..2b9545ada9c2 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> @@ -250,13 +250,13 @@ void vkms_remove_device(struct vkms_device *vkms_device);
->  /* CRTC */
->  struct vkms_crtc *vkms_crtc_init(struct vkms_device *vkmsdev,
->  				 struct drm_plane *primary,
-> -				 struct drm_plane *cursor);
-> +				 struct drm_plane *cursor, const char *name);
->  
->  int vkms_output_init(struct vkms_device *vkmsdev);
->  int vkms_output_init_default(struct vkms_device *vkmsdev);
->  
->  struct vkms_plane *vkms_plane_init(struct vkms_device *vkmsdev,
-> -				   enum drm_plane_type type);
-> +				   enum drm_plane_type type, char* name, ...);
->  
->  /* CRC Support */
->  const char *const *vkms_get_crc_sources(struct drm_crtc *crtc,
-> diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-> index dc69959c5e1d..0ee1f3f4a305 100644
-> --- a/drivers/gpu/drm/vkms/vkms_output.c
-> +++ b/drivers/gpu/drm/vkms/vkms_output.c
-> @@ -2,8 +2,10 @@
->  
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_connector.h>
-> +#include <drm/drm_crtc.h>
->  #include <drm/drm_edid.h>
->  #include <drm/drm_encoder.h>
-> +#include <drm/drm_plane.h>
->  #include <drm/drm_probe_helper.h>
->  #include <drm/drm_simple_kms_helper.h>
->  
-> @@ -60,7 +62,8 @@ vkms_connector_init(struct vkms_device *vkms_device)
->  	return connector;
->  }
->  
-> -static struct drm_encoder *vkms_encoder_init(struct vkms_device *vkms_device)
-> +static struct drm_encoder *vkms_encoder_init(struct vkms_device *vkms_device,
-> +					     char *name)
->  {
->  	struct drm_encoder *encoder;
->  	int ret;
-> @@ -71,7 +74,7 @@ static struct drm_encoder *vkms_encoder_init(struct vkms_device *vkms_device)
->  	encoder = &vkms_device->output
->  			   .encoders[vkms_device->output.num_encoders++];
->  	ret = drm_encoder_init(&vkms_device->drm, encoder, &vkms_encoder_funcs,
-> -			       DRM_MODE_ENCODER_VIRTUAL, NULL);
-> +			       DRM_MODE_ENCODER_VIRTUAL, name);
->  	if (ret) {
->  		memset(encoder, 0, sizeof(*encoder));
->  		vkms_device->output.num_encoders -= 1;
-> @@ -82,7 +85,6 @@ static struct drm_encoder *vkms_encoder_init(struct vkms_device *vkms_device)
->  
->  int vkms_output_init_default(struct vkms_device *vkmsdev)
->  {
-> -	struct vkms_output *output = &vkmsdev->output;
->  	struct drm_device *dev = &vkmsdev->drm;
->  	struct drm_connector *connector;
->  	struct drm_encoder *encoder;
-> @@ -92,35 +94,34 @@ int vkms_output_init_default(struct vkms_device *vkmsdev)
->  	int writeback;
->  	unsigned int n;
->  
-> -	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY);
-> +	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY,
-> +				  "default-primary-plane");
->  	if (IS_ERR(primary))
->  		return PTR_ERR(primary);
->  
->  	if (vkmsdev->config.overlay) {
->  		for (n = 0; n < NUM_OVERLAY_PLANES; n++) {
-> -			struct vkms_plane *overlay = vkms_plane_init(
-> -				vkmsdev, DRM_PLANE_TYPE_OVERLAY);
-> -			if (IS_ERR(overlay)) {
-> -				ret = PTR_ERR(overlay);
-> -				goto err_planes;
-> -			}
-> +			struct vkms_plane *overlay =
-> +				vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_OVERLAY,
-> +						"default-overlay-plane-%d", n);
-> +			if (IS_ERR(overlay))
-> +				return PTR_ERR(overlay);
->  		}
->  	}
->  
->  	if (vkmsdev->config.cursor) {
-> -		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR);
-> -		if (IS_ERR(cursor)) {
-> -			ret = PTR_ERR(cursor);
-> -			goto err_planes;
-> -		}
-> +		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR,
-> +					 "default-cursor-plane");
-> +		if (IS_ERR(cursor))
-> +			return PTR_ERR(cursor);
->  	}
->  
->  	vkms_crtc = vkms_crtc_init(vkmsdev, &primary->base,
-> -				   cursor ? &cursor->base : NULL);
-> +				   cursor ? &cursor->base : NULL,
-> +				   "crtc-default");
->  	if (IS_ERR(vkms_crtc)) {
->  		DRM_ERROR("Failed to init crtc\n");
-> -		ret = PTR_ERR(vkms_crtc);
-> -		goto err_planes;
-> +		return PTR_ERR(vkms_crtc);
->  	}
->  
->  	for (int i = 0; i < vkmsdev->output.num_planes; i++) {
-> @@ -131,22 +132,20 @@ int vkms_output_init_default(struct vkms_device *vkmsdev)
->  	connector = vkms_connector_init(vkmsdev);
->  	if (IS_ERR(connector)) {
->  		DRM_ERROR("Failed to init connector\n");
-> -		ret = PTR_ERR(connector);
-> -		goto err_connector;
-> +		return PTR_ERR(connector);
->  	}
->  
-> -	encoder = vkms_encoder_init(vkmsdev);
-> +	encoder = vkms_encoder_init(vkmsdev, "encoder-default");
->  	if (IS_ERR(encoder)) {
->  		DRM_ERROR("Failed to init encoder\n");
-> -		ret = PTR_ERR(encoder);
-> -		goto err_encoder;
-> +		return PTR_ERR(encoder);
->  	}
->  	encoder->possible_crtcs |= drm_crtc_mask(&vkms_crtc->base);
->  
->  	ret = drm_connector_attach_encoder(connector, encoder);
->  	if (ret) {
->  		DRM_ERROR("Failed to attach connector to encoder\n");
-> -		goto err_attach;
-> +		return ret;
->  	}
->  
->  	if (vkmsdev->config.writeback) {
-> @@ -158,26 +157,235 @@ int vkms_output_init_default(struct vkms_device *vkmsdev)
->  	drm_mode_config_reset(dev);
->  
->  	return 0;
-> +}
->  
-> -err_attach:
-> -	drm_encoder_cleanup(encoder);
-> -
-> -err_encoder:
-> -	drm_connector_cleanup(connector);
+Can we use a hidden selection manner, which means:
 
-Removing the calls to drm_*_cleanup here is a bugfix for Maíra's patches
-to switch over to drmm_. Please split these fixes out, properly reference
-the commit that introduced the issue so that we can merge that through
--fixes and cc: stable.
+config PARAVIRT_TIME_ACCOUNTING
+       def_bool PARAVIRT
 
-> +static bool is_object_linked(struct vkms_config_links *links, unsigned long idx)
+Because I think we needn't give too many choices to users (and bring
+much more effort to test).
+
+PowerPC even hide all the PARAVIRT config options...
+see arch/powerpc/platforms/pseries/Kconfig
+
+Huacai
+
+>  config ARCH_SUPPORTS_KEXEC
+>         def_bool y
+>
+> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/inclu=
+de/asm/paravirt.h
+> index 58f7b7b89f2c..fe27fb5e82b8 100644
+> --- a/arch/loongarch/include/asm/paravirt.h
+> +++ b/arch/loongarch/include/asm/paravirt.h
+> @@ -17,11 +17,16 @@ static inline u64 paravirt_steal_clock(int cpu)
+>  }
+>
+>  int pv_ipi_init(void);
+> +int __init pv_time_init(void);
+>  #else
+>  static inline int pv_ipi_init(void)
+>  {
+>         return 0;
+>  }
+>
+> +static inline int pv_time_init(void)
 > +{
-> +	return links->linked_object_bitmap & (1 << idx);
+> +       return 0;
 > +}
->  
-> -err_connector:
-> -	drm_crtc_cleanup(&vkms_crtc->base);
-> +/**
-> +* validate_vkms_configfs_no_dangling_objects - warn on unused objects in vkms
-> +* configfs.
-> +* @vkmsdev: vkms device
-> +*
-> +* This gives slightly more visible warning messaging to the user before the drm
-> +* system finds the configuration invalid and prints it's debug information.  In
-> +* this case the user may have accidentally not included some links, or the user
-> +* could be testing this faulty configuration.
-> +*/
-> +static void
-> +validate_vkms_configfs_no_dangling_objects(struct vkms_device *vkmsdev)
-
-Please no separate vkms_configfs validation. Instead we should improve the
-drm checks as much as needed. If the issue is that the error output aren't
-meaningful enough, then I think vkms configfs code should drop some drm
-log lines that connect the configfs item names to the drm names every time
-we either create a kms object or when we add a link to a mask.
-
-This way drivers overall will benefit from improved validation, not just
-vkms.
-
+>  #endif // CONFIG_PARAVIRT
+>  #endif
+> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/par=
+avirt.c
+> index 9044ed62045c..3f83afc7e2d2 100644
+> --- a/arch/loongarch/kernel/paravirt.c
+> +++ b/arch/loongarch/kernel/paravirt.c
+> @@ -5,10 +5,13 @@
+>  #include <linux/jump_label.h>
+>  #include <linux/kvm_para.h>
+>  #include <asm/paravirt.h>
+> +#include <linux/reboot.h>
+>  #include <linux/static_call.h>
+>
+>  struct static_key paravirt_steal_enabled;
+>  struct static_key paravirt_steal_rq_enabled;
+> +static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
+> +static int has_steal_clock;
+>
+>  static u64 native_steal_clock(int cpu)
+>  {
+> @@ -17,6 +20,57 @@ static u64 native_steal_clock(int cpu)
+>
+>  DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
+>
+> +static bool steal_acc =3D true;
+> +static int __init parse_no_stealacc(char *arg)
 > +{
-> +	struct vkms_configfs *configfs = vkmsdev->configfs;
-> +	struct config_item *item;
+> +       steal_acc =3D false;
+> +       return 0;
+> +}
+> +early_param("no-steal-acc", parse_no_stealacc);
 > +
-> +	// 1. Planes
-> +	list_for_each_entry(item, &configfs->planes_group.cg_children,
-> +			    ci_entry) {
-> +		struct vkms_config_plane *config_plane =
-> +			item_to_config_plane(item);
-> +		if (config_plane->possible_crtcs.linked_object_bitmap == 0)
-> +			DRM_WARN(
-> +				"Vkms configfs created plane %s has no linked crtcs",
-> +				item->ci_name);
-> +	}
->  
-> -err_planes:
-> -	for (int i = 0; i < output->num_planes; i++)
-> -		drm_plane_cleanup(&output->planes[i].base);
-> +	// 2. connectors
-> +	list_for_each_entry(item, &configfs->connectors_group.cg_children,
-> +			    ci_entry) {
-> +		struct vkms_config_connector *config_connector =
-> +			item_to_config_connector(item);
-> +		if (config_connector->possible_encoders.linked_object_bitmap ==
-> +		    0) {
-> +			DRM_WARN(
-> +				"Vkms configfs created connector %s has no linked encoders",
-> +				item->ci_name);
-> +		}
-> +	}
->  
-> -	memset(output, 0, sizeof(*output));
-> +	// 3. encoders
-> +	list_for_each_entry(item, &configfs->encoders_group.cg_children,
-> +			    ci_entry) {
-> +		struct vkms_config_encoder *config_encoder =
-> +			item_to_config_encoder(item);
-> +		if (config_encoder->possible_crtcs.linked_object_bitmap == 0) {
-> +			DRM_WARN(
-> +				"Vkms configfs created encoder %s has no linked crtcs",
-> +				item->ci_name);
-> +		}
-> +	}
->  
-> -	return ret;
-> +	// 4. crtcs only require a primary plane to function, this is checked during
-> +	// output initialization and returns an error.
->  }
->  
->  int vkms_output_init(struct vkms_device *vkmsdev)
+> +static u64 para_steal_clock(int cpu)
+> +{
+> +       u64 steal;
+> +       struct kvm_steal_time *src;
+> +       int version;
+> +
+> +       src =3D &per_cpu(steal_time, cpu);
+> +       do {
+> +
+> +               version =3D src->version;
+> +               /* Make sure that the version is read before the steal */
+> +               virt_rmb();
+> +               steal =3D src->steal;
+> +               /* Make sure that the steal is read before the next versi=
+on */
+> +               virt_rmb();
+> +
+> +       } while ((version & 1) || (version !=3D src->version));
+> +       return steal;
+> +}
+> +
+> +static int pv_enable_steal_time(void)
+> +{
+> +       int cpu =3D smp_processor_id();
+> +       struct kvm_steal_time *st;
+> +       unsigned long addr;
+> +
+> +       if (!has_steal_clock)
+> +               return -EPERM;
+> +
+> +       st =3D &per_cpu(steal_time, cpu);
+> +       addr =3D per_cpu_ptr_to_phys(st);
+> +
+> +       /* The whole structure kvm_steal_time should be one page */
+> +       if (PFN_DOWN(addr) !=3D PFN_DOWN(addr + sizeof(*st))) {
+> +               pr_warn("Illegal PV steal time addr %lx\n", addr);
+> +               return -EFAULT;
+> +       }
+> +
+> +       addr |=3D KVM_STEAL_PHYS_VALID;
+> +       kvm_hypercall2(KVM_HCALL_FUNC_NOTIFY, KVM_FEATURE_STEAL_TIME, add=
+r);
+> +       return 0;
+> +}
+> +
+>  #ifdef CONFIG_SMP
+>  static void pv_send_ipi_single(int cpu, unsigned int action)
 >  {
-> -	return -EOPNOTSUPP;
-> +	struct drm_device *dev = &vkmsdev->drm;
-> +	struct vkms_configfs *configfs = vkmsdev->configfs;
-
-Just dropping there here again, I think it'd be cleaner to explicitly pass
-the configfs pointer around since it's not guaranteed to outlive struct
-vkms_device. And we must not ever store it in there.
-
-Cheers, Sima
-
-> +	struct vkms_output *output = &vkmsdev->output;
-> +	struct plane_map {
-> +		struct vkms_config_plane *config_plane;
-> +		struct vkms_plane *plane;
-> +	} plane_map[VKMS_MAX_PLANES] = { 0 };
-> +	struct encoder_map {
-> +		struct vkms_config_encoder *config_encoder;
-> +		struct drm_encoder *encoder;
-> +	} encoder_map[VKMS_MAX_OUTPUT_OBJECTS] = { 0 };
-> +	struct config_item *item;
-> +	int map_idx = 0;
-> +
-> +	// Ensure configfs has no unused objects, and warn if so.
-> +	validate_vkms_configfs_no_dangling_objects(vkmsdev);
-> +
-> +	list_for_each_entry(item, &configfs->planes_group.cg_children,
-> +			    ci_entry) {
-> +		struct vkms_config_plane *config_plane =
-> +			item_to_config_plane(item);
-> +		struct vkms_plane *plane = vkms_plane_init(
-> +			vkmsdev, config_plane->type, item->ci_name);
-> +
-> +		if (IS_ERR(plane)) {
-> +			DRM_ERROR("Unable to init plane from config: %s",
-> +				  item->ci_name);
-> +			return PTR_ERR(plane);
-> +		}
-> +
-> +		plane_map[map_idx].config_plane = config_plane;
-> +		plane_map[map_idx].plane = plane;
-> +		map_idx += 1;
-> +	}
-> +
-> +	map_idx = 0;
-> +	list_for_each_entry(item, &configfs->encoders_group.cg_children,
-> +			    ci_entry) {
-> +		struct vkms_config_encoder *config_encoder =
-> +			item_to_config_encoder(item);
-> +		struct drm_encoder *encoder =
-> +			vkms_encoder_init(vkmsdev, item->ci_name);
-> +
-> +		if (IS_ERR(encoder)) {
-> +			DRM_ERROR("Failed to init config encoder: %s",
-> +				  item->ci_name);
-> +			return PTR_ERR(encoder);
-> +		}
-> +		encoder_map[map_idx].config_encoder = config_encoder;
-> +		encoder_map[map_idx].encoder = encoder;
-> +		map_idx += 1;
-> +	}
-> +
-> +	list_for_each_entry(item, &configfs->connectors_group.cg_children,
-> +			    ci_entry) {
-> +		struct vkms_config_connector *config_connector =
-> +			item_to_config_connector(item);
-> +		struct drm_connector *connector = vkms_connector_init(vkmsdev);
-> +
-> +		if (IS_ERR(connector)) {
-> +			DRM_ERROR("Failed to init connector from config: %s",
-> +				  item->ci_name);
-> +			return PTR_ERR(connector);
-> +		}
-> +
-> +		for (int j = 0; j < output->num_encoders; j++) {
-> +			struct encoder_map *encoder = &encoder_map[j];
-> +
-> +			if (is_object_linked(
-> +				    &config_connector->possible_encoders,
-> +				    encoder->config_encoder
-> +					    ->encoder_config_idx)) {
-> +				drm_connector_attach_encoder(connector,
-> +							     encoder->encoder);
-> +			}
-> +		}
-> +	}
-> +
-> +	list_for_each_entry(item, &configfs->crtcs_group.cg_children,
-> +			    ci_entry) {
-> +		struct vkms_config_crtc *config_crtc =
-> +			item_to_config_crtc(item);
-> +		struct vkms_crtc *vkms_crtc;
-> +		struct drm_plane *primary = NULL, *cursor = NULL;
-> +
-> +		for (int j = 0; j < output->num_planes; j++) {
-> +			struct plane_map *plane_entry = &plane_map[j];
-> +			struct drm_plane *plane = &plane_entry->plane->base;
-> +
-> +			if (!is_object_linked(
-> +				    &plane_entry->config_plane->possible_crtcs,
-> +				    config_crtc->crtc_config_idx)) {
-> +				continue;
-> +			}
-> +
-> +			if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
-> +				if (primary) {
-> +					DRM_WARN(
-> +						"Too many primary planes found for crtc %s.",
-> +						item->ci_name);
-> +					return -EINVAL;
-> +				}
-> +				primary = plane;
-> +			} else if (plane->type == DRM_PLANE_TYPE_CURSOR) {
-> +				if (cursor) {
-> +					DRM_WARN(
-> +						"Too many cursor planes found for crtc %s.",
-> +						item->ci_name);
-> +					return -EINVAL;
-> +				}
-> +				cursor = plane;
-> +			}
-> +		}
-> +
-> +		if (!primary) {
-> +			DRM_WARN("No primary plane configured for crtc %s",
-> +				 item->ci_name);
-> +			return -EINVAL;
-> +		}
-> +
-> +		vkms_crtc =
-> +			vkms_crtc_init(vkmsdev, primary, cursor, item->ci_name);
-> +		if (IS_ERR(vkms_crtc)) {
-> +			DRM_WARN("Unable to init crtc from config: %s",
-> +				 item->ci_name);
-> +			return PTR_ERR(vkms_crtc);
-> +		}
-> +
-> +		for (int j = 0; j < output->num_planes; j++) {
-> +			struct plane_map *plane_entry = &plane_map[j];
-> +
-> +			if (!plane_entry->plane)
-> +				break;
-> +
-> +			if (is_object_linked(
-> +				    &plane_entry->config_plane->possible_crtcs,
-> +				    config_crtc->crtc_config_idx)) {
-> +				plane_entry->plane->base.possible_crtcs |=
-> +					drm_crtc_mask(&vkms_crtc->base);
-> +			}
-> +		}
-> +
-> +		for (int j = 0; j < output->num_encoders; j++) {
-> +			struct encoder_map *encoder_entry = &encoder_map[j];
-> +
-> +			if (is_object_linked(&encoder_entry->config_encoder
-> +						      ->possible_crtcs,
-> +					     config_crtc->crtc_config_idx)) {
-> +				encoder_entry->encoder->possible_crtcs |=
-> +					drm_crtc_mask(&vkms_crtc->base);
-> +			}
-> +		}
-> +
-> +		if (vkmsdev->config.writeback) {
-
-This mixes the default setup code (that uses vkms_config) with the
-configfs paths, which I think is really not a good idea. This is why I
-think we should have a very strict split here. Alternatively if we go with
-using struct vkms_config for configfs too, then I think we must not use
-the module options to fill in the missing parameters that configfs does
-not yet support.
-
-The reason is that configfs is uapi (yay!), so if we make a mess here just
-because it's easier to get things going, we'll bake that mess in forever.
-Instead I think it'd be best if we just disable writeback support for the
-initial configfs work.
-
-For properly enabling writeback I think we need a new configfs group for
-just writeback connectors, since those are fairly special (like you cannot
-ever hotplug them, they're always there).
-
-> +			int ret = vkms_enable_writeback_connector(vkmsdev,
-> +								  vkms_crtc);
-> +			if (ret)
-> +				DRM_WARN(
-> +					"Failed to init writeback connector for config crtc: %s. Error code %d",
-> +					item->ci_name, ret);
-> +		}
-> +	}
-> +
-> +	drm_mode_config_reset(dev);
-> +
-> +	return 0;
+> @@ -110,6 +164,32 @@ static void pv_init_ipi(void)
+>         if (r < 0)
+>                 panic("SWI0 IRQ request failed\n");
 >  }
-> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-> index 950e6c930273..3198bf0dca73 100644
-> --- a/drivers/gpu/drm/vkms/vkms_plane.c
-> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0+
->  
->  #include <linux/iosys-map.h>
-> +#include <linux/stdarg.h>
->  
->  #include <drm/drm_atomic.h>
->  #include <drm/drm_atomic_helper.h>
-> @@ -215,20 +216,25 @@ static const struct drm_plane_helper_funcs vkms_plane_helper_funcs = {
->  };
->  
->  struct vkms_plane *vkms_plane_init(struct vkms_device *vkmsdev,
-> -				   enum drm_plane_type type)
-> +				   enum drm_plane_type type, char *name, ...)
->  {
->  	struct drm_device *dev = &vkmsdev->drm;
->  	struct vkms_output *output = &vkmsdev->output;
->  	struct vkms_plane *plane;
-> +	va_list va;
->  	int ret;
->  
->  	if (output->num_planes >= VKMS_MAX_PLANES)
->  		return ERR_PTR(-ENOMEM);
->  
->  	plane = &output->planes[output->num_planes++];
 > +
-> +	va_start(va, name);
->  	ret = drm_universal_plane_init(dev, &plane->base, 0, &vkms_plane_funcs,
->  				       vkms_formats, ARRAY_SIZE(vkms_formats),
-> -				       NULL, type, NULL);
-> +				       NULL, type, name, va);
-> +	va_end(va);
+> +static void pv_disable_steal_time(void)
+> +{
+> +       if (has_steal_clock)
+> +               kvm_hypercall2(KVM_HCALL_FUNC_NOTIFY, KVM_FEATURE_STEAL_T=
+IME, 0);
+> +}
 > +
->  	if (ret)
->  		return ERR_PTR(ret);
->  
-> -- 
-> 2.42.0.rc2.253.gd59a3bf2b4-goog
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> +static int pv_time_cpu_online(unsigned int cpu)
+> +{
+> +       unsigned long flags;
+> +
+> +       local_irq_save(flags);
+> +       pv_enable_steal_time();
+> +       local_irq_restore(flags);
+> +       return 0;
+> +}
+> +
+> +static int pv_time_cpu_down_prepare(unsigned int cpu)
+> +{
+> +       unsigned long flags;
+> +
+> +       local_irq_save(flags);
+> +       pv_disable_steal_time();
+> +       local_irq_restore(flags);
+> +       return 0;
+> +}
+>  #endif
+>
+>  static bool kvm_para_available(void)
+> @@ -149,3 +229,54 @@ int __init pv_ipi_init(void)
+>
+>         return 1;
+>  }
+> +
+> +static void pv_cpu_reboot(void *unused)
+> +{
+> +       pv_disable_steal_time();
+> +}
+> +
+> +static int pv_reboot_notify(struct notifier_block *nb, unsigned long cod=
+e,
+> +               void *unused)
+> +{
+> +       on_each_cpu(pv_cpu_reboot, NULL, 1);
+> +       return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block pv_reboot_nb =3D {
+> +       .notifier_call  =3D pv_reboot_notify,
+> +};
+> +
+> +int __init pv_time_init(void)
+> +{
+> +       int feature;
+> +
+> +       if (!cpu_has_hypervisor)
+> +               return 0;
+> +       if (!kvm_para_available())
+> +               return 0;
+> +
+> +       feature =3D read_cpucfg(CPUCFG_KVM_FEATURE);
+> +       if (!(feature & KVM_FEATURE_STEAL_TIME))
+> +               return 0;
+> +
+> +       has_steal_clock =3D 1;
+> +       if (pv_enable_steal_time()) {
+> +               has_steal_clock =3D 0;
+> +               return 0;
+> +       }
+> +
+> +       register_reboot_notifier(&pv_reboot_nb);
+> +       static_call_update(pv_steal_clock, para_steal_clock);
+> +       static_key_slow_inc(&paravirt_steal_enabled);
+> +       if (steal_acc)
+> +               static_key_slow_inc(&paravirt_steal_rq_enabled);
+> +
+> +#ifdef CONFIG_SMP
+> +       if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> +                       "loongarch/pvi_time:online",
+> +                       pv_time_cpu_online, pv_time_cpu_down_prepare) < 0=
+)
+> +               pr_err("Failed to install cpu hotplug callbacks\n");
+> +#endif
+> +       pr_info("Using stolen time PV\n");
+> +       return 0;
+> +}
+> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+> index fd5354f9be7c..46d7d40c87e3 100644
+> --- a/arch/loongarch/kernel/time.c
+> +++ b/arch/loongarch/kernel/time.c
+> @@ -15,6 +15,7 @@
+>
+>  #include <asm/cpu-features.h>
+>  #include <asm/loongarch.h>
+> +#include <asm/paravirt.h>
+>  #include <asm/time.h>
+>
+>  u64 cpu_clock_freq;
+> @@ -214,4 +215,5 @@ void __init time_init(void)
+>
+>         constant_clockevent_init();
+>         constant_clocksource_init();
+> +       pv_time_init();
+>  }
+> --
+> 2.39.3
+>
+>
