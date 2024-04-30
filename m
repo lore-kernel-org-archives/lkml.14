@@ -1,203 +1,151 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967C91863B;
-	Tue, 30 Apr 2024 05:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC5417582;
+	Tue, 30 Apr 2024 05:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714453751; cv=none; b=WA0UzfCPlxH9421/g4z0Wau594mLyKo6UJ51mZ8CsmGhB+15AJqmeA2UDZiaOq4R1ZKckutlyHMG2QtvYfXPpIVLNgvyBsRNCVteHUytSThtxV3e9zcdM6jUQjNkWGKPz/8KQJI23MhhHaGf7eeFf11jnGJxqX1N5JpHxQw5a2Q=
+	t=1714453757; cv=none; b=VcoOSjB7C/7qQXzBrAJHY+BZlGXQ8WtDhANL4d9cf6IwpYcH8wZcp01rgBRHqqjrn/IdyGD0HjwA6kuFu3igC7e/vUTVvTrnn/AmJfV4sO0nO0y3m4V6klPBtbA9cENZbeGCPjhxxGHrbhAPiqZLfVhskxOH5izP6H030RYmZB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714453751; c=relaxed/simple;
-	bh=rajPX0iLeGJ7tihYHYpJ3BqiDgnmd6Uozx+b2NmThOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NPMvMpFzF5njwjngsFPCAI4kHtkM/dKlAePZc2JtHjBCbkV0Xap40fAGApHjUuNh1l4g6U3xTn2rvB75bQGRl8zyo1Lm4K2PhEPNzLklEnQBIV9q3VkZQQQcGX+EiMqm7PiNFeOwouU2hyMpR6d+WaXAO59EfOIwtEftVHMLV1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pV0+jd+d; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1714453757; c=relaxed/simple;
+	bh=V4JU0kcWhtn/tWTZ81/g5DtXt4pOFjRVoYRQ1OkLVxc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jqo9imjHEdo81ai65a+tytkraQRatIV2tHEnO8oN8hsF7D4A3rSaofXUa3w5Sc2qukXZ1CxY7Mb8oODA4Y5aBAd31W1/nP6u5I14tdLYLEmuI08cOqkRy2s09vtXn3+wKayuGKn3f3inM+eDf6BzULztJMwlOz3t/DxOliM196g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=c0vbkMDZ; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pV0+jd+d"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43U5956b045715;
-	Tue, 30 Apr 2024 00:09:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1714453745;
-	bh=UYVNtjeJt9uaMDsZWyZRF6NmvnAypTge/4ixYT3NUtI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=pV0+jd+do5GrqBwUwPDZdTomBTiMRSxIRhma0xU2MsQwJ2mGcXl5GgBO+g1EfN14Z
-	 ImN6euM3KcikLYs7QUVWG2z9cCAmpI44l+3QIh5QJcEgitJ+5Od3q7SA7hfOg2P5pr
-	 ZY59BM7FQx1Q9IlOqEoymkmveiOU8mxy2EID5LCI=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43U595AX001890
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 30 Apr 2024 00:09:05 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 30
- Apr 2024 00:09:04 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 30 Apr 2024 00:09:04 -0500
-Received: from [10.24.69.66] (uda0510294.dhcp.ti.com [10.24.69.66])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43U591f7010411;
-	Tue, 30 Apr 2024 00:09:02 -0500
-Message-ID: <03662f93-e770-4f9e-b7ec-21ad4992e951@ti.com>
-Date: Tue, 30 Apr 2024 10:39:00 +0530
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="c0vbkMDZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1714453755; x=1745989755;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=V4JU0kcWhtn/tWTZ81/g5DtXt4pOFjRVoYRQ1OkLVxc=;
+  b=c0vbkMDZLxGg+QgjRsapBW5iwaH1xTsX+wm+Dwh5k1ggErKfBsrKxtQB
+   GPN9ufh6kGHQRArgWIIQtC/VfJ1giPGE5uAXWUHZ9LJU0pufzZ8OVptMZ
+   o3TRwOyHnHt54jS1kV+hKtx19sHimh+9S6jQUTbc35TW3TXqooQ0Mzu8I
+   Kthc7Aiag9XFJ2v0VaR1aQKsFyBSKQYwGDPlOudjrQxRsLM7cFQNZvZnv
+   jVCWGbztu6yYaRW4YbrzNFjWXATOsRmOBTL/ryx5elB6IBqTBRhNt9FVD
+   kmMrFf/a3X689H8QBXAgm5y/Ba4ffuYkeRHSSSs5woNQdKvcipwP1W3j3
+   Q==;
+X-CSE-ConnectionGUID: fZdkBnDSTq2nhZklP2dv1A==
+X-CSE-MsgGUID: 9iD+Qmn4TB2zQWR/4qxDNA==
+X-IronPort-AV: E=Sophos;i="6.07,241,1708412400"; 
+   d="scan'208";a="23827299"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Apr 2024 22:09:13 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 29 Apr 2024 22:09:02 -0700
+Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Mon, 29 Apr 2024 22:08:58 -0700
+From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+To: <netdev@vger.kernel.org>
+CC: <lxu@maxlinear.com>, <andrew@lunn.ch>, <hkallweit1@gmail.com>,
+	<linux@armlinux.org.uk>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<UNGLinuxDriver@microchip.com>
+Subject: [PATCH net-next] net: phy: add wol config options in phy device
+Date: Tue, 30 Apr 2024 10:36:35 +0530
+Message-ID: <20240430050635.46319-1-Raju.Lakkaraju@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH v2 1/2] remoteproc: k3-r5: Wait for core0
- power-up before powering up core1
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-CC: <andersson@kernel.org>, <s-anna@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, <nm@ti.com>, <devarsht@ti.com>, <hnagalla@ti.com>
-References: <20240424130504.494916-1-b-padhi@ti.com>
- <20240424130504.494916-2-b-padhi@ti.com> <Zivf4Bhi8zqEQh7p@p14s>
-Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <Zivf4Bhi8zqEQh7p@p14s>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 
-Hello,
+Introduce a new member named 'wolopts' to the 'phy_device' structure to
+store the user-specified Wake-on-LAN (WOL) settings. Update this member
+within the phy driver's 'set_wol()' function whenever the WOL configuration
+is modified by the user.
 
-On 26/04/24 22:39, Mathieu Poirier wrote:
-> Good day, On Wed, Apr 24, 2024 at 06: 35: 03PM +0530, Beleswar Padhi wrote: >
-> From: Apurva Nandan <a-nandan@ ti. com> > > PSC controller has a limitation that
-> it can only power-up the second core > when the first core is in ON
-> ZjQcmQRYFpfptBannerStart
-> This message was sent from outside of Texas Instruments.
-> Do not click links or open attachments unless you recognize the source of this
-> email and know the content is safe. If you wish to report this message to IT
-> Security, please forward the message as an attachment to phishing@list.ti.com
-> ZjQcmQRYFpfptBannerEnd
->
-> Good day,
->
-> On Wed, Apr 24, 2024 at 06:35:03PM +0530, Beleswar Padhi wrote:
-> > From: Apurva Nandan <a-nandan@ti.com>
-> > 
-> > PSC controller has a limitation that it can only power-up the second core
-> > when the first core is in ON state. Power-state for core0 should be equal
-> > to or higher than core1, else the kernel is seen hanging during rproc
-> > loading.
-> > 
-> > Make the powering up of cores sequential, by waiting for the current core
-> > to power-up before proceeding to the next core, with a timeout of 2sec.
-> > Add a wait queue event in k3_r5_cluster_rproc_init call, that will wait
-> > for the current core to be released from reset before proceeding with the
-> > next core.
-> > 
-> > Fixes: 6dedbd1d5443 ("remoteproc: k3-r5: Add a remoteproc driver for R5F subsystem")
-> > 
-> > Signed-off-by: Apurva Nandan <a-nandan@ti.com>
->
-> You need to add your own SoB as well.
->
-> > ---
-> >  drivers/remoteproc/ti_k3_r5_remoteproc.c | 28 ++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> > 
-> > diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> > index ad3415a3851b..5a9bd5d4a2ea 100644
-> > --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> > +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> > @@ -103,12 +103,14 @@ struct k3_r5_soc_data {
-> >   * @dev: cached device pointer
-> >   * @mode: Mode to configure the Cluster - Split or LockStep
-> >   * @cores: list of R5 cores within the cluster
-> > + * @core_transition: wait queue to sync core state changes
-> >   * @soc_data: SoC-specific feature data for a R5FSS
-> >   */
-> >  struct k3_r5_cluster {
-> >  	struct device *dev;
-> >  	enum cluster_mode mode;
-> >  	struct list_head cores;
-> > +	wait_queue_head_t core_transition;
-> >  	const struct k3_r5_soc_data *soc_data;
-> >  };
-> >  
-> > @@ -128,6 +130,7 @@ struct k3_r5_cluster {
-> >   * @atcm_enable: flag to control ATCM enablement
-> >   * @btcm_enable: flag to control BTCM enablement
-> >   * @loczrama: flag to dictate which TCM is at device address 0x0
-> > + * @released_from_reset: flag to signal when core is out of reset
-> >   */
-> >  struct k3_r5_core {
-> >  	struct list_head elem;
-> > @@ -144,6 +147,7 @@ struct k3_r5_core {
-> >  	u32 atcm_enable;
-> >  	u32 btcm_enable;
-> >  	u32 loczrama;
-> > +	bool released_from_reset;
-> >  };
-> >  
-> >  /**
-> > @@ -460,6 +464,8 @@ static int k3_r5_rproc_prepare(struct rproc *rproc)
-> >  			ret);
-> >  		return ret;
-> >  	}
-> > +	core->released_from_reset = true;
-> > +	wake_up_interruptible(&cluster->core_transition);
-> >  
-> >  	/*
-> >  	 * Newer IP revisions like on J7200 SoCs support h/w auto-initialization
-> > @@ -1140,6 +1146,7 @@ static int k3_r5_rproc_configure_mode(struct k3_r5_rproc *kproc)
-> >  		return ret;
-> >  	}
-> >  
-> > +	core->released_from_reset = c_state;
->
-> I understand why this is needed but it line could be very cryptic for people
-> trying to understand this driver.  Please add a comment to describe what is
-> happening here.
-Thanks for the review. I will send v3 addressing these comments shortly!
->
-> >  	ret = ti_sci_proc_get_status(core->tsp, &boot_vec, &cfg, &ctrl,
-> >  				     &stat);
-> >  	if (ret < 0) {
-> > @@ -1280,6 +1287,26 @@ static int k3_r5_cluster_rproc_init(struct platform_device *pdev)
-> >  		    cluster->mode == CLUSTER_MODE_SINGLECPU ||
-> >  		    cluster->mode == CLUSTER_MODE_SINGLECORE)
-> >  			break;
-> > +
-> > +		/*
-> > +		 * R5 cores require to be powered on sequentially, core0
-> > +		 * should be in higher power state than core1 in a cluster
-> > +		 * So, wait for current core to power up before proceeding
-> > +		 * to next core and put timeout of 2sec for each core.
-> > +		 *
-> > +		 * This waiting mechanism is necessary because
-> > +		 * rproc_auto_boot_callback() for core1 can be called before
-> > +		 * core0 due to thread execution order.
-> > +		 */
-> > +		ret = wait_event_interruptible_timeout(cluster->core_transition,
-> > +						       core->released_from_reset,
-> > +						       msecs_to_jiffies(2000));
-> > +		if (ret <= 0) {
-> > +			dev_err(dev,
-> > +				"Timed out waiting for %s core to power up!\n",
-> > +				rproc->name);
-> > +			return ret;
-> > +		}
-> >  	}
-> >  
-> >  	return 0;
-> > @@ -1709,6 +1736,7 @@ static int k3_r5_probe(struct platform_device *pdev)
-> >  	cluster->dev = dev;
-> >  	cluster->soc_data = data;
-> >  	INIT_LIST_HEAD(&cluster->cores);
-> > +	init_waitqueue_head(&cluster->core_transition);
-> >  
-> >  	ret = of_property_read_u32(np, "ti,cluster-mode", &cluster->mode);
-> >  	if (ret < 0 && ret != -EINVAL) {
-> > -- 
-> > 2.34.1
-> > 
->
+Currently, when the system resumes from sleep, the 'phy_init_hw()' function
+resets the PHY's configuration and interrupts, which leads to problems upon
+subsequent WOL attempts. By retaining the desired WOL settings in 'wolopts',
+we can ensure that the PHY's WOL configuration is correctly reapplied
+through 'phy_ethtool_set_wol()' before a system suspend, thereby resolving
+the issue
+
+Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+---
+ drivers/net/phy/mxl-gpy.c    | 5 +++++
+ drivers/net/phy/phy_device.c | 5 +++++
+ include/linux/phy.h          | 2 ++
+ 3 files changed, 12 insertions(+)
+
+diff --git a/drivers/net/phy/mxl-gpy.c b/drivers/net/phy/mxl-gpy.c
+index b2d36a3a96f1..6edb29a1d77e 100644
+--- a/drivers/net/phy/mxl-gpy.c
++++ b/drivers/net/phy/mxl-gpy.c
+@@ -680,6 +680,7 @@ static int gpy_set_wol(struct phy_device *phydev,
+ 	struct net_device *attach_dev = phydev->attached_dev;
+ 	int ret;
+ 
++	phydev->wolopts = 0;
+ 	if (wol->wolopts & WAKE_MAGIC) {
+ 		/* MAC address - Byte0:Byte1:Byte2:Byte3:Byte4:Byte5
+ 		 * VPSPEC2_WOL_AD45 = Byte0:Byte1
+@@ -725,6 +726,8 @@ static int gpy_set_wol(struct phy_device *phydev,
+ 		ret = phy_read(phydev, PHY_ISTAT);
+ 		if (ret < 0)
+ 			return ret;
++
++		phydev->wolopts |= WAKE_MAGIC;
+ 	} else {
+ 		/* Disable magic packet matching */
+ 		ret = phy_clear_bits_mmd(phydev, MDIO_MMD_VEND2,
+@@ -748,6 +751,8 @@ static int gpy_set_wol(struct phy_device *phydev,
+ 		if (ret & (PHY_IMASK_MASK & ~PHY_IMASK_LSTC))
+ 			phy_trigger_machine(phydev);
+ 
++		phydev->wolopts |= WAKE_PHY;
++
+ 		return 0;
+ 	}
+ 
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 616bd7ba46cb..9740f08ad98e 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2038,6 +2038,11 @@ int phy_suspend(struct phy_device *phydev)
+ 	if (phydev->suspended)
+ 		return 0;
+ 
++	if (phydev->wolopts) {
++		wol.wolopts = phydev->wolopts;
++		phy_ethtool_set_wol(phydev, &wol);
++	}
++
+ 	phy_ethtool_get_wol(phydev, &wol);
+ 	phydev->wol_enabled = wol.wolopts || (netdev && netdev->wol_enabled);
+ 	/* If the device has WOL enabled, we cannot suspend the PHY */
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 3ddfe7fe781a..4a628202699c 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -615,6 +615,7 @@ struct macsec_ops;
+  *                 handling shall be postponed until PHY has resumed
+  * @irq_rerun: Flag indicating interrupts occurred while PHY was suspended,
+  *             requiring a rerun of the interrupt handler after resume
++ * @wolopts: User requested wake-on-lan configuration
+  * @interface: enum phy_interface_t value
+  * @possible_interfaces: bitmap if interface modes that the attached PHY
+  *			 will switch between depending on media speed.
+@@ -687,6 +688,7 @@ struct phy_device {
+ 
+ 	u32 dev_flags;
+ 
++	u32 wolopts;
+ 	phy_interface_t interface;
+ 	DECLARE_PHY_INTERFACE_MASK(possible_interfaces);
+ 
+-- 
+2.34.1
+
