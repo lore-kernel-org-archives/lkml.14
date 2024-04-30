@@ -1,67 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DEA181B89
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F33E181BBC
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714486199; cv=none; b=IIbP2qbZsQoxHrGbfmTgS6Pz5HShcI3Jzv7o71fGHT93sm2KZtb/dDcK3DYFVjH0lmrEptRb8cySfhzWi4Z0vX0yeMZOxWEfbQWqsmRY7zqpnoAot37qHXlbPptYpXqMIQNn3wEVfMG/7Wu+PqnXnz4Nur4FemBdU5lcxK9OQGQ=
+	t=1714486201; cv=none; b=pkplZkz5fSXXJsDW3bWktD6bGbx3S3XoQxWLrxBGQXUQ4ARGbia04JNZD2TNIGNFD+A5dTSDeRmBZNzN0ys4Jyt7VMhHn7WgxILoNH95K+xL7fVnF9TEbN1sARMZd//bQDlZ+uN3xOtGHWfubUNfkV10A2GnuX/UVDs8EovpTg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714486199; c=relaxed/simple;
-	bh=HMeaWIIbP8Duad4JIc8SLSR2g4WvY59LHadNwgSKYgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kOdwBI2hk3mk2NJpfy9ebjOc1KsWRy5ABHuY5A5160b+2vDC+f5W53S9PQOT0QkLYw62Y4CCaGl/Arwrm5ZDV+qLo1cdEC/vOhC+FgllmflInQe7Nk8iIgwehjmsbx/PuCO79uliX/qMbTRYSzEj2a8IXfJQwyfZbB4M9NGNvIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KZksq0DH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714486201; c=relaxed/simple;
+	bh=NP40aYhBKcCbFWugAPRlpgWlc6py/IRGpooV4oIaReo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OdMR9J5/605h9YAAmMK9yrF/klI+O5CcuCbIlJLOmUBindYSCKwpwiPC0C45+84wnq1OzRXIQjrV8DQ/A7Vo1HF2qOdPQLcivt50Rpzy4oHj/Wuco7lURcOWs4ch3TPEOv4w2IDHt25za1wB4Z8Qglj9HLmbVTzj4by1AdpsXpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L5o1Woce; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KZksq0DH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714486196;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j0yMtPOxQEnCTmo6Bl1feVRvQTsBseZ0ZhvttmbbIWE=;
-	b=KZksq0DHgL+ZYL//exGRJl3v7pUkeREuoMNIdTIKdI8p7PRtlJCoTn5y3DCLt1bx5W1LT6
-	qX/cOjCfdwhp1Xh8AOCQm+iCXbPYLvPSDKUyv8ehXWw6KQTJa8+k0OU9M/ABQkQ5CyJonk
-	O2MB6/a0IupVGoKgG0Qruis/JwHqeo4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-54-0xnDheX7Oma_dsQLKrK2EQ-1; Tue, 30 Apr 2024 10:09:53 -0400
-X-MC-Unique: 0xnDheX7Oma_dsQLKrK2EQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 71F7D902386;
-	Tue, 30 Apr 2024 14:09:52 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A1C19C01595;
-	Tue, 30 Apr 2024 14:09:50 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Steve French <smfrench@gmail.com>
-Cc: David Howells <dhowells@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Christian Brauner <christian@brauner.io>,
-	netfs@lists.linux.dev,
-	linux-cifs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Steve French <sfrench@samba.org>,
-	Shyam Prasad N <nspmangalore@gmail.com>,
-	Rohith Surabattula <rohiths.msft@gmail.com>
-Subject: [PATCH v7 07/16] cifs: Move cifs_loose_read_iter() and cifs_file_write_iter() to file.c
-Date: Tue, 30 Apr 2024 15:09:19 +0100
-Message-ID: <20240430140930.262762-8-dhowells@redhat.com>
-In-Reply-To: <20240430140930.262762-1-dhowells@redhat.com>
-References: <20240430140930.262762-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L5o1Woce"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a519e1b0e2dso780222866b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:09:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714486198; x=1715090998; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CRndhXKIBc4clIT/57/JCzLDQofvnx8lXgRkee8Nqks=;
+        b=L5o1WoceCSLv2nCc2AQhzTELB3DsUxc1SYVdXqifDcfLgQAq+ix8YD3Pvrrr4HGn+/
+         DPr4yA7iOL1LTou0D8+g1RA/+9eN6J5G70Q8JBCPKsxDl7qSLSlin5s7+8zbo0e0sT0o
+         iAkdY+ifoDFvPiBe1n60zaFBHARVY4QYbhesl77MhdtukslHfhLb2G0rjDgzv+sZUoov
+         Nw6O0vw1tpsrhJTctH6bt2oomY6/gkw/9yMPG44mtOs/hvKIoz1EPvOhfdeeR8YeKyPK
+         1XMzLkVBnV1GtmN1XyMMKejHt3oQZ+koKjwnXNikX1p2/WVIkm6Mg9sbGif5GM+K7eh7
+         /60Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714486198; x=1715090998;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CRndhXKIBc4clIT/57/JCzLDQofvnx8lXgRkee8Nqks=;
+        b=Bjk1+ePTM50QLC4iIN5QkyYT3IsHI1CWojVd+sZUIunY+3o5NLDnvvL/uyKQp2h3bl
+         73f+0DDrtJy4rjHXrNraMo0CRaxsblMpbYgj7wbev8b12hwa6T4MdAmS/dRYwzjKv4h8
+         ksPOhPKfTd8Bq4O7X+aO6JQon9Sv5UCUEMDPbd+cYz/S8Yusq1OAoME8I0cHGJYz/QUU
+         0vGfwJGMk0aMM1Y3wfglEYb1rBHc9dsoq5cTEacsTu2o3EGKE5xacxgkKdcMRuRXtnhA
+         EmR05yeL9ycYeKdeLz4TC2ewfURzE9780hoxyFlLeqhFrlygl8KbPG+hiNopDc8ksAJz
+         galg==
+X-Forwarded-Encrypted: i=1; AJvYcCXgsC4NF4pWD7gMWe/FXo+Jnfv/LnNRvbRbSsliQ616spPfnzIdqcA8HPcSvEB0Mt0LhcwHcFni6ZcyOVHvGnLm2iHDX751GbsGH54R
+X-Gm-Message-State: AOJu0YxKofNX1NH/tyojTJU5Y7aNfPAhr21QfOFjLIGezfgBqd7x6FzW
+	1ApWAM6rg2Zoyz31iVssJ4OQAbm5ISgbj5kUF79yZ+vUms4oMXCCYBo9/Evxxno=
+X-Google-Smtp-Source: AGHT+IFCPAQ//K1ZeCU6+XJpInRutAEizrqbETeiZ9aAaGWrio0jHz4KsPSkvUZEQrLyoAbjpdN+HA==
+X-Received: by 2002:a17:906:f18d:b0:a58:7298:fdfe with SMTP id gs13-20020a170906f18d00b00a587298fdfemr11362096ejb.53.1714486197628;
+        Tue, 30 Apr 2024 07:09:57 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id r18-20020a17090638d200b00a589ce6803asm7260901ejd.110.2024.04.30.07.09.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 07:09:57 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] ASoC: qcom: q6apm-dai: drop unused 'q6apm_dai_rtd' fields
+Date: Tue, 30 Apr 2024 16:09:54 +0200
+Message-ID: <20240430140954.328127-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,168 +72,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Move cifs_loose_read_iter() and cifs_file_write_iter() to file.c so that
-they are colocated with similar functions rather than being split with
-cifsfs.c.
+Remove few unused fields from 'struct q6apm_dai_rtd'.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Shyam Prasad N <nspmangalore@gmail.com>
-cc: Rohith Surabattula <rohiths.msft@gmail.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- fs/smb/client/cifsfs.c | 55 ------------------------------------------
- fs/smb/client/cifsfs.h |  2 ++
- fs/smb/client/file.c   | 53 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 55 insertions(+), 55 deletions(-)
+ sound/soc/qcom/qdsp6/q6apm-dai.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
-index 39277c37185c..847df5152835 100644
---- a/fs/smb/client/cifsfs.c
-+++ b/fs/smb/client/cifsfs.c
-@@ -986,61 +986,6 @@ cifs_smb3_do_mount(struct file_system_type *fs_type,
- 	return root;
- }
+diff --git a/sound/soc/qcom/qdsp6/q6apm-dai.c b/sound/soc/qcom/qdsp6/q6apm-dai.c
+index 00bbd291be5c..cee23d4bda6f 100644
+--- a/sound/soc/qcom/qdsp6/q6apm-dai.c
++++ b/sound/soc/qcom/qdsp6/q6apm-dai.c
+@@ -70,14 +70,10 @@ struct q6apm_dai_rtd {
+ 	unsigned int bytes_received;
+ 	unsigned int copied_total;
+ 	uint16_t bits_per_sample;
+-	uint16_t source; /* Encoding source bit mask */
+-	uint16_t session_id;
+ 	bool next_track;
+ 	enum stream_state state;
+ 	struct q6apm_graph *graph;
+ 	spinlock_t lock;
+-	uint32_t initial_samples_drop;
+-	uint32_t trailing_samples_drop;
+ 	bool notify_on_drain;
+ };
  
--
--static ssize_t
--cifs_loose_read_iter(struct kiocb *iocb, struct iov_iter *iter)
--{
--	ssize_t rc;
--	struct inode *inode = file_inode(iocb->ki_filp);
--
--	if (iocb->ki_flags & IOCB_DIRECT)
--		return cifs_user_readv(iocb, iter);
--
--	rc = cifs_revalidate_mapping(inode);
--	if (rc)
--		return rc;
--
--	return generic_file_read_iter(iocb, iter);
--}
--
--static ssize_t cifs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
--{
--	struct inode *inode = file_inode(iocb->ki_filp);
--	struct cifsInodeInfo *cinode = CIFS_I(inode);
--	ssize_t written;
--	int rc;
--
--	if (iocb->ki_filp->f_flags & O_DIRECT) {
--		written = cifs_user_writev(iocb, from);
--		if (written > 0 && CIFS_CACHE_READ(cinode)) {
--			cifs_zap_mapping(inode);
--			cifs_dbg(FYI,
--				 "Set no oplock for inode=%p after a write operation\n",
--				 inode);
--			cinode->oplock = 0;
--		}
--		return written;
--	}
--
--	written = cifs_get_writer(cinode);
--	if (written)
--		return written;
--
--	written = generic_file_write_iter(iocb, from);
--
--	if (CIFS_CACHE_WRITE(CIFS_I(inode)))
--		goto out;
--
--	rc = filemap_fdatawrite(inode->i_mapping);
--	if (rc)
--		cifs_dbg(FYI, "cifs_file_write_iter: %d rc on %p inode\n",
--			 rc, inode);
--
--out:
--	cifs_put_writer(cinode);
--	return written;
--}
--
- static loff_t cifs_llseek(struct file *file, loff_t offset, int whence)
- {
- 	struct cifsFileInfo *cfile = file->private_data;
-diff --git a/fs/smb/client/cifsfs.h b/fs/smb/client/cifsfs.h
-index 1ab7e5998c58..1acf6bfc06de 100644
---- a/fs/smb/client/cifsfs.h
-+++ b/fs/smb/client/cifsfs.h
-@@ -99,6 +99,8 @@ extern ssize_t cifs_strict_readv(struct kiocb *iocb, struct iov_iter *to);
- extern ssize_t cifs_user_writev(struct kiocb *iocb, struct iov_iter *from);
- extern ssize_t cifs_direct_writev(struct kiocb *iocb, struct iov_iter *from);
- extern ssize_t cifs_strict_writev(struct kiocb *iocb, struct iov_iter *from);
-+ssize_t cifs_file_write_iter(struct kiocb *iocb, struct iov_iter *from);
-+ssize_t cifs_loose_read_iter(struct kiocb *iocb, struct iov_iter *iter);
- extern int cifs_flock(struct file *pfile, int cmd, struct file_lock *plock);
- extern int cifs_lock(struct file *, int, struct file_lock *);
- extern int cifs_fsync(struct file *, loff_t, loff_t, int);
-diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-index 7f2ce68d2a2a..331446fc3d22 100644
---- a/fs/smb/client/file.c
-+++ b/fs/smb/client/file.c
-@@ -4250,6 +4250,59 @@ ssize_t cifs_user_readv(struct kiocb *iocb, struct iov_iter *to)
- 	return __cifs_readv(iocb, to, false);
- }
+@@ -720,14 +716,12 @@ static int q6apm_dai_compr_set_metadata(struct snd_soc_component *component,
  
-+ssize_t cifs_loose_read_iter(struct kiocb *iocb, struct iov_iter *iter)
-+{
-+	ssize_t rc;
-+	struct inode *inode = file_inode(iocb->ki_filp);
-+
-+	if (iocb->ki_flags & IOCB_DIRECT)
-+		return cifs_user_readv(iocb, iter);
-+
-+	rc = cifs_revalidate_mapping(inode);
-+	if (rc)
-+		return rc;
-+
-+	return generic_file_read_iter(iocb, iter);
-+}
-+
-+ssize_t cifs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
-+{
-+	struct inode *inode = file_inode(iocb->ki_filp);
-+	struct cifsInodeInfo *cinode = CIFS_I(inode);
-+	ssize_t written;
-+	int rc;
-+
-+	if (iocb->ki_filp->f_flags & O_DIRECT) {
-+		written = cifs_user_writev(iocb, from);
-+		if (written > 0 && CIFS_CACHE_READ(cinode)) {
-+			cifs_zap_mapping(inode);
-+			cifs_dbg(FYI,
-+				 "Set no oplock for inode=%p after a write operation\n",
-+				 inode);
-+			cinode->oplock = 0;
-+		}
-+		return written;
-+	}
-+
-+	written = cifs_get_writer(cinode);
-+	if (written)
-+		return written;
-+
-+	written = generic_file_write_iter(iocb, from);
-+
-+	if (CIFS_CACHE_WRITE(CIFS_I(inode)))
-+		goto out;
-+
-+	rc = filemap_fdatawrite(inode->i_mapping);
-+	if (rc)
-+		cifs_dbg(FYI, "cifs_file_write_iter: %d rc on %p inode\n",
-+			 rc, inode);
-+
-+out:
-+	cifs_put_writer(cinode);
-+	return written;
-+}
-+
- ssize_t
- cifs_strict_readv(struct kiocb *iocb, struct iov_iter *to)
- {
+ 	switch (metadata->key) {
+ 	case SNDRV_COMPRESS_ENCODER_PADDING:
+-		prtd->trailing_samples_drop = metadata->value[0];
+ 		q6apm_remove_trailing_silence(component->dev, prtd->graph,
+-					      prtd->trailing_samples_drop);
++					      metadata->value[0]);
+ 		break;
+ 	case SNDRV_COMPRESS_ENCODER_DELAY:
+-		prtd->initial_samples_drop = metadata->value[0];
+ 		q6apm_remove_initial_silence(component->dev, prtd->graph,
+-					     prtd->initial_samples_drop);
++					     metadata->value[0]);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+-- 
+2.43.0
 
