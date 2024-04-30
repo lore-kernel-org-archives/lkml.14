@@ -1,139 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACD8129E7A
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C561A129E6E;
+	Tue, 30 Apr 2024 09:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468750; cv=none; b=nus1F9FPjvOVHIxBeA5+CoOEFormi9uGIJg8nPeGS25UNickq8E1WynLIJu8dA+f3/9ES1DMMY9EqgxWZvFW8qTsjeoDmNYAsh5pBN90GR1ayvWf2pw/ToBgHtNL0C26ncwLrn1u5OCY/BCICKCDwLthF9vgpxCJKBhIdyTpb2w=
+	t=1714468751; cv=none; b=Yl2JZSaAIHK0f6Rt+1hc9sjeBHpA4cXDaEWoHK9ED+iUmDt7LB9oqlf4BgyjGnEAris//qEwfJxjoWt7gETtL1uteZpxB4FDy1wd3dMGkTcX6bF0oibDTlYK0ptG9U3XVUvq5ANdBB3kmb63hXtsgpbYCeKfwlfnkIrNFdFwqIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468750; c=relaxed/simple;
-	bh=fBp/NmsaAPYn3Q9LmEeHWCL4r9VZ/lDm41uN7wZ/n7E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rjHV6Pw7ke4FXmUOkVNpZGBEBFhQD7N/AlMoIBKGA/91RV2+JllrSlPurt5U5actvl9kdS04LE3fPejj3l6XvuQgXkbRMHDnQxPA1Wnd+RunuazjQ9dXRqNk3eBqjsb6wDG/G+m5AktTqUOEZVSrVbwBnbAdSy9Xd729HsI835Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hmw+/hZv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714468751; c=relaxed/simple;
+	bh=nJLw8ZzNkHNxUi0RWmfswS2AiqmNNWu4fMk4lAvCziY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=sbRPBteVbfUpCI2fXJ7LMcLsOgsdkm70TcKFgDtkom9Syok+y8kMXUkvRZu+WGJRwOSYeX3b9LgNn+SqaFEPBzcWGsKf8S3tknHhN5w2GhqSllDEKmbOGBGcZ0qF1MZfiw5KCDb6lPlx36AZTA0SdtASNenhkD93Y4QJVoIvl3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=YA/7nQ35; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hmw+/hZv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714468748;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jFwfWtoBEea+wl4lNZJkfIY1AL564duSUyUuZY/5YOk=;
-	b=Hmw+/hZvuKqG2X+RFQ2sumKBpiJi2HKCkrs7E2Qvmo8p/EkIP9+Le9G+jnfYY+XP/b7cki
-	QcsoLP6Ddz4NLllAHPf+XF31N30Tt9XwMEAdgeUiRsdri8Ea6Fz/d00M1Xqh8YTZe0ITFp
-	P06XvPKzsYxNKpGAeCMS7CcIFE6NxcI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-627-FFE2xNfqMduNtc734sLPnw-1; Tue,
- 30 Apr 2024 05:19:03 -0400
-X-MC-Unique: FFE2xNfqMduNtc734sLPnw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0CD691C0AF43;
-	Tue, 30 Apr 2024 09:19:03 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.193.247])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BC88492BC7;
-	Tue, 30 Apr 2024 09:19:00 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: [PATCH v2 20/27] rcu: Rename struct rcu_data .dynticks_snap into .watching_snap
-Date: Tue, 30 Apr 2024 11:17:24 +0200
-Message-ID: <20240430091740.1826862-21-vschneid@redhat.com>
-In-Reply-To: <20240430091740.1826862-1-vschneid@redhat.com>
-References: <20240430091740.1826862-1-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="YA/7nQ35"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714468721; x=1715073521; i=markus.elfring@web.de;
+	bh=nJLw8ZzNkHNxUi0RWmfswS2AiqmNNWu4fMk4lAvCziY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=YA/7nQ35u0kJEg0FSF8UrZNkzte5ooB3jtBpE2Rdi+zYdC3hgcy8exhdzfyApNjY
+	 58hitwap4e8JN6RQmFY9Dlu+yms30IyXqgcL+/a1xWiWGMWgQF0K5Z1lEtoJb7UWj
+	 hYmOL5WXrqGWkbvsh6CBFD7UXUQeL4GBPSG5/HfzYzXFJnewkLeN9x6i1/bIdoxfy
+	 4YuOSxp3HX+q/dpsc3+5LdYDfJs037p1fM3WEc/rxR624GOfxZgQutsJKXZ9orgjS
+	 uaddWT4fKxTILEwNx5ynqbFnJP1GaKUyxooWuGH3wbMI3qMYhHfiFbXjy4XD87RLM
+	 M3aVQOiBt3vyTww0JQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MwjK2-1sqnog3znW-00yQhv; Tue, 30
+ Apr 2024 11:18:40 +0200
+Message-ID: <7d4a29a1-26d2-4b22-8823-ce8e7f9ac534@web.de>
+Date: Tue, 30 Apr 2024 11:18:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+User-Agent: Mozilla Thunderbird
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+ Youling Tang <tangyouling@kylinos.cn>, linux-bcachefs@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Youling Tang <youling.tang@linux.dev>
+References: <ww5fcxuzfcgttglsr6cpnrxufeusw4ixe76iqp7mab3djlyfje@zozue6qvxhzy>
+Subject: Re: bcachefs: Fix error path of bch2_link_trans()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <ww5fcxuzfcgttglsr6cpnrxufeusw4ixe76iqp7mab3djlyfje@zozue6qvxhzy>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8JGAxKe1KPyVXekngDfxeASqhnsNJcNDH5Oi18Aw2cRMyhF6Jt3
+ iEPn4suDWuGcgZp7U9kX7SZpuaSz2PtLj9PCd9KWByfLbn0sudLzTEApmkJ8Z5QJEVfVr+Y
+ oarf2KbY23l1hLnQKWf0P2wOIAWwK0NzF2WNuA29iKKW1nKn17bdveWhnVDt+UW1GdslcMS
+ 7EqHUHolqPCCVF9cyHZvg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:kBKqZET/k9s=;aI40zUrPaZ3NOHwVe3EQtPL9N1H
+ /GkmdmvCi5AY9YcgBQ08ZmsUeH3QI8YFvHJTzlyAv/IxOryjtLMQ4nSApcn9Lp90I1XfvFSRQ
+ u4GSol2OxMeW1ixGekmVsNys8n9aG76Z3ooJ3KmTVwo2h+7tBZeemWLDBWxrk9S/lBdRhmMtc
+ 1R0Yu9boNGtBs9ODrAg5v2OlUH1H5HxLVxz3XSuEeimH6g8Ujz+V0ihp4owzBrkoFiEO4uHbQ
+ 0sRbdolTa+gAHThUOpG1ExGOIyV0oKiIAksFZgx8k1yz/VUrLKeMzWdsTJeXMrqcO+hBWHqny
+ xZdBn+UINmy1mZoIwYCuwYEH21G2gj1wOEGWbJhykamWm26xb2JkfE+XGwdOj7S/7IWysr0wO
+ h5cf3vsPpk9WpJaxU2fqhAtHeMRh0D38SV/RkvJxDU6O+Z+Xta0QseHdax8hapz7LytPcxckS
+ uNdxfBtuYpBj69or8gUQ9TwhuLzDWBJQ7DWtU5zIdsY6zLqm1WS0EkpeoCEbLSJBRCXn9I6Qm
+ CZl8NR5rk+RdTLgDRXORyomg7DE+SANCNH8DAairTHrKJovLubZumvphLhBlVjOpMrDBSksJR
+ AV5jbHoKaxyq9Wh1QREfpBsB16tk9rkJX7LAi4Td+UAfoH62y1f0Mgx/6VpZcV2BIjqkBoiYs
+ /TSuSK6l/lEzmx9dG2cMo95biXxql0oGipEnvFEWJNEYYE5TikNWbSEPmWfjJh67ADJ8fYghU
+ LOaMEJ02dxztEsLKOZorvAcIA+jvVBIjZFSByRxafAollnLFVyI7s+bIopS0fCCcZz5Lqt64p
+ mEVSNkWBJo6xLeZ7MJp9hoLjhQfOi/N+oBY73qkI1cuBA=
 
-The context_tracking.state RCU_DYNTICKS subvariable has been renamed to
-RCU_WATCHING, and the snapshot helpers are now prefix by
-"rcu_watching". Reflect that change into the storage variables for these
-snapshots.
+> > In bch2_link_trans(), if bch2_inode_nlink_inc() fails, it needs to
+> > call bch2_trans_iter_exit() in the error path.
+>
+> Thanks - applied.
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- .../RCU/Design/Data-Structures/Data-Structures.rst          | 4 ++--
- kernel/rcu/tree.c                                           | 6 +++---
- kernel/rcu/tree.h                                           | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+https://evilpiepirate.org/git/bcachefs.git/commit/?id=3Dd04db1c7653dee5ee5=
+f918ce951c05eefddad7eb
 
-diff --git a/Documentation/RCU/Design/Data-Structures/Data-Structures.rst b/Documentation/RCU/Design/Data-Structures/Data-Structures.rst
-index 5389cc49bea13..de76c624fe93e 100644
---- a/Documentation/RCU/Design/Data-Structures/Data-Structures.rst
-+++ b/Documentation/RCU/Design/Data-Structures/Data-Structures.rst
-@@ -921,10 +921,10 @@ This portion of the ``rcu_data`` structure is declared as follows:
- 
- ::
- 
--     1   int dynticks_snap;
-+     1   int watching_snap;
-      2   unsigned long dynticks_fqs;
- 
--The ``->dynticks_snap`` field is used to take a snapshot of the
-+The ``->watching_snap`` field is used to take a snapshot of the
- corresponding CPU's dyntick-idle state when forcing quiescent states,
- and is therefore accessed from other CPUs. Finally, the
- ``->dynticks_fqs`` field is used to count the number of times this CPU
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d3f3a049904fc..73b95240a1a6c 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -770,8 +770,8 @@ static void rcu_gpnum_ovf(struct rcu_node *rnp, struct rcu_data *rdp)
-  */
- static int dyntick_save_progress_counter(struct rcu_data *rdp)
- {
--	rdp->dynticks_snap = rcu_watching_snap(rdp->cpu);
--	if (rcu_watching_in_eqs(rdp->dynticks_snap)) {
-+	rdp->watching_snap = rcu_watching_snap(rdp->cpu);
-+	if (rcu_watching_in_eqs(rdp->watching_snap)) {
- 		trace_rcu_fqs(rcu_state.name, rdp->gp_seq, rdp->cpu, TPS("dti"));
- 		rcu_gpnum_ovf(rdp->mynode, rdp);
- 		return 1;
-@@ -803,7 +803,7 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
- 	 * read-side critical section that started before the beginning
- 	 * of the current RCU grace period.
- 	 */
--	if (rcu_watching_changed_since(rdp, rdp->dynticks_snap)) {
-+	if (rcu_watching_changed_since(rdp, rdp->watching_snap)) {
- 		trace_rcu_fqs(rcu_state.name, rdp->gp_seq, rdp->cpu, TPS("dti"));
- 		rcu_gpnum_ovf(rnp, rdp);
- 		return 1;
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index affcb92a358c3..ac153e365355d 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -206,7 +206,7 @@ struct rcu_data {
- 	long		blimit;		/* Upper limit on a processed batch */
- 
- 	/* 3) dynticks interface. */
--	int dynticks_snap;		/* Per-GP tracking for dynticks. */
-+	int  watching_snap;		/* Per-GP tracking for dynticks. */
- 	bool rcu_need_heavy_qs;		/* GP old, so heavy quiescent state! */
- 	bool rcu_urgent_qs;		/* GP old need light quiescent state. */
- 	bool rcu_forced_tick;		/* Forced tick to provide QS. */
--- 
-2.43.0
+Would it have been nice to add the tag =E2=80=9CFixes=E2=80=9D (besides an=
+ imperative wording) accordingly?
 
+Regards,
+Markus
