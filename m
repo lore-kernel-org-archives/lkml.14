@@ -1,244 +1,178 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F557770EA;
-	Tue, 30 Apr 2024 14:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BBD770E0
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714489112; cv=none; b=EJDQPUeKc6KQs7xSd7M2sVCroIX6R2lQgV9jjixlqWZBvascRsqGJdHp00yVypOrFACPPfublUoF1Jno0pUWKdDFiS243Ignbn0d2qwGqay0M9CyKO52wyj/aYOkgaFmSHdYlj14ETh2XpooiPvDM4lRxii/V7riaDC28EJGGGc=
+	t=1714489130; cv=none; b=km167y3PeSmy3HsojG/n+NACwh+P7RSW3LwfmmuuRkvdP/TzXsll6z0tgQM1lMV5qqgUR6jDz/icZSdAtoVFaz7gBE1k8L2w+sFz7taDAhSzw97Bg66yZhzCOznL65fuYa9GLT6bKMI6x/Wvq7G7Gc4PcGhC49pylquscKDL3e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714489112; c=relaxed/simple;
-	bh=SgGEaEsacEhja8uQWuiWlWNgn8vzHIX0Ax8hgAePZsU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Scfr40sXW3KLMdS//3A5RkmF63B31WELQI48tJ3pNJntcCiTsXwKyRoYTyF7ZCepSuW/EbX32I3b9/ClaB/rwO0RCKgD2lYzSJRIGvkrreduqGnN6g3tkJevFEkir3ecghVufKowLhuv+HBZgKv0hbvm7l9Vgx5BFqiuV6cizK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B50702F4;
-	Tue, 30 Apr 2024 07:58:54 -0700 (PDT)
-Received: from [10.57.65.13] (unknown [10.57.65.13])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6DD263F793;
-	Tue, 30 Apr 2024 07:58:27 -0700 (PDT)
-Message-ID: <5f77b5b9-5d95-4512-a9fe-e0745f478d34@arm.com>
-Date: Tue, 30 Apr 2024 15:58:25 +0100
+	s=arc-20240116; t=1714489130; c=relaxed/simple;
+	bh=JBVAR+sLuGoJYKowBGO4Ad8l5eFBbZOvpATG0wKcI6E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R0KCVzS/QES7FN/JpF+9toG80nl1MUwb3qqdTIfqEKG7ppduqlOltE14nQq2R2Yy7X5jpT7mdpUdbelUk0jtSYF9+1ZkCkXyF/XjgO+f6a8k9+SWnFfOHfjO9mey0L5MiMtzFKqYXnVNkRlYxvHr6hfVs4B9J1z1QRAPVWjoW/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AgnTlBcf; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AgnTlBcf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714489129; x=1746025129;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JBVAR+sLuGoJYKowBGO4Ad8l5eFBbZOvpATG0wKcI6E=;
+  b=AgnTlBcfMuXkBffoZZ2x1j4biXiVEGaFviQ9EfpVgoBRnFx2biuNfogW
+   UJin8f5tv3OOKHn8933eUYjQRZEDg8jUMVtSunBX2srHKR1xLlDidLwJu
+   T3LOPrEHTZdlVuuuFtiIpKKa96PlXICTaJKFf+gHp4wAzd/iHo5X5l5Tt
+   SK3IohkSJb8zSp6uNotIYa0aJ5Ib9r7nmLSYVmxhuofK/prHO6CoH5sNY
+   PS39maQuFqkTi4JQS0KVJII9Bodj2I95hLCChtApJc/TraYHPgAeEVATn
+   y8fHrC64tsB9kCidJhDg21oSbgGiVxmBbQBLR/vyX9frnEmwiK1pBmTl0
+   g==;
+X-CSE-ConnectionGUID: VWPoaYx7TrS6Xp+0DNPDsw==
+X-CSE-MsgGUID: nehywbi3QlimQBLcAPvFkg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10059815"
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="10059815"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 07:58:49 -0700
+X-CSE-ConnectionGUID: UXIgDc36RUabnKJBXrtVMQ==
+X-CSE-MsgGUID: bU6XimoEQIyW+ufqsKOryg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
+   d="scan'208";a="31282110"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by orviesa004.jf.intel.com with ESMTP; 30 Apr 2024 07:58:45 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	Joel Granados <j.granados@samsung.com>
+Cc: iommu@lists.linux.dev,
+	virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v5 0/9] IOMMUFD: Deliver IO page faults to user space
+Date: Tue, 30 Apr 2024 22:57:01 +0800
+Message-Id: <20240430145710.68112-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] thermal: core: Move passive polling management to the
- core
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <5938055.MhkbZ0Pkbq@kreacher>
- <c29247b8-89d4-404a-b294-81f19720e236@arm.com>
- <CAJZ5v0iv_HQ3ej1C3u3iHuwW=Ae5EEAZY4vxMoHDZpKxYMvXkw@mail.gmail.com>
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0iv_HQ3ej1C3u3iHuwW=Ae5EEAZY4vxMoHDZpKxYMvXkw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+This series implements the functionality of delivering IO page faults to
+user space through the IOMMUFD framework. One feasible use case is the
+nested translation. Nested translation is a hardware feature that
+supports two-stage translation tables for IOMMU. The second-stage
+translation table is managed by the host VMM, while the first-stage
+translation table is owned by user space. This allows user space to
+control the IOMMU mappings for its devices.
 
+When an IO page fault occurs on the first-stage translation table, the
+IOMMU hardware can deliver the page fault to user space through the
+IOMMUFD framework. User space can then handle the page fault and respond
+to the device top-down through the IOMMUFD. This allows user space to
+implement its own IO page fault handling policies.
 
-On 4/30/24 14:48, Rafael J. Wysocki wrote:
-> Hi Lukasz,
-> 
-> On Mon, Apr 29, 2024 at 11:21 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
->>
->> Hi Rafael,
->>
->> On 4/25/24 15:11, Rafael J. Wysocki wrote:
->>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>
->>> Passive polling is enabled by setting the 'passive' field in
->>> struct thermal_zone_device to a positive value so long as the
->>> 'passive_delay_jiffies' field is greater than zero.  It causes
->>> the thermal core to actively check the thermal zone temperature
->>> periodically which in theory should be done after crossing a
->>> passive trip point on the way up in order to allow governors to
->>> react more rapidly to temperature changes and adjust mitigation
->>> more precisely.
->>>
->>> However, the 'passive' field in struct thermal_zone_device is currently
->>> managed by governors which is quite problematic.  First of all, only
->>> two governors, Step-Wise and Power Allocator, update that field at
->>> all, so the other governors do not benefit from passive polling,
->>> although in principle they should.  Moreover, if the zone governor is
->>> changed from, say, Step-Wise to Fair-Share after 'passive' has been
->>> incremented by the former, it is not going to be reset back to zero by
->>> the latter even if the zone temperature falls down below all passive
->>> trip points.
->>>
->>> For this reason, make handle_thermal_trip() increment 'passive'
->>> to enable passive polling for the given thermal zone whenever a
->>> passive trip point is crossed on the way up and decrement it
->>> whenever a passive trip point is crossed on the way down.  Also
->>> remove the 'passive' field updates from governors and additionally
->>> clear it in thermal_zone_device_init() to prevent passive polling
->>> from being enabled after a system resume just beacuse it was enabled
->>> before suspending the system.
->>>
->>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>> ---
->>>
->>> This has been mentioned here:
->>>
->>> https://lore.kernel.org/linux-pm/61560bc6-d453-4b0c-a4ea-b375d547b143@linaro.org/
->>>
->>> and I need someone to double check if the Power Allocator governor does not
->>> need to be adjusted more for this change.
->>>
->>> ---
->>>    drivers/thermal/gov_power_allocator.c |   12 +++++++-----
->>>    drivers/thermal/gov_step_wise.c       |   10 ----------
->>>    drivers/thermal/thermal_core.c        |   10 ++++++++--
->>>    3 files changed, 15 insertions(+), 17 deletions(-)
->>>
->>> Index: linux-pm/drivers/thermal/thermal_core.c
->>> ===================================================================
->>> --- linux-pm.orig/drivers/thermal/thermal_core.c
->>> +++ linux-pm/drivers/thermal/thermal_core.c
->>> @@ -389,6 +389,9 @@ static void handle_thermal_trip(struct t
->>>                if (tz->temperature < trip->temperature - trip->hysteresis) {
->>>                        list_add(&td->notify_list_node, way_down_list);
->>>                        td->notify_temp = trip->temperature - trip->hysteresis;
->>> +
->>> +                     if (trip->type == THERMAL_TRIP_PASSIVE)
->>> +                             tz->passive--;
->>
->> This gets negative values and than the core switches to fast 'polling'
->> mode. The values is decremented from 0 each time the
->> thermal_zone_device_enable() is called.
-> 
-> Interesting.
-> 
-> This shouldn't happen because it means that the passive trip has been
-> crossed on the way down, but it wasn't crossed on the way up.
-> 
-> It looks like an initialization issue to me.
-> 
->> Then IPA is actually called every 100ms after boot w/ low temp,
->> while it should 1s.
->>
->> Please see the logs below:
->> 'short log' after boot
->> ----------------------------------------------
->>
->> [    1.632670] thermal_sys: TZ: tz_id=0 passive-- = -1
->> [    1.637984] thermal_sys: TZ: tz_id=0 passive-- = -2
->> [    1.643641] thermal_sys: TZ: tz_id=1 passive-- = -1
->> ----------------------------------------------
->>
->> long log with call stack dumped
->> ----------------------------------------------
->>
->> [    1.632973] thermal_sys: TZ: tz_id=0 passive-- = -1
->> [    1.638295] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc5+ #28
->> [    1.645409] Hardware name: Radxa ROCK 4SE (DT)
->> [    1.650376] Call trace:
->> [    1.653109]  dump_backtrace+0x9c/0x100
->> [    1.657309]  show_stack+0x20/0x38
->> [    1.661017]  dump_stack_lvl+0xc0/0xd0
->> [    1.665119]  dump_stack+0x18/0x28
->> [    1.668828]  __thermal_zone_device_update+0x1fc/0x550
->> [    1.674484]  thermal_zone_device_set_mode+0x64/0xc0
->> [    1.679943]  thermal_zone_device_enable+0x1c/0x30
->> [    1.685206]  thermal_of_zone_register+0x34c/0x590
-> 
-> So let's see.
-> 
-> thermal_of_zone_register() calls
-> thermal_zone_device_register_with_trips() which calls
-> thermal_zone_device_update() for the first time, but
-> __thermal_zone_device_update() sees that
-> thermal_zone_device_is_enabled() returns false, so it does nothing.
-> 
-> This is right after thermal_zone_device_init() has been called, so
-> tz->temperature == THERMAL_TEMP_INVALID and tz->passive == 0.
-> 
-> Next, thermal_zone_device_enable() is called by
-> thermal_of_zone_register() and it calls __thermal_zone_device_update()
-> via thermal_zone_device_set_mode().
-> 
-> This time thermal_zone_device_is_enabled() returns true, so
-> update_temperature() is called and, unless __thermal_zone_get_temp()
-> returns an error, it sets tz->last_temperature to THERMAL_TEMP_INVALID
-> and tz->temperature to the current zone temperature.
-> 
-> Next, handle_thermal_trip() is called for all trips and it sees that
-> tz->last_temperature == THERMAL_TEMP_INVALID, so it skips the branch
-> in which tz->passive is decremented.
-> 
-> The only case I can see in which something else can happen in when
-> __thermal_zone_get_temp() called by update_temperature() returns an
-> error code (and if it is -EAGAIN, it won't even trigger a warning
-> message) in which case the error is silently discarded and
-> __thermal_zone_device_update() happily proceeds with tz->temperature
-> == THERMAL_TEMP_INVALID and tz->last_temperature == 0.
+User space application that is capable of handling IO page faults should
+allocate a fault object, and bind the fault object to any domain that it
+is willing to handle the fault generatd for them. On a successful return
+of fault object allocation, the user can retrieve and respond to page
+faults by reading or writing to the file descriptor (FD) returned.
 
-That correct.
+The iommu selftest framework has been updated to test the IO page fault
+delivery and response functionality.
 
-> 
-> This can lead to many surprises down the road, so IMV
-> __thermal_zone_device_update() should abort if it sees tz->temperature
-> == THERMAL_TEMP_INVALID past calling update_temperature().
+The series and related patches are available on GitHub:
+https://github.com/LuBaolu/intel-iommu/commits/iommufd-io-pgfault-delivery-v5
 
-agree
+Change log:
+v5:
+ - Removed attach handle reference count from the core. Drivers will now
+   synchronize their use of handles and domain attach/detach.
+ - Automatically responds to all outstanding faults in hwpt detach or
+   replace paths.
+ - Supports getting a domain-type specific attach handle.
+ - Reorganized the series by changing the patch order.
+ - Miscellaneous cleanup.
 
-> 
-> So I'm wondering if the patch below (modulo white-space damage from
-> GMail) helps.
-> 
->> [    1.690473]  devm_thermal_of_zone_register+0x6c/0xc0
->> [    1.696031]  rockchip_thermal_probe+0x238/0x5e8
->> [    1.701106]  platform_probe+0x70/0xe8
->> [    1.705208]  really_probe+0xc4/0x278
->> [    1.709205]  __driver_probe_device+0x80/0x140
->> [    1.714078]  driver_probe_device+0x48/0x130
->> [    1.718756]  __driver_attach+0x7c/0x138
->> [    1.723045]  bus_for_each_dev+0x80/0xf0
->> [    1.727342]  driver_attach+0x2c/0x40
->> [    1.731340]  bus_add_driver+0xec/0x1f8
->> [    1.735539]  driver_register+0x68/0x138
->> [    1.739828]  __platform_driver_register+0x30/0x48
->> [    1.745093]  rockchip_thermal_driver_init+0x24/0x38
->> [    1.750551]  do_one_initcall+0x50/0x2d8
->> [    1.754844]  kernel_init_freeable+0x204/0x440
->> [    1.759722]  kernel_init+0x28/0x140
->> [    1.763631]  ret_from_fork+0x10/0x20
->> [    1.767802] thermal_sys: TZ: tz_id=0 passive-- = -2
-> 
-> ---
->   drivers/thermal/thermal_core.c |    3 +++
->   1 file changed, 3 insertions(+)
-> 
-> Index: linux-pm/drivers/thermal/thermal_core.c
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/thermal_core.c
-> +++ linux-pm/drivers/thermal/thermal_core.c
-> @@ -496,6 +496,9 @@ void __thermal_zone_device_update(struct
-> 
->       update_temperature(tz);
-> 
-> +    if (tz->temperature == THERMAL_TEMP_INVALID)
-> +        return;
-> +
->       tz->notify_event = event;
-> 
->       for_each_trip_desc(tz, td)
+v4: https://lore.kernel.org/linux-iommu/20240403011519.78512-1-baolu.lu@linux.intel.com/
+ - Add the iommu domain attachment handle to replace the iopf-specific
+   domain attachment interfaces introduced in the previous v3.
+ - Replace the iommu_sva with iommu domain attachment handle.
+ - Refine some fields in the fault and response message encoding
+   according to feedback collected during v3 review period.
+ - Refine and fix some problems in the fault FD implementation.
+ - Miscellaneous cleanup.
 
-Yes, it prevents that previous situation. I have added a debug print
-before your return in the code above and the it's in the log:
+v3: https://lore.kernel.org/linux-iommu/20240122073903.24406-1-baolu.lu@linux.intel.com/
+ - Add iopf domain attach/detach/replace interfaces to manage the
+   reference counters of hwpt and device, ensuring that both can only be
+   destroyed after all outstanding IOPFs have been responded to. 
+ - Relocate the fault handling file descriptor from hwpt to a fault
+   object to enable a single fault handling object to be utilized
+   across multiple domains.
+ - Miscellaneous cleanup and performance improvements.
 
-[    1.632520] thermal_sys: TZ: THERMAL_TEMP_INVALID, return
-[    1.638899] thermal_sys: TZ: THERMAL_TEMP_INVALID, return
+v2: https://lore.kernel.org/linux-iommu/20231026024930.382898-1-baolu.lu@linux.intel.com/
+ - Move all iommu refactoring patches into a sparated series and discuss
+   it in a different thread. The latest patch series [v6] is available at
+   https://lore.kernel.org/linux-iommu/20230928042734.16134-1-baolu.lu@linux.intel.com/
+ - We discussed the timeout of the pending page fault messages. We
+   agreed that we shouldn't apply any timeout policy for the page fault
+   handling in user space.
+   https://lore.kernel.org/linux-iommu/20230616113232.GA84678@myrica/
+ - Jason suggested that we adopt a simple file descriptor interface for
+   reading and responding to I/O page requests, so that user space
+   applications can improve performance using io_uring.
+   https://lore.kernel.org/linux-iommu/ZJWjD1ajeem6pK3I@ziepe.ca/
 
-The tracing also shows that we have only 1s slow polling.
-It also works properly in IPA when crossing 2 trip points
-and coming back to low temp.
+v1: https://lore.kernel.org/linux-iommu/20230530053724.232765-1-baolu.lu@linux.intel.com/
 
-So, that code above should be OK. Thanks!
+Lu Baolu (9):
+  iommu: Introduce domain attachment handle
+  iommu: Replace sva_iommu with iommu_attach_handle
+  iommu: Add attachment handle to struct iopf_group
+  iommufd: Add fault and response message definitions
+  iommufd: Add iommufd fault object
+  iommufd: Fault-capable hwpt attach/detach/replace
+  iommufd: Associate fault object with iommufd_hw_pgtable
+  iommufd/selftest: Add IOPF support for mock device
+  iommufd/selftest: Add coverage for IOPF test
+
+ include/linux/iommu.h                         |  32 +-
+ include/linux/uacce.h                         |   2 +-
+ drivers/dma/idxd/idxd.h                       |   2 +-
+ drivers/iommu/iommu-priv.h                    |  17 +
+ drivers/iommu/iommufd/iommufd_private.h       |  43 ++
+ drivers/iommu/iommufd/iommufd_test.h          |   8 +
+ include/uapi/linux/iommufd.h                  | 122 ++++++
+ tools/testing/selftests/iommu/iommufd_utils.h |  84 +++-
+ drivers/dma/idxd/cdev.c                       |   4 +-
+ drivers/iommu/io-pgfault.c                    |  34 +-
+ drivers/iommu/iommu-sva.c                     |  43 +-
+ drivers/iommu/iommu.c                         | 156 +++++++-
+ drivers/iommu/iommufd/device.c                |  16 +-
+ drivers/iommu/iommufd/fault.c                 | 373 ++++++++++++++++++
+ drivers/iommu/iommufd/hw_pagetable.c          |  35 +-
+ drivers/iommu/iommufd/main.c                  |   8 +-
+ drivers/iommu/iommufd/selftest.c              |  63 +++
+ drivers/misc/uacce/uacce.c                    |   2 +-
+ tools/testing/selftests/iommu/iommufd.c       |  18 +
+ .../selftests/iommu/iommufd_fail_nth.c        |   2 +-
+ drivers/iommu/iommufd/Makefile                |   1 +
+ 21 files changed, 959 insertions(+), 106 deletions(-)
+ create mode 100644 drivers/iommu/iommufd/fault.c
+
+-- 
+2.34.1
+
