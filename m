@@ -1,287 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6551C233F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FE41C233E
 	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714485793; cv=none; b=kVds6R6s19OemEOOhK6Y9BXvW4kyPDmdDQKKPF09Rx2ynEA19XDFTgPMds/MKhDmTqoEA2oF9pM/jdU8fwkfraJvlA5uuUq+C87Yw1WBbkS5mp4gv0KrNaFoF15i+cJtqUsIoMMb0B+LgmMdZcQpS40SkqKGwAevE57q4YKh4JA=
+	t=1714485792; cv=none; b=p5Uq2DPxNFdch5IKESRRVtwxPf/hUAJPjeHEtf2/lFIXZIq2X2GcuAWB2kkXwqtLnaJsqBAepSCJnG20h3I11Na3Ew/+wXyJSDHl3dFAD9g4RdmEfr3Seopjjhnc2VZkUBjRSP1VdM78pGwg2k1mYwoEEbM05ltryrSr2XMnzz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714485793; c=relaxed/simple;
-	bh=01uPlYp+gvlCfzslwRki94T9N2SRBI4xvdjRNvc/FwA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TaGTDCv68ACqKeSqClU7528UJG2zVqtrP/xqgA/aRyPtuvsamEevWyY+XoTN1LJQvX3y4TQvO8J59Cg5Wf63Qugi5gjOTMVrClceBpT4MA78+cbg4naPeBBTdi22jwDJANJglHuCCVI9Jmqob+ctcleZyZ6WnwFvyXGz/Zf99iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aeK/WMd4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714485792; c=relaxed/simple;
+	bh=XOQ3D1Q+qL3SzysXsYcm80LUwBWHBaXzmlHz6/Wj4iY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ifi5aPwRhlCTGsZUCwZvl1JkKSmL9ODbVgZC6qX5FdM5tKb1I0BgwUIIrDhjoHXLDKFC5+anUei8kuNHTC7BTTzFFh+Q74vS+g1pNtYU7Q0aLJuUcbSSom/dwSagi/Mq8fQfffE+3LjvW0VajLCGEfwxAdvFcJy1M23r/sLnQXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=POFKTWs1; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aeK/WMd4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714485787;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vGCt48jeC555R9pX52pBDvHMiG4CZMcxlPULZd6gPmg=;
-	b=aeK/WMd4WCU+TUROwzHshbSgMF5N4nxiUCRRaR9cEDmf4lyJeJSRs/CnCzYL0xAOMynwTn
-	QsgD8peOrFi6ENtOvHhj+ugw/LvsQd1N2TU7JlR80G5NA1y2ezDRq3DnV5vI8dHG64sbdE
-	43pRGLNU6cKt5IqXVPlCNzyR1sOxO7M=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-118-SoCcPPCCPq6LefypiSX-qA-1; Tue, 30 Apr 2024 10:02:56 -0400
-X-MC-Unique: SoCcPPCCPq6LefypiSX-qA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0ADA788294A;
-	Tue, 30 Apr 2024 14:02:16 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.22])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D1AD6EC680;
-	Tue, 30 Apr 2024 14:02:12 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steve French <smfrench@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: [PATCH v2 17/22] netfs, 9p: Implement helpers for new write code
-Date: Tue, 30 Apr 2024 15:00:48 +0100
-Message-ID: <20240430140056.261997-18-dhowells@redhat.com>
-In-Reply-To: <20240430140056.261997-1-dhowells@redhat.com>
-References: <20240430140056.261997-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POFKTWs1"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e1f3462caso7438373a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:03:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714485787; x=1715090587; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xJJbSwuzaR0w7NGJdc7U0qNxw71mhhvz2h+n/8bje3M=;
+        b=POFKTWs12Tc02ab3xQdrltXnjezd8qZowxHju4xh8sOAvreJlbZp/nFZDi4H2rbj6U
+         5DB/J8LnaCZC58y7iO6PPeLTqv8Xn1R/XC40jggUPo2zh1ozO/w/Rmai3c54meLWZftH
+         rb9bYWn9s3NVXqVk78WkLrcp9lCMoGUHkqZka/5x+lJolpqVqOaUHlqgeVnBzHbYSbWs
+         vtXrjyFazTXYJVQYMMWByGYWcbdTWg4mhJKxtXc13VKYMegNICZWQBUnkF4JN9PNtTXF
+         xYh76YA8SV0dESMeSqr+/fVMheZM9L4mua3m/Imu2WFvpAybvusXkFEbdNmGJ9iSXpQ+
+         3bzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714485787; x=1715090587;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xJJbSwuzaR0w7NGJdc7U0qNxw71mhhvz2h+n/8bje3M=;
+        b=uE6H4axRVgz/SZqErBgKRl6U7luEGzASoYFrFtXXbsphqUAl4hvV9b3RCT2LM6WV4L
+         y0mNETn86w0ux7gLuM37ZsMV8q0rZmJD3p3D3R7z7/k/zpjsL7KXYySmM8j/SJuaxX+8
+         ZJz7WRRyAF8XD6JTAkVFWCCtElMWot6h9fyD2XEbBB3henlLj8yG1Xgjj5AwulsolyQL
+         GwY2KD/8mkF/ArZlkUmWGSDpeygOuDM+c/CYtRCfWE+Q8mcCPWMRDqqiwC4df8REsBlR
+         vEOOcBvCm/2+GwbGrTG5cv2pr0rUYczSYTM815RoEytQdaf8K5nwO/D+SFFAaqkvsTAA
+         egvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEd1XwdnLThb4c2a7PkMvhf+jyg9LdEBhzE/wnGUTOTNB/yjhWUzAIhy44yfK9wXwI/o5eYWUwi0j2QyDlBqAOakSq094CikZNMVYN
+X-Gm-Message-State: AOJu0Yzqgu8M2+WMyUAwd7VBeEExabw/2JIGD/RHm8EA3V2ejpy5Ekz4
+	On1N92tIoKgm1tF9aJCHQC3gBVsY5ttYTAJdnd5DfWL45G89K5I59HmeoKvFkOE=
+X-Google-Smtp-Source: AGHT+IGuEd/p4bNUH8qGU+eaFSK8VAtxB3CIFoT6x1kpuMcKSCXiGNBYxe9tpKOFHZ0t3goA5+TDFQ==
+X-Received: by 2002:a17:906:5d1:b0:a52:5460:a1c6 with SMTP id t17-20020a17090605d100b00a525460a1c6mr8141356ejt.48.1714485786717;
+        Tue, 30 Apr 2024 07:03:06 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id pv27-20020a170907209b00b00a5940af3f67sm31434ejb.16.2024.04.30.07.03.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 07:03:06 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Tue, 30 Apr 2024 16:02:17 +0200
+Subject: [PATCH 08/13] ASoC: kirkwood: Use snd_soc_substream_to_rtd() for
+ accessing private_data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240430-asoc-snd-substream-clean-v1-8-6f8a8902b479@linaro.org>
+References: <20240430-asoc-snd-substream-clean-v1-0-6f8a8902b479@linaro.org>
+In-Reply-To: <20240430-asoc-snd-substream-clean-v1-0-6f8a8902b479@linaro.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
+ Jarkko Nikula <jarkko.nikula@bitmer.com>, Daniel Mack <daniel@zonque.org>, 
+ Haojian Zhuang <haojian.zhuang@gmail.com>, 
+ Robert Jarzmik <robert.jarzmik@free.fr>, 
+ Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
+ Fabio Estevam <festevam@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Ban Tao <fengzheng923@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
+ linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev, 
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=764;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=XOQ3D1Q+qL3SzysXsYcm80LUwBWHBaXzmlHz6/Wj4iY=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmMPn0JcifyNVMar6zygwpR2fCs5/vlSNdY5zrU
+ P/gTARf59qJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjD59AAKCRDBN2bmhouD
+ 1zGnD/4/+HNhnrisX+IxTCcgOIYVGlhMNGY5vKejxjMo983A81khcr7uNg3V39Ut/IpxeMUDDM2
+ Rk6W37xxCNkLbnV8wmT6q0+6JYwo8P4avbWhlcyWX4f/X54F3DagobrxkUqSfNm3z/Ohm2iMNsI
+ 5ugz6Ay/15M8khl/LqKWzwuHNFkFgmxkcWkPSduL9KTHrRilAIDNLYrHPm02HPDdxNLtZNU+BHW
+ HTvM9E0VR5hTDhkw7zVMnhr+YV3QpwCclGbZOhu0Cp0nBuhuyLS6jviuYyHCMCY6GkcreN+twHB
+ cXmh7Xs1u91x/WYnyYmDtSjzvRIkkxVrWxw/QN9qTHQ1RYB/Xx60ra0zeLmBEmOfRz9SMfyGoUn
+ vRlI/JhDNPgNBYSjjkyIBwajOY5i3uiToFIm6XjRwuDnhvfIY1W7C/uwA0GMStEoF+JFVDyw8pW
+ XIHJD1hjJyGYX0RH/SbX84Zx3pQWMS27eL7z7lzWdJWctPFRnKSWOGotjeOgM72adhckEHzGgIF
+ QJDjo4+G5LVVPbCJwrxnbN0CSfbzPMsVVru2jraEYMcMNH7CzrolNQXfdPgbEj/6nlHJvhm8a5t
+ qifBptWPRDKql5mFD1fojt0Pdiv7EWmzeVOR/7d4Fw5AkjTCjcEbUzTHSDxxQlJZ3JQ4G9+PKsH
+ o8NVxPN16vhnqFQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Implement the helpers for the new write code in 9p.  There's now an
-optional ->prepare_write() that allows the filesystem to set the parameters
-for the next write, such as maximum size and maximum segment count, and an
-->issue_write() that is called to initiate an (asynchronous) write
-operation.
+Do not open-code snd_soc_substream_to_rtd().
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: v9fs@lists.linux.dev
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
+ sound/soc/kirkwood/kirkwood-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Notes:
-    Changes
-    =======
-    ver #2)
-     - Use 'int len' rather than 'size_t len' because of the varargs packet
-       formatter.
-
- fs/9p/vfs_addr.c        | 48 ++++++++++++++++++++++++++++++++++++++++
- include/net/9p/client.h |  2 ++
- net/9p/Kconfig          |  1 +
- net/9p/client.c         | 49 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 100 insertions(+)
-
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index 5a943c122d83..07d03efdd594 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -26,6 +26,40 @@
- #include "cache.h"
- #include "fid.h"
+diff --git a/sound/soc/kirkwood/kirkwood-dma.c b/sound/soc/kirkwood/kirkwood-dma.c
+index ef00792e1d49..036b42058272 100644
+--- a/sound/soc/kirkwood/kirkwood-dma.c
++++ b/sound/soc/kirkwood/kirkwood-dma.c
+@@ -19,7 +19,7 @@
  
-+/*
-+ * Writeback calls this when it finds a folio that needs uploading.  This isn't
-+ * called if writeback only has copy-to-cache to deal with.
-+ */
-+static void v9fs_begin_writeback(struct netfs_io_request *wreq)
-+{
-+	struct p9_fid *fid;
-+
-+	fid = v9fs_fid_find_inode(wreq->inode, true, INVALID_UID, true);
-+	if (!fid) {
-+		WARN_ONCE(1, "folio expected an open fid inode->i_ino=%lx\n",
-+			  wreq->inode->i_ino);
-+		return;
-+	}
-+
-+	wreq->wsize = fid->clnt->msize - P9_IOHDRSZ;
-+	if (fid->iounit)
-+		wreq->wsize = min(wreq->wsize, fid->iounit);
-+	wreq->netfs_priv = fid;
-+	wreq->io_streams[0].avail = true;
-+}
-+
-+/*
-+ * Issue a subrequest to write to the server.
-+ */
-+static void v9fs_issue_write(struct netfs_io_subrequest *subreq)
-+{
-+	struct p9_fid *fid = subreq->rreq->netfs_priv;
-+	int err, len;
-+
-+	len = p9_client_write(fid, subreq->start, &subreq->io_iter, &err);
-+	netfs_write_subrequest_terminated(subreq, len ?: err, false);
-+}
-+
- static void v9fs_upload_to_server(struct netfs_io_subrequest *subreq)
+ static struct kirkwood_dma_data *kirkwood_priv(struct snd_pcm_substream *subs)
  {
- 	struct p9_fid *fid = subreq->rreq->netfs_priv;
-@@ -92,6 +126,14 @@ static int v9fs_init_request(struct netfs_io_request *rreq, struct file *file)
- 			rreq->origin == NETFS_UNBUFFERED_WRITE ||
- 			rreq->origin == NETFS_DIO_WRITE);
- 
-+#if 0 // TODO: Cut over
-+	if (rreq->origin == NETFS_WRITEBACK)
-+		return 0; /* We don't get the write handle until we find we
-+			   * have actually dirty data and not just
-+			   * copy-to-cache data.
-+			   */
-+#endif
-+
- 	if (file) {
- 		fid = file->private_data;
- 		if (!fid)
-@@ -103,6 +145,10 @@ static int v9fs_init_request(struct netfs_io_request *rreq, struct file *file)
- 			goto no_fid;
- 	}
- 
-+	rreq->wsize = fid->clnt->msize - P9_IOHDRSZ;
-+	if (fid->iounit)
-+		rreq->wsize = min(rreq->wsize, fid->iounit);
-+
- 	/* we might need to read from a fid that was opened write-only
- 	 * for read-modify-write of page cache, use the writeback fid
- 	 * for that */
-@@ -131,6 +177,8 @@ const struct netfs_request_ops v9fs_req_ops = {
- 	.init_request		= v9fs_init_request,
- 	.free_request		= v9fs_free_request,
- 	.issue_read		= v9fs_issue_read,
-+	.begin_writeback	= v9fs_begin_writeback,
-+	.issue_write		= v9fs_issue_write,
- 	.create_write_requests	= v9fs_create_write_requests,
- };
- 
-diff --git a/include/net/9p/client.h b/include/net/9p/client.h
-index 78ebcf782ce5..4f785098c67a 100644
---- a/include/net/9p/client.h
-+++ b/include/net/9p/client.h
-@@ -207,6 +207,8 @@ int p9_client_read(struct p9_fid *fid, u64 offset, struct iov_iter *to, int *err
- int p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
- 		int *err);
- int p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err);
-+struct netfs_io_subrequest;
-+void p9_client_write_subreq(struct netfs_io_subrequest *subreq);
- int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset);
- int p9dirent_read(struct p9_client *clnt, char *buf, int len,
- 		  struct p9_dirent *dirent);
-diff --git a/net/9p/Kconfig b/net/9p/Kconfig
-index 00ebce9e5a65..bcdab9c23b40 100644
---- a/net/9p/Kconfig
-+++ b/net/9p/Kconfig
-@@ -5,6 +5,7 @@
- 
- menuconfig NET_9P
- 	tristate "Plan 9 Resource Sharing Support (9P2000)"
-+	select NETFS_SUPPORT
- 	help
- 	  If you say Y here, you will get experimental support for
- 	  Plan 9 resource sharing via the 9P2000 protocol.
-diff --git a/net/9p/client.c b/net/9p/client.c
-index f7e90b4769bb..00774656eeac 100644
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -18,6 +18,7 @@
- #include <linux/sched/signal.h>
- #include <linux/uaccess.h>
- #include <linux/uio.h>
-+#include <linux/netfs.h>
- #include <net/9p/9p.h>
- #include <linux/parser.h>
- #include <linux/seq_file.h>
-@@ -1661,6 +1662,54 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
+-	struct snd_soc_pcm_runtime *soc_runtime = subs->private_data;
++	struct snd_soc_pcm_runtime *soc_runtime = snd_soc_substream_to_rtd(subs);
+ 	return snd_soc_dai_get_drvdata(snd_soc_rtd_to_cpu(soc_runtime, 0));
  }
- EXPORT_SYMBOL(p9_client_write);
  
-+void
-+p9_client_write_subreq(struct netfs_io_subrequest *subreq)
-+{
-+	struct netfs_io_request *wreq = subreq->rreq;
-+	struct p9_fid *fid = wreq->netfs_priv;
-+	struct p9_client *clnt = fid->clnt;
-+	struct p9_req_t *req;
-+	unsigned long long start = subreq->start + subreq->transferred;
-+	int written, len = subreq->len - subreq->transferred;
-+	int err;
-+
-+	p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu len %d\n",
-+		 fid->fid, start, len);
-+
-+	/* Don't bother zerocopy for small IO (< 1024) */
-+	if (clnt->trans_mod->zc_request && len > 1024) {
-+		req = p9_client_zc_rpc(clnt, P9_TWRITE, NULL, &subreq->io_iter,
-+				       0, wreq->len, P9_ZC_HDR_SZ, "dqd",
-+				       fid->fid, start, len);
-+	} else {
-+		req = p9_client_rpc(clnt, P9_TWRITE, "dqV", fid->fid,
-+				    start, len, &subreq->io_iter);
-+	}
-+	if (IS_ERR(req)) {
-+		netfs_write_subrequest_terminated(subreq, PTR_ERR(req), false);
-+		return;
-+	}
-+
-+	err = p9pdu_readf(&req->rc, clnt->proto_version, "d", &written);
-+	if (err) {
-+		trace_9p_protocol_dump(clnt, &req->rc);
-+		p9_req_put(clnt, req);
-+		netfs_write_subrequest_terminated(subreq, err, false);
-+		return;
-+	}
-+
-+	if (written > len) {
-+		pr_err("bogus RWRITE count (%d > %u)\n", written, len);
-+		written = len;
-+	}
-+
-+	p9_debug(P9_DEBUG_9P, "<<< RWRITE count %d\n", len);
-+
-+	p9_req_put(clnt, req);
-+	netfs_write_subrequest_terminated(subreq, written, false);
-+}
-+EXPORT_SYMBOL(p9_client_write_subreq);
-+
- struct p9_wstat *p9_client_stat(struct p9_fid *fid)
- {
- 	int err;
+
+-- 
+2.43.0
 
