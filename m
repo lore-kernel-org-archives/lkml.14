@@ -1,74 +1,51 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8862D1802D9;
-	Tue, 30 Apr 2024 14:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF53977103;
+	Tue, 30 Apr 2024 14:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714487603; cv=none; b=VXd07novNTYHM96yACLaHFaKWOxRnrD7ToEh+YF0P8/i9sn6LSLYa/Zz90JAUq+0ZrFVngnsxMySYQinUqDnUe6HEHGyWlrIJXMnisSq/5BDwWbnzgVh5p2Z6TcMzpiRRYnKxehNDEKagrUaQT+ZsN6UZtWskMqhCun65uw/UCg=
+	t=1714487635; cv=none; b=tNGIVl5LsDhxRjGSuxP3DY2u9aPZf5y8DSAMXSoJPeip+Z5D3O1QwgLzwBn56Kay1FcAMQavC58CO0thMdqCv3mqxwHTVfBw6MnYE/eorGBUXahGF0/Nhvl1zFf+aifQzv5lbxpfRnAmi/m0p3OxZrCNoutXQAnOkZlErZZ80Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714487603; c=relaxed/simple;
-	bh=3zemZ+ENMGoPGIEwTuWopoyGRq1SxyxEFPSLySd79K4=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SbB5mAkosfnMwrMghvTZnkL84Uf4sZPiVaRlNpTcmbjSQygd3W8Og22XF0KMf61JkWy11mBh3dqKCJ387UUnovKGgnTBtARDpcj+HwPIGDlZVUdVHJsrP6Yh5awGH7qh8iEDZX6C/9s3lslYZHdN6aMkbiPU2Dt/Lau8UPO/+Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l45UlqAo; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l45UlqAo"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so35123755ad.1;
-        Tue, 30 Apr 2024 07:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714487601; x=1715092401; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n9+uw12LzVsx3wU8adlXBHs43wHbzfmBsLnbaFarO2I=;
-        b=l45UlqAoIwoLUaQ6CY4K214s22tn0YR3Rpv73kqX+g1//lCVJ0X53Aqnsq13fabxN2
-         gWADgXGPOMQt8RwLkN7kQFRosn6LQoiCsoFP0jhAd/8afb4IRoDa1wkOiin7GzVB0UVO
-         mEWcXnzNZjtnUWId3Z4BJRxp6HjwtCWyX10sbiUwAWcH3H1u/Nh6dYMTGYQvrxjASKOW
-         Fc3H9ng9y5IiMvgJLsRqke3Mgf5SHYA5hxrGwwcdvyPCckJw0X8u93IoZGqNgXLP7K5H
-         pDEpudPwmhEPEU7JGBCP76hbnP4miQqA+MQ+FCtNdTnGro8Fq20CenqHxrwhZ3GrDYxE
-         MCpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714487601; x=1715092401;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n9+uw12LzVsx3wU8adlXBHs43wHbzfmBsLnbaFarO2I=;
-        b=Tm1xkBDm6+D8w22asHTwsV4j7n4sso8xsDpPsGZVKGc4knJ73ZrCA92gBfFPsMgbrn
-         sey5KUpIyvRKtE0egdTZM8LIHvXEpP/7mBqdFHxlNw7fLR38TqpxmUWUMzwJDhw7IVCc
-         GrjLmimAk0J0gxyCxwSvh6SwNTx5MtKlm4N1iTWIueD/WGGBmkl6cHUzNWwC7u0RvLn9
-         COCRnoMkp6yq870OWdlG7JvJASknjm8EBY8ACYBrrItlx49UPinp9tetkOZMEf5coOYA
-         SLK/W3k+Pkt3vvmjNMwUV1bUC8cKYQeu0aRl/IUVEN2DZ+Bqvv+LgWgtqS0dGyZI+afh
-         Ty7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUVP/svCUJuk8smxV/Ghtb/Y424MT9dz85/7OFQiGCTLrAdUBZ0HmznhQMByCpYvQbO3tmgdZ1HGCUzodlvAW4PnLNO2I7nrmu7BdPC9UFsYs7DfrWPzSikxTE4yi32Lq797ojcxc8JaXLRIBM=
-X-Gm-Message-State: AOJu0Yz1j5Afzm1KDpgUcAW1y+gXbpkoGXaB0id2lw3gFyvcyVIxbAH1
-	/I7GV3R7EA04Gq3a0qoMWl69PyJJu+ni+U5kouLLJ8/tM1y6zsI7
-X-Google-Smtp-Source: AGHT+IH4UdZbzfvSJo3QJfZt+JphuB4AEFpA9cZMcuqalJRWHwyT3Ed+65xfdEtezZjfDmHJFi8NrA==
-X-Received: by 2002:a17:902:e806:b0:1e2:81c1:b35e with SMTP id u6-20020a170902e80600b001e281c1b35emr17906114plg.54.1714487600758;
-        Tue, 30 Apr 2024 07:33:20 -0700 (PDT)
-Received: from peter-bmc.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
-        by smtp.gmail.com with ESMTPSA id m1-20020a170902db0100b001e47972a2casm1682431plx.96.2024.04.30.07.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 07:33:20 -0700 (PDT)
-From: Peter Yin <peteryin.openbmc@gmail.com>
-To: patrick@stwcx.xyz,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Eddie James <eajames@linux.vnet.ibm.com>,
-	linux-watchdog@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 1/1] watchdog: aspeed: Revise handling of bootstatus
-Date: Tue, 30 Apr 2024 22:31:14 +0800
-Message-Id: <20240430143114.1323686-2-peteryin.openbmc@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240430143114.1323686-1-peteryin.openbmc@gmail.com>
-References: <20240430143114.1323686-1-peteryin.openbmc@gmail.com>
+	s=arc-20240116; t=1714487635; c=relaxed/simple;
+	bh=JZ2gdHjxTZSDkioddp8aZRGRa23qJkly0JMwTmDP9Zc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pkIA4B17qo4FyPXn5lHG6r9F3yaJTHN54zzJbCdJZrhvTg/C0w3GmRzFOJ5Lf04ooiHOYQqprvsKkqZf9E8zMo3HDXcOSAiXsvq875VUe3AZQ4F+4FVyTVkYtneZSgvR4Yo6Qo8QpgZwvltJ9TmQqduros/5MNHL0/rGf+IOgPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTN0y3c9Xz6GD6x;
+	Tue, 30 Apr 2024 22:31:14 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id C111A1400DC;
+	Tue, 30 Apr 2024 22:33:51 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 30 Apr 2024 15:33:50 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Gavin Shan
+	<gshan@redhat.com>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v9 18/19] arm64: document virtual CPU hotplug's expectations
+Date: Tue, 30 Apr 2024 15:24:33 +0100
+Message-ID: <20240430142434.10471-19-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
+References: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,172 +53,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Regarding the AST2600 specification, the WDTn Timeout Status Register
-(WDT10) has bit 1 reserved. Bit 1 of the status register indicates
-on ast2500 if the boot was from the second boot source.
-It does not indicate that the most recent reset was triggered by
-the watchdog. The code should just be changed to set WDIOF_CARDRESET
-if bit 0 of the status register is set. However, this bit can be clear when
-watchdog register 0x0c bit1(Reset System after timeout) is enabled.
-Thereforce include SCU register to veriy WDIOF_EXTERN1 and WDIOF_CARDRESET
-in ast2600 SCU74 or ast2400/ast2500 SCU3C.
+From: James Morse <james.morse@arm.com>
 
-Fixes: 49d4d277ca54 ("aspeed: watchdog: Set bootstatus during probe")
-Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
+Add a description of physical and virtual CPU hotplug, explain the
+differences and elaborate on what is required in ACPI for a working
+virtual hotplug system.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 ---
- drivers/watchdog/aspeed_wdt.c | 90 +++++++++++++++++++++++++++++++----
- 1 file changed, 82 insertions(+), 8 deletions(-)
+v9: No change
+---
+ Documentation/arch/arm64/cpu-hotplug.rst | 79 ++++++++++++++++++++++++
+ Documentation/arch/arm64/index.rst       |  1 +
+ 2 files changed, 80 insertions(+)
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index b4773a6aaf8c..556493763793 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -11,10 +11,12 @@
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/kstrtox.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- #include <linux/watchdog.h>
- 
- static bool nowayout = WATCHDOG_NOWAYOUT;
-@@ -22,10 +24,38 @@ module_param(nowayout, bool, 0);
- MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
- 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
- 
-+/* AST SCU Register for System Reset Event Log Register Set
-+ * ast2600 is scu074 ast2400/2500 is scu03c
-+ */
-+#define AST_SCU_SYS_RESET_POWERON_MASK	BIT(0)
-+#define AST_SCU_SYS_RESET_EXTERN_FLAG	BIT(1)
+diff --git a/Documentation/arch/arm64/cpu-hotplug.rst b/Documentation/arch/arm64/cpu-hotplug.rst
+new file mode 100644
+index 000000000000..76ba8d932c72
+--- /dev/null
++++ b/Documentation/arch/arm64/cpu-hotplug.rst
+@@ -0,0 +1,79 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. _cpuhp_index:
 +
-+#define AST2400_SYSTEM_RESET_STATUS	0x3C
-+#define   AST2400_WATCHDOG_RESET_MASK	BIT(1)
-+#define   AST2400_RESET_FLAG_CLEAR	GENMASK(2, 0)
++====================
++CPU Hotplug and ACPI
++====================
 +
-+#define   AST2500_WATCHDOG_RESET_MASK	GENMASK(4, 2)
-+#define   AST2500_RESET_FLAG_CLEAR	(AST2500_WATCHDOG_RESET_MASK | \
-+					 AST_SCU_SYS_RESET_POWERON_MASK | \
-+					 AST_SCU_SYS_RESET_EXTERN_FLAG)
++CPU hotplug in the arm64 world is commonly used to describe the kernel taking
++CPUs online/offline using PSCI. This document is about ACPI firmware allowing
++CPUs that were not available during boot to be added to the system later.
 +
-+#define AST2600_SYSTEM_RESET_STATUS	0x74
-+#define   AST2600_WATCHDOG_RESET_MASK   GENMASK(31, 16)
-+#define   AST2600_RESET_FLAG_CLEAR	(AST2600_WATCHDOG_RESET_MASK | \
-+					 AST_SCU_SYS_RESET_POWERON_MASK | \
-+					 AST_SCU_SYS_RESET_EXTERN_FLAG)
++``possible`` and ``present`` refer to the state of the CPU as seen by linux.
 +
- struct aspeed_wdt_config {
- 	u32 ext_pulse_width_mask;
- 	u32 irq_shift;
- 	u32 irq_mask;
-+	struct {
-+		const char *compatible;
-+		u32 reset_status_reg;
-+		u32 watchdog_reset_mask;
-+		u32 extern_reset_mask;
-+		u32 reset_flag_clear;
-+	} scu;
- };
- 
- struct aspeed_wdt {
-@@ -39,18 +69,39 @@ static const struct aspeed_wdt_config ast2400_config = {
- 	.ext_pulse_width_mask = 0xff,
- 	.irq_shift = 0,
- 	.irq_mask = 0,
-+	.scu = {
-+		.compatible = "aspeed,ast2400-scu",
-+		.reset_status_reg = AST2400_SYSTEM_RESET_STATUS,
-+		.watchdog_reset_mask = AST2400_WATCHDOG_RESET_MASK,
-+		.extern_reset_mask = 0,
-+		.reset_flag_clear = AST2400_RESET_FLAG_CLEAR,
-+	}
- };
- 
- static const struct aspeed_wdt_config ast2500_config = {
- 	.ext_pulse_width_mask = 0xfffff,
- 	.irq_shift = 12,
- 	.irq_mask = GENMASK(31, 12),
-+	.scu = {
-+		.compatible = "aspeed,ast2500-scu",
-+		.reset_status_reg = AST2400_SYSTEM_RESET_STATUS,
-+		.watchdog_reset_mask = AST2500_WATCHDOG_RESET_MASK,
-+		.extern_reset_mask = AST_SCU_SYS_RESET_EXTERN_FLAG,
-+		.reset_flag_clear = AST2500_RESET_FLAG_CLEAR,
-+	}
- };
- 
- static const struct aspeed_wdt_config ast2600_config = {
- 	.ext_pulse_width_mask = 0xfffff,
- 	.irq_shift = 0,
- 	.irq_mask = GENMASK(31, 10),
-+	.scu = {
-+		.compatible = "aspeed,ast2600-scu",
-+		.reset_status_reg = AST2600_SYSTEM_RESET_STATUS,
-+		.watchdog_reset_mask = AST2600_WATCHDOG_RESET_MASK,
-+		.extern_reset_mask = AST_SCU_SYS_RESET_EXTERN_FLAG,
-+		.reset_flag_clear = AST2600_RESET_FLAG_CLEAR,
-+	}
- };
- 
- static const struct of_device_id aspeed_wdt_of_table[] = {
-@@ -310,6 +361,7 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 	const struct of_device_id *ofdid;
- 	struct aspeed_wdt *wdt;
- 	struct device_node *np;
-+	struct regmap *scu;
- 	const char *reset_type;
- 	u32 duration;
- 	u32 status;
-@@ -458,14 +510,36 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 		writel(duration - 1, wdt->base + WDT_RESET_WIDTH);
- 	}
- 
--	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
--	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
--		wdt->wdd.bootstatus = WDIOF_CARDRESET;
--
--		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
--		    of_device_is_compatible(np, "aspeed,ast2500-wdt"))
--			wdt->wdd.groups = bswitch_groups;
--	}
-+	/*
-+	 * Power on reset is set when triggered by AC or SRSRST.
-+	 * Thereforce, we clear flag to ensure
-+	 * next boot cause is a real watchdog case.
-+	 * We use the external reset flag to determine
-+	 * if it is an external reset or card reset.
-+	 * However, The ast2400 watchdog flag is cleared by an external reset,
-+	 * so it only supports WDIOF_CARDRESET.
-+	 */
-+	scu = syscon_regmap_lookup_by_compatible(wdt->cfg->scu.compatible);
-+	if (IS_ERR(scu))
-+		return PTR_ERR(scu);
 +
-+	ret = regmap_read(scu, wdt->cfg->scu.reset_status_reg, &status);
-+	if (ret)
-+		return ret;
++CPU Hotplug on physical systems - CPUs not present at boot
++----------------------------------------------------------
 +
-+	if (!(status & AST_SCU_SYS_RESET_POWERON_MASK) &&
-+	      status & wdt->cfg->scu.watchdog_reset_mask)
-+		wdt->wdd.bootstatus = (status & wdt->cfg->scu.extern_reset_mask)
-+					 ? WDIOF_EXTERN1 : WDIOF_CARDRESET;
++Physical systems need to mark a CPU that is ``possible`` but not ``present`` as
++being ``present``. An example would be a dual socket machine, where the package
++in one of the sockets can be replaced while the system is running.
 +
-+	status = wdt->cfg->scu.reset_flag_clear;
-+	ret = regmap_write(scu, wdt->cfg->scu.reset_status_reg, status);
-+	if (ret)
-+		return ret;
++This is not supported.
 +
-+	if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
-+	    of_device_is_compatible(np, "aspeed,ast2500-wdt"))
-+		wdt->wdd.groups = bswitch_groups;
- 
- 	dev_set_drvdata(dev, wdt);
- 
++In the arm64 world CPUs are not a single device but a slice of the system.
++There are no systems that support the physical addition (or removal) of CPUs
++while the system is running, and ACPI is not able to sufficiently describe
++them.
++
++e.g. New CPUs come with new caches, but the platform's cache toplogy is
++described in a static table, the PPTT. How caches are shared between CPUs is
++not discoverable, and must be described by firmware.
++
++e.g. The GIC redistributor for each CPU must be accessed by the driver during
++boot to discover the system wide supported features. ACPI's MADT GICC
++structures can describe a redistributor associated with a disabled CPU, but
++can't describe whether the redistributor is accessible, only that it is not
++'always on'.
++
++arm64's ACPI tables assume that everything described is ``present``.
++
++
++CPU Hotplug on virtual systems - CPUs not enabled at boot
++---------------------------------------------------------
++
++Virtual systems have the advantage that all the properties the system will
++ever have can be described at boot. There are no power-domain considerations
++as such devices are emulated.
++
++CPU Hotplug on virtual systems is supported. It is distinct from physical
++CPU Hotplug as all resources are described as ``present``, but CPUs may be
++marked as disabled by firmware. Only the CPU's online/offline behaviour is
++influenced by firmware. An example is where a virtual machine boots with a
++single CPU, and additional CPUs are added once a cloud orchestrator deploys
++the workload.
++
++For a virtual machine, the VMM (e.g. Qemu) plays the part of firmware.
++
++Virtual hotplug is implemented as a firmware policy affecting which CPUs can be
++brought online. Firmware can enforce its policy via PSCI's return codes. e.g.
++``DENIED``.
++
++The ACPI tables must describe all the resources of the virtual machine. CPUs
++that firmware wishes to disable either from boot (or later) should not be
++``enabled`` in the MADT GICC structures, but should have the ``online capable``
++bit set, to indicate they can be enabled later. The boot CPU must be marked as
++``enabled``.  The 'always on' GICR structure must be used to describe the
++redistributors.
++
++CPUs described as ``online capable`` but not ``enabled`` can be set to enabled
++by the DSDT's Processor object's _STA method. On virtual systems the _STA method
++must always report the CPU as ``present``. Changes to the firmware policy can
++be notified to the OS via device-check or eject-request.
++
++CPUs described as ``enabled`` in the static table, should not have their _STA
++modified dynamically by firmware. Soft-restart features such as kexec will
++re-read the static properties of the system from these static tables, and
++may malfunction if these no longer describe the running system. Linux will
++re-discover the dynamic properties of the system from the _STA method later
++during boot.
+diff --git a/Documentation/arch/arm64/index.rst b/Documentation/arch/arm64/index.rst
+index d08e924204bf..78544de0a8a9 100644
+--- a/Documentation/arch/arm64/index.rst
++++ b/Documentation/arch/arm64/index.rst
+@@ -13,6 +13,7 @@ ARM64 Architecture
+     asymmetric-32bit
+     booting
+     cpu-feature-registers
++    cpu-hotplug
+     elf_hwcaps
+     hugetlbpage
+     kdump
 -- 
-2.25.1
+2.39.2
 
