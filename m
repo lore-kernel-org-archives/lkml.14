@@ -1,107 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C075D18637;
-	Tue, 30 Apr 2024 03:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8A8101C4;
+	Tue, 30 Apr 2024 03:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714447897; cv=none; b=ujsDwnBK7hyFOr28LKjY8o1JZmxzGoqcyoE+HoyYUjRSqOiPy2AKM+5RzA/rrnzKSE4IUWEzZ4uBbFEwigKM1lF79nLFnxRVyyn2AsSQr2+sSJJm/sI7QRrtRjQJOpnqePbbTS7DuIHD3ewjP8rSccrDg7ulSX6uS3xboA/dals=
+	t=1714447927; cv=none; b=TB4uosCfiTTUtBWucCLb4fQkXXRzvzExtNEpGaQBNo6zU0sdX6Gm9xQjiSiWygZqEAUYQcQSYmRrMEjMMKMgKcAsaX593TdpKE6vlGDd0vs3EWEDA0C8Tk+vNFXCNr36nDT+lEoI/V2Qn4rQCtcKXxf5KDmOOpz3gXhm6nZXVUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714447897; c=relaxed/simple;
-	bh=mq4Y8ibXMhwIIRyyDw1nn+vBWRQBohV8pJPSfectHRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VLGYuipp+onB0IV+CJllfZBFHy0E9T4cNvyb6Tch3jn1F3S7dqEo9TppI0GmGoXmZQY/wcbzi22il8Y1QAk5/FRwinBgpclAKQNMbTgCesfLQlNkb+bD0ZlOBcg7dtE4hqwiMUDleeQUDDvcn4NHkvMuwugrxUoZNHU+13u7fDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bG5KBgTK; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bG5KBgTK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714447896; x=1745983896;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mq4Y8ibXMhwIIRyyDw1nn+vBWRQBohV8pJPSfectHRE=;
-  b=bG5KBgTKXr7xdpaSSWoqyFugz31G5QKG1AoUtYxbPIIgmJLAzVDVJz4V
-   y/RiAFA1QWKWR5PIIjw2idG9niy1UGs5IWLoyC/KEFUWfKj3Aua+ttnte
-   /DZ4H8gE/DB77EfimuiRGLjhF3Ow1u+HstGsuYmAdq2EzorPW/BuZefFN
-   Ub1oP8FD7UjVLH025wqIMG3WN5srE1iubxzwYgOYSLHSaBabWBAQJiKef
-   Syx51wF/BfNtqoImX4Wxv7RIeFp7tBvoLnLm0/I+wKI1xCmeI191/8NO9
-   Hp2xq5n8nBdELN8uuzQkEopn18qwuo0C8DOMuLusfbr707Vlr6k12DlO2
-   A==;
-X-CSE-ConnectionGUID: 3813MeObTyu6KIof7W4hoQ==
-X-CSE-MsgGUID: 7EQo10CfTDylUig6sGl9DA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="21284194"
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="21284194"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 20:31:36 -0700
-X-CSE-ConnectionGUID: v9O8VmDgQ2afC3JdwV0NkQ==
-X-CSE-MsgGUID: 9BStZHmsSjeEOm7099Kf4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,241,1708416000"; 
-   d="scan'208";a="26820011"
-Received: from xpf.sh.intel.com ([10.239.182.130])
-  by orviesa007.jf.intel.com with ESMTP; 29 Apr 2024 20:31:33 -0700
-From: Pengfei Xu <pengfei.xu@intel.com>
-To: Shuah Khan <skhan@linuxfoundation.org>,
-	shuah@kernel.org,
-	linux-kselftest <linux-kselftest@vger.kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>,
-	jithu.joseph@intel.com,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	ashok.raj@intel.com,
-	sathyanarayanan.kuppuswamy@intel.com
-Subject: [PATCH v1 4/4] selftests: ifs: verify IFS ARRAY BIST functionality
-Date: Tue, 30 Apr 2024 11:31:48 +0800
-Message-ID: <ed40ce865415e98380278b5dec5b24ec50981077.1714447026.git.pengfei.xu@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1714447026.git.pengfei.xu@intel.com>
-References: <cover.1714447026.git.pengfei.xu@intel.com>
+	s=arc-20240116; t=1714447927; c=relaxed/simple;
+	bh=yFxV8IAL/FhTPWHJslqDdQyTJdimCkoRX51HT2h/SaE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FjLZMFAEvHr23gv8ArdghudiyPczvonUx4J5W9WaV98LH8f/8jUtQldBOLBJD7hoJH8IINOdgxJnJ9PPLiTX7zROBd1RstWVBNIw4+uHvKMsz8AQ/gF3OQcZxLi1Rza1KwsiqioofXKr9OhofQ8LglKRPlold90VELNpfIxota8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id A572B160447;
+	Tue, 30 Apr 2024 03:21:53 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf08.hostedemail.com (Postfix) with ESMTPA id 0D09320025;
+	Tue, 30 Apr 2024 03:21:50 +0000 (UTC)
+Message-ID: <aacd7c3a5ad5bb4df71ec5dd107ef12b6ebf4079.camel@perches.com>
+Subject: Re: [PATCH v6] checkpatch: add check for snprintf to scnprintf
+From: Joe Perches <joe@perches.com>
+To: Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>,  Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+ linux-hardening@vger.kernel.org, Finn Thain <fthain@linux-m68k.org>
+Date: Mon, 29 Apr 2024 20:21:49 -0700
+In-Reply-To: <202404291249.078D924@keescook>
+References: <20240429-snprintf-checkpatch-v6-1-354c62c88290@google.com>
+	 <202404291249.078D924@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 0D09320025
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: g4rtr57ict5i64t7bifcqsccwbpei8by
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/11DngRJQirq2hq9jlQZ0nlQjZJQ0C1o8=
+X-HE-Tag: 1714447310-562688
+X-HE-Meta: U2FsdGVkX19VkOaOkTZywdAdJmmPdqSae8cbGjpk4uNn3d20yEfKvhS5J1o91bK7gYO6EY6HnhIqW/ZDtisg4IhGhOfiaJFkywBivrkbrygz5gwAPqx7ksErpiIAAYxbLebjzAaCphQdnYaCjpyr3xYHXqEh5avOrlLccsYN7KP/+2wT+xFatkYcUpPhZFYTHk2dCBgCJHtvs5sI4FKqVKup/zj3mJnaamWCvBWCdOWPZo8OAVLKLDPFf8UUdiHp4eCaQiSWBJc/6rzVGX7yT+SoNd2fSVaDFxrE3qJ1CUKHPYZpmJEfkGLHFund3fVXNFUOgWCYYE1FFXQd31aLWloy9x4ENKmY4btEORRz1X40ojL7CNSR6QpOdzQMl5BovDitnRcXbhKWuXu7ILjyonK86NFh30LzvYp8TOPpVlWtXynTGdNXiXj6F+D+bBi/iljj2FqQAEi/C/ZdY52W9g==
 
-There are two selftest scenarios for ARRAY BIST(Board Integrated System
-Test) tests:
+On Mon, 2024-04-29 at 12:49 -0700, Kees Cook wrote:
+> On Mon, Apr 29, 2024 at 06:39:28PM +0000, Justin Stitt wrote:
+> > I am going to quote Lee Jones who has been doing some snprintf ->
+> > scnprintf refactorings:
+> >=20
+> > "There is a general misunderstanding amongst engineers that
+> > {v}snprintf() returns the length of the data *actually* encoded into th=
+e
+> > destination array.  However, as per the C99 standard {v}snprintf()
+> > really returns the length of the data that *would have been* written if
+> > there were enough space for it.  This misunderstanding has led to
+> > buffer-overruns in the past.  It's generally considered safer to use th=
+e
+> > {v}scnprintf() variants in their place (or even sprintf() in simple
+> > cases).  So let's do that."
+> >=20
+> > To help prevent new instances of snprintf() from popping up, let's add =
+a
+> > check to checkpatch.pl.
+> >=20
+> > Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+>=20
+> Thanks!
+>=20
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>=20
 
-1. Perform IFS ARRAY BIST tests once on each CPU.
-2. Perform IFS ARRAY BIST tests on a random CPU with 3 rounds.
+$ git grep -P '\b((v|)snprintf)\s*\(' | wc -l
+7745
+$ git grep -P '(?:return\s+|=3D\s*)\b((v|)snprintf)\s*\(' | wc -l
+1626
 
-These are not meant to be exhaustive, but are some minimal tests for
-for checking IFS ARRAY BIST.
+Given there are ~5000 uses of these that don't care
+whether or not it's snprintf or scnprintf, I think this
+is not great.
 
-Reviewed-by: Jithu Joseph <jithu.joseph@intel.com>
-Co-developed-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
----
- .../selftests/drivers/platform/x86/intel/ifs/test_ifs.sh  | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I'd much rather make sure the return value of the call
+is used before suggesting an alternative.
 
-diff --git a/tools/testing/selftests/drivers/platform/x86/intel/ifs/test_ifs.sh b/tools/testing/selftests/drivers/platform/x86/intel/ifs/test_ifs.sh
-index 63d13400af4f..2ab310c4aaff 100755
---- a/tools/testing/selftests/drivers/platform/x86/intel/ifs/test_ifs.sh
-+++ b/tools/testing/selftests/drivers/platform/x86/intel/ifs/test_ifs.sh
-@@ -481,6 +481,14 @@ test_ifs()
- 		test_ifs_scan_available_imgs
- 		test_ifs_same_cpu_loop "$IFS_SCAN_MODE" "$RANDOM_CPU" "$LOOP_TIMES"
- 	fi
-+
-+	# SAPPHIRERAPID CPU could not support IFS ARRAY BIST scan
-+	if [[ "$MODEL" == "$SAPPHIRERAPIDS_X" ]]; then
-+		append_log "[$SKIP] SAPPHIRERAPID CPU, skip IFS ARRAY BIST scan"
-+	else
-+		ifs_test_cpus "$SIBLINGS" "$IFS_ARRAY_BIST_SCAN_MODE"
-+		test_ifs_same_cpu_loop "$IFS_ARRAY_BIST_SCAN_MODE" "$RANDOM_CPU" "$LOOP_TIMES"
-+	fi
- }
- 
- trap ifs_cleanup SIGTERM SIGINT
--- 
-2.43.0
+$ git grep  -P '\b((v|)snprintf)\s*\(.*PAGE_SIZE' | wc -l
+515
+
+And about 1/3 of these snprintf calls are for sysfs style
+output that ideally would be converted to sysfs_emit or
+sysfs_emit_at instead.
 
