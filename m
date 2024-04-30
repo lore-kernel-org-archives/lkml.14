@@ -1,144 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D149184139;
-	Tue, 30 Apr 2024 18:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17705180A82
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 18:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714502884; cv=none; b=HHcdN4JrKFTdNUmhCn+dH2WWgdZ4faRupQkGh38/EeBUIo7HA7h4ox3oBd1on3aM3/dB/7QnAQbX1z9BBNcnqkiXuTV29XjY1K4t9U9VQUW4RqU20GF1lqSQGn9kijjlhxp1vRQXM3cuxBqLJ43l/Da83fhG4F0hCDR1AaiMvic=
+	t=1714502979; cv=none; b=XxrzWU0p7oO8v3F0VNG55kOdWwol3m3gYJoQli8tZIf55esM2JBE025cg1R0ikk9bx9wKLfg9ih2SvfnDgs+vMrNSW6+5uAJImji3NRQBHW+A0sP/irPhuMktba/6eIgiH0qru1N6k4AYidejQt7l233kuUTd0wB4z/IaZoUvPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714502884; c=relaxed/simple;
-	bh=HPzjuRJ5yCLBNuv1aWWG9npK5939ao9xZ9NGuQ/3nUI=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KMZDpYrjbVPNlcKeXYzvYNaVjth3VwI4AKvcdZEcvP6lx+4F7AoBQCjDhzTFFiAUv/obqEGZ6IWw5F0OPAGDvAsQjw2qNnC7eUwIG4/qp2JMR+MFZz5Vxd1LXdt3eB2rSfL58PSPqljj0y3a/NmWtVyeqM/C4EG/8mSApUJk+R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXDmZTRo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714502979; c=relaxed/simple;
+	bh=EokB8aqsQ9XlXisWKz+gIXK6A5fWVoC7f0dsqWjTBac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MoBlsmDc/UDhBJ4x/IyqsWEni/HwJ7gz4xx69shkXK52t9+UgIMHpMorVHZIDU4mN1ZTRw3us6gMjkvBOYrb/PKg4gtY0SaODYwy0rlC6Q1wJ9lLDnMb4qkSGG/N1lcpSHonwNaH5QFe6CPiqyyWOPAWmpzk7QZbLnjXdCidHDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PJsbfjX+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXDmZTRo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60731C2BBFC;
-	Tue, 30 Apr 2024 18:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714502883;
-	bh=HPzjuRJ5yCLBNuv1aWWG9npK5939ao9xZ9NGuQ/3nUI=;
-	h=From:To:Subject:In-Reply-To:References:Date:From;
-	b=lXDmZTRouHLCs4AdMqtuDYka9dsVcqIW1NW+vdeMs8J0ylDQMwhfA5I4PM+uVm+Xm
-	 s6rr3M61nsxv1ffqEI8k0X6v9oJ7YeZdmJj2kz0688kVEsd5ydMRjYBeZGKFfSjL6Q
-	 yFSXUq1KiUZU4684hU59BKpvKPwvdOYlt94xrPoyl88wPUay5Z8AUXpScb/OfSl1i5
-	 chH8ORZ4moLQgAklWzQXpZYrAXAGSHxdqKntBpOzpGrfYiFA3tJL8EDj2CP++8VRub
-	 4zSfvqkpMcV2PP88PQJ8Zf+HUljRxgSJ6MWy29q8WyJfKSJlrUYEUqAzK7nc8ZUcD4
-	 vY5teNHhL4haA==
-From: Puranjay Mohan <puranjay@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Zi Shen Lim <zlim.lnx@gmail.com>, Xu Kuohai
- <xukuohai@huawei.com>, Florent Revest <revest@chromium.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next v4 2/2] bpf, arm64: inline
- bpf_get_smp_processor_id() helper
-In-Reply-To: <20240429131647.50165-3-puranjay@kernel.org>
-References: <20240429131647.50165-1-puranjay@kernel.org>
- <20240429131647.50165-3-puranjay@kernel.org>
-Date: Tue, 30 Apr 2024 18:48:00 +0000
-Message-ID: <mb61pzfta1ycf.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PJsbfjX+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714502976;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Qfz69FNF3QRvVYgj0UwtUm//NyFH48AvJNB/+Nb6D8Y=;
+	b=PJsbfjX+/K5iT3KwWdVKbrHYsEXr4a3/yeMkcwnT30Sg/eRzNJklofllXbmbdHMyG6y5kD
+	K3nG5KeKTJCowbphfsPFAUFNE7RwwIbUHYQm+htHCZiFR91Gb5I6k5HWEvOp7iBR5i/aqK
+	yled0ap4ze+/pfeQ4fv0QclSn2AhAmI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-283-JBFOlUxkNWCbAfGBZIXEdQ-1; Tue, 30 Apr 2024 14:49:35 -0400
+X-MC-Unique: JBFOlUxkNWCbAfGBZIXEdQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-41c095d5b07so13403475e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:49:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714502974; x=1715107774;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qfz69FNF3QRvVYgj0UwtUm//NyFH48AvJNB/+Nb6D8Y=;
+        b=c0QphoOngmqmmXJ48dk0zxjKTlvPoO/J5342eiJ+Xm3j11zYAZ3HNOQPwfsTWtQ1M0
+         YN8c5BVRWZH7XJUyhaqF63Jy2e6gC5wWi/psCo/3FYEPK5tD8SLLUgRUq7Ydx9rztqEC
+         BCAa5ozFXJsGgRGIDwrQQEfrr1GjUg4xGvheJ0J4ePxy6LPLz6EE7GU6JSlQxiLl0bKK
+         nYj1y/bttLqwvL+HMTwBK031bpddaPytTHwxStO5TSGp4YG0qFyGzmirLHtWa6gydYfR
+         wKlFQZxhtoupVa/jV/KzLNZ6zByRUbqOH6F+hoAcmRUmtaK7vhuFTtx+D+mAWNQKJ33Y
+         xcsA==
+X-Gm-Message-State: AOJu0YyYKcg3U5YKt2SId+6wKEdQAvZwYk0My2Vm5G47D3MN+v6rP0PQ
+	uhK+T2w7LccqpbUpTbHS/hwgsFVAAKFsdvMa8lP/wm5DKBEEIaP7GwGP2tMM1UfXqgBUcFbFIld
+	L4IL1tiFEKrPB/OkNHU3MehiKC2DcNJ8Bog4b8YC+vSpOxEh4O7THGwtXZ9E8i9HLTSrtu/wvgT
+	9713hu9vHi7tL2bPDtx059/kwruI5PkMZfG0ISaI0K2w==
+X-Received: by 2002:a05:600c:a46:b0:418:fd27:692 with SMTP id c6-20020a05600c0a4600b00418fd270692mr279739wmq.14.1714502973778;
+        Tue, 30 Apr 2024 11:49:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFtv+iFHHId6nLFHEu3MtX/5V5u/gZtD6mgrFVt8qSZNtHT0ztHDzVrQD1olm74qMQBnGjjCA==
+X-Received: by 2002:a05:600c:a46:b0:418:fd27:692 with SMTP id c6-20020a05600c0a4600b00418fd270692mr279715wmq.14.1714502973308;
+        Tue, 30 Apr 2024 11:49:33 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:3d00:d57f:b4c9:850e:d0b8? (p200300cbc7073d00d57fb4c9850ed0b8.dip0.t-ipconnect.de. [2003:cb:c707:3d00:d57f:b4c9:850e:d0b8])
+        by smtp.gmail.com with ESMTPSA id k6-20020a5d6286000000b0034c124b80f7sm14230030wru.61.2024.04.30.11.49.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 11:49:32 -0700 (PDT)
+Message-ID: <f53a87ed-c3fe-4a60-8723-3eea25189553@redhat.com>
+Date: Tue, 30 Apr 2024 20:49:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/10] s390: PG_arch_1+folio cleanups for uv+hugetlb
+To: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Matthew Wilcox <willy@infradead.org>, Thomas Huth <thuth@redhat.com>
+References: <20240412142120.220087-1-david@redhat.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240412142120.220087-1-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Puranjay Mohan <puranjay@kernel.org> writes:
+On 12.04.24 16:21, David Hildenbrand wrote:
+> This is v2 of [1] with changed subject:
+>   "[PATCH v1 0/5] s390: page_mapcount(), page_has_private() and PG_arch_1"
+> 
+> Rebased on s390x/features which contains the page_mapcount() and
+> page_has_private() cleanups, and some PG_arch_1 cleanups from Willy. To
+> compensate, I added some more cleanups ;)
+> 
+> One "easy" fix upfront. Another issue I spotted is documented in [1].
+> 
+> Once this hits upstream, we can remove HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
+> from core-mm and s390x, so only the folio variant will remain.
 
-> As ARM64 JIT now implements BPF_MOV64_PERCPU_REG instruction, inline
-> bpf_get_smp_processor_id().
->
-> ARM64 uses the per-cpu variable cpu_number to store the cpu id.
+Ping.
 
-While implementing this on the RISC-V JIT[1], I realized that reading the
-cpu_number from the per-cpu variable is not the best way to do this on
-arm64.
+-- 
+Cheers,
 
-arm64 now has the cpu number in the thread_info and reading that would
-be more efficient.
+David / dhildenb
 
-Implementation in this patch is emitting:
-
-; int cpu =3D bpf_get_smp_processor_id();
-mov     x7, #0xffff8000ffffffff
-movk    x7, #0x8207, lsl #16=20=20=20
-movk    x7, #0x2008=20=20=20=20=20=20=20=20=20=20=20=20
-mrs     x10, tpidr_el1=20=20=20=20=20=20=20=20=20
-add     x7, x7, x10=20=20=20=20=20=20=20=20=20=20=20=20
-ldr     w7, [x7]=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
-
-If we do this in the JIT like I did for RISC-V[1]
-We can emit:
-
-; int cpu =3D bpf_get_smp_processor_id();
-mrs     x10, sp_el0
-ldr     w7, [x10, #24]
-
-This gives ~ 10% improvement on glob-arr-inc and hash-inc compared to
-3-4 % which this patch is providing.=20
-
-I will send v5 using this approach.
-
-[1] https://lore.kernel.org/all/20240430175834.33152-3-puranjay@kernel.org/
-
-> Here is how the BPF and ARM64 JITed assembly changes after this commit:
->
->                                          BPF
->          		                =3D=3D=3D=3D=3D
->               BEFORE                                       AFTER
->              --------                                     -------
->
-> int cpu =3D bpf_get_smp_processor_id();           int cpu =3D bpf_get_smp=
-_processor_id();
-> (85) call bpf_get_smp_processor_id#229032       (18) r0 =3D 0xffff8000820=
-72008
->                                                 (bf) r0 =3D &(void __perc=
-pu *)(r0)
->                                                 (61) r0 =3D *(u32 *)(r0 +=
-0)
->
-> 				      ARM64 JIT
-> 				     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->               BEFORE                                       AFTER
->              --------                                     -------
->
-> int cpu =3D bpf_get_smp_processor_id();           int cpu =3D bpf_get_smp=
-_processor_id();
-> mov     x10, #0xfffffffffffff4d0                mov     x7, #0xffff8000ff=
-ffffff
-> movk    x10, #0x802b, lsl #16                   movk    x7, #0x8207, lsl =
-#16
-> movk    x10, #0x8000, lsl #32                   movk    x7, #0x2008
-> blr     x10                                     mrs     x10, tpidr_el1
-> add     x7, x0, #0x0                            add     x7, x7, x10
->                                                 ldr     w7, [x7]
->
-> Performance improvement using benchmark[1]
->
->              BEFORE                                       AFTER
->             --------                                     -------
->
-> glob-arr-inc   :   23.817 =C2=B1 0.019M/s      glob-arr-inc   :   24.631 =
-=C2=B1 0.027M/s [+ 3.41%]
-> arr-inc        :   23.253 =C2=B1 0.019M/s      arr-inc        :   23.742 =
-=C2=B1 0.023M/s [+ 2.10%]
-> hash-inc       :   12.258 =C2=B1 0.010M/s      hash-inc       :   12.625 =
-=C2=B1 0.004M/s [+ 3.00%]
->
-> [1] https://github.com/anakryiko/linux/commit/8dec900975ef
-
-
-Thanks,
-Puranjay
