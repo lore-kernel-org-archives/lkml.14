@@ -1,178 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052712CA7;
-	Tue, 30 Apr 2024 10:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2934612C47A;
+	Tue, 30 Apr 2024 10:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714473585; cv=none; b=E8P95tnYEa0awntrGD0Q+hmLqs0N3GKKPHsCogqpnYFPsgpWRFdIq4Zvld5G+7loa/2XKlN1Nsm/oIqW+QEFEyg5TBwXMdHo8S2XuqD/sRcJOZ6Pa00i9hra/nszpDxZbBySg0ul7fypYC6ZeNpt/QuORZMwZMeTif2KHAJRuT0=
+	t=1714473643; cv=none; b=l0N19JQxicVyWT7jalwOWggXnjuaEL770YgUMezFOqlZzbpGPv1YUre3LaFRwJ1yK958ySLOJ4Xf9FHH9o23o6fyadImYCaVQYjJy+MOU793WhVQrIEIDnMPAqlQCNDZ+q64L91Fnyx8aDF7/5euatNfyn261tYWKq7vTiwZaBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714473585; c=relaxed/simple;
-	bh=sNg/sHNAD7BL/VjF8rOvfs48XQbDjX30Eb+2bNQnFuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rflsVxuJ8TG2W7RYwGJMkTzP3BYd38P+c1B433DwidX+CRY7QitiMUK2MATcw7QIOkMpvZOVanwPz3pV63NPEOEGvHYlOCNFJeN/rOjwBpPnDVUqzJwWRWm8gxKkIEpcrOYLqW0ccj1TE0xA6vdRS3eHJuQLRCNcbroZCj5+Ut8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrKPeI6b; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrKPeI6b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9DDC2BBFC;
-	Tue, 30 Apr 2024 10:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714473584;
-	bh=sNg/sHNAD7BL/VjF8rOvfs48XQbDjX30Eb+2bNQnFuw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GrKPeI6b3To+3rhSxGeKzj5cslKwbXB0GZbb9ugcLQLe3E3mosEC6t9NDEiAqbdc/
-	 qJJP/e/4uPB5wISoMmlHKkG3G49/6a9XdBnh748aUmcJQEIu+PWA/OshtVowjWhTXg
-	 k10mzOxYUngyTpkCMBqpvdzIGEaXx7N5GMOpPyyvOdCGrIIv4yWQBKmFAYh/T9n+oJ
-	 iYHLE2S51PtXBsUgJGzXp0od6uR9u+C/5j+QE1al+zDlLdA5gA0pR9lKIDlaPWxbkf
-	 bsQTavu+HyeRMqIhBIuXCMSnNTUB6tcqHaEJ06j5tmVrVwEcO6KNhMJ+eeOymprUNl
-	 BImRJowlPYbLQ==
-Date: Tue, 30 Apr 2024 12:39:38 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] bpf: do not walk twice the hash map on free
-Message-ID: <aqjmjzyiip3fmyivrnn3uvz7qbao3xbvazkaztd5wamubzqaaf@24wrep4lmbqp>
-References: <20240430-bpf-next-v2-0-140aa50f0f19@kernel.org>
- <20240430-bpf-next-v2-2-140aa50f0f19@kernel.org>
+	s=arc-20240116; t=1714473643; c=relaxed/simple;
+	bh=spuDbDMDBL3D0ud6jPnHsaLTenJfMN5QsjwFYIiViXA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XqQ7AFEn4dWxD7q4qniN/WzBFXzTBjSZOmwsUyL6KVhSG9ehqBCJLBpboRqQm1/h3X5kMCUkU+dVYUlHrvJTADUfC+gtHZLG2lUV9dw3+uX3cbP4tuF/76VJO6OlJSXXEpHtxQ6MCBkawJNL/0YDpK+I8pk6OOFJCEWQ5msTf8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VTGq360bXzxNfM;
+	Tue, 30 Apr 2024 18:37:19 +0800 (CST)
+Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 31A8A14035F;
+	Tue, 30 Apr 2024 18:40:37 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 30 Apr 2024 18:40:36 +0800
+From: Zheng Yejian <zhengyejian1@huawei.com>
+To: <sean@mess.org>, <mchehab@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+	<zhengyejian1@huawei.com>
+Subject: [PATCH v2] media: dvb-usb: Fix unexpected infinite loop in dvb_usb_read_remote_control()
+Date: Tue, 30 Apr 2024 18:41:37 +0800
+Message-ID: <20240430104137.1014471-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240412135256.1546051-1-zhengyejian1@huawei.com>
+References: <20240412135256.1546051-1-zhengyejian1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430-bpf-next-v2-2-140aa50f0f19@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 
-On Apr 30 2024, Benjamin Tissoires wrote:
-> If someone stores both a timer and a workqueue in a hash map, on free, we
-> would walk it twice.
-> Add a check in htab_free_malloced_timers_or_wq and free the timers
-> and workqueues if they are present.
-> 
-> Fixes: 246331e3f1ea ("bpf: allow struct bpf_wq to be embedded in arraymaps and hashmaps")
-> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
-> 
-> ---
-> 
-> changes in v2:
-> - fix wq being not freed (and static call not used)
-> ---
->  kernel/bpf/hashtab.c | 49 +++++++++++++------------------------------------
->  1 file changed, 13 insertions(+), 36 deletions(-)
-> 
-> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-> index 0179183c543a..5eefadfc8ea9 100644
-> --- a/kernel/bpf/hashtab.c
-> +++ b/kernel/bpf/hashtab.c
-> @@ -221,32 +221,11 @@ static bool htab_has_extra_elems(struct bpf_htab *htab)
->  	return !htab_is_percpu(htab) && !htab_is_lru(htab);
->  }
->  
-> -static void htab_free_prealloced_timers(struct bpf_htab *htab)
-> +static void htab_free_prealloced_timers_and_wq(struct bpf_htab *htab)
->  {
->  	u32 num_entries = htab->map.max_entries;
->  	int i;
->  
-> -	if (!btf_record_has_field(htab->map.record, BPF_TIMER))
-> -		return;
-> -	if (htab_has_extra_elems(htab))
-> -		num_entries += num_possible_cpus();
-> -
-> -	for (i = 0; i < num_entries; i++) {
-> -		struct htab_elem *elem;
-> -
-> -		elem = get_htab_elem(htab, i);
-> -		bpf_obj_free_timer(htab->map.record, elem->key + round_up(htab->map.key_size, 8));
-> -		cond_resched();
-> -	}
-> -}
-> -
-> -static void htab_free_prealloced_wq(struct bpf_htab *htab)
-> -{
-> -	u32 num_entries = htab->map.max_entries;
-> -	int i;
-> -
-> -	if (!btf_record_has_field(htab->map.record, BPF_WORKQUEUE))
-> -		return;
->  	if (htab_has_extra_elems(htab))
->  		num_entries += num_possible_cpus();
->  
-> @@ -254,8 +233,12 @@ static void htab_free_prealloced_wq(struct bpf_htab *htab)
->  		struct htab_elem *elem;
->  
->  		elem = get_htab_elem(htab, i);
-> -		bpf_obj_free_workqueue(htab->map.record,
-> -				       elem->key + round_up(htab->map.key_size, 8));
-> +		if (btf_record_has_field(htab->map.record, BPF_TIMER))
-> +			bpf_obj_free_timer(htab->map.record,
-> +					   elem->key + round_up(htab->map.key_size, 8));
-> +		else
+Infinite log printing occurs during fuzz test:
 
-Sorry, this else above is wrong, it should be a check on BPF_WORKQUEUE
-instead.
+  rc rc1: DViCO FusionHDTV DVB-T USB (LGZ201) as ...
+  ...
+  dvb-usb: schedule remote query interval to 100 msecs.
+  dvb-usb: DViCO FusionHDTV DVB-T USB (LGZ201) successfully initialized ...
+  dvb-usb: bulk message failed: -22 (1/0)
+  dvb-usb: bulk message failed: -22 (1/0)
+  dvb-usb: bulk message failed: -22 (1/0)
+  ...
+  dvb-usb: bulk message failed: -22 (1/0)
 
-v3 is n its way (with the proper bpf-next suffix this time).
+Looking into the codes, there is a loop in dvb_usb_read_remote_control(),
+that is in rc_core_dvb_usb_remote_init() create a work that will call
+dvb_usb_read_remote_control(), and this work will reschedule itself at
+'rc_interval' intervals to recursively call dvb_usb_read_remote_control(),
+see following code snippet:
 
-Cheers,
-Benjamin
+  rc_core_dvb_usb_remote_init() {
+    ...
+    INIT_DELAYED_WORK(&d->rc_query_work, dvb_usb_read_remote_control);
+    schedule_delayed_work(&d->rc_query_work,
+                          msecs_to_jiffies(rc_interval));
+    ...
+  }
 
-> +			bpf_obj_free_workqueue(htab->map.record,
-> +					       elem->key + round_up(htab->map.key_size, 8));
->  		cond_resched();
->  	}
->  }
-> @@ -1515,7 +1498,7 @@ static void delete_all_elements(struct bpf_htab *htab)
->  	migrate_enable();
->  }
->  
-> -static void htab_free_malloced_timers_or_wq(struct bpf_htab *htab, bool is_timer)
-> +static void htab_free_malloced_timers_and_wq(struct bpf_htab *htab)
->  {
->  	int i;
->  
-> @@ -1527,10 +1510,10 @@ static void htab_free_malloced_timers_or_wq(struct bpf_htab *htab, bool is_timer
->  
->  		hlist_nulls_for_each_entry(l, n, head, hash_node) {
->  			/* We only free timer on uref dropping to zero */
-> -			if (is_timer)
-> +			if (btf_record_has_field(htab->map.record, BPF_TIMER))
->  				bpf_obj_free_timer(htab->map.record,
->  						   l->key + round_up(htab->map.key_size, 8));
-> -			else
-> +			if (btf_record_has_field(htab->map.record, BPF_WORKQUEUE))
->  				bpf_obj_free_workqueue(htab->map.record,
->  						       l->key + round_up(htab->map.key_size, 8));
->  		}
-> @@ -1544,17 +1527,11 @@ static void htab_map_free_timers_and_wq(struct bpf_map *map)
->  	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
->  
->  	/* We only free timer and workqueue on uref dropping to zero */
-> -	if (btf_record_has_field(htab->map.record, BPF_TIMER)) {
-> -		if (!htab_is_prealloc(htab))
-> -			htab_free_malloced_timers_or_wq(htab, true);
-> -		else
-> -			htab_free_prealloced_timers(htab);
-> -	}
-> -	if (btf_record_has_field(htab->map.record, BPF_WORKQUEUE)) {
-> +	if (btf_record_has_field(htab->map.record, BPF_TIMER | BPF_WORKQUEUE)) {
->  		if (!htab_is_prealloc(htab))
-> -			htab_free_malloced_timers_or_wq(htab, false);
-> +			htab_free_malloced_timers_and_wq(htab);
->  		else
-> -			htab_free_prealloced_wq(htab);
-> +			htab_free_prealloced_timers_and_wq(htab);
->  	}
->  }
->  
-> 
-> -- 
-> 2.44.0
-> 
+  dvb_usb_read_remote_control() {
+    ...
+    err = d->props.rc.core.rc_query(d);
+    if (err)
+      err(...)  // Did not return even if query failed
+    schedule_delayed_work(&d->rc_query_work,
+                          msecs_to_jiffies(rc_interval));
+  }
+
+When the infinite log printing occurs, the query callback
+'d->props.rc.core.rc_query' is cxusb_rc_query(). And the log is due to
+the failure of finding a valid 'generic_bulk_ctrl_endpoint'
+in usb_bulk_msg(), see following code snippet:
+
+  cxusb_rc_query() {
+    cxusb_ctrl_msg() {
+      dvb_usb_generic_rw() {
+        ret = usb_bulk_msg(d->udev, usb_sndbulkpipe(d->udev,
+                           d->props.generic_bulk_ctrl_endpoint),...);
+        if (ret)
+          err("bulk message failed: %d (%d/%d)",ret,wlen,actlen);
+          ...
+      }
+  ...
+  }
+
+By analyzing the corresponding USB descriptor, it shows that the
+bNumEndpoints is 0 in its interface descriptor, but
+the 'generic_bulk_ctrl_endpoint' is 1, that means user don't configure
+a valid endpoint for 'generic_bulk_ctrl_endpoint', therefore this
+'invalid' USB device should be rejected before it calls into
+dvb_usb_read_remote_control().
+
+To fix it, we need to add endpoint check for 'generic_bulk_ctrl_endpoint'.
+And as Sean suggested, the same check and clear halts should be done for
+'generic_bulk_ctrl_endpoint_response'. So introduce
+dvb_usb_check_bulk_endpoint() to do it for both of them.
+
+Fixes: 4d43e13f723e ("V4L/DVB (4643): Multi-input patch for DVB-USB device")
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ drivers/media/usb/dvb-usb/dvb-usb-init.c | 27 ++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
+
+v2:
+ - As Sean suggested, check endpoint and clear halt for both
+   'generic_bulk_ctrl_endpoint' and 'generic_bulk_ctrl_endpoint_response'
+   with the new introduced dvb_usb_check_bulk_endpoint();
+   Link: https://lore.kernel.org/all/ZjCl97Ww6NrzJQCB@gofer.mess.org/
+   Link: https://lore.kernel.org/all/ZjC7rXU7ViaH60_S@gofer.mess.org/
+
+ - Add Fixes tag.
+
+v1:
+ - Link: https://lore.kernel.org/all/20240412135256.1546051-1-zhengyejian1@huawei.com/
+
+diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+index fbf58012becd..7eb321bab84f 100644
+--- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+@@ -23,6 +23,23 @@ static int dvb_usb_force_pid_filter_usage;
+ module_param_named(force_pid_filter_usage, dvb_usb_force_pid_filter_usage, int, 0444);
+ MODULE_PARM_DESC(force_pid_filter_usage, "force all dvb-usb-devices to use a PID filter, if any (default: 0).");
+ 
++static int dvb_usb_check_bulk_endpoint(struct dvb_usb_device *d, u8 endpoint)
++{
++	if (endpoint) {
++		int ret;
++
++		ret = usb_pipe_type_check(d->udev, usb_sndbulkpipe(d->udev, endpoint));
++		if (ret)
++			return ret;
++		ret = usb_pipe_type_check(d->udev, usb_rcvbulkpipe(d->udev, endpoint));
++		if (ret)
++			return ret;
++		usb_clear_halt(d->udev, usb_sndbulkpipe(d->udev, endpoint));
++		usb_clear_halt(d->udev, usb_rcvbulkpipe(d->udev, endpoint));
++	}
++	return 0;
++}
++
+ static int dvb_usb_adapter_init(struct dvb_usb_device *d, short *adapter_nrs)
+ {
+ 	struct dvb_usb_adapter *adap;
+@@ -103,10 +120,12 @@ static int dvb_usb_adapter_init(struct dvb_usb_device *d, short *adapter_nrs)
+ 	 * when reloading the driver w/o replugging the device
+ 	 * sometimes a timeout occurs, this helps
+ 	 */
+-	if (d->props.generic_bulk_ctrl_endpoint != 0) {
+-		usb_clear_halt(d->udev, usb_sndbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+-		usb_clear_halt(d->udev, usb_rcvbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+-	}
++	ret = dvb_usb_check_bulk_endpoint(d, d->props.generic_bulk_ctrl_endpoint);
++	if (ret)
++		goto frontend_init_err;
++	ret = dvb_usb_check_bulk_endpoint(d, d->props.generic_bulk_ctrl_endpoint_response);
++	if (ret)
++		goto frontend_init_err;
+ 
+ 	return 0;
+ 
+-- 
+2.25.1
+
