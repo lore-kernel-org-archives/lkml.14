@@ -1,60 +1,60 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E319201257
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83DB1C65E0
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 14:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714485806; cv=none; b=Mb4Oxo660jlGdNWBN3tKFDY4ti4961HsCLDIAhDDAsduxtF16pWQGuxiRzOfOuQNKGSIj5cx4RjJA483OhXk9NeyP1uTlAEcR1meb47It6kzxnNE367GIscJBHz3vj/jZAnID/ScNEGleho1a1xFSvC3NiFXv9mt8t+m5NuwSJY=
+	t=1714485803; cv=none; b=Q1qxQglkslbxSLwKtWmrfbIN3MhalBpVS3+J9DYgauW1o4zNfFADk9ycm8aDGW9tVGPHwxYU8CdBx+0y9lo6SylngIa9ZkHy8/oUqf9v1zpdzHRZGKe6PGdJV56UXdR6vORvdAYpo8eyMCANdb64K4GEgTwkaX6blh7TGW8FhdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714485806; c=relaxed/simple;
-	bh=skJQwkduJ0UqVILLbpIVR8oru+2QUc2pKBYrAAVKHLI=;
+	s=arc-20240116; t=1714485803; c=relaxed/simple;
+	bh=74+WER8rBVNChp8T011lJzusbjvdwfTeUc05vWQCtnc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LRfmVrECEsIt1wUDGbV3BYaSn8nyaQ03hlrhiDAYiCq1BriWWGDd0z7RBXwSgf0BVqmj7B4dOeMA+CT4hsqAs+mgCPor49OIdm4jn/2Iuh5b9GxJgauAlkp2tUy5fo9TjmBKdJTTugkPWl0iuQQtvSjH9iPfb9LN9wqG8WJpclg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LKEH6q2H; arc=none smtp.client-ip=209.85.208.50
+	 In-Reply-To:To:Cc; b=llKyOjynDVgr8lX1WmAmQSayMF1N3Msn90PPiT5hc/3p1rYs9RukAFEoEXDw956/sxafMlWS9c1FfxvwSA6kquIIUmLNrlLZdRpEGc7Qow+Rav7c12kOI3iiUr3BTsoFjn/TqqfjVfUzE9YlnZ4YvA+K1F+sHQ84k0RxwIPZiRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JTHWtZ9I; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LKEH6q2H"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5726716a006so4642143a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:03:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JTHWtZ9I"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2dd6a7ae2dcso91592201fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 07:03:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714485802; x=1715090602; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1714485795; x=1715090595; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yC31R3m8W6wP+grnNVF/H3dyhG6qnKQukTpoDRo2U3E=;
-        b=LKEH6q2Hw1mKS2oplomzGEuGnO94ttqC57D1d3xMNBgR0DcC1YyeZ2E5T7p1ZF5h+5
-         ZPwYWk5xe16+qswAaD0/7CdUuUvogrbYp9YLbR+JWZEOpq8lYVLyCVVaijP88L9EkPuH
-         dPdwshharOYpIglQaxV3b3tqpaxj3ucFvGqCsy7cMBi/N2ve50FOjoZwzBIW8Ak+fW/Q
-         BaxAv/hH8wIseK7Xj9vWvr1aVVojsKFh84ijuWDnYM/d0Os6sqbuBx40hQbyiC/WHKDb
-         23wZgNqdTXcn3T+o2giU4KviHWva2SAG8/E/wTsPQn3lfYihgtwG84om5DavUL4YxU17
-         kALw==
+        bh=HlReh/uKfKGykX7vYGkVx56/1oeqm3j6UBVK+Qmhu9k=;
+        b=JTHWtZ9Is89rHkLNyHWxYkSfcM3YSZF3xxq3O8gQAJjs0/A72TDfD/HKzEsfJCmZRC
+         yWQPIJewU5IcLTQOvX2KCnQfPmk8gBLLobgkWaWqWBzLSunRqz/FDu0eNbMy35zhqAcN
+         nUgKfhB/HZr2oifdDYrfIwpU1InitCl7l69AIqoZgjN+FGSXqG26fZuchwTCYhvHYiIv
+         pGJ4mZM16GTxb6jSktCx+rrBxWvfM7Z21CbnLHXg1oWikao6Isf0Q0G4JY+3pmKDX4+b
+         hvOmv3R4NI1p+I5Q8zJnU0+7dT0qbeTbI3fnKQl4zMVWS7bLeykgTbnMpW9nb/ne2+9l
+         suTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714485802; x=1715090602;
+        d=1e100.net; s=20230601; t=1714485795; x=1715090595;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yC31R3m8W6wP+grnNVF/H3dyhG6qnKQukTpoDRo2U3E=;
-        b=ZWZ6MXHwb/VF0zM52E7voelmjUUkpv8haJgL8y6wLTMZvh2StfYOn6Qlkeh8YlmTJJ
-         YPrs/n2hC0o9LYDI0qpgE0Gb9IVfjAKhV8Kk+DisD/60ccj2SeS+PzoD5aux3sGcd1g1
-         mWOPEo3dg2PNpzngXZwmDPIks6vjxsp4fF1v2GCwS3kq0pYEPNdn21KAMC0j9eA7Vwr9
-         wAKEzvXpHRtd8HC7rvETqOl0dYgh/7Tyo8fW7e0TFs9xv5e6ax8ZUJfv4gzP9NW3pbOq
-         wYZzVEjjF++N6XeQTZePgTjtE1LFyYzdaanyNonarNBeloPVJmdh/DP+EAUqH6NOX0vO
-         Ojng==
-X-Forwarded-Encrypted: i=1; AJvYcCXsaLKbG5XPB9T0vCstYAM4KiAhsnlk5e9E4DzWt3WJvDoUaP4WN8CSMz7nyLAe0uC4jMdaouZY9hsmRN7GV1th7ZGMHY9uBJrTpuzb
-X-Gm-Message-State: AOJu0YypNugXjrU4TkP9UZXLMPvIb3AqrwtJlXbuhZGdZj5kpvBvhOQX
-	RfRQIUkVcsn5zcSfMo1axo7XditGlzHqTWxdShVU6wN73e+nsAYQz9RK8/Yn+mQ=
-X-Google-Smtp-Source: AGHT+IHSymzbs0C8MGLs3EVai6AvWaGt9IGpYcAnz/QtQsZ0owRN86WOYk4l43txKHjNaleFCNL96Q==
-X-Received: by 2002:a17:906:b78c:b0:a58:ff19:1bd7 with SMTP id dt12-20020a170906b78c00b00a58ff191bd7mr4814671ejb.24.1714485802359;
-        Tue, 30 Apr 2024 07:03:22 -0700 (PDT)
+        bh=HlReh/uKfKGykX7vYGkVx56/1oeqm3j6UBVK+Qmhu9k=;
+        b=xIV4lXp++LHghDGZGNB/kECZNz23SXUh5Vnqd4aXXkMKvXi4z2AR09+QRj8oc29vTr
+         3lxDBcp0QXEFGSc64RNPJogK/pDCS9ho8Kib+7J1O01dgxFpbBgAdAbiD6KocCZv9/e5
+         hGfX52QbDZK9QHDDKIEa4hzKMHj957V2zOa9u7ImC6xUmQHFtVmmT5mRluF4am1SwEFI
+         TQYyq3/1qHo+ZpxsC8h5I6XIVUc3hmqH9GNfTHqLN/P8NUQnWQZXPRhvH6WRN/mnDLOV
+         8bIdKKdTmKx948zsS2KvGg3fzV0zOsz5s1p4lqRmUbWEucNL8qLcHJ3+0JsmBq4mIFUA
+         z4uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHNhNheQh2pzq0dvcEx7chkE3ky3kZT6sgBEtcxLni4G3ZPuhdJSpO+xYMMaYy2bpEJFFD37msC60ji63k1ARRm7RswPsc8mGGJ4lF
+X-Gm-Message-State: AOJu0YyddPFfJieuIViNPA4LPyDJ/PQVaUlgwlxM8dynVp5e9drnlNjl
+	gQ1WibdK8RYa0HKSoTVfD0DtrasryNgAVmj2/kGzEbH+sfe36ztZNsLJBDrJCZg=
+X-Google-Smtp-Source: AGHT+IEjPyu9X1615THrmlgihVBnJj6snuJyIqe3VYMH9bOXPEPLADlqYnOlMYNNwswyFzCxSlW3hA==
+X-Received: by 2002:a2e:9145:0:b0:2df:b2d5:5935 with SMTP id q5-20020a2e9145000000b002dfb2d55935mr8668895ljg.28.1714485792538;
+        Tue, 30 Apr 2024 07:03:12 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id pv27-20020a170907209b00b00a5940af3f67sm31434ejb.16.2024.04.30.07.03.20
+        by smtp.gmail.com with ESMTPSA id pv27-20020a170907209b00b00a5940af3f67sm31434ejb.16.2024.04.30.07.03.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 07:03:21 -0700 (PDT)
+        Tue, 30 Apr 2024 07:03:11 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Tue, 30 Apr 2024 16:02:22 +0200
-Subject: [PATCH 13/13] ASoC: sunxi: Use snd_soc_substream_to_rtd() for
+Date: Tue, 30 Apr 2024 16:02:19 +0200
+Subject: [PATCH 10/13] ASoC: mediatek: Use snd_soc_substream_to_rtd() for
  accessing private_data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-asoc-snd-substream-clean-v1-13-6f8a8902b479@linaro.org>
+Message-Id: <20240430-asoc-snd-substream-clean-v1-10-6f8a8902b479@linaro.org>
 References: <20240430-asoc-snd-substream-clean-v1-0-6f8a8902b479@linaro.org>
 In-Reply-To: <20240430-asoc-snd-substream-clean-v1-0-6f8a8902b479@linaro.org>
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
@@ -98,21 +98,21 @@ Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
  linux-sunxi@lists.linux.dev, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=855;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=13819;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=skJQwkduJ0UqVILLbpIVR8oru+2QUc2pKBYrAAVKHLI=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmMPn42nKdNBa2rMr1pgKaAGhX7w0XUyPtyKW9V
- bUEsOjG4LCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjD5+AAKCRDBN2bmhouD
- 147DD/4ieg9gyFCb0g9PJBqL29gkEXs/qxtb2TaodG03VYLhq+fFzv2vOzJZhszAb1VOkS8eI0F
- KlbKY9lyGbdzA1h6zSNA0p/UgvlOtsdv4xC+0KT0yy7TXAza83A9DSl1qDnkNTdOFgc42e1+9FU
- eaGGfDloUavMXd6rNB7SRZMQRcm41b47P/mRzEa2cA1bjkAlrlBm6NwPeVLP5A/Kcr3Tb3EZ2pI
- HgLvCY5h27fuJYugwmxUMfqOjXMdWLx9SSAQ5yfhuYZZBgKU100MiFOvcW2nlDlhncmjU0WcU5t
- H7ySW9GYOdqAqEkELNGxb97j0Ov7StcHdE1uz4YmdansE+m8dNQTp3CaZ4LdH2+2TFF/sP4aynu
- H2GUeJKaC1N/Ng+cEI1h0gMDXKbR8qyTg+SjoM6i7+5UP1I2coCVMYrneh2dpEyJOp9MNFOvj5d
- UzzEQMRQeFilQTHwB3xynjKLIUqJbjhqfafH5A0FECh/lb7OoM+PTU7VciDC4L/s1Xl/NOiJCnq
- 69WLOXnti2pJsaGzvUMsSHAlokIA+7NRIpUewkiHs/lN9zgB7QfsX/zvrQTookURZBTMehAN/cd
- yW7Vl73L2bSpn6CppvaD8hpkm5+NhqYeNWbMxnKsVdyQiMo84C2YNgI+3cBxRRpVQUYuh98RXgk
- h6j6UQIf5KNOdKQ==
+ bh=74+WER8rBVNChp8T011lJzusbjvdwfTeUc05vWQCtnc=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmMPn2wIAKWRRmb3f+Eu7E/sNsicAIeRJntuzxZ
+ SxYr98J11CJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjD59gAKCRDBN2bmhouD
+ 1yOiD/9+no2oO2meu/Ufx9CEy3qSO7oTggEWW3FaqAqFcceuY3ZcL6EMZ2biHC/QRNK4ebDskKU
+ 3O2P3faEC8XJpoITbkbDIiqXeyFCKlF8xXpOUoqJU2b/1DL8tjHLJ65Dg+xoktZHD2NWmNoQiRg
+ eIA9zZjygsEGOywLbr00ulna67FOpbcwyo0pYJ3dQYy1TyOTBy9jFGsl8RxPBCcZfhE2P3xy9Op
+ 3YJQdjnLIEm0nGjkPUwV/mbyv1dB9guABGSShJm5gvvH+W+/cqmtzgzKa5lD3MLc//md1a3Ju+V
+ GYH6YWtUfX7QSYdrf2odSjymVm9iBei+GgTtQW9SfPeVHHo17PilaDoe5GVaygZohC2HM2K33n1
+ Po5GQ+qHU9/lDaSYbLMh26vyEayDUXnoxPUHaOgSiNZamo6XG6T07CTTJnF0XA0JoNRQd5eyWJs
+ BHmwevPcP6/bP/iV9hjNJnOo7ORDuwBCFPhQlH2IgPI/WGR/3ux6Ozr54ngy6kgQ1l8FYVYJ5zm
+ lkr1t63qAutgNeS0JPV+5JJfLfhPY0jPjSPT2oOa93zLB79CYb2OCU4CZNxFUoUZ1ICYyxfXdkz
+ vSpyKtJNvE/u0Mzrwu0nPoMZhU+mWKpd1utzIbZX8OCoJLTfC5V20Hpv2quS3imeWDvF5BCURTw
+ YI43f977A5OcnvA==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
@@ -120,22 +120,259 @@ Do not open-code snd_soc_substream_to_rtd().
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- sound/soc/sunxi/sun50i-dmic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/mediatek/mt7986/mt7986-afe-pcm.c |  4 ++--
+ sound/soc/mediatek/mt8186/mt8186-afe-pcm.c | 14 +++++++-------
+ sound/soc/mediatek/mt8186/mt8186-mt6366.c  |  2 +-
+ sound/soc/mediatek/mt8188/mt8188-afe-pcm.c |  8 ++++----
+ sound/soc/mediatek/mt8188/mt8188-mt6359.c  |  6 +++---
+ sound/soc/mediatek/mt8195/mt8195-afe-pcm.c | 10 +++++-----
+ sound/soc/mediatek/mt8195/mt8195-mt6359.c  |  4 ++--
+ 7 files changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/sound/soc/sunxi/sun50i-dmic.c b/sound/soc/sunxi/sun50i-dmic.c
-index c76628bc86c6..fedfa4fc95fb 100644
---- a/sound/soc/sunxi/sun50i-dmic.c
-+++ b/sound/soc/sunxi/sun50i-dmic.c
-@@ -74,7 +74,7 @@ static const struct dmic_rate dmic_rate_s[] = {
- static int sun50i_dmic_startup(struct snd_pcm_substream *substream,
- 			       struct snd_soc_dai *cpu_dai)
+diff --git a/sound/soc/mediatek/mt7986/mt7986-afe-pcm.c b/sound/soc/mediatek/mt7986/mt7986-afe-pcm.c
+index c1c486e275b9..572ded279b53 100644
+--- a/sound/soc/mediatek/mt7986/mt7986-afe-pcm.c
++++ b/sound/soc/mediatek/mt7986/mt7986-afe-pcm.c
+@@ -106,7 +106,7 @@ static const struct snd_pcm_hardware mt7986_afe_hardware = {
+ static int mt7986_memif_fs(struct snd_pcm_substream *substream,
+ 			   unsigned int rate)
  {
 -	struct snd_soc_pcm_runtime *rtd = substream->private_data;
 +	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
- 	struct sun50i_dmic_dev *host = snd_soc_dai_get_drvdata(snd_soc_rtd_to_cpu(rtd, 0));
+ 	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd, AFE_PCM_NAME);
+ 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
  
- 	/* only support capture */
+@@ -116,7 +116,7 @@ static int mt7986_memif_fs(struct snd_pcm_substream *substream,
+ static int mt7986_irq_fs(struct snd_pcm_substream *substream,
+ 			 unsigned int rate)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd, AFE_PCM_NAME);
+ 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
+ 
+diff --git a/sound/soc/mediatek/mt8186/mt8186-afe-pcm.c b/sound/soc/mediatek/mt8186/mt8186-afe-pcm.c
+index bfcfc68ac64d..bafbef96a42d 100644
+--- a/sound/soc/mediatek/mt8186/mt8186-afe-pcm.c
++++ b/sound/soc/mediatek/mt8186/mt8186-afe-pcm.c
+@@ -40,7 +40,7 @@ static const struct snd_pcm_hardware mt8186_afe_hardware = {
+ static int mt8186_fe_startup(struct snd_pcm_substream *substream,
+ 			     struct snd_soc_dai *dai)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+@@ -82,7 +82,7 @@ static int mt8186_fe_startup(struct snd_pcm_substream *substream,
+ static void mt8186_fe_shutdown(struct snd_pcm_substream *substream,
+ 			       struct snd_soc_dai *dai)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	struct mt8186_afe_private *afe_priv = afe->platform_priv;
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+@@ -104,7 +104,7 @@ static int mt8186_fe_hw_params(struct snd_pcm_substream *substream,
+ 			       struct snd_pcm_hw_params *params,
+ 			       struct snd_soc_dai *dai)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+ 	unsigned int channels = params_channels(params);
+@@ -153,7 +153,7 @@ static int mt8186_fe_hw_free(struct snd_pcm_substream *substream,
+ static int mt8186_fe_trigger(struct snd_pcm_substream *substream, int cmd,
+ 			     struct snd_soc_dai *dai)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_pcm_runtime * const runtime = substream->runtime;
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	struct mt8186_afe_private *afe_priv = afe->platform_priv;
+@@ -252,7 +252,7 @@ static int mt8186_fe_trigger(struct snd_pcm_substream *substream, int cmd,
+ static int mt8186_memif_fs(struct snd_pcm_substream *substream,
+ 			   unsigned int rate)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_soc_component *component =
+ 		snd_soc_rtdcom_lookup(rtd, AFE_PCM_NAME);
+ 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
+@@ -269,7 +269,7 @@ static int mt8186_get_dai_fs(struct mtk_base_afe *afe,
+ 
+ static int mt8186_irq_fs(struct snd_pcm_substream *substream, unsigned int rate)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_soc_component *component =
+ 		snd_soc_rtdcom_lookup(rtd, AFE_PCM_NAME);
+ 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
+@@ -290,7 +290,7 @@ static int mt8186_get_memif_pbuf_size(struct snd_pcm_substream *substream)
+ static int mt8186_fe_prepare(struct snd_pcm_substream *substream,
+ 			     struct snd_soc_dai *dai)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_pcm_runtime * const runtime = substream->runtime;
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+diff --git a/sound/soc/mediatek/mt8186/mt8186-mt6366.c b/sound/soc/mediatek/mt8186/mt8186-mt6366.c
+index 8fd31c52b077..771d53611c2a 100644
+--- a/sound/soc/mediatek/mt8186/mt8186-mt6366.c
++++ b/sound/soc/mediatek/mt8186/mt8186-mt6366.c
+@@ -297,7 +297,7 @@ static const struct snd_soc_ops mt8186_da7219_i2s_ops = {
+ static int mt8186_rt5682s_i2s_hw_params(struct snd_pcm_substream *substream,
+ 					struct snd_pcm_hw_params *params)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_soc_card *card = rtd->card;
+ 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+ 	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
+diff --git a/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c b/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
+index 9647fe133dc8..ccb6c1f3adc7 100644
+--- a/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
++++ b/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
+@@ -91,7 +91,7 @@ int mt8188_afe_fs_timing(unsigned int rate)
+ static int mt8188_memif_fs(struct snd_pcm_substream *substream,
+ 			   unsigned int rate)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_soc_component *component = NULL;
+ 	struct mtk_base_afe *afe = NULL;
+ 	struct mt8188_afe_private *afe_priv = NULL;
+@@ -300,7 +300,7 @@ static int mt8188_afe_enable_cm(struct mtk_base_afe *afe,
+ static int mt8188_afe_fe_startup(struct snd_pcm_substream *substream,
+ 				 struct snd_soc_dai *dai)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+@@ -334,7 +334,7 @@ static int mt8188_afe_fe_hw_params(struct snd_pcm_substream *substream,
+ 				   struct snd_pcm_hw_params *params,
+ 				   struct snd_soc_dai *dai)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+ 	struct mtk_base_afe_memif *memif = &afe->memif[id];
+@@ -358,7 +358,7 @@ static int mt8188_afe_fe_trigger(struct snd_pcm_substream *substream, int cmd,
+ {
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	const struct mt8188_afe_channel_merge *cm = mt8188_afe_found_cm(dai);
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_pcm_runtime * const runtime = substream->runtime;
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+ 	struct mtk_base_afe_memif *memif = &afe->memif[id];
+diff --git a/sound/soc/mediatek/mt8188/mt8188-mt6359.c b/sound/soc/mediatek/mt8188/mt8188-mt6359.c
+index f629fc6bbb53..eba6f4c445ff 100644
+--- a/sound/soc/mediatek/mt8188/mt8188-mt6359.c
++++ b/sound/soc/mediatek/mt8188/mt8188-mt6359.c
+@@ -557,7 +557,7 @@ enum {
+ static int mt8188_dptx_hw_params(struct snd_pcm_substream *substream,
+ 				 struct snd_pcm_hw_params *params)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	unsigned int rate = params_rate(params);
+ 	unsigned int mclk_fs_ratio = 256;
+ 	unsigned int mclk_fs = rate * mclk_fs_ratio;
+@@ -658,7 +658,7 @@ static int mt8188_dumb_amp_init(struct snd_soc_pcm_runtime *rtd)
+ static int mt8188_max98390_hw_params(struct snd_pcm_substream *substream,
+ 				     struct snd_pcm_hw_params *params)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	unsigned int bit_width = params_width(params);
+ 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+ 	struct snd_soc_dai *codec_dai;
+@@ -821,7 +821,7 @@ static const struct snd_soc_ops mt8188_nau8825_ops = {
+ static int mt8188_rt5682s_i2s_hw_params(struct snd_pcm_substream *substream,
+ 					struct snd_pcm_hw_params *params)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_soc_card *card = rtd->card;
+ 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+ 	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
+diff --git a/sound/soc/mediatek/mt8195/mt8195-afe-pcm.c b/sound/soc/mediatek/mt8195/mt8195-afe-pcm.c
+index 64af9bf363fd..38891d1bd18a 100644
+--- a/sound/soc/mediatek/mt8195/mt8195-afe-pcm.c
++++ b/sound/soc/mediatek/mt8195/mt8195-afe-pcm.c
+@@ -84,7 +84,7 @@ int mt8195_afe_fs_timing(unsigned int rate)
+ static int mt8195_memif_fs(struct snd_pcm_substream *substream,
+ 			   unsigned int rate)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_soc_component *component =
+ 			snd_soc_rtdcom_lookup(rtd, AFE_PCM_NAME);
+ 	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
+@@ -281,7 +281,7 @@ mt8195_afe_paired_memif_clk_prepare(struct snd_pcm_substream *substream,
+ 				    struct snd_soc_dai *dai,
+ 				    int enable)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	struct mt8195_afe_private *afe_priv = afe->platform_priv;
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+@@ -310,7 +310,7 @@ mt8195_afe_paired_memif_clk_enable(struct snd_pcm_substream *substream,
+ 				   struct snd_soc_dai *dai,
+ 				   int enable)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	struct mt8195_afe_private *afe_priv = afe->platform_priv;
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+@@ -342,7 +342,7 @@ mt8195_afe_paired_memif_clk_enable(struct snd_pcm_substream *substream,
+ static int mt8195_afe_fe_startup(struct snd_pcm_substream *substream,
+ 				 struct snd_soc_dai *dai)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+@@ -380,7 +380,7 @@ static int mt8195_afe_fe_hw_params(struct snd_pcm_substream *substream,
+ 				   struct snd_pcm_hw_params *params,
+ 				   struct snd_soc_dai *dai)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
+ 	int id = snd_soc_rtd_to_cpu(rtd, 0)->id;
+ 	struct mtk_base_afe_memif *memif = &afe->memif[id];
+diff --git a/sound/soc/mediatek/mt8195/mt8195-mt6359.c b/sound/soc/mediatek/mt8195/mt8195-mt6359.c
+index 62e4e34cffbb..ca8751190520 100644
+--- a/sound/soc/mediatek/mt8195/mt8195-mt6359.c
++++ b/sound/soc/mediatek/mt8195/mt8195-mt6359.c
+@@ -338,7 +338,7 @@ static const struct snd_soc_ops mt8195_hdmitx_dptx_playback_ops = {
+ static int mt8195_dptx_hw_params(struct snd_pcm_substream *substream,
+ 				 struct snd_pcm_hw_params *params)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+ 
+ 	return snd_soc_dai_set_sysclk(cpu_dai, 0, params_rate(params) * 256,
+@@ -394,7 +394,7 @@ static int mt8195_dptx_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
+ static int mt8195_rt5682_etdm_hw_params(struct snd_pcm_substream *substream,
+ 					struct snd_pcm_hw_params *params)
+ {
+-	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct snd_soc_card *card = rtd->card;
+ 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+ 	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
 
 -- 
 2.43.0
