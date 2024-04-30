@@ -1,100 +1,116 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1436417109A;
-	Tue, 30 Apr 2024 12:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50577171099
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714481595; cv=none; b=WZ1Yqrr2tl9NAyxZwcOkvY5ZVJpG2OfFP8Gr2KOqxr3noPctJTjcTLjZ0dT6/6kMdePtnWB+xN40Fnt6jqQmbZUU2VJpE9tHrdzJlfioJ3O4ZxMw/6crbt4s89EA+bVahdnLLb81glFRFOajEEylsjT1xd6M0NlAcQb+K7MVcqQ=
+	t=1714481617; cv=none; b=WeDewyNNArdLyrW6DgJxpypmpF0g2htxHOIs2dAKNaYqk+292zuNSEtXcMfbSVxYWUu/SJGpyEv6tR/FQMTEM6lVLghKUoe1MNYnw3WYhE5ssuQGeSZSvlJJxBFf+m4dVU6h/RGEZ7nFSVlmkF4qSmNH1Z9ILFyqhzt0WZMCfdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714481595; c=relaxed/simple;
-	bh=oWqL3ZY85KNjhD8aSZZTQArTMiUJ1o11X6J2QIlGdww=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WxaIvuU3fnlHOoBufTPJdDAXWd8D/XWgempR/VxL1kZ2T61k6mfNjj6j250Gc5YDW1at0ZRy1mQojKUTH4kdb9rIhHuZMIJm2hTuh84kaf+mPb+DaLL0adBF7iRslYP6lMqxF6iz8b9BCVCHoUYKRAja5hRsUOSarfymaGI+89w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MxgB5xaA; arc=none smtp.client-ip=209.85.167.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxgB5xaA"
-Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-518a56cdc03so6347550e87.1;
-        Tue, 30 Apr 2024 05:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714481592; x=1715086392; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oWqL3ZY85KNjhD8aSZZTQArTMiUJ1o11X6J2QIlGdww=;
-        b=MxgB5xaARnx7GEi6IaJBRF7aGUdBMLLCYoBLr1l0M6bL6tk6IVktY4wFGdaL0glY/4
-         hZWn6s107pEqWiLzPIGErMmeSTxqhcZUGLsjvGxlu4RbfUN/URLu3u5alGYMBfeOANKc
-         FDtrqUBuyl7WOaM1OjkDQp8IS+iUap+XLDJD1XOQM3xfQuhF/JhoVzwp8QmSYKCtGJIG
-         sWrWdCij6DMBVhazmM6GLlfjfY5kPN/pBGEiaAZ76Jso8vt223Q4WCKpEkzuR6UG0Gmx
-         FXbDkV2EmNa94rqul7/NMXoWhVKBMUYeaZuYjNwQdWmlX/Y5ME1M2l3DuojNSR8P++0V
-         c0jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714481592; x=1715086392;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oWqL3ZY85KNjhD8aSZZTQArTMiUJ1o11X6J2QIlGdww=;
-        b=oP5A51U6C++eDQ+DI8BgPyPY1Evw6dIywGBxJ6F3LBIDNrBEI6KgD/QlqM7XHUGwAM
-         WTETcZBo0g6HxpT/Vy/8gH7doyPEAtvb3hoXybauFaO4c+J/yR4gNqvpKQZj3kwra+/h
-         gWwQQ9NLwQT7BtC4B6WBWDfF6Wk8lizP40r6VcmWCLClRtzBJNrpgw+8XMo/4u/BtJjs
-         9vdfGOqxjpxAVwL0zNxdzi9yzdorU8LzMtkhC4re+s4KqYF5vCJruNTe4gHT4q5JQAtS
-         EvFwmjrD2zdIhVH6BZL7WfoX+WxsahorT+dAju4d5UOfvwtRT9yqhZ0qxlaiJraOIYvM
-         XUrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtfAk5OUKY/KSy6CIOySOeVwAOUlA0Zv6lipO038PG+h2CHS+YSGFuqbEa2ikDjAyPNZ/gdVXSRf2CZaS72DjOz871qdm1cpuDiRW6Sy2DtjTE5eQ5FN3ubkU7MsOTSlwH+jk3TBB3RVUlOHyhtGGjWIcpxPasLqNH+C/RFbkA0ldX
-X-Gm-Message-State: AOJu0YyuHjfRwv5ENj+oZkiYvxj4yWjlle4p+iqyPFruNK2mdsNR0bSH
-	sCa6QPKM99hq1tEJntQzhhGxBaI1/Zbkkc+/eMlko+nAEvuNfQjILhfhPHOAeKWW0wmcqG4JSB8
-	V66ub3j3e6iyIDVhJjv2iYEfOzwM=
-X-Google-Smtp-Source: AGHT+IEeNsmeI9uM1owNWyT0b3Zfvz+dHi/sMUsi0aBKdjayxoENcsgxyoEpXD/x/7tF4V10wXTofSlFpfxGo5KyeVY=
-X-Received: by 2002:a19:9157:0:b0:516:d33a:7571 with SMTP id
- y23-20020a199157000000b00516d33a7571mr9167898lfj.8.1714481591989; Tue, 30 Apr
- 2024 05:53:11 -0700 (PDT)
+	s=arc-20240116; t=1714481617; c=relaxed/simple;
+	bh=KUAYMhvovsY69EuC837OWjSCKrwjtcfZZJDSNCJrkjs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sQasvdUxjd5m0KBgmDq6aD/2AZFtCLvTmN/1Ib4Kus9UjNYhkhaXwUFIj2oQjpj7rb/uc9tp/1pIvhFcDa3uBlNRjR/KfYf+CsVaTiZy2hzB08YNA2lXuTX3VAtQVT7kbvgkwj8NM5PMomuNMEZJQGDDQhJKaK0San2NZ+0lm2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD7CF2F4;
+	Tue, 30 Apr 2024 05:54:01 -0700 (PDT)
+Received: from [10.1.38.140] (XHFQ2J9959.cambridge.arm.com [10.1.38.140])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E44CF3F793;
+	Tue, 30 Apr 2024 05:53:33 -0700 (PDT)
+Message-ID: <e842963b-e682-4923-a1cc-c8b2abd6afee@arm.com>
+Date: Tue, 30 Apr 2024 13:53:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430-bpf-next-v3-0-27afe7f3b17c@kernel.org> <20240430-bpf-next-v3-2-27afe7f3b17c@kernel.org>
-In-Reply-To: <20240430-bpf-next-v3-2-27afe7f3b17c@kernel.org>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Tue, 30 Apr 2024 14:52:35 +0200
-Message-ID: <CAP01T76NyoYc4Y6k_ArbjfUn1tVjxSa0SpqVzEtM0h9jdRvgDg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 2/3] bpf: do not walk twice the hash map on free
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] arm64/mm: Refactor PMD_PRESENT_INVALID and
+ PTE_PROT_NONE bits
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Peter Xu <peterx@redhat.com>,
+ Mike Rapoport <rppt@linux.ibm.com>, Shivansh Vij <shivanshvij@outlook.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240429140208.238056-1-ryan.roberts@arm.com>
+ <20240429140208.238056-2-ryan.roberts@arm.com> <Zi_IzrfIcqWxt7cE@arm.com>
+ <839d6975-ce12-4fc9-aa3b-8ec5787bf577@arm.com> <ZjDR0EIjLr9F2dWn@arm.com>
+ <29fd6909-73d2-4b7e-99ef-0101cde1ba8a@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <29fd6909-73d2-4b7e-99ef-0101cde1ba8a@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 30 Apr 2024 at 12:44, Benjamin Tissoires <bentiss@kernel.org> wrote:
->
-> If someone stores both a timer and a workqueue in a hash map, on free, we
-> would walk it twice.
-> Add a check in htab_free_malloced_timers_or_wq and free the timers
-> and workqueues if they are present.
->
-> Fixes: 246331e3f1ea ("bpf: allow struct bpf_wq to be embedded in arraymaps and hashmaps")
-> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
->
-> ---
+On 30/04/2024 12:37, David Hildenbrand wrote:
+> On 30.04.24 13:11, Catalin Marinas wrote:
+>> On Mon, Apr 29, 2024 at 06:15:45PM +0100, Ryan Roberts wrote:
+>>> On 29/04/2024 17:20, Catalin Marinas wrote:
+>>>> On Mon, Apr 29, 2024 at 03:02:05PM +0100, Ryan Roberts wrote:
+>>>>> diff --git a/arch/arm64/include/asm/pgtable-prot.h
+>>>>> b/arch/arm64/include/asm/pgtable-prot.h
+>>>>> index dd9ee67d1d87..de62e6881154 100644
+>>>>> --- a/arch/arm64/include/asm/pgtable-prot.h
+>>>>> +++ b/arch/arm64/include/asm/pgtable-prot.h
+>>>>> @@ -18,14 +18,7 @@
+>>>>>   #define PTE_DIRTY        (_AT(pteval_t, 1) << 55)
+>>>>>   #define PTE_SPECIAL        (_AT(pteval_t, 1) << 56)
+>>>>>   #define PTE_DEVMAP        (_AT(pteval_t, 1) << 57)
+>>>>> -#define PTE_PROT_NONE        (_AT(pteval_t, 1) << 58) /* only when
+>>>>> !PTE_VALID */
+>>>>> -
+>>>>> -/*
+>>>>> - * This bit indicates that the entry is present i.e. pmd_page()
+>>>>> - * still points to a valid huge page in memory even if the pmd
+>>>>> - * has been invalidated.
+>>>>> - */
+>>>>> -#define PMD_PRESENT_INVALID    (_AT(pteval_t, 1) << 59) /* only when
+>>>>> !PMD_SECT_VALID */
+>>>>> +#define PTE_INVALID        (_AT(pteval_t, 1) << 59) /* only when
+>>>>> !PTE_VALID */
+>>>>
+>>>> Nitpick - I prefer the PTE_PRESENT_INVALID name as it makes it clearer
+>>>> it's a present pte. We already have PTE_VALID, calling it PTE_INVALID
+>>>> looks like a negation only.
+>>>
+>>> Meh, for me the pte can only be valid or invalid if it is present. So it's
+>>> implicit. And if you have PTE_PRESENT_INVALID you should also have
+>>> PTE_PRESENT_VALID.
+>>>
+>>> We also have pte_mkinvalid(), which is core-mm-defined. In your scheme, surely
+>>> it should be pte_mkpresent_invalid()?
+>>>
+>>> But you're the boss, I'll change this to PTE_PRESENT_INVALID. :-(
+>>
+>> TBH, I don't have a strong opinion but best to avoid the bikeshedding.
+>> I'll leave the decision to you ;). It would match the pmd_mkinvalid()
+>> core code. But if you drop 'present' make sure you add a comment above
+>> that it's meant for present ptes.
+> 
+> FWIW, I was confused by
+> 
+> present = valid | invalid
 
-I had forgotten how the extra_elems logic is working, turns out
-everything is in the preallocated elems array and per-cpu extra_elems
-stores the *pointer* to them for recycling without hitting the pcpu
-allocator, so should be fine (just in case this confuses anyone else).
+OK fair enough.
 
->
-> changes in v3:
-> - fix unloading of bpf_wq, again
->
-> changes in v2:
-> - fix wq being not freed (and static call not used)
-> ---
+> 
+> Something like
+> 
+> present = present_valid | present_invalid
 
-Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+I don't want to change pte_valid() to pte_present_valid(); that would also be a
+fair bit of churn.
+
+I'll take Catalin's suggestion and make this PTE_PRESENT_INVALID and
+pte_present_invalid(). And obviously leave pmd_mkinvalid() as it is.
+(Conversation in the other thread has concluded that it's ok to invalidate a
+non-present pmd afterall).
+
+> 
+> would be more obvious at least to me ;)
+> 
+
