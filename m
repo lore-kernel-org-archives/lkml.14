@@ -1,207 +1,99 @@
-Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
+Received: from sender-of-o59.zoho.eu (sender11.zoho.eu [31.186.226.224])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4447A152799;
-	Tue, 30 Apr 2024 15:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714490382; cv=none; b=p3z3fHhd/FJ/e8h0HGfjvXLai1yjf714QRNqJmblk+LkhMZWIIDN380zl1+NLvtopuI0gUnDZWyVYV6YZArByUbF90ZKnDGJfvdIdPuLQNWlFM57o6LO8bCIk64qHaxpvzfL5xIbG4kF9KrrReyiop2K5dqSrgcKLVdwm0Vm1NA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714490382; c=relaxed/simple;
-	bh=3E7LMLmQaL5tGcWs1QA023J3ddzjIGbmnfR3mFYjJhE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WtwqxlFcnbg7ST2/cn+yyuaCwDTcGBBriYbjmCoXB97MuclcYWvyxCb0DsVJ/MtqCFD7bKt8tWmdDLC7Bvq+sbapjvE9huilppPST0gs4NvKdQ8vWLOyxCHjc2JwDJypYkEcRcLqa15yVmx346owRSpqfWTmsJlRppGc0OZb3cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=YieStm/f; arc=none smtp.client-ip=168.119.48.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF76152799
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 15:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=31.186.226.224
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714490494; cv=pass; b=AO8e2WtNFcg4LM0gkLKEYLnnKLKMThD1d86caIlnqN5QSrG3lZ6dC+Supd7Gx1JhOtVS0c3MB5ffSHqSJUIxpNkmhpr3Co76iR3QoilkvlTgXt6WKygEBcxYXnnQ8xZ6JBuoPnzB0nx9EPWNoArEUIlSo6ZwIxswdUmCcr4K30E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714490494; c=relaxed/simple;
+	bh=4IYFvX1b6QiGO1/5J43up48bhB143WjpaEwFgfhwe+g=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oubppQ+lzkhJCI1gV4Jj9FmOEW/8OukQbbB6zIZJW7JrT/+9Ugk5EXLbigg+7bWkT+NNqepJ9/z2ZNPdVc2Nn+V2AKaHfmjEjukYw+FF3XJxrPhKoIH0c/OtZNuc1aV/HlUpPq1CcGJPyS2TekKIczQHs7ZqSdrlhds0Kn1M6WM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com; spf=pass smtp.mailfrom=bursov.com; dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b=UMXp7fH5; arc=pass smtp.client-ip=31.186.226.224
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bursov.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="YieStm/f"
-From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
-	s=2023072701; t=1714490373;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=qUFnqnB6znIDj+q1NPyYoIZ8zE7Eb30cXcMkX9V8te8=;
-	b=YieStm/fos4plj+5Ek/rF7kivqnOKzhbGlbaVKsjn1Gw+zNmiQIxJgveo8SWf6+AMwtCGN
-	CeIaurK0s4NnFnCSnQm6e0Uj3qZqEgSxaTlX/yKMSVyYiJ6m1dGSpaowCotc2qGEKNJ9Uw
-	qmlrZ8WYGQ0jrHHFUNVDOsO9PoDwA472NoV15Qu2vw/dl/ZpO5WWPyTW81vXdcFRjF3wU4
-	oO1W6ZULxpa9NICTJEywCCI55em3Jw9m/1wKJ9deK/jKVecaoEWB9R1ajXaEL6Siu0bJc8
-	12b4Ur1naQKhHOvtXwar45HEQXxD8fAACvVu9yf02oQo4k6TdXBlvaf3y+iORA==
-To: brauner@kernel.org
-Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
-	Jan Kara <jack@suse.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Kees Cook <keescook@chromium.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Miklos Szeredi <mszeredi@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-fsdevel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b="UMXp7fH5"
+ARC-Seal: i=1; a=rsa-sha256; t=1714489544; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=cm2J7ndQWpQBVCAmMjSTdHEGpD5U2KQ494uFaRWe+YAg6TRMKnPS+IAchm5U/u/2ycTRzxcWFxaKdMy4fHRpGbEU3zTomzrXsW3XGQRKhe9pF5olq/lrKWu2W7Vl0Ydq1v9o+Zd6GufSUA6kd71JSJ2xsnjl9N99qPQ/hAxkleA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1714489544; h=Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=CBC7Fu2NEYn+ls8avVIuRHKbqAbCU9lUfbYF3tRg4a4=; 
+	b=egQd3tTOTxbnQcptSvE3r1c4rEYzNwSonXQCgWeZdV39LGy1dVNKSX5AWudfYiHK8NmEw+nkC/HfFUmgAI4j8pmPU19V0j9jCnwAeLal/Clirn1Jg0ywbOOQAZqB8SpiBxocDE2RZkh12mtB31ACeBUEapquj6iuhnSqmZ86Rhg=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=bursov.com;
+	spf=pass  smtp.mailfrom=vitaly@bursov.com;
+	dmarc=pass header.from=<vitaly@bursov.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1714489544;
+	s=zoho; d=bursov.com; i=vitaly@bursov.com;
+	h=From:From:To:To:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To:Cc;
+	bh=CBC7Fu2NEYn+ls8avVIuRHKbqAbCU9lUfbYF3tRg4a4=;
+	b=UMXp7fH5CD1FKLNLyQC1ykBYfd809euR0k0MEbq0Wnk3xD1TDL7A8Zd0gOh4idyv
+	vWOhxWvShVmxtF0cY/Nd12jr1nELESW8LpUJoDlGPd2D+Kug5UavN8cBFrI5bJnv1o5
+	oX6YquuBj69M/wt78yAMTR3Df7dt7h7qa0vlMj9E=
+Received: by mx.zoho.eu with SMTPS id 1714489540370440.6683863089778;
+	Tue, 30 Apr 2024 17:05:40 +0200 (CEST)
+From: Vitalii Bursov <vitaly@bursov.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org
-Subject: [PATCH] fs/xattr: unify *at syscalls
-Date: Tue, 30 Apr 2024 17:19:14 +0200
-Message-ID: <20240430151917.30036-1-cgoettsche@seltendoof.de>
-Reply-To: cgzones@googlemail.com
+	Vitalii Bursov <vitaly@bursov.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>
+Subject: [PATCH v4 2/3] sched/debug: dump domains' level
+Date: Tue, 30 Apr 2024 18:05:24 +0300
+Message-Id: <9489b6475f6dd6fbc67c617752d4216fa094da53.1714488502.git.vitaly@bursov.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <cover.1714488502.git.vitaly@bursov.com>
+References: <cover.1714488502.git.vitaly@bursov.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-From: Christian Göttsche <cgzones@googlemail.com>
+Knowing domain's level exactly can be useful when setting
+relax_domain_level or cpuset.sched_relax_domain_level
 
-Use the same parameter ordering for all four newly added *xattrat
-syscalls:
+Usage:
+cat /debug/sched/domains/cpu0/domain1/level
+to dump cpu0 domain1's level.
 
-    dirfd, pathname, at_flags, ...
+SDM macro is not used because sd->level is int and
+it would hide the type mismatch between int and u32.
 
-Also consistently use unsigned int as the type for at_flags.
-
-Suggested-by: Jan Kara <jack@suse.com>
-Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+Signed-off-by: Vitalii Bursov <vitaly@bursov.com>
+Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 ---
- fs/xattr.c               | 36 +++++++++++++++++++-----------------
- include/linux/syscalls.h |  8 +++++---
- 2 files changed, 24 insertions(+), 20 deletions(-)
+ kernel/sched/debug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/xattr.c b/fs/xattr.c
-index 45603e74c632..454304046d7d 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -931,17 +931,18 @@ listxattr(struct dentry *d, char __user *list, size_t size)
- 	return error;
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 8d5d98a5834d..c1eb9a1afd13 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -425,6 +425,7 @@ static void register_sd(struct sched_domain *sd, struct dentry *parent)
+ 
+ 	debugfs_create_file("flags", 0444, parent, &sd->flags, &sd_flags_fops);
+ 	debugfs_create_file("groups_flags", 0444, parent, &sd->groups->flags, &sd_flags_fops);
++	debugfs_create_u32("level", 0444, parent, (u32 *)&sd->level);
  }
  
--static ssize_t do_listxattrat(int dfd, const char __user *pathname, char __user *list,
--			      size_t size, int flags)
-+static ssize_t do_listxattrat(int dfd, const char __user *pathname,
-+			      unsigned int at_flags,
-+			      char __user *list, size_t size)
- {
- 	struct path path;
- 	ssize_t error = 0;
- 	int lookup_flags;
- 
--	if ((flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
-+	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
- 		return -EINVAL;
- 
--	if (flags & AT_EMPTY_PATH && vfs_empty_path(dfd, pathname)) {
-+	if (at_flags & AT_EMPTY_PATH && vfs_empty_path(dfd, pathname)) {
- 		CLASS(fd, f)(dfd);
- 
- 		if (!f.file)
-@@ -965,22 +966,23 @@ static ssize_t do_listxattrat(int dfd, const char __user *pathname, char __user
- 	return error;
- }
- 
--SYSCALL_DEFINE5(listxattrat, int, dfd, const char __user *, pathname, char __user *, list,
--		size_t, size, int, flags)
-+SYSCALL_DEFINE5(listxattrat, int, dfd, const char __user *, pathname,
-+		unsigned int, at_flags,
-+		char __user *, list, size_t, size)
- {
--	return do_listxattrat(dfd, pathname, list, size, flags);
-+	return do_listxattrat(dfd, pathname, at_flags, list, size);
- }
- 
- SYSCALL_DEFINE3(listxattr, const char __user *, pathname, char __user *, list,
- 		size_t, size)
- {
--	return do_listxattrat(AT_FDCWD, pathname, list, size, 0);
-+	return do_listxattrat(AT_FDCWD, pathname, 0, list, size);
- }
- 
- SYSCALL_DEFINE3(llistxattr, const char __user *, pathname, char __user *, list,
- 		size_t, size)
- {
--	return do_listxattrat(AT_FDCWD, pathname, list, size, AT_SYMLINK_NOFOLLOW);
-+	return do_listxattrat(AT_FDCWD, pathname, AT_SYMLINK_NOFOLLOW, list, size);
- }
- 
- SYSCALL_DEFINE3(flistxattr, int, fd, char __user *, list, size_t, size)
-@@ -1019,17 +1021,17 @@ removexattr(struct mnt_idmap *idmap, struct dentry *d,
- }
- 
- static int do_removexattrat(int dfd, const char __user *pathname,
--			    const char __user *name, int flags)
-+			    unsigned int at_flags, const char __user *name)
- {
- 	struct path path;
- 	int error;
- 	int lookup_flags;
- 
--	if ((flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
-+	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
- 		return -EINVAL;
- 
--	lookup_flags = (flags & AT_SYMLINK_NOFOLLOW) ? 0 : LOOKUP_FOLLOW;
--	if (flags & AT_EMPTY_PATH)
-+	lookup_flags = (at_flags & AT_SYMLINK_NOFOLLOW) ? 0 : LOOKUP_FOLLOW;
-+	if (at_flags & AT_EMPTY_PATH)
- 		lookup_flags |= LOOKUP_EMPTY;
- retry:
- 	error = user_path_at(dfd, pathname, lookup_flags, &path);
-@@ -1049,21 +1051,21 @@ static int do_removexattrat(int dfd, const char __user *pathname,
- }
- 
- SYSCALL_DEFINE4(removexattrat, int, dfd, const char __user *, pathname,
--		const char __user *, name, int, flags)
-+		unsigned int, at_flags, const char __user *, name)
- {
--	return do_removexattrat(dfd, pathname, name, flags);
-+	return do_removexattrat(dfd, pathname, at_flags, name);
- }
- 
- SYSCALL_DEFINE2(removexattr, const char __user *, pathname,
- 		const char __user *, name)
- {
--	return do_removexattrat(AT_FDCWD, pathname, name, 0);
-+	return do_removexattrat(AT_FDCWD, pathname, 0, name);
- }
- 
- SYSCALL_DEFINE2(lremovexattr, const char __user *, pathname,
- 		const char __user *, name)
- {
--	return do_removexattrat(AT_FDCWD, pathname, name, AT_SYMLINK_NOFOLLOW);
-+	return do_removexattrat(AT_FDCWD, pathname, AT_SYMLINK_NOFOLLOW, name);
- }
- 
- SYSCALL_DEFINE2(fremovexattr, int, fd, const char __user *, name)
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index e06fffc48535..ca3cba698602 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -356,15 +356,17 @@ asmlinkage long sys_fgetxattr(int fd, const char __user *name,
- 			      void __user *value, size_t size);
- asmlinkage long sys_listxattr(const char __user *path, char __user *list,
- 			      size_t size);
--asmlinkage long sys_listxattrat(int dfd, const char __user *path, char __user *list,
--			      size_t size, int flags);
-+asmlinkage long sys_listxattrat(int dfd, const char __user *path,
-+				unsigned int at_flags,
-+				char __user *list, size_t size);
- asmlinkage long sys_llistxattr(const char __user *path, char __user *list,
- 			       size_t size);
- asmlinkage long sys_flistxattr(int fd, char __user *list, size_t size);
- asmlinkage long sys_removexattr(const char __user *path,
- 				const char __user *name);
- asmlinkage long sys_removexattrat(int dfd, const char __user *path,
--				const char __user *name, int flags);
-+				  unsigned int at_flags,
-+				  const char __user *name);
- asmlinkage long sys_lremovexattr(const char __user *path,
- 				 const char __user *name);
- asmlinkage long sys_fremovexattr(int fd, const char __user *name);
+ void update_sched_domain_debugfs(void)
 -- 
-2.43.0
+2.20.1
 
