@@ -1,89 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F2A17BB20;
-	Tue, 30 Apr 2024 17:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3335017BB20
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 17:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714498016; cv=none; b=iuZ2Q60LSbVJHFiXWFAUc9P/J7LRgDvqy+eMgtdKwJXG8fkUnYVdwfrJnIgy1OGhfIUzF3HKsL1EiTdALcArj+Y0I5VWU01KuncutfgIVKw4spsilwRnZ6sZBVqxZokHAQaipSU5+PuEDBi+JfE+fDke1SKn8gH6fiBlnqB0p/E=
+	t=1714498123; cv=none; b=nOwMdMEBo+oA21ynxljtwDQV0mpoRikcN25Hgm4OeO51auo/r/2JM5SGpOacjQfw4o+Ni2Fz90V4Qo2dNbGgw6cfFV2jyO9X8WkGsMSDxjGGS6ofRKSpWc4b3umAXDL33NnUV22Q47059np0R5LubeUfWb9bKn9ozvNuWw9GGPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714498016; c=relaxed/simple;
-	bh=0KeV2u9ksY0YfA2yFgfKkgJQrLCCtz23h5HZRBAWiFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OtDllCa8fzfgZ4vgXi1+sUZ+vTDqx3Cu/ZuUSVRoQBLCbkfWMcLRJ2alcnxnyoxZZg0rJJezDeMIoHOGNpagJDf4ELdLA5BFDEQxK19EM+PSgAxzBeugDdpQ6tBLUlE0WHoz6MjLMWPXI7vjkq+OEocD/SmY876EiauTslXp5yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKCf087I; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKCf087I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 316FBC2BBFC;
-	Tue, 30 Apr 2024 17:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714498015;
-	bh=0KeV2u9ksY0YfA2yFgfKkgJQrLCCtz23h5HZRBAWiFI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GKCf087IOPhdKhN23Rh+4nYolxBmxLSO7gl4cTkAbF6IGcHWam/bcbmhNLA0+5hfG
-	 NefAyi4QAhJonrQ2T0uvSS/DlYCnplWB39GhCHO53EgsgQ0NYC1sXg3abQ1zUvVNcs
-	 r/5CFiGjbedNdrNPSNYdu6m6+ypoEZuI1adiGctzrgRXmlEEwbj5c6pqJ+PG1/apNU
-	 5LXjHQvUrx64k0PqjL/h9GDYReGsYZOrdMZD7n2E5GDIqxY4N/HalTeDmOGf4NGWXQ
-	 bhuZMNQP0cxZiOxT/nJ2sEjm8HcuCNshVJZmBpkiQLQRi6SCzJHBgcwS1ntMIyxLXW
-	 U4TKnxxq7IBeQ==
-Date: Tue, 30 Apr 2024 18:26:49 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alisa-Dariana Roman <alisadariana@gmail.com>
-Cc: michael.hennerich@analog.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	alexandru.tachici@analog.com, lars@metafoo.de, jic23@kernel.org,
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-	andy@kernel.org, nuno.sa@analog.com, marcelo.schmitt@analog.com,
-	bigunclemax@gmail.com, dlechner@baylibre.com, okan.sahin@analog.com,
-	fr0st61te@gmail.com, alisa.roman@analog.com,
-	marcus.folkesson@gmail.com, schnelle@linux.ibm.com,
-	liambeguin@gmail.com
-Subject: Re: [PATCH v7 5/6] dt-bindings: iio: adc: ad7192: Add AD7194 support
-Message-ID: <20240430-sandfish-bring-16ce723b8612@spud>
-References: <20240430162946.589423-1-alisa.roman@analog.com>
- <20240430162946.589423-6-alisa.roman@analog.com>
+	s=arc-20240116; t=1714498123; c=relaxed/simple;
+	bh=CXJgUhz8OYEEkYzJZrXQnLGGmaASP98O5B5szOrjNpw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=aoas4rACw/j+BBYOcG/uYmgYgOqxJGZoMtDlYtt8yn47Hdl2XdhhXdiKEeptQASmUHXi+mOIFv9RWpo7WFj2cBUWMkukEvRzSVJtzbxHt2viHJjp05CKDAqyyzD1qXAPJ0cztxbzAVdVTlBHKi3WVguQQIcW6wp3jL0tmlsbcVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7ded5e00bf0so203391539f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 10:28:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714498121; x=1715102921;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CXJgUhz8OYEEkYzJZrXQnLGGmaASP98O5B5szOrjNpw=;
+        b=wjukC3XQF753ZvJ7rTJ4Qo7yH9+CR2J07aIvkwhuCVGvS1Q0IFHzfqhQgzOR27xsLR
+         6m/Vw4N98wFRMz8gKgtR2z/vgdcVLAPQ6R+amWJgfJ9WBagOnLhwLOhHaX0+xDsQzisx
+         N6w9UuDr22PC/bE9rBIdp512osv9wX+d4fIR/+hFDJTByUBEkS7P/foyN29LRV0YszSt
+         zIkpqzJ6UvVZhIS6t0JzaEJaBQya5ktKvERQJEOEbLRENcXyctI9oHqXwkeiSmyZHCQ4
+         YW06l/C6CrhMVfy3KGUEw73o5Cso2AQtvL11DWtaCNiLjePwIJeZeBwNHoGXSUU8cZoq
+         UfxQ==
+X-Gm-Message-State: AOJu0YzON/9eQFhF1DjWvfA7ccpbSXORqoYP+be5xHRZD72WMk6AffuG
+	x90dCf2beFFj+EUnE7ec+7rLYzaYENG0fOSO8XKyslP8+qmV0MIKwSmBQ3h/tFf9jZhCXHomuBy
+	VkFHIb33uRIK43c4JhNiLyTtLJdlweT0AtRMRDO3XdhBGaI0FXc0TVHo=
+X-Google-Smtp-Source: AGHT+IH5FMmstBBBVzcOx/guNr7Crxo4Pn3rXCcWchG2UxMeNZ0eAyWRA4y4otFoMw+55FnHv1/ciIV8dDcV2RVxGoDiSOSRyAaZ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="QgM2jKZVHy6EjSwK"
-Content-Disposition: inline
-In-Reply-To: <20240430162946.589423-6-alisa.roman@analog.com>
+X-Received: by 2002:a05:6602:26d4:b0:7da:67e8:9379 with SMTP id
+ g20-20020a05660226d400b007da67e89379mr13091ioo.4.1714498121387; Tue, 30 Apr
+ 2024 10:28:41 -0700 (PDT)
+Date: Tue, 30 Apr 2024 10:28:41 -0700
+In-Reply-To: <000000000000440b0a06173e6ca8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007e645b061753b331@google.com>
+Subject: Re: [syzbot] KMSAN: uninit-value in ext4_inlinedir_to_tree
+From: syzbot <syzbot+eaba5abe296837a640c0@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
---QgM2jKZVHy6EjSwK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+***
 
-On Tue, Apr 30, 2024 at 07:29:45PM +0300, Alisa-Dariana Roman wrote:
-> From: Alisa-Dariana Roman <alisadariana@gmail.com>
-> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+Subject: KMSAN: uninit-value in ext4_inlinedir_to_tree
+Author: shenxiaxi26@gmail.com
 
-btw, the whole series has a from != signoff email problem. My git
-send-email handles that for me without me having to do anything by
-inserting a From: header in the patches, like so:
-https://lore.kernel.org/all/20240424-tabby-plural-5f1d9fe44f47@spud/
-
-I am not sure what option you're missing to suggest, but it may be as
-setting the `--from` arg (or sendemail.from in your gitconfig).
-
-Thanks,
-Conor.
-
-
---QgM2jKZVHy6EjSwK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjEp2AAKCRB4tDGHoIJi
-0kziAQDcAT7+brax7bXTdBP5X+1u8YLuwr8T//H8T5XVPYXs8wD/X5FEQlyk1Qg+
-BoUHQ4cGSH7Sp4iWyYrKn7r9j82Wkwk=
-=ue30
------END PGP SIGNATURE-----
-
---QgM2jKZVHy6EjSwK--
+#syz test
