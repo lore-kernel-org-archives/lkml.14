@@ -1,121 +1,120 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346CC4501C
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38088801;
+	Tue, 30 Apr 2024 09:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468240; cv=none; b=SgRD6hRUfTsUZhLR6s2pU9Cs8qJfgY2R0nDZEoXxjR54Su7rG0ylxh+9Gh9KHXvCVI8E2BHFlUyGxyklhN+HGY4mvmDO+oR1mblBfwQngtcWvnmniOWIZWiQb/k88zmT2TfRQTIGXvFYGkkRlogo9ObFxTpqsxoXBUNUZbyitjY=
+	t=1714468318; cv=none; b=HaaMhybK0JepO9Hq0c/BXh94dKFE4DZNRsz7FsGAmr3XgALTkSqg7wCDJOEhTJeRj+zIfWrH734SLpDsGluhF+abHa4w2tcCjjRYZc98Xtwdi19/aP+JGP8vUotOjrkiyNe2VrEKVhQ1Hq1SgPgBBui2yUub45fius7oCJ4VtUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468240; c=relaxed/simple;
-	bh=EnpC8uxdaBLW+uWUMw9JJXC1K+AjyDTh9tv4xrNIOPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yk3e6KiGZVPQ/pju924+8RjCU4dq1rML4B6sEBsQwCUJv2XtTQk3ei/KUFbB0h/TCXWrp4ZexMxBC4taxVmA3EFp67LpQEK41G5wry1O3E65b5yiQpoosC3V8OJC3kdtYbfdQ3WWvcZtWmi1QMCRxdqXuPiF8Jd048gShKann+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=f2VFFO2N; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1714468318; c=relaxed/simple;
+	bh=STiwPfQ3FgfC68RgCrPFSAvD0HXwevrsh2MHG2P+BxQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=auCcAx+MUYWnRUxhf9/ijDtVPxKByLxgiOhC0AcbfyqJf2pNSlgdxi4es3scTYEvMrVNQWoeb3JFH8NDt2aI3Ac/bmQjGYP0ZHmb6GIysk7AEJvDeNKZ78q+vrOJim1YIkY7MkhNpWMCozHanpq3T0O7nKRx/ZA9rUkeXVxukdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8XKojoH; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="f2VFFO2N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=QJb4
-	ulNH2VMgB23s2bKMJ77ejPMzfrg0P2qy+6olDX4=; b=f2VFFO2NU+TWRiqZ/1o9
-	4J6WInkbsJkiez5lhD2sEvYzfWiIJXZ70xNiNBDKGMwpTmXZ2O/ZmjA5lqgLwBoq
-	f61buPFYT3ZfjTd5tuNDAhzYz0dToa5H/WqFBMryj0X3ViTaDws9Glx++eKhdpPC
-	Nwi0tnlAK3E2w7JkyzO7UE3nOrVBV1gdadLwO/uf1PETVzpEjEvPgFPFlei9eHSc
-	rED5CxPg7bLUcxRRrKZNnL42jbzC8Zr4L7sN2UjaRHyNhLVO7OPKf0urtiF1dZpP
-	g/7l20tEfqk++x+WZgVj5SUmyajdyBdswyhJzNh+kxE+F8SkXroUvCKiBo3qRGf2
-	uw==
-Received: (qmail 2570745 invoked from network); 30 Apr 2024 11:10:33 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Apr 2024 11:10:33 +0200
-X-UD-Smtp-Session: l3s3148p1@tPMKvkwXBJtehhrb
-Date: Tue, 30 Apr 2024 11:10:33 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Hien Huynh <hien.huynh.px@renesas.com>
-Subject: Re: [PATCH v2] mmc: renesas_sdhi: Set the SDBUF after reset
-Message-ID: <h2fhduxr5bv3m7vkxl2ga6pqkkv5mlzpwgk2q6lfsnz3l63ckk@pyzj2vt4jkfw>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Hien Huynh <hien.huynh.px@renesas.com>
-References: <20240410135416.2139173-1-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8XKojoH"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1ec4dd8525cso2231925ad.3;
+        Tue, 30 Apr 2024 02:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714468316; x=1715073116; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gQBoYvZPsCYcuSR3qK1bJQWQDiuW4fONQZ/4zoSfa0A=;
+        b=E8XKojoH6+RoFi5Unum/E7wXNxLCFnxUGOUKtqwXL6hWHEghwshwNHzPnorzEP01ue
+         q/Piv16eSTJpHoY5AmmHxHEGNhM3TPF5Av4ftwNRE+L5xo5Bbfif1bTjNnRdWCBBtJgO
+         ykWR1JBWzjgzVI0dcYEhsn6zWHPEkOi9qwRyLY52hvMhpuj4cdyr8QKsP3KqbbZJPeVe
+         ZlFvEO3SFSbk3kqlOxzVhnDqYN3nZAbKX0PE/MZ/tT7IYU3lxZ0wmN+3IaObX/OqKavL
+         fHnzHvP4bTKhTYFtje/mMteSrvP4oCycnvFGWFMDJdLZkOkCL2nkJBjshhdkv9QGRHk0
+         Jq2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714468316; x=1715073116;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gQBoYvZPsCYcuSR3qK1bJQWQDiuW4fONQZ/4zoSfa0A=;
+        b=QQSQv3u/WfeA9EC5KrmQ6RioDpwHIfBAq2Nc/MzD7IPKXGvlYP9kWWHusDPG8BwEr4
+         3UthGvzteAMOmIiAZ2ZXvpi4Oc6xPdJUo0fP1tydXzH2nkFvKIkqwmKzIlgioHFxXF2N
+         lVl0Dl48Jj279Lbt/dOIp6CnMXkOcQ4dAUccreUMUKMW2igjdU/QbyDDqM9zDWdJEcZR
+         cG16NA+9hUMFzTTowy65S9zj84ITi3SusCr02txZ3UQYwH+uK8VOLqfOR3k0AcUAaBWK
+         y1ClUUjm6hFJS1IX5hI2vs06u9W28nN03LiFk4lCMG757e8eUid3h8RXl0jpliZ2Vayy
+         jf7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWpzfCmB9Uj5Eiibn5qkII5RpEgKHqGqQ4KgbNciwemD221cgRb4RvsvoifvTkcfdTIRzGSfB2XCOlKXYQ6U4G5tSSpZJSUX2X/jt++lKPhQtNAwiGUcxLjEI0fAjphfhdC0SP33qjn1Q==
+X-Gm-Message-State: AOJu0Yw2eoFw9b6hekYHq0oa2gvLHlUuGUE/7/UgIpb5+dWb3FuygPfY
+	5Lvpfu6mryTLA0RFHUYgPfvq2cu/v6F3AxkKbzfzSfcJlh0a+ARA
+X-Google-Smtp-Source: AGHT+IGdQj3RvvilGjPqOJ+D1q8N7cU48eNqNv6tzSAfI1/lYpJcwu9FZdy2EjkD8mzyUnt6enes0A==
+X-Received: by 2002:a17:902:d543:b0:1ea:c7a4:7e8 with SMTP id z3-20020a170902d54300b001eac7a407e8mr11288084plf.17.1714468315953;
+        Tue, 30 Apr 2024 02:11:55 -0700 (PDT)
+Received: from VM-147-239-centos.localdomain ([43.132.141.4])
+        by smtp.gmail.com with ESMTPSA id kh5-20020a170903064500b001e47bf10536sm21845806plb.69.2024.04.30.02.11.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Apr 2024 02:11:55 -0700 (PDT)
+From: Yongzhi Liu <hyperlyzcs@gmail.com>
+To: skashyap@marvell.com,
+	Markus.Elfring@web.de,
+	njavali@marvell.com,
+	martin.petersen@oracle.com,
+	James.Bottomley@HansenPartnership.com
+Cc: himanshu.madhani@oracle.com,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jitxie@tencent.com,
+	huntazhang@tencent.com,
+	Yongzhi Liu <hyperlyzcs@gmail.com>
+Subject: [PATCH V3 1/2] scsi: qla2xxx: Fix double free of fcport in qla24xx_els_dcmd_iocb
+Date: Tue, 30 Apr 2024 17:11:43 +0800
+Message-Id: <20240430091144.10744-1-hyperlyzcs@gmail.com>
+X-Mailer: git-send-email 2.36.1
+In-Reply-To: <9c711441-6e79-422f-9405-ee271929e77c@web.de>
+References: <9c711441-6e79-422f-9405-ee271929e77c@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="n7owwzlqyi25o6qu"
-Content-Disposition: inline
-In-Reply-To: <20240410135416.2139173-1-claudiu.beznea.uj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
 
+When dma_alloc_coherent() or qla2x00_start_sp() return an error,
+the callback function qla2x00_els_dcmd_sp_free in qla2x00_sp_release
+will call qla2x00_free_fcport() to kfree fcport. We shouldn't call
+qla2x00_free_fcport() again in the error handling path.
 
---n7owwzlqyi25o6qu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fix this by cleaning the duplicate qla2x00_free_fcport() calls up.
 
-Hi Claudiu,
+Fixes: 82f522ae0d97 ("scsi: qla2xxx: Fix double free of fcport")
+Signed-off-by: Yongzhi Liu <hyperlyzcs@gmail.com>
+---
+V2 -> V3: Improve patch summary and provide a patch serises with two separate update steps
+V1 -> V2: Optimisation of exception handling
 
-On Wed, Apr 10, 2024 at 04:54:16PM +0300, Claudiu Beznea wrote:
-> For development purpose, renesas_sdhi_probe() could be called w/
-> dma_ops =3D NULL to force the usage of PIO mode. In this case the
-> renesas_sdhi_enable_dma() will not be called before transferring data.
->=20
-> If renesas_sdhi_enable_dma() is not called, renesas_sdhi_clk_enable()
-> call from renesas_sdhi_probe() will configure SDBUF by calling the
-> renesas_sdhi_sdbuf_width() function, but then SDBUF will be reset in
-> tmio_mmc_host_probe() when calling tmio_mmc_reset() though host->reset().
-> If SDBUF is zero the data transfer will not work in PIO mode for RZ/G3S.
->=20
-> To fix this call again the renesas_sdhi_sdbuf_width(host, 16) in
-> renesas_sdhi_reset(). The call of renesas_sdhi_sdbuf_width() was not
-> removed from renesas_sdhi_clk_enable() as the host->reset() is optional.
+ drivers/scsi/qla2xxx/qla_iocb.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-So, I tried to find a place where we would need only one call to
-renesas_sdhi_sdbuf_width() but I also couldn't find a sweet spot. So,
-this approach seems also best to me.
+diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
+index 0b41e8a06602..faec66bd1951 100644
+--- a/drivers/scsi/qla2xxx/qla_iocb.c
++++ b/drivers/scsi/qla2xxx/qla_iocb.c
+@@ -2751,7 +2751,6 @@ qla24xx_els_dcmd_iocb(scsi_qla_host_t *vha, int els_opcode,
+ 	if (!elsio->u.els_logo.els_logo_pyld) {
+ 		/* ref: INIT */
+ 		kref_put(&sp->cmd_kref, qla2x00_sp_release);
+-		qla2x00_free_fcport(fcport);
+ 		return QLA_FUNCTION_FAILED;
+ 	}
+ 
+@@ -2776,7 +2775,6 @@ qla24xx_els_dcmd_iocb(scsi_qla_host_t *vha, int els_opcode,
+ 	if (rval != QLA_SUCCESS) {
+ 		/* ref: INIT */
+ 		kref_put(&sp->cmd_kref, qla2x00_sp_release);
+-		qla2x00_free_fcport(fcport);
+ 		return QLA_FUNCTION_FAILED;
+ 	}
+ 
+-- 
+2.36.1
 
-> +
-> +			/*
-> +			 * In case the controller works in PIO mode the SDBUF
-> +			 * needs to be set as its reset value is zero.
-> +			 */
-
-But I think we can shorten the above comment to something like:
-
-			/* Ensure default value for this driver */
-> +			renesas_sdhi_sdbuf_width(host, 16);
-
-D'accord?
-
-Happy hacking,
-
-   Wolfram
-
-
---n7owwzlqyi25o6qu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmYwtYUACgkQFA3kzBSg
-KbYqdhAAh1BHkpYuhh4UgC9lTha0M8cRwfM9fPYYxLfGuMgJkUlTzNpqu1rOSsSJ
-QyN4vggjd5lhvLmBwNLIpeDPSt8sM2Pp2rKbyZj89SHlRShvzZkSSkWSwRDu+gbL
-k2l2mU/0xhrMkO3s3ZX7FcA5HGok/qb44xGMqaBVI4cvdZd4uEGPNDxXi6Yijd48
-gAxLCh3PN1gwMVETT9qt9ckp2LEtFM1omIbXic/yvry1572d9ujoqCeN7E+mx8wi
-26vWP1pVRCUFhTLJVysz6B5kh1JBBamjR7iSQnSl9K1dICIVkHlZF6WbAh3FBqbJ
-nW4C6JVl6rWg2VosQ4sBfe105PpZw3sjyuaOELh2HXFhfrFKl9QlUd4spkVqxAVz
-BCptmAs4PgUBaOcIoM7RrPteLvTOLprdHwWI+qJbSuMZJr0bVsYBbkcDEFXRGpdf
-TlwBChaFj2CFnCLAYVBTFBdLmsRGUOUhFC5PE0Ev93m7rXxd1AfiDRV3KKF0jKGW
-V4hNyDBrdmaSJnZb3eCQhzyJ+5SyjNQhhRO+C4qpqfMK2Yx86G77jJtVBrZTVS8n
-JY1cZg7fnE2Et2mmpkbw5+VrBdPks0YEU5IGDquBGQ/Iyrt7liR/dWCVtb/YsYe+
-XbHVJiutlclajSwTBBfyxTggxyXdkHkXWxAnHuSm8W5WDZa4axk=
-=1g6D
------END PGP SIGNATURE-----
-
---n7owwzlqyi25o6qu--
