@@ -1,164 +1,90 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA243308A;
-	Tue, 30 Apr 2024 20:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC259182C3;
+	Tue, 30 Apr 2024 20:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714507770; cv=none; b=M+rpZ4V37nAEKTQZEkjeSp0L5vxhx+oz1N3Gah3PPqaEXuTf9MTypKEWnTXtTCmCIClo2K0vEIHbL5ANb/Myha11eatA5w34INGzuqcLjJghYbBsT+PEuOyp7XMKZy3fA8f/gAuMIzjRY8NnyJxhyywkFQMyZtFXrGjwyK3D98E=
+	t=1714507821; cv=none; b=BAipFtDjk+jCJsVJbptCpSZhRoqbO028Jp40kTpTqcgsKGGdCYDYXNabUE4VkjbGLl4f0kAemB5diy2n8PmrID0xfxiMDQuM7lijUUeif8niIBh5w6NuelpvFip7AjC/IdoDMuoQrJeAyl5JGB+gxvMT2iI1+QLTvSLe+/vmGow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714507770; c=relaxed/simple;
-	bh=+W073mdtgIFOzLF3pLZOnqWa4SW4FX7ciIxPNHIMnjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ujFekWfdeyddk2a7S6a7fjy9zTUyYCNeni1bFomisMpRog8AAC5OdVpeFl8fqvwCiI9qgm1D7SxfhbyYjEeTHvKq1Ka8GM2N6l541Kpao+vJuSedL7eZIfliclvuZYqxp094wPyDTpCqMY9ewIAsFRGRUqrVpVjHuPIcZjGwi/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=SkBYcRS+; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1714507821; c=relaxed/simple;
+	bh=58CBaYeu4exH4ljqyrgLewfHjjrJsr+lwEV4eBnRRBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g75nd/95qxcb3wizd6G3VGiJ6SNr0k8mzVW4viBbOMPRAY3hIBo7Rpc9LL7dJMe0Ea73x5G7gtQe/83tJCQQVdDBgxQVj3aKNCEYIf8wp/XiwkyMgLazT8UuWKLeXQC9xLQrDfrZ/BnfaVIynXr96XETMy7nzCA2cq5D5CkIoZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WImPU34v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="SkBYcRS+"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 2B35B1B33AB;
-	Tue, 30 Apr 2024 22:09:25 +0200 (CEST)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1714507765; bh=9hVpNf0UpME2ZAq2VVrOWX05zjm2iYyBWxgQpaSqhEE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SkBYcRS+1DgzItYu4znKOQOwyrc0mqUDVbLVI5/da2r4YcYoqFL2jY0tNX/XsifwQ
-	 pQo2swe5T4NzzIX4WvCuOmGx2SxBkFY3T/1/N5hKNoh7z7Rz9RK0VLUdHTOjOtrgc2
-	 jrcEThrVOWriPcwS7+eM7weKDs6dobPEuUI/lZrV15/LSo4p7FDvYBVx8ETBuqKQgV
-	 d4ntvnWsjczfUiEbqqknTdYxwh+JQIU/SdHYIwt4OTEFuYeqB9fPhrDpqkMMX4Q/+i
-	 u/ZRIUAG3u5OxFASbqiWpGtuQNEKfazFHC86gvBHWstoyK2bvxBUfR8nhGxTOoGj31
-	 8HZ139QUNghkw==
-Date: Tue, 30 Apr 2024 22:09:24 +0200
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "mhkelley58@gmail.com" <mhkelley58@gmail.com>, "robin.murphy@arm.com"
- <robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
- "will@kernel.org" <will@kernel.org>, "hch@lst.de" <hch@lst.de>,
- "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "corbet@lwn.net"
- <corbet@lwn.net>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "roberto.sassu@huaweicloud.com" <roberto.sassu@huaweicloud.com>
-Subject: Re: [PATCH v3 1/1] Documentation/core-api: Add swiotlb
- documentation
-Message-ID: <20240430220924.3d0446f7@meshulam.tesarici.cz>
-In-Reply-To: <SN6PR02MB41579F43DD1ACB401EEC9E7AD41A2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240429151337.1069470-1-mhklinux@outlook.com>
-	<20240430132413.69797af1@mordecai>
-	<SN6PR02MB41579F43DD1ACB401EEC9E7AD41A2@SN6PR02MB4157.namprd02.prod.outlook.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WImPU34v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C0CC2BBFC;
+	Tue, 30 Apr 2024 20:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714507821;
+	bh=58CBaYeu4exH4ljqyrgLewfHjjrJsr+lwEV4eBnRRBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WImPU34vi9oog0mmRTYwMKyo1ISHKsDV6YPWI+6u3+xUXQD8qpYdkh3C/41+D6CJw
+	 k6UKJmZXrLyk5BK2449OfE1cJpyzZgF9BxLmxWHNjFuDNGZudLuAXQSJKMr8FdYCQV
+	 cIEig5Y9rFDOqmC2AJQLvqY3T39W804ABIfyx3tLU0gZeu1lre7MEyjzk+57HmK9OT
+	 mYlEXGZh2NVuCp9T1OIwqLDSqmZV580TjPigcNNiN6CtS4oF6eVQHiZ3WNf0YPsEbu
+	 W4pzjqjzlUQ7Y9m+2ZqyTh7DDtM1ly32OG7YCKWgtLAsuBKB4WT4rvc+6gb628z1ZP
+	 H8aC6Gjk+siug==
+Date: Tue, 30 Apr 2024 21:08:44 +0100
+From: Simon Horman <horms@kernel.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Felix Fietkau <nbd@nbd.name>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Landen Chao <Landen.Chao@mediatek.com>, devicetree@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net] net: dsa: mt7530: fix impossible MDIO address and
+ issue warning
+Message-ID: <20240430200844.GE2575892@kernel.org>
+References: <e615351aefba25e990215845e4812e6cb8153b28.1714433716.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e615351aefba25e990215845e4812e6cb8153b28.1714433716.git.daniel@makrotopia.org>
 
-On Tue, 30 Apr 2024 15:48:42 +0000
-Michael Kelley <mhklinux@outlook.com> wrote:
+On Tue, Apr 30, 2024 at 12:45:46AM +0100, Daniel Golle wrote:
+> The MDIO address of the MT7530 and MT7531 switch ICs can be configured
+> using bootstrap pins. However, there are only 4 possible options for the
+> switch itself: 7, 15, 23 and 31 (ie. only 3 and 4 can be configured, bit
+> 0~2 are always 111). Practically all boards known as of today use the
+> default setting which is to have the switch respond to address 31, while
+> the built-in switch PHYs respond to address 0~4 in this case.
+> 
+> However, even in MediaTek's SDK the address of the switch is wrongly
+> stated in the device trees as 0 (while in reality it is 31), so warn the
+> user about such broken device tree and make a good guess what was
+> actually intended.
+> 
+> This is imporant to not break compatibility with older Device Trees as
+> with commit 868ff5f4944a ("net: dsa: mt7530-mdio: read PHY address of
+> switch from device tree") the address in device tree will be taken into
+> account. Doing so instead of assuming the switch is always at
+> address 31 which was previously hard-coded will obviously break things
+> for many existing downstream device trees as they contain the wrong
+> address (0) which previously didn't matter.
+> 
+> Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 
-> From: Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> Sent: Tuesday, April 30, =
-2024 4:24 AM
-> > >
-> > > +Usage Scenarios
-> > > +---------------
-> > > +swiotlb was originally created to handle DMA for devices with addres=
-sing
-> > > +limitations. As physical memory sizes grew beyond 4 GiB, some device=
-s could
-> > > +only provide 32-bit DMA addresses. By allocating bounce buffer memor=
-y below
-> > > +the 4 GiB line, these devices with addressing limitations could stil=
-l work and
-> > > +do DMA. =20
-> >=20
-> > IIRC the origins are even older and bounce buffers were used to
-> > overcome the design flaws inherited all the way from the original IBM
-> > PC. These computers used an Intel 8237 for DMA. This chip has a 16-bit
-> > address register, but even the early 8088 CPUs had a 20-bit bus. So IBM
-> > added a separate 74LS670 4-by-4 register file chip to provide the high 4
-> > bits for each of the 4 DMA channels. As a side note, these bits were not
-> > updated when the 8237 address register was incrementing from 0xffff, so
-> > DMA would overflow at every 64K address boundary. PC AT then replaced
-> > these 4 bits with an 8-bit DMA "page" register to match the 24-bit
-> > address bus of an 80286. This design was not changed for 32-bit CPUs
-> > (i.e. 80386).
-> >=20
-> > In short, bounce buffers were not introduced because of 64-bit CPUs.
-> > They were already needed on 386 systems.
-> >=20
-> > OTOH this part of the history need not be mentioned in the
-> > documentation (unless you WANT it). =20
->=20
-> I knew there was some even earlier history, but I didn't know the
-> details. :-(  I'll add some qualifying wording about there being multiple
-> DMA addressing limitations during the history of the x86 PCs, with
-> the 32-bit addressing as a more recent example.  But I won't try to
-> cover the details of what you describe.
+The cited commit is present in net-next but not net.
+So I think this patch should target net-next.
 
-Yes, this sounds like a good level of detail.
-
-> > > +
-> > > +More recently, Confidential Computing (CoCo) VMs have the guest VM's=
- memory
-> > > +encrypted by default, and the memory is not accessible by the host h=
-ypervisor
-> > > +and VMM. For the host to do I/O on behalf of the guest, the I/O must=
- be
-> > > +directed to guest memory that is unencrypted. CoCo VMs set a kernel-=
-wide option
-> > > +to force all DMA I/O to use bounce buffers, and the bounce buffer me=
-mory is set
-> > > +up as unencrypted. The host does DMA I/O to/from the bounce buffer m=
-emory, and
-> > > +the Linux kernel DMA layer does "sync" operations to cause the CPU t=
-o copy the
-> > > +data to/from the original target memory buffer. The CPU copying brid=
-ges between
-> > > +the unencrypted and the encrypted memory. This use of bounce buffers=
- allows
-> > > +existing device drivers to "just work" in a CoCo VM, with no modific=
-ations
-> > > +needed to handle the memory encryption complexity. =20
-> >=20
-> > This part might be misleading. It sounds as if SWIOTLB would not be
-> > needed if drivers were smarter. =20
->=20
-> I'm not sure I understand the point you are making. It is possible for a
-> driver to do its own manual bounce buffering to handle encrypted memory.
-> For example, in adding support for CoCo VMs, we encountered such a
-> driver/device with complex DMA and memory requirements that already
-> did some manual bounce buffering. When used in a CoCo VM, driver
-> modifications were needed to handle encrypted memory, but that was
-> the preferred approach because of the pre-existing manual bounce
-> buffering. In that case, indeed swiotlb was not needed by that driver/dev=
-ice.
-> But in the general case, we don't want to require driver modifications for
-> CoCo VMs. swiotlb bounce buffering makes it all work in the exactly the
-> situation you describe where the buffer memory could have originated
-> in a variety of places.
->=20
-> Could you clarify your point?  Or perhaps suggest alternate wording
-> that would help avoid any confusion?
-
-Ah, I wasn't aware that some drivers implement their own bounce
-buffers. I can't say I'm really happy about it, because such drivers
-must inevitably deal with all the complexities like IOMMU, decrypting,
-etc. But you're right - bounce buffers can be implemented by individual
-drivers.
-
-I have now read the sentence again, and the problematic wording is
-"existing device drivers". I know it's not the same as "legacy device
-drivers", but it still leaves some doubt whether "future device drivers"
-should make use of SWIOTLB. So either remove "existing" or be more
-explicit and say "existing and future device drivers". Then it sounds
-fine to me.
-
-HTH
-Petr T
+...
