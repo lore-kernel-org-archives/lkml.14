@@ -1,92 +1,116 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B83D3611D;
-	Tue, 30 Apr 2024 18:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3672F23C9
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 18:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714501978; cv=none; b=cQOfEcrcnv2IwzDJJnNw2Eu7jHdvmwsZ0O/0MIL0v6AJYmsXiHLaayiQ8PPup31J6gz3VH6WL4Zl5j5QSYKiOf4O5LefcS3rYdFbWuP1nRk6KKkVWjBE2s0zy0x8if2CKbDxTp+dOvaOPbqi16qFrop6/DeFbKjze1NoZJ4yu/g=
+	t=1714502299; cv=none; b=GBSbkiL/3UOME+DLLMERh88MzsM+XQkgdEVZoNbwOqrbBEW2EipAI9MHtnkp0RONOwHfMgivC6vG4hiLGZmsLGTQHYtjiMDGCO04fbdPJLSB+kIJ2gtv+UlenNJfTFyc3TEq43o/+RGf+tqBHMonhL/3AlhjqZGB3RqaWSSHmnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714501978; c=relaxed/simple;
-	bh=CQprubpB8YMHv2XCb19xqFCKvkLYHG2uyxu3LDv3wsc=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=Q8IZwn+cX3twoC5uYhMFANr+Je03gQqk5puDo3P/zX4szQqfIk1zo2177MJUkE13f0Y91sQGwASVjRugiGi7I07jeF70+CppsgI6MH3UThALi9XBTCLinBP1Kj1zzMsxcidZmOyv3ysWaBY5LjsbPYNfGxDsj8ZuWFMULX1odDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bd+VB3Ak; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714502299; c=relaxed/simple;
+	bh=EHewurBx2AMPQUT06vASr1weugukBXU7zjHEuhuZQ6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WT5c4LHi7bK6shFnbKc4R7lYzRDk9lmHU5RGcDU8iIy9ElXLWEQx4/05euFGRdRTIqjW/cr0l7dkqxZhzlKNK6g3Miy5B2k+CTLErhfYtwf8nxmaF291ySETuuRKmBRvSMYC9YkhnTb0oODW+Ric6W6zIYZd4Y2YhwgUyMdzwlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=rnjMChfi; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bd+VB3Ak"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6ee4162061fso1105771a34.1;
-        Tue, 30 Apr 2024 11:32:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="rnjMChfi"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f074520c8cso5821694b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:38:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714501976; x=1715106776; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xV7zk+wo5XdD6RHY7NZuGP7XMhfV5bcA88HKAcpktm8=;
-        b=bd+VB3Ak5rXP2/oQU7/Ofa/M2WnOOwMriA+hONwUi8y3idpu8yyczwxGSn96WWO1Q0
-         dMOkE/UFcgfAnQa4crU+kwkCYLqXcK/mxLCodmodSZ+xrabNdPZ39bawyXiDlM+JoEvg
-         OAhV6yJk2NH9ze4FQDWA8CA4ZxzbVlr0bkK2LL8PCV5QUWE+8HMoMnhKYeUHHxEEt8Lj
-         tYFHq3YuRlFkvVvzxItAQ3KcIPpXthQh9RUpay3jxwY+d6u4GjLR2hCDkPpqP323gfnT
-         Lw/zWlYfJm0oiLM5i1bKsDgqeM2B8tqZG+o93uE/n9xoXbmsfbe9GnRzMyDDAu5hFnkS
-         DJAA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714502296; x=1715107096; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+xFFNyvJRBStVKiZvJgpzL4WEEIzaE/N0wvWYH0AAbU=;
+        b=rnjMChfibWDiLohflxwp9S+1eFUkG2w6M1RpCnqZqc/pNgcXaFYWB5ntCoeUkxWaSA
+         0Jh4VYqB0iZNJT7j56iAUHnUxpTNYCk94BIcw6QxaallfHX/4QM4vhgr4r6geFH6DRj4
+         k1TDzanAAvYC/b4u7cWu7+pugucQEzfDrFJ/01TtNjD+vZLN7m0061e3ZRr5m9BnedMB
+         OMVTgpJ72UZiT/MUk7MuwUdblKKaaEodl7V6RS0sYY9v9jQHR/hD/U0d3vhEKWqqxHCe
+         kUMrALVduOq6uxhQC7ipfF0wWb+6zpc5QKcOrvEryMiJ50IIthF/pk6HSZ3YkjPBBwPO
+         9SbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714501976; x=1715106776;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xV7zk+wo5XdD6RHY7NZuGP7XMhfV5bcA88HKAcpktm8=;
-        b=Zt9DB8YzNDAXRO5a1B2AjZn9fBDxa6T70FwbAOOoVdMraVSJ58pIrrAI4Ra6fkD3Fg
-         5fvgFww8yIXD8boa4HHaLcw52Ke3EenW7CYnymtTeSmaA7m/qrUVM9p2/gOvMlrkeDIj
-         vzbu8rxPrk06Q/W+Gvlzw8MjHNGAT1CEnaUCqEGc1HTEaNMiHKO6WpXi20yIt9kChE15
-         8vGdyIoQmAMm6ZHXsb7x7qnkNCd1niYOaNXsDmCNr+03iewCsOqd5FkY+HGXt34W5Xik
-         p3hSX4ff76z5RYWoX2gsxpsXpMw8WYU+3wgz8+ioB7aEh/Li/WBqTWYiHQ+txUlTpLGD
-         CQxg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkd0rD4fpn6kozaFQ7EMstp7LYRjyDHiZqH/FoTtj8U+YLvzPXKOPQh2qUbcU14DIhADm7N7R3oacojto4WChIxLFNdeFLWHBEnNmpVbSkv+2luGC6y3tGsRHESKkJr30xTxCe
-X-Gm-Message-State: AOJu0YzGSOFMLe0Drx+StJpX3EYs0d991EzDZWSTta3qca5IUmH6ABPr
-	0uh8eigGF7iTZ2A3VVHBpgcD631IPYY4omGgosFwlMdZ0cjZiSTzaUU++A==
-X-Google-Smtp-Source: AGHT+IEjLk0SXti2ttFvB6m1CtczScYTQcqB4YELArlFTfgvA+mtXr+a8fheoqQ1WO2EBJ+ARX5f0g==
-X-Received: by 2002:a05:6830:22c7:b0:6ee:29d3:81bc with SMTP id q7-20020a05683022c700b006ee29d381bcmr362547otc.2.1714501976081;
-        Tue, 30 Apr 2024 11:32:56 -0700 (PDT)
-Received: from localhost (164.146.150.34.bc.googleusercontent.com. [34.150.146.164])
-        by smtp.gmail.com with ESMTPSA id y16-20020a37e310000000b0078d5fdc929fsm11604498qki.104.2024.04.30.11.32.55
+        d=1e100.net; s=20230601; t=1714502296; x=1715107096;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+xFFNyvJRBStVKiZvJgpzL4WEEIzaE/N0wvWYH0AAbU=;
+        b=K9J1zcj4w8+EBJ7giQB5Dt0+2Ho+fgzH9Rr9cuxFSPQDS5O1y1w37K/Acm+QqY9eJm
+         8EBz4Y0IKshdumR8rWebQUekjujCNfIjEk45imGZnR7jXBuW1kylwmuYva2/Q1mNB0y7
+         gRILjfknuOLMXorDOnqMnBxf/g8qxmN0nVQ6G/NgTDL85nQekGXZjonnPHCGqiQF3Lsc
+         xSQw1qTzdXu3P6l+Cj/wDwtjDNoJSzp2sjgL9N63ZQO4ppysS/hbOEfhYFyEFUp0Xxk+
+         AyFOM/daoZydVfHsp0jPvPsF1oHIXeTDM04HTOTNUcVEpzZ4lHxucEzE5A3/ZzE0HLCC
+         KQrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnsj7jcq2/Jc/2BLAHX+MaMq/jY6yaiIgg0YoHLhTE0S629dWhqeJ/LuLG16MuVuP/LEy9fNLPwkit5T24M3owlp4gKMWggfBIqNTZ
+X-Gm-Message-State: AOJu0YxvUN2JNYiH4tQd4uOSF/CxikQh+8mE1EV30rmsAh1/QSqKQlc9
+	LbI9z8z9xI+GSjAMKbg83rNWY48sCOPcKoYW0jvb+lozEzLMS8g2RedOLgtV2jc=
+X-Google-Smtp-Source: AGHT+IEAb8YNwNMBc7V5kulQjE/hD4v1bwrN1gT1wqu/osrvWEeW+ChqYczlkXqTDwcnz+KuEOG2gw==
+X-Received: by 2002:a05:6a20:3d8c:b0:1a9:c4cc:721d with SMTP id s12-20020a056a203d8c00b001a9c4cc721dmr879056pzi.57.1714502296448;
+        Tue, 30 Apr 2024 11:38:16 -0700 (PDT)
+Received: from ghost (mobile-166-137-160-039.mycingular.net. [166.137.160.39])
+        by smtp.gmail.com with ESMTPSA id r16-20020a056a00217000b006ed87983f95sm21338288pff.52.2024.04.30.11.38.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 11:32:55 -0700 (PDT)
-Date: Tue, 30 Apr 2024 14:32:55 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Richard Gobert <richardbgobert@gmail.com>, 
- davem@davemloft.net, 
- edumazet@google.com, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- dsahern@kernel.org, 
- willemdebruijn.kernel@gmail.com, 
- alobakin@pm.me, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Cc: Richard Gobert <richardbgobert@gmail.com>
-Message-ID: <663139575e4d7_32e7ba29446@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20240430143555.126083-3-richardbgobert@gmail.com>
-References: <20240430143555.126083-1-richardbgobert@gmail.com>
- <20240430143555.126083-3-richardbgobert@gmail.com>
-Subject: Re: [PATCH net v4 2/2] net: gro: add flush check in
- udp_gro_receive_segment
+        Tue, 30 Apr 2024 11:38:15 -0700 (PDT)
+Date: Tue, 30 Apr 2024 11:38:12 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Evan Green <evan@rivosinc.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] riscv: cpufeature: Fix thead vector hwcap removal
+Message-ID: <ZjE6lAMy/6+HAB4X@ghost>
+References: <20240429-cpufeature_fixes-v3-0-6aa11dde513b@rivosinc.com>
+ <20240429-cpufeature_fixes-v3-1-6aa11dde513b@rivosinc.com>
+ <20240430-6781cbaa0a929246cb77dafd@orel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240430-6781cbaa0a929246cb77dafd@orel>
 
-Richard Gobert wrote:
-> GRO-GSO path is supposed to be transparent and as such L3 flush checks are
-> relevant to all UDP flows merging in GRO. This patch uses the same logic
-> and code from tcp_gro_receive, terminating merge if flush is non zero.
+On Tue, Apr 30, 2024 at 12:07:26PM +0200, Andrew Jones wrote:
+> On Mon, Apr 29, 2024 at 03:29:51PM GMT, Charlie Jenkins wrote:
+> ...
+> > +		 *
+> > +		 * Disable vector if the boot hart has a T-Head mvendorid and an marchid of 0.
 > 
-> Fixes: e20cf8d3f1f7 ("udp: implement GRO for plain UDP sockets.")
-> Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+> I probably would have added the 'why' to this comment, i.e. T-Head doesn't
+> have standard V so things will break if we try to use it, or whatever. The
+> 'what' alone is just putting the easy to read condition below into
+> English, making it an unnecessary comment.
 
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+The 'why' is directly above this comment. I'll just get rid of this
+addition.
+
+- Charlie
+
+> 
+> Thanks,
+> drew
+> 
+> >  		 */
+> > -		if (acpi_disabled && riscv_cached_mvendorid(cpu) == THEAD_VENDOR_ID &&
+> > -		    riscv_cached_marchid(cpu) == 0x0) {
+> > +		if (acpi_disabled && boot_vendorid == THEAD_VENDOR_ID && boot_archid == 0x0) {
+> >  			this_hwcap &= ~isa2hwcap[RISCV_ISA_EXT_v];
+> >  			clear_bit(RISCV_ISA_EXT_v, isainfo->isa);
+> >  		}
+> > 
+> > -- 
+> > 2.44.0
+> > 
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
