@@ -1,123 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C3C171668
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDFC171E40
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 13:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714483176; cv=none; b=OyQTr0rgbKsLpg12Xmiugm35XkdtNmZPqpuZioDLCCLTIG5D1/RNjtT1igu2OhPFACHRKLTRealWVgDqL+79g3DHgY+dNs7/lkPwTiR1H55v5Qc9N9bEpzWq0Bqg6rkq6z3BCqbpmW3JzY+cA7kaD//rfkeRFEYOnw9p2dEUKSk=
+	t=1714483178; cv=none; b=S3i11OwJ8aUwulVlZmnzUi7OZr+6bm7AyiGcDK0nJ+GgRfsoy1vmamTe2Lhgg0/8F2N3LDNl5EwATIh2MZCCyrnEw/Y92d2hd8rIsfAYfnpkzpj2Dz3xzPQbyktOSzRUXafYZgtkHYE5YVXq75WFOlmvU18ttTNEx8nuXujJtiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714483176; c=relaxed/simple;
-	bh=flc38teKNx+GZo7NmJ5kYlP5ydouaYSS4d1wDV2Fd1M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Jsu29EymGgUhvw9PI7a9lfC0K97xm3xsE2O4xCdWv+TnQFVMc28aiUyroQD0AMo3WYnVkQI22asXOQZA8hFUTm5dus53t/j4KAGVfPC+fxn45HSiK/Ehr94bFQLcKn7pelb1gEnKn5tXsL/mGq9yX7feFJhu0t1Ex+uvuCmRvcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QSyykgKc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714483178; c=relaxed/simple;
+	bh=fqXn07NJ7GE3yV1s+ytTihFNdpEBLH0EaqCNH1hPBtY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W4p0fApxORDbX/cWpYpZj0KXROZhnsJ0wWsRSVvOA2hhOMrRG1ZCMdBI13BC5xak1MFKfMqTsQlmGikAwfKObrsCorfvWp49a7vFvgumhp0xeicBmynLPW//9/a6eOKwwLQLt3ozq8foQMhri6ZRTEDgjKuOr6hm9f2pGYmQ+BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XqKNPmxV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+cGZ9RCy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XqKNPmxV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+cGZ9RCy; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QSyykgKc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714483174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=flc38teKNx+GZo7NmJ5kYlP5ydouaYSS4d1wDV2Fd1M=;
-	b=QSyykgKc7Bgy8t5tvngWwlBbbdBY265iy2lXdQiCw7j1NXN41Rey6FcPwssyC/FUF9ZOms
-	XS7yzv1nM181GqtVcW2maxSWoyUfuq/6SrH3a5PI183B3It8nUkp7lIiK4gm26/fKTNbGF
-	sDuAiZa27czZbrTwtYrZ8KPVlQ+ubSY=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-573-qzEtkfj2OjqvElhoCiGK6A-1; Tue, 30 Apr 2024 09:19:32 -0400
-X-MC-Unique: qzEtkfj2OjqvElhoCiGK6A-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5728683a63cso244823a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 06:19:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714483171; x=1715087971;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=flc38teKNx+GZo7NmJ5kYlP5ydouaYSS4d1wDV2Fd1M=;
-        b=PxFVzkMd/GkcBUJBXL6JYyVfGQn4XwDrkfG2uoulTfJbTHnUdncHNSJCdtP8xG3+IB
-         Lpho5+N3FioikMPBOEBZk/eh3Cw8whMIgZA//WywHUMvtBd1HerJRKdTSb3tlApDYWFA
-         3ijOjjIlVt068E2jwIiDu3y1pQV0pp7V4oOoZ2ur1UrlGGiFLMM/VmOuf9rLpe01yQeq
-         +mQCT9+EWjAeQmIjTfG6KYSs/wDZqFVPKjhN9Z2cNKHAWi/Ut0MXLlanGaHRCuzEfKp3
-         niRhCBKzz8VvSzXbOXqA8sKpxLdiDdNeVSmG525GNW1XIBn75RviAJX8H4+BeKXkhz10
-         AIkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgWeyKxb2vDkPItGon1UgcU5mcSJxmLwtN/qHfyYi/WcUNeOIIyDbizWuU5a6Ik54Pz4R90G+n5cpsH+8TqZIPWosMfnJiVQogyPrG
-X-Gm-Message-State: AOJu0YzCDj2bT7s5J8AI5T6KkzGbRC7Vu07NWaqWARRlA13X1ahMDZ9a
-	qwAK2luRVC7C3i/w3vflzuewZi6ZtxyDOeqyE+PjuGYAKWshaucTMkV6jrWK0vCulBhb5quTBzd
-	hvGDXkH7ap4NJ4SDiyKE384yO7rqw4awuLIaQQ0uYJV/66xb3NJJ2XhQsMw3/sQ==
-X-Received: by 2002:a17:907:31c2:b0:a58:a102:14c9 with SMTP id xf2-20020a17090731c200b00a58a10214c9mr10029941ejb.1.1714483171184;
-        Tue, 30 Apr 2024 06:19:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGh4K4utBzJoK8EabmELqU4eU7xXvQ9Tvf1P7sU4CiIYaYLxbNlXgftXkCnmG96HMMAft3zHA==
-X-Received: by 2002:a17:907:31c2:b0:a58:a102:14c9 with SMTP id xf2-20020a17090731c200b00a58a10214c9mr10029918ejb.1.1714483170818;
-        Tue, 30 Apr 2024 06:19:30 -0700 (PDT)
-Received: from gerbillo.redhat.com ([2a0d:3341:b0ae:6a10::f71])
-        by smtp.gmail.com with ESMTPSA id j21-20020a170906431500b00a521e5856f6sm15163433ejm.51.2024.04.30.06.19.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 06:19:30 -0700 (PDT)
-Message-ID: <e273971a5219cc240c4e9dda1adbbdf7a5ee6812.camel@redhat.com>
-Subject: Re: [PATCH v2] rxrpc: Fix using alignmask being zero for
- __page_frag_alloc_align()
-From: Paolo Abeni <pabeni@redhat.com>
-To: David Howells <dhowells@redhat.com>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>, 
- linux-afs@lists.infradead.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>, Marc
- Dionne <marc.dionne@auristor.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>
-Date: Tue, 30 Apr 2024 15:19:28 +0200
-In-Reply-To: <20240428111640.27306-1-linyunsheng@huawei.com>
-References: <20240428111640.27306-1-linyunsheng@huawei.com>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XqKNPmxV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+cGZ9RCy";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XqKNPmxV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+cGZ9RCy"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 622C91F7E3;
+	Tue, 30 Apr 2024 13:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714483175; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=hP3+rSE6dC1kyvM4PrsVsdM9kaG51YId12Fi+b44hcM=;
+	b=XqKNPmxVbiW1ma3f5nSK4ojPJovfZdxxRlSBljL6bzxex075dvFUL81+hYyCV2/K5fX50p
+	bSvWcfzVFIWL+FKEljz5p9Tl4h6c2B+nsEh1tT7rUXJoZDOhmllHDm3u8ZWtdq1F+fSvuk
+	Fnp9nyoAofBsaEOTR4X+P0N1BXqAQgc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714483175;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=hP3+rSE6dC1kyvM4PrsVsdM9kaG51YId12Fi+b44hcM=;
+	b=+cGZ9RCyuylUPb1e/HJB/Z2fU/Ssz7jqsHk54J1+9nZr8CC0WoAvquxQe90Gv/d/HFtqld
+	BfG9U2yIejIiGgAg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=XqKNPmxV;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=+cGZ9RCy
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714483175; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=hP3+rSE6dC1kyvM4PrsVsdM9kaG51YId12Fi+b44hcM=;
+	b=XqKNPmxVbiW1ma3f5nSK4ojPJovfZdxxRlSBljL6bzxex075dvFUL81+hYyCV2/K5fX50p
+	bSvWcfzVFIWL+FKEljz5p9Tl4h6c2B+nsEh1tT7rUXJoZDOhmllHDm3u8ZWtdq1F+fSvuk
+	Fnp9nyoAofBsaEOTR4X+P0N1BXqAQgc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714483175;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=hP3+rSE6dC1kyvM4PrsVsdM9kaG51YId12Fi+b44hcM=;
+	b=+cGZ9RCyuylUPb1e/HJB/Z2fU/Ssz7jqsHk54J1+9nZr8CC0WoAvquxQe90Gv/d/HFtqld
+	BfG9U2yIejIiGgAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4F747133A7;
+	Tue, 30 Apr 2024 13:19:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gyT2EefvMGZgMAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 30 Apr 2024 13:19:35 +0000
+From: Daniel Wagner <dwagner@suse.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	James Smart <james.smart@broadcom.com>,
+	Hannes Reinecke <hare@suse.de>,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH v7 0/5] nvme-fabrics: short-circuit connect retries
+Date: Tue, 30 Apr 2024 15:19:23 +0200
+Message-ID: <20240430131928.29766-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 622C91F7E3
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
 
-On Sun, 2024-04-28 at 19:16 +0800, Yunsheng Lin wrote:
-> rxrpc_alloc_data_txbuf() may be called with data_align being
-> zero in none_alloc_txbuf() and rxkad_alloc_txbuf(), data_align
-> is supposed to be an order-based alignment value, but zero is
-> not a valid order-based alignment value, and '~(data_align - 1)'
-> doesn't result in a valid mask-based alignment value for
-> __page_frag_alloc_align().
->=20
-> Fix it by passing a valid order-based alignment value in
-> none_alloc_txbuf() and rxkad_alloc_txbuf().
->=20
-> Also use page_frag_alloc_align() expecting an order-based
-> alignment value in rxrpc_alloc_data_txbuf() to avoid doing the
-> alignment converting operation and to catch possible invalid
-> alignment value in the future. Remove the 'if (data_align)'
-> checking too, as it is always true for a valid order-based
-> alignment value.
->=20
-> Fixes: 6b2536462fd4 ("rxrpc: Fix use of changed alignment param to page_f=
-rag_alloc_align()")
-> Fixes: 49489bb03a50 ("rxrpc: Do zerocopy using MSG_SPLICE_PAGES and page =
-frags")
-> CC: David Howells <dhowells@redhat.com>
-> CC: Alexander Duyck <alexander.duyck@gmail.com>
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Acked-by: David Howells <dhowells@redhat.com>
+I've splitted the last patch into the hopefully non controversial part 'do not
+retry when DNR is set' and the 'don't retry auth failures'. I hope we can get at
+least the first few patches in and have a lively discussion on the final patch
+at LSF.
 
-Double checking before doing dumb mistakes...
+changes:
+v7:
+ - updated commit message patch #3
+ - split last patch so that only the DNR checks
+   are added first and then the auth reconnect failure test
 
-@David: I assume from your ack you are fine with this patch being
-merged via the net tree, am I correct?
+v6:
+  - reorder series
+  - extended nvmf_should_reconnect
+  - added auth retry logic
+  - https://lore.kernel.org/linux-nvme/20240415124220.5433-1-dwagner@suse.de/
+  
+v5:
+  - nvme: do not mix kernel error code with nvme status
+  - nvmet: separate nvme status from dhchap status
+  - https://lore.kernel.org/linux-nvme/20240409093510.12321-1-dwagner@suse.de/
 
-Thanks,
+v4:
+  - rebased
+  - added 'nvme: fixes for authentication errors' series
+  - https://lore.kernel.org/all/20240404154500.2101-1-dwagner@suse.de/
 
-Paolo
+v3:
+  - added my SOB tag
+  - fixed indention
+  - https://lore.kernel.org/linux-nvme/20240305080005.3638-1-dwagner@suse.de/
+
+v2:
+  - refresh/rebase on current head
+  - extended blktests (nvme/045) to cover this case
+    (see separate post)
+  - https://lore.kernel.org/linux-nvme/20240304161006.19328-1-dwagner@suse.de/
+  
+v1:
+  - initial version
+  - https://lore.kernel.org/linux-nvme/20210623143250.82445-1-hare@suse.de/
+
+Daniel Wagner (1):
+  nvme: do not retry authentication failures
+
+Hannes Reinecke (4):
+  nvmet: lock config semaphore when accessing DH-HMAC-CHAP key
+  nvmet: return DHCHAP status codes from nvmet_setup_auth()
+  nvme: return kernel error codes for admin queue connect
+  nvme-fabrics: short-circuit reconnect retries
+
+ drivers/nvme/host/auth.c               |  6 +--
+ drivers/nvme/host/core.c               |  6 +--
+ drivers/nvme/host/fabrics.c            | 51 ++++++++++++++++----------
+ drivers/nvme/host/fabrics.h            |  2 +-
+ drivers/nvme/host/fc.c                 |  4 +-
+ drivers/nvme/host/nvme.h               |  2 +-
+ drivers/nvme/host/rdma.c               | 19 ++++++----
+ drivers/nvme/host/tcp.c                | 22 +++++++----
+ drivers/nvme/target/auth.c             | 22 +++++------
+ drivers/nvme/target/configfs.c         | 22 ++++++++---
+ drivers/nvme/target/fabrics-cmd-auth.c | 49 +++++++++++++------------
+ drivers/nvme/target/fabrics-cmd.c      | 11 +++---
+ drivers/nvme/target/nvmet.h            |  8 ++--
+ 13 files changed, 129 insertions(+), 95 deletions(-)
+
+-- 
+2.44.0
 
