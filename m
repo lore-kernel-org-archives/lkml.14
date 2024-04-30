@@ -1,126 +1,181 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647B2180A65
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 18:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003F51802DA;
+	Tue, 30 Apr 2024 18:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714501355; cv=none; b=HQTTvhH5nRMl9BGveML6BSXYd+K3tVz9R1N/recFq+OP663k0w+rSd+d30vXnhmHfWkXat63fwa94NmXe7Ig9yFy0yBPt/BmETidRMZ2oQCDwvOT5jZH3mDryg8rxoPkI3w1DhIiIWZ0vX3LqUVG4y+5mthWDiWTnvYBZvpsd6E=
+	t=1714501367; cv=none; b=gVF8gWR21OxyLO6Kf2U2o1Xu7IN2WnS2eM/qMHd5Ck0aKieO9N+/UmcXmCYYrB/vmfuG1JdJcLnSLfFFxnSwYcoEYhBbRmQjEpYyuLfdUp1gl24KbZxMYKPSU2zy7iZZ2Y8PdQB7+RwVbSS4yjFzeQ71v3s947Xto2njYh7IsrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714501355; c=relaxed/simple;
-	bh=Tys9Vqu4Np9NrR4Q24ohGiMMf8UxyZr7+N9SeUjltmg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nt10hzo5U6/QUGnNR/7KudUF91NcAgQ43BvrcGYMy4bubP5yksHPoDBD4+FPLhb8r4/7L8NJp7oP2E1kqlX8nD45dkcACV4/iE9m+6rJnBJpmFM4fafyi+0aoSwzzIl0C2xjKXwpzdaatd/51upMLKtemYOzDcJWvXH59OXMaVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=jVdcxRlL; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="jVdcxRlL"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a58eb9a42d9so454280866b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1714501352; x=1715106152; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Eim2qM9dw2NaPc5K3CL5p94YEvS81xT9DDWzSJ6rzVw=;
-        b=jVdcxRlL5j4m5yjl+WkqXscbtYgVttxc/4JvOHNJSKoCALCp8m5WMRqqDyNQCmsAA4
-         WChmteAaj0mZVrJnCchQERr0n1ieqhyYmztRykfsQJ8lMjLyD4kBUjPTGhhmdCk0MMJ1
-         ZqXLxputKkkwMaIlMws1NdafEq2PMpSbXYuqGSfNedb895+iaPrvIzXcuN/4LibEUcjx
-         Cx1fTACsnSES/HawFo/TwxuJ7jG6+oACt62OwtYWj8bJN47HBesy6pQd1AASEl63CHSf
-         rvj4vjVYZYyRwtANKrfZU7hdxVUMZfbaL5vgQ7EKZZAWENl/MEvXAhZAre7eiM0F7qtW
-         +C4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714501352; x=1715106152;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Eim2qM9dw2NaPc5K3CL5p94YEvS81xT9DDWzSJ6rzVw=;
-        b=pfMutV5NgYz9UE3Reu987H0GvLhqZJirt2XJ0j51kJTGGzgq/kqLV/jFkK8G6O9ax+
-         wZfCgtGbcQFjRpEQo026DBUKZQmI1oFLtxv1pGdNSYQEmsU3RivSJ8xoJXFVFMAm8Bvb
-         MpV7CWSKrgeoFvTf+r8f0s+pI0s+Wh8N/4B+XgVm4BYHfCMgz0g90ObHXszkUOhKurw3
-         Gz1048nO253piecU5IA0XAyHQ29dZ/lNSD6UmJk8ctRmPXbzNQvVbApOjhTCmCBDqljE
-         gNfWYVbCVoYz9mCf+Y4xBNKNbCzQ1wx67FofRWV7lz47TMi6NYqsXqojNUoOlm5QWPHL
-         J1yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmFtRz4HrOV7igbmGllGnqskadg7ElPuSbmnFhSyJdoncXcrqrbKmt1m8re/mJ9Vocj4e8ThtEx8qCI7Ec4onllj6xCwJ7GLVORMhv
-X-Gm-Message-State: AOJu0Yx3Cb/4zgeDN97HINKMNr/GAWro4w9y7XqI21YZSsCnfxKJhp4k
-	aYUavTwouv6uqQNh18KLcqTxghf2IZNxCHUV2UMUglCORegwtg96i7qwMLETA8o=
-X-Google-Smtp-Source: AGHT+IE5aiBScuaQ19uargUpEfy39/b85ALLx+hF4lmyoM77hZpnbkfe7n/+rxmBeqSK1orOCqLUdw==
-X-Received: by 2002:a17:906:c791:b0:a55:b592:7e0a with SMTP id cw17-20020a170906c79100b00a55b5927e0amr377859ejb.48.1714501352560;
-        Tue, 30 Apr 2024 11:22:32 -0700 (PDT)
-Received: from localhost ([79.142.230.34])
-        by smtp.gmail.com with ESMTPSA id j11-20020a170906474b00b00a58eeb329d8sm3949305ejs.44.2024.04.30.11.22.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 11:22:32 -0700 (PDT)
-From: Andreas Hindborg <nmi@metaspace.dk>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Benno Lossin <benno.lossin@proton.me>,  Miguel Ojeda <ojeda@kernel.org>,
-  Alex Gaynor <alex.gaynor@gmail.com>,  Wedson Almeida Filho
- <wedsonaf@gmail.com>,  Anna-Maria Behnsen <anna-maria@linutronix.de>,
-  Frederic Weisbecker <frederic@kernel.org>,  Thomas Gleixner
- <tglx@linutronix.de>,  Andreas Hindborg <a.hindborg@samsung.com>,  Gary
- Guo <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
-  Alice Ryhl <aliceryhl@google.com>,  rust-for-linux@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: hrtimer: introduce hrtimer support
-In-Reply-To: <ZjELgVzzX4oru0gi@Boquns-Mac-mini.home> (Boqun Feng's message of
-	"Tue, 30 Apr 2024 08:17:21 -0700")
-References: <20240425094634.262674-1-nmi@metaspace.dk>
-	<a7a560c7-fb8c-4adf-9f46-2e272f24b335@proton.me>
-	<87v844lbhm.fsf@metaspace.dk> <Zi_Zb1lBOBBUFJFV@boqun-archlinux>
-	<87plu7jahd.fsf@metaspace.dk> <ZjELgVzzX4oru0gi@Boquns-Mac-mini.home>
-User-Agent: mu4e 1.12.4; emacs 29.3
-Date: Tue, 30 Apr 2024 20:22:25 +0200
-Message-ID: <87h6fik8wu.fsf@metaspace.dk>
+	s=arc-20240116; t=1714501367; c=relaxed/simple;
+	bh=XlTQNL+YhpK5nbJwkIGxGuNsLWfK2Atq2y8yIscclCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kClG8nZs8Hsjq4C8ZQ9mZpfnqUZNqzEp6V9p4k9mvlLIQoZ4pHKmsN6H/e0p/HwgJVDi3I6pHp7tMqQrjzEOaHCtepioNqS+5Q8kzWqcgNAtYPbBFtuG/yH5+F2z8PftV4P3+5cxcZdyZeT4zShAVG/vgXImc3c/CmvG3VGf3YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C72C5C2BBFC;
+	Tue, 30 Apr 2024 18:22:45 +0000 (UTC)
+Date: Tue, 30 Apr 2024 14:23:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tze-nan wu <Tze-nan.Wu@mediatek.com>
+Subject: [PATCH] eventfs/tracing: Add callback for release of an
+ eventfs_inode
+Message-ID: <20240430142327.7bff81ba@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Boqun Feng <boqun.feng@gmail.com> writes:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> On Tue, Apr 30, 2024 at 02:33:50PM +0200, Andreas Hindborg wrote:
-> [...]
->> >
->> > Could you see if you can replace this with a `SpinLock<bool>` +
->> > `CondVar`? We shouldn't use Rust atomic in kernel now. I know it's
->> > unfortunate that LKMM atomics are still work in process, but in real
->> > world, you won't do busy waiting for a timer to fire, so a
->> > `CondVar::wait` is better for example purpose.
->>=20
->> Since this is only using the atomic from Rust code, it should be fine
->> right? There is no mixing of memory models on this memory location.
->>=20
->
-> It's better compared to mixing accesses on a same location, but it's
-> still not allowed (for now, at least) to avoid mixing memory models on
-> ordering guarantees, for example:
->
-> (assume all memory location is initialized as 0)
->
-> 	CPU 0				CPU 1
-> 	-----				-----
-> 	x.store(1, RELAXED); // Rust native atomic
-> 	smp_store_release(&y, 1); // LKMM atomic
-> 					let r0 =3D smp_load_acquire(&y);
-> 					let r1 =3D x.load(RELAXED);
->
-> The smp_store_release() and smp_load_acquire() pairs per LKMM, and
-> provide certain rel-acq ordering. But to make it (r0 =3D=3D 1 && r1 =3D=
-=3D 0),
-> C11 memory model needs to understand this sort of orderings, but
-> currently there is no such thing as an "external ordering" to C11 memory
-> model.
->
-> I admit this is much of a theorical concern for code reasoning, in real
-> world, it must "just work", but "if you want to have fun, start with
-> one" ;-)
+Synthetic events create and destroy tracefs files when they are created
+and removed. The tracing subsystem has its own file descriptor
+representing the state of the events attached to the tracefs files.
+There's a race between the eventfs files and this file descriptor of the
+tracing system where the following can cause an issue:
 
-Alright, I will change it to a `CondVar` or a `SpinLock` =F0=9F=91=8D
+With two scripts 'A' and 'B' doing:
 
-BR Andreas
+  Script 'A':
+    echo "hello int aaa" > /sys/kernel/tracing/synthetic_events
+    while :
+    do
+      echo 0 > /sys/kernel/tracing/events/synthetic/hello/enable
+    done
+
+  Script 'B':
+    echo > /sys/kernel/tracing/synthetic_events
+
+Script 'A' creates a synthetic event "hello" and then just writes zero
+into its enable file.
+
+Script 'B' removes all synthetic events (including the newly created
+"hello" event).
+
+What happens is that the opening of the "enable" file has:
+
+ {
+	struct trace_event_file *file = inode->i_private;
+	int ret;
+
+	ret = tracing_check_open_get_tr(file->tr);
+ [..]
+
+But deleting the events frees the "file" descriptor, and a "use after
+free" happens with the dereference at "file->tr".
+
+The file descriptor does have a reference counter, but there needs to be a
+way to decrement it from the eventfs when the eventfs_inode is removed
+that represents this file descriptor.
+
+Add an optional "release" callback to the eventfs_entry array structure,
+that gets called when the eventfs file is about to be removed. This allows
+for the creating on the eventfs file to increment the tracing file
+descriptor ref counter. When the eventfs file is deleted, it can call the
+release function that will call the put function for the tracing file
+descriptor.
+
+This will protect the tracing file from being freed while a eventfs file
+that references it is being opened.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240426073410.17154-1-Tze-nan.Wu@mediatek.com/
+
+Cc: stable@vger.kernel.org
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Reported-by: Tze-nan wu <Tze-nan.Wu@mediatek.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c    |  7 +++++++
+ include/linux/tracefs.h     |  3 +++
+ kernel/trace/trace_events.c | 12 ++++++++++++
+ 3 files changed, 22 insertions(+)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 894c6ca1e500..dc97c19f9e0a 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -84,10 +84,17 @@ enum {
+ static void release_ei(struct kref *ref)
+ {
+ 	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
++	const struct eventfs_entry *entry;
+ 	struct eventfs_root_inode *rei;
+ 
+ 	WARN_ON_ONCE(!ei->is_freed);
+ 
++	for (int i = 0; i < ei->nr_entries; i++) {
++		entry = &ei->entries[i];
++		if (entry->release)
++			entry->release(entry->name, ei->data);
++	}
++
+ 	kfree(ei->entry_attrs);
+ 	kfree_const(ei->name);
+ 	if (ei->is_events) {
+diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
+index 7a5fe17b6bf9..d03f74658716 100644
+--- a/include/linux/tracefs.h
++++ b/include/linux/tracefs.h
+@@ -62,6 +62,8 @@ struct eventfs_file;
+ typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
+ 				const struct file_operations **fops);
+ 
++typedef void (*eventfs_release)(const char *name, void *data);
++
+ /**
+  * struct eventfs_entry - dynamically created eventfs file call back handler
+  * @name:	Then name of the dynamic file in an eventfs directory
+@@ -72,6 +74,7 @@ typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
+ struct eventfs_entry {
+ 	const char			*name;
+ 	eventfs_callback		callback;
++	eventfs_release			release;
+ };
+ 
+ struct eventfs_inode;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 52f75c36bbca..6ef29eba90ce 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2552,6 +2552,14 @@ static int event_callback(const char *name, umode_t *mode, void **data,
+ 	return 0;
+ }
+ 
++/* The file is incremented on creation and freeing the enable file decrements it */
++static void event_release(const char *name, void *data)
++{
++	struct trace_event_file *file = data;
++
++	event_file_put(file);
++}
++
+ static int
+ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ {
+@@ -2566,6 +2574,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 		{
+ 			.name		= "enable",
+ 			.callback	= event_callback,
++			.release	= event_release,
+ 		},
+ 		{
+ 			.name		= "filter",
+@@ -2634,6 +2643,9 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 		return ret;
+ 	}
+ 
++	/* Gets decremented on freeing of the "enable" file */
++	event_file_get(file);
++
+ 	return 0;
+ }
+ 
+-- 
+2.43.0
+
