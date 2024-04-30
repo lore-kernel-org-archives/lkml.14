@@ -1,39 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE787175571;
-	Tue, 30 Apr 2024 15:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501F6180A60;
+	Tue, 30 Apr 2024 15:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714492254; cv=none; b=MN/OiRqs1c5SlRekFwqA6GN7zfUxZZCJdk+YZ0qZBc/Y1xTSOgFDDejWqqDpTTRx2WscTIwjUvjESFSQQg3w2aFC8VJ/xd3d76h2oLRqH2+caY1BvAKipTcARS2xd3UoMo+EJ454THMehsQI54OSjgtw/zkFW/YVh0MXoPkmxZY=
+	t=1714492256; cv=none; b=QjwjRNU2lpYrS8rudyXdMiywhbNxaqjnPO8twRNlllXuf7F1kMjGBmwEBw8Jux6FzZP3Ai/s6iJml74fE1KBzRm6ovX9QsbUld6NkUPhmq984GpHi9S/N2pqHlFyNTW5LTJJKEkUcGIyUUd9M5mvRj+lKgp1t6f5o+8PyBTARLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714492254; c=relaxed/simple;
-	bh=MR4T+aVryHDlCdLIA+7+MzjoHtX5UbAViJjBqaEXzNI=;
+	s=arc-20240116; t=1714492256; c=relaxed/simple;
+	bh=qEI9+iVInmUdwyvWghwzJ9fnt6+ljZGyhGys6iPhASw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tqOAh/NWtCDDizgTg8CGaoZwZ1dFgopp8nKvyocckvpHHaROZj6VfVlkeeuEgJmjaQjzZGE5gf2eILdNGKpJBRn+zBsIYy2omwizFx3DL8KuzjZbnMOzfmNS+p+RQrvAPIvvqGtgTDp3qXr73UlbsN+uRpzJq3oerUv+MmpzYjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ElhFqnSP; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=qqnYNkzwHTW5AX4pUKjEoWdbdXIZW6jMVGLiZ6KvFUQi0APQRjh1S+ftcNRg/iQt11Ts7faGg2mzP1qvfiqShYGrNmXC/XdKdzoJGsfQSnT2SxQbCCty/BJqBkXP/nHm8Ru3b+6Ncd/etXLyHb2hbVr3t9u5Hy5uP1q3pEc4CjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QXHjLGSJ; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ElhFqnSP"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D4F7520016;
-	Tue, 30 Apr 2024 15:50:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QXHjLGSJ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 43CD020013;
+	Tue, 30 Apr 2024 15:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714492239;
+	t=1714492243;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EtjDyVeqqMgYUVSHB7nyuZRP2kSxS8c/e1unyRtkL5I=;
-	b=ElhFqnSPGOxirfUFhmp8R2K6zVMRcIlW7z0lkVPipo6NHYFqJrlJOrKs6Zciz2XzHcKDTY
-	a9X5/vzDV/Hbnk+aQqj8QiHGko3GFjvlbaAHs6Usf0i3MRRz8GZtqXRY6OXmhhlMEJVBei
-	JKdirDIoNp+XiGdQVqj/AyWgWVwpP5PCUZXQjcK5hb2+xXkOfs9x6pKRjWqySTAkHvbIkt
-	BbeIhCxWADpn0x6eTBR6JQ6RuHbi1d+dAnr5nXPaHpkSRxL8EwvD6LL96vnTtx3IN0cjg4
-	GtQYcXLd2kI73yOlDHLcOPBsAr8I6DmyGn766H1ybHhr/ct1HXSU5ab8sEnrfQ==
+	bh=oDau1UUzArQJMoURWAmjHOpV0hahq4KJ+hmHXZTqIiI=;
+	b=QXHjLGSJ5jAeb9TyxitWAtpYnSPzbkAdIyAI3EJ6vO/ppi6/+1JET/YT/LalcMTD+3lQdR
+	BZrNoOY8I4EfvzOZ6gcJPxsJ9A+bqKC1vevCEtUgp/PBWnED4Cba01Zq353Mu3EaGsc0Bm
+	VATJ91hMG0uf+RpOt2ZcQJxQMU3vNNXc1G9WGqiFcd5iXmrQ29Xaxc1APPgMH/SkTbfqIA
+	nbGWD2mcbo4OOS/9yY5rlkppL7r0HDuhj7fbeTMEPkIVmxN2+ZVKNWy5X6cUztxkb56Xhh
+	Pxet+RxtWhOxDkno9yB+wgJoCbNEoPozrYvLpnTY2QBpfT0L+dkA+Bn7Qdpgig==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 30 Apr 2024 17:49:53 +0200
-Subject: [PATCH net-next v12 10/13] net: netdevsim: ptp_mock: Convert to
- netdev_ptp_clock_register
+Date: Tue, 30 Apr 2024 17:49:56 +0200
+Subject: [PATCH net-next v12 13/13] netlink: specs: tsinfo: Enhance netlink
+ attributes and add a set command
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-feature_ptp_netnext-v12-10-2c5f24b6a914@bootlin.com>
+Message-Id: <20240430-feature_ptp_netnext-v12-13-2c5f24b6a914@bootlin.com>
 References: <20240430-feature_ptp_netnext-v12-0-2c5f24b6a914@bootlin.com>
 In-Reply-To: <20240430-feature_ptp_netnext-v12-0-2c5f24b6a914@bootlin.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
@@ -68,116 +68,202 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: kory.maincent@bootlin.com
 
-The hardware registration clock for net device is now using
-netdev_ptp_clock_register to save the net_device pointer within the PTP
-clock xarray. netdevsim is registering its ptp through the mock driver.
-It is the only driver using the mock driver to register a ptp clock.
-Convert the mock driver to the new API.
+Add new attributed to tsinfo allowing to get the tsinfo and the hwtstamp
+from a phc provider (composed by a phc index and a phc qualifier) on a
+netdevice's link.
+Add simultaneously a set command to be able to set hwtstamp configuration
+for a specified phc provider.
 
-Reviewed-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Here is few examples:
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --dump tsinfo-get
+             --json '{"header":{"dev-name":"eth0"}}'
+[{'header': {'dev-index': 3, 'dev-name': 'eth0'},
+  'hwtst-provider': {'index': 0, 'qualifier': 0},
+  'phc-index': 0,
+  'rx-filters': {'bits': {'bit': [{'index': 0, 'name': 'none'},
+                                  {'index': 2, 'name': 'some'}]},
+                 'nomask': True,
+                 'size': 16},
+  'timestamping': {'bits': {'bit': [{'index': 0, 'name': 'hardware-transmit'},
+                                    {'index': 2, 'name': 'hardware-receive'},
+                                    {'index': 6,
+                                     'name': 'hardware-raw-clock'}]},
+                   'nomask': True,
+                   'size': 17},
+  'tx-types': {'bits': {'bit': [{'index': 0, 'name': 'off'},
+                                {'index': 1, 'name': 'on'}]},
+               'nomask': True,
+               'size': 4}},
+ {'header': {'dev-index': 3, 'dev-name': 'eth0'},
+  'hwtst-provider': {'index': 2, 'qualifier': 0},
+  'phc-index': 2,
+  'rx-filters': {'bits': {'bit': [{'index': 0, 'name': 'none'},
+                                  {'index': 1, 'name': 'all'}]},
+                 'nomask': True,
+                 'size': 16},
+  'timestamping': {'bits': {'bit': [{'index': 0, 'name': 'hardware-transmit'},
+                                    {'index': 1, 'name': 'software-transmit'},
+                                    {'index': 2, 'name': 'hardware-receive'},
+                                    {'index': 3, 'name': 'software-receive'},
+                                    {'index': 4,
+                                     'name': 'software-system-clock'},
+                                    {'index': 6,
+                                     'name': 'hardware-raw-clock'}]},
+                   'nomask': True,
+                   'size': 17},
+  'tx-types': {'bits': {'bit': [{'index': 0, 'name': 'off'},
+                                {'index': 1, 'name': 'on'},
+                                {'index': 2, 'name': 'onestep-sync'}]},
+               'nomask': True,
+               'size': 4}}]
+
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do tsinfo-get
+             --json '{"header":{"dev-name":"eth0"},
+                      "hwtst-provider":{"index":0, "qualifier":0 }
+}'
+{'header': {'dev-index': 3, 'dev-name': 'eth0'},
+ 'hwtst-provider': {'index': 0, 'qualifier': 0},
+ 'phc-index': 0,
+ 'rx-filters': {'bits': {'bit': [{'index': 0, 'name': 'none'},
+                                 {'index': 2, 'name': 'some'}]},
+                'nomask': True,
+                'size': 16},
+ 'timestamping': {'bits': {'bit': [{'index': 0, 'name': 'hardware-transmit'},
+                                   {'index': 2, 'name': 'hardware-receive'},
+                                   {'index': 6, 'name': 'hardware-raw-clock'}]},
+                  'nomask': True,
+                  'size': 17},
+ 'tx-types': {'bits': {'bit': [{'index': 0, 'name': 'off'},
+                               {'index': 1, 'name': 'on'}]},
+              'nomask': True,
+              'size': 4}}
+
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do tsinfo-set
+             --json '{"header":{"dev-name":"eth0"},
+                      "hwtst-provider":{"index":2, "qualifier":0}}'
+None
+
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do tsinfo-get
+             --json '{"header":{"dev-name":"eth0"}, "ghwtstamp":1}'
+{'header': {'dev-index': 3, 'dev-name': 'eth0'},
+ 'hwtst-flags': 1,
+ 'rx-filters': {'bits': {'bit': [{'index': 0, 'name': 'none'}]},
+                'nomask': True,
+                'size': 16},
+ 'tx-types': {'bits': {'bit': [{'index': 0, 'name': 'off'}]},
+              'nomask': True,
+              'size': 4}}
+
+./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do tsinfo-set
+             --json '{"header":{"dev-name":"eth0"},
+                      "rx-filters":{"bits": {"bit": {"name":"ptpv2-l4-event"}},
+                                    "nomask": 1},
+                      "tx-types":{"bits": {"bit": {"name":"on"}},
+                                  "nomask": 1}}'
+None
+
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
+
 Changes in v8:
 - New patch
----
- drivers/net/netdevsim/netdev.c | 19 +++++++++++--------
- drivers/ptp/ptp_mock.c         |  4 ++--
- include/linux/ptp_mock.h       |  4 ++--
- 3 files changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index d127856f8f36..c53d2163022e 100644
---- a/drivers/net/netdevsim/netdev.c
-+++ b/drivers/net/netdevsim/netdev.c
-@@ -482,17 +482,12 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
- 	struct mock_phc *phc;
- 	int err;
+Changes in v10:
+- Add ghwtstamp attributes
+- Add tsinfo ntf command
+
+Changes in v11:
+- Add examples in the commit message.
+---
+ Documentation/netlink/specs/ethtool.yaml | 43 +++++++++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+index 00dc61358be8..c25f78fd3893 100644
+--- a/Documentation/netlink/specs/ethtool.yaml
++++ b/Documentation/netlink/specs/ethtool.yaml
+@@ -576,6 +576,15 @@ attribute-sets:
+       -
+         name: tx-err
+         type: uint
++  -
++    name: tsinfo-hwtst-provider
++    attributes:
++      -
++        name: index
++        type: u32
++      -
++        name: qualifier
++        type: u32
+   -
+     name: tsinfo
+     attributes:
+@@ -602,6 +611,16 @@ attribute-sets:
+         name: stats
+         type: nest
+         nested-attributes: ts-stat
++      -
++        name: ghwtstamp
++        type: u8
++      -
++        name: hwtst-provider
++        type: nest
++        nested-attributes: tsinfo-hwtst-provider
++      -
++        name: hwtst-flags
++        type: u32
+   -
+     name: cable-result
+     attributes:
+@@ -1406,7 +1425,7 @@ operations:
+       notify: eee-get
+     -
+       name: tsinfo-get
+-      doc: Get tsinfo params.
++      doc: Get tsinfo params or hwtstamp config.
  
--	phc = mock_phc_create(&ns->nsim_bus_dev->dev);
--	if (IS_ERR(phc))
--		return PTR_ERR(phc);
--
--	ns->phc = phc;
- 	ns->netdev->netdev_ops = &nsim_netdev_ops;
- 	ns->netdev->stat_ops = &nsim_stat_ops;
+       attribute-set: tsinfo
  
- 	err = nsim_udp_tunnels_info_create(ns->nsim_dev, ns->netdev);
- 	if (err)
--		goto err_phc_destroy;
-+		return err;
- 
- 	rtnl_lock();
- 	err = nsim_bpf_init(ns);
-@@ -506,8 +501,18 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
- 	if (err)
- 		goto err_ipsec_teardown;
- 	rtnl_unlock();
+@@ -1414,6 +1433,8 @@ operations:
+         request:
+           attributes:
+             - header
++            - ghwtstamp
++            - hwtst-provider
+         reply:
+           attributes:
+             - header
+@@ -1422,6 +1443,8 @@ operations:
+             - rx-filters
+             - phc-index
+             - stats
++            - hwtst-provider
++            - hwtst-flags
+       dump: *tsinfo-get-op
+     -
+       name: cable-test-act
+@@ -1730,3 +1753,21 @@ operations:
+       name: mm-ntf
+       doc: Notification for change in MAC Merge configuration.
+       notify: mm-get
++    -
++      name: tsinfo-set
++      doc: Set hwtstamp.
 +
-+	phc = mock_phc_create(ns->netdev);
-+	if (IS_ERR(phc)) {
-+		err = PTR_ERR(phc);
-+		goto err_register_netdevice;
-+	}
++      attribute-set: tsinfo
 +
-+	ns->phc = phc;
- 	return 0;
- 
-+err_register_netdevice:
-+	unregister_netdevice(ns->netdev);
- err_ipsec_teardown:
- 	nsim_ipsec_teardown(ns);
- 	nsim_macsec_teardown(ns);
-@@ -515,8 +520,6 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
- err_utn_destroy:
- 	rtnl_unlock();
- 	nsim_udp_tunnels_info_destroy(ns->netdev);
--err_phc_destroy:
--	mock_phc_destroy(ns->phc);
- 	return err;
- }
- 
-diff --git a/drivers/ptp/ptp_mock.c b/drivers/ptp/ptp_mock.c
-index e7b459c846a2..1dcbe7426746 100644
---- a/drivers/ptp/ptp_mock.c
-+++ b/drivers/ptp/ptp_mock.c
-@@ -115,7 +115,7 @@ int mock_phc_index(struct mock_phc *phc)
- }
- EXPORT_SYMBOL_GPL(mock_phc_index);
- 
--struct mock_phc *mock_phc_create(struct device *dev)
-+struct mock_phc *mock_phc_create(struct net_device *dev)
- {
- 	struct mock_phc *phc;
- 	int err;
-@@ -147,7 +147,7 @@ struct mock_phc *mock_phc_create(struct device *dev)
- 	spin_lock_init(&phc->lock);
- 	timecounter_init(&phc->tc, &phc->cc, 0);
- 
--	phc->clock = ptp_clock_register(&phc->info, dev);
-+	phc->clock = netdev_ptp_clock_register(&phc->info, dev);
- 	if (IS_ERR(phc->clock)) {
- 		err = PTR_ERR(phc->clock);
- 		goto out_free_phc;
-diff --git a/include/linux/ptp_mock.h b/include/linux/ptp_mock.h
-index 72eb401034d9..e226011071f8 100644
---- a/include/linux/ptp_mock.h
-+++ b/include/linux/ptp_mock.h
-@@ -13,13 +13,13 @@ struct mock_phc;
- 
- #if IS_ENABLED(CONFIG_PTP_1588_CLOCK_MOCK)
- 
--struct mock_phc *mock_phc_create(struct device *dev);
-+struct mock_phc *mock_phc_create(struct net_device *dev);
- void mock_phc_destroy(struct mock_phc *phc);
- int mock_phc_index(struct mock_phc *phc);
- 
- #else
- 
--static inline struct mock_phc *mock_phc_create(struct device *dev)
-+static inline struct mock_phc *mock_phc_create(struct net_device *dev)
- {
- 	return NULL;
- }
++      do:
++        request:
++          attributes:
++            - header
++            - tx-types
++            - rx-filters
++            - hwtst-provider
++            - hwtst-flags
++    -
++      name: tsinfo-ntf
++      doc: Notification for change in tsinfo configuration.
++      notify: tsinfo-get
 
 -- 
 2.34.1
