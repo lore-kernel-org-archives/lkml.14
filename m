@@ -1,118 +1,228 @@
-Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BA41836E8;
-	Tue, 30 Apr 2024 14:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30E2184123;
+	Tue, 30 Apr 2024 14:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714487463; cv=none; b=UTtoCAU5EzhzxEcHI1ihL1Uz/jIxQrcwyd7MohuFch4X2B/yGWAg1UIsS0XkQiqgjEu31WMAPPhQHxlYxiVqXswBwrauQzbE3OSvksGkLP3Jzh3BUBN9yOvNAM/hZGS080022BkgYDvJr/q2nUizl1tmjffTlOMb8y5LFVTALtQ=
+	t=1714487466; cv=none; b=NoS1+nd/D0Qgs0qmrV6TH8uPDCc007dy3iiMSNMsiTyerbRCcG31O1CaXOVeMD2Y2vCvbGH3vFScDGEMNa3OONrxsVYDt1N345kbk7dCWhAXpQlGphkBql0drdMPqqtYqrxFWlr4aChxG6/i4Xy5WtCbIKeHB0Q8YP3oJIGCfLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714487463; c=relaxed/simple;
-	bh=6zYoaw+dgG3Bu9DdBmF+t1atFZ+VM7VFTnbJ1A42nnI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=KgekjbplNsTxMQQ7fatIobfwGXp0LMiKkQbuch/XCP1zcoqIpkgix/URUVXeXJwQdedstiIbnfFRLhnZpoDJyPoB1jFtDVyBoZitJlQrRUFolssiXMBBHeRDVpaQYllYLn/h4/SMQpMGuFdh2IUAR2vj8704J9Wp+g9HrLL00qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=DiVmsIEn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X69BSx4N; arc=none smtp.client-ip=64.147.123.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1714487466; c=relaxed/simple;
+	bh=3XxuFTJHx7IRFFfMGWFpLCJovHBAjWZA+TX+nlB1vak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JdQ0zNauddY6ECIegewGUlzAsKIwCB20RuwLG0V783WgsQI6gYM8wb2Ft0szA11CUJbFMt486XiDxPJiUxpmD+NCjHiHQQmAAWtwM0g0/mJXuz6ht/SSPjSuWoD3HwNjgy5qBzWld421oU4q9QY0RsO0aEDsMQcWawMwdi/yy5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fnF+KE64; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="DiVmsIEn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X69BSx4N"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 680F2180017E;
-	Tue, 30 Apr 2024 10:30:58 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 30 Apr 2024 10:30:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1714487457; x=1714573857; bh=JcfQhI0Wws
-	uSGe/INWfe6PfQ7Tf+kyGI91zAGGmpZBQ=; b=DiVmsIEnmgmwAwDHc+SjO2CRUb
-	Tfy4slCC9D2xsDE2rved+525uP6obJ2gZ+G5WD0wPHYuEeZi6PXP3r5+5reaXWtq
-	E63+F/cF+Ezp7EGKT4cxfL0XBksuzR69x7NxAhf0l4k82lgwRKBzpwoKgpRgR9Gu
-	r7qaENdzj5nVEu4qrIAorvbmsk28WcbLdx2veMMs6FywWl+7ysoy8JYxoLeeUDhE
-	+MqIsoFrGThnZ+GsC06fo5e/rKJfVX1O8uz961z0rS7bUqRRFF9h7F9+Ck0xJz0O
-	FvDNB7UxZWQ7M4NfkD+wlS3HvSQLZp9mDWG829hStYz645ipl3QU2HSBYKDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714487457; x=1714573857; bh=JcfQhI0WwsuSGe/INWfe6PfQ7Tf+
-	kyGI91zAGGmpZBQ=; b=X69BSx4N3WpZm8NluzBuS7rxAhLCzgRJZXJ/j4lnHCjm
-	87xIVYofta72ZERvrO+4tE6XfSjinLYo6qSCbfaDXxt8eObWjBzHkKN0+y6p20kS
-	axmXOxqtzm+30onx4giOolIz95x6zYG3eapPAcrnLXTn+xAcz9n1r/4gzSU5Cc3c
-	jBHbFxU1yS7NgjNJ+BLbA5Yy5oVWwtpXNANeooKcBAArlxGnFNxfthTpShpDesGZ
-	UqGCeAH162kZnrI91j+mMn2hkhhd+8mPk8fWX9CpoRm/qlkYzo4/Vj2SRX3h9VZ+
-	aPf99XaxDBSwXYZ1bGelyEM9iM4LqpiU0N1wFPaVLg==
-X-ME-Sender: <xms:oQAxZisTvI-i6JMT3FNNbk9l0tm1RcHOoPEsQGzQNe_eZmVhwthPIA>
-    <xme:oQAxZnfn5mkOQu8kQEhNSCVhwJJgztApWbCeNpO3CYwq-OQBri0iX54lFb2hOINzR
-    ig3mzpEhAx_FkiGaqU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddufedgjeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:oQAxZtzPWRadQLIvw4FDz3PvuL0iv94FY79yaK0Xiy9rcCZqAFNdow>
-    <xmx:oQAxZtOUsOCN7iPiZyiAxeBQQdZt3SASfH6mLiq_s1Xk-wt57UPmHg>
-    <xmx:oQAxZi-0rLmSvlrKzqAM9S-EWZ6-g4jiEuZyDsnAm5bss4vU-05_rw>
-    <xmx:oQAxZlWOpZZha1gh8epZsNrepJIurAcL2hY0sxmlsLGS-hduRf0GxQ>
-    <xmx:oQAxZtdkFLYlpDvOtK-MNJ1bZ_cTd9v_pOTU2-BxdVxMn_zOYQWNdcgk>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 6800EB6008D; Tue, 30 Apr 2024 10:30:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-416-g2c1796742e-fm-20240424.001-g2c179674
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fnF+KE64"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1714487461;
+	bh=3XxuFTJHx7IRFFfMGWFpLCJovHBAjWZA+TX+nlB1vak=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fnF+KE64XgK2xqU27gvvQJPDM98GUFUXst+F8BgFTA1YMY198FgoKsUNTwADuMFAj
+	 cGzjHmpvZYhZuUYKhYP7uJcmqhzWhv7xGOsgx7ueQJWziye90uOaNdKSSTPIx3kxhF
+	 vU1U/2RUkDEmrIS2RmldgFzDmBatlo8z+HgHHFbDg5wdsz4IdSCieGUJ/euhz81oNV
+	 4dWGCADImwICDan9O3V4SN64lyesPtRxUdPHrenu7NxTVIxXrAKURCr2kAjPAZEDE8
+	 YwXPQrPbKvRHpvlG1iWfE+DEwKCTP7kGYsc42VVIEtXU+Zi2G6iaPKB16ZIfgY7hjh
+	 yUzys/nSHM1iA==
+Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: koike)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 305883781116;
+	Tue, 30 Apr 2024 14:30:55 +0000 (UTC)
+Message-ID: <35b6b4c1-cc36-4c1b-8f6f-9cca0bd5917c@collabora.com>
+Date: Tue, 30 Apr 2024 11:30:54 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <99ef1ba3-155f-47e8-b1a4-e46cb056cbfd@app.fastmail.com>
-In-Reply-To: <20240430141609.2244416-1-hca@linux.ibm.com>
-References: 
- <CA+G9fYuP7S+a89Ep5g5_Ad69EMwRkJ8nM+MMTzbEcP+6H2oMXQ@mail.gmail.com>
- <20240430141609.2244416-1-hca@linux.ibm.com>
-Date: Tue, 30 Apr 2024 16:30:37 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Heiko Carstens" <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
- "open list" <linux-kernel@vger.kernel.org>,
- linux-clk <linux-clk@vger.kernel.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>, imx@lists.linux.dev,
- "Abel Vesa" <abelvesa@kernel.org>, "Abel Vesa" <abel.vesa@linaro.org>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>
-Cc: "Shengjiu Wang" <shengjiu.wang@nxp.com>,
- "Shawn Guo" <shawnguo@kernel.org>,
- "Michael Turquette" <mturquette@baylibre.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>, "Peng Fan" <peng.fan@nxp.com>
-Subject: Re: [PATCH] clk: imx: imx8mp: Add missing CONFIG_PM ifdefs
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/5] drm/ci: uprev mesa version
+To: Vignesh Raman <vignesh.raman@collabora.com>,
+ dri-devel@lists.freedesktop.org
+Cc: daniels@collabora.com, airlied@gmail.com, daniel@ffwll.ch,
+ robdclark@gmail.com, david.heidelberg@collabora.com,
+ guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
+ dmitry.baryshkov@linaro.org, mcanal@igalia.com,
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, amd-gfx@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20240430091121.508099-1-vignesh.raman@collabora.com>
+ <20240430091121.508099-2-vignesh.raman@collabora.com>
+Content-Language: en-US
+From: Helen Koike <helen.koike@collabora.com>
+In-Reply-To: <20240430091121.508099-2-vignesh.raman@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 30, 2024, at 16:16, Heiko Carstens wrote:
-> Add missing CONFIG_PM ifdefs to fix this allmodconfig compile error:
->
-> drivers/clk/imx/clk-imx8mp-audiomix.c:356:12: error:
-> 'clk_imx8mp_audiomix_runtime_suspend' defined but not used
-> [-Werror=unused-function]
->   356 | static int clk_imx8mp_audiomix_runtime_suspend(struct device *dev)
->       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> cc1: all warnings being treated as errors
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: 
-> https://lore.kernel.org/r/CA+G9fYuP7S+a89Ep5g5_Ad69EMwRkJ8nM+MMTzbEcP+6H2oMXQ@mail.gmail.com
-> Fixes: 1496dd413b2e ("clk: imx: imx8mp: Add pm_runtime support for 
-> power saving")
-> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 
-Thanks for your patch. I see the bug as well, but
-I think a better fix is to replace the deprecated
-SET_RUNTIME_PM_OPS() and SET_NOIRQ_SYSTEM_SLEEP_PM_OPS()
-with the modern variants, RUNTIME_PM_OPS() and
-RUNTIME_PM_OPS().
 
-      Arnd
+On 30/04/2024 06:11, Vignesh Raman wrote:
+> zlib.net is not allowing tarball download anymore and results
+> in below error in kernel+rootfs_arm32 container build,
+> urllib.error.HTTPError: HTTP Error 403: Forbidden
+> urllib.error.HTTPError: HTTP Error 415: Unsupported Media Type
+> 
+> Uprev mesa to latest version which includes a fix for this issue.
+> https://gitlab.freedesktop.org/mesa/mesa/-/commit/908f444e
+> 
+> Also copy helper scripts to install, so that the ci jobs can
+> use these scripts for logging.
+> 
+> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+
+Acked-by: Helen Koike <helen.koike@collabora.com>
+
+> ---
+>   drivers/gpu/drm/ci/build.sh       |  1 +
+>   drivers/gpu/drm/ci/container.yml  | 12 ++++--------
+>   drivers/gpu/drm/ci/gitlab-ci.yml  | 11 ++++++++---
+>   drivers/gpu/drm/ci/image-tags.yml |  3 ++-
+>   drivers/gpu/drm/ci/test.yml       |  2 ++
+>   5 files changed, 17 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/ci/build.sh b/drivers/gpu/drm/ci/build.sh
+> index 106f2d40d222..8a3baa003904 100644
+> --- a/drivers/gpu/drm/ci/build.sh
+> +++ b/drivers/gpu/drm/ci/build.sh
+> @@ -128,6 +128,7 @@ fi
+>   # Pass needed files to the test stage
+>   mkdir -p install
+>   cp -rfv .gitlab-ci/* install/.
+> +cp -rfv ci/*  install/.
+>   cp -rfv install/common install/ci-common
+>   cp -rfv drivers/gpu/drm/ci/* install/.
+>   
+> diff --git a/drivers/gpu/drm/ci/container.yml b/drivers/gpu/drm/ci/container.yml
+> index 9764e7921a4f..d6edf3635b23 100644
+> --- a/drivers/gpu/drm/ci/container.yml
+> +++ b/drivers/gpu/drm/ci/container.yml
+> @@ -36,15 +36,15 @@ debian/android_build:
+>     rules:
+>       - when: never
+>   
+> -debian/x86_64_test-android:
+> +.debian/x86_64_test-android:
+>     rules:
+>       - when: never
+>   
+> -windows_build_vs2019:
+> +windows_build_msvc:
+>     rules:
+>       - when: never
+>   
+> -windows_test_vs2019:
+> +windows_test_msvc:
+>     rules:
+>       - when: never
+>   
+> @@ -56,10 +56,6 @@ rustfmt:
+>      rules:
+>       - when: never
+>   
+> -windows_vs2019:
+> -   rules:
+> -    - when: never
+> -
+> -clang-format:
+> +windows_msvc:
+>      rules:
+>       - when: never
+> \ No newline at end of file
+> diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
+> index 084e3ff8e3f4..9bf5190604a7 100644
+> --- a/drivers/gpu/drm/ci/gitlab-ci.yml
+> +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
+> @@ -1,6 +1,6 @@
+>   variables:
+>     DRM_CI_PROJECT_PATH: &drm-ci-project-path mesa/mesa
+> -  DRM_CI_COMMIT_SHA: &drm-ci-commit-sha 9d162de9a05155e1c4041857a5848842749164cf
+> +  DRM_CI_COMMIT_SHA: &drm-ci-commit-sha e5f133ccc426a197c48a4e88f5377f943f078180
+>   
+>     UPSTREAM_REPO: git://anongit.freedesktop.org/drm/drm
+>     TARGET_BRANCH: drm-next
+> @@ -26,10 +26,13 @@ variables:
+>     JOB_ARTIFACTS_BASE: ${PIPELINE_ARTIFACTS_BASE}/${CI_JOB_ID}
+>     # default kernel for rootfs before injecting the current kernel tree
+>     KERNEL_REPO: "gfx-ci/linux"
+> -  KERNEL_TAG: "v6.6.4-for-mesa-ci-e4f4c500f7fb"
+> +  KERNEL_TAG: "v6.6.21-mesa-19fc"
+>     KERNEL_IMAGE_BASE: https://${S3_HOST}/mesa-lava/${KERNEL_REPO}/${KERNEL_TAG}
+>     LAVA_TAGS: subset-1-gfx
+>     LAVA_JOB_PRIORITY: 30
+> +  ARTIFACTS_BASE_URL: https://${CI_PROJECT_ROOT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts
+> +  # Python scripts for structured logger
+> +  PYTHONPATH: "$PYTHONPATH:$CI_PROJECT_DIR/install"
+>   
+>   default:
+>     before_script:
+> @@ -46,6 +49,7 @@ default:
+>       - cd $CI_PROJECT_DIR
+>       - curl --output - $DRM_CI_PROJECT_URL/-/archive/$DRM_CI_COMMIT_SHA/mesa-$DRM_CI_COMMIT_SHA.tar.gz | tar -xz
+>       - mv mesa-$DRM_CI_COMMIT_SHA/.gitlab-ci* .
+> +    - mv mesa-$DRM_CI_COMMIT_SHA/bin/ci .
+>       - rm -rf mesa-$DRM_CI_COMMIT_SHA/
+>       - echo -e "\e[0Ksection_end:$(date +%s):drm_ci_download_section\r\e[0K"
+>   
+> @@ -98,6 +102,7 @@ include:
+>   stages:
+>     - sanity
+>     - container
+> +  - code-validation
+>     - git-archive
+>     - build
+>     - amdgpu
+> @@ -107,7 +112,6 @@ stages:
+>     - msm
+>     - rockchip
+>     - virtio-gpu
+> -  - lint
+>   
+>   # YAML anchors for rule conditions
+>   # --------------------------------
+> @@ -218,6 +222,7 @@ make git archive:
+>     script:
+>       # Remove drm-ci files we just added
+>       - rm -rf .gitlab-ci.*
+> +    - rm -rf ci
+>   
+>       # Compactify the .git directory
+>       - git gc --aggressive
+> diff --git a/drivers/gpu/drm/ci/image-tags.yml b/drivers/gpu/drm/ci/image-tags.yml
+> index 7ab4f2514da8..d8f72b82c938 100644
+> --- a/drivers/gpu/drm/ci/image-tags.yml
+> +++ b/drivers/gpu/drm/ci/image-tags.yml
+> @@ -1,5 +1,5 @@
+>   variables:
+> -   CONTAINER_TAG: "2023-10-11-mesa-uprev"
+> +   CONTAINER_TAG: "2024-04-22-mesa-uprev"
+>      DEBIAN_X86_64_BUILD_BASE_IMAGE: "debian/x86_64_build-base"
+>      DEBIAN_BASE_TAG: "${CONTAINER_TAG}"
+>   
+> @@ -7,6 +7,7 @@ variables:
+>      DEBIAN_BUILD_TAG: "2023-10-08-config"
+>   
+>      KERNEL_ROOTFS_TAG: "2023-10-06-amd"
+> +   PKG_REPO_REV: "3cc12a2a"
+>   
+>      DEBIAN_X86_64_TEST_BASE_IMAGE: "debian/x86_64_test-base"
+>      DEBIAN_X86_64_TEST_IMAGE_GL_PATH: "debian/x86_64_test-gl"
+> diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
+> index 8bc63912fddb..612c9ede3507 100644
+> --- a/drivers/gpu/drm/ci/test.yml
+> +++ b/drivers/gpu/drm/ci/test.yml
+> @@ -150,6 +150,8 @@ msm:sdm845:
+>       BM_KERNEL: https://${PIPELINE_ARTIFACTS_BASE}/arm64/cheza-kernel
+>       GPU_VERSION: sdm845
+>       RUNNER_TAG: google-freedreno-cheza
+> +    DEVICE_TYPE: sdm845-cheza-r3
+> +    FARM: google
+>     script:
+>       - ./install/bare-metal/cros-servo.sh
+>   
