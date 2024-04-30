@@ -1,109 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC06172BBF;
-	Tue, 30 Apr 2024 15:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BF0770F5;
+	Tue, 30 Apr 2024 15:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714491641; cv=none; b=Y7EqC30nOE6OiACCZRAhYORX3GdJ9qalkVcJs8q5SbGg2ANHTEEAqaKrHnwIM95ETNSI4W/fmPbGuQL5NuGKWrntPnqcYkAjtibaeGlL8LfmQKcoIE6Hin3+Fh/vGEsKfcGDScufJ5u3LJ0WX+yufhm61kpZVPXtiFYi7LusGlQ=
+	t=1714491657; cv=none; b=VoAODF7EX3AK9dANg3177nulZfnEh1YTMkIpkGuolaInGhz3CoKSPW2CElQK/zqbptvcEZ2IBGBtdjSenwXnQpXjjiaKgLH+zPoTmuOOHUm7BZtEbRCrn4n7OPeCke8EyM9os229vyZqQLuacjsLxgQlf8yFrkBEFV4WBQbL23I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714491641; c=relaxed/simple;
-	bh=AhXim/Cc8ypQWAXX8GYwTtPeMzV9LcwnwpaCMgnFYdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VhOX9wBx00BvzaQSvjqinrBUQbYAgjEuBTBqmvJcBGBTtUilEoga2x1V32lt23aDBkjaJjxz6Dba66hMaZcDm9aNqxiBeJb8FxpGK2Nbx6uTuZj2diQhQD/rRe8jrBIIPN6E6S1lnbgjpkEVL/1/0HFPwZn3T/Gn+b1R1GjEPII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bO8Fv/JI; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714491657; c=relaxed/simple;
+	bh=Bqw3IsZ8vcRPqDodfPPnFBRWgVK31l21uLdf4lwzVEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j/Y6zyQ+mC9p6bbQ1rgnDjGPKrDpzJrD0nCDSouu1Yp8EUZhkfVKaQviGMXp/skd6tPmgIZo5hQd4PGZdcijHfGj45r1c2s4wEGd7ZzwWqCa6ZtCEM6B14FFn8VyARi3bzU6e3Mbu/SD1Muqxn5mDn3ucmuYwcM3DXrblM1DC0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VMh3nULY; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bO8Fv/JI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714491640; x=1746027640;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AhXim/Cc8ypQWAXX8GYwTtPeMzV9LcwnwpaCMgnFYdE=;
-  b=bO8Fv/JIFcuxv8bWze/OgdH7y7nG2i7laLu4a3xgsaGcizkmGQ08F7FN
-   sXgCsKGgLGHgQsWAiLBOY6XOkVS7zux5Tcfa8LeqILYqjshtWvJa1FKRs
-   jOd6Zd1bXeM19x3p6Q/GocjlAYQxTvLnrufaqBn8erm46zgJQddRaLxGS
-   +J/dO8E4QHIh1Tf6g8PoVbrCVO9MGhYMOdu8Rit7AATAvYF4kTeuNzxxI
-   6gv9PfwsM5PLRBhssarIDEpupUWdH2NAUZbK55InWMYV/SiZWHY6c1x4o
-   Xn84GuM6IeXAcVmkPibJJswh1o9NEDLG04gpekUc5iI7CpLIirZeJSsny
-   g==;
-X-CSE-ConnectionGUID: 53cGs2IzSJa7biN3ITYL2w==
-X-CSE-MsgGUID: w9Uqr4dsTOGKe9hFnXGabw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10066457"
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="10066457"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 08:40:40 -0700
-X-CSE-ConnectionGUID: zUTsGXBoR22YHQ6INz1/Zw==
-X-CSE-MsgGUID: f3OF7Y3dTSOPjEERKsuEtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="31297597"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 08:40:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s1par-00000002iBe-0CR9;
-	Tue, 30 Apr 2024 18:40:33 +0300
-Date: Tue, 30 Apr 2024 18:40:32 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Petar Stoykov <pd.pstoykov@gmail.com>
-Cc: linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Angel Iglesias <ang.iglesiasg@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] iio: pressure: Add driver for Sensirion SDP500
-Message-ID: <ZjEQ8LBxftcr0Z0t@smile.fi.intel.com>
-References: <CADFWO8EQUkGcbE=RXjxXbub2tZge9+ss=gB-Q6wngFAvwFygRg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VMh3nULY"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4733C1C0003;
+	Tue, 30 Apr 2024 15:40:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1714491647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G0CBebPXkOcJbQJyeGur7JrerjS7KJc+NjEpyOTbDoI=;
+	b=VMh3nULYKBzJIBVAFVTlMWkdIcZ+reJKsiZ0V0jPi72UTrWXlChhWgDXg3eE9SIA85Wl2j
+	VczEh72WUPIYeF0/qlHU2dA5NvL58G4x10XgWKFuBVBxgqnhvAx3fJAYfak1fX9mOVzqma
+	L7tkgp4biVVl6gyO5P1TGLI0XlALQkbEGUnoOlgZ75P4ycMfbBUnS/dXCjpkbfIylprdWs
+	Mma8zxDmSadEn9l2NsiYXyRcHBL04zgrkRe9hKDVtVCGPYKW5y4rQeCXDLq6S9+Yxc8jAY
+	V4mP/TKsCe04bwwjflLmyosk8vsxalY7bsE5QxkVnIQdgLYzGaiJZ7WmN8fb5Q==
+Date: Tue, 30 Apr 2024 17:40:44 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Lee Jones <lee@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Saravana Kannan
+ <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, Steen
+ Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
+ <daniel.machon@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, netdev@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Allan
+ Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli
+ <luca.ceresoli@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 07/17] net: mdio: mscc-miim: Handle the switch reset
+Message-ID: <20240430174044.606c2ed4@bootlin.com>
+In-Reply-To: <74e40e5d-e71f-4909-811e-7e9fc1120360@lunn.ch>
+References: <20240430083730.134918-1-herve.codina@bootlin.com>
+	<20240430083730.134918-8-herve.codina@bootlin.com>
+	<74e40e5d-e71f-4909-811e-7e9fc1120360@lunn.ch>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADFWO8EQUkGcbE=RXjxXbub2tZge9+ss=gB-Q6wngFAvwFygRg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Tue, Apr 30, 2024 at 05:27:24PM +0200, Petar Stoykov wrote:
-> From 6ae7537517f551540121ca6fb3b99080b7580410 Mon Sep 17 00:00:00 2001
-> From: Petar Stoykov <pd.pstoykov@gmail.com>
-> Date: Mon, 15 Jan 2024 12:21:26 +0100
-> Subject: [PATCH 2/3] iio: pressure: Add driver for Sensirion SDP500
+Hi Andrew,
+
+On Tue, 30 Apr 2024 15:46:18 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
+
+> On Tue, Apr 30, 2024 at 10:37:16AM +0200, Herve Codina wrote:
+> > The mscc-miim device can be impacted by the switch reset, at least when
+> > this device is part of the LAN966x PCI device.  
 > 
-> Sensirion SDP500 is a digital differential pressure sensor. The sensor is
-> accessed over I2C.
+> Just to be sure i understand this correctly. The MDIO bus master can
+> be reset using the "switch" reset. So you are adding code to ensure
+> the "switch" reset is out of reset state, so the MDIO bus master
+> works.
 
-Any Datasheet: tag can be added?
+Exactly.
 
-...
+> 
+> Given that this is a new property, maybe give it a better name to
+> indicate it resets both the switch and the MDIO bus master?
+> 
 
-> +config SDP500
-> +    tristate "Sensirion SDP500 differential pressure sensor I2C driver"
-> +    depends on I2C
-> +    help
-> +      Say Y here to build support for Sensirion SDP500 differential pressure
-> +      sensor I2C driver.
-> +      To compile this driver as a module, choose M here: the core module
-> +      will be called sdp500.
+Replied in the patch in the same series introducing the property
+  [PATCH 06/17] dt-bindings: net: mscc-miim: Add resets property
 
-You patch is broken. Fix the way how you send patches.
-
-...
-
-> +static int sdp500_start_measurement(struct sdp500_data *data, const
-> struct iio_dev *indio_dev)
-
-Here is more visible.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks for the feedback.
+Best regards,
+Hervé
