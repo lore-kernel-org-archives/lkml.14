@@ -1,76 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568771292CE;
-	Tue, 30 Apr 2024 09:36:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321001292CE;
+	Tue, 30 Apr 2024 09:36:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714469776; cv=none; b=MRRhs7Sq/Rdx3cMheMtuPHbg23Awvp1cmDW14lXP7osZ0/u6Az5Qob6zE86ROb95mxtG68MAWCXPmyDInfpmrLdfgVrNMGN8CZjx8hUiJDd+2zigXnC62FOkcJTaOj1+Qc9E4vc8s1/EUXXoXU9PFAw6WJ12TjbArviFeRdLITE=
+	t=1714469782; cv=none; b=b3BjnmAZQ8CbJbPRadG9nsP3IphLTQEAbVL70RLCqYA4orbYgS3FeF7l3f0w4Z+oa9XThuDhSE+u7ABqF+YNsxj+gImQzUI3VTzA2ANQlQ4jUNXD7nR/4ZHTtfUAcmY3UgUcLasOK3hv0yf9VmLLHZW+kPcUAnr/Q61nD5/fw3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714469776; c=relaxed/simple;
-	bh=3l20woefNrUTmYr2WXVuXJsLYYGk9ONQKilh/0kO8iQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FfDre1ZhayB4HWfrxOMm9nlpwmaHawrk6dC69qP8M/6nfG1jUIJuRSr4+UsLphNhI7XyaG6oalwKJBg40SfNcvyuGN0BUadb3/n6UpNE804Hk4s0kXAeb+S/R3H1/lu5RsAgr99LBszQX5WZRxlAUpprsgYI6XIsk+aGwFP7f90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyX+AXMA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714469782; c=relaxed/simple;
+	bh=isV08BGQVxr2m6vFfC6FVBJx7wJ01ixie6zpVJy6Nww=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=exipB1+IaqPuMc3MQhJeQk1CEywxgcg+goiPJbPjhUMNBPclJNl3nlnGznqUF9Gr5orWII7lFO/hm7uD782LyveerxsjJldId5rP8o+ydxbVKRNWmDkN7xBb0iJI5ACMwB6o/D6r6Q829dN6e+peUxJnusrXsdkKMvNoSgONLVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWdbJMSN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyX+AXMA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 647EEC2BBFC;
-	Tue, 30 Apr 2024 09:36:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWdbJMSN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57949C4AF14;
+	Tue, 30 Apr 2024 09:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714469775;
-	bh=3l20woefNrUTmYr2WXVuXJsLYYGk9ONQKilh/0kO8iQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gyX+AXMA9YSULYnBC+gtH6mJufvYQCBvx6Ht5xJUrQvYCrX49bBiw6tH+Xj6k01im
-	 Rmo5vvSa1PYWEDPmetLVJZCJqSxWc2rl/4x3WGZ0Urr3ZHirbdjZxcLwT35sJVJWA0
-	 oZGrVOL5ET+QVSwNr+1Bphxt6zLbUjS+lCHYMy4wdrernxtiLWEmdYvhCWcc6hKMD9
-	 r7OByvdGgwnHbb5Row0k7R4W/2AticzWeWOpyut759IWQSdvxGVNMp4+7Ypp2pVoBn
-	 t2c/FtoCBv2qm91Sph9G79mT1SovRErqRlHEKvx6Zg5DYmO7IgQMjDI1Q0Mx7OLKW0
-	 BxQLptzD3DobQ==
-Date: Tue, 30 Apr 2024 11:36:12 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, 
-	linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Jan Dabros <jsd@semihalf.com>, Lee Jones <lee@kernel.org>, 
-	Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Duanqiang Wen <duanqiangwen@net-swift.com>, 
-	"open list:SYNOPSYS DESIGNWARE I2C DRIVER" <linux-i2c@vger.kernel.org>, "open list:WANGXUN ETHERNET DRIVER" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v3 4/5] mfd: intel_quark_i2c_gpio: Utilize
- i2c-designware.h
-Message-ID: <fidbc7locp32lypdui67crj3qkj3nbcp5vpxcnlxrdmme2sn4c@npdan5ncxxog>
-References: <20240425214438.2100534-1-florian.fainelli@broadcom.com>
- <20240425214438.2100534-5-florian.fainelli@broadcom.com>
- <Ziu6gDOqhEYQNhcH@smile.fi.intel.com>
+	s=k20201202; t=1714469781;
+	bh=isV08BGQVxr2m6vFfC6FVBJx7wJ01ixie6zpVJy6Nww=;
+	h=From:Subject:Date:To:Cc:From;
+	b=hWdbJMSNu/Jski0Z/rYuSDjGrusG+nFcwzTRw8LAr93g2NfuxPTq7m2j2iLlI0FrY
+	 cN1un9FocW9SHa/fWYJwaadUnuTo795rn7AUh7jsSxrdjVIUHZLHAJGaHymHyYXAEU
+	 U3SBVvqcpXTKm7IcER9DU3WU1sgVAKHuTbFzlW6qzmSnZVQDg9AQ/SaRze6d7sJvbi
+	 H2u1U37P7snoBAH7TB5MJafNBvZTaiwYTrcp4+vLVBe12ZwAgsulj65lFQ3W7eKZq2
+	 LPvFG+upTuFqv5Pj9ZMBbd2XDaoMKL9FRRnjlVsbH//DaDbuHjaCin9+xgef+xDGnq
+	 zYAi9UEb0s5TQ==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Subject: [PATCH v2 0/3] bpf_wq followup series
+Date: Tue, 30 Apr 2024 11:36:09 +0200
+Message-Id: <20240430-bpf-next-v2-0-140aa50f0f19@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Ziu6gDOqhEYQNhcH@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIm7MGYC/23Myw6CMBCF4Vchs3ZMr0hc+R6GhcIAE00hU9JgS
+ N/dytrlf3Ly7RBJmCJcqx2EEkeeQwlzqqCbHmEk5L40GGWccsbjcxkw0Lai0dpZr3xzIQvlvgg
+ NvB3UvS09cVxn+Rxy0r/1D5I0KtR9Y62iuqudvb1IAr3Ps4zQ5py/lUfDHqEAAAA=
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714469778; l=921;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=isV08BGQVxr2m6vFfC6FVBJx7wJ01ixie6zpVJy6Nww=;
+ b=mmDCYkonQ+6v4TD35B1xiAiFVlmwP/3ZsFb7uVnF46y3C8omyoXJZ3rG+7NY66XbHrJ/hdCTv
+ u3Ash7+GLVJAG9skLfNKX0Kh6wo1RyYeqUG1tK5OBAYU4HHmzML/Lsl
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-Hi Andy,
+Few patches that should have been there from day 1.
 
-On Fri, Apr 26, 2024 at 05:30:24PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 25, 2024 at 02:44:37PM -0700, Florian Fainelli wrote:
-> > Rather than open code the i2c_designware string, utilize the newly
-> > defined constant in i2c-designware.h.
-> 
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> P.S>
-> Note, my tags for MFD patches does not imply that I agree on the general idea
-> of this series, it's just in case if it will be approved by the respective
-> maintainers (I²C / MFD / etc).
+Anyway, they are coming now.
 
-I waited a bit to see if more comments were coming.
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+---
+Changes in v2:
+- fix wq in hashtabs not being freed (and static call not being used)
+- Link to v1: https://lore.kernel.org/r/20240425-bpf-next-v1-0-1d8330e6c643@kernel.org
 
-Do you have a better approach in mind?
+---
+Benjamin Tissoires (3):
+      bpf: do not walk twice the map on free
+      bpf: do not walk twice the hash map on free
+      selftests/bpf: drop an unused local variable
 
-Andi
+ kernel/bpf/arraymap.c                       | 15 ++++-----
+ kernel/bpf/hashtab.c                        | 49 ++++++++---------------------
+ tools/testing/selftests/bpf/prog_tests/wq.c |  2 --
+ 3 files changed, 21 insertions(+), 45 deletions(-)
+---
+base-commit: 1bba3b3d373dbafae891e7cb06b8c82c8d62aba1
+change-id: 20240425-bpf-next-2114350587e3
+
+Best regards,
+-- 
+Benjamin Tissoires <bentiss@kernel.org>
+
