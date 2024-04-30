@@ -1,122 +1,108 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2F7181B99;
-	Tue, 30 Apr 2024 14:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700EE181B99;
+	Tue, 30 Apr 2024 14:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714487451; cv=none; b=YVlqSbLj4hdAuj2OnXaXUb8TCiqLBPOPM6r44g1sUH7Whq/Vw0Ii/DO8f887qgigIGIrJ2MiUxvAF1LH4mh+fgE/93EazQ6UsHo/uI7QCwL8M9e5CztiWODiqr3rLCedZUIeWuM+hs3rheoCjxklwRb55bawcxNRxKKLooo4ZhI=
+	t=1714487458; cv=none; b=jirVxAdsa3HtRfulG/degneLLxmtxtChYa+22M8NZD7enTDPMb/Aa3wcjKYS63kZgErergVLBUBkKe/YMEfJYDcmSaYrK9uYBTwO02HFnh6F2AzS1+VutZ6ytDJFNIFTFXcWSd80FNfZCsmzuzAU38BheTOS/7216Voqun7WPDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714487451; c=relaxed/simple;
-	bh=/SkOWkEpWezbJiHW1cEGA0a9fKeRFGBcYXO0YebXhsw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TrQ4b7bCeVEtxSXAMa8xlMWjLtY4RAxhwJvqgOCLYOHwzSwRGqLMd1NdLnT4xGsY9mgLg0MLXf/SVE1hehLDfIkNKHKTpYosp92DZcNhYX+0ZABxxdSzOnJjsxrw8AyjH0b5oc1xBmJVqMaja7sNCvMlDsj86/bi3Jl+Qkmprr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S5Oo1hcp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714487458; c=relaxed/simple;
+	bh=oIu77yJ8jUXRAwXdOkexEPrPZO91cF32r9M6/AkM+Xw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rgu77TJR+hQfkHl1B0AZ6KNGBl0xNlcOBrQODsRhVCsiW5UYvZAWpZFgn4Rd4ZLQR+MVDe9tu8osr/oQCZ4EriLIeN5gS3uGNBcqZ9QYMhttXonctWLNIdYYY1tmD66T8KW4gr6pypSZPlfKI249xa7HwXYrhS41PZtXU6qJUdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=frz5ogwe; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S5Oo1hcp"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43U3F6wY009584;
-	Tue, 30 Apr 2024 14:30:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=XZ5KkB533ZUQ0vvv/5r5U1dXN3Lm56bSOv7f7rE0hB0=; b=S5
-	Oo1hcp18hO73zZx+QppTOWr3ylXLbPfdVBePbn3575T5EUiykvDHvImMjJcdr4wS
-	DaDZMzz2+DUU4vkvFP1fnC39ZOWfFWOrAOhSRmOr1VIA/P0578/IGUWRXUmtO18+
-	yQfM2UZZC+eZJJqiSfuInQIlMlSRFV/qsD7Kal01VVjBQyLrvjeXFuGweiGsmjn1
-	NnkUIjYEb9T5ZjsLApF6cOETup20Pt6vT82GACHWbyRhcSXZ9eZ0u3EtoqUN3vi8
-	V8m2TbCr+vK8GtmzVoOi6F+Z1Zu8n7bfVeQI+trBw/lPXoZx+bvIrBknuc2SEVqs
-	e7fFcrHZEvLl9bBc0b3Q==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xtqkr9v1a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 14:30:46 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43UEUi7L030998
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Apr 2024 14:30:44 GMT
-Received: from hu-jkona-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 30 Apr 2024 07:30:39 -0700
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Vladimir Zapolskiy
-	<vladimir.zapolskiy@linaro.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        "Satya
- Priya Kakitapalli" <quic_skakitap@quicinc.com>,
-        Ajit Pandey
-	<quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>
-Subject: [PATCH V3 5/8] dt-bindings: clock: qcom: Fix the incorrect order of SC8280XP camcc header
-Date: Tue, 30 Apr 2024 19:57:54 +0530
-Message-ID: <20240430142757.16872-6-quic_jkona@quicinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240430142757.16872-1-quic_jkona@quicinc.com>
-References: <20240430142757.16872-1-quic_jkona@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frz5ogwe"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2dd6c14d000so71243071fa.0;
+        Tue, 30 Apr 2024 07:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714487454; x=1715092254; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wEOadgbQT3YL3EGb5PWaYHsAq47K4P1J7w8JkzUt/l0=;
+        b=frz5ogweENkcEl9Df8RpRAB/8GNkkDQy3kOZb0aEYZfg0/s+blhkRLbJo4yOA6mb1v
+         VIEqdzziroKlS1tzv+pO0ZArhdVpdPza6F5LdwLatdoJE8oB1/zPuUSUySGgALpFYJTU
+         FuBplNdm9/O6eFLHD1S93tf0Dh/5xMaS1EDjBvzrQkS2L598ZB69qonFyw5VSTQB9jUd
+         MsUDC6uT0YfBEDjCGVC3vT7iJMY7VEQdQFc0u7D4mxR2H6i/iZumXbz9m79q8B6QCwFh
+         y4EenglfTf3RlOZJ+8RIwJ9cl70CNOWEgJv2yoTptVCjfJBMP+EaQ5Eg7yvhXVHSqZDB
+         Fkug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714487454; x=1715092254;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wEOadgbQT3YL3EGb5PWaYHsAq47K4P1J7w8JkzUt/l0=;
+        b=qaSKCGQtaipWC1qe7T4MJmhPsdai1bLGmHb8Y56IfsPHnrX5WRnenLM5ve2O4AhCcr
+         1zTnhO07Tl6jLhsp+ZgJyDOl1gvPq4Dt3yLYFu/m+eA1WrI7gPtHRH74Ho4a0JYfo6t8
+         NHMc/yl5rVo4k1EraSTOXZqrK8ZTvjDBcb7FOo81/ytG8fiR7urrDERGh53l4rit7egT
+         VAV8cEHl9CjNeqD/FLNBQaTkKmK2K0elpYLcFfL1aG3g6wVjfUcisFKS6ORCfZMWivMD
+         bPfQkvhz86tT/c7qBej5y/ZflnktP5q1oVKvByhqnS2Vr4OU6fyg1uYiAIs4CMII3Y5p
+         5RHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJjRrsYRJE6Jq/esJR/FgjphdRi5vAVKWaKS53aU4moG32goCZ7BWYgTFN9S9xVbwIZw39MFW8rtt6GMeW/6+74pBOAkEdcc8L5GA7EZbLwry/pb3xYFpZqyqjsdBdruMJNPWLH77QQyyT638=
+X-Gm-Message-State: AOJu0YxcWY75dppE7du71cxjji39rHejDaj8UBjYHerwqb5FkUXmTwjf
+	WbZQ6zat6gOiREjE20TvcmjCn1ida5g6Hs8tec3rNHVsPlAhFR4tGbJbhppnr52HRrFPmIyKgDS
+	yF0FnsjTg6LHL7HZbtO4rckGgCEM=
+X-Google-Smtp-Source: AGHT+IGjOrb4BHOISLk99QfwZ1zS8Uq99QSSFpGq0P8HcPecTZ6qZzCz7vA6fnsaQ871JWWvDVySYkqIhti1ybrIaV8=
+X-Received: by 2002:a2e:9b0f:0:b0:2df:e2d1:f4b5 with SMTP id
+ u15-20020a2e9b0f000000b002dfe2d1f4b5mr6985340lji.21.1714487454257; Tue, 30
+ Apr 2024 07:30:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 6xtZBtzbsn1evoFECtyypvmU-r06YWrd
-X-Proofpoint-ORIG-GUID: 6xtZBtzbsn1evoFECtyypvmU-r06YWrd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-30_08,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- suspectscore=0 priorityscore=1501 mlxlogscore=980 malwarescore=0
- phishscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404300102
+References: <20240428142937.785925-1-peteryin.openbmc@gmail.com>
+ <20240428142937.785925-2-peteryin.openbmc@gmail.com> <d231737bfa9f3dd3c0a4370ab2e86557a407980d.camel@codeconstruct.com.au>
+ <CAPSyxFRG8mooBg1QWZk8sw=cWzoUQqk=WnyAtgPfRBmQRKtvaQ@mail.gmail.com> <e694ba58197687dce68d568dfcb078ff3a6c6fed.camel@codeconstruct.com.au>
+In-Reply-To: <e694ba58197687dce68d568dfcb078ff3a6c6fed.camel@codeconstruct.com.au>
+From: Peter Yin <peteryin.openbmc@gmail.com>
+Date: Tue, 30 Apr 2024 22:30:43 +0800
+Message-ID: <CAPSyxFSVkyKQ2xvg92xqpkL=0WYqt+rP_+TjcM19mEMtu4FPng@mail.gmail.com>
+Subject: Re: [PATCH v8 1/1] drivers: watchdog: revise watchdog bootstatus
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: patrick@stwcx.xyz, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Joel Stanley <joel@jms.id.au>, linux-watchdog@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix the incorrect order of SC8280XP camcc header file in SM8450 camcc
-bindings.
+Hi Andrew,
+  Thanks, I am going to fix it in V9.
 
-Fixes: 206cd759fbd2 ("dt-bindings: clock: Add SC8280XP CAMCC")
-Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
----
- Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml
-index fa0e5b6b02b8..bf23e25d71f5 100644
---- a/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml
-@@ -14,9 +14,9 @@ description: |
-   domains on SM8450.
- 
-   See also::
-+    include/dt-bindings/clock/qcom,sc8280xp-camcc.h
-     include/dt-bindings/clock/qcom,sm8450-camcc.h
-     include/dt-bindings/clock/qcom,sm8550-camcc.h
--    include/dt-bindings/clock/qcom,sc8280xp-camcc.h
-     include/dt-bindings/clock/qcom,x1e80100-camcc.h
- 
- allOf:
--- 
-2.43.0
-
+On Tue, Apr 30, 2024 at 9:38=E2=80=AFAM Andrew Jeffery
+<andrew@codeconstruct.com.au> wrote:
+>
+> On Mon, 2024-04-29 at 22:54 +0800, Peter Yin wrote:
+> > Hi Andrew,
+> >     I am not sure how to add the Fixes tag, Is it like this?
+> >
+> > Fixes: 6a6c7b006e5c (watchdog: aspeed: Add support for
+> > aspeed,reset-mask DT property).
+>
+> Approximately, yes, but it must not be wrapped.
+>
+> Some more info is provided in the submitting-patches documentation:
+>
+> https://docs.kernel.org/process/submitting-patches.html#describe-your-cha=
+nges
+>
+> > Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
+> >
+> > Is it the correct commit ID or should I base on which commit ID?
+> >
+>
+> The correct commit ID to use is the one that introduces the problem.
+> Using `git blame drivers/watchdog/aspeed_wdt.c` it appears you're
+> changing the behaviour that was introduced in 49d4d277ca54 ("aspeed:
+> watchdog: Set bootstatus during probe"):
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?id=3D49d4d277ca54e04170d39484c8758a0ea9bca37d
+>
+> Andrew
