@@ -1,118 +1,93 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B344A1802D7
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 17:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BBA1802A7
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 17:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714498214; cv=none; b=ET68SLS4yqgSTC4dUx8Z25oLh0dCUs1A/wJQUnwqDxomKSSC0cVCVynOxHt+vuxOoqarXRiqqV5Y5gRKi/s6eoLzZZY1ZNwJSuIlKpm4j2n8Y3UKlQduqTkS+Ptx3yvOROAhhcyBr+gZ9Q8WsmRH/vBcNTrGCerkC8renPywjTc=
+	t=1714498225; cv=none; b=IbC0HcCkVqAfJ+dN88Ur/oHWU9uevT2x77oDb7We/AlT36IySB/vbVeESXJo1i2LC+qgU78nt6Ei9A34wLw0AyavGcgbizslZ36L04oQ36b4fU//UPyzhWgnx0emeDJBaFaSTdEl7k+ENotMXFD2CpZeQC1FpdirXBydgDVrd7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714498214; c=relaxed/simple;
-	bh=BR9Wkd6miBhzfBRCvTbhOcpLA80oqmQjUGpUH96Ratk=;
+	s=arc-20240116; t=1714498225; c=relaxed/simple;
+	bh=FxZbViaAhwO4PV0OUowq5huoBZWoVzh7Ze8dxxotR2M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oV4XAxaE2Ojs0JhhsYyuM+JlsMkJtcoGbvDeIbsN3IpoYqnqAFqncfGHfT5tPHEsI/5LgpehdtzkMhDsafkKDhHwkDu31a5yG1kr2zf+8B/42Nh85yaOJoouXwVn1J59hrzdJFiCKfZaaFdEJYrbyjF4bfzFD8KpqsoPc3tmk5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E3fQ7nWt; arc=none smtp.client-ip=209.85.208.45
+	 To:Cc:Content-Type; b=onP63Gz6MfRIe0/DYdgvUU0rtgwWiE2Vglk0d+7bB1mMS1XEiPMCgKzljMMxmZ7MVOZFYfBcMPJqCYJOku+h+ra9oAA4odzDFAwYo8O1DfQVnC1l3BhyPy2RIfyui+kU7MRW3OFw9kaQ95nswOaQKYqDAP6frkkGjM9L3YkKF0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TFX60Iyp; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E3fQ7nWt"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso947a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 10:30:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TFX60Iyp"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-de61424f478so1160985276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 10:30:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714498211; x=1715103011; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714498223; x=1715103023; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=awaW7AT0wOcGmKhgMWqej99cmUwIAXC84LCX446x4FU=;
-        b=E3fQ7nWtq0h9yfZi/OzLRPTB2tGnydDkoPI1hk3+4siYKA3C8bStTw9+poPooBbbZY
-         wpHOyB3udWf7SMQd5EumaDO/N5Vi38cZdZWKs27l8ssk6OYKKhPpP6vzgNpzLVEf73zq
-         6Ko2G1+Gxtk+uuiJCUCn3sPRHMFKLZQ+OprCkert8yjmvB3tnqai3Aes1I6cePUlgc0k
-         rMKCBgIrsQzf+tb/4hdP/iq1kUoXMz7FgC6d/RTLBTRKBsoasjIJC09iE5imzZRZqERe
-         mrsUvIPDEggWeoBQ4PCvQ8BL5DmB0WuERrGAA2Y5SDsD5UM1r3d8LGgVoSJ4aliWkoo8
-         U2fA==
+        bh=FxZbViaAhwO4PV0OUowq5huoBZWoVzh7Ze8dxxotR2M=;
+        b=TFX60Iypf0rMbFM8hu2NbFXmFgAZB5vH2Jewbs2L6AWdIBbR5WjFkMKLWaeLu7Lyw6
+         RJleaaLcphMNIeJvrW8M3d2Irw0FE8m51PhSRoTQgf3EoGuEmZHZyuUnIEIXWdXVsUM7
+         4L446C3LXyIMR9v4cwOIB+BUkLkn7tcjld6TWcOvj7uZd4f33PzZWqDLa99qbqZ7jxsG
+         uqaeMoswFyQQs07c4klH2hFdgh9sQheNkHdFCXGywUlCmWK3mHCcvykDd2oH3+PIsBNJ
+         3/PUloafUdnTQbI3rvhqYI9gm8T2mncBipavedWuwjIdcm68ylNaVLCLcYLZdu+17qFB
+         3BAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714498211; x=1715103011;
+        d=1e100.net; s=20230601; t=1714498223; x=1715103023;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=awaW7AT0wOcGmKhgMWqej99cmUwIAXC84LCX446x4FU=;
-        b=KT+yafOzVuki97Bmn/HOezk2vTECjTI252Zt6gVzUGRoIMgtb+F2Vy95vsCYVrlVOZ
-         aTjSaZSHOe13Tb9PYszlvEDQz2Jkgt6CgG5IGFP63J9Y8J7AsCfPctlng0QozqRD/bsp
-         qXpoKbW8vAAvNuZPYRE9r8e1bZrk4ABFBCkls4cza5f+iWHjip3DjHz+McbrKErOQ+sJ
-         Ym5A+XpGaQOqUEUrJdxVIFPXbq5WWqvaK+zrj7cVldPgwllAqFU5Q5Ys+irfnqfMC2O8
-         qJCTkR2SoDcH+64OBOVIyi8Yjfm5EcgvGbOe9T7S5M7fTh+zQKm/iYuKpC/cGAJAJyE6
-         OG3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXqvMe/1UO8CRIhVEErO0XreDFFS6Y6n4gNseW7371mHsCJcvLGUvkuKA8jI32suLvQIX5foe4MfcPHlWdyXDDlrnK+QNQWtp+C3sOC
-X-Gm-Message-State: AOJu0YxZZSdsoWJbQAgm9wTBsW8ckB6xLyf0cE8/yUlNiYUaGbIQDFCz
-	6DV20ByfyQe3HdI+UPnqlwLlz3TDFmdvBHhuParfVjdmtMS2CobYWAwTxTHnFG0BV3qj63z/QVP
-	GTipi/Eu1iTn6Dtz1b7Mva3YQIbo+EaI2C7Ah
-X-Google-Smtp-Source: AGHT+IH+9i4rJwPsBQqyArNc6DyoylM2VtMH1uR90G8+UmkTIaIfFTHI45q8A/gfsHjMbdT2dAMNGIl7Sk7gnVSSnaI=
-X-Received: by 2002:a05:6402:3105:b0:572:9960:c21 with SMTP id
- dc5-20020a056402310500b0057299600c21mr145767edb.7.1714498210546; Tue, 30 Apr
- 2024 10:30:10 -0700 (PDT)
+        bh=FxZbViaAhwO4PV0OUowq5huoBZWoVzh7Ze8dxxotR2M=;
+        b=YFIBDNk7RYgUmYwh96OYMkuPhRax2/8ovQTA+kn1xSODVfN/zmladzxG0k1Fcr1k32
+         jP1BvVqi+VfcPUumf9viYe3n2rPhS/9zGIqA9E+w56nftYi1Bkaw2G6GcQzBv7pQKH9i
+         P2RC+qXMm2DVPzxFGWq8LPqpKtZS+fGPBLXpwgeUit+OzNcmYnanqef0ecb/qgjX7Byd
+         6eSt1u1uiSfX9+4Dc6L6qbB2aTxaD+8n7VAKV2aSq1Ni01sy/P9LzDy5lTS8pY7jbkL0
+         tPLKs66wawkoAkE3EIZKqaW1EfVmUoQkvp9J2vfqJlfXMjcMFjebQAwX2z9dwQNkiHag
+         ZVOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXN+kP9Yy7XXDjxQA5dzBlCcctwuVBPyh+gN3G4IpTX6d33wcsVgBj5yDaEYaVUq1jD53V0rZ1JdG8hH48GoaqizM+/MJV1fir26wqp
+X-Gm-Message-State: AOJu0YyJeV4S48h4ELospL0MVDmApWT006vanPECaNEKX4fUARYAOxbC
+	iXY+P4KODc4un3btiIDdXIOlrcH17EJhGA1oq+bnZKfQnchDZulFGyhMTMZdDKFnxCw5pJr3eMN
+	fTmKVIRhGK5L9iT102fzYVxhhJmYtw4mNEIKQ
+X-Google-Smtp-Source: AGHT+IHty/V744L2v5XOatNQF7i9eNUdQLrh2vd0dVlj+zon9AdpeH0meErTJfIImPxb7iOwtSY+aFtHN8bPD1KCT48=
+X-Received: by 2002:a25:e08b:0:b0:de0:f74b:25f3 with SMTP id
+ x133-20020a25e08b000000b00de0f74b25f3mr250740ybg.60.1714498222582; Tue, 30
+ Apr 2024 10:30:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430010628.430427-1-edliaw@google.com> <2024043037-debate-capsize-e44c@gregkh>
-In-Reply-To: <2024043037-debate-capsize-e44c@gregkh>
-From: Edward Liaw <edliaw@google.com>
-Date: Tue, 30 Apr 2024 10:29:43 -0700
-Message-ID: <CAG4es9VL8CdROKVygYi3YAo3ZuugXgiyt6uhf+3yq6s8iKfQeg@mail.gmail.com>
-Subject: Re: [PATCH 6.6.y] kselftest: Add a ksft_perror() helper
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>, kernel-team@android.com, 
-	Mark Brown <broonie@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240430060612.2171650-1-shakeel.butt@linux.dev>
+ <20240430060612.2171650-4-shakeel.butt@linux.dev> <CAJD7tkb0cOwgvet4MV8pAzP+R4ptHoWgFoMsdoYw_0qrcWv1=Q@mail.gmail.com>
+In-Reply-To: <CAJD7tkb0cOwgvet4MV8pAzP+R4ptHoWgFoMsdoYw_0qrcWv1=Q@mail.gmail.com>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Tue, 30 Apr 2024 10:30:11 -0700
+Message-ID: <CABdmKX3Q0rGLsZY63=M1gBcMhXahcd-hfFGjJwa2hqM1Z40QdA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/8] mm: memcg: account memory used for memcg vmstats
+ and lruvec stats
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, kernel-team@meta.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 30, 2024 at 12:51=E2=80=AFAM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
+On Tue, Apr 30, 2024 at 1:34=E2=80=AFAM Yosry Ahmed <yosryahmed@google.com>=
+ wrote:
 >
-> On Tue, Apr 30, 2024 at 01:06:27AM +0000, Edward Liaw wrote:
-> > From: Mark Brown <broonie@kernel.org>
+> On Mon, Apr 29, 2024 at 11:06=E2=80=AFPM Shakeel Butt <shakeel.butt@linux=
+.dev> wrote:
 > >
-> > [ Upstream commit 907f33028871fa7c9a3db1efd467b78ef82cce20 ]
+> > From: Roman Gushchin <roman.gushchin@linux.dev>
 > >
-> > The standard library perror() function provides a convenient way to pri=
-nt
-> > an error message based on the current errno but this doesn't play nicel=
-y
-> > with KTAP output. Provide a helper which does an equivalent thing in a =
-KTAP
-> > compatible format.
+> > The percpu memory used by memcg's memory statistics is already accounte=
+d.
+> > For consistency, let's enable accounting for vmstats and lruvec stats
+> > as well.
 > >
-> > nolibc doesn't have a strerror() and adding the table of strings requir=
-ed
-> > doesn't seem like a good fit for what it's trying to do so when we're u=
-sing
-> > that only print the errno.
-> >
-> > Signed-off-by: Mark Brown <broonie@kernel.org>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> > Stable-dep-of: 071af0c9e582 ("selftests: timers: Convert posix_timers t=
-est to generate KTAP output")
-> > Signed-off-by: Edward Liaw <edliaw@google.com>
-> > ---
-> >  tools/testing/selftests/kselftest.h | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
+> > Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 >
-> This commit is already in 6.6.29, why submit it again?
-
-Hi Greg,
-I double checked and I don't see this commit in 6.6.29.   As far as I
-can tell the earliest it has been merged is in 6.7.1.  Do you mind
-rechecking?
-
-Thank you,
-Edward
-
+> Reviewed-by: Yosry Ahmed <yosryahmed@google.com>
 >
-> confused,
->
-> greg k-h
+Reviewed-by: T.J. Mercier <tjmercier@google.com>
