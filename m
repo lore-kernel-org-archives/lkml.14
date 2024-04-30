@@ -1,150 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BA9199E9B
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 09:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57ED12836D;
+	Tue, 30 Apr 2024 09:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468728; cv=none; b=JFHe7aK0+CuvXNThpOYZnfyChkVmy2+w/XsUwLg3eG4DEe28EE+mSV4xzl6P4fYcon2SpEDB4jxxQ6n35WVTMi8NS+h6QfZvFXy2XbYodE4P92qUeQbl5lxVYcXfAbaDkdLmkEfTCnY66QIM8pRYxYvGAhgMygFjoJGAgtRWUsM=
+	t=1714468730; cv=none; b=oRZdp9b8BNfTwuGc4lGdeX0i3xhdBjdGnojSt1qgdrazL5J5iowd62MIrI45kGAYf0aasE8f/5qwz/qJg3n0jWgEh1fKqmg2fVcG+hXrUZyUwd/wwBfCdryAU0gugoP63oTAm3yxkk/8nfV5d5/JqW4dzzivBDGeqhC73N3p8+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468728; c=relaxed/simple;
-	bh=bgq56JkDmwg87xb07+GQV5RQnHvgbtHzqhdKAGeRZao=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B0EtrhQ/Go8srTWNqCAn5yUe4NqgTEN0K9amwc6Iz5imI7+IQQSZVEBHocv+Fy6pNiNlxbqFZeH+OrFKP3R81NO/cFbGUxkyDLT8C+qm7CYaJXP37OyUYlgepDw5wm1s9Y9NteLsjL5KnMPKuKcK0Z60zrXXk4e4FMBdKGYuao4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GkzsLeey; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714468730; c=relaxed/simple;
+	bh=xu4688X5LpIa9WsGUbdB5ty/Fonowhlc5KxUVayyEn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A2i0wi9HsbThNaa6E8108lFUxIZH7AkfvJ19QPpYWi1tWG7cjpQSSej9C2KpK8th+Fqg3zoS9PdsZF6++hVq2FcDD6ryeqfP73C5v1cTwRgnjeI46b96xxNWEKA+wKztpRUw7p4wWNdaJjFoQJzOr0Xtnavr6FHFc5LmpNR22g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Vn8aMbTO; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GkzsLeey"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714468725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DV3lYzDfK9nBuWPjI96StBtQfZyWxLcHDIW5433jP/0=;
-	b=GkzsLeeyi9G/YBKp4Jc53MvTA3Gr+QgTHwekJYruI/JFJK6yAmOfZrdjOTNmz5WcwGAo7g
-	usCYxu0gj3BnScvDcaPZMkOt5eXvSrPdxYkBaDRhq+Pe2MzaBGNCZ63oBO9h7gkjRzp0gR
-	WVH2VGEITwfarxFHkCxJ6kMgyigxgBg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-231-JZg_Avr1PNe5rnf1IbGAyQ-1; Tue, 30 Apr 2024 05:18:40 -0400
-X-MC-Unique: JZg_Avr1PNe5rnf1IbGAyQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 626B888E929;
-	Tue, 30 Apr 2024 09:18:39 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.193.247])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 48DFF492BC7;
-	Tue, 30 Apr 2024 09:18:37 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: [PATCH v2 12/27] context_tracking, rcu: Rename DYNTICK_IRQ_NONIDLE into CT_NESTING_IRQ_NONIDLE
-Date: Tue, 30 Apr 2024 11:17:16 +0200
-Message-ID: <20240430091740.1826862-13-vschneid@redhat.com>
-In-Reply-To: <20240430091740.1826862-1-vschneid@redhat.com>
-References: <20240430091740.1826862-1-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vn8aMbTO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xu4688X5LpIa9WsGUbdB5ty/Fonowhlc5KxUVayyEn0=; b=Vn8aMbTOd8x2KVdzx4zx502abC
+	0ktMguPbT3STkiJJH+4+777WbgZ65KoqqWsk2WT/EuE9hUlfueqcxjDFMQ7+J8wJyDotHw30CVIOc
+	RCqa8aB4lB2dfZ/WR273ADnGoXUuKd1HlgqZTFk90YCigUys4LbTLX1kTzOFAYvljtp/SWvbqluW9
+	/qaf7TSHDeEqR9NJ58xrV2OKocqbZ4zuCeDK0PIZS+R5BRPxjBxBzYVJNr8ucIIAcNmeG+nutSnqD
+	tSgP166iVlyEUahURv+90me2NJ/BpEAnkg03NRU2o1IGia0t3H+HGspAwh5ra0/Y3qfvoU7knzLN/
+	tIxHbq3Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s1jdB-0000000ETrS-2ro4;
+	Tue, 30 Apr 2024 09:18:33 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5C0DB300684; Tue, 30 Apr 2024 11:18:33 +0200 (CEST)
+Date: Tue, 30 Apr 2024 11:18:33 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Erick Archer <erick.archer@outlook.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/intel/uncore: Prefer struct_size over open
+ coded arithmetic
+Message-ID: <20240430091833.GD40213@noisy.programming.kicks-ass.net>
+References: <AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202404291013.B21EADD4F@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202404291013.B21EADD4F@keescook>
 
-The context_tracking.state RCU_DYNTICKS subvariable has been renamed to
-RCU_WATCHING, and the 'dynticks' prefix can be dropped without losing any
-meaning.
+On Mon, Apr 29, 2024 at 10:18:03AM -0700, Kees Cook wrote:
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- include/linux/context_tracking_state.h | 2 +-
- kernel/context_tracking.c              | 8 ++++----
- kernel/rcu/tree.c                      | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+> Peter and Ingo, you seem to traditionally take these changes (via -tip)?
+> Can you please pick this up?
 
-diff --git a/include/linux/context_tracking_state.h b/include/linux/context_tracking_state.h
-index 34fd504e53a86..0dbda59c9f372 100644
---- a/include/linux/context_tracking_state.h
-+++ b/include/linux/context_tracking_state.h
-@@ -7,7 +7,7 @@
- #include <linux/context_tracking_irq.h>
- 
- /* Offset to allow distinguishing irq vs. task-based idle entry/exit. */
--#define DYNTICK_IRQ_NONIDLE	((LONG_MAX / 2) + 1)
-+#define CT_NESTING_IRQ_NONIDLE	((LONG_MAX / 2) + 1)
- 
- enum ctx_state {
- 	CT_STATE_DISABLED	= -1,	/* returned by ct_state() if unknown */
-diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-index 19e3e0e30a9b2..647939b0befd9 100644
---- a/kernel/context_tracking.c
-+++ b/kernel/context_tracking.c
-@@ -29,7 +29,7 @@
- DEFINE_PER_CPU(struct context_tracking, context_tracking) = {
- #ifdef CONFIG_CONTEXT_TRACKING_IDLE
- 	.nesting = 1,
--	.nmi_nesting = DYNTICK_IRQ_NONIDLE,
-+	.nmi_nesting = CT_NESTING_IRQ_NONIDLE,
- #endif
- 	.state = ATOMIC_INIT(CT_RCU_WATCHING),
- };
-@@ -125,7 +125,7 @@ static void noinstr ct_kernel_exit(bool user, int offset)
- {
- 	struct context_tracking *ct = this_cpu_ptr(&context_tracking);
- 
--	WARN_ON_ONCE(ct_nmi_nesting() != DYNTICK_IRQ_NONIDLE);
-+	WARN_ON_ONCE(ct_nmi_nesting() != CT_NESTING_IRQ_NONIDLE);
- 	WRITE_ONCE(ct->nmi_nesting, 0);
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     ct_nesting() == 0);
-@@ -156,7 +156,7 @@ static void noinstr ct_kernel_exit(bool user, int offset)
-  * Exit an RCU extended quiescent state, which can be either the
-  * idle loop or adaptive-tickless usermode execution.
-  *
-- * We crowbar the ->nmi_nesting field to DYNTICK_IRQ_NONIDLE to
-+ * We crowbar the ->nmi_nesting field to CT_NESTING_IRQ_NONIDLE to
-  * allow for the possibility of usermode upcalls messing up our count of
-  * interrupt nesting level during the busy period that is just now starting.
-  */
-@@ -186,7 +186,7 @@ static void noinstr ct_kernel_enter(bool user, int offset)
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
- 	WRITE_ONCE(ct->nesting, 1);
- 	WARN_ON_ONCE(ct_nmi_nesting());
--	WRITE_ONCE(ct->nmi_nesting, DYNTICK_IRQ_NONIDLE);
-+	WRITE_ONCE(ct->nmi_nesting, CT_NESTING_IRQ_NONIDLE);
- 	instrumentation_end();
- }
- 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index f5b1d83cdef85..d8f89bc573448 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -598,7 +598,7 @@ void rcu_irq_exit_check_preempt(void)
- 	RCU_LOCKDEP_WARN(ct_nesting() <= 0,
- 			 "RCU nesting counter underflow/zero!");
- 	RCU_LOCKDEP_WARN(ct_nmi_nesting() !=
--			 DYNTICK_IRQ_NONIDLE,
-+			 CT_NESTING_IRQ_NONIDLE,
- 			 "Bad RCU  nmi_nesting counter\n");
- 	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
- 			 "RCU in extended quiescent state!");
--- 
-2.43.0
-
+I have been explicitly not taking these things for perf and sched for a
+while now. As I wrote in that other mail, I detest struct_size(), it
+obfuscates code for no real benefit afaict.
