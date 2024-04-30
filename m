@@ -1,141 +1,251 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBB217166F
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B3C171652
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714481845; cv=none; b=Odabdlx1NI7yzoKPdlJa5oAVbQXszDyH2spY4Z6RsvXBluZitGVu1JakR8+7tusdsCgSSOHsElo4S7Dnk3rLpNbGmPCkSqfdps6Ndn80ddvl2oVOBzk0EI/m1336Cp3m930wlEnvfJ9qNHNaQfbqIbiJakVNn+/JbH34bPdX1xM=
+	t=1714481882; cv=none; b=eXtNn0aaDXjeqpIIYL8qxPHH7C+OeRpOvXRn16efxYklzNgtbUeFoGesUBzPJEkRMBvLIUAQ4fYAEy+qhWoF7doEqYa8S+LpLCj7Vfyt+pDWPFS/0Cr6q1AoKfqKd7GQPeLo/d3LYApIvFvbMrRi7fbBpQRsg4m9deBIfJWDt4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714481845; c=relaxed/simple;
-	bh=6QT0q2O5P7yUDN49ZBaxXbsmzFoWw+mrdy57yktGL+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ozimGxuEwenLa8VeFxJYUHAUIeaQQYiVDZrtO0O0igD4Xvtux6MC6kY6DW1bKZUHGZfj2vIHMG85rd6yJivgrooLVxBMoLA0azJed8xnaCRD8O2ZBlE05GHy5hpYIhGsDxKQf3LxBko4UQnThwHCvH3qCzRt8D/C59NbFbp3j00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Rw92ooLQ; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1714481882; c=relaxed/simple;
+	bh=/pU4Dib1WddZsF8ZFDt6j+ppcDi/xkpE/RQql4gGQyM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sdnG8khniHPn91Lt3tUg9wfPOYWf0M1G2wpcpV0HPkwbqoV05ca8aIvGfMdSyblhvK0JmQ0Pka4WNRDehyXNceLKlcMzmEp+0C3/4Pje63NeRTSzRa6h3fL90tmI1puyS1vBx7kWzyB2spWUdpYIU+BY44zIJ5e2Ci9fDEFdMUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jvNP0/Nn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=royZH4Cy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wIVQZ+UG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gy0UNDTG; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Rw92ooLQ"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2b27eec1eb1so510097a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 05:57:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1714481843; x=1715086643; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5uLT2hc2nyqyVJ8rbCN78QLwond+XzmKAS1fxzjXQbI=;
-        b=Rw92ooLQioQENzl7PwwfVO4eEzyem5+Qyj7SKzanUTPqXnDhqPVJU3sbqAlgCHJAhf
-         c0pjUwNB75mmNPUI6Ue7SfMRuiXnKf79wB6uwTetqaaBpmJFCgnf2jY/YsWmU/15tes0
-         ZKToB4V2+qtBkBbfrJNFJdd1PgvfCOMq1Mjrqz/XgsmI3FDGe5Z/um8fVP5a0RGjF53T
-         q5g9YVZ/fO0fVOlJpdYv/QdyEug2De9XVX7dCnU4FUG24MCXbWOVkvKBflKiN/bDkX3J
-         0UqEAkS2b84/wIhXzQQwCrBWPtWNNcPk95RCUAdaXFQoQ3PPmezt9N+PyEyI9IHlyiwt
-         5HCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714481843; x=1715086643;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5uLT2hc2nyqyVJ8rbCN78QLwond+XzmKAS1fxzjXQbI=;
-        b=XolTZDtvAcodhgiPrV4b6wWFoQ34vFVsKiVEiS5OjjDPp/hZDpsVEXdeXH57+rrjLr
-         HIztAnucMGYQDCejSd72hY6ENfBakSZKt3mAD87CIkJpo9EZyLP3f+F+HAOyG1rEpiX6
-         Af8qBbtXlWnDaQ5Si0wFQzBGjfx+XyLx/kKRslJfMxAwZxJSc3uZuHkYTqmRF2MDV0GJ
-         vkbQma/bHtAzZHnHtn5cyHZVjBMDdLjV189BLzBjldrIHYzT3MWO6+VUiuUusPAFxUQ0
-         dbwo/g6p6sopihFZAn4tBi5epQrDGfFGX2j8bSajQIo6/QwbmzrKZCqV3Fr1w8jWS1Xb
-         IfWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBtmuNL9jhttR6ixt1WsMPwAcNKas57aiO6Joi0NAznmuN2pjbZGzJY3D39QJMl+cuQrWMoRHTqDN7TA8wlPdAVg1AKML7bQ+WXbTN
-X-Gm-Message-State: AOJu0YyNJYjM35x245imeAPQXlI8YlepUCXj3nCeB57OCd7lO7PTPKX2
-	sDA74xhIpD+uasMuPkVpL5UK1e/Gt92azyNuCWjZBFtGKwCWd9Q7OgItBHKmQeo=
-X-Google-Smtp-Source: AGHT+IEj+uWnR47Gzrthf1B7PKB4MKEOP/aomUlBZht7YwI1FpOC6x4BCa+6YhpjM40KQjA9TFAHzQ==
-X-Received: by 2002:a17:90a:9318:b0:2a5:4105:186c with SMTP id p24-20020a17090a931800b002a54105186cmr13296149pjo.9.1714481842724;
-        Tue, 30 Apr 2024 05:57:22 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id nv5-20020a17090b1b4500b002a2f055e52csm22551280pjb.34.2024.04.30.05.57.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 05:57:22 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1s1n2u-0072aA-Gm;
-	Tue, 30 Apr 2024 09:57:20 -0300
-Date: Tue, 30 Apr 2024 09:57:20 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Long Li <longli@microsoft.com>,
-	Konstantin Taranov <kotaranov@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH rdma-next 6/6] RDMA/mana_ib: implement uapi for creation
- of rnic cq
-Message-ID: <20240430125720.GT231144@ziepe.ca>
-References: <1713459125-14914-1-git-send-email-kotaranov@linux.microsoft.com>
- <1713459125-14914-7-git-send-email-kotaranov@linux.microsoft.com>
- <SJ1PR21MB345775858C05B9FE51C2BDF0CE112@SJ1PR21MB3457.namprd21.prod.outlook.com>
- <20240430123715.GD100414@unreal>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jvNP0/Nn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="royZH4Cy";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wIVQZ+UG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gy0UNDTG"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ED5C11F7D2;
+	Tue, 30 Apr 2024 12:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714481879; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=28VGKmz8/G47Zscm7EVEjbZPA1AicPxrlrxWvx0shZA=;
+	b=jvNP0/NnBiSa4qhTnN25wHJ1Xdg6+Z9TtVSX6OQdxSi6mb0pyRYoLEsKZ3ZGwI7YxU1jSH
+	6HhMQxI3O9Q5g6NBsrdWLYd81NliaR0ez8oFDHML5Z+ZM+GUxGdsTXNbkRsBSZ2aw1lnPX
+	xVGpyeY2kS5pYF/mwYdy7ryMn9j3XMk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714481879;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=28VGKmz8/G47Zscm7EVEjbZPA1AicPxrlrxWvx0shZA=;
+	b=royZH4CyjV1vbwNc6U9uT59fWX0THAQRM10bKmxZi3GC3oxSY3+7xIdaeRTMQ1wND6lEHk
+	c3/mqIT0AWqhSvBw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714481878; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=28VGKmz8/G47Zscm7EVEjbZPA1AicPxrlrxWvx0shZA=;
+	b=wIVQZ+UGElsUEtcRhegciyUl7y3HfUA9JZynBmMgGBF0XBnAkCklEQcDdOBSgdbztMekOP
+	jRrYVfmHQ9qhzffDGnv88g1+czULLtiJnwscqK2FQQu+R/StuVdlSIGCqnc33oDTlJvSnd
+	jFxPz/2HM5yXa1GfN0w4wQO+JKzSwGc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714481878;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=28VGKmz8/G47Zscm7EVEjbZPA1AicPxrlrxWvx0shZA=;
+	b=gy0UNDTGR7KuO7MzcNkbvFWqEYWK5YuSPvd672UKGrbOU9hJ+64ZnkpxVBvahuIxswMJtC
+	vAUIytv5/a788tDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B6203136A8;
+	Tue, 30 Apr 2024 12:57:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jgboK9bqMGbrKAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 30 Apr 2024 12:57:58 +0000
+Date: Tue, 30 Apr 2024 14:58:10 +0200
+Message-ID: <87jzkfm2hp.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Baojun Xu <baojun.xu@ti.com>
+Cc: <robh+dt@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>,
+	<lgirdwood@gmail.com>,
+	<perex@perex.cz>,
+	<pierre-louis.bossart@linux.intel.com>,
+	<kevin-lu@ti.com>,
+	<shenghao-ding@ti.com>,
+	<navada@ti.com>,
+	<13916275206@139.com>,
+	<v-po@ti.com>,
+	<niranjan.hy@ti.com>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<liam.r.girdwood@intel.com>,
+	<yung-chuan.liao@linux.intel.com>,
+	<broonie@kernel.org>,
+	<soyer@irl.hu>
+Subject: Re: [PATCH v4 1/3] ALSA: hda/tas2781: Add tas2781 hda driver based on SPI
+In-Reply-To: <20240430072544.1877-2-baojun.xu@ti.com>
+References: <20240430072544.1877-1-baojun.xu@ti.com>
+	<20240430072544.1877-2-baojun.xu@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240430123715.GD100414@unreal>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[dt];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,gmail.com,perex.cz,ti.com,139.com,alsa-project.org,vger.kernel.org,intel.com,irl.hu];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -1.80
+X-Spam-Flag: NO
 
-On Tue, Apr 30, 2024 at 03:37:15PM +0300, Leon Romanovsky wrote:
-> On Tue, Apr 23, 2024 at 11:57:53PM +0000, Long Li wrote:
-> > > Subject: [PATCH rdma-next 6/6] RDMA/mana_ib: implement uapi for creation
-> > > of rnic cq
-> > > 
-> > > From: Konstantin Taranov <kotaranov@microsoft.com>
-> > > 
-> > > Enable users to create RNIC CQs.
-> > > With the previous request size, an ethernet CQ is created.
-> > > Use the cq_buf_size from the user to create an RNIC CQ and return its ID.
-> > > 
-> > > Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
-> > > ---
-> > >  drivers/infiniband/hw/mana/cq.c | 56 ++++++++++++++++++++++++++++++---
-> > >  include/uapi/rdma/mana-abi.h    |  7 +++++
-> > >  2 files changed, 59 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/infiniband/hw/mana/cq.c
-> > > b/drivers/infiniband/hw/mana/cq.c index 8323085..a62bda7 100644
-> > > --- a/drivers/infiniband/hw/mana/cq.c
-> > > +++ b/drivers/infiniband/hw/mana/cq.c
-> > > @@ -9,17 +9,25 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct
-> > > ib_cq_init_attr *attr,
-> > >  		      struct ib_udata *udata)
-> > >  {
-> > >  	struct mana_ib_cq *cq = container_of(ibcq, struct mana_ib_cq, ibcq);
-> > > +	struct mana_ib_create_cq_resp resp = {};
-> > > +	struct mana_ib_ucontext *mana_ucontext;
-> > >  	struct ib_device *ibdev = ibcq->device;
-> > >  	struct mana_ib_create_cq ucmd = {};
-> > >  	struct mana_ib_dev *mdev;
-> > > +	bool is_rnic_cq = true;
-> > > +	u32 doorbell;
-> > >  	int err;
-> > > 
-> > >  	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
-> > > 
-> > > -	if (udata->inlen < sizeof(ucmd))
-> > > +	cq->comp_vector = attr->comp_vector % ibdev->num_comp_vectors;
-> > > +	cq->cq_handle = INVALID_MANA_HANDLE;
-> > > +
-> > > +	if (udata->inlen < offsetof(struct mana_ib_create_cq, cq_buf_size))
-> > >  		return -EINVAL;
-> > > 
-> > > -	cq->comp_vector = attr->comp_vector % ibdev->num_comp_vectors;
-> > > +	if (udata->inlen == offsetof(struct mana_ib_create_cq, cq_buf_size))
-> > > +		is_rnic_cq = false;
-> > 
-> > I think it's okay with checking on offset in uapi message to decide if this is a newer/updated RNIC uverb.
+On Tue, 30 Apr 2024 09:25:42 +0200,
+Baojun Xu wrote:
+> 
+> Integrate tas2781 hda spi driver configs for HP (Varcolac).
+> Every tas2781 SPI node was added by serial-multi-instantie.c as a SPI device.
+> The code support Realtek as the primary codec.
+> 
+> Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+> 
+> ---
+> v4:
+>  - Add old hardware id "TIAS2781" for compatible with old production
+>  - Add 2 devices in struct smi_node tas2781_hda, to compatible with 4 AMPs
+> v3:
+>  - Move HID up to above /* Non-conforming _HID ... */ in scan.c,
+>    for avoid misunderstanding.
+>  - Move HID up to above /* Non-conforming _HID ... */ in
+>    serial-multi-instantiate.c, for avoid misunderstanding.
+>  - Change objs to y for snd-hda-scodec-tas2781-spi- in Makefile.
+> ---
+>  drivers/acpi/scan.c                             |  2 ++
+>  drivers/platform/x86/serial-multi-instantiate.c | 13 +++++++++++++
+>  sound/pci/hda/Kconfig                           | 14 ++++++++++++++
+>  sound/pci/hda/Makefile                          |  2 ++
+>  sound/pci/hda/patch_realtek.c                   | 13 +++++++++++++
+>  5 files changed, 44 insertions(+)
+> 
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index d1464324de95..51af181ccf62 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1765,6 +1765,8 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
+>  		{"CSC3557", },
+>  		{"INT33FE", },
+>  		{"INT3515", },
+> +		{"TXNW2781", },
+> +		{"TIAS2781", },
+>  		/* Non-conforming _HID for Cirrus Logic already released */
+>  		{"CLSA0100", },
+>  		{"CLSA0101", },
+> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+> index 97b9c6392230..d1c766f17b26 100644
+> --- a/drivers/platform/x86/serial-multi-instantiate.c
+> +++ b/drivers/platform/x86/serial-multi-instantiate.c
+> @@ -368,6 +368,17 @@ static const struct smi_node cs35l57_hda = {
+>  	.bus_type = SMI_AUTO_DETECT,
+>  };
+>  
+> +static const struct smi_node tas2781_hda = {
+> +	.instances = {
+> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
+> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
+> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
+> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
+> +		{}
+> +	},
+> +	.bus_type = SMI_AUTO_DETECT,
+> +};
+> +
+>  /*
+>   * Note new device-ids must also be added to ignore_serial_bus_ids in
+>   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
+> @@ -380,6 +391,8 @@ static const struct acpi_device_id smi_acpi_ids[] = {
+>  	{ "CSC3556", (unsigned long)&cs35l56_hda },
+>  	{ "CSC3557", (unsigned long)&cs35l57_hda },
+>  	{ "INT3515", (unsigned long)&int3515_data },
+> +	{ "TXNW2781", (unsigned long)&tas2781_hda },
+> +	{ "TIAS2781", (unsigned long)&tas2781_hda },
+>  	/* Non-conforming _HID for Cirrus Logic already released */
+>  	{ "CLSA0100", (unsigned long)&cs35l41_hda },
+>  	{ "CLSA0101", (unsigned long)&cs35l41_hda },
+> diff --git a/sound/pci/hda/Kconfig b/sound/pci/hda/Kconfig
+> index f806636242ee..15f0e66b77e5 100644
+> --- a/sound/pci/hda/Kconfig
+> +++ b/sound/pci/hda/Kconfig
+> @@ -202,6 +202,20 @@ config SND_HDA_SCODEC_TAS2781_I2C
+>  comment "Set to Y if you want auto-loading the side codec driver"
+>  	depends on SND_HDA=y && SND_HDA_SCODEC_TAS2781_I2C=m
+>  
+> +config SND_HDA_SCODEC_TAS2781_SPI
+> +	tristate "Build TAS2781 HD-audio side codec support for SPI Bus"
+> +	depends on SPI_MASTER
+> +	depends on ACPI
+> +	depends on EFI
+> +	depends on SND_SOC
+> +	select CRC32_SARWATE
+> +	help
+> +	  Say Y or M here to include TAS2781 SPI HD-audio side codec support
+> +	  in snd-hda-intel driver, such as ALC287.
+> +
+> +comment "Set to Y if you want auto-loading the side codec driver"
+> +	depends on SND_HDA=y && SND_HDA_SCODEC_TAS2781_SPI=m
+> +
+>  config SND_HDA_CODEC_REALTEK
+>  	tristate "Build Realtek HD-audio codec support"
+>  	select SND_HDA_GENERIC
+> diff --git a/sound/pci/hda/Makefile b/sound/pci/hda/Makefile
+> index 13e04e1f65de..2d5d4d841d87 100644
+> --- a/sound/pci/hda/Makefile
+> +++ b/sound/pci/hda/Makefile
+> @@ -39,6 +39,7 @@ snd-hda-scodec-cs35l56-spi-objs :=	cs35l56_hda_spi.o
+>  snd-hda-cs-dsp-ctls-objs :=		hda_cs_dsp_ctl.o
+>  snd-hda-scodec-component-objs :=	hda_component.o
+>  snd-hda-scodec-tas2781-i2c-objs :=	tas2781_hda_i2c.o
+> +snd-hda-scodec-tas2781-spi-y :=	tas2781_hda_spi.o tas2781_spi_fwlib.o
 
-Yes, this is the expected method
+A nitpicking: better to align with other lines (i.e. with *-objs
+instead of *-y).
 
-> You should really try to avoid changing MANA_IB_UVERBS_ABI_VERSION as it
-> usually means that backward compatibility will be broken after such change.
+The main problem here is, though, that this commit will break the
+build, because you introduced a Kconfig that can be enabled, while the
+corresponding code for snd-hda-scodec-tas2781-spi isn't present yet.
+This is bad for the git-bisection.
 
-Yes, please don't do that.
+You'd need to reorganize better how the code is added piece-by-piece.
 
-Jason
+
+thanks,
+
+Takashi
