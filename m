@@ -1,573 +1,128 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E4A1C0DC7;
-	Tue, 30 Apr 2024 08:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DB51C6615
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 08:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466379; cv=none; b=YwHa1slgbI40Unkz9RVrkPM1+C+FDrNXGq/kJnhk5K4tvpf5DyyXyy7UrmG3evdxBOUsU0bDB9rqQxh8q9yTC5hYXBSD72TJn5+Cuy+bx0Y5iBgi8kRu+SV4x7RIm8LEieBGtg84iXkDoaBM6B10OFhYK+9OtvqykyIF/cl0hR4=
+	t=1714466385; cv=none; b=VMc3npfIV+esDTbsCyT8U8Kd+3B567/rJ97XShpGXJa8ZCGKWIP+xjBRTDwbFaMO5xlvNqdJgrHyvUJCTAWVgoG2ME8zqfbXLmyrMA53rofCBioN3J7jsXXd6QriwKxfAa8TEJ70qg/LCMhCkljyb8mdyvtA169i2oQb7zvH1yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466379; c=relaxed/simple;
-	bh=nliaHWA/NMStS5UotZ7BKISP29iSI3mDU9pVVa55xuI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kjcjTxXrtAyeohkIiayN/9uB/GYsUKhnccoXMQVI78HHldef0aTQDATebYQ3klUBSLGVZ5aA4yNErw94DCawpWAUCZVC5tCEXDHGB5x5cOe6PY8gO6nu9BdZvgC74zASQcIrlddaR2jx2rkRARWfYzriUqewDH6d/nFmWbpPQzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ysu7qESt; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1714466385; c=relaxed/simple;
+	bh=WWFnrSc8+9eCmftDNV7T5kPmDsgc2uC6sffBiuC6UVY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SMqYo9mT2ogwgOiwz6RClddxezoHl0aPLEHMRLvIwuXbCSp8gTAwR6gUADkOU8mTRoDYVqd3HU90NvAxQKL+caj0MXdrcglwkNv4cTcLP/YSG0A+j41knHzzgUcl30SgKXw4cXmb4RMDVvG5IklB2JXfi+UhdXmeOcf2Wj+b4Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=sxfTy8XJ; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ysu7qESt"
-Received: by mail.gandi.net (Postfix) with ESMTPA id CA7AC2000B;
-	Tue, 30 Apr 2024 08:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714466375;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1x6u+GMy96SLnvHnPDRb/JeS/VQcZwMT1qoZIOF3XQc=;
-	b=Ysu7qEStKewqPlfDKZxeb4N/jgwYmmGV23M+nB1ssvvXEtpld6bg0vA+QtO27Wg21aV2kI
-	ndlDkh2GU7qiEFqM5oL8iDq/OWcIwvP1CikwguzY9+pb8ewrumTcdw9ryr7eRqYNOqKwT0
-	iFiaupFzyYk0He0UThVMkWQsk3hYRmFo02yrvUkz28w3mbUnAu3BJKi5Bf8jE+m2AFegVC
-	oiyPIR4xmhmtjIBXsXRmQYTXYTb+E1ryajRVJml+HHNVA/dCW7Q8Gn4B9xHx/Oufipv7Ba
-	pksW2xIiJ9cg8ytIia9f1zFyfLDjcvY2PWr2YFqvn/fjdJI/+vxC/0I0DSxXYA==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Herve Codina <herve.codina@bootlin.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Lee Jones <lee@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 16/17] mfd: Add support for LAN966x PCI device
-Date: Tue, 30 Apr 2024 10:37:25 +0200
-Message-ID: <20240430083730.134918-17-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240430083730.134918-1-herve.codina@bootlin.com>
-References: <20240430083730.134918-1-herve.codina@bootlin.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sxfTy8XJ"
+X-UUID: 2d3d3e8806cd11ef8065b7b53f7091ad-20240430
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=LwZIKlQJP95UHeQU2CW1tpdwHn1XGE1fySMMHl57I3A=;
+	b=sxfTy8XJ6m1N2aPEeXn/4HG8LP6QH265ngj+9Tz/nc9Anvjf/l3Y3Pfl4+YNIzHQrpQwkZjE0PfGt5ewJzbeIh6Pb0DoGdjGEO0b3oF6yqyRaLel9ZVFzc9ROXpk67MlBkbIlqCAa8rR4TqnCogautjY6J5J8ast7fjx7dqZEIg=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:fc59f32b-2338-41c5-9c3b-2f1377258e9d,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:82c5f88,CLOUDID:498c4883-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 2d3d3e8806cd11ef8065b7b53f7091ad-20240430
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 2099143406; Tue, 30 Apr 2024 16:39:36 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 30 Apr 2024 16:39:35 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 30 Apr 2024 16:39:35 +0800
+From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Chun-Kuang Hu
+	<chunkuang.hu@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+CC: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jason-ch Chen <jason-ch.chen@mediatek.com>, "Jason-JH . Lin"
+	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
+ Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH] mailbox: mtk-cmdq: Fix sleeping function called from invalid context
+Date: Tue, 30 Apr 2024 16:39:34 +0800
+Message-ID: <20240430083934.26980-1-jason-jh.lin@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain
+X-MTK: N
 
-Add a PCI driver that handles the LAN966x PCI device using a device-tree
-overlay. This overlay is applied to the PCI device DT node and allows to
-describe components that are present in the device.
+When we run kernel with lockdebug option, we will get the BUG below:
+[  106.692124] BUG: sleeping function called from invalid context at drivers/base/power/runtime.c:1164
+[  106.692190] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 3616, name: kworker/u17:3
+[  106.692226] preempt_count: 1, expected: 0
+[  106.692254] RCU nest depth: 0, expected: 0
+[  106.692282] INFO: lockdep is turned off.
+[  106.692306] irq event stamp: 0
+[  106.692331] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+[  106.692376] hardirqs last disabled at (0): [<ffffffee15d37fa0>] copy_process+0xc90/0x2ac0
+[  106.692429] softirqs last  enabled at (0): [<ffffffee15d37fc4>] copy_process+0xcb4/0x2ac0
+[  106.692473] softirqs last disabled at (0): [<0000000000000000>] 0x0
+[  106.692513] CPU: 1 PID: 3616 Comm: kworker/u17:3 Not tainted 6.1.87-lockdep-14133-g26e933aca785 #1 6839942e1cf34914b0a366137843dd2366f52aa9
+[  106.692556] Hardware name: Google Ciri sku0/unprovisioned board (DT)
+[  106.692586] Workqueue: imgsys_runner imgsys_runner_func
+[  106.692638] Call trace:
+[  106.692662]  dump_backtrace+0x100/0x120
+[  106.692702]  show_stack+0x20/0x2c
+[  106.692737]  dump_stack_lvl+0x84/0xb4
+[  106.692775]  dump_stack+0x18/0x48
+[  106.692809]  __might_resched+0x354/0x4c0
+[  106.692847]  __might_sleep+0x98/0xe4
+[  106.692883]  __pm_runtime_resume+0x70/0x124
+[  106.692921]  cmdq_mbox_send_data+0xe4/0xb1c
+[  106.692964]  msg_submit+0x194/0x2dc
+[  106.693003]  mbox_send_message+0x190/0x330
+[  106.693043]  imgsys_cmdq_sendtask+0x1618/0x2224
+[  106.693082]  imgsys_runner_func+0xac/0x11c
+[  106.693118]  process_one_work+0x638/0xf84
+[  106.693158]  worker_thread+0x808/0xcd0
+[  106.693196]  kthread+0x24c/0x324
+[  106.693231]  ret_from_fork+0x10/0x20
 
-The memory from the device-tree is remapped to the BAR memory thanks to
-"ranges" properties computed at runtime by the PCI core during the PCI
-enumeration.
-The PCI device itself acts as an interrupt controller and is used as the
-parent of the internal LAN966x interrupt controller to route the
-interrupts to the assigned PCI INTx interrupt.
+We found that there is a spin_lock_irqsave protection in msg_submit()
+of mailbox.c.
+So when cmdq driver calls pm_runtime_get_sync() in cmdq_mbox_send_data(),
+it will get this BUG report.
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Add pm_runtime_irq_safe() to let pm_runtime callbacks is safe in atomic
+context with interrupts disabled.
+
+Fixes: 8afe816b0c99 ("mailbox: mtk-cmdq-mailbox: Implement Runtime PM with autosuspend")
+Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
 ---
- drivers/mfd/Kconfig          |  24 ++++
- drivers/mfd/Makefile         |   4 +
- drivers/mfd/lan966x_pci.c    | 229 +++++++++++++++++++++++++++++++++++
- drivers/mfd/lan966x_pci.dtso | 167 +++++++++++++++++++++++++
- drivers/pci/quirks.c         |   1 +
- 5 files changed, 425 insertions(+)
- create mode 100644 drivers/mfd/lan966x_pci.c
- create mode 100644 drivers/mfd/lan966x_pci.dtso
+ drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 4b023ee229cf..e5f5d2986dd3 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -144,6 +144,30 @@ config MFD_ATMEL_FLEXCOM
- 	  by the probe function of this MFD driver according to a device tree
- 	  property.
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index ead2200f39ba..3b4f19633c83 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -694,6 +694,7 @@ static int cmdq_probe(struct platform_device *pdev)
  
-+config MFD_LAN966X_PCI
-+	tristate "Microchip LAN966x PCIe Support"
-+	depends on PCI
-+	select OF
-+	select OF_OVERLAY
-+	select IRQ_DOMAIN
-+	help
-+	  This enables the support for the LAN966x PCIe device.
-+	  This is used to drive the LAN966x PCIe device from the host system
-+	  to which it is connected.
-+
-+	  This driver uses an overlay to load other drivers to support for
-+	  LAN966x internal components.
-+	  Even if this driver does not depend on these other drivers, in order
-+	  to have a fully functional board, the following drivers are needed:
-+	    - fixed-clock (COMMON_CLK)
-+	    - lan966x-oic (LAN966X_OIC)
-+	    - lan966x-cpu-syscon (MFD_SYSCON)
-+	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
-+	    - lan966x-pinctrl (PINCTRL_OCELOT)
-+	    - lan966x-serdes (PHY_LAN966X_SERDES)
-+	    - lan966x-miim (MDIO_MSCC_MIIM)
-+	    - lan966x-switch (LAN966X_SWITCH)
-+
- config MFD_ATMEL_HLCDC
- 	tristate "Atmel HLCDC (High-end LCD Controller)"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index c66f07edcd0e..165a9674ff48 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -284,3 +284,7 @@ rsmu-i2c-objs			:= rsmu_core.o rsmu_i2c.o
- rsmu-spi-objs			:= rsmu_core.o rsmu_spi.o
- obj-$(CONFIG_MFD_RSMU_I2C)	+= rsmu-i2c.o
- obj-$(CONFIG_MFD_RSMU_SPI)	+= rsmu-spi.o
-+
-+lan966x-pci-objs		:= lan966x_pci.o
-+lan966x-pci-objs		+= lan966x_pci.dtbo.o
-+obj-$(CONFIG_MFD_LAN966X_PCI)	+= lan966x-pci.o
-diff --git a/drivers/mfd/lan966x_pci.c b/drivers/mfd/lan966x_pci.c
-new file mode 100644
-index 000000000000..d9d886a1948f
---- /dev/null
-+++ b/drivers/mfd/lan966x_pci.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Microchip LAN966x PCI driver
-+ *
-+ * Copyright (c) 2024 Microchip Technology Inc. and its subsidiaries.
-+ *
-+ * Authors:
-+ *	Clément Léger <clement.leger@bootlin.com>
-+ *	Hervé Codina <herve.codina@bootlin.com>
-+ */
-+
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/pci.h>
-+#include <linux/slab.h>
-+
-+/* Embedded dtbo symbols created by cmd_wrap_S_dtb in scripts/Makefile.lib */
-+extern char __dtbo_lan966x_pci_begin[];
-+extern char __dtbo_lan966x_pci_end[];
-+
-+struct pci_dev_intr_ctrl {
-+	struct pci_dev *pci_dev;
-+	struct irq_domain *irq_domain;
-+	int irq;
-+};
-+
-+static int pci_dev_irq_domain_map(struct irq_domain *d, unsigned int virq, irq_hw_number_t hw)
-+{
-+	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops pci_dev_irq_domain_ops = {
-+	.map = pci_dev_irq_domain_map,
-+	.xlate = irq_domain_xlate_onecell,
-+};
-+
-+static irqreturn_t pci_dev_irq_handler(int irq, void *data)
-+{
-+	struct pci_dev_intr_ctrl *intr_ctrl = data;
-+	int ret;
-+
-+	ret = generic_handle_domain_irq(intr_ctrl->irq_domain, 0);
-+	return ret ? IRQ_NONE : IRQ_HANDLED;
-+}
-+
-+static struct pci_dev_intr_ctrl *pci_dev_create_intr_ctrl(struct pci_dev *pdev)
-+{
-+	struct pci_dev_intr_ctrl *intr_ctrl;
-+	struct fwnode_handle *fwnode;
-+	int ret;
-+
-+	if (!pdev->irq)
-+		return ERR_PTR(-EOPNOTSUPP);
-+
-+	fwnode = dev_fwnode(&pdev->dev);
-+	if (!fwnode)
-+		return ERR_PTR(-ENODEV);
-+
-+	intr_ctrl = kmalloc(sizeof(*intr_ctrl), GFP_KERNEL);
-+	if (!intr_ctrl)
-+		return ERR_PTR(-ENOMEM);
-+
-+	intr_ctrl->pci_dev = pdev;
-+
-+	intr_ctrl->irq_domain = irq_domain_create_linear(fwnode, 1, &pci_dev_irq_domain_ops,
-+							 intr_ctrl);
-+	if (!intr_ctrl->irq_domain) {
-+		pci_err(pdev, "Failed to create irqdomain\n");
-+		ret = -ENOMEM;
-+		goto err_free_intr_ctrl;
-+	}
-+
-+	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_LEGACY);
-+	if (ret < 0) {
-+		pci_err(pdev, "Unable alloc irq vector (%d)\n", ret);
-+		goto err_remove_domain;
-+	}
-+	intr_ctrl->irq = pci_irq_vector(pdev, 0);
-+	ret = request_irq(intr_ctrl->irq, pci_dev_irq_handler, IRQF_SHARED,
-+			  dev_name(&pdev->dev), intr_ctrl);
-+	if (ret) {
-+		pci_err(pdev, "Unable to request irq %d (%d)\n", intr_ctrl->irq, ret);
-+		goto err_free_irq_vector;
-+	}
-+
-+	return intr_ctrl;
-+
-+err_free_irq_vector:
-+	pci_free_irq_vectors(pdev);
-+err_remove_domain:
-+	irq_domain_remove(intr_ctrl->irq_domain);
-+err_free_intr_ctrl:
-+	kfree(intr_ctrl);
-+	return ERR_PTR(ret);
-+}
-+
-+static void pci_dev_remove_intr_ctrl(struct pci_dev_intr_ctrl *intr_ctrl)
-+{
-+	free_irq(intr_ctrl->irq, intr_ctrl);
-+	pci_free_irq_vectors(intr_ctrl->pci_dev);
-+	irq_dispose_mapping(irq_find_mapping(intr_ctrl->irq_domain, 0));
-+	irq_domain_remove(intr_ctrl->irq_domain);
-+	kfree(intr_ctrl);
-+}
-+
-+static void devm_pci_dev_remove_intr_ctrl(void *data)
-+{
-+	struct pci_dev_intr_ctrl *intr_ctrl = data;
-+
-+	pci_dev_remove_intr_ctrl(intr_ctrl);
-+}
-+
-+static int devm_pci_dev_create_intr_ctrl(struct pci_dev *pdev)
-+{
-+	struct pci_dev_intr_ctrl *intr_ctrl;
-+
-+	intr_ctrl = pci_dev_create_intr_ctrl(pdev);
-+
-+	if (IS_ERR(intr_ctrl))
-+		return PTR_ERR(intr_ctrl);
-+
-+	return devm_add_action_or_reset(&pdev->dev, devm_pci_dev_remove_intr_ctrl, intr_ctrl);
-+}
-+
-+struct lan966x_pci {
-+	struct device *dev;
-+	struct pci_dev *pci_dev;
-+	int ovcs_id;
-+};
-+
-+static int lan966x_pci_load_overlay(struct lan966x_pci *data)
-+{
-+	u32 dtbo_size = __dtbo_lan966x_pci_end - __dtbo_lan966x_pci_begin;
-+	void *dtbo_start = __dtbo_lan966x_pci_begin;
-+	int ret;
-+
-+	ret = of_overlay_fdt_apply(dtbo_start, dtbo_size, &data->ovcs_id, data->dev->of_node);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static void lan966x_pci_unload_overlay(struct lan966x_pci *data)
-+{
-+	of_overlay_remove(&data->ovcs_id);
-+}
-+
-+static int lan966x_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct lan966x_pci *data;
-+	int ret;
-+
-+	if (!dev->of_node) {
-+		dev_err(dev, "Missing of_node for device\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Need to be done before devm_pci_dev_create_intr_ctrl.
-+	 * It allocates an IRQ and so pdev->irq is updated
-+	 */
-+	ret = pcim_enable_device(pdev);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_pci_dev_create_intr_ctrl(pdev);
-+	if (ret)
-+		return ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, data);
-+	data->dev = dev;
-+	data->pci_dev = pdev;
-+
-+	ret = lan966x_pci_load_overlay(data);
-+	if (ret)
-+		return ret;
-+
-+	pci_set_master(pdev);
-+
-+	ret = of_platform_default_populate(dev->of_node, NULL, dev);
-+	if (ret)
-+		goto err_unload_overlay;
-+
-+	return 0;
-+
-+err_unload_overlay:
-+	lan966x_pci_unload_overlay(data);
-+	return ret;
-+}
-+
-+static void lan966x_pci_remove(struct pci_dev *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct lan966x_pci *data = dev_get_drvdata(dev);
-+
-+	of_platform_depopulate(dev);
-+
-+	lan966x_pci_unload_overlay(data);
-+
-+	pci_clear_master(pdev);
-+}
-+
-+static struct pci_device_id lan966x_pci_ids[] = {
-+	{ PCI_DEVICE(0x1055, 0x9660) },
-+	{ 0, }
-+};
-+MODULE_DEVICE_TABLE(pci, lan966x_pci_ids);
-+
-+static struct pci_driver lan966x_pci_driver = {
-+	.name = "mchp_lan966x_pci",
-+	.id_table = lan966x_pci_ids,
-+	.probe = lan966x_pci_probe,
-+	.remove = lan966x_pci_remove,
-+};
-+module_pci_driver(lan966x_pci_driver);
-+
-+MODULE_AUTHOR("Herve Codina <herve.codina@bootlin.com>");
-+MODULE_DESCRIPTION("Microchip LAN966x PCI driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/mfd/lan966x_pci.dtso b/drivers/mfd/lan966x_pci.dtso
-new file mode 100644
-index 000000000000..041f4319e4cd
---- /dev/null
-+++ b/drivers/mfd/lan966x_pci.dtso
-@@ -0,0 +1,167 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2022 Microchip UNG
-+ */
-+
-+#include <dt-bindings/clock/microchip,lan966x.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/mfd/atmel-flexcom.h>
-+#include <dt-bindings/phy/phy-lan966x-serdes.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/dts-v1/;
-+/plugin/;
-+
-+/ {
-+	fragment@0 {
-+		target-path="";
-+		__overlay__ {
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			pci-ep-bus@0 {
-+				compatible = "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				/*
-+				 * map @0xe2000000 (32MB) to BAR0 (CPU)
-+				 * map @0xe0000000 (16MB) to BAR1 (AMBA)
-+				 */
-+				ranges = <0xe2000000 0x00 0x00 0x00 0x2000000
-+				          0xe0000000 0x01 0x00 0x00 0x1000000>;
-+
-+				oic: oic@e00c0120 {
-+					compatible = "microchip,lan966x-oic";
-+					#interrupt-cells = <2>;
-+					interrupt-controller;
-+					interrupts = <0>; /* PCI INTx assigned interrupt */
-+					reg = <0xe00c0120 0x190>;
-+				};
-+
-+				cpu_clk: cpu_clk {
-+					compatible = "fixed-clock";
-+					#clock-cells = <0>;
-+					clock-frequency = <600000000>;  // CPU clock = 600MHz
-+				};
-+
-+				ddr_clk: ddr_clk {
-+					compatible = "fixed-clock";
-+					#clock-cells = <0>;
-+					clock-frequency = <30000000>;  // Fabric clock = 30MHz
-+				};
-+
-+				sys_clk: sys_clk {
-+					compatible = "fixed-clock";
-+					#clock-cells = <0>;
-+					clock-frequency = <15625000>;  // System clock = 15.625MHz
-+				};
-+
-+				cpu_ctrl: syscon@e00c0000 {
-+					compatible = "microchip,lan966x-cpu-syscon", "syscon";
-+					reg = <0xe00c0000 0xa8>;
-+				};
-+
-+				reset: reset@e200400c {
-+					compatible = "microchip,lan966x-switch-reset";
-+					reg = <0xe200400c 0x4>;
-+					reg-names = "gcb";
-+					#reset-cells = <1>;
-+					cpu-syscon = <&cpu_ctrl>;
-+				};
-+
-+				gpio: pinctrl@e2004064 {
-+					compatible = "microchip,lan966x-pinctrl";
-+					reg = <0xe2004064 0xb4>,
-+					      <0xe2010024 0x138>;
-+					resets = <&reset 0>;
-+					reset-names = "switch";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&gpio 0 0 78>;
-+					interrupt-parent = <&oic>;
-+					interrupt-controller;
-+					interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
-+					#interrupt-cells = <2>;
-+
-+					tod_pins: tod_pins {
-+						pins = "GPIO_36";
-+						function = "ptpsync_1";
-+					};
-+
-+					fc0_a_pins: fcb4-i2c-pins {
-+						/* RXD, TXD */
-+						pins = "GPIO_9", "GPIO_10";
-+						function = "fc0_a";
-+					};
-+
-+				};
-+
-+				serdes: serdes@e202c000 {
-+					compatible = "microchip,lan966x-serdes";
-+					reg = <0xe202c000 0x9c>,
-+					      <0xe2004010 0x4>;
-+					#phy-cells = <2>;
-+				};
-+
-+				mdio1: mdio@e200413c {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					compatible = "microchip,lan966x-miim";
-+					reg = <0xe200413c 0x24>,
-+					      <0xe2010020 0x4>;
-+
-+					resets = <&reset 0>;
-+					reset-names = "switch";
-+
-+					lan966x_phy0: ethernet-lan966x_phy@1 {
-+						reg = <1>;
-+					};
-+
-+					lan966x_phy1: ethernet-lan966x_phy@2 {
-+						reg = <2>;
-+					};
-+				};
-+
-+				switch: switch@e0000000 {
-+					compatible = "microchip,lan966x-switch";
-+					reg = <0xe0000000 0x0100000>,
-+					      <0xe2000000 0x0800000>;
-+					reg-names = "cpu", "gcb";
-+
-+					interrupt-parent = <&oic>;
-+					interrupts = <12 IRQ_TYPE_LEVEL_HIGH>,
-+						     <9 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-names = "xtr", "ana";
-+
-+					resets = <&reset 0>;
-+					reset-names = "switch";
-+
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&tod_pins>;
-+
-+					ethernet-ports {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+
-+						port0: port@0 {
-+							phy-handle = <&lan966x_phy0>;
-+
-+							reg = <0>;
-+							phy-mode = "gmii";
-+							phys = <&serdes 0 CU(0)>;
-+						};
-+
-+						port1: port@1 {
-+							phy-handle = <&lan966x_phy1>;
-+
-+							reg = <1>;
-+							phy-mode = "gmii";
-+							phys = <&serdes 1 CU(1)>;
-+						};
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index eff7f5df08e2..9933f245b781 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -6241,6 +6241,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
-+DECLARE_PCI_FIXUP_FINAL(0x1055, 0x9660, of_pci_make_dev_node);
+ 	pm_runtime_set_autosuspend_delay(dev, CMDQ_MBOX_AUTOSUSPEND_DELAY_MS);
+ 	pm_runtime_use_autosuspend(dev);
++	pm_runtime_irq_safe(dev);
  
- /*
-  * Devices known to require a longer delay before first config space access
+ 	return 0;
+ }
 -- 
-2.44.0
+2.18.0
 
