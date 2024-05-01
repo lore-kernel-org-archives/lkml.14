@@ -1,139 +1,100 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC8C50286
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 23:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B977B4D9EF;
+	Wed,  1 May 2024 23:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714605133; cv=none; b=f8U4TMzOwv6KGTVQjeVlALf1+FUE2hM59dXUXmYDZExKos1XbLkSovKGfbGh4FozuYt2fdpbFc485+iL/mLxb1lOyOmTTFSmfZbzgknHc9Kfn9ZXkbo1L+dCJdR2awwGjPOsM4LWXP67HuLhW3gilrxZyBZz4ePRHoIHxfoaWl8=
+	t=1714605158; cv=none; b=P/71dKOmmEn+dvyQ5iep0xmuAeBYREaT5dfdnnLDqzxYLcyPROInyFbOZhSi07o6AFsth3b5shMz79LMizOpsKN9iTEeqkq9ynW03wSsyR/AKocsV+Zg0rJm3IifD/Saydy8oMUhHJu9vGf2bSId/A+dP4KPMb5bm9upnY6bAPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714605133; c=relaxed/simple;
-	bh=s/hUPYM+b4OeI4bO4UJhPD3dsf7FKKl+zPSQtBpLsrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sjbK+bZMTgf83Q326da/uZAjlKD7KGiqMB59f7ZPJEiTcKItSHw0JNlefB95Cd7za9bmzGU9bazE3jcSjndqcri7bZdCPbaSvhxvqSgVIs9vA0POG51KZchN/DEuXebhYVjL3/hFulhHwFI0pppQDZkE3Th1oi4sXGnhl7TCZXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K1WQOtqG; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714605158; c=relaxed/simple;
+	bh=do+2ZH/19azdeCdNdYYL3AHNk8uPkdkkl2JCBaU1tK4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QLxDGoMrVohRxbMtIpW11iMcDG25wfJEoeS5aY7JYgLjmnlrJix1TygtKJV0Gq/Ls+y1P17BU+ED9O+oMNoYWWWU0d3o3pNY/FagpdILQtKdwcQfu7y47CLHdWv6t/u1reOkUwUN8aEizNBV+6LTAXxNocmQ483uZnFNE7gy9dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVrs0N+9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K1WQOtqG"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a58e787130fso214681666b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 16:12:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714605130; x=1715209930; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zhCvg7KjClQbusFKD8NHC5U/vmYAlsndfakVGGXVNKg=;
-        b=K1WQOtqGMtJobmFCFgFHvhoseuasnBA9A4/UPgkIAGTecfUtqDDEtDqg3ZLMAbXULX
-         CoWVTwfromIe+eMaeKGhr8VnO/+5bnMYNcKmBtPg2dIEk6ij1ZA/JmEOVIfYQnd7NeOp
-         JXQK/Ks10yzJb69JwMO9Ay6MTKtJ9JF3kOdsJjOPgl/W8T5dHYSVJZFcwf4ryuJfRYAs
-         sNCxSrJbtxNPg8Mc/mGay7RaDvHpbE6wR8ioPVsWC5JxuVuI+vqw8VUyYJ8MVmZEo/yp
-         kHrVsxYkHQjSB1xrVQJrhHEzl01zZ5470cdVLjQRwBZ9P1P5fmcWXQ3jv2zyYWHifkpg
-         yWrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714605130; x=1715209930;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zhCvg7KjClQbusFKD8NHC5U/vmYAlsndfakVGGXVNKg=;
-        b=qcpyVwRd6Ey0MeEUB9izlQ5C0XTZ2x67gEtDE37y+dTherq5n3olCty8cwdpHH8PYu
-         v8Uwp9eoEHwvJ3JOndSS4aMq9KEizF3MzsFQBllRhv+jEeNwFqbBtxQ5LVwa0UwHhv7t
-         Sm4VzcLE5vvx/ifPKjbcY5ybYt8nKgUc5lXL6W1hNEkAcuSzBAeaG44n7lrPNMQJDIZm
-         5E7C4IOzv/ZZJ32x48202DrAUaobDoshicW/wshz4SXJJ466KYop7ecQ0HeWeiNdqZX2
-         LLTYcJyHmjf91DzlVrMCfCq4aDldpsX4cDNiPUNfjqwvGrARK5iC3jXZ4aUEOwDmu/Eo
-         cVeA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8qudBiCzyarIw3IbAnuWt20Fu3dg4p3DLdswQqr2BXh3zTEGvtt0OMtX2Nwh7XNH8F1OCyW4TF4j/hK1D9YpGet/AhtaIfSfZj8/6
-X-Gm-Message-State: AOJu0Yw5eD/en1AP7KbL9ltR6lCrseWpd2JbYodDj7/Ito/wvZd/z2hT
-	foOtxLfgebGbN4KJebQlEb8tB/SJIc8dZuGWY+5k1UFpgBO/ZyFEcI/kw8MfVxk=
-X-Google-Smtp-Source: AGHT+IEd6YA08JvM1N+higQIn7mDVjGj2X7nOzNIL/Ck0S0TzZ3u3IeS6KS6XKPLpm1T/IcRgAoaCw==
-X-Received: by 2002:a17:906:5919:b0:a51:e188:bced with SMTP id h25-20020a170906591900b00a51e188bcedmr605346ejq.37.1714605130596;
-        Wed, 01 May 2024 16:12:10 -0700 (PDT)
-Received: from [192.168.114.15] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id f24-20020a170906c09800b00a522f867697sm16765743ejz.132.2024.05.01.16.12.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 May 2024 16:12:10 -0700 (PDT)
-Message-ID: <88aad6ee-703c-4e86-ae46-96b909503cdf@linaro.org>
-Date: Thu, 2 May 2024 01:12:06 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVrs0N+9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373BBC072AA;
+	Wed,  1 May 2024 23:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714605158;
+	bh=do+2ZH/19azdeCdNdYYL3AHNk8uPkdkkl2JCBaU1tK4=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=eVrs0N+9RpHN0X1elg9X2J1RPZxT0DIywBm+io97ufQZIMtzvK6Hc3MSS1maDwsMo
+	 ANz3NzQ01Xa019RNE/fKijiHbyqZAyvA5XnimJqnhYvMjuxzDvwKOCYoo96+cmKSBn
+	 PvrpClzZ8X8o7WKAKl+INf1tZFL0PSQIU6Rxy1Gbnl3z4g/SxTSs4CXSPtl2RboexA
+	 K/LCLjFim7eM+Lxzf90ABNi5QIsq/im7EfFsJHcOull4/+5nNWmD8DmJp9eeq0XHcd
+	 PkhEpoVA3PBpEv6AcysqcAnw6Gf3TdATBlZO387QkMSbFRU/w4+cQLqpzPBw7UOKLS
+	 HGTXl91GlY2Ww==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id CF3BDCE1073; Wed,  1 May 2024 16:12:37 -0700 (PDT)
+Date: Wed, 1 May 2024 16:12:37 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: kuba@kernel.org, ast@kernel.org, clm@fb.com, rostedt@goodmis.org,
+	mhiramat@kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Subject: [PATCH resend ftrace] Asynchronous grace period for
+ register_ftrace_direct()
+Message-ID: <ac05be77-2972-475b-9b57-56bef15aa00a@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/13] arm64: dts: qcom: msm8996-xiaomi-common: drop
- excton from the USB PHY
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
- Wesley Cheng <quic_wcheng@quicinc.com>, cros-qcom-dts-watchers@chromium.org,
- Bjorn Andersson <andersson@kernel.org>, David Wronek
- <davidwronek@gmail.com>, Andy Gross <andy.gross@linaro.org>,
- Evan Green <evgreen@chromium.org>, Douglas Anderson <dianders@chromium.org>,
- Iskren Chernev <me@iskren.info>, Luca Weiss <luca.weiss@fairphone.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Yassine Oudjana <y.oudjana@protonmail.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzk@kernel.org>,
- Konrad Dybcio <konrad.dybcio@somainline.org>
-References: <20240501-qcom-phy-fixes-v1-0-f1fd15c33fb3@linaro.org>
- <20240501-qcom-phy-fixes-v1-13-f1fd15c33fb3@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240501-qcom-phy-fixes-v1-13-f1fd15c33fb3@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 1.05.2024 6:19 PM, Dmitry Baryshkov wrote:
-> The USB PHYs don't use extcon connectors, drop the extcon property from
-> the hsusb_phy1 node.
+Note that the immediate pressure for this patch should be relieved by the
+NAPI patch series [1], but this sort of problem could easily arise again.
 
-These don't, some do (like the one on 8916(
+When running heavy test workloads with KASAN enabled, RCU Tasks grace
+periods can extend for many tens of seconds, significantly slowing
+trace registration.  Therefore, make the registration-side RCU Tasks
+grace period be asynchronous via call_rcu_tasks().
 
-> 
-> Fixes: 46680fe9ba61 ("arm64: dts: qcom: msm8996: Add support for the Xiaomi MSM8996 platform")
-> Cc: Yassine Oudjana <y.oudjana@protonmail.com>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+[1] https://lore.kernel.org/all/cover.1710877680.git.yan@cloudflare.com/
 
-Konrad
+Reported-by: Jakub Kicinski <kuba@kernel.org>
+Reported-by: Alexei Starovoitov <ast@kernel.org>
+Reported-by: Chris Mason <clm@fb.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: <linux-trace-kernel@vger.kernel.org>
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 6c96b30f3d63b..32ea92934268c 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5365,6 +5365,13 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
+ 	}
+ }
+ 
++static void register_ftrace_direct_cb(struct rcu_head *rhp)
++{
++	struct ftrace_hash *fhp = container_of(rhp, struct ftrace_hash, rcu);
++
++	free_ftrace_hash(fhp);
++}
++
+ /**
+  * register_ftrace_direct - Call a custom trampoline directly
+  * for multiple functions registered in @ops
+@@ -5463,10 +5470,8 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+  out_unlock:
+ 	mutex_unlock(&direct_mutex);
+ 
+-	if (free_hash && free_hash != EMPTY_HASH) {
+-		synchronize_rcu_tasks();
+-		free_ftrace_hash(free_hash);
+-	}
++	if (free_hash && free_hash != EMPTY_HASH)
++		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
+ 
+ 	if (new_hash)
+ 		free_ftrace_hash(new_hash);
