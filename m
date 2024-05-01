@@ -1,45 +1,84 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from wfout1-smtp.messagingengine.com (wfout1-smtp.messagingengine.com [64.147.123.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42356165FAA
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 23:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79D6168AE4
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 23:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714605546; cv=none; b=dL1J/VPCJwU1R7KXQwCqfKxDna0RETVio59kFUZK82U5n2KGF/njJ+5mr3wD8RuQ1rP14/TUVLcXMPrk/hv/qP6hkse2b9pm8PjKttoUygNMpeui1hrq2RQmknTRtmyQ7FLMF+cJi9NVEyn9t7I5L1ba2f8kZ6CJeo4oGothoSo=
+	t=1714605577; cv=none; b=NM9CG204mn24rbUywJjufC5FiNPNgXi7GSW5HW+j6vgvqIkhNAnFDoVZUTKHyuDDmZO73Jt61moZtHqTFoedlcZtdmLJ3rsEMIysqNndLZmdDjyP+KU5n119u7bZ/klKldht8sCCs9fCWShbBviqZTbEevd9I2G5fQfXYPU3AOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714605546; c=relaxed/simple;
-	bh=RVX6CWee9Et4secAL4eq9G6Zu+mOoI+QY67WAZDE8E0=;
+	s=arc-20240116; t=1714605577; c=relaxed/simple;
+	bh=BQsvHIpsbm/ye5b6OR/dSwwmp8PukAId2ZXHkT3Kz3o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N+WwJVdD+kWUdY4xeUBXYFwU9fX96L1AHO/2aOkcNKZ1nSzBHju8QCN9ZbwRgRRn09DiEfNwWxYTEgqizd1LOTz7bZ+B4m/LB7k/cZtM9ILNs5lg0PLkFOBv8jtUOrhQXlKV+HjlrdXcV53lqom14pNzDpm6E0Q/UTxURsEw1zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sT0Eez54; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=FzXAyT+8AtBRTo0PlD6qrAHaJMt4fHlfHdj3+gkTlGMPxE9xtlZbw742fF3xjq6X8EnehSy0d4llxnyHBwsMpOTFieMUgi6f0u0vTuVtLuFBz1MW3GFKkyJLEaf1HL73m5WkL24r7mBw0DBnNKX2Y6CxTsXDvVctggmMNftESEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=nEPLbHnv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H4vhHlVX; arc=none smtp.client-ip=64.147.123.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sT0Eez54"
-Date: Wed, 1 May 2024 16:18:57 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714605542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RHAt9ryWcPi6r2+Mi2K4KwgaN6ilqj66ygb1ZhC0eWM=;
-	b=sT0Eez54kn5LXckYJgvnME+XvNbRTMK9yBJj9F8KcSEPZEt8zfhE/VofpK8jFd0lHvGqUk
-	alZaUuT1i0JMSjV7KhPdjAwZ+m5HI8mZ3x1oxjNe15zrz/psBqoekqvPdbZccKxgsOvtus
-	u/pG3K25JeP1Xw5D55xtgd6NAzYHsng=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Breno Leitao <leitao@debian.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>, paulmck@kernel.org,
-	"open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <cgroups@vger.kernel.org>,
-	"open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <linux-mm@kvack.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: memcg: use READ_ONCE()/WRITE_ONCE() to access
- stock->nr_pages
-Message-ID: <ZjLN4eWVwr9W-pk8@P9FQF9L96D>
-References: <20240501095420.679208-1-leitao@debian.org>
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="nEPLbHnv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H4vhHlVX"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfout.west.internal (Postfix) with ESMTP id C91B01C0016C;
+	Wed,  1 May 2024 19:19:34 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Wed, 01 May 2024 19:19:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1714605574; x=
+	1714691974; bh=aJ9bQTQ0bXFx75w1V4iyVyCDpPwSIeyvhFaFFkaoznc=; b=n
+	EPLbHnvn7kk3Q6HYjNnt/OXnh2RN8kQC3XElkRXx4fy6QTwG9blEl6lkid8ZwMim
+	8FQi8ec1df3ls65liqVggKMSjpM+QBFJr/mddTOIjhWNETefC3/JXegbfOaBUjer
+	JISoUSTAo7y804jT37zdEoPkQsZQPeL0dAl9yMsNVDHOdjFD873E9eSfrldfA/pX
+	ajgFI5Y5/gDTED430KysQOfkugOQII5d40QyYK6mUXwso3a2kxYYuMCq7z5yEF/W
+	ZM4KeW4ndUPYoRjnqbzG0XQARkQGUo+eW/tDQI++l+Dl5CK/nAL2j3r2GIyz2z4R
+	dvCZSoYSQKWDHva1v/niw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714605574; x=1714691974; bh=aJ9bQTQ0bXFx75w1V4iyVyCDpPwS
+	IeyvhFaFFkaoznc=; b=H4vhHlVXcT7kw8wLXefLQE0IW9kvUA1YOGNJ+6u3jMt5
+	r9vulwR5ilNwStsg3THwnqPVsQ8u0Zac1wWi3eB6BRtNa1THS5QbRUZUzOf0OOdJ
+	0qa07qFx5UdseBIzTtekvG7ovSPmFR9sCXiAed/1opVbxbHoWzIW+8mVWzc53W16
+	608mf3dInts22j0emQNJYmmmj0vyuQ/ZNO1FQ1TyzWh6NuoIriE3rojrou9dQ3Gy
+	5vzRy0ksA6XriYxxs6C4/YI1PMypzbGdP31xC/+GGZMRhlmdK+IvkHLcjVZsIdp2
+	/T9AVVm7Q5J+i4rhTgqFeAE4ivCYYBJ/gopfF7mwyA==
+X-ME-Sender: <xms:Bs4yZuRj43ouOoEpzP8FU7k6rpScrGu09QeP69ppwqQFsSLibHkkmA>
+    <xme:Bs4yZjx8trRk0btoDEE8pQ_n7Ao6XmyIkqVKoP2oF0zL8UKnvFIyhQldpBP9aJ-64
+    AGYops0DDXj2DO3Uz4>
+X-ME-Received: <xmr:Bs4yZr0lAWzSUccET_TrZW6auV7zr4dIt8Z8_5_4q_KoQG-UT9lA90VPCdVHNAz_CDB0ECLb8kVf8G2S6eDc0MnORsuCrzjg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddujedgvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
+    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
+    hjpheqnecuggftrfgrthhtvghrnhepveeilefhudekffehkeffudduvedvfeduleelfeeg
+    ieeljeehjeeuvdeghfetvedvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghs
+    hhhisehsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:Bs4yZqBLhPn0s0kH3DDdkD0LhW7U9VHdrcG9Y54R4AsKQLO1k8xytg>
+    <xmx:Bs4yZni3Cc1erQbDWL2xgUxdnkm_4V0xAmlv22bP1KhhpJUSDqoQ6g>
+    <xmx:Bs4yZmqKf7uSx2_MfxSilQVE_d4GtThPJjKXXLt00SZVYdHP-mPWjw>
+    <xmx:Bs4yZqi8_mMMxL-AffjltSMYssZjEvGhCbK7cxX6NpBoWfxmvVq_wg>
+    <xmx:Bs4yZksTYx_eDfEVfaQ_VLIuW8wInPg7bPWNQ18YPbp18VlzDcERlPMq>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 1 May 2024 19:19:32 -0400 (EDT)
+Date: Thu, 2 May 2024 08:19:31 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: Adam Goldman <adamg@pobox.com>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firewire: ohci: mask bus reset interrupts between ISR
+ and bottom half
+Message-ID: <20240501231931.GB106963@workstation.local>
+Mail-Followup-To: Adam Goldman <adamg@pobox.com>,
+	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <ZfqpJ061hLtPT8XL@iguana.24-8.net>
+ <20240325005828.GB21329@workstation.local>
+ <20240401121800.GA220025@workstation.local>
+ <ZjIp68AqHhegFmDv@iguana.24-8.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,54 +87,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240501095420.679208-1-leitao@debian.org>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <ZjIp68AqHhegFmDv@iguana.24-8.net>
 
-On Wed, May 01, 2024 at 02:54:20AM -0700, Breno Leitao wrote:
-> A memcg pointer in the per-cpu stock can be accessed by drain_all_stock()
-> and consume_stock() in parallel, causing a potential race.
-> 
-> KCSAN shows this data-race clearly in the splat below:
-> 
-> 	BUG: KCSAN: data-race in drain_all_stock.part.0 / try_charge_memcg
-> 
-> 	write to 0xffff88903f8b0788 of 4 bytes by task 35901 on cpu 2:
-> 	try_charge_memcg (mm/memcontrol.c:2323 mm/memcontrol.c:2746)
-> 	__mem_cgroup_charge (mm/memcontrol.c:7287 mm/memcontrol.c:7301)
-> 	do_anonymous_page (mm/memory.c:1054 mm/memory.c:4375 mm/memory.c:4433)
-> 	__handle_mm_fault (mm/memory.c:3878 mm/memory.c:5300 mm/memory.c:5441)
-> 	handle_mm_fault (mm/memory.c:5606)
-> 	do_user_addr_fault (arch/x86/mm/fault.c:1363)
-> 	exc_page_fault (./arch/x86/include/asm/irqflags.h:37
-> 		        ./arch/x86/include/asm/irqflags.h:72
-> 			arch/x86/mm/fault.c:1513
-> 			arch/x86/mm/fault.c:1563)
-> 	asm_exc_page_fault (./arch/x86/include/asm/idtentry.h:623)
-> 
-> 	read to 0xffff88903f8b0788 of 4 bytes by task 287 on cpu 27:
-> 	drain_all_stock.part.0 (mm/memcontrol.c:2433)
-> 	mem_cgroup_css_offline (mm/memcontrol.c:5398 mm/memcontrol.c:5687)
-> 	css_killed_work_fn (kernel/cgroup/cgroup.c:5521 kernel/cgroup/cgroup.c:5794)
-> 	process_one_work (kernel/workqueue.c:3254)
-> 	worker_thread (kernel/workqueue.c:3329 kernel/workqueue.c:3416)
-> 	kthread (kernel/kthread.c:388)
-> 	ret_from_fork (arch/x86/kernel/process.c:147)
-> 	ret_from_fork_asm (arch/x86/entry/entry_64.S:257)
-> 
-> 	value changed: 0x00000014 -> 0x00000013
-> 
-> This happens because drain_all_stock() is reading stock->nr_pages, while
-> consume_stock() might be updating the same address, causing a potential
-> data-race.
+Hi Adam,
 
-Btw there is an actual data race, which is periodically causing a needless
-draining of a per-cpu stock.
-
+On Wed, May 01, 2024 at 04:39:23AM -0700, Adam Goldman wrote:
+> Hi Takashi,
 > 
-> Make the shared addresses bulletproof regarding to reads and writes,
-> similarly to what stock->cached_objcg and stock->cached.
-> Annotate all accesses to stock->nr_pages with READ_ONCE()/WRITE_ONCE().
+> On Mon, Apr 01, 2024 at 09:18:00PM +0900, Takashi Sakamoto wrote:
+> > I sent an additional patch[1] to handle the bus-reset event at the first
+> > time. I'd like you to review and test it as well, especially under your
+> > environment in which 1394:1995 and 1394a phys exist.
+> > 
+> > [1] https://lore.kernel.org/lkml/20240401121200.220013-1-o-takashi@sakamocchi.jp/
 > 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> I'm sorry for another very late reply.
+> 
+> Now that we eliminated the IRQ storm, it makes sense to always enable 
+> the bus-reset interrupt at startup. I tested your patch with various 
+> devices, with a FW800 repeater, with a FW400 hub, without a hub, etc. 
+> Everything works OK. However, I only tested with XIO2213B OHCI.
+> 
+> -- Adam
 
-Reviewed-by: Roman Gushchin <roman.gushchin@linux.dev>
+Thanks for your test. The content of patch is equivalent to the first
+one in the candidate series[1], so I appended Tested-by tag when
+applying to for-next branch.
+
+The for-next branch includes the commits to provide the following
+tracepoints events:
+
+* firewire:async_request_outbound_initiate
+* firewire:async_request_outbound_complete
+* firewire:async_response_inbound
+* firewire:async_request_inbound
+* firewire:async_response_outbound_initiate
+* firewire:async_response_outbound_complete
+* firewire:async_phy_outbound_initiate
+* firewire:async_phy_outbound_complete
+* firewire:async_phy_inbound
+* firewire:bus_reset_initiate
+* firewire:bus_reset_schedule
+* firewire:bus_reset_postpone
+* firewire:bus_reset_handle
+
+All of them are used to trace the action of firewire core function,
+instead of 1394 OHCI driver. I think they are helpful to debug the kind
+of issue which we handled for v6.8 kernel.
+
+[1] https://lore.kernel.org/lkml/20240501073238.72769-1-o-takashi@sakamocchi.jp/
+
+
+Thanks
+
+Takashi Sakamoto
