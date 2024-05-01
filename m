@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626904D5BF;
-	Wed,  1 May 2024 21:46:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978B4165FC7;
+	Wed,  1 May 2024 21:46:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714599995; cv=none; b=GulRn3YGyra5WP2w+YyevxD9w+vbfaZWFPcBW9QX/Cqg+OEPqVIRajpoyOGX8J5Kln1C5M71ZPSmHPQISQ6gwNEwZaCbEE3NCi1mZAg9Bb98t0z0eo9NQK9mHDs/Lx/DH7YGdmQeEshkK3l9cEWf8baJFcfgBqEoqLb7Hlke0Bk=
+	t=1714599997; cv=none; b=P7o60ukJkLa3WNyFq1MeImwbhQ2P/mh/F4F9M6Nakfba/s/k3c9V7KXFmUI4ASJY8WaR+iaIw8ilKvv0cpjr9oDYud3NDcjU0aGKVH62zV1OZK0PfnmpUbk5dGt7jCDOUma+Rcg1KgbtK2F12fSEfP+voAep2g4KwNQH8HExMko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714599995; c=relaxed/simple;
-	bh=RO7P29qn1M22iniMK6HK7Pgb3F+22AoEOD8lP3wry/8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NhBVYDTcQis8wySL2XmNLcNeYUzDOtT0MddDOGGxoM8Pz/Oks5dv3I31ceUbh8Kf3z2RcDWHyl3kKYqM2NDAoyDH1f2QizjtYrj6rUYetJ2e7oAe3rCZTP0N6byOBVTT560ClVcJ+0iN5+QH7GXRwkX1FcRJGyb4GQFov0VYpso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FqTQ3fkq; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1714599997; c=relaxed/simple;
+	bh=hACSXKwjUfbBQK1SZQtJKTIslnAmtEzEsEUXgKqVCk4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NVRRfG5hGR3zazVBteedSlvVp3DM0vlY/M0QBCI2jNZ+7d033ydX3n/73xrSyWzOKzi23dZkjNC9P+xxTcsbN3wRnbcjnO9/oeFFCFhl6VwKR3fvctGakaIwQOkMjSuqXIykgONf4HZXbfgziXmzay/+9I/ubte+EFbGPzqcOMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lvbBfk9R; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FqTQ3fkq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lvbBfk9R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714599994; x=1746135994;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RO7P29qn1M22iniMK6HK7Pgb3F+22AoEOD8lP3wry/8=;
-  b=FqTQ3fkqtyS1T1XxpdWv0lz+FlT43uXhorN5SVT2KO9UGpLULHNG+Lp9
-   kJUwKnWQBnUhvMCRL7QELNHTtHsewh1pBPraaMK7rk1cA/bmwiZ2PUZmy
-   0ZTywUvKy7/4PvibKkbEIpDnnWSwQdlC71Yu/Q318KgnXM3EeTAlVeuZG
-   PMWHZy5Sg/cCzPC5va8PAT45gXTNKhKdihfGOToIpYZAeVw1tkyJRtFGB
-   PytIHfYkbBrKIp9+487A2hOfmbwQeSxLFPhHaEHGVgOO0iBTr8yt2oOTq
-   Wx3dI3+nkSpcpJbz0IbYUH5B+ke3GVO6IONeOrbI+ginGGRfSRaR4qyy9
+  t=1714599996; x=1746135996;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hACSXKwjUfbBQK1SZQtJKTIslnAmtEzEsEUXgKqVCk4=;
+  b=lvbBfk9Rv6Bhu7FB1DUBePskz+2cgTawFWEvsrekd6dh6CFAZE5qQJFL
+   WJT8Jylv7shmt8n+L7eGMY7pJsufpqQCiO9syPCBHsR+EW9y/V/FxIY6U
+   n9JtzUOtiv/VS4iAUug/mC6Nw/vaGamP9TslTopDV2dHX2ATkEyCpDgc9
+   W3f02enOZO+g50W2qZ1ZQBPY0nom+L35FgshGR84eTEA9pQ+p233T0A4R
+   DHbPt49h02I/6ZyGFsipWrNqVnJogq5Nx0zNQjfkZEYFERocHa4YsNxI6
+   lizqQ0tQY2avGMdNYrtCHWQs5PZWESxHu5bDQxN+4m3NY9zZzi5GH53oS
    Q==;
-X-CSE-ConnectionGUID: CMrm34nTSBq9+CpZ5PyUEg==
-X-CSE-MsgGUID: ktHYlBMMQRq6U8eCZAFQXg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="14130135"
+X-CSE-ConnectionGUID: qBHbahdCSd20HCFPoWmzKQ==
+X-CSE-MsgGUID: MaMKSrQuSHCHEWM3IZUj3Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="14130158"
 X-IronPort-AV: E=Sophos;i="6.07,246,1708416000"; 
-   d="scan'208";a="14130135"
+   d="scan'208";a="14130158"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 14:46:31 -0700
-X-CSE-ConnectionGUID: OSxaXT7pSuqsbWgzOTMAhQ==
-X-CSE-MsgGUID: sZ1yQv1gTr+bEFQ0mcTVDQ==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 14:46:36 -0700
+X-CSE-ConnectionGUID: 11aTBIVSRM66jHJjDTB57Q==
+X-CSE-MsgGUID: fdwANjsYQoKoqEWm32GAbg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,246,1708416000"; 
-   d="scan'208";a="31726356"
+   d="scan'208";a="31726391"
 Received: from jf5300-b11a264t.jf.intel.com ([10.242.51.89])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 14:46:30 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 14:46:35 -0700
 From: Andre Glover <andre.glover@linux.intel.com>
 To: tom.zanussi@linux.intel.com,
 	minchan@kernel.org,
@@ -67,10 +68,12 @@ Cc: wajdi.k.feghali@intel.com,
 	ryan.roberts@arm.com,
 	linux-crypto@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: [RFC PATCH 0/3] by_n compression and decompression with Intel IAA 
-Date: Wed,  1 May 2024 14:46:26 -0700
-Message-Id: <cover.1714581792.git.andre.glover@linux.intel.com>
+Subject: [RFC PATCH 2/3] crypto: add by_n attribute to acomp_req
+Date: Wed,  1 May 2024 14:46:28 -0700
+Message-Id: <8fe04e86f0907588d210885ac91965960f97f450.1714581792.git.andre.glover@linux.intel.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1714581792.git.andre.glover@linux.intel.com>
+References: <cover.1714581792.git.andre.glover@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,113 +82,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Add the 'by_n' attribute to the acomp_req. The 'by_n' attribute can be
+used a directive by acomp crypto algorithms for splitting compress and
+decompress operations into "n" separate jobs.
+ 
+Signed-off-by: Andre Glover <andre.glover@linux.intel.com>
+---
+ include/crypto/acompress.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-With the introduction of the 'canned' compression algorithm [1], we
-see better latencies than the 'dynamic' Deflate, and a better compression
-ratio than 'fixed' Deflate.
-
-When using IAA hardware accelerated 'canned' compression, we are able to
-take advantage of the IAA architecture and initiate independent
-parallel operations for both compress and decompress. In support of mTHP
-and large folio swap in/out, we have developed an algorithm based on
-'canned' compression, called 'canned-by_n' that takes advantage of the IAA
-hardware that has multiple compression and decompression engines which
-creates parallelism for each single compress and/or decompress operation
-thus greatly reducing latency.
-
-When using the 'canned-by_n' algorithm, the user provides an input buffer,
-an output buffer, and a parameter N. The 'canned-by_n' crypto algorithm
-compresses (or decompresses) a single input buffer into a single output
-buffer. This is done in such a way that the compress and decompress
-operations can be parallelized into up to N parallel operations from a
-single input buffer into a single output buffer.
-
-Usage
-=====
-
-With the introduction of the 'canned-by_n' algorithm, the user would
-simply do the following to initiate an operation:
-
-struct crypto_acomp *tfm;
-struct acomp_req *req;
-tfm = crypto_alloc_acomp("deflate-iaa-canned-by_n", 0, 0);
-
-....
-
-// Ignored by non 'by_n' algorithms
-
-req->by_n = N;
-
-err = crypto_wait_req(crypto_acomp_compress(req), &wait);
-
-In the above example, the only new initialization for an acomp_req would be
-to specify the by_n number N, where N is a power of 2 and 1 <= N <= 64 (64
-is the current limit but this can be changed to a greater value based on
-the hardware capability).
-
-Performance
-===========
-
-'Canned-by_n' compression shows promising performance improvements when
-applied to recent patches pertaining to multi-sized THPs in mm-unstable
-(7cca940d) -- swapping out the large folios and storing them in zram as
-outlined in [2] and swapping them back in as large folios [3]. Our results
-with a simple madvise-based benchmark swapping out/in folios comprised of
-data folios collected from SPEC benchmarks shows an over 16x improvement in
-compression latency and close to 10x in decompression latency over lzo-rle
-on 64KB mTHPs. This translates to a greater than 10x improvement in zram
-write latency and 7x improvement in zram read latency. The achieved
-compression ratio, at 2.8 is better than that of lzo-rle. These are
-achieved with 'canned-by_n' compression by_n setting of 8. See table below
-for additional data.
-
-With larger values of N, the latency of compression and decompression
-drops, due to more parallelism. Concurrently, the overheads also increase
-with larger N values, and start to dominate the cost after a point.
-Compression ratio also drops with the increased splitting with larger
-values of N.
-
-Performance comparison for each 64KB folio with zram on Sapphire Rapids,
-whose core frequency is fixed at 2500MHz, is shown below:
-
-+------------+-------------+---------+-------------+----------+----------+
-|            | Compression | Decomp  | Compression | zram     | zram     |
-| Algorithm  | latency     | latency | ratio       | write    | read     |
-+------------+-------------+---------+-------------+----------+----------+
-|            |       Median (ns)     |             |      Median (ns)    |
-+------------+-------------+---------+-------------+----------+----------+
-|            |             |         |             |          |          |
-| IAA by_1   | 34,493      | 20,038  | 2.93        | 40,130   | 24,478   |
-| IAA by_2   | 18,830      | 11,888  | 2.93        | 24,149   | 15,536   |
-| IAA by_4   | 11,364      |  8,146  | 2.90        | 16,735   | 11,469   |
-| IAA by_8   |  8,344      |  6,342  | 2.77        | 13,527   |  9,177   |
-| IAA by_16  |  8,837      |  6,549  | 2.33        | 15,309   |  9,547   |
-| IAA by_32  | 11,153      |  9,641  | 2.19        | 16,457   | 14,086   |
-| IAA by_64  | 18,272      | 16,696  | 1.96        | 24,294   | 20,048   |
-|            |             |         |             |          |          |
-| lz4        | 139,190     | 33,687  | 2.40        | 144,940  | 37,312   |
-|            |             |         |             |          |          |
-| lzo-rle    | 138,235     | 61,055  | 2.52        | 143,666  | 64,321   |
-|            |             |         |             |          |          |
-| zstd       | 251,820     | 90,878  | 3.40        | 256,384  | 94,328   |
-+------------+-------------+---------+-------------+----------+----------+
-
-[1] https://lore.kernel.org/all/cover.1710969449.git.andre.glover@linux.intel.com/
-[2] https://lore.kernel.org/linux-mm/20240327214816.31191-1-21cnbao@gmail.com/
-[3] https://lore.kernel.org/linux-mm/20240304081348.197341-1-21cnbao@gmail.com/
-
-Andre Glover (3):
-  crypto: Add pre_alloc and post_free callbacks for acomp algorithms
-  crypto: add by_n attribute to acomp_req
-  crypto: Add deflate-canned-byN algorithm to IAA
-
- crypto/acompress.c                         |  13 +
- drivers/crypto/intel/iaa/iaa_crypto.h      |   9 +
- drivers/crypto/intel/iaa/iaa_crypto_main.c | 402 ++++++++++++++++++++-
- include/crypto/acompress.h                 |   4 +
- include/crypto/internal/acompress.h        |   6 +
- 5 files changed, 421 insertions(+), 13 deletions(-)
-
+diff --git a/include/crypto/acompress.h b/include/crypto/acompress.h
+index 2b73cef2f430..c687729e1966 100644
+--- a/include/crypto/acompress.h
++++ b/include/crypto/acompress.h
+@@ -25,6 +25,7 @@
+  * @slen:	Size of the input buffer
+  * @dlen:	Size of the output buffer and number of bytes produced
+  * @flags:	Internal flags
++ * @by_n:	by_n setting used by acomp alg
+  * @__ctx:	Start of private context data
+  */
+ struct acomp_req {
+@@ -34,6 +35,7 @@ struct acomp_req {
+ 	unsigned int slen;
+ 	unsigned int dlen;
+ 	u32 flags;
++	u32 by_n;
+ 	void *__ctx[] CRYPTO_MINALIGN_ATTR;
+ };
+ 
 -- 
 2.27.0
 
