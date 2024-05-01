@@ -1,139 +1,178 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C378748CE0
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 11:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F09248CE0
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 11:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714561885; cv=none; b=bPL8L7SfByRYrVTHGrjWO9SB/cO13mgoJFHH8MBVLrRRlIWToLe0D08KVqTVomBOnGYFASsKebriA8rnC3DCOJdZIP7ShZ8Q3ORBNBr4oaX4iQFx90EhmwljmKMCNO5hZxEKT7F5MZ6xeeauzfg86rXeujuLizMJTSREVwveN5M=
+	t=1714561894; cv=none; b=PhJwklwFq+VKUqn4ZNB7xTn0E22K2kHq5C1BMKTKWAA+P4P26NytQ9ZSWQa4E11RAjxET3Tl94PuGOEr0H3FZTZcBsPq25Lpi+TDjmp2n70oFiH32vleKvfGG2k9umcY3CNMeBMS38Q2lxRUf/8arV5Y0bkpeoG3CZSCSqZaVP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714561885; c=relaxed/simple;
-	bh=HjmQN/vLfXCeKes7nGzRxBen9HgLMO+9+ng5Ze3Bavk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VIGV62CRdJyH2i0WAana1xE9IWqIaahQffyOpf+SQD+SIZI1aueU/CWSCa5/0ZSPwLnTBfSvSOj2l5TT+wsKHdHXQ331eZWybKJQUFzNBMyUI6c+Cmd6E0s4Awb8HYl9ExOCPInppq/K33w4/bCzQ9vq1xs47tm+Ops855jw1as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H0WpWxtn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714561894; c=relaxed/simple;
+	bh=rP7uH6p9WSfZPD4zUjuFPD5EEQc4lxYWqVD/vJwLfNw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YgnAu57G9y7OXkjH+iruFBAnL/zMxt0uzOPv11nNY0cZ90DDDhSH4z9nw5k7XA4coeF9KX/gPT3MyQ5a8VjNQiJkQzQl4AD5uvsh5RzF3a34L393NCo2HHZB/0RRN4WQIdP6ugXyp1sZSUFUsWC0UmRMlzAjueucxYBkodB7Bo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UzYl3piF; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H0WpWxtn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714561882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/9EhiTpZ039qYHHJ6iv2nIzs+2XcBDCLGyTfEI94qWw=;
-	b=H0WpWxtnat1Z9b6zzPoVhtz7huxz5QUERylQRVteNeAWYAnkviVJKNNQkJSB5f0xQYHRq0
-	TpFmVMrPV+8ae+JtszKNdm29LHV6o2e75eQF+cdhXXHkkDIj5e6dpy2EzFf8wsYT3UwtL5
-	pRt0jISXL7i6hRS3qPdYvCWcrH4oWrE=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-180-i4buSK1vM_ql7BdNxMA3Dw-1; Wed, 01 May 2024 07:11:06 -0400
-X-MC-Unique: i4buSK1vM_ql7BdNxMA3Dw-1
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6f3eb28c129so2556107b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 04:11:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UzYl3piF"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2b273cbbdfdso1343788a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 04:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714561892; x=1715166692; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BZZTUr02OpFJNJ7PY9o47700VYpg5n+dM1vcCgaaNjM=;
+        b=UzYl3piFd3XIDUK3Jo7G1t3EWTIMMM/ubuKvSd33n20bQro1x0CTrFo4/M2nE4kHD8
+         wDwQoVua0xPozaqQbmqRxXYH9ot9uOSsI2izTZVZZJOtuRrWKQ3xHjEUReNWxF6cx+Ai
+         ZCcIglNDgRVIqpPy0w8so4/utRevDPjuoBr6hMTdGgOl7rj5mF+G/mjZ4A8ofZOmsUq+
+         gUSvo9Z7F49bndZB1MAba4dOc2g1WPKiDMIh/E1Dd+w4YansHhQXAmhSMG01or34vFWc
+         kieBpI0SxYZYMbJjndJLVYEj0YLkpaGXPEb3z9JtlmqMyeFBfWIXZ7L+hBJxA/OuZ6IM
+         dj5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714561865; x=1715166665;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/9EhiTpZ039qYHHJ6iv2nIzs+2XcBDCLGyTfEI94qWw=;
-        b=tu4g6u68c4l24KH1+m/PkeGQbD9neOHQHbLuBFANrxWBIwIe1QT+eR7piwhNCaDusY
-         3xtlCRjOsMblZA8oJFF+9rK7m+MbLAFBFJcz/eOOtmq+IXx3tmHxXNf8s4Ul78uHJ0dx
-         E7zImM1mubwQx1MN67zHSN06IT39hkJUq93p3vXlhMsZp+91D14euxTvHGNmuNK0y5J6
-         VWn2K3DCYBq9qmI6hhD/PwdHxXJVgOgL0YH08i/8XxigjOHsnIsyNPlc1VhQWHP2f7iX
-         QOeyAtRJKQs/AlRU2mHDXRU9kw8DfTrAs5wqXmgAyyc1W9PlsU0kwYc1kYUWBsa6RG9e
-         QGjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWlfz+d4LuE25gaElBo17dHGlwFvs1K8lp+J99CxwjT+CfX5s8vSCOKNzfQulHoyMMSfh4GMO8RhawxfFg/KJ9+wYv8C96juLz5yKWw
-X-Gm-Message-State: AOJu0YzSyLWTK+MEmGGOVp7emHEykftLwVeVey4jFLm9cgPmFOs/xufk
-	edcT+uC08U89nUfqOiEz/x8u9ZHXec9M4YrULPtPcdf90ffNn6Hui8Z8r7JPN1TOtt0iZAz/JdA
-	aGsLeESGgOw1NNQG8NJDqul2vWPxoHgYArolkKiJYSZqSTqUR0ByCD7+KPWRUOw==
-X-Received: by 2002:a05:6a20:f38a:b0:1af:59b9:e3ed with SMTP id qr10-20020a056a20f38a00b001af59b9e3edmr2412156pzb.5.1714561865246;
-        Wed, 01 May 2024 04:11:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGjAPRGKaaujq7rTK1yaA7Ot9xIJqN3jHlI3pLra3C5HiqJNFkOQs4ByCYnk6CyZCfgy9Hx2w==
-X-Received: by 2002:a05:6a20:f38a:b0:1af:59b9:e3ed with SMTP id qr10-20020a056a20f38a00b001af59b9e3edmr2412126pzb.5.1714561864872;
-        Wed, 01 May 2024 04:11:04 -0700 (PDT)
-Received: from [192.168.68.50] ([43.252.112.88])
-        by smtp.gmail.com with ESMTPSA id r10-20020a6560ca000000b005fd74e632f0sm15597042pgv.38.2024.05.01.04.10.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 May 2024 04:11:04 -0700 (PDT)
-Message-ID: <47e1b241-9085-44e6-a3d0-4ded94a183ce@redhat.com>
-Date: Wed, 1 May 2024 21:10:53 +1000
+        d=1e100.net; s=20230601; t=1714561892; x=1715166692;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BZZTUr02OpFJNJ7PY9o47700VYpg5n+dM1vcCgaaNjM=;
+        b=R955xQQMxzoWypDiBrLeVRp+jm+X67XUGrHOJGUj+OBMRhTkH6FqeRLqWCUbK5uwMd
+         HH26jReFE1tp50uw5On7Ye14fWtEEN0chElrDLugQATYNuwudoxUI8EDeL7DygCrGffN
+         65ODcVYE+k8mBtLtFamFqrHIzSD9pmCRqNee+7hofiwjIUmcYxmCRWKre2NW8kN00Ts4
+         EW/mJdZz+lfKS0Uv9rNx6NMfHL9dUzhAI/dNiHT8Ylz0Viiv42c8vMdFzd/+OYfI1t+H
+         JptIsicaIu9Hkl8pqXcnt8olBeZwNydakrp0nL2L3RBgGBYxjOG1zkkIDiYwe91nX5iK
+         sCRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXiIPPeKqhmul/YrCmaAdvh7R7pMJSjQssM6MKNjISonq0qXXe69Ntn8ZlBH5eTNm2emsSLKEfyW4pD7T71fqcNjxf0bwfsPwGA2cz8
+X-Gm-Message-State: AOJu0YzpiP8k95Be6y9x0Oo9Z6394UtQKgKhEXGBBLWuXaYoZYp0+xUS
+	r9Lecnt82rC3dnTsH7VUOVqYN6QjAZraSV3iIae+EH40CAZzaPeh8pyKjLowUWkUN+IKN7bbRzZ
+	Ujsi19nyeeeiGFi3TjVe3fubRPGBUe3nUhXlOdg==
+X-Google-Smtp-Source: AGHT+IHme+tbaissSNWWxihi7iBWbnHX1ITaUYwIqqsZ/hS87/ki1ILDQ1EHmGWbPiULm7pY0uK6xANN1WfW/TaXyVQ=
+X-Received: by 2002:a17:90b:388f:b0:2b2:812e:1d8c with SMTP id
+ mu15-20020a17090b388f00b002b2812e1d8cmr1795234pjb.2.1714561892566; Wed, 01
+ May 2024 04:11:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 12/19] arm64: acpi: Harden get_cpu_for_acpi_id()
- against missing CPU entry
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, x86@kernel.org, Russell King
- <linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>,
- Salil Mehta <salil.mehta@huawei.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Hanjun Guo <guohanjun@huawei.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com,
- justin.he@arm.com, jianyong.wu@arm.com
-References: <20240430142434.10471-1-Jonathan.Cameron@huawei.com>
- <20240430142434.10471-13-Jonathan.Cameron@huawei.com>
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20240430142434.10471-13-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240429152207.479221-1-james.clark@arm.com> <20240429152207.479221-11-james.clark@arm.com>
+In-Reply-To: <20240429152207.479221-11-james.clark@arm.com>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Wed, 1 May 2024 12:11:21 +0100
+Message-ID: <CAJ9a7VghkeaJ8e-mEZKodicQ++QyW_SKfacsPPsfQb2PiT6H0w@mail.gmail.com>
+Subject: Re: [PATCH 10/17] coresight: Move struct coresight_trace_id_map to
+ common header
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com, 
+	scclevenger@os.amperecomputing.com, coresight@lists.linaro.org, 
+	suzuki.poulose@arm.com, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/1/24 00:24, Jonathan Cameron wrote:
-> In a review discussion of the changes to support vCPU hotplug where
-> a check was added on the GICC being enabled if was was online, it was
-                                                  ^^^^^^^
-
-                                                  typo
-
-> noted that there is need to map back to the cpu and use that to index
-> into a cpumask. As such, a valid ID is needed.
-> 
-> If an MPIDR check fails in acpi_map_gic_cpu_interface() it is possible
-> for the entry in cpu_madt_gicc[cpu] == NULL.  This function would
-> then cause a NULL pointer dereference.   Whilst a path to trigger
-> this has not been established, harden this caller against the
-> possibility.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Mon, 29 Apr 2024 at 16:24, James Clark <james.clark@arm.com> wrote:
+>
+> The trace ID maps will need to be created and stored by the core and
+> Perf code so move the definition up to the common header.
+>
+> Signed-off-by: James Clark <james.clark@arm.com>
 > ---
-> v9: New patch in response to a question from Marc Zyngier.
->      Taking the easy way out - harden against a possible condition rather
->      than establishing it never happens!
-> ---
->   arch/arm64/include/asm/acpi.h | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+>  .../hwtracing/coresight/coresight-trace-id.c  |  1 +
+>  .../hwtracing/coresight/coresight-trace-id.h  | 19 -------------------
+>  include/linux/coresight.h                     | 18 ++++++++++++++++++
+>  3 files changed, 19 insertions(+), 19 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+> index af5b4ef59cea..19005b5b4dc4 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.c
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (c) 2022, Linaro Limited, All rights reserved.
+>   * Author: Mike Leach <mike.leach@linaro.org>
+>   */
+> +#include <linux/coresight.h>
+>  #include <linux/coresight-pmu.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/kernel.h>
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
+> index 3797777d367e..49438a96fcc6 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.h
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
+> @@ -32,10 +32,6 @@
+>  #include <linux/bitops.h>
+>  #include <linux/types.h>
+>
+> -
+> -/* architecturally we have 128 IDs some of which are reserved */
+> -#define CORESIGHT_TRACE_IDS_MAX 128
+> -
+>  /* ID 0 is reserved */
+>  #define CORESIGHT_TRACE_ID_RES_0 0
+>
+> @@ -46,21 +42,6 @@
+>  #define IS_VALID_CS_TRACE_ID(id)       \
+>         ((id > CORESIGHT_TRACE_ID_RES_0) && (id < CORESIGHT_TRACE_ID_RES_TOP))
+>
+> -/**
+> - * Trace ID map.
+> - *
+> - * @used_ids:  Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
+> - *             Initialised so that the reserved IDs are permanently marked as
+> - *             in use.
+> - * @pend_rel_ids: CPU IDs that have been released by the trace source but not
+> - *               yet marked as available, to allow re-allocation to the same
+> - *               CPU during a perf session.
+> - */
+> -struct coresight_trace_id_map {
+> -       DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+> -       DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
+> -};
+> -
+>  /* Allocate and release IDs for a single default trace ID map */
+>
+>  /**
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index f09ace92176e..c16c61a8411d 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -218,6 +218,24 @@ struct coresight_sysfs_link {
+>         const char *target_name;
+>  };
+>
+> +/* architecturally we have 128 IDs some of which are reserved */
+> +#define CORESIGHT_TRACE_IDS_MAX 128
+> +
+> +/**
+> + * Trace ID map.
+> + *
+> + * @used_ids:  Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
+> + *             Initialised so that the reserved IDs are permanently marked as
+> + *             in use.
+> + * @pend_rel_ids: CPU IDs that have been released by the trace source but not
+> + *               yet marked as available, to allow re-allocation to the same
+> + *               CPU during a perf session.
+> + */
+> +struct coresight_trace_id_map {
+> +       DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+> +       DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
+> +};
+> +
+>  /**
+>   * struct coresight_device - representation of a device as used by the framework
+>   * @pdata:     Platform data with device connections associated to this device.
+> --
+> 2.34.1
+>
 
-With the typo corrected:
-
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-
-> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
-> index bc9a6656fc0c..a407f9cd549e 100644
-> --- a/arch/arm64/include/asm/acpi.h
-> +++ b/arch/arm64/include/asm/acpi.h
-> @@ -124,7 +124,8 @@ static inline int get_cpu_for_acpi_id(u32 uid)
->   	int cpu;
->   
->   	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
-> -		if (uid == get_acpi_id_for_cpu(cpu))
-> +		if (acpi_cpu_get_madt_gicc(cpu) &&
-> +		    uid == get_acpi_id_for_cpu(cpu))
->   			return cpu;
->   
->   	return -EINVAL;
-
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
