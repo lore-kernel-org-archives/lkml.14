@@ -1,77 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED1D14012
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 16:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861EF14012;
+	Wed,  1 May 2024 16:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714580113; cv=none; b=pZaUiUw+BKTNb9FQaCelJvtwd1/k/ictHDhKk8rYEHpW1WsJOkV/qwoqCVeJAPj9xhoI3oSiRwyGgLomB5gcU39VDU72dKjSuO0iypYCGodrK6jm+RG/FMohP4QVDD0JCSj9sNcm/otvkw1bH3iqxttIFbWyvTIb7tTFP4B76ZE=
+	t=1714580189; cv=none; b=Xe4uyX6HvseWvVUl1nF6QxQqZZfH3mVIFXI8O+Tx3PRHNtE1QxQrMcVNoHN5lRFgU/Xt7JTOTsQmIQAt2AhVXuZOlraYkc12+ykcCcsh9O6z4dHIesdvPzOFps/Z4UAMSB2XaDc5EsqHOwEXt8aS9O1jbg7pUUsy68dkUREjf6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714580113; c=relaxed/simple;
-	bh=4JZobKXvCAkKEuBLtHUYjgoYsuv0NHezNKIZozxI+3s=;
+	s=arc-20240116; t=1714580189; c=relaxed/simple;
+	bh=//LEnlvSVSXUbJfMDjvd6bTaR+rRYvm4s7OOaxCY8DY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dIbXOrlhwe6Z5yCue7KnFBCF1818zoueB1ok247Dwf9Zsjsck0tnfrLBywjNkG33NolVdLrKu4LXDbe1KChxDm+P1Nuoxbe+i6pnGArN6ZnGQiYyJPPqPF8+eWatGKye10tU9Z3XUsAue9PDxCthPNC8o53ygqlagR0EpfN8AgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JAnz8Xrd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=O0X54kC5USrkZJjXdiCe1bQOzLg0chwyAKB7Sc/3AzerhmnkHfEXOpdO/Yqg2H93LAP1ZfdUC1UsF/7YarFwQKmUXUdqchTq+JyuGChmF0jBqCMxq04jxqm+JMSSDdMjTRIYYORRdhUhR+pRGElAGPEB0Bo2gym0wMHsvQde1Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K+T9GnP0; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JAnz8Xrd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714580111;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E7mWrcXve95zg3d/M8fss24W5lX0LbUL9bKvtgV/1yg=;
-	b=JAnz8XrdfwcdagwgyPJ2rEN7L4oD5lp9XMLiEDGuhgnUd8uFg1HmNzMf9ZQ9PKlfHTmmyX
-	XoXittxcBMf0U8isDpO4yzE8mBmXYzJhdKeioTDvz2+JsX7yIsh+1pXz6iowSbkt4SVRIk
-	82sg8fJXHUASgykXg8EDkKwsfLeHSKs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-652-z1LnRTDWOxuvHw9wZTjeIA-1; Wed, 01 May 2024 12:15:09 -0400
-X-MC-Unique: z1LnRTDWOxuvHw9wZTjeIA-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-34da4921505so774608f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 09:15:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714580108; x=1715184908;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+T9GnP0"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f3f6aa1437so3420740b3a.3;
+        Wed, 01 May 2024 09:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714580188; x=1715184988; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E7mWrcXve95zg3d/M8fss24W5lX0LbUL9bKvtgV/1yg=;
-        b=dsGSp7dleZ+a0lGO9/NZrgEiYvhnNbWynHaUcoAnx2X51s3/FE9NQpBH9abaoPFvtD
-         GJyzB4x/ZYAF2k1VjZ/X44QQ2Zt3+cOSgurzM2Ipu3aVrK7FUf7CBooPGkADuzrNj8O8
-         rq9cZDib2w86h2rlTHIZxqSMB8HhXN5I3Yux10gi5d410bjQB5V3adIxrDL+VpCFIW0Y
-         QJgshaXBjmvj4EXdHmoDIMkyAus4zTmbfQkvLrm/ldBh5Ot/LxeN3vK4ccY6fVNd706/
-         MyKZysSBQDNjbSN0TCcEv1eief+9UiTugp8ozTW7fzqfY0k5jUWwJQdWh13LDyXdgEid
-         7i7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWfAy4uJhyW02eHUeV54CPfY7yVBZ35rkA4uLZ7uVWFG7yMrSAoOjlJBhPl1KhTWhJ9Jx178hLC1X33FVzDIgY5X14tdttbdpeabjhv
-X-Gm-Message-State: AOJu0YzmXkQS9RRKAg82o6422qL9BrWyseaN5V9Rh8ma63kg8H6nGfKt
-	v3mt//uemrS/3+eNUNDTuKTVf1izs20mAeIkE7EktK76BOIzrzzVwVF7f+HmtnLveGOGrvD7Pva
-	mR2Kz5jmu9xAOYR04Ksfic58BuxFd6Y0EttRQNyqYYeJ5ASorRFnT0KJX7XPRFg==
-X-Received: by 2002:a5d:4528:0:b0:343:751e:8ef7 with SMTP id j8-20020a5d4528000000b00343751e8ef7mr3142432wra.51.1714580108375;
-        Wed, 01 May 2024 09:15:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFyKzGL84l2usjgV0H/flDoMX0zRy6ou0wp/1X1uaRyOtrwrWRor6D2o1DQAe7+oMIVOR8snA==
-X-Received: by 2002:a5d:4528:0:b0:343:751e:8ef7 with SMTP id j8-20020a5d4528000000b00343751e8ef7mr3142404wra.51.1714580107826;
-        Wed, 01 May 2024 09:15:07 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc7:346:6a42:bb79:449b:3f0b:a228])
-        by smtp.gmail.com with ESMTPSA id bs21-20020a056000071500b0034ddf05a3e6sm1509266wrb.76.2024.05.01.09.15.05
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2eqaP89xJW0ujXnZ+hB2QVGRIufSQtfLwgVff4XKb0I=;
+        b=K+T9GnP0zY1PolGTDO47p/z/r9Kr5Nh796dYcTGsUTAWeUUi6NEbUlYlfKN7sf7Tu3
+         pOTbbMZ8COlFKma6rWD8koC2zkCKHKiodpL+JfKWdhT/UBcRMFGBpIJpRWVLbuTfj0ST
+         Smlu4ag9xHlds/h9SmYfs9TObfPkoTfOwzBIfDWCblggFh1JBs145OLJyKKxl694jIG1
+         lumKGNxBLhF84kBrYCMY1/QVPnOgN5jjtpn+R/S+ZsHfZIq4Go39NEUQauY34Yr40ozB
+         oHNae+pUO/BH4ayfpDISzBEmfGLOeafRbQ5YwyIaPeOP/Rvuan8Q6yBHZ23kP4HiubQ+
+         Ro5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714580188; x=1715184988;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2eqaP89xJW0ujXnZ+hB2QVGRIufSQtfLwgVff4XKb0I=;
+        b=cMzoD3zu8BrCvxkzI1YHEYYCictcnR9aW/H2goO9yQZdnvofrz3QeEU/RDTvWpD/Ck
+         aqiRlGP8DWugUGDI+3tdfjVN8WrycUTeULab5OjEGKFrzy3SZMFvnHcTe9YcKLTxaoHC
+         5uG3HmLps0P7fEzumclS5PyEnmhKV90aAnoTFj723c1odVGdgO3lIN5S9HoU0pgJz1Wk
+         BUJCxVMwdDoTR+69sVhihT5k/gMUtgrdVYDBFVk+XxKjArYfHQ5qSg+HmXsFDCYsavo8
+         n3dlvyFJLVoUiVKPpImzdAvRQ7Yc2mwTkI/l6UvsJpyOAh5kHEbj4mIJ+v2CUM0Dau8T
+         9Wiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUs7IYm0RrhZu0pCcQsB88vO6kz794WBfMhrg3TpC0fIlTFM0eX0gV+a7Cya5dZH6rVVgH4XlvTMfvSUU1VdJo3Tm0E158COqsJOpJwNMa4gtUzEleSn9oPG1xum8zjrsvezQM8hOk9v3jQnQ==
+X-Gm-Message-State: AOJu0YwwE63iuX4H4gz3WxjrXiuPMn1Wvpigz7sipKQWGKEXfQMc4qXv
+	egvPL0Ac1L6xuWoE/E9qWNsvhP8ZlbhozFw+TUOp2yx9wzAly+5k
+X-Google-Smtp-Source: AGHT+IFG4/zw2BTucTObEcs4prhPN8niNp0Os6Yg5zzDwEAG7i1CghqpTQkkOnlieXo3HxSODetzjg==
+X-Received: by 2002:a05:6a20:430c:b0:1a7:1b6e:4d4 with SMTP id h12-20020a056a20430c00b001a71b6e04d4mr3003804pzk.23.1714580187677;
+        Wed, 01 May 2024 09:16:27 -0700 (PDT)
+Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
+        by smtp.gmail.com with ESMTPSA id a20-20020a056a0011d400b006ecec1f4b08sm22766536pfu.118.2024.05.01.09.16.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 09:15:07 -0700 (PDT)
-Date: Wed, 1 May 2024 12:15:03 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Mike Christie <michael.christie@oracle.com>
-Cc: Hillf Danton <hdanton@sina.com>, Edward Adam Davis <eadavis@qq.com>,
-	syzbot+98edc2df894917b3431f@syzkaller.appspotmail.com,
-	jasowang@redhat.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com, virtualization@lists.linux.dev
-Subject: Re: [PATCH next] vhost_task: after freeing vhost_task it should not
- be accessed in vhost_task_fn
-Message-ID: <20240501121411-mutt-send-email-mst@kernel.org>
-References: <b959b82a-510f-45c0-9e06-acf526c2f4a1@oracle.com>
- <20240501001544.1606-1-hdanton@sina.com>
- <20240501075057.1670-1-hdanton@sina.com>
- <6971427a-d3ab-41c8-b34b-be84a594e40b@oracle.com>
+        Wed, 01 May 2024 09:16:27 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 1 May 2024 06:16:26 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: willy@infradead.org, akpm@linux-foundation.org, jack@suse.cz,
+	hcochran@kernelspring.com, axboe@kernel.dk, mszeredi@redhat.com,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Fix and cleanups to page-writeback
+Message-ID: <ZjJq2uvuXZoZ5aj3@slm.duckdns.org>
+References: <20240425131724.36778-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,50 +71,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6971427a-d3ab-41c8-b34b-be84a594e40b@oracle.com>
+In-Reply-To: <20240425131724.36778-1-shikemeng@huaweicloud.com>
 
-On Wed, May 01, 2024 at 10:57:38AM -0500, Mike Christie wrote:
-> On 5/1/24 2:50 AM, Hillf Danton wrote:
-> > On Wed, 1 May 2024 02:01:20 -0400 Michael S. Tsirkin <mst@redhat.com>
-> >>
-> >> and then it failed testing.
-> >>
-> > So did my patch [1] but then the reason was spotted [2,3]
-> > 
-> > [1] https://lore.kernel.org/lkml/20240430110209.4310-1-hdanton@sina.com/
-> > [2] https://lore.kernel.org/lkml/20240430225005.4368-1-hdanton@sina.com/
-> > [3] https://lore.kernel.org/lkml/000000000000a7f8470617589ff2@google.com/
+On Thu, Apr 25, 2024 at 09:17:20PM +0800, Kemeng Shi wrote:
+> v1->v2:
+> -rebase on up-to-date tree.
+> -add test result in "mm: correct calculation of wb's bg_thresh in cgroup
+> domain"
+> -drop "mm: remove redundant check in wb_min_max_ratio"
+> -collect RVB from Matthew to "mm: remove stale comment __folio_mark_dirty"
 > 
-> Just to make sure I understand the conclusion.
-> 
-> Edward's patch that just swaps the order of the calls:
-> 
-> https://lore.kernel.org/lkml/tencent_546DA49414E876EEBECF2C78D26D242EE50A@qq.com/
-> 
-> fixes the UAF. I tested the same in my setup. However, when you guys tested it
-> with sysbot, it also triggered a softirq/RCU warning.
-> 
-> The softirq/RCU part of the issue is fixed with this commit:
-> 
-> https://lore.kernel.org/all/20240427102808.29356-1-qiang.zhang1211@gmail.com/
-> 
-> commit 1dd1eff161bd55968d3d46bc36def62d71fb4785
-> Author: Zqiang <qiang.zhang1211@gmail.com>
-> Date:   Sat Apr 27 18:28:08 2024 +0800
-> 
->     softirq: Fix suspicious RCU usage in __do_softirq()
-> 
-> The problem was that I was testing with -next master which has that patch.
-> It looks like you guys were testing against bb7a2467e6be which didn't have
-> the patch, and so that's why you guys still hit the softirq/RCU issue. Later
-> when you added that patch to your patch, it worked with syzbot.
-> 
-> So is it safe to assume that the softirq/RCU patch above will be upstream
-> when the vhost changes go in or is there a tag I need to add to my patches?
+> This series contains some random cleanups and a fix to correct
+> calculation of wb's bg_thresh in cgroup domain. More details can
+> be found respective patches. Thanks!
 
-That patch is upstream now. I rebased and asked syzbot to test
-https://lore.kernel.org/lkml/tencent_546DA49414E876EEBECF2C78D26D242EE50A@qq.com/
-on top.
+Isn't this series already in -mm? Why is this being reposted? What tree is
+this based on? Please provide more context to help reviewing the patches.
 
-If that passes I will squash.
+Thanks.
 
+-- 
+tejun
