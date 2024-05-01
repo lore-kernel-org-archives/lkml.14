@@ -1,158 +1,166 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A974117580
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 17:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C8517580;
+	Wed,  1 May 2024 17:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714583183; cv=none; b=aTLtcSZcNdVf1Zgw6up6t3tlpgPKlUJWArHQDO5+PSx4CwY7jD/PHivAsMQJrc5ueSZ4XrdnUTZAZULH4upevGPO4lcab+XW6al5Ed5DVW1zRHWcL001nPVG7TrEqpq/U2kU6ArymIl3/9/sCEnUHPGKLTQawB1pWUZk9rER5C4=
+	t=1714583269; cv=none; b=iEgybuiHm2Kmef4v5Hl1Enhp+DrvJekVR57AxnXrBy/9RCSe+jDzTPY3Cegnqphguzd0gBfkHNsGTeJJMirc+bcaK3SzwdjidW9YkK3z3i8+3UV6Yb5/+P3NUkJamWrpUYts/U2hHnEPKh70tCxqXLUcOd4K6X0d0jmivr1ETl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714583183; c=relaxed/simple;
-	bh=pqU7oYGJgnj9NuhHq21MW2iYlmXEJsCtkyhRbZQMx0c=;
+	s=arc-20240116; t=1714583269; c=relaxed/simple;
+	bh=8/png6sxsqEGBRMcXp6Bjwq65G0P803V71/0WDXSe9Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tLWMcl9XlAGqlAiIozOXQQzu9Dkym/KBOHR0SRYiXUIaIO6EoK3I2s5Dnx7P6TVMwA3QjPKJs/F0VFU25xT18zcKz0yK/FWv1OJoClyYW38JA6BPqO9Bkdmrn9xEC0tLWzkbO326kFbeUpLgSlF8KcYb5pHQh1rbpU326FqkHI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pskqzGJO; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iouvc9KTiGCOPjFdPvz3ZrkL3gpt84+XkovL+UbxYdTfjkgOgau/IUAK4+IiHKxUKFY/FwHSLD2OuCXkoJuHixEiT+iYJqAFmxz1KTCiDES+SoZaCy3slVpwLZrUHsibNAPTBED0zAJpNMDeq3UOIydoZDibGiW3GMQLlEr9f+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5EPMXKH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pskqzGJO"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2b3374e08cfso439336a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 10:06:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714583182; x=1715187982; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ulUTnrt0/o6KrpYj4/lKXwggI1Tcz4XFzc+8cliUI0c=;
-        b=pskqzGJOaoD4BIUPmMgmZijLoimhceT6AA89Byuqf5OmPWuyi2gxFvdjI3/X03PuT2
-         EiwArqrECy9mcOB3xfJJ+1lze8cCIfiwxbuvkiiQsE3reif3c9wshk39vjGz7oRUyVKs
-         oP7nYrbhpvOv4rAj8cgKbAcxJNF8RhsGArvXSW3vW8+IQWd4eqGw04cdmA+n8qwlJF1f
-         +CDjKde9V11tnI0tbFVfymVf39gmimnXqG35VXjWnnYhkZkR+v/7u5DZKNx77prWM36C
-         Gz8sN8tqZ4Tp9hB3twsSbnTOHXhUnx6MkpgfUw134PNlQ6N1Cxf+IqdBWPZZ/LSFngnU
-         jn6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714583182; x=1715187982;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ulUTnrt0/o6KrpYj4/lKXwggI1Tcz4XFzc+8cliUI0c=;
-        b=f9lu1yhvQl6nsuTqvc7avAz+EpxVnRmYv80KjCD+K2aDlojL/QypzmR24z08GLZwbV
-         Y8xd+r5XEhRi++azpPrYNfYnvr+7VSW+TKqOXqHkCfLcr6t2QN4HWpdn7/wqts2Ml7tK
-         s73bpMmIAvDovWPF2lTLEe3Q4WHR6jV79fOPFzgVjkxVJjMZX8XL+KPplc9YhdGFdRW+
-         ot6i68mD6mB8KPQIXbcBbpPiYpAvutdo5+BgARPIGALxr9i2baVEF3qaNu3l5khhPtq4
-         Q3Snm7hAVoG313JuzsY7zUVJIG3zHSSoXrIALNiWzWdX0rg990UghtNkS7fTL6W95OCC
-         dcvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXphJKca4HZGJC+RcqYt/v/VgeSHsXXz7e6cf44V1q8kk7ob+1wIgL9biWaMzzEUc+GjLgXeDKwxjX65EbLlvAvYX0hePjQyEhrd86T
-X-Gm-Message-State: AOJu0Yz+pLlVEHzLri7J9i0r09XQ5QCnTo2FoBSGPmBL3yppGj1UkcCT
-	0rQY+PQklGcIUgxIPJI2iakr2PN61ZRSHfsfGz3rh+77jhCqzSC8d7khJeeNX8w=
-X-Google-Smtp-Source: AGHT+IGbQ99FfsOuQfbPD1HKb4OFUev7bCmbhruunbIFw2+vddc7cv9+d7D2Uj+7TUiDOOY0K6p1lQ==
-X-Received: by 2002:a17:90a:f493:b0:2b2:d001:db41 with SMTP id bx19-20020a17090af49300b002b2d001db41mr2837033pjb.40.1714583181995;
-        Wed, 01 May 2024 10:06:21 -0700 (PDT)
-Received: from ghost ([2601:647:5700:6860:1dcc:e03e:dc61:895d])
-        by smtp.gmail.com with ESMTPSA id db5-20020a17090ad64500b002a53b33afa3sm1593854pjb.8.2024.05.01.10.06.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 10:06:21 -0700 (PDT)
-Date: Wed, 1 May 2024 10:06:18 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 05/16] riscv: Extend cpufeature.c to detect vendor
- extensions
-Message-ID: <ZjJ2irS2ornhzeYc@ghost>
-References: <20240426-dev-charlie-support_thead_vector_6_9-v4-0-b692f3c516ec@rivosinc.com>
- <20240426-dev-charlie-support_thead_vector_6_9-v4-5-b692f3c516ec@rivosinc.com>
- <20240501-pelican-throwaway-da84be7dac30@spud>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5EPMXKH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E807C072AA;
+	Wed,  1 May 2024 17:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714583269;
+	bh=8/png6sxsqEGBRMcXp6Bjwq65G0P803V71/0WDXSe9Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U5EPMXKHlB4SDJriFUqz44y53RD4A4LCX3HHMjR9aPglBpE3/T1/QFAGTBfxIriFc
+	 HT57GzvsDFFNwRYNYrnW+qhDr4Lz+BfijWMLpYbTNW8uWKmh1znJO6KrQ95ZpNt+nU
+	 fQDZ0mybKZitIuvm8e+6qPLfF/04nfjKc3DSNokViAZ2ZVkBQcoyeeESvdQNqF8qTO
+	 ONaG2w9eamgRMad9Yfq8gKpcqDHexNAD7vpi29kk0fL2/B5mJxnweXjJUjBBSbRUyr
+	 KwYrB7CX1coBz497nT2Wf6OA1ScS/hbd2upZXmN2yCjj4VIg3VVM9dlrC0+KPPSh7h
+	 RRKngkClwAnWA==
+Date: Wed, 1 May 2024 18:07:44 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: net: mediatek: remove wrongly added clocks
+ and SerDes
+Message-ID: <20240501-prorate-hanky-5fbb9ff28bc5@spud>
+References: <ea2e786eda4561cb5d11b62a4edd7e75c0975f1f.1714513773.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iA7tPiIVLweNoVjq"
+Content-Disposition: inline
+In-Reply-To: <ea2e786eda4561cb5d11b62a4edd7e75c0975f1f.1714513773.git.daniel@makrotopia.org>
+
+
+--iA7tPiIVLweNoVjq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240501-pelican-throwaway-da84be7dac30@spud>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 01, 2024 at 12:19:34PM +0100, Conor Dooley wrote:
-> On Fri, Apr 26, 2024 at 02:29:19PM -0700, Charlie Jenkins wrote:
-> > @@ -353,6 +336,10 @@ static void __init riscv_parse_isa_string(unsigned long *this_hwcap, struct risc
-> >  		bool ext_long = false, ext_err = false;
-> >  
-> >  		switch (*ext) {
-> > +		case 'x':
-> > +		case 'X':
-> > +			pr_warn_once("Vendor extensions are ignored in riscv,isa. Use riscv,isa-extensions instead.");
-> > +			continue;
-> 
-> Yeah, so this is not right - you need to find the end of the extension
-> before containing - for example if I had a system with
-> rv64imafdcxconorkwe, you get something like:
-> [    0.000000] CPU with hartid=0 is not available
-> [    0.000000] Falling back to deprecated "riscv,isa"
-> [    0.000000] Vendor extensions are ignored in riscv,isa. Use riscv,isa-extensions instead.
-> [    0.000000] riscv: base ISA extensions acdefikmnorw
-> [    0.000000] riscv: ELF capabilities acdfim
-> 
-> kwe are all pretty safe letters, but suppose one was a v..
-> I think you can just yoink the code from the s/z case:
+On Tue, Apr 30, 2024 at 10:53:55PM +0100, Daniel Golle wrote:
+> Several clocks as well as both sgmiisys phandles were added by mistake
+> to the Ethernet bindings for MT7988.
+>=20
+> This happened because the vendor driver which served as a reference uses
+> a high number of syscon phandles to access various parts of the SoC
+> which wasn't acceptable upstream. Hence several parts which have never
+> previously been supported (such SerDes PHY and USXGMII PCS) are going to
+> be implemented by separate drivers. As a result the device tree will
+> look much more sane.
+>=20
+> Quickly align the bindings with the upcoming reality of the drivers
+> actually adding support for the remaining Ethernet-related features of
+> the MT7988 SoC.
+>=20
+> Fixes: c94a9aabec36 ("dt-bindings: net: mediatek,net: add mt7988-eth bind=
+ing")
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+>  .../devicetree/bindings/net/mediatek,net.yaml | 32 ++++---------------
+>  1 file changed, 7 insertions(+), 25 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Do=
+cumentation/devicetree/bindings/net/mediatek,net.yaml
+> index e74502a0afe8..030d106bc7d3 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> +++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> @@ -337,32 +337,23 @@ allOf:
+>            minItems: 4
+> =20
+>          clocks:
+> -          minItems: 34
+> -          maxItems: 34
+> +          minItems: 24
+> +          maxItems: 24
+> =20
+>          clock-names:
+>            items:
+> -            - const: crypto
+> +            - const: xgp1
+> +            - const: xgp2
+> +            - const: xgp3
 
-Oh right, I forgot about that.
+Why is the ordering changing too?
 
-> 
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index 20bc9ba6b7a2..4daedba7961f 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -338,8 +338,19 @@ static void __init riscv_parse_isa_string(unsigned long *this_hwcap, struct risc
->  		switch (*ext) {
->  		case 'x':
->  		case 'X':
-> -			pr_warn_once("Vendor extensions are ignored in riscv,isa. Use riscv,isa-extensions instead.");
-> -			continue;
-> +			if (acpi_disabled)
-> +				pr_warn_once("Vendor extensions are ignored in riscv,isa. Use riscv,isa-extensions instead.");
-> +			/*
-> +			 * To skip an extension, we find its end.
-> +			 * As multi-letter extensions must be split from other multi-letter
-> +			 * extensions with an "_", the end of a multi-letter extension will
-> +			 * either be the null character or the "_" at the start of the next
-> +			 * multi-letter extension.
-> +			 */
-> +			for (; *isa && *isa != '_'; ++isa)
-> +				;
-> +			ext_err = true;
-> +			break;
->  		case 's':
->  			/*
->  			 * Workaround for invalid single-letter 's' & 'u' (QEMU).
-> 
-> You'll note that I made the dt property error dt only, this function
-> gets called for ACPI too. I think the skip is pretty safe there though
-> at the moment, we've not established any meanings yet for vendor stuff
-> on ACPI.
-> I think breaking is probably better than using continue - we get the _
-> skip from outside the switch statement out of that. And ye, I am lazy
-> so I kept it as a for loop.
+>              - const: fe
+>              - const: gp2
+>              - const: gp1
+>              - const: gp3
+> +            - const: esw
+> +            - const: crypto
+>              - const: ethwarp_wocpu2
+>              - const: ethwarp_wocpu1
+>              - const: ethwarp_wocpu0
+> -            - const: esw
+> -            - const: netsys0
+> -            - const: netsys1
+> -            - const: sgmii_tx250m
+> -            - const: sgmii_rx250m
+> -            - const: sgmii2_tx250m
+> -            - const: sgmii2_rx250m
+> -            - const: top_usxgmii0_sel
+> -            - const: top_usxgmii1_sel
+> -            - const: top_sgm0_sel
+> -            - const: top_sgm1_sel
+> -            - const: top_xfi_phy0_xtal_sel
+> -            - const: top_xfi_phy1_xtal_sel
+>              - const: top_eth_gmii_sel
+>              - const: top_eth_refck_50m_sel
+>              - const: top_eth_sys_200m_sel
+> @@ -375,15 +366,6 @@ allOf:
+>              - const: top_netsys_sync_250m_sel
+>              - const: top_netsys_ppefb_250m_sel
+>              - const: top_netsys_warp_sel
+> -            - const: wocpu1
+> -            - const: wocpu0
+> -            - const: xgp1
+> -            - const: xgp2
+> -            - const: xgp3
+> -
+> -        mediatek,sgmiisys:
+> -          minItems: 2
+> -          maxItems: 2
+> =20
+>  patternProperties:
+>    "^mac@[0-1]$":
+> --=20
+> 2.44.0
+>=20
 
-Awesome, thanks!
+--iA7tPiIVLweNoVjq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-- Charlie
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> Cheers,
-> Conor.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjJ23wAKCRB4tDGHoIJi
+0jQoAQCrI827zGT9l/GNCLHhBDxuB2DyQ+FKu0l+4FvZTur7ZwEA3BOvbyZ4jXdL
+DGa1XxfE8CunnKNn9b20At6jUlGZwwk=
+=dQTZ
+-----END PGP SIGNATURE-----
 
-
+--iA7tPiIVLweNoVjq--
