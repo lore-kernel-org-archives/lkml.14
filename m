@@ -1,219 +1,270 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97783234;
-	Wed,  1 May 2024 16:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B2C748D;
+	Wed,  1 May 2024 16:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714582231; cv=none; b=uwEexJWVPBT+UXSE4rNJrBNqZOQH2u1KQ0/Sh4lmXfTa5BsX6CD9OU9HCm9KM47uGNo+28Ntp16trdOSkUryRW8ClneCPZoTjV703O3v4/8f4sMpQWYgj41qMug2RIj3hvIjiljVRtzKwSgvb0W+AvMlajR413Qehs//bb+RnDU=
+	t=1714582337; cv=none; b=u8AhVpCmTCJxsiCHKuFmwdYBLj9ursNzup4eautgaKhuYbPYsGVtbS2OKZ9sgI+0CzcccBYGsOo79eEA4WCLEeeBCE9kUUwCw/aWxRiD4cmZoHaZNbrN70MMhOjoP5zIaC5/RjMTtTxr+ujMgfHqqw4MlrLp/+AwCghztX252+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714582231; c=relaxed/simple;
-	bh=T5uWjQn0TdTai7lZsSs6aSnBx3aKCjraRrFmpU3ySSc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R1IMewGxdvRNyMcOpAMkIfz7dVDvi2/u4qwCH2+kvRygrqgGijN86dMhibCDLw3rIfM4yGEh1N6cuFhPAt7lgw6kFakSGhu16xS1QMx492sRj0CsCOS+1PuOxULxk98Ia/qdiInA/EHeiXPXCPksPsLbwEluTaaqTWX9XtgEbzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bw4iEbZq; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1714582337; c=relaxed/simple;
+	bh=EoTNNFNmdiSJ+ihhxP7N6TMOpU57rtyD9Vd0HKERdZw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GhNY4eEbQVbaoSg8UQz+4xSTN+EQWimq6m3HWrbhKTqY3Am3VMnLf33N3ZxjdWtBgovKt5pNI840QsohxlKYALHc/Ca+M5xq8Dx3iWP7Gsdr/hd+v0md8A33QxwFIrSofqnnsy/oIfcSiXluf3nVCg4EVpnN6Zu1Em0lhsRStAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RczkqTMa; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bw4iEbZq"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ec69e3dbe5so14030255ad.0;
-        Wed, 01 May 2024 09:50:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RczkqTMa"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f4178aec15so1482108b3a.0;
+        Wed, 01 May 2024 09:52:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714582229; x=1715187029; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Aksft0yTn/V06U1VI9NL6+QbOurl0GnC7c4G4bkaC4s=;
-        b=bw4iEbZqMgtryJK8jVcUh+L7aGw1WXn2xuw+mp3DnHua2S0t8xrhjUNBua6TmyRQly
-         aW3TV9PEoa8gx/T2fh7IcGG9SjdaYzKCW8YU+BU7BQ/AQgKwjnRAvx6Xi9eFrl4i27e2
-         9HwiVAeq2H0CqobYNmNrp3oYQfEPbELWJooN4yqVn68QgsIkF2BSuOjqTO/dIvAVcGJV
-         SnhfDIZQGAGnvmS25JfUsstTaz9xD6xE2Wts81ycNaztE3CAlNcRew0Jj6onbEMsRccp
-         gb0GpokqfcIUj/yjTcg38Sg8kaPC9vScq9dsoNw869ZwMJdDUkE3km1Ke863H2bC2yXZ
-         hXaw==
+        d=gmail.com; s=20230601; t=1714582335; x=1715187135; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X+kLWLzH38TvjMAPOyIaIJoNEWichEBjYFHCLTsZASU=;
+        b=RczkqTMaw6+/lEwp6+gdvvuF2HLS/W3drvRC5yl/IOfMjpu6eUDEp8yjiFZPpx8Bpu
+         nF51wDsuxb366T3x0NlSjJ2bJLqzJYziOKKlGbYrK6bKpjrfsDkc6CxYacqlJjfYeT9V
+         tA0Yl7u3o3jXu4zWFG5Seakoz6tVL4+J+huFgef1W0zpOvuTASlXutLaN+ftLHznmABb
+         g3VbYpGrvvWbUCALMP9NPfi6BSmEPAaST6DxjtZjvJw+YJb3NceQhOFLp6aRrbxg8xbG
+         PXdFN8qC3ebO9pJq/PZGSxLKdbO9I5oIMV1iAcjlPkNF6JJQjawXrL5hDzHRRXsbjwzm
+         un8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714582229; x=1715187029;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Aksft0yTn/V06U1VI9NL6+QbOurl0GnC7c4G4bkaC4s=;
-        b=Kc3NfFKi8Go7+RFk+QXQUrdVC0RjZVpdot88TdPWVCXsMMGUMpHlauKH4/o/NT2bTN
-         WOO3hRrajzlq2R2DTQKAa4YC/Dr0xmoklJZ7l+XQ+onqZ2NV5hkWd4jQWNOfa4Orz9e8
-         /XcULzsdT0tF6K/C1srTpa+Ro/DKaJicy76fhdZkHzX82YlKCDj6bK2WbNC7r9udwqGD
-         Pp0ude6FMHhNVdcIEeujKujAGf4S1kGSXplzSkfTpWFd9BkaPnGBvkPu7H1qmUuU2MGL
-         Fu3cPUJ9t+0sI8MY/TAnxmeeYHeDSkPbSMhX9vBvvOod3DiW3sayMy7hSvTnBVNmr2Kx
-         5ShQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEOpzP7o4uRNRXm+Fgvank3qORKMczukEmA+Jq0aKAx34Kc9yeZnjosZZrY3mI0VJZc2axtPVRQrSe9fPk5SW06/Hs2whltD+3MHwlQyGF0zYGzn2bsaiSqYX8N1jzHTvo
-X-Gm-Message-State: AOJu0YwMz51EwFmliUBWnSy128l1l/f15vhAtZpjG0g7vz64y/zxTjUp
-	0NeA45ogi5LWxdi4sV0BzcAzdKr21ROfeq5zssCLERY2jwHvwlLWcYuIo9Lw15q11x0gOny0uNH
-	rl8KDgs/aob/DBYxhQ259y02uUeQ=
-X-Google-Smtp-Source: AGHT+IGphJowQwPdQc/IaHX5fYRv9tLnSqbTNSMg8oYW9E7t5aRvVSuJjG7AQiuaR5dOEj0zY6wFvDFEVRQ7xzc7xek=
-X-Received: by 2002:a17:90b:68e:b0:2a5:4e39:6a8 with SMTP id
- m14-20020a17090b068e00b002a54e3906a8mr3089123pjz.33.1714582229167; Wed, 01
- May 2024 09:50:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714582335; x=1715187135;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X+kLWLzH38TvjMAPOyIaIJoNEWichEBjYFHCLTsZASU=;
+        b=vaCaQMAd5MfDhRyqTrIAE0iwbiI8/+Bh6V374G/Tn4vr5It4JFc6qpKX/9i66VZEu1
+         cLal8DVArxpFJy3vtKo5o9XXOGe87OZmpCRyogz2ECv+5p3Dr/lnKlUwT6ND6muhY5Fo
+         2iQ6cr9QzbxTJWv7PcmhsOwF0yogiE6sIM7GmCYJVvsutt/mfpXNJQ1rtrqKWJoQsgyZ
+         n3qkG+3d4dLYybP8D9lbsuS6E1kJzj3O12lPFRUgtCIeyvKL8nuyhzRdwEK1xoQjWOc5
+         eisFHVf3/pgyvAOd4bBCDUiqKxfYYB+safb/C1Eg8itQB2KWHmBd7GQ08cBp4ULjBseI
+         GNZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgsL1yDcfrnaMqQ+zEwulSzYZTRJ2BHrjwCLRwK5IvoQHtSiHpJ+ms/fvmzGQ0WZh+pFZGygmaXTF1i2xn6HXlsky/mqRw3mruC19RCcYVtPL68qjFBl4Js9FvbZA+/7ls1COH5krUpw==
+X-Gm-Message-State: AOJu0YxA/0xmkOFfmme9EydLuifOAXW0QyJwWNhS95zcUmpiyihYcBQd
+	AK2J1s6zPQMPHlO3zC/m384NQNvF1K00Kmivc0xYnms6sIbjIfuI
+X-Google-Smtp-Source: AGHT+IFoLPLaa10OmlKHdeMWUQfAXY6nicn0jqB5kR0cepCobySIMzdTUmrXKqUApZ+BDGQJOD7ZNA==
+X-Received: by 2002:a05:6a21:339f:b0:1ad:7e4d:2ea6 with SMTP id yy31-20020a056a21339f00b001ad7e4d2ea6mr3618013pzb.20.1714582335399;
+        Wed, 01 May 2024 09:52:15 -0700 (PDT)
+Received: from kousik.local ([2405:201:c006:31f8:c3a6:8218:5d12:51ef])
+        by smtp.gmail.com with ESMTPSA id gd22-20020a056a00831600b006e6fc52ecd0sm22758866pfb.123.2024.05.01.09.52.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 09:52:14 -0700 (PDT)
+From: Kousik Sanagavarapu <five231003@gmail.com>
+To: Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Kousik Sanagavarapu <five231003@gmail.com>
+Subject: [PATCH v3] spi: dt-bindings: ti,qspi: convert to dtschema
+Date: Wed,  1 May 2024 22:18:53 +0530
+Message-ID: <20240501165203.13763-1-five231003@gmail.com>
+X-Mailer: git-send-email 2.45.0.rc1.8.ge326e52010
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430234739.79185-1-puranjay@kernel.org> <20240430234739.79185-3-puranjay@kernel.org>
-In-Reply-To: <20240430234739.79185-3-puranjay@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 1 May 2024 09:50:16 -0700
-Message-ID: <CAEf4BzbszfMGoOCx7hQPBfDLNLfBuAQ1PQDEq=ut=WiEubm_oA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 2/2] bpf, arm64: inline bpf_get_smp_processor_id()
- helper
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Zi Shen Lim <zlim.lnx@gmail.com>, Xu Kuohai <xukuohai@huawei.com>, 
-	Florent Revest <revest@chromium.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, puranjay12@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 30, 2024 at 4:48=E2=80=AFPM Puranjay Mohan <puranjay@kernel.org=
-> wrote:
->
-> Inline calls to bpf_get_smp_processor_id() helper in the JIT by emitting
-> a read from struct thread_info. The SP_EL0 system register holds the
-> pointer to the task_struct and thread_info is the first member of this
-> struct. We can read the cpu number from the thread_info.
->
-> Here is how the ARM64 JITed assembly changes after this commit:
->
->                                       ARM64 JIT
->                                      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->               BEFORE                                    AFTER
->              --------                                  -------
->
-> int cpu =3D bpf_get_smp_processor_id();        int cpu =3D bpf_get_smp_pr=
-ocessor_id();
->
-> mov     x10, #0xfffffffffffff4d0             mrs     x10, sp_el0
-> movk    x10, #0x802b, lsl #16                ldr     w7, [x10, #24]
-> movk    x10, #0x8000, lsl #32
-> blr     x10
-> add     x7, x0, #0x0
->
->                Performance improvement using benchmark[1]
->
-> ./benchs/run_bench_trigger.sh glob-arr-inc arr-inc hash-inc
->
-> +---------------+-------------------+-------------------+--------------+
-> |      Name     |      Before       |        After      |   % change   |
-> |---------------+-------------------+-------------------+--------------|
-> | glob-arr-inc  | 23.380 =C2=B1 1.675M/s | 25.893 =C2=B1 0.026M/s |   + 1=
-0.74%   |
-> | arr-inc       | 23.928 =C2=B1 0.034M/s | 25.213 =C2=B1 0.063M/s |   + 5=
-.37%    |
-> | hash-inc      | 12.352 =C2=B1 0.005M/s | 12.609 =C2=B1 0.013M/s |   + 2=
-.08%    |
-> +---------------+-------------------+-------------------+--------------+
->
-> [1] https://github.com/anakryiko/linux/commit/8dec900975ef
->
-> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
-> ---
->  arch/arm64/include/asm/insn.h |  1 +
->  arch/arm64/net/bpf_jit.h      |  2 ++
->  arch/arm64/net/bpf_jit_comp.c | 23 +++++++++++++++++++++++
->  3 files changed, 26 insertions(+)
->
+Convert txt binding of TI's qspi controller (found on their omap SoCs) to
+dtschema to allow for validation.
 
-Nice improvements! I suggest combining arm64 and risc-v patches
-together when resubmitting, so that we can land them in one go. This
-one depends on RISC-V patches landing first to avoid a warning about
-global function without a prototype, right?
+The changes, w.r.t. the original txt binding, are:
 
-Please add my ack as well
+- Introduce "clocks" and "clock-names" which was never mentioned.
+- Reflect that "ti,hwmods" is deprecated and is not a "required"
+  property anymore.
+- Introduce "num-cs" which allows for setting the number of chip
+  selects.
+- Drop "qspi_ctrlmod".
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
+---
+Changes since v1:
+- Removed a redundant paragraph in the commit message.
+- Mention that we are dropping "qspi_ctrlmod", which I forgot to do in
+  the last iteration.
 
+Changes since v2:
+- Don't make "num-cs" an array.
+- The max number of syscon-chipselects is now 1.
+- Make the unit-address in the example right.
+- Fix a typo in "syscon-chipselects"'s description.
 
-> diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.=
-h
-> index 8de0e39b29f3..8c0a36f72d6f 100644
-> --- a/arch/arm64/include/asm/insn.h
-> +++ b/arch/arm64/include/asm/insn.h
-> @@ -138,6 +138,7 @@ enum aarch64_insn_special_register {
->  enum aarch64_insn_system_register {
->         AARCH64_INSN_SYSREG_TPIDR_EL1   =3D 0x4684,
->         AARCH64_INSN_SYSREG_TPIDR_EL2   =3D 0x6682,
-> +       AARCH64_INSN_SYSREG_SP_EL0      =3D 0x4208,
->  };
->
->  enum aarch64_insn_variant {
-> diff --git a/arch/arm64/net/bpf_jit.h b/arch/arm64/net/bpf_jit.h
-> index b627ef7188c7..b22ab2f97a30 100644
-> --- a/arch/arm64/net/bpf_jit.h
-> +++ b/arch/arm64/net/bpf_jit.h
-> @@ -302,5 +302,7 @@
->         aarch64_insn_gen_mrs(Rt, AARCH64_INSN_SYSREG_TPIDR_EL1)
->  #define A64_MRS_TPIDR_EL2(Rt) \
->         aarch64_insn_gen_mrs(Rt, AARCH64_INSN_SYSREG_TPIDR_EL2)
-> +#define A64_MRS_SP_EL0(Rt) \
-> +       aarch64_insn_gen_mrs(Rt, AARCH64_INSN_SYSREG_SP_EL0)
->
->  #endif /* _BPF_JIT_H */
-> diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.=
-c
-> index ed8f9716d9d5..8084f3e61e0b 100644
-> --- a/arch/arm64/net/bpf_jit_comp.c
-> +++ b/arch/arm64/net/bpf_jit_comp.c
-> @@ -1215,6 +1215,19 @@ static int build_insn(const struct bpf_insn *insn,=
- struct jit_ctx *ctx,
->                 const u8 r0 =3D bpf2a64[BPF_REG_0];
->                 bool func_addr_fixed;
->                 u64 func_addr;
-> +               u32 cpu_offset =3D offsetof(struct thread_info, cpu);
-> +
-> +               /* Implement helper call to bpf_get_smp_processor_id() in=
-line */
-> +               if (insn->src_reg =3D=3D 0 && insn->imm =3D=3D BPF_FUNC_g=
-et_smp_processor_id) {
-> +                       emit(A64_MRS_SP_EL0(tmp), ctx);
-> +                       if (is_lsi_offset(cpu_offset, 2)) {
-> +                               emit(A64_LDR32I(r0, tmp, cpu_offset), ctx=
-);
-> +                       } else {
-> +                               emit_a64_mov_i(1, tmp2, cpu_offset, ctx);
-> +                               emit(A64_LDR32(r0, tmp, tmp2), ctx);
-> +                       }
-> +                       break;
-> +               }
->
->                 ret =3D bpf_jit_get_func_addr(ctx->prog, insn, extra_pass=
-,
->                                             &func_addr, &func_addr_fixed)=
-;
-> @@ -2541,6 +2554,16 @@ bool bpf_jit_supports_percpu_insn(void)
->         return true;
->  }
->
-> +bool bpf_jit_inlines_helper_call(s32 imm)
-> +{
-> +       switch (imm) {
-> +       case BPF_FUNC_get_smp_processor_id:
-> +               return true;
-> +       }
-> +
-> +       return false;
+ .../devicetree/bindings/spi/ti,qspi.yaml      | 96 +++++++++++++++++++
+ .../devicetree/bindings/spi/ti_qspi.txt       | 53 ----------
+ 2 files changed, 96 insertions(+), 53 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/ti,qspi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/ti_qspi.txt
 
-same minor nit to use default: return false inside the switch itself
+diff --git a/Documentation/devicetree/bindings/spi/ti,qspi.yaml b/Documentation/devicetree/bindings/spi/ti,qspi.yaml
+new file mode 100644
+index 000000000000..626a915b3d77
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/ti,qspi.yaml
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/ti,qspi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI QSPI controller
++
++maintainers:
++  - Kousik Sanagavarapu <five231003@gmail.com>
++
++allOf:
++  - $ref: spi-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - ti,am4372-qspi
++      - ti,dra7xxx-qspi
++
++  reg:
++    items:
++      - description: base registers
++      - description: mapped memory
++
++  reg-names:
++    items:
++      - const: qspi_base
++      - const: qspi_mmap
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: fck
++
++  interrupts:
++    maxItems: 1
++
++  num-cs:
++    minimum: 1
++    maximum: 4
++    default: 1
++
++  ti,hwmods:
++    description:
++      Name of the hwmod associated to the QSPI.  This is for legacy
++      platforms only.
++    $ref: /schemas/types.yaml#/definitions/string
++    deprecated: true
++
++  syscon-chipselects:
++    description:
++      Handle to system control region containing QSPI chipselect register
++      and offset of that register.
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    items:
++      - items:
++          - description: phandle to system control register
++          - description: register offset
++
++  spi-max-frequency:
++    description: Maximum SPI clocking speed of the controller in Hz.
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/dra7.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    spi@4b300000 {
++        compatible = "ti,dra7xxx-qspi";
++        reg = <0x4b300000 0x100>,
++              <0x5c000000 0x4000000>;
++        reg-names = "qspi_base", "qspi_mmap";
++        syscon-chipselects = <&scm_conf 0x558>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++        clocks = <&l4per2_clkctrl DRA7_L4PER2_QSPI_CLKCTRL 25>;
++        clock-names = "fck";
++        num-cs = <4>;
++        spi-max-frequency = <48000000>;
++        interrupts = <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/spi/ti_qspi.txt b/Documentation/devicetree/bindings/spi/ti_qspi.txt
+deleted file mode 100644
+index 47b184bce414..000000000000
+--- a/Documentation/devicetree/bindings/spi/ti_qspi.txt
++++ /dev/null
+@@ -1,53 +0,0 @@
+-TI QSPI controller.
+-
+-Required properties:
+-- compatible : should be "ti,dra7xxx-qspi" or "ti,am4372-qspi".
+-- reg: Should contain QSPI registers location and length.
+-- reg-names: Should contain the resource reg names.
+-	- qspi_base: Qspi configuration register Address space
+-	- qspi_mmap: Memory mapped Address space
+-	- (optional) qspi_ctrlmod: Control module Address space
+-- interrupts: should contain the qspi interrupt number.
+-- #address-cells, #size-cells : Must be present if the device has sub-nodes
+-- ti,hwmods: Name of the hwmod associated to the QSPI
+-
+-Recommended properties:
+-- spi-max-frequency: Definition as per
+-                     Documentation/devicetree/bindings/spi/spi-bus.txt
+-
+-Optional properties:
+-- syscon-chipselects: Handle to system control region contains QSPI
+-		      chipselect register and offset of that register.
+-
+-NOTE: TI QSPI controller requires different pinmux and IODelay
+-parameters for Mode-0 and Mode-3 operations, which needs to be set up by
+-the bootloader (U-Boot). Default configuration only supports Mode-0
+-operation. Hence, "spi-cpol" and "spi-cpha" DT properties cannot be
+-specified in the slave nodes of TI QSPI controller without appropriate
+-modification to bootloader.
+-
+-Example:
+-
+-For am4372:
+-qspi: qspi@47900000 {
+-	compatible = "ti,am4372-qspi";
+-	reg = <0x47900000 0x100>, <0x30000000 0x4000000>;
+-	reg-names = "qspi_base", "qspi_mmap";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	spi-max-frequency = <25000000>;
+-	ti,hwmods = "qspi";
+-};
+-
+-For dra7xx:
+-qspi: qspi@4b300000 {
+-	compatible = "ti,dra7xxx-qspi";
+-	reg = <0x4b300000 0x100>,
+-	      <0x5c000000 0x4000000>,
+-	reg-names = "qspi_base", "qspi_mmap";
+-	syscon-chipselects = <&scm_conf 0x558>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	spi-max-frequency = <48000000>;
+-	ti,hwmods = "qspi";
+-};
+-- 
+2.45.0.rc1.8.ge326e52010
 
-
-> +}
-> +
->  void bpf_jit_free(struct bpf_prog *prog)
->  {
->         if (prog->jited) {
-> --
-> 2.40.1
->
