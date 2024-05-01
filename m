@@ -1,97 +1,322 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6B412DDB0;
-	Wed,  1 May 2024 13:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCACD5029A
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 13:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714570081; cv=none; b=f3yXh7kHkhd//rj1dqVqMN+Z0xOf4UlfwpXdfTp+tIei1xZE3Fg4Ej/IbIf6aIR87fUdnziliU0SOrmSpPphhxHN8QhQu+rsZpJaQWFNQwca8+xTa6/hPW/5cL/twbOViaRxHwdoT1eYZ7BnFzyuct5spMIqnpCvxGxqkpaOcw0=
+	t=1714570287; cv=none; b=RITmYkAXKUE0FUTI1Ru1dhubqXtgxepDU2hr6pefXL60OqC6y6Gi5OUFoPicfGstz5D6JF88q4GOlm0bxjgp4QNnMLPuQJTH0NB35a2H9+C/j0pdI54DfnwzHRD97dE+JIVq1WrF7Dksrg08/iWCj423M811Uz7/BoamhZf4AhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714570081; c=relaxed/simple;
-	bh=QtCYznDFxAqU7kOOd/hY0Cb2aqW53mLPzwqiX702hVM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=UXgEmMSEP6utc+Q+duct8jJT9MdXgdmbWzsGbO3F0aP6oIyGccxcPIAyRmRgukiE2aFuCpzXdAzIE9zNGXD4/J8eg1AwHvikz8Z5egN/bHgOkMruL8EZcxEPT4HtPXO7PTplQx24vDS906fbHM4a21ci/9MEyDKgSgkLa8Otiks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=gfm9KiI2; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714570287; c=relaxed/simple;
+	bh=GOV9SpBdrbLUHNqrWyub6cb3BrALMYIpAncwmbro2yc=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g4LaT+nNnP3Fex+So0G8W4ZPItJEEY1EuNsj6je6+9NMe74NC6Xvn/WLN+jAOiDqfadHiGAWbxLlM4olGzD1K+0ST4ncE16c1kY2BM/WujX4Z3Ai1ffvbxlk7idWSmto53uvN+i6W4JBhlpB37tERq1F6pulySQe7R9N3ZyFdJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=oxCQdFTt; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="gfm9KiI2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714569989; x=1715174789; i=markus.elfring@web.de;
-	bh=iS/r3J9lwCCODjyNXcaefNMyX7CRPZrNN91+KUc3PB4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=gfm9KiI213O4FGS2IDi3MOi5TLT1a5yfTjYqtTsLqkCMt8rHZHsHEdvNDEfKKMH0
-	 uOgZwR5ufGuJJKTg8tlJrBEHgQDvmQbwZJVckzntSM6tFCKLNMYCX7c0z45qMZzwh
-	 V2qo32T3mogEqYf92/qlWm2FFp9w2rXSqSvpkTeZEvzKWuacKpTCwiQ6CC8iRZnu3
-	 gbBlA0sQFIVNY+EyanpAFzKGQVEWaUWKqlJHGx68uLAuaUDnCAaAJk3oskEEGzRne
-	 idv5/M9CiNG4XfW/pXSYutyTkuy5JC7/bhuMkFsFDq1N8PuIIxtcXqZ25qs6Olu2z
-	 qyeB1/Te+P/QzlqVHQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MwjFg-1sqIf83FmM-00ylNB; Wed, 01
- May 2024 15:26:28 +0200
-Message-ID: <d69ce186-6406-40ec-b8a3-a4b66d005ad6@web.de>
-Date: Wed, 1 May 2024 15:26:06 +0200
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="oxCQdFTt"
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 536FF410AF
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 13:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1714570279;
+	bh=c8oK9gFYZNPK8JjkQaEUib/TlJXrHwdRQFsXpehmfQo=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=oxCQdFTtQhG9tOtVfZ7VTu7oupcXNvpxRK91LOOnA3CtloGmCaC15xPhLxDM4Eux/
+	 qhZ5CeTXAN337oRF53S5UJ6uo/fQ2IWXPKIgu0mM69RI6QKHnJbLwtA4zfnpf9Tr8R
+	 EasLBjqltjLiXR8s2xU9cgLuhGFOog5uAufzbICIXkDFhu/v6qTW9QEzCLaFsr5Rkn
+	 RAiwWTzlytxQ4te9a1NwCCGiC36zIf/+5Ligs260ieh/+f7hfnYQ6DxXGkRlMISawx
+	 VTW1BH7f0eH7vbgpqV62FmrO1r0OSbxpuIm5RfxYG8etuAUMcOcj/dOggknPHtktE0
+	 hvkp4TrDFNh3A==
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a58db282330so83876966b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 06:31:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714570278; x=1715175078;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c8oK9gFYZNPK8JjkQaEUib/TlJXrHwdRQFsXpehmfQo=;
+        b=icyE5O1ll20gUPzP7JsQPH9rVSnwfOvMVpr4xubrRn8q/ADsh8rEU30plodw1KOyCK
+         lFRRcTjAFMuB5OLCgFsY9wDRyIXmGWB0nGBJNCBBk3OogoBFhDp4yJX/W/WIJQgw7sKL
+         XxbrUXPfHo+3v8Eu9ayMVPCEar2gh86APP/e8PBbE8p0cR4mIbrr3HIo9HC7MJBozpDd
+         veG2NPdd4e3MzvuygQEQ1+4AlEIkHBenbwm7Qj++PGortqbxVXWlGpL3lA8TEfSDjKmC
+         FUHfgyrFvxWDf1kspFWqKmeNAxOLwl/mNMvDUdrmbu4ZvcWJrq7UNNglsaOrc0zO+B1W
+         YPaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxO2ySDzeYyAtwdijp4qHaxoPeocRDxkIh1tHOtDdvgc+sq/BYCboBnaLWo2tOiwbUd6pIhLbcJ2KSs2fuwSTdKZYLJ/XOV5EU8f3T
+X-Gm-Message-State: AOJu0YyLWom5KP2gvkKaziwtBS8G94RQOc3sdkNrld7RT+nnAHd6L2Hg
+	pLh9i4oSu8d0G8qngsokj5QunSS/pPbx3aLDZI6qeuWiCaW272c2M7G3m3KqgBV98j2sE7YdY/6
+	6jhjZjYP+q/vu9HCrlC+aZM+p610zG5N/L7c4MSdTdXGkhgRePC+BR6n+jhOIusxSD7OB7WTnG0
+	+e3BXwD7jMz30PHpp4J9SGwknqdG4NVwtqPRNY6gpgjIcqUjZtgLuI
+X-Received: by 2002:a2e:a7ce:0:b0:2df:8ce6:96cb with SMTP id x14-20020a2ea7ce000000b002df8ce696cbmr955472ljp.8.1714570258155;
+        Wed, 01 May 2024 06:30:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEYT+qTSOE1Kr9KmhXevsjrdrGfobx9Pel64hRtY96pMsR8tg00NtEJfiVi5E4mSMS1jyTIKo1grrZjSHhuefw=
+X-Received: by 2002:a2e:a7ce:0:b0:2df:8ce6:96cb with SMTP id
+ x14-20020a2ea7ce000000b002df8ce696cbmr955417ljp.8.1714570257684; Wed, 01 May
+ 2024 06:30:57 -0700 (PDT)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 1 May 2024 08:30:56 -0500
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20240501-pinctrl-cleanup-v1-5-797ceca46e5c@nxp.com>
+References: <20240501-pinctrl-cleanup-v1-0-797ceca46e5c@nxp.com> <20240501-pinctrl-cleanup-v1-5-797ceca46e5c@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Shenghao Ding <shenghao-ding@ti.com>, alsa-devel@alsa-project.org,
- kernel-janitors@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Baojun Xu <Baojun.Xu@fpt.com>, Baojun Xu <baojun.xu@ti.com>,
- Bard Liao <bard.liao@intel.com>, Bard Liao
- <yung-chuan.liao@linux.intel.com>,
- Cameron Berkenpas <cameron.berkenpas@gmail.com>, Gergo Koteles
- <soyer@irl.hu>, Jaroslav Kysela <perex@perex.cz>, Kevin Lu
- <kevin-lu@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Liam Girdwood <liam.r.girdwood@intel.com>, mimperial@lenovo.com,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Shenghao Ding <13916275206@139.com>, Takashi Iwai <tiwai@suse.de>
-References: <20240501122252.1215-1-shenghao-ding@ti.com>
-Subject: Re: [PATCH v2] ALSA: ASoc/tas2781: Fix wrong loading calibrated data
- sequence
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240501122252.1215-1-shenghao-ding@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:tC3X+GrzsotPgf+R/O7R1QzbOvKPtHRkYGtPGuFEp6iXPQyKEsb
- sCfhQHr+xF90jdOxVxhUmudOdLZB0aJwka+qTur5jv34SPxWBD2/sr/xDhuU4tDhfGO/6Px
- aopo2bxCZ1HfiAor+Rga88jCHsBAeLDKxHh761DdERfoXcH2wL8eeatxNIH8SWSnV5zmtep
- lNLON/93vd8Ab/LR9RZ2Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2AKk/GKNh8g=;DIT/7tzccpnbJLKqm6tsIt75NpI
- aWJarwT56NcwoY13VQFhfeqfTrfiXm5Bl8jUwZNNdbxut7Src4TEm3BWh4GhFONIHezvTvWjV
- uAcIBU+YyWb+yJjs3J3vFMR4WeBK4TWfeooN+Bp7W3RkQaS0DW06EKAVlnNQMm8AXaITXBdYB
- jxiwYlU/pxE9xypmgCUX0xBwQIHtL82FDWNc+t9impuUZPbOfQ1SXkQqH7Qi2ErIxLBqykb+0
- v/ZOZLhjkObxaElawDIm5VCAFEA5e5pv/edEX8m1GI0+c+E4DCtqGc+AI1/rfWQBpjSX9J5zb
- CmHZvh3QrtTJwtvKeEM4N7dVSi2FAy358EHRGZ3jau2H+uYnfKRPxgETEV4O5N01ezjiTjLbL
- uRtd4FjvCebmu/35H5BEAD4PC5uW72pv1NVl0PjfHcRMkDQMy7JIZ7hxF65yhopKkhlcGnF0M
- K9/yY4qBGKztNR1OAqeqBlpv+TPd8N1EuyLsmX6NWzquTyL80AP0N1KBLaVS22bOJ+lnwOmSQ
- 6nFktRzAf+PslYRG23Atkm54lAQMZPAGlV+L+udlUuNtmvi4+XaUXy1BVWED6fWeWF4rYPqmK
- 3DMlQ+7LYaPV28A2NH0c6LmaVtv82rTLcrChU+eEg6nmM8hKt6l4fTfuamwTVyeh/sPh8vwXC
- ihr2xa9SvaLFrduH+/nMb2GL/0+cQ4RLeVl0Kvkfe+SO53F5p+G2aLgI0eXW4HiGI0IEX/bRx
- tbnHwAAyu49s1BmpgWb9kySsxa44No6nJfxvR8bupqH+G+xL40pX0YUOZnusx3IQ9Tm2YTguK
- XmSQb2wFpaaPieFpc+qEHnNlBw+2nh5Y11t1jaQJxHcTE=
+Mime-Version: 1.0
+Date: Wed, 1 May 2024 08:30:56 -0500
+Message-ID: <CAJM55Z9RuobAMR4EaevhTPRsJe3vuruV7-_DTQYpH_w8_azkcA@mail.gmail.com>
+Subject: Re: [PATCH 05/21] pinctrl: starfive: Use scope based of_node_put() cleanups
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Patrice Chotard <patrice.chotard@foss.st.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Damien Le Moal <dlemoal@kernel.org>, Ludovic Desroches <ludovic.desroches@microchip.com>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Chester Lin <chester62515@gmail.com>, 
+	Matthias Brugger <mbrugger@suse.com>, Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Joel Stanley <joel@jms.id.au>, Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-samsung-soc@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	imx@lists.linux.dev, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+	Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 
-> 'Fixes: 0a0877812628 ("ASoc: tas2781: Fix spelling mistake "calibraiton"
->  -> "calibration"")'
+Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> Use scope based of_node_put() cleanup to simplify code.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Please improve this tag.
-Would you like to omit a line break?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc6#n145
+Acked-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
-Are you looking for better ways to embed double quotation characters
-in the corresponding commit =E2=80=9Csummary=E2=80=9D?
-
-Regards,
-Markus
+> ---
+>  drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c | 27 +++++++++-------------
+>  drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c | 18 +++++++--------
+>  2 files changed, 19 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c
+> index 6df7a310c7ed..27f99183d994 100644
+> --- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c
+> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c
+> @@ -480,7 +480,6 @@ static int starfive_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  {
+>  	struct starfive_pinctrl *sfp = pinctrl_dev_get_drvdata(pctldev);
+>  	struct device *dev = sfp->gc.parent;
+> -	struct device_node *child;
+>  	struct pinctrl_map *map;
+>  	const char **pgnames;
+>  	const char *grpname;
+> @@ -492,20 +491,18 @@ static int starfive_dt_node_to_map(struct pinctrl_dev *pctldev,
+>
+>  	nmaps = 0;
+>  	ngroups = 0;
+> -	for_each_available_child_of_node(np, child) {
+> +	for_each_available_child_of_node_scoped(np, child) {
+>  		int npinmux = of_property_count_u32_elems(child, "pinmux");
+>  		int npins   = of_property_count_u32_elems(child, "pins");
+>
+>  		if (npinmux > 0 && npins > 0) {
+>  			dev_err(dev, "invalid pinctrl group %pOFn.%pOFn: both pinmux and pins set\n",
+>  				np, child);
+> -			of_node_put(child);
+>  			return -EINVAL;
+>  		}
+>  		if (npinmux == 0 && npins == 0) {
+>  			dev_err(dev, "invalid pinctrl group %pOFn.%pOFn: neither pinmux nor pins set\n",
+>  				np, child);
+> -			of_node_put(child);
+>  			return -EINVAL;
+>  		}
+>
+> @@ -527,14 +524,14 @@ static int starfive_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  	nmaps = 0;
+>  	ngroups = 0;
+>  	mutex_lock(&sfp->mutex);
+> -	for_each_available_child_of_node(np, child) {
+> +	for_each_available_child_of_node_scoped(np, child) {
+>  		int npins;
+>  		int i;
+>
+>  		grpname = devm_kasprintf(dev, GFP_KERNEL, "%pOFn.%pOFn", np, child);
+>  		if (!grpname) {
+>  			ret = -ENOMEM;
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		pgnames[ngroups++] = grpname;
+> @@ -543,18 +540,18 @@ static int starfive_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  			pins = devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
+>  			if (!pins) {
+>  				ret = -ENOMEM;
+> -				goto put_child;
+> +				goto free_map;
+>  			}
+>
+>  			pinmux = devm_kcalloc(dev, npins, sizeof(*pinmux), GFP_KERNEL);
+>  			if (!pinmux) {
+>  				ret = -ENOMEM;
+> -				goto put_child;
+> +				goto free_map;
+>  			}
+>
+>  			ret = of_property_read_u32_array(child, "pinmux", pinmux, npins);
+>  			if (ret)
+> -				goto put_child;
+> +				goto free_map;
+>
+>  			for (i = 0; i < npins; i++) {
+>  				unsigned int gpio = starfive_pinmux_to_gpio(pinmux[i]);
+> @@ -570,7 +567,7 @@ static int starfive_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  			pins = devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
+>  			if (!pins) {
+>  				ret = -ENOMEM;
+> -				goto put_child;
+> +				goto free_map;
+>  			}
+>
+>  			pinmux = NULL;
+> @@ -580,18 +577,18 @@ static int starfive_dt_node_to_map(struct pinctrl_dev *pctldev,
+>
+>  				ret = of_property_read_u32_index(child, "pins", i, &v);
+>  				if (ret)
+> -					goto put_child;
+> +					goto free_map;
+>  				pins[i] = v;
+>  			}
+>  		} else {
+>  			ret = -EINVAL;
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		ret = pinctrl_generic_add_group(pctldev, grpname, pins, npins, pinmux);
+>  		if (ret < 0) {
+>  			dev_err(dev, "error adding group %s: %d\n", grpname, ret);
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		ret = pinconf_generic_parse_dt_config(child, pctldev,
+> @@ -600,7 +597,7 @@ static int starfive_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  		if (ret) {
+>  			dev_err(dev, "error parsing pin config of group %s: %d\n",
+>  				grpname, ret);
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		/* don't create a map if there are no pinconf settings */
+> @@ -623,8 +620,6 @@ static int starfive_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  	mutex_unlock(&sfp->mutex);
+>  	return 0;
+>
+> -put_child:
+> -	of_node_put(child);
+>  free_map:
+>  	pinctrl_utils_free_map(pctldev, map, nmaps);
+>  	mutex_unlock(&sfp->mutex);
+> diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+> index 9609eb1ecc3d..4ce080caa233 100644
+> --- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+> @@ -150,7 +150,7 @@ static int jh7110_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  	nmaps = 0;
+>  	ngroups = 0;
+>  	mutex_lock(&sfp->mutex);
+> -	for_each_available_child_of_node(np, child) {
+> +	for_each_available_child_of_node_scoped(np, child) {
+>  		int npins = of_property_count_u32_elems(child, "pinmux");
+>  		int *pins;
+>  		u32 *pinmux;
+> @@ -161,13 +161,13 @@ static int jh7110_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  				"invalid pinctrl group %pOFn.%pOFn: pinmux not set\n",
+>  				np, child);
+>  			ret = -EINVAL;
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		grpname = devm_kasprintf(dev, GFP_KERNEL, "%pOFn.%pOFn", np, child);
+>  		if (!grpname) {
+>  			ret = -ENOMEM;
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		pgnames[ngroups++] = grpname;
+> @@ -175,18 +175,18 @@ static int jh7110_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  		pins = devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
+>  		if (!pins) {
+>  			ret = -ENOMEM;
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		pinmux = devm_kcalloc(dev, npins, sizeof(*pinmux), GFP_KERNEL);
+>  		if (!pinmux) {
+>  			ret = -ENOMEM;
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		ret = of_property_read_u32_array(child, "pinmux", pinmux, npins);
+>  		if (ret)
+> -			goto put_child;
+> +			goto free_map;
+>
+>  		for (i = 0; i < npins; i++)
+>  			pins[i] = jh7110_pinmux_pin(pinmux[i]);
+> @@ -200,7 +200,7 @@ static int jh7110_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  						pins, npins, pinmux);
+>  		if (ret < 0) {
+>  			dev_err(dev, "error adding group %s: %d\n", grpname, ret);
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		ret = pinconf_generic_parse_dt_config(child, pctldev,
+> @@ -209,7 +209,7 @@ static int jh7110_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  		if (ret) {
+>  			dev_err(dev, "error parsing pin config of group %s: %d\n",
+>  				grpname, ret);
+> -			goto put_child;
+> +			goto free_map;
+>  		}
+>
+>  		/* don't create a map if there are no pinconf settings */
+> @@ -233,8 +233,6 @@ static int jh7110_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  	*num_maps = nmaps;
+>  	return 0;
+>
+> -put_child:
+> -	of_node_put(child);
+>  free_map:
+>  	pinctrl_utils_free_map(pctldev, map, nmaps);
+>  	mutex_unlock(&sfp->mutex);
+>
+> --
+> 2.37.1
+>
