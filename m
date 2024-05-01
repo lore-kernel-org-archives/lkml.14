@@ -1,105 +1,101 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-108-mta215.mxroute.com (mail-108-mta215.mxroute.com [136.175.108.215])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1292B13172B;
-	Wed,  1 May 2024 15:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6FE131753
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.215
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714577472; cv=none; b=pLRJ5xpLkRmPq15Ur5yXaz1Q8NGWm4EiuQMy51zhyHhWipEEfcAvRxBxytCrYTwsmgVWeKZ0hdhg1XE1ugKxuGFBxMvaZPrX5FnfAxUUwkhNjFmZZ2qnP/QjehBncFdLFYkjgMCpd96rotbOccA8GTZrBmN5Q7MSLpByfzDhV9k=
+	t=1714577478; cv=none; b=agXxaKeVl70d/tuFWVpJ1uZvlQeJqP6fYaC11GgjQh5xDmmBZsIKrWa6kElH6ksxjVLlSI3CAnJt1hTaH5+pc1+efXiB/98yKYkV+aSUNA/Ck6FHT7UaFwH99X/zURVEzIn3+AM+PmriYN6UhZ9of7UrFXfnnJ/ZoUNl3a4kUnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714577472; c=relaxed/simple;
-	bh=5EQCAGJWi1gNMQ9VlfMCPs3pDIh0UsuBaU2aKjFSw3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ubd6mSpk3zZksTthSGOxPgfYiPQer6NZtg6F+Q6F62M8SIRUxjAh1fNyk15Cg+gjmlQ1oCXSb2Zkph4AhR0DO6o1fn2VhkB1KtQ7sn8UH7Jw93Ig6WmAyFwhSix3pIMS6MYOZnDW4ngvBStuiaIA8p6vAY34FuOsNJ20A5/7YVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DJ26PfHW; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714577478; c=relaxed/simple;
+	bh=oCSJBQE3aiwqbmfu1EJ9a36gJDCKL6HMUjBrjCIJ3ow=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PLcQScQ+6fumMRxQsLdqIgG+AsqS1jqjRws+/UJDiMNrBfBAQIvCx3OUmHe0Olhf5k+dsc6l76oaLF6HCjlwzSD0iHN9Gz9isqmuPBK5lhVsl4raYKBz9nLFiFwGd0AlPnqPzOIlu/XP20lBdK+L+NjmbBxVmMzxCvrP4jDP6Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=VmfsULTz; arc=none smtp.client-ip=136.175.108.215
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJ26PfHW"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51ef64d04b3so277045e87.3;
-        Wed, 01 May 2024 08:31:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714577469; x=1715182269; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=twOO39IK0y3RTrpJCuNRz/HORbt2EjU/IQkWuJv9K7g=;
-        b=DJ26PfHWT1fy6zIb7Rf1YS8mWMVEJTw4q3TXroIFn8sONDstDyuSU+6vBaSb7A6hsk
-         j4YvktrO4Cwr61k5V/C86JdJi95H8CZL/5fELnXYcbe1+DW/wBWB26316PPa9Th3X3Ts
-         qPC22QagKo0SM+PrH1f6JGnLMfnyBBQthy2Yb5sdSlBQvO4VMuPhMNyOcYkQOZ8m+Q+H
-         fed1EGpOBLarCgFeHb1/qC6O4b09tYwlEQapjYlPtRRXy5rJh6Mim/IaOz5Uc7LaJrXG
-         wQWu+syXyCfVl47y8rZmcbM1k0yVtebL/ZLggwSCLSDRvhGqs2f1kbNcUcjUacLfhHSA
-         Ucyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714577469; x=1715182269;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=twOO39IK0y3RTrpJCuNRz/HORbt2EjU/IQkWuJv9K7g=;
-        b=CQL/SqhmAdpbPalZr5mln2Gmue5b2Bc0w5DTnSCO/bSJ1CV22DSVWWE1AjtGZX/ucY
-         5CfN1wZojJDTCKA12UBtIYy0hCCO7Bk/9ViKdn16+vH3t53k/Hr6BVQbISkLd/GqDDHF
-         QyzhRGSY3KgjE6lGDXfDc+ryl1yueyATNipIGBi4JB1aKdz6B9jOmWKpPHq6D/7le4+t
-         qPO4oYr9pfMgGsfhJ1G0mbl2Ctdy02IEwgHCmzooGd2buMj3/1ZhGVCDZWVqSjyKT3p1
-         hlDOsYxxZUcGFYI7GacDDGIBj5pZ31k1JClFuE1DxZbjJsyIU6Yr6yg+THC//l1DMQ31
-         bAHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgMl4nabC3PDTpgd+A4BuXOmYrcMcGT17FTcTbB0nzE6oJ/PxvClfjYHi823WuQ9d7+x6VMEJfpb8i4kmvU3FFk9bvZoM3Xs6rbc3E2MtYSWMs3RPLIWDO9XZruVjvjFQ1CFb7yrs60us=
-X-Gm-Message-State: AOJu0YwM4jJwxWLlZgPN5kC15uj3OHLwLrQEOJl5CjvTU8qQEodY9ugK
-	2RIeOl+KXMnLUXMCdKgNU0NwdYrUJ/d5STozNMjeY5pFLxf9yZ16B6/PCWCFEaiR7TBJXUCwyV0
-	Q6RuDx9gBEFGOOCtaY448UOCVYjs=
-X-Google-Smtp-Source: AGHT+IFii37kJAoGxHEuKDgZh7zDvrHm3VfWjLZHCEx4n6ylXkiOwcCkIxsj5cdcuRCM6DmkrSIEd7CW2IVMvBK7TB0=
-X-Received: by 2002:a05:6512:398a:b0:51e:3932:fbff with SMTP id
- j10-20020a056512398a00b0051e3932fbffmr3119308lfu.43.1714577468852; Wed, 01
- May 2024 08:31:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="VmfsULTz"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta215.mxroute.com (ZoneMTA) with ESMTPSA id 18f34c297490008ca2.010
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 01 May 2024 15:25:19 +0000
+X-Zone-Loop: 22e5d77b85f5aaafc8f67cc5a2542eec4691fe89ceee
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eDZZF6N9fGs2w7erh1JS+Jobb378vgl6f0WBmuxrApM=; b=VmfsULTzZSgWjRfex6s/0UXQkK
+	A0mXPz406NMcxufm3/bvA89O8S8oIhYTlIFlU3+Y+asSKDJou0B/7AocPHqUs4xD9LId5EPxTgG8e
+	u1VlSwuRbCtbzwOpIIcIBkTrPBw5Tbu1CGtx6EbATHFtywF5cmoGIBX9sbkAJhV9fQjap/cE/9uMi
+	R/hioynezuiU4iN8I0oe99sD3KldIdgRRpnL3DtL257O+Too2f0yF5UEdklGFgWLhyNOGBjIg5zkm
+	woq44QzYONOAmz0KN+ATRekC4anIiZUhACs0d9jM70vsI1BmK4oAEQyzXcOOwsqY4XuzACTeqe9pZ
+	10gHzNyA==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	pavel@ucw.cz,
+	phone-devel@vger.kernel.org,
+	Luis Garcia <git@luigi311.com>
+Subject: [PATCH v5 13/25] media: i2c: imx258: Correct max FRM_LENGTH_LINES value
+Date: Wed,  1 May 2024 09:24:30 -0600
+Message-ID: <20240501152442.1072627-14-git@luigi311.com>
+In-Reply-To: <20240501152442.1072627-1-git@luigi311.com>
+References: <20240501152442.1072627-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430080019.4242-1-konishi.ryusuke@gmail.com>
- <20240430080019.4242-2-konishi.ryusuke@gmail.com> <650ed9f6-fa50-4a3b-939d-633f9e389137@acm.org>
-In-Reply-To: <650ed9f6-fa50-4a3b-939d-633f9e389137@acm.org>
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date: Thu, 2 May 2024 00:30:52 +0900
-Message-ID: <CAKFNMomCzNMU0tjLkEchr=GQwSVW1zr1GAq7vUToeOvX-M3eVg@mail.gmail.com>
-Subject: Re: [PATCH -mm 1/2] nilfs2: use integer type instead of enum req_op
- for event tracing header
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-nilfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
-On Wed, May 1, 2024 at 11:42=E2=80=AFPM Bart Van Assche wrote:
->
-> On 4/30/24 10:00, Ryusuke Konishi wrote:
-> >       trace_nilfs2_mdt_submit_block(inode, inode->i_ino, blkoff,
-> > -                                   opf & REQ_OP_MASK);
-> > +                                   (__force int)(opf & REQ_OP_MASK));
->
-> Please keep the enum req_op type instead of casting that type away with
-> "__force int".
->
-> Thanks,
->
-> Bart.
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Hi Bart,
+The data sheet states that the maximum value for registers
+0x0340/0x0341 FRM_LENGTH_LINES is 65525(decimal), not the
+0xFFFF defined in this driver. Correct this limit.
 
-No, this type cast is necessary to prevent the following sparse warning:
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Signed-off-by: Luis Garcia <git@luigi311.com>
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+---
+ drivers/media/i2c/imx258.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  CC [M]  fs/nilfs2/mdt.o
-  CHECK   fs/nilfs2/mdt.c
-fs/nilfs2/mdt.c:155:43: warning: incorrect type in argument 4
-(different base types)
-fs/nilfs2/mdt.c:155:43:    expected int mode
-fs/nilfs2/mdt.c:155:43:    got restricted blk_opf_t
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index 2429eb7b55c6..c1a2c2406aaa 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -28,7 +28,7 @@
+ #define IMX258_VTS_30FPS		0x0c50
+ #define IMX258_VTS_30FPS_2K		0x0638
+ #define IMX258_VTS_30FPS_VGA		0x034c
+-#define IMX258_VTS_MAX			0xffff
++#define IMX258_VTS_MAX			65525
+ 
+ #define IMX258_REG_VTS			0x0340
+ 
+-- 
+2.44.0
 
-What we're doing here is just changing the event tracing type back to
-int, and keeping blk_opf_t and enum req_op in the rest of the code.
-
-I understand if you have enough reason to ignore the warnings, but
-Why do you have to keep enum req_op type instead of int for event tracing?
-
-Regards,
-Ryusuke Konishi
