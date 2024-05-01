@@ -1,103 +1,89 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126C345C10;
-	Wed,  1 May 2024 05:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E60481A3;
+	Wed,  1 May 2024 05:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714541332; cv=none; b=UgNWsmRcnLA/1VxXS39KS0AGdxFCRy5VCwPdU6/WKllbrAuPpmMnjy19fJXip6QNX3bJxBzW9bJDZip5IYSVBepQCnmPwvqJKuCRUbW2YOc87YHZfg6Twb5atQKEzeGeSMAY3zM1vw1iNZtw2o2a8Eouq2bRzcWz4vR0245d+E4=
+	t=1714541543; cv=none; b=UY2UtZ4sFK5Mv5iWjwffKD88BPTEFdRUc1kGkGWLUuHODWfFUbKr57y7i+kwFu279rRqfIDe3ZQWamBDJG+dHLfjKeWFfFntPoJxkRcD/cnqdAUa2YSEjhV7r0thglt+rXUlkugrVoJ2WGEsvGQ3ZXyrykgmbBII8yRF/UQozKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714541332; c=relaxed/simple;
-	bh=3bPyfozDstmDwZLV/ukzH1VbLQqxYqjZIzAj2hMugxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Zj3hOVzPBhQPASYiZNc07Nb1H3cbT95MHbvLNS/RqrOiSqqGWHMeqVRuNLBXPi+pZ/O0J9lWix3O5sXM8SZ72o/OThJwRiIGQGq+1KRC8PIDdgRNLHXWkFR8ULT1rPF31O8VypADdMCnQ3uYin/4XiS9zkSTtGzWPnECFWX6spw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Y9SeVoLN; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1714541543; c=relaxed/simple;
+	bh=ArOXPy7P1rDCISOetC7udZv3vahyD59OFDoMpu2TJss=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Vb3XbVpkKmZkDTizkLPwiEi/s3zXBEBcsTskVtGpZhQ7H2JHWFUWouSRvA1BDsocEsQISoaBL+pndV82kTcB3sh+Dri2SdRjxR9N40pJRWd0rdtf85SO0AOeukU2XPyQnRRgA3+Iz4IAu+g9J6OMJgP0Al7szn06zduJF9M/Edg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=qwz3qeDO; arc=none smtp.client-ip=80.12.242.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y9SeVoLN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1714541328;
-	bh=7iCiIxpOc6gBOG6oc53IQAt5L1pLTD4S8r3Fd/+jfGo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Y9SeVoLNkuwKMSixdOVwOUEDImRD1Q1+nHe0e//Lo88IRUfMPbNmOFJSkzyme1NEP
-	 brneucKVgQQ+xV2i/4KoTI+GR81VbCCMF5yXJUXcvMUXUyjFRW+QTuBK77h3FXSzYq
-	 cldiFAr7jhZT3srgrW7OOqParjMo6APLg5nHI/tDEA4aYFOmWrX6MWJmiyiigccAzp
-	 tGnTiCl7EqTmcHlVK9ymPwssX3ywfwie2rJEoxJdJLMLvHO3JH35Xb8v66GhZnEe3T
-	 jJjOpP2wEBe9IpuFpjz6xrHRqsOfeJK7CdahjSNHOFOK5C/LK3numEOpWEbsx8ynvD
-	 VpGZhd+PyFjtQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VTlwb29y4z4x0t;
-	Wed,  1 May 2024 15:28:46 +1000 (AEST)
-Date: Wed, 1 May 2024 15:28:46 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Chengming Zhou <chengming.zhou@linux.dev>, Nicolas Bouchinet
- <nicolas.bouchinet@ssi.gouv.fr>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the slab tree
-Message-ID: <20240501152846.311be492@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="qwz3qeDO"
+Received: from localhost.localdomain ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 22YcsEsBRAF5O22YosxtZt; Wed, 01 May 2024 07:31:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1714541478;
+	bh=PKg24I0LA3FDiDUWAMdwYK2Up/UUtvN46WwgU2Vuv+U=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=qwz3qeDOGFZtq2o1uiGHa2FXUydYvXEJCRia7jopwBrhcbjIOfFU0aKIOz5OjJBwl
+	 VlqhfRhpiK2pMCjHkOjpGjmBfm739M2qcXOaGlD1rsA7v/KDI7x4v0k4fblgNKdLhh
+	 VJb4+wX2NxcpVblrZTNGg4utZFgiKqSdmh2RJidzE5HlzzSQBHjrjaxXQPW0w8p3fI
+	 SLDGXVHMbJOm/BYWOSdwfc3Cim32m5/1Kdm7yo26ScUJSbTlxpko6RlDShJpSAiVBE
+	 jzGYY2zM/1H62BLeqh4FxxfQpA/hWQYnO00uyv0lecRt6Q7ChPTpCKoan+gmhTp67Q
+	 2AJIG5SBL0mzQ==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 01 May 2024 07:31:18 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-input@vger.kernel.org
+Subject: [PATCH 2/2] Input: tca6416-keypad - Remove unused struct tca6416_drv_data
+Date: Wed,  1 May 2024 07:30:55 +0200
+Message-ID: <3e6fd1d0875ef3c90ecaab7adf7fd4a5e8e6f708.1714541432.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <926c0f40040671565dcc54d5146a8f9511fb6d46.1714541432.git.christophe.jaillet@wanadoo.fr>
+References: <926c0f40040671565dcc54d5146a8f9511fb6d46.1714541432.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dZ+1.=a=9al1OJivYkBYJTL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/dZ+1.=a=9al1OJivYkBYJTL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+"struct tca6416_drv_data" is unused.
+Remove it.
 
-Hi all,
+Found with cppcheck, unusedStructMember.
 
-After merging the slab tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only.
 
-mm/slub.c: In function 'slab_free_hook':
-mm/slub.c:2187:25: error: implicit declaration of function 'get_info_end' [=
--Werror=3Dimplicit-function-declaration]
- 2187 |                 inuse =3D get_info_end(s);
-      |                         ^~~~~~~~~~~~
-mm/slub.c: In function 'maybe_wipe_obj_freeptr':
-mm/slub.c:3872:14: error: implicit declaration of function 'freeptr_outside=
-_object' [-Werror=3Dimplicit-function-declaration]
- 3872 |             !freeptr_outside_object(s))
-      |              ^~~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
+It was added in the initial commit 30ba3ead0576 ("Input: add keypad driver
+for keys interfaced to TCA6416") but was never used.
+---
+ drivers/input/keyboard/tca6416-keypad.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Caused by commit
+diff --git a/drivers/input/keyboard/tca6416-keypad.c b/drivers/input/keyboard/tca6416-keypad.c
+index 044401d01bf6..fbc674d7b9f0 100644
+--- a/drivers/input/keyboard/tca6416-keypad.c
++++ b/drivers/input/keyboard/tca6416-keypad.c
+@@ -32,11 +32,6 @@ static const struct i2c_device_id tca6416_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, tca6416_id);
+ 
+-struct tca6416_drv_data {
+-	struct input_dev *input;
+-	struct tca6416_button data[];
+-};
+-
+ struct tca6416_keypad_chip {
+ 	uint16_t reg_output;
+ 	uint16_t reg_direction;
+-- 
+2.44.0
 
-  7f39e23ed8dd ("mm/slub: avoid zeroing outside-object freepointer for sing=
-le free")
-
-$ grep CONFIG_SLUB_DEBUG .config
-$
-
-I have used the slab tree from next-20240430 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/dZ+1.=a=9al1OJivYkBYJTL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYx0w4ACgkQAVBC80lX
-0Gyq5wgAiD/Wy9xaBsjDyaTUstXKWq5pQBwbuPWJlsCVitTF1wElG3f4WcY7SkGH
-/AjOH/ZSHF/FyQfID14/ccQ9a7DWlhVF1X0J9KGSoJLra8eCI3Ui4GiHug5rRQdi
-ZkRIw2Lf6L8nKj63BZhCvfUpoxashC8SUOUD8losZ/itoveGfB9PY8xC/6wLHSxE
-dQrE6R+kJC3cEa7hz56XdizasDmlpxQNKaBfMEG16ZWGZ8wbI2Eh3qFqlWlm1ndn
-TTu3yYUJmoEJhyIl8ZVBnimtMhSK7Qt37qEBLs060ICiYMzScI8jON14US0dr17m
-IopkuNEgukrsfu96V6/z5CBFCbkyEg==
-=Hnlj
------END PGP SIGNATURE-----
-
---Sig_/dZ+1.=a=9al1OJivYkBYJTL--
