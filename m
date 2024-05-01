@@ -1,95 +1,103 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6831C1649A8
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 20:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3BF1635DC;
+	Wed,  1 May 2024 20:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714596472; cv=none; b=RCwTbfxP/B7KiutCdNQH5UGoz1ThKnJnMKuVNDLbAMhbXdyV7RgCKxH7Qp6A7XKG3L+axrKjPlFFXiqs26EDPRCTwa+5YwMETcSDxQDyAPLXXsCsoqrqA7UWE3jUv2U/ufFesSmv5mvft+OD7qvSGnS7W3uaYNYUjwYDaHw6cN8=
+	t=1714596497; cv=none; b=O40ST7QNC92+/HiAnsGccou4j8FASz16qAckTzWxttBRyjWndhoQL4USZddIzeMNM+9PoLCET7XNWbfV87GgH+EqwRl253d2h27DpZFJgI7/5xjb7rsLwyaceZuLwmRBX7eSJm4h2haBPEy1tl2ytDiePxpvc2cH7Yf6kARW+k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714596472; c=relaxed/simple;
-	bh=is7OKVQ4oHTUSKCVgI8woUplkhLb0ChtKjfZ52WSoxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kouGfvMxSlrK0MccBvYLJZ6KEaJ+eQsqMZ5Z9rnkzlh5ubZzwoo2tzrvI44q+ryiUpj0W/W5k60aO9V/E0BIePFQTfP/wisFAxyD82+7HqOzLLyG5Q0xGv3GK6cnZHq+JPMNrDLEnIRDgTgOmwZKdIEXmqK2r5lhpqq/4wcnzrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ti7JLpz3; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1714596497; c=relaxed/simple;
+	bh=Tiy2F4jguHHFGevNV9k3bq5nr8j4GVd0yoOlkMy0hGo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DS3jIDp9HNOFUcH9H6q1qOgHwozwJWZDhOkpaufL0vL5haxvAZ/Zhb1Q8TFBfOyFXOjIuBzHHyLbJybS3sLzicRtYZJQaO08u+Cfd1hvB/YV6W9/ek1/EV6hY8MyQLSTjsEH56YIXQvoOJ0sw14CdnusiL3YVINW6djuhgRR9ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=l+/bF4+w; arc=none smtp.client-ip=161.97.139.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ti7JLpz3"
-Date: Wed, 1 May 2024 13:47:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714596468;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XiLp0x8XfXFTs7cYbJkOcVg/j2s1qKapf0EMhMbr3E8=;
-	b=ti7JLpz3C3Yb5ms1o6GyQawPVNzUf4kx27q/4+a0kn/c3JMW4r42eZJcujOqrrj4UIo5pq
-	M0WChPcWDgdYd1OLBlfsmKqKC8970KRUNpxzQK1dTa50MrQCnhK8B68HnK8zrOmVfTmJ2J
-	vcMTZH4mZqsM83qf39/5NWAxs22+7Hg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Breno Leitao <leitao@debian.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, paulmck@kernel.org, 
-	"open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <cgroups@vger.kernel.org>, 
-	"open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: memcg: use READ_ONCE()/WRITE_ONCE() to access
- stock->nr_pages
-Message-ID: <7hm5jb6sxg3hd2qtp3qpei6mskdva6kseik6jlna4dlpliangc@m4xs3i2cgg34>
-References: <20240501095420.679208-1-leitao@debian.org>
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="l+/bF4+w"
+Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
+	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1s2Grz-005PNf-2A;
+	Wed, 01 May 2024 22:48:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=uGNyEJyuD+UoCXn28eyMiHjYV2XmgAndE6khamSVnBQ=; b=l+/bF4+wLZxZMFHYtv3oDRmaDq
+	pF8z6HbsngLMdVLKT5p+HeE3fQHSSlgn+J1+cxj9gTZ4XXNSqr9WO5Jv8RL62qLJFFwNhjazTY30g
+	WdaMLIy1ZemFYHVqjVUL+MrW8C4bVdX6svyy3Vc4RQazuApQeQw83Byqx5cGjQTKkZKSrtL7PvujN
+	IPS+KETkfyyvQc3adap3ocq4Cy+lqK1phvvEaGmaVMJC3OKWpWNmnzC9JWawyse0Nr1UPGsF8iN0Q
+	0o8LXPadNDPmGC0h5E+4FJEgSOuw3QT09Tl2oJPQMdJiAYHqf6uipkFUG99nTdnkedtJWJTZfXusy
+	2uxIWpig==;
+Received: from p200300c2071a02001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:71a:200:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1s2Grx-000OnS-25;
+	Wed, 01 May 2024 22:48:02 +0200
+Received: from andi by aktux with local (Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1s2Gry-003BKh-2C;
+	Wed, 01 May 2024 22:48:02 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: dmitry.torokhov@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	o.rempel@pengutronix.de,
+	andreas@kemnade.info,
+	u.kleine-koenig@pengutronix.de,
+	hdegoede@redhat.com,
+	oliver.graute@kococonnector.com,
+	ye.xingchen@zte.com.cn,
+	p.puschmann@pironex.com,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	andy.shevchenko@gmail.com,
+	felix@kaechele.ca
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 1/2] dt-bindings: input: touchscreen: edt-ft5x06: Add ft5426
+Date: Wed,  1 May 2024 22:47:57 +0200
+Message-Id: <20240501204758.758537-2-andreas@kemnade.info>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240501204758.758537-1-andreas@kemnade.info>
+References: <20240501204758.758537-1-andreas@kemnade.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501095420.679208-1-leitao@debian.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 01, 2024 at 02:54:20AM -0700, Breno Leitao wrote:
-> A memcg pointer in the per-cpu stock can be accessed by drain_all_stock()
-> and consume_stock() in parallel, causing a potential race.
-> 
-> KCSAN shows this data-race clearly in the splat below:
-> 
-> 	BUG: KCSAN: data-race in drain_all_stock.part.0 / try_charge_memcg
-> 
-> 	write to 0xffff88903f8b0788 of 4 bytes by task 35901 on cpu 2:
-> 	try_charge_memcg (mm/memcontrol.c:2323 mm/memcontrol.c:2746)
-> 	__mem_cgroup_charge (mm/memcontrol.c:7287 mm/memcontrol.c:7301)
-> 	do_anonymous_page (mm/memory.c:1054 mm/memory.c:4375 mm/memory.c:4433)
-> 	__handle_mm_fault (mm/memory.c:3878 mm/memory.c:5300 mm/memory.c:5441)
-> 	handle_mm_fault (mm/memory.c:5606)
-> 	do_user_addr_fault (arch/x86/mm/fault.c:1363)
-> 	exc_page_fault (./arch/x86/include/asm/irqflags.h:37
-> 		        ./arch/x86/include/asm/irqflags.h:72
-> 			arch/x86/mm/fault.c:1513
-> 			arch/x86/mm/fault.c:1563)
-> 	asm_exc_page_fault (./arch/x86/include/asm/idtentry.h:623)
-> 
-> 	read to 0xffff88903f8b0788 of 4 bytes by task 287 on cpu 27:
-> 	drain_all_stock.part.0 (mm/memcontrol.c:2433)
-> 	mem_cgroup_css_offline (mm/memcontrol.c:5398 mm/memcontrol.c:5687)
-> 	css_killed_work_fn (kernel/cgroup/cgroup.c:5521 kernel/cgroup/cgroup.c:5794)
-> 	process_one_work (kernel/workqueue.c:3254)
-> 	worker_thread (kernel/workqueue.c:3329 kernel/workqueue.c:3416)
-> 	kthread (kernel/kthread.c:388)
-> 	ret_from_fork (arch/x86/kernel/process.c:147)
-> 	ret_from_fork_asm (arch/x86/entry/entry_64.S:257)
-> 
-> 	value changed: 0x00000014 -> 0x00000013
-> 
-> This happens because drain_all_stock() is reading stock->nr_pages, while
-> consume_stock() might be updating the same address, causing a potential
-> data-race.
-> 
-> Make the shared addresses bulletproof regarding to reads and writes,
-> similarly to what stock->cached_objcg and stock->cached.
-> Annotate all accesses to stock->nr_pages with READ_ONCE()/WRITE_ONCE().
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+Add compatible for ft5426.
+Searches for documentation reveal neither edt nor evervision
+as some related company, only FocalTech.
 
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/input/touchscreen/edt-ft5x06.yaml        | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+index f2808cb4d99df..71fd3c66c966e 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+@@ -39,6 +39,7 @@ properties:
+       - edt,edt-ft5406
+       - edt,edt-ft5506
+       - evervision,ev-ft5726
++      - focaltech,ft5426
+       - focaltech,ft6236
+ 
+   reg:
+-- 
+2.39.2
+
