@@ -1,125 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31A41474D9;
-	Wed,  1 May 2024 18:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2ED1474A7
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 18:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714586975; cv=none; b=RpQ2tBDJO/WGuDZQ9kkTUxbzwNwVPQ/aXZ5cJXnB9rZsxD7lBT38l7u2c3MgwI18IMi9TolBozCzXQ9olYBoUs5XVIVh/rPkaaL2leyVEww1i8vR0No9oyzljQZtN+4x4gtQd36YjnW2f1uYoOHJvbbY0Fk7huC6+GgNfwd3Uw4=
+	t=1714587090; cv=none; b=hJc8/iorDBsYSGkj9oVtn4rBt0k9CJDDiSR3o6nvdLerGLPO3LC9vhh0TbAK3OIzXexPt/W44VVX1vc2NK06xVLLwerKa1F7H6C0d4OnyenkD3ruhl4FBJWtOS5ATTDjo1rfgKrmq8eUiOGtJWES1DrtgXPgbxA6eGEGMwTr2Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714586975; c=relaxed/simple;
-	bh=GUrIh8yHkkjlZaW0ktFu8P9XlYLMGXvdBwQsqt4psgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KiK2ODSJHbpACYOZHxL7uROKkzCngd75Ka8tQfXnC/C4bZWSYwSnPeNQ/jCD+PyP0bTLgiKBuPfv/BgjZHD1TzyTpUxBhkyzD/4arf8XAQtSGw2ypKA2J8jwscHUAGAfTHIvtNTUm22ivqmYo7rLnc0hsMHkXEPfttM68EKoRqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJfy5onH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714587090; c=relaxed/simple;
+	bh=nFKXvXLadFn2sb+yZv1KYPN17au5eDoEgdinwHBjegs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZPTh5RCgL/m05Hwmc0eJ/w0YctBVp21h/Gtz5jdSz7I8nqoksO0VLmlYQhVrdtlyuMCISYNNesBxDXgkt5LFZUXwoGn/CfFi69ImO4fu8gKHvd0SEm9WdTl8fNUN89BdBbla/n0TgcEzgFmVIYhgRORtWmxsGez27B9WSDREbLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rFma4A9e; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJfy5onH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CDBDC072AA;
-	Wed,  1 May 2024 18:09:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714586975;
-	bh=GUrIh8yHkkjlZaW0ktFu8P9XlYLMGXvdBwQsqt4psgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BJfy5onHBA+Zu1aUXMBi8sapeke4esXCAUWp5juWXi/8n05Rz+T2GKXlpuVUu+jBZ
-	 bKxuby08Bzoblsk+ckGyQOU+0nTrIPPwTUSk34LPpqqKDlO1cAoYbdNuFXavu1AXpE
-	 5/KA643kPVn1GLgV03XYS+pEgxXoPNxxpy6dKIL3o+jwR8LE31mDecnTA+VuS5dEAK
-	 29Q+NccXCflx8gXcd7GXSSSn8pSxdqnAIFm9+AWOs3kd6aChniYKKNxyTm2uyPNUcV
-	 cqra5dfmJOx5ys95/whQYG8wntuyTx2c7sNMFRm9Xk1n2AWaPhyY0Y0AlCqMOcMJu1
-	 uNT8H3oBxBYPw==
-Date: Wed, 1 May 2024 19:09:28 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Evan Green <evan@rivosinc.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 05/16] riscv: Extend cpufeature.c to detect vendor
- extensions
-Message-ID: <20240501-moneyless-shifter-a54bbaecc4e7@spud>
-References: <20240426-dev-charlie-support_thead_vector_6_9-v4-0-b692f3c516ec@rivosinc.com>
- <20240426-dev-charlie-support_thead_vector_6_9-v4-5-b692f3c516ec@rivosinc.com>
- <CALs-HstM64Hy_=XVz=0sWQt=8j1u+bq6RhthUuD3P0E4=HyvcA@mail.gmail.com>
- <ZjKBKg5zzikR5ngl@ghost>
- <20240501-banner-sniff-4c5958eb15ef@spud>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rFma4A9e"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso7125847276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 11:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714587087; x=1715191887; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nFKXvXLadFn2sb+yZv1KYPN17au5eDoEgdinwHBjegs=;
+        b=rFma4A9efte33EURdRIpaparIC1NRvk+pVkelqXW2FhJIWYQEIn7h7jTR09O88Og05
+         jPY2Qg8EIuezqOBS2eNR5g3u3hOCJ1yP8Y369zcKTwehQqZvItSh5zWBIsh1nTKUdSOk
+         wsCjXJ9j2UV2OtXDnZEEWWxGV4BuKMCCtOwqmy2kOJMLTjdTOSj9LFDMmydBh+U/KI/M
+         XwPJL5rmMP+JuX3MiIj0944wh2xCdcgjHg4ej2Rir7m9zUIrXfYrxpUwFHGKi67V5NlZ
+         BIinxa6PGReOK16M46V4c5XFyii0+50wpdut74IJUzflRXGBgX9LTdUU6skj3Z1wu7OD
+         VkOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714587087; x=1715191887;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nFKXvXLadFn2sb+yZv1KYPN17au5eDoEgdinwHBjegs=;
+        b=CK/XY/FfwzT3pY1VPqMVrdUGcrpW82F0mIFstsQ7CJ9foYQgqdDpIf4Tuqn0fbGHpL
+         ImwOo2mCzhtH66wptdWuzPxDh3lqX+DCXaVWZLmvcptIDUn+fRa5miizs2gOUPzlettR
+         0tnipHCStRGilSICKEvtEyGJ9tUQMwRyi6VfSYaNAyZ6Blls7L+8VKr0HEPvwh+3NjhL
+         MZKYn3N/Sqv/Q3IxF2sChX/V2A+fphhj2ZzHAkZySYMzgmtMuOsXjiEjG7U2o55Lx7Ta
+         Awfzxf6/299EaNbqf4gfbgrFxS0oS+bEgrdS/x4Kc+sGvrlLGp11uuvOO4UiiVCaDxRJ
+         a9sg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWqmOB2n5Y5nY2wHDP8OC1f5LimTNdoVr1Khjm71iDXe+IwzJvYlgkAKFA1El7LsDrYcB7Co5O8+UpcicFutm2KPwQ535zDP1WFsWX
+X-Gm-Message-State: AOJu0YwqB3AV+xvkjoCqcU5Ah8s8BgwZl2s1LR/aZfK56t9LB8bItqxL
+	WsbKQl4OMMHiN6PQbQh1t4cWFIwiD0qXGWEcoNzVyoyTpf/2ZfBvvDvneci18x9L/aqpvRDmNf6
+	nVBJP8k44HsZYpY+SNXb4iO7NoGApy6sPhQ3vI6onmZKsNi7DtV5ZzQ==
+X-Google-Smtp-Source: AGHT+IHYNIdvTb4iBMDLqUY1RqQeF19T75NgRtsKlfmqPhm1TYOhVCTd8FMhMWbpI1r7ar+/niUA1T2KEBeRinx6paM=
+X-Received: by 2002:a25:bcc5:0:b0:de6:1245:c3d5 with SMTP id
+ l5-20020a25bcc5000000b00de61245c3d5mr3406926ybm.60.1714587085478; Wed, 01 May
+ 2024 11:11:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yAv19tBoV/9fOzJc"
-Content-Disposition: inline
-In-Reply-To: <20240501-banner-sniff-4c5958eb15ef@spud>
+References: <20240327202740.3075378-1-swboyd@chromium.org> <CAD=FV=VLwa0AFsrXXxKGG+hcyW+h7u7-tyg3uoDB8M_XdPti_Q@mail.gmail.com>
+ <CAE-0n51osUcpqqh6o9OhURLbRKjcWbRZT-5oHLi_mwfJsUngEw@mail.gmail.com>
+In-Reply-To: <CAE-0n51osUcpqqh6o9OhURLbRKjcWbRZT-5oHLi_mwfJsUngEw@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 1 May 2024 21:11:14 +0300
+Message-ID: <CAA8EJpqVGHqufKo1kV52RzQCNL5D92mmnCzUwKZn4o+5=wF9pQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Fix a black screen on sc7180 Trogdor devices
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Doug Anderson <dianders@chromium.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <andersson@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, patches@lists.linux.dev, 
+	linux-arm-msm@vger.kernel.org, Taniya Das <quic_tdas@quicinc.com>, 
+	Laura Nao <laura.nao@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 1 May 2024 at 03:17, Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Doug Anderson (2024-03-28 09:39:54)
+> >
+> > I spent a bunch of time discussing this offline with Stephen and I'll
+> > try to summarize. Hopefully this isn't too much nonsense...
+> >
+> > 1. We'll likely land the patches downstream in ChromeOS for now while
+> > we're figuring things out since we're seeing actual breakages. Whether
+> > to land upstream is a question. The first patch is a bit of a hack but
+> > unlikely to cause any real problems. The second patch seems correct
+> > but it also feels like it's going to cause stuck clocks for a pile of
+> > other SoCs because we're not adding hacks similar to the sc7180 hack
+> > for all the other SoCs. I guess we could hope we get lucky or play
+> > whack-a-mole? ...or we try to find a more generic solution... Dunno
+> > what others think.
+>
+> I think we should hope to get lucky or play whack-a-mole and merge
+> something like this series. If we have to we can similarly turn off RCGs
+> or branches during driver probe that are using shared parents like we
+> have on sc7180.
+>
+> Put simply, the shared RCG implementation is broken because it reports
+> the wrong parent for clk_ops::get_parent() and doesn't clear the force
+> enable bit. With the current code we're switching the parent to XO when
+> the clk is enabled the first time. That's an obvious bug that we should
+> fix regardless of implementing proper clk handoff. We haven't
+> implemented handoff in over a decade. Blocking this bug fix on
+> implementing handoff isn't practical.
 
---yAv19tBoV/9fOzJc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, that needs to be fixed. My approach was to drop the XO parent and
+consider the clock to be off if it is fed by the XO.
 
-On Wed, May 01, 2024 at 07:03:46PM +0100, Conor Dooley wrote:
-> On Wed, May 01, 2024 at 10:51:38AM -0700, Charlie Jenkins wrote:
-> > On Wed, May 01, 2024 at 09:44:15AM -0700, Evan Green wrote:
-> > > On Fri, Apr 26, 2024 at 2:29=E2=80=AFPM Charlie Jenkins <charlie@rivo=
-sinc.com> wrote:
-> > > > +       for (int i =3D 0; i < riscv_isa_vendor_ext_list_size; i++) {
-> > > > +               const struct riscv_isa_vendor_ext_data_list *ext_li=
-st =3D riscv_isa_vendor_ext_list[i];
-> > > > +
-> > > > +               if (bitmap_empty(ext_list->vendor_bitmap, ext_list-=
->bitmap_size))
-> > > > +                       bitmap_copy(ext_list->vendor_bitmap,
-> > > > +                                   ext_list->per_hart_vendor_bitma=
-p[cpu].isa,
-> > > > +                                   ext_list->bitmap_size);
-> > >=20
-> > > Could you get into trouble here if the set of vendor extensions
-> > > reduces to zero, and then becomes non-zero? To illustrate, consider
-> > > these masks:
-> > > cpu 0: 0x0000C000
-> > > cpu 1: 0x00000003 <<< vendor_bitmap ANDs out to 0
-> > > cpu 2: 0x00000010 <<< oops, we end up copying this into vendor_bitmap
-> > >=20
-> >=20
-> > Huh that's a good point. The standard extensions have that same bug too?
-> >=20
-> > 	if (bitmap_empty(riscv_isa, RISCV_ISA_EXT_MAX))
-> > 		bitmap_copy(riscv_isa, isainfo->isa, RISCV_ISA_EXT_MAX);
-> > 	else
-> > 		bitmap_and(riscv_isa, riscv_isa, isainfo->isa, RISCV_ISA_EXT_MAX);
->=20
-> I suppose it could in theory, but the boot hart needs ima to even get
-> this far. I think you'd only end up with this happening if there were
-> enabled harts that supported rvXXe, but I don't think we even add those
-> to the possible set of CPUs. I'll have to check.
+> Furthermore, we're relying on clk
+> consumers to clear that force enable bit by enabling the clk once. That
+> doesn't make any sense, although we could use that force enable bit to
+> consider the RCG as enabled for clk_disable_unused.
 
-Ye, you don't get marked possible if you don't have ima, so I don't
-think this is possible to have happen. Maybe a comment here is
-sufficient, explaining why this cannot reduce to zeros?
+That patch seems fine to me. Will it work if we take the force-enable
+bit into account when considering the clock to be on or off?
 
+>
+> An alternative approach to this series would be to force all shared RCGs
+> to be parented to XO at clk registration time, and continue to clear
+> that RCG force enable bit. That's sort of what Dmitry was going for
+> earlier. Doing this would break anything that's relying on the clks
+> staying enabled at some frequency through boot, but that isn't supported
+> anyway because clk handoff isn't implemented. It avoids the problem that
+> the first patch is for too because XO doesn't turn off causing a clk to
+> get stuck on. I can certainly craft this patch up if folks think that's
+> better.
 
+I think this approach makes sense too (and might be preferable to
+boot-time hacks).
+On most of the platforms we are already resetting the MDSS as soon as
+the mdss (root device) is being probed. Then the display is going to
+be broken until DPU collects all the coonectors and outpus and finally
+creates the DRM device.
 
---yAv19tBoV/9fOzJc
-Content-Type: application/pgp-signature; name="signature.asc"
+But I think we should fix the get_parent() too irrespectively of this.
 
------BEGIN PGP SIGNATURE-----
+> To ease the transition we can make a new clk_ops for the RCG as well so
+> that each SoC has to opt-in to use this behavior. Then we can be certain
+> that other platforms aren't affected without being tested first. I'd
+> prefer to not do that though because I fear we'll be leaving drivers in
+> the broken state for some time.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjKFWAAKCRB4tDGHoIJi
-0kU9AP4s89glK6UnykI5g5cj0b710rlhFt08mdDjYgdqVE4BzwD+Pa0gATqWhdOe
-sO8sV3u9SVcK+K5gu/2K3mQMzB+OYQE=
-=r/pQ
------END PGP SIGNATURE-----
+SGTM
 
---yAv19tBoV/9fOzJc--
+--
+With best wishes
+Dmitry
