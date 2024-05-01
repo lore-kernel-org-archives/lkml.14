@@ -1,120 +1,134 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338F7165FAA;
-	Wed,  1 May 2024 22:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6851C68D;
+	Wed,  1 May 2024 22:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714601296; cv=none; b=dx8aIwckSMupTM3H9HUq+ywWD8Itdzxgz5NsYQ/QFkw/OCF5HavSPpYhumWTiUB+mFD5WAsnBvvVeN9DCqmdRYXRXQ2/9gCrzfQzf7nBwEZeAq4+tW562Uw5L4af0n+cluTuQjUqW0+mWd0d8yfnLsNRystyjfvvO/NVMWhbotY=
+	t=1714601573; cv=none; b=SdOfJG0MkdfcU9mdjZr5yQ4djdPneAPSq5NDGcLlze2mM976v+5Xs2rAEh/aVimFSbKVUsdIk8V42NugTD96mhkqW7z2pZmG78XddDQbiNuR4bS8Qs/mdTf+Gs7+mXa0drP9HavvxOBEtKWgfSGmL1+zPRQELcTebSUPXJeLLRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714601296; c=relaxed/simple;
-	bh=Fzok5aJqa4+7oGLlWSOjZLQFV+oy3BXKUkmid8inYTA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bmmRvrRGusRFg51jS5f/ox7BzOmtLgMvrj34K8mJteMYyWzELd8XEu4QSYpwnzSvY4ylmcb3xoQSHwSrRJ1JLidbJKJyjJI4TBGSwXdMiZGVUlhneiIssCthF41VEu+SdtW+p0/uAyXWqgOonzWvhO5Hrhfrr8BWOZ0fp05OLMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FWzhgUUw; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714601573; c=relaxed/simple;
+	bh=Ug3FQ7I2qR/RHww0ckNHp2CA4CIPVdT90yjcPc5ds/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fnKuljarPxaeFXl3MREWE5BraBP+1XLccCiTFKz5MyjfJrc2hkf/ScRIE85Yle3O6IkzVGYoSWRchAFosdOa2wud4u20CO8OAy87eBBo3NPQNErgP6Hvp46So45BXT43Z2j4xSsJRIISV38YG6SDBmmbfocG226694vdSU9NjJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCXCc3OC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWzhgUUw"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2a526803fccso4872411a91.1;
-        Wed, 01 May 2024 15:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714601294; x=1715206094; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fzok5aJqa4+7oGLlWSOjZLQFV+oy3BXKUkmid8inYTA=;
-        b=FWzhgUUwf9BvLzXNxmjNHTYlTqQSPvIaovYdhbhZgPPY0rm0K8FKetLmIHK7pmt/pB
-         TRKheL/AKcUpY9s6ephsn5xMDm2HAprRSqd/8qPgVrHeOZUAOfumB2au0CEgPQLe40BC
-         lg4B9L3ocw0JoKBCLJ8bvfx2jmZkaE5m6osQjgdkJ60GkWLL18XtPKIlvksukRFIq1sT
-         kvXZGAfHsEU5DpX/s74wQPxyC/z1i3OtdcgXaPtYE3kdXHUeyBvdkrB9Q/ObKCmtA6c3
-         apJvWa6+GtKn6S124YKP/J1AZQ1Vd+LPonBqwOzgVAMgiqidqcRSfm2EZQv51dQdSSHU
-         ZmEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714601294; x=1715206094;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fzok5aJqa4+7oGLlWSOjZLQFV+oy3BXKUkmid8inYTA=;
-        b=gvI7E5gNTKm4BSiK9syW3RcRM23hvPaxVYDAIYPYDb6RfKDEZF866cW5sFwtG6TUHj
-         9mixi3x/VQSkf764nFwD04pWiCX1JHWbpukvh6+tu7IwvF1T5lVq1kmZXdSNb0hei8rW
-         BiVzZn+ubQK3Y56XW9ReYDxvNS/i07244R3Iq4WyQ/WVJP6g7jcFu9ue6MTzGqZ0UzEb
-         j47nBnnhOsQSuWAJv72YUcrNlBFuQSvVmpS4lZjbJGycHnWP0G0N9Zuncl/1M9fZKdpI
-         XP0kv5mvRDqfPKEQCxBRfcCE/opu1hxM3I2WgP22JHqD3AVHDK9jLpZSEYbcN0Mldntr
-         +SUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPvjnJh2HxBwoLwEEByeHTQoHceM1Z0GNY6gk8CjkG/85qmU0AXyDcUwr6DWI1soP9OorxpTnfttRXlQ7h/37E09djKa4fw5E3i2MVoNWovBpjv/LKj+frdMziLxFgqNvYbLr2zg7L3FBHh8k=
-X-Gm-Message-State: AOJu0YzbVmghV6BvyQz2QFJnU7pd8J24u5Mf1RJMg0GO4ljR/UiIKvMq
-	rV1jQn0BgcdjuKDw5wLiNDmRViGwvfl3G6qqwuONEPTDKEKfqx7qx0p8xbf1b+SyCZXbBScmb16
-	r8ofJ5BwGPUwQJgFP95v76j54/mM=
-X-Google-Smtp-Source: AGHT+IGVV48XRtpNQ9/4wKjJtS7cTSF5aA0dcNMF5dGvaXLHjGojpjfQteWjzWdxyzR3mWNJlAsihyloF0y5iS07LWY=
-X-Received: by 2002:a17:90a:b389:b0:2b1:1c9d:fa8d with SMTP id
- e9-20020a17090ab38900b002b11c9dfa8dmr3595697pjr.28.1714601294400; Wed, 01 May
- 2024 15:08:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCXCc3OC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C65BC072AA;
+	Wed,  1 May 2024 22:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714601572;
+	bh=Ug3FQ7I2qR/RHww0ckNHp2CA4CIPVdT90yjcPc5ds/c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gCXCc3OCNyr6+i3h4YTHs9KepSLe6n7aIrtfRjc0yAHqvWeildSuL6MWAYA37i3C5
+	 jRrpQ4zd2eq/p/dpUQkoUYs52Cn4Im+Z+AogwoRh5jxXZityH0Y+8q0v8n0q9b7DsY
+	 JwtpslpDaQW0EehLBq5b435NxyKJe9XNoOg0CeAv+a/YK+jgnMNt5+UwLD66pAQsYv
+	 zMguRGrKKHK6EXaZpRSLWSsDhBTpdvXviFQsLg4/kbtTmDW+iUngl31YDx0HIiBfiR
+	 QMCDcKJz3jXFJJPPTw+X30RCnZC95AFPy88KOwNmF9fciBSSTWyTvN7hCtwCslDzqA
+	 QYxNlRWvDDdYg==
+Date: Wed, 1 May 2024 15:12:51 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Praveen Kumar Kannoju <praveen.kannoju@oracle.com>
+Cc: jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+ davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rajesh.sivaramasubramaniom@oracle.com, rama.nichanamatlu@oracle.com,
+ manjunath.b.patil@oracle.com
+Subject: Re: [PATCH RFC] net/sched: adjust device watchdog timer to detect
+ stopped queue at right time
+Message-ID: <20240501151251.2eccb4d0@kernel.org>
+In-Reply-To: <20240430140010.5005-1-praveen.kannoju@oracle.com>
+References: <20240430140010.5005-1-praveen.kannoju@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328013603.206764-1-wedsonaf@gmail.com> <20240408094738.00005e59.zhiw@nvidia.com>
-In-Reply-To: <20240408094738.00005e59.zhiw@nvidia.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 2 May 2024 00:06:57 +0200
-Message-ID: <CANiq72nrMpg_dk4eM2Ve+aOi7QF4U-SCvLpx9PMD6o=6sdzOYQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] Allocation APIs
-To: Zhi Wang <zhiw@nvidia.com>
-Cc: Wedson Almeida Filho <wedsonaf@gmail.com>, rust-for-linux@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, linux-kernel@vger.kernel.org, 
-	Wedson Almeida Filho <walmeida@microsoft.com>, John Hubbard <jhubbard@nvidia.com>, Neo Jia <cjia@nvidia.com>, 
-	Andy Currid <acurrid@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 8, 2024 at 8:48=E2=80=AFAM Zhi Wang <zhiw@nvidia.com> wrote:
->
-> IMO, It seems the allocation flag here means GFP flags according to
-> Patch 5 and I understand the benefit of introducing the flags.
->
-> I am interested in the future plan. With this change, will Vec and Box
-> stick to kernel memory application APIs with GFP flags in the future?
-> e.g. GUP, kmalloc, those mostly allocates continuous memory for small
-> objects. Is that the future for Vec and Box in kernel?
->
-> Is there any plan for having vmalloc() in rust kernel? Currently, if I
-> push a large object into a Vec, kernel MM will complain for sure. And
-> literally Vec/Box themselves don't imply to the user that they allocate
-> memory with limitations.
->
-> Kernel uses different MM alloc APIs for different usages. For rust,
-> should we have a different kind of "Vec/Box" or having a Vec/Box with
-> different set of allocation flags that covers both GFP MM APIs and
-> vmalloc()? I am curious about the plan.
+On Tue, 30 Apr 2024 19:30:10 +0530 Praveen Kumar Kannoju wrote:
+> Applications are sensitive to long network latency, particularly
+> heartbeat monitoring ones. Longer the tx timeout recovery higher the
+> risk with such applications on a production machines. This patch
+> remedies, yet honoring device set tx timeout.
+> 
+> Modify watchdog next timeout to be shorter than the device specified.
+> Compute the next timeout be equal to device watchdog timeout less the
+> how long ago queue stop had been done. At next watchdog timeout tx
+> timeout handler is called into if still in stopped state. Either called
+> or not called, restore the watchdog timeout back to device specified.
 
-Sorry Zhi, Danilo brought this message to my attention today (thanks!).
+Idea makes sense, some comments on the code below.
 
-We have been trying to find the best way forward to support fallible
-allocations, per-call-site flags, other kernel allocators and so on
-for a long time, including discussions with upstream Rust.
+> diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
+> index 4a2c763e2d11..64e31f8b4ac1 100644
+> --- a/net/sched/sch_generic.c
+> +++ b/net/sched/sch_generic.c
+> @@ -506,18 +506,25 @@ static void dev_watchdog(struct timer_list *t)
+>  			unsigned int timedout_ms = 0;
+>  			unsigned int i;
+>  			unsigned long trans_start;
+> +			unsigned long next_check = 0;
+> +			unsigned long current_jiffies;
+>  
+>  			for (i = 0; i < dev->num_tx_queues; i++) {
+>  				struct netdev_queue *txq;
+> +				current_jiffies = jiffies;
 
-At this point, after these years, I think the ideal path is to try our
-best to avoid re-enabling `allocator_api` and to have perhaps our own
-custom APIs/types as needed (possibly several depending on the use
-case) -- please also see my reply at
-https://lore.kernel.org/rust-for-linux/CANiq72=3D0BNw-KiURBjosLqfuUEPpjZPbR=
-g1XMFZyobOzBt7aMA@mail.gmail.com/
+Not sure why you save current jiffies.
 
-Regarding this patch series, we mainly wanted to make progress on
-(finally) allowing at least to use the GFP flags and also,
-importantly, dropping `alloc` since we want to start supporting
-several compiler versions soon.
+>  				txq = netdev_get_tx_queue(dev, i);
+>  				trans_start = READ_ONCE(txq->trans_start);
+> -				if (netif_xmit_stopped(txq) &&
+> -				    time_after(jiffies, (trans_start +
+> -							 dev->watchdog_timeo))) {
+> -					timedout_ms = jiffies_to_msecs(jiffies - trans_start);
+> -					atomic_long_inc(&txq->trans_timeout);
+> -					break;
+> +				if (netif_xmit_stopped(txq)) {
 
-Thank you for your feedback on this. It would be nice to hear what you
-think about Danilo's approach in the other series and other possible
-approaches that may not rely on `allocator_api`.
+please use continue instead of adding another indentation level
 
-Cheers,
-Miguel
+> +					if (time_after(current_jiffies, (trans_start +
+
+wrap at 80 characters
+
+> +								   dev->watchdog_timeo))) {
+> +						timedout_ms = jiffies_to_msecs(current_jiffies -
+> +										trans_start);
+> +						atomic_long_inc(&txq->trans_timeout);
+> +						break;
+> +					}
+> +					next_check = trans_start + dev->watchdog_timeo -
+> +									current_jiffies;
+
+this will give us "next_check" for last queue. Let's instead find the
+oldest trans_start in the loop. Do:
+
+		unsigned long oldest_start = jiffies;
+
+then in the loop:
+
+		oldest_start = min(...)
+
+>  				}
+>  			}
+>  
+> @@ -530,9 +537,11 @@ static void dev_watchdog(struct timer_list *t)
+>  				dev->netdev_ops->ndo_tx_timeout(dev, i);
+>  				netif_unfreeze_queues(dev);
+>  			}
+> +			if (!next_check)
+> +				next_check = dev->watchdog_timeo;
+>  			if (!mod_timer(&dev->watchdog_timer,
+>  				       round_jiffies(jiffies +
+> -						     dev->watchdog_timeo)))
+> +						     next_check)))
+
+then here you just need to swap jiffies for oldest_start
+
+>  				release = false;
+>  		}
+>  	}
+
