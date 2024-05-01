@@ -1,84 +1,108 @@
-Received: from msa.smtpout.orange.fr (msa-210.smtpout.orange.fr [193.252.23.210])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773BF48781;
-	Wed,  1 May 2024 05:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57154AEC3;
+	Wed,  1 May 2024 05:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714541551; cv=none; b=Gy6hAC5yBlZpi0qjlO/kewC0HqfhocqVwfEJlW4jNOLsyZqYXowfdfLXDadcBbtAKZ3pooyTYP9sFMoxoEkyIlvIzAXqMb6aivsRcvcIwA8g18aWkcUaTe/9QcWph5zmXR5Yzl0OiNRxeGRSlJzICI7lpMwYoO1W1r3sfYtzgb8=
+	t=1714541558; cv=none; b=lNMSlyueHEZOGejVAaw1BmOqWuFlf7vm01G+ZXvDTF6HZM28bFMJXufR3K+ELnpgl8lmIkRHkgdWrIeMRVocKDZ7iMTNIRZiaTjbaw2x+oO+XYBoM4Ir2jbrbFbS7tDyc6SZ3DU4hWXRmhbhH8wOFppme+BIJiWzB/iAO/oufFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714541551; c=relaxed/simple;
-	bh=XGnwqzGVRVLKMqUxqhbPMjTk3pC1cEJXJekJTprHVbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q7B8smJc+qBygTaL16I1elJwy8dYDPwqJtGvk9XFclyiqfjztidnY55l8rsQ3ObJC4Gbux0z5OIzKD6Mqabdz1xZ8TZ4iGgjuKG1KL3LqOEXUILF+VuLPmeWvHpWXRJGTTiYEZkeF5ThFszi8jVEvc5qUCk+1DCmRtcr6ctgG4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Su0SsbPE; arc=none smtp.client-ip=193.252.23.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1714541558; c=relaxed/simple;
+	bh=LhUQypmCj6FihMXMgHiHgd8f2gMkEN6+/WGmjHLMtsQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sHuNivvu+zRBTipRQ5G6U/MW6e7acs0QYCo3FGI13QUZMNJ5DHksaLP2A7WrRLKbN1SnOxScrno8nz71q6CXZtYTIhJi0XtT9XXEYgcCOZAseE+oxUIra2O9TbkKMWdfkwaJJQobH7wO/Rw2WsV1dxnHATkgYbsBce4vAOrH4RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nL+jrcV8; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Su0SsbPE"
-Received: from localhost.localdomain ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id 22YcsEsBRAF5O22YcsxtZ3; Wed, 01 May 2024 07:31:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1714541469;
-	bh=gkHbjdcpVGhYwhArziDiurlEAkgTgXQtE1ztZgQ3NT0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=Su0SsbPEuir6j/Zux1shoe7hWU5cHbMmAjZeNs+AcGlPQSQzH6xK4g3hpG/lvEYMo
-	 4PIs7R86sjYyJBuc8U4bGpMUTnaiLPi7jJq1qJYqDndXtMdUsG+Bg3UiMlYt2oEqzH
-	 uLz1xQciAnlGsatK1tLkvNwo02V0pHtM7GQNygrpGOB443fIH8qyHwoLKojrFXi/hV
-	 1AhKneC8872Xdz8T3HJkWr/NEf91mmgnvUyuPlBQuTTZdAbnsBAnJ39g5dghr/OGVn
-	 ZvyOT1V7D551eaLhKwrldwt3LZdXQKLu0YFve9CyrMVNwAL5PfinnDdg+zo5Xt7nkI
-	 ylq36OpLmWmHw==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 01 May 2024 07:31:09 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-input@vger.kernel.org
-Subject: [PATCH 1/2] Input: tca6416-keypad - Remove an unused field in struct tca6416_keypad_chip
-Date: Wed,  1 May 2024 07:30:54 +0200
-Message-ID: <926c0f40040671565dcc54d5146a8f9511fb6d46.1714541432.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nL+jrcV8"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2b24dbd1bb6so1519849a91.3;
+        Tue, 30 Apr 2024 22:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714541556; x=1715146356; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LhUQypmCj6FihMXMgHiHgd8f2gMkEN6+/WGmjHLMtsQ=;
+        b=nL+jrcV8t5U4Jcd2F37YY16zv3eK1n59hzUYBDqWA0Rmz/G87Ga0r+GfA7Yaw+n3MW
+         OKteE7rbAPRdo0L4LyZeLU/8C5MfrLW5qJhrhyX6mhMXWJ2aUlO0S/OPB2RMRH9QIxKv
+         RJaOOXWl5tftT71JGMwtmQ6OnPf1EL+/jDCF4rVcnticGSQjMFOwK1V0fhv86CmgkLQh
+         h8bZAfEi4mNDcaEWwOq+uErB8vYPWlKDr12T1OtKxpVZ3wNYV9YGyyTzeZiNp6WxN9nT
+         e48IMnEGHtGUh/bb1wgNlBKtLCzcC3YBK8WYHbzjj8lR1NIeJKVhC+2BadTxRmIczivW
+         tRJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714541556; x=1715146356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LhUQypmCj6FihMXMgHiHgd8f2gMkEN6+/WGmjHLMtsQ=;
+        b=W0TTgxYi4uS6blFDxGyODT9o0aE0mZiRQXnpfBGVpR3JYNSWxxauncprKjC0zGR3ur
+         1EganiLDjpUlN1PsVTetMpzDmWz7D8JGWG7Zd2yFRp1aZoTE9uM/+VYGobToeGsfqChW
+         EFY7GTmPa4k5914+WpJBZbTH1A2J10pKPflZnf8FuMSthbfVIF8BHBDC36gZiQqu2P2E
+         NIFGPmLmd11VW+PXjgofAZjlig283XzVEq7jhGAbZroVLIa3EJrGdfHZg/Vuj20QhhmZ
+         EOAJEJmzunAXnCg+ykufG+RPlpG0ObE/Afr16+QzkLfBaiT5PhVJAbsoFrkic4ZJ/FOV
+         79yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUs4izYCWTjaASX27iNcltrFJ9LEHDI3otswQvM5EdEhvNXTaf8dbBkX24jqzIxE8igEnicKPWO9Un50GGL/CYOcrs7tkriB82/H7fbpE97t8UVxia+zTsBPxmzoEKfnw4EIQ6AvR20fGNCx27czfyHbfn+MhaNktQieDYI89qSCsw6VzlMpA==
+X-Gm-Message-State: AOJu0Ywy3RdZcNql0hTo7KhNu7ZDTreucXZqoQQ8mjcm7FFDHrw+puj+
+	eJ9Y8s75K317WAgtoctzj9pp2P/99lx30NXnPyPhHPD1uPUV1bDovuMthmXTg4OkPZTLhhbG+p8
+	siUGIenaMaCBi074RJ0/Jh4pSUGM=
+X-Google-Smtp-Source: AGHT+IHiMOGLd/+67g95LqIkRpVDEp1zqfi64FrDgiZ4JUy/3e1V8BHvssHdIkCZW6yhQ4K5LDcsY6QZXtCz416hve0=
+X-Received: by 2002:a17:90a:714a:b0:2af:b977:363a with SMTP id
+ g10-20020a17090a714a00b002afb977363amr1483032pjs.43.1714541556119; Tue, 30
+ Apr 2024 22:32:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAE8VWi+UwYWw+RBMPi5ozg+sQHKtyxp2i2K3u9e3b42Gt8D+qw@mail.gmail.com>
+ <2024050119-pediatric-prankish-64b9@gregkh> <CAE8VWiKqrPge_OaeCXXAER6ofFLULLPrPK8StCMV9DPM+WHuHw@mail.gmail.com>
+ <2024050149-blob-afoot-af04@gregkh>
+In-Reply-To: <2024050149-blob-afoot-af04@gregkh>
+From: Shresth Prasad <shresthprasad7@gmail.com>
+Date: Wed, 1 May 2024 11:02:24 +0530
+Message-ID: <CAE8VWiKZSGM_JXnvsbp3jo+A80puYGA58FoLY3+ZQar5tFAyCg@mail.gmail.com>
+Subject: Re: [PATCH][next] tty: sunsu: Simplify device_node cleanup by using __free
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: davem@davemloft.net, jirislaby@kernel.org, linux-serial@vger.kernel.org, 
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>, Julia Lawall <julia.lawall@inria.fr>, 
+	Shuah Khan <skhan@linuxfoundation.org>, sparclinux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In "struct tca6416_keypad_chip", the 'irqnum' field is unused.
-Remove it.
+> Yes, but you did not include it in your response at all, so how were we
+> to see it?
 
-Found with cppcheck, unusedStructMember.
+Oh, really sorry about that.
+I thought I was replying to the thread with the patch.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only.
+> Great, please say so in your changelog text.
 
-It was added in the initial commit 30ba3ead0576 ("Input: add keypad driver
-for keys interfaced to TCA6416") and its users were removed in commit
-687fe7dfb736 ("Input: tca6416-keypad - always expect proper IRQ number in
-i2c client").
----
- drivers/input/keyboard/tca6416-keypad.c | 1 -
- 1 file changed, 1 deletion(-)
+Right, I'll do that. My bad.
+I'll resubmit the patch.
 
-diff --git a/drivers/input/keyboard/tca6416-keypad.c b/drivers/input/keyboard/tca6416-keypad.c
-index 677bc4baa5d1..044401d01bf6 100644
---- a/drivers/input/keyboard/tca6416-keypad.c
-+++ b/drivers/input/keyboard/tca6416-keypad.c
-@@ -45,7 +45,6 @@ struct tca6416_keypad_chip {
- 	struct i2c_client *client;
- 	struct input_dev *input;
- 	int io_size;
--	int irqnum;
- 	u16 pinmask;
- 	bool use_polling;
- 	struct tca6416_button buttons[];
--- 
-2.44.0
+Regards,
+Shresth
 
+On Wed, May 1, 2024 at 10:33=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Wed, May 01, 2024 at 10:28:35AM +0530, Shresth Prasad wrote:
+> > > I don't see anything here, sorry.
+> > I'm sorry but is this patch not visible?
+> > https://lore.kernel.org/all/20240425060303.8045-2-shresthprasad7@gmail.=
+com/
+>
+> Yes, but you did not include it in your response at all, so how were we
+> to see it?
+>
+> > > Also, how was this tested?
+> > I tested it using a qemu x86_64 virtual machine
+>
+> Great, please say so in your changelog text.
+>
+> thanks,
+>
+> greg k-h
