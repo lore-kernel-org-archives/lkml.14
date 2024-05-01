@@ -1,270 +1,283 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B2C748D;
-	Wed,  1 May 2024 16:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24109748D;
+	Wed,  1 May 2024 16:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714582337; cv=none; b=u8AhVpCmTCJxsiCHKuFmwdYBLj9ursNzup4eautgaKhuYbPYsGVtbS2OKZ9sgI+0CzcccBYGsOo79eEA4WCLEeeBCE9kUUwCw/aWxRiD4cmZoHaZNbrN70MMhOjoP5zIaC5/RjMTtTxr+ujMgfHqqw4MlrLp/+AwCghztX252+E=
+	t=1714582349; cv=none; b=IyN+1TEr75zHy91uC1Geg391aIWexew2ENolQW20krVLrb4JNU1P2B+x6vUKtZNLUsmzGAetkCQzCuyH1zTE0sQ8TFadxUXqJcjIKMytKkc7XGSe8wk7xsvnhPcVrengs6uzpYx5LF88NGIlJBpWFnVP8T6n02xrgbsOQDOYkiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714582337; c=relaxed/simple;
-	bh=EoTNNFNmdiSJ+ihhxP7N6TMOpU57rtyD9Vd0HKERdZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GhNY4eEbQVbaoSg8UQz+4xSTN+EQWimq6m3HWrbhKTqY3Am3VMnLf33N3ZxjdWtBgovKt5pNI840QsohxlKYALHc/Ca+M5xq8Dx3iWP7Gsdr/hd+v0md8A33QxwFIrSofqnnsy/oIfcSiXluf3nVCg4EVpnN6Zu1Em0lhsRStAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RczkqTMa; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1714582349; c=relaxed/simple;
+	bh=2EnY6jlUJdwfnq9vKIeMfPfdmHIS1mOXct0+S+bKfOM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wh0eX6qWz0kJXy313ZCGGjvXlCInyk0nbc19INGsJ2beyebi7gsNmpNlId+M9C7CZARnbHVMMslgUcH6HltREc1xOdKVkEiX8kgf7FAEeXWMIfofmXn/08CrFnZmAC46lR2L3p5x/3W3mplB2Xzz1WX+cTNvOdejrxGBHKrxWo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l9Dndnjt; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RczkqTMa"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f4178aec15so1482108b3a.0;
-        Wed, 01 May 2024 09:52:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9Dndnjt"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e1c09eff95so33021fa.1;
+        Wed, 01 May 2024 09:52:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714582335; x=1715187135; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X+kLWLzH38TvjMAPOyIaIJoNEWichEBjYFHCLTsZASU=;
-        b=RczkqTMaw6+/lEwp6+gdvvuF2HLS/W3drvRC5yl/IOfMjpu6eUDEp8yjiFZPpx8Bpu
-         nF51wDsuxb366T3x0NlSjJ2bJLqzJYziOKKlGbYrK6bKpjrfsDkc6CxYacqlJjfYeT9V
-         tA0Yl7u3o3jXu4zWFG5Seakoz6tVL4+J+huFgef1W0zpOvuTASlXutLaN+ftLHznmABb
-         g3VbYpGrvvWbUCALMP9NPfi6BSmEPAaST6DxjtZjvJw+YJb3NceQhOFLp6aRrbxg8xbG
-         PXdFN8qC3ebO9pJq/PZGSxLKdbO9I5oIMV1iAcjlPkNF6JJQjawXrL5hDzHRRXsbjwzm
-         un8g==
+        d=gmail.com; s=20230601; t=1714582345; x=1715187145; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ERfpwxgCZf+sBZVMcgjD4HYC9mmOkZ9NslkItmGclBI=;
+        b=l9DndnjtH92aVIp0VCLSjTWqC9782DQDkRJFbByVbiQa3nDrVpg2rWl0AY/XYBAQLg
+         QUGBuLHLu9fMGP5QFVP0zDlDFjy2TFTBwPd3+EhSJ9S3F72xoHyAph4tuKPdSBjYOgTj
+         3Jh2F1uwhQ5rijbljlwaQM2HU1pxEhmhVhgIJDQt4/4GWXGVPLsqxQYZb1vYB3+xs5zj
+         T4mMWGJ36pnFdzD58GPq5ISpOaHKrpFKOrAEXspEvL1zUs51VzPwiQSju87JAD+vk39A
+         YuW/XpGYNie6Tmqh3mlqXPWnoMHBv+a+3vvK5JmnvuXqIs9BasKEXky4wxnUuAFRSJWZ
+         a+1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714582335; x=1715187135;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X+kLWLzH38TvjMAPOyIaIJoNEWichEBjYFHCLTsZASU=;
-        b=vaCaQMAd5MfDhRyqTrIAE0iwbiI8/+Bh6V374G/Tn4vr5It4JFc6qpKX/9i66VZEu1
-         cLal8DVArxpFJy3vtKo5o9XXOGe87OZmpCRyogz2ECv+5p3Dr/lnKlUwT6ND6muhY5Fo
-         2iQ6cr9QzbxTJWv7PcmhsOwF0yogiE6sIM7GmCYJVvsutt/mfpXNJQ1rtrqKWJoQsgyZ
-         n3qkG+3d4dLYybP8D9lbsuS6E1kJzj3O12lPFRUgtCIeyvKL8nuyhzRdwEK1xoQjWOc5
-         eisFHVf3/pgyvAOd4bBCDUiqKxfYYB+safb/C1Eg8itQB2KWHmBd7GQ08cBp4ULjBseI
-         GNZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWgsL1yDcfrnaMqQ+zEwulSzYZTRJ2BHrjwCLRwK5IvoQHtSiHpJ+ms/fvmzGQ0WZh+pFZGygmaXTF1i2xn6HXlsky/mqRw3mruC19RCcYVtPL68qjFBl4Js9FvbZA+/7ls1COH5krUpw==
-X-Gm-Message-State: AOJu0YxA/0xmkOFfmme9EydLuifOAXW0QyJwWNhS95zcUmpiyihYcBQd
-	AK2J1s6zPQMPHlO3zC/m384NQNvF1K00Kmivc0xYnms6sIbjIfuI
-X-Google-Smtp-Source: AGHT+IFoLPLaa10OmlKHdeMWUQfAXY6nicn0jqB5kR0cepCobySIMzdTUmrXKqUApZ+BDGQJOD7ZNA==
-X-Received: by 2002:a05:6a21:339f:b0:1ad:7e4d:2ea6 with SMTP id yy31-20020a056a21339f00b001ad7e4d2ea6mr3618013pzb.20.1714582335399;
-        Wed, 01 May 2024 09:52:15 -0700 (PDT)
-Received: from kousik.local ([2405:201:c006:31f8:c3a6:8218:5d12:51ef])
-        by smtp.gmail.com with ESMTPSA id gd22-20020a056a00831600b006e6fc52ecd0sm22758866pfb.123.2024.05.01.09.52.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 09:52:14 -0700 (PDT)
-From: Kousik Sanagavarapu <five231003@gmail.com>
-To: Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Kousik Sanagavarapu <five231003@gmail.com>
-Subject: [PATCH v3] spi: dt-bindings: ti,qspi: convert to dtschema
-Date: Wed,  1 May 2024 22:18:53 +0530
-Message-ID: <20240501165203.13763-1-five231003@gmail.com>
-X-Mailer: git-send-email 2.45.0.rc1.8.ge326e52010
+        d=1e100.net; s=20230601; t=1714582345; x=1715187145;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ERfpwxgCZf+sBZVMcgjD4HYC9mmOkZ9NslkItmGclBI=;
+        b=lS4O2kfgsShkxjH5zx/6w+YGV2eJ3nSvrREOUivee5OPqNOVq6sj0j23JXFYYLkwnj
+         219OUtaVwWrWvinkfbzalvoyPdM4HIjyE7AeXqyzVwo7uaJfULzPVR/dGdS5IPf03Eha
+         6gk9PyoCVW0siDmrU2OMa1IZn1zMHQpr4oVar2L4pqdjiFfRtM2rojHYfayZj71zLfff
+         vci8MTowQR5hqNTkJKvjexfJuF/h4kGt/V8UEBdGplhwEjE3zre3Z1U66WIYzcxMhYAY
+         nqj49rE+Wht/2wsUsaoIxe55mE/uYfxFf9r4QgLn5Xkb9c4qSxqby6Lr3XCgv5XPaJev
+         bCuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXh5rtHMEgrY27ET1WARZirxvX/tRGyVDLaZGNzCLqa6AcjHDN+w9bPEfiMcYcD2tNwk0mjBr7U2IdoMr50ndHELt9ZJu3ITZrupAj+Q99WchOvR4hZtRRLvQLoGrQthdYVOXmOZsx1yiHuH3tI
+X-Gm-Message-State: AOJu0YwQLdC+qZUM3S2yckgL58zbkjpzO50IczvEzR84OIcEPsMagI1v
+	T6ZVtHMkwxfFNkp8OfstmA2eKdodxgeR+WPMeyYymkStvGGVftnt52fUQbaRDgwsZBk0hZ+SWVE
+	GypmepnUeoBuG8Y0A/ivOOfT2Ag4=
+X-Google-Smtp-Source: AGHT+IFFxpObw475ZTfxnUpPYNyknx7u3fyI1szOE6lb5MxCpukdzbx2u1R923UOhURn8q+hYfQ6fKafUowytSLdlKE=
+X-Received: by 2002:a2e:9e58:0:b0:2e1:a40b:af28 with SMTP id
+ g24-20020a2e9e58000000b002e1a40baf28mr56752ljk.18.1714582344911; Wed, 01 May
+ 2024 09:52:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240422152500.1.I8939e49084a6fef78496eb73edafdf3c2c4afbf4@changeid>
+ <CABBYNZLCjrJUiVzNf53XYM-ZHWL6TZD4yFNtNGOuYi=6s5Q+OA@mail.gmail.com>
+ <CAJQfnxHUW+MdJUp9VCrF2Nq_-JZrd7mKBR9NdDoo0SOvgH5WUQ@mail.gmail.com>
+ <CANFp7mU2Chj_cZ_26kfM8TE1OToZzUeFKz61D7j-0ykMBQeG4A@mail.gmail.com>
+ <CABBYNZJK6zyYYmi66prKMdF69HkwfhOvMeB0TnEcGYRLTTr2jw@mail.gmail.com> <CANFp7mWWYmm9gPrsDBho3sDGu5q_fQztR+LJJUWQ_Faw0QRXFQ@mail.gmail.com>
+In-Reply-To: <CANFp7mWWYmm9gPrsDBho3sDGu5q_fQztR+LJJUWQ_Faw0QRXFQ@mail.gmail.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Wed, 1 May 2024 12:52:12 -0400
+Message-ID: <CABBYNZLtDc2MVh8f=2vLK6czfiz8wN=940exiw+fDv-fkNkqJA@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: btusb: Add debugfs to force toggling remote wakeup
+To: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc: Archie Pusaka <apusaka@google.com>, linux-bluetooth <linux-bluetooth@vger.kernel.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
+	CrosBT Upstreaming <chromeos-bluetooth-upstreaming@chromium.org>, 
+	Archie Pusaka <apusaka@chromium.org>, Abhishek Pandit-Subedi <abhishekpandit@google.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert txt binding of TI's qspi controller (found on their omap SoCs) to
-dtschema to allow for validation.
+Hi Abhishek,
 
-The changes, w.r.t. the original txt binding, are:
+On Wed, May 1, 2024 at 12:34=E2=80=AFPM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
+>
+> On Tue, Apr 30, 2024 at 9:46=E2=80=AFAM Luiz Augusto von Dentz
+> <luiz.dentz@gmail.com> wrote:
+> >
+> > Hi Abhishek,
+> >
+> > On Fri, Apr 26, 2024 at 1:04=E2=80=AFPM Abhishek Pandit-Subedi
+> > <abhishekpandit@chromium.org> wrote:
+> > >
+> > > On Fri, Apr 26, 2024 at 2:08=E2=80=AFAM 'Archie Pusaka' via ChromeOS =
+Bluetooth
+> > > Upstreaming <chromeos-bluetooth-upstreaming@chromium.org> wrote:
+> > > >
+> > > > Hi Luiz,
+> > > >
+> > > > On Thu, 25 Apr 2024 at 03:05, Luiz Augusto von Dentz
+> > > > <luiz.dentz@gmail.com> wrote:
+> > > > >
+> > > > > Hi Archie,
+> > > > >
+> > > > > On Mon, Apr 22, 2024 at 3:25=E2=80=AFAM Archie Pusaka <apusaka@go=
+ogle.com> wrote:
+> > > > > >
+> > > > > > From: Archie Pusaka <apusaka@chromium.org>
+> > > > > >
+> > > > > > Sometimes we want the controller to not wake the host up, e.g. =
+to
+> > > > > > save the battery. Add some debugfs knobs to force the wake by B=
+T
+> > > > > > behavior.
+> > > > > >
+> > > > > > Signed-off-by: Archie Pusaka <apusaka@chromium.org>
+> > > > > > Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@google.com>
+> > > > > >
+> > > > > > ---
+> > > > > >
+> > > > > >  drivers/bluetooth/btusb.c | 19 +++++++++++++++++++
+> > > > > >  1 file changed, 19 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btus=
+b.c
+> > > > > > index 8bede0a335668..846b15fc3c04c 100644
+> > > > > > --- a/drivers/bluetooth/btusb.c
+> > > > > > +++ b/drivers/bluetooth/btusb.c
+> > > > > > @@ -873,6 +873,9 @@ struct btusb_data {
+> > > > > >         unsigned cmd_timeout_cnt;
+> > > > > >
+> > > > > >         struct qca_dump_info qca_dump;
+> > > > > > +
+> > > > > > +       bool force_enable_remote_wake;
+> > > > > > +       bool force_disable_remote_wake;
+> > > > > >  };
+> > > > > >
+> > > > > >  static void btusb_reset(struct hci_dev *hdev)
+> > > > > > @@ -4596,6 +4599,10 @@ static int btusb_probe(struct usb_interf=
+ace *intf,
+> > > > > >
+> > > > > >         debugfs_create_file("force_poll_sync", 0644, hdev->debu=
+gfs, data,
+> > > > > >                             &force_poll_sync_fops);
+> > > > > > +       debugfs_create_bool("force_enable_remote_wake", 0644, h=
+dev->debugfs,
+> > > > > > +                           &data->force_enable_remote_wake);
+> > > > > > +       debugfs_create_bool("force_disable_remote_wake", 0644, =
+hdev->debugfs,
+> > > > > > +                           &data->force_disable_remote_wake);
+> > > > > >
+> > > > > >         return 0;
+> > > > > >
+> > > > > > @@ -4702,6 +4709,18 @@ static int btusb_suspend(struct usb_inte=
+rface *intf, pm_message_t message)
+> > > > > >                 }
+> > > > > >         }
+> > > > > >
+> > > > > > +       if (!PMSG_IS_AUTO(message)) {
+> > > > > > +               if (data->force_enable_remote_wake) {
+> > > > > > +                       data->udev->do_remote_wakeup =3D 1;
+> > > > > > +                       if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, =
+&data->flags))
+> > > > > > +                               data->udev->reset_resume =3D 0;
+> > > > > > +               } else if (data->force_disable_remote_wake) {
+> > > > > > +                       data->udev->do_remote_wakeup =3D 0;
+> > > > > > +                       if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, =
+&data->flags))
+> > > > > > +                               data->udev->reset_resume =3D 1;
+> > > > > > +               }
+> > > > > > +       }
+> > > > > > +
+> > > > > >         return 0;
+> > > > > >  }
+> > > > > >
+> > > > > > --
+> > > > > > 2.44.0.769.g3c40516874-goog
+> > > > >
+> > > > > There is a D-Bus interface available to overwrite the wakeup sett=
+ing:
+> > > > >
+> > > > > https://github.com/bluez/bluez/blob/master/doc/org.bluez.Device.r=
+st#boolean-wakeallowed-readwrite
+> > > > >
+> > > > > Or do you want a master switch for it? On the other hand aren't w=
+e
+> > > > > getting into the rfkill area if you really want to switch off rad=
+io
+> > > > > activity while suspended? That seems like a better idea then just
+> > > > > disable remote wakeup.
+> > >
+> > > This DBUS api is different from the quirk this is introducing.
+> > >
+> > > The `Wake Allowed` field in D-bus controls whether we add the address
+> > > to the Classic Event Filter (HIDP) or LE Filter Accept List (HOGP) bu=
+t
+> > > not whether we allow wake at the transport level (which is why
+> > > hdev->wakeup exists).
+> > >
+> > > This change specifically addresses a quirk with Realtek chipsets:
+> > > RTL8822/RTL8852 will do "global shutdown" and power off Bluetooth if
+> > > USB Remote Wake bit is not set. The USB remote_wake bit is normally
+> > > set by the USB stack based on whether device_may_wakeup(udev) =3D=3D =
+true.
+> > > This means that RTL88x2 will lose power around suspend/resume if ther=
+e
+> > > are no wake capable devices connected.
+> > >
+> > > ChromeOS decided to use idle power and resume-time to determine
+> > > whether to allow remote wake or not for these chipsets and we want to
+> > > move this control to userspace so that we don't have to hold CHROMIUM
+> > > patches in the kernel applying this policy (we want udev rules
+> > > instead). RTL8852 gets force enabled remote wake because the
+> > > RESET_RESUME behavior of this chip would otherwise increase our resum=
+e
+> > > time >1s which breaks one of our platform requirements.
+> > >
+> > > The end-goal of these changes:
+> > > * We detect RTL8822 or RTL8852 with udev and apply the right policy.
+> > > * RTL8822 gets force_disable_remote_wake (idle power consumption too
+> > > high otherwise)
+> > > * RTL8852 gets force_enable_remote_wake (resume time too long otherwi=
+se)
+> >
+> > Got it, but the suggestion was to instead of using
+> > force_enable_remote_wake, which is sort of non-standard, why don't
+> > Chrome OS simply use rkill interface to tell the driver to shutdown?
+> > On resume then you can just unblock via rfkill that should have the
+> > same result as using force_enable_remote_wake, well except if there is
+> > a bug in the driver that is not handling rfkill as a 'global
+> > shutdown', but then you need to fix the driver not introduce yet
+> > another debugfs entry to bypass it.
+>
+> Did you mean `force_disable_remote_wake`? rfkill will work for that
+> around system suspend. We preferred not to do it because we don't use
+> userspace suspend signals with Bluez today (preferring the kernel
+> suspend notifier).
 
-- Introduce "clocks" and "clock-names" which was never mentioned.
-- Reflect that "ti,hwmods" is deprecated and is not a "required"
-  property anymore.
-- Introduce "num-cs" which allows for setting the number of chip
-  selects.
-- Drop "qspi_ctrlmod".
+Yeah, that said rfkill has nothing to do with suspend afaik, it is
+more for achieving flight mode and as far I know it is a kernel
+interface.
 
-Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
----
-Changes since v1:
-- Removed a redundant paragraph in the commit message.
-- Mention that we are dropping "qspi_ctrlmod", which I forgot to do in
-  the last iteration.
+> `force_enable_remote_wake` still needs debugfs as rfkill can't force
+> an interface to stay awake as far as I know.
 
-Changes since v2:
-- Don't make "num-cs" an array.
-- The max number of syscon-chipselects is now 1.
-- Make the unit-address in the example right.
-- Fix a typo in "syscon-chipselects"'s description.
+You mixing up, Im not saying to use rfkill to enable/disable wake
+support, the remains the same, what changes is that if you want to
+overwrite that it just use rfkill to block the traffic while suspended
+that way wake being enable or not doesn't matter since the controller
+radio shall be off if it is blocked.
 
- .../devicetree/bindings/spi/ti,qspi.yaml      | 96 +++++++++++++++++++
- .../devicetree/bindings/spi/ti_qspi.txt       | 53 ----------
- 2 files changed, 96 insertions(+), 53 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/ti,qspi.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/ti_qspi.txt
+>
+> >
+> > > Hope this provides enough context for why this change is necessary.
+> > >
+> > > >
+> > > > Yes, the initial idea was a master switch.
+> > > > Thanks for your suggestions.
+> > > > Let me discuss it with Abhishek.
+> > > > >
+> > > > > --
+> > > > > Luiz Augusto von Dentz
+> > > >
+> > > > Thanks,
+> > > > Archie
+> > > >
+> > > > --
+> > > > You received this message because you are subscribed to the Google =
+Groups "ChromeOS Bluetooth Upstreaming" group.
+> > > > To unsubscribe from this group and stop receiving emails from it, s=
+end an email to chromeos-bluetooth-upstreaming+unsubscribe@chromium.org.
+> > > > To post to this group, send email to chromeos-bluetooth-upstreaming=
+@chromium.org.
+> > > > To view this discussion on the web visit https://groups.google.com/=
+a/chromium.org/d/msgid/chromeos-bluetooth-upstreaming/CAJQfnxHUW%2BMdJUp9VC=
+rF2Nq_-JZrd7mKBR9NdDoo0SOvgH5WUQ%40mail.gmail.com.
+> >
+> >
+> >
+> > --
+> > Luiz Augusto von Dentz
 
-diff --git a/Documentation/devicetree/bindings/spi/ti,qspi.yaml b/Documentation/devicetree/bindings/spi/ti,qspi.yaml
-new file mode 100644
-index 000000000000..626a915b3d77
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/ti,qspi.yaml
-@@ -0,0 +1,96 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/ti,qspi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI QSPI controller
-+
-+maintainers:
-+  - Kousik Sanagavarapu <five231003@gmail.com>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,am4372-qspi
-+      - ti,dra7xxx-qspi
-+
-+  reg:
-+    items:
-+      - description: base registers
-+      - description: mapped memory
-+
-+  reg-names:
-+    items:
-+      - const: qspi_base
-+      - const: qspi_mmap
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: fck
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  num-cs:
-+    minimum: 1
-+    maximum: 4
-+    default: 1
-+
-+  ti,hwmods:
-+    description:
-+      Name of the hwmod associated to the QSPI.  This is for legacy
-+      platforms only.
-+    $ref: /schemas/types.yaml#/definitions/string
-+    deprecated: true
-+
-+  syscon-chipselects:
-+    description:
-+      Handle to system control region containing QSPI chipselect register
-+      and offset of that register.
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    items:
-+      - items:
-+          - description: phandle to system control register
-+          - description: register offset
-+
-+  spi-max-frequency:
-+    description: Maximum SPI clocking speed of the controller in Hz.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/dra7.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    spi@4b300000 {
-+        compatible = "ti,dra7xxx-qspi";
-+        reg = <0x4b300000 0x100>,
-+              <0x5c000000 0x4000000>;
-+        reg-names = "qspi_base", "qspi_mmap";
-+        syscon-chipselects = <&scm_conf 0x558>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        clocks = <&l4per2_clkctrl DRA7_L4PER2_QSPI_CLKCTRL 25>;
-+        clock-names = "fck";
-+        num-cs = <4>;
-+        spi-max-frequency = <48000000>;
-+        interrupts = <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/spi/ti_qspi.txt b/Documentation/devicetree/bindings/spi/ti_qspi.txt
-deleted file mode 100644
-index 47b184bce414..000000000000
---- a/Documentation/devicetree/bindings/spi/ti_qspi.txt
-+++ /dev/null
-@@ -1,53 +0,0 @@
--TI QSPI controller.
--
--Required properties:
--- compatible : should be "ti,dra7xxx-qspi" or "ti,am4372-qspi".
--- reg: Should contain QSPI registers location and length.
--- reg-names: Should contain the resource reg names.
--	- qspi_base: Qspi configuration register Address space
--	- qspi_mmap: Memory mapped Address space
--	- (optional) qspi_ctrlmod: Control module Address space
--- interrupts: should contain the qspi interrupt number.
--- #address-cells, #size-cells : Must be present if the device has sub-nodes
--- ti,hwmods: Name of the hwmod associated to the QSPI
--
--Recommended properties:
--- spi-max-frequency: Definition as per
--                     Documentation/devicetree/bindings/spi/spi-bus.txt
--
--Optional properties:
--- syscon-chipselects: Handle to system control region contains QSPI
--		      chipselect register and offset of that register.
--
--NOTE: TI QSPI controller requires different pinmux and IODelay
--parameters for Mode-0 and Mode-3 operations, which needs to be set up by
--the bootloader (U-Boot). Default configuration only supports Mode-0
--operation. Hence, "spi-cpol" and "spi-cpha" DT properties cannot be
--specified in the slave nodes of TI QSPI controller without appropriate
--modification to bootloader.
--
--Example:
--
--For am4372:
--qspi: qspi@47900000 {
--	compatible = "ti,am4372-qspi";
--	reg = <0x47900000 0x100>, <0x30000000 0x4000000>;
--	reg-names = "qspi_base", "qspi_mmap";
--	#address-cells = <1>;
--	#size-cells = <0>;
--	spi-max-frequency = <25000000>;
--	ti,hwmods = "qspi";
--};
--
--For dra7xx:
--qspi: qspi@4b300000 {
--	compatible = "ti,dra7xxx-qspi";
--	reg = <0x4b300000 0x100>,
--	      <0x5c000000 0x4000000>,
--	reg-names = "qspi_base", "qspi_mmap";
--	syscon-chipselects = <&scm_conf 0x558>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--	spi-max-frequency = <48000000>;
--	ti,hwmods = "qspi";
--};
--- 
-2.45.0.rc1.8.ge326e52010
 
+
+--=20
+Luiz Augusto von Dentz
