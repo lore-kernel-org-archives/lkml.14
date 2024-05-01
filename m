@@ -1,154 +1,301 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE59D4D9E9
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 07:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECAF4CE0F;
+	Wed,  1 May 2024 07:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714549741; cv=none; b=XT70w+wy2Q6OmsvtxCPg9/Wqn8qXZLVcRZi6gsvIuF3q2w/sdzzK1X5UE9VKaXudLfHHvwEc1oKmyaSfqPswQ4Xq3eenEQfvZxO6sC0oFv9YOBqdqks1tGjVicdzj5oXE28hpr/opfumg3lhsUZKAo8UXSqVMjcbC+sVB4TroR4=
+	t=1714549852; cv=none; b=TWBdpl0aguzeWFxcEVaZpPBL2XpLNLsMVRv1ho8uBgzPqULm031RWKTCVNipBp9DKwQC3QdDq2rgPsZRfw/383j0sZnwKuNqTVSvEqF4sql90Pk6fcU4owHJtXXFBiSIIY/hW0VuKn5/8NHZTnVXgGvMVpjME0lURUvMZetiwWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714549741; c=relaxed/simple;
-	bh=cGwK526R503ldDm/CriBnxuRBeqaMR26khdz4eVoYoA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gblzRqUhBvG1ScnQ7m79PC8RRN0xg4v3KwC+9PjVpTnXxcXDQqRGcPrqWT8FEPYwXegtqbhTjNgZ2HjRY+XRZQu4ro5nGY27iUK5q08gfbLB8LJJPU5+Gf+fNi2zEMkp8Kj0xkI3Fx8Qm3b6vpyejOm8rf2jipvsNDYlt5daRoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NzocMZC3; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714549852; c=relaxed/simple;
+	bh=qc9Q3fJInyIPLUyfsn2QU1DB5+yr0LAeBaxOlPKq20I=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=aoISJHfPasNdqDbX32dv9ccuf321ZeoBUV2hkdUjWZBxsLq8//MCa0oV0QExaO0rKWFJ+Ycoul7tgypMRjMCSVTthpZoRKbcNBpl48cHJfqRWtz2svTT/39+DBh1kVOmvH8BoIdQfWG5Z3GaTjKC+jSOYod452EEaXarTKx07YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zELHSjKr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WhZs9A1Y; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NzocMZC3"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-571be483ccaso7898069a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 00:48:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714549738; x=1715154538; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S6caJNuoOcbTF2A8XjASgel2eyoPHbRLJ4yhUwfPsJg=;
-        b=NzocMZC3LreJ+QmatL3XEJtLc8PzGFznZ0sz+0GfTNbScnK/PxRu8ef65Wqi8hYvzB
-         8My69b2QfPtaP6pxCVV8py2hvmq+VmCKDfw9FPmh5YMcY6adIx9yNR3NRr7bkbqi1sqH
-         WPV+jki4lhuqOse9FO0dy4eNEBu1A9TpbhQQQ2sjDBeIDU+z40BZxryqE0P3cb6BSiku
-         RljMJj9ql1TwhirXFqoxtGUyhanUUWqoPjh/PEsrokBH0f8xm6iEeY4JqxmQwHy89/aq
-         U268mnYY8F0dERU4enxZdbnb6Pt984WwXhKu4eMzpxs0RBqGFTopzOxWndrExrwd7yTR
-         Ibdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714549738; x=1715154538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S6caJNuoOcbTF2A8XjASgel2eyoPHbRLJ4yhUwfPsJg=;
-        b=FQJdx7Nggg0PZcOxtCD3BNiGtvNhda67O4xLK8CLRQPsOhJok5cCyX4JlaErk4ChOa
-         IbSO/y+b9Q8C0zvgGrXdJk4SoEWARcVh6bFg0LaBHExezJt1kjOlehcXSg9Tdoa8dhN2
-         R4gS4xasAi4O7L2/N4PxB7BHI4T72HHaiY1cDnLn2Hl7/HM78LpbOFYyuaM9qEHEZVrY
-         7qFn8duNwhfRkMSGyi2V8eO57kseGvtUOCXsczWvDIf9dvk7UTTZ1HPYymYolacCK2cm
-         EA7U7AVPOJ3JK51e13yif7WkDMgvJ3pYrd0OuSuu+ACTtIGWLmCxoccwFoAlU9RysYHn
-         9X/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWti9GT7kyy50m1+FfycxuMBKl1nenyGW0Do22j7NkWliqHp6iLyrBJCtVxXWYJgdCXcj/ji5/XFnZeAkTog99NhPk4GmCikeiJXuvQ
-X-Gm-Message-State: AOJu0YzzaA2dSx7RLmFKni2XUeZBdEQARiFTrw21L8RHXWyWHBIhIntP
-	1kTRLqW/6MaiOw22juh+hZf/mBF1zpuzvb8XFqX1n4YuAXA0bLF+/hSffsiTpyVc21z9xlBqMU1
-	c8ENzKHFyMagZDoytvS/KEoTOIXUIIa3CkN65
-X-Google-Smtp-Source: AGHT+IGhlKIspORV3UsoMFDJbaiFzOQH7V8xn49DkcxHrG8vlrT1eYyx0WJBZ3CEo2IQKHYAlSXX53YHVqq5Mgwl4Sc=
-X-Received: by 2002:a17:906:52c1:b0:a55:5ddd:e5f6 with SMTP id
- w1-20020a17090652c100b00a555ddde5f6mr1398294ejn.28.1714549737800; Wed, 01 May
- 2024 00:48:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zELHSjKr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WhZs9A1Y"
+Date: Wed, 01 May 2024 07:50:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1714549848;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vgs7Ofr2/HH/fNinRqbnfHY1oZ2hMdJThwsIZ2I8j2E=;
+	b=zELHSjKrL0gfwmtL0dHBrVuKUucQ8l7pjgwaafFHpjhynFTb9yYMhob8Zuwfqly9t/gNzK
+	5elGq1ODLCnmYqjX/tO/Ch1Bo4GKT3N9Rm6mJlQsD1n6IZMbEe0HvciEQ80kK1gCSMJ6vn
+	aKgpa/gy+FxnovWQnh7myQvC8iBdz7ASPtabyiwjzinCQ+t58SIMtMmtBYlDkpGguBQhEu
+	p06K6CCDZy2+Lr0ZSV3BkXAEJyWUPpTfl6VK8VozgGjpDoNmLVj11Xgo8++tcye9ckq/HE
+	d3sdFHznhYBRApoMZWuyqqXhGg8fwTIqMZHJkTgjraRvNPCisbdRRCOyJoKc6w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1714549848;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vgs7Ofr2/HH/fNinRqbnfHY1oZ2hMdJThwsIZ2I8j2E=;
+	b=WhZs9A1Y+k04QKzabClmo1nunMkBodZ2iJraWIsmgXh0k0pzDnfMsPeYdVB3Uo+coJMxjE
+	vUjP6pC7U4a8rgBg==
+From: "tip-bot2 for Linus Torvalds" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/mm: Remove broken vsyscall emulation code from
+ the page fault code
+Cc: syzbot+83e7f982ca045ab4405c@syzkaller.appspotmail.com,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To:
+ <CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com>
+References:
+ <CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424165646.1625690-2-dtatulea@nvidia.com> <4ba023709249e11d97c78a98ac7db3b37f419960.camel@nvidia.com>
- <CAHS8izMbAJHatnM6SvsZVLPY+N7LgGJg03pSdNfSRFCufGh9Zg@mail.gmail.com>
- <4c20b500c2ed615aba424c0f3c7a79f5f5a04171.camel@nvidia.com>
- <20240426160557.51de91f9@kernel.org> <c307a3086d255d1dfed22284f500aa9fb70f11a3.camel@nvidia.com>
- <7a5a1d74040052afc8cc6cc5c2700fdf2e836b0c.camel@nvidia.com>
-In-Reply-To: <7a5a1d74040052afc8cc6cc5c2700fdf2e836b0c.camel@nvidia.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 1 May 2024 00:48:43 -0700
-Message-ID: <CAHS8izOsFqiSiS4Z-E-jfD70aogNp5Bcyt7Rk8xFoR2TcDjz=g@mail.gmail.com>
-Subject: Re: [RFC PATCH] net: Fix one page_pool page leak from skb_frag_unref
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: "kuba@kernel.org" <kuba@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, 
-	"ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"jacob.e.keller@intel.com" <jacob.e.keller@intel.com>, "pabeni@redhat.com" <pabeni@redhat.com>, 
-	Jianbo Liu <jianbol@nvidia.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"edumazet@google.com" <edumazet@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <171454984807.10875.8290271548321530670.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 30, 2024 at 11:20=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.co=
-m> wrote:
->
-> On Mon, 2024-04-29 at 09:39 +0200, Dragos Tatulea wrote:
-> > On Fri, 2024-04-26 at 16:05 -0700, Jakub Kicinski wrote:
-> > > On Thu, 25 Apr 2024 08:17:28 +0000 Dragos Tatulea wrote:
-> > > > >  The unref path always dropped a regular page
-> > > > > ref, thanks to this commit as you point out:
-> > > > >
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t/commit/?id=3D2cc3aeb5ecccec0d266813172fcd82b4b5fa5803
-> > > > >
-> > > > > AFAICT the correct fix is to actually revert commit 2cc3aeb5eccc
-> > > > > ("skbuff: Fix a potential race while recycling page_pool packets"=
-).
-> > > > > The reason is that now that skb_frag_ref() can grab page-pool ref=
-s, we
-> > > > > don't need to make sure there is only 1 SKB that triggers the rec=
-ycle
-> > > > > path anymore. All the skb and its clones can obtain page-pool ref=
-s,
-> > > > > and in the unref path we drop the page-pool refs. page_pool_put_p=
-age()
-> > > > > detects correctly that the last page-pool ref is put and recycles=
- the
-> > > > > page only then.
-> > > > >
-> > > > I don't think this is a good way forward. For example, skb->pp_recy=
-cle is used
-> > > > as a hint in skb_gro_receive to avoid coalescing skbs with differen=
-t pp_recycle
-> > > > flag states. This could interfere with that.
-> > >
-> > > That's a bit speculative, right? The simple invariant we are trying t=
-o
-> > > hold is that if skb->pp_recycle && skb_frag_is_pp(skb, i) then the
-> > > reference skb is holding on that frag is a pp reference, not page
-> > > reference.
-> > >
-> > Yes, it was a speculative statement. After re-reading it and the code o=
-f
-> > skb_gro_receive() it makes less sense now.
-> >
-> > Mina's suggestion to revert commit 2cc3aeb5eccc ("skbuff: Fix a potenti=
-al race
-> > while recycling page_pool packets") seems less scary now. I just hope w=
-e don't
-> > bump into too many scenarios similar to the ipsec one...
-> >
-> > > skb_gro_receive() needs to maintain that invariant, if it doesn't
-> > > we need to fix it..
-> > >
-> >
-> Gentle ping. Not sure how to proceed with this:
->
-> 1) Revert commit 2cc3aeb5eccc
-> ("skbuff: Fix a potential race while recycling page_pool packets"). I tes=
-ted
-> this btw and it works (for this specific scenario).
->
-> 2) Revert Mina's commit a580ea994fd3 ("net: mirror skb frag ref/unref hel=
-pers")
-> for now.
->
+The following commit has been merged into the x86/urgent branch of tip:
 
-I vote for #1, and IIUC Jakub's feedback, he seems to prefer this as
-well. If we continue to run into edge cases after the revert of #1, I
-think we may want to do #2 and I can look to reland it with the kunit
-tests that Jakub suggested that reproduce these edge cases.
+Commit-ID:     02b670c1f88e78f42a6c5aee155c7b26960ca054
+Gitweb:        https://git.kernel.org/tip/02b670c1f88e78f42a6c5aee155c7b26960ca054
+Author:        Linus Torvalds <torvalds@linux-foundation.org>
+AuthorDate:    Mon, 29 Apr 2024 10:00:51 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 01 May 2024 09:41:43 +02:00
 
-I can upload #1 in the morning if there are no objections. I don't see
-any regressions with #1 but I was never able to repo this issue.
+x86/mm: Remove broken vsyscall emulation code from the page fault code
 
---=20
-Thanks,
-Mina
+The syzbot-reported stack trace from hell in this discussion thread
+actually has three nested page faults:
+
+  https://lore.kernel.org/r/000000000000d5f4fc0616e816d4@google.com
+
+... and I think that's actually the important thing here:
+
+ - the first page fault is from user space, and triggers the vsyscall
+   emulation.
+
+ - the second page fault is from __do_sys_gettimeofday(), and that should
+   just have caused the exception that then sets the return value to
+   -EFAULT
+
+ - the third nested page fault is due to _raw_spin_unlock_irqrestore() ->
+   preempt_schedule() -> trace_sched_switch(), which then causes a BPF
+   trace program to run, which does that bpf_probe_read_compat(), which
+   causes that page fault under pagefault_disable().
+
+It's quite the nasty backtrace, and there's a lot going on.
+
+The problem is literally the vsyscall emulation, which sets
+
+        current->thread.sig_on_uaccess_err = 1;
+
+and that causes the fixup_exception() code to send the signal *despite* the
+exception being caught.
+
+And I think that is in fact completely bogus.  It's completely bogus
+exactly because it sends that signal even when it *shouldn't* be sent -
+like for the BPF user mode trace gathering.
+
+In other words, I think the whole "sig_on_uaccess_err" thing is entirely
+broken, because it makes any nested page-faults do all the wrong things.
+
+Now, arguably, I don't think anybody should enable vsyscall emulation any
+more, but this test case clearly does.
+
+I think we should just make the "send SIGSEGV" be something that the
+vsyscall emulation does on its own, not this broken per-thread state for
+something that isn't actually per thread.
+
+The x86 page fault code actually tried to deal with the "incorrect nesting"
+by having that:
+
+                if (in_interrupt())
+                        return;
+
+which ignores the sig_on_uaccess_err case when it happens in interrupts,
+but as shown by this example, these nested page faults do not need to be
+about interrupts at all.
+
+IOW, I think the only right thing is to remove that horrendously broken
+code.
+
+The attached patch looks like the ObviouslyCorrect(tm) thing to do.
+
+NOTE! This broken code goes back to this commit in 2011:
+
+  4fc3490114bb ("x86-64: Set siginfo and context on vsyscall emulation faults")
+
+... and back then the reason was to get all the siginfo details right.
+Honestly, I do not for a moment believe that it's worth getting the siginfo
+details right here, but part of the commit says:
+
+    This fixes issues with UML when vsyscall=emulate.
+
+... and so my patch to remove this garbage will probably break UML in this
+situation.
+
+I do not believe that anybody should be running with vsyscall=emulate in
+2024 in the first place, much less if you are doing things like UML. But
+let's see if somebody screams.
+
+Reported-and-tested-by: syzbot+83e7f982ca045ab4405c@syzkaller.appspotmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lore.kernel.org/r/CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com
+---
+ arch/x86/entry/vsyscall/vsyscall_64.c | 28 +---------------------
+ arch/x86/include/asm/processor.h      |  1 +-
+ arch/x86/mm/fault.c                   | 33 +--------------------------
+ 3 files changed, 3 insertions(+), 59 deletions(-)
+
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index a3c0df1..2fb7d53 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -98,11 +98,6 @@ static int addr_to_vsyscall_nr(unsigned long addr)
+ 
+ static bool write_ok_or_segv(unsigned long ptr, size_t size)
+ {
+-	/*
+-	 * XXX: if access_ok, get_user, and put_user handled
+-	 * sig_on_uaccess_err, this could go away.
+-	 */
+-
+ 	if (!access_ok((void __user *)ptr, size)) {
+ 		struct thread_struct *thread = &current->thread;
+ 
+@@ -120,10 +115,8 @@ static bool write_ok_or_segv(unsigned long ptr, size_t size)
+ bool emulate_vsyscall(unsigned long error_code,
+ 		      struct pt_regs *regs, unsigned long address)
+ {
+-	struct task_struct *tsk;
+ 	unsigned long caller;
+ 	int vsyscall_nr, syscall_nr, tmp;
+-	int prev_sig_on_uaccess_err;
+ 	long ret;
+ 	unsigned long orig_dx;
+ 
+@@ -172,8 +165,6 @@ bool emulate_vsyscall(unsigned long error_code,
+ 		goto sigsegv;
+ 	}
+ 
+-	tsk = current;
+-
+ 	/*
+ 	 * Check for access_ok violations and find the syscall nr.
+ 	 *
+@@ -234,12 +225,8 @@ bool emulate_vsyscall(unsigned long error_code,
+ 		goto do_ret;  /* skip requested */
+ 
+ 	/*
+-	 * With a real vsyscall, page faults cause SIGSEGV.  We want to
+-	 * preserve that behavior to make writing exploits harder.
++	 * With a real vsyscall, page faults cause SIGSEGV.
+ 	 */
+-	prev_sig_on_uaccess_err = current->thread.sig_on_uaccess_err;
+-	current->thread.sig_on_uaccess_err = 1;
+-
+ 	ret = -EFAULT;
+ 	switch (vsyscall_nr) {
+ 	case 0:
+@@ -262,23 +249,12 @@ bool emulate_vsyscall(unsigned long error_code,
+ 		break;
+ 	}
+ 
+-	current->thread.sig_on_uaccess_err = prev_sig_on_uaccess_err;
+-
+ check_fault:
+ 	if (ret == -EFAULT) {
+ 		/* Bad news -- userspace fed a bad pointer to a vsyscall. */
+ 		warn_bad_vsyscall(KERN_INFO, regs,
+ 				  "vsyscall fault (exploit attempt?)");
+-
+-		/*
+-		 * If we failed to generate a signal for any reason,
+-		 * generate one here.  (This should be impossible.)
+-		 */
+-		if (WARN_ON_ONCE(!sigismember(&tsk->pending.signal, SIGBUS) &&
+-				 !sigismember(&tsk->pending.signal, SIGSEGV)))
+-			goto sigsegv;
+-
+-		return true;  /* Don't emulate the ret. */
++		goto sigsegv;
+ 	}
+ 
+ 	regs->ax = ret;
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 811548f..78e51b0 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -472,7 +472,6 @@ struct thread_struct {
+ 	unsigned long		iopl_emul;
+ 
+ 	unsigned int		iopl_warn:1;
+-	unsigned int		sig_on_uaccess_err:1;
+ 
+ 	/*
+ 	 * Protection Keys Register for Userspace.  Loaded immediately on
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 622d12e..bba4e02 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -723,39 +723,8 @@ kernelmode_fixup_or_oops(struct pt_regs *regs, unsigned long error_code,
+ 	WARN_ON_ONCE(user_mode(regs));
+ 
+ 	/* Are we prepared to handle this kernel fault? */
+-	if (fixup_exception(regs, X86_TRAP_PF, error_code, address)) {
+-		/*
+-		 * Any interrupt that takes a fault gets the fixup. This makes
+-		 * the below recursive fault logic only apply to a faults from
+-		 * task context.
+-		 */
+-		if (in_interrupt())
+-			return;
+-
+-		/*
+-		 * Per the above we're !in_interrupt(), aka. task context.
+-		 *
+-		 * In this case we need to make sure we're not recursively
+-		 * faulting through the emulate_vsyscall() logic.
+-		 */
+-		if (current->thread.sig_on_uaccess_err && signal) {
+-			sanitize_error_code(address, &error_code);
+-
+-			set_signal_archinfo(address, error_code);
+-
+-			if (si_code == SEGV_PKUERR) {
+-				force_sig_pkuerr((void __user *)address, pkey);
+-			} else {
+-				/* XXX: hwpoison faults will set the wrong code. */
+-				force_sig_fault(signal, si_code, (void __user *)address);
+-			}
+-		}
+-
+-		/*
+-		 * Barring that, we can do the fixup and be happy.
+-		 */
++	if (fixup_exception(regs, X86_TRAP_PF, error_code, address))
+ 		return;
+-	}
+ 
+ 	/*
+ 	 * AMD erratum #91 manifests as a spurious page fault on a PREFETCH
