@@ -1,206 +1,139 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86975D2E5;
-	Wed,  1 May 2024 04:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9CE11CB8
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 04:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714537957; cv=none; b=lp/SMW6kt7mB8XKlHUavBALKxYLBjDbyWQqJEqtB4XsoTmcdxXSvKQQ3DIr3GpvpOLgYWAvm6C/QSqeyPH439z3O4pccYQrSfOAS+gqcz/2JEwBdUS9T63yhjluElzDtxw7UxA9N5PK4sW9BzI3fInBDlkja2Bhg84YogGmMaE8=
+	t=1714538192; cv=none; b=KuJilRocHxSbW2s/QHq9ysSrQcuN2VyDNGMWppXmBZ2cw0MzSmjnCNoDa2KydOtSTqpARgf2Aq9/NnHwkGT2zwwZIYvmAl7dF+Xq0tSLBJN7Affg/cGAjF6F2ZX9f0erd0HWUM+xeiVMaPAL26Yaq6RbR3N2tHvSjUaTQkg3SGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714537957; c=relaxed/simple;
-	bh=2JY5OY0eLf0Go09E4VV+/1JdG4dIaohPD9zFXAum5sk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kMv6ohQXWjRsYECJ948FEzlvCN1Wynpxaokj1lOBAsJ6gZ2c6oLpnnc3Si4ELebYnB7B5NcoKWoZOYrhfSBIQP3z0+GO2iBI2geApfJCqhT6tresxyRPEkn/xMND6tlNfrALOFVm/JXzXF3Q0PyRIXfq3++dSAv4lMITXQmJVL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4dee77a2b49so1212153e0c.1;
-        Tue, 30 Apr 2024 21:32:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714537954; x=1715142754;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5Z5lN9ouraph5ntmF9cLLqC94FKMgX8DNOshw4gn8zw=;
-        b=JusS84OA+OTwpPp8KwmveLTPm22mgiuGnpmpf6KAJAaTJ4nZuvz539jvj57IQZegSJ
-         7I3EqlDAXc589bq3m460sw/0S9iR6TIgkGexZDLGfhqTfl68imgW1oddJyMDOdyNm64N
-         JUIzVXhv1e/W1PppsOhtowbq2oFGEK/eEtOUNVu/A+FTxdojr/Axd3yvhLiM/nPH+gZS
-         YZAPsCc9etC0X2PFn8C5FZxKc8cZzHbpFmL1PKqjhiuFKYdtUintZaf5Ry8HjbU5k0Bd
-         fz1zh66jWWE8Atv10UgMdUV4sKtMvAhmKtt1PsSyJIWOWdp2ZPm6DCFR1GbrzYFIxc0q
-         Pb2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWRKqHPccsbp7AkOu/wMEhKtXsqnjKx8L6Qu2YB4dvbJwt7cU9tLOLB8bVhfKB5jW0DI5e/n+kVjMfjXMNafew2cwdG0Ww6OHvnYLnolBu2Kv81QDVXHSuhK/EErg50J5sIAWhsNpbqVuYPnpxEKHb8F8yR2+26qoD42AtjrTwJRCfDORS8
-X-Gm-Message-State: AOJu0YzLZtxOYdGvvpjB/JWg3QaNmHO8IXaK/SNvPrdhnxRJNlpnVntf
-	AXYkYQ48iPG6jh0olP/NeMLpmFjrhuXr6oBMz+M4AJNnEdtDFujT
-X-Google-Smtp-Source: AGHT+IFEsfnWehxiAiumsg8emFvB06y8Nfu+9ZDYXnIqFHeuB3FAWBoMcAZIutFPX/7RUaCD07qFjw==
-X-Received: by 2002:a05:6122:3187:b0:4d4:1ec7:76e5 with SMTP id ch7-20020a056122318700b004d41ec776e5mr1328818vkb.16.1714537954179;
-        Tue, 30 Apr 2024 21:32:34 -0700 (PDT)
-Received: from tofu.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id i1-20020ae9ee01000000b0078f12b01bbdsm11618561qkg.101.2024.04.30.21.32.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 21:32:33 -0700 (PDT)
-From: Sungwoo Kim <iam@sung-woo.kim>
-To: luiz.dentz@gmail.com
-Cc: daveti@purdue.edu,
-	benquike@gmail.com,
-	Sungwoo Kim <iam@sung-woo.kim>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Bluetooth: L2CAP: Fix div-by-zero in l2cap_le_flowctl_init()
-Date: Wed,  1 May 2024 00:29:36 -0400
-Message-Id: <20240501042936.2579739-1-iam@sung-woo.kim>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1714538192; c=relaxed/simple;
+	bh=YKBL3Xlm5cnWdNbk81l0J2LSLyE3+5eFoXiFZouHEfY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nvk7Wu1NPRCfyTKDFz3f13Fjn7U5W34U4knhPkaQMG+ntmblGoHyceXJuBaCCw2CYKAOXk3soyAeGkPgyfeKEursVEAOjk1kSj4VO97VNQtpJYHgKNIZQ8F+udKiC1qdZYpTlbyFJzK7qI5XcPpBtsxfkw+SWm7xJcRkA56tIpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MQiWBJ2V; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MQiWBJ2V"
+Message-ID: <a59cdfc1-7cc0-4944-b527-68c3ff981529@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714538186;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M/zxLrv/112LnHWHBf9LH/ua85DzPXjXJ+sUgBkQQh0=;
+	b=MQiWBJ2V6/7jUo+/vdb9BitJWGQJq6EH6FJES4FfwY83SQhPpyRcbtv4B87DA6kPIhKMPF
+	W4y9tzbJcdfCQbNu7Mpg7m5wD0LuKuybya1lKAKBeIPncdzoINeuV24ky0cNyn6SjmPPk9
+	gwR49jqtTNVU3m6JcohQGzb3s/Dqpl0=
+Date: Wed, 1 May 2024 12:36:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: drm/debugfs: Drop conditionals around of_node pointers
+To: Doug Anderson <dianders@chromium.org>, =?UTF-8?B?6ZqL5pmv5bOw?=
+ <suijingfeng@bosc.ac.cn>
+Cc: Maxime Ripard <mripard@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Biju Das <biju.das.jz@bp.renesas.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240321222258.1440130-1-sui.jingfeng@linux.dev>
+ <caa6fb05-8080-444a-93c3-2d9283ccb74d@bosc.ac.cn>
+ <20240429-enchanted-cooperative-jacamar-cf2902@houat>
+ <6db82a3f.c7.18f2c927d9f.Coremail.suijingfeng@bosc.ac.cn>
+ <CAD=FV=W2ksFLtv3o5tqrpXY4aHD_wUq7R7rT9hOHCQa8FLmeoQ@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <CAD=FV=W2ksFLtv3o5tqrpXY4aHD_wUq7R7rT9hOHCQa8FLmeoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Luiz, could you review this patch?
+Hi,
 
-This patch prevents a div-by-zero error and potential int overflow by
-adding a range check for MTU in hci_cc_le_read_buffer_size() and
-hci_cc_le_read_buffer_size_v2().
-Also, hci_connect_le() will refuse to allocate hcon if the MTU is not in
-the valid range.
 
-Bug description:
+On 2024/5/1 05:33, Doug Anderson wrote:
+> Hi,
+>
+> On Mon, Apr 29, 2024 at 6:16 PM 隋景峰 <suijingfeng@bosc.ac.cn> wrote:
+>> Hi,
+>>
+>>
+>>> -----原始邮件-----
+>>> 发件人: "Maxime Ripard" <mripard@kernel.org>
+>>> 发送时间: 2024-04-29 19:30:24 (星期一)
+>>> 收件人: "Sui Jingfeng" <suijingfeng@bosc.ac.cn>
+>>> 抄送: "Sui Jingfeng" <sui.jingfeng@linux.dev>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Daniel Vetter" <daniel@ffwll.ch>, "Douglas Anderson" <dianders@chromium.org>, "Laurent Pinchart" <laurent.pinchart+renesas@ideasonboard.com>, "Biju Das" <biju.das.jz@bp.renesas.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+>>> 主题: Re: drm/debugfs: Drop conditionals around of_node pointers
+>>>
+>>> On Sun, Apr 28, 2024 at 04:52:13PM +0800, Sui Jingfeng wrote:
+>>>> ping
+>>>>
+>>>> 在 2024/3/22 06:22, Sui Jingfeng 写道:
+>>>>> Having conditional around the of_node pointer of the drm_bridge structure
+>>>>> turns out to make driver code use ugly #ifdef blocks.
+>>> The code being ugly is an opinion, what problem is it causing exactly?
+>>>
+>>>> Drop the conditionals to simplify debugfs.
+>>> What does it simplifies?
+>>>
+>>>>> Fixes: d8dfccde2709 ("drm/bridge: Drop conditionals around of_node pointers")
+>>>>> Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
+>>> Why do we want to backport that patch to stable?
+> Technically it's not CCing stable and so it's not really incorrect.
+> ...but I agree that this is a bit of a stretch to call it a "Fix".
+> Maybe drop the "Fixes" line?
 
-l2cap_le_flowctl_init() can cause both div-by-zero and an integer overflow.
 
-l2cap_le_flowctl_init()
-  chan->mps = min_t(u16, chan->imtu, chan->conn->mtu - L2CAP_HDR_SIZE);
-  chan->rx_credits = (chan->imtu / chan->mps) + 1;  <- div-by-zero
+OK, good idea, acceptable.
 
-Here, chan->conn->mtu could be less than or equal to L2CAP_HDR_SIZE (4).
-If mtu is 4, it causes div-by-zero. If mtu is less than 4, it causes an
-integer overflow.
+Originally, I add the fix tag to hint that my modification belongs to
+the commit d8dfccde2709 ("drm/bridge: Drop conditionals around of_node pointers") too.
+But get missed.
 
-How mtu could have such low value:
 
-hci_cc_le_read_buffer_size()
-  hdev->le_mtu = __le16_to_cpu(rp->le_mtu);
+>
+>> My commit message is written based on commit of d8dfccde2709
+>>
+>> $ git show c9e358dfc4a8
+>>
+>>      This patch is based on commit c9e358dfc4a8 ("driver-core: remove
+>>      conditionals around devicetree pointers").
+>>
+>>      Having conditional around the of_node pointer of the drm_bridge
+>>      structure turns out to make driver code use ugly #ifdef blocks. Drop the
+>>      conditionals to simplify drivers. While this slightly increases the size
+>>      of struct drm_bridge on non-OF system, the number of bridges used today
+>>      and foreseen tomorrow on those systems is very low, so this shouldn't be
+>>      an issue.
+>>
+>>      So drop #if conditionals by adding struct device_node forward declaration.
+>>
+>>> Maxime
+>> I'm just start to contribute by mimic other people's tone, there seems no need
+>> to over read.
+> I think the fact that you skipped the reference to commit c9e358dfc4a8
+> ("driver-core: remove conditionals around devicetree pointers") was
+> relevant here. Referencing that commit makes it easy for the reader to
+> see that you are following convention used throughout the kernel and
+> not just asserting your own opinion about style.
+>
+> If you add that reference into your commit message and send a v2, I'm
+> happy to apply it.
 
-l2cap_conn_add()
-  conn->mtu = hcon->hdev->le_mtu;
 
-As shown, mtu is an input from an HCI device. So, any HCI device can
-set mtu value to any value, such as lower than 4.
-According to the spec v5.4 7.8.2 LE Read Buffer Size command, the value
-should be fall in [0x001b, 0xffff].
+OK, thanks a lot.
 
-Thank you,
-Sungwoo.
 
-divide error: 0000 [#1] PREEMPT SMP KASAN NOPTI
-CPU: 0 PID: 67 Comm: kworker/u5:0 Tainted: G        W          6.9.0-rc5+ #20
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-Workqueue: hci0 hci_rx_work
-RIP: 0010:l2cap_le_flowctl_init+0x19e/0x3f0 net/bluetooth/l2cap_core.c:547
-Code: e8 17 17 0c 00 66 41 89 9f 84 00 00 00 bf 01 00 00 00 41 b8 02 00 00 00 4c 89 fe 4c 89 e2 89 d9 e8 27 17 0c 00 44 89 f0 31 d2 <66> f7 f3 89 c3 ff c3 4d 8d b7 88 00 00 00 4c 89 f0 48 c1 e8 03 42
-RSP: 0018:ffff88810bc0f858 EFLAGS: 00010246
-RAX: 00000000000002a0 RBX: 0000000000000000 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: ffff88810bc0f7c0 RDI: ffffc90002dcb66f
-RBP: ffff88810bc0f880 R08: aa69db2dda70ff01 R09: 0000ffaaaaaaaaaa
-R10: 0084000000ffaaaa R11: 0000000000000000 R12: ffff88810d65a084
-R13: dffffc0000000000 R14: 00000000000002a0 R15: ffff88810d65a000
-FS:  0000000000000000(0000) GS:ffff88811ac00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000100 CR3: 0000000103268003 CR4: 0000000000770ef0
-PKRU: 55555554
-Call Trace:
- <TASK>
- l2cap_le_connect_req net/bluetooth/l2cap_core.c:4902 [inline]
- l2cap_le_sig_cmd net/bluetooth/l2cap_core.c:5420 [inline]
- l2cap_le_sig_channel net/bluetooth/l2cap_core.c:5486 [inline]
- l2cap_recv_frame+0xe59d/0x11710 net/bluetooth/l2cap_core.c:6809
- l2cap_recv_acldata+0x544/0x10a0 net/bluetooth/l2cap_core.c:7506
- hci_acldata_packet net/bluetooth/hci_core.c:3939 [inline]
- hci_rx_work+0x5e5/0xb20 net/bluetooth/hci_core.c:4176
- process_one_work kernel/workqueue.c:3254 [inline]
- process_scheduled_works+0x90f/0x1530 kernel/workqueue.c:3335
- worker_thread+0x926/0xe70 kernel/workqueue.c:3416
- kthread+0x2e3/0x380 kernel/kthread.c:388
- ret_from_fork+0x5c/0x90 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
+> -Doug
 
-Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
----
-v1 -> v2:
-- Reply with an error code if a given MTU is not valid.
-- Refuse hcon allocation if MTU is not still valid.
-
- include/net/bluetooth/hci.h | 6 ++++++
- net/bluetooth/hci_conn.c    | 4 ++++
- net/bluetooth/hci_event.c   | 6 ++++++
- 3 files changed, 16 insertions(+)
-
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 5c12761cb..a7bc07e9c 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -1666,6 +1666,12 @@ struct hci_cp_le_set_event_mask {
- 	__u8     mask[8];
- } __packed;
- 
-+/* BLUETOOTH CORE SPECIFICATION Version 5.4 | Vol 4, Part E
-+ * 7.8.2 LE Read Buffer Size command
-+ */
-+#define HCI_MIN_LE_MTU 0x001b
-+#define HCI_MAX_LE_MTU 0xFFFF
-+
- #define HCI_OP_LE_READ_BUFFER_SIZE	0x2002
- struct hci_rp_le_read_buffer_size {
- 	__u8     status;
-diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
-index 05346250f..0b86a7452 100644
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1277,6 +1277,10 @@ struct hci_conn *hci_connect_le(struct hci_dev *hdev, bdaddr_t *dst,
- 		return ERR_PTR(-EOPNOTSUPP);
- 	}
- 
-+	/* Check the mtu is valid */
-+	if (hdev->le_mtu < HCI_MIN_LE_MTU || HCI_MAX_LE_MTU < hdev->le_mtu)
-+		return ERR_PTR(-ECONNREFUSED);
-+
- 	/* Since the controller supports only one LE connection attempt at a
- 	 * time, we return -EBUSY if there is any connection attempt running.
- 	 */
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 4a27e4a17..a8563cbe2 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -1263,6 +1263,9 @@ static u8 hci_cc_le_read_buffer_size(struct hci_dev *hdev, void *data,
- 
- 	BT_DBG("%s le mtu %d:%d", hdev->name, hdev->le_mtu, hdev->le_pkts);
- 
-+	if (hdev->le_mtu < HCI_MIN_LE_MTU || HCI_MAX_LE_MTU < hdev->le_mtu)
-+		return HCI_ERROR_INVALID_PARAMETERS;
-+
- 	return rp->status;
- }
- 
-@@ -3821,6 +3824,9 @@ static u8 hci_cc_le_read_buffer_size_v2(struct hci_dev *hdev, void *data,
- 	BT_DBG("%s acl mtu %d:%d iso mtu %d:%d", hdev->name, hdev->acl_mtu,
- 	       hdev->acl_pkts, hdev->iso_mtu, hdev->iso_pkts);
- 
-+	if (hdev->le_mtu < HCI_MIN_LE_MTU || HCI_MAX_LE_MTU < hdev->le_mtu)
-+		return HCI_ERROR_INVALID_PARAMETERS;
-+
- 	return rp->status;
- }
- 
 -- 
-2.34.1
+Best regards,
+Sui
 
