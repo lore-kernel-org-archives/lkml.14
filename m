@@ -1,140 +1,110 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D5646
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 00:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000DA646;
+	Wed,  1 May 2024 00:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714524667; cv=none; b=bHPoE7zIbD3LjLzieqPCVhvVpjUXNOTWDjIETWpRYgBuYJgGfjTcWZiLGP5bTyxbMLHeSY64orZU6fsFodwO0tKZY8RzpjavCSOOMIE0FIilVFlhzg5mZFNHg9rKV0lrZ1QH4vjnQx0uo/GMD4HcZqjkGSgju6DhxWFmVoLyTXg=
+	t=1714524779; cv=none; b=U4dzwiG7m/ROcZpKlVf35poKcRQuTe5J9OfpUhoD/H1brrsmBwYHdwB/QoiXho1upAMgTqJBML04RYm4VeEcgtHuRJUrCqkxZdq7CbCELjY984bcSMmBzcPNGMgv9EDhSaiNL6142U6ENeKxtnQMRHS/pjf1U1hqTAxRWHiR/NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714524667; c=relaxed/simple;
-	bh=3F82S8nexwhqGW6YGWr5YlPxXVIxXYdtx7GHwD0H0Wc=;
+	s=arc-20240116; t=1714524779; c=relaxed/simple;
+	bh=/TN7SiCublb2q/4ojZFR4/POqT5ttG+SWtdRCGOgxd8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jy1Kmb2FJNtGnU6+l3gpJAZ/nRXRneyEHr3X0+eiAAvK014MTuctSkdEHx3hGUH8ng4xa+0Y33iqQkSfPQh6qe2Lo42O/1jW7Q0dsOqiZDdzv6sDkrZpKLskkTY2R5SzgNz64DsTUlJuetog7RiRoodvQkPxaFBgrH4dazSochw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=lug2jlHw; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=aufgg1ySVFOrorNlG9TMnxvmfxUeZ+JBxeEFbNQOi/pMbde0Zi8pd/gyIjjCE3qkUZBDXFf+xVRiuXE9LvrDJd88S9QvNYzDHZQYMo2qago81eTqIxLeWK2wTjFwBeZz345+s++axFygkOhURIsTYxqmEB/s+NH5fZbnkfGzG/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YpO/8Zr0; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="lug2jlHw"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-69b5de48126so18025516d6.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Apr 2024 17:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1714524663; x=1715129463; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9BD94zdxyDu4bbMrkiiEBVb20niGXuFjMmzvoxFlieQ=;
-        b=lug2jlHwBuxetbk347zWSpZL8b9lrj/9Hxh6LwPaC9AaUbeSB7lgqHqoEw+VZN6ku2
-         dK6PbToPlQiPr6sH2Wz2r6JxgYjnR7sEf/j8mksuUmT9Po2GxTCuGp+TwlN6cs7RoIXg
-         j4sVnZs2y2yjjcyqD6Id+l2MzpNoR8Ndmz8QDgzl4nnxmpaRpF/M5C51SOMXfGHCtHHu
-         poVDFMPOxKvLpEnncdhO+lFx1M7mCOQQsU/+rCaWzRiwSi+JnWoHRFgLN/jtTvK2pNVq
-         Dvur8SRyegkgeNqvuQ9BOeX9c1aCT6/Qo5WuI9K9Qjm6A1lN9UVsNRCcvHlF7yWcgFXU
-         eFsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714524663; x=1715129463;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9BD94zdxyDu4bbMrkiiEBVb20niGXuFjMmzvoxFlieQ=;
-        b=j01sRcWEnuFbL0UOUCqnoI9l9nnrI8Fp/eyjmzEaIEoAjIBk8C7w5yX+2c2Wz9LujJ
-         QmSi4uxe3nu4VSd80jg4QWvSbUHCY4iRWbuWMlr3alglJh8kJsI2cv6IUXdYIZwgPd0q
-         g/z0i2HHNLe0AHN2Fpuuxs4xWCBa0Z4k+g3zdTW+J1PlgogK5lPIO499HQYeKQ1EJBdy
-         jSw54a5rsdGTeiGZ7ytPxzCYhSfHVzz2cUggWX3FF0lnOZflUtt0AugQX1IaTvKhQMrP
-         m11GrkYcq6fgz4ESaDtKsTAzw5R67Szl6k7srkktuZPbdWmjGbDO/XtTFLQCFKbJUGQN
-         rD/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUrLmp7sUWhjddSGwHBoYgkoloIGs2vfajT69X6pbRoug10eiD+nWUgWdfotRwgyychPirKSNyKIcprEuXstJUZ/ni/fXyu/f6bwAb6
-X-Gm-Message-State: AOJu0YyU6MpW77AE5PqeVLkO1zpXEOZKqJjkXIlPcY/rcFpuOhfcvRQI
-	nLbXx1mjdQH9uY/PR+EtQ1woXVwpv+7/B1ny8DPTMQmuWpdw5JRHhEO8wokRepE=
-X-Google-Smtp-Source: AGHT+IGmkFCNrECwXMOsV+GH36MaUwl+gyGfkvlXgDL2aLu6d/LAO2jPBNjH2tAr3rSkoFwqy+Stig==
-X-Received: by 2002:a05:6214:242e:b0:69b:17b2:df34 with SMTP id gy14-20020a056214242e00b0069b17b2df34mr1310043qvb.63.1714524663371;
-        Tue, 30 Apr 2024 17:51:03 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id q5-20020ad44025000000b006a0cbed1bf9sm2543002qvp.7.2024.04.30.17.51.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 17:51:02 -0700 (PDT)
-Date: Tue, 30 Apr 2024 20:50:58 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	"T . J . Mercier" <tjmercier@google.com>, kernel-team@meta.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/8] memcg: reduce memory for the lruvec and memcg
- stats
-Message-ID: <20240501005058.GA2538005@cmpxchg.org>
-References: <20240430060612.2171650-1-shakeel.butt@linux.dev>
- <20240430060612.2171650-5-shakeel.butt@linux.dev>
- <CAJD7tkZnXY+Nbip8e6c7WC4qoYC21x=MHop_hT4NqYLKL8Fp6Q@mail.gmail.com>
- <u3okwix7ovvzzfossbmfalwpq23qa3bmv3secg7tpjk7ghyemq@w3ngvr526rc2>
- <CAJD7tkZh-bLHQhaPsU7h1WUmK3xwHVoacVcR=P55i+7d0FzfFw@mail.gmail.com>
- <gmel2s2pysaavfetoqit3zq7grcrsbbfqh7sitg577yip7knwh@bufhf7ymlyd7>
- <CAJD7tkbue8S86YZE3y_1qOF5ee14F9MCuh2iJ0BNBZC8QpL=_Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YpO/8Zr0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714524777; x=1746060777;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/TN7SiCublb2q/4ojZFR4/POqT5ttG+SWtdRCGOgxd8=;
+  b=YpO/8Zr0/4apu/vf2VqnTrB+aMK7+xyN1+70/LG0SpIxiS/d9pZKTL0q
+   b2/vwZXC4hidF8mjEl3tlKMwSb5ozzAbGw5n8YwGofo1JF2ARPGgyB16p
+   vSr5VKMIPuFfsnokFEFH+YzcOGRcyINp3E8PrFHCr2FWv8GcZlrkqI7Pu
+   Xwnf/S63fTi+Lz+tyN8bxo8eO75uyvkqiThZeI1g4MyxMZVGe6wj8czSF
+   GrhFRkyaiWaf6LYD0j7KZsiCyr06gOLNEpdiaqSnDuwZ5bpfNaNsoYsTk
+   pByzBGPGhgC2DLKGPfYl4ilgo/COgY52z9KxcFo3c08sBT3fgOBsFUP8W
+   A==;
+X-CSE-ConnectionGUID: AUbc9CL7RfCHHW98SCzUhg==
+X-CSE-MsgGUID: 9tIuphHFQ3uhlLrhLTt3kQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10427247"
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="10427247"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 17:52:57 -0700
+X-CSE-ConnectionGUID: IKMrh20OTIOli/AiCOwNWg==
+X-CSE-MsgGUID: wuwKJK23QO++FFMVLKNXFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="27057176"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 17:52:56 -0700
+Date: Tue, 30 Apr 2024 17:59:40 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: "Zhang, Rui" <rui.zhang@intel.com>
+Cc: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+	"srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+	"Brown, Len" <len.brown@intel.com>,
+	"stanislaw.gruszka@linux.intel.com" <stanislaw.gruszka@linux.intel.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Neri, Ricardo" <ricardo.neri@intel.com>
+Subject: Re: [PATCH 2/4] thermal: intel: hfi: Tune the HFI thermal netlink
+ event delay via debugfs
+Message-ID: <20240501005940.GA29652@ranerica-svr.sc.intel.com>
+References: <20240429234152.16230-1-ricardo.neri-calderon@linux.intel.com>
+ <20240429234152.16230-3-ricardo.neri-calderon@linux.intel.com>
+ <e7fa25681ed057988c5ed14ebddad72e09b20703.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJD7tkbue8S86YZE3y_1qOF5ee14F9MCuh2iJ0BNBZC8QpL=_Q@mail.gmail.com>
+In-Reply-To: <e7fa25681ed057988c5ed14ebddad72e09b20703.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Tue, Apr 30, 2024 at 04:07:05PM -0700, Yosry Ahmed wrote:
-> On Tue, Apr 30, 2024 at 4:00 PM Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> >
-> > On Tue, Apr 30, 2024 at 10:41:01AM -0700, Yosry Ahmed wrote:
-> > > On Tue, Apr 30, 2024 at 10:38 AM Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> > > >
-> > > > On Tue, Apr 30, 2024 at 01:41:38AM -0700, Yosry Ahmed wrote:
-> > > > > On Mon, Apr 29, 2024 at 11:06 PM Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> > > > > >
-> > > > [...]
-> > > > > > +
-> > > > > > +#define NR_MEMCG_NODE_STAT_ITEMS ARRAY_SIZE(memcg_node_stat_items)
-> > > > > > +#define NR_MEMCG_STATS (NR_MEMCG_NODE_STAT_ITEMS + ARRAY_SIZE(memcg_stat_items))
-> > > > > > +static int8_t mem_cgroup_stats_index[MEMCG_NR_STAT] __read_mostly;
-> > > > >
-> > > > > NR_MEMCG_STATS and MEMCG_NR_STAT are awfully close and have different
-> > > > > meanings. I think we should come up with better names (sorry nothing
-> > > > > comes to mind) or add a comment to make the difference more obvious.
-> > > > >
-> > > >
-> > > > How about the following comment?
-> > >
-> > > The comment LGTM. I prefer renaming them though if someone can come up
-> > > with better names.
-> > >
-> >
-> > I will be posting v4 and will change the name (still thinking about the
-> > name) becasuse:
-> >
-> > > > > > +static void init_memcg_stats(void)
-> > > > > > +{
-> > > > > > +       int8_t i, j = 0;
-> > > > > > +
-> > > > > > +       /* Switch to short once this failure occurs. */
-> > > > > > +       BUILD_BUG_ON(NR_MEMCG_STATS >= 127 /* INT8_MAX */);
-> >
-> > The above should be MEMCG_NR_STAT instead of NR_MEMCG_STATS.
+On Tue, Apr 30, 2024 at 04:52:52AM +0000, Zhang, Rui wrote:
+> On Mon, 2024-04-29 at 16:41 -0700, Ricardo Neri wrote:
+> > THe delay between an HFI interrupt and its corresponding thermal
 > 
-> Yeah it's pretty confusing :)
+> s/THe/The
+
+Ah, I read the changelog 1000 times and still I misse this. Thanks!
+
 > 
-> How about something explicit like:
+> > netlink
+> > event has so far been hard-coded to CONFIG_HZ jiffies. This may not
+> > suit
+> > the needs of all hardware configurations or listeners of events.
+> > 
+> > If the update delay is too long, much of the information of
+> > consecutive
+> > hardware updates will be lost as the HFI delayed workqueue posts a
+> > new
+> > thermal netlink event only when there are no previous pending events.
+> > If
+> > the delay is too short, multiple, events may overwhelm listeners.
+> > 
+> > Listeners are better placed to determine the delay of events. They
+> > know how
+> > quickly they can act on them effectively. They may also want to
+> > experiment
+> > with different values.
+> > 
+> > Start a debugfs interface to tune the notification delay.
 > 
-> NR_MEMCG_POSSIBLE_STAT_ITEMS / MEMCG_MAX_STAT_ITEM
-> NR_MEMCG_ACTUAL_STAT_ITEMS / MEMCG_ACTUAL_NR_STAT
+> Why this is implemented as debugfs rather than a module param?
 
-NR is pretty common to mark the end of an enum range. It would be good
-to keep that for enum memcg_stat_item.
+Implementing as module param would require more work. In its current form,
+intel_hfi is not a module. Its entry points are device_initcall()
+(via therm_throt.c) and CPU hotplug.
 
-The other one is about an array, where we usually use "size" or
-"len". How about using one of those instead? I think it should be
-sufficiently distinguished then:
-
-- MEMORY_STAT_LEN
-- MEMCG_VMSTAT_LEN
-- MEMCG_VMSTAT_SIZE
+I can look into implementing as a module param if folks think its a
+better solution.
