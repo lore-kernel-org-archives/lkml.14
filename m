@@ -1,143 +1,143 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBAA502A6;
-	Wed,  1 May 2024 08:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C8053392;
+	Wed,  1 May 2024 08:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714552372; cv=none; b=GRcLQKsvVd+GONPeP4sYvd/rCcsD0U8wpNsGSs/TxQocYRIgirhWB8VngIoHpt7d5vFWqUiAcHMPoywO3fmFURu0jkqShjre4FOuDP8BA8hltKFRLk3yrN54urFMgUtmbl0cvaZ8g1UV1dy53HlY++yfY8hvWzyGUweOMbHlccw=
+	t=1714552374; cv=none; b=IEvsufa1+0OVdILOUWnvOx9Iit6pltAM5StsBlDvJt8G59nbQGSInfa47wEVIIXReuj22/ap9ZKJS0CR41gzELPYY/jM2u73U6xnnYlhtP3B1gULdmFrqsVgqkRewMfikoauCbIToZ4JAqi3sJbi7xxRRRBidzWnIZ9X/1JfwJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714552372; c=relaxed/simple;
-	bh=trPaH2wyrIlkFi7z539a415V19+XREbMpJPBZ22K7jk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=WlIgO3ISS/si1ytkzq5GJXTcPl+j2Zw7OsyvU7dGx9YWZtxYVBoufJ5QuH7VL9zpWqz77J2PXVCdCBcAPFVqSMhSG/TL3VobwS2s7GerRTKhEteF8cPHrx51ppALTyVQQzGXT+AdNDtDd/GM0wedfcp83Qpz/UiEzU2OqnWyIuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nADJAvVC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714552374; c=relaxed/simple;
+	bh=5n7Ca93sgt2C4nvaRXiYy2nhqL3iHW3hsRzfzicQJdw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BOA9BzxoGyDsBm165NHRgV6VEJzYkoKnPWjdmRsZGpRNgDALpqiKfqVFuGGwP1SYHCGNmRUYCPDZySzW9z3RSFtkjiFshxzaaUVcRimlVq6j61VpIvDAtLjrMykAWVB5NT5OPw/egsMJBGEKzvuz/J4Y/dCd6ie8uX1dIBaLrQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0Q5d981; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nADJAvVC"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4418MEoN027237;
-	Wed, 1 May 2024 08:32:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=Fbpnjq+hrN2ZFdP92/aGghpDR97OsU6F/Bfdwd+aiYM
-	=; b=nADJAvVCKsXwK/9/B+BGKAMmQrhRtsRIukSj0elSLJbP1zxp4R9pMtIUBoK
-	ryPm/Ik2VoQgB9A900oTEhgz+rSWh2Bov2tcNB105/4xZaLTGA4IPCaadHS81ZkC
-	bGRAhdODd20bqMTkRqmdch3+lI9mH7qvp14tKrgEqqc/qSTJGvYCKpYZTlxpm5GS
-	iz54lKYt4jhuaW8GvKaCSI0Oeoc0486MtranQCmmHrIhKblOzNHsvP+P1ktCZIsi
-	1FmdMDC1VfpaR1moR8Nd0eTptx6sE4R6UprKC4VkD5AMPbnrSY+VMM+6exa31Kda
-	Lx7ZK8ml8RW1q99M748uVQ6samQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xtvf7jycy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 May 2024 08:32:33 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4418WWfe017894
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 1 May 2024 08:32:32 GMT
-Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 1 May 2024 01:32:28 -0700
-From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Date: Wed, 1 May 2024 14:02:18 +0530
-Subject: [PATCH v3 1/2] dt-bindings: clock: qcom: Add AHB clock for SM8150
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0Q5d981"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1ec69e3dbcfso9953175ad.0;
+        Wed, 01 May 2024 01:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714552373; x=1715157173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8RfbJF1AHvLx68TbsWfPK5aQiL25UBSnWB8Job9Vv4g=;
+        b=i0Q5d981SgWWQcqD/jOHshw7A75664r2C49/NZxEhJeNf507nIfkYBINQc9AI1Nzap
+         hwEhqy0o3Hc7KblykNSKoQHudYXTc3tibFCWzzQj2frmjBpkmX+rFgfCS48mgmM2Z5uX
+         hGYGbTVAmWTxLhMmt0iwh6yCxlJpLt7WefHRJ2+UBQbeumvEUAO5DCkIVLcPyAXyTaxe
+         CQCInp7SnbApL6XufuFaohfRidRMQ0gGKoqmhLFNqdMfB9VqPHAN6YKQLFkxOZjRpdAJ
+         TN1Y9sgYaZRBu2KEKxMDD8/jRRUY3HIJrOgFkxZ3kHjyoAjcU+Fz8hHEKChQFkJHBsNH
+         UZmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714552373; x=1715157173;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8RfbJF1AHvLx68TbsWfPK5aQiL25UBSnWB8Job9Vv4g=;
+        b=CWTJNTW5x8Tec4mHpzKEGTMjGhjqzQUGREtXHOo4wKeKIYDL0iiCUXlO9YCluTRwgn
+         g+4xGw1TxfWDIG0/hUq65PQQtlwa4XGxFj7+27FMdcJaURtuD8PUnUrePv4qTZlHSWFV
+         67nkZfpypuJ+36YV+BEJhw2lu/T2mgXRUEzjUpUOOgph8umpiQ9Fur6N5qYfEivbZ8nF
+         lR6XtYv+AbewGBxzscg95dUu5u2f1GwiOni8t6lX9dHUWjZVm6dGCm/VVPqM/fusPI6u
+         R3OaP27oPGR+wDBkAe+P3Q5a4xDTE8Vb7GmXAZX8J4VlVLNr4UgQonQEwielxo17EYyP
+         aViA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtJbhvN1stSb4F/LQk5lsRh1gcrj9mgf8VFA7IAglZch3AfwodMi70EnNVeuNHwImQkC9jdmo0OURaPpcrkoQkdWSQOF3w4uFaAq5JoHJ5uN3ibxTGFTSk2HIu2vwm/Dhd9wbhb8YdW58U7MMMAu2J4gpjhlfwuW1U3Fo1uRL15yHSLg==
+X-Gm-Message-State: AOJu0Yx5gWFqxMtIHan3KqpOgexVszqsWjJ7NA84YsR2xzOr1vB/SZFy
+	I3XgO0qDWxhBL5DE/req6RGjUm4uzu7I9O3Xoqo9F3+xvJk6tKoh
+X-Google-Smtp-Source: AGHT+IHXAaPkZGd5Nh8t+ernOYHnVoWi2W46KeG7qa8Pc+dwOqN2qBR97bt1o8e7/+/xUA+of306Lw==
+X-Received: by 2002:a17:903:1c6:b0:1e5:c0ee:a7f9 with SMTP id e6-20020a17090301c600b001e5c0eea7f9mr1809339plh.14.1714552372317;
+        Wed, 01 May 2024 01:32:52 -0700 (PDT)
+Received: from localhost ([39.152.149.70])
+        by smtp.gmail.com with ESMTPSA id x1-20020a170902ec8100b001e5cadbdf8csm23761863plg.37.2024.05.01.01.32.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 01:32:52 -0700 (PDT)
+From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	unicorn_wang@outlook.com
+Cc: dlan@gentoo.org,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v7 1/2] dt-bindings: pwm: sophgo: add pwm for Sophgo CV1800 series SoC
+Date: Wed,  1 May 2024 16:32:41 +0800
+Message-Id: <20240501083242.773305-2-qiujingbao.dlmu@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
+References: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240501-videocc-sm8150-dt-node-v3-1-2c4bd9ef48bd@quicinc.com>
-References: <20240501-videocc-sm8150-dt-node-v3-0-2c4bd9ef48bd@quicinc.com>
-In-Reply-To: <20240501-videocc-sm8150-dt-node-v3-0-2c4bd9ef48bd@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>
-CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Ajit Pandey
-	<quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Taniya
- Das" <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        "Satya Priya
- Kakitapalli" <quic_skakitap@quicinc.com>
-X-Mailer: b4 0.12.4
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _C_8vJOcoyC_5WKDmYPfwaPgLJ9iOdgP
-X-Proofpoint-ORIG-GUID: _C_8vJOcoyC_5WKDmYPfwaPgLJ9iOdgP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_08,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 lowpriorityscore=0 mlxlogscore=970 priorityscore=1501
- phishscore=0 mlxscore=0 adultscore=0 bulkscore=0 clxscore=1015
- suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2405010059
+Content-Transfer-Encoding: 8bit
 
-SM8150 videocc needs AHB clock, so update the bindings for sm8150
-to add the AHB clock.
+Add devicetree binding to describe the PWM for Sophgo CV1800 SoC.
 
-Fixes: 35d26e9292e2 ("dt-bindings: clock: Add YAML schemas for the QCOM VIDEOCC clock bindings")
-Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 ---
- .../devicetree/bindings/clock/qcom,videocc.yaml         | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ .../bindings/pwm/sophgo,cv1800-pwm.yaml       | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-index 6999e36ace1b..68bac801adb0 100644
---- a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-@@ -75,7 +75,6 @@ allOf:
-           enum:
-             - qcom,sc7180-videocc
-             - qcom,sdm845-videocc
--            - qcom,sm8150-videocc
-     then:
-       properties:
-         clocks:
-@@ -101,6 +100,22 @@ allOf:
-             - const: bi_tcxo
-             - const: bi_tcxo_ao
- 
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - qcom,sm8150-videocc
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: AHB
-+            - description: Board XO source
-+        clock-names:
-+          items:
-+            - const: iface
-+            - const: bi_tcxo
+diff --git a/Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml b/Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
+new file mode 100644
+index 000000000000..b5b819d780f1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/sophgo,cv1800-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-   - if:
-       properties:
-         compatible:
-
++title: Sophgo CV1800 PWM controller
++
++maintainers:
++  - Jingbao Qiu <qiujingbao.dlmu@gmail.com>
++
++description:
++  The chip provides a set of four independent PWM channel outputs.
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    const: sophgo,cv1800-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 3
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    pwm0: pwm@3060000 {
++        compatible = "sophgo,cv1800-pwm";
++        reg = <0x3060000 0x1000>;
++        clocks = <&clk 60>;
++        #pwm-cells = <3>;
++    };
 -- 
 2.25.1
 
