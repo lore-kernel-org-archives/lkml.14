@@ -1,47 +1,48 @@
 Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB409163A80;
-	Wed,  1 May 2024 20:48:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0511635A9;
+	Wed,  1 May 2024 20:48:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714596497; cv=none; b=IBF+FOPzyVHSnES4cNdm12QEIknsQc8gWACIW/RU/PWe7CK6qnfgmLDNyiLVId6ZHUREHnyzfrLSQe+Y41Jm4GJLLpha1+dYZdqJ7TLPW/SpMNltXvNgNxLrnMdOIvqn30hY7qTPnzzLYUsKYGKTk6zbbrnSrNdwEATD1WGmSw8=
+	t=1714596498; cv=none; b=PG3mGi/sctz/sW++49NwVwDmebruUgOWdqi+0ah5trGgFzV4Z9MH2vt3OjluDNLQujzHwxnDXm3SmE+0zCiTXX7DdPAhbKHh67+fOt0coxdo1lkEx7ne0Pkh1j0HXHW0J+FDTTZFwTsaOY7tH+RI0Xwg/Z5fUFiu16hn9Apwg8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714596497; c=relaxed/simple;
-	bh=2Xv24IW461dx87lQvZYqfi3iIdL1HV0h2BUIUMEuDyI=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=SgUQv4uudWSTj2prNXsnEAH0oXbgrTbBdJWwu1MhQPlQWkqAb4Wt8ga5JCfOx34ju+eC5umTulSjElOW3uFRIs7/tHfugj9j7XntyWArcgxqpfB23KpcpUdwxzOjzfG+U6SLUC5c2nxpfYdR2g9D0dRM5/hXb79jtDowiso4fuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=pLXtkvRu; arc=none smtp.client-ip=161.97.139.27
+	s=arc-20240116; t=1714596498; c=relaxed/simple;
+	bh=qACjeJ8WIuESunSMWPlu5A8R78ujFaqbQZlXKib7gwQ=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KSFwIIVhD2G4OG3QsQfnT86RIU3Y/22xdAFaslUf7Syx1U25N+7wY7ORCZJVA3LvxTP779PxZ6tArZnxVWI/iHYe2Kc44BRYgngc1IO9W71nT+VpDH+O+On4rt+CbwmdIqrCBSdcMD8OVVqqPmxS2lPQ9SwsR0nHgx0nX/RKXAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=XckCldwC; arc=none smtp.client-ip=161.97.139.27
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="pLXtkvRu"
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="XckCldwC"
 Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
 	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <andreas@kemnade.info>)
-	id 1s2Grz-005PNg-29;
+	id 1s2Grz-005PNh-2A;
 	Wed, 01 May 2024 22:48:04 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=EziAVVGoDGwvfXefxOEMQP944ZbxBIa11u0lLKfCvuE=; b=pLXtkvRu5bxzky+I5Z6IOiLCty
-	GYjbkq7sBI4GYlZYJSiDkpvQEd+EgdoLlqZ+idmVgwb842DxDpHVOxkhzXpf/8vPM1j01oHqM3btW
-	V/ICUPOvRBJtVssj2WM/bJHPlO0f1zcEPjGKbWPe1udgADayHRUq/8CJz5HbXnt2r9Rdgu80VuHHD
-	fgeUNMLo5b58HRz2Opk0cYLEHJf0fmGzfihzswul/SkeUKLBGRY40CHuPJZj2y9wTIV7tLXUC8598
-	YIjHJroDSIuJ8n5N6w3X5P6ArLlXQunHvFYKYK22Rz1uJDv41UtSboB8rbrO9kVF/QIQDUkneT+lB
-	xKa1clzQ==;
+	References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
+	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=h8RCSKC+enaAXM/E/bFJEcaWjvNfKRuAfVQEY1KJEF8=; b=XckCldwC2WffgnEb7L6zWrbTa0
+	+DKKWP1YE3eg/0y8cqYNOwx193BIU7KSmUzSfqfVOs6dU/72CPOkNqMtuCxHDWggRM97wJI5GwE4F
+	exTPomdKQoVBTeEEHOpNKViyWAAS38K4CCcXK+djshWFO3krG8AlNk+sxnFKAXe/xrxdc0CEMtbdW
+	QlE3kEyEdV/SNuji4wxToNj+2o7I1w7+BUDIZXnm+pG4Jk2SqIbfQZPnPul9WHw2BKqrqifKDeWtB
+	4ZXIQ+BRzRIkQgWj0Lj1aQbxVHwL1+/bnUS37NCL+a4nUJyGE32csxZY2Ck/OKALTkTJi5cZVb8+5
+	hBKXXeOA==;
 Received: from p200300c2071a02001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:71a:200:1a3d:a2ff:febf:d33a] helo=aktux)
 	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <andreas@kemnade.info>)
-	id 1s2Grx-000OnR-1b;
-	Wed, 01 May 2024 22:48:02 +0200
+	id 1s2Grx-000OnW-3B;
+	Wed, 01 May 2024 22:48:03 +0200
 Received: from andi by aktux with local (Exim 4.96)
 	(envelope-from <andreas@kemnade.info>)
-	id 1s2Gry-003BKd-0p;
+	id 1s2Gry-003BKm-3C;
 	Wed, 01 May 2024 22:48:02 +0200
 From: Andreas Kemnade <andreas@kemnade.info>
 To: dmitry.torokhov@gmail.com,
@@ -60,10 +61,12 @@ To: dmitry.torokhov@gmail.com,
 	linux-kernel@vger.kernel.org,
 	andy.shevchenko@gmail.com,
 	felix@kaechele.ca
-Subject: [PATCH v3 0/2] Input: add ft5426
-Date: Wed,  1 May 2024 22:47:56 +0200
-Message-Id: <20240501204758.758537-1-andreas@kemnade.info>
+Subject: [PATCH v3 2/2] Input: edt-ft5x06 - add ft5426
+Date: Wed,  1 May 2024 22:47:58 +0200
+Message-Id: <20240501204758.758537-3-andreas@kemnade.info>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240501204758.758537-1-andreas@kemnade.info>
+References: <20240501204758.758537-1-andreas@kemnade.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,20 +75,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v3:
-- reorder compatible also in driver
+As ft5426 seems to be compatible with this driver, add it.
+Debug output during identification: Model "generic ft5x06 (79)", Rev. "
 
-Changes in v2:
-- reorder compatible
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ drivers/input/touchscreen/edt-ft5x06.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Andreas Kemnade (2):
-  dt-bindings: input: touchscreen: edt-ft5x06: Add ft5426
-  Input: edt-ft5x06 - add ft5426
-
- .../devicetree/bindings/input/touchscreen/edt-ft5x06.yaml        | 1 +
- drivers/input/touchscreen/edt-ft5x06.c                           | 1 +
- 2 files changed, 2 insertions(+)
-
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 2a1db11344766..028ec66faa193 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -1486,6 +1486,7 @@ static const struct of_device_id edt_ft5x06_of_match[] = {
+ 	{ .compatible = "edt,edt-ft5406", .data = &edt_ft5x06_data },
+ 	{ .compatible = "edt,edt-ft5506", .data = &edt_ft5506_data },
+ 	{ .compatible = "evervision,ev-ft5726", .data = &edt_ft5506_data },
++	{ .compatible = "focaltech,ft5426", .data = &edt_ft5506_data },
+ 	/* Note focaltech vendor prefix for compatibility with ft6236.c */
+ 	{ .compatible = "focaltech,ft6236", .data = &edt_ft6236_data },
+ 	{ /* sentinel */ }
 -- 
 2.39.2
 
