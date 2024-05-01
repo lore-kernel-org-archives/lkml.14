@@ -1,127 +1,124 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7CC42A96
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 20:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326835B69E;
+	Wed,  1 May 2024 20:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714594533; cv=none; b=B56GfYo8NpIfh2W5KIItFqzdlZ4la9IRQfK+UcIvVvoFvcOB2exh6sm+A4dFNHUfex5VfRSxVk10iaZqRzb4iTaFj4NKEcHlCriNPYq149E/OA+MxTVEVPOdGa7v2F16H+WeZSid/NHIM5zt9XC839UMJmM3wqIDme6oK9I2N2M=
+	t=1714594551; cv=none; b=bCmgdqEmsL5P18shOzwQde8vp4BaWCdJrJdjIfm5nacxkT6yVk8ccWPRpo7mVN3M0Q7NNaLfT/6vKLCLYywwInv7lOwos3Dwx+Rz725+gw1N9z8toiiwnSwiWNY5HEcGR1S/+UcKTez2E2nC1Za/OwLLDg2QdyIl/9R3XG928UI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714594533; c=relaxed/simple;
-	bh=wiC/qwp1tn2QtLPL49mOBk5DgvjRW0eTkk2FnvD2dvI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gTXt211GmbHkCbM8See0px+blpciyKIku9biJipy12Y+8V2xEn/vIYMQBK3seOpNkkb+4OtM32RBKxD3DYFUJG30izUbVN3Zd/lJ7yFsDzX/B89AYFamy3Ut/F9JO5JmjnQD9+Q1aOh3sbXEH2u7BCFgshtWm89LB8at+trQnKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aP/dGSQJ; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714594551; c=relaxed/simple;
+	bh=B1Uh4i07qA042YiuAtEnhpGxy0d/YEecRVrlZr0WYw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=phUO/6mT/45zDJZKOJQ8dVdWbju2fsePsJOIe3eLMj/3JVpxJyNQlbyCLTjAR/GAk+mHU70Lau3q7+dD4c5cihapT+NkiNuR4KRpSDp53Tx1t1E+KmvOvXbbmd65TqA2fsfJaGGGywKeU6Duoxk2KZO3V73BkaXPPDELt18P5QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwu2J1/h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aP/dGSQJ"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7f395ac5b16so482308241.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 13:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714594531; x=1715199331; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+i1KmeojcJt62XLl7CnlLSmsjOhDVR/E3EtOZ1fd9k8=;
-        b=aP/dGSQJ4L/wfBCOPwmR7uwjmqJ0pYAvN8cwCfriOLcmB05o3R9JNtx6/rq2LLUsq9
-         C14y9X2yvLqLOSuTt5pkjy7j5I1VDNlrAj1q8T+LLmDWGl99mqUfW5+zvfKqSK68x0n6
-         h58nuXZNflEgYq1IAehgXLntTeLTIUt5sM9nRDLweu1HL6KgLO9enVWKp36XogS4Prlb
-         zuuxoOnebsIlWXzNFhlNi2Grxyxc5yCiCQLWSPrnhoE1IpoZKcU8BFl5E2DVV0JoJUQE
-         IQLLfxklnDaFKWWbrsFU3q6moX6GzzHPnX3iWHjqGK9pVtL/rKF6nzSwrjA+HpZp0vVY
-         ff8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714594531; x=1715199331;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+i1KmeojcJt62XLl7CnlLSmsjOhDVR/E3EtOZ1fd9k8=;
-        b=LmVI/yJcOcWMnVD56Su833igz1KYegJNEoKB2ZUhfXZSWD4SUcU9TpkvIsHOK5sh4I
-         2CYyOxP8WBSNORzA5mqgvEzyPyXDTLMwDkoYAIjJUBqezaWKa5hdb1feTRB7KuDtsvkh
-         dqiXwX8scxkZ9qoFkB21mvxWPwSrvG8ed5/rce6azmcZkir//L/FcaLHw+ASWZjk0a+a
-         mX+fda2nhhal656rtXgUMTs3BKH0+PSXtTTiJbD8x6G0/KuIA3EbvNIPro/PGtFmHt+r
-         KFHwf+RL+LaxwEnFpjw2n6mGh0tP6TsF9oasujzuRWyHpp8l1hN9WYzYgBZWAM11A2pG
-         Mglg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJKp6sGWf0Dp5/E2f627ik7ZdsWDY+PH7JbD6owyfK2qUVl1EALjrnq4MiH/YjX/OowgQwYq74ckwtBeARM9497Mq+ddOSOe0JLXvo
-X-Gm-Message-State: AOJu0YwYKhGMQgeHyDU5pBLQcD5qE4tUpWT1SBlNsjvpnpsFdIsxqnm0
-	XWcFF1/U1v+ZsWyfMUuG49pYxqJ/DY9iLlkMtBnwElVwGaFB7Df1QNNTpxTjFeCfh8gkHJy+Dto
-	nANzpVVOyFrhyKAtqPTMngTNc2sUDa7wkNKNA
-X-Google-Smtp-Source: AGHT+IFhpQb9UqMdO0uNQVh8XPqKDU0xHEW+aQEOpdYTs8DjimUSAduAwteLZCVHPiCOLjyGRKMOgGsbqxKF59nSe14=
-X-Received: by 2002:a05:6122:d9d:b0:4da:a788:cad5 with SMTP id
- bc29-20020a0561220d9d00b004daa788cad5mr1334566vkb.5.1714594530088; Wed, 01
- May 2024 13:15:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwu2J1/h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32582C4AF19;
+	Wed,  1 May 2024 20:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714594550;
+	bh=B1Uh4i07qA042YiuAtEnhpGxy0d/YEecRVrlZr0WYw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nwu2J1/hBd8nUQDpUcCUvBJ/iE2Tt854m42ww+YyLzdRcPUswOq5X0ben9BhtzqeC
+	 KOKuGrC9hV5ugEltMpZ9LOWNXx7IyJ5ph2DcYQNxdfLLfODQruyozQYBAm8PdX5uCd
+	 yTaCg1bca1vKUTibNb9AFHiToLHamAtXOTlRaeXrgWVlm/yDrZONGe8lu5d69xM6Wp
+	 Z62GETam1wKiei04yhW3bFHttlICDuVo6oap1jc0+w9TIxqKGdDD52njjkMnNW8rA5
+	 8pUAQwLGgMJvnnOX1fzvEk4w6i/tgDG4PVqALPi6mG841Jf3Hoep8sSx9ZeeXav/4V
+	 3eUPthzU83tnA==
+Date: Wed, 1 May 2024 21:15:44 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 07/16] riscv: cpufeature: Extract common elements from
+ extension checking
+Message-ID: <20240501-hazy-reformist-8ff36ba53450@spud>
+References: <20240426-dev-charlie-support_thead_vector_6_9-v4-0-b692f3c516ec@rivosinc.com>
+ <20240426-dev-charlie-support_thead_vector_6_9-v4-7-b692f3c516ec@rivosinc.com>
+ <20240501-probable-unfunded-746ef6ae1853@spud>
+ <ZjKcfZsWgR1AY3AZ@ghost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8edbd558-a05f-c775-4d0c-09367e688682@I-love.SAKURA.ne.jp>
- <2023053048-saved-undated-9adf@gregkh> <18a58415-4aa9-4cba-97d2-b70384407313@I-love.SAKURA.ne.jp>
- <CAHk-=wgSOa_g+bxjNi+HQpC=6sHK2yKeoW-xOhb0-FVGMTDWjg@mail.gmail.com>
- <a3be44f9-64eb-42e8-bf01-8610548a68a7@I-love.SAKURA.ne.jp>
- <CAHk-=wj6HmDetTDhNNUNcAXZzmCv==oHk22_kVW4znfO-HuMnA@mail.gmail.com>
- <CANpmjNN250UCxsWCpUHAvJo28Lzv=DN-BKTmjEpcLFOCA+U+pw@mail.gmail.com>
- <CAHk-=whnQXNVwuf42Sh2ngBGhBqbJjUfq5ux6e7Si_XSPAt05A@mail.gmail.com>
- <d4de136e-c4e0-45c2-b33e-9a819cb3a791@paulmck-laptop> <CAHk-=wi3iondeh_9V2g3Qz5oHTRjLsOpoy83hb58MVh=nRZe0A@mail.gmail.com>
- <892324fc-9b75-4e8a-b3b6-cf3c5b4c3506@paulmck-laptop>
-In-Reply-To: <892324fc-9b75-4e8a-b3b6-cf3c5b4c3506@paulmck-laptop>
-From: Marco Elver <elver@google.com>
-Date: Wed, 1 May 2024 22:14:51 +0200
-Message-ID: <CANpmjNOY=Qpm3hBu-eN4Xk8n-2VXQRvcQ3_PfwPwNw9MmC8ctw@mail.gmail.com>
-Subject: Re: [PATCH v3] tty: tty_io: remove hung_up_tty_fops
-To: paulmck@kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	syzbot <syzbot+b7c3ba8cdc2f6cf83c21@syzkaller.appspotmail.com>, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Jiri Slaby <jirislaby@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GXUDSiAct5jPEsjU"
+Content-Disposition: inline
+In-Reply-To: <ZjKcfZsWgR1AY3AZ@ghost>
 
-On Wed, 1 May 2024 at 21:02, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Wed, May 01, 2024 at 11:56:26AM -0700, Linus Torvalds wrote:
-> > On Wed, 1 May 2024 at 11:46, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > >
-> > > In short, I for one do greatly value KCSAN's help.  Along with that of
-> > > a great many other tools, none of which are perfect, but all of which
-> > > are helpful.
-> >
-> > It's not that I don't value what KCSAN does, but I really think this
-> > is a KCSAN issue.
-> >
-> > I absolutely *detest* these crazy "randomly add data race annotations".
-> >
-> > Could we instead annotate particular structure fields? I don't want to
-> > mark things actually "volatile", because that then causes the compiler
-> > to generate absolutely horrendous code. But some KCSAN equivalent of
-> > "this field has data races, and we don't care" kind of annotation
-> > would be lovely..
->
-> That would give the poor sleep-deprived innocent bystander some way
-> to figure out which fields were shared, so that does sound like a good
-> improvement!
->
-> I would naively expect that KCSAN's ability to handle volatile fields
-> would make this doable, but there is much that I do not know about
-> KCSAN internals.  So I must defer to Marco on this one.
 
-This is relatively trivial:
+--GXUDSiAct5jPEsjU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-#ifdef __SANITIZE_THREAD__
-#define __data_racy volatile
-#endif
+On Wed, May 01, 2024 at 12:48:13PM -0700, Charlie Jenkins wrote:
+> On Wed, May 01, 2024 at 12:37:14PM +0100, Conor Dooley wrote:
+> > On Fri, Apr 26, 2024 at 02:29:21PM -0700, Charlie Jenkins wrote:
+> > > The __riscv_has_extension_likely() and __riscv_has_extension_unlikely=
+()
+> > > functions from the vendor_extensions.h can be used to simplify the
+> > > standard extension checking code as well. Migrate those functions to
+> > > cpufeature.h and reorganize the code in the file to use the functions.
+> > >=20
+> > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > ---
+> > >  arch/riscv/include/asm/cpufeature.h        | 78 +++++++++++++++++---=
+----------
+> > >  arch/riscv/include/asm/vendor_extensions.h | 28 -----------
+> > >  2 files changed, 44 insertions(+), 62 deletions(-)
+> > >=20
+> > > diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include=
+/asm/cpufeature.h
+> > > index fedd479ccfd1..17896ec9ec11 100644
+> > > --- a/arch/riscv/include/asm/cpufeature.h
+> > > +++ b/arch/riscv/include/asm/cpufeature.h
+> > > @@ -98,59 +98,66 @@ extern bool riscv_isa_fallback;
+> > > =20
+> > >  unsigned long riscv_isa_extension_base(const unsigned long *isa_bitm=
+ap);
+> > > =20
+> > > +#define EXT_ALL_VENDORS		0
+> >=20
+> > It's not really "all vendors", it's standard. Otherwise, this seems all
+>=20
+> This hooks up into the alternatives:
+>=20
+> ALTERNATIVE("nop", "j	%l[l_yes]", %[vendor], %[ext], 1)
 
-KCSAN will just ignore racy access to them (it will pretend they are "marked").
+Yeah, I know what you're using it for, I just find the naming odd.
+>=20
+> Where the "vendor" argument is supposed to be 0 if the alternative is
+> applicable to all vendors. Is there a better way to convey this?
 
-In some cases it might cause the compiler to complain if converting a
-volatile pointer to a non-volatile pointer, but I suspect that the
-corresponding pointer should then similarly be marked as __data_racy.
-The fact that without casting the attribute is "viral" is probably WAI
-even in this case.
+s/EXT_ALL_VENDORS/STANDARD_EXT/?
 
-Do we want this kind of attribute?
+--GXUDSiAct5jPEsjU
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
--- Marco
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjKi7wAKCRB4tDGHoIJi
+0pu+AP9hEmGvtiSYMRVj8J8qm6vSD21SfEYfsPIhrXHI3zAnRwEAtYpy2rqHQbrU
+hC4o62eJA24pmjxdVcu266GkK87+ywA=
+=wAFW
+-----END PGP SIGNATURE-----
+
+--GXUDSiAct5jPEsjU--
