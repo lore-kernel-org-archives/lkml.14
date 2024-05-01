@@ -1,121 +1,86 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DF71EB44
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 14:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E0110958;
+	Wed,  1 May 2024 14:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714574706; cv=none; b=ObxFNtGkQdzNM0UuXoindfSIhdZar4x9ntrkgzgsw89dQY6I1g967BR+yzuBINi5VU39cIu5Tx/rk43iQUkkPGM4sIvs+f6pqbBMllkpaExb+n6cpyW2yBk51dTzrBfyXbkBHfv9b/z4BQ6U3fFUMG/VTObR28TMmE4vt22idKQ=
+	t=1714574757; cv=none; b=g273wY/tAjsJzD5ui9bYrl/v6pN4r9Y7EVRzpeJRN8gvQ6uGxRsWgc2x4mcaw7RL/vEsyNagcpBU/5f87flKwUXVNRbXlg6bHROy+8+cwAFuZttrXhgTRAJXBMcP+Qwv3byooANg8ERSoEO35lO0LEd5xF3CfeeBi9JP7wSodGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714574706; c=relaxed/simple;
-	bh=OVCEA+sMHIn5t+AmYPlgxoh+k+aWKCTPEhOiftVsSw4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=P54UWZBgsepkQ9Q9q9e1AXUv113j6c6sXdjePvV5YwEDV6uWyhubJi9SGnmCnKv/vGXS3rrGnuf6lChnKIQOxlXGzO0rRxtGKxkSvA+JAsfIHamCiIUFZgqhYLoflOsmJIQWUm1ZTWV19TuhCeqHQqFFtWveuuwjMYX66gdntBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kgZWwbJG; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714574757; c=relaxed/simple;
+	bh=Lr+zIgo/OtAUC7MfUUAOJmSsXwP++T+/RCsxrw4DNQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GfUDDn6U2yILyRdz0t1rU8SkQFlCCjqiHcnWIWwQb0O2KzNzkBlfV8hKdLZ/4HKON8qtTAlYAUiS9viREwVc7XbIjnN6C7khf5qxLC+oqb/3cBzVQr3+E91LpoAkOaiIuI0WT35fWwUZmDOE7hIuyBe0e+5iPjHeT9qBOQZ2iuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OlKIQudv; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kgZWwbJG"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57255e89facso6451112a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 07:45:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlKIQudv"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6f07de6ab93so6437540b3a.2;
+        Wed, 01 May 2024 07:45:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714574703; x=1715179503; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=19fONahm4CwkvcFuKCjkaG9ywwBvaJs3VMjRkYN1PAE=;
-        b=kgZWwbJGmyhgPBISUGTPFpfiDJYMIzjRKujJ6vhK6fR8gAZ3F1M43V1HvqYor66iUH
-         bYvl007S20AvuYBj2qtS8hmf68adwXFZZrxZ/jP6hF0fYT8kwLZBoXi+ZaTkAaHSTy/+
-         coBoTG2ew4powGY+ThlABkgHHGTiMOC7Jrj2gYviR4iubf6o/qrSjcpPpn0jnQfbmYdN
-         y3YHuQcTWh8G54LMBXK9G62/4RVQmHtPjMMf0h6TKpngfx3kgbFEh2vK3fQN9/evYlEc
-         Om0NLe9EaHU2WvONVn+7Klba8I2pfIUBNS5I9WvXIH7dSPShJtu6x9kUBVno5YL/d3t+
-         jG0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714574703; x=1715179503;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1714574755; x=1715179555; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=19fONahm4CwkvcFuKCjkaG9ywwBvaJs3VMjRkYN1PAE=;
-        b=T1Pt/eIP6hvK20vx0GasVCo0hGhvyU+0H7Y9UGPGiSGvIuk/abYwfaNIrE/upNqm6Q
-         Wcb7bXVCajM3UmcMJ0dLjwy9Q65KHFmNRslgA25he5ZnR+GPNbjOuBeMf7ebq3GTec0U
-         8jlwa57pd+0tLunB7MU9g3Zeb+R9eGFfwS1QFAKagsAIYRyEB5U5/T3CZUawrxGlB4fC
-         1o1foLeB6f5PA4D1kSvdS/QwjiK/DPzxLQPueIfCl15GRV764lhK77ecMhSC2UpdWvF8
-         ak9zf3zdSFSvk9ivyaGndVaZ5QL8sgjGWQQ17qhydi53ArTTRRSuipaM4X+hfOFgWbZ6
-         +Zsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIoY3Nl/m1DVKXLlJFq58KR208Slv5jL9MHWOkWH+k9YcgHUO3apkHS8QOIFa3lmR4Tm7AliTfkAn9jeDl5NmBOu7fMOfTMuz69T+m
-X-Gm-Message-State: AOJu0Yz/81TpU4l0tdoemLqXgHG3qw9W63mjiKXA2QtNh4OoN0eeZKDg
-	23d9vkAehRp5J7fBlUjz3jaqVEYkvqzHrWdQjn4zIKdtF+yQgs60e596SEyxXzA=
-X-Google-Smtp-Source: AGHT+IFWw4+HYpsJ1jIgKWLbzvy0AN2twDF2ubXy00OLPY7mv44CBJ1BKi+rmI9iBBALYYUDnnI0BA==
-X-Received: by 2002:a17:906:a0d4:b0:a51:fec0:23ec with SMTP id bh20-20020a170906a0d400b00a51fec023ecmr1764739ejb.25.1714574702588;
-        Wed, 01 May 2024 07:45:02 -0700 (PDT)
-Received: from hackbox.lan ([62.231.100.236])
-        by smtp.gmail.com with ESMTPSA id e7-20020a170906c00700b00a51bf97e63esm16343266ejz.190.2024.05.01.07.45.01
+        bh=Pn4mAEpkg9DsE8kn0GNq/PDutzyas5mpgXUYzPQmPvQ=;
+        b=OlKIQudva2dChMPjTTbRHLzUCKU8G4MbiM+NsTsEtkoVmshiyTtEpTtaSCek+E2G80
+         TbEbM2IDd56HbtTzbma//E6Hd9MSPTdBmJHAFSsrl/h59UMML7jUZG3Ti01rZMDEFhDp
+         0Go/U3rIZhicJSn1aWrKHxXtmW4asVg0NdFb8myV4s7JZFa5skJrTKrHFUa4mRcic+5H
+         Z7N8ymY7xFbvpOINboSnRg6WytoaymQRIuVQTRDAP7ChGhHemKPD1uWAjfLBqUjXkRj5
+         ih4kKm6dg0jaXhlMf0z896Wp8azELST2Yl1w1HT2/mE5CG7aHelpyCvtu80tIhb5P4SW
+         ivyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714574755; x=1715179555;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pn4mAEpkg9DsE8kn0GNq/PDutzyas5mpgXUYzPQmPvQ=;
+        b=LCn43VaF/Nl8l5sAkPAU9oc4iKtN9fSF/qEtDHWZnWp06Q2br2WVW+IGNqRX6O8Npk
+         7x3+nWgrCC2srDQcjhGWcw1DHlAQrr88WCTYEIbvhgOi3lG7JmbOYmk/6HuPrvqWYriK
+         lsRcruUxJx0bLHKdhQEtvC/mFb7HJbBljQr7BhCwZ8xgm2MHlctvT2+dXZxekfsQsHNG
+         xF8FxPPc3yaQBWLqmov00UVitHV0wK730MiE1G7AY9fB+efIWVzK28MEqx5lupG4oQp8
+         2ZelW01dgUGizWL2/0MxgaNyBT7yKFMFbR+soXriaQBMN+CDTbxS9ZTVD9rhXctwoJNV
+         DSYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGspQSeEm1a8mTrs+18NrLxxT/tBDHOgh96Dsa8wK+MqypC3xnLN9051D5flmW3eOAPYHYtFRfXHag0q1TsEoF7Pwim3z5GvOgKSRBM9XqP5jf8/n5se6jEpm6snzH44midBlHfHJQf9Q8iS8o9kwg330yWOK9tT+qQpE2SQqwa/7Aikd8o203c0g=
+X-Gm-Message-State: AOJu0YzYZH1lFc+t7Q1JDx9mYnXqih5o1jgCnG8eEvXiy5QbvtGoybsy
+	YwRgNteif7u0P7WCb07MsJBrgyJ5hP4O6UWzpTluKaDKcWzGqLdS
+X-Google-Smtp-Source: AGHT+IEd17PNu6VWr4on732WJPeqS9YY7Rqn2dZvUyvqUH1SH3YwjPwLUaYwyzziTXY8J9oUN9HbQg==
+X-Received: by 2002:a05:6a00:938a:b0:6ec:e726:b6f5 with SMTP id ka10-20020a056a00938a00b006ece726b6f5mr3670773pfb.26.1714574755014;
+        Wed, 01 May 2024 07:45:55 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c22-20020aa78816000000b006f3f9e4dfd4sm6384477pfo.60.2024.05.01.07.45.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 07:45:02 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Mike Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: imx@lists.linux.dev,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-clk@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] clk: imx: Updates for v6.10
-Date: Wed,  1 May 2024 17:44:45 +0300
-Message-Id: <20240501144445.892045-1-abel.vesa@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        Wed, 01 May 2024 07:45:54 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 1 May 2024 07:45:53 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (stts751) Remove an unused field in struct
+ stts751_priv
+Message-ID: <d5df8bd5-7de0-4d13-ac62-069ab5b05501@roeck-us.net>
+References: <94ccf9caaa6b0101351bf381f09f4428c5e0835c.1714511322.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94ccf9caaa6b0101351bf381f09f4428c5e0835c.1714511322.git.christophe.jaillet@wanadoo.fr>
 
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+On Tue, Apr 30, 2024 at 11:09:07PM +0200, Christophe JAILLET wrote:
+> In "struct stts751_priv", the 'smbus_timeout' field is unused.
+> Remove it.
+> 
+> Found with cppcheck, unusedStructMember.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+Applied.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelvesa/linux.git/ tags/clk-imx-6.10
-
-for you to fetch changes up to f5072cffb35c122ec85d91ef327fa8814f04297b:
-
-  clk: imx: imx8mp: Convert to platform remove callback returning void (2024-05-01 14:40:49 +0300)
-
-----------------------------------------------------------------
-i.MX clocks changes for 6.10
-
-- Add PM runtime support to i.MX8MP Audiomix
-- Add i.MX95 BLK CTL clock driver
-- Add DT schema for i.MX95 Display Master Block Control
-- Convert to platform remove callback returning void for i.MX8MP
-  Audiomix
-
-----------------------------------------------------------------
-Fabio Estevam (1):
-      clk: imx: imx8mp: Switch to RUNTIME_PM_OPS()
-
-Peng Fan (4):
-      dt-bindings: clock: add i.MX95 clock header
-      dt-bindings: clock: support i.MX95 BLK CTL module
-      dt-bindings: clock: support i.MX95 Display Master CSR module
-      clk: imx: add i.MX95 BLK CTL clk driver
-
-Shengjiu Wang (1):
-      clk: imx: imx8mp: Add pm_runtime support for power saving
-
-Uwe Kleine-König (1):
-      clk: imx: imx8mp: Convert to platform remove callback returning void
-
- .../bindings/clock/nxp,imx95-blk-ctl.yaml          |  56 +++
- .../clock/nxp,imx95-display-master-csr.yaml        |  64 +++
- drivers/clk/imx/Kconfig                            |   7 +
- drivers/clk/imx/Makefile                           |   1 +
- drivers/clk/imx/clk-imx8mp-audiomix.c              | 155 +++++++-
- drivers/clk/imx/clk-imx95-blk-ctl.c                | 438 +++++++++++++++++++++
- include/dt-bindings/clock/nxp,imx95-clock.h        |  28 ++
- 7 files changed, 728 insertions(+), 21 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/nxp,imx95-display-master-csr.yaml
- create mode 100644 drivers/clk/imx/clk-imx95-blk-ctl.c
- create mode 100644 include/dt-bindings/clock/nxp,imx95-clock.h
+Thanks,
+Guenter
