@@ -1,88 +1,103 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D86F2576B;
-	Wed,  1 May 2024 05:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0259B45BF1
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 05:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714540776; cv=none; b=E7x7mH9KA+xF6yQSc1Rx6dfL0iqNxjBOAVhBuZmCG6DwQ/muQmkGZzFr+KEw3n66Fgr8mMhR3MPYxd50i+npUdRgmuu60xenvM3E8ufcTE99qhPUVbLxLCUjWzwAdiRh+qkkCNdDyAPUMJDP6epOKtL4ODaOdov3LNMqPXCh/8g=
+	t=1714541059; cv=none; b=DTeKBSpgH4QPPNmvpWLjHKtuggfo5Mq0ztTJw9yLd3vSuRIxisR+NUG7WAW5JAj6IjiHInYZlNDyIOMeJzBexUOMfhi7LlaYJNtJaYDy0g2g01FM0jgUN1OlG3isLEKTmYNC3Z1jpHReA1Udt/GCr6AK/Gwn2oYka/N+mPUJWBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714540776; c=relaxed/simple;
-	bh=rZOVMkjacxk6ggX2MZ0ySIKeOu+bur476T2sZGzGrI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=quDqmlc4xm2FC6qP//fw8yNxyQlD06V2Ofw6scCqxX5zifz7hgAik6VBvGOuQcWcwqXRTMNuHzU+0fTOIjn6LwXfETQpB9n/pPrnJMs4K5zp+cVfLF+dXv9fGrRGQC0JI7l++PnlH5rcOltrWR+FiK7GCGeSVBzszT3YeqZdVLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=OEnKf3Bv; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1714541059; c=relaxed/simple;
+	bh=W6vQknOCG9pH+KpiTCI9n0o+sqxHWVPRqivmOUwN4wU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SYI7DToqPj9v6EJ+xeXJhkdwfEMxX6L1RSUWgS5J8zlqs4mOwL7NJZTg3MCwj5IyOIsSR6ygAD5U1I0OF5m1LpBBWrNIIail2SnVHmCrAwRQ3/SvctjlNvUY6TDcxXeP4v1G1YQb1UshII45+MsTwtFEeSjQKBc3J7eEKnKMr+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf; spf=pass smtp.mailfrom=kl.wtf; dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b=hf2VBGy0; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kl.wtf
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OEnKf3Bv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1714540770;
-	bh=qIOMi5cZWSDGMcCVi4MgiYeL0Wgytoc+x8bs5oC5YgA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=OEnKf3Bv4CmkjWVQpyVhJR8IU9hmp3QnGVs8GcO81IE/iYHQZXH8CR3cU7itiOfE5
-	 WCSJlUCRUN2alsLkNZoeUPM3WVsGz+Ub/C98uuw+Hn8/IhCzySNKQnc0rBqOTnJQTy
-	 AN69gdnWfUKoMcv3oQfS6tq+Y5VjIvsmOFA1DHx4uYtne4D9uWjB9jb1WJ/AYHsb11
-	 cMCexrqGej4+8TWLsTlCCvVnF7nTdOqBH0owMl+f2EAiy50Fr0mDbz1AFAjbZw3Pf7
-	 2gmb8MlL8JTGEB+Wf0mcwusYJ2bJJzq5zPoeVt0X3TrP6n/jDEc08BWy0C7iMgTMFm
-	 PR21C0NaLoUuA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VTljt3FFSz4wxf;
-	Wed,  1 May 2024 15:19:30 +1000 (AEST)
-Date: Wed, 1 May 2024 15:19:29 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>, Roman Li <roman.li@amd.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the amdgpu tree
-Message-ID: <20240501151929.219916ee@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="hf2VBGy0"
+Message-ID: <26070c7a-4005-4bb4-b4af-779bfc415dea@kl.wtf>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=key1;
+	t=1714541052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DY5QCzdG2l5n9xOYJTH9mAFpqSJJ9rQm13TN9QItwbA=;
+	b=hf2VBGy0lVBFv/YVa68S9xhqplWrtjAcAvXPKeohrhdgYWNn+SfInIqhAbzGn5aFpWSBWD
+	fXSek3RABzu0zWhAB/dtVmfAdpJm9msJXv88ZqxCuAcimMExS+VY/1723GxzyBHEKN6iD8
+	PEsSniZPD3YloWzhNIqrUm0NxQGRcFncMAOTS4AB14LnpEOfjq5kU8gi3OffZ9j2Tqerl8
+	9y4v6jJclwhl1boFvdYcRV59LThvWa5JFrR7ppIEDe1TMj7O1dbyfDvEbxb5iqrdAoPfzo
+	LNGULD8FGqFG39Cq2AlZFDfXf8maPFq+rCx5b1kgJ8w+ai+fATBqfK4bK5pfWA==
+Date: Wed, 1 May 2024 07:24:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//XGt8rXHGLsv+32atP6I7T1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Subject: Re: [PATCH v3 1/3] HID: i2c-hid: Rely on HID descriptor fetch to
+ probe
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dtor@chromium.org>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Douglas Anderson <dianders@chromium.org>, Hans de Goede
+ <hdegoede@redhat.com>, Maxime Ripard <mripard@kernel.org>,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ Johan Hovold <johan+linaro@kernel.org>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Radoslaw Biernacki <rad@chromium.org>,
+ Lukasz Majczak <lma@chromium.org>
+References: <20240426225739.2166-1-kl@kl.wtf>
+ <20240426225739.2166-2-kl@kl.wtf> <ZixvUNooESC02cJK@google.com>
+ <5aa9f745-7f6a-4873-90ba-79c55335905c@kl.wtf> <ZjFli4zOalXkDWx_@google.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kenny Levinsen <kl@kl.wtf>
+In-Reply-To: <ZjFli4zOalXkDWx_@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
---Sig_//XGt8rXHGLsv+32atP6I7T1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/30/24 11:41 PM, Dmitry Torokhov wrote:
+> I actually believe there is. On Chromebooks we may source components
+> from several vendors and use them in our devices. The components
+> are electrically compatible with each other, have exactly the same
+> connector, and therefore interchangeable. Because of that at probe time
+> we do not quite know if the device is there at given address, or not
+> (i.e. the touchpad could be from a different vendor and listening on
+> another address) and we need to make a quick determination whether we
+> should continue with probe or not.
 
-Hi all,
+Maybe I should clarify what I meant: All I2C operations start with the 
+master writing the slave address to the bus. When a slave reads its own 
+address off the bus, it pulls the data line low to ACK. If no device is 
+present on the bus with the specified address, the line stays high which 
+is a NACK. This means that on the bus level, we have a clear error 
+condition specifically for no device with the specified address being 
+present on the bus.
 
-After merging the amdgpu tree, today's linux-next build (htmldocs)
-produced this warning:
+Whether the operation used is a dummy read or our first actual write 
+should not matter - if the address is not acknowledged, the device is 
+not present (or able to talk I2C). The problem lies in whether this "no 
+device present on bus" error is reported clearly to us: Some drivers use 
+-ENXIO specifically for this, some use it also for NACKs on written 
+data, some report it but use other return codes for it, etc.
 
-drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:581: warning: Function pa=
-rameter or struct member 'idle_workqueue' not described in 'amdgpu_display_=
-manager'
+Even if we stick to the smbus probe in the long run, if we get to the 
+point where we can rely on the error codes from I2C drivers we would be 
+able to correctly log and propagate other error classes like bus errors 
+or I2C driver issues which are all currently silenced as "nothing at 
+address" by the smbus probe.
 
-Introduced by commit
+> I am not sure we can fully unify what Windows does and what Linux does,
+> mainly because our firmwares are different (I think Windows devices do a
+> lot more device discovery in firmware, Chrome OS historically tried to
+> limit amount of code in its firmware). We also need to make sure it
+> works on non-ACPI systems/ARM.
 
-  afca033f10d3 ("drm/amd/display: Add periodic detection for IPS")
+Good point. My main focus is also quirky behaviors we have added to 
+replicate Windows behavior, the smbus probe just stood out in my bus traces.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//XGt8rXHGLsv+32atP6I7T1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYx0OEACgkQAVBC80lX
-0GxqKAf/d30FYXwhVSxsM1+mBP3YLfd+W/gOhfsAW/B/ksEkT8rQISKzlrxKcY2K
-vJkXDF22v0AYS/qBvrEj50tvhzgSKcsyr7jGwQZ8wydj+uPzOrqyQdG9ul71rs5C
-gEoJLc4ULBLUGXt/t6gJSPHrtIsbFezgTJ24DV6WDtQ0+62Ey439Cs81U7YlcGoA
-x2sKaPd4rqKiOJELt8Y7YhyrzarKuEp7JYBeOR2iv1kxh1c+SFXYR8CruNBJqave
-kropRFHN6lzHDYml+6tBSpGjOkGMW9HZzYzfY+jGEcemHcRr6dzG9GenbEHK8V+m
-Wzic4L/kCg+QuAeMqmrKsjRqcH9LtQ==
-=//8Z
------END PGP SIGNATURE-----
-
---Sig_//XGt8rXHGLsv+32atP6I7T1--
+I already sent 
+https://lore.kernel.org/all/20240429233924.6453-1-kl@kl.wtf/ which goes 
+back to improving the bus probe.
