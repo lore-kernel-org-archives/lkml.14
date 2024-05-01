@@ -1,80 +1,47 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F38912FB09
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2748312FF78;
+	Wed,  1 May 2024 15:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714578202; cv=none; b=XWQclD5UWd7sOAVhRNLYgfzvnEeDGiKBmKRlX6dL5pgsimfWzEfO10ekv9HT4LmaGcMGfQs7TBwN3MyhjFUQorCU4UtPJKXmceOg+Kh71/te7b2mbeqKIuAwt/HFmyo1E47DgXGLqRCXLpHJ+NKlNDxN75HMa+BUtV2XSdnrg6s=
+	t=1714578204; cv=none; b=FEKb1HAUfk2fXpnyox1NHPoOvVbvRZg31JDL5RLrmsri3VKhj7z/UT3VaaoPtqH+RGm7eNPVdgotBjWH2JCcLcrcFvW0AznyI/XEZ6XE8bVxrTAQjJK5lA95JzN59ZTEgC9aU6U75/8nfDjWbtdYGeQ6z5HktY4JtKj7782IuKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714578202; c=relaxed/simple;
-	bh=CHn6dd9juJ7QU5kf8EIUTCmIhfjE5Sww12t5qi+aUgg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tP9WV0/PBdoV2+1B1HSMim47lzMWVnQB55Ul1mvGClwwKtRZqW6KCLNrL6PjM5EIGFHNMo2xmZr1g4VQIFsGeVKLpEm6fyjLUSHgwVkFP059fbD/x0jm2vy4E762JWINs1G4g5aXRfK/5wdZzoHqWkJpCTQh9vP3Mri/Mz2Eg2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=j6aJ4JYp; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714578204; c=relaxed/simple;
+	bh=KALlXTVUTaG7KIY4xfSeGKWZAwSJ5/dytvx09z4PAuA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RNahXCpZnbDLqOh90aD5nZEn8GAZkbKVwVVY1nsH6vTBYOHQoC4yLZJQypfyD9dulGJa8Y7MMS7inW3OO78ROfwwQhW+7ui+VTyjb7JuVGkGR6nOwRpmIf2+knCjVunFyk+ueD0qH2V/Bh/cCT+GoFxIQKi2SdXtNLgaKPEtCw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=th6c1+mm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j6aJ4JYp"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6edb76d83d0so5978443b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 08:43:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714578200; x=1715183000; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IqSRaJ+I/NgAMp1CRzQlMWp8eVTN4Fv5wLPbhbxPoyI=;
-        b=j6aJ4JYpowemZ8CpNRS0SWwYCLoo4QD+CzHSz+cmugY7cc/mT/YsotZ1lAj9ZCKnrJ
-         tqKTqwUiUmlY9J+08bC/UbYrZ7ZYSU7i5dtvdNFcj4BX6Rio06/WItBIklS3UvifuvSA
-         9ROBBay844DA2zQjkNu/R4SlhR7TWJea0W2a4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714578200; x=1715183000;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IqSRaJ+I/NgAMp1CRzQlMWp8eVTN4Fv5wLPbhbxPoyI=;
-        b=TeFLjENDBrGZtdgmiH9YARhoUfYdGsb9rkXNxyAlSlO3rqfuLfIKhFgzv4MWCTYIts
-         HDCjWWoi8NR2lUGBW6uIXieNCOnH9XqOSOWrfLOZLpwE844tYsEKuwjxKVy3IQ4wJQdC
-         g0JAaDJYR3UP2hRVfIi8v6rfsQwAt5omsKIPMLrdwAem+XQJHuu0Wvtxy/OP43wK0xHD
-         vGJ2p97WibMMidGbhsX9BPdPQ05tLtGhcyrjYX+VHXUtq6cxx20g+mA+bqUOHHZgZhF5
-         iqea4NzCAeZpAEnT/zntOdIoXDnXbG9dqhHjsj1VCKJMSk6aXjW4GvoKuIPTS6WscJYp
-         U/rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnJ1+WLBL1iK+Qnh87VhU5A1A5BAknbxrbVwfUdje3J0rrDDJWVJXi1wVhLpmKqdPFbAeGlgFXqKAuB4+SuMEowwg1roh/0vGNlBo0
-X-Gm-Message-State: AOJu0YwFvMCdUogMRD5hVWLAQqgmP8ztVwtsMTcEO1OOHxfip19vsYwZ
-	B52nhr4pb5Pz9fM5FWjknftQWW0u8dxfMYcO1ye7mKP46dVAD8UDT/FgToVQwg==
-X-Google-Smtp-Source: AGHT+IFI0XRKl4xlF9oA6mVlSbPDXsPwloqxxCaCX7TyGbZ6xYS649sCJKaSQ+96XKkEBKOMHdGtmg==
-X-Received: by 2002:a05:6a20:2593:b0:1a9:8251:41ba with SMTP id k19-20020a056a20259300b001a9825141bamr3504545pzd.51.1714578200409;
-        Wed, 01 May 2024 08:43:20 -0700 (PDT)
-Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:e886:8de:19a2:55b0])
-        by smtp.gmail.com with ESMTPSA id fb12-20020a056a002d8c00b006f3ec69bc09sm7717924pfb.75.2024.05.01.08.43.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 08:43:19 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
-	Hsin-Yi Wang <hsinyi@google.com>,
-	Brian Norris <briannorris@chromium.org>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Joel Selvaraj <jo@jsfamily.in>,
-	lvzhaoxiong@huaqin.corp-partner.google.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="th6c1+mm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A5EFC072AA;
+	Wed,  1 May 2024 15:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714578203;
+	bh=KALlXTVUTaG7KIY4xfSeGKWZAwSJ5/dytvx09z4PAuA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=th6c1+mm5tEOQDCQZKB6/0pXmDxMTXaBzvR1lpXEFQJPkq9GJSEKcwTW2jyNHYjr7
+	 TfGDpwsO2mcdGdRbuwZigx9Qvocz20fn2W+ubLTx30PXku5RilOYMB2Pm2QSC6NIK8
+	 W/P0Cd93k5yfwdAzOyNsRifq291WpbE2ZPbL7m+Fp44F+Q4gcMs+qhHNtAzUdnSsN+
+	 WBTDTW0CerAW/OQ1YH4uUi43tiRvR/8jNPJ8S3A6q84o/5GXHwi6/sliWmj/b1HgT2
+	 TlLIyU76GEGF6bQNrV9tHqkhDRtg6xiA7qsYh2XZynGE1eOyxQe0xEgGqwOzMhFrR2
+	 +y4cw2FaaZ90A==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sumit Garg <sumit.garg@linaro.org>,
+	Stephen Boyd <swboyd@chromium.org>,
 	Douglas Anderson <dianders@chromium.org>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/9] drm/mipi-dsi: Fix theoretical int overflow in mipi_dsi_dcs_write_seq()
-Date: Wed,  1 May 2024 08:41:04 -0700
-Message-ID: <20240501084109.v3.1.I30fa4c8348ea316c886ef8a522a52fed617f930d@changeid>
-X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
-In-Reply-To: <20240501154251.3302887-1-dianders@chromium.org>
-References: <20240501154251.3302887-1-dianders@chromium.org>
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: puranjay12@gmail.com
+Subject: [PATCH] arm64: implement raw_smp_processor_id() using thread_info
+Date: Wed,  1 May 2024 15:42:36 +0000
+Message-Id: <20240501154236.10236-1-puranjay@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,72 +50,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The mipi_dsi_dcs_write_seq() macro makes a call to
-mipi_dsi_dcs_write_buffer() which returns a type ssize_t. The macro
-then stores it in an int and checks to see if it's negative. This
-could theoretically be a problem if "ssize_t" is larger than "int".
+ARM64 defines THREAD_INFO_IN_TASK which means the cpu id can be found
+from current_thread_info()->cpu.
 
-To see the issue, imagine that "ssize_t" is 32-bits and "int" is
-16-bits, you could see a problem if there was some code out there that
-looked like:
+Implement raw_smp_processor_id() using the above. This decreases the
+number of emitted instructions like in the following example:
 
-  mipi_dsi_dcs_write_seq(dsi, cmd, <32767 bytes as arguments>);
+Dump of assembler code for function bpf_get_smp_processor_id:
+   0xffff8000802cd608 <+0>:     nop
+   0xffff8000802cd60c <+4>:     nop
+   0xffff8000802cd610 <+8>:     adrp    x0, 0xffff800082138000
+   0xffff8000802cd614 <+12>:    mrs     x1, tpidr_el1
+   0xffff8000802cd618 <+16>:    add     x0, x0, #0x8
+   0xffff8000802cd61c <+20>:    ldrsw   x0, [x0, x1]
+   0xffff8000802cd620 <+24>:    ret
 
-...since we'd get back that 32768 bytes were transferred and 32768
-stored in a 16-bit int would look negative.
+After this patch:
 
-Though there are no callsites where we'd actually hit this (even if
-"int" was only 16-bit), it's cleaner to make the types match so let's
-fix it.
+Dump of assembler code for function bpf_get_smp_processor_id:
+   0xffff8000802c9130 <+0>:     nop
+   0xffff8000802c9134 <+4>:     nop
+   0xffff8000802c9138 <+8>:     mrs     x0, sp_el0
+   0xffff8000802c913c <+12>:    ldr     w0, [x0, #24]
+   0xffff8000802c9140 <+16>:    ret
 
-Fixes: 2a9e9daf7523 ("drm/mipi-dsi: Introduce mipi_dsi_dcs_write_seq macro")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+A microbenchmark[1] was built to measure the performance improvement
+provided by this change. It calls the following function given number of
+times and finds the runtime overhead:
+
+static noinline int get_cpu_id(void)
+{
+	return smp_processor_id();
+}
+
+Run the benchmark like:
+ modprobe smp_processor_id nr_function_calls=1000000000
+
+      +--------------------------+------------------------+
+      |        | Number of Calls |    Time taken          |
+      +--------+-----------------+------------------------+
+      | Before |   1000000000    |   1602888401ns         |
+      +--------+-----------------+------------------------+
+      | After  |   1000000000    |   1206212658ns         |
+      +--------+-----------------+------------------------+
+      |  Difference (decrease)   |   396675743ns (24.74%) |
+      +---------------------------------------------------+
+
+This improvement is in this very specific microbenchmark but it proves
+the point.
+
+The percpu variable cpu_number is left as it is because it is used in
+set_smp_ipi_range()
+
+[1] https://github.com/puranjaymohan/linux/commit/77d3fdd
+
+Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 ---
+ arch/arm64/include/asm/smp.h | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-Changes in v3:
-- Use %zd in print instead of casting errors to int.
-
-Changes in v2:
-- New
-
- include/drm/drm_mipi_dsi.h | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-index 82b1cc434ea3..70ce0b8cbc68 100644
---- a/include/drm/drm_mipi_dsi.h
-+++ b/include/drm/drm_mipi_dsi.h
-@@ -333,18 +333,18 @@ int mipi_dsi_dcs_get_display_brightness_large(struct mipi_dsi_device *dsi,
-  * @cmd: Command
-  * @seq: buffer containing data to be transmitted
-  */
--#define mipi_dsi_dcs_write_seq(dsi, cmd, seq...)                           \
--	do {                                                               \
--		static const u8 d[] = { cmd, seq };                        \
--		struct device *dev = &dsi->dev;                            \
--		int ret;                                                   \
--		ret = mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));    \
--		if (ret < 0) {                                             \
--			dev_err_ratelimited(                               \
--				dev, "sending command %#02x failed: %d\n", \
--				cmd, ret);                                 \
--			return ret;                                        \
--		}                                                          \
-+#define mipi_dsi_dcs_write_seq(dsi, cmd, seq...)                            \
-+	do {                                                                \
-+		static const u8 d[] = { cmd, seq };                         \
-+		struct device *dev = &dsi->dev;                             \
-+		ssize_t ret;                                                \
-+		ret = mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));     \
-+		if (ret < 0) {                                              \
-+			dev_err_ratelimited(                                \
-+				dev, "sending command %#02x failed: %zd\n", \
-+				cmd, ret);                                  \
-+			return ret;                                         \
-+		}                                                           \
- 	} while (0)
+diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+index efb13112b408..88fd2ab805ec 100644
+--- a/arch/arm64/include/asm/smp.h
++++ b/arch/arm64/include/asm/smp.h
+@@ -34,13 +34,9 @@
+ DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
  
- /**
+ /*
+- * We don't use this_cpu_read(cpu_number) as that has implicit writes to
+- * preempt_count, and associated (compiler) barriers, that we'd like to avoid
+- * the expense of. If we're preemptible, the value can be stale at use anyway.
+- * And we can't use this_cpu_ptr() either, as that winds up recursing back
+- * here under CONFIG_DEBUG_PREEMPT=y.
++ * This relies on THREAD_INFO_IN_TASK, but arm64 defines that unconditionally.
+  */
+-#define raw_smp_processor_id() (*raw_cpu_ptr(&cpu_number))
++#define raw_smp_processor_id() (current_thread_info()->cpu)
+ 
+ /*
+  * Logical CPU mapping.
 -- 
-2.45.0.rc0.197.gbae5840b3b-goog
+2.40.1
 
