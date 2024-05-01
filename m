@@ -1,473 +1,139 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7C712C462
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 12:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6768012C49F;
+	Wed,  1 May 2024 12:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714565994; cv=none; b=oBI9tnHOa9hnRK1bKQ5hZOYVaAfah6tdcmbG5YzvyDcmd50Vjbt+xujkM+GjBmUhaMknbF8jrPT5CCwBsJaoLlATOIQzmAXVV7Q+E/VHekeeJaa1suTgMTan/Ww+riu09Xr1IsCGMRcgdwvGJ43HajDdyQjVDxqBqe8SK3jnpoU=
+	t=1714566000; cv=none; b=Nra3kwn3k141OcNxrnF/4o3ETuNfy0J7Xx2hj44x5uwjN3cTp+uw4ao63lPVjzaIzkQJc4A5tIRkLjd9egjkHYqQboMafDacZiX6Cdak82JRlhW+JRVPbiIJ20wH8sdMB9Y6nbDQsSXUWcziGeMLnxK9hqYmzI4Zvi7BdtOtk6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714565994; c=relaxed/simple;
-	bh=PIgRKdcBOY6xqaSxqFNwNiexk2/lPC9DEDH/ofVigro=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JfnXGQCo7PGxPUr+a9k9+ymChskk7e2CrWQBvlnWUKUBAPsesVQ/kiFRzIVQ63U/Tf3lOLgmz9oRsC0Dly1XbKThrYVesTV8PQiDwSOfad+42uC7Z3cfGxdyhtzRd0V+xea75Txn9TyfdU8AscpNfUHDLdfivT+TUAoO0/8UeRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=BL/JPOXw; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1714566000; c=relaxed/simple;
+	bh=cDoOmYzAYQKD5INwb4Si/7qAYJjCsw6v5b3DdRgc5GA=;
+	h=Date:Message-Id:From:To:Cc:Subject:In-Reply-To; b=TgLXsUkc1RQaHR95CKAVR/hLW6QyNskyV+VLpjiiZRtUGYc7GOeIjk6IuJ1dsyaupb+7zaWcBERY62JZlORJEot5tS0MBLprwhQe6Q5ILdQ8BHT8yMCRlYODqN0QIxAxB+rAKgamVJ+LGwCvmNFPrmHjsWCBdLS9uBRWbGVpAjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m2fvmp9a; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="BL/JPOXw"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso5112245a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 05:19:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2fvmp9a"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e50a04c317so36841005ad.1;
+        Wed, 01 May 2024 05:19:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1714565992; x=1715170792; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EXYTa+lyps4skrflQeX/iviyMZf5mebO38NcRgvfQY0=;
-        b=BL/JPOXwM7EIgrTtHZKdy4Ahg8WMe7UXRuq56+sDiDDUzbjcQHt9gp9ZvDNemTOr4c
-         AC8XbOdKpsY7/Tjn0drb9YNXIg/aae2i29z6Ko4A62Ok3cHdpWrEG04V4oHGsalwX5ek
-         LPZWvRClboZ2S7m+zu9azgp4fpSdRC30gDTFRWBC86ICDY4TzH7w882SEfu3Kg41MCvD
-         SKreMrmBAEkDU1RtOeYQBzT6XSh2fhuXMz5buJ0sdDzJTbQNm6g14X2CS3fWRFSHSnFp
-         X+2az7OrugHMIx2wBj131FbmyNva/qNB5KeFGAKkTsKE1KnQ0UR0SL7nLREgKqrCaHTk
-         wYSw==
+        d=gmail.com; s=20230601; t=1714565999; x=1715170799; darn=vger.kernel.org;
+        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Q+bXJh1WFpGfj02zZsMPGyMBrA1lTWkDff/10uQbdd4=;
+        b=m2fvmp9acjoYlmSyXFxav3ezR/+FFF+ZS8U6ek1GHHr9GEl0mPNQ9Iz1us5rJzrsHO
+         FZvei1qTNpG6M9yIYUixYEXDV7I5TTVIHtceavJHPXuBhzotzyU98D2mm7queqq0+dDa
+         Pr5d4a0iq7x75AS3WEdMnXEVzYj0/mypE1mciNQifneXPxqMa3ni984F6+QjBgDTVsOI
+         oQ5D1vyamvg85tfnhvFvbF3ulXG0iD81x0RFxx8/mukWSyhcMdAAjwZgpVybWJ5tSKti
+         fyNCgrTO+9n/NHrE/4XJYO7pMCNUsVwQGaB0/5OTtFMf1RiWi/X5hScyLagjjj5cUj+y
+         SlzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714565992; x=1715170792;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EXYTa+lyps4skrflQeX/iviyMZf5mebO38NcRgvfQY0=;
-        b=p72yEYmWozkIxrqxbBytuRbYTFh05Cvj/jsKrewkDQNUVqSgaJbA9wPqI2njK5cM1T
-         49zbz06h4SjCx2DIp4SBla/qk48v0t5H3vgRozc71SAcXF36ww6Ptb3iUQyeRj1f4O3o
-         bGd5putDMbvzrwcU7IHvCeVnLch3RCNi9Ea26QBQVkb03LghnVscvLrnBAkaXYHXuFK1
-         ReQS75a4cE1nl4zvJHiaQX3gE581QAnvN4lO3m2zLvvB43KXYjuI38t647qOT7q+yTUI
-         yZRun+TNHLc8/kyY9FOq1o3yhsGsVRjNDrz+GfDyppBbjKOIoy6wHnrkP0UWCm++Ezdq
-         TvzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoQuqwcwaeSOGo9UCuLhWEr3UrREjMhHMqlEXzEwvkUnEQfZIYzK1rmSQ2pY4ux8r7XSCqq5gdDTSrAJXDo7x0qwPJScJECAKpkyxQ
-X-Gm-Message-State: AOJu0Yxq0ILUCnVQKgXwCm6IXviDjaUHLCkRCu6+XxAqX49BSLuhmeAp
-	biXrQTuGAROc17X/gY2bx3t6L03QRPFDWJV6iBPH8/L2G0+r4mp1AUmbxn93/Tw=
-X-Google-Smtp-Source: AGHT+IEYbbDg76A7S1g52ZK/aOehSAGVOKJv35qqCM5C5Vw6MRuD5Sdk6WDNaIS+1kkWSucq//am/w==
-X-Received: by 2002:a17:90b:1c0b:b0:2b3:2a3b:e4a0 with SMTP id oc11-20020a17090b1c0b00b002b32a3be4a0mr1170711pjb.32.1714565992555;
-        Wed, 01 May 2024 05:19:52 -0700 (PDT)
-Received: from sunil-pc.Dlink ([106.51.188.106])
-        by smtp.gmail.com with ESMTPSA id im15-20020a170902bb0f00b001ec8888b22esm1336900plb.65.2024.05.01.05.19.45
+        d=1e100.net; s=20230601; t=1714565999; x=1715170799;
+        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q+bXJh1WFpGfj02zZsMPGyMBrA1lTWkDff/10uQbdd4=;
+        b=JPmMsMmzX8gy6dgRLA8xby2eZcPTzBELBaCtAbksi5Uji6+cQ3VqnAKsObb17dlllM
+         NgLzvNXWZXGpmpRBAKHUiYBoqdJUDnoHXu72WQiu8Ga3upukEIZyP1YSibsriBPC8iHh
+         d3XoFV5imL4fknchOZLJHgA3jQ6m9mF7ySktNZ76yIht2tuj/3i6HdIgiXmpNbRe/0pC
+         Gld38lrW4RWyX7uKU86tv49Ushk08esk4RdxyHl4HebCkd1wo+y9ai/XI5VBml9yiLul
+         cYzBoABH8jYVQl93PlrBcjRnBbInsqJRYeujvHyJAbonfV0h+uRlmEV3dAI0h2F1WTo0
+         bpOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpFvpe2pGQT+xkS5zOxlfU5ZF89wuixsBF5WeXHBIgDcOFdTChJWfTeWA/9Ub+5CkOMkrEEp5lW0NwlcZ/9Fz/l/fiGQByJF0jwgeCqP1HmN8KfokQkQDnK4OMNyZwvvt2WYeK6aqoOw+A9Q==
+X-Gm-Message-State: AOJu0Yy+nxFC+AO4Oe4ecNeoiA4h1KsuFS4jnAgN4KQW/PtN+ab0a27q
+	kA5t2FUExBZrQ5BTxe+knCBPtEnotJ+IwM0uiF+LkL4PLRCgiq/u
+X-Google-Smtp-Source: AGHT+IHH66m34ehe2oGyA8sEbgvqCf0QfvwZyF4PH1MwqMJKPg649zwjVE/zpqgicmyWWWJMHAmO0A==
+X-Received: by 2002:a17:902:c213:b0:1e4:24bc:426e with SMTP id 19-20020a170902c21300b001e424bc426emr2154990pll.28.1714565998423;
+        Wed, 01 May 2024 05:19:58 -0700 (PDT)
+Received: from dw-tp ([171.76.84.250])
+        by smtp.gmail.com with ESMTPSA id i3-20020a170902c94300b001ebd72d55c0sm5600171pla.18.2024.05.01.05.19.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 05:19:52 -0700 (PDT)
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Andrei Warkentin <andrei.warkentin@intel.com>,
-	Haibo1 Xu <haibo1.xu@intel.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [PATCH v5 14/17] irqchip/riscv-imsic: Add ACPI support
-Date: Wed,  1 May 2024 17:47:39 +0530
-Message-Id: <20240501121742.1215792-15-sunilvl@ventanamicro.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
-References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
+        Wed, 01 May 2024 05:19:57 -0700 (PDT)
+Date: Wed, 01 May 2024 17:49:50 +0530
+Message-Id: <87le4t4tcp.fsf@gmail.com>
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Dave Chinner <david@fromorbit.com>, Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, hch@infradead.org, djwong@kernel.org, willy@infradead.org, zokeefe@google.com, yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com, wangkefeng.wang@huawei.com
+Subject: Re: [PATCH v4 02/34] ext4: check the extent status again before inserting delalloc block
+In-Reply-To: <ZjHmY6RoE3ILnsMv@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-RISC-V IMSIC interrupt controller provides IPI and MSI support.
-Currently, DT based drivers setup the IPI feature early during boot but
-defer setting up the MSI functionality. However, in ACPI systems, ACPI,
-both IPI and MSI features need to be initialized early itself.
+Dave Chinner <david@fromorbit.com> writes:
 
-Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
----
- drivers/irqchip/irq-riscv-imsic-early.c    |  52 +++++++++-
- drivers/irqchip/irq-riscv-imsic-platform.c |  32 ++++--
- drivers/irqchip/irq-riscv-imsic-state.c    | 115 ++++++++++-----------
- drivers/irqchip/irq-riscv-imsic-state.h    |   2 +-
- include/linux/irqchip/riscv-imsic.h        |  10 ++
- 5 files changed, 144 insertions(+), 67 deletions(-)
+> On Wed, Apr 10, 2024 at 10:29:16PM +0800, Zhang Yi wrote:
+>> From: Zhang Yi <yi.zhang@huawei.com>
+>> 
+>> Now we lookup extent status entry without holding the i_data_sem before
+>> inserting delalloc block, it works fine in buffered write path and
+>> because it holds i_rwsem and folio lock, and the mmap path holds folio
+>> lock, so the found extent locklessly couldn't be modified concurrently.
+>> But it could be raced by fallocate since it allocate block whitout
+>> holding i_rwsem and folio lock.
+>> 
+>> ext4_page_mkwrite()             ext4_fallocate()
+>>  block_page_mkwrite()
+>>   ext4_da_map_blocks()
+>>    //find hole in extent status tree
+>>                                  ext4_alloc_file_blocks()
+>>                                   ext4_map_blocks()
+>>                                    //allocate block and unwritten extent
+>>    ext4_insert_delayed_block()
+>>     ext4_da_reserve_space()
+>>      //reserve one more block
+>>     ext4_es_insert_delayed_block()
+>>      //drop unwritten extent and add delayed extent by mistake
+>
+> Shouldn't this be serialised by the file invalidation lock?  Hole
+> punching via fallocate must do this to avoid data use-after-free
+> bugs w.r.t racing page faults and all the other fallocate ops need
+> to serialise page faults to avoid page cache level data corruption.
+> Yet here we see a problem resulting from a fallocate operation
+> racing with a page fault....
 
-diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
-index 886418ec06cb..d8161243791d 100644
---- a/drivers/irqchip/irq-riscv-imsic-early.c
-+++ b/drivers/irqchip/irq-riscv-imsic-early.c
-@@ -5,13 +5,16 @@
-  */
- 
- #define pr_fmt(fmt) "riscv-imsic: " fmt
-+#include <linux/acpi.h>
- #include <linux/cpu.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
- #include <linux/irqchip/chained_irq.h>
-+#include <linux/irqchip/riscv-imsic.h>
- #include <linux/module.h>
-+#include <linux/pci.h>
- #include <linux/spinlock.h>
- #include <linux/smp.h>
- 
-@@ -182,7 +185,7 @@ static int __init imsic_early_dt_init(struct device_node *node, struct device_no
- 	int rc;
- 
- 	/* Setup IMSIC state */
--	rc = imsic_setup_state(fwnode);
-+	rc = imsic_setup_state(fwnode, NULL);
- 	if (rc) {
- 		pr_err("%pfwP: failed to setup state (error %d)\n", fwnode, rc);
- 		return rc;
-@@ -199,3 +202,50 @@ static int __init imsic_early_dt_init(struct device_node *node, struct device_no
- }
- 
- IRQCHIP_DECLARE(riscv_imsic, "riscv,imsics", imsic_early_dt_init);
-+
-+#ifdef CONFIG_ACPI
-+
-+static struct fwnode_handle *imsic_acpi_fwnode;
-+
-+struct fwnode_handle *imsic_acpi_get_fwnode(struct device *dev)
-+{
-+	return imsic_acpi_fwnode;
-+}
-+
-+static int __init imsic_early_acpi_init(union acpi_subtable_headers *header,
-+					const unsigned long end)
-+{
-+	struct acpi_madt_imsic *imsic = (struct acpi_madt_imsic *)header;
-+	int rc;
-+
-+	imsic_acpi_fwnode = irq_domain_alloc_named_fwnode("imsic");
-+	if (!imsic_acpi_fwnode) {
-+		pr_err("unable to allocate IMSIC FW node\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Setup IMSIC state */
-+	rc = imsic_setup_state(imsic_acpi_fwnode, (void *)imsic);
-+	if (rc) {
-+		pr_err("%pfwP: failed to setup state (error %d)\n", imsic_acpi_fwnode, rc);
-+		return rc;
-+	}
-+
-+	/* Do early setup of IMSIC state and IPIs */
-+	rc = imsic_early_probe(imsic_acpi_fwnode);
-+	if (rc)
-+		return rc;
-+
-+	rc = imsic_platform_acpi_probe(imsic_acpi_fwnode);
-+
-+#ifdef CONFIG_PCI
-+	if (!rc)
-+		pci_msi_register_fwnode_provider(&imsic_acpi_get_fwnode);
-+#endif
-+
-+	return rc;
-+}
-+
-+IRQCHIP_ACPI_DECLARE(riscv_imsic, ACPI_MADT_TYPE_IMSIC, NULL,
-+		     1, imsic_early_acpi_init);
-+#endif
-diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
-index 11723a763c10..64905e6f52d7 100644
---- a/drivers/irqchip/irq-riscv-imsic-platform.c
-+++ b/drivers/irqchip/irq-riscv-imsic-platform.c
-@@ -5,6 +5,7 @@
-  */
- 
- #define pr_fmt(fmt) "riscv-imsic: " fmt
-+#include <linux/acpi.h>
- #include <linux/bitmap.h>
- #include <linux/cpu.h>
- #include <linux/interrupt.h>
-@@ -348,18 +349,37 @@ int imsic_irqdomain_init(void)
- 	return 0;
- }
- 
--static int imsic_platform_probe(struct platform_device *pdev)
-+static int imsic_platform_probe_common(struct fwnode_handle *fwnode)
- {
--	struct device *dev = &pdev->dev;
--
--	if (imsic && imsic->fwnode != dev->fwnode) {
--		dev_err(dev, "fwnode mismatch\n");
-+	if (imsic && imsic->fwnode != fwnode) {
-+		pr_err("%pfwP: fwnode mismatch\n", fwnode);
- 		return -ENODEV;
- 	}
- 
- 	return imsic_irqdomain_init();
- }
- 
-+static int imsic_platform_dt_probe(struct platform_device *pdev)
-+{
-+	return imsic_platform_probe_common(pdev->dev.fwnode);
-+}
-+
-+#ifdef CONFIG_ACPI
-+
-+/*
-+ *  On ACPI based systems, PCI enumeration happens early during boot in
-+ *  acpi_scan_init(). PCI enumeration expects MSI domain setup before
-+ *  it calls pci_set_msi_domain(). Hence, unlike in DT where
-+ *  imsic-platform drive probe happens late during boot, ACPI based
-+ *  systems need to setup the MSI domain early.
-+ */
-+int imsic_platform_acpi_probe(struct fwnode_handle *fwnode)
-+{
-+	return imsic_platform_probe_common(fwnode);
-+}
-+
-+#endif
-+
- static const struct of_device_id imsic_platform_match[] = {
- 	{ .compatible = "riscv,imsics" },
- 	{}
-@@ -370,6 +390,6 @@ static struct platform_driver imsic_platform_driver = {
- 		.name		= "riscv-imsic",
- 		.of_match_table	= imsic_platform_match,
- 	},
--	.probe = imsic_platform_probe,
-+	.probe = imsic_platform_dt_probe,
- };
- builtin_platform_driver(imsic_platform_driver);
-diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
-index 5479f872e62b..608b87dd0784 100644
---- a/drivers/irqchip/irq-riscv-imsic-state.c
-+++ b/drivers/irqchip/irq-riscv-imsic-state.c
-@@ -5,6 +5,7 @@
-  */
- 
- #define pr_fmt(fmt) "riscv-imsic: " fmt
-+#include <linux/acpi.h>
- #include <linux/cpu.h>
- #include <linux/bitmap.h>
- #include <linux/interrupt.h>
-@@ -516,12 +517,8 @@ static int __init imsic_get_parent_hartid(struct fwnode_handle *fwnode,
- 	struct of_phandle_args parent;
- 	int rc;
- 
--	/*
--	 * Currently, only OF fwnode is supported so extend this
--	 * function for ACPI support.
--	 */
- 	if (!is_of_node(fwnode))
--		return -EINVAL;
-+		return acpi_get_intc_index_hartid(index, hartid);
- 
- 	rc = of_irq_parse_one(to_of_node(fwnode), index, &parent);
- 	if (rc)
-@@ -540,12 +537,8 @@ static int __init imsic_get_parent_hartid(struct fwnode_handle *fwnode,
- static int __init imsic_get_mmio_resource(struct fwnode_handle *fwnode,
- 					  u32 index, struct resource *res)
- {
--	/*
--	 * Currently, only OF fwnode is supported so extend this
--	 * function for ACPI support.
--	 */
- 	if (!is_of_node(fwnode))
--		return -EINVAL;
-+		return acpi_get_imsic_mmio_info(index, res);
- 
- 	return of_address_to_resource(to_of_node(fwnode), index, res);
- }
-@@ -553,20 +546,15 @@ static int __init imsic_get_mmio_resource(struct fwnode_handle *fwnode,
- static int __init imsic_parse_fwnode(struct fwnode_handle *fwnode,
- 				     struct imsic_global_config *global,
- 				     u32 *nr_parent_irqs,
--				     u32 *nr_mmios)
-+				     u32 *nr_mmios,
-+				     void *opaque)
- {
-+	struct acpi_madt_imsic *imsic = (struct acpi_madt_imsic *)opaque;
- 	unsigned long hartid;
- 	struct resource res;
- 	int rc;
- 	u32 i;
- 
--	/*
--	 * Currently, only OF fwnode is supported so extend this
--	 * function for ACPI support.
--	 */
--	if (!is_of_node(fwnode))
--		return -EINVAL;
--
- 	*nr_parent_irqs = 0;
- 	*nr_mmios = 0;
- 
-@@ -578,51 +566,60 @@ static int __init imsic_parse_fwnode(struct fwnode_handle *fwnode,
- 		return -EINVAL;
- 	}
- 
--	/* Find number of guest index bits in MSI address */
--	rc = of_property_read_u32(to_of_node(fwnode), "riscv,guest-index-bits",
--				  &global->guest_index_bits);
--	if (rc)
--		global->guest_index_bits = 0;
-+	if (is_of_node(fwnode)) {
-+		/* Find number of guest index bits in MSI address */
-+		rc = of_property_read_u32(to_of_node(fwnode), "riscv,guest-index-bits",
-+					  &global->guest_index_bits);
-+		if (rc)
-+			global->guest_index_bits = 0;
- 
--	/* Find number of HART index bits */
--	rc = of_property_read_u32(to_of_node(fwnode), "riscv,hart-index-bits",
--				  &global->hart_index_bits);
--	if (rc) {
--		/* Assume default value */
--		global->hart_index_bits = __fls(*nr_parent_irqs);
--		if (BIT(global->hart_index_bits) < *nr_parent_irqs)
--			global->hart_index_bits++;
--	}
-+		/* Find number of HART index bits */
-+		rc = of_property_read_u32(to_of_node(fwnode), "riscv,hart-index-bits",
-+					  &global->hart_index_bits);
-+		if (rc) {
-+			/* Assume default value */
-+			global->hart_index_bits = __fls(*nr_parent_irqs);
-+			if (BIT(global->hart_index_bits) < *nr_parent_irqs)
-+				global->hart_index_bits++;
-+		}
- 
--	/* Find number of group index bits */
--	rc = of_property_read_u32(to_of_node(fwnode), "riscv,group-index-bits",
--				  &global->group_index_bits);
--	if (rc)
--		global->group_index_bits = 0;
-+		/* Find number of group index bits */
-+		rc = of_property_read_u32(to_of_node(fwnode), "riscv,group-index-bits",
-+					  &global->group_index_bits);
-+		if (rc)
-+			global->group_index_bits = 0;
- 
--	/*
--	 * Find first bit position of group index.
--	 * If not specified assumed the default APLIC-IMSIC configuration.
--	 */
--	rc = of_property_read_u32(to_of_node(fwnode), "riscv,group-index-shift",
--				  &global->group_index_shift);
--	if (rc)
--		global->group_index_shift = IMSIC_MMIO_PAGE_SHIFT * 2;
-+		/*
-+		 * Find first bit position of group index.
-+		 * If not specified assumed the default APLIC-IMSIC configuration.
-+		 */
-+		rc = of_property_read_u32(to_of_node(fwnode), "riscv,group-index-shift",
-+					  &global->group_index_shift);
-+		if (rc)
-+			global->group_index_shift = IMSIC_MMIO_PAGE_SHIFT * 2;
-+
-+		/* Find number of interrupt identities */
-+		rc = of_property_read_u32(to_of_node(fwnode), "riscv,num-ids",
-+					  &global->nr_ids);
-+		if (rc) {
-+			pr_err("%pfwP: number of interrupt identities not found\n", fwnode);
-+			return rc;
-+		}
- 
--	/* Find number of interrupt identities */
--	rc = of_property_read_u32(to_of_node(fwnode), "riscv,num-ids",
--				  &global->nr_ids);
--	if (rc) {
--		pr_err("%pfwP: number of interrupt identities not found\n", fwnode);
--		return rc;
-+		/* Find number of guest interrupt identities */
-+		rc = of_property_read_u32(to_of_node(fwnode), "riscv,num-guest-ids",
-+					  &global->nr_guest_ids);
-+		if (rc)
-+			global->nr_guest_ids = global->nr_ids;
-+	} else {
-+		global->guest_index_bits = imsic->guest_index_bits;
-+		global->hart_index_bits = imsic->hart_index_bits;
-+		global->group_index_bits = imsic->group_index_bits;
-+		global->group_index_shift = imsic->group_index_shift;
-+		global->nr_ids = imsic->num_ids;
-+		global->nr_guest_ids = imsic->num_guest_ids;
- 	}
- 
--	/* Find number of guest interrupt identities */
--	rc = of_property_read_u32(to_of_node(fwnode), "riscv,num-guest-ids",
--				  &global->nr_guest_ids);
--	if (rc)
--		global->nr_guest_ids = global->nr_ids;
--
- 	/* Sanity check guest index bits */
- 	i = BITS_PER_LONG - IMSIC_MMIO_PAGE_SHIFT;
- 	if (i < global->guest_index_bits) {
-@@ -688,7 +685,7 @@ static int __init imsic_parse_fwnode(struct fwnode_handle *fwnode,
- 	return 0;
- }
- 
--int __init imsic_setup_state(struct fwnode_handle *fwnode)
-+int __init imsic_setup_state(struct fwnode_handle *fwnode, void *opaque)
- {
- 	u32 i, j, index, nr_parent_irqs, nr_mmios, nr_handlers = 0;
- 	struct imsic_global_config *global;
-@@ -729,7 +726,7 @@ int __init imsic_setup_state(struct fwnode_handle *fwnode)
- 	}
- 
- 	/* Parse IMSIC fwnode */
--	rc = imsic_parse_fwnode(fwnode, global, &nr_parent_irqs, &nr_mmios);
-+	rc = imsic_parse_fwnode(fwnode, global, &nr_parent_irqs, &nr_mmios, opaque);
- 	if (rc)
- 		goto out_free_local;
- 
-diff --git a/drivers/irqchip/irq-riscv-imsic-state.h b/drivers/irqchip/irq-riscv-imsic-state.h
-index 5ae2f69b035b..391e44280827 100644
---- a/drivers/irqchip/irq-riscv-imsic-state.h
-+++ b/drivers/irqchip/irq-riscv-imsic-state.h
-@@ -102,7 +102,7 @@ void imsic_vector_debug_show_summary(struct seq_file *m, int ind);
- 
- void imsic_state_online(void);
- void imsic_state_offline(void);
--int imsic_setup_state(struct fwnode_handle *fwnode);
-+int imsic_setup_state(struct fwnode_handle *fwnode, void *opaque);
- int imsic_irqdomain_init(void);
- 
- #endif
-diff --git a/include/linux/irqchip/riscv-imsic.h b/include/linux/irqchip/riscv-imsic.h
-index faf0b800b1b0..e08680b1932b 100644
---- a/include/linux/irqchip/riscv-imsic.h
-+++ b/include/linux/irqchip/riscv-imsic.h
-@@ -84,4 +84,14 @@ static inline const struct imsic_global_config *imsic_get_global_config(void)
- 
- #endif
- 
-+#ifdef CONFIG_ACPI
-+int imsic_platform_acpi_probe(struct fwnode_handle *fwnode);
-+struct fwnode_handle *imsic_acpi_get_fwnode(struct device *dev);
-+#else
-+static inline struct fwnode_handle *imsic_acpi_get_fwnode(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- #endif
--- 
-2.40.1
+IIUC, fallocate operations which invalidates the page cache contents needs
+to take th invalidate_lock in exclusive mode to prevent page fault
+operations from loading pages for stale mappings (blocks which were
+marked free might get reused). This can cause stale data exposure.
 
+Here the fallocate operation require allocation of unwritten extents and
+does not require truncate of pagecache range. So I guess, it is not
+strictly necessary to hold the invalidate lock here.
+But I see XFS does take IOLOCK_EXCL AND MMAPLOCK_EXCL even for this operation.
+
+I guess we could use the invalidate lock for fallocate operation in ext4
+too. However, I think we still require the current patch. The reason is
+ext4_da_map_blocks() call here first tries to lookup the extent status
+cache w/o any i_data_sem lock in the fastpath. If it finds a hole, it
+takes the i_data_sem in write mode and just inserts an entry into extent
+status cache w/o re-checking for the same under the exclusive lock. 
+...So I believe we still should have this patch which re-verify under
+the write lock if whether any other operation has inserted any entry
+already or not.
+
+
+>
+> Ah, I see that the invalidation lock is only picked up deep inside
+> ext4_punch_hole(), ext4_collapse_range(), ext4_insert_range() and
+> ext4_zero_range(). They all do the same flush, lock, and dio wait
+> preamble but each do it just a little bit differently. The allocation path does
+> it just a little bit differently again and does not take the
+> invalidate lock...
+
+Yes, I think it is not stricly required to take invalidate lock in the
+allocation path of fallocate. Hence it could expose such a problem which
+existed in ext4_da_map_blocks(), right?
+
+
+>
+> Perhaps the ext4 fallocate code should be factored so that all the
+> fallocate operations run the same flush, lock and wait code rather
+> than having 5 slightly different copies of the same code?
+
+Yes. I agree. These paths can be refactored and if we are doing so, we
+may as well just use the invalidate lock as you suggested.
+
+-ritesh
