@@ -1,142 +1,286 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2076.outbound.protection.outlook.com [40.92.107.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C1A12FB36;
-	Wed,  1 May 2024 16:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714580012; cv=none; b=vFyEYVw5tVUAwtjGbkO62+HOVLa9u6eWTfzZX1AhLDJpxfMARTVXjBImTLGty+wuccwdRCDIymEp8RMg8BIf9EWlEqzcae9S5CvrYQnmb1dLT1epQCngabyiDr0qN+yozt5iiqceu5phJGaSFSDTI8/oJGN9xiaSsIWtv820vvo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714580012; c=relaxed/simple;
-	bh=dFzfiSp+K+7eC8iqd8lGaatDkcEc0b44t6mRfekFWs0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S9twhZVkeCqNsk+Zo6dpz9YJSf0uuEPMPZ8BXqvlwg2G1v236yVmXHmy4vNSwoF/1RemRlHqCUgVhYOVIudzIGo3NXM6MrrhsTMT7BI686Epiu4m9UsVEMfwgtYIOD42M16oX4BQH5/aKrSgTPFFEkX7R3yzNWoVmrhy7wy8uWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SK76njsD; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E62814012;
+	Wed,  1 May 2024 16:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.107.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714580093; cv=fail; b=pmz1sx24bBJ53CRZQsrajSLWYaTRTL/MYvzsfcn1k23/qgsg90XxAnApZngfZUpSBy9iA7wrPjlnObCtE/NzAl+FtKkHkJzK2n54VYWl0uyH5C/W8/zPXWkSG+8HLPE5f2w8ZXnysELOcmG4hRNg08K6VIr+EwhCFJ/tNC0AC9g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714580093; c=relaxed/simple;
+	bh=Q9OGUmiTFsjd+9O0xdXLrQUgv+Oq337rNyQ1BijPpBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Wmvam3m3UlyJhOIMc2OSF5ETYpvoaBpNS7XWyi5GuwavVJJJum83hQggrcM8dTErsk4itVlC9f6t4k5wbC40xKH5q8X9V7uyIObUOdrc0OZg0XIDb20iDHNk7UGD8hx9DoU48c44b3VA0LEbhGc1oLfJUjgwivoc0VfHxcrxIc0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kcSSArMF; arc=fail smtp.client-ip=40.92.107.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SK76njsD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA2DC072AA;
-	Wed,  1 May 2024 16:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714580011;
-	bh=dFzfiSp+K+7eC8iqd8lGaatDkcEc0b44t6mRfekFWs0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SK76njsD/UbgyWhKEa5gdiXSDYZ7FmYrHbjk4phy4JQ/5y++dgaAoK7dFrTnpbgJm
-	 wWqEsJ5UHazwnyXBq6qImP5pWtHrNCce6zW2vPHGcBPotG1/tWoiJPC2bQ6ETPpuLD
-	 4EzW/uEvNHTm/x3mPEh/1agcO0v6woJRSKhugvfmwXAyGCT3/BtkrU9EYh/7s8n7Yc
-	 WJ4yH29ddvKTUhqJTvKmHJYADF6hgHLpuh5KVdp95Du1ZUbMx2Ry/MJLU/peSJ02Gx
-	 rJdVEZoG89TjPu1YbCz0ASGT8cme30P+XUQHFhwv9omUtihZ90EV6FDEgjt4eNqLjE
-	 7Jutct3+m0Z2Q==
-Date: Wed, 1 May 2024 19:11:58 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	"Luck, Tony" <tony.luck@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Ross Zwisler <zwisler@google.com>,
-	"wklin@google.com" <wklin@google.com>,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-Message-ID: <ZjJpzqviUeFnV1A4@kernel.org>
-References: <202404091519.B7B2221@keescook>
- <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
- <20240411154007.5bdf8d95@gandalf.local.home>
- <fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
- <20240412132243.053ad096@gandalf.local.home>
- <ZjJVnZUX3NZiGW6q@kernel.org>
- <20240501105455.42b78a0b@gandalf.local.home>
- <ZjJgIIOvvEdnisNA@kernel.org>
- <20240501120904.61c7617c@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kcSSArMF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YMEdP6v082bZTrB87E51xQnG0zZd/Fpe6QjnW+IxqCIalhDO1ca+Er5u8b5pz5Yd27/VjDyZrpWfcQnhCSRrqwiRHjPY+kNFJcSZHb6sM0ANZQbKHGZ6lz4YWcKYnVc78ggajGFzLIOYaDa3zed7Hls2OkyF2mjE6TMeT5nBHCwYQ/pXtUZsDrHsz4ur+U1WZvQofZzs+IQsBJb0isvdwWGpa09P5+PWZ2+eZ8Bvtg502CzYYW+kf6pZWycb15hfRJl0cA05YSTg8yEtTUK0ySAe7QhvwiopuiTCQ0q15+58z63YZ8SPhQ9y9KryOCFrZaiNrfrW60kaOP6jG8wtQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rbOtTebtzu/cATU3j7GOnrL+wt4Ra0sZePsLBZFPSAM=;
+ b=Y4LPMo77ft/HeCpf1mjAMkjD6p0QgSEMWHFJi9+GYPlCtuDat15cRJA8v4Lc/2oJj8UegUIxZoqVya7lC4Dhftx8EmR+FYxvlSNwdXV8MbrqVKnM99YpbSAlKFNZetSndeTXRIscpru7RHw1f4zMNHvz6/VlxGsveG8U/OFYr2cby3yn8Naeoxz2Yhwz2vm/iE8zF0v0YRjz/2GYVurvlAauvldtCD7UlRiHt+MPHflFrT//u5t6GtYtmE+MvK27XrN5aHIUwWDTqM9PuGyjo5ZwLAUVZrk8rg1GomAX35JpwMKv+BLMp3uXoOzY6XsjtFe5X+LDFIwXl7IrWacywA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rbOtTebtzu/cATU3j7GOnrL+wt4Ra0sZePsLBZFPSAM=;
+ b=kcSSArMFXmR5Afu97BoqcLLu8YM1lYwHWdY6Bw1zJpi6Cjp2kGe7gefc8gPBxmhb7gY0WfhLCobP8Li7xQCI+pCE0RA4+22mgpJDj85VR9qc+VomRbUvMgQXL6rYR3fiW3P+0SH4sH7xvFWRabXxU9l4QGvinLZkb1zeO8uu2KjnhhoypNKgN1uo/DReipTkGw1RVr3sIyrvmN0mbUjJEgAYSrcgezlDNpvNSnqP8wDaajTPsi9CU0XCxY2RYDkTZJ8/yHL+ZVGgh/1qOldkpAlXCn9DyoqOtJQ+YNhY4g7ByGV1W9HDgMhtQotGzGYjE1bFGUNCHTjwehXjlCQsWA==
+Received: from TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+ (2603:1096:400:363::9) by KL1PR01MB4861.apcprd01.prod.exchangelabs.com
+ (2603:1096:820:bd::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36; Wed, 1 May
+ 2024 16:14:48 +0000
+Received: from TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+ ([fe80::3641:305b:41e2:6094]) by TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+ ([fe80::3641:305b:41e2:6094%4]) with mapi id 15.20.7519.031; Wed, 1 May 2024
+ 16:14:47 +0000
+From: Ziyang Huang <hzyitc@outlook.com>
+To: kvalo@kernel.org
+Cc: jjohnson@kernel.org,
+	linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Ziyang Huang <hzyitc@outlook.com>
+Subject: [PATCH] wifi: ath11k: fix remapped ce accessing issue on 64bit OS
+Date: Thu,  2 May 2024 00:14:31 +0800
+Message-ID:
+ <TYZPR01MB55563B3A689D54D18179E5B4C9192@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+X-Mailer: git-send-email 2.40.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [XtZR7T2ItLH2/vhgRbeIdkBzNBJGxOQl5AEEcc+XwbsTRErPTIfZ7Q==]
+X-ClientProxiedBy: SJ0PR05CA0210.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::35) To TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+ (2603:1096:400:363::9)
+X-Microsoft-Original-Message-ID: <20240501161431.1021275-1-hzyitc@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501120904.61c7617c@gandalf.local.home>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR01MB5556:EE_|KL1PR01MB4861:EE_
+X-MS-Office365-Filtering-Correlation-Id: 64080f89-70d8-4249-f575-08dc69f9d1c6
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	ZKMLRtZJQr1bbi0ZJNBSo+VwLg1D0P9kcCQrUCHXZ7xAZAsRBf0eOGS4BDFd179ep9M0BUuTIWSGrLGd96vr1pSlcvvRFOJA1hr0fIyiP3G5miCph6UHVJ8uH05qgoIMPFMJIwlC0QMMIQZEvzet/SaexPIyGXZFJO01V93JAwjAcR0kpY/4TxTsuibjA6d1gjPdywH32B5HZ6fx/J9ce31bQi6b97QrX00bRjlZTA9Mp63ouonUmcJJz5CtRANY4jLvy0WmXJpZZ7sPImhTc5AivSnhUeKnsIO1NrRbw2CAON1/0GRIYqAlHSbQ9mLvrGaJAqMY9kmfWq7uVHDlYLeeJWvjtB6smv60QBKi08prQ952553tfOjZkDcrUhWAp+yDAVeCQbajMHJwwILbvA+RvXzTKugr10Bzh9uQnoEVhw/rmtQ4NX5XoXSDIvhRQNXqzcnDog10BoXpI8GR1dv3eQ3VauTqO1BHYrmAh0i2NmgZ1XJ2kUjFX5GAFl4ZSDZef+TILFo3m3cGXOGv50oSAG/e5KG6AX2kf6D2e8qAvW4CyYMhf6MxBGB1dDrfYFT/sTDhG9VU84lQSLtIZklvB/DmhUIrP9pqD6vUYj7v6C264blQqiwW81jW+7kY
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?V0PGIaAaAo5aOxC48rE1Uf0b2e5dnwsglDJWOuPYgIyCUKqtoJCc6hR5vxXA?=
+ =?us-ascii?Q?tGOfzQB8BKOhIs7stmux0zADF6EbaICjQf12XQTLImWR79CL+RDsuI/UjzsY?=
+ =?us-ascii?Q?P2oyGn/g62Sse733CeUasWjxlUVBv3VmhZTkmLgwAlygOcymNt8NLhGybFXF?=
+ =?us-ascii?Q?lQ65rcRzJsZDU4+EO/MtDpRWhuD6naUSG1Htk/qeNYjLnH0tFHArvxqfGGLi?=
+ =?us-ascii?Q?76IGIF2zzX0/E70UXfcqDmKSBx9JF64Un4WvyHgW+RJHB+IBn1KZqthbxDrg?=
+ =?us-ascii?Q?dxqNjLk7FJedNI/FLeh7ZVf9A72MxszBfZaycd+JyNcsKs6FNIPbHhqkTs79?=
+ =?us-ascii?Q?6SDYs1OBbzKAEXqVux6Ot/1uMB8babtquOkfdhDNXhPY4MjCwOXShqNN8i63?=
+ =?us-ascii?Q?mAEIhEDt4u1KpRfBm/bw4y/Amg2LqHd8URijw/MqpeUt3BKZT54Rn+5PmIyu?=
+ =?us-ascii?Q?vwb0x5AepWip+Ox0estaBr5YABJTmDC6r6ggMfhBhI9ZEj/8HE9cNBv93UjK?=
+ =?us-ascii?Q?6ABJsn2QGVMp2zD6Ex239X+ic4yapxcNrQ1AA/vXeiUuzKWlJKHoyImeDknj?=
+ =?us-ascii?Q?anNpvp2w6WNcOdmqmm3EN7UEOWMQbGHRdzCXCr2VVNsW7NXNBzcprIHP5lri?=
+ =?us-ascii?Q?iMtOQCOKVTsNyvtZ6uiNcZnpYCbA7HHRLUs+/b8bM5GWV/dH9NEiilI9bXTg?=
+ =?us-ascii?Q?eMsj4dpiSjQ1ia4VmQYXmKC55SrnzHPye/4p70UjKl6yG37nYyDMNI/bW+PN?=
+ =?us-ascii?Q?wK14482NuVilN0XXc2mIAkoVMZqyRmbVNi2aZDks1cgiGRcqI/svYcZBeZpA?=
+ =?us-ascii?Q?nBvVeCQEBvv2EVkc67bOnzkNpIuEeMozLMehBgb6//JRg0fXeeJSBOdtQM1J?=
+ =?us-ascii?Q?i43Lrw0X5ezgphheEswRH/MtiASvz5wsOX8MS/EGFauxvjVoJNz/+BDLTs0P?=
+ =?us-ascii?Q?oYTp8AAueE4pNH96LPRe6BcQDnTCqulmXHG1YEvIbNXaxs6dOnrJcHPiyPOB?=
+ =?us-ascii?Q?te/lh6a+gMJgiCYOCafIxsA73n1k3PTNDkAE5aVqvUiHbgV+ctQo4Ype3RDD?=
+ =?us-ascii?Q?7ENSVyjbt/o7s8x9VQpubkTfLdf1l4kiJKWDq+CtrxlQ3q+OUhNeW7IjmoAG?=
+ =?us-ascii?Q?GYZ7N8HcWji5ZMILT2M1qv1rddGZKcHmJC4kMCWDmtPhEp+QGzZm2/X9l7bl?=
+ =?us-ascii?Q?ZYSGfg/qclncHvoWVRK/lZGS15vQRyT0PLxaSEXbvocJlEXM4RN2YYAzQVHe?=
+ =?us-ascii?Q?WDoNBJkVujhK44WNJyU9FetLHLoEqFbnSN5D5TVJEQ=3D=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 64080f89-70d8-4249-f575-08dc69f9d1c6
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2024 16:14:47.1453
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR01MB4861
 
-On Wed, May 01, 2024 at 12:09:04PM -0400, Steven Rostedt wrote:
-> On Wed, 1 May 2024 18:30:40 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > > > /*
-> > > >  * Parse early_reserve_mem=nn:align:name
-> > > >  */
-> > > > static int __init early_reserve_mem(char *p)
-> > > > {
-> > > > 	phys_addr_t start, size, align;
-> > > > 	char *oldp;
-> > > > 	int err;
-> > > > 
-> > > > 	if (!p)
-> > > > 		return -EINVAL;
-> > > > 
-> > > > 	oldp = p;
-> > > > 	size = memparse(p, &p);
-> > > > 	if (p == oldp)
-> > > > 		return -EINVAL;
-> > > > 
-> > > > 	if (*p != ':')
-> > > > 		return -EINVAL;
-> > > > 
-> > > > 	align = memparse(p+1, &p);
-> > > > 	if (*p != ':')
-> > > > 		return -EINVAL;
-> > > > 
-> > > > 	start = memblock_phys_alloc(size, align);  
-> > > 
-> > > So this will allocate the same physical location for every boot, if booting
-> > > the same kernel and having the same physical memory layout?  
-> > 
-> > Up to kaslr that might use that location for the kernel image.
-> > But it's the same as allocating from e820 after kaslr.
-> > 
-> > And, TBH, I don't have good ideas how to ensure the same physical location
-> > with randomization of the physical address of the kernel image.
-> 
-> I'll try it out. Looking at arch/x86/boot/compressed/kaslr.c, if I read the
-> code correctly, it creates up to a 100 slots to store the kernel.
-> 
-> The method I used was to make sure that the allocation was always done at
-> the top address of memory, which I think would in most cases never be
-> assigned by KASLR.
-> 
-> This looks to just grab the next available physical address, which KASLR
-> can most definitely mess with.
+On 64bit OS, when ab->mem_ce is lower than or 4G far away from ab->mem,
+u32 is not enough to store the offsets, which makes ath11k_ahb_read32()
+and ath11k_ahb_write32() access incorrect address and causes Data Abort
+Exception.
 
-On x86 memblock allocates from top of the memory. As this will run later
-than e820, the allocation will be lower than from e820, but still close to
-the top of the memory.
+Let's use the high bits of offsets to decide where to access, which is
+similar as ath11k_pci_get_window_start() done. In the future, we can merge
+these functions for unified regs accessing.
+
+Signed-off-by: Ziyang Huang <hzyitc@outlook.com>
+---
+ drivers/net/wireless/ath/ath11k/ahb.c | 34 ++++++++++++++++++++-------
+ drivers/net/wireless/ath/ath11k/hal.c | 17 +++++---------
+ drivers/net/wireless/ath/ath11k/hw.c  | 14 +++++------
+ drivers/net/wireless/ath/ath11k/hw.h  |  7 +++++-
+ 4 files changed, 45 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
+index 7c0a23517949..9e59b4de93a9 100644
+--- a/drivers/net/wireless/ath/ath11k/ahb.c
++++ b/drivers/net/wireless/ath/ath11k/ahb.c
+@@ -198,12 +198,30 @@ static const struct ath11k_pci_ops ath11k_ahb_pci_ops_wcn6750 = {
  
-> I would still like to get the highest address possible.
-> 
-> -- Steve
-
+ static inline u32 ath11k_ahb_read32(struct ath11k_base *ab, u32 offset)
+ {
+-	return ioread32(ab->mem + offset);
++	switch (offset & ATH11K_REG_TYPE_MASK) {
++	case ATH11K_REG_TYPE_NORMAL:
++		return ioread32(ab->mem + FIELD_GET(ATH11K_REG_OFFSET_MASK, offset));
++	case ATH11K_REG_TYPE_CE:
++		return ioread32(ab->mem_ce + FIELD_GET(ATH11K_REG_OFFSET_MASK, offset));
++	default:
++		BUG();
++		return 0;
++	}
+ }
+ 
+ static inline void ath11k_ahb_write32(struct ath11k_base *ab, u32 offset, u32 value)
+ {
+-	iowrite32(value, ab->mem + offset);
++	switch (offset & ATH11K_REG_TYPE_MASK) {
++	case ATH11K_REG_TYPE_NORMAL:
++		iowrite32(value, ab->mem + FIELD_GET(ATH11K_REG_OFFSET_MASK, offset));
++		break;
++	case ATH11K_REG_TYPE_CE:
++		iowrite32(value, ab->mem_ce + FIELD_GET(ATH11K_REG_OFFSET_MASK, offset));
++		break;
++	default:
++		BUG();
++		break;
++	}
+ }
+ 
+ static void ath11k_ahb_kill_tasklets(struct ath11k_base *ab)
+@@ -275,9 +293,9 @@ static void ath11k_ahb_ce_irq_enable(struct ath11k_base *ab, u16 ce_id)
+ 	const struct ce_ie_addr *ce_ie_addr = ab->hw_params.ce_ie_addr;
+ 	u32 ie1_reg_addr, ie2_reg_addr, ie3_reg_addr;
+ 
+-	ie1_reg_addr = ce_ie_addr->ie1_reg_addr + ATH11K_CE_OFFSET(ab);
+-	ie2_reg_addr = ce_ie_addr->ie2_reg_addr + ATH11K_CE_OFFSET(ab);
+-	ie3_reg_addr = ce_ie_addr->ie3_reg_addr + ATH11K_CE_OFFSET(ab);
++	ie1_reg_addr = ce_ie_addr->ie1_reg_addr;
++	ie2_reg_addr = ce_ie_addr->ie2_reg_addr;
++	ie3_reg_addr = ce_ie_addr->ie3_reg_addr;
+ 
+ 	ce_attr = &ab->hw_params.host_ce_config[ce_id];
+ 	if (ce_attr->src_nentries)
+@@ -296,9 +314,9 @@ static void ath11k_ahb_ce_irq_disable(struct ath11k_base *ab, u16 ce_id)
+ 	const struct ce_ie_addr *ce_ie_addr = ab->hw_params.ce_ie_addr;
+ 	u32 ie1_reg_addr, ie2_reg_addr, ie3_reg_addr;
+ 
+-	ie1_reg_addr = ce_ie_addr->ie1_reg_addr + ATH11K_CE_OFFSET(ab);
+-	ie2_reg_addr = ce_ie_addr->ie2_reg_addr + ATH11K_CE_OFFSET(ab);
+-	ie3_reg_addr = ce_ie_addr->ie3_reg_addr + ATH11K_CE_OFFSET(ab);
++	ie1_reg_addr = ce_ie_addr->ie1_reg_addr;
++	ie2_reg_addr = ce_ie_addr->ie2_reg_addr;
++	ie3_reg_addr = ce_ie_addr->ie3_reg_addr;
+ 
+ 	ce_attr = &ab->hw_params.host_ce_config[ce_id];
+ 	if (ce_attr->src_nentries)
+diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
+index f3d04568c221..f9ba2f821108 100644
+--- a/drivers/net/wireless/ath/ath11k/hal.c
++++ b/drivers/net/wireless/ath/ath11k/hal.c
+@@ -1233,20 +1233,16 @@ static int ath11k_hal_srng_create_config(struct ath11k_base *ab)
+ 	s->reg_start[1] = HAL_SEQ_WCSS_UMAC_TCL_REG + HAL_TCL_STATUS_RING_HP;
+ 
+ 	s = &hal->srng_config[HAL_CE_SRC];
+-	s->reg_start[0] = HAL_SEQ_WCSS_UMAC_CE0_SRC_REG(ab) + HAL_CE_DST_RING_BASE_LSB +
+-		ATH11K_CE_OFFSET(ab);
+-	s->reg_start[1] = HAL_SEQ_WCSS_UMAC_CE0_SRC_REG(ab) + HAL_CE_DST_RING_HP +
+-		ATH11K_CE_OFFSET(ab);
++	s->reg_start[0] = HAL_SEQ_WCSS_UMAC_CE0_SRC_REG(ab) + HAL_CE_DST_RING_BASE_LSB;
++	s->reg_start[1] = HAL_SEQ_WCSS_UMAC_CE0_SRC_REG(ab) + HAL_CE_DST_RING_HP;
+ 	s->reg_size[0] = HAL_SEQ_WCSS_UMAC_CE1_SRC_REG(ab) -
+ 		HAL_SEQ_WCSS_UMAC_CE0_SRC_REG(ab);
+ 	s->reg_size[1] = HAL_SEQ_WCSS_UMAC_CE1_SRC_REG(ab) -
+ 		HAL_SEQ_WCSS_UMAC_CE0_SRC_REG(ab);
+ 
+ 	s = &hal->srng_config[HAL_CE_DST];
+-	s->reg_start[0] = HAL_SEQ_WCSS_UMAC_CE0_DST_REG(ab) + HAL_CE_DST_RING_BASE_LSB +
+-		ATH11K_CE_OFFSET(ab);
+-	s->reg_start[1] = HAL_SEQ_WCSS_UMAC_CE0_DST_REG(ab) + HAL_CE_DST_RING_HP +
+-		ATH11K_CE_OFFSET(ab);
++	s->reg_start[0] = HAL_SEQ_WCSS_UMAC_CE0_DST_REG(ab) + HAL_CE_DST_RING_BASE_LSB;
++	s->reg_start[1] = HAL_SEQ_WCSS_UMAC_CE0_DST_REG(ab) + HAL_CE_DST_RING_HP;
+ 	s->reg_size[0] = HAL_SEQ_WCSS_UMAC_CE1_DST_REG(ab) -
+ 		HAL_SEQ_WCSS_UMAC_CE0_DST_REG(ab);
+ 	s->reg_size[1] = HAL_SEQ_WCSS_UMAC_CE1_DST_REG(ab) -
+@@ -1254,9 +1250,8 @@ static int ath11k_hal_srng_create_config(struct ath11k_base *ab)
+ 
+ 	s = &hal->srng_config[HAL_CE_DST_STATUS];
+ 	s->reg_start[0] = HAL_SEQ_WCSS_UMAC_CE0_DST_REG(ab) +
+-		HAL_CE_DST_STATUS_RING_BASE_LSB + ATH11K_CE_OFFSET(ab);
+-	s->reg_start[1] = HAL_SEQ_WCSS_UMAC_CE0_DST_REG(ab) + HAL_CE_DST_STATUS_RING_HP +
+-		ATH11K_CE_OFFSET(ab);
++		HAL_CE_DST_STATUS_RING_BASE_LSB;
++	s->reg_start[1] = HAL_SEQ_WCSS_UMAC_CE0_DST_REG(ab) + HAL_CE_DST_STATUS_RING_HP;
+ 	s->reg_size[0] = HAL_SEQ_WCSS_UMAC_CE1_DST_REG(ab) -
+ 		HAL_SEQ_WCSS_UMAC_CE0_DST_REG(ab);
+ 	s->reg_size[1] = HAL_SEQ_WCSS_UMAC_CE1_DST_REG(ab) -
+diff --git a/drivers/net/wireless/ath/ath11k/hw.c b/drivers/net/wireless/ath/ath11k/hw.c
+index caa6dc12a790..58f39a7eaa1c 100644
+--- a/drivers/net/wireless/ath/ath11k/hw.c
++++ b/drivers/net/wireless/ath/ath11k/hw.c
+@@ -2268,9 +2268,9 @@ const struct ce_ie_addr ath11k_ce_ie_addr_ipq8074 = {
+ };
+ 
+ const struct ce_ie_addr ath11k_ce_ie_addr_ipq5018 = {
+-	.ie1_reg_addr = CE_HOST_IPQ5018_IE_ADDRESS - HAL_IPQ5018_CE_WFSS_REG_BASE,
+-	.ie2_reg_addr = CE_HOST_IPQ5018_IE_2_ADDRESS - HAL_IPQ5018_CE_WFSS_REG_BASE,
+-	.ie3_reg_addr = CE_HOST_IPQ5018_IE_3_ADDRESS - HAL_IPQ5018_CE_WFSS_REG_BASE,
++	.ie1_reg_addr = ATH11K_REG_TYPE_CE + CE_HOST_IPQ5018_IE_ADDRESS - HAL_IPQ5018_CE_WFSS_REG_BASE,
++	.ie2_reg_addr = ATH11K_REG_TYPE_CE + CE_HOST_IPQ5018_IE_2_ADDRESS - HAL_IPQ5018_CE_WFSS_REG_BASE,
++	.ie3_reg_addr = ATH11K_REG_TYPE_CE + CE_HOST_IPQ5018_IE_3_ADDRESS - HAL_IPQ5018_CE_WFSS_REG_BASE,
+ };
+ 
+ const struct ce_remap ath11k_ce_remap_ipq5018 = {
+@@ -2801,13 +2801,13 @@ const struct ath11k_hw_regs ipq5018_regs = {
+ 	.hal_reo_status_hp = 0x00003070,
+ 
+ 	/* WCSS relative address */
+-	.hal_seq_wcss_umac_ce0_src_reg = 0x08400000
++	.hal_seq_wcss_umac_ce0_src_reg = ATH11K_REG_TYPE_CE + 0x08400000
+ 		- HAL_IPQ5018_CE_WFSS_REG_BASE,
+-	.hal_seq_wcss_umac_ce0_dst_reg = 0x08401000
++	.hal_seq_wcss_umac_ce0_dst_reg = ATH11K_REG_TYPE_CE + 0x08401000
+ 		- HAL_IPQ5018_CE_WFSS_REG_BASE,
+-	.hal_seq_wcss_umac_ce1_src_reg = 0x08402000
++	.hal_seq_wcss_umac_ce1_src_reg = ATH11K_REG_TYPE_CE + 0x08402000
+ 		- HAL_IPQ5018_CE_WFSS_REG_BASE,
+-	.hal_seq_wcss_umac_ce1_dst_reg = 0x08403000
++	.hal_seq_wcss_umac_ce1_dst_reg = ATH11K_REG_TYPE_CE + 0x08403000
+ 		- HAL_IPQ5018_CE_WFSS_REG_BASE,
+ 
+ 	/* WBM Idle address */
+diff --git a/drivers/net/wireless/ath/ath11k/hw.h b/drivers/net/wireless/ath/ath11k/hw.h
+index 14ef4eb48f80..44593b38fc85 100644
+--- a/drivers/net/wireless/ath/ath11k/hw.h
++++ b/drivers/net/wireless/ath/ath11k/hw.h
+@@ -81,7 +81,12 @@
+ #define ATH11K_M3_FILE			"m3.bin"
+ #define ATH11K_REGDB_FILE_NAME		"regdb.bin"
+ 
+-#define ATH11K_CE_OFFSET(ab)	(ab->mem_ce - ab->mem)
++#define ATH11K_REG_TYPE_MASK		GENMASK(31, 28)
++#define  ATH11K_REG_TYPE(x)		FIELD_PREP_CONST(ATH11K_REG_TYPE_MASK, x)
++#define  ATH11K_REG_TYPE_NORMAL		ATH11K_REG_TYPE(0)
++#define  ATH11K_REG_TYPE_DP		ATH11K_REG_TYPE(1)
++#define  ATH11K_REG_TYPE_CE		ATH11K_REG_TYPE(2)
++#define ATH11K_REG_OFFSET_MASK		GENMASK(27, 0)
+ 
+ enum ath11k_hw_rate_cck {
+ 	ATH11K_HW_RATE_CCK_LP_11M = 0,
 -- 
-Sincerely yours,
-Mike.
+2.40.1
+
