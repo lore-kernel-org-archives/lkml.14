@@ -1,141 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEB3645
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 09:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F002E645;
+	Wed,  1 May 2024 09:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714556786; cv=none; b=A8odTg6bdxem7AnmEAhmUrWG2O4M8V0rQRsuMohJNHPMfLi9huyxG2yybfv5WvTeW9/AQldCGYtrEstwit5u02/7Myw4dAAMNcsgeX5866cW0+7IEf6z8iF5+0/sJ2BcrBalTmBo/dUoTkSjZMrMootPTQYHTlhPAVxEuUQmauQ=
+	t=1714557063; cv=none; b=VOZnjUtxAF+FUZzEPAFQowypar7R2fcu9z2x+0AFZoJ7WrmTyyww5oCWpt59MjNyVqfNiepqRSRureIY7YlL1GcHQ2g0wHByv5OIDjAhNodcW7UpaZAvxpsO5Mn4y1yWQ+z/LeXqvHpsIO0IsFxQ9qJRhlTIVkTFf7lWBhyU1/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714556786; c=relaxed/simple;
-	bh=qktPS/9PKg+zKj9BjSJlCmmrBWubtCJUY6awBJGHkl8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hI7RJb25QItFV37zhK3G8Nrt8+XHo0fVaxUb81FKCSWVtQjgziVNKbJ1muol7EwNfE7FbQ7+9ZFwvVQQ9y61uHWeeSVE/WkiGi52x4UMcqrFL62C4o1MapvtPWa0Ray4v7cFWNl5xuTt4Wv+HKIBA+S/iTIS80w9tOnRbl9t32w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z36xColy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714557063; c=relaxed/simple;
+	bh=vvylw6nHMRwLM+9gl4nry8f4/NOWGRkQIZOZBNuzl2o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rXXMqJhdUICMi1E4Y5dri+7OnpT53GOFuzJaPSUqsnboDC9FtnFnyuOlRfbIZENMQU32pUo7ZFVKcDDpUZz36JlFRNet7MwxP83ESFIBMO7NlGfJqDdzAJDZJRBhmVLCdIdfw79wW3Fy552e0RrmTCWXGi8jczMSrI6u1XbJDeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Mdp18xET; arc=none smtp.client-ip=80.12.242.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z36xColy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87C77C113CC;
-	Wed,  1 May 2024 09:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714556786;
-	bh=qktPS/9PKg+zKj9BjSJlCmmrBWubtCJUY6awBJGHkl8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z36xColyTUmXY7YZUUZ40kJfHmKE1w9xYbgwha615G78CjvB16zg7L/DQRa2p3D5x
-	 qXwpZPNFbPWTmj1hFGWfMrY9l5VKwprlEfgEVzLeyavtOpcfparH3+AlO2ndVgclsx
-	 Nzs9b7Fx8tNM2cC2dbEpuCPu0ZFId7LQhxr+5NlLZHXQMVl7vry/1gVWyh/rQKEc0d
-	 lbBp8jOQYBmvSnloqv4LP3smgStP3gtbS1NQOlDHNGMt7Irzsnqa57u9Op3qnloW0U
-	 388DFM+7pGfcx/Z6KRtZoLNBRP6uUYE3Wo0Cb17Lp4XTGZvanbtv611TxB5gJ7taLv
-	 9j7VdFAhhpGaw==
-Message-ID: <bc812026-bfe7-4733-ae9c-444f1a64382d@kernel.org>
-Date: Wed, 1 May 2024 11:46:16 +0200
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Mdp18xET"
+Received: from localhost.localdomain ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 26TUsv4R8rs7M26TVswXrR; Wed, 01 May 2024 11:42:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1714556525;
+	bh=ihCvMaCJ1TBCxY0a/aMCQRyN7JfGY+w7nfdzuRre2yE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Mdp18xETnmsMenUVoZrWFluvlKQYzatXX8PVmttk5gqXUkGJmUVmf+27K08lRONih
+	 9ne2w5Oayq4N1lE47ayVek3AW38LvPAJOLXIWWYkY+EDMZE73GlSxd/Nw7MmAWxiAg
+	 dCUghnZwQQNw5ReWb71IeeyMvieGtgx/SscbK3vWze5VrVJN5pikTAaomrte2hYLsi
+	 PXiqagxfo6Ct8TLy8cdScQtLj2iY3bfh1DYLAlNpQDw6Th+LBr/NWTePyEkHLDGrHj
+	 2Rr8hA1kmhdaehLI2tp2iMN27/UW7xIqgqULiEvB759FZABwA7BMfk+a2JxNSid0Of
+	 4omHN6Y0RK21Q==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 01 May 2024 11:42:05 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Peter Rosin <peda@axentia.se>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-iio@vger.kernel.org
+Subject: [PATCH] iio: multiplexer: Remove an unused field in struct mux
+Date: Wed,  1 May 2024 11:41:54 +0200
+Message-ID: <7bb04abdc2815caf090a6c9ecab2a51d837792a7.1714556499.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: firmware: secvio: Add documentation
-To: Vabhav Sharma <vabhav.sharma@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com,
- Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc: Silvano Di Ninno <silvano.dininno@nxp.com>, Varun Sethi
- <V.Sethi@nxp.com>, Pankaj Gupta <pankaj.gupta@nxp.com>,
- Peng Fan <peng.fan@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>,
- frank.li@nxp.com, daniel.baluta@nxp.com,
- Franck LENORMAND <franck.lenormand@nxp.com>
-References: <20240501053205.1737248-1-vabhav.sharma@nxp.com>
- <20240501053205.1737248-2-vabhav.sharma@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240501053205.1737248-2-vabhav.sharma@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 01/05/2024 07:32, Vabhav Sharma wrote:
-> This patch adds the documentation for the SECVIO driver.
+In "struct mux", the 'indio_dev' field is unused.
+Remove it.
 
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+Found with cppcheck, unusedStructMember.
 
-Describe hardware, not driver.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only.
 
+It was added in the initial commit 7ba9df54b091 ("iio: multiplexer: new iio
+category and iio-mux driver") but was never used.
+---
+ drivers/iio/multiplexer/iio-mux.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> 
-> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-
-
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
-
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline), work on fork of kernel
-(don't, instead use mainline) or you ignore some maintainers (really
-don't). Just use b4 and everything should be fine, although remember
-about `b4 prep --auto-to-cc` if you added new patches to the patchset.
-
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time, thus I will skip this patch entirely till you follow
-the process allowing the patch to be tested.
-
-Please kindly resend and include all necessary To/Cc entries.
-
-
-Best regards,
-Krzysztof
+diff --git a/drivers/iio/multiplexer/iio-mux.c b/drivers/iio/multiplexer/iio-mux.c
+index edd8c69f6d2e..2953403bef53 100644
+--- a/drivers/iio/multiplexer/iio-mux.c
++++ b/drivers/iio/multiplexer/iio-mux.c
+@@ -30,7 +30,6 @@ struct mux {
+ 	int cached_state;
+ 	struct mux_control *control;
+ 	struct iio_channel *parent;
+-	struct iio_dev *indio_dev;
+ 	struct iio_chan_spec *chan;
+ 	struct iio_chan_spec_ext_info *ext_info;
+ 	struct mux_child *child;
+-- 
+2.44.0
 
