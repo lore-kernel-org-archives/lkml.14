@@ -1,242 +1,231 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754FBD520
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 10:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930CED520;
+	Wed,  1 May 2024 10:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714559470; cv=none; b=MBiFGFV9amAQPhCAiPf2Df2pb+QCiS5fOxBZ4HXuShnE5dW2MQsjIIXdOYujhzDklgOzLgGcTbsLzZuUMAvNuQUK8guDdVq+DZkmObgiY81BfW+frxqcd1NvhBbLz1Nkz7mq93FaW+q9oaj/VOHbeZev/zp2d5BaCop+60Wt1SM=
+	t=1714559512; cv=none; b=lsIPGrcB8Njd/R8HOWAI4UPSiKPauaEKhAf9wiSkycgbNpk4qBttjBQrK7XNUlNk16qv/AQ2dtGkajwLmrjFKnAtVgoxUxYHc74hXGo5xJ3CQIrHRjTcGyHCCI7C94/RRvmKIPZvvwfuprftmSFxNUrPTIMmDanufhELaIWOPRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714559470; c=relaxed/simple;
-	bh=4Q7P25SMYMYLyy+WOkh7aWxBP4ADpV2ba15PV0+TtRs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jWVWyj6jDxW7PKQE73s0yC165K0qvKxOjj0zc51I1frjwjDuNoKpA0cmaBUq5JXMkvhd37Z5IUHXTH1x5te21PLukTlc/UdeezxYzR0Y1J8Ct542w86Vb3Z73nYNUVbpbRbu98nMmLZfClSn9DteVXxVZP33Mb9PiILEQg6wo4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uvG+sSYu; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714559512; c=relaxed/simple;
+	bh=6DBbHrkfxS0tiwHrPZgT+bjTP/LQ6KTVWXOSl9oS0uw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKJbMJNsr0yj38pAKqBpiKs5xQVbQQcuAfZ1cZgyJeNFz6vZH5R1M1Bjg5cJ+u7FfyeUlomXxchX8lZcMhZpVaiiviHdvt9yA2Ram5bt/8vSvcWnLcGFiQxSk12Dog9QMSSBUec2cKXbCUBHjyemEprVjYo07NmYuDdmpflJsZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5ee8bwg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uvG+sSYu"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7f15256cb89so665627241.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 03:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714559467; x=1715164267; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L8FQnKsxIS9geA2jHjBOkkgdXnuOqTnOA0DqM9I2eTg=;
-        b=uvG+sSYuMESK99436+7BrFYHKOdQJBt6jKQb681TPea+gSgRHUExS55ArAt0a0suw1
-         RJY+smJZ+BHzaSzqeqiTfA6pwd5hJx8Rymf1fINaN7BbCU5IyD4jS5ffmRGUB3vZBtL9
-         uZVoHSR9BBeeSvMRcfmPx3RGaUQ1QRJEJKy2kG/1MVZnYxn+SgUigczCUuEUC/1ftDCM
-         ztQautNw9NpjE9C+BQ649iRDioBzDSljuz9VDQ3yeEUqMy6SlRDC9W9r9k76YgP1qmu/
-         O5SAbyPzGyPlz2UDJjXpkkvFU+Ci8hSM7dbtT+dTJ2CFp4yZvQ49t+EjQDXH+BRYR3A+
-         Po6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714559467; x=1715164267;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L8FQnKsxIS9geA2jHjBOkkgdXnuOqTnOA0DqM9I2eTg=;
-        b=CtbgQwn4g9zPxo6KEsJ1wApzTi1q/tKIbhoNlvkYJ6hVbkXyB/zDJ7uC175c5TIcJX
-         TYD95IGotzDd2K5GZbSFkGtQmuK816pO1HvcWHfpSVD2rXspSU2Ov42NXDpsaSBd+8t2
-         lc/fxQoDB5yDgeQeWkc+XSPdZEcyfdtIXXwn8uN41+X3fYIBcDeNKAHQLth4qXKZqw2G
-         4KjKCWAkIeFbq/7tNx5SdyTOvC7vxZzGz7LJXNeMJ2IYf5obQmKpq3xDIRos4DCoQs1+
-         tj+vrnecuVBmM5NTyzHRZwQW02awaipdh5wf2pv0LoKni/k7Q2h63Sj3KamFeA0g+Gm+
-         kf9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWfvA2PJ6CybDZvYIi1+HkV93ktrphNmOn4Kxh+nFEm7Gu8DgAnztgCZi39xt61kJT08MOjE1/RvKgjOU4ZTCwrkKTLH7dq2oEFenhD
-X-Gm-Message-State: AOJu0Yz3pjbQQAQitdXyQQ8TO3eSSXb40CMkUBT+wc2A2FmzLzgkwzAI
-	uGQKyPNW65i1oZ1pIUyeXEFg3XwngvxqDfnoD5VyCp2VQHXW9kLenQqk9PgWq3QF2/4proEn9Cd
-	qgJSyDgOGQq15XBjwlkRZ7E5RZ7YIYqeilc67ow==
-X-Google-Smtp-Source: AGHT+IFEjAYEUmgf1+5TgUMSZTBA4Fc0E53KiGFYgdpdlvTMmFgs2/9PUnYRZDMF+uqDN/NmAYBHEP/HxIhEcSu4pyc=
-X-Received: by 2002:a05:6122:3698:b0:4de:daa8:b8e2 with SMTP id
- ec24-20020a056122369800b004dedaa8b8e2mr2270757vkb.3.1714559467450; Wed, 01
- May 2024 03:31:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5ee8bwg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87259C113CC;
+	Wed,  1 May 2024 10:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714559512;
+	bh=6DBbHrkfxS0tiwHrPZgT+bjTP/LQ6KTVWXOSl9oS0uw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U5ee8bwgBLBCu4DumpOEAERsjw3ZbAP1XblSkz9aVFKZGtMgCFTiA0pxj3GXTowo2
+	 7ckb1Z6BdjEoy5msRFbdI7BAYmKf3htSei2B1D+T+yu7FP0PpQaNy/3aUaePzp97sH
+	 cKmbeqTesHi0Ye71vJBxFoyAGSy1+14roh4mNDgO4HIUFKck3ZWyiaPStY1bnoEVLR
+	 X+s8MeH8GU3OZ/Bbz6IXbIwrDt+H/pAnwRuBeq5KVjdgFCzLaJJOUDaF7GmMYbxq0+
+	 c/FTazQwk1znasxvU2OYJorZPiHHCvI29cVf3yfADDUqbsf5qSiQcr3P/qB1DuRqmk
+	 iHHbtFC1LN2rw==
+Date: Wed, 1 May 2024 11:31:45 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 03/16] riscv: vector: Use vlenb from DT
+Message-ID: <20240501-showroom-rephrase-66c0929011b3@spud>
+References: <20240426-dev-charlie-support_thead_vector_6_9-v4-0-b692f3c516ec@rivosinc.com>
+ <20240426-dev-charlie-support_thead_vector_6_9-v4-3-b692f3c516ec@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430103043.397234724@linuxfoundation.org>
-In-Reply-To: <20240430103043.397234724@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 1 May 2024 16:00:54 +0530
-Message-ID: <CA+G9fYs60XZ3TNPOaxwZ3dR_uecnz2AjUBYHPo7DX+AY2WsTHQ@mail.gmail.com>
-Subject: Re: [PATCH 5.15 00/80] 5.15.158-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SnPvkgTlHmJo6buD"
+Content-Disposition: inline
+In-Reply-To: <20240426-dev-charlie-support_thead_vector_6_9-v4-3-b692f3c516ec@rivosinc.com>
+
+
+--SnPvkgTlHmJo6buD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 30 Apr 2024 at 16:47, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.15.158 release.
-> There are 80 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 02 May 2024 10:30:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.15.158-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Apr 26, 2024 at 02:29:17PM -0700, Charlie Jenkins wrote:
+> If vlenb is provided in the device tree, prefer that over reading the
+> vlenb csr.
+>=20
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/cpufeature.h |  2 ++
+>  arch/riscv/kernel/cpufeature.c      | 43 +++++++++++++++++++++++++++++++=
+++++++
+>  arch/riscv/kernel/vector.c          | 12 ++++++++++-
+>  3 files changed, 56 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm=
+/cpufeature.h
+> index 347805446151..0c4f08577015 100644
+> --- a/arch/riscv/include/asm/cpufeature.h
+> +++ b/arch/riscv/include/asm/cpufeature.h
+> @@ -31,6 +31,8 @@ DECLARE_PER_CPU(struct riscv_cpuinfo, riscv_cpuinfo);
+>  /* Per-cpu ISA extensions. */
+>  extern struct riscv_isainfo hart_isa[NR_CPUS];
+> =20
+> +extern u32 riscv_vlenb_of;
+> +
+>  void riscv_user_isa_enable(void);
+> =20
+>  #if defined(CONFIG_RISCV_MISALIGNED)
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index 3ed2359eae35..8158f34c3e36 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -35,6 +35,8 @@ static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __r=
+ead_mostly;
+>  /* Per-cpu ISA extensions. */
+>  struct riscv_isainfo hart_isa[NR_CPUS];
+> =20
+> +u32 riscv_vlenb_of;
+> +
+>  /**
+>   * riscv_isa_extension_base() - Get base extension word
+>   *
+> @@ -648,6 +650,42 @@ static int __init riscv_isa_fallback_setup(char *__u=
+nused)
+>  early_param("riscv_isa_fallback", riscv_isa_fallback_setup);
+>  #endif
+> =20
+> +static int riscv_homogeneous_vlenb(void)
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Without a verb, this function name is rather odd.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> +{
+> +	int cpu;
+> +	u32 prev_vlenb =3D 0;
+> +	u32 vlenb;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		struct device_node *cpu_node;
+> +
+> +		cpu_node =3D of_cpu_device_node_get(cpu);
+> +		if (!cpu_node) {
+> +			pr_warn("Unable to find cpu node\n");
+> +			continue;
 
-## Build
-* kernel: 5.15.158-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-5.15.y
-* git commit: d6b90d569cec2513e2bd695321ba651a37d4267f
-* git describe: v5.15.157-81-gd6b90d569cec
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15=
-.157-81-gd6b90d569cec
+Hmm, if we fail to find the cpu node, then shouldn't we be returning an
+error?
 
-## Test Regressions (compared to v5.15.155)
+> +		}
+> +
+> +		if (of_property_read_u32(cpu_node, "riscv,vlenb", &vlenb)) {
+> +			of_node_put(cpu_node);
+> +
+> +			if (prev_vlenb)
+> +				return -1;
 
-## Metric Regressions (compared to v5.15.155)
+Can you return an errno here and below please?
 
-## Test Fixes (compared to v5.15.155)
+> +			continue;
+> +		}
+> +
+> +		if (prev_vlenb && vlenb !=3D prev_vlenb) {
+> +			of_node_put(cpu_node);
+> +			return -1;
+> +		}
+> +
+> +		prev_vlenb =3D vlenb;
+> +		of_node_put(cpu_node);
+> +	}
+> +
+> +	riscv_vlenb_of =3D vlenb;
+> +	return 0;
+> +}
+> +
+>  void __init riscv_fill_hwcap(void)
+>  {
+>  	char print_str[NUM_ALPHA_EXTS + 1];
+> @@ -671,6 +709,11 @@ void __init riscv_fill_hwcap(void)
+>  			pr_info("Falling back to deprecated \"riscv,isa\"\n");
+>  			riscv_fill_hwcap_from_isa_string(isa2hwcap);
+>  		}
+> +
+> +		if (riscv_homogeneous_vlenb() < 0) {
+> +			pr_warn("RISCV_ISA_V only supports one vlenb on SMP systems. Please e=
+nsure that the riscv,vlenb devicetree property is the same across all CPUs.=
+ Either all CPUs must have the riscv,vlenb property, or none. If no CPUs in=
+ the devicetree use riscv,vlenb then vlenb will be probed from the vlenb CS=
+R. Disabling vector.\n");
 
-## Metric Fixes (compared to v5.15.155)
+Oh dear, that's a bit unwieldy... I think you could get away with a far
+more basic message - and you should be able to break this over lines,
+adjacent string literals should get concatenated.
+I'd probably say something like "unsupported heterogeneous vlen detected,
+vector extension disabled", however we should actually check that the
+vector extension has been detected on all CPUs and that kernel support
+for vector is enabled before emitting a warning for this.
 
-## Test result summary
-total: 91343, pass: 73626, fail: 2525, skip: 15124, xfail: 68
+Cheers,
+Conor.
 
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 103 total, 103 passed, 0 failed
-* arm64: 30 total, 30 passed, 0 failed
-* i386: 25 total, 25 passed, 0 failed
-* mips: 22 total, 22 passed, 0 failed
-* parisc: 3 total, 3 passed, 0 failed
-* powerpc: 24 total, 24 passed, 0 failed
-* riscv: 8 total, 8 passed, 0 failed
-* s390: 9 total, 9 passed, 0 failed
-* sh: 9 total, 9 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 27 total, 27 passed, 0 failed
+> +			elf_hwcap &=3D ~COMPAT_HWCAP_ISA_V;
+> +		}
+>  	}
+> =20
+>  	/*
+> diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
+> index 6727d1d3b8f2..e04586cdb7f0 100644
+> --- a/arch/riscv/kernel/vector.c
+> +++ b/arch/riscv/kernel/vector.c
+> @@ -33,7 +33,17 @@ int riscv_v_setup_vsize(void)
+>  {
+>  	unsigned long this_vsize;
+> =20
+> -	/* There are 32 vector registers with vlenb length. */
+> +	/*
+> +	 * There are 32 vector registers with vlenb length.
+> +	 *
+> +	 * If the riscv,vlenb property was provided by the firmware, use that
+> +	 * instead of probing the CSRs.
+> +	 */
+> +	if (riscv_vlenb_of) {
+> +		this_vsize =3D riscv_vlenb_of * 32;
+> +		return 0;
+> +	}
+> +
+>  	riscv_v_enable();
+>  	this_vsize =3D csr_read(CSR_VLENB) * 32;
+>  	riscv_v_disable();
+>=20
+> --=20
+> 2.44.0
+>=20
 
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-lib
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-watchdog
-* kselftest-x86
-* kselftest-zram
-* kunit
-* kvm-unit-tests
-* libgpiod
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-smoketest
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
+--SnPvkgTlHmJo6buD
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-Linaro LKFT
-https://lkft.linaro.org
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjIaEQAKCRB4tDGHoIJi
+0hNBAP9YH38VakJjIeXqwOnQlJJWTLPRdPDQPf5eTY+Ir67I6QEA8WCxzjgKtaAO
+OCpGug+WIcHcZlm8J+isXxxHhyQ9TwQ=
+=T1wq
+-----END PGP SIGNATURE-----
+
+--SnPvkgTlHmJo6buD--
