@@ -1,110 +1,134 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3E42E3F2;
-	Wed,  1 May 2024 07:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADA645000;
+	Wed,  1 May 2024 07:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714549197; cv=none; b=Bm8JyMKfRJJb4wKtMvMgaFSa1fOFw8ERita9eP6CnpPHg8mFjMVRm1SyeUytx8xGQG0e+WhzP0p9sEzGl1eK+/V9WkHB1CMc1DLL+//wC3OHgBbO0GL8KBwAQu9GgdZvxACBq3mXiUDk2TXzkHGJtxf8hTjo2xuYxExzyOdJ7sc=
+	t=1714549392; cv=none; b=hLUXTcck21n30UA6Kr8/daK69Et3wfB8shu2Q4kHY3yLX4d96Bi4PrNrRxwVDY13B83380IL9oCasqQyw5zjIwC3D0ycqbmpYEU5Gq5uozLLik7+A+/HbvvOPtYRgCqDQHzhT3HzLhgt5x6buiJRQ9Nfvup7YH0aQFDUpBzvkv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714549197; c=relaxed/simple;
-	bh=5eWuGHYXfyJHepRujiagDpeV3q8qyo9GkPxVCzukQy4=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FkxfAegtczwnIfz2Swl+O3l4o0gq8NDXpKaAAGX+AgO7cC6/YcSo+nDOQ/JLiUdU8w0wXBjLI2UFFw9dn9lT8FHWs15X0j65sgk0zZugaUpsQIYIGiRrQorsnRwVc17/ie+sFUB0muLLEtUYvtqDWI9UtwDVjL4iVXwcZWZskzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lkeYkYla; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1714549392; c=relaxed/simple;
+	bh=nDz7IgBIt8zcUbDYSusybKLUFygsWzYKS7tlIuHx9Xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rPW5m5k/EF2CRh7BLwDxSwG+PJ1qL6hVMGG+n25y9VxWZUI1xAj1xTvOkzNSf8kwP6yV6cb8UwZGMKui+ajzV2KpZ1+ts37/KHKyq4WUQ9UrOHwPNCxg8wslDA31F/P5kY+Tf+rUqv36fx3FMkTr7btjSQt8tWVH5jB2GSU+32c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EvaYDxOm; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkeYkYla"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1eab16c8d83so52921075ad.3;
-        Wed, 01 May 2024 00:39:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvaYDxOm"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41b79450f78so37502525e9.2;
+        Wed, 01 May 2024 00:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714549195; x=1715153995; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714549389; x=1715154189; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5eWuGHYXfyJHepRujiagDpeV3q8qyo9GkPxVCzukQy4=;
-        b=lkeYkYlavqCvNh+rLvd5S2clhQO5HTVHqjRAnpGQNTi0ckjWlD1eiCFcFOFQHp6TnN
-         Y/V7qmscLVHaXDzIjQFiA/omUDOZBrAut5k4zdmzzcgHzV2q1T4cxZeSq2j/f+nn3TFI
-         nJSlJuESh/rHLYGCCZ8Z7BLjwHbdRoWuCxacQiBbVb91AuwtWy+5bkrWErpMJqsz1xpE
-         iyniSAzZLHU67K3E69An6U4+0Kp6uF5dLyID2/aDJCB3231b9hvTKqt7F2efAbBdxtoS
-         I8qlGBhKpVvxaPtokidR3JHmWT7fAL7HU+K7aQSwPobuasV9jOOtw2N22SLVk94R+U3c
-         41sw==
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VS97UVDmTq0jUKWg6SotUR+zNkhZ/4MYnHJe/NRtR38=;
+        b=EvaYDxOmRdxvt0t0qzk3LfyR6+Cm3+dsdaiBdYzs9D3gWMlXiovjdWh8ap25lJboNv
+         afXdV1/2tA2rAOTFLGNdpCiiGwG2qhLCAfO/484GGfxA40d2Apx7OP6pPSizJhPeecl+
+         xqJ9nGkVtH3ChtH4PXMaamUvmaH3fCukE28f9bcuRpaAAM61d4wimx7po6oqEHh6x7O6
+         snDk3T3eRPQn5ZYIEUkuRpMxA7IzWzHj/Kv/IsQV5/CS7ThI3hQh3HS909WyhlZhyy4K
+         MwuvFtYRjUC9dFAWaWQ4/5eDhYdIENrGH6m6CmAUu1kcoh5CncgK7JbyxWzINrfqO2Re
+         oRhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714549195; x=1715153995;
+        d=1e100.net; s=20230601; t=1714549389; x=1715154189;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5eWuGHYXfyJHepRujiagDpeV3q8qyo9GkPxVCzukQy4=;
-        b=SNx37z3opqq7vkLIl/cTXxdHcGUKz7z//73aQcMiZB6sc/CMWeva44TFxD7QhbAKeW
-         SFK4ynDYD/mWDWKNXa2xr/2bDZ5wD0jQYy+q+BXD1EDZRZdfgxA3R2uQogcfifvg0fCw
-         +uc2EM56PN42fidACFNPxCAr6NcFuCw0n4YO46HlK501w1zWvtE4LyzMh8dyvDgR4sE2
-         ZUk6ZgVMoREpLyxkBuPA59Sqbspq3sRn2y0Tbtp0C9S7v72Wic45PBKM2VUW1mUosEsC
-         14Dr/uN0EW2SyHlMSAUag+XMmfl4qMwSSrDyPyipVSmw6KznWTt1tpGrxQ6eQqm71+gH
-         upUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKuU6//uHoBG5xMIH0Tkt9ue/CSTxHz2zwABo7YhUVCUdoGFjieQZ5SxlKKa4IUz468ONqlx4HWs9GGzoltlBEbHvy30FclCb3CIr4HLZ18XFTc9CcAlwWIU9oPbCJUEwR3H1N+nvo
-X-Gm-Message-State: AOJu0YxVL2rZMqDfgNivpTvztspJ6OoxRfrZdLf6ddKbHszBcU7YOels
-	7MoHfU4S1yWAs4g7T3tfO2imfjd1fcRip1lfP+816zwavMfdbBKz
-X-Google-Smtp-Source: AGHT+IGtHhq6yEiiulIYwbWbLH9rp2tc+PgviJAeQI/3SWUvHmKXCvEk5gVgKxrvXwKxyIXXBnfupQ==
-X-Received: by 2002:a17:902:eb8e:b0:1e4:6253:75db with SMTP id q14-20020a170902eb8e00b001e4625375dbmr2093312plg.17.1714549195020;
-        Wed, 01 May 2024 00:39:55 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id q4-20020a170902edc400b001e29c4b7bd2sm23626709plk.240.2024.05.01.00.39.54
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VS97UVDmTq0jUKWg6SotUR+zNkhZ/4MYnHJe/NRtR38=;
+        b=wjuS/+H9oMbBFljvKqKSUKf+QTWgEE0esVZ2FHcbs6mtR0D4MRFffNZXJQ0riGjJaL
+         xAgO/crWWwzO402kErihABH3cqr4I4uhWiWw7rsHvaUKTGh8pfBWiijkmAws9v46yaWE
+         GU+ge01KPGK+eUibQlzGwRv2MFBJTtefH630L/wF/BtEUgpz8E6ZC6RLhtXoQuFv2O4U
+         SYJ5ctEKdHXUnPtX8MqWQTsEOyVuxb3PxCeyUnwFdBVKanGaYUTA9m3gPEx/LFpkcqxl
+         MEzhu07DJ4PzqzRbn4NemIPMONDswWYTV/BcG6cOLag0DfUxEL9CiP5tQi03EgXdmkDw
+         H7Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMiSgF7XXxTiIMEvv2ee7BnMZuklikgjLa0Y7XX4aEkGpjpYdjRGTEGJZLj5LvzoO/zpglCFwIWlK+O9e00F9M0cfA6Gss+C8u8NbQeUnvXKYhsxd92gsHVNJ9YmSnjGIF
+X-Gm-Message-State: AOJu0Yyi4LBY3kz1MNKCEAQhsSOfilt9Z58Ilk3wZQFFc1zSAx65CsZ3
+	j+LTdbCPoBgSEdMds0FG4H52qLhx3omBHAGiLREaiTGrgtiwLaLxrFpTppkI
+X-Google-Smtp-Source: AGHT+IE+xuenBBdfvMBsv6WfaxYXki4TTiAgFoUeJbfTWshn1vHer1TP0WJ88r2aPYPWbRWPovAXWQ==
+X-Received: by 2002:a05:600c:3ba2:b0:41b:d973:24c1 with SMTP id n34-20020a05600c3ba200b0041bd97324c1mr1933561wms.12.1714549388206;
+        Wed, 01 May 2024 00:43:08 -0700 (PDT)
+Received: from gmail.com (20014C4C171B8800C2E0EE13693E7E35.unconfigured.pool.telekom.hu. [2001:4c4c:171b:8800:c2e0:ee13:693e:7e35])
+        by smtp.gmail.com with ESMTPSA id c14-20020adfa30e000000b0034da4e80885sm2428071wrb.59.2024.05.01.00.43.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 00:39:54 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 23CFD18462B23; Wed, 01 May 2024 14:39:51 +0700 (WIB)
-Date: Wed, 1 May 2024 14:39:51 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: mhklinux@outlook.com, robin.murphy@arm.com, joro@8bytes.org,
-	will@kernel.org, hch@lst.de, m.szyprowski@samsung.com,
-	corbet@lwn.net, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, petr@tesarici.cz,
-	roberto.sassu@huaweicloud.com
-Subject: Re: [PATCH v3 1/1] Documentation/core-api: Add swiotlb documentation
-Message-ID: <ZjHxxzRb-63ARo6Z@archie.me>
-References: <20240429151337.1069470-1-mhklinux@outlook.com>
+        Wed, 01 May 2024 00:43:07 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 1 May 2024 09:43:04 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Hillf Danton <hdanton@sina.com>, Andy Lutomirski <luto@amacapital.net>,
+	Peter Anvin <hpa@zytor.com>, Adrian Bunk <bunk@kernel.org>,
+	syzbot <syzbot+83e7f982ca045ab4405c@syzkaller.appspotmail.com>,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	andrii@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] x86/mm: Remove broken vsyscall emulation code from the
+ page fault code
+Message-ID: <ZjHyiI4DlNNh/HRq@gmail.com>
+References: <20240427231321.3978-1-hdanton@sina.com>
+ <CAHk-=wjBvNvVggy14p9rkHA8W1ZVfoKXvW0oeX5NZWxWUv8gfQ@mail.gmail.com>
+ <20240428232302.4035-1-hdanton@sina.com>
+ <CAHk-=wjma_sSghVTgDCQxHHd=e2Lqi45PLh78oJ4WeBj8erV9Q@mail.gmail.com>
+ <CAHk-=wh9D6f7HUkDgZHKmDCHUQmp+Co89GP+b8+z+G56BKeyNg@mail.gmail.com>
+ <Zi9Ts1HcqiKzy9GX@gmail.com>
+ <CAHk-=wj9=+4k+sY6hNsQy2oQA4HABNA369cBPSgBNaeRHbbTZg@mail.gmail.com>
+ <CAHk-=wg63NPb-cEL7NTFTKN2=uM6Lygg_CcXwwDBTVCg=PeSRg@mail.gmail.com>
+ <CAHk-=whuH+-swynMTVd9=uCB0uuhaoanQ5kfHEX=QaRZx7UgBw@mail.gmail.com>
+ <ZjCLSLQ4WttYQXVd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SQuUPEbHKzRUh2zX"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240429151337.1069470-1-mhklinux@outlook.com>
+In-Reply-To: <ZjCLSLQ4WttYQXVd@gmail.com>
 
 
---SQuUPEbHKzRUh2zX
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-On Mon, Apr 29, 2024 at 08:13:37AM -0700, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
->=20
-> There's currently no documentation for the swiotlb. Add documentation
-> describing usage scenarios, the key APIs, and implementation details.
-> Group the new documentation with other DMA-related documentation.
->=20
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> 
+> * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> 
+> > I guess that patch to rip out sig_on_uaccess_err needs to go into 6.9 and 
+> > even be marked for stable, since it most definitely breaks some stuff 
+> > currently. Even if that "some stuff" is pretty esoteric (ie 
+> > "vsyscall=emulate" together with tracing).
+> 
+> Yeah - I just put it into tip:x86/urgent as-is, with the various Tested-by 
+> and Acked-by tags added, and we'll send it to you later this week if all 
+> goes well.
 
-Other than outstanding reviews, the doc LGTM. Thanks!
+Update: added the delta patch below to the fix, because now 
+'tsk' is unused in emulate_vsyscall().
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Thanks,
 
---=20
-An old man doll... just what I always wanted! - Clara
+	Ingo
 
---SQuUPEbHKzRUh2zX
-Content-Type: application/pgp-signature; name="signature.asc"
+ arch/x86/entry/vsyscall/vsyscall_64.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index 3b0f61b2ea6d..2fb7d53cf333 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -115,7 +115,6 @@ static bool write_ok_or_segv(unsigned long ptr, size_t size)
+ bool emulate_vsyscall(unsigned long error_code,
+ 		      struct pt_regs *regs, unsigned long address)
+ {
+-	struct task_struct *tsk;
+ 	unsigned long caller;
+ 	int vsyscall_nr, syscall_nr, tmp;
+ 	long ret;
+@@ -166,8 +165,6 @@ bool emulate_vsyscall(unsigned long error_code,
+ 		goto sigsegv;
+ 	}
+ 
+-	tsk = current;
+-
+ 	/*
+ 	 * Check for access_ok violations and find the syscall nr.
+ 	 *
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZjHxwgAKCRD2uYlJVVFO
-o3WrAQDvhNlHDw0C1NqqL2yH9OQNIxn9j4y2CY6FFWX/Oz/INwD/WbBcId0StqpV
-oVnntracxxAV03zfP4U6+nARrv12Qg0=
-=zv+C
------END PGP SIGNATURE-----
-
---SQuUPEbHKzRUh2zX--
