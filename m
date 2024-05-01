@@ -1,90 +1,212 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBE4C2FD;
-	Wed,  1 May 2024 15:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E71B5024E
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714577900; cv=none; b=Yr1jSX7GnWxHHX4R0NfEbqjckl39bbuahUCE8uOGDbbUwm6KyqUAgVdN6I+bkjt2416erdZpuquuuQRXfnBfr/kXDoLLIXrWpJXNyn8JcVODy4zFXCD36tl4y2KDwHiZCV4XjN3L2Aq6IYCXeZGHBGlQ+MEsmKvepG9i5ygBVu8=
+	t=1714577987; cv=none; b=WLThm7iDo6elifD3ao8yHZrMQtglXR26n0Jyr1fkbvdqOCLsQDL6kjgS8ScN0uDLbb1DIXnw6ZPbNvOdKMeYxqeCSCbFL1WnLPAUdYuhUZRt9SHP2n6r5+dRB1y15JGJ7j/K5a0XMIgMQ5DNGSAnKGees0IXtAHXBJ603RsO2nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714577900; c=relaxed/simple;
-	bh=eDoeRon2FNe588ZUGUZc3+AJ6puekYfMV5lxqbbJ3gE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=qHuBJhCAeslGsOsR977u9ifMK/P0gyVP0R+yG6iHRupG9w7SLRO4FDwb7fosyslU+O6ZR0xA0dplH2rhBosq/XmNnDKxR8NzJUXPyzRVMZEad9KOMkXjEx+S5rAChcNudR5JA/hidp72DWbYuizA32p+v+PTZkW6ItFeN5Q3rbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=arNoMv24; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714577987; c=relaxed/simple;
+	bh=TXnlRUd4wzTg+J3RDLQaov6hXIMql18Rm1XlXmIxRJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fxAjQkXedU/5elsRgZyGGuuH7aB5A9xNYDK9yc9DEFOjomiI6+9oGoCmYW873cDXLiWFKgaGA5jPzQpgUDaR0u8KgRtKJMbIgesCOax1izjRb7wDdu6KoM6b83TtN9hSoQY7/iNcdgtSv3C8y1dldBp+6ztjGA1LnG4wnnOHiOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gwRkcnqz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="arNoMv24"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714577820; x=1715182620; i=markus.elfring@web.de;
-	bh=eDoeRon2FNe588ZUGUZc3+AJ6puekYfMV5lxqbbJ3gE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=arNoMv246RrlBebVKPsArQ2tTWPM3YvFF/URq94nk+24URwTNiIDjTRwrM4kRD9j
-	 KJj9LQDUTzvR6cbeRlOQSVxs3+tNtP9TTAMDi/IzkgfKLiIAXx4/RPDvohGIHEPlF
-	 1spumDATTDeKTIrhZkZ28IrT8DTMeCyJOQiSLZWLNkN4a7RtN/NdXCkYq80LQynGc
-	 IOrvRfBLodljkRNVjEZljVUGVwBv0mJxtJUD9N8LDZGR+PMhHUxT8Shesf43/Q3/q
-	 I2/daoFcaA/JtU1MlJ3ap+w4IVXCMY0B4KrUH8JROXRpDUwfNmjM4c/d0jqRYL2We
-	 OuF/dizoGo0wzUZ1aA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MS17h-1sCp9M3Yrb-00U3Xg; Wed, 01
- May 2024 17:36:59 +0200
-Message-ID: <1cdce712-f007-495b-80ef-0efe67dd5e20@web.de>
-Date: Wed, 1 May 2024 17:36:54 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gwRkcnqz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714577984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7HEIRVOOxs9+Z4JyFqDhStdwNE4nDa7vmALaBzUWy5c=;
+	b=gwRkcnqzQNoKA/c/sIYzp3400oK8EH+TUh6785N12gTORtrOE/Ki1lcZmxLS5vy5d2O1ep
+	Dq72c4kPn69HTtIiBmEq8Kcqc0VkkxVEW7w93XSjBsyfpk7cgPzMrDQ+LcbWkY9/EKiin6
+	xbSUaVPLFrXpog1ZKOYQJtSHrEUKCIE=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-533-sC1vH30zMqy-tC0TGZzU7g-1; Wed,
+ 01 May 2024 11:39:36 -0400
+X-MC-Unique: sC1vH30zMqy-tC0TGZzU7g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 839D0385A185;
+	Wed,  1 May 2024 15:39:19 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (unknown [10.39.192.58])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4C8511C0654E;
+	Wed,  1 May 2024 15:39:14 +0000 (UTC)
+Date: Wed, 1 May 2024 11:39:11 -0400
+From: Phil Auld <pauld@redhat.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Ankit Jain <ankit-aj.jain@broadcom.com>, linux@rasmusvillemoes.dk,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	juri.lelli@redhat.com, ajay.kaher@broadcom.com,
+	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com,
+	Paul Turner <pjt@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH] lib/cpumask: Boot option to disable tasks distribution
+ within cpumask
+Message-ID: <20240501153911.GD39737@lorien.usersys.redhat.com>
+References: <20240430090431.1619622-1-ankit-aj.jain@broadcom.com>
+ <ZjE3C9UgeZR02Jyy@yury-ThinkPad>
+ <20240501133608.GB39737@lorien.usersys.redhat.com>
+ <ZjJfftWMbjT9r8iT@yury-ThinkPad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Usama Arif <usamaarif642@gmail.com>, linux-mm@kvack.org,
- cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-team@meta.com,
- Chengming Zhou <chengming.zhou@linux.dev>,
- Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Tejun Heo <tj@kernel.org>,
- Yosry Ahmed <yosryahmed@google.com>, Zefan Li <lizefan.x@bytedance.com>
-References: <20240501100620.1461685-1-usamaarif642@gmail.com>
-Subject: Re: [PATCH] selftests: cgroup: remove redundant addition of memory
- controller
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240501100620.1461685-1-usamaarif642@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:V37OePDYSXHrrNlgIy/91VHaZf4oW15rKVNXlr0apLkPnPgkYvj
- QVG0wyXvdoM0h6ld1A848+F4MW34V7/OMLkhLq4t1w4S9Pkrhgk9SDkmePtrNe02qzCN2+3
- c71O9PYKCuBiE6dacslGkPT1tMrTBKbrerG2rS6Fdyn6viqfl4PHjbFVJjZfNU0ytUy4vsy
- xzi5BouNuUXv8e66Bu+yA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:kH699/Ne5mE=;WP0scAqvZ/5b5l0T3EdGVB0lKEt
- JDPTry589asK0ZpypIUQdoLm2ejtlhOcekQzTJJxPyYZs40l9muiY1bC1UMCEfxHCcl7MzLT8
- zmcZm16mnYhpo6jZIp8PvgDCuPDMt/HdonGgw1XuF0A5C58W2wmyBMQY8NnuDCFOE8alpLf2C
- MZACMjJT2fdw+mbIdi7FeWSOrgIKUryMMqVNAD+1GsQrjsw/jKBllCyx9MRZ3yDOCsPFXTJy1
- kKK0zfgSsMoKSIEamcbcD8Ke4CbiT7Ls6WpHFBblaZo8wp7BCcOLLC6SGj4uNHSMT7nMc1yfw
- ytlvrIbEOxp9m09u+PVuK834KlRayVJp9ARXiXP1929AbICWTvWEhCkKMM8dCYF/Ixr3/l67D
- CXoWJYE2+UO8h6pvQ7RvsjLLgkN5VuEvW796SQXu81SkMWVvxsIkqtSTja3NB331zgxYZRwlz
- qa42mJUWgW0+2emKkYNIO4DYUCzyZ6MQJV7GbOOVgjt9+hM4qXb6jDpSHTqBeBO+oN6Uq3qne
- mSL2SKlALeQlpGuiawl0k2tj8dIEBmbs7UTRdRHjdIji5rmFPltTxi+H3i9cYfgbg9X3aJvcg
- CoJXyKj4iVvBLbg1OPX+3UJxVUZqtV86x3Bmijadhq8GDzRvyQo50JAL1pQfjoYqoBKW0Dxfy
- CqSlulvB2/liu+XHnD4iCtQpHwvWv5hYCIFMyNfESSM5UYtTngdp1XEvuZ29T2ODUb8lXVrTy
- 1TtRnUMzSHTYt5oLAnBEavJkgLl+LapqwMxVuvi15sgWk4MDGXeAQlpIBnBfvbr/oK01Hdi41
- dI8WGg0SRL6OcFl+fMSjMauPU60UbfSFtaWfIuvNWpZeY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjJfftWMbjT9r8iT@yury-ThinkPad>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-> This is already done in main.
+On Wed, May 01, 2024 at 08:27:58AM -0700 Yury Norov wrote:
+> On Wed, May 01, 2024 at 09:36:08AM -0400, Phil Auld wrote:
+> > 
+> > Hi Yuri,
+> 
+> [...]
+>  
+> > > Not that I'm familiar to your setup, but this sounds like a userspace
+> > > configuration problems. Can you try to move your non-RT tasks into a
+> > > cgroup attached to non-RT CPUs, or something like that? 
+> > >
+> > 
+> > It's not really. In a container environment just logging in to the
+> > container could end up with the exec'd task landing on one of
+> > the polling or latency sensitive cores.
+> > 
+> > In a telco deployment the applications will run containers with
+> > isolated(pinned) cpus with load balacning disabled.  These
+> > containers typically use one of these cpus for its "housekeeping"
+> > with the remainder used for the latency sensitive workloads.
+> > 
+> > Also, this is a change in kernel behavior which is breaking
+> > userspace.
+> 
+> Alright, that's a different story.
+>
 
-Please improve this change description.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc6#n45
+It's a specific edge case. I'd prefer to push for a forward solution
+than revert. 
 
-Will the tag =E2=80=9CFixes=E2=80=9D become relevant here (besides an impe=
-rative wording)?
+> > We are also hitting this and are interested in a way to get the
+> > old behavior back for some workloads.
+> > 
+> > > > With the introduction of kernel cmdline param 'sched_pick_firstcpu',
+> > > > there is an option provided for such usecases to disable the distribution
+> > > > of tasks within the cpumask logic and use the previous 'pick first cpu'
+> > > > approach for initial placement of tasks. Because many telco vendors
+> > > > configure the system in such a way that the first cpu within a cpuset
+> > > > of pod doesn't run any SCHED_FIFO or High priority tasks.
+> > > > 
+> > > > Co-developed-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+> > > > Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+> > > > Signed-off-by: Ankit Jain <ankit-aj.jain@broadcom.com>
+> > > > ---
+> > > >  lib/cpumask.c | 24 ++++++++++++++++++++++++
+> > > >  1 file changed, 24 insertions(+)
+> > > > 
+> > > > diff --git a/lib/cpumask.c b/lib/cpumask.c
+> > > > index e77ee9d46f71..3dea87d5ec1f 100644
+> > > > --- a/lib/cpumask.c
+> > > > +++ b/lib/cpumask.c
+> > > > @@ -154,6 +154,23 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
+> > > >  }
+> > > >  EXPORT_SYMBOL(cpumask_local_spread);
+> > > >  
+> > > > +/*
+> > > > + * Task distribution within the cpumask feature disabled?
+> > > > + */
+> > > > +static bool cpumask_pick_firstcpu __read_mostly;
+> > > > +
+> > > > +/*
+> > > > + * Disable Tasks distribution within the cpumask feature
+> > > > + */
+> > > > +static int __init cpumask_pick_firstcpu_setup(char *str)
+> > > > +{
+> > > > +	cpumask_pick_firstcpu = 1;
+> > > > +	pr_info("cpumask: Tasks distribution within cpumask is disabled.");
+> > > > +	return 1;
+> > > > +}
+> > > > +
+> > > > +__setup("sched_pick_firstcpu", cpumask_pick_firstcpu_setup);
+> > > > +
+> > > >  static DEFINE_PER_CPU(int, distribute_cpu_mask_prev);
+> > > >  
+> > > >  /**
+> > > > @@ -171,6 +188,13 @@ unsigned int cpumask_any_and_distribute(const struct cpumask *src1p,
+> > > >  {
+> > > >  	unsigned int next, prev;
+> > > >  
+> > > > +	/*
+> > > > +	 * Don't distribute, if tasks distribution
+> > > > +	 * within cpumask feature is disabled
+> > > > +	 */
+> > > > +	if (cpumask_pick_firstcpu)
+> > > > +		return cpumask_any_and(src1p, src2p);
+> > > 
+> > > No, this is a wrong way.
+> > > 
+> > > To begin with, this parameter shouldn't control a single random
+> > > function. At least, the other cpumask_*_distribute() should be
+> > > consistent to the policy.
+> > > 
+> > > But in general... I don't think we should do things like that at all.
+> > > Cpumask API is a simple and plain wrapper around bitmaps. If you want
+> > > to modify a behavior of the scheduler, you could do that at scheduler
+> > > level, not in a random helper function.
+> > > 
+> > > Consider 2 cases:
+> > >  - Someone unrelated to scheduler would use the same helper and will
+> > >    be affected by this parameter inadvertently.
+> > >  - Scheduler will switch to using another function to distribute CPUs,
+> > >    and your setups will suddenly get broken again. This time deeply in
+> > >    production.
+> > >
+> > 
+> > Yeah, I think I agree with this part.  At the scheduler level, where this
+> > is called, makes more sense. 
+> > 
+> > Note, this is "deeply in production" now...
+> 
+> So, if we all agree that touching cpumasks is a bad idea, let's drop
+> this patch and try figuring out a better solution.
+> 
+> Now that you're saying the scheduler patches break userspace, I think
+> it would be legitimate to revert them, unless there's a simple fix for
+> that.
 
-Regards,
-Markus
+As I said above let's try to go forward if we can. I'd argue that relying
+on the old first cpu selection is not really an API, or documented so I
+don't think a revert is needed.
+
+I think a static key at the one or two places _distribute() is used
+in the scheduler (and workqueue?) code would have the same effect as
+this and be a better fit. 
+
+
+Cheers,
+Phil
+
+> 
+> Let's see what the folks will say. Please keep me in CC.
+> 
+> Thanks,
+> Yury
+> 
+
+-- 
+
