@@ -1,118 +1,107 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E517B12AAE9;
-	Wed,  1 May 2024 13:24:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF39212E1C4
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 13:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714569853; cv=none; b=S2QTi/pE049BKNjXUMa0ZKPblMHht39OGZaDnR4OU/Uu1//TyIvPGTHNCEMLn/o9KA9kFyecbPbg1oavYDvZIlVPNUPcVr98M5m8rEN/cDplGj0nGOMN0TWq/m+8vjwtiz7m3gCKXIj1HakXn4Gwnzj2/1mo2sGgEe9N7Ekm0Zo=
+	t=1714569880; cv=none; b=YuZ7kbb5xCMy6N3zjpuoFdacO1ZmNQUuLjJm5pniYHFh0lLHERghYx2Rvuun8eaKYZoQWEALWAZvdCzvwGw4N+uY7hO0YBimNcy9uUTo/dOUAKB5tAfhL2MaCxbNFoGmPOSWvfJhwHGd9M4OHdMUJZSR/bJTTJXUVJim0LPWYLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714569853; c=relaxed/simple;
-	bh=lMYzmV9//9INyU1Duoqy4uVKWMnnmekE58fSm7AFEL0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oZ8Ga8ueHTgYHS4y3hSy9dOOESLa4J1VVVzD0ZLlsou0CfTzx8/I2ujaMEcBz/kLqhPVwIL+0BTcbbeH+SUp8RBzBalDoU4csjcGMQoZo7t9bBTPPVeD1p3pYfMa0DQIcXIXSJ5KScposYheP9wp8JD1Sexe757T5xz2HBRmPaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YUi7x/ey; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714569880; c=relaxed/simple;
+	bh=krrfckqjbeQlFLb67v3IVek4EQvt8apnoVfcRYoUsg8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FdaJrMpq6NmKkHaxP2OKJwo+WSx6uThUoxQuBlmnvqOBxwYMgDEZOuJnzeul9LJ9xf3XkEPXUL78OyYSSc7Ra+5R/YGyG4harsSdblhrpeLhFgpr9xZZMaLvBTO9ivaMR1fTDCRfmhLHDg5630nNGUur59aeJbuymhzomFBbhNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z4PSvnZZ; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUi7x/ey"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f3f6aa1437so3247738b3a.3;
-        Wed, 01 May 2024 06:24:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z4PSvnZZ"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2a473ba0632so7960122a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 06:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714569851; x=1715174651; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KMBFEPpX0chiN/ZQJQtqfNtd+/I0a6HtphalfcoEIRs=;
-        b=YUi7x/eybSpa4uwJowB73jIbW5xmuspKSI2/Oyyi0Iq4iI0pjElrJEoPTEuo0AZjLe
-         lIt9T13CKyZ7voAizNU6FLkf2jzx8yvVyWCLO7xH8ZMLRDrIL3Psxf727MXyStZOXwuS
-         g5buXlAqN+6/ttziZm6MZ9OiVlT26vQdvWnizKC78lz519erYCZbCG1R/+ZK0yYMNa+F
-         FJ3IhB0xKb0WJSANB/ZzsyJud32j6I09RmpaeuIvDBTPqCZfYX1/AVwJ/njijztlAuAo
-         rGbszpNuc0YrqLRKPo+JVShy1grqwkU4zCl/usNzSVzEHE2RHkZv7Q9+Rr5rC5eC3nMg
-         lbTQ==
+        d=google.com; s=20230601; t=1714569878; x=1715174678; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4j6TmQ6ZgTGCAdIqQxwPqCx/nTzh+QyhXiuMiXZrc1A=;
+        b=z4PSvnZZow+6cwPT+0ewrIkZ1zd7BDzLa+B4BwRbWfQeul8nzOsi19rm0gzFJB29a5
+         X1qrmI4UmTxNrE8laFdrt5n0s1LOcdAQUyN8KlFjksLa19gdfLjN9rdxS7rkHH6wHmSx
+         Dt6vno8vuOBbKIVaNd/ZSN209Qkb/aM/VBPR0OgIPrRnR7/vkHGp68RZbNptbw41mTFa
+         3d043BKnXcNsJkhd/u6ytclKWj9RxAZpUPm0bNkT0+lSbw6W9UH6MMOoIsVtz9Jxpx/l
+         0NrMuyLM5KyCds8FWf26I6GWndEOa1VsaXVD1/lqiTKKSTp/prHyQE9HYEcdSmd7GLiI
+         2DfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714569851; x=1715174651;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KMBFEPpX0chiN/ZQJQtqfNtd+/I0a6HtphalfcoEIRs=;
-        b=iZIUEMOEeyIVQ3Y/e41YgLYQaMznjBYl35/Fn8hshNsFahNxOmdyqSEyILTK9j3q3/
-         N+OnGezILMD7Ln4m5pvWTNM3WxhPVNR4/nbMeU4212fCjyC31JgoJq8VbL50c7GvHziw
-         /l6i/I07TJKN6Nt99H6ZDU/7RvbQV4NHLE7MPtFa3LKaoVwGcKDrg+ZaDC87vduh23cj
-         jXhMN6jiGLwjFqCmt8KUyW64KCefIOjez9qGswCbgPIq+blW3Dk11dCXNeAkbF+XEdhY
-         QEjuBfxzsofkI5+Eub7sVjqZZ0l0CZ8RfU+ECNa0QO2ViSpKpdillxGEMjuYwG/l2Euf
-         tjYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWy63nWqOLOdG2seyezoa70IgRC3BMGJqKhMIf9rN2W+3QDxRPdDpmcO3UzyBq68TOCNG98uZoHibjNJEHlYJ5aC7rPRTAd41/+nbdHJz81I2/jeM9J46bDH/HgejT21bo0V5oTL4KIJQ==
-X-Gm-Message-State: AOJu0YxwNqlFwoTDqRq8u6SMBqyTR+9gXnMKS8jqujKbUnwXkSUfuFyG
-	1fpZP4SZKGy4v8xF9UT7hATxkwhZ4GXcDJzdGjtATT1JEbR4ua0x
-X-Google-Smtp-Source: AGHT+IGWQGHARDT9zOyTneCFcfF0M9DcNNCQix+mRZM8KZme0cTKD+4AVFAz6FeVhl6PzTx0E67ZUg==
-X-Received: by 2002:a05:6a21:3996:b0:1ac:4fca:23c2 with SMTP id ad22-20020a056a21399600b001ac4fca23c2mr2514825pzc.8.1714569850990;
-        Wed, 01 May 2024 06:24:10 -0700 (PDT)
-Received: from localhost.localdomain ([49.142.40.215])
-        by smtp.gmail.com with ESMTPSA id g3-20020aa79dc3000000b006f2909ab504sm17809894pfq.53.2024.05.01.06.24.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 06:24:10 -0700 (PDT)
-From: skseofh@gmail.com
-To: lkp@intel.com
-Cc: daero_le.lee@samsung.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	robh@kernel.org,
-	rppt@kernel.org,
-	saravanak@google.com,
-	skseofh@gmail.com
-Subject: [PATCH v2] of: of_reserved_mem: clean-up reserved memory with no-map
-Date: Wed,  1 May 2024 22:23:59 +0900
-Message-Id: <20240501132359.488616-1-skseofh@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <202405011208.qsZQwChO-lkp@intel.com>
-References: <202405011208.qsZQwChO-lkp@intel.com>
+        d=1e100.net; s=20230601; t=1714569878; x=1715174678;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4j6TmQ6ZgTGCAdIqQxwPqCx/nTzh+QyhXiuMiXZrc1A=;
+        b=XkmuVpi2oDznPifZyWOxYYByarmqrnjtu4XLaDqAFFrDfcBR8w+U+pE+QYoy2eCFGD
+         I2Td4sTAbtNArw0571GX8mnbPMvDoNuMFthPlCF0xRr0xeIC/QnZ5wCrjfsOjGXggMel
+         pw5XLmQKRcVGCo++fh1SuP7rAJwDalHQfWDh4Zoh8rYXRmZ+KgRa6U0Ij/6AcElyVN3J
+         AuyvWLu+29KBNjy+gwK3Thfk8iySRnxOFQ2vMP8iWwxnDAAUulLVR9jWJ4d5Kk3Ws0IX
+         +0SfzfQaJuCJ+RE1790lmvs7wgSpL03t5iXq/CPEwMWsYfMegYWW/Sh2jxTGUsUboORD
+         lrwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3oVch/TTbzqQxQ6ZY//Pr/Z6kSdnq3KDvaI4nbxrInFHyPcLYveA8xhDeCf0JR4d000iAxeaz2iEZdaQ6fvQjT52aMuN/l2OHaWNB
+X-Gm-Message-State: AOJu0YzTkslyp700WLh1S3G4d63HbKzjEbNKrxCB0oQwRAMS6t0c/pVU
+	kZHIHjWIUf08q35CdNr8SDQaAKBJ0Y6Q+Ab2393O7paHyQo4/316pAVLQggNWKRttWVvebZxNHY
+	iyw==
+X-Google-Smtp-Source: AGHT+IF3937EXGaxRuC2iwKEsqWkwYndGF2ruoyJWYYFvQeb8jNS6z1A7kQ93TL3uURuwu8bhUtDSRxNorw=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:b0f:b0:2b0:14bf:3f45 with SMTP id
+ bf15-20020a17090b0b0f00b002b014bf3f45mr7454pjb.0.1714569878155; Wed, 01 May
+ 2024 06:24:38 -0700 (PDT)
+Date: Wed, 1 May 2024 06:24:36 -0700
+In-Reply-To: <ZjGiGq-_kUVht63m@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240430235057.1351993-1-edliaw@google.com> <ZjGiGq-_kUVht63m@finisterre.sirena.org.uk>
+Message-ID: <ZjJClMYEIyGEo37e@google.com>
+Subject: Re: [PATCH v1 00/10] Define _GNU_SOURCE for sources using
+From: Sean Christopherson <seanjc@google.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Edward Liaw <edliaw@google.com>, shuah@kernel.org, Jaroslav Kysela <perex@perex.cz>, 
+	Takashi Iwai <tiwai@suse.com>, Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <bentiss@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Bongsu Jeon <bongsu.jeon@samsung.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kernel-team@android.com, 
+	linux-sound@vger.kernel.org, linux-input@vger.kernel.org, kvm@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-From: Daero Lee <daero_le.lee@samsung.com>
+On Wed, May 01, 2024, Mark Brown wrote:
+> On Tue, Apr 30, 2024 at 11:50:09PM +0000, Edward Liaw wrote:
+> > 809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
+> > asprintf into kselftest_harness.h, which is a GNU extension and needs
+> > _GNU_SOURCE to either be defined prior to including headers or with the
+> > -D_GNU_SOURCE flag passed to the compiler.
+> 
+> This seems like something that should be handled centrally rather than
+> having to go round and audit the users every time some update is made.
 
-In early_init_dt_reserve_memory we only add memory w/o no-map flag to
-memblock.reserved. But we need to add memory w/ no-map flag to
-memblock.reserved, because NOMAP and memblock.reserved are semantically
-different.
++1.
 
-Signed-off-by: Daero Lee <daero_le.lee@samsung.com>
----
- drivers/of/of_reserved_mem.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+And if for some reason unilaterally defining _GNU_SOURCE in
+tools/testing/selftests/lib.mk isn't an option, we should at least have
+kselftest_harness.h assert instead of making a futile attempt to provide its own
+definition, e.g.
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 8236ecae2953..d00a17a9cebc 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -81,6 +81,7 @@ static void __init fdt_reserved_mem_save_node(unsigned long node, const char *un
- static int __init early_init_dt_reserve_memory(phys_addr_t base,
- 					       phys_addr_t size, bool nomap)
- {
-+	int err = 0;
- 	if (nomap) {
- 		/*
- 		 * If the memory is already reserved (by another region), we
-@@ -91,7 +92,10 @@ static int __init early_init_dt_reserve_memory(phys_addr_t base,
- 		    memblock_is_region_reserved(base, size))
- 			return -EBUSY;
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 4fd735e48ee7..6741b4f20f25 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -51,7 +51,7 @@
+ #define __KSELFTEST_HARNESS_H
  
--		return memblock_mark_nomap(base, size);
-+
-+		err = memblock_mark_nomap(base, size);
-+		if (err)
-+			return err;
- 	}
- 	return memblock_reserve(base, size);
- }
--- 
-2.25.1
-
+ #ifndef _GNU_SOURCE
+-#define _GNU_SOURCE
++static_assert(0, "Using the kselftests harness requires building with _GNU_SOURCE");
+ #endif
+ #include <asm/types.h>
+ #include <ctype.h>
