@@ -1,84 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835EE10958;
-	Wed,  1 May 2024 14:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AFE14012;
+	Wed,  1 May 2024 14:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714574280; cv=none; b=iJWozvu1KjEBACLwvx9tJpkc4I9pVaCRpa2kwiM5r0O36Znan1XmcYB2muTJXYyjR387ZMummRtDTfGlZ/0Eie1gqdlWjrgCIpTNRYTD3Vo8e4nNdGYslcTSC9gImISY+EIUl2oVCByBoNCXRax37IiRxaNBzGEhigRWE5HPB/M=
+	t=1714574348; cv=none; b=fRMJu0pgF2JrORixDgJA3K9ByiBRets4P4HmKD5dRswrH5LhYHyOzkDsNoyx7FgueyPxFjTGzTjTMCGcSmO6ksKU3Py6djthykhsvke1a+ruBhvr72b6Kj6vOjLoubOr3Uqh3/AXQ2gOWee4qMC2CZ3ZsAnozo5iJnE/s8988fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714574280; c=relaxed/simple;
-	bh=fnzipyC0KSPPMhA3lbz+NK9PDvP4bcqNMdwD//odq4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rrGrYTwWXi1uhZnwyHHywUl/0lY2gOUJotPAiirMz6crypl/LdWwclV28QinS+vCMQctPCpBAy0nxpCUJnfXu5/qN1jQA+scLBkI8mdOadb8A/t0qqn+svzaFs2YO1bD8ox39+8enDRcw03EVTtrYQqyjNzDTHoypRvHgabqhrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Od7WPu4L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714574348; c=relaxed/simple;
+	bh=3EQ+oWKQqtrjsODeFi5xeD2z30PLypWt44MJVuizc/8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QcwheGEdC1QL+pgrGQ0fPW/YXU/1CqVf5GtJER6NmJAnwopt2IY83PGmnjBnZ4SC/dURD//0M7NwhQvnjAXyzU0KcNDvXr8ORjS1rjJ0wL7Cwt3/c4Ler0ww3kpntP9Zheo9nM08jw2OLdYQ81JgcfsVP+PFhy9zSdAA8Oc06aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=w/ZJL00n; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=w/ZJL00n; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Od7WPu4L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28EF4C072AA;
-	Wed,  1 May 2024 14:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714574280;
-	bh=fnzipyC0KSPPMhA3lbz+NK9PDvP4bcqNMdwD//odq4k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Od7WPu4LpHp7dC74MWGloZCxyUgTJcbwQE7uXrlcaB2Qzyx2ykdEUnj7/HnRNSV9S
-	 2ud/yCP3Qaay9o6GVvTMECZUHoICBCAESwIUprKLj2KLU76qqvKi814TwDtJyH+ENG
-	 M962iZLsrY2VDrqdgyp3+/QGO9PrmnzFhwroc7DAXVsjBZUcOpUEgLAfdNY6+en3QI
-	 H8LJSXksZ/aashA1j+neCJhoFiWH+ROQhao8+jGq4camGSaqhn+KgtMoByeKg4LKch
-	 fZj6Bza5LVN5WkayXPrRm6He4Rz4RWKtKqUFRMjzKlX+J6XylWyd0gyKqAuK+/jUYS
-	 XidC1tyP+aebQ==
-Date: Wed, 1 May 2024 07:37:58 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Ido Schimmel <idosch@nvidia.com>
-Cc: Danielle Ratson <danieller@nvidia.com>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>,
- "edumazet@google.com" <edumazet@google.com>, "pabeni@redhat.com"
- <pabeni@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>,
- "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "sdf@google.com"
- <sdf@google.com>, "kory.maincent@bootlin.com" <kory.maincent@bootlin.com>,
- "maxime.chevallier@bootlin.com" <maxime.chevallier@bootlin.com>,
- "vladimir.oltean@nxp.com" <vladimir.oltean@nxp.com>,
- "przemyslaw.kitszel@intel.com" <przemyslaw.kitszel@intel.com>,
- "ahmed.zaki@intel.com" <ahmed.zaki@intel.com>, "richardcochran@gmail.com"
- <richardcochran@gmail.com>, "shayagr@amazon.com" <shayagr@amazon.com>,
- "paul.greenwalt@intel.com" <paul.greenwalt@intel.com>, "jiri@resnulli.us"
- <jiri@resnulli.us>, "linux-doc@vger.kernel.org"
- <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, mlxsw <mlxsw@nvidia.com>, Petr Machata
- <petrm@nvidia.com>
-Subject: Re: [PATCH net-next v5 04/10] ethtool: Add flashing transceiver
- modules' firmware notifications ability
-Message-ID: <20240501073758.3da76601@kernel.org>
-In-Reply-To: <ZjH1DCu0rJTL_RYz@shredder>
-References: <20240424133023.4150624-1-danieller@nvidia.com>
-	<20240424133023.4150624-5-danieller@nvidia.com>
-	<20240429201130.5fad6d05@kernel.org>
-	<DM6PR12MB45168DC7D9D9D7A5AE3E2B2DD81A2@DM6PR12MB4516.namprd12.prod.outlook.com>
-	<20240430130302.235d612d@kernel.org>
-	<ZjH1DCu0rJTL_RYz@shredder>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="w/ZJL00n";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="w/ZJL00n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1714574345;
+	bh=3EQ+oWKQqtrjsODeFi5xeD2z30PLypWt44MJVuizc/8=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=w/ZJL00nwM6w5z/8CbB0oSsA797HfCvyxdopQkvYx9dCpWNA+8qXeSUuB49jEP3Ju
+	 /7sRc8sTS3KGQt04J0Jgv4Cwl11wLPvK+a6T4i4cSKo7U9Ski3NzNH/fbhpOg988WJ
+	 7hvKmo+i166QYTG33tUNslnEQgg3Blb1X2dFJ59E=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 67F261285DB5;
+	Wed,  1 May 2024 10:39:05 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id 1f2y665NX5OW; Wed,  1 May 2024 10:39:05 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1714574345;
+	bh=3EQ+oWKQqtrjsODeFi5xeD2z30PLypWt44MJVuizc/8=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=w/ZJL00nwM6w5z/8CbB0oSsA797HfCvyxdopQkvYx9dCpWNA+8qXeSUuB49jEP3Ju
+	 /7sRc8sTS3KGQt04J0Jgv4Cwl11wLPvK+a6T4i4cSKo7U9Ski3NzNH/fbhpOg988WJ
+	 7hvKmo+i166QYTG33tUNslnEQgg3Blb1X2dFJ59E=
+Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 661001285D8D;
+	Wed,  1 May 2024 10:39:04 -0400 (EDT)
+Message-ID: <c358208c5d4c823e3373aca4fe42998a6edd12fb.camel@HansenPartnership.com>
+Subject: Re: [PATCH v3] scsi: csiostor: Use kcalloc() instead of kzalloc()
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Kees Cook <keescook@chromium.org>, "Martin K. Petersen"
+	 <martin.petersen@oracle.com>
+Cc: Erick Archer <erick.archer@outlook.com>, Bjorn Helgaas
+ <bhelgaas@google.com>,  Justin Stitt <justinstitt@google.com>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>,  linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-hardening@vger.kernel.org
+Date: Wed, 01 May 2024 10:39:02 -0400
+In-Reply-To: <202404291259.3A8EE11@keescook>
+References: 
+	<AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	 <202404291019.5AC903A@keescook> <yq17cgg58sp.fsf@ca-mkp.ca.oracle.com>
+	 <202404291259.3A8EE11@keescook>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 1 May 2024 10:53:48 +0300 Ido Schimmel wrote:
-> We can try to use unicast, but the current design is influenced by
-> devlink firmware flash (see __devlink_flash_update_notify()) and ethtool
-> cable testing (see ethnl_cable_test_started() and
-> ethnl_cable_test_finished()), both of which use multicast notifications
-> although the latter does not update about progress.
+On Mon, 2024-04-29 at 13:13 -0700, Kees Cook wrote:
+> On Mon, Apr 29, 2024 at 02:31:19PM -0400, Martin K. Petersen wrote:
+> > 
+> > Kees,
+> > 
+> > > > This patch seems to be lost. Gustavo reviewed it on January 15,
+> > > > 2024 but the patch has not been applied since.
+> > > 
+> > > This looks correct to me. I can pick this up if no one else snags
+> > > it?
+> > 
+> > I guess my original reply didn't make it out, I don't see it in the
+> > archives.
+> > 
+> > My objections were:
+> > 
+> >  1. The original code is more readable to me than the proposed
+> >     replacement.
 > 
-> Do you want us to try the unicast approach or be consistent with the
-> above examples?
+> I guess this is a style preference. I find the proposed easier to
+> read. It also removes lines while doing it. :)
+> 
+> >  2. The original code has worked since introduced in 2012. Nobody
+> > has touched it since, presumably it's fine.
+> 
+> The code itself is fine unless you have a 32-bit system with a
+> malicious card, so yeah, near zero risk.
 
-We are charting a bit of a new territory here, you're right that 
-the precedents point in the direction of multicast.
-The unicast is harder to get done on the kernel side (we should
-probably also check that the socket pid didn't get reused, stop
-sending the notifications when original socket gets closed?)
-It will require using pretty much all the pieces of advanced
-netlink infra we have, I'm happy to explain more, but I'll also
-understand if you prefer to stick to multicast.
+Well, no actually zero: we assume plugged in hardware to operate
+correctly (had this argument in the driver hardening thread a while
+ago), but in this particular case you'd have to have a card with a very
+high number of ports, which would cause kernel allocations to fail long
+before anything could introduce an overflow of sizeof(struct csio_lnode
+*) * hw->num_lns.
+
+> >  3. I don't have the hardware and thus no way of validating the
+> > proposed changes.
+> 
+> This is kind of an ongoing tension we have between driver code and
+> refactoring efforts.
+
+That's because we keep having cockups where we accept so called "zero
+risk" changes to older drivers only to have people with the hardware
+turn up months to years later demanding to know why we broke it.
+
+Security is about balancing risks and the risk here of a malicious
+adversary crafting an attack based on a driver so few people use (and
+given they'd have to come up with modified hardware) seems equally
+zero.
+
+>  And this isn't a case where we can show identical binary output,
+> since this actively adds overflow checking via kcalloc() internals.
+
+Overflow checking which is unnecessary as I showed above.
+
+> > So what is the benefit of me accepting this patch? We have had
+> > several regressions in these conversions. Had one just last week,
+> > almost identical in nature to the one at hand.
+> 
+> People are working through large piles of known "weak code patterns"
+> with the goal of reaching 0 instances in the kernel. Usually this is
+> for ongoing greater compiler flag coverage, but this particular one
+> is harder for the compiler to warn on, so it's from Coccinelle
+> patterns.
+
+We understand the problem and we're happy to investigate and then
+explain why something like this can't be exploited, so what's the issue
+with adding it to the exceptions list given that, as you said, it's
+never going to be compiler detected?
+
+> > I am all for fixing code which is undergoing active use and
+> > development. But I really don't see the benefit of updating a
+> > legacy driver which hasn't seen updates in ages. Why risk
+> > introducing a regression?
+> 
+> I see a common pattern where "why risk introducing a regression?"
+> gets paired with "we can't test this code". I'm really not sure what
+> to do about this given how much the kernel is changing all the time.
+
+Well, it's a balance of risks, but given that there's zero chance of
+exploitation of the potential overflow, it would seem that balance lies
+on the side of not risking the regression.  I think if you could
+demonstrate you were fixing an exploitable bug (without needing
+modified hardware) the balance would lie differently.
+
+> In this particular case, I guess all I can say is that it is a
+> trivially correct change that uses a more robust API and more
+> idiomatic allocation sizeof()s (i.e. use the sizeof() of what is
+> being allocated, not a potentially disconnected struct name).
+
+Which is somewhat similar to the statement other people made about the
+strncpy replacement which eventually turned out to cause a problem.
+
+James
+
