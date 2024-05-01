@@ -1,83 +1,142 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9C95028F;
-	Wed,  1 May 2024 11:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C4C5028F
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 11:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714561607; cv=none; b=nytBgwOFV59eMf1KHQWSSuuzUnulrzgX39BHlMx49BClTnnNgfB0UoX9FvYgatA/Jsct1lfM1KtsF4svU26ONxeRNnbZyhi9MgtGuoB1fUDn0Wcbd2ACSMcFlt71z8xvFn6Qtt0C/l8knZmqcL7k/Zd0HvOEG4zQlmXZKA0v+P4=
+	t=1714561662; cv=none; b=mUQgXlofYequWEokn7ercl6Lj7oObZvjGdWTZ8noCRaRdOrWpn1shB0ZXsm7sC6U522k6DeeuTdiZ7pBG028V1kYNcwiXICoWkot53tWlnHpDsa+ElmwRKXFe0bAJTsS5Ujn9uSy40OwIsfai1SxNqIskj2UOaGe8Znnz7TPj2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714561607; c=relaxed/simple;
-	bh=hqFVMicxiJEATeOF/1jtox+rOiQl5zLUQQK3VQGe1ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cy5/TJMe5TInNIY5YfWlSIKG8KlVAcbHt/DUbXngtrfUN+6KUKjhzEjxjQ0OCVUozfUnLpV9x4wjIiG90jvr7KJBaCPxV5lrRaRnET2+9l6PdF0kICsOIhKaEbTC+CswtfZqSyGmJtTZSYn4cOQu3C3JqvXQgUhZNAF+VnmJzpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eL6YOqnp; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1714561662; c=relaxed/simple;
+	bh=PFvDOMRHeF4ceqtT1HoG5CTMOEV3p5eFI81RRqSaeRE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ubfk/cNqmH2uDWty1ma3+nNaar5Q8FfdGTJIZfSEc2tspSDmWxgGq7o2NDd0zj4oyU/xWz6VJd3A/xnlegwsBjOJueQK1QJAGVJOGk5ki55lX7CL0QAqgVspW7b2FGfWWxagJ48t2K1SXQgYfSsNxjxJNfGzIn+60a394sqSq1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B08lNSqO; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eL6YOqnp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=aNpiIghGKhPJ0ZIxsrzl9Nb+y+hsY2vBs19eG4Yd/jM=; b=eL6YOqnpySW2lWXLYPLdhXlpO/
-	0Z/4wH1ftAMvgh9jO3if19zP4ThcY0bxTX5I5xow1Y0EOZt+V1VO+a8C5E379CH6JOr6uUtIVy2o5
-	CpinvZONv3FR2koeGLiTyHfLxT269URPDm8ceepTtAPEZ11d9gwZHGymjl4ia6dz2kr6uOYnyo57/
-	g657iUjhv20jq0gV6KRanU1KStOlqk9xo8zoKu+bkU9dsF+p96ZIWZqLWALill5zOermPnuNtEhdr
-	NEQyX8Xm2H3QanwU+igqLYuTtja6/l5lW0yH9IPLT0xJeUaJLWxlaR5ohbuSi5rrHEk7A0flsV/8k
-	TU7tF6Iw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s27mx-0000000HM6l-1X6Z;
-	Wed, 01 May 2024 11:06:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0BBA7300362; Wed,  1 May 2024 13:06:15 +0200 (CEST)
-Date: Wed, 1 May 2024 13:06:14 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hardening: Refresh KCFI options, add some more
-Message-ID: <20240501110614.GI40213@noisy.programming.kicks-ass.net>
-References: <20240426222940.work.884-kees@kernel.org>
- <20240430092140.GE40213@noisy.programming.kicks-ass.net>
- <202404301037.9E34D4811@keescook>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B08lNSqO"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ed32341906so6102471b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 04:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714561660; x=1715166460; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ek5F3YPIQaz7pVJGDrpZC6fIvMvYFFyBjkRJozj7mhk=;
+        b=B08lNSqORCad23SG44rFFpG4gqe3jaITrZ3AG2hQ8xd6+9b3KwQc5XT2dU+g8f4dsj
+         5eJWFBMNshAiz04IUZeIhJy87m5GAMx+bxMFXiC1GuAAtp6T4m/o9Awu+rKCo06jWSBL
+         1iP0rIqF/FQX0bMlkgvPoY1zTUMeYETMCF0v6VcTV/6QLTXKKX5ek0YMVszrENtYjYIl
+         HuWgJzEm4wTR/o7JRmATlhKLA2lDnE0KIq40jcb/9nnRU54w1DqyOJwR4KIgCyaU6tfT
+         TGasvGS1NhgK7h/xlTkeN6R7TO3rDgHAuSiv9HD3m5gxBYrdFXfSGN3gJvDtu4xTXTls
+         Eeng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714561660; x=1715166460;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ek5F3YPIQaz7pVJGDrpZC6fIvMvYFFyBjkRJozj7mhk=;
+        b=p4XPFB0csaOlY79s19JzWfyRGEef/rkoG3+C6o19DAU1M0FKdv+LPMwSyKdIBpEOdC
+         ylU8rmL0bcFrs1Y/C1V5ZgcCHKD8fBT/7w9jDJDj9DVbJm/+A+Ymv+eblFiMOXfLo0Mz
+         iOuO2JKfeLa52ZA93W0hlSZpVcGWoHZqgnu8o1UE+6v5sgi8AK0n9qY8kGtGjmTdoLum
+         TFQ0rP97tqeNcBsymK5mBwZ2nd75DVc4vNqT5/6RW165AWNPp2v7jFK7HEm+ZiZD0Q0J
+         eDYoZFnO6syxwg7ALixfI8kGpO7ozVIRfZWvayMR3jE7wI3Z7lBz04pMpSuQi2KaXc7X
+         N2Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCVWMJRba6DM5Bu7f7bZvrjgNG3s00dZJ0MqLVTnfntuPrnmfn3K/vOiPBskB7b41JWZwfZphycwbrjSaSIfm3OKBkZYhruOC9DJKCpt
+X-Gm-Message-State: AOJu0Ywhb2SlvL5FktaTRJenzqTKZee+qjr6pEMjUna/BF8gxm85Bp4p
+	iokAHR4aFAjOfoTzfWVLkVHxTq3QYigrNiOsHuOnJ71eo41zOA+dMCnyti2dAW2gBGuXWwsu6sN
+	WElfexdmpEdpB+0fVA1j9k/22Eg7PKtG5gm44AA==
+X-Google-Smtp-Source: AGHT+IE/tyinAuqC8y5bBreMEgtKVRNCzWBS/7la0SOC/SOUmFsQmilGpTeNNFJve+JepEwqeq9sMzFbKUfoY4RzIdo=
+X-Received: by 2002:a05:6a20:3213:b0:1a9:c757:a22d with SMTP id
+ hl19-20020a056a20321300b001a9c757a22dmr2167796pzc.14.1714561659976; Wed, 01
+ May 2024 04:07:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202404301037.9E34D4811@keescook>
+References: <20240429152207.479221-1-james.clark@arm.com> <20240429152207.479221-10-james.clark@arm.com>
+In-Reply-To: <20240429152207.479221-10-james.clark@arm.com>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Wed, 1 May 2024 12:07:29 +0100
+Message-ID: <CAJ9a7Vgvdjz9peyDzRzAJ3DDGFfjVD0dNXgcJ7b+g-WvCwZ1QQ@mail.gmail.com>
+Subject: Re: [PATCH 09/17] coresight: Clarify comments around the PID of the
+ sink owner
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com, 
+	scclevenger@os.amperecomputing.com, coresight@lists.linaro.org, 
+	suzuki.poulose@arm.com, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 30, 2024 at 10:48:36AM -0700, Kees Cook wrote:
-> On Tue, Apr 30, 2024 at 11:21:40AM +0200, Peter Zijlstra wrote:
-> > On Fri, Apr 26, 2024 at 03:29:44PM -0700, Kees Cook wrote:
-> > 
-> > > - CONFIG_CFI_CLANG=y for x86 and arm64. (And disable FINEIBT since
-> > >   it isn't as secure as straight KCFI.)
-> > 
-> > Oi ?
-> 
-> Same objection I always had[1]: moving the check into the destination
-> means attacks with control over executable memory contents can just omit
-> the check.
+On Mon, 29 Apr 2024 at 16:24, James Clark <james.clark@arm.com> wrote:
+>
+> "Process being monitored" and "pid of the process to monitor" imply that
+> this would be the same PID if there were two sessions targeting the same
+> process. But this is actually the PID of the process that did the Perf
+> event open call, rather than the target of the session. So update the
+> comments to make this clearer.
+>
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-tmc-etr.c | 5 +++--
+>  drivers/hwtracing/coresight/coresight-tmc.h     | 5 +++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index e75428fa1592..8962fc27d04f 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -36,7 +36,8 @@ struct etr_buf_hw {
+>   * etr_perf_buffer - Perf buffer used for ETR
+>   * @drvdata            - The ETR drvdaga this buffer has been allocated for.
+>   * @etr_buf            - Actual buffer used by the ETR
+> - * @pid                        - The PID this etr_perf_buffer belongs to.
+> + * @pid                        - The PID of the session owner that etr_perf_buffer
+> + *                       belongs to.
+>   * @snaphost           - Perf session mode
+>   * @nr_pages           - Number of pages in the ring buffer.
+>   * @pages              - Array of Pages in the ring buffer.
+> @@ -1662,7 +1663,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+>                 goto unlock_out;
+>         }
+>
+> -       /* Get a handle on the pid of the process to monitor */
+> +       /* Get a handle on the pid of the session owner */
+>         pid = etr_perf->pid;
+>
+>         /* Do not proceed if this device is associated with another session */
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+> index c77763b49de0..2671926be62a 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.h
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
+> @@ -171,8 +171,9 @@ struct etr_buf {
+>   * @csdev:     component vitals needed by the framework.
+>   * @miscdev:   specifics to handle "/dev/xyz.tmc" entry.
+>   * @spinlock:  only one at a time pls.
+> - * @pid:       Process ID of the process being monitored by the session
+> - *             that is using this component.
+> + * @pid:       Process ID of the process that owns the session that is using
+> + *             this component. For example this would be the pid of the Perf
+> + *             process.
+>   * @buf:       Snapshot of the trace data for ETF/ETB.
+>   * @etr_buf:   details of buffer used in TMC-ETR
+>   * @len:       size of the available trace for ETF/ETB.
+> --
+> 2.34.1
+>
 
-I thought it was game over if you could write arbitrary test anyway?
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
-The whole CFI thing was about clobbering data (function pointers to be
-more specific), and both are robust against that.
-
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
