@@ -1,120 +1,173 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F51F17C74
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 17:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0C417C74;
+	Wed,  1 May 2024 17:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714583464; cv=none; b=HzZyozZzCxYUIhG2bkso1Lap2HP/iwzSvZFbEFkIkWwKwSPOn4Y49/fOOdOYJFJt/zkXB20Bk5jLroy9fyeL4x/agVDq6kxku4JC2tT/d70qJRFCL9pkFxJSCFMNYQN2bSfmBQ5Fn7SJiZPIio4VcKU43g3QwQUBbaQadjhkSA8=
+	t=1714583579; cv=none; b=R5lWzQMZhCGHzcRxzRTrq3C/EPP90gDVzw/fYUsJXFSaGATDfej6eRs4B866gTDhU830WWf/HcRGMgCSFKe5nHy9+7hKG1qi8ED8c0lLP3K66NHi7BNG24840exGIGQpIq82D8b86b3gkgDLo8VMQ50FCFLiRto56Y2HXsXTDY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714583464; c=relaxed/simple;
-	bh=pZAOS/T1u3WYFJhsFU1zktGFGi+9KYNTImhhH3xfeKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BiAJTU1CkCd4ed3P4bk7q+CPArxWqLEMmaxuSd9YdqKKmySZfAB1Fvm5t54Yc2bgw01sf/nlLCKlGBIotXnWo4Ze8Za+44e8scNRXUZxycxf+4TGch1Oy1Jm61UWh7p+T+USZ6DX/CYG5vX+TdOFNaNBnW29qnbl7eUIAcx6px4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=uHTrGo5J; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1714583579; c=relaxed/simple;
+	bh=zbcbIeexpIPCHZ07qIjb2xvy0LAIrIkIli7fZrlkkPs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IhlxhjsnUcxQHZOF59WIXcpVYzvCeoaq4vi1OdY90g122z8X0WtAzAr4LmrOW//fsgbnqc+HCTT3JWgSW/2M04qYOc0BIRK/pn0jMZgbVMuNELTCNKgxJE2UUmCTY++OWa+EZ+QV7X1z/KWZIh3KcBS2bIudA7EHWNUx9dli/P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzDOwakc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="uHTrGo5J"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e50a04c317so38826855ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 10:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714583461; x=1715188261; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7VEcP2FdbTuUC3sLwg55sFZlBNkkI24Wn6q64j9hZkM=;
-        b=uHTrGo5JLLGnMbH5QgPkVY/+HGVN/EW9HmjfcHJfWdHNiMD9EfsmVt92BilMOItN7l
-         TIunE56JqNtp1LTYsTS2+euIEbOUa3FC2LZsL68xg7l0KN5xV14wRyiAITWf9kDTiYEj
-         nm/69ibSGjrGNWevERGDxpyD89Lu6/AWfDnzM52bEDhaTzumf2+BnWVguziPTtSgre+X
-         oDU47Zb746h5dkiobEzZ1Pq8SCE3e8dZHi1QriNiDToQ3TKbD4zyPSt477ZpTSXuqrj7
-         XaMjv1mT8A9LHzcZJDUo3ptTmJPwafhH5iqTMUZvzFksNfUqxWdffrDyUcMMzdjbczVe
-         aJOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714583461; x=1715188261;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7VEcP2FdbTuUC3sLwg55sFZlBNkkI24Wn6q64j9hZkM=;
-        b=BAWV9cctbepp4xUR6rkplGy70AbZVmsyMzC8k/9HNDQiTbcrs3wsL/CvOKxktBRgvN
-         uUkNSHn4v32ao8hZ2O4ufe+BYKOBRSC0d48DNDUOIUTJer/VrcKNONPrjILXIRPkpmpf
-         jApBtll17GvtCQrYzZkmyJhT6h3UL8VE/ik5/x+JlRXj5UIcjIUj/1tNdHLYYbPLfiTR
-         FlpZoOFqMrDprOJD45gKvu3STQsQt4X+Ru6SMDxP3y8pzebNkWy/R4iidjyWL4x4R3XA
-         otJ3bG2SyGlpvLTIK4iYZR+erKS7QNb7wsOTVpYdgIiWNeIGebdj5Tah+thxbcx4z/hU
-         fXZg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjdYk4YYOuwNX5DTU1NpWTyOckMB+bWmB44HQC1p2TEguxFimuc6Hv9rbcwNCyIpePOgc5VpcJVwaGBk2b0HJj4Yl8MP4Wp6V1lV9X
-X-Gm-Message-State: AOJu0YzarW8ctp3GfDZaNeASC3vBLsRkYtGVYKvaye2vbuGkv5KAezTC
-	8PmIFElIF8L7OO2rEGzgn6M1KLp9sYGxwKQ3V5yp44PHQ9KtRoYEzlz2pFSlVWs=
-X-Google-Smtp-Source: AGHT+IHpxFS6GEORaahugjisle6m4KLF0ZtLQCz0Flxl/HiPXR710X9hyJZCr2QqZFZg/RK2FxmvGg==
-X-Received: by 2002:a17:902:6bca:b0:1e4:df0c:a570 with SMTP id m10-20020a1709026bca00b001e4df0ca570mr3014699plt.8.1714583461518;
-        Wed, 01 May 2024 10:11:01 -0700 (PDT)
-Received: from ghost ([2601:647:5700:6860:1dcc:e03e:dc61:895d])
-        by smtp.gmail.com with ESMTPSA id mq8-20020a170902fd4800b001e23fcdebe9sm24447681plb.98.2024.05.01.10.10.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 10:11:01 -0700 (PDT)
-Date: Wed, 1 May 2024 10:10:57 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 05/16] riscv: Extend cpufeature.c to detect vendor
- extensions
-Message-ID: <ZjJ3oaFWhbLc39sz@ghost>
-References: <20240426-dev-charlie-support_thead_vector_6_9-v4-0-b692f3c516ec@rivosinc.com>
- <20240426-dev-charlie-support_thead_vector_6_9-v4-5-b692f3c516ec@rivosinc.com>
- <20240501-drivable-deviation-0a493511770c@spud>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzDOwakc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01CF5C4AF18;
+	Wed,  1 May 2024 17:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714583579;
+	bh=zbcbIeexpIPCHZ07qIjb2xvy0LAIrIkIli7fZrlkkPs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=mzDOwakc6N/hsFge1akpD47JDrwLOLSaetMZZCmYVmWU9z77Y3smwP96XGF/jK7Lu
+	 e7aAtkFjfydVufECpNDfIBHWdjYLU5hKhaz5RPKM9JwQsu6SdXL95X1b4aQVOD3NVk
+	 J6hT+7VPC4XZG9m6xxKi1PErdm/GfALSq528wIRxRRg2MhxptlhXxxzxZWYjn9Q1L7
+	 IBxowFFy6xHRYUuv6LOSXvKz+vVjFv9m4akDdidqK1TMxbjCx+3JXJ/qxTuqELRZ+B
+	 FfRfP6x0R/RjQc3x9X+Or2FuHqCNDtMyeUB/TUedwngviJWWsqkwHygxDRteaXOtAb
+	 Ukrj8mq6vgeHA==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Sumit Garg <sumit.garg@linaro.org>, Stephen Boyd
+ <swboyd@chromium.org>, Douglas Anderson <dianders@chromium.org>, "Peter
+ Zijlstra (Intel)" <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, Ard Biesheuvel
+ <ardb@kernel.org>
+Subject: Re: [PATCH] arm64: implement raw_smp_processor_id() using thread_info
+In-Reply-To: <ZjJwos7KpvzhoK_f@FVFF77S0Q05N.cambridge.arm.com>
+References: <20240501154236.10236-1-puranjay@kernel.org>
+ <ZjJwos7KpvzhoK_f@FVFF77S0Q05N.cambridge.arm.com>
+Date: Wed, 01 May 2024 17:12:52 +0000
+Message-ID: <mb61py18t78x7.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501-drivable-deviation-0a493511770c@spud>
+Content-Type: text/plain
 
-On Wed, May 01, 2024 at 12:40:38PM +0100, Conor Dooley wrote:
-> On Fri, Apr 26, 2024 at 02:29:19PM -0700, Charlie Jenkins wrote:
-> > Separate vendor extensions out into one struct per vendor
-> > instead of adding vendor extensions onto riscv_isa_ext.
-> > 
-> > Add a hidden config RISCV_ISA_VENDOR_EXT to conditionally include this
-> > code.
-> > 
-> > The xtheadvector vendor extension is added using these changes.
-> > 
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> >  arch/riscv/Kconfig                               |  2 +
-> >  arch/riscv/Kconfig.vendor                        | 19 ++++++
-> >  arch/riscv/include/asm/cpufeature.h              | 18 ++++++
-> >  arch/riscv/include/asm/vendor_extensions.h       | 26 ++++++++
-> >  arch/riscv/include/asm/vendor_extensions/thead.h | 19 ++++++
-> >  arch/riscv/kernel/Makefile                       |  2 +
-> >  arch/riscv/kernel/cpufeature.c                   | 77 ++++++++++++++++++------
-> >  arch/riscv/kernel/vendor_extensions.c            | 18 ++++++
-> >  arch/riscv/kernel/vendor_extensions/Makefile     |  3 +
-> >  arch/riscv/kernel/vendor_extensions/thead.c      | 36 +++++++++++
-> 
-> I see no modifications to cpu.c here, is it intentional that vendor
-> stuff isn't gonna show up in /proc/cpuinfo?
+Mark Rutland <mark.rutland@arm.com> writes:
 
-I wasn't sure if that's something we were wanting to support since
-hwprobe is the prefered api, but I can add that if it is desired.
+> Hi Puranjay,
+>
+> On Wed, May 01, 2024 at 03:42:36PM +0000, Puranjay Mohan wrote:
+>> ARM64 defines THREAD_INFO_IN_TASK which means the cpu id can be found
+>> from current_thread_info()->cpu.
+>
+> Nice!
+>
+> This is something that we'd wanted to do, but there were some historical
+> reasons that prevented that. I think it'd be worth describing that in the
+> commit message, e.g.
+>
+> | Historically, arm64 implemented raw_smp_processor_id() as a read of
+> | current_thread_info()->cpu. This changed when arm64 moved thread_info into
+> | task struct, as at the time CONFIG_THREAD_INFO_IN_TASK made core code use
+> | thread_struct::cpu for the cpu number, and due to header dependencies
+> | prevented using this in raw_smp_processor_id(). As a workaround, we moved to
+> | using a percpu variable in commit:
+> |
+> |   57c82954e77fa12c ("arm64: make cpu number a percpu variable")
+> |
+> | Since then, thread_info::cpu was reintroduced, and core code was made to use
+> | this in commits:
+> |
+> |   001430c1910df65a ("arm64: add CPU field to struct thread_info")
+> |   bcf9033e5449bdca ("sched: move CPU field back into thread_info if THREAD_INFO_IN_TASK=y")
+> |
+> | Consequently it is possible to use current_thread_info()->cpu again.
+>
+>> Implement raw_smp_processor_id() using the above. This decreases the
+>> number of emitted instructions like in the following example:
+>> 
+>> Dump of assembler code for function bpf_get_smp_processor_id:
+>>    0xffff8000802cd608 <+0>:     nop
+>>    0xffff8000802cd60c <+4>:     nop
+>>    0xffff8000802cd610 <+8>:     adrp    x0, 0xffff800082138000
+>>    0xffff8000802cd614 <+12>:    mrs     x1, tpidr_el1
+>>    0xffff8000802cd618 <+16>:    add     x0, x0, #0x8
+>>    0xffff8000802cd61c <+20>:    ldrsw   x0, [x0, x1]
+>>    0xffff8000802cd620 <+24>:    ret
+>> 
+>> After this patch:
+>> 
+>> Dump of assembler code for function bpf_get_smp_processor_id:
+>>    0xffff8000802c9130 <+0>:     nop
+>>    0xffff8000802c9134 <+4>:     nop
+>>    0xffff8000802c9138 <+8>:     mrs     x0, sp_el0
+>>    0xffff8000802c913c <+12>:    ldr     w0, [x0, #24]
+>>    0xffff8000802c9140 <+16>:    ret
+>> 
+>> A microbenchmark[1] was built to measure the performance improvement
+>> provided by this change. It calls the following function given number of
+>> times and finds the runtime overhead:
+>> 
+>> static noinline int get_cpu_id(void)
+>> {
+>> 	return smp_processor_id();
+>> }
+>> 
+>> Run the benchmark like:
+>>  modprobe smp_processor_id nr_function_calls=1000000000
+>> 
+>>       +--------------------------+------------------------+
+>>       |        | Number of Calls |    Time taken          |
+>>       +--------+-----------------+------------------------+
+>>       | Before |   1000000000    |   1602888401ns         |
+>>       +--------+-----------------+------------------------+
+>>       | After  |   1000000000    |   1206212658ns         |
+>>       +--------+-----------------+------------------------+
+>>       |  Difference (decrease)   |   396675743ns (24.74%) |
+>>       +---------------------------------------------------+
+>> 
+>> This improvement is in this very specific microbenchmark but it proves
+>> the point.
+>> 
+>> The percpu variable cpu_number is left as it is because it is used in
+>> set_smp_ipi_range()
+>> 
+>> [1] https://github.com/puranjaymohan/linux/commit/77d3fdd
+>> 
+>> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+>> ---
+>>  arch/arm64/include/asm/smp.h | 8 ++------
+>>  1 file changed, 2 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+>> index efb13112b408..88fd2ab805ec 100644
+>> --- a/arch/arm64/include/asm/smp.h
+>> +++ b/arch/arm64/include/asm/smp.h
+>> @@ -34,13 +34,9 @@
+>>  DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
+>>  
+>>  /*
+>> - * We don't use this_cpu_read(cpu_number) as that has implicit writes to
+>> - * preempt_count, and associated (compiler) barriers, that we'd like to avoid
+>> - * the expense of. If we're preemptible, the value can be stale at use anyway.
+>> - * And we can't use this_cpu_ptr() either, as that winds up recursing back
+>> - * here under CONFIG_DEBUG_PREEMPT=y.
+>> + * This relies on THREAD_INFO_IN_TASK, but arm64 defines that unconditionally.
+>>   */
+>> -#define raw_smp_processor_id() (*raw_cpu_ptr(&cpu_number))
+>> +#define raw_smp_processor_id() (current_thread_info()->cpu)
+>
+> I think we can (and should) delete the comment entirely.
 
-- Charlie
+Sure,
+I will add the information to the commit message and remove this comment
+in the next version.
 
+I think it would be useful to remove the cpu_number percpu variable as
+well.
 
+We can use &irq_stat in place of &cpu_number in set_smp_ipi_range() in
+the calls to request_percpu_nmi/irq() as this is just a dummy value and
+ipi_handler() doesn't use it.
+
+There are no other users of cpu_number.
+
+Thanks,
+Puranjay
