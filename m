@@ -1,105 +1,127 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B4942A96
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 20:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7CC42A96
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 20:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714594411; cv=none; b=O1kha1kVBOBwHCxDJ9euiMNQmxC7pEv6gHds/vrtXtFPY8KT7yvp5ms2t6YEUjLvkoDJqlO0jfa+KcIjRl5sBG5x9fXeND2EHJ0fBc4l4bZvlTMXK6DAyHt7LLXNIHK8c+/1Jg35SGQlRchz2FVRMxBJvzYKjHX0vDcw1IrERys=
+	t=1714594533; cv=none; b=B56GfYo8NpIfh2W5KIItFqzdlZ4la9IRQfK+UcIvVvoFvcOB2exh6sm+A4dFNHUfex5VfRSxVk10iaZqRzb4iTaFj4NKEcHlCriNPYq149E/OA+MxTVEVPOdGa7v2F16H+WeZSid/NHIM5zt9XC839UMJmM3wqIDme6oK9I2N2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714594411; c=relaxed/simple;
-	bh=rkNzy9U73z8jvrL5sUQ+lp32dbo34t1vmGN/vpd0fWQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jwKMYeHwXQvwJNBAoe2GX3wGRbmvhAEONTaLH8EB8M8bXUmBoDtwwdRfts11DC3oeEFpXBJC+ftNJNj/TRDKr1KVas7dCD+5LjZgCNHmhUEvVhPS+d6KaKOiJYwpUEj3JTfvjBV56xRqiHq97uAWHx9dZNSNQD0I6vmyR1Gg3d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k08JWQVf; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1714594533; c=relaxed/simple;
+	bh=wiC/qwp1tn2QtLPL49mOBk5DgvjRW0eTkk2FnvD2dvI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gTXt211GmbHkCbM8See0px+blpciyKIku9biJipy12Y+8V2xEn/vIYMQBK3seOpNkkb+4OtM32RBKxD3DYFUJG30izUbVN3Zd/lJ7yFsDzX/B89AYFamy3Ut/F9JO5JmjnQD9+Q1aOh3sbXEH2u7BCFgshtWm89LB8at+trQnKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aP/dGSQJ; arc=none smtp.client-ip=209.85.222.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k08JWQVf"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-ddaf2f115f2so11174914276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 13:13:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aP/dGSQJ"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7f395ac5b16so482308241.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 13:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714594409; x=1715199209; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pAz4UtE9TtuqKUTxLs4RS/mVM2NOpMppCAL8lNzqroU=;
-        b=k08JWQVft8gjvszzlt62zIhsy6UPMevWQP+zIa4kMnznTuh4C6QMtjqB05o3dtJTaV
-         2phUXX+Y06dA8VoN6wtTgj1D1wJbwCcmegunrEXz91+QZdHFrJuXQbw11elaCe75eked
-         WY6W422r+msePMu4iM3y5VtLmlPJ3nf5BKLELdWYIUwtGPgowZfRCMPjSG3IZNuBnwVC
-         vM4jgoUQPGWx0eHQIPNMhsC4XaQKXBo/vRFzXe2MYaUfxrIzyAtkziLru1hDUULzDKsN
-         p+TPcs+KS10dNxt5nCOPixIOLM7mynkOFheTsq+iK9dvkxXyu9U86VO/EX2ftw+fQoI3
-         LonA==
+        d=google.com; s=20230601; t=1714594531; x=1715199331; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+i1KmeojcJt62XLl7CnlLSmsjOhDVR/E3EtOZ1fd9k8=;
+        b=aP/dGSQJ4L/wfBCOPwmR7uwjmqJ0pYAvN8cwCfriOLcmB05o3R9JNtx6/rq2LLUsq9
+         C14y9X2yvLqLOSuTt5pkjy7j5I1VDNlrAj1q8T+LLmDWGl99mqUfW5+zvfKqSK68x0n6
+         h58nuXZNflEgYq1IAehgXLntTeLTIUt5sM9nRDLweu1HL6KgLO9enVWKp36XogS4Prlb
+         zuuxoOnebsIlWXzNFhlNi2Grxyxc5yCiCQLWSPrnhoE1IpoZKcU8BFl5E2DVV0JoJUQE
+         IQLLfxklnDaFKWWbrsFU3q6moX6GzzHPnX3iWHjqGK9pVtL/rKF6nzSwrjA+HpZp0vVY
+         ff8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714594409; x=1715199209;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pAz4UtE9TtuqKUTxLs4RS/mVM2NOpMppCAL8lNzqroU=;
-        b=kEicf/NCRYCEmUGJ7nTE/+VT5wGSa949bXBZ2HxFYhoswfI5BX8KwyalmLifHIkWD6
-         fCKM1AI2rw7kHv+1+ZqN4cmviX8cMhzHFO3nkIld07you0xyl21D2M4OXgaWu3oGdlQL
-         3o1Ytn5gGl3NzEnDktL9uMq0coQ8ifuK7bHVeZrPyljPvoZ0U6EX7FzSbcq/nEru6xyO
-         QZYGoMLFzTNdwZqd79ekohDRhQ/vqR70aJijIqjr0Ue3+2izuw2Avqp8HlaIVzt/LXnP
-         IHsR8syiMgEIYUAJ9VSnBWlufWzEgxALUquLSNQjiApL0bYHKREiG8ezgNqg03U+0APl
-         6Lqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXooynONWbb2pNHTplvrrXGo6aahnqA1OD3A6HsNLPb+wUyt0HqJfN1e3rcD0ab6gQVXxPXPItcr2XLWd+/Y7QXJkngSS1hdza7/3V
-X-Gm-Message-State: AOJu0YyTI6pBTDroDVXHSkeMsKFiZvewI6Z94Y43MBJXlZPKPGEDr2Ue
-	ddH9w5WnzSZpgBfPzDvHppOoa6+/deLTiS0Mv5hxedvnaqUeJg54AngSgCfeF88DYpdVc6INFfZ
-	ioorRP02her9Neg==
-X-Google-Smtp-Source: AGHT+IHqI+ChrQt9eDkX7OntryvFzGWOZwa5AHoNSRjrZhppIPW4IvMdH+fS/OJP2+KxJpifU59LGhWMlLyMdo0=
-X-Received: from tj-virt.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5683])
- (user=tjmercier job=sendgmr) by 2002:a25:6809:0:b0:de5:5304:3206 with SMTP id
- d9-20020a256809000000b00de553043206mr381300ybc.11.1714594409532; Wed, 01 May
- 2024 13:13:29 -0700 (PDT)
-Date: Wed,  1 May 2024 20:13:18 +0000
+        d=1e100.net; s=20230601; t=1714594531; x=1715199331;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+i1KmeojcJt62XLl7CnlLSmsjOhDVR/E3EtOZ1fd9k8=;
+        b=LmVI/yJcOcWMnVD56Su833igz1KYegJNEoKB2ZUhfXZSWD4SUcU9TpkvIsHOK5sh4I
+         2CYyOxP8WBSNORzA5mqgvEzyPyXDTLMwDkoYAIjJUBqezaWKa5hdb1feTRB7KuDtsvkh
+         dqiXwX8scxkZ9qoFkB21mvxWPwSrvG8ed5/rce6azmcZkir//L/FcaLHw+ASWZjk0a+a
+         mX+fda2nhhal656rtXgUMTs3BKH0+PSXtTTiJbD8x6G0/KuIA3EbvNIPro/PGtFmHt+r
+         KFHwf+RL+LaxwEnFpjw2n6mGh0tP6TsF9oasujzuRWyHpp8l1hN9WYzYgBZWAM11A2pG
+         Mglg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJKp6sGWf0Dp5/E2f627ik7ZdsWDY+PH7JbD6owyfK2qUVl1EALjrnq4MiH/YjX/OowgQwYq74ckwtBeARM9497Mq+ddOSOe0JLXvo
+X-Gm-Message-State: AOJu0YwYKhGMQgeHyDU5pBLQcD5qE4tUpWT1SBlNsjvpnpsFdIsxqnm0
+	XWcFF1/U1v+ZsWyfMUuG49pYxqJ/DY9iLlkMtBnwElVwGaFB7Df1QNNTpxTjFeCfh8gkHJy+Dto
+	nANzpVVOyFrhyKAtqPTMngTNc2sUDa7wkNKNA
+X-Google-Smtp-Source: AGHT+IFhpQb9UqMdO0uNQVh8XPqKDU0xHEW+aQEOpdYTs8DjimUSAduAwteLZCVHPiCOLjyGRKMOgGsbqxKF59nSe14=
+X-Received: by 2002:a05:6122:d9d:b0:4da:a788:cad5 with SMTP id
+ bc29-20020a0561220d9d00b004daa788cad5mr1334566vkb.5.1714594530088; Wed, 01
+ May 2024 13:15:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
-Message-ID: <20240501201319.586289-1-tjmercier@google.com>
-Subject: [PATCH] iommu/dma: Respect SWIOTLB force_bounce
-From: "T.J. Mercier" <tjmercier@google.com>
-To: tjmercier@google.com, Robin Murphy <robin.murphy@arm.com>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>
-Cc: isaacmanjarres@google.com, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <8edbd558-a05f-c775-4d0c-09367e688682@I-love.SAKURA.ne.jp>
+ <2023053048-saved-undated-9adf@gregkh> <18a58415-4aa9-4cba-97d2-b70384407313@I-love.SAKURA.ne.jp>
+ <CAHk-=wgSOa_g+bxjNi+HQpC=6sHK2yKeoW-xOhb0-FVGMTDWjg@mail.gmail.com>
+ <a3be44f9-64eb-42e8-bf01-8610548a68a7@I-love.SAKURA.ne.jp>
+ <CAHk-=wj6HmDetTDhNNUNcAXZzmCv==oHk22_kVW4znfO-HuMnA@mail.gmail.com>
+ <CANpmjNN250UCxsWCpUHAvJo28Lzv=DN-BKTmjEpcLFOCA+U+pw@mail.gmail.com>
+ <CAHk-=whnQXNVwuf42Sh2ngBGhBqbJjUfq5ux6e7Si_XSPAt05A@mail.gmail.com>
+ <d4de136e-c4e0-45c2-b33e-9a819cb3a791@paulmck-laptop> <CAHk-=wi3iondeh_9V2g3Qz5oHTRjLsOpoy83hb58MVh=nRZe0A@mail.gmail.com>
+ <892324fc-9b75-4e8a-b3b6-cf3c5b4c3506@paulmck-laptop>
+In-Reply-To: <892324fc-9b75-4e8a-b3b6-cf3c5b4c3506@paulmck-laptop>
+From: Marco Elver <elver@google.com>
+Date: Wed, 1 May 2024 22:14:51 +0200
+Message-ID: <CANpmjNOY=Qpm3hBu-eN4Xk8n-2VXQRvcQ3_PfwPwNw9MmC8ctw@mail.gmail.com>
+Subject: Re: [PATCH v3] tty: tty_io: remove hung_up_tty_fops
+To: paulmck@kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Vyukov <dvyukov@google.com>, 
+	syzbot <syzbot+b7c3ba8cdc2f6cf83c21@syzkaller.appspotmail.com>, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Jiri Slaby <jirislaby@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-iommu_dma_map_page and iommu_dma_map_sg conditionally use SWIOTLB, but
-checking if force_bounce is set for the device is not part of that
-condition. Check if devices have requested to force SWIOTLB use as part
-of deciding to take the existing SWIOTLB paths.
+On Wed, 1 May 2024 at 21:02, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Wed, May 01, 2024 at 11:56:26AM -0700, Linus Torvalds wrote:
+> > On Wed, 1 May 2024 at 11:46, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >
+> > > In short, I for one do greatly value KCSAN's help.  Along with that of
+> > > a great many other tools, none of which are perfect, but all of which
+> > > are helpful.
+> >
+> > It's not that I don't value what KCSAN does, but I really think this
+> > is a KCSAN issue.
+> >
+> > I absolutely *detest* these crazy "randomly add data race annotations".
+> >
+> > Could we instead annotate particular structure fields? I don't want to
+> > mark things actually "volatile", because that then causes the compiler
+> > to generate absolutely horrendous code. But some KCSAN equivalent of
+> > "this field has data races, and we don't care" kind of annotation
+> > would be lovely..
+>
+> That would give the poor sleep-deprived innocent bystander some way
+> to figure out which fields were shared, so that does sound like a good
+> improvement!
+>
+> I would naively expect that KCSAN's ability to handle volatile fields
+> would make this doable, but there is much that I do not know about
+> KCSAN internals.  So I must defer to Marco on this one.
 
-Fixes: 861370f49ce4 ("iommu/dma: force bouncing if the size is not cacheline-aligned")
-Signed-off-by: T.J. Mercier <tjmercier@google.com>
----
- drivers/iommu/dma-iommu.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This is relatively trivial:
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index e4cb26f6a943..755d66b49dff 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -606,7 +606,8 @@ static bool dev_use_swiotlb(struct device *dev, size_t size,
- {
- 	return IS_ENABLED(CONFIG_SWIOTLB) &&
- 		(dev_is_untrusted(dev) ||
--		 dma_kmalloc_needs_bounce(dev, size, dir));
-+		 dma_kmalloc_needs_bounce(dev, size, dir) ||
-+		 is_swiotlb_force_bounce(dev));
- }
- 
- static bool dev_use_sg_swiotlb(struct device *dev, struct scatterlist *sg,
-@@ -632,7 +633,7 @@ static bool dev_use_sg_swiotlb(struct device *dev, struct scatterlist *sg,
- 				return true;
- 	}
- 
--	return false;
-+	return is_swiotlb_force_bounce(dev);
- }
- 
- /**
--- 
-2.45.0.rc0.197.gbae5840b3b-goog
+#ifdef __SANITIZE_THREAD__
+#define __data_racy volatile
+#endif
 
+KCSAN will just ignore racy access to them (it will pretend they are "marked").
+
+In some cases it might cause the compiler to complain if converting a
+volatile pointer to a non-volatile pointer, but I suspect that the
+corresponding pointer should then similarly be marked as __data_racy.
+The fact that without casting the attribute is "viral" is probably WAI
+even in this case.
+
+Do we want this kind of attribute?
+
+Thanks,
+-- Marco
