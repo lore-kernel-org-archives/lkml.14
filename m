@@ -1,101 +1,176 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40FA51036;
-	Wed,  1 May 2024 14:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B2312E6A;
+	Wed,  1 May 2024 14:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714575005; cv=none; b=rrxWpnPkRrdhP1NLCikeUldbKbjf+UlQpvKuhgv1gVJcSiC6N/sI4rilsxJzdMbm/fNlN8YRePPEK2CsKvCXIZxFh/zhT0IWmK68DQqB6mdgFNXJROc2Dwh9qG1cU0FTzk/pJ9BCjjWEN7n3GIz0Fb5Xqw1lnYCrF356EIvGZQo=
+	t=1714575255; cv=none; b=T9+smeqho1vhoq/Na6f6EOPC5pdietggFKCDzFSLz7SB5rdyyTtIuJyOeqJfNolUBW0f+5xa1tJJSccK1H0LzuIAYV5KyotyA0NqBEbS696IFQ7MBlBDCdh+YKNQIVhEmhj99EtUigFvPuJlWXwuWrWIRc/C5Spp3G1FVXlFa5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714575005; c=relaxed/simple;
-	bh=sLvBTfpmmzucnDRKj1TzzUegK7SP40wGOpJjCskyQEM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rVbpvr99KuO8dqgBq1XED4nB/PhykngDRoWn1WWjg4MWPG2Vh8KyJdbfIRe3hMHJC/sPgEFyjrNH5kvel+BSJbke6aFVM7znZS5p7bzBC/0ubKH1oKRIjajn1J1uc0sRd0vxO1LJ3TQ37jOEC665lFg7vB6mpdleeNgu3hMwVUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=Z49Tqcwb; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="Z49Tqcwb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=G1c8VPPjpU8t54HGr8jcj9ZiacIyUIRMTCeFMOj4sFo=; t=1714575001; x=1715179801; 
-	b=Z49TqcwbWA5mkNFu3LRleuPeESjWiSSev92/eo2BBnJXgqDTJk1GVsYYaJHIwkfKe1Zaqje1cJT
-	xxItZYJI6n7n4bbMN9FQWfBoGkS2IDan19wK4G5aimoBPOs1FC9L+eEVGEU08nOAqusm8GJdU1zBy
-	uWU+lGtwADRZt0osieNdzx8YsS35ja0VQAJUDZ0+epRtcjW5QPHoeuY2AigvTQSO+9WoQAOsF1xtO
-	3i3hWCKFJ2Kuo5eNBhKAHVeYSGUmEuSBl9uvkKtarEfKqTBWcp+ip4y3kkmiZxXITTS1IKR0n/w59
-	Yi7XXz38MWWkkmit30/rdM+licflNvwm9Tmg==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.97)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1s2BHT-00000001RII-1EfU; Wed, 01 May 2024 16:49:59 +0200
-Received: from p57bd90e8.dip0.t-ipconnect.de ([87.189.144.232] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.97)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1s2BHT-00000001IKZ-0Lkx; Wed, 01 May 2024 16:49:59 +0200
-Message-ID: <429f4343463b824e4e5e33b87b275e35464b0721.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] Revert "sh: Handle calling csum_partial with misaligned
- data"
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker
- <dalias@libc.org>,  linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 01 May 2024 16:49:58 +0200
-In-Reply-To: <a489b335-9174-40b1-8ffd-a34eb83fa8c3@roeck-us.net>
-References: <20240324231804.841099-1-linux@roeck-us.net>
-	 <059d03a5da257660fa0bc188c6cc8d0152e97704.camel@physik.fu-berlin.de>
-	 <a9ac59cd-82db-45a0-9f85-ec3880c54dbf@roeck-us.net>
-	 <cb8d3d2a-b843-49d5-a219-10a29b5877d0@roeck-us.net>
-	 <1e77ade4fb1d924ffaf226cb946ba3314ba59a1d.camel@physik.fu-berlin.de>
-	 <fb0293d85dbf82341c6b7e4d56fe8f1d23f7768a.camel@physik.fu-berlin.de>
-	 <a489b335-9174-40b1-8ffd-a34eb83fa8c3@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	s=arc-20240116; t=1714575255; c=relaxed/simple;
+	bh=kh+wjNGTe3rkosFU5tIMQvZ6bZ/Ezmwl/V7rTuuidyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PWhH+HRD0AAZVDgvTPZqmmn+ZgWpydlRgySV4ZEl6NuRNCtm0JybYp+axPeLcy5eZxwg02Lyjxx+9GE37JovOMTH6hWtBDwsw4ulo5KQYQfZfS8h5M0b/4XW8AgmLWjOOGPHkCQ4nsuhjJZxXRlyu1Wvec5MayUTDoZ0MmJkQh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE7DC072AA;
+	Wed,  1 May 2024 14:54:11 +0000 (UTC)
+Date: Wed, 1 May 2024 10:54:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, "Luck, Tony"
+ <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>, Joel Fernandes
+ <joel@joelfernandes.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
+ <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
+ <peterz@infradead.org>, "linux-hardening@vger.kernel.org"
+ <linux-hardening@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Ross
+ Zwisler <zwisler@google.com>, "wklin@google.com" <wklin@google.com>,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Suleiman Souhlal
+ <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
+ pstore consistently
+Message-ID: <20240501105455.42b78a0b@gandalf.local.home>
+In-Reply-To: <ZjJVnZUX3NZiGW6q@kernel.org>
+References: <20240409210254.660888920@goodmis.org>
+	<20240409172358.34ea19f0@gandalf.local.home>
+	<202404091519.B7B2221@keescook>
+	<SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	<3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
+	<20240411154007.5bdf8d95@gandalf.local.home>
+	<fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
+	<20240412132243.053ad096@gandalf.local.home>
+	<ZjJVnZUX3NZiGW6q@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2024-05-01 at 07:44 -0700, Guenter Roeck wrote:
-> On Wed, May 01, 2024 at 10:28:11AM +0200, John Paul Adrian Glaubitz wrote=
-:
-> > > > Did you have time to test this on real hardware ?
-> > >=20
-> > > Not yet. I just returned from Easter holidays and need to get synced =
-with work first.
-> >=20
-> > I might have to skip this for v6.10 as I haven't been able to test this=
- yet.
-> >=20
-> > I agree with the change in general, but I want to make sure I can repro=
-duce
-> > this on real hardware.
-> >=20
->=20
-> No worries, This is not a new problem, after all, so it doesn't really ma=
-ke
-> much of a difference.
+On Wed, 1 May 2024 17:45:49 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-OK, thanks. I'll be happy when I'm though with Geert's two series which tak=
-e
-quite some time to review.
+> > +static void __init memmap_copy(void)
+> > +{
+> > +	if (!early_mmap_size)
+> > +		return;
+> > +
+> > +	mmap_list = kcalloc(early_mmap_size + 1, sizeof(mmap_list), GFP_KERNEL);  
+> 
+> We can keep early_mmap_size after boot and then we don't need to allocate
+> an extra element in the mmap_list. No strong feeling here, though.
+> 
+> > +	if (!mmap_list)
+> > +		return;
+> > +
+> > +	for (int i = 0; i < early_mmap_size; i++)
+> > +		mmap_list[i] = early_mmap_list[i];
+> > +}  
+> 
+> With something like this
+> 
+> /*
+>  * Parse early_reserve_mem=nn:align:name
+>  */
+> static int __init early_reserve_mem(char *p)
+> {
+> 	phys_addr_t start, size, align;
+> 	char *oldp;
+> 	int err;
+> 
+> 	if (!p)
+> 		return -EINVAL;
+> 
+> 	oldp = p;
+> 	size = memparse(p, &p);
+> 	if (p == oldp)
+> 		return -EINVAL;
+> 
+> 	if (*p != ':')
+> 		return -EINVAL;
+> 
+> 	align = memparse(p+1, &p);
+> 	if (*p != ':')
+> 		return -EINVAL;
+> 
+> 	start = memblock_phys_alloc(size, align);
 
-Adrian
+So this will allocate the same physical location for every boot, if booting
+the same kernel and having the same physical memory layout?
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+-- Steve
+
+
+> 	if (!start)
+> 		return -ENOMEM;
+> 
+> 	p++;
+> 	err = memmap_add(start, size, p);
+> 	if (err) {
+> 		memblock_phys_free(start, size);
+> 		return err;
+> 	}
+> 
+> 	p += strlen(p);
+> 
+> 	return *p == '\0' ? 0: -EINVAL;
+> }
+> __setup("early_reserve_mem=", early_reserve_mem);
+> 
+> you don't need to touch e820 and it will work the same for all
+> architectures.
+> 
+> We'd need a better naming, but I couldn't think of something better yet.
+> 
+> > +
+> > +/**
+> > + * memmap_named - Find a wildcard region with a given name
+> > + * @name: The name that is attached to a wildcard region
+> > + * @start: If found, holds the start address
+> > + * @size: If found, holds the size of the address.
+> > + *
+> > + * Returns: 1 if found or 0 if not found.
+> > + */
+> > +int memmap_named(const char *name, u64 *start, u64 *size)
+> > +{
+> > +	struct mmap_map *map;
+> > +
+> > +	if (!mmap_list)
+> > +		return 0;
+> > +
+> > +	for (int i = 0; mmap_list[i].name[0]; i++) {
+> > +		map = &mmap_list[i];
+> > +		if (!map->size)
+> > +			continue;
+> > +		if (strcmp(name, map->name) == 0) {
+> > +			*start = map->start;
+> > +			*size = map->size;
+> > +			return 1;
+> > +		}
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> >  struct kobject *mm_kobj;
+> >  
+> >  #ifdef CONFIG_SMP
+> > @@ -2793,4 +2864,5 @@ void __init mm_core_init(void)
+> >  	pti_init();
+> >  	kmsan_init_runtime();
+> >  	mm_cache_init();
+> > +	memmap_copy();
+> >  }  
+> 
+
