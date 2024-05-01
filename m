@@ -1,158 +1,121 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233CC13172B;
-	Wed,  1 May 2024 15:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0575713175F;
+	Wed,  1 May 2024 15:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714576423; cv=none; b=PNTie+wjK3QEuQYyQYiHR6P+7JPrWsrxwfCd0y4iJv4mSaRxL3dQD+wbgNptj6jaLq43J+W1vghiY4ONyw5uGyVKURYhYkOXEsKGdNZFwf7jSCWGrZAPOlAcKPQ9s0/CrRaybazj4BpgyTCxqD16webazgc4IgO3JFenVoEkhuI=
+	t=1714576426; cv=none; b=cAmUBiy57DHdlcnkOe7ciIllkQdcT/XR4Q6HyjQNxv5oopFwU6m2Rn8mRv78DZezKb3zPk+lWgTRNWrdBn3ZYEoRNHx0aGmt7K7xIvXaw54vQrsp1UX2yauU1dJvs3ttkjcqgxE0weJwYhXe8BlBkdp2Xc/WFZh55raIwM8eD+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714576423; c=relaxed/simple;
-	bh=umYW4kgVZzhjRxdAvIvjder0SddTGsWPe+tkqV8xgc8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lRTAShAfJ3cf6oAYKYYoQTQR/CMjycCBkM78Buu+Uc3fkPeni5jiTW+7X5Ec8LXTbIglEp7j2PCLjEHczhU/NPprHERyBA9ivpMiotRA7LIc4OGZyqtElm2dOT3kiheTtjyYOKmNzLVrnE3hAk/t9f+KEL2wiqF9cAyGcLyl2Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CQXtWmHf; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714576426; c=relaxed/simple;
+	bh=YBjLSMIppWafWg7KldsTZKrs4eG5nttTEthhu+OXRyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=boJGeukFb7N+UW2BBSGVsIxTwEitqj8GGT+ENrVjMtX+GmbGFRrWwRwfY8ykEL4txzG37bJC6lNohGpaeQKDx+PKb2WdrwiPK9fGO/uPp3B4L9E/gfjLF8pWhrRyQb/wrsLY5Wndu306inJxHpwUZPl5V/WSGkqsGC1EKqRsPDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgn55JcK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQXtWmHf"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e9ffd3f96eso56155685ad.3;
-        Wed, 01 May 2024 08:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714576421; x=1715181221; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z+Xr7LOTbeBKdnIhloNSsZOexImckDjxZ7O5dDt1M8s=;
-        b=CQXtWmHf0NPCgujVVRUT85C0ud+swKQh0VwbYeRhL68Pa4U7HUDo9Qcho/U1R7gLdD
-         Db2Ngmm60kAkuktsUUpCKYEMaGcPx7y3ioRx9ttbnhOrjBzCRG8gtpMeezRKQEuqN9mF
-         2U040cil5W/xYgCpJKuH+QnSUy8LLu9qL4ia9g2/1HfInFEW72LksxNiD6Fko2PF5FnT
-         ShiIv7vbgosOoU4kd+Tb7QAElKbmXY4L7LNBubaVyvKXVXpSiYKspFPoWjymRUb8eGOL
-         67l34h+ZrNWTfWD3yjEmMkqRh1TIIsi78ns/jQdJDC018t/OPRqSgv68lyS/aQJyF+78
-         nM9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714576421; x=1715181221;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=z+Xr7LOTbeBKdnIhloNSsZOexImckDjxZ7O5dDt1M8s=;
-        b=pXXftzOjgDxiERKZEcuEcqfaODyH77wFKGQ1HdaCnv0180TbYN10WxDjrYz08/C6ZO
-         a3//46svHJ+ADfZLBKezsfGsDUb0Z+RblylArRoJHOLhMDiJHghUWHcWAK9o0RNQssm4
-         ZkdG/dHMT8NiyNeFKm7XNGWgcT38En1SHIuZlMTJa24a5QseovlhwfZmNCLmnxcbhJ8N
-         O9mhY4jVaYiXhsE957Khjjk+zqlKv8vGdSNp4+KOeS6DDJswQyOexKUUroRQG1c885aa
-         eOAk2k9DfellRrHMcxhOXTnnbCwX6GpnwBYyBh+eesXYgGQeDcjGEXcTqQaXqsxVCp5L
-         5IEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXb/3qKxfg5YOClaTVyObloeTtz/qgUwd1yXlsSykQ26vYHfTMiMIOlwe34habAS6uEHdLCU58RSX1T4Rz2wdzEEHYj
-X-Gm-Message-State: AOJu0Yzd45mrTR9g2lIGYnQJCVLd+dil5Cm9ZLd6lTsQ/nG23cg5llYO
-	oUHd4acXKDHosLMAcM/DMIipD+plM43K4FbCz6Ue8CSbNhK3xRMp
-X-Google-Smtp-Source: AGHT+IHOCSVtJ4T6Au/O5pepeAJna0v6BFEIHeuSVuW7v40q6FIZ/rvfe/z6Vjb8a+O6KU+ZPPMuwQ==
-X-Received: by 2002:a17:902:b497:b0:1e8:9f46:c1af with SMTP id y23-20020a170902b49700b001e89f46c1afmr2467653plr.63.1714576421322;
-        Wed, 01 May 2024 08:13:41 -0700 (PDT)
-Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id m2-20020a170902db0200b001ea02c8412asm16099414plx.119.2024.05.01.08.13.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 08:13:40 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-From: Tejun Heo <tj@kernel.org>
-To: torvalds@linux-foundation.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@kernel.org,
-	joshdon@google.com,
-	brho@google.com,
-	pjt@google.com,
-	derkling@google.com,
-	haoluo@google.com,
-	dvernet@meta.com,
-	dschatzberg@meta.com,
-	dskarlat@cs.cmu.edu,
-	riel@surriel.com,
-	changwoo@igalia.com,
-	himadrics@inria.fr,
-	memxor@gmail.com,
-	andrea.righi@canonical.com,
-	joel@joelfernandes.org
-Cc: linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	kernel-team@meta.com,
-	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 12/39] sched: Add normal_policy()
-Date: Wed,  1 May 2024 05:09:47 -1000
-Message-ID: <20240501151312.635565-13-tj@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240501151312.635565-1-tj@kernel.org>
-References: <20240501151312.635565-1-tj@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgn55JcK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00153C113CC;
+	Wed,  1 May 2024 15:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714576425;
+	bh=YBjLSMIppWafWg7KldsTZKrs4eG5nttTEthhu+OXRyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sgn55JcKpxb0pLy4qCshQKV2X7q87m847hTuD9aQU5FueGeUjKn1Ewd1x6Fo+tFBn
+	 3nf/SbivuIkR97d5ZJe9t1Ux0gtgcFkXcJzYW4o3JXODsxdpWQgRDzPvRUPV9grzXp
+	 cQCzyox8PXtHPaou1zC3L7V5TYuKeuLLlPaVVI1QrVbT8dmv/feK/hBr8IdjS7I9Pg
+	 sTchsz/A3n3RoeSu6av8EHHa53C+nTj3apISSqsfkTNUgIlAgbiSyk2uGrbhNyWrkD
+	 SKWOnfmtdl+v8gfZAbF+ppCC9hJ835PC+7dw24BFM9oiZ7fVQpQjDPaXkYb7boa5Uk
+	 ocDWzBfVLm/HA==
+Date: Wed, 1 May 2024 08:13:43 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Valentin Obst <kernel@valentinobst.de>,
+	Kees Cook <keescook@chromium.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Bill Wendling <morbo@google.com>
+Subject: Re: [PATCH] selftests/harness: fix many "format string is empty"
+ warnings
+Message-ID: <20240501151343.GA1018661@dev-arch.thelio-3990X>
+References: <20240501020813.264878-1-jhubbard@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240501020813.264878-1-jhubbard@nvidia.com>
 
-A new BPF extensible sched_class will need to dynamically change how a task
-picks its sched_class. For example, if the loaded BPF scheduler progs fail,
-the tasks will be forced back on CFS even if the task's policy is set to the
-new sched_class. To support such mapping, add normal_policy() which wraps
-testing for %SCHED_NORMAL. This doesn't cause any behavior changes.
+Hi John,
 
-v2: Update the description with more details on the expected use.
+On Tue, Apr 30, 2024 at 07:08:13PM -0700, John Hubbard wrote:
+> In order to build with clang at all, in order to see these symptoms, one
+> must first apply Valentin Obst's build fix for LLVM [1]. Once that is
+> done, then when building with clang, via:
+> 
+>     make LLVM=1 -C tools/testing/selftests
+> 
+> ...clang emits a "format string is empty" warning. (gcc also emits a
+> similar warning.)
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: David Vernet <dvernet@meta.com>
-Acked-by: Josh Don <joshdon@google.com>
-Acked-by: Hao Luo <haoluo@google.com>
-Acked-by: Barret Rhoden <brho@google.com>
----
- kernel/sched/fair.c  | 2 +-
- kernel/sched/sched.h | 8 +++++++-
- 2 files changed, 8 insertions(+), 2 deletions(-)
+The warning you are describing here sounds like the same exact one that
+commit caed8eba2215 ("selftests: kselftest_harness: fix Clang warning
+about zero-length format") should have addressed in 6.9-rc5. Is this
+patch actually necessary?
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 51301ae13725..8a9b2e95d06b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8322,7 +8322,7 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
- 	 * Batch and idle tasks do not preempt non-idle tasks (their preemption
- 	 * is driven by the tick):
- 	 */
--	if (unlikely(p->policy != SCHED_NORMAL) || !sched_feat(WAKEUP_PREEMPTION))
-+	if (unlikely(!normal_policy(p->policy)) || !sched_feat(WAKEUP_PREEMPTION))
- 		return;
- 
- 	find_matching_se(&se, &pse);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index ccf2fff0e2ae..11b4345d2638 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -171,9 +171,15 @@ static inline int idle_policy(int policy)
- {
- 	return policy == SCHED_IDLE;
- }
-+
-+static inline int normal_policy(int policy)
-+{
-+	return policy == SCHED_NORMAL;
-+}
-+
- static inline int fair_policy(int policy)
- {
--	return policy == SCHED_NORMAL || policy == SCHED_BATCH;
-+	return normal_policy(policy) || policy == SCHED_BATCH;
- }
- 
- static inline int rt_policy(int policy)
--- 
-2.44.0
+> Fix by passing NULL, instead of "", for the msg argument to
 
+Because this text is describing what was done in caed8eba2215...
+
+> ksft_test_result_code(). This removes dozens of warnings and a few
+> errors (some tests have -Werror set).
+>
+> [1] https://lore.kernel.org/all/20240329-selftests-libmk-llvm-rfc-v1-1-2f9ed7d1c49f@valentinobst.de/
+> 
+> Cc: Valentin Obst <kernel@valentinobst.de>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Justin Stitt <justinstitt@google.com>
+> Cc: Bill Wendling <morbo@google.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  tools/testing/selftests/kselftest_harness.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+> index d98702b6955d..456b8694e678 100644
+> --- a/tools/testing/selftests/kselftest_harness.h
+> +++ b/tools/testing/selftests/kselftest_harness.h
+> @@ -1207,8 +1207,10 @@ void __run_test(struct __fixture_metadata *f,
+>  	else
+>  		diagnostic = "unknown";
+>  
+> -	ksft_test_result_code(t->exit_code, test_name,
+> -			      diagnostic ? "%s" : NULL, diagnostic);
+> +	if (diagnostic)
+> +		ksft_test_result_code(t->exit_code, test_name, "%s", diagnostic);
+> +	else
+> +		ksft_test_result_code(t->exit_code, test_name, NULL);
+
+but this diff is not doing that because it is based on a tree that has
+caed8eba2215; instead, it appears to be a completely identical
+transformation?
+
+Cheers,
+Nathan
+
+>  	free(test_name);
+>  }
+>  
+> 
+> base-commit: 18daea77cca626f590fb140fc11e3a43c5d41354
+> prerequisite-patch-id: b901ece2a5b78503e2fb5480f20e304d36a0ea27
+> -- 
+> 2.45.0
+> 
