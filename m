@@ -1,151 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D3B048CE0
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 11:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633AA5028F
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 11:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714561456; cv=none; b=SjdUq3O4WRFZNkjeJwhrjozWK+qo7SQ1huJ5mLtlvV274hMP8mN8HLUeaEN5+rqVQMQ1Ve0BLKEVHo36cGyjG1rzKiddVv50HtvZuZ7RKC/hi5Hp+NMfDZOqfcibamW/h5ArV5Pe6JYcpxaEi73Zku8FAy64dUL/yY9RokiHkIw=
+	t=1714561601; cv=none; b=mvE1a1XUzyhorZxAy14ytpftPBLp04P6lKkyf5+M2Rxuy/66dJw5VXfIEC1Q5+Trl5RpfEivPbvMc4pSSwoUnJDwRUuxw6HrYoUzDlP1gM/YI5a8ymsvWS7Xu3hkKdmOvzi8BSPJFdCXT9ehdCCTDxqDx0mWTOJdlE3Nynj7/wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714561456; c=relaxed/simple;
-	bh=BMvyK2ejIFFU2gxEqBo7gg/tUhjpicT6PIvc8ob7Ttg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rf8+syI0VJf0SKrgq8K6TjeCTnSJCQiotFEVMqZeKRWAFRQ/fUtEEpsQ+KVst+FubxqRYKWXcEKl4up52SHYRQkGq8uJ039YmwNo391hsIR14IqVXokQBCIASNyYF5HHy3PRIYJ7tfAVTztLNn4e/sjX1pAHtuhdhVCwizdtBOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0BF32F4;
-	Wed,  1 May 2024 04:04:33 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD70B3F793;
-	Wed,  1 May 2024 04:04:06 -0700 (PDT)
-Date: Wed, 1 May 2024 12:04:04 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
-Cc: gregkh@linuxfoundation.org, javier.carrasco.cruz@gmail.com,
-	Sudeep Holla <sudeep.holla@arm.com>, julia.lawall@inria.fr,
-	linux-kernel@vger.kernel.org, rafael@kernel.org,
-	skhan@linuxfoundation.org
-Subject: Re: [PATCH 1/2 v3] drivers: reorganize do-while loops
-Message-ID: <ZjIhpHKtEs-SughS@bogus>
-References: <20240424125401.oxvt5n64d7a57ge3@bogus>
- <20240501094313.407820-1-vincenzo.mezzela@gmail.com>
- <20240501094313.407820-2-vincenzo.mezzela@gmail.com>
+	s=arc-20240116; t=1714561601; c=relaxed/simple;
+	bh=8Ern/w3N5sL4wLf8mWZQzBfabAjbgCGzxG/d/rNuRT4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kzEnRItFzV7yhssIzQQhJVcecKabDDOYO0lPerVzaDf8EzV8+wrtE1pNlAulHBnenN74JkIIVkK+JjtxnnMyQGsCLRjipyH6yKdNK2BnCNwjXlCRAYzxoW1f58CEWmIfhEhI9pbUFVV9n+9nJZ3o0TYzky38c+URhrXtTeoGfMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eMpNrJC4; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eMpNrJC4"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f3f6aa1437so3154515b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 04:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714561599; x=1715166399; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UVIfCEDLcryVh1sxegO1WMzH32gqhTaOJpqJeO8zPZI=;
+        b=eMpNrJC4M4qGrIQJtM34Z32GvUCmKNcl3/h9L2WhKEOAH9g0XkiMSvomfWrnBxz0dA
+         bXvE45U6qg80AGk9EmKI4YQ5nEuXgGnF4qvsw74ndNoXYODpaha/UZCjyGR/AODE09Uu
+         gJHAmJ2c38/HtMvKcb3msy1AdnprvOaEKzkxmz360lVx0PM5p35LHY4Xf8TwxnGPeoN0
+         Vlyh2sn8Qlev7bABki4sDXak+DYKYxHVs7VjuKGx3MAbVgW8+r4XihUimkZOeJMxTrUu
+         MrlmZnDrZyLwtAjT9U1EqHmvrPeGHChpToYJ3vlBVqZkbmcZzx5Wsb8HoYA+HVNh//Mg
+         bjrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714561599; x=1715166399;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UVIfCEDLcryVh1sxegO1WMzH32gqhTaOJpqJeO8zPZI=;
+        b=ivD6fL2+pbGtRNYuDG1MTlIRmtuq67Y7hnUQLVKMHFhlG8zJWIe5xrdqB2qQr6am3g
+         KgBZUiTthsNXSXuyj3BS5B/a6nKcHSgUtWK4ekVPTg0kMS9YcDg/V8v0Q9OC2fpCC6Cq
+         7X+AuduJH+ntxbjrGqB7W41KYFj8ryX9oYdfi69e+8qCYbz43IkZxK6U0YZgvNPYjRT8
+         TKk5fU/nqRnz1+c1/cT0zPkcLaX8mtZn6Qerh4n5rJtmM2hietC11VwVUXkGxpAOuJ0G
+         dCKYm42DBrvCN6FLNUCGsejAo52qsigbYyltkY89+10UjgQM/KP+INNH8nDsI5/SUofe
+         72Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWg0DD9JsVCoc09TFv85rApqKg6kIH53Vp9FRP+qdm1AKIa2PpADj2xBRyWiP/syb6xXJcX97qCvJDLEBBokHQyuWxuvg6mtePnpoMY
+X-Gm-Message-State: AOJu0YxDIGXFOY60kHm37AsEG4J5IU4HupHln2nfAGLmgXkiZ+zo074D
+	BW2iEYRuhLOe44roKGtaLvoTswSdceXq/aJg0jEyj/kK/Uecv5QivIgXd/YtlU6H0Hhhd5W3AZN
+	1gc1IsnV+H9zMZzLtstXe+0+Ns2K8FmxCzbPlxw==
+X-Google-Smtp-Source: AGHT+IEIeZDG2abjSl7JiRn4xQhRhE22MbWI7q0YUcF0ys8JS5PMok3Dg8kUX1MoLmYeliXkgq+kWLLlOGEYtodZ7Ag=
+X-Received: by 2002:a05:6a20:5a89:b0:1a7:9e85:c28f with SMTP id
+ kh9-20020a056a205a8900b001a79e85c28fmr1964085pzb.48.1714561599628; Wed, 01
+ May 2024 04:06:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501094313.407820-2-vincenzo.mezzela@gmail.com>
+References: <20240429152207.479221-1-james.clark@arm.com> <20240429152207.479221-9-james.clark@arm.com>
+In-Reply-To: <20240429152207.479221-9-james.clark@arm.com>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Wed, 1 May 2024 12:06:28 +0100
+Message-ID: <CAJ9a7VgAg==xysGSjR9Cd5oO1+=HQF0xxcpamgntb_PV6aw6JQ@mail.gmail.com>
+Subject: Re: [PATCH 08/17] coresight: Remove unused stubs
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com, 
+	scclevenger@os.amperecomputing.com, coresight@lists.linaro.org, 
+	suzuki.poulose@arm.com, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
-
-$subject seems to be too generic. Please change it to something like
-drivers: arch_topology: Refactor do-while loops
-
-On Wed, May 01, 2024 at 11:43:12AM +0200, Vincenzo Mezzela wrote:
-> Test c = of_get_child_by_name() failures using "if(!c) break;" instead of
-> having the body of the loop all within the "if(c){ }" body.
+On Mon, 29 Apr 2024 at 16:24, James Clark <james.clark@arm.com> wrote:
 >
-
-Drop the above description which is clear from the code.
-
-Just mention it as refactor do-while look to move the break condition
-inside the loop.
-
-> This modification is required
-
-s/required/in preparation/
-
-> to move the declaration of the device_node
-> directly within the loop and take advantage of the automatic cleanup
-> feature provided by the __free(device_node) attribute.
-> 
-> Signed-off-by: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
+> This file is never included anywhere if CONFIG_CORESIGHT is not set so
+> they are unused and aren't currently compile tested with any config so
+> remove them.
+>
+> Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  drivers/base/arch_topology.c | 107 ++++++++++++++++++-----------------
->  1 file changed, 55 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 024b78a0cfc1..ea8836f0bb4b 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-
-[...]
-
-> @@ -599,48 +600,48 @@ static int __init parse_cluster(struct device_node *cluster, int package_id,
->  	do {
->  		snprintf(name, sizeof(name), "cluster%d", i);
->  		c = of_get_child_by_name(cluster, name);
-> -		if (c) {
-> -			leaf = false;
-> -			ret = parse_cluster(c, package_id, i, depth + 1);
-> -			if (depth > 0)
-> -				pr_warn("Topology for clusters of clusters not yet supported\n");
-> -			of_node_put(c);
-> -			if (ret != 0)
-> -				return ret;
-> -		}
-> +		if (!c)
-> +			break;
-> +
-> +		leaf = false;
-> +		ret = parse_cluster(c, package_id, i, depth + 1);
-> +		if (depth > 0)
-> +			pr_warn("Topology for clusters of clusters not yet supported\n");
-> +		of_node_put(c);
-> +		if (ret != 0)
-> +			return ret;
->  		i++;
-> -	} while (c);
-> +	} while (1);
->  
->  	/* Now check for cores */
->  	i = 0;
->  	do {
->  		snprintf(name, sizeof(name), "core%d", i);
->  		c = of_get_child_by_name(cluster, name);
-> -		if (c) {
-> -			has_cores = true;
+>  .../hwtracing/coresight/coresight-etm-perf.h   | 18 ------------------
+>  1 file changed, 18 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h b/drivers/hwtracing/coresight/coresight-etm-perf.h
+> index bebbadee2ceb..744531158d6b 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.h
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
+> @@ -62,7 +62,6 @@ struct etm_event_data {
+>         struct list_head * __percpu *path;
+>  };
+>
+> -#if IS_ENABLED(CONFIG_CORESIGHT)
+>  int etm_perf_symlink(struct coresight_device *csdev, bool link);
+>  int etm_perf_add_symlink_sink(struct coresight_device *csdev);
+>  void etm_perf_del_symlink_sink(struct coresight_device *csdev);
+> @@ -77,23 +76,6 @@ static inline void *etm_perf_sink_config(struct perf_output_handle *handle)
+>  int etm_perf_add_symlink_cscfg(struct device *dev,
+>                                struct cscfg_config_desc *config_desc);
+>  void etm_perf_del_symlink_cscfg(struct cscfg_config_desc *config_desc);
+> -#else
+> -static inline int etm_perf_symlink(struct coresight_device *csdev, bool link)
+> -{ return -EINVAL; }
+> -int etm_perf_add_symlink_sink(struct coresight_device *csdev)
+> -{ return -EINVAL; }
+> -void etm_perf_del_symlink_sink(struct coresight_device *csdev) {}
+> -static inline void *etm_perf_sink_config(struct perf_output_handle *handle)
+> -{
+> -       return NULL;
+> -}
+> -int etm_perf_add_symlink_cscfg(struct device *dev,
+> -                              struct cscfg_config_desc *config_desc)
+> -{ return -EINVAL; }
+> -void etm_perf_del_symlink_cscfg(struct cscfg_config_desc *config_desc) {}
 > -
-> -			if (depth == 0) {
-> -				pr_err("%pOF: cpu-map children should be clusters\n",
-> -				       c);
-> -				of_node_put(c);
-> -				return -EINVAL;
-> -			}
-> +		if (!c)
-> +			break;
->  
-> -			if (leaf) {
-> -				ret = parse_core(c, package_id, cluster_id,
-> -						 core_id++);
-> -			} else {
-> -				pr_err("%pOF: Non-leaf cluster with core %s\n",
-> -				       cluster, name);
-> -				ret = -EINVAL;
-> -			}
-> +		has_cores = true;
->  
-> +		if (depth == 0) {
-> +			pr_err("%pOF: cpu-map children should be clusters\n", c);
->  			of_node_put(c);
-> -			if (ret != 0)
-> -				return ret;
-> +			return -EINVAL;
->  		}
-> +
-> +		if (leaf) {
-> +			ret = parse_core(c, package_id, cluster_id, core_id++);
-> +		} else {
-> +			pr_err("%pOF: Non-leaf cluster with core %s\n",
-> +				cluster, name);
+> -#endif /* CONFIG_CORESIGHT */
+> -
+>  int __init etm_perf_init(void);
+>  void etm_perf_exit(void);
+>
+> --
+> 2.34.1
+>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
-Extra space before 'cluster' ? checkpatch must have complain if I am not
-reading this correctly.
-
---
-Regards,
-Sudeep
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
