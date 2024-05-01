@@ -1,115 +1,226 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C8E1527AD;
-	Wed,  1 May 2024 15:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E4A38DDC
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714576085; cv=none; b=KLWa+kWZhjzbBNTxosDV1yeeYTgVQaC5SzHUiPj6Il4jeRYUAvdIpOzpGYdHArooVenZfKuM3Zs9Hvg0Q9dIhjIMrFP1JmdjfZEawhWouA3G+ZRPRlW3Ve2N+shEU8RcB4dWqcwUA7NR4RW4oQ4Oy+qQbtAE1VKrRcpJD8eBDP8=
+	t=1714576205; cv=none; b=ZZDBUSiljEpOdZUbSN4Z/ft/Pb1iFX4qFZjxK3Akh/96y9ubTXfl4LOfkVnfnkP1K+hZERu+N4jeY3/Rt1PY7LTXsOpWlW5/tNEhELD36M0/p+mmLE4+w3Q2dAr9L3Z/7NegzU5e4i/8yf/3m46t/pNpWkNbRwi8oq0cPm489pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714576085; c=relaxed/simple;
-	bh=WkNpj7MrWb1DUuLQkCSwYjQqW4spsuCzL5df6e8cjYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NQsUTn2Dyupc7ScBqaIpadE1rPVlRdNB++EmexKQ+7+n4gCetnoP/Fgf6IjHMBnSWr767GhlV9ogLGxpuQyUBzaE6m0VkuXmUd9h+Agerhsn/PJzhLXvdvsXNEeRlKtRj8/h0rvmoGdPcDZn+siji8dd9lNCyGeUn1BxMn7bQno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Ub7vtwJF; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1714576205; c=relaxed/simple;
+	bh=O0uJqRaXBRd9ZBmmGXmC8diK6l4BeSpUI9fWV6EndUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HWdGfscn/egHw11HA+eYbyhSvzShytcCJdHNWfI7mpjYMARTqAzsh222lQOSHP/rvdSsPnHpgg8tsQ4bPd48f4IhcPX+kDVXfny3tyTzdKNT5VfCv/J1RycfPwptidLZfsCUTk2PvkCtih+yabJyqkXhW3Mvw3viZ75qBMF+bZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=gXpYvfIU; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ub7vtwJF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=r7gAXy+cNEHO7G6rohfcs/xnGaGYf4/LzouNOqGTrog=; b=Ub7vtwJFu31k+jCSuleQcGO1Qb
-	sfN8ktFXayykcXReCJZQowkbnYKx3TSDpjEm1o8mt0XUt0DXYlyqZiU7v9r7rVUKusSvnVZ5sM22d
-	5h/kFCCevEEeyuUEiAtX7MZgTd3RdYRuzF+zrYLm7hFVDfTbPQ0T6hRRl4JBw0/yZRxw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1s2BYe-00EQuu-Kp; Wed, 01 May 2024 17:07:44 +0200
-Date: Wed, 1 May 2024 17:07:44 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Andrew Halaney <ahalaney@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org,
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, mcoquelin.stm32@gmail.com, hkallweit1@gmail.com,
-	linux@armlinux.org.uk
-Subject: Re: racing ndo_open()/phylink*connect() with phy_probe()
-Message-ID: <229b5a82-1086-40be-8ee5-16b7f3a03b30@lunn.ch>
-References: <uz66kbjbxieof6vkliuwgpzhlrbcmeb2f5aeuourw2vqcoc4hv@2adpvba3zszx>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="gXpYvfIU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ODudOxrddT3A4z1QE7+55p3tSTQPhao8h4ys35QEMtk=; b=gXpYvfIUiqLTyxWVdb1HMKk5rH
+	jeOZNCGpWy5wj0/UwBu9EXoHyAP+MwIqlLfqOKx+j3ZXQ2YC2Cx0fYvMu0KUN5BpS7McAm1+FAg8V
+	wSiGr8hSX4tKNRFJGq6bMnqfjlTvdGLI+FMdF28GIv4EC/dUxABegSpEpwLenhHS7YFInJsEWGGIG
+	gpmd/lFZIRCbOsAP9+OBhKWRSq5wue4b7lrY8ULaSCrlYNBt2m1K20xg1LbYMGzXuyGHWGFBMx2kc
+	B6LnWk2FgWwyQyiTUfX1MaxkmzoUP574c/JJjb8MSIWyh9Bsc9mnwSXPozIrlOIGa6nyGj5y5RzNX
+	ESgyrNyA==;
+Received: from [84.65.0.132] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1s2Bah-002d6o-IM; Wed, 01 May 2024 17:09:51 +0200
+Message-ID: <91c82905-4319-470c-8797-3c6effa7e32c@igalia.com>
+Date: Wed, 1 May 2024 16:09:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <uz66kbjbxieof6vkliuwgpzhlrbcmeb2f5aeuourw2vqcoc4hv@2adpvba3zszx>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/psi: Optimise psi_group_change a bit
+Content-Language: en-GB
+To: Tvrtko Ursulin <tursulin@igalia.com>
+Cc: linux-kernel@vger.kernel.org, Tvrtko Ursulin <tursulin@ursulin.net>,
+ Suren Baghdasaryan <surenb@google.com>, Peter Ziljstra
+ <peterz@infradead.org>, kernel-dev@igalia.com,
+ Johannes Weiner <hannes@cmpxchg.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Ingo Molnar <mingo@kernel.org>
+References: <20240329160648.86999-1-tursulin@igalia.com>
+ <20240329185147.GA877460@cmpxchg.org> <20240409223847.GE1057805@cmpxchg.org>
+ <99b39d9e-1fae-41a5-96f9-d1298c7cc29c@igalia.com>
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <99b39d9e-1fae-41a5-96f9-d1298c7cc29c@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 30, 2024 at 04:02:19PM -0500, Andrew Halaney wrote:
-> Hi,
+
+Hi,
+
+Adding more scheduler maintainers to Cc - hopefully someone can merge to 
+the relevant tree?
+
+Thanks,
+
+Tvrtko
+
+On 18/04/2024 09:54, Tvrtko Ursulin wrote:
 > 
-> I've been taking a look at the following error message:
+> Hi Ingo,
 > 
->     qcom-ethqos 23000000.ethernet end1: __stmmac_open: Cannot attach to PHY (error: -19)
+> On 09/04/2024 23:38, Johannes Weiner wrote:
+>> [ Oops, I still had an old mutt alias for Ingo's address. ]
+>>
+>> Ingo, would you mind taking this through the scheduler tree?
 > 
-> end1 is using a phy on the mdio bus of end0, not on its own bus. Something
-> like this devicetree snippet highlights the relationship:
+> Gentle reminder so this one does not fall through the cracks.
 > 
->     // end0
->     &ethernet0 {
->             phy-mode = "sgmii";
->             phy-handle = <&sgmii_phy0>;
+> Regards,
 > 
->             mdio {
->                     compatible = "snps,dwmac-mdio";
->                     sgmii_phy0: phy@8 {
->                             compatible = "ethernet-phy-id0141.0dd4";
->                             reg = <0x8>;
->                             device_type = "ethernet-phy";
->                     };
+> Tvrtko
 > 
->                     sgmii_phy1: phy@a {
->                             compatible = "ethernet-phy-id0141.0dd4";
->                             reg = <0xa>;
->                             device_type = "ethernet-phy";
->                     };
->             };
->     };
-> 
->     // end1
->     &ethernet1 {
->             phy-mode = "sgmii";
->             phy-handle = <&sgmii_phy1>;
->     };
-
-I agree with Russell here. You need to determine where the ENODEV
-comes from.
-
-It seems unlikely, but one possibility is:
-
-static int stmmac_xgmac2_mdio_read_c22(struct mii_bus *bus, int phyaddr,
-                                       int phyreg)
-{
-        struct net_device *ndev = bus->priv;
-        struct stmmac_priv *priv;
-        u32 addr;
-
-        priv = netdev_priv(ndev);
-
-        /* Until ver 2.20 XGMAC does not support C22 addr >= 4 */
-        if (priv->synopsys_id < DWXGMAC_CORE_2_20 &&
-            phyaddr > MII_XGMAC_MAX_C22ADDR)
-                return -ENODEV;
-
-Maybe if the interface is down, priv->synopsys_id has not been set
-yet? Your devices are at address 8 and 10, so if priv->synopsys_id
-where 0, this would give you the ENODEV.
-
-Once you know the root cause, we might be able to make suggests how to
-fix it.
-
-      Andrew
+>> On Fri, Mar 29, 2024 at 02:51:53PM -0400, Johannes Weiner wrote:
+>>> On Fri, Mar 29, 2024 at 04:06:48PM +0000, Tvrtko Ursulin wrote:
+>>>> From: Tvrtko Ursulin <tursulin@ursulin.net>
+>>>>
+>>>> The current code loops over the psi_states only to call a helper which
+>>>> then resolves back to the action needed for each state using a switch
+>>>> statement. That is effectively creating a double indirection of a kind
+>>>> which, given how all the states need to be explicitly listed and 
+>>>> handled
+>>>> anyway, we can simply remove. Both the for loop and the switch 
+>>>> statement
+>>>> that is.
+>>>>
+>>>> The benefit is both in the code size and CPU time spent in this 
+>>>> function.
+>>>> YMMV but on my Steam Deck, while in a game, the patch makes the CPU 
+>>>> usage
+>>>> go from ~2.4% down to ~1.2%. Text size at the same time went from 
+>>>> 0x323 to
+>>>> 0x2c1.
+>>>>
+>>>> Signed-off-by: Tvrtko Ursulin <tursulin@ursulin.net>
+>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>>>> Cc: Suren Baghdasaryan <surenb@google.com>
+>>>> Cc: Peter Ziljstra <peterz@infradead.org>
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Cc: kernel-dev@igalia.com
+>>>
+>>> This is great.
+>>>
+>>> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>>>
+>>> Ingo, would you mind please taking this through the scheduler tree? I
+>>> think Peter is still out.
+>>>
+>>> Remaining quote below.
+>>>
+>>> Thanks
+>>>
+>>>> ---
+>>>>   kernel/sched/psi.c | 54 
+>>>> +++++++++++++++++++++++-----------------------
+>>>>   1 file changed, 27 insertions(+), 27 deletions(-)
+>>>>
+>>>> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+>>>> index 7b4aa5809c0f..55720ecf420e 100644
+>>>> --- a/kernel/sched/psi.c
+>>>> +++ b/kernel/sched/psi.c
+>>>> @@ -218,28 +218,32 @@ void __init psi_init(void)
+>>>>       group_init(&psi_system);
+>>>>   }
+>>>> -static bool test_state(unsigned int *tasks, enum psi_states state, 
+>>>> bool oncpu)
+>>>> +static u32 test_states(unsigned int *tasks, u32 state_mask)
+>>>>   {
+>>>> -    switch (state) {
+>>>> -    case PSI_IO_SOME:
+>>>> -        return unlikely(tasks[NR_IOWAIT]);
+>>>> -    case PSI_IO_FULL:
+>>>> -        return unlikely(tasks[NR_IOWAIT] && !tasks[NR_RUNNING]);
+>>>> -    case PSI_MEM_SOME:
+>>>> -        return unlikely(tasks[NR_MEMSTALL]);
+>>>> -    case PSI_MEM_FULL:
+>>>> -        return unlikely(tasks[NR_MEMSTALL] &&
+>>>> -            tasks[NR_RUNNING] == tasks[NR_MEMSTALL_RUNNING]);
+>>>> -    case PSI_CPU_SOME:
+>>>> -        return unlikely(tasks[NR_RUNNING] > oncpu);
+>>>> -    case PSI_CPU_FULL:
+>>>> -        return unlikely(tasks[NR_RUNNING] && !oncpu);
+>>>> -    case PSI_NONIDLE:
+>>>> -        return tasks[NR_IOWAIT] || tasks[NR_MEMSTALL] ||
+>>>> -            tasks[NR_RUNNING];
+>>>> -    default:
+>>>> -        return false;
+>>>> +    const bool oncpu = state_mask & PSI_ONCPU;
+>>>> +
+>>>> +    if (tasks[NR_IOWAIT]) {
+>>>> +        state_mask |= BIT(PSI_IO_SOME);
+>>>> +        if (!tasks[NR_RUNNING])
+>>>> +            state_mask |= BIT(PSI_IO_FULL);
+>>>>       }
+>>>> +
+>>>> +    if (tasks[NR_MEMSTALL]) {
+>>>> +        state_mask |= BIT(PSI_MEM_SOME);
+>>>> +        if (tasks[NR_RUNNING] == tasks[NR_MEMSTALL_RUNNING])
+>>>> +            state_mask |= BIT(PSI_MEM_FULL);
+>>>> +    }
+>>>> +
+>>>> +    if (tasks[NR_RUNNING] > oncpu)
+>>>> +        state_mask |= BIT(PSI_CPU_SOME);
+>>>> +
+>>>> +    if (tasks[NR_RUNNING] && !oncpu)
+>>>> +        state_mask |= BIT(PSI_CPU_FULL);
+>>>> +
+>>>> +    if (tasks[NR_IOWAIT] || tasks[NR_MEMSTALL] || tasks[NR_RUNNING])
+>>>> +        state_mask |= BIT(PSI_NONIDLE);
+>>>> +
+>>>> +    return state_mask;
+>>>>   }
+>>>>   static void get_recent_times(struct psi_group *group, int cpu,
+>>>> @@ -770,7 +774,6 @@ static void psi_group_change(struct psi_group 
+>>>> *group, int cpu,
+>>>>   {
+>>>>       struct psi_group_cpu *groupc;
+>>>>       unsigned int t, m;
+>>>> -    enum psi_states s;
+>>>>       u32 state_mask;
+>>>>       groupc = per_cpu_ptr(group->pcpu, cpu);
+>>>> @@ -841,10 +844,7 @@ static void psi_group_change(struct psi_group 
+>>>> *group, int cpu,
+>>>>           return;
+>>>>       }
+>>>> -    for (s = 0; s < NR_PSI_STATES; s++) {
+>>>> -        if (test_state(groupc->tasks, s, state_mask & PSI_ONCPU))
+>>>> -            state_mask |= (1 << s);
+>>>> -    }
+>>>> +    state_mask = test_states(groupc->tasks, state_mask);
+>>>>       /*
+>>>>        * Since we care about lost potential, a memstall is FULL
+>>>> @@ -1194,7 +1194,7 @@ void psi_cgroup_restart(struct psi_group *group)
+>>>>       /*
+>>>>        * After we disable psi_group->enabled, we don't actually
+>>>>        * stop percpu tasks accounting in each psi_group_cpu,
+>>>> -     * instead only stop test_state() loop, record_times()
+>>>> +     * instead only stop test_states() loop, record_times()
+>>>>        * and averaging worker, see psi_group_change() for details.
+>>>>        *
+>>>>        * When disable cgroup PSI, this function has nothing to sync
+>>>> @@ -1202,7 +1202,7 @@ void psi_cgroup_restart(struct psi_group *group)
+>>>>        * would see !psi_group->enabled and only do task accounting.
+>>>>        *
+>>>>        * When re-enable cgroup PSI, this function use 
+>>>> psi_group_change()
+>>>> -     * to get correct state mask from test_state() loop on tasks[],
+>>>> +     * to get correct state mask from test_states() loop on tasks[],
+>>>>        * and restart groupc->state_start from now, use .clear = .set 
+>>>> = 0
+>>>>        * here since no task status really changed.
+>>>>        */
+>>>> -- 
+>>>> 2.44.0
+>>>>
