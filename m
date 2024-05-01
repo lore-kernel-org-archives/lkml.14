@@ -1,120 +1,974 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB4B12FF8E;
-	Wed,  1 May 2024 15:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D023F130E3F
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714578227; cv=none; b=nAXp5gt+KlHUTOXy00nLml/J13ccPnJjdjZUw/rKxWMIfO3yHiB4Jm7MrNQ93c9XWn37bViELOUpZCZyytdo0MXRb7IVfW7CKNdr8ZYjRZx3jsUvV9XrDx0/h6DUb5RsLYylJVitEghuLFRJ9z7gSkzhsDb17WBHspFpYg9wO4k=
+	t=1714578223; cv=none; b=D1+M8zvE5ZwOdZE7LZAHygNhWRIpUR8JK8oW7oqIr9rh1HiSPvZcwxwH2eSKhFNlw3nGR91D09A5Awt82rLNNxuNypJjY0DwQ7h4l6GBG7zxu+CuK+7D322pX5IgPlXrYDgXvyx3op4OlXGQuEMToQPhOeHj6x/ylasMww62A7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714578227; c=relaxed/simple;
-	bh=+j1MhO27oq6Z2k/UMaKrknwIvc97IqQ6TsLfVDaEsVA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qyqHUn9/qS8y2+Uy3jGPXY7m39VXKdc5UARjtyhMiDpzOr4jLMLC52AG6JiStD/kdGgErik428W3Jnn7MhiReOiH+zlYHXPtm2XFQTrWz0K4XkXWwam/w+b1kbercJtTYrPDLTFdJXFeAVXoPMkyQFwUPdSgKRi+ARM10yfrxbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JA9s74oB; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714578223; c=relaxed/simple;
+	bh=Uvw40IbKeSWhLK+NjuypF20aKsTgiAMhV2D8hWWkqj8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=s3T3TsLk49D1ulGJqCjR/rNO89D+7bz2J//MB+Zt+foh4tEZa6JE2vLBtd2GiMoRJ/okSLQR6yrV1L1HNPw+2svu4+XtAinBWqcVg5TwjNMiBoBVZ7R27d2phlhdEPjWRsVOwv6y8vn3ZsfVdi/Q2ydXgOz913jOmY9waedhku0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PsQqBQN2; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JA9s74oB"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6eb93ec8804so3900805a34.2;
-        Wed, 01 May 2024 08:43:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PsQqBQN2"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6ed32341906so6374674b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 08:43:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714578225; x=1715183025; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WYyt1RBKP+5wqyIqwmy5cnYZMq9VEpLdANc4tFv/eOc=;
-        b=JA9s74oBcNhi3U2CLmWURFd2W5GdVotI852dwp5wy4qkLb9GyiWPWdpugf7kz7MW6E
-         uKZWDIiY0JEnRDSOqLvnNbiKOVGX9Cay0hMMkXh6CCX1JSkpSBvvXppcQMyUvVnAgt27
-         1At1IHqX60vNNwkGVfooe7HYdNu06bt0lKLKpxXhk0JsuAYDnshjylmagbYVcYr063kh
-         Eu0u4Lgl7kSgj5vpE+460LrdweO8fEAhZObQ8YQf82nENILEgeorKAKkBb+oe/sCSWic
-         i+yebGfIl0n05zCGgeH3lWtlqq1dmKJUHc5/Z+6NZFS5asC9A9AtlAoTGuzxL1H4NDg0
-         3dHQ==
+        d=chromium.org; s=google; t=1714578219; x=1715183019; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RdAg9E8kEwJIx2CrAjITH8nAMNsaZShsSsrN3DTj8HQ=;
+        b=PsQqBQN2ssjoSeqehO57JJZcx8mzuJBnFk72D98j1Jz4/fo7bTYpdgaNfghi/r3yaw
+         O2TzX/oHZByjCKycwUPrVFllvdxTupGBfzG9ew1d78Csxah2I4/vjiPHeaURiwvqKIIj
+         SJhZUooc+XQ8HcFioWAWSwEcBMUbaspn7E5Mw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714578225; x=1715183025;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WYyt1RBKP+5wqyIqwmy5cnYZMq9VEpLdANc4tFv/eOc=;
-        b=M4KFwDFTu3QR1CL34FJwpH9nEk0kFOh3OdR2ET/unwrX7l0QXyXhLRQuLg+DcSrAkD
-         N5cNSFttCQa+8G6c/5CLMUkPZNbnT4ifHjfh73BJRBpYyO3KBaqp+b7Ze5hzkupiLvUx
-         r88IuXJ1OjMkLPW2ucz0peWrpnHYLnYLOZpRUqXj/LHg1amn6RGoVkImCQUSWovOXAhT
-         HFSjYuabt9el7zl+u5FSTae1m2tGWsGvyl1xiSCVQqqbs3ryFwmfGYEgUUaaeLNTF4aW
-         9Woyc+A5eVLSnnPSynau7AWGkAbbnVluqf0MY9EaVQ3iCXof9Q+fZUIHeVcf2dHuz3Oq
-         B4Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZc/zJJK20mf4MAOolUl5RGUabcWO/oQ81cA7hQILnu0xzRammqSu71FsJCElrLt6nih/h0FVtdrl+ZjbElCF/w84Hw2efCN5kbMBWZ9uphC1bKzZhquaEsWmgQ2PLxfwIEGBPjvwJxlvppwhKwQwEIEeDUdiMKZDYrO7KGgto79QXfDvCHfqdrxQ3njUpvZz8sDGLSVY40R5D4EnIl3vi9+8gQr/7H7Vjsxh8ZCOWpR5YKUQBOSX2wxh2uck=
-X-Gm-Message-State: AOJu0YxBxuSGh2DEyXATfYyi8wVS9hwPlWTl3Qzi644LVcoTx96tiHZh
-	2NHrzS4tIIvIC/idCnjUAoAfgGp4zvUBDpdkbP3m8rJDbvzCNHw2
-X-Google-Smtp-Source: AGHT+IEVAUBi8gaQAQaPiF+BdK+POH9BTZIvS3fio856v721oE2NZNnhywEs1M2R3KrsTS8RWdtRpg==
-X-Received: by 2002:a05:6830:1284:b0:6ef:a0a4:b601 with SMTP id z4-20020a056830128400b006efa0a4b601mr1830971otp.36.1714578225542;
-        Wed, 01 May 2024 08:43:45 -0700 (PDT)
-Received: from [192.168.7.169] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id fc12-20020a056830498c00b006ee0d82d41dsm1595872otb.71.2024.05.01.08.43.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 May 2024 08:43:45 -0700 (PDT)
-Message-ID: <f7176c82-3702-4667-b68b-a8b7e3ad8690@gmail.com>
-Date: Wed, 1 May 2024 10:43:43 -0500
+        d=1e100.net; s=20230601; t=1714578219; x=1715183019;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RdAg9E8kEwJIx2CrAjITH8nAMNsaZShsSsrN3DTj8HQ=;
+        b=ga3FzgYJa1rFobtMioRdfkxt8Q2VBCZ/JspcKAz61ThLvBIkMiaZxi3bZRNq7rYxDC
+         2Si701CbgZqAju+VKUZ4htNdojhoRox1AqvJW9DNr2bgSi6L17tRDp/sb3C5EL4gIVyg
+         qk0UyOhESjsTmo4wkvn6Wn8yekB3YMtJG2f8Nn+OfFptp0ohnnyVVeCPOvWEpeoG/X5C
+         DY1D5gE15rzjNn/gqfyVnpKDG9yETJszEOA93Lk6+m21l0c5jd04724zDHcXR5atO9aL
+         4+ROPNoD+JV9lNDIYQST2h3N5mV4YQwFM7B1d/vMq2Hk+lFL4Gdc3VGgQ7bqDmjpnsn/
+         GxIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYKfRlKQl2KHaqf9OCoMSb6hMWz3eDYEEjJ7gt2rIktKtm3fzl/K889n+o015kW1m9dnxg5qRbZXhbg/FiTlhYng+DztODwkFHhtve
+X-Gm-Message-State: AOJu0YxWQKL+GsJTHWSZX/9REuQpoSo0XG/TdoMgCcvenSCKXhp7RRAX
+	Sa4wXcO/0mP23suUFeWponDTL6Xggz9E1FxBunj0eBcrieWSdxnANYfArJ56bQ==
+X-Google-Smtp-Source: AGHT+IGjpXrgViC1rNuDMiTdubCGLg7R+a30q/3MV/OFwOrMQiDstoFUyU5CfMCSN687RbnduSgHOA==
+X-Received: by 2002:a05:6a20:6a0c:b0:1ad:ab1:9a03 with SMTP id p12-20020a056a206a0c00b001ad0ab19a03mr4075871pzk.25.1714578217853;
+        Wed, 01 May 2024 08:43:37 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:e886:8de:19a2:55b0])
+        by smtp.gmail.com with ESMTPSA id fb12-20020a056a002d8c00b006f3ec69bc09sm7717924pfb.75.2024.05.01.08.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 08:43:37 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
+	Hsin-Yi Wang <hsinyi@google.com>,
+	Brian Norris <briannorris@chromium.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Joel Selvaraj <jo@jsfamily.in>,
+	lvzhaoxiong@huaqin.corp-partner.google.com,
+	Douglas Anderson <dianders@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 8/9] drm/panel: ili9882t: Don't use a table for initting panels
+Date: Wed,  1 May 2024 08:41:11 -0700
+Message-ID: <20240501084109.v3.8.I407b977f9508573103491df549dfaffc3688db13@changeid>
+X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
+In-Reply-To: <20240501154251.3302887-1-dianders@chromium.org>
+References: <20240501154251.3302887-1-dianders@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 RESEND 5/8] PCI: qcom: Add support for IPQ9574
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-clk@vger.kernel.org
-References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
- <20240501042847.1545145-6-mr.nuke.me@gmail.com>
- <a973f67b-de7f-4e21-b6b4-3b85d056456d@kernel.org>
-Content-Language: en-US
-From: mr.nuke.me@gmail.com
-In-Reply-To: <a973f67b-de7f-4e21-b6b4-3b85d056456d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/1/24 5:21 AM, Krzysztof Kozlowski wrote:
-> On 01/05/2024 06:28, Alexandru Gagniuc wrote:
->> IPQ9574 has four PCIe controllers: two single-lane Gen3, and two
->> dual-lane Gen3. The controllers are identical from a software
->> perspective, with the differences appearing in the PHYs.
->>
->> Add a compatible for the PCIe on IPQ9574.
-> 
-> This is a friendly reminder during the review process.
-> 
-> It looks like you received a tag and forgot to add it.
-> 
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions, under or above your Signed-off-by tag. Tag is "received", when
-> provided in a message replied to you on the mailing list. Tools like b4
-> can help here. However, there's no need to repost patches *only* to add
-> the tags. The upstream maintainer will do that for tags received on the
-> version they apply.
-> 
-> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
-> 
-> If a tag was not added on purpose, please state why and what changed.
+Consensus on the mailing lists is that panels shouldn't use a table of
+init commands but should instead use init functions. With the recently
+introduced mipi_dsi_dcs_write_seq_multi() this is not only clean/easy
+but also saves space. Measuring before/after this change:
 
-I had an Acked-by tag from Rob for what is now patch 6/8 -- previously 
-5/7. Due to last-minute info from QUIC Inc, Dmitry and I decided to move 
-the "snoc" and "anoc" clocks out of the PHY and to the PCIe controller.
+$ scripts/bloat-o-meter \
+  .../before/panel-ilitek-ili9882t.ko \
+  .../after/panel-ilitek-ili9882t.ko
+add/remove: 3/2 grow/shrink: 0/2 up/down: 6834/-8177 (-1343)
+Function                                     old     new   delta
+starry_ili9882t_init                           -    6152   +6152
+starry_ili9882t_init.d                         -     678    +678
+ili9882t_disable.d                             -       4      +4
+ili9882t_disable                             260     228     -32
+ili9882t_prepare                             540     396    -144
+.compoundliteral                             681       -    -681
+starry_ili9882t_init_cmd                    7320       -   -7320
+Total: Before=11928, After=10585, chg -11.26%
 
-This change resulted in a 6/8 patch that is substantially different from 
-what Rob acked. I felt it was inappropriate to keep the tag.
+Let's do the conversion.
 
-Alex
+Since we're touching all the tables, let's also convert hex numbers to
+lower case as per kernel conventions.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+Changes in v3:
+- New
+
+ drivers/gpu/drm/panel/panel-ilitek-ili9882t.c | 794 ++++++++----------
+ 1 file changed, 368 insertions(+), 426 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9882t.c b/drivers/gpu/drm/panel/panel-ilitek-ili9882t.c
+index 267a5307041c..58fc1d799371 100644
+--- a/drivers/gpu/drm/panel/panel-ilitek-ili9882t.c
++++ b/drivers/gpu/drm/panel/panel-ilitek-ili9882t.c
+@@ -15,6 +15,8 @@
+ 
+ #include <video/mipi_display.h>
+ 
++struct ili9882t;
++
+ /*
+  * Use this descriptor struct to describe different panels using the
+  * Ilitek ILI9882T display controller.
+@@ -34,7 +36,7 @@ struct panel_desc {
+ 
+ 	unsigned long mode_flags;
+ 	enum mipi_dsi_pixel_format format;
+-	const struct panel_init_cmd *init_cmds;
++	int (*init)(struct ili9882t *boe);
+ 	unsigned int lanes;
+ };
+ 
+@@ -52,433 +54,372 @@ struct ili9882t {
+ 	struct gpio_desc *enable_gpio;
+ };
+ 
+-enum dsi_cmd_type {
+-	INIT_DCS_CMD,
+-	DELAY_CMD,
+-};
+-
+-struct panel_init_cmd {
+-	enum dsi_cmd_type type;
+-	size_t len;
+-	const char *data;
+-};
+-
+-#define _INIT_DCS_CMD(...) { \
+-	.type = INIT_DCS_CMD, \
+-	.len = sizeof((char[]){__VA_ARGS__}), \
+-	.data = (char[]){__VA_ARGS__} }
+-
+-#define _INIT_DELAY_CMD(...) { \
+-	.type = DELAY_CMD,\
+-	.len = sizeof((char[]){__VA_ARGS__}), \
+-	.data = (char[]){__VA_ARGS__} }
+-
+ /* ILI9882-specific commands, add new commands as you decode them */
+ #define ILI9882T_DCS_SWITCH_PAGE	0xFF
+ 
+-#define _INIT_SWITCH_PAGE_CMD(page) \
+-	_INIT_DCS_CMD(ILI9882T_DCS_SWITCH_PAGE, 0x98, 0x82, (page))
+-
+-static const struct panel_init_cmd starry_ili9882t_init_cmd[] = {
+-	_INIT_DELAY_CMD(5),
+-	_INIT_SWITCH_PAGE_CMD(0x01),
+-	_INIT_DCS_CMD(0x00, 0x42),
+-	_INIT_DCS_CMD(0x01, 0x11),
+-	_INIT_DCS_CMD(0x02, 0x00),
+-	_INIT_DCS_CMD(0x03, 0x00),
+-
+-	_INIT_DCS_CMD(0x04, 0x01),
+-	_INIT_DCS_CMD(0x05, 0x11),
+-	_INIT_DCS_CMD(0x06, 0x00),
+-	_INIT_DCS_CMD(0x07, 0x00),
+-
+-	_INIT_DCS_CMD(0x08, 0x80),
+-	_INIT_DCS_CMD(0x09, 0x81),
+-	_INIT_DCS_CMD(0x0A, 0x71),
+-	_INIT_DCS_CMD(0x0B, 0x00),
+-
+-	_INIT_DCS_CMD(0x0C, 0x00),
+-	_INIT_DCS_CMD(0x0E, 0x1A),
+-
+-	_INIT_DCS_CMD(0x24, 0x00),
+-	_INIT_DCS_CMD(0x25, 0x00),
+-	_INIT_DCS_CMD(0x26, 0x00),
+-	_INIT_DCS_CMD(0x27, 0x00),
+-
+-	_INIT_DCS_CMD(0x2C, 0xD4),
+-	_INIT_DCS_CMD(0xB9, 0x40),
+-
+-	_INIT_DCS_CMD(0xB0, 0x11),
+-
+-	_INIT_DCS_CMD(0xE6, 0x32),
+-	_INIT_DCS_CMD(0xD1, 0x30),
+-
+-	_INIT_DCS_CMD(0xD6, 0x55),
+-
+-	_INIT_DCS_CMD(0xD0, 0x01),
+-	_INIT_DCS_CMD(0xE3, 0x93),
+-	_INIT_DCS_CMD(0xE4, 0x00),
+-	_INIT_DCS_CMD(0xE5, 0x80),
+-
+-	_INIT_DCS_CMD(0x31, 0x07),
+-	_INIT_DCS_CMD(0x32, 0x07),
+-	_INIT_DCS_CMD(0x33, 0x07),
+-	_INIT_DCS_CMD(0x34, 0x07),
+-	_INIT_DCS_CMD(0x35, 0x07),
+-	_INIT_DCS_CMD(0x36, 0x01),
+-	_INIT_DCS_CMD(0x37, 0x00),
+-	_INIT_DCS_CMD(0x38, 0x28),
+-	_INIT_DCS_CMD(0x39, 0x29),
+-	_INIT_DCS_CMD(0x3A, 0x11),
+-	_INIT_DCS_CMD(0x3B, 0x13),
+-	_INIT_DCS_CMD(0x3C, 0x15),
+-	_INIT_DCS_CMD(0x3D, 0x17),
+-	_INIT_DCS_CMD(0x3E, 0x09),
+-	_INIT_DCS_CMD(0x3F, 0x0D),
+-	_INIT_DCS_CMD(0x40, 0x02),
+-	_INIT_DCS_CMD(0x41, 0x02),
+-	_INIT_DCS_CMD(0x42, 0x02),
+-	_INIT_DCS_CMD(0x43, 0x02),
+-	_INIT_DCS_CMD(0x44, 0x02),
+-	_INIT_DCS_CMD(0x45, 0x02),
+-	_INIT_DCS_CMD(0x46, 0x02),
+-
+-	_INIT_DCS_CMD(0x47, 0x07),
+-	_INIT_DCS_CMD(0x48, 0x07),
+-	_INIT_DCS_CMD(0x49, 0x07),
+-	_INIT_DCS_CMD(0x4A, 0x07),
+-	_INIT_DCS_CMD(0x4B, 0x07),
+-	_INIT_DCS_CMD(0x4C, 0x01),
+-	_INIT_DCS_CMD(0x4D, 0x00),
+-	_INIT_DCS_CMD(0x4E, 0x28),
+-	_INIT_DCS_CMD(0x4F, 0x29),
+-	_INIT_DCS_CMD(0x50, 0x10),
+-	_INIT_DCS_CMD(0x51, 0x12),
+-	_INIT_DCS_CMD(0x52, 0x14),
+-	_INIT_DCS_CMD(0x53, 0x16),
+-	_INIT_DCS_CMD(0x54, 0x08),
+-	_INIT_DCS_CMD(0x55, 0x0C),
+-	_INIT_DCS_CMD(0x56, 0x02),
+-	_INIT_DCS_CMD(0x57, 0x02),
+-	_INIT_DCS_CMD(0x58, 0x02),
+-	_INIT_DCS_CMD(0x59, 0x02),
+-	_INIT_DCS_CMD(0x5A, 0x02),
+-	_INIT_DCS_CMD(0x5B, 0x02),
+-	_INIT_DCS_CMD(0x5C, 0x02),
+-
+-	_INIT_DCS_CMD(0x61, 0x07),
+-	_INIT_DCS_CMD(0x62, 0x07),
+-	_INIT_DCS_CMD(0x63, 0x07),
+-	_INIT_DCS_CMD(0x64, 0x07),
+-	_INIT_DCS_CMD(0x65, 0x07),
+-	_INIT_DCS_CMD(0x66, 0x01),
+-	_INIT_DCS_CMD(0x67, 0x00),
+-	_INIT_DCS_CMD(0x68, 0x28),
+-	_INIT_DCS_CMD(0x69, 0x29),
+-	_INIT_DCS_CMD(0x6A, 0x16),
+-	_INIT_DCS_CMD(0x6B, 0x14),
+-	_INIT_DCS_CMD(0x6C, 0x12),
+-	_INIT_DCS_CMD(0x6D, 0x10),
+-	_INIT_DCS_CMD(0x6E, 0x0C),
+-	_INIT_DCS_CMD(0x6F, 0x08),
+-	_INIT_DCS_CMD(0x70, 0x02),
+-	_INIT_DCS_CMD(0x71, 0x02),
+-	_INIT_DCS_CMD(0x72, 0x02),
+-	_INIT_DCS_CMD(0x73, 0x02),
+-	_INIT_DCS_CMD(0x74, 0x02),
+-	_INIT_DCS_CMD(0x75, 0x02),
+-	_INIT_DCS_CMD(0x76, 0x02),
+-
+-	_INIT_DCS_CMD(0x77, 0x07),
+-	_INIT_DCS_CMD(0x78, 0x07),
+-	_INIT_DCS_CMD(0x79, 0x07),
+-	_INIT_DCS_CMD(0x7A, 0x07),
+-	_INIT_DCS_CMD(0x7B, 0x07),
+-	_INIT_DCS_CMD(0x7C, 0x01),
+-	_INIT_DCS_CMD(0x7D, 0x00),
+-	_INIT_DCS_CMD(0x7E, 0x28),
+-	_INIT_DCS_CMD(0x7F, 0x29),
+-	_INIT_DCS_CMD(0x80, 0x17),
+-	_INIT_DCS_CMD(0x81, 0x15),
+-	_INIT_DCS_CMD(0x82, 0x13),
+-	_INIT_DCS_CMD(0x83, 0x11),
+-	_INIT_DCS_CMD(0x84, 0x0D),
+-	_INIT_DCS_CMD(0x85, 0x09),
+-	_INIT_DCS_CMD(0x86, 0x02),
+-	_INIT_DCS_CMD(0x87, 0x07),
+-	_INIT_DCS_CMD(0x88, 0x07),
+-	_INIT_DCS_CMD(0x89, 0x07),
+-	_INIT_DCS_CMD(0x8A, 0x07),
+-	_INIT_DCS_CMD(0x8B, 0x07),
+-	_INIT_DCS_CMD(0x8C, 0x07),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x02),
+-	_INIT_DCS_CMD(0x29, 0x3A),
+-	_INIT_DCS_CMD(0x2A, 0x3B),
+-
+-	_INIT_DCS_CMD(0x06, 0x01),
+-	_INIT_DCS_CMD(0x07, 0x01),
+-	_INIT_DCS_CMD(0x08, 0x0C),
+-	_INIT_DCS_CMD(0x09, 0x44),
+-
+-	_INIT_DCS_CMD(0x3C, 0x0A),
+-	_INIT_DCS_CMD(0x39, 0x11),
+-	_INIT_DCS_CMD(0x3D, 0x00),
+-	_INIT_DCS_CMD(0x3A, 0x0C),
+-	_INIT_DCS_CMD(0x3B, 0x44),
+-
+-	_INIT_DCS_CMD(0x53, 0x1F),
+-	_INIT_DCS_CMD(0x5E, 0x40),
+-	_INIT_DCS_CMD(0x84, 0x00),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x03),
+-	_INIT_DCS_CMD(0x20, 0x01),
+-	_INIT_DCS_CMD(0x21, 0x3C),
+-	_INIT_DCS_CMD(0x22, 0xFA),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x0A),
+-	_INIT_DCS_CMD(0xE0, 0x01),
+-	_INIT_DCS_CMD(0xE2, 0x01),
+-	_INIT_DCS_CMD(0xE5, 0x91),
+-	_INIT_DCS_CMD(0xE6, 0x3C),
+-	_INIT_DCS_CMD(0xE7, 0x00),
+-	_INIT_DCS_CMD(0xE8, 0xFA),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x12),
+-	_INIT_DCS_CMD(0x87, 0x2C),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x05),
+-	_INIT_DCS_CMD(0x73, 0xE5),
+-	_INIT_DCS_CMD(0x7F, 0x6B),
+-	_INIT_DCS_CMD(0x6D, 0xA4),
+-	_INIT_DCS_CMD(0x79, 0x54),
+-	_INIT_DCS_CMD(0x69, 0x97),
+-	_INIT_DCS_CMD(0x6A, 0x97),
+-	_INIT_DCS_CMD(0xA5, 0x3F),
+-	_INIT_DCS_CMD(0x61, 0xDA),
+-	_INIT_DCS_CMD(0xA7, 0xF1),
+-	_INIT_DCS_CMD(0x5F, 0x01),
+-	_INIT_DCS_CMD(0x62, 0x3F),
+-	_INIT_DCS_CMD(0x1D, 0x90),
+-	_INIT_DCS_CMD(0x86, 0x87),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x06),
+-	_INIT_DCS_CMD(0xC0, 0x80),
+-	_INIT_DCS_CMD(0xC1, 0x07),
+-	_INIT_DCS_CMD(0xCA, 0x58),
+-	_INIT_DCS_CMD(0xCB, 0x02),
+-	_INIT_DCS_CMD(0xCE, 0x58),
+-	_INIT_DCS_CMD(0xCF, 0x02),
+-	_INIT_DCS_CMD(0x67, 0x60),
+-	_INIT_DCS_CMD(0x10, 0x00),
+-	_INIT_DCS_CMD(0x92, 0x22),
+-	_INIT_DCS_CMD(0xD3, 0x08),
+-	_INIT_DCS_CMD(0xD6, 0x55),
+-	_INIT_DCS_CMD(0xDC, 0x38),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x08),
+-	_INIT_DCS_CMD(0xE0, 0x00, 0x10, 0x2A, 0x4D, 0x61, 0x56, 0x6A, 0x6E, 0x79, 0x76, 0x8F, 0x95, 0x98, 0xAE, 0xAA, 0xB2, 0xBB, 0xCE, 0xC6, 0xBD, 0xD5, 0xE2, 0xE8),
+-	_INIT_DCS_CMD(0xE1, 0x00, 0x10, 0x2A, 0x4D, 0x61, 0x56, 0x6A, 0x6E, 0x79, 0x76, 0x8F, 0x95, 0x98, 0xAE, 0xAA, 0xB2, 0xBB, 0xCE, 0xC6, 0xBD, 0xD5, 0xE2, 0xE8),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x04),
+-	_INIT_DCS_CMD(0xBA, 0x81),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x0C),
+-	_INIT_DCS_CMD(0x00, 0x02),
+-	_INIT_DCS_CMD(0x01, 0x00),
+-	_INIT_DCS_CMD(0x02, 0x03),
+-	_INIT_DCS_CMD(0x03, 0x01),
+-	_INIT_DCS_CMD(0x04, 0x03),
+-	_INIT_DCS_CMD(0x05, 0x02),
+-	_INIT_DCS_CMD(0x06, 0x04),
+-	_INIT_DCS_CMD(0x07, 0x03),
+-	_INIT_DCS_CMD(0x08, 0x03),
+-	_INIT_DCS_CMD(0x09, 0x04),
+-	_INIT_DCS_CMD(0x0A, 0x04),
+-	_INIT_DCS_CMD(0x0B, 0x05),
+-	_INIT_DCS_CMD(0x0C, 0x04),
+-	_INIT_DCS_CMD(0x0D, 0x06),
+-	_INIT_DCS_CMD(0x0E, 0x05),
+-	_INIT_DCS_CMD(0x0F, 0x07),
+-	_INIT_DCS_CMD(0x10, 0x04),
+-	_INIT_DCS_CMD(0x11, 0x08),
+-	_INIT_DCS_CMD(0x12, 0x05),
+-	_INIT_DCS_CMD(0x13, 0x09),
+-	_INIT_DCS_CMD(0x14, 0x05),
+-	_INIT_DCS_CMD(0x15, 0x0A),
+-	_INIT_DCS_CMD(0x16, 0x06),
+-	_INIT_DCS_CMD(0x17, 0x0B),
+-	_INIT_DCS_CMD(0x18, 0x05),
+-	_INIT_DCS_CMD(0x19, 0x0C),
+-	_INIT_DCS_CMD(0x1A, 0x06),
+-	_INIT_DCS_CMD(0x1B, 0x0D),
+-	_INIT_DCS_CMD(0x1C, 0x06),
+-	_INIT_DCS_CMD(0x1D, 0x0E),
+-	_INIT_DCS_CMD(0x1E, 0x07),
+-	_INIT_DCS_CMD(0x1F, 0x0F),
+-	_INIT_DCS_CMD(0x20, 0x06),
+-	_INIT_DCS_CMD(0x21, 0x10),
+-	_INIT_DCS_CMD(0x22, 0x07),
+-	_INIT_DCS_CMD(0x23, 0x11),
+-	_INIT_DCS_CMD(0x24, 0x07),
+-	_INIT_DCS_CMD(0x25, 0x12),
+-	_INIT_DCS_CMD(0x26, 0x08),
+-	_INIT_DCS_CMD(0x27, 0x13),
+-	_INIT_DCS_CMD(0x28, 0x07),
+-	_INIT_DCS_CMD(0x29, 0x14),
+-	_INIT_DCS_CMD(0x2A, 0x08),
+-	_INIT_DCS_CMD(0x2B, 0x15),
+-	_INIT_DCS_CMD(0x2C, 0x08),
+-	_INIT_DCS_CMD(0x2D, 0x16),
+-	_INIT_DCS_CMD(0x2E, 0x09),
+-	_INIT_DCS_CMD(0x2F, 0x17),
+-	_INIT_DCS_CMD(0x30, 0x08),
+-	_INIT_DCS_CMD(0x31, 0x18),
+-	_INIT_DCS_CMD(0x32, 0x09),
+-	_INIT_DCS_CMD(0x33, 0x19),
+-	_INIT_DCS_CMD(0x34, 0x09),
+-	_INIT_DCS_CMD(0x35, 0x1A),
+-	_INIT_DCS_CMD(0x36, 0x0A),
+-	_INIT_DCS_CMD(0x37, 0x1B),
+-	_INIT_DCS_CMD(0x38, 0x0A),
+-	_INIT_DCS_CMD(0x39, 0x1C),
+-	_INIT_DCS_CMD(0x3A, 0x0A),
+-	_INIT_DCS_CMD(0x3B, 0x1D),
+-	_INIT_DCS_CMD(0x3C, 0x0A),
+-	_INIT_DCS_CMD(0x3D, 0x1E),
+-	_INIT_DCS_CMD(0x3E, 0x0A),
+-	_INIT_DCS_CMD(0x3F, 0x1F),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x04),
+-	_INIT_DCS_CMD(0xBA, 0x01),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x0E),
+-	_INIT_DCS_CMD(0x02, 0x0C),
+-	_INIT_DCS_CMD(0x20, 0x10),
+-	_INIT_DCS_CMD(0x25, 0x16),
+-	_INIT_DCS_CMD(0x26, 0xE0),
+-	_INIT_DCS_CMD(0x27, 0x00),
+-	_INIT_DCS_CMD(0x29, 0x71),
+-	_INIT_DCS_CMD(0x2A, 0x46),
+-	_INIT_DCS_CMD(0x2B, 0x1F),
+-	_INIT_DCS_CMD(0x2D, 0xC7),
+-	_INIT_DCS_CMD(0x31, 0x02),
+-	_INIT_DCS_CMD(0x32, 0xDF),
+-	_INIT_DCS_CMD(0x33, 0x5A),
+-	_INIT_DCS_CMD(0x34, 0xC0),
+-	_INIT_DCS_CMD(0x35, 0x5A),
+-	_INIT_DCS_CMD(0x36, 0xC0),
+-	_INIT_DCS_CMD(0x38, 0x65),
+-	_INIT_DCS_CMD(0x80, 0x3E),
+-	_INIT_DCS_CMD(0x81, 0xA0),
+-	_INIT_DCS_CMD(0xB0, 0x01),
+-	_INIT_DCS_CMD(0xB1, 0xCC),
+-	_INIT_DCS_CMD(0xC0, 0x12),
+-	_INIT_DCS_CMD(0xC2, 0xCC),
+-	_INIT_DCS_CMD(0xC3, 0xCC),
+-	_INIT_DCS_CMD(0xC4, 0xCC),
+-	_INIT_DCS_CMD(0xC5, 0xCC),
+-	_INIT_DCS_CMD(0xC6, 0xCC),
+-	_INIT_DCS_CMD(0xC7, 0xCC),
+-	_INIT_DCS_CMD(0xC8, 0xCC),
+-	_INIT_DCS_CMD(0xC9, 0xCC),
+-	_INIT_DCS_CMD(0x30, 0x00),
+-	_INIT_DCS_CMD(0x00, 0x81),
+-	_INIT_DCS_CMD(0x08, 0x02),
+-	_INIT_DCS_CMD(0x09, 0x00),
+-	_INIT_DCS_CMD(0x07, 0x21),
+-	_INIT_DCS_CMD(0x04, 0x10),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x1E),
+-	_INIT_DCS_CMD(0x60, 0x00),
+-	_INIT_DCS_CMD(0x64, 0x00),
+-	_INIT_DCS_CMD(0x6D, 0x00),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x0B),
+-	_INIT_DCS_CMD(0xA6, 0x44),
+-	_INIT_DCS_CMD(0xA7, 0xB6),
+-	_INIT_DCS_CMD(0xA8, 0x03),
+-	_INIT_DCS_CMD(0xA9, 0x03),
+-	_INIT_DCS_CMD(0xAA, 0x51),
+-	_INIT_DCS_CMD(0xAB, 0x51),
+-	_INIT_DCS_CMD(0xAC, 0x04),
+-	_INIT_DCS_CMD(0xBD, 0x92),
+-	_INIT_DCS_CMD(0xBE, 0xA1),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x05),
+-	_INIT_DCS_CMD(0x86, 0x87),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x06),
+-	_INIT_DCS_CMD(0x92, 0x22),
+-
+-	_INIT_SWITCH_PAGE_CMD(0x00),
+-	_INIT_DCS_CMD(MIPI_DCS_EXIT_SLEEP_MODE),
+-	_INIT_DELAY_CMD(120),
+-	_INIT_DCS_CMD(MIPI_DCS_SET_DISPLAY_ON),
+-	_INIT_DELAY_CMD(20),
+-	{},
+-};
++#define ili9882t_switch_page(ctx, page) \
++	mipi_dsi_dcs_write_seq_multi(ctx, ILI9882T_DCS_SWITCH_PAGE, \
++				     0x98, 0x82, (page))
+ 
+-static inline struct ili9882t *to_ili9882t(struct drm_panel *panel)
++static int starry_ili9882t_init(struct ili9882t *ili)
+ {
+-	return container_of(panel, struct ili9882t, base);
+-}
++	struct mipi_dsi_multi_context ctx = { .dsi = ili->dsi };
++
++	usleep_range(5000, 5100);
++
++	ili9882t_switch_page(&ctx, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x00, 0x42);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x01, 0x11);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x02, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x03, 0x00);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x04, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x05, 0x11);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x06, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x07, 0x00);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x08, 0x80);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x09, 0x81);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0a, 0x71);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0b, 0x00);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0c, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0e, 0x1a);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x24, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x25, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x26, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x27, 0x00);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2c, 0xd4);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xb9, 0x40);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xb0, 0x11);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe6, 0x32);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xd1, 0x30);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xd6, 0x55);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xd0, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe3, 0x93);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe4, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe5, 0x80);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x31, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x32, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x33, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x34, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x35, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x36, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x37, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x38, 0x28);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x39, 0x29);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3a, 0x11);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3b, 0x13);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3c, 0x15);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3d, 0x17);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3e, 0x09);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3f, 0x0d);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x40, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x41, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x42, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x43, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x44, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x45, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x46, 0x02);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x47, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x48, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x49, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x4a, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x4b, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x4c, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x4d, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x4e, 0x28);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x4f, 0x29);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x50, 0x10);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x51, 0x12);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x52, 0x14);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x53, 0x16);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x54, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x55, 0x0c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x56, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x57, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x58, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x59, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x5a, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x5b, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x5c, 0x02);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x61, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x62, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x63, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x64, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x65, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x66, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x67, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x68, 0x28);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x69, 0x29);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x6a, 0x16);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x6b, 0x14);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x6c, 0x12);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x6d, 0x10);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x6e, 0x0c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x6f, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x70, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x71, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x72, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x73, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x74, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x75, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x76, 0x02);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x77, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x78, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x79, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x7a, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x7b, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x7c, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x7d, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x7e, 0x28);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x7f, 0x29);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x80, 0x17);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x81, 0x15);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x82, 0x13);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x83, 0x11);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x84, 0x0d);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x85, 0x09);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x86, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x87, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x88, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x89, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x8a, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x8b, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x8c, 0x07);
++
++	ili9882t_switch_page(&ctx, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x29, 0x3a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2a, 0x3b);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x06, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x07, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x08, 0x0c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x09, 0x44);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3c, 0x0a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x39, 0x11);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3d, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3a, 0x0c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3b, 0x44);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x53, 0x1f);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x5e, 0x40);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x84, 0x00);
++
++	ili9882t_switch_page(&ctx, 0x03);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x20, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x21, 0x3c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x22, 0xfa);
++
++	ili9882t_switch_page(&ctx, 0x0a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe0, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe2, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe5, 0x91);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe6, 0x3c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe7, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe8, 0xfa);
++
++	ili9882t_switch_page(&ctx, 0x12);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x87, 0x2c);
++
++	ili9882t_switch_page(&ctx, 0x05);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x73, 0xe5);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x7f, 0x6b);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x6d, 0xa4);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x79, 0x54);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x69, 0x97);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x6a, 0x97);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xa5, 0x3f);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x61, 0xda);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xa7, 0xf1);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x5f, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x62, 0x3f);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x1d, 0x90);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x86, 0x87);
++
++	ili9882t_switch_page(&ctx, 0x06);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc0, 0x80);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc1, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xca, 0x58);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xcb, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xce, 0x58);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xcf, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x67, 0x60);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x10, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x92, 0x22);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xd3, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xd6, 0x55);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xdc, 0x38);
++
++	ili9882t_switch_page(&ctx, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe0, 0x00, 0x10, 0x2a, 0x4d, 0x61, 0x56, 0x6a, 0x6e,
++				     0x79, 0x76, 0x8f, 0x95, 0x98, 0xae, 0xaa, 0xb2, 0xbb, 0xce,
++				     0xc6, 0xbd, 0xd5, 0xe2, 0xe8);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe1, 0x00, 0x10, 0x2a, 0x4d, 0x61, 0x56, 0x6a, 0x6e,
++				     0x79, 0x76, 0x8f, 0x95, 0x98, 0xae, 0xaa, 0xb2, 0xbb, 0xce,
++				     0xc6, 0xbd, 0xd5, 0xe2, 0xe8);
++
++	ili9882t_switch_page(&ctx, 0x04);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xba, 0x81);
++
++	ili9882t_switch_page(&ctx, 0x0c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x00, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x01, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x02, 0x03);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x03, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x04, 0x03);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x05, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x06, 0x04);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x07, 0x03);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x08, 0x03);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x09, 0x04);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0a, 0x04);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0b, 0x05);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0c, 0x04);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0d, 0x06);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0e, 0x05);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x0f, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x10, 0x04);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x11, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x12, 0x05);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x13, 0x09);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x14, 0x05);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x15, 0x0a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x16, 0x06);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x17, 0x0b);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x18, 0x05);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x19, 0x0c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x1a, 0x06);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x1b, 0x0d);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x1c, 0x06);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x1d, 0x0e);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x1e, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x1f, 0x0f);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x20, 0x06);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x21, 0x10);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x22, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x23, 0x11);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x24, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x25, 0x12);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x26, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x27, 0x13);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x28, 0x07);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x29, 0x14);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2a, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2b, 0x15);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2c, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2d, 0x16);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2e, 0x09);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2f, 0x17);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x30, 0x08);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x31, 0x18);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x32, 0x09);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x33, 0x19);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x34, 0x09);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x35, 0x1a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x36, 0x0a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x37, 0x1b);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x38, 0x0a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x39, 0x1c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3a, 0x0a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3b, 0x1d);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3c, 0x0a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3d, 0x1e);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3e, 0x0a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3f, 0x1f);
++
++	ili9882t_switch_page(&ctx, 0x04);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xba, 0x01);
++
++	ili9882t_switch_page(&ctx, 0x0e);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x02, 0x0c);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x20, 0x10);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x25, 0x16);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x26, 0xe0);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x27, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x29, 0x71);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2a, 0x46);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2b, 0x1f);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x2d, 0xc7);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x31, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x32, 0xdf);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x33, 0x5a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x34, 0xc0);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x35, 0x5a);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x36, 0xc0);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x38, 0x65);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x80, 0x3e);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x81, 0xa0);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xb0, 0x01);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xb1, 0xcc);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc0, 0x12);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc2, 0xcc);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc3, 0xcc);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc4, 0xcc);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc5, 0xcc);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc6, 0xcc);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc7, 0xcc);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc8, 0xcc);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xc9, 0xcc);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x30, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x00, 0x81);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x08, 0x02);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x09, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x07, 0x21);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x04, 0x10);
++
++	ili9882t_switch_page(&ctx, 0x1e);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x60, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x64, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x6d, 0x00);
++
++	ili9882t_switch_page(&ctx, 0x0b);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xa6, 0x44);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xa7, 0xb6);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xa8, 0x03);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xa9, 0x03);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xaa, 0x51);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xab, 0x51);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xac, 0x04);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xbd, 0x92);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0xbe, 0xa1);
++
++	ili9882t_switch_page(&ctx, 0x05);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x86, 0x87);
++
++	ili9882t_switch_page(&ctx, 0x06);
++	mipi_dsi_dcs_write_seq_multi(&ctx, 0x92, 0x22);
++
++	ili9882t_switch_page(&ctx, 0x00);
++	mipi_dsi_dcs_write_seq_multi(&ctx, MIPI_DCS_EXIT_SLEEP_MODE);
++	if (ctx.accum_err)
++		return ctx.accum_err;
++
++	msleep(120);
++
++	mipi_dsi_dcs_write_seq_multi(&ctx, MIPI_DCS_SET_DISPLAY_ON);
++	if (ctx.accum_err)
++		return ctx.accum_err;
++
++	msleep(20);
+ 
+-static int ili9882t_init_dcs_cmd(struct ili9882t *ili)
+-{
+-	struct mipi_dsi_device *dsi = ili->dsi;
+-	struct drm_panel *panel = &ili->base;
+-	int i, err = 0;
+-
+-	if (ili->desc->init_cmds) {
+-		const struct panel_init_cmd *init_cmds = ili->desc->init_cmds;
+-
+-		for (i = 0; init_cmds[i].len != 0; i++) {
+-			const struct panel_init_cmd *cmd = &init_cmds[i];
+-
+-			switch (cmd->type) {
+-			case DELAY_CMD:
+-				msleep(cmd->data[0]);
+-				err = 0;
+-				break;
+-
+-			case INIT_DCS_CMD:
+-				err = mipi_dsi_dcs_write(dsi, cmd->data[0],
+-							 cmd->len <= 1 ? NULL :
+-							 &cmd->data[1],
+-							 cmd->len - 1);
+-				break;
+-
+-			default:
+-				err = -EINVAL;
+-			}
+-
+-			if (err < 0) {
+-				dev_err(panel->dev,
+-					"failed to write command %u\n", i);
+-				return err;
+-			}
+-		}
+-	}
+ 	return 0;
+-}
++};
+ 
+-static int ili9882t_switch_page(struct mipi_dsi_device *dsi, u8 page)
++static inline struct ili9882t *to_ili9882t(struct drm_panel *panel)
+ {
+-	int ret;
+-	const struct panel_init_cmd cmd = _INIT_SWITCH_PAGE_CMD(page);
+-
+-	ret = mipi_dsi_dcs_write(dsi, cmd.data[0],
+-				 cmd.len <= 1 ? NULL :
+-				 &cmd.data[1],
+-				 cmd.len - 1);
+-	if (ret) {
+-		dev_err(&dsi->dev,
+-			"error switching panel controller page (%d)\n", ret);
+-		return ret;
+-	}
+-
+-	return 0;
++	return container_of(panel, struct ili9882t, base);
+ }
+ 
+ static int ili9882t_enter_sleep_mode(struct ili9882t *ili)
+@@ -502,10 +443,13 @@ static int ili9882t_enter_sleep_mode(struct ili9882t *ili)
+ static int ili9882t_disable(struct drm_panel *panel)
+ {
+ 	struct ili9882t *ili = to_ili9882t(panel);
+-	struct mipi_dsi_device *dsi = ili->dsi;
++	struct mipi_dsi_multi_context ctx = { .dsi = ili->dsi };
+ 	int ret;
+ 
+-	ili9882t_switch_page(dsi, 0x00);
++	ili9882t_switch_page(&ctx, 0x00);
++	if (ctx.accum_err)
++		return ctx.accum_err;
++
+ 	ret = ili9882t_enter_sleep_mode(ili);
+ 	if (ret < 0) {
+ 		dev_err(panel->dev, "failed to set panel off: %d\n", ret);
+@@ -570,11 +514,9 @@ static int ili9882t_prepare(struct drm_panel *panel)
+ 	gpiod_set_value(ili->enable_gpio, 1);
+ 	usleep_range(6000, 10000);
+ 
+-	ret = ili9882t_init_dcs_cmd(ili);
+-	if (ret < 0) {
+-		dev_err(panel->dev, "failed to init panel: %d\n", ret);
++	ret = ili->desc->init(ili);
++	if (ret < 0)
+ 		goto poweroff;
+-	}
+ 
+ 	return 0;
+ 
+@@ -620,7 +562,7 @@ static const struct panel_desc starry_ili9882t_desc = {
+ 	.format = MIPI_DSI_FMT_RGB888,
+ 	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+ 		      MIPI_DSI_MODE_LPM,
+-	.init_cmds = starry_ili9882t_init_cmd,
++	.init = starry_ili9882t_init,
+ };
+ 
+ static int ili9882t_get_modes(struct drm_panel *panel,
+-- 
+2.45.0.rc0.197.gbae5840b3b-goog
+
