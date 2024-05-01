@@ -1,133 +1,87 @@
-Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [207.211.30.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE3312E1DD
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 13:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.211.30.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F511DFFB
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 13:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714569379; cv=none; b=seOY6mnVDuEScfvoLphTcWbfdk08YbqSvRl9DO56HvuY3nXpjHy41yMK7IgTar0uD7sTPKntWajiVn9x24tK7JTRdE3qcK2+otRZPnfCxTQ++j/aRX/fbT45GvSpWAHDmXxgC8fRU8MRh3T6pJ5ovTfGTH0OCyyRhBCzYPx2DNw=
+	t=1714569547; cv=none; b=rslKrbt/yXxlVaGpL+5r/NIm9Plrg5iSNRlAvT5apC31ED5S//ji8sVK8aPLGQ501ZFw3JveXsanpQXAPIyKxuFzDjcipiRupdGRsYB7qV1SqDtOi4UbEZVtf6VzhA/rpIIM9JnpvPL5eFu42G09kzWwEsjbp8tci8KPWoxgjEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714569379; c=relaxed/simple;
-	bh=juN4Ny8Hm6qA0zsZ9K4+OvOZiB1X0k0WkV7pZSOQMuQ=;
+	s=arc-20240116; t=1714569547; c=relaxed/simple;
+	bh=AVhnqdGhscmydW3auczmGVEvQdtUwgBxwqKgut16GIs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X1EK9wBrrOhpKUjymhhZWo2XrGjzy//TMzNMo3d5IyARaMraAiHJJt6C65zafhUWIfsP1HF9OCcXCqTpFzFMpi7391/f3fDuqOU3+biWd5XkIvwv//W+Dtbd1eAYSvozWWOGvNoXSRpZaTIXJzUOwpVfUuEEC3jSXrk72+WIsUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=none smtp.mailfrom=queasysnail.net; arc=none smtp.client-ip=207.211.30.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=queasysnail.net
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-531-F3TRqiq5Oo6qB2-P5FKodQ-1; Wed, 01 May 2024 09:16:08 -0400
-X-MC-Unique: F3TRqiq5Oo6qB2-P5FKodQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 07D1C802E4D;
-	Wed,  1 May 2024 13:16:06 +0000 (UTC)
-Received: from hog (unknown [10.39.193.137])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0FC61C271A4;
-	Wed,  1 May 2024 13:15:55 +0000 (UTC)
-Date: Wed, 1 May 2024 15:15:54 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: j.granados@samsung.com
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	David Ahern <dsahern@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>,
-	Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
-	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-	linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	lvs-devel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 8/8] ax.25: x.25: Remove the now superfluous
- sentinel elements from ctl_table array
-Message-ID: <ZjJAikcdWzzaIr1s@hog>
-References: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
- <20240501-jag-sysctl_remset_net-v6-8-370b702b6b4a@samsung.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WY2z1R4/gdOvhq0Y0psSxWCor//4rSfE6m22KSTYwhrXPCHGMZtsajyXwQc95Z3o2Q8ixmraGAoiVlTFc/ErJTVuZhTwXPuS4FQIC5CpzNTcAxrvQBo2/BqL9fvmsNWeA89MjTXgsK3dwwO2jA7wdXcWwW9LM81BKHGMF8EisZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8XsvbR9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8XsvbR9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B34C113CC;
+	Wed,  1 May 2024 13:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714569546;
+	bh=AVhnqdGhscmydW3auczmGVEvQdtUwgBxwqKgut16GIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m8XsvbR9imLaKErl7qDzfdcFLQVBCuda+cFlN44UJfUh38Q7yGend8PCrJO/Nw1AV
+	 ueWG9WN7Wn7P1c1o36pLnmLcivaBESyfZakP0xk/iFCJ6r83naBmIz0+WO3lyNhsOx
+	 tlmTrRPSAee+zxPENUCyNrzQeFcv7B3ybdVg5w72mPHncbGIMcwTKR7i4kHa6Za5Q4
+	 IyDD9KOFMN8pcbfxYSkLHmOqjZavazrZl7RpnP5s5C4C+3cTkF3iRXz3ilJldtwxUp
+	 EvlFKRvnO208q8twdv8qXpdFGvISdEpcA1NzPmgDQ0MVIlz+Ti6ii3lraQD/yfwuj9
+	 TN8cMGlDTqSMw==
+Date: Wed, 1 May 2024 14:19:02 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
+Cc: sudeep.holla@arm.com, gregkh@linuxfoundation.org,
+	javier.carrasco.cruz@gmail.com, julia.lawall@inria.fr,
+	linux-kernel@vger.kernel.org, rafael@kernel.org,
+	skhan@linuxfoundation.org
+Subject: Re: [PATCH 0/2 v3] drivers: introduce automatic cleanup feature
+Message-ID: <20240501-ensure-detective-f1c7442d383a@spud>
+References: <20240424125401.oxvt5n64d7a57ge3@bogus>
+ <20240501094313.407820-1-vincenzo.mezzela@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tZOHu1rnc+PeBHs5"
 Content-Disposition: inline
-In-Reply-To: <20240501-jag-sysctl_remset_net-v6-8-370b702b6b4a@samsung.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
-
-2024-05-01, 11:29:32 +0200, Joel Granados via B4 Relay wrote:
-> From: Joel Granados <j.granados@samsung.com>
-> 
-> This commit comes at the tail end of a greater effort to remove the
-> empty elements at the end of the ctl_table arrays (sentinels) which will
-> reduce the overall build time size of the kernel and run time memory
-> bloat by ~64 bytes per sentinel (further information Link :
-> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> 
-> Avoid a buffer overflow when traversing the ctl_table by ensuring that
-> AX25_MAX_VALUES is the same as the size of ax25_param_table. This is
-> done with a BUILD_BUG_ON where ax25_param_table is defined and a
-> CONFIG_AX25_DAMA_SLAVE guard in the unnamed enum definition as well as
-> in the ax25_dev_device_up and ax25_ds_set_timer functions.
-                                ^^
-nit:                            not anymore ;)
-(but not worth a repost IMO)
+In-Reply-To: <20240501094313.407820-1-vincenzo.mezzela@gmail.com>
 
 
-> diff --git a/net/ax25/ax25_ds_timer.c b/net/ax25/ax25_ds_timer.c
-> index c4f8adbf8144..c50a58d9e368 100644
-> --- a/net/ax25/ax25_ds_timer.c
-> +++ b/net/ax25/ax25_ds_timer.c
-> @@ -55,6 +55,7 @@ void ax25_ds_set_timer(ax25_dev *ax25_dev)
->  	ax25_dev->dama.slave_timeout =
->  		msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
->  	mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
-> +	return;
+--tZOHu1rnc+PeBHs5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-nit: return not needed here since we're already at the bottom of the
-function, but probably not worth a repost of the series.
+On Wed, May 01, 2024 at 11:43:11AM +0200, Vincenzo Mezzela wrote:
+> This patch series introduces the automatic cleanup feature using the __fr=
+ee
+> attribute. With this modification, resources allocated with __free are=20
+> automatically released at the end of the scope.
 
->  }
+FWIW, I did run this on a system that uses the generic topology code.
+Nothing blew up, and the topology seemed to be reported correctly still. I
+won't give you any hints as to how since Greg wants you to figure it out
+for yourself ;)
 
--- 
-Sabrina
+b4 handles it fine, but usually new revisions of patchsets are not sent
+as replies to earlier ones, so that might be something to change if you
+resend to fix the subject lines.
 
+Cheers,
+Conor.
+
+
+--tZOHu1rnc+PeBHs5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjJBQwAKCRB4tDGHoIJi
+0qRFAQDKXTuLUDDOGjyqORybsJM8g+8f8Q2Fe36+7IduwYwvMgEA07DbTTz7yNc8
+Idjfh+3LBkZ+0zYl8pTzgbsdzv/jwAQ=
+=Ism/
+-----END PGP SIGNATURE-----
+
+--tZOHu1rnc+PeBHs5--
