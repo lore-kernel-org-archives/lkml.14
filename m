@@ -1,57 +1,57 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFC913340D;
-	Wed,  1 May 2024 15:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447931327FB;
+	Wed,  1 May 2024 15:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714576441; cv=none; b=uyNLA6rLFJK88CjDauTSh3qdxu6wmCqjhYW8AV6IamOu9XSXYWcROYKWtKU1DBR5TH62E5/MntgM85IGyHFLA36bwBKkHDj+ja2cBTrFhXsaFoxWE1+TETnAlZR/0V2poGa5Mtup4Fol0Rh0V9NH4oDdCSqcmx/myWnZccHYSeU=
+	t=1714576432; cv=none; b=hIyRNhYDHb7weQSLLo/mydERwDfD0iwjQKwAEjmk7+NEaqON1W99hmYCiZmNp19L1gGpQudmP1XzLgqiP2hxb66tqILviBrU10CMEsyJRsr5v1GYTnSFJCoG1MD6z24eApqePPtDmox6JN7IwO7G38yHNSU5E0NhYq3gvlhKR14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714576441; c=relaxed/simple;
-	bh=gIF2QrsMHM/B/UDcxk7sbrnEHtEOU99YBgh/AMxu8/k=;
+	s=arc-20240116; t=1714576432; c=relaxed/simple;
+	bh=R29ukKLeOABgHH0WjIrawBQ0SbrumFdGqO0yJ7eRZiA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qmgJ3TdNcKlcHpx0botLRjcus1YDdxT11i8L7o7RNJvJIKuU2EN3KcMMw8+7vMPz30CTxq+Q1dFXPYCc4zq0vn1xQ2zIbu44Ordvhf6yGCDcgaUKQijWHrpROAWErkHHPCBFhkI5+8ECTsIdpqsfSRZnkT5FIhb2liZ1OYJzevQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XivLhFjW; arc=none smtp.client-ip=209.85.215.171
+	 MIME-Version; b=X2xpSKjjnM9M/zWPStJFgJLEInDm+CeGgoFyzQQc3d1XAb82Dqcpm713YsfjBu8CguqQbst9626QQsUwCjE3B9PxEriNrCFipt3r7a6nJEYIUUtQCy9glcEWSsBGlvCoix84NOsMOX3oCeZa1pSAthHD+A5gRnRVrvn9AUsYSao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PUHSs+n6; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XivLhFjW"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-613a6bb2947so2315325a12.3;
-        Wed, 01 May 2024 08:13:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUHSs+n6"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1eab699fcddso54232905ad.0;
+        Wed, 01 May 2024 08:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714576437; x=1715181237; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714576428; x=1715181228; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1OvIoU1oRLEpEy46qbogjdAzeNGp3CqtPIa9rK8TZug=;
-        b=XivLhFjWeInfXC05XRNF3adW3O1NGfugWqWT7/d2w8RzNiQJeKf3Cd0lK1trOdNrHV
-         FwPZeTR47l0Xp9OqPa8F6UTmJKwKQ6XTqhHx2Hss0SlGem6bEFUduOOI46iFBJFRdHqS
-         kmUd7XAEHo7byLeujg1j0wl/02XJk8D5BBEfrujhdP9/jnz5LaejSym47RuC+ffF9Fmt
-         FcTL6s+WSUcDhH3Wr9X6IL4KWTEp+5gIjdK6Zg7Eut2mje0XdnKYPiYhLZ4TLlbq/hiZ
-         ir4hfBSax53Xl/TsuCp47sZcN6jrHQ1TFU8BGqR14MJ6qoZk67lM63sBoBXpiFlX0bbA
-         WG8g==
+        bh=TY7+nQ+nVKitD13AsjVGlO5VbgkjOzUtp/QWTHTnots=;
+        b=PUHSs+n6gkJUWy4rdYiT63qpbcl8XsHhtzODplDSFOwFhC55EF5askIgOUvsZEytMP
+         /HAN4/g5EKVIwft4EyU7uReGMSTrlZD8GI2bKBIsG307YpxgVpHhx+4+rF3WBOhyc5IJ
+         qHnkn2oA/fRvsiLtyShUjuhTg+gMmaJEz9LfL6VESvOQBniItb8IA8UiPNHYXtlePfMl
+         Dd4gI/iXa8WBW3KYWn/lxTT6ZYU3sZGUYl8LwrqdQTe4IeVTOaS6NPOheDDOT66reVXk
+         n+P91Pj5j1lNXYj8LwRP0OrUQ8i8ma5oLvS2bhPr4jn2/0wdC7fTPiFTqf45ix2rC9Lq
+         R6Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714576437; x=1715181237;
+        d=1e100.net; s=20230601; t=1714576428; x=1715181228;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=1OvIoU1oRLEpEy46qbogjdAzeNGp3CqtPIa9rK8TZug=;
-        b=scmK92QihBInZYwnWdzw03yYGSHGIOlvlQH3kqATCw1eaYB/mL/YNxIYYujpHlGYSN
-         qE1Eb9kAe33mQ6rhAQ6UYvLc9qs5K1mZMNtSLb6ktFECHdpyBs/VZ5pnRaLwTGuxq7Ra
-         CQq2u1ig8jRdkV/bUABLawQOKvNjgrEUhnFWOIXlUtNKqCh4Rvoclyc24eYVsUgcnVjt
-         X128qPozVt2UcXMhH23kbGtwBTmMjswJ0u8i9ojVVpM2szuRi7m8FDvXM37XOA2lkIu1
-         XEW8paT2CvbTaFWzs4QBOEx6j5WVJarAd1UFE+9neat1SU8xMVnH0g8qrlHH+jRgLBhE
-         wt8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXG0MrRSUyoM3eK6RLWMqHw3NmTfonKVTWHVFcchiXDLe2Jli7WZjW51CV4uWFYc+xxjbnV0TumMD5LiIeE5Jypf88w
-X-Gm-Message-State: AOJu0YxqY8elq+3xEQCo25jKyskDtMjAocH8ut7BV0RIG/2Px7Dm7XqK
-	gtT+gfElXVM0OZOyg4KWgmRPr8dBfSD+Ua1WfEz5fy0llKcBUszP
-X-Google-Smtp-Source: AGHT+IEihIMgtvCmRXAbzZiUukfbDjgNDRcPvD+8breDm9CHfzIQNSn1qriPEf8opbcMbTWDPqXbYw==
-X-Received: by 2002:a17:90a:d191:b0:2a6:ff2e:dce0 with SMTP id fu17-20020a17090ad19100b002a6ff2edce0mr2783485pjb.5.1714576437139;
-        Wed, 01 May 2024 08:13:57 -0700 (PDT)
+        bh=TY7+nQ+nVKitD13AsjVGlO5VbgkjOzUtp/QWTHTnots=;
+        b=EdFizbKL6kQ6cyDDftOhzb66en+bLHFbY0nBMAdEOI1cCKrCRp1PPHAR6KzjDbz0Ma
+         H/73HPoulOuZKpdrDkHggtOt5mzkDqtJ03lxYZpe8awcn9lQSThpAOBa9jYuy2QKgnQq
+         nif/EIJw1EupZRKTZD4b7AH/HIdD/IYBR08qknd9hymkcydzQNesQHuzFoo1+W1Q9uO5
+         nNsoUchUWSdeP6ff7TcDJ/hA9mnCfwNi0YGiQkiRqityEu6k8vLxamcVatt8gVjvfEel
+         zBpwVrnwgFOQbhXQMffN92n1S0KvAuBWtuA+TVbIQJjo0NrUhV6gtT9kfUFdaQNcCTrx
+         1W3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUyQpHxklhAfsJTPUbsd4AV5bCbkWJ/L7jnO5u9O13GfbyHYdrb+aFuzycVw+Epkwi6/qtWZVuINqgzqSiKduepIidJ
+X-Gm-Message-State: AOJu0Yw6z4r/BW0dIbRR9MxXPscK+Q/XrfHP/auRbxsesPw57tCVecSO
+	uXQyztm6X4yR+CRukdOw9rqGPtMqckgb13v8hgtwlOPPEJ6eOK6U
+X-Google-Smtp-Source: AGHT+IG4w5WqnXo6bfVHjy4KSi9ahKybM9Sd89iV7slIM5n4TW8B6sxdTYb3XhrO5tYLoT3iTCVDJA==
+X-Received: by 2002:a17:902:64c2:b0:1e8:c993:a13c with SMTP id y2-20020a17090264c200b001e8c993a13cmr2944673pli.25.1714576427981;
+        Wed, 01 May 2024 08:13:47 -0700 (PDT)
 Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id 100-20020a17090a09ed00b002a2f6da006csm1575238pjo.52.2024.05.01.08.13.56
+        by smtp.gmail.com with ESMTPSA id im15-20020a170902bb0f00b001ec8888b22esm1572214plb.65.2024.05.01.08.13.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 08:13:56 -0700 (PDT)
+        Wed, 01 May 2024 08:13:47 -0700 (PDT)
 Sender: Tejun Heo <htejun@gmail.com>
 From: Tejun Heo <tj@kernel.org>
 To: torvalds@linux-foundation.org,
@@ -87,9 +87,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	kernel-team@meta.com,
 	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 20/39] sched_ext: Print debug dump after an error exit
-Date: Wed,  1 May 2024 05:09:55 -1000
-Message-ID: <20240501151312.635565-21-tj@kernel.org>
+Subject: [PATCH 15/39] sched_ext: Add scx_simple and scx_example_qmap example schedulers
+Date: Wed,  1 May 2024 05:09:50 -1000
+Message-ID: <20240501151312.635565-16-tj@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240501151312.635565-1-tj@kernel.org>
 References: <20240501151312.635565-1-tj@kernel.org>
@@ -101,439 +101,1637 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If a BPF scheduler triggers an error, the scheduler is aborted and the
-system is reverted to the built-in scheduler. In the process, a lot of
-information which may be useful for figuring out what happened can be lost.
+Add two simple example BPF schedulers - simple and qmap.
 
-This patch adds debug dump which captures information which may be useful
-for debugging including runqueue and runnable thread states at the time of
-failure. The following shows a debug dump after triggering the watchdog:
+* simple: In terms of scheduling, it behaves identical to not having any
+  operation implemented at all. The two operations it implements are only to
+  improve visibility and exit handling. On certain homogeneous
+  configurations, this actually can perform pretty well.
 
-  # os/work/tools/sched_ext/build/bin/scx_qmap -t 100
-  enq=0, dsp=0, delta=0, deq=0
-  enq=21, dsp=21, delta=0, deq=0
-  enq=96, dsp=96, delta=0, deq=1
+* qmap: A fixed five level priority scheduler to demonstrate queueing PIDs
+  on BPF maps for scheduling. While not very practical, this is useful as a
+  simple example and will be used to demonstrate different features.
 
-  DEBUG DUMP
-  ================================================================================
+v6: - Common header files reorganized and cleaned up. Compat helpers are
+      added to demonstrate how schedulers can maintain backward
+      compatibility with older kernels while making use of newly added
+      features.
 
-  kworker/u16:0[11] triggered exit kind 1026:
-    runnable task stall (scx_qmap[1524] failed to run for 5.659s)
+    - simple_select_cpu() added to keep track of the number of local
+      dispatches. This is needed because the default ops.select_cpu()
+      implementation is updated to dispatch directly and won't call
+      ops.enqueue().
 
-  Backtrace:
-    scx_watchdog_workfn+0x138/0x1c0
-    process_scheduled_works+0x245/0x4e0
-    worker_thread+0x270/0x360
-    kthread+0xeb/0x110
-    ret_from_fork+0x36/0x40
-    ret_from_fork_asm+0x11/0x20
+    - Updated to reflect the sched_ext API changes. Switching all tasks is
+      the default behavior now and scx_qmap supports partial switching when
+      `-p` is specified.
 
-  Runqueue states
-  ---------------
+    - tools/sched_ext/Kconfig dropped. This will be included in the doc
+      instead.
 
-  CPU 2   : nr_run=1 ops_qseq=34
-	    curr=kworker/u16:0[11] class=ext_sched_class
+v5: - Improve Makefile. Build artifects are now collected into a separate
+      dir which change be changed. Install and help targets are added and
+      clean actually cleans everything.
 
-   *R kworker/u16:0[11] +0ms
-	scx_state/flags=3/0xd ops_state/qseq=0/0
-	sticky/holding_cpu=-1/-1 dsq_id=(n/a)
-	cpus=ff
+    - MEMBER_VPTR() improved to improve access to structs. ARRAY_ELEM_PTR()
+      and RESIZEABLE_ARRAY() are added to support resizable arrays in .bss.
 
-      scx_ops_error_irq_workfn+0x25d/0x340
-      irq_work_run_list+0x7d/0xc0
-      irq_work_run+0x18/0x30
-      __sysvec_irq_work+0x38/0x100
-      sysvec_irq_work+0x69/0x80
-      asm_sysvec_irq_work+0x1b/0x20
-      scx_watchdog_workfn+0x15d/0x1c0
-      process_scheduled_works+0x245/0x4e0
-      worker_thread+0x270/0x360
-      kthread+0xeb/0x110
-      ret_from_fork+0x36/0x40
-      ret_from_fork_asm+0x11/0x20
+    - Add scx_common.h which provides common utilities to user code such as
+      SCX_BUG[_ON]() and RESIZE_ARRAY().
 
-  CPU 7   : nr_run=1 ops_qseq=11
-	    curr=swapper/7[0] class=idle_sched_class
+    - Use SCX_BUG[_ON]() to simplify error handling.
 
-    R scx_qmap[1524] -5659ms
-	scx_state/flags=3/0x9 ops_state/qseq=2/3
-	sticky/holding_cpu=-1/-1 dsq_id=(n/a)
-	cpus=ff
+v4: - Dropped _example prefix from scheduler names.
 
-      common_nsleep+0x34/0x50
-      __x64_sys_clock_nanosleep+0xd9/0x120
-      do_syscall_64+0x7e/0x150
-      entry_SYSCALL_64_after_hwframe+0x46/0x4e
+v3: - Rename scx_example_dummy to scx_example_simple and restructure a bit
+      to ease later additions. Comment updates.
 
-  ================================================================================
+    - Added declarations for BPF inline iterators. In the future, hopefully,
+      these will be consolidated into a generic BPF header so that they
+      don't need to be replicated here.
 
-  EXIT: runnable task stall (scx_qmap[1524] failed to run for 5.659s)
-
-It shows that CPU 2 was running the watchdog when it triggered the error
-condition and the scx_qmap thread has been queued on CPU 7 for over 5
-seconds but failed to run. This dump has proved pretty useful for developing
-and debugging BPF schedulers.
-
-Currently, it uses fixed 32k buffer and doesn't provide any way for the BPF
-scheduler to add additional information. These will be improved in the
-future.
+v2: - Updated with the generic BPF cpumask helpers.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 Reviewed-by: David Vernet <dvernet@meta.com>
+Acked-by: Josh Don <joshdon@google.com>
+Acked-by: Hao Luo <haoluo@google.com>
+Acked-by: Barret Rhoden <brho@google.com>
 ---
- kernel/sched/ext.c                           | 122 ++++++++++++++++++-
- tools/sched_ext/include/scx/compat.h         |  11 +-
- tools/sched_ext/include/scx/user_exit_info.h |  19 +++
- tools/sched_ext/scx_qmap.c                   |  10 +-
- tools/sched_ext/scx_simple.c                 |   2 +-
- 5 files changed, 155 insertions(+), 9 deletions(-)
+ Makefile                                      |   8 +-
+ tools/Makefile                                |  10 +-
+ tools/sched_ext/.gitignore                    |   2 +
+ tools/sched_ext/Makefile                      | 246 ++++++++++++++++
+ .../sched_ext/include/bpf-compat/gnu/stubs.h  |  11 +
+ tools/sched_ext/include/scx/common.bpf.h      | 275 ++++++++++++++++++
+ tools/sched_ext/include/scx/common.h          |  71 +++++
+ tools/sched_ext/include/scx/compat.bpf.h      |  53 ++++
+ tools/sched_ext/include/scx/compat.h          | 155 ++++++++++
+ tools/sched_ext/include/scx/user_exit_info.h  |  64 ++++
+ tools/sched_ext/scx_qmap.bpf.c                | 268 +++++++++++++++++
+ tools/sched_ext/scx_qmap.c                    | 100 +++++++
+ tools/sched_ext/scx_simple.bpf.c              |  63 ++++
+ tools/sched_ext/scx_simple.c                  |  99 +++++++
+ 14 files changed, 1423 insertions(+), 2 deletions(-)
+ create mode 100644 tools/sched_ext/.gitignore
+ create mode 100644 tools/sched_ext/Makefile
+ create mode 100644 tools/sched_ext/include/bpf-compat/gnu/stubs.h
+ create mode 100644 tools/sched_ext/include/scx/common.bpf.h
+ create mode 100644 tools/sched_ext/include/scx/common.h
+ create mode 100644 tools/sched_ext/include/scx/compat.bpf.h
+ create mode 100644 tools/sched_ext/include/scx/compat.h
+ create mode 100644 tools/sched_ext/include/scx/user_exit_info.h
+ create mode 100644 tools/sched_ext/scx_qmap.bpf.c
+ create mode 100644 tools/sched_ext/scx_qmap.c
+ create mode 100644 tools/sched_ext/scx_simple.bpf.c
+ create mode 100644 tools/sched_ext/scx_simple.c
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index ff080b5f0330..4ffa42e5d7dd 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -12,6 +12,7 @@ enum scx_consts {
+diff --git a/Makefile b/Makefile
+index 763b6792d3d5..3e8a804efa27 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1344,6 +1344,12 @@ ifneq ($(wildcard $(resolve_btfids_O)),)
+ 	$(Q)$(MAKE) -sC $(srctree)/tools/bpf/resolve_btfids O=$(resolve_btfids_O) clean
+ endif
  
- 	SCX_EXIT_BT_LEN			= 64,
- 	SCX_EXIT_MSG_LEN		= 1024,
-+	SCX_EXIT_DUMP_DFL_LEN		= 32768,
- };
- 
- enum scx_exit_kind {
-@@ -48,6 +49,9 @@ struct scx_exit_info {
- 
- 	/* informational message */
- 	char			*msg;
++tools-clean-targets := sched_ext
++PHONY += $(tools-clean-targets)
++$(tools-clean-targets):
++	$(Q)$(MAKE) -sC tools $@_clean
++tools_clean: $(tools-clean-targets)
 +
-+	/* debug dump */
-+	char			*dump;
- };
+ # Clear a bunch of variables before executing the submake
+ ifeq ($(quiet),silent_)
+ tools_silent=s
+@@ -1513,7 +1519,7 @@ PHONY += $(mrproper-dirs) mrproper
+ $(mrproper-dirs):
+ 	$(Q)$(MAKE) $(clean)=$(patsubst _mrproper_%,%,$@)
  
- /* sched_ext_ops.flags */
-@@ -330,6 +334,12 @@ struct sched_ext_ops {
- 	 */
- 	u32 timeout_ms;
+-mrproper: clean $(mrproper-dirs)
++mrproper: clean $(mrproper-dirs) tools_clean
+ 	$(call cmd,rmfiles)
+ 	@find . $(RCS_FIND_IGNORE) \
+ 		\( -name '*.rmeta' \) \
+diff --git a/tools/Makefile b/tools/Makefile
+index 276f5d0d53a4..278d24723b74 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -28,6 +28,7 @@ include scripts/Makefile.include
+ 	@echo '  pci                    - PCI tools'
+ 	@echo '  perf                   - Linux performance measurement and analysis tool'
+ 	@echo '  selftests              - various kernel selftests'
++	@echo '  sched_ext              - sched_ext example schedulers'
+ 	@echo '  bootconfig             - boot config tool'
+ 	@echo '  spi                    - spi tools'
+ 	@echo '  tmon                   - thermal monitoring and tuning tool'
+@@ -91,6 +92,9 @@ perf: FORCE
+ 	$(Q)mkdir -p $(PERF_O) .
+ 	$(Q)$(MAKE) --no-print-directory -C perf O=$(PERF_O) subdir=
  
-+	/**
-+	 * exit_dump_len - scx_exit_info.dump buffer length. If 0, the default
-+	 * value of 32768 is used.
-+	 */
-+	u32 exit_dump_len;
++sched_ext: FORCE
++	$(call descend,sched_ext)
 +
- 	/**
- 	 * name - BPF scheduler's name
- 	 *
-@@ -2888,12 +2898,13 @@ static void scx_ops_bypass(bool bypass)
+ selftests: FORCE
+ 	$(call descend,testing/$@)
  
- static void free_exit_info(struct scx_exit_info *ei)
- {
-+	kfree(ei->dump);
- 	kfree(ei->msg);
- 	kfree(ei->bt);
- 	kfree(ei);
- }
+@@ -184,6 +188,9 @@ install: acpi_install counter_install cpupower_install gpio_install \
+ 	$(Q)mkdir -p $(PERF_O) .
+ 	$(Q)$(MAKE) --no-print-directory -C perf O=$(PERF_O) subdir= clean
  
--static struct scx_exit_info *alloc_exit_info(void)
-+static struct scx_exit_info *alloc_exit_info(size_t exit_dump_len)
- {
- 	struct scx_exit_info *ei;
++sched_ext_clean:
++	$(call descend,sched_ext,clean)
++
+ selftests_clean:
+ 	$(call descend,testing/$(@:_clean=),clean)
  
-@@ -2903,8 +2914,9 @@ static struct scx_exit_info *alloc_exit_info(void)
+@@ -213,6 +220,7 @@ clean: acpi_clean counter_clean cpupower_clean hv_clean firewire_clean \
+ 		mm_clean bpf_clean iio_clean x86_energy_perf_policy_clean tmon_clean \
+ 		freefall_clean build_clean libbpf_clean libsubcmd_clean \
+ 		gpio_clean objtool_clean leds_clean wmi_clean pci_clean firmware_clean debugging_clean \
+-		intel-speed-select_clean tracing_clean thermal_clean thermometer_clean thermal-engine_clean
++		intel-speed-select_clean tracing_clean thermal_clean thermometer_clean thermal-engine_clean \
++		sched_ext_clean
  
- 	ei->bt = kcalloc(sizeof(ei->bt[0]), SCX_EXIT_BT_LEN, GFP_KERNEL);
- 	ei->msg = kzalloc(SCX_EXIT_MSG_LEN, GFP_KERNEL);
-+	ei->dump = kzalloc(exit_dump_len, GFP_KERNEL);
- 
--	if (!ei->bt || !ei->msg) {
-+	if (!ei->bt || !ei->msg || !ei->dump) {
- 		free_exit_info(ei);
- 		return NULL;
- 	}
-@@ -3104,8 +3116,101 @@ static void scx_ops_disable(enum scx_exit_kind kind)
- 	schedule_scx_ops_disable_work();
- }
- 
-+static void scx_dump_task(struct seq_buf *s, struct task_struct *p, char marker,
-+			  unsigned long now)
+ .PHONY: FORCE
+diff --git a/tools/sched_ext/.gitignore b/tools/sched_ext/.gitignore
+new file mode 100644
+index 000000000000..d6264fe1c8cd
+--- /dev/null
++++ b/tools/sched_ext/.gitignore
+@@ -0,0 +1,2 @@
++tools/
++build/
+diff --git a/tools/sched_ext/Makefile b/tools/sched_ext/Makefile
+new file mode 100644
+index 000000000000..626782a21375
+--- /dev/null
++++ b/tools/sched_ext/Makefile
+@@ -0,0 +1,246 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Meta Platforms, Inc. and affiliates.
++include ../build/Build.include
++include ../scripts/Makefile.arch
++include ../scripts/Makefile.include
++
++all: all_targets
++
++ifneq ($(LLVM),)
++ifneq ($(filter %/,$(LLVM)),)
++LLVM_PREFIX := $(LLVM)
++else ifneq ($(filter -%,$(LLVM)),)
++LLVM_SUFFIX := $(LLVM)
++endif
++
++CLANG_TARGET_FLAGS_arm          := arm-linux-gnueabi
++CLANG_TARGET_FLAGS_arm64        := aarch64-linux-gnu
++CLANG_TARGET_FLAGS_hexagon      := hexagon-linux-musl
++CLANG_TARGET_FLAGS_m68k         := m68k-linux-gnu
++CLANG_TARGET_FLAGS_mips         := mipsel-linux-gnu
++CLANG_TARGET_FLAGS_powerpc      := powerpc64le-linux-gnu
++CLANG_TARGET_FLAGS_riscv        := riscv64-linux-gnu
++CLANG_TARGET_FLAGS_s390         := s390x-linux-gnu
++CLANG_TARGET_FLAGS_x86          := x86_64-linux-gnu
++CLANG_TARGET_FLAGS              := $(CLANG_TARGET_FLAGS_$(ARCH))
++
++ifeq ($(CROSS_COMPILE),)
++ifeq ($(CLANG_TARGET_FLAGS),)
++$(error Specify CROSS_COMPILE or add '--target=' option to lib.mk)
++else
++CLANG_FLAGS     += --target=$(CLANG_TARGET_FLAGS)
++endif # CLANG_TARGET_FLAGS
++else
++CLANG_FLAGS     += --target=$(notdir $(CROSS_COMPILE:%-=%))
++endif # CROSS_COMPILE
++
++CC := $(LLVM_PREFIX)clang$(LLVM_SUFFIX) $(CLANG_FLAGS) -fintegrated-as
++else
++CC := $(CROSS_COMPILE)gcc
++endif # LLVM
++
++CURDIR := $(abspath .)
++TOOLSDIR := $(abspath ..)
++LIBDIR := $(TOOLSDIR)/lib
++BPFDIR := $(LIBDIR)/bpf
++TOOLSINCDIR := $(TOOLSDIR)/include
++BPFTOOLDIR := $(TOOLSDIR)/bpf/bpftool
++APIDIR := $(TOOLSINCDIR)/uapi
++GENDIR := $(abspath ../../include/generated)
++GENHDR := $(GENDIR)/autoconf.h
++
++ifeq ($(O),)
++OUTPUT_DIR := $(CURDIR)/build
++else
++OUTPUT_DIR := $(O)/build
++endif # O
++OBJ_DIR := $(OUTPUT_DIR)/obj
++INCLUDE_DIR := $(OUTPUT_DIR)/include
++BPFOBJ_DIR := $(OBJ_DIR)/libbpf
++SCXOBJ_DIR := $(OBJ_DIR)/sched_ext
++BINDIR := $(OUTPUT_DIR)/bin
++BPFOBJ := $(BPFOBJ_DIR)/libbpf.a
++ifneq ($(CROSS_COMPILE),)
++HOST_BUILD_DIR		:= $(OBJ_DIR)/host
++HOST_OUTPUT_DIR	:= host-tools
++HOST_INCLUDE_DIR	:= $(HOST_OUTPUT_DIR)/include
++else
++HOST_BUILD_DIR		:= $(OBJ_DIR)
++HOST_OUTPUT_DIR	:= $(OUTPUT_DIR)
++HOST_INCLUDE_DIR	:= $(INCLUDE_DIR)
++endif
++HOST_BPFOBJ := $(HOST_BUILD_DIR)/libbpf/libbpf.a
++RESOLVE_BTFIDS := $(HOST_BUILD_DIR)/resolve_btfids/resolve_btfids
++DEFAULT_BPFTOOL := $(HOST_OUTPUT_DIR)/sbin/bpftool
++
++VMLINUX_BTF_PATHS ?= $(if $(O),$(O)/vmlinux)					\
++		     $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux)		\
++		     ../../vmlinux						\
++		     /sys/kernel/btf/vmlinux					\
++		     /boot/vmlinux-$(shell uname -r)
++VMLINUX_BTF ?= $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
++ifeq ($(VMLINUX_BTF),)
++$(error Cannot find a vmlinux for VMLINUX_BTF at any of "$(VMLINUX_BTF_PATHS)")
++endif
++
++BPFTOOL ?= $(DEFAULT_BPFTOOL)
++
++ifneq ($(wildcard $(GENHDR)),)
++  GENFLAGS := -DHAVE_GENHDR
++endif
++
++CFLAGS += -g -O2 -rdynamic -pthread -Wall -Werror $(GENFLAGS)			\
++	  -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR)				\
++	  -I$(TOOLSINCDIR) -I$(APIDIR) -I$(CURDIR)/include
++
++# Silence some warnings when compiled with clang
++ifneq ($(LLVM),)
++CFLAGS += -Wno-unused-command-line-argument
++endif
++
++LDFLAGS = -lelf -lz -lpthread
++
++IS_LITTLE_ENDIAN = $(shell $(CC) -dM -E - </dev/null |				\
++			grep 'define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__')
++
++# Get Clang's default includes on this system, as opposed to those seen by
++# '-target bpf'. This fixes "missing" files on some architectures/distros,
++# such as asm/byteorder.h, asm/socket.h, asm/sockios.h, sys/cdefs.h etc.
++#
++# Use '-idirafter': Don't interfere with include mechanics except where the
++# build would have failed anyways.
++define get_sys_includes
++$(shell $(1) -v -E - </dev/null 2>&1 \
++	| sed -n '/<...> search starts here:/,/End of search list./{ s| \(/.*\)|-idirafter \1|p }') \
++$(shell $(1) -dM -E - </dev/null | grep '__riscv_xlen ' | awk '{printf("-D__riscv_xlen=%d -D__BITS_PER_LONG=%d", $$3, $$3)}')
++endef
++
++BPF_CFLAGS = -g -D__TARGET_ARCH_$(SRCARCH)					\
++	     $(if $(IS_LITTLE_ENDIAN),-mlittle-endian,-mbig-endian)		\
++	     -I$(CURDIR)/include -I$(CURDIR)/include/bpf-compat			\
++	     -I$(INCLUDE_DIR) -I$(APIDIR)					\
++	     -I../../include							\
++	     $(call get_sys_includes,$(CLANG))					\
++	     -Wall -Wno-compare-distinct-pointer-types				\
++	     -O2 -mcpu=v3
++
++# sort removes libbpf duplicates when not cross-building
++MAKE_DIRS := $(sort $(OBJ_DIR)/libbpf $(HOST_BUILD_DIR)/libbpf			\
++	       $(HOST_BUILD_DIR)/bpftool $(HOST_BUILD_DIR)/resolve_btfids	\
++	       $(INCLUDE_DIR) $(SCXOBJ_DIR) $(BINDIR))
++
++$(MAKE_DIRS):
++	$(call msg,MKDIR,,$@)
++	$(Q)mkdir -p $@
++
++$(BPFOBJ): $(wildcard $(BPFDIR)/*.[ch] $(BPFDIR)/Makefile)			\
++	   $(APIDIR)/linux/bpf.h						\
++	   | $(OBJ_DIR)/libbpf
++	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=$(OBJ_DIR)/libbpf/	\
++		    EXTRA_CFLAGS='-g -O0 -fPIC'					\
++		    DESTDIR=$(OUTPUT_DIR) prefix= all install_headers
++
++$(DEFAULT_BPFTOOL): $(wildcard $(BPFTOOLDIR)/*.[ch] $(BPFTOOLDIR)/Makefile)	\
++		    $(HOST_BPFOBJ) | $(HOST_BUILD_DIR)/bpftool
++	$(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)				\
++		    ARCH= CROSS_COMPILE= CC=$(HOSTCC) LD=$(HOSTLD)		\
++		    EXTRA_CFLAGS='-g -O0'					\
++		    OUTPUT=$(HOST_BUILD_DIR)/bpftool/				\
++		    LIBBPF_OUTPUT=$(HOST_BUILD_DIR)/libbpf/			\
++		    LIBBPF_DESTDIR=$(HOST_OUTPUT_DIR)/				\
++		    prefix= DESTDIR=$(HOST_OUTPUT_DIR)/ install-bin
++
++$(INCLUDE_DIR)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL) | $(INCLUDE_DIR)
++ifeq ($(VMLINUX_H),)
++	$(call msg,GEN,,$@)
++	$(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
++else
++	$(call msg,CP,,$@)
++	$(Q)cp "$(VMLINUX_H)" $@
++endif
++
++$(SCXOBJ_DIR)/%.bpf.o: %.bpf.c $(INCLUDE_DIR)/vmlinux.h include/scx/*.h		\
++		       | $(BPFOBJ) $(SCXOBJ_DIR)
++	$(call msg,CLNG-BPF,,$(notdir $@))
++	$(Q)$(CLANG) $(BPF_CFLAGS) -target bpf -c $< -o $@
++
++$(INCLUDE_DIR)/%.bpf.skel.h: $(SCXOBJ_DIR)/%.bpf.o $(INCLUDE_DIR)/vmlinux.h $(BPFTOOL)
++	$(eval sched=$(notdir $@))
++	$(call msg,GEN-SKEL,,$(sched))
++	$(Q)$(BPFTOOL) gen object $(<:.o=.linked1.o) $<
++	$(Q)$(BPFTOOL) gen object $(<:.o=.linked2.o) $(<:.o=.linked1.o)
++	$(Q)$(BPFTOOL) gen object $(<:.o=.linked3.o) $(<:.o=.linked2.o)
++	$(Q)diff $(<:.o=.linked2.o) $(<:.o=.linked3.o)
++	$(Q)$(BPFTOOL) gen skeleton $(<:.o=.linked3.o) name $(subst .bpf.skel.h,,$(sched)) > $@
++	$(Q)$(BPFTOOL) gen subskeleton $(<:.o=.linked3.o) name $(subst .bpf.skel.h,,$(sched)) > $(@:.skel.h=.subskel.h)
++
++SCX_COMMON_DEPS := include/scx/common.h include/scx/user_exit_info.h | $(BINDIR)
++
++c-sched-targets = scx_simple scx_qmap
++
++$(addprefix $(BINDIR)/,$(c-sched-targets)): \
++	$(BINDIR)/%: \
++		$(filter-out %.bpf.c,%.c) \
++		$(INCLUDE_DIR)/%.bpf.skel.h \
++		$(SCX_COMMON_DEPS)
++	$(eval sched=$(notdir $@))
++	$(CC) $(CFLAGS) -c $(sched).c -o $(SCXOBJ_DIR)/$(sched).o
++	$(CC) -o $@ $(SCXOBJ_DIR)/$(sched).o $(HOST_BPFOBJ) $(LDFLAGS)
++
++$(c-sched-targets): %: $(BINDIR)/%
++
++install: all
++	$(Q)mkdir -p $(DESTDIR)/usr/local/bin/
++	$(Q)cp $(BINDIR)/* $(DESTDIR)/usr/local/bin/
++
++clean:
++	rm -rf $(OUTPUT_DIR) $(HOST_OUTPUT_DIR)
++	rm -f *.o *.bpf.o *.bpf.skel.h *.bpf.subskel.h
++	rm -f $(c-sched-targets)
++
++help:
++	@echo   'Building targets'
++	@echo   '================'
++	@echo   ''
++	@echo   '  all		  - Compile all schedulers'
++	@echo   ''
++	@echo   'Alternatively, you may compile individual schedulers:'
++	@echo   ''
++	@printf '  %s\n' $(c-sched-targets)
++	@echo   ''
++	@echo   'For any scheduler build target, you may specify an alternative'
++	@echo   'build output path with the O= environment variable. For example:'
++	@echo   ''
++	@echo   '   O=/tmp/sched_ext make all'
++	@echo   ''
++	@echo   'will compile all schedulers, and emit the build artifacts to'
++	@echo   '/tmp/sched_ext/build.'
++	@echo   ''
++	@echo   ''
++	@echo   'Installing targets'
++	@echo   '=================='
++	@echo   ''
++	@echo   '  install	  - Compile and install all schedulers to /usr/bin.'
++	@echo   '		    You may specify the DESTDIR= environment variable'
++	@echo   '		    to indicate a prefix for /usr/bin. For example:'
++	@echo   ''
++	@echo   '                     DESTDIR=/tmp/sched_ext make install'
++	@echo   ''
++	@echo   '		    will build the schedulers in CWD/build, and'
++	@echo   '		    install the schedulers to /tmp/sched_ext/usr/bin.'
++	@echo   ''
++	@echo   ''
++	@echo   'Cleaning targets'
++	@echo   '================'
++	@echo   ''
++	@echo   '  clean		  - Remove all generated files'
++
++all_targets: $(c-sched-targets)
++
++.PHONY: all all_targets $(c-sched-targets) clean help
++
++# delete failed targets
++.DELETE_ON_ERROR:
++
++# keep intermediate (.bpf.skel.h, .bpf.o, etc) targets
++.SECONDARY:
+diff --git a/tools/sched_ext/include/bpf-compat/gnu/stubs.h b/tools/sched_ext/include/bpf-compat/gnu/stubs.h
+new file mode 100644
+index 000000000000..ad7d139ce907
+--- /dev/null
++++ b/tools/sched_ext/include/bpf-compat/gnu/stubs.h
+@@ -0,0 +1,11 @@
++/*
++ * Dummy gnu/stubs.h. clang can end up including /usr/include/gnu/stubs.h when
++ * compiling BPF files although its content doesn't play any role. The file in
++ * turn includes stubs-64.h or stubs-32.h depending on whether __x86_64__ is
++ * defined. When compiling a BPF source, __x86_64__ isn't set and thus
++ * stubs-32.h is selected. However, the file is not there if the system doesn't
++ * have 32bit glibc devel package installed leading to a build failure.
++ *
++ * The problem is worked around by making this file available in the include
++ * search paths before the system one when building BPF.
++ */
+diff --git a/tools/sched_ext/include/scx/common.bpf.h b/tools/sched_ext/include/scx/common.bpf.h
+new file mode 100644
+index 000000000000..6b355899f67d
+--- /dev/null
++++ b/tools/sched_ext/include/scx/common.bpf.h
+@@ -0,0 +1,275 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2022 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2022 Tejun Heo <tj@kernel.org>
++ * Copyright (c) 2022 David Vernet <dvernet@meta.com>
++ */
++#ifndef __SCX_COMMON_BPF_H
++#define __SCX_COMMON_BPF_H
++
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++#include <asm-generic/errno.h>
++#include "user_exit_info.h"
++
++#define PF_WQ_WORKER			0x00000020	/* I'm a workqueue worker */
++#define PF_KTHREAD			0x00200000	/* I am a kernel thread */
++#define PF_EXITING			0x00000004
++#define CLOCK_MONOTONIC			1
++
++/*
++ * Earlier versions of clang/pahole lost upper 32bits in 64bit enums which can
++ * lead to really confusing misbehaviors. Let's trigger a build failure.
++ */
++static inline void ___vmlinux_h_sanity_check___(void)
 +{
-+	static unsigned long bt[SCX_EXIT_BT_LEN];
-+	char dsq_id_buf[19] = "(n/a)";
-+	unsigned long ops_state = atomic_long_read(&p->scx.ops_state);
-+	unsigned int bt_len;
-+	size_t avail, used;
-+	char *buf;
-+
-+	if (p->scx.dsq)
-+		scnprintf(dsq_id_buf, sizeof(dsq_id_buf), "0x%llx",
-+			  (unsigned long long)p->scx.dsq->id);
-+
-+	seq_buf_printf(s, "\n %c%c %s[%d] %+ldms\n",
-+		       marker, task_state_to_char(p), p->comm, p->pid,
-+		       jiffies_delta_msecs(p->scx.runnable_at, now));
-+	seq_buf_printf(s, "      scx_state/flags=%u/0x%x ops_state/qseq=%lu/%lu\n",
-+		       scx_get_task_state(p),
-+		       p->scx.flags & ~SCX_TASK_STATE_MASK,
-+		       ops_state & SCX_OPSS_STATE_MASK,
-+		       ops_state >> SCX_OPSS_QSEQ_SHIFT);
-+	seq_buf_printf(s, "      sticky/holding_cpu=%d/%d dsq_id=%s\n",
-+		       p->scx.sticky_cpu, p->scx.holding_cpu, dsq_id_buf);
-+	seq_buf_printf(s, "      cpus=%*pb\n\n", cpumask_pr_args(p->cpus_ptr));
-+
-+	bt_len = stack_trace_save_tsk(p, bt, SCX_EXIT_BT_LEN, 1);
-+
-+	avail = seq_buf_get_buf(s, &buf);
-+	used = stack_trace_snprint(buf, avail, bt, bt_len, 3);
-+	seq_buf_commit(s, used < avail ? used : -1);
++	_Static_assert(SCX_DSQ_FLAG_BUILTIN,
++		       "bpftool generated vmlinux.h is missing high bits for 64bit enums, upgrade clang and pahole");
 +}
 +
-+static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
-+{
-+	const char trunc_marker[] = "\n\n~~~~ TRUNCATED ~~~~\n";
-+	unsigned long now = jiffies;
-+	struct seq_buf s;
-+	size_t avail, used;
-+	char *buf;
-+	int cpu;
++s32 scx_bpf_create_dsq(u64 dsq_id, s32 node) __ksym;
++s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags, bool *is_idle) __ksym;
++void scx_bpf_dispatch(struct task_struct *p, u64 dsq_id, u64 slice, u64 enq_flags) __ksym;
++u32 scx_bpf_dispatch_nr_slots(void) __ksym;
++void scx_bpf_dispatch_cancel(void) __ksym;
++bool scx_bpf_consume(u64 dsq_id) __ksym;
++s32 scx_bpf_dsq_nr_queued(u64 dsq_id) __ksym;
++void scx_bpf_destroy_dsq(u64 dsq_id) __ksym;
++void scx_bpf_exit_bstr(s64 exit_code, char *fmt, unsigned long long *data, u32 data__sz) __ksym __weak;
++void scx_bpf_error_bstr(char *fmt, unsigned long long *data, u32 data_len) __ksym;
++u32 scx_bpf_nr_cpu_ids(void) __ksym __weak;
++const struct cpumask *scx_bpf_get_possible_cpumask(void) __ksym __weak;
++const struct cpumask *scx_bpf_get_online_cpumask(void) __ksym __weak;
++void scx_bpf_put_cpumask(const struct cpumask *cpumask) __ksym __weak;
++const struct cpumask *scx_bpf_get_idle_cpumask(void) __ksym;
++const struct cpumask *scx_bpf_get_idle_smtmask(void) __ksym;
++void scx_bpf_put_idle_cpumask(const struct cpumask *cpumask) __ksym;
++bool scx_bpf_test_and_clear_cpu_idle(s32 cpu) __ksym;
++s32 scx_bpf_pick_idle_cpu(const cpumask_t *cpus_allowed, u64 flags) __ksym;
++s32 scx_bpf_pick_any_cpu(const cpumask_t *cpus_allowed, u64 flags) __ksym;
++bool scx_bpf_task_running(const struct task_struct *p) __ksym;
++s32 scx_bpf_task_cpu(const struct task_struct *p) __ksym;
 +
-+	if (dump_len <= sizeof(trunc_marker))
-+		return;
++static inline __attribute__((format(printf, 1, 2)))
++void ___scx_bpf_exit_format_checker(const char *fmt, ...) {}
 +
-+	seq_buf_init(&s, ei->dump, dump_len - sizeof(trunc_marker));
++/*
++ * Helper macro for initializing the fmt and variadic argument inputs to both
++ * bstr exit kfuncs. Callers to this function should use ___fmt and ___param to
++ * refer to the initialized list of inputs to the bstr kfunc.
++ */
++#define scx_bpf_exit_preamble(fmt, args...)					\
++	static char ___fmt[] = fmt;						\
++	/*									\
++	 * Note that __param[] must have at least one				\
++	 * element to keep the verifier happy.					\
++	 */									\
++	unsigned long long ___param[___bpf_narg(args) ?: 1] = {};		\
++										\
++	_Pragma("GCC diagnostic push")						\
++	_Pragma("GCC diagnostic ignored \"-Wint-conversion\"")			\
++	___bpf_fill(___param, args);						\
++	_Pragma("GCC diagnostic pop")						\
 +
-+	seq_buf_printf(&s, "%s[%d] triggered exit kind %d:\n  %s (%s)\n\n",
-+		       current->comm, current->pid, ei->kind, ei->reason, ei->msg);
-+	seq_buf_printf(&s, "Backtrace:\n");
-+	avail = seq_buf_get_buf(&s, &buf);
-+	used = stack_trace_snprint(buf, avail, ei->bt, ei->bt_len, 1);
-+	seq_buf_commit(&s, used < avail ? used : -1);
-+
-+	seq_buf_printf(&s, "\nRunqueue states\n");
-+	seq_buf_printf(&s, "---------------\n");
-+
-+	for_each_possible_cpu(cpu) {
-+		struct rq *rq = cpu_rq(cpu);
-+		struct rq_flags rf;
-+		struct task_struct *p;
-+
-+		rq_lock(rq, &rf);
-+
-+		if (list_empty(&rq->scx.runnable_list) &&
-+		    rq->curr->sched_class == &idle_sched_class)
-+			goto next;
-+
-+		seq_buf_printf(&s, "\nCPU %-4d: nr_run=%u ops_qseq=%lu\n",
-+			       cpu, rq->scx.nr_running, rq->scx.ops_qseq);
-+		seq_buf_printf(&s, "          curr=%s[%d] class=%ps\n",
-+			       rq->curr->comm, rq->curr->pid,
-+			       rq->curr->sched_class);
-+
-+		if (rq->curr->sched_class == &ext_sched_class)
-+			scx_dump_task(&s, rq->curr, '*', now);
-+
-+		list_for_each_entry(p, &rq->scx.runnable_list, scx.runnable_node)
-+			scx_dump_task(&s, p, ' ', now);
-+	next:
-+		rq_unlock(rq, &rf);
-+	}
-+
-+	if (seq_buf_has_overflowed(&s))
-+		memcpy(ei->dump + seq_buf_used(&s) - 1, trunc_marker,
-+		       sizeof(trunc_marker));
-+}
-+
- static void scx_ops_error_irq_workfn(struct irq_work *irq_work)
- {
-+	struct scx_exit_info *ei = scx_exit_info;
-+
-+	if (ei->kind >= SCX_EXIT_ERROR)
-+		scx_dump_state(ei, scx_ops.exit_dump_len);
-+
- 	schedule_scx_ops_disable_work();
- }
- 
-@@ -3131,6 +3236,13 @@ static __printf(3, 4) void scx_ops_exit_kind(enum scx_exit_kind kind,
- 	vscnprintf(ei->msg, SCX_EXIT_MSG_LEN, fmt, args);
- 	va_end(args);
- 
-+	/*
-+	 * Set ei->kind and ->reason for scx_dump_state(). They'll be set again
-+	 * in scx_ops_disable_workfn().
-+	 */
-+	ei->kind = kind;
-+	ei->reason = scx_exit_reason(ei->kind);
-+
- 	irq_work_queue(&scx_ops_error_irq_work);
- }
- 
-@@ -3192,7 +3304,7 @@ static int scx_ops_enable(struct sched_ext_ops *ops)
- 	if (ret < 0)
- 		goto err;
- 
--	scx_exit_info = alloc_exit_info();
-+	scx_exit_info = alloc_exit_info(ops->exit_dump_len);
- 	if (!scx_exit_info) {
- 		ret = -ENOMEM;
- 		goto err_del;
-@@ -3572,6 +3684,10 @@ static int bpf_scx_init_member(const struct btf_type *t,
- 			return -E2BIG;
- 		ops->timeout_ms = *(u32 *)(udata + moff);
- 		return 1;
-+	case offsetof(struct sched_ext_ops, exit_dump_len):
-+		ops->exit_dump_len =
-+			*(u32 *)(udata + moff) ?: SCX_EXIT_DUMP_DFL_LEN;
-+		return 1;
- 	}
- 
- 	return 0;
-diff --git a/tools/sched_ext/include/scx/compat.h b/tools/sched_ext/include/scx/compat.h
-index 2a66f3eb87a9..2be79bd88a25 100644
---- a/tools/sched_ext/include/scx/compat.h
-+++ b/tools/sched_ext/include/scx/compat.h
-@@ -126,7 +126,8 @@ static inline bool __COMPAT_struct_has_field(const char *type, const char *field
-  * and attach it, backward compatibility is automatically maintained where
-  * reasonable.
-  *
-- * - sched_ext_ops.tick(): Ignored on older kernels with a warning.
-+ * - ops.tick(): Ignored on older kernels with a warning.
-+ * - ops.exit_dump_len: Cleared to zero on older kernels with a warning.
-  */
- #define SCX_OPS_OPEN(__ops_name, __scx_name) ({					\
- 	struct __scx_name *__skel;						\
-@@ -136,7 +137,13 @@ static inline bool __COMPAT_struct_has_field(const char *type, const char *field
- 	__skel; 								\
- })
- 
--#define SCX_OPS_LOAD(__skel, __ops_name, __scx_name) ({				\
-+#define SCX_OPS_LOAD(__skel, __ops_name, __scx_name, __uei_name) ({		\
-+	UEI_SET_SIZE(__skel, __ops_name, __uei_name);				\
-+	if (!__COMPAT_struct_has_field("sched_ext_ops", "exit_dump_len") &&	\
-+	    (__skel)->struct_ops.__ops_name->exit_dump_len) {			\
-+		fprintf(stderr, "WARNING: kernel doesn't support setting exit dump len\n"); \
-+		(__skel)->struct_ops.__ops_name->exit_dump_len = 0;		\
-+	}									\
- 	if (!__COMPAT_struct_has_field("sched_ext_ops", "tick") &&		\
- 	    (__skel)->struct_ops.__ops_name->tick) {				\
- 		fprintf(stderr, "WARNING: kernel doesn't support ops.tick()\n"); \
-diff --git a/tools/sched_ext/include/scx/user_exit_info.h b/tools/sched_ext/include/scx/user_exit_info.h
-index 8c3b7fac4d05..cf4293cb250e 100644
---- a/tools/sched_ext/include/scx/user_exit_info.h
-+++ b/tools/sched_ext/include/scx/user_exit_info.h
-@@ -13,6 +13,7 @@
- enum uei_sizes {
- 	UEI_REASON_LEN		= 128,
- 	UEI_MSG_LEN		= 1024,
-+	UEI_DUMP_DFL_LEN	= 32768,
- };
- 
- struct user_exit_info {
-@@ -28,6 +29,8 @@ struct user_exit_info {
- #include <bpf/bpf_core_read.h>
- 
- #define UEI_DEFINE(__name)							\
-+	char RESIZABLE_ARRAY(data, __name##_dump);				\
-+	const volatile u32 __name##_dump_len;					\
- 	struct user_exit_info __name SEC(".data")
- 
- #define UEI_RECORD(__uei_name, __ei) ({						\
-@@ -35,6 +38,8 @@ struct user_exit_info {
- 				  sizeof(__uei_name.reason), (__ei)->reason);	\
- 	bpf_probe_read_kernel_str(__uei_name.msg,				\
- 				  sizeof(__uei_name.msg), (__ei)->msg);		\
-+	bpf_probe_read_kernel_str(__uei_name##_dump,				\
-+				  __uei_name##_dump_len, (__ei)->dump);		\
- 	if (bpf_core_field_exists((__ei)->exit_code))				\
- 		__uei_name.exit_code = (__ei)->exit_code;			\
- 	/* use __sync to force memory barrier */				\
-@@ -47,6 +52,13 @@ struct user_exit_info {
- #include <stdio.h>
- #include <stdbool.h>
- 
-+/* no need to call the following explicitly if SCX_OPS_LOAD() is used */
-+#define UEI_SET_SIZE(__skel, __ops_name, __uei_name) ({				\
-+	u32 __len = (__skel)->struct_ops.__ops_name->exit_dump_len ?: UEI_DUMP_DFL_LEN; \
-+	(__skel)->rodata->__uei_name##_dump_len = __len;			\
-+	RESIZE_ARRAY(data, __uei_name##_dump, __len);				\
++/*
++ * scx_bpf_exit() wraps the scx_bpf_exit_bstr() kfunc with variadic arguments
++ * instead of an array of u64. Using this macro will cause the scheduler to
++ * exit cleanly with the specified exit code being passed to user space.
++ */
++#define scx_bpf_exit(code, fmt, args...)					\
++({										\
++	scx_bpf_exit_preamble(fmt, args)					\
++	scx_bpf_exit_bstr(code, ___fmt, ___param, sizeof(___param));		\
++	___scx_bpf_exit_format_checker(fmt, ##args);				\
 +})
 +
- #define UEI_EXITED(__skel, __uei_name) ({					\
- 	/* use __sync to force memory barrier */				\
- 	__sync_val_compare_and_swap(&(__skel)->data->__uei_name.kind, -1, -1);	\
-@@ -54,6 +66,13 @@ struct user_exit_info {
- 
- #define UEI_REPORT(__skel, __uei_name) ({					\
- 	struct user_exit_info *__uei = &(__skel)->data->__uei_name;		\
-+	char *__uei_dump = (__skel)->data_##__uei_name##_dump->__uei_name##_dump; \
-+	if (__uei_dump[0] != '\0') {						\
-+		fputs("\nDEBUG DUMP\n", stderr);				\
-+		fputs("================================================================================\n\n", stderr); \
-+		fputs(__uei_dump, stderr);					\
-+		fputs("\n================================================================================\n\n", stderr); \
++/*
++ * scx_bpf_error() wraps the scx_bpf_error_bstr() kfunc with variadic arguments
++ * instead of an array of u64. Invoking this macro will cause the scheduler to
++ * exit in an erroneous state, with diagnostic information being passed to the
++ * user.
++ */
++#define scx_bpf_error(fmt, args...)						\
++({										\
++	scx_bpf_exit_preamble(fmt, args)					\
++	scx_bpf_error_bstr(___fmt, ___param, sizeof(___param));			\
++	___scx_bpf_exit_format_checker(fmt, ##args);				\
++})
++
++#define BPF_STRUCT_OPS(name, args...)						\
++SEC("struct_ops/"#name)								\
++BPF_PROG(name, ##args)
++
++#define BPF_STRUCT_OPS_SLEEPABLE(name, args...)					\
++SEC("struct_ops.s/"#name)							\
++BPF_PROG(name, ##args)
++
++/**
++ * RESIZABLE_ARRAY - Generates annotations for an array that may be resized
++ * @elfsec: the data section of the BPF program in which to place the array
++ * @arr: the name of the array
++ *
++ * libbpf has an API for setting map value sizes. Since data sections (i.e.
++ * bss, data, rodata) themselves are maps, a data section can be resized. If
++ * a data section has an array as its last element, the BTF info for that
++ * array will be adjusted so that length of the array is extended to meet the
++ * new length of the data section. This macro annotates an array to have an
++ * element count of one with the assumption that this array can be resized
++ * within the userspace program. It also annotates the section specifier so
++ * this array exists in a custom sub data section which can be resized
++ * independently.
++ *
++ * See RESIZE_ARRAY() for the userspace convenience macro for resizing an
++ * array declared with RESIZABLE_ARRAY().
++ */
++#define RESIZABLE_ARRAY(elfsec, arr) arr[1] SEC("."#elfsec"."#arr)
++
++/**
++ * MEMBER_VPTR - Obtain the verified pointer to a struct or array member
++ * @base: struct or array to index
++ * @member: dereferenced member (e.g. .field, [idx0][idx1], .field[idx0] ...)
++ *
++ * The verifier often gets confused by the instruction sequence the compiler
++ * generates for indexing struct fields or arrays. This macro forces the
++ * compiler to generate a code sequence which first calculates the byte offset,
++ * checks it against the struct or array size and add that byte offset to
++ * generate the pointer to the member to help the verifier.
++ *
++ * Ideally, we want to abort if the calculated offset is out-of-bounds. However,
++ * BPF currently doesn't support abort, so evaluate to %NULL instead. The caller
++ * must check for %NULL and take appropriate action to appease the verifier. To
++ * avoid confusing the verifier, it's best to check for %NULL and dereference
++ * immediately.
++ *
++ *	vptr = MEMBER_VPTR(my_array, [i][j]);
++ *	if (!vptr)
++ *		return error;
++ *	*vptr = new_value;
++ *
++ * sizeof(@base) should encompass the memory area to be accessed and thus can't
++ * be a pointer to the area. Use `MEMBER_VPTR(*ptr, .member)` instead of
++ * `MEMBER_VPTR(ptr, ->member)`.
++ */
++#define MEMBER_VPTR(base, member) (typeof((base) member) *)			\
++({										\
++	u64 __base = (u64)&(base);						\
++	u64 __addr = (u64)&((base) member) - __base;				\
++	_Static_assert(sizeof(base) >= sizeof((base) member),			\
++		       "@base is smaller than @member, is @base a pointer?");	\
++	asm volatile (								\
++		"if %0 <= %[max] goto +2\n"					\
++		"%0 = 0\n"							\
++		"goto +1\n"							\
++		"%0 += %1\n"							\
++		: "+r"(__addr)							\
++		: "r"(__base),							\
++		  [max]"i"(sizeof(base) - sizeof((base) member)));		\
++	__addr;									\
++})
++
++/**
++ * ARRAY_ELEM_PTR - Obtain the verified pointer to an array element
++ * @arr: array to index into
++ * @i: array index
++ * @n: number of elements in array
++ *
++ * Similar to MEMBER_VPTR() but is intended for use with arrays where the
++ * element count needs to be explicit.
++ * It can be used in cases where a global array is defined with an initial
++ * size but is intended to be be resized before loading the BPF program.
++ * Without this version of the macro, MEMBER_VPTR() will use the compile time
++ * size of the array to compute the max, which will result in rejection by
++ * the verifier.
++ */
++#define ARRAY_ELEM_PTR(arr, i, n) (typeof(arr[i]) *)				\
++({										\
++	u64 __base = (u64)arr;							\
++	u64 __addr = (u64)&(arr[i]) - __base;					\
++	asm volatile (								\
++		"if %0 <= %[max] goto +2\n"					\
++		"%0 = 0\n"							\
++		"goto +1\n"							\
++		"%0 += %1\n"							\
++		: "+r"(__addr)							\
++		: "r"(__base),							\
++		  [max]"r"(sizeof(arr[0]) * ((n) - 1)));			\
++	__addr;									\
++})
++
++/*
++ * BPF core and other generic helpers
++ */
++
++/* list and rbtree */
++#define __contains(name, node) __attribute__((btf_decl_tag("contains:" #name ":" #node)))
++#define private(name) SEC(".data." #name) __hidden __attribute__((aligned(8)))
++
++void *bpf_obj_new_impl(__u64 local_type_id, void *meta) __ksym;
++void bpf_obj_drop_impl(void *kptr, void *meta) __ksym;
++
++#define bpf_obj_new(type) ((type *)bpf_obj_new_impl(bpf_core_type_id_local(type), NULL))
++#define bpf_obj_drop(kptr) bpf_obj_drop_impl(kptr, NULL)
++
++void bpf_list_push_front(struct bpf_list_head *head, struct bpf_list_node *node) __ksym;
++void bpf_list_push_back(struct bpf_list_head *head, struct bpf_list_node *node) __ksym;
++struct bpf_list_node *bpf_list_pop_front(struct bpf_list_head *head) __ksym;
++struct bpf_list_node *bpf_list_pop_back(struct bpf_list_head *head) __ksym;
++struct bpf_rb_node *bpf_rbtree_remove(struct bpf_rb_root *root,
++				      struct bpf_rb_node *node) __ksym;
++int bpf_rbtree_add_impl(struct bpf_rb_root *root, struct bpf_rb_node *node,
++			bool (less)(struct bpf_rb_node *a, const struct bpf_rb_node *b),
++			void *meta, __u64 off) __ksym;
++#define bpf_rbtree_add(head, node, less) bpf_rbtree_add_impl(head, node, less, NULL, 0)
++
++struct bpf_rb_node *bpf_rbtree_first(struct bpf_rb_root *root) __ksym;
++
++void *bpf_refcount_acquire_impl(void *kptr, void *meta) __ksym;
++#define bpf_refcount_acquire(kptr) bpf_refcount_acquire_impl(kptr, NULL)
++
++/* task */
++struct task_struct *bpf_task_from_pid(s32 pid) __ksym;
++struct task_struct *bpf_task_acquire(struct task_struct *p) __ksym;
++void bpf_task_release(struct task_struct *p) __ksym;
++
++/* cgroup */
++struct cgroup *bpf_cgroup_ancestor(struct cgroup *cgrp, int level) __ksym;
++void bpf_cgroup_release(struct cgroup *cgrp) __ksym;
++struct cgroup *bpf_cgroup_from_id(u64 cgid) __ksym;
++
++/* cpumask */
++struct bpf_cpumask *bpf_cpumask_create(void) __ksym;
++struct bpf_cpumask *bpf_cpumask_acquire(struct bpf_cpumask *cpumask) __ksym;
++void bpf_cpumask_release(struct bpf_cpumask *cpumask) __ksym;
++u32 bpf_cpumask_first(const struct cpumask *cpumask) __ksym;
++u32 bpf_cpumask_first_zero(const struct cpumask *cpumask) __ksym;
++void bpf_cpumask_set_cpu(u32 cpu, struct bpf_cpumask *cpumask) __ksym;
++void bpf_cpumask_clear_cpu(u32 cpu, struct bpf_cpumask *cpumask) __ksym;
++bool bpf_cpumask_test_cpu(u32 cpu, const struct cpumask *cpumask) __ksym;
++bool bpf_cpumask_test_and_set_cpu(u32 cpu, struct bpf_cpumask *cpumask) __ksym;
++bool bpf_cpumask_test_and_clear_cpu(u32 cpu, struct bpf_cpumask *cpumask) __ksym;
++void bpf_cpumask_setall(struct bpf_cpumask *cpumask) __ksym;
++void bpf_cpumask_clear(struct bpf_cpumask *cpumask) __ksym;
++bool bpf_cpumask_and(struct bpf_cpumask *dst, const struct cpumask *src1,
++		     const struct cpumask *src2) __ksym;
++void bpf_cpumask_or(struct bpf_cpumask *dst, const struct cpumask *src1,
++		    const struct cpumask *src2) __ksym;
++void bpf_cpumask_xor(struct bpf_cpumask *dst, const struct cpumask *src1,
++		     const struct cpumask *src2) __ksym;
++bool bpf_cpumask_equal(const struct cpumask *src1, const struct cpumask *src2) __ksym;
++bool bpf_cpumask_intersects(const struct cpumask *src1, const struct cpumask *src2) __ksym;
++bool bpf_cpumask_subset(const struct cpumask *src1, const struct cpumask *src2) __ksym;
++bool bpf_cpumask_empty(const struct cpumask *cpumask) __ksym;
++bool bpf_cpumask_full(const struct cpumask *cpumask) __ksym;
++void bpf_cpumask_copy(struct bpf_cpumask *dst, const struct cpumask *src) __ksym;
++u32 bpf_cpumask_any_distribute(const struct cpumask *cpumask) __ksym;
++u32 bpf_cpumask_any_and_distribute(const struct cpumask *src1,
++				   const struct cpumask *src2) __ksym;
++
++/* rcu */
++void bpf_rcu_read_lock(void) __ksym;
++void bpf_rcu_read_unlock(void) __ksym;
++
++#include "compat.bpf.h"
++
++#endif	/* __SCX_COMMON_BPF_H */
+diff --git a/tools/sched_ext/include/scx/common.h b/tools/sched_ext/include/scx/common.h
+new file mode 100644
+index 000000000000..8d5a6775f64d
+--- /dev/null
++++ b/tools/sched_ext/include/scx/common.h
+@@ -0,0 +1,71 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2023 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2023 Tejun Heo <tj@kernel.org>
++ * Copyright (c) 2023 David Vernet <dvernet@meta.com>
++ */
++#ifndef __SCHED_EXT_COMMON_H
++#define __SCHED_EXT_COMMON_H
++
++#ifdef __KERNEL__
++#error "Should not be included by BPF programs"
++#endif
++
++#include <stdarg.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdint.h>
++#include <errno.h>
++
++typedef uint8_t u8;
++typedef uint16_t u16;
++typedef uint32_t u32;
++typedef uint64_t u64;
++typedef int8_t s8;
++typedef int16_t s16;
++typedef int32_t s32;
++typedef int64_t s64;
++
++#define SCX_BUG(__fmt, ...)							\
++	do {									\
++		fprintf(stderr, "%s:%d [scx panic]: %s\n", __FILE__, __LINE__,	\
++			strerror(errno));					\
++		fprintf(stderr, __fmt __VA_OPT__(,) __VA_ARGS__);		\
++		fprintf(stderr, "\n");						\
++										\
++		exit(EXIT_FAILURE);						\
++	} while (0)
++
++#define SCX_BUG_ON(__cond, __fmt, ...)					\
++	do {								\
++		if (__cond)						\
++			SCX_BUG((__fmt) __VA_OPT__(,) __VA_ARGS__);	\
++	} while (0)
++
++/**
++ * RESIZE_ARRAY - Convenience macro for resizing a BPF array
++ * @elfsec: the data section of the BPF program in which to the array exists
++ * @arr: the name of the array
++ * @n: the desired array element count
++ *
++ * For BPF arrays declared with RESIZABLE_ARRAY(), this macro performs two
++ * operations. It resizes the map which corresponds to the custom data
++ * section that contains the target array. As a side effect, the BTF info for
++ * the array is adjusted so that the array length is sized to cover the new
++ * data section size. The second operation is reassigning the skeleton pointer
++ * for that custom data section so that it points to the newly memory mapped
++ * region.
++ */
++#define RESIZE_ARRAY(elfsec, arr, n)						  \
++	do {									  \
++		size_t __sz;							  \
++		bpf_map__set_value_size(skel->maps.elfsec##_##arr,		  \
++				sizeof(skel->elfsec##_##arr->arr[0]) * (n));	  \
++		skel->elfsec##_##arr =						  \
++			bpf_map__initial_value(skel->maps.elfsec##_##arr, &__sz); \
++	} while (0)
++
++#include "user_exit_info.h"
++#include "compat.h"
++
++#endif	/* __SCHED_EXT_COMMON_H */
+diff --git a/tools/sched_ext/include/scx/compat.bpf.h b/tools/sched_ext/include/scx/compat.bpf.h
+new file mode 100644
+index 000000000000..c32a6a0f994c
+--- /dev/null
++++ b/tools/sched_ext/include/scx/compat.bpf.h
+@@ -0,0 +1,53 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2024 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2024 Tejun Heo <tj@kernel.org>
++ * Copyright (c) 2024 David Vernet <dvernet@meta.com>
++ */
++#ifndef __SCX_COMPAT_BPF_H
++#define __SCX_COMPAT_BPF_H
++
++/*
++ * scx_switch_all() was replaced by %SCX_OPS_SWITCH_PARTIAL. See
++ * %__COMPAT_SCX_OPS_SWITCH_PARTIAL in compat.h. This can be dropped in the
++ * future.
++ */
++void scx_bpf_switch_all(void) __ksym __weak;
++
++static inline void __COMPAT_scx_bpf_switch_all(void)
++{
++	if (!bpf_core_enum_value_exists(enum scx_ops_flags, SCX_OPS_SWITCH_PARTIAL))
++		scx_bpf_switch_all();
++}
++
++/*
++ * scx_bpf_exit() is a new addition. Fall back to scx_bpf_error() if
++ * unavailable. Users can use scx_bpf_exit() directly in the future.
++ */
++#define __COMPAT_scx_bpf_exit(code, fmt, args...)				\
++({										\
++	if (bpf_ksym_exists(scx_bpf_exit_bstr))					\
++		scx_bpf_exit((code), fmt, args);				\
++	else									\
++		scx_bpf_error(fmt, args);					\
++})
++
++/*
++ * scx_bpf_nr_cpu_ids(), scx_bpf_get_possible/online_cpumask() are new. No good
++ * way to noop these kfuncs. Provide a test macro. Users can assume existence in
++ * the future.
++ */
++#define __COMPAT_HAS_CPUMASKS							\
++	bpf_ksym_exists(scx_bpf_nr_cpu_ids)
++
++/*
++ * Define sched_ext_ops. This may be expanded to define multiple variants for
++ * backward compatibility. See compat.h::SCX_OPS_LOAD/ATTACH().
++ */
++#define SCX_OPS_DEFINE(__name, ...)						\
++	SEC(".struct_ops.link")							\
++	struct sched_ext_ops __name = {						\
++		__VA_ARGS__,							\
++	};
++
++#endif	/* __SCX_COMPAT_BPF_H */
+diff --git a/tools/sched_ext/include/scx/compat.h b/tools/sched_ext/include/scx/compat.h
+new file mode 100644
+index 000000000000..2a66f3eb87a9
+--- /dev/null
++++ b/tools/sched_ext/include/scx/compat.h
+@@ -0,0 +1,155 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2024 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2024 Tejun Heo <tj@kernel.org>
++ * Copyright (c) 2024 David Vernet <dvernet@meta.com>
++ */
++#ifndef __SCX_COMPAT_H
++#define __SCX_COMPAT_H
++
++#include <bpf/btf.h>
++
++struct btf *__COMPAT_vmlinux_btf __attribute__((weak));
++
++static inline void __COMPAT_load_vmlinux_btf(void)
++{
++	if (!__COMPAT_vmlinux_btf) {
++		__COMPAT_vmlinux_btf = btf__load_vmlinux_btf();
++		SCX_BUG_ON(!__COMPAT_vmlinux_btf, "btf__load_vmlinux_btf()");
++	}
++}
++
++static inline bool __COMPAT_read_enum(const char *type, const char *name, u64 *v)
++{
++	const struct btf_type *t;
++	const char *n;
++	s32 tid;
++	int i;
++
++	__COMPAT_load_vmlinux_btf();
++
++	tid = btf__find_by_name(__COMPAT_vmlinux_btf, type);
++	if (tid < 0)
++		return false;
++
++	t = btf__type_by_id(__COMPAT_vmlinux_btf, tid);
++	SCX_BUG_ON(!t, "btf__type_by_id(%d)", tid);
++
++	if (btf_is_enum(t)) {
++		struct btf_enum *e = btf_enum(t);
++
++		for (i = 0; i < BTF_INFO_VLEN(t->info); i++) {
++			n = btf__name_by_offset(__COMPAT_vmlinux_btf, e[i].name_off);
++			SCX_BUG_ON(!n, "btf__name_by_offset()");
++			if (!strcmp(n, name)) {
++				*v = e[i].val;
++				return true;
++			}
++		}
++	} else if (btf_is_enum64(t)) {
++		struct btf_enum64 *e = btf_enum64(t);
++
++		for (i = 0; i < BTF_INFO_VLEN(t->info); i++) {
++			n = btf__name_by_offset(__COMPAT_vmlinux_btf, e[i].name_off);
++			SCX_BUG_ON(!n, "btf__name_by_offset()");
++			if (!strcmp(n, name)) {
++				*v = btf_enum64_value(&e[i]);
++				return true;
++			}
++		}
++	}
++
++	return false;
++}
++
++#define __COMPAT_ENUM_OR_ZERO(__type, __ent)					\
++({										\
++	u64 __val = 0;								\
++	__COMPAT_read_enum(__type, __ent, &__val);				\
++	__val;									\
++})
++
++static inline bool __COMPAT_has_ksym(const char *ksym)
++{
++	__COMPAT_load_vmlinux_btf();
++	return btf__find_by_name(__COMPAT_vmlinux_btf, ksym) >= 0;
++}
++
++static inline bool __COMPAT_struct_has_field(const char *type, const char *field)
++{
++	const struct btf_type *t;
++	const struct btf_member *m;
++	const char *n;
++	s32 tid;
++	int i;
++
++	__COMPAT_load_vmlinux_btf();
++	tid = btf__find_by_name_kind(__COMPAT_vmlinux_btf, type, BTF_KIND_STRUCT);
++	if (tid < 0)
++		return false;
++
++	t = btf__type_by_id(__COMPAT_vmlinux_btf, tid);
++	SCX_BUG_ON(!t, "btf__type_by_id(%d)", tid);
++
++	m = btf_members(t);
++
++	for (i = 0; i < BTF_INFO_VLEN(t->info); i++) {
++		n = btf__name_by_offset(__COMPAT_vmlinux_btf, m[i].name_off);
++		SCX_BUG_ON(!n, "btf__name_by_offset()");
++			if (!strcmp(n, field))
++				return true;
++	}
++
++	return false;
++}
++
++/*
++ * An ops flag, %SCX_OPS_SWITCH_PARTIAL, replaced scx_bpf_switch_all() which had
++ * to be called from ops.init(). To support both before and after, use both
++ * %__COMPAT_SCX_OPS_SWITCH_PARTIAL and %__COMPAT_scx_bpf_switch_all() defined
++ * in compat.bpf.h. Users can switch to directly using %SCX_OPS_SWITCH_PARTIAL
++ * in the future.
++ */
++#define __COMPAT_SCX_OPS_SWITCH_PARTIAL						\
++	__COMPAT_ENUM_OR_ZERO("scx_ops_flags", "SCX_OPS_SWITCH_PARTIAL")
++
++/*
++ * scx_bpf_nr_cpu_ids(), scx_bpf_get_possible/online_cpumask() are new. Users
++ * will be able to assume existence in the future.
++ */
++#define __COMPAT_HAS_CPUMASKS							\
++	__COMPAT_has_ksym("scx_bpf_nr_cpu_ids")
++
++/*
++ * struct sched_ext_ops can change over time. If compat.bpf.h::SCX_OPS_DEFINE()
++ * is used to define ops and compat.h::SCX_OPS_LOAD/ATTACH() are used to load
++ * and attach it, backward compatibility is automatically maintained where
++ * reasonable.
++ *
++ * - sched_ext_ops.tick(): Ignored on older kernels with a warning.
++ */
++#define SCX_OPS_OPEN(__ops_name, __scx_name) ({					\
++	struct __scx_name *__skel;						\
++										\
++	__skel = __scx_name##__open();						\
++	SCX_BUG_ON(!__skel, "Could not open " #__scx_name);			\
++	__skel; 								\
++})
++
++#define SCX_OPS_LOAD(__skel, __ops_name, __scx_name) ({				\
++	if (!__COMPAT_struct_has_field("sched_ext_ops", "tick") &&		\
++	    (__skel)->struct_ops.__ops_name->tick) {				\
++		fprintf(stderr, "WARNING: kernel doesn't support ops.tick()\n"); \
++		(__skel)->struct_ops.__ops_name->tick = NULL;			\
 +	}									\
- 	fprintf(stderr, "EXIT: %s", __uei->reason);				\
- 	if (__uei->msg[0] != '\0')						\
- 		fprintf(stderr, " (%s)", __uei->msg);				\
++	SCX_BUG_ON(__scx_name##__load((__skel)), "Failed to load skel");	\
++})
++
++#define SCX_OPS_ATTACH(__skel, __ops_name) ({					\
++	struct bpf_link *__link;						\
++	__link = bpf_map__attach_struct_ops((__skel)->maps.__ops_name);		\
++	SCX_BUG_ON(!__link, "Failed to attach struct_ops");			\
++	__link;									\
++})
++
++#endif	/* __SCX_COMPAT_H */
+diff --git a/tools/sched_ext/include/scx/user_exit_info.h b/tools/sched_ext/include/scx/user_exit_info.h
+new file mode 100644
+index 000000000000..8c3b7fac4d05
+--- /dev/null
++++ b/tools/sched_ext/include/scx/user_exit_info.h
+@@ -0,0 +1,64 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Define struct user_exit_info which is shared between BPF and userspace parts
++ * to communicate exit status and other information.
++ *
++ * Copyright (c) 2022 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2022 Tejun Heo <tj@kernel.org>
++ * Copyright (c) 2022 David Vernet <dvernet@meta.com>
++ */
++#ifndef __USER_EXIT_INFO_H
++#define __USER_EXIT_INFO_H
++
++enum uei_sizes {
++	UEI_REASON_LEN		= 128,
++	UEI_MSG_LEN		= 1024,
++};
++
++struct user_exit_info {
++	int		kind;
++	s64		exit_code;
++	char		reason[UEI_REASON_LEN];
++	char		msg[UEI_MSG_LEN];
++};
++
++#ifdef __bpf__
++
++#include "vmlinux.h"
++#include <bpf/bpf_core_read.h>
++
++#define UEI_DEFINE(__name)							\
++	struct user_exit_info __name SEC(".data")
++
++#define UEI_RECORD(__uei_name, __ei) ({						\
++	bpf_probe_read_kernel_str(__uei_name.reason,				\
++				  sizeof(__uei_name.reason), (__ei)->reason);	\
++	bpf_probe_read_kernel_str(__uei_name.msg,				\
++				  sizeof(__uei_name.msg), (__ei)->msg);		\
++	if (bpf_core_field_exists((__ei)->exit_code))				\
++		__uei_name.exit_code = (__ei)->exit_code;			\
++	/* use __sync to force memory barrier */				\
++	__sync_val_compare_and_swap(&__uei_name.kind, __uei_name.kind,		\
++				    (__ei)->kind);				\
++})
++
++#else	/* !__bpf__ */
++
++#include <stdio.h>
++#include <stdbool.h>
++
++#define UEI_EXITED(__skel, __uei_name) ({					\
++	/* use __sync to force memory barrier */				\
++	__sync_val_compare_and_swap(&(__skel)->data->__uei_name.kind, -1, -1);	\
++})
++
++#define UEI_REPORT(__skel, __uei_name) ({					\
++	struct user_exit_info *__uei = &(__skel)->data->__uei_name;		\
++	fprintf(stderr, "EXIT: %s", __uei->reason);				\
++	if (__uei->msg[0] != '\0')						\
++		fprintf(stderr, " (%s)", __uei->msg);				\
++	fputs("\n", stderr);							\
++})
++
++#endif	/* __bpf__ */
++#endif	/* __USER_EXIT_INFO_H */
+diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
+new file mode 100644
+index 000000000000..ad0328bb3c6a
+--- /dev/null
++++ b/tools/sched_ext/scx_qmap.bpf.c
+@@ -0,0 +1,268 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * A simple five-level FIFO queue scheduler.
++ *
++ * There are five FIFOs implemented using BPF_MAP_TYPE_QUEUE. A task gets
++ * assigned to one depending on its compound weight. Each CPU round robins
++ * through the FIFOs and dispatches more from FIFOs with higher indices - 1 from
++ * queue0, 2 from queue1, 4 from queue2 and so on.
++ *
++ * This scheduler demonstrates:
++ *
++ * - BPF-side queueing using PIDs.
++ * - Sleepable per-task storage allocation using ops.prep_enable().
++ *
++ * This scheduler is primarily for demonstration and testing of sched_ext
++ * features and unlikely to be useful for actual workloads.
++ *
++ * Copyright (c) 2022 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2022 Tejun Heo <tj@kernel.org>
++ * Copyright (c) 2022 David Vernet <dvernet@meta.com>
++ */
++#include <scx/common.bpf.h>
++
++enum consts {
++	ONE_SEC_IN_NS		= 1000000000,
++	SHARED_DSQ		= 0,
++};
++
++char _license[] SEC("license") = "GPL";
++
++const volatile u64 slice_ns = SCX_SLICE_DFL;
++const volatile u32 dsp_batch;
++const volatile bool switch_partial;
++
++u32 test_error_cnt;
++
++UEI_DEFINE(uei);
++
++struct qmap {
++	__uint(type, BPF_MAP_TYPE_QUEUE);
++	__uint(max_entries, 4096);
++	__type(value, u32);
++} queue0 SEC(".maps"),
++  queue1 SEC(".maps"),
++  queue2 SEC(".maps"),
++  queue3 SEC(".maps"),
++  queue4 SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_ARRAY_OF_MAPS);
++	__uint(max_entries, 5);
++	__type(key, int);
++	__array(values, struct qmap);
++} queue_arr SEC(".maps") = {
++	.values = {
++		[0] = &queue0,
++		[1] = &queue1,
++		[2] = &queue2,
++		[3] = &queue3,
++		[4] = &queue4,
++	},
++};
++
++/* Per-task scheduling context */
++struct task_ctx {
++	bool	force_local;	/* Dispatch directly to local_dsq */
++};
++
++struct {
++	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
++	__uint(map_flags, BPF_F_NO_PREALLOC);
++	__type(key, int);
++	__type(value, struct task_ctx);
++} task_ctx_stor SEC(".maps");
++
++struct cpu_ctx {
++	u64	dsp_idx;	/* dispatch index */
++	u64	dsp_cnt;	/* remaining count */
++};
++
++struct {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__uint(max_entries, 1);
++	__type(key, u32);
++	__type(value, struct cpu_ctx);
++} cpu_ctx_stor SEC(".maps");
++
++/* Statistics */
++u64 nr_enqueued, nr_dispatched, nr_dequeued;
++
++s32 BPF_STRUCT_OPS(qmap_select_cpu, struct task_struct *p,
++		   s32 prev_cpu, u64 wake_flags)
++{
++	struct task_ctx *tctx;
++	s32 cpu;
++
++	tctx = bpf_task_storage_get(&task_ctx_stor, p, 0, 0);
++	if (!tctx) {
++		scx_bpf_error("task_ctx lookup failed");
++		return -ESRCH;
++	}
++
++	if (p->nr_cpus_allowed == 1 ||
++	    scx_bpf_test_and_clear_cpu_idle(prev_cpu)) {
++		tctx->force_local = true;
++		return prev_cpu;
++	}
++
++	cpu = scx_bpf_pick_idle_cpu(p->cpus_ptr, 0);
++	if (cpu >= 0)
++		return cpu;
++
++	return prev_cpu;
++}
++
++static int weight_to_idx(u32 weight)
++{
++	/* Coarsely map the compound weight to a FIFO. */
++	if (weight <= 25)
++		return 0;
++	else if (weight <= 50)
++		return 1;
++	else if (weight < 200)
++		return 2;
++	else if (weight < 400)
++		return 3;
++	else
++		return 4;
++}
++
++void BPF_STRUCT_OPS(qmap_enqueue, struct task_struct *p, u64 enq_flags)
++{
++	struct task_ctx *tctx;
++	u32 pid = p->pid;
++	int idx = weight_to_idx(p->scx.weight);
++	void *ring;
++
++	if (test_error_cnt && !--test_error_cnt)
++		scx_bpf_error("test triggering error");
++
++	tctx = bpf_task_storage_get(&task_ctx_stor, p, 0, 0);
++	if (!tctx) {
++		scx_bpf_error("task_ctx lookup failed");
++		return;
++	}
++
++	/* Is select_cpu() is telling us to enqueue locally? */
++	if (tctx->force_local) {
++		tctx->force_local = false;
++		scx_bpf_dispatch(p, SCX_DSQ_LOCAL, slice_ns, enq_flags);
++		return;
++	}
++
++	ring = bpf_map_lookup_elem(&queue_arr, &idx);
++	if (!ring) {
++		scx_bpf_error("failed to find ring %d", idx);
++		return;
++	}
++
++	/* Queue on the selected FIFO. If the FIFO overflows, punt to global. */
++	if (bpf_map_push_elem(ring, &pid, 0)) {
++		scx_bpf_dispatch(p, SHARED_DSQ, slice_ns, enq_flags);
++		return;
++	}
++
++	__sync_fetch_and_add(&nr_enqueued, 1);
++}
++
++/*
++ * The BPF queue map doesn't support removal and sched_ext can handle spurious
++ * dispatches. qmap_dequeue() is only used to collect statistics.
++ */
++void BPF_STRUCT_OPS(qmap_dequeue, struct task_struct *p, u64 deq_flags)
++{
++	__sync_fetch_and_add(&nr_dequeued, 1);
++}
++
++void BPF_STRUCT_OPS(qmap_dispatch, s32 cpu, struct task_struct *prev)
++{
++	struct task_struct *p;
++	struct cpu_ctx *cpuc;
++	u32 zero = 0, batch = dsp_batch ?: 1;
++	void *fifo;
++	s32 i, pid;
++
++	if (scx_bpf_consume(SHARED_DSQ))
++		return;
++
++	if (!(cpuc = bpf_map_lookup_elem(&cpu_ctx_stor, &zero))) {
++		scx_bpf_error("failed to look up cpu_ctx");
++		return;
++	}
++
++	for (i = 0; i < 5; i++) {
++		/* Advance the dispatch cursor and pick the fifo. */
++		if (!cpuc->dsp_cnt) {
++			cpuc->dsp_idx = (cpuc->dsp_idx + 1) % 5;
++			cpuc->dsp_cnt = 1 << cpuc->dsp_idx;
++		}
++
++		fifo = bpf_map_lookup_elem(&queue_arr, &cpuc->dsp_idx);
++		if (!fifo) {
++			scx_bpf_error("failed to find ring %llu", cpuc->dsp_idx);
++			return;
++		}
++
++		/* Dispatch or advance. */
++		bpf_repeat(BPF_MAX_LOOPS) {
++			if (bpf_map_pop_elem(fifo, &pid))
++				break;
++
++			p = bpf_task_from_pid(pid);
++			if (!p)
++				continue;
++
++			__sync_fetch_and_add(&nr_dispatched, 1);
++			scx_bpf_dispatch(p, SHARED_DSQ, slice_ns, 0);
++			bpf_task_release(p);
++			batch--;
++			cpuc->dsp_cnt--;
++			if (!batch || !scx_bpf_dispatch_nr_slots()) {
++				scx_bpf_consume(SHARED_DSQ);
++				return;
++			}
++			if (!cpuc->dsp_cnt)
++				break;
++		}
++
++		cpuc->dsp_cnt = 0;
++	}
++}
++
++s32 BPF_STRUCT_OPS(qmap_init_task, struct task_struct *p,
++		   struct scx_init_task_args *args)
++{
++	/*
++	 * @p is new. Let's ensure that its task_ctx is available. We can sleep
++	 * in this function and the following will automatically use GFP_KERNEL.
++	 */
++	if (bpf_task_storage_get(&task_ctx_stor, p, 0,
++				 BPF_LOCAL_STORAGE_GET_F_CREATE))
++		return 0;
++	else
++		return -ENOMEM;
++}
++
++s32 BPF_STRUCT_OPS_SLEEPABLE(qmap_init)
++{
++	if (!switch_partial)
++		__COMPAT_scx_bpf_switch_all();
++
++	return scx_bpf_create_dsq(SHARED_DSQ, -1);
++}
++
++void BPF_STRUCT_OPS(qmap_exit, struct scx_exit_info *ei)
++{
++	UEI_RECORD(uei, ei);
++}
++
++SCX_OPS_DEFINE(qmap_ops,
++	       .select_cpu		= (void *)qmap_select_cpu,
++	       .enqueue			= (void *)qmap_enqueue,
++	       .dequeue			= (void *)qmap_dequeue,
++	       .dispatch		= (void *)qmap_dispatch,
++	       .init_task		= (void *)qmap_init_task,
++	       .init			= (void *)qmap_init,
++	       .exit			= (void *)qmap_exit,
++	       .name			= "qmap");
 diff --git a/tools/sched_ext/scx_qmap.c b/tools/sched_ext/scx_qmap.c
-index d2b98ef3ead2..28fd5aa4e62c 100644
---- a/tools/sched_ext/scx_qmap.c
+new file mode 100644
+index 000000000000..1c0455c64f64
+--- /dev/null
 +++ b/tools/sched_ext/scx_qmap.c
-@@ -20,7 +20,7 @@ const char help_fmt[] =
- "See the top-level comment in .bpf.c for more details.\n"
- "\n"
- "Usage: %s [-s SLICE_US] [-e COUNT] [-t COUNT] [-T COUNT] [-b COUNT]\n"
--"       [-d PID] [-p] [-v]\n"
-+"       [-d PID] [-D LEN] [-p] [-v]\n"
- "\n"
- "  -s SLICE_US   Override slice duration\n"
- "  -e COUNT      Trigger scx_bpf_error() after COUNT enqueues\n"
-@@ -28,6 +28,7 @@ const char help_fmt[] =
- "  -T COUNT      Stall every COUNT'th kernel thread\n"
- "  -b COUNT      Dispatch upto COUNT tasks together\n"
- "  -d PID        Disallow a process from switching into SCHED_EXT (-1 for self)\n"
-+"  -D LEN        Set scx_exit_info.dump buffer length\n"
- "  -p            Switch only tasks on SCHED_EXT policy intead of all\n"
- "  -v            Print libbpf debug messages\n"
- "  -h            Display this help and exit\n";
-@@ -59,7 +60,7 @@ int main(int argc, char **argv)
- 
- 	skel = SCX_OPS_OPEN(qmap_ops, scx_qmap);
- 
--	while ((opt = getopt(argc, argv, "s:e:t:T:b:d:pvh")) != -1) {
-+	while ((opt = getopt(argc, argv, "s:e:t:T:b:d:D:pvh")) != -1) {
- 		switch (opt) {
- 		case 's':
- 			skel->rodata->slice_ns = strtoull(optarg, NULL, 0) * 1000;
-@@ -81,6 +82,9 @@ int main(int argc, char **argv)
- 			if (skel->rodata->disallow_tgid < 0)
- 				skel->rodata->disallow_tgid = getpid();
- 			break;
-+		case 'D':
-+			skel->struct_ops.qmap_ops->exit_dump_len = strtoul(optarg, NULL, 0);
+@@ -0,0 +1,100 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2022 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2022 Tejun Heo <tj@kernel.org>
++ * Copyright (c) 2022 David Vernet <dvernet@meta.com>
++ */
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <inttypes.h>
++#include <signal.h>
++#include <libgen.h>
++#include <bpf/bpf.h>
++#include <scx/common.h>
++#include "scx_qmap.bpf.skel.h"
++
++const char help_fmt[] =
++"A simple five-level FIFO queue sched_ext scheduler.\n"
++"\n"
++"See the top-level comment in .bpf.c for more details.\n"
++"\n"
++"Usage: %s [-s SLICE_US] [-e COUNT] [-b COUNT] [-p] [-v]\n"
++"\n"
++"  -s SLICE_US   Override slice duration\n"
++"  -e COUNT      Trigger scx_bpf_error() after COUNT enqueues\n"
++"  -b COUNT      Dispatch upto COUNT tasks together\n"
++"  -p            Switch only tasks on SCHED_EXT policy intead of all\n"
++"  -v            Print libbpf debug messages\n"
++"  -h            Display this help and exit\n";
++
++static bool verbose;
++static volatile int exit_req;
++
++static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
++{
++	if (level == LIBBPF_DEBUG && !verbose)
++		return 0;
++	return vfprintf(stderr, format, args);
++}
++
++static void sigint_handler(int dummy)
++{
++	exit_req = 1;
++}
++
++int main(int argc, char **argv)
++{
++	struct scx_qmap *skel;
++	struct bpf_link *link;
++	int opt;
++
++	libbpf_set_print(libbpf_print_fn);
++	signal(SIGINT, sigint_handler);
++	signal(SIGTERM, sigint_handler);
++
++	skel = SCX_OPS_OPEN(qmap_ops, scx_qmap);
++
++	while ((opt = getopt(argc, argv, "s:e:b:pvh")) != -1) {
++		switch (opt) {
++		case 's':
++			skel->rodata->slice_ns = strtoull(optarg, NULL, 0) * 1000;
 +			break;
- 		case 'p':
- 			skel->rodata->switch_partial = true;
- 			skel->struct_ops.qmap_ops->flags |= __COMPAT_SCX_OPS_SWITCH_PARTIAL;
-@@ -94,7 +98,7 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
--	SCX_OPS_LOAD(skel, qmap_ops, scx_qmap);
-+	SCX_OPS_LOAD(skel, qmap_ops, scx_qmap, uei);
- 	link = SCX_OPS_ATTACH(skel, qmap_ops);
- 
- 	while (!exit_req && !UEI_EXITED(skel, uei)) {
++		case 'e':
++			skel->bss->test_error_cnt = strtoul(optarg, NULL, 0);
++			break;
++		case 'b':
++			skel->rodata->dsp_batch = strtoul(optarg, NULL, 0);
++			break;
++		case 'p':
++			skel->rodata->switch_partial = true;
++			skel->struct_ops.qmap_ops->flags |= __COMPAT_SCX_OPS_SWITCH_PARTIAL;
++			break;
++		case 'v':
++			verbose = true;
++			break;
++		default:
++			fprintf(stderr, help_fmt, basename(argv[0]));
++			return opt != 'h';
++		}
++	}
++
++	SCX_OPS_LOAD(skel, qmap_ops, scx_qmap);
++	link = SCX_OPS_ATTACH(skel, qmap_ops);
++
++	while (!exit_req && !UEI_EXITED(skel, uei)) {
++		long nr_enqueued = skel->bss->nr_enqueued;
++		long nr_dispatched = skel->bss->nr_dispatched;
++
++		printf("stats  : enq=%lu dsp=%lu delta=%ld deq=%"PRIu64"\n",
++		       nr_enqueued, nr_dispatched, nr_enqueued - nr_dispatched,
++		       skel->bss->nr_dequeued);
++		fflush(stdout);
++		sleep(1);
++	}
++
++	bpf_link__destroy(link);
++	UEI_REPORT(skel, uei);
++	scx_qmap__destroy(skel);
++	return 0;
++}
+diff --git a/tools/sched_ext/scx_simple.bpf.c b/tools/sched_ext/scx_simple.bpf.c
+new file mode 100644
+index 000000000000..6bb13a3c801b
+--- /dev/null
++++ b/tools/sched_ext/scx_simple.bpf.c
+@@ -0,0 +1,63 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * A simple scheduler.
++ *
++ * A simple global FIFO scheduler. It also demonstrates the following niceties.
++ *
++ * - Statistics tracking how many tasks are queued to local and global dsq's.
++ * - Termination notification for userspace.
++ *
++ * Copyright (c) 2022 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2022 Tejun Heo <tj@kernel.org>
++ * Copyright (c) 2022 David Vernet <dvernet@meta.com>
++ */
++#include <scx/common.bpf.h>
++
++char _license[] SEC("license") = "GPL";
++
++UEI_DEFINE(uei);
++
++struct {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__uint(key_size, sizeof(u32));
++	__uint(value_size, sizeof(u64));
++	__uint(max_entries, 2);			/* [local, global] */
++} stats SEC(".maps");
++
++static void stat_inc(u32 idx)
++{
++	u64 *cnt_p = bpf_map_lookup_elem(&stats, &idx);
++	if (cnt_p)
++		(*cnt_p)++;
++}
++
++s32 BPF_STRUCT_OPS(simple_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)
++{
++	bool is_idle = false;
++	s32 cpu;
++
++	cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &is_idle);
++	if (is_idle) {
++		stat_inc(0);	/* count local queueing */
++		scx_bpf_dispatch(p, SCX_DSQ_LOCAL, SCX_SLICE_DFL, 0);
++	}
++
++	return cpu;
++}
++
++void BPF_STRUCT_OPS(simple_enqueue, struct task_struct *p, u64 enq_flags)
++{
++	stat_inc(1);	/* count global queueing */
++	scx_bpf_dispatch(p, SCX_DSQ_GLOBAL, SCX_SLICE_DFL, enq_flags);
++}
++
++void BPF_STRUCT_OPS(simple_exit, struct scx_exit_info *ei)
++{
++	UEI_RECORD(uei, ei);
++}
++
++SCX_OPS_DEFINE(simple_ops,
++	       .select_cpu		= (void *)simple_select_cpu,
++	       .enqueue			= (void *)simple_enqueue,
++	       .exit			= (void *)simple_exit,
++	       .name			= "simple");
 diff --git a/tools/sched_ext/scx_simple.c b/tools/sched_ext/scx_simple.c
-index 08c741f56685..9ffa8d084228 100644
---- a/tools/sched_ext/scx_simple.c
+new file mode 100644
+index 000000000000..08c741f56685
+--- /dev/null
 +++ b/tools/sched_ext/scx_simple.c
-@@ -80,7 +80,7 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
--	SCX_OPS_LOAD(skel, simple_ops, scx_simple);
-+	SCX_OPS_LOAD(skel, simple_ops, scx_simple, uei);
- 	link = SCX_OPS_ATTACH(skel, simple_ops);
- 
- 	while (!exit_req && !UEI_EXITED(skel, uei)) {
+@@ -0,0 +1,99 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2022 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2022 Tejun Heo <tj@kernel.org>
++ * Copyright (c) 2022 David Vernet <dvernet@meta.com>
++ */
++#include <stdio.h>
++#include <unistd.h>
++#include <signal.h>
++#include <libgen.h>
++#include <bpf/bpf.h>
++#include <scx/common.h>
++#include "scx_simple.bpf.skel.h"
++
++const char help_fmt[] =
++"A simple sched_ext scheduler.\n"
++"\n"
++"See the top-level comment in .bpf.c for more details.\n"
++"\n"
++"Usage: %s [-v]\n"
++"\n"
++"  -v            Print libbpf debug messages\n"
++"  -h            Display this help and exit\n";
++
++static bool verbose;
++static volatile int exit_req;
++
++static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
++{
++	if (level == LIBBPF_DEBUG && !verbose)
++		return 0;
++	return vfprintf(stderr, format, args);
++}
++
++static void sigint_handler(int simple)
++{
++	exit_req = 1;
++}
++
++static void read_stats(struct scx_simple *skel, __u64 *stats)
++{
++	int nr_cpus = libbpf_num_possible_cpus();
++	__u64 cnts[2][nr_cpus];
++	__u32 idx;
++
++	memset(stats, 0, sizeof(stats[0]) * 2);
++
++	for (idx = 0; idx < 2; idx++) {
++		int ret, cpu;
++
++		ret = bpf_map_lookup_elem(bpf_map__fd(skel->maps.stats),
++					  &idx, cnts[idx]);
++		if (ret < 0)
++			continue;
++		for (cpu = 0; cpu < nr_cpus; cpu++)
++			stats[idx] += cnts[idx][cpu];
++	}
++}
++
++int main(int argc, char **argv)
++{
++	struct scx_simple *skel;
++	struct bpf_link *link;
++	__u32 opt;
++
++	libbpf_set_print(libbpf_print_fn);
++	signal(SIGINT, sigint_handler);
++	signal(SIGTERM, sigint_handler);
++
++	skel = SCX_OPS_OPEN(simple_ops, scx_simple);
++
++	while ((opt = getopt(argc, argv, "vh")) != -1) {
++		switch (opt) {
++		case 'v':
++			verbose = true;
++			break;
++		default:
++			fprintf(stderr, help_fmt, basename(argv[0]));
++			return opt != 'h';
++		}
++	}
++
++	SCX_OPS_LOAD(skel, simple_ops, scx_simple);
++	link = SCX_OPS_ATTACH(skel, simple_ops);
++
++	while (!exit_req && !UEI_EXITED(skel, uei)) {
++		__u64 stats[2];
++
++		read_stats(skel, stats);
++		printf("local=%llu global=%llu\n", stats[0], stats[1]);
++		fflush(stdout);
++		sleep(1);
++	}
++
++	bpf_link__destroy(link);
++	UEI_REPORT(skel, uei);
++	scx_simple__destroy(skel);
++	return 0;
++}
 -- 
 2.44.0
 
