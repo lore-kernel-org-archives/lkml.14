@@ -1,146 +1,211 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-108-mta91.mxroute.com (mail-108-mta91.mxroute.com [136.175.108.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF3E12F59F
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E33454FA1
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714577375; cv=none; b=QUAhyvt1Q5U+rzpTcXUAomova8B4HZNsOglUkrDh3k5OMPp6meZloVd5b7WV8x3Jn/UNn9kfJRA69y+8Di9xaaVed4K9F1Fb/0nuTLWP+zs8X0B0H9WySA/yVPnFOZyN10fsOKktQzEw8K7G/WXfidyFJsveIur4ZoMxKgg/gTU=
+	t=1714577404; cv=none; b=hcbOmU1MVl/HSReEZnui18Di3Z4K4VNEGVzf8oKlKDhJi6ck2NZMHa9mr7E8jcqvgvR8pv9tFJUDyGz0Ee5b9Bj8XC6nXOwrpMU6lVviLs7eEW2yCIEM2ry09qs6jSOnmf0gXWpHSwFltWckL9tg/sJpVWc1kXjHcoRPWUp2RTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714577375; c=relaxed/simple;
-	bh=oLeBWgB0+WXZmytF4guGj9ibVqIVjNYYvrW01MvrqPA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aSOvRneXy/+6jrOPNY0q4uCV+P4YX08nGPDRmTSXQuiMf5tKWCfRY/bV8y7g6rDXH9fPv4dU/ZSMI73bCcM/53ca3lSQj4F/JwZyhm6rgNL++eBNC3xQ3aMz9cPvDIePFmz3/i8t3JZ3x9BaWnQFiLYC3V5PYZ+2EAKZFRcpVxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DaSq8OS0; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1714577404; c=relaxed/simple;
+	bh=/pRCtSseLzYkCvXz7LcflhT9f5jyHTqpeVpOZcybRX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gmm+lk9JCTC3iZ88TpjuuCfjnq5naOj3SbBQSlXd0wkyvfQ+E9wKrwKYXMZvvKuSPszBBY7veA6zTKiKi0tasdC7r62bvum4QUotMsgHXhXzg48XRhgEbyZCTvoJuzFJHRJav70eH7T2m8jnhJjQT9p7T6Y5YnPZJYDJsVld7XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=gB9JxAcj; arc=none smtp.client-ip=136.175.108.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DaSq8OS0"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso777816a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 08:29:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714577373; x=1715182173; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1XM+1gnsvWZBIoRYTk8OchwwR62glsxwZHuML6i3JI8=;
-        b=DaSq8OS0fcQn9/krwlBE4g0ebyO9MIisxFvESxIQ0J+SpuH5wPeOBVt23ZhtX1Ikr0
-         xxM8664iwzeeDkV0WnkVec6CNgfdirXdDWw4rAAy69pag3YsrbbZEueOBp0zbiLeOLxs
-         wqiEiyzxotznO7ro/fWh4nxyYDFdv1UW30JTwEf7F2Z47/cxUbSkvhKR5u3M2imRL/ME
-         GmISLHJy7W6Dpm7W3nP5mA0vDeiE8N1aGS9vdftsf6OHwHXnvDvXtsbq0HaNhGSWrTXJ
-         lgE0Yzn5YV2aTfJa70e823WXb87W3EEwGq4Z/Hikgu4pAHFUAFb10giSmG2ucoxIZ3BA
-         3ILg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714577373; x=1715182173;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1XM+1gnsvWZBIoRYTk8OchwwR62glsxwZHuML6i3JI8=;
-        b=KvY/ieN5cZZ1DkHFciXnHKMHfnr1LswIbxEo88xWyyye0QHClJ3f3XIZWgKHjx804K
-         mazQzymNuwcOTWw/Ef2mD1dcD/uKhWYavQCImYqNa3drrVNWTI3Vtg6lfvI8UxqV1DUh
-         +UxUvin/FDimnjTWmkMvS/aYlQCBzCmTGBYzI2U/T09fKCBNvfMgPgACmWTASUHGRx+s
-         91xM0djhmOqGWEllAXRd83xt+sNbYYgQn8Ng7TwpZ2dSBIT/rUMyV7yI1ytyHU5NP+/5
-         FhlZU2iGDM7gOj1VlT8JjA627JbJnLkCzi+laT8EQ3ETkh+nT3JI+a0T1MIwK1nAVNwF
-         9oaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEUx9oy2zHb8aScuF6ZHNgfQMAsWVzHOc6Nu2RkF80hV5BmZPjWSWkZ2M6y75ktW9ZbKmqvoRrtWMznoPuo721Iv+DgeyGNUrHbb2L
-X-Gm-Message-State: AOJu0YzqALOLrT6YXZATD4KHCtRBJwAXeBuSZkaJQxx+fpugAbmQ0XHu
-	XAiDT69L3imbF0H+psSCAH40a+Ld7vtg0x3NibiOdb/mXlnCOHqqsoWJinCFUOTjsmQOZIcmU0C
-	5uA==
-X-Google-Smtp-Source: AGHT+IHQzstJxmu1IG9JpOOsDONGuF/54MDhI9Dz8RNrMqMts6Kod4+nByWRgKhyT0HouE8HuwUsvhZjW/o=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:5955:0:b0:5f0:7fc6:83a7 with SMTP id
- j21-20020a635955000000b005f07fc683a7mr8pgm.0.1714577373008; Wed, 01 May 2024
- 08:29:33 -0700 (PDT)
-Date: Wed, 1 May 2024 15:29:31 +0000
-In-Reply-To: <20240403140116.3002809-1-vineeth@bitbyteword.org>
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="gB9JxAcj"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta91.mxroute.com (ZoneMTA) with ESMTPSA id 18f34c228370008ca2.010
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 01 May 2024 15:24:50 +0000
+X-Zone-Loop: d981a713a71d7049d96b1b66606dbf9c980a3dcda974
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=9fd1WG4wcM9VhDUCqkT94Cc+eRxvqfQ5BlXSqcGrRWY=; b=gB9JxAcjgsgJGpTreOxML+Glj+
+	g4//pBQBOvFdzLV2baYfGNX2hv6xYVPH86yvkkoRdt/emmeNz2OINfVEu/caOcSQSn4448U/g7qrZ
+	lp8VO9awzTsz9UepRJ7gPyBUwQ5OzqYjFKbQLUt0RJs8BRtGkaEzjG6cwHDW/2mRRCszEMYCi80jy
+	4ikjmUpKZ8ttClAHewrJZopsN5PUIlgYpNpi8rzB5Ffd0m7sxps98tGFtx/lt9eQSlNWVihTbKYwi
+	utFfF2M5Jpsw4pu4+vav2tKG6fqALqk+tl9dEl3MQFhuxHPzLHIe3EuJf4g7DE5JUkYI3anQbA8Af
+	sS2cCxaw==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	pavel@ucw.cz,
+	phone-devel@vger.kernel.org,
+	Luis Garcia <git@luigi311.com>
+Subject: [PATCH v5 00/25] imx258 improvement series
+Date: Wed,  1 May 2024 09:24:17 -0600
+Message-ID: <20240501152442.1072627-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240403140116.3002809-1-vineeth@bitbyteword.org>
-Message-ID: <ZjJf27yn-vkdB32X@google.com>
-Subject: Re: [RFC PATCH v2 0/5] Paravirt Scheduling (Dynamic vcpu priority management)
-From: Sean Christopherson <seanjc@google.com>
-To: "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>
-Cc: Ben Segall <bsegall@google.com>, Borislav Petkov <bp@alien8.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Joel Fernandes <joel@joelfernandes.org>, 
-	Suleiman Souhlal <suleiman@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, himadrics@inria.fr, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
-On Wed, Apr 03, 2024, Vineeth Pillai (Google) wrote:
-> Double scheduling is a concern with virtualization hosts where the host
-> schedules vcpus without knowing whats run by the vcpu and guest schedules
-> tasks without knowing where the vcpu is physically running. This causes
-> issues related to latencies, power consumption, resource utilization
-> etc. An ideal solution would be to have a cooperative scheduling
-> framework where the guest and host shares scheduling related information
-> and makes an educated scheduling decision to optimally handle the
-> workloads. As a first step, we are taking a stab at reducing latencies
-> for latency sensitive workloads in the guest.
-> 
-> v1 RFC[1] was posted in December 2023. The main disagreement was in the
-> implementation where the patch was making scheduling policy decisions
-> in kvm and kvm is not the right place to do it. The suggestion was to
-> move the polcy decisions outside of kvm and let kvm only handle the
-> notifications needed to make the policy decisions. This patch series is
-> an iterative step towards implementing the feature as a layered
-> design where the policy could be implemented outside of kvm as a
-> kernel built-in, a kernel module or a bpf program.
-> 
-> This design comprises mainly of 4 components:
-> 
-> - pvsched driver: Implements the scheduling policies. Register with
->     host with a set of callbacks that hypervisor(kvm) can use to notify
->     vcpu events that the driver is interested in. The callback will be
->     passed in the address of shared memory so that the driver can get
->     scheduling information shared by the guest and also update the
->     scheduling policies set by the driver.
-> - kvm component: Selects the pvsched driver for a guest and notifies
->     the driver via callbacks for events that the driver is interested
->     in. Also interface with the guest in retreiving the shared memory
->     region for sharing the scheduling information.
-> - host kernel component: Implements the APIs for:
->     - pvsched driver for register/unregister to the host kernel, and
->     - hypervisor for assingning/unassigning driver for guests.
-> - guest component: Implements a framework for sharing the scheduling
->     information with the pvsched driver through kvm.
+From: Luis Garcia <git@luigi311.com>
 
-Roughly summarazing an off-list discussion.
- 
- - Discovery schedulers should be handled outside of KVM and the kernel, e.g.
-   similar to how userspace uses PCI, VMBUS, etc. to enumerate devices to the guest.
+v5:
+  - Changed ownership of a few patches to Ondrej Jirman
+  - Implement feedback from Tommy Merciai
+    - media: i2c: imx258: Add support for reset gpio
+    - media: i2c: imx258: Use v4l2_link_freq_to_bitmap helper
+    - media: i2c: imx258: Convert to new CCI register access helpers
 
- - "Negotiating" features/hooks should also be handled outside of the kernel,
-   e.g. similar to how VirtIO devices negotiate features between host and guest.
+v4:
+  - Swapped out the use macro patch for a patch that uses the new
+    CCI register access helpers per Sakari Ailus
+  - Fix order of reset and powerdown gpio before disable regulators
+  - Fix formating of all patches
+  
+  - Implemented feedback from Pavel Machek
+    - media: i2c: imx258: Follow normal V4L2 behaviours
+    - media: i2c: imx258: Allow configuration of clock
+  - Implemented feedback from Sakari Ailus
+    - media: i2c: imx258: Add support for powerdown gpio
 
- - Pushing PV scheduler entities to KVM should either be done through an exported
-   API, e.g. if the scheduler is provided by a separate kernel module, or by a
-   KVM or VM ioctl() (especially if the desire is to have per-VM schedulers).
 
-I think those were the main takeaways?  Vineeth and Joel, please chime in on
-anything I've missed or misremembered.
- 
-The other reason I'm bringing this discussion back on-list is that I (very) briefly
-discussed this with Paolo, and he pointed out the proposed rseq-based mechanism
-that would allow userspace to request an extended time slice[*], and that if that
-landed it would be easy-ish to reuse the interface for KVM's steal_time PV API.
+v3 Luis Garcia
 
-I see that you're both on that thread, so presumably you're already aware of the
-idea, but I wanted to bring it up here to make sure that we aren't trying to
-design something that's more complex than is needed.
+- Add Use v4l2_link_freq_to_bitmap helper patch per Sakari Ailus
+- Separate dt-bindings for powerdown per Rob Herring
+- Fix dt-bindings for imx258.yaml
+- Fix sign offs per Dang Huynh 
+- Fix versioning per Conor Dooley and Kieran Bingham
+- Use scripts to validate and fix patches
+- Implemented feedback from Sakari Ailus
+  - media: i2c: imx258: Add support for 24MHz clock
+  - media: i2c: imx258: Add support for running on 2 CSI data lanes
 
-Specifically, if the guest has a generic way to request an extended time slice
-(or boost its priority?), would that address your use cases?  Or rather, how close
-does it get you?  E.g. the guest will have no way of requesting a larger time
-slice or boosting priority when an event is _pending_ but not yet receiveed by
-the guest, but is that actually problematic in practice?
+- Implemented feedback from Rob Herring
+  - dt-bindings: media: imx258: Add alternate compatible strings
 
-[*] https://lore.kernel.org/all/20231025235413.597287e1@gandalf.local.home
+
+
+v2 Luis Garcia
+
+- Add use macros patch 
+- Add support for powerdown gpio patch
+- Add support for reset gpio patch
+- Dropped Add support for long exposure modes patch
+- Implemented feedback from Jacopo Mondi
+  - media: i2c: imx258: Add regulator control
+  - media: i2c: imx258: Add support for 24MHz clock
+  - media: i2c: imx258: Add support for running on 2 CSI data lanes
+  - media: i2c: imx258: Add get_selection for pixel array information
+  - media: i2c: imx258: Issue reset before starting streaming
+  - media: i2c: imx258: Set pixel_rate range to the same as the value
+  - dt-bindings: media: imx258: Add alternate compatible strings
+  - media: i2c: imx258: Change register settings for variants of the sensor
+  - media: i2c: imx258: Make HFLIP and VFLIP controls writable
+
+This adds a few more patches and drops one. The long exposure mode patch
+was dropped due to the bug that Jacopo found. The powerdown and reset gpio
+patches were added as that fixes support for the Pinephone Pro, without
+them the sensor doesn't initialize correctly.
+
+Tested on a Pinephone Pro by forcing 24 mhz clock. The two lower 
+resolutions had some artifacts but that is expected as more changes are 
+required to fix them for the Pinephone Pro specifically, kept all 
+registers the same as Dave's original patch since that works on dedicated
+imx258 hardware and the artifacts are PPP specific so it shouldn't 
+be a regression.
+
+
+
+v1 Dave Stevenson
+
+This is a set of patches for imx258 that allow it to work with alternate
+clock frequencies, over either 2 or 4 lanes, and generally adding
+flexibility to the driver.
+
+Tested with an IMX258 module from Soho Enterprises that has a 24MHz
+oscillator. Both 2 and 4 lane configurations work with correct link
+frequencies and pixel rates.
+
+Jacopo has tested on a PinePhone Pro which has an ~19.2MHz clock fed from
+the SoC, He confirms that the two lower resolution modes work, but not the
+full res mode. Comparing to the BSP it looks like they have some weird
+clock configuration in the 4208x3120 mode (nominally 1224Mb/s/lane instead
+of 1267). As it has never previously worked directly with the mainline
+driver this isn't a regression but may indicate that there is a need for
+support of additional link frequencies in the future.
+
+The last patch that makes HFLIP and VFLIP configurable may be contentious
+as I've retained the default configuration of inverted from the original
+driver. I know this was discussed recently, but I can't recall the final
+outcome.
+
+I am relying on someone from Intel testing this out, as correcting the
+cropping and supporting flips has changed the Bayer order. Seeing as this
+is all above board in V4L2 terms I really hope that the layers above it
+behave themselves.
+
+Dave Stevenson (20):
+  media: i2c: imx258: Remove unused defines
+  media: i2c: imx258: Make image geometry meet sensor requirements
+  media: i2c: imx258: Disable digital cropping on binned modes
+  media: i2c: imx258: Remove redundant I2C writes.
+  media: i2c: imx258: Add regulator control
+  media: i2c: imx258: Make V4L2_CID_VBLANK configurable.
+  media: i2c: imx258: Split out common registers from the mode based
+    ones
+  media: i2c: imx258: Add support for 24MHz clock
+  media: i2c: imx258: Add support for running on 2 CSI data lanes
+  media: i2c: imx258: Follow normal V4L2 behaviours for clipping
+    exposure
+  media: i2c: imx258: Add get_selection for pixel array information
+  media: i2c: imx258: Allow configuration of clock lane behaviour
+  media: i2c: imx258: Correct max FRM_LENGTH_LINES value
+  media: i2c: imx258: Issue reset before starting streaming
+  media: i2c: imx258: Set pixel_rate range to the same as the value
+  media: i2c: imx258: Support faster pixel rate on binned modes
+  dt-bindings: media: imx258: Rename to include vendor prefix
+  dt-bindings: media: imx258: Add alternate compatible strings
+  media: i2c: imx258: Change register settings for variants of the
+    sensor
+  media: i2c: imx258: Make HFLIP and VFLIP controls writable
+
+Luis Garcia (2):
+  media: i2c: imx258: Use v4l2_link_freq_to_bitmap helper
+  media: i2c: imx258: Convert to new CCI register access helpers
+
+Ondrej Jirman (3):
+  dt-bindings: media: imx258: Add binding for powerdown-gpio
+  media: i2c: imx258: Add support for powerdown gpio
+  media: i2c: imx258: Add support for reset gpio
+
+ .../i2c/{imx258.yaml => sony,imx258.yaml}     |   15 +-
+ MAINTAINERS                                   |    2 +-
+ drivers/media/i2c/Kconfig                     |    1 +
+ drivers/media/i2c/imx258.c                    | 1451 ++++++++++-------
+ 4 files changed, 850 insertions(+), 619 deletions(-)
+ rename Documentation/devicetree/bindings/media/i2c/{imx258.yaml => sony,imx258.yaml} (86%)
+
+-- 
+2.44.0
+
