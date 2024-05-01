@@ -1,212 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4EE535D9;
-	Wed,  1 May 2024 09:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 396933FB09;
+	Wed,  1 May 2024 09:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714555809; cv=none; b=ZIwIeK70qQvChZSnBS2Co3KIi/rnhcYZSb+xdSTfAeyo0gjB74LsIvBkE8wunZHW3XVAEF0/HxxocjhgoYBSHOoZucZ0FHa3EydCXENWcCMo41SWNSTcueYuNwH28tHCuysNDdIj4LT0wk9ArkmzPEV8nt2sYOveBzMSTFTl0ec=
+	t=1714555866; cv=none; b=kTFwaW5MmNDzafUSjonYbpSHl32gSiInhdH0wJnh0v8HSk3g+EON7lHavHolFQ5K3WBfe2siX/W4mE+YB4BG9sWBWOlJIv9NrwJ+ybL1AW+keizwUPT3YGbv+bN29ICNaKMCIbyh2aZvipy7cQH7Mt6w41LIAMLa2SUK69DIuvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714555809; c=relaxed/simple;
-	bh=hNf63Pk2HgAGXyBQQDS5WAsEv/JgWTScOzabV6lKgvc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=megTcRyJRsBYfgaR5qQIMqjFDPH3nXp/WF5JC1zG6Sx/OFpo0wZ5RCUCON08BPJHRgD48uendNOsVgGJL+d4eak8bNjiETBF36DD2yEOqhp99fDv1GD5/T/ti1C/6QgaE2NVyg+ALPp3eGJfpPVv6N8tdGHewoSSMmDAXszaAGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQd0De6S; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQd0De6S"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 20793C4DDF0;
-	Wed,  1 May 2024 09:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714555809;
-	bh=hNf63Pk2HgAGXyBQQDS5WAsEv/JgWTScOzabV6lKgvc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VQd0De6So4doAjJTCCet49lx95qoLIjPiu5+aD+VXkqFT6+RutHhFAN1iIcbE62nZ
-	 fa6NJeX4drewKJvWHV3wZPubVy/y9m5dhrukSR/4RF4qZ2q0tXm+xxrwIDiKphT+oe
-	 RKBBYh6fdHuqcg1engr3LK9ZIQ0MOSZu6bCXNh1V1u4YvOgw50T3IVTr5ie4UwtUrJ
-	 TriWlwx+iVIAXtspLSF3kX5Wd71+dTQ/d/Lq+/wUoE+ixoueyoW0Nlj9AU2raN/1g3
-	 6+84w7Kpev/GEl9c7B/TgkQhP6Wb/8AzxCICoc6EcbQw8H6SllPzkZs/KmMCFzgHQI
-	 WIT/g4ZxcD4rA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FF7C25B76;
-	Wed,  1 May 2024 09:30:09 +0000 (UTC)
-From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Wed, 01 May 2024 11:29:32 +0200
-Subject: [PATCH net-next v6 8/8] ax.25: x.25: Remove the now superfluous
- sentinel elements from ctl_table array
+	s=arc-20240116; t=1714555866; c=relaxed/simple;
+	bh=/WvfKNTqeV3Kh/V7Imy68oPA+fzwWDSPALr2nzaFSR4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KDymHvjPSRjtyLOu5v8CWL2hoWRYS5Z8qvdNDajk1FRZdnacybL0NIcXmH3G2RdjGU5vAyO5bTkPUVGKMyor2w7i9FJw9jOoMNDNkxMOQOwJkMalOoq/ckSY5GJgtVVXmrjQkhIP8aO/Nb/v17Vmp6ssLljTJyWKKwhJ+8MepAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D9AA2F4;
+	Wed,  1 May 2024 02:31:30 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E87563F793;
+	Wed,  1 May 2024 02:31:02 -0700 (PDT)
+Date: Wed, 1 May 2024 10:30:59 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: linux-sunxi@lists.linux.dev, wens@csie.org, jernej.skrabec@gmail.com,
+ samuel@sholland.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: allwinner: Add cache information to the SoC
+ dtsi for H6
+Message-ID: <20240501103059.10a8f7de@donnerap.manchester.arm.com>
+In-Reply-To: <f4f4163d908c95d2a3f6f48bc3d7de49@manjaro.org>
+References: <6a772756c2c677dbdaaab4a2c71a358d8e4b27e9.1714304058.git.dsimic@manjaro.org>
+	<49abb93000078c692c48c0a65ff677893909361a.1714304071.git.dsimic@manjaro.org>
+	<20240430001002.4797e4e3@minigeek.lan>
+	<6fdeb49d57ccccca62e4f43dbe9475e3@manjaro.org>
+	<20240430114627.0cfcd14a@donnerap.manchester.arm.com>
+	<f4f4163d908c95d2a3f6f48bc3d7de49@manjaro.org>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240501-jag-sysctl_remset_net-v6-8-370b702b6b4a@samsung.com>
-References: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
-In-Reply-To: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>, 
- Stefan Schmidt <stefan@datenfreihafen.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, 
- Steffen Klassert <steffen.klassert@secunet.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, 
- Remi Denis-Courmont <courmisch@gmail.com>, 
- Allison Henderson <allison.henderson@oracle.com>, 
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
- Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
- Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
- Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, 
- Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, 
- Pablo Neira Ayuso <pablo@netfilter.org>, 
- Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, 
- Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
- Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, 
- Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, 
- Kees Cook <keescook@chromium.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dccp@vger.kernel.org, linux-wpan@vger.kernel.org, mptcp@lists.linux.dev, 
- linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org, 
- rds-devel@oss.oracle.com, linux-afs@lists.infradead.org, 
- linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org, 
- linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
- linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org, 
- coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
- Joel Granados <j.granados@samsung.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3832;
- i=j.granados@samsung.com; h=from:subject:message-id;
- bh=AuUMNVULwdRpc7MqK6QxuNKeT/f1k5AlEkDFZpyU2BQ=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYyC55+jATyuag2cMz+nAfHl+HL6F0qL73yQ
- it9OOI3ZHMdqIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmMgueAAoJELqXzVK3
- lkFPeOEL/jPjta+dOJSZPZOjLVWcJG08CJUC7rYb1k0PNtxO7S/21gaMJjENoVcIEVGESaFX22i
- 7CGruN2yxgicXlNg5nTRv1ZrlzybcKiPH06JFYreKEgLe6CJ4UsTGS/jXsMpupMDpSw3FsLRf2b
- p0RiEVHZlB5v+TY5XZVLfYuni9WBamS0CWyHo/YP4Cpt7BFk7Z400iRHZtp8Mm3BbernP88WLsI
- tu+949SFzqw3fVIsjFSrmWoCP3O1O3XbWbwn1jbbvjMMcwEoQ5HtlVMe4wofVUgR58+Qo4dxmMg
- cnk4INgUh0IkD/gez2ewL7bnlZDDKjRA1wtR25xIqsxCmxeamUeFFjWs1856xfEwNa8w48gn3q6
- jKggb0B5t38jUi1rgISS3kB5+IDwZsSmZLV7SdEBgZTQoA0WntUu/A6QzpK/dm4yw4JHktCZeyb
- G7zXpWgiGYiuhdcJC4yBMyJcFqQUYM71xk7umchoPq1It2qt5P/Iwgk1NCdtrg06W7Bz3uHXL76
- mk=
-X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
- auth_id=70
-X-Original-From: Joel Granados <j.granados@samsung.com>
-Reply-To: j.granados@samsung.com
 
-From: Joel Granados <j.granados@samsung.com>
+On Tue, 30 Apr 2024 13:10:41 +0200
+Dragan Simic <dsimic@manjaro.org> wrote:
 
-This commit comes at the tail end of a greater effort to remove the
-empty elements at the end of the ctl_table arrays (sentinels) which will
-reduce the overall build time size of the kernel and run time memory
-bloat by ~64 bytes per sentinel (further information Link :
-https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+> Hello Andre,
+> 
+> On 2024-04-30 12:46, Andre Przywara wrote:
+> > On Tue, 30 Apr 2024 02:01:42 +0200
+> > Dragan Simic <dsimic@manjaro.org> wrote:  
+> >> On 2024-04-30 01:10, Andre Przywara wrote:  
+> >> > On Sun, 28 Apr 2024 13:40:36 +0200
+> >> > Dragan Simic <dsimic@manjaro.org> wrote:
+> >> >  
+> >> >> Add missing cache information to the Allwinner H6 SoC dtsi, to allow
+> >> >> the userspace, which includes lscpu(1) that uses the virtual files
+> >> >> provided
+> >> >> by the kernel under the /sys/devices/system/cpu directory, to display
+> >> >> the
+> >> >> proper H6 cache information.
+> >> >>
+> >> >> Adding the cache information to the H6 SoC dtsi also makes the
+> >> >> following
+> >> >> warning message in the kernel log go away:
+> >> >>
+> >> >>   cacheinfo: Unable to detect cache hierarchy for CPU 0
+> >> >>
+> >> >> The cache parameters for the H6 dtsi were obtained and partially
+> >> >> derived
+> >> >> by hand from the cache size and layout specifications found in the
+> >> >> following
+> >> >> datasheets and technical reference manuals:
+> >> >>
+> >> >>   - Allwinner H6 V200 datasheet, version 1.1
+> >> >>   - ARM Cortex-A53 revision r0p3 TRM, version E
+> >> >>
+> >> >> For future reference, here's a brief summary of the documentation:
+> >> >>
+> >> >>   - All caches employ the 64-byte cache line length
+> >> >>   - Each Cortex-A53 core has 32 KB of L1 2-way, set-associative
+> >> >> instruction
+> >> >>     cache and 32 KB of L1 4-way, set-associative data cache
+> >> >>   - The entire SoC has 512 KB of unified L2 16-way, set-associative
+> >> >> cache
+> >> >>
+> >> >> Signed-off-by: Dragan Simic <dsimic@manjaro.org>  
+> >> >
+> >> > I can confirm that the data below matches the manuals, but also the
+> >> > decoding of the architectural cache type registers (CCSIDR_EL1):
+> >> >   L1D: 32 KB: 128 sets, 4 way associative, 64 bytes/line
+> >> >   L1I: 32 KB: 256 sets, 2 way associative, 64 bytes/line
+> >> >   L2: 512 KB: 512 sets, 16 way associative, 64 bytes/line  
+> >> 
+> >> Thank you very much for reviewing my patch in such a detailed way!
+> >> It's good to know that the values in the Allwinner datasheets match
+> >> with the observed reality, so to speak. :)  
+> > 
+> > YW, and yes, I like to double check things when it comes to Allwinner
+> > documentation ;-) And it was comparably easy for this problem.  
+> 
+> Double checking is always good, IMHO. :)
+> 
+> > Out of curiosity: what triggered that patch? Trying to get rid of false
+> > warning/error messages?  
+> 
+> Yes, one of the motivators was to get rid of the false kernel warning,
+> and the other was to have the cache information nicely available through
+> lscpu(1).  I already did the same for a few Rockchip SoCs, [1][2][3] so
+> a couple of Allwinner SoCs were the next on my mental TODO list. :)
 
-Avoid a buffer overflow when traversing the ctl_table by ensuring that
-AX25_MAX_VALUES is the same as the size of ax25_param_table. This is
-done with a BUILD_BUG_ON where ax25_param_table is defined and a
-CONFIG_AX25_DAMA_SLAVE guard in the unnamed enum definition as well as
-in the ax25_dev_device_up and ax25_ds_set_timer functions.
+Thanks for doing this!
 
-The overflow happened when the sentinel was removed from
-ax25_param_table. The sentinel's data element was changed when
-CONFIG_AX25_DAMA_SLAVE was undefined. This had no adverse effects as it
-still stopped on the sentinel's null procname but needed to be addressed
-once the sentinel was removed.
+> > And do you plan to address the H616 as well? It's a bit more tricky 
+> > there,
+> > since there are two die revisions out: one with 256(?)KB of L2, one 
+> > with
+> > 1MB(!). We know how to tell them apart, so I could provide some TF-A 
+> > code
+> > to patch that up in the DT. The kernel DT copy could go with 256KB 
+> > then.  
+> 
+> I have no boards based on the Allwinner H616, so it wasn't on my radar.
+> Though, I'd be happy to prepare and submit a similar kernel patch for
+> the H616, if you'd then take it further and submit a TF-A patch that
+> fixes the DT according to the detected die revision?  Did I understand
+> the plan right?
 
-Signed-off-by: Joel Granados <j.granados@samsung.com>
----
- include/net/ax25.h         | 2 ++
- net/ax25/ax25_dev.c        | 3 +++
- net/ax25/ax25_ds_timer.c   | 1 +
- net/ax25/sysctl_net_ax25.c | 3 +--
- net/x25/sysctl_net_x25.c   | 1 -
- 5 files changed, 7 insertions(+), 3 deletions(-)
+Yes, that was the idea. I have a working version of that TF-A patch now,
+just need to figure out some details about the best way to only build this
+for the H616 port.
 
-diff --git a/include/net/ax25.h b/include/net/ax25.h
-index 0d939e5aee4e..eb9cee8252c8 100644
---- a/include/net/ax25.h
-+++ b/include/net/ax25.h
-@@ -139,7 +139,9 @@ enum {
- 	AX25_VALUES_N2,		/* Default N2 value */
- 	AX25_VALUES_PACLEN,	/* AX.25 MTU */
- 	AX25_VALUES_PROTOCOL,	/* Std AX.25, DAMA Slave, DAMA Master */
-+#ifdef CONFIG_AX25_DAMA_SLAVE
- 	AX25_VALUES_DS_TIMEOUT,	/* DAMA Slave timeout */
-+#endif
- 	AX25_MAX_VALUES		/* THIS MUST REMAIN THE LAST ENTRY OF THIS LIST */
- };
- 
-diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
-index 282ec581c072..0bc682ffae9c 100644
---- a/net/ax25/ax25_dev.c
-+++ b/net/ax25/ax25_dev.c
-@@ -78,7 +78,10 @@ void ax25_dev_device_up(struct net_device *dev)
- 	ax25_dev->values[AX25_VALUES_N2]        = AX25_DEF_N2;
- 	ax25_dev->values[AX25_VALUES_PACLEN]	= AX25_DEF_PACLEN;
- 	ax25_dev->values[AX25_VALUES_PROTOCOL]  = AX25_DEF_PROTOCOL;
-+
-+#ifdef CONFIG_AX25_DAMA_SLAVE
- 	ax25_dev->values[AX25_VALUES_DS_TIMEOUT]= AX25_DEF_DS_TIMEOUT;
-+#endif
- 
- #if defined(CONFIG_AX25_DAMA_SLAVE) || defined(CONFIG_AX25_DAMA_MASTER)
- 	ax25_ds_setup_timer(ax25_dev);
-diff --git a/net/ax25/ax25_ds_timer.c b/net/ax25/ax25_ds_timer.c
-index c4f8adbf8144..c50a58d9e368 100644
---- a/net/ax25/ax25_ds_timer.c
-+++ b/net/ax25/ax25_ds_timer.c
-@@ -55,6 +55,7 @@ void ax25_ds_set_timer(ax25_dev *ax25_dev)
- 	ax25_dev->dama.slave_timeout =
- 		msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
- 	mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
-+	return;
- }
- 
- /*
-diff --git a/net/ax25/sysctl_net_ax25.c b/net/ax25/sysctl_net_ax25.c
-index e0128dc9def3..68753aa30334 100644
---- a/net/ax25/sysctl_net_ax25.c
-+++ b/net/ax25/sysctl_net_ax25.c
-@@ -141,8 +141,6 @@ static const struct ctl_table ax25_param_table[] = {
- 		.extra2		= &max_ds_timeout
- 	},
- #endif
--
--	{ }	/* that's all, folks! */
- };
- 
- int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
-@@ -155,6 +153,7 @@ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
- 	if (!table)
- 		return -ENOMEM;
- 
-+	BUILD_BUG_ON(ARRAY_SIZE(ax25_param_table) != AX25_MAX_VALUES);
- 	for (k = 0; k < AX25_MAX_VALUES; k++)
- 		table[k].data = &ax25_dev->values[k];
- 
-diff --git a/net/x25/sysctl_net_x25.c b/net/x25/sysctl_net_x25.c
-index e9802afa43d0..643f50874dfe 100644
---- a/net/x25/sysctl_net_x25.c
-+++ b/net/x25/sysctl_net_x25.c
-@@ -71,7 +71,6 @@ static struct ctl_table x25_table[] = {
- 		.mode = 	0644,
- 		.proc_handler = proc_dointvec,
- 	},
--	{ },
- };
- 
- int __init x25_register_sysctl(void)
+Neither the data sheet nor the user manual mention the cache sizes for the
+H616, but I checked the CSSIDR_EL1 register readouts on both an old H616
+and a new H618, and they confirm that the former has 256 KB L2, and the
+latter 1MB. Also I ran tinymembench on two boards to confirm this,
+community benchmarks results are available here:
+https://github.com/ThomasKaiser/sbc-bench/blob/master/Results.md
+The OrangePi Zero2 and OrangePi Zero3 are good examples, respectively.
+Associativity and cache line size are dictated by the Arm Cortex cores,
+and the L1I & L1D sizes are the same as in the other SoCs.
 
--- 
-2.43.0
+Cheers,
+Andre
 
+> [1] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=67a6a98575974416834c2294853b3814376a7ce7
+> [2] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=8612169a05c5e979af033868b7a9b177e0f9fcdf
+> [3] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=b72633ba5cfa932405832de25d0f0a11716903b4
 
