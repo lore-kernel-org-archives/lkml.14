@@ -1,72 +1,235 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A81125B9
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 16:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49591168BD;
+	Wed,  1 May 2024 16:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714582566; cv=none; b=S2AMGAOp/1GYY6SulMsGh7gRtM++LME+ll7+VrLfiqQibswYHcAIkU6Bmbxs55Nfgt+7/H8yhz+tRLEgHhM4p24Q+5sJormDV2qRYjDI9xu02vdcfADb4D+b9oDOHeoQq692OGPpBBO2w88cjIkObT6Nj+WT2NihdGVWanqzI2M=
+	t=1714582568; cv=none; b=lRnzSlGEXzYFBXUAVarqV2yhRApp3CktdYSxASDIYXfDtRYBvDhFk82DgIWpH9CCPffJYAEIzBqrq4WbcHgOa205kXidW763v/Tq9myyp4nAHS+L5uAZaLYiwWHBzylUN2XVYvEpLmesnSB0OkOsE+xAq1CFgPr8HIaPhlwdi3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714582566; c=relaxed/simple;
-	bh=1XZHi0YzBLS47mbettJ83dDPGL16uhOqOK1tJN4dlpw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Z+y/EA18J6u89HXxiaux52nLbh+Qr3eqPdrG+AdXu4BemL0j8ASJWmuD/+wxJySMDngqbYRCrfVabRYkGUgQQuxM5C/4BiMnV70bv6JJo3wb9T/41ezUdMQ/FKuUWzLIQJ6uvudiRluleLAgLxshMOgc1Ras5W4Oywbr2qO8VOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7def449f58fso1015039f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 09:56:04 -0700 (PDT)
+	s=arc-20240116; t=1714582568; c=relaxed/simple;
+	bh=TcDzC1URqfIGLzJLPDLTzwckLUr9NbwS3Ma6ukNQrZY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kIEIG7G4vgMk0xr7k30lt2IoqX7+m+xFgDOApSRuxPvEeKe2/MZ3J3uyfSkd8iA9zaJOUn0D8uMaPtGyUGKQ6PHbNBlopbj8vw1Rg18Cxo8PsLVPk8F794WUI2dhp0ajh09biTKUlgKx83P/HxIit+5aEiItCdXkv7dKNcPuD+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso8981039a12.2;
+        Wed, 01 May 2024 09:56:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1714582564; x=1715187364;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zL5zLFLZ9/A+euis3e08Nm55+lvX3+T3wPrxtwGnFpQ=;
-        b=l1g30fSuilPjbr6F84RM7viJbksc0/08Du7tUf2+/2wU2OXt/6QowleHFaM1TY06kn
-         N7h952PpwyPfpTXwzVG0wKmYR4PPHgnTWAPS63F2mkH7A/36mOksJ9ZF52hvPfgfhcWf
-         UJDdIhOPEhpF991HSA/9IBl7mSb37M4fjCSNi+5qzxpyx+NVFi5m0CtLSuVjXudJwdpV
-         j52qzjvbunBnO1SEtSzSOwxhVYQdWwEKl6NRI/Pb/hlHxKOsoRsOD9okAIhEWPpmKNcX
-         I5tvFxBYGhTY3wxiVorPXmR5zu3Xq/ItbTtGtY3+7WTW3+EEfYDRZnztAGOLzjV/llXH
-         LZ9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXJriUbUpI4xJRiwIIlo0cSuTBwHyptYJxCQlds2HqNW/obmX5+d0I3jY3q0/XwsNffoPVFdOzKgv4HSbY9Omc4d6K7FSAjvMIo6LaU
-X-Gm-Message-State: AOJu0Ywfn6IooWlhNB+UH4MBhRjCFNG5v4fJFzhqqUNxaJe0qgF9NdkU
-	VEHSknnxdNgQw9ie/4NlUhO7aJB+FEdGiq4fSwRjaZfWFiqprSiNlMHR3MoK3WasCNc06GgsCTE
-	MGt7EzhHjzh4IM2lw1Se/AsE0MTlMb4Rv4PfxISaltaVxMe3uZbNBwh8=
-X-Google-Smtp-Source: AGHT+IEBjXreViAye+0kXgWGM8QAOQnK+EHu2cHJMy66fdP74jLwDb6XfrE99WN2U9+ggleDVkBLcX+2gumyBDoVt+kvePoHzc8o
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SZyGPQjH8Nh0r2HrUHxBLid/Ouu1r0VmzmfrZnEPyNs=;
+        b=R8o6HvZCcCP2SyIJF4k6fpRr1tlsoP+AhXrIeupjmRFZbnOx7tZqQtNWME6TXoTEsg
+         6MS5wnaJfJbMsEFg/X2pQVwvwPGXjSsptHWXDq7cGxtuPV4kvtU+7l6zRGMLT1Ny7lQu
+         1wBkjJyQNq9YkjA45vUoG4aPd5z0FHAeSjQMTFfTuMGaFhYsFx033KJhWjrdaRVwWbyy
+         cz4FTz4ckHEBjxQTwjy39U1YdSjwb91ESB50c3xq7Vb9qWDD6c7qakp7bO2zePvPq9zo
+         peNyuQOlHv9z6oIcFvCvn/Csrlx93X8pXp8LGyOBfGRl3okFQH92eovrXDqmj9lKypPF
+         LFlg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ/c6EP+1kPDhotGI+1t/7fKAqi3pu88Q5SxrFyD+kMq51G82PV4BCTvcevVm7c2dzIrGcvJawDQvbVpOyR5o5Da7/rYrWJNicwA9F5dT66vxEQ5FNILn/VasLn/VIwv8kT+T8gRIZmviHgsg=
+X-Gm-Message-State: AOJu0YytyKgzXDngrZpJRTTlWjx/nJ8P83OZfzzq0PBzXubTt4jaRhEq
+	9qCZVw70B3KP/m3oeB+jgiNy8xGj77PImYpCYs+D3pcVnNa4dTzn
+X-Google-Smtp-Source: AGHT+IFiNeAXFLvqrJqj/JpJnaQ1VuTj5HIQczid62EJDQa/xpeqnynka7fbVfl2mZvp0wxYEEevxA==
+X-Received: by 2002:a50:8adb:0:b0:572:42ac:9b19 with SMTP id k27-20020a508adb000000b0057242ac9b19mr2532186edk.0.1714582564313;
+        Wed, 01 May 2024 09:56:04 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-005.fbsv.net. [2a03:2880:30ff:5::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 15-20020a508e0f000000b005726e5e8765sm5205429edw.3.2024.05.01.09.56.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 09:56:03 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>
+Cc: netdev@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Alon Giladi <alon.giladi@intel.com>,
+	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Avraham Stern <avraham.stern@intel.com>,
+	linux-wireless@vger.kernel.org (open list:INTEL WIRELESS WIFI LINK (iwlwifi)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH wireless-next v2] wifi: iwlwifi: pcie: allocate dummy net_device dynamically
+Date: Wed,  1 May 2024 09:54:04 -0700
+Message-ID: <20240501165417.3406039-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8684:b0:487:5dce:65ab with SMTP id
- iv4-20020a056638868400b004875dce65abmr6872jab.0.1714582564003; Wed, 01 May
- 2024 09:56:04 -0700 (PDT)
-Date: Wed, 01 May 2024 09:56:03 -0700
-In-Reply-To: <20240501121200-mutt-send-email-mst@kernel.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aa73d50617675ca3@google.com>
-Subject: Re: [syzbot] [net?] [virt?] [kvm?] KASAN: slab-use-after-free Read in vhost_task_fn
-From: syzbot <syzbot+98edc2df894917b3431f@syzkaller.appspotmail.com>
-To: jasowang@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	michael.christie@oracle.com, mst@redhat.com, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, virtualization@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+struct net_device shouldn't be embedded into any structure, instead,
+the owner should use the priv space to embed their state into net_device.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Embedding net_device into structures prohibits the usage of flexible
+arrays in the net_device structure. For more details, see the discussion
+at [1].
 
-Reported-and-tested-by: syzbot+98edc2df894917b3431f@syzkaller.appspotmail.com
+Un-embed the net_device from struct iwl_trans_pcie by converting it
+into a pointer. Then use the leverage alloc_netdev() to allocate the
+net_device object at iwl_trans_pcie_alloc.
 
-Tested on:
+The private data of net_device becomes a pointer for the struct
+iwl_trans_pcie, so, it is easy to get back to the iwl_trans_pcie parent
+given the net_device object.
 
-commit:         f138e94c KASAN: slab-use-after-free Read in vhost_task..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=10a152a7180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3714fc09f933e505
-dashboard link: https://syzkaller.appspot.com/bug?extid=98edc2df894917b3431f
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+[1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Changelog:
+
+v2:
+ * replaced the alloc_netdev() with the proper dummy allocator
+   alloc_netdev_dummy().
+
+v1:
+ * https://lore.kernel.org/all/20240307174843.1719130-1-leitao@debian.org/
+
+---
+ .../wireless/intel/iwlwifi/pcie/internal.h    |  2 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c  | 11 +++++---
+ .../net/wireless/intel/iwlwifi/pcie/trans.c   | 27 ++++++++++++-------
+ 3 files changed, 27 insertions(+), 13 deletions(-)
+
+
+PS: This is compiled-tested only due to lack of hardware.
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+index 7805a42948af..a7eebe400b5b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+@@ -386,7 +386,7 @@ struct iwl_trans_pcie {
+ 	dma_addr_t iml_dma_addr;
+ 	struct iwl_trans *trans;
+ 
+-	struct net_device napi_dev;
++	struct net_device *napi_dev;
+ 
+ 	/* INT ICT Table */
+ 	__le32 *ict_tbl;
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index 9c2461ba13c5..984d7bcd381f 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1000,6 +1000,11 @@ void iwl_pcie_rx_init_rxb_lists(struct iwl_rxq *rxq)
+ 
+ static int iwl_pcie_rx_handle(struct iwl_trans *trans, int queue, int budget);
+ 
++static inline struct iwl_trans_pcie *iwl_netdev_to_trans_pcie(struct net_device *dev)
++{
++	return *(struct iwl_trans_pcie **)netdev_priv(dev);
++}
++
+ static int iwl_pcie_napi_poll(struct napi_struct *napi, int budget)
+ {
+ 	struct iwl_rxq *rxq = container_of(napi, struct iwl_rxq, napi);
+@@ -1007,7 +1012,7 @@ static int iwl_pcie_napi_poll(struct napi_struct *napi, int budget)
+ 	struct iwl_trans *trans;
+ 	int ret;
+ 
+-	trans_pcie = container_of(napi->dev, struct iwl_trans_pcie, napi_dev);
++	trans_pcie = iwl_netdev_to_trans_pcie(napi->dev);
+ 	trans = trans_pcie->trans;
+ 
+ 	ret = iwl_pcie_rx_handle(trans, rxq->id, budget);
+@@ -1034,7 +1039,7 @@ static int iwl_pcie_napi_poll_msix(struct napi_struct *napi, int budget)
+ 	struct iwl_trans *trans;
+ 	int ret;
+ 
+-	trans_pcie = container_of(napi->dev, struct iwl_trans_pcie, napi_dev);
++	trans_pcie = iwl_netdev_to_trans_pcie(napi->dev);
+ 	trans = trans_pcie->trans;
+ 
+ 	ret = iwl_pcie_rx_handle(trans, rxq->id, budget);
+@@ -1131,7 +1136,7 @@ static int _iwl_pcie_rx_init(struct iwl_trans *trans)
+ 			if (trans_pcie->msix_enabled)
+ 				poll = iwl_pcie_napi_poll_msix;
+ 
+-			netif_napi_add(&trans_pcie->napi_dev, &rxq->napi,
++			netif_napi_add(trans_pcie->napi_dev, &rxq->napi,
+ 				       poll);
+ 			napi_enable(&rxq->napi);
+ 		}
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index 6c76b2dd6878..d5a887b3a4bb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -1986,13 +1986,6 @@ static void iwl_trans_pcie_configure(struct iwl_trans *trans,
+ 	trans->command_groups = trans_cfg->command_groups;
+ 	trans->command_groups_size = trans_cfg->command_groups_size;
+ 
+-	/* Initialize NAPI here - it should be before registering to mac80211
+-	 * in the opmode but after the HW struct is allocated.
+-	 * As this function may be called again in some corner cases don't
+-	 * do anything if NAPI was already initialized.
+-	 */
+-	if (trans_pcie->napi_dev.reg_state != NETREG_DUMMY)
+-		init_dummy_netdev(&trans_pcie->napi_dev);
+ 
+ 	trans_pcie->fw_reset_handshake = trans_cfg->fw_reset_handshake;
+ }
+@@ -2074,6 +2067,8 @@ void iwl_trans_pcie_free(struct iwl_trans *trans)
+ 		iwl_pcie_free_ict(trans);
+ 	}
+ 
++	free_netdev(trans_pcie->napi_dev);
++
+ 	iwl_pcie_free_invalid_tx_cmd(trans);
+ 
+ 	iwl_pcie_free_fw_monitor(trans);
+@@ -3594,7 +3589,7 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 			       const struct pci_device_id *ent,
+ 			       const struct iwl_cfg_trans_params *cfg_trans)
+ {
+-	struct iwl_trans_pcie *trans_pcie;
++	struct iwl_trans_pcie *trans_pcie, **priv;
+ 	struct iwl_trans *trans;
+ 	int ret, addr_size;
+ 	const struct iwl_trans_ops *ops = &trans_ops_pcie_gen2;
+@@ -3623,6 +3618,18 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 
+ 	trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 
++	/* Initialize NAPI here - it should be before registering to mac80211
++	 * in the opmode but after the HW struct is allocated.
++	 */
++	trans_pcie->napi_dev = alloc_netdev_dummy(sizeof(struct iwl_trans_pcie *));
++	if (!trans_pcie->napi_dev) {
++		ret = -ENOMEM;
++		goto out_free_trans;
++	}
++	/* The private struct in netdev is a pointer to struct iwl_trans_pcie */
++	priv = netdev_priv(trans_pcie->napi_dev);
++	*priv = trans_pcie;
++
+ 	trans_pcie->trans = trans;
+ 	trans_pcie->opmode_down = true;
+ 	spin_lock_init(&trans_pcie->irq_lock);
+@@ -3637,7 +3644,7 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 						   WQ_HIGHPRI | WQ_UNBOUND, 0);
+ 	if (!trans_pcie->rba.alloc_wq) {
+ 		ret = -ENOMEM;
+-		goto out_free_trans;
++		goto out_free_ndev;
+ 	}
+ 	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
+ 
+@@ -3757,6 +3764,8 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 	iwl_pcie_free_ict(trans);
+ out_no_pci:
+ 	destroy_workqueue(trans_pcie->rba.alloc_wq);
++out_free_ndev:
++	free_netdev(trans_pcie->napi_dev);
+ out_free_trans:
+ 	iwl_trans_free(trans);
+ 	return ERR_PTR(ret);
+-- 
+2.43.0
+
