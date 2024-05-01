@@ -1,92 +1,113 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F5C1474B1;
-	Wed,  1 May 2024 20:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E00A42A96
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 20:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714594079; cv=none; b=ZOGLVPEbPNTLfZTD7vDXPYDUcbhR4DvpsPVmdcLLZT4LNts/nN3DVYUGWDqXWGtUSsQ5zdfs0iIJC9eiNEE3m/yAzKFm5/fHrA0+Cap4hreCW57h3W5cp7avhANTOD4sZzE6To56mLfFiLtidNsWDNPCnsxYCypD52BjgJy+stg=
+	t=1714594405; cv=none; b=sEEnWJyP2SeZz0ZaLI+JA0gvgHuGx54sHJ/hu0wyfDVf6N+ZLsNOd9CqoK8WVJGZCcPA/Pw0cD4NI79pLZ5HvofgB4aSK7cqHqBYf4veEHhqPTlBwvMn8F7ataGVi7L9LteAy9ylHFolvCrJFPF9hGk2vFL2cfEl5oKtl8yU9n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714594079; c=relaxed/simple;
-	bh=N3zk6Y234MgqGMAQG9RoCDph4rWUl30bnD7vWlEU0cw=;
+	s=arc-20240116; t=1714594405; c=relaxed/simple;
+	bh=4ywZCAUhnkyRouoGXFeP3qU1/bxbRV5WojnoTHw3CAw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJQR/pgzR6geXSkwWZpFr6v9U+gIvkepusfjkyBlGvnBP44Vr57uSrjPDF4VsWs8kpdRhsa75KcfdX65C7NoSIeQttKOJdUb/Qxj8/fSNdtInR7mhYNTLtTAA37CYonX/QeyVcpJ5Gxhhc0SuX0hyakcOMxqoahhfRSjuaeMEDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=c2Veqygb; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=taccVhV5DRUXybrynSmPsDNTcWrrVzQkMQqZCY4BN2vFNJpbstZvAwZDrgdGqw0P7feOirPJtO6UuSjROVD0s52k90gdtxKGvPNXP8krnDmyNjO3qCHpi3bme9JGEJbAs9ic+BycNb/JYejaLzAIhd4VOx9rLd6izcGxn1AScIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Cq73uVVR; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="c2Veqygb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=k3d7/UgyKgzqATK8IOdA9YZPJAlZPNvl/CaLjYyubLs=; b=c2
-	VeqygbK4kMrNOqM+BMGsJoDKkcY8/L1sC1BdKVRwWunbcGmKnxKzIw5ryFrljq/SUBxRQs+XKcUFr
-	cv/uJ2pJvJ+MpTTXawoowC07lYn9u1e1E53MQo0TjgAsKAeK8Y+TWasPdoUreKn77/8PHzbiBREFF
-	ZQa0/qUbiRvX1GQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1s2GEz-00ERzR-Gv; Wed, 01 May 2024 22:07:45 +0200
-Date: Wed, 1 May 2024 22:07:45 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: =?iso-8859-1?Q?Ram=F3n?= Nordin Rodriguez <ramon.nordin.rodriguez@ferroamp.se>
-Cc: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, saeedm@nvidia.com,
-	anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, corbet@lwn.net,
-	linux-doc@vger.kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, horatiu.vultur@microchip.com,
-	ruanjinjie@huawei.com, steen.hegelund@microchip.com,
-	vladimir.oltean@nxp.com, UNGLinuxDriver@microchip.com,
-	Thorsten.Kummermehr@microchip.com, Pier.Beruto@onsemi.com,
-	Selvamani.Rajagopal@onsemi.com, Nicolas.Ferre@microchip.com,
-	benjamin.bigler@bernformulastudent.ch
-Subject: Re: [PATCH net-next v4 05/12] net: ethernet: oa_tc6: implement error
- interrupts unmasking
-Message-ID: <78395aa9-5871-4db1-8232-ffdaacc7671a@lunn.ch>
-References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
- <20240418125648.372526-6-Parthiban.Veerasooran@microchip.com>
- <Zi1Xbz7ARLm3HkqW@builder>
- <77d7d190-0847-4dc9-8fc5-4e33308ce7c8@lunn.ch>
- <Zi4czGX8jlqSdNrr@builder>
- <874654d4-3c52-4b0e-944a-dc5822f54a5d@lunn.ch>
- <ZjKJ93uPjSgoMOM7@builder>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cq73uVVR"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6eced6fd98aso6362601b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 13:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714594404; x=1715199204; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fzJNyUjTcyvayOGi2RmNTOhiNWDsJ2lrCXlytRPvm1U=;
+        b=Cq73uVVRzj6HMzdt5QVbKcr/k76sr9w0oytb6P2zs1XmFrJQL2WJAjDEvo/OXwfGcU
+         oQj2RnQNNI+6TylFn99Ju9q37kCwj4K2lsl9p50RDz3Lqf+8GXrsFpwXoC8oYlXs1VeS
+         vNiJII/xVcT2nJRFmSyWzO4p1i1CxQHIjlQqk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714594404; x=1715199204;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fzJNyUjTcyvayOGi2RmNTOhiNWDsJ2lrCXlytRPvm1U=;
+        b=n5ehXP1FYt4Gyv2/RBkhKa68eH5r6Y9+6bAL5/Px+jxzoQO/ky8Dg+Ka1ijzp/h9S9
+         d5VVRNfqqollD6JadsccTXmeyihO5BIQv3Cdf3sRAHoCUW0v50W68EOr5lenMjStv2Qq
+         VkC/X3QSucDHKfHP/vGC4KQBD2/wAwt0cvKm2WPTs8fEf4bV2DaqwuWeOWbfNpJ86TLY
+         hFxsx73r8zIgZUypJgm+zcYf6hYhj4eQOy6YILxifEssJBHXdJ3T922jQ0Z6Qmm6PORy
+         VF76XK3gXNGAzwigtzbtYiyX9h8aS5PaimssrC5DU+q+X4mzEyeJc5SIYd+AVmBZlvUN
+         YxQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWs5+2cOt2Sr1anFMGDyBG/U0nAeWIcvth//VvTp8HQGa5z06uTAlLH132CreYx5oob0awxyqnJkJOsgv3T0kugn7xjf2bp/NcU1Na5
+X-Gm-Message-State: AOJu0YwpFATx2DGm+oIhfnAJFWYtI8HL8GdcByDBXV+VmvPLhVKzkAwE
+	yOVH097zPe3nC/w0qLCDXI/OLFRNVJryhJ8oGWBhdTBdWY1gUkQnjGaehEsOTg==
+X-Google-Smtp-Source: AGHT+IH2F7ggeD8WqIrB1Dq6jq/1RLcQimv9rH0YngcVlTmpQvQ888AUBOkKaiZSGmgPfIrw6a4Oig==
+X-Received: by 2002:a05:6a21:1a8:b0:1a7:5fbf:3774 with SMTP id le40-20020a056a2101a800b001a75fbf3774mr5708830pzb.55.1714594403848;
+        Wed, 01 May 2024 13:13:23 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d2-20020aa78142000000b006ed007b3596sm23070981pfn.69.2024.05.01.13.13.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 13:13:23 -0700 (PDT)
+Date: Wed, 1 May 2024 13:13:22 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Juergen Gross <jgross@suse.com>, Breno Leitao <leitao@debian.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/alternatives: Make FineIBT mode Kconfig selectable
+Message-ID: <202405011307.2C8E9BE5E@keescook>
+References: <20240501000218.work.998-kees@kernel.org>
+ <20240501163314.GA2472577@dev-arch.thelio-3990X>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjKJ93uPjSgoMOM7@builder>
+In-Reply-To: <20240501163314.GA2472577@dev-arch.thelio-3990X>
 
-> I don't have access to a logic analyzer but my old oscilloscope is
-> almost reliable. I could confirm that the spi clock is indeed running at
-> the expected 25MHz, but I could observe some gaps of up to 320µs so
-> that's 8k spi cycles spent doing something else.
-> These gaps were observed on the SPI clock and the macphy interrupt was
-> active for the same ammount of time(though this was measured independently
-> and not on the same trigger).
-> I've been drinking way to much coffe, so soldering is not gonna happen
-> today (shaky hands), but if it helps I can solder wires to attach both
-> probes to confirm that the gap in the SPI clock happens at the same time
-> or not as the interrupt is active.
+On Wed, May 01, 2024 at 09:33:14AM -0700, Nathan Chancellor wrote:
+> On Tue, Apr 30, 2024 at 05:02:22PM -0700, Kees Cook wrote:
+> > Since FineIBT performs checking at the destination, it is weaker against
+> > attacks that can construct arbitrary executable memory contents. As such,
+> > some system builders want to run with FineIBT disabled by default. Allow
+> > the "cfi=kcfi" boot param mode to be selectable through Kconfig via the
+> > newly introduced CONFIG_CFI_AUTO_DEFAULT.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> I verified that flipping the configuration does indeed change the
+> default and that 'cfi=' could still be used to override whatever choice
+> was made at compile time. This patch was a perfect excuse to put my new
+> CET enabled test machine to work.
 
-What i expect you will see is that the interrupt line goes active. A
-while later there is an SPI bus transfer to fetch the interrupt
-status, and when that transfer completes the interrupt should go
-inactive. But you will need your second channel to confirm this.
+Heh, yeah. I have my one lonely CET system that is only powered on for
+this sort of testing too. ;)
 
-One question would be, is 320µs reasonable for an interrupt, and one
-SPI transfer?
+> 
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-I would then expect a number of back to back transfers, each around 64
-bytes in size, as it gets the received frame. The gaps between those
-transfers will be interesting.
+Thanks!
 
-	Andrew
+> CFI_DEFAULT_AUTO reads a little bit better to me personally but I am not
+> looking to get into painting today :)
+
+I went with CFI_AUTO_DEFAULT since this seems to be our current pattern
+for setting these kinds of boot param defaults. A selection of examples:
+
+arch/Kconfig:config RANDOMIZE_KSTACK_OFFSET_DEFAULT
+lib/Kconfig.debug:config CONSOLE_LOGLEVEL_DEFAULT
+mm/Kconfig.debug:config DEBUG_PAGEALLOC_ENABLE_DEFAULT
+
+-- 
+Kees Cook
