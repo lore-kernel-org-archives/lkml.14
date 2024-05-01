@@ -1,126 +1,167 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DBE14AAD;
-	Wed,  1 May 2024 08:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FDB1DA4C;
+	Wed,  1 May 2024 08:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714552369; cv=none; b=f/HKqBDdQDOgXsQ7BdWWLf+5J6dazE1WQ5unXG9/phOqZwdDd10ha+7HUvilO13qb1Zr/3Vr9DUXRb+EEyxMgc14Gek4Aq9a9MplRyiP3OMdYKtR/s/spb8MG6F775oZCBhhZxd6WAyR3JiPOxJ0Dlisd1nm5k0XINTnOSiJdbg=
+	t=1714552370; cv=none; b=UAxe7hZEh4yzG5F4DTmYNXwH1oyYlFrmqcdDpPrQojnLZHqFU9+SuxeEYK0Xr2a+xHbmJwnTtG+9CVztYm/FQ6Hp0pFT50g0MVFvWkPH5Db5YPMIm8ytW/hmnb7eMdT6GjKLinnJsTCvFMcNOWqpnoOf0HH0qL/p0nGPZHk75Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714552369; c=relaxed/simple;
-	bh=RuXNAG1lXnKCvaqPxD3w7ZeY0eoB0xdldgqEftwwyIA=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=tJtgWeZhaUPbwc+1nXL0LOWOZW509CCLfj+aZX0m4DonxWlt8WSJQWXwLKqBTmsDxrOKct4ST59XGRm5/YNmp9X9DHWqvXF1nZm7fMJUWmO+IIDRheNpA0qHWGxBq0jv4y2uN0SS846rs7U1Fw9aKqzhUDKKwMyGwD301o9N5pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bIbPdIrn; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714552370; c=relaxed/simple;
+	bh=022s0DMx01dj0809aHOZNTIDH54IcHq2bcPlkyclrt0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pec5uVjwQbH1uoB/TdQ+agjx6916AljJy+LCzeSkK68cLOA5WfzqRM9tN3iM5dEEoKgGyrJA6YdgAQG2GNshcMOphtRUYR7fJ/jyHvHdsD6s+Pbg4s8kJCu8tk/kapaafn60gnB1T3mDM8hoLfjin93OEwwGBKAjmXg/Cfg6GkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FCKABiGI; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bIbPdIrn"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4415cttO012053;
-	Wed, 1 May 2024 08:32:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=cZcnwkyu4CHae9
-	2lh6KDDACsglcNCH9BQvm5KKokaEM=; b=bIbPdIrnu9kAIL94mLFz7beWWkqmVH
-	8jOn1EYvDuuRBNtvdD0ALDJceqUCIsES8OgNNz8hLaRmqix6AaOsBB+dpUWxWem9
-	xKIlpE3Anz6Ji9qz4oWaHX38qnaGmlW/kJwpE/osus2lFoFcR5f0lnH6BtGVoPWM
-	h8gs0IA9685Tr/EbRn0HMVLjDb0PZFoj6yf+SCTUMYDhbmOPPidrBcu/Mww/kRDv
-	roGnlLHNTzzNNWYi2IsfC+LpdYjOv4ggy6boziHCfete10CrfeEavlte+S+5nvkh
-	10qm3UpjTe4wUiN5+8lk+rC6iBTShq6ktLUppKLczxoBMO4spv4PehtA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xu71j92w7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 May 2024 08:32:29 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4418WSGL008791
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 1 May 2024 08:32:28 GMT
-Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 1 May 2024 01:32:23 -0700
-From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Subject: [PATCH v3 0/2] Add DT support for video clock controller on SM8150
-Date: Wed, 1 May 2024 14:02:17 +0530
-Message-ID: <20240501-videocc-sm8150-dt-node-v3-0-2c4bd9ef48bd@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCKABiGI"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e51398cc4eso58351435ad.2;
+        Wed, 01 May 2024 01:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714552368; x=1715157168; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FHgX42UfUGRGX78Ivvg9lI7RMb4di4wjmmdmQo/NqGs=;
+        b=FCKABiGI2fSLrEwepdZ28JNHaoPiK2TxC2ktmjN1nMt9uk0KOiWllrv7XQXgviIbmd
+         wPzdW9Mu+iaRPInwhSpm68diL8rIcyd840IEsTKiUrPkrni4RQ/g5l+hqDCtj9LGBRZo
+         j6c0Op03573jYk6yWMC4YzldKXBwOSZpNNu+uupaHaMCFfGuFm7j0/b6cpgnSvMe4PNp
+         p7HDD0m1vpdJHpdy9N7Lhaa9SH7RChdGk+/6/OalAF7xCBzz1zparD076w4MnTmHrn4/
+         PuIv9SP3CZ4+jvzMsJY2VbTKp00r+ocOYHePhuqvhD4PU9nn9Vzv+/sFNFcYk7zDI/ah
+         NNwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714552368; x=1715157168;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FHgX42UfUGRGX78Ivvg9lI7RMb4di4wjmmdmQo/NqGs=;
+        b=FwWUg02moK7V2U3On4M0YvYXF0jcWK54uBn+vZhl4TYLrAeEU5phwfG02PjQwhcr/U
+         E/hfR0aBYYoAWFSyvQ9AD7vL8ectU7be+PYz9euLlPScGGiAhu26IcxR+IqWVGSy8Wxv
+         dRHil07Ul/pooNPdVJhzHYbfI7tR7HKNhkJZtx0RAKm/0jO+HJCa2p+lFMJdpNCgqEKi
+         if393yzHvfmVip6aRIyXAFp76YsVuqm/UVqrra57OqfLNfWaAHMTsaE+58CqUnfAoOlv
+         0L/dimrf9MtPw7Zmq5bLggcSG7Z8rC79dLr9vfCfdnPjc+Cne1IG/qaIyiTrhacqTO6X
+         2tIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTUIQQcZveNxMZxJnbNPaVin/XXhLHy5AiFcFeYNs5r6O4cIQXWgyVTVLXzki0+mTRcSZzsppjsHgjZDwGj5/4tolzGjnM6fN6sXja3Ea8T6wewUMufwc3kz1KmMF9dVCnNc8PyJsAwZj3hKjt8cEiKBUiYADBjkDo7+/aQHQpa+beVw==
+X-Gm-Message-State: AOJu0YytA7FImKUaj4V8vtr/GQyjt/0LLeqHpBteGcp4zczBNBaGEWMv
+	jd59LdhJD/csbfM6d44GqtBhQtRFZ7MRMmIheAcdww8yiTxWLPM0
+X-Google-Smtp-Source: AGHT+IGVmAU0ocOEPEAiaXOyjcCYrseaEMIut51PWpsmGN+SgT6XgmAwMY6nwemsP9Ut6K6YeB7efw==
+X-Received: by 2002:a17:903:120b:b0:1e5:a025:12f9 with SMTP id l11-20020a170903120b00b001e5a02512f9mr2569146plh.28.1714552367572;
+        Wed, 01 May 2024 01:32:47 -0700 (PDT)
+Received: from localhost ([39.152.149.70])
+        by smtp.gmail.com with ESMTPSA id h17-20020a170902f55100b001e49428f327sm23758946plf.176.2024.05.01.01.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 01:32:47 -0700 (PDT)
+From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	unicorn_wang@outlook.com
+Cc: dlan@gentoo.org,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Subject: [PATCH v7 0/2] riscv: pwm: sophgo: add pwm support for CV1800
+Date: Wed,  1 May 2024 16:32:40 +0800
+Message-Id: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABL+MWYC/3XNQQ6CMBCF4auQrq1ppwjVlfcwLmA6yCygSrHRE
- O5uISbGBcv/JfPNJAINTEGcskkMFDmw71OYXSawrfobSXapBSjIlVFWRnbkEWXorD4o6UbZe0e
- yaHRh6vwITYkiHd8Havi1wpdr6pbD6If3+ifqZf2S2myRUUslK7KEBi0AwvnxZOQe9+g7saARf
- lCu9CYECTK1LdFB5dyx+Ifmef4ANBUAogcBAAA=
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>
-CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Ajit Pandey
-	<quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Taniya
- Das" <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        "Satya Priya
- Kakitapalli" <quic_skakitap@quicinc.com>
-X-Mailer: b4 0.12.4
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: OroXDFL1kL9S_q2kNk2a2Sf4E2WmxpzI
-X-Proofpoint-ORIG-GUID: OroXDFL1kL9S_q2kNk2a2Sf4E2WmxpzI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_08,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=708 bulkscore=0 adultscore=0 priorityscore=1501
- impostorscore=0 phishscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
- clxscore=1015 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2405010059
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
----
-Changes in v3:
-- Adding the required-opps property back, which was removed in v2.
-- This is needed because the lowest power state for MMCX on sm8150 platform
-  is retention, but we want to enable the power domain in low_svs not retention.
-- Link to v2: https://lore.kernel.org/r/20240401-videocc-sm8150-dt-node-v2-0-3b87cd2add96@quicinc.com
+The Sophgo CV1800 chip provides a set of four independent
+PWM channel outputs.
+This series adds PWM controller support for Sophgo cv1800.
 
-Changes in v2:
-- As per Dmitry's comments, there is no need to update to index based
-  lookup for already existing drivers, hence keeping clock-names property.
-- Updated the videocc bindings to add AHB clock for the sm8150 platform.
-- Link to v1: https://lore.kernel.org/r/20240313-videocc-sm8150-dt-node-v1-0-ae8ec3c822c2@quicinc.com
+Changes since v6:
+- add detailed Limitations
+- using BIT(n) instead BIT(0) << n
+- use 0 instead of disable macro
+- modify OE judgment criteria
+- add devm_regmap_init_mmio error message
+- delete unused variable
 
----
-Satya Priya Kakitapalli (2):
-      dt-bindings: clock: qcom: Add AHB clock for SM8150
-      arm64: dts: qcom: sm8150: Add video clock controller node
+v6: https://lore.kernel.org/all/20240406063413.3334639-1-qiujingbao.dlmu@gmail.com/
 
- .../devicetree/bindings/clock/qcom,videocc.yaml         | 17 ++++++++++++++++-
- arch/arm64/boot/dts/qcom/sa8155p.dtsi                   |  4 ++++
- arch/arm64/boot/dts/qcom/sm8150.dtsi                    | 14 ++++++++++++++
- 3 files changed, 34 insertions(+), 1 deletion(-)
----
-base-commit: 8ffc8b1bbd505e27e2c8439d326b6059c906c9dd
-change-id: 20240308-videocc-sm8150-dt-node-6f163b492f7c
+Changes since v5:
+- delete the OE function because we plan to use the counter subsystem
+  instead of capture, so there is no need to reuse this code.
+- fix set polarity reverse error.
 
-Best regards,
+v5: https://lore.kernel.org/all/20240314100131.323540-1-qiujingbao.dlmu@gmail.com/
+
+Changes since v4:
+- drop filename
+- fix macro
+- optimize cv1800_pwm_set_polarity()
+- optimize cv1800_pwm_set_oe()
+- add comment for cv1800_pwm_set_oe()
+- use ticks replace tem
+- fix duty_cycle larger than period_val
+- use devm_clk_rate_exclusive_get() replace
+  clk_rate_exclusive_get()
+- map linux polarity to register polarity 
+
+v4: https://lore.kernel.org/all/20240304085933.1246964-1-qiujingbao.dlmu@gmail.com/
+
+datasheet Link: https://github.com/milkv-duo/duo-files/blob/main/duo/datasheet/CV1800B-CV1801B-Preliminary-Datasheet-full-en.pdf
+page 614
+
+Changes since v3:
+- use macro instead of npwm number
+- add support for polarity feature
+- add support for Output-Enable/OE feature
+
+v3: https://lore.kernel.org/all/20240223082014.109385-1-qiujingbao.dlmu@gmail.com/
+
+Changes since v2:
+- use 0x08 instead of macro
+- split if statements based on conditions
+- in order to round up, first calculate the
+  number of high-level cycles, then subtract
+  it from the PERIOD to obtain the number of HLPERIOD
+- use new pwmchip_alloc() API instead of old style
+
+v2: https://lore.kernel.org/all/20240212121729.1086718-1-qiujingbao.dlmu@gmail.com/
+
+Changes since v1:
+- drop full stop from subject
+- re-order maintainers and description
+- pass checkpatch.pl --strict
+- fix naming errors
+- add "Limitations" section
+- use a driver specific prefix for all defines
+- using bool instead u32 in cv1800_pwm_enable
+- check and set state->polarity
+- use mul_u64_u64_div_u64
+- use clk_rate_exclusive_get(), balance with clk_rate_exclusive_put()
+- using macro definitions instead of shift operations
+- remove shift operation on 0
+- use priv replace cv_pwm
+- hardcode npwm
+- set atomic to true
+- remove MODULE_ALIAS
+
+v1: https://lore.kernel.org/all/20240207055856.672184-1-qiujingbao.dlmu@gmail.com/
+
+Jingbao Qiu (2):
+  dt-bindings: pwm: sophgo: add pwm for Sophgo CV1800 series SoC
+  pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+
+ .../bindings/pwm/sophgo,cv1800-pwm.yaml       |  45 +++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-cv1800.c                      | 293 ++++++++++++++++++
+ 4 files changed, 349 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-cv1800.c
+
+
+base-commit: 32c44e1fa921aebf8a5ef9f778534a30aab39313
 -- 
-Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+2.25.1
 
