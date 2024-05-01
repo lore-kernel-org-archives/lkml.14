@@ -1,148 +1,94 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685AC1C287;
-	Wed,  1 May 2024 19:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E83EAF6;
+	Wed,  1 May 2024 19:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714591208; cv=none; b=MsObkkZLk+Ns53XnM4jaisY7lJpO3qTXsm5uU6MDz63S2T8mxtiDd14aGSu4vKt7vLGgftuEbdr7GvIifxljLOMEP5k+nVsj+rL7o+xwe3LnBFEAflXKD4wgoiJOR7/0FYMmtzgX3VR6RoSm9cHJUbIAuI1vabPW5bsnYa+0LfQ=
+	t=1714591419; cv=none; b=SUga2qzeIiBOsscheiPcaMkJmI2CHGRP1FX2GqiqQpHXLZ8doi7qTgZRUkhlXlQ10ko88ag6o3WNCCtId8dzPEbuEp7swptOnQmxIbBDSC4mit1JfiWgtqXJ1auF6G8wclWhQ/7/4b54HW7k6ugZVloGGgvAVaUoI3iqWdL5bxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714591208; c=relaxed/simple;
-	bh=2icMSh1KJRQHkfMpRS4no2f8fdq6UTlQRe2OM5Yszuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e38QcdCVttAFL8uEgGfX1QJ/zymYbkkplSa0Heb+Gdoelt/4EyR3pydRa2Sp70jAZj5sAVtd8j8EmwKcmUhOJR3PB5Y4iJ60FV/Not4prqkH/OXNroZe/VdKupFTDEQ+naAEFGswEoect8nkYLY6sXpfLdToWosOJJIIofAFZuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d/bz9Sca; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714591419; c=relaxed/simple;
+	bh=WgZXapr0v/CdZ4lJn13J0ptgvUQhGg3IHPNnu6AmuXQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=XhhRd8no13IjEZfmyJsRAOYuALVJZHgsxLrmabURaQKynBab1JzZlXwYST+XVrfCKX7nwpSH4FZB4gdYEa0sdrFHgu7oh8b8kyOU2U4WqWxD6N5M70Ql4i8Nm2Ead2abSxJkCjLb4cFP29PQgyVk9Uev0RDhSP7CsxJTfHMuXZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=axSUFWsB; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/bz9Sca"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e50a04c317so39552685ad.1;
-        Wed, 01 May 2024 12:20:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714591207; x=1715196007; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NQMIHTv3D4/FbFaMQCgt0UeLIRCHiGP+9OlGQP/6AIQ=;
-        b=d/bz9Scaa7BuPvz3nctbRQ8UuZ0zHTgFvD63K+KqLaScb6PGEk1x233HnxDN2gBZ/h
-         8JQfqCsLksHbuHQhJf7HY2jesXbSZIH4O0iQY2LIUQHsvX3yV3uJ2n3DEgXpb5aZ9LNb
-         HS9oaOGO46o7qxlAlh8G0++arBZLx6Lec57sygx9MkK4SxRvEgzL+sZSo1KEj+n3vHkv
-         G8A5brAcRSQsmuAW7XO+EWi04+fdF57Ngey4MPvc0iW1UGTj/pIFW8ueLAWLfgOJUmbn
-         F5gI/9tg+yPccKQcm3JB4w2UbDHAOTqW48h67b/K1pXeKFoHG3IiCO1t+F+Y0HBM//+y
-         5ERg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714591207; x=1715196007;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NQMIHTv3D4/FbFaMQCgt0UeLIRCHiGP+9OlGQP/6AIQ=;
-        b=AEBSMVOkxetFgvTLv4h+Qv0S4Sd5VNNtvF9Fpak3Ho5FxxZozoeqbKOvHx7XrMBH5c
-         n3K9qWFoP98q7355NLTMtjS/Dx04nq+QRFDkr6vhGUDnQyG91IRyLoirfrdcp2X66Wpf
-         FG0ObyD4u5Y7qKcf5Bj7ql2JYlNHhbf6tqDkQ3WJiueVgkVbmmoIjBPb2/9CqYbGnC2A
-         6ehCih/At2P3w5Z7L+56vkb5r1HCpduxxDkCRfy67KLPTAVn3gVMXHLLOzl1s80Jngze
-         kRJM0zOcBSnKmYz/EL0aktVr9XZwk/gXByklK1TPBrmnoR6tsdlJGyOvHJFZQVxziEHm
-         hKAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2MkLABgmVkWu1B6XWmbr0MLxH/XkOSUbg+KRKEgmV9tktMjMSuq+pyRM1u5EgVI3p5VJxZHCyHXwjqJyVHTPZfxTrlAsHS1qMoP4=
-X-Gm-Message-State: AOJu0Yx+/mYO5XCBcM348ygRlC1PH+cTEW8VvDvCiPovlfPqLR6HRc2K
-	XsrLIIJKfwh6SPjRRgyfV3XwhxtjQkop+CEO23N0lD5Y6+60tNFk
-X-Google-Smtp-Source: AGHT+IGd58y/IOmwV5M13fhinNX4nSAJNZ+EFLovipF4lfrEQyQp9BGMZPZfm9gGlJJy8nVMxvg6Dg==
-X-Received: by 2002:a17:903:1108:b0:1e2:307f:d283 with SMTP id n8-20020a170903110800b001e2307fd283mr3810879plh.1.1714591206533;
-        Wed, 01 May 2024 12:20:06 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:1cb4:dd50:d6f1:6308])
-        by smtp.gmail.com with ESMTPSA id u8-20020a170902e5c800b001e420abf8c1sm24596381plf.165.2024.05.01.12.20.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 12:20:06 -0700 (PDT)
-Date: Wed, 1 May 2024 12:20:03 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Jonathan Denose <jdenose@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jeffery Miller <jefferymiller@google.com>,
-	Phoenix Huang <phoenix@emc.com.tw>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] Input: elantech - fix touchpad state on resume for
- Lenovo N24
-Message-ID: <ZjKV44wZWH4MBCrF@google.com>
-References: <20240501140231.1.Ifa0e25ebf968d8f307f58d678036944141ab17e6@changeid>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="axSUFWsB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714591395; x=1715196195; i=markus.elfring@web.de;
+	bh=/OzIEN8wYE8/xcGiwbU+dTt00S833gZJ8vZlKH2nXNM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=axSUFWsB4NOlK4yB+jQ+wR92elH6D45V0USLzzge2n8VkSoRSNgwCr594VQ2cL1a
+	 woA0rQaDX2c01haPFMjvY3QU9qjNTHvDC1v66KvtRGUT/PfAsIpNBryAebsgbeO54
+	 /AxC7bq3AxTBOelxif+w4R0Gf81PWiCdfMJZ4vfCVIrP6Ew+S/Ek7SNIJaH7iLjoV
+	 nMiBa+lpdmTHABtzlobPQo8dCWJHiKPD8M0WWEHKk0A//EBJyHHfACCnunKH9GstG
+	 unzEPXXADB1sn60H5RKFsyMqVVOlpMXRtbM40mSSYWGVazdRjAfZlHo9/Xht5UFqc
+	 r6J++oxUkWysNJBvnA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MSqXM-1sDu8b0cJy-00URfx; Wed, 01
+ May 2024 21:23:15 +0200
+Message-ID: <44d81ab4-e3e8-4552-ba0c-209adb53aa21@web.de>
+Date: Wed, 1 May 2024 21:23:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501140231.1.Ifa0e25ebf968d8f307f58d678036944141ab17e6@changeid>
+User-Agent: Mozilla Thunderbird
+To: Li Zhijian <lizhijian@fujitsu.com>, linux-cxl@vger.kernel.org,
+ kernel-janitors@vger.kernel.org,
+ Alison Schofield <alison.schofield@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240428030748.318985-1-lizhijian@fujitsu.com>
+Subject: Re: [PATCH] cxl/region: Fix cxlr_pmem leaks
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240428030748.318985-1-lizhijian@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:XEvMWRPs4OkmQfzTBKzTarEa4TnOG7EMBSHd7V4F8Fbt+EmT2R6
+ lo5wtWziM0498hgVReKPl8EviA9vt1VdyPaIL1Vr9vvK1WqXmRR5gvlyDndncwod0JUrydn
+ 3KJ/3Ur0rFK/wKbgea1ZsPDQHqxca9IzxFwu475Pg94EdXVSIOtjRcKnBSQj9NP9WlkEiUC
+ IpXWeNxGOE83J02oN1dEw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:19MG9NbR1DQ=;wLcBwn45VN2Z/0qpaigxH8Rs44Y
+ AHD83VXPZJnK9DW/AE1HWPxEbaGEERu/pHKJOMjIlUPoLFJOFhHJIuJEiQA0SIeSn5nMk1Dvk
+ gVpycZkOX+u8El+0Egp5t25jSBu3dVN0EyvH3h4FJf1JbwL4f68Y3BPD04ewS745x1eEgI5pu
+ +NQVHVA4NYORMcR+E1iwy4XpA0mqNo2dpvA7+142/a1pSQpfjN0k3bwYJPVEMfvfXUa5QXP9N
+ 8dA21Uh2Bc+w3Wqg7La1Ng+OfwOiNCGpAqIKqs8wMceFI0Iadmtl6t3xP1ffWhoKOwBKG1Uwv
+ RCIYIp5Kxzq3ba8bFJ6rgTNvf8adqMnACVIT/LaSbbFkFvWwDeDSt2cYH+DKTHUKXzR40OjV/
+ qSHKPjV7JW6oCjmgb6um0bkbWyo3M5ZLS0gJP2O8nPBFpR3eo2/9xGuf/N/avhLRja7r+Nw3k
+ CH/0tEasuQlRBuKkViOc957H400HcLNfsy1AEWZ8ySHFaiDVlVOeM/fSP/mI/DroQVCSGr5zA
+ 2I7hZ43LgtqMgDYpP3uq+RDv0YmgBwVo4fb8/nnM3MjQXgZFYgvz5KluMFAkWBHfReXQgC5bL
+ EAF2hq22XvtEuJP3j57AE5e1O9H3wixt753Hz6bEhK11FV0hlsNlkJWiHVhnHWPrargpA3D1W
+ 0xm1xx774jxjERjk1Td15iMdssDDCyNRvKQqiUdIAFHjUlYbNWzHXQSkUNj2A4tmrgV8OYEV2
+ dM7eoNu5u+9WDq/SpkWt0hCAxAB6rNMW9dcCpzx1gjLIujZtgIMs+0C9yZyuNfIA4dAJ1DjDs
+ nNL3Bxhl/8wgx31NW1lfwHP9oGD8deNLusoyRSWZfDDpI=
 
-On Wed, May 01, 2024 at 02:02:32PM +0000, Jonathan Denose wrote:
-> The Lenovo N24 on resume becomes stuck in a state where it
-> sends incorrect packets, causing elantech_packet_check_v4 to fail.
-> The only way for the device to resume sending the correct packets is for
-> it to be disabled and then re-enabled.
-> 
-> This change adds a dmi check to trigger this behavior on resume.
-> Signed-off-by: Jonathan Denose <jdenose@google.com>
+> Before this error path, cxlr_pmem pointed to a kzalloc() memory, free
+> it to avoid this memory leaking.
 
-Adding a couple more folks to take a look at this...
+Can the following wording be a bit nicer?
 
-> ---
-> 
->  drivers/input/mouse/elantech.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-> index 4e38229404b4b..e0f3095b4227e 100644
-> --- a/drivers/input/mouse/elantech.c
-> +++ b/drivers/input/mouse/elantech.c
-> @@ -1476,6 +1476,23 @@ static void elantech_disconnect(struct psmouse *psmouse)
->  	psmouse->private = NULL;
->  }
->  
-> +/*
-> + * Some hw_version 4 models fail to properly activate absolute mode on
-> + * resume without going through disable/enable cycle.
-> + */
-> +static const struct dmi_system_id elantech_needs_reenable[] = {
-> +#if defined(CONFIG_DMI) && defined(CONFIG_X86)
-> +	{
-> +		/* Lenovo N24 */
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "81AF"),
-> +		},
-> +	},
-> +#endif
-> +	{ }
-> +};
-> +
->  /*
->   * Put the touchpad back into absolute mode when reconnecting
->   */
-> @@ -1486,6 +1503,22 @@ static int elantech_reconnect(struct psmouse *psmouse)
->  	if (elantech_detect(psmouse, 0))
->  		return -1;
->  
-> +	if (dmi_check_system(elantech_needs_reenable)) {
-> +		int err;
-> +
-> +		err = ps2_sendbyte(&psmouse->ps2dev, PSMOUSE_CMD_DISABLE, NULL);
-> +
-> +		if (err)
-> +			psmouse_warn(psmouse, "Failed to deactivate mouse on %s: %d\n",
-> +					psmouse->ps2dev.serio->phys, err);
-> +
-> +		err = ps2_sendbyte(&psmouse->ps2dev, PSMOUSE_CMD_ENABLE, NULL);
-> +
-> +		if (err)
-> +			psmouse_warn(psmouse, "Failed to reactivate mouse on %s: %d\n",
-> +					psmouse->ps2dev.serio->phys, err);
-> +	}
-> +
->  	if (elantech_set_absolute_mode(psmouse)) {
->  		psmouse_err(psmouse,
->  			    "failed to put touchpad back into absolute mode.\n");
-> -- 
-> 2.45.0.rc0.197.gbae5840b3b-goog
-> 
+   The local variable =E2=80=9Ccxlr_pmem=E2=80=9D referred to dynamically =
+allocated memory.
+   Free it in one error case before it is reset to an error pointer.
 
--- 
-Dmitry
+
+Would the summary phrase =E2=80=9CFix a memory leak in cxl_pmem_region_all=
+oc()=E2=80=9D
+be more appropriate here?
+
+Regards,
+Markus
