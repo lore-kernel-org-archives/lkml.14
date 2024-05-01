@@ -1,297 +1,743 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A54A5E22C;
-	Wed,  1 May 2024 11:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714561754; cv=fail; b=uQdYJ0mU1iVh8gI2QtxNh1zPsiVvfm6m3lx5/bpxeql5xDwJkA59svfhBAUc/3MwXQKEGedbtXv4Ga/YVtNCBb+39bA5fafur2/NDayM2yDgXcXkPxhP5KHwl6Z9VgxRYEFtOR1bgTYtyUy4CElf2LOUX8ul6lGH5l7K2XpPoMc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714561754; c=relaxed/simple;
-	bh=98qN0Kbp1wntBJl+9A8Rf7tA/SHxxWeXErN6WHZccHs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=oZEOJ/2Gr/djBnEVMPOA3MT3P3bXIdIqTb3acOaJYPy+Hm7sAAXzki8fwKOs4oNl0Tg6F3s73bva8OCRF/BvEzFFWaKnin9N6Sv2eS2F5QnnpAhLOhwStsSqs1hyCM04JwvSLYL+uhB/Im5iXOrYcmpMHRfd7c4DJNIjgVZSiDs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ZZt47ygF; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Xpwb0VJu; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F1555E74;
+	Wed,  1 May 2024 11:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714561823; cv=none; b=sMlOXNxidBXclLBTaC+X2s2DyFEOoqZ+7yJWu5Shc+pb3YRqP9ULoNgKYEwvTSceNy+mNHrxthpuOwPox/ez/f18wxCXhv1OKzak8OtIKT6j0f+0/cVpVeycYl1tpziWhIpQPWJxi4N5EOscaNx0mY4BCGtKJNdQO/lyAX+s4Is=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714561823; c=relaxed/simple;
+	bh=mXtWlpJjv4r58BbTHgexbIC8BOjMoH+j0kTfB4fkELg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YxfoFBbGvc9VkKph7MmlB98puQLUiHhmBsjoRYsFlm9a1Fe0yXIUOrkIx7b4KWvALJu3XIKo2rNe9H0cd46vxOjiMoo39bg65rKdYEYxNp2lvN1iOLA9rvL1I317LdpM/BBQn/Ix8Qp87+kj+r6iJqti4cOwhRC5IUUBaEN02sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fbOZuWai; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZZt47ygF";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Xpwb0VJu"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 441ARplC028249;
-	Wed, 1 May 2024 11:08:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=9M6J1i9dP1b5Yx5OmdBGcWwm8QLPs3bsG/Sms+vR+Lk=;
- b=ZZt47ygFbVZO8cGgU+582CRGfoOxdEQ78Ti5ab3CEet6s6KY+i0Y1yzhOP9VRfc0OewN
- XIw/wVjZZBZC9C/Ug/qZphsQX30/8TC2i5AjEqBEzCA4GR5DfU/2laoT3Fl4yLzv2LhV
- VKu73/mhVggKb/KrudQobzst6i1AM1TUc5D3HVKhuFzQlYNqLzsKkQhirZnJ0AweKoaP
- ovf7OtfB7q15RmXZDB34l9bzrIp5xwl60ylnKTOlDCD5ZiOL3/lVBIT85hnm7L8SIS86
- espaR2aDwy7qER1iOwUtsI+sWIZPoPfpPllr+x/BGNN2cx5R1yRDyrezyg+Lbvl0jp+U 7A== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xrswvq150-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 01 May 2024 11:08:44 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 441A3qQX005115;
-	Wed, 1 May 2024 11:08:43 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xrqt8pp75-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 01 May 2024 11:08:43 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P9hzMskyO9bzdg0C4h3CN3u2uR+A0fwkmnevA3IUkNzEQclmZtO5OJkRl/BdoWvbAGf7APj6aeoYlwqynzmzg8HdskAh1FZLfSCFnx8Pbij6SKkesn1Qn0d+dLXKuzohSjjeC3tpdU9YyHrDx2rQBun0E3NxvtxY8rxWjRSgNuZcbM7aX5vpuQBV7xOFMwPv0fNvt80dvCUnCZ5HvWK4yco/jcNQobcQm17vvt2b+hei5vYMzajTvuKcDYZgaYh5fyf7kk00QiU+qewgq4xdQsGW0EVMs/B3MhVxuO+QxZ0VWcMC+t/sow6K+gKlUu+X4PeUxGYduE2L8Ap/lJ4vxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9M6J1i9dP1b5Yx5OmdBGcWwm8QLPs3bsG/Sms+vR+Lk=;
- b=J+nOqaHiPPn0OJZrsEL9lLcftNIgG+YahwodhfCgXheajJpFvS8V5acuohzLsDxmwa682m+SWt2KCxvbXp2xmNzxcMtRnH/kSfzL9WrJqrIngNE5+ZWRurS1xGCi1dP3yWYyMg98c2qQ/XSBSL6wI3Sta5MoIpZ28zC3l1PWBAbH29JtKrMFjqlIgGmDGtpphhVyhBxyIAKwsrr+wUTf1toX5hXhAgfa5yCaR5bPyBIjKsJKc0lRQtejx5PAUuscE6hY/WbZI3U0hRTXUyGV8Fw+rWt42aujibsnL38YyKC1xUa7W9Eus3vqwFff7qLG2g55Z1QWSQfpNgIfzavZPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbOZuWai"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a5894c1d954so203671166b.1;
+        Wed, 01 May 2024 04:10:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9M6J1i9dP1b5Yx5OmdBGcWwm8QLPs3bsG/Sms+vR+Lk=;
- b=Xpwb0VJuTUAbsBTn/GIYnJjbWgiv2x/UG6iDql3Gp7TiaP9gK2x3wymnXlIgd6QC4phBKu6F41xTVOPARzHKEXzDcmHAxDT0nQSVLMoyQ9cPG0z9pGaMSE91l23W+vT+7ME5T+LlH+p6OBd9SU3I59tNt1lE/8wUIAc0O0erCqs=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by CO1PR10MB4642.namprd10.prod.outlook.com (2603:10b6:303:6f::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Wed, 1 May
- 2024 11:08:41 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.7544.023; Wed, 1 May 2024
- 11:08:41 +0000
-Message-ID: <d39c46b7-185c-4175-b909-2ba307c177c9@oracle.com>
-Date: Wed, 1 May 2024 12:08:34 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 17/21] iomap: Atomic write support
-To: Dave Chinner <david@fromorbit.com>
-Cc: djwong@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, brauner@kernel.org,
-        jack@suse.cz, chandan.babu@oracle.com, willy@infradead.org,
-        axboe@kernel.dk, martin.petersen@oracle.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        tytso@mit.edu, jbongio@google.com, ojaswin@linux.ibm.com,
-        ritesh.list@gmail.com, mcgrof@kernel.org, p.raghav@samsung.com,
-        linux-xfs@vger.kernel.org, catherine.hoang@oracle.com
-References: <20240429174746.2132161-1-john.g.garry@oracle.com>
- <20240429174746.2132161-18-john.g.garry@oracle.com>
- <ZjGfOyJl5y3D49fC@dread.disaster.area>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <ZjGfOyJl5y3D49fC@dread.disaster.area>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4PR10CA0016.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d8::8) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        d=gmail.com; s=20230601; t=1714561820; x=1715166620; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7r4L4cuvOpUVxE20o6fm6YjgY0mUNU2VgesemMamP54=;
+        b=fbOZuWaisaCvY8sKikiWoTpsCUx7i29Ptuijt7HeKu7WhEtgYzVZoZnPHccbZvvb+N
+         G8SIYjF13xGajr9GdGwia2W+1oWRHI53aD155QS0QSE4j9vsPK43KYL16924AbuSpdpd
+         UtWQw0VWQS9K5U1X+i/cKTKLtZ7NFkanjFpwHfRdC+VEwUz5Cl73ASSe0QiZzJVg85zg
+         hAQMWKBcyyo5a40k69QvPEuzhHQa7+knQCVBt6bo1GyalEsNSjf4lGcoL3+THpc9YY6F
+         s+a/N2eNQkYbUtAo5wDECnVCRyMOb78tpFCp745GnXhnrfwKBQGTGtsbAzMECjioLev9
+         QnNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714561820; x=1715166620;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7r4L4cuvOpUVxE20o6fm6YjgY0mUNU2VgesemMamP54=;
+        b=EPhr4ZsUd4euyC2R40dtSezZ20ry6nSjQwONlAWA8UTRGx8LM2AM89j09HOuor5EOx
+         Bi4H613o+c+qQccPRIYJ2DFx5SDYB9BD7Q7q5dtQwtbG+o+Em7asyStroSEkrtv4io/p
+         PCPKiIzWub+vC5D9a2CCxSOZsDkq/TlJutdxUWajfB6gbRMzps3ZHkzyEZle3gC4so6l
+         0rhqAwL50PJSe0Y046lCnrcs9mDl1UYfDxiU9ZJ9lGqIPSMzZ23TIDHsLDoF7UwJa9zU
+         JLJ36tbO41C8PbvAheSQrHnoCZ+eiyikgXm6s7m/7aaDTUWL4NsB06N1c9hS5dUszubY
+         /MPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmRnhWWo/YN+hUbVNvcYPF8hRC1PzdfzGbuIXWqQjik3bx4tQ6WBAhvOynI5Aldj7vPUhvCTb8sM4/B0Ez1AhKKcHF5MzI68zvKmZYuaV5LL37MvPMJHpbmXiurhCD9pWJ5vYRUYvmkiDoYLQ=
+X-Gm-Message-State: AOJu0Ywh3wviORN2AFd0NSKwYL0XkbSXXaanbQiMJm65/GIC5BFLMmT2
+	38OpE1UVYPF4QTYb/4vy9aZOg5IliVWoN4HFf1Z4xeVqrF31fCnl0K1NzXXld1Ub0ewFIX1EOZP
+	v4zL5wjUGl6YVh/I/tKDwXh2esHE=
+X-Google-Smtp-Source: AGHT+IHkJbmTSZcZ4Csl7k18MFzWjGrcXLQRLAZEAJuOfVaSgayUbIvHp6NVOZ18/bfB3IeEPgq548IRe82lcia/22A=
+X-Received: by 2002:a50:c048:0:b0:572:3f41:25aa with SMTP id
+ u8-20020a50c048000000b005723f4125aamr1756947edd.11.1714561819574; Wed, 01 May
+ 2024 04:10:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CO1PR10MB4642:EE_
-X-MS-Office365-Filtering-Correlation-Id: 562a97f3-e712-493c-dbaf-08dc69cf0ef7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|376005|7416005;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?TS9oNG9ZbUtMVWRBRWFDQS9lWUswV0dxb1dtbGF4anhwQkhGT2xhMXpWaDRD?=
- =?utf-8?B?ckVNdHgzODVQMSs2blhZMU9PQ2xzbmdjYS8wN05TWDU1NXZ6SlQ2bFRYSjVF?=
- =?utf-8?B?T3F5a2NWcDZ4cUUwNnYyMVplOHdGclFlOWdwaVFDR25qVjMvblIwWmRkZkVL?=
- =?utf-8?B?ZW4vazBLcU5CWDlpa24zbWZPZVVzWlErcFZ3RlRTMDhVTGNXdWRLVGk2ODB1?=
- =?utf-8?B?M3EzSTlzcWQyd1p5VXNFdE10Y0hlcGRYWHYrSnBlSlB1bXY0M2I1SUcxRHh1?=
- =?utf-8?B?ODFObDFzak9iOUJ4YWhqK1J6d0pHWVRzVFJVb25Lek10b3VXWGRWTkg5SGQw?=
- =?utf-8?B?Y3MyOGRXUVBYc1Ntakw2Q3lZdkxLZzR2d21FMkt3TVg3M3VpKzFWY0FnM1dx?=
- =?utf-8?B?N2xPYXhEd05TZTVwdUZzY0JIbFh3ZzhlcHUrdVJyN0ViVFJ2MSt2OFI3RzQ1?=
- =?utf-8?B?eS9xbHhCUmdCU3dnNVhrZ2xDeWdxeVVKMUV3cEplMmxneEFrdnBKc1NqNTdN?=
- =?utf-8?B?bENITHB3WkRDWVlyMzRXV3RaTUZLdGNSRlAyRDhmM2tsNWh4RmQwVHV6bmV4?=
- =?utf-8?B?R0FHNmcxNTF2eHVORkwxK3FVT1NsSWJ5c3R2eGJkN29MbmVvcTNLaDdWSTVy?=
- =?utf-8?B?WEIzcVJ3d3dUbU5QWUhWT1F2WjJQVDRiTmwyR1p2SzBZTmFpVlFkUjNpWWRK?=
- =?utf-8?B?SDI4RFRmODkrMnUrcTA3MTBlSVpsOTNuR2VpNTB4TWZOYWRTaGhSTWRJV3I0?=
- =?utf-8?B?ZFJmWlRDemZ4VHBqNUVZR3VyWTZKVXpqTTVsbHZleXZwTkZIdjBoTUxxenR0?=
- =?utf-8?B?TlVHc04zL2NqTDlEN1Jlb0tLeEhFQ1NqZ29QNm5XUDVtTzc4R0lrSytxWmF5?=
- =?utf-8?B?YlpmeWhnUXV0NFVadi9HRElkcWxBKzBtT09wWlRrVnJYRGpORnlFRVhQWWRk?=
- =?utf-8?B?NDFvUjYraC9DdmZQeXhBTmFKbkpNSWIwQ3NCWFdQS2F4TUVveVhFSGJUd0NW?=
- =?utf-8?B?UlRpSW1PQ0dLSEVMTzA2UytEdlJ2bkY0NkI0TTBib0JOUmNMQTY2dFBkWnBX?=
- =?utf-8?B?TDFVcTRXNThTM0Q2RExwRVJxeWFSVjhrakt0NnVCUUNIU2lyaWtBamxGNnFF?=
- =?utf-8?B?RCtVYnVSdS82WUs2bnpVWW1abGIzdytIbTNhL2UrMlZETE85TU9ZcWw3R3hO?=
- =?utf-8?B?RmQ1MUxhdGZCc0dNWVdmWGgySlpBNE05Y0hvdVBLZXlwdTNtaWcxWkRtclNx?=
- =?utf-8?B?eEkyK09pRGN0N2RxTlJwaVBzUnAveVpESXpGcWRTanVjekF6Z0lZdzBPV2Fm?=
- =?utf-8?B?QVhZS0hVMzhrNXNCNllyL3hSWnM1VEQ5VGtZZjB0dGk0TTV6NHFDeDJsTDIz?=
- =?utf-8?B?elBBZWNwY0s1alZodk9GL3MrZlM4RS85dUV6eTZEOG5RbmdJSUtjQzNHMTRl?=
- =?utf-8?B?ZTRrL1Z2VUpRbnMyYW4xYStUVFNpblhWbXhoVDFRNjJwbk1PUEhQM0d2dS9n?=
- =?utf-8?B?aGIvZ2UzU1JLb1BUR3I4bFBBcUxTclVaWjdxRHlWcDRJQlBJb0tZSXJKZFcw?=
- =?utf-8?B?S0tnV3R1VGNMRjYrYzJQNE91K0w0NGhLcGhsOG1ETC9OcitaL3FwaGVvTXhV?=
- =?utf-8?B?M0Ixd3FjUDE2QTNkUC8renptdlNoRUczc1VKMjJlVkM3enlObGJQUjFyeG13?=
- =?utf-8?B?QXdRQ0JWQWRzcnFnU21oTTV1MVJKaDFSaUpBdUFpdUhvSnc1V3NSUDZnPT0=?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?ajFLd29OZ1ZydTB0UW5ZakU0MmhsdzNrd0N5Yi8xK3Fma015VTZjWDZxYUl5?=
- =?utf-8?B?bTdXQXJickVMcVVvWCtVM0ZxcG9icW5PTCsxM3F4TCtSRjRnbDRDaG14cEtv?=
- =?utf-8?B?UUNCSERrMFhWVkNSbW9kZ2UvaUp1MFJiMUpvb1pocjcyVzVRbWNoYlVEbnAz?=
- =?utf-8?B?R3VuU0FuYTBsNlVlS0JTQjFZaFBWYlVwMWJEYzNhZFFMcFRUQ1NPSm1WaU1j?=
- =?utf-8?B?NGFLVGluRzVRbDlBLzhqMXMwUXpaNk1weUFhazl4Qi9heThLaVlxM0YwdUMv?=
- =?utf-8?B?WE9Qa3p5d1RrWTIydllQUXJJMUgzbHliRGNZL3BiWE9WdFgrdmhPL0NxUndR?=
- =?utf-8?B?MHdoeVdoOEdHL21vQlY5VTdGL1d6YlVCZERQckt2YjFKTTl6UEpnK2ZqMTFv?=
- =?utf-8?B?eGl0ODQ2czRsN3ZHM0JzZDdaa0x4bTVodXdldXo1NVVKUDl6WTdVUHI2VXY0?=
- =?utf-8?B?VE4rT01jaG9sVEhJaVlGcWQ0TFp5VzFwcnlJeG4zL2ordDRMVy9zOE15WXhT?=
- =?utf-8?B?WEFpaXh2aFFPSVEzTUdOZ1FCMlltZlM4c0p0aDlHQWtXbytlMGNqK1lRbEMx?=
- =?utf-8?B?eXZ4MGQxS0xnNnd5eWlzSmczSE1YMVl2MG9pQkk3QTlMY0FrL2V6VGwyQVlR?=
- =?utf-8?B?Vm1GVW1BdWozQ0xZUHdWWEtBY01xSkluTWZ6bm1yUTAwTEF2VG5xTXYvbjk1?=
- =?utf-8?B?MFVmK3NxYmZSTHdUTjh2NW1ORUJWanJicFJWVFVSTXF0cEI1a015SVJaYjZK?=
- =?utf-8?B?anZYdmsxOFFRRGdSNjdCcHRMbzVYTCtpbVZHVTIrdVBDdmFIYXk0RXVIUkdv?=
- =?utf-8?B?TThsMlRGQi9wNXNsanpFc2JTcFYybGF6QldHSnM4RUN4VFJVeDdvUXdnMTgy?=
- =?utf-8?B?ZXc3V21ITG1TRzlidVVLN3poRm15QnZ1THdZSktNR2lYUVNxRGo1cjdKNVhk?=
- =?utf-8?B?VFV4ckpZQmRtdklEa3AwV3ZVLzl3NU1ZSDNVVUNPbVVTendpMXBLTTdFelIz?=
- =?utf-8?B?RjFhU0lPSU5TSzNINmpYL0tobTAwdzlDWmJMSW5OZjBDS3d0SS9qMDBTM2ZC?=
- =?utf-8?B?QzBhREtWaGR4OXUwU2hTWmdHQ2lsNko0THIwdlBiRkdpamhsWDFoWGxtbmY4?=
- =?utf-8?B?bWpyLzZPMjZCTWJiRXN0K0ltcm16SGtjKzV4aFQzU3VRRWZuKzJ3WVl5ZmJl?=
- =?utf-8?B?ZS9TMjlXZmhySG5wVE8rOG1xUS9wTExHZ2s4elhPWTBvMytVcHpWQTBNYWZH?=
- =?utf-8?B?dk9GTlp2bnNQUUFrellGR0pyTHIyQnYwUUNkQWZFSDdQZ3lkVGhpWW5Ta2dk?=
- =?utf-8?B?WCt0WStOaHpjOHk1cDhVZjAxMGFFTTVkVWhjSG9oVjArbTdtUmo1V0ExWGdw?=
- =?utf-8?B?ZzdyaGpicUYrY2RVTUpvRm9xcFRXYXdISURQVU1MSEtjSWl3eVRCNUdyWE5C?=
- =?utf-8?B?aGI2WGlQZ3lmWVlhazRwMXNPblQzMmZnQ1JpbEpwVFdRdGF0WjhuTnJ5S3U4?=
- =?utf-8?B?ZlhsYWZVcEtiL2crMXp0NGJONGNSMUg0cTM0aVc1U0pOUGQvNHd1WmcvdFZJ?=
- =?utf-8?B?TmUzSlpicUNzV0QrSGpkREpxbldETlQwK1FTR2loQWU2Q1BsOGFaNDdkclFv?=
- =?utf-8?B?TFNJWUNBSlkwazVGL1NsZy9lRzdNVnFaQTEwcUFNYkMrL0RvVTdqcGUvUkNT?=
- =?utf-8?B?Z3pZZ2p6cE9LQ2NWc3JrWkZYcjMvOWxjWFJ6L0hMaUUyV2RLTTMzb2JBM09W?=
- =?utf-8?B?UCtSQ1N5YWZ2UlF0M2FnNEdVMnRpQ0V2N0pjT3V4ODJ4TjgzQ3pMUW1YOUJG?=
- =?utf-8?B?bERNcld0NXAwWlpBejYzNVJTUDVtcFlVMnpLMENjcjZFbFB5OUdKY2EvYXNM?=
- =?utf-8?B?VFN5em9YK1hXSGVsTmlhRDBhWmVVNjRWczJvQU5Wb0wwanIxV00vVEhIemE5?=
- =?utf-8?B?ZGxacVZuM28wRFAwYmtNTkwxNVI3LzNLSG1VN3FJZEpzVHQyVk1ramFydWdV?=
- =?utf-8?B?dEM5bk9FOXpXQlIrVTRiWUptZktpRk5BanJGM3JKbDFGbnpIT29QSlhTVHF3?=
- =?utf-8?B?V3g0K3dHQmtDblJKeXNrQlVaTlBQWExzcC9laVEzS1FqZjlkdFBRMFpNWkdW?=
- =?utf-8?B?TGNlcTArNDVjaExtaXlGRjZnRk4zOUtQb1cwM2VwV2FzOWhlRkRxSjFhYURT?=
- =?utf-8?B?dmc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	Sk36+BuIu/K5KM3OfWw71EwkF7jF/8GxhJIXgadFJ74PaOpVsQQHIuXkLculq+QJPzA+UJiyh7lB1W0AVXSSGCUzDSw9H5aLNaOaGZH+Y7+G5a1OEBvMDg0QJgP+ChNmJZAg4I0xkpClKQ42V0O4mE5sfF1Ksbk7C7+mn+8oYEy+NsIMk64ZeatscTNY683k4jEvIbDImeicoWw3ZyE0FbsRtHdDjnd89C1sWWEHEQNyJYmsLd+4T/DyOJkysEc2JV9qgIwPVCip2XQ2c4KB7DDOXY0KMZtsYTyClA3fTAhcCgk9VJbBlbJ8zm8MBR3qNLtEep2DL5Fzmxrw03dJETJZzq21K+anqy2CECRmO9ixOIOJ6FIcU4AFsq+Gc5hKgJa/j+CEdc7DAvijw9Mr9IV4bApQaKOnIqY9O4vxI3mfGNLaUX6ZqUuw2mVHxcjsIm9QJEEahmEuxaHrxAmXCTcq+nAauoG9w9P8u+07s87AHj6MdaW4mo9aVOy35dFUryIjQJWNUXtciEkQsy1/tk/IeHkia2unYNEjADbb6pDUh3Z9SNtzb3fm8i2zW1/P4MrH9k6LS9O78ExrgqxqVifHnTuw6UQyBoOEHvXeFgI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 562a97f3-e712-493c-dbaf-08dc69cf0ef7
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2024 11:08:41.3076
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FFcVSlDCIGUz6II4LtdoiFNG/xPvAjuunLLo0HXHsS/R/i+9ONHhfWVYRaGfCp7TYu5Bx0hZTIfmiW/qQ10Ygg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4642
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_10,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 adultscore=0
- phishscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2405010078
-X-Proofpoint-GUID: nEEYLxfjBIPD9_47D783veiaDzdEB9ov
-X-Proofpoint-ORIG-GUID: nEEYLxfjBIPD9_47D783veiaDzdEB9ov
+References: <20240416074607.1395481-1-nmi@metaspace.dk>
+In-Reply-To: <20240416074607.1395481-1-nmi@metaspace.dk>
+From: =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>
+Date: Wed, 1 May 2024 13:09:43 +0200
+Message-ID: <CAA76j92Eagjv7FjyCHs_fVH+SernJkOQE1htkSB0HDCgnuH37w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: rust: split up helpers.c
+To: Andreas Hindborg <nmi@metaspace.dk>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01/05/2024 02:47, Dave Chinner wrote:
-> On Mon, Apr 29, 2024 at 05:47:42PM +0000, John Garry wrote:
->> Support atomic writes by producing a single BIO with REQ_ATOMIC flag set.
->>
->> We rely on the FS to guarantee extent alignment, such that an atomic write
->> should never straddle two or more extents. The FS should also check for
->> validity of an atomic write length/alignment.
->>
->> Signed-off-by: John Garry <john.g.garry@oracle.com>
->> ---
->>   fs/iomap/direct-io.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
->> index a3ed7cfa95bc..d7bdeb675068 100644
->> --- a/fs/iomap/direct-io.c
->> +++ b/fs/iomap/direct-io.c
->> @@ -275,6 +275,7 @@ static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
->>   static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
->>   		struct iomap_dio *dio)
->>   {
->> +	bool is_atomic = dio->iocb->ki_flags & IOCB_ATOMIC;
->>   	const struct iomap *iomap = &iter->iomap;
->>   	struct inode *inode = iter->inode;
->>   	unsigned int zeroing_size, pad;
->> @@ -387,6 +388,9 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
->>   		bio->bi_iter.bi_sector = iomap_sector(iomap, pos);
->>   		bio->bi_write_hint = inode->i_write_hint;
->>   		bio->bi_ioprio = dio->iocb->ki_ioprio;
->> +		if (is_atomic)
->> +			bio->bi_opf |= REQ_ATOMIC;
-> 
-> REQ_ATOMIC is only valid for write IO, isn't it?
+On Tue, 16 Apr 2024 at 09:46, Andreas Hindborg <nmi@metaspace.dk> wrote:
+>
+> From: Andreas Hindborg <a.hindborg@samsung.com>
+>
+> This patch splits up the rust helpers C file. When rebasing patch sets on
+> upstream linux, merge conflicts in helpers.c is common and time consuming
+> [1]. Thus, split the file so that each kernel component can live in a
+> separate file.
+>
+> This patch lists helper files explicitly and thus conflicts in the file
+> list is still likely. However, they should be more simple to resolve than
+> the conflicts usually seen in helpers.c.
+>
+> Link:
+> https://rust-for-linux.zulipchat.com/#narrow/stream/288089-General/topic/=
+Splitting.20up.20helpers.2Ec/near/426694012 [1]
+>
+> Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+> ---
+>  rust/Makefile               |  36 ++++++--
+>  rust/helpers.c              | 180 ------------------------------------
+>  rust/helpers/Makefile       |   7 ++
+>  rust/helpers/README.md      |  18 ++++
+>  rust/helpers/bug.c          |   9 ++
+>  rust/helpers/build_assert.c |  25 +++++
+>  rust/helpers/build_bug.c    |  10 ++
+>  rust/helpers/err.c          |  22 +++++
+>  rust/helpers/kunit.c        |  10 ++
+>  rust/helpers/mutex.c        |  10 ++
+>  rust/helpers/refcount.c     |  22 +++++
+>  rust/helpers/signal.c       |  10 ++
+>  rust/helpers/spinlock.c     |  27 ++++++
+>  rust/helpers/task.c         |  22 +++++
+>  rust/helpers/wait.c         |  10 ++
+>  rust/helpers/workqueue.c    |  16 ++++
+>  16 files changed, 246 insertions(+), 188 deletions(-)
+>  delete mode 100644 rust/helpers.c
+>  create mode 100644 rust/helpers/Makefile
+>  create mode 100644 rust/helpers/README.md
+>  create mode 100644 rust/helpers/bug.c
+>  create mode 100644 rust/helpers/build_assert.c
+>  create mode 100644 rust/helpers/build_bug.c
+>  create mode 100644 rust/helpers/err.c
+>  create mode 100644 rust/helpers/kunit.c
+>  create mode 100644 rust/helpers/mutex.c
+>  create mode 100644 rust/helpers/refcount.c
+>  create mode 100644 rust/helpers/signal.c
+>  create mode 100644 rust/helpers/spinlock.c
+>  create mode 100644 rust/helpers/task.c
+>  create mode 100644 rust/helpers/wait.c
+>  create mode 100644 rust/helpers/workqueue.c
+>
+> diff --git a/rust/Makefile b/rust/Makefile
+> index 846e6ab9d5a9..ef76dcd5aa7a 100644
+> --- a/rust/Makefile
+> +++ b/rust/Makefile
+> @@ -6,10 +6,22 @@ rustdoc_output :=3D $(objtree)/Documentation/output/rus=
+t/rustdoc
+>  obj-$(CONFIG_RUST) +=3D core.o compiler_builtins.o
+>  always-$(CONFIG_RUST) +=3D exports_core_generated.h
+>
+> -# Missing prototypes are expected in the helpers since these are exporte=
+d
+> -# for Rust only, thus there is no header nor prototypes.
+> -obj-$(CONFIG_RUST) +=3D helpers.o
+> -CFLAGS_REMOVE_helpers.o =3D -Wmissing-prototypes -Wmissing-declarations
+> +RUST_HELPERS :=3D \
+> +       bug \
+> +       build_assert \
+> +       build_bug \
+> +       err \
+> +       kunit \
+> +       mutex \
+> +       refcount \
+> +       signal \
+> +       spinlock\
+> +       task \
+> +       wait \
+> +       workqueue
+> +
+> +export RUST_HELPERS
+> +obj-y +=3D helpers/
+>
+>  always-$(CONFIG_RUST) +=3D libmacros.so
+>  no-clean-files +=3D libmacros.so
+> @@ -339,6 +351,10 @@ quiet_cmd_bindgen =3D BINDGEN $@
+>                 -o $@ -- $(bindgen_c_flags_final) -DMODULE \
+>                 $(bindgen_target_cflags) $(bindgen_target_extra)
+>
+> +quiet_cmd_cat =3D CAT     $@
+> +      cmd_cat =3D \
+> +       cat $(patsubst %,$(srctree)/$(src)/helpers/%.c, $(RUST_HELPERS)) =
+> $@
+> +
+>  $(obj)/bindings/bindings_generated.rs: private bindgen_target_flags =3D =
+\
+>      $(shell grep -Ev '^#|^$$' $(srctree)/$(src)/bindgen_parameters)
+>  $(obj)/bindings/bindings_generated.rs: private bindgen_target_extra =3D =
+; \
+> @@ -353,9 +369,9 @@ $(obj)/uapi/uapi_generated.rs: $(src)/uapi/uapi_helpe=
+r.h \
+>      $(src)/bindgen_parameters FORCE
+>         $(call if_changed_dep,bindgen)
+>
+> -# See `CFLAGS_REMOVE_helpers.o` above. In addition, Clang on C does not =
+warn
+> -# with `-Wmissing-declarations` (unlike GCC), so it is not strictly need=
+ed here
+> -# given it is `libclang`; but for consistency, future Clang changes and/=
+or
+> +# See `ccflags-remove-y` in helpers/Makefile . In addition, Clang on C d=
+oes not
+> +# warn with `-Wmissing-declarations` (unlike GCC), so it is not strictly=
+ needed
+> +# here given it is `libclang`; but for consistency, future Clang changes=
+ and/or
+>  # a potential future GCC backend for `bindgen`, we disable it too.
+>  $(obj)/bindings/bindings_helpers_generated.rs: private bindgen_target_fl=
+ags =3D \
+>      --blocklist-type '.*' --allowlist-var '' \
+> @@ -364,9 +380,13 @@ $(obj)/bindings/bindings_helpers_generated.rs: priva=
+te bindgen_target_cflags =3D \
+>      -I$(objtree)/$(obj) -Wno-missing-prototypes -Wno-missing-declaration=
+s
+>  $(obj)/bindings/bindings_helpers_generated.rs: private bindgen_target_ex=
+tra =3D ; \
+>      sed -Ei 's/pub fn rust_helper_([a-zA-Z0-9_]*)/#[link_name=3D"rust_he=
+lper_\1"]\n    pub fn \1/g' $@
+> -$(obj)/bindings/bindings_helpers_generated.rs: $(src)/helpers.c FORCE
+> +$(obj)/bindings/bindings_helpers_generated.rs: $(obj)/helpers/helpers_co=
+mbined.c FORCE
+>         $(call if_changed_dep,bindgen)
+>
+> +targets +=3D helpers/helpers_combined.c
+> +$(obj)/helpers/helpers_combined.c: $(patsubst %,$(src)/helpers/%.c, $(RU=
+ST_HELPERS)) FORCE
+> +       $(call if_changed,cat)
+> +
+>  quiet_cmd_exports =3D EXPORTS $@
+>        cmd_exports =3D \
+>         $(NM) -p --defined-only $< \
+> diff --git a/rust/helpers.c b/rust/helpers.c
+> deleted file mode 100644
+> index 70e59efd92bc..000000000000
+> --- a/rust/helpers.c
+> +++ /dev/null
+> @@ -1,180 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -/*
+> - * Non-trivial C macros cannot be used in Rust. Similarly, inlined C fun=
+ctions
+> - * cannot be called either. This file explicitly creates functions ("hel=
+pers")
+> - * that wrap those so that they can be called from Rust.
+> - *
+> - * Even though Rust kernel modules should never use directly the binding=
+s, some
+> - * of these helpers need to be exported because Rust generics and inline=
+d
+> - * functions may not get their code generated in the crate where they ar=
+e
+> - * defined. Other helpers, called from non-inline functions, may not be
+> - * exported, in principle. However, in general, the Rust compiler does n=
+ot
+> - * guarantee codegen will be performed for a non-inline function either.
+> - * Therefore, this file exports all the helpers. In the future, this may=
+ be
+> - * revisited to reduce the number of exports after the compiler is infor=
+med
+> - * about the places codegen is required.
+> - *
+> - * All symbols are exported as GPL-only to guarantee no GPL-only feature=
+ is
+> - * accidentally exposed.
+> - *
+> - * Sorted alphabetically.
+> - */
+> -
+> -#include <kunit/test-bug.h>
+> -#include <linux/bug.h>
+> -#include <linux/build_bug.h>
+> -#include <linux/err.h>
+> -#include <linux/errname.h>
+> -#include <linux/mutex.h>
+> -#include <linux/refcount.h>
+> -#include <linux/sched/signal.h>
+> -#include <linux/spinlock.h>
+> -#include <linux/wait.h>
+> -#include <linux/workqueue.h>
+> -
+> -__noreturn void rust_helper_BUG(void)
+> -{
+> -       BUG();
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_BUG);
+> -
+> -void rust_helper_mutex_lock(struct mutex *lock)
+> -{
+> -       mutex_lock(lock);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_mutex_lock);
+> -
+> -void rust_helper___spin_lock_init(spinlock_t *lock, const char *name,
+> -                                 struct lock_class_key *key)
+> -{
+> -#ifdef CONFIG_DEBUG_SPINLOCK
+> -       __raw_spin_lock_init(spinlock_check(lock), name, key, LD_WAIT_CON=
+FIG);
+> -#else
+> -       spin_lock_init(lock);
+> -#endif
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper___spin_lock_init);
+> -
+> -void rust_helper_spin_lock(spinlock_t *lock)
+> -{
+> -       spin_lock(lock);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_spin_lock);
+> -
+> -void rust_helper_spin_unlock(spinlock_t *lock)
+> -{
+> -       spin_unlock(lock);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_spin_unlock);
+> -
+> -void rust_helper_init_wait(struct wait_queue_entry *wq_entry)
+> -{
+> -       init_wait(wq_entry);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_init_wait);
+> -
+> -int rust_helper_signal_pending(struct task_struct *t)
+> -{
+> -       return signal_pending(t);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_signal_pending);
+> -
+> -refcount_t rust_helper_REFCOUNT_INIT(int n)
+> -{
+> -       return (refcount_t)REFCOUNT_INIT(n);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_REFCOUNT_INIT);
+> -
+> -void rust_helper_refcount_inc(refcount_t *r)
+> -{
+> -       refcount_inc(r);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_refcount_inc);
+> -
+> -bool rust_helper_refcount_dec_and_test(refcount_t *r)
+> -{
+> -       return refcount_dec_and_test(r);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_refcount_dec_and_test);
+> -
+> -__force void *rust_helper_ERR_PTR(long err)
+> -{
+> -       return ERR_PTR(err);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_ERR_PTR);
+> -
+> -bool rust_helper_IS_ERR(__force const void *ptr)
+> -{
+> -       return IS_ERR(ptr);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_IS_ERR);
+> -
+> -long rust_helper_PTR_ERR(__force const void *ptr)
+> -{
+> -       return PTR_ERR(ptr);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_PTR_ERR);
+> -
+> -const char *rust_helper_errname(int err)
+> -{
+> -       return errname(err);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_errname);
+> -
+> -struct task_struct *rust_helper_get_current(void)
+> -{
+> -       return current;
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_get_current);
+> -
+> -void rust_helper_get_task_struct(struct task_struct *t)
+> -{
+> -       get_task_struct(t);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_get_task_struct);
+> -
+> -void rust_helper_put_task_struct(struct task_struct *t)
+> -{
+> -       put_task_struct(t);
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_put_task_struct);
+> -
+> -struct kunit *rust_helper_kunit_get_current_test(void)
+> -{
+> -       return kunit_get_current_test();
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_kunit_get_current_test);
+> -
+> -void rust_helper_init_work_with_key(struct work_struct *work, work_func_=
+t func,
+> -                                   bool onstack, const char *name,
+> -                                   struct lock_class_key *key)
+> -{
+> -       __init_work(work, onstack);
+> -       work->data =3D (atomic_long_t)WORK_DATA_INIT();
+> -       lockdep_init_map(&work->lockdep_map, name, key, 0);
+> -       INIT_LIST_HEAD(&work->entry);
+> -       work->func =3D func;
+> -}
+> -EXPORT_SYMBOL_GPL(rust_helper_init_work_with_key);
+> -
+> -/*
+> - * `bindgen` binds the C `size_t` type as the Rust `usize` type, so we c=
+an
+> - * use it in contexts where Rust expects a `usize` like slice (array) in=
+dices.
+> - * `usize` is defined to be the same as C's `uintptr_t` type (can hold a=
+ny
+> - * pointer) but not necessarily the same as `size_t` (can hold the size =
+of any
+> - * single object). Most modern platforms use the same concrete integer t=
+ype for
+> - * both of them, but in case we find ourselves on a platform where
+> - * that's not true, fail early instead of risking ABI or
+> - * integer-overflow issues.
+> - *
+> - * If your platform fails this assertion, it means that you are in
+> - * danger of integer-overflow bugs (even if you attempt to add
+> - * `--no-size_t-is-usize`). It may be easiest to change the kernel ABI o=
+n
+> - * your platform such that `size_t` matches `uintptr_t` (i.e., to increa=
+se
+> - * `size_t`, because `uintptr_t` has to be at least as big as `size_t`).
+> - */
+> -static_assert(
+> -       sizeof(size_t) =3D=3D sizeof(uintptr_t) &&
+> -       __alignof__(size_t) =3D=3D __alignof__(uintptr_t),
+> -       "Rust code expects C `size_t` to match Rust `usize`"
+> -);
+> diff --git a/rust/helpers/Makefile b/rust/helpers/Makefile
+> new file mode 100644
+> index 000000000000..f0236099f209
+> --- /dev/null
+> +++ b/rust/helpers/Makefile
+> @@ -0,0 +1,7 @@
+> +
+> +# Note: `RUST_HELPERS` is defined in `../Makefile`
+> +
+> +# Missing prototypes are expected in the helpers since these are exporte=
+d
+> +# for Rust only, thus there is no header nor prototypes.
+> +obj-$(CONFIG_RUST) +=3D $(patsubst %,%.o, $(RUST_HELPERS))
+> +ccflags-remove-y +=3D -Wmissing-prototypes -Wmissing-declarations
+> diff --git a/rust/helpers/README.md b/rust/helpers/README.md
+> new file mode 100644
+> index 000000000000..7b94ac69878f
+> --- /dev/null
+> +++ b/rust/helpers/README.md
+> @@ -0,0 +1,18 @@
+> +# Rust Helpers
+> +
+> +Non-trivial C macros cannot be used in Rust. Similarly, inlined C functi=
+ons
+> +cannot be called either. The files in this directory explicitly create f=
+unctions
+> +("helpers") that wrap those so that they can be called from Rust.
+> +
+> +Even though Rust kernel modules should never use directly the bindings, =
+some
+> +of these helpers need to be exported because Rust generics and inlined
+> +functions may not get their code generated in the crate where they are
+> +defined. Other helpers, called from non-inline functions, may not be
+> +exported, in principle. However, in general, the Rust compiler does not
+> +guarantee codegen will be performed for a non-inline function either.
+> +Therefore, this file exports all the helpers. In the future, this may be
+> +revisited to reduce the number of exports after the compiler is informed
+> +about the places codegen is required.
+> +
+> +All symbols are exported as GPL-only to guarantee no GPL-only feature is
+> +accidentally exposed.
+> diff --git a/rust/helpers/bug.c b/rust/helpers/bug.c
+> new file mode 100644
+> index 000000000000..e2afbad23dcd
+> --- /dev/null
+> +++ b/rust/helpers/bug.c
+> @@ -0,0 +1,9 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/bug.h>
+> +
+> +__noreturn void rust_helper_BUG(void)
+> +{
+> +       BUG();
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_BUG);
+> diff --git a/rust/helpers/build_assert.c b/rust/helpers/build_assert.c
+> new file mode 100644
+> index 000000000000..6a54b2680b14
+> --- /dev/null
+> +++ b/rust/helpers/build_assert.c
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/build_bug.h>
+> +
+> +/*
+> + * `bindgen` binds the C `size_t` type as the Rust `usize` type, so we c=
+an
+> + * use it in contexts where Rust expects a `usize` like slice (array) in=
+dices.
+> + * `usize` is defined to be the same as C's `uintptr_t` type (can hold a=
+ny
+> + * pointer) but not necessarily the same as `size_t` (can hold the size =
+of any
+> + * single object). Most modern platforms use the same concrete integer t=
+ype for
+> + * both of them, but in case we find ourselves on a platform where
+> + * that's not true, fail early instead of risking ABI or
+> + * integer-overflow issues.
+> + *
+> + * If your platform fails this assertion, it means that you are in
+> + * danger of integer-overflow bugs (even if you attempt to add
+> + * `--no-size_t-is-usize`). It may be easiest to change the kernel ABI o=
+n
+> + * your platform such that `size_t` matches `uintptr_t` (i.e., to increa=
+se
+> + * `size_t`, because `uintptr_t` has to be at least as big as `size_t`).
+> + */
+> +static_assert(
+> +       sizeof(size_t) =3D=3D sizeof(uintptr_t) &&
+> +       __alignof__(size_t) =3D=3D __alignof__(uintptr_t),
+> +       "Rust code expects C `size_t` to match Rust `usize`"
+> +);
+> diff --git a/rust/helpers/build_bug.c b/rust/helpers/build_bug.c
+> new file mode 100644
+> index 000000000000..f3106f248485
+> --- /dev/null
+> +++ b/rust/helpers/build_bug.c
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/export.h>
+> +#include <linux/errname.h>
+> +
+> +const char *rust_helper_errname(int err)
+> +{
+> +       return errname(err);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_errname);
+> diff --git a/rust/helpers/err.c b/rust/helpers/err.c
+> new file mode 100644
+> index 000000000000..fba4e0be64f5
+> --- /dev/null
+> +++ b/rust/helpers/err.c
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/err.h>
+> +#include <linux/export.h>
+> +
+> +__force void *rust_helper_ERR_PTR(long err)
+> +{
+> +       return ERR_PTR(err);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_ERR_PTR);
+> +
+> +bool rust_helper_IS_ERR(__force const void *ptr)
+> +{
+> +       return IS_ERR(ptr);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_IS_ERR);
+> +
+> +long rust_helper_PTR_ERR(__force const void *ptr)
+> +{
+> +       return PTR_ERR(ptr);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_PTR_ERR);
+> diff --git a/rust/helpers/kunit.c b/rust/helpers/kunit.c
+> new file mode 100644
+> index 000000000000..905e4ff4424a
+> --- /dev/null
+> +++ b/rust/helpers/kunit.c
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <kunit/test-bug.h>
+> +#include <linux/export.h>
+> +
+> +struct kunit *rust_helper_kunit_get_current_test(void)
+> +{
+> +       return kunit_get_current_test();
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_kunit_get_current_test);
+> diff --git a/rust/helpers/mutex.c b/rust/helpers/mutex.c
+> new file mode 100644
+> index 000000000000..29fd141c387d
+> --- /dev/null
+> +++ b/rust/helpers/mutex.c
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/export.h>
+> +#include <linux/mutex.h>
+> +
+> +void rust_helper_mutex_lock(struct mutex *lock)
+> +{
+> +       mutex_lock(lock);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_mutex_lock);
+> diff --git a/rust/helpers/refcount.c b/rust/helpers/refcount.c
+> new file mode 100644
+> index 000000000000..13ab64805f77
+> --- /dev/null
+> +++ b/rust/helpers/refcount.c
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/export.h>
+> +#include <linux/refcount.h>
+> +
+> +refcount_t rust_helper_REFCOUNT_INIT(int n)
+> +{
+> +       return (refcount_t)REFCOUNT_INIT(n);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_REFCOUNT_INIT);
+> +
+> +void rust_helper_refcount_inc(refcount_t *r)
+> +{
+> +       refcount_inc(r);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_refcount_inc);
+> +
+> +bool rust_helper_refcount_dec_and_test(refcount_t *r)
+> +{
+> +       return refcount_dec_and_test(r);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_refcount_dec_and_test);
+> diff --git a/rust/helpers/signal.c b/rust/helpers/signal.c
+> new file mode 100644
+> index 000000000000..d44e8096b8a9
+> --- /dev/null
+> +++ b/rust/helpers/signal.c
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/export.h>
+> +#include <linux/sched/signal.h>
+> +
+> +int rust_helper_signal_pending(struct task_struct *t)
+> +{
+> +       return signal_pending(t);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_signal_pending);
+> diff --git a/rust/helpers/spinlock.c b/rust/helpers/spinlock.c
+> new file mode 100644
+> index 000000000000..04fd8ddb4986
+> --- /dev/null
+> +++ b/rust/helpers/spinlock.c
+> @@ -0,0 +1,27 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/export.h>
+> +#include <linux/spinlock.h>
+> +
+> +void rust_helper___spin_lock_init(spinlock_t *lock, const char *name,
+> +                                 struct lock_class_key *key)
+> +{
+> +#ifdef CONFIG_DEBUG_SPINLOCK
+> +       __raw_spin_lock_init(spinlock_check(lock), name, key, LD_WAIT_CON=
+FIG);
+> +#else
+> +       spin_lock_init(lock);
+> +#endif
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper___spin_lock_init);
+> +
+> +void rust_helper_spin_lock(spinlock_t *lock)
+> +{
+> +       spin_lock(lock);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_spin_lock);
+> +
+> +void rust_helper_spin_unlock(spinlock_t *lock)
+> +{
+> +       spin_unlock(lock);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_spin_unlock);
+> diff --git a/rust/helpers/task.c b/rust/helpers/task.c
+> new file mode 100644
+> index 000000000000..b176c347f0d4
+> --- /dev/null
+> +++ b/rust/helpers/task.c
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/export.h>
+> +#include <linux/sched/task.h>
+> +
+> +struct task_struct *rust_helper_get_current(void)
+> +{
+> +       return current;
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_get_current);
+> +
+> +void rust_helper_get_task_struct(struct task_struct *t)
+> +{
+> +       get_task_struct(t);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_get_task_struct);
+> +
+> +void rust_helper_put_task_struct(struct task_struct *t)
+> +{
+> +       put_task_struct(t);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_put_task_struct);
+> diff --git a/rust/helpers/wait.c b/rust/helpers/wait.c
+> new file mode 100644
+> index 000000000000..bf361f40c7cb
+> --- /dev/null
+> +++ b/rust/helpers/wait.c
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/export.h>
+> +#include <linux/wait.h>
+> +
+> +void rust_helper_init_wait(struct wait_queue_entry *wq_entry)
+> +{
+> +       init_wait(wq_entry);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_init_wait);
+> diff --git a/rust/helpers/workqueue.c b/rust/helpers/workqueue.c
+> new file mode 100644
+> index 000000000000..12e2ee66aa4f
+> --- /dev/null
+> +++ b/rust/helpers/workqueue.c
+> @@ -0,0 +1,16 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/export.h>
+> +#include <linux/workqueue.h>
+> +
+> +void rust_helper_init_work_with_key(struct work_struct *work, work_func_=
+t func,
+> +                                   bool onstack, const char *name,
+> +                                   struct lock_class_key *key)
+> +{
+> +       __init_work(work, onstack);
+> +       work->data =3D (atomic_long_t)WORK_DATA_INIT();
+> +       lockdep_init_map(&work->lockdep_map, name, key, 0);
+> +       INIT_LIST_HEAD(&work->entry);
+> +       work->func =3D func;
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_init_work_with_key);
+>
+> base-commit: 8db31d3f3bd5dbc8cf3a22bba04b4b4add7f984e
+> --
+> 2.44.0
+>
+>
 
-yes, it is. We reject RWF_ATOMIC for a READ.
-
-> 
-> This should be added in iomap_dio_bio_opflags() after it is
-> determined we are doing a write operation.  Regardless, it should be
-> added in iomap_dio_bio_opflags(), not here. That also allows us to
-> get rid of the is_atomic variable.
-
-ok
-
-> 
->> +
->>   		bio->bi_private = dio;
->>   		bio->bi_end_io = iomap_dio_bio_end_io;
->>   
->> @@ -403,6 +407,12 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
->>   		}
->>   
->>   		n = bio->bi_iter.bi_size;
->> +		if (is_atomic && n != orig_count) {
->> +			/* This bio should have covered the complete length */
->> +			ret = -EINVAL;
->> +			bio_put(bio);
->> +			goto out;
->> +		}
-> 
-> What happens now if we've done zeroing IO before this? I suspect we
-> might expose stale data if the partial block zeroing converts the
-> unwritten extent in full...
-
-We use iomap_dio.ref to ensure that __iomap_dio_rw() does not return 
-until any zeroing and actual sub-io block write completes. See 
-iomap_dio_zero() -> iomap_dio_submit_bio() -> atomic_inc(&dio->ref) 
-callchain. I meant to add such info to the commit message, as you 
-questioned this previously.
-
-> 
->>   		if (dio->flags & IOMAP_DIO_WRITE) {
->>   			task_io_account_write(n);
->>   		} else {
-> 
-> Ignoring the error handling issues, this code might be better as:
-> 
-> 		if (dio->flags & IOMAP_DIO_WRITE) {
-> 			if ((opflags & REQ_ATOMIC) && n != orig_count) {
-> 				/* atomic writes are all or nothing */
-> 				ret = -EIO
-> 				bio_put(bio);
-> 				goto out;
-> 			}
-> 		}
-> 
-> so that we are not putting atomic write error checks in the read IO
-> submission path.
-> 
-
-Maybe, I'll look at a rework with the suggested change to use 
-iomap_dio_bio_opflags() - I actually thought that I introduced a change 
-to use iomap_dio_bio_opflags() previously...
-
-BTW, we need to return -EINVAL, as this is what userspace expects for 
-such an error.
-
-Thanks,
-John
-
+Reviewed-by: Sergio Gonz=C3=A1lez Collado<sergio.collado@gmail.com>
+Tested-by: Sergio Gonz=C3=A1lez Collado<sergio.collado@gmail.com>
