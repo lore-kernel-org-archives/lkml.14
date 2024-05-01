@@ -1,143 +1,102 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6024130AD7
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 17:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B40E18C22;
+	Wed,  1 May 2024 17:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714584415; cv=none; b=MsfA+qoSAB6i+HyK42CSBZsaVxgGqwSJi+tVcRoNsIrorDaztiC34magI7UQEruFf3UTUD+RTvcLqk0wWQsMpHCWv45OQgAZVL24Btob5Sr582c2o4HLlaB7E7XRcLyfW1dPPw6jb7zPp377sRVOpmPcvJGCI1f+TYBftToRlms=
+	t=1714584531; cv=none; b=Wyonh3asWBf14p1sNrHT90I9BsNEiDmrg79s9BLcq5R1uPeY0CE7/LzMNwWxq31d8dVSEmpWnpNePn0CaBipYC2B2usnDlib8UmgFDRIaqXyvvGJRtXnGzpQ2Xjw2VGRAVeo/Q0aKlj+xEDndDKG5DD7MFV7plLYmFxOkRFogFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714584415; c=relaxed/simple;
-	bh=eP1W92OTQ6cRKMV+qVyniJGTP4MXmCQjFzRqpGKdWoM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hNDqslJUF9Jsb979Z8gIEUoq72CoPaEvrLF4gwleT8tSQOJUz8MgbFoYLEyYy4rTekuh1R5em/U/O0SqeTdEOyuSsFZemKzGeGgROMmZcWLl+J+pl7R2hqBGm9pZ2hQKINGnHIDCopXe8VPCeEXc3q1uIXJ99nibG+sx7EoXNlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YISvIA9+; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1714584531; c=relaxed/simple;
+	bh=+hjBT4f2fglD+v2rS4MciZgOO8UjEC7rc5M9uGPcJwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bdQEKFXMps0ZYyzU2EspJMvtkq6oo0izoAHRMx5Rvh2SzkvbqOS5R1dNx+v8tqwzhOTan3pJdLkPy8+f16JO0fZ2mdxYtB3hS7suCr8wRuvbfA7z+xZ/2duH8/6j0qHDnOzMp+3NW10MGiDDiUFzZnziYloJMsZCS+WaN8mzJm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kg1VHinU; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YISvIA9+"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714584411;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tCoAbtrV5bh5IqBSP9ezmAWDh3uY8sBNqfpz/AA9bcI=;
-	b=YISvIA9+kLtsFEh8MdixEMDSsd8PoXaMrMDODnf1eEjM6JbuLCUks/ImDQ8J8NJ2jIUepy
-	HiLDsiFIiMZF5j0TtXoAglBooeB6fZvdFyN7ggcqruY6WnAoev3cXxwgDUVNyvSM4NV8On
-	wbeqCV6XdRAOfOrUrhbc9rSs7VW6dGg=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>
-Cc: kernel-team@meta.com,
-	linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kg1VHinU"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ed627829e6so8300543b3a.1;
+        Wed, 01 May 2024 10:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714584530; x=1715189330; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/z3qwZ2T0f1AcIzMY8k1DdsGurc58CRUSveN9mEOGBw=;
+        b=Kg1VHinUK78MX+5aSthlCmKrAggOfU7/U4FxZfFKCgdBUiyNljhsbKy34xCH1ug6tK
+         5t2NaCA6qNK1oUVaRvY16BBRErJ3jtoxpjPGtBlO/9RFGYdM6+vUnKaUZyGE1loavbb3
+         PXiPDBJ4I6e5mREB7KMG9OC3Iaj6TB64cjOZoqzw4De9vLP/2reak3ascZTsT54UGWUw
+         OiGbbUd2nNKUTLxWJb8sNm7YK23ZNCtmhw/OBPggH1lN4lhv3C5T2Tn49sqM2mYvrqEA
+         LmdgcoZFtyjieb7/SFTVYG6gaxsdMTAwMAmTBC118Geg3S10pSAAAeyY0pw4061hm3m0
+         AnOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714584530; x=1715189330;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/z3qwZ2T0f1AcIzMY8k1DdsGurc58CRUSveN9mEOGBw=;
+        b=A+7oJzrGOWd2zKfBJtANRkbS/2+l3cOBFWsZbbWHVBQ1t38PBDnHgNJ8PYUQy1H2E0
+         9/XlApdEovY3XVPOHbtIe2wBw4aQAvcAV91Faowo//EYWDRM+ClKZroEq1CI777fEILY
+         BboBWyqrs6E1FqSk7oC4AIEgRkoCVzEti57yGzGbFPmmRFc6HKvtA9lZf2re3yKV7jne
+         3djzt7y8phJEucqbptUUi4134minfpJNWN+NkG+z7kHDn5SYD0XbvCooxS7wc1yFbCZo
+         6sKTKu6aP/Wjb/Fbkbw5PUVJ9cOm5YsP/m/CzMUHwAQsSbQ3MGzQuE61CNi/jAJbkkZi
+         12Gw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlnySztmKvEOxFHHL8oGoO77taGv83oTsWTJyEwNZMzjRmCmENbfTjw4HfkEyttK6I7/zbASg2xc3UzrfCHo3jQe9O4wWsriE3WdGByjFSaK6Zg4FsJOh8f1+4zvg4t1MO0obIL+OhY/0Tew==
+X-Gm-Message-State: AOJu0YwjxRHT28j3kVPfDlUI86nKbpPPI4bSyfuIJWNVRNG0b9DJygNp
+	Wl45D3kbseMRQPR4pVHxfNkbyC3IHdUMLkX+T94QtDk1UT9o/veT
+X-Google-Smtp-Source: AGHT+IH+nW1nZbrDkFK5KLEoS5L4brAnP2C/EKD2m8b1DlKQM6YyKuTyZE5zX/wqdIzp611O87FXWw==
+X-Received: by 2002:a05:6a00:4655:b0:6ea:dfbf:13d4 with SMTP id kp21-20020a056a00465500b006eadfbf13d4mr3353946pfb.18.1714584528767;
+        Wed, 01 May 2024 10:28:48 -0700 (PDT)
+Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
+        by smtp.gmail.com with ESMTPSA id j16-20020a62b610000000b006f423ab373bsm1156887pff.126.2024.05.01.10.28.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 10:28:48 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 1 May 2024 07:28:47 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: willy@infradead.org, akpm@linux-foundation.org, jack@suse.cz,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 8/8] memcg: use proper type for mod_memcg_state
-Date: Wed,  1 May 2024 10:26:17 -0700
-Message-ID: <20240501172617.678560-9-shakeel.butt@linux.dev>
-In-Reply-To: <20240501172617.678560-1-shakeel.butt@linux.dev>
-References: <20240501172617.678560-1-shakeel.butt@linux.dev>
+Subject: Re: [PATCH 09/10] writeback: factor out wb_dirty_exceeded to remove
+ repeated code
+Message-ID: <ZjJ7z0j8T2rTicLD@slm.duckdns.org>
+References: <20240429034738.138609-1-shikemeng@huaweicloud.com>
+ <20240429034738.138609-10-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240429034738.138609-10-shikemeng@huaweicloud.com>
 
-The memcg stats update functions can take arbitrary integer but the
-only input which make sense is enum memcg_stat_item and we don't
-want these functions to be called with arbitrary integer, so replace
-the parameter type with enum memcg_stat_item and compiler will be able
-to warn if memcg stat update functions are called with incorrect index
-value.
+On Mon, Apr 29, 2024 at 11:47:37AM +0800, Kemeng Shi wrote:
+> Factor out wb_dirty_exceeded to remove repeated code
+> 
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> ---
+>  mm/page-writeback.c | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
+> 
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index 68ae4c90ce8b..26b638cc58c5 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -140,6 +140,7 @@ struct dirty_throttle_control {
+>  
+>  	unsigned long		pos_ratio;
+>  	bool			freerun;
+> +	bool			dirty_exceeded;
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-Reviewed-by: T.J. Mercier <tjmercier@google.com>
----
-Changes since v3:
-- N/A
+Can you try making the function return bool? That or collect dtc setup into
+a single function which takes flags to initialize different parts? It can
+become pretty error-prone to keep partially storing results in the struct.
 
- include/linux/memcontrol.h | 13 +++++++------
- mm/memcontrol.c            |  3 ++-
- 2 files changed, 9 insertions(+), 7 deletions(-)
+Thanks.
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index ab8a6e884375..030d34e9d117 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -974,7 +974,8 @@ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg);
- void folio_memcg_lock(struct folio *folio);
- void folio_memcg_unlock(struct folio *folio);
- 
--void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val);
-+void __mod_memcg_state(struct mem_cgroup *memcg, enum memcg_stat_item idx,
-+		       int val);
- 
- /* try to stablize folio_memcg() for all the pages in a memcg */
- static inline bool mem_cgroup_trylock_pages(struct mem_cgroup *memcg)
-@@ -995,7 +996,7 @@ static inline void mem_cgroup_unlock_pages(void)
- 
- /* idx can be of type enum memcg_stat_item or node_stat_item */
- static inline void mod_memcg_state(struct mem_cgroup *memcg,
--				   int idx, int val)
-+				   enum memcg_stat_item idx, int val)
- {
- 	unsigned long flags;
- 
-@@ -1005,7 +1006,7 @@ static inline void mod_memcg_state(struct mem_cgroup *memcg,
- }
- 
- static inline void mod_memcg_page_state(struct page *page,
--					int idx, int val)
-+					enum memcg_stat_item idx, int val)
- {
- 	struct mem_cgroup *memcg;
- 
-@@ -1491,19 +1492,19 @@ static inline void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
- }
- 
- static inline void __mod_memcg_state(struct mem_cgroup *memcg,
--				     int idx,
-+				     enum memcg_stat_item idx,
- 				     int nr)
- {
- }
- 
- static inline void mod_memcg_state(struct mem_cgroup *memcg,
--				   int idx,
-+				   enum memcg_stat_item idx,
- 				   int nr)
- {
- }
- 
- static inline void mod_memcg_page_state(struct page *page,
--					int idx, int val)
-+					enum memcg_stat_item idx, int val)
- {
- }
- 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index b4a1b4bb599d..39f8b0df46f6 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -956,7 +956,8 @@ static int memcg_state_val_in_pages(int idx, int val)
-  * @idx: the stat item - can be enum memcg_stat_item or enum node_stat_item
-  * @val: delta to add to the counter, can be negative
-  */
--void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val)
-+void __mod_memcg_state(struct mem_cgroup *memcg, enum memcg_stat_item idx,
-+		       int val)
- {
- 	int i = memcg_stats_index(idx);
- 
 -- 
-2.43.0
-
+tejun
