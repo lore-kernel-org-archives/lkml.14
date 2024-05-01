@@ -1,57 +1,57 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D423313959C;
-	Wed,  1 May 2024 15:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C381384A3;
+	Wed,  1 May 2024 15:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714576473; cv=none; b=rdyfj3XPIfYq97fT8RtsCwFGpG6iCv/mbild/ksIm1X9MxwqQrLk5Pw1WQaFXVnabVd2XFnbJFkjYBdOEhq+Yxkq9G93B2um87psklpRx3MffKARosxa2gyYb2COATmqSLnxb3O1Ka5AmSJoYW7XBtAyyXOldC2JaaMZBcjGZ+E=
+	t=1714576477; cv=none; b=cczWJdwhRhOpX0nKZt5Qh3ApJDTvypqAgoLag2Oy+Ky3i/1RHc3WRdOli8PWcR+GtyFAsXEmP2SyB6sJM0Z+AeHG6GtGNM8cc6TjwGO5PE/onhAkm6xD1aQa0ZbLHKhj04HdeG/JEewLEpG5rnNZGM3W30CK+l04KBYRZB/witc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714576473; c=relaxed/simple;
-	bh=Ie52vhoRXRCciNmgz1bE0oyphTFz3V//z5Fgu2phpWE=;
+	s=arc-20240116; t=1714576477; c=relaxed/simple;
+	bh=nMIXSBoKvniWGESPS5Uh47Eotbh3hmc3i6CVrGxqUOE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vFwLbs8GKpvF5C5LL90sPOqmFA6Z8h5Lr6//d6Z4AjvGt/q9nwSvRhaXrQAXS+/171818cMfAkXlq1KPJ4XFv4rEZGn1dkM/fUvzAjn+aciOvfv1flXQSTTXWlPomHyJb2m2C010P1o9aIutTBkw519bxKp2FmYK+F+F+E4yYVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZeACKlt6; arc=none smtp.client-ip=209.85.214.170
+	 MIME-Version; b=GlAtZHBCJ57Vbkdr0FGU/qEF9iTziSaD1clpDVBmka3pHhRyZs2WNwsIvMvVh8RlRJFk0sYg3ZXiM4QqHPE/PP+6fhRABPnfZL+zgpE5gGqnBy6fAernEc61Q/ZAjk8uLNR+UiV0xPOeFy4l/39oAV5LA3EmZsNkh7PJlRq4OO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mqDuK+n8; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeACKlt6"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e4266673bbso62510055ad.2;
-        Wed, 01 May 2024 08:14:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqDuK+n8"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6eff9dc1821so6418613b3a.3;
+        Wed, 01 May 2024 08:14:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714576469; x=1715181269; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714576475; x=1715181275; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DIEbS9ifWDeuWycORv8J8huubIpwTQUAY/X8kipWIJI=;
-        b=ZeACKlt6+uKgMFb0hrlcBHzwXH8BfaaOfjw1yMh/7qQbeLX+/J+2kycF+m9RTEs6IM
-         yQpg5NOdQrGt60OMxqHdYZpOSF7SIrDfOuf/UUcPrrw6+VzSemZtlija2G8QhBodyBw6
-         X2sTy1onCK8e20Z4U9fVR3xzkuB5scYnhLD8Otl7AYVajqDQO62ErNTAFT3r5j5ZupAl
-         KvWOGRLK533U2dIYNQyKcsoKe1fH67yIgCqH8nojXtmaIzOYjacfUXj+k6T2r2elZxph
-         Zecf5v5rZdiTaJyk3EJa9Si//plvMVkNQoOq4IUbR2Q0gmcIdd2ty4/IqTunJ6kV7lwE
-         7dBA==
+        bh=qlW0Y/YHuaT/2QKXGoK9M3u0rs4rrJBxL/mOXy7/PGs=;
+        b=mqDuK+n8kpPK1XsleI3pn8YvAVlUYaTK3C68DLc6n4dBJIFPcSRxytWktiCYjLeLTl
+         YXbYYpXOLSmKRpxaVLb6h0nMUXvWFc/YC+VElQeTHohJefiRyPjlM+w+An17duvYFFfF
+         h1GZYxO/AGW5fpIzFUBGT7E4vioJrVQ+CspoRAONMzPsbqCfhgSQtXVJalX7emq/Zb/9
+         JY0vkAYH85TCkyYrM7Tzg9KzNSX6rhUEeX4f0maE4z/6NZNs7GoE0qA0rmh+AZ6h65dn
+         W0/bCpm+7eWd5bGjjCCXMp4qDvw3anHHMyHetYrgORVYV5/soiVqdtOzAtayD5Dtqw2G
+         q6RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714576469; x=1715181269;
+        d=1e100.net; s=20230601; t=1714576475; x=1715181275;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=DIEbS9ifWDeuWycORv8J8huubIpwTQUAY/X8kipWIJI=;
-        b=AmeRoypPmNAAyZTA6yiTiGAXOMGfZiw/FM9zhVRW7nFuy59RyZzPSB7YHFkteXIpC0
-         40lPOKRJcwB5NefDTfAaEVUINd2Em5PPx3eGDKhei7AJPrZNfIVOGaQvzkW28XsL7G7e
-         6FIl9SRMuYHgtacuNfz45J4YAWsmAnHKe/F6+Wm5XduvxO0VAsnuTZGpFzmALuuVygQH
-         W+pFc2axf1UlAwVTBeE5TfTMq92o5bLX/ZcIyGec7IPolw1yLfhkC1Om8bAN7CZr/1oM
-         VMFIuQL7Ebcb5jedL2iz8nGyS9ZwC2OD51nF04nDodOVNIGNqYSpehgbbpTG4diZ+SGy
-         7GLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkrqPH0lbXw4GnoeiAcThqq1UbNE8y1fe7qfNn2WzwwodBYTkBgUzaTOEUPxVXvfhL9DyKTDkar4vPuEGoLHI0XYSe
-X-Gm-Message-State: AOJu0Yws+3rOy3JWZrl3aNtpmSkMsqGNKNVx+1gMgaOEV3KdHLaYZ3OE
-	ZXSp5LH/DiifR8l0N0yhRJSexg03+YOLJ/d8omLHrqk9oDVMTV6Q
-X-Google-Smtp-Source: AGHT+IE+ykFYWdrfAMkNRCAScO8cnbG7IG0arR3kO56okNEAkbpONvdIWU92+zKR5AsdK/ROhe40Gg==
-X-Received: by 2002:a17:902:c3c1:b0:1e2:6d57:c1bb with SMTP id j1-20020a170902c3c100b001e26d57c1bbmr2444997plj.21.1714576468999;
-        Wed, 01 May 2024 08:14:28 -0700 (PDT)
+        bh=qlW0Y/YHuaT/2QKXGoK9M3u0rs4rrJBxL/mOXy7/PGs=;
+        b=tkUfu5seSK+9cnwSaBUUy8d/SIpjJBjsxZe4RjkPf9szHtGMvcB1tw+43IqGq5h/Ez
+         oy05e7v7/estICTCjIIdHfaW2C0IGkASwaysxlerICIhFy0w3RlvFFwzyY6CNeZau74Z
+         rZ0j4B2cYq09X4dVXBkuFdDLZ57vldjaT645W18usQ6b4MNm7XQLgdM78JrK3sWWjqgu
+         SMH702CtTCj3N1ySu3l+k4Bt3wl3hKJVD6l0GHi4cUnz0STvuzK4hU+pnhDfpcLyBZhK
+         aJv1O3CvvPdcwxJKbfHqYWjX0p4fyCLfw5Id/e+BxbnoFkqXzVg6kxlNfthhCLtzXknl
+         LgPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvi1qEZ/B/vQ1rBs7UK5D1pA7rZKq//BYsvHVHfQ3vAyzclKNOv7fgrTE10UFnHzy9EMd6tcB5qUPh1YlZ4QQuzjyX
+X-Gm-Message-State: AOJu0YxM7+HJWzTDILfBA+GUCDzxvqC27MXmVtmgL8gIDj2f07F1MhyP
+	JBrANYq8t5dUTJ1qg90HX3hw0ezAkCnTWS5ZyrNH/zZ3OYW2RbWk
+X-Google-Smtp-Source: AGHT+IHQpeNETnlZqGQJIGW2F/MsUSqY0XVyRBiPOC7+3d1RWR1XJF84Y1IQiHWnSi/Tr+2aW+nznQ==
+X-Received: by 2002:a05:6a00:3919:b0:6ea:e2fd:6100 with SMTP id fh25-20020a056a00391900b006eae2fd6100mr3176801pfb.30.1714576472996;
+        Wed, 01 May 2024 08:14:32 -0700 (PDT)
 Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id w10-20020a170902e88a00b001e87cee098fsm24106136plg.110.2024.05.01.08.14.28
+        by smtp.gmail.com with ESMTPSA id fi33-20020a056a0039a100b006e65d66bb3csm22724565pfb.21.2024.05.01.08.14.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 08:14:28 -0700 (PDT)
+        Wed, 01 May 2024 08:14:32 -0700 (PDT)
 Sender: Tejun Heo <htejun@gmail.com>
 From: Tejun Heo <tj@kernel.org>
 To: torvalds@linux-foundation.org,
@@ -86,10 +86,11 @@ To: torvalds@linux-foundation.org,
 Cc: linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	kernel-team@meta.com,
-	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 35/39] sched_ext: Add vtime-ordered priority queue to dispatch_q's
-Date: Wed,  1 May 2024 05:10:10 -1000
-Message-ID: <20240501151312.635565-36-tj@kernel.org>
+	Tejun Heo <tj@kernel.org>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 37/39] sched_ext: Add cpuperf support
+Date: Wed,  1 May 2024 05:10:12 -1000
+Message-ID: <20240501151312.635565-38-tj@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240501151312.635565-1-tj@kernel.org>
 References: <20240501151312.635565-1-tj@kernel.org>
@@ -101,787 +102,443 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, a dsq is always a FIFO. A task which is dispatched earlier gets
-consumed or executed earlier. While this is sufficient when dsq's are used
-for simple staging areas for tasks which are ready to execute, it'd make
-dsq's a lot more useful if they can implement custom ordering.
+This patch adds CPU performance monitoring and scaling support by
+integrating into schedutil. The following kfuncs are added:
 
-This patch adds a vtime-ordered priority queue to dsq's. When the BPF
-scheduler dispatches a task with the new scx_bpf_dispatch_vtime() helper, it
-can specify the vtime tha the task should be inserted at and the task is
-inserted into the priority queue in the dsq which is ordered according to
-time_before64() comparison of the vtime values.
+- scx_bpf_cpuperf_cap(): Query the relative performance capacity of
+  different CPUs in the system.
 
-A DSQ can either be a FIFO or priority queue and automatically switches
-between the two depending on whether scx_bpf_dispatch() or
-scx_bpf_dispatch_vtime() is used. Using the wrong variant while the DSQ
-already has the other type queued is not allowed and triggers an ops error.
-Built-in DSQs must always be FIFOs.
+- scx_bpf_cpuperf_cur(): Query the current performance level of a CPU
+  relative to its max performance.
 
-This makes it very easy for the BPF schedulers to implement proper vtime
-based scheduling within each dsq very easy and efficient at a negligible
-cost in terms of code complexity and overhead.
+- scx_bpf_cpuperf_set(): Set the current target performance level of a CPU.
 
-scx_simple and scx_example_flatcg are updated to default to weighted
-vtime scheduling (the latter within each cgroup). FIFO scheduling can be
-selected with -f option.
+This gives direct control over CPU performance setting to the BPF scheduler.
+The only change on the schedutil side is disabling frequency holding
+heuristics as it doesn't apply well to sched_ext schedulers which may have a
+lot weaker conneciton between tasks and their current / last CPU.
 
-v4: - As allowing mixing priority queue and FIFO on the same DSQ sometimes
-      led to unexpected starvations, DSQs now error out if both modes are
-      used at the same time and the built-in DSQs are no longer allowed to
-      be priority queues.
-
-    - Explicit type struct scx_dsq_node added to contain fields needed to be
-      linked on DSQs. This will be used to implement stateful iterator.
-
-    - Tasks are now always linked on dsq->list whether the DSQ is in FIFO or
-      PRIQ mode. This confines PRIQ related complexities to the enqueue and
-      dequeue paths. Other paths only need to look at dsq->list. This will
-      also ease implementing BPF iterator.
-
-    - Print p->scx.dsq_flags in debug dump.
-
-v3: - SCX_TASK_DSQ_ON_PRIQ flag is moved from p->scx.flags into its own
-      p->scx.dsq_flags. The flag is protected with the dsq lock unlike other
-      flags in p->scx.flags. This led to flag corruption in some cases.
-
-    - Add comments explaining the interaction between using consumption of
-      p->scx.slice to determine vtime progress and yielding.
-
-v2: - p->scx.dsq_vtime was not initialized on load or across cgroup
-      migrations leading to some tasks being stalled for extended period of
-      time depending on how saturated the machine is. Fixed.
+A toy implementation of cpuperf is added to scx_qmap as a demonstration of
+the feature.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 Reviewed-by: David Vernet <dvernet@meta.com>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- include/linux/sched/ext.h                |  29 ++++-
- init/init_task.c                         |   2 +-
- kernel/sched/ext.c                       | 150 ++++++++++++++++++++---
- tools/sched_ext/include/scx/common.bpf.h |   1 +
- tools/sched_ext/scx_flatcg.bpf.c         |  80 +++++++++++-
- tools/sched_ext/scx_flatcg.c             |   8 +-
- tools/sched_ext/scx_simple.bpf.c         |  90 +++++++++++++-
- tools/sched_ext/scx_simple.c             |   8 +-
- 8 files changed, 342 insertions(+), 26 deletions(-)
+ kernel/sched/cpufreq_schedutil.c         |   8 ++
+ kernel/sched/ext.c                       |  83 +++++++++++++++++-
+ kernel/sched/ext.h                       |   3 +-
+ kernel/sched/sched.h                     |   1 +
+ tools/sched_ext/include/scx/common.bpf.h |   3 +
+ tools/sched_ext/include/scx/compat.bpf.h |  26 ++++++
+ tools/sched_ext/scx_qmap.bpf.c           | 106 +++++++++++++++++++++++
+ tools/sched_ext/scx_qmap.c               |   8 ++
+ 8 files changed, 234 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/sched/ext.h b/include/linux/sched/ext.h
-index d89b4d907b26..8c6299915800 100644
---- a/include/linux/sched/ext.h
-+++ b/include/linux/sched/ext.h
-@@ -49,12 +49,15 @@ enum scx_dsq_id_flags {
- };
- 
- /*
-- * Dispatch queue (dsq) is a simple FIFO which is used to buffer between the
-- * scheduler core and the BPF scheduler. See the documentation for more details.
-+ * A dispatch queue (DSQ) can be either a FIFO or p->scx.dsq_vtime ordered
-+ * queue. A built-in DSQ is always a FIFO. The built-in local DSQs are used to
-+ * buffer between the scheduler core and the BPF scheduler. See the
-+ * documentation for more details.
-  */
- struct scx_dispatch_q {
- 	raw_spinlock_t		lock;
- 	struct list_head	list;	/* tasks in dispatch order */
-+	struct rb_root		priq;	/* used to order by p->scx.dsq_vtime */
- 	u32			nr;
- 	u64			id;
- 	struct rhash_head	hash_node;
-@@ -86,6 +89,11 @@ enum scx_task_state {
- 	SCX_TASK_NR_STATES,
- };
- 
-+/* scx_entity.dsq_flags */
-+enum scx_ent_dsq_flags {
-+	SCX_TASK_DSQ_ON_PRIQ	= 1 << 0, /* task is queued on the priority queue of a dsq */
-+};
-+
- /*
-  * Mask bits for scx_entity.kf_mask. Not all kfuncs can be called from
-  * everywhere and the following bits track which kfunc sets are currently
-@@ -111,13 +119,19 @@ enum scx_kf_mask {
- 	__SCX_KF_TERMINAL	= SCX_KF_ENQUEUE | SCX_KF_SELECT_CPU | SCX_KF_REST,
- };
- 
-+struct scx_dsq_node {
-+	struct list_head	list;		/* dispatch order */
-+	struct rb_node		priq;		/* p->scx.dsq_vtime order */
-+	u32			flags;		/* SCX_TASK_DSQ_* flags */
-+};
-+
- /*
-  * The following is embedded in task_struct and contains all fields necessary
-  * for a task to be scheduled by SCX.
-  */
- struct sched_ext_entity {
- 	struct scx_dispatch_q	*dsq;
--	struct list_head	dsq_node;
-+	struct scx_dsq_node	dsq_node;	/* protected by dsq lock */
- 	u32			flags;		/* protected by rq lock */
- 	u32			weight;
- 	s32			sticky_cpu;
-@@ -149,6 +163,15 @@ struct sched_ext_entity {
- 	 */
- 	u64			slice;
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 0827864c35ff..12174c0137a5 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -332,6 +332,14 @@ static bool sugov_hold_freq(struct sugov_cpu *sg_cpu)
+ 	unsigned long idle_calls;
+ 	bool ret;
  
 +	/*
-+	 * Used to order tasks when dispatching to the vtime-ordered priority
-+	 * queue of a dsq. This is usually set through scx_bpf_dispatch_vtime()
-+	 * but can also be modified directly by the BPF scheduler. Modifying it
-+	 * while a task is queued on a dsq may mangle the ordering and is not
-+	 * recommended.
++	 * The heuristics in this function is for the fair class. For SCX, the
++	 * performance target comes directly from the BPF scheduler. Let's just
++	 * follow it.
 +	 */
-+	u64			dsq_vtime;
++	if (scx_switched_all())
++		return false;
 +
- 	/*
- 	 * If set, reject future sched_setscheduler(2) calls updating the policy
- 	 * to %SCHED_EXT with -%EACCES.
-diff --git a/init/init_task.c b/init/init_task.c
-index b85635b7eed0..6bac934219d8 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -101,7 +101,7 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES) = {
- #endif
- #ifdef CONFIG_SCHED_CLASS_EXT
- 	.scx		= {
--		.dsq_node	= LIST_HEAD_INIT(init_task.scx.dsq_node),
-+		.dsq_node.list	= LIST_HEAD_INIT(init_task.scx.dsq_node.list),
- 		.sticky_cpu	= -1,
- 		.holding_cpu	= -1,
- 		.runnable_node	= LIST_HEAD_INIT(init_task.scx.runnable_node),
+ 	/* if capped by uclamp_max, always update to be in compliance */
+ 	if (uclamp_rq_is_capped(cpu_rq(sg_cpu->cpu)))
+ 		return false;
 diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 83a56b5bb72b..13ba4d3d39bd 100644
+index fb4849fb7afd..6b7990f56845 100644
 --- a/kernel/sched/ext.c
 +++ b/kernel/sched/ext.c
-@@ -685,6 +685,7 @@ enum scx_enq_flags {
- 	__SCX_ENQ_INTERNAL_MASK	= 0xffLLU << 56,
- 
- 	SCX_ENQ_CLEAR_OPSS	= 1LLU << 56,
-+	SCX_ENQ_DSQ_PRIQ	= 1LLU << 57,
+@@ -14,6 +14,8 @@ enum scx_consts {
+ 	SCX_EXIT_BT_LEN			= 64,
+ 	SCX_EXIT_MSG_LEN		= 1024,
+ 	SCX_EXIT_DUMP_DFL_LEN		= 32768,
++
++	SCX_CPUPERF_ONE			= SCHED_CAPACITY_SCALE,
  };
  
- enum scx_deq_flags {
-@@ -1369,6 +1370,17 @@ static void update_curr_scx(struct rq *rq)
- 	}
- }
+ enum scx_exit_kind {
+@@ -3810,7 +3812,7 @@ DEFINE_SCHED_CLASS(ext) = {
+ 	.update_curr		= update_curr_scx,
  
-+static bool scx_dsq_priq_less(struct rb_node *node_a,
-+			      const struct rb_node *node_b)
-+{
-+	const struct task_struct *a =
-+		container_of(node_a, struct task_struct, scx.dsq_node.priq);
-+	const struct task_struct *b =
-+		container_of(node_b, struct task_struct, scx.dsq_node.priq);
+ #ifdef CONFIG_UCLAMP_TASK
+-	.uclamp_enabled		= 0,
++	.uclamp_enabled		= 1,
+ #endif
+ };
+ 
+@@ -4628,7 +4630,7 @@ static int scx_ops_enable(struct sched_ext_ops *ops)
+ 	struct scx_task_iter sti;
+ 	struct task_struct *p;
+ 	unsigned long timeout;
+-	int i, ret;
++	int i, cpu, ret;
+ 
+ 	mutex_lock(&scx_ops_enable_mutex);
+ 
+@@ -4677,6 +4679,9 @@ static int scx_ops_enable(struct sched_ext_ops *ops)
+ 
+ 	atomic_long_set(&scx_nr_rejected, 0);
+ 
++	for_each_possible_cpu(cpu)
++		cpu_rq(cpu)->scx.cpuperf_target = SCX_CPUPERF_ONE;
 +
-+	return time_before64(a->scx.dsq_vtime, b->scx.dsq_vtime);
-+}
-+
- static void dsq_mod_nr(struct scx_dispatch_q *dsq, s32 delta)
- {
- 	/* scx_bpf_dsq_nr_queued() reads ->nr without locking, use WRITE_ONCE() */
-@@ -1380,7 +1392,9 @@ static void dispatch_enqueue(struct scx_dispatch_q *dsq, struct task_struct *p,
- {
- 	bool is_local = dsq->id == SCX_DSQ_LOCAL;
- 
--	WARN_ON_ONCE(p->scx.dsq || !list_empty(&p->scx.dsq_node));
-+	WARN_ON_ONCE(p->scx.dsq || !list_empty(&p->scx.dsq_node.list));
-+	WARN_ON_ONCE((p->scx.dsq_node.flags & SCX_TASK_DSQ_ON_PRIQ) ||
-+		     !RB_EMPTY_NODE(&p->scx.dsq_node.priq));
- 
- 	if (!is_local) {
- 		raw_spin_lock(&dsq->lock);
-@@ -1393,10 +1407,59 @@ static void dispatch_enqueue(struct scx_dispatch_q *dsq, struct task_struct *p,
- 		}
- 	}
- 
--	if (enq_flags & (SCX_ENQ_HEAD | SCX_ENQ_PREEMPT))
--		list_add(&p->scx.dsq_node, &dsq->list);
--	else
--		list_add_tail(&p->scx.dsq_node, &dsq->list);
-+	if (unlikely((dsq->id & SCX_DSQ_FLAG_BUILTIN) &&
-+		     (enq_flags & SCX_ENQ_DSQ_PRIQ))) {
-+		/*
-+		 * SCX_DSQ_LOCAL and SCX_DSQ_GLOBAL DSQs always consume from
-+		 * their FIFO queues. To avoid confusion and accidentally
-+		 * starving vtime-dispatched tasks by FIFO-dispatched tasks, we
-+		 * disallow any internal DSQ from doing vtime ordering of
-+		 * tasks.
-+		 */
-+		scx_ops_error("cannot use vtime ordering for built-in DSQs");
-+		enq_flags &= ~SCX_ENQ_DSQ_PRIQ;
-+	}
-+
-+	if (enq_flags & SCX_ENQ_DSQ_PRIQ) {
-+		struct rb_node *rbp;
-+
-+		/*
-+		 * A PRIQ DSQ shouldn't be using FIFO enqueueing. As tasks are
-+		 * linked to both the rbtree and list on PRIQs, this can only be
-+		 * tested easily when adding the first task.
-+		 */
-+		if (unlikely(RB_EMPTY_ROOT(&dsq->priq) &&
-+			     !list_empty(&dsq->list)))
-+			scx_ops_error("DSQ ID 0x%016llx already had FIFO-enqueued tasks",
-+				      dsq->id);
-+
-+		p->scx.dsq_node.flags |= SCX_TASK_DSQ_ON_PRIQ;
-+		rb_add(&p->scx.dsq_node.priq, &dsq->priq, scx_dsq_priq_less);
-+
-+		/*
-+		 * Find the previous task and insert after it on the list so
-+		 * that @dsq->list is vtime ordered.
-+		 */
-+		rbp = rb_prev(&p->scx.dsq_node.priq);
-+		if (rbp) {
-+			struct task_struct *prev =
-+				container_of(rbp, struct task_struct,
-+					     scx.dsq_node.priq);
-+			list_add(&p->scx.dsq_node.list, &prev->scx.dsq_node.list);
-+		} else {
-+			list_add(&p->scx.dsq_node.list, &dsq->list);
-+		}
-+	} else {
-+		/* a FIFO DSQ shouldn't be using PRIQ enqueuing */
-+		if (unlikely(!RB_EMPTY_ROOT(&dsq->priq)))
-+			scx_ops_error("DSQ ID 0x%016llx already had PRIQ-enqueued tasks",
-+				      dsq->id);
-+
-+		if (enq_flags & (SCX_ENQ_HEAD | SCX_ENQ_PREEMPT))
-+			list_add(&p->scx.dsq_node.list, &dsq->list);
-+		else
-+			list_add_tail(&p->scx.dsq_node.list, &dsq->list);
-+	}
- 
- 	dsq_mod_nr(dsq, 1);
- 	p->scx.dsq = dsq;
-@@ -1435,13 +1498,30 @@ static void dispatch_enqueue(struct scx_dispatch_q *dsq, struct task_struct *p,
- 	}
- }
- 
-+static void task_unlink_from_dsq(struct task_struct *p,
-+				 struct scx_dispatch_q *dsq)
-+{
-+	if (p->scx.dsq_node.flags & SCX_TASK_DSQ_ON_PRIQ) {
-+		rb_erase(&p->scx.dsq_node.priq, &dsq->priq);
-+		RB_CLEAR_NODE(&p->scx.dsq_node.priq);
-+		p->scx.dsq_node.flags &= ~SCX_TASK_DSQ_ON_PRIQ;
-+	}
-+
-+	list_del_init(&p->scx.dsq_node.list);
-+}
-+
-+static bool task_linked_on_dsq(struct task_struct *p)
-+{
-+	return !list_empty(&p->scx.dsq_node.list);
-+}
-+
- static void dispatch_dequeue(struct scx_rq *scx_rq, struct task_struct *p)
- {
- 	struct scx_dispatch_q *dsq = p->scx.dsq;
- 	bool is_local = dsq == &scx_rq->local_dsq;
- 
- 	if (!dsq) {
--		WARN_ON_ONCE(!list_empty(&p->scx.dsq_node));
-+		WARN_ON_ONCE(task_linked_on_dsq(p));
- 		/*
- 		 * When dispatching directly from the BPF scheduler to a local
- 		 * DSQ, the task isn't associated with any DSQ but
-@@ -1462,8 +1542,8 @@ static void dispatch_dequeue(struct scx_rq *scx_rq, struct task_struct *p)
- 	*/
- 	if (p->scx.holding_cpu < 0) {
- 		/* @p must still be on @dsq, dequeue */
--		WARN_ON_ONCE(list_empty(&p->scx.dsq_node));
--		list_del_init(&p->scx.dsq_node);
-+		WARN_ON_ONCE(!task_linked_on_dsq(p));
-+		task_unlink_from_dsq(p, dsq);
- 		dsq_mod_nr(dsq, -1);
- 	} else {
- 		/*
-@@ -1472,7 +1552,7 @@ static void dispatch_dequeue(struct scx_rq *scx_rq, struct task_struct *p)
- 		 * holding_cpu which tells dispatch_to_local_dsq() that it lost
- 		 * the race.
- 		 */
--		WARN_ON_ONCE(!list_empty(&p->scx.dsq_node));
-+		WARN_ON_ONCE(task_linked_on_dsq(p));
- 		p->scx.holding_cpu = -1;
- 	}
- 	p->scx.dsq = NULL;
-@@ -1975,7 +2055,8 @@ static void consume_local_task(struct rq *rq, struct scx_dispatch_q *dsq,
- 
- 	/* @dsq is locked and @p is on this rq */
- 	WARN_ON_ONCE(p->scx.holding_cpu >= 0);
--	list_move_tail(&p->scx.dsq_node, &scx_rq->local_dsq.list);
-+	task_unlink_from_dsq(p, dsq);
-+	list_add_tail(&p->scx.dsq_node.list, &scx_rq->local_dsq.list);
- 	dsq_mod_nr(dsq, -1);
- 	dsq_mod_nr(&scx_rq->local_dsq, 1);
- 	p->scx.dsq = &scx_rq->local_dsq;
-@@ -2018,7 +2099,7 @@ static bool consume_remote_task(struct rq *rq, struct rq_flags *rf,
- 	 * move_task_to_local_dsq().
- 	 */
- 	WARN_ON_ONCE(p->scx.holding_cpu >= 0);
--	list_del_init(&p->scx.dsq_node);
-+	task_unlink_from_dsq(p, dsq);
- 	dsq_mod_nr(dsq, -1);
- 	p->scx.holding_cpu = raw_smp_processor_id();
- 	raw_spin_unlock(&dsq->lock);
-@@ -2050,7 +2131,7 @@ static bool consume_dispatch_q(struct rq *rq, struct rq_flags *rf,
- 
- 	raw_spin_lock(&dsq->lock);
- 
--	list_for_each_entry(p, &dsq->list, scx.dsq_node) {
-+	list_for_each_entry(p, &dsq->list, scx.dsq_node.list) {
- 		struct rq *task_rq = task_rq(p);
- 
- 		if (rq == task_rq) {
-@@ -2570,7 +2651,7 @@ static void put_prev_task_scx(struct rq *rq, struct task_struct *p)
- static struct task_struct *first_local_task(struct rq *rq)
- {
- 	return list_first_entry_or_null(&rq->scx.local_dsq.list,
--					struct task_struct, scx.dsq_node);
-+					struct task_struct, scx.dsq_node.list);
- }
- 
- static struct task_struct *pick_next_task_scx(struct rq *rq)
-@@ -3267,7 +3348,8 @@ void init_scx_entity(struct sched_ext_entity *scx)
- 	 */
- 	memset(scx, 0, offsetof(struct sched_ext_entity, tasks_node));
- 
--	INIT_LIST_HEAD(&scx->dsq_node);
-+	INIT_LIST_HEAD(&scx->dsq_node.list);
-+	RB_CLEAR_NODE(&scx->dsq_node.priq);
- 	scx->sticky_cpu = -1;
- 	scx->holding_cpu = -1;
- 	INIT_LIST_HEAD(&scx->runnable_node);
-@@ -4294,9 +4376,10 @@ static void scx_dump_task(struct seq_buf *s, struct task_struct *p, char marker,
- 	seq_buf_printf(s, "\n %c%c %s[%d] %+ldms\n",
- 		       marker, task_state_to_char(p), p->comm, p->pid,
- 		       jiffies_delta_msecs(p->scx.runnable_at, now));
--	seq_buf_printf(s, "      scx_state/flags=%u/0x%x ops_state/qseq=%lu/%lu\n",
-+	seq_buf_printf(s, "      scx_state/flags=%u/0x%x dsq_flags=0x%x ops_state/qseq=%lu/%lu\n",
- 		       scx_get_task_state(p),
- 		       p->scx.flags & ~SCX_TASK_STATE_MASK,
-+		       p->scx.dsq_node.flags,
- 		       ops_state & SCX_OPSS_STATE_MASK,
- 		       ops_state >> SCX_OPSS_QSEQ_SHIFT);
- 	seq_buf_printf(s, "      sticky/holding_cpu=%d/%d dsq_id=%s\n",
-@@ -4844,6 +4927,9 @@ static int bpf_scx_btf_struct_access(struct bpf_verifier_log *log,
- 		if (off >= offsetof(struct task_struct, scx.slice) &&
- 		    off + size <= offsetofend(struct task_struct, scx.slice))
- 			return SCALAR_VALUE;
-+		if (off >= offsetof(struct task_struct, scx.dsq_vtime) &&
-+		    off + size <= offsetofend(struct task_struct, scx.dsq_vtime))
-+			return SCALAR_VALUE;
- 		if (off >= offsetof(struct task_struct, scx.disallow) &&
- 		    off + size <= offsetofend(struct task_struct, scx.disallow))
- 			return SCALAR_VALUE;
-@@ -5483,10 +5569,44 @@ __bpf_kfunc void scx_bpf_dispatch(struct task_struct *p, u64 dsq_id, u64 slice,
- 	scx_dispatch_commit(p, dsq_id, enq_flags);
+ 	/*
+ 	 * Keep CPUs stable during enable so that the BPF scheduler can track
+ 	 * online CPUs by watching ->on/offline_cpu() after ->init().
+@@ -6227,6 +6232,77 @@ __bpf_kfunc void scx_bpf_error_bstr(char *fmt, unsigned long long *data,
+ 			     data__sz);
  }
  
 +/**
-+ * scx_bpf_dispatch_vtime - Dispatch a task into the vtime priority queue of a DSQ
-+ * @p: task_struct to dispatch
-+ * @dsq_id: DSQ to dispatch to
-+ * @slice: duration @p can run for in nsecs
-+ * @vtime: @p's ordering inside the vtime-sorted queue of the target DSQ
-+ * @enq_flags: SCX_ENQ_*
++ * scx_bpf_cpuperf_cap - Query the maximum relative capacity of a CPU
++ * @cpu: CPU of interest
 + *
-+ * Dispatch @p into the vtime priority queue of the DSQ identified by @dsq_id.
-+ * Tasks queued into the priority queue are ordered by @vtime and always
-+ * consumed after the tasks in the FIFO queue. All other aspects are identical
-+ * to scx_bpf_dispatch().
-+ *
-+ * @vtime ordering is according to time_before64() which considers wrapping. A
-+ * numerically larger vtime may indicate an earlier position in the ordering and
-+ * vice-versa.
++ * Return the maximum relative capacity of @cpu in relation to the most
++ * performant CPU in the system. The return value is in the range [1,
++ * %SCX_CPUPERF_ONE]. See scx_bpf_cpuperf_cur().
 + */
-+__bpf_kfunc void scx_bpf_dispatch_vtime(struct task_struct *p, u64 dsq_id,
-+					u64 slice, u64 vtime, u64 enq_flags)
++__bpf_kfunc u32 scx_bpf_cpuperf_cap(s32 cpu)
 +{
-+	if (!scx_dispatch_preamble(p, enq_flags))
-+		return;
-+
-+	if (slice)
-+		p->scx.slice = slice;
++	if (ops_cpu_valid(cpu, NULL))
++		return arch_scale_cpu_capacity(cpu);
 +	else
-+		p->scx.slice = p->scx.slice ?: 1;
-+
-+	p->scx.dsq_vtime = vtime;
-+
-+	scx_dispatch_commit(p, dsq_id, enq_flags | SCX_ENQ_DSQ_PRIQ);
++		return SCX_CPUPERF_ONE;
 +}
 +
- __bpf_kfunc_end_defs();
++/**
++ * scx_bpf_cpuperf_cur - Query the current relative performance of a CPU
++ * @cpu: CPU of interest
++ *
++ * Return the current relative performance of @cpu in relation to its maximum.
++ * The return value is in the range [1, %SCX_CPUPERF_ONE].
++ *
++ * The current performance level of a CPU in relation to the maximum performance
++ * available in the system can be calculated as follows:
++ *
++ *   scx_bpf_cpuperf_cap() * scx_bpf_cpuperf_cur() / %SCX_CPUPERF_ONE
++ *
++ * The result is in the range [1, %SCX_CPUPERF_ONE].
++ */
++__bpf_kfunc u32 scx_bpf_cpuperf_cur(s32 cpu)
++{
++	if (ops_cpu_valid(cpu, NULL))
++		return arch_scale_freq_capacity(cpu);
++	else
++		return SCX_CPUPERF_ONE;
++}
++
++/**
++ * scx_bpf_cpuperf_set - Set the relative performance target of a CPU
++ * @cpu: CPU of interest
++ * @perf: target performance level [0, %SCX_CPUPERF_ONE]
++ * @flags: %SCX_CPUPERF_* flags
++ *
++ * Set the target performance level of @cpu to @perf. @perf is in linear
++ * relative scale between 0 and %SCX_CPUPERF_ONE. This determines how the
++ * schedutil cpufreq governor chooses the target frequency.
++ *
++ * The actual performance level chosen, CPU grouping, and the overhead and
++ * latency of the operations are dependent on the hardware and cpufreq driver in
++ * use. Consult hardware and cpufreq documentation for more information. The
++ * current performance level can be monitored using scx_bpf_cpuperf_cur().
++ */
++__bpf_kfunc void scx_bpf_cpuperf_set(u32 cpu, u32 perf)
++{
++	if (unlikely(perf > SCX_CPUPERF_ONE)) {
++		scx_ops_error("Invalid cpuperf target %u for CPU %d", perf, cpu);
++		return;
++	}
++
++	if (ops_cpu_valid(cpu, NULL)) {
++		struct rq *rq = cpu_rq(cpu);
++
++		rq->scx.cpuperf_target = perf;
++
++		rcu_read_lock_sched_notrace();
++		cpufreq_update_util(cpu_rq(cpu), 0);
++		rcu_read_unlock_sched_notrace();
++	}
++}
++
+ /**
+  * scx_bpf_nr_cpu_ids - Return the number of possible CPU IDs
+  *
+@@ -6474,6 +6550,9 @@ BTF_ID_FLAGS(func, bpf_iter_scx_dsq_next, KF_ITER_NEXT | KF_RET_NULL)
+ BTF_ID_FLAGS(func, bpf_iter_scx_dsq_destroy, KF_ITER_DESTROY)
+ BTF_ID_FLAGS(func, scx_bpf_exit_bstr, KF_TRUSTED_ARGS)
+ BTF_ID_FLAGS(func, scx_bpf_error_bstr, KF_TRUSTED_ARGS)
++BTF_ID_FLAGS(func, scx_bpf_cpuperf_cap)
++BTF_ID_FLAGS(func, scx_bpf_cpuperf_cur)
++BTF_ID_FLAGS(func, scx_bpf_cpuperf_set)
+ BTF_ID_FLAGS(func, scx_bpf_nr_cpu_ids)
+ BTF_ID_FLAGS(func, scx_bpf_get_possible_cpumask, KF_ACQUIRE)
+ BTF_ID_FLAGS(func, scx_bpf_get_online_cpumask, KF_ACQUIRE)
+diff --git a/kernel/sched/ext.h b/kernel/sched/ext.h
+index 6fd646450065..f555395d9783 100644
+--- a/kernel/sched/ext.h
++++ b/kernel/sched/ext.h
+@@ -46,9 +46,8 @@ void init_sched_ext_class(void);
  
- BTF_KFUNCS_START(scx_kfunc_ids_enqueue_dispatch)
- BTF_ID_FLAGS(func, scx_bpf_dispatch, KF_RCU)
-+BTF_ID_FLAGS(func, scx_bpf_dispatch_vtime, KF_RCU)
- BTF_KFUNCS_END(scx_kfunc_ids_enqueue_dispatch)
- 
- static const struct btf_kfunc_id_set scx_kfunc_set_enqueue_dispatch = {
+ static inline u32 scx_cpuperf_target(s32 cpu)
+ {
+-	/* for now, peg cpus at max performance while enabled */
+ 	if (scx_enabled())
+-		return SCHED_CAPACITY_SCALE;
++		return cpu_rq(cpu)->scx.cpuperf_target;
+ 	else
+ 		return 0;
+ }
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index e8ef7309f347..d31db189977a 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -732,6 +732,7 @@ struct scx_rq {
+ 	u64			extra_enq_flags;	/* see move_task_to_local_dsq() */
+ 	u32			nr_running;
+ 	u32			flags;
++	u32			cpuperf_target;		/* [0, SCHED_CAPACITY_SCALE] */
+ 	bool			cpu_released;
+ 	cpumask_var_t		cpus_to_kick;
+ 	cpumask_var_t		cpus_to_kick_if_idle;
 diff --git a/tools/sched_ext/include/scx/common.bpf.h b/tools/sched_ext/include/scx/common.bpf.h
-index a3979e13aade..0b26046339ee 100644
+index 17c76919e450..20ebb407148e 100644
 --- a/tools/sched_ext/include/scx/common.bpf.h
 +++ b/tools/sched_ext/include/scx/common.bpf.h
-@@ -31,6 +31,7 @@ static inline void ___vmlinux_h_sanity_check___(void)
- s32 scx_bpf_create_dsq(u64 dsq_id, s32 node) __ksym;
- s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags, bool *is_idle) __ksym;
- void scx_bpf_dispatch(struct task_struct *p, u64 dsq_id, u64 slice, u64 enq_flags) __ksym;
-+void scx_bpf_dispatch_vtime(struct task_struct *p, u64 dsq_id, u64 slice, u64 vtime, u64 enq_flags) __ksym;
- u32 scx_bpf_dispatch_nr_slots(void) __ksym;
- void scx_bpf_dispatch_cancel(void) __ksym;
- bool scx_bpf_consume(u64 dsq_id) __ksym;
-diff --git a/tools/sched_ext/scx_flatcg.bpf.c b/tools/sched_ext/scx_flatcg.bpf.c
-index 20a53e087d6c..a9c2fa41a1bb 100644
---- a/tools/sched_ext/scx_flatcg.bpf.c
-+++ b/tools/sched_ext/scx_flatcg.bpf.c
-@@ -38,6 +38,10 @@
-  * this isn't a real concern especially given the performance gain. Also, there
-  * are ways to mitigate the problem further by e.g. introducing an extra
-  * scheduling layer on cgroup delegation boundaries.
-+ *
-+ * The scheduler first picks the cgroup to run and then schedule the tasks
-+ * within by using nested weighted vtime scheduling by default. The
-+ * cgroup-internal scheduling can be switched to FIFO with the -f option.
-  */
- #include <scx/common.bpf.h>
- #include "scx_flatcg.h"
-@@ -51,6 +55,7 @@ char _license[] SEC("license") = "GPL";
+@@ -45,6 +45,9 @@ struct task_struct *bpf_iter_scx_dsq_next(struct bpf_iter_scx_dsq *it) __ksym __
+ void bpf_iter_scx_dsq_destroy(struct bpf_iter_scx_dsq *it) __ksym __weak;
+ void scx_bpf_exit_bstr(s64 exit_code, char *fmt, unsigned long long *data, u32 data__sz) __ksym __weak;
+ void scx_bpf_error_bstr(char *fmt, unsigned long long *data, u32 data_len) __ksym;
++u32 scx_bpf_cpuperf_cap(s32 cpu) __ksym __weak;
++u32 scx_bpf_cpuperf_cur(s32 cpu) __ksym __weak;
++void scx_bpf_cpuperf_set(s32 cpu, u32 perf) __ksym __weak;
+ u32 scx_bpf_nr_cpu_ids(void) __ksym __weak;
+ const struct cpumask *scx_bpf_get_possible_cpumask(void) __ksym __weak;
+ const struct cpumask *scx_bpf_get_online_cpumask(void) __ksym __weak;
+diff --git a/tools/sched_ext/include/scx/compat.bpf.h b/tools/sched_ext/include/scx/compat.bpf.h
+index c17ef3757b31..8fcba2505ad5 100644
+--- a/tools/sched_ext/include/scx/compat.bpf.h
++++ b/tools/sched_ext/include/scx/compat.bpf.h
+@@ -56,6 +56,32 @@ static inline void __COMPAT_scx_bpf_switch_all(void)
+ #define __COMPAT_HAS_CPUMASKS							\
+ 	bpf_ksym_exists(scx_bpf_nr_cpu_ids)
  
- const volatile u32 nr_cpus = 32;	/* !0 for veristat, set during init */
- const volatile u64 cgrp_slice_ns = SCX_SLICE_DFL;
-+const volatile bool fifo_sched;
- 
- u64 cvtime_now;
- UEI_DEFINE(uei);
-@@ -387,7 +392,21 @@ void BPF_STRUCT_OPS(fcg_enqueue, struct task_struct *p, u64 enq_flags)
- 	if (!cgc)
- 		goto out_release;
- 
--	scx_bpf_dispatch(p, cgrp->kn->id, SCX_SLICE_DFL, enq_flags);
-+	if (fifo_sched) {
-+		scx_bpf_dispatch(p, cgrp->kn->id, SCX_SLICE_DFL, enq_flags);
-+	} else {
-+		u64 tvtime = p->scx.dsq_vtime;
-+
-+		/*
-+		 * Limit the amount of budget that an idling task can accumulate
-+		 * to one slice.
-+		 */
-+		if (vtime_before(tvtime, cgc->tvtime_now - SCX_SLICE_DFL))
-+			tvtime = cgc->tvtime_now - SCX_SLICE_DFL;
-+
-+		scx_bpf_dispatch_vtime(p, cgrp->kn->id, SCX_SLICE_DFL,
-+				       tvtime, enq_flags);
-+	}
- 
- 	cgrp_enqueued(cgrp, cgc);
- out_release:
-@@ -499,12 +518,48 @@ void BPF_STRUCT_OPS(fcg_runnable, struct task_struct *p, u64 enq_flags)
- 	bpf_cgroup_release(cgrp);
- }
- 
-+void BPF_STRUCT_OPS(fcg_running, struct task_struct *p)
++/*
++ * cpuperf is new. The followings become noop on older kernels. Callers can be
++ * updated to call cpuperf kfuncs directly in the future.
++ */
++static inline u32 __COMPAT_scx_bpf_cpuperf_cap(s32 cpu)
 +{
-+	struct cgroup *cgrp;
-+	struct fcg_cgrp_ctx *cgc;
-+
-+	if (fifo_sched)
-+		return;
-+
-+	cgrp = scx_bpf_task_cgroup(p);
-+	cgc = find_cgrp_ctx(cgrp);
-+	if (cgc) {
-+		/*
-+		 * @cgc->tvtime_now always progresses forward as tasks start
-+		 * executing. The test and update can be performed concurrently
-+		 * from multiple CPUs and thus racy. Any error should be
-+		 * contained and temporary. Let's just live with it.
-+		 */
-+		if (vtime_before(cgc->tvtime_now, p->scx.dsq_vtime))
-+			cgc->tvtime_now = p->scx.dsq_vtime;
-+	}
-+	bpf_cgroup_release(cgrp);
++	if (bpf_ksym_exists(scx_bpf_cpuperf_cap))
++		return scx_bpf_cpuperf_cap(cpu);
++	else
++		return 1024;
 +}
 +
- void BPF_STRUCT_OPS(fcg_stopping, struct task_struct *p, bool runnable)
- {
- 	struct fcg_task_ctx *taskc;
- 	struct cgroup *cgrp;
- 	struct fcg_cgrp_ctx *cgc;
- 
-+	/*
-+	 * Scale the execution time by the inverse of the weight and charge.
-+	 *
-+	 * Note that the default yield implementation yields by setting
-+	 * @p->scx.slice to zero and the following would treat the yielding task
-+	 * as if it has consumed all its slice. If this penalizes yielding tasks
-+	 * too much, determine the execution time by taking explicit timestamps
-+	 * instead of depending on @p->scx.slice.
-+	 */
-+	if (!fifo_sched)
-+		p->scx.dsq_vtime +=
-+			(SCX_SLICE_DFL - p->scx.slice) * 100 / p->scx.weight;
-+
- 	taskc = bpf_task_storage_get(&task_ctx, p, 0, 0);
- 	if (!taskc) {
- 		scx_bpf_error("task_ctx lookup failed");
-@@ -742,6 +797,7 @@ s32 BPF_STRUCT_OPS(fcg_init_task, struct task_struct *p,
- 		   struct scx_init_task_args *args)
- {
- 	struct fcg_task_ctx *taskc;
-+	struct fcg_cgrp_ctx *cgc;
- 
- 	/*
- 	 * @p is new. Let's ensure that its task_ctx is available. We can sleep
-@@ -753,6 +809,12 @@ s32 BPF_STRUCT_OPS(fcg_init_task, struct task_struct *p,
- 		return -ENOMEM;
- 
- 	taskc->bypassed_at = 0;
-+
-+	if (!(cgc = find_cgrp_ctx(args->cgroup)))
-+		return -ENOENT;
-+
-+	p->scx.dsq_vtime = cgc->tvtime_now;
-+
- 	return 0;
- }
- 
-@@ -840,6 +902,20 @@ void BPF_STRUCT_OPS(fcg_cgroup_exit, struct cgroup *cgrp)
- 	scx_bpf_destroy_dsq(cgid);
- }
- 
-+void BPF_STRUCT_OPS(fcg_cgroup_move, struct task_struct *p,
-+		    struct cgroup *from, struct cgroup *to)
++static inline u32 __COMPAT_scx_bpf_cpuperf_cur(s32 cpu)
 +{
-+	struct fcg_cgrp_ctx *from_cgc, *to_cgc;
-+	s64 vtime_delta;
-+
-+	/* find_cgrp_ctx() triggers scx_ops_error() on lookup failures */
-+	if (!(from_cgc = find_cgrp_ctx(from)) || !(to_cgc = find_cgrp_ctx(to)))
-+		return;
-+
-+	vtime_delta = p->scx.dsq_vtime - from_cgc->tvtime_now;
-+	p->scx.dsq_vtime = to_cgc->tvtime_now + vtime_delta;
++	if (bpf_ksym_exists(scx_bpf_cpuperf_cur))
++		return scx_bpf_cpuperf_cur(cpu);
++	else
++		return 1024;
 +}
 +
- void BPF_STRUCT_OPS(fcg_exit, struct scx_exit_info *ei)
- {
- 	UEI_RECORD(uei, ei);
-@@ -850,12 +926,14 @@ SCX_OPS_DEFINE(flatcg_ops,
- 	       .enqueue			= (void *)fcg_enqueue,
- 	       .dispatch		= (void *)fcg_dispatch,
- 	       .runnable		= (void *)fcg_runnable,
-+	       .running			= (void *)fcg_running,
- 	       .stopping		= (void *)fcg_stopping,
- 	       .quiescent		= (void *)fcg_quiescent,
- 	       .init_task		= (void *)fcg_init_task,
- 	       .cgroup_set_weight	= (void *)fcg_cgroup_set_weight,
- 	       .cgroup_init		= (void *)fcg_cgroup_init,
- 	       .cgroup_exit		= (void *)fcg_cgroup_exit,
-+	       .cgroup_move		= (void *)fcg_cgroup_move,
- 	       .exit			= (void *)fcg_exit,
- 	       .flags			= SCX_OPS_CGROUP_KNOB_WEIGHT | SCX_OPS_ENQ_EXITING,
- 	       .name			= "flatcg");
-diff --git a/tools/sched_ext/scx_flatcg.c b/tools/sched_ext/scx_flatcg.c
-index 20c5a132b610..1143d5eb389a 100644
---- a/tools/sched_ext/scx_flatcg.c
-+++ b/tools/sched_ext/scx_flatcg.c
-@@ -26,10 +26,11 @@ const char help_fmt[] =
- "\n"
- "See the top-level comment in .bpf.c for more details.\n"
- "\n"
--"Usage: %s [-s SLICE_US] [-i INTERVAL] [-v]\n"
-+"Usage: %s [-s SLICE_US] [-i INTERVAL] [-f] [-v]\n"
- "\n"
- "  -s SLICE_US   Override slice duration\n"
- "  -i INTERVAL   Report interval\n"
-+"  -f            Use FIFO scheduling instead of weighted vtime scheduling\n"
- "  -v            Print libbpf debug messages\n"
- "  -h            Display this help and exit\n";
- 
-@@ -137,7 +138,7 @@ int main(int argc, char **argv)
- 
- 	skel->rodata->nr_cpus = libbpf_num_possible_cpus();
- 
--	while ((opt = getopt(argc, argv, "s:i:dvh")) != -1) {
-+	while ((opt = getopt(argc, argv, "s:i:dfvh")) != -1) {
- 		double v;
- 
- 		switch (opt) {
-@@ -153,6 +154,9 @@ int main(int argc, char **argv)
- 		case 'd':
- 			dump_cgrps = true;
- 			break;
-+		case 'f':
-+			skel->rodata->fifo_sched = true;
-+			break;
- 		case 'v':
- 			verbose = true;
- 			break;
-diff --git a/tools/sched_ext/scx_simple.bpf.c b/tools/sched_ext/scx_simple.bpf.c
-index 6bb13a3c801b..535fe52f5b73 100644
---- a/tools/sched_ext/scx_simple.bpf.c
-+++ b/tools/sched_ext/scx_simple.bpf.c
-@@ -2,11 +2,20 @@
++static inline void __COMPAT_scx_bpf_cpuperf_set(s32 cpu, u32 perf)
++{
++	if (bpf_ksym_exists(scx_bpf_cpuperf_set))
++		return scx_bpf_cpuperf_set(cpu, perf);
++}
++
  /*
-  * A simple scheduler.
-  *
-- * A simple global FIFO scheduler. It also demonstrates the following niceties.
-+ * By default, it operates as a simple global weighted vtime scheduler and can
-+ * be switched to FIFO scheduling. It also demonstrates the following niceties.
-  *
-  * - Statistics tracking how many tasks are queued to local and global dsq's.
-  * - Termination notification for userspace.
-  *
-+ * While very simple, this scheduler should work reasonably well on CPUs with a
-+ * uniform L3 cache topology. While preemption is not implemented, the fact that
-+ * the scheduling queue is shared across all CPUs means that whatever is at the
-+ * front of the queue is likely to be executed fairly quickly given enough
-+ * number of CPUs. The FIFO scheduling mode may be beneficial to some workloads
-+ * but comes with the usual problems with FIFO scheduling where saturating
-+ * threads can easily drown out interactive ones.
-+ *
-  * Copyright (c) 2022 Meta Platforms, Inc. and affiliates.
-  * Copyright (c) 2022 Tejun Heo <tj@kernel.org>
-  * Copyright (c) 2022 David Vernet <dvernet@meta.com>
-@@ -15,8 +24,13 @@
+  * Iteration and scx_bpf_consume_task() are new. The following become noop on
+  * older kernels. The users can switch to bpf_for_each(scx_dsq) and directly
+diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
+index 924e7e2b8c4c..977c7cff7b34 100644
+--- a/tools/sched_ext/scx_qmap.bpf.c
++++ b/tools/sched_ext/scx_qmap.bpf.c
+@@ -71,6 +71,18 @@ struct {
+ 	},
+ };
  
- char _license[] SEC("license") = "GPL";
- 
-+const volatile bool fifo_sched;
++/*
++ * If enabled, CPU performance target is set according to the queue index
++ * according to the following table.
++ */
++static const u32 qidx_to_cpuperf_target[] = {
++	[0] = SCX_CPUPERF_ONE * 0 / 4,
++	[1] = SCX_CPUPERF_ONE * 1 / 4,
++	[2] = SCX_CPUPERF_ONE * 2 / 4,
++	[3] = SCX_CPUPERF_ONE * 3 / 4,
++	[4] = SCX_CPUPERF_ONE * 4 / 4,
++};
 +
-+static u64 vtime_now;
- UEI_DEFINE(uei);
+ /*
+  * Per-queue sequence numbers to implement core-sched ordering.
+  *
+@@ -98,6 +110,8 @@ struct {
+ struct cpu_ctx {
+ 	u64	dsp_idx;	/* dispatch index */
+ 	u64	dsp_cnt;	/* remaining count */
++	u32	avg_weight;
++	u32	cpuperf_target;
+ };
  
-+#define SHARED_DSQ 0
-+
  struct {
- 	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
- 	__uint(key_size, sizeof(u32));
-@@ -31,6 +45,11 @@ static void stat_inc(u32 idx)
- 		(*cnt_p)++;
+@@ -110,6 +124,8 @@ struct {
+ /* Statistics */
+ u64 nr_enqueued, nr_dispatched, nr_reenqueued, nr_dequeued;
+ u64 nr_core_sched_execed, nr_expedited;
++u32 cpuperf_min, cpuperf_avg, cpuperf_max;
++u32 cpuperf_target_min, cpuperf_target_avg, cpuperf_target_max;
+ 
+ s32 BPF_STRUCT_OPS(qmap_select_cpu, struct task_struct *p,
+ 		   s32 prev_cpu, u64 wake_flags)
+@@ -347,6 +363,29 @@ void BPF_STRUCT_OPS(qmap_dispatch, s32 cpu, struct task_struct *prev)
+ 	}
  }
  
-+static inline bool vtime_before(u64 a, u64 b)
++void BPF_STRUCT_OPS(qmap_tick, struct task_struct *p)
 +{
-+	return (s64)(a - b) < 0;
++	struct cpu_ctx *cpuc;
++	u32 zero = 0;
++	int idx;
++
++	if (!(cpuc = bpf_map_lookup_elem(&cpu_ctx_stor, &zero))) {
++		scx_bpf_error("failed to look up cpu_ctx");
++		return;
++	}
++
++	/*
++	 * Use the running avg of weights to select the target cpuperf level.
++	 * This is a demonstration of the cpuperf feature rather than a
++	 * practical strategy to regulate CPU frequency.
++	 */
++	cpuc->avg_weight = cpuc->avg_weight * 3 / 4 + p->scx.weight / 4;
++	idx = weight_to_idx(cpuc->avg_weight);
++	cpuc->cpuperf_target = qidx_to_cpuperf_target[idx];
++
++	scx_bpf_cpuperf_set(scx_bpf_task_cpu(p), cpuc->cpuperf_target);
 +}
 +
- s32 BPF_STRUCT_OPS(simple_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)
- {
- 	bool is_idle = false;
-@@ -48,7 +67,69 @@ s32 BPF_STRUCT_OPS(simple_select_cpu, struct task_struct *p, s32 prev_cpu, u64 w
- void BPF_STRUCT_OPS(simple_enqueue, struct task_struct *p, u64 enq_flags)
- {
- 	stat_inc(1);	/* count global queueing */
--	scx_bpf_dispatch(p, SCX_DSQ_GLOBAL, SCX_SLICE_DFL, enq_flags);
+ /*
+  * The distance from the head of the queue scaled by the weight of the queue.
+  * The lower the number, the older the task and the higher the priority.
+@@ -490,6 +529,70 @@ struct {
+ 	__type(value, struct monitor_timer);
+ } central_timer SEC(".maps");
+ 
++/*
++ * Print out the min, avg and max performance levels of CPUs every second to
++ * demonstrate the cpuperf interface.
++ */
++static void monitor_cpuperf(void)
++{
++	u32 zero = 0, nr_cpu_ids;
++	u64 cap_sum = 0, cur_sum = 0, cur_min = SCX_CPUPERF_ONE, cur_max = 0;
++	u64 target_sum = 0, target_min = SCX_CPUPERF_ONE, target_max = 0;
++	const struct cpumask *online;
++	int i, nr_online_cpus = 0;
 +
-+	if (fifo_sched) {
-+		scx_bpf_dispatch(p, SHARED_DSQ, SCX_SLICE_DFL, enq_flags);
-+	} else {
-+		u64 vtime = p->scx.dsq_vtime;
++	if (!__COMPAT_HAS_CPUMASKS)
++		return;
++
++	nr_cpu_ids = scx_bpf_nr_cpu_ids();
++	online = scx_bpf_get_online_cpumask();
++
++	bpf_for(i, 0, nr_cpu_ids) {
++		struct cpu_ctx *cpuc;
++		u32 cap, cur;
++
++		if (!bpf_cpumask_test_cpu(i, online))
++			continue;
++		nr_online_cpus++;
++
++		/* collect the capacity and current cpuperf */
++		cap = scx_bpf_cpuperf_cap(i);
++		cur = scx_bpf_cpuperf_cur(i);
++
++		cur_min = cur < cur_min ? cur : cur_min;
++		cur_max = cur > cur_max ? cur : cur_max;
 +
 +		/*
-+		 * Limit the amount of budget that an idling task can accumulate
-+		 * to one slice.
++		 * $cur is relative to $cap. Scale it down accordingly so that
++		 * it's in the same scale as other CPUs and $cur_sum/$cap_sum
++		 * makes sense.
 +		 */
-+		if (vtime_before(vtime, vtime_now - SCX_SLICE_DFL))
-+			vtime = vtime_now - SCX_SLICE_DFL;
++		cur_sum += cur * cap / SCX_CPUPERF_ONE;
++		cap_sum += cap;
 +
-+		scx_bpf_dispatch_vtime(p, SHARED_DSQ, SCX_SLICE_DFL, vtime,
-+				       enq_flags);
++		if (!(cpuc = bpf_map_lookup_percpu_elem(&cpu_ctx_stor, &zero, i))) {
++			scx_bpf_error("failed to look up cpu_ctx");
++			goto out;
++		}
++
++		/* collect target */
++		cur = cpuc->cpuperf_target;
++		target_sum += cur;
++		target_min = cur < target_min ? cur : target_min;
++		target_max = cur > target_max ? cur : target_max;
 +	}
++
++	cpuperf_min = cur_min;
++	cpuperf_avg = cur_sum * SCX_CPUPERF_ONE / cap_sum;
++	cpuperf_max = cur_max;
++
++	cpuperf_target_min = target_min;
++	cpuperf_target_avg = target_sum / nr_online_cpus;
++	cpuperf_target_max = target_max;
++out:
++	scx_bpf_put_cpumask(online);
 +}
 +
-+void BPF_STRUCT_OPS(simple_dispatch, s32 cpu, struct task_struct *prev)
-+{
-+	scx_bpf_consume(SHARED_DSQ);
-+}
-+
-+void BPF_STRUCT_OPS(simple_running, struct task_struct *p)
-+{
-+	if (fifo_sched)
-+		return;
-+
-+	/*
-+	 * Global vtime always progresses forward as tasks start executing. The
-+	 * test and update can be performed concurrently from multiple CPUs and
-+	 * thus racy. Any error should be contained and temporary. Let's just
-+	 * live with it.
-+	 */
-+	if (vtime_before(vtime_now, p->scx.dsq_vtime))
-+		vtime_now = p->scx.dsq_vtime;
-+}
-+
-+void BPF_STRUCT_OPS(simple_stopping, struct task_struct *p, bool runnable)
-+{
-+	if (fifo_sched)
-+		return;
-+
-+	/*
-+	 * Scale the execution time by the inverse of the weight and charge.
-+	 *
-+	 * Note that the default yield implementation yields by setting
-+	 * @p->scx.slice to zero and the following would treat the yielding task
-+	 * as if it has consumed all its slice. If this penalizes yielding tasks
-+	 * too much, determine the execution time by taking explicit timestamps
-+	 * instead of depending on @p->scx.slice.
-+	 */
-+	p->scx.dsq_vtime += (SCX_SLICE_DFL - p->scx.slice) * 100 / p->scx.weight;
-+}
-+
-+void BPF_STRUCT_OPS(simple_enable, struct task_struct *p)
-+{
-+	p->scx.dsq_vtime = vtime_now;
-+}
-+
-+s32 BPF_STRUCT_OPS_SLEEPABLE(simple_init)
-+{
-+	return scx_bpf_create_dsq(SHARED_DSQ, -1);
- }
+ /*
+  * Dump the currently queued tasks in the shared DSQ to demonstrate the usage of
+  * scx_bpf_dsq_nr_queued() and DSQ iterator. Raise the dispatch batch count to
+@@ -513,6 +616,8 @@ static void dump_shared_dsq(void)
  
- void BPF_STRUCT_OPS(simple_exit, struct scx_exit_info *ei)
-@@ -59,5 +140,10 @@ void BPF_STRUCT_OPS(simple_exit, struct scx_exit_info *ei)
- SCX_OPS_DEFINE(simple_ops,
- 	       .select_cpu		= (void *)simple_select_cpu,
- 	       .enqueue			= (void *)simple_enqueue,
-+	       .dispatch		= (void *)simple_dispatch,
-+	       .running			= (void *)simple_running,
-+	       .stopping		= (void *)simple_stopping,
-+	       .enable			= (void *)simple_enable,
-+	       .init			= (void *)simple_init,
- 	       .exit			= (void *)simple_exit,
- 	       .name			= "simple");
-diff --git a/tools/sched_ext/scx_simple.c b/tools/sched_ext/scx_simple.c
-index acee683a3ec9..b88c058090b6 100644
---- a/tools/sched_ext/scx_simple.c
-+++ b/tools/sched_ext/scx_simple.c
-@@ -17,8 +17,9 @@ const char help_fmt[] =
- "\n"
- "See the top-level comment in .bpf.c for more details.\n"
- "\n"
--"Usage: %s [-v]\n"
-+"Usage: %s [-f] [-v]\n"
- "\n"
-+"  -f            Use FIFO scheduling instead of weighted vtime scheduling\n"
- "  -v            Print libbpf debug messages\n"
- "  -h            Display this help and exit\n";
+ static int monitor_timerfn(void *map, int *key, struct bpf_timer *timer)
+ {
++	monitor_cpuperf();
++
+ 	if (print_shared_dsq)
+ 		dump_shared_dsq();
  
-@@ -70,8 +71,11 @@ int main(int argc, char **argv)
- restart:
- 	skel = SCX_OPS_OPEN(simple_ops, scx_simple);
- 
--	while ((opt = getopt(argc, argv, "vh")) != -1) {
-+	while ((opt = getopt(argc, argv, "fvh")) != -1) {
- 		switch (opt) {
-+		case 'f':
-+			skel->rodata->fifo_sched = true;
-+			break;
- 		case 'v':
- 			verbose = true;
- 			break;
+@@ -555,6 +660,7 @@ SCX_OPS_DEFINE(qmap_ops,
+ 	       .enqueue			= (void *)qmap_enqueue,
+ 	       .dequeue			= (void *)qmap_dequeue,
+ 	       .dispatch		= (void *)qmap_dispatch,
++	       .tick			= (void *)qmap_tick,
+ 	       .core_sched_before	= (void *)qmap_core_sched_before,
+ 	       .cpu_release		= (void *)qmap_cpu_release,
+ 	       .init_task		= (void *)qmap_init_task,
+diff --git a/tools/sched_ext/scx_qmap.c b/tools/sched_ext/scx_qmap.c
+index 1b8cd2993ee2..eb221f0a0580 100644
+--- a/tools/sched_ext/scx_qmap.c
++++ b/tools/sched_ext/scx_qmap.c
+@@ -127,6 +127,14 @@ int main(int argc, char **argv)
+ 		       nr_enqueued, nr_dispatched, nr_enqueued - nr_dispatched,
+ 		       skel->bss->nr_reenqueued, skel->bss->nr_dequeued,
+ 		       skel->bss->nr_core_sched_execed, skel->bss->nr_expedited);
++		if (__COMPAT_has_ksym("scx_bpf_cpuperf_cur"))
++			printf("cpuperf: cur min/avg/max=%u/%u/%u target min/avg/max=%u/%u/%u\n",
++			       skel->bss->cpuperf_min,
++			       skel->bss->cpuperf_avg,
++			       skel->bss->cpuperf_max,
++			       skel->bss->cpuperf_target_min,
++			       skel->bss->cpuperf_target_avg,
++			       skel->bss->cpuperf_target_max);
+ 		fflush(stdout);
+ 		sleep(1);
+ 	}
 -- 
 2.44.0
 
