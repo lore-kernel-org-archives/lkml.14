@@ -1,139 +1,321 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6768012C49F;
-	Wed,  1 May 2024 12:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50D212BF2D
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 12:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714566000; cv=none; b=Nra3kwn3k141OcNxrnF/4o3ETuNfy0J7Xx2hj44x5uwjN3cTp+uw4ao63lPVjzaIzkQJc4A5tIRkLjd9egjkHYqQboMafDacZiX6Cdak82JRlhW+JRVPbiIJ20wH8sdMB9Y6nbDQsSXUWcziGeMLnxK9hqYmzI4Zvi7BdtOtk6g=
+	t=1714566002; cv=none; b=TRJBWOQTNmwwNd97LBD3qTDAHZ2xTKYZTE6Z/v0vH6ziBhWpyiP1gA/JmEdUfX2AqLZ2v+iy9LyPuBTeCNysqaJJiXaXfYYi6WU2Gby13OKFMZTJcPyCUNg0bq/vFU/cJ1vz7PhKmZTyJcX/T1OGZhHLqlhzkTa3FUd3MDjcYYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714566000; c=relaxed/simple;
-	bh=cDoOmYzAYQKD5INwb4Si/7qAYJjCsw6v5b3DdRgc5GA=;
-	h=Date:Message-Id:From:To:Cc:Subject:In-Reply-To; b=TgLXsUkc1RQaHR95CKAVR/hLW6QyNskyV+VLpjiiZRtUGYc7GOeIjk6IuJ1dsyaupb+7zaWcBERY62JZlORJEot5tS0MBLprwhQe6Q5ILdQ8BHT8yMCRlYODqN0QIxAxB+rAKgamVJ+LGwCvmNFPrmHjsWCBdLS9uBRWbGVpAjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m2fvmp9a; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714566002; c=relaxed/simple;
+	bh=Ctl8fjOGCMekGTE69fIp5aXSPpH0EKsLQAWGYrwV+bE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IPNFfUbfQXyoasTIh8LFEk5Ac3zgBL/f5/dTMTA6Jqo2uXuYiWip7Yaiv358BIWmHKbz4BCnW0Bht/Od0OujeMSHiJ4z7kP+Ai5OXafRnfOpjXz7BYVUNWcrAPrTN+fnNuV92nCSOwNYCJZT40HI3cyDY6JYkE5/47OK1JoLHoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Mx6D60oz; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2fvmp9a"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e50a04c317so36841005ad.1;
-        Wed, 01 May 2024 05:19:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Mx6D60oz"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e651a9f3ffso33948465ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 05:20:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714565999; x=1715170799; darn=vger.kernel.org;
-        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Q+bXJh1WFpGfj02zZsMPGyMBrA1lTWkDff/10uQbdd4=;
-        b=m2fvmp9acjoYlmSyXFxav3ezR/+FFF+ZS8U6ek1GHHr9GEl0mPNQ9Iz1us5rJzrsHO
-         FZvei1qTNpG6M9yIYUixYEXDV7I5TTVIHtceavJHPXuBhzotzyU98D2mm7queqq0+dDa
-         Pr5d4a0iq7x75AS3WEdMnXEVzYj0/mypE1mciNQifneXPxqMa3ni984F6+QjBgDTVsOI
-         oQ5D1vyamvg85tfnhvFvbF3ulXG0iD81x0RFxx8/mukWSyhcMdAAjwZgpVybWJ5tSKti
-         fyNCgrTO+9n/NHrE/4XJYO7pMCNUsVwQGaB0/5OTtFMf1RiWi/X5hScyLagjjj5cUj+y
-         SlzA==
+        d=ventanamicro.com; s=google; t=1714566000; x=1715170800; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YKprQ9DjgmWeNOp2jgUX6DT/fQdt5/GgPVbDil8wt68=;
+        b=Mx6D60ozBCEMv0lOoFeLktbUdwnBFtOgnA2ygphrCXXQljGtOKEvFaFUOuCcjbTjHJ
+         iowu6qury78Y6uvqUVojiWdoiF+2Vv7xjB4DPk83V1Qjp7tHiYdNvKzJuecj4SdWuAxu
+         PKR7ggUt6QjuHNUtn21T4jFCkQbDPlwKiEkOUpYs5M7TzcDCdxoqSalf/Ue/MwMeqZ1/
+         pDB6jRMYKJ4a3H61HR7tvRSNh2rMAbN5mVnDk3euksBv6WiRAOJq50rUqYTRXAd+Nw4a
+         RUsS2THk/jsAjZQ9U5QvQ5XUQMQgtLX/LFOdW2NYaWoCXBIfg18aHE89q1/OHRfKVVuf
+         pEdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714565999; x=1715170799;
-        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q+bXJh1WFpGfj02zZsMPGyMBrA1lTWkDff/10uQbdd4=;
-        b=JPmMsMmzX8gy6dgRLA8xby2eZcPTzBELBaCtAbksi5Uji6+cQ3VqnAKsObb17dlllM
-         NgLzvNXWZXGpmpRBAKHUiYBoqdJUDnoHXu72WQiu8Ga3upukEIZyP1YSibsriBPC8iHh
-         d3XoFV5imL4fknchOZLJHgA3jQ6m9mF7ySktNZ76yIht2tuj/3i6HdIgiXmpNbRe/0pC
-         Gld38lrW4RWyX7uKU86tv49Ushk08esk4RdxyHl4HebCkd1wo+y9ai/XI5VBml9yiLul
-         cYzBoABH8jYVQl93PlrBcjRnBbInsqJRYeujvHyJAbonfV0h+uRlmEV3dAI0h2F1WTo0
-         bpOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpFvpe2pGQT+xkS5zOxlfU5ZF89wuixsBF5WeXHBIgDcOFdTChJWfTeWA/9Ub+5CkOMkrEEp5lW0NwlcZ/9Fz/l/fiGQByJF0jwgeCqP1HmN8KfokQkQDnK4OMNyZwvvt2WYeK6aqoOw+A9Q==
-X-Gm-Message-State: AOJu0Yy+nxFC+AO4Oe4ecNeoiA4h1KsuFS4jnAgN4KQW/PtN+ab0a27q
-	kA5t2FUExBZrQ5BTxe+knCBPtEnotJ+IwM0uiF+LkL4PLRCgiq/u
-X-Google-Smtp-Source: AGHT+IHH66m34ehe2oGyA8sEbgvqCf0QfvwZyF4PH1MwqMJKPg649zwjVE/zpqgicmyWWWJMHAmO0A==
-X-Received: by 2002:a17:902:c213:b0:1e4:24bc:426e with SMTP id 19-20020a170902c21300b001e424bc426emr2154990pll.28.1714565998423;
-        Wed, 01 May 2024 05:19:58 -0700 (PDT)
-Received: from dw-tp ([171.76.84.250])
-        by smtp.gmail.com with ESMTPSA id i3-20020a170902c94300b001ebd72d55c0sm5600171pla.18.2024.05.01.05.19.52
+        d=1e100.net; s=20230601; t=1714566000; x=1715170800;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YKprQ9DjgmWeNOp2jgUX6DT/fQdt5/GgPVbDil8wt68=;
+        b=YGo3m3/3YkYjzO9/KrcLFvljYAqJkiR5ERunApHFNIqTFZq8rswLGbaHc/Od94RYXi
+         8QXYlwn0RlRHCu/m8icA+S7X+wkUyX8FBMXLWDedxC8ILC3kiTuZcizGMuE0TuadhQ5q
+         WDJvRTeyxFJH3u77KniRp02egjn6oMoM/7zwz3IsUbUgQcKAxrlLlX5o8o4fEEANPFy+
+         wpjreLiVCmPwWprPhQH1kmIDMkzqXJtjCAuG8+Nye0UxrWSRNZMtk0dIzFuam6ugmE5N
+         +vf92kSHcfLJpN9faTgXA8npUmDFDfDAszMcLAllPB4yYxkrCFJGaI2R1w4/59bxhD+z
+         Q6TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnakpLKK//cdzEnw2hnEMiXL+GKAU5nuSwc/POCGNcnJyQpC+uHu/1Hhh9l1fGry6tvyH5U/o9lWui2K1J/n27UICCAajeTnkVKsEV
+X-Gm-Message-State: AOJu0Yy+30zYB4p4JjTgqLnul+d3m9mcqRsZ0A4O9sg3CXRCZIpW19z6
+	Defr2rXPS80gK/VQvinle7jTZJIE8UGUVGqJXI5JeXKv3ErerwqONybqEi1LZ8U=
+X-Google-Smtp-Source: AGHT+IHXX5ILEyglT/Py3DGUVj43d4poupz49yi1BZblVtQazhBuHxJlZGQemov9OMPe6qk3xCXV3Q==
+X-Received: by 2002:a17:902:e841:b0:1eb:156f:8d01 with SMTP id t1-20020a170902e84100b001eb156f8d01mr2061754plg.40.1714566000196;
+        Wed, 01 May 2024 05:20:00 -0700 (PDT)
+Received: from sunil-pc.Dlink ([106.51.188.106])
+        by smtp.gmail.com with ESMTPSA id im15-20020a170902bb0f00b001ec8888b22esm1336900plb.65.2024.05.01.05.19.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 05:19:57 -0700 (PDT)
-Date: Wed, 01 May 2024 17:49:50 +0530
-Message-Id: <87le4t4tcp.fsf@gmail.com>
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Dave Chinner <david@fromorbit.com>, Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, hch@infradead.org, djwong@kernel.org, willy@infradead.org, zokeefe@google.com, yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com, wangkefeng.wang@huawei.com
-Subject: Re: [PATCH v4 02/34] ext4: check the extent status again before inserting delalloc block
-In-Reply-To: <ZjHmY6RoE3ILnsMv@dread.disaster.area>
+        Wed, 01 May 2024 05:19:59 -0700 (PDT)
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Andrei Warkentin <andrei.warkentin@intel.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>
+Subject: [PATCH v5 15/17] irqchip/riscv-aplic: Add ACPI support
+Date: Wed,  1 May 2024 17:47:40 +0530
+Message-Id: <20240501121742.1215792-16-sunilvl@ventanamicro.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
+References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Dave Chinner <david@fromorbit.com> writes:
+Add ACPI support in APLIC drivers. Use the mapping created early during
+boot to get the details about the APLIC.
 
-> On Wed, Apr 10, 2024 at 10:29:16PM +0800, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->> 
->> Now we lookup extent status entry without holding the i_data_sem before
->> inserting delalloc block, it works fine in buffered write path and
->> because it holds i_rwsem and folio lock, and the mmap path holds folio
->> lock, so the found extent locklessly couldn't be modified concurrently.
->> But it could be raced by fallocate since it allocate block whitout
->> holding i_rwsem and folio lock.
->> 
->> ext4_page_mkwrite()             ext4_fallocate()
->>  block_page_mkwrite()
->>   ext4_da_map_blocks()
->>    //find hole in extent status tree
->>                                  ext4_alloc_file_blocks()
->>                                   ext4_map_blocks()
->>                                    //allocate block and unwritten extent
->>    ext4_insert_delayed_block()
->>     ext4_da_reserve_space()
->>      //reserve one more block
->>     ext4_es_insert_delayed_block()
->>      //drop unwritten extent and add delayed extent by mistake
->
-> Shouldn't this be serialised by the file invalidation lock?  Hole
-> punching via fallocate must do this to avoid data use-after-free
-> bugs w.r.t racing page faults and all the other fallocate ops need
-> to serialise page faults to avoid page cache level data corruption.
-> Yet here we see a problem resulting from a fallocate operation
-> racing with a page fault....
+Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+---
+ drivers/irqchip/irq-riscv-aplic-direct.c | 20 ++++---
+ drivers/irqchip/irq-riscv-aplic-main.c   | 70 ++++++++++++++++--------
+ drivers/irqchip/irq-riscv-aplic-main.h   |  1 +
+ drivers/irqchip/irq-riscv-aplic-msi.c    |  9 ++-
+ 4 files changed, 67 insertions(+), 33 deletions(-)
 
-IIUC, fallocate operations which invalidates the page cache contents needs
-to take th invalidate_lock in exclusive mode to prevent page fault
-operations from loading pages for stale mappings (blocks which were
-marked free might get reused). This can cause stale data exposure.
+diff --git a/drivers/irqchip/irq-riscv-aplic-direct.c b/drivers/irqchip/irq-riscv-aplic-direct.c
+index 4a3ffe856d6c..e24c2d3c78f6 100644
+--- a/drivers/irqchip/irq-riscv-aplic-direct.c
++++ b/drivers/irqchip/irq-riscv-aplic-direct.c
+@@ -4,6 +4,7 @@
+  * Copyright (C) 2022 Ventana Micro Systems Inc.
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/cpu.h>
+@@ -189,17 +190,20 @@ static int aplic_direct_starting_cpu(unsigned int cpu)
+ }
+ 
+ static int aplic_direct_parse_parent_hwirq(struct device *dev, u32 index,
+-					   u32 *parent_hwirq, unsigned long *parent_hartid)
++					   u32 *parent_hwirq, unsigned long *parent_hartid,
++					   struct aplic_priv *priv)
+ {
+ 	struct of_phandle_args parent;
+ 	int rc;
+ 
+-	/*
+-	 * Currently, only OF fwnode is supported so extend this
+-	 * function for ACPI support.
+-	 */
+-	if (!is_of_node(dev->fwnode))
+-		return -EINVAL;
++	if (!is_of_node(dev->fwnode)) {
++		rc = acpi_get_ext_intc_parent_hartid(priv->id, index, parent_hartid);
++		if (rc)
++			return rc;
++
++		*parent_hwirq = RV_IRQ_EXT;
++		return 0;
++	}
+ 
+ 	rc = of_irq_parse_one(to_of_node(dev->fwnode), index, &parent);
+ 	if (rc)
+@@ -237,7 +241,7 @@ int aplic_direct_setup(struct device *dev, void __iomem *regs)
+ 	/* Setup per-CPU IDC and target CPU mask */
+ 	current_cpu = get_cpu();
+ 	for (i = 0; i < priv->nr_idcs; i++) {
+-		rc = aplic_direct_parse_parent_hwirq(dev, i, &hwirq, &hartid);
++		rc = aplic_direct_parse_parent_hwirq(dev, i, &hwirq, &hartid, priv);
+ 		if (rc) {
+ 			dev_warn(dev, "parent irq for IDC%d not found\n", i);
+ 			continue;
+diff --git a/drivers/irqchip/irq-riscv-aplic-main.c b/drivers/irqchip/irq-riscv-aplic-main.c
+index 774a0c97fdab..c1fd328ddf7d 100644
+--- a/drivers/irqchip/irq-riscv-aplic-main.c
++++ b/drivers/irqchip/irq-riscv-aplic-main.c
+@@ -4,8 +4,10 @@
+  * Copyright (C) 2022 Ventana Micro Systems Inc.
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/bitfield.h>
+ #include <linux/irqchip/riscv-aplic.h>
++#include <linux/irqchip/riscv-imsic.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+@@ -125,39 +127,50 @@ static void aplic_init_hw_irqs(struct aplic_priv *priv)
+ 	writel(0, priv->regs + APLIC_DOMAINCFG);
+ }
+ 
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id aplic_acpi_match[] = {
++	{ "RSCV0002", 0 },
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, aplic_acpi_match);
++
++#endif
++
+ int aplic_setup_priv(struct aplic_priv *priv, struct device *dev, void __iomem *regs)
+ {
+ 	struct of_phandle_args parent;
+ 	int rc;
+ 
+-	/*
+-	 * Currently, only OF fwnode is supported so extend this
+-	 * function for ACPI support.
+-	 */
+-	if (!is_of_node(dev->fwnode))
+-		return -EINVAL;
+-
+ 	/* Save device pointer and register base */
+ 	priv->dev = dev;
+ 	priv->regs = regs;
+ 
+-	/* Find out number of interrupt sources */
+-	rc = of_property_read_u32(to_of_node(dev->fwnode), "riscv,num-sources",
+-				  &priv->nr_irqs);
+-	if (rc) {
+-		dev_err(dev, "failed to get number of interrupt sources\n");
+-		return rc;
+-	}
+-
+-	/*
+-	 * Find out number of IDCs based on parent interrupts
+-	 *
+-	 * If "msi-parent" property is present then we ignore the
+-	 * APLIC IDCs which forces the APLIC driver to use MSI mode.
+-	 */
+-	if (!of_property_present(to_of_node(dev->fwnode), "msi-parent")) {
+-		while (!of_irq_parse_one(to_of_node(dev->fwnode), priv->nr_idcs, &parent))
+-			priv->nr_idcs++;
++	if (is_of_node(dev->fwnode)) {
++		/* Find out number of interrupt sources */
++		rc = of_property_read_u32(to_of_node(dev->fwnode), "riscv,num-sources",
++					  &priv->nr_irqs);
++		if (rc) {
++			dev_err(dev, "failed to get number of interrupt sources\n");
++			return rc;
++		}
++
++		/*
++		 * Find out number of IDCs based on parent interrupts
++		 *
++		 * If "msi-parent" property is present then we ignore the
++		 * APLIC IDCs which forces the APLIC driver to use MSI mode.
++		 */
++		if (!of_property_present(to_of_node(dev->fwnode), "msi-parent")) {
++			while (!of_irq_parse_one(to_of_node(dev->fwnode), priv->nr_idcs, &parent))
++				priv->nr_idcs++;
++		}
++	} else {
++		rc = riscv_acpi_get_gsi_info(dev->fwnode, &priv->gsi_base, &priv->id,
++					     &priv->nr_irqs, &priv->nr_idcs);
++		if (rc) {
++			dev_err(dev, "failed to find GSI mapping\n");
++			return rc;
++		}
+ 	}
+ 
+ 	/* Setup initial state APLIC interrupts */
+@@ -186,6 +199,9 @@ static int aplic_probe(struct platform_device *pdev)
+ 	 */
+ 	if (is_of_node(dev->fwnode))
+ 		msi_mode = of_property_present(to_of_node(dev->fwnode), "msi-parent");
++	else
++		msi_mode = imsic_acpi_get_fwnode(NULL) ? 1 : 0;
++
+ 	if (msi_mode)
+ 		rc = aplic_msi_setup(dev, regs);
+ 	else
+@@ -193,6 +209,11 @@ static int aplic_probe(struct platform_device *pdev)
+ 	if (rc)
+ 		dev_err(dev, "failed to setup APLIC in %s mode\n", msi_mode ? "MSI" : "direct");
+ 
++#ifdef CONFIG_ACPI
++	if (!acpi_disabled)
++		acpi_dev_clear_dependencies(ACPI_COMPANION(dev));
++#endif
++
+ 	return rc;
+ }
+ 
+@@ -205,6 +226,7 @@ static struct platform_driver aplic_driver = {
+ 	.driver = {
+ 		.name		= "riscv-aplic",
+ 		.of_match_table	= aplic_match,
++		.acpi_match_table = ACPI_PTR(aplic_acpi_match),
+ 	},
+ 	.probe = aplic_probe,
+ };
+diff --git a/drivers/irqchip/irq-riscv-aplic-main.h b/drivers/irqchip/irq-riscv-aplic-main.h
+index 4393927d8c80..9fbf45c7b4f7 100644
+--- a/drivers/irqchip/irq-riscv-aplic-main.h
++++ b/drivers/irqchip/irq-riscv-aplic-main.h
+@@ -28,6 +28,7 @@ struct aplic_priv {
+ 	u32			gsi_base;
+ 	u32			nr_irqs;
+ 	u32			nr_idcs;
++	u32			id;
+ 	void __iomem		*regs;
+ 	struct aplic_msicfg	msicfg;
+ };
+diff --git a/drivers/irqchip/irq-riscv-aplic-msi.c b/drivers/irqchip/irq-riscv-aplic-msi.c
+index 028444af48bd..f5020241e0ed 100644
+--- a/drivers/irqchip/irq-riscv-aplic-msi.c
++++ b/drivers/irqchip/irq-riscv-aplic-msi.c
+@@ -157,6 +157,7 @@ static const struct msi_domain_template aplic_msi_template = {
+ int aplic_msi_setup(struct device *dev, void __iomem *regs)
+ {
+ 	const struct imsic_global_config *imsic_global;
++	struct irq_domain *msi_domain;
+ 	struct aplic_priv *priv;
+ 	struct aplic_msicfg *mc;
+ 	phys_addr_t pa;
+@@ -239,8 +240,14 @@ int aplic_msi_setup(struct device *dev, void __iomem *regs)
+ 		 * IMSIC and the IMSIC MSI domains are created later through
+ 		 * the platform driver probing so we set it explicitly here.
+ 		 */
+-		if (is_of_node(dev->fwnode))
++		if (is_of_node(dev->fwnode)) {
+ 			of_msi_configure(dev, to_of_node(dev->fwnode));
++		} else {
++			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
++							      DOMAIN_BUS_PLATFORM_MSI);
++			if (msi_domain)
++				dev_set_msi_domain(dev, msi_domain);
++		}
+ 	}
+ 
+ 	if (!msi_create_device_irq_domain(dev, MSI_DEFAULT_DOMAIN, &aplic_msi_template,
+-- 
+2.40.1
 
-Here the fallocate operation require allocation of unwritten extents and
-does not require truncate of pagecache range. So I guess, it is not
-strictly necessary to hold the invalidate lock here.
-But I see XFS does take IOLOCK_EXCL AND MMAPLOCK_EXCL even for this operation.
-
-I guess we could use the invalidate lock for fallocate operation in ext4
-too. However, I think we still require the current patch. The reason is
-ext4_da_map_blocks() call here first tries to lookup the extent status
-cache w/o any i_data_sem lock in the fastpath. If it finds a hole, it
-takes the i_data_sem in write mode and just inserts an entry into extent
-status cache w/o re-checking for the same under the exclusive lock. 
-...So I believe we still should have this patch which re-verify under
-the write lock if whether any other operation has inserted any entry
-already or not.
-
-
->
-> Ah, I see that the invalidation lock is only picked up deep inside
-> ext4_punch_hole(), ext4_collapse_range(), ext4_insert_range() and
-> ext4_zero_range(). They all do the same flush, lock, and dio wait
-> preamble but each do it just a little bit differently. The allocation path does
-> it just a little bit differently again and does not take the
-> invalidate lock...
-
-Yes, I think it is not stricly required to take invalidate lock in the
-allocation path of fallocate. Hence it could expose such a problem which
-existed in ext4_da_map_blocks(), right?
-
-
->
-> Perhaps the ext4 fallocate code should be factored so that all the
-> fallocate operations run the same flush, lock and wait code rather
-> than having 5 slightly different copies of the same code?
-
-Yes. I agree. These paths can be refactored and if we are doing so, we
-may as well just use the invalidate lock as you suggested.
-
--ritesh
