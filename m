@@ -1,140 +1,208 @@
-Received: from mail-108-mta234.mxroute.com (mail-108-mta234.mxroute.com [136.175.108.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E42130AF6
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53E4130E2C;
+	Wed,  1 May 2024 15:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714577529; cv=none; b=qQFkGl9B4r4JNFxf72LjFWrwalcT0Mjb3UnavEg++mCjxtntIh8BVzz0b6mt+4Z9vL5KcC/or67XNWWXZrLaUEZoYTfQMRNJZqu5LlMWP6vLjem+rRoU3A+odXxV0ggrlEu0UMpIpZ1G4cuLLO1yuBkMNbHhw0v3Ei+F/XxqBcQ=
+	t=1714577533; cv=none; b=CoM7/X5AYuQkyVtgO946Lx8MJgRQ3VQq2E4Dr8jZX6ac5yeRTbqhSa1r9m0yjkXkr7BxfmYa+m1UjfQFrfV2/BhFCtLA1pZNBy/npELw54Zii5bZrWGhEkKIOUojB++nFAEqCJ1J99IbefxYnygdC93ojHRT8RyKDGtPa3CvQ1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714577529; c=relaxed/simple;
-	bh=nLM7risJ0XMUwfzT2iF91IqF6mJWvjzYjQDU7pYI8ac=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tn/X7bvdIRlLFXcJLEqhDVJd4QTauc/ZnfI6yNH5btcc/Lcrla0XDlEz8vUh/ixtOsvsofrgJWMgLlw90Yy06/KfyxWJe0hzlbs/YAPiagDt4EJbsjxDY7AoFC+DMalY7rt9YRx2m07tEYtMnuTUsQ5j4ZJ68LyH9juf4daLK2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=bI7olhIK; arc=none smtp.client-ip=136.175.108.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1714577533; c=relaxed/simple;
+	bh=8WVzesDRY59eAiPcjnXVtYZdjfYneGgUndVN5TPMtzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2yfTwAV5BjBgaoQx/75YLzZ8us9SkC4kDu3lUMpZ+bDRXOHWu07HnOMnxTd+wUEgpRULxgxfAxsiwH0vP8aKZMTYOtmty/CjACWEBAMptmqsuS48pi7364aHKVID/vXZffFpSdJQt9TwIa9fDokl8RgwaKcRkyj908rZXZ+I7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXnzuEXF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="bI7olhIK"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta234.mxroute.com (ZoneMTA) with ESMTPSA id 18f34c2fd460008ca2.010
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 01 May 2024 15:25:45 +0000
-X-Zone-Loop: 10330c76fae8cfad19e02e7f2712228b156028f39a0b
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8XM+yDZwX8unHh0IpGoxwkH3HhBX4oqo+tDv7sLbN1s=; b=bI7olhIKP9WJMIk2FYTePpq+IM
-	CVtmkDTxXXg7wE364rki2eHxCwJGdSggYwQT6grqjzakR4Yk+7DTu0gSxnTSIAkhw09X371E21Kpm
-	Tm8D2JHbu6RFeLvVfX8WAWZLSFi4QoENukspiX/b1EbHB4whncLKBgcond1biHwjle/NoUBly3j+j
-	EWdo5e2YIBsW+HylFydNSXG4DgTnn/FP5MblV4vQXdNKZGAd0wRI8/wCbQJRO/ZOc+kIvbLdcx1ca
-	fmxq7vsti0LczCQd/dUaUJ077H87hRCugoBp4jYSojSqII/u6LwW7r34Y+GEbJ1k3zPJyNUVnuNNx
-	0PXGaIEQ==;
-From: git@luigi311.com
-To: linux-media@vger.kernel.org
-Cc: dave.stevenson@raspberrypi.com,
-	jacopo.mondi@ideasonboard.com,
-	mchehab@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	sakari.ailus@linux.intel.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	pavel@ucw.cz,
-	phone-devel@vger.kernel.org,
-	Ondrej Jirman <megi@xff.cz>,
-	Luis Garcia <git@luigi311.com>
-Subject: [PATCH v5 22/25] media: i2c: imx258: Add support for powerdown gpio
-Date: Wed,  1 May 2024 09:24:39 -0600
-Message-ID: <20240501152442.1072627-23-git@luigi311.com>
-In-Reply-To: <20240501152442.1072627-1-git@luigi311.com>
-References: <20240501152442.1072627-1-git@luigi311.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXnzuEXF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B21C072AA;
+	Wed,  1 May 2024 15:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714577533;
+	bh=8WVzesDRY59eAiPcjnXVtYZdjfYneGgUndVN5TPMtzU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OXnzuEXFOzVTCgd5UODHWCQzEQeUrDLX81JT65/GEltCEd/tyHH+BLaUsWjdag4di
+	 hsX4FvfdNTemCxIOYPGYVnar8IwFthSkq78k64ASXt1W4BaEW83jvwX7uPMusoACjZ
+	 j66Fnuw8uVy+mpqhmjsjezyatLL2rRq2GpADPntHrJEffjsa7c8328QtaelxsbUBHV
+	 2BDotzuP4B4uSEaplwH/uB4AdWjTqDZbsLgMkR0ZjGJ6S91803rYH7gOGjIopFU4Hf
+	 vQAKQgn9iCejJaFuT+QjyBrJ5fyl5Y+JgcaveC2Ih9v84TKeo+134tMrmAC49RAzXj
+	 BYWWsYFZ7UZQA==
+Date: Wed, 1 May 2024 18:30:40 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	"Luck, Tony" <tony.luck@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>,
+	"wklin@google.com" <wklin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
+ pstore consistently
+Message-ID: <ZjJgIIOvvEdnisNA@kernel.org>
+References: <20240409210254.660888920@goodmis.org>
+ <20240409172358.34ea19f0@gandalf.local.home>
+ <202404091519.B7B2221@keescook>
+ <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
+ <20240411154007.5bdf8d95@gandalf.local.home>
+ <fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
+ <20240412132243.053ad096@gandalf.local.home>
+ <ZjJVnZUX3NZiGW6q@kernel.org>
+ <20240501105455.42b78a0b@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: personal@luigi311.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240501105455.42b78a0b@gandalf.local.home>
 
-From: Ondrej Jirman <megi@xff.cz>
+On Wed, May 01, 2024 at 10:54:55AM -0400, Steven Rostedt wrote:
+> On Wed, 1 May 2024 17:45:49 +0300
+> Mike Rapoport <rppt@kernel.org> wrote:
+> 
+> > > +static void __init memmap_copy(void)
+> > > +{
+> > > +	if (!early_mmap_size)
+> > > +		return;
+> > > +
+> > > +	mmap_list = kcalloc(early_mmap_size + 1, sizeof(mmap_list), GFP_KERNEL);  
+> > 
+> > We can keep early_mmap_size after boot and then we don't need to allocate
+> > an extra element in the mmap_list. No strong feeling here, though.
+> > 
+> > > +	if (!mmap_list)
+> > > +		return;
+> > > +
+> > > +	for (int i = 0; i < early_mmap_size; i++)
+> > > +		mmap_list[i] = early_mmap_list[i];
+> > > +}  
+> > 
+> > With something like this
+> > 
+> > /*
+> >  * Parse early_reserve_mem=nn:align:name
+> >  */
+> > static int __init early_reserve_mem(char *p)
+> > {
+> > 	phys_addr_t start, size, align;
+> > 	char *oldp;
+> > 	int err;
+> > 
+> > 	if (!p)
+> > 		return -EINVAL;
+> > 
+> > 	oldp = p;
+> > 	size = memparse(p, &p);
+> > 	if (p == oldp)
+> > 		return -EINVAL;
+> > 
+> > 	if (*p != ':')
+> > 		return -EINVAL;
+> > 
+> > 	align = memparse(p+1, &p);
+> > 	if (*p != ':')
+> > 		return -EINVAL;
+> > 
+> > 	start = memblock_phys_alloc(size, align);
+> 
+> So this will allocate the same physical location for every boot, if booting
+> the same kernel and having the same physical memory layout?
 
-On some boards powerdown signal needs to be deasserted for this
-sensor to be enabled.
+Up to kaslr that might use that location for the kernel image.
+But it's the same as allocating from e820 after kaslr.
 
-Signed-off-by: Ondrej Jirman <megi@xff.cz>
-Signed-off-by: Luis Garcia <git@luigi311.com>
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
----
- drivers/media/i2c/imx258.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+And, TBH, I don't have good ideas how to ensure the same physical location
+with randomization of the physical address of the kernel image.
+ 
+> -- Steve
+> 
+> 
+> > 	if (!start)
+> > 		return -ENOMEM;
+> > 
+> > 	p++;
+> > 	err = memmap_add(start, size, p);
+> > 	if (err) {
+> > 		memblock_phys_free(start, size);
+> > 		return err;
+> > 	}
+> > 
+> > 	p += strlen(p);
+> > 
+> > 	return *p == '\0' ? 0: -EINVAL;
+> > }
+> > __setup("early_reserve_mem=", early_reserve_mem);
+> > 
+> > you don't need to touch e820 and it will work the same for all
+> > architectures.
+> > 
+> > We'd need a better naming, but I couldn't think of something better yet.
+> > 
+> > > +
+> > > +/**
+> > > + * memmap_named - Find a wildcard region with a given name
+> > > + * @name: The name that is attached to a wildcard region
+> > > + * @start: If found, holds the start address
+> > > + * @size: If found, holds the size of the address.
+> > > + *
+> > > + * Returns: 1 if found or 0 if not found.
+> > > + */
+> > > +int memmap_named(const char *name, u64 *start, u64 *size)
+> > > +{
+> > > +	struct mmap_map *map;
+> > > +
+> > > +	if (!mmap_list)
+> > > +		return 0;
+> > > +
+> > > +	for (int i = 0; mmap_list[i].name[0]; i++) {
+> > > +		map = &mmap_list[i];
+> > > +		if (!map->size)
+> > > +			continue;
+> > > +		if (strcmp(name, map->name) == 0) {
+> > > +			*start = map->start;
+> > > +			*size = map->size;
+> > > +			return 1;
+> > > +		}
+> > > +	}
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  struct kobject *mm_kobj;
+> > >  
+> > >  #ifdef CONFIG_SMP
+> > > @@ -2793,4 +2864,5 @@ void __init mm_core_init(void)
+> > >  	pti_init();
+> > >  	kmsan_init_runtime();
+> > >  	mm_cache_init();
+> > > +	memmap_copy();
+> > >  }  
+> > 
+> 
 
-diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index f043200e336e..f0bd72f241e4 100644
---- a/drivers/media/i2c/imx258.c
-+++ b/drivers/media/i2c/imx258.c
-@@ -698,6 +698,8 @@ struct imx258 {
- 	unsigned int lane_mode_idx;
- 	unsigned int csi2_flags;
- 
-+	struct gpio_desc *powerdown_gpio;
-+
- 	/*
- 	 * Mutex for serialized access:
- 	 * Protect sensor module set pad format and start/stop streaming safely.
-@@ -1231,6 +1233,8 @@ static int imx258_power_on(struct device *dev)
- 	struct imx258 *imx258 = to_imx258(sd);
- 	int ret;
- 
-+	gpiod_set_value_cansleep(imx258->powerdown_gpio, 0);
-+
- 	ret = regulator_bulk_enable(IMX258_NUM_SUPPLIES,
- 				    imx258->supplies);
- 	if (ret) {
-@@ -1242,6 +1246,7 @@ static int imx258_power_on(struct device *dev)
- 	ret = clk_prepare_enable(imx258->clk);
- 	if (ret) {
- 		dev_err(dev, "failed to enable clock\n");
-+		gpiod_set_value_cansleep(imx258->powerdown_gpio, 1);
- 		regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
- 	}
- 
-@@ -1254,6 +1259,9 @@ static int imx258_power_off(struct device *dev)
- 	struct imx258 *imx258 = to_imx258(sd);
- 
- 	clk_disable_unprepare(imx258->clk);
-+
-+	gpiod_set_value_cansleep(imx258->powerdown_gpio, 1);
-+
- 	regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
- 
- 	return 0;
-@@ -1559,6 +1567,12 @@ static int imx258_probe(struct i2c_client *client)
- 	if (!imx258->variant_cfg)
- 		imx258->variant_cfg = &imx258_cfg;
- 
-+	/* request optional power down pin */
-+	imx258->powerdown_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-+							 GPIOD_OUT_HIGH);
-+	if (IS_ERR(imx258->powerdown_gpio))
-+		return PTR_ERR(imx258->powerdown_gpio);
-+
- 	/* Initialize subdev */
- 	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
- 
 -- 
-2.44.0
-
+Sincerely yours,
+Mike.
