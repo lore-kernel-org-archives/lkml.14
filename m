@@ -1,57 +1,57 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5A8137C3B;
-	Wed,  1 May 2024 15:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7391386B3;
+	Wed,  1 May 2024 15:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714576462; cv=none; b=Pcy+rsJKFAjXYw+G2m0oMYRs/cDAS8Is9fAln9fIOVKRX/6+6+K+4i0fS3DFd1SPeUNqBgFombYuoxSUkjzB+ij6UmaXRvVtCTyjO/94PTzyTAaFUuW2fNXHITt0Jm0wGYbJBt/GNN66dlEu16BUuckp3VnT37PFALaYHIvcoXg=
+	t=1714576467; cv=none; b=NezGwRGaPPJ6dsJ0dpPnXDh80UkNu4l8ScekgNJwuIZPsP3Aj3PlRuHvwcf+3BiXGaK0Cn3T1SCvEmDIVB0o4attleY3YN20StBO5fDxy5pL1r7yxad+wU9c/U4LAF6HKJ466FMKxGKYcI6GAvvrdLDdVq7YwaCg8bcK3kTXU00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714576462; c=relaxed/simple;
-	bh=OmAbVskWHJXdzd6bo+Oq6i5LhKduiBs8hcccwAzacPM=;
+	s=arc-20240116; t=1714576467; c=relaxed/simple;
+	bh=umSt+AwTmTH3qds/vMuDmtTqEDHwYJ61QQlaMccHss4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KX+JWJthEo5sOnsbhs9h1/FwkZhQEJ0pdj9U/kpxUM96U3sPERzNgZOaAD9WR/E8K6/mGsTYLjBYgKcRbQJh+YOJGS/EONSU9Mnw/14wKHxXrpYFJGueV2ay45fK3cIs+RhbJ2zaoy/Dv9w/NQOPcpOXawD1SHPRayyCjsGifik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AbvTTYye; arc=none smtp.client-ip=209.85.166.181
+	 MIME-Version; b=r4Z98No5TG8KC7n2tCP/TzDh1RDfPrdj67mF3aUA6U9bN3FbpC86L0a0F2eOP6zwRJDt033gIyMQ7z+hCKDrPAGAlEzAvXKVh3+/Zg64xs/CPAfytwy8uSE3Cl/5qR8ypt7UpaeaDdHg2XMXLcgyJhRDSG3iRgoOT1Ld6U/i534=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kyjsO/GD; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbvTTYye"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-36b30909b01so27236405ab.2;
-        Wed, 01 May 2024 08:14:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyjsO/GD"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ec4b2400b6so16273495ad.3;
+        Wed, 01 May 2024 08:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714576460; x=1715181260; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714576465; x=1715181265; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=32MT8BpIth0xVDkqzONWNxtle8Qf/PzSWYuUV747AcA=;
-        b=AbvTTYyehSTda5CdNOQ/wR0ABn51NarkBA1a+UUHYs2auXf9MLUmQoorqYRlvT5oUU
-         w/QPUoTLpSLJYOzJdSzqmIaZgqOTQbug3JrsaIqDqSanJp3Npy1K7pnBKhCuDYtczwgs
-         CiRvkfxQh1TOCFyUrDb0mWSrihF2y8toMx7feVa4HJO+3bSWFizbu8BL0e4DWmV5as+R
-         jn9IkofRbroOWL9oy4ZU6Ggs2ky1x92CYKb0iIxpSLN1bVC77h0OC9mRZjvlBn4LqU6c
-         X2JGsnXX9KyJk/fS1xMC6PGgwyy1m9BBTCqiInbp7UPiiAYIxptDLpeq66lv1W/hYkE7
-         QRdw==
+        bh=6U8VsuI2Ijq8da5T1tolpsDpFMZrrIc0bnPL4ZEP/aU=;
+        b=kyjsO/GDE7BuuZSIdOagCCGto7zGXZHvZdx8KGADrWxmVQuU3TKmcSzbAWoXdjpZlo
+         CoKlg6WBDNbI2hXlESrtVDNbxHWEucoCSfjeEbS8dH6AGxVzsMffPFe3PK3DbURg4h0x
+         tAvyUu/tZDDfm70CRYqGqZ6zN6YCmJhdmzI4pNiT8i5XvFvYGqtMZtAyrfIe2zeTP0ux
+         6y9ejHvQ4aVI9jjE2XuzdJ2bO1aJfTIEnE/UO+XtEk0vlsrtDl8/gDuaDH+AAaSVLNth
+         y49/5xmBwsO1muNWo+N758S9vGaa1PkL7LB6fPW9Wl9uWxof5HAnqPAjrUQqC9xDVqbT
+         h0VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714576460; x=1715181260;
+        d=1e100.net; s=20230601; t=1714576465; x=1715181265;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=32MT8BpIth0xVDkqzONWNxtle8Qf/PzSWYuUV747AcA=;
-        b=NqckcsWUibvpL/1Lca2p85eG7R838tBa8hP66nXC3sIGO18XhDaH9sFclRFIO14HIX
-         c5aAgbC+LDHnXH3G1ox0RuCU/s0godB9pU3c8RBur4t5u9P2iIBnu/F9LjeLvvs09spZ
-         4y1k0BFBb0Lx3ypKEkyt//dZikvL3wql5xpkSrYU0vMsbAlGKLH8vuknxWicNop5Lb5o
-         qGGsq0IS3o6BookRU/4mUUJMkXorHlOm9FxGEJK14uUuvL2RsPASDtiAE+7OkGTHImWT
-         7123D1N0HOoxemFNO1JFM0oFpkvYunaDLoVLrOqzAqW58W/DOqFT6U9xsM9ty7w8cFLk
-         1aBA==
-X-Forwarded-Encrypted: i=1; AJvYcCV85hpxShRoUgMbz312hQxmSVTL38ZKp3TnbdtGBLfV93p/Prs7ZmIGegfG3BcjTt+5pC6SUYnT/macF30OZYTOPFPx
-X-Gm-Message-State: AOJu0Yyf8YKkNEPJLVNNdCraxbTOe6zx6cocpe4EjxpNERuWuBydksnQ
-	WMhGpqsN84H7bpEOkXKZ9wLm1qbSFVs+Z27J866Jl7TIztXbJRr5
-X-Google-Smtp-Source: AGHT+IFcAEdwpRn+SiCMJpQ2vwzgm8h3aHIQMPDvoiMGkVBU6zd4ugNuHGCUb3OOR7ZnQpYUOqSYpQ==
-X-Received: by 2002:a05:6e02:1c4b:b0:36b:fffc:73bb with SMTP id d11-20020a056e021c4b00b0036bfffc73bbmr3636802ilg.7.1714576459692;
-        Wed, 01 May 2024 08:14:19 -0700 (PDT)
+        bh=6U8VsuI2Ijq8da5T1tolpsDpFMZrrIc0bnPL4ZEP/aU=;
+        b=oiaA8X2V/QVVfzmiUEVJV3x0AjywgN23+QnDnZ0wCdYNvOd4Y04ZPEPCCnGx9jodME
+         UPE90IbJnjbmyb2cY7v5o6uTSmggwouljueiPlIauEyyYo481uqvTlp8NGkWOM1IwOS2
+         DlYjCTrmnLLw1ZeOprXrs6dKqs8qpfd+BEQY4OE6HuQSRsYbO7Zg05eDzR4ruVkj84d0
+         nt8OaFbak5MvbVY8g2khLEmeUWyhiJYCoMCGmmXUJKJkLyS1n4FfvYUVL6Up1QLyGXCq
+         F5ZTGVd+2xn2qe5asa2Wdrsv5kIxB9eJu+DK4ZtEbn+Eg3t/vQ8p2wqK5iypEB6SXbNE
+         omJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdM54/kIx91B6miJKh/SwT9iXorY6PuMl8nMDihk6ufshFhdZ19Dy7DtbDytWy/crwglNEjpCUg3g/PsRrPhtzEFgC
+X-Gm-Message-State: AOJu0YzV10J4r2JiZro4y2iLUouT1jM34AMr6LdUbtLFMGYTGkkAtYAp
+	lnp4n/mVdBUwz144clUJwdlN30IP3xRyOzVedRubE4SdvIPNwehdTGcfQAbf
+X-Google-Smtp-Source: AGHT+IGYbCZRU0fe7g//BWK/50e+G/4RMAWBbtu4TTgcSYlBjpkoaWidVbeDmzFzCP4RW4+0cta0OA==
+X-Received: by 2002:a17:902:b948:b0:1ea:5aff:c8ce with SMTP id h8-20020a170902b94800b001ea5affc8cemr2123423pls.29.1714576465112;
+        Wed, 01 May 2024 08:14:25 -0700 (PDT)
 Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id h191-20020a6383c8000000b006034c56d597sm14790544pge.22.2024.05.01.08.14.19
+        by smtp.gmail.com with ESMTPSA id e14-20020a170902cf4e00b001e259719a5fsm24284772plg.103.2024.05.01.08.14.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 08:14:19 -0700 (PDT)
+        Wed, 01 May 2024 08:14:24 -0700 (PDT)
 Sender: Tejun Heo <htejun@gmail.com>
 From: Tejun Heo <tj@kernel.org>
 To: torvalds@linux-foundation.org,
@@ -87,9 +87,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	kernel-team@meta.com,
 	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 30/39] sched_ext: Implement SCX_KICK_WAIT
-Date: Wed,  1 May 2024 05:10:05 -1000
-Message-ID: <20240501151312.635565-31-tj@kernel.org>
+Subject: [PATCH 33/39] sched_ext: Bypass BPF scheduler while PM events are in progress
+Date: Wed,  1 May 2024 05:10:08 -1000
+Message-ID: <20240501151312.635565-34-tj@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240501151312.635565-1-tj@kernel.org>
 References: <20240501151312.635565-1-tj@kernel.org>
@@ -101,271 +101,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: David Vernet <dvernet@meta.com>
+PM operations freeze userspace. Some BPF schedulers have active userspace
+component and may misbehave as expected across PM events. While the system
+is frozen, nothing too interesting is happening in terms of scheduling and
+we can get by just fine with the fallback FIFO behavior. Let's make things
+easier by always bypassing the BPF scheduler while PM events are in
+progress.
 
-If set when calling scx_bpf_kick_cpu(), the invoking CPU will busy wait for
-the kicked cpu to enter the scheduler. See the following for example usage:
-
-  https://github.com/sched-ext/scx/blob/main/scheds/c/scx_pair.bpf.c
-
-v2: - Updated to fit the updated kick_cpus_irq_workfn() implementation.
-
-    - Include SCX_KICK_WAIT related information in debug dump.
-
-Signed-off-by: David Vernet <dvernet@meta.com>
-Reviewed-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Tejun Heo <tj@kernel.org>
-Acked-by: Josh Don <joshdon@google.com>
-Acked-by: Hao Luo <haoluo@google.com>
-Acked-by: Barret Rhoden <brho@google.com>
+Reviewed-by: David Vernet <dvernet@meta.com>
 ---
- kernel/sched/core.c  |  4 ++-
- kernel/sched/ext.c   | 82 ++++++++++++++++++++++++++++++++++++++++----
- kernel/sched/ext.h   |  4 +++
- kernel/sched/sched.h |  2 ++
- 4 files changed, 85 insertions(+), 7 deletions(-)
+ kernel/sched/ext.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index de49b94844a9..d940c17dfe8a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6115,8 +6115,10 @@ __pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 
- 	for_each_active_class(class) {
- 		p = class->pick_next_task(rq);
--		if (p)
-+		if (p) {
-+			scx_next_task_picked(rq, p, class);
- 			return p;
-+		}
- 	}
- 
- 	BUG(); /* The idle class should always have a runnable task. */
 diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 80c313a56958..91c3d1851b45 100644
+index ed2452d42862..619ae7e814be 100644
 --- a/kernel/sched/ext.c
 +++ b/kernel/sched/ext.c
-@@ -579,6 +579,12 @@ enum scx_kick_flags {
- 	 * task expires and the dispatch path is invoked.
- 	 */
- 	SCX_KICK_PREEMPT	= 1LLU << 1,
-+
-+	/*
-+	 * Wait for the CPU to be rescheduled. The scx_bpf_kick_cpu() call will
-+	 * return after the target CPU finishes picking the next task.
-+	 */
-+	SCX_KICK_WAIT		= 1LLU << 2,
- };
- 
- enum scx_tg_flags {
-@@ -713,6 +719,9 @@ static struct {
- 
- #endif	/* CONFIG_SMP */
- 
-+/* for %SCX_KICK_WAIT */
-+static unsigned long __percpu *scx_kick_cpus_pnt_seqs;
-+
- /*
-  * Direct dispatch marker.
-  *
-@@ -2315,6 +2324,23 @@ static struct task_struct *pick_next_task_scx(struct rq *rq)
- 	return p;
+@@ -5010,6 +5010,34 @@ void print_scx_info(const char *log_lvl, struct task_struct *p)
+ 	       runnable_at_buf);
  }
  
-+void scx_next_task_picked(struct rq *rq, struct task_struct *p,
-+			  const struct sched_class *active)
++static int scx_pm_handler(struct notifier_block *nb, unsigned long event, void *ptr)
 +{
-+	lockdep_assert_rq_held(rq);
-+
-+	if (!scx_enabled())
-+		return;
-+#ifdef CONFIG_SMP
 +	/*
-+	 * Pairs with the smp_load_acquire() issued by a CPU in
-+	 * kick_cpus_irq_workfn() who is waiting for this CPU to perform a
-+	 * resched.
++	 * SCX schedulers often have userspace components which are sometimes
++	 * involved in critial scheduling paths. PM operations involve freezing
++	 * userspace which can lead to scheduling misbehaviors including stalls.
++	 * Let's bypass while PM operations are in progress.
 +	 */
-+	smp_store_release(&rq->scx.pnt_seq, rq->scx.pnt_seq + 1);
-+#endif
++	switch (event) {
++	case PM_HIBERNATION_PREPARE:
++	case PM_SUSPEND_PREPARE:
++	case PM_RESTORE_PREPARE:
++		scx_ops_bypass(true);
++		break;
++	case PM_POST_HIBERNATION:
++	case PM_POST_SUSPEND:
++	case PM_POST_RESTORE:
++		scx_ops_bypass(false);
++		break;
++	}
++
++	return NOTIFY_OK;
 +}
 +
- #ifdef CONFIG_SMP
- 
- static bool test_and_clear_cpu_idle(int cpu)
-@@ -3868,9 +3894,9 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
- 		    rq->curr->sched_class == &idle_sched_class)
- 			goto next;
- 
--		seq_buf_printf(&s, "\nCPU %-4d: nr_run=%u flags=0x%x ops_qseq=%lu\n",
-+		seq_buf_printf(&s, "\nCPU %-4d: nr_run=%u flags=0x%x ops_qseq=%lu pnt_seq=%lu\n",
- 			       cpu, rq->scx.nr_running, rq->scx.flags,
--			       rq->scx.ops_qseq);
-+			       rq->scx.ops_qseq, rq->scx.pnt_seq);
- 		seq_buf_printf(&s, "          curr=%s[%d] class=%ps\n",
- 			       rq->curr->comm, rq->curr->pid,
- 			       rq->curr->sched_class);
-@@ -3883,6 +3909,9 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
- 		if (!cpumask_empty(rq->scx.cpus_to_preempt))
- 			seq_buf_printf(&s, "  cpus_to_preempt: %*pb\n",
- 				       cpumask_pr_args(rq->scx.cpus_to_preempt));
-+		if (!cpumask_empty(rq->scx.cpus_to_wait))
-+			seq_buf_printf(&s, "  cpus_to_wait   : %*pb\n",
-+				       cpumask_pr_args(rq->scx.cpus_to_wait));
- 
- 		if (rq->curr->sched_class == &ext_sched_class)
- 			scx_dump_task(&s, rq->curr, '*', now);
-@@ -4578,10 +4607,11 @@ static bool can_skip_idle_kick(struct rq *rq)
- 	return !is_idle_task(rq->curr) && !(rq->scx.flags & SCX_RQ_BALANCING);
- }
- 
--static void kick_one_cpu(s32 cpu, struct rq *this_rq)
-+static bool kick_one_cpu(s32 cpu, struct rq *this_rq, unsigned long *pseqs)
++static struct notifier_block scx_pm_notifier = {
++	.notifier_call = scx_pm_handler,
++};
++
+ void __init init_sched_ext_class(void)
  {
- 	struct rq *rq = cpu_rq(cpu);
- 	struct scx_rq *this_scx = &this_rq->scx;
-+	bool should_wait = false;
- 	unsigned long flags;
- 
- 	raw_spin_rq_lock_irqsave(rq, flags);
-@@ -4597,12 +4627,20 @@ static void kick_one_cpu(s32 cpu, struct rq *this_rq)
- 			cpumask_clear_cpu(cpu, this_scx->cpus_to_preempt);
- 		}
- 
-+		if (cpumask_test_cpu(cpu, this_scx->cpus_to_wait)) {
-+			pseqs[cpu] = rq->scx.pnt_seq;
-+			should_wait = true;
-+		}
-+
- 		resched_curr(rq);
- 	} else {
- 		cpumask_clear_cpu(cpu, this_scx->cpus_to_preempt);
-+		cpumask_clear_cpu(cpu, this_scx->cpus_to_wait);
+ 	s32 cpu, v;
+@@ -5902,6 +5930,12 @@ static int __init scx_init(void)
+ 		return ret;
  	}
  
- 	raw_spin_rq_unlock_irqrestore(rq, flags);
-+
-+	return should_wait;
- }
- 
- static void kick_one_cpu_if_idle(s32 cpu, struct rq *this_rq)
-@@ -4623,10 +4661,12 @@ static void kick_cpus_irq_workfn(struct irq_work *irq_work)
- {
- 	struct rq *this_rq = this_rq();
- 	struct scx_rq *this_scx = &this_rq->scx;
-+	unsigned long *pseqs = this_cpu_ptr(scx_kick_cpus_pnt_seqs);
-+	bool should_wait = false;
- 	s32 cpu;
- 
- 	for_each_cpu(cpu, this_scx->cpus_to_kick) {
--		kick_one_cpu(cpu, this_rq);
-+		should_wait |= kick_one_cpu(cpu, this_rq, pseqs);
- 		cpumask_clear_cpu(cpu, this_scx->cpus_to_kick);
- 		cpumask_clear_cpu(cpu, this_scx->cpus_to_kick_if_idle);
- 	}
-@@ -4635,6 +4675,28 @@ static void kick_cpus_irq_workfn(struct irq_work *irq_work)
- 		kick_one_cpu_if_idle(cpu, this_rq);
- 		cpumask_clear_cpu(cpu, this_scx->cpus_to_kick_if_idle);
- 	}
-+
-+	if (!should_wait)
-+		return;
-+
-+	for_each_cpu(cpu, this_scx->cpus_to_wait) {
-+		unsigned long *wait_pnt_seq = &cpu_rq(cpu)->scx.pnt_seq;
-+
-+		if (cpu != cpu_of(this_rq)) {
-+			/*
-+			 * Pairs with smp_store_release() issued by this CPU in
-+			 * scx_next_task_picked() on the resched path.
-+			 *
-+			 * We busy-wait here to guarantee that no other task can
-+			 * be scheduled on our core before the target CPU has
-+			 * entered the resched path.
-+			 */
-+			while (smp_load_acquire(wait_pnt_seq) == pseqs[cpu])
-+				cpu_relax();
-+		}
-+
-+		cpumask_clear_cpu(cpu, this_scx->cpus_to_wait);
++	ret = register_pm_notifier(&scx_pm_notifier);
++	if (ret) {
++		pr_err("sched_ext: Failed to register PM notifier (%d)\n", ret);
++		return ret;
 +	}
- }
- 
- /**
-@@ -4700,6 +4762,11 @@ void __init init_sched_ext_class(void)
- 	BUG_ON(!alloc_cpumask_var(&idle_masks.cpu, GFP_KERNEL));
- 	BUG_ON(!alloc_cpumask_var(&idle_masks.smt, GFP_KERNEL));
- #endif
-+	scx_kick_cpus_pnt_seqs =
-+		__alloc_percpu(sizeof(scx_kick_cpus_pnt_seqs[0]) * nr_cpu_ids,
-+			       __alignof__(scx_kick_cpus_pnt_seqs[0]));
-+	BUG_ON(!scx_kick_cpus_pnt_seqs);
 +
- 	for_each_possible_cpu(cpu) {
- 		struct rq *rq = cpu_rq(cpu);
- 
-@@ -4709,6 +4776,7 @@ void __init init_sched_ext_class(void)
- 		BUG_ON(!zalloc_cpumask_var(&rq->scx.cpus_to_kick, GFP_KERNEL));
- 		BUG_ON(!zalloc_cpumask_var(&rq->scx.cpus_to_kick_if_idle, GFP_KERNEL));
- 		BUG_ON(!zalloc_cpumask_var(&rq->scx.cpus_to_preempt, GFP_KERNEL));
-+		BUG_ON(!zalloc_cpumask_var(&rq->scx.cpus_to_wait, GFP_KERNEL));
- 		init_irq_work(&rq->scx.kick_cpus_irq_work, kick_cpus_irq_workfn);
- 	}
- 
-@@ -5038,8 +5106,8 @@ __bpf_kfunc void scx_bpf_kick_cpu(s32 cpu, u64 flags)
- 	if (flags & SCX_KICK_IDLE) {
- 		struct rq *target_rq = cpu_rq(cpu);
- 
--		if (unlikely(flags & SCX_KICK_PREEMPT))
--			scx_ops_error("PREEMPT cannot be used with SCX_KICK_IDLE");
-+		if (unlikely(flags & (SCX_KICK_PREEMPT | SCX_KICK_WAIT)))
-+			scx_ops_error("PREEMPT/WAIT cannot be used with SCX_KICK_IDLE");
- 
- 		if (raw_spin_rq_trylock(target_rq)) {
- 			if (can_skip_idle_kick(target_rq)) {
-@@ -5054,6 +5122,8 @@ __bpf_kfunc void scx_bpf_kick_cpu(s32 cpu, u64 flags)
- 
- 		if (flags & SCX_KICK_PREEMPT)
- 			cpumask_set_cpu(cpu, this_rq->scx.cpus_to_preempt);
-+		if (flags & SCX_KICK_WAIT)
-+			cpumask_set_cpu(cpu, this_rq->scx.cpus_to_wait);
- 	}
- 
- 	irq_work_queue(&this_rq->scx.kick_cpus_irq_work);
-diff --git a/kernel/sched/ext.h b/kernel/sched/ext.h
-index 1017439dcc00..5db35f627ea3 100644
---- a/kernel/sched/ext.h
-+++ b/kernel/sched/ext.h
-@@ -29,6 +29,8 @@ static inline bool task_on_scx(const struct task_struct *p)
- 	return scx_enabled() && p->sched_class == &ext_sched_class;
- }
- 
-+void scx_next_task_picked(struct rq *rq, struct task_struct *p,
-+			  const struct sched_class *active);
- void scx_tick(struct rq *rq);
- void init_scx_entity(struct sched_ext_entity *scx);
- void scx_pre_fork(struct task_struct *p);
-@@ -78,6 +80,8 @@ static inline const struct sched_class *next_active_class(const struct sched_cla
- #define scx_enabled()		false
- #define scx_switched_all()	false
- 
-+static inline void scx_next_task_picked(struct rq *rq, struct task_struct *p,
-+					const struct sched_class *active) {}
- static inline void scx_tick(struct rq *rq) {}
- static inline void scx_pre_fork(struct task_struct *p) {}
- static inline int scx_fork(struct task_struct *p) { return 0; }
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 0ca2378bb252..c8cf6fbaed07 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -735,6 +735,8 @@ struct scx_rq {
- 	cpumask_var_t		cpus_to_kick;
- 	cpumask_var_t		cpus_to_kick_if_idle;
- 	cpumask_var_t		cpus_to_preempt;
-+	cpumask_var_t		cpus_to_wait;
-+	unsigned long		pnt_seq;
- 	struct irq_work		kick_cpus_irq_work;
- };
- #endif /* CONFIG_SCHED_CLASS_EXT */
+ 	scx_kset = kset_create_and_add("sched_ext", &scx_uevent_ops, kernel_kobj);
+ 	if (!scx_kset) {
+ 		pr_err("sched_ext: Failed to create /sys/kernel/sched_ext\n");
 -- 
 2.44.0
 
