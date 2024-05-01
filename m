@@ -1,88 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702D317C6B;
-	Wed,  1 May 2024 23:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24170168AE4;
+	Wed,  1 May 2024 23:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714605679; cv=none; b=mlpEp06xQahivGa7FnSbbs2NyTS+TUdiZIcYS5UnFSkhNw0bwViBxRGGivG4klb1/Cd3WJz5gsn6S4sQrUYbEZI6EwV/FcxedKaCl7Xb+CU+jMzkIe2HmEWerqoH4s6TqDn05sQUoFJkGIAw+7Ze/SPheAb/D8V8eJ3cb8JsXAU=
+	t=1714605695; cv=none; b=FuNbdhJS4tvYv9I+l9bkWjQIVZxwKDreO5ydnpQBwBXF6qk5ngeEZEgHjGjGZ4TpOJWtPP0a3QuL0Gs+X/ZJhY/iTg/LlFilhRdZ4G+vwm0qruwu7/y4bWSslDI472/6EPYsvn8lVyHvrH7SkRgyyWqAu/MKBLx13/0ag0Fca1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714605679; c=relaxed/simple;
-	bh=V7pdb33RKpwAz8QMydHY2xEB2tvjZSeTxTovguE8X0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GiLaJi/N82j51i7xsJfxULZEQ1DtKPK9JvY0v+5HiomNi7tqieRYxGw1Ai+qDd4FNsjVzhIN58WOofFv0TMQVnYlfDmECMCVPH/t1hOnl6yPMGBa1qVCj4OHAST1Vq2c9H/nckf0WQhIVyAtLTJiLiiNlTnIVcKgu1J7bat3QfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HziUBFXs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714605695; c=relaxed/simple;
+	bh=M3rljuLjY3UhKUT1g/wRug4MwuxiMyvh+qPJzdYy2n4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PYBEZMFBvKj1gsLau7O9NJvYNH+Uyf6RG8Lnsyz4fw7K/FYs+UGXste0eKfysqAVmq9iyv4yiw3nsaJK59PIYPQFPgnujVz10T9RINc9DIFwCMldWs1N0eXrhnGLXmSph+XEoMSriOjt6+oyp4QqosKaQkBFrfdET5Qsd73/0Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XYTtNkxc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HziUBFXs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3D91C072AA;
-	Wed,  1 May 2024 23:21:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XYTtNkxc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C658FC4AF19;
+	Wed,  1 May 2024 23:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714605679;
-	bh=V7pdb33RKpwAz8QMydHY2xEB2tvjZSeTxTovguE8X0I=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=HziUBFXstSH5ymhJcTtj4AFDWpG3Px9nNCGWDWuMhb+AtI2l4hnPhMtMOdIAMSs0H
-	 I/gqMWv/1x+okZj5BEARdXTtcnE8A7XPEIgBv78raHnLtekXpJ6ADUTUDLyBQ+Vjph
-	 lQyyISGLd9Menw0jt7bHQ1I0otSxWg8zXSoa//BwSpxhyl2O7YqDivgrgvZ9sxoh7w
-	 NQo3lwFecfCkt5VpjJ4Wj8oFXjLUl+GpW6jMO9qjZpiKt74Hx8Dy19wYS2WiTOkoVY
-	 UyWOi6aALMMMcQY+p5D8g6DvkXhHG2fqxJ5nuB58Y99w4wfaTXoH/lyTXMnSKePnMZ
-	 oNJckzapCRUWA==
+	s=k20201202; t=1714605694;
+	bh=M3rljuLjY3UhKUT1g/wRug4MwuxiMyvh+qPJzdYy2n4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XYTtNkxcIF5q4iFu1XBRlQYGdaxLZWZJ8F6KFhl5o9Snvpvdb+dJ1dR6L83txqSRF
+	 NtHxoQMzq4v3IsZupeVTZBd3OPEwx0omr5rgnPUyu1TyirQ+97ZyDXl5ADF1XcC1fS
+	 e/fiyecpV7QjniY+q1u/MWyPkDqPYnI7AV3qqaMYXzSEa4qXTrYdY4/a0nVUdpcGmu
+	 VQS6pHNkdwqfTfs+ivFH+mevHSitULh1foSkbLQl4pevPWgKrr3LIOerYVFgWmxXNO
+	 oeFlVmL58qCv9N5RlSJJd7yUGkyaCn9dFC9luH0UWwGL/YVKPwO0DnctLgFPt73acY
+	 plqXwLCNADlXQ==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 809DACE1073; Wed,  1 May 2024 16:21:18 -0700 (PDT)
-Date: Wed, 1 May 2024 16:21:18 -0700
+	id 6DAF0CE1A05; Wed,  1 May 2024 16:21:34 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	kernel-team@meta.com, mingo@kernel.org
-Cc: stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-	peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-	dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-	akiyks@gmail.com
-Subject: [PATCH v2 memory-model 0/3] LKMM updates for v6.10
-Message-ID: <42a43181-a431-44bd-8aff-6b305f8111ba@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <8550daf1-4bfd-4607-8325-bfb7c1e2d8c7@paulmck-laptop>
+To: linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	kernel-team@meta.com,
+	mingo@kernel.org
+Cc: stern@rowland.harvard.edu,
+	parri.andrea@gmail.com,
+	will@kernel.org,
+	peterz@infradead.org,
+	boqun.feng@gmail.com,
+	npiggin@gmail.com,
+	dhowells@redhat.com,
+	j.alglave@ucl.ac.uk,
+	luc.maranget@inria.fr,
+	akiyks@gmail.com,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH memory-model 4/4] Documentation/litmus-tests: Make cmpxchg() tests safe for klitmus
+Date: Wed,  1 May 2024 16:21:32 -0700
+Message-Id: <20240501232132.1785861-4-paulmck@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <42a43181-a431-44bd-8aff-6b305f8111ba@paulmck-laptop>
+References: <42a43181-a431-44bd-8aff-6b305f8111ba@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8550daf1-4bfd-4607-8325-bfb7c1e2d8c7@paulmck-laptop>
+Content-Transfer-Encoding: 8bit
 
-Hello!
+The four litmus tests in Documentation/litmus-tests/atomic do not
+declare all of their local variables.  Although this is just fine for LKMM
+analysis by herd7, it causes build failures when run in-kernel by klitmus.
+This commit therefore adjusts these tests to declare all local variables.
 
-This series contains LKMM documentation updates:
+Reported-by: Andrea Parri <parri.andrea@gmail.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ .../litmus-tests/atomic/cmpxchg-fail-ordered-1.litmus         | 1 +
+ .../litmus-tests/atomic/cmpxchg-fail-ordered-2.litmus         | 4 ++--
+ .../litmus-tests/atomic/cmpxchg-fail-unordered-1.litmus       | 1 +
+ .../litmus-tests/atomic/cmpxchg-fail-unordered-2.litmus       | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
 
-1.	Documentation/litmus-tests: Add locking tests to README.
+diff --git a/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-1.litmus b/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-1.litmus
+index 3df1d140b189b..c0f93dc07105e 100644
+--- a/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-1.litmus
++++ b/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-1.litmus
+@@ -23,6 +23,7 @@ P0(int *x, int *y, int *z)
+ P1(int *x, int *y, int *z)
+ {
+ 	int r0;
++	int r1;
+ 
+ 	WRITE_ONCE(*y, 1);
+ 	r1 = cmpxchg(z, 1, 0);
+diff --git a/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-2.litmus b/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-2.litmus
+index 54146044a16f6..5c06054f46947 100644
+--- a/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-2.litmus
++++ b/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-2.litmus
+@@ -11,7 +11,6 @@ C cmpxchg-fail-ordered-2
+ 
+ P0(int *x, int *y)
+ {
+-	int r0;
+ 	int r1;
+ 
+ 	WRITE_ONCE(*x, 1);
+@@ -20,7 +19,8 @@ P0(int *x, int *y)
+ 
+ P1(int *x, int *y)
+ {
+-	int r0;
++	int r1;
++	int r2;
+ 
+ 	r1 = cmpxchg(y, 0, 1);
+ 	smp_mb__after_atomic();
+diff --git a/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-1.litmus b/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-1.litmus
+index a727ce23b1a6e..39ea1f56a28d2 100644
+--- a/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-1.litmus
++++ b/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-1.litmus
+@@ -23,6 +23,7 @@ P0(int *x, int *y, int *z)
+ P1(int *x, int *y, int *z)
+ {
+ 	int r0;
++	int r1;
+ 
+ 	WRITE_ONCE(*y, 1);
+ 	r1 = cmpxchg(z, 1, 0);
+diff --git a/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-2.litmus b/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-2.litmus
+index a245bac55b578..61aab24a4a643 100644
+--- a/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-2.litmus
++++ b/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-2.litmus
+@@ -12,7 +12,6 @@ C cmpxchg-fail-unordered-2
+ 
+ P0(int *x, int *y)
+ {
+-	int r0;
+ 	int r1;
+ 
+ 	WRITE_ONCE(*x, 1);
+@@ -21,7 +20,8 @@ P0(int *x, int *y)
+ 
+ P1(int *x, int *y)
+ {
+-	int r0;
++	int r1;
++	int r2;
+ 
+ 	r1 = cmpxchg(y, 0, 1);
+ 	r2 = READ_ONCE(*x);
+-- 
+2.40.1
 
-2.	Documentation/litmus-tests: Demonstrate unordered failing cmpxchg.
-
-3.	Documentation/atomic_t: Emphasize that failed atomic operations
-	give no ordering.
-
-4.	Documentation/litmus-tests: Make cmpxchg() tests safe for klitmus.
-
-Changes since V1:
-
-o	Apply formatting feedback from Andrea Parri
-
-o	Add patch 4 that makes tests safe for klitmus, also based on
-	feedback from Andrea Parri.
-
-						Thanx, Paul
-
-------------------------------------------------------------------------
-
- Documentation/litmus-tests/README                                   |   16 ++++
- Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-1.litmus     |    1 
- Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-2.litmus     |    4 -
- Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-1.litmus   |    1 
- Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-2.litmus   |    4 -
- b/Documentation/atomic_t.txt                                        |    4 -
- b/Documentation/litmus-tests/README                                 |   29 ++++++++
- b/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-1.litmus   |   34 ++++++++++
- b/Documentation/litmus-tests/atomic/cmpxchg-fail-ordered-2.litmus   |   30 ++++++++
- b/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-1.litmus |   33 +++++++++
- b/Documentation/litmus-tests/atomic/cmpxchg-fail-unordered-2.litmus |   30 ++++++++
- 11 files changed, 180 insertions(+), 6 deletions(-)
