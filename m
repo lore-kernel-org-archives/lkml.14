@@ -1,459 +1,120 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FA8130E4D
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB4B12FF8E;
+	Wed,  1 May 2024 15:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714578223; cv=none; b=MJXVAoQrKmmbgrOPOFYOdf68sWutKqRe9pbpVKTWvIBEPRfUFXVv8lN1rXTnFxPdeRAXx6KzJWs6KEco8hQz6Pt7V8g0H6NfqfhIt+oyObfKzu3fhJmXApUN2WX5UcbNTIiPUEWSRmYZ3tJDgG3ea7/fYYr+sMcdQOZiSDq5N0E=
+	t=1714578227; cv=none; b=nAXp5gt+KlHUTOXy00nLml/J13ccPnJjdjZUw/rKxWMIfO3yHiB4Jm7MrNQ93c9XWn37bViELOUpZCZyytdo0MXRb7IVfW7CKNdr8ZYjRZx3jsUvV9XrDx0/h6DUb5RsLYylJVitEghuLFRJ9z7gSkzhsDb17WBHspFpYg9wO4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714578223; c=relaxed/simple;
-	bh=0wKI+NgFM1hHSxJbYVlPk+B+xx3/nuDZsUbQ3MsAPtU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LtXJDPD+9yduxfKKwwWTeeQlwdRloZhpdFdk665g9rlUoMv4/tPpYV4jnMI9MKbI+sHAT8l+kcogs1+x1TeeGozEbRBbaL219uS3i3xxg3UEpp9sV9FRNT72YR0ISG4PFusVq5IekJlF6ZdW9KQ6PU4s+DZce9JYIg/i897mXNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e6f1szUu; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714578227; c=relaxed/simple;
+	bh=+j1MhO27oq6Z2k/UMaKrknwIvc97IqQ6TsLfVDaEsVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qyqHUn9/qS8y2+Uy3jGPXY7m39VXKdc5UARjtyhMiDpzOr4jLMLC52AG6JiStD/kdGgErik428W3Jnn7MhiReOiH+zlYHXPtm2XFQTrWz0K4XkXWwam/w+b1kbercJtTYrPDLTFdJXFeAVXoPMkyQFwUPdSgKRi+ARM10yfrxbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JA9s74oB; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e6f1szUu"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f42924ca64so345468b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 08:43:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JA9s74oB"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6eb93ec8804so3900805a34.2;
+        Wed, 01 May 2024 08:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714578221; x=1715183021; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mjz922Yx5vd28soPAvot2ebeUZc5ZGx+3GQDaKYVgII=;
-        b=e6f1szUucwAcs2X4XOND2UwGcuJ6u2YWU8kT1nmdPKzBzd2KGUs4n1k6T2l2u56GtW
-         6yoN1GZgd3mY88ORCnfAy6aj9nn1V9aP5i6h8vZcKcXXulM20E7g/c3r5vhHo/AtMJA7
-         dcQcM7CLYYHJ/7YBB6nVaB5zeeEATlUSW/NEo=
+        d=gmail.com; s=20230601; t=1714578225; x=1715183025; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WYyt1RBKP+5wqyIqwmy5cnYZMq9VEpLdANc4tFv/eOc=;
+        b=JA9s74oBcNhi3U2CLmWURFd2W5GdVotI852dwp5wy4qkLb9GyiWPWdpugf7kz7MW6E
+         uKZWDIiY0JEnRDSOqLvnNbiKOVGX9Cay0hMMkXh6CCX1JSkpSBvvXppcQMyUvVnAgt27
+         1At1IHqX60vNNwkGVfooe7HYdNu06bt0lKLKpxXhk0JsuAYDnshjylmagbYVcYr063kh
+         Eu0u4Lgl7kSgj5vpE+460LrdweO8fEAhZObQ8YQf82nENILEgeorKAKkBb+oe/sCSWic
+         i+yebGfIl0n05zCGgeH3lWtlqq1dmKJUHc5/Z+6NZFS5asC9A9AtlAoTGuzxL1H4NDg0
+         3dHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714578221; x=1715183021;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mjz922Yx5vd28soPAvot2ebeUZc5ZGx+3GQDaKYVgII=;
-        b=NlYf1qxvyHvxbhai5fMq/JWYbo9EF/tJSC23XnDTgRJhhvijBJGrl6jpeNipdXPOCt
-         esBcH221BmM93fXFzc5XXxoer4g2BFtgqO/AoQe9taD59omkB6MJ7LrUf8OiZL0aX1Gb
-         3Hfh/rRq9VI0XCm/xMWlAs1szZShSM/ZHjlIE7GnNGyhV8V9qCtD9x3WAYUp6RJDoDYn
-         NGttCTAhtYR9RnZEOiKLRz037rSHfd6beaU9WGNj5KSDIgnvyNSKG3oC7QcmgkLi47wh
-         UhngUNWl1KZR3AsP6oWKJ7328Z8DVmoOTsNMEToCYeTqnre7mm2o5seSIpQUNOSeSgHU
-         K8ww==
-X-Forwarded-Encrypted: i=1; AJvYcCUaYwhF7IVC4AluQ9Tq5lcAMgtPGBWKrZYPH17ngyNArCmCDvIU/lDK/ye9ecXDYCR+tzCTKvWt6GZ7yoplj61F5xfakVR1Z3rWn9lz
-X-Gm-Message-State: AOJu0YxBkWUCTuKk0uW9k6TOQcSp9DU0xby7yRqtqHFhBplYpVKB7eVD
-	6S/VlyERWP/Nl/cS6USX5rgF91OGUXlT4cWwXn9tyzD9LlsX9BQmCY3SCAhvTQ==
-X-Google-Smtp-Source: AGHT+IEHeLEITUU004rvZx74fOVPzAY2uMYKY8Nu4TFH8gCms1NPOEL4YF9YPb88mgfeem2e+zk3Ew==
-X-Received: by 2002:a05:6a00:21cb:b0:6f3:b041:716d with SMTP id t11-20020a056a0021cb00b006f3b041716dmr3655827pfj.17.1714578221043;
-        Wed, 01 May 2024 08:43:41 -0700 (PDT)
-Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:e886:8de:19a2:55b0])
-        by smtp.gmail.com with ESMTPSA id fb12-20020a056a002d8c00b006f3ec69bc09sm7717924pfb.75.2024.05.01.08.43.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 08:43:40 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
-	Hsin-Yi Wang <hsinyi@google.com>,
-	Brian Norris <briannorris@chromium.org>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Joel Selvaraj <jo@jsfamily.in>,
-	lvzhaoxiong@huaqin.corp-partner.google.com,
-	Douglas Anderson <dianders@chromium.org>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 9/9] drm/panel: innolux-p079zca: Don't use a table for initting panels
-Date: Wed,  1 May 2024 08:41:12 -0700
-Message-ID: <20240501084109.v3.9.I947e28c81f9ef7dcd3add6e193be72d6f8ea086f@changeid>
-X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
-In-Reply-To: <20240501154251.3302887-1-dianders@chromium.org>
-References: <20240501154251.3302887-1-dianders@chromium.org>
+        d=1e100.net; s=20230601; t=1714578225; x=1715183025;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WYyt1RBKP+5wqyIqwmy5cnYZMq9VEpLdANc4tFv/eOc=;
+        b=M4KFwDFTu3QR1CL34FJwpH9nEk0kFOh3OdR2ET/unwrX7l0QXyXhLRQuLg+DcSrAkD
+         N5cNSFttCQa+8G6c/5CLMUkPZNbnT4ifHjfh73BJRBpYyO3KBaqp+b7Ze5hzkupiLvUx
+         r88IuXJ1OjMkLPW2ucz0peWrpnHYLnYLOZpRUqXj/LHg1amn6RGoVkImCQUSWovOXAhT
+         HFSjYuabt9el7zl+u5FSTae1m2tGWsGvyl1xiSCVQqqbs3ryFwmfGYEgUUaaeLNTF4aW
+         9Woyc+A5eVLSnnPSynau7AWGkAbbnVluqf0MY9EaVQ3iCXof9Q+fZUIHeVcf2dHuz3Oq
+         B4Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXZc/zJJK20mf4MAOolUl5RGUabcWO/oQ81cA7hQILnu0xzRammqSu71FsJCElrLt6nih/h0FVtdrl+ZjbElCF/w84Hw2efCN5kbMBWZ9uphC1bKzZhquaEsWmgQ2PLxfwIEGBPjvwJxlvppwhKwQwEIEeDUdiMKZDYrO7KGgto79QXfDvCHfqdrxQ3njUpvZz8sDGLSVY40R5D4EnIl3vi9+8gQr/7H7Vjsxh8ZCOWpR5YKUQBOSX2wxh2uck=
+X-Gm-Message-State: AOJu0YxBxuSGh2DEyXATfYyi8wVS9hwPlWTl3Qzi644LVcoTx96tiHZh
+	2NHrzS4tIIvIC/idCnjUAoAfgGp4zvUBDpdkbP3m8rJDbvzCNHw2
+X-Google-Smtp-Source: AGHT+IEVAUBi8gaQAQaPiF+BdK+POH9BTZIvS3fio856v721oE2NZNnhywEs1M2R3KrsTS8RWdtRpg==
+X-Received: by 2002:a05:6830:1284:b0:6ef:a0a4:b601 with SMTP id z4-20020a056830128400b006efa0a4b601mr1830971otp.36.1714578225542;
+        Wed, 01 May 2024 08:43:45 -0700 (PDT)
+Received: from [192.168.7.169] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
+        by smtp.gmail.com with ESMTPSA id fc12-20020a056830498c00b006ee0d82d41dsm1595872otb.71.2024.05.01.08.43.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 May 2024 08:43:45 -0700 (PDT)
+Message-ID: <f7176c82-3702-4667-b68b-a8b7e3ad8690@gmail.com>
+Date: Wed, 1 May 2024 10:43:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 RESEND 5/8] PCI: qcom: Add support for IPQ9574
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-clk@vger.kernel.org
+References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
+ <20240501042847.1545145-6-mr.nuke.me@gmail.com>
+ <a973f67b-de7f-4e21-b6b4-3b85d056456d@kernel.org>
+Content-Language: en-US
+From: mr.nuke.me@gmail.com
+In-Reply-To: <a973f67b-de7f-4e21-b6b4-3b85d056456d@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Consensus on the mailing lists is that panels shouldn't use a table of
-init commands but should instead use init functions. We'll use the
-same concepts as the recently introduced
-mipi_dsi_generic_write_seq_multi() to make this clean/easy and also
-not bloat the driver too much. Measuring before/after this change:
+On 5/1/24 5:21 AM, Krzysztof Kozlowski wrote:
+> On 01/05/2024 06:28, Alexandru Gagniuc wrote:
+>> IPQ9574 has four PCIe controllers: two single-lane Gen3, and two
+>> dual-lane Gen3. The controllers are identical from a software
+>> perspective, with the differences appearing in the PHYs.
+>>
+>> Add a compatible for the PCIe on IPQ9574.
+> 
+> This is a friendly reminder during the review process.
+> 
+> It looks like you received a tag and forgot to add it.
+> 
+> If you do not know the process, here is a short explanation:
+> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+> versions, under or above your Signed-off-by tag. Tag is "received", when
+> provided in a message replied to you on the mailing list. Tools like b4
+> can help here. However, there's no need to repost patches *only* to add
+> the tags. The upstream maintainer will do that for tags received on the
+> version they apply.
+> 
+> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
-$ scripts/bloat-o-meter \
-  .../before/panel-innolux-p079zca.ko \
-  .../after/panel-innolux-p079zca.ko
-add/remove: 3/2 grow/shrink: 0/1 up/down: 2356/-1944 (412)
-Function                                     old     new   delta
-innolux_p097pfg_init                           -    1772   +1772
-innolux_p097pfg_init.d                         -     480    +480
-innolux_panel_write_multi                      -     104    +104
-innolux_panel_prepare                        412     308    -104
-.compoundliteral                             480       -    -480
-innolux_p097pfg_init_cmds                   1360       -   -1360
-Total: Before=5802, After=6214, chg +7.10%
+I had an Acked-by tag from Rob for what is now patch 6/8 -- previously 
+5/7. Due to last-minute info from QUIC Inc, Dmitry and I decided to move 
+the "snoc" and "anoc" clocks out of the PHY and to the PCIe controller.
 
-Note that, unlike some other drivers, we actually make this panel
-driver _bigger_ by using the new functions. This is because the
-innolux-p079zca panel driver didn't have as complex of a table and
-thus the old table was more efficient than the code. The bloat is
-still not giant (only 412 bytes).
+This change resulted in a 6/8 patch that is substantially different from 
+what Rob acked. I felt it was inappropriate to keep the tag.
 
-Also note that we can't direclty use
-mipi_dsi_generic_write_seq_multi() here because we need to deal with
-the crazy "nop" that this driver sends after all commands. This means
-that we have to write code that is "inspired" by the new macros.
-
-Since we're touching all the tables, let's also convert hex numbers to
-lower case as per kernel conventions.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v3:
-- New
-
- drivers/gpu/drm/panel/panel-innolux-p079zca.c | 284 +++++++++---------
- 1 file changed, 139 insertions(+), 145 deletions(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-innolux-p079zca.c b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
-index 485178a99910..18ab7d9f160c 100644
---- a/drivers/gpu/drm/panel/panel-innolux-p079zca.c
-+++ b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
-@@ -17,14 +17,7 @@
- #include <drm/drm_modes.h>
- #include <drm/drm_panel.h>
- 
--struct panel_init_cmd {
--	size_t len;
--	const char *data;
--};
--
--#define _INIT_CMD(...) { \
--	.len = sizeof((char[]){__VA_ARGS__}), \
--	.data = (char[]){__VA_ARGS__} }
-+struct innolux_panel;
- 
- struct panel_desc {
- 	const struct drm_display_mode *mode;
-@@ -36,7 +29,7 @@ struct panel_desc {
- 
- 	unsigned long flags;
- 	enum mipi_dsi_pixel_format format;
--	const struct panel_init_cmd *init_cmds;
-+	int (*init)(struct innolux_panel *innolux);
- 	unsigned int lanes;
- 	const char * const *supply_names;
- 	unsigned int num_supplies;
-@@ -132,33 +125,9 @@ static int innolux_panel_prepare(struct drm_panel *panel)
- 	/* p079zca: t4, p097pfg: t5 */
- 	usleep_range(20000, 21000);
- 
--	if (innolux->desc->init_cmds) {
--		const struct panel_init_cmd *cmds =
--					innolux->desc->init_cmds;
--		unsigned int i;
--
--		for (i = 0; cmds[i].len != 0; i++) {
--			const struct panel_init_cmd *cmd = &cmds[i];
--
--			err = mipi_dsi_generic_write(innolux->link, cmd->data,
--						     cmd->len);
--			if (err < 0) {
--				dev_err(panel->dev, "failed to write command %u\n", i);
--				goto poweroff;
--			}
--
--			/*
--			 * Included by random guessing, because without this
--			 * (or at least, some delay), the panel sometimes
--			 * didn't appear to pick up the command sequence.
--			 */
--			err = mipi_dsi_dcs_nop(innolux->link);
--			if (err < 0) {
--				dev_err(panel->dev, "failed to send DCS nop: %d\n", err);
--				goto poweroff;
--			}
--		}
--	}
-+	err = innolux->desc->init(innolux);
-+	if (err < 0)
-+		goto poweroff;
- 
- 	err = mipi_dsi_dcs_exit_sleep_mode(innolux->link);
- 	if (err < 0) {
-@@ -250,119 +219,144 @@ static const struct drm_display_mode innolux_p097pfg_mode = {
- 	.vtotal = 2048 + 100 + 2 + 18,
- };
- 
-+static void innolux_panel_write_multi(struct mipi_dsi_multi_context *ctx,
-+				      const void *payload, size_t size)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct device *dev = &dsi->dev;
-+
-+	mipi_dsi_generic_write_multi(ctx, payload, size);
-+	if (ctx->accum_err)
-+		return;
-+
-+	/*
-+	 * Included by random guessing, because without this
-+	 * (or at least, some delay), the panel sometimes
-+	 * didn't appear to pick up the command sequence.
-+	 */
-+	ctx->accum_err = mipi_dsi_dcs_nop(ctx->dsi);
-+	if (ctx->accum_err)
-+		dev_err(dev, "failed to send DCS nop: %d\n", ctx->accum_err);
-+}
-+
-+#define innolux_panel_init_cmd_multi(ctx, seq...)                 \
-+	do {                                                      \
-+		static const u8 d[] = { seq };                    \
-+		innolux_panel_write_multi(ctx, d, ARRAY_SIZE(d)); \
-+	} while (0)
-+
-+#define innolux_panel_switch_page(ctx, page) \
-+	innolux_panel_init_cmd_multi(ctx, 0xf0, 0x55, 0xaa, 0x52, 0x08, (page))
-+
- /*
-  * Display manufacturer failed to provide init sequencing according to
-  * https://chromium-review.googlesource.com/c/chromiumos/third_party/coreboot/+/892065/
-  * so the init sequence stems from a register dump of a working panel.
-  */
--static const struct panel_init_cmd innolux_p097pfg_init_cmds[] = {
--	/* page 0 */
--	_INIT_CMD(0xF0, 0x55, 0xAA, 0x52, 0x08, 0x00),
--	_INIT_CMD(0xB1, 0xE8, 0x11),
--	_INIT_CMD(0xB2, 0x25, 0x02),
--	_INIT_CMD(0xB5, 0x08, 0x00),
--	_INIT_CMD(0xBC, 0x0F, 0x00),
--	_INIT_CMD(0xB8, 0x03, 0x06, 0x00, 0x00),
--	_INIT_CMD(0xBD, 0x01, 0x90, 0x14, 0x14),
--	_INIT_CMD(0x6F, 0x01),
--	_INIT_CMD(0xC0, 0x03),
--	_INIT_CMD(0x6F, 0x02),
--	_INIT_CMD(0xC1, 0x0D),
--	_INIT_CMD(0xD9, 0x01, 0x09, 0x70),
--	_INIT_CMD(0xC5, 0x12, 0x21, 0x00),
--	_INIT_CMD(0xBB, 0x93, 0x93),
--
--	/* page 1 */
--	_INIT_CMD(0xF0, 0x55, 0xAA, 0x52, 0x08, 0x01),
--	_INIT_CMD(0xB3, 0x3C, 0x3C),
--	_INIT_CMD(0xB4, 0x0F, 0x0F),
--	_INIT_CMD(0xB9, 0x45, 0x45),
--	_INIT_CMD(0xBA, 0x14, 0x14),
--	_INIT_CMD(0xCA, 0x02),
--	_INIT_CMD(0xCE, 0x04),
--	_INIT_CMD(0xC3, 0x9B, 0x9B),
--	_INIT_CMD(0xD8, 0xC0, 0x03),
--	_INIT_CMD(0xBC, 0x82, 0x01),
--	_INIT_CMD(0xBD, 0x9E, 0x01),
--
--	/* page 2 */
--	_INIT_CMD(0xF0, 0x55, 0xAA, 0x52, 0x08, 0x02),
--	_INIT_CMD(0xB0, 0x82),
--	_INIT_CMD(0xD1, 0x00, 0x00, 0x00, 0x3E, 0x00, 0x82, 0x00, 0xA5,
--		  0x00, 0xC1, 0x00, 0xEA, 0x01, 0x0D, 0x01, 0x40),
--	_INIT_CMD(0xD2, 0x01, 0x6A, 0x01, 0xA8, 0x01, 0xDC, 0x02, 0x29,
--		  0x02, 0x67, 0x02, 0x68, 0x02, 0xA8, 0x02, 0xF0),
--	_INIT_CMD(0xD3, 0x03, 0x19, 0x03, 0x49, 0x03, 0x67, 0x03, 0x8C,
--		  0x03, 0xA6, 0x03, 0xC7, 0x03, 0xDE, 0x03, 0xEC),
--	_INIT_CMD(0xD4, 0x03, 0xFF, 0x03, 0xFF),
--	_INIT_CMD(0xE0, 0x00, 0x00, 0x00, 0x86, 0x00, 0xC5, 0x00, 0xE5,
--		  0x00, 0xFF, 0x01, 0x26, 0x01, 0x45, 0x01, 0x75),
--	_INIT_CMD(0xE1, 0x01, 0x9C, 0x01, 0xD5, 0x02, 0x05, 0x02, 0x4D,
--		  0x02, 0x86, 0x02, 0x87, 0x02, 0xC3, 0x03, 0x03),
--	_INIT_CMD(0xE2, 0x03, 0x2A, 0x03, 0x56, 0x03, 0x72, 0x03, 0x94,
--		  0x03, 0xAC, 0x03, 0xCB, 0x03, 0xE0, 0x03, 0xED),
--	_INIT_CMD(0xE3, 0x03, 0xFF, 0x03, 0xFF),
--
--	/* page 3 */
--	_INIT_CMD(0xF0, 0x55, 0xAA, 0x52, 0x08, 0x03),
--	_INIT_CMD(0xB0, 0x00, 0x00, 0x00, 0x00),
--	_INIT_CMD(0xB1, 0x00, 0x00, 0x00, 0x00),
--	_INIT_CMD(0xB2, 0x00, 0x00, 0x06, 0x04, 0x01, 0x40, 0x85),
--	_INIT_CMD(0xB3, 0x10, 0x07, 0xFC, 0x04, 0x01, 0x40, 0x80),
--	_INIT_CMD(0xB6, 0xF0, 0x08, 0x00, 0x04, 0x00, 0x00, 0x00, 0x01,
--		  0x40, 0x80),
--	_INIT_CMD(0xBA, 0xC5, 0x07, 0x00, 0x04, 0x11, 0x25, 0x8C),
--	_INIT_CMD(0xBB, 0xC5, 0x07, 0x00, 0x03, 0x11, 0x25, 0x8C),
--	_INIT_CMD(0xC0, 0x00, 0x3C, 0x00, 0x00, 0x00, 0x80, 0x80),
--	_INIT_CMD(0xC1, 0x00, 0x3C, 0x00, 0x00, 0x00, 0x80, 0x80),
--	_INIT_CMD(0xC4, 0x00, 0x00),
--	_INIT_CMD(0xEF, 0x41),
--
--	/* page 4 */
--	_INIT_CMD(0xF0, 0x55, 0xAA, 0x52, 0x08, 0x04),
--	_INIT_CMD(0xEC, 0x4C),
--
--	/* page 5 */
--	_INIT_CMD(0xF0, 0x55, 0xAA, 0x52, 0x08, 0x05),
--	_INIT_CMD(0xB0, 0x13, 0x03, 0x03, 0x01),
--	_INIT_CMD(0xB1, 0x30, 0x00),
--	_INIT_CMD(0xB2, 0x02, 0x02, 0x00),
--	_INIT_CMD(0xB3, 0x82, 0x23, 0x82, 0x9D),
--	_INIT_CMD(0xB4, 0xC5, 0x75, 0x24, 0x57),
--	_INIT_CMD(0xB5, 0x00, 0xD4, 0x72, 0x11, 0x11, 0xAB, 0x0A),
--	_INIT_CMD(0xB6, 0x00, 0x00, 0xD5, 0x72, 0x24, 0x56),
--	_INIT_CMD(0xB7, 0x5C, 0xDC, 0x5C, 0x5C),
--	_INIT_CMD(0xB9, 0x0C, 0x00, 0x00, 0x01, 0x00),
--	_INIT_CMD(0xC0, 0x75, 0x11, 0x11, 0x54, 0x05),
--	_INIT_CMD(0xC6, 0x00, 0x00, 0x00, 0x00),
--	_INIT_CMD(0xD0, 0x00, 0x48, 0x08, 0x00, 0x00),
--	_INIT_CMD(0xD1, 0x00, 0x48, 0x09, 0x00, 0x00),
--
--	/* page 6 */
--	_INIT_CMD(0xF0, 0x55, 0xAA, 0x52, 0x08, 0x06),
--	_INIT_CMD(0xB0, 0x02, 0x32, 0x32, 0x08, 0x2F),
--	_INIT_CMD(0xB1, 0x2E, 0x15, 0x14, 0x13, 0x12),
--	_INIT_CMD(0xB2, 0x11, 0x10, 0x00, 0x3D, 0x3D),
--	_INIT_CMD(0xB3, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D),
--	_INIT_CMD(0xB4, 0x3D, 0x32),
--	_INIT_CMD(0xB5, 0x03, 0x32, 0x32, 0x09, 0x2F),
--	_INIT_CMD(0xB6, 0x2E, 0x1B, 0x1A, 0x19, 0x18),
--	_INIT_CMD(0xB7, 0x17, 0x16, 0x01, 0x3D, 0x3D),
--	_INIT_CMD(0xB8, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D),
--	_INIT_CMD(0xB9, 0x3D, 0x32),
--	_INIT_CMD(0xC0, 0x01, 0x32, 0x32, 0x09, 0x2F),
--	_INIT_CMD(0xC1, 0x2E, 0x1A, 0x1B, 0x16, 0x17),
--	_INIT_CMD(0xC2, 0x18, 0x19, 0x03, 0x3D, 0x3D),
--	_INIT_CMD(0xC3, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D),
--	_INIT_CMD(0xC4, 0x3D, 0x32),
--	_INIT_CMD(0xC5, 0x00, 0x32, 0x32, 0x08, 0x2F),
--	_INIT_CMD(0xC6, 0x2E, 0x14, 0x15, 0x10, 0x11),
--	_INIT_CMD(0xC7, 0x12, 0x13, 0x02, 0x3D, 0x3D),
--	_INIT_CMD(0xC8, 0x3D, 0x3D, 0x3D, 0x3D, 0x3D),
--	_INIT_CMD(0xC9, 0x3D, 0x32),
--
--	{},
--};
-+static int innolux_p097pfg_init(struct innolux_panel *innolux)
-+{
-+	struct mipi_dsi_multi_context ctx = { .dsi = innolux->link };
-+
-+	innolux_panel_switch_page(&ctx, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb1, 0xe8, 0x11);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb2, 0x25, 0x02);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb5, 0x08, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xbc, 0x0f, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb8, 0x03, 0x06, 0x00, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xbd, 0x01, 0x90, 0x14, 0x14);
-+	innolux_panel_init_cmd_multi(&ctx, 0x6f, 0x01);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc0, 0x03);
-+	innolux_panel_init_cmd_multi(&ctx, 0x6f, 0x02);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc1, 0x0d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xd9, 0x01, 0x09, 0x70);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc5, 0x12, 0x21, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xbb, 0x93, 0x93);
-+
-+	innolux_panel_switch_page(&ctx, 0x01);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb3, 0x3c, 0x3c);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb4, 0x0f, 0x0f);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb9, 0x45, 0x45);
-+	innolux_panel_init_cmd_multi(&ctx, 0xba, 0x14, 0x14);
-+	innolux_panel_init_cmd_multi(&ctx, 0xca, 0x02);
-+	innolux_panel_init_cmd_multi(&ctx, 0xce, 0x04);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc3, 0x9b, 0x9b);
-+	innolux_panel_init_cmd_multi(&ctx, 0xd8, 0xc0, 0x03);
-+	innolux_panel_init_cmd_multi(&ctx, 0xbc, 0x82, 0x01);
-+	innolux_panel_init_cmd_multi(&ctx, 0xbd, 0x9e, 0x01);
-+
-+	innolux_panel_switch_page(&ctx, 0x02);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb0, 0x82);
-+	innolux_panel_init_cmd_multi(&ctx, 0xd1, 0x00, 0x00, 0x00, 0x3e, 0x00, 0x82, 0x00, 0xa5,
-+				     0x00, 0xc1, 0x00, 0xea, 0x01, 0x0d, 0x01, 0x40);
-+	innolux_panel_init_cmd_multi(&ctx, 0xd2, 0x01, 0x6a, 0x01, 0xa8, 0x01, 0xdc, 0x02, 0x29,
-+				     0x02, 0x67, 0x02, 0x68, 0x02, 0xa8, 0x02, 0xf0);
-+	innolux_panel_init_cmd_multi(&ctx, 0xd3, 0x03, 0x19, 0x03, 0x49, 0x03, 0x67, 0x03, 0x8c,
-+				     0x03, 0xa6, 0x03, 0xc7, 0x03, 0xde, 0x03, 0xec);
-+	innolux_panel_init_cmd_multi(&ctx, 0xd4, 0x03, 0xff, 0x03, 0xff);
-+	innolux_panel_init_cmd_multi(&ctx, 0xe0, 0x00, 0x00, 0x00, 0x86, 0x00, 0xc5, 0x00, 0xe5,
-+				     0x00, 0xff, 0x01, 0x26, 0x01, 0x45, 0x01, 0x75);
-+	innolux_panel_init_cmd_multi(&ctx, 0xe1, 0x01, 0x9c, 0x01, 0xd5, 0x02, 0x05, 0x02, 0x4d,
-+				     0x02, 0x86, 0x02, 0x87, 0x02, 0xc3, 0x03, 0x03);
-+	innolux_panel_init_cmd_multi(&ctx, 0xe2, 0x03, 0x2a, 0x03, 0x56, 0x03, 0x72, 0x03, 0x94,
-+				     0x03, 0xac, 0x03, 0xcb, 0x03, 0xe0, 0x03, 0xed);
-+	innolux_panel_init_cmd_multi(&ctx, 0xe3, 0x03, 0xff, 0x03, 0xff);
-+
-+	innolux_panel_switch_page(&ctx, 0x03);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb0, 0x00, 0x00, 0x00, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb1, 0x00, 0x00, 0x00, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb2, 0x00, 0x00, 0x06, 0x04, 0x01, 0x40, 0x85);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb3, 0x10, 0x07, 0xfc, 0x04, 0x01, 0x40, 0x80);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb6, 0xf0, 0x08, 0x00, 0x04, 0x00, 0x00, 0x00, 0x01,
-+				     0x40, 0x80);
-+	innolux_panel_init_cmd_multi(&ctx, 0xba, 0xc5, 0x07, 0x00, 0x04, 0x11, 0x25, 0x8c);
-+	innolux_panel_init_cmd_multi(&ctx, 0xbb, 0xc5, 0x07, 0x00, 0x03, 0x11, 0x25, 0x8c);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc0, 0x00, 0x3c, 0x00, 0x00, 0x00, 0x80, 0x80);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc1, 0x00, 0x3c, 0x00, 0x00, 0x00, 0x80, 0x80);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc4, 0x00, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xef, 0x41);
-+
-+	innolux_panel_switch_page(&ctx, 0x04);
-+	innolux_panel_init_cmd_multi(&ctx, 0xec, 0x4c);
-+
-+	innolux_panel_switch_page(&ctx, 0x05);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb0, 0x13, 0x03, 0x03, 0x01);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb1, 0x30, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb2, 0x02, 0x02, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb3, 0x82, 0x23, 0x82, 0x9d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb4, 0xc5, 0x75, 0x24, 0x57);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb5, 0x00, 0xd4, 0x72, 0x11, 0x11, 0xab, 0x0a);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb6, 0x00, 0x00, 0xd5, 0x72, 0x24, 0x56);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb7, 0x5c, 0xdc, 0x5c, 0x5c);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb9, 0x0c, 0x00, 0x00, 0x01, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc0, 0x75, 0x11, 0x11, 0x54, 0x05);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc6, 0x00, 0x00, 0x00, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xd0, 0x00, 0x48, 0x08, 0x00, 0x00);
-+	innolux_panel_init_cmd_multi(&ctx, 0xd1, 0x00, 0x48, 0x09, 0x00, 0x00);
-+
-+	innolux_panel_switch_page(&ctx, 0x06);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb0, 0x02, 0x32, 0x32, 0x08, 0x2f);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb1, 0x2e, 0x15, 0x14, 0x13, 0x12);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb2, 0x11, 0x10, 0x00, 0x3d, 0x3d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb3, 0x3d, 0x3d, 0x3d, 0x3d, 0x3d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb4, 0x3d, 0x32);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb5, 0x03, 0x32, 0x32, 0x09, 0x2f);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb6, 0x2e, 0x1b, 0x1a, 0x19, 0x18);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb7, 0x17, 0x16, 0x01, 0x3d, 0x3d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb8, 0x3d, 0x3d, 0x3d, 0x3d, 0x3d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xb9, 0x3d, 0x32);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc0, 0x01, 0x32, 0x32, 0x09, 0x2f);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc1, 0x2e, 0x1a, 0x1b, 0x16, 0x17);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc2, 0x18, 0x19, 0x03, 0x3d, 0x3d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc3, 0x3d, 0x3d, 0x3d, 0x3d, 0x3d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc4, 0x3d, 0x32);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc5, 0x00, 0x32, 0x32, 0x08, 0x2f);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc6, 0x2e, 0x14, 0x15, 0x10, 0x11);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc7, 0x12, 0x13, 0x02, 0x3d, 0x3d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc8, 0x3d, 0x3d, 0x3d, 0x3d, 0x3d);
-+	innolux_panel_init_cmd_multi(&ctx, 0xc9, 0x3d, 0x32);
-+
-+	return ctx.accum_err;
-+}
- 
- static const struct panel_desc innolux_p097pfg_panel_desc = {
- 	.mode = &innolux_p097pfg_mode,
-@@ -374,7 +368,7 @@ static const struct panel_desc innolux_p097pfg_panel_desc = {
- 	.flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
- 		 MIPI_DSI_MODE_LPM,
- 	.format = MIPI_DSI_FMT_RGB888,
--	.init_cmds = innolux_p097pfg_init_cmds,
-+	.init = innolux_p097pfg_init,
- 	.lanes = 4,
- 	.supply_names = innolux_p097pfg_supply_names,
- 	.num_supplies = ARRAY_SIZE(innolux_p097pfg_supply_names),
--- 
-2.45.0.rc0.197.gbae5840b3b-goog
-
+Alex
