@@ -1,76 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E41168B04;
-	Wed,  1 May 2024 20:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F26A1635BD
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 20:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714594866; cv=none; b=J77AXw+L2HXB6ohTDh+k58wdhW2SAoIXvWwkvwvgfJSnypkDXUh26gwWAAjB+0YBIjKtgu2osGKbhLgxn9w1YnHYK+dc9zkvMXJzKH1MiFbwwabgQ9iKkp6BDFbPjvyrJOOADIzdi56OJRzIU191bm9t5fUvf+ZEs+XhiopcOyI=
+	t=1714594905; cv=none; b=ETVEUMVOnBirH1e/KrKih2nK+as/abk6KX4aIfduGLwNgIyIbiWOOe3qQ8xdDwof/xn2vfE9s+X5VJhqIxZ1FX0o02mZG8ljhZpF2DnvHro5/38ddd4lft6FtgMMRR8EmDDWYBFe6UGfRyYZfwtLx1hiBhNuKzxuBjBmauHuA34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714594866; c=relaxed/simple;
-	bh=NQYZ4dGnOZ9iIvBhWfBi27FrCCyqWbFbUxOkNGUQKd0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HulctSlb5/GoC7Ym2Aq8VaCXh+BMfJcYh2ayhspijH9FLgc83lG2QkDLxcjbiuchs4y0fS/FxzNSSmBpL1pEpzubP8RjiRR5nyLPQsA2rWrFmmzbJMwVa0uXs/avpYPBs0oW0UYXHLf/Dcarq16+dAZtmho42kckWLhLE2dnOf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jItkTfhx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714594905; c=relaxed/simple;
+	bh=nPUrAToma1+IWJyW4NorUHWTJxgN7XpkT+ZRrxLkDoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CaTUsDoITPL/rRo1ZgSxdqRnrW+Wc4BGzR1A1w7kB2NTrcdOq0+bg8w3zojGy2l0KTArDkoSIqb8avVdNfAKbAeFivP7MF1lYIihjqP4wo6pWdNJVbAwnymLp30KKvqIwcZjb/P0MCHsP+SuNyD4soxCYaeGa6oerBvPvVs7TLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R6lC+wyy; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jItkTfhx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FF05C32789;
-	Wed,  1 May 2024 20:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714594866;
-	bh=NQYZ4dGnOZ9iIvBhWfBi27FrCCyqWbFbUxOkNGUQKd0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jItkTfhx3akEVB+1doiYiRDYMFQNcpSlbLr176V/u1XzNd1tqKOXIKCvxgH08v9Dd
-	 X7kPAv7JfMXfJeDxB/qlHKsG6fqz9bbGhjft0k3SROIZnpVBbePHAdvtzF3IKp86ac
-	 qSMMy0IY2WnXEy+4P9r0aZ6j/6SpDMMuJXm0X+Z394XGYJzbV5qOsoFd9a5Q1AiHNz
-	 xUutua6zvjsrqif5ZenKWn4fLmyvCHo8NJIcx4S9hNd+kvYDlYfnVsOK3ya+me1wiR
-	 NDu8z1NtCuide9utMFMbRAsvxpF2UdSVnnUSzpwG6TRILW9wKom2oqt4LONnIrtmKl
-	 uEXLFCwfdOHPg==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Johan Hovold <johan@kernel.org>,
-	Krishna Kurapati <quic_kriskura@quicinc.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	quic_ppratap@quicinc.com,
-	quic_jackp@quicinc.com
-Subject: Re: (subset) [PATCH v16 0/2] Add DT support for Multiport controller on SC8280XP
-Date: Wed,  1 May 2024 15:20:56 -0500
-Message-ID: <171459484207.41039.4630873334442786752.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240429162048.2133512-1-quic_kriskura@quicinc.com>
-References: <20240429162048.2133512-1-quic_kriskura@quicinc.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R6lC+wyy"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6eddff25e4eso6137670b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 13:21:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714594903; x=1715199703; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x9pWF4P+vg6CtGHnRoqbJlxCPNRuZaXK34HOYWDy6qo=;
+        b=R6lC+wyyKGv555bfAgjGaVAhVKeXMz7DYH5NnAacO7JbE3z4cYvgn7VrA7W78G9SBC
+         S7iBlI75R5bcbxhAp/NRCcdjk5sPlNqJlXepxjuhYdqashwgMIqfeWXynm6eKpV590fm
+         yZNlK1OerSDiXNTARj6eGB6JQvl7NcJ1kAGF4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714594903; x=1715199703;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x9pWF4P+vg6CtGHnRoqbJlxCPNRuZaXK34HOYWDy6qo=;
+        b=VtdDkj3Z53dD0p+p6SLA6pJUYSeuHoFyHS8BdQtyhY4EUmMtcFaDCQyGz6hjMNxp5d
+         /UE7PNNGJXMKXqsKAC5W9WC8sJE+sE7A0bLPnfcM9NK3t7RJ+LJS67DueVbu/SgBMm1C
+         mH5JXEYgAcRLetfxWL1FZ/w2MbZyiRSkWyFvE3XAwKcwFVKHu80yRlnS9PCU5k54r+9c
+         W+6TqT7XkkjcJrDqr/5//Pm4yt248j07Dgy4PNOe4P8enl60QO3WelmMA7i7kmg8GLst
+         GikMKlrE8bJ9oD1bpv0ujkvFBwSjEvDzZ+iCaEV1bO+1i36AZfoJfc5OiGn5RFsEmriP
+         Z3sA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZIhpmKp0bHhgS4npdx7ZH69jtNHoORq1puV2JGf+vHbHPjTBHK6y2AL7S43V8LlWdW9XVqZ50CRt7G0WU60I/MamC1jXyy/f+vXtF
+X-Gm-Message-State: AOJu0YwwFQMAnVex7ILXala7WK5yYpM+fHoVdJ5229H6H97lRSItj9vO
+	AvUgbOYoLsITG5mRNv4Qbkq5LMxF7ZwHaAC2CDIt0Ef+3+NOOxyc+lvBlI5F9w==
+X-Google-Smtp-Source: AGHT+IGyvJ8Fbk39B3YR+oN/YqBuq3FvOn0WZU33SvV3xChl0KcHhy12+GnrIWpDME/qQK5QKb0o9w==
+X-Received: by 2002:a05:6a20:9f88:b0:1aa:5b05:7926 with SMTP id mm8-20020a056a209f8800b001aa5b057926mr4987182pzb.39.1714594903411;
+        Wed, 01 May 2024 13:21:43 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r13-20020aa79ecd000000b006ed045af796sm22947779pfq.88.2024.05.01.13.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 13:21:43 -0700 (PDT)
+Date: Wed, 1 May 2024 13:21:42 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <202405011317.AF41B94B@keescook>
+References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <20240430091504.GC40213@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240430091504.GC40213@noisy.programming.kicks-ass.net>
 
-
-On Mon, 29 Apr 2024 21:50:46 +0530, Krishna Kurapati wrote:
-> Series [1] introduces binding and driver support for DWC3 Multiport
-> controllers. This series adds support for tertiary controller of SC8280
-> and enabled multiport controller for SA8295P-ADP platform.
+On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
+> > This is an effort to get rid of all multiplications from allocation
+> > functions in order to prevent integer overflows [1][2].
 > 
-> Till v13 [2] the DT was pushed along with driver code. Separated the DT
-> changes from driver update and pushing it as this series. The first two
-> versions were marked as v1 and v2. Marked this as v16 to avoid missing
-> of change log till v13.
-> 
-> [...]
+> So personally I detest struct_size() because I can never remember wtf it
+> does, whereas the code it replaces is simple and straight forward :/
 
-Applied, thanks!
+Sure, new APIs can involved a learning curve. If we can all handle
+container_of(), we can deal with struct_size(). :)
 
-[1/2] arm64: dts: qcom: sc8280xp: Add USB DWC3 Multiport controller
-      commit: 3170a2c906c61407d725e9022b6225c5ff062d9f
-
-Best regards,
 -- 
-Bjorn Andersson <andersson@kernel.org>
+Kees Cook
