@@ -1,206 +1,266 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2071.outbound.protection.outlook.com [40.107.236.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEB84DA04;
-	Wed,  1 May 2024 07:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714549655; cv=fail; b=odJYA6S0HEPnmRf06M9bj4L8B80wIS4u/Brah2IyXmnIGo6iReXSREUIg1WEoKoLXa0fP1sa7njgX/TY1mOTpbJ8iOe9omgiRm9+5VAHdSymRPtf6FDFhSxhLr+ay9mRA5hjavdgMDAuZGnoQs2urTxeNij7iaC4bV1VQ3oimNg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714549655; c=relaxed/simple;
-	bh=SWNjXMUiQ4nFwytyHo3IEl8gpMql5RSwtJdgbTqfyi4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QeT6V+DkDm9LIKLLE/dkZePOum8fisqibSALHcCZfQhmai5Bl3UhbUvTPxJBfe2Hd1LZrQV4mS9sbsP7wBzcV3FJKUBX4afgNx9GKT4+TKXjNTrzHKN/sW/K7dbixkpE10MOciXNur9iBJkLBvuZZbWriPJmUt0il0A/aBWsolU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=h4UPymRT; arc=fail smtp.client-ip=40.107.236.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BBB4D9FC
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 07:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714549672; cv=none; b=oEYu6+j1B1pNTu81XNKSpqFTuSygEaptLlIncuYwJWB83jRRMI1PUziyA+DlZCkyCcX9J8tlBjUPYFlOQFZEFGMuv0HDBRko+r0izBa65fiOSLSMAMStFXc9x1C5xXqqrHnynNBm9SHQOOT5/npksU5gm0dqcodMBfKZPzdcQ/0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714549672; c=relaxed/simple;
+	bh=LbOF6ESQyMI+cFhXNr1YLTujNXRcUHACJcCpS+EKEWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UI+YncqTsMs6t1DHyLHSfiaoPLaAGoYdC/D0gew31bMaq08D69r8dF173zozqdL03Zbo/CUuiYXJHoIZkb1Ssgh4dR2/phJs9/lIxG436KTBEbrOjJKzHs2Am2cfYo3XgOboE/djdkEI1nP0uTz6cuT0dD9pxgEJ1y6H6qicA9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=1Xm9ELc7; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="h4UPymRT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DMszF3FLlATSC6frTe+TXMCtCDB1s78s3cOvR2/vVBnlItfSFVA2dxSMH27SLAMm8nWyX7NUSZ/vdK8Ok8hfBdJYh6Vs9JZIzl9kZICXA694zOIEwKKjJ3slZTc6UQIi/v83eFySD7OB5bdr/hWTmeh6mvwKm6DBGZxIwOWtNWjy1RvyUrJ/shL9DX5UPjknwy1uSIeVpxY1pcRcx2OzDU9ydP2WMl0B0IQEYezls7bvWvXjuRBRGnetiTe0+84lFU6TUVPJT2eQXE1XQ8WKzbuoGl2yLHilSc7VNBCm4EeRG1Sw8BfBjVZpLTqPHhE81d8Ts6I9vOF9NtefI0Ti3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9iPsbHUVqfnQYObn0gY0+/pNGlt+1qkXCH3qvnDFpWw=;
- b=EIPrSxv//dapJ6UYk+iYGPFZ9ECVvgbLu2I3V0CnYqXtYH6d19MlVh2zsUQAum1TZT1jPKPl1if9xcyYUONxxXQCIFbzjsOfiKdIkJMpoMD8Ow7Vn1fDP77jYuplyH/ZpWGzKWPBbh+kR8CkmUzgUiAbq1DY7RrFOMU892EL26KsXBVBf5WlLO7/oWtc/j/4ecdUfstQFK/ffN2HlEceOG9rIZkwXR0Xb+tH2el7NPA4Vs2kGBZY0LU9nFZmBGSzRLFfZy0VJyLBmK2NWZoDrYOAS4H6+0xocaPTOAD7pMgOnEIpcAjGiRctJM8fiFQ/GIHP5N7xj/WtN3yNmuJpUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9iPsbHUVqfnQYObn0gY0+/pNGlt+1qkXCH3qvnDFpWw=;
- b=h4UPymRTBoVrMvfgdEZxtmFAXdNpf9jyYNioFA8C0rEF8BV/RF9TRnvyxmSPZTcRB96NKZkew3UGw/0hGZAK8PF/8QSXPGsbF249dp1IPE4UBKwdGlRI23xo2RYyB3bDLDeOlkec7hUJUbYShSl3MKUPMj1EiMv6VF+F4wjOyl8=
-Received: from CY5PR22CA0092.namprd22.prod.outlook.com (2603:10b6:930:65::7)
- by SN7PR12MB6690.namprd12.prod.outlook.com (2603:10b6:806:272::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Wed, 1 May
- 2024 07:47:30 +0000
-Received: from CY4PEPF0000EE37.namprd05.prod.outlook.com
- (2603:10b6:930:65:cafe::7a) by CY5PR22CA0092.outlook.office365.com
- (2603:10b6:930:65::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.28 via Frontend
- Transport; Wed, 1 May 2024 07:47:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE37.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Wed, 1 May 2024 07:47:30 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 1 May
- 2024 02:47:29 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <jroedel@suse.de>, <thomas.lendacky@amd.com>,
-	<pbonzini@redhat.com>, <seanjc@google.com>, <pgonda@google.com>,
-	<ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>, <pankaj.gupta@amd.com>,
-	Brijesh Singh <brijesh.singh@amd.com>
-Subject: [PATCH 2/4] KVM: SEV: Add GHCB handling for Hypervisor Feature Support requests
-Date: Wed, 1 May 2024 02:10:46 -0500
-Message-ID: <20240501071048.2208265-3-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240501071048.2208265-1-michael.roth@amd.com>
-References: <20240501071048.2208265-1-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="1Xm9ELc7"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5ce2aada130so4540809a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 00:47:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1714549670; x=1715154470; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yxRd2H6e8mYNr1gSX+l0MwjfKp9IszVuWaKXuYO1IHo=;
+        b=1Xm9ELc7U/34BHjCnH9pkh4iYjARpv5hmdXHFFyJ6E20fXLkXw6lftd+6p9gcz5lnU
+         8r6ZwWbzjVkVfXjge1y7EEXA9FP6gpwE5EUNsxC0NU4EvzGMtQnZdYl/LD8kvE+bBSeR
+         jaf4Ow5Pp2LQ6xK/sf8QQsBO83QDfEIe5hrCNIMzQOZehJ05YVhQzMM1GagrcV/qxjeQ
+         1n7qhiBtWKOy8cpwPtATdjR3r7G7Ew5UIi0iz7+fomoWCzqdFGjuw/f3UhiY7nmlKGUV
+         JaYvA7bP7Ky8BGb+YIU1MQug0yJDx8BfeogwdAG6wZR4qKNHfmUdv/ZmKzX/9elgIPxy
+         nrPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714549670; x=1715154470;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yxRd2H6e8mYNr1gSX+l0MwjfKp9IszVuWaKXuYO1IHo=;
+        b=QGpH2qSKqTXMBdHF6DnUiJecoaBtWLQ1lQbLK1uFSU+HEJ2jN5IgnIipMTBXix7a9K
+         1wLuHFRu7MwnFcZm0eUDjtkTLLfEE6ur/NPNxWfva+r65iy06o2QQcN7T6HDyGsuPgrs
+         bHjODRtzbddKF1/ZJWnWGuNNeseP7WEOz5sOBM4e8DR34iLx03DsYA86VoOgGNiPdOom
+         mRITFw9rtW1rR+KVChFHtbumXKrB7KOa+OYF6Kzouy9U6fb6qa9RIVPLXoFpvzAX6LOh
+         aT3tQe5tvgw7lc2BtnndIRnPjzEVBKGmNqrDFqqyEuU8AqUidhgDg4fpnqabYpfIazx2
+         nj7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXezKDjILf9XbZKxtD1jBvjZuSiIH+2bwv1FQn7qgvQWlq7M2mPAvYtjgz/TFf5XYo1+ESMMiv9D3yAPeLRh9U0ITXDBwtZ4U3HQ/nA
+X-Gm-Message-State: AOJu0YyzNaxrDdF3jH6ME6LVHKeil4acg+FquFQP+SJ12xvpxLp901M2
+	qYbE7eUEnMv0ybmM629XsVh36kyoARMPXcC2cLuBcyXmmoR6BKXvlhIcIse1uxM=
+X-Google-Smtp-Source: AGHT+IHRHk+cbO0Uc//LojouzmzN7miUZLtGzemQFCemIXFiIyRsCHU84FSFC0a0Vh8aVGvtLAQz+g==
+X-Received: by 2002:a05:6a21:6d93:b0:1af:4c43:6ec9 with SMTP id wl19-20020a056a216d9300b001af4c436ec9mr2482794pzb.34.1714549670185;
+        Wed, 01 May 2024 00:47:50 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id i15-20020a170902c94f00b001eb30118300sm8446852pla.132.2024.05.01.00.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 00:47:49 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1s24gt-00H82c-0F;
+	Wed, 01 May 2024 17:47:47 +1000
+Date: Wed, 1 May 2024 17:47:47 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Ritesh Harjani <ritesh.list@gmail.com>
+Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, tytso@mit.edu,
+	adilger.kernel@dilger.ca, jack@suse.cz, hch@infradead.org,
+	djwong@kernel.org, willy@infradead.org, zokeefe@google.com,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
+	wangkefeng.wang@huawei.com
+Subject: Re: [PATCH v4 02/34] ext4: check the extent status again before
+ inserting delalloc block
+Message-ID: <ZjHzo5y0Tz+oWMbF@dread.disaster.area>
+References: <185a0d75-558e-a1ae-9415-c3eed4def60f@huaweicloud.com>
+ <87cyqcyt6t.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE37:EE_|SN7PR12MB6690:EE_
-X-MS-Office365-Filtering-Correlation-Id: ed4c0486-2ae0-40c4-37f8-08dc69b2f442
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|376005|7416005|82310400014|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZkOUr4mIdgIC8ZCNd/VafdF+FM90bq+xPZGJUZpp8F9Rwc1ykHoWAP4RI9Zm?=
- =?us-ascii?Q?XEn0bbfEZcMWAf7fBzjv83cfsP/OD0tJVy3ys0TG8rcwmqHsBQKbRjgO0bow?=
- =?us-ascii?Q?jIxBrqqiZuRRy+WAnbZMcm1NXAGJTJ2VDDG+mWYmB3onu2co7qTobU6l6qkm?=
- =?us-ascii?Q?Y6UxHZra3QxDBUv5Jf+9Pt5vcp0AbyzGAJnYvmmob1OCXSIKRX2QiWq1uENT?=
- =?us-ascii?Q?nQVTYQS5kyQNI1PukgD/we/+j0aM/QLqpFNPFyRc5mFT2xz/ZjdLk12w5r42?=
- =?us-ascii?Q?5FIvpd+RnueAfqELdHUv6O7qJPciL5zz2XicOVDtj0EFRnhCusBS7+LniFg8?=
- =?us-ascii?Q?GvRs7M0AoixdDAxOJyL2AVzSOdcvVr0KnI8Ajxfpy83VilYUd+hRFHlCfY8J?=
- =?us-ascii?Q?T2KsD4OjlIlD/LV+xQ/jTHREMFT4T7DCiJw9p7TbTxWxKr0OcqrjyLqxtEa7?=
- =?us-ascii?Q?BslQDLzSP9MVS5TFG2Zwwt19z2C9DL4Bn5VDQKBAXIBwefkcSd/tGK94sOPR?=
- =?us-ascii?Q?INwWdyHUJYovJiEVDGIuonxvd9JHBQGSZ0L1YjwhTZ+wDEI4vl8hQWWAKXnx?=
- =?us-ascii?Q?wVPXgAli99mc41GWFCyPhEElHAI5WVPl/WFI5ON7NhCCwup57y0vJYDYAj2f?=
- =?us-ascii?Q?s0arodEYEx0ybJejpMaUHsAJbyt7XFnkGPDehOV4r0z0dhaGJ6QR242WbqiX?=
- =?us-ascii?Q?tTtqFzWt2KRGMZHboB7YYwYwNgZSRUMkOsMpAroeH+HG4BjracRrqyAgXHK7?=
- =?us-ascii?Q?ABBIg1u9gdL+g5J4wRnf8+4vzphGPUPn1cIK4/lfQ7hVCgOoe7F4eqHfGkil?=
- =?us-ascii?Q?HS02JzeY+31ccNw2qJrwgcWU+AXU7FQOF4FXvG1ht64sd9G3FRg0jm64xRiX?=
- =?us-ascii?Q?1HtrAbIF69EGTNwI80orMiaficGu3236JVILX7G96uYwm759re3OXJwFV338?=
- =?us-ascii?Q?o2l35isYzaITltrB8JX0hO5lAk7pTmKhf4sA2WMxOEz4WJE2AGl7ZIKceJYV?=
- =?us-ascii?Q?AQqxfXjRnvh2POEvpuWCmFONA/S8mSCneyA3rARCqa8FXQ2zzdJzcrjqWrI2?=
- =?us-ascii?Q?qUrGa1t4SqGRaivsDJRbFpbnxgZpQaYzyx4Oof6+7rWbibtQ3pJ9XXvE4A4d?=
- =?us-ascii?Q?nE8pZHyWKqydhWNmWfXVhYo2zmlSUNOax3HIM2z+98zl73R2SboTOOtoZDAw?=
- =?us-ascii?Q?l1fwXp/rFgSktWvmfIXWVbigeE+EsY21O5d/QVTFeHRat1bOK1rhWmfP1Y9q?=
- =?us-ascii?Q?pqhTNrIFRhWwDC5SCviO9sJqLdHD93wP+Vqod1xxr+cptYYPsYIFq36PP71p?=
- =?us-ascii?Q?V8u3txgfAqgmQ1s7wv+6LgKYBtx/FwxhRsEDgndflog4S9fiWFcPzlhlBS/Y?=
- =?us-ascii?Q?Kbku5IM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2024 07:47:30.1819
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed4c0486-2ae0-40c4-37f8-08dc69b2f442
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE37.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6690
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87cyqcyt6t.fsf@gmail.com>
 
-From: Brijesh Singh <brijesh.singh@amd.com>
+On Fri, Apr 26, 2024 at 10:09:22PM +0530, Ritesh Harjani wrote:
+> Zhang Yi <yi.zhang@huaweicloud.com> writes:
+> 
+> > On 2024/4/26 20:57, Ritesh Harjani (IBM) wrote:
+> >> Ritesh Harjani (IBM) <ritesh.list@gmail.com> writes:
+> >> 
+> >>> Zhang Yi <yi.zhang@huaweicloud.com> writes:
+> >>>
+> >>>> From: Zhang Yi <yi.zhang@huawei.com>
+> >>>>
+> >>>> Now we lookup extent status entry without holding the i_data_sem before
+> >>>> inserting delalloc block, it works fine in buffered write path and
+> >>>> because it holds i_rwsem and folio lock, and the mmap path holds folio
+> >>>> lock, so the found extent locklessly couldn't be modified concurrently.
+> >>>> But it could be raced by fallocate since it allocate block whitout
+> >>>> holding i_rwsem and folio lock.
+> >>>>
+> >>>> ext4_page_mkwrite()             ext4_fallocate()
+> >>>>  block_page_mkwrite()
+> >>>>   ext4_da_map_blocks()
+> >>>>    //find hole in extent status tree
+> >>>>                                  ext4_alloc_file_blocks()
+> >>>>                                   ext4_map_blocks()
+> >>>>                                    //allocate block and unwritten extent
+> >>>>    ext4_insert_delayed_block()
+> >>>>     ext4_da_reserve_space()
+> >>>>      //reserve one more block
+> >>>>     ext4_es_insert_delayed_block()
+> >>>>      //drop unwritten extent and add delayed extent by mistake
+> >>>>
+> >>>> Then, the delalloc extent is wrong until writeback, the one more
+> >>>> reserved block can't be release any more and trigger below warning:
+> >>>>
+> >>>>  EXT4-fs (pmem2): Inode 13 (00000000bbbd4d23): i_reserved_data_blocks(1) not cleared!
+> >>>>
+> >>>> Hold i_data_sem in write mode directly can fix the problem, but it's
+> >>>> expansive, we should keep the lockless check and check the extent again
+> >>>> once we need to add an new delalloc block.
+> >>>
+> >>> Hi Zhang, 
+> >>>
+> >>> It's a nice finding. I was wondering if this was caught in any of the
+> >>> xfstests?
+> >>>
+> >
+> > Hi, Ritesh
+> >
+> > I caught this issue when I tested my iomap series in generic/344 and
+> > generic/346. It's easy to reproduce because the iomap's buffered write path
+> > doesn't hold folio lock while inserting delalloc blocks, so it could be raced
+> > by the mmap page fault path. But the buffer_head's buffered write path can't
+> > trigger this problem,
+> 
+> ya right! That's the difference between how ->map_blocks() is called
+> between buffer_head v/s iomap path. In iomap the ->map_blocks() call
+> happens first to map a large extent and then it iterate over all the
+> locked folios covering the mapped extent for doing writes.
 
-Version 2 of the GHCB specification introduced advertisement of features
-that are supported by the Hypervisor.
+Yes - a fundamental property of the iomap is that it is cached
+filesystem state that isn't protected by locks in any way. It can
+become stale if a concurrent operation modifies the extent map whilst
+the write operation is progressing.
 
-Now that KVM supports version 2 of the GHCB specification, bump the
-maximum supported protocol version.
+Have a look at iomap_begin_write(). Specifically:
 
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Michael Roth <michael.roth@amd.com>
----
- arch/x86/include/asm/sev-common.h |  2 ++
- arch/x86/kvm/svm/sev.c            | 14 ++++++++++++++
- 2 files changed, 16 insertions(+)
+	/*
+	 * Now we have a locked folio, before we do anything with it we need to
+	 * check that the iomap we have cached is not stale. The inode extent
+	 * mapping can change due to concurrent IO in flight (e.g.
+	 * IOMAP_UNWRITTEN state can change and memory reclaim could have
+	 * reclaimed a previously partially written page at this index after IO
+	 * completion before this write reaches this file offset) and hence we
+	 * could do the wrong thing here (zero a page range incorrectly or fail
+	 * to zero) and corrupt data.
+	 */
+	if (folio_ops && folio_ops->iomap_valid) {
+		bool iomap_valid = folio_ops->iomap_valid(iter->inode,
+							 &iter->iomap);
+		if (!iomap_valid) {
+			iter->iomap.flags |= IOMAP_F_STALE;
+			status = 0;
+			goto out_unlock;
+		}
+	}
 
-diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
-index 01261f7054ad..5a8246dd532f 100644
---- a/arch/x86/include/asm/sev-common.h
-+++ b/arch/x86/include/asm/sev-common.h
-@@ -101,6 +101,8 @@ enum psc_op {
- /* GHCB Hypervisor Feature Request/Response */
- #define GHCB_MSR_HV_FT_REQ		0x080
- #define GHCB_MSR_HV_FT_RESP		0x081
-+#define GHCB_MSR_HV_FT_POS		12
-+#define GHCB_MSR_HV_FT_MASK		GENMASK_ULL(51, 0)
- #define GHCB_MSR_HV_FT_RESP_VAL(v)			\
- 	/* GHCBData[63:12] */				\
- 	(((u64)(v) & GENMASK_ULL(63, 12)) >> 12)
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 6e31cb408dd8..37d396636b71 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -36,6 +36,8 @@
- #define GHCB_VERSION_MAX	1ULL
- #define GHCB_VERSION_MIN	1ULL
- 
-+#define GHCB_HV_FT_SUPPORTED	GHCB_HV_FT_SNP
-+
- /* enable/disable SEV support */
- static bool sev_enabled = true;
- module_param_named(sev, sev_enabled, bool, 0444);
-@@ -2701,6 +2703,7 @@ static int sev_es_validate_vmgexit(struct vcpu_svm *svm)
- 	case SVM_VMGEXIT_AP_HLT_LOOP:
- 	case SVM_VMGEXIT_AP_JUMP_TABLE:
- 	case SVM_VMGEXIT_UNSUPPORTED_EVENT:
-+	case SVM_VMGEXIT_HV_FEATURES:
- 		break;
- 	default:
- 		reason = GHCB_ERR_INVALID_EVENT;
-@@ -2961,6 +2964,12 @@ static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
- 				  GHCB_MSR_INFO_MASK,
- 				  GHCB_MSR_INFO_POS);
- 		break;
-+	case GHCB_MSR_HV_FT_REQ:
-+		set_ghcb_msr_bits(svm, GHCB_HV_FT_SUPPORTED,
-+				  GHCB_MSR_HV_FT_MASK, GHCB_MSR_HV_FT_POS);
-+		set_ghcb_msr_bits(svm, GHCB_MSR_HV_FT_RESP,
-+				  GHCB_MSR_INFO_MASK, GHCB_MSR_INFO_POS);
-+		break;
- 	case GHCB_MSR_TERM_REQ: {
- 		u64 reason_set, reason_code;
- 
-@@ -3085,6 +3094,11 @@ int sev_handle_vmgexit(struct kvm_vcpu *vcpu)
- 		ret = 1;
- 		break;
- 	}
-+	case SVM_VMGEXIT_HV_FEATURES:
-+		ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, GHCB_HV_FT_SUPPORTED);
-+
-+		ret = 1;
-+		break;
- 	case SVM_VMGEXIT_UNSUPPORTED_EVENT:
- 		vcpu_unimpl(vcpu,
- 			    "vmgexit: unsupported event - exit_info_1=%#llx, exit_info_2=%#llx\n",
+Yup, there's the hook to detect stale cached iomaps.  The struct
+iomap has a iomap->validity_cookie in it, which is an opaque cookie
+set by the filesytem when it creates the iomap. Here we have locked
+the folio so guaranteed exclusive access to this file range, and so
+we pass the iomap with it's cookie back to the filesystem to
+determine if the iomap is still valid.
+
+XFS uses generation numbers in the extent tree to determine if the
+cached iomap is still valid. ANy change to the extent tree bumps the
+generation number, and the current generation number is placed in
+iomap->validity_cookie when the iomap is created. If the generation
+number on the inode extent tree is different to the number held in
+the validity_cookie, then the extent tree has changed and the iomap
+must be considered stale. The iomap iterator then sees IOMAP_F_STALE
+and generates a new iomap for the remaining range of the write
+operation.
+
+Writeback has the same issue - the iomap_writepage_ctx caches the
+iomap we obtained for the current writeback, and so if something
+else changes the extent state while writeback is underway, then that
+map is stale and needs to be refetched.
+
+XFS does this by wrapping the iomap_writepage_ctx with a
+xfs_writepage_ctx that holds generation numbers so that when
+writeback calls iomap_writeback_ops->map_blocks(), it can check that
+the cached iomap is still valid, same as we do in
+iomap_begin_write().
+
+> Whereas in buffer_head while iterating, we first instantiate/lock the
+> folio and then call ->map_blocks() to map an extent for the given folio.
+> 
+> ... So this opens up this window for a race between iomap buffered write
+> path v/s page mkwrite path for inserting delalloc blocks entries.
+
+iomap allows them to to race - the filesystem extent tree needs it's
+own internal locking to serialise lookups and modifications of the
+extent tree, whilst the data modifications and page cache state
+changes are serialised by the folio lock. That's why
+iomap_begin_write() checks that the iomap is still valid only after
+it has a locked folio it is ready to write data into.
+
+Remeber that delalloc extents need to be inserted into the
+filesystem internal tree when ->iomap_begin() creates them. Hence
+anything that races to write over that same range range will only
+create the delalloc extent once - the second operation will
+simply find the existing delalloc extent the first operation
+created...
+
+> > the race between buffered write path and fallocate path
+> > was discovered while I was analyzing the code, so I'm not sure if it could
+> > be caught by xfstests now, at least I haven't noticed this problem so far.
+> >
+> 
+> Did you mean the race between page fault path and fallocate path here?
+> Because buffered write path and fallocate path should not have any race
+> since both takes the inode_lock. I guess you meant page fault path and
+> fallocate path for which you wrote this patch too :)
+> 
+> I am surprised, why we cannot see the this race between page mkwrite and
+> fallocate in fstests for inserting da entries to extent status cache.
+
+Finding workloads that hit these sorts of races reliably
+is -real hard-. Read the commit message in commit d7b64041164c
+("iomap: write iomap validity checks"), especially this link:
+
+https://lore.kernel.org/linux-xfs/20220817093627.GZ3600936@dread.disaster.area/
+
+And this comment I made in a followup email:
+
+" [....] and it points out that every filesystem using iomap for
+multi-page extent maps will need to implement iomap invalidation
+detection in some way."
+
+> Because the race you identified looks like a legitimate race and is
+> mostly happening since ext4_da_map_blocks() was not doing the right
+> thing.
+> ... looking at the src/holetest, it doesn't really excercise this path.
+> So maybe we can writing such fstest to trigger this race.
+
+We have a regression test that exercises folio_ops->iomap_valid()
+functionality: xfs/559.  It uses the XFS error injection
+infrastructure to add a strategic delay which we placed in
+xfs_iomap_valid() so that we can hold an iomap cached for an
+arbitrary period of time to allow writeback and page cache reclaim
+to do their stuff to cause the extent map held by the write to
+become stale. It also uses ftrace to capture the tracepoint that
+tells us that the invalid iomap state was seen and IOMAP_F_STALE
+behaviour triggered.
+
+This could be turned into a generic test, but there's a lot of
+missing infrastructure bits to do it....
+
+Cheers,
+
+Dave.
+
 -- 
-2.25.1
-
+Dave Chinner
+david@fromorbit.com
