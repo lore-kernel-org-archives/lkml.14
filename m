@@ -1,305 +1,154 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3C24D9EF;
-	Wed,  1 May 2024 07:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714549699; cv=fail; b=fRJ61eghMSGADIaa7lFQasVwo5S4mQMXYDck8ApMy45s7AU+OpE4zOouVh5RdFf2w3mqM3VnY2Xd84c5fzjgS1UDLQ7Xjl27g7/ORdcqZ3jMGVhyr8TIgo2TrgBa77Byl+hYe5+qpk1XZl4sIhA5sCNQLk5YigpYQwuZIngHL3w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714549699; c=relaxed/simple;
-	bh=ZPTHj1oq/Ts5Tgv+oxOM5kvyjrALP6F9dYvQjGz1Fe8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tEaIDxJHZ9XvPmNDvOixf8NMA3oMV8yD3V7XnoCtgTwFL5fsncT2TTOs6ZuuQVxLZt7HuEEYJBV5fsEJ/L4MpwcEGUw3P6+Fn9Y+GVr7nEgWURriw0YRwUKyAKWrim8zMIIOYMa0KkK86U90nzIus2x5/6/wBPf0ZW6eNgheSVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wem35fG/; arc=fail smtp.client-ip=40.107.93.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE59D4D9E9
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 07:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714549741; cv=none; b=XT70w+wy2Q6OmsvtxCPg9/Wqn8qXZLVcRZi6gsvIuF3q2w/sdzzK1X5UE9VKaXudLfHHvwEc1oKmyaSfqPswQ4Xq3eenEQfvZxO6sC0oFv9YOBqdqks1tGjVicdzj5oXE28hpr/opfumg3lhsUZKAo8UXSqVMjcbC+sVB4TroR4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714549741; c=relaxed/simple;
+	bh=cGwK526R503ldDm/CriBnxuRBeqaMR26khdz4eVoYoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gblzRqUhBvG1ScnQ7m79PC8RRN0xg4v3KwC+9PjVpTnXxcXDQqRGcPrqWT8FEPYwXegtqbhTjNgZ2HjRY+XRZQu4ro5nGY27iUK5q08gfbLB8LJJPU5+Gf+fNi2zEMkp8Kj0xkI3Fx8Qm3b6vpyejOm8rf2jipvsNDYlt5daRoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NzocMZC3; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wem35fG/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fyYR5InUTA98zfsbk6hjFATbGzr2pJoRAP+9w7Y/ppoimVcOKv7xFVspSbbFswZlkpXF+L9imdRyfrMOQzF9Z6QYXukxJ2i57qWp3Z2CMJqRhByo1Yn3vn32N0liSrI1FvoaGo4uhMKQzCynHcIQBy8Sj7I9xqTXx9K9E+GHrFv85r9PLKkIkBwS/hNh5aOaQJpRcLP6YhUqveL/rsMtQ7zqx7g4GKN4cOaTzgXieI7KSl6f3MviQqxaUACY4QEZpEEEuvomSO2T9nVllX7PH6JdaePZ2HxQ+BFbg4hUDjW0arjQD1tOZpNk576QqJJjyysrca8BtUo0ZgI71cj0UQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=55BsZiyOriOSg+pL30Cck6KPdOkZNWZZJ/n3ehKgAlU=;
- b=m1AZMJsTlqgviorug54XD2mK10OyE5KPjz8h4/602vy8T4TVFlLO84falg72v/Oj2rhslVxVGQQwlPCHhLv1EmoLUaUP7p4+NHSxufjemnMCdatPfN3Yf/P2ukw3z0CkRGt8sd+Wwn1BizTFXYX+rMwLG7mANGUq9wZqxwo510Jvp8cYJapZ9k9ouHuED0EG6Wsy21QEcCGDnIPpREAcqD+inQRduR8dnuklBN/8ec5hCckkJZJqKa/I/Uciu+dvw4zDo1zoUQYBR2Q1WFXiE8p4bblsYhwWLQGdrstn2Nb1Hz+G3sMouxznLtYAud7YEsEybwArAWc7/nt3mS+mWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=55BsZiyOriOSg+pL30Cck6KPdOkZNWZZJ/n3ehKgAlU=;
- b=wem35fG/9nfcXUsfSsv5Tp75mCX/u8hZE+Gp1wdnTKR6pJhy3xI/p0zqyf/coOpBPkvORmzB3aFYrM0aWEMD3NrBdSvO4/XWAaZ2yqM78Q35TdalM9Xk461WJwu92LTJK+KLZq9gDK3Q5LhsPn2v6VntqFN6NMJkt+IOJ28KTqA=
-Received: from PH8PR22CA0014.namprd22.prod.outlook.com (2603:10b6:510:2d1::29)
- by SJ0PR12MB8140.namprd12.prod.outlook.com (2603:10b6:a03:4e3::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.24; Wed, 1 May
- 2024 07:48:15 +0000
-Received: from CY4PEPF0000EE33.namprd05.prod.outlook.com
- (2603:10b6:510:2d1:cafe::cb) by PH8PR22CA0014.outlook.office365.com
- (2603:10b6:510:2d1::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36 via Frontend
- Transport; Wed, 1 May 2024 07:48:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE33.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Wed, 1 May 2024 07:48:15 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 1 May
- 2024 02:48:14 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <jroedel@suse.de>, <thomas.lendacky@amd.com>,
-	<pbonzini@redhat.com>, <seanjc@google.com>, <pgonda@google.com>,
-	<ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>, <pankaj.gupta@amd.com>
-Subject: [PATCH 4/4] KVM: SEV: Allow per-guest configuration of GHCB protocol version
-Date: Wed, 1 May 2024 02:10:48 -0500
-Message-ID: <20240501071048.2208265-5-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240501071048.2208265-1-michael.roth@amd.com>
-References: <20240501071048.2208265-1-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NzocMZC3"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-571be483ccaso7898069a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 00:48:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714549738; x=1715154538; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S6caJNuoOcbTF2A8XjASgel2eyoPHbRLJ4yhUwfPsJg=;
+        b=NzocMZC3LreJ+QmatL3XEJtLc8PzGFznZ0sz+0GfTNbScnK/PxRu8ef65Wqi8hYvzB
+         8My69b2QfPtaP6pxCVV8py2hvmq+VmCKDfw9FPmh5YMcY6adIx9yNR3NRr7bkbqi1sqH
+         WPV+jki4lhuqOse9FO0dy4eNEBu1A9TpbhQQQ2sjDBeIDU+z40BZxryqE0P3cb6BSiku
+         RljMJj9ql1TwhirXFqoxtGUyhanUUWqoPjh/PEsrokBH0f8xm6iEeY4JqxmQwHy89/aq
+         U268mnYY8F0dERU4enxZdbnb6Pt984WwXhKu4eMzpxs0RBqGFTopzOxWndrExrwd7yTR
+         Ibdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714549738; x=1715154538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S6caJNuoOcbTF2A8XjASgel2eyoPHbRLJ4yhUwfPsJg=;
+        b=FQJdx7Nggg0PZcOxtCD3BNiGtvNhda67O4xLK8CLRQPsOhJok5cCyX4JlaErk4ChOa
+         IbSO/y+b9Q8C0zvgGrXdJk4SoEWARcVh6bFg0LaBHExezJt1kjOlehcXSg9Tdoa8dhN2
+         R4gS4xasAi4O7L2/N4PxB7BHI4T72HHaiY1cDnLn2Hl7/HM78LpbOFYyuaM9qEHEZVrY
+         7qFn8duNwhfRkMSGyi2V8eO57kseGvtUOCXsczWvDIf9dvk7UTTZ1HPYymYolacCK2cm
+         EA7U7AVPOJ3JK51e13yif7WkDMgvJ3pYrd0OuSuu+ACTtIGWLmCxoccwFoAlU9RysYHn
+         9X/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWti9GT7kyy50m1+FfycxuMBKl1nenyGW0Do22j7NkWliqHp6iLyrBJCtVxXWYJgdCXcj/ji5/XFnZeAkTog99NhPk4GmCikeiJXuvQ
+X-Gm-Message-State: AOJu0YzzaA2dSx7RLmFKni2XUeZBdEQARiFTrw21L8RHXWyWHBIhIntP
+	1kTRLqW/6MaiOw22juh+hZf/mBF1zpuzvb8XFqX1n4YuAXA0bLF+/hSffsiTpyVc21z9xlBqMU1
+	c8ENzKHFyMagZDoytvS/KEoTOIXUIIa3CkN65
+X-Google-Smtp-Source: AGHT+IGhlKIspORV3UsoMFDJbaiFzOQH7V8xn49DkcxHrG8vlrT1eYyx0WJBZ3CEo2IQKHYAlSXX53YHVqq5Mgwl4Sc=
+X-Received: by 2002:a17:906:52c1:b0:a55:5ddd:e5f6 with SMTP id
+ w1-20020a17090652c100b00a555ddde5f6mr1398294ejn.28.1714549737800; Wed, 01 May
+ 2024 00:48:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE33:EE_|SJ0PR12MB8140:EE_
-X-MS-Office365-Filtering-Correlation-Id: 023a83b1-0973-441b-3f7b-08dc69b30f0c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|82310400014|7416005|1800799015|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?pzZ1EN6QItJAEJcltyx1edNlp74kPRg5fEC6R5QlMziJ/lAELVDtDl3bFjPl?=
- =?us-ascii?Q?uPQpHVlBVPBWyeb5Lo4jxeJcM+DoDyA1F9dt10O2DkHXWih0jnkQY76IhRcf?=
- =?us-ascii?Q?lDCC9F7YHLO9FZmE6EX1O256mCHh0TvzqpefwtUsiejrMXn1RysSUpNjdrpj?=
- =?us-ascii?Q?pXUkWzm8xoXHXPYR/bAFgla1VNxb/nz/c0Cot/EfWEsTfZh3+Ak5vW3NjrF2?=
- =?us-ascii?Q?pPnH4SyNpqNeDdDDbhCrYWIFm2tH2ekKNs5D37VhCJO2TbA8XhR8nmz7qddb?=
- =?us-ascii?Q?qeZcK6L+fFO2hzjTX8q5Y+EIW4v+4OQagIbuEB/SoTdSKH4McYH46WaB7Hn1?=
- =?us-ascii?Q?37GlTGX3S46Uj6kaH014ioCan0LLqesJoHxahSAa6xr7CHFkPjIzUG6ps6og?=
- =?us-ascii?Q?WHvyjh0nX8CqLpwEZWdB/E3oYUBqyFsBge5u7oOQc88CGJ8XT7FWVt+Yms+u?=
- =?us-ascii?Q?db98+2LmMvWqdv9C8P5ndf9kz7hfP2Q0LsTal20eDuczOVfi4FcjDzT7datP?=
- =?us-ascii?Q?SRlAgb+8hwHiHLXuntG7cLc9i9eW5mZ+/LOPF46QWMy0TpRQx7oFVtkcq1QD?=
- =?us-ascii?Q?WeU5fSuxcWRtWaqTZdf1VJgxVnCfRH9pVcw+XLV4o8EBUXwlNbJB+ppnmvqk?=
- =?us-ascii?Q?Eo8ZCRMjT7fEVDDj7H5NvXo98Uj4SGsaTx4G7HM5LnuC9abqHwJs0h3q5pSy?=
- =?us-ascii?Q?HnfuP+j+sRARee+JBGdTUluvwUVmvfbEY4lH++mT5oVyhvRYdSeAQPywL+Dj?=
- =?us-ascii?Q?oW9hTnWcBcuvhNdU+vAq4ZNCJr2x5wn+m16ZcgYmLF0DI50nQXMTHs7j3BHP?=
- =?us-ascii?Q?Y3KCwtyXanXwtSoKfecBMhHjHI7p8NaWR/Vv9BBotOfDJl1vgfPb8ltC7BxL?=
- =?us-ascii?Q?b2MM4uhqt+/nR1uVZTbxNBqEbSK7LPmj6/BpJoLTpU9YwryEVLXaN0LIUrsE?=
- =?us-ascii?Q?qOB6mdOpCYIp1XuWrBNkM6M0tW+fNI2+wqaRTC2bIb60qa5zKKIdifUWdIND?=
- =?us-ascii?Q?AKqVGAd4nqtHK0o57g06X8uQD/fseyucuXxQC7duc/Cur8rxPuSL9n8kaEdS?=
- =?us-ascii?Q?Xu2v4ntC0g8Xll1x86VjrTKCcrS8E4ohbigK6i2OZegPongy9O0wN9FyZNeb?=
- =?us-ascii?Q?VQp+yFFfvcMp+aalyReDPF3w675pRK+nWuOEnruTq8Wofi+C9h5z1ZbkByEM?=
- =?us-ascii?Q?FiA6HnErD0stnELav51l+l9Zc2UvRNCMZhxmeTSLKoLykdzS+YKguVXuGlQ7?=
- =?us-ascii?Q?J6iGdNmvAULk0ZlvJeB1imgiEbUEWSunNVmBYoBQ4Y6yTV+LAWC5fbEE56WP?=
- =?us-ascii?Q?yEq7LdBTqqvxhTEF1JKJBaY6sgcYZKc0EZSDBUXPIPkFZoAq2Cqx3RJurS+E?=
- =?us-ascii?Q?u1Mcpg3XFDG8skEhyQOLOHO/BmUw?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2024 07:48:15.1213
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 023a83b1-0973-441b-3f7b-08dc69b30f0c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE33.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB8140
+References: <20240424165646.1625690-2-dtatulea@nvidia.com> <4ba023709249e11d97c78a98ac7db3b37f419960.camel@nvidia.com>
+ <CAHS8izMbAJHatnM6SvsZVLPY+N7LgGJg03pSdNfSRFCufGh9Zg@mail.gmail.com>
+ <4c20b500c2ed615aba424c0f3c7a79f5f5a04171.camel@nvidia.com>
+ <20240426160557.51de91f9@kernel.org> <c307a3086d255d1dfed22284f500aa9fb70f11a3.camel@nvidia.com>
+ <7a5a1d74040052afc8cc6cc5c2700fdf2e836b0c.camel@nvidia.com>
+In-Reply-To: <7a5a1d74040052afc8cc6cc5c2700fdf2e836b0c.camel@nvidia.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 1 May 2024 00:48:43 -0700
+Message-ID: <CAHS8izOsFqiSiS4Z-E-jfD70aogNp5Bcyt7Rk8xFoR2TcDjz=g@mail.gmail.com>
+Subject: Re: [RFC PATCH] net: Fix one page_pool page leak from skb_frag_unref
+To: Dragos Tatulea <dtatulea@nvidia.com>
+Cc: "kuba@kernel.org" <kuba@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, 
+	"ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"jacob.e.keller@intel.com" <jacob.e.keller@intel.com>, "pabeni@redhat.com" <pabeni@redhat.com>, 
+	Jianbo Liu <jianbol@nvidia.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"edumazet@google.com" <edumazet@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The GHCB protocol version may be different from one guest to the next.
-Add a field to track it for each KVM instance and extend KVM_SEV_INIT2
-to allow it to be configured by userspace.
+On Tue, Apr 30, 2024 at 11:20=E2=80=AFPM Dragos Tatulea <dtatulea@nvidia.co=
+m> wrote:
+>
+> On Mon, 2024-04-29 at 09:39 +0200, Dragos Tatulea wrote:
+> > On Fri, 2024-04-26 at 16:05 -0700, Jakub Kicinski wrote:
+> > > On Thu, 25 Apr 2024 08:17:28 +0000 Dragos Tatulea wrote:
+> > > > >  The unref path always dropped a regular page
+> > > > > ref, thanks to this commit as you point out:
+> > > > >
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t/commit/?id=3D2cc3aeb5ecccec0d266813172fcd82b4b5fa5803
+> > > > >
+> > > > > AFAICT the correct fix is to actually revert commit 2cc3aeb5eccc
+> > > > > ("skbuff: Fix a potential race while recycling page_pool packets"=
+).
+> > > > > The reason is that now that skb_frag_ref() can grab page-pool ref=
+s, we
+> > > > > don't need to make sure there is only 1 SKB that triggers the rec=
+ycle
+> > > > > path anymore. All the skb and its clones can obtain page-pool ref=
+s,
+> > > > > and in the unref path we drop the page-pool refs. page_pool_put_p=
+age()
+> > > > > detects correctly that the last page-pool ref is put and recycles=
+ the
+> > > > > page only then.
+> > > > >
+> > > > I don't think this is a good way forward. For example, skb->pp_recy=
+cle is used
+> > > > as a hint in skb_gro_receive to avoid coalescing skbs with differen=
+t pp_recycle
+> > > > flag states. This could interfere with that.
+> > >
+> > > That's a bit speculative, right? The simple invariant we are trying t=
+o
+> > > hold is that if skb->pp_recycle && skb_frag_is_pp(skb, i) then the
+> > > reference skb is holding on that frag is a pp reference, not page
+> > > reference.
+> > >
+> > Yes, it was a speculative statement. After re-reading it and the code o=
+f
+> > skb_gro_receive() it makes less sense now.
+> >
+> > Mina's suggestion to revert commit 2cc3aeb5eccc ("skbuff: Fix a potenti=
+al race
+> > while recycling page_pool packets") seems less scary now. I just hope w=
+e don't
+> > bump into too many scenarios similar to the ipsec one...
+> >
+> > > skb_gro_receive() needs to maintain that invariant, if it doesn't
+> > > we need to fix it..
+> > >
+> >
+> Gentle ping. Not sure how to proceed with this:
+>
+> 1) Revert commit 2cc3aeb5eccc
+> ("skbuff: Fix a potential race while recycling page_pool packets"). I tes=
+ted
+> this btw and it works (for this specific scenario).
+>
+> 2) Revert Mina's commit a580ea994fd3 ("net: mirror skb frag ref/unref hel=
+pers")
+> for now.
+>
 
-Now that all SEV-ES support for GHCB protocol version 2 is in place, go
-ahead and default to it when creating SEV-ES guests through the new
-KVM_SEV_INIT2 interface. Keep the older KVM_SEV_ES_INIT interface
-restricted to GHCB protocol version 1.
+I vote for #1, and IIUC Jakub's feedback, he seems to prefer this as
+well. If we continue to run into edge cases after the revert of #1, I
+think we may want to do #2 and I can look to reland it with the kunit
+tests that Jakub suggested that reproduce these edge cases.
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Michael Roth <michael.roth@amd.com>
----
- .../virt/kvm/x86/amd-memory-encryption.rst    | 11 +++++--
- arch/x86/include/uapi/asm/kvm.h               |  4 ++-
- arch/x86/kvm/svm/sev.c                        | 32 +++++++++++++++++--
- arch/x86/kvm/svm/svm.h                        |  1 +
- 4 files changed, 42 insertions(+), 6 deletions(-)
+I can upload #1 in the morning if there are no objections. I don't see
+any regressions with #1 but I was never able to repo this issue.
 
-diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-index 3381556d596d..9677a0714a39 100644
---- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-+++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-@@ -95,13 +95,19 @@ Returns: 0 on success, -negative on error
-         struct kvm_sev_init {
-                 __u64 vmsa_features;  /* initial value of features field in VMSA */
-                 __u32 flags;          /* must be 0 */
--                __u32 pad[9];
-+                __u16 ghcb_version;   /* maximum guest GHCB version allowed */
-+                __u16 pad1;
-+                __u32 pad2[8];
-         };
- 
- It is an error if the hypervisor does not support any of the bits that
- are set in ``flags`` or ``vmsa_features``.  ``vmsa_features`` must be
- 0 for SEV virtual machines, as they do not have a VMSA.
- 
-+``ghcb_version`` must be 0 for SEV virtual machines, as they do not issue GHCB
-+requests. If ``ghcb_version`` is 0 for any other guest type, then the maximum
-+allowed guest GHCB protocol will default to version 2.
-+
- This command replaces the deprecated KVM_SEV_INIT and KVM_SEV_ES_INIT commands.
- The commands did not have any parameters (the ```data``` field was unused) and
- only work for the KVM_X86_DEFAULT_VM machine type (0).
-@@ -112,7 +118,8 @@ They behave as if:
-   KVM_SEV_ES_INIT
- 
- * the ``flags`` and ``vmsa_features`` fields of ``struct kvm_sev_init`` are
--  set to zero
-+  set to zero, and ``ghcb_version`` is set to 0 for KVM_SEV_INIT and 1 for
-+  KVM_SEV_ES_INIT.
- 
- If the ``KVM_X86_SEV_VMSA_FEATURES`` attribute does not exist, the hypervisor only
- supports KVM_SEV_INIT and KVM_SEV_ES_INIT.  In that case, note that KVM_SEV_ES_INIT
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 72ad5ace118d..9fae1b73b529 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -711,7 +711,9 @@ struct kvm_sev_cmd {
- struct kvm_sev_init {
- 	__u64 vmsa_features;
- 	__u32 flags;
--	__u32 pad[9];
-+	__u16 ghcb_version;
-+	__u16 pad1;
-+	__u32 pad2[8];
- };
- 
- struct kvm_sev_launch_start {
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 01baa8aa7e12..a4bde1193b92 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -33,7 +33,8 @@
- #include "cpuid.h"
- #include "trace.h"
- 
--#define GHCB_VERSION_MAX	1ULL
-+#define GHCB_VERSION_MAX	2ULL
-+#define GHCB_VERSION_DEFAULT	2ULL
- #define GHCB_VERSION_MIN	1ULL
- 
- #define GHCB_HV_FT_SUPPORTED	GHCB_HV_FT_SNP
-@@ -268,12 +269,24 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
- 	if (data->vmsa_features & ~valid_vmsa_features)
- 		return -EINVAL;
- 
-+	if (data->ghcb_version > GHCB_VERSION_MAX || (!es_active && data->ghcb_version))
-+		return -EINVAL;
-+
- 	if (unlikely(sev->active))
- 		return -EINVAL;
- 
- 	sev->active = true;
- 	sev->es_active = es_active;
- 	sev->vmsa_features = data->vmsa_features;
-+	sev->ghcb_version = data->ghcb_version;
-+
-+	/*
-+	 * Currently KVM supports the full range of mandatory features defined
-+	 * by version 2 of the GHCB protocol, so default to that for SEV-ES
-+	 * guests created via KVM_SEV_INIT2.
-+	 */
-+	if (sev->es_active && !sev->ghcb_version)
-+		sev->ghcb_version = GHCB_VERSION_DEFAULT;
- 
- 	ret = sev_asid_new(sev);
- 	if (ret)
-@@ -307,6 +320,7 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
- {
- 	struct kvm_sev_init data = {
- 		.vmsa_features = 0,
-+		.ghcb_version = 0,
- 	};
- 	unsigned long vm_type;
- 
-@@ -314,6 +328,14 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 		return -EINVAL;
- 
- 	vm_type = (argp->id == KVM_SEV_INIT ? KVM_X86_SEV_VM : KVM_X86_SEV_ES_VM);
-+
-+	/*
-+	 * KVM_SEV_ES_INIT has been deprecated by KVM_SEV_INIT2, so it will
-+	 * continue to only ever support the minimal GHCB protocol version.
-+	 */
-+	if (vm_type == KVM_X86_SEV_ES_VM)
-+		data.ghcb_version = GHCB_VERSION_MIN;
-+
- 	return __sev_guest_init(kvm, argp, &data, vm_type);
- }
- 
-@@ -2897,6 +2919,7 @@ static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
- {
- 	struct vmcb_control_area *control = &svm->vmcb->control;
- 	struct kvm_vcpu *vcpu = &svm->vcpu;
-+	struct kvm_sev_info *sev = &to_kvm_svm(vcpu->kvm)->sev_info;
- 	u64 ghcb_info;
- 	int ret = 1;
- 
-@@ -2907,7 +2930,7 @@ static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
- 
- 	switch (ghcb_info) {
- 	case GHCB_MSR_SEV_INFO_REQ:
--		set_ghcb_msr(svm, GHCB_MSR_SEV_INFO(GHCB_VERSION_MAX,
-+		set_ghcb_msr(svm, GHCB_MSR_SEV_INFO((__u64)sev->ghcb_version,
- 						    GHCB_VERSION_MIN,
- 						    sev_enc_bit));
- 		break;
-@@ -3268,11 +3291,14 @@ void sev_init_vmcb(struct vcpu_svm *svm)
- 
- void sev_es_vcpu_reset(struct vcpu_svm *svm)
- {
-+	struct kvm_vcpu *vcpu = &svm->vcpu;
-+	struct kvm_sev_info *sev = &to_kvm_svm(vcpu->kvm)->sev_info;
-+
- 	/*
- 	 * Set the GHCB MSR value as per the GHCB specification when emulating
- 	 * vCPU RESET for an SEV-ES guest.
- 	 */
--	set_ghcb_msr(svm, GHCB_MSR_SEV_INFO(GHCB_VERSION_MAX,
-+	set_ghcb_msr(svm, GHCB_MSR_SEV_INFO((__u64)sev->ghcb_version,
- 					    GHCB_VERSION_MIN,
- 					    sev_enc_bit));
- }
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 6fd0f5862681..9ae0c57c7d20 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -87,6 +87,7 @@ struct kvm_sev_info {
- 	struct list_head regions_list;  /* List of registered regions */
- 	u64 ap_jump_table;	/* SEV-ES AP Jump Table address */
- 	u64 vmsa_features;
-+	u16 ghcb_version;	/* Highest guest GHCB protocol version allowed */
- 	struct kvm *enc_context_owner; /* Owner of copied encryption context */
- 	struct list_head mirror_vms; /* List of VMs mirroring */
- 	struct list_head mirror_entry; /* Use as a list entry of mirrors */
--- 
-2.25.1
-
+--=20
+Thanks,
+Mina
