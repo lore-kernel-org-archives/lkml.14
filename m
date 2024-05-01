@@ -1,65 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900AA16C6A4;
-	Wed,  1 May 2024 23:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AED168B0A
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 23:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714605976; cv=none; b=k9zAJ8iGFjnChCBhOFCdnJMFfFWg0xTwJ7jdP5F0pv1Q7ujGcUX5cZbPUqUnVlSrURzVbt0/eR9CNrQ14tzzNyoPW/5LOAJOfBzVkuH9OI6rUON2HL6bIdiwJkdslsEKPV1zP9y68wBJ3BgZyhw6GcHKYkGRgXgkOWKYuhkS8q8=
+	t=1714606044; cv=none; b=YECKkHC40otqA1c31khRRFK97VghGsqd0L8hPzR8e8qvP6Jzx+cC79gB4S/WHlcvG+n5YtftQZfaglYQQje630jZ0Hf2yFn+f1CcqEf/xUOOE157jZqaRfXwkYD0e+tiQybSLlNxub7Hoy8+Y0HlgmW9OO27I6GXnXX75/BuU3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714605976; c=relaxed/simple;
-	bh=wHBTAMKIcvRLwkC8AoFZJyXUiPOkQ5EwhQFLUq2hD7U=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=U0BbBOILEp1vv8Lsx4Fw4rHO78v7v4waTsDgcGBh/ddIC7S319o/L3CSgzk1UGMUiJ6TuihT0TfKQ7j3klGHiAhQxh5EN6A6LLbfF+ZhTFO1syCVRGoWUMEHP0vWIzLce9n7fOavex6tMU/zn/4nz3trtDiH7olfUgT98Sloo8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YvS+vGrR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714606044; c=relaxed/simple;
+	bh=KF22Q91ftKg+StGyAe4vPvXYgZR+4DvQ7bXUDl4Lk1M=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Brept6HSU5FaHvqx+FgUd648YoJRimg1FLtwFOrHFo8Ju0g17rLr2ieK4aHcz1K6XLFHpjRaIvCxPIcf5aKTxdLEGuxJrPoPwtp9pkpZhQznBxf2qs/08PhpsTgl+C/Oz/lt7/Sams2shs7NGK5pRCDWAtFJaEPQHTtEyV+A2xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YqTkUYed; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YvS+vGrR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD41C072AA;
-	Wed,  1 May 2024 23:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714605976;
-	bh=wHBTAMKIcvRLwkC8AoFZJyXUiPOkQ5EwhQFLUq2hD7U=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=YvS+vGrRQQ5MFS7uuvjRk413GdyPc4CrxN/UjqvtEftCzRL272O+XbR1KnFGOF2tS
-	 o5VlQ2rUJRpD2xSFGkwQ+9G1LW0qBOSLI2VmALGqAARjoU4lRZruYU4Qtmok4iWWU8
-	 T69i5THHhZ6rvB1hXuuKH6eDWZzOUJMLYFkf5pEIMGChOIdz2mUbrRab8EpTn/qu1Y
-	 +x8H0rpzY7YsbZW8JeuofflDIsLoWjfmHidorRtxq7z5ZY87+V/fTrW0YA2c9LZ+fY
-	 dTpmSvgWkdpUrEqd1mr5y42x7knLd9sRhVI6xMEL3sH4OHFZJuY4a6wgs5TYqO6MJm
-	 SdvPER2T5vVTQ==
-Message-ID: <b58509db1147e9290e1a006a03e5fec1.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YqTkUYed"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 441MK3Z7031546;
+	Wed, 1 May 2024 23:27:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2023-11-20;
+ bh=5+PFPryu85fPUhHvvBmVJI7+H9PqDvUVFzqR0jjWF1Y=;
+ b=YqTkUYedogVvSCK4kM9rrwbF71TU1YEkkcaGMRNRVzcr5cYLUKudzAv2KpqTh1pqZf7o
+ yf/vsAFC3dRx6rMA3QENwyJU9JR9PIcxGFE9OdEaKQoWvq952Oxl+wQHo4jRXbJBi23x
+ GLVk6+R2bl8f8l0OAKpMxHgKrN3vzXIPTlWZSi21JstIa68JsvTqb7F7YIrSNjbfm6Yq
+ zbzBGMzXFZyX9z6osQz+o3Aygge3m/lkbjjvRgn5YbFU2gNB8/dbfwj41VQ+ObswyI3f
+ cE2r6bZ1SexRuIeYBzpfidVbO1O5kz9LGAZ+mc55QU8Wpw9tJpctx6flchfQQQNCf/5q Fg== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xrswvsyk5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 01 May 2024 23:26:57 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 441MBS4B033172;
+	Wed, 1 May 2024 23:25:08 GMT
+Received: from brm-x62-16.us.oracle.com (brm-x62-16.us.oracle.com [10.80.150.37])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3xrqt9vbuq-3;
+	Wed, 01 May 2024 23:25:08 +0000
+From: Jane Chu <jane.chu@oracle.com>
+To: linmiaohe@huawei.com, nao.horiguchi@gmail.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] mm/madvise: Add MF_ACTION_REQUIRED to madvise(MADV_HWPOISON)
+Date: Wed,  1 May 2024 17:24:57 -0600
+Message-Id: <20240501232458.3919593-3-jane.chu@oracle.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240501232458.3919593-1-jane.chu@oracle.com>
+References: <20240501232458.3919593-1-jane.chu@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240501144445.892045-1-abel.vesa@linaro.org>
-References: <20240501144445.892045-1-abel.vesa@linaro.org>
-Subject: Re: [GIT PULL] clk: imx: Updates for v6.10
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: imx@lists.linux.dev, NXP Linux Team <linux-imx@nxp.com>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To: Abel Vesa <abel.vesa@linaro.org>, Mike Turquette <mturquette@baylibre.com>
-Date: Wed, 01 May 2024 16:26:13 -0700
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-01_16,2024-04-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2405010165
+X-Proofpoint-GUID: xYRc7ttZpJPOgWhFHPkn8aug1OV-_T7v
+X-Proofpoint-ORIG-GUID: xYRc7ttZpJPOgWhFHPkn8aug1OV-_T7v
 
-Quoting Abel Vesa (2024-05-01 07:44:45)
-> The following changes since commit 4cece764965020c22cff7665b18a0120063590=
-95:
->=20
->   Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
->=20
-> are available in the Git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/abelvesa/linux.git/ tags/=
-clk-imx-6.10
->=20
-> for you to fetch changes up to f5072cffb35c122ec85d91ef327fa8814f04297b:
->=20
->   clk: imx: imx8mp: Convert to platform remove callback returning void (2=
-024-05-01 14:40:49 +0300)
->=20
-> ----------------------------------------------------------------
+The soft hwpoison injector via madvise(MADV_HWPOISON) operates in
+a synchrous way in a sense, the injector is also a process under
+test, and should it have the poisoned page mapped in its address
+space, it should legitimately get killed as much as in a real UE
+situation.
 
-Thanks. Pulled into clk-next
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
+---
+ mm/madvise.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 1a073fcc4c0c..eaeae5252c02 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -1127,7 +1127,7 @@ static int madvise_inject_error(int behavior,
+ 		} else {
+ 			pr_info("Injecting memory failure for pfn %#lx at process virtual address %#lx\n",
+ 				 pfn, start);
+-			ret = memory_failure(pfn, MF_COUNT_INCREASED | MF_SW_SIMULATED);
++			ret = memory_failure(pfn, MF_ACTION_REQUIRED | MF_COUNT_INCREASED | MF_SW_SIMULATED);
+ 			if (ret == -EOPNOTSUPP)
+ 				ret = 0;
+ 		}
+-- 
+2.39.3
+
