@@ -1,225 +1,251 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2066.outbound.protection.outlook.com [40.92.40.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F8A17C68
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 16:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714581198; cv=fail; b=J7LdTCyz0KgKAgAVCH307rLzMDAgHKkVr2zFphqquauefZdw5rjdUL8esX9AdxvDGSViWRw8T4bhAkT0hny8AB4Lf4HPDaGLOKKGk/4dPdWfLCo2NSxsTvjKINKg2/DhjNh61Bl7CkkphvfDMKPJqtF4Mv6aQ8ZGROLggBo25kU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714581198; c=relaxed/simple;
-	bh=XXOmZa9F3s4D/tLC9s8GQ8B2Espcejx9Qgoh+zKPjts=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nB620LR65kGSsAqS9DUI/u3KmEveEpkNLAqo3GR4dIooOLHICiuqcfsVktxtdoBYyH0pPfAOXTH7a/g2ihBt9xicAbbwKgLpi6mJwq8ig2SLZcoW9t4t//rI9Cf3q8oV4TYzJGoz6vXzId3dgKBYzptSBK0zgj+Qx43fes1b+aQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=Aw0gqetU; arc=fail smtp.client-ip=40.92.40.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B518CA4E
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 16:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714581295; cv=none; b=H5WpImWAQlk4kz5AP1Hpvu2L5wvPHuaZYzv0/mSd3BaVE2kEiC/lznDQWlihoZ998WCbcHl7SoIrrQfB3kmLEheshhveBb+RDIfRDTxoKnzQCA3syoQjjg0yz6S+5A5nOIzZ0As8foY+lEoZN5Ux8cHGuiP4W/On1lUVmnBaPHg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714581295; c=relaxed/simple;
+	bh=HLRpuJW4wpmvXc3cjO2hjEdv0yZ1MmbzHnWkQZqqRVg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WSt6cJjf/xdOn1wUtSMHLl+4+jEYswY7hW7xmIRkdLqu+EqFGhS2yA0MC+FC+4ymjUJ3tArm32AYozr8E4wGvI2A0/U/FexcFM+If8rHDNVD05CH5XNMDO2w1Fub1VvF7V5RKlkLapXm1y+zBv5uZI0vX1RQZFBoBR6R13K/jf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WXkDwuwU; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="Aw0gqetU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ILnsO+a+BW39hTP4aH4fJQTi8jQC7y/cZrJAPF7Dro2SeKGq1fQHX4u685JBIFn7qs6lD8vTyrQecyew1Fvt8ghFNb8NfLAerX4Dk3/i2qdW5Vep1djKY5Ii+s5mbkbFDLSB4c6zHjcTAyAYByGZzUa23iwv9xW8jITJfnu87GMiRjKDNP1S27eKUlhBpHfLgI85YHLHpGmxoEC76/Z/gQNudF5+vqajz5iLOQjVYsEICeYhlW2UwyKMgHBGkZH4POoEvbIinu1nmtau+EIJ+WYJ8dWHT+thoSg30WCLPjcvEUagSqM3ZC1qEjPNzNfEKpqJb4bYtpaAXNFq7Tfhpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4J00G649Y7XvECg1kmjaJuNbq6mua6ZaDJmrwxIHIEI=;
- b=XpTfINSJsKocbBcc+ZF0ipNvR7+Ngz8Onrg5q9kyF8GedKfSks1R9Qo7z8AROfCVEyIF+16rWtcRq+7kDBT2z9g4KNLJ2eM723Qi1eKnZDd5zWDEnNKMGYuuJ96ikjE2kWaZS3EaB1rmHEMcgtWqz8LZS2iVe/RTPvI8GjwEZBdOwQgCkn500Pft7KdypkraAkiEbljSnFydVD0aO1AXsAhoCuOdJ95+wvmh5jZDWMPLm32XVhLj+AqjzRtnspR8AAF4Z8+cRzNFdUCrTtqc6nFaUOYw2ESHEQ4mXlgxnAO/K8ZztVQ46GhUFeH0Meauy979H85NRgfibo1JQiRnZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4J00G649Y7XvECg1kmjaJuNbq6mua6ZaDJmrwxIHIEI=;
- b=Aw0gqetUvuci+PU+Vt1+OXISnTsE/PCAOb4D4feaIX4luLnZTkm/PUyCpbJOd2KMjxE9fx3oTMVBlpBMt4X3hsIhlXKexDoKN6SWkdacr/tFjI3z1BzSZvMEtizkq6AY3bKF1JNpiQ6j5ZVRU8EN5APAHkig9jHlYn5gGJtCSqE4qeSg7x23d+4osiG8PvgP/bZHXVK5Q7kzp2Vq95iUihHeKZtgm+tML4LTSjPvtvbmdFkyKDuGoQaRMNOgfGJciGzfPA/LZ6zIgQ09pX4QfZwXpy2bvJZE6yWvE2xlDfhboMKFVO0+eqlgb2LZtWqz1Hxdl4+FD94SjY7NcX9y0Q==
-Received: from LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:1ac::6)
- by EA2P220MB1484.NAMP220.PROD.OUTLOOK.COM (2603:10b6:303:251::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.28; Wed, 1 May
- 2024 16:33:14 +0000
-Received: from LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
- ([fe80::7d42:dbbf:4d41:6999]) by LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
- ([fe80::7d42:dbbf:4d41:6999%4]) with mapi id 15.20.7544.023; Wed, 1 May 2024
- 16:33:14 +0000
-From: Min Li <lnimi@hotmail.com>
-To: lee@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Min Li <min.li.xe@renesas.com>
-Subject: [PATCH mfd v2 2/2] mfd: rsmu: add FemtoClock3 support
-Date: Wed,  1 May 2024 12:32:56 -0400
-Message-ID:
- <LV3P220MB120270F8FC18DCCCFD534D82A0192@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240501163256.28463-1-lnimi@hotmail.com>
-References: <20240501163256.28463-1-lnimi@hotmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [tfmBCqiQqYp96HLrxmyMmnvJ5lvrzcRZ]
-X-ClientProxiedBy: BL1PR13CA0276.namprd13.prod.outlook.com
- (2603:10b6:208:2bc::11) To LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:408:1ac::6)
-X-Microsoft-Original-Message-ID: <20240501163256.28463-3-lnimi@hotmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WXkDwuwU"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-61ab6faf179so69135207b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 09:34:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714581293; x=1715186093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X5m5Ft8ibLTazqZcd0FT8Mzs4EFYTDmw9YeSBSiXSp0=;
+        b=WXkDwuwUFO20A0Qc2vzR7wjtnt54keY6Qcz3o7UvFHxZm4VdiH0kSVQzQMPjGASwKi
+         zYFMQnikA0Jh4nGvTa+qcOzqlPKApAlsNtkT6xrSuoBysHTtf6Fh/H9ZQQ0nsd6ycr/w
+         bo5MMWeNzay1Cm0ogv27zf3u9F3kfwguJX70I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714581293; x=1715186093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X5m5Ft8ibLTazqZcd0FT8Mzs4EFYTDmw9YeSBSiXSp0=;
+        b=SjRoRgCbYRIpTA+8wQhj5Wh0Yw1M58SeROeUrvouUhG/0oEMOut6R4g8qBR7zcdLXB
+         Xddv3PFI7ayRZAdrEPpPUdrPg00kvAvqdjF5xJRwk3bONJpHXropsyH1txQRMQK/6Owh
+         tEMwX+UusognK1OOr9Sppnx05dmPNB5EnOFrxSSOcraI0/GylSGXcyiJrMbwdEwHz3Wr
+         OYqYnrbxeYnsmb6WEXmoEtUTEfGGh4IhlK5wVyrvH1ZV2Jc40Zd6WPhYumMuuqarB9Da
+         SWsff9uPT6VJTplWPrsa6Qszi2n9G4/AcGdt4hoqA9RaCyF9bGdHH7K+P0hMYiUSDc2e
+         eLow==
+X-Forwarded-Encrypted: i=1; AJvYcCXqxG/neij3PLO67GCIfu/uF4meFzKVg+iOQBwRCmOfm3T5d+EJRTCkUM1kE+E2t+mssPWrIoMyNChctNQPm19lhkDWuD5Y0noVvxun
+X-Gm-Message-State: AOJu0Yzi20Njri9NE+0eK7XrHbUngZUdxPC0HdRGoUIVQLLRIy1/3evH
+	obsKrBDdTsxu6GkSGYMsQH+bzkWv9rsrXrxyecSsCRgr10TdnpBUO7odhdonn9iuVWOu63OHKgv
+	N2kCWTzlH/L53WtVAfrFRzy2Cx9buFNlxkdEi
+X-Google-Smtp-Source: AGHT+IExBD8RTBL8xum3e8Vc0foHDr1ntymyD24zXkO1pDy4EK+ZR53f24gPaF9yd/K4OBUlanMFViIAGl1MJIXUnoU=
+X-Received: by 2002:a81:4c86:0:b0:617:cc94:31bf with SMTP id
+ z128-20020a814c86000000b00617cc9431bfmr3068340ywa.50.1714581293231; Wed, 01
+ May 2024 09:34:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3P220MB1202:EE_|EA2P220MB1484:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4a2bb0d-ec46-47c5-174f-08dc69fc65f6
-X-Microsoft-Antispam: BCL:0;ARA:14566002|461199019|440099019|3412199016;
-X-Microsoft-Antispam-Message-Info:
-	JOhWKXQTCAxDpoQ6J9unTcc5IdKTde0wsZjohLQILgFe87BMLrvB75zETHC4DfMm4MfC8jm+BOa/+5QT1rdMeYlWo/NO/aOZWjvHEb5YZYNJEn9z79TJaDjCwlm+px6mSdmoE/fn7vGvyY27hd/QWeU3GNpWhd850DHjAmZgIq36E5iOXGopLRB+fWJ7vHko7x2gCRGY4WlH/ht+miwxyed4I2JgrxcdjjZCEAzFaCIjIaQGtpPDyvUnM0E+CDq0hKS3mqVQq8DUSuysctiGWu7ZFfMm7lHepgO01ZyJiY6tRLAm26NVI9yH4nYqlMvc7+7Cy/Z5sGhHPQQS7EC1eNKRO2bsDKpUlbpPugUu1x0BtKAZP2C1iwvpdDfCKPbFx1MkcL54ywhhZtD5cJlNzAYngYr1Ody3LCglEbxd4rl4D/3ZXo109EskKGvCJK05MnLI0kldog8Ra5QlRfN6ACzvvz4XLRPbNXo4yUA5IkfDBKioubsuT3HefuEaoXa0FZhLW2BtZCAysGAt50fnwNYUFd8lbaxS+52SD1xLOGk=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3uPZ6nOmC18Bp1NDbvvC+vkGhB3VewJAsVDqtJyP3iq20Vg/nVWKBP/iLD+o?=
- =?us-ascii?Q?7BSEuKxqh3ite/buhGdq3t4LNAxk7v0ec7kKXvLvJEY2YC3zkhra7mF8Eyaq?=
- =?us-ascii?Q?dKQWopMK+k+t9RPC8bDg1tmLKn5rekhUrNIvd9wdtQxpttOF8R30HMcN/4Qi?=
- =?us-ascii?Q?FWHJIAOFuOMizDpq+HZb9m37iwo0hUkhqDXjx9fW3E4NNU175pHvc56fJ6XL?=
- =?us-ascii?Q?Qs9iqVX5FjJI+A1go+RQmFHS4JHIkasxDCAV+OXhRe5zz2yGpN2AQ/00Kkn5?=
- =?us-ascii?Q?RHX5YUpeLW+jjlTAFUl5Vm7IXg1OTzJR6AFZS4pTOCi443tIZipRghmUYxAy?=
- =?us-ascii?Q?bnEI09dUqU0YOI+4Wk2eSpt3JOhkvAyCN6WgVesHMfwu1clYasWT9X6lJu49?=
- =?us-ascii?Q?uWliC4m5+fEUWVRUimcPMm9cNY5SmWhq56dTi8owcEK1j/waF3VyPsxktIW/?=
- =?us-ascii?Q?At91HJn3ppejbv0dLXkx3STYHMzQl6faKGt1ZTkv155FDKca3sYOMQB9MaCS?=
- =?us-ascii?Q?7iR5AQjAgyWScyeaiEEjc1gw9YbgZRgmjJS1WvHoF4SwILKH8MX/gpBm5Erg?=
- =?us-ascii?Q?qVJC+FuHGpwaN51DLHPTPmBkY8D0DE0HClhytYDw/iEGSvQmHdCplOU9s//3?=
- =?us-ascii?Q?Vvc39tmm4Pl0M5pIo9DkKD5cC5iIlNDqBazcv/A3wvzmwk3udiuf5hZDbME7?=
- =?us-ascii?Q?E3doopsOGHv3nWhjzqNHBnWWeJ/dZDtuJa0R7l+u9caXMPlTE86ZPQawWLFz?=
- =?us-ascii?Q?HiQV+DgnwznnHF/9F+28PY5znE0cnSBUItp+kpuKADys8EnSMXLr7kdAmA4l?=
- =?us-ascii?Q?FNH8JR42/WMvQ6yAfiCD4RhTSjcdi3NniD6eSDPxCSipH1t+AaR75WOXD1cd?=
- =?us-ascii?Q?pVA79wL3N/CZfbT9OiwXj39vtqtkdYoV2z0sLXh0jPAVon+464NA1QLo29ec?=
- =?us-ascii?Q?sPn6iwdM6CDVEuW5RChi68EOz1aUDLaTD8DIuxQ93YfYU+PZZo3lOjEjU/i6?=
- =?us-ascii?Q?t2kLRMOjP5vyjcYq6yyNF30Iwni5Y4NhiKJAYibQoMhrFLgfpf0u9zPUZMdC?=
- =?us-ascii?Q?Lbm0kOtOYjA2IJICkCQf76yxtY/10MwYYQOvPkbFZxylRXflvS4Aa/E+xPhT?=
- =?us-ascii?Q?9cCaipdrJqHRngXLHMZ8/jJ8/HR8XBPkwbUARxow4eazd/zcdfEqNs6+sTI+?=
- =?us-ascii?Q?Dd41ThMJK9UmJ/EbOzqU6JBLwzT+DA20Jp78YQmvnLqdt3E/LKEC7xGMH/8?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-3458f.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4a2bb0d-ec46-47c5-174f-08dc69fc65f6
-X-MS-Exchange-CrossTenant-AuthSource: LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2024 16:33:14.5449
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: EA2P220MB1484
+References: <20240422152500.1.I8939e49084a6fef78496eb73edafdf3c2c4afbf4@changeid>
+ <CABBYNZLCjrJUiVzNf53XYM-ZHWL6TZD4yFNtNGOuYi=6s5Q+OA@mail.gmail.com>
+ <CAJQfnxHUW+MdJUp9VCrF2Nq_-JZrd7mKBR9NdDoo0SOvgH5WUQ@mail.gmail.com>
+ <CANFp7mU2Chj_cZ_26kfM8TE1OToZzUeFKz61D7j-0ykMBQeG4A@mail.gmail.com> <CABBYNZJK6zyYYmi66prKMdF69HkwfhOvMeB0TnEcGYRLTTr2jw@mail.gmail.com>
+In-Reply-To: <CABBYNZJK6zyYYmi66prKMdF69HkwfhOvMeB0TnEcGYRLTTr2jw@mail.gmail.com>
+From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date: Wed, 1 May 2024 09:34:41 -0700
+Message-ID: <CANFp7mWWYmm9gPrsDBho3sDGu5q_fQztR+LJJUWQ_Faw0QRXFQ@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: btusb: Add debugfs to force toggling remote wakeup
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Archie Pusaka <apusaka@google.com>, linux-bluetooth <linux-bluetooth@vger.kernel.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
+	CrosBT Upstreaming <chromeos-bluetooth-upstreaming@chromium.org>, 
+	Archie Pusaka <apusaka@chromium.org>, Abhishek Pandit-Subedi <abhishekpandit@google.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Min Li <min.li.xe@renesas.com>
+On Tue, Apr 30, 2024 at 9:46=E2=80=AFAM Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
+>
+> Hi Abhishek,
+>
+> On Fri, Apr 26, 2024 at 1:04=E2=80=AFPM Abhishek Pandit-Subedi
+> <abhishekpandit@chromium.org> wrote:
+> >
+> > On Fri, Apr 26, 2024 at 2:08=E2=80=AFAM 'Archie Pusaka' via ChromeOS Bl=
+uetooth
+> > Upstreaming <chromeos-bluetooth-upstreaming@chromium.org> wrote:
+> > >
+> > > Hi Luiz,
+> > >
+> > > On Thu, 25 Apr 2024 at 03:05, Luiz Augusto von Dentz
+> > > <luiz.dentz@gmail.com> wrote:
+> > > >
+> > > > Hi Archie,
+> > > >
+> > > > On Mon, Apr 22, 2024 at 3:25=E2=80=AFAM Archie Pusaka <apusaka@goog=
+le.com> wrote:
+> > > > >
+> > > > > From: Archie Pusaka <apusaka@chromium.org>
+> > > > >
+> > > > > Sometimes we want the controller to not wake the host up, e.g. to
+> > > > > save the battery. Add some debugfs knobs to force the wake by BT
+> > > > > behavior.
+> > > > >
+> > > > > Signed-off-by: Archie Pusaka <apusaka@chromium.org>
+> > > > > Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@google.com>
+> > > > >
+> > > > > ---
+> > > > >
+> > > > >  drivers/bluetooth/btusb.c | 19 +++++++++++++++++++
+> > > > >  1 file changed, 19 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.=
+c
+> > > > > index 8bede0a335668..846b15fc3c04c 100644
+> > > > > --- a/drivers/bluetooth/btusb.c
+> > > > > +++ b/drivers/bluetooth/btusb.c
+> > > > > @@ -873,6 +873,9 @@ struct btusb_data {
+> > > > >         unsigned cmd_timeout_cnt;
+> > > > >
+> > > > >         struct qca_dump_info qca_dump;
+> > > > > +
+> > > > > +       bool force_enable_remote_wake;
+> > > > > +       bool force_disable_remote_wake;
+> > > > >  };
+> > > > >
+> > > > >  static void btusb_reset(struct hci_dev *hdev)
+> > > > > @@ -4596,6 +4599,10 @@ static int btusb_probe(struct usb_interfac=
+e *intf,
+> > > > >
+> > > > >         debugfs_create_file("force_poll_sync", 0644, hdev->debugf=
+s, data,
+> > > > >                             &force_poll_sync_fops);
+> > > > > +       debugfs_create_bool("force_enable_remote_wake", 0644, hde=
+v->debugfs,
+> > > > > +                           &data->force_enable_remote_wake);
+> > > > > +       debugfs_create_bool("force_disable_remote_wake", 0644, hd=
+ev->debugfs,
+> > > > > +                           &data->force_disable_remote_wake);
+> > > > >
+> > > > >         return 0;
+> > > > >
+> > > > > @@ -4702,6 +4709,18 @@ static int btusb_suspend(struct usb_interf=
+ace *intf, pm_message_t message)
+> > > > >                 }
+> > > > >         }
+> > > > >
+> > > > > +       if (!PMSG_IS_AUTO(message)) {
+> > > > > +               if (data->force_enable_remote_wake) {
+> > > > > +                       data->udev->do_remote_wakeup =3D 1;
+> > > > > +                       if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, &d=
+ata->flags))
+> > > > > +                               data->udev->reset_resume =3D 0;
+> > > > > +               } else if (data->force_disable_remote_wake) {
+> > > > > +                       data->udev->do_remote_wakeup =3D 0;
+> > > > > +                       if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, &d=
+ata->flags))
+> > > > > +                               data->udev->reset_resume =3D 1;
+> > > > > +               }
+> > > > > +       }
+> > > > > +
+> > > > >         return 0;
+> > > > >  }
+> > > > >
+> > > > > --
+> > > > > 2.44.0.769.g3c40516874-goog
+> > > >
+> > > > There is a D-Bus interface available to overwrite the wakeup settin=
+g:
+> > > >
+> > > > https://github.com/bluez/bluez/blob/master/doc/org.bluez.Device.rst=
+#boolean-wakeallowed-readwrite
+> > > >
+> > > > Or do you want a master switch for it? On the other hand aren't we
+> > > > getting into the rfkill area if you really want to switch off radio
+> > > > activity while suspended? That seems like a better idea then just
+> > > > disable remote wakeup.
+> >
+> > This DBUS api is different from the quirk this is introducing.
+> >
+> > The `Wake Allowed` field in D-bus controls whether we add the address
+> > to the Classic Event Filter (HIDP) or LE Filter Accept List (HOGP) but
+> > not whether we allow wake at the transport level (which is why
+> > hdev->wakeup exists).
+> >
+> > This change specifically addresses a quirk with Realtek chipsets:
+> > RTL8822/RTL8852 will do "global shutdown" and power off Bluetooth if
+> > USB Remote Wake bit is not set. The USB remote_wake bit is normally
+> > set by the USB stack based on whether device_may_wakeup(udev) =3D=3D tr=
+ue.
+> > This means that RTL88x2 will lose power around suspend/resume if there
+> > are no wake capable devices connected.
+> >
+> > ChromeOS decided to use idle power and resume-time to determine
+> > whether to allow remote wake or not for these chipsets and we want to
+> > move this control to userspace so that we don't have to hold CHROMIUM
+> > patches in the kernel applying this policy (we want udev rules
+> > instead). RTL8852 gets force enabled remote wake because the
+> > RESET_RESUME behavior of this chip would otherwise increase our resume
+> > time >1s which breaks one of our platform requirements.
+> >
+> > The end-goal of these changes:
+> > * We detect RTL8822 or RTL8852 with udev and apply the right policy.
+> > * RTL8822 gets force_disable_remote_wake (idle power consumption too
+> > high otherwise)
+> > * RTL8852 gets force_enable_remote_wake (resume time too long otherwise=
+)
+>
+> Got it, but the suggestion was to instead of using
+> force_enable_remote_wake, which is sort of non-standard, why don't
+> Chrome OS simply use rkill interface to tell the driver to shutdown?
+> On resume then you can just unblock via rfkill that should have the
+> same result as using force_enable_remote_wake, well except if there is
+> a bug in the driver that is not handling rfkill as a 'global
+> shutdown', but then you need to fix the driver not introduce yet
+> another debugfs entry to bypass it.
 
-The RENESAS FemtoClock3 Wireless is a high-performance
-jitter attenuator, frequency translator, and clock
-synthesizer. This patch only adds I2C bus access for
-FemtoClock3 through REGMAP.
+Did you mean `force_disable_remote_wake`? rfkill will work for that
+around system suspend. We preferred not to do it because we don't use
+userspace suspend signals with Bluez today (preferring the kernel
+suspend notifier).
 
-Signed-off-by: Min Li <min.li.xe@renesas.com>
----
- drivers/mfd/rsmu_core.c  | 10 +++++-----
- drivers/mfd/rsmu_i2c.c   | 16 ++++++++--------
- include/linux/mfd/rsmu.h |  4 ++--
- 3 files changed, 15 insertions(+), 15 deletions(-)
+`force_enable_remote_wake` still needs debugfs as rfkill can't force
+an interface to stay awake as far as I know.
 
-diff --git a/drivers/mfd/rsmu_core.c b/drivers/mfd/rsmu_core.c
-index 29437fd0b..951ddd92c 100644
---- a/drivers/mfd/rsmu_core.c
-+++ b/drivers/mfd/rsmu_core.c
-@@ -40,12 +40,12 @@ static struct mfd_cell rsmu_sabre_devs[] = {
- 	},
- };
- 
--static struct mfd_cell rsmu_sl_devs[] = {
-+static struct mfd_cell rsmu_fc3_devs[] = {
- 	[RSMU_PHC] = {
--		.name = "8v19n85x-phc",
-+		.name = "rc38xxx-phc",
- 	},
- 	[RSMU_CDEV] = {
--		.name = "8v19n85x-cdev",
-+		.name = "rc38xxx-cdev",
- 	},
- };
- 
-@@ -61,8 +61,8 @@ int rsmu_core_init(struct rsmu_ddata *rsmu)
- 	case RSMU_SABRE:
- 		cells = rsmu_sabre_devs;
- 		break;
--	case RSMU_SL:
--		cells = rsmu_sl_devs;
-+	case RSMU_FC3:
-+		cells = rsmu_fc3_devs;
- 		break;
- 	default:
- 		dev_err(rsmu->dev, "Unsupported RSMU device type: %d\n", rsmu->type);
-diff --git a/drivers/mfd/rsmu_i2c.c b/drivers/mfd/rsmu_i2c.c
-index cba64f107..a3f50a184 100644
---- a/drivers/mfd/rsmu_i2c.c
-+++ b/drivers/mfd/rsmu_i2c.c
-@@ -262,11 +262,11 @@ static const struct regmap_config rsmu_sabre_regmap_config = {
- 	.can_multi_write = true,
- };
- 
--static const struct regmap_config rsmu_sl_regmap_config = {
-+static const struct regmap_config rsmu_fc3_regmap_config = {
- 	.reg_bits = 16,
- 	.val_bits = 8,
- 	.reg_format_endian = REGMAP_ENDIAN_BIG,
--	.max_register = 0x340,
-+	.max_register = 0xE88,
- 	.cache_type = REGCACHE_NONE,
- 	.can_multi_write = true,
- };
-@@ -302,8 +302,8 @@ static int rsmu_i2c_probe(struct i2c_client *client)
- 	case RSMU_SABRE:
- 		cfg = &rsmu_sabre_regmap_config;
- 		break;
--	case RSMU_SL:
--		cfg = &rsmu_sl_regmap_config;
-+	case RSMU_FC3:
-+		cfg = &rsmu_fc3_regmap_config;
- 		break;
- 	default:
- 		dev_err(rsmu->dev, "Unsupported RSMU device type: %d\n", rsmu->type);
-@@ -336,8 +336,8 @@ static const struct i2c_device_id rsmu_i2c_id[] = {
- 	{ "8a34001",  RSMU_CM },
- 	{ "82p33810", RSMU_SABRE },
- 	{ "82p33811", RSMU_SABRE },
--	{ "8v19n850", RSMU_SL },
--	{ "8v19n851", RSMU_SL },
-+	{ "rc38xxx0", RSMU_FC3 },
-+	{ "rc38xxx1", RSMU_FC3 },
- 	{}
- };
- MODULE_DEVICE_TABLE(i2c, rsmu_i2c_id);
-@@ -347,8 +347,8 @@ static const struct of_device_id rsmu_i2c_of_match[] = {
- 	{ .compatible = "idt,8a34001",  .data = (void *)RSMU_CM },
- 	{ .compatible = "idt,82p33810", .data = (void *)RSMU_SABRE },
- 	{ .compatible = "idt,82p33811", .data = (void *)RSMU_SABRE },
--	{ .compatible = "idt,8v19n850", .data = (void *)RSMU_SL },
--	{ .compatible = "idt,8v19n851", .data = (void *)RSMU_SL },
-+	{ .compatible = "idt,rc38xxx0", .data = (void *)RSMU_FC3 },
-+	{ .compatible = "idt,rc38xxx1", .data = (void *)RSMU_FC3 },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, rsmu_i2c_of_match);
-diff --git a/include/linux/mfd/rsmu.h b/include/linux/mfd/rsmu.h
-index 0379aa207..b4a90fc81 100644
---- a/include/linux/mfd/rsmu.h
-+++ b/include/linux/mfd/rsmu.h
-@@ -11,11 +11,11 @@
- #define RSMU_MAX_WRITE_COUNT	(255)
- #define RSMU_MAX_READ_COUNT	(255)
- 
--/* The supported devices are ClockMatrix, Sabre and SnowLotus */
-+/* The supported devices are ClockMatrix, Sabre and FemtoClock3 */
- enum rsmu_type {
- 	RSMU_CM		= 0x34000,
- 	RSMU_SABRE	= 0x33810,
--	RSMU_SL		= 0x19850,
-+	RSMU_FC3	= 0x38312,
- };
- 
- /**
--- 
-2.39.2
-
+>
+> > Hope this provides enough context for why this change is necessary.
+> >
+> > >
+> > > Yes, the initial idea was a master switch.
+> > > Thanks for your suggestions.
+> > > Let me discuss it with Abhishek.
+> > > >
+> > > > --
+> > > > Luiz Augusto von Dentz
+> > >
+> > > Thanks,
+> > > Archie
+> > >
+> > > --
+> > > You received this message because you are subscribed to the Google Gr=
+oups "ChromeOS Bluetooth Upstreaming" group.
+> > > To unsubscribe from this group and stop receiving emails from it, sen=
+d an email to chromeos-bluetooth-upstreaming+unsubscribe@chromium.org.
+> > > To post to this group, send email to chromeos-bluetooth-upstreaming@c=
+hromium.org.
+> > > To view this discussion on the web visit https://groups.google.com/a/=
+chromium.org/d/msgid/chromeos-bluetooth-upstreaming/CAJQfnxHUW%2BMdJUp9VCrF=
+2Nq_-JZrd7mKBR9NdDoo0SOvgH5WUQ%40mail.gmail.com.
+>
+>
+>
+> --
+> Luiz Augusto von Dentz
