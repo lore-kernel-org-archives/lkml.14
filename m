@@ -1,61 +1,61 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6012651009
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAEA51C2A
 	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 09:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714555183; cv=none; b=VAbARg9F1v8GoAi5z8D4MZyV2dgqt2L2QNIlD0Nr9Qr0qxdALoDNW2lzghnOWm+zIY2gLaqbnQ6kyiy09earu10mjYNi66arjQ5GWRM3PFmRBJgnqpyhpl+z+BYbdS9otDXY0ONCfw0nLPncZZYNcA+ZvM7LGKpwTv2ul+eCItI=
+	t=1714555183; cv=none; b=B7beL1BU1XG+77ITt16WFBvojGUE6bPoYemcHDUMYBbaPb1Cx3Vpl2v52Ry3mKbTEmrjy4IEJtFjbs851RC4iAn1GZutniNr45w1dvhgH+sXC50QJ9qvKD7SI1a/SCDoZYuO5gqdohyKUjyrf4ipAajASdcZbk+WJKwzpNEa7pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714555183; c=relaxed/simple;
-	bh=Zuk08dvjADNHTbIa6CzaaYkWsFD6XiEyakBgvGBCZx4=;
+	bh=fnl0PRNOnTN5F2TPa7B0Obhuw7G9puincq7QmLU2688=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UXmUIw6CGhrXUBJQ/vOoZX9JqkInUelC2aS/0tVq7Oco4jvykPx7jMbwEfmS0mV8rkdHlOSjCmjNR8cJjx4dZbev1LWPuadqk0v92mEaeIi8/LdOtMHIuFNVeuQL1axRxviz4CisyLynaCWHn39g0chVCvGmzfF4KU2bKfQ1KIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i9/uiZlG; arc=none smtp.client-ip=209.85.208.47
+	 In-Reply-To:To:Cc; b=XkdPvhZP9Prm/necbMR9uQy7UZx3jwhNXlshleVHru9fZJKwTWeMhSIfVH0b9hjQwi5MjSmZAduu7yA93pEC6BQ6sseE+3mvzQlAPPy/60/AcZFYcCi+Qe3AhPMHbAmeaTE56YqQzdbwQBlLVSkrFhqOnmf2kc7II7emD8NUaRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xxulVpEV; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i9/uiZlG"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56e37503115so7079123a12.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xxulVpEV"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a5200202c1bso859727366b.0
         for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 02:19:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1714555180; x=1715159980; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AUeLm56aXaKJ3j7lV7reH0G/1KMdXe/YGgnuhtOmcYA=;
-        b=i9/uiZlGQR4LV0yZ1RKKgnztn16rl1lKSypqW4Ino1SuoQZvknoEYBJdhokkoSEtR9
-         fSZEWQUzmPCidU5w3lGIqWRB3rHGWCgLIT/2Lws2KRLlJIB3DQMWCFPwkyIYfiVNCJ7C
-         IB3eKmy7Kw2kfmfsjQs8EGyOHay7WhmF7cpkpewuqjx+R3nD3cT8iYBrdn89OrAwnPvV
-         Q2IgYXb2xqEd940EfkT62kgrOV0zf4rGbw8RfmrcxxKwlpSAJ2C8M9CILOAP3um+muh6
-         Mpl8Vy4A5hH+Kz2uV8JiEp33u9t52UESruMhqtNLMUjHdOxKIfPCLhWHcC73Qm1BoAHU
-         QmnA==
+        bh=gpsAkp1XfiYO3VUkSw1HuWtX6ajnqroh4NpfGPkLszE=;
+        b=xxulVpEVg397oQccBfHMAgwZVzpXf6TZgI67RaXXRGE9EoAKYAvutYes/N2JSsMsNy
+         WMFLdXoYJrhEtdylueAfGsimvubAItQPf6jwfdL/mq1+h3OLq2svbbTF91pe+uUxn2sN
+         hcyK27vSD6+jrtP+IcbPWencnfLT+ZC/lg0nLJE9cfcu0yZ4Y/cox5r0E/Bw5CiIhL8j
+         GLF8fTfkYmnDpdXF3AmQig2Y31w+4o64Hifs967pFUof519yNOd5lbp2IkPIoyKm1L9w
+         63LC8ymaYLqPDAtEsnViFbpcBcIUqLsJ8z3CAKFPsQSQc3GElqI6BgtLhGMzZNDNitTC
+         XS9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1714555180; x=1715159980;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AUeLm56aXaKJ3j7lV7reH0G/1KMdXe/YGgnuhtOmcYA=;
-        b=f51XmdmbPti6myBjfgArKXgeIupXvDMMDKWdbrkVJy92K6DwHmD1+W3NGLWzPCP0Kv
-         H78V/ofBmaQ+HkWO1z32AhJLF4OMJR+XQJ5clABLrXJ68o56Uq71pSlwTFJWFkszbZHD
-         PmIvhopniLnC4k0GwXGeAjfpOPMqPV1EfJI9vut8z/o/9tjBpoEOCOPF770u4bm4+hJo
-         /ng7+zAKEn1lxFHeJqVpVli38gSmXziBIdm14MrGjogOg82H3kYKYBB9MNzBbWJJY0uP
-         dUaWzRlzIi7n1E8qXzwX+MTjMexlIOWjPav599b2LXgcwoWmcrYAqvXfqgCxQKlRLmGu
-         Vgag==
-X-Forwarded-Encrypted: i=1; AJvYcCW90pH3PyeHAe/e3ZwMOMkPi9FH6hhAT6I3vljT+oSBikqROjX67ppUxZgQfUO21aD5GDJkt9ZvsVCmc93FhKoXAV/rzuVjLhsBUL1N
-X-Gm-Message-State: AOJu0YzeFnj+n7p+j2qKqvM4ltArGQHwFOXK3P7/VA2bt6Mkpetk3Qga
-	UYxXODiRmJGkylMdhvfgoh6tutxOEdDauHc7C7T/Ow4Qr5TWLna/TI/8oeDVh2w=
-X-Google-Smtp-Source: AGHT+IFtv+d0KYeiBc0zvVXr50XHiQxtl/aTHZVrGYJIG31OJxdDdNjjVQB2H56WV1MWD+r5jjzDrw==
-X-Received: by 2002:a17:906:5603:b0:a58:a37d:7192 with SMTP id f3-20020a170906560300b00a58a37d7192mr1324135ejq.76.1714555179815;
-        Wed, 01 May 2024 02:19:39 -0700 (PDT)
+        bh=gpsAkp1XfiYO3VUkSw1HuWtX6ajnqroh4NpfGPkLszE=;
+        b=h4csY4z0yFhKWHB2E0jw6xYVol3X3MMr1K5VmQ1/djKuzPpFnhWqObBPV7iSxVkPRH
+         ATKL6jtIDmO0mk6GxR4GdhKBI/AGFTQMyQxmePSRITjt44+ZRIhfVAGCR7/ilV6/JhLK
+         Qymgl7lVaZLmA4MTKC5GWB5KBsNlmmMXkne9Duz5T2uuw5Yl1/peLYQSYfDFk3jj8QR/
+         B+S0z+8pwLv1Vedg2gT+JdX91TTHyy3A2kWcXC7EyaitzT3cM8Hgq4u5ov9RxOl2+0wT
+         y27UbdIJxlEa2KFdy7+zMlCgFAd28PKryX+pAD3x0+kg+TkUp97KwyUUvrqSW1ouGmdJ
+         HuUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLIJ2/XCOgETp/tAzdi4muDa9azVlOBoqE7KMwI2w4oIIcvbMEJ2ak9KAk4sM50n3N7W9reA1NFy6WYldYdRtjuiihjuQ2Tl14pIbG
+X-Gm-Message-State: AOJu0YxTazpNDZpIBk1gkhIV5/lexFOmW/2sqPA2fKqE52pifbOUNWoW
+	MtMk/zwAw8XKLM6HlokYP0e5PxYiHhIJ6C6QNtXry65z4Hf/dShgYjpsAsNJQuk=
+X-Google-Smtp-Source: AGHT+IEkQUXDOOtvuZVGg3nz6KbIVcLBaS3f++uJVokxkU0jYEyvOsaDOInv1XRYLWI7ytlxWsL6ow==
+X-Received: by 2002:a17:906:1b4b:b0:a58:c09d:1484 with SMTP id p11-20020a1709061b4b00b00a58c09d1484mr1850250ejg.7.1714555180304;
+        Wed, 01 May 2024 02:19:40 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
         by smtp.gmail.com with ESMTPSA id bw13-20020a170906c1cd00b00a58de09fd92sm5425674ejb.27.2024.05.01.02.19.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 01 May 2024 02:19:39 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Wed, 01 May 2024 10:19:40 +0100
-Subject: [PATCH v2 5/7] phy: exynos5-usbdrd: uniform order of register bit
- macros
+Date: Wed, 01 May 2024 10:19:41 +0100
+Subject: [PATCH v2 6/7] phy: exynos5-usbdrd: convert to clk_bulk for phy
+ (register) access
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240501-usb-phy-gs101-v2-5-ed9f14a1bd6d@linaro.org>
+Message-Id: <20240501-usb-phy-gs101-v2-6-ed9f14a1bd6d@linaro.org>
 References: <20240501-usb-phy-gs101-v2-0-ed9f14a1bd6d@linaro.org>
 In-Reply-To: <20240501-usb-phy-gs101-v2-0-ed9f14a1bd6d@linaro.org>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -87,160 +87,154 @@ Cc: Krzysztof Kozlowski <krzk@kernel.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.12.4
 
-Most of the macros are ordered high -> low, but there are some
-outliers.
+In preparation for support for additional platforms, convert the phy
+register access clock to using the clk_bulk interfaces.
 
-Order them all uniformly from high to low. This will allow adding
-additional register (field) definitions in a consistent way.
+Newer SoCs like Google Tensor gs101 require more clocks for register
+access, and converting to clk_bulk simplifies addition of those extra
+clocks.
 
-While at it, also remove some extra empty lines to group register bit
-field definitions together with the relevant register. This makes the
-registers easier to distinguish visually.
-
-No functional change.
+Given the list of phy register clocks is requested as optional, I
+haven't made it platform specific, as only those clocks that are
+actually declared (in the DT) will be retrieved and the code behaves as
+before this change. Nevertheless, this piece of the code is easy to
+change in the future if the need arises.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- drivers/phy/samsung/phy-exynos5-usbdrd.c | 44 +++++++++++---------------------
- 1 file changed, 15 insertions(+), 29 deletions(-)
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 45 +++++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index 4f30ced439b9..200285fa823b 100644
+index 200285fa823b..c5a0c4882a86 100644
 --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
 +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -36,13 +36,11 @@
+@@ -195,7 +195,8 @@ struct exynos5_usbdrd_phy_drvdata {
+  * struct exynos5_usbdrd_phy - driver data for USB 3.0 PHY
+  * @dev: pointer to device instance of this platform device
+  * @reg_phy: usb phy controller register memory base
+- * @clk: phy clock for register access
++ * @phy_clks: phy clocks for register access
++ * @n_phy_clks: number of phy clocks for register access
+  * @pipeclk: clock for pipe3 phy
+  * @utmiclk: clock for utmi+ phy
+  * @itpclk: clock for ITP generation
+@@ -212,7 +213,8 @@ struct exynos5_usbdrd_phy_drvdata {
+ struct exynos5_usbdrd_phy {
+ 	struct device *dev;
+ 	void __iomem *reg_phy;
+-	struct clk *clk;
++	struct clk_bulk_data  *phy_clks;
++	size_t n_phy_clks;
+ 	struct clk *pipeclk;
+ 	struct clk *utmiclk;
+ 	struct clk *itpclk;
+@@ -408,7 +410,7 @@ static int exynos5_usbdrd_phy_init(struct phy *phy)
+ 	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+ 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
  
- /* Exynos5: USB 3.0 DRD PHY registers */
- #define EXYNOS5_DRD_LINKSYSTEM			0x04
--
-+#define LINKSYSTEM_XHCI_VERSION_CONTROL		BIT(27)
- #define LINKSYSTEM_FLADJ_MASK			(0x3f << 1)
- #define LINKSYSTEM_FLADJ(_x)			((_x) << 1)
--#define LINKSYSTEM_XHCI_VERSION_CONTROL		BIT(27)
+-	ret = clk_prepare_enable(phy_drd->clk);
++	ret = clk_bulk_prepare_enable(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 	if (ret)
+ 		return ret;
  
- #define EXYNOS5_DRD_PHYUTMI			0x08
--
- #define PHYUTMI_OTGDISABLE			BIT(6)
- #define PHYUTMI_FORCESUSPEND			BIT(1)
- #define PHYUTMI_FORCESLEEP			BIT(0)
-@@ -50,40 +48,31 @@
- #define EXYNOS5_DRD_PHYPIPE			0x0c
+@@ -458,7 +460,7 @@ static int exynos5_usbdrd_phy_init(struct phy *phy)
+ 	reg &= ~PHYCLKRST_PORTRESET;
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
  
- #define EXYNOS5_DRD_PHYCLKRST			0x10
--
- #define PHYCLKRST_EN_UTMISUSPEND		BIT(31)
--
- #define PHYCLKRST_SSC_REFCLKSEL_MASK		(0xff << 23)
- #define PHYCLKRST_SSC_REFCLKSEL(_x)		((_x) << 23)
--
- #define PHYCLKRST_SSC_RANGE_MASK		(0x03 << 21)
- #define PHYCLKRST_SSC_RANGE(_x)			((_x) << 21)
--
- #define PHYCLKRST_SSC_EN			BIT(20)
- #define PHYCLKRST_REF_SSP_EN			BIT(19)
- #define PHYCLKRST_REF_CLKDIV2			BIT(18)
--
- #define PHYCLKRST_MPLL_MULTIPLIER_MASK		(0x7f << 11)
- #define PHYCLKRST_MPLL_MULTIPLIER_100MHZ_REF	(0x19 << 11)
- #define PHYCLKRST_MPLL_MULTIPLIER_50M_REF	(0x32 << 11)
- #define PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF	(0x68 << 11)
- #define PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF	(0x7d << 11)
- #define PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF	(0x02 << 11)
--
--#define PHYCLKRST_FSEL_UTMI_MASK		(0x7 << 5)
- #define PHYCLKRST_FSEL_PIPE_MASK		(0x7 << 8)
-+#define PHYCLKRST_FSEL_UTMI_MASK		(0x7 << 5)
- #define PHYCLKRST_FSEL(_x)			((_x) << 5)
- #define PHYCLKRST_FSEL_PAD_100MHZ		(0x27 << 5)
- #define PHYCLKRST_FSEL_PAD_24MHZ		(0x2a << 5)
- #define PHYCLKRST_FSEL_PAD_20MHZ		(0x31 << 5)
- #define PHYCLKRST_FSEL_PAD_19_2MHZ		(0x38 << 5)
--
- #define PHYCLKRST_RETENABLEN			BIT(4)
--
- #define PHYCLKRST_REFCLKSEL_MASK		(0x03 << 2)
- #define PHYCLKRST_REFCLKSEL_PAD_REFCLK		(0x2 << 2)
- #define PHYCLKRST_REFCLKSEL_EXT_REFCLK		(0x3 << 2)
--
- #define PHYCLKRST_PORTRESET			BIT(1)
- #define PHYCLKRST_COMMONONN			BIT(0)
+-	clk_disable_unprepare(phy_drd->clk);
++	clk_bulk_disable_unprepare(phy_drd->n_phy_clks, phy_drd->phy_clks);
  
-@@ -101,30 +90,27 @@
- #define PHYREG1_CR_ACK				BIT(0)
+ 	return 0;
+ }
+@@ -470,7 +472,7 @@ static int exynos5_usbdrd_phy_exit(struct phy *phy)
+ 	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+ 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
  
- #define EXYNOS5_DRD_PHYPARAM0			0x1c
--
- #define PHYPARAM0_REF_USE_PAD			BIT(31)
- #define PHYPARAM0_REF_LOSLEVEL_MASK		(0x1f << 26)
- #define PHYPARAM0_REF_LOSLEVEL			(0x9 << 26)
+-	ret = clk_prepare_enable(phy_drd->clk);
++	ret = clk_bulk_prepare_enable(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 	if (ret)
+ 		return ret;
  
- #define EXYNOS5_DRD_PHYPARAM1			0x20
--
- #define PHYPARAM1_PCS_TXDEEMPH_MASK		(0x1f << 0)
- #define PHYPARAM1_PCS_TXDEEMPH			(0x1c)
+@@ -492,7 +494,7 @@ static int exynos5_usbdrd_phy_exit(struct phy *phy)
+ 		PHYTEST_POWERDOWN_HSP;
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
  
- #define EXYNOS5_DRD_PHYTERM			0x24
+-	clk_disable_unprepare(phy_drd->clk);
++	clk_bulk_disable_unprepare(phy_drd->n_phy_clks, phy_drd->phy_clks);
  
- #define EXYNOS5_DRD_PHYTEST			0x28
--
- #define PHYTEST_POWERDOWN_SSP			BIT(3)
- #define PHYTEST_POWERDOWN_HSP			BIT(2)
+ 	return 0;
+ }
+@@ -827,14 +829,14 @@ static int exynos850_usbdrd_phy_init(struct phy *phy)
+ 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+ 	int ret;
  
- #define EXYNOS5_DRD_PHYADP			0x2c
+-	ret = clk_prepare_enable(phy_drd->clk);
++	ret = clk_bulk_prepare_enable(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 	if (ret)
+ 		return ret;
  
- #define EXYNOS5_DRD_PHYUTMICLKSEL		0x30
--
- #define PHYUTMICLKSEL_UTMI_CLKSEL		BIT(2)
+ 	/* UTMI or PIPE3 specific init */
+ 	inst->phy_cfg->phy_init(phy_drd);
  
- #define EXYNOS5_DRD_PHYRESUME			0x34
+-	clk_disable_unprepare(phy_drd->clk);
++	clk_bulk_disable_unprepare(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 
+ 	return 0;
+ }
+@@ -847,7 +849,7 @@ static int exynos850_usbdrd_phy_exit(struct phy *phy)
+ 	u32 reg;
+ 	int ret;
+ 
+-	ret = clk_prepare_enable(phy_drd->clk);
++	ret = clk_bulk_prepare_enable(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -870,7 +872,7 @@ static int exynos850_usbdrd_phy_exit(struct phy *phy)
+ 	reg &= ~CLKRST_LINK_SW_RST;
+ 	writel(reg, regs_base + EXYNOS850_DRD_CLKRST);
+ 
+-	clk_disable_unprepare(phy_drd->clk);
++	clk_bulk_disable_unprepare(phy_drd->n_phy_clks, phy_drd->phy_clks);
+ 
+ 	return 0;
+ }
+@@ -883,16 +885,29 @@ static const struct phy_ops exynos850_usbdrd_phy_ops = {
+ 	.owner		= THIS_MODULE,
+ };
+ 
++static const char * const phy_clk_list[] = {
++	"phy",
++};
 +
- #define EXYNOS5_DRD_LINKPORT			0x44
+ static int exynos5_usbdrd_phy_clk_handle(struct exynos5_usbdrd_phy *phy_drd)
+ {
+ 	unsigned long ref_rate;
+ 	int ret;
  
- /* USB 3.0 DRD PHY SS Function Control Reg; accessed by CR_PORT */
-@@ -148,31 +134,31 @@
+-	phy_drd->clk = devm_clk_get(phy_drd->dev, "phy");
+-	if (IS_ERR(phy_drd->clk)) {
+-		dev_err(phy_drd->dev, "Failed to get phy clock\n");
+-		return PTR_ERR(phy_drd->clk);
+-	}
++	phy_drd->n_phy_clks = ARRAY_SIZE(phy_clk_list);
++	phy_drd->phy_clks = devm_kcalloc(phy_drd->dev, phy_drd->n_phy_clks,
++					 sizeof(*phy_drd->phy_clks),
++					 GFP_KERNEL);
++	if (!phy_drd->phy_clks)
++		return -ENOMEM;
++
++	for (int i = 0; i < phy_drd->n_phy_clks; ++i)
++		phy_drd->phy_clks[i].id = phy_clk_list[i];
++
++	ret = devm_clk_bulk_get_optional(phy_drd->dev, phy_drd->n_phy_clks,
++					 phy_drd->phy_clks);
++	if (ret < 0)
++		return ret;
  
- /* Exynos850: USB DRD PHY registers */
- #define EXYNOS850_DRD_LINKCTRL			0x04
--#define LINKCTRL_BUS_FILTER_BYPASS(_x)		((_x) << 4)
- #define LINKCTRL_FORCE_QACT			BIT(8)
-+#define LINKCTRL_BUS_FILTER_BYPASS(_x)		((_x) << 4)
- 
- #define EXYNOS850_DRD_CLKRST			0x20
--#define CLKRST_LINK_SW_RST			BIT(0)
--#define CLKRST_PORT_RST				BIT(1)
- #define CLKRST_PHY_SW_RST			BIT(3)
-+#define CLKRST_PORT_RST				BIT(1)
-+#define CLKRST_LINK_SW_RST			BIT(0)
- 
- #define EXYNOS850_DRD_SSPPLLCTL			0x30
- #define SSPPLLCTL_FSEL				GENMASK(2, 0)
- 
- #define EXYNOS850_DRD_UTMI			0x50
--#define UTMI_FORCE_SLEEP			BIT(0)
--#define UTMI_FORCE_SUSPEND			BIT(1)
--#define UTMI_DM_PULLDOWN			BIT(2)
--#define UTMI_DP_PULLDOWN			BIT(3)
--#define UTMI_FORCE_BVALID			BIT(4)
- #define UTMI_FORCE_VBUSVALID			BIT(5)
-+#define UTMI_FORCE_BVALID			BIT(4)
-+#define UTMI_DP_PULLDOWN			BIT(3)
-+#define UTMI_DM_PULLDOWN			BIT(2)
-+#define UTMI_FORCE_SUSPEND			BIT(1)
-+#define UTMI_FORCE_SLEEP			BIT(0)
- 
- #define EXYNOS850_DRD_HSP			0x54
--#define HSP_COMMONONN				BIT(8)
--#define HSP_EN_UTMISUSPEND			BIT(9)
--#define HSP_VBUSVLDEXT				BIT(12)
--#define HSP_VBUSVLDEXTSEL			BIT(13)
- #define HSP_FSV_OUT_EN				BIT(24)
-+#define HSP_VBUSVLDEXTSEL			BIT(13)
-+#define HSP_VBUSVLDEXT				BIT(12)
-+#define HSP_EN_UTMISUSPEND			BIT(9)
-+#define HSP_COMMONONN				BIT(8)
- 
- #define EXYNOS850_DRD_HSP_TEST			0x5c
- #define HSP_TEST_SIDDQ				BIT(24)
+ 	phy_drd->ref_clk = devm_clk_get(phy_drd->dev, "ref");
+ 	if (IS_ERR(phy_drd->ref_clk)) {
 
 -- 
 2.45.0.rc0.197.gbae5840b3b-goog
