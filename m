@@ -1,72 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D5A12FB36
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 16:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C1A12FB36;
+	Wed,  1 May 2024 16:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714579978; cv=none; b=ZJbGVYYt53m1o2Iu7VjEphdwuO4k52HU0jghRVdeOHLyX7JPZbx+y/01TTTkLKF+S/8e8yFCMdKSPtLoZdoLMzX6XQ8lY2Zcnb+24WJydawl5yb43MvztYXBAJ3gMuuziDjVXuqtvogO5Ve4z8a1tiFcXRaZ6O9FJL0UWdCQPsQ=
+	t=1714580012; cv=none; b=vFyEYVw5tVUAwtjGbkO62+HOVLa9u6eWTfzZX1AhLDJpxfMARTVXjBImTLGty+wuccwdRCDIymEp8RMg8BIf9EWlEqzcae9S5CvrYQnmb1dLT1epQCngabyiDr0qN+yozt5iiqceu5phJGaSFSDTI8/oJGN9xiaSsIWtv820vvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714579978; c=relaxed/simple;
-	bh=hrRDPH5KmWRr+9x1RV6ps3o4KFAfIeKcj/QXwk73n2Y=;
+	s=arc-20240116; t=1714580012; c=relaxed/simple;
+	bh=dFzfiSp+K+7eC8iqd8lGaatDkcEc0b44t6mRfekFWs0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IGG+vW4XYv1il8ZcF0ZakbiYqI8i9twnt3f0Zm/vvB4OysJum1TGXT38V5fGkAYARZDf1OzGkzOrsVDschRx53ZdnpMeyJu46vtQv/WIU+gMKTQtTf8TpMFckeBrAX4fHv25qgjEfa2iGrWtUphd2t5QMkZDfPOUT7dwDy8fQrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YlgVTqgA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9twhZVkeCqNsk+Zo6dpz9YJSf0uuEPMPZ8BXqvlwg2G1v236yVmXHmy4vNSwoF/1RemRlHqCUgVhYOVIudzIGo3NXM6MrrhsTMT7BI686Epiu4m9UsVEMfwgtYIOD42M16oX4BQH5/aKrSgTPFFEkX7R3yzNWoVmrhy7wy8uWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SK76njsD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YlgVTqgA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714579975;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hrRDPH5KmWRr+9x1RV6ps3o4KFAfIeKcj/QXwk73n2Y=;
-	b=YlgVTqgAsfsalY/s5N01BofuEkinquxeGyCsRykx/HuFxMG3iyFuKUG4xuJ2nWUQFIX/Yq
-	prnFnh6GtR5m3aESpFdZfPX6xZbwXbeNOq0Jd47yjEv6F9aY4KcOnSMm7sTimQp3sXtZYD
-	baNp1rKK0hHXqh2bsOEWZXwoZpl6quY=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-199-hPU9xpgKMqykWA4CcsxAMQ-1; Wed, 01 May 2024 12:12:54 -0400
-X-MC-Unique: hPU9xpgKMqykWA4CcsxAMQ-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-418a673c191so29881995e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 09:12:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714579973; x=1715184773;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hrRDPH5KmWRr+9x1RV6ps3o4KFAfIeKcj/QXwk73n2Y=;
-        b=nAQsfZ6o8OTz7yjV2QeuF5aL2tuTyT99B+J8Mng2Z09eTfEmU9UtemLcJ2Nfk0KeK/
-         g1o6pj0MxjTHTEXg0/+AjNlScp1PMDfoOuybJRlFGFaYYmb1BvQ9qZHtfg82eaqys9t8
-         +/VdN6wiUQMIbTIUQDm7PlYv8uxb6UJvlFWTlcID3nyQmI6nt3+pWq0hHkbWrSUDBE8n
-         edes1sY6NAr2jAumMchPcE2hsp5ftmSggsiwOhZfIzIbRow8HHywaDSRSjKOLg4TmCUe
-         MbyjtSOIdsuXnIZBTs2JYJSdQeYeUByQh8mbHF2oxWCm0GS5O6z0mJZDzQMHOYHAvWA9
-         5www==
-X-Forwarded-Encrypted: i=1; AJvYcCXPFDJescb1diJYjNzO5h/gSyC9GxlPXIuyHtYLjQ9reNxT6Nw8VbvC5Nhh/ogmD5ZsxTBU2x/1dqAaw2xcjc2M0QifcS2lWSo8FgJB
-X-Gm-Message-State: AOJu0YyxL61GGXsaYq4PqNj83S1uEoK5tmBC3gwt1vdQu6bQYPEiIVK4
-	ECMtiEbpLtwZ7dvTAK5S8h/It60pLk9GCXwSwY5sdhWiOP3Xa0QhnyvoTo7tJ9gGDgz4UWrp6s7
-	vTlWp2phEkHUC5k0UBN2RJuCztPZiDDWdskQOl1PH9tVKKhKOfpiRhSclG+vWzA==
-X-Received: by 2002:a05:600c:3552:b0:41a:be63:afbc with SMTP id i18-20020a05600c355200b0041abe63afbcmr1920318wmq.28.1714579973239;
-        Wed, 01 May 2024 09:12:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFM9eMgnWpKr6MeblXMaPo1/itIFX2oETmSIeau52sprOYTLIeHS2zSDJpwo+oNvlucm1N6qQ==
-X-Received: by 2002:a05:600c:3552:b0:41a:be63:afbc with SMTP id i18-20020a05600c355200b0041abe63afbcmr1920294wmq.28.1714579972623;
-        Wed, 01 May 2024 09:12:52 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc7:346:6a42:bb79:449b:3f0b:a228])
-        by smtp.gmail.com with ESMTPSA id l27-20020a05600c1d1b00b0041c5151dc1csm2639208wms.29.2024.05.01.09.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 09:12:52 -0700 (PDT)
-Date: Wed, 1 May 2024 12:12:48 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: syzbot <syzbot+98edc2df894917b3431f@syzkaller.appspotmail.com>
-Cc: jasowang@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michael.christie@oracle.com, netdev@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com, virtualization@lists.linux.dev
-Subject: Re: [syzbot] [net?] [virt?] [kvm?] KASAN: slab-use-after-free Read
- in vhost_task_fn
-Message-ID: <20240501121200-mutt-send-email-mst@kernel.org>
-References: <000000000000a9613006174c1c4c@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SK76njsD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA2DC072AA;
+	Wed,  1 May 2024 16:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714580011;
+	bh=dFzfiSp+K+7eC8iqd8lGaatDkcEc0b44t6mRfekFWs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SK76njsD/UbgyWhKEa5gdiXSDYZ7FmYrHbjk4phy4JQ/5y++dgaAoK7dFrTnpbgJm
+	 wWqEsJ5UHazwnyXBq6qImP5pWtHrNCce6zW2vPHGcBPotG1/tWoiJPC2bQ6ETPpuLD
+	 4EzW/uEvNHTm/x3mPEh/1agcO0v6woJRSKhugvfmwXAyGCT3/BtkrU9EYh/7s8n7Yc
+	 WJ4yH29ddvKTUhqJTvKmHJYADF6hgHLpuh5KVdp95Du1ZUbMx2Ry/MJLU/peSJ02Gx
+	 rJdVEZoG89TjPu1YbCz0ASGT8cme30P+XUQHFhwv9omUtihZ90EV6FDEgjt4eNqLjE
+	 7Jutct3+m0Z2Q==
+Date: Wed, 1 May 2024 19:11:58 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	"Luck, Tony" <tony.luck@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>,
+	"wklin@google.com" <wklin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
+ pstore consistently
+Message-ID: <ZjJpzqviUeFnV1A4@kernel.org>
+References: <202404091519.B7B2221@keescook>
+ <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
+ <20240411154007.5bdf8d95@gandalf.local.home>
+ <fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
+ <20240412132243.053ad096@gandalf.local.home>
+ <ZjJVnZUX3NZiGW6q@kernel.org>
+ <20240501105455.42b78a0b@gandalf.local.home>
+ <ZjJgIIOvvEdnisNA@kernel.org>
+ <20240501120904.61c7617c@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,7 +78,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000a9613006174c1c4c@google.com>
+In-Reply-To: <20240501120904.61c7617c@gandalf.local.home>
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git f138e94c1f0dbeae721917694fb2203446a68ea9
+On Wed, May 01, 2024 at 12:09:04PM -0400, Steven Rostedt wrote:
+> On Wed, 1 May 2024 18:30:40 +0300
+> Mike Rapoport <rppt@kernel.org> wrote:
+> 
+> > > > /*
+> > > >  * Parse early_reserve_mem=nn:align:name
+> > > >  */
+> > > > static int __init early_reserve_mem(char *p)
+> > > > {
+> > > > 	phys_addr_t start, size, align;
+> > > > 	char *oldp;
+> > > > 	int err;
+> > > > 
+> > > > 	if (!p)
+> > > > 		return -EINVAL;
+> > > > 
+> > > > 	oldp = p;
+> > > > 	size = memparse(p, &p);
+> > > > 	if (p == oldp)
+> > > > 		return -EINVAL;
+> > > > 
+> > > > 	if (*p != ':')
+> > > > 		return -EINVAL;
+> > > > 
+> > > > 	align = memparse(p+1, &p);
+> > > > 	if (*p != ':')
+> > > > 		return -EINVAL;
+> > > > 
+> > > > 	start = memblock_phys_alloc(size, align);  
+> > > 
+> > > So this will allocate the same physical location for every boot, if booting
+> > > the same kernel and having the same physical memory layout?  
+> > 
+> > Up to kaslr that might use that location for the kernel image.
+> > But it's the same as allocating from e820 after kaslr.
+> > 
+> > And, TBH, I don't have good ideas how to ensure the same physical location
+> > with randomization of the physical address of the kernel image.
+> 
+> I'll try it out. Looking at arch/x86/boot/compressed/kaslr.c, if I read the
+> code correctly, it creates up to a 100 slots to store the kernel.
+> 
+> The method I used was to make sure that the allocation was always done at
+> the top address of memory, which I think would in most cases never be
+> assigned by KASLR.
+> 
+> This looks to just grab the next available physical address, which KASLR
+> can most definitely mess with.
 
+On x86 memblock allocates from top of the memory. As this will run later
+than e820, the allocation will be lower than from e820, but still close to
+the top of the memory.
+ 
+> I would still like to get the highest address possible.
+> 
+> -- Steve
+
+-- 
+Sincerely yours,
+Mike.
