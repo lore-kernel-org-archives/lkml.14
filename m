@@ -1,88 +1,78 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E05617C6B
-	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 23:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886F8165FD6
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 23:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714605537; cv=none; b=UvyxQxAZruPlCo6HBorqEmwNoMBHCJIy/6WJ+eIbx+GMa5W784I0sesqGoGXCWTDva63Lh+pgoxLTIcNdNILos0uNKoFS4pmI9h1CIBWY39Qic7KMquk3D7yE8vt4H/Bt7lRboiBe/hGpMVbS70/hisn3xi17bNmW0NWEKIoZ/g=
+	t=1714605545; cv=none; b=sht8YEOyPdrxFx2bn61QlMQyAxBLPCoQcMHE1D6mOfoDujgZlNsW7SLfAwEL6CH3HEQbmzwLPO6G1rq1nm3YKu/xMmBiguqw6Kc0IGjkT0D0DjGaq5w2vMEXd6Brn/G5O3pQFo6F4aLgePGeg7379hOj9XwU2zmsAOwByQ7o+O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714605537; c=relaxed/simple;
-	bh=7FXkbiF78yO95Ik6NVI4Nm2pb09Aq3YrAbf9O/PxWvg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MgUofAw7dnwC3voBulbg/gFozHY4DiL7fMucp//tQYKIQUKQbx6852CZNpgaf2shaiFiEhU6XpW6DEzmG2XJ6vHkrx8l3GpSFDWs1b2v1B/O21s7WUk9l3w70IPQJYUTCAH6QLJpU8tv6Cj+C9su98yWIinMGBeFzYpb5Bn+nOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PABHzP0a; arc=none smtp.client-ip=209.85.217.44
+	s=arc-20240116; t=1714605545; c=relaxed/simple;
+	bh=gYC/W2xaDFXJYpjFLqNWMFw+2VXkrn96q+xybr/GbjY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=nLCxdLkEIF3F6zcXL/3PunA0A45vfRHnpMtUoOm/qMKHuKWMD8w1nNt5VRDAEz/DlltOCAkzZs8zFqIyE4cESmIY1T+8V1cEV1g1D/UUNYXRxrYZkS0w970qlboyKymN08SISnUjNgwFSFdqa7TVya+hwYnincW5VY+57gneyY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JZPfk5M/; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PABHzP0a"
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-47a0bebeacaso2039500137.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 16:18:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JZPfk5M/"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6ed25ed4a5fso8344873b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 16:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714605534; x=1715210334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7FXkbiF78yO95Ik6NVI4Nm2pb09Aq3YrAbf9O/PxWvg=;
-        b=PABHzP0aN1R0tz3YGI0Ot82xvogNHaT1Ev9Ouo+3uCM8EPMHrcpOUss16VYQNxWvsi
-         8OOQ79i2+4qIjVIpnHnRr5OVyKqRimILYjJJQnG0LMZWp29BzQrbK8DMtG+bZV5AKQD7
-         3AbDhHzu50wbRJWt5UDt6jXSVkN9wOC8Gbz05/307y+U1AgZVowEAch9cnt3gZ5B5+6s
-         xCOZYmeUfXgg4GMGQLZzxUD5uW7jVr9xzVkekqYHZnWE/bR16vv5P+tC1+By1QTNbhMo
-         RSxoFmBleOLngKt0W/Pd3qfL9tJa0KNS04H7LFfm1zgrzm5deFpL8PMNQazJ/VC6Udmp
-         /agw==
+        d=google.com; s=20230601; t=1714605544; x=1715210344; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8I49xdD+d9776Vt2j9z1NeaJ1EuBZRI/KuJy9t3rDCU=;
+        b=JZPfk5M/Qmk7FhXmvLH8JdHQzpXDe/XqwwJzd+RCN0cq0RTw2YF0/wyLZ3Mps3uD9O
+         23W3ZaQKi5VPzO0B2iiVj3ySDelBpMWSE2jc0F0nmy0vOKRg+P36X5Eu78ocqJgKDkPM
+         avaNGkNyw9RpqK3mzsEGPRI7Zq71C/dsTVC/y1yLAm30E13qvLFc+t9UHT7928oktLOC
+         WapFIL/SzOuDk4LOgWY/qfBOF9aI1FbQgIB6USBCyBri2gZf/ukCUxCv1jSVMf6Ol09m
+         McE3ZSrAw7t8/ogY0ef0U7Z4npojFrB8FslzMv3p4Fv6mrqcKVtR1aiqJe/lATQUJmRP
+         AHNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714605534; x=1715210334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7FXkbiF78yO95Ik6NVI4Nm2pb09Aq3YrAbf9O/PxWvg=;
-        b=a8Km4VMc7Zyr2zg1yJZE3UOMf9nqdf6eYtUcQbLQ4l5nTnA/sTo3EVntM0RlooDzZf
-         xqaf39G0eIaBzjqwRdUOG39o7ywl+ajH7lNEx+fXGNoI5H+zwn2A7DSdd+vN/J/ZX5pQ
-         vu8rbwVUa3QE0idsv79GoMTVuup6k7ZQB0JEQ6ss6IMLK12dL1zqdclrPiVbDdiEV/5A
-         FHOKlcP0ytWrZbkJca1pJgKXcUzf0fL7ZbZt7Wltr5jRUShqWnVneFWqQ1x+y7fNsX7p
-         89h7QhD+QdeIiE+mDZ6b17jSgQT5O3TouOhHBOz0f1VAjkhTqLIL6cIhf8hVW5xrcfHg
-         LP9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWsf5QcX0R5dChp8l70hZez0jDILxyKJwDxefYstjNWGJF3AevJnBMx7ztMhMgOw6Petu0fa4XFJCY9B1Kh6APMpagdrJceGXyA9ZW2
-X-Gm-Message-State: AOJu0YzPWO6xnBnM4Kx+0WHH8Hqzx0TgIphf9xB/MeTzJVjFDSZiesVj
-	pvdTxofVveuzsFVzfHp0Kgj4/W5tb9DyIUlz3M5rXOge8viZWx4VJG0cqDaF92DAfyQdkPOKmaA
-	hkkKH/wJNyQZcZKf2X6/brVvcHbIhBhr4DfjD
-X-Google-Smtp-Source: AGHT+IFCNhW7Sr4LWQ18lqVtEBE5i75ngQX0dGbAlyauUArqJLvaZn/QyY35oTF3T1kZyxDYj2izJDA/UYjotSrmUC4=
-X-Received: by 2002:a67:ee88:0:b0:47c:24fa:b627 with SMTP id
- n8-20020a67ee88000000b0047c24fab627mr4315116vsp.13.1714605534362; Wed, 01 May
- 2024 16:18:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714605544; x=1715210344;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8I49xdD+d9776Vt2j9z1NeaJ1EuBZRI/KuJy9t3rDCU=;
+        b=oD6Gaz4F6RxvVa+G4j0c5mRAF9/gk7smefk4NgSGuHT/SGOk7bLslFteN/JXdLjcEI
+         qyxPIG8yDEDYi+yw0Ob8/Eu1b6rgRgmn1jWw2MHAenJoXbyW1q8XOFICynla8DG5fv4e
+         1/D0YK0fn5Rz9iR8m2SeX2/SJemXvn0MdUfzT/n5xbqgoFhKOL0BOvuAU/FqwbOQEQR7
+         Km0UFGwzmzkkg/BRKJHAENLL9TyqyvHgwntxStqZabDOZXnh1xBoDSl9bbA5nISxPcUD
+         R/8NJ2/+HmbFRLk8oEaQ3KYSJt0gCwHefVwPlJZLpsp09ZA4VcjUvkLnH/+bu4/Kgx/O
+         VG4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWt8MZu13MkXg6ekz7kzgbMPXSyEYWGTp9j2+eN6CWG/QkUZaoQ+taNMEgqf3I5GFIR/3+5//oA07JnhFy3YJ/2+gfWrkJ1YU0mjZ7O
+X-Gm-Message-State: AOJu0YwfX9ZQoHc3H1Gi1cZmk4FGIgXlzUXbg/SJ0NZmr69u2OTGM+Hs
+	6GDaq+x2z3rWpgsUy1mi9leBJkp0exwxpj+Zm41QxOYHJuTPo7FAVbdDWKXOm1RkhdiIV21lY16
+	LjA==
+X-Google-Smtp-Source: AGHT+IHGioM5y7DlQhAaE5h84bb61oIJh9p3OQBuHDNj7qkZt5fkzHadbnSfgpeEs/q9h0bU0gSGOvD+1Dk=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:ac5:b0:6ec:ceb4:d9e2 with SMTP id
+ c5-20020a056a000ac500b006ecceb4d9e2mr336913pfl.0.1714605543866; Wed, 01 May
+ 2024 16:19:03 -0700 (PDT)
+Date: Wed, 1 May 2024 16:19:02 -0700
+In-Reply-To: <20240219074733.122080-26-weijiang.yang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
- <7cdc63b3-31cc-442c-8c2e-75adb2c76b52@wanadoo.fr>
-In-Reply-To: <7cdc63b3-31cc-442c-8c2e-75adb2c76b52@wanadoo.fr>
-From: Justin Stitt <justinstitt@google.com>
-Date: Wed, 1 May 2024 16:18:42 -0700
-Message-ID: <CAFhGd8rO=-DYvXi0YHvQqnhTteV+Hgeuou0X3USx61oTobj0kw@mail.gmail.com>
-Subject: Re: [PATCH] printk: cleanup deprecated uses of strncpy/strcpy
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20240219074733.122080-1-weijiang.yang@intel.com> <20240219074733.122080-26-weijiang.yang@intel.com>
+Message-ID: <ZjLN5iGKE6DgEyVa@google.com>
+Subject: Re: [PATCH v10 25/27] KVM: nVMX: Introduce new VMX_BASIC bit for
+ event error_code delivery to L1
+From: Sean Christopherson <seanjc@google.com>
+To: Yang Weijiang <weijiang.yang@intel.com>
+Cc: pbonzini@redhat.com, dave.hansen@intel.com, x86@kernel.org, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, 
+	chao.gao@intel.com, rick.p.edgecombe@intel.com, mlevitsk@redhat.com, 
+	john.allen@amd.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, May 1, 2024 at 2:39=E2=80=AFPM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
-> Hi,
->
-> Nit: The { } around each branch can now also be removed.
+The shortlog is wrong, or perhaps just misleading.  This isn't "for event error_code
+delivery to L1", it's for event inject error code deliver for _L2_, i.e. from L1
+to L2.
 
-There was one line before and there's one line now.
+The shortlog should be something more like:
 
-I'll remove the brackets but I will briefly wait to see if any other
-concerns come in.
-
-Thanks
-
->
-> CJ
->
+ KVM: nVMX: Virtualize NO_HW_ERROR_CODE_CC for L1 event injection to L2
