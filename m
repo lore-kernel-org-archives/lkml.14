@@ -1,48 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail114-241.sinamail.sina.com.cn (mail114-241.sinamail.sina.com.cn [218.30.114.241])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4684E1CE;
-	Wed,  1 May 2024 07:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8A84E1C8
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 07:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.114.241
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714549860; cv=none; b=AxLOlTyLywGfTYUJi6cGSG6pWQRknqUqsyTANyA7imZ+d94Di9+qbpwmZ0CJzF4BT7dmMRIhumFWLGxqzYIByoykYkV8F23uZQ4JLdal2KWQ+hdU7aywkxF4mM3ts4WuZpyNFUbztX4DApv0ZzLSJhrHip3nFTjiSVXwD2jEG4c=
+	t=1714549862; cv=none; b=COgK35KRbuz7PxO1bcaa2kVPtJcXIWA0oKYqDRXmDTEbkgwgRGCk97J2SaOrSNSBay4a87LEYxT+dRx4JER6s0L93JbnYLGLJusA6fj9hQGofJzCd74fZcIT6BXAB2HWImELnAKUhE1BJmagbHHLBsKYH7LoaUs/9E4GL49Kv/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714549860; c=relaxed/simple;
-	bh=PuomMsnDC/+v0wckS019MPx5+S2jUMgw0Wzxv4Tf6sI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I6BmWOXj6KhvyrWNd4lhHYYPsc6Xyb2eDgZ8/Ik1R2bu5tsYRNZ8hOQNd9GjZd/G593mubSR8E3S6Epdkyg8cZZEzMSRGtqUxy4J6kshhKknDKKPtAcljADSKP1Hd+MGMc+vTmyxjyEUvFbFvaKpC1d+DbPZw6y4Fz7Nv8bPTCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4qFAx58; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4qFAx58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6FAEC4AF14;
-	Wed,  1 May 2024 07:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714549859;
-	bh=PuomMsnDC/+v0wckS019MPx5+S2jUMgw0Wzxv4Tf6sI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Y4qFAx58w+Ryv1rc+De0MRndV5pVfFBoo0B/ygSqAteErX+IpZOaxPIr4VavTXtvq
-	 rxVaHBk0EBMylTACRqNUX5e9bjxb1a2tNTuI+8k+LOTLngAZLUWxtuzdjlFMZ2Eub3
-	 WTuQQSEXzCEXlFEq5xhjZUb39UbjXLcQUkgnwVSElY9KWlMtVzgbS817w7JDLmrh9w
-	 RrekrJJ5AVfv8rZycgg/QBgALz58sFxyR+uzHZI4BC2l425v6ntBV+q97SDaeonYCJ
-	 kqy7PNxdroat551e9EPnYYjMfZeeteK95uNgSozhFVeDa8NbAKAe6xPQKZ/j15v5ti
-	 EzMAi5D/84ZAA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1s24k1-000000001Co-0GG7;
-	Wed, 01 May 2024 09:51:01 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	s=arc-20240116; t=1714549862; c=relaxed/simple;
+	bh=Nvscq/NT9/+j/DykFVg7/tQ7d07STWFJVXZA2SanBcQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tjbVYXaxPCuk/4DLa5ruhmlcLqe6RCIZsBdiFrFpKMvncnx90vMMWZn0JVspPbp8xfbUemssb82orWFHyYKqeYi/8XgTXJQEzZI7hPoZqk8892QR3qcwDQy5cptjliZ6HbpmLRTFBOCuIQ3CVG+40I91aMQev20e5WWQlliL5LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.241
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.11.115])
+	by sina.com (172.16.235.24) with ESMTP
+	id 6631F45C00003840; Wed, 1 May 2024 15:50:54 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 99969545089450
+X-SMAIL-UIID: 6B92299AF328438ABAD25F19B01E92F2-20240501-155054-1
+From: Hillf Danton <hdanton@sina.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Mike Christie <michael.christie@oracle.com>,
+	Edward Adam Davis <eadavis@qq.com>,
+	syzbot+98edc2df894917b3431f@syzkaller.appspotmail.com,
+	jasowang@redhat.com,
+	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH] dt-bindings: soc: qcom,wcnss: fix bluetooth address example
-Date: Wed,  1 May 2024 09:50:05 +0200
-Message-ID: <20240501075005.4588-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.43.2
+	netdev@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	virtualization@lists.linux.dev
+Subject: Re: [PATCH next] vhost_task: after freeing vhost_task it should not be accessed in vhost_task_fn
+Date: Wed,  1 May 2024 15:50:57 +0800
+Message-Id: <20240501075057.1670-1-hdanton@sina.com>
+In-Reply-To: <20240501020057-mutt-send-email-mst@kernel.org>
+References: <b959b82a-510f-45c0-9e06-acf526c2f4a1@oracle.com> <20240501001544.1606-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,33 +50,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The 'local-bd-address' property is used to pass a unique Bluetooth
-device address from the boot firmware to the kernel and should otherwise
-be left unset.
+On Wed, 1 May 2024 02:01:20 -0400 Michael S. Tsirkin <mst@redhat.com>
+> 
+> and then it failed testing.
+> 
+So did my patch [1] but then the reason was spotted [2,3]
 
-Update the example to reduce the risk that a non-zero address will be
-used by default in some devicetree.
-
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml
-index 74bb92e31554..fd6db0ca98eb 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml
-@@ -116,8 +116,8 @@ examples:
- 
-             bluetooth {
-                 compatible = "qcom,wcnss-bt";
--                /* BD address 00:11:22:33:44:55 */
--                local-bd-address = [ 55 44 33 22 11 00 ];
-+                /* Updated by boot firmware (little-endian order) */
-+                local-bd-address = [ 00 00 00 00 00 00 ];
-             };
- 
-             wifi {
--- 
-2.43.2
-
+[1] https://lore.kernel.org/lkml/20240430110209.4310-1-hdanton@sina.com/
+[2] https://lore.kernel.org/lkml/20240430225005.4368-1-hdanton@sina.com/
+[3] https://lore.kernel.org/lkml/000000000000a7f8470617589ff2@google.com/
