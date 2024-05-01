@@ -1,235 +1,157 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49591168BD;
-	Wed,  1 May 2024 16:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBC513FF6;
+	Wed,  1 May 2024 16:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714582568; cv=none; b=lRnzSlGEXzYFBXUAVarqV2yhRApp3CktdYSxASDIYXfDtRYBvDhFk82DgIWpH9CCPffJYAEIzBqrq4WbcHgOa205kXidW763v/Tq9myyp4nAHS+L5uAZaLYiwWHBzylUN2XVYvEpLmesnSB0OkOsE+xAq1CFgPr8HIaPhlwdi3s=
+	t=1714582577; cv=none; b=fI7lkGFhIajUZZMNurhtQdEiXoRY3PrTHzLBgQdpaebMWNxSTfYr3LQ/4y4yhKXc5Ch0zKoXN66AlQdF/mHsnEI2MOBn40jCG43CqNZ+79b+bBxxNZr/fmiN0XZolGp3yfpPheR7aabIzer8f21lrEGBMjfiq3V0d0iyG9jHddg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714582568; c=relaxed/simple;
-	bh=TcDzC1URqfIGLzJLPDLTzwckLUr9NbwS3Ma6ukNQrZY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kIEIG7G4vgMk0xr7k30lt2IoqX7+m+xFgDOApSRuxPvEeKe2/MZ3J3uyfSkd8iA9zaJOUn0D8uMaPtGyUGKQ6PHbNBlopbj8vw1Rg18Cxo8PsLVPk8F794WUI2dhp0ajh09biTKUlgKx83P/HxIit+5aEiItCdXkv7dKNcPuD+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso8981039a12.2;
-        Wed, 01 May 2024 09:56:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714582564; x=1715187364;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SZyGPQjH8Nh0r2HrUHxBLid/Ouu1r0VmzmfrZnEPyNs=;
-        b=R8o6HvZCcCP2SyIJF4k6fpRr1tlsoP+AhXrIeupjmRFZbnOx7tZqQtNWME6TXoTEsg
-         6MS5wnaJfJbMsEFg/X2pQVwvwPGXjSsptHWXDq7cGxtuPV4kvtU+7l6zRGMLT1Ny7lQu
-         1wBkjJyQNq9YkjA45vUoG4aPd5z0FHAeSjQMTFfTuMGaFhYsFx033KJhWjrdaRVwWbyy
-         cz4FTz4ckHEBjxQTwjy39U1YdSjwb91ESB50c3xq7Vb9qWDD6c7qakp7bO2zePvPq9zo
-         peNyuQOlHv9z6oIcFvCvn/Csrlx93X8pXp8LGyOBfGRl3okFQH92eovrXDqmj9lKypPF
-         LFlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ/c6EP+1kPDhotGI+1t/7fKAqi3pu88Q5SxrFyD+kMq51G82PV4BCTvcevVm7c2dzIrGcvJawDQvbVpOyR5o5Da7/rYrWJNicwA9F5dT66vxEQ5FNILn/VasLn/VIwv8kT+T8gRIZmviHgsg=
-X-Gm-Message-State: AOJu0YytyKgzXDngrZpJRTTlWjx/nJ8P83OZfzzq0PBzXubTt4jaRhEq
-	9qCZVw70B3KP/m3oeB+jgiNy8xGj77PImYpCYs+D3pcVnNa4dTzn
-X-Google-Smtp-Source: AGHT+IFiNeAXFLvqrJqj/JpJnaQ1VuTj5HIQczid62EJDQa/xpeqnynka7fbVfl2mZvp0wxYEEevxA==
-X-Received: by 2002:a50:8adb:0:b0:572:42ac:9b19 with SMTP id k27-20020a508adb000000b0057242ac9b19mr2532186edk.0.1714582564313;
-        Wed, 01 May 2024 09:56:04 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-005.fbsv.net. [2a03:2880:30ff:5::face:b00c])
-        by smtp.gmail.com with ESMTPSA id 15-20020a508e0f000000b005726e5e8765sm5205429edw.3.2024.05.01.09.56.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 09:56:03 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Kalle Valo <kvalo@kernel.org>
-Cc: netdev@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Alon Giladi <alon.giladi@intel.com>,
-	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Avraham Stern <avraham.stern@intel.com>,
-	linux-wireless@vger.kernel.org (open list:INTEL WIRELESS WIFI LINK (iwlwifi)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH wireless-next v2] wifi: iwlwifi: pcie: allocate dummy net_device dynamically
-Date: Wed,  1 May 2024 09:54:04 -0700
-Message-ID: <20240501165417.3406039-1-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1714582577; c=relaxed/simple;
+	bh=SfIUnFvTodi3ZAdSokEGwrQBZQMoBGP2gvIdsXxo1z8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=D5xabfYICiRdM0GdfDmOH0nzsEQWjB2W/U/nTi3G7sYIsUsXPb7MPhT9LdnfBdP2ulwOJfH410ACBzlZjmM8rSPHaGyMDZGCdHDWQnL54LzB/aUTkf8Keuodi+HuaZHOsCGy2Xa0sVXEJxV2rb7LMzDwEMA1vtZlb9/xkpsksmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwrFK+fQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwrFK+fQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC497C072AA;
+	Wed,  1 May 2024 16:56:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714582577;
+	bh=SfIUnFvTodi3ZAdSokEGwrQBZQMoBGP2gvIdsXxo1z8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nwrFK+fQYl6W4IHr6gnMS8swEZfLcfdSm4TEcZt5aWvI5cpqh7w4by/NlSlrVYjZL
+	 nSyMc1JZUgqnVPi3l4AskQDTBIg9ssQDqVRKrNblj13co5FmyvpEeH/66UR7xpkZOB
+	 00NeWDZlTLiVmA0UQWYWoqUKgZkqpFbxOsnnVkdBIiEpBc979vFlZAfENsKIP5C4FP
+	 ZgIXwvnYDTXwcasDNez+ynbUOZgMUa5OPy4YdrNoLJ+KdsG164DtG/7BQjY2pA2zWK
+	 GEd3kS4ypFHM9mTJOQSG/RGht9W4bkGnY7CGz8RqZ+/Ebp1vm8DPjQkVyYEp898vFN
+	 W1ZUMK9aRV32A==
+Date: Wed, 1 May 2024 11:56:15 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Andrei Warkentin <andrei.warkentin@intel.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Subject: Re: [PATCH v5 08/17] ACPI: pci_link: Clear the dependencies after
+ probe
+Message-ID: <20240501165615.GA758227@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240501121742.1215792-9-sunilvl@ventanamicro.com>
 
-struct net_device shouldn't be embedded into any structure, instead,
-the owner should use the priv space to embed their state into net_device.
+On Wed, May 01, 2024 at 05:47:33PM +0530, Sunil V L wrote:
+> RISC-V platforms need to use dependencies between PCI host bridge, Link
+> devices and the interrupt controllers to ensure probe order. The
+> dependency is like below.
+> 
+> Interrupt controller <-- Link Device <-- PCI Host bridge.
+> 
+> If there is no dependency added between Link device and PCI Host Bridge,
+> then the PCI end points can get probed prior to link device, unable to
+> get mapping for INTx.
+> 
+> So, add the link device's HID to dependency honor list and also clear it
+> after its probe.
+> 
+> Since this is required only for architectures like RISC-V, enable this
+> code under a new config option and set this only in RISC-V.
+> 
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> ---
+>  arch/riscv/Kconfig      | 1 +
+>  drivers/acpi/Kconfig    | 3 +++
+>  drivers/acpi/pci_link.c | 3 +++
+>  drivers/acpi/scan.c     | 1 +
+>  4 files changed, 8 insertions(+)
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index f961449ca077..f7a36d79ff1a 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -14,6 +14,7 @@ config RISCV
+>  	def_bool y
+>  	select ACPI_GENERIC_GSI if ACPI
+>  	select ACPI_REDUCED_HARDWARE_ONLY if ACPI
+> +	select ARCH_ACPI_DEFERRED_GSI if ACPI
+>  	select ARCH_DMA_DEFAULT_COHERENT
+>  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
+>  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index e3a7c2aedd5f..ebec1707f662 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -587,6 +587,9 @@ config ACPI_PRMT
+>  	  substantially increase computational overhead related to the
+>  	  initialization of some server systems.
+>  
+> +config ARCH_ACPI_DEFERRED_GSI
+> +	bool
+> +
+>  endif	# ACPI
+>  
+>  config X86_PM_TIMER
+> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+> index aa1038b8aec4..48cdcedafad6 100644
+> --- a/drivers/acpi/pci_link.c
+> +++ b/drivers/acpi/pci_link.c
+> @@ -748,6 +748,9 @@ static int acpi_pci_link_add(struct acpi_device *device,
+>  	if (result)
+>  		kfree(link);
+>  
+> +	if (IS_ENABLED(CONFIG_ARCH_ACPI_DEFERRED_GSI))
+> +		acpi_dev_clear_dependencies(device);
 
-Embedding net_device into structures prohibits the usage of flexible
-arrays in the net_device structure. For more details, see the discussion
-at [1].
+This is really a question for Rafael, but it doesn't seem right that
+this completely depends on a config option.
 
-Un-embed the net_device from struct iwl_trans_pcie by converting it
-into a pointer. Then use the leverage alloc_netdev() to allocate the
-net_device object at iwl_trans_pcie_alloc.
+Is there a reason this wouldn't work for all architectures, i.e., what
+would happen if you just called acpi_dev_clear_dependencies()
+unconditionally?
 
-The private data of net_device becomes a pointer for the struct
-iwl_trans_pcie, so, it is easy to get back to the iwl_trans_pcie parent
-given the net_device object.
-
-[1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Changelog:
-
-v2:
- * replaced the alloc_netdev() with the proper dummy allocator
-   alloc_netdev_dummy().
-
-v1:
- * https://lore.kernel.org/all/20240307174843.1719130-1-leitao@debian.org/
-
----
- .../wireless/intel/iwlwifi/pcie/internal.h    |  2 +-
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c  | 11 +++++---
- .../net/wireless/intel/iwlwifi/pcie/trans.c   | 27 ++++++++++++-------
- 3 files changed, 27 insertions(+), 13 deletions(-)
-
-
-PS: This is compiled-tested only due to lack of hardware.
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-index 7805a42948af..a7eebe400b5b 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-@@ -386,7 +386,7 @@ struct iwl_trans_pcie {
- 	dma_addr_t iml_dma_addr;
- 	struct iwl_trans *trans;
- 
--	struct net_device napi_dev;
-+	struct net_device *napi_dev;
- 
- 	/* INT ICT Table */
- 	__le32 *ict_tbl;
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-index 9c2461ba13c5..984d7bcd381f 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -1000,6 +1000,11 @@ void iwl_pcie_rx_init_rxb_lists(struct iwl_rxq *rxq)
- 
- static int iwl_pcie_rx_handle(struct iwl_trans *trans, int queue, int budget);
- 
-+static inline struct iwl_trans_pcie *iwl_netdev_to_trans_pcie(struct net_device *dev)
-+{
-+	return *(struct iwl_trans_pcie **)netdev_priv(dev);
-+}
-+
- static int iwl_pcie_napi_poll(struct napi_struct *napi, int budget)
- {
- 	struct iwl_rxq *rxq = container_of(napi, struct iwl_rxq, napi);
-@@ -1007,7 +1012,7 @@ static int iwl_pcie_napi_poll(struct napi_struct *napi, int budget)
- 	struct iwl_trans *trans;
- 	int ret;
- 
--	trans_pcie = container_of(napi->dev, struct iwl_trans_pcie, napi_dev);
-+	trans_pcie = iwl_netdev_to_trans_pcie(napi->dev);
- 	trans = trans_pcie->trans;
- 
- 	ret = iwl_pcie_rx_handle(trans, rxq->id, budget);
-@@ -1034,7 +1039,7 @@ static int iwl_pcie_napi_poll_msix(struct napi_struct *napi, int budget)
- 	struct iwl_trans *trans;
- 	int ret;
- 
--	trans_pcie = container_of(napi->dev, struct iwl_trans_pcie, napi_dev);
-+	trans_pcie = iwl_netdev_to_trans_pcie(napi->dev);
- 	trans = trans_pcie->trans;
- 
- 	ret = iwl_pcie_rx_handle(trans, rxq->id, budget);
-@@ -1131,7 +1136,7 @@ static int _iwl_pcie_rx_init(struct iwl_trans *trans)
- 			if (trans_pcie->msix_enabled)
- 				poll = iwl_pcie_napi_poll_msix;
- 
--			netif_napi_add(&trans_pcie->napi_dev, &rxq->napi,
-+			netif_napi_add(trans_pcie->napi_dev, &rxq->napi,
- 				       poll);
- 			napi_enable(&rxq->napi);
- 		}
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 6c76b2dd6878..d5a887b3a4bb 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -1986,13 +1986,6 @@ static void iwl_trans_pcie_configure(struct iwl_trans *trans,
- 	trans->command_groups = trans_cfg->command_groups;
- 	trans->command_groups_size = trans_cfg->command_groups_size;
- 
--	/* Initialize NAPI here - it should be before registering to mac80211
--	 * in the opmode but after the HW struct is allocated.
--	 * As this function may be called again in some corner cases don't
--	 * do anything if NAPI was already initialized.
--	 */
--	if (trans_pcie->napi_dev.reg_state != NETREG_DUMMY)
--		init_dummy_netdev(&trans_pcie->napi_dev);
- 
- 	trans_pcie->fw_reset_handshake = trans_cfg->fw_reset_handshake;
- }
-@@ -2074,6 +2067,8 @@ void iwl_trans_pcie_free(struct iwl_trans *trans)
- 		iwl_pcie_free_ict(trans);
- 	}
- 
-+	free_netdev(trans_pcie->napi_dev);
-+
- 	iwl_pcie_free_invalid_tx_cmd(trans);
- 
- 	iwl_pcie_free_fw_monitor(trans);
-@@ -3594,7 +3589,7 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 			       const struct pci_device_id *ent,
- 			       const struct iwl_cfg_trans_params *cfg_trans)
- {
--	struct iwl_trans_pcie *trans_pcie;
-+	struct iwl_trans_pcie *trans_pcie, **priv;
- 	struct iwl_trans *trans;
- 	int ret, addr_size;
- 	const struct iwl_trans_ops *ops = &trans_ops_pcie_gen2;
-@@ -3623,6 +3618,18 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 
- 	trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
- 
-+	/* Initialize NAPI here - it should be before registering to mac80211
-+	 * in the opmode but after the HW struct is allocated.
-+	 */
-+	trans_pcie->napi_dev = alloc_netdev_dummy(sizeof(struct iwl_trans_pcie *));
-+	if (!trans_pcie->napi_dev) {
-+		ret = -ENOMEM;
-+		goto out_free_trans;
-+	}
-+	/* The private struct in netdev is a pointer to struct iwl_trans_pcie */
-+	priv = netdev_priv(trans_pcie->napi_dev);
-+	*priv = trans_pcie;
-+
- 	trans_pcie->trans = trans;
- 	trans_pcie->opmode_down = true;
- 	spin_lock_init(&trans_pcie->irq_lock);
-@@ -3637,7 +3644,7 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 						   WQ_HIGHPRI | WQ_UNBOUND, 0);
- 	if (!trans_pcie->rba.alloc_wq) {
- 		ret = -ENOMEM;
--		goto out_free_trans;
-+		goto out_free_ndev;
- 	}
- 	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
- 
-@@ -3757,6 +3764,8 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 	iwl_pcie_free_ict(trans);
- out_no_pci:
- 	destroy_workqueue(trans_pcie->rba.alloc_wq);
-+out_free_ndev:
-+	free_netdev(trans_pcie->napi_dev);
- out_free_trans:
- 	iwl_trans_free(trans);
- 	return ERR_PTR(ret);
--- 
-2.43.0
-
+> +
+>  	return result < 0 ? result : 1;
+>  }
+>  
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 3eeb4ce39fcc..67677a6ff8e3 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -834,6 +834,7 @@ static const char * const acpi_honor_dep_ids[] = {
+>  	"INTC10CF", /* IVSC (MTL) driver must be loaded to allow i2c access to camera sensors */
+>  	"RSCV0001", /* RISC-V PLIC */
+>  	"RSCV0002", /* RISC-V APLIC */
+> +	"PNP0C0F",  /* PCI Link Device */
+>  	NULL
+>  };
+>  
+> -- 
+> 2.40.1
+> 
+> 
