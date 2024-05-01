@@ -1,84 +1,129 @@
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F002E645;
-	Wed,  1 May 2024 09:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74954204E;
+	Wed,  1 May 2024 09:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714557063; cv=none; b=VOZnjUtxAF+FUZzEPAFQowypar7R2fcu9z2x+0AFZoJ7WrmTyyww5oCWpt59MjNyVqfNiepqRSRureIY7YlL1GcHQ2g0wHByv5OIDjAhNodcW7UpaZAvxpsO5Mn4y1yWQ+z/LeXqvHpsIO0IsFxQ9qJRhlTIVkTFf7lWBhyU1/w=
+	t=1714557237; cv=none; b=ZeIevWZXXWOhXnVfx1wieCPRmmdV62pwCC3rU6PFbslxi//vmg5soZWpSWDEjLjf/H+ATGZrFZYcI6HqMlNFbkYDjFERDr9TCBicQjOPHf9aQa0CuWExhOBTo+t6lpiNhtpHc6AN8P7tz978ae5kOumkE17SWKMyOV9fK3j4bMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714557063; c=relaxed/simple;
-	bh=vvylw6nHMRwLM+9gl4nry8f4/NOWGRkQIZOZBNuzl2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rXXMqJhdUICMi1E4Y5dri+7OnpT53GOFuzJaPSUqsnboDC9FtnFnyuOlRfbIZENMQU32pUo7ZFVKcDDpUZz36JlFRNet7MwxP83ESFIBMO7NlGfJqDdzAJDZJRBhmVLCdIdfw79wW3Fy552e0RrmTCWXGi8jczMSrI6u1XbJDeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Mdp18xET; arc=none smtp.client-ip=80.12.242.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1714557237; c=relaxed/simple;
+	bh=Hb846Cf7SRZX9pIUAJ1q07Z7Vsj0+r1xmkNfW29a3ZQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CLPyiBkclPq4zhTR3j+L/Q8RR71SPs978vexnNu3GJwzMevVsYmbbsuErivnZBsT6/zT6Twgqofb0qKi1fnjhjsSd5tyjaGic5ErNs5zUi5OTJItiBAHi1ZHamIkPzQ22dhz4lxaUudlai0cx1ZOS8ldMFJ2iFfXrxj6jPpnl5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZPeKcYz8; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Mdp18xET"
-Received: from localhost.localdomain ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id 26TUsv4R8rs7M26TVswXrR; Wed, 01 May 2024 11:42:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1714556525;
-	bh=ihCvMaCJ1TBCxY0a/aMCQRyN7JfGY+w7nfdzuRre2yE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=Mdp18xETnmsMenUVoZrWFluvlKQYzatXX8PVmttk5gqXUkGJmUVmf+27K08lRONih
-	 9ne2w5Oayq4N1lE47ayVek3AW38LvPAJOLXIWWYkY+EDMZE73GlSxd/Nw7MmAWxiAg
-	 dCUghnZwQQNw5ReWb71IeeyMvieGtgx/SscbK3vWze5VrVJN5pikTAaomrte2hYLsi
-	 PXiqagxfo6Ct8TLy8cdScQtLj2iY3bfh1DYLAlNpQDw6Th+LBr/NWTePyEkHLDGrHj
-	 2Rr8hA1kmhdaehLI2tp2iMN27/UW7xIqgqULiEvB759FZABwA7BMfk+a2JxNSid0Of
-	 4omHN6Y0RK21Q==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 01 May 2024 11:42:05 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Peter Rosin <peda@axentia.se>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-iio@vger.kernel.org
-Subject: [PATCH] iio: multiplexer: Remove an unused field in struct mux
-Date: Wed,  1 May 2024 11:41:54 +0200
-Message-ID: <7bb04abdc2815caf090a6c9ecab2a51d837792a7.1714556499.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZPeKcYz8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714557236; x=1746093236;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Hb846Cf7SRZX9pIUAJ1q07Z7Vsj0+r1xmkNfW29a3ZQ=;
+  b=ZPeKcYz8FHnp3NVE8oSBwdDJD/oiqJw5SRSLpq2kcrSQbDW8AXdV4/Hg
+   zoQOjFWx+OsZOI8Xw5sE37cZ424HHv4DhOm/mZ6lv73AKdJk95rrMV5Hi
+   M+EPReGSBSVVOL+Ya9DWIMKgZDt6C00KTMBEmjhgZ6+PfnsL62ncj1rsK
+   vST7VK4WYfcJq/8jRwnYIhafuyi8ZLZWy10qqVAAtGHFmpCr5z039uykN
+   KVpjMzoHnLxYvk+6rk3VxR9QrfZqEOwtM69C51vsziMlGL9mEaCVy9hvv
+   MobbEvxitCYbUDd1mW9VrsJWj2nvUwDZk3kjWItHToV3DF9mDLxh+9zFG
+   A==;
+X-CSE-ConnectionGUID: B1fAsC9CSHy8OzOLeKwctw==
+X-CSE-MsgGUID: /XGlda/vTYahtY4WHmkQrA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="27730361"
+X-IronPort-AV: E=Sophos;i="6.07,244,1708416000"; 
+   d="scan'208";a="27730361"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 02:53:55 -0700
+X-CSE-ConnectionGUID: aAIcMIixT9Wtz8LRNgu3+Q==
+X-CSE-MsgGUID: rSDqELpPRceJmOjVWPQj2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,244,1708416000"; 
+   d="scan'208";a="31455876"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.225.176]) ([10.124.225.176])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 02:53:50 -0700
+Message-ID: <89cbae17-58dd-4c06-9f24-0c651209f037@linux.intel.com>
+Date: Wed, 1 May 2024 17:53:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>,
+ Sunil V L <sunilvl@ventanamicro.com>, Nick Kossifidis <mick@ics.forth.gr>,
+ Sebastien Boeuf <seb@rivosinc.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, devicetree@vger.kernel.org, iommu@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux@rivosinc.com
+Subject: Re: [PATCH v3 4/7] iommu/riscv: Enable IOMMU registration and device
+ probe.
+To: Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>
+References: <cover.1714494653.git.tjeznach@rivosinc.com>
+ <f9c9e5dcdc1457da4af70302e85c0a7be532f650.1714494653.git.tjeznach@rivosinc.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <f9c9e5dcdc1457da4af70302e85c0a7be532f650.1714494653.git.tjeznach@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In "struct mux", the 'indio_dev' field is unused.
-Remove it.
+On 2024/5/1 4:01, Tomasz Jeznach wrote:
+> Advertise IOMMU device and its core API.
+> Only minimal implementation for single identity domain type, without
+> per-group domain protection.
+> 
+> Signed-off-by: Tomasz Jeznach <tjeznach@rivosinc.com>
 
-Found with cppcheck, unusedStructMember.
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only.
+with some nits below.
 
-It was added in the initial commit 7ba9df54b091 ("iio: multiplexer: new iio
-category and iio-mux driver") but was never used.
----
- drivers/iio/multiplexer/iio-mux.c | 1 -
- 1 file changed, 1 deletion(-)
+> ---
+>   drivers/iommu/riscv/iommu.c | 64 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 64 insertions(+)
 
-diff --git a/drivers/iio/multiplexer/iio-mux.c b/drivers/iio/multiplexer/iio-mux.c
-index edd8c69f6d2e..2953403bef53 100644
---- a/drivers/iio/multiplexer/iio-mux.c
-+++ b/drivers/iio/multiplexer/iio-mux.c
-@@ -30,7 +30,6 @@ struct mux {
- 	int cached_state;
- 	struct mux_control *control;
- 	struct iio_channel *parent;
--	struct iio_dev *indio_dev;
- 	struct iio_chan_spec *chan;
- 	struct iio_chan_spec_ext_info *ext_info;
- 	struct mux_child *child;
--- 
-2.44.0
+[..]
 
+>   static int riscv_iommu_init_check(struct riscv_iommu_device *iommu)
+>   {
+>   	u64 ddtp;
+> @@ -71,6 +126,7 @@ static int riscv_iommu_init_check(struct riscv_iommu_device *iommu)
+>   
+>   void riscv_iommu_remove(struct riscv_iommu_device *iommu)
+>   {
+> +	iommu_device_unregister(&iommu->iommu);
+>   	iommu_device_sysfs_remove(&iommu->iommu);
+>   }
+>   
+> @@ -96,8 +152,16 @@ int riscv_iommu_init(struct riscv_iommu_device *iommu)
+>   		goto err_sysfs;
+>   	}
+>   
+> +	rc = iommu_device_register(&iommu->iommu, &riscv_iommu_ops, iommu->dev);
+> +	if (rc) {
+> +		dev_err_probe(iommu->dev, rc, "cannot register iommu interface\n");
+> +		goto err_iommu;
+> +	}
+> +
+>   	return 0;
+>   
+> +err_iommu:
+> +	iommu_device_sysfs_remove(&iommu->iommu);
+>   err_sysfs:
+>   	return rc;
+>   }
+
+It's better to make the goto label indicate what is going to be handled.
+So it's more readable to make it like this:
+
+err_remove_sysfs:
+	iommu_device_sysfs_remove(&iommu->iommu);
+
+Best regards,
+baolu
