@@ -1,88 +1,121 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-108-mta1.mxroute.com (mail-108-mta1.mxroute.com [136.175.108.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155FC12F595;
-	Wed,  1 May 2024 15:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94263D60
+	for <linux-kernel@vger.kernel.org>; Wed,  1 May 2024 15:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714577005; cv=none; b=TR+n3gr13gY5L2Qb/BzEiI9dm+YNMONy/Rp4fLM9PYTf8zGKTQsDG0FPaGUJbQeYhivK3XBUTGgOArVpVQDFDptiPn6dCPHdxIVcd0/s8sN9lYaZaEM/jpf0He3wEWH7Bcsk7IygKPFyZsLJqwtfUUwC2aMDf9aw01PCeddbySg=
+	t=1714577116; cv=none; b=rwyOVKptThAXYDqUICxnAcTDuRbeoLIZUiQUAkmic+xnQ7IcfbJ/fkjdvWtkv624zTLFcbuxZKNVn8hyJ9PKPRys05CPT6R9zn8ZU856R6kBEQwVoSdFERH+S698D/+N+zv+wJpbEsCUDG3XKBdbk7Agz+vhoWs4asIaynBky0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714577005; c=relaxed/simple;
-	bh=Wu4p3dA+4jNndGCJvdWgLlsMPzvrGK+CYRTQiaA9HlA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHAcxhVd5FPvl4RdQAFeQY0TzDAJKC1rUYwZ/5n65Okbaj1k3Uu6srEgtCN9TP9hNIkuLBmW21uxp9iQ+bgJ1BmHBSeB4LotQOczTX+hg/kFjnFUGhzkwChoxOLpmHzrllHdELfotcjIQq7CKQKmyjmiA7c+afcV9cUnC904saM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=FEf2ohJw; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1714577116; c=relaxed/simple;
+	bh=g6reCIRH0/JcMBOnGIeqjTP1oTROyutPaPbhmdHf1Dg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bnw+zm6llrkzVZuqnE9T20wWJ99XoeDPrASW4Qe33oLiKDgmlgav72HDVO5nmet3wmklAIGI49A9X1CH+bcpPSHuTcdNi/JL8YWWZuzR/gsp1khCs5gjVkk8PcRWjaXs/vLyotlz4/eDYMF2ATp0WYWmpDfqwa37wOsGgvzmPko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=RAN2i+ez; arc=none smtp.client-ip=136.175.108.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FEf2ohJw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=QZtc4ADsuFNoYEFTaxp6L+njnzX7pXdzg+EYMtUefqo=; b=FEf2ohJwKWmJjApy+pRB7qWNcL
-	xvQoZk9HXAECcN0eOm1yRC04j+ZUnzyReFd10iFjXxEH3Gc8lO+9La8tg0Ms/8elH84/5WDQ01acn
-	nMe70KXhqx3p7eZ4s9OBovy1fPwjCL9w+1O4iM75+zcxcY39SrEXi0AZO9zZ4Y9YT2n8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1s2Bne-00EQz3-Vz; Wed, 01 May 2024 17:23:14 +0200
-Date: Wed, 1 May 2024 17:23:14 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Halaney <ahalaney@redhat.com>, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="RAN2i+ez"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta1.mxroute.com (ZoneMTA) with ESMTPSA id 18f34c244460008ca2.010
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 01 May 2024 15:24:57 +0000
+X-Zone-Loop: 5273bfbdd6c07c253d0efb070aa31e6602d820f3d77e
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=DCgAgHlEMGBMjcN16C1bbheZthQRfCGTfl1ll6guAKc=; b=RAN2i+ezla/GVtNIFYi/2OO57O
+	OAOaO9iff47iJ90hN+5XNUre0VaAp2HR30i6jU75O7mh5ry2YZhNr/5vHUJc3IK6DAJkTolg97uHD
+	VsqxnNsyauMu6Wq2mKlqLarQWn3YBldQ7d9BUic249oPF65EiUo2ktvIMmmxcEPH8h7iJbZMjKbdN
+	cFMqwTLIwK0ZaNoz1HYZdUbj07HEAgXSsWzd/cAXI/FwUDD4bItJkFo3vcp89/ltiuibt+92CCCv+
+	VD/wwr1hhJbaaxlKwEzs1od+0NMA/W+OG9lfeFpVHPURhkJdWNy5Y6a/Jf8PcXbJIWhY4DelIzosZ
+	OD4bt8aw==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org,
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, mcoquelin.stm32@gmail.com, hkallweit1@gmail.com
-Subject: Re: racing ndo_open()/phylink*connect() with phy_probe()
-Message-ID: <4fdf3a29-a380-4db7-b652-51214d5b15fb@lunn.ch>
-References: <uz66kbjbxieof6vkliuwgpzhlrbcmeb2f5aeuourw2vqcoc4hv@2adpvba3zszx>
- <229b5a82-1086-40be-8ee5-16b7f3a03b30@lunn.ch>
- <ZjJddIUpXQqH/IA+@shell.armlinux.org.uk>
+	linux-kernel@vger.kernel.org,
+	pavel@ucw.cz,
+	phone-devel@vger.kernel.org,
+	Luis Garcia <git@luigi311.com>
+Subject: [PATCH v5 03/25] media: i2c: imx258: Disable digital cropping on binned modes
+Date: Wed,  1 May 2024 09:24:20 -0600
+Message-ID: <20240501152442.1072627-4-git@luigi311.com>
+In-Reply-To: <20240501152442.1072627-1-git@luigi311.com>
+References: <20240501152442.1072627-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjJddIUpXQqH/IA+@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
-> > It seems unlikely, but one possibility is:
-> > 
-> > static int stmmac_xgmac2_mdio_read_c22(struct mii_bus *bus, int phyaddr,
-> >                                        int phyreg)
-> > {
-> >         struct net_device *ndev = bus->priv;
-> >         struct stmmac_priv *priv;
-> >         u32 addr;
-> > 
-> >         priv = netdev_priv(ndev);
-> > 
-> >         /* Until ver 2.20 XGMAC does not support C22 addr >= 4 */
-> >         if (priv->synopsys_id < DWXGMAC_CORE_2_20 &&
-> >             phyaddr > MII_XGMAC_MAX_C22ADDR)
-> >                 return -ENODEV;
-> > 
-> > Maybe if the interface is down, priv->synopsys_id has not been set
-> > yet? Your devices are at address 8 and 10, so if priv->synopsys_id
-> > where 0, this would give you the ENODEV.
-> 
-> Yes, I did look at that, but didn't read the DT snippet to realise
-> that the addresses would be trapped by that. So, looking at where
-> priv->synopsys_id is set... is in stmmac_hwif_init(), which is
-> called from stmmac_hw_init(), which in turn is called from
-> stmmac_dvr_probe(). This is the only path that leads here.
-> 
-> This all happens before the MDIO bus is registered, so the value of
-> priv->synopsys_id should be set by the time the MDIO bus is registered.
-> 
-> So I'm unconvinced...
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Me too. I just wanted to give an example of why it is important to
-track down the source of the ENODEV.
+The binned modes set DIG_CROP_X_OFFSET and DIG_CROP_IMAGE_WIDTH
+to less than the full image, even though the image being captured
+is meant to be a scaled version of the full array size.
 
-      Andrew
+Reduce X_OFFSET to 0, and increase IMAGE_WIDTH to the full array.
+
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Luis Garcia <git@luigi311.com>
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+---
+ drivers/media/i2c/imx258.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index 4a7048d834c6..0ae4371940ca 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -340,11 +340,11 @@ static const struct imx258_reg mode_2104_1560_regs[] = {
+ 	{ 0x0404, 0x00 },
+ 	{ 0x0405, 0x20 },
+ 	{ 0x0408, 0x00 },
+-	{ 0x0409, 0x02 },
++	{ 0x0409, 0x00 },
+ 	{ 0x040A, 0x00 },
+ 	{ 0x040B, 0x00 },
+ 	{ 0x040C, 0x10 },
+-	{ 0x040D, 0x6A },
++	{ 0x040D, 0x70 },
+ 	{ 0x040E, 0x06 },
+ 	{ 0x040F, 0x18 },
+ 	{ 0x3038, 0x00 },
+@@ -459,11 +459,11 @@ static const struct imx258_reg mode_1048_780_regs[] = {
+ 	{ 0x0404, 0x00 },
+ 	{ 0x0405, 0x40 },
+ 	{ 0x0408, 0x00 },
+-	{ 0x0409, 0x06 },
++	{ 0x0409, 0x00 },
+ 	{ 0x040A, 0x00 },
+ 	{ 0x040B, 0x00 },
+ 	{ 0x040C, 0x10 },
+-	{ 0x040D, 0x64 },
++	{ 0x040D, 0x70 },
+ 	{ 0x040E, 0x03 },
+ 	{ 0x040F, 0x0C },
+ 	{ 0x3038, 0x00 },
+-- 
+2.44.0
+
