@@ -1,83 +1,87 @@
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26C51D68F;
-	Wed,  1 May 2024 05:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20871D68F;
+	Wed,  1 May 2024 05:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714540460; cv=none; b=LeeoovMrAL3sy8Ebh0idhywLrN/vx81h0Kj6DNQVCCoABqr/08BJdeb77srvgWf3Tpoc8k30U/cc3xku0kt7JXemIsEO3gK59sajHLdyMg7KX0wO6/ToXRRpkoKuafe4vo5hGDmcxeTKkKocBA0VLTJOmmH55vt3hz4wfzuISIA=
+	t=1714540614; cv=none; b=iNNBkkUZv6DAKz3MjLFaIeanyXLR8u/56wUtfJAfChWSxCcQU+Xo6MdlN57kv31d8x+9sEQv7LUnerwDrH0vCUB8Jwfm8UNkfG2dWNSOj6sD3cY4c9u9wsRpfqxkPAoVh12A0ArboQlToG99/WjNq2osJGHs/2rh6tKkdHodXtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714540460; c=relaxed/simple;
-	bh=RMWyAyYlUlSp9U/kE6nFI9ssssdGhoQ6D+bwcNf6+fg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P4OkQm8zlTVfoI+lUbx40mEpn7PWBC9D6LX63QYrEAJ0TqvY9LjbMq0WEflSq+xGe60o526sbUKNn/mTVWkD2kYJsvXg31IVWJZxnvXR5zipklcpJ709/mDJ2tTepkuKyWzky/UjXuyPQ/jQkkY5ofDchiseNCHfK5Xbyj1s3WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=PS2aASDV; arc=none smtp.client-ip=80.12.242.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1714540614; c=relaxed/simple;
+	bh=7A6sJY/a61zFk3jw04VSruoJTX3tq1XA9gEuQpzPB5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YETKIp7pPrCG+iDpJIisySFNPl4R1qSc/JPdWa2lwyICQ5iwqKVzMYY5YA0Anzg92/C5pixKHj+pAPVIku0reGd/NB1zHG2UGRGJfWwJt/c9sBDBJdCjDAkYGnI6VGDiokRiqSH2XrA0bNKvc6nTm5Iowl3iHaw+XUkbXOBabLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=OT71XiCW; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="PS2aASDV"
-Received: from localhost.localdomain ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id 229estbE3rs7M229esvot9; Wed, 01 May 2024 07:05:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1714539918;
-	bh=X1z/GNaSSMDxojxmVN0YxGfbCezIrv1/qyN8UGm7TgE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=PS2aASDVNpLMOlRQ6EseNQ4ojnelR4JnXF0fuFJLIQdROzbT2X5jB2I5boEh12y3u
-	 YoAqw1DtZPnSRkmbp1x/SZFexfGOW1Mj4S/2LVquZTYvFXbBj/A/iv2ZY2rpXSzMtw
-	 ZCGL/KF1QGpghD9W40HGjdh0qaT25rSaG+dGyIlpUxmd5gMfE2ZNwXYM44uWx3oiA/
-	 15NpG/dlq82E9YiK5yeyN1R8VgPW6dK7/8F1dj1vZCBrvxT4+eDXlHd3/0Tq12uZHX
-	 zOml8gQVz5+Y89aw26IXU8/QQE8X5ENR8DQs+/A2ixDRyhWPi+hRn5GfqepXen3MFx
-	 asoAR9ryPtFoQ==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 01 May 2024 07:05:18 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Support Opensource <support.opensource@diasemi.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-input@vger.kernel.org
-Subject: [PATCH] Input: da7280 - Remove an unused field in struct da7280_haptic
-Date: Wed,  1 May 2024 07:05:05 +0200
-Message-ID: <ac251b456933bcc6fe297b738f9304bd259185c1.1714539865.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OT71XiCW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1714540607;
+	bh=FJFn14SYejNiIAAK7ADw8KLEx9XqaTWenC4rhDOfxOQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=OT71XiCWZ74NvtkVpUFELtQCFwyCNAyXMI+0HtX4uFryeofrBr/WK0r2wZ01Ep2Fr
+	 HYYENNGgKwgMVY6lsjKPCGBNB0D2Nqdz679RYFOtaXE4TLXMe+R8KQLcZDvCksQVZi
+	 322ccksfp5t70MAHmVOjZO7UD/BE+Wak+ZUat0cBqiUPNCzq217qAz+zBuVOv3o8TL
+	 IQ9OZFdURLK9QtiTeTdJoX835V910m9XRiFB5cZDmy6jC5zikhg4TcBY93MsZmBRMl
+	 LzZ1WniB3A3dmtejQ62aQbFVWLlJgD8+z4j793ipE/wNlACddDTLMC5+Vy6bnRCutj
+	 o5zYWQwipSkdw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VTlfl4rzlz4wxf;
+	Wed,  1 May 2024 15:16:47 +1000 (AEST)
+Date: Wed, 1 May 2024 15:16:45 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the bcachefs tree
+Message-ID: <20240501151645.281f1b07@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/LM8eP+xGV/iJMurorRt9V+U";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-In "struct da7280_haptic", the 'legacy' field is unused.
-Remove it.
+--Sig_/LM8eP+xGV/iJMurorRt9V+U
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Found with cppcheck, unusedStructMember.
+Hi all,
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only.
+After merging the bcachefs tree, today's linux-next build (htmldocs)
+produced this warning:
 
-This field was added in the initial commit cd3f609823a5 ("hwmon: Input: new
-da7280 haptic driver") but was never used.
----
- drivers/input/misc/da7280.c | 1 -
- 1 file changed, 1 deletion(-)
+Documentation/filesystems/bcachefs/index.rst:7: WARNING: toctree contains r=
+eference to document 'filesystems/bcachefs/CodingStyle' that doesn't have a=
+ title: no link will be generated
 
-diff --git a/drivers/input/misc/da7280.c b/drivers/input/misc/da7280.c
-index c1fa75c0f970..1629b7ea4cbd 100644
---- a/drivers/input/misc/da7280.c
-+++ b/drivers/input/misc/da7280.c
-@@ -230,7 +230,6 @@ struct da7280_haptic {
- 	struct i2c_client *client;
- 	struct pwm_device *pwm_dev;
- 
--	bool legacy;
- 	struct work_struct work;
- 	int val;
- 	u16 gain;
--- 
-2.44.0
+Introduced by commit
 
+  78b8f7949d02 ("bcachefs: CodingStyle")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/LM8eP+xGV/iJMurorRt9V+U
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYx0D0ACgkQAVBC80lX
+0GzNCgf/XyS/OLHMf1rrgvWSiw4J3cD7vEbaqmz/R/8f6oGgZC1sfzt/XFMp+4jD
+BqIsz2RVORIz7JS+6d5PGKOOxelyj5CPK+u13WNB83KhuDglNCocFyJ+TQ4PpnEW
+r5XBxy+mAVka5kAsWMBvgiZCA27LrsTZ4vSkIt33KV8cjB1ftMNn/zxXC1nsd0ow
+j4+DUDpaZvKgqxDFy+Zh4V/0EnENQLhniAdIRdIenMmi0xEJox5zhAL/crac4Q6E
+FGwzjf12w0wQ4MyU68/Vq1BGtm/sFrW/QOBa5ISfQsB9pawUzNZ79kVJ7iDzsfAV
+uD2JWIFsUNe8h7bp/ERn/6+/u1DyfA==
+=Ealc
+-----END PGP SIGNATURE-----
+
+--Sig_/LM8eP+xGV/iJMurorRt9V+U--
