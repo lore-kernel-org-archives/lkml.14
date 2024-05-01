@@ -1,112 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-25.smtpout.orange.fr [80.12.242.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8937983CDF;
-	Wed,  1 May 2024 11:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E349D5A4CD;
+	Wed,  1 May 2024 11:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714563441; cv=none; b=XQN0VuqoV3Py/vnRkUKuv5y+LQre031YlqGIRhhBatRrSLYb5BETMC5+cECZDGV0qGQcZBQsGiIPMldfCHJghAyxIbthV2vSGQSTf6A+wz6jA1XWLeNaRw8kVWIwUjXhoJZEsiHIQ/KllfagfYpKVB1QbStDuyyDu+e0FnmZ7TE=
+	t=1714563472; cv=none; b=jkvzcbW7Ad/mn7i3mmNz/HWjz4i0fDOjGlrAncKcHkJfPrGxv6AFUYV/boMzjl3FIu9ZyK/tIinrJ3sM/19XIf07OCSHVISbsQ/OJLvcOfMKoK9DZZzjUcNGt4zyRyqJ6zTyX9Gfb0zwxtHrntx0PXxuwJRMbhhwBjxQWbCYPNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714563441; c=relaxed/simple;
-	bh=MP62atQMR9QZoG0+ZlmS5Hnq2cah7KkCkJlRp2jaF4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4UMUTh7RZZz7tqbAqFcCqwzVPLC2IzmVg1SF6qXDa2go3OhOizeMkyrZY3tfWj5XDBNEb1gN/w1uHsQb5gQhqlTZyojH2zSGncMspCZV9ZzsTz4WfLn+4VRo7EQSNKXeoaRejE5x8Oa0Oa9C/+nCImwkHmbVFwrS5yMuceaRhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=beA3KVgr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714563472; c=relaxed/simple;
+	bh=5PygkcuyBUAwRIUORJnEko9R4njhlZJJ/lQkQ/6nwtk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AdrWu7JcpY6Q68MkxajX5drE63gmBkDHisJ5FM77R30UiHSf6HMw/haSpigAYhK3mkqBSL+ExQfVbeclEwS7yQiPSaCM06DgIVwK7QGOmfpz2n+UBbyIOUhia27P7QVcfVArfO4Du57fE+WxlGL9GLy5oTGAZS0dDTwA/Dw3k74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=reAEfJUA; arc=none smtp.client-ip=80.12.242.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="beA3KVgr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EDF8C32789;
-	Wed,  1 May 2024 11:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714563441;
-	bh=MP62atQMR9QZoG0+ZlmS5Hnq2cah7KkCkJlRp2jaF4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=beA3KVgrsWenCerL/qvg7nGJ1js6iXuqGs3AptzAocKB/boxOcYGnp3XkmaF/2oAO
-	 oX/IKgwc3iepDK0HUg4Io2c4i03pdfDpZgk1kcov4Ai/aBxurHiyiAX6HmVvpU/2SO
-	 NUgp2LZev45f9DvID3VJ/ctqV7scYd+UBaa9jEA43ipsr+v4I9z5uvqE1vmo0LXCpJ
-	 qbaaeWs//uQyrcYV7j53qJtIC7z+cFGAY0qdpMGpg3dAbcmAZGjn0tM0K556QYzqkQ
-	 0hJcGqFhq9jdyXi0dahmnkLEGQ+9rxMrR1yFQRySAqIuiMalxkuwm595dFktELebK8
-	 aVetVR6dPCr+Q==
-Date: Wed, 1 May 2024 12:37:14 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 07/16] riscv: cpufeature: Extract common elements from
- extension checking
-Message-ID: <20240501-probable-unfunded-746ef6ae1853@spud>
-References: <20240426-dev-charlie-support_thead_vector_6_9-v4-0-b692f3c516ec@rivosinc.com>
- <20240426-dev-charlie-support_thead_vector_6_9-v4-7-b692f3c516ec@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="reAEfJUA"
+Received: from localhost.localdomain ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 288ws0LoSn00P288ws2F8X; Wed, 01 May 2024 13:28:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1714562939;
+	bh=UX/wu/RLILUA2125zmuAeWndUa2Tzy8BmAzyIuX2a+k=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=reAEfJUA8LXqgKp8cz7LdG6qlni18euoRbsIoCeDdhDwomJt9JhRMWIfRAivA067S
+	 JOXF9qQv0AYSPgvMbBsXt/Nq50WQ6O0bANCynxI2OwGt+GPjJuemJlxz8q/urhHNuD
+	 kWORNwkKZ1Yt8kvR7Yc+EJ7EEn9dKiTEA2i85c49gZi+P9BiDyVsKMwWOvSzknBupl
+	 GJBg+8DVvKnpLL47NgFXzH1MBxba3SulC+9UChmR3RoE3lkpLnPPJjU11bf843r8qQ
+	 DKL/pRtjD9U7nfr6F2QgIMn2tJCKx5fwNT4DuuaKiMnvIvpSg0LE0BW5yP7grub/Ws
+	 45ikphYXwxJ7Q==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 01 May 2024 13:28:59 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Gerald Loacker <gerald.loacker@wolfvision.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-iio@vger.kernel.org
+Subject: [PATCH] iio: tmag5273: Remove some unused field in struct tmag5273_data
+Date: Wed,  1 May 2024 13:28:50 +0200
+Message-ID: <7bd16d7fea12c64b6b3dc3cd32839cfce145bcf3.1714562912.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4cVAmCcvx4abtooG"
-Content-Disposition: inline
-In-Reply-To: <20240426-dev-charlie-support_thead_vector_6_9-v4-7-b692f3c516ec@rivosinc.com>
+Content-Transfer-Encoding: 8bit
 
+In "struct tmag5273_data", the 'scale' and 'vcc' fields are unused.
+Remove them.
 
---4cVAmCcvx4abtooG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Found with cppcheck, unusedStructMember.
 
-On Fri, Apr 26, 2024 at 02:29:21PM -0700, Charlie Jenkins wrote:
-> The __riscv_has_extension_likely() and __riscv_has_extension_unlikely()
-> functions from the vendor_extensions.h can be used to simplify the
-> standard extension checking code as well. Migrate those functions to
-> cpufeature.h and reorganize the code in the file to use the functions.
->=20
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
->  arch/riscv/include/asm/cpufeature.h        | 78 +++++++++++++++++-------=
-------
->  arch/riscv/include/asm/vendor_extensions.h | 28 -----------
->  2 files changed, 44 insertions(+), 62 deletions(-)
->=20
-> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm=
-/cpufeature.h
-> index fedd479ccfd1..17896ec9ec11 100644
-> --- a/arch/riscv/include/asm/cpufeature.h
-> +++ b/arch/riscv/include/asm/cpufeature.h
-> @@ -98,59 +98,66 @@ extern bool riscv_isa_fallback;
-> =20
->  unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
-> =20
-> +#define EXT_ALL_VENDORS		0
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only.
 
-It's not really "all vendors", it's standard. Otherwise, this seems all
-grand to me,
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+It was added in the initial commit 866a1389174b ("iio: magnetometer: add
+ti tmag5273 driver") but was never used.
+---
+ drivers/iio/magnetometer/tmag5273.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Cheers,
-Conor.
+diff --git a/drivers/iio/magnetometer/tmag5273.c b/drivers/iio/magnetometer/tmag5273.c
+index 218b1ce076c1..4187abe12784 100644
+--- a/drivers/iio/magnetometer/tmag5273.c
++++ b/drivers/iio/magnetometer/tmag5273.c
+@@ -118,11 +118,9 @@ struct tmag5273_data {
+ 	unsigned int version;
+ 	char name[16];
+ 	unsigned int conv_avg;
+-	unsigned int scale;
+ 	enum tmag5273_scale_index scale_index;
+ 	unsigned int angle_measurement;
+ 	struct regmap *map;
+-	struct regulator *vcc;
+ 
+ 	/*
+ 	 * Locks the sensor for exclusive use during a measurement (which
+-- 
+2.44.0
 
---4cVAmCcvx4abtooG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjIpagAKCRB4tDGHoIJi
-0nqbAQDotPME6y45R4f68eXuCnbyY4XAOyDUzD3fL8AW4YgGDAD/VCUttdmY/5WW
-rxMqmWx1QCw9yGME4Abt8BHVFnG4ZgI=
-=cdZM
------END PGP SIGNATURE-----
-
---4cVAmCcvx4abtooG--
