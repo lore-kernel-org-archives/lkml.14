@@ -1,128 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5654C66;
-	Wed,  1 May 2024 01:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127656FCC;
+	Wed,  1 May 2024 01:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714527768; cv=none; b=gFfcwJvk28t0G+o7+QcLEOpnHV9M90hd0kTayQ3uRq11enyRuyhrglm0rdWCdg+auMwZheIU1z71r3nc7WN+bHmpFVD/90ZYY+SIEfLimFjjeM6salLj1f3zA++2MmalZY8zV+UQON8CcXFoBdsWHGMBlnEhvezah0HYTgrNZ/U=
+	t=1714527770; cv=none; b=FV8zINvuN3xdZ5k0ODGAOFX+CpfcOhLQJheWqDLEaE3zN7IWMcXeGmEZ04fzoGqVzBT6qhBPmm4UD9S8XlO8TjIcqsjTrPe93lYJGVkmirZmF1nDAAjHPMFnrw+z647pwd43R6x9hs7iqn+c3BT3D5t3eOYqRFbMN25nF7kcIlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714527768; c=relaxed/simple;
-	bh=NXfYsGE9+CDW89d7BYlqMr64teyBUpwW1AwfylRDXJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Doo/6VM9FbMhPxrSGdLoqpJEemreqhYqrVB4OLN2N6Dz4qiSLzDbY9IwQUu4pH/Q2IuIFdW6DPS/T6lUMKCAGKtdAqj0Ohdu/d6TmR3hDy3jfVeeqM7DM7Lr2DmJtbG6q0YnZ7QMiMc/om1BNGMJtYicp2xJkmBS1btvnTMx3Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R+eT8Iqq; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714527770; c=relaxed/simple;
+	bh=s+K42gZIABEUE/N88ONB7Yon6cOf8NQnhlQxz3/MGhg=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=qm5WzKBHHItNUJFb/3uKmB+Dkt9s2suGLDo4crOT+UbERQQDvUown9hQBc6i8pm4mGddL2VdWw1xOIzY5b3nrKfO1guoIZEJUptn8Io2wAoJ2gRBHVdUkq988mI1ZiQNAkodpMT3LCp1O+gg9VuVfC1O3bUsR1K7XiRcELnvO0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=MDX0TdgU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=flmLz+du; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R+eT8Iqq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714527766; x=1746063766;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NXfYsGE9+CDW89d7BYlqMr64teyBUpwW1AwfylRDXJI=;
-  b=R+eT8IqqgRrFicJ30CKOiz44C8AUPvyx+gjOzKkGBJRdMXtZMgMdDpx/
-   WBWZknjguW2yeTmHWJHhV94IxGCuT6sJOL2kZniDshgfkG1XHvuN1hNse
-   lNmCci0vGGycwP8SE98lY09g1BfPdcyYN7F3HgSrZ0wplrCgC0sWqzJau
-   ug7vrU7+7NAb6KaK81vIH/YELFQRzondxaVTmeFtwiVZyfzlgMsasu6lh
-   iMEIIJTASV/HoHTBrXDTV+/663d0IZCaDQMETO32VsFEyyZMEMVh736kT
-   uytg8usucv0L5FZyOZsSilF41ILKuK5h2P2hdFc6u1OjDSS9a4iJBVkgL
-   w==;
-X-CSE-ConnectionGUID: L7AVYFYpSPivopraYDzqRQ==
-X-CSE-MsgGUID: SSv0vgmNRrmrdjX1gVGnlQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="35648203"
-X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
-   d="scan'208";a="35648203"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 18:40:04 -0700
-X-CSE-ConnectionGUID: zR9ugFEtRN6HDdbKAUjQWg==
-X-CSE-MsgGUID: UfaCz3N4Sxq+/TNXPh5m7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
-   d="scan'208";a="64144628"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 30 Apr 2024 18:40:01 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s1ywx-0008kB-0f;
-	Wed, 01 May 2024 01:39:59 +0000
-Date: Wed, 1 May 2024 09:39:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: skseofh@gmail.com, robh@kernel.org, saravanak@google.com,
-	rppt@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Daero Lee <daero_le.lee@samsung.com>
-Subject: Re: [PATCH] of: of_reserved_mem: clean-up reserved memory with no-map
-Message-ID: <202405010907.PHM9xSMi-lkp@intel.com>
-References: <20240428125505.434962-1-skseofh@gmail.com>
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="MDX0TdgU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="flmLz+du"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 158C31380140;
+	Tue, 30 Apr 2024 21:42:48 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Tue, 30 Apr 2024 21:42:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1714527768;
+	 x=1714614168; bh=UI8eVskdm/0fVqSqYYlThaWLGBVwXSK9e2mLaByBoGU=; b=
+	MDX0TdgUUsrAMX8symQpT8Cw5eEIerQ+7vxrHie7tLYorwQh6v3lDk8DQyhuoZjS
+	bQJmzsRLppJDx93gsMfckp5sUc31AoQ/FDfbYJt9uUOt6vl7hlAE9U+CFOqdXPHm
+	nQo0tUQ504p+BzxPb3qbmHxcK5UvvBDDDz50YecGIauWHWxvSBmcaXNRPbK6hiZk
+	p40XPZg+btvdn3RFf9g4D+3wYGwwJOb6DZYjEkj879LJUDRhChLUAtqdz+Du1Sr8
+	fwjlWxjR27iQ7hCgbsvaI2BcWwpXJroWsXy8NGcIf6EMuv0BWCxW0+yqCgjQxQSz
+	Ivz6h0owKsbTMpW50AhtYw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1714527768; x=
+	1714614168; bh=UI8eVskdm/0fVqSqYYlThaWLGBVwXSK9e2mLaByBoGU=; b=f
+	lmLz+duLZr7gdCCm2eAyERMpNmvQ+A13xNH4OQYGp+5cow0kqzb3GuA9cMsUt2rS
+	LiR6YZYAL7OEvEuR9+iGKeUIAsRAj9OzL0w6UzJ4ZMpnsr7V0JRb1re39GSknxPo
+	i3ULGJ217KIpits7LcLgIsSvbjHz6ssRmkZqin8Nf07ynJIqeHZG0/QFrfbFrfp0
+	GPL4wCfbvfi4aOB6bX6hSHQEpau8tc8qTZpseHKuALTN82KD+BtIAgFkRyBDu5Sw
+	WLuchbgC6wyS24iooRESYdTlhc6mLC6KxNcOnL4uqJNqGsy39pCKDKXAZ4opc6Zd
+	O0UVPz/4EFOJkDKcsVbVg==
+X-ME-Sender: <xms:F54xZj5T_vvnygwwgWF37OrWoI45O5btWPOqmU9TrrGJ_c6rKrY1sA>
+    <xme:F54xZo5BMZMQOXi4RvUSVOyydoTdw1m8SVGwnUOFzxCbUvi6wxC8DoIBwIp5eK6Jc
+    p7eLRyrLC3aQHQD8m0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddugedggeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfn
+    hihnughonhcuufgrnhgthhgvfdcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqne
+    cuggftrfgrthhtvghrnhepheefgfevjeeivedvkefgfedtudfgtefgteeuleeiudffteei
+    leehteeivedvfeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomheplhhsrghntghhvgeslhihnhguvghnohdrtggr
+X-ME-Proxy: <xmx:F54xZqfVJnd8Q5zagBuZxGxLDg05dM0LXrWS-cL_pm3o4dC_E500UQ>
+    <xmx:F54xZkJuVKx6QVIi3YsLl9B5I0vpLaOY4xQVGAAcFeJSf9-ag75Dmg>
+    <xmx:F54xZnICHlhY6_KSwj72VwbvRhiNNbOPDfx_w5aL7BnPzKJQE70ejQ>
+    <xmx:F54xZtwS-BgDVrpbEC3f34Xs7kWT1M7AWq2eil5-NIpwrvxQZwq2zw>
+    <xmx:GJ4xZkAVsgdYUg2tKfWwp1vtYoNNQZVS4DiUg6OyvYjiQ8PhocrJzNpa>
+Feedback-ID: i1719461a:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 1D886C60097; Tue, 30 Apr 2024 21:42:47 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-416-g2c1796742e-fm-20240424.001-g2c179674
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240428125505.434962-1-skseofh@gmail.com>
+Message-Id: <32d6fa42-5a8f-45a2-b07f-c16f51533e04@app.fastmail.com>
+In-Reply-To: <20240501013623.ia3debwadlu2qzff@pali>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
+ <20240501011507.6942-2-lsanche@lyndeno.ca>
+ <20240501013623.ia3debwadlu2qzff@pali>
+Date: Tue, 30 Apr 2024 19:42:26 -0600
+From: "Lyndon Sanche" <lsanche@lyndeno.ca>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: "Mario Limonciello" <mario.limonciello@amd.com>, W_Armin@gmx.de,
+ srinivas.pandruvada@linux.intel.com,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ lkp@intel.com, "Matthew Garrett" <mjg59@srcf.ucam.org>,
+ "Hans de Goede" <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Dell.Client.Kernel@dell.com
+Subject: Re: [PATCH v4] platform/x86: dell-laptop: Implement platform_profile
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Apr 30, 2024, at 7:36 PM, Pali Roh=C3=A1r wrote:
+> On Tuesday 30 April 2024 19:14:52 Lyndon Sanche wrote:
+>> + *          Bit 2 AAC (Quiet)
+>> + *          Bit 3 AAC (Performance)
+>> + *  cbRes3, byte 3  Current Fan Failure Mode
+>> + *     Bit 0 Minimal Fan Failure (at least one fan has failed, one f=
+an working)
+>> + *     Bit 1 Catastrophic Fan Failure (all fans have failed)
+>> + *  cbArg1 0x1   (Set Thermal Information), both desired thermal mod=
+e and
+>
+> Broken indentation. cbArg1 should have only one space after "*" and be
+> at the same level as the previous cbArg1 description.
+>
+> And I would suggest to add a newline before cbArg1 as it start
+> description of the next command.
+>
 
-kernel test robot noticed the following build warnings:
+I will fix this.
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master v6.9-rc6 next-20240430]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>> + *               desired AAC mode shall be applied
+>> + *  cbArg2, byte 0  Desired Thermal Mode to set
+>> + *                  (only one bit may be set for this parameter)
+>> + *     Bit 0 Balanced
+>> + *     Bit 1 Cool Bottom
+>> + *     Bit 2 Quiet
+>> + *     Bit 3 Performance
+>> + *  cbArg2, byte 1  Desired Active Acoustic Controller (AAC) Mode to=
+ set
+>> + *     If AAC Configuration Type is Global,
+>> + *         0  AAC mode disabled
+>> + *         1  AAC mode enabled
+>> + *
+>
+> And here I would suggest to remove empty line as the comment below
+> belongs to the AAC description above the empty line.
+>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/skseofh-gmail-com/of-of_reserved_mem-clean-up-reserved-memory-with-no-map/20240430-144643
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240428125505.434962-1-skseofh%40gmail.com
-patch subject: [PATCH] of: of_reserved_mem: clean-up reserved memory with no-map
-config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20240501/202405010907.PHM9xSMi-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240501/202405010907.PHM9xSMi-lkp@intel.com/reproduce)
+Agreed.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405010907.PHM9xSMi-lkp@intel.com/
+>> =20
+>>  /* dell-rbtn.c driver export functions which will not work correctly=
+ (and could
+>> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/p=
+latform/x86/dell/dell-smbios-base.c
+>> index e61bfaf8b5c4..40aa4469b38b 100644
+>> --- a/drivers/platform/x86/dell/dell-smbios-base.c
+>> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
+>> @@ -9,6 +9,7 @@
+>>   *  Based on documentation in the libsmbios package:
+>>   *  Copyright (C) 2005-2014 Dell Inc.
+>>   */
+>> +#include "linux/wmi.h"
+>
+> Is this include file really used? Because only SELECT_THERMAL_MANAGEME=
+NT
+> was added and it is in the dell-smbios.h. And others constants like
+> SELECT_KBD_BACKLIGHT did not needed it.
+>
 
-All warnings (new ones prefixed by >>):
+No it is not. It seems my IDE automatically inserted this. I glossed ove=
+r it when committing it seems.
 
-   drivers/of/of_reserved_mem.c: In function 'early_init_dt_reserve_memory':
->> drivers/of/of_reserved_mem.c:95:25: warning: 'return' with no value, in function returning non-void [-Wreturn-type]
-      95 |                         return;
-         |                         ^~~~~~
-   drivers/of/of_reserved_mem.c:81:19: note: declared here
-      81 | static int __init early_init_dt_reserve_memory(phys_addr_t base,
-         |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Thank you for your quick feedback.
 
-
-vim +/return +95 drivers/of/of_reserved_mem.c
-
-    80	
-    81	static int __init early_init_dt_reserve_memory(phys_addr_t base,
-    82						       phys_addr_t size, bool nomap)
-    83	{
-    84		if (nomap) {
-    85			/*
-    86			 * If the memory is already reserved (by another region), we
-    87			 * should not allow it to be marked nomap, but don't worry
-    88			 * if the region isn't memory as it won't be mapped.
-    89			 */
-    90			if (memblock_overlaps_region(&memblock.memory, base, size) &&
-    91			    memblock_is_region_reserved(base, size))
-    92				return -EBUSY;
-    93	
-    94			if (memblock_mark_nomap(base, size))
-  > 95				return;
-    96		}
-    97		return memblock_reserve(base, size);
-    98	}
-    99	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Lyndon
