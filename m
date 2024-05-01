@@ -1,57 +1,57 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B734596E;
-	Wed,  1 May 2024 04:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A494F48787;
+	Wed,  1 May 2024 04:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714537743; cv=none; b=WAtVUdOHkFptgbjhImVbBdLK6E4MExzlDzK1WcAWuBiGhl8hqCvWjK33vrfVwY5470nd8Aqg+CPAxFKZWaBt7qQ2oMWraM0kt77fxops1cmJJkYpUtRa1MQiy2izwauP7LvurQzCSb8yQ2n4g804EIbmzNMhbi1eQMCiCsCmcVs=
+	t=1714537747; cv=none; b=tEpfOXXPQQVT6fgky+7zR8vB/yp167cvp+8AV8bA6hO8xPRLAMmK6EAYCoE2MZIi1ZHDnsolhAS7lHj4lSQ7ybCeyF7LYb8MmP1QGrHUpF3HQD1dgVKMn0ua+8YaMlyZho0mZCltUjJVK4ku7VdhHVuahflOdve/D/dtd+hSGlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714537743; c=relaxed/simple;
-	bh=hTXTBAcEL8gMHMEYQjxjqOhus0GQvyCJWh1hLepjz8Q=;
+	s=arc-20240116; t=1714537747; c=relaxed/simple;
+	bh=2cKONyUhvqsDbdbaoKbjY2AvnOp4SE0Z8KCFA6jaKJI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UhqmuTOsyMhMPpEh6qM+oAjIJC/4qJXeS13LynFoqUp1PWe95xd4lKw8pLvQ0lmveeLp0Ai1EgawkB/Bb5djIZ/CImJMPlhDtgH3nT002py+gYmZoa53mEIzHvOgLM1yXb3idTqOYbXc64mBcKqvj7D2r87Fl7Ys8k0FSD6zzsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oi+DDutj; arc=none smtp.client-ip=209.85.210.52
+	 MIME-Version; b=QkenGLp5HVzi8Rkgj+1Uz5vr1ugUJC0SSzc69jaJQB0PTFmMKkpZ4UXogA1gu8ClHUi8wc3Aopc6lja7cLcPhzLuDn3q29sxBFsImFcYtqitoAxKnLNn7ZXbYv6yZTJw2SmzgfngJsOqyvBMQyfRAH/nALuvewolPpx6geg8bF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NA4XYqQa; arc=none smtp.client-ip=209.85.210.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oi+DDutj"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6ea156bee62so169653a34.0;
-        Tue, 30 Apr 2024 21:29:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NA4XYqQa"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6ee266e2999so1792267a34.2;
+        Tue, 30 Apr 2024 21:29:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714537741; x=1715142541; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714537745; x=1715142545; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=53QnHnVF7bqkRAf/NYE3eZQ50tFTHOIRODlZaYfoSVE=;
-        b=Oi+DDutjeqc01jr1Dg7FF/52Jb0TZswoSyTj93eAhOlty6jGgo5aKC+XZ+FxW12+MF
-         IPPiL6BcN6/NIJdv7Rdic/+UoVAewr5t4zAlekM+J64ohoyJB/x54frQuMbBJchccAJ9
-         qvcXvRcYdINY3cXEt11nHSOVofUkhr9tg2Fk/GgjKJt7U5P8vxq87EnUZHV9BH4WqEnI
-         B3oe+8vA/XbmmwaP9Xnv6lG7RQx6rZpGHLsGasShfX9pS+u4W4DGBaI8FIOR6tZbUTlk
-         p/OUJlugyswuqkUSYkQfxdmTlljvZbFkCPI1oxbl4Zbi8yT2Bxqxtnc20PEOth+qsK8c
-         IX/Q==
+        bh=SI71NoupknAET1jl5DuELYiP8ivpPOCBg6fYut4RUIg=;
+        b=NA4XYqQaDYjO6Ivgul7Hu1RPUQjVyfbkVDv46xo2tnww+3x/haSyRyPnhy1IjQ0inX
+         bkrex8JCx7erdqBJ/SAi8jdnALKC5xKv9YhSb0M+jqnS/5h+9J37np5F7cFCxl4odBIK
+         zjvAZRA+mbJW0lDzey80YmVI5/y2kqqfRbd9fdRhRO6sEmc8T217OcoWfUMF+6XPZy90
+         FcrG/5JLN2QyYc2q3oy+n18b61/QRd8tNwRI61MEnZ9ygnWT7BWXW9APGUai45XRjne3
+         FULVaGj5k7TQ4Tc8YlmFNMHsKC0EpBCSYqSORwviJ2eJa++ZCgbNmGsfY4s9QAuv9GoK
+         82ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714537741; x=1715142541;
+        d=1e100.net; s=20230601; t=1714537745; x=1715142545;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=53QnHnVF7bqkRAf/NYE3eZQ50tFTHOIRODlZaYfoSVE=;
-        b=pPai6TrY34jqo7RwwfDdb5rWouFHjiwmWipj2k3Xu5nbWUwqCCfG3sXyLzukhtYiEq
-         GK5xr2Wx/S7KUGuv6MmVPD568TptSXc4evipKJALfsJy5b/uSiuWF8573N1+AWzKEVM0
-         VDxiDYbmNxYo4FynPpnwy54dIDUbTuSC0chZJxeejyD851+gCShSxg7lFbS9y0pQ+cfn
-         j1PGnbutrn02pFpELhsrro3Jx2jCxHhsigsNqOOBAZaG3T9PufZD/ZWqd8ZUOeKPRRZK
-         xhxNBJs59XbJnHBrrfIRl8oJKh70TQLcIxjItQMnQgvl11nikKMPpsIx6NDYm8CAPdDJ
-         Kwew==
-X-Forwarded-Encrypted: i=1; AJvYcCVa3oyBppHwDIqUs2r9npkrWPtNb/MESlGP2eFpT7IomW4EudmnwCYRlXXn/uOmIpNWs0Q8eROtHDHZODyQGPAIbXk0Y36G1pNXOQVA+t0o3iayag174d2kwtEnq9+XrIFXkHCkxToKExezEPEI6/Todp6I5Ha/LKd5BfGiWXXtY81cK8H9UbyPH/sdZUs+B4xZWSxzCT/XKG+E8N8hk4EdI/DdJo88tvyq84+8pY0fTmheVuVRjb4WVKonO7Q=
-X-Gm-Message-State: AOJu0YzF73YbFY1UakOj3Nxj5qSk2S5CWJDDhuaDWU9636LTnq6xB0Hw
-	CwIhCT2XU8f37KIAOPAdHMAdXA7Ye1gzjvOVen0HBtYeiNHkRZWn
-X-Google-Smtp-Source: AGHT+IGZ6Bq0eAhG/carm/csp8ApgnvJNQUPq/GxvHn40hwIEdBr56IsFv4ZyhDbwV1GMjYFEXYYaQ==
-X-Received: by 2002:a9d:6e12:0:b0:6ee:1654:c391 with SMTP id e18-20020a9d6e12000000b006ee1654c391mr2064810otr.7.1714537741133;
-        Tue, 30 Apr 2024 21:29:01 -0700 (PDT)
+        bh=SI71NoupknAET1jl5DuELYiP8ivpPOCBg6fYut4RUIg=;
+        b=M9UkN3FHe2VvLyOzu8VTFlbvpZdzONBlzM4fHbKg45MDHTbcJ9RtdBe8k3aQ8RzoqC
+         B9SzUXTTQxAA/QXpTFcLRH+/aM0XrP7hSl83F0JBOqGq4o24VTDowA/YQ1BUhzJ9RvMC
+         tsa2aNWDgBHyeXH02dveBG00a2iDpjVhT4aPQ6vlL2gq/GDxttJ02JezdCZX666VaoX8
+         0rN6uaiaXMisI+addrHa1UMpx30csUWDoS8hmEhNDv4YxtO4G77xwWjg9WaE+9G2MZi2
+         MpgcnR59zOPAv3fwuqBfksnhKHAVheEiaWysCkxpzkRtXt+3hIyEL/Qi4rcVN06GLB+T
+         JDog==
+X-Forwarded-Encrypted: i=1; AJvYcCWWooFbSRCWQoYFIHlof8E6FmH78AOyjBbx+kXPz5HTB+qGFYN+BsnGB6rymUATFD5EJ8tlKZnpx7w1JVguDDSEaQtBH0DjAko//RFWGGaytgFqKOW0wtetYwUVw1yn1XaMu25JrfrAvZVOzTHU0E6LUoAw64XOPkmcSnSYoHorL0SjsbGw3gV01kp3Rtta7TyempPLQo+WV/3/qAuhcReTH4zuZki/3eH3V5xpV8yZ/2drvG5eFC+SNtCooak=
+X-Gm-Message-State: AOJu0YwHdlSR4UWHmOsKlIWg0tduLcd1JZXxVgTVQczNhVN6RLvKqLyl
+	r8AYz7wp15XhPUhiMxP2KwnuDE2Gs7Auhx3Lui9fcVnh6wYYaviB
+X-Google-Smtp-Source: AGHT+IEW5WaGUfL+JvzpQNeZs7pi6YqdiUbKAaXYvweRc4MKw+/bkLFotYWyiDTa1oMgCa3JbZcsBQ==
+X-Received: by 2002:a05:6830:12da:b0:6eb:e1ba:6645 with SMTP id a26-20020a05683012da00b006ebe1ba6645mr1695409otq.3.1714537744803;
+        Tue, 30 Apr 2024 21:29:04 -0700 (PDT)
 Received: from nukework.lan (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id do26-20020a0568300e1a00b006ed6dc9fd54sm2719058otb.25.2024.04.30.21.29.00
+        by smtp.gmail.com with ESMTPSA id do26-20020a0568300e1a00b006ed6dc9fd54sm2719058otb.25.2024.04.30.21.29.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 21:29:00 -0700 (PDT)
+        Tue, 30 Apr 2024 21:29:04 -0700 (PDT)
 From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -73,9 +73,9 @@ To: Bjorn Andersson <andersson@kernel.org>,
 	linux-phy@lists.infradead.org,
 	linux-clk@vger.kernel.org
 Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Subject: [PATCH v4 RESEND 3/8] dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
-Date: Tue, 30 Apr 2024 23:28:42 -0500
-Message-Id: <20240501042847.1545145-4-mr.nuke.me@gmail.com>
+Subject: [PATCH v4 RESEND 5/8] PCI: qcom: Add support for IPQ9574
+Date: Tue, 30 Apr 2024 23:28:44 -0500
+Message-Id: <20240501042847.1545145-6-mr.nuke.me@gmail.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
 References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
@@ -87,93 +87,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-IPQ9574 has PCIe controllers which are almost identical to IPQ6018.
-The difference is that the "iface" clock is replaced by the "snoc",
-and "anoc". The "sleep" reset is replaced by an "aux" reset.
-Document these differences along with the compatible string.
+IPQ9574 has four PCIe controllers: two single-lane Gen3, and two
+dual-lane Gen3. The controllers are identical from a software
+perspective, with the differences appearing in the PHYs.
+
+Add a compatible for the PCIe on IPQ9574.
 
 Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../devicetree/bindings/pci/qcom,pcie.yaml    | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index cf9a6910b542..ac6d2b1b8702 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -26,6 +26,7 @@ properties:
-           - qcom,pcie-ipq8064-v2
-           - qcom,pcie-ipq8074
-           - qcom,pcie-ipq8074-gen3
-+          - qcom,pcie-ipq9574
-           - qcom,pcie-msm8996
-           - qcom,pcie-qcs404
-           - qcom,pcie-sdm845
-@@ -161,6 +162,7 @@ allOf:
-             enum:
-               - qcom,pcie-ipq6018
-               - qcom,pcie-ipq8074-gen3
-+              - qcom,pcie-ipq9574
-     then:
-       properties:
-         reg:
-@@ -397,6 +399,39 @@ allOf:
-             - const: axi_m_sticky # AXI Master Sticky reset
-             - const: axi_s_sticky # AXI Slave Sticky reset
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - qcom,pcie-ipq9574
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 4
-+          maxItems: 4
-+        clock-names:
-+          items:
-+            - const: axi_m # AXI Master clock
-+            - const: axi_s # AXI Slave clock
-+            - const: axi_bridge # AXI bridge clock
-+            - const: anoc
-+            - const: snoc
-+            - const: rchng
-+        resets:
-+          minItems: 8
-+          maxItems: 8
-+        reset-names:
-+          items:
-+            - const: pipe # PIPE reset
-+            - const: aux # AUX reset
-+            - const: sticky # Core Sticky reset
-+            - const: axi_m # AXI Master reset
-+            - const: axi_s # AXI Slave reset
-+            - const: axi_s_sticky # AXI Slave Sticky reset
-+            - const: axi_m_sticky # AXI Master Sticky reset
-+            - const: ahb # AHB Reset
-+
-   - if:
-       properties:
-         compatible:
-@@ -507,6 +542,7 @@ allOf:
-                 - qcom,pcie-ipq8064v2
-                 - qcom,pcie-ipq8074
-                 - qcom,pcie-ipq8074-gen3
-+                - qcom,pcie-ipq9574
-                 - qcom,pcie-qcs404
-     then:
-       required:
-@@ -566,6 +602,7 @@ allOf:
-               - qcom,pcie-ipq8064-v2
-               - qcom,pcie-ipq8074
-               - qcom,pcie-ipq8074-gen3
-+              - qcom,pcie-ipq9574
-               - qcom,pcie-qcs404
-     then:
-       properties:
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index ea81ff68d433..e61888e6c63d 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1551,6 +1551,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+ 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
+ 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
++	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_2_9_0 },
+ 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+ 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+ 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
 -- 
 2.40.1
 
