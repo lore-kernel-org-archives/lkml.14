@@ -1,88 +1,75 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC5F125C0;
-	Thu,  2 May 2024 01:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5262134B2;
+	Thu,  2 May 2024 01:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714613881; cv=none; b=Rld10tcJQJpNGkiItJgQxeq2/i04GOAO7EsZy5sRn+FCkVpHlojsWhIHERhqR+deI6I4jJQwsfERjFaS100XmMOq9VRTZltOEWSuLSaMEAhqVtnnZBG6fvyKvIub5Yd8mjSjG6GfxtslvxAY67IeMoEcsriT5KB6sEV+ZVi+hKI=
+	t=1714613881; cv=none; b=MAbt5No6aMoxQHTEaCVuCFCkqQacaH4fUWcj20mBef8yudkD2j7L7kyTZWfPqcqUGnaXcVq4KYY2HO7zExMwR1mysU72Rah6SldmvK7iFFCPWl7Mpgqq4dZxk8y2fV6eATSHEIq2QVn6TY3dOCkMVGNa7ZYWpJ3M9dU8IASZpAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714613881; c=relaxed/simple;
-	bh=KQJpn9Kws2+yaPwY8/riULmXzVcDBpW9sq3IBcoL45I=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=GMS9laVDjQiB/0ayqjyAWNHAz/NExGTDg/7IPdGikrKD6gq3Ad7JjG+C66xyr61JkJiRF+G2Wu10FCujiSus6FTtfWHJD3Ji1zCR/BWttNTvcW0FSRd+NxETUibDE7J2CDhy9K5wkX+XmYHoULyVrsxJDLlAVxHK1FhcO02EgN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=AL6BY7bA; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	bh=ZidUTk9IjA5PczGiPEgm5WSMoqCnYRRlVV5rFpP1XS4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=hXO6ng6bd/oZX27I4f2MoZSOFN1CwS393M508alC3NVcsYG4lT0bn3Yo4L0FkB4LuO5+B2juG3Yh9g3tU9cmlZHshunAaU+d0crjVhYuFbO+pLs5WH0UQbq98NPvtZwV4Cb0YeTLAVWGPmh82Y43ykgY56pOVlU1bH7SpfdGi6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SReLSI+J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="AL6BY7bA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SReLSI+J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239B5C072AA;
+	Thu,  2 May 2024 01:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714613881;
+	bh=ZidUTk9IjA5PczGiPEgm5WSMoqCnYRRlVV5rFpP1XS4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SReLSI+J6ZvT3abCJn3YrMT7Rp6vLEeLeO8cb+YhleL+V2/swmQiNV2EHNv/08B7P
+	 4odR5zx7HTd1SpmrtpFRFjEdWAInE650wDUPngLXNwGBCOjGVH3+gbn+/jfm0NPusX
+	 GHpcSC5kaLoC6vme2Yo9RM4RP+m1EsyAaDgB1q38QEL3aLRSIN0s4ZoF1cxjnGEh8X
+	 4ghxA2HCQ5J5JBjdQPrmX4gDSkqaAffwckF3JsQ9QipvrarubcU2YtkjvURtdGPGW+
+	 tGCTvCyPUfiJntllYzfcZblpXfM/KGUfmdIS2aAwuuwR4ZMAkvnyY+ViMxIjgOYYDT
+	 yZ5SZguL40HnA==
+Date: Thu, 2 May 2024 10:37:56 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: LuMingYin <lumingyindetect@126.com>, linux-trace-kernel@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Steven Rostedt
+ <rostedt@goodmis.org>
+Subject: Re: [v3] tracing/probes: Fix memory leak in
+ traceprobe_parse_probe_arg_body()
+Message-Id: <20240502103756.934f487af05dc7e232f0f06e@kernel.org>
+In-Reply-To: <909dde28-019e-4f53-b5d5-a5fe9956dfc4@web.de>
+References: <20240429222941.12d3b774bebef484e605d095@kernel.org>
+	<909dde28-019e-4f53-b5d5-a5fe9956dfc4@web.de>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1714613322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVCWMANqUJGySV0avp2OJDbEbFh/XAZgzAZxpawRdKA=;
-	b=AL6BY7bAhPHkOUh/+ThY+7AZ5Jy5l+EvAzMP9wr0i+3216C2W4rpKxBVinnuSxVtDqsChK
-	sMvXNdslzPHl7YUbKXn+LVadBR+hDI8OgN/OdQb3H0YduRIAbcqKf0PgQZWOOQiBEB19uH
-	UfScHmX5ia5a2cTj+qv1+ZhO9NAkQnp1cPA8ih4gykdcV2zU/FO2QLLBrk5TAFuQJ3fYcz
-	ya2nPd6YI5/DI0Glo+4Pa3w91d1SIX+wOS+Bf/DRaoFoAoimH93Mw/bOlWTfJ31mg3JW+z
-	0Kt3d3tix75+sZLQeLohycCaGMh2spEzpj4vODhAUB8wPNk8Ex/KiOBxfot84A==
-Date: Thu, 02 May 2024 03:28:39 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Folker Schwesinger <dev@folker-schwesinger.de>
-Cc: Chukun Pan <amadeus@jmu.edu.cn>, Heiko Stuebner <heiko@sntech.de>, Conor
- Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob
- Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: Add Radxa ROCK 3C
-In-Reply-To: <D0X7UJELGST3.2IL1AFDJ89N07@folker-schwesinger.de>
-References: <20240428123618.72170-1-amadeus@jmu.edu.cn>
- <20240428123618.72170-3-amadeus@jmu.edu.cn>
- <D0X7UJELGST3.2IL1AFDJ89N07@folker-schwesinger.de>
-Message-ID: <ded928414323ef4be51f2575d00ba7d1@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Folker,
+On Mon, 29 Apr 2024 15:55:09 +0200
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
-On 2024-04-30 07:42, Folker Schwesinger wrote:
-> On Sun Apr 28, 2024 at 2:36 PM CEST, Chukun Pan wrote:
->> [...]
->> +&sdhci {
->> +	bus-width = <8>;
->> +	max-frequency = <200000000>;
->> +	mmc-hs200-1_8v;
+> …
+> > > it jumps to the label 'out' instead of 'fail' by mistake.In the result,
+> …
+> >
+> > Looks good to me.
 > 
-> Out of curiosity, does this board also support HS400? From a very brief
-> look this board seems quite similar to Rock 4 series boards, that do
-> support HS400.
-
-In a word, no, unfortunately.  In more detail, the Rockchip RK3566
-and RK3568 SoCs support the eMMC modes up to and including HS200, but
-not the HS400 mode.
-
->> +	non-removable;
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&emmc_bus8 &emmc_clk &emmc_cmd &emmc_datastrobe>;
->> +	vmmc-supply = <&vcc_3v3>;
->> +	vqmmc-supply = <&vcc_1v8>;
->> +	status = "okay";
->> +};
+> * Do you care for a typo in this change description?
 > 
+> * Would you like to read any improved (patch) version descriptions (or changelogs)?
+
+Thanks, but those are nitpicks and I don't mind it.
+
+Thank you,
+
 > 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> Regards,
+> Markus
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
