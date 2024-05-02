@@ -1,101 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [185.125.25.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6111E86E;
-	Thu,  2 May 2024 21:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBEA180A81
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 21:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714684024; cv=none; b=GO5MRSdpFBt0zntbx+xn135FuxGJp9pZ/zf2Vgv/xHID35VaumKk9r5hQJEt5/abDMUv5Do87DaXlAIqpgWOJDTStmibR+plxcyPbHnjjGGrz9Q6QBB7jCFzFjhd/ZwAgqJcN/VlI85SIiuj9fL/1AxHBP0njqmFWMCZrSlFrsU=
+	t=1714684180; cv=none; b=fAX6RrqXNu8KUKcPgw9OTTafdWrPptVudBvA+ie+hBS1LnLS/yc4e2sujTBjei7ILoGQNe8HXCIwFsSgjjfxrq64/6bojTMPiPVszqWt0S5VKwanpnDnnm0bB7P7DxT04hD8XBi15jLkS858pCMcTXgLmem/ZmCc7XjPg5yZSZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714684024; c=relaxed/simple;
-	bh=rjkBg6gUkSwRf+TgXtxDgQ2t24FzbYZEekev+R+BxDc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kfyqGm04PHbjTSHZC+EFbtUcflQHMSzwCafKm9YJagKTwRJxholsXtGMHR3K3+e/D23OU29je2S6sTyfd+Vt+NBMtaj4kvtSBoDV0/DuoWOQe8/D/x9a7XNMNa2OtX9tkKvjJD22vuGPQnlD7y53yUS3txk+C6lncE5wbHQAgt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0wb9iAw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714684180; c=relaxed/simple;
+	bh=H21Z2fTU/3Zi7Aj9M2B1LpFUqah0CIukLyC68VTbJtg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fUk1pFs616m1vqzd+cGa2CBVmP+YaKhGmj+qQHCzZ4RnDzDBrnJt2yMkEQBGLQtuJEIid6wNU5Pmi5bi2m9fsTZktj+DPDNUtahqXE7pmvLjxa0LIL+o8RsX/uJ6b1WCHiUS7wAPn6VOlBf6Qy89WV1uKsK9HXyMBhxfvW4BP10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=D918GByc; arc=none smtp.client-ip=185.125.25.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0wb9iAw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA89AC113CC;
-	Thu,  2 May 2024 21:07:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714684024;
-	bh=rjkBg6gUkSwRf+TgXtxDgQ2t24FzbYZEekev+R+BxDc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=n0wb9iAwpK+XMfBr/FZ4U1DKg5YoFOUoEbTr63KIe4K4V+uV6oWvbzrQeqtP8mSLh
-	 s3O6FRJAbtGMRyRod3rcECmmp3rO6SqFd8q8E6UaVdDJp0ja8BbIgEv/Ez0ACEerK3
-	 UrrSf4hRJJ0VkcmpFz/wcBuibPdGxH1LsFVUpvrtl/u+3Zhfl1aeRppuaFGsEAEgHM
-	 YgvazFudIx7K3DphZr4E3iYSTULNJ0dSbBbgmUch4hdUz4V5jsL5r1u0AOqq4mZNOx
-	 xrejkiKoOu4hN56yYrWy6wA+L+f3RCUfyuOOFUErA7DkJkhGYX5+mB+r6BJzvnDruY
-	 ybI1OvPKH2fkQ==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Arnaldo Carvalho de Melo
- <acme@redhat.com>, linux-kernel@vger.kernel.org, =?utf-8?B?QmrDtnJuIFQ=?=
- =?utf-8?B?w7ZwZWw=?=
- <bjorn@rivosinc.com>, Nathan Chancellor <nathan@kernel.org>, Nick
- Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- bpf@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
- llvm@lists.linux.dev
-Subject: Re: [PATCH v2] tools/build: Add clang cross-compilation flags to
- feature detection
-In-Reply-To: <20240429171145.GA241057@myrica>
-References: <20231102103252.247147-1-bjorn@kernel.org>
- <ZUOWcXDpCOzxbFW0@krava> <87o79wxvnu.fsf@all.your.base.are.belong.to.us>
- <20240429171145.GA241057@myrica>
-Date: Thu, 02 May 2024 23:07:01 +0200
-Message-ID: <87a5l7x6ru.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="D918GByc"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VVmlh5gpMzMV0;
+	Thu,  2 May 2024 23:09:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1714684176;
+	bh=H21Z2fTU/3Zi7Aj9M2B1LpFUqah0CIukLyC68VTbJtg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=D918GBycTCdRpdNtcRw290HDcN9+EsGCyrdTCt5CX2/A53BZ4sPZq+eGthQjwv06U
+	 HGYBCnSJDSRkLKMENWjQ56urmulaSzs7jm9r1p63kgEJrV5QpRmCDd1RPfKiOfu9hj
+	 l2y6L2cOa1LONUYumuUA3BwQeEsXF+LDYZdN2Fvs=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VVmlb1bcXzHKq;
+	Thu,  2 May 2024 23:09:31 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Mark Brown <broonie@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Shengyu Li <shengyu.li.evgeny@gmail.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	"David S . Miller" <davem@davemloft.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Will Drewry <wad@chromium.org>,
+	kernel test robot <oliver.sang@intel.com>,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v4 01/10] selftests/pidfd: Fix config for pidfd_setns_test
+Date: Thu,  2 May 2024 23:09:17 +0200
+Message-ID: <20240502210926.145539-2-mic@digikod.net>
+In-Reply-To: <20240502210926.145539-1-mic@digikod.net>
+References: <20240502210926.145539-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-Jean-Philippe Brucker <jean-philippe@linaro.org> writes:
+Required by switch_timens() to open /proc/self/ns/time_for_children.
 
-> On Fri, Apr 26, 2024 at 12:31:17PM +0200, Bj=C3=B6rn T=C3=B6pel wrote:
->> Jiri Olsa <olsajiri@gmail.com> writes:
->>=20
->> > On Thu, Nov 02, 2023 at 11:32:52AM +0100, Bj=C3=B6rn T=C3=B6pel wrote:
->> >> From: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
->> >>=20
->> >> When a tool cross-build has LLVM=3D1 set, the clang cross-compilation
->> >> flags are not passed to the feature detection build system. This
->> >> results in the host's features are detected instead of the targets.
->> >>=20
->> >> E.g, triggering a cross-build of bpftool:
->> >>=20
->> >>   cd tools/bpf/bpftool
->> >>   make ARCH=3Driscv CROSS_COMPILE=3Driscv64-linux-gnu- LLVM=3D1
->> >>=20
->> >> would report the host's, and not the target's features.
->> >>=20
->> >> Correct the issue by passing the CLANG_CROSS_FLAGS variable to the
->> >> feature detection makefile.
->> >>=20
->> >> Fixes: cebdb7374577 ("tools: Help cross-building with clang")
->> >> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
->> >
->> > Acked-by: Jiri Olsa <jolsa@kernel.org>
->>=20
->> Waking up the dead!
->>=20
->> Arnaldo, Jean-Philippe: I'm still stung by what this patch fixes. LMK
->> what you need from me/this patch to pick it up.
->
-> I guess the problem is these files don't have a specific tree. Since you
-> mention BPF maybe it should go through the BPF tree, in which case you
-> could resend to the tools/bpf maintainers (and "PATCH bpf" subject prefix)
->
-> FWIW the change looks good to me:
->
-> Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+CONFIG_GENERIC_VDSO_TIME_NS is not available on UML, so pidfd_setns_test
+cannot be run successfully on this architecture.
 
-Thanks for the review. Yes, maybe it's a orphan files issue! It does
-seem a bit weird to route it via BPF, since it's just a regular
-cross-build fix -- Not directly related to BPF. Regardless; I'll do a
-respin targetted at *some* tree. ;-)
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 2b40c5db73e2 ("selftests/pidfd: add pidfd setns tests")
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20240502210926.145539-2-mic@digikod.net
+---
+ tools/testing/selftests/pidfd/config | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/tools/testing/selftests/pidfd/config b/tools/testing/selftests/pidfd/config
+index f6f2965e17af..6133524710f7 100644
+--- a/tools/testing/selftests/pidfd/config
++++ b/tools/testing/selftests/pidfd/config
+@@ -3,5 +3,7 @@ CONFIG_IPC_NS=y
+ CONFIG_USER_NS=y
+ CONFIG_PID_NS=y
+ CONFIG_NET_NS=y
++CONFIG_TIME_NS=y
++CONFIG_GENERIC_VDSO_TIME_NS=y
+ CONFIG_CGROUPS=y
+ CONFIG_CHECKPOINT_RESTORE=y
+-- 
+2.45.0
 
-Bj=C3=B6rn
