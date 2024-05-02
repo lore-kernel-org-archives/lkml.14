@@ -1,117 +1,150 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BB713C660
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 13:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FD27441E;
+	Thu,  2 May 2024 13:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714657577; cv=none; b=FEu0mJmh1jPLdXQ7LNc3IJ9CH3AOGrGqa20sDvdD67A8PEGxNI78GMBWHFDiAzBIh6jBQO8E/Cx3RBUaWKsz5dQ07stAdJkuGa0HjqsO553zlmnjGS5p/xuLY+Q+1iWGaBuez++xxxR024WRq9ts0SKS2XVxftoToPBA0r+fsDE=
+	t=1714657607; cv=none; b=C5trsDLwhmwNHVzq/IdrMH2/9VAilsEe7Qpartq0MyWBsGHYIVhs5Twu6ch5SCMlsgw8+Q3wtwheSnQhpk9asvuif7HcW/l3WAcmjoh56QCniZQ4F+kUrD9DVOhiAD/jKT0LweQxNYSyfOnVUtBsaNzaI3XB1/ea8PwmsfS5V8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714657577; c=relaxed/simple;
-	bh=umAKYkGw6Qh2FAI5WcUUghAsI5djPBhIsfyxFgp451E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=R99tXPu6eB2gsbsnyYTOp2NLHu+FNMSxF1RqdyxiKN+g0m/t2Z00Sl9CT2HPlwh+NEnaHuew0Bp0iWmlWQH9WGWNa4DNttOzaLrXNqZqMtlT0b8VjSm2osHIshE0ENywhfHpoUxAz6I5EKtixbg9HnTdo/6ULeRGsPCOZnw7CdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=SdNm8TVL; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1714657607; c=relaxed/simple;
+	bh=C1dTioCTbJAqPdX5fiQM5i2I9L/XeeoaYhZ/nM6DKO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BznuI4K7yvAhwpvlSBSDOll0faU2WC+Lyfn4GsStR4J3FN23mp+wEox1RbgfSi+qgapDL+sXyS/g+x1IWX3GtXVZADJ9IsYkkK0GpFg1MfO5m3+sBu73kZILBr28c4H2SCifQHAi5221bV9i/an2Nbsz7q/+t8N3HPo5CGS1Y88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QetbCS5c; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="SdNm8TVL"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51f25f87e58so822167e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 06:46:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1714657571; x=1715262371; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KjbvBW6RdAEPTXQDkB746T8DtbLmBQp7aI+NR/HIMtA=;
-        b=SdNm8TVLQzMNJD+AUbaVgzzoJlYQQeS9DAf05qP0IVyOzxGnMkoNhw2d6p3RTEomn6
-         6S198zsONFGHsSc+Kla7zjIJ+ZfFKYz/PfYWiyQNw7oagI7h5+uoP0EmVimRphcGbNqo
-         wZYlgK6zJ3EHlNeKxzBUZCOWPF76xEynfM/wg0U5Dm0kcGFQM24fs3maEqk1nMOlH1L0
-         Sl4s/C9Xt30fT+G7S+z2mEuIhLTtCqR9QVtr8NTpCJorGlQzfAzcA7lK5P5imuvSk3Mb
-         lHkjlg9FCexO3sOzGMTXccfg3qko9YObpOT7ZvZirYg/IbhyZngSjTyk6T1V5HZ/DBI7
-         yi7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714657571; x=1715262371;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KjbvBW6RdAEPTXQDkB746T8DtbLmBQp7aI+NR/HIMtA=;
-        b=D/YxQusaYnj1Mql38dY350moCvIx6OZ/vQTQHTzuf12DfZdSe8/+yUqmk5ZNzNBIqE
-         iQP/aZRkZG68CWhaL4GJRDZ07TkCo08s0544u6Yju8sEawc6KLLkccyNLD9guKALXG2O
-         c+RlpkY1yW98OFj8Cnx3pDDnrt4KjfrMOeJeSoGZr2sobos0y2S8fX6IERurcTt4OOD0
-         37Wxc1LVqLvgChmJZSaXpZFXOglaw4sPHqiKdZ3EXaakRLicB7zq8paWVpkpBc8kJccQ
-         Gbs+x4S6O33bcDlpDomhy6uThGWpbbRiukH+lWM3YrwCassE+8nHiW3Rj6Xr30nm+rIl
-         wKYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWXwXFE22v2KXCwlXy8nXPLA8mtnvFJZW9xdt8m4ypRnqmOq8KHG/sV2tOborbWNzAqisR5pClQ7bP1j1nlznscz98a6+sz6e6GDMjS
-X-Gm-Message-State: AOJu0Yz4GdyAxJEAejSbgEU6lcR95d2KNf/CqOJFGtrOwT7LqUL7wZjF
-	rJiLH2juOB5mwUMy16ncnLA3VEiE/Trh4eVtG9NP6Ojo+4gN10LWzbDEz1P9ATc=
-X-Google-Smtp-Source: AGHT+IFep4NL01L9Ttyd1vLDcDsr7A1IdG5IgCdv67mtSJhnn0nKGdEu7Tq10aLQKCI1NwgsUJdJ7w==
-X-Received: by 2002:a05:6512:3083:b0:51a:a400:785e with SMTP id z3-20020a056512308300b0051aa400785emr5147210lfd.43.1714657571559;
-        Thu, 02 May 2024 06:46:11 -0700 (PDT)
-Received: from [127.0.1.1] ([79.87.205.120])
-        by smtp.gmail.com with ESMTPSA id c1-20020a05600c0a4100b0041bf3a716b9sm2014447wmq.34.2024.05.02.06.46.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 06:46:10 -0700 (PDT)
-From: Julien Panis <jpanis@baylibre.com>
-Date: Thu, 02 May 2024 15:46:03 +0200
-Subject: [PATCH] thermal/drivers/mediatek/lvts_thermal: Check NULL ptr on
- lvts_data
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QetbCS5c"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4426KPDu013262;
+	Thu, 2 May 2024 13:46:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=pbtefCiALFzu30bj6ncNXLiyVomEQeGevWPDsu1b3jo=; b=Qe
+	tbCS5cdGdqaoyoIfrIMHm7ZuECV2b9XW9gcw+puJx4C2AMtpOgkpU0uPB11YBq2K
+	cpbr5sGwI31cidjhcsG3URRWqNonQO5plAiWujx+ecfzcz/zYYQxGDiQ22b9ktwA
+	0GUdCuV3HJInZHKRGYjiuokC/6g2c4iuJQ71XHDvQ+9tYxKto6HwbUhPZFPssVgZ
+	xCx4piEycx1x/xq+UJvgSKZmcwv+5YQ1SkzDwtLsbPhjbcLTbThxNzHtdY9jxkym
+	JPV32/OVEv0dyDPM9GCJhzRU70506TdclSBLMb/lTfcUZ62WO5xaw3Q42iqVJ2+t
+	a1aHSrUOA3t0ZpjG20hA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xv01tsad5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 May 2024 13:46:42 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 442DkfZC008757
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 2 May 2024 13:46:41 GMT
+Received: from [10.253.35.130] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 2 May 2024
+ 06:46:40 -0700
+Message-ID: <f1b45d7d-27e0-4ad7-976c-670a0e0d136b@quicinc.com>
+Date: Thu, 2 May 2024 21:46:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: QCA NVM file for the X13s (WCN6855)
+To: Johan Hovold <johan@kernel.org>
+CC: Tim Jiang <quic_tjiang@quicinc.com>,
+        Janaki Ramaiah Thota
+	<quic_janathot@quicinc.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <ZjNxfFJmCgIyq8J6@hovoldconsulting.com>
+ <5aea3149-ba44-400f-acc6-1a3eca8a7e72@quicinc.com>
+ <ZjOUWqor4q1Efy0W@hovoldconsulting.com>
+Content-Language: en-US
+From: quic_zijuhu <quic_zijuhu@quicinc.com>
+In-Reply-To: <ZjOUWqor4q1Efy0W@hovoldconsulting.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240502-mtk-thermal-lvts-data-v1-1-65f1b0bfad37@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIABqZM2YC/zWNwQrCMBBEf6Xs2YU0RFF/RTxsmtUE2yi7SymU/
- rup4PEx82ZWUJbCCtduBeG5aHnXBv2hgyFTfTKW1Bi888EdncfJXmiZZaIRx9kUExlhiP0ludO
- 5NQI0N5IyRqE65N2uvBj+J/b8I/woy+/3dt+2L7gkdLaHAAAA
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Nicolas Pitre <npitre@baylibre.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Julien Panis <jpanis@baylibre.com>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714657570; l=935;
- i=jpanis@baylibre.com; s=20230526; h=from:subject:message-id;
- bh=umAKYkGw6Qh2FAI5WcUUghAsI5djPBhIsfyxFgp451E=;
- b=XsliQEKG1eu9+im+fcPyY5Bbcd0sVJkvx/RcjpKU1v7XxCLRK2GVF3ir4d6kad7e4Geja8X1n
- U9XUTA8WUMvBsVCV6f7yMC4aFi2H/666pKzVpdEoUoeX/0+JSCS+uxO
-X-Developer-Key: i=jpanis@baylibre.com; a=ed25519;
- pk=8eSM4/xkiHWz2M1Cw1U3m2/YfPbsUdEJPCWY3Mh9ekQ=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: d3fhczlvIBbzMi7hAaTslBgM_2KSMSHE
+X-Proofpoint-GUID: d3fhczlvIBbzMi7hAaTslBgM_2KSMSHE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-02_02,2024-05-02_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ spamscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0 adultscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2405020089
 
-Verify that lvts_data is not NULL before using it.
-
-Signed-off-by: Julien Panis <jpanis@baylibre.com>
----
-At probe, verify that lvts_data is not NULL before using it.
----
- drivers/thermal/mediatek/lvts_thermal.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/thermal/mediatek/lvts_thermal.c b/drivers/thermal/mediatek/lvts_thermal.c
-index 86b2f44355ac..20a64b68f9c0 100644
---- a/drivers/thermal/mediatek/lvts_thermal.c
-+++ b/drivers/thermal/mediatek/lvts_thermal.c
-@@ -1271,6 +1271,8 @@ static int lvts_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	lvts_data = of_device_get_match_data(dev);
-+	if (!lvts_data)
-+		return -ENODEV;
- 
- 	lvts_td->clk = devm_clk_get_enabled(dev, NULL);
- 	if (IS_ERR(lvts_td->clk))
-
----
-base-commit: 9c6ecb3cb6e20c4fd7997047213ba0efcf9ada1a
-change-id: 20240502-mtk-thermal-lvts-data-4b19d0685024
-
-Best regards,
--- 
-Julien Panis <jpanis@baylibre.com>
+On 5/2/2024 9:25 PM, Johan Hovold wrote:
+> On Thu, May 02, 2024 at 08:56:12PM +0800, quic_zijuhu wrote:
+>> On 5/2/2024 6:57 PM, Johan Hovold wrote:
+> 
+>>> I noticed that you have both submitted firmware and NVM files for
+>>> QCA2066 to linux-firmware. [1][2]
+>>>
+>>> I'm working on Linux support for the Lenovo ThinkPad X13s (Windows on
+>>> Arm, Snapdragon), which has the related WCN6855 controller that uses the
+>>> same firmware (hpbtfw21.tlv).
+> 
+>> which SOC type does the machine use?  WCN6855 or QCA2066?
+> 
+> It's WCN6855 but the Linux driver currently uses the firmware you pushed
+> for QCA2066.
+> 
+>>> The current Linux driver is using the generic NVM file (hpnv21.bin) for
+>>> WCN6855, but connectivity is quite bad and I only get 2-3 meters of
+>>> range.
+> 
+>>>> Switching to the board-specific NVM configuration (hpnv21b.b8c) that
+>> it seems hpnv21b.b8c is a wrong NVM name.
+>> is it hpnv21g.b8c?
+> 
+hpnv21g.b8c is the right NVM for the machine.
+i am afraid that i can't answer your question due to company CCI policy
+> I've only tested with the NVM file without the "g" infix, but there
+> indeed also is a 'hpnv21g.b8c' in the Windows installation.
+> 
+> What is the difference between those two?
+> 
+>>> came with the Windows driver make all issues go away and the range is
+>>> really good, but I'm not sure if that file is fully compatible with the
+>>> firmware used by the Linux driver.
+>>>
+>>> Could you help us submit an NVM configuration file for the controller
+>>> with board id 0x008c to linux-firmware?
+>>>
+>> For Windows OS, there are relevant channel to deliver BT firmware.
+>> For Linux OS, we normally upload relevant BT firmware to linux-firmware.
+>>
+>> it seems customer would like to use Linux OS instead of preinstalled
+>> Windows OS for the machine.
+>> right?
+> 
+> Exactly. It's a Lenovo machine that comes with Windows pre-installed and
+> we're working on enabling Linux on it with some help from Lenovo.
+> 
+>> need customer to make a request for their requirements if the answer is
+>> yes for above question.
+> 
+> Lenovo has made requests for X13s firmware from Qualcomm and pushed it
+> to linux-firmware [1], but they have not yet been able to get Qualcomm
+> to provide an NVM configuration file for Bluetooth (I think the problem
+> may be finding the right person to talk to inside Qualcomm).
+> 
+> So I was hoping maybe you could help us with this since the difference
+> between 'hpnv21.bin' that you pushed to linux-firmware and what came
+> with Windows appears to be really small (e.g. just a few bytes).
+> 
+let me try to find out the right person who will push this task at next
+monday.
+there are some other internal procedures before we can push BT firmware
+into linux-firmware.
+> Johan
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/qcom?id=4ae4ae88918928e15006eb129ad981aa58216b59
+> 
 
