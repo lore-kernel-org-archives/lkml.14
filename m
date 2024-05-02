@@ -1,111 +1,124 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8199756751
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 09:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA6C4F88C;
+	Thu,  2 May 2024 09:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714643801; cv=none; b=on3Er/AlC46qfGaxpj+JykKq4DtHMj4oPCZLO1F/W3Z+0Hk6fXxRMJbWJjXw1GzylvpzL6AQ203GFNY5hq7Xi7oLGo16fn+xk9URzxbaCYo5TYtezfAeuai/3olJqjr0DJy6DuQPcdbd7wYQFX2WY6GBqFxzj86bFehayWL2Ztw=
+	t=1714643980; cv=none; b=Tit8rGqiYVmb+gKGjmvXqf8dwHZGpK//TTTh+VH0MIYB2V8GOih6db3VqR6BBHG2L+rSqCVaOESZ4C+nVtnRxFvqrUBIndW334FiIKslQFRW/ZWWRBfwZV0qcc0NcFaO7aPgwutYyTVyNmTlt753rcCDrqz8NPqUmanT+ZfYS6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714643801; c=relaxed/simple;
-	bh=3l3zV1CvMpPQ6M3agjT4bErcSYjrF9CaWcpEI3wJ9GQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lCnT6sXfmNbseH34qupx1/olSMDB9eQJUtxfgPbDxm5OzlomozXuRwCxeLEFmqHqFeEHQ/blo4QcM1JqN59kzkICIzZklFxk81jqnROqcy+BaRDs81V9xJHSIw+ZPSXAmImI7rYBnmyz61vYwlCN8qeA7CTtMKDXsuxfEPmdFqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=R5TBtt59; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1714643980; c=relaxed/simple;
+	bh=QL9nuqQoyyNsWN3gxQVMz1nurlN4CBrHLvpqKsCC2dU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ou+uBcT20kEYq8JV9xzi9o4sXb8De6669eAIh5StrQh5w8UbGe/63qwQV1djchRuxuJ0ZOWnzyU5YTxHlysQPQiTBQSWDEb98LfmeUBrTEni0gPTB6dCeFZowFvUewUbYm7F/4Nrg3+5Qtc1A4N7rC3P4WJVYnRz2kUpGQZBP4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=lfmm31AC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=B4dY1gmm; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="R5TBtt59"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6effe9c852eso6837814b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 02:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1714643800; x=1715248600; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sucCdO5kXmwHz0FAAtAAGExlkRhEC3HqOy4Cv/qw8KI=;
-        b=R5TBtt59vRw7pDNWPRdtnfrGzClC8OtQpN13oIl6mLbBGMWFqAhCgjMJ77PVbuTvdK
-         w76Sq5hiI2T6WsreDf4rWfkHBD5ekHGzRUAuuKldv+z9sSBPcUWUkS6lxI3E11+Kz5gx
-         8TPx0FK8znm3jozKmGlvT3OEr40HlR1WZ6nC9NafGgEwr4qvWEQs+Q56/Zi7X7HW4Xp/
-         cEhnVJ4XtgJSpYnDJ3aIieLt6bYy+QAlpkvO5opoA/0pS+FqUOJ9XvXpsS898BH0yRsx
-         Y3+GCMzFw2feSDRYNRSL6Daa8xbWWBIVz43B3hZs6+vvvWnlLjNFsfP7TGH5Pg/k3+qa
-         oWBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714643800; x=1715248600;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sucCdO5kXmwHz0FAAtAAGExlkRhEC3HqOy4Cv/qw8KI=;
-        b=nYVR1HCWLQf9npIhO2vXypu1JEzgD27H4RBvG5rnUb22vEqjDaa5KcZ8SRqgl59+Y4
-         R4s3Egj1Cy1/CTOCT0d9JiklP4qSOmhZXANMIyJbbPZoCizQyHSBpKTZUVHV876fh/gc
-         Ugy2F57sD0vYtt3t3C3FjwomcoF1Sy7QUBl8g3ELMAqn89vzHDZxO1UzUUYWmhoE/dRG
-         zsS3m6k3gumjqlKoEXZEHHxUuvaOTzJzHTKnHDRlL5uLnYGHHRwLbvMNA5Kwgp001aYg
-         HBkq7wsGoovm25cMCOnpZVKqrTE1+t3OZ0UeVW1eu+QrvnlQGPdhA20NafQWlBIoQmmM
-         6qJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKPdRTTTk4A7zyDTBx6CoN8rAVCriHl5YDgXiSF7/CNaehkqWf9hv8z4apX4YmemRvXOKP2cfrcAchXc8KQLokCy7jusNbQGqlQv8e
-X-Gm-Message-State: AOJu0YzcgrUfBcX+ylT2r5XCs0BZbR54OykZe7gwRKl8kZAt5r4vSqzz
-	aGqzUKOGnRcXUu0BfXhKWs+yWSR4WRTztacY5NCEPAT7Dyrjb74CfFWoKPpsxCQ=
-X-Google-Smtp-Source: AGHT+IEdqN4j0tZUjqkf7AiQCf6AILBV0FVoUPT7pSiU8sVSt1YtTCq7aHm3fUhXEYUOJZhfGVfIwA==
-X-Received: by 2002:a05:6a20:7f86:b0:1a7:5402:8a92 with SMTP id d6-20020a056a207f8600b001a754028a92mr1702915pzj.31.1714643799826;
-        Thu, 02 May 2024 02:56:39 -0700 (PDT)
-Received: from sunil-laptop ([106.51.190.19])
-        by smtp.gmail.com with ESMTPSA id lf12-20020a170902fb4c00b001eb53dcf458sm864846plb.188.2024.05.02.02.56.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 02:56:39 -0700 (PDT)
-Date: Thu, 2 May 2024 15:26:26 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Andrei Warkentin <andrei.warkentin@intel.com>,
-	Haibo1 Xu <haibo1.xu@intel.com>,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-Subject: Re: [PATCH v5 01/17] arm64: PCI: Migrate ACPI related functions to
- pci-acpi.c
-Message-ID: <ZjNjSpJus7EYT6zn@sunil-laptop>
-References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
- <20240501121742.1215792-2-sunilvl@ventanamicro.com>
- <ZjNbVPYIjINdk4Fn@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="lfmm31AC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B4dY1gmm"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 709B91140169;
+	Thu,  2 May 2024 05:59:37 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Thu, 02 May 2024 05:59:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1714643977;
+	 x=1714730377; bh=0pbruEW72n0bzaIHzN28DENnlP2MFUGMO7lTKWW+W5A=; b=
+	lfmm31ACJ2DVi1t2IrrXmX7QBOeCSxA+envPgYI1oMOXCd50KlijnsOpWZMlfWWW
+	6TnpPvCzNDWbph1Eh8rdl6yb+710Le1vlMymdNLG3uEltgOETzmWMVwBu7zKe18c
+	2Wp0r5r+Hr+UN4kj18LUaRxKDuh5VcTIpiasvxDpC5dBxg3MYxlPYGW0lQ6mCHu9
+	XNPC7mJjOkmqYlhyEsk/bOfwzQDTlry9kEBKWJ6ktw2mlicThV2EmWMDUP+S0Z3d
+	lXdICdOfUvXfbYlu/ShRVD7UKl3I6l7DKEtaRCNAz6b+VAZMY9s1M5Vt3mWcJn/o
+	ggdBAJc7J5FsQHVS65XJcQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1714643977; x=
+	1714730377; bh=0pbruEW72n0bzaIHzN28DENnlP2MFUGMO7lTKWW+W5A=; b=B
+	4dY1gmmw5p0+6wocyTFOICLRPIo/nhpDqT5IVWDuVJr77dwGOjZ5EKQiLaHSNIHF
+	e13n0nQRhoNi+YrBB+WHLX5esap2EJfSyh9erkX+Sr28v/sF63SC+c2T5Fsdrfjr
+	0ZdR64l4cMMQ3IPIREKHkMQc5DBFeZzMHvqHkeUuqtPFWaxDvwsE96/98OUXZlJd
+	XN08wZC30o2INAli/2PJ4gWaH7utRrff5TrgAdnQZtv9MOGR7bGgHafKBbxBZ2fj
+	t9jjw66mweIEWg+MdbgW0EF9TwO4hoX03Q2WOAu4AnKUyJ53BENwBBBsqzX443eb
+	5HJArH3TN1J7naYG7oG0w==
+X-ME-Sender: <xms:CWQzZqEuYEEVDzCAhLq7DqJIe_56xJY98wsfecmQDS1eHcpk5qtU-Q>
+    <xme:CWQzZrWcOiKfdrQ2jtXIrJ_HxW0YTA-_fnzlRLtguZRbgz_dOrHJMTDMziTeUE-eg
+    Z7mSgxxsfq0ecuyTMQ>
+X-ME-Received: <xmr:CWQzZkKv-599J2IEWEYMnQRyb4FRvHPfDpXDGiY3tvJ2Ykttwh5c4Z4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddukedgvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephfffufggtgfgkfhfjgfvvefosehtkeertdertdejnecuhfhrohhmpeflihgr
+    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
+    cuggftrfgrthhtvghrnhepveevteehgefggeejkeejtddtteeuleduheevjefgjeetvdfh
+    udegtefglefhveeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:CWQzZkFXWk9oJyxDOhsg5JWERLDUQgVEu2WamsDTzDN9NVpeQa0a6w>
+    <xmx:CWQzZgVRC_789l5NWBq1BDXaCqCvqEo_lDLtLS9-NNiPO1VgVLbHJQ>
+    <xmx:CWQzZnOZHt3tKgxq-IVHYjhlDwGwfNavXUwC0GLvbBe9opT33u3B5A>
+    <xmx:CWQzZn05hkbihdFHQHdUJk1SAesuapKTAn0UW14omLe2WYd63JZafg>
+    <xmx:CWQzZqf0_t6YL8WBym1gRq4fWMJnckWxb4rHkxNNMd-8dvXK0-iRr7Hx>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 2 May 2024 05:59:36 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Thu, 02 May 2024 10:59:28 +0100
+Subject: [PATCH v3 1/9] MIPS: asm: Move strings to .rodata.str section
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjNbVPYIjINdk4Fn@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240502-mips_debug_ll-v3-1-3b61f30e484c@flygoat.com>
+References: <20240502-mips_debug_ll-v3-0-3b61f30e484c@flygoat.com>
+In-Reply-To: <20240502-mips_debug_ll-v3-0-3b61f30e484c@flygoat.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+ =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=661;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=QL9nuqQoyyNsWN3gxQVMz1nurlN4CBrHLvpqKsCC2dU=;
+ b=owGbwMvMwCHmXMhTe71c8zDjabUkhjTjFPbg6bk1VW6lXAr3r8qy6v4qj/+15bPAca7q/DXlp
+ 5t3TVnQUcrCIMbBICumyBIioNS3ofHigusPsv7AzGFlAhnCwMUpABNRTmRkaDHddCU8yMZxd/3P
+ gvhV4Vv3LHgtcIQ7v3VD1saehdd1pRkZJmms4dv56PusdM6ol9PcmqtV2fn++Xb/5p32eduVeDk
+ FdgA=
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-On Thu, May 02, 2024 at 12:22:28PM +0300, Andy Shevchenko wrote:
-> On Wed, May 01, 2024 at 05:47:26PM +0530, Sunil V L wrote:
-> > The functions defined in arm64 for ACPI support are required
-> > for RISC-V also. To avoid duplication, move these functions
-> > to common location.
-> 
-> ...
-> 
-> There are -M -C parameters to git format-patch. Use them in the next version of
-> the series. (Note, you may add percentage numbers to each of those parameters
-> to get prettier result.)
-> 
-Yeah, I tried different combination of percentage after you told me last
-time. I just didn't see any difference in the patch generated. Let me
-try again while sending next version. Thanks!
+Well, they are read only.
+
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+v3: Fix an indentation error (philmd)
+---
+ arch/mips/include/asm/asm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/mips/include/asm/asm.h b/arch/mips/include/asm/asm.h
+index 2e99450f4228..0c87a7de2a7d 100644
+--- a/arch/mips/include/asm/asm.h
++++ b/arch/mips/include/asm/asm.h
+@@ -94,7 +94,7 @@ symbol:		.insn
+ symbol		=	value
+ 
+ #define TEXT(msg)					\
+-		.pushsection .data;			\
++		.pushsection .rodata.str;		\
+ 8:		.asciiz msg;				\
+ 		.popsection;
+ 
+
+-- 
+2.34.1
 
