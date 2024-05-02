@@ -1,113 +1,101 @@
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D391586D5;
-	Thu,  2 May 2024 16:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B914D15AAC5;
+	Thu,  2 May 2024 16:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714666699; cv=none; b=ptzukVU7CSl/IzMdfV4Qo8ADAxCbTnC4uyeUKsyiaqwFBXTzZNPlGix0S3+e5frR7ne3SArxWSGSAHnuIc1O/NMonXf/uH0xXsv0An0HMeLBNLCGF7Yk9wfwZzQimsYNrdBL45dP7qrq737yEBM5xcKztASZLeQpd/FAtnl2SrE=
+	t=1714666747; cv=none; b=apm2c7KdiTuLQZH1kRWyBGmf7oeybKYytl10KFChb1QIpj3lGKwxY/rdziHWKv9Q6c3w1/3s73C+GacZHtk2oXQ34CGFTleUPXObLBvfFlT+6T1LU7VLTOOQiNJd7vWMQW1pc8gcnK7Ngw9f4Mc1setsotluDiiI9k4hOjKSmVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714666699; c=relaxed/simple;
-	bh=PXiRo4w2E0/4qzbSWCaMbbfTifqyV+g9KZhxk0A5rDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mdkljCIARI6QLcfRRDx/wTt9WhZRsz14PRrVeahNbKRzNGCVYUht7LqTDcWgoD3Hk4+0sFRL12XkM9hNYV/RsszNB/F2M1r2TO6F6TqzJhMgyFLjTvfY3n8yeEu9PUEnvWotmiQjgAPs/kMSE9QqshSvrYJunOgB/2k4lqYxSh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=0qShFYzd; arc=none smtp.client-ip=74.208.4.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
+	s=arc-20240116; t=1714666747; c=relaxed/simple;
+	bh=cfpd7jyzmkAweaa0hD3uTqGADQ0i4iCKVXcnU1BPD5c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lEPNx2a9VFEKbq9MFGlVfX4vZPu7pHMttIiYmJwVfdzO75dP70usI3GJaD3shktR4d6YLLiWqgOziPtYK7dAHgevmc2zrZt/D/Hi93dEqBkFBHFv7Xab3q1fk+by3CqBdrZ9UlDUfOupcVFtQZHlvtsJy2wUuIVxOJVsWtPPYLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iznJJ4qb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="0qShFYzd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
-	s=s1-ionos; t=1714666691; x=1715271491; i=parker@finest.io;
-	bh=LKoyu6h7KDiFRhiij4H8trRflZZKdIgkV1s5K2caVw4=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=0qShFYzdeOFnC7PRxHcpNziw9g1XxHTEvbdm6NJM5ZRZaaR2rR9SQyzO8caCq7CV
-	 QyLjYvrB/JWwl+QJkTCtWaGT1VbcYamyO2lHpIWdcz57nt6NEmZhsAtJzgcl7MFA1
-	 bak5RcA9ivrrwbykj/uMhxNjOpjDceHMw0wN2qfrHZouOwK0FHillWCiVZpROjWON
-	 CEtW/lmENGXxAbKK2hBzfczCvnYwcnpengSCDFqIUN+UbYNnzGvTlNNGTvuhmMd3Y
-	 c0/dv0xjrg5u446vL02T5vDOIDJgHGkjfWywRSwe2AZqJsvVe41pBGm2973eNa+fy
-	 /pfAKs70CFd0jVpWFg==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from SWDEV2.connecttech.local ([98.159.241.229]) by
- mrelay.perfora.net (mreueus004 [74.208.5.2]) with ESMTPSA (Nemesis) id
- 1N7AIq-1sjKTH2Eii-017S1k; Thu, 02 May 2024 18:18:11 +0200
-Date: Thu, 2 May 2024 12:18:09 -0400
-From: Parker Newman <parker@finest.io>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org
-Cc: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Parker
- Newman <pnewman@connecttech.com>
-Subject: Re: [PATCH v2 0/4] serial: exar: fix kbuild warnings and code style
-Message-ID: <20240502121809.30491a67@SWDEV2.connecttech.local>
-In-Reply-To: <cover.1713533298.git.pnewman@connecttech.com>
-References: <cover.1713533298.git.pnewman@connecttech.com>
-Organization: Connect Tech Inc.
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iznJJ4qb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20565C113CC;
+	Thu,  2 May 2024 16:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714666747;
+	bh=cfpd7jyzmkAweaa0hD3uTqGADQ0i4iCKVXcnU1BPD5c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=iznJJ4qbBWR7NpsLRpKzCXcgRKLWAZYR171nJcG3Nespiw1EWNbUbDk87RXO15exq
+	 QWyNqSgjM5+PIbIa2LpqoJdaumaWvVXIKuOm+d/vOR63qEsvpXRDS/27rFY6rdrWj/
+	 VO2P/mcatsHtq9y+T7efokkMSu8CdwHGDVScWM+fdNFUgE7c/hOE1xBLfdcxPfBNHr
+	 oKZQtD57RNlxH4L6Sgd+61BJzHbqPKocp+1+shNYIi1ufyJg2Ght67OrjYpfqFCGUu
+	 +5azFcRRYEtKDPT8nGPqgaZRWIfMctYvcVwa+TBhT7egp6kFM8Q9KciRdKnySwQe2m
+	 D+1lx2W9khUxA==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Puranjay Mohan <puranjay@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
+ Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, bpf@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Pu Lehui
+ <pulehui@huawei.com>
+Cc: puranjay12@gmail.com
+Subject: Re: [PATCH bpf-next v2 2/2] riscv, bpf: inline
+ bpf_get_smp_processor_id()
+In-Reply-To: <20240430175834.33152-3-puranjay@kernel.org>
+References: <20240430175834.33152-1-puranjay@kernel.org>
+ <20240430175834.33152-3-puranjay@kernel.org>
+Date: Thu, 02 May 2024 18:19:04 +0200
+Message-ID: <87edakw5jb.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:McQlekSsgghGBLIcmt0S/h4x/zjxzWYi8l3YZYVrmqTi0lS/ikz
- 73RvGTSS59v1dbZQTjNvArFEmt1hl85dLfOVFANO0uJpvjbK6ZfQW0S1axCrEtDjdaVpyvV
- +FKcfhbQoJWc3p/G3vTdv/kmYFIabNEHWsulRFYy470zGj1ame8vGJpw6ctVAU83mMHB+lr
- qlwJG7tvdBkkVN5NtewjQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:WpY9wamyheo=;EI1vgfvixcJRoW+SJ+tLi4qspYU
- 9wZoI9rxxAskBXqHg7xHEUEjHbIluDv3NAX9SgiJzUpLRt30R+02DB40gdanCo2eiSblt9uDi
- KrY0WWE9GylBA30Gt5+IOUljerf143Uv61QHpQehSwUFW84OO/Y09imLa7nu+kdJNBl00fEJ2
- GCxabS8IPSt9qlu+T6Tp00g4M325aIClz6GQsfMHkV4wNZzjuUIblF5CGKPqtXuVOeZApbRDf
- zGPURMV0oI8dAcSb0Lo8gOS8cV9fPobSmbGIDCkymNQhdO7CgL490zBje/UrxZSNqLCEkbVAW
- ws6j7YhqNdmEpOhksCFpoGUm4N0V59PSy9AMq3k6Y5Rtphapx3obC9+ZPtyjmkz3iJJLTJVzv
- KjCfY7DnrujAVSt2qp2Nd8lrB206bQZuuGe6neIEDE1pX8eu2rVbOJnJmu+gX2yVXjttPGyNe
- 7EJnXWwcBehOuFXxX8cmnZkJJxDgkHu5MRLjVmBq2HDrYSsxusKjMBNNJ1xCf17in9IdQSo0S
- wF94KBx1n8FwhDBV2xXjl1atdoTNuH2aB9xCH0M8EEblED0wFiR47S+meBRZ+ZCiG6keTuQgR
- qBjziAxL0zPAvmG2mGQ9HzVOHRc9t/tAKJenpKI/5bs793xkjOKJi+ujlNStzzE/pQREtUHPL
- gf9hWhG3R/rP1efE3v9jGThVjTMLxHJqpD/wIbZbtZBiw6OEViUo13Shy9Q+9A/GqJwzzX5Dw
- GZDhN7qPrc5vsJbQCywc9KLJCBT+CjB33QegqPtDPuYdtb7l6Zwz90=
 
-On Fri, 19 Apr 2024 10:17:00 -0400
-Parker Newman <parker@finest.io> wrote:
+Puranjay Mohan <puranjay@kernel.org> writes:
 
-> From: Parker Newman <pnewman@connecttech.com>
+> Inline the calls to bpf_get_smp_processor_id() in the riscv bpf jit.
 >
-> This is a series of small patches fixing kbuilds error and code style
-> issues based on feedback during review of main patches.
+> RISCV saves the pointer to the CPU's task_struct in the TP (thread
+> pointer) register. This makes it trivial to get the CPU's processor id.
+> As thread_info is the first member of task_struct, we can read the
+> processor id from TP + offsetof(struct thread_info, cpu).
 >
-> Original patches thread:
-> Link: https://lore.kernel.org/linux-serial/cover.1713382717.git.pnewman@=
-connecttech.com/
+>           RISCV64 JIT output for `call bpf_get_smp_processor_id`
+> 	  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
 >
+>                 Before                           After
+>                --------                         -------
+>
+>          auipc   t1,0x848c                  ld    a5,32(tp)
+>          jalr    604(t1)
+>          mv      a5,a0
+>
+> Benchmark using [1] on Qemu.
+>
+> ./benchs/run_bench_trigger.sh glob-arr-inc arr-inc hash-inc
+>
+> +---------------+------------------+------------------+--------------+
+> |      Name     |     Before       |       After      |   % change   |
+> |---------------+------------------+------------------+--------------|
+> | glob-arr-inc  | 1.077 =C2=B1 0.006M/s | 1.336 =C2=B1 0.010M/s |   + 24.=
+04%   |
+> | arr-inc       | 1.078 =C2=B1 0.002M/s | 1.332 =C2=B1 0.015M/s |   + 23.=
+56%   |
+> | hash-inc      | 0.494 =C2=B1 0.004M/s | 0.653 =C2=B1 0.001M/s |   + 32.=
+18%   |
+> +---------------+------------------+------------------+--------------+
+>
+> NOTE: This benchmark includes changes from this patch and the previous
+>       patch that implemented the per-cpu insn.
+>
+> [1] https://github.com/anakryiko/linux/commit/8dec900975ef
+>
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 
-These patches should not be required anymore. Andy Shevchenko has
-submitted a more comprehensive clean up patch set that makes this
-set unneeded.
-
-Link: https://lore.kernel.org/linux-serial/20240502144626.2716994-1-andriy=
-.shevchenko@linux.intel.com/
-
-Thanks,
-Parker
-
-> Parker Newman (4):
->   serial: exar: add missing kernel doc function parameters
->   serial: exar: use return dev_err_probe instead of returning error code
->   serial: exar: return bool from exar_ee_read_bit()
->   serial: exar: remove ternaries from
->     cti_get_port_type_xr17c15x_xr17v25x()
->
->  drivers/tty/serial/8250/8250_exar.c | 36 ++++++++++++++---------------
->  1 file changed, 18 insertions(+), 18 deletions(-)
->
->
-> base-commit: c6795fbffc4547b40933ec368200bd4926a41b44
-> --
-> 2.43.2
->
-
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org>
