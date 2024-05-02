@@ -1,64 +1,184 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B2F15E20D
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADFC286BD;
+	Thu,  2 May 2024 16:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714667045; cv=none; b=ZdOJFSGgFpgN9DqPPpm7b8quhYXvr2HfYtJkEq6iayo2LCtESDaUoeSHQL2H4ORH9utgsGWWvvO3Ub1zM7trwmdB3HS3A6z1DUtDy7WPFmd0GoWoDpYmln9pvGXikRYMCUh5yV3oXM7IeoKSQKUcmxAaT0WYfVXohpaMh876SiY=
+	t=1714667053; cv=none; b=WM3ZuFArbuJfP5NHdxj80nLWrRUxLFpwr6MktZ2ZCnL/E3JywKPcXMcxZ/RCo/ucXof6KYIZN2Wtyj88l0zO30cXXVCW+5gx8zzKH17oJk8Cq3DEcTPQ9Q2baq2wDFfV2WlH8HxCgtBfSdSB/UzIfIAeaGF7PuYeCoPa19AMr4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714667045; c=relaxed/simple;
-	bh=NGVwFjaFO10XPYZmmBrdVpFxIB4XnJUxAtDA0jJnZbQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a+X9yE8Fn/kAKL32cg5IF1s4mHlJ4fpoQXXwR0tSVmc3nH5wYhpRFwq5OHavmymYJXa5fyVp0th3tCAmKpR3K8rvn2mI7leewIe6Phcej+2aTVsUCavFWbEfJ/+POUqe4tgGjhg/i/39TZi/0CfBvPJz0P1sBHVGt4JaTdeUNZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=amas3A2t; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1714667053; c=relaxed/simple;
+	bh=8bnm0Mp6aA159OPgwtTWCVCezNkfmBxywIMR3Q9y61E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTHwmjXElx7r/GLNaUyH0aye27vmjzKsY31Jo3u6zVfcBsSawHH/HK3k/cr9rdvTU7lL3hxnDkY6Oe342RBzlvxE+g4WaRTWbjUmRvFMTPxu0ix9XugTj1FuKcK8/8wKSP0iygvBiKigdu9W2Up7YQWVxsjLZ1hLtcYtYcZn+Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GKKa37gI; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="amas3A2t"
-Received: from fedor-21d0.intra.ispras.ru (unknown [10.10.165.8])
-	by mail.ispras.ru (Postfix) with ESMTPSA id C5A4F407850A;
-	Thu,  2 May 2024 16:18:48 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru C5A4F407850A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1714666728;
-	bh=DtReRsjlUyViWf7paqbZpI8KlMsBY9+Wd3lvivUXAhA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=amas3A2tnskmQQ7zLqotmvrmOBDD3MRUJlwBBG8YFpuph8RhJxqsDwcB8JUP/n6Gq
-	 JHlh8jVe7rGijb/Rhz6JgOAYoCko/ITGKQUV3VzsKkbZekqAALGD2IRWyH6GSvcfFf
-	 yGRl0bQMK/ttw1GJ0NRIh3Ls4ldyzNFwovCvyXYs=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Xiang Chen <chenxiang66@hisilicon.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Barry Song <song.bao.hua@hisilicon.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	lvc-project@linuxtesting.org
-Subject: [PATCH 0/2] dma-mapping: benchmark: adjust some error handling in do_map_benchmark
-Date: Thu,  2 May 2024 19:18:24 +0300
-Message-ID: <20240502161827.403338-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GKKa37gI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714667051; x=1746203051;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8bnm0Mp6aA159OPgwtTWCVCezNkfmBxywIMR3Q9y61E=;
+  b=GKKa37gIIqWAHAiSatkA6xRV62Z9ho76bEiVxAGHZAx9M2cP69HPjoeu
+   TqqNKxA5F0p6kEk2Ah6Bi9ytVzuUFfL0Js7fqKVjVfmgjG1t40KpZVqot
+   B8+E6XdSOq1m4YO+VraMcbQABr4nKIXSfNDW38DBH6LXo/ru4Kq0vmzlM
+   ISOCeUvH65/fM96jUMNQmIvcnjxXtDpWU1ZtZCuZuLUs3aMijqia6bNMQ
+   4kbfECwvGQOye77QaUMHs0ssHQU0vWq4KO4cwNjIbXZyeX95TPOfQxaAa
+   ru4EO9lxBYAYzhSCLh5qcyXyI3RHZ2OD7lxtZ4i6vVgqC/yFuKqbzZG/T
+   g==;
+X-CSE-ConnectionGUID: CJqBmeXIR+m8P55T7I1EBA==
+X-CSE-MsgGUID: zMIcjpw9Tha5uYbS0pnuHQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10378778"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10378778"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 09:24:11 -0700
+X-CSE-ConnectionGUID: gyKOMwuERVWbe1SWC/Pk/g==
+X-CSE-MsgGUID: 2BvGVijpR2OhXI8q1CaqkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="31662271"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 09:24:07 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 8C03A11FA94;
+	Thu,  2 May 2024 19:24:04 +0300 (EEST)
+Date: Thu, 2 May 2024 16:24:04 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Julien Massot <julien.massot@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Jacopo Mondi <jacopo+renesas@jmondi.org>,
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Sylvain Petinot <sylvain.petinot@foss.st.com>,
+	Yong Zhi <yong.zhi@intel.com>, Bingbu Cao <bingbu.cao@intel.com>,
+	Dan Scally <djrscally@gmail.com>,
+	Tianshu Qiu <tian.shu.qiu@intel.com>,
+	Eugen Hristev <eugen.hristev@collabora.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Maxime Ripard <mripard@kernel.org>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Robert Foss <rfoss@kernel.org>,
+	Todor Tomov <todor.too@gmail.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Dafna Hirschfeld <dafna@fastmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Hugues Fruchet <hugues.fruchet@foss.st.com>,
+	Alain Volmat <alain.volmat@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Yong Deng <yong.deng@magewell.com>,
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+	Benoit Parrot <bparrot@ti.com>, Jai Luthra <j-luthra@ti.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Michal Simek <michal.simek@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Sowjanya Komatineni <skomatineni@nvidia.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-sunxi@lists.linux.dev, linux-staging@lists.linux.dev,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 0/2] Introduce v4l2_async_nf_unregister_cleanup
+Message-ID: <ZjO-JDBdHXVLbz5H@kekkonen.localdomain>
+References: <20240502-master-v1-0-8bd109c6a3ba@collabora.com>
+ <20240502155626.GD15807@pendragon.ideasonboard.com>
+ <ZjO46Uo_tVcRTdA0@kekkonen.localdomain>
+ <20240502160830.GB11443@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502160830.GB11443@pendragon.ideasonboard.com>
 
-Some of the error paths inside do_map_benchmark() do not behave correctly.
-Adjust them with the following patches.
+Hi Laurent,
 
-Fedor Pchelkin (2):
-  dma-mapping: benchmark: fix up kthread creation error handling
-  dma-mapping: benchmark: prevent potential kthread hang
+On Thu, May 02, 2024 at 07:08:30PM +0300, Laurent Pinchart wrote:
+> On Thu, May 02, 2024 at 04:01:45PM +0000, Sakari Ailus wrote:
+> > On Thu, May 02, 2024 at 06:56:26PM +0300, Laurent Pinchart wrote:
+> > > On Thu, May 02, 2024 at 05:22:20PM +0200, Julien Massot wrote:
+> > > > Many drivers has
+> > > >   v4l2_async_nf_unregister(&notifier);
+> > > >   v4l2_async_nf_cleanup(&notifier);
+> > > > 
+> > > > Introduce a helper function to call both functions in one line.
+> > > 
+> > > Does this really go in the right direction ? For other objects (video
+> > > devices, media devices, ...), the unregistration should be done at
+> > > .remove() time, and the cleanup at .release() time (the operation called
+> > > when the last reference to the object is released). This is needed to
+> > > ensure proper lifetime management of the objects, and avoid a
+> > > use-after-free for objects that can be reached from userspace.
+> > > 
+> > > It could be argued that the notifier isn't exposed to userspace, but can
+> > > we guarantee that no driver will have a need to access the notifier in a
+> > > code path triggered by a userspace operation ? I think it would be safer
+> > > to adopt the same split for the nofifier unregistration and cleanup. In
+> > > my opinion using the same rule across different APIs also make it easier
+> > > for driver authors and for reviewers to get it right.
+> > > 
+> > > As shown by your series, lots of drivers call v4l2_async_nf_cleanup()
+> > > and .remove() time instead of .release(). That's because most drivers
+> > > get lifetime management wrong and don't even implement .release().
+> > > That's something Sakari is addressing with ongoing work. This patch
+> > > series seems to go in the opposite direction.
+> > 
+> > This still avoids the driver authors feeling they need to implement wrapper
+> > functions for v4l2_async_nf_{unregister,cleanup}. I'd be in favour merging
+> > this.
+> > 
+> > I don't see this getting in the way of adding use counts as the code will
+> > need to be changed in any case.
+> 
+> Fixing the lifetime issues would essentially revert 2/2 and move the
+> v4l2_async_nf_cleanup() call to .remove(). I don't think providing a
+> helper that forces the cleanup at .remove() time is a good idea, it
+> gives a false sense of doing things right to drivers. This is the same
+> reason why devm_kzalloc() is so harmful, it gave the wrong message, and
+> created (or participated in) all those lifetime issues.
 
- kernel/dma/map_benchmark.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+I still prefer having devm_*alloc() functions than having the drivers open
+coding the same -- with the same result. The frameworks won't enable doing
+this right at the moment and I don't think drivers (or us!) should be
+penalised for that. The driver authors will only change what they do, with
+these patches or without, when told so. But we don't really have an
+alternative today.
+
+A similar situation exists with clk_unprepare() and clk_disable().
 
 -- 
-2.45.0
+Kind regards,
 
+Sakari Ailus
