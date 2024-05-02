@@ -1,93 +1,67 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC71815B148;
-	Thu,  2 May 2024 14:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36405160781;
+	Thu,  2 May 2024 14:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714661209; cv=none; b=fHDbngFDABVJBFGeRi0nS2hIw0KDu4HdAqMsOQmQi/byElr7op6aQ/XBXthWlcoNavVDesmTYsnRYsotFtuHsf9j6rrJ7R52ix+xcwDB4OWgcj0gYXwWxVSZJhwEg6NktObjxcZfxlkx1AmbSvjZtrb8b/YSEMXl563Hkzgqgxg=
+	t=1714661219; cv=none; b=oOETRNa9y5VWKGvSXm2uZaQm8tkIf4EPe91LbWO82j+n+dpDM5LvTmFnUasFyHziRstEJVKua41lIqfcLXePb1mmq9WlC6TeNrdfQAtIHsSaaxddJ/hJfPE6sX8Jj/j+HPplhtdUr4gmlxutBGkaROlKgvBXFpfJh9LQP7rtnjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714661209; c=relaxed/simple;
-	bh=EhzWsTWACEjCUnlwxHyfabgFLKuatNS81iZvkVCsVyM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 In-Reply-To:References; b=elYo9coXkeKauVObgcGoR/AtJOVzoOSEMNdQ7Dvg3ngMyEbaRx6/JbwiGlS/yQ/UXykf3uApbr6jzlBytZ4P29W+Ary/J9+2mAWGfyv8i+yuYe17sE1yhqiZi9IyoIkuU+Sbv0XrkUh4UwoOqnEpHG2JbZhrjNcnvoP6cKhAWTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=206.189.21.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from ubuntu.localdomain (unknown [221.192.181.50])
-	by mail-app2 (Coremail) with SMTP id by_KCgA3L4GZpjNmnigDAg--.28S4;
-	Thu, 02 May 2024 22:44:51 +0800 (CST)
-From: Duoming Zhou <duoming@zju.edu.cn>
-To: linux-hams@vger.kernel.org
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jreuter@yaina.de,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	dan.carpenter@linaro.org,
-	Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH net 2/2] ax25: fix potential reference counting leak in ax25_addr_ax25dev
-Date: Thu,  2 May 2024 22:43:38 +0800
-Message-Id: <cb44ea91c0b7084079c3086d6d75e7984505cec7.1714660565.git.duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1714660565.git.duoming@zju.edu.cn>
-References: <cover.1714660565.git.duoming@zju.edu.cn>
-In-Reply-To: <cover.1714660565.git.duoming@zju.edu.cn>
-References: <cover.1714660565.git.duoming@zju.edu.cn>
-X-CM-TRANSID:by_KCgA3L4GZpjNmnigDAg--.28S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7GrWrAF18GFyrZw17XF45GFg_yoWDurb_uF
-	97ury7Ww1DJr1UCw1rXF48Jry7Zw10gwnrJr1ayFZ7trW5ta47JrWkJw1UXr1UXa47Cr4F
-	qF1rGrW3Aw4IkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUblkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW5XwCF04k20xvY0x0EwIxGrwCF54CY
-	xVCY1x0262kKe7AKxVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUwAwsUUU
-	UU=
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwIJAWYySJ0M6ABgsM
+	s=arc-20240116; t=1714661219; c=relaxed/simple;
+	bh=V5gXs6TvijArdQBXrnEsdGKdWOcmg2X3CXITyzJl0/A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NhAt7O/LB6o/Cv80Rk63HeXngEVMYSRxmChRoAGtopzvDT8ErSQVLIpxS90jOQ97S18TXQLntnqITYzS0WDWyxQfsUBm1qxgfHS76k4kxoLTd8aNV+kpaE43DR4cxm59HEGzV1qBuNW5rBoiipDY+a8SDp9Go2M+53nG6JyhQzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mixePdvr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mixePdvr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABFEC113CC;
+	Thu,  2 May 2024 14:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714661218;
+	bh=V5gXs6TvijArdQBXrnEsdGKdWOcmg2X3CXITyzJl0/A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=mixePdvr2FIBmbXuS5uAXeHQHbtcWJ0ks9Wj4YukUtFztdOUN9Ab3UJisIMLXvw3i
+	 YTsl7GF6WAlS7s9FEnw23EMjfGKMtrzpR0dBaRrsMSdmkhAph0Z+wOKj508ZVDCOfe
+	 wEjWSOR32YUWCoJpP5ZQYXLLk+8FWOI1oA7/q1g4K3qtSzMctk/3PQZKzltvYZ/5pu
+	 ttP13Bf/8VN1mHE0Dq6Tjgzko90UQMlrNtt3w9oQYZiPodwhlJrPYQI/GMy3kxYyeB
+	 O1qsIgDafkSOz4JUwSaOdKUB26RdrHfVl+EJEO7E5eTANqALz1eUdJuG8oDblPtcNM
+	 uiX8iIXzCkSmw==
+From: Leon Romanovsky <leon@kernel.org>
+To: Jules Irenge <jbi.octave@gmail.com>
+Cc: jgg@ziepe.ca, linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ lishifeng@sangfor.com.cn, gustavoars@kernel.org
+In-Reply-To: <ZjGC4qXrOwZE0aHi@octinomon.home>
+References: <ZjGC4qXrOwZE0aHi@octinomon.home>
+Subject: Re: [PATCH] RDMA/mlx5: Remove NULL check before dev_{put, hold}
+Message-Id: <171466121283.1638184.16945329377468449493.b4-ty@kernel.org>
+Date: Thu, 02 May 2024 17:46:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-The reference counting of ax25_dev potentially increase more
-than once in ax25_addr_ax25dev(), which will cause memory leak.
 
-In order to fix the above issue, only increase the reference
-counting of ax25_dev once, when the res is not null.
+On Wed, 01 May 2024 00:46:42 +0100, Jules Irenge wrote:
+> Coccinelle reports a warning
+> 
+> WARNING: NULL check before dev_{put, hold} functions is not needed
+> 
+> The reason is the call netdev_{put, hold} of dev_{put,hold} will check NULL
+> There is no need to check before using dev_{put, hold}
+> 
+> [...]
 
-Fixes: d01ffb9eee4a ("ax25: add refcount in ax25_dev to avoid UAF bugs")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
----
- net/ax25/ax25_dev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
-index 07723095c60..945af92a7b6 100644
---- a/net/ax25/ax25_dev.c
-+++ b/net/ax25/ax25_dev.c
-@@ -37,8 +37,9 @@ ax25_dev *ax25_addr_ax25dev(ax25_address *addr)
- 	for (ax25_dev = ax25_dev_list; ax25_dev != NULL; ax25_dev = ax25_dev->next)
- 		if (ax25cmp(addr, (const ax25_address *)ax25_dev->dev->dev_addr) == 0) {
- 			res = ax25_dev;
--			ax25_dev_hold(ax25_dev);
- 		}
-+	if (res)
-+		ax25_dev_hold(ax25_dev);
- 	spin_unlock_bh(&ax25_dev_lock);
- 
- 	return res;
+[1/1] RDMA/mlx5: Remove NULL check before dev_{put, hold}
+      https://git.kernel.org/rdma/rdma/c/82e966130ddd67
+
+Best regards,
 -- 
-2.17.1
+Leon Romanovsky <leon@kernel.org>
 
