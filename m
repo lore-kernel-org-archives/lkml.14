@@ -1,117 +1,81 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E43D15B56C
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 15:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057DD15B578;
+	Thu,  2 May 2024 15:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714665189; cv=none; b=m64p6o/dHf1050xYf3ul1Q3djK0mxHRPqq8kk9ZozJBYTwuRRR1+QlA/eyb6GWQ5XJLYAfsCBka5JMxfz1LzvfDIT81lol9CzkZOE4DTRhg5oSqap2PjZ/oOdStkL4HUXJcHxKkZJiTHC33tBtFRPd7lba09t0qARfr/LcZQMiQ=
+	t=1714665291; cv=none; b=RsNxZMjDvM6XWyj6AJBmPYXk4nRA9MFGyQf88Jmx5LBx6V1bLgifvigChuooiMzbE2XcwS0j4/fc+PPOXaWQUyYqPQ5XLWmGI7qb9NZRSMmXwmgY51iELVxZRMcT5STmOK+OAqKNJY5y6yPJbUus15NPQesEE+4OfyUcABOMZ1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714665189; c=relaxed/simple;
-	bh=hgLqQsUmbnlqSKDOOFDfYvGL7hLvkqrTWQ08Fg0yZ2c=;
+	s=arc-20240116; t=1714665291; c=relaxed/simple;
+	bh=r8OebLc96WPRSNwChpSCzfDAiTtMCUd2QwenhT091WU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EKU5NozyUrsJqgc5aCXtwEUiXcII8zEoCQQUtnuAGcXox3/44f9ONNgGd6oph/W8gIpyy+9ewnQXv2Orj0BovXe2IfUb0OlGIfyROCysgY3cT8NrLYUfZ/P95MdzS32c01YCHOkGsm8wFzG8qka3YgMv8isjSUg+P8wJ/6h4l78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=XXRv0S7M; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tenstorrent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZD0wPf8ZikLfbp11jfS1KYKvls1x6aXGrwcodzeCqa+VFMWFx2/yIscWxBaFLWGMgAJGn4QUTthq+oi+N6X8xjUHYRbNMkvW2l1JF6KWOMF05htaIKGwBW5Sk5Hj8F95P4nnaLbsIxPEsZefwZTC6MrLfwjqNla4bP2VF4ALFW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAz1pkl9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="XXRv0S7M"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1ec486198b6so26196375ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 08:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1714665187; x=1715269987; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xrO+BzTfAqGrVSW6gaAM1uVW/UhYnHc2qIbuASzSIck=;
-        b=XXRv0S7MFTlv3u2OhC968Zki0V1ZqmbE8lL18EQVLpE2J+GRo6VUd2rFmDAVLUoDI7
-         RH1LkBOnS3AwTa1FBTCt2W4v6Pvav2gueoZrvWdPN5tTPku5V+YP28JkYAQmG/LH7IOz
-         nlfLZW2YHtALHKxTpuqZOkLRh/U6PQciMJI+anpzID3lWjxcgM4q9dju31eQtTZgwilv
-         1Ywn+yLzK62CRFJ/WRED2NqBctu0HiNd1zpgRCnINVReE+JsJzMYDN6dxYBEHgEUicAV
-         ea12Hlh8u9pGF7cCQetFrW4iE2kLy6q0i/m6Jox6t0JPnjIHtbHI8cnheNLB2zBIiIGt
-         FmJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714665187; x=1715269987;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xrO+BzTfAqGrVSW6gaAM1uVW/UhYnHc2qIbuASzSIck=;
-        b=ZuMVzcna91PGLv0CVH2zT2siTwfCii1RJ4nNRyCh7JNsFVfBzAA3nkZYHdhmpuXWsH
-         UK0nW4A+pX2YCm4MhjPoNfjkfbnrt7Kag6wKNFMrB65JgCvnrOWjeq5xra9yPj4Lvj1U
-         nrLp284eXbtF7QLAkFIm5Iobk1LCef+tJiH7Z6dWzvMGnb/3iAvUcxOmKCpPamdkG5zg
-         EByA1M0V5uY5VN1YzfneFumljS2liaZsO21a7sGY4hnAqtpqF7IVBDhy4K5aj5BRjrpw
-         jpY7LRTnkf99i5dByOG/thCHvdtnylcAyHNSaax4XOPZ3N4LKMr+zDnbS+r4qUxx8VyX
-         r59g==
-X-Forwarded-Encrypted: i=1; AJvYcCXIEAkePOwGa9ClcYFvGbs+EghC2qdGNI3wnfCbWShpz9TFMGvgGn5UtlaQCsC0F1nqQQkmKxke6Yb13k7Q8p6t4hE9Ec9crN5UWUsP
-X-Gm-Message-State: AOJu0YzWHoKRwtpmmGiC9mASbVTmmaPpII0juMWvGXEdrFTYfvE0o7zO
-	GOJsUayZznUaK9suQg5WEvadpbE4g8pTfLduvgtPAMtq2pkQ1JNFhFOVzmb8zhM=
-X-Google-Smtp-Source: AGHT+IGrW1OPSdicmml9TYEIm0yY7aapvxFGT0j7ToPXTRa7G6YIhicWH6kAZGYVaA97W1Sg6HV2lw==
-X-Received: by 2002:a17:902:bb8b:b0:1e4:5b89:dbfa with SMTP id m11-20020a170902bb8b00b001e45b89dbfamr28506pls.41.1714665187388;
-        Thu, 02 May 2024 08:53:07 -0700 (PDT)
-Received: from x1 ([2601:1c2:1802:170:e8cc:54a1:83d7:2ef1])
-        by smtp.gmail.com with ESMTPSA id m3-20020a170902c44300b001ec2e620b1fsm1447508plm.273.2024.05.02.08.53.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 08:53:07 -0700 (PDT)
-Date: Thu, 2 May 2024 08:53:05 -0700
-From: Drew Fustini <dfustini@tenstorrent.com>
-To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Yangtao Li <frank.li@vivo.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAz1pkl9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48100C4AF18;
+	Thu,  2 May 2024 15:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714665290;
+	bh=r8OebLc96WPRSNwChpSCzfDAiTtMCUd2QwenhT091WU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lAz1pkl9vN871eOe7gJHmVTMqyHlEPwkjJMl35emMXbcf5KQco7Sehm/W0WiUp8Cf
+	 nX1rs+1d4p2hehVsxE8K1frzjYcHcip1FBf07L04Xl/02GKdoMjHIACieKABotDVrq
+	 UE9jUY2HhnHOtWhLFGF9GMMcNqx9aWyH5xg328jEDxm1ba6PcYH9ChrN0rvAptopOX
+	 mU/IFtYIlyvG/L0cileCrD7CnJxOgYwREqmlPNwvYrBh0SgEh2VPayg727pqCU7L7N
+	 CMIzuUwuzGNZ9yggBU+M8b7/TJUaIlT1QHiRy8vmOWIekBSL1SYa9bz5yz7SL6YDu3
+	 EylyBEet2EpoQ==
+Date: Thu, 2 May 2024 16:54:46 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Prajna Rajendra Kumar <prajna.rajendrakumar@microchip.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH RFC v2 4/4] riscv: dts: thead: Add clock to TH1520 mmc
- controllers
-Message-ID: <ZjO24XikkqNAnbti@x1>
-References: <20240426-th1520-clk-v2-v2-0-96b829e6fcee@tenstorrent.com>
- <20240426-th1520-clk-v2-v2-4-96b829e6fcee@tenstorrent.com>
- <1444dac5-c725-4bf7-8843-469a62c3abf1@bootlin.com>
+	linux-riscv@lists.infradead.org, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	valentina.fernandezalanis@microchip.com
+Subject: Re: [PATCH 1/3] spi: spi-microchip-core: Add support for GPIO based
+ CS
+Message-ID: <20240502-produce-gallery-3b8e17db9c01@spud>
+References: <20240502143410.12629-1-prajna.rajendrakumar@microchip.com>
+ <20240502143410.12629-2-prajna.rajendrakumar@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RFYwY/Nam1P3ueHY"
+Content-Disposition: inline
+In-Reply-To: <20240502143410.12629-2-prajna.rajendrakumar@microchip.com>
+
+
+--RFYwY/Nam1P3ueHY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1444dac5-c725-4bf7-8843-469a62c3abf1@bootlin.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 02, 2024 at 09:47:43AM +0200, Thomas Bonnefille wrote:
-> 
-> 
-> On 4/27/24 2:10 AM, Drew Fustini wrote:
-> > Change the clock property in the T-Head TH1520 mmc controller nodes to a
-> > real clock provided by the AP_SUBSYS clock driver.
-> > 
-> > Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
-> 
-> I experienced that, when the I2C clocks were correctly configured, the UART
-> stopped working, likely due to their dependence on FOUTPOSTDIV.
-> Setting up the UART correctly, for instance:
-> 
->                 uartx: serial@xxxxxxxxxx {
-> 			...
->                         clocks = <&clk CLK_UART_SCLK>, <&clk
-> CLK_UARTX_PCLK>;
->                         clock-names = "baudclk", "apb_pclk";
->                         ...
-> 			status = "disabled";
->                 };
-> resolved the issue.
-> As this would be mandatory in the future, I suggest that you configure all
-> the nodes currently set to a fixed clock, not just the MMC controller.
+On Thu, May 02, 2024 at 03:34:08PM +0100, Prajna Rajendra Kumar wrote:
+> The SPI controller within the PolarFire SoC is capable of handling
+> multiple CS, but only one CS line is wired in the MSS. Therefore,
+> use GPIO descriptors to configure additional CS lines.
+>=20
+> Signed-off-by: Prajna Rajendra Kumar <prajna.rajendrakumar@microchip.com>
 
-Thank you for testing and discovering this issue.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Could you post your device tree so I can be sure I'm testing the same as
-what you have?
+--RFYwY/Nam1P3ueHY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Drew
+-----BEGIN PGP SIGNATURE-----
+
+iHQEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjO3RgAKCRB4tDGHoIJi
+0kPSAPiTRfo+gPE5ctQPx4+xDZ6kHdX4imtKH396RVtO0xx3AP9rVc/Jkfpg2Nrw
+o7xTU7ZdJcc06vss/e1NxTwDdx7KAg==
+=R2rj
+-----END PGP SIGNATURE-----
+
+--RFYwY/Nam1P3ueHY--
