@@ -1,125 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4289D7F481;
-	Thu,  2 May 2024 12:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8CD60EC3;
+	Thu,  2 May 2024 12:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714652687; cv=none; b=Zk6ucTsmduAYMLNCwFfkdvN13YEmbWUQeGirSLhW6cDqfiAwEe0vXzVSMm1y9E4dDg+UZcdlyhQzm6dUd30QdpjJRjXcUYqc4c7yEdZKt1qpV6btmEdToWgzu1sLESwEju3siqD7FN+JB84eeXZqaPvIDDqfGW48vpkQgGaMIPQ=
+	t=1714652822; cv=none; b=Cuiv//5KgYD7FN+t/yJ4pflfAn+Ggsgxcn+FjuIdff/WCWrziT3G8/oxqYA40TQXkHXFBgOunr2qX6UY3HLVALnwx0NlrSRj3EQtZEIM/rz+mzrwLLSD4PsvlAftGS9PBnDgpndbDmtL5DagErxlqmi9w8yL/84335re/h+77nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714652687; c=relaxed/simple;
-	bh=IxSJTvmJyyluDOgbN3Qv5eq4m8dBC+x6ly4U5xSNfi8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BMRdLeshHT1NlQDhlNocuzxMiz6W63wJf7M5SBh3ilm0LGFbY4KoWpQ8KfomaGn19ECPu7BDXvUqccM4T33GREdN9oaCXzA4nlQtqSB8dT+XRTP1G8OOHwIwb9lgNreLCm5UT5tOZvu8rvI9BGKH/v9Ct9fvGewxZJWn7JuBpOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkiS0twE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714652822; c=relaxed/simple;
+	bh=ubGsjiWQHWPaEZ1fQ7tqbi/KKjuYjwt1nMnswlvWugU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uov5vh5jFYoqs8EK8zA5Opdx/tacbpzt/Fjb5/SuudlVEyxy7ACdvzQ/v41TbVxvCy9UmraDZ3YzHn8jNa8Pw+GlabMQEggq+CwN9EKoKdUoyEtqhnV/xK1DBl1iMbpq7eC6xExuLjvleeuETqQ2SYw5QP1cOFPeEpTgz1z+S7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bNgfbgJ/; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkiS0twE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11B3CC113CC;
-	Thu,  2 May 2024 12:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714652686;
-	bh=IxSJTvmJyyluDOgbN3Qv5eq4m8dBC+x6ly4U5xSNfi8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NkiS0twE1DcVIJty0dIiyfLue//ziLF3Br/jp/DRl4zBOr4neTnq8rTX1yTUdGXcB
-	 GEtXJnpJCRqAfn78vy1MPxMH2nr7ogcHv+OXLZTKquohizzO7Ma13iOiA/njI+AaCG
-	 wCi5qvXE2KpVNQ/FzlDGAqytSftpjCBpmDZhU6VxS9eGH1hJW5eFgy6/vIAfPSwUQc
-	 TwdkyCATEmtDutDB60ihVBEfqj64oiO3Qa4LcjPtR+VVU+1u6mQ7nz1ea7Zn7+E1BY
-	 sUrwuJjfyUFuRujYAOIelYTj3V1RLXNaiH7bBVdWvBR37I4c4UexTy9gctjYija7UE
-	 jKGmdjuy8XGtA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org,
-	x86@kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>
-Subject: [PATCHv4 7/7] man2: Add uretprobe syscall page
-Date: Thu,  2 May 2024 14:23:13 +0200
-Message-ID: <20240502122313.1579719-8-jolsa@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240502122313.1579719-1-jolsa@kernel.org>
-References: <20240502122313.1579719-1-jolsa@kernel.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bNgfbgJ/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=gVITxXoUTVKTfjI6S12QFG1wv1DAg8EEN4Ngn7R7v5M=; b=bNgfbgJ/L9jRQ2A93jsYogUi+N
+	kWVgx9OUBoOTsJoCcLnAlM6XDTuqJr5/b2Qg5GAYLGF2BXEZ/MWrDQvuHcnTqN2csm1keEMrEAtix
+	pmaiapgE22GVw3XeCstUGB1Oe/srzXlYSK/M8u46dgZAzc8c2vtsOE9QQyf662Yasyis=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1s2VWG-00EVEN-M8; Thu, 02 May 2024 14:26:36 +0200
+Date: Thu, 2 May 2024 14:26:36 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Herve Codina <herve.codina@bootlin.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 06/17] dt-bindings: net: mscc-miim: Add resets property
+Message-ID: <4f9fd16b-773d-40e7-86d8-db19e2f6da16@lunn.ch>
+References: <20240430083730.134918-1-herve.codina@bootlin.com>
+ <20240430083730.134918-7-herve.codina@bootlin.com>
+ <5d899584-38ed-4eee-9ba5-befdedbc5734@lunn.ch>
+ <20240430174023.4d15a8a4@bootlin.com>
+ <2b01ed8a-1169-4928-952e-1645935aca2f@lunn.ch>
+ <20240502115043.37a1a33a@bootlin.com>
+ <20240502-petted-dork-20eb02e5a8e3@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502-petted-dork-20eb02e5a8e3@wendy>
 
-Adding man page for new uretprobe syscall.
+On Thu, May 02, 2024 at 11:31:00AM +0100, Conor Dooley wrote:
+> On Thu, May 02, 2024 at 11:50:43AM +0200, Herve Codina wrote:
+> > Hi Andrew,
+> > 
+> > On Tue, 30 Apr 2024 18:31:46 +0200
+> > Andrew Lunn <andrew@lunn.ch> wrote:
+> > 
+> > > > We have the same construction with the pinctrl driver used in the LAN966x
+> > > >   Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> > > > 
+> > > > The reset name is 'switch' in the pinctrl binding.
+> > > > I can use the same description here as the one present in the pinctrl binding:
+> > > >   description: Optional shared switch reset.
+> > > > and keep 'switch' as reset name here (consistent with pinctrl reset name).
+> > > > 
+> > > > What do you think about that ?  
+> > > 
+> > > It would be good to document what it is shared with. So it seems to be
+> > > the switch itself, pinctl and MDIO? Anything else?
+> > > 
+> > 
+> > To be honest, I know that the GPIO controller (microchip,sparx5-sgpio) is
+> > impacted but I don't know if anything else is impacted by this reset.
+> > I can update the description with:
+> >   description:
+> >     Optional shared switch reset.
+> >     This reset is shared with at least pinctrl, GPIO, MDIO and the switch
+> >     itself.
+> > 
+> > Does it sound better ?
+> 
+> $dayjob hat off, bindings hat on: If you don't know, can we get someone
+> from Microchip (there's some and a list in CC) to figure it out?
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- man2/uretprobe.2 | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 man2/uretprobe.2
+That is probably a good idea, there is potential for hard to find bugs
+here, when a device gets an unexpected reset. Change the order things
+probe, or an unexpected EPRODE_DEFER could be interesting.
 
-diff --git a/man2/uretprobe.2 b/man2/uretprobe.2
-new file mode 100644
-index 000000000000..08fe6a670430
---- /dev/null
-+++ b/man2/uretprobe.2
-@@ -0,0 +1,45 @@
-+.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
-+.\"
-+.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-+.\"
-+.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.SH NAME
-+uretprobe \- execute pending return uprobes
-+.SH SYNOPSIS
-+.nf
-+.B int uretprobe(void)
-+.fi
-+.SH DESCRIPTION
-+Kernel is using
-+.BR uretprobe()
-+syscall to trigger uprobe return probe consumers instead of using
-+standard breakpoint instruction.
-+
-+The uretprobe syscall is not supposed to be called directly by user, it's allowed
-+to be invoked only through user space trampoline provided by kernel.
-+When called from outside of this trampoline, the calling process will receive
-+.BR SIGILL .
-+
-+.SH RETURN VALUE
-+.BR uretprobe()
-+return value is specific for given architecture.
-+
-+.SH VERSIONS
-+This syscall is not specified in POSIX,
-+and details of its behavior vary across systems.
-+.SH STANDARDS
-+None.
-+.SH NOTES
-+.BR uretprobe()
-+syscall is initially introduced on x86-64 architecture, because doing syscall
-+is faster than doing breakpoint trap on it. It might be extended to other
-+architectures.
-+
-+.BR uretprobe()
-+syscall exists only to allow the invocation of return uprobe consumers.
-+It should
-+.B never
-+be called directly.
-+Details of the arguments (if any) passed to
-+.BR uretprobe ()
-+and the return value are specific for given architecture.
--- 
-2.44.0
-
+       Andrew
