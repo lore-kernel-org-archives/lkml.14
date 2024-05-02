@@ -1,176 +1,169 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C0513C805;
-	Thu,  2 May 2024 14:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E2E12DDBF;
+	Thu,  2 May 2024 14:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714659247; cv=none; b=IHuZdlOgMOagcewdbDI/3GPX5mR3Ir+5MuDXZ8GfGxVJjwWf7HFr4iCq04qC45X75JuJjquLAycl0qyyaYtIuQBYEwpRPwpVfDBdWYvoHtUFYDjASxXBVn6y7fTRqVcJIbYiicIXj1rY0tHvkWjuTqOuOdZPoyJOMMD5yW1XMN0=
+	t=1714659273; cv=none; b=M8t0HqaTTI7Q9jYelJxl7p985XRFD7fs5dtxp4BBhVYZAAPcX3GNY4lVzMy/ZarOy1sUPxIVZBBBON7vzWMLlZZdlnFR9qkzevOG8TQsZdCey4cOnylPcexSGCB28SACLptQ9wBvpXDWMO2sriQWDKdZ1TBNAQsmF4s8zsYJ0qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714659247; c=relaxed/simple;
-	bh=lbWfnrf/xgAKQua0DHb+A0y6pv4+Q2Pc2fzVcmh6W7k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VJXsBzg68kmmhTz9LCtHFauzRx0L5PnDhSAGEeuv/JfNRAODv+iyAIzTiFpg6MexXX6xzIyxf3z4BU6N941pLdI8OdEf+q1ijSfCc/kyHsIdRjmRSNMyBBJH6NCLa7meqPBSczot73+p35Ka67PItakqzxrseAXRw9ugYBNzetc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MrNpNSSo; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714659273; c=relaxed/simple;
+	bh=TqGPQfv5cuk6T1XGFYZfEGJtd5vUUufArvfOG8WA+bE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OTjh5RkpDKChZZJSIlo4tyFuFJVglEqEWwngo8pAR91R4NQS4bbJEGjoG/G7Qp/UA5J1pTxSrIw5An6h/jpNrkehecOYsUKN+vR0Xw7lNsSftPgwf2uixhMEDg0wV1p42njWs5Lu9bTI6lX+dzx9JIbAw4dkcwuu54xp0jhNZjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=So0Vbqp8; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrNpNSSo"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ed627829e6so9331259b3a.1;
-        Thu, 02 May 2024 07:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714659245; x=1715264045; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZK9MhMJmPLU0U1h9aoilxp/KfAO26agqEnlepbavk/M=;
-        b=MrNpNSSoe3uH2rB2n+4PEq6UusckOCS4TvKQ7yVH9qwpkDLgou8I+/q9wAud9biwMN
-         PaIBoeZDMoFhICn1+cNhgZ8q80RtWvpHHsgdkMvXweOshbZK0FcrmR4lU0znOXID52uI
-         fHING7FGsWkcPz5iP/WjnI5Z9dCLvjD3wA4oCHRElhiIqrHiYhEeawopYW8l5LflzRUm
-         FtwNI+jzK3y47YonxXc9T/5G/S1cn8glx4vTWpVOt+C2XprHIMfJbTSgzlE1RvGgUSLH
-         9vZ2UE+0PPfi3zOwtlEXg1ko0GEhReYHlf+4kCp7rLRxiG/dVYy7x7AI+d87twB3mCv7
-         DStw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714659245; x=1715264045;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZK9MhMJmPLU0U1h9aoilxp/KfAO26agqEnlepbavk/M=;
-        b=XcYZ/LtplxZZfSiPWcpqCLrN8fCGxeEdoSK6jFEEYZvPT7WcoUqDhml+Bneg3lG9em
-         FYgRMCnu3WfE+Qd6GwnqRNvop+1ccMUSoBBYmLGxKNq9Lo/VKaw1UNfMRxv96w/Sn06z
-         RTovYsHX66QIbpZ3ZYGOM70Yyg92zbOgiWwBdDsMMmzHoFTKga3LRczOesWtrfYWVlG9
-         b4zysz56JAeIcpkjskz+duQEuAE+z3uZ7clfb2bnguf6yyeMjMzosg1Szh9uDPHrIFpC
-         0YgxAcQQmSJHJDbNjzIw9Jo31KzPvVH39+NffFxX4OUwdWpakh0rE9iPU8ks7qyblVyu
-         Avfw==
-X-Forwarded-Encrypted: i=1; AJvYcCXsrMI1lr91PS7Zj7OrJxpPyMGQ0AQdXPnezoE1/fnloFodFLZRsuDXnfIb2Rtur6Cg2AVjEak89CbPsFHBxTwK5FZdKyRAtptQVpffGlkVlL8YvP0NRD0k3WHvysvC7u8C57t0Gl5A5k+NSD3x
-X-Gm-Message-State: AOJu0Yze34sPEnEheuHurOhIAaIitdQ4I4fsyadhXxNTe1XoFAJBhuoU
-	8wjFDzp3XOfxqsLTdzLHBO0Ox6dMx74Kyd+Uqq5bYzKZClQLm2Dj
-X-Google-Smtp-Source: AGHT+IFAb7vnMGomKlHPacm8NDZMeY7sNS0eDNsEmYEE8UkqWCVqra81g6aGMfTNUU8Gqy+DdLKfYg==
-X-Received: by 2002:a05:6a20:4320:b0:1a9:5eb1:7f35 with SMTP id h32-20020a056a20432000b001a95eb17f35mr7072909pzk.46.1714659244972;
-        Thu, 02 May 2024 07:14:04 -0700 (PDT)
-Received: from localhost.localdomain (125-229-101-177.hinet-ip.hinet.net. [125.229.101.177])
-        by smtp.gmail.com with ESMTPSA id h17-20020a056a00219100b006ed06c4074bsm1252591pfi.85.2024.05.02.07.14.03
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 02 May 2024 07:14:04 -0700 (PDT)
-From: "Hsin-Yu.Chen" <harry021633@gmail.com>
-To: keescook@chromium.org
-Cc: andy@kernel.org,
-	akpm@linux-foundation.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Hsin-Yu.Chen" <harry021633@gmail.com>
-Subject: [PATCH 2/2] string: improve strlen performance
-Date: Thu,  2 May 2024 22:13:59 +0800
-Message-Id: <20240502141359.89567-1-harry021633@gmail.com>
-X-Mailer: git-send-email 2.38.1
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="So0Vbqp8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/l18ESN+CGYoapWjh3HxNbj/XMovUs4b0G9wlX7P+3c=; b=So0Vbqp8qMueIWyjz6YJtlM1lU
+	uelnWzp88m6gGS1Ft8TAqTi9Uvcl8S++BJwu/q32Dg0hY4s7wu4LEta3rzw+c5dJWn5zvPANXk136
+	92zAq5NIYe+7xgaba3TMoKYW+9AgYRT2ygHgD0p9SqX+M4PFAzOjtlk/gENIOiVQf0iDihkoOG42q
+	UHQe79XI7teRc+uS1bQ+v0H82YTwr1LoTPpnanstLiz9QAZ0+UE5OOy21zXvhwapdRTA6aK5VP3bd
+	g1HfOqnaB7OVWuV+6K3NtAvyth+YsQfSI4lUbLds2In47jjJptrbdyGw9zJ3KSAfGjshM4ltqKjFt
+	8DYE8VdA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60508)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1s2XCQ-0007N8-1b;
+	Thu, 02 May 2024 15:14:14 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1s2XCP-0003i3-J2; Thu, 02 May 2024 15:14:13 +0100
+Date: Thu, 2 May 2024 15:14:13 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Stefan Eichenberger <eichest@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	lxu@maxlinear.com, hkallweit1@gmail.com, michael@walle.cc,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] net: phy: mxl-gpy: add new device tree property
+ to disable SGMII autoneg
+Message-ID: <ZjOftdnoToSSsVJ1@shell.armlinux.org.uk>
+References: <Zikd+GxuwMRC+5Ae@shell.armlinux.org.uk>
+ <Zikrv5UOWvSGjgcv@eichest-laptop>
+ <ZilLz8f6vQQCg4NB@shell.armlinux.org.uk>
+ <Zio9g9+wsFX39Vkx@eichest-laptop>
+ <ZippHJrnvzXsTiK4@shell.armlinux.org.uk>
+ <Zip8Hd/ozP3R8ASS@eichest-laptop>
+ <ZiqFOko7zFjfTdz4@shell.armlinux.org.uk>
+ <ZiqUB0lwgw7vIozG@eichest-laptop>
+ <Ziq5+gRXGmqt9bXM@shell.armlinux.org.uk>
+ <ZjOYuP5ypnH8GJWd@eichest-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjOYuP5ypnH8GJWd@eichest-laptop>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Port `strlen` in gcc, which enhance performance over 10 times
+On Thu, May 02, 2024 at 03:44:24PM +0200, Stefan Eichenberger wrote:
+> Hi Russell,
+> 
+> Sorry for the late reply but I wanted to give you some update after
+> testing with the latest version of your patches on net-queue.
 
-Please refer to these following articles
-1. [Determine if a word has a byte less than n]
-   (https://graphics.stanford.edu/~seander/bithacks.html#HasLessInWord)
-2. [Determine if a word has a zero byte]
-   (https://graphics.stanford.edu/~seander/bithacks.html#ZeroInWord)
+I've also been randomly distracted, and I've been meaning to ping you
+to test some of the updates.
 
-Signed-off-by: Hsin-Yu.Chen <harry021633@gmail.com>
----
- lib/string.c | 77 +++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 73 insertions(+), 4 deletions(-)
+http://git.armlinux.org.uk/cgit/linux-arm.git/log/?h=net-queue
 
-diff --git a/lib/string.c b/lib/string.c
-index 6891d15ce991..31e8642422af 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -398,11 +398,80 @@ EXPORT_SYMBOL(strnchr);
- #ifndef __HAVE_ARCH_STRLEN
- size_t strlen(const char *s)
- {
--	const char *sc;
-+	const char *char_ptr;
-+	const unsigned long *longword_ptr;
-+	unsigned long longword, himagic, lomagic;
- 
--	for (sc = s; *sc != '\0'; ++sc)
--		/* nothing */;
--	return sc - s;
-+	/* Handle the first few characters by reading one character at a time.
-+	 * Do this until CHAR_PTR is aligned on a longword boundary.
-+	 */
-+	for (char_ptr = s; ((unsigned long) char_ptr
-+		& (sizeof(longword) - 1)) != 0;
-+		++char_ptr)
-+		if (*char_ptr == '\0')
-+			return char_ptr - s;
-+
-+	/* All these elucidatory comments refer to 4-byte longwords,
-+	 * but the theory applies equally well to 8-byte longwords.
-+	 */
-+	longword_ptr = (unsigned long *) char_ptr;
-+
-+	/* Bits 31, 24, 16, and 8 of this number are zero.
-+	 * Call these bits the "holes."
-+	 * Note that there is a hole just to the left of
-+	 * each byte, with an extra at the end:
-+	 * bits:  01111110 11111110 11111110 11111111
-+	 * bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD
-+	 * The 1-bits make sure that carries propagate to the next 0-bit.
-+	 * The 0-bits provide holes for carries to fall into.
-+	 */
-+	himagic = 0x80808080L;
-+	lomagic = 0x01010101L;
-+
-+	if (sizeof(longword) > 4) {
-+		/* 64-bit version of the magic. */
-+		/* Do the shift in two steps to avoid a warning if long has 32 bits.
-+		 */
-+		himagic = ((himagic << 16) << 16) | himagic;
-+		lomagic = ((lomagic << 16) << 16) | lomagic;
-+	}
-+
-+	if (sizeof(longword) > 8)
-+		abort();
-+
-+	/* Instead of the traditional loop which tests each character,
-+	 * we will test a longword at a time.  The tricky part is testing
-+	 * if *any of the four* bytes in the longword in question are zero.
-+	 */
-+	for (;;) {
-+		longword = *longword_ptr++;
-+		if (((longword - lomagic) & ~longword & himagic) != 0) {
-+
-+			/* Which of the bytes was the zero?
-+			 * If none of them were, it was a misfire; continue the search.
-+			 */
-+			const char *cp = (const char *) (longword_ptr - 1);
-+
-+			if (cp[0] == 0)
-+				return cp - s;
-+			else if (cp[1] == 0)
-+				return cp - s + 1;
-+			else if (cp[2] == 0)
-+				return cp - s + 2;
-+			else if (cp[3] == 0)
-+				return cp - s + 3;
-+			if (sizeof(longword) > 4) {
-+				if (cp[4] == 0)
-+					return cp - s + 4;
-+				else if (cp[5] == 0)
-+					return cp - s + 5;
-+				else if (cp[6] == 0)
-+					return cp - s + 6;
-+				else if (cp[7] == 0)
-+					return cp - s + 7;
-+			}
-+		}
-+	}
- }
- EXPORT_SYMBOL(strlen);
- #endif
+The current set begins with:
+
+"net: sfp-bus: constify link_modes to sfp_select_interface()" which is
+now in net-next, then the patches between and including:
+
+"net: phylink: validate sfp_select_interface() returned interface" to
+"net: phylink: clean up phylink_resolve()"
+
+That should get enough together for the PCS "neg" mode to be consistent
+with what the MAC driver sees.
+
+The remaining bits that I still need to sort out is the contents of
+phylink_pcs_neg_mode() for the 802.3z mode with PHY, and also working
+out some way of handling the SGMII case where the PHY and PCS disagree
+(one only supporting inband the other not supporting inband.)
+
+I'm not sure when I'll be able to get to that - things are getting
+fairly chaotic again, meaning I have again less time to spend on
+mainline... and I'd like to take some vacation time very soon (I really
+need some time off!)
+
+> I think I see the problem you are describing.
+> 
+> When the driver starts it will negotiate MLO_AN_PHY based on the
+> capabilities of the PHY and of the PCS. However when I switch to 1GBit/s
+> it should switch to MLO_AN_INBAND but this does not work. Here the
+> output of phylink:
+
+I'm designing this to work the other way - inband being able to fall
+back to PHY (out of band) mode rather than PHY mode being able to fall
+forwards to inband mode.
+
+> The problem is that the PCS continues to be in phy mode but the PHY
+> driver currently only supports LINK_INBAND_ENABLE and SGMII for 1GBit/s.
+> 
+> What I'm wondering is if it wouldn't make sense to adapt the phy driver
+> to support MLO_AN_PHY in SGMII/1000BASE-X mode.
+
+PHYs have no idea about MLO_AN_xxx at all, neither should they. This
+is not part of phylib's API, and I don't think PHYs should ever know
+about MLO_AN_xxx stuff (which is something purely between phylink and
+the MAC driver.) The structure here is:
+
+      MAC            PCS                   PHY
+       ^              ^                    ^ ^-----.
+       v              v                    v       |
+   MAC driver <-> PCS driver <-------> PHY driver  |
+       ^           ^                    ^          |
+       |           |                    |          |
+  MLO_AN_xxx  PHYLINK_PCS_NEG_xxx       |          |
+       `           '                    |          |
+        \         /                     v          |
+          phylink <----------------> phylib <------'
+
+MLO_AN_xxx is far beyond the PHY, and more or less defines the overall
+"system" operating mode. PHYLINK_PCS_NEG_xxx defines the properties
+used for the PCS link to the next device towards the media. This is
+more of relevance to what the PHY should be using on its MAC-facing
+interface.
+
+> Currently the mxl-gpy phy driver can only support:
+> 10/100/1000 MBit/s: SGMII with MLO_AN_INBAND
+> 2500MBit/s          2500Base-X with MLO_AN_PHY
+> 
+> However, the PHY would also support the following mode:
+> 10/100/1000 MBit/s: SGMII with MLO_AN_PHY
+
+The problem with this is some PHYs will not pass data _unless_ their
+SGMII control frame to the PCS has been acknowledged by the PCS - in
+other words, inband has to be used. However, that can be coped with,
+because such a PHY driver should be saying that it only supports
+LINK_INBAND_ENABLE in SGMII mode... and firmware must tell phylink
+that it wants to use inband mode (as that's exactly what firmware
+must do today in this situation.)
+
+> I just don't know how the PHY driver could know about what it should
+> configure.
+
+Currently, I haven't added an interface to cope with the case where
+a PHY says LINK_INBAND_ENABLE | LINK_INBAND_DISABLE to allow it to be
+configured in that case... that's something that will eventually be
+needed.
+
 -- 
-2.38.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
