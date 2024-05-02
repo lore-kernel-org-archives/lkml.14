@@ -1,187 +1,169 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3167823D9;
-	Thu,  2 May 2024 12:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0BB7F481;
+	Thu,  2 May 2024 12:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714654601; cv=none; b=Mhy/QdZClcqgraav8y0NjX+FTo03I56dYZuLAzbaBuUs2FyfuX9YVSTcq9KMALwf9zVwTZm1vKU+D1vlwIxJQNp8aAJQu9nYPuEvmISE53sL22WnIHzobBQhYz0VL9CJyTDojgH/I+T6Hq925J6UskP9F9GiU5+CaA6/ezl0e2A=
+	t=1714654727; cv=none; b=gNQaYaVvykTdif5WL3J/zEQJ/HI9g+fijTqrtokhJQT20Zll36bdmas3qbC6CsqN1rsKJHkYWQKHorDvZSBG7QHumn0gQR56mywWiF82jNnCy2ZcKGfYkDPkHP8Vg7iDAkl1+SLmI/JekW7PdlPFURhajI4tI+7iiQNhdttiI9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714654601; c=relaxed/simple;
-	bh=clVW9mGdBdg9TXlCTlD22bAmTuqBoHagRqQAWZ2rNz4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OeBhvgIlQRhvcxik9AhEmZ6wDmt133OnScagF5M/GbyaYreFcBZAjMg4fjvu5wmAfrS9AczPbcFK+AmPL/iCBHhA16c1k9lFr2AsfhORuWzDcAwqPYFI2+F05bxzVnehoODReHEnYuhN7kdmXIT/71aboTtXo8rJsAbT1iPBb4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zxQGCFnm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BhdXEbAA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1714654727; c=relaxed/simple;
+	bh=d5lIMO407MDnIQ9/e79pnEoYgUg36/5ZYRteDB8/LzI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BccmvGRmHnLB6xKvkBZVaKqdHBVvFiTjqSk5M+suchU8yF/GxPTHR/Xk9ifLtFDTRfkQeyshGp8hMMYRcpedVpwXu+qoFt3Olpl5M73+33Xlrc2gYuRhghQZx0bEno2JLHHV7Cfba/avIKQnrz3+mJEgxWY/jSXY9ljvSojv1MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXAHvlTp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zxQGCFnm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BhdXEbAA"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1714654597;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BjYDZW6+H5YqCRs45lbwaNsGQFiEJvG9P0BZQGh6L00=;
-	b=zxQGCFnm94zj+aRQ3ZKAyxibSUunF/sH2J9LMisxeROwLoZ8GIr2Vcv66L7vJKjtcdlEtJ
-	MTD+liW84KRiyfvJ3B7FATIl66Drvpzs4L4JFGbTjbwv4pr26cf34h09YwO0qNzTuLDsKW
-	eXzSS5QZvdjMPpI4IeMBZkJPYmwlPhbY8ZqmcJiTFAEzAOnkNAEoC8mSbGhKR48ocue+Sp
-	Z+A/VBUXBTQnuG6wl2z5o69Ze/7GXg9Q3KaGZbn3VMNaZ2fGvQSU8jC8+EMDyDD8Gx1Yba
-	J5wyumXUB3LHNNu0f5enATglrQY3khHighhAnQL0OLLLigjLOq0ubWJCkApCLg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1714654597;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BjYDZW6+H5YqCRs45lbwaNsGQFiEJvG9P0BZQGh6L00=;
-	b=BhdXEbAA4NhREuQC6Pi3jPT0qUku2RXfJAvtXRZhUjw/BAPE4MSI7oZNTk/FYFr+9jYohU
-	DM8moLEzLDcW2PBQ==
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Lukasz Luba <lukasz.luba@arm.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Oliver Sang <oliver.sang@intel.com>,
- oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, ying.huang@intel.com,
- feng.tang@intel.com, fengwei.yin@intel.com, Frederic Weisbecker
- <frederic@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- linux-pm@vger.kernel.org
-Subject: Re: [linus:master] [timers] 7ee9887703:
- stress-ng.uprobe.ops_per_sec -17.1% regression
-In-Reply-To: <CAJZ5v0iLNWu6K2vhA3j==rbeHjku6eOvuWymRGcux4V9Xx_7Uw@mail.gmail.com>
-References: <Zgtjdd0C2FzYVBto@xsang-OptiPlex-9020> <87zfth3l6y.fsf@somnus>
- <CAJZ5v0g_GKF8-QK5UdFCpJapf+MK7EouQ7hMTVtPYRjNNyUt+g@mail.gmail.com>
- <3aba1a1d-8ebc-4ee0-9caf-d9baae586db7@arm.com> <87zftcy0xt.fsf@somnus>
- <87sez4xxhn.fsf@somnus>
- <CAJZ5v0iLNWu6K2vhA3j==rbeHjku6eOvuWymRGcux4V9Xx_7Uw@mail.gmail.com>
-Date: Thu, 02 May 2024 14:56:37 +0200
-Message-ID: <87ikzwid8a.fsf@somnus>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXAHvlTp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93977C113CC;
+	Thu,  2 May 2024 12:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714654725;
+	bh=d5lIMO407MDnIQ9/e79pnEoYgUg36/5ZYRteDB8/LzI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RXAHvlTpuULfleDV9iketGFXPT6pbR60YDBiVvOqF9bUgBAW+dxymgKhIqXjbaiN3
+	 3+Ixu+Vt/U8w1ZX6IMprYSkHBSd4qoSkHvR4Eifa1Q8jV8HfoKoYHN9Wbq26qU7pJA
+	 dsAtSag72IDUrYruCrxb2H2cMY29ANlylCokpF+iPtBPovQT7KmNw857QpX0xKZpzB
+	 7061dyk2a0L8fAvA0DYgNYwZmwNGeYGJiq9YjaVWVeBT1AniSjRpVToOZrtA0tlJml
+	 HbYn1gFXFC/om3b67m/Or8S3lFonLuXcuJdUs/gbOsp/eYAFdYg65563pDXbWyOnN5
+	 MFqH+aQ6xxeNw==
+Message-ID: <59cdb557-cffd-41f3-b487-2f1890e7cac3@kernel.org>
+Date: Thu, 2 May 2024 14:58:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/17] dt-bindings: i2c: i2c-fsi: Convert to
+ json-schema
+To: Eddie James <eajames@linux.ibm.com>, linux-aspeed@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsi@lists.ozlabs.org, linux-spi@vger.kernel.org,
+ linux-i2c@vger.kernel.org, lakshmiy@us.ibm.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+ andrew@codeconstruct.com.au, andi.shyti@kernel.org
+References: <20240429210131.373487-1-eajames@linux.ibm.com>
+ <20240429210131.373487-11-eajames@linux.ibm.com>
+ <bbf12675-e0f5-4150-96d1-097eb7abd81a@kernel.org>
+ <1ebaaa48-9812-467e-9189-c1cd3369b6cb@linux.ibm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1ebaaa48-9812-467e-9189-c1cd3369b6cb@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
-"Rafael J. Wysocki" <rafael@kernel.org> writes:
+On 01/05/2024 18:16, Eddie James wrote:
+> 
+> On 4/30/24 02:35, Krzysztof Kozlowski wrote:
+>> On 29/04/2024 23:01, Eddie James wrote:
+>>> Convert to json-schema for the FSI-attached I2C controller.
+>>>
+>>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>>> ---
+>>> Changes since v3:
+>>>   - Update MAINTAINERS
+>>>   - Change commit message to match similar commits
+>>>
+>>>   .../devicetree/bindings/i2c/i2c-fsi.txt       | 40 -------------
+>>>   .../devicetree/bindings/i2c/ibm,i2c-fsi.yaml  | 58 +++++++++++++++++++
+>>
+>> Please split independent patches to separate patchsets, so they can be
+>> reviewed and picked up by respective maintainers.
+>>
+>> I don't see any dependency here. Neither in 1st patch.
+> 
+> 
+> OK, I guess that makes it complicated for Andrew to pull together with 
+> the device tree changes in a way that avoids warnings, but I agree there 
+> is no direct dependency.
 
-> On Mon, Apr 29, 2024 at 12:40=E2=80=AFPM Anna-Maria Behnsen
-> <anna-maria@linutronix.de> wrote:
->>
->> Anna-Maria Behnsen <anna-maria@linutronix.de> writes:
->>
->> > Hi,
->> >
->> > Lukasz Luba <lukasz.luba@arm.com> writes:
->> >> On 4/26/24 17:03, Rafael J. Wysocki wrote:
->> >>> On Thu, Apr 25, 2024 at 10:23=E2=80=AFAM Anna-Maria Behnsen
->> >>> <anna-maria@linutronix.de> wrote:
->> >
->> > [...]
->> >
->> >>>> So my assumption here is, that cpuidle governors assume that a deep=
-er
->> >>>> idle state could be choosen and selecting the deeper idle state mak=
-es an
->> >>>> overhead when returning from idle. But I have to notice here, that =
-I'm
->> >>>> still not familiar with cpuidle internals... So I would be happy ab=
-out
->> >>>> some hints how I can debug/trace cpuidle internals to falsify or ve=
-rify
->> >>>> this assumption.
->> >>>
->> >>> You can look at the "usage" and "time" numbers for idle states in
->> >>>
->> >>> /sys/devices/system/cpu/cpu*/cpuidle/state*/
->> >>>
->> >>> The "usage" value is the number of times the governor has selected t=
-he
->> >>> given state and the "time" is the total idle time after requesting t=
-he
->> >>> given state (ie. the sum of time intervals between selecting that
->> >>> state by the governor and wakeup from it).
->> >>>
->> >>> If "usage" decreases for deeper (higher number) idle states relative
->> >>> to its value for shallower (lower number) idle states after applying
->> >>> the test patch, that will indicate that the theory is valid.
->> >>
->> >> I agree with Rafael here, this is the first thing to check, those
->> >> statistics. Then, when you see difference in those stats in baseline
->> >> vs. patched version, we can analyze the internal gov decisions
->> >> with help of tracing.
->> >>
->> >> Please also share how many idle states is in those testing platforms.
->> >
->> > Thanks Rafael and Lukasz, for the feedback here!
->> >
->> > So I simply added the state usage values for all 112 CPUs and calculat=
-ed
->> > the diff before and after the stress-ng call. The values are from a
->> > single run.
->> >
->>
->> Now here are the values of the states and the time because I forgot to
->> track also the time in the first run:
->>
->> USAGE           good            bad             bad+patch
->>                 ----            ---             ---------
->> state0          115             137             234
->> state1          450680          354689          420904
->> state2          3092092         2687410         3169438
->>
->>
->> TIME            good            bad             bad+patch
->>                 ----            ---             ---------
->> state0          9347            9683            18378
->> state1          626029557       562678907       593350108
->> state2          6130557768      6201518541      6150403441
->>
->>
->> > good: 57e95a5c4117 ("timers: Introduce function to check timer base
->> >         is_idle flag")
->> > bad:    v6.9-rc4
->> > bad+patch: v6.9-rc4 + patch
->> >
->> > I choosed v6.9-rc4 for "bad", to make sure all the timer pull model fi=
-xes
->> > are applied.
->> >
->> > If I got Raphael right, the values indicate, that my theory is not
->> > right...
->
-> It appears so.
->
-> However, the hardware may refuse to enter a deeper idle state in some cas=
-es.
->
-> It would be good to run the test under turbostat and see what happens
-> to hardware C-state residencies.  I would also like to have a look at
-> the CPU frequencies in use in all of the cases above.
->
+SoC tree should not pull subsystem patches. Plus DTS must be separate
+from drivers...
 
-	Avg_MHz Busy%   Bzy_MHz TSC_MHz IPC     IRQ     SMI     POLL    C1      C2=
-      POLL%   C1%     C2%     CPU%c1  CPU%c6  CoreTmp CoreThr PkgTmp  PkgWa=
-tt RAMWatt PKG_%   RAM_%
-good:	12      0.66    1842    2095    0.31    3584322 0       48      43991=
-9  3146476 0.00    8.94    90.64   15.80   83.54   38      0       42      =
-69.35   11.64   0.00    0.00
-bad:	10      0.55    1757    2095    0.32    2867259 0       197     381975=
-  2495863 0.00    9.00    90.65   14.94   84.51   38      0       41      6=
-8.80   11.62   0.00    0.00
-bad+p:	14      0.75    1832    2095    0.28    3582503 0       102     4401=
-81  3147744 0.00    9.04    90.45   15.57   83.68   36      0       40     =
- 69.28   11.54   0.00    0.00
 
-I just took the 'summary line' of turbostat output and just used the
-default turbostat settings. Before starting the test, the cpufreq
-governor was set to performance for all CPUs (as the original test does
-as well).
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    i2c@1800 {
+>>> +        compatible = "ibm,i2c-fsi";
+>>> +        reg = <0x1800 0x400>;
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <0>;
+>>> +
+>>> +        i2c-bus@0 {
+>>> +            reg = <0>;
+>>> +            #address-cells = <1>;
+>>> +            #size-cells = <0>;
+>> This does not look right. Why do you have multiple i2c-bus children? I
+>> do not think i2c-controller.yaml schema allows this.
+> 
+> 
+> It does seem to allow it, as this validates here and in the device tree. 
 
-Thanks,
+Only because children are treated as I2C devices.
 
-	Anna-Maria
+> It is this way because the I2C controller provides multiple busses. 
+
+It does not look like I2C controller anymore. I think I2C controller
+sits on the bus, not on multiple busses. How are SDA/SCL lines connected?
+
+This looks like you are describing something which is not I2C bus
+controller as I2C bus controller...
+
+I'll let I2C maintainer comment on that - is this real I2C bus which
+consists of multiple buses.
+
+
+> Should I change it so to add "bus" pattern properties that reference 
+> i2c-controller.yaml?
+
+Not sure if I get it right... whatever is the I2C bus controller, should
+reference i2c-controller.yaml. Not some other entity.
+
+Best regards,
+Krzysztof
+
