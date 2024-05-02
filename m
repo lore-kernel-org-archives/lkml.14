@@ -1,178 +1,99 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19FE3D994;
-	Thu,  2 May 2024 08:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50063171AA;
+	Thu,  2 May 2024 08:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714638083; cv=none; b=PJQ3aXAOB5Ws4DD8MAry4Bvw4Wt1VOKHqzFGmkorTwIt7QO1iBga8X9lwipj4aTVnodWQmmBwG5S6wqDLWIYhSbJjiks2Epuqu4Aqz6sDhLKNueb3bOyJiMAuuBuzkdAAKllK6RBHpwi2bEnl21qGYOq8OnAZBK1CnsKouxNWdc=
+	t=1714638176; cv=none; b=Si6oF4A+YTfY1C3D+6Gd7qnc1To4FtJ1nsJIDqnIxR83hFT9Lh0d5jdCaal+EdqsHO+iKkdKqbdSA++U+hPlQJ5SQt0WSCHpWuQJvFRc1FTGx9JkzqsxunkH9/CuFUITm0SAmsIH4aFYHDbrNmtfejiGxv0kEe3QUYSXGt3Qpmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714638083; c=relaxed/simple;
-	bh=z5T6sE8yYk3aSXJz+sORCr81pNY92/f8JgIJYHZSs4U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PcHjYyIv4JMYRfS5VZDXQCpl1+8qGaNzl1tvX+MKBZotwSy4Eu5zZnFTnRh/agShcZ1MnqL3i95pOyMufb6Sxg9Kt44vVXl0sO3IhtxhDnmReqEewDdzD4fKN3wfeK3RSEgUcChugMJue7mc/fmkMpitJirnpQi2/uZfoIqIELc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EUX8HJpL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714638176; c=relaxed/simple;
+	bh=E4+DQxHbmRZH8hQLZzYXl+R8ueZIMSIxWR5jTQDKNyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TrC4NEGI3Xgb2kjXA7OPpiP7knY9tBSqRd9IPA9SPa1caqMYOdYUJFcv2U5wubjo0L/vlE+XF76ZHPeUWZUUC80h7WpoWIuZn0kBywxyArS6suRvdaCSlWYHDleHsH0qkc37aq0ku6E7zbJBJw3fXgA4lw7azhXn4TuLepKf0kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=f4JUJbMx; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EUX8HJpL"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4424VBIF001253;
-	Thu, 2 May 2024 08:21:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=t4og2TiQoiLaBSFwmC+sjrVbMBD+PlqWAcb8nuNH2Ow=; b=EU
-	X8HJpLt8bD0E8IRb4vj3EXBiwjNBOVoFzEGUavyl5V+1aux56Ay9FoaTa/ycCyjw
-	8/AzZRanxLprWEs6ZDycE1pyYp6Nxh0Ooofp769MhTkZB6GguJ3eDciyveFzvDT8
-	a2a8cHYuGBcziJ51d9/2I44ZIXJixomCtw1hXHVU417XCBIF4iMKXVK6oa71rrBv
-	1pL3B+T+Ucckx1sPwmFeyl5+qLxXKFsl1D+6giaPPRvANnnfS5oinUYtIBOTRaCj
-	NIZR980gtwfwBUED6cuEMUy7biX1uTpBvbMqVQIFMGOaxZPGxCxbKnor6gq/s72w
-	TO0a4QDJYSJKtSTPilkA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xup5ksw9j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 May 2024 08:21:13 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4428LCsH008157
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 2 May 2024 08:21:12 GMT
-Received: from hu-kbajaj-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 2 May 2024 01:21:05 -0700
-From: Komal Bajaj <quic_kbajaj@quicinc.com>
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Adrien Thierry <athierry@redhat.com>,
-        Mantas Pucka <mantas@8devices.com>, Abel Vesa <abel.vesa@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Wesley Cheng <quic_wcheng@quicinc.com>, <quic_ppratap@quicinc.com>,
-        Jack Pham
-	<quic_jackp@quicinc.com>,
-        Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>,
-        Komal Bajaj <quic_kbajaj@quicinc.com>,
-        Amrit Anand
-	<quic_amrianan@quicinc.com>
-Subject: [PATCH v3 4/4] phy: qcpm-qmp-usb: Add support for QDU1000/QRU1000
-Date: Thu, 2 May 2024 13:50:17 +0530
-Message-ID: <20240502082017.13777-5-quic_kbajaj@quicinc.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240502082017.13777-1-quic_kbajaj@quicinc.com>
-References: <20240502082017.13777-1-quic_kbajaj@quicinc.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="f4JUJbMx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=8wuGpwnMt9ml6C6oIbM/w/YxYBb9yduCe8wSQiSG0GQ=; b=f4JUJbMxmSflXyYq48u1tWnPvt
+	aMmmKJRDROPXBPhaGI0S6qpebizMuULtoyK5xyJufpkKS0qpvB4FHlVh207NAN//CMwTJDPl0gOSM
+	pCTbpLM6vNKIancWKJhrGeCpCEak9gMfhZx0xUmLKQ1B8YH5+UISpPGIfLxWlTHcZP/k2Rl+j9zjw
+	jLdumkt6Ylz0zy32CZbnffN9JyuZpojxsbFCw9qbhWoKUqlzjauhTw8R1fnJnP7VMEiEEUVmxRDJJ
+	uOvEzvq1YjTAclb0at1KqqQOnHC4NytwxruVjw2BdpwLQ7qR/+GfHd9pzODR8URGrxhCt1HMslTUz
+	O2Lj1oIQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52706)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1s2RiD-00072I-1g;
+	Thu, 02 May 2024 09:22:41 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1s2RiC-0003Vo-1X; Thu, 02 May 2024 09:22:40 +0100
+Date: Thu, 2 May 2024 09:22:39 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Duanqiang Wen <duanqiangwen@net-swift.com>, mturquette@baylibre.com,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
+ entries
+Message-ID: <ZjNNT+KBNpQL+U3b@shell.armlinux.org.uk>
+References: <E1rl62V-004UFh-Te@rmk-PC.armlinux.org.uk>
+ <e15b8a1165a5437ab1fa868ccd0b629c.sboyd@kernel.org>
+ <560549ed7db5da2f2727dc053a5d196d.sboyd@kernel.org>
+ <ZjNIiDeXIjXhJlT4@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: emXe1DrkqEz3PLeu82UJKT8wSUkFEHdS
-X-Proofpoint-GUID: emXe1DrkqEz3PLeu82UJKT8wSUkFEHdS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_16,2024-05-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- priorityscore=1501 suspectscore=0 adultscore=0 clxscore=1015
- impostorscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2405020049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjNIiDeXIjXhJlT4@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Add QDU1000/QRU1000 specific register layout and table configs.
+On Thu, May 02, 2024 at 09:02:16AM +0100, Russell King (Oracle) wrote:
+> On Wed, May 01, 2024 at 06:02:54PM -0700, Stephen Boyd wrote:
+> > Quoting Stephen Boyd (2024-05-01 17:59:16)
+> > > Quoting Russell King (Oracle) (2024-03-15 04:47:55)
+> > > > Report an error when an attempt to register a clkdev entry results in a
+> > > > truncated string so the problem can be easily spotted.
+> > > > 
+> > > > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
+> > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > > > ---
+> > > 
+> > > Applied to clk-next
+> > > 
+> > 
+> > And backed out because I get a compilation failure
+> > 
+> > drivers/clk/clkdev.c: In function 'vclkdev_alloc':
+> > drivers/clk/clkdev.c:182:17: error: function 'vclkdev_alloc' might be a candidate for 'gnu_printf' format attribute [-Werror=suggest-attribute=format]
+> >   182 |                 res = vsnprintf(cla->dev_id, sizeof(cla->dev_id), dev_fmt, ap);
+> >       |                 ^~~
+> > cc1: all warnings being treated as errors
+> > make[5]: *** [scripts/Makefile.build:244: drivers/clk/clkdev.o] Error 1
+> > make[4]: *** [scripts/Makefile.build:485: drivers/clk] Error 2
+> 
+> It builds fine for me. I don't get this _error_, and it's really no
+> different from what it originally was - instead of using vcsnprintf()
+> we're now using vsnprintf(). That should make no difference what so
+> ever.
 
-Co-developed-by: Amrit Anand <quic_amrianan@quicinc.com>
-Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
-Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp-usb.c | 47 +++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+... and I've just checked, and it builds entirely cleanly for me.
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-usb.c b/drivers/phy/qualcomm/phy-qcom-qmp-usb.c
-index 85253936fac3..c174463c58a3 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-usb.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-usb.c
-@@ -337,6 +337,29 @@ static const struct qmp_phy_init_tbl msm8996_usb3_pcs_tbl[] = {
- 	QMP_PHY_INIT_CFG(QPHY_V2_PCS_POWER_STATE_CONFIG2, 0x08),
- };
+I'll merge it.
 
-+static const struct qmp_phy_init_tbl qdu1000_usb3_uniphy_pcs_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG1, 0xc4),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG2, 0x89),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG3, 0x20),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG6, 0x13),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_L, 0xe7),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_H, 0x03),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RX_SIGDET_LVL, 0xaa),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_PCS_TX_RX_CONFIG, 0x0c),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_CDR_RESET_TIME, 0x0a),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_ALIGN_DETECT_CONFIG1, 0x88),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_ALIGN_DETECT_CONFIG2, 0x13),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_EQ_CONFIG1, 0x4b),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_EQ_CONFIG5, 0x10),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_REFGEN_REQ_CONFIG1, 0x21),
-+};
-+
-+static const struct qmp_phy_init_tbl qdu1000_usb3_uniphy_pcs_usb_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_RXEQTRAINING_DFE_TIME_S2, 0x07),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_LFPS_DET_HIGH_COUNT_VAL, 0xf8),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_POWER_STATE_CONFIG1, 0x6f),
-+};
-+
- static const struct qmp_phy_init_tbl qmp_v3_usb3_uniphy_serdes_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x07),
- 	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x14),
-@@ -1400,6 +1423,27 @@ static const struct qmp_phy_cfg msm8996_usb3phy_cfg = {
- 	.regs			= qmp_v2_usb3phy_regs_layout,
- };
-
-+static const struct qmp_phy_cfg qdu1000_usb3_uniphy_cfg = {
-+	.offsets		= &qmp_usb_offsets_v5,
-+
-+	.serdes_tbl		= sm8150_usb3_uniphy_serdes_tbl,
-+	.serdes_tbl_num		= ARRAY_SIZE(sm8150_usb3_uniphy_serdes_tbl),
-+	.tx_tbl			= sm8350_usb3_uniphy_tx_tbl,
-+	.tx_tbl_num		= ARRAY_SIZE(sm8350_usb3_uniphy_tx_tbl),
-+	.rx_tbl			= sm8350_usb3_uniphy_rx_tbl,
-+	.rx_tbl_num		= ARRAY_SIZE(sm8350_usb3_uniphy_rx_tbl),
-+	.pcs_tbl		= qdu1000_usb3_uniphy_pcs_tbl,
-+	.pcs_tbl_num		= ARRAY_SIZE(qdu1000_usb3_uniphy_pcs_tbl),
-+	.pcs_usb_tbl		= qdu1000_usb3_uniphy_pcs_usb_tbl,
-+	.pcs_usb_tbl_num	= ARRAY_SIZE(qdu1000_usb3_uniphy_pcs_usb_tbl),
-+	.vreg_list		= qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.regs			= qmp_v4_usb3phy_regs_layout,
-+	.pcs_usb_offset		= 0x1000,
-+
-+	.has_pwrdn_delay	= true,
-+};
-+
- static const struct qmp_phy_cfg sa8775p_usb3_uniphy_cfg = {
- 	.offsets		= &qmp_usb_offsets_v5,
-
-@@ -2202,6 +2246,9 @@ static const struct of_device_id qmp_usb_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,msm8996-qmp-usb3-phy",
- 		.data = &msm8996_usb3phy_cfg,
-+	}, {
-+		.compatible = "qcom,qdu1000-qmp-usb3-uni-phy",
-+		.data = &qdu1000_usb3_uniphy_cfg,
- 	}, {
- 		.compatible = "qcom,sa8775p-qmp-usb3-uni-phy",
- 		.data = &sa8775p_usb3_uniphy_cfg,
---
-2.42.0
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
