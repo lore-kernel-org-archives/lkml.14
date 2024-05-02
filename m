@@ -1,162 +1,93 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC21A1552EE;
-	Thu,  2 May 2024 15:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92A9155323;
+	Thu,  2 May 2024 15:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714662498; cv=none; b=c0lwOCXvpnwfxMsdXg3V/G7lkUq3A1NHvBh1TgPrS5SZ8YM3vGrF3CD2KgD3yFfi/HDzfAGcKfZpNx3fpcrL1hwlDmo83E8VYDeCmBf4AtJyyJcFBxHZvWFASRok5uruolq7EtHPWO2G67LuX8mTluxFSWRsxmca/RKwemr1Ro0=
+	t=1714662517; cv=none; b=qjgBymSNoScoYvyEGSn+2lepMqdfjvsrOh5wlelTkpzE9WnCMFEGtJv5Lf1a1hYzjBLAzEKxrxxMEp/lutc+QBX1m5tCWggGQslj6dCxBNmVPuIBXthFr1gdSz6kE08nqItpadp7sA0b00Laqazs/5AhkrMUm8f2SrC5CUSivb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714662498; c=relaxed/simple;
-	bh=vqe6bqVfksmhA3Dv0sGQ+VBpqTfUtbHpQ4u1lvvVW/k=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Ch13iceUqkf78i/rzxfNYBXd3JoF+yo4kSMYGHCeWO3Bxs1RWbmqH6CRSZjdhkRIsoZmzj7OF8jptECzuy/Gjqbhn4p0EZXcbiiC8sR+AqvCGanKoUtOoxYTRGD15p2cjaDbESkxp/O0df9tsM5EkUvlkuyAt8nlDLcTmzAOhM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kLpxbUQM; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1714662517; c=relaxed/simple;
+	bh=dcNa0ETf3HLFdrzcPrc9U+CH6XCRPQLNNrx+zNJntNo=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=EAfDxuKPEd2bB8R/3jgNddRDwoANJxQlloz+IX2YnbJL5HXMvF3nOnfYHz4fIGD/zTKu5HWA+hzCkjSATM8R6zGJFyQ+Q8E8kEv2VHU3sjODL5VTKsS7rDcl+SESQNDppH0VFa0FLxSdTSiVwZx7eraMGfG6fZ5gMdghrFPUeRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUYj8Af3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kLpxbUQM"
-Received: from apais-vm1.0synte4vioeebbvidf5q0vz2ua.xx.internal.cloudapp.net (unknown [52.183.86.224])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4E46E20B2C80;
-	Thu,  2 May 2024 07:59:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4E46E20B2C80
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1714661965;
-	bh=emptab7+3YFMG1SQMC0wFEdq7q5l4lpPKpITnuC0zJg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kLpxbUQM6vgG2iRx6mGF27Bwzlq2ikZH0BIuBoKzsQ0i7ds67Lu5X4A7WWApGpM7I
-	 uXdh2D8hr8mXwvd2AM9XSyAxcCX3NtWB6bQiN+RFltl5adKQ5Ht6BPHpEgj0du8fAX
-	 JEZ8PEm5s2jkhU5eJFIac47yXgch+NYOIJIcwj1E=
-From: Allen Pais <apais@linux.microsoft.com>
-To: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	ebiederm@xmission.com,
-	keescook@chromium.org,
-	mcgrof@kernel.org,
-	j.granados@samsung.com
-Subject: [PATCH v2] fs/coredump: Enable dynamic configuration of max file note size
-Date: Thu,  2 May 2024 14:59:20 +0000
-Message-Id: <20240502145920.5011-1-apais@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUYj8Af3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2518DC113CC;
+	Thu,  2 May 2024 15:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714662516;
+	bh=dcNa0ETf3HLFdrzcPrc9U+CH6XCRPQLNNrx+zNJntNo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=nUYj8Af3hfzTsnB/nLAJ5nOZA51v43WbPOqY2kLDTRlcilSKfOeWIF12ntIITPCLa
+	 BTBMf4FKJ7C1/2OZrRjeO37UkzyZyvnL+TJ0ftE6mjln6z2XT7egBTKacZ1a1xyJB3
+	 TWsRD4J53DbWEdWphQYPJJPSoGnm/8GbKuxKqMdXr9U/4gDpfRliFi3oz3/XTtfPdR
+	 hz5PX8HDBX2b1hX3UNts9jgCM2H3zilx+CThITArcEyHCIk8xqAVYgRDidwgqc1Yem
+	 3mVZFwv3FxSSN2iKajyJf+Vvm8DsInXvikB6yFa0lGcaoXXMD6laJ12c88wrlFECzK
+	 nqrSScSZTyoVQ==
+Date: Thu, 02 May 2024 10:08:35 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ravi Gunasekaran <r-gunasekaran@ti.com>
+Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org, srk@ti.com, 
+ kristo@kernel.org, linux-arm-kernel@lists.infradead.org, rogerq@kernel.org, 
+ devicetree@vger.kernel.org, nm@ti.com, conor+dt@kernel.org, vigneshr@ti.com
+In-Reply-To: <20240502053615.29514-1-r-gunasekaran@ti.com>
+References: <20240502053615.29514-1-r-gunasekaran@ti.com>
+Message-Id: <171466230679.2213225.6233997103191921836.robh@kernel.org>
+Subject: Re: [PATCH 0/2] Add USB 3.0 support for J784S4
 
-Introduce the capability to dynamically configure the maximum file
-note size for ELF core dumps via sysctl. This enhancement removes
-the previous static limit of 4MB, allowing system administrators to
-adjust the size based on system-specific requirements or constraints.
 
-- Remove hardcoded `MAX_FILE_NOTE_SIZE` from `fs/binfmt_elf.c`.
-- Define `max_file_note_size` in `fs/coredump.c` with an initial value
-  set to 4MB.
-- Declare `max_file_note_size` as an external variable in
-  `include/linux/coredump.h`.
-- Add a new sysctl entry in `kernel/sysctl.c` to manage this setting
-  at runtime.
+On Thu, 02 May 2024 11:06:13 +0530, Ravi Gunasekaran wrote:
+> J784S4 has one USB sub system.
+> This series adds and enables support for USB 3.0 for
+> J784S4 EVM.
+> 
+> Matt Ranostay (2):
+>   arm64: dts: ti: k3-j784s4-main: Add support for USB
+>   arm64: dts: ti: k3-j784s4-evm: Enable USB3 support
+> 
+>  arch/arm64/boot/dts/ti/k3-j784s4-evm.dts   | 41 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 39 ++++++++++++++++++++
+>  2 files changed, 80 insertions(+)
+> 
+> 
+> base-commit: f68868ba718e30594165879cc3020607165b0761
+> --
+> 2.17.1
+> 
+> 
+> 
 
-$ sysctl -a | grep max_file_note_size
-kernel.max_file_note_size = 4194304
 
-$ sysctl -n kernel.max_file_note_size
-4194304
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-$echo 519304 > /proc/sys/kernel/max_file_note_size
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-$sysctl -n kernel.max_file_note_size
-519304
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-Why is this being done?
-We have observed that during a crash when there are more than 65k mmaps
-in memory, the existing fixed limit on the size of the ELF notes section
-becomes a bottleneck. The notes section quickly reaches its capacity,
-leading to incomplete memory segment information in the resulting coredump.
-This truncation compromises the utility of the coredumps, as crucial
-information about the memory state at the time of the crash might be
-omitted.
+  pip3 install dtschema --upgrade
 
-Signed-off-by: Vijay Nag <nagvijay@microsoft.com>
-Signed-off-by: Allen Pais <apais@linux.microsoft.com>
 
----
-Changes in v2:
-   - Move new sysctl to fs/coredump.c [Luis & Kees]
-   - rename max_file_note_size to core_file_note_size_max [kees]
-   - Capture "why this is being done?" int he commit message [Luis & Kees]
----
- fs/binfmt_elf.c          |  3 +--
- fs/coredump.c            | 10 ++++++++++
- include/linux/coredump.h |  1 +
- 3 files changed, 12 insertions(+), 2 deletions(-)
+New warnings running 'make CHECK_DTBS=y ti/k3-j784s4-evm.dtb' for 20240502053615.29514-1-r-gunasekaran@ti.com:
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 5397b552fbeb..6aebd062b92b 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1564,7 +1564,6 @@ static void fill_siginfo_note(struct memelfnote *note, user_siginfo_t *csigdata,
- 	fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
- }
- 
--#define MAX_FILE_NOTE_SIZE (4*1024*1024)
- /*
-  * Format of NT_FILE note:
-  *
-@@ -1592,7 +1591,7 @@ static int fill_files_note(struct memelfnote *note, struct coredump_params *cprm
- 
- 	names_ofs = (2 + 3 * count) * sizeof(data[0]);
-  alloc:
--	if (size >= MAX_FILE_NOTE_SIZE) /* paranoia check */
-+	if (size >= core_file_note_size_max) /* paranoia check */
- 		return -EINVAL;
- 	size = round_up(size, PAGE_SIZE);
- 	/*
-diff --git a/fs/coredump.c b/fs/coredump.c
-index be6403b4b14b..a312be48030f 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -56,10 +56,13 @@
- static bool dump_vma_snapshot(struct coredump_params *cprm);
- static void free_vma_snapshot(struct coredump_params *cprm);
- 
-+#define MAX_FILE_NOTE_SIZE (4*1024*1024)
-+
- static int core_uses_pid;
- static unsigned int core_pipe_limit;
- static char core_pattern[CORENAME_MAX_SIZE] = "core";
- static int core_name_size = CORENAME_MAX_SIZE;
-+unsigned int core_file_note_size_max = MAX_FILE_NOTE_SIZE;
- 
- struct core_name {
- 	char *corename;
-@@ -1020,6 +1023,13 @@ static struct ctl_table coredump_sysctls[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec,
- 	},
-+	{
-+		.procname       = "core_file_note_size_max",
-+		.data           = &core_file_note_size_max,
-+		.maxlen         = sizeof(unsigned int),
-+		.mode           = 0644,
-+		.proc_handler   = proc_douintvec,
-+	},
- };
- 
- static int __init init_fs_coredump_sysctls(void)
-diff --git a/include/linux/coredump.h b/include/linux/coredump.h
-index d3eba4360150..14c057643e7f 100644
---- a/include/linux/coredump.h
-+++ b/include/linux/coredump.h
-@@ -46,6 +46,7 @@ static inline void do_coredump(const kernel_siginfo_t *siginfo) {}
- #endif
- 
- #if defined(CONFIG_COREDUMP) && defined(CONFIG_SYSCTL)
-+extern unsigned int core_file_note_size_max;
- extern void validate_coredump_safety(void);
- #else
- static inline void validate_coredump_safety(void) {}
--- 
-2.17.1
+arch/arm64/boot/dts/ti/k3-j784s4-evm.dtb: pinctrl@11c000: 'main-usbss0-pins-default' does not match any of the regexes: '-pins(-[0-9]+)?$|-pin$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-single.yaml#
+
+
+
+
 
