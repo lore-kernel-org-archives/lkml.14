@@ -1,110 +1,121 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C732115AACC
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 15:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA4642078;
+	Thu,  2 May 2024 15:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714664103; cv=none; b=j7Qs35lB7yAljkl91thhd1BpSUtjJpn5aZURMK8xZCxcPoymdlovCUtTtl8+JGb78DGJDBEBPm1b76n5O3GL2wrDCPHtJ8wzMfIe6Xgp9+KxN35d/rBIZDTUl6Y4zJxFy+WE6vCRZXeGoBmqMhGC/sJt5242+VB1/w4zPz89Dw4=
+	t=1714664165; cv=none; b=B9r7PdIo5zajKEwNUkW4NJ9o1wYrfVXo2/8TTp9bRYaQu87kcMFHFlIenNPeVD1+SnzrTwF3+QdApUB/G8u5U6vIUwYfLvtrR05onmUvm+pQ2+c0j6mQsL3yJVWXvt8JpTnCXmxlSOSF1LRppca3YnbESqw0pll6jBic4/oyMw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714664103; c=relaxed/simple;
-	bh=R+pJmmxpNrZ/XJxigie9GtGPdSpA3KgFHVA0wipAK7E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ux4JuYY2QidN20twapzV4KMnqJIO+bjYERWNNTcIoNpcPp+lnTWAJ8VVXjJovx0yF8AMBAcXpO2pHyepmDtbaQDo96ugXI91C52HSaSZSlqX8ALIMH6h/LsS+DQZngPfw10pWag31ka25+09cINH0C6JP1DkOOWX6Hx2iNnKiS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=yScL0wg9; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1714664165; c=relaxed/simple;
+	bh=E8C2qPCeaHtiAjUVZaWnodtIyl8a3pqbTM+93AmJ71Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eHsS09wZNnrml+C/kCBpxg8Ocm6dMUBcwzfT0jcGM++KG2e5VI6F3hsU9CcXuszjtbIW+tLfUcyGvwZy4Wc3NeJ7ixMflfXZN/iDTeUUuWDHEh8rhKLqjVr1LYrbOsFKhaEi2TwQJEbbe+E1FyWFZO4u/ZGbnitlYI38auzMtPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WSyuE7uS; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="yScL0wg9"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-572babec735so760586a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 08:35:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1714664100; x=1715268900; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ce5FXE5idr82jeqevYO8YWeQ0hM+JzLoZr03p3rxaCE=;
-        b=yScL0wg9qUChw1cmaZ3tDo4DHELgq6gUPBj5+tZ7W/eKXER+BT9WKBfsuWTWWDXL/d
-         tkBSsxbh7S/DxXRT/a+KuLYpv54ihMRiljBcSetSqEZqGCoO3MSF5CB9BxIaDZl88Jet
-         pP8aTSfeZioalHZ2rAohCiVBBoJ+mOovAXk52PwCh5/lLbi3eIfGHwZRgZDsBdrNcCgC
-         CmeSqjp1YhEG3XQAO1QJJq2rPpY6H+j6EDIWLdW6A3JbPkANaPWtsLkeolS7Lu162gLU
-         2/Y4znvNX42IofJg7tBbZZpgkWHHmSnwTeSu1LMPtFxibFRskkyfpb6TBTAnI6aFPibC
-         Cpmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714664100; x=1715268900;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ce5FXE5idr82jeqevYO8YWeQ0hM+JzLoZr03p3rxaCE=;
-        b=XKfDhJ8DBX6RTmjZGK90GJGXoOvnBArPt1SMxYrWKzeKv7cDjXdZjBV/lVJGnkMkR3
-         nCsRgyl0lg6yP/KumPqkz3pMooYMiVMsC0olDqqp0etkRC1J0pOfB06Q/6huOFaHp8yW
-         qxWDEs9CFGvsdTmypMj6DLB+kKzuFfP2cr64w1KmGFQeQhjzY1WoqBCaTvJ8N7vyS/vC
-         /Ogx8VZuNUHvYMqWsf6MET2HXsImLMrATUe/rub2E5A4PuLJXMt1yfVQyp1DMxR2mpHs
-         ZfveeIt87SKqJTUqfDeSn4K01aVuoMKNlIYzpbIMb+OazeEQZNrNocCBoTBIDIA/1h7J
-         vrpA==
-X-Forwarded-Encrypted: i=1; AJvYcCU81ylHNCAzQDhAoQiwFoeg2gpvXHxTgP7rpxhgZkGD3zC8s+eM8v6drUDwLlfnvAwvjxAiBb4BA8qUEP1M9ZfUIRBRRRvh6JJbUx6q
-X-Gm-Message-State: AOJu0YxujNN0y1mCp/eDWpE/atviO88iDFbXs407ff6JHFOBUPGSxJsg
-	zJVhFkVgi9rYeZJ+CzFeEvUICOjjDxT/zSsfEJTZSQQIsQAmuRUQmQ710iMwuLo=
-X-Google-Smtp-Source: AGHT+IEQfs59rIUKVTrOCgSJ3jKTTUJ2JzRMpQm4fmKS62RfKZlGAhSLcI0NsdYjXVyyfSKA9TdCqA==
-X-Received: by 2002:a17:906:6a05:b0:a58:7ddf:1805 with SMTP id qw5-20020a1709066a0500b00a587ddf1805mr3302521ejc.7.1714664100017;
-        Thu, 02 May 2024 08:35:00 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
-        by smtp.gmail.com with ESMTPSA id j21-20020a170906279500b00a5587038aefsm675107ejc.156.2024.05.02.08.34.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 08:34:59 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] crypto: iaa - Use kmemdup() instead of kzalloc() and memcpy()
-Date: Thu,  2 May 2024 17:33:39 +0200
-Message-ID: <20240502153338.6945-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WSyuE7uS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714664163; x=1746200163;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=E8C2qPCeaHtiAjUVZaWnodtIyl8a3pqbTM+93AmJ71Y=;
+  b=WSyuE7uSwU5f/7bYnjCXajYcotet4DvVdtYvisV+WbZlIN+mgLRTKmu0
+   U5LrDEAujnZx5TmPTii1ZqJDqVGhqC7uESRMInvsmmtWWOL/hwn7CTauF
+   ku9hPAdmlg/j56hOeoJwBElDg9091xB+/Ex0nn+ZTIayzwdFyIc6xIAlc
+   YXi6A4qrY7833yA1gvDD5OD9LoHvFJJM2797elqGBMR4++R+jiOWg58bG
+   8D6Vmf2khptkDZyK3ck6aaZN133B80CARECS/8GsQ/eCLxY55fVZYKXG3
+   S1M+9Dv5kwE3JrfAzQyuZIH8V4VdWnQz16Fh6n8B1/Ne0z/0Mst/jbgxK
+   A==;
+X-CSE-ConnectionGUID: j/T38Oz4RBaWKUjvoQIXqA==
+X-CSE-MsgGUID: XdkusnyqSei3J51cvACd4Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10570068"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10570068"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 08:36:03 -0700
+X-CSE-ConnectionGUID: b+Q2+7rHQo2NCSK+Z3AvIg==
+X-CSE-MsgGUID: qhp105huQHCdu0Ee90JJ7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="27208567"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 08:35:56 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s2YTQ-00000003Mdz-43wp;
+	Thu, 02 May 2024 18:35:52 +0300
+Date: Thu, 2 May 2024 18:35:52 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Andrei Warkentin <andrei.warkentin@intel.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
+Subject: Re: [PATCH v5 17/17] serial: 8250: Add 8250_acpi driver
+Message-ID: <ZjOy2G0qN5G076i0@smile.fi.intel.com>
+References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
+ <20240501121742.1215792-18-sunilvl@ventanamicro.com>
+ <ZjNaR-YtVTm4pbP7@smile.fi.intel.com>
+ <ZjNh0Llcx+0VHevy@sunil-laptop>
+ <ZjNmdfR2J6hNnYle@smile.fi.intel.com>
+ <ZjN3GQI3gegYOIgS@sunil-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjN3GQI3gegYOIgS@sunil-laptop>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Fixes the following two Coccinelle/coccicheck warnings reported by
-memdup.cocci:
+On Thu, May 02, 2024 at 04:50:57PM +0530, Sunil V L wrote:
+> On Thu, May 02, 2024 at 01:09:57PM +0300, Andy Shevchenko wrote:
+> > On Thu, May 02, 2024 at 03:20:08PM +0530, Sunil V L wrote:
+> > > On Thu, May 02, 2024 at 12:17:59PM +0300, Andy Shevchenko wrote:
 
-	iaa_crypto_main.c:350:19-26: WARNING opportunity for kmemdup
-	iaa_crypto_main.c:358:18-25: WARNING opportunity for kmemdup
+...
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- drivers/crypto/intel/iaa/iaa_crypto_main.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> > > This driver is not a duplicate of 8250_pnp. It just relies on UART
+> > > enumerated as platform device instead of using PNP interfaces.
+> > > Isn't it better and simple to have an option to enumerate as platform
+> > > device instead of PNP? 
+> > 
+> > Ah, then extract platform driver first from 8250_core.c.
+> > 
+> Let me know if I understand your suggestion correctly. Do you mean call
+> something like serial8250_acpi_init() from serial8250_init() and
+> register the driver directly in serial8250_acpi_init()?
 
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-index b2191ade9011..7635fbebe52f 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-@@ -347,18 +347,16 @@ int add_iaa_compression_mode(const char *name,
- 		goto free;
- 
- 	if (ll_table) {
--		mode->ll_table = kzalloc(ll_table_size, GFP_KERNEL);
-+		mode->ll_table = kmemdup(ll_table, ll_table_size, GFP_KERNEL);
- 		if (!mode->ll_table)
- 			goto free;
--		memcpy(mode->ll_table, ll_table, ll_table_size);
- 		mode->ll_table_size = ll_table_size;
- 	}
- 
- 	if (d_table) {
--		mode->d_table = kzalloc(d_table_size, GFP_KERNEL);
-+		mode->d_table = kmemdup(d_table, d_table_size, GFP_KERNEL);
- 		if (!mode->d_table)
- 			goto free;
--		memcpy(mode->d_table, d_table, d_table_size);
- 		mode->d_table_size = d_table_size;
- 	}
- 
+Extract the code to be 8250_platform.c and update that file.
+I have locally the extraction of RSA code, I will see if I can help you
+with the rest.
+
 -- 
-2.44.0
+With Best Regards,
+Andy Shevchenko
+
 
