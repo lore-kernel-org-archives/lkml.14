@@ -1,118 +1,135 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCA01CF8B
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 23:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB821CD0C
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 23:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714692076; cv=none; b=EALwPIZJ675gq/HzzBzAwbgIoJ8QX5STlkHUzyEMFWvgFLdNtOBgEr74kvIVAgiHxegrX+VBdFILyhwccFZtSo7kBD1Hn3PjGSngcVshJ1FZDIYmyem9aLHvZ0pMuDS0ZAhwR3E702/e1p0TUwXdraPOIwhKSRvzZs6CjrKiPkg=
+	t=1714692104; cv=none; b=XqKaT9U4nW96KCzTxlJAnKkohIwBJwwS1TUJr6IENtDwjdOa2aGKIGSWdG06qvN8sfSYAyfuTu8ToSa3WwOplQEtBoEhx1AlS2AAlAqaO9CNdlX14yYXVY2DYecD0Yqk0utotBbBrUII495QCLagotKtrqGE1x+JmrBFlId4hJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714692076; c=relaxed/simple;
-	bh=6YgtMXWABRT2OTs6qwyyj+LFyuPuM8VYCR4YovsE1KQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ma1V12gnuFY0JANwCpgdukc0dQ7QXYlK8g9+lEitdoiua8t7WyqD3Y78hmgh6xM2vld/8ucfsJF8ePeWUm29I5WJADtaFS932cmmNEIVWLDXTxuCxQRzhn2jf3tlVRkRYF4aWmYUezHdfyTByC5Oq1OkvTGbghG1u+PcJXFS8NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QxFx9dvV; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714692104; c=relaxed/simple;
+	bh=t0ocJHvY73hrUFCV06uFlb3wGHL2RVlZU9n1KTZ7hPY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jgMmtPzl816wY9wj3Lw1Rt5gCP0g8BS7I/dkmrU3/KmB3UlUPL19Xl4L/FLn1xNSh6gkBFECaMMBPsTKFwonhay7j07MHNNbHRfJzWmGrzH/yUiQ0nMq4BrR97ujrNM8ruwAOBtQDRinapZkU5aumOO0SSkszBX1j3wPk9J1u+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EMJVd0MR; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QxFx9dvV"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6f447976de7so617615b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 16:21:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EMJVd0MR"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de603db5d6aso8337492276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 16:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714692074; x=1715296874; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yb4bKEByKdlz4UZjReMUHUSYQEXXrh5q/y+c7lUVAhc=;
-        b=QxFx9dvVfc9RrjAW8fvVc0SxoJ8B1jmxz1Jli7jWPt6QWk10CZkIbdjp83W4W4OgCn
-         psyp5bx5xsIjZfQVpUK7/kgnbeLjvjv7K3ps/FU6NuJ7lKRQl9kOozsHAAlEWo6pbIKa
-         1zfeaH3HrwwpFW4Yq532/alFlJ9CMYoElKWMQ=
+        d=google.com; s=20230601; t=1714692101; x=1715296901; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s0bl+EXjP+FAcnnealSKe+UO8h20s3Bb2rwaSYi0ocI=;
+        b=EMJVd0MRiJqm3UnPJGEkLl6LrggKvvFrfdAGX8rmY3ImBqu474OjktOA/hjEjlrmCX
+         fmrBXGeIY2skkftEbxpfawAbf/qosKiXfyPX647e79Rokt/VDVig5oMnYAtx0DIBbmiq
+         MAYNy63TJwTdOY/scvKX/Bdvb1imxiSiSVESqh18pD0oH2u8yVUjjFTHA+FXRO3dW7Et
+         vjGPn4NKb3kblBfRW+R80b6viy+KWjyQ6GeRa/tgxL5WATN0l7C+m+BHHS4XHonnPKDX
+         LnFxrp9LNrzPsERkfVyIvpbL0v4qGpL5O7qsjGnu++R9octd9DZ/21MQUrdEsmveCjMs
+         s9yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714692074; x=1715296874;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yb4bKEByKdlz4UZjReMUHUSYQEXXrh5q/y+c7lUVAhc=;
-        b=OhrZnLG++BhUWCTaoNfH29LmABt8SSCbiD0RLhITiYwJOlGAEaTUTwqCSPP+nvcaao
-         yshbAwHGjF+Sfaa8H01B/NF5p539D+kqUWOHCy05XG+ng2LY7kRwFF2vsqEBPGnCZfrJ
-         eyU05FnHcuIboibw+HQjzEJAuepldrWLPM7B4se7U+S/eCcXnG8IzuyVu2mPNCxwZ1cZ
-         Z8/MuZ3G5ipJHjClr+FdU//EUFYW1BlSt6Evns+OTjdE68B1LKh020qfLo745ee1jNLC
-         uZ5wP9NXTMSDXADMQWlXOGBHHcnTD4zVoZFFqqX3meibiMfJfyTVQG3lRy+LjosCC4+Q
-         g77g==
-X-Forwarded-Encrypted: i=1; AJvYcCXwG+tuE9F6oZhxFptKh0IEfNYVKi7Sb3IfOmxxFwMcqzTp84rL65PvPTwy76r76zA/0MygXgV4Ogroap0QDV3ls/KUZXRX20toeEg/
-X-Gm-Message-State: AOJu0YygLrV4xMqxtRTAwxIFAFEaX5/HRnZsYL6U12twFFz1ux0tL6vz
-	N3Z9kiv8PGi/yAe5pizpwLvP43aFJnwFTzlNrry2FO3hOuLZ/JhDBcopa9orPw==
-X-Google-Smtp-Source: AGHT+IErA5BfNjNMgVipEBvX/O4/Zlw4xwfnpXOv3ZrPWth9wG6pzC2gQkNN14O91XqQe1Da/qOaqw==
-X-Received: by 2002:a05:6a20:7f96:b0:1a9:b2ee:5f72 with SMTP id d22-20020a056a207f9600b001a9b2ee5f72mr1455527pzj.36.1714692074451;
-        Thu, 02 May 2024 16:21:14 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ls30-20020a056a00741e00b006f4123491d2sm1821750pfb.108.2024.05.02.16.21.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 16:21:13 -0700 (PDT)
-Date: Thu, 2 May 2024 16:21:13 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, Zack Rusin <zack.rusin@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Matt Atwood <matthew.s.atwood@intel.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Nirmoy Das <nirmoy.das@intel.com>,
-	Jonathan Cavitt <jonathan.cavitt@intel.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5/5] fs: Convert struct file::f_count to refcount_long_t
-Message-ID: <202405021620.C8115568@keescook>
-References: <20240502222252.work.690-kees@kernel.org>
- <20240502223341.1835070-5-keescook@chromium.org>
- <20240502224250.GM2118490@ZenIV>
- <202405021548.040579B1C@keescook>
- <20240502231228.GN2118490@ZenIV>
+        d=1e100.net; s=20230601; t=1714692101; x=1715296901;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s0bl+EXjP+FAcnnealSKe+UO8h20s3Bb2rwaSYi0ocI=;
+        b=cXAn9MIDGuq/Yg0i7M7KZUAg1phcOOOlGh782LNkDtfSKlVrlVGZvoWUb5MvSuiKrB
+         fsYLmgpENNFE8Ef6QO4CQW+J8+sL16Dtwv+1YY+HLVYi5GYQO6BaYumOm5dbKKn8Ouv6
+         XfDo4itRFdALORhl5DZcUJ7ilQZOPC1mW1EYV4mU96rPltv2RomlStgNjwdGcersFuHs
+         uNN6ao0dFv3qXQ5G3V2KC2ZihQyXAiVedVrJV3KWn8AC0y41tXi/R2jK/rd+Hpei4LS1
+         Fys21x/tot7JU+jsC9WK7Op5RHnCXyFFHHyNJleqixuekM2qLeLPWJfiewnNTr/5yWV1
+         oB+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXkPMdjlGUVz5GeOJIDmMazKoPvUc8AQITy5oNy1rfrNaY9LrAmTY/lJm3efL8g3mxXY13Cw6SZwwKcJQt92R+HvSa0AGiZkm0TRwbS
+X-Gm-Message-State: AOJu0YxxiBX1HZ0bkrVhDX8BPmq6CEuFivbH/G9pmSU7O0iCboRl0clh
+	yXV9dCbfIUcVgPccxtveaOkTAmNn5cUf4SGqV0r9fOJCf1nEyAoEnklofz2vjO8E/VebVkosXcu
+	2aw==
+X-Google-Smtp-Source: AGHT+IHjDGmpaXVSoAwTIzLen1vuSbxCgrToQC/Icn+sgd/CbVo8NnwSTKIPPZRYPCvB6poyTUeH1apk8qc=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:2b83:b0:dd1:390a:51e8 with SMTP id
+ fj3-20020a0569022b8300b00dd1390a51e8mr368460ybb.10.1714692101128; Thu, 02 May
+ 2024 16:21:41 -0700 (PDT)
+Date: Thu, 2 May 2024 16:21:39 -0700
+In-Reply-To: <20240418021823.1275276-2-alejandro.j.jimenez@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502231228.GN2118490@ZenIV>
+Mime-Version: 1.0
+References: <20240418021823.1275276-1-alejandro.j.jimenez@oracle.com> <20240418021823.1275276-2-alejandro.j.jimenez@oracle.com>
+Message-ID: <ZjQgA0ml4-mRJC-e@google.com>
+Subject: Re: [PATCH v2 1/2] KVM: x86: Only set APICV_INHIBIT_REASON_ABSENT if
+ APICv is enabled
+From: Sean Christopherson <seanjc@google.com>
+To: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+Cc: kvm@vger.kernel.org, pbonzini@redhat.com, linux-kernel@vger.kernel.org, 
+	joao.m.martins@oracle.com, boris.ostrovsky@oracle.com, 
+	suravee.suthikulpanit@amd.com, mlevitsk@redhat.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, May 03, 2024 at 12:12:28AM +0100, Al Viro wrote:
-> On Thu, May 02, 2024 at 03:52:21PM -0700, Kees Cook wrote:
+On Thu, Apr 18, 2024, Alejandro Jimenez wrote:
+> Use the APICv enablement status to determine if APICV_INHIBIT_REASON_ABSENT
+> needs to be set, instead of unconditionally setting the reason during
+> initialization.
 > 
-> > As for semantics, what do you mean? Detecting dec-below-zero means we
-> > catch underflow, and detected inc-from-zero means we catch resurrection
-> > attempts. In both cases we avoid double-free, but we have already lost
-> > to a potential dangling reference to a freed struct file. But just
-> > letting f_count go bad seems dangerous.
+> Specifically, in cases where AVIC is disabled via module parameter or lack
+> of hardware support, unconditionally setting an inhibit reason due to the
+> absence of an in-kernel local APIC can lead to a scenario where the reason
+> incorrectly remains set after a local APIC has been created by either
+> KVM_CREATE_IRQCHIP or the enabling of KVM_CAP_IRQCHIP_SPLIT. This is
+> because the helpers in charge of removing the inhibit return early if
+> enable_apicv is not true, and therefore the bit remains set.
 > 
-> Detected inc-from-zero can also mean an RCU lookup detecting a descriptor
-> in the middle of getting closed.  And it's more subtle than that, actually,
-> thanks to SLAB_TYPESAFE_BY_RCU for struct file.
+> This leads to confusion as to the cause why APICv is not active, since an
+> incorrect reason will be reported by tracepoints and/or a debugging tool
+> that examines the currently set inhibit reasons.
+> 
+> Fixes: ef8b4b720368 ("KVM: ensure APICv is considered inactive if there is no APIC")
+> Co-developed-by: Sean Christopherson <seanjc@google.com>
 
-But isn't that already handled by __get_file_rcu()? i.e. shouldn't it be
-impossible for a simple get_file() to ever see a 0 f_count under normal
-conditions?
+Heh, no need, I just provided review feedback.
 
--- 
-Kees Cook
+> Signed-off-by: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+> ---
+>  arch/x86/kvm/x86.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 26288ca05364..09052ff5a9a0 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9995,15 +9995,14 @@ static void set_or_clear_apicv_inhibit(unsigned long *inhibits,
+>  
+>  static void kvm_apicv_init(struct kvm *kvm)
+>  {
+> -	unsigned long *inhibits = &kvm->arch.apicv_inhibit_reasons;
+> +	enum kvm_apicv_inhibit reason = enable_apicv ?
+> +						APICV_INHIBIT_REASON_ABSENT :
+> +						APICV_INHIBIT_REASON_DISABLE;
+
+Just let this poke out, the 80 char limit is a soft limit, where "soft" is fairly
+"hard" in KVM", but there are still legitimate situations where running past 80
+is yields more readable code, and IMO this is one of them.
+
+> -	init_rwsem(&kvm->arch.apicv_update_lock);
+> -
+> -	set_or_clear_apicv_inhibit(inhibits, APICV_INHIBIT_REASON_ABSENT, true);
+> +	set_or_clear_apicv_inhibit(&kvm->arch.apicv_inhibit_reasons, reason,
+> +				   true);
+
+Same here.
+
+No need for a v3, I'll fixup when applying.
+
+>  
+> -	if (!enable_apicv)
+> -		set_or_clear_apicv_inhibit(inhibits,
+> -					   APICV_INHIBIT_REASON_DISABLE, true);
+> +	init_rwsem(&kvm->arch.apicv_update_lock);
+>  }
+>  
+>  static void kvm_sched_yield(struct kvm_vcpu *vcpu, unsigned long dest_id)
+> -- 
+> 2.39.3
+> 
