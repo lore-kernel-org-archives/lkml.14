@@ -1,123 +1,91 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4625F874;
-	Thu,  2 May 2024 19:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F7969D2F
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 19:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714676497; cv=none; b=X1Ao8sJ0rHNu+1BVLZH7x5iOHR8MKYJGhxnvqy3cQh5v2jYlzRuxGQdlwbCczfwQCsxjPXiED06WkadZQOcYSShc4YVJObwLRJxb85H7MPmN28hDBeTQkfgfUp0qeTOTR3X1mbR8uTv7HoPWc+txeo4PiiJ3ELU1wwS9LdP6nLQ=
+	t=1714676555; cv=none; b=UjKEdPyLaSGt92jUZ1IX5N8FodJqCPEVK2H4kPuyJGnU8nohSVSeGLKPW0xH6kCaFIqibc8bRJadHjNaCimvGF2qQf84TKYvJ+zI+US3dlypMeZprTX/MllfvwSnlSLnt5BK4LLKfwd9dIxeD84E7a/WJOZZfDrze8p4IANaSnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714676497; c=relaxed/simple;
-	bh=mu8rfKXOAdKbFd++Ire3kxBFhX7hIRUh9vpX9hFf9wU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UFseJhbc1k6GQUqkbf7YP/TSnNiwctsXZTWNwyccIfzdS5qGLcOco4fvW06su+gmfb7/2moBsOE6GUAeqFwfQThWglygOkCvH5mmuqP+d1zyiJ5TeLM7it1S1fuFencqEZVqiX1ptQLNjMvSkPmqQzoEWVz/c0q5n2xHPBoy+SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G1Q7Ifr4; arc=none smtp.client-ip=209.85.167.45
+	s=arc-20240116; t=1714676555; c=relaxed/simple;
+	bh=dKAP99POAqyYPnhFZYywVYbkmuWguwDT00wJFjQ2YmY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T2GxXxXIOwegnlhyGwPZ5bhiVCzTVwDUivFBN+KnHB7LZ5VgN9MZdttpYVWVt+4bseGjmgHDK4rsHrUWFziPtbSswkRf4My9uKbDmiEsSqQOnzwKbiBb/repcUQt/85cZMku8zyKYJmzVDyDVb+zbekERoFEdnNpy2eNU+/9YNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ARYplwbx; arc=none smtp.client-ip=209.85.160.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1Q7Ifr4"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51f1bf83f06so1316089e87.1;
-        Thu, 02 May 2024 12:01:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARYplwbx"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-22edbef3b4eso2185470fac.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 12:02:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714676494; x=1715281294; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nh35CEGjyQd/KulzELdyVZbVY0fU4Acs6q0cwM1JL4g=;
-        b=G1Q7Ifr4bQw98VGvFijQU/llKeSTHwbc7S44+ItGOZ5h2Nw6i34ziFggzplplcUaDq
-         BE70owmo3/C1JR/XlUQ+96auNhlCjSrq81WvZrh8+Eun1DnfLohWhiPK6IB4Ni7jpVND
-         FKQm1C9lf1A8XdM1zEVAkHU2izqLqritb4ItioOC+ETojYj8lB0t3ifbUaG+Uo5M3drD
-         Dyg9d75Y/jU9O8T7YAaK9U5joL/GL5iV9LPcWDJkTvWKysPQPMyPVZaq2xM63YlxfgI1
-         yWKEjF8vbnQL8FoPRK6fU/uND6rjHE0aTeaRlG5eAQnJwCp/Fg6PEFhWHHnsJygVhtlp
-         0usA==
+        d=gmail.com; s=20230601; t=1714676553; x=1715281353; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qf43ccYVyZU/hXzDBcoEbEvMHvQfl5Mx9Lbcsd/pruo=;
+        b=ARYplwbxL1/q2pl3zjec7o/yXISUzPYCty4azijDe44SEivALReaJ4SlJOcxcogvsZ
+         gD/s8D1YWQxyGKb1VXmQ2znQmHlLACG45UyLCE3uI2zIR8JwVmft5aRC1FMCW6AY0cy+
+         48rAi07MH+8I/QtHaAWH6n8I8+5N1GOcOnxOYb8NT0Y4wzLVQFg224IBpk/forzpdNFa
+         tQz5XkaJcCAo/3wiNs0uwH0I3bKsLZhYqi/dVbuX8cCsGrqjCtzLXFieqs4B/QJh6p92
+         FLpPsfw/ZWpMHKUdNC/0a+QgVEHimr/9n7H0wEgkvMFsOfC4RFgqUVg366FfPQiCyWMP
+         N2sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714676494; x=1715281294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nh35CEGjyQd/KulzELdyVZbVY0fU4Acs6q0cwM1JL4g=;
-        b=vIqXTYeZz9w+ndjSvZzWB6DMAy7UMK8q258GjLy0XngFsyLG6mMfo6aWz2GYTGtpF/
-         0CPBFP08Z00W8vKN//7TbfWjN5G7eJiJ7a4hW12jdSKZ2OKyK30SqXsS7rZ8fnBWftBy
-         lbUrpYH8huCdZ59XkzV2VfgtDsqZshB09oOLeaq7uCllsft/dNN89inTR9s2dz2Ga3cK
-         N66J3F9Hk6m/iXXWRKWvRuTjW5Ewfb38sURxS6w92HTpc32zf5ibkPrxKum9nnw+/IlG
-         YZGyGT33tBmvAdi3pVGtzaNax/gzwxcSmB/v8+U4NIdHHNyk9rdOtV5iEvYysxs0sAux
-         1D5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWd1Yt4HvGX44Fxh+BlvP/gzuFSpgeI58PGgyLNrsrlGCDu/yv0BuO/wcz1RM0SF4yjJHSP00WkwNM6Y4EkaUWiRrjFGTGejQmXLrHSSluGIvq8TKemd6j2DLLCAk6ZrqdoA1c+ABvNmg0=
-X-Gm-Message-State: AOJu0Yx/4oN/monWdWhegwkRLfX2JA0d512QDVnaWYosYLIfXFZWfYju
-	9RWXZBfh1XzUdIROYueLwZihAI96/pOO1qLPAHicgbe8r3dRUPw+ptpFTDcXTo6hW6RhktgJOzn
-	EGG5P1iVxrzkiQ/J8tgY5y7kAWdM=
-X-Google-Smtp-Source: AGHT+IFtdKlZWuM1wsaGzBv6v0w3MPzrm4tdeztfDeMWx9KsDau87uqaZLeguIyMdvA7lu+3GnzFmJ0hvz3cCht3hGs=
-X-Received: by 2002:ac2:5dd3:0:b0:51e:ef7f:4e89 with SMTP id
- x19-20020ac25dd3000000b0051eef7f4e89mr457732lfq.6.1714676493797; Thu, 02 May
- 2024 12:01:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714676553; x=1715281353;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qf43ccYVyZU/hXzDBcoEbEvMHvQfl5Mx9Lbcsd/pruo=;
+        b=xTZirWm5lH/2DKjbya0Rc9r+Y+2Jj+1VxtMFRiN36w77qPDTmUfYNlDVl9VLbFjB0p
+         Wk9v4uoyUBdOsuazN53VB3DNiGErR6DIgNiZSvpDRJ/YPGrzDgxUd11ZUCo5jM0iCTbu
+         7yb4NX9ZAwZ1i9U+qGinzwJo9/7UWDyaDbhD9p7GRkwiPjV3MYt0ZUugVx4LiLH3PXrc
+         iVFcZcn9FNtf82arqpoj18vYL/UiBS0iSdIzW5ouIR0FjxZlXzPRiGwdPFLLFQZ0xlXz
+         bsCj8pfxvsLHNNrTq9g15niTNX703QK3cd7zZOtn9MLq2BhW7mpRwI/CKies5geJE4YN
+         5afw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2Aoq8KuIfFF47P7+LgDLXyZDQ4SeHzmXbmdGw0Wy6a6qkt3eDtoSt7QvM9z0mP6gIU/1AUwoH3rFJBPXWo/5XDjsRQDTnKBtIcAsQ
+X-Gm-Message-State: AOJu0Yxub1pO62dRUGqXbtk+PWCTldUniDmznDrxzcOaEAGVn4xlRGS8
+	CSAiv8pqGi0785eupkuLKH0ZTxFQJWyaooWbJoTUaAA5PfbjXiFW
+X-Google-Smtp-Source: AGHT+IHQonnV7qf4zQta5DKOum4m4xQJrQRdDU7HjUbtZXDq75nTIUuZUVsX3yLdgHr8DBB38OcouA==
+X-Received: by 2002:a05:6871:891:b0:22e:d20d:1274 with SMTP id r17-20020a056871089100b0022ed20d1274mr901952oaq.9.1714676553085;
+        Thu, 02 May 2024 12:02:33 -0700 (PDT)
+Received: from localhost (fwdproxy-nao-009.fbsv.net. [2a03:2880:23ff:9::face:b00c])
+        by smtp.gmail.com with ESMTPSA id gb13-20020a05622a598d00b0043b15618a4asm728294qtb.39.2024.05.02.12.02.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 12:02:32 -0700 (PDT)
+From: Usama Arif <usamaarif642@gmail.com>
+To: akpm@linux-foundation.org
+Cc: hannes@cmpxchg.org,
+	yosryahmed@google.com,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Usama Arif <usamaarif642@gmail.com>
+Subject: [PATCH v2 0/1] cgroup: add tests to verify the zswap writeback path
+Date: Thu,  2 May 2024 19:58:36 +0100
+Message-ID: <20240502190223.3975970-1-usamaarif642@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430080019.4242-1-konishi.ryusuke@gmail.com>
- <20240430080019.4242-2-konishi.ryusuke@gmail.com> <650ed9f6-fa50-4a3b-939d-633f9e389137@acm.org>
- <CAKFNMomCzNMU0tjLkEchr=GQwSVW1zr1GAq7vUToeOvX-M3eVg@mail.gmail.com>
-In-Reply-To: <CAKFNMomCzNMU0tjLkEchr=GQwSVW1zr1GAq7vUToeOvX-M3eVg@mail.gmail.com>
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date: Fri, 3 May 2024 04:01:17 +0900
-Message-ID: <CAKFNMo=rkHF6urydfDbcvTbGzUEHmsTudVMm517pTE32vzqiwA@mail.gmail.com>
-Subject: Re: [PATCH -mm 1/2] nilfs2: use integer type instead of enum req_op
- for event tracing header
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-nilfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 2, 2024 at 12:30=E2=80=AFAM Ryusuke Konishi wrote:
->
-> On Wed, May 1, 2024 at 11:42=E2=80=AFPM Bart Van Assche wrote:
-> >
-> > On 4/30/24 10:00, Ryusuke Konishi wrote:
-> > >       trace_nilfs2_mdt_submit_block(inode, inode->i_ino, blkoff,
-> > > -                                   opf & REQ_OP_MASK);
-> > > +                                   (__force int)(opf & REQ_OP_MASK))=
-;
-> >
-> > Please keep the enum req_op type instead of casting that type away with
-> > "__force int".
-> >
-> > Thanks,
-> >
-> > Bart.
->
-> Hi Bart,
->
-> No, this type cast is necessary to prevent the following sparse warning:
->
->   CC [M]  fs/nilfs2/mdt.o
->   CHECK   fs/nilfs2/mdt.c
-> fs/nilfs2/mdt.c:155:43: warning: incorrect type in argument 4
-> (different base types)
-> fs/nilfs2/mdt.c:155:43:    expected int mode
-> fs/nilfs2/mdt.c:155:43:    got restricted blk_opf_t
->
-> What we're doing here is just changing the event tracing type back to
-> int, and keeping blk_opf_t and enum req_op in the rest of the code.
->
-> I understand if you have enough reason to ignore the warnings, but
-> Why do you have to keep enum req_op type instead of int for event tracing=
-?
->
-> Regards,
-> Ryusuke Konishi
+Initate writeback with the steps described in the commit message and check
+using memory.stat.zswpwb if zswap writeback occurred.
 
-Hi Bart,
+v1 -> v2:
+- Change method of causing writeback from limit zswap to memory reclaim.
+  (Further described in commit message) (Yosry Ahmed)
+- Document why using random memory (Nhat Pham)
 
-Sorry, I didn't realize you were digging into the issue and talking
-with the sparse and kbuild teams to resolve the issue.
+Usama Arif (1):
+  selftests: cgroup: add tests to verify the zswap writeback path
 
-Is there any hope for a solution?
+ tools/testing/selftests/cgroup/test_zswap.c | 125 +++++++++++++++++++-
+ 1 file changed, 124 insertions(+), 1 deletion(-)
 
-If you haven't given up yet on solving the underlying problem, I would
-like to withdraw this patch.
+-- 
+2.43.0
 
-Thanks,
-Ryusuke Konishi
