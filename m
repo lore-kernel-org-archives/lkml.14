@@ -1,103 +1,194 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2101.outbound.protection.outlook.com [40.107.8.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDE4604B3;
-	Thu,  2 May 2024 12:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714651985; cv=none; b=An72DeOdrWIYbsucaG8OXcmwOa3X84q0XHZl74cI+Js+gbF1Wkc0LnQywgV5yf4/V8eT6vfUJLKUi7RrqlxH6bw+MGy7RnisjqvScKO3xsVknPXT05aMmmzV3LhD8qtD0YcZDm1sDsYBfBAG6ADaUTHpX7GUsg2BpQ5NcCckCvM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714651985; c=relaxed/simple;
-	bh=Mqkrhza3t8I1NNmuInmaoNH7fQpysGQRs0CN3Xq6QZk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6kXAUEm0onkBzxryCGOjr7hsEqr0pR+YJwtSFdRK9rOmDUzzMepVZ5MAVk0TbTcjlnc3Me6m72DwCVRlkgpbeErsS0v//W87dnJgJG7+tiIqmIQuvf8pCfktUnf6m4SdF4MBjmpVr/FR+KRfSypdY/Xcs22MIPtuWUesbO5BL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INJmBKwm; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1106341B;
+	Thu,  2 May 2024 12:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.101
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714652059; cv=fail; b=ne3Hn63XKtRYai82BjR0vyxmNHtME9kbQR+utys/RYJP7QbtpFSsihDf86DUfpyq2xAzSA2QhoK3QSNJvffoQyIlk3ajtlLu+o/bh3g4QIRih5xZTAr9e0TFm0y8/nGwtw7Tot9A/Lgvw0m3L4LiDopyzuJPo6/CfqHMOnBaDmY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714652059; c=relaxed/simple;
+	bh=LqpXefInW1026pVVLKSbuMNhNjdQcjzGC5FCS13VyyI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=psU2p8Frui9DXYsHy9U18RtnFr5JxbKdcYgLXroczjwWFyjQvyIdog9Jf+4X51UfDVoSX10yuqJaEzMS0sXzd39vTAo6EFewhrDgzL4ec2bVP0b19nMr2v0BoGp9JzZDPF/2gLF7z7ezYeouo7lsoG4O7VdVjcXwFMOhlDcG8iQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=theobroma-systems.com; spf=pass smtp.mailfrom=cherry.de; dkim=pass (2048-bit key) header.d=theobroma-systems.com header.i=@theobroma-systems.com header.b=GF/Z+nGW; arc=fail smtp.client-ip=40.107.8.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=theobroma-systems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INJmBKwm"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41bab13ca4eso40701675e9.1;
-        Thu, 02 May 2024 05:13:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714651982; x=1715256782; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uNtgswtzTBIO+kOiOB63IQ6L3ruI+H9mtsGm2wznV5E=;
-        b=INJmBKwmMduZL5JOWMqNHuHGYVT5z3E+4xo8436KgaK5aWBsk5vVwIbLF4Sj1B+n/N
-         Rc6NgUdhF4X71VQdp0YgIvgui/YDA7rwz2+rTjY/07F9VwBQsLKFLZxSfqTFxk7VToKI
-         gajeEgWeMJBcP2/Im/TCP4sAFrz0Ecq7w2u3lfGcfEh7kYjBgSYcpSoajONqNw6N9soo
-         Kou3ThcdbgVs2KmSNxhBrU4wPJ8NB/vy6+6OHTSE3saC1ra08V/9dN/c02h846Qyeglj
-         qciMRSmvP94T4kZ3a3ZvPA3qQIrdf10Nz05cPNC0N9/NrEazgJjXi+TT2qVneU8CjtYZ
-         hIlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714651982; x=1715256782;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uNtgswtzTBIO+kOiOB63IQ6L3ruI+H9mtsGm2wznV5E=;
-        b=TIbiFFmB0XtrsFpvIxna7Z6yWI2FDT1Qm/3HNgos/wxqI2VcutFEjjnfFdq5WO2hb9
-         m9K5bwp6RntqfALScbwUQUqf5+PRQhKli6nNCpCQKjwLWT489VF/4RSLEsiRRs4bG4Um
-         lbvBY90PgJWDgX677ez13zp3jN/vNvUNks4WTi2jLVGpMxmmP/v0H5o137uzBq6o59ew
-         /Cix8T1kWVA8ms8nY34gSPpYfdxtuder13+YMbgS6M4c6I/F6gHmqFG9P4KtUo/n/Ueg
-         4wknC0ZQ95Iy8G0TVYyBDue6fbKVAsiWLa2cZQSyqatz5H4Gebn7gYJQ1yYEgkiyVwbd
-         DnXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQbtyp5kPB9SwYGWPmsSuje6LRRp1O3IjPAKMWTW6oUVL+2Ut1ScdBLNLKeu1D2QUcWWOelfaCUM6FxLKEOkusJBbgOI63IHaTCEDEvuS9m3gsJ0t3/LhehuDJYay0QQ/T3z51Y6qjmy1fuDrzMUneJK42NwfVq7ZcfHtjk89+srwI7yVG
-X-Gm-Message-State: AOJu0YwAGxIppurV4XC5c2kSQxblyQgJSMp2c3jiapq+2I34SyD1dy0y
-	LgqE+CS9rnDcB5LJb3R+tDPbpRPXku+o3kL0x+Aim0as7y4eHAlm
-X-Google-Smtp-Source: AGHT+IEu1hDh6wrO8MNZ87VL1UC1AHkRHlnMqdwwjboZKadDjNQWMLRJH4xNE7l8YroPc/XByFaI/A==
-X-Received: by 2002:a05:600c:1392:b0:41b:f116:87e0 with SMTP id u18-20020a05600c139200b0041bf11687e0mr3932012wmf.29.1714651981731;
-        Thu, 02 May 2024 05:13:01 -0700 (PDT)
-Received: from localhost ([217.151.144.138])
-        by smtp.gmail.com with ESMTPSA id s20-20020adfa294000000b0034e285d818dsm1136638wra.32.2024.05.02.05.13.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 05:13:01 -0700 (PDT)
-From: Oliver Graute <oliver.graute@gmail.com>
-X-Google-Original-From: Oliver Graute <oliver.graute@kococonnector.com>
-Date: Thu, 2 May 2024 10:42:17 +0200
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, o.rempel@pengutronix.de,
-	u.kleine-koenig@pengutronix.de, hdegoede@redhat.com,
-	ye.xingchen@zte.com.cn, p.puschmann@pironex.com,
-	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-	felix@kaechele.ca
-Subject: Re: [PATCH v3 2/2] Input: edt-ft5x06 - add ft5426
-Message-ID: <ZjNR6eny4lt4tLIJ@graute-think>
-References: <20240501204758.758537-1-andreas@kemnade.info>
- <20240501204758.758537-3-andreas@kemnade.info>
+	dkim=pass (2048-bit key) header.d=theobroma-systems.com header.i=@theobroma-systems.com header.b="GF/Z+nGW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aDaQqeQOXar9L0OC7PjnwC0qSblEEGOssuHZFCTGlR9PlntEPgMEHGoFSCzFB+FRodiRAsq5zkU374RsgRo+JN0KRFoQ0vour1Xhc6US1jvkXFrhOuiJK9I8dMQ8hnL/ftepffYvYkt3YwGfMOBR7+IkdFFM8v+kTzE5MsUtdZSYi9NQ7RpU5jfOEEEarBe5Vi5uzfe2c6mXC3/Fotue4/7bKCmfBSDcMaNo8COP/85iq/iGuNHTb8I599kupAdRnBLAoqxm1kakWA3SrjcviL0cnclpTYz/NCkzMp3Oyggh4gW8wrTqTe1/+4BsbKKMBNefhLHicONydTsaCPShGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qY607RuOjkthsJeGb+4yrZg/ts/is+MS55ycucs5TYM=;
+ b=PjpIWaX50HXWtWKI/1JxYkzmwzZk6OVnCx006Ovr/HLxz+il+cT1A+ErCylS5R9RbESw6wVn5zqI8ECiaJRJnqiZ0fRKpwdcOBrgPEmgdWh9QUMZkJsYil+zIXF4VjfiL5gQWLOSY3ze/ETr+V9dwbP3uHpFpkWRY/u3FbzlLtasy4XhenB1qQnamuoKLpeoHEFCL3NsodSl9xvguyWA6cecXzx7FTJV5AvCTpw2yVTuOJ2WjnSVdmicmfGgS/0lpp5DLktLS9yhtsCRMxHoRO7+u8RHmuJTKi+cdQPqHrHZXrY6raZoexDSObJdRONFA0M+6PGp+a+WupkQgadXzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none
+ header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=theobroma-systems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qY607RuOjkthsJeGb+4yrZg/ts/is+MS55ycucs5TYM=;
+ b=GF/Z+nGWFRI0mrS26Dla7jydcCvj0PrPoLtdd1CCTZVj2QKXDmShz6usFBFJ3sbYYA/VSRIbnWE6lC/xFkfsBVWBP2aT66ELiZ+InMp+p7xNXgqBMqh7UjhqHms/bU7q4DdendfBFE4TVaeCuVqCO+UlgWHpGBNewpDXBFz7nItEtZxgbY8gE/zhDqZ+2OUR/UHoi4I3uoRWv9VmAFy83YrXgHK/OGSbg9xRIaM8WhmNm+0A85RND3WZ5stfZvAEUEUQRUnvlh7ChRF4CLF/J23LOtfjqSPzhmA3l7XwnWJkcEsh8JyvfTxBtwOg0ihiVMfjaYXWvKz1rkJKYnd46A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com (2603:10a6:803:122::31)
+ by AM9PR04MB8305.eurprd04.prod.outlook.com (2603:10a6:20b:3ee::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36; Thu, 2 May
+ 2024 12:14:11 +0000
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::59d9:878d:65f0:3936]) by VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::59d9:878d:65f0:3936%4]) with mapi id 15.20.7544.029; Thu, 2 May 2024
+ 12:14:11 +0000
+Message-ID: <875763a8-fd58-4759-818c-b36f181ddc44@theobroma-systems.com>
+Date: Thu, 2 May 2024 14:14:02 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] dt-bindings: i2c: mux: mule: add dt-bindings for mule
+ i2c multiplexer
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Peter Rosin <peda@axentia.se>, Andi Shyti <andi.shyti@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+ Heiko Stuebner <heiko@sntech.de>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20240426-dev-mule-i2c-mux-v1-0-045a482f6ffb@theobroma-systems.com>
+ <20240426-dev-mule-i2c-mux-v1-2-045a482f6ffb@theobroma-systems.com>
+ <CAL_JsqJH-wD1BbSK=DmBtftpWT7YDbabmvgy1+PPii-8ziHTiQ@mail.gmail.com>
+Content-Language: en-US
+From: Farouk Bouabid <farouk.bouabid@theobroma-systems.com>
+In-Reply-To: <CAL_JsqJH-wD1BbSK=DmBtftpWT7YDbabmvgy1+PPii-8ziHTiQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: WA2P291CA0031.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1f::12) To VE1PR04MB6382.eurprd04.prod.outlook.com
+ (2603:10a6:803:122::31)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501204758.758537-3-andreas@kemnade.info>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6382:EE_|AM9PR04MB8305:EE_
+X-MS-Office365-Filtering-Correlation-Id: 42b2ce7e-b729-4004-2e17-08dc6aa15fce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|7416005|1800799015|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VW0wVTFBQmw2WjhLK2Q2UWErdm82OU5KUHF2VGJMYzJwT1ZmUEVGRjhGY2Jt?=
+ =?utf-8?B?dm9xSU5nNnR4cVYzWnV4WElydXRkbGRjaW5DY1EvQXdIVDlUSUlUVkZMa2xn?=
+ =?utf-8?B?REk4S2tzY2NWUEkzenNKNmt6dXFjWlp0Qi81cEp5MlRHbUlSbTVEdXI1TlFH?=
+ =?utf-8?B?Qk1NWERUZlZtNXA2Mmc5VnBNRVZGOVdyc3pTdWVyUDBray9UYWlFUG1JUXVo?=
+ =?utf-8?B?NXQya09lWmplZTh1Nm1rQ2FaWmpQMGh6eDgwKzFFLzhGbmZWOXRnOXA5VTNU?=
+ =?utf-8?B?TWljZ1JsVjNvVExheGNRSEpvdldtNnpTTEtXbS9uN3ZJOUtQTjllQ0htUHY0?=
+ =?utf-8?B?bEl0REY2c1ZkSnFjRE1EaC9NVzFxQkM0WVhKbUZtbTdxeUY3MWFBZms5c1B0?=
+ =?utf-8?B?RHp4VnBiUU1IVFhOb1h5alFQSWVweWdoYWRlZUV1c1ZXdGVvVXJ0ZkRmeG1i?=
+ =?utf-8?B?Q2huQVc3RUdxUnczRzBwRUlrUXN6M0crWThFeWk4NG5QTENUV3dSWWpWR0RF?=
+ =?utf-8?B?R0VFc0U4ZG5CY0dFZW5TL3BxbHpuL2M3cXRwMlBwT2kyeGg1dEhaUHhZYjlU?=
+ =?utf-8?B?d3JQQzBERkVQdGErbHM2T0FVYjh1UndwZmc2Qzd1aS9oTnJodS90QmttcEtG?=
+ =?utf-8?B?bmFRYUhMSERHTFlNQVJjTDV3SnBGZUs0S1FPYlJTb200cmorVEdROFdSWUtv?=
+ =?utf-8?B?REdzVEYvbytGdXlJMVhvdlhzbkt1ZnJLT3YzVnBUdTNTTktvZUFxMHZvMldp?=
+ =?utf-8?B?dlRPTG1PckQ1LzIwMHJVOWNHRFo5NWUwci8zTTJLZjdNclViMVBoRXF1TkIv?=
+ =?utf-8?B?VDEvVGkrTDVZaVY2U0R0blRwd3c5eDVxNFc5UW16TG9VeElGUitOdXpudDhL?=
+ =?utf-8?B?eUgyMXo0bFlTZDlLcnpHUFU1b2tRaEZvQnFwWlJpYjdhTnYvYXB5dVR0WnJJ?=
+ =?utf-8?B?OXYwTXZrdVBubDdGTDY5MzFKZ0ZqWkZzbEdOOFg3RmY4NGIvRUdtOUcwVnB5?=
+ =?utf-8?B?Q0dDU2lvUHF1K0d2QnpBUWdOSldXVDAwV3VMSVU2N2xEQzliQ1E0VWpYVjNj?=
+ =?utf-8?B?Wjl2ZldVSUsxdGRuTmlKZHZxdW5xZE43Zi9jUVJZNTI3aVVjZnRDNVV0b3hP?=
+ =?utf-8?B?QkZNUkN6aEhkWWdtNnFIc1pRZ0JJTjlCR3hxUG04MUdtUk8xazhDbzBzVkVs?=
+ =?utf-8?B?aHliQmhLQ000UlRBaVZhd2NwSGRaRysrNHF4a3M0Q1VuWmFUa1J3NVgzanNx?=
+ =?utf-8?B?TjRaV3pjc1FXUm01VkNRNE12cmVUMzhyeEJMSDZ6Y2hLZmNjS3JvYnhOdXFQ?=
+ =?utf-8?B?RmVzeTZlNGs4b0xQK05VQkkrdFpNMFgwMVR5TXFxQUo2aktzZ1hDSWZQZlR2?=
+ =?utf-8?B?REc5aVNNUWt3NXhDTE0vQzJxejRPR24yYjhUc3JCQU1vd1hKN1NnUU1yQW1T?=
+ =?utf-8?B?c2N2QzRVVm0wWklmdkxHanhkVU0xMlRzMHAxV0VhS3Nka042Sm9HckhkQ2Zn?=
+ =?utf-8?B?MndvTVVkU21yWS9oeXg0alJleUVMT0xrdVB2T1FVWnFuZTk2VVl4ZDR6NDF3?=
+ =?utf-8?B?RlFremhCMFZZOGxVcCtkQnZUZlNGbzlJdUpGZ21qYWFtOHRoTGFPK1RyN3RG?=
+ =?utf-8?B?elpjR0xIbWJMRmJ0MjNPWkFjNXlZMkNXYTlHZFphY25BcGcxQWtBbGNGTlY3?=
+ =?utf-8?B?aVAxa1lTa29SS2l0LzNjRjlGaTRCeXR3Vkk2YVQvSStKSitWY0xiMjFRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6382.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NUEyNjUvR1dRRkZMS3ZOOWlJZUlzTUl1cHI2Z1gwMWREUWtIUVBnTU5xMGlI?=
+ =?utf-8?B?c3I4d2pCcXpIekU1WldqTDRVNlRhYmxUQzJxckx2NHpZUWZ5RFlRQW8vMGw5?=
+ =?utf-8?B?eDBhNWdrSjdNUjZaejRQUVYwL0VvU3RLNkhPSWNTWVI5cVg5TzM1bkFQeVZh?=
+ =?utf-8?B?QjR5TVpNOEJhSktlbWFURGliRVlFNFBZNzdBQWN5ZXNBMURtVmxPNnJTdDBl?=
+ =?utf-8?B?bVZPbVp3Qkt4K3VwcFJDWjh3TFhSOTB0Z2pTNXZZVm95eC9NSHQyOEtiamNJ?=
+ =?utf-8?B?a0lGanl3Q3JlNWN2ZklTTCtPcFlkMnhzV3NLS0VNdlpmODVOU1RIK2RGVEM1?=
+ =?utf-8?B?TDZ6NjYxN2FkcHBONjJyRkhrU1ZGRVRwNnBoUkpFQTRDMUtScEVlcEtUSG9T?=
+ =?utf-8?B?R3NkWnJnZVVsVC90NkFEWU1pZ3IzWUZYWUlXeFJCTWpjaGRBSEJuM25YaVJ6?=
+ =?utf-8?B?ZDdNNy9ZNnMwbGpIdGxhLzhiYS92V2VaR0E4bjJJYjBMenlNR3pOd1IxQjdM?=
+ =?utf-8?B?L2JSU01KcFdXOGEwZ3h2WEI1dHFPN2lyOFNiL0NIQUdGWmhTTGx2SE93ZWdy?=
+ =?utf-8?B?Z01aMzVoL1hYL2Z1ZXh1RU1RTjlPZEJSR3plbGV0L1BrdXUwY0ExSXZUZWtB?=
+ =?utf-8?B?M2wzTmdlNWJidUhZcFhtRE1sLzl4MFU3TXhvSi9jWTkyNXA5WnduQWlqWkVs?=
+ =?utf-8?B?VjduRkZiS0FZdVc4eXg1ZElLeUY5RWEzSTZFTGxoUTNablVPNSswSUNsOCtD?=
+ =?utf-8?B?QkVnOE0xTDBHdllMMEpOTEZIOVpWK0xGVGs4eWp6eFBtR0hTZkRsdGlka3FO?=
+ =?utf-8?B?MG1rZ3JRSTE1QXV5REdIc3hQYU1MTnZvT2E2T0JIRXBSZUtTRUV2c24wanNn?=
+ =?utf-8?B?b0NSdWtqNGVMS1JvdFdsSS9Cb3FGVjRIN1VySGs2WW9LYXVUejQxSVM0d1l1?=
+ =?utf-8?B?SDd4WVRzNzkwWitJYzBDUDRubzdUWjdFU3BvM3NiV2pYdG81ZklJZ09XK2Zw?=
+ =?utf-8?B?Z3AzZWFuRkNQcVB4Z0lPYTFiSTIwYXNEY1pxTmhwMWh4V0F2OFN4TVdRU2U4?=
+ =?utf-8?B?MmFnS3R5THRJeEZ1MmJ2Yk1rdFhsZTJLQ25yL3hDdkVVcSthUUpqdXpaVlQ0?=
+ =?utf-8?B?bUcyZ09ZbnpqcEFVMkg3TitjNVBRQTFjY2dHOW1pQXRWTkozWnJVRTJ6R29O?=
+ =?utf-8?B?V1NCNEJBZHV4LytRMzVDMjNYQm15WjRIbVlPVjNmQVAwTllpMnRiaXBDQ2dR?=
+ =?utf-8?B?MXIyaW9wVEdaYXhWdUFmOXJoUUJqY3g2VWNJbjFjQ1FJOXBGQkg3cUpvOFpt?=
+ =?utf-8?B?NmNscHM1MmVTMHFaWnFkM3NIQTVvQlU1b1lXeGZoRk5taTVxV2ZweDZ6bU94?=
+ =?utf-8?B?djhtUDg0N1Z1OFE0bFQ4ei9QSG9scEwxdFNKanBvMjBNYTZuQ2JrTHFFdXM3?=
+ =?utf-8?B?eHp0ZnRhMHFLYnFsTVl4Qk9UcTVDdFV5dTV0RVN6Vm1QV2s0YWE4MlpDY3A2?=
+ =?utf-8?B?TVk4WWsxamcwUGdrbDJxaEh1UmMwQXZCZ0I1TTJzeENpV0RvQWpEMDB0aDk3?=
+ =?utf-8?B?OXprSEpuTkNOaEMrYUpYRDdLVW95QnNSNTUxVW1DS2drSVBYRDJwWVA1ZURP?=
+ =?utf-8?B?c2FMNk5lZUdZRHlXSExmWlBFb1hWaVZJcGx5K2V0eWhxbzVRdUlyNXZTNUZa?=
+ =?utf-8?B?RjdwcEk5UmRQa2VrWFRhTlhyS0RJZnpkdWpQeWFyK3ZJdHowTDFERlFxN20r?=
+ =?utf-8?B?OFRXQUxZcmhpL3JVaWdBaGNwajhaUjMvakZyYWJBRUErTThPb2NudmYraDQ3?=
+ =?utf-8?B?bGJhdlJvSnBuTEZXOVFRYWE4b0ZQbExacEg0UHY3cXhIclNaNnlUMmJ6VDMw?=
+ =?utf-8?B?VXQwWGhiTHM5eDRLeFdwbUlCdjlDV2RiSHBMZVBGU0tzRmM0eXZTc3pxWGp5?=
+ =?utf-8?B?eXdHdEQ2TmhTdXVPTWx1TFFXR1RFTkdlaG45WXE4Mnc3cGx2TTRJUEdPZDFE?=
+ =?utf-8?B?UGR4aEgwQTNUWDNYeUJ5RWdicEtreGUyYTVESTJBL0lGbERFZjRRV25Uc1Br?=
+ =?utf-8?B?STQ3cCtHdmhsd2J4TWZVVFordnZNY0RxVVV1YnVnZlhIcWl6c1JrQWdKUzdR?=
+ =?utf-8?B?WlhUVklnZEkxcmx6aFA0U2k1emo3VzA4M3ZieTVKRTRXZzY5MVRSbEVxZlBM?=
+ =?utf-8?B?MVE9PQ==?=
+X-OriginatorOrg: theobroma-systems.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42b2ce7e-b729-4004-2e17-08dc6aa15fce
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6382.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2024 12:14:11.1516
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YGLzTKIAOTDAPxftheJu7QdoRT8WLG2rzcCwB9fsmKsCpss5ICc2jd/eIYvBCvLbiCItlUsOBkIETj1bJHDGj32keuJ0Q6SKz1X98TnpSzQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8305
 
-On 01/05/24, Andreas Kemnade wrote:
-> As ft5426 seems to be compatible with this driver, add it.
-> Debug output during identification: Model "generic ft5x06 (79)", Rev. "
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
->  drivers/input/touchscreen/edt-ft5x06.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> index 2a1db11344766..028ec66faa193 100644
-> --- a/drivers/input/touchscreen/edt-ft5x06.c
-> +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> @@ -1486,6 +1486,7 @@ static const struct of_device_id edt_ft5x06_of_match[] = {
->  	{ .compatible = "edt,edt-ft5406", .data = &edt_ft5x06_data },
->  	{ .compatible = "edt,edt-ft5506", .data = &edt_ft5506_data },
->  	{ .compatible = "evervision,ev-ft5726", .data = &edt_ft5506_data },
-> +	{ .compatible = "focaltech,ft5426", .data = &edt_ft5506_data },
->  	/* Note focaltech vendor prefix for compatibility with ft6236.c */
->  	{ .compatible = "focaltech,ft6236", .data = &edt_ft6236_data },
->  	{ /* sentinel */ }
-> -- 
-> 2.39.2
+Hi Rob,
 
-Reviewed-by: Oliver Graute <oliver.graute@kococonnector.com>
+On 29.04.24 15:56, Rob Herring wrote:
+> On Fri, Apr 26, 2024 at 11:50 AM Farouk Bouabid
+> <farouk.bouabid@theobroma-systems.com> wrote:
+>> This patch adds support for the Mule I2C multiplexer.
+>>
+>> Mule is an mcu that emulates a set of i2c devices which are reacheable
+> MCU
+>
+> reachable
+>
+>> through an i2c-mux.
+>>
+>> The emulated devices share a single i2c address with the mux itself where
+>> the requested register is what determines which logic is executed (mux or
+>> device).
+> Just to be sure, we need a complete binding for the MCU. Is this the
+> only thing the MCU does?
+
+
+Currently that is all the MCU does. We plan to add more features to the 
+MCU firmware: Buzzer over i2c, watchdog over i2c ...
+
+
+Best regards
+
+Farouk
+
