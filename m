@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912C8153BC4;
-	Thu,  2 May 2024 14:38:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBE9153BF7;
+	Thu,  2 May 2024 14:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714660699; cv=none; b=o42Mvb/h4gxXkCgRKnkJacrvyUu/ghNzVut9XwK8j02lqxRRk+IzFeDOaBAIBZsX7r94OeDuSh0zAo7J+3gT6KWCmvXeK63eCwvQ7fXWhodAEdaj1OE7Jgd5HLLB3wItTRb/jlDofRFkKxCiP6c94k64DJ+NIOJk8GhRwmjUlzI=
+	t=1714660712; cv=none; b=HWKKB+OPLatUCZasmk7GJNw02TuUkVaEmynM/JsnVxd9PLIiApMmZnoJRNM0iN2NhoSdQ9R1EaW0x3eIq5xOkp3MuiLJfedb4HsmEKCoWMS47ZkXZPity+bG2sM8UFETeoZZ6LdueNg+0Wc1yK2qzAl0bv1kvkBh+2K5v7VSjxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714660699; c=relaxed/simple;
-	bh=dR9l3MhGDfH0SJpc1xSgr2Jq6+cKoPvCDbv8gFx6KQg=;
+	s=arc-20240116; t=1714660712; c=relaxed/simple;
+	bh=GUsN3TSvq3f4nQdG+MvBHTr4HXRJ+Ok618/efBexNyA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dIQ07n7c8NQp1+11NwxSx448ILx/o639Dg/VWtzUNNaemjxB+FNWRVWvk2H3p9UU3fmb34qiyGJKLCl3QKKk7hWYDXn3TUf2Zjk0e1g2iUvsN8Pk98AYzwOBLyd3eEK9GDXWsWiJsghRIrVuB5LCztXVXTHwfKPsdIxtV4rJ2fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Mk7PY2IG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VQ7lXQEVDemVUhgPqL79JGb55hAGhnvRnT3SIwcdV3rer8IXE2r8uXie+hkXtgbyzz6fT08EgP5OGVeBTyVtfh3AA/V5WNG/SFHCU4kbSzjeaHVtnXaCeDfdK+4TeHjhwFEPWisoUK7eFu64LIMpvAdqLjiqQQlK9ph1N33oYv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LXLBrNCz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Mk7PY2IG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47502C4AF18;
-	Thu,  2 May 2024 14:38:18 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LXLBrNCz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 820E7C113CC;
+	Thu,  2 May 2024 14:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1714660699;
-	bh=dR9l3MhGDfH0SJpc1xSgr2Jq6+cKoPvCDbv8gFx6KQg=;
+	s=korg; t=1714660711;
+	bh=GUsN3TSvq3f4nQdG+MvBHTr4HXRJ+Ok618/efBexNyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Mk7PY2IG7Nc8F8VU/XTeX9UR/d7P+yG4pgXKHDVDGlSfwP4H63LU2zlsNwEqObEuk
-	 lrT8nHCgn3yoUQmDb9UqbduM1TGOPH5k4TRFyp1uXafvJ5ynRtYARC+vxnroPk0Atl
-	 zVSQrJH54uF3mcRnThvxAIyoMXexrOKEIbQ0qiCo=
+	b=LXLBrNCzvk/hd+YrHT0V5SYp5mTSr4eJSX3hUwcl4e5M7KX+n57e1gWeI+hewrfhe
+	 kWuglL/4/2gknJ5e/IHyy7DpDrwdzogervVF4O+sDFkaTniXt27fkp9ScRNu5IiYK8
+	 RgN6UpIeQhpzuAmzkn0/OK25k3251us6wvi62MCc=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -31,12 +31,12 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.1.90
-Date: Thu,  2 May 2024 16:38:07 +0200
-Message-ID: <2024050207-mundane-delusion-b8d2@gregkh>
+Subject: Re: Linux 6.6.30
+Date: Thu,  2 May 2024 16:38:25 +0200
+Message-ID: <2024050225-manhunt-certainty-cf6c@gregkh>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <2024050207-fanning-blot-4ba4@gregkh>
-References: <2024050207-fanning-blot-4ba4@gregkh>
+In-Reply-To: <2024050225-unloved-overgrown-3df3@gregkh>
+References: <2024050225-unloved-overgrown-3df3@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,8 +45,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 599e8d3bcbc3..9235cf4fbabf 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -172,7 +172,7 @@ variables.
+ Offset of the free_list's member. This value is used to compute the number
+ of free pages.
+ 
+-Each zone has a free_area structure array called free_area[MAX_ORDER + 1].
++Each zone has a free_area structure array called free_area[NR_PAGE_ORDERS].
+ The free_list represents a linked list of free page blocks.
+ 
+ (list_head, next|prev)
+@@ -189,8 +189,8 @@ Offsets of the vmap_area's members. They carry vmalloc-specific
+ information. Makedumpfile gets the start address of the vmalloc region
+ from this.
+ 
+-(zone.free_area, MAX_ORDER + 1)
+--------------------------------
++(zone.free_area, NR_PAGE_ORDERS)
++--------------------------------
+ 
+ Free areas descriptor. User-space tools use this value to iterate the
+ free_area ranges. MAX_ORDER is used by the zone buddy allocator.
 diff --git a/Documentation/admin-guide/sysctl/net.rst b/Documentation/admin-guide/sysctl/net.rst
-index 6394f5dc2303..e3894c928118 100644
+index 4877563241f3..5f1748f33d9a 100644
 --- a/Documentation/admin-guide/sysctl/net.rst
 +++ b/Documentation/admin-guide/sysctl/net.rst
 @@ -205,6 +205,11 @@ Will increase power usage.
@@ -62,20 +86,20 @@ index 6394f5dc2303..e3894c928118 100644
  ------------
  
 diff --git a/Makefile b/Makefile
-index a0472e1cf715..7ae5cf9ec9e5 100644
+index bb103505791e..1c144301b02f 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
  VERSION = 6
- PATCHLEVEL = 1
--SUBLEVEL = 89
-+SUBLEVEL = 90
+ PATCHLEVEL = 6
+-SUBLEVEL = 29
++SUBLEVEL = 30
  EXTRAVERSION =
- NAME = Curry Ramen
+ NAME = Hurr durr I'ma ninja sloth
  
 diff --git a/arch/Kconfig b/arch/Kconfig
-index f99fd9a4ca77..e959abf969ec 100644
+index 20c2c93d2c88..09603e0bc2cc 100644
 --- a/arch/Kconfig
 +++ b/arch/Kconfig
 @@ -9,6 +9,14 @@
@@ -92,7 +116,7 @@ index f99fd9a4ca77..e959abf969ec 100644
 +
  menu "General architecture-dependent options"
  
- config CRASH_CORE
+ config ARCH_HAS_SUBPAGE_FAULTS
 diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
 index 6691f4255077..41b980df862b 100644
 --- a/arch/arc/boot/dts/hsdk.dts
@@ -105,10 +129,10 @@ index 6691f4255077..41b980df862b 100644
  			compatible = "snps,dwmac";
  			reg = <0x8000 0x2000>;
  			interrupts = <10>;
-diff --git a/arch/arm/boot/dts/at91-sama7g5ek.dts b/arch/arm/boot/dts/at91-sama7g5ek.dts
-index 4af8a1c96ed6..bede6e88ae11 100644
---- a/arch/arm/boot/dts/at91-sama7g5ek.dts
-+++ b/arch/arm/boot/dts/at91-sama7g5ek.dts
+diff --git a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
+index 217e9b96c61e..20b2497657ae 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
 @@ -293,7 +293,7 @@ vddcore: VDD_CORE {
  
  					regulator-state-standby {
@@ -145,11 +169,23 @@ index 4af8a1c96ed6..bede6e88ae11 100644
  						regulator-on-in-suspend;
  					};
  
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull-tarragon-common.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ull-tarragon-common.dtsi
+index 3fdece5bd31f..5248a058230c 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ull-tarragon-common.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ull-tarragon-common.dtsi
+@@ -805,6 +805,7 @@ &usbotg1 {
+ 		     &pinctrl_usb_pwr>;
+ 	dr_mode = "host";
+ 	power-active-high;
++	over-current-active-low;
+ 	disable-over-current;
+ 	status = "okay";
+ };
 diff --git a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
-index d31a194124c9..03fd9df16999 100644
+index fffdb7bbf889..2d0ef6f23b3a 100644
 --- a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
 +++ b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
-@@ -128,7 +128,7 @@ ethernet_phy0: ethernet-phy@5 {
+@@ -129,7 +129,7 @@ ethernet_phy0: ethernet-phy@5 {
  };
  
  &pio {
@@ -158,7 +194,7 @@ index d31a194124c9..03fd9df16999 100644
  		tx_pins {
  			pinmux = <MT2712_PIN_71_GBE_TXD3__FUNC_GBE_TXD3>,
  				 <MT2712_PIN_72_GBE_TXD2__FUNC_GBE_TXD2>,
-@@ -155,7 +155,7 @@ mdio_pins {
+@@ -156,7 +156,7 @@ mdio_pins {
  		};
  	};
  
@@ -167,7 +203,7 @@ index d31a194124c9..03fd9df16999 100644
  		tx_pins {
  			pinmux = <MT2712_PIN_71_GBE_TXD3__FUNC_GPIO71>,
  				 <MT2712_PIN_72_GBE_TXD2__FUNC_GPIO72>,
-@@ -181,14 +181,14 @@ mdio_pins {
+@@ -182,14 +182,14 @@ mdio_pins {
  		};
  	};
  
@@ -185,7 +221,7 @@ index d31a194124c9..03fd9df16999 100644
  			pinmux = <MT2712_PIN_14_IDDIG_P1__FUNC_IDDIG_B>;
  			bias-pull-up;
 diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-index 1ac0b2cf3d40..fde2b165f55d 100644
+index ed1a9d319415..f767f921bdee 100644
 --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
 @@ -249,10 +249,11 @@ topckgen: syscon@10000000 {
@@ -202,10 +238,10 @@ index 1ac0b2cf3d40..fde2b165f55d 100644
  
  	pericfg: syscon@10003000 {
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index 7bb316922a3a..f8a32006885b 100644
+index 3ee9266fa8e9..917fa39a74f8 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -251,7 +251,7 @@ scpsys: power-controller@10006000 {
+@@ -252,7 +252,7 @@ scpsys: power-controller@10006000 {
  		clock-names = "hif_sel";
  	};
  
@@ -214,7 +250,7 @@ index 7bb316922a3a..f8a32006885b 100644
  		compatible = "mediatek,mt7622-cir";
  		reg = <0 0x10009000 0 0x1000>;
  		interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_LOW>;
-@@ -282,16 +282,14 @@ thermal_calibration: calib@198 {
+@@ -283,16 +283,14 @@ thermal_calibration: calib@198 {
  		};
  	};
  
@@ -235,7 +271,7 @@ index 7bb316922a3a..f8a32006885b 100644
  		reg = <0 0x10210000 0 0x1000>;
  		#clock-cells = <1>;
  	};
-@@ -514,7 +512,6 @@ thermal: thermal@1100b000 {
+@@ -515,7 +513,6 @@ thermal: thermal@1100b000 {
  			 <&pericfg CLK_PERI_AUXADC_PD>;
  		clock-names = "therm", "auxadc";
  		resets = <&pericfg MT7622_PERI_THERM_SW_RST>;
@@ -295,11 +331,405 @@ index 7bb316922a3a..f8a32006885b 100644
  		reg = <0 0x1b100000 0 0x20000>;
  		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>,
  			     <GIC_SPI 224 IRQ_TYPE_LEVEL_LOW>,
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+index e1ec2cccf444..aba6686eb34a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+@@ -146,19 +146,19 @@ sfp2: sfp-2 {
+ 
+ &cpu_thermal {
+ 	cooling-maps {
+-		cpu-active-high {
++		map-cpu-active-high {
+ 			/* active: set fan to cooling level 2 */
+ 			cooling-device = <&fan 2 2>;
+ 			trip = <&cpu_trip_active_high>;
+ 		};
+ 
+-		cpu-active-med {
++		map-cpu-active-med {
+ 			/* active: set fan to cooling level 1 */
+ 			cooling-device = <&fan 1 1>;
+ 			trip = <&cpu_trip_active_med>;
+ 		};
+ 
+-		cpu-active-low {
++		map-cpu-active-low {
+ 			/* active: set fan to cooling level 0 */
+ 			cooling-device = <&fan 0 0>;
+ 			trip = <&cpu_trip_active_low>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+index d974739eae1c..559990dcd1d1 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+@@ -16,49 +16,49 @@ / {
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
+-	clk40m: oscillator-40m {
+-		compatible = "fixed-clock";
+-		clock-frequency = <40000000>;
+-		#clock-cells = <0>;
+-		clock-output-names = "clkxtal";
+-	};
+-
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		cpu0: cpu@0 {
+-			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+-			enable-method = "psci";
+ 			reg = <0x0>;
++			device_type = "cpu";
++			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+-			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+-			enable-method = "psci";
+ 			reg = <0x1>;
++			device_type = "cpu";
++			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+-			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+-			enable-method = "psci";
+ 			reg = <0x2>;
++			device_type = "cpu";
++			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+-			device_type = "cpu";
+-			enable-method = "psci";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x3>;
++			device_type = "cpu";
++			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
++	clk40m: oscillator-40m {
++		compatible = "fixed-clock";
++		clock-frequency = <40000000>;
++		#clock-cells = <0>;
++		clock-output-names = "clkxtal";
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
+@@ -121,32 +121,23 @@ wo_boot: wo-boot@15194000 {
+ 
+ 	};
+ 
+-	timer {
+-		compatible = "arm,armv8-timer";
+-		interrupt-parent = <&gic>;
+-		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+-			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+-			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+-			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+-	};
+-
+ 	soc {
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+ 		compatible = "simple-bus";
+ 		ranges;
++		#address-cells = <2>;
++		#size-cells = <2>;
+ 
+ 		gic: interrupt-controller@c000000 {
+ 			compatible = "arm,gic-v3";
+-			#interrupt-cells = <3>;
+-			interrupt-parent = <&gic>;
+-			interrupt-controller;
+ 			reg = <0 0x0c000000 0 0x10000>,  /* GICD */
+ 			      <0 0x0c080000 0 0x80000>,  /* GICR */
+ 			      <0 0x0c400000 0 0x2000>,   /* GICC */
+ 			      <0 0x0c410000 0 0x1000>,   /* GICH */
+ 			      <0 0x0c420000 0 0x2000>;   /* GICV */
++			interrupt-parent = <&gic>;
+ 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
+ 		};
+ 
+ 		infracfg: infracfg@10001000 {
+@@ -203,6 +194,19 @@ pio: pinctrl@1001f000 {
+ 			#interrupt-cells = <2>;
+ 		};
+ 
++		pwm: pwm@10048000 {
++			compatible = "mediatek,mt7986-pwm";
++			reg = <0 0x10048000 0 0x1000>;
++			#pwm-cells = <2>;
++			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&topckgen CLK_TOP_PWM_SEL>,
++				 <&infracfg CLK_INFRA_PWM_STA>,
++				 <&infracfg CLK_INFRA_PWM1_CK>,
++				 <&infracfg CLK_INFRA_PWM2_CK>;
++			clock-names = "top", "main", "pwm1", "pwm2";
++			status = "disabled";
++		};
++
+ 		sgmiisys0: syscon@10060000 {
+ 			compatible = "mediatek,mt7986-sgmiisys_0",
+ 				     "syscon";
+@@ -240,19 +244,6 @@ crypto: crypto@10320000 {
+ 			status = "disabled";
+ 		};
+ 
+-		pwm: pwm@10048000 {
+-			compatible = "mediatek,mt7986-pwm";
+-			reg = <0 0x10048000 0 0x1000>;
+-			#pwm-cells = <2>;
+-			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&topckgen CLK_TOP_PWM_SEL>,
+-				 <&infracfg CLK_INFRA_PWM_STA>,
+-				 <&infracfg CLK_INFRA_PWM1_CK>,
+-				 <&infracfg CLK_INFRA_PWM2_CK>;
+-			clock-names = "top", "main", "pwm1", "pwm2";
+-			status = "disabled";
+-		};
+-
+ 		uart0: serial@11002000 {
+ 			compatible = "mediatek,mt7986-uart",
+ 				     "mediatek,mt6577-uart";
+@@ -310,9 +301,9 @@ i2c0: i2c@11008000 {
+ 
+ 		spi0: spi@1100a000 {
+ 			compatible = "mediatek,mt7986-spi-ipm", "mediatek,spi-ipm";
++			reg = <0 0x1100a000 0 0x100>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg = <0 0x1100a000 0 0x100>;
+ 			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&topckgen CLK_TOP_MPLL_D2>,
+ 				 <&topckgen CLK_TOP_SPI_SEL>,
+@@ -324,9 +315,9 @@ spi0: spi@1100a000 {
+ 
+ 		spi1: spi@1100b000 {
+ 			compatible = "mediatek,mt7986-spi-ipm", "mediatek,spi-ipm";
++			reg = <0 0x1100b000 0 0x100>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg = <0 0x1100b000 0 0x100>;
+ 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&topckgen CLK_TOP_MPLL_D2>,
+ 				 <&topckgen CLK_TOP_SPIM_MST_SEL>,
+@@ -336,6 +327,20 @@ spi1: spi@1100b000 {
+ 			status = "disabled";
+ 		};
+ 
++		thermal: thermal@1100c800 {
++			compatible = "mediatek,mt7986-thermal";
++			reg = <0 0x1100c800 0 0x800>;
++			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_THERM_CK>,
++				 <&infracfg CLK_INFRA_ADC_26M_CK>;
++			clock-names = "therm", "auxadc";
++			nvmem-cells = <&thermal_calibration>;
++			nvmem-cell-names = "calibration-data";
++			#thermal-sensor-cells = <1>;
++			mediatek,auxadc = <&auxadc>;
++			mediatek,apmixedsys = <&apmixedsys>;
++		};
++
+ 		auxadc: adc@1100d000 {
+ 			compatible = "mediatek,mt7986-auxadc";
+ 			reg = <0 0x1100d000 0 0x1000>;
+@@ -387,39 +392,23 @@ mmc0: mmc@11230000 {
+ 			status = "disabled";
+ 		};
+ 
+-		thermal: thermal@1100c800 {
+-			#thermal-sensor-cells = <1>;
+-			compatible = "mediatek,mt7986-thermal";
+-			reg = <0 0x1100c800 0 0x800>;
+-			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&infracfg CLK_INFRA_THERM_CK>,
+-				 <&infracfg CLK_INFRA_ADC_26M_CK>,
+-				 <&infracfg CLK_INFRA_ADC_FRC_CK>;
+-			clock-names = "therm", "auxadc", "adc_32k";
+-			mediatek,auxadc = <&auxadc>;
+-			mediatek,apmixedsys = <&apmixedsys>;
+-			nvmem-cells = <&thermal_calibration>;
+-			nvmem-cell-names = "calibration-data";
+-		};
+-
+ 		pcie: pcie@11280000 {
+ 			compatible = "mediatek,mt7986-pcie",
+ 				     "mediatek,mt8192-pcie";
++			reg = <0x00 0x11280000 0x00 0x4000>;
++			reg-names = "pcie-mac";
++			ranges = <0x82000000 0x00 0x20000000 0x00
++				  0x20000000 0x00 0x10000000>;
+ 			device_type = "pci";
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+-			reg = <0x00 0x11280000 0x00 0x4000>;
+-			reg-names = "pcie-mac";
+ 			interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
+ 			bus-range = <0x00 0xff>;
+-			ranges = <0x82000000 0x00 0x20000000 0x00
+-				  0x20000000 0x00 0x10000000>;
+ 			clocks = <&infracfg CLK_INFRA_IPCIE_PIPE_CK>,
+ 				 <&infracfg CLK_INFRA_IPCIE_CK>,
+ 				 <&infracfg CLK_INFRA_IPCIER_CK>,
+ 				 <&infracfg CLK_INFRA_IPCIEB_CK>;
+ 			clock-names = "pl_250m", "tl_26m", "peri_26m", "top_133m";
+-			status = "disabled";
+ 
+ 			phys = <&pcie_port PHY_TYPE_PCIE>;
+ 			phy-names = "pcie-phy";
+@@ -430,6 +419,8 @@ pcie: pcie@11280000 {
+ 					<0 0 0 2 &pcie_intc 1>,
+ 					<0 0 0 3 &pcie_intc 2>,
+ 					<0 0 0 4 &pcie_intc 3>;
++			status = "disabled";
++
+ 			pcie_intc: interrupt-controller {
+ 				#address-cells = <0>;
+ 				#interrupt-cells = <1>;
+@@ -440,9 +431,9 @@ pcie_intc: interrupt-controller {
+ 		pcie_phy: t-phy {
+ 			compatible = "mediatek,mt7986-tphy",
+ 				     "mediatek,generic-tphy-v2";
++			ranges;
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
+-			ranges;
+ 			status = "disabled";
+ 
+ 			pcie_port: pcie-phy@11c00000 {
+@@ -467,9 +458,9 @@ thermal_calibration: calib@274 {
+ 		usb_phy: t-phy@11e10000 {
+ 			compatible = "mediatek,mt7986-tphy",
+ 				     "mediatek,generic-tphy-v2";
++			ranges = <0 0 0x11e10000 0x1700>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges = <0 0 0x11e10000 0x1700>;
+ 			status = "disabled";
+ 
+ 			u2port0: usb-phy@0 {
+@@ -497,8 +488,6 @@ u2port1: usb-phy@1000 {
+ 		};
+ 
+ 		ethsys: syscon@15000000 {
+-			 #address-cells = <1>;
+-			 #size-cells = <1>;
+ 			 compatible = "mediatek,mt7986-ethsys",
+ 				      "syscon";
+ 			 reg = <0 0x15000000 0 0x1000>;
+@@ -532,20 +521,6 @@ wed1: wed@15011000 {
+ 			mediatek,wo-ccif = <&wo_ccif1>;
+ 		};
+ 
+-		wo_ccif0: syscon@151a5000 {
+-			compatible = "mediatek,mt7986-wo-ccif", "syscon";
+-			reg = <0 0x151a5000 0 0x1000>;
+-			interrupt-parent = <&gic>;
+-			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+-		wo_ccif1: syscon@151ad000 {
+-			compatible = "mediatek,mt7986-wo-ccif", "syscon";
+-			reg = <0 0x151ad000 0 0x1000>;
+-			interrupt-parent = <&gic>;
+-			interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+ 		eth: ethernet@15100000 {
+ 			compatible = "mediatek,mt7986-eth";
+ 			reg = <0 0x15100000 0 0x80000>;
+@@ -578,26 +553,39 @@ eth: ethernet@15100000 {
+ 					  <&topckgen CLK_TOP_SGM_325M_SEL>;
+ 			assigned-clock-parents = <&apmixedsys CLK_APMIXED_NET2PLL>,
+ 						 <&apmixedsys CLK_APMIXED_SGMPLL>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			mediatek,ethsys = <&ethsys>;
+ 			mediatek,sgmiisys = <&sgmiisys0>, <&sgmiisys1>;
+ 			mediatek,wed-pcie = <&wed_pcie>;
+ 			mediatek,wed = <&wed0>, <&wed1>;
+-			#reset-cells = <1>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
+ 
++		wo_ccif0: syscon@151a5000 {
++			compatible = "mediatek,mt7986-wo-ccif", "syscon";
++			reg = <0 0x151a5000 0 0x1000>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		wo_ccif1: syscon@151ad000 {
++			compatible = "mediatek,mt7986-wo-ccif", "syscon";
++			reg = <0 0x151ad000 0 0x1000>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		wifi: wifi@18000000 {
+ 			compatible = "mediatek,mt7986-wmac";
++			reg = <0 0x18000000 0 0x1000000>,
++			      <0 0x10003000 0 0x1000>,
++			      <0 0x11d10000 0 0x1000>;
+ 			resets = <&watchdog MT7986_TOPRGU_CONSYS_SW_RST>;
+ 			reset-names = "consys";
+ 			clocks = <&topckgen CLK_TOP_CONN_MCUSYS_SEL>,
+ 				 <&topckgen CLK_TOP_AP2CNN_HOST_SEL>;
+ 			clock-names = "mcu", "ap2conn";
+-			reg = <0 0x18000000 0 0x1000000>,
+-			      <0 0x10003000 0 0x1000>,
+-			      <0 0x11d10000 0 0x1000>;
+ 			interrupts = <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
+@@ -645,4 +633,13 @@ cpu_trip_active_low: active-low {
+ 			};
+ 		};
+ 	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
++	};
+ };
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+index 70becf10cacb..d846342c1d3b 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+@@ -405,7 +405,6 @@ &mt6358codec {
+ };
+ 
+ &mt6358_vgpu_reg {
+-	regulator-min-microvolt = <625000>;
+ 	regulator-max-microvolt = <900000>;
+ 
+ 	regulator-coupled-with = <&mt6358_vsram_gpu_reg>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index d5d9b954c449..2147e152683b 100644
+index df6e9990cd5f..8721a5ffca30 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -1554,6 +1554,7 @@ mfgcfg: syscon@13000000 {
+@@ -1628,6 +1628,7 @@ mfgcfg: syscon@13000000 {
  			compatible = "mediatek,mt8183-mfgcfg", "syscon";
  			reg = <0 0x13000000 0 0x1000>;
  			#clock-cells = <1>;
@@ -308,10 +738,10 @@ index d5d9b954c449..2147e152683b 100644
  
  		gpu: gpu@13040000 {
 diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-index c6080af1e4a3..0814ed6a7272 100644
+index 4bd1494b354c..dc39ebd1bbfc 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-@@ -903,7 +903,7 @@ regulators {
+@@ -1392,7 +1392,7 @@ regulators {
  			mt6315_6_vbuck1: vbuck1 {
  				regulator-compatible = "vbuck1";
  				regulator-name = "Vbcpu";
@@ -320,7 +750,7 @@ index c6080af1e4a3..0814ed6a7272 100644
  				regulator-max-microvolt = <1193750>;
  				regulator-enable-ramp-delay = <256>;
  				regulator-allowed-modes = <0 1 2>;
-@@ -913,7 +913,7 @@ mt6315_6_vbuck1: vbuck1 {
+@@ -1402,7 +1402,7 @@ mt6315_6_vbuck1: vbuck1 {
  			mt6315_6_vbuck3: vbuck3 {
  				regulator-compatible = "vbuck3";
  				regulator-name = "Vlcpu";
@@ -329,7 +759,7 @@ index c6080af1e4a3..0814ed6a7272 100644
  				regulator-max-microvolt = <1193750>;
  				regulator-enable-ramp-delay = <256>;
  				regulator-allowed-modes = <0 1 2>;
-@@ -930,7 +930,7 @@ regulators {
+@@ -1419,7 +1419,7 @@ regulators {
  			mt6315_7_vbuck1: vbuck1 {
  				regulator-compatible = "vbuck1";
  				regulator-name = "Vgpu";
@@ -339,10 +769,10 @@ index c6080af1e4a3..0814ed6a7272 100644
  				regulator-enable-ramp-delay = <256>;
  				regulator-allowed-modes = <0 1 2>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt8192.dtsi b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-index 4ed8a0f18758..7ecba8c7262d 100644
+index f1fc14e53f8c..b1443adc55aa 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8192.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-@@ -1240,6 +1240,7 @@ mutex: mutex@14001000 {
+@@ -1412,6 +1412,7 @@ mutex: mutex@14001000 {
  			reg = <0 0x14001000 0 0x1000>;
  			interrupts = <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH 0>;
  			clocks = <&mmsys CLK_MM_DISP_MUTEX0>;
@@ -351,10 +781,131 @@ index 4ed8a0f18758..7ecba8c7262d 100644
  					      <CMDQ_EVENT_DISP_STREAM_DONE_ENG_EVENT_1>;
  			power-domains = <&spm MT8192_POWER_DOMAIN_DISP>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-index 4b8a1c462906..9180a73db066 100644
+index 3f508e5c1843..b78f408110bf 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-@@ -845,7 +845,7 @@ regulators {
+@@ -114,6 +114,77 @@ ppvar_sys: regulator-ppvar-sys {
+ 		regulator-boot-on;
+ 	};
+ 
++	/* Murata NCP03WF104F05RL */
++	tboard_thermistor1: thermal-sensor-t1 {
++		compatible = "generic-adc-thermal";
++		#thermal-sensor-cells = <0>;
++		io-channels = <&auxadc 0>;
++		io-channel-names = "sensor-channel";
++		temperature-lookup-table = <	(-10000) 1553
++						(-5000) 1485
++						0 1406
++						5000 1317
++						10000 1219
++						15000 1115
++						20000 1007
++						25000 900
++						30000 796
++						35000 697
++						40000 605
++						45000 523
++						50000 449
++						55000 384
++						60000 327
++						65000 279
++						70000 237
++						75000 202
++						80000 172
++						85000 147
++						90000 125
++						95000 107
++						100000 92
++						105000 79
++						110000 68
++						115000 59
++						120000 51
++						125000 44>;
++	};
++
++	tboard_thermistor2: thermal-sensor-t2 {
++		compatible = "generic-adc-thermal";
++		#thermal-sensor-cells = <0>;
++		io-channels = <&auxadc 1>;
++		io-channel-names = "sensor-channel";
++		temperature-lookup-table = <	(-10000) 1553
++						(-5000) 1485
++						0 1406
++						5000 1317
++						10000 1219
++						15000 1115
++						20000 1007
++						25000 900
++						30000 796
++						35000 697
++						40000 605
++						45000 523
++						50000 449
++						55000 384
++						60000 327
++						65000 279
++						70000 237
++						75000 202
++						80000 172
++						85000 147
++						90000 125
++						95000 107
++						100000 92
++						105000 79
++						110000 68
++						115000 59
++						120000 51
++						125000 44>;
++	};
++
+ 	usb_vbus: regulator-5v0-usb-vbus {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "usb-vbus";
+@@ -176,6 +247,42 @@ &afe {
+ 	memory-region = <&afe_mem>;
+ };
+ 
++&auxadc {
++	status = "okay";
++};
++
++&cpu0 {
++	cpu-supply = <&mt6359_vcore_buck_reg>;
++};
++
++&cpu1 {
++	cpu-supply = <&mt6359_vcore_buck_reg>;
++};
++
++&cpu2 {
++	cpu-supply = <&mt6359_vcore_buck_reg>;
++};
++
++&cpu3 {
++	cpu-supply = <&mt6359_vcore_buck_reg>;
++};
++
++&cpu4 {
++	cpu-supply = <&mt6315_6_vbuck1>;
++};
++
++&cpu5 {
++	cpu-supply = <&mt6315_6_vbuck1>;
++};
++
++&cpu6 {
++	cpu-supply = <&mt6315_6_vbuck1>;
++};
++
++&cpu7 {
++	cpu-supply = <&mt6315_6_vbuck1>;
++};
++
+ &dp_intf0 {
+ 	status = "okay";
+ 
+@@ -1098,7 +1205,7 @@ regulators {
  			mt6315_6_vbuck1: vbuck1 {
  				regulator-compatible = "vbuck1";
  				regulator-name = "Vbcpu";
@@ -363,7 +914,7 @@ index 4b8a1c462906..9180a73db066 100644
  				regulator-max-microvolt = <1193750>;
  				regulator-enable-ramp-delay = <256>;
  				regulator-ramp-delay = <6250>;
-@@ -863,7 +863,7 @@ regulators {
+@@ -1116,7 +1223,7 @@ regulators {
  			mt6315_7_vbuck1: vbuck1 {
  				regulator-compatible = "vbuck1";
  				regulator-name = "Vgpu";
@@ -372,35 +923,72 @@ index 4b8a1c462906..9180a73db066 100644
  				regulator-max-microvolt = <1193750>;
  				regulator-enable-ramp-delay = <256>;
  				regulator-ramp-delay = <6250>;
+@@ -1127,6 +1234,36 @@ mt6315_7_vbuck1: vbuck1 {
+ 	};
+ };
+ 
++&thermal_zones {
++	soc-area-thermal {
++		polling-delay = <1000>;
++		polling-delay-passive = <250>;
++		thermal-sensors = <&tboard_thermistor1>;
++
++		trips {
++			trip-crit {
++				temperature = <84000>;
++				hysteresis = <1000>;
++				type = "critical";
++			};
++		};
++	};
++
++	pmic-area-thermal {
++		polling-delay = <1000>;
++		polling-delay-passive = <0>;
++		thermal-sensors = <&tboard_thermistor2>;
++
++		trips {
++			trip-crit {
++				temperature = <84000>;
++				hysteresis = <1000>;
++				type = "critical";
++			};
++		};
++	};
++};
++
+ &u3phy0 {
+ 	status = "okay";
+ };
 diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-index 414cbe345127..bdf002e9cece 100644
+index 6708c4d21abf..2bb9d9aa65fe 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
-@@ -1492,6 +1492,7 @@ vppsys0: clock-controller@14000000 {
- 			compatible = "mediatek,mt8195-vppsys0";
+@@ -1963,6 +1963,7 @@ vppsys0: syscon@14000000 {
+ 			compatible = "mediatek,mt8195-vppsys0", "syscon";
  			reg = <0 0x14000000 0 0x1000>;
  			#clock-cells = <1>;
 +			mediatek,gce-client-reg = <&gce1 SUBSYS_1400XXXX 0 0x1000>;
  		};
  
- 		smi_sub_common_vpp0_vpp1_2x1: smi@14010000 {
-@@ -1597,6 +1598,7 @@ vppsys1: clock-controller@14f00000 {
- 			compatible = "mediatek,mt8195-vppsys1";
+ 		mutex@1400f000 {
+@@ -2077,6 +2078,7 @@ vppsys1: syscon@14f00000 {
+ 			compatible = "mediatek,mt8195-vppsys1", "syscon";
  			reg = <0 0x14f00000 0 0x1000>;
  			#clock-cells = <1>;
 +			mediatek,gce-client-reg = <&gce1 SUBSYS_14f0XXXX 0 0x1000>;
  		};
  
- 		larb5: larb@14f02000 {
-@@ -1982,6 +1984,7 @@ vdosys0: syscon@1c01a000 {
+ 		mutex@14f01000 {
+@@ -2623,6 +2625,7 @@ vdosys0: syscon@1c01a000 {
  			reg = <0 0x1c01a000 0 0x1000>;
  			mboxes = <&gce0 0 CMDQ_THR_PRIO_4>;
  			#clock-cells = <1>;
 +			mediatek,gce-client-reg = <&gce0 SUBSYS_1c01XXXX 0xa000 0x1000>;
  		};
  
- 		larb20: larb@1b010000 {
-@@ -2085,6 +2088,7 @@ mutex: mutex@1c016000 {
+ 
+@@ -2776,6 +2779,7 @@ mutex: mutex@1c016000 {
  			interrupts = <GIC_SPI 658 IRQ_TYPE_LEVEL_HIGH 0>;
  			power-domains = <&spm MT8195_POWER_DOMAIN_VDOSYS0>;
  			clocks = <&vdosys0 CLK_VDO0_DISP_MUTEX0>;
@@ -408,11 +996,110 @@ index 414cbe345127..bdf002e9cece 100644
  			mediatek,gce-events = <CMDQ_EVENT_VDO0_DISP_STREAM_DONE_0>;
  		};
  
+@@ -2846,6 +2850,7 @@ mutex1: mutex@1c101000 {
+ 			power-domains = <&spm MT8195_POWER_DOMAIN_VDOSYS1>;
+ 			clocks = <&vdosys1 CLK_VDO1_DISP_MUTEX>;
+ 			clock-names = "vdo1_mutex";
++			mediatek,gce-client-reg = <&gce0 SUBSYS_1c10XXXX 0x1000 0x1000>;
+ 			mediatek,gce-events = <CMDQ_EVENT_VDO1_STREAM_DONE_ENG_0>;
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+index 6eb4c5eb6bb8..fbb9bf09078a 100644
+--- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+@@ -2644,7 +2644,7 @@ usb_sec: usb@a8f8800 {
+ 			resets = <&gcc GCC_USB30_SEC_BCR>;
+ 			power-domains = <&gcc USB30_SEC_GDSC>;
+ 			interrupts-extended = <&intc GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
+-					      <&pdc 7 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 40 IRQ_TYPE_LEVEL_HIGH>,
+ 					      <&pdc 10 IRQ_TYPE_EDGE_BOTH>,
+ 					      <&pdc 11 IRQ_TYPE_EDGE_BOTH>;
+ 			interrupt-names = "hs_phy_irq", "ss_phy_irq",
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+index b8081513176a..329dcfea51de 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+@@ -1773,6 +1773,7 @@ pcie4: pcie@1c00000 {
+ 			reset-names = "pci";
+ 
+ 			power-domains = <&gcc PCIE_4_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
+ 
+ 			phys = <&pcie4_phy>;
+ 			phy-names = "pciephy";
+@@ -1871,6 +1872,7 @@ pcie3b: pcie@1c08000 {
+ 			reset-names = "pci";
+ 
+ 			power-domains = <&gcc PCIE_3B_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
+ 
+ 			phys = <&pcie3b_phy>;
+ 			phy-names = "pciephy";
+@@ -1969,6 +1971,7 @@ pcie3a: pcie@1c10000 {
+ 			reset-names = "pci";
+ 
+ 			power-domains = <&gcc PCIE_3A_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
+ 
+ 			phys = <&pcie3a_phy>;
+ 			phy-names = "pciephy";
+@@ -2070,6 +2073,7 @@ pcie2b: pcie@1c18000 {
+ 			reset-names = "pci";
+ 
+ 			power-domains = <&gcc PCIE_2B_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
+ 
+ 			phys = <&pcie2b_phy>;
+ 			phy-names = "pciephy";
+@@ -2168,6 +2172,7 @@ pcie2a: pcie@1c20000 {
+ 			reset-names = "pci";
+ 
+ 			power-domains = <&gcc PCIE_2A_GDSC>;
++			required-opps = <&rpmhpd_opp_nom>;
+ 
+ 			phys = <&pcie2a_phy>;
+ 			phy-names = "pciephy";
+diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+index 0fc25c6a481f..0229bd706a2e 100644
+--- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+@@ -1774,12 +1774,8 @@ pcie0: pci@1c00000 {
+ 			ranges = <0x01000000 0x0 0x00000000 0x0 0x60200000 0x0 0x100000>,
+ 				 <0x02000000 0x0 0x60300000 0x0 0x60300000 0x0 0x3d00000>;
+ 
+-			/*
+-			 * MSIs for BDF (1:0.0) only works with Device ID 0x5980.
+-			 * Hence, the IDs are swapped.
+-			 */
+-			msi-map = <0x0 &gic_its 0x5981 0x1>,
+-				  <0x100 &gic_its 0x5980 0x1>;
++			msi-map = <0x0 &gic_its 0x5980 0x1>,
++				  <0x100 &gic_its 0x5981 0x1>;
+ 			msi-map-mask = <0xff00>;
+ 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "msi";
+@@ -1888,12 +1884,8 @@ pcie1: pci@1c08000 {
+ 			ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x100000>,
+ 				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
+ 
+-			/*
+-			 * MSIs for BDF (1:0.0) only works with Device ID 0x5a00.
+-			 * Hence, the IDs are swapped.
+-			 */
+-			msi-map = <0x0 &gic_its 0x5a01 0x1>,
+-				  <0x100 &gic_its 0x5a00 0x1>;
++			msi-map = <0x0 &gic_its 0x5a00 0x1>,
++				  <0x100 &gic_its 0x5a01 0x1>;
+ 			msi-map-mask = <0xff00>;
+ 			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "msi";
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
-index 194e48c755f6..a51e8d0493ca 100644
+index 054c6a4d1a45..294eb2de263d 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
-@@ -789,7 +789,6 @@ &pcie_phy {
+@@ -779,7 +779,6 @@ &pcie_phy {
  };
  
  &pcie0 {
@@ -421,7 +1108,7 @@ index 194e48c755f6..a51e8d0493ca 100644
  	num-lanes = <4>;
  	pinctrl-names = "default";
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index aa3e21bd6c8f..937a15005eb0 100644
+index 20e3f41efe97..f2ca5d30d223 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
 @@ -401,16 +401,22 @@ &io_domains {
@@ -477,10 +1164,10 @@ index aa3e21bd6c8f..937a15005eb0 100644
  	/*
  	 * Signal integrity isn't great at 200MHz but 100MHz has proven stable
 diff --git a/arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts b/arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts
-index 26d7fda275ed..856fe4b66a0b 100644
+index f9127ddfbb7d..dc5892d25c10 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts
-@@ -412,6 +412,8 @@ regulator-state-mem {
+@@ -416,6 +416,8 @@ regulator-state-mem {
  
  			vccio_sd: LDO_REG5 {
  				regulator-name = "vccio_sd";
@@ -489,7 +1176,7 @@ index 26d7fda275ed..856fe4b66a0b 100644
  				regulator-min-microvolt = <1800000>;
  				regulator-max-microvolt = <3300000>;
  
-@@ -521,9 +523,9 @@ &mdio0 {
+@@ -525,9 +527,9 @@ &mdio0 {
  	#address-cells = <1>;
  	#size-cells = <0>;
  
@@ -501,6 +1188,19 @@ index 26d7fda275ed..856fe4b66a0b 100644
  
  		ports {
  			#address-cells = <1>;
+diff --git a/arch/arm64/kvm/hyp/include/nvhe/gfp.h b/arch/arm64/kvm/hyp/include/nvhe/gfp.h
+index fe5472a184a3..97c527ef53c2 100644
+--- a/arch/arm64/kvm/hyp/include/nvhe/gfp.h
++++ b/arch/arm64/kvm/hyp/include/nvhe/gfp.h
+@@ -16,7 +16,7 @@ struct hyp_pool {
+ 	 * API at EL2.
+ 	 */
+ 	hyp_spinlock_t lock;
+-	struct list_head free_area[MAX_ORDER + 1];
++	struct list_head free_area[NR_PAGE_ORDERS];
+ 	phys_addr_t range_start;
+ 	phys_addr_t range_end;
+ 	unsigned short max_order;
 diff --git a/arch/loongarch/include/asm/perf_event.h b/arch/loongarch/include/asm/perf_event.h
 index 2a35a0bc2aaa..52b638059e40 100644
 --- a/arch/loongarch/include/asm/perf_event.h
@@ -521,10 +1221,10 @@ index 2a35a0bc2aaa..52b638059e40 100644
 +
  #endif /* __LOONGARCH_PERF_EVENT_H__ */
 diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-index b829ab911a17..007718d51f09 100644
+index 1fc2f6813ea0..97b40defde06 100644
 --- a/arch/loongarch/mm/fault.c
 +++ b/arch/loongarch/mm/fault.c
-@@ -193,10 +193,10 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
+@@ -202,10 +202,10 @@ static void __kprobes __do_page_fault(struct pt_regs *regs,
  		if (!(vma->vm_flags & VM_WRITE))
  			goto bad_area;
  	} else {
@@ -537,11 +1237,24 @@ index b829ab911a17..007718d51f09 100644
  	}
  
  	/*
+diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+index 57e887bfa34c..94b3d6930fc3 100644
+--- a/arch/riscv/include/asm/page.h
++++ b/arch/riscv/include/asm/page.h
+@@ -89,7 +89,7 @@ typedef struct page *pgtable_t;
+ #define PTE_FMT "%08lx"
+ #endif
+ 
+-#ifdef CONFIG_64BIT
++#if defined(CONFIG_64BIT) && defined(CONFIG_MMU)
+ /*
+  * We override this value as its generic definition uses __pa too early in
+  * the boot process (before kernel_map.va_pa_offset is set).
 diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 63055c6ad2c2..2d9416a6a070 100644
+index 2793304bf1b7..719c3041ae1c 100644
 --- a/arch/riscv/include/asm/pgtable.h
 +++ b/arch/riscv/include/asm/pgtable.h
-@@ -799,8 +799,8 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
+@@ -903,8 +903,8 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
  #define PAGE_SHARED		__pgprot(0)
  #define PAGE_KERNEL		__pgprot(0)
  #define swapper_pg_dir		NULL
@@ -552,11 +1265,61 @@ index 63055c6ad2c2..2d9416a6a070 100644
  #define VMALLOC_END		TASK_SIZE
  
  #endif /* !CONFIG_MMU */
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index aac853ae4eb7..e600aab116a4 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -173,6 +173,19 @@ static void __init init_resources(void)
+ 	if (ret < 0)
+ 		goto error;
+ 
++#ifdef CONFIG_KEXEC_CORE
++	if (crashk_res.start != crashk_res.end) {
++		ret = add_resource(&iomem_resource, &crashk_res);
++		if (ret < 0)
++			goto error;
++	}
++	if (crashk_low_res.start != crashk_low_res.end) {
++		ret = add_resource(&iomem_resource, &crashk_low_res);
++		if (ret < 0)
++			goto error;
++	}
++#endif
++
+ #ifdef CONFIG_CRASH_DUMP
+ 	if (elfcorehdr_size > 0) {
+ 		elfcorehdr_res.start = elfcorehdr_addr;
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index b50faa232b5e..ec02ea86aa39 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -230,7 +230,7 @@ static void __init setup_bootmem(void)
+ 	 * In 64-bit, any use of __va/__pa before this point is wrong as we
+ 	 * did not know the start of DRAM before.
+ 	 */
+-	if (IS_ENABLED(CONFIG_64BIT))
++	if (IS_ENABLED(CONFIG_64BIT) && IS_ENABLED(CONFIG_MMU))
+ 		kernel_map.va_pa_offset = PAGE_OFFSET - phys_ram_base;
+ 
+ 	/*
+diff --git a/arch/sparc/kernel/traps_64.c b/arch/sparc/kernel/traps_64.c
+index 08ffd17d5ec3..523a6e5ee925 100644
+--- a/arch/sparc/kernel/traps_64.c
++++ b/arch/sparc/kernel/traps_64.c
+@@ -897,7 +897,7 @@ void __init cheetah_ecache_flush_init(void)
+ 
+ 	/* Now allocate error trap reporting scoreboard. */
+ 	sz = NR_CPUS * (2 * sizeof(struct cheetah_err_info));
+-	for (order = 0; order <= MAX_ORDER; order++) {
++	for (order = 0; order < NR_PAGE_ORDERS; order++) {
+ 		if ((PAGE_SIZE << order) >= sz)
+ 			break;
+ 	}
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5f7a86f240db..49cea5b81649 100644
+index 0ca3130c6c8f..be9248e5cb71 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -61,6 +61,7 @@ config X86
+@@ -62,6 +62,7 @@ config X86
  	select ACPI_SYSTEM_POWER_STATES_SUPPORT	if ACPI
  	select ARCH_32BIT_OFF_T			if X86_32
  	select ARCH_CLOCKSOURCE_INIT
@@ -564,9 +1327,9 @@ index 5f7a86f240db..49cea5b81649 100644
  	select ARCH_CORRECT_STACKTRACE_ON_KRETPROBE
  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if X86_64 && HUGETLB_PAGE && MIGRATION
  	select ARCH_ENABLE_MEMORY_HOTPLUG if X86_64
-@@ -2449,17 +2450,17 @@ config CC_HAS_SLS
- config CC_HAS_RETURN_THUNK
- 	def_bool $(cc-option,-mfunction-return=thunk-extern)
+@@ -2421,17 +2422,17 @@ config PREFIX_SYMBOLS
+ 	def_bool y
+ 	depends on CALL_PADDING && !CFI_CLANG
  
 -menuconfig SPECULATION_MITIGATIONS
 -	bool "Mitigations for speculative execution vulnerabilities"
@@ -588,10 +1351,10 @@ index 5f7a86f240db..49cea5b81649 100644
  config PAGE_TABLE_ISOLATION
  	bool "Remove the kernel mapping in user mode"
 diff --git a/arch/x86/include/asm/coco.h b/arch/x86/include/asm/coco.h
-index 1f97d00ad858..100a752c33bb 100644
+index de03537a0182..c72b3553081c 100644
 --- a/arch/x86/include/asm/coco.h
 +++ b/arch/x86/include/asm/coco.h
-@@ -13,9 +13,10 @@ enum cc_vendor {
+@@ -12,9 +12,10 @@ enum cc_vendor {
  };
  
  extern enum cc_vendor cc_vendor;
@@ -603,7 +1366,7 @@ index 1f97d00ad858..100a752c33bb 100644
  static inline void cc_set_mask(u64 mask)
  {
  	RIP_REL_REF(cc_mask) = mask;
-@@ -25,6 +26,8 @@ u64 cc_mkenc(u64 val);
+@@ -24,6 +25,8 @@ u64 cc_mkenc(u64 val);
  u64 cc_mkdec(u64 val);
  void cc_random_init(void);
  #else
@@ -613,19 +1376,19 @@ index 1f97d00ad858..100a752c33bb 100644
  {
  	return val;
 diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index f6116b66f289..f0b9b37c4609 100644
+index 0b748ee16b3d..9abb8cc4cd47 100644
 --- a/arch/x86/include/asm/pgtable_types.h
 +++ b/arch/x86/include/asm/pgtable_types.h
-@@ -127,7 +127,7 @@
-  */
- #define _COMMON_PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |	       \
- 				 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |\
--				 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC | \
-+				 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_CC | \
- 				 _PAGE_UFFD_WP)
+@@ -148,7 +148,7 @@
+ #define _COMMON_PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |	\
+ 				 _PAGE_SPECIAL | _PAGE_ACCESSED |	\
+ 				 _PAGE_DIRTY_BITS | _PAGE_SOFT_DIRTY |	\
+-				 _PAGE_DEVMAP | _PAGE_ENC | _PAGE_UFFD_WP)
++				 _PAGE_DEVMAP | _PAGE_CC | _PAGE_UFFD_WP)
  #define _PAGE_CHG_MASK	(_COMMON_PAGE_CHG_MASK | _PAGE_PAT)
  #define _HPAGE_CHG_MASK (_COMMON_PAGE_CHG_MASK | _PAGE_PSE | _PAGE_PAT_LARGE)
-@@ -153,6 +153,7 @@ enum page_cache_mode {
+ 
+@@ -173,6 +173,7 @@ enum page_cache_mode {
  };
  #endif
  
@@ -634,10 +1397,10 @@ index f6116b66f289..f0b9b37c4609 100644
  
  #define _PAGE_CACHE_MASK	(_PAGE_PWT | _PAGE_PCD | _PAGE_PAT)
 diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 7f94dbbc397b..a0d3059bee3d 100644
+index 33b268747bb7..4989095ab769 100644
 --- a/arch/x86/kernel/process_64.c
 +++ b/arch/x86/kernel/process_64.c
-@@ -137,7 +137,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
+@@ -138,7 +138,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
  		       log_lvl, d3, d6, d7);
  	}
  
@@ -646,20 +1409,92 @@ index 7f94dbbc397b..a0d3059bee3d 100644
  		printk("%sPKRU: %08x\n", log_lvl, read_pkru());
  }
  
-diff --git a/crypto/algapi.c b/crypto/algapi.c
-index c73d1359b9d4..5dc9ccdd5a51 100644
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -290,7 +290,6 @@ static struct crypto_larval *__crypto_register_alg(struct crypto_alg *alg)
- 		}
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index dc8e8e907cfb..da2d82e3a873 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -691,6 +691,8 @@ void kvm_pmu_reset(struct kvm_vcpu *vcpu)
+  */
+ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++
+ 	if (KVM_BUG_ON(kvm_vcpu_has_run(vcpu), vcpu->kvm))
+ 		return;
  
- 		if (!strcmp(q->cra_driver_name, alg->cra_name) ||
--		    !strcmp(q->cra_driver_name, alg->cra_driver_name) ||
- 		    !strcmp(q->cra_name, alg->cra_driver_name))
- 			goto err;
- 	}
+@@ -700,8 +702,34 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	 */
+ 	kvm_pmu_reset(vcpu);
+ 
+-	bitmap_zero(vcpu_to_pmu(vcpu)->all_valid_pmc_idx, X86_PMC_IDX_MAX);
++	pmu->version = 0;
++	pmu->nr_arch_gp_counters = 0;
++	pmu->nr_arch_fixed_counters = 0;
++	pmu->counter_bitmask[KVM_PMC_GP] = 0;
++	pmu->counter_bitmask[KVM_PMC_FIXED] = 0;
++	pmu->reserved_bits = 0xffffffff00200000ull;
++	pmu->raw_event_mask = X86_RAW_EVENT_MASK;
++	pmu->global_ctrl_mask = ~0ull;
++	pmu->global_status_mask = ~0ull;
++	pmu->fixed_ctr_ctrl_mask = ~0ull;
++	pmu->pebs_enable_mask = ~0ull;
++	pmu->pebs_data_cfg_mask = ~0ull;
++	bitmap_zero(pmu->all_valid_pmc_idx, X86_PMC_IDX_MAX);
++
++	if (!vcpu->kvm->arch.enable_pmu)
++		return;
++
+ 	static_call(kvm_x86_pmu_refresh)(vcpu);
++
++	/*
++	 * At RESET, both Intel and AMD CPUs set all enable bits for general
++	 * purpose counters in IA32_PERF_GLOBAL_CTRL (so that software that
++	 * was written for v1 PMUs don't unknowingly leave GP counters disabled
++	 * in the global controls).  Emulate that behavior when refreshing the
++	 * PMU so that userspace doesn't need to manually set PERF_GLOBAL_CTRL.
++	 */
++	if (kvm_pmu_has_perf_global_ctrl(pmu) && pmu->nr_arch_gp_counters)
++		pmu->global_ctrl = GENMASK_ULL(pmu->nr_arch_gp_counters - 1, 0);
+ }
+ 
+ void kvm_pmu_init(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 1549461fa42b..48a2f77f62ef 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -493,19 +493,6 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	u64 counter_mask;
+ 	int i;
+ 
+-	pmu->nr_arch_gp_counters = 0;
+-	pmu->nr_arch_fixed_counters = 0;
+-	pmu->counter_bitmask[KVM_PMC_GP] = 0;
+-	pmu->counter_bitmask[KVM_PMC_FIXED] = 0;
+-	pmu->version = 0;
+-	pmu->reserved_bits = 0xffffffff00200000ull;
+-	pmu->raw_event_mask = X86_RAW_EVENT_MASK;
+-	pmu->global_ctrl_mask = ~0ull;
+-	pmu->global_status_mask = ~0ull;
+-	pmu->fixed_ctr_ctrl_mask = ~0ull;
+-	pmu->pebs_enable_mask = ~0ull;
+-	pmu->pebs_data_cfg_mask = ~0ull;
+-
+ 	memset(&lbr_desc->records, 0, sizeof(lbr_desc->records));
+ 
+ 	/*
+@@ -517,8 +504,9 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 		return;
+ 
+ 	entry = kvm_find_cpuid_entry(vcpu, 0xa);
+-	if (!entry || !vcpu->kvm->arch.enable_pmu)
++	if (!entry)
+ 		return;
++
+ 	eax.full = entry->eax;
+ 	edx.full = entry->edx;
+ 
 diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index 093675b1a1ff..49339f37d940 100644
+index 7ff269a78c20..d3b9da75a815 100644
 --- a/drivers/acpi/cppc_acpi.c
 +++ b/drivers/acpi/cppc_acpi.c
 @@ -163,6 +163,13 @@ show_cppc_data(cppc_get_perf_caps, cppc_perf_caps, nominal_freq);
@@ -676,7 +1511,7 @@ index 093675b1a1ff..49339f37d940 100644
  static ssize_t show_feedback_ctrs(struct kobject *kobj,
  		struct kobj_attribute *attr, char *buf)
  {
-@@ -776,6 +783,7 @@ int acpi_cppc_processor_probe(struct acpi_processor *pr)
+@@ -777,6 +784,7 @@ int acpi_cppc_processor_probe(struct acpi_processor *pr)
  			} else if (gas_t->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
  				if (gas_t->address) {
  					void __iomem *addr;
@@ -684,7 +1519,7 @@ index 093675b1a1ff..49339f37d940 100644
  
  					if (!osc_cpc_flexible_adr_space_confirmed) {
  						pr_debug("Flexible address space capability not supported\n");
-@@ -783,7 +791,8 @@ int acpi_cppc_processor_probe(struct acpi_processor *pr)
+@@ -784,7 +792,8 @@ int acpi_cppc_processor_probe(struct acpi_processor *pr)
  							goto out_free;
  					}
  
@@ -694,7 +1529,7 @@ index 093675b1a1ff..49339f37d940 100644
  					if (!addr)
  						goto out_free;
  					cpc_ptr->cpc_regs[i-2].sys_mem_vaddr = addr;
-@@ -979,6 +988,7 @@ int __weak cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val)
+@@ -980,6 +989,7 @@ int __weak cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val)
  static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
  {
  	void __iomem *vaddr = NULL;
@@ -702,7 +1537,7 @@ index 093675b1a1ff..49339f37d940 100644
  	int pcc_ss_id = per_cpu(cpu_pcc_subspace_idx, cpu);
  	struct cpc_reg *reg = &reg_res->cpc_entry.reg;
  
-@@ -988,14 +998,14 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
+@@ -989,14 +999,14 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
  	}
  
  	*val = 0;
@@ -719,7 +1554,7 @@ index 093675b1a1ff..49339f37d940 100644
  		if (ACPI_FAILURE(status)) {
  			pr_debug("Error: Failed to read SystemIO port %llx\n",
  				 reg->address);
-@@ -1004,17 +1014,24 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
+@@ -1005,17 +1015,24 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
  
  		*val = val_u32;
  		return 0;
@@ -747,7 +1582,7 @@ index 093675b1a1ff..49339f37d940 100644
  	case 8:
  		*val = readb_relaxed(vaddr);
  		break;
-@@ -1028,27 +1045,37 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
+@@ -1029,27 +1046,37 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
  		*val = readq_relaxed(vaddr);
  		break;
  	default:
@@ -789,7 +1624,7 @@ index 093675b1a1ff..49339f37d940 100644
  		if (ACPI_FAILURE(status)) {
  			pr_debug("Error: Failed to write SystemIO port %llx\n",
  				 reg->address);
-@@ -1056,17 +1083,27 @@ static int cpc_write(int cpu, struct cpc_register_resource *reg_res, u64 val)
+@@ -1057,17 +1084,27 @@ static int cpc_write(int cpu, struct cpc_register_resource *reg_res, u64 val)
  		}
  
  		return 0;
@@ -820,7 +1655,7 @@ index 093675b1a1ff..49339f37d940 100644
  	case 8:
  		writeb_relaxed(val, vaddr);
  		break;
-@@ -1080,8 +1117,13 @@ static int cpc_write(int cpu, struct cpc_register_resource *reg_res, u64 val)
+@@ -1081,8 +1118,13 @@ static int cpc_write(int cpu, struct cpc_register_resource *reg_res, u64 val)
  		writeq_relaxed(val, vaddr);
  		break;
  	default:
@@ -836,11 +1671,37 @@ index 093675b1a1ff..49339f37d940 100644
  		ret_val = -EFAULT;
  		break;
  	}
+diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
+index ac8ebccd3507..812fd2a8f853 100644
+--- a/drivers/bluetooth/btmtk.c
++++ b/drivers/bluetooth/btmtk.c
+@@ -380,8 +380,10 @@ int btmtk_process_coredump(struct hci_dev *hdev, struct sk_buff *skb)
+ 	switch (data->cd_info.state) {
+ 	case HCI_DEVCOREDUMP_IDLE:
+ 		err = hci_devcd_init(hdev, MTK_COREDUMP_SIZE);
+-		if (err < 0)
++		if (err < 0) {
++			kfree_skb(skb);
+ 			break;
++		}
+ 		data->cd_info.cnt = 0;
+ 
+ 		/* It is supposed coredump can be done within 5 seconds */
+@@ -407,9 +409,6 @@ int btmtk_process_coredump(struct hci_dev *hdev, struct sk_buff *skb)
+ 		break;
+ 	}
+ 
+-	if (err < 0)
+-		kfree_skb(skb);
+-
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(btmtk_process_coredump);
 diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 954f7f3b5cc3..6a772b955d69 100644
+index 1976593bc804..d178e1464bfd 100644
 --- a/drivers/bluetooth/btusb.c
 +++ b/drivers/bluetooth/btusb.c
-@@ -535,6 +535,8 @@ static const struct usb_device_id blacklist_table[] = {
+@@ -541,6 +541,8 @@ static const struct usb_device_id quirks_table[] = {
  	/* Realtek 8852BE Bluetooth devices */
  	{ USB_DEVICE(0x0cb8, 0xc559), .driver_info = BTUSB_REALTEK |
  						     BTUSB_WIDEBAND_SPEECH },
@@ -849,11 +1710,29 @@ index 954f7f3b5cc3..6a772b955d69 100644
  	{ USB_DEVICE(0x0bda, 0x887b), .driver_info = BTUSB_REALTEK |
  						     BTUSB_WIDEBAND_SPEECH },
  	{ USB_DEVICE(0x0bda, 0xb85b), .driver_info = BTUSB_REALTEK |
+@@ -3457,13 +3459,12 @@ static void btusb_dump_hdr_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ 
+ static void btusb_coredump_qca(struct hci_dev *hdev)
+ {
++	int err;
+ 	static const u8 param[] = { 0x26 };
+-	struct sk_buff *skb;
+ 
+-	skb = __hci_cmd_sync(hdev, 0xfc0c, 1, param, HCI_CMD_TIMEOUT);
+-	if (IS_ERR(skb))
+-		bt_dev_err(hdev, "%s: triggle crash failed (%ld)", __func__, PTR_ERR(skb));
+-	kfree_skb(skb);
++	err = __hci_cmd_send(hdev, 0xfc0c, 1, param);
++	if (err < 0)
++		bt_dev_err(hdev, "%s: triggle crash failed (%d)", __func__, err);
+ }
+ 
+ /*
 diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 33956ddec933..179278b801eb 100644
+index 8861b8017fbd..410f146e3f67 100644
 --- a/drivers/bluetooth/hci_qca.c
 +++ b/drivers/bluetooth/hci_qca.c
-@@ -1645,6 +1645,9 @@ static bool qca_wakeup(struct hci_dev *hdev)
+@@ -1672,6 +1672,9 @@ static bool qca_wakeup(struct hci_dev *hdev)
  	struct hci_uart *hu = hci_get_drvdata(hdev);
  	bool wakeup;
  
@@ -863,7 +1742,20 @@ index 33956ddec933..179278b801eb 100644
  	/* BT SoC attached through the serial bus is handled by the serdev driver.
  	 * So we need to use the device handle of the serdev driver to get the
  	 * status of device may wakeup.
-@@ -2257,16 +2260,21 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+@@ -1935,8 +1938,10 @@ static int qca_setup(struct hci_uart *hu)
+ 		qca_debugfs_init(hdev);
+ 		hu->hdev->hw_error = qca_hw_error;
+ 		hu->hdev->cmd_timeout = qca_cmd_timeout;
+-		if (device_can_wakeup(hu->serdev->ctrl->dev.parent))
+-			hu->hdev->wakeup = qca_wakeup;
++		if (hu->serdev) {
++			if (device_can_wakeup(hu->serdev->ctrl->dev.parent))
++				hu->hdev->wakeup = qca_wakeup;
++		}
+ 	} else if (ret == -ENOENT) {
+ 		/* No patch/nvm-config found, run with original fw/config */
+ 		set_bit(QCA_ROM_FW, &qca->flags);
+@@ -2298,16 +2303,21 @@ static int qca_serdev_probe(struct serdev_device *serdev)
  		    (data->soc_type == QCA_WCN6750 ||
  		     data->soc_type == QCA_WCN6855)) {
  			dev_err(&serdev->dev, "failed to acquire BT_EN gpio\n");
@@ -888,7 +1780,7 @@ index 33956ddec933..179278b801eb 100644
  
  		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
  		if (IS_ERR(qcadev->susclk)) {
-@@ -2285,10 +2293,13 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+@@ -2326,10 +2336,13 @@ static int qca_serdev_probe(struct serdev_device *serdev)
  		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
  					       GPIOD_OUT_LOW);
  		if (IS_ERR(qcadev->bt_en)) {
@@ -904,11 +1796,83 @@ index 33956ddec933..179278b801eb 100644
  		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
  		if (IS_ERR(qcadev->susclk)) {
  			dev_warn(&serdev->dev, "failed to acquire clk\n");
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 4b4c15e94338..fecaa18f4dd2 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -959,25 +959,22 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+ 	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+ 	struct device *dev = mds->cxlds.dev;
+ 	struct cxl_get_event_payload *payload;
+-	struct cxl_mbox_cmd mbox_cmd;
+ 	u8 log_type = type;
+ 	u16 nr_rec;
+ 
+ 	mutex_lock(&mds->event.log_lock);
+ 	payload = mds->event.buf;
+ 
+-	mbox_cmd = (struct cxl_mbox_cmd) {
+-		.opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
+-		.payload_in = &log_type,
+-		.size_in = sizeof(log_type),
+-		.payload_out = payload,
+-		.min_out = struct_size(payload, records, 0),
+-	};
+-
+ 	do {
+ 		int rc, i;
+-
+-		mbox_cmd.size_out = mds->payload_size;
++		struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
++			.opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
++			.payload_in = &log_type,
++			.size_in = sizeof(log_type),
++			.payload_out = payload,
++			.size_out = mds->payload_size,
++			.min_out = struct_size(payload, records, 0),
++		};
+ 
+ 		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+ 		if (rc) {
+@@ -1311,7 +1308,6 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+ 	struct cxl_mbox_poison_out *po;
+ 	struct cxl_mbox_poison_in pi;
+-	struct cxl_mbox_cmd mbox_cmd;
+ 	int nr_records = 0;
+ 	int rc;
+ 
+@@ -1323,16 +1319,16 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 	pi.offset = cpu_to_le64(offset);
+ 	pi.length = cpu_to_le64(len / CXL_POISON_LEN_MULT);
+ 
+-	mbox_cmd = (struct cxl_mbox_cmd) {
+-		.opcode = CXL_MBOX_OP_GET_POISON,
+-		.size_in = sizeof(pi),
+-		.payload_in = &pi,
+-		.size_out = mds->payload_size,
+-		.payload_out = po,
+-		.min_out = struct_size(po, record, 0),
+-	};
+-
+ 	do {
++		struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd){
++			.opcode = CXL_MBOX_OP_GET_POISON,
++			.size_in = sizeof(pi),
++			.payload_in = &pi,
++			.size_out = mds->payload_size,
++			.payload_out = po,
++			.min_out = struct_size(po, record, 0),
++		};
++
+ 		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+ 		if (rc)
+ 			break;
 diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
-index f4c07ad3be15..af8777a1ec2e 100644
+index 0ac634a51c5e..f86939fa33b9 100644
 --- a/drivers/dma/idma64.c
 +++ b/drivers/dma/idma64.c
-@@ -167,6 +167,10 @@ static irqreturn_t idma64_irq(int irq, void *dev)
+@@ -171,6 +171,10 @@ static irqreturn_t idma64_irq(int irq, void *dev)
  	u32 status_err;
  	unsigned short i;
  
@@ -919,11 +1883,145 @@ index f4c07ad3be15..af8777a1ec2e 100644
  	dev_vdbg(idma64->dma.dev, "%s: status=%#x\n", __func__, status);
  
  	/* Check if we have any interrupt from the DMA controller */
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index 4eeec95a6675..ad7b55dd9596 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -342,7 +342,7 @@ static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)
+ 	if (!evl)
+ 		return;
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 	status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
+ 	t = status.tail;
+ 	h = status.head;
+@@ -354,9 +354,8 @@ static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)
+ 			set_bit(h, evl->bmap);
+ 		h = (h + 1) % size;
+ 	}
+-	spin_unlock(&evl->lock);
+-
+ 	drain_workqueue(wq->wq);
++	mutex_unlock(&evl->lock);
+ }
+ 
+ static int idxd_cdev_release(struct inode *node, struct file *filep)
+diff --git a/drivers/dma/idxd/debugfs.c b/drivers/dma/idxd/debugfs.c
+index f3f25ee676f3..ad4245cb301d 100644
+--- a/drivers/dma/idxd/debugfs.c
++++ b/drivers/dma/idxd/debugfs.c
+@@ -66,7 +66,7 @@ static int debugfs_evl_show(struct seq_file *s, void *d)
+ 	if (!evl || !evl->log)
+ 		return 0;
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 
+ 	evl_status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
+ 	t = evl_status.tail;
+@@ -87,7 +87,7 @@ static int debugfs_evl_show(struct seq_file *s, void *d)
+ 		dump_event_entry(idxd, s, i, &count, processed);
+ 	}
+ 
+-	spin_unlock(&evl->lock);
++	mutex_unlock(&evl->lock);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index fa0f880beae6..542d340552dd 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -770,7 +770,7 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+ 		goto err_alloc;
+ 	}
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 	evl->log = addr;
+ 	evl->dma = dma_addr;
+ 	evl->log_size = size;
+@@ -791,7 +791,7 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+ 	gencfg.evl_en = 1;
+ 	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
+ 
+-	spin_unlock(&evl->lock);
++	mutex_unlock(&evl->lock);
+ 	return 0;
+ 
+ err_alloc:
+@@ -814,7 +814,7 @@ static void idxd_device_evl_free(struct idxd_device *idxd)
+ 	if (!gencfg.evl_en)
+ 		return;
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 	gencfg.evl_en = 0;
+ 	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
+ 
+@@ -831,7 +831,7 @@ static void idxd_device_evl_free(struct idxd_device *idxd)
+ 	evl_dma = evl->dma;
+ 	evl->log = NULL;
+ 	evl->size = IDXD_EVL_SIZE_MIN;
+-	spin_unlock(&evl->lock);
++	mutex_unlock(&evl->lock);
+ 
+ 	dma_free_coherent(dev, evl_log_size, evl_log, evl_dma);
+ }
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 6fc79deb99bf..df62dd129118 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -279,7 +279,7 @@ struct idxd_driver_data {
+ 
+ struct idxd_evl {
+ 	/* Lock to protect event log access. */
+-	spinlock_t lock;
++	struct mutex lock;
+ 	void *log;
+ 	dma_addr_t dma;
+ 	/* Total size of event log = number of entries * entry size. */
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index d09a8553ea71..2e323c9b2068 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -353,7 +353,7 @@ static int idxd_init_evl(struct idxd_device *idxd)
+ 	if (!evl)
+ 		return -ENOMEM;
+ 
+-	spin_lock_init(&evl->lock);
++	mutex_init(&evl->lock);
+ 	evl->size = IDXD_EVL_SIZE_MIN;
+ 
+ 	idxd_name = dev_name(idxd_confdev(idxd));
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index 0bbc6bdc6145..b2ca9c1f194c 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -363,7 +363,7 @@ static void process_evl_entries(struct idxd_device *idxd)
+ 	evl_status.bits = 0;
+ 	evl_status.int_pending = 1;
+ 
+-	spin_lock(&evl->lock);
++	mutex_lock(&evl->lock);
+ 	/* Clear interrupt pending bit */
+ 	iowrite32(evl_status.bits_upper32,
+ 		  idxd->reg_base + IDXD_EVLSTATUS_OFFSET + sizeof(u32));
+@@ -380,7 +380,7 @@ static void process_evl_entries(struct idxd_device *idxd)
+ 
+ 	evl_status.head = h;
+ 	iowrite32(evl_status.bits_lower32, idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
+-	spin_unlock(&evl->lock);
++	mutex_unlock(&evl->lock);
+ }
+ 
+ irqreturn_t idxd_misc_thread(int vec, void *data)
 diff --git a/drivers/dma/idxd/perfmon.c b/drivers/dma/idxd/perfmon.c
-index d73004f47cf4..612ef13b7160 100644
+index fdda6d604262..5e94247e1ea7 100644
 --- a/drivers/dma/idxd/perfmon.c
 +++ b/drivers/dma/idxd/perfmon.c
-@@ -529,14 +529,11 @@ static int perf_event_cpu_offline(unsigned int cpu, struct hlist_node *node)
+@@ -528,14 +528,11 @@ static int perf_event_cpu_offline(unsigned int cpu, struct hlist_node *node)
  		return 0;
  
  	target = cpumask_any_but(cpu_online_mask, cpu);
@@ -942,10 +2040,10 @@ index d73004f47cf4..612ef13b7160 100644
  	return 0;
  }
 diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-index b6e0ac8314e5..0819f19c87cc 100644
+index 384476757c5e..3bcf73ef69dc 100644
 --- a/drivers/dma/owl-dma.c
 +++ b/drivers/dma/owl-dma.c
-@@ -249,7 +249,7 @@ static void pchan_update(struct owl_dma_pchan *pchan, u32 reg,
+@@ -250,7 +250,7 @@ static void pchan_update(struct owl_dma_pchan *pchan, u32 reg,
  	else
  		regval &= ~val;
  
@@ -954,7 +2052,7 @@ index b6e0ac8314e5..0819f19c87cc 100644
  }
  
  static void pchan_writel(struct owl_dma_pchan *pchan, u32 reg, u32 data)
-@@ -273,7 +273,7 @@ static void dma_update(struct owl_dma *od, u32 reg, u32 val, bool state)
+@@ -274,7 +274,7 @@ static void dma_update(struct owl_dma *od, u32 reg, u32 val, bool state)
  	else
  		regval &= ~val;
  
@@ -964,10 +2062,10 @@ index b6e0ac8314e5..0819f19c87cc 100644
  
  static void dma_writel(struct owl_dma *od, u32 reg, u32 data)
 diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
-index 75af3488a3ba..e70b7c41dcab 100644
+index 33b101001100..674cf6305283 100644
 --- a/drivers/dma/tegra186-gpc-dma.c
 +++ b/drivers/dma/tegra186-gpc-dma.c
-@@ -742,6 +742,9 @@ static int tegra_dma_get_residual(struct tegra_dma_channel *tdc)
+@@ -746,6 +746,9 @@ static int tegra_dma_get_residual(struct tegra_dma_channel *tdc)
  	bytes_xfer = dma_desc->bytes_xfer +
  		     sg_req[dma_desc->sg_idx].len - (wcount * 4);
  
@@ -1031,23 +2129,403 @@ index 84dc5240a807..93938ed80fc8 100644
  	spin_unlock_irqrestore(&chan->lock, flags);
  }
  
+diff --git a/drivers/gpio/gpio-tangier.c b/drivers/gpio/gpio-tangier.c
+index 7ce3eddaed25..1ce40b7673b1 100644
+--- a/drivers/gpio/gpio-tangier.c
++++ b/drivers/gpio/gpio-tangier.c
+@@ -205,7 +205,8 @@ static int tng_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+ 
+ static void tng_irq_ack(struct irq_data *d)
+ {
+-	struct tng_gpio *priv = irq_data_get_irq_chip_data(d);
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct tng_gpio *priv = gpiochip_get_data(gc);
+ 	irq_hw_number_t gpio = irqd_to_hwirq(d);
+ 	unsigned long flags;
+ 	void __iomem *gisr;
+@@ -241,7 +242,8 @@ static void tng_irq_unmask_mask(struct tng_gpio *priv, u32 gpio, bool unmask)
+ 
+ static void tng_irq_mask(struct irq_data *d)
+ {
+-	struct tng_gpio *priv = irq_data_get_irq_chip_data(d);
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct tng_gpio *priv = gpiochip_get_data(gc);
+ 	irq_hw_number_t gpio = irqd_to_hwirq(d);
+ 
+ 	tng_irq_unmask_mask(priv, gpio, false);
+@@ -250,7 +252,8 @@ static void tng_irq_mask(struct irq_data *d)
+ 
+ static void tng_irq_unmask(struct irq_data *d)
+ {
+-	struct tng_gpio *priv = irq_data_get_irq_chip_data(d);
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct tng_gpio *priv = gpiochip_get_data(gc);
+ 	irq_hw_number_t gpio = irqd_to_hwirq(d);
+ 
+ 	gpiochip_enable_irq(&priv->chip, gpio);
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index d87dd06db40d..9130c691a2dd 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -36,12 +36,6 @@
+ #define  TEGRA186_GPIO_SCR_SEC_REN		BIT(27)
+ #define  TEGRA186_GPIO_SCR_SEC_G1W		BIT(9)
+ #define  TEGRA186_GPIO_SCR_SEC_G1R		BIT(1)
+-#define  TEGRA186_GPIO_FULL_ACCESS		(TEGRA186_GPIO_SCR_SEC_WEN | \
+-						 TEGRA186_GPIO_SCR_SEC_REN | \
+-						 TEGRA186_GPIO_SCR_SEC_G1R | \
+-						 TEGRA186_GPIO_SCR_SEC_G1W)
+-#define  TEGRA186_GPIO_SCR_SEC_ENABLE		(TEGRA186_GPIO_SCR_SEC_WEN | \
+-						 TEGRA186_GPIO_SCR_SEC_REN)
+ 
+ /* control registers */
+ #define TEGRA186_GPIO_ENABLE_CONFIG 0x00
+@@ -177,10 +171,18 @@ static inline bool tegra186_gpio_is_accessible(struct tegra_gpio *gpio, unsigned
+ 
+ 	value = __raw_readl(secure + TEGRA186_GPIO_SCR);
+ 
+-	if ((value & TEGRA186_GPIO_SCR_SEC_ENABLE) == 0)
+-		return true;
++	/*
++	 * When SCR_SEC_[R|W]EN is unset, then we have full read/write access to all the
++	 * registers for given GPIO pin.
++	 * When SCR_SEC[R|W]EN is set, then there is need to further check the accompanying
++	 * SCR_SEC_G1[R|W] bit to determine read/write access to all the registers for given
++	 * GPIO pin.
++	 */
+ 
+-	if ((value & TEGRA186_GPIO_FULL_ACCESS) == TEGRA186_GPIO_FULL_ACCESS)
++	if (((value & TEGRA186_GPIO_SCR_SEC_REN) == 0 ||
++	     ((value & TEGRA186_GPIO_SCR_SEC_REN) && (value & TEGRA186_GPIO_SCR_SEC_G1R))) &&
++	     ((value & TEGRA186_GPIO_SCR_SEC_WEN) == 0 ||
++	     ((value & TEGRA186_GPIO_SCR_SEC_WEN) && (value & TEGRA186_GPIO_SCR_SEC_G1W))))
+ 		return true;
+ 
+ 	return false;
 diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index 260e6a3316db..7d5fbaaba72f 100644
+index e036011137aa..15c5a2533ba6 100644
 --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
 +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -1779,6 +1779,7 @@ int amdgpu_amdkfd_gpuvm_alloc_memory_of_gpu(
+@@ -1785,6 +1785,7 @@ int amdgpu_amdkfd_gpuvm_alloc_memory_of_gpu(
  err_bo_create:
- 	amdgpu_amdkfd_unreserve_mem_limit(adev, aligned_size, flags);
+ 	amdgpu_amdkfd_unreserve_mem_limit(adev, aligned_size, flags, xcp_id);
  err_reserve_limit:
 +	amdgpu_sync_free(&(*mem)->sync);
  	mutex_destroy(&(*mem)->lock);
  	if (gobj)
  		drm_gem_object_put(gobj);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+index c0a3afe81bb1..4294f5e7bff9 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+@@ -819,7 +819,7 @@ static int amdgpu_cs_bo_validate(void *param, struct amdgpu_bo *bo)
+ 
+ 	p->bytes_moved += ctx.bytes_moved;
+ 	if (!amdgpu_gmc_vram_full_visible(&adev->gmc) &&
+-	    amdgpu_bo_in_cpu_visible_vram(bo))
++	    amdgpu_res_cpu_visible(adev, bo->tbo.resource))
+ 		p->bytes_moved_vis += ctx.bytes_moved;
+ 
+ 	if (unlikely(r == -ENOMEM) && domain != bo->allowed_domains) {
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fdinfo.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fdinfo.c
+index 6038b5021b27..792c059ff7b3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fdinfo.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fdinfo.c
+@@ -105,6 +105,10 @@ void amdgpu_show_fdinfo(struct drm_printer *p, struct drm_file *file)
+ 		   stats.requested_visible_vram/1024UL);
+ 	drm_printf(p, "amd-requested-gtt:\t%llu KiB\n",
+ 		   stats.requested_gtt/1024UL);
++	drm_printf(p, "drm-shared-vram:\t%llu KiB\n", stats.vram_shared/1024UL);
++	drm_printf(p, "drm-shared-gtt:\t%llu KiB\n", stats.gtt_shared/1024UL);
++	drm_printf(p, "drm-shared-cpu:\t%llu KiB\n", stats.cpu_shared/1024UL);
++
+ 	for (hw_ip = 0; hw_ip < AMDGPU_HW_IP_NUM; ++hw_ip) {
+ 		if (!usage[hw_ip])
+ 			continue;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+index 173b43a5aa13..361f2cc94e8e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+@@ -625,8 +625,7 @@ int amdgpu_bo_create(struct amdgpu_device *adev,
+ 		return r;
+ 
+ 	if (!amdgpu_gmc_vram_full_visible(&adev->gmc) &&
+-	    bo->tbo.resource->mem_type == TTM_PL_VRAM &&
+-	    amdgpu_bo_in_cpu_visible_vram(bo))
++	    amdgpu_res_cpu_visible(adev, bo->tbo.resource))
+ 		amdgpu_cs_report_moved_bytes(adev, ctx.bytes_moved,
+ 					     ctx.bytes_moved);
+ 	else
+@@ -1280,26 +1279,39 @@ void amdgpu_bo_move_notify(struct ttm_buffer_object *bo, bool evict)
+ void amdgpu_bo_get_memory(struct amdgpu_bo *bo,
+ 			  struct amdgpu_mem_stats *stats)
+ {
++	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
++	struct ttm_resource *res = bo->tbo.resource;
+ 	uint64_t size = amdgpu_bo_size(bo);
++	struct drm_gem_object *obj;
+ 	unsigned int domain;
++	bool shared;
+ 
+ 	/* Abort if the BO doesn't currently have a backing store */
+-	if (!bo->tbo.resource)
++	if (!res)
+ 		return;
+ 
+-	domain = amdgpu_mem_type_to_domain(bo->tbo.resource->mem_type);
++	obj = &bo->tbo.base;
++	shared = drm_gem_object_is_shared_for_memory_stats(obj);
++
++	domain = amdgpu_mem_type_to_domain(res->mem_type);
+ 	switch (domain) {
+ 	case AMDGPU_GEM_DOMAIN_VRAM:
+ 		stats->vram += size;
+-		if (amdgpu_bo_in_cpu_visible_vram(bo))
++		if (amdgpu_res_cpu_visible(adev, bo->tbo.resource))
+ 			stats->visible_vram += size;
++		if (shared)
++			stats->vram_shared += size;
+ 		break;
+ 	case AMDGPU_GEM_DOMAIN_GTT:
+ 		stats->gtt += size;
++		if (shared)
++			stats->gtt_shared += size;
+ 		break;
+ 	case AMDGPU_GEM_DOMAIN_CPU:
+ 	default:
+ 		stats->cpu += size;
++		if (shared)
++			stats->cpu_shared += size;
+ 		break;
+ 	}
+ 
+@@ -1384,10 +1396,7 @@ vm_fault_t amdgpu_bo_fault_reserve_notify(struct ttm_buffer_object *bo)
+ 	/* Remember that this BO was accessed by the CPU */
+ 	abo->flags |= AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED;
+ 
+-	if (bo->resource->mem_type != TTM_PL_VRAM)
+-		return 0;
+-
+-	if (amdgpu_bo_in_cpu_visible_vram(abo))
++	if (amdgpu_res_cpu_visible(adev, bo->resource))
+ 		return 0;
+ 
+ 	/* Can't move a pinned BO to visible VRAM */
+@@ -1411,7 +1420,7 @@ vm_fault_t amdgpu_bo_fault_reserve_notify(struct ttm_buffer_object *bo)
+ 
+ 	/* this should never happen */
+ 	if (bo->resource->mem_type == TTM_PL_VRAM &&
+-	    !amdgpu_bo_in_cpu_visible_vram(abo))
++	    !amdgpu_res_cpu_visible(adev, bo->resource))
+ 		return VM_FAULT_SIGBUS;
+ 
+ 	ttm_bo_move_to_lru_tail_unlocked(bo);
+@@ -1571,6 +1580,7 @@ uint32_t amdgpu_bo_get_preferred_domain(struct amdgpu_device *adev,
+  */
+ u64 amdgpu_bo_print_info(int id, struct amdgpu_bo *bo, struct seq_file *m)
+ {
++	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
+ 	struct dma_buf_attachment *attachment;
+ 	struct dma_buf *dma_buf;
+ 	const char *placement;
+@@ -1579,10 +1589,11 @@ u64 amdgpu_bo_print_info(int id, struct amdgpu_bo *bo, struct seq_file *m)
+ 
+ 	if (dma_resv_trylock(bo->tbo.base.resv)) {
+ 		unsigned int domain;
++
+ 		domain = amdgpu_mem_type_to_domain(bo->tbo.resource->mem_type);
+ 		switch (domain) {
+ 		case AMDGPU_GEM_DOMAIN_VRAM:
+-			if (amdgpu_bo_in_cpu_visible_vram(bo))
++			if (amdgpu_res_cpu_visible(adev, bo->tbo.resource))
+ 				placement = "VRAM VISIBLE";
+ 			else
+ 				placement = "VRAM";
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+index a3ea8a82db23..fa03d9e4874c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+@@ -138,12 +138,18 @@ struct amdgpu_bo_vm {
+ struct amdgpu_mem_stats {
+ 	/* current VRAM usage, includes visible VRAM */
+ 	uint64_t vram;
++	/* current shared VRAM usage, includes visible VRAM */
++	uint64_t vram_shared;
+ 	/* current visible VRAM usage */
+ 	uint64_t visible_vram;
+ 	/* current GTT usage */
+ 	uint64_t gtt;
++	/* current shared GTT usage */
++	uint64_t gtt_shared;
+ 	/* current system memory usage */
+ 	uint64_t cpu;
++	/* current shared system memory usage */
++	uint64_t cpu_shared;
+ 	/* sum of evicted buffers, includes visible VRAM */
+ 	uint64_t evicted_vram;
+ 	/* sum of evicted buffers due to CPU access */
+@@ -244,28 +250,6 @@ static inline u64 amdgpu_bo_mmap_offset(struct amdgpu_bo *bo)
+ 	return drm_vma_node_offset_addr(&bo->tbo.base.vma_node);
+ }
+ 
+-/**
+- * amdgpu_bo_in_cpu_visible_vram - check if BO is (partly) in visible VRAM
+- */
+-static inline bool amdgpu_bo_in_cpu_visible_vram(struct amdgpu_bo *bo)
+-{
+-	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
+-	struct amdgpu_res_cursor cursor;
+-
+-	if (!bo->tbo.resource || bo->tbo.resource->mem_type != TTM_PL_VRAM)
+-		return false;
+-
+-	amdgpu_res_first(bo->tbo.resource, 0, amdgpu_bo_size(bo), &cursor);
+-	while (cursor.remaining) {
+-		if (cursor.start < adev->gmc.visible_vram_size)
+-			return true;
+-
+-		amdgpu_res_next(&cursor, cursor.size);
+-	}
+-
+-	return false;
+-}
+-
+ /**
+  * amdgpu_bo_explicit_sync - return whether the bo is explicitly synced
+  */
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+index 1124e2d4f853..d1687b572569 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+@@ -137,7 +137,7 @@ static void amdgpu_evict_flags(struct ttm_buffer_object *bo,
+ 			amdgpu_bo_placement_from_domain(abo, AMDGPU_GEM_DOMAIN_CPU);
+ 		} else if (!amdgpu_gmc_vram_full_visible(&adev->gmc) &&
+ 			   !(abo->flags & AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED) &&
+-			   amdgpu_bo_in_cpu_visible_vram(abo)) {
++			   amdgpu_res_cpu_visible(adev, bo->resource)) {
+ 
+ 			/* Try evicting to the CPU inaccessible part of VRAM
+ 			 * first, but only set GTT as busy placement, so this
+@@ -408,40 +408,55 @@ static int amdgpu_move_blit(struct ttm_buffer_object *bo,
+ 	return r;
+ }
+ 
+-/*
+- * amdgpu_mem_visible - Check that memory can be accessed by ttm_bo_move_memcpy
++/**
++ * amdgpu_res_cpu_visible - Check that resource can be accessed by CPU
++ * @adev: amdgpu device
++ * @res: the resource to check
+  *
+- * Called by amdgpu_bo_move()
++ * Returns: true if the full resource is CPU visible, false otherwise.
+  */
+-static bool amdgpu_mem_visible(struct amdgpu_device *adev,
+-			       struct ttm_resource *mem)
++bool amdgpu_res_cpu_visible(struct amdgpu_device *adev,
++			    struct ttm_resource *res)
+ {
+-	u64 mem_size = (u64)mem->size;
+ 	struct amdgpu_res_cursor cursor;
+-	u64 end;
+ 
+-	if (mem->mem_type == TTM_PL_SYSTEM ||
+-	    mem->mem_type == TTM_PL_TT)
++	if (!res)
++		return false;
++
++	if (res->mem_type == TTM_PL_SYSTEM || res->mem_type == TTM_PL_TT ||
++	    res->mem_type == AMDGPU_PL_PREEMPT)
+ 		return true;
+-	if (mem->mem_type != TTM_PL_VRAM)
++
++	if (res->mem_type != TTM_PL_VRAM)
+ 		return false;
+ 
+-	amdgpu_res_first(mem, 0, mem_size, &cursor);
+-	end = cursor.start + cursor.size;
++	amdgpu_res_first(res, 0, res->size, &cursor);
+ 	while (cursor.remaining) {
++		if ((cursor.start + cursor.size) >= adev->gmc.visible_vram_size)
++			return false;
+ 		amdgpu_res_next(&cursor, cursor.size);
++	}
+ 
+-		if (!cursor.remaining)
+-			break;
++	return true;
++}
+ 
+-		/* ttm_resource_ioremap only supports contiguous memory */
+-		if (end != cursor.start)
+-			return false;
++/*
++ * amdgpu_res_copyable - Check that memory can be accessed by ttm_bo_move_memcpy
++ *
++ * Called by amdgpu_bo_move()
++ */
++static bool amdgpu_res_copyable(struct amdgpu_device *adev,
++				struct ttm_resource *mem)
++{
++	if (!amdgpu_res_cpu_visible(adev, mem))
++		return false;
+ 
+-		end = cursor.start + cursor.size;
+-	}
++	/* ttm_resource_ioremap only supports contiguous memory */
++	if (mem->mem_type == TTM_PL_VRAM &&
++	    !(mem->placement & TTM_PL_FLAG_CONTIGUOUS))
++		return false;
+ 
+-	return end <= adev->gmc.visible_vram_size;
++	return true;
+ }
+ 
+ /*
+@@ -534,8 +549,8 @@ static int amdgpu_bo_move(struct ttm_buffer_object *bo, bool evict,
+ 
+ 	if (r) {
+ 		/* Check that all memory is CPU accessible */
+-		if (!amdgpu_mem_visible(adev, old_mem) ||
+-		    !amdgpu_mem_visible(adev, new_mem)) {
++		if (!amdgpu_res_copyable(adev, old_mem) ||
++		    !amdgpu_res_copyable(adev, new_mem)) {
+ 			pr_err("Move buffer fallback to memcpy unavailable\n");
+ 			return r;
+ 		}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h
+index 65ec82141a8e..32cf6b6f6efd 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h
+@@ -139,6 +139,9 @@ int amdgpu_vram_mgr_reserve_range(struct amdgpu_vram_mgr *mgr,
+ int amdgpu_vram_mgr_query_page_status(struct amdgpu_vram_mgr *mgr,
+ 				      uint64_t start);
+ 
++bool amdgpu_res_cpu_visible(struct amdgpu_device *adev,
++			    struct ttm_resource *res);
++
+ int amdgpu_ttm_init(struct amdgpu_device *adev);
+ void amdgpu_ttm_fini(struct amdgpu_device *adev);
+ void amdgpu_ttm_set_buffer_funcs_status(struct amdgpu_device *adev,
+diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c b/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c
+index f413898dda37..e76e7e7cb554 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c
+@@ -365,7 +365,8 @@ static void sdma_v4_4_2_ring_emit_hdp_flush(struct amdgpu_ring *ring)
+ 	u32 ref_and_mask = 0;
+ 	const struct nbio_hdp_flush_reg *nbio_hf_reg = adev->nbio.hdp_flush_reg;
+ 
+-	ref_and_mask = nbio_hf_reg->ref_and_mask_sdma0 << ring->me;
++	ref_and_mask = nbio_hf_reg->ref_and_mask_sdma0
++		       << (ring->me % adev->sdma.num_inst_per_aid);
+ 
+ 	sdma_v4_4_2_wait_reg_mem(ring, 0, 1,
+ 			       adev->nbio.funcs->get_hdp_flush_done_offset(adev),
 diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v5_2.c b/drivers/gpu/drm/amd/amdgpu/sdma_v5_2.c
-index 856db876af14..c7af36370b0d 100644
+index 0f930fd8a383..72b18156debb 100644
 --- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_2.c
 +++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_2.c
-@@ -345,17 +345,21 @@ static void sdma_v5_2_ring_emit_hdp_flush(struct amdgpu_ring *ring)
+@@ -292,17 +292,21 @@ static void sdma_v5_2_ring_emit_hdp_flush(struct amdgpu_ring *ring)
  	u32 ref_and_mask = 0;
  	const struct nbio_hdp_flush_reg *nbio_hf_reg = adev->nbio.hdp_flush_reg;
  
@@ -1080,8 +2558,302 @@ index 856db876af14..c7af36370b0d 100644
  }
  
  /**
+diff --git a/drivers/gpu/drm/gma500/Makefile b/drivers/gpu/drm/gma500/Makefile
+index 4f302cd5e1a6..58fed80c7392 100644
+--- a/drivers/gpu/drm/gma500/Makefile
++++ b/drivers/gpu/drm/gma500/Makefile
+@@ -34,7 +34,6 @@ gma500_gfx-y += \
+ 	  psb_intel_lvds.o \
+ 	  psb_intel_modes.o \
+ 	  psb_intel_sdvo.o \
+-	  psb_lid.o \
+ 	  psb_irq.o
+ 
+ gma500_gfx-$(CONFIG_ACPI) +=  opregion.o
+diff --git a/drivers/gpu/drm/gma500/psb_device.c b/drivers/gpu/drm/gma500/psb_device.c
+index dcfcd7b89d4a..6dece8f0e380 100644
+--- a/drivers/gpu/drm/gma500/psb_device.c
++++ b/drivers/gpu/drm/gma500/psb_device.c
+@@ -73,8 +73,7 @@ static int psb_backlight_setup(struct drm_device *dev)
+ 	}
+ 
+ 	psb_intel_lvds_set_brightness(dev, PSB_MAX_BRIGHTNESS);
+-	/* This must occur after the backlight is properly initialised */
+-	psb_lid_timer_init(dev_priv);
++
+ 	return 0;
+ }
+ 
+@@ -259,8 +258,6 @@ static int psb_chip_setup(struct drm_device *dev)
+ 
+ static void psb_chip_teardown(struct drm_device *dev)
+ {
+-	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
+-	psb_lid_timer_takedown(dev_priv);
+ 	gma_intel_teardown_gmbus(dev);
+ }
+ 
+diff --git a/drivers/gpu/drm/gma500/psb_drv.h b/drivers/gpu/drm/gma500/psb_drv.h
+index 70d9adafa233..bb1cd45c085c 100644
+--- a/drivers/gpu/drm/gma500/psb_drv.h
++++ b/drivers/gpu/drm/gma500/psb_drv.h
+@@ -170,7 +170,6 @@
+ 
+ #define PSB_NUM_VBLANKS 2
+ #define PSB_WATCHDOG_DELAY (HZ * 2)
+-#define PSB_LID_DELAY (HZ / 10)
+ 
+ #define PSB_MAX_BRIGHTNESS		100
+ 
+@@ -499,11 +498,7 @@ struct drm_psb_private {
+ 	/* Hotplug handling */
+ 	struct work_struct hotplug_work;
+ 
+-	/* LID-Switch */
+-	spinlock_t lid_lock;
+-	struct timer_list lid_timer;
+ 	struct psb_intel_opregion opregion;
+-	u32 lid_last_state;
+ 
+ 	/* Watchdog */
+ 	uint32_t apm_reg;
+@@ -599,10 +594,6 @@ struct psb_ops {
+ 	int i2c_bus;		/* I2C bus identifier for Moorestown */
+ };
+ 
+-/* psb_lid.c */
+-extern void psb_lid_timer_init(struct drm_psb_private *dev_priv);
+-extern void psb_lid_timer_takedown(struct drm_psb_private *dev_priv);
+-
+ /* modesetting */
+ extern void psb_modeset_init(struct drm_device *dev);
+ extern void psb_modeset_cleanup(struct drm_device *dev);
+diff --git a/drivers/gpu/drm/gma500/psb_lid.c b/drivers/gpu/drm/gma500/psb_lid.c
+deleted file mode 100644
+index 58a7fe392636..000000000000
+--- a/drivers/gpu/drm/gma500/psb_lid.c
++++ /dev/null
+@@ -1,80 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/**************************************************************************
+- * Copyright (c) 2007, Intel Corporation.
+- *
+- * Authors: Thomas Hellstrom <thomas-at-tungstengraphics-dot-com>
+- **************************************************************************/
+-
+-#include <linux/spinlock.h>
+-
+-#include "psb_drv.h"
+-#include "psb_intel_reg.h"
+-#include "psb_reg.h"
+-
+-static void psb_lid_timer_func(struct timer_list *t)
+-{
+-	struct drm_psb_private *dev_priv = from_timer(dev_priv, t, lid_timer);
+-	struct drm_device *dev = (struct drm_device *)&dev_priv->dev;
+-	struct timer_list *lid_timer = &dev_priv->lid_timer;
+-	unsigned long irq_flags;
+-	u32 __iomem *lid_state = dev_priv->opregion.lid_state;
+-	u32 pp_status;
+-
+-	if (readl(lid_state) == dev_priv->lid_last_state)
+-		goto lid_timer_schedule;
+-
+-	if ((readl(lid_state)) & 0x01) {
+-		/*lid state is open*/
+-		REG_WRITE(PP_CONTROL, REG_READ(PP_CONTROL) | POWER_TARGET_ON);
+-		do {
+-			pp_status = REG_READ(PP_STATUS);
+-		} while ((pp_status & PP_ON) == 0 &&
+-			 (pp_status & PP_SEQUENCE_MASK) != 0);
+-
+-		if (REG_READ(PP_STATUS) & PP_ON) {
+-			/*FIXME: should be backlight level before*/
+-			psb_intel_lvds_set_brightness(dev, 100);
+-		} else {
+-			DRM_DEBUG("LVDS panel never powered up");
+-			return;
+-		}
+-	} else {
+-		psb_intel_lvds_set_brightness(dev, 0);
+-
+-		REG_WRITE(PP_CONTROL, REG_READ(PP_CONTROL) & ~POWER_TARGET_ON);
+-		do {
+-			pp_status = REG_READ(PP_STATUS);
+-		} while ((pp_status & PP_ON) == 0);
+-	}
+-	dev_priv->lid_last_state =  readl(lid_state);
+-
+-lid_timer_schedule:
+-	spin_lock_irqsave(&dev_priv->lid_lock, irq_flags);
+-	if (!timer_pending(lid_timer)) {
+-		lid_timer->expires = jiffies + PSB_LID_DELAY;
+-		add_timer(lid_timer);
+-	}
+-	spin_unlock_irqrestore(&dev_priv->lid_lock, irq_flags);
+-}
+-
+-void psb_lid_timer_init(struct drm_psb_private *dev_priv)
+-{
+-	struct timer_list *lid_timer = &dev_priv->lid_timer;
+-	unsigned long irq_flags;
+-
+-	spin_lock_init(&dev_priv->lid_lock);
+-	spin_lock_irqsave(&dev_priv->lid_lock, irq_flags);
+-
+-	timer_setup(lid_timer, psb_lid_timer_func, 0);
+-
+-	lid_timer->expires = jiffies + PSB_LID_DELAY;
+-
+-	add_timer(lid_timer);
+-	spin_unlock_irqrestore(&dev_priv->lid_lock, irq_flags);
+-}
+-
+-void psb_lid_timer_takedown(struct drm_psb_private *dev_priv)
+-{
+-	del_timer_sync(&dev_priv->lid_timer);
+-}
+-
+diff --git a/drivers/gpu/drm/ttm/tests/ttm_device_test.c b/drivers/gpu/drm/ttm/tests/ttm_device_test.c
+index b1b423b68cdf..19eaff22e6ae 100644
+--- a/drivers/gpu/drm/ttm/tests/ttm_device_test.c
++++ b/drivers/gpu/drm/ttm/tests/ttm_device_test.c
+@@ -175,7 +175,7 @@ static void ttm_device_init_pools(struct kunit *test)
+ 
+ 	if (params->pools_init_expected) {
+ 		for (int i = 0; i < TTM_NUM_CACHING_TYPES; ++i) {
+-			for (int j = 0; j <= MAX_ORDER; ++j) {
++			for (int j = 0; j < NR_PAGE_ORDERS; ++j) {
+ 				pt = pool->caching[i].orders[j];
+ 				KUNIT_EXPECT_PTR_EQ(test, pt.pool, pool);
+ 				KUNIT_EXPECT_EQ(test, pt.caching, i);
+diff --git a/drivers/gpu/drm/ttm/ttm_pool.c b/drivers/gpu/drm/ttm/ttm_pool.c
+index 9b60222511d6..37c08fac7e7d 100644
+--- a/drivers/gpu/drm/ttm/ttm_pool.c
++++ b/drivers/gpu/drm/ttm/ttm_pool.c
+@@ -65,11 +65,11 @@ module_param(page_pool_size, ulong, 0644);
+ 
+ static atomic_long_t allocated_pages;
+ 
+-static struct ttm_pool_type global_write_combined[MAX_ORDER + 1];
+-static struct ttm_pool_type global_uncached[MAX_ORDER + 1];
++static struct ttm_pool_type global_write_combined[NR_PAGE_ORDERS];
++static struct ttm_pool_type global_uncached[NR_PAGE_ORDERS];
+ 
+-static struct ttm_pool_type global_dma32_write_combined[MAX_ORDER + 1];
+-static struct ttm_pool_type global_dma32_uncached[MAX_ORDER + 1];
++static struct ttm_pool_type global_dma32_write_combined[NR_PAGE_ORDERS];
++static struct ttm_pool_type global_dma32_uncached[NR_PAGE_ORDERS];
+ 
+ static spinlock_t shrinker_lock;
+ static struct list_head shrinker_list;
+@@ -287,17 +287,23 @@ static struct ttm_pool_type *ttm_pool_select_type(struct ttm_pool *pool,
+ 						  enum ttm_caching caching,
+ 						  unsigned int order)
+ {
+-	if (pool->use_dma_alloc || pool->nid != NUMA_NO_NODE)
++	if (pool->use_dma_alloc)
+ 		return &pool->caching[caching].orders[order];
+ 
+ #ifdef CONFIG_X86
+ 	switch (caching) {
+ 	case ttm_write_combined:
++		if (pool->nid != NUMA_NO_NODE)
++			return &pool->caching[caching].orders[order];
++
+ 		if (pool->use_dma32)
+ 			return &global_dma32_write_combined[order];
+ 
+ 		return &global_write_combined[order];
+ 	case ttm_uncached:
++		if (pool->nid != NUMA_NO_NODE)
++			return &pool->caching[caching].orders[order];
++
+ 		if (pool->use_dma32)
+ 			return &global_dma32_uncached[order];
+ 
+@@ -563,11 +569,17 @@ void ttm_pool_init(struct ttm_pool *pool, struct device *dev,
+ 	pool->use_dma_alloc = use_dma_alloc;
+ 	pool->use_dma32 = use_dma32;
+ 
+-	if (use_dma_alloc || nid != NUMA_NO_NODE) {
+-		for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i)
+-			for (j = 0; j <= MAX_ORDER; ++j)
+-				ttm_pool_type_init(&pool->caching[i].orders[j],
+-						   pool, i, j);
++	for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i) {
++		for (j = 0; j < NR_PAGE_ORDERS; ++j) {
++			struct ttm_pool_type *pt;
++
++			/* Initialize only pool types which are actually used */
++			pt = ttm_pool_select_type(pool, i, j);
++			if (pt != &pool->caching[i].orders[j])
++				continue;
++
++			ttm_pool_type_init(pt, pool, i, j);
++		}
+ 	}
+ }
+ EXPORT_SYMBOL(ttm_pool_init);
+@@ -584,10 +596,16 @@ void ttm_pool_fini(struct ttm_pool *pool)
+ {
+ 	unsigned int i, j;
+ 
+-	if (pool->use_dma_alloc || pool->nid != NUMA_NO_NODE) {
+-		for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i)
+-			for (j = 0; j <= MAX_ORDER; ++j)
+-				ttm_pool_type_fini(&pool->caching[i].orders[j]);
++	for (i = 0; i < TTM_NUM_CACHING_TYPES; ++i) {
++		for (j = 0; j < NR_PAGE_ORDERS; ++j) {
++			struct ttm_pool_type *pt;
++
++			pt = ttm_pool_select_type(pool, i, j);
++			if (pt != &pool->caching[i].orders[j])
++				continue;
++
++			ttm_pool_type_fini(pt);
++		}
+ 	}
+ 
+ 	/* We removed the pool types from the LRU, but we need to also make sure
+@@ -641,7 +659,7 @@ static void ttm_pool_debugfs_header(struct seq_file *m)
+ 	unsigned int i;
+ 
+ 	seq_puts(m, "\t ");
+-	for (i = 0; i <= MAX_ORDER; ++i)
++	for (i = 0; i < NR_PAGE_ORDERS; ++i)
+ 		seq_printf(m, " ---%2u---", i);
+ 	seq_puts(m, "\n");
+ }
+@@ -652,7 +670,7 @@ static void ttm_pool_debugfs_orders(struct ttm_pool_type *pt,
+ {
+ 	unsigned int i;
+ 
+-	for (i = 0; i <= MAX_ORDER; ++i)
++	for (i = 0; i < NR_PAGE_ORDERS; ++i)
+ 		seq_printf(m, " %8u", ttm_pool_type_count(&pt[i]));
+ 	seq_puts(m, "\n");
+ }
+@@ -761,7 +779,7 @@ int ttm_pool_mgr_init(unsigned long num_pages)
+ 	spin_lock_init(&shrinker_lock);
+ 	INIT_LIST_HEAD(&shrinker_list);
+ 
+-	for (i = 0; i <= MAX_ORDER; ++i) {
++	for (i = 0; i < NR_PAGE_ORDERS; ++i) {
+ 		ttm_pool_type_init(&global_write_combined[i], NULL,
+ 				   ttm_write_combined, i);
+ 		ttm_pool_type_init(&global_uncached[i], NULL, ttm_uncached, i);
+@@ -794,7 +812,7 @@ void ttm_pool_mgr_fini(void)
+ {
+ 	unsigned int i;
+ 
+-	for (i = 0; i <= MAX_ORDER; ++i) {
++	for (i = 0; i < NR_PAGE_ORDERS; ++i) {
+ 		ttm_pool_type_fini(&global_write_combined[i]);
+ 		ttm_pool_type_fini(&global_uncached[i]);
+ 
 diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-index 08768e5acced..57697605b2e2 100644
+index e6a8b6d8eab7..3c3c497b6b91 100644
 --- a/drivers/hid/hid-logitech-dj.c
 +++ b/drivers/hid/hid-logitech-dj.c
 @@ -965,9 +965,7 @@ static void logi_hidpp_dev_conn_notif_equad(struct hid_device *hdev,
@@ -1096,10 +2868,10 @@ index 08768e5acced..57697605b2e2 100644
  	}
  }
 diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 969f8eb086f0..0b05bb1e4410 100644
+index 2735cd585af0..799ad0ef9c4a 100644
 --- a/drivers/hid/i2c-hid/i2c-hid-core.c
 +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -61,7 +61,6 @@
+@@ -64,7 +64,6 @@
  /* flags */
  #define I2C_HID_STARTED		0
  #define I2C_HID_RESET_PENDING	1
@@ -1107,7 +2879,7 @@ index 969f8eb086f0..0b05bb1e4410 100644
  
  #define I2C_HID_PWR_ON		0x00
  #define I2C_HID_PWR_SLEEP	0x01
-@@ -193,15 +192,10 @@ static int i2c_hid_xfer(struct i2c_hid *ihid,
+@@ -190,15 +189,10 @@ static int i2c_hid_xfer(struct i2c_hid *ihid,
  		msgs[n].len = recv_len;
  		msgs[n].buf = recv_buf;
  		n++;
@@ -1123,7 +2895,7 @@ index 969f8eb086f0..0b05bb1e4410 100644
  	if (ret != n)
  		return ret < 0 ? ret : -EIO;
  
-@@ -569,9 +563,6 @@ static irqreturn_t i2c_hid_irq(int irq, void *dev_id)
+@@ -566,9 +560,6 @@ static irqreturn_t i2c_hid_irq(int irq, void *dev_id)
  {
  	struct i2c_hid *ihid = dev_id;
  
@@ -1154,10 +2926,10 @@ index a49c6affd7c4..dd5fc60874ba 100644
  	return dev;
  }
 diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 5e3976ba5265..1ebc95379914 100644
+index 7f30bcceebae..3642d4246320 100644
 --- a/drivers/i2c/i2c-core-base.c
 +++ b/drivers/i2c/i2c-core-base.c
-@@ -2075,13 +2075,18 @@ static int i2c_check_for_quirks(struct i2c_adapter *adap, struct i2c_msg *msgs,
+@@ -2187,13 +2187,18 @@ static int i2c_check_for_quirks(struct i2c_adapter *adap, struct i2c_msg *msgs,
   * Returns negative errno, else the number of messages executed.
   *
   * Adapter lock must be held when calling this function. No debug logging
@@ -1177,7 +2949,7 @@ index 5e3976ba5265..1ebc95379914 100644
  	if (WARN_ON(!msgs || num < 1))
  		return -EINVAL;
  
-@@ -2148,11 +2153,6 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+@@ -2260,11 +2265,6 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
  {
  	int ret;
  
@@ -1190,11 +2962,11 @@ index 5e3976ba5265..1ebc95379914 100644
  	 *
  	 *  - When we get an error after receiving N bytes from a slave,
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 4d03fb3a8246..f9ab5cfc9b94 100644
+index 676c9250d3f2..fc0528c513ad 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -4535,13 +4535,8 @@ static int its_vpe_irq_domain_alloc(struct irq_domain *domain, unsigned int virq
- 		set_bit(i, bitmap);
+@@ -4561,13 +4561,8 @@ static int its_vpe_irq_domain_alloc(struct irq_domain *domain, unsigned int virq
+ 		irqd_set_resend_when_in_progress(irq_get_irq_data(virq + i));
  	}
  
 -	if (err) {
@@ -1210,10 +2982,10 @@ index 4d03fb3a8246..f9ab5cfc9b94 100644
  	return err;
  }
 diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index a5ab2af3e520..e37fb25577c0 100644
+index 668e0aceeeba..e113b99a3eab 100644
 --- a/drivers/mmc/host/sdhci-msm.c
 +++ b/drivers/mmc/host/sdhci-msm.c
-@@ -2831,6 +2831,11 @@ static __maybe_unused int sdhci_msm_runtime_suspend(struct device *dev)
+@@ -2694,6 +2694,11 @@ static __maybe_unused int sdhci_msm_runtime_suspend(struct device *dev)
  	struct sdhci_host *host = dev_get_drvdata(dev);
  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
@@ -1225,7 +2997,7 @@ index a5ab2af3e520..e37fb25577c0 100644
  
  	/* Drop the performance vote */
  	dev_pm_opp_set_rate(dev, 0);
-@@ -2845,6 +2850,7 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+@@ -2708,6 +2713,7 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
  	struct sdhci_host *host = dev_get_drvdata(dev);
  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
@@ -1233,7 +3005,7 @@ index a5ab2af3e520..e37fb25577c0 100644
  	int ret;
  
  	ret = clk_bulk_prepare_enable(ARRAY_SIZE(msm_host->bulk_clks),
-@@ -2863,7 +2869,15 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+@@ -2726,7 +2732,15 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
  
  	dev_pm_opp_set_rate(dev, msm_host->clk_rate);
  
@@ -1272,11 +3044,194 @@ index 5d2ddb037a9a..2068025d5639 100644
  			doc_probe(doc_locations[i]);
  		}
  	}
+diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+index b079605c84d3..b8cff9240b28 100644
+--- a/drivers/mtd/nand/raw/qcom_nandc.c
++++ b/drivers/mtd/nand/raw/qcom_nandc.c
+@@ -2815,7 +2815,7 @@ static int qcom_misc_cmd_type_exec(struct nand_chip *chip, const struct nand_sub
+ 			      host->cfg0_raw & ~(7 << CW_PER_PAGE));
+ 		nandc_set_reg(chip, NAND_DEV0_CFG1, host->cfg1_raw);
+ 		instrs = 3;
+-	} else {
++	} else if (q_op.cmd_reg != OP_RESET_DEVICE) {
+ 		return 0;
+ 	}
+ 
+@@ -2830,9 +2830,8 @@ static int qcom_misc_cmd_type_exec(struct nand_chip *chip, const struct nand_sub
+ 	nandc_set_reg(chip, NAND_EXEC_CMD, 1);
+ 
+ 	write_reg_dma(nandc, NAND_FLASH_CMD, instrs, NAND_BAM_NEXT_SGL);
+-	(q_op.cmd_reg == OP_BLOCK_ERASE) ? write_reg_dma(nandc, NAND_DEV0_CFG0,
+-	2, NAND_BAM_NEXT_SGL) : read_reg_dma(nandc,
+-	NAND_FLASH_STATUS, 1, NAND_BAM_NEXT_SGL);
++	if (q_op.cmd_reg == OP_BLOCK_ERASE)
++		write_reg_dma(nandc, NAND_DEV0_CFG0, 2, NAND_BAM_NEXT_SGL);
+ 
+ 	write_reg_dma(nandc, NAND_EXEC_CMD, 1, NAND_BAM_NEXT_SGL);
+ 	read_reg_dma(nandc, NAND_FLASH_STATUS, 1, NAND_BAM_NEXT_SGL);
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index b8fde22aebf9..8556502f0672 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -566,13 +566,61 @@ static void mv88e6xxx_translate_cmode(u8 cmode, unsigned long *supported)
+ 		phy_interface_set_rgmii(supported);
+ }
+ 
+-static void mv88e6250_phylink_get_caps(struct mv88e6xxx_chip *chip, int port,
+-				       struct phylink_config *config)
++static void
++mv88e6250_setup_supported_interfaces(struct mv88e6xxx_chip *chip, int port,
++				     struct phylink_config *config)
+ {
+ 	unsigned long *supported = config->supported_interfaces;
++	int err;
++	u16 reg;
+ 
+-	/* Translate the default cmode */
+-	mv88e6xxx_translate_cmode(chip->ports[port].cmode, supported);
++	err = mv88e6xxx_port_read(chip, port, MV88E6XXX_PORT_STS, &reg);
++	if (err) {
++		dev_err(chip->dev, "p%d: failed to read port status\n", port);
++		return;
++	}
++
++	switch (reg & MV88E6250_PORT_STS_PORTMODE_MASK) {
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_HALF_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_100_HALF_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_FULL_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_100_FULL_PHY:
++		__set_bit(PHY_INTERFACE_MODE_REVMII, supported);
++		break;
++
++	case MV88E6250_PORT_STS_PORTMODE_MII_HALF:
++	case MV88E6250_PORT_STS_PORTMODE_MII_FULL:
++		__set_bit(PHY_INTERFACE_MODE_MII, supported);
++		break;
++
++	case MV88E6250_PORT_STS_PORTMODE_MII_DUAL_100_RMII_FULL_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_200_RMII_FULL_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_HALF_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_FULL_PHY:
++		__set_bit(PHY_INTERFACE_MODE_REVRMII, supported);
++		break;
++
++	case MV88E6250_PORT_STS_PORTMODE_MII_DUAL_100_RMII_FULL:
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_FULL:
++		__set_bit(PHY_INTERFACE_MODE_RMII, supported);
++		break;
++
++	case MV88E6250_PORT_STS_PORTMODE_MII_100_RGMII:
++		__set_bit(PHY_INTERFACE_MODE_RGMII, supported);
++		break;
++
++	default:
++		dev_err(chip->dev,
++			"p%d: invalid port mode in status register: %04x\n",
++			port, reg);
++	}
++}
++
++static void mv88e6250_phylink_get_caps(struct mv88e6xxx_chip *chip, int port,
++				       struct phylink_config *config)
++{
++	if (!mv88e6xxx_phy_is_internal(chip, port))
++		mv88e6250_setup_supported_interfaces(chip, port, config);
+ 
+ 	config->mac_capabilities = MAC_SYM_PAUSE | MAC_10 | MAC_100;
+ }
+diff --git a/drivers/net/dsa/mv88e6xxx/port.h b/drivers/net/dsa/mv88e6xxx/port.h
+index 86deeb347cbc..ddadeb9bfdae 100644
+--- a/drivers/net/dsa/mv88e6xxx/port.h
++++ b/drivers/net/dsa/mv88e6xxx/port.h
+@@ -25,10 +25,25 @@
+ #define MV88E6250_PORT_STS_PORTMODE_PHY_100_HALF	0x0900
+ #define MV88E6250_PORT_STS_PORTMODE_PHY_10_FULL		0x0a00
+ #define MV88E6250_PORT_STS_PORTMODE_PHY_100_FULL	0x0b00
+-#define MV88E6250_PORT_STS_PORTMODE_MII_10_HALF		0x0c00
+-#define MV88E6250_PORT_STS_PORTMODE_MII_100_HALF	0x0d00
+-#define MV88E6250_PORT_STS_PORTMODE_MII_10_FULL		0x0e00
+-#define MV88E6250_PORT_STS_PORTMODE_MII_100_FULL	0x0f00
++/* - Modes with PHY suffix use output instead of input clock
++ * - Modes without RMII or RGMII use MII
++ * - Modes without speed do not have a fixed speed specified in the manual
++ *   ("DC to x MHz" - variable clock support?)
++ */
++#define MV88E6250_PORT_STS_PORTMODE_MII_DISABLED		0x0000
++#define MV88E6250_PORT_STS_PORTMODE_MII_100_RGMII		0x0100
++#define MV88E6250_PORT_STS_PORTMODE_MII_DUAL_100_RMII_FULL_PHY	0x0200
++#define MV88E6250_PORT_STS_PORTMODE_MII_200_RMII_FULL_PHY	0x0400
++#define MV88E6250_PORT_STS_PORTMODE_MII_DUAL_100_RMII_FULL	0x0600
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_FULL	0x0700
++#define MV88E6250_PORT_STS_PORTMODE_MII_HALF			0x0800
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_HALF_PHY	0x0900
++#define MV88E6250_PORT_STS_PORTMODE_MII_FULL			0x0a00
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_FULL_PHY	0x0b00
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_HALF_PHY		0x0c00
++#define MV88E6250_PORT_STS_PORTMODE_MII_100_HALF_PHY		0x0d00
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_FULL_PHY		0x0e00
++#define MV88E6250_PORT_STS_PORTMODE_MII_100_FULL_PHY		0x0f00
+ #define MV88E6XXX_PORT_STS_LINK			0x0800
+ #define MV88E6XXX_PORT_STS_DUPLEX		0x0400
+ #define MV88E6XXX_PORT_STS_SPEED_MASK		0x0300
+diff --git a/drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c b/drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c
+index b3d04f49f77e..6bf149d64594 100644
+--- a/drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c
++++ b/drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c
+@@ -435,10 +435,8 @@ static void umac_init(struct bcmasp_intf *intf)
+ 	umac_wl(intf, 0x800, UMC_RX_MAX_PKT_SZ);
+ }
+ 
+-static int bcmasp_tx_poll(struct napi_struct *napi, int budget)
++static int bcmasp_tx_reclaim(struct bcmasp_intf *intf)
+ {
+-	struct bcmasp_intf *intf =
+-		container_of(napi, struct bcmasp_intf, tx_napi);
+ 	struct bcmasp_intf_stats64 *stats = &intf->stats64;
+ 	struct device *kdev = &intf->parent->pdev->dev;
+ 	unsigned long read, released = 0;
+@@ -481,10 +479,16 @@ static int bcmasp_tx_poll(struct napi_struct *napi, int budget)
+ 							DESC_RING_COUNT);
+ 	}
+ 
+-	/* Ensure all descriptors have been written to DRAM for the hardware
+-	 * to see updated contents.
+-	 */
+-	wmb();
++	return released;
++}
++
++static int bcmasp_tx_poll(struct napi_struct *napi, int budget)
++{
++	struct bcmasp_intf *intf =
++		container_of(napi, struct bcmasp_intf, tx_napi);
++	int released = 0;
++
++	released = bcmasp_tx_reclaim(intf);
+ 
+ 	napi_complete(&intf->tx_napi);
+ 
+@@ -794,6 +798,7 @@ static int bcmasp_init_tx(struct bcmasp_intf *intf)
+ 
+ 	intf->tx_spb_index = 0;
+ 	intf->tx_spb_clean_index = 0;
++	memset(intf->tx_cbs, 0, sizeof(struct bcmasp_tx_cb) * DESC_RING_COUNT);
+ 
+ 	netif_napi_add_tx(intf->ndev, &intf->tx_napi, bcmasp_tx_poll);
+ 
+@@ -904,6 +909,8 @@ static void bcmasp_netif_deinit(struct net_device *dev)
+ 	} while (timeout-- > 0);
+ 	tx_spb_dma_wl(intf, 0x0, TX_SPB_DMA_FIFO_CTRL);
+ 
++	bcmasp_tx_reclaim(intf);
++
+ 	umac_enable_set(intf, UMC_CMD_TX_EN, 0);
+ 
+ 	phy_stop(dev->phydev);
 diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
-index 7f876721596c..5b6209f5a801 100644
+index 3e4fb3c3e834..1be6d14030bc 100644
 --- a/drivers/net/ethernet/broadcom/b44.c
 +++ b/drivers/net/ethernet/broadcom/b44.c
-@@ -2033,12 +2033,14 @@ static int b44_set_pauseparam(struct net_device *dev,
+@@ -2009,12 +2009,14 @@ static int b44_set_pauseparam(struct net_device *dev,
  		bp->flags |= B44_FLAG_TX_PAUSE;
  	else
  		bp->flags &= ~B44_FLAG_TX_PAUSE;
@@ -1298,10 +3253,10 @@ index 7f876721596c..5b6209f5a801 100644
  	spin_unlock_irq(&bp->lock);
  
 diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 0d0aad7141c1..77ea19bcdc6f 100644
+index 38e3b2225ff1..724624737d09 100644
 --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
 +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -1697,7 +1697,7 @@ static inline struct sk_buff *bnxt_tpa_end(struct bnxt *bp,
+@@ -1659,7 +1659,7 @@ static inline struct sk_buff *bnxt_tpa_end(struct bnxt *bp,
  		skb = bnxt_copy_skb(bnapi, data_ptr, len, mapping);
  		if (!skb) {
  			bnxt_abort_tpa(cpr, idx, agg_bufs);
@@ -1310,7 +3265,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  			return NULL;
  		}
  	} else {
-@@ -1707,7 +1707,7 @@ static inline struct sk_buff *bnxt_tpa_end(struct bnxt *bp,
+@@ -1669,7 +1669,7 @@ static inline struct sk_buff *bnxt_tpa_end(struct bnxt *bp,
  		new_data = __bnxt_alloc_rx_frag(bp, &new_mapping, GFP_ATOMIC);
  		if (!new_data) {
  			bnxt_abort_tpa(cpr, idx, agg_bufs);
@@ -1319,7 +3274,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  			return NULL;
  		}
  
-@@ -1723,7 +1723,7 @@ static inline struct sk_buff *bnxt_tpa_end(struct bnxt *bp,
+@@ -1685,7 +1685,7 @@ static inline struct sk_buff *bnxt_tpa_end(struct bnxt *bp,
  		if (!skb) {
  			skb_free_frag(data);
  			bnxt_abort_tpa(cpr, idx, agg_bufs);
@@ -1328,7 +3283,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  			return NULL;
  		}
  		skb_reserve(skb, bp->rx_offset);
-@@ -1734,7 +1734,7 @@ static inline struct sk_buff *bnxt_tpa_end(struct bnxt *bp,
+@@ -1696,7 +1696,7 @@ static inline struct sk_buff *bnxt_tpa_end(struct bnxt *bp,
  		skb = bnxt_rx_agg_pages_skb(bp, cpr, skb, idx, agg_bufs, true);
  		if (!skb) {
  			/* Page reuse already handled by bnxt_rx_pages(). */
@@ -1337,7 +3292,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  			return NULL;
  		}
  	}
-@@ -1950,11 +1950,8 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
+@@ -1914,11 +1914,8 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
  			u32 frag_len = bnxt_rx_agg_pages_xdp(bp, cpr, &xdp,
  							     cp_cons, agg_bufs,
  							     false);
@@ -1351,7 +3306,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  		}
  		xdp_active = true;
  	}
-@@ -1977,9 +1974,7 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
+@@ -1941,9 +1938,7 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
  				else
  					bnxt_xdp_buff_frags_free(rxr, &xdp);
  			}
@@ -1362,7 +3317,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  		}
  	} else {
  		u32 payload;
-@@ -1990,29 +1985,21 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
+@@ -1954,29 +1949,21 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
  			payload = 0;
  		skb = bp->rx_skb_func(bp, rxr, cons, data, data_ptr, dma_addr,
  				      payload | len);
@@ -1397,7 +3352,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  			}
  		}
  	}
-@@ -2090,6 +2077,11 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
+@@ -2054,6 +2041,11 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
  	*raw_cons = tmp_raw_cons;
  
  	return rc;
@@ -1409,7 +3364,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  }
  
  /* In netpoll mode, if we are using a combined completion ring, we need to
-@@ -2135,7 +2127,7 @@ static int bnxt_force_rx_discard(struct bnxt *bp,
+@@ -2099,7 +2091,7 @@ static int bnxt_force_rx_discard(struct bnxt *bp,
  	}
  	rc = bnxt_rx_pkt(bp, cpr, raw_cons, event);
  	if (rc && rc != -EBUSY)
@@ -1418,7 +3373,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  	return rc;
  }
  
-@@ -11812,6 +11804,16 @@ static void bnxt_rx_ring_reset(struct bnxt *bp)
+@@ -11807,6 +11799,16 @@ static void bnxt_rx_ring_reset(struct bnxt *bp)
  	bnxt_rtnl_unlock_sp(bp);
  }
  
@@ -1435,7 +3390,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  static void bnxt_fw_reset_close(struct bnxt *bp)
  {
  	bnxt_ulp_stop(bp);
-@@ -11825,12 +11827,7 @@ static void bnxt_fw_reset_close(struct bnxt *bp)
+@@ -11820,12 +11822,7 @@ static void bnxt_fw_reset_close(struct bnxt *bp)
  		pci_read_config_word(bp->pdev, PCI_SUBSYSTEM_ID, &val);
  		if (val == 0xffff)
  			bp->fw_reset_min_dsecs = 0;
@@ -1449,7 +3404,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  	}
  	__bnxt_close_nic(bp, true, false);
  	bnxt_vf_reps_free(bp);
-@@ -13978,6 +13975,7 @@ static pci_ers_result_t bnxt_io_error_detected(struct pci_dev *pdev,
+@@ -13967,6 +13964,7 @@ static pci_ers_result_t bnxt_io_error_detected(struct pci_dev *pdev,
  {
  	struct net_device *netdev = pci_get_drvdata(pdev);
  	struct bnxt *bp = netdev_priv(netdev);
@@ -1457,7 +3412,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  
  	netdev_info(netdev, "PCI I/O error detected\n");
  
-@@ -13986,16 +13984,27 @@ static pci_ers_result_t bnxt_io_error_detected(struct pci_dev *pdev,
+@@ -13975,16 +13973,27 @@ static pci_ers_result_t bnxt_io_error_detected(struct pci_dev *pdev,
  
  	bnxt_ulp_stop(bp);
  
@@ -1488,7 +3443,7 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  
  	if (pci_is_enabled(pdev))
  		pci_disable_device(pdev);
-@@ -14081,6 +14090,7 @@ static pci_ers_result_t bnxt_io_slot_reset(struct pci_dev *pdev)
+@@ -14070,6 +14079,7 @@ static pci_ers_result_t bnxt_io_slot_reset(struct pci_dev *pdev)
  	}
  
  reset_exit:
@@ -1497,10 +3452,10 @@ index 0d0aad7141c1..77ea19bcdc6f 100644
  	rtnl_unlock();
  
 diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index a9db1ed74d3f..9efd4b962dce 100644
+index a21fc92aa272..f8d1a994c2f6 100644
 --- a/drivers/net/ethernet/intel/i40e/i40e_main.c
 +++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -16173,8 +16173,8 @@ static int i40e_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+@@ -16237,8 +16237,8 @@ static int i40e_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
  	val = (rd32(&pf->hw, I40E_PRTGL_SAH) &
  	       I40E_PRTGL_SAH_MFS_MASK) >> I40E_PRTGL_SAH_MFS_SHIFT;
  	if (val < MAX_FRAME_SIZE_DEFAULT)
@@ -1511,7 +3466,7 @@ index a9db1ed74d3f..9efd4b962dce 100644
  
  	/* Add a filter to drop all Flow control frames from any VSI from being
  	 * transmitted. By doing so we stop a malicious VF from sending out
-@@ -16716,7 +16716,7 @@ static int __init i40e_init_module(void)
+@@ -16778,7 +16778,7 @@ static int __init i40e_init_module(void)
  	 * since we need to be able to guarantee forward progress even under
  	 * memory pressure.
  	 */
@@ -1521,10 +3476,10 @@ index a9db1ed74d3f..9efd4b962dce 100644
  		pr_err("%s: Failed to create workqueue\n", i40e_driver_name);
  		return -ENOMEM;
 diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
-index b9c4b311cd62..53b9fe35d803 100644
+index 257865647c86..ce0b91999526 100644
 --- a/drivers/net/ethernet/intel/iavf/iavf_main.c
 +++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
-@@ -3631,6 +3631,34 @@ static void iavf_del_all_cloud_filters(struct iavf_adapter *adapter)
+@@ -3574,6 +3574,34 @@ static void iavf_del_all_cloud_filters(struct iavf_adapter *adapter)
  	spin_unlock_bh(&adapter->cloud_filter_list_lock);
  }
  
@@ -1559,7 +3514,7 @@ index b9c4b311cd62..53b9fe35d803 100644
  /**
   * __iavf_setup_tc - configure multiple traffic classes
   * @netdev: network interface device structure
-@@ -3688,7 +3716,7 @@ static int __iavf_setup_tc(struct net_device *netdev, void *type_data)
+@@ -3631,7 +3659,7 @@ static int __iavf_setup_tc(struct net_device *netdev, void *type_data)
  		if (ret)
  			return ret;
  		/* Return if same TC config is requested */
@@ -1568,11 +3523,57 @@ index b9c4b311cd62..53b9fe35d803 100644
  			return 0;
  		adapter->num_tc = num_tc;
  
+diff --git a/drivers/net/ethernet/intel/ice/ice_vf_lib.c b/drivers/net/ethernet/intel/ice/ice_vf_lib.c
+index d488c7156d09..03b9d7d74851 100644
+--- a/drivers/net/ethernet/intel/ice/ice_vf_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_vf_lib.c
+@@ -847,6 +847,11 @@ int ice_reset_vf(struct ice_vf *vf, u32 flags)
+ 		return 0;
+ 	}
+ 
++	if (flags & ICE_VF_RESET_LOCK)
++		mutex_lock(&vf->cfg_lock);
++	else
++		lockdep_assert_held(&vf->cfg_lock);
++
+ 	lag = pf->lag;
+ 	mutex_lock(&pf->lag_mutex);
+ 	if (lag && lag->bonded && lag->primary) {
+@@ -858,11 +863,6 @@ int ice_reset_vf(struct ice_vf *vf, u32 flags)
+ 			act_prt = ICE_LAG_INVALID_PORT;
+ 	}
+ 
+-	if (flags & ICE_VF_RESET_LOCK)
+-		mutex_lock(&vf->cfg_lock);
+-	else
+-		lockdep_assert_held(&vf->cfg_lock);
+-
+ 	if (ice_is_vf_disabled(vf)) {
+ 		vsi = ice_get_vf_vsi(vf);
+ 		if (!vsi) {
+@@ -947,14 +947,14 @@ int ice_reset_vf(struct ice_vf *vf, u32 flags)
+ 	ice_mbx_clear_malvf(&vf->mbx_info);
+ 
+ out_unlock:
+-	if (flags & ICE_VF_RESET_LOCK)
+-		mutex_unlock(&vf->cfg_lock);
+-
+ 	if (lag && lag->bonded && lag->primary &&
+ 	    act_prt != ICE_LAG_INVALID_PORT)
+ 		ice_lag_move_vf_nodes_cfg(lag, pri_prt, act_prt);
+ 	mutex_unlock(&pf->lag_mutex);
+ 
++	if (flags & ICE_VF_RESET_LOCK)
++		mutex_unlock(&vf->cfg_lock);
++
+ 	return err;
+ }
+ 
 diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/macsec.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/macsec.c
-index a7832a0180ee..48cf691842b5 100644
+index b2cabd6ab86c..cc9bcc420032 100644
 --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/macsec.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/macsec.c
-@@ -1703,6 +1703,7 @@ static const struct macsec_ops macsec_offload_ops = {
+@@ -1640,6 +1640,7 @@ static const struct macsec_ops macsec_offload_ops = {
  	.mdo_add_secy = mlx5e_macsec_add_secy,
  	.mdo_upd_secy = mlx5e_macsec_upd_secy,
  	.mdo_del_secy = mlx5e_macsec_del_secy,
@@ -1581,23 +3582,342 @@ index a7832a0180ee..48cf691842b5 100644
  
  bool mlx5e_macsec_handle_tx_skb(struct mlx5e_macsec *macsec, struct sk_buff *skb)
 diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index e2a985ec2c76..f36a416ffcfe 100644
+index 1ccf3b73ed72..85507d01fd45 100644
 --- a/drivers/net/ethernet/mellanox/mlxsw/core.c
 +++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -792,7 +792,7 @@ static void mlxsw_emad_rx_listener_func(struct sk_buff *skb, u16 local_port,
+@@ -835,7 +835,7 @@ static void mlxsw_emad_rx_listener_func(struct sk_buff *skb, u16 local_port,
  
  static const struct mlxsw_listener mlxsw_emad_rx_listener =
  	MLXSW_RXL(mlxsw_emad_rx_listener_func, ETHEMAD, TRAP_TO_CPU, false,
 -		  EMAD, DISCARD);
 +		  EMAD, FORWARD);
  
- static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
+ static int mlxsw_emad_tlv_enable(struct mlxsw_core *mlxsw_core)
  {
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
+index faa63ea9b83e..1915fa41c622 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
+@@ -95,7 +95,7 @@ struct mlxsw_afa_set {
+ 		      */
+ 	   has_trap:1,
+ 	   has_police:1;
+-	unsigned int ref_count;
++	refcount_t ref_count;
+ 	struct mlxsw_afa_set *next; /* Pointer to the next set. */
+ 	struct mlxsw_afa_set *prev; /* Pointer to the previous set,
+ 				     * note that set may have multiple
+@@ -120,7 +120,7 @@ struct mlxsw_afa_fwd_entry {
+ 	struct rhash_head ht_node;
+ 	struct mlxsw_afa_fwd_entry_ht_key ht_key;
+ 	u32 kvdl_index;
+-	unsigned int ref_count;
++	refcount_t ref_count;
+ };
+ 
+ static const struct rhashtable_params mlxsw_afa_fwd_entry_ht_params = {
+@@ -282,7 +282,7 @@ static struct mlxsw_afa_set *mlxsw_afa_set_create(bool is_first)
+ 	/* Need to initialize the set to pass by default */
+ 	mlxsw_afa_set_goto_set(set, MLXSW_AFA_SET_GOTO_BINDING_CMD_TERM, 0);
+ 	set->ht_key.is_first = is_first;
+-	set->ref_count = 1;
++	refcount_set(&set->ref_count, 1);
+ 	return set;
+ }
+ 
+@@ -330,7 +330,7 @@ static void mlxsw_afa_set_unshare(struct mlxsw_afa *mlxsw_afa,
+ static void mlxsw_afa_set_put(struct mlxsw_afa *mlxsw_afa,
+ 			      struct mlxsw_afa_set *set)
+ {
+-	if (--set->ref_count)
++	if (!refcount_dec_and_test(&set->ref_count))
+ 		return;
+ 	if (set->shared)
+ 		mlxsw_afa_set_unshare(mlxsw_afa, set);
+@@ -350,7 +350,7 @@ static struct mlxsw_afa_set *mlxsw_afa_set_get(struct mlxsw_afa *mlxsw_afa,
+ 	set = rhashtable_lookup_fast(&mlxsw_afa->set_ht, &orig_set->ht_key,
+ 				     mlxsw_afa_set_ht_params);
+ 	if (set) {
+-		set->ref_count++;
++		refcount_inc(&set->ref_count);
+ 		mlxsw_afa_set_put(mlxsw_afa, orig_set);
+ 	} else {
+ 		set = orig_set;
+@@ -564,7 +564,7 @@ mlxsw_afa_fwd_entry_create(struct mlxsw_afa *mlxsw_afa, u16 local_port)
+ 	if (!fwd_entry)
+ 		return ERR_PTR(-ENOMEM);
+ 	fwd_entry->ht_key.local_port = local_port;
+-	fwd_entry->ref_count = 1;
++	refcount_set(&fwd_entry->ref_count, 1);
+ 
+ 	err = rhashtable_insert_fast(&mlxsw_afa->fwd_entry_ht,
+ 				     &fwd_entry->ht_node,
+@@ -607,7 +607,7 @@ mlxsw_afa_fwd_entry_get(struct mlxsw_afa *mlxsw_afa, u16 local_port)
+ 	fwd_entry = rhashtable_lookup_fast(&mlxsw_afa->fwd_entry_ht, &ht_key,
+ 					   mlxsw_afa_fwd_entry_ht_params);
+ 	if (fwd_entry) {
+-		fwd_entry->ref_count++;
++		refcount_inc(&fwd_entry->ref_count);
+ 		return fwd_entry;
+ 	}
+ 	return mlxsw_afa_fwd_entry_create(mlxsw_afa, local_port);
+@@ -616,7 +616,7 @@ mlxsw_afa_fwd_entry_get(struct mlxsw_afa *mlxsw_afa, u16 local_port)
+ static void mlxsw_afa_fwd_entry_put(struct mlxsw_afa *mlxsw_afa,
+ 				    struct mlxsw_afa_fwd_entry *fwd_entry)
+ {
+-	if (--fwd_entry->ref_count)
++	if (!refcount_dec_and_test(&fwd_entry->ref_count))
+ 		return;
+ 	mlxsw_afa_fwd_entry_destroy(mlxsw_afa, fwd_entry);
+ }
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_keys.c b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_keys.c
+index 70f9b5e85a26..bf140e7416e1 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_keys.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_keys.c
+@@ -5,6 +5,7 @@
+ #include <linux/slab.h>
+ #include <linux/list.h>
+ #include <linux/errno.h>
++#include <linux/refcount.h>
+ 
+ #include "item.h"
+ #include "core_acl_flex_keys.h"
+@@ -105,7 +106,7 @@ EXPORT_SYMBOL(mlxsw_afk_destroy);
+ 
+ struct mlxsw_afk_key_info {
+ 	struct list_head list;
+-	unsigned int ref_count;
++	refcount_t ref_count;
+ 	unsigned int blocks_count;
+ 	int element_to_block[MLXSW_AFK_ELEMENT_MAX]; /* index is element, value
+ 						      * is index inside "blocks"
+@@ -282,7 +283,7 @@ mlxsw_afk_key_info_create(struct mlxsw_afk *mlxsw_afk,
+ 	if (err)
+ 		goto err_picker;
+ 	list_add(&key_info->list, &mlxsw_afk->key_info_list);
+-	key_info->ref_count = 1;
++	refcount_set(&key_info->ref_count, 1);
+ 	return key_info;
+ 
+ err_picker:
+@@ -304,7 +305,7 @@ mlxsw_afk_key_info_get(struct mlxsw_afk *mlxsw_afk,
+ 
+ 	key_info = mlxsw_afk_key_info_find(mlxsw_afk, elusage);
+ 	if (key_info) {
+-		key_info->ref_count++;
++		refcount_inc(&key_info->ref_count);
+ 		return key_info;
+ 	}
+ 	return mlxsw_afk_key_info_create(mlxsw_afk, elusage);
+@@ -313,7 +314,7 @@ EXPORT_SYMBOL(mlxsw_afk_key_info_get);
+ 
+ void mlxsw_afk_key_info_put(struct mlxsw_afk_key_info *key_info)
+ {
+-	if (--key_info->ref_count)
++	if (!refcount_dec_and_test(&key_info->ref_count))
+ 		return;
+ 	mlxsw_afk_key_info_destroy(key_info);
+ }
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_env.c b/drivers/net/ethernet/mellanox/mlxsw/core_env.c
+index d637c0348fa1..b71bc23245fe 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_env.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_env.c
+@@ -1357,24 +1357,20 @@ static struct mlxsw_linecards_event_ops mlxsw_env_event_ops = {
+ 	.got_inactive = mlxsw_env_got_inactive,
+ };
+ 
+-static int mlxsw_env_max_module_eeprom_len_query(struct mlxsw_env *mlxsw_env)
++static void mlxsw_env_max_module_eeprom_len_query(struct mlxsw_env *mlxsw_env)
+ {
+ 	char mcam_pl[MLXSW_REG_MCAM_LEN];
+-	bool mcia_128b_supported;
++	bool mcia_128b_supported = false;
+ 	int err;
+ 
+ 	mlxsw_reg_mcam_pack(mcam_pl,
+ 			    MLXSW_REG_MCAM_FEATURE_GROUP_ENHANCED_FEATURES);
+ 	err = mlxsw_reg_query(mlxsw_env->core, MLXSW_REG(mcam), mcam_pl);
+-	if (err)
+-		return err;
+-
+-	mlxsw_reg_mcam_unpack(mcam_pl, MLXSW_REG_MCAM_MCIA_128B,
+-			      &mcia_128b_supported);
++	if (!err)
++		mlxsw_reg_mcam_unpack(mcam_pl, MLXSW_REG_MCAM_MCIA_128B,
++				      &mcia_128b_supported);
+ 
+ 	mlxsw_env->max_eeprom_len = mcia_128b_supported ? 128 : 48;
+-
+-	return 0;
+ }
+ 
+ int mlxsw_env_init(struct mlxsw_core *mlxsw_core,
+@@ -1445,15 +1441,11 @@ int mlxsw_env_init(struct mlxsw_core *mlxsw_core,
+ 	if (err)
+ 		goto err_type_set;
+ 
+-	err = mlxsw_env_max_module_eeprom_len_query(env);
+-	if (err)
+-		goto err_eeprom_len_query;
+-
++	mlxsw_env_max_module_eeprom_len_query(env);
+ 	env->line_cards[0]->active = true;
+ 
+ 	return 0;
+ 
+-err_eeprom_len_query:
+ err_type_set:
+ 	mlxsw_env_module_event_disable(env, 0);
+ err_mlxsw_env_module_event_enable:
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c
+index 7c59c8a13584..b01b000bc71c 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl.c
+@@ -9,6 +9,7 @@
+ #include <linux/rhashtable.h>
+ #include <linux/netdevice.h>
+ #include <linux/mutex.h>
++#include <linux/refcount.h>
+ #include <net/net_namespace.h>
+ #include <net/tc_act/tc_vlan.h>
+ 
+@@ -55,7 +56,7 @@ struct mlxsw_sp_acl_ruleset {
+ 	struct rhash_head ht_node; /* Member of acl HT */
+ 	struct mlxsw_sp_acl_ruleset_ht_key ht_key;
+ 	struct rhashtable rule_ht;
+-	unsigned int ref_count;
++	refcount_t ref_count;
+ 	unsigned int min_prio;
+ 	unsigned int max_prio;
+ 	unsigned long priv[];
+@@ -99,7 +100,7 @@ static bool
+ mlxsw_sp_acl_ruleset_is_singular(const struct mlxsw_sp_acl_ruleset *ruleset)
+ {
+ 	/* We hold a reference on ruleset ourselves */
+-	return ruleset->ref_count == 2;
++	return refcount_read(&ruleset->ref_count) == 2;
+ }
+ 
+ int mlxsw_sp_acl_ruleset_bind(struct mlxsw_sp *mlxsw_sp,
+@@ -176,7 +177,7 @@ mlxsw_sp_acl_ruleset_create(struct mlxsw_sp *mlxsw_sp,
+ 	ruleset = kzalloc(alloc_size, GFP_KERNEL);
+ 	if (!ruleset)
+ 		return ERR_PTR(-ENOMEM);
+-	ruleset->ref_count = 1;
++	refcount_set(&ruleset->ref_count, 1);
+ 	ruleset->ht_key.block = block;
+ 	ruleset->ht_key.chain_index = chain_index;
+ 	ruleset->ht_key.ops = ops;
+@@ -222,13 +223,13 @@ static void mlxsw_sp_acl_ruleset_destroy(struct mlxsw_sp *mlxsw_sp,
+ 
+ static void mlxsw_sp_acl_ruleset_ref_inc(struct mlxsw_sp_acl_ruleset *ruleset)
+ {
+-	ruleset->ref_count++;
++	refcount_inc(&ruleset->ref_count);
+ }
+ 
+ static void mlxsw_sp_acl_ruleset_ref_dec(struct mlxsw_sp *mlxsw_sp,
+ 					 struct mlxsw_sp_acl_ruleset *ruleset)
+ {
+-	if (--ruleset->ref_count)
++	if (!refcount_dec_and_test(&ruleset->ref_count))
+ 		return;
+ 	mlxsw_sp_acl_ruleset_destroy(mlxsw_sp, ruleset);
+ }
 diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.c
-index 41eac7dfb67e..685bcf8cbfa9 100644
+index 50ea1eff02b2..92a406f02eae 100644
 --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.c
 +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.c
-@@ -780,7 +780,9 @@ static void mlxsw_sp_acl_tcam_vregion_rehash_work(struct work_struct *work)
+@@ -9,6 +9,8 @@
+ #include <linux/rhashtable.h>
+ #include <linux/netdevice.h>
+ #include <linux/mutex.h>
++#include <linux/refcount.h>
++#include <linux/idr.h>
+ #include <net/devlink.h>
+ #include <trace/events/mlxsw.h>
+ 
+@@ -57,41 +59,43 @@ int mlxsw_sp_acl_tcam_priority_get(struct mlxsw_sp *mlxsw_sp,
+ static int mlxsw_sp_acl_tcam_region_id_get(struct mlxsw_sp_acl_tcam *tcam,
+ 					   u16 *p_id)
+ {
+-	u16 id;
++	int id;
+ 
+-	id = find_first_zero_bit(tcam->used_regions, tcam->max_regions);
+-	if (id < tcam->max_regions) {
+-		__set_bit(id, tcam->used_regions);
+-		*p_id = id;
+-		return 0;
+-	}
+-	return -ENOBUFS;
++	id = ida_alloc_max(&tcam->used_regions, tcam->max_regions - 1,
++			   GFP_KERNEL);
++	if (id < 0)
++		return id;
++
++	*p_id = id;
++
++	return 0;
+ }
+ 
+ static void mlxsw_sp_acl_tcam_region_id_put(struct mlxsw_sp_acl_tcam *tcam,
+ 					    u16 id)
+ {
+-	__clear_bit(id, tcam->used_regions);
++	ida_free(&tcam->used_regions, id);
+ }
+ 
+ static int mlxsw_sp_acl_tcam_group_id_get(struct mlxsw_sp_acl_tcam *tcam,
+ 					  u16 *p_id)
+ {
+-	u16 id;
++	int id;
+ 
+-	id = find_first_zero_bit(tcam->used_groups, tcam->max_groups);
+-	if (id < tcam->max_groups) {
+-		__set_bit(id, tcam->used_groups);
+-		*p_id = id;
+-		return 0;
+-	}
+-	return -ENOBUFS;
++	id = ida_alloc_max(&tcam->used_groups, tcam->max_groups - 1,
++			   GFP_KERNEL);
++	if (id < 0)
++		return id;
++
++	*p_id = id;
++
++	return 0;
+ }
+ 
+ static void mlxsw_sp_acl_tcam_group_id_put(struct mlxsw_sp_acl_tcam *tcam,
+ 					   u16 id)
+ {
+-	__clear_bit(id, tcam->used_groups);
++	ida_free(&tcam->used_groups, id);
+ }
+ 
+ struct mlxsw_sp_acl_tcam_pattern {
+@@ -155,7 +159,7 @@ struct mlxsw_sp_acl_tcam_vregion {
+ 		struct mlxsw_sp_acl_tcam_rehash_ctx ctx;
+ 	} rehash;
+ 	struct mlxsw_sp *mlxsw_sp;
+-	unsigned int ref_count;
++	refcount_t ref_count;
+ };
+ 
+ struct mlxsw_sp_acl_tcam_vchunk;
+@@ -176,7 +180,7 @@ struct mlxsw_sp_acl_tcam_vchunk {
+ 	unsigned int priority; /* Priority within the vregion and group */
+ 	struct mlxsw_sp_acl_tcam_vgroup *vgroup;
+ 	struct mlxsw_sp_acl_tcam_vregion *vregion;
+-	unsigned int ref_count;
++	refcount_t ref_count;
+ };
+ 
+ struct mlxsw_sp_acl_tcam_entry {
+@@ -714,7 +718,9 @@ static void mlxsw_sp_acl_tcam_vregion_rehash_work(struct work_struct *work)
  			     rehash.dw.work);
  	int credits = MLXSW_SP_ACL_TCAM_VREGION_REHASH_CREDITS;
  
@@ -1607,7 +3927,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  	if (credits < 0)
  		/* Rehash gone out of credits so it was interrupted.
  		 * Schedule the work as soon as possible to continue.
-@@ -790,6 +792,17 @@ static void mlxsw_sp_acl_tcam_vregion_rehash_work(struct work_struct *work)
+@@ -724,6 +730,17 @@ static void mlxsw_sp_acl_tcam_vregion_rehash_work(struct work_struct *work)
  		mlxsw_sp_acl_tcam_vregion_rehash_work_schedule(vregion);
  }
  
@@ -1625,7 +3945,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  static void
  mlxsw_sp_acl_tcam_rehash_ctx_vchunk_changed(struct mlxsw_sp_acl_tcam_vchunk *vchunk)
  {
-@@ -812,7 +825,7 @@ mlxsw_sp_acl_tcam_rehash_ctx_vregion_changed(struct mlxsw_sp_acl_tcam_vregion *v
+@@ -746,7 +763,7 @@ mlxsw_sp_acl_tcam_rehash_ctx_vregion_changed(struct mlxsw_sp_acl_tcam_vregion *v
  	 * the current chunk pointer to make sure all chunks
  	 * are properly migrated.
  	 */
@@ -1634,7 +3954,16 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  }
  
  static struct mlxsw_sp_acl_tcam_vregion *
-@@ -885,10 +898,14 @@ mlxsw_sp_acl_tcam_vregion_destroy(struct mlxsw_sp *mlxsw_sp,
+@@ -769,7 +786,7 @@ mlxsw_sp_acl_tcam_vregion_create(struct mlxsw_sp *mlxsw_sp,
+ 	vregion->tcam = tcam;
+ 	vregion->mlxsw_sp = mlxsw_sp;
+ 	vregion->vgroup = vgroup;
+-	vregion->ref_count = 1;
++	refcount_set(&vregion->ref_count, 1);
+ 
+ 	vregion->key_info = mlxsw_afk_key_info_get(afk, elusage);
+ 	if (IS_ERR(vregion->key_info)) {
+@@ -819,10 +836,14 @@ mlxsw_sp_acl_tcam_vregion_destroy(struct mlxsw_sp *mlxsw_sp,
  	struct mlxsw_sp_acl_tcam *tcam = vregion->tcam;
  
  	if (vgroup->vregion_rehash_enabled && ops->region_rehash_hints_get) {
@@ -1650,7 +3979,52 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  	}
  	mlxsw_sp_acl_tcam_vgroup_vregion_detach(mlxsw_sp, vregion);
  	if (vregion->region2)
-@@ -1254,8 +1271,14 @@ mlxsw_sp_acl_tcam_ventry_activity_get(struct mlxsw_sp *mlxsw_sp,
+@@ -856,7 +877,7 @@ mlxsw_sp_acl_tcam_vregion_get(struct mlxsw_sp *mlxsw_sp,
+ 			 */
+ 			return ERR_PTR(-EOPNOTSUPP);
+ 		}
+-		vregion->ref_count++;
++		refcount_inc(&vregion->ref_count);
+ 		return vregion;
+ 	}
+ 
+@@ -871,7 +892,7 @@ static void
+ mlxsw_sp_acl_tcam_vregion_put(struct mlxsw_sp *mlxsw_sp,
+ 			      struct mlxsw_sp_acl_tcam_vregion *vregion)
+ {
+-	if (--vregion->ref_count)
++	if (!refcount_dec_and_test(&vregion->ref_count))
+ 		return;
+ 	mlxsw_sp_acl_tcam_vregion_destroy(mlxsw_sp, vregion);
+ }
+@@ -924,7 +945,7 @@ mlxsw_sp_acl_tcam_vchunk_create(struct mlxsw_sp *mlxsw_sp,
+ 	INIT_LIST_HEAD(&vchunk->ventry_list);
+ 	vchunk->priority = priority;
+ 	vchunk->vgroup = vgroup;
+-	vchunk->ref_count = 1;
++	refcount_set(&vchunk->ref_count, 1);
+ 
+ 	vregion = mlxsw_sp_acl_tcam_vregion_get(mlxsw_sp, vgroup,
+ 						priority, elusage);
+@@ -1008,7 +1029,7 @@ mlxsw_sp_acl_tcam_vchunk_get(struct mlxsw_sp *mlxsw_sp,
+ 		if (WARN_ON(!mlxsw_afk_key_info_subset(vchunk->vregion->key_info,
+ 						       elusage)))
+ 			return ERR_PTR(-EINVAL);
+-		vchunk->ref_count++;
++		refcount_inc(&vchunk->ref_count);
+ 		return vchunk;
+ 	}
+ 	return mlxsw_sp_acl_tcam_vchunk_create(mlxsw_sp, vgroup,
+@@ -1019,7 +1040,7 @@ static void
+ mlxsw_sp_acl_tcam_vchunk_put(struct mlxsw_sp *mlxsw_sp,
+ 			     struct mlxsw_sp_acl_tcam_vchunk *vchunk)
+ {
+-	if (--vchunk->ref_count)
++	if (!refcount_dec_and_test(&vchunk->ref_count))
+ 		return;
+ 	mlxsw_sp_acl_tcam_vchunk_destroy(mlxsw_sp, vchunk);
+ }
+@@ -1153,8 +1174,14 @@ mlxsw_sp_acl_tcam_ventry_activity_get(struct mlxsw_sp *mlxsw_sp,
  				      struct mlxsw_sp_acl_tcam_ventry *ventry,
  				      bool *activity)
  {
@@ -1667,7 +4041,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  }
  
  static int
-@@ -1289,6 +1312,8 @@ mlxsw_sp_acl_tcam_vchunk_migrate_start(struct mlxsw_sp *mlxsw_sp,
+@@ -1188,6 +1215,8 @@ mlxsw_sp_acl_tcam_vchunk_migrate_start(struct mlxsw_sp *mlxsw_sp,
  {
  	struct mlxsw_sp_acl_tcam_chunk *new_chunk;
  
@@ -1676,7 +4050,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  	new_chunk = mlxsw_sp_acl_tcam_chunk_create(mlxsw_sp, vchunk, region);
  	if (IS_ERR(new_chunk))
  		return PTR_ERR(new_chunk);
-@@ -1307,7 +1332,7 @@ mlxsw_sp_acl_tcam_vchunk_migrate_end(struct mlxsw_sp *mlxsw_sp,
+@@ -1206,7 +1235,7 @@ mlxsw_sp_acl_tcam_vchunk_migrate_end(struct mlxsw_sp *mlxsw_sp,
  {
  	mlxsw_sp_acl_tcam_chunk_destroy(mlxsw_sp, vchunk->chunk2);
  	vchunk->chunk2 = NULL;
@@ -1685,7 +4059,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  }
  
  static int
-@@ -1330,6 +1355,9 @@ mlxsw_sp_acl_tcam_vchunk_migrate_one(struct mlxsw_sp *mlxsw_sp,
+@@ -1229,6 +1258,9 @@ mlxsw_sp_acl_tcam_vchunk_migrate_one(struct mlxsw_sp *mlxsw_sp,
  		return 0;
  	}
  
@@ -1695,7 +4069,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  	/* If the migration got interrupted, we have the ventry to start from
  	 * stored in context.
  	 */
-@@ -1339,6 +1367,8 @@ mlxsw_sp_acl_tcam_vchunk_migrate_one(struct mlxsw_sp *mlxsw_sp,
+@@ -1238,6 +1270,8 @@ mlxsw_sp_acl_tcam_vchunk_migrate_one(struct mlxsw_sp *mlxsw_sp,
  		ventry = list_first_entry(&vchunk->ventry_list,
  					  typeof(*ventry), list);
  
@@ -1704,7 +4078,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  	list_for_each_entry_from(ventry, &vchunk->ventry_list, list) {
  		/* During rollback, once we reach the ventry that failed
  		 * to migrate, we are done.
-@@ -1379,6 +1409,7 @@ mlxsw_sp_acl_tcam_vchunk_migrate_one(struct mlxsw_sp *mlxsw_sp,
+@@ -1278,6 +1312,7 @@ mlxsw_sp_acl_tcam_vchunk_migrate_one(struct mlxsw_sp *mlxsw_sp,
  		}
  	}
  
@@ -1712,7 +4086,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  	mlxsw_sp_acl_tcam_vchunk_migrate_end(mlxsw_sp, vchunk, ctx);
  	return 0;
  }
-@@ -1392,6 +1423,9 @@ mlxsw_sp_acl_tcam_vchunk_migrate_all(struct mlxsw_sp *mlxsw_sp,
+@@ -1291,6 +1326,9 @@ mlxsw_sp_acl_tcam_vchunk_migrate_all(struct mlxsw_sp *mlxsw_sp,
  	struct mlxsw_sp_acl_tcam_vchunk *vchunk;
  	int err;
  
@@ -1722,7 +4096,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  	/* If the migration got interrupted, we have the vchunk
  	 * we are working on stored in context.
  	 */
-@@ -1420,16 +1454,17 @@ mlxsw_sp_acl_tcam_vregion_migrate(struct mlxsw_sp *mlxsw_sp,
+@@ -1319,16 +1357,17 @@ mlxsw_sp_acl_tcam_vregion_migrate(struct mlxsw_sp *mlxsw_sp,
  	int err, err2;
  
  	trace_mlxsw_sp_acl_tcam_vregion_migrate(mlxsw_sp, vregion);
@@ -1742,7 +4116,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  		ctx->this_is_rollback = true;
  		err2 = mlxsw_sp_acl_tcam_vchunk_migrate_all(mlxsw_sp, vregion,
  							    ctx, credits);
-@@ -1440,7 +1475,6 @@ mlxsw_sp_acl_tcam_vregion_migrate(struct mlxsw_sp *mlxsw_sp,
+@@ -1339,7 +1378,6 @@ mlxsw_sp_acl_tcam_vregion_migrate(struct mlxsw_sp *mlxsw_sp,
  			/* Let the rollback to be continued later on. */
  		}
  	}
@@ -1750,7 +4124,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  	trace_mlxsw_sp_acl_tcam_vregion_migrate_end(mlxsw_sp, vregion);
  	return err;
  }
-@@ -1489,6 +1523,7 @@ mlxsw_sp_acl_tcam_vregion_rehash_start(struct mlxsw_sp *mlxsw_sp,
+@@ -1388,6 +1426,7 @@ mlxsw_sp_acl_tcam_vregion_rehash_start(struct mlxsw_sp *mlxsw_sp,
  
  	ctx->hints_priv = hints_priv;
  	ctx->this_is_rollback = false;
@@ -1758,7 +4132,7 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  
  	return 0;
  
-@@ -1541,7 +1576,8 @@ mlxsw_sp_acl_tcam_vregion_rehash(struct mlxsw_sp *mlxsw_sp,
+@@ -1440,7 +1479,8 @@ mlxsw_sp_acl_tcam_vregion_rehash(struct mlxsw_sp *mlxsw_sp,
  	err = mlxsw_sp_acl_tcam_vregion_migrate(mlxsw_sp, vregion,
  						ctx, credits);
  	if (err) {
@@ -1768,11 +4142,179 @@ index 41eac7dfb67e..685bcf8cbfa9 100644
  	}
  
  	if (*credits >= 0)
+@@ -1548,19 +1588,11 @@ int mlxsw_sp_acl_tcam_init(struct mlxsw_sp *mlxsw_sp,
+ 	if (max_tcam_regions < max_regions)
+ 		max_regions = max_tcam_regions;
+ 
+-	tcam->used_regions = bitmap_zalloc(max_regions, GFP_KERNEL);
+-	if (!tcam->used_regions) {
+-		err = -ENOMEM;
+-		goto err_alloc_used_regions;
+-	}
++	ida_init(&tcam->used_regions);
+ 	tcam->max_regions = max_regions;
+ 
+ 	max_groups = MLXSW_CORE_RES_GET(mlxsw_sp->core, ACL_MAX_GROUPS);
+-	tcam->used_groups = bitmap_zalloc(max_groups, GFP_KERNEL);
+-	if (!tcam->used_groups) {
+-		err = -ENOMEM;
+-		goto err_alloc_used_groups;
+-	}
++	ida_init(&tcam->used_groups);
+ 	tcam->max_groups = max_groups;
+ 	tcam->max_group_size = MLXSW_CORE_RES_GET(mlxsw_sp->core,
+ 						  ACL_MAX_GROUP_SIZE);
+@@ -1574,10 +1606,8 @@ int mlxsw_sp_acl_tcam_init(struct mlxsw_sp *mlxsw_sp,
+ 	return 0;
+ 
+ err_tcam_init:
+-	bitmap_free(tcam->used_groups);
+-err_alloc_used_groups:
+-	bitmap_free(tcam->used_regions);
+-err_alloc_used_regions:
++	ida_destroy(&tcam->used_groups);
++	ida_destroy(&tcam->used_regions);
+ 	mlxsw_sp_acl_tcam_rehash_params_unregister(mlxsw_sp);
+ err_rehash_params_register:
+ 	mutex_destroy(&tcam->lock);
+@@ -1590,8 +1620,8 @@ void mlxsw_sp_acl_tcam_fini(struct mlxsw_sp *mlxsw_sp,
+ 	const struct mlxsw_sp_acl_tcam_ops *ops = mlxsw_sp->acl_tcam_ops;
+ 
+ 	ops->fini(mlxsw_sp, tcam->priv);
+-	bitmap_free(tcam->used_groups);
+-	bitmap_free(tcam->used_regions);
++	ida_destroy(&tcam->used_groups);
++	ida_destroy(&tcam->used_regions);
+ 	mlxsw_sp_acl_tcam_rehash_params_unregister(mlxsw_sp);
+ 	mutex_destroy(&tcam->lock);
+ }
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.h b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.h
+index 462bf448497d..79a1d8606512 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.h
+@@ -6,15 +6,16 @@
+ 
+ #include <linux/list.h>
+ #include <linux/parman.h>
++#include <linux/idr.h>
+ 
+ #include "reg.h"
+ #include "spectrum.h"
+ #include "core_acl_flex_keys.h"
+ 
+ struct mlxsw_sp_acl_tcam {
+-	unsigned long *used_regions; /* bit array */
++	struct ida used_regions;
+ 	unsigned int max_regions;
+-	unsigned long *used_groups;  /* bit array */
++	struct ida used_groups;
+ 	unsigned int max_groups;
+ 	unsigned int max_group_size;
+ 	struct mutex lock; /* guards vregion list */
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+index ae2fb9efbc50..d15aa6b25a88 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -501,7 +501,7 @@ struct mlxsw_sp_rt6 {
+ 
+ struct mlxsw_sp_lpm_tree {
+ 	u8 id; /* tree ID */
+-	unsigned int ref_count;
++	refcount_t ref_count;
+ 	enum mlxsw_sp_l3proto proto;
+ 	unsigned long prefix_ref_count[MLXSW_SP_PREFIX_COUNT];
+ 	struct mlxsw_sp_prefix_usage prefix_usage;
+@@ -578,7 +578,7 @@ mlxsw_sp_lpm_tree_find_unused(struct mlxsw_sp *mlxsw_sp)
+ 
+ 	for (i = 0; i < mlxsw_sp->router->lpm.tree_count; i++) {
+ 		lpm_tree = &mlxsw_sp->router->lpm.trees[i];
+-		if (lpm_tree->ref_count == 0)
++		if (refcount_read(&lpm_tree->ref_count) == 0)
+ 			return lpm_tree;
+ 	}
+ 	return NULL;
+@@ -654,7 +654,7 @@ mlxsw_sp_lpm_tree_create(struct mlxsw_sp *mlxsw_sp,
+ 	       sizeof(lpm_tree->prefix_usage));
+ 	memset(&lpm_tree->prefix_ref_count, 0,
+ 	       sizeof(lpm_tree->prefix_ref_count));
+-	lpm_tree->ref_count = 1;
++	refcount_set(&lpm_tree->ref_count, 1);
+ 	return lpm_tree;
+ 
+ err_left_struct_set:
+@@ -678,7 +678,7 @@ mlxsw_sp_lpm_tree_get(struct mlxsw_sp *mlxsw_sp,
+ 
+ 	for (i = 0; i < mlxsw_sp->router->lpm.tree_count; i++) {
+ 		lpm_tree = &mlxsw_sp->router->lpm.trees[i];
+-		if (lpm_tree->ref_count != 0 &&
++		if (refcount_read(&lpm_tree->ref_count) &&
+ 		    lpm_tree->proto == proto &&
+ 		    mlxsw_sp_prefix_usage_eq(&lpm_tree->prefix_usage,
+ 					     prefix_usage)) {
+@@ -691,14 +691,15 @@ mlxsw_sp_lpm_tree_get(struct mlxsw_sp *mlxsw_sp,
+ 
+ static void mlxsw_sp_lpm_tree_hold(struct mlxsw_sp_lpm_tree *lpm_tree)
+ {
+-	lpm_tree->ref_count++;
++	refcount_inc(&lpm_tree->ref_count);
+ }
+ 
+ static void mlxsw_sp_lpm_tree_put(struct mlxsw_sp *mlxsw_sp,
+ 				  struct mlxsw_sp_lpm_tree *lpm_tree)
+ {
+-	if (--lpm_tree->ref_count == 0)
+-		mlxsw_sp_lpm_tree_destroy(mlxsw_sp, lpm_tree);
++	if (!refcount_dec_and_test(&lpm_tree->ref_count))
++		return;
++	mlxsw_sp_lpm_tree_destroy(mlxsw_sp, lpm_tree);
+ }
+ 
+ #define MLXSW_SP_LPM_TREE_MIN 1 /* tree 0 is reserved */
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+index 6c749c148148..6397ff0dc951 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+@@ -61,7 +61,7 @@ struct mlxsw_sp_bridge_port {
+ 	struct mlxsw_sp_bridge_device *bridge_device;
+ 	struct list_head list;
+ 	struct list_head vlans_list;
+-	unsigned int ref_count;
++	refcount_t ref_count;
+ 	u8 stp_state;
+ 	unsigned long flags;
+ 	bool mrouter;
+@@ -495,7 +495,7 @@ mlxsw_sp_bridge_port_create(struct mlxsw_sp_bridge_device *bridge_device,
+ 			     BR_MCAST_FLOOD;
+ 	INIT_LIST_HEAD(&bridge_port->vlans_list);
+ 	list_add(&bridge_port->list, &bridge_device->ports_list);
+-	bridge_port->ref_count = 1;
++	refcount_set(&bridge_port->ref_count, 1);
+ 
+ 	err = switchdev_bridge_port_offload(brport_dev, mlxsw_sp_port->dev,
+ 					    NULL, NULL, NULL, false, extack);
+@@ -531,7 +531,7 @@ mlxsw_sp_bridge_port_get(struct mlxsw_sp_bridge *bridge,
+ 
+ 	bridge_port = mlxsw_sp_bridge_port_find(bridge, brport_dev);
+ 	if (bridge_port) {
+-		bridge_port->ref_count++;
++		refcount_inc(&bridge_port->ref_count);
+ 		return bridge_port;
+ 	}
+ 
+@@ -558,7 +558,7 @@ static void mlxsw_sp_bridge_port_put(struct mlxsw_sp_bridge *bridge,
+ {
+ 	struct mlxsw_sp_bridge_device *bridge_device;
+ 
+-	if (--bridge_port->ref_count != 0)
++	if (!refcount_dec_and_test(&bridge_port->ref_count))
+ 		return;
+ 	bridge_device = bridge_port->bridge_device;
+ 	mlxsw_sp_bridge_port_destroy(bridge_port);
 diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
-index 9948ac14e68d..c1bdf045e981 100644
+index c66618d91c28..f89716b1cfb6 100644
 --- a/drivers/net/ethernet/ti/am65-cpts.c
 +++ b/drivers/net/ethernet/ti/am65-cpts.c
-@@ -649,6 +649,11 @@ static bool am65_cpts_match_tx_ts(struct am65_cpts *cpts,
+@@ -784,6 +784,11 @@ static bool am65_cpts_match_tx_ts(struct am65_cpts *cpts,
  		struct am65_cpts_skb_cb_data *skb_cb =
  					(struct am65_cpts_skb_cb_data *)skb->cb;
  
@@ -1784,11 +4326,46 @@ index 9948ac14e68d..c1bdf045e981 100644
  		if (mtype_seqid == skb_cb->skb_mtype_seqid) {
  			u64 ns = event->timestamp;
  
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+index c09ecb3da772..925044c16c6a 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+@@ -421,12 +421,14 @@ static int prueth_init_rx_chns(struct prueth_emac *emac,
+ 		if (!i)
+ 			fdqring_id = k3_udma_glue_rx_flow_get_fdq_id(rx_chn->rx_chn,
+ 								     i);
+-		rx_chn->irq[i] = k3_udma_glue_rx_get_irq(rx_chn->rx_chn, i);
+-		if (rx_chn->irq[i] <= 0) {
+-			ret = rx_chn->irq[i];
++		ret = k3_udma_glue_rx_get_irq(rx_chn->rx_chn, i);
++		if (ret <= 0) {
++			if (!ret)
++				ret = -ENXIO;
+ 			netdev_err(ndev, "Failed to get rx dma irq");
+ 			goto fail;
+ 		}
++		rx_chn->irq[i] = ret;
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/net/ethernet/wangxun/libwx/wx_lib.c b/drivers/net/ethernet/wangxun/libwx/wx_lib.c
+index e078f4071dc2..be434c833c69 100644
+--- a/drivers/net/ethernet/wangxun/libwx/wx_lib.c
++++ b/drivers/net/ethernet/wangxun/libwx/wx_lib.c
+@@ -1585,7 +1585,7 @@ static void wx_set_num_queues(struct wx *wx)
+  */
+ static int wx_acquire_msix_vectors(struct wx *wx)
+ {
+-	struct irq_affinity affd = {0, };
++	struct irq_affinity affd = { .pre_vectors = 1 };
+ 	int nvecs, i;
+ 
+ 	nvecs = min_t(int, num_online_cpus(), wx->mac.max_msix_vectors);
 diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 7086acfed5b9..05b5914d8358 100644
+index 2b5357d94ff5..63f932256c9f 100644
 --- a/drivers/net/gtp.c
 +++ b/drivers/net/gtp.c
-@@ -1110,11 +1110,12 @@ static int gtp_newlink(struct net *src_net, struct net_device *dev,
+@@ -1111,11 +1111,12 @@ static int gtp_newlink(struct net *src_net, struct net_device *dev,
  static void gtp_dellink(struct net_device *dev, struct list_head *head)
  {
  	struct gtp_dev *gtp = netdev_priv(dev);
@@ -1803,10 +4380,10 @@ index 7086acfed5b9..05b5914d8358 100644
  
  	list_del_rcu(&gtp->list);
 diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 209ee9f35275..8a8fd74110e2 100644
+index 9663050a852d..778fb77c5a93 100644
 --- a/drivers/net/macsec.c
 +++ b/drivers/net/macsec.c
-@@ -1007,10 +1007,12 @@ static enum rx_handler_result handle_not_macsec(struct sk_buff *skb)
+@@ -996,10 +996,12 @@ static enum rx_handler_result handle_not_macsec(struct sk_buff *skb)
  	struct metadata_dst *md_dst;
  	struct macsec_rxh_data *rxd;
  	struct macsec_dev *macsec;
@@ -1819,16 +4396,18 @@ index 209ee9f35275..8a8fd74110e2 100644
  
  	list_for_each_entry_rcu(macsec, &rxd->secys, secys) {
  		struct sk_buff *nskb;
-@@ -1021,10 +1023,42 @@ static enum rx_handler_result handle_not_macsec(struct sk_buff *skb)
+@@ -1010,14 +1012,42 @@ static enum rx_handler_result handle_not_macsec(struct sk_buff *skb)
  		 * the SecTAG, so we have to deduce which port to deliver to.
  		 */
  		if (macsec_is_offloaded(macsec) && netif_running(ndev)) {
--			if (md_dst && md_dst->type == METADATA_MACSEC &&
--			    (!find_rx_sc(&macsec->secy, md_dst->u.macsec_info.sci)))
+-			struct macsec_rx_sc *rx_sc = NULL;
 +			const struct macsec_ops *ops;
-+
+ 
+-			if (md_dst && md_dst->type == METADATA_MACSEC)
+-				rx_sc = find_rx_sc(&macsec->secy, md_dst->u.macsec_info.sci);
 +			ops = macsec_get_ops(macsec, NULL);
-+
+ 
+-			if (md_dst && md_dst->type == METADATA_MACSEC && !rx_sc)
 +			if (ops->rx_uses_md_dst && !is_macsec_md_dst)
  				continue;
  
@@ -1864,7 +4443,7 @@ index 209ee9f35275..8a8fd74110e2 100644
  			if (ether_addr_equal_64bits(hdr->h_dest,
  						    ndev->dev_addr)) {
  				/* exact match, divert skb to this port */
-@@ -1040,11 +1074,7 @@ static enum rx_handler_result handle_not_macsec(struct sk_buff *skb)
+@@ -1033,14 +1063,10 @@ static enum rx_handler_result handle_not_macsec(struct sk_buff *skb)
  					break;
  
  				nskb->dev = ndev;
@@ -1876,7 +4455,126 @@ index 209ee9f35275..8a8fd74110e2 100644
 +				eth_skb_pkt_type(nskb, ndev);
  
  				__netif_rx(nskb);
- 			}
+-			} else if (rx_sc || ndev->flags & IFF_PROMISC) {
++			} else if (ndev->flags & IFF_PROMISC) {
+ 				skb->dev = ndev;
+ 				skb->pkt_type = PACKET_HOST;
+ 				ret = RX_HANDLER_ANOTHER;
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index fa8c6fdcf301..d7aaefb5226b 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -695,7 +695,8 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+ 	phy_ctrl_val = dp83869->mode;
+ 	if (phydev->interface == PHY_INTERFACE_MODE_MII) {
+ 		if (dp83869->mode == DP83869_100M_MEDIA_CONVERT ||
+-		    dp83869->mode == DP83869_RGMII_100_BASE) {
++		    dp83869->mode == DP83869_RGMII_100_BASE ||
++		    dp83869->mode == DP83869_RGMII_COPPER_ETHERNET) {
+ 			phy_ctrl_val |= DP83869_OP_MODE_MII;
+ 		} else {
+ 			phydev_err(phydev, "selected op-mode is not valid with MII mode\n");
+diff --git a/drivers/net/phy/mediatek-ge-soc.c b/drivers/net/phy/mediatek-ge-soc.c
+index 0f3a1538a8b8..f4f9412d0cd7 100644
+--- a/drivers/net/phy/mediatek-ge-soc.c
++++ b/drivers/net/phy/mediatek-ge-soc.c
+@@ -216,6 +216,9 @@
+ #define   MTK_PHY_LED_ON_LINK1000		BIT(0)
+ #define   MTK_PHY_LED_ON_LINK100		BIT(1)
+ #define   MTK_PHY_LED_ON_LINK10			BIT(2)
++#define   MTK_PHY_LED_ON_LINK			(MTK_PHY_LED_ON_LINK10 |\
++						 MTK_PHY_LED_ON_LINK100 |\
++						 MTK_PHY_LED_ON_LINK1000)
+ #define   MTK_PHY_LED_ON_LINKDOWN		BIT(3)
+ #define   MTK_PHY_LED_ON_FDX			BIT(4) /* Full duplex */
+ #define   MTK_PHY_LED_ON_HDX			BIT(5) /* Half duplex */
+@@ -231,6 +234,12 @@
+ #define   MTK_PHY_LED_BLINK_100RX		BIT(3)
+ #define   MTK_PHY_LED_BLINK_10TX		BIT(4)
+ #define   MTK_PHY_LED_BLINK_10RX		BIT(5)
++#define   MTK_PHY_LED_BLINK_RX			(MTK_PHY_LED_BLINK_10RX |\
++						 MTK_PHY_LED_BLINK_100RX |\
++						 MTK_PHY_LED_BLINK_1000RX)
++#define   MTK_PHY_LED_BLINK_TX			(MTK_PHY_LED_BLINK_10TX |\
++						 MTK_PHY_LED_BLINK_100TX |\
++						 MTK_PHY_LED_BLINK_1000TX)
+ #define   MTK_PHY_LED_BLINK_COLLISION		BIT(6)
+ #define   MTK_PHY_LED_BLINK_RX_CRC_ERR		BIT(7)
+ #define   MTK_PHY_LED_BLINK_RX_IDLE_ERR		BIT(8)
+@@ -1247,11 +1256,9 @@ static int mt798x_phy_led_hw_control_get(struct phy_device *phydev, u8 index,
+ 	if (blink < 0)
+ 		return -EIO;
+ 
+-	if ((on & (MTK_PHY_LED_ON_LINK1000 | MTK_PHY_LED_ON_LINK100 |
+-		   MTK_PHY_LED_ON_LINK10)) ||
+-	    (blink & (MTK_PHY_LED_BLINK_1000RX | MTK_PHY_LED_BLINK_100RX |
+-		      MTK_PHY_LED_BLINK_10RX | MTK_PHY_LED_BLINK_1000TX |
+-		      MTK_PHY_LED_BLINK_100TX | MTK_PHY_LED_BLINK_10TX)))
++	if ((on & (MTK_PHY_LED_ON_LINK | MTK_PHY_LED_ON_FDX | MTK_PHY_LED_ON_HDX |
++		   MTK_PHY_LED_ON_LINKDOWN)) ||
++	    (blink & (MTK_PHY_LED_BLINK_RX | MTK_PHY_LED_BLINK_TX)))
+ 		set_bit(bit_netdev, &priv->led_state);
+ 	else
+ 		clear_bit(bit_netdev, &priv->led_state);
+@@ -1269,7 +1276,7 @@ static int mt798x_phy_led_hw_control_get(struct phy_device *phydev, u8 index,
+ 	if (!rules)
+ 		return 0;
+ 
+-	if (on & (MTK_PHY_LED_ON_LINK1000 | MTK_PHY_LED_ON_LINK100 | MTK_PHY_LED_ON_LINK10))
++	if (on & MTK_PHY_LED_ON_LINK)
+ 		*rules |= BIT(TRIGGER_NETDEV_LINK);
+ 
+ 	if (on & MTK_PHY_LED_ON_LINK10)
+@@ -1287,10 +1294,10 @@ static int mt798x_phy_led_hw_control_get(struct phy_device *phydev, u8 index,
+ 	if (on & MTK_PHY_LED_ON_HDX)
+ 		*rules |= BIT(TRIGGER_NETDEV_HALF_DUPLEX);
+ 
+-	if (blink & (MTK_PHY_LED_BLINK_1000RX | MTK_PHY_LED_BLINK_100RX | MTK_PHY_LED_BLINK_10RX))
++	if (blink & MTK_PHY_LED_BLINK_RX)
+ 		*rules |= BIT(TRIGGER_NETDEV_RX);
+ 
+-	if (blink & (MTK_PHY_LED_BLINK_1000TX | MTK_PHY_LED_BLINK_100TX | MTK_PHY_LED_BLINK_10TX))
++	if (blink & MTK_PHY_LED_BLINK_TX)
+ 		*rules |= BIT(TRIGGER_NETDEV_TX);
+ 
+ 	return 0;
+@@ -1323,15 +1330,19 @@ static int mt798x_phy_led_hw_control_set(struct phy_device *phydev, u8 index,
+ 		on |= MTK_PHY_LED_ON_LINK1000;
+ 
+ 	if (rules & BIT(TRIGGER_NETDEV_RX)) {
+-		blink |= MTK_PHY_LED_BLINK_10RX  |
+-			 MTK_PHY_LED_BLINK_100RX |
+-			 MTK_PHY_LED_BLINK_1000RX;
++		blink |= (on & MTK_PHY_LED_ON_LINK) ?
++			  (((on & MTK_PHY_LED_ON_LINK10) ? MTK_PHY_LED_BLINK_10RX : 0) |
++			   ((on & MTK_PHY_LED_ON_LINK100) ? MTK_PHY_LED_BLINK_100RX : 0) |
++			   ((on & MTK_PHY_LED_ON_LINK1000) ? MTK_PHY_LED_BLINK_1000RX : 0)) :
++			  MTK_PHY_LED_BLINK_RX;
+ 	}
+ 
+ 	if (rules & BIT(TRIGGER_NETDEV_TX)) {
+-		blink |= MTK_PHY_LED_BLINK_10TX  |
+-			 MTK_PHY_LED_BLINK_100TX |
+-			 MTK_PHY_LED_BLINK_1000TX;
++		blink |= (on & MTK_PHY_LED_ON_LINK) ?
++			  (((on & MTK_PHY_LED_ON_LINK10) ? MTK_PHY_LED_BLINK_10TX : 0) |
++			   ((on & MTK_PHY_LED_ON_LINK100) ? MTK_PHY_LED_BLINK_100TX : 0) |
++			   ((on & MTK_PHY_LED_ON_LINK1000) ? MTK_PHY_LED_BLINK_1000TX : 0)) :
++			  MTK_PHY_LED_BLINK_TX;
+ 	}
+ 
+ 	if (blink || on)
+@@ -1344,9 +1355,7 @@ static int mt798x_phy_led_hw_control_set(struct phy_device *phydev, u8 index,
+ 				MTK_PHY_LED0_ON_CTRL,
+ 			     MTK_PHY_LED_ON_FDX     |
+ 			     MTK_PHY_LED_ON_HDX     |
+-			     MTK_PHY_LED_ON_LINK10  |
+-			     MTK_PHY_LED_ON_LINK100 |
+-			     MTK_PHY_LED_ON_LINK1000,
++			     MTK_PHY_LED_ON_LINK,
+ 			     on);
+ 
+ 	if (ret)
 diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
 index 3078511f7608..21b6c4d94a63 100644
 --- a/drivers/net/usb/ax88179_178a.c
@@ -1906,71 +4604,11 @@ index 3078511f7608..21b6c4d94a63 100644
  		ax88179_rx_checksum(ax_skb, pkt_hdr);
  		usbnet_skb_return(dev, ax_skb);
  
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 45f1a871b7da..32cddb633793 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2948,19 +2948,35 @@ static int virtnet_get_rxfh(struct net_device *dev, u32 *indir, u8 *key, u8 *hfu
- static int virtnet_set_rxfh(struct net_device *dev, const u32 *indir, const u8 *key, const u8 hfunc)
- {
- 	struct virtnet_info *vi = netdev_priv(dev);
-+	bool update = false;
- 	int i;
- 
- 	if (hfunc != ETH_RSS_HASH_NO_CHANGE && hfunc != ETH_RSS_HASH_TOP)
- 		return -EOPNOTSUPP;
- 
- 	if (indir) {
-+		if (!vi->has_rss)
-+			return -EOPNOTSUPP;
-+
- 		for (i = 0; i < vi->rss_indir_table_size; ++i)
- 			vi->ctrl->rss.indirection_table[i] = indir[i];
-+		update = true;
- 	}
--	if (key)
-+
-+	if (key) {
-+		/* If either _F_HASH_REPORT or _F_RSS are negotiated, the
-+		 * device provides hash calculation capabilities, that is,
-+		 * hash_key is configured.
-+		 */
-+		if (!vi->has_rss && !vi->has_rss_hash_report)
-+			return -EOPNOTSUPP;
-+
- 		memcpy(vi->ctrl->rss.key, key, vi->rss_key_size);
-+		update = true;
-+	}
- 
--	virtnet_commit_rss_command(vi);
-+	if (update)
-+		virtnet_commit_rss_command(vi);
- 
- 	return 0;
- }
-@@ -3852,13 +3868,15 @@ static int virtnet_probe(struct virtio_device *vdev)
- 	if (virtio_has_feature(vdev, VIRTIO_NET_F_HASH_REPORT))
- 		vi->has_rss_hash_report = true;
- 
--	if (virtio_has_feature(vdev, VIRTIO_NET_F_RSS))
-+	if (virtio_has_feature(vdev, VIRTIO_NET_F_RSS)) {
- 		vi->has_rss = true;
- 
--	if (vi->has_rss || vi->has_rss_hash_report) {
- 		vi->rss_indir_table_size =
- 			virtio_cread16(vdev, offsetof(struct virtio_net_config,
- 				rss_max_indirection_table_length));
-+	}
-+
-+	if (vi->has_rss || vi->has_rss_hash_report) {
- 		vi->rss_key_size =
- 			virtio_cread8(vdev, offsetof(struct virtio_net_config, rss_max_key_size));
- 
 diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
-index 619dd71c9d75..fbd36dff9ec2 100644
+index 99ede1312419..ecdf0276004f 100644
 --- a/drivers/net/vxlan/vxlan_core.c
 +++ b/drivers/net/vxlan/vxlan_core.c
-@@ -1662,6 +1662,10 @@ static bool vxlan_set_mac(struct vxlan_dev *vxlan,
+@@ -1615,6 +1615,10 @@ static bool vxlan_set_mac(struct vxlan_dev *vxlan,
  	if (ether_addr_equal(eth_hdr(skb)->h_source, vxlan->dev->dev_addr))
  		return false;
  
@@ -1982,10 +4620,10 @@ index 619dd71c9d75..fbd36dff9ec2 100644
  	if (vxlan_get_sk_family(vs) == AF_INET) {
  		saddr.sin.sin_addr.s_addr = ip_hdr(skb)->saddr;
 diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-index 8c5b97fb1941..5b0b4bb2bb68 100644
+index 233ae81884a0..ae0eb585b61e 100644
 --- a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
 +++ b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-@@ -48,6 +48,8 @@ int iwl_mvm_ftm_add_pasn_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
+@@ -53,6 +53,8 @@ int iwl_mvm_ftm_add_pasn_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
  	if (!pasn)
  		return -ENOBUFS;
  
@@ -1995,10 +4633,10 @@ index 8c5b97fb1941..5b0b4bb2bb68 100644
  
  	switch (pasn->cipher) {
 diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
-index acd8803dbcdd..b20d64dbba1a 100644
+index 3cbe2c0b8d6b..03ec900a3343 100644
 --- a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
 +++ b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
-@@ -2650,7 +2650,8 @@ static int iwl_mvm_build_scan_cmd(struct iwl_mvm *mvm,
+@@ -2819,7 +2819,8 @@ static int iwl_mvm_build_scan_cmd(struct iwl_mvm *mvm,
  		if (ver_handler->version != scan_ver)
  			continue;
  
@@ -2008,8 +4646,21 @@ index acd8803dbcdd..b20d64dbba1a 100644
  	}
  
  	err = iwl_mvm_scan_umac(mvm, vif, params, type, uid);
+diff --git a/drivers/net/wireless/virtual/mac80211_hwsim.c b/drivers/net/wireless/virtual/mac80211_hwsim.c
+index f5a0880da3fc..07be0adc13ec 100644
+--- a/drivers/net/wireless/virtual/mac80211_hwsim.c
++++ b/drivers/net/wireless/virtual/mac80211_hwsim.c
+@@ -3795,7 +3795,7 @@ static int hwsim_pmsr_report_nl(struct sk_buff *msg, struct genl_info *info)
+ 	}
+ 
+ 	nla_for_each_nested(peer, peers, rem) {
+-		struct cfg80211_pmsr_result result;
++		struct cfg80211_pmsr_result result = {};
+ 
+ 		err = mac80211_hwsim_parse_pmsr_result(peer, &result, info);
+ 		if (err)
 diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-index 21d68664fe08..7968baa626d1 100644
+index 7eb17f46a815..9e1a34e23af2 100644
 --- a/drivers/nfc/trf7970a.c
 +++ b/drivers/nfc/trf7970a.c
 @@ -424,7 +424,8 @@ struct trf7970a {
@@ -2123,85 +4774,10 @@ index 21d68664fe08..7968baa626d1 100644
  	mutex_destroy(&trf->lock);
  }
 diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-index c93286483b42..211ce84d980f 100644
+index b700f52b7b67..11fcb1867118 100644
 --- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
 +++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-@@ -11,6 +11,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-@@ -47,6 +48,15 @@
- #define IMX8MM_GPR_PCIE_SSC_EN		BIT(16)
- #define IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE	BIT(9)
- 
-+enum imx8_pcie_phy_type {
-+	IMX8MM,
-+};
-+
-+struct imx8_pcie_phy_drvdata {
-+	const	char			*gpr;
-+	enum	imx8_pcie_phy_type	variant;
-+};
-+
- struct imx8_pcie_phy {
- 	void __iomem		*base;
- 	struct clk		*clk;
-@@ -57,6 +67,7 @@ struct imx8_pcie_phy {
- 	u32			tx_deemph_gen1;
- 	u32			tx_deemph_gen2;
- 	bool			clkreq_unused;
-+	const struct imx8_pcie_phy_drvdata	*drvdata;
- };
- 
- static int imx8_pcie_phy_power_on(struct phy *phy)
-@@ -68,31 +79,17 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
- 	reset_control_assert(imx8_phy->reset);
- 
- 	pad_mode = imx8_phy->refclk_pad_mode;
--	/* Set AUX_EN_OVERRIDE 1'b0, when the CLKREQ# isn't hooked */
--	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
--			   IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE,
--			   imx8_phy->clkreq_unused ?
--			   0 : IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE);
--	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
--			   IMX8MM_GPR_PCIE_AUX_EN,
--			   IMX8MM_GPR_PCIE_AUX_EN);
--	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
--			   IMX8MM_GPR_PCIE_POWER_OFF, 0);
--	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
--			   IMX8MM_GPR_PCIE_SSC_EN, 0);
--
--	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
--			   IMX8MM_GPR_PCIE_REF_CLK_SEL,
--			   pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ?
--			   IMX8MM_GPR_PCIE_REF_CLK_EXT :
--			   IMX8MM_GPR_PCIE_REF_CLK_PLL);
--	usleep_range(100, 200);
--
--	/* Do the PHY common block reset */
--	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
--			   IMX8MM_GPR_PCIE_CMN_RST,
--			   IMX8MM_GPR_PCIE_CMN_RST);
--	usleep_range(200, 500);
-+	switch (imx8_phy->drvdata->variant) {
-+	case IMX8MM:
-+		/* Tune PHY de-emphasis setting to pass PCIe compliance. */
-+		if (imx8_phy->tx_deemph_gen1)
-+			writel(imx8_phy->tx_deemph_gen1,
-+			       imx8_phy->base + PCIE_PHY_TRSV_REG5);
-+		if (imx8_phy->tx_deemph_gen2)
-+			writel(imx8_phy->tx_deemph_gen2,
-+			       imx8_phy->base + PCIE_PHY_TRSV_REG6);
-+		break;
-+	}
- 
- 	if (pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ||
- 	    pad_mode == IMX8_PCIE_REFCLK_PAD_UNUSED) {
-@@ -111,8 +108,10 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
+@@ -110,8 +110,10 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
  		/* Source clock from SoC internal PLL */
  		writel(ANA_PLL_CLK_OUT_TO_EXT_IO_SEL,
  		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG062);
@@ -2214,106 +4790,11 @@ index c93286483b42..211ce84d980f 100644
  		val = ANA_AUX_RX_TX_SEL_TX | ANA_AUX_TX_TERM;
  		writel(val | ANA_AUX_RX_TERM_GND_EN,
  		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG064);
-@@ -120,15 +119,37 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
- 		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG065);
- 	}
- 
--	/* Tune PHY de-emphasis setting to pass PCIe compliance. */
--	if (imx8_phy->tx_deemph_gen1)
--		writel(imx8_phy->tx_deemph_gen1,
--		       imx8_phy->base + PCIE_PHY_TRSV_REG5);
--	if (imx8_phy->tx_deemph_gen2)
--		writel(imx8_phy->tx_deemph_gen2,
--		       imx8_phy->base + PCIE_PHY_TRSV_REG6);
-+	/* Set AUX_EN_OVERRIDE 1'b0, when the CLKREQ# isn't hooked */
-+	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-+			   IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE,
-+			   imx8_phy->clkreq_unused ?
-+			   0 : IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE);
-+	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-+			   IMX8MM_GPR_PCIE_AUX_EN,
-+			   IMX8MM_GPR_PCIE_AUX_EN);
-+	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-+			   IMX8MM_GPR_PCIE_POWER_OFF, 0);
-+	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-+			   IMX8MM_GPR_PCIE_SSC_EN, 0);
- 
--	reset_control_deassert(imx8_phy->reset);
-+	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-+			   IMX8MM_GPR_PCIE_REF_CLK_SEL,
-+			   pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ?
-+			   IMX8MM_GPR_PCIE_REF_CLK_EXT :
-+			   IMX8MM_GPR_PCIE_REF_CLK_PLL);
-+	usleep_range(100, 200);
-+
-+	/* Do the PHY common block reset */
-+	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-+			   IMX8MM_GPR_PCIE_CMN_RST,
-+			   IMX8MM_GPR_PCIE_CMN_RST);
-+
-+	switch (imx8_phy->drvdata->variant) {
-+	case IMX8MM:
-+		reset_control_deassert(imx8_phy->reset);
-+		usleep_range(200, 500);
-+		break;
-+	}
- 
- 	/* Polling to check the phy is ready or not. */
- 	ret = readl_poll_timeout(imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG75,
-@@ -160,6 +181,17 @@ static const struct phy_ops imx8_pcie_phy_ops = {
- 	.owner		= THIS_MODULE,
- };
- 
-+static const struct imx8_pcie_phy_drvdata imx8mm_drvdata = {
-+	.gpr = "fsl,imx8mm-iomuxc-gpr",
-+	.variant = IMX8MM,
-+};
-+
-+static const struct of_device_id imx8_pcie_phy_of_match[] = {
-+	{.compatible = "fsl,imx8mm-pcie-phy", .data = &imx8mm_drvdata, },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, imx8_pcie_phy_of_match);
-+
- static int imx8_pcie_phy_probe(struct platform_device *pdev)
- {
- 	struct phy_provider *phy_provider;
-@@ -172,6 +204,8 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
- 	if (!imx8_phy)
- 		return -ENOMEM;
- 
-+	imx8_phy->drvdata = of_device_get_match_data(dev);
-+
- 	/* get PHY refclk pad mode */
- 	of_property_read_u32(np, "fsl,refclk-pad-mode",
- 			     &imx8_phy->refclk_pad_mode);
-@@ -197,7 +231,7 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
- 
- 	/* Grab GPR config register range */
- 	imx8_phy->iomuxc_gpr =
--		 syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
-+		 syscon_regmap_lookup_by_compatible(imx8_phy->drvdata->gpr);
- 	if (IS_ERR(imx8_phy->iomuxc_gpr)) {
- 		dev_err(dev, "unable to find iomuxc registers\n");
- 		return PTR_ERR(imx8_phy->iomuxc_gpr);
-@@ -225,12 +259,6 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
- 	return PTR_ERR_OR_ZERO(phy_provider);
- }
- 
--static const struct of_device_id imx8_pcie_phy_of_match[] = {
--	{.compatible = "fsl,imx8mm-pcie-phy",},
--	{ },
--};
--MODULE_DEVICE_TABLE(of, imx8_pcie_phy_of_match);
--
- static struct platform_driver imx8_pcie_phy_driver = {
- 	.probe	= imx8_pcie_phy_probe,
- 	.driver = {
 diff --git a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-index d641b345afa3..251e1aedd4a6 100644
+index 24c3371e2bb2..27f221a0f922 100644
 --- a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
 +++ b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-@@ -602,7 +602,7 @@ static void comphy_gbe_phy_init(struct mvebu_a3700_comphy_lane *lane,
+@@ -603,7 +603,7 @@ static void comphy_gbe_phy_init(struct mvebu_a3700_comphy_lane *lane,
  	u16 val;
  
  	fix_idx = 0;
@@ -2322,7 +4803,7 @@ index d641b345afa3..251e1aedd4a6 100644
  		/*
  		 * All PHY register values are defined in full for 3.125Gbps
  		 * SERDES speed. The values required for 1.25 Gbps are almost
-@@ -610,11 +610,12 @@ static void comphy_gbe_phy_init(struct mvebu_a3700_comphy_lane *lane,
+@@ -611,11 +611,12 @@ static void comphy_gbe_phy_init(struct mvebu_a3700_comphy_lane *lane,
  		 * comparison to 3.125 Gbps values. These register values are
  		 * stored in "gbe_phy_init_fix" array.
  		 */
@@ -2338,11 +4819,201 @@ index d641b345afa3..251e1aedd4a6 100644
  		} else {
  			val = gbe_phy_init[addr];
  		}
+diff --git a/drivers/phy/qualcomm/phy-qcom-m31.c b/drivers/phy/qualcomm/phy-qcom-m31.c
+index 5cb7e79b99b3..89c9d74e3546 100644
+--- a/drivers/phy/qualcomm/phy-qcom-m31.c
++++ b/drivers/phy/qualcomm/phy-qcom-m31.c
+@@ -253,7 +253,7 @@ static int m31usb_phy_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, PTR_ERR(qphy->phy),
+ 						"failed to create phy\n");
+ 
+-	qphy->vreg = devm_regulator_get(dev, "vdda-phy");
++	qphy->vreg = devm_regulator_get(dev, "vdd");
+ 	if (IS_ERR(qphy->vreg))
+ 		return dev_err_probe(dev, PTR_ERR(qphy->vreg),
+ 						"failed to get vreg\n");
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+index 5e6fc8103e9d..dce002e232ee 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+@@ -112,6 +112,7 @@ enum qphy_reg_layout {
+ 	QPHY_COM_BIAS_EN_CLKBUFLR_EN,
+ 
+ 	QPHY_DP_PHY_STATUS,
++	QPHY_DP_PHY_VCO_DIV,
+ 
+ 	QPHY_TX_TX_POL_INV,
+ 	QPHY_TX_TX_DRV_LVL,
+@@ -137,6 +138,7 @@ static const unsigned int qmp_v3_usb3phy_regs_layout[QPHY_LAYOUT_SIZE] = {
+ 	[QPHY_COM_BIAS_EN_CLKBUFLR_EN]	= QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN,
+ 
+ 	[QPHY_DP_PHY_STATUS]		= QSERDES_V3_DP_PHY_STATUS,
++	[QPHY_DP_PHY_VCO_DIV]		= QSERDES_V3_DP_PHY_VCO_DIV,
+ 
+ 	[QPHY_TX_TX_POL_INV]		= QSERDES_V3_TX_TX_POL_INV,
+ 	[QPHY_TX_TX_DRV_LVL]		= QSERDES_V3_TX_TX_DRV_LVL,
+@@ -161,6 +163,7 @@ static const unsigned int qmp_v45_usb3phy_regs_layout[QPHY_LAYOUT_SIZE] = {
+ 	[QPHY_COM_BIAS_EN_CLKBUFLR_EN]	= QSERDES_V4_COM_BIAS_EN_CLKBUFLR_EN,
+ 
+ 	[QPHY_DP_PHY_STATUS]		= QSERDES_V4_DP_PHY_STATUS,
++	[QPHY_DP_PHY_VCO_DIV]		= QSERDES_V4_DP_PHY_VCO_DIV,
+ 
+ 	[QPHY_TX_TX_POL_INV]		= QSERDES_V4_TX_TX_POL_INV,
+ 	[QPHY_TX_TX_DRV_LVL]		= QSERDES_V4_TX_TX_DRV_LVL,
+@@ -185,6 +188,7 @@ static const unsigned int qmp_v5_5nm_usb3phy_regs_layout[QPHY_LAYOUT_SIZE] = {
+ 	[QPHY_COM_BIAS_EN_CLKBUFLR_EN]	= QSERDES_V5_COM_BIAS_EN_CLKBUFLR_EN,
+ 
+ 	[QPHY_DP_PHY_STATUS]		= QSERDES_V5_DP_PHY_STATUS,
++	[QPHY_DP_PHY_VCO_DIV]		= QSERDES_V5_DP_PHY_VCO_DIV,
+ 
+ 	[QPHY_TX_TX_POL_INV]		= QSERDES_V5_5NM_TX_TX_POL_INV,
+ 	[QPHY_TX_TX_DRV_LVL]		= QSERDES_V5_5NM_TX_TX_DRV_LVL,
+@@ -209,6 +213,7 @@ static const unsigned int qmp_v6_usb3phy_regs_layout[QPHY_LAYOUT_SIZE] = {
+ 	[QPHY_COM_BIAS_EN_CLKBUFLR_EN]	= QSERDES_V6_COM_PLL_BIAS_EN_CLK_BUFLR_EN,
+ 
+ 	[QPHY_DP_PHY_STATUS]		= QSERDES_V6_DP_PHY_STATUS,
++	[QPHY_DP_PHY_VCO_DIV]		= QSERDES_V6_DP_PHY_VCO_DIV,
+ 
+ 	[QPHY_TX_TX_POL_INV]		= QSERDES_V6_TX_TX_POL_INV,
+ 	[QPHY_TX_TX_DRV_LVL]		= QSERDES_V6_TX_TX_DRV_LVL,
+@@ -2047,9 +2052,9 @@ static bool qmp_combo_configure_dp_mode(struct qmp_combo *qmp)
+ 	writel(val, qmp->dp_dp_phy + QSERDES_DP_PHY_PD_CTL);
+ 
+ 	if (reverse)
+-		writel(0x4c, qmp->pcs + QSERDES_DP_PHY_MODE);
++		writel(0x4c, qmp->dp_dp_phy + QSERDES_DP_PHY_MODE);
+ 	else
+-		writel(0x5c, qmp->pcs + QSERDES_DP_PHY_MODE);
++		writel(0x5c, qmp->dp_dp_phy + QSERDES_DP_PHY_MODE);
+ 
+ 	return reverse;
+ }
+@@ -2059,6 +2064,7 @@ static int qmp_combo_configure_dp_clocks(struct qmp_combo *qmp)
+ 	const struct phy_configure_opts_dp *dp_opts = &qmp->dp_opts;
+ 	u32 phy_vco_div;
+ 	unsigned long pixel_freq;
++	const struct qmp_phy_cfg *cfg = qmp->cfg;
+ 
+ 	switch (dp_opts->link_rate) {
+ 	case 1620:
+@@ -2081,7 +2087,7 @@ static int qmp_combo_configure_dp_clocks(struct qmp_combo *qmp)
+ 		/* Other link rates aren't supported */
+ 		return -EINVAL;
+ 	}
+-	writel(phy_vco_div, qmp->dp_dp_phy + QSERDES_V4_DP_PHY_VCO_DIV);
++	writel(phy_vco_div, qmp->dp_dp_phy + cfg->regs[QPHY_DP_PHY_VCO_DIV]);
+ 
+ 	clk_set_rate(qmp->dp_link_hw.clk, dp_opts->link_rate * 100000);
+ 	clk_set_rate(qmp->dp_pixel_hw.clk, pixel_freq);
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+index 32d897684755..e2c22edfe653 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.h
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+@@ -134,9 +134,11 @@
+ #define QPHY_V4_PCS_MISC_TYPEC_STATUS			0x10
+ #define QPHY_V4_PCS_MISC_PLACEHOLDER_STATUS		0x14
+ 
++#define QSERDES_V5_DP_PHY_VCO_DIV			0x070
+ #define QSERDES_V5_DP_PHY_STATUS			0x0dc
+ 
+ /* Only for QMP V6 PHY - DP PHY registers */
++#define QSERDES_V6_DP_PHY_VCO_DIV			0x070
+ #define QSERDES_V6_DP_PHY_AUX_INTERRUPT_STATUS		0x0e0
+ #define QSERDES_V6_DP_PHY_STATUS			0x0e4
+ 
+diff --git a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+index 5de5e2e97ffa..26b157f53f3d 100644
+--- a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
++++ b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+@@ -125,12 +125,15 @@ struct rockchip_combphy_grfcfg {
+ };
+ 
+ struct rockchip_combphy_cfg {
++	unsigned int num_phys;
++	unsigned int phy_ids[3];
+ 	const struct rockchip_combphy_grfcfg *grfcfg;
+ 	int (*combphy_cfg)(struct rockchip_combphy_priv *priv);
+ };
+ 
+ struct rockchip_combphy_priv {
+ 	u8 type;
++	int id;
+ 	void __iomem *mmio;
+ 	int num_clks;
+ 	struct clk_bulk_data *clks;
+@@ -320,7 +323,7 @@ static int rockchip_combphy_probe(struct platform_device *pdev)
+ 	struct rockchip_combphy_priv *priv;
+ 	const struct rockchip_combphy_cfg *phy_cfg;
+ 	struct resource *res;
+-	int ret;
++	int ret, id;
+ 
+ 	phy_cfg = of_device_get_match_data(dev);
+ 	if (!phy_cfg) {
+@@ -338,6 +341,15 @@ static int rockchip_combphy_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	/* find the phy-id from the io address */
++	priv->id = -ENODEV;
++	for (id = 0; id < phy_cfg->num_phys; id++) {
++		if (res->start == phy_cfg->phy_ids[id]) {
++			priv->id = id;
++			break;
++		}
++	}
++
+ 	priv->dev = dev;
+ 	priv->type = PHY_NONE;
+ 	priv->cfg = phy_cfg;
+@@ -562,6 +574,12 @@ static const struct rockchip_combphy_grfcfg rk3568_combphy_grfcfgs = {
+ };
+ 
+ static const struct rockchip_combphy_cfg rk3568_combphy_cfgs = {
++	.num_phys = 3,
++	.phy_ids = {
++		0xfe820000,
++		0xfe830000,
++		0xfe840000,
++	},
+ 	.grfcfg		= &rk3568_combphy_grfcfgs,
+ 	.combphy_cfg	= rk3568_combphy_cfg,
+ };
+@@ -578,8 +596,14 @@ static int rk3588_combphy_cfg(struct rockchip_combphy_priv *priv)
+ 		rockchip_combphy_param_write(priv->phy_grf, &cfg->con1_for_pcie, true);
+ 		rockchip_combphy_param_write(priv->phy_grf, &cfg->con2_for_pcie, true);
+ 		rockchip_combphy_param_write(priv->phy_grf, &cfg->con3_for_pcie, true);
+-		rockchip_combphy_param_write(priv->pipe_grf, &cfg->pipe_pcie1l0_sel, true);
+-		rockchip_combphy_param_write(priv->pipe_grf, &cfg->pipe_pcie1l1_sel, true);
++		switch (priv->id) {
++		case 1:
++			rockchip_combphy_param_write(priv->pipe_grf, &cfg->pipe_pcie1l0_sel, true);
++			break;
++		case 2:
++			rockchip_combphy_param_write(priv->pipe_grf, &cfg->pipe_pcie1l1_sel, true);
++			break;
++		}
+ 		break;
+ 	case PHY_TYPE_USB3:
+ 		/* Set SSC downward spread spectrum */
+@@ -736,6 +760,12 @@ static const struct rockchip_combphy_grfcfg rk3588_combphy_grfcfgs = {
+ };
+ 
+ static const struct rockchip_combphy_cfg rk3588_combphy_cfgs = {
++	.num_phys = 3,
++	.phy_ids = {
++		0xfee00000,
++		0xfee10000,
++		0xfee20000,
++	},
+ 	.grfcfg		= &rk3588_combphy_grfcfgs,
+ 	.combphy_cfg	= rk3588_combphy_cfg,
+ };
 diff --git a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-index 1d355b32ba55..c6aa6bc69e90 100644
+index 121e5961ce11..9857ee45b89e 100644
 --- a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
 +++ b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-@@ -39,6 +39,8 @@
+@@ -40,6 +40,8 @@
  #define RK3588_BIFURCATION_LANE_0_1		BIT(0)
  #define RK3588_BIFURCATION_LANE_2_3		BIT(1)
  #define RK3588_LANE_AGGREGATION		BIT(2)
@@ -2351,7 +5022,7 @@ index 1d355b32ba55..c6aa6bc69e90 100644
  
  struct rockchip_p3phy_ops;
  
-@@ -131,7 +133,7 @@ static const struct rockchip_p3phy_ops rk3568_ops = {
+@@ -132,7 +134,7 @@ static const struct rockchip_p3phy_ops rk3568_ops = {
  static int rockchip_p3phy_rk3588_init(struct rockchip_p3phy_priv *priv)
  {
  	u32 reg = 0;
@@ -2360,7 +5031,7 @@ index 1d355b32ba55..c6aa6bc69e90 100644
  	int ret;
  
  	/* Deassert PCIe PMA output clamp mode */
-@@ -139,31 +141,24 @@ static int rockchip_p3phy_rk3588_init(struct rockchip_p3phy_priv *priv)
+@@ -140,31 +142,24 @@ static int rockchip_p3phy_rk3588_init(struct rockchip_p3phy_priv *priv)
  
  	/* Set bifurcation if needed */
  	for (int i = 0; i < priv->num_lanes; i++) {
@@ -2403,10 +5074,10 @@ index 1d355b32ba55..c6aa6bc69e90 100644
  
  	reset_control_deassert(priv->p30phy);
 diff --git a/drivers/phy/ti/phy-tusb1210.c b/drivers/phy/ti/phy-tusb1210.c
-index 669c13d6e402..bdd44ec3e809 100644
+index b4881cb34475..c23eecc7d180 100644
 --- a/drivers/phy/ti/phy-tusb1210.c
 +++ b/drivers/phy/ti/phy-tusb1210.c
-@@ -64,7 +64,6 @@ struct tusb1210 {
+@@ -65,7 +65,6 @@ struct tusb1210 {
  	struct delayed_work chg_det_work;
  	struct notifier_block psy_nb;
  	struct power_supply *psy;
@@ -2414,7 +5085,7 @@ index 669c13d6e402..bdd44ec3e809 100644
  #endif
  };
  
-@@ -230,19 +229,24 @@ static const char * const tusb1210_chargers[] = {
+@@ -231,19 +230,24 @@ static const char * const tusb1210_chargers[] = {
  
  static bool tusb1210_get_online(struct tusb1210 *tusb)
  {
@@ -2446,7 +5117,7 @@ index 669c13d6e402..bdd44ec3e809 100644
  }
  
  static void tusb1210_chg_det_work(struct work_struct *work)
-@@ -466,9 +470,6 @@ static void tusb1210_remove_charger_detect(struct tusb1210 *tusb)
+@@ -467,9 +471,6 @@ static void tusb1210_remove_charger_detect(struct tusb1210 *tusb)
  		cancel_delayed_work_sync(&tusb->chg_det_work);
  		power_supply_unregister(tusb->psy);
  	}
@@ -2456,11 +5127,72 @@ index 669c13d6e402..bdd44ec3e809 100644
  }
  #else
  static void tusb1210_probe_charger_detect(struct tusb1210 *tusb) { }
+diff --git a/drivers/soundwire/amd_manager.c b/drivers/soundwire/amd_manager.c
+index a3b1f4e6f0f9..79173ab540a6 100644
+--- a/drivers/soundwire/amd_manager.c
++++ b/drivers/soundwire/amd_manager.c
+@@ -148,6 +148,19 @@ static void amd_sdw_set_frameshape(struct amd_sdw_manager *amd_manager)
+ 	writel(frame_size, amd_manager->mmio + ACP_SW_FRAMESIZE);
+ }
+ 
++static void amd_sdw_wake_enable(struct amd_sdw_manager *amd_manager, bool enable)
++{
++	u32 wake_ctrl;
++
++	wake_ctrl = readl(amd_manager->mmio + ACP_SW_STATE_CHANGE_STATUS_MASK_8TO11);
++	if (enable)
++		wake_ctrl |= AMD_SDW_WAKE_INTR_MASK;
++	else
++		wake_ctrl &= ~AMD_SDW_WAKE_INTR_MASK;
++
++	writel(wake_ctrl, amd_manager->mmio + ACP_SW_STATE_CHANGE_STATUS_MASK_8TO11);
++}
++
+ static void amd_sdw_ctl_word_prep(u32 *lower_word, u32 *upper_word, struct sdw_msg *msg,
+ 				  int cmd_offset)
+ {
+@@ -1122,6 +1135,7 @@ static int __maybe_unused amd_suspend(struct device *dev)
+ 	}
+ 
+ 	if (amd_manager->power_mode_mask & AMD_SDW_CLK_STOP_MODE) {
++		amd_sdw_wake_enable(amd_manager, false);
+ 		return amd_sdw_clock_stop(amd_manager);
+ 	} else if (amd_manager->power_mode_mask & AMD_SDW_POWER_OFF_MODE) {
+ 		/*
+@@ -1148,6 +1162,7 @@ static int __maybe_unused amd_suspend_runtime(struct device *dev)
+ 		return 0;
+ 	}
+ 	if (amd_manager->power_mode_mask & AMD_SDW_CLK_STOP_MODE) {
++		amd_sdw_wake_enable(amd_manager, true);
+ 		return amd_sdw_clock_stop(amd_manager);
+ 	} else if (amd_manager->power_mode_mask & AMD_SDW_POWER_OFF_MODE) {
+ 		ret = amd_sdw_clock_stop(amd_manager);
+diff --git a/drivers/soundwire/amd_manager.h b/drivers/soundwire/amd_manager.h
+index 5f040151a259..6dcc7a449346 100644
+--- a/drivers/soundwire/amd_manager.h
++++ b/drivers/soundwire/amd_manager.h
+@@ -152,7 +152,7 @@
+ #define AMD_SDW0_EXT_INTR_MASK		0x200000
+ #define AMD_SDW1_EXT_INTR_MASK		4
+ #define AMD_SDW_IRQ_MASK_0TO7		0x77777777
+-#define AMD_SDW_IRQ_MASK_8TO11		0x000d7777
++#define AMD_SDW_IRQ_MASK_8TO11		0x000c7777
+ #define AMD_SDW_IRQ_ERROR_MASK		0xff
+ #define AMD_SDW_MAX_FREQ_NUM		1
+ #define AMD_SDW0_MAX_TX_PORTS		3
+@@ -190,6 +190,7 @@
+ #define AMD_SDW_CLK_RESUME_REQ				2
+ #define AMD_SDW_CLK_RESUME_DONE				3
+ #define AMD_SDW_WAKE_STAT_MASK				BIT(16)
++#define AMD_SDW_WAKE_INTR_MASK				BIT(16)
+ 
+ static u32 amd_sdw_freq_tbl[AMD_SDW_MAX_FREQ_NUM] = {
+ 	AMD_SDW_DEFAULT_CLK_FREQ,
 diff --git a/drivers/video/fbdev/core/fb_defio.c b/drivers/video/fbdev/core/fb_defio.c
-index 49883c8012e6..3b376345d4d4 100644
+index 1ae1d35a5942..b9607d5a370d 100644
 --- a/drivers/video/fbdev/core/fb_defio.c
 +++ b/drivers/video/fbdev/core/fb_defio.c
-@@ -200,7 +200,7 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
+@@ -196,7 +196,7 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
   */
  static vm_fault_t fb_deferred_io_page_mkwrite(struct fb_info *info, struct vm_fault *vmf)
  {
@@ -2470,10 +5202,10 @@ index 49883c8012e6..3b376345d4d4 100644
  
  	file_update_time(vmf->vma->vm_file);
 diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
-index 18cf801ab590..23d0372e8882 100644
+index a4a809efc92f..df223ebf2551 100644
 --- a/fs/btrfs/backref.c
 +++ b/fs/btrfs/backref.c
-@@ -2475,20 +2475,14 @@ struct btrfs_data_container *init_data_container(u32 total_bytes)
+@@ -2770,20 +2770,14 @@ struct btrfs_data_container *init_data_container(u32 total_bytes)
  	size_t alloc_bytes;
  
  	alloc_bytes = max_t(size_t, total_bytes, sizeof(*data));
@@ -2497,24 +5229,187 @@ index 18cf801ab590..23d0372e8882 100644
  
  	return data;
  }
-diff --git a/fs/smb/client/cifs_spnego.h b/fs/smb/client/cifs_spnego.h
-index 7f102ffeb675..e4d751b0c812 100644
---- a/fs/smb/client/cifs_spnego.h
-+++ b/fs/smb/client/cifs_spnego.h
-@@ -24,7 +24,7 @@ struct cifs_spnego_msg {
- 	uint32_t	flags;
- 	uint32_t	sesskey_len;
- 	uint32_t	secblob_len;
--	uint8_t		data[1];
-+	uint8_t		data[];
- };
+diff --git a/fs/btrfs/extent_map.c b/fs/btrfs/extent_map.c
+index a6d8368ed0ed..8c017c4105f2 100644
+--- a/fs/btrfs/extent_map.c
++++ b/fs/btrfs/extent_map.c
+@@ -843,7 +843,7 @@ void btrfs_drop_extent_map_range(struct btrfs_inode *inode, u64 start, u64 end,
+ 					split->block_len = em->block_len;
+ 					split->orig_start = em->orig_start;
+ 				} else {
+-					const u64 diff = start + len - em->start;
++					const u64 diff = end - em->start;
  
- #ifdef __KERNEL__
+ 					split->block_len = split->len;
+ 					split->block_start += diff;
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index e57d18825a56..33d0efa5ed79 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -1134,13 +1134,13 @@ static void submit_one_async_extent(struct async_chunk *async_chunk,
+ 				   0, *alloc_hint, &ins, 1, 1);
+ 	if (ret) {
+ 		/*
+-		 * Here we used to try again by going back to non-compressed
+-		 * path for ENOSPC.  But we can't reserve space even for
+-		 * compressed size, how could it work for uncompressed size
+-		 * which requires larger size?  So here we directly go error
+-		 * path.
++		 * We can't reserve contiguous space for the compressed size.
++		 * Unlikely, but it's possible that we could have enough
++		 * non-contiguous space for the uncompressed size instead.  So
++		 * fall back to uncompressed.
+ 		 */
+-		goto out_free;
++		submit_uncompressed_range(inode, async_extent, locked_page);
++		goto done;
+ 	}
+ 
+ 	/* Here we're doing allocation and writeback of the compressed pages */
+@@ -1192,7 +1192,6 @@ static void submit_one_async_extent(struct async_chunk *async_chunk,
+ out_free_reserve:
+ 	btrfs_dec_block_group_reservations(fs_info, ins.objectid);
+ 	btrfs_free_reserved_extent(fs_info, ins.objectid, ins.offset, 1);
+-out_free:
+ 	mapping_set_error(inode->vfs_inode.i_mapping, -EIO);
+ 	extent_clear_unlock_delalloc(inode, start, end,
+ 				     NULL, EXTENT_LOCKED | EXTENT_DELALLOC |
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index 9cef4243c23d..819973c37a14 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -1013,6 +1013,7 @@ static void scrub_stripe_read_repair_worker(struct work_struct *work)
+ 	struct btrfs_fs_info *fs_info = sctx->fs_info;
+ 	int num_copies = btrfs_num_copies(fs_info, stripe->bg->start,
+ 					  stripe->bg->length);
++	unsigned long repaired;
+ 	int mirror;
+ 	int i;
+ 
+@@ -1079,16 +1080,15 @@ static void scrub_stripe_read_repair_worker(struct work_struct *work)
+ 	 * Submit the repaired sectors.  For zoned case, we cannot do repair
+ 	 * in-place, but queue the bg to be relocated.
+ 	 */
+-	if (btrfs_is_zoned(fs_info)) {
+-		if (!bitmap_empty(&stripe->error_bitmap, stripe->nr_sectors))
++	bitmap_andnot(&repaired, &stripe->init_error_bitmap, &stripe->error_bitmap,
++		      stripe->nr_sectors);
++	if (!sctx->readonly && !bitmap_empty(&repaired, stripe->nr_sectors)) {
++		if (btrfs_is_zoned(fs_info)) {
+ 			btrfs_repair_one_zone(fs_info, sctx->stripes[0].bg->start);
+-	} else if (!sctx->readonly) {
+-		unsigned long repaired;
+-
+-		bitmap_andnot(&repaired, &stripe->init_error_bitmap,
+-			      &stripe->error_bitmap, stripe->nr_sectors);
+-		scrub_write_sectors(sctx, stripe, repaired, false);
+-		wait_scrub_stripe_io(stripe);
++		} else {
++			scrub_write_sectors(sctx, stripe, repaired, false);
++			wait_scrub_stripe_io(stripe);
++		}
+ 	}
+ 
+ 	scrub_stripe_report_errors(sctx, stripe);
+diff --git a/fs/btrfs/tests/extent-map-tests.c b/fs/btrfs/tests/extent-map-tests.c
+index 29bdd08b241f..bf85c75ee722 100644
+--- a/fs/btrfs/tests/extent-map-tests.c
++++ b/fs/btrfs/tests/extent-map-tests.c
+@@ -826,6 +826,11 @@ static int test_case_7(void)
+ 		goto out;
+ 	}
+ 
++	if (em->block_start != SZ_32K + SZ_4K) {
++		test_err("em->block_start is %llu, expected 36K", em->block_start);
++		goto out;
++	}
++
+ 	free_extent_map(em);
+ 
+ 	read_lock(&em_tree->lock);
+diff --git a/fs/overlayfs/params.c b/fs/overlayfs/params.c
+index ad3593a41fb5..488f920f79d2 100644
+--- a/fs/overlayfs/params.c
++++ b/fs/overlayfs/params.c
+@@ -438,7 +438,7 @@ static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
+ 	struct ovl_fs_context *ctx = fc->fs_private;
+ 	struct ovl_fs_context_layer *l;
+ 	char *dup = NULL, *iter;
+-	ssize_t nr_lower = 0, nr = 0, nr_data = 0;
++	ssize_t nr_lower, nr;
+ 	bool data_layer = false;
+ 
+ 	/*
+@@ -490,6 +490,7 @@ static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
+ 	iter = dup;
+ 	l = ctx->lower;
+ 	for (nr = 0; nr < nr_lower; nr++, l++) {
++		ctx->nr++;
+ 		memset(l, 0, sizeof(*l));
+ 
+ 		err = ovl_mount_dir(iter, &l->path);
+@@ -506,10 +507,10 @@ static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
+ 			goto out_put;
+ 
+ 		if (data_layer)
+-			nr_data++;
++			ctx->nr_data++;
+ 
+ 		/* Calling strchr() again would overrun. */
+-		if ((nr + 1) == nr_lower)
++		if (ctx->nr == nr_lower)
+ 			break;
+ 
+ 		err = -EINVAL;
+@@ -519,7 +520,7 @@ static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
+ 			 * This is a regular layer so we require that
+ 			 * there are no data layers.
+ 			 */
+-			if ((ctx->nr_data + nr_data) > 0) {
++			if (ctx->nr_data > 0) {
+ 				pr_err("regular lower layers cannot follow data lower layers");
+ 				goto out_put;
+ 			}
+@@ -532,8 +533,6 @@ static int ovl_parse_param_lowerdir(const char *name, struct fs_context *fc)
+ 		data_layer = true;
+ 		iter++;
+ 	}
+-	ctx->nr = nr_lower;
+-	ctx->nr_data += nr_data;
+ 	kfree(dup);
+ 	return 0;
+ 
+diff --git a/fs/proc/page.c b/fs/proc/page.c
+index 195b077c0fac..9223856c934b 100644
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -67,7 +67,7 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
+ 		 */
+ 		ppage = pfn_to_online_page(pfn);
+ 
+-		if (!ppage || PageSlab(ppage) || page_has_type(ppage))
++		if (!ppage)
+ 			pcount = 0;
+ 		else
+ 			pcount = page_mapcount(ppage);
+@@ -124,11 +124,8 @@ u64 stable_page_flags(struct page *page)
+ 
+ 	/*
+ 	 * pseudo flags for the well known (anonymous) memory mapped pages
+-	 *
+-	 * Note that page->_mapcount is overloaded in SLAB, so the
+-	 * simple test in page_mapped() is not enough.
+ 	 */
+-	if (!PageSlab(page) && page_mapped(page))
++	if (page_mapped(page))
+ 		u |= 1 << KPF_MMAP;
+ 	if (PageAnon(page))
+ 		u |= 1 << KPF_ANON;
 diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
-index 0a79771c8f33..f0a3336ffb6c 100644
+index fcb93a66e47c..44e2cc37a8b6 100644
 --- a/fs/smb/client/cifsfs.c
 +++ b/fs/smb/client/cifsfs.c
-@@ -387,6 +387,7 @@ cifs_alloc_inode(struct super_block *sb)
+@@ -392,6 +392,7 @@ cifs_alloc_inode(struct super_block *sb)
  	 * server, can not assume caching of file data or metadata.
  	 */
  	cifs_set_oplock_level(cifs_inode, 0);
@@ -2522,108 +5417,24 @@ index 0a79771c8f33..f0a3336ffb6c 100644
  	cifs_inode->flags = 0;
  	spin_lock_init(&cifs_inode->writers_lock);
  	cifs_inode->writers = 0;
+diff --git a/fs/smb/client/cifsglob.h b/fs/smb/client/cifsglob.h
+index 68fd61a56408..12a48e1d80c3 100644
+--- a/fs/smb/client/cifsglob.h
++++ b/fs/smb/client/cifsglob.h
+@@ -1247,7 +1247,9 @@ struct cifs_tcon {
+ 	__u32 max_cached_dirs;
+ #ifdef CONFIG_CIFS_FSCACHE
+ 	u64 resource_id;		/* server resource id */
++	bool fscache_acquired;		/* T if we've tried acquiring a cookie */
+ 	struct fscache_volume *fscache;	/* cookie for share */
++	struct mutex fscache_lock;	/* Prevent regetting a cookie */
+ #endif
+ 	struct list_head pending_opens;	/* list of incomplete opens */
+ 	struct cached_fids *cfids;
 diff --git a/fs/smb/client/cifspdu.h b/fs/smb/client/cifspdu.h
-index 97bb1838555b..9cb457706334 100644
+index c0513fbb8a59..c46d418c1c0c 100644
 --- a/fs/smb/client/cifspdu.h
 +++ b/fs/smb/client/cifspdu.h
-@@ -562,7 +562,7 @@ typedef union smb_com_session_setup_andx {
- 		__u32 Reserved;
- 		__le32 Capabilities;	/* see below */
- 		__le16 ByteCount;
--		unsigned char SecurityBlob[1];	/* followed by */
-+		unsigned char SecurityBlob[];	/* followed by */
- 		/* STRING NativeOS */
- 		/* STRING NativeLanMan */
- 	} __attribute__((packed)) req;	/* NTLM request format (with
-@@ -582,7 +582,7 @@ typedef union smb_com_session_setup_andx {
- 		__u32 Reserved;	/* see below */
- 		__le32 Capabilities;
- 		__le16 ByteCount;
--		unsigned char CaseInsensitivePassword[1];     /* followed by: */
-+		unsigned char CaseInsensitivePassword[];     /* followed by: */
- 		/* unsigned char * CaseSensitivePassword; */
- 		/* STRING AccountName */
- 		/* STRING PrimaryDomain */
-@@ -599,7 +599,7 @@ typedef union smb_com_session_setup_andx {
- 		__le16 Action;	/* see below */
- 		__le16 SecurityBlobLength;
- 		__u16 ByteCount;
--		unsigned char SecurityBlob[1];	/* followed by */
-+		unsigned char SecurityBlob[];	/* followed by */
- /*      unsigned char  * NativeOS;      */
- /*	unsigned char  * NativeLanMan;  */
- /*      unsigned char  * PrimaryDomain; */
-@@ -618,7 +618,7 @@ typedef union smb_com_session_setup_andx {
- 		__le16 PasswordLength;
- 		__u32 Reserved; /* encrypt key len and offset */
- 		__le16 ByteCount;
--		unsigned char AccountPassword[1];	/* followed by */
-+		unsigned char AccountPassword[];	/* followed by */
- 		/* STRING AccountName */
- 		/* STRING PrimaryDomain */
- 		/* STRING NativeOS */
-@@ -632,7 +632,7 @@ typedef union smb_com_session_setup_andx {
- 		__le16 AndXOffset;
- 		__le16 Action;	/* see below */
- 		__u16 ByteCount;
--		unsigned char NativeOS[1];	/* followed by */
-+		unsigned char NativeOS[];	/* followed by */
- /*	unsigned char * NativeLanMan; */
- /*      unsigned char * PrimaryDomain; */
- 	} __attribute__((packed)) old_resp; /* pre-NTLM (LANMAN2.1) response */
-@@ -693,7 +693,7 @@ typedef struct smb_com_tconx_req {
- 	__le16 Flags;		/* see below */
- 	__le16 PasswordLength;
- 	__le16 ByteCount;
--	unsigned char Password[1];	/* followed by */
-+	unsigned char Password[];	/* followed by */
- /* STRING Path    *//* \\server\share name */
- 	/* STRING Service */
- } __attribute__((packed)) TCONX_REQ;
-@@ -705,7 +705,7 @@ typedef struct smb_com_tconx_rsp {
- 	__le16 AndXOffset;
- 	__le16 OptionalSupport;	/* see below */
- 	__u16 ByteCount;
--	unsigned char Service[1];	/* always ASCII, not Unicode */
-+	unsigned char Service[];	/* always ASCII, not Unicode */
- 	/* STRING NativeFileSystem */
- } __attribute__((packed)) TCONX_RSP;
- 
-@@ -718,7 +718,7 @@ typedef struct smb_com_tconx_rsp_ext {
- 	__le32 MaximalShareAccessRights;
- 	__le32 GuestMaximalShareAccessRights;
- 	__u16 ByteCount;
--	unsigned char Service[1];	/* always ASCII, not Unicode */
-+	unsigned char Service[];	/* always ASCII, not Unicode */
- 	/* STRING NativeFileSystem */
- } __attribute__((packed)) TCONX_RSP_EXT;
- 
-@@ -755,14 +755,14 @@ typedef struct smb_com_echo_req {
- 	struct	smb_hdr hdr;
- 	__le16	EchoCount;
- 	__le16	ByteCount;
--	char	Data[1];
-+	char	Data[];
- } __attribute__((packed)) ECHO_REQ;
- 
- typedef struct smb_com_echo_rsp {
- 	struct	smb_hdr hdr;
- 	__le16	SequenceNumber;
- 	__le16	ByteCount;
--	char	Data[1];
-+	char	Data[];
- } __attribute__((packed)) ECHO_RSP;
- 
- typedef struct smb_com_logoff_andx_req {
-@@ -862,7 +862,7 @@ typedef struct smb_com_open_req {	/* also handles create */
- 	__le32 ImpersonationLevel;
- 	__u8 SecurityFlags;
- 	__le16 ByteCount;
--	char fileName[1];
-+	char fileName[];
- } __attribute__((packed)) OPEN_REQ;
- 
- /* open response: oplock levels */
 @@ -882,7 +882,7 @@ typedef struct smb_com_open_rsp {
  	__u8 OplockLevel;
  	__u16 Fid;
@@ -2633,180 +5444,7 @@ index 97bb1838555b..9cb457706334 100644
  		__le64 CreationTime;
  		__le64 LastAccessTime;
  		__le64 LastWriteTime;
-@@ -939,7 +939,7 @@ typedef struct smb_com_openx_req {
- 	__le32 Timeout;
- 	__le32 Reserved;
- 	__le16  ByteCount;  /* file name follows */
--	char   fileName[1];
-+	char   fileName[];
- } __attribute__((packed)) OPENX_REQ;
- 
- typedef struct smb_com_openx_rsp {
-@@ -1087,7 +1087,7 @@ typedef struct smb_com_lock_req {
- 	__le16 NumberOfUnlocks;
- 	__le16 NumberOfLocks;
- 	__le16 ByteCount;
--	LOCKING_ANDX_RANGE Locks[1];
-+	LOCKING_ANDX_RANGE Locks[];
- } __attribute__((packed)) LOCK_REQ;
- 
- /* lock type */
-@@ -1116,7 +1116,7 @@ typedef struct smb_com_rename_req {
- 	__le16 SearchAttributes;	/* target file attributes */
- 	__le16 ByteCount;
- 	__u8 BufferFormat;	/* 4 = ASCII or Unicode */
--	unsigned char OldFileName[1];
-+	unsigned char OldFileName[];
- 	/* followed by __u8 BufferFormat2 */
- 	/* followed by NewFileName */
- } __attribute__((packed)) RENAME_REQ;
-@@ -1136,7 +1136,7 @@ typedef struct smb_com_copy_req {
- 	__le16 Flags;
- 	__le16 ByteCount;
- 	__u8 BufferFormat;	/* 4 = ASCII or Unicode */
--	unsigned char OldFileName[1];
-+	unsigned char OldFileName[];
- 	/* followed by __u8 BufferFormat2 */
- 	/* followed by NewFileName string */
- } __attribute__((packed)) COPY_REQ;
-@@ -1146,7 +1146,7 @@ typedef struct smb_com_copy_rsp {
- 	__le16 CopyCount;    /* number of files copied */
- 	__u16 ByteCount;    /* may be zero */
- 	__u8 BufferFormat;  /* 0x04 - only present if errored file follows */
--	unsigned char ErrorFileName[1]; /* only present if error in copy */
-+	unsigned char ErrorFileName[]; /* only present if error in copy */
- } __attribute__((packed)) COPY_RSP;
- 
- #define CREATE_HARD_LINK		0x103
-@@ -1160,7 +1160,7 @@ typedef struct smb_com_nt_rename_req {	/* A5 - also used for create hardlink */
- 	__le32 ClusterCount;
- 	__le16 ByteCount;
- 	__u8 BufferFormat;	/* 4 = ASCII or Unicode */
--	unsigned char OldFileName[1];
-+	unsigned char OldFileName[];
- 	/* followed by __u8 BufferFormat2 */
- 	/* followed by NewFileName */
- } __attribute__((packed)) NT_RENAME_REQ;
-@@ -1175,7 +1175,7 @@ typedef struct smb_com_delete_file_req {
- 	__le16 SearchAttributes;
- 	__le16 ByteCount;
- 	__u8 BufferFormat;	/* 4 = ASCII */
--	unsigned char fileName[1];
-+	unsigned char fileName[];
- } __attribute__((packed)) DELETE_FILE_REQ;
- 
- typedef struct smb_com_delete_file_rsp {
-@@ -1187,7 +1187,7 @@ typedef struct smb_com_delete_directory_req {
- 	struct smb_hdr hdr;	/* wct = 0 */
- 	__le16 ByteCount;
- 	__u8 BufferFormat;	/* 4 = ASCII */
--	unsigned char DirName[1];
-+	unsigned char DirName[];
- } __attribute__((packed)) DELETE_DIRECTORY_REQ;
- 
- typedef struct smb_com_delete_directory_rsp {
-@@ -1199,7 +1199,7 @@ typedef struct smb_com_create_directory_req {
- 	struct smb_hdr hdr;	/* wct = 0 */
- 	__le16 ByteCount;
- 	__u8 BufferFormat;	/* 4 = ASCII */
--	unsigned char DirName[1];
-+	unsigned char DirName[];
- } __attribute__((packed)) CREATE_DIRECTORY_REQ;
- 
- typedef struct smb_com_create_directory_rsp {
-@@ -1211,7 +1211,7 @@ typedef struct smb_com_query_information_req {
- 	struct smb_hdr hdr;     /* wct = 0 */
- 	__le16 ByteCount;	/* 1 + namelen + 1 */
- 	__u8 BufferFormat;      /* 4 = ASCII */
--	unsigned char FileName[1];
-+	unsigned char FileName[];
- } __attribute__((packed)) QUERY_INFORMATION_REQ;
- 
- typedef struct smb_com_query_information_rsp {
-@@ -1231,7 +1231,7 @@ typedef struct smb_com_setattr_req {
- 	__le16 reserved[5]; /* must be zero */
- 	__u16  ByteCount;
- 	__u8   BufferFormat; /* 4 = ASCII */
--	unsigned char fileName[1];
-+	unsigned char fileName[];
- } __attribute__((packed)) SETATTR_REQ;
- 
- typedef struct smb_com_setattr_rsp {
-@@ -1313,7 +1313,7 @@ typedef struct smb_com_transaction_ioctl_req {
- 	__u8 IsRootFlag; /* 1 = apply command to root of share (must be DFS) */
- 	__le16 ByteCount;
- 	__u8 Pad[3];
--	__u8 Data[1];
-+	__u8 Data[];
- } __attribute__((packed)) TRANSACT_IOCTL_REQ;
- 
- typedef struct smb_com_transaction_compr_ioctl_req {
-@@ -1431,8 +1431,8 @@ typedef struct smb_com_transaction_change_notify_req {
- 	__u8 WatchTree;  /* 1 = Monitor subdirectories */
- 	__u8 Reserved2;
- 	__le16 ByteCount;
--/* 	__u8 Pad[3];*/
--/*	__u8 Data[1];*/
-+/*	__u8 Pad[3];*/
-+/*	__u8 Data[];*/
- } __attribute__((packed)) TRANSACT_CHANGE_NOTIFY_REQ;
- 
- /* BB eventually change to use generic ntransact rsp struct
-@@ -1521,7 +1521,7 @@ struct cifs_quota_data {
- 	__u64	space_used;
- 	__u64	soft_limit;
- 	__u64	hard_limit;
--	char	sid[1];  /* variable size? */
-+	char	sid[];  /* variable size? */
- } __attribute__((packed));
- 
- /* quota sub commands */
-@@ -1673,7 +1673,7 @@ typedef struct smb_com_transaction2_qpi_req {
- 	__u8 Pad;
- 	__le16 InformationLevel;
- 	__u32 Reserved4;
--	char FileName[1];
-+	char FileName[];
- } __attribute__((packed)) TRANSACTION2_QPI_REQ;
- 
- typedef struct smb_com_transaction2_qpi_rsp {
-@@ -1706,7 +1706,7 @@ typedef struct smb_com_transaction2_spi_req {
- 	__u16 Pad1;
- 	__le16 InformationLevel;
- 	__u32 Reserved4;
--	char FileName[1];
-+	char FileName[];
- } __attribute__((packed)) TRANSACTION2_SPI_REQ;
- 
- typedef struct smb_com_transaction2_spi_rsp {
-@@ -1813,7 +1813,7 @@ typedef struct smb_com_transaction2_ffirst_req {
- 	__le16 SearchFlags;
- 	__le16 InformationLevel;
- 	__le32 SearchStorageType;
--	char FileName[1];
-+	char FileName[];
- } __attribute__((packed)) TRANSACTION2_FFIRST_REQ;
- 
- typedef struct smb_com_transaction2_ffirst_rsp {
-@@ -2024,7 +2024,7 @@ typedef struct smb_com_transaction2_get_dfs_refer_req {
- 				   perhaps?) followed by one byte pad - doesn't
- 				   seem to matter though */
- 	__le16 MaxReferralLevel;
--	char RequestFileName[1];
-+	char RequestFileName[];
- } __attribute__((packed)) TRANSACTION2_GET_DFS_REFER_REQ;
- 
- #define DFS_VERSION cpu_to_le16(0x0003)
-@@ -2053,7 +2053,7 @@ struct get_dfs_referral_rsp {
- 	__le16 PathConsumed;
- 	__le16 NumberOfReferrals;
- 	__le32 DFSFlags;
--	REFERRAL3 referrals[1];	/* array of level 3 dfs_referral structures */
-+	REFERRAL3 referrals[];	/* array of level 3 dfs_referral structures */
- 	/* followed by the strings pointed to by the referral structures */
- } __packed;
- 
-@@ -2270,7 +2270,7 @@ typedef struct {
+@@ -2266,7 +2266,7 @@ typedef struct {
  /* QueryFileInfo/QueryPathinfo (also for SetPath/SetFile) data buffer formats */
  /******************************************************************************/
  typedef struct { /* data block encoding of response to level 263 QPathInfo */
@@ -2815,115 +5453,11 @@ index 97bb1838555b..9cb457706334 100644
  		__le64 CreationTime;
  		__le64 LastAccessTime;
  		__le64 LastWriteTime;
-@@ -2292,7 +2292,10 @@ typedef struct { /* data block encoding of response to level 263 QPathInfo */
- 	__le32 Mode;
- 	__le32 AlignmentRequirement;
- 	__le32 FileNameLength;
--	char FileName[1];
-+	union {
-+		char __pad;
-+		DECLARE_FLEX_ARRAY(char, FileName);
-+	};
- } __attribute__((packed)) FILE_ALL_INFO;	/* level 0x107 QPathInfo */
- 
- typedef struct {
-@@ -2330,7 +2333,7 @@ typedef struct {
- } __attribute__((packed)) FILE_UNIX_BASIC_INFO;	/* level 0x200 QPathInfo */
- 
- typedef struct {
--	char LinkDest[1];
-+	DECLARE_FLEX_ARRAY(char, LinkDest);
- } __attribute__((packed)) FILE_UNIX_LINK_INFO;	/* level 0x201 QPathInfo */
- 
- /* The following three structures are needed only for
-@@ -2380,7 +2383,7 @@ struct file_end_of_file_info {
- } __attribute__((packed)); /* size info, level 0x104 for set, 0x106 for query */
- 
- struct file_alt_name_info {
--	__u8   alt_name[1];
-+	DECLARE_FLEX_ARRAY(__u8, alt_name);
- } __attribute__((packed));      /* level 0x0108 */
- 
- struct file_stream_info {
-@@ -2490,7 +2493,10 @@ typedef struct {
- 	__le32 NextEntryOffset;
- 	__u32 ResumeKey; /* as with FileIndex - no need to convert */
- 	FILE_UNIX_BASIC_INFO basic;
--	char FileName[1];
-+	union {
-+		char __pad;
-+		DECLARE_FLEX_ARRAY(char, FileName);
-+	};
- } __attribute__((packed)) FILE_UNIX_INFO; /* level 0x202 */
- 
- typedef struct {
-@@ -2504,7 +2510,7 @@ typedef struct {
- 	__le64 AllocationSize;
- 	__le32 ExtFileAttributes;
- 	__le32 FileNameLength;
--	char FileName[1];
-+	char FileName[];
- } __attribute__((packed)) FILE_DIRECTORY_INFO;   /* level 0x101 FF resp data */
- 
- typedef struct {
-@@ -2519,7 +2525,7 @@ typedef struct {
- 	__le32 ExtFileAttributes;
- 	__le32 FileNameLength;
- 	__le32 EaSize; /* length of the xattrs */
--	char FileName[1];
-+	char FileName[];
- } __attribute__((packed)) FILE_FULL_DIRECTORY_INFO; /* level 0x102 rsp data */
- 
- typedef struct {
-@@ -2536,7 +2542,7 @@ typedef struct {
- 	__le32 EaSize; /* EA size */
- 	__le32 Reserved;
- 	__le64 UniqueId; /* inode num - le since Samba puts ino in low 32 bit*/
--	char FileName[1];
-+	char FileName[];
- } __attribute__((packed)) SEARCH_ID_FULL_DIR_INFO; /* level 0x105 FF rsp data */
- 
- typedef struct {
-@@ -2554,7 +2560,7 @@ typedef struct {
- 	__u8   ShortNameLength;
- 	__u8   Reserved;
- 	__u8   ShortName[24];
--	char FileName[1];
-+	char FileName[];
- } __attribute__((packed)) FILE_BOTH_DIRECTORY_INFO; /* level 0x104 FFrsp data */
- 
- typedef struct {
-@@ -2569,7 +2575,7 @@ typedef struct {
- 	__le32 AllocationSize;
- 	__le16 Attributes; /* verify not u32 */
- 	__u8   FileNameLength;
--	char FileName[1];
-+	char FileName[];
- } __attribute__((packed)) FIND_FILE_STANDARD_INFO; /* level 0x1 FF resp data */
- 
- 
-@@ -2579,16 +2585,6 @@ struct win_dev {
- 	__le64 minor;
- } __attribute__((packed));
- 
--struct gea {
--	unsigned char name_len;
--	char name[1];
--} __attribute__((packed));
--
--struct gealist {
--	unsigned long list_len;
--	struct gea list[1];
--} __attribute__((packed));
--
- struct fea {
- 	unsigned char EA_flags;
- 	__u8 name_len;
 diff --git a/fs/smb/client/fs_context.c b/fs/smb/client/fs_context.c
-index 4d5302b58b53..ca39d01077cd 100644
+index 58567ae617b9..103421791bb5 100644
 --- a/fs/smb/client/fs_context.c
 +++ b/fs/smb/client/fs_context.c
-@@ -676,6 +676,16 @@ static int smb3_fs_context_validate(struct fs_context *fc)
+@@ -714,6 +714,16 @@ static int smb3_fs_context_validate(struct fs_context *fc)
  	/* set the port that we got earlier */
  	cifs_set_port((struct sockaddr *)&ctx->dstaddr, ctx->port);
  
@@ -2940,7 +5474,7 @@ index 4d5302b58b53..ca39d01077cd 100644
  	if (ctx->override_uid && !ctx->uid_specified) {
  		ctx->override_uid = 0;
  		pr_notice("ignoring forceuid mount option specified with no uid= option\n");
-@@ -923,12 +933,14 @@ static int smb3_fs_context_parse_param(struct fs_context *fc,
+@@ -983,12 +993,14 @@ static int smb3_fs_context_parse_param(struct fs_context *fc,
  			ctx->override_uid = 0;
  		else
  			ctx->override_uid = 1;
@@ -2956,10 +5490,10 @@ index 4d5302b58b53..ca39d01077cd 100644
  	case Opt_perm:
  		if (result.negated)
 diff --git a/fs/smb/client/fs_context.h b/fs/smb/client/fs_context.h
-index 26093f54d3e6..319a91b7f670 100644
+index 8cfc25b609b6..4e409238fe8f 100644
 --- a/fs/smb/client/fs_context.h
 +++ b/fs/smb/client/fs_context.h
-@@ -154,6 +154,8 @@ enum cifs_param {
+@@ -155,6 +155,8 @@ enum cifs_param {
  };
  
  struct smb3_fs_context {
@@ -2968,53 +5502,69 @@ index 26093f54d3e6..319a91b7f670 100644
  	bool uid_specified;
  	bool cruid_specified;
  	bool gid_specified;
-diff --git a/fs/smb/client/readdir.c b/fs/smb/client/readdir.c
-index 5990bdbae598..9a1f1913fb59 100644
---- a/fs/smb/client/readdir.c
-+++ b/fs/smb/client/readdir.c
-@@ -497,7 +497,7 @@ static char *nxt_dir_entry(char *old_entry, char *end_of_smb, int level)
- 		FIND_FILE_STANDARD_INFO *pfData;
- 		pfData = (FIND_FILE_STANDARD_INFO *)pDirInfo;
+diff --git a/fs/smb/client/fscache.c b/fs/smb/client/fscache.c
+index a4ee801b2939..ecabc4b40053 100644
+--- a/fs/smb/client/fscache.c
++++ b/fs/smb/client/fscache.c
+@@ -43,12 +43,23 @@ int cifs_fscache_get_super_cookie(struct cifs_tcon *tcon)
+ 	char *key;
+ 	int ret = -ENOMEM;
  
--		new_entry = old_entry + sizeof(FIND_FILE_STANDARD_INFO) +
-+		new_entry = old_entry + sizeof(FIND_FILE_STANDARD_INFO) + 1 +
- 				pfData->FileNameLength;
- 	} else {
- 		u32 next_offset = le32_to_cpu(pDirInfo->NextEntryOffset);
-@@ -515,9 +515,9 @@ static char *nxt_dir_entry(char *old_entry, char *end_of_smb, int level)
- 			 new_entry, end_of_smb, old_entry);
- 		return NULL;
- 	} else if (((level == SMB_FIND_FILE_INFO_STANDARD) &&
--		    (new_entry + sizeof(FIND_FILE_STANDARD_INFO) > end_of_smb))
-+		    (new_entry + sizeof(FIND_FILE_STANDARD_INFO) + 1 > end_of_smb))
- 		  || ((level != SMB_FIND_FILE_INFO_STANDARD) &&
--		   (new_entry + sizeof(FILE_DIRECTORY_INFO) > end_of_smb)))  {
-+		   (new_entry + sizeof(FILE_DIRECTORY_INFO) + 1 > end_of_smb)))  {
- 		cifs_dbg(VFS, "search entry %p extends after end of SMB %p\n",
- 			 new_entry, end_of_smb);
- 		return NULL;
-diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
-index cc425a616899..e15bf116c755 100644
---- a/fs/smb/client/smb2pdu.c
-+++ b/fs/smb/client/smb2pdu.c
-@@ -5073,10 +5073,10 @@ smb2_parse_query_directory(struct cifs_tcon *tcon,
++	if (tcon->fscache_acquired)
++		return 0;
++
++	mutex_lock(&tcon->fscache_lock);
++	if (tcon->fscache_acquired) {
++		mutex_unlock(&tcon->fscache_lock);
++		return 0;
++	}
++	tcon->fscache_acquired = true;
++
+ 	tcon->fscache = NULL;
+ 	switch (sa->sa_family) {
+ 	case AF_INET:
+ 	case AF_INET6:
+ 		break;
+ 	default:
++		mutex_unlock(&tcon->fscache_lock);
+ 		cifs_dbg(VFS, "Unknown network family '%d'\n", sa->sa_family);
+ 		return -EINVAL;
+ 	}
+@@ -57,6 +68,7 @@ int cifs_fscache_get_super_cookie(struct cifs_tcon *tcon)
  
- 	switch (srch_inf->info_level) {
- 	case SMB_FIND_FILE_DIRECTORY_INFO:
--		info_buf_size = sizeof(FILE_DIRECTORY_INFO) - 1;
-+		info_buf_size = sizeof(FILE_DIRECTORY_INFO);
- 		break;
- 	case SMB_FIND_FILE_ID_FULL_DIR_INFO:
--		info_buf_size = sizeof(SEARCH_ID_FULL_DIR_INFO) - 1;
-+		info_buf_size = sizeof(SEARCH_ID_FULL_DIR_INFO);
- 		break;
- 	case SMB_FIND_FILE_POSIX_INFO:
- 		/* note that posix payload are variable size */
+ 	sharename = extract_sharename(tcon->tree_name);
+ 	if (IS_ERR(sharename)) {
++		mutex_unlock(&tcon->fscache_lock);
+ 		cifs_dbg(FYI, "%s: couldn't extract sharename\n", __func__);
+ 		return PTR_ERR(sharename);
+ 	}
+@@ -90,6 +102,7 @@ int cifs_fscache_get_super_cookie(struct cifs_tcon *tcon)
+ 	kfree(key);
+ out:
+ 	kfree(sharename);
++	mutex_unlock(&tcon->fscache_lock);
+ 	return ret;
+ }
+ 
+diff --git a/fs/smb/client/misc.c b/fs/smb/client/misc.c
+index 74627d647818..0d13db80e67c 100644
+--- a/fs/smb/client/misc.c
++++ b/fs/smb/client/misc.c
+@@ -141,6 +141,9 @@ tcon_info_alloc(bool dir_leases_enabled)
+ 	atomic_set(&ret_buf->num_local_opens, 0);
+ 	atomic_set(&ret_buf->num_remote_opens, 0);
+ 	ret_buf->stats_from_time = ktime_get_real_seconds();
++#ifdef CONFIG_CIFS_FSCACHE
++	mutex_init(&ret_buf->fscache_lock);
++#endif
+ 
+ 	return ret_buf;
+ }
 diff --git a/fs/smb/client/smb2pdu.h b/fs/smb/client/smb2pdu.h
-index 8d011fedecd0..2823526b66f7 100644
+index db08194484e0..b00f707bddfc 100644
 --- a/fs/smb/client/smb2pdu.h
 +++ b/fs/smb/client/smb2pdu.h
-@@ -339,7 +339,7 @@ struct smb2_file_reparse_point_info {
+@@ -319,7 +319,7 @@ struct smb2_file_reparse_point_info {
  } __packed;
  
  struct smb2_file_network_open_info {
@@ -3023,20 +5573,11 @@ index 8d011fedecd0..2823526b66f7 100644
  		__le64 CreationTime;
  		__le64 LastAccessTime;
  		__le64 LastWriteTime;
-@@ -373,7 +373,7 @@ struct smb2_file_id_extd_directory_info {
- 	__le32 EaSize; /* EA size */
- 	__le32 ReparsePointTag; /* valid if FILE_ATTR_REPARSE_POINT set in FileAttributes */
- 	__le64 UniqueId; /* inode num - le since Samba puts ino in low 32 bit */
--	char FileName[1];
-+	char FileName[];
- } __packed; /* level 60 */
- 
- extern char smb2_padding[7];
 diff --git a/fs/smb/client/transport.c b/fs/smb/client/transport.c
-index df44acaec9ae..338b34c99b2d 100644
+index 994d70193432..ddf1a3aafee5 100644
 --- a/fs/smb/client/transport.c
 +++ b/fs/smb/client/transport.c
-@@ -931,12 +931,15 @@ cifs_sync_mid_result(struct mid_q_entry *mid, struct TCP_Server_Info *server)
+@@ -909,12 +909,15 @@ cifs_sync_mid_result(struct mid_q_entry *mid, struct TCP_Server_Info *server)
  			list_del_init(&mid->qhead);
  			mid->mid_flags |= MID_DELETED;
  		}
@@ -3052,11 +5593,90 @@ index df44acaec9ae..338b34c99b2d 100644
  	release_mid(mid);
  	return rc;
  }
+@@ -1057,9 +1060,11 @@ struct TCP_Server_Info *cifs_pick_channel(struct cifs_ses *ses)
+ 		index = (uint)atomic_inc_return(&ses->chan_seq);
+ 		index %= ses->chan_count;
+ 	}
++
++	server = ses->chans[index].server;
+ 	spin_unlock(&ses->chan_lock);
+ 
+-	return ses->chans[index].server;
++	return server;
+ }
+ 
+ int
+diff --git a/fs/squashfs/inode.c b/fs/squashfs/inode.c
+index c6e626b00546..16bd693d0b3a 100644
+--- a/fs/squashfs/inode.c
++++ b/fs/squashfs/inode.c
+@@ -48,6 +48,10 @@ static int squashfs_new_inode(struct super_block *sb, struct inode *inode,
+ 	gid_t i_gid;
+ 	int err;
+ 
++	inode->i_ino = le32_to_cpu(sqsh_ino->inode_number);
++	if (inode->i_ino == 0)
++		return -EINVAL;
++
+ 	err = squashfs_get_id(sb, le16_to_cpu(sqsh_ino->uid), &i_uid);
+ 	if (err)
+ 		return err;
+@@ -58,10 +62,9 @@ static int squashfs_new_inode(struct super_block *sb, struct inode *inode,
+ 
+ 	i_uid_write(inode, i_uid);
+ 	i_gid_write(inode, i_gid);
+-	inode->i_ino = le32_to_cpu(sqsh_ino->inode_number);
+-	inode->i_mtime.tv_sec = le32_to_cpu(sqsh_ino->mtime);
+-	inode->i_atime.tv_sec = inode->i_mtime.tv_sec;
+-	inode_set_ctime(inode, inode->i_mtime.tv_sec, 0);
++	inode_set_mtime(inode, le32_to_cpu(sqsh_ino->mtime), 0);
++	inode_set_atime(inode, inode_get_mtime_sec(inode), 0);
++	inode_set_ctime(inode, inode_get_mtime_sec(inode), 0);
+ 	inode->i_mode = le16_to_cpu(sqsh_ino->mode);
+ 	inode->i_size = 0;
+ 
+diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+index bc9f6aa2f3fe..7c2ec139c464 100644
+--- a/include/drm/drm_gem.h
++++ b/include/drm/drm_gem.h
+@@ -544,6 +544,19 @@ unsigned long drm_gem_lru_scan(struct drm_gem_lru *lru,
+ 
+ int drm_gem_evict(struct drm_gem_object *obj);
+ 
++/**
++ * drm_gem_object_is_shared_for_memory_stats - helper for shared memory stats
++ *
++ * This helper should only be used for fdinfo shared memory stats to determine
++ * if a GEM object is shared.
++ *
++ * @obj: obj in question
++ */
++static inline bool drm_gem_object_is_shared_for_memory_stats(struct drm_gem_object *obj)
++{
++	return (obj->handle_count > 1) || obj->dma_buf;
++}
++
+ #ifdef CONFIG_LOCKDEP
+ /**
+  * drm_gem_gpuva_set_lock() - Set the lock protecting accesses to the gpuva list.
+diff --git a/include/drm/ttm/ttm_pool.h b/include/drm/ttm/ttm_pool.h
+index 30a347e5aa11..4490d43c63e3 100644
+--- a/include/drm/ttm/ttm_pool.h
++++ b/include/drm/ttm/ttm_pool.h
+@@ -74,7 +74,7 @@ struct ttm_pool {
+ 	bool use_dma32;
+ 
+ 	struct {
+-		struct ttm_pool_type orders[MAX_ORDER + 1];
++		struct ttm_pool_type orders[NR_PAGE_ORDERS];
+ 	} caching[TTM_NUM_CACHING_TYPES];
+ };
+ 
 diff --git a/include/linux/etherdevice.h b/include/linux/etherdevice.h
-index a541f0c4f146..d7eef2158667 100644
+index 224645f17c33..297231854ada 100644
 --- a/include/linux/etherdevice.h
 +++ b/include/linux/etherdevice.h
-@@ -593,6 +593,31 @@ static inline void eth_hw_addr_gen(struct net_device *dev, const u8 *base_addr,
+@@ -607,6 +607,31 @@ static inline void eth_hw_addr_gen(struct net_device *dev, const u8 *base_addr,
  	eth_hw_addr_set(dev, addr);
  }
  
@@ -3088,11 +5708,307 @@ index a541f0c4f146..d7eef2158667 100644
  /**
   * eth_skb_pad - Pad buffer to mininum number of octets for Ethernet frame
   * @skb: Buffer to pad
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index bf5d0b1b16f4..3d617d0d6967 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1184,14 +1184,16 @@ static inline void page_mapcount_reset(struct page *page)
+  * a large folio, it includes the number of times this page is mapped
+  * as part of that folio.
+  *
+- * The result is undefined for pages which cannot be mapped into userspace.
+- * For example SLAB or special types of pages. See function page_has_type().
+- * They use this field in struct page differently.
++ * Will report 0 for pages which cannot be mapped into userspace, eg
++ * slab, page tables and similar.
+  */
+ static inline int page_mapcount(struct page *page)
+ {
+ 	int mapcount = atomic_read(&page->_mapcount) + 1;
+ 
++	/* Handle page_has_type() pages */
++	if (mapcount < 0)
++		mapcount = 0;
+ 	if (unlikely(PageCompound(page)))
+ 		mapcount += folio_entire_mapcount(page_folio(page));
+ 
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 0f62786269d0..1acbc6ce1fe4 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -34,6 +34,8 @@
+ 
+ #define IS_MAX_ORDER_ALIGNED(pfn) IS_ALIGNED(pfn, MAX_ORDER_NR_PAGES)
+ 
++#define NR_PAGE_ORDERS (MAX_ORDER + 1)
++
+ /*
+  * PAGE_ALLOC_COSTLY_ORDER is the order at which allocations are deemed
+  * costly to service.  That is between allocation orders which should
+@@ -95,7 +97,7 @@ static inline bool migratetype_is_mergeable(int mt)
+ }
+ 
+ #define for_each_migratetype_order(order, type) \
+-	for (order = 0; order <= MAX_ORDER; order++) \
++	for (order = 0; order < NR_PAGE_ORDERS; order++) \
+ 		for (type = 0; type < MIGRATE_TYPES; type++)
+ 
+ extern int page_group_by_mobility_disabled;
+@@ -929,7 +931,7 @@ struct zone {
+ 	CACHELINE_PADDING(_pad1_);
+ 
+ 	/* free areas of different sizes */
+-	struct free_area	free_area[MAX_ORDER + 1];
++	struct free_area	free_area[NR_PAGE_ORDERS];
+ 
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+ 	/* Pages to be accepted. All pages on the list are MAX_ORDER */
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 5c02720c53a5..a77f3a7d21d1 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -190,7 +190,6 @@ enum pageflags {
+ 
+ 	/* At least one page in this folio has the hwpoison flag set */
+ 	PG_has_hwpoisoned = PG_error,
+-	PG_hugetlb = PG_active,
+ 	PG_large_rmappable = PG_workingset, /* anon or file-backed */
+ };
+ 
+@@ -432,30 +431,51 @@ static __always_inline int TestClearPage##uname(struct page *page)	\
+ 	TESTSETFLAG(uname, lname, policy)				\
+ 	TESTCLEARFLAG(uname, lname, policy)
+ 
++#define FOLIO_TEST_FLAG_FALSE(name)					\
++static inline bool folio_test_##name(const struct folio *folio)		\
++{ return false; }
++#define FOLIO_SET_FLAG_NOOP(name)					\
++static inline void folio_set_##name(struct folio *folio) { }
++#define FOLIO_CLEAR_FLAG_NOOP(name)					\
++static inline void folio_clear_##name(struct folio *folio) { }
++#define __FOLIO_SET_FLAG_NOOP(name)					\
++static inline void __folio_set_##name(struct folio *folio) { }
++#define __FOLIO_CLEAR_FLAG_NOOP(name)					\
++static inline void __folio_clear_##name(struct folio *folio) { }
++#define FOLIO_TEST_SET_FLAG_FALSE(name)					\
++static inline bool folio_test_set_##name(struct folio *folio)		\
++{ return false; }
++#define FOLIO_TEST_CLEAR_FLAG_FALSE(name)				\
++static inline bool folio_test_clear_##name(struct folio *folio)		\
++{ return false; }
++
++#define FOLIO_FLAG_FALSE(name)						\
++FOLIO_TEST_FLAG_FALSE(name)						\
++FOLIO_SET_FLAG_NOOP(name)						\
++FOLIO_CLEAR_FLAG_NOOP(name)
++
+ #define TESTPAGEFLAG_FALSE(uname, lname)				\
+-static inline bool folio_test_##lname(const struct folio *folio) { return false; } \
++FOLIO_TEST_FLAG_FALSE(lname)						\
+ static inline int Page##uname(const struct page *page) { return 0; }
+ 
+ #define SETPAGEFLAG_NOOP(uname, lname)					\
+-static inline void folio_set_##lname(struct folio *folio) { }		\
++FOLIO_SET_FLAG_NOOP(lname)						\
+ static inline void SetPage##uname(struct page *page) {  }
+ 
+ #define CLEARPAGEFLAG_NOOP(uname, lname)				\
+-static inline void folio_clear_##lname(struct folio *folio) { }		\
++FOLIO_CLEAR_FLAG_NOOP(lname)						\
+ static inline void ClearPage##uname(struct page *page) {  }
+ 
+ #define __CLEARPAGEFLAG_NOOP(uname, lname)				\
+-static inline void __folio_clear_##lname(struct folio *folio) { }	\
++__FOLIO_CLEAR_FLAG_NOOP(lname)						\
+ static inline void __ClearPage##uname(struct page *page) {  }
+ 
+ #define TESTSETFLAG_FALSE(uname, lname)					\
+-static inline bool folio_test_set_##lname(struct folio *folio)		\
+-{ return 0; }								\
++FOLIO_TEST_SET_FLAG_FALSE(lname)					\
+ static inline int TestSetPage##uname(struct page *page) { return 0; }
+ 
+ #define TESTCLEARFLAG_FALSE(uname, lname)				\
+-static inline bool folio_test_clear_##lname(struct folio *folio)	\
+-{ return 0; }								\
++FOLIO_TEST_CLEAR_FLAG_FALSE(lname)					\
+ static inline int TestClearPage##uname(struct page *page) { return 0; }
+ 
+ #define PAGEFLAG_FALSE(uname, lname) TESTPAGEFLAG_FALSE(uname, lname)	\
+@@ -815,29 +835,6 @@ TESTPAGEFLAG_FALSE(LargeRmappable, large_rmappable)
+ 
+ #define PG_head_mask ((1UL << PG_head))
+ 
+-#ifdef CONFIG_HUGETLB_PAGE
+-int PageHuge(struct page *page);
+-SETPAGEFLAG(HugeTLB, hugetlb, PF_SECOND)
+-CLEARPAGEFLAG(HugeTLB, hugetlb, PF_SECOND)
+-
+-/**
+- * folio_test_hugetlb - Determine if the folio belongs to hugetlbfs
+- * @folio: The folio to test.
+- *
+- * Context: Any context.  Caller should have a reference on the folio to
+- * prevent it from being turned into a tail page.
+- * Return: True for hugetlbfs folios, false for anon folios or folios
+- * belonging to other filesystems.
+- */
+-static inline bool folio_test_hugetlb(struct folio *folio)
+-{
+-	return folio_test_large(folio) &&
+-		test_bit(PG_hugetlb, folio_flags(folio, 1));
+-}
+-#else
+-TESTPAGEFLAG_FALSE(Huge, hugetlb)
+-#endif
+-
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ /*
+  * PageHuge() only returns true for hugetlbfs pages, but not for
+@@ -893,34 +890,23 @@ PAGEFLAG_FALSE(HasHWPoisoned, has_hwpoisoned)
+ 	TESTSCFLAG_FALSE(HasHWPoisoned, has_hwpoisoned)
+ #endif
+ 
+-/*
+- * Check if a page is currently marked HWPoisoned. Note that this check is
+- * best effort only and inherently racy: there is no way to synchronize with
+- * failing hardware.
+- */
+-static inline bool is_page_hwpoison(struct page *page)
+-{
+-	if (PageHWPoison(page))
+-		return true;
+-	return PageHuge(page) && PageHWPoison(compound_head(page));
+-}
+-
+ /*
+  * For pages that are never mapped to userspace (and aren't PageSlab),
+  * page_type may be used.  Because it is initialised to -1, we invert the
+  * sense of the bit, so __SetPageFoo *clears* the bit used for PageFoo, and
+  * __ClearPageFoo *sets* the bit used for PageFoo.  We reserve a few high and
+- * low bits so that an underflow or overflow of page_mapcount() won't be
++ * low bits so that an underflow or overflow of _mapcount won't be
+  * mistaken for a page type value.
+  */
+ 
+ #define PAGE_TYPE_BASE	0xf0000000
+-/* Reserve		0x0000007f to catch underflows of page_mapcount */
++/* Reserve		0x0000007f to catch underflows of _mapcount */
+ #define PAGE_MAPCOUNT_RESERVE	-128
+ #define PG_buddy	0x00000080
+ #define PG_offline	0x00000100
+ #define PG_table	0x00000200
+ #define PG_guard	0x00000400
++#define PG_hugetlb	0x00000800
+ 
+ #define PageType(page, flag)						\
+ 	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
+@@ -937,35 +923,38 @@ static inline int page_has_type(struct page *page)
+ 	return page_type_has_type(page->page_type);
+ }
+ 
++#define FOLIO_TYPE_OPS(lname, fname)					\
++static __always_inline bool folio_test_##fname(const struct folio *folio)\
++{									\
++	return folio_test_type(folio, PG_##lname);			\
++}									\
++static __always_inline void __folio_set_##fname(struct folio *folio)	\
++{									\
++	VM_BUG_ON_FOLIO(!folio_test_type(folio, 0), folio);		\
++	folio->page.page_type &= ~PG_##lname;				\
++}									\
++static __always_inline void __folio_clear_##fname(struct folio *folio)	\
++{									\
++	VM_BUG_ON_FOLIO(!folio_test_##fname(folio), folio);		\
++	folio->page.page_type |= PG_##lname;				\
++}
++
+ #define PAGE_TYPE_OPS(uname, lname, fname)				\
++FOLIO_TYPE_OPS(lname, fname)						\
+ static __always_inline int Page##uname(const struct page *page)		\
+ {									\
+ 	return PageType(page, PG_##lname);				\
+ }									\
+-static __always_inline int folio_test_##fname(const struct folio *folio)\
+-{									\
+-	return folio_test_type(folio, PG_##lname);			\
+-}									\
+ static __always_inline void __SetPage##uname(struct page *page)		\
+ {									\
+ 	VM_BUG_ON_PAGE(!PageType(page, 0), page);			\
+ 	page->page_type &= ~PG_##lname;					\
+ }									\
+-static __always_inline void __folio_set_##fname(struct folio *folio)	\
+-{									\
+-	VM_BUG_ON_FOLIO(!folio_test_type(folio, 0), folio);		\
+-	folio->page.page_type &= ~PG_##lname;				\
+-}									\
+ static __always_inline void __ClearPage##uname(struct page *page)	\
+ {									\
+ 	VM_BUG_ON_PAGE(!Page##uname(page), page);			\
+ 	page->page_type |= PG_##lname;					\
+-}									\
+-static __always_inline void __folio_clear_##fname(struct folio *folio)	\
+-{									\
+-	VM_BUG_ON_FOLIO(!folio_test_##fname(folio), folio);		\
+-	folio->page.page_type |= PG_##lname;				\
+-}									\
++}
+ 
+ /*
+  * PageBuddy() indicates that the page is free and in the buddy system
+@@ -1012,6 +1001,37 @@ PAGE_TYPE_OPS(Table, table, pgtable)
+  */
+ PAGE_TYPE_OPS(Guard, guard, guard)
+ 
++#ifdef CONFIG_HUGETLB_PAGE
++FOLIO_TYPE_OPS(hugetlb, hugetlb)
++#else
++FOLIO_TEST_FLAG_FALSE(hugetlb)
++#endif
++
++/**
++ * PageHuge - Determine if the page belongs to hugetlbfs
++ * @page: The page to test.
++ *
++ * Context: Any context.
++ * Return: True for hugetlbfs pages, false for anon pages or pages
++ * belonging to other filesystems.
++ */
++static inline bool PageHuge(const struct page *page)
++{
++	return folio_test_hugetlb(page_folio(page));
++}
++
++/*
++ * Check if a page is currently marked HWPoisoned. Note that this check is
++ * best effort only and inherently racy: there is no way to synchronize with
++ * failing hardware.
++ */
++static inline bool is_page_hwpoison(struct page *page)
++{
++	if (PageHWPoison(page))
++		return true;
++	return PageHuge(page) && PageHWPoison(compound_head(page));
++}
++
+ extern bool is_free_buddy_page(struct page *page);
+ 
+ PAGEFLAG(Isolated, isolated, PF_ANY);
+@@ -1078,7 +1098,7 @@ static __always_inline void __ClearPageAnonExclusive(struct page *page)
+  */
+ #define PAGE_FLAGS_SECOND						\
+ 	(0xffUL /* order */		| 1UL << PG_has_hwpoisoned |	\
+-	 1UL << PG_hugetlb		| 1UL << PG_large_rmappable)
++	 1UL << PG_large_rmappable)
+ 
+ #define PAGE_FLAGS_PRIVATE				\
+ 	(1UL << PG_private | 1UL << PG_private_2)
 diff --git a/include/net/af_unix.h b/include/net/af_unix.h
-index 16d6936baa2f..e7d71a516bd4 100644
+index d1b07ddbe677..77bf30203d3c 100644
 --- a/include/net/af_unix.h
 +++ b/include/net/af_unix.h
-@@ -79,6 +79,9 @@ enum unix_socket_lock_class {
+@@ -77,6 +77,9 @@ enum unix_socket_lock_class {
  	U_LOCK_NORMAL,
  	U_LOCK_SECOND,	/* for double locking, see unix_state_double_lock(). */
  	U_LOCK_DIAG, /* used while dumping icons, see sk_diag_dump_icons(). */
@@ -3102,11 +6018,26 @@ index 16d6936baa2f..e7d71a516bd4 100644
  };
  
  static inline void unix_state_lock_nested(struct sock *sk,
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index 103b290d6efb..e6f659ce534e 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -1865,6 +1865,10 @@ void hci_conn_del_sysfs(struct hci_conn *conn);
+ #define privacy_mode_capable(dev) (use_ll_privacy(dev) && \
+ 				   (hdev->commands[39] & 0x04))
+ 
++#define read_key_size_capable(dev) \
++	((dev)->commands[20] & 0x10 && \
++	 !test_bit(HCI_QUIRK_BROKEN_READ_ENC_KEY_SIZE, &hdev->quirks))
++
+ /* Use enhanced synchronous connection if command is supported and its quirk
+  * has not been set.
+  */
 diff --git a/include/net/macsec.h b/include/net/macsec.h
-index 65c93959c2dc..dd578d193f9a 100644
+index ebf9bc54036a..75340c3e0c8b 100644
 --- a/include/net/macsec.h
 +++ b/include/net/macsec.h
-@@ -302,6 +302,7 @@ struct macsec_ops {
+@@ -303,6 +303,7 @@ struct macsec_ops {
  	int (*mdo_get_tx_sa_stats)(struct macsec_context *ctx);
  	int (*mdo_get_rx_sc_stats)(struct macsec_context *ctx);
  	int (*mdo_get_rx_sa_stats)(struct macsec_context *ctx);
@@ -3115,10 +6046,10 @@ index 65c93959c2dc..dd578d193f9a 100644
  
  void macsec_pn_wrapped(struct macsec_secy *secy, struct macsec_tx_sa *tx_sa);
 diff --git a/include/net/sock.h b/include/net/sock.h
-index 60577751ea9e..77298c74822a 100644
+index 25780942ec8b..53b81e0a8981 100644
 --- a/include/net/sock.h
 +++ b/include/net/sock.h
-@@ -1483,33 +1483,36 @@ sk_memory_allocated(const struct sock *sk)
+@@ -1458,33 +1458,36 @@ sk_memory_allocated(const struct sock *sk)
  
  /* 1 MB per cpu, in page units */
  #define SK_MEMORY_PCPU_RESERVE (1 << (20 - PAGE_SHIFT))
@@ -3173,11 +6104,37 @@ index 60577751ea9e..77298c74822a 100644
  }
  
  #define SK_ALLOC_PERCPU_COUNTER_BATCH 16
+diff --git a/include/net/tls.h b/include/net/tls.h
+index 5fdd5dd251df..2ad28545b15f 100644
+--- a/include/net/tls.h
++++ b/include/net/tls.h
+@@ -110,7 +110,8 @@ struct tls_strparser {
+ 	u32 stopped : 1;
+ 	u32 copy_mode : 1;
+ 	u32 mixed_decrypted : 1;
+-	u32 msg_ready : 1;
++
++	bool msg_ready;
+ 
+ 	struct strp_msg stm;
+ 
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index 1478b9dd05fa..e010618f9326 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -135,6 +135,7 @@ IF_HAVE_PG_ARCH_X(arch_3)
+ #define DEF_PAGETYPE_NAME(_name) { PG_##_name, __stringify(_name) }
+ 
+ #define __def_pagetype_names						\
++	DEF_PAGETYPE_NAME(hugetlb),					\
+ 	DEF_PAGETYPE_NAME(offline),					\
+ 	DEF_PAGETYPE_NAME(guard),					\
+ 	DEF_PAGETYPE_NAME(table),					\
 diff --git a/init/Kconfig b/init/Kconfig
-index b63dce6706c5..537f01eba2e6 100644
+index 0f700e8f01bb..e403a2925635 100644
 --- a/init/Kconfig
 +++ b/init/Kconfig
-@@ -1920,11 +1920,11 @@ config RUST
+@@ -1894,11 +1894,11 @@ config RUST
  	bool "Rust support"
  	depends on HAVE_RUST
  	depends on RUST_IS_AVAILABLE
@@ -3204,10 +6161,10 @@ index c5a9fcd2d622..29b2cd00df2c 100644
  	DEFINE(SPINLOCK_SIZE, sizeof(spinlock_t));
  #ifdef CONFIG_LRU_GEN
 diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 2c44dd12a158..e0e09b700b43 100644
+index 92429104bbf8..2dd2fd300e91 100644
 --- a/kernel/cpu.c
 +++ b/kernel/cpu.c
-@@ -2788,8 +2788,8 @@ enum cpu_mitigations {
+@@ -3208,8 +3208,8 @@ enum cpu_mitigations {
  };
  
  static enum cpu_mitigations cpu_mitigations __ro_after_init =
@@ -3218,14 +6175,41 @@ index 2c44dd12a158..e0e09b700b43 100644
  
  static int __init mitigations_parse_cmdline(char *arg)
  {
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 2f675ef045d4..cef8e07bc528 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -660,7 +660,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_OFFSET(list_head, prev);
+ 	VMCOREINFO_OFFSET(vmap_area, va_start);
+ 	VMCOREINFO_OFFSET(vmap_area, list);
+-	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER + 1);
++	VMCOREINFO_LENGTH(zone.free_area, NR_PAGE_ORDERS);
+ 	log_buf_vmcoreinfo_setup();
+ 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
+ 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
+@@ -675,11 +675,10 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_NUMBER(PG_head_mask);
+ #define PAGE_BUDDY_MAPCOUNT_VALUE	(~PG_buddy)
+ 	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+-#ifdef CONFIG_HUGETLB_PAGE
+-	VMCOREINFO_NUMBER(PG_hugetlb);
++#define PAGE_HUGETLB_MAPCOUNT_VALUE	(~PG_hugetlb)
++	VMCOREINFO_NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE);
+ #define PAGE_OFFLINE_MAPCOUNT_VALUE	(~PG_offline)
+ 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
+-#endif
+ 
+ #ifdef CONFIG_KALLSYMS
+ 	VMCOREINFO_SYMBOL(kallsyms_names);
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 85617928041c..7e9a5919299b 100644
+index 177ce7438db6..2eab916b504b 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -662,6 +662,15 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+@@ -727,6 +727,15 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
  		} else if (anon_vma_fork(tmp, mpnt))
  			goto fail_nomem_anon_vma_fork;
- 		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
+ 		vm_flags_clear(tmp, VM_LOCKED_MASK);
 +		/*
 +		 * Copy/update hugetlb private vma information.
 +		 */
@@ -3238,7 +6222,7 @@ index 85617928041c..7e9a5919299b 100644
  		file = tmp->vm_file;
  		if (file) {
  			struct address_space *mapping = file->f_mapping;
-@@ -678,12 +687,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+@@ -743,12 +752,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
  			i_mmap_unlock_write(mapping);
  		}
  
@@ -3249,9 +6233,9 @@ index 85617928041c..7e9a5919299b 100644
 -			hugetlb_dup_vma_private(tmp);
 -
  		/* Link the vma into the MT */
- 		mas.index = tmp->vm_start;
- 		mas.last = tmp->vm_end - 1;
-@@ -695,9 +698,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+ 		if (vma_iter_bulk_store(&vmi, tmp))
+ 			goto fail_nomem_vmi_store;
+@@ -757,9 +760,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
  		if (!(tmp->vm_flags & VM_WIPEONFORK))
  			retval = copy_page_range(tmp, mpnt);
  
@@ -3261,11 +6245,97 @@ index 85617928041c..7e9a5919299b 100644
  		if (retval)
  			goto loop_out;
  	}
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 69fe62126a28..397ef27c9bdb 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -707,15 +707,21 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+  *
+  * XXX could add max_slice to the augmented data to track this.
+  */
+-static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity *se)
++static s64 entity_lag(u64 avruntime, struct sched_entity *se)
+ {
+-	s64 lag, limit;
++	s64 vlag, limit;
++
++	vlag = avruntime - se->vruntime;
++	limit = calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se);
+ 
++	return clamp(vlag, -limit, limit);
++}
++
++static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity *se)
++{
+ 	SCHED_WARN_ON(!se->on_rq);
+-	lag = avg_vruntime(cfs_rq) - se->vruntime;
+ 
+-	limit = calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se);
+-	se->vlag = clamp(lag, -limit, limit);
++	se->vlag = entity_lag(avg_vruntime(cfs_rq), se);
+ }
+ 
+ /*
+@@ -3626,11 +3632,10 @@ static inline void
+ dequeue_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) { }
+ #endif
+ 
+-static void reweight_eevdf(struct cfs_rq *cfs_rq, struct sched_entity *se,
++static void reweight_eevdf(struct sched_entity *se, u64 avruntime,
+ 			   unsigned long weight)
+ {
+ 	unsigned long old_weight = se->load.weight;
+-	u64 avruntime = avg_vruntime(cfs_rq);
+ 	s64 vlag, vslice;
+ 
+ 	/*
+@@ -3711,7 +3716,7 @@ static void reweight_eevdf(struct cfs_rq *cfs_rq, struct sched_entity *se,
+ 	 *	   = V  - vl'
+ 	 */
+ 	if (avruntime != se->vruntime) {
+-		vlag = (s64)(avruntime - se->vruntime);
++		vlag = entity_lag(avruntime, se);
+ 		vlag = div_s64(vlag * old_weight, weight);
+ 		se->vruntime = avruntime - vlag;
+ 	}
+@@ -3737,25 +3742,26 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+ 			    unsigned long weight)
+ {
+ 	bool curr = cfs_rq->curr == se;
++	u64 avruntime;
+ 
+ 	if (se->on_rq) {
+ 		/* commit outstanding execution time */
+-		if (curr)
+-			update_curr(cfs_rq);
+-		else
++		update_curr(cfs_rq);
++		avruntime = avg_vruntime(cfs_rq);
++		if (!curr)
+ 			__dequeue_entity(cfs_rq, se);
+ 		update_load_sub(&cfs_rq->load, se->load.weight);
+ 	}
+ 	dequeue_load_avg(cfs_rq, se);
+ 
+-	if (!se->on_rq) {
++	if (se->on_rq) {
++		reweight_eevdf(se, avruntime, weight);
++	} else {
+ 		/*
+ 		 * Because we keep se->vlag = V - v_i, while: lag_i = w_i*(V - v_i),
+ 		 * we need to scale se->vlag when w_i changes.
+ 		 */
+ 		se->vlag = div_s64(se->vlag * se->load.weight, weight);
+-	} else {
+-		reweight_eevdf(cfs_rq, se, weight);
+ 	}
+ 
+ 	update_load_set(&se->load, weight);
 diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index 79e894cf8406..77eb944b7a6b 100644
+index 2f5aa851834e..15a055865d10 100644
 --- a/lib/stackdepot.c
 +++ b/lib/stackdepot.c
-@@ -466,10 +466,10 @@ depot_stack_handle_t __stack_depot_save(unsigned long *entries,
+@@ -402,10 +402,10 @@ depot_stack_handle_t __stack_depot_save(unsigned long *entries,
  		/*
  		 * Zero out zone modifiers, as we don't have specific zone
  		 * requirements. Keep the flags related to allocation in atomic
@@ -3276,10 +6346,467 @@ index 79e894cf8406..77eb944b7a6b 100644
 -		alloc_flags &= (GFP_ATOMIC | GFP_KERNEL);
 +		alloc_flags &= (GFP_ATOMIC | GFP_KERNEL | __GFP_NOLOCKDEP);
  		alloc_flags |= __GFP_NOWARN;
- 		page = alloc_pages(alloc_flags, STACK_ALLOC_ORDER);
+ 		page = alloc_pages(alloc_flags, DEPOT_POOL_ORDER);
  		if (page)
+diff --git a/lib/test_meminit.c b/lib/test_meminit.c
+index 0ae35223d773..0dc173849a54 100644
+--- a/lib/test_meminit.c
++++ b/lib/test_meminit.c
+@@ -93,7 +93,7 @@ static int __init test_pages(int *total_failures)
+ 	int failures = 0, num_tests = 0;
+ 	int i;
+ 
+-	for (i = 0; i <= MAX_ORDER; i++)
++	for (i = 0; i < NR_PAGE_ORDERS; i++)
+ 		num_tests += do_alloc_pages_order(i, &failures);
+ 
+ 	REPORT_FAILURES_IN_FN();
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 5a3c644c978e..61c741f11e9b 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -2225,7 +2225,7 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+ 
+ 	/* Direct compactor: Is a suitable page free? */
+ 	ret = COMPACT_NO_SUITABLE_PAGE;
+-	for (order = cc->order; order <= MAX_ORDER; order++) {
++	for (order = cc->order; order < NR_PAGE_ORDERS; order++) {
+ 		struct free_area *area = &cc->zone->free_area[order];
+ 		bool can_steal;
+ 
+diff --git a/mm/gup.c b/mm/gup.c
+index 2f8a2d89fde1..cfc0a66d951b 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1204,6 +1204,22 @@ static long __get_user_pages(struct mm_struct *mm,
+ 
+ 		/* first iteration or cross vma bound */
+ 		if (!vma || start >= vma->vm_end) {
++			/*
++			 * MADV_POPULATE_(READ|WRITE) wants to handle VMA
++			 * lookups+error reporting differently.
++			 */
++			if (gup_flags & FOLL_MADV_POPULATE) {
++				vma = vma_lookup(mm, start);
++				if (!vma) {
++					ret = -ENOMEM;
++					goto out;
++				}
++				if (check_vma_flags(vma, gup_flags)) {
++					ret = -EINVAL;
++					goto out;
++				}
++				goto retry;
++			}
+ 			vma = gup_vma_lookup(mm, start);
+ 			if (!vma && in_gate_area(mm, start)) {
+ 				ret = get_gate_page(mm, start & PAGE_MASK,
+@@ -1670,35 +1686,35 @@ long populate_vma_page_range(struct vm_area_struct *vma,
+ }
+ 
+ /*
+- * faultin_vma_page_range() - populate (prefault) page tables inside the
+- *			      given VMA range readable/writable
++ * faultin_page_range() - populate (prefault) page tables inside the
++ *			  given range readable/writable
+  *
+  * This takes care of mlocking the pages, too, if VM_LOCKED is set.
+  *
+- * @vma: target vma
++ * @mm: the mm to populate page tables in
+  * @start: start address
+  * @end: end address
+  * @write: whether to prefault readable or writable
+  * @locked: whether the mmap_lock is still held
+  *
+- * Returns either number of processed pages in the vma, or a negative error
+- * code on error (see __get_user_pages()).
++ * Returns either number of processed pages in the MM, or a negative error
++ * code on error (see __get_user_pages()). Note that this function reports
++ * errors related to VMAs, such as incompatible mappings, as expected by
++ * MADV_POPULATE_(READ|WRITE).
+  *
+- * vma->vm_mm->mmap_lock must be held. The range must be page-aligned and
+- * covered by the VMA. If it's released, *@locked will be set to 0.
++ * The range must be page-aligned.
++ *
++ * mm->mmap_lock must be held. If it's released, *@locked will be set to 0.
+  */
+-long faultin_vma_page_range(struct vm_area_struct *vma, unsigned long start,
+-			    unsigned long end, bool write, int *locked)
++long faultin_page_range(struct mm_struct *mm, unsigned long start,
++			unsigned long end, bool write, int *locked)
+ {
+-	struct mm_struct *mm = vma->vm_mm;
+ 	unsigned long nr_pages = (end - start) / PAGE_SIZE;
+ 	int gup_flags;
+ 	long ret;
+ 
+ 	VM_BUG_ON(!PAGE_ALIGNED(start));
+ 	VM_BUG_ON(!PAGE_ALIGNED(end));
+-	VM_BUG_ON_VMA(start < vma->vm_start, vma);
+-	VM_BUG_ON_VMA(end > vma->vm_end, vma);
+ 	mmap_assert_locked(mm);
+ 
+ 	/*
+@@ -1710,19 +1726,13 @@ long faultin_vma_page_range(struct vm_area_struct *vma, unsigned long start,
+ 	 *		  a poisoned page.
+ 	 * !FOLL_FORCE: Require proper access permissions.
+ 	 */
+-	gup_flags = FOLL_TOUCH | FOLL_HWPOISON | FOLL_UNLOCKABLE;
++	gup_flags = FOLL_TOUCH | FOLL_HWPOISON | FOLL_UNLOCKABLE |
++		    FOLL_MADV_POPULATE;
+ 	if (write)
+ 		gup_flags |= FOLL_WRITE;
+ 
+-	/*
+-	 * We want to report -EINVAL instead of -EFAULT for any permission
+-	 * problems or incompatible mappings.
+-	 */
+-	if (check_vma_flags(vma, gup_flags))
+-		return -EINVAL;
+-
+-	ret = __get_user_pages(mm, start, nr_pages, gup_flags,
+-			       NULL, locked);
++	ret = __get_user_pages_locked(mm, start, nr_pages, NULL, locked,
++				      gup_flags);
+ 	lru_add_drain();
+ 	return ret;
+ }
+@@ -2227,12 +2237,11 @@ static bool is_valid_gup_args(struct page **pages, int *locked,
+ 	/*
+ 	 * These flags not allowed to be specified externally to the gup
+ 	 * interfaces:
+-	 * - FOLL_PIN/FOLL_TRIED/FOLL_FAST_ONLY are internal only
++	 * - FOLL_TOUCH/FOLL_PIN/FOLL_TRIED/FOLL_FAST_ONLY are internal only
+ 	 * - FOLL_REMOTE is internal only and used on follow_page()
+ 	 * - FOLL_UNLOCKABLE is internal only and used if locked is !NULL
+ 	 */
+-	if (WARN_ON_ONCE(gup_flags & (FOLL_PIN | FOLL_TRIED | FOLL_UNLOCKABLE |
+-				      FOLL_REMOTE | FOLL_FAST_ONLY)))
++	if (WARN_ON_ONCE(gup_flags & INTERNAL_GUP_FLAGS))
+ 		return false;
+ 
+ 	gup_flags |= to_set;
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index a17950160395..555cf1a80eae 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1630,7 +1630,7 @@ static inline void __clear_hugetlb_destructor(struct hstate *h,
+ {
+ 	lockdep_assert_held(&hugetlb_lock);
+ 
+-	folio_clear_hugetlb(folio);
++	__folio_clear_hugetlb(folio);
+ }
+ 
+ /*
+@@ -1717,7 +1717,7 @@ static void add_hugetlb_folio(struct hstate *h, struct folio *folio,
+ 		h->surplus_huge_pages_node[nid]++;
+ 	}
+ 
+-	folio_set_hugetlb(folio);
++	__folio_set_hugetlb(folio);
+ 	folio_change_private(folio, NULL);
+ 	/*
+ 	 * We have to set hugetlb_vmemmap_optimized again as above
+@@ -1971,7 +1971,7 @@ static void __prep_new_hugetlb_folio(struct hstate *h, struct folio *folio)
+ {
+ 	hugetlb_vmemmap_optimize(h, &folio->page);
+ 	INIT_LIST_HEAD(&folio->lru);
+-	folio_set_hugetlb(folio);
++	__folio_set_hugetlb(folio);
+ 	hugetlb_set_folio_subpool(folio, NULL);
+ 	set_hugetlb_cgroup(folio, NULL);
+ 	set_hugetlb_cgroup_rsvd(folio, NULL);
+@@ -2074,22 +2074,6 @@ static bool prep_compound_gigantic_folio_for_demote(struct folio *folio,
+ 	return __prep_compound_gigantic_folio(folio, order, true);
+ }
+ 
+-/*
+- * PageHuge() only returns true for hugetlbfs pages, but not for normal or
+- * transparent huge pages.  See the PageTransHuge() documentation for more
+- * details.
+- */
+-int PageHuge(struct page *page)
+-{
+-	struct folio *folio;
+-
+-	if (!PageCompound(page))
+-		return 0;
+-	folio = page_folio(page);
+-	return folio_test_hugetlb(folio);
+-}
+-EXPORT_SYMBOL_GPL(PageHuge);
+-
+ /*
+  * Find and lock address space (mapping) in write mode.
+  *
+@@ -3153,9 +3137,12 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
+ 
+ 		rsv_adjust = hugepage_subpool_put_pages(spool, 1);
+ 		hugetlb_acct_memory(h, -rsv_adjust);
+-		if (deferred_reserve)
++		if (deferred_reserve) {
++			spin_lock_irq(&hugetlb_lock);
+ 			hugetlb_cgroup_uncharge_folio_rsvd(hstate_index(h),
+ 					pages_per_huge_page(h), folio);
++			spin_unlock_irq(&hugetlb_lock);
++		}
+ 	}
+ 	return folio;
+ 
+diff --git a/mm/internal.h b/mm/internal.h
+index 30cf724ddbce..abed947f784b 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -581,9 +581,8 @@ struct anon_vma *folio_anon_vma(struct folio *folio);
+ void unmap_mapping_folio(struct folio *folio);
+ extern long populate_vma_page_range(struct vm_area_struct *vma,
+ 		unsigned long start, unsigned long end, int *locked);
+-extern long faultin_vma_page_range(struct vm_area_struct *vma,
+-				   unsigned long start, unsigned long end,
+-				   bool write, int *locked);
++extern long faultin_page_range(struct mm_struct *mm, unsigned long start,
++		unsigned long end, bool write, int *locked);
+ extern bool mlock_future_ok(struct mm_struct *mm, unsigned long flags,
+ 			       unsigned long bytes);
+ /*
+@@ -962,8 +961,14 @@ enum {
+ 	FOLL_FAST_ONLY = 1 << 20,
+ 	/* allow unlocking the mmap lock */
+ 	FOLL_UNLOCKABLE = 1 << 21,
++	/* VMA lookup+checks compatible with MADV_POPULATE_(READ|WRITE) */
++	FOLL_MADV_POPULATE = 1 << 22,
+ };
+ 
++#define INTERNAL_GUP_FLAGS (FOLL_TOUCH | FOLL_TRIED | FOLL_REMOTE | FOLL_PIN | \
++			    FOLL_FAST_ONLY | FOLL_UNLOCKABLE | \
++			    FOLL_MADV_POPULATE)
++
+ /*
+  * Indicates for which pages that are write-protected in the page table,
+  * whether GUP has to trigger unsharing via FAULT_FLAG_UNSHARE such that the
+diff --git a/mm/kmsan/init.c b/mm/kmsan/init.c
+index ffedf4dbc49d..103e2e88ea03 100644
+--- a/mm/kmsan/init.c
++++ b/mm/kmsan/init.c
+@@ -96,7 +96,7 @@ void __init kmsan_init_shadow(void)
+ struct metadata_page_pair {
+ 	struct page *shadow, *origin;
+ };
+-static struct metadata_page_pair held_back[MAX_ORDER + 1] __initdata;
++static struct metadata_page_pair held_back[NR_PAGE_ORDERS] __initdata;
+ 
+ /*
+  * Eager metadata allocation. When the memblock allocator is freeing pages to
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 4dded5d27e7e..98fdb9288a68 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -917,27 +917,14 @@ static long madvise_populate(struct vm_area_struct *vma,
+ {
+ 	const bool write = behavior == MADV_POPULATE_WRITE;
+ 	struct mm_struct *mm = vma->vm_mm;
+-	unsigned long tmp_end;
+ 	int locked = 1;
+ 	long pages;
+ 
+ 	*prev = vma;
+ 
+ 	while (start < end) {
+-		/*
+-		 * We might have temporarily dropped the lock. For example,
+-		 * our VMA might have been split.
+-		 */
+-		if (!vma || start >= vma->vm_end) {
+-			vma = vma_lookup(mm, start);
+-			if (!vma)
+-				return -ENOMEM;
+-		}
+-
+-		tmp_end = min_t(unsigned long, end, vma->vm_end);
+ 		/* Populate (prefault) page tables readable/writable. */
+-		pages = faultin_vma_page_range(vma, start, tmp_end, write,
+-					       &locked);
++		pages = faultin_page_range(mm, start, end, write, &locked);
+ 		if (!locked) {
+ 			mmap_read_lock(mm);
+ 			locked = 1;
+@@ -958,7 +945,7 @@ static long madvise_populate(struct vm_area_struct *vma,
+ 				pr_warn_once("%s: unhandled return value: %ld\n",
+ 					     __func__, pages);
+ 				fallthrough;
+-			case -ENOMEM:
++			case -ENOMEM: /* No VMA or out of memory. */
+ 				return -ENOMEM;
+ 			}
+ 		}
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index ab7141735012..6b4c30fcae1c 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1570,7 +1570,7 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
+ 	struct page *page;
+ 
+ 	/* Find a page of the appropriate size in the preferred list */
+-	for (current_order = order; current_order <= MAX_ORDER; ++current_order) {
++	for (current_order = order; current_order < NR_PAGE_ORDERS; ++current_order) {
+ 		area = &(zone->free_area[current_order]);
+ 		page = get_page_from_free_area(area, migratetype);
+ 		if (!page)
+@@ -1940,7 +1940,7 @@ static bool unreserve_highatomic_pageblock(const struct alloc_context *ac,
+ 			continue;
+ 
+ 		spin_lock_irqsave(&zone->lock, flags);
+-		for (order = 0; order <= MAX_ORDER; order++) {
++		for (order = 0; order < NR_PAGE_ORDERS; order++) {
+ 			struct free_area *area = &(zone->free_area[order]);
+ 
+ 			page = get_page_from_free_area(area, MIGRATE_HIGHATOMIC);
+@@ -2050,8 +2050,7 @@ __rmqueue_fallback(struct zone *zone, int order, int start_migratetype,
+ 	return false;
+ 
+ find_smallest:
+-	for (current_order = order; current_order <= MAX_ORDER;
+-							current_order++) {
++	for (current_order = order; current_order < NR_PAGE_ORDERS; current_order++) {
+ 		area = &(zone->free_area[current_order]);
+ 		fallback_mt = find_suitable_fallback(area, current_order,
+ 				start_migratetype, false, &can_steal);
+@@ -2884,7 +2883,7 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
+ 		return true;
+ 
+ 	/* For a high-order request, check at least one suitable page is free */
+-	for (o = order; o <= MAX_ORDER; o++) {
++	for (o = order; o < NR_PAGE_ORDERS; o++) {
+ 		struct free_area *area = &z->free_area[o];
+ 		int mt;
+ 
+@@ -6442,7 +6441,7 @@ bool is_free_buddy_page(struct page *page)
+ 	unsigned long pfn = page_to_pfn(page);
+ 	unsigned int order;
+ 
+-	for (order = 0; order <= MAX_ORDER; order++) {
++	for (order = 0; order < NR_PAGE_ORDERS; order++) {
+ 		struct page *page_head = page - (pfn & ((1 << order) - 1));
+ 
+ 		if (PageBuddy(page_head) &&
+@@ -6501,7 +6500,7 @@ bool take_page_off_buddy(struct page *page)
+ 	bool ret = false;
+ 
+ 	spin_lock_irqsave(&zone->lock, flags);
+-	for (order = 0; order <= MAX_ORDER; order++) {
++	for (order = 0; order < NR_PAGE_ORDERS; order++) {
+ 		struct page *page_head = page - (pfn & ((1 << order) - 1));
+ 		int page_order = buddy_order(page_head);
+ 
+diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+index b021f482a4cb..66369cc5279b 100644
+--- a/mm/page_reporting.c
++++ b/mm/page_reporting.c
+@@ -276,7 +276,7 @@ page_reporting_process_zone(struct page_reporting_dev_info *prdev,
+ 		return err;
+ 
+ 	/* Process each free list starting from lowest order/mt */
+-	for (order = page_reporting_order; order <= MAX_ORDER; order++) {
++	for (order = page_reporting_order; order < NR_PAGE_ORDERS; order++) {
+ 		for (mt = 0; mt < MIGRATE_TYPES; mt++) {
+ 			/* We do not pull pages from the isolate free list */
+ 			if (is_migrate_isolate(mt))
+diff --git a/mm/show_mem.c b/mm/show_mem.c
+index 4b888b18bdde..b896e54e3a26 100644
+--- a/mm/show_mem.c
++++ b/mm/show_mem.c
+@@ -355,8 +355,8 @@ static void show_free_areas(unsigned int filter, nodemask_t *nodemask, int max_z
+ 
+ 	for_each_populated_zone(zone) {
+ 		unsigned int order;
+-		unsigned long nr[MAX_ORDER + 1], flags, total = 0;
+-		unsigned char types[MAX_ORDER + 1];
++		unsigned long nr[NR_PAGE_ORDERS], flags, total = 0;
++		unsigned char types[NR_PAGE_ORDERS];
+ 
+ 		if (zone_idx(zone) > max_zone_idx)
+ 			continue;
+@@ -366,7 +366,7 @@ static void show_free_areas(unsigned int filter, nodemask_t *nodemask, int max_z
+ 		printk(KERN_CONT "%s: ", zone->name);
+ 
+ 		spin_lock_irqsave(&zone->lock, flags);
+-		for (order = 0; order <= MAX_ORDER; order++) {
++		for (order = 0; order < NR_PAGE_ORDERS; order++) {
+ 			struct free_area *area = &zone->free_area[order];
+ 			int type;
+ 
+@@ -380,7 +380,7 @@ static void show_free_areas(unsigned int filter, nodemask_t *nodemask, int max_z
+ 			}
+ 		}
+ 		spin_unlock_irqrestore(&zone->lock, flags);
+-		for (order = 0; order <= MAX_ORDER; order++) {
++		for (order = 0; order < NR_PAGE_ORDERS; order++) {
+ 			printk(KERN_CONT "%lu*%lukB ",
+ 			       nr[order], K(1UL) << order);
+ 			if (nr[order])
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 00e81e99c6ee..e9616c4ca12d 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1055,7 +1055,7 @@ static void fill_contig_page_info(struct zone *zone,
+ 	info->free_blocks_total = 0;
+ 	info->free_blocks_suitable = 0;
+ 
+-	for (order = 0; order <= MAX_ORDER; order++) {
++	for (order = 0; order < NR_PAGE_ORDERS; order++) {
+ 		unsigned long blocks;
+ 
+ 		/*
+@@ -1471,7 +1471,7 @@ static void frag_show_print(struct seq_file *m, pg_data_t *pgdat,
+ 	int order;
+ 
+ 	seq_printf(m, "Node %d, zone %8s ", pgdat->node_id, zone->name);
+-	for (order = 0; order <= MAX_ORDER; ++order)
++	for (order = 0; order < NR_PAGE_ORDERS; ++order)
+ 		/*
+ 		 * Access to nr_free is lockless as nr_free is used only for
+ 		 * printing purposes. Use data_race to avoid KCSAN warning.
+@@ -1500,7 +1500,7 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
+ 					pgdat->node_id,
+ 					zone->name,
+ 					migratetype_names[mtype]);
+-		for (order = 0; order <= MAX_ORDER; ++order) {
++		for (order = 0; order < NR_PAGE_ORDERS; ++order) {
+ 			unsigned long freecount = 0;
+ 			struct free_area *area;
+ 			struct list_head *curr;
+@@ -1540,7 +1540,7 @@ static void pagetypeinfo_showfree(struct seq_file *m, void *arg)
+ 
+ 	/* Print header */
+ 	seq_printf(m, "%-43s ", "Free pages count per migrate type at order");
+-	for (order = 0; order <= MAX_ORDER; ++order)
++	for (order = 0; order < NR_PAGE_ORDERS; ++order)
+ 		seq_printf(m, "%6d ", order);
+ 	seq_putc(m, '\n');
+ 
+@@ -2176,7 +2176,7 @@ static void unusable_show_print(struct seq_file *m,
+ 	seq_printf(m, "Node %d, zone %8s ",
+ 				pgdat->node_id,
+ 				zone->name);
+-	for (order = 0; order <= MAX_ORDER; ++order) {
++	for (order = 0; order < NR_PAGE_ORDERS; ++order) {
+ 		fill_contig_page_info(zone, order, &info);
+ 		index = unusable_free_index(order, &info);
+ 		seq_printf(m, "%d.%03d ", index / 1000, index % 1000);
+@@ -2228,7 +2228,7 @@ static void extfrag_show_print(struct seq_file *m,
+ 	seq_printf(m, "Node %d, zone %8s ",
+ 				pgdat->node_id,
+ 				zone->name);
+-	for (order = 0; order <= MAX_ORDER; ++order) {
++	for (order = 0; order < NR_PAGE_ORDERS; ++order) {
+ 		fill_contig_page_info(zone, order, &info);
+ 		index = __fragmentation_index(order, &info);
+ 		seq_printf(m, "%2d.%03d ", index / 1000, index % 1000);
 diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
-index 6b4c25a92377..0bffac238b61 100644
+index 5db805d5f74d..9d11d26e46c0 100644
 --- a/net/ax25/af_ax25.c
 +++ b/net/ax25/af_ax25.c
 @@ -103,7 +103,7 @@ static void ax25_kill_by_device(struct net_device *dev)
@@ -3291,11 +6818,34 @@ index 6b4c25a92377..0bffac238b61 100644
  				ax25_dev_put(ax25_dev);
  			}
  			ax25_cb_del(s);
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 80e71ce32f09..1b4abf8e90f6 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -3229,7 +3229,7 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, void *data,
+ 			if (key) {
+ 				set_bit(HCI_CONN_ENCRYPT, &conn->flags);
+ 
+-				if (!(hdev->commands[20] & 0x10)) {
++				if (!read_key_size_capable(hdev)) {
+ 					conn->enc_key_size = HCI_LINK_KEY_SIZE;
+ 				} else {
+ 					cp.handle = cpu_to_le16(conn->handle);
+@@ -3679,8 +3679,7 @@ static void hci_encrypt_change_evt(struct hci_dev *hdev, void *data,
+ 		 * controller really supports it. If it doesn't, assume
+ 		 * the default size (16).
+ 		 */
+-		if (!(hdev->commands[20] & 0x10) ||
+-		    test_bit(HCI_QUIRK_BROKEN_READ_ENC_KEY_SIZE, &hdev->quirks)) {
++		if (!read_key_size_capable(hdev)) {
+ 			conn->enc_key_size = HCI_LINK_KEY_SIZE;
+ 			goto notify;
+ 		}
 diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
-index 4198ca66fbe1..e3c7029ec8a6 100644
+index aac00f103f91..d647bd15d500 100644
 --- a/net/bluetooth/l2cap_sock.c
 +++ b/net/bluetooth/l2cap_sock.c
-@@ -457,7 +457,8 @@ static int l2cap_sock_getsockopt_old(struct socket *sock, int optname,
+@@ -438,7 +438,8 @@ static int l2cap_sock_getsockopt_old(struct socket *sock, int optname,
  	struct l2cap_chan *chan = l2cap_pi(sk)->chan;
  	struct l2cap_options opts;
  	struct l2cap_conninfo cinfo;
@@ -3305,7 +6855,7 @@ index 4198ca66fbe1..e3c7029ec8a6 100644
  	u32 opt;
  
  	BT_DBG("sk %p", sk);
-@@ -504,7 +505,7 @@ static int l2cap_sock_getsockopt_old(struct socket *sock, int optname,
+@@ -485,7 +486,7 @@ static int l2cap_sock_getsockopt_old(struct socket *sock, int optname,
  
  		BT_DBG("mode 0x%2.2x", chan->mode);
  
@@ -3314,7 +6864,7 @@ index 4198ca66fbe1..e3c7029ec8a6 100644
  		if (copy_to_user(optval, (char *) &opts, len))
  			err = -EFAULT;
  
-@@ -554,7 +555,7 @@ static int l2cap_sock_getsockopt_old(struct socket *sock, int optname,
+@@ -535,7 +536,7 @@ static int l2cap_sock_getsockopt_old(struct socket *sock, int optname,
  		cinfo.hci_handle = chan->conn->hcon->handle;
  		memcpy(cinfo.dev_class, chan->conn->hcon->dev_class, 3);
  
@@ -3324,10 +6874,10 @@ index 4198ca66fbe1..e3c7029ec8a6 100644
  			err = -EFAULT;
  
 diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 716f6dc4934b..76dac5a90aef 100644
+index 92fd3786bbdf..ac693e64f1f9 100644
 --- a/net/bluetooth/mgmt.c
 +++ b/net/bluetooth/mgmt.c
-@@ -2680,7 +2680,11 @@ static int add_uuid(struct sock *sk, struct hci_dev *hdev, void *data, u16 len)
+@@ -2616,7 +2616,11 @@ static int add_uuid(struct sock *sk, struct hci_dev *hdev, void *data, u16 len)
  		goto failed;
  	}
  
@@ -3340,7 +6890,7 @@ index 716f6dc4934b..76dac5a90aef 100644
  	if (err < 0) {
  		mgmt_pending_free(cmd);
  		goto failed;
-@@ -2774,8 +2778,11 @@ static int remove_uuid(struct sock *sk, struct hci_dev *hdev, void *data,
+@@ -2710,8 +2714,11 @@ static int remove_uuid(struct sock *sk, struct hci_dev *hdev, void *data,
  		goto unlock;
  	}
  
@@ -3354,7 +6904,7 @@ index 716f6dc4934b..76dac5a90aef 100644
  	if (err < 0)
  		mgmt_pending_free(cmd);
  
-@@ -2841,8 +2848,11 @@ static int set_dev_class(struct sock *sk, struct hci_dev *hdev, void *data,
+@@ -2777,8 +2784,11 @@ static int set_dev_class(struct sock *sk, struct hci_dev *hdev, void *data,
  		goto unlock;
  	}
  
@@ -3368,7 +6918,7 @@ index 716f6dc4934b..76dac5a90aef 100644
  	if (err < 0)
  		mgmt_pending_free(cmd);
  
-@@ -5530,8 +5540,8 @@ static int remove_adv_monitor(struct sock *sk, struct hci_dev *hdev,
+@@ -5467,8 +5477,8 @@ static int remove_adv_monitor(struct sock *sk, struct hci_dev *hdev,
  		goto unlock;
  	}
  
@@ -3380,10 +6930,10 @@ index 716f6dc4934b..76dac5a90aef 100644
  	if (err) {
  		mgmt_pending_remove(cmd);
 diff --git a/net/bluetooth/sco.c b/net/bluetooth/sco.c
-index 2e9137c539a4..4a6bf60f3e7a 100644
+index 8e4f39b8601c..3cc9fab8e838 100644
 --- a/net/bluetooth/sco.c
 +++ b/net/bluetooth/sco.c
-@@ -971,7 +971,8 @@ static int sco_sock_getsockopt_old(struct socket *sock, int optname,
+@@ -963,7 +963,8 @@ static int sco_sock_getsockopt_old(struct socket *sock, int optname,
  	struct sock *sk = sock->sk;
  	struct sco_options opts;
  	struct sco_conninfo cinfo;
@@ -3393,7 +6943,7 @@ index 2e9137c539a4..4a6bf60f3e7a 100644
  
  	BT_DBG("sk %p", sk);
  
-@@ -993,7 +994,7 @@ static int sco_sock_getsockopt_old(struct socket *sock, int optname,
+@@ -985,7 +986,7 @@ static int sco_sock_getsockopt_old(struct socket *sock, int optname,
  
  		BT_DBG("mtu %u", opts.mtu);
  
@@ -3402,7 +6952,7 @@ index 2e9137c539a4..4a6bf60f3e7a 100644
  		if (copy_to_user(optval, (char *)&opts, len))
  			err = -EFAULT;
  
-@@ -1011,7 +1012,7 @@ static int sco_sock_getsockopt_old(struct socket *sock, int optname,
+@@ -1003,7 +1004,7 @@ static int sco_sock_getsockopt_old(struct socket *sock, int optname,
  		cinfo.hci_handle = sco_pi(sk)->conn->hcon->handle;
  		memcpy(cinfo.dev_class, sco_pi(sk)->conn->hcon->dev_class, 3);
  
@@ -3412,10 +6962,10 @@ index 2e9137c539a4..4a6bf60f3e7a 100644
  			err = -EFAULT;
  
 diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
-index d087fd4c784a..d38eff27767d 100644
+index 10f0d33d8ccf..65e9ed385142 100644
 --- a/net/bridge/br_netlink.c
 +++ b/net/bridge/br_netlink.c
-@@ -650,7 +650,7 @@ void br_ifinfo_notify(int event, const struct net_bridge *br,
+@@ -666,7 +666,7 @@ void br_ifinfo_notify(int event, const struct net_bridge *br,
  {
  	u32 filter = RTEXT_FILTER_BRVLAN_COMPRESSED;
  
@@ -3425,10 +6975,10 @@ index d087fd4c784a..d38eff27767d 100644
  
  /*
 diff --git a/net/core/sock.c b/net/core/sock.c
-index c8803b95ea0d..550af616f535 100644
+index 383e30fe79f4..1471c0a862b3 100644
 --- a/net/core/sock.c
 +++ b/net/core/sock.c
-@@ -279,6 +279,7 @@ __u32 sysctl_rmem_max __read_mostly = SK_RMEM_MAX;
+@@ -283,6 +283,7 @@ __u32 sysctl_rmem_max __read_mostly = SK_RMEM_MAX;
  EXPORT_SYMBOL(sysctl_rmem_max);
  __u32 sysctl_wmem_default __read_mostly = SK_WMEM_MAX;
  __u32 sysctl_rmem_default __read_mostly = SK_RMEM_MAX;
@@ -3437,10 +6987,10 @@ index c8803b95ea0d..550af616f535 100644
  /* Maximal space eaten by iovec or ancillary data plus some space */
  int sysctl_optmem_max __read_mostly = sizeof(unsigned long)*(2*UIO_MAXIOV+512);
 diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-index 5b1ce656baa1..d281d5343ff4 100644
+index 03f1edb948d7..373b5b2231c4 100644
 --- a/net/core/sysctl_net_core.c
 +++ b/net/core/sysctl_net_core.c
-@@ -29,6 +29,7 @@ static int int_3600 = 3600;
+@@ -30,6 +30,7 @@ static int int_3600 = 3600;
  static int min_sndbuf = SOCK_MIN_SNDBUF;
  static int min_rcvbuf = SOCK_MIN_RCVBUF;
  static int max_skb_frags = MAX_SKB_FRAGS;
@@ -3448,7 +6998,7 @@ index 5b1ce656baa1..d281d5343ff4 100644
  
  static int net_msg_warn;	/* Unused, but still a sysctl */
  
-@@ -348,6 +349,14 @@ static struct ctl_table net_core_table[] = {
+@@ -407,6 +408,14 @@ static struct ctl_table net_core_table[] = {
  		.proc_handler	= proc_dointvec_minmax,
  		.extra1		= &min_rcvbuf,
  	},
@@ -3464,7 +7014,7 @@ index 5b1ce656baa1..d281d5343ff4 100644
  		.procname	= "dev_weight",
  		.data		= &weight_p,
 diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
-index e02daa74e833..5ba7b460cbf7 100644
+index 2edc8b796a4e..049c3adeb850 100644
 --- a/net/ethernet/eth.c
 +++ b/net/ethernet/eth.c
 @@ -164,17 +164,7 @@ __be16 eth_type_trans(struct sk_buff *skb, struct net_device *dev)
@@ -3487,7 +7037,7 @@ index e02daa74e833..5ba7b460cbf7 100644
  	/*
  	 * Some variants of DSA tagging don't have an ethertype field
 diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index 2b09ef70752f..31051b327e53 100644
+index b8607763d113..3b221643206d 100644
 --- a/net/ipv4/icmp.c
 +++ b/net/ipv4/icmp.c
 @@ -92,6 +92,7 @@
@@ -3498,7 +7048,7 @@ index 2b09ef70752f..31051b327e53 100644
  
  /*
   *	Build xmit assembly blocks
-@@ -1029,6 +1030,8 @@ bool icmp_build_probe(struct sk_buff *skb, struct icmphdr *icmphdr)
+@@ -1032,6 +1033,8 @@ bool icmp_build_probe(struct sk_buff *skb, struct icmphdr *icmphdr)
  	struct icmp_ext_hdr *ext_hdr, _ext_hdr;
  	struct icmp_ext_echo_iio *iio, _iio;
  	struct net *net = dev_net(skb->dev);
@@ -3507,7 +7057,7 @@ index 2b09ef70752f..31051b327e53 100644
  	struct net_device *dev;
  	char buff[IFNAMSIZ];
  	u16 ident_len;
-@@ -1112,10 +1115,15 @@ bool icmp_build_probe(struct sk_buff *skb, struct icmphdr *icmphdr)
+@@ -1115,10 +1118,15 @@ bool icmp_build_probe(struct sk_buff *skb, struct icmphdr *icmphdr)
  	/* Fill bits in reply message */
  	if (dev->flags & IFF_UP)
  		status |= ICMP_EXT_ECHOREPLY_ACTIVE;
@@ -3526,10 +7076,10 @@ index 2b09ef70752f..31051b327e53 100644
  	icmphdr->un.echo.sequence |= htons(status);
  	return true;
 diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index a0c687ff2598..6c0f1e347b85 100644
+index e1e30c09a175..7c05cbcd39d3 100644
 --- a/net/ipv4/route.c
 +++ b/net/ipv4/route.c
-@@ -2168,6 +2168,9 @@ int ip_route_use_hint(struct sk_buff *skb, __be32 daddr, __be32 saddr,
+@@ -2166,6 +2166,9 @@ int ip_route_use_hint(struct sk_buff *skb, __be32 daddr, __be32 saddr,
  	int err = -EINVAL;
  	u32 tag = 0;
  
@@ -3540,10 +7090,10 @@ index a0c687ff2598..6c0f1e347b85 100644
  		goto martian_source;
  
 diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index 2a78c78186c3..39fae7581d35 100644
+index 70a9a4a48216..5e9219623c0a 100644
 --- a/net/ipv4/udp.c
 +++ b/net/ipv4/udp.c
-@@ -1141,16 +1141,17 @@ int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+@@ -1124,16 +1124,17 @@ int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  
  	if (msg->msg_controllen) {
  		err = udp_cmsg_send(sk, msg, &ipc.gso_size);
@@ -3564,10 +7114,10 @@ index 2a78c78186c3..39fae7581d35 100644
  	if (!ipc.opt) {
  		struct ip_options_rcu *inet_opt;
 diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 1775e9b9b85a..504ea27d08fb 100644
+index d31beb65db08..a05c83cfdde9 100644
 --- a/net/ipv6/udp.c
 +++ b/net/ipv6/udp.c
-@@ -1493,9 +1493,11 @@ int udpv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+@@ -1476,9 +1476,11 @@ int udpv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  		ipc6.opt = opt;
  
  		err = udp_cmsg_send(sk, msg, &ipc6.gso_size);
@@ -3580,7 +7130,7 @@ index 1775e9b9b85a..504ea27d08fb 100644
  		if (err < 0) {
  			fl6_sock_release(flowlabel);
  			return err;
-@@ -1507,7 +1509,6 @@ int udpv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+@@ -1490,7 +1492,6 @@ int udpv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  		}
  		if (!(opt->opt_nflen|opt->opt_flen))
  			opt = NULL;
@@ -3588,6 +7138,281 @@ index 1775e9b9b85a..504ea27d08fb 100644
  	}
  	if (!opt) {
  		opt = txopt_get(np);
+diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
+index e31c312c124a..7b3ecc288f09 100644
+--- a/net/mac80211/mesh.c
++++ b/net/mac80211/mesh.c
+@@ -765,6 +765,9 @@ bool ieee80211_mesh_xmit_fast(struct ieee80211_sub_if_data *sdata,
+ 			      struct sk_buff *skb, u32 ctrl_flags)
+ {
+ 	struct ieee80211_if_mesh *ifmsh = &sdata->u.mesh;
++	struct ieee80211_mesh_fast_tx_key key = {
++		.type = MESH_FAST_TX_TYPE_LOCAL
++	};
+ 	struct ieee80211_mesh_fast_tx *entry;
+ 	struct ieee80211s_hdr *meshhdr;
+ 	u8 sa[ETH_ALEN] __aligned(2);
+@@ -800,7 +803,10 @@ bool ieee80211_mesh_xmit_fast(struct ieee80211_sub_if_data *sdata,
+ 			return false;
+ 	}
+ 
+-	entry = mesh_fast_tx_get(sdata, skb->data);
++	ether_addr_copy(key.addr, skb->data);
++	if (!ether_addr_equal(skb->data + ETH_ALEN, sdata->vif.addr))
++		key.type = MESH_FAST_TX_TYPE_PROXIED;
++	entry = mesh_fast_tx_get(sdata, &key);
+ 	if (!entry)
+ 		return false;
+ 
+diff --git a/net/mac80211/mesh.h b/net/mac80211/mesh.h
+index ad8469293d71..58c619874ca6 100644
+--- a/net/mac80211/mesh.h
++++ b/net/mac80211/mesh.h
+@@ -133,10 +133,39 @@ struct mesh_path {
+ #define MESH_FAST_TX_CACHE_THRESHOLD_SIZE	384
+ #define MESH_FAST_TX_CACHE_TIMEOUT		8000 /* msecs */
+ 
++/**
++ * enum ieee80211_mesh_fast_tx_type - cached mesh fast tx entry type
++ *
++ * @MESH_FAST_TX_TYPE_LOCAL: tx from the local vif address as SA
++ * @MESH_FAST_TX_TYPE_PROXIED: local tx with a different SA (e.g. bridged)
++ * @MESH_FAST_TX_TYPE_FORWARDED: forwarded from a different mesh point
++ * @NUM_MESH_FAST_TX_TYPE: number of entry types
++ */
++enum ieee80211_mesh_fast_tx_type {
++	MESH_FAST_TX_TYPE_LOCAL,
++	MESH_FAST_TX_TYPE_PROXIED,
++	MESH_FAST_TX_TYPE_FORWARDED,
++
++	/* must be last */
++	NUM_MESH_FAST_TX_TYPE
++};
++
++
++/**
++ * struct ieee80211_mesh_fast_tx_key - cached mesh fast tx entry key
++ *
++ * @addr: The Ethernet DA for this entry
++ * @type: cache entry type
++ */
++struct ieee80211_mesh_fast_tx_key {
++	u8 addr[ETH_ALEN] __aligned(2);
++	u16 type;
++};
++
+ /**
+  * struct ieee80211_mesh_fast_tx - cached mesh fast tx entry
+  * @rhash: rhashtable pointer
+- * @addr_key: The Ethernet DA which is the key for this entry
++ * @key: the lookup key for this cache entry
+  * @fast_tx: base fast_tx data
+  * @hdr: cached mesh and rfc1042 headers
+  * @hdrlen: length of mesh + rfc1042
+@@ -147,7 +176,7 @@ struct mesh_path {
+  */
+ struct ieee80211_mesh_fast_tx {
+ 	struct rhash_head rhash;
+-	u8 addr_key[ETH_ALEN] __aligned(2);
++	struct ieee80211_mesh_fast_tx_key key;
+ 
+ 	struct ieee80211_fast_tx fast_tx;
+ 	u8 hdr[sizeof(struct ieee80211s_hdr) + sizeof(rfc1042_header)];
+@@ -333,7 +362,8 @@ void mesh_path_tx_root_frame(struct ieee80211_sub_if_data *sdata);
+ 
+ bool mesh_action_is_path_sel(struct ieee80211_mgmt *mgmt);
+ struct ieee80211_mesh_fast_tx *
+-mesh_fast_tx_get(struct ieee80211_sub_if_data *sdata, const u8 *addr);
++mesh_fast_tx_get(struct ieee80211_sub_if_data *sdata,
++		 struct ieee80211_mesh_fast_tx_key *key);
+ bool ieee80211_mesh_xmit_fast(struct ieee80211_sub_if_data *sdata,
+ 			      struct sk_buff *skb, u32 ctrl_flags);
+ void mesh_fast_tx_cache(struct ieee80211_sub_if_data *sdata,
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index 3e52aaa57b1f..59f7264194ce 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -36,8 +36,8 @@ static const struct rhashtable_params mesh_rht_params = {
+ static const struct rhashtable_params fast_tx_rht_params = {
+ 	.nelem_hint = 10,
+ 	.automatic_shrinking = true,
+-	.key_len = ETH_ALEN,
+-	.key_offset = offsetof(struct ieee80211_mesh_fast_tx, addr_key),
++	.key_len = sizeof_field(struct ieee80211_mesh_fast_tx, key),
++	.key_offset = offsetof(struct ieee80211_mesh_fast_tx, key),
+ 	.head_offset = offsetof(struct ieee80211_mesh_fast_tx, rhash),
+ 	.hashfn = mesh_table_hash,
+ };
+@@ -426,20 +426,21 @@ static void mesh_fast_tx_entry_free(struct mesh_tx_cache *cache,
+ }
+ 
+ struct ieee80211_mesh_fast_tx *
+-mesh_fast_tx_get(struct ieee80211_sub_if_data *sdata, const u8 *addr)
++mesh_fast_tx_get(struct ieee80211_sub_if_data *sdata,
++		 struct ieee80211_mesh_fast_tx_key *key)
+ {
+ 	struct ieee80211_mesh_fast_tx *entry;
+ 	struct mesh_tx_cache *cache;
+ 
+ 	cache = &sdata->u.mesh.tx_cache;
+-	entry = rhashtable_lookup(&cache->rht, addr, fast_tx_rht_params);
++	entry = rhashtable_lookup(&cache->rht, key, fast_tx_rht_params);
+ 	if (!entry)
+ 		return NULL;
+ 
+ 	if (!(entry->mpath->flags & MESH_PATH_ACTIVE) ||
+ 	    mpath_expired(entry->mpath)) {
+ 		spin_lock_bh(&cache->walk_lock);
+-		entry = rhashtable_lookup(&cache->rht, addr, fast_tx_rht_params);
++		entry = rhashtable_lookup(&cache->rht, key, fast_tx_rht_params);
+ 		if (entry)
+ 		    mesh_fast_tx_entry_free(cache, entry);
+ 		spin_unlock_bh(&cache->walk_lock);
+@@ -484,18 +485,24 @@ void mesh_fast_tx_cache(struct ieee80211_sub_if_data *sdata,
+ 	if (!sta)
+ 		return;
+ 
++	build.key.type = MESH_FAST_TX_TYPE_LOCAL;
+ 	if ((meshhdr->flags & MESH_FLAGS_AE) == MESH_FLAGS_AE_A5_A6) {
+ 		/* This is required to keep the mppath alive */
+ 		mppath = mpp_path_lookup(sdata, meshhdr->eaddr1);
+ 		if (!mppath)
+ 			return;
+ 		build.mppath = mppath;
++		if (!ether_addr_equal(meshhdr->eaddr2, sdata->vif.addr))
++			build.key.type = MESH_FAST_TX_TYPE_PROXIED;
+ 	} else if (ieee80211_has_a4(hdr->frame_control)) {
+ 		mppath = mpath;
+ 	} else {
+ 		return;
+ 	}
+ 
++	if (!ether_addr_equal(hdr->addr4, sdata->vif.addr))
++		build.key.type = MESH_FAST_TX_TYPE_FORWARDED;
++
+ 	/* rate limit, in case fast xmit can't be enabled */
+ 	if (mppath->fast_tx_check == jiffies)
+ 		return;
+@@ -542,7 +549,7 @@ void mesh_fast_tx_cache(struct ieee80211_sub_if_data *sdata,
+ 		}
+ 	}
+ 
+-	memcpy(build.addr_key, mppath->dst, ETH_ALEN);
++	memcpy(build.key.addr, mppath->dst, ETH_ALEN);
+ 	build.timestamp = jiffies;
+ 	build.fast_tx.band = info->band;
+ 	build.fast_tx.da_offs = offsetof(struct ieee80211_hdr, addr3);
+@@ -595,11 +602,10 @@ void mesh_fast_tx_cache(struct ieee80211_sub_if_data *sdata,
+ void mesh_fast_tx_gc(struct ieee80211_sub_if_data *sdata)
+ {
+ 	unsigned long timeout = msecs_to_jiffies(MESH_FAST_TX_CACHE_TIMEOUT);
+-	struct mesh_tx_cache *cache;
++	struct mesh_tx_cache *cache = &sdata->u.mesh.tx_cache;
+ 	struct ieee80211_mesh_fast_tx *entry;
+ 	struct hlist_node *n;
+ 
+-	cache = &sdata->u.mesh.tx_cache;
+ 	if (atomic_read(&cache->rht.nelems) < MESH_FAST_TX_CACHE_THRESHOLD_SIZE)
+ 		return;
+ 
+@@ -617,7 +623,6 @@ void mesh_fast_tx_flush_mpath(struct mesh_path *mpath)
+ 	struct ieee80211_mesh_fast_tx *entry;
+ 	struct hlist_node *n;
+ 
+-	cache = &sdata->u.mesh.tx_cache;
+ 	spin_lock_bh(&cache->walk_lock);
+ 	hlist_for_each_entry_safe(entry, n, &cache->walk_head, walk_list)
+ 		if (entry->mpath == mpath)
+@@ -632,7 +637,6 @@ void mesh_fast_tx_flush_sta(struct ieee80211_sub_if_data *sdata,
+ 	struct ieee80211_mesh_fast_tx *entry;
+ 	struct hlist_node *n;
+ 
+-	cache = &sdata->u.mesh.tx_cache;
+ 	spin_lock_bh(&cache->walk_lock);
+ 	hlist_for_each_entry_safe(entry, n, &cache->walk_head, walk_list)
+ 		if (rcu_access_pointer(entry->mpath->next_hop) == sta)
+@@ -644,13 +648,18 @@ void mesh_fast_tx_flush_addr(struct ieee80211_sub_if_data *sdata,
+ 			     const u8 *addr)
+ {
+ 	struct mesh_tx_cache *cache = &sdata->u.mesh.tx_cache;
++	struct ieee80211_mesh_fast_tx_key key = {};
+ 	struct ieee80211_mesh_fast_tx *entry;
++	int i;
+ 
+-	cache = &sdata->u.mesh.tx_cache;
++	ether_addr_copy(key.addr, addr);
+ 	spin_lock_bh(&cache->walk_lock);
+-	entry = rhashtable_lookup_fast(&cache->rht, addr, fast_tx_rht_params);
+-	if (entry)
+-		mesh_fast_tx_entry_free(cache, entry);
++	for (i = 0; i < NUM_MESH_FAST_TX_TYPE; i++) {
++		key.type = i;
++		entry = rhashtable_lookup_fast(&cache->rht, &key, fast_tx_rht_params);
++		if (entry)
++			mesh_fast_tx_entry_free(cache, entry);
++	}
+ 	spin_unlock_bh(&cache->walk_lock);
+ }
+ 
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index c6044ab4e7fc..6e574e2adc22 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -5859,7 +5859,7 @@ static void ieee80211_ml_reconfiguration(struct ieee80211_sub_if_data *sdata,
+ 		 */
+ 		if (control &
+ 		    IEEE80211_MLE_STA_RECONF_CONTROL_AP_REM_TIMER_PRESENT)
+-			link_removal_timeout[link_id] = le16_to_cpu(*(__le16 *)pos);
++			link_removal_timeout[link_id] = get_unaligned_le16(pos);
+ 	}
+ 
+ 	removed_links &= sdata->vif.valid_links;
+@@ -5884,8 +5884,11 @@ static void ieee80211_ml_reconfiguration(struct ieee80211_sub_if_data *sdata,
+ 			continue;
+ 		}
+ 
+-		link_delay = link_conf->beacon_int *
+-			link_removal_timeout[link_id];
++		if (link_removal_timeout[link_id] < 1)
++			link_delay = 0;
++		else
++			link_delay = link_conf->beacon_int *
++				(link_removal_timeout[link_id] - 1);
+ 
+ 		if (!delay)
+ 			delay = link_delay;
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 26ca2f5dc52b..604863cebc19 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -2726,7 +2726,10 @@ ieee80211_rx_mesh_fast_forward(struct ieee80211_sub_if_data *sdata,
+ 			       struct sk_buff *skb, int hdrlen)
+ {
+ 	struct ieee80211_if_mesh *ifmsh = &sdata->u.mesh;
+-	struct ieee80211_mesh_fast_tx *entry = NULL;
++	struct ieee80211_mesh_fast_tx_key key = {
++		.type = MESH_FAST_TX_TYPE_FORWARDED
++	};
++	struct ieee80211_mesh_fast_tx *entry;
+ 	struct ieee80211s_hdr *mesh_hdr;
+ 	struct tid_ampdu_tx *tid_tx;
+ 	struct sta_info *sta;
+@@ -2735,9 +2738,13 @@ ieee80211_rx_mesh_fast_forward(struct ieee80211_sub_if_data *sdata,
+ 
+ 	mesh_hdr = (struct ieee80211s_hdr *)(skb->data + sizeof(eth));
+ 	if ((mesh_hdr->flags & MESH_FLAGS_AE) == MESH_FLAGS_AE_A5_A6)
+-		entry = mesh_fast_tx_get(sdata, mesh_hdr->eaddr1);
++		ether_addr_copy(key.addr, mesh_hdr->eaddr1);
+ 	else if (!(mesh_hdr->flags & MESH_FLAGS_AE))
+-		entry = mesh_fast_tx_get(sdata, skb->data);
++		ether_addr_copy(key.addr, skb->data);
++	else
++		return false;
++
++	entry = mesh_fast_tx_get(sdata, &key);
+ 	if (!entry)
+ 		return false;
+ 
 diff --git a/net/netfilter/ipvs/ip_vs_proto_sctp.c b/net/netfilter/ipvs/ip_vs_proto_sctp.c
 index a0921adc31a9..1e689c714127 100644
 --- a/net/netfilter/ipvs/ip_vs_proto_sctp.c
@@ -3628,10 +7453,10 @@ index 274b6f7e6bb5..d170758a1eb5 100644
  		kfree_rcu(found, rcu);
  		return;
 diff --git a/net/openvswitch/conntrack.c b/net/openvswitch/conntrack.c
-index e4ba86b84b9b..2302bae1e012 100644
+index 74b63cdb5992..2928c142a2dd 100644
 --- a/net/openvswitch/conntrack.c
 +++ b/net/openvswitch/conntrack.c
-@@ -1920,9 +1920,9 @@ static void ovs_ct_limit_exit(struct net *net, struct ovs_net *ovs_net)
+@@ -1593,9 +1593,9 @@ static void ovs_ct_limit_exit(struct net *net, struct ovs_net *ovs_net)
  	for (i = 0; i < CT_LIMIT_HASH_BUCKETS; ++i) {
  		struct hlist_head *head = &info->limits[i];
  		struct ovs_ct_limit *ct_limit;
@@ -3643,8 +7468,52 @@ index e4ba86b84b9b..2302bae1e012 100644
  			kfree_rcu(ct_limit, rcu);
  	}
  	kfree(info->limits);
+diff --git a/net/tls/tls.h b/net/tls/tls.h
+index 28a8c0e80e3c..02038d0381b7 100644
+--- a/net/tls/tls.h
++++ b/net/tls/tls.h
+@@ -212,7 +212,7 @@ static inline struct sk_buff *tls_strp_msg(struct tls_sw_context_rx *ctx)
+ 
+ static inline bool tls_strp_msg_ready(struct tls_sw_context_rx *ctx)
+ {
+-	return ctx->strp.msg_ready;
++	return READ_ONCE(ctx->strp.msg_ready);
+ }
+ 
+ static inline bool tls_strp_msg_mixed_decrypted(struct tls_sw_context_rx *ctx)
+diff --git a/net/tls/tls_strp.c b/net/tls/tls_strp.c
+index ca1e0e198ceb..5df08d848b5c 100644
+--- a/net/tls/tls_strp.c
++++ b/net/tls/tls_strp.c
+@@ -360,7 +360,7 @@ static int tls_strp_copyin(read_descriptor_t *desc, struct sk_buff *in_skb,
+ 	if (strp->stm.full_len && strp->stm.full_len == skb->len) {
+ 		desc->count = 0;
+ 
+-		strp->msg_ready = 1;
++		WRITE_ONCE(strp->msg_ready, 1);
+ 		tls_rx_msg_ready(strp);
+ 	}
+ 
+@@ -528,7 +528,7 @@ static int tls_strp_read_sock(struct tls_strparser *strp)
+ 	if (!tls_strp_check_queue_ok(strp))
+ 		return tls_strp_read_copy(strp, false);
+ 
+-	strp->msg_ready = 1;
++	WRITE_ONCE(strp->msg_ready, 1);
+ 	tls_rx_msg_ready(strp);
+ 
+ 	return 0;
+@@ -580,7 +580,7 @@ void tls_strp_msg_done(struct tls_strparser *strp)
+ 	else
+ 		tls_strp_flush_anchor_copy(strp);
+ 
+-	strp->msg_ready = 0;
++	WRITE_ONCE(strp->msg_ready, 0);
+ 	memset(&strp->stm, 0, sizeof(strp->stm));
+ 
+ 	tls_strp_check_rcv(strp);
 diff --git a/net/unix/garbage.c b/net/unix/garbage.c
-index 85c6f05c0fa3..d2fc795394a5 100644
+index 8734c0c1fc19..2a758531e102 100644
 --- a/net/unix/garbage.c
 +++ b/net/unix/garbage.c
 @@ -260,7 +260,7 @@ void unix_gc(void)
@@ -3656,26 +7525,209 @@ index 85c6f05c0fa3..d2fc795394a5 100644
  				unix_state_unlock(sk);
  			}
  		}
+diff --git a/rust/Makefile b/rust/Makefile
+index 7dbf9abe0d01..e5619f25b55c 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -173,7 +173,6 @@ quiet_cmd_rustdoc_test_kernel = RUSTDOC TK $<
+ 	mkdir -p $(objtree)/$(obj)/test/doctests/kernel; \
+ 	OBJTREE=$(abspath $(objtree)) \
+ 	$(RUSTDOC) --test $(rust_flags) \
+-		@$(objtree)/include/generated/rustc_cfg \
+ 		-L$(objtree)/$(obj) --extern alloc --extern kernel \
+ 		--extern build_error --extern macros \
+ 		--extern bindings --extern uapi \
+diff --git a/rust/kernel/init.rs b/rust/kernel/init.rs
+index 4ebb6f23fc2e..0fe043c0eaac 100644
+--- a/rust/kernel/init.rs
++++ b/rust/kernel/init.rs
+@@ -1292,8 +1292,15 @@ macro_rules! impl_zeroable {
+     i8, i16, i32, i64, i128, isize,
+     f32, f64,
+ 
+-    // SAFETY: These are ZSTs, there is nothing to zero.
+-    {<T: ?Sized>} PhantomData<T>, core::marker::PhantomPinned, Infallible, (),
++    // Note: do not add uninhabited types (such as `!` or `core::convert::Infallible`) to this list;
++    // creating an instance of an uninhabited type is immediate undefined behavior. For more on
++    // uninhabited/empty types, consult The Rustonomicon:
++    // <https://doc.rust-lang.org/stable/nomicon/exotic-sizes.html#empty-types>. The Rust Reference
++    // also has information on undefined behavior:
++    // <https://doc.rust-lang.org/stable/reference/behavior-considered-undefined.html>.
++    //
++    // SAFETY: These are inhabited ZSTs; there is nothing to zero and a valid value exists.
++    {<T: ?Sized>} PhantomData<T>, core::marker::PhantomPinned, (),
+ 
+     // SAFETY: Type is allowed to take any value, including all zeros.
+     {<T>} MaybeUninit<T>,
 diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-index 91764bfb1f89..f2efa86a747a 100644
+index c42105c2ff96..34ae73f5db06 100644
 --- a/rust/macros/lib.rs
 +++ b/rust/macros/lib.rs
-@@ -27,18 +27,6 @@ use proc_macro::TokenStream;
- ///     author: b"Rust for Linux Contributors",
- ///     description: b"My very own kernel module!",
- ///     license: b"GPL",
+@@ -35,18 +35,6 @@
+ ///     author: "Rust for Linux Contributors",
+ ///     description: "My very own kernel module!",
+ ///     license: "GPL",
 -///     params: {
 -///        my_i32: i32 {
 -///            default: 42,
 -///            permissions: 0o000,
--///            description: b"Example of i32",
+-///            description: "Example of i32",
 -///        },
 -///        writeable_i32: i32 {
 -///            default: 42,
 -///            permissions: 0o644,
--///            description: b"Example of i32",
+-///            description: "Example of i32",
 -///        },
 -///    },
  /// }
  ///
  /// struct MyModule;
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 82e3fb19fdaf..5c4e437f9d85 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -272,7 +272,7 @@ rust_common_cmd = \
+ 	-Zallow-features=$(rust_allowed_features) \
+ 	-Zcrate-attr=no_std \
+ 	-Zcrate-attr='feature($(rust_allowed_features))' \
+-	--extern alloc --extern kernel \
++	-Zunstable-options --extern force:alloc --extern kernel \
+ 	--crate-type rlib -L $(objtree)/rust/ \
+ 	--crate-name $(basename $(notdir $@)) \
+ 	--out-dir $(dir $@) --emit=dep-info=$(depfile)
+diff --git a/tools/net/ynl/lib/ynl.py b/tools/net/ynl/lib/ynl.py
+index 13c4b019a881..44ea0965c9d9 100644
+--- a/tools/net/ynl/lib/ynl.py
++++ b/tools/net/ynl/lib/ynl.py
+@@ -201,6 +201,7 @@ class NlMsg:
+             self.done = 1
+             extack_off = 20
+         elif self.nl_type == Netlink.NLMSG_DONE:
++            self.error = struct.unpack("i", self.raw[0:4])[0]
+             self.done = 1
+             extack_off = 4
+ 
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 38f651469968..cacf6507f690 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -784,7 +784,7 @@ void *kill_thread(void *data)
+ 	bool die = (bool)data;
+ 
+ 	if (die) {
+-		prctl(PR_GET_SECCOMP, 0, 0, 0, 0);
++		syscall(__NR_getpid);
+ 		return (void *)SIBLING_EXIT_FAILURE;
+ 	}
+ 
+@@ -803,11 +803,11 @@ void kill_thread_or_group(struct __test_metadata *_metadata,
+ {
+ 	pthread_t thread;
+ 	void *status;
+-	/* Kill only when calling __NR_prctl. */
++	/* Kill only when calling __NR_getpid. */
+ 	struct sock_filter filter_thread[] = {
+ 		BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
+ 			offsetof(struct seccomp_data, nr)),
+-		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_prctl, 0, 1),
++		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_getpid, 0, 1),
+ 		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_KILL_THREAD),
+ 		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
+ 	};
+@@ -819,7 +819,7 @@ void kill_thread_or_group(struct __test_metadata *_metadata,
+ 	struct sock_filter filter_process[] = {
+ 		BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
+ 			offsetof(struct seccomp_data, nr)),
+-		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_prctl, 0, 1),
++		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_getpid, 0, 1),
+ 		BPF_STMT(BPF_RET|BPF_K, kill),
+ 		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
+ 	};
+@@ -3709,7 +3709,12 @@ TEST(user_notification_sibling_pid_ns)
+ 	ASSERT_GE(pid, 0);
+ 
+ 	if (pid == 0) {
+-		ASSERT_EQ(unshare(CLONE_NEWPID), 0);
++		ASSERT_EQ(unshare(CLONE_NEWPID), 0) {
++			if (errno == EPERM)
++				SKIP(return, "CLONE_NEWPID requires CAP_SYS_ADMIN");
++			else if (errno == EINVAL)
++				SKIP(return, "CLONE_NEWPID is invalid (missing CONFIG_PID_NS?)");
++		}
+ 
+ 		pid2 = fork();
+ 		ASSERT_GE(pid2, 0);
+@@ -3727,6 +3732,8 @@ TEST(user_notification_sibling_pid_ns)
+ 	ASSERT_EQ(unshare(CLONE_NEWPID), 0) {
+ 		if (errno == EPERM)
+ 			SKIP(return, "CLONE_NEWPID requires CAP_SYS_ADMIN");
++		else if (errno == EINVAL)
++			SKIP(return, "CLONE_NEWPID is invalid (missing CONFIG_PID_NS?)");
+ 	}
+ 	ASSERT_EQ(errno, 0);
+ 
+@@ -4037,6 +4044,16 @@ TEST(user_notification_filter_empty_threaded)
+ 	EXPECT_GT((pollfd.revents & POLLHUP) ?: 0, 0);
+ }
+ 
++
++int get_next_fd(int prev_fd)
++{
++	for (int i = prev_fd + 1; i < FD_SETSIZE; ++i) {
++		if (fcntl(i, F_GETFD) == -1)
++			return i;
++	}
++	_exit(EXIT_FAILURE);
++}
++
+ TEST(user_notification_addfd)
+ {
+ 	pid_t pid;
+@@ -4053,7 +4070,7 @@ TEST(user_notification_addfd)
+ 	/* There may be arbitrary already-open fds at test start. */
+ 	memfd = memfd_create("test", 0);
+ 	ASSERT_GE(memfd, 0);
+-	nextfd = memfd + 1;
++	nextfd = get_next_fd(memfd);
+ 
+ 	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+ 	ASSERT_EQ(0, ret) {
+@@ -4064,7 +4081,8 @@ TEST(user_notification_addfd)
+ 	/* Check that the basic notification machinery works */
+ 	listener = user_notif_syscall(__NR_getppid,
+ 				      SECCOMP_FILTER_FLAG_NEW_LISTENER);
+-	ASSERT_EQ(listener, nextfd++);
++	ASSERT_EQ(listener, nextfd);
++	nextfd = get_next_fd(nextfd);
+ 
+ 	pid = fork();
+ 	ASSERT_GE(pid, 0);
+@@ -4119,14 +4137,16 @@ TEST(user_notification_addfd)
+ 
+ 	/* Verify we can set an arbitrary remote fd */
+ 	fd = ioctl(listener, SECCOMP_IOCTL_NOTIF_ADDFD, &addfd);
+-	EXPECT_EQ(fd, nextfd++);
++	EXPECT_EQ(fd, nextfd);
++	nextfd = get_next_fd(nextfd);
+ 	EXPECT_EQ(filecmp(getpid(), pid, memfd, fd), 0);
+ 
+ 	/* Verify we can set an arbitrary remote fd with large size */
+ 	memset(&big, 0x0, sizeof(big));
+ 	big.addfd = addfd;
+ 	fd = ioctl(listener, SECCOMP_IOCTL_NOTIF_ADDFD_BIG, &big);
+-	EXPECT_EQ(fd, nextfd++);
++	EXPECT_EQ(fd, nextfd);
++	nextfd = get_next_fd(nextfd);
+ 
+ 	/* Verify we can set a specific remote fd */
+ 	addfd.newfd = 42;
+@@ -4164,7 +4184,8 @@ TEST(user_notification_addfd)
+ 	 * Child has earlier "low" fds and now 42, so we expect the next
+ 	 * lowest available fd to be assigned here.
+ 	 */
+-	EXPECT_EQ(fd, nextfd++);
++	EXPECT_EQ(fd, nextfd);
++	nextfd = get_next_fd(nextfd);
+ 	ASSERT_EQ(filecmp(getpid(), pid, memfd, fd), 0);
+ 
+ 	/*
