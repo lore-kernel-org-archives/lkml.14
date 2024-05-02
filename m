@@ -1,82 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054C353365;
-	Thu,  2 May 2024 09:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C118153365;
+	Thu,  2 May 2024 09:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714641505; cv=none; b=A73qrNWhkX1TjCvYciFAJoXhhCA0Fud9ZrBwoLJropFr2Z4bvk/kEN5M1Q/ualTlo8sNQixsONeKqevJHmIILKUDe0cxl1M6Cy6mh7RVCavx8kD8/gL3xTUJ/76VgpJrUifBC3w8jqM59U3zLMNnf0CHCfrvMIsT8wK5T/z6kys=
+	t=1714641528; cv=none; b=Fe0G4Yb93A6THyOKFHjUCqlirgkFB5puMmGFmRZ0VWrLsHBpooSAj+gYuWEsVSY6Z6zhruSyZrDZx3ycQkNcam/QTQT9T1JpKFzPekT4augF16rRp/G3qYPpJe/qzC7VXGIqiJEBj4uXaRC+E2weqblZoKJHZgrKww4HkJbhVX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714641505; c=relaxed/simple;
-	bh=a/QufiF272o3DvR0cKkQMFkYPKhS35DQjuKoUIBYmTk=;
+	s=arc-20240116; t=1714641528; c=relaxed/simple;
+	bh=I7p1RdtGOFI//Ur2G0I4lDz0SGt6YQnyFeR6Ar+LrsQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SEKEY2BM4wh8Np0eB9jza57Iv9HdGgCY2grnJRixp5zNox4IRT+j1W1R0gWrphsfD2lfLfdoZsLnJPvSoy5bq/HGgV/ICk75kmBcGNEFxIeHNy7S/1HbD1xWL7XeHke12FTtbKoLM02ey60MfPi5fXKFMT5kY96VPyx8Q12/6/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kbmXp/1B; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=i+DmB0mjyxiK5Q75t8hdL1SGqQcswyJZpoLHulqC0wCrYBU2yAw65wGHy2o1+zx/5x+FSR5DiJ00HCY0f6XxgJ8vQznISp5cdJ9rs0sXmc6c3TfFNBmcYVywopIbx1nX2KTJBmSO6t5jFrIaZYy6+jJUx0XKRW74n0JPcKXwL/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uFQggjpZ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kbmXp/1B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714641504; x=1746177504;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=a/QufiF272o3DvR0cKkQMFkYPKhS35DQjuKoUIBYmTk=;
-  b=kbmXp/1B21yUuwq+qOXE9zjQItJoxrW/2C+eEUrkEy3LQ2lH2jLxIwx+
-   AwSJZ/EJQAarnaf0qoNWS1XruUMeZOcD0Hw4/6e3/SmV462wYdArSITZR
-   uiKAHHtUJOpAgm+8qVYoRLiKG109tgbtt2vW/YKqxVSZY/OSB/0DjxIki
-   ePXmaRk8zCc1diDzeESnQdEb9NqDZx+FEHlC8yL8xX6cKfwAIr2kPzlXG
-   /PsqvqsLBIcrSFDDJ5LHdCZjG1d7XyQZGiBevTx1/u3g595JG7K27FVMy
-   lx1UZI0cnQlpl/NL3DjqXOr11cEKYayYGO4klvuv29rJgVwayr3lRxD9j
-   g==;
-X-CSE-ConnectionGUID: qO8Ei41dSN+87NW0pzD3ow==
-X-CSE-MsgGUID: srmRrpYlQcKNIfeZHPqxwQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="10274161"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="10274161"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 02:18:10 -0700
-X-CSE-ConnectionGUID: weq2NrOvSyClDOUB0O6Igw==
-X-CSE-MsgGUID: iZzhZm4ZT9S/eDC2HeXt4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="27142469"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 02:18:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s2SZk-00000003GCl-0xR0;
-	Thu, 02 May 2024 12:18:00 +0300
-Date: Thu, 2 May 2024 12:17:59 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Andrei Warkentin <andrei.warkentin@intel.com>,
-	Haibo1 Xu <haibo1.xu@intel.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
-Subject: Re: [PATCH v5 17/17] serial: 8250: Add 8250_acpi driver
-Message-ID: <ZjNaR-YtVTm4pbP7@smile.fi.intel.com>
-References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
- <20240501121742.1215792-18-sunilvl@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uFQggjpZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YTpMwMX+qpj6Q/bcMYzijVjSwnah9GpAyoqUNT5p8FE=; b=uFQggjpZFaHyRheUPJ/kajtRrJ
+	camcEqM/4pLauiKQOWKzIw1iT5fbw+MXhwWL7BezQNa+6f0RMP8EzuUV6yU+jjvBAaVXgIb6/AFUs
+	9F/68m45s3ecnvnIooOwxg0lCZlVFXCxxHlvTBwGUTCSEYHyXfEn5s8L1F+MOn33vVtyw4Y9R9cdg
+	ybPOuzhOxVG8t+8/c8JyM5lNw2TwVa0G0SUuMbJsk9LfFS3kWh2Cs0ffjoMbfS0QBqhpagjg6MZp0
+	5pKlVxu5Xw8HW5TniqLT+UuUUjWqs3JEH7cu1Yfnc0Fp5miS1M+N3a3uVPsxxMIIaJlRpQuiNr1Wk
+	AH/wktrQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s2SaL-00000001Kdw-2O0D;
+	Thu, 02 May 2024 09:18:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3B94A30057A; Thu,  2 May 2024 11:18:37 +0200 (CEST)
+Date: Thu, 2 May 2024 11:18:37 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <20240502091837.GA30852@noisy.programming.kicks-ass.net>
+References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <20240430091504.GC40213@noisy.programming.kicks-ass.net>
+ <202405011317.AF41B94B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,37 +61,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240501121742.1215792-18-sunilvl@ventanamicro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <202405011317.AF41B94B@keescook>
 
-On Wed, May 01, 2024 at 05:47:42PM +0530, Sunil V L wrote:
-> RISC-V has non-PNP generic 16550A compatible UART which needs to be
-> enumerated as ACPI platform device. Add driver support for such devices
-> similar to 8250_of.
+On Wed, May 01, 2024 at 01:21:42PM -0700, Kees Cook wrote:
+> On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
+> > On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
+> > > This is an effort to get rid of all multiplications from allocation
+> > > functions in order to prevent integer overflows [1][2].
+> > 
+> > So personally I detest struct_size() because I can never remember wtf it
+> > does, whereas the code it replaces is simple and straight forward :/
+> 
+> Sure, new APIs can involved a learning curve. If we can all handle
+> container_of(), we can deal with struct_size(). :)
 
-...
+containre_of() is actually *much* shorter than typing it all out. Which
+is a benefit.
 
-> + * This driver is for generic 16550 compatible UART enumerated via ACPI
-> + * platform bus instead of PNP bus like PNP0501. This is not a full
-
-This has to be told in the commit message. Anyway, we don't need a duplication
-code, please use 8250_pnp.
-
-...
-
-> +	{ "RSCV0003", 0 },
-
-Does it have _CID to be PNP0501?
-If not, add this ID to the 8250_pnp.
-
-...
-
-P.S.
-The code you submitted has a lot of small style issues, I can comment on them
-if you want, but as I said this code is not needed at all.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+struct_size() not so much. That's just obfuscation for obfuscation's
+sake.
