@@ -1,119 +1,61 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AB115574D
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 15:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E6815B552;
+	Thu,  2 May 2024 15:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714664706; cv=none; b=PUXdG2PBqSwxa+raMWSR8GbnMevwgkawcn7jcZkNTV2oLhfYb5EnyKBi5dFU0b6Bx7i24pZDHu0b7CTmOB9egoSle1IQ+mc4dN44DoQUPuRSo9zw0CWarGYjYDt05scZtNsu4gjrHCD+UWI9/zQGPijHfGqofgIdLa/Rv6xKAp0=
+	t=1714664765; cv=none; b=eTkinY2pamSMxmhSXcktPjNTiOEwA7DMNAGFdkRS58pQZWNTLP9jQxmpTTXUNjiZrjK7v7e+aVWOdUHF3KTk0XDW6BUPE6+wpAPvEmT55gOWTughrRtr95lCmUPNpq90jq1LTVClErLyY7zFuwb6iYPSwN+xQ4YIHMKqaaRe4Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714664706; c=relaxed/simple;
-	bh=Gpu0Hivw2WMkBjrWlt3F4okzBlo59nzVUjsQpo/rA8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YUFF0WjaqIR7veW2RnBsHmfAhynIc1F5T1xmzyzE/GsbazG5V/+jBzypgp3Q6eLSfDEXrYRTinVTtVtUoL1AkayMSBSUlc+jX8MyaQn7zPgJ0tSdHcLfoeON3u3eHTquMm7d0ypCzeY2FjDk84fYYvfpOpqejxWnnuTkOazmsmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BwXV3xiN; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714664765; c=relaxed/simple;
+	bh=ke5fV4sGRwndayA7Ai35n4IndDXJW3aZT4TXL/Tq40E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ilVMCOXOLXz959ORx2xcHS4R/I6k7dT10ALyj5A/mCzrL57tI3hRmnuHbDYGgPb47Gjagy/pYOfQls3wAN3XHhw2TjhhCKssf8jMfyH69InO3kKIbA8b0CV0bm4TxDlR1L7SMu2eUX1HiIuxGdSAOJnHHATfYSaklmQoUP69obI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=UdrzkB1A; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BwXV3xiN"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ecec796323so7776194b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 08:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714664704; x=1715269504; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MOqLq0lZ0i7PXhp3YLh0UdxAncxBGq3YXZCOMwkygc4=;
-        b=BwXV3xiN2lH6vpFw4linXe/2giOmlkrz9B/K0316slX0wNhlajDFX7X2x1bdJuFZ1D
-         diSQSoDVrctCou7cNjL/X58/a1kZzpb8IIPCGHec2A5AWMdsqH+sMWkCw4DrUapjuU2a
-         vVo1pRnLvgBwJC0IIFNhNOHabhV0bDDHEx5E4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714664704; x=1715269504;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MOqLq0lZ0i7PXhp3YLh0UdxAncxBGq3YXZCOMwkygc4=;
-        b=kHRmGS5dHH3Ovnoe7pTWQuAMcHMsP/Kz+14+z0r/a/oH9beE4zKMcWkXxAFfyU3XgX
-         KksLzdPrn2yNzu2d+55VZZZssD/q81cYRbGzgJzejMoBhd2KbJ0RHt+rsDbytztrZx++
-         5IkRlpHdQaM+tIKaPJCqoAkgEjBTG9VYtlu+zN9D9ilUItPWoOynOp1IPA37RydE6Ter
-         e/cq82nvY44zSzEA4bnUkpVJH0617fQjCHWup4xRkkfRMCknO+KAx8ISSS+KQet+2dIF
-         hXueSTNCnKJT54S0wn0jUjZyCG1gOPM0508fqx5k3ZzmOrHd7iChUH74YPBoc5SgtrpA
-         t72A==
-X-Forwarded-Encrypted: i=1; AJvYcCUW0lGYrIwWmVsU8/OQHoTpdVnXwzWM1IV4s1o0hkhsncNA89qFHhBcRrsztQro5uqUhBP+Er/d1FLqzpabC+G3e/+5bOdhFXatP/WZ
-X-Gm-Message-State: AOJu0YyzpPkjx8+YNlX//4nZvmnh3om4epROYBkex5UFKksvzpaLY4gV
-	UfzRuqi4k8N+wM2fDQ2ryk4BpV3fCWLKNoMmECqKWXP6NN4MTlI34UulaRQFeg==
-X-Google-Smtp-Source: AGHT+IH+DKW/P1R56uRTZhYtqEUAHiBxc+2IZYShyGS2YIDsx+eMU2ct2kjiiYu7bnTgUSejCrtSrw==
-X-Received: by 2002:a05:6a00:2ea6:b0:6ed:1c7:8c65 with SMTP id fd38-20020a056a002ea600b006ed01c78c65mr7064701pfb.10.1714664704045;
-        Thu, 02 May 2024 08:45:04 -0700 (PDT)
-Received: from treapking.tpe.corp.google.com ([2401:fa00:1:10:8191:2b1f:c04b:51ab])
-        by smtp.gmail.com with ESMTPSA id h4-20020a056a00218400b006f3e3d928fesm1387660pfi.220.2024.05.02.08.45.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 08:45:03 -0700 (PDT)
-From: Pin-yen Lin <treapking@chromium.org>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	linux-mediatek@lists.infradead.org,
-	Hsin-Te Yuan <yuanhsinte@chromium.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Pin-yen Lin <treapking@chromium.org>
-Subject: [PATCH v2] arm64: dts: mediatek: mt8192-asurada: Add off-on-delay-us for pp3300_mipibrdg
-Date: Thu,  2 May 2024 23:39:51 +0800
-Message-ID: <20240502154455.3427793-1-treapking@chromium.org>
-X-Mailer: git-send-email 2.45.0.rc0.197.gbae5840b3b-goog
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="UdrzkB1A"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 616AB47C39
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1714664761; bh=ousXZmiImu7YU7q0/as6YIRuE8ckEwwhEQWCYCHx7eU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=UdrzkB1A2m8ezcEzlyMFxGByPirJ58/ZO3aC3ejiH6m9yyVvc9r1AH4axJLj4r5CF
+	 f+w44Bg7lL6n5Zdv4cYVupy7LcuCvpyvQ/7TWP6Yhwd7vne+6ZhJaS16yGsBdYsds9
+	 2VEW2w3/MbEIOUVFwUrGNARQm3HeG49ymsVWfJOgUf45zr5ygDo9QVlKI8otd4/aG6
+	 d1eUXqy4lXAcgLmz7f+hnx/WK3hqaq9e7anwfwfGQk5kg7A7OebRnbN1bUDt+Ng/5X
+	 COH1Vj3CSVkyRyqoXO21kxqjN4HJZBE4/akI5I0KpLoMZqymFUExVWynBM8rbrXoAN
+	 UwttCRC3HCRDw==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 616AB47C39;
+	Thu,  2 May 2024 15:46:01 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Federico Vaga <federico.vaga@vaga.pv.it>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] doc:it_IT: align Italian documentation
+In-Reply-To: <f63524e3bc9d110c96255f27580c680d@vaga.pv.it>
+References: <20240316225400.22590-1-federico.vaga@vaga.pv.it>
+ <f63524e3bc9d110c96255f27580c680d@vaga.pv.it>
+Date: Thu, 02 May 2024 09:46:00 -0600
+Message-ID: <87a5l88bev.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Set off-on-delay-us to 500000 us for pp3300_mipibrdg to make sure it
-complies with the panel's unprepare delay (the time to power down
-completely) of the power sequence. Explicit configuration on the
-regulator node is required because mt8192-asurada uses the same power
-supply for the panel and the anx7625 DP bridge.
+Federico Vaga <federico.vaga@vaga.pv.it> writes:
 
-For example, the power sequence could be violated in this sequence:
-1. Bridge on: panel goes off, but regulator doesn't turn off (refcount=1).
-2. Bridge off: regulator turns off (refcount=0).
-3. Bridge resume -> regulator turns on but the bridge driver doesn't
-   check the delay.
+> Hello Jonathan,
+>
+> I'm pinging you on this patch, just in case it got somehow lost.
 
-Or in this sequence:
-1. Bridge on: panel goes off. The regulator doesn't turn off (refcount=1),
-   but the .unprepared_time in panel_edp is still updated.
-2. Bridge off, regulator goes off (refcount=0).
-3. Panel on, but the panel driver uses the wrong .unprepared_time to check
-   the unprepare delay.
+It did indeed fall through the cracks, not quite sure how.  Applied now,
+thanks.
 
-Fixes: f9f00b1f6b9b ("arm64: dts: mediatek: asurada: Add display regulators")
-Signed-off-by: Pin-yen Lin <treapking@chromium.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
----
-
-Changes in v2:
-- Update the commit message
-- Collect review tag
-
- arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-index 7a704246678f..08d71ddf3668 100644
---- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-@@ -147,6 +147,7 @@ pp3300_mipibrdg: regulator-3v3-mipibrdg {
- 		regulator-boot-on;
- 		gpio = <&pio 127 GPIO_ACTIVE_HIGH>;
- 		vin-supply = <&pp3300_g>;
-+		off-on-delay-us = <500000>;
- 	};
- 
- 	/* separately switched 3.3V power rail */
--- 
-2.45.0.rc0.197.gbae5840b3b-goog
-
+jon
