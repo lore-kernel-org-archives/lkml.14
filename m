@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055C823775;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A9C36AFE;
 	Thu,  2 May 2024 06:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714629615; cv=none; b=lfAiPHirvpjOGLRwTE8C5YYFc3aOh223xlCgd/d7tf6WVnQWEHxIPSNX1b+lkgJ1pBYbT4O7Pyw7v54WD3++9OMwOOVj8sl00w8/y7Zu8DbdJhqK87uQstEJoBihFUjknBIRIrOduar6L24aEkcL9cBLXRlRBmZGNsTql6N5oMo=
+	t=1714629616; cv=none; b=XRQywEQcnbZcTlY+BnwepoJZFxpt6qYd3qDwmI9zhmbn5A9N/nLQRTTwSooIlHHaPmKY6Q/paqEXQDcU5mT0RUt1DQ+YwRpTyjviuZojyhboKeMcXGhwXUBcUa4k6YszaNEOJ7qyWksGMLWM2MMHnZWRnHtVVesU5557Hw5KW+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714629615; c=relaxed/simple;
-	bh=FD83vOLGqIEiapuFz0V+SOOdVptlx7pB58xGzLzESqw=;
+	s=arc-20240116; t=1714629616; c=relaxed/simple;
+	bh=wBhNx/ENJ3dtDGzKbOpBhB0k32mIboB/9iNKvY4VhfM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NFPgEoPQLam8N9Ba/4J2FiMfm6qHuATgb11nKLsiveNCFd3WDy70cRelXOB2+k39Fwq+LMzaOqdI8HUKZZ9bceEHcPLTk0ERR6X1IWMX3LIljM+uyu9fn5Ptkf0pdUj3xuMF4fwRKe1qeioyn0sYLwOoLr+2KPTxW4WgZtj75iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHZFhw/W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cM1Ow5beb7dNMbXmVOtzdWG+ju13aoggIW+wunG7cF2BPdj8ffHdcK7csp/mgs78mNHvm4uhOtj2460/VRhhvmGMsiEoDweV3+SfTugYaqtNyMQs95yr4ngMyv+OtOOiVp4nNQl8/roGzBw/4ehLOGdIDNl1WbjZP/PT0e7iyyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hs5/Y1gp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHZFhw/W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82139C4AF50;
-	Thu,  2 May 2024 06:00:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hs5/Y1gp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E0E4C4AF51;
+	Thu,  2 May 2024 06:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714629614;
-	bh=FD83vOLGqIEiapuFz0V+SOOdVptlx7pB58xGzLzESqw=;
+	s=k20201202; t=1714629615;
+	bh=wBhNx/ENJ3dtDGzKbOpBhB0k32mIboB/9iNKvY4VhfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rHZFhw/WFZWr/010GbTf+vBwDGHAWj5xhRUIq/VH4Il3w2dgRjA56xG6KjqNz0oBH
-	 ftDTLJCYVInzFIKFhRvuQ9FIvDt/y2D03TYyh1ApemaDCdpv16e051gQqe34K84I7E
-	 x4O5WQX+/N/7Z9aLYfJmDZ7mvGMQYXxzKjKq89UKvuGjq0h5LfRvGIxFDy6yYsBOA8
-	 TJN0Q/Re+wd4V/GhaknVD19obidf60RkkPDYEQ3E2x6fJV15sMC/hwnkjT7DM55O7u
-	 YG6qA5ETnadqEwLwbF8sYZfAkKBM42T5xdraDPKWyM69pTyrJID6TkR4aScJ6DRpTU
-	 fd51LCLJkhzJQ==
+	b=Hs5/Y1gpP3uEtaJBKNPkmeW54B0HZW29fmbLYQfgRdTIzAlU7pwW5SYG/ob3egHyH
+	 gXmEt7gK/0KqbWJZuWM5FFiglpXX4ajDpzzhlJI976gdpCh8LZGKxYCyu+3qFb53Ah
+	 GNCOSziTp/RR80ifewaD9o6rjkLPzZvr0UGYeUVus9lMv5jOSNowvgTwI9WDNgtIL8
+	 OfU16zQwbIkxo0WpKdQ/W9axKErlQyoGuinKDK63TOyLLqgQArVx9UOpA8UXqJf1qy
+	 bkYuz4uSF9hfUBEjXKd5v0+18n6SQIkMFNaFud5kOXFGx/vk9aKHqQY9Hij/5Zols8
+	 KFv90TiSXgUfg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/6] perf annotate-data: Check memory access with two registers
-Date: Wed,  1 May 2024 23:00:09 -0700
-Message-ID: <20240502060011.1838090-5-namhyung@kernel.org>
+Subject: [PATCH 6/6] perf annotate-data: Check kind of stack variables
+Date: Wed,  1 May 2024 23:00:11 -0700
+Message-ID: <20240502060011.1838090-7-namhyung@kernel.org>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 In-Reply-To: <20240502060011.1838090-1-namhyung@kernel.org>
 References: <20240502060011.1838090-1-namhyung@kernel.org>
@@ -50,106 +50,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The following instruction pattern is used to access a global variable.
+I sometimes see ("unknown type") in the result and it was because it
+didn't check the type of stack variables properly during the instruction
+tracking.  The stack can carry constant values (without type info) and
+if the target instruction is accessing the stack location, it resulted
+in the "unknown type".
 
-  mov     $0x231c0, %rax
-  movsql  %edi, %rcx
-  mov     -0x7dc94ae0(,%rcx,8), %rcx
-  cmpl    $0x0, 0xa60(%rcx,%rax,1)     <<<--- here
+Maybe we could pick one of integer types for the constant, but it
+doesn't really mean anything useful.  Let's just drop the stack slot if
+it doesn't have a valid type info.
 
-The first instruction set the address of the per-cpu variable (here, it
-is 'runqueus' of struct rq).  The second instruction seems like a cpu
-number of the per-cpu base.  The third instruction get the base offset
-of per-cpu area for that cpu.  The last instruction compares the value
-of the per-cpu variable at the offset of 0xa60.
+Here's an example how it got the unknown type.
+Note that 0xffffff48 = -0xb8.
+  -----------------------------------------------------------
+  find data type for 0xffffff48(reg6) at ...
+  CU for ...
+  frame base: cfa=0 fbreg=6
+  scope: [2/2] (die:11cb97f)
+  bb: [37 - 3a]
+  var [37] reg15 type='int' size=0x4 (die:0x1180633)
+  bb: [40 - 4b]
+  mov [40] imm=0x1 -> reg13
+  var [45] reg8 type='sigset_t*' size=0x8 (die:0x11a39ee)
+  mov [45] imm=0x1 -> reg2                     <---  here reg2 has a constant
+  bb: [215 - 237]
+  mov [218] reg2 -> -0xb8(stack) constant      <---  and save it to the stack
+  mov [225] reg13 -> -0xc4(stack) constant
+  call [22f] find_task_by_vgpid
+  call [22f] return -> reg0 type='struct task_struct*' size=0x8 (die:0x11881e8)
+  bb: [5c8 - 5cf]
+  bb: [2fb - 302]
+  mov [2fb] -0xc4(stack) -> reg13 constant
+  bb: [13b - 14d]
+  mov [143] 0xd50(reg3) -> reg5 type='struct task_struct*' size=0x8 (die:0xa31f3c)
+  bb: [153 - 153]
+  chk [153] reg6 offset=0xffffff48 ok=0 kind=0 fbreg    <--- access here
+  found by insn track: 0xffffff48(reg6) type-offset=0
+   type='G<EF>^K<F6><AF>U' size=0 (die:0xffffffffffffffff)
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/annotate-data.c | 44 +++++++++++++++++++++++++++++----
- 1 file changed, 39 insertions(+), 5 deletions(-)
+ tools/perf/util/annotate-data.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index f1e52a531563..245e3ef3e2ff 100644
+index 68fe7999f033..2c98813f95cd 100644
 --- a/tools/perf/util/annotate-data.c
 +++ b/tools/perf/util/annotate-data.c
-@@ -1031,22 +1031,37 @@ static void update_insn_state_x86(struct type_state *state,
- 		else if (has_reg_type(state, sreg) &&
- 			 state->regs[sreg].kind == TSR_KIND_PERCPU_BASE) {
- 			u64 ip = dloc->ms->sym->start + dl->al.offset;
-+			u64 var_addr = src->offset;
- 			int offset;
+@@ -1314,6 +1314,9 @@ static int check_matching_type(struct type_state *state,
+ 			return -1;
+ 		}
  
-+			if (src->multi_regs) {
-+				int reg2 = (sreg == src->reg1) ? src->reg2 : src->reg1;
++		if (stack->kind != TSR_KIND_TYPE)
++			return 0;
 +
-+				if (has_reg_type(state, reg2) && state->regs[reg2].ok &&
-+				    state->regs[reg2].kind == TSR_KIND_CONST)
-+					var_addr += state->regs[reg2].imm_value;
-+			}
-+
- 			/*
- 			 * In kernel, %gs points to a per-cpu region for the
- 			 * current CPU.  Access with a constant offset should
- 			 * be treated as a global variable access.
- 			 */
--			if (get_global_var_type(cu_die, dloc, ip, src->offset,
-+			if (get_global_var_type(cu_die, dloc, ip, var_addr,
- 						&offset, &type_die) &&
- 			    die_get_member_type(&type_die, offset, &type_die)) {
- 				tsr->type = type_die;
- 				tsr->kind = TSR_KIND_TYPE;
- 				tsr->ok = true;
+ 		*type_die = stack->type;
+ 		/* Update the type offset from the start of slot */
+ 		dloc->type_offset -= stack->offset;
+@@ -1343,6 +1346,9 @@ static int check_matching_type(struct type_state *state,
+ 			return -1;
+ 		}
  
--				pr_debug_dtp("mov [%x] percpu %#x(reg%d) -> reg%d",
--					     insn_offset, src->offset, sreg, dst->reg1);
-+				if (src->multi_regs) {
-+					pr_debug_dtp("mov [%x] percpu %#x(reg%d,reg%d) -> reg%d",
-+						     insn_offset, src->offset, src->reg1,
-+						     src->reg2, dst->reg1);
-+				} else {
-+					pr_debug_dtp("mov [%x] percpu %#x(reg%d) -> reg%d",
-+						     insn_offset, src->offset, sreg, dst->reg1);
-+				}
- 				pr_debug_type_name(&tsr->type, tsr->kind);
- 			} else {
- 				tsr->ok = false;
-@@ -1340,6 +1355,17 @@ static int check_matching_type(struct type_state *state,
- 
- 		pr_debug_dtp(" percpu var\n");
- 
-+		if (dloc->op->multi_regs) {
-+			int reg2 = dloc->op->reg2;
++		if (stack->kind != TSR_KIND_TYPE)
++			return 0;
 +
-+			if (dloc->op->reg2 == reg)
-+				reg2 = dloc->op->reg1;
-+
-+			if (has_reg_type(state, reg2) && state->regs[reg2].ok &&
-+			    state->regs[reg2].kind == TSR_KIND_CONST)
-+				var_addr += state->regs[reg2].imm_value;
-+		}
-+
- 		if (get_global_var_type(cu_die, dloc, dloc->ip, var_addr,
- 					&var_offset, type_die)) {
- 			dloc->type_offset = var_offset;
-@@ -1527,8 +1553,16 @@ static int find_data_type_block(struct data_loc_info *dloc, int reg,
- 		found = find_data_type_insn(dloc, reg, &basic_blocks, var_types,
- 					    cu_die, type_die);
- 		if (found > 0) {
--			pr_debug_dtp("found by insn track: %#x(reg%d) type-offset=%#x\n",
--				     dloc->op->offset, reg, dloc->type_offset);
-+			char buf[64];
-+
-+			if (dloc->op->multi_regs)
-+				snprintf(buf, sizeof(buf), "reg%d, reg%d",
-+					 dloc->op->reg1, dloc->op->reg2);
-+			else
-+				snprintf(buf, sizeof(buf), "reg%d", dloc->op->reg1);
-+
-+			pr_debug_dtp("found by insn track: %#x(%s) type-offset=%#x\n",
-+				     dloc->op->offset, buf, dloc->type_offset);
- 			pr_debug_type_name(type_die, TSR_KIND_TYPE);
- 			ret = 0;
- 			break;
+ 		*type_die = stack->type;
+ 		/* Update the type offset from the start of slot */
+ 		dloc->type_offset -= fboff + stack->offset;
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
