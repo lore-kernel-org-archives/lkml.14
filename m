@@ -1,71 +1,45 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AEB5915A
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 09:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248A453E22;
+	Thu,  2 May 2024 09:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714641898; cv=none; b=hQ4wcXrs7EL5B+TxrId65/ib0sorGZ2v5GcvQ1GWdOThSwmvvs79kyoc9FGODpTW687fW7K8AtYLbdoskx8fyel8iPfCKM2tKx3RCfRVBU3V4OxaG2XNpykKqnLnSEY6a+PlBh2OUnjDvQ1on5gCo5cNqpKAaj4v1x4BsWphqXQ=
+	t=1714641902; cv=none; b=sz9HRn+lmWmQnKN4gQjm+Ke9MoMYokkCCKMk0Ociy56J1A/UAdlmXcHPdmYA1zIbxbBzag+/HNGpeKYPy7jla8Sx5lZwG6qsoTBh8fl+2ssiX4fIKzYx/4OAZSum72uDNk4nkNRp6uauk1iVwpmcjsaC9qsU6ZAUZ9bPc7gCN0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714641898; c=relaxed/simple;
-	bh=IWMavLt3kFulGzQxZIoWZWxUM2RWdm2WOTlumZ3O1yY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PrzUbaKpnUEv7h6DW4i6mF0LNx2rfwFrXFZNmu7a22bhGPdgVcJ5z9Wug9/0Zaa7KrjQfn/pQXSRTmUu5JbEiL3wh1mr2E9b3KGPOSgNl/FTt6L1DYOGBBsx87OjoTTTiOIwPGYOLaYCNJte7RSjWFzimY37F8oWERuKAlAsA9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XX8keK1D; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XX8keK1D"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ab48c1c007so1967083a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 02:24:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714641896; x=1715246696; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Vtuu8T9epphwTtTuu3lp/GQ6ElIGl8lBIMHX4TrsJc=;
-        b=XX8keK1DzMtknkUI07aQY63yogE6jBIurP9xTWVm9DS7/IbyjzBAVLwY6n5gGj8lgR
-         l02gjwMT380wUxOJPTLoVwAEmwMZGgANXDk/JvYU0svz19Lb/0ybzjtCURCWXcb451rc
-         6AskaOvu9Mpq/kAcJlgIwwpPRMEuVlAFxTQd7Au4HVRyocJZorld0Ky4YPN5WKCMelFo
-         xl9lsHg9zZNwEJp5lyDbGH0BrtggJU8UZIPzd86VjhSw3R40zl6txD+L0UK2JzaM/S5I
-         W/TnLDVkXuspONzCkkCc7IoDS3VnfB+Xr3wVfBPfbuwgcXp1QN5eiPUy6EVENiTNItkw
-         MmpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714641896; x=1715246696;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Vtuu8T9epphwTtTuu3lp/GQ6ElIGl8lBIMHX4TrsJc=;
-        b=R8QIbOMDtj/g+X1IHB0t6g/3vTOzrohcd1Cw/j6HPsEgQfVOzreHdTVkZhqjPfLTfI
-         ZtCVMvcscDgyHHtZnPPxX+4fSNSx8x02p0b6OL8UpIRHFVwDAcHoMJzT4MyIEBM+aRXc
-         XKjeh1n6LgenqFEfOglAsGKSiP5aTOdblu0x58YAQRIPqnSAUW7RBCL9B9Wax/AW9/uv
-         aS6eG/b6kQlSmTiat+TrjUOkk7n+D3T1KbBvlU3A0QAVMle8Xq3JqNGkdO5x2g/sccGC
-         mb4V6ExsBvOtUwUuSuNabZmaorTY4CpiZWyCONn4SVOMOa8jqVnGmF7YWljP9njp11iA
-         ruZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXkZcYQDotkDl6lEoyE0jqmlr6yDeJjMh4V6HtQ4gHsDt1HmM6ydHhxopxpHMYx0bdt58a9nlNnmJ3MUrJM1XmryQbzwOjVsJ0ljdJD
-X-Gm-Message-State: AOJu0YzeSbR+PNgfZmmr80lDsxkY9TgZpXk7I2DI3qoz5fqdHyttQWJv
-	cWETxwxBoJuJKyds5hUNARfZf15SZnpX6wH6+p6L+4IKhcQpfYvbsfIWQJTz
-X-Google-Smtp-Source: AGHT+IHKNU0etU7+knP43TQ0jsaxdSCdUU2aisVlh1h0CtI+thkwDQ6wADoLeaIEi+DFGWe4rwH/fA==
-X-Received: by 2002:a05:6a20:f388:b0:1ae:42c8:4f69 with SMTP id qr8-20020a056a20f38800b001ae42c84f69mr5799654pzb.0.1714641895964;
-        Thu, 02 May 2024 02:24:55 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id bk15-20020a17090b080f00b002a51dcecc49sm746836pjb.38.2024.05.02.02.24.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 02:24:55 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: akpm@linux-foundation.org,
-	yury.norov@gmail.com
-Cc: linux@rasmusvillemoes.dk,
-	n26122115@gs.ncku.edu.tw,
-	jserv@ccns.ncku.edu.tw,
-	linux-kernel@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>
-Subject: [PATCH v5 2/2] bitops: Optimize fns() for improved performance
-Date: Thu,  2 May 2024 17:24:43 +0800
-Message-Id: <20240502092443.6845-3-visitorckw@gmail.com>
+	s=arc-20240116; t=1714641902; c=relaxed/simple;
+	bh=Q3TjhEeueXQnJjDtU66CjFcI6nMSGbi/emQb6a0f7zY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K7A6A2BC+pwzgNJmkf9VuyzpFbdMT91UZW7PEbpA0z6wWGmrfwoVOXRWaziuuP0aLluBn3w5ObitOHdjvhgsDmuW1D3zV2WXAwnOSuZRqmLWceeTw8T48nc0Vri9b8UqziV/c6qJ2dYddPM0Pi81cbjp8yE+JE2uCpGmLs4Jfwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4429Og2J22334252, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4429Og2J22334252
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 2 May 2024 17:24:42 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 2 May 2024 17:24:43 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 2 May
+ 2024 17:24:42 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, "Justin
+ Lai" <justinlai0215@realtek.com>
+Subject: [PATCH net-next v17 13/13] MAINTAINERS: Add the rtase ethernet driver entry
+Date: Thu, 2 May 2024 17:18:47 +0800
+Message-ID: <20240502091847.65181-14-justinlai0215@realtek.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240502092443.6845-1-visitorckw@gmail.com>
-References: <20240502092443.6845-1-visitorckw@gmail.com>
+In-Reply-To: <20240502091847.65181-1-justinlai0215@realtek.com>
+References: <20240502091847.65181-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,65 +47,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-The current fns() repeatedly uses __ffs() to find the index of the
-least significant bit and then clears the corresponding bit using
-__clear_bit(). The method for clearing the least significant bit can be
-optimized by using word &= word - 1 instead.
+Add myself and Larry Chiu as the maintainer for the rtase ethernet driver.
 
-Typically, the execution time of one __ffs() plus one __clear_bit() is
-longer than that of a bitwise AND operation and a subtraction. To
-improve performance, the loop for clearing the least significant bit
-has been replaced with word &= word - 1, followed by a single __ffs()
-operation to obtain the answer. This change reduces the number of
-__ffs() iterations from n to just one, enhancing overall performance.
-
-This modification significantly accelerates the fns() function in the
-test_bitops benchmark, improving its speed by approximately 7.6 times.
-Additionally, it enhances the performance of find_nth_bit() in the
-find_bit benchmark by approximately 26%.
-
-Before:
-test_bitops: fns:            58033164 ns
-find_nth_bit:                  4254313 ns,  16525 iterations
-
-After:
-test_bitops: fns:             7637268 ns
-find_nth_bit:                  3362863 ns,  16501 iterations
-
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
 ---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Changes in v5:
-- Update benchmark results in the commit message.
-
- include/linux/bitops.h | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 2ba557e067fe..57ecef354f47 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -254,16 +254,10 @@ static inline unsigned long __ffs64(u64 word)
-  */
- static inline unsigned long fns(unsigned long word, unsigned int n)
- {
--	unsigned int bit;
-+	while (word && n--)
-+		word &= word - 1;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 53b7ca804465..239aae94dc0f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18476,6 +18476,13 @@ L:	linux-remoteproc@vger.kernel.org
+ S:	Maintained
+ F:	drivers/tty/rpmsg_tty.c
  
--	while (word) {
--		bit = __ffs(word);
--		if (n-- == 0)
--			return bit;
--		__clear_bit(bit, &word);
--	}
--
--	return BITS_PER_LONG;
-+	return word ? __ffs(word) : BITS_PER_LONG;
- }
- 
- /**
++RTASE ETHERNET DRIVER
++M:	Justin Lai <justinlai0215@realtek.com>
++M:	Larry Chiu <larry.chiu@realtek.com>
++L:	netdev@vger.kernel.org
++S:	Maintained
++F:	drivers/net/ethernet/realtek/rtase/
++
+ RTL2830 MEDIA DRIVER
+ M:	Antti Palosaari <crope@iki.fi>
+ L:	linux-media@vger.kernel.org
 -- 
 2.34.1
 
