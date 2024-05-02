@@ -1,183 +1,123 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B116E15E5CE;
-	Thu,  2 May 2024 18:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4625F874;
+	Thu,  2 May 2024 19:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714676312; cv=none; b=IfV5oMwAvZQ/MqWHLeBjC/dbjbelYc6eXHYgJ3eEZwd+Doj7jiVui1v+4+ywSICFbiCkE+skx2Ju5kT3qpPU6G5KS7b9DrqfOBOF3AwrGP5zxSTWpzSUcFVzB4IG1+5BOKANN7h9UQ25gXhLZ2ghPtqf+tJvDZZdPkviu/AGPMs=
+	t=1714676497; cv=none; b=X1Ao8sJ0rHNu+1BVLZH7x5iOHR8MKYJGhxnvqy3cQh5v2jYlzRuxGQdlwbCczfwQCsxjPXiED06WkadZQOcYSShc4YVJObwLRJxb85H7MPmN28hDBeTQkfgfUp0qeTOTR3X1mbR8uTv7HoPWc+txeo4PiiJ3ELU1wwS9LdP6nLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714676312; c=relaxed/simple;
-	bh=1ddELZ3rv7/x2FMyMnZThIFs8dk075U55LChIsF4djo=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UZ+2DPaVwSh23d+xKiD1Bd5HU99age6mSBBkV/xr+9dFuFj9omVI+NtLYKlzAVvoySIef5ksSJJvaKTQ/GNqc/c2lTHgXV8oX6Emfuy13oVj8O73bWGTTuVvW36UnIBwD1cA9a44BtWMvVp5hQ0Fw4/w9Tgi1G4546IuSOW/0qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=VVybXyDH; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1714676497; c=relaxed/simple;
+	bh=mu8rfKXOAdKbFd++Ire3kxBFhX7hIRUh9vpX9hFf9wU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UFseJhbc1k6GQUqkbf7YP/TSnNiwctsXZTWNwyccIfzdS5qGLcOco4fvW06su+gmfb7/2moBsOE6GUAeqFwfQThWglygOkCvH5mmuqP+d1zyiJ5TeLM7it1S1fuFencqEZVqiX1ptQLNjMvSkPmqQzoEWVz/c0q5n2xHPBoy+SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G1Q7Ifr4; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="VVybXyDH"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s2bdQ-005SoS-1F;
-	Thu, 02 May 2024 20:58:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=eOa7z2BB2RrbUPKNWTzARvpY9sFJebL6N8r4Bi6ZY8c=; b=VVybXyDHiAVomT+iJTmAt7+Ut/
-	PNTRndoK1LlVEaqXqdoA+BqJywRqK9RaNEIHcu+ceif6QpDwpXGFBOGrZhIcDlDH7HYhzbG9tJrZV
-	niDohH4XAhiqu5SG1yJ+19fG+5H/hoBVEbEFrU2FYwk8qW2qFB6wxV0WqeLJM3BjoXqlxkUqz2q9Z
-	dOgILdpIRMHezsG35wGfF0JDKycXAGWWtJjv1Gs5BAigTaoZOSnDpzZJGYujqY5k4VEjY/v7/mmgF
-	o9sp1DlhTv+PnE86BYom/0uXmulRqniwffukpz2pHrR8+K0PeN0t+13Ti5gB6ZZFXJiesUZgk+YbO
-	K8JLCPCg==;
-Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s2bdO-000RVW-0I;
-	Thu, 02 May 2024 20:58:23 +0200
-Received: from andi by aktux with local (Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s2bdP-003JBv-0J;
-	Thu, 02 May 2024 20:58:23 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: dmitry.torokhov@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andreas@kemnade.info,
-	hdegoede@redhat.com,
-	andy.shevchenko@gmail.com,
-	u.kleine-koenig@pengutronix.de,
-	siebren.vroegindeweij@hotmail.com,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: touchscreen: convert elan,ektf2127 to json-schema
-Date: Thu,  2 May 2024 20:58:18 +0200
-Message-Id: <20240502185819.788716-2-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240502185819.788716-1-andreas@kemnade.info>
-References: <20240502185819.788716-1-andreas@kemnade.info>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1Q7Ifr4"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51f1bf83f06so1316089e87.1;
+        Thu, 02 May 2024 12:01:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714676494; x=1715281294; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nh35CEGjyQd/KulzELdyVZbVY0fU4Acs6q0cwM1JL4g=;
+        b=G1Q7Ifr4bQw98VGvFijQU/llKeSTHwbc7S44+ItGOZ5h2Nw6i34ziFggzplplcUaDq
+         BE70owmo3/C1JR/XlUQ+96auNhlCjSrq81WvZrh8+Eun1DnfLohWhiPK6IB4Ni7jpVND
+         FKQm1C9lf1A8XdM1zEVAkHU2izqLqritb4ItioOC+ETojYj8lB0t3ifbUaG+Uo5M3drD
+         Dyg9d75Y/jU9O8T7YAaK9U5joL/GL5iV9LPcWDJkTvWKysPQPMyPVZaq2xM63YlxfgI1
+         yWKEjF8vbnQL8FoPRK6fU/uND6rjHE0aTeaRlG5eAQnJwCp/Fg6PEFhWHHnsJygVhtlp
+         0usA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714676494; x=1715281294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nh35CEGjyQd/KulzELdyVZbVY0fU4Acs6q0cwM1JL4g=;
+        b=vIqXTYeZz9w+ndjSvZzWB6DMAy7UMK8q258GjLy0XngFsyLG6mMfo6aWz2GYTGtpF/
+         0CPBFP08Z00W8vKN//7TbfWjN5G7eJiJ7a4hW12jdSKZ2OKyK30SqXsS7rZ8fnBWftBy
+         lbUrpYH8huCdZ59XkzV2VfgtDsqZshB09oOLeaq7uCllsft/dNN89inTR9s2dz2Ga3cK
+         N66J3F9Hk6m/iXXWRKWvRuTjW5Ewfb38sURxS6w92HTpc32zf5ibkPrxKum9nnw+/IlG
+         YZGyGT33tBmvAdi3pVGtzaNax/gzwxcSmB/v8+U4NIdHHNyk9rdOtV5iEvYysxs0sAux
+         1D5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWd1Yt4HvGX44Fxh+BlvP/gzuFSpgeI58PGgyLNrsrlGCDu/yv0BuO/wcz1RM0SF4yjJHSP00WkwNM6Y4EkaUWiRrjFGTGejQmXLrHSSluGIvq8TKemd6j2DLLCAk6ZrqdoA1c+ABvNmg0=
+X-Gm-Message-State: AOJu0Yx/4oN/monWdWhegwkRLfX2JA0d512QDVnaWYosYLIfXFZWfYju
+	9RWXZBfh1XzUdIROYueLwZihAI96/pOO1qLPAHicgbe8r3dRUPw+ptpFTDcXTo6hW6RhktgJOzn
+	EGG5P1iVxrzkiQ/J8tgY5y7kAWdM=
+X-Google-Smtp-Source: AGHT+IFtdKlZWuM1wsaGzBv6v0w3MPzrm4tdeztfDeMWx9KsDau87uqaZLeguIyMdvA7lu+3GnzFmJ0hvz3cCht3hGs=
+X-Received: by 2002:ac2:5dd3:0:b0:51e:ef7f:4e89 with SMTP id
+ x19-20020ac25dd3000000b0051eef7f4e89mr457732lfq.6.1714676493797; Thu, 02 May
+ 2024 12:01:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240430080019.4242-1-konishi.ryusuke@gmail.com>
+ <20240430080019.4242-2-konishi.ryusuke@gmail.com> <650ed9f6-fa50-4a3b-939d-633f9e389137@acm.org>
+ <CAKFNMomCzNMU0tjLkEchr=GQwSVW1zr1GAq7vUToeOvX-M3eVg@mail.gmail.com>
+In-Reply-To: <CAKFNMomCzNMU0tjLkEchr=GQwSVW1zr1GAq7vUToeOvX-M3eVg@mail.gmail.com>
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Date: Fri, 3 May 2024 04:01:17 +0900
+Message-ID: <CAKFNMo=rkHF6urydfDbcvTbGzUEHmsTudVMm517pTE32vzqiwA@mail.gmail.com>
+Subject: Re: [PATCH -mm 1/2] nilfs2: use integer type instead of enum req_op
+ for event tracing header
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-nilfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert EKTF2127 infrared touchscreen controller binding to DT schema
-and add ektf2232 compatible.
+On Thu, May 2, 2024 at 12:30=E2=80=AFAM Ryusuke Konishi wrote:
+>
+> On Wed, May 1, 2024 at 11:42=E2=80=AFPM Bart Van Assche wrote:
+> >
+> > On 4/30/24 10:00, Ryusuke Konishi wrote:
+> > >       trace_nilfs2_mdt_submit_block(inode, inode->i_ino, blkoff,
+> > > -                                   opf & REQ_OP_MASK);
+> > > +                                   (__force int)(opf & REQ_OP_MASK))=
+;
+> >
+> > Please keep the enum req_op type instead of casting that type away with
+> > "__force int".
+> >
+> > Thanks,
+> >
+> > Bart.
+>
+> Hi Bart,
+>
+> No, this type cast is necessary to prevent the following sparse warning:
+>
+>   CC [M]  fs/nilfs2/mdt.o
+>   CHECK   fs/nilfs2/mdt.c
+> fs/nilfs2/mdt.c:155:43: warning: incorrect type in argument 4
+> (different base types)
+> fs/nilfs2/mdt.c:155:43:    expected int mode
+> fs/nilfs2/mdt.c:155:43:    got restricted blk_opf_t
+>
+> What we're doing here is just changing the event tracing type back to
+> int, and keeping blk_opf_t and enum req_op in the rest of the code.
+>
+> I understand if you have enough reason to ignore the warnings, but
+> Why do you have to keep enum req_op type instead of int for event tracing=
+?
+>
+> Regards,
+> Ryusuke Konishi
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- .../bindings/input/touchscreen/ektf2127.txt   | 25 --------
- .../input/touchscreen/elan,ektf2127.yaml      | 59 +++++++++++++++++++
- 2 files changed, 59 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/elan,ektf2127.yaml
+Hi Bart,
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt b/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
-deleted file mode 100644
-index c9f2c9f578e34..0000000000000
---- a/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--* Elan eKTF2127 I2C touchscreen controller
--
--Required properties:
-- - compatible		  : "elan,ektf2127" or "elan,ektf2132"
-- - reg			  : I2C slave address of the chip (0x40)
-- - interrupts		  : interrupt specification for the ektf2127 interrupt
-- - power-gpios		  : GPIO specification for the pin connected to the
--			    ektf2127's wake input. This needs to be driven high
--			    to take ektf2127 out of its low power state
--
--For additional optional properties see: touchscreen.txt
--
--Example:
--
--i2c@00000000 {
--	ektf2127: touchscreen@15 {
--		compatible = "elan,ektf2127";
--		reg = <0x15>;
--		interrupt-parent = <&pio>;
--		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>
--		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>;
--		touchscreen-inverted-x;
--		touchscreen-swapped-x-y;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/elan,ektf2127.yaml b/Documentation/devicetree/bindings/input/touchscreen/elan,ektf2127.yaml
-new file mode 100644
-index 0000000000000..66cda99a2ddd0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/elan,ektf2127.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/elan,ektf2127.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Elan eKTF2127 I2C touchscreen controller
-+
-+maintainers:
-+  - Siebren Vroegindeweij <siebren.vroegindeweij@hotmail.com>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - elan,ektf2127
-+      - elan,ektf2132
-+      - elan,ektf2232
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  power-gpios:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - power-gpios
-+
-+unevaluatedProperties: false
-+
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        touchscreen@15 {
-+            compatible = "elan,ektf2127";
-+            reg = <0x15>;
-+            interrupt-parent = <&pio>;
-+            interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>;
-+            power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>;
-+            touchscreen-inverted-x;
-+            touchscreen-swapped-x-y;
-+        };
-+    };
-+...
--- 
-2.39.2
+Sorry, I didn't realize you were digging into the issue and talking
+with the sparse and kbuild teams to resolve the issue.
 
+Is there any hope for a solution?
+
+If you haven't given up yet on solving the underlying problem, I would
+like to withdraw this patch.
+
+Thanks,
+Ryusuke Konishi
