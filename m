@@ -1,143 +1,90 @@
-Received: from nbd.name (nbd.name [46.4.11.11])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFA74D5BD;
-	Thu,  2 May 2024 08:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D46F59147
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 08:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714639505; cv=none; b=mw4fwBRcdVOz/3GOzmUL7BIU+Zq9FgBeMS6jHmEAWEsEdq0a9fZOt1cFeOvHlbwruj46VvDlwNws4Z0p4sGPComZ0yNrbYIyF6StGsa5ymnpcVZroaHOsU0kD6IfzzyjrwMImEpVHKWPFhHxgbqaHBLLrtcaNFagsbwYXInlYno=
+	t=1714639514; cv=none; b=ufM9FdB2o/he0IF7U0xfbUgDIrdhT4n6v5+FbAlOmzKimeuwNUCrjx0/C2+ZDEoG6nn7fxADDo3sWSbHzBGhYPZnIO4TWgaNXIDyK/M2nrbcBsowNHHNHf62cv0JY9NUSmX0O6bRzckVwoiYc/bjOUA5X81lwAwt4XjMOY5UGVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714639505; c=relaxed/simple;
-	bh=em95ThCxyRDDBjSTJDqTAFCT1a5qtEljt9DPevZNmjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oVfLR3Aw65gu4+FmIGpd4R9fZNi5hftcEk9HLVfi79yZk6p7IjxtzPGlif7cqsU5Liiwp+4r+1ey1rX668nhwgVfvKJJ5qAz3BSDvHEcZUOVcQ5bVvonovpfn0TA/xlaWfUB8bAByg+qgVHjMJMRYlSDzMfzSy9mNX6JRwt4GcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=dDIlppcj; arc=none smtp.client-ip=46.4.11.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
+	s=arc-20240116; t=1714639514; c=relaxed/simple;
+	bh=4E8utQNKBoQ5tzMCgjoTU2IXv0ph4OwfGKexiKxaTB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qlUgYHj9MVT/wPMHIVoEDHZ8YE+BMvBiouXOq5KskH5CzL2lvSrQ+ANMflhb6WsfF5NIhshY+KLDAlx9tpdw8dHPR84LRikao/Z1uF2zmgDur9N/MSCRITypdHCAoV4d1b3Yzn4fyg9ESzwkXDwbvXTwV6iss/xIbCOuLE0Go5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gdbcl+B9; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="dDIlppcj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-	s=20160729; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=ClxvxZbCCOupReIkBBj/RqjhghV22QirKfocqVO5EBo=; b=dDIlppcjXom0blgcUvN0bpCdHU
-	XaVwoil79CsD2lbRS5Ob5CKxDeQTIDCNg/CkZcjJF8se3h2nzRDE2Hbe8tcfXro6NPnfIzmfe4enV
-	w43KgA2ZlIOC1oVe2Nrk1dfMZDklJNcTTvlZrQNck025kh4C253gxviBd/AvMVpa8ryE=;
-Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=localhost.localdomain)
-	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
-	(Exim 4.96)
-	(envelope-from <nbd@nbd.name>)
-	id 1s2S3i-00BKKn-1O;
-	Thu, 02 May 2024 10:44:54 +0200
-From: Felix Fietkau <nbd@nbd.name>
-To: netdev@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>
-Cc: willemdebruijn.kernel@gmail.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 net-next v5 4/6] net: create tcp_gro_lookup helper function
-Date: Thu,  2 May 2024 10:44:45 +0200
-Message-ID: <20240502084450.44009-5-nbd@nbd.name>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240502084450.44009-1-nbd@nbd.name>
-References: <20240502084450.44009-1-nbd@nbd.name>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gdbcl+B9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=TMs6qFbAXOgZbfTIfvzW4Fje5xMDforyGhdiIfliBIE=; b=gdbcl+B967rG+mexLhZjkUct+0
+	qokcmFEoZNRMFGIxrZghtvyKN7tTr8it6YnJARHbLM00GAOB9RxLh+FjgXhy+zAgDC0TCY10mE8+d
+	qyn/+MZ4HX6+hE/2zd1fX1zW+FyaaKOkkCJUw/RXp0NhuOs75WSbVv4PMwhZWg28xzkqcGrt5M6RW
+	i/Y59qzNh6K6fR+xXx9/Clk5AUsfxFD6Pl4rEWv82Ufkj7Xyg/qBXYGvG7f4Wy49KztIYo0SgT9ic
+	h4X+KgaJjgoHUYZBM1IxPRxAAnipTLxY7v7G2KZndGD7xqyANp5iPBDg9Uzf6q8xPpja0EvO07Hxf
+	IBbGYtGA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s2S3s-00000001HWh-3ZEV;
+	Thu, 02 May 2024 08:45:04 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7A87230057A; Thu,  2 May 2024 10:45:04 +0200 (CEST)
+Date: Thu, 2 May 2024 10:45:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	Luca Abeni <luca.abeni@santannapisa.it>,
+	Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Vineeth Pillai <vineeth@bitbyteword.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Phil Auld <pauld@redhat.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Youssef Esmat <youssefesmat@google.com>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>
+Subject: Re: [PATCH V6 2/6] sched/deadline: Deferrable dl server
+Message-ID: <20240502084504.GX30852@noisy.programming.kicks-ass.net>
+References: <cover.1712337227.git.bristot@kernel.org>
+ <7b9c206e914ef257a2534199f25938ffafa3e59e.1712337227.git.bristot@kernel.org>
+ <20240410174749.GC30852@noisy.programming.kicks-ass.net>
+ <c4c6575d-5ea0-44ba-bbdc-eadad77dea81@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4c6575d-5ea0-44ba-bbdc-eadad77dea81@redhat.com>
 
-This pulls the flow port matching out of tcp_gro_receive, so that it can be
-reused for the next change, which adds the TCP fraglist GRO heuristic.
-
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
----
- include/net/tcp.h      |  1 +
- net/ipv4/tcp_offload.c | 41 +++++++++++++++++++++++++----------------
- 2 files changed, 26 insertions(+), 16 deletions(-)
-
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index a9eb21251195..9f08ecab26e0 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -2199,6 +2199,7 @@ void tcp_v4_destroy_sock(struct sock *sk);
- 
- struct sk_buff *tcp_gso_segment(struct sk_buff *skb,
- 				netdev_features_t features);
-+struct sk_buff *tcp_gro_lookup(struct list_head *head, struct tcphdr *th);
- struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb);
- INDIRECT_CALLABLE_DECLARE(int tcp4_gro_complete(struct sk_buff *skb, int thoff));
- INDIRECT_CALLABLE_DECLARE(struct sk_buff *tcp4_gro_receive(struct list_head *head, struct sk_buff *skb));
-diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
-index aa7508676315..4a194a9d36cd 100644
---- a/net/ipv4/tcp_offload.c
-+++ b/net/ipv4/tcp_offload.c
-@@ -245,6 +245,27 @@ struct sk_buff *tcp_gso_segment(struct sk_buff *skb,
- 	return segs;
- }
- 
-+struct sk_buff *tcp_gro_lookup(struct list_head *head, struct tcphdr *th)
-+{
-+	struct tcphdr *th2;
-+	struct sk_buff *p;
-+
-+	list_for_each_entry(p, head, list) {
-+		if (!NAPI_GRO_CB(p)->same_flow)
-+			continue;
-+
-+		th2 = tcp_hdr(p);
-+		if (*(u32 *)&th->source ^ *(u32 *)&th2->source) {
-+			NAPI_GRO_CB(p)->same_flow = 0;
-+			continue;
-+		}
-+
-+		return p;
-+	}
-+
-+	return NULL;
-+}
-+
- struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb)
- {
- 	struct sk_buff *pp = NULL;
-@@ -282,24 +303,12 @@ struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb)
- 	len = skb_gro_len(skb);
- 	flags = tcp_flag_word(th);
- 
--	list_for_each_entry(p, head, list) {
--		if (!NAPI_GRO_CB(p)->same_flow)
--			continue;
--
--		th2 = tcp_hdr(p);
--
--		if (*(u32 *)&th->source ^ *(u32 *)&th2->source) {
--			NAPI_GRO_CB(p)->same_flow = 0;
--			continue;
--		}
--
--		goto found;
--	}
--	p = NULL;
--	goto out_check_final;
-+	p = tcp_gro_lookup(head, th);
-+	if (!p)
-+		goto out_check_final;
- 
--found:
- 	/* Include the IP ID check below from the inner most IP hdr */
-+	th2 = tcp_hdr(p);
- 	flush = NAPI_GRO_CB(p)->flush;
- 	flush |= (__force int)(flags & TCP_FLAG_CWR);
- 	flush |= (__force int)((flags ^ tcp_flag_word(th2)) &
--- 
-2.44.0
-
+On Thu, May 02, 2024 at 10:35:02AM +0200, Daniel Bristot de Oliveira wrote:
+> On 4/10/24 19:47, Peter Zijlstra wrote:
+> >> +static enum hrtimer_restart dl_server_timer(struct hrtimer *timer, struct sched_dl_entity *dl_se)
+> >> +{
+> >> +	struct rq *rq = rq_of_dl_se(dl_se);
+> >> +	enum hrtimer_restart restart = 0;
+> >> +	struct rq_flags rf;
+> >> +	u64 fw;
+> >> +
+> >> +	rq_lock(rq, &rf);
+> > 	guard(rq_lock)(rq, &rf);
+> 
+> this is the way I found to get the &rf... inspired on sched_rr_get_interval():
+> 
+>         scoped_guard (rq_lock, rq) {
+>                 struct rq_flags *rf = &scope.rf;
+> 
+> is that right?
+> 
+Yeah, it's a bit ugly, but yes.
