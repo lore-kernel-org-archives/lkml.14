@@ -1,78 +1,157 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7455115991E;
-	Thu,  2 May 2024 16:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DF915359A;
+	Thu,  2 May 2024 16:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714665829; cv=none; b=BBPp0P4l0T9AtpYu3wwER1rlQPsYL9cE8m8NRDmjdOfUOrI2wzz9L2DW/qY+oDb+AgGmz/5MaSEkC8hOk5vo9Z80PJ1AxOv6eiosVsDR0cXhtVOIkrShocyl96HRyXtwBp5LoT1f6tjaULxYr9ErU7QUQ98FQDgzNf5H5xbaWt4=
+	t=1714665950; cv=none; b=ethDiv3BSBuswi9vHNOFQXwdV00J6M7mIsFfE+3rqD4d8ZSsqxcQf9EaS/funz+14Cysd7tbZbqFWFcWyfsBIBLo8vrBugJws3wbaQVqCc/Hq0PntQ93jBWz7ASlNMYSPtBl9xeG/Rw/d5N57VRWHdkYMnj0KB56VGG0I+26hfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714665829; c=relaxed/simple;
-	bh=C4p74GXwgBU9xVrDTLpTjgvTtnUYi96q//QK5IQzsNU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XmSk7zTL7PiGiwZNgARJcESJ8xijCMj0l69Gy/ITlzgJTn0JCXMgR2S/ws52ChZxBCfoOiARvodcEgLFilxO2Is1VGTSMqU2XH8WjwfPhDnKDWk1H6gjspy9DgiXCQROYtORipwydvlgBMKvTng13WXNebWk36hHe5cKvjO4JCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=dtUw95q0; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1714665950; c=relaxed/simple;
+	bh=liNJpqZaUusEYaet5+AZ8QmE2V1rDP/SCGnddJWnXNg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nwTnGcDCByU2EgATjK+4odkPAf7wICjLQLnj7cLCTrgVnQ1aKZsj53jci4nHtZFJWOLRfTvz7z++QHqGVN4awfma3QIssd9Cuq+WOgG/0bbX066b71jA7pN1mPVUNYLmM8QLc7Qgi2EZC7ukxSbrF7fmoBbvG8ZmcqGIO101ejs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DCqaaOI4; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="dtUw95q0"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 868CE47C39
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1714665827; bh=aQ5qTPoGJifQI2mnWAfO0qtqKccOBd/tOi8k7Fk0gQw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=dtUw95q0Geajx3oGs0seWfCk3LUg1lEQvScPl1MB87g8q9LVQOqgNLLRIX1eKNe62
-	 /Pr4/44bmoX5JkoSc/AiyQdCazIMuvIhGZtxQ/6ENBJRdnApNY1lbNtkY8F89WHxsN
-	 jEEZONcaLxRSOr9mpztFn6rqU97eF+AlaHyD3+zjX4mMZ16eatIhhdwCAvMly2m5m/
-	 6ln9ns31XbwwvKtkpiInnDnwrRpNUSGvQCKv6cafxV7iR32X/IEgYOc5ph/I/fdoYB
-	 0l2euBo/5Lf2RSCj2s6TGkru1fAQSaWnZz5nmrIFhjj12STiR3KLwA8IltzmT25qKI
-	 1MHuIcg2vQFJQ==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 868CE47C39;
-	Thu,  2 May 2024 16:03:47 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Remington Brasga <rbrasga@uci.edu>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Remington
- Brasga <rbrasga@uci.edu>
-Subject: Re: [PATCH] Docs: typos/spelling
-In-Reply-To: <20240429225527.2329-1-rbrasga@uci.edu>
-References: <20240429225527.2329-1-rbrasga@uci.edu>
-Date: Thu, 02 May 2024 10:03:46 -0600
-Message-ID: <87sez06w0t.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DCqaaOI4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714665949; x=1746201949;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=liNJpqZaUusEYaet5+AZ8QmE2V1rDP/SCGnddJWnXNg=;
+  b=DCqaaOI4SxpvTEmveF/UnfOdQ7Uek6XSnLcKsxj6Jj8IitMPS+vz397J
+   sfyj3QuJT2lQpFIEsg7i1+6Snx0aVszcoHpIGNClyD1tzOB+TLPbVLnuy
+   5FqUHtur/Ajf07Pk4/hGiHWNUAJVsGfMns5e4KdsfT4rJpGZr1gwFZW3R
+   l2FH+JK40mxXVm9FXYI/+BFobwTkj/NKXoAC2qJUlIot06FmAyyYvFSf1
+   VYT7vMPIpTpUzWrv0rMxpgjwBxh1zDT7B/9vQltCMucwQZapODC56vNBW
+   SamN4Jx0FCWIkA/6NdpUv0vjQOHWCGmOMVw1YJepoZZgaumza2TebnuAR
+   Q==;
+X-CSE-ConnectionGUID: G9xQVcqaSA+/5yPn+P9v1A==
+X-CSE-MsgGUID: vNDf5q9SRlqAcGN1UdcKQg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10374567"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10374567"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 09:05:17 -0700
+X-CSE-ConnectionGUID: gWDa5TmKQPuG2RdMmF7q/A==
+X-CSE-MsgGUID: IoiQcfODT/G8bTRHDEkG9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="64606203"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.54])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 09:05:10 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 2 May 2024 19:05:03 +0300 (EEST)
+To: Shresth Prasad <shresthprasad7@gmail.com>
+cc: davem@davemloft.net, gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+    sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-serial@vger.kernel.org, javier.carrasco.cruz@gmail.com, 
+    skhan@linuxfoundation.org, Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH v2][next] tty: sunsu: Simplify device_node cleanup by
+ using __free
+In-Reply-To: <20240501084110.4165-2-shresthprasad7@gmail.com>
+Message-ID: <f1707254-ec32-4884-275a-c3c85b48d7d5@linux.intel.com>
+References: <20240501084110.4165-2-shresthprasad7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 
-Remington Brasga <rbrasga@uci.edu> writes:
+On Wed, 1 May 2024, Shresth Prasad wrote:
 
-> Fix spelling and grammar in Docs descriptions
->
-> Signed-off-by: Remington Brasga <rbrasga@uci.edu>
+> Add `__free` function attribute to `ap` and `match` pointer
+> initialisations which ensure that the pointers are freed as soon as they
+> go out of scope, thus removing the need to manually free them using
+> `of_node_put`.
+> 
+> This also removes the need for the `goto` statement and the `rc`
+> variable.
+> 
+> Tested using a qemu x86_64 virtual machine.
+
+Eh, how can you test this with an x86_64 VM ???
+
+config SERIAL_SUNSU
+        tristate "Sun SU serial support"
+        depends on SPARC && PCI
+
+-- 
+ i.
+
+
+> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
 > ---
->  Documentation/admin-guide/hw-vuln/srso.rst                    | 2 +-
->  Documentation/admin-guide/kernel-parameters.txt               | 2 +-
->  Documentation/admin-guide/mm/ksm.rst                          | 2 +-
->  Documentation/arch/m68k/buddha-driver.rst                     | 2 +-
->  Documentation/arch/sparc/oradax/dax-hv-api.txt                | 2 +-
->  Documentation/arch/x86/xstate.rst                             | 2 +-
->  Documentation/core-api/entry.rst                              | 2 +-
->  Documentation/driver-api/mtd/nand_ecc.rst                     | 2 +-
->  Documentation/driver-api/scsi.rst                             | 2 +-
->  Documentation/driver-api/usb/usb.rst                          | 2 +-
->  Documentation/driver-api/wbrf.rst                             | 2 +-
->  Documentation/filesystems/directory-locking.rst               | 4 ++--
->  Documentation/filesystems/porting.rst                         | 4 ++--
->  Documentation/mm/slub.rst                                     | 2 +-
->  Documentation/security/SCTP.rst                               | 2 +-
->  Documentation/translations/zh_TW/process/submit-checklist.rst | 2 +-
->  16 files changed, 18 insertions(+), 18 deletions(-)
-
-Applied, thanks.
-
-jon
+> Changes in v2:
+>     - Specify how the patch was tested
+> 
+>  drivers/tty/serial/sunsu.c | 37 +++++++++++--------------------------
+>  1 file changed, 11 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/sunsu.c b/drivers/tty/serial/sunsu.c
+> index 67a5fc70bb4b..0f463da5e7ce 100644
+> --- a/drivers/tty/serial/sunsu.c
+> +++ b/drivers/tty/serial/sunsu.c
+> @@ -1382,44 +1382,29 @@ static inline struct console *SUNSU_CONSOLE(void)
+>  
+>  static enum su_type su_get_type(struct device_node *dp)
+>  {
+> -	struct device_node *ap = of_find_node_by_path("/aliases");
+> -	enum su_type rc = SU_PORT_PORT;
+> +	struct device_node *ap __free(device_node) =
+> +			    of_find_node_by_path("/aliases");
+>  
+>  	if (ap) {
+>  		const char *keyb = of_get_property(ap, "keyboard", NULL);
+>  		const char *ms = of_get_property(ap, "mouse", NULL);
+> -		struct device_node *match;
+>  
+>  		if (keyb) {
+> -			match = of_find_node_by_path(keyb);
+> +			struct device_node *match __free(device_node) =
+> +					    of_find_node_by_path(keyb);
+>  
+> -			/*
+> -			 * The pointer is used as an identifier not
+> -			 * as a pointer, we can drop the refcount on
+> -			 * the of__node immediately after getting it.
+> -			 */
+> -			of_node_put(match);
+> -
+> -			if (dp == match) {
+> -				rc = SU_PORT_KBD;
+> -				goto out;
+> -			}
+> +			if (dp == match)
+> +				return SU_PORT_KBD;
+>  		}
+>  		if (ms) {
+> -			match = of_find_node_by_path(ms);
+> +			struct device_node *match __free(device_node) =
+> +					    of_find_node_by_path(ms);
+>  
+> -			of_node_put(match);
+> -
+> -			if (dp == match) {
+> -				rc = SU_PORT_MS;
+> -				goto out;
+> -			}
+> +			if (dp == match)
+> +				return SU_PORT_MS;
+>  		}
+>  	}
+> -
+> -out:
+> -	of_node_put(ap);
+> -	return rc;
+> +	return SU_PORT_PORT;
+>  }
+>  
+>  static int su_probe(struct platform_device *op)
+> 
