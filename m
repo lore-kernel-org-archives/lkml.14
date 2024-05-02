@@ -1,182 +1,233 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2070.outbound.protection.outlook.com [40.107.243.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CAD5466B;
-	Thu,  2 May 2024 09:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714643507; cv=fail; b=i1Dv1FIiRVQ4qDjxkzeEcy33TyQf3aqK45G2V+3V9I+A97kLo1Pe7iKHaCCdFLqL0PgejlkGhYV2dTPykOvRN+HWFy5np1x03BhGL0QXvxC/5RMNKZpyJB2OpFpit6GW1+wYTlAfptxaJtEeMefgGnB4WJOxPl+N23+a6xAdjig=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714643507; c=relaxed/simple;
-	bh=rF7lfPwMUQFPxce6EjOqvBAojbhZJwLrtvFv6mm6Kzw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=McM3/Jqcz2gySHMVynPyDq8Db1s3CDhLdgXWjAI1uCUeMtmzw3CKkudYmBxq3qjyhmrvLuzwupVzjjKNjav3uJyZrtqqg2VakhjYSto1kYd9HK3PFCwd7/HdfVe0a4Wmne6CA/DGOucv0XH9dF/O5JS3hcVqsddNHWmWJKo2rSQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vmybJzQH; arc=fail smtp.client-ip=40.107.243.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6BF56444
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 09:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714643515; cv=none; b=T4u1sJrR3GjepgEVApwujF/tw9O1NNCt0DZUDmLejqlG4zIVjlF81HC59BfPqZWFRUuZOXpKbZVUrd3OkbiVtch+ABxBJiS9//NqqZ0Wf9icZ5Oj+bLxDx7LJG1MVInQXx61Cv37oT9AAW3/3+lcLA8yWpgXCzg6VEOV7tjuM5I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714643515; c=relaxed/simple;
+	bh=/TCOrrZIziWIoZHm680VfmeZr4x/v7De8uT3VCYEd4w=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ItNVrAGlheiTW+UQqxo7iCzPiFdih5FL+6f8TRJdp4MpV7LE92oMDWqejToMw+sZO8JIaRu5J7zDiZNwpvJw1VzQ7cEn5u2kHbXBxfGGGMBUD3u3f5DgABMNHZJJnj92+4VZmg5W14lEHdYRt5QLDNH6F19yj8ouWZJ6dhO4ClM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ov5vC8kL; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vmybJzQH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nkt40RjN7o48+VxEu5+UNcplsG4d8EnyUMz8L/UnrglhT5LLVZTz4CgfP0pMKAv8dAaarv5O3pS6hsD30iaoBoLds571vJZWfDjdM1tlgW6/b3UsSKiCrUoVDY3z6CB+gUCenVB16sSm7aOyWrVROO500yjfc5e+c770NF5agRG18lTmYo5DYDOqXJhgeXq1j0GNhp+OKjPqaQbpEiIRPFOVPCD37tN77J0JCmMp+UryVoVodSkarv61ChXzVmIWeHRomHPN/IoksJp41moX5lPELzNdPrL8SGCuHEn9cTUuKhnAHCBV0sF5ryVxjArNlMD/F3VDbwAJFFgsXgjzKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0tgWn4nOX3OuUTOl5cdSu8WwxiRBHKcAVq1FoP7j3Fw=;
- b=K6N0DkjSDF9aMrHTa6xdCAwIzD/5Mc0H/Th2PE7jHRnExjBiihrI92Fx0OoK6y/7PXKP99w30kedF53OHiPjKnVFqFwK12yaaxfN2LrW+c1O0v9aG1DovxMrKytLfvvl880fwwwajv6OGNxo3NlcU6kD3+UxnGCJDeTsYUVdUsKTZL3tdzV0O8mpgZ8riAF6XVbxV74Tf8roKulOkrURqJGH/8syeswUzqdbJRrshlQ7ilTShrR9/Ghx5KXFZP17bi57XF5xdt0fZl/7GKihFu64tNP0c0jvPXyn+u+x5WPSFGCroC1HGgiS6PquHmnM8pS1NYoiAkFLM4Qfu+QZfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0tgWn4nOX3OuUTOl5cdSu8WwxiRBHKcAVq1FoP7j3Fw=;
- b=vmybJzQHqfr1rIiHHzl+ZhFGgzJ9ZVxxwZ1aVIVtXiquLAGFxfaSnFu5nrOCUEE0zomheAIYFY4o/82oRQ4RLmuXHSnKJsa83rZlUiHBJ5Ng3WiPAXwICelC5aNtogj/0GElvHyP1oBBD7on53Hhscd8Ka7yYr68q1WUoFJy8wE=
-Received: from DM6PR03CA0015.namprd03.prod.outlook.com (2603:10b6:5:40::28) by
- CY8PR12MB7314.namprd12.prod.outlook.com (2603:10b6:930:52::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7544.28; Thu, 2 May 2024 09:51:43 +0000
-Received: from DS3PEPF000099DF.namprd04.prod.outlook.com
- (2603:10b6:5:40:cafe::e3) by DM6PR03CA0015.outlook.office365.com
- (2603:10b6:5:40::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30 via Frontend
- Transport; Thu, 2 May 2024 09:51:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099DF.mail.protection.outlook.com (10.167.17.202) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Thu, 2 May 2024 09:51:42 +0000
-Received: from BLR-L-DUGWEKAR.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 2 May
- 2024 04:51:37 -0500
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-To: <tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <ananth.narayan@amd.com>,
-	<gautham.shenoy@amd.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<sandipan.das@amd.com>, <alexander.shishkin@linux.intel.com>,
-	<irogers@google.com>, <gustavoars@kernel.org>, <kprateek.nayak@amd.com>,
-	<ravi.bangoria@amd.com>, Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Subject: [PATCH 0/2] Fix energy-pkg event for AMD CPUs
-Date: Thu, 2 May 2024 15:21:13 +0530
-Message-ID: <20240502095115.177713-1-Dhananjay.Ugwekar@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ov5vC8kL"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51ab4ee9df8so9658281e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 02:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714643511; x=1715248311; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cwHJ9SUvvvu/eTS+n+2CuD+oluv5OCbi0dkOhie1vG0=;
+        b=ov5vC8kLHU03jsPjcPGzh0PYkxy6g2a8BzI3o35ehUjpylQ7l+OeX1GCb7Nm7nVBy8
+         MbNrEPopopm1QAq618+w6crjfAuZH4Fm1rtyzhfoCo9gU9MlI13M8OvADGtV9b4egWMm
+         1hxyjc2Er/bOkHkTYwgh2wxOph5dqB9NMxG0fmpsaqSmpHXF+B22zsuXFD8NOUMj837d
+         awo4egPiSXVWaTJr5QGdSxEYoLip+xSLvBDo4R+K+72h7SF0trOQZG7jKEAOaCFMCbgt
+         w7lk0CHNK5y63ofGQ1PbnaooaNl/lv+wlKOwbQGOBJNXDM0nei2jBcH6Ru4yIi8YUK5M
+         zIHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714643511; x=1715248311;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cwHJ9SUvvvu/eTS+n+2CuD+oluv5OCbi0dkOhie1vG0=;
+        b=hp6X3UjgHXSdj/Pzwlk2+M463mRYATpYd3ZiJNGhn11kHchzcam5qK2534RxVNJMXe
+         ghdAewer9kZwpNi5CNx1e+yskbDI1DJJ/FFQFOTvifCaCZeUUDOwamtJgiLD8DA/USWL
+         a8IbQlxcHi2jJSy0/qcSbcBAu7LOwIhTaE3uK+ERykUOIwveD3jcsevSGcwleXUDgB0Z
+         8969a+/quOrjRCFEPEK4ZNkwe9yUDMnNwIB4IXKGc4rHED2ObB2kz8mw0NzuxjOQpTFG
+         lFlNX+44ozVpSY/6/u/InOeRUIdyPG7D99KkoMarZVrzN0P84jYXTVQMjJQOfknRQSKV
+         8iSw==
+X-Gm-Message-State: AOJu0Yzx0zPrGZD/WQ8VEdLKD4nkeQLEe/0gqMmM3TxAPWMiaXW/WRwd
+	jz0qFZVLUNPlfSEuPeiVFqC9uOGhjpH/pxm+Pv0SCxYIJ86BmSYtsUwEExIIYeQ=
+X-Google-Smtp-Source: AGHT+IH2nAedYmYkm09WVVnEdOPLPX/GEHT4/F0CjpiidPPF5MGNtDslJvDE/ZPiN6HaEr0YLxtgEA==
+X-Received: by 2002:a05:6512:3d24:b0:512:cc50:c3e0 with SMTP id d36-20020a0565123d2400b00512cc50c3e0mr4374971lfv.52.1714643509112;
+        Thu, 02 May 2024 02:51:49 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id i14-20020a05600c354e00b004169836bf9asm5103376wmq.23.2024.05.02.02.51.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 May 2024 02:51:48 -0700 (PDT)
+Message-ID: <89a02410-87c8-47c6-aa50-04dad5b4e585@linaro.org>
+Date: Thu, 2 May 2024 11:51:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux PM mailing list <linux-pm@vger.kernel.org>,
+ Lukasz Luba <Lukasz.Luba@arm.com>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Raphael Gallais-Pou <rgallaispou@gmail.com>,
+ Priyansh Jain <quic_priyjain@quicinc.com>,
+ Dmitry Rokosov <ddrokosov@salutedevices.com>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+ Hsin-Te Yuan <yuanhsinte@chromium.org>, Aleksandr Mishin
+ <amishin@t-argos.ru>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Nicolas Pitre <nicolas.pitre@linaro.org>,
+ Binbin Zhou <zhoubinbin@loongson.cn>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [GIT PULL] thermal drivers for v6.10-rc1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DF:EE_|CY8PR12MB7314:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5b292f5e-6cc8-434e-f5d4-08dc6a8d78cc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|7416005|36860700004|376005|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?d5rIoDHxXkRMpECT20QbK0OKWtPqh33mj7ORdxPBUrQcftZ85PEofY+HL2jm?=
- =?us-ascii?Q?LVh7XJVUuYV5hNWEqEGnb3gdcMYsbILGlJJronrOmTKRY9vuG9j5qno9hAuW?=
- =?us-ascii?Q?55cgj48OqgY0hwMC2BgjjBUOkZYTOombPEJRIRTrNNRFYL9K6EAYfUb8TEKe?=
- =?us-ascii?Q?o5Int5CNAN3SCGPzM4e43a/bQ7pY+/a46FJA1c2SGj3MBfSQ6/yhCHrNF0ia?=
- =?us-ascii?Q?Q8FF1vVq9Roq4BhUuysO4xZFU+grd0LsSlElwNCJjVFbf/hyqpER4xcv1KdA?=
- =?us-ascii?Q?KQHhMz7ZFM81QlLyv+sONionwz86wrgw4mp886Ac7XSjhX/Zg4RW4BrkYPtw?=
- =?us-ascii?Q?PknnLUWbxF5zeJmPtGqFQVOXpWR9y5Xwj3dTbWa6+NMfeExGVWscQOMiz/Ft?=
- =?us-ascii?Q?xtCvhfMJcxvhl10896bv1mFIPwsTfbuBff5ZHDPRkXu9oE3Ng3HTYNycdt9M?=
- =?us-ascii?Q?UrNTU1zigb1AVqxcPxFy42eVa/efDFUzUQdoQOSISiRzA23IpYVJ3RIzlUVL?=
- =?us-ascii?Q?0xJu2+EhG7wjg8SJGAxRNLGherzRk1z2+u8KBOKKFQDPyKEQ8kY8+E8T8pBC?=
- =?us-ascii?Q?x5f0GC0skHoSE0Tge3GmNerxA5F0bGt2903aWt4STq64zlFa4mv+hNLmAGyl?=
- =?us-ascii?Q?95gv7dAPPWXTaTjEJ80qJyXDGvJHNw8fxV1dS0RyNKHWvx0qz+4F1n/uZxFT?=
- =?us-ascii?Q?xPA10XcG+r8fUe7ArGgV42xSFJjERJN9YpNWCHbICuc9/p2rub+odquMpnH+?=
- =?us-ascii?Q?pwBUHSQThIiwq9mXmSvVOYOZzrHUPDbnXuJ7YLmMwmOJS8BTPee9tinKFfMT?=
- =?us-ascii?Q?LiEyYdtBh5XBO+zFEuYDRgcTZum2uv41vngGnd8fCZEmrsxBTDerznti57PI?=
- =?us-ascii?Q?DL3bUSRVLyScsNYiNJnnx8eiIB+Zrc5EX1wCbyW4z7j7Q90CscUSnYalo1PB?=
- =?us-ascii?Q?K4TzRqjY6Cf74QFBWNDWjl6E1IC+W9FESq9XXuVFRxEpAh/Jj7RzjhqV0nfl?=
- =?us-ascii?Q?+u6tPU4QFGtWPJRdc5+WbVOFBPZBser875coiIWdyH8bWgvRbp7ycX3+Uj7f?=
- =?us-ascii?Q?RlQ6YXatkz5yuHS9vnBN0JpC9J9kxuWTYXVvVjVLGa94UiUcouQzqKLjvBdJ?=
- =?us-ascii?Q?xzcjNJK8Q6a8PTVzArua+lNcJmjuwXAIiGtuhYTEDqiXa5K++Ay2K7+7gUD+?=
- =?us-ascii?Q?E6tdEwW8A4Cf6gYHLGUMbvcOc/XSOaQD9zr8mg9V4C+mbqN+PcYT3bkmt51a?=
- =?us-ascii?Q?+uMJXUZhTbHhgBSLViXzRxBl1wXYoykScCQRzpgg0eIHHXT6EE91pbfOE5YK?=
- =?us-ascii?Q?ouTAJOKQCr733e4/PFMuy4xGSkMXux7dZ2qats/kW7vkhGk9FZLT09Q0LKPr?=
- =?us-ascii?Q?Aj+pLN8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2024 09:51:42.8617
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b292f5e-6cc8-434e-f5d4-08dc6a8d78cc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099DF.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7314
 
-After commit 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"), 
-on AMD processors that support extended CPUID leaf 0x80000026, the 
-topology_die_cpumask() and topology_logical_die_id(), no longer return 
-the package cpumask and package id, instead they return the CCD (Core 
-Complex Die) mask and CCD id respectively. This leads to the energy-pkg 
-event scope to be modified to CCD instead of package.
+Hi Rafael,
 
-This is functionally incorrect as the AMD energy-pkg is a package scope 
-event.
+please consider this pull request for v6.10-rc1
 
-On a 12 CCD 1 Package AMD Zen4 Genoa machine:
+The following changes since commit 5c897a9a1237155822183b8979005d06c14a996a:
 
-$ cat /sys/devices/power/cpumask
-0,8,16,24,32,40,48,56,64,72,80,88.
+   Merge back earlier thermal control material for v6.10. (2024-04-19 
+15:17:21 +0200)
 
-Expected cpumask for 1 Package AMD CPUs energy-pkg event is supposed to 
-be just "0".
+are available in the Git repository at:
 
-This in turn leads to incorrect values of package energy consumption.
+ 
+ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git 
+tags/thermal-v6.10-rc1
 
-$ perf stat -C 100 -e power/energy-pkg/ sleep 1
+for you to fetch changes up to 734b5def91b594d3aa1147d60c45eded139ce2eb:
 
- Performance counter stats for 'CPU(s) 100':
+   thermal/drivers/loongson2: Add Loongson-2K2000 support (2024-04-23 
+12:40:30 +0200)
 
-             36.60 Joules power/energy-pkg/
+----------------------------------------------------------------
+- Add QCM2290 compatible DT bindings for Lmh and fix a null pointer
+   dereference in the lmh driver in case the SCM is not present (Konrad
+   Dybcio)
 
-       1.005821050 seconds time elapsed
+- Use the strreplace() function instead of doing it manually in the
+   Armada driver (Rasmus Villemoes)
 
-$ perf stat -a -e power/energy-pkg/ sleep 1
+- Convert st,stih407-thermal to DT schema and fix up missing
+   properties (Raphael Gallais-Pou)
 
- Performance counter stats for 'system wide':
+- Add suspend/resume by restoring the context of the tsens sensor
+   (Priyansh Jain)
 
-            414.03 Joules power/energy-pkg/
+- Support A1 SoC family Thermal Sensor controller and add the DT
+   bindings (Dmitry Rokosov)
 
-       1.005252132 seconds time elapsed
+- Improve the temperature approximation calculation and consolidate
+   the Tj constant into a shared area of the structure instead of
+   duplicating it on the Rcar Gen3 (Niklas Söderlund)
 
-In both cases the energy consumption values should have been the same,
-but instead, due to the incorrect cpumask, the values are being
-aggregated at a CCD level in the second case.
+- Fix the Mediatek LVTS sensor coefficient for the MT8192 in order to 
+support
+   it correctly (Hsin-Te Yuan)
 
-Replacing the die macros with the package macros(for AMD CPUs) fixes 
-this issue. 
+- Fix a null pointer dereference on the tsens driver when the function
+   compute_intercept_slope() is called with a null parameter (Aleksandr
+   Mishin)
 
-This patch cleanly applies on top of tip/master after
-commit acf68d98cae8 ("perf/x86/rapl: Add support for Intel Lunar Lake"),
-but not on Linus' tree.
+- Remove some unused fields in struct qpnp_tm_chip and k3_bandgap
+   (Christophe Jaillet)
 
-Dhananjay Ugwekar (2):
-  perf/x86/rapl: Rename maxdie to nr_rapl_pmu and dieid to rapl_pmu_idx
-  perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+- Fixup calibration efuse data decoding, consolidate the code by
+   checking boundaries and refactor some part of the LVTS Mediatek
+   driver. After setting the scene, add MT8186 and MT8188 along with
+   the DT bindings (Nicolas Pitre)
 
- arch/x86/events/rapl.c | 44 +++++++++++++++++++++++++++++++-----------
- 1 file changed, 33 insertions(+), 11 deletions(-)
+- Add Loongson-2K2000 support after some minor code adjustements and
+   providing the DT bindings definition (Binbin Zhou)
+
+----------------------------------------------------------------
+Aleksandr Mishin (1):
+       thermal/drivers/tsens: Fix null pointer dereference
+
+Binbin Zhou (4):
+       thermal/drivers/loongson2: Trivial code style adjustment
+       dt-bindings: thermal: loongson,ls2k-thermal: Add Loongson-2K0500 
+compatible
+       dt-bindings: thermal: loongson,ls2k-thermal: Fix incorrect 
+compatible definition
+       thermal/drivers/loongson2: Add Loongson-2K2000 support
+
+Christophe JAILLET (2):
+       thermal/drivers/qcom: Remove some unused fields in struct 
+qpnp_tm_chip
+       thermal/drivers/k3_bandgap: Remove some unused fields in struct 
+k3_bandgap
+
+Dmitry Rokosov (2):
+       dt-bindings: thermal: amlogic: add support for A1 thermal sensor
+       thermal/drivers/amlogic: Support A1 SoC family Thermal Sensor 
+controller
+
+Hsin-Te Yuan (1):
+       thermal/drivers/mediatek/lvts_thermal: Add coeff for mt8192
+
+Konrad Dybcio (2):
+       dt-bindings: thermal: lmh: Add QCM2290 compatible
+       thermal/drivers/qcom/lmh: Check for SCM availability at probe
+
+Nicolas Pitre (11):
+       thermal/drivers/mediatek/lvts_thermal: Retrieve all calibration bytes
+       thermal/drivers/mediatek/lvts_thermal: Move comment
+       thermal/drivers/mediatek/lvts_thermal: Remove .hw_tshut_temp
+       thermal/drivers/mediatek/lvts_thermal: Use offsets for every 
+calibration byte
+       thermal/drivers/mediatek/lvts_thermal: Guard against efuse data 
+buffer overflow
+       dt-bindings: thermal: mediatek: Add LVTS thermal controller 
+definition for MT8186
+       thermal/drivers/mediatek/lvts_thermal: Add MT8186 support
+       thermal/drivers/mediatek/lvts_thermal: Provision for gt variable 
+location
+       thermal/drivers/mediatek/lvts_thermal: Allow early empty sensor slots
+       dt-bindings: thermal: mediatek: Add LVTS thermal controller 
+definition for MT8188
+       thermal/drivers/mediatek/lvts_thermal: Add MT8188 support
+
+Niklas Söderlund (2):
+       thermal/drivers/rcar_gen3: Move Tj_T storage to shared private data
+       thermal/drivers/rcar_gen3: Update temperature approximation 
+calculation
+
+Priyansh Jain (1):
+       thermal/drivers/tsens: Add suspend to RAM support for tsens
+
+Raphael Gallais-Pou (1):
+       dt-bindings: thermal: convert st,stih407-thermal to DT schema
+
+Rasmus Villemoes (1):
+       thermal/drivers/armada: Simplify name sanitization
+
+  .../bindings/thermal/amlogic,thermal.yaml          |  12 +-
+  .../bindings/thermal/loongson,ls2k-thermal.yaml    |  24 +-
+  .../bindings/thermal/mediatek,lvts-thermal.yaml    |   6 +
+  .../devicetree/bindings/thermal/qcom-lmh.yaml      |  12 +-
+  .../bindings/thermal/st,stih407-thermal.yaml       |  58 +++
+  .../devicetree/bindings/thermal/st-thermal.txt     |  32 --
+  drivers/thermal/amlogic_thermal.c                  |  10 +
+  drivers/thermal/armada_thermal.c                   |   9 +-
+  drivers/thermal/k3_bandgap.c                       |   1 -
+  drivers/thermal/loongson2_thermal.c                | 117 ++++--
+  drivers/thermal/mediatek/lvts_thermal.c            | 438 
++++++++++++++++------
+  drivers/thermal/qcom/lmh.c                         |   3 +
+  drivers/thermal/qcom/qcom-spmi-temp-alarm.c        |   1 -
+  drivers/thermal/qcom/tsens-v2.c                    |   1 +
+  drivers/thermal/qcom/tsens.c                       |  33 +-
+  drivers/thermal/qcom/tsens.h                       |   5 +
+  drivers/thermal/rcar_gen3_thermal.c                | 165 ++++----
+  .../dt-bindings/thermal/mediatek,lvts-thermal.h    |  26 ++
+  18 files changed, 667 insertions(+), 286 deletions(-)
+  create mode 100644 
+Documentation/devicetree/bindings/thermal/st,stih407-thermal.yaml
+  delete mode 100644 
+Documentation/devicetree/bindings/thermal/st-thermal.txt
 
 -- 
-2.34.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
