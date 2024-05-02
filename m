@@ -1,112 +1,119 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A61C200C7;
-	Thu,  2 May 2024 08:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274B5168DA;
+	Thu,  2 May 2024 08:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714638610; cv=none; b=FsqLyPZjXpJly8d2uxoCAMg4sqOqsiRl+JJNbPDKen2sXUrTDAFkVyapQcP1S4HyFAcQvXeCq1wU798QWrZCoThLIelkW2kY8yb1FnkCzvjEz9MlmmhIDm8hkFTccEmNP4FJN1kYcKt/+aiR/rgIX8xrTppjjro/5MfLABMs8Cs=
+	t=1714638616; cv=none; b=TJCZaNeUrbijlZUf5SPTct2fmPR6pQhE5GCC9C6xpNJ9pU/pqbPZXKtAHtTUO+5mzyBBthP4qA7x0hDbEeZG1H6ntEQyFowd/uJrPYjoNrY6opEAf0BB/2I3duE+LiVxyJMgfCMKGrvlG3Pupl+6ASyYrWMIs0M52POi7O9pi9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714638610; c=relaxed/simple;
-	bh=IKHhctVrpWhcOboSLMZaryI2v9hhTEGATCQRIQX0hq0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IwZMy4FRBGe6MDtgnvHYzT29dLxVGRhkjerlvpkfC0YkqudxR5ZJtcknpWjLoLxVIs1BmUAGhTIiqBXUwW6qE79Kk0r9DYoCuRWuxcbSOR74R4eSAS0pb5YT844y5rROpd7+EMIKg3vGJiXOxx2QnRbl0NZquUQJksVTG2ftfAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au; spf=pass smtp.mailfrom=gmail.com; dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b=fosqzzER; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714638616; c=relaxed/simple;
+	bh=vOI/nXtB8szATT9cPSG35cgjUhx0wO9nDdrM+dagnXk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nWqrC7C+wYQDhagcso5XYHirhHIgZ5wtHkfTexLcQagXyG6IeoNEBaCl1N/j6jCtFNY8VcSlLar5jUFgxANheAlkcIQQfzDa+DUGEW0Eg2kZoqm6DYT3+Kcq7q2+UN9seTP1Tb89Id63A9YBwDBZB3LK9HGzafDDQMrE8m+tNQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zMOd6jbZ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="fosqzzER"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-572babec735so874804a12.0;
-        Thu, 02 May 2024 01:30:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google; t=1714638604; x=1715243404; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EcS37ofGtSGOaqbMmyUYN9nLzJNBzaZA8qq8/HQQjPU=;
-        b=fosqzzERnc/xEzPWjlcsxQo3nnWtAQlvc3HYfPteSUN/03iZNUZWKdNbto5GggDoGL
-         nX24qq77SicHLCd9VphqfActfnG9Qq2RF5GGDccpXNTlnMijIhvK8d43mexa0Woj2lxn
-         QIrhbifsyuKMOMw0NV+gVLMuJ7U/jTkFJaKaU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714638604; x=1715243404;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EcS37ofGtSGOaqbMmyUYN9nLzJNBzaZA8qq8/HQQjPU=;
-        b=M39Iyw4+V639i7S5D87AIWvzWEavzD1P09SJM1glVhApTgySGvgyGvsxvoFOyI70u8
-         AjO7DAkkLe8CwOtlgpkr6JKzutwlQIJmWpMUqpjrVceHtroY1Fq1iySn/m1CW9cmkyXR
-         zwNgv6dUVpj1Q/m9mMe1NQFPwl+BuWs/07wytwX/u/8SSn5eSAMMrsMhHkyoRxcjscdk
-         TIaMbvrkRHMHXwCuF0/7jTf9ewCS2RVTn4tBt9Y1ct2hebSsQqYWxxEE8adqWS/xr46V
-         Cae5bRKGlgmzipKKu5pbvZnjiX0Br05LZvXFgsfgcgGm0V4W6CiUYHZ1kLYupv0q9RPj
-         XLaA==
-X-Forwarded-Encrypted: i=1; AJvYcCX18mP0+9fcbH+KKnkUf1NVzwTs1gEvUjvR2LdsamQUCZe2gMtiTa/YsV7szKtWxcei9nZUL23e48R/efUXU08buhFO2s/JrwIUX3R+jyzSzl7WezOPicK0CVe63wsm8R3tW4mdRj2f+w==
-X-Gm-Message-State: AOJu0Yx5i4IKTu2luMMdh1drlCtqDAo+QTa1eadwt7/lJj9cLkApM2WP
-	v5saVSXuLTYoKBtJjskwCepys4XeHcou3mH2burkFr+f11N29WrkPwJv1pRPrzJJaTs51WcA45i
-	fVzwVCAXjf/NBMdCqmlGa4od5Lxw=
-X-Google-Smtp-Source: AGHT+IE7PXs7Cu+sBWPGxvQ8zk0DGcZNvv6VeR1g/mLA+ZLjmhg+6Kp84MHM3XAzW8rbbeT+KWPAZfh1Yj4u2YTFJBU=
-X-Received: by 2002:a17:906:3b4b:b0:a58:f186:229 with SMTP id
- h11-20020a1709063b4b00b00a58f1860229mr1782860ejf.0.1714638604139; Thu, 02 May
- 2024 01:30:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zMOd6jbZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=9m0sQbYRngeahD4E6m4UZ+bEYxjvjKNj0Unh9KoUYJo=;
+	t=1714638614; x=1715070614; b=zMOd6jbZCuPnlwSRUb925IXnmtirdv5FmwabyI1VMqpQzMQ
+	X6QPJ8LiTm0vYOIAowHvN7cGrf8UNn7YIqO1PVgxt1PVgf5UzpMNkQWetiwj5UBvcqk+1p9s/At3Y
+	+U8DrU/2z4/iA8anMQE7EBk1VZqg20pAlwidpIEiTScDXFyn+Wl7RNIkdcteSv30tsT/60y091nPx
+	8Fad77VVv/EPzAT8uH2xCNV6/ZdzcSlhpDJEmG7Dv77JeYYvY4ZbVaTUJ/nBhUcFZZbjll9yXEdP7
+	SJaounw1Od5F+ldzMqvA9vrZN/S8F/CfiDz2Hs0yLemyCdO5P5GrlVd59ZWj6uiQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s2RpS-00006M-NL; Thu, 02 May 2024 10:30:10 +0200
+Message-ID: <935b4630-5100-4be6-ae96-4d043b0d5ae4@leemhuis.info>
+Date: Thu, 2 May 2024 10:30:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502002836.17862-5-zev@bewilderbeest.net>
-In-Reply-To: <20240502002836.17862-5-zev@bewilderbeest.net>
-From: Joel Stanley <joel@jms.id.au>
-Date: Thu, 2 May 2024 17:59:50 +0930
-Message-ID: <CACPK8Xe9BcFziQTKA2FrQq6GT1aWeSirDrWTNBh8b+HwcZzctg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] ARM: dts: aspeed: Add ASRock E3C256D4I BMC
-To: Zev Weiss <zev@bewilderbeest.net>
-Cc: Andrew Jeffery <andrew@codeconstruct.com.au>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	openbmc@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
+To: Lee Jones <lee@kernel.org>
+Cc: Ben Greear <greearb@candelatech.com>, LKML
+ <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
+ <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
+ <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
+ <20240411070718.GD6194@google.com>
+ <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
+ <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
+ <bc420f3a-5809-4c4a-80ad-ccd8a46853b6@leemhuis.info>
+ <8ab88be5de30bcbd0d1cac3cfde6b2085dcfc8fb.camel@sipsolutions.net>
+ <0197efe8-828b-43ae-85c9-5d521913a289@leemhuis.info>
+ <20240502071908.GB5338@google.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240502071908.GB5338@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714638614;e18d2da4;
+X-HE-SMSGID: 1s2RpS-00006M-NL
 
-On Thu, 2 May 2024 at 09:59, Zev Weiss <zev@bewilderbeest.net> wrote:
->
-> Hello,
->
-> These patches add a device-tree (and a couple tiny bindings updates)
-> for the Aspeed BMC on the ASRock E3C256D4I, so that it can be added as
-> a supported OpenBMC platform.
+On 02.05.24 09:19, Lee Jones wrote:
+> On Tue, 23 Apr 2024, Linux regression tracking (Thorsten Leemhuis) wrote:
+> 
+>> On 23.04.24 11:06, Johannes Berg wrote:
+>>> On Tue, 2024-04-23 at 11:00 +0200, Linux regression tracking (Thorsten
+>>> Leemhuis) wrote:
+>>>> On 16.04.24 08:17, Johannes Berg wrote:
+>>>>> On Mon, 2024-04-15 at 13:37 -0700, Ben Greear wrote:
+>>>>>>
+>>>>>> Johannes, you had another suggestion: changing iwlwifi's request_module() to request_module_nowait() in
+>>>>>> iwl_req_fw_callback()
+>>>>>>
+>>>>>> Is that still best thing to try in your opinion?
+>>>>>
+>>>>> I guess so, I don't have any better ideas so far anyway ...
+>>>>
+>>>> [adding the iwlwifi maintainer; thread starts here:
+>>>> https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+>>>> ]
+>>>>
+>>>> Johannes, Miri, what's the status wrt to this regression? From here
+>>>> things look somewhat stalled -- but maybe there was progress and I just
+>>>> missed it.
+>>>
+>>> What do you want? It got bisected to an LED merge, but you ping _us_?
+>>> Way to go ...
+>>
+>> Sorry, to me it sounded a bit like you had an idea for a fix and were
+>> going to give it a try -- similar to how the maintainers for a r8169
+>> driver and the igc driver provided fixes for bugs recent LED changes
+>> exposed.
+>>
+>> But sure, you are right, in the end some LED change seems to have cause
+>> this, so the duty to fix it lies in that field. Therefore:
+>>
+>> Lee, what's the status here to get this fixed before the final?
+> 
+> No idea.  Did you send a fix?
 
-Thanks! Applied and pushed out.
+I'm just here to help Linus keeping an eye on regression to ensure they
+are handled like he wants them to be handled.
 
->
-> Changes since v2 [1]:
->  - Added patch 1 adding isl69269 to trivial-devices.yml
->  - Adjusted isl69269 compat string to use isil vendor prefix instead
->    of renesas, dropped unprefixed entry
->
-> Changes since v1 [0]:
->  - Removed bootargs [Krzysztof]
->  - Renamed LED nodes [Krzysztof]
->  - Added function & color properties to LED nodes
->  - Added #address-cells and #size-cells to FRU eeprom node
->
-> [0] https://lore.kernel.org/lkml/20231114112722.28506-4-zev@bewilderbeest.net/
-> [1] https://lore.kernel.org/lkml/20231120121954.19926-4-zev@bewilderbeest.net/
->
-> Thanks,
-> Zev
->
->
-> Zev Weiss (3):
->   dt-bindings: trivial-devices: add isil,isl69269
->   dt-bindings: arm: aspeed: document ASRock E3C256D4I
->   ARM: dts: aspeed: Add ASRock E3C256D4I BMC
->
->  .../bindings/arm/aspeed/aspeed.yaml           |   1 +
->  .../devicetree/bindings/trivial-devices.yaml  |   2 +
->  arch/arm/boot/dts/aspeed/Makefile             |   1 +
->  .../aspeed/aspeed-bmc-asrock-e3c256d4i.dts    | 322 ++++++++++++++++++
->  4 files changed, 326 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-e3c256d4i.dts
->
-> --
-> 2.44.0
->
+But Ben Greear sent a patch to work around the problem:
+
+https://lore.kernel.org/all/20240430234212.2132958-1-greearb@candelatech.com/
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
