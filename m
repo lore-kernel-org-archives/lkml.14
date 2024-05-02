@@ -1,167 +1,103 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC1E604B3
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 12:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDE4604B3;
+	Thu,  2 May 2024 12:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714651976; cv=none; b=Wsx/u+I4netkTzPVRd18aOSwKe+zN0QjQKnekiNZfiGWnxyLH/U4trjZS516QYeHbgzv0dYTbOMLHcDMXTHWoeEKbsT3zywUeirI1StTTfRcBynwevdDKxsyS/pArVkubxB08gCZ/gO9zTHtjJHYwAVOle4dwStHNr0JjwcPEn8=
+	t=1714651985; cv=none; b=An72DeOdrWIYbsucaG8OXcmwOa3X84q0XHZl74cI+Js+gbF1Wkc0LnQywgV5yf4/V8eT6vfUJLKUi7RrqlxH6bw+MGy7RnisjqvScKO3xsVknPXT05aMmmzV3LhD8qtD0YcZDm1sDsYBfBAG6ADaUTHpX7GUsg2BpQ5NcCckCvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714651976; c=relaxed/simple;
-	bh=U0+9t/DUTI7wv+JhYa4+yvPwHRkQr5ZuSHZ6s20Plk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LcO2l+ufy7/flf36ydGuZgPHmIy88o6RUFVyKCZDGk2pjzSH9xu54jUyboCxN738Eus6lR4PlRxoxSwipruEO3KUbg9gv8TeFNDe3JK0SIorWstfTqBGPYbZ0epxm1/z8O8lWQbW6DJqf1oM1e1hrIxWIUbp6Z883ty4fQUEyhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=bAB/Edq8; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1714651985; c=relaxed/simple;
+	bh=Mqkrhza3t8I1NNmuInmaoNH7fQpysGQRs0CN3Xq6QZk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y6kXAUEm0onkBzxryCGOjr7hsEqr0pR+YJwtSFdRK9rOmDUzzMepVZ5MAVk0TbTcjlnc3Me6m72DwCVRlkgpbeErsS0v//W87dnJgJG7+tiIqmIQuvf8pCfktUnf6m4SdF4MBjmpVr/FR+KRfSypdY/Xcs22MIPtuWUesbO5BL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INJmBKwm; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="bAB/Edq8"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-572babec735so298444a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 05:12:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INJmBKwm"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41bab13ca4eso40701675e9.1;
+        Thu, 02 May 2024 05:13:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1714651974; x=1715256774; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=672JpQGQxN2adDtGURkG6O93oWu5Ah9pxezBGrFTATk=;
-        b=bAB/Edq82jw0GDpMTAoGjUX/tIU1rWtbBmRWpckZNd2ZUZdYo0opynVSn8aCykSQjp
-         mbH6FOJs9mGQKRFdCc5cLn0OXcrpAZTy6OY91bJ0UL2XMkZaTLBR2/P9eMv2ihtQ56iF
-         1cB6UA5/VnVTPrkHA+9Fx8J2SFEzrETV5f3lkdAA5uvYf3Cm5LXx7MJ2IJGnUk04c2tV
-         u5Sl/ACh8p70Qky96Gohp2SvcHnMM2QaWBkG5a/+bmPRYeAD4HjmzkPoR86TnVybGT4O
-         f6nctDOy+HX2L4rmBpA5rAwXWG/fxYqGeXIT1HbYDy8lwVqK4igdCEUQMCnJHwWTSXpo
-         E06w==
+        d=gmail.com; s=20230601; t=1714651982; x=1715256782; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uNtgswtzTBIO+kOiOB63IQ6L3ruI+H9mtsGm2wznV5E=;
+        b=INJmBKwmMduZL5JOWMqNHuHGYVT5z3E+4xo8436KgaK5aWBsk5vVwIbLF4Sj1B+n/N
+         Rc6NgUdhF4X71VQdp0YgIvgui/YDA7rwz2+rTjY/07F9VwBQsLKFLZxSfqTFxk7VToKI
+         gajeEgWeMJBcP2/Im/TCP4sAFrz0Ecq7w2u3lfGcfEh7kYjBgSYcpSoajONqNw6N9soo
+         Kou3ThcdbgVs2KmSNxhBrU4wPJ8NB/vy6+6OHTSE3saC1ra08V/9dN/c02h846Qyeglj
+         qciMRSmvP94T4kZ3a3ZvPA3qQIrdf10Nz05cPNC0N9/NrEazgJjXi+TT2qVneU8CjtYZ
+         hIlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714651974; x=1715256774;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=672JpQGQxN2adDtGURkG6O93oWu5Ah9pxezBGrFTATk=;
-        b=k4lpuxpGEJTHGeN6q4IZxBUorMCKR+zHW49S6KYaeYj2xnG6HOsjC3GW1eCfIE0v5L
-         cotYZMDJMtF0eHt8/xXtI/HvloakHvz1gwSBMGymCV2ePt6+/+ScjUO/FHzedj2mXcw8
-         nbzId/dA55WojLERXE5AiIASJLJISOPCOsyaTQW2F1OQnEG5LBuW/oNNP5xtV783xBuj
-         ReLkYcNTeL1R49WJd89JfnIH9n1wvQEWa8IXnl05yon7JVzIUH5VdUcDotNQgDepDrHO
-         Q8KBMSiM89nXBma1foXV9DegqixUC418h8V5eBoTDKIv1Pqfrcjbm4da7RyzVNEWYbB6
-         gDvw==
-X-Forwarded-Encrypted: i=1; AJvYcCW61S4zuhrxSPe3RBkP5NqogWhEpkPKMNeEwMpwHNoQCXI9sIgUdLPq7FIwpL4KnZWV6XdYcNhranRt17Xe3XcogkTP6Szf2FjuGJOd
-X-Gm-Message-State: AOJu0Yx5gwEdf+oug5ccmwCiM2d9i9zC9qBggQ0/7CMrw6meEp6xXTux
-	c8YKZRRY5PmRAaGefP/a43pWNLvd6aOivN/aKM7x1tJmvaHHoC5fRmg92vLD64U=
-X-Google-Smtp-Source: AGHT+IGBveCIDdwRLjqeRHzu8Xwq+nwSoG7CgDOi9YvahOmP7DijvF4W2bSeOpwFts4MR/jGuXktPw==
-X-Received: by 2002:a50:d613:0:b0:572:a198:49ca with SMTP id x19-20020a50d613000000b00572a19849camr1953208edi.20.1714651973540;
-        Thu, 02 May 2024 05:12:53 -0700 (PDT)
-Received: from [192.168.0.161] ([62.73.69.208])
-        by smtp.gmail.com with ESMTPSA id t17-20020a05640203d100b00572c15aba54sm465190edw.17.2024.05.02.05.12.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 May 2024 05:12:53 -0700 (PDT)
-Message-ID: <431e1af1-6043-4e3e-bc3b-5998ec366de7@blackwall.org>
-Date: Thu, 2 May 2024 15:12:51 +0300
+        d=1e100.net; s=20230601; t=1714651982; x=1715256782;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uNtgswtzTBIO+kOiOB63IQ6L3ruI+H9mtsGm2wznV5E=;
+        b=TIbiFFmB0XtrsFpvIxna7Z6yWI2FDT1Qm/3HNgos/wxqI2VcutFEjjnfFdq5WO2hb9
+         m9K5bwp6RntqfALScbwUQUqf5+PRQhKli6nNCpCQKjwLWT489VF/4RSLEsiRRs4bG4Um
+         lbvBY90PgJWDgX677ez13zp3jN/vNvUNks4WTi2jLVGpMxmmP/v0H5o137uzBq6o59ew
+         /Cix8T1kWVA8ms8nY34gSPpYfdxtuder13+YMbgS6M4c6I/F6gHmqFG9P4KtUo/n/Ueg
+         4wknC0ZQ95Iy8G0TVYyBDue6fbKVAsiWLa2cZQSyqatz5H4Gebn7gYJQ1yYEgkiyVwbd
+         DnXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQbtyp5kPB9SwYGWPmsSuje6LRRp1O3IjPAKMWTW6oUVL+2Ut1ScdBLNLKeu1D2QUcWWOelfaCUM6FxLKEOkusJBbgOI63IHaTCEDEvuS9m3gsJ0t3/LhehuDJYay0QQ/T3z51Y6qjmy1fuDrzMUneJK42NwfVq7ZcfHtjk89+srwI7yVG
+X-Gm-Message-State: AOJu0YwAGxIppurV4XC5c2kSQxblyQgJSMp2c3jiapq+2I34SyD1dy0y
+	LgqE+CS9rnDcB5LJb3R+tDPbpRPXku+o3kL0x+Aim0as7y4eHAlm
+X-Google-Smtp-Source: AGHT+IEu1hDh6wrO8MNZ87VL1UC1AHkRHlnMqdwwjboZKadDjNQWMLRJH4xNE7l8YroPc/XByFaI/A==
+X-Received: by 2002:a05:600c:1392:b0:41b:f116:87e0 with SMTP id u18-20020a05600c139200b0041bf11687e0mr3932012wmf.29.1714651981731;
+        Thu, 02 May 2024 05:13:01 -0700 (PDT)
+Received: from localhost ([217.151.144.138])
+        by smtp.gmail.com with ESMTPSA id s20-20020adfa294000000b0034e285d818dsm1136638wra.32.2024.05.02.05.13.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 05:13:01 -0700 (PDT)
+From: Oliver Graute <oliver.graute@gmail.com>
+X-Google-Original-From: Oliver Graute <oliver.graute@kococonnector.com>
+Date: Thu, 2 May 2024 10:42:17 +0200
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, o.rempel@pengutronix.de,
+	u.kleine-koenig@pengutronix.de, hdegoede@redhat.com,
+	ye.xingchen@zte.com.cn, p.puschmann@pironex.com,
+	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
+	felix@kaechele.ca
+Subject: Re: [PATCH v3 2/2] Input: edt-ft5x06 - add ft5426
+Message-ID: <ZjNR6eny4lt4tLIJ@graute-think>
+References: <20240501204758.758537-1-andreas@kemnade.info>
+ <20240501204758.758537-3-andreas@kemnade.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next 00/10] MC Flood disable and snooping
-To: Joseph Huang <joseph.huang.2024@gmail.com>,
- Vladimir Oltean <olteanv@gmail.com>
-Cc: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org,
- Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, =?UTF-8?Q?Linus_L=C3=BCssing?=
- <linus.luessing@c0d3.blue>, linux-kernel@vger.kernel.org,
- bridge@lists.linux.dev
-References: <20240402174348.wosc37adyub5o7xu@skbuf>
- <a8968719-a63b-4969-a971-173c010d708f@blackwall.org>
- <20240402204600.5ep4xlzrhleqzw7k@skbuf>
- <065b803f-14a9-4013-8f11-712bb8d54848@blackwall.org>
- <804b7bf3-1b29-42c4-be42-4c23f1355aaf@gmail.com>
- <20240405102033.vjkkoc3wy2i3vdvg@skbuf>
- <935c18c1-7736-416c-b5c5-13ca42035b1f@blackwall.org>
- <651c87fc-1f21-4153-bade-2dad048eecbd@gmail.com>
- <20240405211502.q5gfwcwyhkm6w7xy@skbuf>
- <1f385946-84d0-499c-9bf6-90ef65918356@gmail.com>
- <20240430012159.rmllu5s5gcdepjnc@skbuf>
- <b90caf5f-fa1e-41e6-a7c2-5af042b0828e@gmail.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <b90caf5f-fa1e-41e6-a7c2-5af042b0828e@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240501204758.758537-3-andreas@kemnade.info>
 
-On 30/04/2024 20:01, Joseph Huang wrote:
-> On 4/29/2024 9:21 PM, Vladimir Oltean wrote:
->> On Mon, Apr 29, 2024 at 04:14:03PM -0400, Joseph Huang wrote:
->>> How about the following syntax? I think it satisfies all the "not breaking
->>> existing behavior" requirements (new option defaults to off, and missing
->>> user space netlink attributes does not change the existing behavior):
->>>
->>> mcast_flood off
->>>    all off
->>> mcast_flood off mcast_flood_rfc4541 off
->>>    all off
->>> mcast_flood off mcast_flood_rfc4541 on
->>>    224.0.0.X and ff02::1 on, the rest off
->>> mcast_flood on
->>>    all on
->>> mcast_flood on mcast_flood_rfc4541 off
->>>    all on (mcast_flood on overrides mcast_flood_rfc4541)
->>> mcast_flood on mcast_flood_rfc4541 on
->>>    all on
->>> mcast_flood_rfc4541 off
->>>    invalid (mcast_flood_rfc4541 is only valid if mcast_flood [on | off] is
->>> specified first)
->>> mcast_flood_rfc4541 on
->>>    invalid (mcast_flood_rfc4541 is only valid if mcast_flood [on | off] is
->>> specified first)
->>
->> A bridge port defaults to having BR_MCAST_FLOOD set - see new_nbp().
->> Netlink attributes are only there to _change_ the state of properties in
->> the kernel. They don't need to be specified by user space if there's
->> nothing to be changed. "Only valid if another netlink attribute comes
->> first" makes no sense. You can alter 2 bridge port flags as part of the
->> same netlink message, or as part of different netlink messages (sent
->> over sockets of other processes).
->>
->>>
->>> Think of mcast_flood_rfc4541 like a pet door if you will.
->>
->> Ultimately, as far as I see it, both the OR-based and the AND-based UAPI
->> addition could be made to work in a way that's perhaps similarly backwards
->> compatible. It needs to be worked out with the bridge maintainers. Given
->> that I'm not doing great with my spare time, I will take a back seat on
->> that.
+On 01/05/24, Andreas Kemnade wrote:
+> As ft5426 seems to be compatible with this driver, add it.
+> Debug output during identification: Model "generic ft5x06 (79)", Rev. "
 > 
-> Nik, do you have any objection to the following proposal?
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+>  drivers/input/touchscreen/edt-ft5x06.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> mcast_flood ->          default/    off         on
-> (existing flag)         missing     (specified/ (specified/
->                         (on)        nlmsg)      nlmsg)
-> 
-> mcast_flood_rfc4541
-> (proposed new flag)
->      |
->      v
-> default/                flood all   no flood    flood all
-> missing
-> (off)
-> 
-> off                     flood all   no flood    flood all
-> (specified/nlmsg)
-> 
-> on                      flood all   flood 4541  flood all
-> (specified/nlmsg)                   ^^^^^^^^^^
->                                     only behavior change
-> 
-> 
-> Basically the attributes are OR'ed together to form the final flooding decision.
-> 
-> 
+> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> index 2a1db11344766..028ec66faa193 100644
+> --- a/drivers/input/touchscreen/edt-ft5x06.c
+> +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> @@ -1486,6 +1486,7 @@ static const struct of_device_id edt_ft5x06_of_match[] = {
+>  	{ .compatible = "edt,edt-ft5406", .data = &edt_ft5x06_data },
+>  	{ .compatible = "edt,edt-ft5506", .data = &edt_ft5506_data },
+>  	{ .compatible = "evervision,ev-ft5726", .data = &edt_ft5506_data },
+> +	{ .compatible = "focaltech,ft5426", .data = &edt_ft5506_data },
+>  	/* Note focaltech vendor prefix for compatibility with ft6236.c */
+>  	{ .compatible = "focaltech,ft6236", .data = &edt_ft6236_data },
+>  	{ /* sentinel */ }
+> -- 
+> 2.39.2
 
-Looks good to me. Please make use of the boolopt uapi to avoid adding new
-nl attributes.
-
-Thanks,
- Nik
-
-
+Reviewed-by: Oliver Graute <oliver.graute@kococonnector.com>
