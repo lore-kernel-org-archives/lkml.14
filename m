@@ -1,143 +1,125 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0B815E5A9
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 17:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E8816D4C0;
+	Thu,  2 May 2024 17:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714670470; cv=none; b=ix7qXKaYqsKIpDETqASb9j+W3ZGNCtDJBSdLYWg05IHlGCscTkmJabIWUGysliQgv/YfWc5CPlN2xua4pzYhA2vS2QXGrryJJZZ5aaaGez+oc9cYbiRupUsOaw6C/DTG7mIm4KJCc3VQHNogkAgkno64bGZUVzXam1OGOExPSQM=
+	t=1714670574; cv=none; b=DAYp9Pq3nyxQGPMU3wChAM5cSUqep6k7vjoN11LtHOXo3/gzT3C+E9VlQhOMUnY06ye0nJhGymYxtH9f9sr7E8lGGJ5iDKjL821s/zlKkFlA8I5spRd40twbSx/7UUAvqDLWib0oAfjgUbBbDEVAvy0CWFxwph4n6k7pDSkYlQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714670470; c=relaxed/simple;
-	bh=oxNcBWQxmMinnuPRCnHgfU+zEqGKyyng8T4qsAL+ufM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TbbgQr8olaxNtxKIrDdW8XZZ66yZKTp//P4oovlAicLXr546U27F0V0UHR1Ik1t13GRZ3r/LhCjC5M7KI2vMqGzQmUfYjOq5m2K8xrDih3rfCgxCIbXrkW710iu0riVD5XZJMCZUnBW/946fVcXmIEBS+rCge4Xnl+OOKyiL/tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FevljIVB; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714670574; c=relaxed/simple;
+	bh=xxnRKRRsdiWLKlOgW8fmndRPG/Gun2yKWKn7YZ5of50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qnXIadmIHEBQinxCRiYvQaraXyoiQBTghVbnQsd3GHxVfmX2RVug6yRlhrFHXBY5O5vPsaX4EyHXxQnTlm2EDN8iEKDysYcz+l3lA3xPs0wABeGSjkxiu+qVlT8A5YpTD/+2A5pljLIgmx29Tid+VhaSLNzayMAoIRU1boEBakU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B/IKTubw; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FevljIVB"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51ae2e37a87so9965325e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 10:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714670466; x=1715275266; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IAFt7eBKKgungDlgXUVM9S/K1MsryQKKIBA2KVjr1YE=;
-        b=FevljIVBtNzae+cu+q/wb+BEoyzpC2aKX1GW1S4aE+9l8bQPMb7oE2HB96HHze05bX
-         4PHq1SDn0EMgpqsDhMvWYyTQ3fqBuGxwns+9pIThO8JI9rm1UKcxYs9ralH6N3E8DYgr
-         Ve75NXkwUzbFQTRi6KXqq3g75/1lOsWfISCU3gnU8UPCrdnTmknXS226jnKnLW+MNwYR
-         9rfY2an8JUXXiSd/Zk9S8ec9zTLwrdgaT9jD8KZ3C4O/pmJWnxTJVoEhN9gHMG+zrKJ8
-         EUjlXZy9mGCfsJSTSX3oxHKl1EUgBZt1cw9vfeProEu0YMM+MQhgMBHEUyq/Cyr12mDp
-         I3oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714670466; x=1715275266;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IAFt7eBKKgungDlgXUVM9S/K1MsryQKKIBA2KVjr1YE=;
-        b=HXp+5+l3svEGq26rbRsHaWysU/50XQuyLFdG2Kgh/O/rueZHdJtA9tFbAcUGaBL1gJ
-         lVCJmGj1sTJ5QNJUZUXtFSO5ClLpltbxyx9As2b2lWMooyJcMVKbktQxQq5TcV9cSeHh
-         bkV/m+KLo38bqTABtZ/DmCdlhwzLL/85Qr/Sb7QV+a8zvtBENJkiPn0Q2357tZno/ynp
-         SRLc1yiGeq+as9m3y9sSvvbXZxV8qaydgndalfuOZX73ke6lvNvszqtQtVye/xvkuqFS
-         eCRohM+jaYsjw+i14nFIkj+h9Z4Hl4Ts+cGD9ZgXY14Fts0LZpMErvjbJ8vCUNmSK6g2
-         HaMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMONDlqpD1uNvt3gHHj/XAeezTQrzfjCGVBjOy6U26yDEWz/RPjFJVp+9uVEn5HzLiBp2kjPvMENTM11z+JxiVb3p3x0cS3YJMp2oA
-X-Gm-Message-State: AOJu0YwppwJ/Vo17tz5UtwLcIJVxATNpHkUd+Py0cdXL5lNrkTNcPvQg
-	+6rrWyfbhQeFZi5KE5Z67ZQLobkta0que+eFB+3w9g4JZrU3D7EOqKfkUgmVtCqVxBFhbc1EdfN
-	lNAQ4dBFhAVXj3JSGkjOJVfjeh7Qe7cKrRX9a
-X-Google-Smtp-Source: AGHT+IFpNRlTHWJL6HXai3hmJK+GuIw3YYYOL/DrnOSaXBdoOfBi4Z5FJUy9J23o3mfrfAr4AkX4h3xDsLMrq2uwIYs=
-X-Received: by 2002:a05:6512:3f1a:b0:51d:4473:48eb with SMTP id
- y26-20020a0565123f1a00b0051d447348ebmr423118lfa.38.1714670466174; Thu, 02 May
- 2024 10:21:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B/IKTubw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714670572; x=1746206572;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xxnRKRRsdiWLKlOgW8fmndRPG/Gun2yKWKn7YZ5of50=;
+  b=B/IKTubwUDyIkmrSD+oGIPGtSgkysy0lGJMPjO2U7M8Wvq0V+tmOapGN
+   m+vIvKlUEB/SAolxb+KjFoR8ntohzZ8+aWDCjieI7y5m1r1aROIp8npa5
+   NK6JCugqJ2sM6juvKuM9Qe38bC7DbtTA6wf9NxIeiEkRIiCWyk9nfnt7t
+   lcpeVd+xROUsK2faVNQ46XBCajEL/o1oGAs2nW+94xcXxDuxyNENYIjHb
+   C2EofbcNR39DjPDQtVjSMV0MhM/0zXwWbXcB6huiBdBcFoIA1CTVIJbZ9
+   RwTHk4SZKC2bKDmU25CE7IA/2TEcLm8TrnG/T+Lhfrbp6o8znu8sppWAQ
+   w==;
+X-CSE-ConnectionGUID: 67blkTPYSyu7Imb1EFavCA==
+X-CSE-MsgGUID: wIu9iSBRTWGw/UQrn9wrCw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10577993"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10577993"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 10:22:52 -0700
+X-CSE-ConnectionGUID: UDIwUJVaSWKh+oGahgMqJg==
+X-CSE-MsgGUID: 5lm7PBVdS4K5zd38mdUaCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="27199840"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 10:22:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s2a8u-00000003Ojo-0Jhe;
+	Thu, 02 May 2024 20:22:48 +0300
+Date: Thu, 2 May 2024 20:22:47 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Parker Newman <parker@finest.io>
+Cc: Parker Newman <pnewman@connecttech.com>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH v1 00/13] serial: 8250_exar: Clean up the driver
+Message-ID: <ZjPL5z7ah-Qkct6l@smile.fi.intel.com>
+References: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
+ <20240502114645.4445b3da@SWDEV2.connecttech.local>
+ <ZjO4vYEBzxU3fpzC@smile.fi.intel.com>
+ <20240502120840.02c65f30@SWDEV2.connecttech.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8edbd558-a05f-c775-4d0c-09367e688682@I-love.SAKURA.ne.jp>
- <2023053048-saved-undated-9adf@gregkh> <18a58415-4aa9-4cba-97d2-b70384407313@I-love.SAKURA.ne.jp>
- <CAHk-=wgSOa_g+bxjNi+HQpC=6sHK2yKeoW-xOhb0-FVGMTDWjg@mail.gmail.com>
- <a3be44f9-64eb-42e8-bf01-8610548a68a7@I-love.SAKURA.ne.jp>
- <CAHk-=wj6HmDetTDhNNUNcAXZzmCv==oHk22_kVW4znfO-HuMnA@mail.gmail.com>
- <CANpmjNN250UCxsWCpUHAvJo28Lzv=DN-BKTmjEpcLFOCA+U+pw@mail.gmail.com>
- <CAHk-=whnQXNVwuf42Sh2ngBGhBqbJjUfq5ux6e7Si_XSPAt05A@mail.gmail.com>
- <d4de136e-c4e0-45c2-b33e-9a819cb3a791@paulmck-laptop> <CAHk-=wi3iondeh_9V2g3Qz5oHTRjLsOpoy83hb58MVh=nRZe0A@mail.gmail.com>
- <892324fc-9b75-4e8a-b3b6-cf3c5b4c3506@paulmck-laptop> <CANpmjNOY=Qpm3hBu-eN4Xk8n-2VXQRvcQ3_PfwPwNw9MmC8ctw@mail.gmail.com>
- <CAHk-=whTakjVGgBC5OtoZ5Foo=hd4-g+NZ79nkMDVj6Ug7ARKQ@mail.gmail.com>
- <CANpmjNNo_jyTPrgPVCeSfgvsX-fK8x0H81zbBA6LZMVNodO6GA@mail.gmail.com> <b13ab60e-503a-4c11-8a99-0ccccce33c6c@I-love.SAKURA.ne.jp>
-In-Reply-To: <b13ab60e-503a-4c11-8a99-0ccccce33c6c@I-love.SAKURA.ne.jp>
-From: Marco Elver <elver@google.com>
-Date: Thu, 2 May 2024 19:20:25 +0200
-Message-ID: <CANpmjNPtoKf1ysbKd=E8o753JT0DzBanzFBP234VBsazfufVAQ@mail.gmail.com>
-Subject: Re: [PATCH v3] tty: tty_io: remove hung_up_tty_fops
-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, paulmck@kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	syzbot <syzbot+b7c3ba8cdc2f6cf83c21@syzkaller.appspotmail.com>, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Jiri Slaby <jirislaby@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502120840.02c65f30@SWDEV2.connecttech.local>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, 2 May 2024 at 18:42, Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> On 2024/05/02 23:14, Marco Elver wrote:
-> > I sent a patch to add the type qualifier - in a simple test I added it
-> > does what we want:
-> > https://lore.kernel.org/all/20240502141242.2765090-1-elver@google.com/T/#u
->
-> Want some updates to Documentation/process/volatile-considered-harmful.rst
-> because __data_racy is for patches to add volatile variables ?
-
-This has nothing to do with volatile. It's merely an implementation
-artifact that in CONFIG_KCSAN builds __data_racy translates to
-"volatile": the compiler will emit special instrumentation for
-volatile accesses so that KCSAN thinks they are "marked". However,
-volatile is and has been an implementation detail of certain
-primitives like READ_ONCE()/WRITE_ONCE(), although as a developer
-using this interface we should not be concerned with the fact that
-there's volatile underneath. In a perfect world the compiler would
-give us a better "tool" than volatile, but we have to make do with the
-tools we have at our disposal today.
-
->   Patches to remove volatile variables are generally welcome - as long as
->   they come with a justification which shows that the concurrency issues have
->   been properly thought through.
-
-My suggestion is to forget about "volatile" and simply pretend it's
-data_race() but as a type qualifier, like the bit of documentation I
-added to Documentation/dev-tools/kcsan.rst in the patch.
-
+On Thu, May 02, 2024 at 12:08:40PM -0400, Parker Newman wrote:
+> On Thu, 2 May 2024 19:01:01 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, May 02, 2024 at 11:46:45AM -0400, Parker Newman wrote:
+> > > On Thu,  2 May 2024 17:43:54 +0300
+> > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > > After a rework for CONNTECH was done, the driver may need a bit of
+> > > > love in order to become less verbose (in terms of indentation and
+> > > > code duplication) and hence easier to read.
+> > > >
+> > > > This clean up series fixes a couple of (not so critical) issues and
+> > > > cleans up the recently added code. No functional change indented by
+> > > > the cleaning up part.
+> > >
+> > > Just an FYI I submitted a patch series that fixed several of these issues but I
+> > > think it fell through the cracks (I know everyone is very busy!).
+> > >
+> > > Link: https://lore.kernel.org/linux-serial/cover.1713533298.git.pnewman@connecttech.com/
+> > >
+> > > I believe my previous patch series is no longer required. This one fixes
+> > > everything.
 > >
-> > I'll leave it to Tetsuo to amend the original patch if __data_racy makes sense.
->
-> OK if below change is acceptable.
->
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1012,7 +1012,7 @@ struct file {
->         struct file_ra_state    f_ra;
->         struct path             f_path;
->         struct inode            *f_inode;       /* cached value */
-> -       const struct file_operations    *f_op;
-> +       const __data_racy struct file_operations   *f_op;
->
->         u64                     f_version;
->  #ifdef CONFIG_SECURITY
->
-> Hmm, debugfs assumes that f_op does not change?
->
-> fs/debugfs/file.c: In function 'full_proxy_release':
-> fs/debugfs/file.c:357:45: warning: initialization discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
->   const struct file_operations *proxy_fops = filp->f_op;
->                                              ^~~~
+> > I haven't noticed that, if it contains duplicated patches, I may replace mine
+> > with yours if you insist.
+> >
+> > In any case it's better to reply there that you prefer this series to be
+> > applied, so Greg will not pick it up.
+> >
+> 
+> I do not have a preference. I am fine with using yours if it is easier on
+> the maintainers.
 
-Exactly as I pointed out elsewhere: pointers to __data_racy fields now
-have to become __data_racy as well:
+Up to you, there is no issue to take your patches in case they are the same
+(or quite similar) as mine. I can pick them up, just tell me if you want this
+to happen with a list of the patches (as mail Message-Id).
 
-  const struct file_operations __data_racy *proxy_fops = filp->f_op;
+> I will send a reply on my previous series that it is not needed and link
+> to this. I am new to the mailing lists so I didn't know what the procedure
+> is for this situation.
 
-should be what you want there. The type system is in fact helping us
-here as intended. :-)
+It's not about mailing lists, it's just a common sense.
+
+> Thanks for the fixes :),
+
+You are welcome!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
