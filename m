@@ -1,106 +1,193 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AA3537E7;
-	Thu,  2 May 2024 09:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268CE54BE7;
+	Thu,  2 May 2024 09:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714641570; cv=none; b=bLJ3O1TuKH4wnsnsxYtfDbU6SbhNJsiiLBEuelrOt04twNjkW863+/zxVZYAbtRO2tkF1nuXpU0YfaZ0hivYk44+sdyE+pZJ6u/XAAqcQXyHUaFUgqd5MxA567UlwvcDul0XtjLJ294DjJVWmSQkmNez4VXvkpJbI65NSl4jVBM=
+	t=1714641576; cv=none; b=NYTzpKIv0i/g9b+NEQ1knF3YGZiiplhV9zlNjj+gDZN8P3+/rGpqpsBfJcyWQZL7vCrpdW5enpAXYW9H1uY4tdkIbbYNxOxFMyxOAhYCNW9A9UUQHGgvCLI2Er317AFMYi2dLiP9dDz9zvJjNwP6fFKZLxMSDkPL8D7HBc9Pc4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714641570; c=relaxed/simple;
-	bh=icDwQ3NnzKzaEU0fVTxo5GzqH06fgDy1OdNdLXdTKSs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QdWhqdEIJvBBnMiY/5lLjIY1xz/+lu4lk56hvpyS0RKDX+sG9OTPw2uK/UhlKDjVb1HBEjGt4waoizby+6rRRDEJ/KkBRnEKLkvgydEtVg3L7eu8jiAtTssN41KOMxj5Gd15hkBu8/YkfYKer9Qq+pCWsINzB14WfHOgF/x687U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HvIsmP1n; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HvIsmP1n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714641568; x=1746177568;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=icDwQ3NnzKzaEU0fVTxo5GzqH06fgDy1OdNdLXdTKSs=;
-  b=HvIsmP1nTrGur4ZIaFDLV3LC9ozEtWHmcZgGHdFVc2UsKVZPNY7vmH1y
-   rWnK1xKk12+dz5GDwd09JzAiCUNjA1IoNQj9RUTJu93uj50V71UXYpZ4L
-   MOcidFFtIG4uwvCdTzgmR6BK4DKpeuN9BpLopR/4XG14jHS7VkZTvKU4q
-   oLgfwh3YFdushsjcam1fdKawmCAJ7Ex/NikInpW1X2hjyZim3fXdiMZ2i
-   0Tyrvz8ekLEJdDa31CsnxRWZxLUOrcNDDC/gZF/M0QWn971m9TzL+GVRG
-   wM1FNfg4HiVyIabyTjPZagDldbtGGcAyE4sWeHYlJC2KlJQ96sep2KOiE
-   g==;
-X-CSE-ConnectionGUID: oAArqpbjSVWiACZUqe2UkQ==
-X-CSE-MsgGUID: yqFoPueoQGSXeWlGALX2iQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="10273887"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="10273887"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 02:19:27 -0700
-X-CSE-ConnectionGUID: clc1dKztSw6SpXtD+ktJoA==
-X-CSE-MsgGUID: i52VyOUxS2C9j0vRnbabvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="27179198"
-Received: from ehlflashnuc2.fi.intel.com (HELO [10.237.72.57]) ([10.237.72.57])
-  by fmviesa006.fm.intel.com with ESMTP; 02 May 2024 02:19:23 -0700
-Message-ID: <fdbf6547-7e6d-408d-8ed8-13e449de181d@linux.intel.com>
-Date: Thu, 2 May 2024 12:19:22 +0300
+	s=arc-20240116; t=1714641576; c=relaxed/simple;
+	bh=SGYPtRW6iBf8mBHh0qDfuYqiwMqL1utxVOaxNqH3anA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I5KcTMkT93jf8Ee6TpicUAILaCmcrTIN0JdQmpN1BhPtUyaryLlmCsKtZUnyu/3C47n7PUQVPfh5AlxmmeBoqzJxYGzBbVDbSihPwHKI0cH0DiCCWdHgLX3uFyUegSVgYeofhN1xQw/gmKGCwLOOHpvnPHJHUKG1vYd4M6TcR8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4429J1p442330621, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4429J1p442330621
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 2 May 2024 17:19:02 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 2 May 2024 17:19:02 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 2 May
+ 2024 17:19:01 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, "Justin
+ Lai" <justinlai0215@realtek.com>
+Subject: [PATCH net-next v17 00/13] Add Realtek automotive PCIe driver
+Date: Thu, 2 May 2024 17:18:34 +0800
+Message-ID: <20240502091847.65181-1-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/5] mfd: intel_quark_i2c_gpio: Utilize
- i2c-designware.h
-To: Andi Shyti <andi.shyti@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- linux-kernel@vger.kernel.org,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jan Dabros <jsd@semihalf.com>, Lee Jones <lee@kernel.org>,
- Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou
- <mengyuanlou@net-swift.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Andrew Lunn <andrew@lunn.ch>, Duanqiang Wen <duanqiangwen@net-swift.com>,
- "open list:SYNOPSYS DESIGNWARE I2C DRIVER" <linux-i2c@vger.kernel.org>,
- "open list:WANGXUN ETHERNET DRIVER" <netdev@vger.kernel.org>
-References: <20240425214438.2100534-1-florian.fainelli@broadcom.com>
- <20240425214438.2100534-5-florian.fainelli@broadcom.com>
- <Ziu6gDOqhEYQNhcH@smile.fi.intel.com>
- <fidbc7locp32lypdui67crj3qkj3nbcp5vpxcnlxrdmme2sn4c@npdan5ncxxog>
-Content-Language: en-US
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-In-Reply-To: <fidbc7locp32lypdui67crj3qkj3nbcp5vpxcnlxrdmme2sn4c@npdan5ncxxog>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On 4/30/24 12:36 PM, Andi Shyti wrote:
-> Hi Andy,
-> 
-> On Fri, Apr 26, 2024 at 05:30:24PM +0300, Andy Shevchenko wrote:
->> On Thu, Apr 25, 2024 at 02:44:37PM -0700, Florian Fainelli wrote:
->>> Rather than open code the i2c_designware string, utilize the newly
->>> defined constant in i2c-designware.h.
->>
->> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>
->> P.S>
->> Note, my tags for MFD patches does not imply that I agree on the general idea
->> of this series, it's just in case if it will be approved by the respective
->> maintainers (I²C / MFD / etc).
-> 
-> I waited a bit to see if more comments were coming.
-> 
-Well I had doubts about the idea will it help maintaining code or do the 
-opposite but didn't receive a reply from the patch author:
+This series includes adding realtek automotive ethernet driver
+and adding rtase ethernet driver entry in MAINTAINERS file.
 
-https://lore.kernel.org/linux-i2c/62e58960-f568-459d-8690-0c9c608a4d9f@linux.intel.com/
+This ethernet device driver for the PCIe interface of 
+Realtek Automotive Ethernet Switch,applicable to 
+RTL9054, RTL9068, RTL9072, RTL9075, RTL9068, RTL9071.
 
-Also Lee Jones have similar concerns:
+v1 -> v2:
+- Remove redundent debug message.
+- Modify coding rule.
+- Remove other function codes not related to netdev.
 
-https://lore.kernel.org/linux-i2c/20240502071751.GA5338@google.com/
+v2 -> v3:
+- Remove SR-IOV function - We will add the SR-IOV function together when
+uploading the vf driver in the future.
+- Remove other unnecessary code and macro.
+
+v3 -> v4:
+- Remove function prototype - Our driver does not use recursion, so we
+have reordered the code and removed the function prototypes.
+- Define macro precisely - Improve macro code readability to make the
+source code cleaner.
+
+v4 -> v5:
+- Modify ethtool function - Remove some unnecessary code.
+- Don't use inline function - Let the compiler decide.
+
+v5 -> v6:
+- Some old macro definitions have been removed and replaced with the
+lastest usage.
+- Replace s32 with int to ensure consistency.
+- Clearly point out the objects of the service and remove unnecessary
+struct.
+
+v6 -> v7:
+- Split this driver into multiple patches.
+- Reorganize this driver code and remove redundant code to make this
+driver more concise.
+
+v7 -> v8:
+- Add the function to calculate time mitigation and the function to 
+calculate packet number mitigation. Users can use these two functions 
+to calculate the reg value that needs to be set for the mitigation value
+they want to set.
+- This device is usually used in automotive embedded systems. The page
+pool api will use more memory in receiving packets and requires more 
+verification, so we currently do not plan to use it in this patch.
+
+v8 -> v9:
+- Declare functions that are not extern as static functions and increase
+the size of the character array named name in the rtase_int_vector struct
+to correct the build warning noticed by the kernel test robot.
+
+v9 -> v10:
+- Currently we change to use the page pool api. However, when we allocate
+more than one page to an rx buffer, it will cause system errors
+in some cases. Therefore, we set the rx buffer to fixed size with 3776
+(PAGE_SIZE - SKB_DATA_ALIGN(sizeof(skb_shared_info) )), and the maximum 
+value of mtu is set to 3754(rx buffer size - VLAN_ETH_HLEN - ETH_FCS_LEN).
+- When ndo_tx_timeout is called, it will dump some device information,
+which can be used for debugging.
+- When the mtu is greater than 1500, the device supports checksums
+but not TSO.
+- Fix compiler warnning.
+
+v10 -> v11:
+- Added error handling of rtase_init_ring().
+- Modify the error related to asymmetric pause in rtase_get_settings.
+- Fix compiler error.
+
+v11 -> v12:
+- Use pm_sleep_ptr and related macros.
+- Remove multicast filter limit.
+- Remove VLAN support and CBS offload functions. 
+- Remove redundent code.
+- Fix compiler warnning.
+
+v12 -> v13:
+- Fixed the compiler warning of unuse rtase_suspend() and rtase_resume()
+when there is no define CONFIG_PM_SLEEP.
+
+v13 -> v14:
+- Remove unuse include.
+- call eth_hw_addr_random() to generate random MAC and set device flag 
+- use pci_enable_msix_exact() instead of pci_enable_msix_range() 
+- If dev->dma_mask is non-NULL, dma_set_mask_and_coherent with a 64-bit
+mask will never fail, so remove the part that determines the 32-bit mask.
+- set dev->pcpu_stat_type before register_netdev() and core will allocate
+stats 
+- call NAPI instance at the right location
+
+v14 -> v15:
+- In rtase_open, when the request interrupt fails, all request interrupts
+are freed.
+- When calling netif_device_detach, there is no need to call
+netif_stop_queue.
+- Call netif_tx_disable() instead of stop_queue(), it takes the tx lock so
+there is no need to worry about the packets being transmitted.
+- In rtase_tx_handler, napi budget is no longer used, but a customized
+tx budget is used.
+- Use the start / stop macros from include/net/netdev_queues.h. 
+- Remove redundent code.
+
+v15 -> v16:
+- Re-upload v15 patch set
+
+v16 -> v17:
+- Prefix the names of some rtase-specific macros, structs, and enums.
+- Fix the abnormal problem when returning page_pool resources.
+
+Justin Lai (13):
+  rtase: Add pci table supported in this module
+  rtase: Implement the .ndo_open function
+  rtase: Implement the rtase_down function
+  rtase: Implement the interrupt routine and rtase_poll
+  rtase: Implement hardware configuration function
+  rtase: Implement .ndo_start_xmit function
+  rtase: Implement a function to receive packets
+  rtase: Implement net_device_ops
+  rtase: Implement pci_driver suspend and resume function
+  rtase: Implement ethtool function
+  rtase: Add a Makefile in the rtase folder
+  realtek: Update the Makefile and Kconfig in the realtek folder
+  MAINTAINERS: Add the rtase ethernet driver entry
+
+ MAINTAINERS                                   |    7 +
+ drivers/net/ethernet/realtek/Kconfig          |   17 +
+ drivers/net/ethernet/realtek/Makefile         |    1 +
+ drivers/net/ethernet/realtek/rtase/Makefile   |   10 +
+ drivers/net/ethernet/realtek/rtase/rtase.h    |  326 +++
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 2326 +++++++++++++++++
+ 6 files changed, 2687 insertions(+)
+ create mode 100644 drivers/net/ethernet/realtek/rtase/Makefile
+ create mode 100644 drivers/net/ethernet/realtek/rtase/rtase.h
+ create mode 100644 drivers/net/ethernet/realtek/rtase/rtase_main.c
+
+-- 
+2.34.1
 
