@@ -1,84 +1,84 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC437211C
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D472015F302
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714667456; cv=none; b=mqttUKy0tjfklWlJA4tUcudIScepVfdu7o4QAF1SCinca+5ZJqzD3BA3s7muDrQkDtaAYTZZAk7s3UrAvVJ3Dbb1sQXFSJPNAR94NEAGw2QwsB39+B8VGbVWIOwMAZ9/9UBzvHfaR9cCbyIZYbOqiqX90/n/BlRJPVmYasRso9E=
+	t=1714667458; cv=none; b=iYKazIrkFWn5vLUulqhR0X8LyoB9WVg2SVBGdscsZpTIKcj/T5+X8bZ4ry1qXCQWrzcBcZ9Hsr7inASNJ8cc4hUKxOvmKSu/dGps80Dj/UdoDLACW/7JeQqHCDVF8PV9ek7/pddByQj/Sd09UeB5ukppPqXr61mMzRuuELFAz7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714667456; c=relaxed/simple;
-	bh=FDs8zOxUdfobTpJKR/H15bW4BvIDRf4R69hj+7xfUXQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ezdHOhAhUZFOwhX17zuH3gFvaSbg/pdP25WOdgJtxYOdtoEDYYQUqJO3b4dHyBAw35QjVxhaHQoiHXZU4/5x/Mxm9peQ91pg2zfL4FUakNXgjAIkrHKQuSjjWaH9EVf6DCJspva49DaZYWe9Ujy9NAmdnqDiUh8qwDv4ALi0Ngs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=rhNipQEd; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rhNipQEd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=VF57B/xw0oUlWQRex3Gc5BwlwzzPx1Jss71WKlk4wrk=; b=rhNipQEdFyrhaNtY
-	IR40TiPgAAIfnwHzWJeRNh5aOqZXdaGLIgDoPxXIIYX9P0MHeW4uN7/nWMDHCnWU02CxP/I5j/Dys
-	/fPyCzi027LVkbgDKM1JCue1k2gNEove1Oup5yT8vayiPkp8NfrbFbvy2mM4mPzZ1YeQfwIJTQsca
-	rjuxGRY64Ikm2qfT44CWtb3wcSuX3cG/Hs80W2F+EuAnavLUBkGxQjlqdRIqSCEvre9w2XQfE29WL
-	dSG3z7bWVfD/lXj1pIrVLoJLVg3D4g10HCqPCLTIcf+YOA1LloIKv1SEw3/2xYk02PZz0V9loEYlG
-	zFnRjOef8jnKUewveg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1s2Yfw-004ILZ-2R;
-	Thu, 02 May 2024 15:48:48 +0000
-From: linux@treblig.org
-To: sudipm.mukherjee@gmail.com
-Cc: arnd@arndb.de,
-	linux-kernel@vger.kernel.org,
-	linux-parport@lists.infradead.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 2/3] parport: Remove attach function pointer
-Date: Thu,  2 May 2024 16:48:22 +0100
-Message-ID: <20240502154823.67235-3-linux@treblig.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240502154823.67235-1-linux@treblig.org>
-References: <20240502154823.67235-1-linux@treblig.org>
+	s=arc-20240116; t=1714667458; c=relaxed/simple;
+	bh=2SQoQi7JeUwE5gXSWzDNdMZbjikWJj8zunkdgMusgJE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=sRfrdpokqAJOssmjsyq5MMxAnxhzDCAyPWmWtrLld5fmClK3YuE1P8vpAnOnkvGc5CYu7PB9MKEzpIhoWQXhmFLKQLLRewKa/70ABErlMRQSNW7K/bBjrgCNtwSO7D3wbqnezn7OaYalCJZ+KxuHhG7b5A4xl6rtmGk3BVmgdCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-209-5UzM5jnQMu62QQGL5yAXng-1; Thu, 02 May 2024 17:30:49 +0100
+X-MC-Unique: 5UzM5jnQMu62QQGL5yAXng-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 2 May
+ 2024 17:30:18 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 2 May 2024 17:30:18 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: "'H. Peter Anvin'" <hpa@zytor.com>, Jules Irenge <jbi.octave@gmail.com>,
+	"mingo@redhat.com" <mingo@redhat.com>
+CC: "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>,
+	"x86@kernel.org" <x86@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/3] x86/tsc: Use div64_ul instead of do_div()
+Thread-Topic: [PATCH 1/3] x86/tsc: Use div64_ul instead of do_div()
+Thread-Index: AQHamaA+T554jBHA0E2zu7rxgunKsbGEKAzg
+Date: Thu, 2 May 2024 16:30:18 +0000
+Message-ID: <5f30cab9917d4d46b581b06e00b792e9@AcuMS.aculab.com>
+References: <Zi6H5P_mc6DPR_v3@octinomon.home>
+ <7EE9AB38-3103-4091-A558-BF0DEAF61E1D@zytor.com>
+In-Reply-To: <7EE9AB38-3103-4091-A558-BF0DEAF61E1D@zytor.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-
-The attach function pointers haven't actually been called since:
-  'commit 3275158fa52a ("parport: remove use of devmodel")'
-topped adding entries to the drivers list.
-
-If you're converting a driver, look at the 'match_port' function
-pointer instead.
-
-(There are lots of comment references to 'attach' all over, but they
-probably need some deeper understanding to check the semantics
-to see if they can be replaced by match_port).
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- include/linux/parport.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/include/linux/parport.h b/include/linux/parport.h
-index 2a4424b601565..190de3569e25c 100644
---- a/include/linux/parport.h
-+++ b/include/linux/parport.h
-@@ -252,7 +252,6 @@ struct parport {
- 
- struct parport_driver {
- 	const char *name;
--	void (*attach) (struct parport *);
- 	void (*detach) (struct parport *);
- 	void (*match_port)(struct parport *);
- 	int (*probe)(struct pardevice *);
--- 
-2.44.0
+RnJvbTogSC4gUGV0ZXIgQW52aW4gDQo+IFNlbnQ6IDI4IEFwcmlsIDIwMjQgMjA6MTMNCj4gDQo+
+IE9uIEFwcmlsIDI4LCAyMDI0IDEwOjMxOjE2IEFNIFBEVCwgSnVsZXMgSXJlbmdlIDxqYmkub2N0
+YXZlQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID5kb19kaXYoKSB0cnVuY2F0ZXMgYSB1NjQgZGl2aXNv
+ciB0byAzMiBiaXQuDQo+ID5UaGlzIGNhbiBsZWFkIHRvIG5vbi16ZXJvIGJlaW5nIHRydW5jYXRl
+ZCB0byB6ZXJvIGZvciBkaXZpc2lvbi4NCj4gPg0KPiA+Rml4IGNvY2NpbmVsbGUgd2FybmluZw0K
+PiA+V0FSTklORzogZG9fZGl2KCkgZG9lcyBhIDY0LWJ5LTMyIGRpdmlzaW9uLCBwbGVhc2UgY29u
+c2lkZXIgdXNpbmcgZGl2NjRfdWwgaW5zdGVhZA0KPiA+DQo+ID5TaWduZWQtb2ZmLWJ5OiBKdWxl
+cyBJcmVuZ2UgPGpiaS5vY3RhdmVAZ21haWwuY29tPg0KPiA+LS0tDQo+ID4gYXJjaC94ODYva2Vy
+bmVsL3RzYy5jIHwgMiArLQ0KPiA+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBk
+ZWxldGlvbigtKQ0KPiA+DQo+ID5kaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3RzYy5jIGIv
+YXJjaC94ODYva2VybmVsL3RzYy5jDQo+ID5pbmRleCA1YTY5YTQ5YWNjOTYuLjJkYTM3ZjMzZGQx
+NyAxMDA2NDQNCj4gPi0tLSBhL2FyY2gveDg2L2tlcm5lbC90c2MuYw0KPiA+KysrIGIvYXJjaC94
+ODYva2VybmVsL3RzYy5jDQo+ID5AQCAtNDg0LDcgKzQ4NCw3IEBAIHN0YXRpYyB1bnNpZ25lZCBs
+b25nIHBpdF9jYWxpYnJhdGVfdHNjKHUzMiBsYXRjaCwgdW5zaWduZWQgbG9uZyBtcywgaW50IGxv
+b3BtaW4pDQo+ID4NCj4gPiAJLyogQ2FsY3VsYXRlIHRoZSBQSVQgdmFsdWUgKi8NCj4gPiAJZGVs
+dGEgPSB0MiAtIHQxOw0KPiA+LQlkb19kaXYoZGVsdGEsIG1zKTsNCj4gPisJZGl2NjRfdWwoZGVs
+dGEsIG1zKTsNCj4gPiAJcmV0dXJuIGRlbHRhOw0KPiA+IH0NCj4gPg0KPiANCj4gQXJlIHlvdSBz
+dXJlIHRoaXMgaXMgbm90IGEgZmFsc2UgcG9zaXRpdmU/IFRoaXMgaXMgYSAqbXVjaCogbW9yZSBl
+eHBlbnNpdmUgb3BlcmF0aW9uIG9uIDMyIGJpdHMuDQoNCklJUkMgZG9fZGl2KCkgaXNuJ3QgdGhh
+dCBncmVhdCBlaXRoZXIuDQpTb21ld2hlcmUgaXQgY2hhbmdlZCBmcm9tIGJlaW5nIGEgc2ltcGxl
+IHdyYXBwZXIgb24gdGhlIHg4NiAnZGl2JyBpbnN0cnVjdGlvbg0KKGllIDY0IGJ5IDMyIGdpdmlu
+ZyAzMiBhbmQgMzIpIHRvIGJlaW5nIGFibGUgdG8gZ2VuZXJhdGUgYSA2NGJpdCBxdW90ZW50Lg0K
+DQpCdXQgdGhlIHBhdGNoIGlzIGVudGlyZWx5IGJyb2tlbiBhcyB3ZWxsLg0KDQoJRGF2aWQNCg0K
+LQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0s
+IE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdh
+bGVzKQ0K
 
