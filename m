@@ -1,77 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2165D15AACA;
-	Thu,  2 May 2024 15:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F9515ADBF;
+	Thu,  2 May 2024 15:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714662934; cv=none; b=T3/ZMbvlY51AoCaa/Y0Arx0C5zWFrQXvVIJmUJj0qxUlS6SHzqaZGA1jyj4Qfw2Kluid3FNmb+hQsBVS5eIt0Pd5SoJI1/YI0iiWBeJQuI8rb4Tn46KVTMIrenarbjaAW4Ki45zKc+HcJoSZOsJNpyev/X7BfalAbqIC36P4syw=
+	t=1714662934; cv=none; b=ee1eKrMEsweybu8w2X/8u9STIkCb7ETD1/M+0zOk6JY4Bt6c1zwHz1/1KJt73OiDsi3yXx5PtXWJ8q6424GVfJPSDrMqbQqym1K8OZ/78eyD8YV/UWCWpTURO1BAeff7mv/iFRHXA/0s+4ukwRsjfQhQDcrM66Hux1M9R7bB0l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714662934; c=relaxed/simple;
-	bh=mn51M/aLYne7AuxEoxbC4ggK7clEUPSjzRG+mNeu3yI=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=HamstQ73OEG4+h9WV+JPm0ndoS1+QJ8o+OaRFUaFIiNnxKjPwYs/4ihzPCgeqJW+OVlZSzdZZgtm6sgRG2mxQzq3YH0/03crx/voTW4nbGruv1rgqqr/LlJf9gUzRHm8jjpd9y9VpPzQ33BqIYoSnpwGAyHNXPsLQe/wMReM2DE=
+	bh=Zjm2gWdBScHrZHJ6OHWJqK9+Y6TkySrNHNWy7Q+/g+0=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=O/YgVGYPwadP9DBQU6La9t29ryRTEqTDjnShoATExOuGc8KdfmiSENdZ2otS8vS/ccwL30sSwIkdv4XIU/NKUwA6p7lFUIhf8P2lKaqQjLqfvl5t5cTUui+HVpnu56G1mNNKriVnIaLeYW+thMlDThS/wN/hTHIXVnKKwL+23iI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE46C113CC;
-	Thu,  2 May 2024 15:15:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A7AC4AF1A;
+	Thu,  2 May 2024 15:15:34 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1s2YAW-00000003ISF-1Zdr;
+	id 1s2YAW-00000003ITF-2uZX;
 	Thu, 02 May 2024 11:16:20 -0400
-Message-ID: <20240502151547.973653253@goodmis.org>
+Message-ID: <20240502151620.558412090@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 02 May 2024 11:15:47 -0400
+Date: Thu, 02 May 2024 11:15:49 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 0/5] tracefs/eventfs: Fix inconsistent permissions
+ Andrew Morton <akpm@linux-foundation.org>,
+ stable@vger.kernel.org
+Subject: [PATCH v2 2/5] tracefs: Still use mount point as default permissions for instances
+References: <20240502151547.973653253@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+
+If the instances directory's permissions were never change, then have it
+and its children use the mount point permissions as the default.
+
+Currently, the permissions of instance directories are determined by the
+instance directory's permissions itself. But if the tracefs file system is
+remounted and changes the permissions, the instance directory and its
+children should use the new permission.
+
+But because both the instance directory and its children use the instance
+directory's inode for permissions, it misses the update.
+
+To demonstrate this:
+
+  # cd /sys/kernel/tracing/
+  # mkdir instances/foo
+  # ls -ld instances/foo
+ drwxr-x--- 5 root root 0 May  1 19:07 instances/foo
+  # ls -ld instances
+ drwxr-x--- 3 root root 0 May  1 18:57 instances
+  # ls -ld current_tracer
+ -rw-r----- 1 root root 0 May  1 18:57 current_tracer
+
+  # mount -o remount,gid=1002 .
+  # ls -ld instances
+ drwxr-x--- 3 root root 0 May  1 18:57 instances
+  # ls -ld instances/foo/
+ drwxr-x--- 5 root root 0 May  1 19:07 instances/foo/
+  # ls -ld current_tracer
+ -rw-r----- 1 root lkp 0 May  1 18:57 current_tracer
+
+Notice that changing the group id to that of "lkp" did not affect the
+instances directory nor its children. It should have been:
+
+  # ls -ld current_tracer
+ -rw-r----- 1 root root 0 May  1 19:19 current_tracer
+  # ls -ld instances/foo/
+ drwxr-x--- 5 root root 0 May  1 19:25 instances/foo/
+  # ls -ld instances
+ drwxr-x--- 3 root root 0 May  1 19:19 instances
+
+  # mount -o remount,gid=1002 .
+  # ls -ld current_tracer
+ -rw-r----- 1 root lkp 0 May  1 19:19 current_tracer
+  # ls -ld instances
+ drwxr-x--- 3 root lkp 0 May  1 19:19 instances
+  # ls -ld instances/foo/
+ drwxr-x--- 5 root lkp 0 May  1 19:25 instances/foo/
+
+Where all files were updated by the remount gid update.
+
+Cc: stable@vger.kernel.org
+Fixes: 8186fff7ab649 ("tracefs/eventfs: Use root and instance inodes as default ownership")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/inode.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 5f2417df1c43..e1bf65efdbb3 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -180,16 +180,39 @@ static void set_tracefs_inode_owner(struct inode *inode)
+ {
+ 	struct tracefs_inode *ti = get_tracefs(inode);
+ 	struct inode *root_inode = ti->private;
++	kuid_t uid;
++	kgid_t gid;
++
++	uid = root_inode->i_uid;
++	gid = root_inode->i_gid;
++
++	/*
++	 * If the root is not the mount point, then check the root's
++	 * permissions. If it was never set, then default to the
++	 * mount point.
++	 */
++	if (root_inode != d_inode(root_inode->i_sb->s_root)) {
++		struct tracefs_inode *rti;
++
++		rti = get_tracefs(root_inode);
++		root_inode = d_inode(root_inode->i_sb->s_root);
++
++		if (!(rti->flags & TRACEFS_UID_PERM_SET))
++			uid = root_inode->i_uid;
++
++		if (!(rti->flags & TRACEFS_GID_PERM_SET))
++			gid = root_inode->i_gid;
++	}
+ 
+ 	/*
+ 	 * If this inode has never been referenced, then update
+ 	 * the permissions to the superblock.
+ 	 */
+ 	if (!(ti->flags & TRACEFS_UID_PERM_SET))
+-		inode->i_uid = root_inode->i_uid;
++		inode->i_uid = uid;
+ 
+ 	if (!(ti->flags & TRACEFS_GID_PERM_SET))
+-		inode->i_gid = root_inode->i_gid;
++		inode->i_gid = gid;
+ }
+ 
+ static int tracefs_permission(struct mnt_idmap *idmap,
+-- 
+2.43.0
 
 
-The tracefs and eventfs permissions are created dynamically based
-on what the mount point inode has or the instances directory inode has.
-But the way it worked had some inconsistencies that could lead to
-security issues as the file system is not behaving like admins would
-expect.
-
-The files and directories could ignore the remount option that changes
-the gid or uid ownerships, leaving files susceptable to access that
-is not expected. This happens if a file had its value changed previously
-and then a remount changed all the files permissions. The one that
-was changed previously would not be affected.
-
-This change set resolves these inconsistencies.
-
-This also fixes the test_ownership.tc test as it would pass on the
-first time it is run, but fail on the second time, because of the
-inconsistant state of the permissions. Now you can run that test
-multiple times and it will always pass.
-
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240502030024.062275408@goodmis.org/
-
-- Testing showed that taking a mutex when freeing the tracefs_inode
-  caused a lockdep splat as it can happen in the RCU softirq context.
-  Convert the mutex to a spinlock for adding and removing the node
-  from the link list, and free the node via call_rcu() so that the
-  iteration of the list only needs to be protected by rcu_read_lock().
-
-
-Steven Rostedt (Google) (5):
-      tracefs: Reset permissions on remount if permissions are options
-      tracefs: Still use mount point as default permissions for instances
-      eventfs: Do not differentiate the toplevel events directory
-      eventfs: Do not treat events directory different than other directories
-      eventfs: Have "events" directory get permissions from its parent
-
-----
- fs/tracefs/event_inode.c | 102 ++++++++++++++++++++++++++++-------------------
- fs/tracefs/inode.c       |  77 +++++++++++++++++++++++++++++++++--
- fs/tracefs/internal.h    |  14 ++++---
- 3 files changed, 144 insertions(+), 49 deletions(-)
