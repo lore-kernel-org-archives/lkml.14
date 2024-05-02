@@ -1,64 +1,120 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A9215359A;
-	Thu,  2 May 2024 16:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9287460BB6;
+	Thu,  2 May 2024 16:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714666391; cv=none; b=bt7XuG5yohVYeRH/o7Ty4sI657roZ2oZx02C1h9tFCOZfDM5fzC6zxfC7BcrJ0zcyb1OEAAJOEhoeZ3pqY/yk7vsqsvw/0YkUYnkWZ7y9ntLe9CsOtlGVUCmLTYYJsYeB9ZFLqR70qWVvWO5r4r+GgS2JL4eDW/oneoB61mHlko=
+	t=1714666458; cv=none; b=kfQUITt5yb5Q2AaO1BgSwQxZT0sZJVJUmw6D8JbzzyC13JuoK3bVUFX9L4tyUYsBS9YaskUchvZQv7Pp/EdDqz0NWd4s6DBDgDSA0W74zRSouVZYuy6CBAHRVZ2jzeag8BQxQhrEOviZyhTfEPMkJpmMj58qMB0NHbrulLR2UqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714666391; c=relaxed/simple;
-	bh=3ftJAFzteXGUrfe+KMXY35rqWKZoRTdjLJlVvybiFH0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sLJtkghzRaaNsUXZIiWwE0nFk8ZXzntVow3OtWa+MPkcBNc20GPjNrwXKRBgogThx1cPHeYR0Pt1DG7UtYEtoNdUlSv6m8F+NFepRClm5RvxtjYEycXwW2TWDajQG7LpQVOaoZeaFsBlnzSNOidO6cpntojNuit9DTqOmvopdoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=kaAaIGbU; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1714666458; c=relaxed/simple;
+	bh=EYyBIpXtLbrojJ0gwTNmKNe8NZCDfNPHVGhDJtgJFL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JUL30wiflJi+rftvnzMcIvpQYinozrNNQMxfA0sZfNMjMUVO/xQeQlWSXL+XggEmadHpJ47K0/Ly3PK8p6uSgnygwuWxrOacbvVaVlEsRlqKsIRgn2Xd2JOES0qp/atencdO7WiX97AicW0WJF8S2K+OaWsN4FWAiIsaOYs7EWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=AiMtJSxM; arc=none smtp.client-ip=74.208.4.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="kaAaIGbU"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5C7F247C39
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1714666389; bh=3ftJAFzteXGUrfe+KMXY35rqWKZoRTdjLJlVvybiFH0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=kaAaIGbUKdWbTUuTDlsr4IdH4JxM8p8ceGS2+/5tPCabcecisXJUCTNeg16WuPYtN
-	 CSnbMKnoc6WwU+WCxpHQPbYM5rPV8fKWf+n/aM24icKhqC2dH5TyrqLqa9YkFo0fPw
-	 7b10BXa+Yw3Zty59Y1tSup/KN1HZSkISMejiVSjBAC355it6HngZUiASHuoL/R1/Jy
-	 TMhxyu4JbobQ0PloddCM5asvKLXEo5oyg+Ept3fJl8cn90wfu/zUZxgcMWErI86Bsw
-	 OAImw71TfOzeL5278AKJe5c73e7JViCHUMG4XQi83SJWZJizSvzCs1VhCRi4gwGrSc
-	 dJN8z3KSSXGSA==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 5C7F247C39;
-	Thu,  2 May 2024 16:13:09 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] docs: stable-kernel-rules: fine-tuning and 'no
- stable backport' tag
-In-Reply-To: <cover.1714367921.git.linux@leemhuis.info>
-References: <cover.1714367921.git.linux@leemhuis.info>
-Date: Thu, 02 May 2024 10:13:08 -0600
-Message-ID: <87jzkc6vl7.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="AiMtJSxM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
+	s=s1-ionos; t=1714666452; x=1715271252; i=parker@finest.io;
+	bh=F1Ux9cZrOuJh9vuypt4bqQwJFsHtjYpAaryxJnzC8UU=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=AiMtJSxMjCb+kfDU2A/JPuN5r3PE1QqXY10l88NeBVQF0PAXqKDa2MwZtZpKshhN
+	 PnEPGikcO1ZX5rmLRufde5ecl2HnXURqQZUz44/hKK/m+InG+FuYJ1WqTOD+Q8tCr
+	 8saN3QuXY+W4cWq2ReaC/CU70YgImhhOlCFIBl115upW9Gz/X3j8pjBB05Posyeb/
+	 2UByhCmoOy2IRfKU+TJORwY3LyE2IG540b8ikdE9/SYUtZ4+p2xq/y0J3ftJCkHqD
+	 IvkSht3zcLKRoCYcYTF33BMRdqnPfb+ljxaBGfSXEUIdwANSCIC1tRIFcwcm8JtKT
+	 Yy9d1sxO5RsLZI2viA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from SWDEV2.connecttech.local ([98.159.241.229]) by
+ mrelay.perfora.net (mreueus002 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 0MNa9c-1rzmlW1OiQ-001dPt; Thu, 02 May 2024 18:08:48 +0200
+Date: Thu, 2 May 2024 12:08:40 -0400
+From: Parker Newman <parker@finest.io>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Parker Newman <pnewman@connecttech.com>, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH v1 00/13] serial: 8250_exar: Clean up the driver
+Message-ID: <20240502120840.02c65f30@SWDEV2.connecttech.local>
+In-Reply-To: <ZjO4vYEBzxU3fpzC@smile.fi.intel.com>
+References: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
+	<20240502114645.4445b3da@SWDEV2.connecttech.local>
+	<ZjO4vYEBzxU3fpzC@smile.fi.intel.com>
+Organization: Connect Tech Inc.
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wQQFg7JqXeyMc7J73yaQ3i6/8bCsSfUwf0eyYZhDGpSV4C2Mv2x
+ JTendR9EQupIO/Pd9qAVsd5yJShMGZ8QXCgqhinFWqRPUwGI0rs5phSJZ2QzJ5Nf6qfJNUB
+ V9pSo9Xm7tTTzNBK90bs7WZN+q2Y6qHhlQ9hWlpOopnhoE30t8rHvdjl/rDnPVvJCjmnJgu
+ V4wtVuG/m/6Dzm91mmp9Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:s0b9kt01wnY=;NqVlvOczYkO9YsE+8ETmlKaC1Zx
+ RckKbwJGmHeqMNlH6eJsN2Kllaw9z36miib9msAcsG1svYihv8ITSlLGeeUK0HUv3xOU0cmO6
+ GpWVh80Q2uhCOzwylw1/6zAkCHrQHvmcbREydYiVhDb8gcUZhgc3jM1ObTqUrx1sU1WCCOEwh
+ Y6Y4OC74tRozI8LWRE090MIZ8pj3O8HDO5BJkcU4FqoNSDTM4SSfc+pSbA+X92SUanqNmfBz0
+ z3VVX5aCst+d4NGwh75IRMOuOAOzUNxUlrdQo9OOrYrCeDDdkc12r5xWRrjkpMX97McvOjw1i
+ 2xvTGO4ty+/wYFJE4jtaBzB6GYYpj2KSym+LwP4jcYT9kCS802GqHs3wtjvX/NtCump+5kWnH
+ RRiU30o/CihhCeScbNHvPUVd0ZXRCc/2F1GFi1vdNpk8m8bxrEfWUWtsjLT94dp8EUbTBQzwS
+ 1ghS+If3FsRmpcZ2//g+dPgLBhbFsxj0rcsgJtxgJNOzWQJWMlecNwuu0gMZ8HvlpAWxskDwf
+ +LzeZEzqF8zhezgAM9K0T5lkRexY+106+XxSwIq41+iSyzLIAhRhBqVV397jDiLyJMaFlq9PZ
+ am6SHL3ufrLaoJbIrlNHJGzhvJAkqE3ffIPW3TpqI5+vL21Zj1WxaQycHm3Z6v11GFigra0uE
+ XRg1hCwh48ETNB9k2o4hfEc8HNvM5IaayZvD7UMk4iJ6V9KQDVXlpZvRaY49UDpDXHVOorExg
+ 1P8S4u+aHqc5FiyYfBokzztxV7CZPrLYinY+C1LAfrgIMkuZ84ssNs=
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+On Thu, 2 May 2024 19:01:01 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-> After a recent discussion regarding "do we need a 'nobackport' tag" I
-> set out to create one change for stable-kernel-rules.rst. This is now
-> the last patch in the series, which links to that discussion with
-> all the details; the other stuff is fine-tuning that happened along the
-> way.
+> On Thu, May 02, 2024 at 11:46:45AM -0400, Parker Newman wrote:
+> > On Thu,  2 May 2024 17:43:54 +0300
+> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > > After a rework for CONNTECH was done, the driver may need a bit of
+> > > love in order to become less verbose (in terms of indentation and
+> > > code duplication) and hence easier to read.
+> > >
+> > > This clean up series fixes a couple of (not so critical) issues and
+> > > cleans up the recently added code. No functional change indented by
+> > > the cleaning up part.
+> > >
+> >
+> > Just an FYI I submitted a patch series that fixed several of these iss=
+ues but I
+> > think it fell through the cracks (I know everyone is very busy!).
+> >
+> > Link: https://lore.kernel.org/linux-serial/cover.1713533298.git.pnewma=
+n@connecttech.com/
+> >
+> > I believe my previous patch series is no longer required. This one fix=
+es
+> > everything.
+>
+> I haven't noticed that, if it contains duplicated patches, I may replace=
+ mine
+> with yours if you insist.
+>
+> In any case it's better to reply there that you prefer this series to be
+> applied, so Greg will not pick it up.
+>
 
-I've applied the set, thanks.
+I do not have a preference. I am fine with using yours if it is easier on
+the maintainers.
 
-jon
+I will send a reply on my previous series that it is not needed and link
+to this. I am new to the mailing lists so I didn't know what the procedure
+is for this situation.
+
+Thanks for the fixes :),
+Parker
+
