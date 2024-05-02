@@ -1,145 +1,166 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2119.outbound.protection.partner.outlook.cn [139.219.17.119])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32994824AC;
-	Thu,  2 May 2024 13:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.119
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714655624; cv=fail; b=d5dY2xxQ/a78IMKX1fI1msYXQZ4FzQTg7jDU2/K3tXVnb4QWdYHOdvhCf/P0N/B9SYHjI8Px94yHanD+nJSh1mNQt3gDATtpFcUYLju1cfs/O/Rf35jm/U99jNrqUhfyF1Fa3h1EKLPOGFZ6J0LUHgunGjCpSloZxfOJ+zqWVps=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714655624; c=relaxed/simple;
-	bh=Y+t4jh9ItlV5uG63DXPLk7KpWeg2fgmI3UZxxYPuXes=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ubwhmWI4TD+wvPLCWdlTwXqLoruJUJUfZTkqX25c1c6/KsUDrqMo5FC/HqRz9VSxaCcvQ1RloSD7AyEgrSzRBRC6phLM8IOH8wx1wRwm2+RsP05Rrk1wUfjBRY5LjDMwQi8heG7rwSjndMXUzw+IEK9A3w9n5DkkMq5/l50c3f4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j1lpFNapH0PKYfGa/lHFalqL0Flceh1eMXthgruSZ5elSQFjJvs0MGlQyq6EUaMPKw2bGM401QHfavUwblX0Qa3ZkCU7pKSGULEWaHAAHOk19EeVas3QeDzjeU5UhojOE3mgothSjNe1TO751SkC0QY+xGfr7Gx3xJ9BHiGJQySHnBIhJTNihDX+UksbSwmM4nPPnzXIZPxplUySk6W34+yIgI+wchBRvcFdmIedVmU2szxvnGc7LrVtPyZujB9FePYKf8w4OapfJvsljKyzMYavo9QYo8UgnG6Q4Qs8+JL+J3bFPuyqjix6lqGqd09COfeNZsSOgfCeoGr4Tp8l/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y+t4jh9ItlV5uG63DXPLk7KpWeg2fgmI3UZxxYPuXes=;
- b=QjyNMtqEpWv+Uz/0X7dk7dxdnv7E9FWMUtjITbU4w55YB9Jk/WcfRAGgFikWj3BdFkjHeO7QKf0o2H8whVf+paY8B9plQhBXI2uSPFtcYqU4zaAPCKwjTyydCQjZbGCnojQFXZ1oUgd4skrFWQb2gvsn08mNVLAkuBsE6PFudui7g/D55LXPlgHcfILmTsL6MPexNkqDGM/qwnxQJBl3e87RYdK1JvZ5n2zKvYbv1tLKMsHQ5p7Yz3RKeiWOGE8NIrquVCpGUT9MTFDfw30xGHwwdykavScudXZd2Tegxpk636AbTh7wlyj1j0PQn/SXxjYxGUqQe5q7vw+mn2uHxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:17::9) by ZQ4PR01MB1235.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:15::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Thu, 2 May
- 2024 12:58:13 +0000
-Received: from ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
- ([fe80::301e:ec80:4356:8b14]) by
- ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn ([fe80::301e:ec80:4356:8b14%6])
- with mapi id 15.20.7472.044; Thu, 2 May 2024 12:58:13 +0000
-From: JiSheng Teoh <jisheng.teoh@starfivetech.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
-	Michal Simek <michal.simek@amd.com>, Lars-Peter Clausen <lars@metafoo.de>
-CC: Leyfoon Tan <leyfoon.tan@starfivetech.com>, "linux-spi@vger.kernel.org"
-	<linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, EngLee Teh <englee.teh@starfivetech.com>
-Subject: RE: [PATCH v2 2/2] dt-bindings: spi: spi-cadence: Add optional reset
- control
-Thread-Topic: [PATCH v2 2/2] dt-bindings: spi: spi-cadence: Add optional reset
- control
-Thread-Index: AQHanH5J1xo3ta2QXkGkfo2fF/uLg7GD3ZcAgAADf9CAAAQVgIAAAXwQ
-Date: Thu, 2 May 2024 12:58:13 +0000
-Message-ID:
- <ZQ4PR01MB1154491D456521284B3BACFBEB18A@ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn>
-References: <20240502104800.3030486-1-jisheng.teoh@starfivetech.com>
- <20240502104800.3030486-3-jisheng.teoh@starfivetech.com>
- <89f96e06-1966-43c2-b4c4-17e1669c2566@kernel.org>
- <ZQ4PR01MB1154B6FBA361C503AC10E6B6EB18A@ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn>
- <ea96eb15-2cd0-4f0a-8bba-8bd7f37cbbc2@kernel.org>
-In-Reply-To: <ea96eb15-2cd0-4f0a-8bba-8bd7f37cbbc2@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ4PR01MB1154:EE_|ZQ4PR01MB1235:EE_
-x-ms-office365-filtering-correlation-id: 60ba3ba4-991c-4b3e-17cd-08dc6aa786e7
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- e6e6ZNDmKCx5RyxCtrl1+saN3SEHZo7oL8PRHJCcKAXIcHrJT4o+9g1JiJs9LMyl5s3a3F37i8KYy7tiOsiSkGYYue1mNQY4NydoLb0B0Max7omNNHYRKjsPMTso6HT6HBo5S2AUYJt0GpX4HALrhHlYLzv4jSUzTb43cLjutBEyO2cj88g4Igu4nh+LuON8iEH38XkTLTKSIcU19ZjRCTUjT1RcSnZw0nLIqrKWtMMX/wgn4OXFTMiahlb2C2RClAiipO2Mvr0obsYB2XgqwFK07/lzP68bpWxqcWHUAaGiIkS5QaiAe3KkWobG3U5Po/kgZ95Lctgd61Z0LRoGIukQ8p2S7veixR0p1sK42Q++aYY8xzk9BCySnl0y0ty/o7P/2oshroMrTIL1tTMbuSt2BU1RMI500qPSt/1TC9geyVUpWzToMYtiibXNwjAOYb/+RVVcqqGxx517tQ0nNG0cqgn7QnfW407rFeUiWE7BlVVLvGU48qRRUk9rkpRLOlo+UScyJnuC5LNh/Q0X6OxBOcBcwExKDaQfP8pQrfrG/KkGV4DS9HuiEir68bbRq/QpVIyQHBlq1bGR9OUSesVG628MGdAlv9svQ/hPwTFpbDiFNOMnfPdzNsB/Jt9N
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(1800799015)(7416005)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?WHRKc2NEZjMya1hub282TllnY2FZcTF0cmI4L3ovaDlDb3VtMXYxb0k5dHBq?=
- =?utf-8?B?VDdMMGZ6Y2M5S2pBVTJoMDg4ODJvWllCZFB0MG9Na0Y4YU56Q1pQcTlscnBh?=
- =?utf-8?B?Ym1oMGtkcWEwODAyVUh5K2JHSGRmVWVBMjA4UGpIMXJWVHZxOTZsSEsrZkVu?=
- =?utf-8?B?SERGNnBWQmlWWlprSDkxSGQ1U1lSeHppQVkraWFKWlRSSXdNY01UZ0JJdmZ5?=
- =?utf-8?B?SjlDeGRDRkdnd3Z6cm1keEYrWFBIbTdrbzhQb256K3NTVTJCNWJUQ2JVNWJt?=
- =?utf-8?B?TWZIeW5RakdQb05XaHFndUdMbjIzWnRVQ1NDMnlVOUZncjUxWTdycituUFo2?=
- =?utf-8?B?MmpRYkNiRmZvSzZXZ2V0NElISVo5VjREQzNCS3JwY1RKdjFtQllLQmtiaTcr?=
- =?utf-8?B?NGZHZXUxcm1zSVR4angwaXRLMUNieFgwZzA0bEdrdFpuR0toZnlVVEFhRElq?=
- =?utf-8?B?dXNPOWZRbUhMejlnQlJmN1dhdzd6M0ZrWVR0RE56c1ZRTTZDdFEwRTJhek55?=
- =?utf-8?B?QkJKSFFOU1dBT0ZBZ2tzMTcwN1JmOEs4RE5POXFGVis0WHp5QkdOcWRoRHJG?=
- =?utf-8?B?YzlzMWhZMldYOG4zaVd6MTJNOFlTTEw5OGFlSWFqN1NpcU5mQnkzZ0VoTWpC?=
- =?utf-8?B?VzdKNDZxMlp5WERzYUw2aFNLcEtiZGtwZW9GVk8yWDk5Vk1FanpJU3RVN1lQ?=
- =?utf-8?B?WEM2cVkzejc1eng4YUNuMXFIT05DSllhTWxLdVE4VkIvbWRBemlCTVNidjZ5?=
- =?utf-8?B?RnhvVnB4eGUwa05NK01OKzhJZ0FmT0N4SHJwMnA1TDVTYW15TFZTdktPMDl2?=
- =?utf-8?B?ZHNHemJFUzFRNkE4QTJlQnZKNHhIcm4rcFVmdkRyQ0g5Yjd0bklRbjJBc25i?=
- =?utf-8?B?ZFVxSXV0TUR6NzZwQk1hR0ZQU3RwRlhhNnk5VUgxQmxFTGo1bkg3Yk5UNitE?=
- =?utf-8?B?QmU4UUFDaWdEYStnemFlelE0Z1BZL3RVbjFGUmFqd2N2cW1RNUdkdHdnMWxJ?=
- =?utf-8?B?UXdnbThzYlh2bmcvWFBIdldXeEpZbWxLc1NteThPK1lOSWhVWXhNaE8rWlZw?=
- =?utf-8?B?WFZ0U1lHNUtuVW40dkRBQTc2VnI3YlBuc2NFT2FBYTRLL3NDbjA0K3lZN0dr?=
- =?utf-8?B?UGlZS3dpT0FwOWQ2Sml6dlljUmI4YXF6QzBnZm5LLzNhNXptUlNRY2Y3WDFJ?=
- =?utf-8?B?NFRZU2tzUW5sK3hNTjBINzRUQkFud3hJVHExSGhzQUNJSEV3ZURWcXowN1pa?=
- =?utf-8?B?eWg5T2pGeGNXQWNoeno5cjFOMGJFTGkvSlh6YithNEVXV3NTeFl0NWdyN1FS?=
- =?utf-8?B?YVZmWndZRHIwSjZSazZjQmhYQWdpTThCSk9vZWhUdmVXN2ZOZE5uMXg2WDBo?=
- =?utf-8?B?YkVRc1FkYUk1clJLWUxsclZUZ0lURkZ5Zkx5dXEwQWd5S3pxMjRmT0FtdDZX?=
- =?utf-8?B?VE9BODhJa3Ezd1F2bGEvL0c5VXg3OWVic3hjbkZRS1FKcFArYlVRd0xVQ2pJ?=
- =?utf-8?B?NkZQRi9nMnphelhNQWV5MjVRWjNyUElMZnZZZlNzaWF1ZWdYRytwKzFqUWh6?=
- =?utf-8?B?RGRQdVEyYUcvWTlDSURPWXA5U2MzalJDUTBJYTR0cWtEUUVpSVpucmI1UHA0?=
- =?utf-8?B?TFZiODhLK2FPeVdoOE4yUFhoWGR5U1JIaDBmVXpBc1c1M3poMnNJdzRjRDVq?=
- =?utf-8?B?M3AzL3kvSUw0UzdSMVBhdUtScXViczNMRFJnVTc0SVZTQkcyRHRUOUZqVUtW?=
- =?utf-8?B?VlpaSTJqb3E2d1FkbkZ1VXVPbmF4Rmo3RVhHdHppRkF4M3FObnpKUTFkbHds?=
- =?utf-8?B?dGFPc21QZ2MwMmFnSzNVbFJoMUJTclRqdUtuQlpJRGdiU1RMSlAxL1QzOTNM?=
- =?utf-8?B?QlJRTjYrTmVnK1pWYzNHK3pYQldCdnd2YUc0K3JYVEl4VUZvQ04xQVp4TERZ?=
- =?utf-8?B?azBrVFYwV2IvOXBlUnZWQWNsQVVtamE4blBkOHNvY2xlQVRsZHk1VmdFb040?=
- =?utf-8?B?ZnZETmxTVXFxVXBXc0UxUnJPcVRQR1ZpMUUvREF3MHZkNjNBUHUwT0JDU2xH?=
- =?utf-8?B?eG5Mb0tOdjU1czc1NEllOFRMa0h5Wk9mUnZsTTA0RWtJcjRyOEcwMkllQksy?=
- =?utf-8?B?cEdKYTFNd294S1h1Mm04dFBpNGdvMmdzK2JNZ0xrWEdITGNmeU5UTm9mNjVK?=
- =?utf-8?B?MVE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816427580A
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 13:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714655761; cv=none; b=nWOWgpp7DfdhsLXodoTtMgvlFGEUZY0GWKyDzCUnlA2YArmgKyvLuTZnAJgQXavPZnEpcQGG+eRsoTT28CClFPokR++4Y7vG5KLXWnotVdEgak0DuifzhLUx4yFk2pzSJeZrVmi7J3c7M3Q2YJA9kqlLp0vB5/3dEb9tajgFIoA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714655761; c=relaxed/simple;
+	bh=c8ZZ9d64RbEWyQ6Kk0VKbXdMhQLFT49iGgzs/AfSJQw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uPAcBYOcCf4iadhIfw/Aei4M6X6qibG7XfIguy4zM/fc00gDlVshWUElvSiYlzB74PHwenzY3ZriF9Bhw+1jdOcnR5iFrd3SM/0vtaW/RLFrp6EaRwua6kHobSioCUXqoycIlTTTx2gPH6xbSKbcSpflTCkKufWmTjz1M+Jpla8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C+dMKvAM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C+dMKvAM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714655758;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yJRM9yLGjCQ3X2KTtow0XulnnmVUDuYuBv4ldY/21BM=;
+	b=C+dMKvAMruldzeBkCJz+VP994VvXuVhVe6oRkQ+7JwMGv0Nesno72yEixe6zh9e5mlyqqC
+	BZ7R7vX1Os3oJqnQAxl0d+pjntSaP7UXV9PJ56fY/vAb93bSw87ENylGkea/HDvaqLI0+a
+	ekHmooOAYktqeifKZ/ULc9k/xS8DdHg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-106-zyvSBYc4OmeffEq1JG3m9g-1; Thu, 02 May 2024 09:15:57 -0400
+X-MC-Unique: zyvSBYc4OmeffEq1JG3m9g-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-418df23b51cso35402925e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 06:15:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714655755; x=1715260555;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yJRM9yLGjCQ3X2KTtow0XulnnmVUDuYuBv4ldY/21BM=;
+        b=ne0uTuC0HwqIduvFa3wEbUSVbVKLhWU9o+vDaFIWqYDG0MXOaf3HVxn1XnDMciWPse
+         d+62z3bj/7xq85fNRDngt3PUr9zIaeo9XufOfnpvoKRB3lNcH2ijpRoi+2rQ7DHtfB80
+         I8hxb0NeQHE3KfsRmb6/J3+kYdrqDTgo88o6JCzN4g2zIptlwWzZh1RoJtEnyRfotZ/z
+         69C+JcJw/lDKuRpb8m37mJGAxzpUSBNc9KwjS90kgJ6Za4eSt80EirU7bPCuZY0EE4HP
+         Vgubn5ADe70t5Xfjup5aMpZzzpMHKmjG6/wBQCVqLb3vGaY0STxjP07AcsLP3Xx50+pS
+         O5WA==
+X-Gm-Message-State: AOJu0Yytl3iCofzDPdKbBC6+XdS+t7FhZg6/oqkDlibM/LN0TxOg0SUv
+	ARyBV6f9K71V2q4nc+OpzasfGp6UVebUSQUYBHqfLuVA2p3OP0E5AFn0/zvgN/1UnGkY3uj4H/h
+	35bdGE0Tp5E6zVIQfsd26oxwhJ8JPdLaVTdbJHZ94bVT428OuBqU0gCJ4duXi3A==
+X-Received: by 2002:a05:600c:5347:b0:41a:f9db:88ac with SMTP id hi7-20020a05600c534700b0041af9db88acmr4205373wmb.14.1714655755539;
+        Thu, 02 May 2024 06:15:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIdIVLBhB+0aie2kvkajxvjiyhxiVZplyKjASYKUxI+SOW9NeCEQX4xWLxZvFVP3TIfqcaow==
+X-Received: by 2002:a05:600c:5347:b0:41a:f9db:88ac with SMTP id hi7-20020a05600c534700b0041af9db88acmr4205355wmb.14.1714655755077;
+        Thu, 02 May 2024 06:15:55 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c71e:bf00:eba1:3ab9:ab0f:d676? (p200300cbc71ebf00eba13ab9ab0fd676.dip0.t-ipconnect.de. [2003:cb:c71e:bf00:eba1:3ab9:ab0f:d676])
+        by smtp.gmail.com with ESMTPSA id s7-20020a05600c384700b0041c12324eb6sm5728258wmr.22.2024.05.02.06.15.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 May 2024 06:15:54 -0700 (PDT)
+Message-ID: <f44e3b1b-d8f7-4b5c-a66b-13ae3f3d53bd@redhat.com>
+Date: Thu, 2 May 2024 15:15:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60ba3ba4-991c-4b3e-17cd-08dc6aa786e7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2024 12:58:13.4807
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WsqAAvMNrbtKCr5rS9opy3EfQDDRYTjHtSrz7kSNnmGlXE2F08dKCSf3KZO9El501AUykJjSWMT+eeP23NLXjoizn6C1Qrq2rwNrJmJSaTw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1235
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/hugetlb: align cma on allocation order, not demotion
+ order
+To: Frank van der Linden <fvdl@google.com>, linux-mm@kvack.org,
+ muchun.song@linux.dev, akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, Roman Gushchin <roman.gushchin@linux.dev>
+References: <20240430161437.2100295-1-fvdl@google.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240430161437.2100295-1-fvdl@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-PiBPbiAwMi8wNS8yMDI0IDE0OjQ1LCBKaVNoZW5nIFRlb2ggd3JvdGU6DQo+ID4+IE9uIDAyLzA1
-LzIwMjQgMTI6NDgsIEppIFNoZW5nIFRlb2ggd3JvdGU6DQo+ID4+PiBEb2N1bWVudCB0aGUgb3B0
-aW9uYWwgcmVzZXQgY29udHJvbCB0byBTUEkuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTog
-RW5nIExlZSBUZWggPGVuZ2xlZS50ZWhAc3RhcmZpdmV0ZWNoLmNvbT4NCj4gPj4+IFNpZ25lZC1v
-ZmYtYnk6IExleSBGb29uIFRhbiA8bGV5Zm9vbi50YW5Ac3RhcmZpdmV0ZWNoLmNvbT4NCj4gPj4+
-IFNpZ25lZC1vZmYtYnk6IEppIFNoZW5nIFRlb2ggPGppc2hlbmcudGVvaEBzdGFyZml2ZXRlY2gu
-Y29tPg0KPiA+Pg0KPiA+PiBXaG8gaXMgdGhlIGF1dGhvciBoZXJlPyBXaGF0IGFyZSB0aGVzZSB0
-aHJlZSBTb0JzIGV4cHJlc3Npbmc/IFJvYiBhc2tlZCBmb3IgdGhpcyBsYXN0IHRpbWUuDQo+ID4N
-Cj4gPiBGaXJzdCBTb0Igd2FzIHRoZSBvcmlnaW5hbCBhdXRob3IsIHRoZSBzdWJzZXF1ZW50IFNv
-QiBtYWRlIGNoYW5nZXMgdG8gdGhlIG9yaWdpbmFsIHBhdGNoLg0KPiA+IElmIGludGVuZCB0byBv
-bmx5IGtlZXAgdGhlIGF1dGhvciwgdGhlbiBwbGVhc2UgdGFrZSB0aGUgZmlyc3QgU29CLiBTb3Jy
-eSBmb3IgdGhlIG5vaXNlLg0KPiANCj4gVGhlbiB5b3UgbWlzcyBDby1kZXZlbG9wZWQtYnkgdGFn
-cy4NCg0KVGhhbmtzLCBJIHdpbGwgZml4IHRoZSB0YWdzIGluIHRoZSBuZXh0IHJldmlzaW9uLg0K
+On 30.04.24 18:14, Frank van der Linden wrote:
+> Align the CMA area for hugetlb gigantic pages to their size, not the
+> size that they can be demoted to. Otherwise there might be misaligned
+> sections at the start and end of the CMA area that will never be used
+> for hugetlb page allocations.
+> 
+> Signed-off-by: Frank van der Linden <fvdl@google.com>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Fixes: a01f43901cfb ("hugetlb: be sure to free demoted CMA pages to CMA")
+> ---
+>   mm/hugetlb.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 5dc3f5ea3a2e..cfe7b025c576 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -7794,7 +7794,7 @@ void __init hugetlb_cma_reserve(int order)
+>   		 * huge page demotion.
+>   		 */
+>   		res = cma_declare_contiguous_nid(0, size, 0,
+> -					PAGE_SIZE << HUGETLB_PAGE_ORDER,
+> +					PAGE_SIZE << order,
+>   					HUGETLB_PAGE_ORDER, false, name,
+>   					&hugetlb_cma[nid], nid);
+>   		if (res) {
+
+I was wondering how that worked when reviewing your other patch. 
+Wondering why we never got a BUG report, maybe we were always lucky 
+about the alignment we actually got?
+
+We round up size to PAGE_SIZE << order, so that's the alignment we need.
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
