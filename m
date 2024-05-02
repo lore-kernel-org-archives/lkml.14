@@ -1,172 +1,118 @@
-Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7976457333
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 10:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE21557333;
+	Thu,  2 May 2024 10:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714645780; cv=none; b=pnGmSP2qgMJlHh3cHacTNF2Ge1gU7/JRUAgrzJnGf/EGOo0iU+F+05YgfX0MbznOb9MFAZ7gkR4kdYYoNwMzFKav+jkpJVnxmGQlH4+KGEkVUZJSdsNKC2VvBV8xmtl6VbNwuk7v0L2t7a/XRfjtYzzL6Ws/i0vv79Uw0X/Ne4Q=
+	t=1714645793; cv=none; b=dqWHpJHzz3oHzMOA8m96bMFEXpzCw8j1x/m8Ec9f3jQG32dNwSy426bEfVnt5TDkpeXfV0Ht2jnu4LnxyvzDK+SbWh2LpxJTeH5glBAa9uBBtm0ag5qCJBaepqD5Wo9Pg36DkTcmhq2SUyu8pZSE9igLHOYkdjzY8RIL4KG5PZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714645780; c=relaxed/simple;
-	bh=i2s20f7InC2NyYNbpKgBeu8U+br+ygvboY0KeBgHUZs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rzz9wWLE7KBeh92W24upBBsgg5j/xGQlS2voNgystQWQd8NvMK0Xa5xQRYhbdmR9KdDZkxD7pmJo/1EJRP3oVwlwxYp6KL9vNmi/du/0XEuC6icK127FJUIti0IgHJ8r59kM3V0xX2GS5zdXQUI0yEH2PRnJ1Sj2V8GUiOoW6Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=AiN9qZJO; arc=none smtp.client-ip=178.154.239.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1714645793; c=relaxed/simple;
+	bh=O+x6zlED+zDMOemCx1e2RcNkUseJEOjblAholmx+D/0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lvp0X5/1xKqVlFq3drSd4d+UCuXQgc7rCmLpBVIRFMbTuZHtjiTXD4Y31w0bvwsGoWSwQ9zNHxPY0VmUcrenyqPozzuZy3OIWEHZ3Ss/kMa4iNYeDd9IsyMG304jAcQn44bdRbZ3Ys9+4alqv7wiXF1jP8W4i4DdzWY+fpFG3uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=aBfG9AzH; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="AiN9qZJO"
-Received: from mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:6401:0:640:7e6f:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 82EB660910;
-	Thu,  2 May 2024 13:27:44 +0300 (MSK)
-Received: from davydov-max-nux.yandex.net (unknown [2a02:6b8:8f:4:b109:a1eb:adad:8bd8])
-	by mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id VRQf6I2Ida60-3IHe2CJi;
-	Thu, 02 May 2024 13:27:43 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1714645663;
-	bh=SqeQ0fwjbHbev+ThpT2U2uVA+Y3CxxB2925TJzRuIaE=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=AiN9qZJOioqqmAYjfU+hzTNktOpGkx6TuEQ8Cf3MCgZ0UfDm3NtXmFxJzOFgHIPuQ
-	 slcPVP7CJai7qM0aQLatT8MmbWApd4izZQuatMpUH5yRCF0JmgKodxZVZPdEc/MoaD
-	 0qlGq8YximaY5gnUNVZ1iQ6Yo8ENZRtbrbXK53UA=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Maksim Davydov <davydov-max@yandex-team.ru>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: davydov-max@yandex-team.ru,
-	den-plotnikov@yandex-team.ru,
-	dave.hansen@linux.intel.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	gpiccoli@igalia.com
-Subject: [PATCH v2] x86/split_lock: fix delayed detection enabling
-Date: Thu,  2 May 2024 13:27:31 +0300
-Message-Id: <20240502102731.84429-1-davydov-max@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="aBfG9AzH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=PPcqclq5JazTzzPM+WzlgQe+U+YyPREGD6xfGzxYCAg=; t=1714645792; x=1715250592; 
+	b=aBfG9AzHudapO//64X1AkPDh+zAuauV8WXkqxFw6QJajcqMlxmXj1NsfJiM4jgMGyv4NKeRCXzQ
+	asRC2vusRcSeo2WGs2X1M87fOwbFZiltCKTF/n6X+7zPutdo1U65y/Gx9+BMcFSlzWRXt3YrEBfMa
+	ey2F5rFA78hjLZl0EB/ETb4KlsESAJHUU/QsFc/Td0oqQ81eFIAaTOv0WArDi7u8VkVXNzrOnQG5s
+	eNYHtGtVIQmVx2ENofhbHPwsQapDgxY81NPdW/8lJJcvZIHLe8sq/3AHkvBSwSNAm1n4eu3Y1DkQ9
+	Ll31B0FOWzaOOJPAEo1t+hgUp2HiDq1nL+ew==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1s2ThE-00000001zK7-1ayC; Thu, 02 May 2024 12:29:48 +0200
+Received: from p57bd90e8.dip0.t-ipconnect.de ([87.189.144.232] helo=[192.168.178.20])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1s2ThE-000000007k2-0fxW; Thu, 02 May 2024 12:29:48 +0200
+Message-ID: <b00e0adc72815e465cf32fc5505445cfceeeca84.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v2] sh: Call paging_init() earlier in the init sequence
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Oreoluwa Babatunde <quic_obabatun@quicinc.com>, 
+	ysato@users.sourceforge.jp, dalias@libc.org
+Cc: akpm@linux-foundation.org, linux-sh@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@quicinc.com, Rob
+ Herring <robh@kernel.org>, Rob Landley <rob@landley.net>
+Date: Thu, 02 May 2024 12:29:47 +0200
+In-Reply-To: <72ec7831604326e852eb228072b1d817bab829fb.camel@physik.fu-berlin.de>
+References: <20240423233150.74302-1-quic_obabatun@quicinc.com>
+	 <72ec7831604326e852eb228072b1d817bab829fb.camel@physik.fu-berlin.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-If the warn mode with disabled mitigation mode is used, then on each
-CPU where the split lock occurred detection will be disabled in order to
-make progress and delayed work will be scheduled, which then will enable
-detection back. Now it turns out that all CPUs use one global delayed
-work structure. This leads to the fact that if a split lock occurs on
-several CPUs at the same time (within 2 jiffies), only one CPU will
-schedule delayed work, but the rest will not. The return value of
-schedule_delayed_work_on() would have shown this, but it is not checked
-in the code.
+Hi Oreoluwa,
 
-A diagram that can help to understand the bug reproduction:
-https://lore.kernel.org/all/2cd54041-253b-4e78-b8ea-dbe9b884ff9b@yandex-team.ru/
+On Wed, 2024-05-01 at 19:18 +0200, John Paul Adrian Glaubitz wrote:
+> Hi Oreoluwa,
+>=20
+> On Tue, 2024-04-23 at 16:31 -0700, Oreoluwa Babatunde wrote:
+> > The unflatten_device_tree() function contains a call to
+> > memblock_alloc(). This is a problem because this allocation is done
+> > before any of the reserved memory is set aside in paging_init().
+> > This means that there is a possibility for memblock to allocate from
+> > any of the memory regions that are supposed to be set aside as reserved=
+.
+> >=20
+> > Hence, move the call to paging_init() to be earlier in the init
+> > sequence so that the reserved memory regions are set aside before any
+> > allocations are done using memblock.
+>=20
+> I was just about to merge your patch when I ran a git blame on the code i=
+n
+> arch/sh/kernel/setup.c and noticed the following commit by Rich Felker:
+>=20
+> commit eb6b6930a70faefe04479a71088cc10366782d9a
+> Author: Rich Felker <dalias@libc.org>
+> Date:   Mon Jul 31 01:27:50 2017 -0400
+>=20
+>     sh: fix memory corruption of unflattened device tree
+>    =20
+>     unflatten_device_tree() makes use of memblock allocation, and
+>     therefore must be called before paging_init() migrates the memblock
+>     allocation data to the bootmem framework. Otherwise the record of the
+>     allocation for the expanded device tree will be lost, and will
+>     eventually be clobbered when allocated for another use.
+>    =20
+>     Signed-off-by: Rich Felker <dalias@libc.org>
+>=20
+> It looks like that the call to unflatten_device_tree() before paging_init=
+()
+> is intentional and needed for the device tree to be preserved in memory
+> after running paging_init().
+>=20
+> @Geert: Do you have any comments on this patch?
+> @Rob: Could you test this patch on your J2 board and report back?
 
-In order to fix the warn mode with disabled mitigation mode, delayed work
-has to be a per-CPU.
+I'm skipping this patch for v6.10 now for the aforementioned reasons.
 
-Fixes: 727209376f49 ("x86/split_lock: Add sysctl to control the misery mode")
-Signed-off-by: Maksim Davydov <davydov-max@yandex-team.ru>
----
- arch/x86/kernel/cpu/intel.c | 65 ++++++++++++++++++++++---------------
- 1 file changed, 39 insertions(+), 26 deletions(-)
+Adrian
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index be30d7fa2e66..527906aee688 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -971,28 +971,6 @@ static struct ratelimit_state bld_ratelimit;
- static unsigned int sysctl_sld_mitigate = 1;
- static DEFINE_SEMAPHORE(buslock_sem, 1);
- 
--#ifdef CONFIG_PROC_SYSCTL
--static struct ctl_table sld_sysctls[] = {
--	{
--		.procname       = "split_lock_mitigate",
--		.data           = &sysctl_sld_mitigate,
--		.maxlen         = sizeof(unsigned int),
--		.mode           = 0644,
--		.proc_handler	= proc_douintvec_minmax,
--		.extra1         = SYSCTL_ZERO,
--		.extra2         = SYSCTL_ONE,
--	},
--};
--
--static int __init sld_mitigate_sysctl_init(void)
--{
--	register_sysctl_init("kernel", sld_sysctls);
--	return 0;
--}
--
--late_initcall(sld_mitigate_sysctl_init);
--#endif
--
- static inline bool match_option(const char *arg, int arglen, const char *opt)
- {
- 	int len = strlen(opt), ratelimit;
-@@ -1115,7 +1093,43 @@ static void __split_lock_reenable(struct work_struct *work)
- {
- 	sld_update_msr(true);
- }
--static DECLARE_DELAYED_WORK(sl_reenable, __split_lock_reenable);
-+/*
-+ * In order for each CPU to schedule itself delayed work independently of the
-+ * others, delayed work struct should be per-CPU. This is not required when
-+ * sysctl_sld_mitigate is enabled because of the semaphore, that limits
-+ * the number of simultaneously scheduled delayed works to 1.
-+ */
-+static DEFINE_PER_CPU(struct delayed_work, sl_reenable);
-+
-+#ifdef CONFIG_PROC_SYSCTL
-+static struct ctl_table sld_sysctls[] = {
-+	{
-+		.procname       = "split_lock_mitigate",
-+		.data           = &sysctl_sld_mitigate,
-+		.maxlen         = sizeof(unsigned int),
-+		.mode           = 0644,
-+		.proc_handler	= proc_douintvec_minmax,
-+		.extra1         = SYSCTL_ZERO,
-+		.extra2         = SYSCTL_ONE,
-+	},
-+};
-+
-+static int __init sld_mitigate_sysctl_init(void)
-+{
-+	unsigned int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct delayed_work *work = per_cpu_ptr(&sl_reenable, cpu);
-+		*work = (struct delayed_work) __DELAYED_WORK_INITIALIZER(*work,
-+			__split_lock_reenable, 0);
-+	}
-+
-+	register_sysctl_init("kernel", sld_sysctls);
-+	return 0;
-+}
-+
-+late_initcall(sld_mitigate_sysctl_init);
-+#endif
- 
- /*
-  * If a CPU goes offline with pending delayed work to re-enable split lock
-@@ -1157,12 +1171,11 @@ static void split_lock_warn(unsigned long ip)
- 		 */
- 		if (down_interruptible(&buslock_sem) == -EINTR)
- 			return;
--		work = &sl_reenable_unlock;
--	} else {
--		work = &sl_reenable;
- 	}
- 
- 	cpu = get_cpu();
-+	work = (sysctl_sld_mitigate ?
-+		&sl_reenable_unlock : this_cpu_ptr(&sl_reenable));
- 	schedule_delayed_work_on(cpu, work, 2);
- 
- 	/* Disable split lock detection on this CPU to make progress */
--- 
-2.34.1
-
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
