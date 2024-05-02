@@ -1,167 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE19317C6C
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 02:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285F61862F;
+	Thu,  2 May 2024 03:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714618558; cv=none; b=hwfdfq4x5Eq+tnZbI3RV34Y1QxMSPcKMrLhW8ALSy6q94u1qeh1CPRCE8W5ojIGAqrcfijN8MxlRu0uoy6uHGk45gJDf6tQaIGfndgmcx7hBbkCL114+STFCuf8ebnrosNjJKKrjGo1WrGqLX3YL+jjd5KW+JZBlUjEa0LCY9Oc=
+	t=1714618808; cv=none; b=GwZCtlMNAVKT55HsQU2lddvxVcTDg1mGWuIiwLg0T9G2hkWY7iRksW/PPx9zGVY7KG5Pt/UL7sGUetqJIIqJI1B6Tm3kP3kXpGhN7GAPx3hG8SMU08KvZPlWs6pIVDGBumiWUu6DbW/ZExl5dyacRcBWxhoCaivYkvoVStHdrD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714618558; c=relaxed/simple;
-	bh=rOYtVnECOk4vxRBuyHoxcpxugZsLeVIL0sFgchXLl+g=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=mcjgqMyvSB4D0G9999teD1y2chJmcIpJ0478CfXAxV2s7bhfqKc+Q4oPeUvLUxh5PY1mvK3p9bGMMjh3H6lnJccoa1EHTX3udK5mAFiSi4ax1CJ1QouLgtGnCUtBkmPWBbO9UQ14TOuKOaYh494dhvw2f4rUeDqZJFGV30ArJ0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a0FjTwDS; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a0FjTwDS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714618557; x=1746154557;
-  h=date:from:to:cc:subject:message-id;
-  bh=rOYtVnECOk4vxRBuyHoxcpxugZsLeVIL0sFgchXLl+g=;
-  b=a0FjTwDSKhNTHHIm7Rg8YgV+I73PVLb6X4XzH6/NiPmyu/xfvRaXdrKH
-   1hKyiyROfrl2tKl+ir4KJ4vymSvkRtQ+mnrNiak5dwb9y0pbwCfqOmPPr
-   Fkj07Ye7ejMs2bajNalZ+plzRg5fGV2t+i95XGQguS/QZxSxzqn+Qd4HW
-   igQM4NyYuTLHJwo/DMvURWmIr0CzPtFBiwgaNr7FthXw1QXTsMKMocWzm
-   GvyqoJ75S9XJHtO5MgL0dCpK1t2hFwXZ5tEZb+nvMOybDnNK63y+YNLjv
-   ngmLmU7p4Ys3LroAeCEEg/07rZcN4HmyiPig8FApybwG1DR0aC10GwXuw
-   w==;
-X-CSE-ConnectionGUID: 9lNfrwFkRpuz9A7Rga/Flw==
-X-CSE-MsgGUID: 2RpUpSZ+RsKf9JqQshRaow==
-X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="32887783"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="32887783"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 19:55:56 -0700
-X-CSE-ConnectionGUID: va/u2pC1SRqMILaZ6gEEsg==
-X-CSE-MsgGUID: 4t5MzRNBTSC7F1F6y3uA3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="31789983"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 01 May 2024 19:55:55 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s2Mbw-000AKH-2Y;
-	Thu, 02 May 2024 02:55:52 +0000
-Date: Thu, 02 May 2024 10:55:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:timers/core] BUILD SUCCESS
- ddd9120983c3efbcaa3a4c7777da1440f8ce27d8
-Message-ID: <202405021059.KfVgVpW3-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1714618808; c=relaxed/simple;
+	bh=ydI3fYejD4Xls86Gl5fOeRuiZIbVbw1jrCOxj0nEOXY=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=uQyMfPRxBld2gCipaR0UQC9WnPSVp9/UCsddW5TBgp4oBVHAnssHmaVB2p4Nz+/oqli+Osx1Rp0UXiINk9jem2M0tUWBoYDmwjtZj8+zEZ5iFc+8YiKmEvBcq9+pgtahGePce9cnPDdhjaEYumVUf560/FPuyBS+nXkHcSK5akE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC0FC4AF1D;
+	Thu,  2 May 2024 03:00:07 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1s2Mgn-000000039hE-1v62;
+	Wed, 01 May 2024 23:00:53 -0400
+Message-ID: <20240502030053.317255047@goodmis.org>
+User-Agent: quilt/0.67
+Date: Wed, 01 May 2024 23:00:26 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ stable@vger.kernel.org
+Subject: [PATCH 2/5] tracefs: Still use mount point as default permissions for instances
+References: <20240502030024.062275408@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
-branch HEAD: ddd9120983c3efbcaa3a4c7777da1440f8ce27d8  rust: time: doc: Add missing C header links
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-elapsed time: 1719m
+If the instances directory's permissions were never change, then have it
+and its children use the mount point permissions as the default.
 
-configs tested: 90
-configs skipped: 4
+Currently, the permissions of instance directories are determined by the
+instance directory's permissions itself. But if the tracefs file system is
+remounted and changes the permissions, the instance directory and its
+children should use the new permission.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+But because both the instance directory and its children use the instance
+directory's inode for permissions, it misses the update.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                               allnoconfig   clang
-arm                                 defconfig   clang
-arm                   milbeaut_m10v_defconfig   clang
-arm                   randconfig-001-20240502   gcc  
-arm                        spear6xx_defconfig   clang
-arm                           sunxi_defconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240502   gcc  
-i386         buildonly-randconfig-002-20240502   gcc  
-i386         buildonly-randconfig-003-20240502   clang
-i386         buildonly-randconfig-004-20240502   gcc  
-i386         buildonly-randconfig-005-20240502   clang
-i386         buildonly-randconfig-006-20240502   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240502   gcc  
-i386                  randconfig-002-20240502   clang
-i386                  randconfig-003-20240502   clang
-i386                  randconfig-004-20240502   gcc  
-i386                  randconfig-005-20240502   gcc  
-i386                  randconfig-011-20240502   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             alldefconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                       bmips_be_defconfig   gcc  
-mips                           mtx1_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                     akebono_defconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                      bamboo_defconfig   clang
-powerpc                    socrates_defconfig   gcc  
-powerpc                     tqm5200_defconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
+To demonstrate this:
 
+  # cd /sys/kernel/tracing/
+  # mkdir instances/foo
+  # ls -ld instances/foo
+ drwxr-x--- 5 root root 0 May  1 19:07 instances/foo
+  # ls -ld instances
+ drwxr-x--- 3 root root 0 May  1 18:57 instances
+  # ls -ld current_tracer
+ -rw-r----- 1 root root 0 May  1 18:57 current_tracer
+
+  # mount -o remount,gid=1002 .
+  # ls -ld instances
+ drwxr-x--- 3 root root 0 May  1 18:57 instances
+  # ls -ld instances/foo/
+ drwxr-x--- 5 root root 0 May  1 19:07 instances/foo/
+  # ls -ld current_tracer
+ -rw-r----- 1 root lkp 0 May  1 18:57 current_tracer
+
+Notice that changing the group id to that of "lkp" did not affect the
+instances directory nor its children. It should have been:
+
+  # ls -ld current_tracer
+ -rw-r----- 1 root root 0 May  1 19:19 current_tracer
+  # ls -ld instances/foo/
+ drwxr-x--- 5 root root 0 May  1 19:25 instances/foo/
+  # ls -ld instances
+ drwxr-x--- 3 root root 0 May  1 19:19 instances
+
+  # mount -o remount,gid=1002 .
+  # ls -ld current_tracer
+ -rw-r----- 1 root lkp 0 May  1 19:19 current_tracer
+  # ls -ld instances
+ drwxr-x--- 3 root lkp 0 May  1 19:19 instances
+  # ls -ld instances/foo/
+ drwxr-x--- 5 root lkp 0 May  1 19:25 instances/foo/
+
+Where all files were updated by the remount gid update.
+
+Cc: stable@vger.kernel.org
+Fixes: 8186fff7ab649 ("tracefs/eventfs: Use root and instance inodes as default ownership")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/inode.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 2a1dc2b442d1..1130c0fe2426 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -170,16 +170,39 @@ static void set_tracefs_inode_owner(struct inode *inode)
+ {
+ 	struct tracefs_inode *ti = get_tracefs(inode);
+ 	struct inode *root_inode = ti->private;
++	kuid_t uid;
++	kgid_t gid;
++
++	uid = root_inode->i_uid;
++	gid = root_inode->i_gid;
++
++	/*
++	 * If the root is not the mount point, then check the root's
++	 * permissions. If it was never set, then default to the
++	 * mount point.
++	 */
++	if (root_inode != d_inode(root_inode->i_sb->s_root)) {
++		struct tracefs_inode *rti;
++
++		rti = get_tracefs(root_inode);
++		root_inode = d_inode(root_inode->i_sb->s_root);
++
++		if (!(rti->flags & TRACEFS_UID_PERM_SET))
++			uid = root_inode->i_uid;
++
++		if (!(rti->flags & TRACEFS_GID_PERM_SET))
++			gid = root_inode->i_gid;
++	}
+ 
+ 	/*
+ 	 * If this inode has never been referenced, then update
+ 	 * the permissions to the superblock.
+ 	 */
+ 	if (!(ti->flags & TRACEFS_UID_PERM_SET))
+-		inode->i_uid = root_inode->i_uid;
++		inode->i_uid = uid;
+ 
+ 	if (!(ti->flags & TRACEFS_GID_PERM_SET))
+-		inode->i_gid = root_inode->i_gid;
++		inode->i_gid = gid;
+ }
+ 
+ static int tracefs_permission(struct mnt_idmap *idmap,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
+
