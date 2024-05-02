@@ -1,81 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7469A15381F;
-	Thu,  2 May 2024 15:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3A61553A8
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 15:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714664331; cv=none; b=k8ydzM+7vwHeOIhy626jTl2AZaQz25MlRHUE0zuBqG8tgxMKL4SmJTfHcm7r6iyMQWcAzoCW+0YeA3J1CnBO3+ve0+i1HUuMCCi4Lp8HDm3DSDScWqe5LwQ+/tOGV13WKUrdcKmGY4b4J1why3R8FeoZvb+X4LtoVXF2s4xbmjA=
+	t=1714664522; cv=none; b=pOMU0aM1PHZJE3kNhgXf1ERpMYqiI9IV2YNrdMdIeRz3en8k9Zc0XpjfMJoUykcfER4B4Y6q+l5/E3gjKZXmxOEIr4MysIY0iG8s15SuIeFSmc4JkyqOjkNodpMMbWKV5zPTWmHgyJ7q/TZFWhv4anHE15jD7MGs7n0ekMeNZZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714664331; c=relaxed/simple;
-	bh=19JNsRFEKUX4aIFSbQgj18sRdjQzRL6sHrU6+0i+8y8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XXzyTxPziWlniXZWiJbMsEzym3ctyjlQuDOtXTOdh/3P22UGX1Nh8m3RZC8FwVv6hvKf9RZjTTj3ASmR3DkOOxHSJoMZQB/3wX84B2k+NQ4rp8oVBNa2Lf739VOUfJVokalQFMizVN1AdeCG0SrGx3UH9qibcas97N6mZ/yBm9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: rkPEPQY7Tw6bHi1I5fkD9A==
-X-CSE-MsgGUID: MStDGcttTDyjS32/h0OrLQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="14247058"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="14247058"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 08:38:50 -0700
-X-CSE-ConnectionGUID: QvFjUOimSR+HemaZ6JTTjQ==
-X-CSE-MsgGUID: iObttkVIQhOkVK/mU7eD0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="50356399"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 08:38:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1s2YWD-00000003MgT-3p93;
-	Thu, 02 May 2024 18:38:45 +0300
-Date: Thu, 2 May 2024 18:38:45 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Hsin-Yu.Chen" <harry021633@gmail.com>, akpm@linux-foundation.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] string: improve strlen performance
-Message-ID: <ZjOzhc0o00njV_RT@smile.fi.intel.com>
-References: <20240502141359.89567-1-harry021633@gmail.com>
- <CAHp75Vd9PibrQA=tgZLHuv-kDXana9rGcu5s_aPqyxW6tDBYGw@mail.gmail.com>
- <CAHp75Ve4BV7+C+XsNmmjCSupcL6PXe_9ZNMGAQXg9nqdMBFrqg@mail.gmail.com>
- <202405020809.C8973634BF@keescook>
+	s=arc-20240116; t=1714664522; c=relaxed/simple;
+	bh=BfGYmqaEPgJV/sPLwkgpPXEEBqMjyD1KiEQoEP6Ry1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y1Qvq+Qn+7taq7LV3h44oOPQs0U5IuVNvMACh+bNVRNnrbTN+kjJaZPc8Fus6cfkolvr7Z5GbCsJTfP6E7ap6J81MruQfa6PHadi/oDtpk+D3KBgPGp/sPQw6PJ9CPOxcdpWWtaNHVwtw2NqJYLipTWTJwi7i7m0cE+ZR1KZHfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=etufmLNs; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="etufmLNs"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7d9c78d1087so52420839f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 08:42:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1714664519; x=1715269319; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BfGYmqaEPgJV/sPLwkgpPXEEBqMjyD1KiEQoEP6Ry1o=;
+        b=etufmLNs0h71ujgXcqdh3Yl8bpyHvCTRFwM5OvxXtO/h6UdmfSZppk3Qkd7ij+V/Rk
+         zP5OFBNWtUn1kB5v2uQVXk4h/aTyKDmBvtZyGlJW/Yuc8om/jhnccGzgVT4zfLKcJj11
+         EYnFn20WSCgSdFTjNWKUh0DtMGBTS9MSfMOew=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714664519; x=1715269319;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfGYmqaEPgJV/sPLwkgpPXEEBqMjyD1KiEQoEP6Ry1o=;
+        b=vIobr6n7Bg4swHLAgDSRbii5Q/4RcT5C6ogPI4BiEwo+bSmLOKZR0Ee4gLqLiyZxT3
+         6hdzNS81ZWV10TADplml4CJuEF3Mji+W/CDLpM9ikj2me+BSY0AvMm8KTuIzpwkwE7MS
+         ATndn6ZQH6ExLVJVYrz+SKA+7LdUASsooe9hAi/tOgfsI0+hc+KZTeDBXua0NRKq9RUk
+         B5WJHavKOeHXsdMCX2sri+P9ulFjyCs+h+J1XnFKxbGijAt13R/ChUng8Da3iFB4TkaG
+         orEKJHtCi6T1hP4htQ06MwwUWFZ43ooYuf7ekL+uXqo/XaGs4t5vanrXIzX4BTAAXYXZ
+         SsYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFwrJeJtKxsRFu0/alrOJ5dV0pEssFLmIxyoozMVpLH8iP9RvF8Z+xRYc3AdU8ESfVpIWh4JVqKHVQPkrrxapW4u+cV44d9JKWr8QG
+X-Gm-Message-State: AOJu0YzHkj8t2oQTAzydXk+Lw5H274Fsdng5yz063c8jiKYEF/ERFQA0
+	RI96jgqD7YNFZzt0vNFyFDw7DXwPVUKpIc+aabraSdy+u6rtO/dU4rSRxJexyGU=
+X-Google-Smtp-Source: AGHT+IEC5dfuT+FFk7h1TTMiHug2ythsJtqV6OG+J23mQi+UO++Mtkz8gjQSmfD/X833Y1BBw82JKw==
+X-Received: by 2002:a5d:860e:0:b0:7d9:eeb8:ddeb with SMTP id f14-20020a5d860e000000b007d9eeb8ddebmr18108iol.2.1714664519677;
+        Thu, 02 May 2024 08:41:59 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id j11-20020a05663822cb00b0048813dbf4c2sm262931jat.156.2024.05.02.08.41.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 May 2024 08:41:59 -0700 (PDT)
+Message-ID: <5cab1797-aab0-4f49-b9fe-cc0520462067@linuxfoundation.org>
+Date: Thu, 2 May 2024 09:41:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202405020809.C8973634BF@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools/power/cpupower: Fix Pstate frequency reporting on
+ AMD Family 1Ah CPUs
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, trenn@suse.com,
+ shuah@kernel.org
+Cc: ananth.narayan@amd.com, gautham.shenoy@amd.com, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rafael@kernel.org, Perry.Yuan@amd.com,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240430083706.69641-1-Dhananjay.Ugwekar@amd.com>
+ <13bcd356-a5a0-4cf0-9222-bccc01177032@amd.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <13bcd356-a5a0-4cf0-9222-bccc01177032@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 02, 2024 at 08:10:32AM -0700, Kees Cook wrote:
-> On Thu, May 02, 2024 at 06:03:04PM +0300, Andy Shevchenko wrote:
-> > On Thu, May 2, 2024 at 5:59 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, May 2, 2024 at 5:14 PM Hsin-Yu.Chen <harry021633@gmail.com> wrote:
-> > 
-> > And on top of that, check what this code will do on the architectures
-> > that do not support unaligned access. If everything is fine, mention
-> > this in the commit message. Btw, your commit message needs
-> > elaboration, e.g., pointing to the test case (which is absent in this
-> > patch, I assume it's already in the kernel?) and step-by-step
-> > instructions on how you got the mentioned results with details of the
-> > hardware you used for that.
-> 
-> I might be worth looking at the implementation of strscpy(), which is
-> doing similar multi-byte steps and handles unaligned access.
+On 4/30/24 11:06, Mario Limonciello wrote:
+> On 4/30/2024 03:37, Dhananjay Ugwekar wrote:
+>> Update cpupower's P-State frequency calculation and reporting with AMD
+>> Family 1Ah+ processors, when using the acpi-cpufreq driver. This is due
+>> to a change in the PStateDef MSR layout in AMD Family 1Ah+.
+>>
+>> [ dhananjay: commit log, tested on 4th and 5th Gen AMD EPYC system ]
+>>
+>> Signed-off-by: Ananth Narayan <Ananth.Narayan@amd.com>
+>> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Right, we have a word-at-a-time.h or alike for this things.
+Thank you. Applied to
 
--- 
-With Best Regards,
-Andy Shevchenko
+git.kernel.org/pub/scm/linux/kernel/git/shuah/linux.git/log/ cpupower
+branch for Linux 6.10-rc1.
 
+I will include it in my pull request to Rafael.
 
+thanks
+-- Shuah
