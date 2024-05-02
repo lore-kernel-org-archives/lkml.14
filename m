@@ -1,99 +1,102 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50063171AA;
-	Thu,  2 May 2024 08:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54BE33CFC
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 08:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714638176; cv=none; b=Si6oF4A+YTfY1C3D+6Gd7qnc1To4FtJ1nsJIDqnIxR83hFT9Lh0d5jdCaal+EdqsHO+iKkdKqbdSA++U+hPlQJ5SQt0WSCHpWuQJvFRc1FTGx9JkzqsxunkH9/CuFUITm0SAmsIH4aFYHDbrNmtfejiGxv0kEe3QUYSXGt3Qpmo=
+	t=1714638202; cv=none; b=kRcKuIkb7OlscM5E6QoclDT+bnlYj2N0nMnbdNjkayqS9Y7xs/arNC9Q0sK4UAObPdhnA/McKASjDLDE6xXi/4t5u+eJfjT/i29V8wc3h5T36PPgHZ6rWG1/meIV3E8OIaLHGgQYguLDqmEak/17KIGpYcvVEsrPtZaf1Q+QGlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714638176; c=relaxed/simple;
-	bh=E4+DQxHbmRZH8hQLZzYXl+R8ueZIMSIxWR5jTQDKNyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TrC4NEGI3Xgb2kjXA7OPpiP7knY9tBSqRd9IPA9SPa1caqMYOdYUJFcv2U5wubjo0L/vlE+XF76ZHPeUWZUUC80h7WpoWIuZn0kBywxyArS6suRvdaCSlWYHDleHsH0qkc37aq0ku6E7zbJBJw3fXgA4lw7azhXn4TuLepKf0kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=f4JUJbMx; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1714638202; c=relaxed/simple;
+	bh=24YyTRYR6RGICTEPRKVLXQM7MeeLdxtmJnjzlihyxds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SuEqbEsjPpOlDWxTbagdFIUHd9UIEsQhUEvjXUTL+oW5oTmTJESU++kodEqadl5axMDiJwG7gicVnkk9oQZIZ+rDSSJNR2T/LwRQH4q1CneZdR4NWzsbHsfIhj+WawoXxykXGeh34dcuhssOlkoF3Mn7wQgw49QPjNGK0hc6Ruc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EElmt4gW; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="f4JUJbMx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8wuGpwnMt9ml6C6oIbM/w/YxYBb9yduCe8wSQiSG0GQ=; b=f4JUJbMxmSflXyYq48u1tWnPvt
-	aMmmKJRDROPXBPhaGI0S6qpebizMuULtoyK5xyJufpkKS0qpvB4FHlVh207NAN//CMwTJDPl0gOSM
-	pCTbpLM6vNKIancWKJhrGeCpCEak9gMfhZx0xUmLKQ1B8YH5+UISpPGIfLxWlTHcZP/k2Rl+j9zjw
-	jLdumkt6Ylz0zy32CZbnffN9JyuZpojxsbFCw9qbhWoKUqlzjauhTw8R1fnJnP7VMEiEEUVmxRDJJ
-	uOvEzvq1YjTAclb0at1KqqQOnHC4NytwxruVjw2BdpwLQ7qR/+GfHd9pzODR8URGrxhCt1HMslTUz
-	O2Lj1oIQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52706)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1s2RiD-00072I-1g;
-	Thu, 02 May 2024 09:22:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1s2RiC-0003Vo-1X; Thu, 02 May 2024 09:22:40 +0100
-Date: Thu, 2 May 2024 09:22:39 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Duanqiang Wen <duanqiangwen@net-swift.com>, mturquette@baylibre.com,
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
- entries
-Message-ID: <ZjNNT+KBNpQL+U3b@shell.armlinux.org.uk>
-References: <E1rl62V-004UFh-Te@rmk-PC.armlinux.org.uk>
- <e15b8a1165a5437ab1fa868ccd0b629c.sboyd@kernel.org>
- <560549ed7db5da2f2727dc053a5d196d.sboyd@kernel.org>
- <ZjNIiDeXIjXhJlT4@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EElmt4gW"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-de59daab3f3so7167131276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 01:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714638200; x=1715243000; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=24YyTRYR6RGICTEPRKVLXQM7MeeLdxtmJnjzlihyxds=;
+        b=EElmt4gWUzf2LkC1r3k54+Tdvda62KYBoiZ5I024uGIqmrIbhosHhpOcZQJAl9f270
+         7IdeJYcGB38Rt5DXblpV8GTgzV1aBvIz4N2F54DTCGLobq/MRCH/6edlVWyGk1L8A7zF
+         /SNnzpYO/pOquJR1ug+9dBi3Hcre5/UiBrlmNMgpDF5ejXPESgma62eCbHS8zJNuB842
+         yqTD4guEaMjQvWd5o1fC3zUI5toizeD8BN7XKr7X+WwW6EeMffhlpU6xyQNrburgOHq3
+         TaFB1Wl1lSw1o2/tclKPVCRoSIg7Wkuh+i9c+M6777ykZiXDaDP4+iZrDSU4BMtRCkjY
+         4Itg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714638200; x=1715243000;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=24YyTRYR6RGICTEPRKVLXQM7MeeLdxtmJnjzlihyxds=;
+        b=WKaqQszGSRbp/KQrvfuDBatlxKSKV08pS+K0KQtHnb2uKAsTS8ZrqwN8LrmLv2FZZv
+         HwgQfFtQwPSGIH8R1oLClttFz+YCmyXmVF6JvcxEeUkJ6PeFEePhUXHahBczOWR2iYfZ
+         vu2LJv8TiRLmqaydvSnOo2+ENIptgqcx6zHa8+N2qUEssv4UtR3ZnUBFOC7dqQy30N/g
+         chhVB7KSHSbVp+yZg6JfLhydFgz9Sej7VkpFHU5XMtS3Nh+AjWjHP6wg05gdEmGwPByy
+         LidIJpdZYxifAEjqqqK8Y0fKSsu9VCqjpbX/o3wFlW9UX1mzloUmIVm2jRLkOFqvhLss
+         lMtw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6JgqtTVZ9qXIfzFKSqkUyPnjPbR6yujnu3L1Ct7zlKI7nhaxpN9KBSpmnpUiChMQl3saelV5FhWH4O0paX+Xa71brJyGp2ph/dWw+
+X-Gm-Message-State: AOJu0YyBHKP08ibAFkpe23eyLmaa5EEC30TDNO2AHAsNpMS5//W1t/y6
+	tkFLn+bVdA2JTjFaIsg2IFeRAgO90YofQf9f8ReMTYO65f9jL2Hvl2r5vQg+8GwStwoqlNB4W8v
+	kkn48s7a35Z1xKD4FA0ysfoPbHL6A7lgwmwQSwA==
+X-Google-Smtp-Source: AGHT+IHJf8nsf+hQ0oYySY8kc9eXFs7bLgTHLiT7HAY38ioGQLECM9C1dGV4rTXrwZjUZET6iMLonxw6UYxZADDvgl4=
+X-Received: by 2002:a25:2b81:0:b0:de4:7603:e888 with SMTP id
+ r123-20020a252b81000000b00de47603e888mr5029716ybr.29.1714638199758; Thu, 02
+ May 2024 01:23:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjNIiDeXIjXhJlT4@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20240501154251.3302887-1-dianders@chromium.org> <20240501084109.v3.4.Id15fae80582bc74a0d4f1338987fa375738f45b9@changeid>
+In-Reply-To: <20240501084109.v3.4.Id15fae80582bc74a0d4f1338987fa375738f45b9@changeid>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 2 May 2024 10:23:08 +0200
+Message-ID: <CACRpkdb2eJWVYREhpCUoJnYeutBybBY8mic2SAUuU67MW5Hjbg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/9] drm/mipi-dsi: Reduce driver bloat of mipi_dsi_*_write_seq()
+To: Douglas Anderson <dianders@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Cong Yang <yangcong5@huaqin.corp-partner.google.com>, Hsin-Yi Wang <hsinyi@google.com>, 
+	Brian Norris <briannorris@chromium.org>, Sam Ravnborg <sam@ravnborg.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Javier Martinez Canillas <javierm@redhat.com>, 
+	Joel Selvaraj <jo@jsfamily.in>, lvzhaoxiong@huaqin.corp-partner.google.com, 
+	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 02, 2024 at 09:02:16AM +0100, Russell King (Oracle) wrote:
-> On Wed, May 01, 2024 at 06:02:54PM -0700, Stephen Boyd wrote:
-> > Quoting Stephen Boyd (2024-05-01 17:59:16)
-> > > Quoting Russell King (Oracle) (2024-03-15 04:47:55)
-> > > > Report an error when an attempt to register a clkdev entry results in a
-> > > > truncated string so the problem can be easily spotted.
-> > > > 
-> > > > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
-> > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > > > ---
-> > > 
-> > > Applied to clk-next
-> > > 
-> > 
-> > And backed out because I get a compilation failure
-> > 
-> > drivers/clk/clkdev.c: In function 'vclkdev_alloc':
-> > drivers/clk/clkdev.c:182:17: error: function 'vclkdev_alloc' might be a candidate for 'gnu_printf' format attribute [-Werror=suggest-attribute=format]
-> >   182 |                 res = vsnprintf(cla->dev_id, sizeof(cla->dev_id), dev_fmt, ap);
-> >       |                 ^~~
-> > cc1: all warnings being treated as errors
-> > make[5]: *** [scripts/Makefile.build:244: drivers/clk/clkdev.o] Error 1
-> > make[4]: *** [scripts/Makefile.build:485: drivers/clk] Error 2
-> 
-> It builds fine for me. I don't get this _error_, and it's really no
-> different from what it originally was - instead of using vcsnprintf()
-> we're now using vsnprintf(). That should make no difference what so
-> ever.
+On Wed, May 1, 2024 at 5:43=E2=80=AFPM Douglas Anderson <dianders@chromium.=
+org> wrote:
 
-... and I've just checked, and it builds entirely cleanly for me.
+> Through a cooperative effort between Hsin-Yi Wang and Dmitry
+> Baryshkov, we have realized the dev_err() in the
+> mipi_dsi_*_write_seq() macros was causing quite a bit of bloat to the
+> kernel. Let's hoist this call into drm_mipi_dsi.c by adding a "chatty"
+> version of the functions that includes the print. While doing this,
+> add a bit more comments to these macros making it clear that they
+> print errors and also that they return out of _the caller's_ function.
 
-I'll merge it.
+This doesn't really explain why this takes so much less space.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Please add some explanation like that "the macro gets inlined
+and thus the error report string gets inlined into every call to
+mipi_dsi_dcs_write_seq() and mipi_dsi_generic_write_seq(),
+by using a call to a "chatty" function, the usage is reduced to one
+string in the chatty function and a function call at the invoking
+site".
+
+With some explanation like that +/- added in:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
