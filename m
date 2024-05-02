@@ -1,113 +1,82 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E79B20B28;
-	Thu,  2 May 2024 06:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7833C1CAA5
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 06:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714632647; cv=none; b=Yr/QEdwH7/Wm+PnBDNOVnVGD+tgMfcXBNDAcA6OiFAWdvYSWef+LnMPojnFDiNqOzHxyNaFsTrQ+kdkjbxZtpojgFpD09OiVhu4TO7IQxDyjgeGpzq7ANt/2GxpXwdbebLvWRuWxnAHWu72t6P5iauQMsE/o0lCcatGNSGsg6ik=
+	t=1714632648; cv=none; b=eQYrCJae3f7Ygwmic1bEhKxvNoJdSxlavrWHQTkVmIgTc1XClOUfiOzrH4rHJRk+EFdIHKojzKLa077w33oJIw2Y0Ugdkikq7y6y/p/REpNLYg7PgnvvjS9b0CmDSDN9l+koCDUTU0P+OofVH6tdEoALxNJT/syHR2A2ntnCsFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714632647; c=relaxed/simple;
-	bh=0KtAjG/lQgOLJAFTu2txRbylcS7quAOoyaCIXOphnRE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C/B9IIiXw0VVNoHmQvUGsI09fc9zIWoNESl44ohwzB2/uEhfg3DZYviPGn/B2eetYvFrZGhA/s1CKk7yFhCkHKHVdHbUgNVda1tfMHCQhmYQsbOpwdxGm8NnX6Me7ktvtspV8HpTz9yI0ndxyEc9kVojHJEFCYrVoMnRnKORdis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Z0eNvovy; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1714632648; c=relaxed/simple;
+	bh=gczMRuZ2fsGRpoCXUBhl7NeVLE82+ehtyW2OQrB7AVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sBEsl/zg7ED0pVd6E9ii1/D4539aF0AOYzhcel4Ut7O+Fv9771WPtBqdYKHTLAPYVhmr/HayC6U1JGiPM93S4SRDY/Qq4+jnV2zvY64IgbKKiQUF3wq4fNFXAMQ9KJQ3b1kxUIOvEONSnLDoJucDRG4hiU+1Joh0XIF7b6VALMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tjHdj1sw; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Z0eNvovy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1714632644; x=1746168644;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0KtAjG/lQgOLJAFTu2txRbylcS7quAOoyaCIXOphnRE=;
-  b=Z0eNvovyAvOCOfS0HzQfpKk4ZPbZylmdysCXcxOM4BOuO9Ad0LmqoTiu
-   4D9fwicoPC3IZav15cfStLivb3/x5qJlgZ8hxpJnwxo6qd13LE08v6tRs
-   guA83ORm2jiI0KPhYvkwps1xLgDGPrFvpzGSR4Cf10xCz8C+SI8W2UNd1
-   c9hwdxH9TPm+RtSyLFo3rSvswosSbzWdWDg/KPPZLSEtkSl6J1aftmJIZ
-   aHOsVaoGu0+PtYdlcgWxjM6T++QzsYA+Gs2yQSGcPzefFowKXfZlGNc+D
-   2C0dByk9IA0zPHc1Vsjon0CbJDY2n8NfGb1KkI7sE8YEMSSVkION9KCk5
-   A==;
-X-CSE-ConnectionGUID: i2nnprOWT+as/Z9/JQ0dlg==
-X-CSE-MsgGUID: uhYcgmjHQaO4Rf4DNJeUmg==
-X-IronPort-AV: E=Sophos;i="6.07,247,1708412400"; 
-   d="scan'208";a="23940607"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 May 2024 23:50:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 1 May 2024 23:49:47 -0700
-Received: from localhost (10.10.85.11) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 1 May 2024 23:49:47 -0700
-Date: Thu, 2 May 2024 08:49:46 +0200
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: Min Li <lnimi@hotmail.com>
-CC: <richardcochran@gmail.com>, <lee@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, Min Li
-	<min.li.xe@renesas.com>
-Subject: Re: [PATCH net-next v7 3/5] ptp: clockmatrix: dco input-to-output
- delay is 20 FOD cycles + 8ns
-Message-ID: <20240502064946.yc6v7xadwkfldbsw@DEN-DL-M31836.microchip.com>
-References: <20240501160324.27514-1-lnimi@hotmail.com>
- <LV3P220MB12024CB984967E4AC05A1E13A0192@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tjHdj1sw"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e47843cc7so7396585a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 23:50:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714632645; x=1715237445; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gczMRuZ2fsGRpoCXUBhl7NeVLE82+ehtyW2OQrB7AVI=;
+        b=tjHdj1sw4LmVaCMs0X8OaPrJwin9CaDOJYFyQVAgG+gu2hHuv33O3MklYUx7JV/Fp+
+         GnvQVZPijjfRU+7ym1NRUWVmREVpSjyk1CLebYNQxkHmaXQwETj1+dtqb9wQaGReudTr
+         sNr7k+tKIDMUQkVdteSt3VRxhOdGgHNzy5e9kA5bOCLqQcraCkakgNPYE1Qjgx1jfHqa
+         EqF03Xvv0zJIC93xcKuawdemULKUt8e2zK3IjYuI0heJFKwUWaS1JSkwYIPt5/V52Alw
+         ugRNaJl5YOO56myAgnqtE5NfCcloR/OhJVtEI9CwOoMPKohsnj3iVsFe3Rx3kejLLr+r
+         Cxvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714632645; x=1715237445;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gczMRuZ2fsGRpoCXUBhl7NeVLE82+ehtyW2OQrB7AVI=;
+        b=AvpwUszx66jbyTv/ExMFm5LZG3FMt/hUUDxdlmx4Hm2M41sO8x9Y4H++qQ6YkQY4ot
+         +szGSb7uGKLPWFXx6wiNUzE/y+lIAVFpbEc6JF+9pmMdh82sFc59644xWzNJ7bXHeRDC
+         b353TWGjIUZ9pxS31ZyDrheB9pkfSimNHpcB7XqS7GlVdh3XqctYIVyTolslZA6ABvVE
+         mFkSXTHkfJ4r2AURaOnZrMb4Yy22Ga42tjcdb1uxFe/7hkQxCX6t9i5S8BKUeMnLxUsJ
+         xiJZpSihzAvaBZLJGyBpg5/rr5XvN8v+yI93kf6JUU0UX25WwUsIJSN5c/TOenSYnSIh
+         vuRA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/BoNMNWuvMbWWrrNDGIMItquMZzNgc2ZyvZxe7Xn0TE4QVLMIVM8KDRS3IKdVXsaZV9LnjoCsut3ohmm+Z/1rbfQCznwGtGh3EsB0
+X-Gm-Message-State: AOJu0YxVNOAK/gbpyiAikvhEtcyN63SLemNJu3tklPE2R+iTio1ndLg0
+	7wosH0N8MUdeBZBQlGBiayaKLiLAmEpbAMNo41Zq37nzMzZ0Mpfdgw6Z1TaoF3A=
+X-Google-Smtp-Source: AGHT+IEm4hxtYeUITzy9KskvdEwvovQTQ7goiMjdbtjJXbgiREClpPvtcTNcEi0/QqCMuqRmWxzfgg==
+X-Received: by 2002:a17:906:3510:b0:a58:eb98:6806 with SMTP id r16-20020a170906351000b00a58eb986806mr2983352eja.32.1714632644997;
+        Wed, 01 May 2024 23:50:44 -0700 (PDT)
+Received: from [172.20.10.10] ([213.233.85.172])
+        by smtp.gmail.com with ESMTPSA id f8-20020a17090624c800b00a526fe5ac61sm179547ejb.209.2024.05.01.23.50.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 May 2024 23:50:44 -0700 (PDT)
+Message-ID: <29eebff9-04ad-4c4d-a3be-2f2da7a9a280@linaro.org>
+Date: Thu, 2 May 2024 07:50:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <LV3P220MB12024CB984967E4AC05A1E13A0192@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] arm64: dts: exynos: gs101: specify bus clock for
+ pinctrl_hsi2
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Will McVicker <willmcvicker@google.com>,
+ Sam Protsenko <semen.protsenko@linaro.org>, kernel-team@android.com,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240430-samsung-pinctrl-busclock-dts-v2-0-14fc988139dd@linaro.org>
+ <20240430-samsung-pinctrl-busclock-dts-v2-3-14fc988139dd@linaro.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20240430-samsung-pinctrl-busclock-dts-v2-3-14fc988139dd@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The 05/01/2024 12:03, Min Li wrote:
-
-Hi Min Li,
-
-> 
-> From: Min Li <min.li.xe@renesas.com>
-> 
-> Set dco input-to-output delay is 20 FOD cycles + 8ns
-
-Can you explain why you are doing this change in the commit message?
-Is this a fix or just improvement?
-
-> 
-> Signed-off-by: Min Li <min.li.xe@renesas.com>
-> ---
->  drivers/ptp/ptp_clockmatrix.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
-> index d069b6e451ef..21f3a2c179f5 100644
-> --- a/drivers/ptp/ptp_clockmatrix.c
-> +++ b/drivers/ptp/ptp_clockmatrix.c
-> @@ -2165,7 +2165,7 @@ static int configure_channel_pll(struct idtcm_channel *channel)
-> 
->  /*
->   * Compensate for the PTP DCO input-to-output delay.
-> - * This delay is 18 FOD cycles.
-> + * This delay is 20 FOD cycles + 8ns.
->   */
->  static u32 idtcm_get_dco_delay(struct idtcm_channel *channel)
->  {
-> @@ -2196,7 +2196,7 @@ static u32 idtcm_get_dco_delay(struct idtcm_channel *channel)
->         fodFreq = (u32)div_u64(m, n);
-> 
->         if (fodFreq >= 500000000)
-> -               return (u32)div_u64(18 * (u64)NSEC_PER_SEC, fodFreq);
-> +               return (u32)div_u64(20 * (u64)NSEC_PER_SEC, fodFreq) + 8;
-> 
->         return 0;
->  }
-> --
-> 2.39.2
-> 
-> 
-
--- 
-/Horatiu
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
