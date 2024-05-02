@@ -1,164 +1,279 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2077.outbound.protection.outlook.com [40.107.8.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C697322B
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 00:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714609222; cv=none; b=eiw+l+uRVKg3Mp8xZ/g1Nv4JT+Vu5Ki/0rTV7PbsSzp57ic4zB5+vxQ3J6tjx144NXsndZIZrJk+lqugX4S5Ruz9G2zah6Izpx4zAyheXscueFpDocz+0PuMaaXvqa4S/mXz7Xl2T7eHsc6OSYcmN+kuUkuxj7xLs7ZXsSPtHk0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714609222; c=relaxed/simple;
-	bh=u41EwqRKzoIPMnwx3uJD5HnTN0ef2JtTmKQdCY/Erwc=;
-	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kyv76VG5x/6IU2yAR1TK1tuA87f1QZmL8U+umjDLqGpyVA+VJCh3hr1NOCwFp/Fna7yFz58bhliQR9fjwor1xfva1L3M9KCf6E72e7Dkt4yJfXE5rJlfxe01o3ZHbzDXtL7LgCUJF73f3bk8tR1wscG+pYdfgyZvnf8AelAlESc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bugOooDb; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39357F6;
+	Thu,  2 May 2024 00:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714609730; cv=fail; b=jpT/9OzAZ9jIvw0sCT8vGOjg2UlO5Po+81HOEDEX+61JD4ATv0t17hkv1YOJwp0c0McW2A/Yeufbq3WYk2Qgvc0AoQoCHNuZXPiu6NcY7Z2vSJV0BdONXdqBvCMIVD1sO71AKyuQcEEZ3DUCiBmarJuMOdoetMy1fFh7NcK3R78=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714609730; c=relaxed/simple;
+	bh=jQbEGXVkkVKV6ZsnasXOEkfreZU6sJowC+0I75DDLs4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bxtR/oEDIkmZZyjIPo8f1RHNhgKaFATn1J2gAvA8A47H5zksQecRJDU1WcKN1qEXwcpQfnYuXPvcBOV5haxKIFAzIFssSMTQYDYCqC5eslRGXgKE15AvisDVhIOXlhyjmTsTm1FUi0noqTiA7ApWgenC++0tsRSJPLmcwNV1HbM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=OrXuO1DF; arc=fail smtp.client-ip=40.107.8.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bugOooDb"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-69b514d3cf4so80599696d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 17:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714609219; x=1715214019; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u41EwqRKzoIPMnwx3uJD5HnTN0ef2JtTmKQdCY/Erwc=;
-        b=bugOooDbNCoejEADieRSHfp+9g6wkP/WY5N81ay1vzvGoq9aDajmDDrc4ebJcA7tpO
-         xqIBRAA74ziMGHE6IaKSd1sj/mPgs75ZJslJq9k3nI59loWl7hpzCBET6TrcqCndATp0
-         Lbk1EQfNSufBOQlfVmf7Lb0BrTUMmJmp03A+c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714609219; x=1715214019;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u41EwqRKzoIPMnwx3uJD5HnTN0ef2JtTmKQdCY/Erwc=;
-        b=F5m2Zo0iilQtV8YeEvAoBavVEXntjgS5tO3VtAf/oXsJceox12rh6sJ5w7ZJs2FHbT
-         NKuS8iJfrtMBxOZpuvIQ0E7AohroX7QWqhdbElyvV5bhenK3naYoRro7Y/FRevuE/cEb
-         HSgUcP29Ck7j7SnitHqkaaPwUcoAQ9THd6DFHtQpy7k2wiFWZA8fIiVEGdpY/Gd3jonP
-         ykHHDWpUcMez8Q340EaSqg+N1xIsBM2UL4N2D7HeCyrno2ZLmO8/snGTh8HBGQfwwTXp
-         YlKGHhudG2/JRf32wUWsQCcAbTnMAr9fhNY/J1EJ9CtrHqlsh3wyQALZQ5+oHDmLKzXH
-         G7rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ahlKod9odlrQlDTt+6Zdou8eBMnVGxmD0WgZM6xlFRXaCeaLtMY5egEFB+NYFrZ/AhgX4FN3h9aFrEMPhZ0vwEfUDbLXGRGXEeeV
-X-Gm-Message-State: AOJu0Ywa3un/TkFUAE4HH5LT0vQDNJa9I0v529s17lnu+g7Wj1C7Ys0l
-	IKwGLQ3Ne0FYVO7I1EYwjutIA2gx69O6Pcjd7jalj253o8PevsXBReAeAhPcH2Sm9Fi9AlHifYj
-	j4TUhZB3lLEK0cqagwSwLv5I1fpakbQcKiFRj
-X-Google-Smtp-Source: AGHT+IEc1eTRsFE6XeEVTYHiMbtnza7LGG/rlt3ScVq6rOvZPlhWc3Y03+hhqJKXzOZ75M3+vGyimImWhMVDRjS2H9g=
-X-Received: by 2002:ad4:5baa:0:b0:6a0:8511:98e0 with SMTP id
- 10-20020ad45baa000000b006a0851198e0mr443958qvq.22.1714609219471; Wed, 01 May
- 2024 17:20:19 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 1 May 2024 17:20:18 -0700
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OrXuO1DF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZHo/3ID6lS+AdqFu0gzXQ6LAIReaEeHmgHou7j+2joTeo4B/TVLHXrhtCrlLlyHBVnUD9ZRx4d8wuMth4jYLdLzMwaTn+mEBzKAE7fIB9WyBMImr9/eWYyf7ln7uF5FUTr/IFvaxIO3t/uWu2OEkCW9LtJAJQs9TBvl5ZOwtKaw3Li588GF582swUppsSTjP5Bf494m7Ob3edHQWffSXJHoXyIzbsj1qscSQIndLCiSu0z7D2MuKW3lmPoFzumz0XlyVfEyV6UCsvEApzPDK3NTt0vMLVBOtzUb10TdymWrHxP7ur2IxPcSYwOtdE8j17yYNWhQzU2hYZ8VkmeOt1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TJ2SPCN2M7ohOGJj3Bl0H2FL8GmKXIEX+qlx+hJJ6Vk=;
+ b=WoL3nKdwZP1YWz4sB5WcllieCBPhjhapCun3qthlUYj0blEH1t62CMMgNTAEnfmRY9gG69uQLjQCH9k1smx+KK2w4eN2elqiXlVu/D30ugEOgrre+/teu4bi5tm0BjTS7ddFmnEpznEDlwC9exMg6LeCPw3rFNxY6TOy8ZtzBjsIwZ6Osg6jxWvaG6LKqU9XmSIDs0AMrbMwOGky1fGBVl+16fY2AH88wjyhZE2Qtx8BvZFytYngTqX7MEPhdJbsPCKd8K3omF+cmc0BjlwJfyEugFE8SJr1A8v8h33qCRDrZeNUmogsmV8xn8UWUOGv4SruCjDvxYJxFvcmNYzBIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TJ2SPCN2M7ohOGJj3Bl0H2FL8GmKXIEX+qlx+hJJ6Vk=;
+ b=OrXuO1DF0OYCGccyVr6vQCYh8n/oKQIXVB3PspIE8ar/nEzxpvy7nFtvS/KmP2fwGWGQ/ILBmYTkXcFGC62fyHTNGw3z2Q43ALPxx/AGuz2mpzJKk7ERw21kky09QmrgICHaNEIwUmfrvwgX/gS6KDLyBQvdhEHvNc0Cih04/NE=
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by DB9PR04MB8092.eurprd04.prod.outlook.com (2603:10a6:10:24f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.26; Thu, 2 May
+ 2024 00:28:44 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7544.029; Thu, 2 May 2024
+ 00:28:42 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>, "Peng Fan (OSS)"
+	<peng.fan@oss.nxp.com>
+CC: Linus Walleij <linus.walleij@linaro.org>, Thierry Reding
+	<thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Dvorkin
+ Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
+	<jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>,
+	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang
+	<baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Viresh
+ Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+	"soc@kernel.org" <soc@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar
+	<alim.akhtar@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>,
+	Patrice Chotard <patrice.chotard@foss.st.com>, Heiko Stuebner
+	<heiko@sntech.de>, Damien Le Moal <dlemoal@kernel.org>, Ludovic Desroches
+	<ludovic.desroches@microchip.com>, Nicolas Ferre
+	<nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Aisheng Dong <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Chester Lin <chester62515@gmail.com>,
+	Matthias Brugger <mbrugger@suse.com>, "Ghennadi Procopciuc (OSS)"
+	<ghennadi.procopciuc@oss.nxp.com>, Sean Wang <sean.wang@kernel.org>, Matthias
+ Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Sascha Hauer
+	<s.hauer@pengutronix.de>, Andrew Jeffery <andrew@codeconstruct.com.au>, Joel
+ Stanley <joel@jms.id.au>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+	"linux-stm32@st-md-mailman.stormreply.com"
+	<linux-stm32@st-md-mailman.stormreply.com>,
+	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "openbmc@lists.ozlabs.org"
+	<openbmc@lists.ozlabs.org>
+Subject: RE: [PATCH 01/21] pinctrl: ti: iodelay: Use scope based of_node_put()
+ cleanups
+Thread-Topic: [PATCH 01/21] pinctrl: ti: iodelay: Use scope based
+ of_node_put() cleanups
+Thread-Index: AQHam8Xj7phXRd8k+Eq6Rs1zefiOObGCYIcAgAC3AKA=
+Date: Thu, 2 May 2024 00:28:42 +0000
+Message-ID:
+ <DU0PR04MB9417AD5892A1A45E6AE18D8688182@DU0PR04MB9417.eurprd04.prod.outlook.com>
+References: <20240501-pinctrl-cleanup-v1-0-797ceca46e5c@nxp.com>
+ <20240501-pinctrl-cleanup-v1-1-797ceca46e5c@nxp.com>
+ <ee5c8637-b8b2-491b-b011-e399942691dc@moroto.mountain>
+In-Reply-To: <ee5c8637-b8b2-491b-b011-e399942691dc@moroto.mountain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DB9PR04MB8092:EE_
+x-ms-office365-filtering-correlation-id: 65567ff6-a480-4765-c129-08dc6a3ed231
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|7416005|366007|1800799015|376005|38070700009;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?1QMqElXeCqFjLQXHcTzDnVygRky25BofQFpiRTOSFrI2EX/xtqUmsFJuW5eJ?=
+ =?us-ascii?Q?wLAbZv9JCdV0gErgqKWqZ+00K7/azYHAMLMpsiondY6Hk5cRYsxdOIc+Lnfq?=
+ =?us-ascii?Q?aGXgz5b+pcbYFS/kfQyVK0E4ajF/JsAcLzgQOWpODIajkmynSbYNPEVZPR43?=
+ =?us-ascii?Q?DVdrR0lptvTQl/qsiK1L2Ki4WJ1ggAVsty6ipJVVOaDeRYN2eFSje+n/V4SK?=
+ =?us-ascii?Q?FRbShhaGkJThkAzI1SiAhAAuuzthpec4N5xnBRVe6hvQ9tRd9zDRfC+olLmv?=
+ =?us-ascii?Q?hmeB3gDaQS4EFsdFtIYIEUNeHVf9pZzp9tww4eEj5eSH8TaDW/X99vQ0Vyfp?=
+ =?us-ascii?Q?siSlrg//L71WLgXMPmsPsJx0qVveP0GNLiRih6HNGSQLwgKbA0rewLF+GvsD?=
+ =?us-ascii?Q?S4JY4PM3UPPTbg9RJQ4xF2c5A5UldDuChGihQ+qAE/Ngz2Cjph+f06uiVGKk?=
+ =?us-ascii?Q?w0mWso1WBPWdCwOVfmhp1X5BJLQJgjmbXtCsO3lX1kJpo42CQLn5CCFSosV0?=
+ =?us-ascii?Q?o7spyqaMlp9s6T0lyIklqdzqei8dEx0B+CkPDIMWR/Zm1EIW/NuCxN577b88?=
+ =?us-ascii?Q?M8xXhygwWY3qgU7tEpsEzVG6xXnW54hs5LPSOZaC/RpDAkhkxa+224VBIet8?=
+ =?us-ascii?Q?8IBfBObrHscd1mnhJyK6ymwW0iakOJwN7VJQ6SoBoq9WO9Eo3nkPtOSqbxJq?=
+ =?us-ascii?Q?kzH+3b3/p/mx/LrtyhDTwMhFClCIsunacWjTvemmr5YM9omjXw7wpV0Zl0K+?=
+ =?us-ascii?Q?8XfS5UjdqqCZy/GbkIwpNttFWMqwkILaohgxtJC4XKPn3Q8cC2mRhAAymnXy?=
+ =?us-ascii?Q?ttqoGakLRKMIWa1oykfHXz5q/2BF3qBJCrJjzyZREF9UQs9GESUvmpswzSk5?=
+ =?us-ascii?Q?EOR/l8Vzw+s0n/VzJjVZ3nFrNGer33JhlbH6v94Kk0JKgEyCir5n9Xpu4bUU?=
+ =?us-ascii?Q?N6/Ze8YBRDleHk9asy1MnjbNK81uXsRCq4AuKR2F+3HToHJd0RV/c4HgFPNm?=
+ =?us-ascii?Q?19rpSaRSd+fiE5uZKNhw3Xp7AaHmT6Zs7A6g11xxntvdkW+doVoccvm4DzAe?=
+ =?us-ascii?Q?G0cwHEJTXzkwM9XO58nstGUuKLWcAFXFQ36c9j/ZR0HsdkdhA/tktrGh66Sv?=
+ =?us-ascii?Q?ekiRtGidaBMmioh1NDa9BMt5zSTo1ZJ2lqcwmt5b/fYHIu0DKjA35e6y/zbU?=
+ =?us-ascii?Q?axpyIJw9CpP0cDfIqK40U36VjuGYCY1aEeBfyeDIvw7FLoF938sefH54oXqN?=
+ =?us-ascii?Q?RVSWKEFg6XTWo8htb3U21KdUG2DxexWe5s4Xu6LQ4jgIPuyiIGCLZQnOkFAF?=
+ =?us-ascii?Q?eczaQeLAqYGS4xZRzvZPbMRoDBLbkagKzXqkkRGCGBVg2w=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?CpVog6jI5OKurZJAU0XhgI1TVxEpz+zzjIglGeKnV+kYFgVQpUJpj7oZv3l/?=
+ =?us-ascii?Q?9ctRCgWOY6x1qJhee0xaWwqwctu7Wuvns8lNyx7oviqqyHUUvy6SPcTuJ6B+?=
+ =?us-ascii?Q?6iyauZENPOgyHvMId0Cv49R6ET82zHf+4DE64UqiVvZmcnNPnu7rxPopKYSW?=
+ =?us-ascii?Q?yU58e61oGCEMcZmfVX8yWz2kcPMoy3O8ZXFah3zc2w7hsJ78ESjRrwDaS7Vr?=
+ =?us-ascii?Q?z1LTyZ9qzsUHjoLcXrcisqMH3ALAHEs9qCK0Ru2L92WLy7gLpFah7fUXORUf?=
+ =?us-ascii?Q?c7M0HFoT6Imcjwqf9XmhkjV6i6gC/U99qWbo5hN7L8viTGos5vs+RxDN6pND?=
+ =?us-ascii?Q?lTgF2lVblVe1+XEO1eyOzYwP7txpzHSbh7eetLm+BBvNEwO0WP0PgjmnTq3L?=
+ =?us-ascii?Q?4yZNVNmMivRqrgTBU51WmTiAgdoPespEhCI7nee804oqvY7U9H40ATRtH5H2?=
+ =?us-ascii?Q?djif00m+tGZc6hETjDC6W/M090h1cl3JSTgZS9NTrkbPRZpvFDbqYhDPyecg?=
+ =?us-ascii?Q?JAm4GK+zZIJkM+F90n6OCf9tNTzUbsYaJ7Sl6+/5j/TQS2LmlTEhVnt+Iwfj?=
+ =?us-ascii?Q?mdhe5BZ6GsUsFvZ6zpVBhkSpqoNyoHWn/asmsQ7onmc9YLQTiU0DAMvAds9G?=
+ =?us-ascii?Q?lEgP3xit9oKfgf+vVENqo+vjSHsvlWfagbvqtMoFJqH7WvrFMIr5o7YNpRGL?=
+ =?us-ascii?Q?DJlY/ctBGpD5E2qoBx7MQuXxkw1ynJ+HYUf0duzLqSoIA8FbvyTaIE8AQzdu?=
+ =?us-ascii?Q?qEYwgem8x/BYwRA68JB/mq03MtqofZU3rVUNjp/lLQdm+e7vib88gY3P3Aoq?=
+ =?us-ascii?Q?TAvPAa25ygj7ALXkOmtJqs6ODgTB05UTyi7vc09ZloVFM1oakNTjUTNmyIO3?=
+ =?us-ascii?Q?poINkGPCg59gJRY7tNWEFWVADaWAdhM/4ZUejxDLWDfXD6JauuWwSjKtB4ZY?=
+ =?us-ascii?Q?2OfmKInCQYJXC9SpROmHIGsxdKYWj6Ak+ReFhZcA1045HRoQLN4dMIolMP1J?=
+ =?us-ascii?Q?2XZooo3r513l1OjIFtMxbHbGUTyDLTSL9CeEFtNuH9lYY1neQVDE5TLLAFHK?=
+ =?us-ascii?Q?T6F6rPT3ym4RCTi1nMyEyINBn5stuTTBM1vNIGX1BkitfCLoeb7h0C/BXQx5?=
+ =?us-ascii?Q?cWApztl5EWXgXUUepSshbgc0y432VcIqkx2Zi24uRRXMjJ2JFV7Ji9T+tlBn?=
+ =?us-ascii?Q?7+R8rOng04OEm0IVdodMODxDorPGeDoieMZDAM4f+N6TEt6B5tPkFMn+8Asz?=
+ =?us-ascii?Q?Y4YhwUbmB9/tiCYMpzRNlNjnQ+HvTshWEeza0kd1+uREqyzE659qp9lYq4D8?=
+ =?us-ascii?Q?lcjn9+5rFgiyBbWMFzW+zVOidSuWBcRqmNavWcGyUMPDZkfC3m4fvsikRqq5?=
+ =?us-ascii?Q?5INb2gRbOW0Ikx4UP01fOyzh9mJ5iYwNAtHentOnZEmV/p7U43dAnPGYaB6H?=
+ =?us-ascii?Q?KOEdPq5sPTa6MCiycNaRAEsE1h0kbeqUsFAqxSl8hRqOoSQ2eS5nn9tnmeH2?=
+ =?us-ascii?Q?F5+MhyIQUO1O+jfaeawPnqU8JLJH2aNxcG5M+rAvb8kpbRWTFO5KpYL1PScE?=
+ =?us-ascii?Q?dZHQSv7K2xuIaqpD2Zw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAA8EJpqVGHqufKo1kV52RzQCNL5D92mmnCzUwKZn4o+5=wF9pQ@mail.gmail.com>
-References: <20240327202740.3075378-1-swboyd@chromium.org> <CAD=FV=VLwa0AFsrXXxKGG+hcyW+h7u7-tyg3uoDB8M_XdPti_Q@mail.gmail.com>
- <CAE-0n51osUcpqqh6o9OhURLbRKjcWbRZT-5oHLi_mwfJsUngEw@mail.gmail.com> <CAA8EJpqVGHqufKo1kV52RzQCNL5D92mmnCzUwKZn4o+5=wF9pQ@mail.gmail.com>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date: Wed, 1 May 2024 17:20:18 -0700
-Message-ID: <CAE-0n52knCL3DP35jg8UhTJP6wxQ5Fueq9Qa796O9hKuEFPRQg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Fix a black screen on sc7180 Trogdor devices
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Doug Anderson <dianders@chromium.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <andersson@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, patches@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, Taniya Das <quic_tdas@quicinc.com>, 
-	Laura Nao <laura.nao@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65567ff6-a480-4765-c129-08dc6a3ed231
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2024 00:28:42.6706
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aI8YFo/Skwu6zxqn8HobTDaVWaQ3DE1QfrDFSC77Z1GbtbvHAb/vXlE5OMCOq7z2b7VvcAGEVu75OyLmNIggOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8092
 
-Quoting Dmitry Baryshkov (2024-05-01 11:11:14)
-> On Wed, 1 May 2024 at 03:17, Stephen Boyd <swboyd@chromium.org> wrote:
+> Subject: Re: [PATCH 01/21] pinctrl: ti: iodelay: Use scope based of_node_=
+put()
+> cleanups
+>=20
+> On Wed, May 01, 2024 at 08:55:59PM +0800, Peng Fan (OSS) wrote:
+> > @@ -879,16 +874,12 @@ static int ti_iodelay_probe(struct
+> platform_device *pdev)
+> >  	ret =3D pinctrl_register_and_init(&iod->desc, dev, iod, &iod->pctl);
+> >  	if (ret) {
+> >  		dev_err(dev, "Failed to register pinctrl\n");
+> > -		goto exit_out;
+> > +		return ret;
+> >  	}
 > >
-> > Quoting Doug Anderson (2024-03-28 09:39:54)
-> > >
-> > > I spent a bunch of time discussing this offline with Stephen and I'll
-> > > try to summarize. Hopefully this isn't too much nonsense...
-> > >
-> > > 1. We'll likely land the patches downstream in ChromeOS for now while
-> > > we're figuring things out since we're seeing actual breakages. Whether
-> > > to land upstream is a question. The first patch is a bit of a hack but
-> > > unlikely to cause any real problems. The second patch seems correct
-> > > but it also feels like it's going to cause stuck clocks for a pile of
-> > > other SoCs because we're not adding hacks similar to the sc7180 hack
-> > > for all the other SoCs. I guess we could hope we get lucky or play
-> > > whack-a-mole? ...or we try to find a more generic solution... Dunno
-> > > what others think.
+> >  	platform_set_drvdata(pdev, iod);
 > >
-> > I think we should hope to get lucky or play whack-a-mole and merge
-> > something like this series. If we have to we can similarly turn off RCGs
-> > or branches during driver probe that are using shared parents like we
-> > have on sc7180.
-> >
-> > Put simply, the shared RCG implementation is broken because it reports
-> > the wrong parent for clk_ops::get_parent() and doesn't clear the force
-> > enable bit. With the current code we're switching the parent to XO when
-> > the clk is enabled the first time. That's an obvious bug that we should
-> > fix regardless of implementing proper clk handoff. We haven't
-> > implemented handoff in over a decade. Blocking this bug fix on
-> > implementing handoff isn't practical.
->
-> Yes, that needs to be fixed. My approach was to drop the XO parent and
-> consider the clock to be off if it is fed by the XO.
->
-> > Furthermore, we're relying on clk
-> > consumers to clear that force enable bit by enabling the clk once. That
-> > doesn't make any sense, although we could use that force enable bit to
-> > consider the RCG as enabled for clk_disable_unused.
->
-> That patch seems fine to me. Will it work if we take the force-enable
-> bit into account when considering the clock to be on or off?
+> >  	return pinctrl_enable(iod->pctl);
+> > -
+> > -exit_out:
+> > -	of_node_put(np);
+> > -	return ret;
+> >  }
+>=20
+> This will call of_node_put() on the success path so it's a behavior chang=
+e.  The
+> original code is buggy, it's supposed to call of_node_put() on the succes=
+s path
+> here or in ti_iodelay_remove().
+>=20
+> If it's supposed to call of_node_put() here, then fine, this is bugfix bu=
+t if it's
+> supposed to call it in ti_iodelay_remove() then we need to save the point=
+er
+> somewhere using no_free_ptr().  Probably saving ->np is the safest choice=
+?
+>=20
+> The original code is already a little bit buggy because it doesn't check =
+for
+> pinctrl_enable() errors and cleanup.
 
-What is "that patch"?
+It was introduced by=20
+commit 6118714275f0a313ecc296a87ed1af32d9691bed (tag: pinctrl-v4.11-4)
+Author: Tony Lindgren <tony@atomide.com>
+Date:   Thu Mar 30 09:16:39 2017 -0700
 
-It would work to consider the rcg clk as on or off. During rcg clk
-registration if a branch child is found to be enabled we would go and
-write the force enable bit in the parent rcg. And similarly we would
-modify the rcg clk_ops to set that bit whenever the clk is enabled and
-clear it whenever it is disabled. This avoids the feedback mechanism
-from confusing us about the enable state of the rcg, at the cost of
-writing the register.
+    pinctrl: core: Fix pinctrl_register_and_init() with pinctrl_enable()
 
-It wouldn't fix the problem that we have on Trogdor though. That's
-because the display GDSC is turned off when the rotator clk is enabled
-and parented to the display PLL, which is also turned off. We have to
-either turn off the rotator clk, or switch the parent to something that
-is always on, XO, or keep the display GDSC on until the rotator clk can
-be turned off. On other SoCs we may need to turn off even more clks
-depending on which ones the display GDSC is controlling.
+of_node_put is expected in probe, not in remove.
 
->
-> >
-> > An alternative approach to this series would be to force all shared RCGs
-> > to be parented to XO at clk registration time, and continue to clear
-> > that RCG force enable bit. That's sort of what Dmitry was going for
-> > earlier. Doing this would break anything that's relying on the clks
-> > staying enabled at some frequency through boot, but that isn't supported
-> > anyway because clk handoff isn't implemented. It avoids the problem that
-> > the first patch is for too because XO doesn't turn off causing a clk to
-> > get stuck on. I can certainly craft this patch up if folks think that's
-> > better.
->
-> I think this approach makes sense too (and might be preferable to
-> boot-time hacks).
-> On most of the platforms we are already resetting the MDSS as soon as
-> the mdss (root device) is being probed. Then the display is going to
-> be broken until DPU collects all the coonectors and outpus and finally
-> creates the DRM device.
+Thanks,
+Peng.
 
-Ok. I'm leaning towards this approach now because it seems like keeping
-the clk at whatever it was set at boot isn't useful. If it becomes
-useful at some point we can implement a better handoff mechanism. I have
-some idea how to do that by using the 'clocks' DT property to find child
-clks that haven't probed yet. I'll test out this alternate approach to
-park shared clks at probe and send the patch.
+>=20
+>=20
+> diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti=
+/pinctrl-ti-
+> iodelay.c
+> index 040f2c46a868..f40a1476e4ff 100644
+> --- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+> +++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+> @@ -156,6 +156,7 @@ struct ti_iodelay_device {
+>=20
+>  	const struct ti_iodelay_reg_data *reg_data;
+>  	struct ti_iodelay_reg_values reg_init_conf_values;
+> +	struct device_node *np;
+>  };
+>=20
+>  /**
+> @@ -884,7 +885,12 @@ static int ti_iodelay_probe(struct platform_device
+> *pdev)
+>=20
+>  	platform_set_drvdata(pdev, iod);
+>=20
+> -	return pinctrl_enable(iod->pctl);
+> +	ret =3D pinctrl_enable(iod->pctl);
+> +	if (ret)
+> +		goto exit_out;
+> +
+> +	iod->np =3D no_free_ptr(np);
+> +	return 0;
+>=20
+>  exit_out:
+>  	of_node_put(np);
+> @@ -903,6 +909,7 @@ static void ti_iodelay_remove(struct platform_device
+> *pdev)
+>  		pinctrl_unregister(iod->pctl);
+>=20
+>  	ti_iodelay_pinconf_deinit_dev(iod);
+> +	of_node_put(iod->np);
+>=20
+>  	/* Expect other allocations to be freed by devm */  }
+>=20
+>=20
+>=20
 
->
-> But I think we should fix the get_parent() too irrespectively of this.
->
-
-Sure, but it becomes sorta moot if we force the parent to be XO.
