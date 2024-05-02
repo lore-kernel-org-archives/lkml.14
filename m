@@ -1,89 +1,94 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D929F153514;
-	Thu,  2 May 2024 14:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC5913C68D;
+	Thu,  2 May 2024 14:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714661194; cv=none; b=NGLFhnvrYKH8r/g1qHzmkw/b5toSm6xJa/MVO+KxrcP7+SIu7426jbDc7NQI726qLRpGtiGpEpt5F/7ZfWa84xB3zumi6k2ZsDHGEMPitvbJXbV5My+Y8FwQlY2WDjXifhPODWr+38NR31WmGDGLDH7JSSwO1DABHMiZCWaxHHA=
+	t=1714661195; cv=none; b=blSy5BuKTPjIPosOqgjXkSaQKwGGKR2WY19K2XX8Jc2ZWJKxlwrPFmORoUZ9oi1fyIYAp9c5QHi/PFnDf4y8I+YzLDg2lyoLkDLOHzkz5aQrxfQN4lj4WKfm92Ha0tL5NSObTMwGXV9nxWktcQkriFv2HfQXSAIGz1PsBcekIf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714661194; c=relaxed/simple;
-	bh=NUzH0xLjYug2wA1GsDRruTxJ0XL95zyZdLIf5ZhzrS0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 In-Reply-To:References; b=REbt6fA15nVdc+ZEob4AtP+i4LofA3pcujnCA7xXtC5XIju1YfdLJIheGMKAcB7qwLyKDzQrhoE8RgdluxrbR5x47FIL3aBYu+5YFRpa1UXgjkS2zk3MWsBqEvMGURf5Iyu689aM/nmrKFTAYrVc1NXEAPZu7Hxn0MHI59mzOxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from ubuntu.localdomain (unknown [221.192.181.50])
-	by mail-app2 (Coremail) with SMTP id by_KCgA3L4GZpjNmnigDAg--.28S3;
-	Thu, 02 May 2024 22:44:26 +0800 (CST)
-From: Duoming Zhou <duoming@zju.edu.cn>
-To: linux-hams@vger.kernel.org
-Cc: netdev@vger.kernel.org,
+	s=arc-20240116; t=1714661195; c=relaxed/simple;
+	bh=XptqbUg5xNIQKmQKuni+sa4YXQiyH4WIn+t4Dt1W1MA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K2OWXSetx1RnLpe/7/uZFr5v4p+XqOSPbYO4LDLv7LwQBQL3sU0sIgiP61XWsv5dNC3B5EcdFp65jdQevRRpQM/tqd8EAFQJ2+KFdVbsZ2ywFiC110yKhfjckxxlKP+ZJGSPLqbkJW/5wREkV3MKYeWFsxMiuYjmx2AUKvVLRi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TzbQefYl; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TzbQefYl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714661194; x=1746197194;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XptqbUg5xNIQKmQKuni+sa4YXQiyH4WIn+t4Dt1W1MA=;
+  b=TzbQefYlZfoO4Ied6SJD86PSCr3VjWq7dCi0jyiB1DRZ+/lnwP84omaB
+   YYWJycfkECXnbxhoMywYIN+8d+fL7B3DNsn50ZoaT8uTp4kaD+q1863mI
+   C7/kCQKWSsGJWR0PCfEPWBKB6yoQ0MXnunv7wluKcc5XdQtSgPe3Ilfw3
+   OB6BocLi+VDgs6e8wqQKv2EPT8991g+ahVRP6apSRcyjpUcj7NHB/ENa1
+   nkV4qCC8zmDrvVfv0jzo9yPz9NFW4SLu/NaTJ4+kslF9wiCF8CdlUIMXo
+   Cy/mYfmpPV21VhESmJxDQVc/vGIwvy7IA6auJsxeN/h3hH4xgoNd3B2tu
+   g==;
+X-CSE-ConnectionGUID: vHCHbcF2Tti5eRWqocDCGQ==
+X-CSE-MsgGUID: Hx/Ip/E3QcqrTQeqT/oNvA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10306065"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10306065"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 07:46:33 -0700
+X-CSE-ConnectionGUID: qIjp9/dATeyAA7Ij6nuAeA==
+X-CSE-MsgGUID: ivJ0cS98Tg2/N32pmd+ugQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="31632823"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 02 May 2024 07:46:32 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id B087817E; Thu,  2 May 2024 17:46:30 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Parker Newman <pnewman@connecttech.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
-	jreuter@yaina.de,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	dan.carpenter@linaro.org,
-	Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH net 1/2] ax25: change kfree in ax25_dev_free to ax25_dev_free
-Date: Thu,  2 May 2024 22:43:37 +0800
-Message-Id: <81bc171fb2246201236c341e9b7d799f509d7dd4.1714660565.git.duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1714660565.git.duoming@zju.edu.cn>
-References: <cover.1714660565.git.duoming@zju.edu.cn>
-In-Reply-To: <cover.1714660565.git.duoming@zju.edu.cn>
-References: <cover.1714660565.git.duoming@zju.edu.cn>
-X-CM-TRANSID:by_KCgA3L4GZpjNmnigDAg--.28S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw48CFy8GryrArWDArWUurg_yoWfJFX_uF
-	1kAFZrXw4UJr1UCw1rCFWrJry7Ww1jgw1fJryfAFZ7t34Yqa4UJrWkWr18XF1UurWUCr4I
-	qr1rJr13Ar43JjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUblkFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
-	0Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW5XwCF04k20xvY0x0EwIxGrwCF54CY
-	xVCY1x0262kKe7AKxVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhYFZUUU
-	UU=
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwIJAWYySJ0M6ABdsx
+	linux-serial@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Subject: [PATCH v1 00/13] serial: 8250_exar: Clean up the driver
+Date: Thu,  2 May 2024 17:43:54 +0300
+Message-ID: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The ax25_dev is managed by reference counting, so it should not be
-deallocated directly by kfree() in ax25_dev_free(), replace it with
-ax25_dev_put() instead.
+After a rework for CONNTECH was done, the driver may need a bit of
+love in order to become less verbose (in terms of indentation and
+code duplication) and hence easier to read.
 
-Fixes: d01ffb9eee4a ("ax25: add refcount in ax25_dev to avoid UAF bugs")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
----
- net/ax25/ax25_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This clean up series fixes a couple of (not so critical) issues and
+cleans up the recently added code. No functional change indented by
+the cleaning up part.
 
-diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
-index 282ec581c07..07723095c60 100644
---- a/net/ax25/ax25_dev.c
-+++ b/net/ax25/ax25_dev.c
-@@ -208,7 +208,7 @@ void __exit ax25_dev_free(void)
- 		s        = ax25_dev;
- 		netdev_put(ax25_dev->dev, &ax25_dev->dev_tracker);
- 		ax25_dev = ax25_dev->next;
--		kfree(s);
-+		ax25_dev_put(s);
- 	}
- 	ax25_dev_list = NULL;
- 	spin_unlock_bh(&ax25_dev_lock);
+Andy Shevchenko (13):
+  serial: 8250_exar: Don't return positive values as error codes
+  serial: 8250_exar: Describe all parameters in kernel doc
+  serial: 8250_exar: Kill CTI_PCI_DEVICE()
+  serial: 8250_exar: Use PCI_SUBVENDOR_ID_IBM for subvendor ID
+  serial: 8250_exar: Trivia typo fixes
+  serial: 8250_exar: Extract cti_board_init_osc_freq() helper
+  serial: 8250_exar: Kill unneeded ->board_init()
+  serial: 8250_exar: Decrease indentation level
+  serial: 8250_exar: Return directly from switch-cases
+  serial: 8250_exar: Switch to use dev_err_probe()
+  serial: 8250_exar: Use BIT() in exar_ee_read()
+  serial: 8250_exar: Make type of bit the same in exar_ee_*_bit()
+  serial: 8250_exar: Keep the includes sorted
+
+ drivers/tty/serial/8250/8250_exar.c | 454 ++++++++++++----------------
+ 1 file changed, 200 insertions(+), 254 deletions(-)
+
 -- 
-2.17.1
+2.43.0.rc1.1336.g36b5255a03ac
 
