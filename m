@@ -1,415 +1,143 @@
-Received: from thorn.bewilderbeest.net (thorn.bewilderbeest.net [71.19.156.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6056B290F;
-	Thu,  2 May 2024 00:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=71.19.156.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40394802
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 00:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714609761; cv=none; b=p3PM96JwSVCUJzVHUVbXgEeBfqH1DTr1JtHLpbv5vvNi7scNuEPOTDj9m/Yr4zZ7fbjsRRW2ZpChRqX2TtJ0CZAALt/ODf9eYu9Iwh9I6cbOawX18qnlG6ONHLafKrssvwFHjtEiBpHybUEw/tomyTAOiE9qsyIya4xwKSzGk5M=
+	t=1714609854; cv=none; b=BI4y8KxFQkhXBRB/wkLoZitQsgiRcEir3dgWaWUJrcfBUCvWaR3ipj+tNmjY2pRFGb1+m/ZgfJNYIdvkXQnS5BsDoDPnduAzO/2PbUH7dbcMpnbWlbMIbOimVWiJ9ySDilpQWFZ5qiTjV4Xg4fO08O6c2etsO5r7OMoNJO1UdhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714609761; c=relaxed/simple;
-	bh=5qRy7a3IslFdALZquRF0rHqjpVRo8zplgpUqUxvmvn0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H+zI74s82ZUuO67QrFdA6X/uMWqMPAsvl/A7N3d36LE2y71z0IWiSVlMSBTmgKbpVY0pc/mZhhLw/SCutRuUUS2s5bUfSNPH1W3r1O7liAztRb5zfEgrHFmT3rdVK7ZmeqEpxHLtW1kQ8fU2ZcweC8G9KvZ3PTyorVZw5PVI19U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bewilderbeest.net; spf=pass smtp.mailfrom=bewilderbeest.net; dkim=pass (1024-bit key) header.d=bewilderbeest.net header.i=@bewilderbeest.net header.b=nw9XPRtH; arc=none smtp.client-ip=71.19.156.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bewilderbeest.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bewilderbeest.net
+	s=arc-20240116; t=1714609854; c=relaxed/simple;
+	bh=XNc3xiDlFWmdQwJ9TuKuemRnBD5csEPygZcV/iRKUKc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YOQCuVMt+DX/6PKe5oA2/bq3Od6DygjvJN40TMsBVjW0Y02CHE9Rr3pnvqXgaSxfcYHALabqOpvCjeazN6kyp7r6hX929bHLOZFIr/9aQ7p6M2RMCYrqtT/GEp0PKOuV6G0WintmLbBZy1Sc5cg532M75MALBEVMR0+qax8JM+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bxbAJYlk; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bewilderbeest.net header.i=@bewilderbeest.net header.b="nw9XPRtH"
-Received: from hatter.bewilderbeest.net (unknown [IPv6:2602:61:712b:6300::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: zev)
-	by thorn.bewilderbeest.net (Postfix) with ESMTPSA id 7EF9B43FA;
-	Wed,  1 May 2024 17:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bewilderbeest.net;
-	s=thorn; t=1714609759;
-	bh=45Dv04icT8AaPzWT2HEdAqaXcoII+i9PD1RJizAq29k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nw9XPRtHMXKSrU/GyiR98Qav579JQCp0WPhZVl11rHKHYwi5e3gYw1Myb8OLCTf5o
-	 vObdO3MmORAyleIdEAw5qVK87X51mYar5CVIacIALnhXYXd429aEzkhd0D21YedCym
-	 y4ngFeRz94g/qkidaM2kFxk0+Ddhl3vqosZmSrpU=
-From: Zev Weiss <zev@bewilderbeest.net>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>
-Cc: Zev Weiss <zev@bewilderbeest.net>,
-	Guenter Roeck <linux@roeck-us.net>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org
-Subject: [PATCH v3 3/3] ARM: dts: aspeed: Add ASRock E3C256D4I BMC
-Date: Wed,  1 May 2024 17:28:33 -0700
-Message-ID: <20240502002836.17862-8-zev@bewilderbeest.net>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240502002836.17862-5-zev@bewilderbeest.net>
-References: <20240502002836.17862-5-zev@bewilderbeest.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxbAJYlk"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2dd7e56009cso95302761fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 17:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714609851; x=1715214651; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kp562e4y9SulzbDyJ0IEKx2QOZQ2mnPE6n/S2UPXGwA=;
+        b=bxbAJYlk7GhKArC9lKsM5vW2dTx66PZs9zNtN7A1hsnDDe2y3NhMXRTy4S0t7WCBSm
+         dBlGmSImJdLxA40kvjdaHYGJSGHCJnzSUarlghIW1EbjlagiQu0G6DH2teinVESYX591
+         XLuuOjPldNmghEJTlJlCLHo5h88bjFhYTYsB/1gxmLhShWkX4VeT5HeH6lIBk7rXRvwj
+         Qnw+Rkt2GTPImfDRs9z1SmiKM5H/S+0H5C/TFuA2WjGeSOMfXszVkg+0B4knpDScTYmx
+         homzQWG2WJs51O6lCDhBh/QZejx8LT67VGU1lSPfZqDSkOY3jDIL+6R58clBpy4CdjU1
+         vIjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714609851; x=1715214651;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kp562e4y9SulzbDyJ0IEKx2QOZQ2mnPE6n/S2UPXGwA=;
+        b=ASYrkA7OuKWmAOD9FeCgiIpipGUm4tefPrfTzC4rtgcT3Du5yujq785fo/pTnf6KVY
+         9H6xcIkZiXMbd+HFl9FWONw/APpzOkyaZGzd+GgydUs13rrsW99MPMlVqam/lXMbMDJZ
+         bdVe34UAURx41zsRzppqkocRd3DS9ob3HM0u+zKWnQKfLlU6nhxhr7kxyLBdj526Vx4j
+         LkCP5ouTflK0CtqCvC8Y2+Ec9PbgyCluTN0LSUOB/tnTsq7cw+vzQj+TvxW8l19livix
+         apmYR050xLLQQOFl2+UM63/qtujUCxn2kAMpttMijis+qzeWicNTdzwkhhweXKzrD61+
+         nOQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUc0gnz/ELFpW5Vk9p9x6anzQoOZGmAGWd4dM7504vw86mGO91ZfCOqnI2pXkKIRqQ2JuulqB9CK11cF+C7lnZZNnl0fn7vnOJhlYaH
+X-Gm-Message-State: AOJu0YxpbQFcSjYuFTP0BCPDxAeZt4oU5cZx7oDgQKg5VWWdkPORdFQ7
+	Vo85r2VzrdQNlIaRMndF5sG0jOBe/qWDN+1h0nzpmISy36sAPAFJmPVmtDlq1JGAal5pT6hz6Sg
+	rFgs7yJIfK9m0fgE+X9axMeTPTuQ=
+X-Google-Smtp-Source: AGHT+IGGzcny3DlV2Jm68J5B2kaFqlbDfTOvJloIoTmsdrcqI3Z7BEoNjeV/hDuJrOs9REavq38NZ/ZnvoNuUHWyg5Y=
+X-Received: by 2002:a05:651c:2049:b0:2df:49b:27f1 with SMTP id
+ t9-20020a05651c204900b002df049b27f1mr269940ljo.4.1714609850999; Wed, 01 May
+ 2024 17:30:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240501042700.83974-1-ioworker0@gmail.com> <20240501160803.60988-1-sj@kernel.org>
+In-Reply-To: <20240501160803.60988-1-sj@kernel.org>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Thu, 2 May 2024 08:30:39 +0800
+Message-ID: <CAK1f24k1qcTUnaZ-ZoT7GWkpWk-vDUjVb+yL9QWZAvfSLxEsCQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Reclaim lazyfree THP without splitting
+To: SeongJae Park <sj@kernel.org>
+Cc: akpm@linux-foundation.org, willy@infradead.org, maskray@google.com, 
+	ziy@nvidia.com, ryan.roberts@arm.com, david@redhat.com, 21cnbao@gmail.com, 
+	mhocko@suse.com, fengwei.yin@intel.com, zokeefe@google.com, 
+	shy828301@gmail.com, xiehuan09@gmail.com, libang.li@antgroup.com, 
+	wangkefeng.wang@huawei.com, songmuchun@bytedance.com, peterx@redhat.com, 
+	minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Like the E3C246D4I, this is a reasonably affordable off-the-shelf
-mini-ITX AST2500/Xeon motherboard with good potential as an OpenBMC
-development platform.  Booting the host requires a modicum of eSPI
-support that's not yet in the mainline kernel, but most other basic
-BMC functionality is available with this device-tree.
+On Thu, May 2, 2024 at 12:08=E2=80=AFAM SeongJae Park <sj@kernel.org> wrote=
+:
+>
+> Hi Lance,
+>
+> On Wed,  1 May 2024 12:26:57 +0800 Lance Yang <ioworker0@gmail.com> wrote=
+:
+>
+> > Hi all,
+> >
+> > This series adds support for reclaiming PMD-mapped THP marked as lazyfr=
+ee
+> > without needing to first split the large folio via split_huge_pmd_addre=
+ss().
+> >
+> > When the user no longer requires the pages, they would use madvise(MADV=
+_FREE)
+> > to mark the pages as lazy free. Subsequently, they typically would not =
+re-write
+> > to that memory again.
+> >
+> > During memory reclaim, if we detect that the large folio and its PMD ar=
+e both
+> > still marked as clean and there are no unexpected references(such as GU=
+P), so we
+> > can just discard the memory lazily, improving the efficiency of memory
+> > reclamation in this case.
+> >
+> > Performance Testing
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > On an Intel i5 CPU, reclaiming 1GiB of lazyfree THPs using
+> > mem_cgroup_force_empty() results in the following runtimes in seconds
+> > (shorter is better):
+> >
+> > --------------------------------------------
+> > |     Old       |      New       |  Change  |
+> > --------------------------------------------
+> > |   0.683426    |    0.049197    |  -92.80% |
+> > --------------------------------------------
+> >
+> > ---
+> >
+> > Changes since v3 [3]
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >  - mm/rmap: integrate PMD-mapped folio splitting into pagewalk loop
+> >     - Resolve compilation errors by handling the case where
+> >       CONFIG_PGTABLE_HAS_HUGE_LEAVES is undefined (thanks to SeongJae P=
+ark)
+>
+> I confirmed that the issue I reported before is disappeared with this ver=
+sion
+> of the patchset.  For the fix,
+>
+> Tested-by: SeongJae Park <sj@kernel.org>
 
-Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
----
- arch/arm/boot/dts/aspeed/Makefile             |   1 +
- .../aspeed/aspeed-bmc-asrock-e3c256d4i.dts    | 322 ++++++++++++++++++
- 2 files changed, 323 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-e3c256d4i.dts
+Hey SJ,
 
-diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
-index d3ac20e316d0..3398ee53f034 100644
---- a/arch/arm/boot/dts/aspeed/Makefile
-+++ b/arch/arm/boot/dts/aspeed/Makefile
-@@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-ampere-mtmitchell.dtb \
- 	aspeed-bmc-arm-stardragon4800-rep2.dtb \
- 	aspeed-bmc-asrock-e3c246d4i.dtb \
-+	aspeed-bmc-asrock-e3c256d4i.dtb \
- 	aspeed-bmc-asrock-romed8hm3.dtb \
- 	aspeed-bmc-bytedance-g220a.dtb \
- 	aspeed-bmc-delta-ahe50dc.dtb \
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-e3c256d4i.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-e3c256d4i.dts
-new file mode 100644
-index 000000000000..9d00ce9475f2
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-e3c256d4i.dts
-@@ -0,0 +1,322 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+#include <dt-bindings/i2c/i2c.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/watchdog/aspeed-wdt.h>
-+
-+/{
-+	model = "ASRock E3C256D4I BMC";
-+	compatible = "asrock,e3c256d4i-bmc", "aspeed,ast2500";
-+
-+	aliases {
-+		serial4 = &uart5;
-+
-+		i2c20 = &i2c2mux0ch0;
-+		i2c21 = &i2c2mux0ch1;
-+		i2c22 = &i2c2mux0ch2;
-+		i2c23 = &i2c2mux0ch3;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart5;
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		/* BMC heartbeat */
-+		led-0 {
-+			gpios = <&gpio ASPEED_GPIO(H, 6) GPIO_ACTIVE_LOW>;
-+			function = LED_FUNCTION_HEARTBEAT;
-+			color = <LED_COLOR_ID_GREEN>;
-+			linux,default-trigger = "timer";
-+		};
-+
-+		/* system fault */
-+		led-1 {
-+			gpios = <&gpio ASPEED_GPIO(Z, 2) GPIO_ACTIVE_LOW>;
-+			function = LED_FUNCTION_FAULT;
-+			color = <LED_COLOR_ID_RED>;
-+			panic-indicator;
-+		};
-+	};
-+
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
-+			<&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>,
-+			<&adc 8>, <&adc 9>, <&adc 10>, <&adc 11>,
-+			<&adc 12>, <&adc 13>, <&adc 14>, <&adc 15>;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "bmc";
-+		spi-max-frequency = <100000000>; /* 100 MHz */
-+#include "openbmc-flash-layout-64.dtsi"
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&uart_routing {
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rgmii1_default &pinctrl_mdio1_default>;
-+
-+	nvmem-cells = <&eth0_macaddress>;
-+	nvmem-cell-names = "mac-address";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	i2c-mux@70 {
-+		compatible = "nxp,pca9545";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c2mux0ch0: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		i2c2mux0ch1: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		i2c2mux0ch2: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		i2c2mux0ch3: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+
-+	vrm@60 {
-+		compatible = "isil,isl69269";
-+		reg = <0x60>;
-+	};
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+
-+	/* FRU eeprom */
-+	eeprom@57 {
-+		compatible = "st,24c128", "atmel,24c128";
-+		reg = <0x57>;
-+		pagesize = <16>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		eth0_macaddress: macaddress@3f80 {
-+			reg = <0x3f80 6>;
-+		};
-+	};
-+};
-+
-+&video {
-+	status = "okay";
-+};
-+
-+&vhub {
-+	status = "okay";
-+};
-+
-+&lpc_ctrl {
-+	status = "okay";
-+};
-+
-+&lpc_snoop {
-+	status = "okay";
-+	snoop-ports = <0x80>;
-+};
-+
-+&kcs3 {
-+	status = "okay";
-+	aspeed,lpc-io-reg = <0xca2>;
-+};
-+
-+&peci0 {
-+	status = "okay";
-+};
-+
-+&wdt1 {
-+	aspeed,reset-mask = <(AST2500_WDT_RESET_DEFAULT & ~AST2500_WDT_RESET_LPC)>;
-+};
-+
-+&wdt2 {
-+	aspeed,reset-mask = <(AST2500_WDT_RESET_DEFAULT & ~AST2500_WDT_RESET_LPC)>;
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default /* CPU */
-+		&pinctrl_pwm2_default      /* rear */
-+		&pinctrl_pwm4_default>;    /* front */
-+
-+	/* CPU */
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+
-+	/* rear */
-+	fan@2 {
-+		reg = <0x02>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+
-+	/* front */
-+	fan@4 {
-+		reg = <0x04>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
-+	};
-+};
-+
-+&gpio {
-+	status = "okay";
-+	gpio-line-names =
-+		/*  A */ "", "", "NMI_BTN_N", "BMC_NMI", "", "", "", "",
-+		/*  B */ "", "", "", "", "", "", "", "",
-+		/*  C */ "", "", "", "", "", "", "", "",
-+		/*  D */ "BMC_PSIN", "BMC_PSOUT", "BMC_RESETCON", "RESETCON",
-+			"", "", "", "",
-+		/*  E */ "", "", "", "", "", "", "", "",
-+		/*  F */ "LOCATORLED_STATUS_N", "LOCATORBTN", "", "",
-+			"", "", "BMC_PCH_SCI_LPC", "BMC_NCSI_MUX_CTL",
-+		/*  G */ "HWM_BAT_EN", "CHASSIS_ID0", "CHASSIS_ID1", "CHASSIS_ID2",
-+			"", "", "", "",
-+		/*  H */ "FM_ME_RCVR_N", "O_PWROK", "", "D4_DIMM_EVENT_3V_N",
-+			"MFG_MODE_N", "BMC_RTCRST", "BMC_HB_LED_N", "BMC_CASEOPEN",
-+		/*  I */ "", "", "", "", "", "", "", "",
-+		/*  J */ "BMC_READY", "BMC_PCH_BIOS_CS_N", "BMC_SMI", "", "", "", "", "",
-+		/*  K */ "", "", "", "", "", "", "", "",
-+		/*  L */ "", "", "", "", "", "", "", "",
-+		/*  M */ "", "", "", "", "", "", "", "",
-+		/*  N */ "", "", "", "", "", "", "", "",
-+		/*  O */ "", "", "", "", "", "", "", "",
-+		/*  P */ "", "", "", "", "", "", "", "",
-+		/*  Q */ "", "", "", "", "", "", "", "",
-+		/*  R */ "", "", "", "", "", "", "", "",
-+		/*  S */ "PCHHOT_BMC_N", "", "RSMRST", "", "", "", "", "",
-+		/*  T */ "", "", "", "", "", "", "", "",
-+		/*  U */ "", "", "", "", "", "", "", "",
-+		/*  V */ "", "", "", "", "", "", "", "",
-+		/*  W */ "", "", "", "", "", "", "", "",
-+		/*  X */ "", "", "", "", "", "", "", "",
-+		/*  Y */ "SLP_S3", "SLP_S5", "", "", "", "", "", "",
-+		/*  Z */ "CPU_CATERR_BMC_N", "", "SYSTEM_FAULT_LED_N", "BMC_THROTTLE_N",
-+			"", "", "", "",
-+		/* AA */ "CPU1_THERMTRIP_LATCH_N", "", "CPU1_PROCHOT_N", "",
-+			"", "", "IRQ_SMI_ACTIVE_N", "FM_BIOS_POST_CMPLT_N",
-+		/* AB */ "", "", "ME_OVERRIDE", "BMC_DMI_MODIFY", "", "", "", "",
-+		/* AC */ "", "", "", "", "", "", "", "";
-+};
-+
-+&adc {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default /* 3VSB */
-+		&pinctrl_adc1_default	   /* 5VSB */
-+		&pinctrl_adc2_default	   /* CPU1 */
-+		&pinctrl_adc3_default	   /* VCCSA */
-+		&pinctrl_adc4_default	   /* VCCM */
-+		&pinctrl_adc5_default	   /* V10M */
-+		&pinctrl_adc6_default	   /* VCCIO */
-+		&pinctrl_adc7_default	   /* VCCGT */
-+		&pinctrl_adc8_default	   /* VPPM */
-+		&pinctrl_adc9_default	   /* BAT */
-+		&pinctrl_adc10_default	   /* 3V */
-+		&pinctrl_adc11_default	   /* 5V */
-+		&pinctrl_adc12_default	   /* 12V */
-+		&pinctrl_adc13_default	   /* GND */
-+		&pinctrl_adc14_default	   /* GND */
-+		&pinctrl_adc15_default>;   /* GND */
-+};
--- 
-2.44.0
+Thanks for taking time to confirm! I appreciate your feedback!
 
+Thanks,
+Lance
+
+>
+>
+> Thanks,
+> SJ
+>
+> [...]
