@@ -1,189 +1,230 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF41046544
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 08:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621F047772;
+	Thu,  2 May 2024 08:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714639784; cv=none; b=Ms2fxbeFii09+kkgWaimYNjI7xNB9wmrVarRz8KtVeMwptnFb9G48+lf2FjyAvqC4sT4/G8sOw4JlF7stenqtK95p4vKAPy8XpTMGwtIC/D84+M36TdU1iJ8CNOrnHWadSprCS7H8ZWMdlpyIMOppc1eDkYpTFwo1KuaOMM+1fc=
+	t=1714639822; cv=none; b=FoTeih46n+TURkw99wbdN8fAlCF/ngrrijSt1+0uIPqyTmZyFZclyTCQyOdhiHzmN+fSqHSQIbFagUuXHmrT4Iu7QT8HaeuGKoKDh0s/Qap7RRXSdi2nv16AiOYxzhold1ufPEKabZSOUWxc580OIIdR/UdjdjyzV+pKvpe9LZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714639784; c=relaxed/simple;
-	bh=RBNo7t5IGu2yThFFulb8qCfz4Zt2E7C/FOw15MNEb5o=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mXGZw7ne3ZkybvZbwpNhvXiAxapVWKmPg9oXjila151fTYrQo9ND3m9nsXm0jdLF4cq6deFqIagucHmGVnRfhyr/2bLq08GgI67/wFivbCjSf5viGk0Eh+/ROjXdNLVn67nCGeUj1n0SbkVkSyqAgguXANbbuKWMo1plueeU8WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zq0M/7of; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714639822; c=relaxed/simple;
+	bh=h0/SRsAe2O/iKK/puk0MgmyOeDjetRM9hjyClQBU5Os=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AquZgpHBhEZRlbPMfHGVPJxuq0B5CyNAgwaqg9bTuRoY8h2IOeL0fS04XfahEA9OePZukISQqnBugqH9d2+JQ82/9ZwOaljZZUggQWK3Qt8vz8RX2wohtI5liAgdiLl18nnyLX5NaJhbFiDJcgasJcM6UeP+mSy8YUD34COoq0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aofk9iud; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zq0M/7of"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714639781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+3z/p7PSnITLar6zjViIxQUZhsvkqQniW+UpUaJYwp0=;
-	b=Zq0M/7of5/OP0hNH2g+d1yGXXvqySUvhJI0Jz+A9lbvjHwKXZEdOQUUGWtc5o1Jwuiv+lR
-	ejxXSXDLjvo2AAjxcdJNBsqVMZVe77QyPWHYIsgJLYEBRHJeSSCtRrw8rjvdV2nqGUwS8j
-	wzhdythemOjYYFbjCVVDTINQBAIP7Ig=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-167--go6KHMWP8WnbZ4LLKnQ6w-1; Thu, 02 May 2024 04:49:40 -0400
-X-MC-Unique: -go6KHMWP8WnbZ4LLKnQ6w-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-34da8f1bf7cso1580904f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 01:49:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aofk9iud"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e9ffd3f96eso62731915ad.3;
+        Thu, 02 May 2024 01:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714639821; x=1715244621; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7HU2SkQDR4mMrV58+lW5U65TL0KC+HX+uRYg6Mar4vo=;
+        b=Aofk9iudXc7tkJNZ/CKQ+FNcAHOJaHny4Q+XPOVaD9dJu0hlwMEsIHEsw/d8mFajCt
+         m9Eb5SYGJeh1FwMsfIXDF9ucB9orMQx2KN3qhxWXDs2+vOOFh2pi0CdSfXFgMK4JcIUQ
+         O2EogDGThdjRaT0rOfDw5A2vLyoaA2B4jjO6l5dDlBkziG5WU6GhwoTAaIXivInj9Fk3
+         fnqi2FZVgSCcyJA+esWOACnJEejhNH40hxTktZ9naLwraDinjCwF/XXhSSfJi/d5GbZT
+         M05v/dwZgJoF5snagff001jyESoFFzIMWOonWgGi4j8Of7ljpmYEAwprlglet2O57zK8
+         MtwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714639778; x=1715244578;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+3z/p7PSnITLar6zjViIxQUZhsvkqQniW+UpUaJYwp0=;
-        b=HFsvDZDMDwju76fju0Zysbp6x7z8Fr1rm6X5rMesatnaxdpnceHUjPuNK/zQUbIceb
-         7bllys4b0NdbtAQZkQl9BYSLANENRiAmBrVZe77td8sEhQvaVKWhRc3ajPizU4Dz3cH5
-         ZQxMAdoCoQV/MZRbkY1pzUoaVzncJh8JlGHABfFfBt/Vh5ojQKmR6LE2wqgUdKhtHILG
-         S/X5BtaZdpP/jiG9G/G93uEyoj2coPjjHExvy9/fdakcd/KI4ihD2yZQbNJKPWv2y9n4
-         iCRsmTyWKVGCDfU4P7OmUk9rGOQrBa6fg5I7QhMQsJxx3ln8X43jQ884jzfe9wpKx5U3
-         UHYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJtVcb9FqxYfr/oNAtr5ARCPhJX9l6DGVeVEVI95MluQdU30XC0OoA6RpoYoWqE1bR+eNTiqfQKwd3ErNKoiyfuOJVnAiv7cvBsSlj
-X-Gm-Message-State: AOJu0Yxgo+TRfPxAIrBFpypewgZN35aRWXq1FWrKoM7cTod4bFnmtOBf
-	cQgWa0QdMYecBH4VFIkYJHIgwnNXf+bo3+Sf9NQ6XE7DXT1R2QR6gRk9vor7/Jw070J5VyHfCnI
-	Zor4cL1e4Aew6GoiT53qZlonsjUPptWb3vgB7/5LR45UDEcI3x4yIPvqXEz4fVNvjCp1rTA==
-X-Received: by 2002:a5d:4d42:0:b0:34d:b43d:6e24 with SMTP id a2-20020a5d4d42000000b0034db43d6e24mr4206252wru.32.1714639778645;
-        Thu, 02 May 2024 01:49:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVOHj8C2dd7Bt2GMvMzFkmfLMNHv/OiubjKl8vg1gno+Z4uyreVz7F2PF/KvPDgRwuVCzitg==
-X-Received: by 2002:a5d:4d42:0:b0:34d:b43d:6e24 with SMTP id a2-20020a5d4d42000000b0034db43d6e24mr4206236wru.32.1714639778208;
-        Thu, 02 May 2024 01:49:38 -0700 (PDT)
-Received: from redhat.com ([84.33.125.84])
-        by smtp.gmail.com with ESMTPSA id dd3-20020a0560001e8300b0034c9f060a14sm716299wrb.11.2024.05.02.01.49.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 01:49:37 -0700 (PDT)
-From: Oleg Nesterov <onestero@redhat.com>
-X-Google-Original-From: Oleg Nesterov <oleg@redhat.com>
-Date: Thu, 2 May 2024 04:49:36 -0400
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Phil Auld <pauld@redhat.com>
-Subject: Re: kernel/sched/isolation.c:143 housekeeping_setup() warn: always
- true condition '(first_cpu >= 0) => (0-u32max >= 0)'
-Message-ID: <ZjNToL7ARe_vfJch@redhat.com>
-References: <202404300915.WNvfwBz3-lkp@intel.com>
+        d=1e100.net; s=20230601; t=1714639821; x=1715244621;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7HU2SkQDR4mMrV58+lW5U65TL0KC+HX+uRYg6Mar4vo=;
+        b=P75QyQRo966DO8Dm4UgEsqCyQ1/j6AbND3PfmdVqEKQMmvR156MtznkI9AMmeoHcep
+         2NQUcJNKplG0K/BZ67vilYVEW86F/WQHcs7fEktIb+vsSHfvzV1ftHcQ5iUscCzZTqMc
+         mD5V6OrDuV/nPvdLAqNIhO+MrRT6XNaJqqOcRFSTFNajX8sa6cPdEUR4fhJy6g6nqwTG
+         qIqnsX79aCyAG9lp/0FLQ5yLD7iSQLM6TMgeJrTKgvDeJhx9y8CwALU+bsQ8n2sIIim7
+         O4msXUpXO6u3wLymQL9xVXNDSiFu9hteiI+Taq8gnclysWGdZOvG4vU49Lv5gdRcapoM
+         npqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXZM3I66d06cucypUuhi/g92hy9KIhklMWdPfWt0Tf8FPu0iAmCaALlbA3yNwqADjMrcATTbFENblAno4HWRamgH56V/gC/7GGZ45kPpCV/DvbvUgPPJxhbJrl5zj9qf9STWdBx+76HVyEVUtZ711q4Z9X3uXgUZNBHNbqORHhvZWTDnE2aXw==
+X-Gm-Message-State: AOJu0YyFu0uBFFqFWUPwzOTZ3uLZkNB+gjj1BY4e+6d8NqTqBuKzaxXT
+	B23ZWdsbn28+dIel2vTZ+zD/gkdShBUdVJurMaAMZ8YhRDWsSAVk
+X-Google-Smtp-Source: AGHT+IEum/YkVi3jfWr1OA1pFH3dJL22MujEcP594sYqp7lP92G8EsNoWMfK9ZCNtKjcgZkH0nMekg==
+X-Received: by 2002:a17:902:c402:b0:1ec:c7af:881b with SMTP id k2-20020a170902c40200b001ecc7af881bmr3321063plk.54.1714639820550;
+        Thu, 02 May 2024 01:50:20 -0700 (PDT)
+Received: from KASONG-MB2.tencent.com ([1.203.116.31])
+        by smtp.gmail.com with ESMTPSA id j12-20020a170903024c00b001e43576a7a1sm737712plh.222.2024.05.02.01.50.15
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 02 May 2024 01:50:19 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Chris Li <chrisl@kernel.org>,
+	Barry Song <v-songbaohua@oppo.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Neil Brown <neilb@suse.de>,
+	Minchan Kim <minchan@kernel.org>,
+	Hugh Dickins <hughd@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH v4 08/12] nfs: drop usage of folio_file_pos
+Date: Thu,  2 May 2024 16:49:35 +0800
+Message-ID: <20240502084939.30250-1-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240502084609.28376-1-ryncsn@gmail.com>
+References: <20240502084609.28376-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202404300915.WNvfwBz3-lkp@intel.com>
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Kairui Song <kasong@tencent.com>
 
-I am on PTO till May 9 without my working laptop, can't even read the source code.
-I'll return to this when I'm back. CONFIG_SMP=n I guess.
+folio_file_pos is only needed for mixed usage of page cache and
+swap cache, for pure page cache usage, the caller can just use
+folio_pos instead.
 
-On 04/30, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   98369dccd2f8e16bf4c6621053af7aa4821dcf8e
-> commit: 257bf89d84121280904800acd25cc2c444c717ae sched/isolation: Fix boot crash when maxcpus < first housekeeping CPU
-> date:   2 days ago
-> config: xtensa-randconfig-r081-20240429 (https://download.01.org/0day-ci/archive/20240430/202404300915.WNvfwBz3-lkp@intel.com/config)
-> compiler: xtensa-linux-gcc (GCC) 13.2.0
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202404300915.WNvfwBz3-lkp@intel.com/
-> 
-> New smatch warnings:
-> kernel/sched/isolation.c:143 housekeeping_setup() warn: always true condition '(first_cpu >= 0) => (0-u32max >= 0)'
-> 
-> Old smatch warnings:
-> arch/xtensa/include/asm/thread_info.h:97 current_thread_info() warn: inconsistent indenting
-> 
-> vim +143 kernel/sched/isolation.c
-> 
->    117	
->    118	static int __init housekeeping_setup(char *str, unsigned long flags)
->    119	{
->    120		cpumask_var_t non_housekeeping_mask, housekeeping_staging;
->    121		unsigned int first_cpu;
->    122		int err = 0;
->    123	
->    124		if ((flags & HK_FLAG_TICK) && !(housekeeping.flags & HK_FLAG_TICK)) {
->    125			if (!IS_ENABLED(CONFIG_NO_HZ_FULL)) {
->    126				pr_warn("Housekeeping: nohz unsupported."
->    127					" Build with CONFIG_NO_HZ_FULL\n");
->    128				return 0;
->    129			}
->    130		}
->    131	
->    132		alloc_bootmem_cpumask_var(&non_housekeeping_mask);
->    133		if (cpulist_parse(str, non_housekeeping_mask) < 0) {
->    134			pr_warn("Housekeeping: nohz_full= or isolcpus= incorrect CPU range\n");
->    135			goto free_non_housekeeping_mask;
->    136		}
->    137	
->    138		alloc_bootmem_cpumask_var(&housekeeping_staging);
->    139		cpumask_andnot(housekeeping_staging,
->    140			       cpu_possible_mask, non_housekeeping_mask);
->    141	
->    142		first_cpu = cpumask_first_and(cpu_present_mask, housekeeping_staging);
->  > 143		if (first_cpu >= nr_cpu_ids || first_cpu >= setup_max_cpus) {
->    144			__cpumask_set_cpu(smp_processor_id(), housekeeping_staging);
->    145			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
->    146			if (!housekeeping.flags) {
->    147				pr_warn("Housekeeping: must include one present CPU, "
->    148					"using boot CPU:%d\n", smp_processor_id());
->    149			}
->    150		}
->    151	
->    152		if (cpumask_empty(non_housekeeping_mask))
->    153			goto free_housekeeping_staging;
->    154	
->    155		if (!housekeeping.flags) {
->    156			/* First setup call ("nohz_full=" or "isolcpus=") */
->    157			enum hk_type type;
->    158	
->    159			for_each_set_bit(type, &flags, HK_TYPE_MAX)
->    160				housekeeping_setup_type(type, housekeeping_staging);
->    161		} else {
->    162			/* Second setup call ("nohz_full=" after "isolcpus=" or the reverse) */
->    163			enum hk_type type;
->    164			unsigned long iter_flags = flags & housekeeping.flags;
->    165	
->    166			for_each_set_bit(type, &iter_flags, HK_TYPE_MAX) {
->    167				if (!cpumask_equal(housekeeping_staging,
->    168						   housekeeping.cpumasks[type])) {
->    169					pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
->    170					goto free_housekeeping_staging;
->    171				}
->    172			}
->    173	
->    174			iter_flags = flags & ~housekeeping.flags;
->    175	
->    176			for_each_set_bit(type, &iter_flags, HK_TYPE_MAX)
->    177				housekeeping_setup_type(type, housekeeping_staging);
->    178		}
->    179	
->    180		if ((flags & HK_FLAG_TICK) && !(housekeeping.flags & HK_FLAG_TICK))
->    181			tick_nohz_full_setup(non_housekeeping_mask);
->    182	
->    183		housekeeping.flags |= flags;
->    184		err = 1;
->    185	
->    186	free_housekeeping_staging:
->    187		free_bootmem_cpumask_var(housekeeping_staging);
->    188	free_non_housekeeping_mask:
->    189		free_bootmem_cpumask_var(non_housekeeping_mask);
->    190	
->    191		return err;
->    192	}
->    193	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+After commit e1209d3a7a67 ("mm: introduce ->swap_rw and use it for
+reads from SWP_FS_OPS swap-space"), swap cache should never be exposed
+to nfs.
+
+So remove the usage of folio_file_pos in following NFS functions / helpers:
+
+- nfs_vm_page_mkwrite
+
+  It's only used by nfs_file_vm_ops.page_mkwrite
+
+- trace event helper: nfs_folio_event
+- trace event helper: nfs_folio_event_done
+
+  These two are used through DEFINE_NFS_FOLIO_EVENT and
+  DEFINE_NFS_FOLIO_EVENT_DONE, which defined following events:
+
+  - trace_nfs_aop_readpage{_done}: only called by nfs_read_folio
+  - trace_nfs_writeback_folio: only called by nfs_wb_folio
+  - trace_nfs_invalidate_folio: only called by nfs_invalidate_folio
+  - trace_nfs_launder_folio_done: only called by nfs_launder_folio
+
+  None of them could possibly be used on swap cache folio,
+  nfs_read_folio only called by:
+  .write_begin -> nfs_read_folio
+  .read_folio
+
+  nfs_wb_folio only called by nfs mapping:
+  .release_folio -> nfs_wb_folio
+  .launder_folio -> nfs_wb_folio
+  .write_begin -> nfs_read_folio -> nfs_wb_folio
+  .read_folio -> nfs_wb_folio
+  .write_end -> nfs_update_folio -> nfs_writepage_setup -> nfs_setup_write_request -> nfs_try_to_update_request -> nfs_wb_folio
+  .page_mkwrite -> nfs_update_folio -> nfs_writepage_setup -> nfs_setup_write_request -> nfs_try_to_update_request -> nfs_wb_folio
+  .write_begin -> nfs_flush_incompatible -> nfs_wb_folio
+  .page_mkwrite -> nfs_vm_page_mkwrite -> nfs_flush_incompatible -> nfs_wb_folio
+
+  nfs_invalidate_folio is only called by .invalidate_folio.
+  nfs_launder_folio is only called by .launder_folio
+
+- nfs_grow_file
+- nfs_update_folio
+
+  nfs_grow_file is only called by nfs_update_folio, and all
+  possible callers of them are:
+
+  .write_end -> nfs_update_folio
+  .page_mkwrite -> nfs_update_folio
+
+- nfs_wb_folio_cancel
+
+  .invalidate_folio -> nfs_wb_folio_cancel
+
+Also, seeing from the swap side, swap_rw is now the only interface calling
+into fs, the offset info is always in iocb.ki_pos now.
+
+So we can remove all these folio_file_pos call safely.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+---
+ fs/nfs/file.c     | 2 +-
+ fs/nfs/nfstrace.h | 4 ++--
+ fs/nfs/write.c    | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 407c6e15afe2..02741c32e114 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -588,7 +588,7 @@ static vm_fault_t nfs_vm_page_mkwrite(struct vm_fault *vmf)
+ 
+ 	dfprintk(PAGECACHE, "NFS: vm_page_mkwrite(%pD2(%lu), offset %lld)\n",
+ 		 filp, filp->f_mapping->host->i_ino,
+-		 (long long)folio_file_pos(folio));
++		 (long long)folio_pos(folio));
+ 
+ 	sb_start_pagefault(inode->i_sb);
+ 
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index afedb449b54f..d249741452e1 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -960,7 +960,7 @@ DECLARE_EVENT_CLASS(nfs_folio_event,
+ 			__entry->fileid = nfsi->fileid;
+ 			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
+ 			__entry->version = inode_peek_iversion_raw(inode);
+-			__entry->offset = folio_file_pos(folio);
++			__entry->offset = folio_pos(folio);
+ 			__entry->count = nfs_folio_length(folio);
+ 		),
+ 
+@@ -1008,7 +1008,7 @@ DECLARE_EVENT_CLASS(nfs_folio_event_done,
+ 			__entry->fileid = nfsi->fileid;
+ 			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
+ 			__entry->version = inode_peek_iversion_raw(inode);
+-			__entry->offset = folio_file_pos(folio);
++			__entry->offset = folio_pos(folio);
+ 			__entry->count = nfs_folio_length(folio);
+ 			__entry->ret = ret;
+ 		),
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 5de85d725fb9..fc782d889449 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -281,7 +281,7 @@ static void nfs_grow_file(struct folio *folio, unsigned int offset,
+ 	end_index = ((i_size - 1) >> folio_shift(folio)) << folio_order(folio);
+ 	if (i_size > 0 && folio_index(folio) < end_index)
+ 		goto out;
+-	end = folio_file_pos(folio) + (loff_t)offset + (loff_t)count;
++	end = folio_pos(folio) + (loff_t)offset + (loff_t)count;
+ 	if (i_size >= end)
+ 		goto out;
+ 	trace_nfs_size_grow(inode, end);
+@@ -1362,7 +1362,7 @@ int nfs_update_folio(struct file *file, struct folio *folio,
+ 	nfs_inc_stats(inode, NFSIOS_VFSUPDATEPAGE);
+ 
+ 	dprintk("NFS:       nfs_update_folio(%pD2 %d@%lld)\n", file, count,
+-		(long long)(folio_file_pos(folio) + offset));
++		(long long)(folio_pos(folio) + offset));
+ 
+ 	if (!count)
+ 		goto out;
+@@ -2073,7 +2073,7 @@ int nfs_wb_folio_cancel(struct inode *inode, struct folio *folio)
+  */
+ int nfs_wb_folio(struct inode *inode, struct folio *folio)
+ {
+-	loff_t range_start = folio_file_pos(folio);
++	loff_t range_start = folio_pos(folio);
+ 	loff_t range_end = range_start + (loff_t)folio_size(folio) - 1;
+ 	struct writeback_control wbc = {
+ 		.sync_mode = WB_SYNC_ALL,
+-- 
+2.44.0
 
