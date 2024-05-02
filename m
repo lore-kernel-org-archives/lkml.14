@@ -1,95 +1,119 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333631B947;
-	Thu,  2 May 2024 22:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AF01B978
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 22:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714690218; cv=none; b=npo9/xRnygNVteyK/tRPo6oKm60uGfhZuffmF6Jk0zy9Ic6XNrqEYLyKjAGzfo5WbUIN2y6g5TiH73Zma9CXIJpb+h/Sezr9e8bI1/bkZv8xkvPvjrkYiez7/qjjyA2SaHFpU3iPsA8/5fNmStEPq+Xs7XQ8YG656/xUAATecC0=
+	t=1714690344; cv=none; b=M7bSOGiw7vDN2xg4j3l3MjhDOJgK1DInYLGtyI1dh8qxvbyCTBqX/zvGHksT8DnCm/AXu1qnqluL27H3TwByuPS1BoJSS8S78NEuwNA/qVRduyXsoZZdqaDjC6o0yqN6T234d7fBtk6IiyrNRePpH94rXol0oYdfSc46dMukffA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714690218; c=relaxed/simple;
-	bh=pSM2vhex3VBgefl7WQTUvMktZ2mdr9pHWUp1yBiwejY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=t+Pjx1+EcFx+8h/0c+S4nFfdsMb/1Mfbs7Mh8EBnVFm/JeYPvJHBSkRPAyffOaur/DjxcBsMsYqiOV52UTL5WWQvyVxpbtjSr+TUiBFKw8NAG1WxcRD3nAbzSINUVjFIWeri/sSwIspjxvjRHZuwz814VrJ02cWhbjPWLe6njG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=DMka/n/c; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1714690344; c=relaxed/simple;
+	bh=N2PaycxEmY7XWj03FUl9SZb9HROv6N5dMS34YzMs3ME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TCa8OHjvecdUkLwhem9GLsmUlazBkIYSO7hf7TsE9GoBjNUBhHgHkHfXZY8L60jCpqNHUb8WpzmS73oaMi7m01PI+d5TRKSom0D4xWbkG9r6yklIe4ihUkfSWoLrDbL1Yg7VQf6wQ88aYZZDQT1scBekYs0ekiAsm8j+gTCMAbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QO8WDE7X; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DMka/n/c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1714690213;
-	bh=uI5hGZzVwSZENNno+sCdAGJoMSDIrNofVkrglPrzHVE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=DMka/n/cv+gZXOT+WT6ZMYgCjoESv/fXNWk82LPZ5V/eOtfbHZPQ4AdL2JCVZCssP
-	 4q+XXA25I7lySPDml83cXmfihghcBE0zPZMTw1G0wH6qbZEzEH9DEz2OuqyUlHTJJO
-	 bBWBxf0cQMlx4cGMqSdXsSgx+1I3/apBFa/8v4d0/xitI56rwqtfzp3AowrUlhMv2Q
-	 ZXgvjm4CvOnUF/xyACSpmDQz28vkvqymzf6yoCNIiPWdLcnfc5R0cjLaXKkjJrS0+b
-	 JHo6bTenXw+TaazSOHZGvsxxT58hPtz0aRxQ3o+njGnwtxu+dzEK5JgD/3hSxb2i3V
-	 4g3TIjLFvKetQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VVpzn4jFpz4wcr;
-	Fri,  3 May 2024 08:50:13 +1000 (AEST)
-Date: Fri, 3 May 2024 08:50:11 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Alex Hung <alex.hung@amd.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the amdgpu tree
-Message-ID: <20240503085011.1a0cb036@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QO8WDE7X"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f074520c8cso8093512b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 15:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714690342; x=1715295142; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CaFsfP7DKpgQNfEAphXpGxTTBp7ycaxayFvxorBszwQ=;
+        b=QO8WDE7XgujGXM9YBez1z+Fki6cqLMk1iBvSPpVxul8fnUPTysO9UOYYIf7OmIxup5
+         xUP+ABJq2Zb685i4SXMsjzFPHjseWjNbVzNbbWBXKxGeQryaxRXKK2+ZYpfbeLFw36Tg
+         /4MKWU02/CFdSE7hsy87x9KwJuQ0/cDN5/yvw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714690342; x=1715295142;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CaFsfP7DKpgQNfEAphXpGxTTBp7ycaxayFvxorBszwQ=;
+        b=sNqjzQ3A/gZepLhNKFoWoUfKeuovmEsIxZQ+9hfdDXGwIOOaoKza8l4a/ngsGfO+uH
+         5fezDGZogBt+sxkyTa+QeOc1ceky4bjJ8DA9s9sx6i/1tWJr2+2X/7q4bmufqpLLF8M9
+         K8OMs8vuU57U0ZZ3ZzGfwWR1xnu0r+5D5Rr8KnCTS8iPeA4b8c3gB8dLfBdIh3JhD/6c
+         Saf3sFFa+S8Pcd4kbjvcGEJnpFpymq6Exu75Ns+yUE2Wk6X1+5zsyNbWu958NOEQoMiN
+         /FTZkXXIzOqa8UclI/DcyTiO6fA+4iT8LmztRYdTw5tPg6BlHH4xLlygVIaC4DwLEU+P
+         Givw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+30yCLXblpJE596R9lCbyABRuUvHYFoMz3vTU63/XI8dsoBMRhqj3FT7F0BNnyOq8vHOTR9lOpm7WzshQF0nz2rgpDKotu0z56++/
+X-Gm-Message-State: AOJu0YwMaptI4nkeSZ5NoAknJYv082CYEDbqvIgULICl0MOFwByzk0zW
+	33gbl6BXelWfquwdk6GqnF37ZNbQLQkopotBjNzND0s7w0TLinQgcUedqBkT7A==
+X-Google-Smtp-Source: AGHT+IF6DEKM5OKMglZmn4Z71ee5/EXabaGMMWGKP6YJ9ZMYVLGTNQcbbL5IuYd27jIZQ8XL5S2yPQ==
+X-Received: by 2002:a05:6a20:e687:b0:1a9:8836:ae37 with SMTP id mz7-20020a056a20e68700b001a98836ae37mr1313878pzb.12.1714690342568;
+        Thu, 02 May 2024 15:52:22 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id iz14-20020a170902ef8e00b001eac94472f6sm1877632plb.93.2024.05.02.15.52.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 15:52:21 -0700 (PDT)
+Date: Thu, 2 May 2024 15:52:21 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, Zack Rusin <zack.rusin@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Matt Atwood <matthew.s.atwood@intel.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Nirmoy Das <nirmoy.das@intel.com>,
+	Jonathan Cavitt <jonathan.cavitt@intel.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 5/5] fs: Convert struct file::f_count to refcount_long_t
+Message-ID: <202405021548.040579B1C@keescook>
+References: <20240502222252.work.690-kees@kernel.org>
+ <20240502223341.1835070-5-keescook@chromium.org>
+ <20240502224250.GM2118490@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Pq.zhqxELbMZUKJUJo9fX_k";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502224250.GM2118490@ZenIV>
 
---Sig_/Pq.zhqxELbMZUKJUJo9fX_k
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 02, 2024 at 11:42:50PM +0100, Al Viro wrote:
+> On Thu, May 02, 2024 at 03:33:40PM -0700, Kees Cook wrote:
+> > Underflow of f_count needs to be more carefully detected than it
+> > currently is. The results of get_file() should be checked, but the
+> > first step is detection. Redefine f_count from atomic_long_t to
+> > refcount_long_t.
+> 
+> 	It is used on fairly hot paths.  What's more, it's not
+> at all obvious what the hell would right semantics be.
 
-Hi all,
+I think we've put performance concerns between refcount_t and atomic_t
+to rest long ago. If there is a real workload where it's a problem,
+let's find it! :)
 
-In commit
+As for semantics, what do you mean? Detecting dec-below-zero means we
+catch underflow, and detected inc-from-zero means we catch resurrection
+attempts. In both cases we avoid double-free, but we have already lost
+to a potential dangling reference to a freed struct file. But just
+letting f_count go bad seems dangerous.
 
-  8891fd6cb2cf ("drm/amd/display: Assign disp_cfg_index_max when dml21")
-
-Fixes tag
-
-  Fixes: 03e611b7b65b ("drm/amd/display: Limit array index according to arc=
-hitecture")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: 55ec7679e6a5 ("drm/amd/display: Limit array index according to archi=
-tecture")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Pq.zhqxELbMZUKJUJo9fX_k
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmY0GKMACgkQAVBC80lX
-0GxV3gf+LkGWYMBMHIhZA5r99WsPgMSJ8561orAd6F6gGTxZPFms+jwjrPWk959b
-UTghOfet1YlGx7Ke3e5saQAm2i9WB4Knruyu6CJItKYC/0SPHGpAIxWYtLdLGQ+K
-8NkdGhLrLqZrt+8twgSLkFx/JiVBwqLdytqbg5tnhWx3moIGRTavYRWyuw9gZd7F
-oDD/NDtdNKh9iJBMdNjNjyF6GIluxe0WnNvWDVQ2FTG2wzrPVU9n9TblJZNAPlDE
-etXowlpqMxIEN5IOMu3Bq2VtJIFqDb2o01UabUVRoMTYXrmZDw4agzHYlQ9zl1Uo
-roO/hsaP70cnc9s7nFLSCGdsfDoO0A==
-=rD0J
------END PGP SIGNATURE-----
-
---Sig_/Pq.zhqxELbMZUKJUJo9fX_k--
+-- 
+Kees Cook
