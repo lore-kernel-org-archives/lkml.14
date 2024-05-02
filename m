@@ -1,91 +1,134 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ma-mailsvcp-mx-lapp02.apple.com (ma-mailsvcp-mx-lapp02.apple.com [17.32.222.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696B57E9
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 00:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D04632
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 00:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.32.222.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714608745; cv=none; b=GmhmhHDSis0whtDKqE82dJ1V+Ns6TkdPxNxyPMzJPZMbOI2ZecS1gUJd97kODAAj/RRDjTghIf3dHT+bhoZq2zJts8e9E1WEFrGRnNDJdiLT9+2dsbK7OAWMnBwjtid4YQEtmzV26aVlxBfg6YOoCxlrZ+XScLGDjqJX4aMZ0gA=
+	t=1714609010; cv=none; b=eb1TL/4L2KDrRZQ1My/T1xgVsOKbF6+sfdVyiaqa/otiicaBVwFvJjCoO4gVi2jM2Ok26sPaEjBDfQyJ2Y59lKmzvgIq18Zmqy03gICRKzvg6UBkULvr0C0BZuLzs4NLR8+FQBtrbJmhQectXT4dlgOB1bX9eKGrEpAMcAlB0Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714608745; c=relaxed/simple;
-	bh=K+Gy9CML3PFAZCtOCTwpWFdOpIQZF3doQsnDOX3rzXE=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=gtx7z+Wz9qRufj9HMKKVpsJ7P+6b9LCmMRZVYonIvotP0FL/MxcHRI71GNjJVgg31N9KGZz9jkQZEqPPD0nDCocco+1X0MMUEly1goKzJRJzrdbZa9krgKFpcaJFCNCh10HffxG2HIbd2eSPhetVD0YQhtv33Fs+b6qxXJb789g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SDitN78R; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1714609010; c=relaxed/simple;
+	bh=FttjLP2RMELHyklUWIQJDa+KTsHTslmnMvr+Q/filAg=;
+	h=From:To:Cc:Subject:Date:Message-id:In-reply-to:References:
+	 MIME-version; b=mbSh+5adhyPezQARNrOKWUtq4vWfkZtpTHPmpoftPuxG8IKlBjJdPTULQSsspkncTE3Oxzb7vJ8NBK1qa3XhY/PI86Y+kirpaOppethhdB3bjq9XqYXkvJrPKRPuvDzlgxIcaRCl6J+3QBkxpHZUxyzYczgvn/g/Fz0uopMcnFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com; spf=pass smtp.mailfrom=apple.com; dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b=NhiCBDJp; arc=none smtp.client-ip=17.32.222.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apple.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SDitN78R"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 441NjsV4014441;
-	Thu, 2 May 2024 00:12:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=aEUEHsNlLAlsnV2vJAFJDY90+EpOgRLfIOlxyC3dbF4=;
- b=SDitN78RSknRDefTHBo4sECWySpql1/JJVmQSM7P3bKiFkvjeYtkrJkAl3v7yfC2f9xK
- PuVcDM7XwCMmuMWkTm381wGD4QtXiddyAmz2w2UUBq1i7cp1+Um206kEzsHtCmR5VS4s
- bqw51NwOExLNBfboZ089x2yqT2RpHikrUqetPi2tP9cCgJzv2c8dwCDYjZXLll+Gv92r
- AtrcwN0/h3NO5a0q1g4wq5omDQDVwBnP4W2wP+Lf1OcFqZVkh0locDJJs/+BhillaHXN
- Uga2zgRGmL1y4/Nv/SLKK5KYy5VxCOR88mvPeZByXOFFL9cNdLHVxjNMiT3U/IG2mWho 4g== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xrqsf24uf-42
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 02 May 2024 00:12:11 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 441MBS49033172;
-	Wed, 1 May 2024 23:25:04 GMT
-Received: from brm-x62-16.us.oracle.com (brm-x62-16.us.oracle.com [10.80.150.37])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3xrqt9vbuq-1;
-	Wed, 01 May 2024 23:25:04 +0000
-From: Jane Chu <jane.chu@oracle.com>
-To: linmiaohe@huawei.com, nao.horiguchi@gmail.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] Enhance soft hwpoison handling and injection 
-Date: Wed,  1 May 2024 17:24:55 -0600
-Message-Id: <20240501232458.3919593-1-jane.chu@oracle.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b="NhiCBDJp"
+Received: from rn-mailsvcp-mta-lapp03.rno.apple.com
+ (rn-mailsvcp-mta-lapp03.rno.apple.com [10.225.203.151])
+ by ma-mailsvcp-mx-lapp02.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0SCU00YM70RLZ000@ma-mailsvcp-mx-lapp02.apple.com> for
+ linux-kernel@vger.kernel.org; Wed, 01 May 2024 17:16:48 -0700 (PDT)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-01_16,2024-04-30_01,2023-05-22_02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com; h=from : to
+ : cc : subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=20180706;
+ bh=NkY47ufs8kucjQXAyO31Twlr+ZWbr4oDpHiSLaMsAnU=;
+ b=NhiCBDJpC/oMt1AxUm6xa80yXZvaGfnxeIIrSCMUW5aWGtAD0dWHMwmnbBazZh1NjW4Q
+ NEOhtyeoJtRFlH3UKdpAPCPtfyBkZEYfB6nnCtCeZwfHU9Qe4sVFg261uvgku4yQPVpr
+ 0bQw8Rc9bFZen52eT6uRnglxcDM+WPPWrtNIaDIxqxwsBqTQ5uc8yvNIeyulqHXsuZle
+ MdkYjzCFseEoGBrjiy1ySZghDFYFvKriquLSxRdeVtcW2FSgWGS1HbqJZz93jBF/ZnnZ
+ 0RuIuRAlV7eoDyR71dAZCW8EeX8NJV7bA/B6Jo6qDXTZFkQhIuzxYCZUCWCqv9035sOg JQ==
+Received: from rn-mailsvcp-mmp-lapp01.rno.apple.com
+ (rn-mailsvcp-mmp-lapp01.rno.apple.com [17.179.253.14])
+ by rn-mailsvcp-mta-lapp03.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0SCU00KQ60RVUM00@rn-mailsvcp-mta-lapp03.rno.apple.com>;
+ Wed, 01 May 2024 17:16:43 -0700 (PDT)
+Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp01.rno.apple.com by
+ rn-mailsvcp-mmp-lapp01.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) id <0SCU00N000GSQI00@rn-mailsvcp-mmp-lapp01.rno.apple.com>; Wed,
+ 01 May 2024 17:16:43 -0700 (PDT)
+X-Va-A:
+X-Va-T-CD: cbf7380921e8e2f9db5ea993b70cea12
+X-Va-E-CD: 631f076f6b365e42e06a1df7057e44fb
+X-Va-R-CD: ce6be43db0cce57f85f587e814b9d60f
+X-Va-ID: 0f36f4da-c23d-4baa-a49e-f113311040b5
+X-Va-CD: 0
+X-V-A:
+X-V-T-CD: cbf7380921e8e2f9db5ea993b70cea12
+X-V-E-CD: 631f076f6b365e42e06a1df7057e44fb
+X-V-R-CD: ce6be43db0cce57f85f587e814b9d60f
+X-V-ID: c8542c07-c203-4592-b250-b9207167abc0
+X-V-CD: 0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-01_16,2024-04-30_01,2023-05-22_02
+Received: from mr41p01nt-relayp01.apple.com ([100.64.99.124])
+ by rn-mailsvcp-mmp-lapp01.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023))
+ with ESMTPSA id <0SCU003GI0RTJA00@rn-mailsvcp-mmp-lapp01.rno.apple.com>; Wed,
+ 01 May 2024 17:16:42 -0700 (PDT)
+From: Zayd Qumsieh <zayd_qumsieh@apple.com>
+To: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Zayd Qumsieh <zayd_qumsieh@apple.com>,
+ Justin Lu <ih_justin@apple.com>, Ryan Houdek <Houdek.Ryan@fex-emu.org>,
+ Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Mateusz Guzik <mjguzik@gmail.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Miguel Luis <miguel.luis@oracle.com>,
+ Joey Gouly <joey.gouly@arm.com>, Christoph Paasch <cpaasch@apple.com>,
+ Kees Cook <keescook@chromium.org>, Sami Tolvanen <samitolvanen@google.com>,
+ Baoquan He <bhe@redhat.com>, Joel Granados <j.granados@samsung.com>,
+ Dawei Li <dawei.li@shingroup.cn>, Andrew Morton <akpm@linux-foundation.org>,
+ Florent Revest <revest@chromium.org>, David Hildenbrand <david@redhat.com>,
+ Stefan Roesch <shr@devkernel.io>, Andy Chiu <andy.chiu@sifive.com>,
+ Josh Triplett <josh@joshtriplett.org>, Oleg Nesterov <oleg@redhat.com>,
+ Helge Deller <deller@gmx.de>, Zev Weiss <zev@bewilderbeest.net>,
+ Ondrej Mosnacek <omosnace@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Asahi Linux <asahi@lists.linux.dev>
+Subject: Re: [PATCH 0/4] arm64: Support the TSO memory model
+Date: Wed, 01 May 2024 17:16:32 -0700
+Message-id: <20240502001632.41289-1-zayd_qumsieh@apple.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-reply-to: <20240411132853.GA26481@willie-the-truck>
+References:
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_16,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
- suspectscore=0 malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2405010165
-X-Proofpoint-ORIG-GUID: E68nnOLL_89lpTxpowlOR5c3ZX5VPC5W
-X-Proofpoint-GUID: E68nnOLL_89lpTxpowlOR5c3ZX5VPC5W
+MIME-version: 1.0
+Content-transfer-encoding: 8bit
 
-This series aim at the following enhancement -
-1. Let one hwpoison injector, that is, madvise(MADV_HWPOISON) to behave
-   more like as if a real UE occurred. Because the other two injectors
-   such as hwpoison-inject and the 'einj' on x86 can't, and it seems to
-   me we need a better simulation to real UE scenario.
-2. For years, if the kernel is unable to unmap a hwpoisoned page, it send
-   a SIGKILL instead of SIGBUS to prevent user process from potentially
-   accessing the page again. But in doing so, the user process also lose
-   important information: vaddr, for recovery.  Fortunately, the kernel
-   already has code to kill process re-accessing a hwpoisoned page, so
-   remove the '!unmap_success' check.
-3. Right now, if a thp page under GUP longterm pin is hwpoisoned, and
-   kernel cannot split the thp page, memory-failure simply ignores
-   the UE and returns.  That's not ideal, it could deliver a SIGBUS with
-   useful information for userspace recovery.
+On Thu, 11 Apr 2024 14:28:54 +0100,
+Will Deacon <will@kernel.org> wrote:
+> P.S. I briefly pondered the idea of the kernel toggling the bit in the
+> ELF loader when e.g. it sees an x86 machine type but I suspect that
+> doesn't really help with existing emulators and you'd still need a way
+> to tell the emulator whether or not it was enabled.
 
+This seems promising to me. What do people think of adding an opt-in argument,
+option, or similar to binfmt that allows users to mark certain file formats as
+"must run under TSO"? And then, the kernel would set the TSO bit when invoking
+the interpreter for those file formats. If an emulator decides to create a
+non-CPU-emulation thread, then it can use a prctl to disable TSO and switch to
+the default ARM memory model. Note that this prctl wouldn't be allowed to
+enable TSO - it would only disable it. This way, it is much harder for a
+faulty application to be made that relies on TSO, since enabling of TSO is
+only done via a binfmt handler that the user must explicitly opt into.
 
-Jane Chu (3):
-  mm/memory-failure: try to send SIGBUS even if unmap failed
-  mm/madvise: Add MF_ACTION_REQUIRED to madvise(MADV_HWPOISON)
-  mm/memory-failure: send SIGBUS in the event of thp split fail
+It is true that existing emulators wouldn't be able to benefit from this, but
+that's the case no matter the activation mechanism. We can, however, expose a
+prctl to get the memory model, so emulators can detect if TSO was enabled for
+their threads.
 
- mm/madvise.c        |  2 +-
- mm/memory-failure.c | 49 ++++++++++++++++++++++++++++++++++++---------
- 2 files changed, 41 insertions(+), 10 deletions(-)
+To summarize, I propose two prctls (similar to the ones in the current revision
+of the patch series). One to switch from the TSO memory model to the default
+ARM one (this is a one-way street). And another to query the current memory
+model.
 
--- 
-2.39.3
+Thanks,
+Zayd
 
+P.S. I forgot to CC you in my most recent email to Marc Zyngier just now. 
+Sorry, I'm quite new to using mailing lists.
