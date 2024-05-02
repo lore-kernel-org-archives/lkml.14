@@ -1,119 +1,90 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 12.mo583.mail-out.ovh.net (12.mo583.mail-out.ovh.net [46.105.39.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D31139593;
-	Fri,  3 May 2024 07:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D24139593
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.39.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714721130; cv=none; b=Lhfz+b5nuD0qiznByLZgr3x8tpQ9wbymc4oDkGBuiv8E/7Br3Jb6+hTVD5+zDVMRSzlB7oC1D/E6vk918gNWshfDmAMNLFHfoTSWIcEH2s4xIn2BOINmvJwId+5ArL/5XVqANK0s1RxSN/E6WXtOAAhd0zSnrrbnAPOzNop0kLo=
+	t=1714721288; cv=none; b=XgWXv1hPGCD1mdbWs2SRbakfiKFYWgcqahnPV6p2+ZLrvMd7cw6rxPJ1bllM9+7woz/yF24Q8dLTJy1wauHeqDSHX54nGXzTRIMq8xxv79WdpYnErdVHDXrRwUETMfkA28xG32mPuXxpKEg3MSLQByqIEZksyYhmBgsV5Rwau3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714721130; c=relaxed/simple;
-	bh=cqv9SBuOKk4+0s89FmYuGzf91MVZ71PBD18TBj1B16Q=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=WKtEnZUzQeN0gI/RxRB+0CmM08bS2uiLs/OZo+BvtEb2QjIKJjbE1GvV8q2sotdrf0PTwxS1TnwG86N5xXYk0NbZuvOQdnUARGHo3YxRoHJ5zmqRyh7sXG3ukjMAx7YCDHs8VCJPHFi6W1JAmZ2LWTXI610fx4BbSHn+FzNQtv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BGmrOF/d; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGmrOF/d"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51f12ccff5eso2182206e87.1;
-        Fri, 03 May 2024 00:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714721127; x=1715325927; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2bfIVKPy8kEkNHpot7ISpKC3G8aLSDEdKgGxPBam63Q=;
-        b=BGmrOF/dqFu7W9+KburpANTmQFvxX9+IsUJHg1idfHvwPNkq4cRNYjS2utKMa5Vyow
-         GeXIegks0crNKGhhIl90V9fQteDWfykAA0sIB8wHKkLaKwRxKwf5+0aCvMWMJvmJ5JHt
-         xP/Rk+tchs7yl3qUX+iruNg9WFUVuWTaPv4iFLPgKMX0sDUYI8Sy9RKqmTjvmQtVNK62
-         sioRKLfbePdLzAzUZW2dXM/+xBwFvnHJn/90v2spn4GtdAgQ2NjzGD2O4gSPu3gTZH0m
-         upnIGFhyqqfzgbNi1oAaKk8Eh8KzTr2D39UGP4xNMusaXdC3R1EVyTuu/MFDLSisUS9X
-         vb6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714721127; x=1715325927;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2bfIVKPy8kEkNHpot7ISpKC3G8aLSDEdKgGxPBam63Q=;
-        b=OtjHM0KU+LjROJyDXkvT0JALEIAnFbUyvMOlQkLZCUxUBnvRQKF+6uK2fQg5LEmDw8
-         Pf8Euxh7oQE8jEgYIbEZp10O0iqMeYz7ReUTkbsUJe9dgx6ob/PVsLLEZwWbNGifN6Vp
-         pno1VMOQwzP7/NGprYiSV8fMc++pQg7Y7H88knTrQQ40dBcoFQhJ5ZDvJ0lecgypb2bl
-         MQD8gRXkEuA4A4vpaKk67y/Dnm5ZJWMUCQAboaQP32RfdFWEoTZ7aIQdHprSfePSJxVZ
-         sigtpeCn2bHMRlyTkZzuhStiZlfV9kqqh76U53eP7xDBzrYybncG9w8Dcb2Q2iT+QwIq
-         ybrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmVPOxqZeRqrGowawVXiW5jFUGiphCWXIB887Az/6e1nUdTzTgQ2iqxe4eIZshPhbqDTmzYEABn0n3+wPeX0F3fFLhTAOWUA2hEM1By7rtHdMjac//WIXz7j/KhpcO2oAQGUL/U/5kdxWx4LEf6qmbIEXFsJ+oEm6drT/x4lOXWPnISPlTTJGY
-X-Gm-Message-State: AOJu0YwvHDjizJi8sxDR1ndpKxzUthiIi85qY7T3LqY12mUvf+xidpkm
-	54yI/vLoeqT6A51CE3870QE+TOA9U14hqlHBQLr/Mkecn4wpftOM
-X-Google-Smtp-Source: AGHT+IHfp8TeX/0dHU9tN2siim24RPoCWkmxx7z811SZUiY7WINB0kURBDR6geiOQ/+SyFPGgu6HDA==
-X-Received: by 2002:a19:5201:0:b0:51c:cf2e:db1f with SMTP id m1-20020a195201000000b0051ccf2edb1fmr1198161lfb.6.1714721127176;
-        Fri, 03 May 2024 00:25:27 -0700 (PDT)
-Received: from [172.16.183.82] ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id y13-20020a19750d000000b0051f2230523fsm448785lfe.147.2024.05.03.00.25.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 May 2024 00:25:26 -0700 (PDT)
-Message-ID: <2286c7cd-6510-407a-817a-8d964b158c4c@gmail.com>
-Date: Fri, 3 May 2024 10:25:26 +0300
+	s=arc-20240116; t=1714721288; c=relaxed/simple;
+	bh=O9dHTfqdUKYqYcEkVxGpE1PpwlajnvKSe2uB3eZESzc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TMOQYg7N4j87s92bl0ruwa039/SACWk8BEPNOpr5NF1Cre8M9xvicdSe7AkiecgcNjuxJEJ8ZM+UOSJ0L10p8WBh037v+aAhYSL+yFcQxAU6oP3HP11erbGU0Khr64W3zvNw2ZFeC2SQ2t7tiH9iMGILKmlQApKHh+sV4Rqler4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=46.105.39.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director3.ghost.mail-out.ovh.net (unknown [10.108.2.118])
+	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4VVqPg5frzz1QjG
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 23:09:11 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-b6h52 (unknown [10.108.42.39])
+	by director3.ghost.mail-out.ovh.net (Postfix) with ESMTPS id A17F91FDF8;
+	Thu,  2 May 2024 23:09:06 +0000 (UTC)
+Received: from etezian.org ([37.59.142.105])
+	by ghost-submission-6684bf9d7b-b6h52 with ESMTPSA
+	id 8ifaEBIdNGZnZx8AitxrAg
+	(envelope-from <andi@etezian.org>); Thu, 02 May 2024 23:09:06 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-105G006ccf2312c-b8e8-4f3e-a551-11cf7daafa4c,
+                    C3C300A9F266149161DCD69BC7DE92F4F10D7925) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: linux-kernel@vger.kernel.org, 
+ Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Mika Westerberg <mika.westerberg@linux.intel.com>, 
+ Jan Dabros <jsd@semihalf.com>, Lee Jones <lee@kernel.org>, 
+ Jiawen Wu <jiawenwu@trustnetic.com>, 
+ Mengyuan Lou <mengyuanlou@net-swift.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Duanqiang Wen <duanqiangwen@net-swift.com>, 
+ linux-i2c@vger.kernel.org, netdev@vger.kernel.org
+In-Reply-To: <20240425214438.2100534-1-florian.fainelli@broadcom.com>
+References: <20240425214438.2100534-1-florian.fainelli@broadcom.com>
+Subject: Re: (subset) [PATCH v3 0/5] Define i2c_designware in a header file
+Message-Id: <171469134545.1016503.10207141192762647093.b4-ty@kernel.org>
+Date: Fri, 03 May 2024 01:09:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/6] dt-bindings: ROHM BD96801 PMIC regulators
-Content-Language: en-US, en-GB
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>,
- Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <cover.1714478142.git.mazziesaccount@gmail.com>
- <c747a3395a52bdb9b9697f814cd781fb0903b894.1714478142.git.mazziesaccount@gmail.com>
- <20240502-vitalize-oat-ecbc14647df8@spud>
- <74655775-a8e2-45f4-8a1b-8046dffa5520@gmail.com>
-In-Reply-To: <74655775-a8e2-45f4-8a1b-8046dffa5520@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+X-Ovh-Tracer-Id: 2096144151853337100
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrvdduledgudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddruddtheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeefpdhmohguvgepshhmthhpohhuth
 
-On 5/3/24 07:54, Matti Vaittinen wrote:
-> Hi Conor,
+Hi
+
+On Thu, 25 Apr 2024 14:44:33 -0700, Florian Fainelli wrote:
+> This patch series depends upon the following two patches being applied:
 > 
-> On 5/2/24 19:20, Conor Dooley wrote:
->> On Tue, Apr 30, 2024 at 02:59:50PM +0300, Matti Vaittinen wrote:
->>
->> Krzysztof had some comments on the buck/ldo node names
+> https://lore.kernel.org/all/20240422084109.3201-1-duanqiangwen@net-swift.com/
+> https://lore.kernel.org/all/20240422084109.3201-2-duanqiangwen@net-swift.com/
 > 
-> I think Krzysztof pointed out that the regulator-name property should 
-> not match the data-sheet but the board. If he had something to say about 
-> the node names, then I've missed his comment!
+> There is no reason why each driver should have to repeat the
+> "i2c_designware" string all over the place, because when that happens we
+> see the reverts like the above being necessary.
 > 
->> and on the
->> initial value properties that I'm not sure if have been addressed, so
->> gonna leave this series to him.
-> 
-> Thanks for pointing out I may have missed addressing some of his 
-> concerns. I though I fixed all issues he pointed to me but it may be I 
-> missed some - or accidentally dropped some change(s) when merging fixes 
-> from the 'experimental' branch to the 'simple'. I'll revise Krzysztof's 
-> feedback to the RFC before sending the next version!
+> [...]
 
-You were right Conor. I checked it and yes, I omitted a few of the fixes 
-to regulator bindings. Please skip reviewing this version of these 
-bindings, I'll handle the rest of the comments in next one!
+Applied to i2c/i2c-host on
 
-Yours,
-	-- Matti
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
 
+Thank you,
+Andi
 
--- 
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
-
-~~ When things go utterly wrong vim users can always type :help! ~~
+Patches applied
+===============
+[1/5] i2c: designware: Replace MODULE_ALIAS() with MODULE_DEVICE_TABLE()
+      commit: 91647e64f0f5677ace84165dc25dc99579147b8f
+[2/5] i2c: designware: Create shared header hosting driver name
+      commit: 856cd5f13de7cebca44db5ff4bc2ca73490dd8d7
 
