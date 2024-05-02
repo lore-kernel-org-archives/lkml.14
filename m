@@ -1,73 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756CD13C820;
-	Thu,  2 May 2024 17:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B87616FF38;
+	Thu,  2 May 2024 17:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714670612; cv=none; b=GLk7u0kVSFyrcUUtRFmbAT+AMaXSuzQXneH5ahxDCXlDAXlMEWozyAiFZTUSMhPnHJ2++rPHC4UQUJGQ/CSgoTcILQMxcTZoV8NmNg505EqIObG9hBq2PyUGl0/TDYoMz+m2HbFs1ou9B64c6K45d4TS16dHPA3nU5T61ezi7xQ=
+	t=1714670640; cv=none; b=NIZyHdjgFPV5nrtugjebqJDE1azLMHvDq1P48A/oZdLhZll5wn8r6TbRULhpPtjjm1DPhfbi7pt4oo2f2c3OcRbOfmGL7ugLtFswwRl8v537Gy+pVBboBmXv9T4jN2lZ+ew4p06kkfCCUK0xPaIJm8nteaQUR2bBgjXs/Y5exrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714670612; c=relaxed/simple;
-	bh=VnsaxWRKYnVr47uFHyKJNESO4A+VCX3F1VXJeDiJ/wE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=b7u2DUgGxKeiTq0VmDg2bS+XE/lgpYWbiYHsEkineELJX6tY0hEO5CyBDb1ZMFyJBvlAaxy7zb6qa38vDVL4plXIcNrMSnLbi0qF1oN0neqidFsWJIsuLGCoNGTP0+uzBhZhihW6iTxJ6cpU9KS9yXqI/8lH1T9t5FL+YF6987w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEw//myQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714670640; c=relaxed/simple;
+	bh=+AGde7ihoVL37RNfwg2ChkKnBeZbRb8zV7vZfOgq33c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JFRgwvY4uBN9/u4qREd8Zja+owqPC4qzzCKasaJ0gR24aXr4vQLyMHhOOhzR44r0nqgzcrq9s6m6QAgTe7YOP+02c4lXaZaov2rbk3Gh/Tq/+nYP6SZ0dHQdwE3LCVp7cWuWVlELNs2aUF9xYF64lubMgOGN4vb+LhHjTuavj6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hOwoRAri; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEw//myQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0581FC113CC;
-	Thu,  2 May 2024 17:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714670612;
-	bh=VnsaxWRKYnVr47uFHyKJNESO4A+VCX3F1VXJeDiJ/wE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pEw//myQGuRYUqtOXZmIxXyH4H0J8VfltjfUEy33nM03vSVHns36q/Bjn64wncMoI
-	 rwzMZJVErkdkTx8k+ppDCwWTrsXFKHtC5L+9XiJnw6VL2dMRM04xB2sPTiZAr+2r6I
-	 3O2v8YpabggFwN0qP1dYNJNNKp3Q/CoJOe8Ob9VaxBrTN5Wt0byFZlanRNobwQsZhc
-	 JqoVg3++raHpIwZsZgwxtCQDiMwHeUB8K/wo1mWA0sFjaeSwVYOOgimfHt7GZQjW6c
-	 +C3s9FbIV5aWZH0Y92nf03YMyI4PZ7DlEFS6dP0iKCYXIJgO+jz+CkPoNj9MuhIlgZ
-	 MjM0Y0hEu9BiA==
-From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240430172520.535179-1-robh@kernel.org>
-References: <20240430172520.535179-1-robh@kernel.org>
-Subject: Re: (subset) [PATCH] dt-bindings: mfd: aspeed: Drop 'oneOf' for
- pinctrl node
-Message-Id: <171467060972.1223907.593520549880230505.b4-ty@kernel.org>
-Date: Thu, 02 May 2024 18:23:29 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hOwoRAri"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1ec69e3dbe5so25319805ad.0;
+        Thu, 02 May 2024 10:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714670638; x=1715275438; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BoLV4NBTi5WshpxXLizBmf79HWwJfptg7//iRnwuPL0=;
+        b=hOwoRArihruWh461sb14KUBy2pt34t0m5KO4CDcaWWdHjmV92ae9UQ7+QtCjaRYlDw
+         uys/S8AAbO1h8bCZi/yfsueSpNWTsRUOjSxVovIgNqNDTAFPWZ+q/809wLL4E7vkfi9G
+         OVcDYeZzoszbF+KcXxN8zhdQfdFTwrgImXknLKc1nUXprrBjczODuZkfY1M7FNeJxEmo
+         xjF91PxwHSOJeDKed4+mBmcEPj16KHsyIEVSdlHImvu4yo+k6Ii7tgx+omEIIdSETd9q
+         TCt87muL7qOBUfHMSjMjl7Ur4C8Be4oHWpf5CqxnEfXy+j/u9BL5O046CvYV4o875dbA
+         dO6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714670638; x=1715275438;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BoLV4NBTi5WshpxXLizBmf79HWwJfptg7//iRnwuPL0=;
+        b=ajfmtpJTftrnNYPLUx5tD1Ir4ThRR9chrCzt8st+Aj2/0h9FLsnMbTY2FnIAnM+0xb
+         5+sOlm8w9xakReHena2feVTWZyQTmFY75mAlBOX8fpDDMsdSlZP7jZj/PqcedwRlRccC
+         w+2/8XYxnuEdMJ49m//sFtVltppT4u3ArLtDh922P1+rTYJDmnPE3162PNX6Q4X/3DfT
+         U9AKJHcNMR9ftOiq/ifa+1mlnaL/ywQichGZm5Dc2U+fI2md24o9h2x9MWuetpAELLiQ
+         SOGEf1/xZWoybFIpn9BAm3gjnsbqb6eeVwfBER6zlfsR3Tp/ka0/3Jxl1GJqdYbNo1Zz
+         31sw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBbkIQucZVsWGzE78woDhBUsClhJdR4UAQ3vZYRq1aubpvxBvhj6g4AyD7nk0wRTMPJc7WTUEyl+75/pwzijlQZlIx1y4ps37AusLRoN75PdsOvmPhBwfMPen1ntKoejtpRUUfNsSy7/A=
+X-Gm-Message-State: AOJu0Yzcp9x6vOXhc4mxqDsuWiOfq6oLh343AEFiPz/RNKGQyyp0FlDO
+	lhWjpOuTirHzs1JPJlKXtIl0FIVzVqJOJXahbCjGfYzVPRHLIvkY
+X-Google-Smtp-Source: AGHT+IEyeN+w/2GKnAAXaO0iG1dRQeaeYXXU53saYgxjY5324IkOkLk95/QiEGVAl7Bnc0yRghOx1w==
+X-Received: by 2002:a17:902:da8d:b0:1e9:cf94:5bea with SMTP id j13-20020a170902da8d00b001e9cf945beamr433078plx.35.1714670638524;
+        Thu, 02 May 2024 10:23:58 -0700 (PDT)
+Received: from localhost.localdomain ([2401:4900:5fc9:c3c6:40e7:b56b:5c47:4a78])
+        by smtp.gmail.com with ESMTPSA id t12-20020a170902bc4c00b001e4565a2596sm1568513plz.92.2024.05.02.10.23.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 10:23:58 -0700 (PDT)
+From: Shresth Prasad <shresthprasad7@gmail.com>
+To: lee@kernel.org,
+	daniel.thompson@linaro.org,
+	jingoohan1@gmail.com,
+	deller@gmx.de
+Cc: dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	javier.carrasco.cruz@gmail.com,
+	skhan@linuxfoundation.org,
+	julia.lawall@inria.fr,
+	Shresth Prasad <shresthprasad7@gmail.com>
+Subject: [RESEND][PATCH v3][next] backlight: sky81452-backlight: Remove unnecessary call to of_node_get
+Date: Thu,  2 May 2024 22:51:21 +0530
+Message-ID: <20240502172121.8695-2-shresthprasad7@gmail.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.12.4
 
-On Tue, 30 Apr 2024 12:25:19 -0500, Rob Herring (Arm) wrote:
-> The use of 'oneOf' to include 1 of 3 possible child node schemas results
-> in error messages containing the actual error message(s) for the correct
-> SoC buried in the tons of error messages from the 2 schemas that don't
-> apply. It also causes the pinctrl schema to be applied twice as it will
-> be applied when the compatible matches.
-> 
-> All that's really needed in the parent schema is to ensure one of the
-> possible compatible strings is present in the pinctrl node so that its
-> schema will be applied separately.
-> 
-> [...]
+`dev->of_node` already has a reference to the device_node and calling
+of_node_get on it is unnecessary. All conresponding calls to
+of_node_put are also removed.
 
-Applied, thanks!
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
+---
+Changes in v3:
+    - Remove unnecessary braces
 
-[1/1] dt-bindings: mfd: aspeed: Drop 'oneOf' for pinctrl node
-      commit: 8f553c27697bc5e11074e37dfc0def6e39e489b2
+ drivers/video/backlight/sky81452-backlight.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---
-Lee Jones [李琼斯]
+diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-backlight.c
+index eb18c6eb0ff0..19f9f84a9fd6 100644
+--- a/drivers/video/backlight/sky81452-backlight.c
++++ b/drivers/video/backlight/sky81452-backlight.c
+@@ -182,7 +182,7 @@ static const struct attribute_group sky81452_bl_attr_group = {
+ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
+ 							struct device *dev)
+ {
+-	struct device_node *np = of_node_get(dev->of_node);
++	struct device_node *np = dev->of_node;
+ 	struct sky81452_bl_platform_data *pdata;
+ 	int num_entry;
+ 	unsigned int sources[6];
+@@ -194,10 +194,8 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
+ 	}
+ 
+ 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+-	if (!pdata) {
+-		of_node_put(np);
++	if (!pdata)
+ 		return ERR_PTR(-ENOMEM);
+-	}
+ 
+ 	of_property_read_string(np, "name", &pdata->name);
+ 	pdata->ignore_pwm = of_property_read_bool(np, "skyworks,ignore-pwm");
+@@ -217,7 +215,6 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
+ 					num_entry);
+ 		if (ret < 0) {
+ 			dev_err(dev, "led-sources node is invalid.\n");
+-			of_node_put(np);
+ 			return ERR_PTR(-EINVAL);
+ 		}
+ 
+@@ -237,7 +234,6 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
+ 	if (ret < 0)
+ 		pdata->boost_current_limit = 2750;
+ 
+-	of_node_put(np);
+ 	return pdata;
+ }
+ #else
+-- 
+2.45.0
 
