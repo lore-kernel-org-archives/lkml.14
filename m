@@ -1,164 +1,257 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3DB56766;
-	Thu,  2 May 2024 09:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714643552; cv=none; b=qB06eNuh/hhFqD1REYa+zZx0Ac1zFOMmbP2R1wX6+kiEHNquURfU11eNuVAxiT8xo7lWaH9t0AHYHpWY2YN1WtQOrkx9y1LWJSy8ASfNbIY2CnSJqO2nOMO5M9mCQ8v7RM2XDn27g+T9Y7UbmEiDVy0xW1rkfgWp1DeseMnJ//o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714643552; c=relaxed/simple;
-	bh=vITXKoMtPN6CljACjRovE4Q9eiO6CiuoWCW2T4ojjQU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mdxr8vmRteN+D3WbnPxIuKZgndLjpvXyMpdLqBdALSSArb3SX9+xO5yvtDiknq4zUf9917sQ13mzYiA6E7Taohc2FZl5r7W8MUeiw0b6S5t2gH9MAOlLs+baf0DiJWAEhoYlp3mSLEBEwK41kwy/KLdrW8+5N4VJjCurv/i6+Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LUnS+/TV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g79upUkd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LUnS+/TV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g79upUkd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CD55644E;
+	Thu,  2 May 2024 09:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714643571; cv=fail; b=QHlLPsyQkxAreqPXJ7AJKfNKAsxN1bLFwVfuRgC1ArO9a7alau0RwGVeufubb7Yzse2KMLUGi+epLu3kio7QtYV3HTM+M2vZAYWW4skHpqwPwWmWXPkIFKAFn+W8fWX6oFSp9+JeXyLvPDM4FzZ/VKCXa4H305Z7SR4wVjpUdWI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714643571; c=relaxed/simple;
+	bh=6iwEzhG4bHX5ibXXMGL4mKfx8uDicQXRxcQguXZghrI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hif5dHztysjguHH5NhAARsmshxTw6cELIinoqZUt9IHbjFPnh0YbaOhe37oAWZTvi0tDEPvk3jZYotYCVoX/gH3Bpl4ptAthpMN7EzKVUxvSKdIOlyZT0YMGnbjI215LFHxHcNy9EdOry3Q4Dq66vNGry8a+Gh5SWyZ/a+VNX/E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zZsYLufi; arc=fail smtp.client-ip=40.107.237.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LUnS+/TV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g79upUkd";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LUnS+/TV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g79upUkd"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C76D21FB79;
-	Thu,  2 May 2024 09:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714643548; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4eGmpuaeDMzhLfyJ1oPJc4iz3E5Oauzqw7fHW9MAvVU=;
-	b=LUnS+/TVSf5LwASnqw0/CLTNtkxsRKWb8pZZPOLXhfRBePYDzUjhoVGfctSCo3wKVmqlKj
-	qq0XTuaWQXHoY41HPXctervNoTKfgrrFjP8IFxxyvD9hQa6WLAHIBSUV3R54iJL4ZF0AU7
-	JC4W6IYA/f/p47iXIMX9YypJQkK9SA8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714643548;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4eGmpuaeDMzhLfyJ1oPJc4iz3E5Oauzqw7fHW9MAvVU=;
-	b=g79upUkdIzPMIzIFCPogoZ30i5uuKqxIsOiDKBcSRozI6Mzg9HcrxXP4P2y0JYgPLg6UyD
-	j2xkcQRUc4OD3IBA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="LUnS+/TV";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=g79upUkd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1714643548; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4eGmpuaeDMzhLfyJ1oPJc4iz3E5Oauzqw7fHW9MAvVU=;
-	b=LUnS+/TVSf5LwASnqw0/CLTNtkxsRKWb8pZZPOLXhfRBePYDzUjhoVGfctSCo3wKVmqlKj
-	qq0XTuaWQXHoY41HPXctervNoTKfgrrFjP8IFxxyvD9hQa6WLAHIBSUV3R54iJL4ZF0AU7
-	JC4W6IYA/f/p47iXIMX9YypJQkK9SA8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1714643548;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4eGmpuaeDMzhLfyJ1oPJc4iz3E5Oauzqw7fHW9MAvVU=;
-	b=g79upUkdIzPMIzIFCPogoZ30i5uuKqxIsOiDKBcSRozI6Mzg9HcrxXP4P2y0JYgPLg6UyD
-	j2xkcQRUc4OD3IBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9354D13957;
-	Thu,  2 May 2024 09:52:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id U81mIlxiM2aIAgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 02 May 2024 09:52:28 +0000
-Date: Thu, 02 May 2024 11:52:41 +0200
-Message-ID: <87h6fgk0ba.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: Simon Trimmer <simont@opensource.cirrus.com>,
-	<tiwai@suse.com>,
-	<linux-sound@vger.kernel.org>,
-	<alsa-devel@alsa-project.org>,
-	<linux-kernel@vger.kernel.org>,
-	<patches@opensource.cirrus.com>
-Subject: Re: [PATCH] ALSA: hda: cs35l56: Perform firmware download in the background
-In-Reply-To: <a9345d24-af36-42b4-9139-0701a0dbe1a3@opensource.cirrus.com>
-References: <20240501111755.21231-1-simont@opensource.cirrus.com>
-	<87ttjgk6ph.wl-tiwai@suse.de>
-	<a9345d24-af36-42b4-9139-0701a0dbe1a3@opensource.cirrus.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zZsYLufi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mxuiRq8VhyyWsc4uC2uPtHYpKjeFKdyLYrfYcjgzw0MwDNAJmrGl2zZr9GebxtObwMJv0AlY5d5aw04stsZyOtWlTM8MRY5aY/szRWp5uZ2KMYKWukMRqXT1xh36RcEXbplBZx3ya6x+Ol0aJaAHEpLd5qBOC9JabIc6+1cQFfQvfQsI5l1eN9BqcjjCirRc4fvnx6MjO4Le98TmPylXuqoa4v3m+ScM/icfG+A326RFQ/SFNRJaaWgRlyQYAQvXZOzSrBFNAUHMr+vIjaBe20pnGmEA3ZLJQT5wg6px55rS9W/iCk+ouXDOPY/mwOE1//ayWNdqAYUetbU1Gj00XA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MxRSNwTJiVNU/sNkdfqTJok2Wf9CF8PyX1ph712TswU=;
+ b=nBfyu7qMi5Acqi+PbKILD3TJl2EwCS2NFvOFqVu/+iS1b3fM9ZilFf+lVCO8RSKUetd6wXT3DNJN+5UiKrpQ1UA/67J/uhQv1EipudJn6c/yRKD+4aOPauWeEFNqZvaLay81OU256o3KUct+Zx50KL3u2pWXadLXKRfsoiHPBHS9AzcT53eHx14r1n4NT0mENgHN1qMGUFJBbaJb0GvODAJjHH89SvCs0fGmuQd/kOS538TJQJLTSrGM8flB8G88/X6x0A0qakVml3vA1jgaBCAKAlNy6ClQJkdtF+7k7W8cKupj1+Q5bc6EEM/IAgSkgQRywQDX7yivFk6EASVmXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MxRSNwTJiVNU/sNkdfqTJok2Wf9CF8PyX1ph712TswU=;
+ b=zZsYLufiafxUZLvg8K61ncO684FbdBKhuto5uRSvJAOqG0c2dwB2+1YivBX95GCvsbiSib6nL0EkAOz32XDs7HZi1hRJ1LH43jirIgKdLW0P4hwVL1PFLKoebN7oAOSrQT0YAyZ/+dV+wdD3zv7RSOQydU8QjdtvSTsf8i4qpJE=
+Received: from DM6PR07CA0114.namprd07.prod.outlook.com (2603:10b6:5:330::29)
+ by MW4PR12MB7438.namprd12.prod.outlook.com (2603:10b6:303:219::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.28; Thu, 2 May
+ 2024 09:52:44 +0000
+Received: from DS3PEPF000099DE.namprd04.prod.outlook.com
+ (2603:10b6:5:330:cafe::72) by DM6PR07CA0114.outlook.office365.com
+ (2603:10b6:5:330::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30 via Frontend
+ Transport; Thu, 2 May 2024 09:52:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099DE.mail.protection.outlook.com (10.167.17.200) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7544.18 via Frontend Transport; Thu, 2 May 2024 09:52:43 +0000
+Received: from BLR-L-DUGWEKAR.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 2 May
+ 2024 04:52:37 -0500
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+To: <tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <ananth.narayan@amd.com>,
+	<gautham.shenoy@amd.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<sandipan.das@amd.com>, <alexander.shishkin@linux.intel.com>,
+	<irogers@google.com>, <gustavoars@kernel.org>, <kprateek.nayak@amd.com>,
+	<ravi.bangoria@amd.com>, Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Subject: [PATCH 2/2] perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+Date: Thu, 2 May 2024 15:21:15 +0530
+Message-ID: <20240502095115.177713-3-Dhananjay.Ugwekar@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240502095115.177713-1-Dhananjay.Ugwekar@amd.com>
+References: <20240502095115.177713-1-Dhananjay.Ugwekar@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -5.51
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: C76D21FB79
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-5.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DE:EE_|MW4PR12MB7438:EE_
+X-MS-Office365-Filtering-Correlation-Id: 121484b4-eb5c-4528-0ac6-08dc6a8d9d25
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|36860700004|7416005|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Wm8mXC1mtYTCPpXYDL6HKXMHrrmK/KLHmN7BAcOzC+GB1LLZbCdqWNMn20lC?=
+ =?us-ascii?Q?RAwkM6acE5dA9Smk83egBVRejqwdn7fyObPMGK6Iaxksb8qXBxN0m/Socgzo?=
+ =?us-ascii?Q?zfD8Pjm4tbrKMIzPjAASCeN2WQ1UykSrPaYkc9VYBnDnARgAr13NfiHImYsc?=
+ =?us-ascii?Q?UIEuDsh4ocz3S+tX7WneRY9sXNnFsMqWroJmF3tDSlYsIqm5KnsHkJ8KKSSr?=
+ =?us-ascii?Q?TavRKdLD++KzvhffynVXGflGy7MJSQOgqvAS3Kr3ytEzAxRdheuoqpoeo093?=
+ =?us-ascii?Q?r7P1Ohg7SHsTgfIA5cI7opwpcFtcPazp5gMlXu0uUWDz35sa9404LpRV6ZG9?=
+ =?us-ascii?Q?ARSWnFdQniSRnRilOEgg6OnwcsBijd15Hiz5ZUbZc75ietJeO/WkZ752befd?=
+ =?us-ascii?Q?omXjzNET1OjbtgMRhf6LokAmvuoDIT/cq1K50xVl0ULAyIckeUMePzCPNrDz?=
+ =?us-ascii?Q?PiP9urVSZ8gjwYmlpWnNHCgOIMk/zJDwthcWIp4kz9m48cYZ67939ftTR4nA?=
+ =?us-ascii?Q?1TgbqLRcC8efdmvoABUYbPCVmJBcFWlZ774vtVrusG7kdPRwyoFtqYlZpJtD?=
+ =?us-ascii?Q?sx54JfxTG5tEkrueSBSaaacakJ+yoNeseS34GQ2Bp0yfikH+qnF3KNTqnofK?=
+ =?us-ascii?Q?UEtH6q5LedRopn65VVi8eyhkD/hXtpHybquY8uF+RTPf0CHkBzFZ0VKd5s3d?=
+ =?us-ascii?Q?SAadv2UHLAa1we6u290twR1HISznueSwJV486BEh9Fa+J3IV9qYRCWACbHpM?=
+ =?us-ascii?Q?8MquvRtCxNWEo1d4yB9bB80/AhhdM+YVeSMtOR6S+UG7mbyRbdX7n1J2PLzF?=
+ =?us-ascii?Q?ipqG7Nf8wmiX7/J7aDuqYaLf/PBQ2ti/KaGRUgPOThC5bacSylhlCXRCTqaX?=
+ =?us-ascii?Q?REquj7BMkR1T3hyS9THlIFw8fxLG3ce7R2ut+cQYOpoqr8IRhhvc//TXN9MI?=
+ =?us-ascii?Q?QEBH4vfjBO9VsHf5ow9BihqjtM0+Kn6dlF9S2JiUPI9pFrhDB45GNDZyI5b7?=
+ =?us-ascii?Q?ZZrwxmMow2mtC3QENknNRjgD649/et8Y2tPuYD3XarAHGt04vKk0Hby7NjXE?=
+ =?us-ascii?Q?SEyu20MR6Pq0PMSW8brg6eldoL2MGhjOLzYr7Xj/D1CGTQ8cVKwRp+96hyG9?=
+ =?us-ascii?Q?N94x2Fv3a5WNWy17sr0nFDJmWz/KQndxIBsPrAa67/UDj2mttWCigeQnhsfc?=
+ =?us-ascii?Q?L1+4FnAFq1XcQe1B1mbIM1DRTIsk25suRZULUzfXwh6oaGS6SLbVzM2FEnaS?=
+ =?us-ascii?Q?QjRk0txzOHw1MnGP+yPMOLTWE7zeQ8EZYD4KT8HXhPBvZ8hPwuO9iN2WH+on?=
+ =?us-ascii?Q?3fJ9hlj2syQ0r2VQowPi7Hdt9eWd/1YS7mZXlYtSNZwn8TBZ5UAp5hl6NM0Q?=
+ =?us-ascii?Q?eYxX50Mb1tV8fMUxgXvZke+QswsB?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2024 09:52:43.8370
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 121484b4-eb5c-4528-0ac6-08dc6a8d9d25
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099DE.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7438
 
-On Thu, 02 May 2024 11:21:36 +0200,
-Richard Fitzgerald wrote:
-> 
-> On 02/05/2024 08:34, Takashi Iwai wrote:
-> > On Wed, 01 May 2024 13:17:55 +0200,
-> > Simon Trimmer wrote:
-> >> @@ -964,6 +1011,14 @@ int cs35l56_hda_common_probe(struct cs35l56_hda *cs35l56, int hid, int id)
-> >>   	mutex_init(&cs35l56->base.irq_lock);
-> >>   	dev_set_drvdata(cs35l56->base.dev, cs35l56);
-> >>   +	cs35l56->dsp_wq =
-> >> create_singlethread_workqueue("cs35l56-dsp");
-> >> +	if (!cs35l56->dsp_wq) {
-> >> +		ret = -ENOMEM;
-> >> +		goto err;
-> >> +	}
-> > 
-> > Do we really need a dedicated workqueue?  In most usages, simple
-> > schedule_work*() works fine and is recommended.
-> > 
-> 
-> On a slow I2C bus with 4 amps this work could take over 2 seconds.
-> That seems too long to be blocking a global system queue. We use a
-> dedicated queue in the ASoC driver.
-> 
-> Also if we queue work on an ordered (single-threaded) system queue the
-> firmware won't be downloaded to multiple amps in parallel, so we don't
-> get the best use of the available bus bandwidth.
+After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
+on AMD processors that support extended CPUID leaf 0x80000026, the
+topology_die_cpumask() and topology_logical_die_id() macros, no longer 
+return the package cpumask and package id, instead they return the CCD 
+(Core Complex Die) mask and id respectively. This leads to the energy-pkg 
+event scope to be modified to CCD instead of package.
 
-OK, that sounds like a sensible argument.
+Replacing these macros with their package counterparts fixes the
+energy-pkg event for AMD CPUs.
 
-But the patch has no call of a queue destructor.  Won't it leak
-resources?
+However due to the difference between the scope of energy-pkg event for 
+Intel and AMD CPUs, we have to replace these macros conditionally only for
+AMD CPUs.
 
+On a 12 CCD 1 Package AMD Zen4 Genoa machine:
 
-thanks,
+Before:
+$ cat /sys/devices/power/cpumask
+0,8,16,24,32,40,48,56,64,72,80,88.
 
-Takashi
+The expected cpumask here is supposed to be just "0", as it is a package 
+scope event, only one CPU will be collecting the event for all the CPUs in 
+the package.
+
+After:
+$ cat /sys/devices/power/cpumask
+0
+
+Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
+---
+ arch/x86/events/rapl.c | 30 ++++++++++++++++++++++++++----
+ 1 file changed, 26 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 46e673585560..d77bf7959a43 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -102,6 +102,10 @@ static struct perf_pmu_events_attr event_attr_##v = {				\
+ 	.event_str	= str,							\
+ };
+ 
++#define rapl_pmu_is_pkg_scope()				\
++	(boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||	\
++	 boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
++
+ struct rapl_pmu {
+ 	raw_spinlock_t		lock;
+ 	int			n_active;
+@@ -139,9 +143,21 @@ static unsigned int rapl_cntr_mask;
+ static u64 rapl_timer_ms;
+ static struct perf_msr *rapl_msrs;
+ 
++static inline unsigned int get_rapl_pmu_idx(int cpu)
++{
++	return rapl_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
++					 topology_logical_die_id(cpu);
++}
++
++static inline cpumask_t *get_rapl_pmu_cpumask(int cpu)
++{
++	return rapl_pmu_is_pkg_scope() ? topology_core_cpumask(cpu) :
++					 topology_die_cpumask(cpu);
++}
++
+ static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
+ {
+-	unsigned int rapl_pmu_idx = topology_logical_die_id(cpu);
++	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
+ 
+ 	/*
+ 	 * The unsigned check also catches the '-1' return value for non
+@@ -542,6 +558,7 @@ static struct perf_msr amd_rapl_msrs[] = {
+ 
+ static int rapl_cpu_offline(unsigned int cpu)
+ {
++	cpumask_t *cpumask = get_rapl_pmu_cpumask(cpu);
+ 	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
+ 	int target;
+ 
+@@ -551,7 +568,7 @@ static int rapl_cpu_offline(unsigned int cpu)
+ 
+ 	pmu->cpu = -1;
+ 	/* Find a new cpu to collect rapl events */
+-	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
++	target = cpumask_any_but(cpumask, cpu);
+ 
+ 	/* Migrate rapl events to the new target */
+ 	if (target < nr_cpu_ids) {
+@@ -564,6 +581,8 @@ static int rapl_cpu_offline(unsigned int cpu)
+ 
+ static int rapl_cpu_online(unsigned int cpu)
+ {
++	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
++	cpumask_t *cpumask = get_rapl_pmu_cpumask(cpu);
+ 	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
+ 	int target;
+ 
+@@ -578,14 +597,14 @@ static int rapl_cpu_online(unsigned int cpu)
+ 		pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
+ 		rapl_hrtimer_init(pmu);
+ 
+-		rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
++		rapl_pmus->pmus[rapl_pmu_idx] = pmu;
+ 	}
+ 
+ 	/*
+ 	 * Check if there is an online cpu in the package which collects rapl
+ 	 * events already.
+ 	 */
+-	target = cpumask_any_and(&rapl_cpu_mask, topology_die_cpumask(cpu));
++	target = cpumask_any_and(&rapl_cpu_mask, cpumask);
+ 	if (target < nr_cpu_ids)
+ 		return 0;
+ 
+@@ -676,6 +695,9 @@ static int __init init_rapl_pmus(void)
+ {
+ 	int nr_rapl_pmu = topology_max_packages() * topology_max_dies_per_package();
+ 
++	if (rapl_pmu_is_pkg_scope())
++		nr_rapl_pmu = topology_max_packages();
++
+ 	rapl_pmus = kzalloc(struct_size(rapl_pmus, pmus, nr_rapl_pmu), GFP_KERNEL);
+ 	if (!rapl_pmus)
+ 		return -ENOMEM;
+-- 
+2.34.1
+
