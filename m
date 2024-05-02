@@ -1,155 +1,174 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BE0D26A
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 12:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DF5D26A;
+	Thu,  2 May 2024 12:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714652585; cv=none; b=C4OeeZY72QokYLnkk2LCcfbk/QjIYIsmUwtHzxRUrXN6EOKKEorUKG+EdXvE2QJbx6eUItUh89vtZCSa52VyjyYlS9tSpxgJEVxWN1+M+SVij+yMgbPtvN0eNZ1+v2Y1E3ROiZtEn8sS5K9cOsDcmghNJ+YdJP+8y8oBXAkXtpA=
+	t=1714652601; cv=none; b=IbKWHoFOxV9j7Zfllyc3pjoVPThS+sDcpPMLKR2qfo/l9olSjn9MbHVlhJWoZmeUPau/Q/t2syxuvDBaYWizUFvyf+NLzazbL6+GkrS6obO3egsbGc9AlAXkoZdFZYnVeS/8Tf/dyNLYAYawKt5UHdo55ya9NE364pvCVGFbRGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714652585; c=relaxed/simple;
-	bh=J5Gbb28PWVRjoM6ofQuKxcdt2Y+r4kfgcHxs+9oOS58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nx9ezi0Fbl79W0pUNmLPUPr3Fhm0EOty/r8k/d3sTZQOc/og0A8AP0CMuD6NBoJK7nELm7kiKMKZjIX2j1Z1GtBHJ1i1mcCxLSzlYbkd7aUThBe/dcLSCDTlBa0LcOGpAeRol2KyZn++QTp+EgKaZQJWwDPL30S7CNabGH8tQhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=veqotFvG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9jFWxyHb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=veqotFvG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9jFWxyHb; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1714652601; c=relaxed/simple;
+	bh=BfrjHbaH4kx1eIxa8k9QBveZGnfSIPLRTzKMvB0B4Iw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eTzhhFkiDxOFGBrukJT/ncoWtfH8Cl9mStDkt3kkgrcU46k63n4iZuRIQj7g1/qcB2TtEHJqxBW1syUAYLB/qOXWIIAtad9MJ/SqiIa46G04BP1U9LX3ILTuFBd8WMcYO9Y5lJcqAExDZsPAFlJda/0rON12GqjNKVUtTJK0dTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bdf/6/Ee; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="veqotFvG";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9jFWxyHb";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="veqotFvG";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9jFWxyHb"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 41581352F6;
-	Thu,  2 May 2024 12:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1714652581; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oJmYOWiytFqZ/McyZKWdmo+2f9lysX01+48DFAf0K7Y=;
-	b=veqotFvG5QEbFCJ6IZBrEZfD0A/J2Tiv/02KDEz+Fj88vgaSEXE6TRceyhuMNybfGD/H69
-	+mIKUHCXlVkw3MDCwO6tyFXOHzG5Mc6xBzpfHKi0MQpLVmi00sY8KWOUy5lbvs5nkjzSbM
-	8K6VPmt4fiuJrCOSs3UHl27ik81eWPw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1714652581;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oJmYOWiytFqZ/McyZKWdmo+2f9lysX01+48DFAf0K7Y=;
-	b=9jFWxyHbi1VRs16oyaHveaSUg/OHviPqh1jGWTy+xraGitWBsHcd+jBwC/u0mQqLQcKest
-	WPpNHSrPVv4turBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1714652581; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oJmYOWiytFqZ/McyZKWdmo+2f9lysX01+48DFAf0K7Y=;
-	b=veqotFvG5QEbFCJ6IZBrEZfD0A/J2Tiv/02KDEz+Fj88vgaSEXE6TRceyhuMNybfGD/H69
-	+mIKUHCXlVkw3MDCwO6tyFXOHzG5Mc6xBzpfHKi0MQpLVmi00sY8KWOUy5lbvs5nkjzSbM
-	8K6VPmt4fiuJrCOSs3UHl27ik81eWPw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1714652581;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oJmYOWiytFqZ/McyZKWdmo+2f9lysX01+48DFAf0K7Y=;
-	b=9jFWxyHbi1VRs16oyaHveaSUg/OHviPqh1jGWTy+xraGitWBsHcd+jBwC/u0mQqLQcKest
-	WPpNHSrPVv4turBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 332871386E;
-	Thu,  2 May 2024 12:23:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zW9QDKWFM2aDOAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 02 May 2024 12:23:01 +0000
-Message-ID: <203b39b1-fd83-4fc6-9d55-004d998494f2@suse.cz>
-Date: Thu, 2 May 2024 14:23:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bdf/6/Ee"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63637C113CC;
+	Thu,  2 May 2024 12:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714652601;
+	bh=BfrjHbaH4kx1eIxa8k9QBveZGnfSIPLRTzKMvB0B4Iw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bdf/6/EeLG8MDB3J1wGX4LWC3UYH06zM+8U/vnRBmeP91POn1GVSvZgOIWwKd0uUu
+	 iJVPpissrk4qmQYcIUx1k5D/5fcNW/JU3FEczOzAm1UpTOgCUjBMfNGYrOyEQHY84B
+	 mwx6UKU7SRAD+xVnfwQeo3R/s5Sr7EvlT8940LK46aC8fdPweR5CI+OWOjG4x5y2Io
+	 Bf9Fqa6asUXsEiRs/AQzhubgiETs+GmnqFcS5KVcN4RkOat6PDIXhLbL2F3Z95Kl+m
+	 5TNYFaQRUi3Wp6p94BV/7j5ikTY3p43yzb2nOcLcAEJw74TkdnnvvinmUKj9BUusU0
+	 O6nmY+8sak0Rw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org,
+	x86@kernel.org,
+	bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: [PATCHv4 bpf-next 0/7] uprobe: uretprobe speed up
+Date: Thu,  2 May 2024 14:23:06 +0200
+Message-ID: <20240502122313.1579719-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/slub: mark racy access on slab->freelist
-To: linke li <lilinke99@qq.com>
-Cc: xujianhao01@gmail.com, Christoph Lameter <cl@linux.com>,
- Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <tencent_579220610AF1240FE3735A3443DBB01F9D07@qq.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <tencent_579220610AF1240FE3735A3443DBB01F9D07@qq.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-0.83 / 50.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	BAYES_HAM(-1.04)[87.55%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,kvack.org,vger.kernel.org];
-	TAGGED_RCPT(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_TO(0.00)[qq.com];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,qq.com]
-X-Spam-Score: -0.83
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On 4/27/24 10:51, linke li wrote:
-> In deactivate_slab(), slab->freelist can be changed concurrently. Mark
-> data race on slab->freelist as benign using READ_ONCE.
-> 
-> This patch is aimed at reducing the number of benign races reported by
-> KCSAN in order to focus future debugging effort on harmful races.
-> 
-> Signed-off-by: linke li <lilinke99@qq.com>
+hi,
+as part of the effort on speeding up the uprobes [0] coming with
+return uprobe optimization by using syscall instead of the trap
+on the uretprobe trampoline.
 
-Added to slab/for-6.10, thanks
+The speed up depends on instruction type that uprobe is installed
+and depends on specific HW type, please check patch 1 for details.
 
-> ---
->  mm/slub.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 0d700f6ca547..bb0e05a321e9 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -2813,7 +2813,7 @@ static void deactivate_slab(struct kmem_cache *s, struct slab *slab,
->  	struct slab new;
->  	struct slab old;
->  
-> -	if (slab->freelist) {
-> +	if (READ_ONCE(slab->freelist)) {
->  		stat(s, DEACTIVATE_REMOTE_FREES);
->  		tail = DEACTIVATE_TO_TAIL;
->  	}
+Patches 1-6 are based on bpf-next/master, but path 1 and 2 are
+apply-able on linux-trace.git tree probes/for-next branch.
+Patch 7 is based on man-pages master.
+
+v4 changes:
+  - added acks [Oleg,Andrii,Masami]
+  - reworded the man page and adding more info to NOTE section [Masami]
+  - rewrote bpf tests not to use trace_pipe [Andrii]
+  - cc-ed linux-man list
+
+Also available at:
+  https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  uretprobe_syscall
+
+thanks,
+jirka
+
+
+Notes to check list items in Documentation/process/adding-syscalls.rst:
+
+- System Call Alternatives
+  New syscall seems like the best way in here, becase we need
+  just to quickly enter kernel with no extra arguments processing,
+  which we'd need to do if we decided to use another syscall.
+
+- Designing the API: Planning for Extension
+  The uretprobe syscall is very specific and most likely won't be
+  extended in the future.
+
+  At the moment it does not take any arguments and even if it does
+  in future, it's allowed to be called only from trampoline prepared
+  by kernel, so there'll be no broken user.
+
+- Designing the API: Other Considerations
+  N/A because uretprobe syscall does not return reference to kernel
+  object.
+
+- Proposing the API
+  Wiring up of the uretprobe system call si in separate change,
+  selftests and man page changes are part of the patchset.
+
+- Generic System Call Implementation
+  There's no CONFIG option for the new functionality because it
+  keeps the same behaviour from the user POV.
+
+- x86 System Call Implementation
+  It's 64-bit syscall only.
+
+- Compatibility System Calls (Generic)
+  N/A uretprobe syscall has no arguments and is not supported
+  for compat processes.
+
+- Compatibility System Calls (x86)
+  N/A uretprobe syscall is not supported for compat processes.
+
+- System Calls Returning Elsewhere
+  N/A.
+
+- Other Details
+  N/A.
+
+- Testing
+  Adding new bpf selftests and ran ltp on top of this change.
+
+- Man Page
+  Attached.
+
+- Do not call System Calls in the Kernel
+  N/A.
+
+
+[0] https://lore.kernel.org/bpf/ZeCXHKJ--iYYbmLj@krava/
+---
+Jiri Olsa (6):
+      uprobe: Wire up uretprobe system call
+      uprobe: Add uretprobe syscall to speed up return probe
+      selftests/bpf: Add uretprobe syscall test for regs integrity
+      selftests/bpf: Add uretprobe syscall test for regs changes
+      selftests/bpf: Add uretprobe syscall call from user space test
+      selftests/bpf: Add uretprobe compat test
+
+ arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+ arch/x86/kernel/uprobes.c                                   | 115 ++++++++++++++++++++++++++++
+ include/linux/syscalls.h                                    |   2 +
+ include/linux/uprobes.h                                     |   3 +
+ include/uapi/asm-generic/unistd.h                           |   5 +-
+ kernel/events/uprobes.c                                     |  24 ++++--
+ kernel/sys_ni.c                                             |   2 +
+ tools/include/linux/compiler.h                              |   4 +
+ tools/testing/selftests/bpf/.gitignore                      |   1 +
+ tools/testing/selftests/bpf/Makefile                        |   7 +-
+ tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c       | 123 ++++++++++++++++++++++++++++-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 382 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_syscall.c          |  15 ++++
+ tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  17 +++++
+ 14 files changed, 691 insertions(+), 10 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c
+
+Jiri Olsa (1):
+      man2: Add uretprobe syscall page
+
+ man2/uretprobe.2 | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 man2/uretprobe.2
