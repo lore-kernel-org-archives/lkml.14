@@ -1,88 +1,89 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747D315E1EF;
-	Thu,  2 May 2024 16:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42B9154457;
+	Thu,  2 May 2024 16:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714667289; cv=none; b=IyXxZ3agVpeLCP46Dz/tbUBUJHy8/DwHBHRw25MCGx/U8Xd+/rJ7ADeZxcyhr76J+6/ocvtsTsnrYaI8USY0AWs9mBZr+G7QGMmDS4lAkJnA23E4T4MGbNj5dNXn5y5oPj41tPM6LKA3vuL4AOsgVH9tYr3o1tgPVG/P957iZCQ=
+	t=1714667304; cv=none; b=IxOWkWAq4SD46k2O69tP96J57kk85GoVTG5t2hSl7BUk76KmvAio+LXX6LhxHdpwWgsrFVH0cBl6riFaZuL8yU5e7QdZMV277ToxB/cVI9Xs77wI1FKHb5xK7LTsntl3ZwzE40fLh/67ZIZzVNBMeq1I1ohJxSaWjIR6Ol1DBBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714667289; c=relaxed/simple;
-	bh=8CN60vsDhsaBYBw8dNPoZqC4vHRsiqNxpPf+1mCw9fI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Cxh08/JO/vSjmWGIS97KCos6V2U5WbfRjmPvcOssbLFCY056N37tRdnpTmpgzwwEYHhqXdlN/5QCMTxokUbFxfqQXAe6DXAboVhJiYzH2xa0aYna2j7lBYCR/Uf42oU+aKRoaZZ+M1QEre1wTVG4tIKStidQa+NvvehTQgo4CS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-79100a90868so335646185a.2;
-        Thu, 02 May 2024 09:28:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714667286; x=1715272086;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sLr63wSRKN1zYIcrCH+ZmDq9lvkzTwxbqszK/XM362s=;
-        b=StTiWlY1ifL8W0YXYqLBwXk8/elJJQdpP3f9tdRUAFu7742SFvmYkAkT5nKdQgmXR2
-         Tq590Djp2oNQ2RMsNY5UV0lHY1VVl+MX1EsScRErGQG7XND1kOJVErJiGVuo2zjzM4Iy
-         gZLSm8xeL2vz8mkQmet4Zo0Fvu7PMiKvKgbgZ2lEaSojWBhh93q9hHjCEyX+jJ9djFqR
-         nfWnbK4X528Q8Yejh6vqriwNy1zBpYxSWsmEpqCl4Y2UizznCxdHIlIHyUHE7ze5A+U+
-         QsjlmRu88PAYIIFcO4y6tNj/m9CECphgDnNm7IjFvNAVrBOT5PJxYMYnqOLfdz68+KOm
-         UUfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYmt4ZdYS11gRuwXBauSY1p1trBf7PMnInIDJDgd+AkfpVSk8J4XZ+UiOoeKQyP+TuMUArO1rXXundUN6CI2Fv0V/riG/kGHTanaMwZveuHihIC+cT1GjK3Pdz+o2lrEPY5N7fwb1X8KNpj7z5
-X-Gm-Message-State: AOJu0Yylv4+as6tV5A7h+tm0FHzmLdYWtVZCY/RTjwvneUfd7gPaCq0F
-	2bgSFCd8GinTknABBXRyidBMiXgpv4uAD48Nfl1ZDUgFXmaY0A6cJBJdiqtxSPs=
-X-Google-Smtp-Source: AGHT+IE8O/JMsKuYSwWcU2BZsRBaUrLuaKL/7Li1OU1jCXzWkSXo3VNANI02MVjKmhk+yuspNLJFvw==
-X-Received: by 2002:ae9:f510:0:b0:78d:5c65:f2a0 with SMTP id o16-20020ae9f510000000b0078d5c65f2a0mr91478qkg.21.1714667286493;
-        Thu, 02 May 2024 09:28:06 -0700 (PDT)
-Received: from tofu.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id v12-20020a05620a0a8c00b0078f1ae252c6sm483349qkg.49.2024.05.02.09.28.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 09:28:06 -0700 (PDT)
-From: Sungwoo Kim <iam@sung-woo.kim>
-To: luiz.dentz@gmail.com
-Cc: daveti@purdue.edu,
-	benquike@gmail.com,
-	Sungwoo Kim <iam@sung-woo.kim>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Bluetooth: HCI: Fix potential null-ptr-deref
-Date: Thu,  2 May 2024 12:09:31 -0400
-Message-Id: <20240502160931.1135175-1-iam@sung-woo.kim>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1714667304; c=relaxed/simple;
+	bh=igeGofHHX03XUM7K37J588YrkNVJAkcgHSuZsnjbMRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kGrKhySPDp0ZYFTdn+N3zFMKCmGfFGyeAViWPu/jc1VsaLp7XCMLRhbBQvMrFibpD2kvLle39eooAt+iVi7b9fynje4MfuKd0bYSTw+KUyPNQtoZvhm7okGb3By/47av87eE7oxu0AS4cXdvQntZZekd92VE+5JDX6nXcppunh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tkwArCD5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tkwArCD5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D79ADC113CC;
+	Thu,  2 May 2024 16:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714667304;
+	bh=igeGofHHX03XUM7K37J588YrkNVJAkcgHSuZsnjbMRY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tkwArCD524hvWVLbY/B04VyZtyU2tSmLXTC+TN/3fNo1FFjhjp+e3HDRt66njqDKB
+	 wTpSEwE6jVMeS3d3xMfLLOksc1ddn7gvw3UY4Sq+w7RKVV8HA977fRZj9yYHtKwZ87
+	 9cWjCOHgQJJsrNlLKy5RoiUVP4kx4WhVE7KzStDBI+tK2S8uoslj2M0TWCE2tEOFuw
+	 /MOMN1Z0IdPcYVCAyk4jpzy6Lt6DIcv3VGgEkEUw+bWDxRaYzp9f+9vagunjJ7jQuq
+	 2+w7eY/+3Bs++xIUIgDjNo83QuObVB4VuHPezAYebaNgU0L84haFAdu+WN8hM4n2BD
+	 WaPcMNA4q+gzA==
+Date: Thu, 2 May 2024 17:28:18 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org, bhelgaas@google.com,
+	james.morse@arm.com, jhugo@codeaurora.org, jeremy.linton@arm.com,
+	john.garry@huawei.com, Jonathan.Cameron@huawei.com,
+	pierre.gondois@arm.com, sudeep.holla@arm.com, tiantao6@huawei.com
+Subject: Re: [PATCH v4 1/3] riscv: cacheinfo: remove the useless input
+ parameter (node) of ci_leaf_init()
+Message-ID: <20240502-secrecy-unleveled-e173419c54ec@spud>
+References: <20240418034330.84721-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jCp1f9hek9NXabnN"
+Content-Disposition: inline
+In-Reply-To: <20240418034330.84721-1-cuiyunhui@bytedance.com>
 
-Fix potential null-ptr-deref in hci_le_big_sync_established_evt().
 
-Fixes: f777d8827817 (Bluetooth: ISO: Notify user space about failed bis connections)
-Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
----
-v1 -> v2:
-- add a Fixes tag
-- make the commit message concise
+--jCp1f9hek9NXabnN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- net/bluetooth/hci_event.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Thu, Apr 18, 2024 at 11:43:28AM +0800, Yunhui Cui wrote:
+> ci_leaf_init() is a declared static function. The implementation of the
+> function body and the caller do not use the parameter (struct device_node
+> *node) input parameter, so remove it.
+>=20
+> Fixes: 6a24915145c9 ("Revert "riscv: Set more data to cacheinfo"")
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 4a27e4a17..d72d238c1 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -7037,6 +7037,8 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
- 			u16 handle = le16_to_cpu(ev->bis[i]);
- 
- 			bis = hci_conn_hash_lookup_handle(hdev, handle);
-+			if (!bis)
-+				continue;
- 
- 			set_bit(HCI_CONN_BIG_SYNC_FAILED, &bis->flags);
- 			hci_connect_cfm(bis, ev->status);
--- 
-2.34.1
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
+By the way, please use cover letters for multi patch patchsets. I don't
+enjoy marking previous versions "superceded" by hand in patchwork.
+
+Thanks,
+Conor.
+
+--jCp1f9hek9NXabnN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjO/IgAKCRB4tDGHoIJi
+0hi4AQCMArFXXQ1jipb+xchGlJ3/aeXo1IgXwQ7MxE3mxAbG9QD/UwOrcrpHE3gN
+t4eD8gxKhTy6Wmuj7HiFcstVa4iezAg=
+=jJp+
+-----END PGP SIGNATURE-----
+
+--jCp1f9hek9NXabnN--
