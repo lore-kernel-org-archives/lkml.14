@@ -1,106 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5951C5731F;
-	Thu,  2 May 2024 10:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1DF5B5D3;
+	Thu,  2 May 2024 10:11:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714644699; cv=none; b=fZotwVxUM14nenC4npaDHbaZpcAfkflRhEMjQBK7IuTzTwkWHEtXckSWNcCRQVtnynpntb/tgnHdVVuvIA9aZjCDObRQe379tWAncBevXuiSnxykrGn5QgxT0B2ifdri3bjfJxxMpzV8SIyN6K2weqneCZ4C3rY6KqbYLT9FWKQ=
+	t=1714644711; cv=none; b=gLRUvYHw0z1XiFujCgpC2guidE9N6HRdReCrwW7J1LSEa2X2EDFMbqahyZ32Yr8uNSMKl7HzPULH+QpRnOsRNmf97kWCzUaAwXqoDAdUCoTEM46EsnpaC1yyIryM5PHSftieLZxAV8bBdNOiyt3q5L+Pqfeh4U76FGFbcuPLRcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714644699; c=relaxed/simple;
-	bh=dAcIeF1zYIZcs4LzSltVRWcQ+tLrYYFfHlx+Gup6U8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OCU+rOKc0kNK8RVP3uVspFiYk6JzWpZMdGkOwr9lllCzE5q4nK+9aESxFtSqguFUsmLsILwFs1vPR/J2+YZMqP0OdVTHvASlydD7dOeLcMdHztbDPHvH16irIoJZFnmguMdKT5NGTj20dYT52UYtVFmU5LF+7fNgI+nXGz2D0LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1r9EM3J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714644711; c=relaxed/simple;
+	bh=GUU+v+UJIqZI+g6ox/QR1gLsNl4vzZaTvvschNpsLRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DHeCuW8LwO+el7IIBQAs0cGs9bk2LxeSteQNYT2Uj0oi7NNFowZufwlKOQu85LybL1EqQzOOJZCyYsDBK9h01r73JxliiQjB0rwkN1SApsPpr1Gx/e+RMWfLYfpewb7IOTqtoDk2wkeVLJYTHt/GLzjeTh0t33ozzcFvSu7c54s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=US0lC9wa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1r9EM3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3900C113CC;
-	Thu,  2 May 2024 10:11:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="US0lC9wa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1878FC32789;
+	Thu,  2 May 2024 10:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714644698;
-	bh=dAcIeF1zYIZcs4LzSltVRWcQ+tLrYYFfHlx+Gup6U8k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=o1r9EM3JPsKjyByhcMt6caBtUltI5yojwaPHE60fGGGJlColapnsDivyytTt578jL
-	 Gbq+hu/T0O3txaCK1yZh0p9YgnsFLnEpdPq9ynYCUGSR6s0n/gn4ah5JWNkiN3CkFl
-	 dFMRrgNkL9IEdBNjLpAW6z17jxi8+Wjl0vk6MU2KySe3Y+s+OIc2MupivjTJ5pSQFG
-	 f452+RlewfVoxXQ2diP3N3c8JeI8n6j4fvWCM7kcM68MwKDANeHg3HJeWv9xkCFKmt
-	 M8cCyhtT9vn1COElNWP9oc85JRhHUK4/DI1NrQbH/tUQvUrXcbDO9iaA03xwLsLpVx
-	 4+6cpzZF3kV8w==
-Date: Thu, 2 May 2024 11:11:30 +0100
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Broadcom
- internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Sakari
- Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao <bingbu.cao@intel.com>,
- Tianshu Qiu <tian.shu.qiu@intel.com>, linux-media@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2 1/5] media: bcm2835-unicam: Fix build with !PM
-Message-ID: <20240502111130.769402fa@sal.lan>
-In-Reply-To: <20240501-fix-ipu6-v2-1-a5629a37a0fb@chromium.org>
-References: <20240501-fix-ipu6-v2-0-a5629a37a0fb@chromium.org>
-	<20240501-fix-ipu6-v2-1-a5629a37a0fb@chromium.org>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1714644711;
+	bh=GUU+v+UJIqZI+g6ox/QR1gLsNl4vzZaTvvschNpsLRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=US0lC9wa3NYxAnawMg86UNKE9Xb8wuRB5rxVj2FDjyQI+k2I4GdUXZ56ohM9Qmw47
+	 zEjHHglUdkZ2n9BCW35vITjONMi9O5fRse2iWe1h7YBY9VgfzCqyJfWvY0IeCA1VBW
+	 z5sYwP+76Uil1buhBZr5MXKgAhg1G7XYUgzmvJFiSgxLk/Zrm6YfLp4wTh6RK36I/r
+	 ElaA02wuNHRkOdwyGg/yGvY44wKdNrX+z3TWK6/nTjrdErKQTzga9Lwux1aIEn0c5m
+	 3o+ntGkwvxekOsNRiGpqHbZZCrUhDW3bJ+7Dxtwd3vGJVm2HSqjya/8E6EZ2Ts1aYl
+	 vtl00Deidn2KA==
+Date: Thu, 2 May 2024 11:11:45 +0100
+From: Lee Jones <lee@kernel.org>
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: Andi Shyti <andi.shyti@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-kernel@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Duanqiang Wen <duanqiangwen@net-swift.com>,
+	"open list:SYNOPSYS DESIGNWARE I2C DRIVER" <linux-i2c@vger.kernel.org>,
+	"open list:WANGXUN ETHERNET DRIVER" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3 4/5] mfd: intel_quark_i2c_gpio: Utilize
+ i2c-designware.h
+Message-ID: <20240502101145.GT5338@google.com>
+References: <20240425214438.2100534-1-florian.fainelli@broadcom.com>
+ <20240425214438.2100534-5-florian.fainelli@broadcom.com>
+ <Ziu6gDOqhEYQNhcH@smile.fi.intel.com>
+ <fidbc7locp32lypdui67crj3qkj3nbcp5vpxcnlxrdmme2sn4c@npdan5ncxxog>
+ <fdbf6547-7e6d-408d-8ed8-13e449de181d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fdbf6547-7e6d-408d-8ed8-13e449de181d@linux.intel.com>
 
-Em Wed, 01 May 2024 13:08:09 +0000
-Ricardo Ribalda <ribalda@chromium.org> escreveu:
+On Thu, 02 May 2024, Jarkko Nikula wrote:
 
-> The driver can only match the device vide the DT table, so the table
-> should always be used, of_match_ptr does not make sense here.
->=20
-> Fixes:
-> drivers/media/platform/broadcom/bcm2835-unicam.c:2724:34: warning: =E2=80=
-=98unicam_of_match=E2=80=99 defined but not used [-Wunused-const-variable=
-=3D]
+> On 4/30/24 12:36 PM, Andi Shyti wrote:
+> > Hi Andy,
+> > 
+> > On Fri, Apr 26, 2024 at 05:30:24PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Apr 25, 2024 at 02:44:37PM -0700, Florian Fainelli wrote:
+> > > > Rather than open code the i2c_designware string, utilize the newly
+> > > > defined constant in i2c-designware.h.
+> > > 
+> > > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > 
+> > > P.S>
+> > > Note, my tags for MFD patches does not imply that I agree on the general idea
+> > > of this series, it's just in case if it will be approved by the respective
+> > > maintainers (I²C / MFD / etc).
+> > 
+> > I waited a bit to see if more comments were coming.
+> > 
+> Well I had doubts about the idea will it help maintaining code or do the
+> opposite but didn't receive a reply from the patch author:
+> 
+> https://lore.kernel.org/linux-i2c/62e58960-f568-459d-8690-0c9c608a4d9f@linux.intel.com/
+> 
+> Also Lee Jones have similar concerns:
+> 
+> https://lore.kernel.org/linux-i2c/20240502071751.GA5338@google.com/
 
-Be careful here: Fixes: <patch> is a tag used by stable people to
-identify if a patch needs to be backported. Using a Fixes: may cause
-such scripts to break.
+Right.  It's a NACK from me, sorry.
 
-(it caused a problem on my apply patch script, as it does reorder
-fixes tag).
-
-No need to resend it, as I can fix it when applying, but next time
-please use something like:
-
-	It fixes this warning:
-	drivers/media/platform/broadcom/bcm2835-unicam.c:2724:34: warning: =E2=80=
-=98unicam_of_match=E2=80=99 defined but not used [-Wunused-const-variable=
-=3D]
-
-(or some other similar word that won't be using a defined meta tag
-with a different meaning).
-
-Regards,
-Mauro
-
->=20
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/platform/broadcom/bcm2835-unicam.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/platform/broadcom/bcm2835-unicam.c b/drivers/m=
-edia/platform/broadcom/bcm2835-unicam.c
-> index bd2bbb53070e..c590e26fe2cf 100644
-> --- a/drivers/media/platform/broadcom/bcm2835-unicam.c
-> +++ b/drivers/media/platform/broadcom/bcm2835-unicam.c
-> @@ -2733,7 +2733,7 @@ static struct platform_driver unicam_driver =3D {
->  	.driver =3D {
->  		.name	=3D UNICAM_MODULE_NAME,
->  		.pm	=3D pm_ptr(&unicam_pm_ops),
-> -		.of_match_table =3D of_match_ptr(unicam_of_match),
-> +		.of_match_table =3D unicam_of_match,
->  	},
->  };
-> =20
->=20
+-- 
+Lee Jones [李琼斯]
