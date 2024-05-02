@@ -1,154 +1,255 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EE022F00;
-	Thu,  2 May 2024 07:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6BB405FB
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 07:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714636566; cv=none; b=PNXCQNlSgp9Vmk2PvejcaDIqwiBrAdgSXxdhisTECYocXE25t+WkEjWiOC1tvUD4l+fiEK2b9CXKDr+bxyiJhTc3WLs9o9A9BWjZrrkmq+Mj07Nw8gIuOPIUdu1D1KxzOzWdhKUNx9j67UJmlosHJwPtoRYwKUI244QWHU/BuTg=
+	t=1714636611; cv=none; b=PX04ACoaS9hVIN3LBAvUFJgaD+rdpJREGBBSY8zdRJhPvqzOMDA6co92oZ2W4EwPLUv11ZAd5LGLDuxxVnG7qdpUBR29GbRuTO10NFBLMta5JMI7wwNKzELPAY9EibADf6+qO4+iPex5/IPMMzukqSErggEIJruc2m37DLyAWvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714636566; c=relaxed/simple;
-	bh=Vc+UiWe/PFfiLW9+QHsBDK/nqefj6balOiVXYNuF3i0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IT0Tvdm0tQ517aRMic8XKB88AqjVVPVmfuWT7lFhqLVV+kNJWbUsfgd5qJbzRZVBjp+mCcV9/MjIBeI/F9bo3klOopRaAmKlc0GsyEVdGdOS9B164S4NUSGd3gzS+b7iMKsepVdNh/5XzWFIJfbJ8KAtyljQtguOYdCA4Z7zLOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a58e787130fso265321966b.0;
-        Thu, 02 May 2024 00:56:04 -0700 (PDT)
+	s=arc-20240116; t=1714636611; c=relaxed/simple;
+	bh=7yHUReQVpBbuF59WgVxqcgBxLTriwnNY9V4A/86EQqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lDqmUH1sewrhcC1ixDjKQnH2hnxubPUvin8zztHySGNfu6XI6oOw2FIQHlE6zMjs9U+4A8DqwubOR53SQTPaOprnSE5nuQAOo9nXNK9EW4zVT8VSDlF6K+DcHVRVYLdjgZyUuIg63f6mUpVv2BO9S2PnU0A+bNUY+gNex12XPBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bB1+ngLp; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bB1+ngLp"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2e0a2870bceso51241161fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 00:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714636608; x=1715241408; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O2K7W10bUuhGIOY6LbVf5zRLSo3TolQftZm0XAlBBVE=;
+        b=bB1+ngLpOKsPIRqtatn9z6eQOKUuH9HVr/KcdiVq2B7vZlxpt4Fqun7SlolesZ8EKm
+         B3ca1BFa1E8AWUTzmaIwLdBTAQSXmalLTbq1qUYNxyxiKsDUXLnqHOdYPlgVdujbfRDq
+         W/r3F5ryoOUc61zYz8rwGUT78EYJ2PKW0bX5uqWeezqEWxH1BJt7o4ufcFBwXX9VKvne
+         9RvVftDfTxt3XmDMrUjh6tyNmeIxD2A6dRtTEVUGpLea1+e2aDpx8ZsbPwSzBVnytqYl
+         H4oB0vlrTYgRMaNZIAMogRMPrPd7VOwzMBTEaQG8LUNciIOY+haPxQ//DerOsV47gkbR
+         Byag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714636563; x=1715241363;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1714636608; x=1715241408;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gCHs5AyIZZ846owNPHrscIolxUHAkH2dX6I4QmI8RyU=;
-        b=XPkIocWuy4hwM7UhR0NcfEzSxSsMW104AseASWvLZDx5Fmox9+lc3Mw9kzXf3AA/DT
-         j54EQuBspHA6jzGRiKiZdpWZAoPeaRJ0Uq0jCxrxFhPvmMBZUlfjN6qbShHzQe3Lm1Tf
-         nn6U7X2ZVMk/M4l8UOhFoChwEAtzDe5UlJv9l2g47Gi7mIRVdUzLtKbNNcB5vWxtU2uj
-         /qcQYA3akFC1md2l8pZljyQKQq/sVW3ltwa5g84Rl/u/gmSFknFH+rDeC3+tUl8PA/uz
-         EmMa/O4kZ7gMZbYkidGRX78GmqYdwrfajxQznCHCYgUb6O4hCdfl/OROYryL3cgf4p16
-         5xHw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1JJb/A6BlJU3bP7Bg3jnt6vhBiXGygiYx9N0hsCp1TaQom1HfdFlFPOG+fZWnKnGlo69GHfnwSdA+fmlR4pLjXTyXo4kscAsPJI2UI8IlV5uTfqUX9no7BOIiqeA5+eA7dihZURNMXkQx
-X-Gm-Message-State: AOJu0Yw4rbkGyS1ndTzVFkkROF5rGJyuVofAzuaGAacPeAOeCRa3w979
-	Z29XppxPPAQQ3qvEuwDz0Midcwrpn09q+mE5D7Hj/qh5KMjc2t7c
-X-Google-Smtp-Source: AGHT+IGFME45YUcGSIYJpvtT0MBUCcOSCBGxBO1lqQJPYJ00YYSsDdQL+TsG9vmbcHd1ZjwEt6x6mw==
-X-Received: by 2002:a17:906:1ccc:b0:a58:85ab:354c with SMTP id i12-20020a1709061ccc00b00a5885ab354cmr1587893ejh.1.1714636562454;
-        Thu, 02 May 2024 00:56:02 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id jw20-20020a17090776b400b00a4660b63502sm253754ejc.12.2024.05.02.00.56.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 May 2024 00:56:02 -0700 (PDT)
-Message-ID: <01cbcdf5-8a7a-4b47-a2aa-05c041e3cab2@kernel.org>
-Date: Thu, 2 May 2024 09:56:00 +0200
+        bh=O2K7W10bUuhGIOY6LbVf5zRLSo3TolQftZm0XAlBBVE=;
+        b=dvG5gtekYPnehnLFR7FvxKLqJKiH/cPb7TvA1cEszm/mepCceFLYMVBQUPrnt1LFMt
+         ZLRFHPrCKVit7I6u0MgJjWVLQCXwd6oaGKM9YrpHIbO39RF6AcDcRA3VqDaMtv+b7FR/
+         B1LFhwyBeJLIYI5f5kj/XLHpgyZx4levXxzzRTQIcuwyqi/cIm5OvJGOxe0l3IjpuSqM
+         wgoSf0TPPAg++FqiE2ZGruAeou31KcMkdqA2+VHymy04NbO+t0UI9Aw9MZ9xG5S9bdWY
+         CD9bJ7pmcW7mHX02aqxJKP26tzw4PWA8xFIgEFgyJLzsDnenWwCCvWXDX2wdSibGQiJV
+         N0jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5TZo9fS9McAF6BI/C7mV/DBhPjAtvwSpQ6z8Zm4oklm+g/emQ2psXiBkDAe1dYwbO+ZPTkg0oq6WjdEzmJbR+cpwwnEJQGiazAKjy
+X-Gm-Message-State: AOJu0YxZr5L1M6vtb483UJM+rJV8kC92IhWIvsVZ55KidyxTd+ul5j79
+	hJqvS4w8u3GbnYuuiy0ziroeGpVPrF+4pa6rCOzMqzDQfD3LyEUReww7EBmdL/E=
+X-Google-Smtp-Source: AGHT+IG4eu72+9YmFm7RNA3TZngr6D6gFdgVwSM5kAeMoCWbd4wSkocjjJm4rpizJdh+aX/XE/7fyA==
+X-Received: by 2002:a2e:3201:0:b0:2df:6cb8:c92f with SMTP id y1-20020a2e3201000000b002df6cb8c92fmr2508931ljy.23.1714636607767;
+        Thu, 02 May 2024 00:56:47 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id z11-20020a2e884b000000b002d816c0500asm85707ljj.118.2024.05.02.00.56.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 00:56:47 -0700 (PDT)
+Date: Thu, 2 May 2024 10:56:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: duoming@zju.edu.cn
+Cc: linux-hams@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, pabeni@redhat.com, kuba@kernel.org,
+	edumazet@google.com, davem@davemloft.net, jreuter@yaina.de,
+	lars@oddbit.com, Miroslav Skoric <skoric@uns.ac.rs>
+Subject: Re: [PATCH net] ax25: Fix refcount leak issues of ax25_dev
+Message-ID: <8767454a-2d5a-4c6d-b887-440047c9bc5b@moroto.mountain>
+References: <20240501060218.32898-1-duoming@zju.edu.cn>
+ <7fcfdc9a-e3f3-49a1-9373-39b5ad745799@moroto.mountain>
+ <1402dfc8.20a4b.18f37963e87.Coremail.duoming@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] tty: sunsu: Simplify device_node cleanup by
- using __free
-To: Shresth Prasad <shresthprasad7@gmail.com>, davem@davemloft.net,
- gregkh@linuxfoundation.org
-Cc: sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, javier.carrasco.cruz@gmail.com,
- skhan@linuxfoundation.org, Julia Lawall <julia.lawall@inria.fr>
-References: <20240501084110.4165-2-shresthprasad7@gmail.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20240501084110.4165-2-shresthprasad7@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1402dfc8.20a4b.18f37963e87.Coremail.duoming@zju.edu.cn>
 
-On 01. 05. 24, 10:41, Shresth Prasad wrote:
-> Add `__free` function attribute to `ap` and `match` pointer
-> initialisations which ensure that the pointers are freed as soon as they
-> go out of scope, thus removing the need to manually free them using
-> `of_node_put`.
+On Thu, May 02, 2024 at 12:35:44PM +0800, duoming@zju.edu.cn wrote:
+> On Wed, 1 May 2024 20:43:37 +0300 Dan Carpenter wrote:
+> > I'm always happy to take credit for stuff but the Reported by should go
+> > to Lars and Miroslav.
+> > 
+> > Reported-by: Lars Kellogg-Stedman <lars@oddbit.com>
+> > Reported-by: Miroslav Skoric <skoric@uns.ac.rs>
 > 
-> This also removes the need for the `goto` statement and the `rc`
-> variable.
+> This patch is not related with the problem raised by Lars Kellogg-Stedman
+> and Miroslav Skoric, it only solves the reference counting leak issues of
+> ax25_dev in ax25_addr_ax25dev() and ax25_dev_device_down(). So I think
+> there is no need to change the "Reported by" label.
 > 
-> Tested using a qemu x86_64 virtual machine.
-> 
-> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-> Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
-> ---
-> Changes in v2:
->      - Specify how the patch was tested
-> 
->   drivers/tty/serial/sunsu.c | 37 +++++++++++--------------------------
->   1 file changed, 11 insertions(+), 26 deletions(-)
 
-Nice cleanup.
+Ah...  I was really hoping it was related to the other bugs.
 
-> --- a/drivers/tty/serial/sunsu.c
-> +++ b/drivers/tty/serial/sunsu.c
-> @@ -1382,44 +1382,29 @@ static inline struct console *SUNSU_CONSOLE(void)
->   
->   static enum su_type su_get_type(struct device_node *dp)
->   {
-> -	struct device_node *ap = of_find_node_by_path("/aliases");
-> -	enum su_type rc = SU_PORT_PORT;
-> +	struct device_node *ap __free(device_node) =
-> +			    of_find_node_by_path("/aliases");
+Okay, what about we separate this into different patches one for each
+bug?  The changes to ax25_addr_ax25dev() and ax25_dev_free() are
+obvious and could go in as-is but as two separate patches.
 
-If we used c++, that would be even nicer; like:
-Destroyer ap(of_find_node_by_path("/aliases"));
+The changes to ax25_dev_device_up/down() are more subtle.
 
-But we don't :P. OTOH. can't we achieve that with macro-fu and typeof() 
-magic? Perhaps not really exactly the above, but something like
-   Destroyer(ap, of_find_node_by_path("/aliases"));
-maybe?
+The ax25_dev_list stuff is frustrating.  It would be so much easier if
+it were a normal list and you could just do:
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+        /*
+         *      Remove any packet forwarding that points to this device.
+         */
+        list_for_each_entry(s, ax25_dev_list, list) {
+                if (s->forward == dev)
+                        s->forward = NULL;
+        }
 
-thanks,
--- 
-js
-suse labs
+        list_for_each_entry(s, ax25_dev_list, list) {
+                if (s == ax25_dev) {
+                        list_del(s);
+                        free_net = true;
+                        break;
+                }
+        }
+
+        spin_unlock_bh(&ax25_dev_lock);
+        dev->ax25_ptr = NULL;
+        if (free_net)
+                netdev_put(dev, &ax25_dev->dev_tracker);
+        ax25_dev_put(ax25_dev);
+}
+
+Why do we call netdev_put() on that one path?  Btw, here is an untested
+conversion to lists...
+
+regards,
+dan carpenter
+
+diff --git a/include/net/ax25.h b/include/net/ax25.h
+index 0d939e5aee4e..c2a85fd3f5ea 100644
+--- a/include/net/ax25.h
++++ b/include/net/ax25.h
+@@ -216,7 +216,7 @@ typedef struct {
+ struct ctl_table;
+ 
+ typedef struct ax25_dev {
+-	struct ax25_dev		*next;
++	struct list_head	list;
+ 
+ 	struct net_device	*dev;
+ 	netdevice_tracker	dev_tracker;
+@@ -330,7 +330,6 @@ int ax25_addr_size(const ax25_digi *);
+ void ax25_digi_invert(const ax25_digi *, ax25_digi *);
+ 
+ /* ax25_dev.c */
+-extern ax25_dev *ax25_dev_list;
+ extern spinlock_t ax25_dev_lock;
+ 
+ #if IS_ENABLED(CONFIG_AX25)
+diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
+index 282ec581c072..b632af38f1e1 100644
+--- a/net/ax25/ax25_dev.c
++++ b/net/ax25/ax25_dev.c
+@@ -22,11 +22,12 @@
+ #include <net/sock.h>
+ #include <linux/uaccess.h>
+ #include <linux/fcntl.h>
++#include <linux/list.h>
+ #include <linux/mm.h>
+ #include <linux/interrupt.h>
+ #include <linux/init.h>
+ 
+-ax25_dev *ax25_dev_list;
++static struct list_head ax25_dev_list;
+ DEFINE_SPINLOCK(ax25_dev_lock);
+ 
+ ax25_dev *ax25_addr_ax25dev(ax25_address *addr)
+@@ -34,11 +35,12 @@ ax25_dev *ax25_addr_ax25dev(ax25_address *addr)
+ 	ax25_dev *ax25_dev, *res = NULL;
+ 
+ 	spin_lock_bh(&ax25_dev_lock);
+-	for (ax25_dev = ax25_dev_list; ax25_dev != NULL; ax25_dev = ax25_dev->next)
++	list_for_each_entry(ax25_dev, &ax25_dev_list, list) {
+ 		if (ax25cmp(addr, (const ax25_address *)ax25_dev->dev->dev_addr) == 0) {
+ 			res = ax25_dev;
+ 			ax25_dev_hold(ax25_dev);
+ 		}
++	}
+ 	spin_unlock_bh(&ax25_dev_lock);
+ 
+ 	return res;
+@@ -52,6 +54,10 @@ void ax25_dev_device_up(struct net_device *dev)
+ {
+ 	ax25_dev *ax25_dev;
+ 
++	// FIXME: do call this in probe or something
++	if (!ax25_dev_list.next)
++		INIT_LIST_HEAD(&ax25_dev_list);
++
+ 	ax25_dev = kzalloc(sizeof(*ax25_dev), GFP_KERNEL);
+ 	if (!ax25_dev) {
+ 		printk(KERN_ERR "AX.25: ax25_dev_device_up - out of memory\n");
+@@ -85,8 +91,7 @@ void ax25_dev_device_up(struct net_device *dev)
+ #endif
+ 
+ 	spin_lock_bh(&ax25_dev_lock);
+-	ax25_dev->next = ax25_dev_list;
+-	ax25_dev_list  = ax25_dev;
++	list_add(&ax25_dev->list, &ax25_dev_list);
+ 	spin_unlock_bh(&ax25_dev_lock);
+ 	ax25_dev_hold(ax25_dev);
+ 
+@@ -111,23 +116,18 @@ void ax25_dev_device_down(struct net_device *dev)
+ 	/*
+ 	 *	Remove any packet forwarding that points to this device.
+ 	 */
+-	for (s = ax25_dev_list; s != NULL; s = s->next)
++	list_for_each_entry(s, &ax25_dev_list, list) {
+ 		if (s->forward == dev)
+ 			s->forward = NULL;
+-
+-	if ((s = ax25_dev_list) == ax25_dev) {
+-		ax25_dev_list = s->next;
+-		goto unlock_put;
+ 	}
+ 
+-	while (s != NULL && s->next != NULL) {
+-		if (s->next == ax25_dev) {
+-			s->next = ax25_dev->next;
++	list_for_each_entry(s, &ax25_dev_list, list) {
++		if (s == ax25_dev) {
++			list_del(&s->list);
+ 			goto unlock_put;
+ 		}
+-
+-		s = s->next;
+ 	}
++
+ 	spin_unlock_bh(&ax25_dev_lock);
+ 	dev->ax25_ptr = NULL;
+ 	ax25_dev_put(ax25_dev);
+@@ -200,16 +200,13 @@ struct net_device *ax25_fwd_dev(struct net_device *dev)
+  */
+ void __exit ax25_dev_free(void)
+ {
+-	ax25_dev *s, *ax25_dev;
++	ax25_dev *s, *n;
+ 
+ 	spin_lock_bh(&ax25_dev_lock);
+-	ax25_dev = ax25_dev_list;
+-	while (ax25_dev != NULL) {
+-		s        = ax25_dev;
+-		netdev_put(ax25_dev->dev, &ax25_dev->dev_tracker);
+-		ax25_dev = ax25_dev->next;
++	list_for_each_entry_safe(s, n, &ax25_dev_list, list) {
++		netdev_put(s->dev, &s->dev_tracker);
++		list_del(&s->list);
+ 		kfree(s);
+ 	}
+-	ax25_dev_list = NULL;
+ 	spin_unlock_bh(&ax25_dev_lock);
+ }
+
 
