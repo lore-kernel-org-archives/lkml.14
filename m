@@ -1,115 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0502015B117;
-	Thu,  2 May 2024 15:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C8115AACC;
+	Thu,  2 May 2024 15:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714663752; cv=none; b=Im/q4XQgD1L66OOuYpZYC7TeVRkUznnFc0V1tpt8moRMNI1kHzhZB6vuH6BQeN+KStMqBdIUPLaE/7VX3EcPc9+J8xpD6dvTsdIWvL+m2xpAKJwiW8R8SPXRFt6kM4QHQnVZpxv9nHpku1eVplcA9TSSam1tyMp0qZ8rdrIAMEw=
+	t=1714663758; cv=none; b=czBQKJRYigD42xOruHnu1A/wEBeWCMbxJF1VPa96JvnyEU0cXH/cRRVufQlnhUuF9uxgPWcKDuiKkvNhieG8ajuw4fJLAKIPUJbJvC7zvPgaq93ujOdYZZ1J+wwFqOcNWuipJqMRBqUtCHffyfgNUUnr6izX+F1n5EglevMeDns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714663752; c=relaxed/simple;
-	bh=cPGa8qLZCWdSfi3FLowd1sGPDmQvoIjKXRVt4ZJcvo0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJsuST65HBrJzM+KmYVjqpffhM2rrHgWQGyED3wIj6r1YxO2Ej5RQfV42itU7dzrzo0YlthboToieaOzCXMsy51AAY2jJxBiUTvBPRNd7uYK/G91pIPSonvveFxeBSqi4x0awx7ligWgUBs+Nn0F4u/tvNjYQqtGM/Wmls+CgZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9U77uTj; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9U77uTj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714663751; x=1746199751;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cPGa8qLZCWdSfi3FLowd1sGPDmQvoIjKXRVt4ZJcvo0=;
-  b=l9U77uTj8rsuUsMksX4V7ADV/1V1GOAG5FGpJaI30v34khSnEbjJ1gwk
-   rARBBA1fXZ4WxdmEcCfuqpD+IEPEImFUuMyjf0CxHIB6digPPvtkT1qb0
-   vho4sDIlOzOvnUfRWVn7wRqBoe/87FSVmErWs13jdw9Dbg7G3OgDIIpvd
-   j5wPiq6ntXcGL3VvSaUPKJlxde4yh7zMCct8se0r8lbi3Jsgj6cUq/VmV
-   OcvDeHsYDXX14b0JBZGUu6nHcv16OtwBlsBQVWLyUgzv++maIc/LklO9z
-   4g+g9VBLPO93pX+2EdQY2HvQPCvAL7sIJk3wFqvtJO+Bvzv5pxtvZ7tgB
-   A==;
-X-CSE-ConnectionGUID: EpXw65IiSmW8drCIqrapCw==
-X-CSE-MsgGUID: OzXC1p55SWeS3CHSZDdqNA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="21585714"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="21585714"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 08:29:10 -0700
-X-CSE-ConnectionGUID: qW6WCQrGQ8OLazAZ0dlIGQ==
-X-CSE-MsgGUID: B6Bb5c08RSC2Z3CHlB3T0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="27160860"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 08:29:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s2YMr-00000003MXs-3dAB;
-	Thu, 02 May 2024 18:29:05 +0300
-Date: Thu, 2 May 2024 18:29:05 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Parker Newman <parker@finest.io>
-Cc: Parker Newman <pnewman@connecttech.com>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [PATCH v1 03/13] serial: 8250_exar: Kill CTI_PCI_DEVICE()
-Message-ID: <ZjOxQWc1OtGWatKC@smile.fi.intel.com>
-References: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
- <20240502144626.2716994-4-andriy.shevchenko@linux.intel.com>
- <20240502111314.63d66b54@SWDEV2.connecttech.local>
+	s=arc-20240116; t=1714663758; c=relaxed/simple;
+	bh=NbmtV0Lpae5Kt6tHaBmqxRRz2KjCUuAoY8gQ9gznMjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uXbb5gz+iTbPoTeM0dEjrrJLpm24QtXndLhAZwCTNSEOsAoN6jUgmJkZkSuRMqDF8iMyDmeW/lAF9U2kD55iFrdZn6o4/D/zvDt4SiuPGdEulcBDYZq9hdri1nhsYjo4Bd5Pq1q1bQ03CQC91j/T8KpjC7CkNma75xDFHtefCTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 242F2C113CC;
+	Thu,  2 May 2024 15:29:17 +0000 (UTC)
+Date: Thu, 2 May 2024 11:30:03 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] tracefs: Reset permissions on remount if
+ permissions are options
+Message-ID: <20240502113003.73c0fe38@gandalf.local.home>
+In-Reply-To: <20240502151620.400578783@goodmis.org>
+References: <20240502151547.973653253@goodmis.org>
+	<20240502151620.400578783@goodmis.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502111314.63d66b54@SWDEV2.connecttech.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 02, 2024 at 11:13:14AM -0400, Parker Newman wrote:
-> On Thu,  2 May 2024 17:43:57 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+On Thu, 02 May 2024 11:15:48 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > The CTI_PCI_DEVICE() duplicates EXAR_DEVICE(). Kill the former.
+> +/*
+> + * On a remount of tracefs, if UID or GID options are set, then
+> + * the mount point inode permissions should be used.
+> + * Reset the saved permission flags appropriately.
+> + */
+> +void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
+> +{
+> +	struct eventfs_inode *ei = ti->private;
 
-...
+And I just realized there's a race here too :-p
 
-> > -// For Connect Tech cards with Connect Tech vendor/device PCI IDs (FPGA based)
-> > -#define CTI_PCI_DEVICE(devid, bd) {                     \
-> > -	PCI_DEVICE_SUB(                                 \
-> > -		PCI_VENDOR_ID_CONNECT_TECH,             \
-> > -		PCI_DEVICE_ID_CONNECT_TECH_PCI_##devid, \
+I need to set ti->private = NULL before freeing the ei, and probably free
+the ei via RCU.
 
-
-#define PCI_DEVICE_SUB(vend, dev, subvend, subdev) \
-        .vendor = (vend), .device = (dev), \
-        .subvendor = (subvend), .subdevice = (subdev)
-
-#define PCI_DEVICE_DATA(vend, dev, data) \
-        .vendor = PCI_VENDOR_ID_##vend, .device = PCI_DEVICE_ID_##vend##_##dev, \
-        .subvendor = PCI_ANY_ID, .subdevice = PCI_ANY_ID, 0, 0, \
-        .driver_data = (kernel_ulong_t)(data)
+-- Steve
 
 
-> > -		PCI_ANY_ID,                             \
-> > -		PCI_ANY_ID), 0, 0,                      \
-> > -		(kernel_ulong_t)&bd                     \
-> > -	}
-> > -
-> >  #define EXAR_DEVICE(vend, devid, bd) { PCI_DEVICE_DATA(vend, devid, &bd) }
-
-> This is not correct. The CTI_PCI_DEVICE() macro is for cards that have the
-> Connect Tech PCI Vendor ID (not Sub-Vendor ID). EXAR_DEVICE() is for cards with
-> Exar PCI Vendor ID.
-
-Above I added current code of these macros, can you elaborate how it's incorrect?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +
+> +	if (!ei)
+> +		return;
+> +
+> +	if (update_uid)
+> +		ei->attr.mode &= ~EVENTFS_SAVE_UID;
+> +
+> +	if (update_gid)
+> +		ei->attr.mode &= ~EVENTFS_SAVE_GID;
+> +
+> +	if (!ei->entry_attrs)
+> +		return;
+> +
+> +	for (int i = 0; i < ei->nr_entries; i++) {
+> +		if (update_uid)
+> +			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_UID;
+> +		if (update_gid)
+> +			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_GID;
+> +	}
+> +}
+> +
