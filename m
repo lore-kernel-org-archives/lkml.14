@@ -1,145 +1,66 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from 0.smtp.remotehost.it (0.smtp.remotehost.it [213.190.28.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45757819;
-	Thu,  2 May 2024 06:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4FE1CAAE;
+	Thu,  2 May 2024 06:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.190.28.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714632443; cv=none; b=fqqvpDrq3HYNcfcuTcoujxUSsUozfIeSg8FZfds7RRklTndRiN0Ry/0KCriDZzV/3P8wz2KEDjiFQH/qw6w0N7kp5Ad3fTGbqrIlqOu44pRGOeGHxei77+mILcdcaNmZpBwF4RkQ5N+XlzXjAn/pRA4S627NEf8BNlDmkO7POfM=
+	t=1714632449; cv=none; b=Bkzqdx8OXzavWse7FIVfBFCbwviO9swCaPLulfyUwq42l7RxmcrypRAAQjr1vAsQ82CmR/ayYtaEAJjc3d62x7scW29NxueYz0aqbSHWFe7kXapgQ1mh8dXvj3/BCmR36taDYnNY3Bo3zJNgx6Rx7TfiOFRpytAGaIXwvnIi+GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714632443; c=relaxed/simple;
-	bh=SLYUWv1FqeTmDucVkpoJ6azIPS2DejVJixDpKAATot0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Z2TtyPyOH0DgJYgu8S2XN3DqCHKT3I1lO5abxB7NLf7KRUHJghRIlLDMHfpg0wFWo6GIu2sFq6WZnPA2bb/HGvt6Yvt2W3GCP9N+RuryaNSb6XEGm1L1hEMEI7XJaV3bxMg5ojJalt6aF70F9IITWezZFny3ZLJ928Hf3iLBeZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=LKe0TM3L; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1714632449; c=relaxed/simple;
+	bh=8nrCqHmR8DI15VzIKjBKRM4ja7aQLPI8bwpgUN0NccA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EAC3F2SfeF8XCFHzctDmIVuELrkyHC8MTtc39atruyGNAHr48hiCza465tMnAxT74GJMiNnIQWdWSnHaXTt6lKM4WlKiUXmLyQ8PQfYCtAHpvY9pRkGYKMguZSzwwtQ6y2YlnNDKNJQVmXhs31j4+/lQbG6FYYsntu3SeO+a+f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net; spf=pass smtp.mailfrom=hardfalcon.net; dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b=yl/qs0VU; arc=none smtp.client-ip=213.190.28.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hardfalcon.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LKe0TM3L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1714632436;
-	bh=mrGgxvSw1F21bEEOMCuH3SGmeA9rITTKwq+RASVYwX0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=LKe0TM3LD3wZWwj/dP77NlSbI5kZ3W/iQZF2Ey9s1g2QDPfK00qDN+GeZrSmIdlnB
-	 w1X2TruWqj79fGGXvxDMRLktYA0LvdYh6cjTudFdVerht02CfeKvJmZxCsAD9fWV/B
-	 J9h8bki04nxNCUojXHJ8tNxOKUNiDXO+FaQSY4cJithJJQkoklhLtK/vPnv9l4fGRE
-	 9EOrS07Rbf2QMmajADs+fomDQnU91dcEOFPIlK8qFeTIRewQQygpcWD6bP4pNr+edV
-	 l+3aYs4iEdue4huXXt35hTWp0bmAxUkGIXiexm4aFbPi15wX+FeAAUXqiORrSKhNSs
-	 CVe6c5U8m4c1g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VVPcd5kvkz4wxf;
-	Thu,  2 May 2024 16:47:13 +1000 (AEST)
-Date: Thu, 2 May 2024 16:47:11 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>, Isaku Yamahata
- <isaku.yamahata@intel.com>, Sean Christopherson <seanjc@google.com>,
- Xiaoyao Li <xiaoyao.li@intel.com>, KVM <kvm@vger.kernel.org>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the kvm tree
-Message-ID: <20240502164711.06b5aca6@canb.auug.org.au>
+	dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b="yl/qs0VU"
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=hardfalcon.net;
+	s=dkim_2024-02-03; t=1714631893;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8nrCqHmR8DI15VzIKjBKRM4ja7aQLPI8bwpgUN0NccA=;
+	b=yl/qs0VUbvzyk5o1aXLXLSenJ+rz9Hxn0mrMmQSXDflrLmM++bulrv+qWq60zzNG8uooKp
+	uqHLDYS0L7uOX9BQ==
+Message-ID: <81f04913-36c5-4ef6-8089-abef9c458cab@hardfalcon.net>
+Date: Thu, 2 May 2024 08:38:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/u9taxsfNaih2JgKfzbuTXpf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Subject: Re: [PATCH 5.15 00/80] 5.15.158-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+References: <20240430103043.397234724@linuxfoundation.org>
+Content-Language: en-US
+From: Pascal Ernster <git@hardfalcon.net>
+In-Reply-To: <20240430103043.397234724@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
---Sig_/u9taxsfNaih2JgKfzbuTXpf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-After merging the kvm tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
-
-arch/x86/kvm/vmx/main.c:102:43: error: 'pi_has_pending_interrupt' undeclare=
-d here (not in a function)
-  102 |         .dy_apicv_has_pending_interrupt =3D pi_has_pending_interrup=
-t,
-      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/kvm/vmx/main.c:131:27: error: 'vmx_pi_update_irte' undeclared here=
- (not in a function); did you mean 'kvm_apic_update_irr'?
-  131 |         .pi_update_irte =3D vmx_pi_update_irte,
-      |                           ^~~~~~~~~~~~~~~~~~
-      |                           kvm_apic_update_irr
-arch/x86/kvm/vmx/main.c:132:32: error: 'vmx_pi_start_assignment' undeclared=
- here (not in a function); did you mean 'kvm_arch_start_assignment'?
-  132 |         .pi_start_assignment =3D vmx_pi_start_assignment,
-      |                                ^~~~~~~~~~~~~~~~~~~~~~~
-      |                                kvm_arch_start_assignment
-
-Probably caused by commit
-
-  5f18c642ff7e ("KVM: VMX: Move out vmx_x86_ops to 'main.c' to dispatch VMX=
- and TDX")
-
-interacting with commit
-
-  699f67512f04 ("KVM: VMX: Move posted interrupt descriptor out of VMX code=
-")
-
-from the tip tree.
-
-I have applied the following merge resolution patch.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 2 May 2024 14:13:25 +1000
-Subject: [PATCH] fixup for "KVM: VMX: Move posted interrupt descriptor out =
-of
- VMX code"
-
-interacting with commit
-
-  5f18c642ff7e ("KVM: VMX: Move out vmx_x86_ops to 'main.c' to dispatch VMX=
- andTDX")
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/x86/kvm/vmx/main.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index 7c546ad3e4c9..d4ed681785fd 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -5,6 +5,7 @@
- #include "vmx.h"
- #include "nested.h"
- #include "pmu.h"
-+#include "posted_intr.h"
-=20
- #define VMX_REQUIRED_APICV_INHIBITS				\
- 	(BIT(APICV_INHIBIT_REASON_DISABLE)|			\
---=20
-2.43.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/u9taxsfNaih2JgKfzbuTXpf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYzNu8ACgkQAVBC80lX
-0GzQeAf/QqH2Kd0FrILfzRcfD/fuGeTiiQhbezCcAffbBJ0B74DONLWlg1Zi/UAz
-4LyeaRA6E8FrL2/wfTe+XTazFuB9hzWxvEr+sPbwPBwtjQdk+c/0/JlQ1ZLhbT3T
-t2k/xkPQEIZm5s9y37RjemCVvLICSdcr5FnJBKnR8SBwH4U6TqE+g5GYmAIVdDhC
-29t9Ileob+8btzcIRbP/13JYnSQBfgkQqJbT2Ff4Q/CVdYCP/HdICm5KHuXUzMD6
-rHlKsHynE91+zOSwOnFei/PZuC2Qte/lwddcK9Xi8OebO9kRv1cUNu64whVRx3iN
-E7TDTmPlXwsXo5YRpVSd16d+uG3K7A==
-=HXEM
------END PGP SIGNATURE-----
-
---Sig_/u9taxsfNaih2JgKfzbuTXpf--
+WzIwMjQtMDQtMzAgMTI6MzldIEdyZWcgS3JvYWgtSGFydG1hbjoNCj4gVGhpcyBpcyB0aGUg
+c3RhcnQgb2YgdGhlIHN0YWJsZSByZXZpZXcgY3ljbGUgZm9yIHRoZSA1LjE1LjE1OCByZWxl
+YXNlLg0KPiBUaGVyZSBhcmUgODAgcGF0Y2hlcyBpbiB0aGlzIHNlcmllcywgYWxsIHdpbGwg
+YmUgcG9zdGVkIGFzIGEgcmVzcG9uc2UNCj4gdG8gdGhpcyBvbmUuICBJZiBhbnlvbmUgaGFz
+IGFueSBpc3N1ZXMgd2l0aCB0aGVzZSBiZWluZyBhcHBsaWVkLCBwbGVhc2UNCj4gbGV0IG1l
+IGtub3cuDQo+IA0KPiBSZXNwb25zZXMgc2hvdWxkIGJlIG1hZGUgYnkgVGh1LCAwMiBNYXkg
+MjAyNCAxMDozMDoyNyArMDAwMC4NCj4gQW55dGhpbmcgcmVjZWl2ZWQgYWZ0ZXIgdGhhdCB0
+aW1lIG1pZ2h0IGJlIHRvbyBsYXRlLg0KDQpIaSwgNS4xNS4xNTgtcmMxIGlzIHJ1bm5pbmcg
+ZmluZSBvbiBhIE5ldGdlYXIgR1MxMDhUIHYzICh0aGUgU29DIGlzIGEgDQpSZWFsdGVrIFJU
+TDgzODBNLCB3aGljaCBoYXMgYSBNSVBTIDRLRWMgY29yZSkuDQoNCk5vdGUgdGhhdCBJIGhh
+dmUgKm5vdCogdGVzdGVkIGJ1aWxkaW5nIHRoZSBrZXJuZWwgZG9jdW1lbnRhdGlvbiwgYW5k
+IEkgDQpzdXNwZWN0IHRoYXQgYnVpbGRpbmcgdGhlIGRvY3VtZW50YXRpb24gd2l0aCBkb2N1
+dGlscyA+PSAwLjIxIHdvdWxkIA0KbGlrZWx5IGZhaWwgd2l0aG91dCB0aGUgcGF0Y2ggZnJv
+bQ0KDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvZmFmNWZhNDUtMmE5ZC00NTczLTlk
+MmUtMzkzMGJkYzFlZDY1QGdtYWlsLmNvbS8NCg0KVGVzdGVkLWJ5OiBQYXNjYWwgRXJuc3Rl
+ciA8Z2l0QGhhcmRmYWxjb24ubmV0Pg0KDQpSZWdhcmRzDQpQYXNjYWwNCg==
