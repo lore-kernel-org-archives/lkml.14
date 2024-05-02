@@ -1,210 +1,64 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBFF14A634;
-	Thu,  2 May 2024 16:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B2F15E20D
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714667040; cv=none; b=kDwe3wv0wRCGYyIVwG+LUlvmNSjEvKvqpmCjt3Lf9XkUoX5Tug4sug4UD7WXTwhTLzhdLiHg32s27lh7cMchH8tutgmkPVbtDCDOXaiRhMKIIrQ7KAeyC6zlrEOtJKcDXR5gSpVQFQJnGZ9toKjJ/jlQcHb3Dm3tEtvEwOkCy5Q=
+	t=1714667045; cv=none; b=ZdOJFSGgFpgN9DqPPpm7b8quhYXvr2HfYtJkEq6iayo2LCtESDaUoeSHQL2H4ORH9utgsGWWvvO3Ub1zM7trwmdB3HS3A6z1DUtDy7WPFmd0GoWoDpYmln9pvGXikRYMCUh5yV3oXM7IeoKSQKUcmxAaT0WYfVXohpaMh876SiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714667040; c=relaxed/simple;
-	bh=66YOgsmohBXvJp4T81vSLjeFlQrvgZ5on0WeVnORq7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J6d0DRFSzWwj+KWAIqIpI3meaKZQEMyJKlp3gjqJuTZihcOs9mcxDO/PRVXGDEgIy+QtYNhua9cltxYm98Hl/qRhVWqsz66w1O5PIq2IiC4Zwve7R02zGciHL0glqq0aC14ulbhJlucSHjkdLzHbRDmsXDzIvifNG5Mzzq3zflg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IPshHAw+; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714667045; c=relaxed/simple;
+	bh=NGVwFjaFO10XPYZmmBrdVpFxIB4XnJUxAtDA0jJnZbQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a+X9yE8Fn/kAKL32cg5IF1s4mHlJ4fpoQXXwR0tSVmc3nH5wYhpRFwq5OHavmymYJXa5fyVp0th3tCAmKpR3K8rvn2mI7leewIe6Phcej+2aTVsUCavFWbEfJ/+POUqe4tgGjhg/i/39TZi/0CfBvPJz0P1sBHVGt4JaTdeUNZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=amas3A2t; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPshHAw+"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ecddf96313so9793415ad.2;
-        Thu, 02 May 2024 09:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714667038; x=1715271838; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ByJlhiDFaKaaD0s+HlejNv3NTGIXQ86sKjMQDl0Lm/c=;
-        b=IPshHAw+ztNKz5AhdI76bpYzYfOoCSVbZ95/JIlLIulaA0qRPRiK+AuX7/gcXfNqM9
-         yr28UDui3nrMHuXQoDU4hpCVRYvYqh7LBlbOQtIilvZ5kDtuU5LmgpUwMWRdstrjbSkG
-         AJk2hc0NtQC8WAZAzY2Z4hOm2fU8n/Sskc90zeHWL3rnBycvxR5cPPhEg339Q7Jsv0dd
-         nYwUk/ds8cJdOg9eAfPhUpcHtym4o2lvX+c0IMbN31OryKRTiWnlK50A0hOgjWySgSDJ
-         fYQ5W+I4YozlioNgP2AOTKg2ac4+h4RiQn27Hp1T5QbTP/dBZn+1LaehOrnmuozlNqxJ
-         Jobw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714667038; x=1715271838;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ByJlhiDFaKaaD0s+HlejNv3NTGIXQ86sKjMQDl0Lm/c=;
-        b=a03oSYt/mn9oFbAwP95dp5i/l43XDDeX3m75yzamMvqHj1EqK9ooT+D1NzS2qdmyy6
-         hbL+MKRtwzKK+sarnqcK7yBzh1aHIgCatRNg85WwaN8Bv3XozGPUy/PHD3tsE2Lm+zhV
-         zhHZ0vqr3ykpjR/DQIuxhGd/6Z7tuPOMhubNgchlL9ruJ4Ri/m1uSoQz8TXEnYL7pxW3
-         FqH4YvI6/HgHqHYJXhLaXUipMJPwpB/VqM24socRoeFPWAI8dKd/dWtrUdXHL9qvbn/d
-         cY/2TmGZowA+34Q6GHMISmcRJwWZXuYvwdMGJkj7zG7s5i155i2b7kuVFaFLV+nYq2s4
-         V2qg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8kZxQO+VG6BLAjBCLd9+apEOkfU/WG9i6bI3G3FhwtpHQGl2nX8AEy8odwtHKJRSkUZ0VKHzHZWDMmLnZ8ZNp+sJZ1jSPkEOmVRUX
-X-Gm-Message-State: AOJu0YwNm9aNky8bQEKRI81y6cJyiK6I5c76Sjegj6EvVJUP/70Blz1T
-	K/Y16iPPYDVINNwz7VdBmVXOdGV0ItTK/VTiEeS9ajzX8JWO+XQNuxxnoCX8
-X-Google-Smtp-Source: AGHT+IFrI/3bevqRuEF2wvquGRLwRPi+UlnbLOjftb29T5BL0MhuPczQYXex0T9fCT7A3p22wjg+oA==
-X-Received: by 2002:a17:903:2284:b0:1eb:2f02:cd0d with SMTP id b4-20020a170903228400b001eb2f02cd0dmr269664plh.0.1714667038027;
-        Thu, 02 May 2024 09:23:58 -0700 (PDT)
-Received: from ?IPV6:2402:e280:214c:86:622d:192:3faf:5ac1? ([2402:e280:214c:86:622d:192:3faf:5ac1])
-        by smtp.gmail.com with ESMTPSA id o2-20020a170902d4c200b001e45c0d6be6sm1496530plg.246.2024.05.02.09.23.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 May 2024 09:23:57 -0700 (PDT)
-Message-ID: <97b8fabe-2bc9-4d14-a3b3-bb1356a7e642@gmail.com>
-Date: Thu, 2 May 2024 21:53:54 +0530
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="amas3A2t"
+Received: from fedor-21d0.intra.ispras.ru (unknown [10.10.165.8])
+	by mail.ispras.ru (Postfix) with ESMTPSA id C5A4F407850A;
+	Thu,  2 May 2024 16:18:48 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru C5A4F407850A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1714666728;
+	bh=DtReRsjlUyViWf7paqbZpI8KlMsBY9+Wd3lvivUXAhA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=amas3A2tnskmQQ7zLqotmvrmOBDD3MRUJlwBBG8YFpuph8RhJxqsDwcB8JUP/n6Gq
+	 JHlh8jVe7rGijb/Rhz6JgOAYoCko/ITGKQUV3VzsKkbZekqAALGD2IRWyH6GSvcfFf
+	 yGRl0bQMK/ttw1GJ0NRIh3Ls4ldyzNFwovCvyXYs=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Xiang Chen <chenxiang66@hisilicon.com>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Barry Song <song.bao.hua@hisilicon.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>,
+	lvc-project@linuxtesting.org
+Subject: [PATCH 0/2] dma-mapping: benchmark: adjust some error handling in do_map_benchmark
+Date: Thu,  2 May 2024 19:18:24 +0300
+Message-ID: <20240502161827.403338-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 linux-next] usb:typec:mux: remove indentation for
- common path
-To: heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
- neil.armstrong@linaro.org, dmitry.baryshkov@linaro.org,
- u.kleine-koenig@pengutronix.de, christophe.jaillet@wanadoo.fr
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com
-References: <20240426164705.2717-1-prosunofficial@gmail.com>
-Content-Language: en-US
-From: R Sundar <prosunofficial@gmail.com>
-In-Reply-To: <20240426164705.2717-1-prosunofficial@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 26/04/24 22:17, R Sundar wrote:
-> Nitpick, Mostly common path will not be indented.  so rewritten this
-> function to check device_node pointer is null and removed common path
-> indentation.
-> 
-> Signed-off-by: R Sundar <prosunofficial@gmail.com>
-> ---
-> 
-> Fixed nitpicks in code according to comments received on other patch as
-> below:
-> 
-> [ Nit, this function should be rewritten to not work like this, the
-> "common" path should not be indented, but only the exception (i.e. bail
-> if ep is not allocated properly.) ]
-> https://lore.kernel.org/all/2024041103-doornail-professor-7c1e@gregkh/
-> 
-> Goal is to get rid of of_node_put,but sending this patch first to do one
-> thing at a time.
-> 
-> Changes since v1 - fixed the typo error for spell from identation to
-> indentation
-> 
-> Changes since v2 - Shifted the indentation to one level left for the
-> switch cases as per coding style.
-> 
-> Changes since v3 - Added descriptive subject for the patch and checked
-> from and sign-off having same name.
-> 
-> Changes since v4 - Fixed name in signed-off-by as in documents.
-> 
-> Patches link:
-> ------------
-> v1  - https://lore.kernel.org/all/20240420145522.15018-1-prosunofficial@gmail.com/
-> v2  - https://lore.kernel.org/linux-usb/20240420164927.15290-1-prosunofficial@gmail.com/
-> v3  - https://lore.kernel.org/all/20240421011647.3027-1-prosunofficial@gmail.com/
-> v4  - https://lore.kernel.org/all/20240424150718.5006-1-prosunofficial@gmail.com/
-> 
->   drivers/usb/typec/mux/nb7vpq904m.c | 68 +++++++++++++++---------------
->   1 file changed, 34 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/mux/nb7vpq904m.c b/drivers/usb/typec/mux/nb7vpq904m.c
-> index b17826713753..f7a00b388876 100644
-> --- a/drivers/usb/typec/mux/nb7vpq904m.c
-> +++ b/drivers/usb/typec/mux/nb7vpq904m.c
-> @@ -320,47 +320,47 @@ static int nb7vpq904m_parse_data_lanes_mapping(struct nb7vpq904m *nb7)
->   	int ret, i, j;
->   
->   	ep = of_graph_get_endpoint_by_regs(nb7->client->dev.of_node, 1, 0);
-> +	if (!ep)
-> +		return 0;
->   
-> -	if (ep) {
-> -		ret = of_property_count_u32_elems(ep, "data-lanes");
-> -		if (ret == -EINVAL)
-> -			/* Property isn't here, consider default mapping */
-> -			goto out_done;
-> -		if (ret < 0)
-> -			goto out_error;
-> -
-> -		if (ret != DATA_LANES_COUNT) {
-> -			dev_err(&nb7->client->dev, "expected 4 data lanes\n");
-> -			ret = -EINVAL;
-> -			goto out_error;
-> -		}
-> -
-> -		ret = of_property_read_u32_array(ep, "data-lanes", data_lanes, DATA_LANES_COUNT);
-> -		if (ret)
-> -			goto out_error;
-> +	ret = of_property_count_u32_elems(ep, "data-lanes");
-> +	if (ret == -EINVAL)
-> +		/* Property isn't here, consider default mapping */
-> +		goto out_done;
-> +	if (ret < 0)
-> +		goto out_error;
-> +
-> +	if (ret != DATA_LANES_COUNT) {
-> +		dev_err(&nb7->client->dev, "expected 4 data lanes\n");
-> +		ret = -EINVAL;
-> +		goto out_error;
-> +	}
->   
-> -		for (i = 0; i < ARRAY_SIZE(supported_data_lane_mapping); i++) {
-> -			for (j = 0; j < DATA_LANES_COUNT; j++) {
-> -				if (data_lanes[j] != supported_data_lane_mapping[i][j])
-> -					break;
-> -			}
-> +	ret = of_property_read_u32_array(ep, "data-lanes", data_lanes, DATA_LANES_COUNT);
-> +	if (ret)
-> +		goto out_error;
->   
-> -			if (j == DATA_LANES_COUNT)
-> +	for (i = 0; i < ARRAY_SIZE(supported_data_lane_mapping); i++) {
-> +		for (j = 0; j < DATA_LANES_COUNT; j++) {
-> +			if (data_lanes[j] != supported_data_lane_mapping[i][j])
->   				break;
->   		}
->   
-> -		switch (i) {
-> -		case NORMAL_LANE_MAPPING:
-> -			break;
-> -		case INVERT_LANE_MAPPING:
-> -			nb7->swap_data_lanes = true;
-> -			dev_info(&nb7->client->dev, "using inverted data lanes mapping\n");
-> +		if (j == DATA_LANES_COUNT)
->   			break;
-> -		default:
-> -			dev_err(&nb7->client->dev, "invalid data lanes mapping\n");
-> -			ret = -EINVAL;
-> -			goto out_error;
-> -		}
-> +	}
-> +
-> +	switch (i) {
-> +	case NORMAL_LANE_MAPPING:
-> +		break;
-> +	case INVERT_LANE_MAPPING:
-> +		nb7->swap_data_lanes = true;
-> +		dev_info(&nb7->client->dev, "using inverted data lanes mapping\n");
-> +		break;
-> +	default:
-> +		dev_err(&nb7->client->dev, "invalid data lanes mapping\n");
-> +		ret = -EINVAL;
-> +		goto out_error;
->   	}
->   
->   out_done:
+Some of the error paths inside do_map_benchmark() do not behave correctly.
+Adjust them with the following patches.
 
-Hi,
+Fedor Pchelkin (2):
+  dma-mapping: benchmark: fix up kthread creation error handling
+  dma-mapping: benchmark: prevent potential kthread hang
 
-Any feedback for this patch?
+ kernel/dma/map_benchmark.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Regards,
-Sundar
+-- 
+2.45.0
+
