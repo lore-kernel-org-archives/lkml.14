@@ -1,250 +1,148 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EAD1635A2
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 19:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0F1161304;
+	Thu,  2 May 2024 19:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714676557; cv=none; b=NZ3Pe4YHDxwQ9yjBk3bQ62F0TnDd0PclcEpsijqQf67OdDPLYBUIWwEyqKO/tRhGFl6mlK4GcGzfUhQf6rYis9HKZG8DPR0aj87wJlc7braL53chfj+s7YtYJGwQnSsvmXHtXjKyqndI4DSewLxEI5t5nOC7fOmRHfuPSKOrcn8=
+	t=1714676639; cv=none; b=nDKYKaazrDsWpqwOCpqp8Y4NJYBEs8Acd5hobJk/2CiCHu1UnE6xUpbcGYTmTQoPWCzHJheUhIUaGia4chobVQh3Kx4IYbHGl3QZwzGhblmZrzs07iHZwAGjk2esCIn+JfMRN/AQ1z3+xrfosmN8Nq5JBa9bgtp4DPXRyyFX4IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714676557; c=relaxed/simple;
-	bh=98jStbeoB0+s7xM+AeYYTBiMnjWT7Biqyj3FGw4vpOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cuATdCy6acZG60LwelSH83r6B4Ns1MhfWZMl0/mOIsCzgl/cssWymiPu1C0pUEwNuMtZR3M/SZBeet8aQwlWArSfWOoz24JgeqTNJKsY2si6T1fSBraRKHOswFmvgfx3mHYln2hTlANADkljq1J1sL3Go+sDJ0NRo8JGkVDKJzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d6LxMgyN; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714676639; c=relaxed/simple;
+	bh=EoWpaGahS9+7N/Tn7VrR0XBjpa7/lAxYqFMa8FhNZMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sM7o5JIozO//mwuJvitrQ5g3ixf/7iqhh4LinQfkgFtvaRWVUXMSvZDEp+76lBbeXy2xbvMpQn/gb9PSqebCceM5TlbfBCUzpkdvi67ZK8F7VVivgTggh56hhILdmP2N1KTbxTP/Q3wRBkY6x3PYwBKcvfGmnlonXiI4qmlHBXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HNtG7Hdj; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6LxMgyN"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-43ab2b2f11bso14845411cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 12:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714676554; x=1715281354; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+7eQcQPlLfPoF1F7OxifffHm/SsC0VJeyg2xs0tjwD8=;
-        b=d6LxMgyNGFwnVleo2zx9VHl1++t2yYDfJ8dg5iq1pHYmPz5sFAmamdW5dDogWpOVfg
-         o2hHiphlgcE04Jjnl9Gtb27UNoovZVmo0JFJpMh5Lsbn5mM5nrnjTEIyFCC+vgvc3WQd
-         xAsI4wOTpy8tBQvf99gEqk/mVGb+lCq2Blgarkfy48gSrLBkbHAUARsDG+aBnNNRLC86
-         AD8gDnsWT538m3oU686g8a8ZA5zLRopah2E6dNzzIlH6lZfwwbtpjG3F5tRRxMVpZv6P
-         +f1LLZeO/kC0L/PLMY6NfV0kzZqk9p+T8HttvvYbTPbNh6VxKS2mwXCHoeMBWJzcndO2
-         pE2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714676554; x=1715281354;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+7eQcQPlLfPoF1F7OxifffHm/SsC0VJeyg2xs0tjwD8=;
-        b=UMm+gedJsZuyVBkAvGmxG9KAWXcJXEQe8vVOMRNPdxg5ncCvjYJEoadhEL390fgPGO
-         jOYmSmM0jGNJtx3rsHGUUvo71p2pQAmJ8oDdOlfa9lFcFN7xScjzx5mA80GpTiPvHx5q
-         DT3o1BsrDFRgjLdJhFKP9xK/Dhc928DFV12+HqULHiJkToKp3i2X4X2Z5bE9G29ZQwIz
-         fUXc+G675ESFGVtl44y3TH5frHO91xDzdftmsaLPbnXzz4whcqmukfhJjqbNVPyMYS0J
-         S8IPaqp3VaQr20y3LD6b6SNYDazSP0KIY0yIhavX7ryD6eFpPX2WnzyhVY6JYGFlc7yX
-         D2jA==
-X-Forwarded-Encrypted: i=1; AJvYcCXedjICqBRZFtU1NwZBlPbXcDQebGHYHyxv2N5xWVbPVFDQ8FWC4uUZnvkiKIycAj66NS6tMh3TUlQUWrly6HFjt5xqDRBSgo4uvA+i
-X-Gm-Message-State: AOJu0YwwoZZO0lsarjB6gQ0kOFjK7bR3M+/iTpYyrlW72/XQGAjwCwqd
-	1XfUk6TKXK2ZPdM8pKt2nc+su1vSoK4a8DR6Yu5jZymtAp/mjLhN
-X-Google-Smtp-Source: AGHT+IG+vh405FIs2xF2Ei9F+WVe3rZDH8UmyV2+XlPjV5yMR1Q0m/xNIXBzcVWijqXvA2+J6ynj8w==
-X-Received: by 2002:ac8:7d83:0:b0:439:a719:702e with SMTP id c3-20020ac87d83000000b00439a719702emr485958qtd.54.1714676554441;
-        Thu, 02 May 2024 12:02:34 -0700 (PDT)
-Received: from localhost (fwdproxy-nao-000.fbsv.net. [2a03:2880:23ff::face:b00c])
-        by smtp.gmail.com with ESMTPSA id bb20-20020a05622a1b1400b0043cc0583dd3sm602970qtb.50.2024.05.02.12.02.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 12:02:34 -0700 (PDT)
-From: Usama Arif <usamaarif642@gmail.com>
-To: akpm@linux-foundation.org
-Cc: hannes@cmpxchg.org,
-	yosryahmed@google.com,
-	nphamcs@gmail.com,
-	chengming.zhou@linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	Usama Arif <usamaarif642@gmail.com>
-Subject: [PATCH v2 1/1] selftests: cgroup: add tests to verify the zswap writeback path
-Date: Thu,  2 May 2024 19:58:37 +0100
-Message-ID: <20240502190223.3975970-2-usamaarif642@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240502190223.3975970-1-usamaarif642@gmail.com>
-References: <20240502190223.3975970-1-usamaarif642@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HNtG7Hdj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714676638; x=1746212638;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EoWpaGahS9+7N/Tn7VrR0XBjpa7/lAxYqFMa8FhNZMQ=;
+  b=HNtG7HdjMP1UJrDta3vc46HzKIDCgh271Ynb31QKtPwL6I4ekeeCfjGu
+   u6LIMZaV74gKRi4eD1elJ037tP/ESsDdXFmHaYPEvsa3We/c4cGrkmXlJ
+   YBP9mtGXzfMqhAxMwBy+00tJr6gBofjfAoHsczgw/D0amsJQ0mhDU48ZR
+   QG201nI3yGX+nfn2CzbWrQfqgeOEFMv40XoCZzOHbUprJxMy8bp5ET/sp
+   spvYucJEWwKm6hOEqgSXuiiRwpuSrAxqZvTE28grDqm8yGOWCU0Pcytju
+   L1h+YWUorKpZ7i4HeWlmbOwVtn5QSAo5cTR1wuTZBoFdy5nvQVw3kvOek
+   A==;
+X-CSE-ConnectionGUID: 6FIU4BbMRY+agvDhufdh2Q==
+X-CSE-MsgGUID: sPeGEydlQYuQ9EJm/hXhmw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10399727"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10399727"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 12:03:57 -0700
+X-CSE-ConnectionGUID: hIsS+t9vTdWnvfoomMjbOQ==
+X-CSE-MsgGUID: pNk0L24ZSrGX7MRYoWkhkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="27324360"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 02 May 2024 12:03:54 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s2bii-000AuK-02;
+	Thu, 02 May 2024 19:03:52 +0000
+Date: Fri, 3 May 2024 03:03:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jonathan Denose <jdenose@google.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-input@vger.kernel.org,
+	Jonathan Denose <jdenose@google.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jeffery Miller <jefferymiller@google.com>
+Subject: Re: [PATCH] Input: elantech - fix touchpad state on resume for
+ Lenovo N24
+Message-ID: <202405030210.izdCj8wZ-lkp@intel.com>
+References: <20240501140231.1.Ifa0e25ebf968d8f307f58d678036944141ab17e6@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240501140231.1.Ifa0e25ebf968d8f307f58d678036944141ab17e6@changeid>
 
-Initate writeback with the below steps and check using
-memory.stat.zswpwb if zswap writeback occurred:
-1. Allocate memory.
-2. Reclaim memory equal to the amount that was allocated in step 1.
-   This will move it into zswap.
-3. Save current zswap usage.
-4. Move the memory allocated in step 1 back in from zswap.
-5. Set zswap.max to half the amount that was recorded in step 3.
-6. Attempt to reclaim memory equal to the amount that was allocated,
-   this will either trigger writeback if its enabled, or reclamation
-   will fail if writeback is disabled as there isn't enough zswap
-   space.
+Hi Jonathan,
 
-Suggested-by: Nhat Pham <nphamcs@gmail.com>
-Signed-off-by: Usama Arif <usamaarif642@gmail.com>
----
- tools/testing/selftests/cgroup/test_zswap.c | 125 +++++++++++++++++++-
- 1 file changed, 124 insertions(+), 1 deletion(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/tools/testing/selftests/cgroup/test_zswap.c b/tools/testing/selftests/cgroup/test_zswap.c
-index f0e488ed90d8..cd864ab825d0 100644
---- a/tools/testing/selftests/cgroup/test_zswap.c
-+++ b/tools/testing/selftests/cgroup/test_zswap.c
-@@ -50,7 +50,7 @@ static int get_zswap_stored_pages(size_t *value)
- 	return read_int("/sys/kernel/debug/zswap/stored_pages", value);
- }
- 
--static int get_cg_wb_count(const char *cg)
-+static long get_cg_wb_count(const char *cg)
- {
- 	return cg_read_key_long(cg, "memory.stat", "zswpwb");
- }
-@@ -248,6 +248,127 @@ static int test_zswapin(const char *root)
- 	return ret;
- }
- 
-+/*
-+ * Initate writeback with the following steps:
-+ * 1. Allocate memory.
-+ * 2. Reclaim memory equal to the amount that was allocated in step 1.
-+      This will move it into zswap.
-+ * 3. Save current zswap usage.
-+ * 4. Move the memory allocated in step 1 back in from zswap.
-+ * 5. Set zswap.max to half the amount that was recorded in step 3.
-+ * 6. Attempt to reclaim memory equal to the amount that was allocated,
-+      this will either trigger writeback if its enabled, or reclamation
-+      will fail if writeback is disabled as there isn't enough zswap space.
-+ */
-+static int initiate_writeback(const char *cgroup, void *arg)
-+{
-+	char *test_group = arg;
-+	size_t memsize = MB(4);
-+	int ret = -1;
-+	bool wb_enabled = cg_read_long(test_group, "memory.zswap.writeback");
-+	long zswap_usage;
-+
-+	if (cg_write(test_group, "memory.max", "8M"))
-+		return ret;
-+
-+	/* Allocate random memory to enusre high zswap memory usage */
-+	char *mem = (char *)malloc(memsize);
-+
-+	if (!mem)
-+		return ret;
-+	for (int i = 0; i < memsize; i++)
-+		mem[i] = rand() % 128;
-+
-+	/* Try and reclaim allocated memory */
-+	if (cg_write(test_group, "memory.reclaim", "4M")) {
-+		ksft_print_msg("Failed to reclaim all of the requested memory\n");
-+		goto out;
-+	}
-+
-+	zswap_usage = cg_read_long(test_group, "memory.zswap.current");
-+
-+	/* zswpin */
-+	for (int i = 0; i < memsize; i++) {
-+		if (mem[i] < 0 || mem[i] > 127) {
-+			ksft_print_msg("invalid memory\n");
-+			ret = -1;
-+		}
-+	}
-+
-+	if (cg_write_numeric(test_group, "memory.zswap.max", zswap_usage/2))
-+		goto out;
-+
-+	/*
-+	 * If writeback is enabled, trying to reclaim memory now will trigger a
-+	 * writeback as zswap.max is half of what was needed when reclaim ran the first time.
-+	 * If writeback is disabled, memory reclaim will fail as zswap is limited and
-+	 * it can't writeback to swap.
-+	 */
-+	ret = cg_write(test_group, "memory.reclaim", "4M");
-+	if (!wb_enabled && ret)
-+		ret = 0;
-+out:
-+	free(mem);
-+	return ret;
-+}
-+
-+/* Test to verify the zswap writeback path */
-+static int test_zswap_writeback(const char *root, bool wb)
-+{
-+	int ret = KSFT_FAIL;
-+	char *test_group;
-+	long zswpwb_before, zswpwb_after;
-+
-+	test_group = cg_name(root,
-+		wb ? "zswap_writeback_enabled_test" : "zswap_writeback_disabled_test");
-+	if (!test_group)
-+		goto out;
-+	if (cg_create(test_group))
-+		goto out;
-+	if (cg_write(test_group, "memory.zswap.writeback", wb ? "1" : "0"))
-+		return ret;
-+
-+	zswpwb_before = get_cg_wb_count(test_group);
-+	if (zswpwb_before < 0) {
-+		ksft_print_msg("failed to get zswpwb_before\n");
-+		goto out;
-+	}
-+
-+	if (cg_run(test_group, initiate_writeback, (void *) test_group))
-+		goto out;
-+
-+	/* Verify that zswap writeback occurred only if writeback was enabled */
-+	zswpwb_after = get_cg_wb_count(test_group);
-+	if (wb) {
-+		if (zswpwb_after <= zswpwb_before) {
-+			ksft_print_msg("writeback enabled and zswpwb_after <= zswpwb_before\n");
-+			goto out;
-+		}
-+	} else {
-+		if (zswpwb_after != zswpwb_before) {
-+			ksft_print_msg("writeback disabled and zswpwb_after != zswpwb_before\n");
-+			goto out;
-+		}
-+	}
-+
-+	ret = KSFT_PASS;
-+
-+out:
-+	cg_destroy(test_group);
-+	free(test_group);
-+	return ret;
-+}
-+
-+static int test_zswap_writeback_enabled(const char *root)
-+{
-+	return test_zswap_writeback(root, true);
-+}
-+
-+static int test_zswap_writeback_disabled(const char *root)
-+{
-+	return test_zswap_writeback(root, false);
-+}
-+
- /*
-  * When trying to store a memcg page in zswap, if the memcg hits its memory
-  * limit in zswap, writeback should affect only the zswapped pages of that
-@@ -425,6 +546,8 @@ struct zswap_test {
- 	T(test_zswap_usage),
- 	T(test_swapin_nozswap),
- 	T(test_zswapin),
-+	T(test_zswap_writeback_enabled),
-+	T(test_zswap_writeback_disabled),
- 	T(test_no_kmem_bypass),
- 	T(test_no_invasive_cgroup_shrink),
- };
+[auto build test WARNING on dtor-input/next]
+[also build test WARNING on dtor-input/for-linus hid/for-next linus/master v6.9-rc6 next-20240502]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Denose/Input-elantech-fix-touchpad-state-on-resume-for-Lenovo-N24/20240501-220739
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
+patch link:    https://lore.kernel.org/r/20240501140231.1.Ifa0e25ebf968d8f307f58d678036944141ab17e6%40changeid
+patch subject: [PATCH] Input: elantech - fix touchpad state on resume for Lenovo N24
+config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20240503/202405030210.izdCj8wZ-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240503/202405030210.izdCj8wZ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405030210.izdCj8wZ-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/math.h:5,
+                    from include/linux/delay.h:22,
+                    from drivers/input/mouse/elantech.c:10:
+   drivers/input/mouse/elantech.c: In function 'elantech_reconnect':
+>> include/linux/stddef.h:8:14: warning: passing argument 3 of 'ps2_sendbyte' makes integer from pointer without a cast [-Wint-conversion]
+       8 | #define NULL ((void *)0)
+         |              ^~~~~~~~~~~
+         |              |
+         |              void *
+   drivers/input/mouse/elantech.c:1509:75: note: in expansion of macro 'NULL'
+    1509 |                 err = ps2_sendbyte(&psmouse->ps2dev, PSMOUSE_CMD_DISABLE, NULL);
+         |                                                                           ^~~~
+   In file included from drivers/input/mouse/elantech.c:19:
+   include/linux/libps2.h:64:63: note: expected 'unsigned int' but argument is of type 'void *'
+      64 | int ps2_sendbyte(struct ps2dev *ps2dev, u8 byte, unsigned int timeout);
+         |                                                  ~~~~~~~~~~~~~^~~~~~~
+>> include/linux/stddef.h:8:14: warning: passing argument 3 of 'ps2_sendbyte' makes integer from pointer without a cast [-Wint-conversion]
+       8 | #define NULL ((void *)0)
+         |              ^~~~~~~~~~~
+         |              |
+         |              void *
+   drivers/input/mouse/elantech.c:1515:74: note: in expansion of macro 'NULL'
+    1515 |                 err = ps2_sendbyte(&psmouse->ps2dev, PSMOUSE_CMD_ENABLE, NULL);
+         |                                                                          ^~~~
+   include/linux/libps2.h:64:63: note: expected 'unsigned int' but argument is of type 'void *'
+      64 | int ps2_sendbyte(struct ps2dev *ps2dev, u8 byte, unsigned int timeout);
+         |                                                  ~~~~~~~~~~~~~^~~~~~~
+   drivers/input/mouse/elantech.c: In function 'elantech_setup_ps2':
+   drivers/input/mouse/elantech.c:2123:65: warning: '/input1' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
+    2123 |                 snprintf(etd->tp_phys, sizeof(etd->tp_phys), "%s/input1",
+         |                                                                 ^~~~~~~
+   drivers/input/mouse/elantech.c:2123:17: note: 'snprintf' output between 8 and 39 bytes into a destination of size 32
+    2123 |                 snprintf(etd->tp_phys, sizeof(etd->tp_phys), "%s/input1",
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    2124 |                         psmouse->ps2dev.serio->phys);
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/ps2_sendbyte +8 include/linux/stddef.h
+
+^1da177e4c3f41 Linus Torvalds   2005-04-16  6  
+^1da177e4c3f41 Linus Torvalds   2005-04-16  7  #undef NULL
+^1da177e4c3f41 Linus Torvalds   2005-04-16 @8  #define NULL ((void *)0)
+6e218287432472 Richard Knutsson 2006-09-30  9  
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
