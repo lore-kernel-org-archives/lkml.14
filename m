@@ -1,36 +1,36 @@
 Received: from nbd.name (nbd.name [46.4.11.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED33C46544;
-	Thu,  2 May 2024 08:45:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C53646B83;
+	Thu,  2 May 2024 08:45:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714639503; cv=none; b=lYWmYmTxDnZdbZzROMEwypbkTyWYKy1ETe6L/gy4h47NdB9qkRz1aTPWYUDpX32pwDMe+8rGOkJZU6e168P8dCpbzwBbBqdK3iroFUhM75wqBtidmTtijG3C+Sj6bl52lVp/tXbUe5b2GHBhAO/kjHllAQfueYgMklPlknE3vnE=
+	t=1714639504; cv=none; b=qwRpBIg4fyBhmis9xSCvcXdeQbgEyBoa/a8Gz7hgL9WFZumTaTLK8kRXbLNBeoXbZKZWSZm8FM7u6W/6mBVRgIUO3rT3NrqMJaMUwzitPgfTnCiLMtXK8V2rXoINJQdF+uNETTBt8vrYSP1JgbkdKyjTL1wbG4cteKCmAlWePtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714639503; c=relaxed/simple;
-	bh=Ec3n3R3FZcZFT49rhjxqF95C5KQCNufioCSig6jhwoc=;
+	s=arc-20240116; t=1714639504; c=relaxed/simple;
+	bh=5EX44/CTYL2OsIgll7KF256jTOnGWBaAbNv1JhU4GIs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wfe+bVR39jbqM6s/vexB5RkU9El5WtrvGMfSBea0/XPis1M1PpqKFGMsWOUsyU2HGltKy58mGmA6LSPUGEsb7NKeytYAUAktdoJXYu1JmeVLh4s2Omjt5ciqiRzk2GKlqAFsx06FtSqznDHrTQLkiToTIyZNtISw9uyQj95fZJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=o4HlmzTJ; arc=none smtp.client-ip=46.4.11.11
+	 MIME-Version; b=muGB/tcUH4CgaVHBaVpl9gSJbxXTWA2awhJFx2WhFXODEYQGPmNQF0gGirRdFJrukVLoWDH7iGVlYfLvXcFgwB7UZZAQoeWikD25CZgc4FHPxj5cfBb3ORVENos3RgchCWNcqKvMKqFI20yGWjKctzaYbPOT6juIL3yroyIFAE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=sb9+NG8k; arc=none smtp.client-ip=46.4.11.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="o4HlmzTJ"
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="sb9+NG8k"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
 	s=20160729; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=fg/6cT3jAJK1vqwjodbXWEwb5gy6rm9+zRAdButCrKg=; b=o4HlmzTJ7Q/tPSMtP1IZc+P9Wp
-	tWoLOdjU6+tx0eawKLIzhWXfCT+xPK4eo+JFrjxMfDM8Jq+Kcq9rfEb6qV87mi7U9ULgjxfHPOTKx
-	3sf2gcyDimTjProB5VUcAj44l2/Le1bLO4e5Knc8XEre153ES9O/HdeFuQ+7xE7hXpmw=;
+	bh=wQkdKbexqFJvvMsjapxWvuM2aI3ZZOB65mkuF3E4zl0=; b=sb9+NG8kf2DRSCg8QlJObQq2oj
+	tKTYdw717GAd/wWsRTHDfr4pYeBqHfmEva/YlNZ/AfxeH8sujWKPhqyUKX9uupVIlKibp1fAzvOpd
+	ikdoBVlzylSPr2dRKGHjh9nOm91TXoDFN67Hje99ng/KrjHRG39/wOjmRmHuzZ1cJg8k=;
 Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=localhost.localdomain)
 	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
 	(Exim 4.96)
 	(envelope-from <nbd@nbd.name>)
-	id 1s2S3h-00BKKn-2I;
-	Thu, 02 May 2024 10:44:53 +0200
+	id 1s2S3k-00BKKn-0O;
+	Thu, 02 May 2024 10:44:56 +0200
 From: Felix Fietkau <nbd@nbd.name>
 To: netdev@vger.kernel.org,
 	Eric Dumazet <edumazet@google.com>,
@@ -40,9 +40,9 @@ To: netdev@vger.kernel.org,
 	Paolo Abeni <pabeni@redhat.com>
 Cc: willemdebruijn.kernel@gmail.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 net-next v5 3/6] net: add code for TCP fraglist GRO
-Date: Thu,  2 May 2024 10:44:44 +0200
-Message-ID: <20240502084450.44009-4-nbd@nbd.name>
+Subject: [PATCH v5 net-next v5 6/6] net: add heuristic for enabling TCP fraglist GRO
+Date: Thu,  2 May 2024 10:44:47 +0200
+Message-ID: <20240502084450.44009-7-nbd@nbd.name>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240502084450.44009-1-nbd@nbd.name>
 References: <20240502084450.44009-1-nbd@nbd.name>
@@ -54,76 +54,142 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This implements fraglist GRO similar to how it's handled in UDP, however
-no functional changes are added yet. The next change adds a heuristic for
-using fraglist GRO instead of regular GRO.
+When forwarding TCP after GRO, software segmentation is very expensive,
+especially when the checksum needs to be recalculated.
+One case where that's currently unavoidable is when routing packets over
+PPPoE. Performance improves significantly when using fraglist GRO
+implemented in the same way as for UDP.
+
+When NETIF_F_GRO_FRAGLIST is enabled, perform a lookup for an established
+socket in the same netns as the receiving device. While this may not
+cover all relevant use cases in multi-netns configurations, it should be
+good enough for most configurations that need this.
+
+Here's a measurement of running 2 TCP streams through a MediaTek MT7622
+device (2-core Cortex-A53), which runs NAT with flow offload enabled from
+one ethernet port to PPPoE on another ethernet port + cake qdisc set to
+1Gbps.
+
+rx-gro-list off: 630 Mbit/s, CPU 35% idle
+rx-gro-list on:  770 Mbit/s, CPU 40% idle
 
 Acked-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 ---
- net/ipv4/tcp_offload.c   | 21 +++++++++++++++++++++
- net/ipv6/tcpv6_offload.c |  9 +++++++++
- 2 files changed, 30 insertions(+)
+ net/ipv4/tcp_offload.c   | 32 ++++++++++++++++++++++++++++++++
+ net/ipv6/tcpv6_offload.c | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
 
 diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
-index affd4ed28cfe..aa7508676315 100644
+index 87ae9808e260..c90704befd7b 100644
 --- a/net/ipv4/tcp_offload.c
 +++ b/net/ipv4/tcp_offload.c
-@@ -334,6 +334,18 @@ struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb)
- 	flush |= (ntohl(th2->seq) + skb_gro_len(p)) ^ ntohl(th->seq);
- 	flush |= skb_cmp_decrypted(p, skb);
+@@ -407,6 +407,36 @@ void tcp_gro_complete(struct sk_buff *skb)
+ }
+ EXPORT_SYMBOL(tcp_gro_complete);
  
-+	if (unlikely(NAPI_GRO_CB(p)->is_flist)) {
-+		flush |= (__force int)(flags ^ tcp_flag_word(th2));
-+		flush |= skb->ip_summed != p->ip_summed;
-+		flush |= skb->csum_level != p->csum_level;
-+		flush |= NAPI_GRO_CB(p)->count >= 64;
++static void tcp4_check_fraglist_gro(struct list_head *head, struct sk_buff *skb,
++				    struct tcphdr *th)
++{
++	const struct iphdr *iph;
++	struct sk_buff *p;
++	struct sock *sk;
++	struct net *net;
++	int iif, sdif;
 +
-+		if (flush || skb_gro_receive_list(p, skb))
-+			mss = 1;
++	if (likely(!(skb->dev->features & NETIF_F_GRO_FRAGLIST)))
++		return;
 +
-+		goto out_check_final;
++	p = tcp_gro_lookup(head, th);
++	if (p) {
++		NAPI_GRO_CB(skb)->is_flist = NAPI_GRO_CB(p)->is_flist;
++		return;
 +	}
 +
- 	if (flush || skb_gro_receive(p, skb)) {
- 		mss = 1;
- 		goto out_check_final;
-@@ -400,6 +412,15 @@ INDIRECT_CALLABLE_SCOPE int tcp4_gro_complete(struct sk_buff *skb, int thoff)
- 	const struct iphdr *iph = ip_hdr(skb);
- 	struct tcphdr *th = tcp_hdr(skb);
++	inet_get_iif_sdif(skb, &iif, &sdif);
++	iph = skb_gro_network_header(skb);
++	net = dev_net(skb->dev);
++	sk = __inet_lookup_established(net, net->ipv4.tcp_death_row.hashinfo,
++				       iph->saddr, th->source,
++				       iph->daddr, ntohs(th->dest),
++				       iif, sdif);
++	NAPI_GRO_CB(skb)->is_flist = !sk;
++	if (sk)
++		sock_put(sk);
++}
++
+ INDIRECT_CALLABLE_SCOPE
+ struct sk_buff *tcp4_gro_receive(struct list_head *head, struct sk_buff *skb)
+ {
+@@ -422,6 +452,8 @@ struct sk_buff *tcp4_gro_receive(struct list_head *head, struct sk_buff *skb)
+ 	if (!th)
+ 		goto flush;
  
-+	if (unlikely(NAPI_GRO_CB(skb)->is_flist)) {
-+		skb_shinfo(skb)->gso_type |= SKB_GSO_FRAGLIST | SKB_GSO_TCPV4;
-+		skb_shinfo(skb)->gso_segs = NAPI_GRO_CB(skb)->count;
++	tcp4_check_fraglist_gro(head, skb, th);
 +
-+		__skb_incr_checksum_unnecessary(skb);
-+
-+		return 0;
-+	}
-+
- 	th->check = ~tcp_v4_check(skb->len - thoff, iph->saddr,
- 				  iph->daddr, 0);
+ 	return tcp_gro_receive(head, skb, th);
  
+ flush:
 diff --git a/net/ipv6/tcpv6_offload.c b/net/ipv6/tcpv6_offload.c
-index 7180c30dbbef..575e2743e331 100644
+index e73a4f74fd96..d59f58cbd306 100644
 --- a/net/ipv6/tcpv6_offload.c
 +++ b/net/ipv6/tcpv6_offload.c
-@@ -32,6 +32,15 @@ INDIRECT_CALLABLE_SCOPE int tcp6_gro_complete(struct sk_buff *skb, int thoff)
- 	const struct ipv6hdr *iph = ipv6_hdr(skb);
- 	struct tcphdr *th = tcp_hdr(skb);
+@@ -7,12 +7,45 @@
+  */
+ #include <linux/indirect_call_wrapper.h>
+ #include <linux/skbuff.h>
++#include <net/inet6_hashtables.h>
+ #include <net/gro.h>
+ #include <net/protocol.h>
+ #include <net/tcp.h>
+ #include <net/ip6_checksum.h>
+ #include "ip6_offload.h"
  
-+	if (unlikely(NAPI_GRO_CB(skb)->is_flist)) {
-+		skb_shinfo(skb)->gso_type |= SKB_GSO_FRAGLIST | SKB_GSO_TCPV6;
-+		skb_shinfo(skb)->gso_segs = NAPI_GRO_CB(skb)->count;
++static void tcp6_check_fraglist_gro(struct list_head *head, struct sk_buff *skb,
++				    struct tcphdr *th)
++{
++#if IS_ENABLED(CONFIG_IPV6)
++	const struct ipv6hdr *hdr;
++	struct sk_buff *p;
++	struct sock *sk;
++	struct net *net;
++	int iif, sdif;
 +
-+		__skb_incr_checksum_unnecessary(skb);
++	if (likely(!(skb->dev->features & NETIF_F_GRO_FRAGLIST)))
++		return;
 +
-+		return 0;
++	p = tcp_gro_lookup(head, th);
++	if (p) {
++		NAPI_GRO_CB(skb)->is_flist = NAPI_GRO_CB(p)->is_flist;
++		return;
 +	}
 +
- 	th->check = ~tcp_v6_check(skb->len - thoff, &iph->saddr,
- 				  &iph->daddr, 0);
- 	skb_shinfo(skb)->gso_type |= SKB_GSO_TCPV6;
++	inet6_get_iif_sdif(skb, &iif, &sdif);
++	hdr = skb_gro_network_header(skb);
++	net = dev_net(skb->dev);
++	sk = __inet6_lookup_established(net, net->ipv4.tcp_death_row.hashinfo,
++					&hdr->saddr, th->source,
++					&hdr->daddr, ntohs(th->dest),
++					iif, sdif);
++	NAPI_GRO_CB(skb)->is_flist = !sk;
++	if (sk)
++		sock_put(sk);
++#endif /* IS_ENABLED(CONFIG_IPV6) */
++}
++
+ INDIRECT_CALLABLE_SCOPE
+ struct sk_buff *tcp6_gro_receive(struct list_head *head, struct sk_buff *skb)
+ {
+@@ -28,6 +61,8 @@ struct sk_buff *tcp6_gro_receive(struct list_head *head, struct sk_buff *skb)
+ 	if (!th)
+ 		goto flush;
+ 
++	tcp6_check_fraglist_gro(head, skb, th);
++
+ 	return tcp_gro_receive(head, skb, th);
+ 
+ flush:
 -- 
 2.44.0
 
