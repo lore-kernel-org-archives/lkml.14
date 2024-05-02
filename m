@@ -1,407 +1,135 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290FD1DDC5
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 21:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6E918132D
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 21:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714684825; cv=none; b=I6/l0tJk1XHsLejxY2yrAf2m77kS7FByyzGWpkdycVb5YmLBLWpVy5+J5ef8o8X5VVXqgwU6mxGj/JSAQ2++I2RLfGYxCWjZXZQN5P3AH1lu95q/oacFPb3DGUUhEfocGg5f8zlPLj4jT3HytESEL0RhgnpjmirWuCqpyyk0brI=
+	t=1714685050; cv=none; b=f+6jrERbs6fPN/3aWxyv24MxykoNbFy/1xb7ZEgeivPZWp2RonKaNfvKNfA7nIHcl6MFeiDmULq5SyEIyImSvcjk1UguKLyvBoHs/Zv+G8YvBQ3/oKzDA1DRe9ka1OcyGxVw9anEI8Ps5zQ6Ad477dqM96xskvPVm6iLfz8IMVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714684825; c=relaxed/simple;
-	bh=hUK2jEvBw2kxTtt5wE8bcezHoXk73oM3myWEjpqNG0M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PQDqxZSaLaHJjOhji7QYTgXU2ogTAjCECIaC1OWmujzii55mxkDzFRiFm4b1QoEV3VcbE0wjCZIMmNeKOuVzUQL7hvCp5Rv07y+BTxLLZZR0r1wIE9D9QKl7RNy9O6UnHkANHm5q+9LQYC/1e+adxMVhOf/FmMaKmts55dOFKnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=umNpCyoq; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1714685050; c=relaxed/simple;
+	bh=e5MnDYpDbG4HN+rm3kIwAqZE0h1MjgBoqyIP17amCKU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FRhulY2vdxP2gR1CbW7BFtfIdGYEZK6K7681yLTQAvRqIRMW5v4GLHbEOtcjrYc/9pD6pPdFUGa80Il0E8uhcTkY80Fe3MEU8nU+Fw6jRushb+7rTQ8nooAe0Fwfsvd6tCadWgqtCO2NIzgDbDCxY1vmgfpq/mkmfUN0UEG5j2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F876ssa/; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="umNpCyoq"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ecec796323so8162160b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 14:20:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F876ssa/"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-572a1b3d6baso1722a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 14:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1714684823; x=1715289623; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hncUOQWmqOGUoLNpyAkBcgErvZ7+mEaS4U5aue9YWcM=;
-        b=umNpCyoqHVGI6XeLlEZ8nq1iz+ZzMIXo5P6P8yrOPVYliH8+oVk4DFXSYGz2BcSPt4
-         SzXQMDFGZOHsRag+WCIy1TnCPdkem+/kM7t+NDSkTrMGLmOGSxxrqB3zi5wTIOXK/KCW
-         iILDp1SPtAfn3F/QNLzoywcyr5K6dGQo1yNu8=
+        d=google.com; s=20230601; t=1714685047; x=1715289847; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/DpXkrfXRsTHCLm8mx8p2ZuP05XHl7UCwnC21b1+Ido=;
+        b=F876ssa/nc3uQtcmX5bNxOK5roXvQniRl1J7VAAMoVr1RTWoVzzlY+QLdagqt/Owjm
+         bjdFFb2oLb1xjsFqlE/xelE0VUIQQ9W3loacGrAnIXG0npf2cfw1Y18ibGRiRjyf+ij/
+         ROMJsbfl6+lMRoUhW1XI1guwDIiaMPg3fl2JMDaPjqW7KyeLiUOYPqiouD6sgoZiscnr
+         gjaUfldWLkewmF69R9A96mAJAVLm/2b3LTsrUtGfK/yfjcW+Th4fqDC1ibJJGted9lW/
+         hcClyU9xC3oU1v5N3YtwWJmoIgz9hov7m8/kIuhq9iPdVUQ7nMKk/+KXWmRNrVLf5XW7
+         q/hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714684823; x=1715289623;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hncUOQWmqOGUoLNpyAkBcgErvZ7+mEaS4U5aue9YWcM=;
-        b=v92QM3lE+kSgumxnAWOoAu9AeSxHX7qScES0xe0U04i+hFheEAq7EtHxBxjldxIcQi
-         iUMy06/UI6d3JaQfaP7hC0rEdUjGSU5a2SWtPbqTGr96iCtkYj2+6AnIJVBImazLKw6d
-         /K5p20mF4coLbQqsrNT0fXvrPyIP+ca3BLifro4Zt+AaiCsl6wCHEZGTL/fiEZkEfX7q
-         /LIX5gpZ6hBK3asqUjggk1+59ruY4o7znrfUAOOR0rbuFWZ82KRxHzkftd8822gLAGZX
-         hSFeDWfohtiAnBmLsSydJVK5lFJB0fwhasbvxKnFA5vLckQ53FUzb4M6FiLWPfqPDnJu
-         dXLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJJIdKw1yf7VBXsivfnX78GixRLEA+x8hvyzJHE++QkosZjsl4aksGIEWu3g1BBRkQqBgz6fU4XO4+Uy3NmixZs6N/myrWZZTaSw87
-X-Gm-Message-State: AOJu0YyTgO7zR7pvJ5GEki/6ZaUsqlWLiyJ47c/AHTXekkvMsMSjc+ud
-	BPnxxrDleUhXj+eIDcYArFf1RvjudtSGy/EJATcaBc5LPPjC68wKbFQ7XIhHz/iPPFVGRJuU7G9
-	x
-X-Google-Smtp-Source: AGHT+IEOJcD/NH5H4od1kl2Rjccz0Lt0ltHz/eAsoHtVB7pUoFxr0/GN18Mkn7U4wk0bAkqyOA22cA==
-X-Received: by 2002:a05:6a20:ba1:b0:1aa:bde:8c78 with SMTP id i33-20020a056a200ba100b001aa0bde8c78mr915178pzh.54.1714684823412;
-        Thu, 02 May 2024 14:20:23 -0700 (PDT)
-Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id ld16-20020a170902fad000b001e4344a7601sm1806712plb.42.2024.05.02.14.20.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 14:20:22 -0700 (PDT)
-From: Joe Damato <jdamato@fastly.com>
-To: linux-kselftest@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: nalramli@fastly.com,
-	Joe Damato <jdamato@fastly.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Subject: [PATCH net-next] selftest: epoll_busy_poll: epoll busy poll tests
-Date: Thu,  2 May 2024 21:20:11 +0000
-Message-Id: <20240502212013.274758-1-jdamato@fastly.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1714685047; x=1715289847;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/DpXkrfXRsTHCLm8mx8p2ZuP05XHl7UCwnC21b1+Ido=;
+        b=N4jMVFosYozQvPhEwGqPJ6kYuAhbIBvJaGEC3P5gkEs1UAw8MGUs+Qg7NGqNWAQe62
+         u+HZ+kvxTVZW8M4vrIgaUrome1efle1uQNtRQDNxlM9mI9fn0LhLo2XS2F99gLkjrsHc
+         WtLK6/kXg72jLy8PA9fEpqlmoiRnG/srATr0/ZCDu0IyF79bhiHQHiBXx8c3kUhZprRF
+         KrXI2xOjUWQDXJodVDbGchaMpH8ijuYIKflItoPucV5sjKT9u4xODb/WpVnBp5igR9HH
+         dWjGGWuXzMN6vvbmJw3nIMdwExJm4ySU3oAKoPAJPZSwzadmek2lFFFwoQupVkbzdnR5
+         F5kw==
+X-Forwarded-Encrypted: i=1; AJvYcCU34V7fUwjG72peUzZMjtjxRP7uJw+hbun6lsyMgEGUNZSurzAYwG+bIpyoZjy55ppOw5PkvFTyOBa8ogVhdhmoMPbex9WolzbD3C2+
+X-Gm-Message-State: AOJu0Yy9xh/k7KAAodV4sIcF8MJOwFtrzqCiRmAnnePJ0f94+0aEn4Ji
+	YFVXv2eCPGsI6hunS/xSd4XvVBSDg7uwlh6Iymm6mLO9JpB4cvf8LrR/rfkl7tEUbd62kJZRmJ+
+	TSVTMIDkMbyir7UGNuEBhPl6V/iKooNWQuW3W
+X-Google-Smtp-Source: AGHT+IE6D0fEqWY7DDB8CwkPwGyVRibjt+oC+Eg4cUWkVc6Psi/KvL45XqFWzXhHNui+xz3wqXew4hVko87URKKdZHA=
+X-Received: by 2002:a50:999a:0:b0:572:554b:ec66 with SMTP id
+ 4fb4d7f45d1cf-572d0f4be13mr12509a12.3.1714685046627; Thu, 02 May 2024
+ 14:24:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240422232404.213174-1-sboyd@kernel.org> <20240422232404.213174-4-sboyd@kernel.org>
+ <CABVgOSnEQ0m_nG-dSA3e+5PSazh9uTB_A56zRrphh5vgPsYk3Q@mail.gmail.com>
+In-Reply-To: <CABVgOSnEQ0m_nG-dSA3e+5PSazh9uTB_A56zRrphh5vgPsYk3Q@mail.gmail.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Date: Thu, 2 May 2024 17:23:52 -0400
+Message-ID: <CAFd5g47jEkDvxkg4Kk066_RgN1w6AdjtCKSs3=shWG-kXynPKQ@mail.gmail.com>
+Subject: Re: [PATCH v4 03/10] dt-bindings: test: Add KUnit empty node binding
+To: David Gow <davidgow@google.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	patches@lists.linux.dev, kunit-dev@googlegroups.com, 
+	linux-kselftest@vger.kernel.org, devicetree@vger.kernel.org, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Daniel Latypov <dlatypov@google.com>, Christian Marangi <ansuelsmth@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Ripard <maxime@cerno.tech>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a simple test for the epoll busy poll ioctls.
+On Wed, May 1, 2024 at 3:55=E2=80=AFAM 'David Gow' via KUnit Development
+<kunit-dev@googlegroups.com> wrote:
+>
+> On Tue, 23 Apr 2024 at 07:24, Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Describe a binding for an empty device node used by KUnit tests to
+> > confirm overlays load properly.
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> > Cc: Conor Dooley <conor+dt@kernel.org>
+> > Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> > Cc: David Gow <davidgow@google.com>
+> > Cc: Rae Moar <rmoar@google.com>
+> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> > ---
+>
+> Looks good to me.
+>
+> Reviewed-by: David Gow <davidgow@google.com>
 
-This test ensures that the ioctls have the expected return codes and
-that the kernel properly gets and sets epoll busy poll parameters.
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-The test can be expanded in the future to do real busy polling (provided
-another machine to act as the client is available).
+>
+> -- David
+>
+> >  .../devicetree/bindings/test/test,empty.yaml  | 30 +++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/test/test,empty.y=
+aml
+> >
+> > diff --git a/Documentation/devicetree/bindings/test/test,empty.yaml b/D=
+ocumentation/devicetree/bindings/test/test,empty.yaml
+> > new file mode 100644
+> > index 000000000000..20dc83b15bbf
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/test/test,empty.yaml
+> > @@ -0,0 +1,30 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/test/test,empty.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Empty node
+> > +
+> > +maintainers:
+> > +  - David Gow <davidgow@google.com>
+> > +  - Brendan Higgins <brendanhiggins@google.com>
+>
+> Brendan: Do you want to use your linux.dev address here?
 
-To run the test (use -s for "simple" test):
+Ah, thanks for pointing that out, David. Yes, please use "Brendan
+Higgins <brendan.higgins@linux.dev>" here.
 
-./epoll_busy_poll -s
-
-On success, nothing is written to stdout/stderr and the exit code is 0.
-
-Signed-off-by: Joe Damato <jdamato@fastly.com>
----
- tools/testing/selftests/net/.gitignore        |   1 +
- tools/testing/selftests/net/Makefile          |   1 +
- tools/testing/selftests/net/epoll_busy_poll.c | 279 ++++++++++++++++++
- 3 files changed, 281 insertions(+)
- create mode 100644 tools/testing/selftests/net/epoll_busy_poll.c
-
-diff --git a/tools/testing/selftests/net/.gitignore b/tools/testing/selftests/net/.gitignore
-index d996a0ab0765..777cfd027076 100644
---- a/tools/testing/selftests/net/.gitignore
-+++ b/tools/testing/selftests/net/.gitignore
-@@ -5,6 +5,7 @@ bind_wildcard
- csum
- cmsg_sender
- diag_uid
-+epoll_busy_poll
- fin_ack_lat
- gro
- hwtstamp_config
-diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
-index 5befca249452..c83c5d9c1ad9 100644
---- a/tools/testing/selftests/net/Makefile
-+++ b/tools/testing/selftests/net/Makefile
-@@ -84,6 +84,7 @@ TEST_GEN_FILES += sctp_hello
- TEST_GEN_FILES += csum
- TEST_GEN_FILES += ip_local_port_range
- TEST_GEN_FILES += bind_wildcard
-+TEST_GEN_FILES += epoll_busy_poll
- TEST_PROGS += test_vxlan_mdb.sh
- TEST_PROGS += test_bridge_neigh_suppress.sh
- TEST_PROGS += test_vxlan_nolocalbypass.sh
-diff --git a/tools/testing/selftests/net/epoll_busy_poll.c b/tools/testing/selftests/net/epoll_busy_poll.c
-new file mode 100644
-index 000000000000..3066a41a2acb
---- /dev/null
-+++ b/tools/testing/selftests/net/epoll_busy_poll.c
-@@ -0,0 +1,279 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Basic per-epoll context busy poll test.
-+ *
-+ * Only tests the ioctls, but should be expanded to test two connected hosts in
-+ * the future
-+ */
-+
-+#define _GNU_SOURCE
-+
-+#include <error.h>
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <limits.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+
-+#include <sys/epoll.h>
-+#include <sys/ioctl.h>
-+#include <sys/socket.h>
-+
-+/* if the headers haven't been updated, we need to define some things */
-+#if !defined(EPOLL_IOC_TYPE)
-+struct epoll_params {
-+	uint32_t busy_poll_usecs;
-+	uint16_t busy_poll_budget;
-+	uint8_t prefer_busy_poll;
-+
-+	/* pad the struct to a multiple of 64bits */
-+	uint8_t __pad;
-+};
-+
-+#define EPOLL_IOC_TYPE 0x8A
-+#define EPIOCSPARAMS _IOW(EPOLL_IOC_TYPE, 0x01, struct epoll_params)
-+#define EPIOCGPARAMS _IOR(EPOLL_IOC_TYPE, 0x02, struct epoll_params)
-+#endif
-+
-+enum epoll_test_types {
-+	TEST_UNDEFINED = -1,
-+	TEST_SIMPLE = 0,
-+};
-+
-+static enum epoll_test_types test_type = TEST_UNDEFINED;
-+
-+static void usage(const char *filepath)
-+{
-+	error(1, 0, "Usage: %s [options]", filepath);
-+}
-+
-+static void parse_opts(int argc, char **argv)
-+{
-+	int c;
-+
-+	while ((c = getopt(argc, argv, "s")) != -1) {
-+		switch (c) {
-+		case 's':
-+			test_type = TEST_SIMPLE;
-+			break;
-+		}
-+	}
-+
-+	if (optind != argc)
-+		usage(argv[0]);
-+}
-+
-+static void do_simple_test_get_params(int fd)
-+{
-+	/* begin by getting the epoll params from the kernel
-+	 *
-+	 * the default should be default and all fields should be zero'd by the
-+	 * kernel, so set params fields to garbage to test this.
-+	 */
-+	struct epoll_params *invalid_params;
-+	struct epoll_params params;
-+	int ret = 0;
-+
-+	params.busy_poll_usecs = 0xff;
-+	params.busy_poll_budget = 0xff;
-+	params.prefer_busy_poll = 1;
-+	params.__pad = 0xf;
-+
-+	if (ioctl(fd, EPIOCGPARAMS, &params) != 0)
-+		error(1, errno, "ioctl EPIOCGPARAMS");
-+
-+	if (params.busy_poll_usecs != 0)
-+		error(1, 0, "EPIOCGPARAMS busy_poll_usecs should have been 0");
-+
-+	if (params.busy_poll_budget != 0)
-+		error(1, 0, "EPIOCGPARAMS busy_poll_budget should have been 0");
-+
-+	if (params.prefer_busy_poll != 0)
-+		error(1, 0, "EPIOCGPARAMS prefer_busy_poll should have been 0");
-+
-+	if (params.__pad != 0)
-+		error(1, 0, "EPIOCGPARAMS __pad should have been 0");
-+
-+	invalid_params = (struct epoll_params *)0xdeadbeef;
-+	ret = ioctl(fd, EPIOCGPARAMS, invalid_params);
-+	if (ret != -1)
-+		error(1, 0, "EPIOCGPARAMS should error with invalid params");
-+
-+	if (errno != EFAULT)
-+		error(1, 0,
-+		      "EPIOCGPARAMS with invalid params should set errno to EFAULT");
-+}
-+
-+static void do_simple_test_set_invalid(int fd)
-+{
-+	/* Set some unacceptable values and check for error */
-+	struct epoll_params *invalid_params;
-+	struct epoll_params params;
-+	int ret;
-+
-+	memset(&params, 0, sizeof(struct epoll_params));
-+
-+	params.__pad = 1;
-+
-+	ret = ioctl(fd, EPIOCSPARAMS, &params);
-+
-+	if (ret != -1)
-+		error(1, 0, "EPIOCSPARAMS with non-zero __pad should error");
-+
-+	if (errno != EINVAL)
-+		error(1, 0, "EPIOCSPARAMS with non-zero __pad errno should be EINVAL");
-+
-+	params.__pad = 0;
-+	params.busy_poll_usecs = (unsigned int)INT_MAX + 1;
-+
-+	ret = ioctl(fd, EPIOCSPARAMS, &params);
-+
-+	if (ret != -1)
-+		error(1, 0, "EPIOCSPARAMS should error busy_poll_usecs > S32_MAX");
-+
-+	if (errno != EINVAL)
-+		error(1, 0, "EPIOCSPARAMS with busy_poll_usecs > S32_MAX, errno should be EINVAL");
-+
-+	params.__pad = 0;
-+	params.busy_poll_usecs = 32;
-+	params.prefer_busy_poll = 2;
-+
-+	ret = ioctl(fd, EPIOCSPARAMS, &params);
-+
-+	if (ret != -1)
-+		error(1, 0, "EPIOCSPARAMS should error prefer_busy_poll > 1");
-+
-+	if (errno != EINVAL)
-+		error(1, 0, "EPIOCSPARAMS with prefer_busy_poll > 1 errno should be EINVAL");
-+
-+	params.__pad = 0;
-+	params.busy_poll_usecs = 32;
-+	params.prefer_busy_poll = 1;
-+	params.busy_poll_budget = 65535;
-+
-+	ret = ioctl(fd, EPIOCSPARAMS, &params);
-+
-+	if (ret != -1)
-+		error(1, 0, "EPIOCSPARAMS should error busy_poll_budget > NAPI_POLL_WEIGHT");
-+
-+	if (errno != EPERM)
-+		error(1, 0,
-+		      "EPIOCSPARAMS with busy_poll_budget > NAPI_POLL_WEIGHT (without CAP_NET_ADMIN) errno should be EPERM");
-+
-+	invalid_params = (struct epoll_params *)0xdeadbeef;
-+	ret = ioctl(fd, EPIOCSPARAMS, invalid_params);
-+
-+	if (ret != -1)
-+		error(1, 0, "EPIOCSPARAMS should error when epoll_params is invalid");
-+
-+	if (errno != EFAULT)
-+		error(1, 0, "EPIOCSPARAMS should set errno to EFAULT when epoll_params is invalid");
-+}
-+
-+static void do_simple_test_set_and_get_valid(int fd)
-+{
-+	struct epoll_params params;
-+	int ret;
-+
-+	memset(&params, 0, sizeof(struct epoll_params));
-+
-+	params.busy_poll_usecs = 25;
-+	params.busy_poll_budget = 16;
-+	params.prefer_busy_poll = 1;
-+
-+	ret = ioctl(fd, EPIOCSPARAMS, &params);
-+
-+	if (ret != 0)
-+		error(1, errno, "EPIOCSPARAMS with valid params should not error");
-+
-+	/* check that the kernel returns the same values back */
-+
-+	memset(&params, 0, sizeof(struct epoll_params));
-+
-+	ret = ioctl(fd, EPIOCGPARAMS, &params);
-+
-+	if (ret != 0)
-+		error(1, errno, "EPIOCGPARAMS should not error");
-+
-+	if (params.busy_poll_usecs != 25 ||
-+	    params.busy_poll_budget != 16 ||
-+	    params.prefer_busy_poll != 1 ||
-+	    params.__pad != 0)
-+		error(1, 0, "EPIOCGPARAMS returned incorrect values");
-+}
-+
-+static void do_simple_test_invalid_fd(void)
-+{
-+	struct epoll_params params;
-+	int ret;
-+	int fd;
-+
-+	fd = socket(AF_UNIX, SOCK_DGRAM, 0);
-+
-+	if (fd == -1)
-+		error(1, errno, "creating unix socket");
-+
-+	ret = ioctl(fd, EPIOCGPARAMS, &params);
-+
-+	if (ret != -1)
-+		error(1, 0, "EPIOCGPARAMS on invalid epoll FD should error");
-+
-+	if (errno != ENOTTY)
-+		error(1, 0, "EPIOCGPARAMS on invalid epoll FD should set errno to ENOTTY");
-+
-+	memset(&params, 0, sizeof(struct epoll_params));
-+
-+	ret = ioctl(fd, EPIOCSPARAMS, &params);
-+
-+	if (ret != -1)
-+		error(1, 0, "EPIOCSPARAMS on invalid epoll FD should error");
-+
-+	if (errno != ENOTTY)
-+		error(1, 0, "EPIOCSPARAMS on invalid epoll FD should set errno to ENOTTY");
-+}
-+
-+static void do_simple_test_invalid_ioctl(int fd)
-+{
-+	struct epoll_params params;
-+	int invalid_ioctl = EPIOCGPARAMS + 10;
-+	int ret;
-+
-+	ret = ioctl(fd, invalid_ioctl, &params);
-+
-+	if (ret != -1)
-+		error(1, 0, "invalid ioctl should return error");
-+
-+	if (errno != EINVAL)
-+		error(1, 0, "invalid ioctl should set errno to EINVAL");
-+}
-+
-+static void do_simple_test(void)
-+{
-+	int fd;
-+
-+	fd = epoll_create1(0);
-+	if (fd == -1)
-+		error(1, errno, "epoll_create");
-+
-+	do_simple_test_invalid_fd();
-+	do_simple_test_invalid_ioctl(fd);
-+	do_simple_test_get_params(fd);
-+	do_simple_test_set_invalid(fd);
-+	do_simple_test_set_and_get_valid(fd);
-+
-+	if (close(fd))
-+		error(1, errno, "close");
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	parse_opts(argc, argv);
-+
-+	if (test_type == TEST_SIMPLE)
-+		do_simple_test();
-+	else
-+		error(1, 0, "unknown test type: %d", test_type);
-+
-+	return 0;
-+}
--- 
-2.25.1
-
+Otherwise it looks good to me.
