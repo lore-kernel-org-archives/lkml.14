@@ -1,91 +1,174 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E30C181CEC;
-	Thu,  2 May 2024 23:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB98615358F;
+	Thu,  2 May 2024 23:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714693015; cv=none; b=huIv+M6kKKgJKlSNRdmp08KKAcliRmlU+ghyJYF38bTRdTfMl/VyAYu5DK0MwA6zE9Jkmb2+u72W32XvzNJE/W2cdrcJ9w3SaYfQcYYF5ghpb7zQ8yosGy36/tn48P81vwb4a8jA2lRdyYDoOS6vDnwjtM53FW2j4r92Gi1tfIs=
+	t=1714693065; cv=none; b=uhF/maXTh/bfPMXgY9etLh/poCzmCKeinXElNVaBjl0ayA+DEsBfmutHvN65bedRitP3IqLU5e+el/PMSN06qhaxs4DV5y6lO7/wVrmTwaiGwhtQgLJnXlIhRm5SMRQStrlkKK0KqjRsGlJk/JrfioQm6NiFxxQWyjkDpHHV33o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714693015; c=relaxed/simple;
-	bh=NUzH0xLjYug2wA1GsDRruTxJ0XL95zyZdLIf5ZhzrS0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 In-Reply-To:References; b=FoIZ0xcML0sXuPM09v6CINwvnB64EYlo/nbw1kV0M03n7amm/B7Q1tl0UnJjigpPFkeyCY0eWIcAdjClsyul2IYdl20r06URVAEOzds6T0MU3b6RHHZeiV2sxcwfyZJYfdkQSjT6n98O96DxQgCPnfNUIeTEl8yxahqHqNvkM/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=52.237.72.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from ubuntu.localdomain (unknown [221.192.179.227])
-	by mail-app2 (Coremail) with SMTP id by_KCgC3ZqZwIzRm7PwDAA--.6463S3;
-	Fri, 03 May 2024 07:36:24 +0800 (CST)
-From: Duoming Zhou <duoming@zju.edu.cn>
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-hams@vger.kernel.org,
-	pabeni@redhat.com,
-	kuba@kernel.org,
-	edumazet@google.com,
-	davem@davemloft.net,
-	jreuter@yaina.de,
-	horms@kernel.org,
-	Markus.Elfring@web.de,
-	dan.carpenter@linaro.org,
-	lars@oddbit.com,
-	Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH net v2 1/2] ax25: change kfree in ax25_dev_free to ax25_dev_free
-Date: Fri,  3 May 2024 07:36:15 +0800
-Message-Id: <81bc171fb2246201236c341e9b7d799f509d7dd4.1714690906.git.duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1714690906.git.duoming@zju.edu.cn>
-References: <cover.1714690906.git.duoming@zju.edu.cn>
-In-Reply-To: <cover.1714690906.git.duoming@zju.edu.cn>
-References: <cover.1714690906.git.duoming@zju.edu.cn>
-X-CM-TRANSID:by_KCgC3ZqZwIzRm7PwDAA--.6463S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw48CFy8GryrArWDArWUurg_yoWfJFX_uF
-	1kAFZrXw4UJr1UCw1rCFWrJry7Ww1jgw1fJryfAFZ7t34Yqa4UJrWkWr18XF1UurWUCr4I
-	qr1rJr13Ar43JjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbdAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
-	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E
-	0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67
-	AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48I
-	cxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxw
-	CY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_uwCF04k20xvY0x0EwIxGrwCF54CYxVCY
-	1x0262kKe7AKxVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
-	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRPDG5UUUUU=
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwUJAWYztgkCSgAKsm
+	s=arc-20240116; t=1714693065; c=relaxed/simple;
+	bh=ScmNimVD55HCJMpU1ZPTM6tr5t4G+wAg/gscjQhbxFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WSivMeyunEo7vEOE5+cCG4sLDze6/9zRMcT+UIymclU58t0PQNbZzez5atj9uleEdgu1NAtECYAJ+g1lJIcY67TUib+DQoamdOVtdQk5qS98pZO9DorFqlk1RlgJHybpZujtpZRI4GnbkJzGGDbS53pf1FJ4JXyNZNlNKG+coAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=O2/n/1nn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="O2/n/1nn"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 442NKMxO019950;
+	Thu, 2 May 2024 23:37:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=yRahZediyJwd+8tFnCwYNOlw++FRljCtETICqi0KlLs=; b=O2
+	/n/1nnkgzSroG5Sq+vOV2/J4HinUGZrLvxhaAONmKDPAQOgn9WUHzYJPDSt0QYpA
+	EFUBbWzML+H3epFcUwj3FPH+XY3XjvGnlqYZZUdT05ll8lkzvQkzcQdbtVJvhIcQ
+	YJqojw/vXeRHVRMBF4PLrTuWePYkHVoANXOTSTHaHMSJBazzvDgUYC6aRbwUI5kQ
+	Wt1zKVXPuZct2q7KHJ2bBtEgVwdE5ymRVmlm+HadKZxLHG5/x+o+bsf7vNaLJzn8
+	2aNjbYa+m2DaOOVxzlxaM+jxAL9qlvYSUmeePIy/D5uN5iKmvR3EcsIgRPeTWIyT
+	qfyHgkPnafCjNKbG+rUw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xvawbhapu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 May 2024 23:37:17 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 442NbGor013135
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 2 May 2024 23:37:16 GMT
+Received: from [10.71.112.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 2 May 2024
+ 16:37:15 -0700
+Message-ID: <a88b41f4-7e53-e162-5a6a-2d470e29c0bb@quicinc.com>
+Date: Thu, 2 May 2024 16:37:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v20 06/41] usb: host: xhci-sideband: Expose a sideband
+ interrupter enable API
+Content-Language: en-US
+To: Mathias Nyman <mathias.nyman@linux.intel.com>,
+        <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+        <lgirdwood@gmail.com>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <gregkh@linuxfoundation.org>,
+        <Thinh.Nguyen@synopsys.com>, <broonie@kernel.org>,
+        <bgoswami@quicinc.com>, <tiwai@suse.com>, <robh@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>
+References: <20240425215125.29761-1-quic_wcheng@quicinc.com>
+ <20240425215125.29761-7-quic_wcheng@quicinc.com>
+ <ddd682da-5cfd-db09-e316-3c54939caf90@linux.intel.com>
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+In-Reply-To: <ddd682da-5cfd-db09-e316-3c54939caf90@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: RmyOpgti89lDhFfWlfBLnFZdjZ9mBcru
+X-Proofpoint-ORIG-GUID: RmyOpgti89lDhFfWlfBLnFZdjZ9mBcru
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-02_14,2024-05-02_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 suspectscore=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 adultscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2405020159
 
-The ax25_dev is managed by reference counting, so it should not be
-deallocated directly by kfree() in ax25_dev_free(), replace it with
-ax25_dev_put() instead.
+Hi Mathias,
 
-Fixes: d01ffb9eee4a ("ax25: add refcount in ax25_dev to avoid UAF bugs")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
----
- net/ax25/ax25_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 5/2/2024 4:07 AM, Mathias Nyman wrote:
+> On 26.4.2024 0.50, Wesley Cheng wrote:
+>> Some use cases maybe require that the secondary interrupter's events to
+>> be handled by the OS.  In this case, configure the IMOD and the
+>> skip_events property to enable the interrupter's events.  By default,
+>> assume that the secondary interrupter doesn't want to enable OS event
+>> handling.
+>>
+>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+>> ---
+>>   drivers/usb/host/xhci-sideband.c  | 28 ++++++++++++++++++++++++++++
+>>   include/linux/usb/xhci-sideband.h |  2 ++
+>>   2 files changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/usb/host/xhci-sideband.c 
+>> b/drivers/usb/host/xhci-sideband.c
+>> index 255feae33c6e..6fdae9840c11 100644
+>> --- a/drivers/usb/host/xhci-sideband.c
+>> +++ b/drivers/usb/host/xhci-sideband.c
+>> @@ -237,6 +237,30 @@ xhci_sideband_get_event_buffer(struct 
+>> xhci_sideband *sb)
+>>   }
+>>   EXPORT_SYMBOL_GPL(xhci_sideband_get_event_buffer);
+>> +/**
+>> + * xhci_sideband_enable_interrupt - enable interrupt for secondary 
+>> interrupter
+>> + * @sb: sideband instance for this usb device
+>> + * @imod_interval: number of event ring segments to allocate
+>> + *
+>> + * Enables OS owned event handling for a particular interrupter if 
+>> client
+>> + * requests for it.  In addition, set the IMOD interval for this 
+>> particular
+>> + * interrupter.
+>> + *
+>> + * Returns 0 on success, negative error otherwise
+>> + */
+>> +int xhci_sideband_enable_interrupt(struct xhci_sideband *sb, u32 
+>> imod_interval)
+>> +{
+>> +    if (!sb || !sb->ir)
+>> +        return -ENODEV;
+>> +
+>> +    xhci_set_interrupter_moderation(sb->ir, imod_interval);
+> 
+> Is there a need to adjust the moderation after initial setup?
+> 
+> If not then maybe we could pass the imod_interval as a parameter to
+> xhci_create_secondary_interrupter(), and avoid exporting
+> xhci_set_interrupter_moderation()
+> 
+> 
 
-diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
-index 282ec581c07..07723095c60 100644
---- a/net/ax25/ax25_dev.c
-+++ b/net/ax25/ax25_dev.c
-@@ -208,7 +208,7 @@ void __exit ax25_dev_free(void)
- 		s        = ax25_dev;
- 		netdev_put(ax25_dev->dev, &ax25_dev->dev_tracker);
- 		ax25_dev = ax25_dev->next;
--		kfree(s);
-+		ax25_dev_put(s);
- 	}
- 	ax25_dev_list = NULL;
- 	spin_unlock_bh(&ax25_dev_lock);
--- 
-2.17.1
+Let me preface my comments by saying that I was trying to include some 
+aspects of enabling the secondary interrupter line within the main apps 
+proc.  If this gets too confusing, I can remove these mechanisms for 
+now.  For example, as you mentioned below 
+xhci_sideband_enable_interrupt() isn't going to be used in the offload path.
 
+However, I decided to add it so we can have some corresponding function 
+that will utilize/set skip_events = false. (as it is "true" by default) 
+Again, I can remove this part and revisit later when we actually have a 
+use case to handle secondary interrupts on apps.
+
+As for the IMOD setting, depending on what you think, I can add it as 
+part of xhci_create_secondary_interrupter()
+
+>> +    sb->ir->skip_events = false;
+>> +    xhci_enable_interrupter(sb->ir);
+>> +
+>> +    return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(xhci_sideband_enable_interrupt);
+> 
+> I can't find the place where xhci_sideband_enable_interrupt() is called in
+> this series. How is it planned to be used?
+> 
+> Thanks
+> Mathias
+
+Thanks
+Wesley Cheng
