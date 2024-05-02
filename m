@@ -1,106 +1,70 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7301836F0
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 21:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDC91BED6F;
+	Thu,  2 May 2024 21:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714685716; cv=none; b=GqW6BO23hToR8PJdacOnrekHRbGuT2TStqh1tkR6MC5wOIC5aWnmcCbPCzJ1iRqnbt999aRvrW7MioT1SbwHNwsNVDnNlOIWPRnezVvyTcuOlmTJYkVV4ZSiClXeyUr7beZKT3i12gnhWSdZxPGvUOhs5i3G6wQExPff2FOzbcw=
+	t=1714685720; cv=none; b=ag34cZBiN5rrRzOlmGN1srFSPoFVIFBu9lFGvx8JR1FeH3tQXyOTKVy0Cxf3MXdEOZWwJIJsAQ9SSb29OMSfaJ43jolQ3xhzp3PiszXmPjNu18hA/5Pv+lLW8Dtept+73XIaKJzmXuFhrVNCMvIAJE/1T9vwDG8QSqfbBFBjc1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714685716; c=relaxed/simple;
-	bh=+iC8656RV+1z9SNt/rVmkZ8TfblJJXHmOmw6MoV2AOA=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=UB5QuwhqByJwFvhS6VCUR5661pXAjv973BTAWVouv+EvYnIK0TiEt3lIV7N+PmZLi6sNYyWHNva0q3BAS4LQ3IxIZ/JA0tok3aoEJLbFtVr+8FAiGpYNYVS5Ur4/1rGL9ygvOdZgJXZoaAGorfy8RCBKwtGW2Jt/mRTdvBwSlZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YKmUWmoh; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1714685720; c=relaxed/simple;
+	bh=dGVoI4d4tynFDPGLs6MfTg5m6n3+0kLY1UaKnKdA55k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WLiY2PaJK2t49eht7pOXyWw+APGIriJXTj5psje/+pZiSZaw1evOhjgzGYSidp4BYm39PvTuBnhhdmHckBOQ1K3X2vmxdLFeXHFDXFhkf37xyKbFdWqu1K81pReEMf7zPj/v3LCgGficPspnDLRmRvrTgkuw+08rkW95r8uLrvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kMWDdPq6; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YKmUWmoh"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de60321ce6cso8326630276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 14:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714685714; x=1715290514; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zgV4xf5fQxiR7aZHDngtpEH48nFcBFO3YN7qW93R/WY=;
-        b=YKmUWmohHCI3nJNqF0x0QwKfeyQLFnr3qoAF3UJwHEcseRz57D1mJvvfgXq86Ob1HM
-         q4vP+URgT99hwigCINta0rPI4elFwXbp5HU6Pdbv6qlYxGbH7xA+fzAREWVM9bhJmocC
-         iuQ1FKbVzV3P7Dqcy/wt25N4cJHGQ7SNWgUYj7IlKus2uyHWGMbfVfWEn9cDMWgzMKUn
-         AGuxGXtrDjT5JTQqTyC0EnhDVqY6Y6FSsF+4nAA2kfl0gFfvTDu+OtMcjGd/7wsM53Yv
-         fAPnF1EaXEOZl5RILKLoSn4tkmEV1IWlqw6U0EKz0z6HNwhEtzST1Th4euXyOmURNGcK
-         DTWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714685714; x=1715290514;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zgV4xf5fQxiR7aZHDngtpEH48nFcBFO3YN7qW93R/WY=;
-        b=wki/eeZpJpw5St/d6/TlS3Pe+TrBdkkRjAYqwYJT3of2LTsnOxRwDgkuLd0NlpkPCu
-         V+yfnmKpCeZKt693NRVw2FLpmMOJofIvfIN5XCmG0xGZ2CJ3CxnR1DfYZr2+YQfKIEQc
-         yypU7VSgWlE/LxUACQ6NUgtraJnJSFhXGjTJnGC9Son0ZuFuug6D+LBBIAA6D3abwNgM
-         lCzkVNAmXkJDvawFYmwAWFNyf5ZWQ8YHvJUdV5Pp/FhfPoV9NcSMWMs+bM2NW95DujvG
-         i1/APJKfryrrxw8XAakbkUMPeng6spRGk8IVSvphzxTQCbu1jYPWnzVPZG/x7yA0ZzKM
-         D6Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvRXfPTDjewqu1xhEuQx98tg4veXZ8cr7B6cNQaHj0RFEJf6T2MIVp6QEBWrn6JLGotuZdkyO9t26CW1s6Rk8Lgpcffl1/SMXAg49x
-X-Gm-Message-State: AOJu0Yyao+XnfuR0XgGhUKlUtznKlV7gJ1aKqAwsMYzcmcMAnLTb4HQr
-	FsW4NYJtazcvAsqFl1lXpS3kPasR7IhLvXR6sMkFqVrmFhd6TZcziU2hi254z5VYOWN7IgrUdag
-	ouxN7aA==
-X-Google-Smtp-Source: AGHT+IEXj+L7mG/mFxFwq34rU15M9trIcDqflnvzeDMxWFJfivTAbhdOHNL6yQyts7hcKK3NVMlyQZ6Ci0F9
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:deba:378d:2d3a:2641])
- (user=irogers job=sendgmr) by 2002:a05:6902:1007:b0:dc6:d233:ffdd with SMTP
- id w7-20020a056902100700b00dc6d233ffddmr322304ybt.0.1714685714546; Thu, 02
- May 2024 14:35:14 -0700 (PDT)
-Date: Thu,  2 May 2024 14:35:03 -0700
-In-Reply-To: <20240502213507.2339733-1-irogers@google.com>
-Message-Id: <20240502213507.2339733-3-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kMWDdPq6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=tlFW8nHNMe/kIplt0cgGnakBNynrklQOcrWEc7IQ7x4=; b=kMWDdPq6vs1CUwS+IRPUbgpLoA
+	IC8dWLw6FaCljPdIJWTkh4MImGo5Ty2XG0jnQ8eMOHqj4i6byL8Sstn/I4JOXliEjY5jvCvoKaXl5
+	3HNrPT8//2gKQfyGPO+EdzOS84mlIe4MG55TupkdB6W/+SMQsanlE73aXBjYgUvUyd6BkYHL91/PC
+	3M4qdcaMnIyXnnb1dGoniT1IqGRPS3wXcU353S1r/zt8TQAKllsLUF25JhzlqPgToXZl+ifv9vhfn
+	IMfo4YL3OH/6ADo5OwtaFfxrA0OzfbMUc5ufFQ+yul6Cvb1v5xzR0CiEPQC4UOXdXQKpsEZhZfqOc
+	fBEUzOmg==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s2e5C-0000000DzCy-2lmy;
+	Thu, 02 May 2024 21:35:14 +0000
+Date: Thu, 2 May 2024 14:35:14 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Allen <allen.lkml@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Allen Pais <apais@linux.microsoft.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
+	jack@suse.cz, ebiederm@xmission.com, j.granados@samsung.com
+Subject: Re: [PATCH v2] fs/coredump: Enable dynamic configuration of max file
+ note size
+Message-ID: <ZjQHEpRW7q686kU7@bombadil.infradead.org>
+References: <20240502145920.5011-1-apais@linux.microsoft.com>
+ <202405021045.360F5313EA@keescook>
+ <CAOMdWSJzXiqB5tusdKaavJFTaKC-qyArT0ssRHVY-fvZVKJW+Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240502213507.2339733-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v5 2/6] perf Document: Sysfs event names must be lower or
- upper case
-From: Ian Rogers <irogers@google.com>
-To: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
-	James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMdWSJzXiqB5tusdKaavJFTaKC-qyArT0ssRHVY-fvZVKJW+Q@mail.gmail.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-To avoid directory scans in perf it is going to be assumed that sysfs
-event names are either lower or upper case.
+On Thu, May 02, 2024 at 01:03:52PM -0700, Allen wrote:
+> +int proc_core_file_note_size_max(struct ctl_table *table, int write,
+> void __user *buffer, size_t *lenp, loff_t *ppos) {
+> +    int error = proc_douintvec(table, write, buffer, lenp, ppos);
+> +    if (write && (core_file_note_size_max < MAX_FILE_NOTE_SIZE ||
+> core_file_note_size_max > MAX_ALLOWED_NOTE_SIZE))
+> +        core_file_note_size_max = MAX_FILE_NOTE_SIZE;  // Revert to
+> default if out of bounds
+> +    return error;
+> +}
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
----
- .../ABI/testing/sysfs-bus-event_source-devices-events       | 6 ++++++
- 1 file changed, 6 insertions(+)
+There's already a proc helper which let's you set min / max.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-events b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-index 77de58d03822..e7efeab2ee83 100644
---- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-+++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-@@ -37,6 +37,12 @@ Description:	Per-pmu performance monitoring events specific to the running syste
- 		performance monitoring event supported by the <pmu>. The name
- 		of the file is the name of the event.
- 
-+		As performance monitoring event names are case
-+		insensitive in the perf tool, the perf tool only looks
-+		for lower or upper case event names in sysfs to avoid
-+		scanning the directory. It is therefore required the
-+		name of the event here is either lower or upper case.
-+
- 		File contents:
- 
- 			<term>[=<value>][,<term>[=<value>]]...
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
-
+  Luis
