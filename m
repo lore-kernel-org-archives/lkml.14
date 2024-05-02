@@ -1,175 +1,253 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C48D23759
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 07:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F413D0D5;
+	Thu,  2 May 2024 07:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714633543; cv=none; b=PkPorhx0GJKBNdzhHa8SxXhYuUsXG7pRa2u49F8fkVTWuw+RaVwCTOGdDtVLtsUrZoj7t7vAURgdhOyNwYMTKW1voMYewlrmzV5/XhxTtFahK0lGQXvSr1gr5JEIpOmnfUWHUDJtNhdPc80b3C00EO1TPUVDfZJa68GnxJ7hTsU=
+	t=1714633567; cv=none; b=XbdNTRJ2X86H7vQkwYaE0ZS1moCPSUwDToem5hmlzT2vk40LNtKuHBHuUl/QZxUewwg5j+D4/Ej89tgZd4F7p9uTFu1Rrklh8Ion+9xNW6SkOPt+x8xXlklan9m9YagcX0RISSzFyRqYDmHfuhueeAdXrMWAWgwlxgGAnxIYa8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714633543; c=relaxed/simple;
-	bh=jmCz2bzZzN6llSSfnEw77N01jtx9utNXMW5o87pvL2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbzNZJWFAXXq3Yp5gxe+XLX/nQuUQl7qftPawRLZN5AoR12vmIXvCrER/GbrZvt1B3M9S9On5QAh+3f+DS2YjJzDbfYoCY35jlDw0uRtYIEknCtyLvwAtZO39H9Xeh7UhD7cIBl6HbmTP6ShcD5OXZNXvyh1muehXQEhonIBLWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zOqxvveo; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714633567; c=relaxed/simple;
+	bh=VCJpFTyWHDVtl37lStzlxQlOOcbZwfJtBV574sUGtMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IpLAfynZbU35jTEgtrwek4kXkBTA0+ss4j1Glm3Mr/bjvN7x1pkylZvsjxphsaldUsLyyO0vaT1gWa3qmoOPbwLjgGiAkYRnv9Q7WLBWEk7Z7NN0HpasKVM9hnnS0Ti3z3ILlXlw3KUOSKpff7yKy8XMRfuYNO0C1pwiMPedsas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B8j1f5Uu; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zOqxvveo"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2df9af57b5eso73699601fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 00:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714633540; x=1715238340; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V3T3S0/ACanJIeY4czsTT+RTZ1YRol9ljsewIaXQads=;
-        b=zOqxvveoh0antj8BAs4hQvuiDTYMLbFX6Gto+PdQ7hl2MT62tfWZ1Q4ZYhaHtnVVxK
-         VVpIqua7oEgqKx3G5v7d2vMuiLxkb0DlfBC3p4BM6nOdVMlUsIaa+kTJlCIs9k+ewaLj
-         +KokrfVL9ldJ+4TJr2CkZZCuYk3e+4dtfQqK8vXBnTStehYk9i28w8+//9db1Hjq3xR6
-         odXInKjwg/237Fd3XORDBm98Y/J3mpbj05871x7CBdGrlMSDjRiYB3JQ9i41PFCs1hPh
-         AOXbZsuPil/A2+4TO+/4QX3QT9lTJoewkZtR+VgILuC75Jwk89aEQyUtsGgAp75ZxmWa
-         wVJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714633540; x=1715238340;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V3T3S0/ACanJIeY4czsTT+RTZ1YRol9ljsewIaXQads=;
-        b=UBHcbdaCB7D3TwmLvd9bWrzrXTRl7f4Y5xJ4Fya621Wt1QPSm86g9dXYkevKgm8tlV
-         VOXHVwJJ+5gyLnoLVVB7FAtwH5FRkxbFgDSwG7MW79621KBmiJDE58kL/ojYbSNgCCk+
-         4rzxzDDP/KW+Qq5uG4E6NYQBMPdg5UA9KkQ66z4pbNVr6X4s7tTKrUW3/EN3z8FuxXzh
-         d2mfYoyHxEl3YDWYkjTpjnvqrkecj887KbgdV6Du1Vlrw93ShVTE4DsVmykPSat8ccyE
-         XuXtGb6UCNrsS9O0luwwMaZElhbraH+pw0tsk66QL16qvPFD5BsIpjMk0AE2037ZKChD
-         M35A==
-X-Forwarded-Encrypted: i=1; AJvYcCVR+qmZCOelHFXDircDWXMT1DTlaA0dQ00v1h1K7SVuFj2eJ8pjStfm+MEEOWqQBth18DbMCuQqbQCB7MNFIqO8+GLm+e0QVtklaAXL
-X-Gm-Message-State: AOJu0YzKnLsW23cNBpuZCt34zeXk0VoctWK68KmwKlguTqDxPrbTcToC
-	7MAqmrw/PULBdkxppeEfkbmDc3TWb3V//o2kWOZRfAq/4ESt1yr3WGWhV8hbS/8=
-X-Google-Smtp-Source: AGHT+IGHVWuyebZDGCsij4vuuCGXUnlNacdJhnGzP0jhAixWhDpzQ1nmi4t3DPfRBlZrMwTir+WhcA==
-X-Received: by 2002:a2e:a58e:0:b0:2d9:fb60:9afa with SMTP id m14-20020a2ea58e000000b002d9fb609afamr1096872ljp.40.1714633540084;
-        Thu, 02 May 2024 00:05:40 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id q26-20020a2e969a000000b002d860a40f9dsm69420lji.136.2024.05.02.00.05.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 00:05:39 -0700 (PDT)
-Date: Thu, 2 May 2024 10:05:35 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Viresh Kumar <vireshk@kernel.org>,
-	Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-	"soc@kernel.org" <soc@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Aisheng Dong <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Chester Lin <chester62515@gmail.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	"Ghennadi Procopciuc (OSS)" <ghennadi.procopciuc@oss.nxp.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Joel Stanley <joel@jms.id.au>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH 01/21] pinctrl: ti: iodelay: Use scope based
- of_node_put() cleanups
-Message-ID: <26aab31b-8085-49e0-862d-24c26ff4d02c@moroto.mountain>
-References: <20240501-pinctrl-cleanup-v1-0-797ceca46e5c@nxp.com>
- <20240501-pinctrl-cleanup-v1-1-797ceca46e5c@nxp.com>
- <ee5c8637-b8b2-491b-b011-e399942691dc@moroto.mountain>
- <DU0PR04MB9417AD5892A1A45E6AE18D8688182@DU0PR04MB9417.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B8j1f5Uu"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E4106FF80D;
+	Thu,  2 May 2024 07:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1714633557;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sik2Srpo/NMXeuyqGPdiEfnhnvExYt+wCnwEMFyOk40=;
+	b=B8j1f5UuQ+vnS71+EkEfNv+tOaeI+G68TJyKlaSdEUr0+GqduZ45SWwDpOX7X4irVbzNS7
+	a4LaDpYPb7Jg8J3QlefxyiaPGvJsx8zgrXU5WnqTYAiKEf0KBI0DM4gbsaXEO5pqZbkmeB
+	3Rn3nZcsmy20kDJ+0AOPvKop4Pyu7Jg5CuCPsMNrRBhwFAo395d0n9BtC8da9mxa6kCq03
+	VdCexfNiKI7V0TYnqpbWJRLr6L0YiwNdVw8RHR+bGV6snnXZlCOfw9vvdO9cuqPbYwdQLx
+	N3kQO+6SagPNJ0JLlsU4WG07zz2n5Eipa7j+1TRwajgFBFYld3xtZKV/SGhUkQ==
+Date: Thu, 2 May 2024 09:05:53 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
+ <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Russell King
+ <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Piergiorgio Beruto
+ <piergiorgio.beruto@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ =?UTF-8?B?Tmljb2zDsg==?= Veronese <nicveronese@gmail.com>, Simon Horman
+ <horms@kernel.org>, mwojtas@chromium.org, Nathan Chancellor
+ <nathan@kernel.org>, Antoine Tenart <atenart@kernel.org>
+Subject: Re: [PATCH net-next] net: phy: Don't conditionally compile the
+ phy_link_topology creation
+Message-ID: <20240502090553.485bf36b@device-28.home>
+In-Reply-To: <2422613d-0f9c-4485-bad3-5aa7cf12c0b1@gmail.com>
+References: <20240429131008.439231-1-maxime.chevallier@bootlin.com>
+	<1ed5b8cb-c79b-44b9-8dbe-f78d7505b3b4@gmail.com>
+	<20240430135734.503f51a2@device-28.home>
+	<2422613d-0f9c-4485-bad3-5aa7cf12c0b1@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DU0PR04MB9417AD5892A1A45E6AE18D8688182@DU0PR04MB9417.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Thu, May 02, 2024 at 12:28:42AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH 01/21] pinctrl: ti: iodelay: Use scope based of_node_put()
-> > cleanups
-> > 
-> > On Wed, May 01, 2024 at 08:55:59PM +0800, Peng Fan (OSS) wrote:
-> > > @@ -879,16 +874,12 @@ static int ti_iodelay_probe(struct
-> > platform_device *pdev)
-> > >  	ret = pinctrl_register_and_init(&iod->desc, dev, iod, &iod->pctl);
-> > >  	if (ret) {
-> > >  		dev_err(dev, "Failed to register pinctrl\n");
-> > > -		goto exit_out;
-> > > +		return ret;
-> > >  	}
-> > >
-> > >  	platform_set_drvdata(pdev, iod);
-> > >
-> > >  	return pinctrl_enable(iod->pctl);
-> > > -
-> > > -exit_out:
-> > > -	of_node_put(np);
-> > > -	return ret;
-> > >  }
-> > 
-> > This will call of_node_put() on the success path so it's a behavior change.  The
-> > original code is buggy, it's supposed to call of_node_put() on the success path
-> > here or in ti_iodelay_remove().
-> > 
-> > If it's supposed to call of_node_put() here, then fine, this is bugfix but if it's
-> > supposed to call it in ti_iodelay_remove() then we need to save the pointer
-> > somewhere using no_free_ptr().  Probably saving ->np is the safest choice?
-> > 
-> > The original code is already a little bit buggy because it doesn't check for
-> > pinctrl_enable() errors and cleanup.
-> 
-> It was introduced by 
-> commit 6118714275f0a313ecc296a87ed1af32d9691bed (tag: pinctrl-v4.11-4)
-> Author: Tony Lindgren <tony@atomide.com>
-> Date:   Thu Mar 30 09:16:39 2017 -0700
-> 
->     pinctrl: core: Fix pinctrl_register_and_init() with pinctrl_enable()
-> 
-> of_node_put is expected in probe, not in remove.
-> 
+Hi,
 
-Ah, right.  You'll add that for the Fixes tag obviously...
+On Tue, 30 Apr 2024 23:29:37 +0200
+Heiner Kallweit <hkallweit1@gmail.com> wrote:
 
-regards,
-dan carpenter
+> On 30.04.2024 13:57, Maxime Chevallier wrote:
+> > Hello Heiner,
+> > 
+> > On Tue, 30 Apr 2024 10:17:31 +0200
+> > Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> >   
+> >> On 29.04.2024 15:10, Maxime Chevallier wrote:  
+> >>> The core of the phy_link_topology isn't directly tied to phylib, and at
+> >>> the moment it's initialized, phylib might not be loaded yet. Move the
+> >>> initialization of the topology to the phy_link_topology_core header,
+> >>> which contains the bare minimum so that we can initialize it at netdev
+> >>> creation.
+> >>>     
+> >>
+> >> The change fixes the issue for me, but according to my personal taste
+> >> the code isn't intuitive and still error-prone. Also there's no good
+> >> reason to inline a function like phy_link_topo_create() and make it
+> >> publicly available. Do you expect it to be ever used outside net core?
+> >> In general it may make sense to add a config symbol for the topology
+> >> extension, there seem to be very few, specialized use cases for it.  
+> > 
+> > I think I'm missing the point here then. Do you mean adding a Kconfig
+> > option to explicitely turn phy_link_topology on ? or build it as a
+> > dedicated kernel module ?
+> > 
+> > Or do you see something such as "if phylib is M or Y, then build the
+> > topology stuff and make sure it's allocated when a netdev gets created
+> > ?"
+> > 
+> > Thanks,
+> > 
+> > Maxime
+> >   
+> >>  
+> >>> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> >>> Closes: https://lore.kernel.org/netdev/2e11b89d-100f-49e7-9c9a-834cc0b82f97@gmail.com/
+> >>> Closes: https://lore.kernel.org/netdev/20240409201553.GA4124869@dev-arch.thelio-3990X/
+> >>> ---
+> >>>  drivers/net/phy/phy_link_topology.c    | 23 --------------------
+> >>>  include/linux/phy_link_topology.h      |  5 -----
+> >>>  include/linux/phy_link_topology_core.h | 30 +++++++++++++++++---------
+> >>>  3 files changed, 20 insertions(+), 38 deletions(-)
+> >>>
+> >>> diff --git a/drivers/net/phy/phy_link_topology.c b/drivers/net/phy/phy_link_topology.c
+> >>> index 985941c5c558..960aedd73308 100644
+> >>> --- a/drivers/net/phy/phy_link_topology.c
+> >>> +++ b/drivers/net/phy/phy_link_topology.c
+> >>> @@ -12,29 +12,6 @@
+> >>>  #include <linux/rtnetlink.h>
+> >>>  #include <linux/xarray.h>
+> >>>  
+> >>> -struct phy_link_topology *phy_link_topo_create(struct net_device *dev)
+> >>> -{
+> >>> -	struct phy_link_topology *topo;
+> >>> -
+> >>> -	topo = kzalloc(sizeof(*topo), GFP_KERNEL);
+> >>> -	if (!topo)
+> >>> -		return ERR_PTR(-ENOMEM);
+> >>> -
+> >>> -	xa_init_flags(&topo->phys, XA_FLAGS_ALLOC1);
+> >>> -	topo->next_phy_index = 1;
+> >>> -
+> >>> -	return topo;
+> >>> -}
+> >>> -
+> >>> -void phy_link_topo_destroy(struct phy_link_topology *topo)
+> >>> -{
+> >>> -	if (!topo)
+> >>> -		return;
+> >>> -
+> >>> -	xa_destroy(&topo->phys);
+> >>> -	kfree(topo);
+> >>> -}
+> >>> -
+> >>>  int phy_link_topo_add_phy(struct phy_link_topology *topo,
+> >>>  			  struct phy_device *phy,
+> >>>  			  enum phy_upstream upt, void *upstream)
+> >>> diff --git a/include/linux/phy_link_topology.h b/include/linux/phy_link_topology.h
+> >>> index 6b79feb607e7..ad72d7881257 100644
+> >>> --- a/include/linux/phy_link_topology.h
+> >>> +++ b/include/linux/phy_link_topology.h
+> >>> @@ -32,11 +32,6 @@ struct phy_device_node {
+> >>>  	struct phy_device *phy;
+> >>>  };
+> >>>  
+> >>> -struct phy_link_topology {
+> >>> -	struct xarray phys;
+> >>> -	u32 next_phy_index;
+> >>> -};
+> >>> -
+> >>>  static inline struct phy_device *
+> >>>  phy_link_topo_get_phy(struct phy_link_topology *topo, u32 phyindex)
+> >>>  {
+> >>> diff --git a/include/linux/phy_link_topology_core.h b/include/linux/phy_link_topology_core.h
+> >>> index 0a6479055745..0116ec49cd1b 100644
+> >>> --- a/include/linux/phy_link_topology_core.h
+> >>> +++ b/include/linux/phy_link_topology_core.h
+> >>> @@ -2,24 +2,34 @@
+> >>>  #ifndef __PHY_LINK_TOPOLOGY_CORE_H
+> >>>  #define __PHY_LINK_TOPOLOGY_CORE_H
+> >>>  
+> >>> -struct phy_link_topology;
+> >>> +#include <linux/xarray.h>
+> >>>  
+> >>> -#if IS_REACHABLE(CONFIG_PHYLIB)
+> >>> -
+> >>> -struct phy_link_topology *phy_link_topo_create(struct net_device *dev);
+> >>> -void phy_link_topo_destroy(struct phy_link_topology *topo);
+> >>> -
+> >>> -#else
+> >>> +struct phy_link_topology {
+> >>> +	struct xarray phys;
+> >>> +	u32 next_phy_index;
+> >>> +};
+> >>>  
+> >>>  static inline struct phy_link_topology *phy_link_topo_create(struct net_device *dev)
+> >>>  {
+> >>> -	return NULL;
+> >>> +	struct phy_link_topology *topo;
+> >>> +
+> >>> +	topo = kzalloc(sizeof(*topo), GFP_KERNEL);
+> >>> +	if (!topo)
+> >>> +		return ERR_PTR(-ENOMEM);
+> >>> +
+> >>> +	xa_init_flags(&topo->phys, XA_FLAGS_ALLOC1);
+> >>> +	topo->next_phy_index = 1;
+> >>> +
+> >>> +	return topo;
+> >>>  }
+> >>>  
+> >>>  static inline void phy_link_topo_destroy(struct phy_link_topology *topo)
+> >>>  {
+> >>> -}
+> >>> +	if (!topo)
+> >>> +		return;
+> >>>  
+> >>> -#endif
+> >>> +	xa_destroy(&topo->phys);
+> >>> +	kfree(topo);
+> >>> +}
+> >>>  
+> >>>  #endif /* __PHY_LINK_TOPOLOGY_CORE_H */    
+> >>  
+> >   
+> 
+> To go a little bit more into detail:
+> 
+> phy_link_topo_create() and phy_link_topo_destroy() are used in net/core/dev.c
+> only. Do you expect them to be ever used by other callers?
+> If not, their functionality could be moved to net/core/dev.c.
+> Supposedly guarded by IS_ENABLED(CONFIG_PHYLIB), alternatively a new config
+> symbol for link_topo support.
+> 
+> To get rid of the dependency you could also lazy-inizialize
+> netdev->link_topo. For this phy_link_topo_add_phy() would have
+> to take the netdev as first argument, not the topo.
+> Then the first call to phy_link_topo_add_phy() would initialize
+> netdev->link_topo.
+> 
+> I think functions like phy_link_topo_get_phy() should also check for
+> topo != NULL first, maybe combined with a WARN_ON().
+> They are exported and you have no control over its use.
 
+Thanks Heiner for the explanations. I'll rework based on that. The
+original reason I didn't directly include the netdev as a parameter for
+these function, or didn't put any helper in net/core/dev.c is because I
+wanted to avoid too strong of a link between the topology and netdev.
+
+There are some PHYs for which we can't assign any netdev (PHYs that
+would sit in-between 2 chained DSA switches is the only example I have
+in mind though), but TBH the code in its actual shape doesn't address
+these either, so it's a useless design constraint.
+
+So, let me indeed do that, it will probably make for a simpler and more
+straightforward design.
+
+Thanks for the input,
+
+Maxime
