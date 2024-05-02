@@ -1,102 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818D515D5D1;
-	Thu,  2 May 2024 16:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD9115CD7B;
+	Thu,  2 May 2024 16:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714666127; cv=none; b=oc9AB4Y1KxH9Z4dg1citUMA26xf0wgIywOQmPUmLInTBpRuCgkKKUA2Z7tsjYYWqFb/WlibZXAx9PwvPjYRsRcZ2HPcmT4HkooXdCpheqq6+oXQJlTcraueErhM/xXXAOeyUuUZe0FzM4i8CmkmnelinCJ0sw9LABAoFhaUHoh8=
+	t=1714666153; cv=none; b=aFtuPKA45XX8oRCUt3QUfh07Gk7EnJ8ZafHs2rcBncTXubzLHSFO43HfAe0sTyZBeKgrmst302xmuiaMzDBiL/Se89g3IVXzrj1p2/wC+vofhEI0Wo/JCneVMmphLuKrNtRRd0ME3pXddM3N7a4rp2/QkLPIP+9neO8FnVAHvGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714666127; c=relaxed/simple;
-	bh=gl9O2WwztfOm6npo/1+WfKL5nQmCth7iyvHkJ0RH9c4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m/Mw2p9Dy2sc5qqne5oU/kv2898vIGjd2asxV8zhKatGv2EScb1cPFMQBVGivqNhOsfq6XU98o09KeVS9+veng4UhKBuEzbJaQU7ewUtwRzHr9ADQmMTOovOfcRLGuJJltdUVipPEwBrd0J/GtbWXmYQQaFqCXQmodoFws2U2p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B91kLkBm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714666153; c=relaxed/simple;
+	bh=bEIqQ5F5YN4F9JTpN1ESGIlQIRXLOYQv3szua/b9Dhs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=K8QJbEPY7dfLz5WwCKBjb2lerY4tY2HtyQu6p6pK8QHM5C/R6kWE/3UQFGwQ5cwsEJr9idb7d4ER24IvDfxKNTTxAp3WAex+hAPnoKrfzG7EKo2unLjslrtb1mV8x5samyzklm5UcgAiUh7uInWCdDA9jhpVs5cfrLMFhYygo/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SjOpADPw; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B91kLkBm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F317C113CC;
-	Thu,  2 May 2024 16:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714666127;
-	bh=gl9O2WwztfOm6npo/1+WfKL5nQmCth7iyvHkJ0RH9c4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B91kLkBmHQ5lgyqltlx+5+JcepgXeFHd3/LFM+sal1nWhA7JX0Ujg5q1mMDQmkYyH
-	 nJNFtQ4OGjCHSRHBADn4BsNG+VSlxgi9/cuXEPy/2yeMt10fXlf9RHyWU72p6zOjGB
-	 FfHypT2i/vlMF+7mS6Kj13RThJegMsFp7bGVdPuBA+Dcv+rHNg526bxxcdz6zB6O0P
-	 upi0HTJTDinSBNItRssW3+t5zxldFhnkyfKTNYsWPZkBEeRH58SZC+GjHWYbbgjYod
-	 UwQqBq3OyxOBsd1RExxWOf7Az07+GijsHDWq5RPPlO4Gp2dhsZ8K8XSA/35viCc+N7
-	 yl0v1d/V+lRuw==
-Date: Thu, 2 May 2024 09:08:45 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Tomasz =?utf-8?Q?K=C5=82oczko?= <kloczko.tomasz@gmail.com>
-Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org, conor@kernel.org,
-	ojeda@kernel.org
-Subject: Re: Prebuilt LLVM 18.1.5 uploaded
-Message-ID: <20240502160845.GA3193908@dev-arch.thelio-3990X>
-References: <20240502152416.GA3178126@dev-arch.thelio-3990X>
- <CABB28Cwu3CMeBNch+snX8LG_g2oaYRDboVK4prwc3jp7MHyQWg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SjOpADPw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714666152; x=1746202152;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=bEIqQ5F5YN4F9JTpN1ESGIlQIRXLOYQv3szua/b9Dhs=;
+  b=SjOpADPwVdwSK+j/pVMjAF2Yf00W62AWBVzh33mE98SECOIKXrxIwcFP
+   hMTN3V4UyNwvIpE5M3HhlgAldWEvk/93+pWNalxbsnZ7lGS2z/rbJfVs7
+   VTWifE8A9KkpK1SZLKCVvl2bahvSY/7D6LbIUWNZyAbTDuiW3oOfNZjdW
+   bZ/ZfZV9g0hJwfdJ6ZmBzveVLFM1WxQ/CqSSvuL192t4Mf/ecNJ4zboL3
+   px5VpaK04GZfVDkYlNAGr9vWCyxA9Ce4PcOt5yNmPJGM+qMMWaa4cSVbw
+   aa3jKXBo/OKUxtGJfcNSYIHsVKNPns4orN/WEaIqTGnPfR8hy0T+Z1tZ4
+   Q==;
+X-CSE-ConnectionGUID: wxzK+aQoQQyp/aB4lN6qmQ==
+X-CSE-MsgGUID: sUpDfCthSse3UJhuzf7+HA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="27975649"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="27975649"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 09:08:30 -0700
+X-CSE-ConnectionGUID: TXl1Wl+XRlC2W6neqMOg5g==
+X-CSE-MsgGUID: Etv4bJKsRVy+2meoIb9Y9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="27143502"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.54])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 09:08:27 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 2 May 2024 19:08:21 +0300 (EEST)
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: Parker Newman <pnewman@connecttech.com>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH v1 11/13] serial: 8250_exar: Use BIT() in
+ exar_ee_read()
+In-Reply-To: <20240502144626.2716994-12-andriy.shevchenko@linux.intel.com>
+Message-ID: <702a9145-5bc1-c765-a1fa-278702741637@linux.intel.com>
+References: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com> <20240502144626.2716994-12-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABB28Cwu3CMeBNch+snX8LG_g2oaYRDboVK4prwc3jp7MHyQWg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, May 02, 2024 at 04:33:32PM +0100, Tomasz Kłoczko wrote:
-> On Thu, 2 May 2024 at 16:25, Nathan Chancellor <nathan@kernel.org> wrote:
+On Thu, 2 May 2024, Andy Shevchenko wrote:
+
+> Use BIT() in exar_ee_read() like other functions do.
 > 
-> > Hi all,
-> >
-> > I have built and uploaded LLVM 18.1.5 to
-> > https://mirrors.edge.kernel.org/pub/tools/llvm/.
-> >
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/tty/serial/8250/8250_exar.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Is it known when dist tar balls will be uploaded as gh assets to
-> https://github.com/llvm/llvm-project/releases/tag/llvmorg-18.1.5 ? 🤔
+> diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+> index 306bc6d7c141..bf3730f4231d 100644
+> --- a/drivers/tty/serial/8250/8250_exar.c
+> +++ b/drivers/tty/serial/8250/8250_exar.c
+> @@ -340,13 +340,13 @@ static u16 exar_ee_read(struct exar8250 *priv, u8 ee_addr)
+>  	exar_ee_write_bit(priv, 0);
+>  
+>  	// Send address to read from
+> -	for (i = 1 << (UART_EXAR_REGB_EE_ADDR_SIZE - 1); i; i >>= 1)
+> -		exar_ee_write_bit(priv, (ee_addr & i));
+> +	for (i = UART_EXAR_REGB_EE_ADDR_SIZE - 1; i >= 0; i--)
+> +		exar_ee_write_bit(priv, ee_addr & BIT(i));
+>  
+>  	// Read data 1 bit at a time
+>  	for (i = 0; i <= UART_EXAR_REGB_EE_DATA_SIZE; i++) {
+> -		data <<= 1;
+> -		data |= exar_ee_read_bit(priv);
+> +		if (exar_ee_read_bit(priv))
+> +			data |= BIT(i);
 
-Not sure. It seems like there was a 24 hour delay for 18.1.4 if I am
-reading GitHub's release JSON correctly:
+Does this end up reversing the order of bits? In the original, data was 
+left shifted which moved the existing bits and added the lsb but the 
+replacement adds highest bit on each iteration?
 
-$ gh -R llvm/llvm-project release view --json assets,createdAt,tagName llvmorg-18.1.4 | python3 -c "import json, sys
+-- 
+ i.
 
-llvm_json = json.load(sys.stdin)
-
-llvm_tag_date = llvm_json['createdAt']
-llvm_tag_name = llvm_json['tagName']
-
-print(f'\n{llvm_tag_name} was made at {llvm_tag_date}\n')
-
-for asset in llvm_json['assets']:
-    if (asset_name := asset['name']).endswith('.src.tar.xz'):
-        asset_upload_date = asset['createdAt']
-        print(f'{asset_name} was uploaded at {asset_upload_date}')"
-
-llvmorg-18.1.4 was made at 2024-04-17T00:26:56Z
-
-bolt-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:08Z
-clang-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:09Z
-clang-tools-extra-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:10Z
-cmake-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:11Z
-compiler-rt-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:12Z
-flang-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:12Z
-libclc-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:13Z
-libcxx-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:14Z
-libcxxabi-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:15Z
-libunwind-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:16Z
-lld-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:16Z
-lldb-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:17Z
-llvm-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:18Z
-llvm-project-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:20Z
-mlir-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:24Z
-openmp-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:25Z
-polly-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:26Z
-runtimes-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:26Z
-test-suite-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:27Z
-third-party-18.1.4.src.tar.xz was uploaded at 2024-04-18T00:13:32Z
-
-Cheers,
-Nathan
