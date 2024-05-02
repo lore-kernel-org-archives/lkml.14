@@ -1,90 +1,81 @@
-Received: from gentwo.org (gentwo.org [62.72.0.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474733207;
-	Thu,  2 May 2024 01:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B2F134D1;
+	Thu,  2 May 2024 01:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714614300; cv=none; b=X6OxVT8M5GzmKZlZXfyILrYQdxR7vtCqLVbQrXUeNJ2GNuBb9SScbxENsODQoXZUZU0BuJz9Kb2IIUN64j7Z6leF+/mdSEr9giJEerNnqFhROhgjV5cmRciVq4VzzQNaCOknytLerM06VMfQl3QvkG8/X5sCM1qJx8Dg3lwBfn0=
+	t=1714614634; cv=none; b=DaTN0/ctwD5N+UGyikiDxUXZ7cNj2vfl+vKPi3UWmIu/0NzIfNK9deeRvDLTH7aaZc3kbPhykunBzf0VMlcZi2J+8crO2lekx+72RL4LjiK4u/PlMwUm/9/753OR3w6klLGg06tXyC3XiqFHtCDQkzpAjgCIP0cuReJTBg6dI7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714614300; c=relaxed/simple;
-	bh=4/6ccF66M6jfy4na42oviYshr2LOBPT25Dm7w4642t4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RINtBZzi5mDN6/hWe4eGwUXSNAQ25/oe2pnfYNpguijOedhyIIdEtvPtN0rkuY3yDPjNpY5rAkGUV5FxTijrcaleBiESzoUpbsn/Dq/Iom5oprk3J1a65yNMJz3GS7VlVuFXdOaifU9KOOd4SLiM1ktz0Y9z47uPSRoKEPxjfXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=EZAY33JE; arc=none smtp.client-ip=62.72.0.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+	s=arc-20240116; t=1714614634; c=relaxed/simple;
+	bh=UqJyOCfUOQaamn1XOe5aPpuJ96nuGK2MkwC3U20TSVU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=V7P60zTQj5sFZjp4ApFl4i4xONyBnk/PSieqR4LdKD/kNcfS91Ciz5CFw6pIhqdO97qfUOLXbF5dSQ3WdGTP0ulzkR1CRLBU2LMo1LT1eFqHW64idqLY8OU0hL+isHCgwOF1lVtXf4VnkgXOiDelUD6QTGtIWBwMrC+hmy67yTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIVINzy3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="EZAY33JE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
-	s=default; t=1714613623;
-	bh=4/6ccF66M6jfy4na42oviYshr2LOBPT25Dm7w4642t4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=EZAY33JEALU8XVl7KTq3DxYg/uHLFyAMRvc4XqzUNE64PUsUG/nI+FirEx7DByHNF
-	 ZbpTx75v9UJMxP/IMChibVgFYJup586biteVaVOAQar6SqFbC+LrFD0f4TQQ86BH94
-	 3Uu9sInK+nne4DE4ugGPvNsR2M36BSUVqMBcoPeI=
-Received: by gentwo.org (Postfix, from userid 1003)
-	id F07EF401D5; Wed,  1 May 2024 18:33:42 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-	by gentwo.org (Postfix) with ESMTP id ECB50401C3;
-	Wed,  1 May 2024 18:33:42 -0700 (PDT)
-Date: Wed, 1 May 2024 18:33:42 -0700 (PDT)
-From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-To: Ankur Arora <ankur.a.arora@oracle.com>
-cc: linux-pm@vger.kernel.org, kvm@vger.kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-    catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de, 
-    mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, 
-    pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com, 
-    rafael@kernel.org, daniel.lezcano@linaro.org, peterz@infradead.org, 
-    arnd@arndb.de, lenb@kernel.org, mark.rutland@arm.com, harisokn@amazon.com, 
-    joao.m.martins@oracle.com, boris.ostrovsky@oracle.com, 
-    konrad.wilk@oracle.com
-Subject: Re: [PATCH 1/9] cpuidle: rename ARCH_HAS_CPU_RELAX to
- ARCH_HAS_OPTIMIZED_POLL
-In-Reply-To: <20240430183730.561960-2-ankur.a.arora@oracle.com>
-Message-ID: <7473bd3d-f812-e039-24cf-501502206dc9@gentwo.org>
-References: <20240430183730.561960-1-ankur.a.arora@oracle.com> <20240430183730.561960-2-ankur.a.arora@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIVINzy3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 67CB6C4AF18;
+	Thu,  2 May 2024 01:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714614633;
+	bh=UqJyOCfUOQaamn1XOe5aPpuJ96nuGK2MkwC3U20TSVU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=NIVINzy3hG9s+sSJaz05jpkC3br03/TPTbIKfPIu6Ch8TPj31vQ2wPOXOj5G8wlQ3
+	 tY20uEZoGIWPZxFmPjPmdTphE9xuP16i+LszcWE51h0t/aVOvWhatv1scvTd8pCWLJ
+	 uz8dHMYDEYvAs050sd97pYvuqg3fura7XEe9v3adLtIBAvOgA9QN8/Tf56GhzI6Qk7
+	 +pLkp6R+A5ACpGZ9zhez5v+5ZEHSgNOhnKsc/XII+Oigs8z++KAzQuzZ0MSOI28JOp
+	 BcqNUWORNlkssqX9xs9gbE4rO6yoGzW7nV6XdE+SaYSUtGDIGdal/vn/lo36e2of/W
+	 p1q6wK9gVcEgg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4FBA5C43440;
+	Thu,  2 May 2024 01:50:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3] net: ti: icssg_prueth: Add SW TX / RX Coalescing
+ based on hrtimers
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171461463332.22196.9443088195151767378.git-patchwork-notify@kernel.org>
+Date: Thu, 02 May 2024 01:50:33 +0000
+References: <20240430120634.1558998-1-danishanwar@ti.com>
+In-Reply-To: <20240430120634.1558998-1-danishanwar@ti.com>
+To: MD Danish Anwar <danishanwar@ti.com>
+Cc: dan.carpenter@linaro.org, hkallweit1@gmail.com, andrew@lunn.ch,
+ jan.kiszka@siemens.com, diogo.ivo@siemens.com, pabeni@redhat.com,
+ kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, srk@ti.com, vigneshr@ti.com,
+ r-gunasekaran@ti.com, rogerq@kernel.org, horms@kernel.org
 
-On Tue, 30 Apr 2024, Ankur Arora wrote:
+Hello:
 
-> ARCH_HAS_CPU_RELAX is a bit of a misnomer since all architectures
-> define cpu_relax(). Not all, however, have a performant version, with
-> some only implementing it as a compiler barrier.
->
-> In contexts that this config option is used, it is expected to provide
-> an architectural primitive that can be used as part of a polling
-> mechanism -- one that would be cheaper than spinning in a tight loop.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-The intend of cpu_relax() is not a polling mechanism. Initial AFAICT it 
-was introduced on x86 as the REP NOP instruction. Aka as PAUSE. And it was 
-part of a spin loop. So there was no connection to polling anything.
+On Tue, 30 Apr 2024 17:36:34 +0530 you wrote:
+> Add SW IRQ coalescing based on hrtimers for RX and TX data path for ICSSG
+> driver, which can be enabled by ethtool commands:
+> 
+> - RX coalescing
+>   ethtool -C eth1 rx-usecs 50
+> 
+> - TX coalescing can be enabled per TX queue
+> 
+> [...]
 
-The intend was to make the processor aware that we are in a spin loop. 
-Various processors have different actions that they take upon encountering 
-such a cpu relax operation.
+Here is the summary with links:
+  - [net-next,v3] net: ti: icssg_prueth: Add SW TX / RX Coalescing based on hrtimers
+    https://git.kernel.org/netdev/net-next/c/dcb3fba6fa34
 
-The polling (WFE/WFI) available on ARM (and potentially other platforms) 
-is a different mechanism that is actually intended to reduce the power 
-requirement of the processor until a certain condition is met and that 
-check is done in hardware.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-These are not the same and I think we need both config options.
-
-The issues that you have with WFET later in the patchset arise from not 
-making this distinction.
-
-The polling (waiting for an event) could be implemented for a 
-processor not supporting that in hardware by using a loop that 
-checks for the condition and then does a cpu_relax().
-
-With that you could f.e. support the existing cpu_relax() and also have 
-some form of cpu_poll() interface.
 
