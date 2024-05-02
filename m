@@ -1,163 +1,196 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2046.outbound.protection.outlook.com [40.107.220.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260E2C8F3;
-	Thu,  2 May 2024 14:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714658642; cv=fail; b=ApMI5kHpG4CNt5CXS2AEwHClrkCBhKVciYt4ztwdqXz+E/ZG8/tOhjUYoOZdSndz0DY5qysC0EesJsKi0irHPCh6T9qJtRD50XF/qbI6HLLdR2j8C4Tz0E2WOqnfI3XA17sB86VaLvKM/3XQEdwQbC1VnUPtkOQWU6ZZAIvmkdI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714658642; c=relaxed/simple;
-	bh=QWzEkSdjvnADCmIvbRWb8cssbIqca65gv7G5OZVLxc8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R3DPEexlW1LnDgcyMABoECCEKxYeqIKE42ZUoLocxEx0jhLHnwq0SGMoOAg7ljp9UnyN/vcGNG/40xa2dyPFu4BW+keQ+lhiKJAZjMC/soFdy3xBmmqdlVjboKf5rI9e6m7o/Vt6mO5j/DAVUbaEbD1J8VVpyeRXSHZwBIZluAM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=07mEspSr; arc=fail smtp.client-ip=40.107.220.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C1DC8F3;
+	Thu,  2 May 2024 14:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714658710; cv=none; b=fmqNwrRPb+UzhPuyjzIxt/ryb2XcLr0CTOg1heaZWshjppmqrNUs9AxCWDnmegMzqWa2sZmegzzi5GkmuQ3xDsXNEpd/ej8oDDpu3i5QDl+LGB+BzYMq8CFnMU4Nq3/JCZxrn7LptZ+eUrOS1RP63pCHOuR1BZK+2sBWI0nEFas=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714658710; c=relaxed/simple;
+	bh=8y14gJObKP5c3w67SOb6CXspdVuxp4RGI5WB7sMX8w4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pAd+rUoDVzn0/lIrqAFQCJwIjpmfmCEbPl45nS3xFqq5uN617rx7jo+1PL3hgBpEkF1QirIXqwEr6KBp8VXLrgx4r/vTTWd0ATO1ThSYcg7SdE7uVF5Qow+duK+y91HK0OG8fZLtW+WPDmNNKL+McwhHhsf/LprqUP/249inmow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+sY4JEB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="07mEspSr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XZln+5apSyZZkmARBh1ELGEqMOY5J7sA6syFbwb3ifGh8dlrbJ7cL4ZF1EwUxtMcM80zversdAhqxgypHHJ5a1zMWqsO+2c45+9ASfW3sDYktRdaXRhJhNz0/VoseAjxttHeK6P8T/ZKD2MFWaphCYi1f6QIc8N/sL3Rhybg1sRkFGN0C2xE/JDKqI3cjXVZtDaMoJGP5T0x40mrDiKzemKGIxa95ScjtRmA+CXGMZ66Dg51SVFHEk34TAISog8WbIq4YRLJLh/keao8Rs8mkgoEmJHFaiV+cY375K6nId2iVMlB8Zl1hPHP80Nx1dMT0kjqrik5O+1cDMiyWWyL7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3orPfhOIf2ez8ZcEx0FaEOr17YZzaq39myVFLiquxiE=;
- b=Isak8mMRrOvXUrgYqFtF6yhLNH2dhMXsVUofr1Kj2/di6EbAsWwW6tsDiRLQXecuNJC3ke4eOEru24q+xD3RyPn9znlAZRfMdk2F/Dr1wEln0NgKLZ/tGjt61NR81H2XfXZPmIQThycE5IGdvIF9jJ1o1/W0wWpvWpZEUj00l43LlxEYWB515ECi2X4pp+3U+TbFrNye43HVZ0N180Lb77N2Yh1J8JNYFC6R7qsyrMjh/xTKxEGGqUdovf2zTd/iGczzMc9Nqa8nXRg803nuaO6SGRf3OAbwAahBOE5J5XH05CoZvF01tQx2rFXio0mzhWf5v9eXxSiezR1fxgcIkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3orPfhOIf2ez8ZcEx0FaEOr17YZzaq39myVFLiquxiE=;
- b=07mEspSrqX/kmFMW7OMz/tAOHB1/XrCoGUwiNIK7CwatE7nw/xqvMO8AFhAdmbuwsvtzQYEA2J7JPPwOK/OfbmgE8jOLt80VRcSsumOcEBLF/4jV2IKAvzzaXyJp4OimEJHfA0JbnhAQb36Rcm2ooKqdmrZq47Ql//Bnix7Bqio=
-Received: from BL1P221CA0002.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:2c5::32)
- by DM4PR12MB5988.namprd12.prod.outlook.com (2603:10b6:8:6b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30; Thu, 2 May
- 2024 14:03:56 +0000
-Received: from BL02EPF00021F6C.namprd02.prod.outlook.com
- (2603:10b6:208:2c5:cafe::12) by BL1P221CA0002.outlook.office365.com
- (2603:10b6:208:2c5::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34 via Frontend
- Transport; Thu, 2 May 2024 14:03:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF00021F6C.mail.protection.outlook.com (10.167.249.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Thu, 2 May 2024 14:03:55 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 2 May
- 2024 09:03:52 -0500
-Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
- SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35
- via Frontend Transport; Thu, 2 May 2024 09:03:49 -0500
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <venkataprasad.potturu@amd.com>,
-	<Basavaraj.Hiregoudar@amd.com>, <Sunil-kumar.Dommati@amd.com>, "Vijendar
- Mukunda" <Vijendar.Mukunda@amd.com>, Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "Syed Saba
- Kareem" <Syed.SabaKareem@amd.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, "open list:SOUND - SOC LAYER /
- DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] ASoC: amd: acp: move chip->flag variable assignment
-Date: Thu, 2 May 2024 19:33:26 +0530
-Message-ID: <20240502140340.4049021-2-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240502140340.4049021-1-Vijendar.Mukunda@amd.com>
-References: <20240502140340.4049021-1-Vijendar.Mukunda@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+sY4JEB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57987C113CC;
+	Thu,  2 May 2024 14:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714658709;
+	bh=8y14gJObKP5c3w67SOb6CXspdVuxp4RGI5WB7sMX8w4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H+sY4JEBHbXdxo0UZF+JgqYUOIWp66mt2/s3OMmqt7fgd937BR3wvn1JdXLofu/S5
+	 NWMRuJ1BBr0kGLUso4UvUSgo8ETaSpk2ChZtcMoi5F8nRapoBZGmf9abp4Vl7oHWQY
+	 iZnOMgP8rMZ4BwNbyiwzSdNKZy5Mp1vpmXT2qFobP1IdLKSt+PpDT+IH2e8fotJDlX
+	 3kX0kUMqBnal/z0BAwj1FZy8eeup3T/7nG/ipWFPBvB50fKNGhOx3oG2tm9/mer23m
+	 0Hox6JjEpbLdra428fTXiKcPkuDtfTegkfkuijH3PcEw7jAfSSYiI66QyyHSHgNdMh
+	 mfTiXW1fMhEiQ==
+Date: Thu, 2 May 2024 11:05:04 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/6] perf annotate-data: Check memory access with two
+ registers
+Message-ID: <ZjOdkHraWXZIuSy_@x1>
+References: <20240502060011.1838090-1-namhyung@kernel.org>
+ <20240502060011.1838090-5-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: Vijendar.Mukunda@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF00021F6C:EE_|DM4PR12MB5988:EE_
-X-MS-Office365-Filtering-Correlation-Id: 77bc2d8f-db02-4243-3db3-08dc6ab0b4c5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|36860700004|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?piUdzXVFDhctGW8e2l+TUCST7jll1z+JnmuBzuBr0tsqZaYvCtMZEkbB9zeV?=
- =?us-ascii?Q?yLvJhnZ2qh2Jyw3wbujt0U5UV0KByZ5rRg70/fjnwLukAplF7TxKbmxGy7dB?=
- =?us-ascii?Q?faoHM0lX2/GYRP0mvyYT6ozYciEcYUZWRB46476WOOtqDvfrfXwTgHAaJYhc?=
- =?us-ascii?Q?s6ihJmWXZmMOprsGX3QTgsnQhGGSZWGCT+lKYlnjhZo9UmYuXR9biPIfwwsg?=
- =?us-ascii?Q?DEwNQ5h6pTxwTFmwhDYpR+WBRvvP19xG6HvvGvkFpOSv4S8fqb2RMEZWcAEZ?=
- =?us-ascii?Q?lC5bwQqRaIBt84Qo6g6YhNxTqLqECwoX12NHEqi26GNRNB5RyaDWs9iLkU+/?=
- =?us-ascii?Q?bDwdLSGfa+lpJ9Rw90nhdGBmg203ZsEgjsf1zYFXU34URkXy4VPx8esDc6MI?=
- =?us-ascii?Q?RHg1ZCsmDj9kzKbo1RhveBKRN6Y6nxo9GJWb4lHGqCRUPHz6Rf1ogvPo4z+p?=
- =?us-ascii?Q?ACzHovy+/fqq988SiMYeQCrAATXqZ2hdB4cPreBP2mJiQyZKaCZ0h0IrNbmo?=
- =?us-ascii?Q?06N1oe0c7a8MfP6PlAr2ae01DSe64tahwFIIwNmqL8lwn3S8ZOHPwz7Gem+u?=
- =?us-ascii?Q?jCEnCzoZo+e1XwFG7jT7eWFMLnIDE4hn0XciET6DzwkO60/zhkmygvzq3aws?=
- =?us-ascii?Q?Of76ujDaC8nL/UxLBoSk1cASw228Z4b/HOjB89ETIZxmXFqUmkIjlCO5UEgy?=
- =?us-ascii?Q?vvYCM06NFj75VOOmkH5dILFIBri2Jid5CJvcuIay8wac9wCyXk5xISCwMss7?=
- =?us-ascii?Q?Ydqkh4gnPINbCaEo7wGdwW5b24k7+oEJmt3KrSXekQiwIApEu4LwFEv0mjWt?=
- =?us-ascii?Q?fThrnaYRJhJxuWibXSTFt/+XtBNxV68RKeNkv04+dvfO/XKgVQA+LCoCxcEi?=
- =?us-ascii?Q?BWsLdONR+37QfffYMysI2lG16IHZK3U+BsN/BOfcKsBoBhjZUeGh9nAzIonW?=
- =?us-ascii?Q?znh6JZ0Y51pPr3BHEqSlJCKwCB7qHdsugaCqHniGSnM6GUoXbHMRANEI9z+G?=
- =?us-ascii?Q?SJRwzindFmDePnWJS66aiPh9dP5eY01AjsCliegGGWmVlRnb3CIhxa27Bb+C?=
- =?us-ascii?Q?oDUcI0u+NbZMxJlmqBXgjJZgw/f39ZZRPgb62zAExYKsvRt1YDs3OvXkEI5w?=
- =?us-ascii?Q?B1zlqW5Ie41sEYN9Ziox7rc7QMtIXyX2Tdb97d7rziF1QFF/+gQ8YNlHgpa7?=
- =?us-ascii?Q?ES1FaKAx/dPqgNzW7Aqi+vLwU3Y6ALn82MT/U7Hk7WTJKDvzsFnIRHBXjkDx?=
- =?us-ascii?Q?KNgMO6sOdiCxfZZBtJrB2gBpwsa6DOJY7pbQQOIhiZ6ChVczoeYqz6OiGeAr?=
- =?us-ascii?Q?1ff7HjJicKhGtQtywrM1idoAbjuPTkf5VvKV/OfdbBgbxuTE91CpXc+389MV?=
- =?us-ascii?Q?TtCFfAP1Opbaic41P6O56mGq54GZ?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2024 14:03:55.9068
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77bc2d8f-db02-4243-3db3-08dc6ab0b4c5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF00021F6C.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5988
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502060011.1838090-5-namhyung@kernel.org>
 
-chip->flag variable should be assigned along with other structure
-variables for 'chip' structure. Move the variable assignment.
+On Wed, May 01, 2024 at 11:00:09PM -0700, Namhyung Kim wrote:
+> The following instruction pattern is used to access a global variable.
+> 
+>   mov     $0x231c0, %rax
+>   movsql  %edi, %rcx
+>   mov     -0x7dc94ae0(,%rcx,8), %rcx
+>   cmpl    $0x0, 0xa60(%rcx,%rax,1)     <<<--- here
+> 
+> The first instruction set the address of the per-cpu variable (here, it
+> is 'runqueus' of struct rq).  The second instruction seems like a cpu
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- sound/soc/amd/acp/acp-pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You mean 'runqueues', i.e. this one:
 
-diff --git a/sound/soc/amd/acp/acp-pci.c b/sound/soc/amd/acp/acp-pci.c
-index ad320b29e87d..20c824d8a323 100644
---- a/sound/soc/amd/acp/acp-pci.c
-+++ b/sound/soc/amd/acp/acp-pci.c
-@@ -100,6 +100,7 @@ static int acp_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id
- 		ret = -EINVAL;
- 		goto release_regions;
- 	}
-+	chip->flag = flag;
- 	dmic_dev = platform_device_register_data(dev, "dmic-codec", PLATFORM_DEVID_NONE, NULL, 0);
- 	if (IS_ERR(dmic_dev)) {
- 		dev_err(dev, "failed to create DMIC device\n");
-@@ -139,7 +140,6 @@ static int acp_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id
- 		}
- 	}
- 
--	chip->flag = flag;
- 	memset(&pdevinfo, 0, sizeof(pdevinfo));
- 
- 	pdevinfo.name = chip->name;
--- 
-2.34.1
+kernel/sched/core.c
+DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
 
+?
+
+But that 0xa60 would be in an alignment hole, at least in:
+
+$ pahole --hex rq | egrep 0xa40 -A12
+	struct mm_struct *         prev_mm;              /* 0xa40   0x8 */
+	unsigned int               clock_update_flags;   /* 0xa48   0x4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	u64                        clock;                /* 0xa50   0x8 */
+
+	/* XXX 40 bytes hole, try to pack */
+
+	/* --- cacheline 42 boundary (2688 bytes) --- */
+	u64                        clock_task __attribute__((__aligned__(64))); /* 0xa80   0x8 */
+	u64                        clock_pelt;           /* 0xa88   0x8 */
+	long unsigned int          lost_idle_time;       /* 0xa90   0x8 */
+$ uname -a
+Linux toolbox 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16:50:39 UTC 2024 x86_64 GNU/Linux
+$
+
+The paragraph then reads:
+
+----
+The first instruction set the address of the per-cpu variable (here, it
+is 'runqueues' of type 'struct rq').  The second instruction seems like
+a cpu number of the per-cpu base.  The third instruction get the base
+offset of per-cpu area for that cpu.  The last instruction compares the
+value of the per-cpu variable at the offset of 0xa60.
+----
+
+Ok?
+
+> number of the per-cpu base.  The third instruction get the base offset
+> of per-cpu area for that cpu.  The last instruction compares the value
+> of the per-cpu variable at the offset of 0xa60.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/annotate-data.c | 44 +++++++++++++++++++++++++++++----
+>  1 file changed, 39 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index f1e52a531563..245e3ef3e2ff 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -1031,22 +1031,37 @@ static void update_insn_state_x86(struct type_state *state,
+>  		else if (has_reg_type(state, sreg) &&
+>  			 state->regs[sreg].kind == TSR_KIND_PERCPU_BASE) {
+>  			u64 ip = dloc->ms->sym->start + dl->al.offset;
+> +			u64 var_addr = src->offset;
+>  			int offset;
+>  
+> +			if (src->multi_regs) {
+> +				int reg2 = (sreg == src->reg1) ? src->reg2 : src->reg1;
+> +
+> +				if (has_reg_type(state, reg2) && state->regs[reg2].ok &&
+> +				    state->regs[reg2].kind == TSR_KIND_CONST)
+> +					var_addr += state->regs[reg2].imm_value;
+> +			}
+> +
+>  			/*
+>  			 * In kernel, %gs points to a per-cpu region for the
+>  			 * current CPU.  Access with a constant offset should
+>  			 * be treated as a global variable access.
+>  			 */
+> -			if (get_global_var_type(cu_die, dloc, ip, src->offset,
+> +			if (get_global_var_type(cu_die, dloc, ip, var_addr,
+>  						&offset, &type_die) &&
+>  			    die_get_member_type(&type_die, offset, &type_die)) {
+>  				tsr->type = type_die;
+>  				tsr->kind = TSR_KIND_TYPE;
+>  				tsr->ok = true;
+>  
+> -				pr_debug_dtp("mov [%x] percpu %#x(reg%d) -> reg%d",
+> -					     insn_offset, src->offset, sreg, dst->reg1);
+> +				if (src->multi_regs) {
+> +					pr_debug_dtp("mov [%x] percpu %#x(reg%d,reg%d) -> reg%d",
+> +						     insn_offset, src->offset, src->reg1,
+> +						     src->reg2, dst->reg1);
+> +				} else {
+> +					pr_debug_dtp("mov [%x] percpu %#x(reg%d) -> reg%d",
+> +						     insn_offset, src->offset, sreg, dst->reg1);
+> +				}
+>  				pr_debug_type_name(&tsr->type, tsr->kind);
+>  			} else {
+>  				tsr->ok = false;
+> @@ -1340,6 +1355,17 @@ static int check_matching_type(struct type_state *state,
+>  
+>  		pr_debug_dtp(" percpu var\n");
+>  
+> +		if (dloc->op->multi_regs) {
+> +			int reg2 = dloc->op->reg2;
+> +
+> +			if (dloc->op->reg2 == reg)
+> +				reg2 = dloc->op->reg1;
+> +
+> +			if (has_reg_type(state, reg2) && state->regs[reg2].ok &&
+> +			    state->regs[reg2].kind == TSR_KIND_CONST)
+> +				var_addr += state->regs[reg2].imm_value;
+> +		}
+> +
+>  		if (get_global_var_type(cu_die, dloc, dloc->ip, var_addr,
+>  					&var_offset, type_die)) {
+>  			dloc->type_offset = var_offset;
+> @@ -1527,8 +1553,16 @@ static int find_data_type_block(struct data_loc_info *dloc, int reg,
+>  		found = find_data_type_insn(dloc, reg, &basic_blocks, var_types,
+>  					    cu_die, type_die);
+>  		if (found > 0) {
+> -			pr_debug_dtp("found by insn track: %#x(reg%d) type-offset=%#x\n",
+> -				     dloc->op->offset, reg, dloc->type_offset);
+> +			char buf[64];
+> +
+> +			if (dloc->op->multi_regs)
+> +				snprintf(buf, sizeof(buf), "reg%d, reg%d",
+> +					 dloc->op->reg1, dloc->op->reg2);
+> +			else
+> +				snprintf(buf, sizeof(buf), "reg%d", dloc->op->reg1);
+> +
+> +			pr_debug_dtp("found by insn track: %#x(%s) type-offset=%#x\n",
+> +				     dloc->op->offset, buf, dloc->type_offset);
+>  			pr_debug_type_name(type_die, TSR_KIND_TYPE);
+>  			ret = 0;
+>  			break;
+> -- 
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
+> 
