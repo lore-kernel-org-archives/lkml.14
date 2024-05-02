@@ -1,57 +1,58 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7209318EBF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B42D8C1A
 	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 22:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714689227; cv=none; b=ZOox+PoXUmqqmZD/S4nt3E7I9qitRb2wkeNZDPxA/Zj730WolRsnT/zLiI6ApEiJReCrMOlDfgbnPJdSjPuzpcKyp2vPE8rgFJl+vwJsow45sDyqF1KL/xVepWMmL0j6oBJ0fXqPytNy1QJfYk8hQHwNCFMIjvNLnhw+T3l1Alk=
+	t=1714689227; cv=none; b=fRewIzLqvS6XUahl/wvHaGtJsl6WFEB49OD7gPvAaUeiXuFYAoTsPwRl20C868DqwI9uGo+IogQx0fjX7IEHoo0OXFmgTrQTjFnHve36On95/GXBoiszvA5rU5Mx+bBSwR1RdImM+71JpBJjjakVm32Bh021Net/iQkPwsod3w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714689227; c=relaxed/simple;
-	bh=OUKzE9BVu8bWw6VjJLw4TE6pDmrAN0hiIKHseOy5gQI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Zq+DtzmaR9RE1dSJp2jRutyYoJzE5WvyrT6qACIv7wMft9tAsXHEB2JxozoBJ3I4gH2wlTb3WSSdx3xLwVnL0AevrsUyjvsgydCvIvSwTTSYPR6KS6wvvt8W9Mh5JKxF2VrT0uX6KYfQQLgdbFJW4VnZyufm1Qobyqw/YosEptU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fRoX6Vrz; arc=none smtp.client-ip=209.85.210.181
+	bh=zh3jTYlv3gAfsJ0fJDEOOWbgXfu84QDhZ5jAngTPr/A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G8jAxV3fncV35GqCAdtOvK/3f7IvCT+G+fMqsExmkr8bjoUwhDsiZAReohEsSM61DQ7o+dkbOm1McfqkdQWimqjePdittqJjrLmBk/avgyBIMxwU/snjMqDFlaKcxS6arO2EciHOjqPlrsGAOdyMoIhuoCefBAXMB2j75U5qg04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KV0UXu5f; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fRoX6Vrz"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ee13f19e7eso7835236b3a.1
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KV0UXu5f"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ecd9a81966so9591845ad.0
         for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 15:33:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714689224; x=1715294024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1A06K+cPndg/pyM0u+MnZKl+yBNNRhhQ81oQHFD2WfU=;
-        b=fRoX6VrzxbPEaTpA/kP/AKhczr/5dmU/r3DUPek5TaOo4BZmeOkDEpoBawV+8fjjTf
-         DcyRjCUDTs2Fr87wKT/FiHhxXIagUWChy0sRJXl8Q6LFB4ltBOsB/+dQdtxl9xnyHUbQ
-         WG4qpZyVh1tLZDqDD2T7q0eLX4AEhuVVY575k=
+        d=chromium.org; s=google; t=1714689223; x=1715294023; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Alkyi5JqXUdcGMCJmPn2xNXTUHn7MjYy9EVPcBLGUQQ=;
+        b=KV0UXu5fQphPwu/En8bFdZb2papNHd9PJxLZ2WTsEqQNz8tuinfCD2icHLLIK4jv3X
+         epozpPCTWjKYEgy7RvzWsKC8cKABBzmDCIF3jWCtxn/BwsdRAln4s6YwOAPx3lvmE81A
+         zY0yGcqQ8nkuoD1xGakPTTyykaawUVOwTUwcA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714689224; x=1715294024;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1A06K+cPndg/pyM0u+MnZKl+yBNNRhhQ81oQHFD2WfU=;
-        b=FIah2ECaj9xRmuk8f71Kkao7hHvhN2gZvqDB2hxoioPLUBotf/JA7mkGeFK39BpGJX
-         ri+XEN+dLFzECOQ1NNDRYs5FsXj/yIDvPAWoDcL+4PqktN1NV8B7lTxraYP1q/bX95+j
-         TlY2YYpvqmBWzptMtvA3wHzu6ctTtcOP0fNkCiC07yM1EHd8PIvbEEEthieJJRuq4Zaj
-         Ns5KytLnH02NjhZhsfKllNoxoZngds0Vpu73jIhGwlZzMhN4d8E/9UlG08EkNEZFKHM+
-         2qUitvR/BxBkuAQfmfNjQQtQjfO3vzlOBGHqLx3/jMacAZbz70FX6s0emg3gPNODNbwO
-         ixug==
-X-Forwarded-Encrypted: i=1; AJvYcCWju6KQJmQo3QgLJVUvb/2SDe1P2/419a8o3fY392EmbphVImRk/W2b18AZmVeAb623XVjdzocnvh1z9ehky9KMhH8g9syFzkNFeOcf
-X-Gm-Message-State: AOJu0YwaZRrA0UkUyc1AX/CUNdQdmE5/xJbJZbKjZPP45t2BtcMaB2Hh
-	C1aAohZu/aTetbTxipq/7cpyu8HSmeWse8aYrmrZN0c6tUan2U/JqjeQcCsN7g==
-X-Google-Smtp-Source: AGHT+IG2YWa+9vY4h3Nt4PaRaRqLrTI7aivCYrlbdPDKTXJ4+9jbccE7kk1f6L0pdlB3sdtwRrv0Kg==
-X-Received: by 2002:a05:6a20:2ea1:b0:1a7:64dd:ebe8 with SMTP id bj33-20020a056a202ea100b001a764ddebe8mr1102791pzb.49.1714689223844;
+        d=1e100.net; s=20230601; t=1714689223; x=1715294023;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Alkyi5JqXUdcGMCJmPn2xNXTUHn7MjYy9EVPcBLGUQQ=;
+        b=dSKmy44hVroopwdwKOSz3eCpXd878iZzTpP8RiVV2fbM4dPSv9DqUcsEJxYSh337Ms
+         hNcWbme2mnf1DL1BvTC7z9w1Ak3jNy/5o5rCBMHkOn3LMg4Q+VHSu8Pp2hrp06dnLa5r
+         Ll/VYF3uL+d867F+R91jzhhIQMmTLlyUk09N/b4XAAPS25lAxNKIi7nxyIke/XvkRtBr
+         6McNRpe67nw+bhoRwxobYjoJLfLTKqagEoseYtRQ58XTqL3kBd66JAUr461CfoArPSN/
+         aC6QsLIul/Wbrb7h0ZnJia26f2yBo7A1+JKBiavRw0HoQ12IX8aNBF7XLVmmyiuMkW8j
+         T6DA==
+X-Forwarded-Encrypted: i=1; AJvYcCXc5LxN94QD/s9h2eDl0lhjJ/HmBOHgLzpNnUvaBYv9eYsRT6znRdCbScu7QF9thQG6AZaJ6r6T7tXT+eGyt5wvfiQr2gzxHfijntpe
+X-Gm-Message-State: AOJu0Yyl41UmduhjwSAfox2DcNto6HOpmZ90ZW5W90OB0RbAOnfGx6yh
+	XJSggBS+GOjIesF3YcUDXfj1cD35687fsJpW2LV48rXaRC3eJFM0Gb35aKQosA==
+X-Google-Smtp-Source: AGHT+IGAayZiLEBsyLgIJp727/HOhIW8jcf68JHnImgIz5MoqiH36x7xVdhDcqAQUHQ4AOs7ALD8tQ==
+X-Received: by 2002:a17:902:ce81:b0:1e2:7734:63dd with SMTP id f1-20020a170902ce8100b001e2773463ddmr5911220plg.30.1714689223609;
         Thu, 02 May 2024 15:33:43 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c12-20020a631c4c000000b005c6617b52e6sm1794043pgm.5.2024.05.02.15.33.41
+        by smtp.gmail.com with ESMTPSA id e15-20020a17090301cf00b001ec852124f6sm1859006plh.309.2024.05.02.15.33.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 02 May 2024 15:33:42 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Christian Brauner <brauner@kernel.org>
+To: Christian Brauner <brauner@kernel.org>,
+	Will Deacon <will@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
 	Zack Rusin <zack.rusin@broadcom.com>,
 	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -59,9 +60,6 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>,
 	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
 	Jani Nikula <jani.nikula@linux.intel.com>,
 	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
 	Rodrigo Vivi <rodrigo.vivi@intel.com>,
@@ -72,7 +70,6 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Matthew Auld <matthew.auld@intel.com>,
 	Nirmoy Das <nirmoy.das@intel.com>,
 	Jonathan Cavitt <jonathan.cavitt@intel.com>,
-	Will Deacon <will@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	Mark Rutland <mark.rutland@arm.com>,
@@ -83,67 +80,73 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
 	intel-gfx@lists.freedesktop.org,
 	linux-kbuild@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 2/5] drm/vmwgfx: Do not directly manipulate file->f_count
-Date: Thu,  2 May 2024 15:33:37 -0700
-Message-Id: <20240502223341.1835070-2-keescook@chromium.org>
+Subject: [PATCH 0/5] fs: Do not allow get_file() to resurrect 0 f_count
+Date: Thu,  2 May 2024 15:33:35 -0700
+Message-Id: <20240502222252.work.690-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240502222252.work.690-kees@kernel.org>
-References: <20240502222252.work.690-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1187; i=keescook@chromium.org;
- h=from:subject; bh=OUKzE9BVu8bWw6VjJLw4TE6pDmrAN0hiIKHseOy5gQI=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmNBTDv/zsdqEX/aWrvJELPzlHroMCjXF3QLhey
- S4S5ggvUL6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZjQUwwAKCRCJcvTf3G3A
- JkpxD/oDlial29qMNd66BSgea9O5UW/Aq3fbPMw4W3EMgMW8bVd/2Cha0TLF9V6wPXJVpP9GICw
- eySmpxWOHWSZcjcLDQcl3iM4a9UgU5v0D/1sXfoWYpKb8RVGeGLgKP3alVDBkkX0vAShE079Rgv
- AaOYBsxL4AWKH0J2mPuUNW1OfLBaqETFXnLQBSaj2UyS3/WXTVW1GHxm9VvBJGhFVxuE+wCb6J2
- xOaHDjJd0EfmnXYWA5G0fszOm/QZch9KwaaSnl4bvV6ennST4HrFfxcb3aoODK7M6tHEtze1gql
- 3NOu5+wUDcxv68MozmrUGEAXWOvGgTGZ5kugToTTsHflWiG23cemytSMo203nmTfyKc8/u3S0AO
- fT0/foBY7k3RMwGcqYBnsdh1/Jq5xVXpDYVLyMgNRsgW1NXdWmM1cA+dosWN6PMw6lRAue96s9c
- i3rmc1I8FSgzzkU6CVzCHA2OvjWHWnAtCxDZFGoTWPNSt68KMgYxy+w7dhirZS3oY8UA8NByD4z
- iU0Wr8PshZ6X/yOrMNAqrLv/YHZHlXt9M1fl5FRs35Y9Cfj6SaJjRhsWINHqY7XmL7DbZgLHnfT
- 2sm2WcxYxdug3OFoyke5UhhyXwLjB1tcBLaU3maUuNFLkfVGdBWJy1b3jBcj9FeFF/FmdXedjLE f5Rb9fzOhMoS+kQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1562; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=zh3jTYlv3gAfsJ0fJDEOOWbgXfu84QDhZ5jAngTPr/A=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmNBTDFUoY6TVoqmQxs375eqvdFBj89/ctuDLOW
+ 2+X99yJ49+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZjQUwwAKCRCJcvTf3G3A
+ JspPEACtGBTA/04xGkfNe0POOY6UGlh9ESMNyH/8oZZ8d3UQPt4M6jepl1PWlD4m3cEnHJK7W59
+ Ew1O/o3JMO6xpM/DaYhVWnWU6vmyOuXC2BLL3sC0H78DoDCS1YeGvgwcsLvoJQkPR6yocxZc1Lp
+ ArPQeS2n1GN6Natd2CKQpRU1hHaVx8V4k47jJ1C1ooXgDt7NaA3v3Mxp2k1nkVABc40Xt0iPZHe
+ N135yJYCUnJcpYLB0ibjarI10wI4Q38s3kkHaSPBUFFlyZzwaqs8cVJtVafb+WFIadgKLSgplR6
+ Gvo818ypPYTYB7jNIlptvHB2MpN4nJBL6DYjM9W9EA22HbIDDGJexmcFxNXqlQl/qXZpFt7XmnP
+ Q6IX+BvQ65e6Zl3n+AYDDb+8lD/3uddFxKLY+yN8uImNTJaomfLEsLEdpWNQISX4Sd0iZoqRgNU
+ wW8OcE471z7VJafbM8my64tY9J+xrj7sh3jZrbv695WaOXZVOZhvKl4yHNKdmuB7SwoTxzGJp8c
+ 6H/kFSBF+jTC0H5n89DfR0Uuy/y1HoONrXrvE252vDox1DwVh8Gfz62Vr1+HtbNlBpcN9K4w/k7
+ /tznwjyRyIqPUxNhJJzdX9hpAs9d/CHvDyY8049XOPocPYOnqRtriVf3abZjlh68t5HB+axTGF/
+ GHusxWn D0shXk1Q==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The correct helper for taking an f_count reference is get_file().
-Now that it checks for 0 counts, use it and check results.
+Hi,
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Zack Rusin <zack.rusin@broadcom.com>
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
----
- drivers/gpu/drm/vmwgfx/ttm_object.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Failure with f_count reference counting are better contained by
+an actual reference counting type, like refcount_t. The first step
+is for get_file() to use inc_not_zero to avoid resurrection. I also
+found a couple open-coded modifications of f_count that should be using
+get_file(). Since long ago, f_count was switched to atomic_long_t, so to
+get proper reference count checking, I've added a refcount_long_t API,
+and then converted f_count to refcount_long_t.
 
-diff --git a/drivers/gpu/drm/vmwgfx/ttm_object.c b/drivers/gpu/drm/vmwgfx/ttm_object.c
-index 6806c05e57f6..68d8ee3020b1 100644
---- a/drivers/gpu/drm/vmwgfx/ttm_object.c
-+++ b/drivers/gpu/drm/vmwgfx/ttm_object.c
-@@ -475,7 +475,7 @@ void ttm_object_device_release(struct ttm_object_device **p_tdev)
-  */
- static bool __must_check get_dma_buf_unless_doomed(struct dma_buf *dmabuf)
- {
--	return atomic_long_inc_not_zero(&dmabuf->file->f_count) != 0L;
-+	return get_file(dmabuf->file) != NULL;
- }
- 
- /**
+Now if there are underflows (or somehow an overflow), we'll see them
+reported.
+
+-Kees
+
+Kees Cook (5):
+  fs: Do not allow get_file() to resurrect 0 f_count
+  drm/vmwgfx: Do not directly manipulate file->f_count
+  drm/i915: Do not directly manipulate file->f_count
+  refcount: Introduce refcount_long_t and APIs
+  fs: Convert struct file::f_count to refcount_long_t
+
+ MAINTAINERS                           |   2 +-
+ Makefile                              |  11 +-
+ drivers/gpu/drm/i915/gt/shmem_utils.c |   5 +-
+ drivers/gpu/drm/vmwgfx/ttm_object.c   |   2 +-
+ fs/file.c                             |   4 +-
+ fs/file_table.c                       |   6 +-
+ include/linux/fs.h                    |   7 +-
+ include/linux/refcount-impl.h         | 344 ++++++++++++++++++++++++++
+ include/linux/refcount.h              | 341 +------------------------
+ include/linux/refcount_types.h        |  12 +
+ lib/refcount.c                        |  17 +-
+ 11 files changed, 398 insertions(+), 353 deletions(-)
+ create mode 100644 include/linux/refcount-impl.h
+
 -- 
 2.34.1
 
