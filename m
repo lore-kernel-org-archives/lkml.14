@@ -1,121 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B35742044;
-	Thu,  2 May 2024 11:07:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7735D903;
+	Thu,  2 May 2024 11:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714648031; cv=none; b=Xb3f6Rs3kye2RbWoUbJQzAZXMs6DhAUWDPVq67tfjmArQ7b75oa/05iG+R0QEBMScjen+1UaK61lBaIs1LRbX7jktXCM0cDMkJlSFUPuBVZsgDKytokK/7Pn3xywIuui3vhs7Hpug0wU7naZEZSKDjWL9P7IGVSDDTB2Dk5b35E=
+	t=1714648126; cv=none; b=rxraOPvDiYPxmAAehG7Nfl0sV1YokpkZU9/3zuGXaXVYE/Nt3js0AM7GhafP1tIrSVfcJi0ioWvOdB5iL5e/K01f9fk96+z1gLu5dQDzoDvKJCieBbctfr0SNCqxicZj1PKmTcilwG5zbe//crPDxCqUit6H6LvtqTIwPzMVMQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714648031; c=relaxed/simple;
-	bh=Np9pvEsoFitSg29emT+0EpuitAMJ3ccV39LNm511Gss=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c5s+3dO45EibZjGj1Bg2D7Bi/jRhzuQTetTgDkdRxQQX/y+fO/GUyH21Lfk8etJaIwEgM8jF0DdbEkyqGfRzTZnlrQ8mwMXuUJfFm+KCexNOj13J9yyn+ZrwpPaIvrr4gqtoyZkqKY+Lujh/3hQypMHLeDv9pL+WMkKV+pCYGy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=auWjptQk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714648126; c=relaxed/simple;
+	bh=8K4ujeYhTAhKF8D1gB1WkqlDa8ad4YIK/nV9mxb+ubU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=JXuPCBAnnFszEOC/c4P70DAOaTaj2k4e7+hdXzff29wKII+LmbAm8VA3TF/pMcgLD2Sg/bUxnbN+owzARNVTUfze27KRuah18ejAi5eTv9sEMaW0HM90h3WhQKzwF+83+UcijKXft7YtjOPWZz/ZUouK5eCYZbidncoVnsEITOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xch1aCry; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="auWjptQk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A37EBC32789;
-	Thu,  2 May 2024 11:07:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xch1aCry"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09FB1C32789;
+	Thu,  2 May 2024 11:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714648030;
-	bh=Np9pvEsoFitSg29emT+0EpuitAMJ3ccV39LNm511Gss=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=auWjptQk37oycIWeIeE8HIS7LneZ9hi+9rxCJxNCYFpAHBbrNrzj90nnVf1vEiC6y
-	 OEQ0kNQgRuJTFU7jId3hs6SkqfldgszVbZPzRSAmILDPH0VC7/KPzlWJbsYFhiYY8X
-	 MnxtD4oTbpxogAM2L50UA0QjTgcCfi5/kYTOFZ7nwAkPAifhVISLmhRvK8w03tcLuw
-	 zAG2caimyP9PiAWR/6lykRzZnhqIbVVl2rAeKnMk5DzARmxzLCl5c9VLJaxqsvbpuu
-	 RVh6S0G6exJk4I1VHMxZtjd7nYutrfarNuajJUAOdTVCnOOu4n73lwTMqU0wCEOVTN
-	 4z7Omhl2iAZUg==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-518931f8d23so7827618e87.3;
-        Thu, 02 May 2024 04:07:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXt7tl3vu9hUD00ZF+Mg9/oUFkMUWQyQiYk/h6RRDbYdOhvgjHVLOKT0p2w8n0ik2TuIz5CRJLBRfM7o/gPxoAEPJULlF/ss8F6L6S24PmGjzokkQNQdZhLD+m4kU/1uJye4S5VzupmZs3EizPFdRbhtdcVp0zfq43Csg2ObNm2pthX0anTBw==
-X-Gm-Message-State: AOJu0YzGH4e8Dh0MnoWFmjzxBKIoV1+aVie37o1aevamGXEA+LeFk6HB
-	oZ8otE1ms03bC2KzcXRMSPkwspCjLJQHLC1UG0aVrZXgyH6Db1dOp97Bg3koSI0ZQYysHfBxsSz
-	VMBSRRZZ95ip55K1dt6oxezICNLs=
-X-Google-Smtp-Source: AGHT+IGglbNUcmY0tPy/2FfcGCZjTbOKNm3qt2fGG0t4e4fvLjpNRktw1NMsov0qlKycBZDrNlJq8PKuHtWWp4wr4O0=
-X-Received: by 2002:a05:6512:1042:b0:51e:e846:2b6f with SMTP id
- c2-20020a056512104200b0051ee8462b6fmr2210297lfb.51.1714648029315; Thu, 02 May
- 2024 04:07:09 -0700 (PDT)
+	s=k20201202; t=1714648126;
+	bh=8K4ujeYhTAhKF8D1gB1WkqlDa8ad4YIK/nV9mxb+ubU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Xch1aCryETzgJNn5QhGZcIl+hrYm/8q+8iGpMNSEadG8jdgXj4l8beI0Va8LK+za9
+	 6u6n51Xrji4oNk7v3xY3Hrhvpj/otTcmucJnfftr2ct+s1X2pJSEHYLD7dMUOsCo7j
+	 Yfd3vs6csyzFhdyStor7UThIuuDtW5Mrcs6hLguygfULpyP61PMrwkA0lbbl9dYBY9
+	 7woK1SdHk0yguXtN6Z1jW1tAanAuWmWT/rQo04Q9bUdlv6xIxaR78YJmA86EoZh0PM
+	 PQIPy36ZfU+tTcDO3iesTFsILknaLAV5FVeAjuVZ/XI3p5rsnvcnAuU5WUNg5FcD68
+	 RFZrW7SqGo7DA==
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5afbcf21abdso853346eaf.1;
+        Thu, 02 May 2024 04:08:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWCqKJSiIehH6/vLGJtFAFkB5A4eMzh8+vL2WarH5Xwzl/V+Rs88lOhGnkHd3AY9ECYc2wlb3rpCrQ+6ZkRH+8zGguhl7Om2UD8p7yY
+X-Gm-Message-State: AOJu0YykXYEZ9HBVXEc6qEhHBXdE7H8Yxad+dgW994WidueBDCVu8kdH
+	VQXozpiMy8qwemtCL06efqnVPFWUxbAEesuDg53sGA9PnwrDy6sYC4kOwj8ArbjzCjXStyy34dx
+	4mTINwam63UYASkn2rg4FruDlEPM=
+X-Google-Smtp-Source: AGHT+IF/nIdqFeA4jayC/Sos9U+g1FOb02A/CEFxDNMAhuoOi3HEctyS0uDfUx3Fc/O8DvAf6b84Dou4PbdImKnUN4s=
+X-Received: by 2002:a4a:9887:0:b0:5aa:3e4f:f01e with SMTP id
+ a7-20020a4a9887000000b005aa3e4ff01emr5105162ooj.1.1714648125193; Thu, 02 May
+ 2024 04:08:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430202928.1143802-3-robh@kernel.org>
-In-Reply-To: <20240430202928.1143802-3-robh@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 2 May 2024 20:06:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATnr-L0Xwi2xCy1hcuPV=H=11+1bR=D0ji21exhprXRXg@mail.gmail.com>
-Message-ID: <CAK7LNATnr-L0Xwi2xCy1hcuPV=H=11+1bR=D0ji21exhprXRXg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: kbuild: Fix dt_binding_check for arch
- without dts directory
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 2 May 2024 13:08:31 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gqRGw3NEOVXH4vwERcy-kO+tihXBmP74UJGEhsTMc_BA@mail.gmail.com>
+Message-ID: <CAJZ5v0gqRGw3NEOVXH4vwERcy-kO+tihXBmP74UJGEhsTMc_BA@mail.gmail.com>
+Subject: [GIT PULL] Thermal control fixes for v6.9-rc7
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 1, 2024 at 5:30=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org> =
-wrote:
->
-> Commit 1d06c77d93da ("dt-bindings: kbuild: Add separate
-> target/dependency for processed-schema.json") placed setting CHECK_DTBS
-> for 'dt_binding_check' target within the section that depends on having
-> arch/$ARCH/boot/dts/ which x86 doesn't have for example. That results in
-> the schema checks not running for the examples. Move setting it back out
-> of the conditional section as it was (CHECK_DT_BINDING is still
-> replaced).
->
-> Fixes: 1d06c77d93da ("dt-bindings: kbuild: Add separate target/dependency=
- for processed-schema.json")
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> Cc: devicetree@vger.kernel.org
->
-> Masahiro, Please take this as the above commit is in your tree.
+Hi Linus,
 
+Please pull from the tag
 
-I squashed this to the original commit.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ thermal-6.9-rc7
 
-Thanks.
+with top-most commit d351eb0ab04c3e8109895fc33250cebbce9c11da
+
+ thermal/debugfs: Prevent use-after-free from occurring after cdev removal
+
+on top of commit ed30a4a51bb196781c8058073ea720133a65596f
+
+ Linux 6.9-rc5
+
+to receive thermal control fixes for 6.9-rc7.
+
+These fix a memory leak and a few locking issues (that may cause the
+kernel to crash in principle if all goes wrong) in the thermal debug
+code introduced during the 6.8 development cycle.
+
+Thanks!
 
 
+---------------
 
+Rafael J. Wysocki (3):
+      thermal/debugfs: Free all thermal zone debug memory on zone removal
+      thermal/debugfs: Fix two locking issues with thermal zone debug
+      thermal/debugfs: Prevent use-after-free from occurring after cdev removal
 
->
->  Makefile | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index f4fe5b0ea931..43a2a630436a 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1403,7 +1403,7 @@ dtbs: dtbs_prepare
->  # dtbs_install depend on it as dtbs_install may run as root.
->  dtbs_prepare: include/config/kernel.release scripts_dtc
->
-> -ifneq ($(filter dt_binding_check dtbs_check, $(MAKECMDGOALS)),)
-> +ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
->  export CHECK_DTBS=3Dy
->  endif
->
-> @@ -1422,6 +1422,10 @@ endif
->
->  endif
->
-> +ifneq ($(filter dt_binding_check, $(MAKECMDGOALS)),)
-> +export CHECK_DTBS=3Dy
-> +endif
-> +
->  PHONY +=3D scripts_dtc
->  scripts_dtc: scripts_basic
->         $(Q)$(MAKE) $(build)=3Dscripts/dtc
-> --
-> 2.43.0
->
+---------------
 
-
---=20
-Best Regards
-Masahiro Yamada
+ drivers/thermal/thermal_debugfs.c | 59 +++++++++++++++++++++++++++++----------
+ 1 file changed, 45 insertions(+), 14 deletions(-)
