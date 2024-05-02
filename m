@@ -1,49 +1,43 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEB915E1EF
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6690615D5BE
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714667344; cv=none; b=LyaS3M1RLE1eKGbFEeq7DdtfZU+FGeOYbHKjRw7k5/8zC9QA5bA3WwWJf5gy3vIkBk/M1lr6GWmCl0XRqCLQU18hRNF3+nhxpzmWfeL0nCtX0N2Df711Q4uhdyqkdpKh2SZMpJY14CdZRHM3gw4TizZDI1G8dYGRAD+wAFsgNMM=
+	t=1714667451; cv=none; b=r3KVfhMoR6ulHUzgHeDaH8XaiafFS9ujmETPXev0IPdlRwxdcVCe3QisLoKhA/qm+kwr5kW8V2d8Z+bzN1lsar0K4EY1KERwR9YKwpMryYKmWCurlfNi0/3MtaTMBNq/8/Rd4qdzwy2byvq4vbwVBypfg5lUl9HnzX/W+9ztq9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714667344; c=relaxed/simple;
-	bh=V8KxA8VqpVmR+Zyu7dFeYSpT9k2Uk/1WVAAjXNpTZGw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y89NMpy/hNyLyuOcVf6rbX6Vbb+DXBsFLwzaJVtgEJyMnFvMEQVlsoHQsP220th2d/5m3jB4NDP2PMjue6IgWECPcJsfAMdkPC7NC1XunkkYXWbIqa3iKo0XzBfP9SGc7dOAaUzIcPhZbLL301naokH0mxOKhjYb2phPGTrUMBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=oPsYETrx; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1714667451; c=relaxed/simple;
+	bh=4zlpv+DhkaBiyYsvVgDDjEkJDrbSWHV2ilnz+UjRAb4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kNo7U1vxv7wJ2KZbGo3rUQAWyGmlVy4c+xywrwbIIyqqK6OwWew0dKn5YxtGEcpfeObmL3o+LwsUj5EZyBqqxulk2dfhgOWBelyj1XwO198w+ShQ3L8CcYHkSNSN3DV89ERlaAXDm6ixz+ijxIUfZrayPLxNAvSdsZDAzIUjUC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=rE80tuXV; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="oPsYETrx"
-Received: from fedor-21d0.intra.ispras.ru (unknown [10.10.165.8])
-	by mail.ispras.ru (Postfix) with ESMTPSA id DF41840762D9;
-	Thu,  2 May 2024 16:18:53 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru DF41840762D9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1714666734;
-	bh=pGaAAC7U9OSU8oqKj4HdqFvQw4E0L+KuLXciIaLFu0k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oPsYETrx1ZfxJcu5C//ePVQphhcDlzwZ5xiraGXybrLmid6kjpkmyKg/z9mi0STX+
-	 +XK5DIZVh+QVfgdUIQIPkWPEqnTgwrPZtJjRltIw3k7XM0Cx4Kbql4/m0CPPXx4AaM
-	 DiGSV3v9OyUcMCJm2J+UhfV/UW235QEb8aKhArxU=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Xiang Chen <chenxiang66@hisilicon.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Barry Song <song.bao.hua@hisilicon.com>,
-	iommu@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rE80tuXV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=BWNBfZG7kizyb6cHFecEfxf40LvY/HI+GlksidfEVfM=; b=rE80tuXVfWce54OV
+	ILx3QP/PdlOSWIjm0v6HLcqRL3+4rghrm1hW0VDOkiqjrddRzClSEf3oGdW8qyzDJ/EeMxgUoTYU5
+	ju29HqyrKPHPH6/fAY0mStlhFpVCc3X2gWCpK/pOS9lXfx1wUaOMDV2Jy7meB4cEnoZvHtZ4W/0Rn
+	bMJ5VocIDOyrPSL6TSaRaGFaQK1wcXwrrX5g0nyP1LQ/8jOrz8jbTY8H5Y1pdOJJSUajpKpU0Zfe/
+	GIpzxWv3V/o0yotn7tbP14HttqXnoQyctL2ikQdPUVKYkN5AOOIAVsQ9qQYuh1Xg3cTqB1DvRY6k9
+	/GP6Bagc8bL7GgqTTQ==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1s2Yfp-004ILZ-1S;
+	Thu, 02 May 2024 15:48:41 +0000
+From: linux@treblig.org
+To: sudipm.mukherjee@gmail.com
+Cc: arnd@arndb.de,
 	linux-kernel@vger.kernel.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	lvc-project@linuxtesting.org
-Subject: [PATCH 2/2] dma-mapping: benchmark: prevent potential kthread hang
-Date: Thu,  2 May 2024 19:18:26 +0300
-Message-ID: <20240502161827.403338-3-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240502161827.403338-1-pchelkin@ispras.ru>
-References: <20240502161827.403338-1-pchelkin@ispras.ru>
+	linux-parport@lists.infradead.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH 0/3] parport: Cleanup some pre-devmodel code
+Date: Thu,  2 May 2024 16:48:20 +0100
+Message-ID: <20240502154823.67235-1-linux@treblig.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,47 +46,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If some of kthreads executing map_benchmark_thread() return with an error
-code (e.g. due to a memory allocation failure), then the next kthreads in
-the array are not stopped and potentially loop for indefinite time.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Call kthread_stop() for each started thread as map_benchmark_thread()
-expects that happening in order to exit.
+There are some remenants of the pre-devmodel code
+still in the parport drivers; try and clean some of them out.
 
-Found by Linux Verification Center (linuxtesting.org).
+This series should have no visible change, all the drivers
+already use the devmodel, it's just removing the flags
+that say that, and cleaning out no longer used function pointers.
+(To me the most useful bit is removing the no longer used
+'attach' pointer, so if you've got code that's trying to use
+it you'll get educated).
 
-Fixes: 65789daa8087 ("dma-mapping: add benchmark support for streaming DMA APIs")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- kernel/dma/map_benchmark.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Trivially tested in qemu, I can still write to the lp;
 
-diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-index ea938bc6c7e3..7e39a4690331 100644
---- a/kernel/dma/map_benchmark.c
-+++ b/kernel/dma/map_benchmark.c
-@@ -140,13 +140,17 @@ static int do_map_benchmark(struct map_benchmark_data *map)
- 
- 	msleep_interruptible(map->bparam.seconds * 1000);
- 
--	/* wait for the completion of benchmark threads */
-+	/* wait for the completion of all started benchmark threads */
- 	for (i = 0; i < threads; i++) {
--		ret = kthread_stop(tsk[i]);
--		if (ret)
--			goto out;
-+		int kthread_ret = kthread_stop(tsk[i]);
-+
-+		if (kthread_ret)
-+			ret = kthread_ret;
- 	}
- 
-+	if (ret)
-+		goto out;
-+
- 	loops = atomic64_read(&map->loops);
- 	if (likely(loops > 0)) {
- 		u64 map_variance, unmap_variance;
+Also checked with grep -r 'struct parport_driver' . -A 9
+to see if I've missed any.
+
+(I found this while dragging the out-of-tree ppscsi code
+into working on head, so that I could use my prehistoric
+HP PP scanner)
+
+Dave
+
+Dr. David Alan Gilbert (3):
+  parport: Remove 'drivers' list
+  parport: Remove attach function pointer
+  parport: Remove parport_driver.devmodel
+
+ drivers/ata/pata_parport/pata_parport.c  | 1 -
+ drivers/auxdisplay/ks0108.c              | 1 -
+ drivers/auxdisplay/panel.c               | 1 -
+ drivers/char/lp.c                        | 1 -
+ drivers/char/ppdev.c                     | 1 -
+ drivers/i2c/busses/i2c-parport.c         | 1 -
+ drivers/input/joystick/db9.c             | 1 -
+ drivers/input/joystick/gamecon.c         | 1 -
+ drivers/input/joystick/turbografx.c      | 1 -
+ drivers/input/joystick/walkera0701.c     | 1 -
+ drivers/input/serio/parkbd.c             | 1 -
+ drivers/net/hamradio/baycom_epp.c        | 1 -
+ drivers/net/hamradio/baycom_par.c        | 1 -
+ drivers/net/plip/plip.c                  | 1 -
+ drivers/parport/daisy.c                  | 1 -
+ drivers/parport/share.c                  | 9 ---------
+ drivers/pps/clients/pps_parport.c        | 1 -
+ drivers/pps/generators/pps_gen_parport.c | 1 -
+ drivers/scsi/imm.c                       | 1 -
+ drivers/scsi/ppa.c                       | 1 -
+ drivers/spi/spi-butterfly.c              | 1 -
+ drivers/spi/spi-lm70llp.c                | 1 -
+ include/linux/parport.h                  | 6 ------
+ sound/drivers/mts64.c                    | 1 -
+ sound/drivers/portman2x4.c               | 1 -
+ 25 files changed, 38 deletions(-)
+
 -- 
-2.45.0
+2.44.0
 
