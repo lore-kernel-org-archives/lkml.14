@@ -1,89 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42B9154457;
-	Thu,  2 May 2024 16:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF0515E21D
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714667304; cv=none; b=IxOWkWAq4SD46k2O69tP96J57kk85GoVTG5t2hSl7BUk76KmvAio+LXX6LhxHdpwWgsrFVH0cBl6riFaZuL8yU5e7QdZMV277ToxB/cVI9Xs77wI1FKHb5xK7LTsntl3ZwzE40fLh/67ZIZzVNBMeq1I1ohJxSaWjIR6Ol1DBBQ=
+	t=1714667343; cv=none; b=EyP23NT00Swu5MTpXnw7ulZwc/1lrjULxox7CLGRYFILVB17L3GiGoLtJIpa93KTtOa7acrP7kEwMzjhkz+MIbOJbzHIkBAW/KB7iPzM9e7SGg9QkQNzp5mqXkXlaBkYIcYP9rcOVMIWlpI+M46I+W7UtCADQ7HXgr6OrHd+SPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714667304; c=relaxed/simple;
-	bh=igeGofHHX03XUM7K37J588YrkNVJAkcgHSuZsnjbMRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kGrKhySPDp0ZYFTdn+N3zFMKCmGfFGyeAViWPu/jc1VsaLp7XCMLRhbBQvMrFibpD2kvLle39eooAt+iVi7b9fynje4MfuKd0bYSTw+KUyPNQtoZvhm7okGb3By/47av87eE7oxu0AS4cXdvQntZZekd92VE+5JDX6nXcppunh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tkwArCD5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714667343; c=relaxed/simple;
+	bh=BGWSwT9yiF+j7TOtTdcFLHTYs8xxX0tEDdj13yc+gxQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HxvCgy2gHaeB+4s+EBOku1UNb/1xG2Vkbb/bmnDNr0gKQz0j670Ak+YHqZntjHTn8JKzhaRhP1eQgCSq1lawakyLvzFJ3F+6K8gi2uM4HuFBgbkYys7lZTE19ytwDtKtfIWwlfa+6qUK5H93NJGq7+Xt5Ux1OFJSq9BjuVABbck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=I6UL21IF; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tkwArCD5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D79ADC113CC;
-	Thu,  2 May 2024 16:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714667304;
-	bh=igeGofHHX03XUM7K37J588YrkNVJAkcgHSuZsnjbMRY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tkwArCD524hvWVLbY/B04VyZtyU2tSmLXTC+TN/3fNo1FFjhjp+e3HDRt66njqDKB
-	 wTpSEwE6jVMeS3d3xMfLLOksc1ddn7gvw3UY4Sq+w7RKVV8HA977fRZj9yYHtKwZ87
-	 9cWjCOHgQJJsrNlLKy5RoiUVP4kx4WhVE7KzStDBI+tK2S8uoslj2M0TWCE2tEOFuw
-	 /MOMN1Z0IdPcYVCAyk4jpzy6Lt6DIcv3VGgEkEUw+bWDxRaYzp9f+9vagunjJ7jQuq
-	 2+w7eY/+3Bs++xIUIgDjNo83QuObVB4VuHPezAYebaNgU0L84haFAdu+WN8hM4n2BD
-	 WaPcMNA4q+gzA==
-Date: Thu, 2 May 2024 17:28:18 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org, bhelgaas@google.com,
-	james.morse@arm.com, jhugo@codeaurora.org, jeremy.linton@arm.com,
-	john.garry@huawei.com, Jonathan.Cameron@huawei.com,
-	pierre.gondois@arm.com, sudeep.holla@arm.com, tiantao6@huawei.com
-Subject: Re: [PATCH v4 1/3] riscv: cacheinfo: remove the useless input
- parameter (node) of ci_leaf_init()
-Message-ID: <20240502-secrecy-unleveled-e173419c54ec@spud>
-References: <20240418034330.84721-1-cuiyunhui@bytedance.com>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="I6UL21IF"
+Received: from fedor-21d0.intra.ispras.ru (unknown [10.10.165.8])
+	by mail.ispras.ru (Postfix) with ESMTPSA id D0F7A4078513;
+	Thu,  2 May 2024 16:18:50 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru D0F7A4078513
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1714666731;
+	bh=P260cdiv+ihyWABy6txYbc6wGpl+ovNNv3lvJc3fgaU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=I6UL21IFhgt4k6VRfCylGP7XwUFuvSQDfKIeNxEN/w85gytbDkFB5R1kJoZHiyxkb
+	 J6A4MpYU8ClKz6CLjcMxxPf0m3S7GqTpBkRQ5xOANg9iNygKXADiYjrkJAIdiwu6N+
+	 /Kk74v7OJk1431rlvWwU5zcVKWGbJ1SMZJpMiLFA=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Xiang Chen <chenxiang66@hisilicon.com>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Barry Song <song.bao.hua@hisilicon.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>,
+	lvc-project@linuxtesting.org
+Subject: [PATCH 1/2] dma-mapping: benchmark: fix up kthread creation error handling
+Date: Thu,  2 May 2024 19:18:25 +0300
+Message-ID: <20240502161827.403338-2-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240502161827.403338-1-pchelkin@ispras.ru>
+References: <20240502161827.403338-1-pchelkin@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jCp1f9hek9NXabnN"
-Content-Disposition: inline
-In-Reply-To: <20240418034330.84721-1-cuiyunhui@bytedance.com>
+Content-Transfer-Encoding: 8bit
 
+If a kthread creation fails for some reason then uninitialized members of
+the tasks array will be accessed on the error path since it is allocated
+by kmalloc_array().
 
---jCp1f9hek9NXabnN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Limit the bound in such case.
 
-On Thu, Apr 18, 2024 at 11:43:28AM +0800, Yunhui Cui wrote:
-> ci_leaf_init() is a declared static function. The implementation of the
-> function body and the caller do not use the parameter (struct device_node
-> *node) input parameter, so remove it.
->=20
-> Fixes: 6a24915145c9 ("Revert "riscv: Set more data to cacheinfo"")
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Found by Linux Verification Center (linuxtesting.org).
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Fixes: 65789daa8087 ("dma-mapping: add benchmark support for streaming DMA APIs")
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+---
+ kernel/dma/map_benchmark.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-By the way, please use cover letters for multi patch patchsets. I don't
-enjoy marking previous versions "superceded" by hand in patchwork.
+diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
+index 02205ab53b7e..ea938bc6c7e3 100644
+--- a/kernel/dma/map_benchmark.c
++++ b/kernel/dma/map_benchmark.c
+@@ -118,6 +118,7 @@ static int do_map_benchmark(struct map_benchmark_data *map)
+ 		if (IS_ERR(tsk[i])) {
+ 			pr_err("create dma_map thread failed\n");
+ 			ret = PTR_ERR(tsk[i]);
++			threads = i;
+ 			goto out;
+ 		}
+ 
+-- 
+2.45.0
 
-Thanks,
-Conor.
-
---jCp1f9hek9NXabnN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjO/IgAKCRB4tDGHoIJi
-0hi4AQCMArFXXQ1jipb+xchGlJ3/aeXo1IgXwQ7MxE3mxAbG9QD/UwOrcrpHE3gN
-t4eD8gxKhTy6Wmuj7HiFcstVa4iezAg=
-=jJp+
------END PGP SIGNATURE-----
-
---jCp1f9hek9NXabnN--
