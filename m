@@ -1,109 +1,62 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CD7537FF;
-	Thu,  2 May 2024 09:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4F8548E7
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 09:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714642347; cv=none; b=SysyLWEwOm1vbw3yXNUARi7GcrvaBmdDHMlG5qyzJX8nboBnlGM00p/C1V9DJOVAR4B683YkK+ZlrnWqq4MBEYJGVkT91R/t3jNrjtFtOhfIO/xwm+76PbZAYeIlpXauc2b/WGMO+U3z/nbqYkLQMLoFukEwX6Wx5MqMGTxGekQ=
+	t=1714642363; cv=none; b=UjlI88zWCiMseQkHOv5LF+z0LzXvPyxpGw8+sU2eyMUztFuUmI6ixP0Ls0pfNg48tEfl9EDJR0hLHTmi+6rpNPtEDv6xwJhx2fNWfhOS0N18DkESvS53yFjk5Z9jjH2QrvwZeNKnxeLTs4yz4fz9sJ2+Tix/xABylSfwrPdH7dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714642347; c=relaxed/simple;
-	bh=Z3lZtPpMKSUcjo/JnGTaHgDn+jnpLLkH19fhzoM/SDs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pj+Tv8Tsdkli5KaTdqtrc5RpFdj76xYnuJUxbUUVFvR8VuiOiw3zi/TuHee5/3ILVzcw/QrpHd5yzMEIugX1O4JUy3o1YqnVOuoCuiLG25R2RQNQbzL0H04L1UPHEpDrMBRcIrZf0F4r1UidZQ6zyPtlnZZJ17vILHenJfaqb84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K8xJ0qLi; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714642363; c=relaxed/simple;
+	bh=pnHl2KOj1Es6tFCYdzt37ZBCZQscbYpMzR0Z5AZrRmk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=fDrADzacgolLYWI2WtAQuJNw0dBqQ6C3HcwFzw6i01AFftqENd/rOO3KRvWI0UtTChnd6lUicd5+REKvg1FLSx9KkNffE8OGQ+FV3ouXIEmNeZsjeZ1eiDfT70ij1hOzIvZcRW+lnCxqLNx9cV3ZBtv1XO2bTBphSLe+CPnV3N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szYua+Vq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8xJ0qLi"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2db7c6b5598so100166761fa.1;
-        Thu, 02 May 2024 02:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714642344; x=1715247144; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z3lZtPpMKSUcjo/JnGTaHgDn+jnpLLkH19fhzoM/SDs=;
-        b=K8xJ0qLiDX2qerX84o7tbYH3MY6PiJtLpQcTYpOf14FFoWHUbYQvUzdXFPW/rDk6wm
-         lcY99v7Le15UG+6DTT0AMz6YB8ki/wLcPruRoSBOflueI6IDADnPQmaJrX14reWxcLe5
-         Wwvaf11k6b/D3y0qS+FYGgrP9rjbw5ZE/LO9+ZAw1vWcKEH+9rCGkXR1Xx8p0iTZdwvg
-         FATorODRVm7uypaiYwcdjepeGlolvmUigVatdvyOg/Gn8aWVO9uoUSCqbpDOX5kjyRog
-         05VD8lTufIe3uMrdX9cLitJbTeamSTRhj+4Q3TpJd2twviiyLccJmLGJRAczD94Xyafo
-         fXiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714642344; x=1715247144;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z3lZtPpMKSUcjo/JnGTaHgDn+jnpLLkH19fhzoM/SDs=;
-        b=oi0xAE+mxUITTNO2ejNqY7AyVQW9GlPyXFi7BCblsDHXPYmIw3KZpbMPPiQ0rCXGyl
-         wQ/dgo+HpNkDUccXkEKBhvp0FLCFsUde71RJSJLOYkyeS0uuxBH6qsIQQ8XJ9v/UXsqJ
-         Xo5/GBFehEZInZtGhTNj+zs2Sj5HkwwI6mGCKxGaMKWdTQ8e8QvBxl+eo2TF7L495Wfx
-         DRzHIGoqOrnCeUyXB0LV0KH4oJDh5BX8V0J6brEYT/Tqv5UD3ieliREagywrCcsv8PTK
-         uC+Z5dPyhKO3WqEBJV/20SaxD3N+JbxZGHR+ESNyfEzncMO4hWYm0j1AdmgTh0BKCYmj
-         mMRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdUvSNoJoS4lZoutAhOhWP9qR0E0ql/vYguNV9kqumjr86UbFrZ7gsJ2RhP9+MAG9TinjMNK2Fk6VgXuwxrZHoKZYEp85FYWM+01qrfk82UYwJBmLr1hYttpL5A4lU2sfYso9yGrO5EtGj6Q==
-X-Gm-Message-State: AOJu0YyMp5oZhbTwkbcHTuwSTlbfL2UkjaoX6IpW+Zl1owDWJyIlj9Jw
-	rpyrskRdJ2TIIJJytTQlC07HGsVJ95MqyUQvyZCBrh1iIU383rGXjS45BlkZGFTi7QTU9aNCZrH
-	BTRjNN53dMVqcPUbfurIhYNd6F7o=
-X-Google-Smtp-Source: AGHT+IGCzOhkTfJRi4C5pjOm7iTIkpXmJVWJcWAimRSBIoNi/DSth1zP+hvlFVbxsvIwktZfamO0hBQVH3TYe+RbVkk=
-X-Received: by 2002:a2e:950e:0:b0:2d8:57a4:968d with SMTP id
- f14-20020a2e950e000000b002d857a4968dmr2959202ljh.12.1714642343841; Thu, 02
- May 2024 02:32:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szYua+Vq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F9A0C113CC;
+	Thu,  2 May 2024 09:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714642363;
+	bh=pnHl2KOj1Es6tFCYdzt37ZBCZQscbYpMzR0Z5AZrRmk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=szYua+Vqilje9929zd7g40MJevp6agXVtANGeuBlTG3UClfNrIisExuDdTX1x+0n3
+	 a986m1hWzoHr1fiAX3lQRLAPq/TTuG2w29Rzhp9o+EZLKS+g+UXhKRYGk69Jt+UxQS
+	 bz5Yi65dgkKsADSiukivawSmj+RXpHuccbZB3n6KUu2rZB6680qKZdOlmrB097uLXt
+	 ek7aSSpnPoHYDZvbcG+3mcZkVtH+XmW5giDlBOsmtl+YgXFiCBNfRmom/Bgq6qp0ib
+	 xg8wQBMK96CD1LE81OWGPTZ1XJpGHU7GQHhGd2W5PQfUV8DfSqho/BGDhak+RspkMa
+	 N1/bOoHqp4Odw==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org, wens@csie.org, wangkaiyuan <wangkaiyuan@inspur.com>
+Cc: linux-kernel@vger.kernel.org
+In-Reply-To: <20240429024547.27724-1-wangkaiyuan@inspur.com>
+References: <20240429024547.27724-1-wangkaiyuan@inspur.com>
+Subject: Re: (subset) [PATCH] mfd: axp20x: convert to use maple tree
+ register cache
+Message-Id: <171464236184.1130487.12710545036975634302.b4-ty@kernel.org>
+Date: Thu, 02 May 2024 10:32:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502084609.28376-1-ryncsn@gmail.com> <20240502084939.30250-4-ryncsn@gmail.com>
- <7636ada9-fdf0-4796-ab83-9ac60a213465@redhat.com>
-In-Reply-To: <7636ada9-fdf0-4796-ab83-9ac60a213465@redhat.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Thu, 2 May 2024 17:32:07 +0800
-Message-ID: <CAMgjq7CD=r9TP4PSe2MqR=r-+PnMB-N6yYbFRr9U=B5ZBvTPtA@mail.gmail.com>
-Subject: Re: [PATCH v4 11/12] mm: drop page_index and convert folio_index to
- use folio
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	"Huang, Ying" <ying.huang@intel.com>, Matthew Wilcox <willy@infradead.org>, Chris Li <chrisl@kernel.org>, 
-	Barry Song <v-songbaohua@oppo.com>, Ryan Roberts <ryan.roberts@arm.com>, Neil Brown <neilb@suse.de>, 
-	Minchan Kim <minchan@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	Yosry Ahmed <yosryahmed@google.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.4
 
-On Thu, May 2, 2024 at 5:12=E2=80=AFPM David Hildenbrand <david@redhat.com>=
- wrote:
->
-> On 02.05.24 10:49, Kairui Song wrote:
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > There are two helpers for retrieving the index within address space
-> > for mixed usage of swap cache and page cache:
-> >
-> > - page_index
-> > - folio_index (wrapper of page_index)
-> >
-> > This commit drops page_index, as we have eliminated all users, and
-> > converts folio_index to use folio internally.
->
-> The latter does not make sense. folio_index() already is using a folio
-> internally. Maybe a leftover from reshuffling/reworking patches?
+On Mon, 29 Apr 2024 10:45:47 +0800, wangkaiyuan wrote:
+> The maple tree register cache is based on a much more modern data structure
+> than the rbtree cache and makes optimisation choices which are probably
+> more appropriate for modern systems than those made by the rbtree cache.
+> 
+> 
 
-Hi, David,
+Applied, thanks!
 
-folio_index calls swapcache_index, and swapcache_index is defined as:
+[1/1] mfd: axp20x: convert to use maple tree register cache
+      commit: a0fb1c6608c5ff7526e77031e3e90475529414e3
 
-#define swapcache_index(folio) __page_file_index(&(folio)->page)
+--
+Lee Jones [李琼斯]
 
-Where it casts the folio to page first, then call __page_file_index,
-__page_file_index is a function and works on pages.
-
-After this commit __page_file_index is converted to
-__folio_swap_cache_index. This change is a bit of trivial but we get
-rid of the internal page conversion.
-
-I can simplify the commit message, just say drop page_index to make
-the code cleaner, if this is confusing.
