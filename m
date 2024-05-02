@@ -1,123 +1,119 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337915F874;
-	Thu,  2 May 2024 10:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8607F56B7B;
+	Thu,  2 May 2024 10:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714646395; cv=none; b=LIZ1KuvbkIz63T7D7N/Ezq0ZMqc6N8104AQ9dMi8my/c8yDu0drHqBD9v37rD5NkrMbMPoUqvSz9A7/z7GYwZ8FQQSY6dESa5Ota6PGTZ3Je5qec1VBdMgBFecg/FjREntKMJSzdZg8mOA/YhRGfORbv3zBS5GL+xc8tw7L+QD8=
+	t=1714646421; cv=none; b=fGvQI5Dx4JkQvAXESQBN9Lptyrq0nWrEVUMrxRd2u2iQpzNpg6NUzxN4IPLcxZEOKkzB7Nd1nhmIqgiD0rcv93j0n5l23/UlrO6B5tGALXrxKkLKutOc6R5rqn27UEJ3BwgIdM0E/FVrj+hUZXyxu5UVIZo8ax1lN+S8ZQ7UXhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714646395; c=relaxed/simple;
-	bh=t5g00IGuHelGRldg6cVwXrUENnvsckikhiMzyAUt2X0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Acud2VEX2ZoMqDUpavpz4IZjQE7+WegJKFRF/bJjJOOFy91EJMi3Px8rVtiZeD4oa+8WzRJavO4o1A/jzKMTm6grO/vROqulNUhykUfbQDAd824t8OhyoBgRjXd2KYpKIrOf928glZpLW9TFdowbbqY7sACNQnN2IkJv6eJLwmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IAJdWk1l; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714646421; c=relaxed/simple;
+	bh=O+bEwrnwg4S4cWN+/eKT9QwEoL56qOFANcTDwM8x0Jk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sSfd5mb+Yz7mXtg6bxss0Mge2zGvkjss+Zwei+35r2eLJpBaXvRAeV6GugB1k4lcLLjbBk5OtYulsA9fH/V23niVQpXYkpm0KMtJtvx3aENOG50rDe+cBYN2vEs6UZz/kuOet9sWxREXwPsQdqPiERbpOv2RUNvMBef31Zgyi1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=cDDWlnqe; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAJdWk1l"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so76981685ad.1;
-        Thu, 02 May 2024 03:39:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714646393; x=1715251193; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t4GOnPYyyWwnP1/8TVXg36vGNLqaRGbyUqOh/xHsbXg=;
-        b=IAJdWk1lv35dZEdIhCbTqm6TNz5VVezmq/fURr7yT9vYC0+qzqxJhpfcoZujOyhLgf
-         FiYT6WYD7/IbS6pTwLVZQw/wGR5jr4wN3uem61TDcNCMhxqBwd7zPLTu9XPLFfAZn1Vp
-         bfFC+mSv/jz67/qzAvZajs6CncmvVbfMBAw486jhrsYze/Rv62RzercXHxusaanVQjqt
-         5Ex2LpYXWSagirCyebCkhoSTazyxDfUtNLk2DzE6vE9Q//8Wz8507bnVvfMFEcyXodRr
-         YFtboxgBJPtC8gsZI8RLBJineu2L1f1taFuZ8Qm50TN0EutAzVc2HmCrOuOkJ87EGhcb
-         LjdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714646393; x=1715251193;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t4GOnPYyyWwnP1/8TVXg36vGNLqaRGbyUqOh/xHsbXg=;
-        b=RGwf4cCBpPuvrDWGdM63RDcsr/aKFI0htbAax+3pZE07yEeLn3qP467qQvsMksYkEX
-         G3MED5A/H3zVpyRJ09NQaU2Bigbkg85oSERV22k4+3rO/ZkBDtMHm/8XwVSN/751Fj60
-         hO6s41yaW3bwCyI2Cb8xV4yIUos3X8Vk5v8APWHSMbbo+K8r0KoJiGUJLgU8EOvDdVYu
-         LC2Be9bHNpZ2B+TALve9HrhnEb2v7dA2xbHNopWtwyhikZpnYZ0Ca1HNafJZomB8dZei
-         D+uGl5aQb8Q53kO0x/UuyBg408CcYnhijL/6R65UDMD83jHhePKOgmz/ffxBiZCmB19h
-         kuKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUrGaHOheKv3YwqmiuCXzOmvjgMLK4m3txqOtvMe6YwJMJJ0NUtvh7v/Jwy0JB5WWQuRM9t5epCS47B1pcROybGoTu0kZFTTg1PAkMH
-X-Gm-Message-State: AOJu0YzWOwygwX2jb1bkQV6ngFEIC5aAQlrI2xGxYJZiY/9Ia/UCtkXS
-	d8y2Wbh3EljLgJatZy+BcwXhlwVhlag47BxTUNzBp58Wt/Dnx2hGqnNvpw==
-X-Google-Smtp-Source: AGHT+IFqR9Gkj344QonOI/YaQd5ZGgXVxI22fmuDMyiLr1wujioqvrX9hCDlBQudXht6mXr5poqAMw==
-X-Received: by 2002:a17:90a:d446:b0:2b2:af15:f948 with SMTP id cz6-20020a17090ad44600b002b2af15f948mr5891627pjb.38.1714646393420;
-        Thu, 02 May 2024 03:39:53 -0700 (PDT)
-Received: from [10.0.2.15] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id t22-20020a17090a5d9600b002b16d9ab430sm879121pji.3.2024.05.02.03.39.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 May 2024 03:39:53 -0700 (PDT)
-Message-ID: <640114d2-5780-48c3-a294-c0eba230f984@gmail.com>
-Date: Thu, 2 May 2024 19:39:48 +0900
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="cDDWlnqe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1714646411; x=1715251211; i=j.neuschaefer@gmx.net;
+	bh=mi0PezsKxlt4YHnZxxM0jZD6ggEqlUX2jNwgc7Ancas=;
+	h=X-UI-Sender-Class:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:References:In-Reply-To:To:Cc:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=cDDWlnqeeZFFzxvFuSEHECtppp8V3bO4d0UkuCq3A5b73duZ4OZldbbzH0h+ta5k
+	 SbW2Kj7CgMwu+w4azimZSIEq+Vi06vhkqPKgIG8Pxw4nkEg2hHqrBa0bmIVAqrT8l
+	 8S58133jSf5PKlaJR5E8BhZsdbiePGT29Yt1ZGs3pOrjegow9LXg3yiRqYGoQBxDd
+	 V54n9fQAnvdgFuEySX5S++5GMwWQsYwmCbpcs91ZOFCGgAxyrrvWtT8Th23H8htXf
+	 RWed7gP1ZhOCUJPbWZfE4olMjlj+HbHzpbZ4pA+QXcfWpGMtz9iw1/gkm3GmPgGhH
+	 YiBS7YbZr2PrVjfOcQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from probook ([89.1.59.78]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MvsEn-1stcLN3h0p-00sxJe; Thu, 02
+ May 2024 12:40:10 +0200
+From: =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Date: Thu, 02 May 2024 12:40:02 +0200
+Subject: [PATCH v12 3/6] clk: provider: Address documentation pitfall in
+ struct clk_parent_data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Sphinx error fixed for inline literal end-string by
- changing $type_constant2 in kernel-doc script to include "*" unicode
- character in highlights_rst.
-To: Utkarsh Tripathi <utripathi2002@gmail.com>, corbet@lwn.net
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, Akira Yokosawa <akiyks@gmail.com>
-References: <b9e4bedb-6678-42ed-9ac1-c10179be5b69@gmail.com>
- <20240501175730.23326-1-utripathi2002@gmail.com>
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <20240501175730.23326-1-utripathi2002@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20240502-wpcm-clk-v12-3-1d065d58df07@gmx.net>
+References: <20240502-wpcm-clk-v12-0-1d065d58df07@gmx.net>
+In-Reply-To: <20240502-wpcm-clk-v12-0-1d065d58df07@gmx.net>
+To: openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714646407; l=1209;
+ i=j.neuschaefer@gmx.net; s=20240329; h=from:subject:message-id;
+ bh=1uiYw4A/lLLh/mTtdxttn1wy5i6b5KyOE0h65+zswio=;
+ b=q8eunMEY8w2HoF/7ikaMihIPI7LizlxmNI2AG/eDzXjlhl2U+uKHSEJT5Ym5KVbp87uTYyrJE
+ AsUnl9akjWMChwF/fhXANkLvLIj7hWB8pZfRegYAJxtuh1LWZmKKMIZ
+X-Developer-Key: i=j.neuschaefer@gmx.net; a=ed25519;
+ pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
+X-Provags-ID: V03:K1:3o8FPKXfGjyk93wzOJ3/PA3/k/PDZ5csIAPUA7P5cEj1cE6h3Ft
+ O8DBykUoXJLl5+vki/ykwSOk338sas9GAaDAp4a/4AVcQUSRxU2aGDTxXoc6Ui84Zc3kiNt
+ NJfqgol6F557lCLuXn9wGKWqMZbYiuAPIsvZtz+vMfWByLLri5v9NKzn1qEpZjvA0ICVrna
+ BlJyDfttl367Tv7+wr7Wg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:rtAsOuEidkw=;ZNWcbyZHMyEKVXpZBIBuhL/i8/B
+ e95tM5/mT/kG6qejGhOA9k8j4QINJtxDZf9bFnWv12BUJjIkcI3D+HdZGDbmAXLGFUqOByZuK
+ trU+p1lm1TyWfZ6WSzUyM43lnvOJE4BTEuHqGqq7dMwotwRpE6EItROCIykUvm6/8Qpyvkbck
+ 6XLsFjPlEYtadw1g44uWWI0MXsROdRY7mEzzu2byQ8V1zq2YuPDWWMRj2p6khcMHtttkmsLp3
+ G5jvBGtzpGuEsPIeam4CevcY1cHnzqpBhBoggZZlFnXCuUI8b1CCnnHHgOvYTbkVUT9ex+j1T
+ jVdiGH5iKEr1GKQ7C2gimWr/Vnny84wkgLxOlE7cJKu/innA3po25mf1uRQi1BLEo26D3BfvB
+ elPPat1dqFTf3BcSlZdXdV3qWMdaARZU3Q+7y8KUHc9d3iiyKNqAl6W+KAe697sbOxmFVxP5p
+ YP8GAy5f3+CVMvDyxiLOGwl46mnXNmG3sF/k9qFrBNxVYNWVJzkYvvIz4hBMG+FaCpVkTJgJO
+ PVGoN16Qu84/FrBPtpJF03gClgU4oJ+6wGAJtnYnhIkSxmE8SO1NGM2zBikST3G9OpHjQ0JHA
+ taEQN2XluwoYFiF+aDZGSUJRgiL8zWjJ+HM+aGlviWgKYVfiUD7nKLTM71MpZuTU5YJHwqpVR
+ TYfiv9cd4Q43U2FlA+ENxUD3GYLQMzKafcLStVAx/Mf7XRwswxew69TpX/wyek7Huu8PXJ7yU
+ LZ6d7pHahHwMLc8+lbnofYDw3CHu+m9zOTKccJJHwRG+vedJHF6r54a+hKpJJM0xqjUcjdw9l
+ Oa/tjKX7wcS/SujMgT9JfzT+WEPMTIPVHuRZLK6ffOWsA=
 
-Hi Utkarsh,
+For some reason, I understood the description of .index to mean an index
+into the list of clocks defined by the provider itself. This is not the
+case, and it caused me much confusion.
 
-First of all, thank you for taking the time!
+Let's be a bit more explicit for those who read the documentation after me=
+.
 
-Besides Jon's comments on the summary and changelog, please find my
-suggestion below.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ include/linux/clk-provider.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-On Wed,  1 May 2024 23:27:30 +0530, Utkarsh Tripathi wrote:
-> The kernel-doc script uses the $type_constant2 variable to match
-> expressions used to find embedded type information. The current
-> implementation of $type_constant2 does not include the "*" unicode
-> character, which is used to highlight inline literals in the
-> documentation. This causes a Sphinx error when the inline literal
-> end-string is used in the documentation.
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 5d537d0776a11f..88bdada390c772 100644
+=2D-- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -273,7 +273,9 @@ struct clk_ops {
+  * @hw: parent clk_hw pointer (used for clk providers with internal clks)
+  * @fw_name: parent name local to provider registering clk
+  * @name: globally unique parent name (used as a fallback)
+- * @index: parent index local to provider registering clk (if @fw_name ab=
+sent)
++ * @index: parent index local to provider registering clk (if @fw_name ab=
+sent).
++ *         Note that this is not an index into the provider's own clocks =
+but
++ *         into its list of parents!
+  */
+ struct clk_parent_data {
+ 	const struct clk_hw	*hw;
 
-I'm afraid your description of what is wrong is not clear enough ...
-Let me talk using some examples.
-
-Current kernel-doc (script) conversion to reST:
-
-    %WQ_* -->  ``WQ_``*
-
-Against which Sphinx complains:
-
-    WARNING: Inline literal start-string without end-string.
-
-, because ``* is not recognized as end-string (of inline literal).
-
-With your change applied, conversion to reST becomes:
-
-    %WQ_* --> ``WQ_*``
-
-, and it is a proper inline literal.
-
-Please update the changelog accordingly.
-
-This is not urgent at all.  Please take your time and read through
-Documentation/process/submitting-patches.rst (among others) before
-submitting v3.
-
-Feel free to add (in v3):
-
-Reviewed-by: Akira Yokosawa <akiyks@gmail.com>
-
-    Thanks, Akira
+=2D-
+2.43.0
 
