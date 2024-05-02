@@ -1,186 +1,157 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from ma-mailsvcp-mx-lapp02.apple.com (ma-mailsvcp-mx-lapp02.apple.com [17.32.222.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD7C11718
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 01:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA78D14AAD
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 01:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.32.222.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714612270; cv=none; b=oKWqWyG9/2GTXB7a10Y/Ea4hWai9QM0SKath87G2kaNwLu12+MWtUKuYmDseIsM2a7fiFcQBVk5BP8la61wNeU5GBUJGTURTDWRtrHA5jtfHQ51ZFqmBuKa0zBzgyZTYHnDqzCLd3hTD6ziY75fXto8914dbKzJ4hTDktM8JmqI=
+	t=1714612273; cv=none; b=KWhoE+O0KCDZ81+Ofy3gUgZIzjUv4nGgGyg9ZBjMwlncP0XOYwPsEB42adfYqvdS3B6F8NtSnCH7fBHT00QmYaPBqP0vndwx/q0EiPq3utpLFuHTcRHWOhhHusCcFrrXyBqselSk0ok8Pd60gsyI+6t44/iRYTCKTLOrBjZpUG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714612270; c=relaxed/simple;
-	bh=goGnx7+o0cvrtydIDAhojJQ/cmld+QqZebwaXWoS2ZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y3X/C3OLSV8rdYu276gf9c0Fs0twyBt8W6RGE6F+Bomy7z3RXVTO8EB/WzjE41XyApXyouT9odLdBrU9bUSdRzV+nQZnvsbfY/4/+jxmoxTzBucb+/Wc8Y9tLZBVTc/tJIgswCcfUrkP9/09NG/pf3tajyLU8QH+c4ROYqLpnUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=HizvQYYw; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1714612273; c=relaxed/simple;
+	bh=z8MxxiMryaY2KFsttaRStt574gLkrend+EZ69VmURrI=;
+	h=From:To:Cc:Subject:Date:Message-id:In-reply-to:References:
+	 MIME-version; b=D7/lvWHjT+iQVbnvNQouBed4dpyQvx6G6sE4jFXxaZPT8MTq+KJuzi9NU7XdkqNBZ7Ma9IxFwvNftpXnv6SoybtU6PwPUsVucyhNXzMOqa9WITjnpIcaiVHOH6E3r8KgyPv0CJ06UdzqEBPq7wMBue7Lv18Uel+bwGk+wqlg5oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com; spf=pass smtp.mailfrom=apple.com; dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b=O90V67Gd; arc=none smtp.client-ip=17.32.222.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apple.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="HizvQYYw"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1eab16c8d83so60009475ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 18:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1714612267; x=1715217067; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cTmHTn+EDFvVBp/uyb7cTt66Oy+JEt94l4VC8Lg3nkQ=;
-        b=HizvQYYw2Vk/8lTkUD9rgJxIJ4rRQszigVSXO925Q/ViWXwPDpvBITXu+XzWF20o6L
-         0Djz/fjB+kR2wF+Hhx6wY5f2z7wfmqiUsEK5/MamyQGFuoNrLtdTlFFRGQAuzgaR0j1Q
-         OFRbNIstCFhbaLvtcfH4hPEz9xy8z/IcvWbhnjETX8M9m57yE+wF/x9QjXsKgDLXAIrk
-         tzvVi9RkT3t6UaCESlEHSWojWbgNo5MyICfMkMGgvD4lxkgTNWWJ1xQwx80drWaapT3b
-         tP4JvZtdjc00oeNiS5YbRwIPTc+C8aN7XJEoz1UliNlO+jD9LXaoE7ETeImzhOQAt2Pa
-         EARA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714612267; x=1715217067;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cTmHTn+EDFvVBp/uyb7cTt66Oy+JEt94l4VC8Lg3nkQ=;
-        b=XNef1jzr1VOFXsFLEtiXGcAv5Ytgb1ip4bucCJejrcIsIAnfiEAZ5jSpNGehobAh1V
-         qC30o+LefAzlchf3kxTZhnhvFkBSkc6JAdBBP5OsyZkgvsLoYJfzs+qvLeTqp1W4YtbJ
-         OTUcS/TNwikypl+b3z4nX27Q6w29UgU/yE0nsHJiiVi/CcZgwMxv+0t56jvyiCjC6AZO
-         lvRtJ8EvNHTiioGxyfip+rs5jKQqAm9OEghI2xU5ADKcuN8v5BcmuPgMzn7pnVlfSOtG
-         NG6Uv6WaJeE+3+wrDfE3eR3paJQYPtX5Por/G8R8tOdYtOF9NrYw31/RpRhBX7A4jR4q
-         JD4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXmckdiDJB/iOE4ubzngoM3Ei6eufr3vQVbzA8qXXFsZko6p3G3W0n/KZu8XawiHOC/6quZK2f8BZ0kFs3Ndm2BIIey38hny1LIm7MQ
-X-Gm-Message-State: AOJu0YzIj7FRRE9Fgvq4hoMtuXHBu9IoccZqmBD5TzhEgWH6dTwNyWZ+
-	KqZhcmdyAn14OoEdUXdGXW2+99LWK+WAQA4EeD7rD0P/wMRHwtXmunj2A+PJdqo=
-X-Google-Smtp-Source: AGHT+IG2tMNTomS3ZqyWOINVPtwBWTHlZFdEmCLTkAdgm8tukRJkLC5VAwUJPVsGDfNYzBUOMRcRmg==
-X-Received: by 2002:a17:902:ed01:b0:1e8:674b:d10f with SMTP id b1-20020a170902ed0100b001e8674bd10fmr426300pld.41.1714612266683;
-        Wed, 01 May 2024 18:11:06 -0700 (PDT)
-Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
-        by smtp.gmail.com with ESMTPSA id b18-20020a170903229200b001eb2e6b14e0sm9671431plh.126.2024.05.01.18.11.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 18:11:06 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1s2KyV-000N8D-2i;
-	Thu, 02 May 2024 11:11:03 +1000
-Date: Thu, 2 May 2024 11:11:03 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: djwong@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, jack@suse.cz, chandan.babu@oracle.com,
-	willy@infradead.org, axboe@kernel.dk, martin.petersen@oracle.com,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	tytso@mit.edu, jbongio@google.com, ojaswin@linux.ibm.com,
-	ritesh.list@gmail.com, mcgrof@kernel.org, p.raghav@samsung.com,
-	linux-xfs@vger.kernel.org, catherine.hoang@oracle.com
-Subject: Re: [PATCH v3 09/21] xfs: Do not free EOF blocks for forcealign
-Message-ID: <ZjLoJ4FeSbsb/hch@dread.disaster.area>
-References: <20240429174746.2132161-1-john.g.garry@oracle.com>
- <20240429174746.2132161-10-john.g.garry@oracle.com>
- <ZjF2jjtsA/C6ajtb@dread.disaster.area>
- <833f5821-a928-441f-848f-3a846111dcb7@oracle.com>
+	dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b="O90V67Gd"
+Received: from rn-mailsvcp-mta-lapp02.rno.apple.com
+ (rn-mailsvcp-mta-lapp02.rno.apple.com [10.225.203.150])
+ by ma-mailsvcp-mx-lapp02.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0SCU011Z70IERT20@ma-mailsvcp-mx-lapp02.apple.com> for
+ linux-kernel@vger.kernel.org; Wed, 01 May 2024 17:11:05 -0700 (PDT)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-01_16,2024-04-30_01,2023-05-22_02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com; h=from : to
+ : cc : subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=20180706;
+ bh=/VikyMK82iUyB2IpWp8IUQImq+ZjSWX/dOzZjyjp/FA=;
+ b=O90V67GdxdKbpihh2pWmACbVp8kgEwmSH7xlODbZ+WAg4Q4WI+HZIXkHNIeRjEXp3Dq8
+ MXGjejpwFIYiAY5RQHBNB5sfdMkYni9P9zdFN4eOMmqFmCxzUD0PDUvFRfTUTIkpHL5R
+ ti8VTV6MT1Ba3+nWPh0HghfneO+1EX4IeJ57tEUNswn/3+jGqPbycUB0YcWHJA3TA/Jy
+ If4iHpfp2bXHU1Wvw8QmlCnz9tq6jK8IHZlnbmXmE/Awxm519YO2G5U2dvaK0zv1LI7s
+ cGJPEcuHds0tLZ49GqM7bdLLpYjPTuLFUjSBNjvMT2f90/GoyDgqPO/0iQUFEmiEnJVT SA==
+Received: from rn-mailsvcp-mmp-lapp01.rno.apple.com
+ (rn-mailsvcp-mmp-lapp01.rno.apple.com [17.179.253.14])
+ by rn-mailsvcp-mta-lapp02.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0SCU00ITQ0IDULN0@rn-mailsvcp-mta-lapp02.rno.apple.com>;
+ Wed, 01 May 2024 17:11:02 -0700 (PDT)
+Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp01.rno.apple.com by
+ rn-mailsvcp-mmp-lapp01.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) id <0SCU00N000GSQI00@rn-mailsvcp-mmp-lapp01.rno.apple.com>; Wed,
+ 01 May 2024 17:11:01 -0700 (PDT)
+X-Va-A:
+X-Va-T-CD: 2a7a9b2cb17ba74c1da13bff19a80214
+X-Va-E-CD: 631f076f6b365e42e06a1df7057e44fb
+X-Va-R-CD: ce6be43db0cce57f85f587e814b9d60f
+X-Va-ID: 40ea895e-85fd-4841-92c4-ffb31f808d49
+X-Va-CD: 0
+X-V-A:
+X-V-T-CD: 2a7a9b2cb17ba74c1da13bff19a80214
+X-V-E-CD: 631f076f6b365e42e06a1df7057e44fb
+X-V-R-CD: ce6be43db0cce57f85f587e814b9d60f
+X-V-ID: 93f68664-015a-42c2-81a7-97fbd29e9574
+X-V-CD: 0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-01_16,2024-04-30_01,2023-05-22_02
+Received: from mr41p01nt-relayp01.apple.com ([100.64.99.124])
+ by rn-mailsvcp-mmp-lapp01.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023))
+ with ESMTPSA id <0SCU0039D0ICJA00@rn-mailsvcp-mmp-lapp01.rno.apple.com>; Wed,
+ 01 May 2024 17:11:00 -0700 (PDT)
+From: Zayd Qumsieh <zayd_qumsieh@apple.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Zayd Qumsieh <zayd_qumsieh@apple.com>,
+ Justin Lu <ih_justin@apple.com>, Ryan Houdek <Houdek.Ryan@fex-emu.org>,
+ Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Mateusz Guzik <mjguzik@gmail.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Miguel Luis <miguel.luis@oracle.com>,
+ Joey Gouly <joey.gouly@arm.com>, Christoph Paasch <cpaasch@apple.com>,
+ Kees Cook <keescook@chromium.org>, Sami Tolvanen <samitolvanen@google.com>,
+ Baoquan He <bhe@redhat.com>, Joel Granados <j.granados@samsung.com>,
+ Dawei Li <dawei.li@shingroup.cn>, Andrew Morton <akpm@linux-foundation.org>,
+ Florent Revest <revest@chromium.org>, David Hildenbrand <david@redhat.com>,
+ Stefan Roesch <shr@devkernel.io>, Andy Chiu <andy.chiu@sifive.com>,
+ Josh Triplett <josh@joshtriplett.org>, Oleg Nesterov <oleg@redhat.com>,
+ Helge Deller <deller@gmx.de>, Zev Weiss <zev@bewilderbeest.net>,
+ Ondrej Mosnacek <omosnace@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Asahi Linux <asahi@lists.linux.dev>
+Subject: Re: [PATCH 0/4] arm64: Support the TSO memory model
+Date: Wed, 01 May 2024 17:10:35 -0700
+Message-id: <20240502001035.41083-1-zayd_qumsieh@apple.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-reply-to: <87zftoqn7u.wl-maz@kernel.org>
+References:
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <833f5821-a928-441f-848f-3a846111dcb7@oracle.com>
+MIME-version: 1.0
+Content-transfer-encoding: 8bit
 
-On Wed, May 01, 2024 at 09:30:37AM +0100, John Garry wrote:
-> On 30/04/2024 23:54, Dave Chinner wrote:
-> > On Mon, Apr 29, 2024 at 05:47:34PM +0000, John Garry wrote:
-> > > For when forcealign is enabled, we want the EOF to be aligned as well, so
-> > > do not free EOF blocks.
+> On Fri, 19 Apr 2024 17:58:09 +0100,
+> Will Deacon <will@kernel.org> wrote:
 > > 
-> > This is doesn't match what the code does. The code is correct - it
-> > rounds the range to be trimmed up to the aligned offset beyond EOF
-> > and then frees them. The description needs to be updated to reflect
-> > this.
-> 
-> ok, fine
-> 
-> > 
+> > On Thu, Apr 11, 2024 at 11:19:13PM +0900, Hector Martin wrote:
+> > > On 2024/04/11 22:28, Will Deacon wrote:
+> > > >   * Some binaries in a distribution exhibit instability which goes away
+> > > >     in TSO mode, so a taskset-like program is used to run them with TSO
+> > > >     enabled.
 > > > 
-> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
-> > > ---
-> > >   fs/xfs/xfs_bmap_util.c | 7 ++++++-
-> > >   1 file changed, 6 insertions(+), 1 deletion(-)
+> > > Since the flag is cleared on execve, this third one isn't generally
+> > > possible as far as I know.
+> > 
+> > Ah ok, I'd missed that. Thanks.
+> > 
+> > > > In all these cases, we end up with native arm64 applications that will
+> > > > either fail to load or will crash in subtle ways on CPUs without the TSO
+> > > > feature. Assuming that the application cannot be fixed, a better
+> > > > approach would be to recompile using stronger instructions (e.g.
+> > > > LDAR/STLR) so that at least the resulting binary is portable. Now, it's
+> > > > true that some existing CPUs are TSO by design (this is a perfectly
+> > > > valid implementation of the arm64 memory model), but I think there's a
+> > > > big difference between quietly providing more ordering guarantees than
+> > > > software may be relying on and providing a mechanism to discover,
+> > > > request and ultimately rely upon the stronger behaviour.
 > > > 
-> > > diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-> > > index 19e11d1da660..f26d1570b9bd 100644
-> > > --- a/fs/xfs/xfs_bmap_util.c
-> > > +++ b/fs/xfs/xfs_bmap_util.c
-> > > @@ -542,8 +542,13 @@ xfs_can_free_eofblocks(
-> > >   	 * forever.
-> > >   	 */
-> > >   	end_fsb = XFS_B_TO_FSB(mp, (xfs_ufsize_t)XFS_ISIZE(ip));
-> > > -	if (XFS_IS_REALTIME_INODE(ip) && mp->m_sb.sb_rextsize > 1)
-> > > +
-> > > +	/* Do not free blocks when forcing extent sizes */
-> > > +	if (xfs_inode_has_forcealign(ip) && ip->i_extsize > 1)
+> > > The problem is "just" using stronger instructions is much more
+> > > expensive, as emulators have demonstrated. If TSO didn't serve a
+> > > practical purpose I wouldn't be submitting this, but it does. This is
+> > > basically non-negotiable for x86 emulation; if this is rejected
+> > > upstream, it will forever live as a downstream patch used by the entire
+> > > gaming-on-Mac-Linux ecosystem (and this is an ecosystem we are very
+> > > explicitly targeting, given our efforts with microVMs for 4K page size
+> > > support and the upcoming Vulkan drivers).
 > > 
-> > I see this sort of check all through the remaining patches.
+> > These microVMs sound quite interesting. What exactly are they? Are you
+> > running them under KVM?
 > > 
-> > Given there are significant restrictions on forced alignment,
-> > shouldn't this all the details be pushed inside the helper function?
-> > e.g.
-> > 
-> > /*
-> >   * Forced extent alignment is dependent on extent size hints being
-> >   * set to define the alignment. Alignment is only necessary when the
-> >   * extent size hint is larger than a single block.
-> >   *
-> >   * If reflink is enabled on the file or we are in always_cow mode,
-> >   * we can't easily do forced alignment.
-> >   *
-> >   * We don't support forced alignment on realtime files.
-> >   * XXX(dgc): why not?
-> 
-> There is no technical reason to not be able to support forcealign on RT,
-> AFAIK. My idea is to support RT after non-RT is supported.
-> 
-> >   */
-> > static inline bool
-> > xfs_inode_has_forcealign(struct xfs_inode *ip)
-> > {
-> > 	if (!(ip->di_flags & XFS_DIFLAG_EXTSIZE))
-> > 		return false;
-> > 	if (ip->i_extsize <= 1)
-> > 		return false;
-> > 
-> > 	if (xfs_is_cow_inode(ip))
-> > 		return false;
-> 
-> Could we just include this in the forcealign validate checks? Currently we
-> just check CoW extsize is zero there.
+> > Ignoring the mechanism for the time being, would it solve your problem
+> > if you were able to run specific microVMs in TSO mode, or do you *really*
+> > need the VM to have finer-grained control than that? If the whole VM is
+> > running in TSO mode, then my concerns largely disappear, as that's
+> > indistinguishable from running on a hardware implementation that happens
+> > to be TSO.
+>
+> Since KVM has been mentioned a few times, I'll give my take on this.
+>
+> Since day 1, it was a conscious decision for KVM/arm64 to emulate the
+> architecture, and only that -- this is complicated enough. Meaning
+> that no implementation-defined features should be explicitly exposed
+> to the guest. So I have no plan to expose any such feature for
+> userspace to configure TSO or anything else of the sort.
 
-Checking COW extsize is zero doesn't tell us anything useful about
-whether the inode might have shared extents, or that the filesystem
-has had the sysfs "always cow" debug knob turned on. That changes
-filesystem behaviour at mount time and has nothing to do with the
-on-disk format constraints.
-
-And now that I think about it, checking for COW extsize is
-completely the wrong thing to do because it doesn't get used until
-an extent is shared and a COW trigger is hit. So the presence of COW
-extsize has zero impact on whether we can use forced alignment or
-not.
-
-IOWs, we have to check for shared extents or always cow here,
-because even a file with correctly set up forced alignment needs to
-have forced alignment disabled when always_cow is enabled. Every
-write is going to use the COW path and AFAICT we don't support
-forced alignment through that path yet.
-
-> 
-> > 	if (ip->di_flags & XFS_DIFLAG_REALTIME)
-> > 		return false;
-> 
-> We check this in xfs_inode_validate_forcealign()
-
-That's kinda my point - we have a random smattering of different
-checks at different layers and in different contexts. i.e.  There's
-no one function that performs -all- the "can we do forced alignment"
-checks that allow forced alignment to be used. This simply adds all
-those checks in the one place and ensures that even if other code
-gets checks wrong, we won't use forcealign inappropriately.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Agreed. We do not intend for TSO mode to be used extensively for EL1, the
+intention is for TSO mode to be reserved for userspace applications that
+request it.
