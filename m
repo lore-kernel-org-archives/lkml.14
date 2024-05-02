@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D599915380F;
-	Thu,  2 May 2024 14:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5F8153BCA;
+	Thu,  2 May 2024 14:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714661199; cv=none; b=a5GMkyezCWwCLi7rdRWOFrFAgSV6ddn7nNrSXq4Q0Q+jFrAsCfLw83RMVCMqYh3Q2JqLkGgtwhXUfLWrXqT179GZg2e2bQQC185iO9rTrxMDEd89S5crP0VfyE/uunmK9oTNScF1SFgFo6Hsd1gqNxS1frmQuxtP0fXGoSJlCC8=
+	t=1714661200; cv=none; b=BokSVHhjLk80FffXdj9Eo8P8d4Thlm3di9x1waQUnYcD2u2x/DFZxWzjKe3C+CQPnyBpQGhNtB5zr6VHOBUTFDqhZ36e04R+Y0GFRhVfxCvXgU37+VKuPYesrbBOZ6gjL2HFjgRpxTYFyzxW+b/Oir4+kCY0HvAW66eiux1orVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714661199; c=relaxed/simple;
-	bh=MNevgiHkmuCG//FLCxCfm2v7RKLaRbqWb2DHuURYI4c=;
+	s=arc-20240116; t=1714661200; c=relaxed/simple;
+	bh=KxyK8ZGKsiW++U8bXvlHx6KRpe2z/axkKPSBZA7qYtk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K2K2LL1vetQtbl0oRZqOgsVIEriYhYCBaUND0y2jHYykMRrbBAbWtnkGqAU97W75BChLkm2uSxaU3EYQKZ9J2kn/AlEkgOm7GYRG+NRjJgivO0XnJ4aXPONWR4Y3J6EImBQELQeymh/ApKJoqhf7iY+EBvZSEPI/OqhgQRUeidM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A0YExunH; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=shIVPV4mOt4ByJL7rE9QfEXAToxKmjQvxSqc59XEgn6gKKfX0k3ahaqVj7bzHNlN9ODzKomuXe5328TGeP3+wf4wlIuXK9SymQqvcqva/dt/ienoSC3rchShuPksaPz0H4KtLy/izhwCxOmSCVfKiNR5xbyPNEYDYM09vqZsIpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h3jjlIN6; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A0YExunH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h3jjlIN6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714661197; x=1746197197;
+  t=1714661199; x=1746197199;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MNevgiHkmuCG//FLCxCfm2v7RKLaRbqWb2DHuURYI4c=;
-  b=A0YExunHNrfAX9vW+fEn9kWNL/UHKSxBMz3Wk6uIrTY+ELm7cBszWYck
-   2j+lDfBsjN2Zkwb+4S74R1Ltu/rK6+RMZOlj2UwqfWo9zaUQBNOqUd1d/
-   wXuKeuDS57fmI7XEs7hiq+aqbO/6YnGX0xKrU+CiEOx2PigKvLEOKC90f
-   fSlLRSsbiPxIJWEVxMwhhBASxqDmin3D0T+nmh3Myhki3HOrgDhNkeVNF
-   l1rT/V2Sv5Ll6ZyLMHHmvMSbTmA6QMUmd2XyrlVoLiiEX9P/Y3+FuWAJ/
-   ZyMwBUFij3VyeYdmc3RAgfFtojp/rs75CQyff+rGPzgqgMKxuAEMWTyso
+  bh=KxyK8ZGKsiW++U8bXvlHx6KRpe2z/axkKPSBZA7qYtk=;
+  b=h3jjlIN6lbGFL02iqpdcYbdFIff9IVpBwsdDbLZkITit4nzZsrivbKS3
+   aTGcdiL7eOBw1onrt52fCCdysrEPWmdaTB+WvJAVmZUY6rdSqzNNmZVnN
+   P7CVpQID2sZMPwCOMuSuea3XrOYFQq9dIUgSjEX740qK4Up3vMtVbZ8qE
+   OS7BeWkTdxotKIBzceJjDZp3F9feghpQJlpfoX6Ep1Z9Oq97g+gnGx6/1
+   N8hjdFp9XLpVdrOYXM2oc+okKrAOajaApE5JqIqj7MHdyI0zJpY2h3pFw
+   qk3CazPVIYcPy8FMR5pI03T9gUkWm6jvswSUvtIvCGaNY7+pgsxIanRTj
    A==;
-X-CSE-ConnectionGUID: KdfRmQtuRxiFDvQIeZBLbA==
-X-CSE-MsgGUID: 3oUMpcGERiWhTzFEldt5uw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10306073"
+X-CSE-ConnectionGUID: JWyTZYIgQ56DQj/DU1XFRg==
+X-CSE-MsgGUID: 8dRMQNf8SmK7DjrSKfRfog==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10590811"
 X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="10306073"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 07:46:34 -0700
-X-CSE-ConnectionGUID: LOXpM/xoTNS3EhxQvU/jNA==
-X-CSE-MsgGUID: 5k9v+jPRTbOPJDH7ZomXuQ==
+   d="scan'208";a="10590811"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 07:46:36 -0700
+X-CSE-ConnectionGUID: MuZk85TcQr+yqM9qgiA6Cg==
+X-CSE-MsgGUID: Yfo8qtO5T3O63GTpzpmeYw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="31632825"
+   d="scan'208";a="31753962"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP; 02 May 2024 07:46:32 -0700
+  by fmviesa004.fm.intel.com with ESMTP; 02 May 2024 07:46:34 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id E089B21A; Thu,  2 May 2024 17:46:30 +0300 (EEST)
+	id 5A44AD79; Thu,  2 May 2024 17:46:31 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Parker Newman <pnewman@connecttech.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -52,9 +52,9 @@ To: Parker Newman <pnewman@connecttech.com>,
 	linux-serial@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH v1 03/13] serial: 8250_exar: Kill CTI_PCI_DEVICE()
-Date: Thu,  2 May 2024 17:43:57 +0300
-Message-ID: <20240502144626.2716994-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 12/13] serial: 8250_exar: Make type of bit the same in exar_ee_*_bit()
+Date: Thu,  2 May 2024 17:44:06 +0300
+Message-ID: <20240502144626.2716994-13-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
 References: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
@@ -66,63 +66,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The CTI_PCI_DEVICE() duplicates EXAR_DEVICE(). Kill the former.
+Make type of bit parameter and returned one the same in exar_ee_*_bit().
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/tty/serial/8250/8250_exar.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ drivers/tty/serial/8250/8250_exar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-index 150c4abd92fc..ab0abc14ecf8 100644
+index bf3730f4231d..6764aaa20df2 100644
 --- a/drivers/tty/serial/8250/8250_exar.c
 +++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -1737,7 +1737,6 @@ static const struct exar8250_board pbn_exar_XR17V8358 = {
- 	.exit		= pci_xr17v35x_exit,
- };
+@@ -280,7 +280,7 @@ static inline void exar_ee_deselect(struct exar8250 *priv)
+ 	exar_write_reg(priv, UART_EXAR_REGB, 0x00);
+ }
  
--// For Connect Tech cards with Exar vendor/device PCI IDs
- #define CTI_EXAR_DEVICE(devid, bd) {                    \
- 	PCI_DEVICE_SUB(                                 \
- 		PCI_VENDOR_ID_EXAR,                     \
-@@ -1747,16 +1746,6 @@ static const struct exar8250_board pbn_exar_XR17V8358 = {
- 		(kernel_ulong_t)&bd                     \
- 	}
- 
--// For Connect Tech cards with Connect Tech vendor/device PCI IDs (FPGA based)
--#define CTI_PCI_DEVICE(devid, bd) {                     \
--	PCI_DEVICE_SUB(                                 \
--		PCI_VENDOR_ID_CONNECT_TECH,             \
--		PCI_DEVICE_ID_CONNECT_TECH_PCI_##devid, \
--		PCI_ANY_ID,                             \
--		PCI_ANY_ID), 0, 0,                      \
--		(kernel_ulong_t)&bd                     \
--	}
--
- #define EXAR_DEVICE(vend, devid, bd) { PCI_DEVICE_DATA(vend, devid, &bd) }
- 
- #define IBM_DEVICE(devid, sdevid, bd) {			\
-@@ -1786,6 +1775,7 @@ static const struct pci_device_id exar_pci_tbl[] = {
- 	EXAR_DEVICE(ACCESSIO, COM_4SM, pbn_exar_XR17C15x),
- 	EXAR_DEVICE(ACCESSIO, COM_8SM, pbn_exar_XR17C15x),
- 
-+	/* Connect Tech cards with Exar vendor/device PCI IDs */
- 	CTI_EXAR_DEVICE(XR17C152,       pbn_cti_xr17c15x),
- 	CTI_EXAR_DEVICE(XR17C154,       pbn_cti_xr17c15x),
- 	CTI_EXAR_DEVICE(XR17C158,       pbn_cti_xr17c15x),
-@@ -1798,9 +1788,10 @@ static const struct pci_device_id exar_pci_tbl[] = {
- 	CTI_EXAR_DEVICE(XR17V354,       pbn_cti_xr17v35x),
- 	CTI_EXAR_DEVICE(XR17V358,       pbn_cti_xr17v35x),
- 
--	CTI_PCI_DEVICE(XR79X_12_XIG00X, pbn_cti_fpga),
--	CTI_PCI_DEVICE(XR79X_12_XIG01X, pbn_cti_fpga),
--	CTI_PCI_DEVICE(XR79X_16,        pbn_cti_fpga),
-+	/* Connect Tech cards with Connect Tech vendor/device PCI IDs (FPGA based) */
-+	EXAR_DEVICE(CONNECT_TECH, PCI_XR79X_12_XIG00X, pbn_cti_fpga),
-+	EXAR_DEVICE(CONNECT_TECH, PCI_XR79X_12_XIG01X, pbn_cti_fpga),
-+	EXAR_DEVICE(CONNECT_TECH, PCI_XR79X_16,        pbn_cti_fpga),
- 
- 	IBM_DEVICE(XR17C152, SATURN_SERIAL_ONE_PORT, pbn_exar_ibm_saturn),
+-static inline void exar_ee_write_bit(struct exar8250 *priv, int bit)
++static inline void exar_ee_write_bit(struct exar8250 *priv, u8 bit)
+ {
+ 	u8 value = UART_EXAR_REGB_EECS;
  
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
