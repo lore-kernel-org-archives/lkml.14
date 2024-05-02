@@ -1,48 +1,48 @@
 Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2439A58AA7
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 10:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACF05A7AE
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 10:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714646344; cv=none; b=X8HN+hpfAxonKeRFn9YB4369n9zKRBKrnyafUbIwDRGs05pECfeCDZHD2uv8NEttkvFQhXMK/EwdX5L1m2K3HOuWzC52GxWciBCZQDkvYlWqDuUmRjO/3Cq6vcjGKlHj4lXWRAYzVa0+zlnU015s+6fDwVc1oe3z2glz+hl1az8=
+	t=1714646345; cv=none; b=QbWpiObFolmpOwq5j5mK9ZCTHazOzcshHoTAH6E9VkMWtQB4dTgvGWEug3CiF9hLJMmWaOTK08hRMWQT1lT6NbSQgsyqf1p2SVYHpziZZXUqOcrkYxScBy8FPv5t8XuLOlG6ob61vhR4qAArTtJYZiLgOMLR7HwCIQPeWAgih0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714646344; c=relaxed/simple;
-	bh=glfHlNt0G3JLM8nXxM5z0FedVs76MkfR4NhoFD7a+NI=;
+	s=arc-20240116; t=1714646345; c=relaxed/simple;
+	bh=GU5YSPW3zQL8xJTQHgBWe2mEPImsEMijzkt9QLihaW0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S/RjOF6BBkQ9n1zzAjp6OQIwOw75Qo2iLYS3+8ytj3+CS6zaPxU4QXRBWj02NHoaA9QAkIf/hfK/A4Pi8ukDcEsU3wOvjhmV2dh4guqgN0bF1WGpovhNIHoq+r98FCi7FD0yoIqEx2udAnI5uoktLGIVaBSH5Q4QLRdaHVAIyGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=D5MI6vQK; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=EEYVTM+MUoxGrnfGJ8Mop/JtvG6m/dCXZG5Yh6Ah2D44QuEL5OuR89Ug90Sjic4q/DLZ5wMM1siN3KvMotryuT3mAircrW0IWwdf+RCZd39TEi9Kn/ofjcrY/VcRrwOPC5zd+WdB7kk//EnDk2f8SZSFp7g8eGXviBh2lR4DLF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Xq14sqMZ; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="D5MI6vQK"
-X-UUID: 2de68b7e087011ef8065b7b53f7091ad-20240502
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Xq14sqMZ"
+X-UUID: 2ef231ee087011ef8065b7b53f7091ad-20240502
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=RRQ3alWKe4ZnruvA7OeP7d0ZCmcWukqzJaUdH2jWIGE=;
-	b=D5MI6vQK6DPT1WxlUotmNEqT3YWJsZV3C9eMdKKbRv16yY8VAOBKvpGyymPH4vvUNbTZi7YXHERI4Wc+S+H1T5gLxwJfMf7qy+XJ/k86a6RgaZxXKwSqcQOXLvInADt7e/HIcXvI3V7v+VgrqKW0TJ/UdoA54fRJUYRpjDBqZf8=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=WYNlPuYbcVBq3L7dw0isrnQUyZvAijEpUh2IAETN/9Q=;
+	b=Xq14sqMZ9OuDB9DZwOVRpHy4VGS/CPQMyIXh3KLn2sA+0Y33PeGRHebRxA/OtMpM+v99+B7VFH7ccmKUO5f2QLiGovuP45NruNeUiDHQScXdIoNIHTtsBsmnaRPWMoB6Si6emYziTO+avG0PKFni2BvBja+KU/VkWl2fsAaio+M=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:99f83a1e-74bd-4055-8e13-7caea61ff03e,IP:0,U
+X-CID-O-INFO: VERSION:1.1.38,REQID:7286e558-578c-49bc-abc3-314b7d937ccd,IP:0,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:0
-X-CID-META: VersionHash:82c5f88,CLOUDID:dc315e83-4f93-4875-95e7-8c66ea833d57,B
+X-CID-META: VersionHash:82c5f88,CLOUDID:c2ee9afb-ed05-4274-9204-014369d201e8,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
 	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
 	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR
-X-UUID: 2de68b7e087011ef8065b7b53f7091ad-20240502
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 2ef231ee087011ef8065b7b53f7091ad-20240502
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
 	(envelope-from <shawn.sung@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1452110412; Thu, 02 May 2024 18:38:57 +0800
+	with ESMTP id 420312962; Thu, 02 May 2024 18:38:58 +0800
 Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 2 May 2024 03:38:55 -0700
+ 15.2.1118.26; Thu, 2 May 2024 18:38:57 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
  mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 2 May 2024 18:38:55 +0800
+ 15.2.1118.26 via Frontend Transport; Thu, 2 May 2024 18:38:57 +0800
 From: Shawn Sung <shawn.sung@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
 	<angelogioacchino.delregno@collabora.com>
@@ -55,9 +55,9 @@ CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
 	<dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Hsiao
  Chien Sung <shawn.sung@mediatek.com>
-Subject: [PATCH v7 03/18] drm/mediatek: Add missing plane settings when async update
-Date: Thu, 2 May 2024 18:38:33 +0800
-Message-ID: <20240502103848.5845-4-shawn.sung@mediatek.com>
+Subject: [PATCH v7 13/18] drm/mediatek: Support "None" blending in OVL
+Date: Thu, 2 May 2024 18:38:43 +0800
+Message-ID: <20240502103848.5845-14-shawn.sung@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20240502103848.5845-1-shawn.sung@mediatek.com>
 References: <20240502103848.5845-1-shawn.sung@mediatek.com>
@@ -72,31 +72,28 @@ X-MTK: N
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-Fix an issue that plane coordinate was not saved when
-calling async update.
+Support "None" alpha blending mode on MediaTek's chips.
 
-Fixes: 920fffcc8912 ("drm/mediatek: update cursors by using async atomic update")
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_plane.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
-index 4625deb21d406..a74b26d359857 100644
---- a/drivers/gpu/drm/mediatek/mtk_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_plane.c
-@@ -227,6 +227,8 @@ static void mtk_plane_atomic_async_update(struct drm_plane *plane,
- 	plane->state->src_y = new_state->src_y;
- 	plane->state->src_h = new_state->src_h;
- 	plane->state->src_w = new_state->src_w;
-+	plane->state->dst.x1 = new_state->dst.x1;
-+	plane->state->dst.y1 = new_state->dst.y1;
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index ad84c2fe57111..87dbecc09a260 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -480,7 +480,8 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 		con |= state->base.alpha & OVL_CON_ALPHA;
+ 	}
  
- 	mtk_plane_update_new_state(new_state, new_plane_state);
- 	swap(plane->state->fb, new_state->fb);
+-	if (state->base.fb && !state->base.fb->format->has_alpha)
++	if (blend_mode == DRM_MODE_BLEND_PIXEL_NONE ||
++	    (state->base.fb && !state->base.fb->format->has_alpha))
+ 		ignore_pixel_alpha = OVL_CONST_BLEND;
+ 
+ 	if (pending->rotation & DRM_MODE_REFLECT_Y) {
 -- 
 2.18.0
 
