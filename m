@@ -1,245 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A658B158A12;
-	Thu,  2 May 2024 14:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC71815B148;
+	Thu,  2 May 2024 14:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714661205; cv=none; b=derreMWAYtxQFuBTKA3MW7DqDZzAY+oibuqkWStmZqmaysi9q3J3daVWc+Y7GUTHgDGIGLYaybd3w01cSlr2bp/LIzIOVTAY0SDB4O9ZGLhTDGF/LOiU/gnJieu0pZ1NgKLmRxJpzHNTfWLxQfUpI2JuVn3JRM+ZjWuHAOpv3uE=
+	t=1714661209; cv=none; b=fHDbngFDABVJBFGeRi0nS2hIw0KDu4HdAqMsOQmQi/byElr7op6aQ/XBXthWlcoNavVDesmTYsnRYsotFtuHsf9j6rrJ7R52ix+xcwDB4OWgcj0gYXwWxVSZJhwEg6NktObjxcZfxlkx1AmbSvjZtrb8b/YSEMXl563Hkzgqgxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714661205; c=relaxed/simple;
-	bh=lcpyqo/kIZ8bG16xlC0SZOBkBwextMe9kvhdGFvCZgI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o5dJfOlDJ7Dztt1NwuwQo8+xEnhJbNt1twYquiQLU1xF5q2CcEsANpfE4/U6xCPkp6ElhmajH0xmtD1r2XFdHEH+E0TzztK+TbuMeDKOKEyo/pZbAMWg8Jj5ttrwwKQmr0gx/KuUZHZWNQbIfouL7lZQ0umzhY6DxK5HAm4oiXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=acEX/PIL; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="acEX/PIL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714661204; x=1746197204;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lcpyqo/kIZ8bG16xlC0SZOBkBwextMe9kvhdGFvCZgI=;
-  b=acEX/PILDDr15Q5ul0WGPxrwR9Jr0HT4raootaOZGI+83s9ZgApXKqAY
-   wIBSeu2waegmiQmKsCRQSINMGOPNaYeUBALOY48Orx3XmszTw5CpSDgrA
-   9Rnf3rcZxk3hP6Y/1bCk2JEges9v4v/n6an7++daJfWS+Om/XW3DSNseC
-   hTt1r91IYGrJegPx+7DuAPsBzG4YXY96KVZGm1YAPZRmajnMPdE22UslB
-   NPMCWGdxTwGj59OnlIOP+T2+vQkyte8PFYd1LDSDGZ/fhc3TJFKcGP1kR
-   61Cyo7aJ/loq7dyeBwd8v6GjhcgnXMMHs743fjENN3CtYM+K02oJlX32H
-   g==;
-X-CSE-ConnectionGUID: IxKRMC/mRkC6sdvNgFFPsg==
-X-CSE-MsgGUID: lbpNRUeASKSzk8ir0qxowg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10306116"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="10306116"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 07:46:36 -0700
-X-CSE-ConnectionGUID: 3bhdqyNtSre0Jzcary/QMA==
-X-CSE-MsgGUID: URBp+H6SSLicbhPXDz23OA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="31632846"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP; 02 May 2024 07:46:34 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3D2BDB5F; Thu,  2 May 2024 17:46:31 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Parker Newman <pnewman@connecttech.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	s=arc-20240116; t=1714661209; c=relaxed/simple;
+	bh=EhzWsTWACEjCUnlwxHyfabgFLKuatNS81iZvkVCsVyM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 In-Reply-To:References; b=elYo9coXkeKauVObgcGoR/AtJOVzoOSEMNdQ7Dvg3ngMyEbaRx6/JbwiGlS/yQ/UXykf3uApbr6jzlBytZ4P29W+Ary/J9+2mAWGfyv8i+yuYe17sE1yhqiZi9IyoIkuU+Sbv0XrkUh4UwoOqnEpHG2JbZhrjNcnvoP6cKhAWTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from ubuntu.localdomain (unknown [221.192.181.50])
+	by mail-app2 (Coremail) with SMTP id by_KCgA3L4GZpjNmnigDAg--.28S4;
+	Thu, 02 May 2024 22:44:51 +0800 (CST)
+From: Duoming Zhou <duoming@zju.edu.cn>
+To: linux-hams@vger.kernel.org
+Cc: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH v1 09/13] serial: 8250_exar: Return directly from switch-cases
-Date: Thu,  2 May 2024 17:44:03 +0300
-Message-ID: <20240502144626.2716994-10-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
-References: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
+	jreuter@yaina.de,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	dan.carpenter@linaro.org,
+	Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH net 2/2] ax25: fix potential reference counting leak in ax25_addr_ax25dev
+Date: Thu,  2 May 2024 22:43:38 +0800
+Message-Id: <cb44ea91c0b7084079c3086d6d75e7984505cec7.1714660565.git.duoming@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1714660565.git.duoming@zju.edu.cn>
+References: <cover.1714660565.git.duoming@zju.edu.cn>
+In-Reply-To: <cover.1714660565.git.duoming@zju.edu.cn>
+References: <cover.1714660565.git.duoming@zju.edu.cn>
+X-CM-TRANSID:by_KCgA3L4GZpjNmnigDAg--.28S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7GrWrAF18GFyrZw17XF45GFg_yoWDurb_uF
+	97ury7Ww1DJr1UCw1rXF48Jry7Zw10gwnrJr1ayFZ7trW5ta47JrWkJw1UXr1UXa47Cr4F
+	qF1rGrW3Aw4IkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUblkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
+	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW5XwCF04k20xvY0x0EwIxGrwCF54CY
+	xVCY1x0262kKe7AKxVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUwAwsUUU
+	UU=
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwIJAWYySJ0M6ABgsM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-There are two similar switch-cases which use different style.
-Unify them and one more to return from the cases directly.
+The reference counting of ax25_dev potentially increase more
+than once in ax25_addr_ax25dev(), which will cause memory leak.
 
-While at it, add missing default in another switch-case.
+In order to fix the above issue, only increase the reference
+counting of ax25_dev once, when the res is not null.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: d01ffb9eee4a ("ax25: add refcount in ax25_dev to avoid UAF bugs")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
 ---
- drivers/tty/serial/8250/8250_exar.c | 80 +++++++++++------------------
- 1 file changed, 29 insertions(+), 51 deletions(-)
+ net/ax25/ax25_dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-index 1f04d4562878..51f6af16c557 100644
---- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -627,6 +627,8 @@ pci_fastcom335_setup(struct exar8250 *priv, struct pci_dev *pcidev,
- 		writeb(0xc0, p + UART_EXAR_MPIOINV_7_0);
- 		writeb(0xc0, p + UART_EXAR_MPIOSEL_7_0);
- 		break;
-+	default:
-+		break;
- 	}
- 	writeb(0x00, p + UART_EXAR_MPIOINT_7_0);
- 	writeb(0x00, p + UART_EXAR_MPIO3T_7_0);
-@@ -723,8 +725,6 @@ static enum cti_port_type cti_get_port_type_xr17c15x_xr17v25x(struct exar8250 *p
- 							struct pci_dev *pcidev,
- 							unsigned int port_num)
- {
--	enum cti_port_type port_type;
--
- 	switch (pcidev->subsystem_device) {
- 	// RS232 only cards
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_232:
-@@ -734,24 +734,17 @@ static enum cti_port_type cti_get_port_type_xr17c15x_xr17v25x(struct exar8250 *p
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_232_NS:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232_NS:
--		port_type = CTI_PORT_TYPE_RS232;
--		break;
-+		return CTI_PORT_TYPE_RS232;
- 	// 1x RS232, 1x RS422/RS485
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_1_1:
--		port_type = (port_num == 0) ?
--			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
--		break;
-+		return (port_num == 0) ? CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
- 	// 2x RS232, 2x RS422/RS485
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_2:
--		port_type = (port_num < 2) ?
--			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
--		break;
-+		return (port_num < 2) ? CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
- 	// 4x RS232, 4x RS422/RS485
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_SP:
--		port_type = (port_num < 4) ?
--			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
--		break;
-+		return (port_num < 4) ? CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
- 	// RS232/RS422/RS485 HW (jumper) selectable
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4:
-@@ -774,32 +767,24 @@ static enum cti_port_type cti_get_port_type_xr17c15x_xr17v25x(struct exar8250 *p
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XP_OPTO:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_XPRS_OPTO:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP:
--		port_type = CTI_PORT_TYPE_RS232_422_485_HW;
--		break;
-+		return CTI_PORT_TYPE_RS232_422_485_HW;
- 	// RS422/RS485 HW (jumper) selectable
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_485:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_485:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_485:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_485:
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_485:
--		port_type = CTI_PORT_TYPE_RS422_485;
--		break;
-+		return CTI_PORT_TYPE_RS422_485;
- 	// 6x RS232, 2x RS422/RS485
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_6_2_SP:
--		port_type = (port_num < 6) ?
--			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
--		break;
-+		return (port_num < 6) ? CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
- 	// 2x RS232, 6x RS422/RS485
- 	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_6_SP:
--		port_type = (port_num < 2) ?
--			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
--		break;
-+		return (port_num < 2) ? CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
- 	default:
- 		dev_err(&pcidev->dev, "unknown/unsupported device\n");
--		port_type = CTI_PORT_TYPE_NONE;
-+		return CTI_PORT_TYPE_NONE;
- 	}
--
--	return port_type;
- }
- 
- /**
-@@ -816,20 +801,15 @@ static enum cti_port_type cti_get_port_type_fpga(struct exar8250 *priv,
- 						struct pci_dev *pcidev,
- 						unsigned int port_num)
- {
--	enum cti_port_type port_type;
--
- 	switch (pcidev->device) {
- 	case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG00X:
- 	case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG01X:
- 	case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_16:
--		port_type = CTI_PORT_TYPE_RS232_422_485_HW;
--		break;
-+		return CTI_PORT_TYPE_RS232_422_485_HW;
- 	default:
- 		dev_err(&pcidev->dev, "unknown/unsupported device\n");
- 		return CTI_PORT_TYPE_NONE;
- 	}
--
--	return port_type;
- }
- 
- /**
-@@ -1493,35 +1473,33 @@ static irqreturn_t exar_misc_handler(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
--static unsigned int exar_get_nr_ports(struct exar8250_board *board,
--					struct pci_dev *pcidev)
-+static unsigned int exar_get_nr_ports(struct exar8250_board *board, struct pci_dev *pcidev)
- {
--	unsigned int nr_ports = 0;
-+	if (pcidev->vendor == PCI_VENDOR_ID_ACCESSIO)
-+		return BIT(((pcidev->device & 0x38) >> 3) - 1);
- 
--	if (pcidev->vendor == PCI_VENDOR_ID_ACCESSIO) {
--		nr_ports = BIT(((pcidev->device & 0x38) >> 3) - 1);
--	} else if (board->num_ports > 0) {
--		// Check if board struct overrides number of ports
--		nr_ports = board->num_ports;
--	} else if (pcidev->vendor == PCI_VENDOR_ID_EXAR) {
--		// Exar encodes # ports in last nibble of PCI Device ID ex. 0358
--		nr_ports = pcidev->device & 0x0f;
--	} else  if (pcidev->vendor == PCI_VENDOR_ID_CONNECT_TECH) {
--		// Handle CTI FPGA cards
-+	// Check if board struct overrides number of ports
-+	if (board->num_ports > 0)
-+		return board->num_ports;
-+
-+	// Exar encodes # ports in last nibble of PCI Device ID ex. 0358
-+	if (pcidev->vendor == PCI_VENDOR_ID_EXAR)
-+		return pcidev->device & 0x0f;
-+
-+	// Handle CTI FPGA cards
-+	if (pcidev->vendor == PCI_VENDOR_ID_CONNECT_TECH) {
- 		switch (pcidev->device) {
- 		case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG00X:
- 		case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG01X:
--			nr_ports = 12;
--			break;
-+			return 12;
- 		case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_16:
--			nr_ports = 16;
--			break;
-+			return 16;
- 		default:
--			break;
-+			return 0;
+diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
+index 07723095c60..945af92a7b6 100644
+--- a/net/ax25/ax25_dev.c
++++ b/net/ax25/ax25_dev.c
+@@ -37,8 +37,9 @@ ax25_dev *ax25_addr_ax25dev(ax25_address *addr)
+ 	for (ax25_dev = ax25_dev_list; ax25_dev != NULL; ax25_dev = ax25_dev->next)
+ 		if (ax25cmp(addr, (const ax25_address *)ax25_dev->dev->dev_addr) == 0) {
+ 			res = ax25_dev;
+-			ax25_dev_hold(ax25_dev);
  		}
- 	}
++	if (res)
++		ax25_dev_hold(ax25_dev);
+ 	spin_unlock_bh(&ax25_dev_lock);
  
--	return nr_ports;
-+	return 0;
- }
- 
- static int
+ 	return res;
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.17.1
 
