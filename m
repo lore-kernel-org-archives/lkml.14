@@ -1,292 +1,146 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E8755C2A;
-	Thu,  2 May 2024 09:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A845953362
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 09:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714641053; cv=none; b=uu3pAiEYUD1B6H39CmA5KBG20NsiBazohZUZdocjHxDA6U5xI63OCWWW2BCs+nHycrQZI6X/eXHPQuK2AH+oI8eobv7NJaMu1/ys+W1ZfhKLnpW1RDFWl1zs+nopOoH+X5BlimFMx0BImjAN59AyP1j9gFBa0IG6Qww7tEqkY9k=
+	t=1714641126; cv=none; b=mo5eI9QSUpcIYqbGNGMSSqO5df9LK9FXbudS8QhZFdJoFNU6W3ymvjGzlIR2RAROXbsCx2Szyz8p5eSzqsWiYQOsTzI56jt6ABtvk6KK9qCDJn0DN07vj3bfnd/iqbWRJHflbL7UpfhFfYg0Xmm8BqSfguhoZ97E7wiQ5gyqKRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714641053; c=relaxed/simple;
-	bh=NbSwkCB185nI3eTg5sxgZWTeysIpxJc7+qjeNnuKNHc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GM1PFu0imXmmAkYpepqDJRV0cdPybwAQvwwWQpYEOzpKVWPzgfNE2Vg9thptxWMLb3NsguKha+/TbJD5MbjL3xMt1tt1LiWHp8LMF51YIEGClwrfzCzYzl9ABsrioKue2JAza/njHWO7rM6shnF2QYKpNJNymW4+9iNqBBxoIjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iKW2iQT+; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1714641126; c=relaxed/simple;
+	bh=QQDvn6Q8TkCbmjMUDI4cHKI+ospj5DHXLnkdPbN4GLU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EyRxbi0ww6iSGsMt0P7VytkUruBsyyb8em4ooP+vKThnmk+sy4Q4cSJJsroZgtAgsFkt/NEfqEVrE85QskAN9H2C1v6buVYxIH5BgpLHWfXxNmrtXkdObvtfCF9hHg37s8B5dFix6nqWNEl32bm032/X4LjpdbX021mpYrcn/ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Hl9WobmC; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iKW2iQT+"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4429Afpk120795;
-	Thu, 2 May 2024 04:10:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1714641041;
-	bh=kYXDB+R2gtFLvDZr/KPh+wZWmTqWjtCzNhI0OzYNovI=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=iKW2iQT+Nk3ratVtPepsf/g0j9D7zqUukj2Do+EDB6EhHtEgU78ChNkNsJz2WQhK2
-	 QP+LaT62gWwnWBnp22milyya1GO44jaVhG0tAToLdVCcqUi/apkvPOsU7hC5lS5wq5
-	 yNoawFIMceuIaiFGWJr+NxPsyrZaTb/zAjQITMUI=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4429AfBv113500
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 2 May 2024 04:10:41 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 2
- May 2024 04:10:41 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 2 May 2024 04:10:41 -0500
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4429AeSP007726;
-	Thu, 2 May 2024 04:10:40 -0500
-From: Chintan Vankar <c-vankar@ti.com>
-To: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon
-	<nm@ti.com>,
-        <s-vadapalli@ti.com>, <danishanwar@ti.com>, <r-gunasekaran@ti.com>,
-        <srk@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Chintan Vankar <c-vankar@ti.com>
-Subject: [PATCH v7 4/5] arm64: dts: ti: k3-j784s4: Add overlay to enable QSGMII mode with CPSW9G
-Date: Thu, 2 May 2024 14:40:01 +0530
-Message-ID: <20240502091002.3659435-5-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240502091002.3659435-1-c-vankar@ti.com>
-References: <20240502091002.3659435-1-c-vankar@ti.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Hl9WobmC"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a58772187d8so898233566b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 02:12:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1714641123; x=1715245923; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XKBISEz5hivbFgsL9sOrWIy+M0J+RrEQV3Dl9y05i9U=;
+        b=Hl9WobmCJjmT63XPi8Rvic4HP5QhuB+fDVcGezn8lySClSevvmwl4pm1uz0CXYhdzg
+         gnYheJ2ua+kxAngBZOqyXsPXxqmMtNbX9ND9IsR09C3Od4WTzQNCN4v5HhgNDPMYdh/2
+         CWCVH/tvbsk6Am86OEhXcsiZkVRHemNPg6Fgbz4Z5p0jy1flwof4Py1B2ic35vnKbl5q
+         RRVTUz4cDXlG957Cta+czzr8h9Uodw0AAvTdlZbCciuod3BqoQ8URap7rYgutkBm+A7u
+         GRQeH6H3ieW3j7L1ZPiHsi5R+oZkEk3XoD7kyMIk/AARjoeRMHWUnmZENU7E7BsFHEjR
+         uatQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714641123; x=1715245923;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XKBISEz5hivbFgsL9sOrWIy+M0J+RrEQV3Dl9y05i9U=;
+        b=UO5wNGdhJGuwzor4IdrV14d3aOqx/Xs64Zms8QUAXcBLLyrc+LadpEQD7sqMuZTO2f
+         oyeIsj8TE4NutnZ28/1S/0dNiywfMqkIapDL/edvdVzYF+c6WvE6K1PBKCR3fmaK65fl
+         mcttxNJtRChY7aiHbqiP3+3y4OGfpQJhK7ceSTBOTWlM/lfVXt9BlxObQS0Zz147bhmn
+         8OXSOO3ShzAPYmdXUuCRtRELELERQEOUXBCJk/Hfsi3osopkAeETQfTnT1iQqhgzl/5h
+         S0yxQJIwuH6Syftv5Kyz8Ygutyu6LKSe/eaWolgJCpvOyxEudB4DFRgpJE5hhqsyxA9R
+         Pkgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUae7b6KVEO9hZlj7OG/BZsGi0exYbFrff/jubRfWeQBTWHWAYBj26PX23YIfEtPZtnhUfWgpAlAu5w6s8u+9m9h5zxNa+9sDBN6/ep
+X-Gm-Message-State: AOJu0YyixSgeDhdZbEsGz3HD4um2sN33OqGuxKSr6zhJnkoYcpt6HPtY
+	gDAfOUh3NvgTVqvipRgpWXwANh46dOQ1BUxXkpbjHzSbzKo/c/w5q4vjMm11wOA=
+X-Google-Smtp-Source: AGHT+IHQ6L475JtRROpjybMx/lyDKdF98v0PWXkxGP7wEay+2VSkVed/s8BZXiNF9X43dqxWFA0H2w==
+X-Received: by 2002:a17:906:79c3:b0:a58:9707:685b with SMTP id m3-20020a17090679c300b00a589707685bmr1128611ejo.16.1714641122948;
+        Thu, 02 May 2024 02:12:02 -0700 (PDT)
+Received: from localhost (host-87-1-234-99.retail.telecomitalia.it. [87.1.234.99])
+        by smtp.gmail.com with ESMTPSA id p22-20020a1709060e9600b00a5887833da8sm315074ejf.81.2024.05.02.02.12.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 02:12:02 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 2 May 2024 11:12:06 +0200
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kamal Dasu <kamal.dasu@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>, linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Phil Elwell <phil@raspberrypi.com>
+Subject: Re: [PATCH 0/6] Add support for BCM2712 SD card controller
+Message-ID: <ZjNY5qY4ABOB3lv2@apocalypse>
+Mail-Followup-To: Stefan Wahren <wahrenst@gmx.net>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kamal Dasu <kamal.dasu@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>, linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Phil Elwell <phil@raspberrypi.com>
+References: <cover.1713036964.git.andrea.porta@suse.com>
+ <fd77cfa2-9bd8-4393-95bd-eced676bf6d2@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd77cfa2-9bd8-4393-95bd-eced676bf6d2@gmx.net>
 
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
+On 12:07 Sun 14 Apr     , Stefan Wahren wrote:
+> Hi Andrea,
+> 
+> Am 14.04.24 um 00:14 schrieb Andrea della Porta:
+> > Hi,
+> > 
+> > This patchset adds support for the SDHCI controller on Broadcom BCM2712
+> > SoC in order to make it possible to boot (particularly) Raspberry Pi 5
+> > from SD card. This work is heavily based on downstream contributions.
+> since your goal is minimal Raspberry Pi 5 support, i suggest to use this
+> as the subject for this patch.
+> > Patch #1 and 2: introduce the dt binding definitions for, respectively,
+> > the new pin cfg/mux controller and the SD host controller as a preparatory
+> > step for the upcoming dts.
+> > 
+> > Patch #3: add a somewhat reasonable (*almost* bare-minimum) dts to be used
+> > to boot Rpi5 boards. Since till now there was no support at all for any
+> > 2712 based chipset, both the SoC and board dts plus definitions for the
+> > new Pin and SD host controller have been added.
+> The patch still seems to contain a lot unnecessary stuff (Wifi, BT,
+> SPI), please try to remove as much as possible for the minimal support
+> (just boot via debug UART & SD card) in order to make review easier. Btw
+> this patch must be after pinctrl & SDHCI support.
+> > Patch #4: the driver supporting the pin controller. Based on [1] and
+> > successive fix commits.
+> > 
+> > Patch #5: add SDHCI support. Based on [2] and the next 2 fix commits.
+> > Drop the SD Express implementation for now, that will be added by patch
+> > #6.
+> > 
+> > Patch #6: this patch offers SD Express support and can be considered totally
+> > optional. The callback plumbing is slightly different w.r.t. the downstream
+> > approach (see [3]), as explained in the patch comment. Not sure what is the best,
+> > any comment is highly appreciated.
+> I don't think this should be necessary for minimal Raspberry Pi 5
+> support. Maybe this should be addressed later.
 
-The J7 Quad Port Add-On Ethernet Card for J784S4 EVM supports
-QSGMII mode. Use the overlay to configure CPSW9G ports in QSGMII
-mode with the Add-On Ethernet Card connected to the ENET Expansion
-1 slot on the EVM.
+Thanks for all the feedback. Just a quick note to let you know that
+I'm working on V2 patchset that will fix all coding-style and dts/binding
+issues. The new patchset will be significantly smaller and I managed
+to remove everything that is not strictly needed in order to be able to
+boot an rpi5 from sd card.
 
-Add support to reset the PHY from kernel by using gpio-hog and
-gpio-reset.
-
-Add aliases for CPSW9G ports to enable kernel to fetch MAC Addresses
-directly from U-Boot.
-
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
----
-
-Link to v6:
-https://lore.kernel.org/r/20240329053130.2822129-5-c-vankar@ti.com/
-
-Changes from v6 to v7:
-- No changes.
-
- arch/arm64/boot/dts/ti/Makefile               |   7 +-
- .../ti/k3-j784s4-evm-quad-port-eth-exp1.dtso  | 147 ++++++++++++++++++
- 2 files changed, 153 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
-
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 2c327cc320cf..bb3ca0d17788 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -101,6 +101,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
- # Boards with J784s4 SoC
- dtb-$(CONFIG_ARCH_K3) += k3-am69-sk.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
-+dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-quad-port-eth-exp1.dtbo
- 
- # Build time test only, enabled by CONFIG_OF_ALL_DTBS
- k3-am625-beagleplay-csi2-ov5640-dtbs := k3-am625-beagleplay.dtb \
-@@ -148,6 +149,8 @@ k3-j721e-sk-csi2-dual-imx219-dtbs := k3-j721e-sk.dtb \
- 	k3-j721e-sk-csi2-dual-imx219.dtbo
- k3-j721s2-evm-pcie1-ep-dtbs := k3-j721s2-common-proc-board.dtb \
- 	k3-j721s2-evm-pcie1-ep.dtbo
-+k3-j784s4-evm-quad-port-eth-exp1-dtbs := k3-j784s4-evm.dtb \
-+	k3-j784s4-evm-quad-port-eth-exp1.dtbo
- dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
- 	k3-am625-beagleplay-csi2-tevi-ov5640.dtb \
- 	k3-am625-sk-csi2-imx219.dtb \
-@@ -168,7 +171,8 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
- 	k3-am69-sk-csi2-dual-imx219.dtb \
- 	k3-j721e-evm-pcie0-ep.dtb \
- 	k3-j721e-sk-csi2-dual-imx219.dtb \
--	k3-j721s2-evm-pcie1-ep.dtb
-+	k3-j721s2-evm-pcie1-ep.dtb \
-+	k3-j784s4-evm-quad-port-eth-exp1.dtb
- 
- # Enable support for device-tree overlays
- DTC_FLAGS_k3-am625-beagleplay += -@
-@@ -186,3 +190,4 @@ DTC_FLAGS_k3-am69-sk += -@
- DTC_FLAGS_k3-j721e-common-proc-board += -@
- DTC_FLAGS_k3-j721e-sk += -@
- DTC_FLAGS_k3-j721s2-common-proc-board += -@
-+DTC_FLAGS_k3-j784s4-evm += -@
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso b/arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
-new file mode 100644
-index 000000000000..dcd2c7c39ec3
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
-@@ -0,0 +1,147 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
-+/**
-+ * DT Overlay for CPSW9G in QSGMII mode using J7 Quad Port ETH EXP Add-On Ethernet Card with
-+ * J784S4 EVM. The Add-On Ethernet Card has to be connected to ENET Expansion 1 slot on the
-+ * board.
-+ *
-+ * Product Datasheet: https://www.ti.com/lit/ug/spruj74/spruj74.pdf
-+ *
-+ * Link to QSGMII Daughtercard: https://www.ti.com/tool/J721EXENETXPANEVM
-+ *
-+ * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/phy/phy-cadence.h>
-+#include <dt-bindings/phy/phy.h>
-+
-+#include "k3-pinctrl.h"
-+#include "k3-serdes.h"
-+
-+&{/} {
-+	aliases {
-+		ethernet1 = "/bus@100000/ethernet@c000000/ethernet-ports/port@5";
-+		ethernet2 = "/bus@100000/ethernet@c000000/ethernet-ports/port@6";
-+		ethernet3 = "/bus@100000/ethernet@c000000/ethernet-ports/port@7";
-+		ethernet4 = "/bus@100000/ethernet@c000000/ethernet-ports/port@8";
-+		ethernet5 = "/bus@100000/ethernet@c200000/ethernet-ports/port@1";
-+	};
-+};
-+
-+&main_cpsw0 {
-+	status = "okay";
-+};
-+
-+&main_cpsw0_port5 {
-+	phy-handle = <&cpsw9g_phy1>;
-+	phy-mode = "qsgmii";
-+	mac-address = [00 00 00 00 00 00];
-+	phys = <&cpsw0_phy_gmii_sel 5>, <&serdes2_qsgmii_link>;
-+	phy-names = "mac", "serdes";
-+	status = "okay";
-+};
-+
-+&main_cpsw0_port6 {
-+	phy-handle = <&cpsw9g_phy2>;
-+	phy-mode = "qsgmii";
-+	mac-address = [00 00 00 00 00 00];
-+	phys = <&cpsw0_phy_gmii_sel 6>, <&serdes2_qsgmii_link>;
-+	phy-names = "mac", "serdes";
-+	status = "okay";
-+};
-+
-+&main_cpsw0_port7 {
-+	phy-handle = <&cpsw9g_phy0>;
-+	phy-mode = "qsgmii";
-+	mac-address = [00 00 00 00 00 00];
-+	phys = <&cpsw0_phy_gmii_sel 7>, <&serdes2_qsgmii_link>;
-+	phy-names = "mac", "serdes";
-+	status = "okay";
-+};
-+
-+&main_cpsw0_port8 {
-+	phy-handle = <&cpsw9g_phy3>;
-+	phy-mode = "qsgmii";
-+	mac-address = [00 00 00 00 00 00];
-+	phys = <&cpsw0_phy_gmii_sel 8>, <&serdes2_qsgmii_link>;
-+	phy-names = "mac", "serdes";
-+	status = "okay";
-+};
-+
-+&main_cpsw0_mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mdio0_default_pins>;
-+	bus_freq = <1000000>;
-+	reset-gpios = <&exp2 17 GPIO_ACTIVE_LOW>;
-+	reset-post-delay-us = <120000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	cpsw9g_phy0: ethernet-phy@16 {
-+		reg = <16>;
-+	};
-+	cpsw9g_phy1: ethernet-phy@17 {
-+		reg = <17>;
-+	};
-+	cpsw9g_phy2: ethernet-phy@18 {
-+		reg = <18>;
-+	};
-+	cpsw9g_phy3: ethernet-phy@19 {
-+		reg = <19>;
-+	};
-+};
-+
-+&exp2 {
-+	/* Power-up ENET1 EXPANDER PHY. */
-+	qsgmii-line-hog {
-+		gpio-hog;
-+		gpios = <16 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+	};
-+
-+	/* Toggle MUX2 for MDIO lines */
-+	mux-sel-hog {
-+		gpio-hog;
-+		gpios = <13 GPIO_ACTIVE_HIGH>, <14 GPIO_ACTIVE_HIGH>, <15 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+	};
-+};
-+
-+&main_pmx0 {
-+	mdio0_default_pins: mdio0-default-pins {
-+		pinctrl-single,pins = <
-+			J784S4_IOPAD(0x05c, PIN_INPUT, 4) /* (AC36) MCASP2_AXR0.MDIO1_MDIO */
-+			J784S4_IOPAD(0x058, PIN_INPUT, 4) /* (AE37) MCASP2_AFSX.MDIO1_MDC */
-+		>;
-+	};
-+};
-+
-+&serdes_ln_ctrl {
-+	idle-states = <J784S4_SERDES0_LANE0_PCIE1_LANE0>, <J784S4_SERDES0_LANE1_PCIE1_LANE1>,
-+		      <J784S4_SERDES0_LANE2_IP3_UNUSED>, <J784S4_SERDES0_LANE3_USB>,
-+		      <J784S4_SERDES1_LANE0_PCIE0_LANE0>, <J784S4_SERDES1_LANE1_PCIE0_LANE1>,
-+		      <J784S4_SERDES1_LANE2_PCIE0_LANE2>, <J784S4_SERDES1_LANE3_PCIE0_LANE3>,
-+		      <J784S4_SERDES2_LANE0_QSGMII_LANE5>, <J784S4_SERDES2_LANE1_QSGMII_LANE6>,
-+		      <J784S4_SERDES2_LANE2_QSGMII_LANE7>, <J784S4_SERDES2_LANE3_QSGMII_LANE8>;
-+};
-+
-+&serdes_wiz2 {
-+	status = "okay";
-+};
-+
-+&serdes2 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+	serdes2_qsgmii_link: phy@0 {
-+		reg = <2>;
-+		cdns,num-lanes = <1>;
-+		#phy-cells = <0>;
-+		cdns,phy-type = <PHY_TYPE_QSGMII>;
-+		resets = <&serdes_wiz2 3>;
-+	};
-+};
--- 
-2.34.1
-
+Best regards,
+Andrea
