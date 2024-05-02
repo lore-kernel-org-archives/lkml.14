@@ -1,102 +1,152 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1760516D4FD
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 20:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4BC180A96;
+	Thu,  2 May 2024 20:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714680340; cv=none; b=n9N2KmYwTGGV6JoXu+tH6M8kuPu65DUDmePD9iOpI2O3wEpyHcq/drhrnM8ff5X2XwnY1C7vGjpCQlHrplY7DOD0zqASZT3q2fyjOi9PA6FKTpqY4vD726kfDie1Nr5WIXkwvZx5aoWrazfPBShrX4pYHkAgDL/aMzOQzQgwmDA=
+	t=1714680350; cv=none; b=MiLpCfsMNPwEfCgqCyMvWjQWAof+bvYO/DA0YXHYcFX3iVBl6BzUJd+R116ZRxKlnThSbQgOa+40BV3K3NvisQIrcNfTIJFi9qEusrieFz9esezicn7+4nj6oqnbY3ayXTYiEj+guv32EPS6sVc7xrQsVFF05WRPjDWsOrU9RS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714680340; c=relaxed/simple;
-	bh=rb3+3axq0ArHOeglMNGwwoYuWnEKwIZF6CyAIDiHpsk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fBqN3mlWG18/89GZaQYkiBQ29s2IPTl/DlKEXQTXbrSJg+qT5Udg2woqkZ7uBFL6tcdq0OVRAo256c/EK2qsiN0WV9liI4XiKH045HE3dGjk7/kaB6EasPc1sriiun7psHi+XDTeOYNIrYXyJxtxDDXvi+J4owZJhuje+2wnQpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iUYwu7iU; arc=none smtp.client-ip=209.85.219.50
+	s=arc-20240116; t=1714680350; c=relaxed/simple;
+	bh=vhlNDUeZIeAKCiYPSLEh2Ii826G2fhUv3y2XiGVPsiw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CL3C5zHw37K7F6osnkr9ysAUVtA/CfN9hRHS11g4NH1Yrrl4VwcTJJXbIF90Og2xXxdtKNDg4n/TnYGjeTEKxpFb7EQE13pov0XzHB726WPXPXLvU5OPI3peRP9mCJ3L7nOvVm4SIsMz1LV/xly+WAHowbFmMZJcVKtEkfcC12c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cTzvj6Jb; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iUYwu7iU"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6a071595d22so43461866d6.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 13:05:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTzvj6Jb"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41b5e74fa83so56730535e9.0;
+        Thu, 02 May 2024 13:05:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714680338; x=1715285138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z0eeA2c+auK+aXg6KNPwfi/nf0ZrssrhFecJaWxdXRI=;
-        b=iUYwu7iUWCQIcpW98Yk2RaKbDEnxRIJSFYo8EeCVl+L032Pgkts/XEa+xa0H+L6HVf
-         o9riO75w/oMw6dssEAFMpEVEhjDqIDp938i9WIr99anlQysWHrox67KD/5lNSYRa/iCX
-         XUW+g+KCSzdnW0oeZlVHUBv0QtDqdaQMPDjVm18hoeiVMPkt8KoK6r2dWuPO7ll060h+
-         8uipbc8YOwv9URYukPQWN03nxBRQLHDPfUR9pX7vN1qHB4PBU5G6VRSRo1sSfzj7zvaJ
-         nAuvkwOrhhqtil+OuVVHDcsVtSz65NyqImDEBxrfLnM12sG+gooF5EgNpGg+MLYMJ8we
-         eLbw==
+        d=gmail.com; s=20230601; t=1714680347; x=1715285147; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CaQbQJW7qpDa3J1bLEylpyUDiUE+NN+Elta1I7Et/qA=;
+        b=cTzvj6Jb8EMyXW7U5K2cDvdJ5HHNBJxoFYPdYZuYxPpKD1lQ7xnNfPV93/j1hDUeJm
+         8MPtiFSGrNujEtHzpKD6ojJSxnHX7dJjhiTWgknqrIHlZnhoJE6umsJIkd5iwpDLk+wG
+         7hydxfieTx2DPFtCRAjjdmrngkcD4tA186PVoor5bGIC/FOpmiewLN0UiLoEi/+F7mvi
+         351mQgT3XzcKULWY/p5sjrRPGSEVx5MLfmUjOxjQZP/fm2jpjPSeT8n63HmJmUcFQl7Q
+         2B2bbG79poDBGA8CWhPWFhmw/OWv1wokBJQIB0MSgm/2yzRnzAgzBnhMW6Fssk9K/t7e
+         eafA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714680338; x=1715285138;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z0eeA2c+auK+aXg6KNPwfi/nf0ZrssrhFecJaWxdXRI=;
-        b=O4Vt2hmnx+Xpyt55ATc9Ly/hm1HgfQWmpT+VPDczZUhbfCB8sU3mGad9syCMnu6h03
-         5qQFfqu55IQg4PnNPiXrBZMdd/Yi8R44nvI9MLQHqF4ISiDfB1px0F9Ixwevl0bc63zA
-         EkavQN/bcLD60ISx8veAyZfk2m8o66FbY2qOjzlFpzVSdVsiaIMZOM99EZCFM7TEFB/0
-         33ZHEEu+gYS9BLAoYHaRLoaRczQJqg5+TlMRZ7pK1V0+FZeS6p4AQ9IvGKLE/Hak1l/V
-         55p7gtpevTP+nPxVFRYy6NLR/RlF914fzcHwFgSFSgpW4xDBIOfBTeJTJoK6ovtWlgV9
-         IFBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUx8pUpSbHK+7mp9FzJNNZOk4ghTteb/hpnJDYKGM5cyfJhy42EIgnhecg8oHelogQapn3Qdz/n8oF0ME+jOk+leylIbxAuWD9QoXAo
-X-Gm-Message-State: AOJu0Yz/bTTYsBQHMUQYjaHmHCxllJvSUdlQpkpr0k+zf8cSMHNG6roK
-	5UZmkGb87BzIqy0FBujL4pLMfYckmymONvpxzNUy4L9HzzIkMKQaN2bwaHj47YQ=
-X-Google-Smtp-Source: AGHT+IFY5Wmec7sa66rtCOXZWmpu3PizaWiuVwSFDLKvzTxUxEN66BYBbtpvyXv9GihvbdS5ijwZQw==
-X-Received: by 2002:a05:6214:1d2e:b0:6a0:95a5:cf01 with SMTP id f14-20020a0562141d2e00b006a095a5cf01mr835602qvd.19.1714680337871;
-        Thu, 02 May 2024 13:05:37 -0700 (PDT)
-Received: from localhost (fwdproxy-nao-013.fbsv.net. [2a03:2880:23ff:d::face:b00c])
-        by smtp.gmail.com with ESMTPSA id j11-20020a0ceb0b000000b006a0dd5ad71bsm612471qvp.12.2024.05.02.13.05.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 13:05:37 -0700 (PDT)
-From: Usama Arif <usamaarif642@gmail.com>
-To: akpm@linux-foundation.org
-Cc: hannes@cmpxchg.org,
-	yosryahmed@google.com,
-	nphamcs@gmail.com,
-	chengming.zhou@linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	Usama Arif <usamaarif642@gmail.com>
-Subject: [PATCH v2 1/1] selftests: cgroup: remove redundant addition of memory controller
-Date: Thu,  2 May 2024 21:04:26 +0100
-Message-ID: <20240502200529.4193651-2-usamaarif642@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240502200529.4193651-1-usamaarif642@gmail.com>
-References: <20240502200529.4193651-1-usamaarif642@gmail.com>
+        d=1e100.net; s=20230601; t=1714680347; x=1715285147;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CaQbQJW7qpDa3J1bLEylpyUDiUE+NN+Elta1I7Et/qA=;
+        b=WJWx0WNfVV6xiOHUrXWzGiQCJcbIrSUqzJLZomnS+fAswYjIXm5pECCam8CCLIwcx9
+         nec1B4mzds3xCBD9rmnKAAOmN8CflxZ2RkIOQDcbxprfBEg034527adIl+SYLdS5t4n+
+         mY9Rs6HwkaWuNRzO9F3RYdhrhTETj+12b22J+byt5eGL/JFP0fl3vzSSeKYuhn9z+olR
+         o/og/o+ir5BsozyYIPCz+AiZwJnVO/NlSgKdl1M8iAhFQapcnNImKhv73WTYMxW40Jzh
+         4pZMTz5HS5JsfZ/xtYtQiFdiwpgtn5swzwmImTkTcPzycBzZV7K9kFboi3iwPZG2EiMY
+         oLlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWosNMBT03PERQWJWPLqR/n/DPN/oi1JPpwenS8zx8P5OKZtrMK9mHkXfEtg/eEh4ZgR6CaJjuTpLweeOm427KED02ArwG/MJwGuHJuXWXznkGseNYlgoL0xaOsuREAMazlEBYFqaeVtPbWuwwqCoi9OwzQhXhLt7AY6OAC5ntJlxXIC7Q1usKJCTm3nbAd
+X-Gm-Message-State: AOJu0YxzAkoNBtiEKjLkIgP9ayw6fDnfXy7q25CmsnC17G3PbRJOJxoh
+	4IV5lsdjrPONi/ZvPAwdxrud0IQGPcG7mkwJ2vKkkgQVVkdKyfe9
+X-Google-Smtp-Source: AGHT+IERDdLSkd1KZypnKYe4Ok4q7bdJEXZCW/hz4GNoQecQXu9dDSHxZ/8mcrQyyvAGsgBB2HwrcA==
+X-Received: by 2002:a05:600c:4691:b0:41a:141c:e15a with SMTP id p17-20020a05600c469100b0041a141ce15amr590276wmo.16.1714680347215;
+        Thu, 02 May 2024 13:05:47 -0700 (PDT)
+Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id r12-20020a05600c458c00b0041bfa2171efsm3010935wmo.40.2024.05.02.13.05.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 May 2024 13:05:44 -0700 (PDT)
+Message-ID: <b7d97b2b-8b13-4a02-9235-46ed418c3d81@gmail.com>
+Date: Thu, 2 May 2024 22:05:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] hwmon: surface_temp: Add support for sensor names
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, Ivor Wanders <ivor@iwanders.net>,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20240330112409.3402943-1-luzmaximilian@gmail.com>
+ <20240330112409.3402943-3-luzmaximilian@gmail.com>
+ <43908511-198f-42ee-af21-dad79bdf799a@roeck-us.net>
+ <97d0f68f-63da-4f72-ae8d-89fbf9aadf62@gmail.com>
+ <8d62af9d-281a-44c0-a40c-93ae76827705@roeck-us.net>
+Content-Language: en-US
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <8d62af9d-281a-44c0-a40c-93ae76827705@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Memory controller is already added in main which invokes
-the test, hence this does not need to be done in test_no_kmem_bypass.
+Hi,
 
-Signed-off-by: Usama Arif <usamaarif642@gmail.com>
----
- tools/testing/selftests/cgroup/test_zswap.c | 2 --
- 1 file changed, 2 deletions(-)
+On 4/16/24 11:08 PM, Guenter Roeck wrote:
+> On Tue, Apr 16, 2024 at 09:00:05PM +0200, Maximilian Luz wrote:
+>> On 4/16/24 3:30 PM, Guenter Roeck wrote:
+>>> On Sat, Mar 30, 2024 at 12:24:01PM +0100, Maximilian Luz wrote:
+>>
+>> [...]
+>>
+>>>> +static int ssam_tmp_get_name(struct ssam_device *sdev, u8 iid, char *buf, size_t buf_len)
+>>>> +{
+>>>> +	struct ssam_tmp_get_name_rsp name_rsp;
+>>>> +	int status;
+>>>> +
+>>>> +	status =  __ssam_tmp_get_name(sdev->ctrl, sdev->uid.target, iid, &name_rsp);
+>>>> +	if (status)
+>>>> +		return status;
+>>>> +
+>>>> +	/*
+>>>> +	 * This should not fail unless the name in the returned struct is not
+>>>> +	 * null-terminated or someone changed something in the struct
+>>>> +	 * definitions above, since our buffer and struct have the same
+>>>> +	 * capacity by design. So if this fails blow this up with a warning.
+>>>> +	 * Since the more likely cause is that the returned string isn't
+>>>> +	 * null-terminated, we might have received garbage (as opposed to just
+>>>> +	 * an incomplete string), so also fail the function.
+>>>> +	 */
+>>>> +	status = strscpy(buf, name_rsp.name, buf_len);
+>>>> +	WARN_ON(status < 0);
+>>>
+>>> Not acceptable. From include/asm-generic/bug.h:
+>>>
+>>>    * Do not use these macros when checking for invalid external inputs
+>>>    * (e.g. invalid system call arguments, or invalid data coming from
+>>>    * network/devices), and on transient conditions like ENOMEM or EAGAIN.
+>>>    * These macros should be used for recoverable kernel issues only.
+>>>
+>>
+>> Hmm, I always interpreted that as "do not use for checking user-defined
+>> input", which this is not.
+>>
+> 
+> "invalid data coming from network/devices" is not user-defined input.
+> 
+>> The reason I added/requested it here was to check for "bugs" in how we
+>> think the interface behaves (and our definitions related to it) as the
+>> interface was reverse-engineered. Generally, when this fails I expect
+>> that we made some mistake in our code (or the things we assume about the
+>> interface), which likely causes us to interpret the received data as
+>> "garbage" (and not the EC sending corrupted data, which it is generally
+>> not due to CRC checking and validation in the SAM driver). Hence, I
+>> personally would prefer if this blows up in a big warning with a trace
+>> attached to it, so that an end-user can easily report this to us and
+>> that we can appropriately deal with it. As opposed to some one-line
+>> error message that will likely get overlooked or not taken as seriously.
+>>
+> 
+> I have heard the "This backtrace is absolutely essential" argument before,
+> including the "will be fixed" part. Chromebooks report more than 500,000
+> warning backtraces _every single day_. None of them is getting fixed.
+> 
+>> If you still insist, I could change that to a dev_err() message. Or
+>> maybe make the comment a bit clearer.
+> 
+> dev_err() would be acceptable. WARN() or WARN_ON() are no-go.
 
-diff --git a/tools/testing/selftests/cgroup/test_zswap.c b/tools/testing/selftests/cgroup/test_zswap.c
-index cd864ab825d0..19ac29c533e0 100644
---- a/tools/testing/selftests/cgroup/test_zswap.c
-+++ b/tools/testing/selftests/cgroup/test_zswap.c
-@@ -485,8 +485,6 @@ static int test_no_kmem_bypass(const char *root)
- 	trigger_allocation_size = sys_info.totalram / 20;
- 
- 	/* Set up test memcg */
--	if (cg_write(root, "cgroup.subtree_control", "+memory"))
--		goto out;
- 	test_group = cg_name(root, "kmem_bypass_test");
- 	if (!test_group)
- 		goto out;
--- 
-2.43.0
+Sorry for the delayed response. I will change this to a dev_err() then
+and try to re-spin the patches this weekend.
 
+Best regards,
+Max
