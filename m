@@ -1,109 +1,102 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD24515E5B9
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6861553BB
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714667150; cv=none; b=Lpp1KMMK3OrW+Zcm6ThJAHSSiuqMO4bBL/Umy09t9lD2eVBWihvPLOYUrLtJpaA1sZ8Izd6hcTkzlWrDNh46zzXqD02VXrQQqxNL6gzHyuUJlOs8FQvMSG1jhpe0pfvtV5yjoFROkn6qHm3gFLi6pUQ3BOSu0c/Nqq42SeHhpZo=
+	t=1714667202; cv=none; b=LquU/ZivsyF0WBRBetTU1xLQkDLTNX5fHeShfRCfMyjc/vc+xZAXNf+OB05P8y1ieOf8C2AfX38dk1Zksz3ElCvc+MIITY1gXlmGZGqV0jy4b0njv3RMoA6XC8UaFnX0oar+qtK41Z02pZNBLZadZeh/iLocYDElsCcARpFs8DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714667150; c=relaxed/simple;
-	bh=4mXnxYuyE4V6VCm5aQCB1D/pwSjJB4SGdR59W7Y1ZUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=flVVu6vx3+BCGd4JR7x/eiqQOeIqDTA9AIf8okwTnZxqtfDNU4exvfqhHI8RjBqHubIogQHZ5KVtnj2X7bEJOLPBW44FYClTF+CjtgCwpc9srC+p9CD5pH43wLtkDFyaASdqPSKNoxCq3F0WQzPZQ9/GYzMhSeh5QA8be1EJin8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wqzXVd5D; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wqzXVd5D"
-Message-ID: <e1d01191-fd96-4b17-b223-7147eb427315@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714667146;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AN8xdb1IOqM8B6dtORjftXrgW+S1XF62ODJxIj/2mvU=;
-	b=wqzXVd5DEvBRvixSMLLlWTtSgq/brVCrTYO0CwcEoU1bIfI4P/0GTCj0EvcN++fFrUIftl
-	7BAWTBPa26LKnCFIkhmGZyYO6y6gRYlRJn60Tvdh57bRd5BfuKMYoAisAQiTmzmB9CHYs5
-	DWXBOs7fmzOqAPxiIFY5X8IPZVFl5+M=
-Date: Fri, 3 May 2024 00:25:17 +0800
+	s=arc-20240116; t=1714667202; c=relaxed/simple;
+	bh=U3YldxXJcGf7WG0ecgFb0yY6/sPYuvXH992nRZL34Aw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=oPlz9sfr/fb7Orlw0H9WPKqHkWZSzh2W1mfyYoGVGoOmCQYtBibpn12x2OupPfuO6pDZhx5dJ9Ad5tykFTFFN/i/NgXHYljhHjoALfEC0/HFnWMK/1z6/ilFB9O8PWxpTTzIW6aRk8ORlFT6XTiBW2Jmh+H1zQEhkOcVMyEPXD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-319-8JfQbD0yNe2epfzRFaAXmw-1; Thu, 02 May 2024 17:26:28 +0100
+X-MC-Unique: 8JfQbD0yNe2epfzRFaAXmw-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 2 May
+ 2024 17:25:58 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 2 May 2024 17:25:58 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Jules Irenge' <jbi.octave@gmail.com>, "mark.rutland@arm.com"
+	<mark.rutland@arm.com>
+CC: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>, "irogers@google.com"
+	<irogers@google.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
+	"hpa@zytor.com" <hpa@zytor.com>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+Thread-Topic: [PATCH] perf/x86/amd/power: Use div64_u64 onstead of do_div()
+Thread-Index: AQHamYq9w5OrjuroEEyWIm0jPSXs6bGEJ7/A
+Date: Thu, 2 May 2024 16:25:58 +0000
+Message-ID: <41180245c6e94a06b789cd44b8aebd62@AcuMS.aculab.com>
+References: <Zi57-TMgU19puaQM@octinomon.home>
+In-Reply-To: <Zi57-TMgU19puaQM@octinomon.home>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [v1,1/3] drm/panel: ili9341: Correct use of device property APIs
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
- Randy Dunlap <rdunlap@infradead.org>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-References: <20240425142706.2440113-2-andriy.shevchenko@linux.intel.com>
- <c2d41916-0b6c-43b5-98eb-514eb0511f84@linux.dev>
- <ce6a480d-80b3-46b0-a32d-26bc6480d02f@linux.dev>
- <ZiqrLfezhns4UycR@smile.fi.intel.com>
- <b5ffd984-4031-4a8a-adbc-75a1e1dfe765@linux.dev>
- <ZjD8eoO3TmuCUj-a@smile.fi.intel.com>
- <9e69b129-7539-4403-a621-bf3775aab995@linux.dev>
- <ZjNPiBvLF3WcBftn@smile.fi.intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <ZjNPiBvLF3WcBftn@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+From: Jules Irenge <jbi.octave@gmail.com>
+> Sent: 28 April 2024 17:40
+>=20
+> do_div() truncates a u64 divisor to 32 bit.
+> This can lead to non-zero being truncated to zero for division.
+>=20
+> Fix coccinelle warning
+> WARNING: do_div() does a 64-by-32 division, please consider using div64_u=
+64 instead
+>=20
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  arch/x86/events/amd/power.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/events/amd/power.c b/arch/x86/events/amd/power.c
+> index 37d5b380516e..ff003c1a645b 100644
+> --- a/arch/x86/events/amd/power.c
+> +++ b/arch/x86/events/amd/power.c
+> @@ -64,7 +64,7 @@ static void event_update(struct perf_event *event)
+>  =09delta *=3D cpu_pwr_sample_ratio * 1000;
+>  =09tdelta =3D new_ptsc - prev_ptsc;
+>=20
+> -=09do_div(delta, tdelta);
+> +=09div64_u64(delta, tdelta);
 
+Nak - you've not tested it.
 
-On 2024/5/2 16:32, Andy Shevchenko wrote:
-> On Wed, May 01, 2024 at 12:27:14AM +0800, Sui Jingfeng wrote:
->> On 2024/4/30 22:13, Andy Shevchenko wrote:
->>> On Fri, Apr 26, 2024 at 05:13:43AM +0800, Sui Jingfeng wrote:
-> ...
->
->>> the former might be subdivided to "is it swnode backed or real fwnode one?"
->>>
->> Yeah,
->> On non-DT cases, it can be subdivided to swnode backed case and ACPI fwnode backed case.
->>
->>   - For swnode backed case: the device_get_match_data() don't has a implemented backend.
->>   - For ACPI fwnode backed case: the device_get_match_data() has a implemented backend.
->>
->> But the driver has *neither* software node support
-> True.
->
->> nor ACPI support,
-> Not true.
+=09David
 
-Why this is not true? Are you means that the panel-ilitek-ili9341 driver has ACPI support?
-I'm asking because I don't see struct acpi_device_id related stuff in that source file,
-am I miss something?
+>  =09local64_add(delta, &event->count);
+>  }
+>=20
+> --
+> 2.43.2
+>=20
 
-
-> So, slow down and take your time to get into the code and understand how it works.
->
->> so that the rotation property can not get and ili9341_dpi_probe() will fails.
->> So in total, this is not a 100% correct use of device property APIs.
->>
->> But I'm fine that if you want to leave(ignore) those less frequent use cases temporarily,
->> there may have programmers want to post patches, to complete the missing in the future.
->>
->> So, there do have some gains on non-DT cases.
->>
->>   - As you make it be able to compiled on X86 with the drm-misc-defconfig.
->>   - You cleanup the code up (at least patch 2 in this series is no obvious problem).
->>   - You allow people to modprobe it, and maybe half right and half undefined.
->>
->> But you do helps moving something forward, so congratulations for the wake up.
-
--- 
-Best regards,
-Sui
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
