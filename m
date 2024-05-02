@@ -1,115 +1,104 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8CD60EC3;
-	Thu,  2 May 2024 12:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858C21CD39
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 12:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714652822; cv=none; b=Cuiv//5KgYD7FN+t/yJ4pflfAn+Ggsgxcn+FjuIdff/WCWrziT3G8/oxqYA40TQXkHXFBgOunr2qX6UY3HLVALnwx0NlrSRj3EQtZEIM/rz+mzrwLLSD4PsvlAftGS9PBnDgpndbDmtL5DagErxlqmi9w8yL/84335re/h+77nw=
+	t=1714652917; cv=none; b=RMZFqBnWWMNIdGg6HzvmoavLCs+KD4RYr7US75hFOBeqLC0N8+NzWQ83JLwW/p6xCr3K148h7BF5qALzvYD4ezuTedrvIhGVVorwPftGiRZ1X2LO0ENQy/eMDf6W0a1ATQVK29P8ks8Q9LtrwPIrYOdOSsuA99ysehmG6Anhpu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714652822; c=relaxed/simple;
-	bh=ubGsjiWQHWPaEZ1fQ7tqbi/KKjuYjwt1nMnswlvWugU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uov5vh5jFYoqs8EK8zA5Opdx/tacbpzt/Fjb5/SuudlVEyxy7ACdvzQ/v41TbVxvCy9UmraDZ3YzHn8jNa8Pw+GlabMQEggq+CwN9EKoKdUoyEtqhnV/xK1DBl1iMbpq7eC6xExuLjvleeuETqQ2SYw5QP1cOFPeEpTgz1z+S7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bNgfbgJ/; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1714652917; c=relaxed/simple;
+	bh=HH+FtvMLNNLnx+2imOSH/oS9QLlnmJPMxK2Bj1TI3IA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uEZA5J2m51Z8LnzxgeJ+7rnCa5Rd+84LAgLDVVlSobg+hhA/EGqxUk8hqtf+vOh0r3HXp4W+Wa5LpT5S2gyqjbmI34EeP66Ox7WDhtI9fbcS5ou+VLZ+bvLwSWsoqsxDx59UulugC5yoFEKTdowLweZL3ljXvKqXFa1QwgHYu5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=yPlF3Mgg; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bNgfbgJ/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=gVITxXoUTVKTfjI6S12QFG1wv1DAg8EEN4Ngn7R7v5M=; b=bNgfbgJ/L9jRQ2A93jsYogUi+N
-	kWVgx9OUBoOTsJoCcLnAlM6XDTuqJr5/b2Qg5GAYLGF2BXEZ/MWrDQvuHcnTqN2csm1keEMrEAtix
-	pmaiapgE22GVw3XeCstUGB1Oe/srzXlYSK/M8u46dgZAzc8c2vtsOE9QQyf662Yasyis=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1s2VWG-00EVEN-M8; Thu, 02 May 2024 14:26:36 +0200
-Date: Thu, 2 May 2024 14:26:36 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 06/17] dt-bindings: net: mscc-miim: Add resets property
-Message-ID: <4f9fd16b-773d-40e7-86d8-db19e2f6da16@lunn.ch>
-References: <20240430083730.134918-1-herve.codina@bootlin.com>
- <20240430083730.134918-7-herve.codina@bootlin.com>
- <5d899584-38ed-4eee-9ba5-befdedbc5734@lunn.ch>
- <20240430174023.4d15a8a4@bootlin.com>
- <2b01ed8a-1169-4928-952e-1645935aca2f@lunn.ch>
- <20240502115043.37a1a33a@bootlin.com>
- <20240502-petted-dork-20eb02e5a8e3@wendy>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="yPlF3Mgg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1714652901;
+ bh=o3dDw9/Nk0P+Y2L4RAZ5QXHC0oKEkNV6XQMxSmp6kck=;
+ b=yPlF3Mgg+w+Yg1rpI+/lKiGA/WzRqpsSceMcgESxR644mkfkntWWPWbk9vd1MzlcHBFZV3mXD
+ 9AcrW7pd+9UURCgQjyUPSEYZJcPBdYF1dzgzFiTf4I8Dkx8ax3sbGRC/Aj2yxzeRIAJVhltjppK
+ hWtBylaNjayWF3AAm5nYg31SEdtbgLwQuFR85sutfINCgeh3yspiZ1eHhEJ8Qcsp2pS267KKEs4
+ oCZPmb6u8pLpVDPL21qe0wJo9dGXVBYRNRYUydnguS1iXyocNc630n5S5KXV1p1wbMAPdvaQryI
+ QEwkAELLc+SzLx7OH/ox8pMcXI8Q2imE347dXLIfJRBQ==
+Message-ID: <832d6c37-a6c5-4468-9a23-1637b2affb90@kwiboo.se>
+Date: Thu, 2 May 2024 14:17:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502-petted-dork-20eb02e5a8e3@wendy>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: Add Radxa ROCK 3C
+To: Dragan Simic <dsimic@manjaro.org>, Folker Schwesinger
+ <dev@folker-schwesinger.de>
+Cc: Chukun Pan <amadeus@jmu.edu.cn>, Heiko Stuebner <heiko@sntech.de>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240428123618.72170-1-amadeus@jmu.edu.cn>
+ <20240428123618.72170-3-amadeus@jmu.edu.cn>
+ <D0X7UJELGST3.2IL1AFDJ89N07@folker-schwesinger.de>
+ <ded928414323ef4be51f2575d00ba7d1@manjaro.org>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <ded928414323ef4be51f2575d00ba7d1@manjaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 6633847bf48eecfc8b9e7ac4
 
-On Thu, May 02, 2024 at 11:31:00AM +0100, Conor Dooley wrote:
-> On Thu, May 02, 2024 at 11:50:43AM +0200, Herve Codina wrote:
-> > Hi Andrew,
-> > 
-> > On Tue, 30 Apr 2024 18:31:46 +0200
-> > Andrew Lunn <andrew@lunn.ch> wrote:
-> > 
-> > > > We have the same construction with the pinctrl driver used in the LAN966x
-> > > >   Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
-> > > > 
-> > > > The reset name is 'switch' in the pinctrl binding.
-> > > > I can use the same description here as the one present in the pinctrl binding:
-> > > >   description: Optional shared switch reset.
-> > > > and keep 'switch' as reset name here (consistent with pinctrl reset name).
-> > > > 
-> > > > What do you think about that ?  
-> > > 
-> > > It would be good to document what it is shared with. So it seems to be
-> > > the switch itself, pinctl and MDIO? Anything else?
-> > > 
-> > 
-> > To be honest, I know that the GPIO controller (microchip,sparx5-sgpio) is
-> > impacted but I don't know if anything else is impacted by this reset.
-> > I can update the description with:
-> >   description:
-> >     Optional shared switch reset.
-> >     This reset is shared with at least pinctrl, GPIO, MDIO and the switch
-> >     itself.
-> > 
-> > Does it sound better ?
+Hi Dragan and Folker,
+
+On 2024-05-02 03:28, Dragan Simic wrote:
+> Hello Folker,
 > 
-> $dayjob hat off, bindings hat on: If you don't know, can we get someone
-> from Microchip (there's some and a list in CC) to figure it out?
+> On 2024-04-30 07:42, Folker Schwesinger wrote:
+>> On Sun Apr 28, 2024 at 2:36 PM CEST, Chukun Pan wrote:
+>>> [...]
+>>> +&sdhci {
+>>> +	bus-width = <8>;
+>>> +	max-frequency = <200000000>;
+>>> +	mmc-hs200-1_8v;
+>>
+>> Out of curiosity, does this board also support HS400? From a very brief
+>> look this board seems quite similar to Rock 4 series boards, that do
+>> support HS400.
+> 
+> In a word, no, unfortunately.  In more detail, the Rockchip RK3566
+> and RK3568 SoCs support the eMMC modes up to and including HS200, but
+> not the HS400 mode.
 
-That is probably a good idea, there is potential for hard to find bugs
-here, when a device gets an unexpected reset. Change the order things
-probe, or an unexpected EPRODE_DEFER could be interesting.
+The datasheet for RK3568 only mention HS200 mode, however, HS400 mode is
+working in U-Boot after adjusting tap number for transmit clock [1].
+Linux may need similar adjustment to make HS400 mode work on RK3568.
 
-       Andrew
+RK3566 that this board use only support HS200, as specified in datasheet.
+
+[1] https://source.denx.de/u-boot/u-boot/-/commit/5c053f3adc69eaf83645b5d44c6adbb2d49a3fa7
+
+Regards,
+Jonas
+
+> 
+>>> +	non-removable;
+>>> +	pinctrl-names = "default";
+>>> +	pinctrl-0 = <&emmc_bus8 &emmc_clk &emmc_cmd &emmc_datastrobe>;
+>>> +	vmmc-supply = <&vcc_3v3>;
+>>> +	vqmmc-supply = <&vcc_1v8>;
+>>> +	status = "okay";
+>>> +};
+>>
+
