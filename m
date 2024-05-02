@@ -1,71 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADCD32C60;
-	Thu,  2 May 2024 13:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D6480025;
+	Thu,  2 May 2024 13:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714655073; cv=none; b=CMMvVAO1weEEPKIAJjF9bXzfdcO1VchZusAzMfIaVkYMTqKDYvSAni5mV8OfvV0OUoZbzlK1hcc+acfuSxncc3PN0qp/mMKD/YpmOwky2OhRf2Gw/vNLhUCE4jxLDmirIKsv9gQdjaY5sCN+sZD1bX6kfj2qCDycoX2jSbAPn6Y=
+	t=1714655080; cv=none; b=Zx1v2eBxMy4CAXdG/Gn6QMTsi+PoOUpsIsWaxHSKZgYm3TzhfKcD235RXgWDrhHku/JOPIzLgwgjbXeQhjsl7jKL3R4N3TVy7bSa61n+iBL1/0dPiqpydPKo+14nY+EVVQ1AQgoSs1cUK3PbRM+T7+6u6Tfr3hU0rZE59Cib/n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714655073; c=relaxed/simple;
-	bh=LxYoy5aryNP2HMhsf2xv0naIvXnZbLmH+o8waQE0UrY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWD5SlOC25PN080cxgouhoC8R17s7t+i+foj04XMnt+tuFKfIqQj+BJYAmj/AxzMIhAmnlwr/5ZvWOupH5doRCbGgh+dF/jkP4G0c4EPn59nJBlww7GfE6PIT0Tra3d0ZxihHLETKQm2g86YVwKWYHEIWRgzDH8E5AQzAl1z4so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iC/n65fl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714655080; c=relaxed/simple;
+	bh=9Sytb0R/juyLCsyWpjAt6xK7NUX0YzbFi7AcUjRnJxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GRfO4J7R1RMGIqq2WfvOjpHjASWYvwvolHiqda48y9rkj+TYvWwaZBdsA72FrmsIe5KanA64siEzNlzqWL/fS/09NKMmV5uIA1w/MfqgrZ5eEUOrLZpYW06xVpsaPDnovm2yQsWVNyr5782BHy5N7JQg37FnLMxoxW/FH7XIz+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Gr7HgnwT; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Gr7HgnwT; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iC/n65fl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FFD2C113CC;
-	Thu,  2 May 2024 13:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714655072;
-	bh=LxYoy5aryNP2HMhsf2xv0naIvXnZbLmH+o8waQE0UrY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iC/n65flUWWkvVzlWCRqHhOK18rapNIuK5TRG/60Hb4VkQXdaXhjcSKi45tYurzXB
-	 QYxWML007PwZWEYaYC5JoKXVbpDce+u5GoYgOZE0SB7ENfrm6za00f8roLirVb1LZ2
-	 Ed5nKsebg88bbdxqn0+wtWQv00XkjpiY3aUBactJVBXkEmZs916WErcTaPTL6ZXc/Y
-	 vLeU2lJk/uHNzbaFk5bqxi0Bj/LKMSfbi5KmylDzMX+PScS9S3Nx7y39QHfXx9U74V
-	 qykma9KTEkX+aTgm91VfnSQOKKwOqen6N6WIBBZyofgr0nbg9NQWQd/khkmpQBBeza
-	 mvfQlsROA9dWg==
-Date: Thu, 2 May 2024 15:04:26 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: cgzones@googlemail.com, Jan Kara <jack@suse.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Kees Cook <keescook@chromium.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Casey Schaufler <casey@schaufler-ca.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Miklos Szeredi <mszeredi@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH] fs/xattr: unify *at syscalls
-Message-ID: <20240502-wegweisend-hippen-75aae5b9da3f@brauner>
-References: <20240430151917.30036-1-cgoettsche@seltendoof.de>
- <20240502103716.avdfm6r3ma2wfxjj@quack3>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Gr7HgnwT";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Gr7HgnwT"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3063F1FC05;
+	Thu,  2 May 2024 13:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1714655077; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Fas0eFkeRGK0Fm3A4e9li8djyPi6sXuaWV6aGsjK1qA=;
+	b=Gr7HgnwT1hJPi/+NQZEpdqh5N00lxrV92xt9md83nJ9HXKPd+2BOtK28MjP3LG8N2PaM+4
+	eoo2j2CJZEl7FxSu5eEzbXHZw7jQugy7xcx5mSI8ma5u4iHOvamUG/EiAU7RrJBLX/a5cY
+	86uDfDLQQBIGijQWaAeDncqCrqPpRIU=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1714655077; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Fas0eFkeRGK0Fm3A4e9li8djyPi6sXuaWV6aGsjK1qA=;
+	b=Gr7HgnwT1hJPi/+NQZEpdqh5N00lxrV92xt9md83nJ9HXKPd+2BOtK28MjP3LG8N2PaM+4
+	eoo2j2CJZEl7FxSu5eEzbXHZw7jQugy7xcx5mSI8ma5u4iHOvamUG/EiAU7RrJBLX/a5cY
+	86uDfDLQQBIGijQWaAeDncqCrqPpRIU=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 26FDC13957;
+	Thu,  2 May 2024 13:04:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Sy6CCWWPM2b/RgAAD6G6ig
+	(envelope-from <dsterba@suse.com>); Thu, 02 May 2024 13:04:37 +0000
+From: David Sterba <dsterba@suse.com>
+To: torvalds@linux-foundation.org
+Cc: David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 6.9-rc7
+Date: Thu,  2 May 2024 14:57:18 +0200
+Message-ID: <cover.1714654371.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240502103716.avdfm6r3ma2wfxjj@quack3>
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_TLS_ALL(0.00)[]
 
-On Thu, May 02, 2024 at 12:37:16PM +0200, Jan Kara wrote:
-> On Tue 30-04-24 17:19:14, Christian Göttsche wrote:
-> > From: Christian Göttsche <cgzones@googlemail.com>
-> > 
-> > Use the same parameter ordering for all four newly added *xattrat
-> > syscalls:
-> > 
-> >     dirfd, pathname, at_flags, ...
-> > 
-> > Also consistently use unsigned int as the type for at_flags.
-> > 
-> > Suggested-by: Jan Kara <jack@suse.com>
-> > Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
-> 
-> Thanks! The change looks good to me. Christian, do you plan to fold this
-> into the series you've taken to your tree?
+Hi,
 
-Yep, that's the plan.
+please pull a few more fixes, thanks.
+
+- set correct ram_bytes when splitting ordered extent, this is
+  can be inconsistent on-disk but harmless as it's not used for
+  calculations and it's only advisory for compression
+
+- fix lockdep splat when taking cleaner mutex in qgroups disable ioctl
+
+- fix missing mutex unlock on error path when looking up sys chunk for
+  relocation
+
+----------------------------------------------------------------
+The following changes since commit fe1c6c7acce10baf9521d6dccc17268d91ee2305:
+
+  btrfs: fix wrong block_start calculation for btrfs_drop_extent_map_range() (2024-04-18 18:18:50 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.9-rc6-tag
+
+for you to fetch changes up to 63a6ce5a1a6261e4c70bad2b55c4e0de8da4762e:
+
+  btrfs: set correct ram_bytes when splitting ordered extent (2024-04-30 12:03:44 +0200)
+
+----------------------------------------------------------------
+Dominique Martinet (1):
+      btrfs: add missing mutex_unlock in btrfs_relocate_sys_chunks()
+
+Josef Bacik (1):
+      btrfs: take the cleaner_mutex earlier in qgroup disable
+
+Qu Wenruo (1):
+      btrfs: set correct ram_bytes when splitting ordered extent
+
+ fs/btrfs/ioctl.c        | 33 ++++++++++++++++++++++++++++++---
+ fs/btrfs/ordered-data.c |  1 +
+ fs/btrfs/qgroup.c       | 21 ++++++++-------------
+ fs/btrfs/volumes.c      |  1 +
+ 4 files changed, 40 insertions(+), 16 deletions(-)
