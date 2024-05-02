@@ -1,151 +1,92 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3535180A82
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 20:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA773158845;
+	Thu,  2 May 2024 20:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714680519; cv=none; b=ewLAyrjprQtKBy2SJKKk+QX2Ww4xT4/aA8kKnie6bt1IDEUXCWCm5KSCAqWp1xjvXPg9CqaLMvNYnHTCj6lbaDWGhEZrIEFusCgALVSpDwVes4CLEWI5zV/Jw5j1ewJgAcdUya45cE3Q0aKYDef8He6WbI4VHMlNhhaL9cMo1mc=
+	t=1714680750; cv=none; b=XhCRHhFjs84sfkwawz0n8uLB12TQmLWEOpI1m6/C5yLVzdlqae5XnhphDOmQ+UVnWHqbxwgLyxtS5B2DURV515CSvOi0BB9g7XjutWWbL/b6pHsFphyS53/8PGWp9ZfxHldpLUjNpV1mVZuOi6EdQ7UmWz/0PsCqus90zlvZa3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714680519; c=relaxed/simple;
-	bh=3IYp4lRTQzmLzgGC9pmgdaaE/T9wslCBCEEl1047Fdo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c13H1vlzX6SAxCYzGxiz31vyGQmbgMWRxoIqOthPed8sdDe1zcso0JukjM6CQ87nII446tauYHX8whBMJ1nFaq8oyizHyBhSzRO3lUxn5xH93r/lDXuiVyY1COqutYGts1FxOI+d8L9oK5WG5c61vmsiHaG4iRQBOTCZk9L10Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g87r6rca; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714680750; c=relaxed/simple;
+	bh=m2RT8PC4x1UCnE8lG23iBCFVaGRGa4zOXUVtHgndTQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OLsefs2xNQb20FRi08FEETe5Av8pPP80F5Gz12TJUHqfEfMA6E6OM7bWde+pKA6NBB+97woyoPAmtd+EYAqxHlBvAuoh9M3FSIBNa8gAUEcAVJdCv0MkKLJ4knufnO7rspSu2e+QgyxntnysOPjdinAB2ZPNiL37dGw3VfLQMkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ge2W1nD5; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g87r6rca"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a595199cb9bso323860566b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 13:08:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ge2W1nD5"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f44b390d5fso23653b3a.3;
+        Thu, 02 May 2024 13:12:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714680516; x=1715285316; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w7bHDLJ7ExWZnW/zCrBxpFgsWVLK4EooXDm/uirDOi4=;
-        b=g87r6rcaroN6m6Ha3jE6mL6bgDXBYxYsfo8/2VrEd0v3QO/baPSi9d6kGq2alrLXqK
-         Whenv6Qasq7HMnibi7bt9aprjuUJ4a1ZE+7xffxwGb6sn7kPtEj8YL/InK7F868n7XRu
-         564jfcJF9mhv0C4vdVUTwWYmgFCYBqiXUma/UInYCZGsnK/W++FXvPrN8cnGyHJd4YIe
-         GTgiTIcypwld51rG0k4vF/vxkQf/JkTy7FuM3JSWqAzt0d1AEBwZQrItvXBZXRgUMWsl
-         uqzibryvsK14x4TsmhE6SRvVmbqqkG7N+u/HdsPimJiIRZjsiGJ+i/smreDmPeqhD4v7
-         M9uQ==
+        d=gmail.com; s=20230601; t=1714680747; x=1715285547; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6meDpwIFn6POwM0GTM589VI6wgTQh6ljoPgnNTkMk6k=;
+        b=ge2W1nD5TdeklGBzFFoI0zcQEingoFhN2BdeS75r+QyfIFedSal+b+zYkC3ddjHrdg
+         +BSZg+DYtPZJ31lsgSMXfg10hiJPFxTBNSDgEo3TQwG75cEks87ydVr8bX+mLnfISWDN
+         wLzObveYakL0LM0x1ge95ML8W4f8OcuVGPEZri9o1q/slyEwFT7VnczTvLzahr61Izw4
+         DkM1ELFCw6IV9OL4X41wH1glcgO1u0dHn4kIfgXqh+18Pn4gd2Ki49sIerztgHFAS1AM
+         zfXO54FExQ1hF26XvYxwdPy47fvJPw2hBMygFke2kph/HkgtxxuI9u2wX3KHcebKPpm3
+         Mofw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714680516; x=1715285316;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w7bHDLJ7ExWZnW/zCrBxpFgsWVLK4EooXDm/uirDOi4=;
-        b=Hi8979Qa7ZplFxtjYbkr7Ksu7+lngQx8S7asSsvZh9E4MGX6fIYTnmzW4e9Q1jti8h
-         /gOXCygDrxrpWRF+pdIEAiOQ8SNrJZBStqO03ytr6UFdZ4N54bIukm0CRZ02lynHcK9j
-         VFem/xEe8+dYIt9yQ8PuyKatopusHi/oVjvZjFpE4zUPcTlvd9no+nSLM+AvYWWI0HnL
-         H7lARpOUPzVaCdG99oraZlUa/XtIubncARDQOYHPPb3QzKfndzbpjF/PLMfE6SC7mtFT
-         jRonNamwVrO3sb3+D/IrO+eotaBcaZm8awnjMJPYdj8hze3UC2H+htatZLeWrF65u6cS
-         t99w==
-X-Forwarded-Encrypted: i=1; AJvYcCWNt2JV+0I4myoBpWM3vptQPsdFaBYoD9HTYr5F9Q6ENl6qad2o1j6sRj/BQRGN8EshU8XsL7G/9ojS3Hhm26q8K8+GSi88klBSZzsa
-X-Gm-Message-State: AOJu0YxIbbCmxC6db5+1RbQQdXbUbzln64s77T/h5m/8UUZTgfrZgDMr
-	7Iwtks3Y0p5YvDWIgCgAVwxicn8aI5POU92/a06xcC5/vvYKWot1jQ/FPWPKDPkRqhf/JvaAet7
-	H15PnTqVESmiKZSQrq28D3jp7RbWTXzxfpKgX
-X-Google-Smtp-Source: AGHT+IFc79OoA6cHdMREvw/F5+U+f5TUvfpAw59eNfwjV/TrZ+jI0Si/9Dzy8J7JFxVy8yrrTpCSw98BqmRTC+TzxDI=
-X-Received: by 2002:a17:906:387:b0:a58:bce5:9b49 with SMTP id
- b7-20020a170906038700b00a58bce59b49mr315966eja.44.1714680515692; Thu, 02 May
- 2024 13:08:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714680747; x=1715285547;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6meDpwIFn6POwM0GTM589VI6wgTQh6ljoPgnNTkMk6k=;
+        b=muGUPWBIdek1TYfGUK7ppc0onSskbJll9dPPOAAjOGgL8L7iuGa+WwXM8LJtRMlHVr
+         sKBmx+lamLiPzRU1Zz6esQxOHC15wq8e5LlMMvSixt073NH37WkGkPx03xbKzno7VuPk
+         CN38pwEvGHZUakZHQxlohDWWE+v+rpfOY1JfpwZDxv8QVPVQWk5x0Cua7SodCoBtoQz6
+         iid26/LG/5GSJO2QoJcSfgAEL9p21ixedyT1vfzNAue0jUVwehflmjeqMS2AYUmhbTAV
+         gaeGw0a7ijzgmiPZfk0TUjMe7SnAN0sYteUAOxgnFLNT/fARZjy2M0RWR4iQlvadSxyy
+         ElpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXU7Y05rFJi9ar9AVrrJzC5XQViL4iZ+6bYKTV+7ro53JoIMXCRBO76Q+wURcoybFk2Ekt7kEp1L2bmAvbI8d/LXbzH0OW2t1bSVKh4zlv4Jiw7m0dZ/stb3sgV4MYs0Qygaic/+bZ4
+X-Gm-Message-State: AOJu0YwQJ5ua5cygl6pSyZ+jPeqoy6vRTqphZg1Xf0ZK0wVHsibOx9gc
+	fMaNbWcvkKw4FxAOqpGqAFIpeJihypJkB66yhSAMI5n1pIM9yrPMObcW6m+H
+X-Google-Smtp-Source: AGHT+IEkeV0ZW1vAReZH/O25DndzDOP7OdAvbWnDjw0Mc3J2E3onwOJi72SjnZxcb1iqBZb/Ax44sA==
+X-Received: by 2002:a05:6a00:2290:b0:6f0:b53c:dfb4 with SMTP id f16-20020a056a00229000b006f0b53cdfb4mr736947pfe.22.1714680747237;
+        Thu, 02 May 2024 13:12:27 -0700 (PDT)
+Received: from localhost ([115.96.207.161])
+        by smtp.gmail.com with ESMTPSA id k1-20020a632401000000b0061ca8fac008sm84332pgk.22.2024.05.02.13.12.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 13:12:26 -0700 (PDT)
+Date: Fri, 3 May 2024 01:41:21 +0530
+From: Aryabhatta Dey <aryabhattadey35@gmail.com>
+To: linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: pavel@ucw.cz, lee@kernel.org, corbet@lwn.net, 
+	skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com
+Subject: [PATCH] Fix typo
+Message-ID: <y5bqy3p7deaemny5sczd33zy2dwtbqvucgrq6wxqs7ibf4omwb@kpd2gwfve2ax>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424165646.1625690-2-dtatulea@nvidia.com> <4ba023709249e11d97c78a98ac7db3b37f419960.camel@nvidia.com>
- <CAHS8izMbAJHatnM6SvsZVLPY+N7LgGJg03pSdNfSRFCufGh9Zg@mail.gmail.com>
- <4c20b500c2ed615aba424c0f3c7a79f5f5a04171.camel@nvidia.com>
- <CAHS8izPkRJyLctmyj+Ppc5j3Qq5O1u3aPe5h9mnFNHDU2OxA=A@mail.gmail.com>
- <20240426160859.0d85908e@kernel.org> <CAHS8izNs-LV=6FE39sjF3V7qVfveOsOAOJ_X62TSzWpvamsS0Q@mail.gmail.com>
- <20240429080022.214a9df9@kernel.org>
-In-Reply-To: <20240429080022.214a9df9@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 2 May 2024 13:08:23 -0700
-Message-ID: <CAHS8izPBhZ1USvSoDdR-Xwg3jNL5ppRXTzc3FEM9gjx6B1fJAw@mail.gmail.com>
-Subject: Re: [RFC PATCH] net: Fix one page_pool page leak from skb_frag_unref
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Dragos Tatulea <dtatulea@nvidia.com>, "davem@davemloft.net" <davem@davemloft.net>, 
-	"pabeni@redhat.com" <pabeni@redhat.com>, 
-	"ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"jacob.e.keller@intel.com" <jacob.e.keller@intel.com>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Jianbo Liu <jianbol@nvidia.com>, 
-	"edumazet@google.com" <edumazet@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Apr 29, 2024 at 8:00=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Fri, 26 Apr 2024 21:24:09 -0700 Mina Almasry wrote:
-> > On Fri, Apr 26, 2024 at 4:09=E2=80=AFPM Jakub Kicinski <kuba@kernel.org=
-> wrote:
-> > >
-> > > On Thu, 25 Apr 2024 12:20:59 -0700 Mina Almasry wrote:
-> > > > -       if (recycle && napi_pp_get_page(page))
-> > > > +       if (napi_pp_get_page(page))
-> > >
-> > > Pretty sure you can't do that. The "recycle" here is a concurrency
-> > > guarantee. A guarantee someone is holding a pp ref on that page,
-> > > a ref which will not go away while napi_pp_get_page() is executing.
-> >
-> > I don't mean to argue, but I think the get_page()/put_page() pair we
-> > do in the page ref path is susceptible to the same issue. AFAIU it's
-> > not safe to get_page() if another CPU can be dropping the last ref,
-> > get_page_unless_zero() should be used instead.
->
+Change 'dasy-chain' to 'daisy-chain'.
 
-I uploaded a revert for review, but to reland I perhaps need to
-understand a bit more the concern here. AFAICT that diff you're
-responding to is safe and it works very well with devmem so it would
-be my preferred approach to reland (but there are other options if you
-are convinced it's bad). FWIW my thoughts:
+Signed-off-by: Aryabhatta Dey <aryabhattadey35@gmail.com>
+---
+ Documentation/leds/leds-blinkm.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Whoever gave us the pointer to operate on has a reference, so the page
-> can't disappear. get_page() is safe.
+diff --git a/Documentation/leds/leds-blinkm.rst b/Documentation/leds/leds-blinkm.rst
+index c74b5bc877b1..2d3c226a371a 100644
+--- a/Documentation/leds/leds-blinkm.rst
++++ b/Documentation/leds/leds-blinkm.rst
+@@ -7,7 +7,7 @@ The leds-blinkm driver supports the devices of the BlinkM family.
+ They are RGB-LED modules driven by a (AT)tiny microcontroller and
+ communicate through I2C. The default address of these modules is
+ 0x09 but this can be changed through a command. By this you could
+-dasy-chain up to 127 BlinkMs on an I2C bus.
++daisy-chain up to 127 BlinkMs on an I2C bus.
+ 
+ The device accepts RGB and HSB color values through separate commands.
+ Also you can store blinking sequences as "scripts" in
+-- 
+2.44.0
 
-Agreed.
-
-> The problem with pp is that we
-> don't know whether the caller has a pp ref or a page ref. IOW the pp
-> ref may not be owned by whoever called us.
->
-
-OK, this is where I'm not sure anymore. The diff you're replying to
-attempts to enforce the invariant: "if anyone wants a reference on an
-skb_frag, skb_frag_ref will be a pp ref on pp frags
-(is_pp_page=3D=3Dtrue), and page refs on non-pp frags
-(is_pp_page=3D=3Dfalse)".
-
-Additionally the page doesn't transition from pp to non-pp and vice
-versa while anyone is holding a pp ref, because
-page_pool_set_pp_info() is called right after the page is obtained
-from the buddy allocator (before released from the page pool) and
-page_pool_clear_pp_info() is called only after all the pp refs are
-dropped.
-
-So:
-
-1. We know the caller has a ref (otherwise get_page() wouldn't be safe
-in the non-pp case).
-2. We know that the page has not transitioned from pp to non-pp or
-vice versa since the caller obtained the ref (from code inspection, pp
-info is not changed until all the refs are dropped for pp pages).
-3. AFAICT, it follows that if the page is pp, then the caller has a pp
-ref, and if the page is non-pp, then the caller has a page ref.
-4. So, if is_pp_page=3D=3Dtrue, then the caller has a pp ref, then
-napi_pp_get_page() should be concurrently safe.
-
-AFAICT the only way my mental model is broken is if there is code
-doing a raw get_page() rather than a skb_frag_ref() in core net stack.
-I would like to get rid of these call sites if they exist. They would
-not interact well with devmem I think (but could be made to work with
-some effort).
-
---
-Thanks,
-Mina
