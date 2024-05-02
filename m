@@ -1,147 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE58E2E85A;
-	Thu,  2 May 2024 06:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D28A1C6AE
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 06:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714629616; cv=none; b=QiCxMvYyjpUypR2kJ9jCh+hIj3LJUmSkB/kzKMxP0nt0A2EsH3MAtLPjoNJ9/y6bfWqfO7TmdDEl0vpP1oHV5skaj4yV3hKt3FymRcDn2LIHNp5SpvmYgWqcVdDBlyuN64iQl07rPu1EiTgRQjXnZikQwnvClIzV3V7JZdBEAW4=
+	t=1714629844; cv=none; b=DUUKtetxMIbUpYzI6y4jE75KkGuiW6kpxY1aKw9/UJrHyFpL4q7gqICLu4mDqVMzr9wjhD3ERdnk3a9bT4kn0FQ/NqN9hnIHlUj0eflgVR4dDFfmo8r+DjKjUZrqSXoAvvFhA3BZs1kpyDxxV54v0ai5+8oILbVs8fjI5+uYWdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714629616; c=relaxed/simple;
-	bh=bBO0Iqelj8fza63egsoXJuy9RT4wZZVSdAOcjGFLV54=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=paoekKwzETUW5bQdITTdUx6dEwEbXB+s+REXMX71wrh8u16Lson5nREFpzgfSS6YSsEujeDXp8T1DY2z5aGc8HVMg8XCFhRUaL2K85/Qxdx0UDuN9ZjAcmEOxa5vFGB3SvFnsPe7Fh9NGYZzw+WIGozLCBkyjS5kxx+GfR/HovM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KcVhjvN2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KcVhjvN2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05AD4C4AF61;
-	Thu,  2 May 2024 06:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714629615;
-	bh=bBO0Iqelj8fza63egsoXJuy9RT4wZZVSdAOcjGFLV54=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KcVhjvN2Q/IIksoC2T2K7yei0Za/gHqV7wMwhTWBGaCBSyeoaG57Ii30mBmJ9WbwV
-	 Y4Y16Sazd9ilTIic/WJW3Gyfxoc3iU4pnXI8R4WRVDMkXwVUQpRw456ILHTP2PsL/S
-	 3L4I5LA3SmBEJF+aC+ifJZUsUArPtf3Nia4Ye8ITNgvvJ0T/UsuQnWWS1+kVkTtz96
-	 T6Pvq5XBxjDzCYombLd5K6dzK2Gklq45Ah7JhUV0uZ3pfT91/2tB8RGv6QQEfzMuBK
-	 n+HbjKb6VbbkMgO8PoFiN5vE4q/G0MMmu4rEm4ELFRd/yULipOt3soCKtmYsVhjM6Y
-	 TveN+kZdfXZuA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 5/6] perf annotate-data: Handle multi regs in find_data_type_block()
-Date: Wed,  1 May 2024 23:00:10 -0700
-Message-ID: <20240502060011.1838090-6-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-In-Reply-To: <20240502060011.1838090-1-namhyung@kernel.org>
-References: <20240502060011.1838090-1-namhyung@kernel.org>
+	s=arc-20240116; t=1714629844; c=relaxed/simple;
+	bh=lI+zYYhwfdiozaRC5irM1Z9SGyZ7PZ1GJTG4/ppi83A=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Uz2Fi6w7tgThvDDf0yoAcweJCDBSx6YfmgoPOz3Ifh6giKO2zEtTTzJ/+SVamMZoXNc4WiUszQmiEVIuv/fTjPZlgp7TqMweGKn/XE5W+3uK6lbU6Hcuhzol9WWf7RJM815aoEJRcJmmQJf3/jPdUosLtxkIRCLwiJlnE1nTe5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7d9d0936d6aso860625939f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 23:04:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714629842; x=1715234642;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zGOj66+WzT3abwAJPa/hUYebqscE1cEduzWpvyCpWPA=;
+        b=dbWDDmiEFL3X/1y1wL2VKbQ0/9kqzXMAhlxTnmw6rYTv8Z8aF1OP8+UMgdojUuoTE7
+         vssot9+QD3VpJZe1LM57INkLY6P5qi6hPF2PBCjVTOFPZGdHNm/X+602WV/Dx8mlKbq/
+         gZLDkR0XXLYtPHNNMDtQTrDGK/bhUvyEqCrfquSYEdlWrgmzkBCr+hM2JmBKCxb+a6cL
+         Kt77A2OmJ5swJpaz/QZ4cOA8oo5VC4bF+XCy/xM4X/EJmrlePXwuxpT1YHwAu5ioLZ+0
+         64Lygdc5S2ATt1gbjwlZpEzTEAhne9BotNml0ulYSrIZ+bOSZewi7sFlDE5qdR1h/fiW
+         UCww==
+X-Gm-Message-State: AOJu0Yx+A7kuPCx7ibCzLXbcNdKX9E/DdMVXPBjhJMzM30dRMsDu7CeV
+	aCbL7aA5h+nQ5/Y2Ob3LC9p7v9omNVLJnt6L8PO0nMPAHM+p/lpAgqb8unzdGdl/dfxrriOmrdX
+	DXql2BhFWrCu/ozUmPDxTiiIbdKyqlk1aJs2pzaKadR42rWNB/90uSRA=
+X-Google-Smtp-Source: AGHT+IH0zCVUIBY6sDcixsmAoK1ZKjmwCKA1Wx+965sYUy8p2WK/VRYQnlRIJcculiUrPEIc6Wrobl6ARmQS4tjaeuNduDAAyDk2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:20ed:b0:36c:5f85:6979 with SMTP id
+ q13-20020a056e0220ed00b0036c5f856979mr83307ilv.0.1714629842488; Wed, 01 May
+ 2024 23:04:02 -0700 (PDT)
+Date: Wed, 01 May 2024 23:04:02 -0700
+In-Reply-To: <ZjMkFLuOdNVQVCl6@zeus>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000aee1800617725e64@google.com>
+Subject: Re: [syzbot] [net?] [nfc?] KMSAN: uninit-value in nci_rx_work
+From: syzbot <syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, ryasuoka@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The instruction tracking should be the same for the both registers.
-Just do it once and compare the result with multi regs as with the
-previous patches.  Then we don't need to call find_data_type_block()
-separately for each reg.  Let's remove the 'reg' argument from the
-relevant functions.
+Hello,
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate-data.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 245e3ef3e2ff..68fe7999f033 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -1258,11 +1258,12 @@ static void setup_stack_canary(struct data_loc_info *dloc)
-  * are similar to global variables and no additional info is needed.
-  */
- static int check_matching_type(struct type_state *state,
--			       struct data_loc_info *dloc, int reg,
-+			       struct data_loc_info *dloc,
- 			       Dwarf_Die *cu_die, Dwarf_Die *type_die)
- {
- 	Dwarf_Word size;
- 	u32 insn_offset = dloc->ip - dloc->ms->sym->start;
-+	int reg = dloc->op->reg1;
- 
- 	pr_debug_dtp("chk [%x] reg%d offset=%#x ok=%d kind=%d",
- 		     insn_offset, reg, dloc->op->offset,
-@@ -1448,7 +1449,7 @@ static int check_matching_type(struct type_state *state,
- }
- 
- /* Iterate instructions in basic blocks and update type table */
--static int find_data_type_insn(struct data_loc_info *dloc, int reg,
-+static int find_data_type_insn(struct data_loc_info *dloc,
- 			       struct list_head *basic_blocks,
- 			       struct die_var_type *var_types,
- 			       Dwarf_Die *cu_die, Dwarf_Die *type_die)
-@@ -1481,7 +1482,7 @@ static int find_data_type_insn(struct data_loc_info *dloc, int reg,
- 			update_var_state(&state, dloc, addr, dl->al.offset, var_types);
- 
- 			if (this_ip == dloc->ip) {
--				ret = check_matching_type(&state, dloc, reg,
-+				ret = check_matching_type(&state, dloc,
- 							  cu_die, type_die);
- 				goto out;
- 			}
-@@ -1502,7 +1503,7 @@ static int find_data_type_insn(struct data_loc_info *dloc, int reg,
-  * Construct a list of basic blocks for each scope with variables and try to find
-  * the data type by updating a type state table through instructions.
-  */
--static int find_data_type_block(struct data_loc_info *dloc, int reg,
-+static int find_data_type_block(struct data_loc_info *dloc,
- 				Dwarf_Die *cu_die, Dwarf_Die *scopes,
- 				int nr_scopes, Dwarf_Die *type_die)
- {
-@@ -1550,7 +1551,7 @@ static int find_data_type_block(struct data_loc_info *dloc, int reg,
- 		fixup_var_address(var_types, start);
- 
- 		/* Find from start of this scope to the target instruction */
--		found = find_data_type_insn(dloc, reg, &basic_blocks, var_types,
-+		found = find_data_type_insn(dloc, &basic_blocks, var_types,
- 					    cu_die, type_die);
- 		if (found > 0) {
- 			char buf[64];
-@@ -1716,8 +1717,13 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
- 		goto out;
- 	}
- 
-+	if (loc->multi_regs && reg == loc->reg1 && loc->reg1 != loc->reg2) {
-+		reg = loc->reg2;
-+		goto retry;
-+	}
-+
- 	if (reg != DWARF_REG_PC) {
--		ret = find_data_type_block(dloc, reg, &cu_die, scopes,
-+		ret = find_data_type_block(dloc, &cu_die, scopes,
- 					   nr_scopes, type_die);
- 		if (ret == 0) {
- 			ann_data_stat.insn_track++;
-@@ -1725,11 +1731,6 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
- 		}
- 	}
- 
--	if (loc->multi_regs && reg == loc->reg1 && loc->reg1 != loc->reg2) {
--		reg = loc->reg2;
--		goto retry;
--	}
--
- 	if (ret < 0) {
- 		pr_debug_dtp("no variable found\n");
- 		ann_data_stat.no_var++;
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+Reported-and-tested-by: syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         e88c4cfc Merge tag 'for-6.9-rc5-tag' of git://git.kern..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=15d07a28980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b43eff4125d4e9fe
+dashboard link: https://syzkaller.appspot.com/bug?extid=d7b4dc6cd50410152534
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14fadc90980000
+
+Note: testing is done by a robot and is best-effort only.
