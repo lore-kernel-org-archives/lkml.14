@@ -1,67 +1,78 @@
-Received: from mail115-76.sinamail.sina.com.cn (mail115-76.sinamail.sina.com.cn [218.30.115.76])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3DE1C2AD
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 23:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B315E57C96;
+	Thu,  2 May 2024 23:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714692223; cv=none; b=LJbsmUuGx+oD+rS7AlfHsgWinb94XqxKifA84xsuOkTTrDCsnOPSskBuLQEALUcoTOtGOzbUx1gY+19OtuUbIcfJqwKIZtLstmZbmHHWiHl2xUNfDS9aszpzZkf17ZTgPL3GptHD2YbSOP25vnwXzLViZyO6MyGJusz8MUTN6H0=
+	t=1714692297; cv=none; b=l2jZDpKvNabBJ4wCntzouwEAudDSy4rBUp/cicqmyqMqtsR2UsfJffnLVNTCNEPZcQTEKDu3xyNOMZtkaJDF7yVaOgbzSsy8r5NS4VfJP5w0arx4C1r8TQ6/WukDvoTB9FQeXSFs+Z0sxlfaITk+9pPWqyBI28Axx5jjT/51mRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714692223; c=relaxed/simple;
-	bh=qxv6eLTXJ08RHAn4M74hEmlNHmGTF7pZkSb0aNw1mBI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dQulmHqTWjH5Z6IXb39wIMavdQc35odwlu3vDq+khQhg5NfCkgzXePIrDCGiYI8ytCj6lSkTkYZDuNgOqo3expyEZSxkCRWPaT5qhaTg2pWaMEwe89yCEJM5B4ObP8qwrG5fBBBs02Kt4SBCzp93gVvhqGh8b/engnQzFMvKthU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.64.31])
-	by sina.com (10.75.12.45) with ESMTP
-	id 6634205100005E4F; Thu, 3 May 2024 07:22:59 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 65011531457717
-X-SMAIL-UIID: D436D9FE715F47DC8A982E0EA16D3A41-20240503-072259-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+9e39ac154d8781441e60@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [btrfs?] kernel BUG in folio_unlock (2)
-Date: Fri,  3 May 2024 07:22:47 +0800
-Message-Id: <20240502232247.1845-1-hdanton@sina.com>
-In-Reply-To: <0000000000009e614206177b0968@google.com>
-References: 
+	s=arc-20240116; t=1714692297; c=relaxed/simple;
+	bh=+xXyzedyVc48PF3hdyhKkxKsf7uulASRUcLk9rMpso8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DJaYYeOiTfyxH02FYVkwZmJdyp4V4O3o3Im/CH4HEBWZnOsIt08tzlAW2+l82Fx1RrR1bnLIKwMmziYnpGvztgBUQ8GAA/1y6QrwdjAx1OLqWLPXuiGt//xEvDJbN5VTz3fxz3ep0b6WOWBUPTG51j9dQSar66yvpDExGVOLrNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=YJ8thX4O; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="YJ8thX4O"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=i6JN4J2gFuUHV5idXz05AtG9Y1hW4HX4gS5b0NVqQAg=; b=YJ8thX4O/ALhTWziBUFMmV8YCH
+	maFFLbdIt0u12R2wdolpQIpNqeQ1aUhuZ0ZutCMc7u88GcEzII1dS/+7/xr+ru9B5vUiiYNRZ5qil
+	kxjtigSee/d3iVR2GMykTjSNSTrcLLT4nlJ7ubZyxJ4ynz6QJ3MGTtEqPY/8pKuddlnrUhC7A3h3x
+	H9E8asOqGV/KkNW8YxR03I+jXWWcPBu6w/s6HMzADolIJaSAdfed0zdYfkQtERMV2ToPAL9cpOpux
+	DnKRcLgwKnBtNduWU56QU9YY0qMCjp57/0j+E2U3Oc+9we3T1FVZPPwhxeVElFRMGEu/P319o/XFn
+	XtveEmOQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1s2fnD-009rGh-0p;
+	Thu, 02 May 2024 23:24:47 +0000
+Date: Fri, 3 May 2024 00:24:47 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	elver@google.com, akpm@linux-foundation.org, tglx@linutronix.de,
+	peterz@infradead.org, dianders@chromium.org, pmladek@suse.com,
+	arnd@arndb.de, torvalds@linux-foundation.org, kernel-team@meta.com,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-sh@vger.kernel.org
+Subject: Re: [PATCH v2 cmpxchg 12/13] sh: Emulate one-byte cmpxchg
+Message-ID: <20240502232447.GO2118490@ZenIV>
+References: <b67e79d4-06cb-4a45-a906-b9e0fbae22c5@paulmck-laptop>
+ <20240501230130.1111603-12-paulmck@kernel.org>
+ <1376850f47279e3a3f4f40e3de2784ae3ac30414.camel@physik.fu-berlin.de>
+ <b7ae0feb-d401-43ee-8d5f-ce62ca224638@paulmck-laptop>
+ <6f7743601fe7bd50c2855a8fd1ed8f766ef03cac.camel@physik.fu-berlin.de>
+ <9a4e1928-961d-43af-9951-71786b97062a@paulmck-laptop>
+ <20240502205345.GK2118490@ZenIV>
+ <0a429959-935d-4800-8d0c-4e010951996d@paulmck-laptop>
+ <20240502220757.GL2118490@ZenIV>
+ <3dac400c-d18f-4f4e-b598-cad6948362d6@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3dac400c-d18f-4f4e-b598-cad6948362d6@paulmck-laptop>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, 02 May 2024 09:24:30 -0700
-> syzbot found the following issue on:
+On Thu, May 02, 2024 at 04:12:44PM -0700, Paul E. McKenney wrote:
+
+> > I'm probably missing your point, though - what mix of cmpxchg and
+> > smp_store_release on 8bit values?
 > 
-> HEAD commit:    9c6ecb3cb6e2 Add linux-next specific files for 20240502
-> git tree:       linux-next
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10efe5f8980000
+> One of RCU's state machines uses smp_store_release() to start the
+> state machine (only one task gets to do this) and cmpxchg() to update
+> state beyond that point.  And the state is 8 bits so that it and other
+> state fits into 32 bits to allow a single check for multiple conditions
+> elsewhere.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git  9c6ecb3cb6e2
-
---- x/fs/btrfs/extent_io.c
-+++ y/fs/btrfs/extent_io.c
-@@ -1516,7 +1516,8 @@ done:
- 					       PAGE_SIZE, !ret);
- 		mapping_set_error(page->mapping, ret);
- 	}
--	unlock_page(page);
-+	if (PageLocked(page))
-+		unlock_page(page);
- 	ASSERT(ret <= 0);
- 	return ret;
- }
---
+Humm...  smp_store_release() of 8bit on old alpha is mb + fetch 64bit + replace
+8 bits + store 64bit...
