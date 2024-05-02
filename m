@@ -1,43 +1,46 @@
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6690615D5BE
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC437211C
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 16:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714667451; cv=none; b=r3KVfhMoR6ulHUzgHeDaH8XaiafFS9ujmETPXev0IPdlRwxdcVCe3QisLoKhA/qm+kwr5kW8V2d8Z+bzN1lsar0K4EY1KERwR9YKwpMryYKmWCurlfNi0/3MtaTMBNq/8/Rd4qdzwy2byvq4vbwVBypfg5lUl9HnzX/W+9ztq9k=
+	t=1714667456; cv=none; b=mqttUKy0tjfklWlJA4tUcudIScepVfdu7o4QAF1SCinca+5ZJqzD3BA3s7muDrQkDtaAYTZZAk7s3UrAvVJ3Dbb1sQXFSJPNAR94NEAGw2QwsB39+B8VGbVWIOwMAZ9/9UBzvHfaR9cCbyIZYbOqiqX90/n/BlRJPVmYasRso9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714667451; c=relaxed/simple;
-	bh=4zlpv+DhkaBiyYsvVgDDjEkJDrbSWHV2ilnz+UjRAb4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kNo7U1vxv7wJ2KZbGo3rUQAWyGmlVy4c+xywrwbIIyqqK6OwWew0dKn5YxtGEcpfeObmL3o+LwsUj5EZyBqqxulk2dfhgOWBelyj1XwO198w+ShQ3L8CcYHkSNSN3DV89ERlaAXDm6ixz+ijxIUfZrayPLxNAvSdsZDAzIUjUC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=rE80tuXV; arc=none smtp.client-ip=46.235.229.95
+	s=arc-20240116; t=1714667456; c=relaxed/simple;
+	bh=FDs8zOxUdfobTpJKR/H15bW4BvIDRf4R69hj+7xfUXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ezdHOhAhUZFOwhX17zuH3gFvaSbg/pdP25WOdgJtxYOdtoEDYYQUqJO3b4dHyBAw35QjVxhaHQoiHXZU4/5x/Mxm9peQ91pg2zfL4FUakNXgjAIkrHKQuSjjWaH9EVf6DCJspva49DaZYWe9Ujy9NAmdnqDiUh8qwDv4ALi0Ngs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=rhNipQEd; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rE80tuXV"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rhNipQEd"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
 	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=BWNBfZG7kizyb6cHFecEfxf40LvY/HI+GlksidfEVfM=; b=rE80tuXVfWce54OV
-	ILx3QP/PdlOSWIjm0v6HLcqRL3+4rghrm1hW0VDOkiqjrddRzClSEf3oGdW8qyzDJ/EeMxgUoTYU5
-	ju29HqyrKPHPH6/fAY0mStlhFpVCc3X2gWCpK/pOS9lXfx1wUaOMDV2Jy7meB4cEnoZvHtZ4W/0Rn
-	bMJ5VocIDOyrPSL6TSaRaGFaQK1wcXwrrX5g0nyP1LQ/8jOrz8jbTY8H5Y1pdOJJSUajpKpU0Zfe/
-	GIpzxWv3V/o0yotn7tbP14HttqXnoQyctL2ikQdPUVKYkN5AOOIAVsQ9qQYuh1Xg3cTqB1DvRY6k9
-	/GP6Bagc8bL7GgqTTQ==;
+	:Subject; bh=VF57B/xw0oUlWQRex3Gc5BwlwzzPx1Jss71WKlk4wrk=; b=rhNipQEdFyrhaNtY
+	IR40TiPgAAIfnwHzWJeRNh5aOqZXdaGLIgDoPxXIIYX9P0MHeW4uN7/nWMDHCnWU02CxP/I5j/Dys
+	/fPyCzi027LVkbgDKM1JCue1k2gNEove1Oup5yT8vayiPkp8NfrbFbvy2mM4mPzZ1YeQfwIJTQsca
+	rjuxGRY64Ikm2qfT44CWtb3wcSuX3cG/Hs80W2F+EuAnavLUBkGxQjlqdRIqSCEvre9w2XQfE29WL
+	dSG3z7bWVfD/lXj1pIrVLoJLVg3D4g10HCqPCLTIcf+YOA1LloIKv1SEw3/2xYk02PZz0V9loEYlG
+	zFnRjOef8jnKUewveg==;
 Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
 	by mx.treblig.org with esmtp (Exim 4.96)
 	(envelope-from <linux@treblig.org>)
-	id 1s2Yfp-004ILZ-1S;
-	Thu, 02 May 2024 15:48:41 +0000
+	id 1s2Yfw-004ILZ-2R;
+	Thu, 02 May 2024 15:48:48 +0000
 From: linux@treblig.org
 To: sudipm.mukherjee@gmail.com
 Cc: arnd@arndb.de,
 	linux-kernel@vger.kernel.org,
 	linux-parport@lists.infradead.org,
 	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 0/3] parport: Cleanup some pre-devmodel code
-Date: Thu,  2 May 2024 16:48:20 +0100
-Message-ID: <20240502154823.67235-1-linux@treblig.org>
+Subject: [PATCH 2/3] parport: Remove attach function pointer
+Date: Thu,  2 May 2024 16:48:22 +0100
+Message-ID: <20240502154823.67235-3-linux@treblig.org>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240502154823.67235-1-linux@treblig.org>
+References: <20240502154823.67235-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,59 +51,34 @@ Content-Transfer-Encoding: 8bit
 
 From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-There are some remenants of the pre-devmodel code
-still in the parport drivers; try and clean some of them out.
+The attach function pointers haven't actually been called since:
+  'commit 3275158fa52a ("parport: remove use of devmodel")'
+topped adding entries to the drivers list.
 
-This series should have no visible change, all the drivers
-already use the devmodel, it's just removing the flags
-that say that, and cleaning out no longer used function pointers.
-(To me the most useful bit is removing the no longer used
-'attach' pointer, so if you've got code that's trying to use
-it you'll get educated).
+If you're converting a driver, look at the 'match_port' function
+pointer instead.
 
-Trivially tested in qemu, I can still write to the lp;
+(There are lots of comment references to 'attach' all over, but they
+probably need some deeper understanding to check the semantics
+to see if they can be replaced by match_port).
 
-Also checked with grep -r 'struct parport_driver' . -A 9
-to see if I've missed any.
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ include/linux/parport.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-(I found this while dragging the out-of-tree ppscsi code
-into working on head, so that I could use my prehistoric
-HP PP scanner)
-
-Dave
-
-Dr. David Alan Gilbert (3):
-  parport: Remove 'drivers' list
-  parport: Remove attach function pointer
-  parport: Remove parport_driver.devmodel
-
- drivers/ata/pata_parport/pata_parport.c  | 1 -
- drivers/auxdisplay/ks0108.c              | 1 -
- drivers/auxdisplay/panel.c               | 1 -
- drivers/char/lp.c                        | 1 -
- drivers/char/ppdev.c                     | 1 -
- drivers/i2c/busses/i2c-parport.c         | 1 -
- drivers/input/joystick/db9.c             | 1 -
- drivers/input/joystick/gamecon.c         | 1 -
- drivers/input/joystick/turbografx.c      | 1 -
- drivers/input/joystick/walkera0701.c     | 1 -
- drivers/input/serio/parkbd.c             | 1 -
- drivers/net/hamradio/baycom_epp.c        | 1 -
- drivers/net/hamradio/baycom_par.c        | 1 -
- drivers/net/plip/plip.c                  | 1 -
- drivers/parport/daisy.c                  | 1 -
- drivers/parport/share.c                  | 9 ---------
- drivers/pps/clients/pps_parport.c        | 1 -
- drivers/pps/generators/pps_gen_parport.c | 1 -
- drivers/scsi/imm.c                       | 1 -
- drivers/scsi/ppa.c                       | 1 -
- drivers/spi/spi-butterfly.c              | 1 -
- drivers/spi/spi-lm70llp.c                | 1 -
- include/linux/parport.h                  | 6 ------
- sound/drivers/mts64.c                    | 1 -
- sound/drivers/portman2x4.c               | 1 -
- 25 files changed, 38 deletions(-)
-
+diff --git a/include/linux/parport.h b/include/linux/parport.h
+index 2a4424b601565..190de3569e25c 100644
+--- a/include/linux/parport.h
++++ b/include/linux/parport.h
+@@ -252,7 +252,6 @@ struct parport {
+ 
+ struct parport_driver {
+ 	const char *name;
+-	void (*attach) (struct parport *);
+ 	void (*detach) (struct parport *);
+ 	void (*match_port)(struct parport *);
+ 	int (*probe)(struct pardevice *);
 -- 
 2.44.0
 
