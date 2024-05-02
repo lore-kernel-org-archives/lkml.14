@@ -1,289 +1,145 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2119.outbound.protection.partner.outlook.cn [139.219.17.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4A643158
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 13:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714655553; cv=none; b=ddtwLebziprOWeP4MljCo2HesfK6xy/jIe5ARtLUASyrAa5AMGFkK1WagAprl+ODdxHDPtZOBujV4u9WmQZPgSZHzA0AXmYYxiF/lDGatOFhBedyHbv4BzEIm155IYcdv34JGK5y2RzZm2NH41IaM2wA1IpO5BY322OnlOIedNs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714655553; c=relaxed/simple;
-	bh=w36A9qNTkHew7BT2vRvvyNspByFD2CNRYwskOpKFMNY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G5dTkK+KM6K3Hjb5AMj4ugmf0Rf8L0iocRDXOQ8KQtttOt1U+ZumGy4Jcksl7Wn7UIutzfWD3sz7/DrCNiKo+jx8PU1+uGkDE4Qv3CQp/M0LaIGQ5aRc7aAD8eRce9KKqMcYMkP1KB3AmHK/ezEtJY81NMbd853dLwe5sSwvK2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pq0FcFFd; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pq0FcFFd"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-ddda842c399so8146524276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 06:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714655551; x=1715260351; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=e9IfF2XRrC1/or05aEZt3Pgg1CS/l8eHWqh1tFVKZN4=;
-        b=pq0FcFFdFyslHFHmW4iDwTqhNMjI0Wh4AibrlCf4ipmtVjIjnYVOtFEx6iTp/NHEUT
-         aDweGprtPI6uW1sFtvp9lL1iWFibsYbLvZF8d1rkGCTwF5UwpqB5EaUv6Z8K91HJdd6T
-         WsNfJ8lZKuHcX1EVeYLgQsAxyltsXipHtgW3hFiBe2esvPEw39UbzopxfT+NAyfRt1Wf
-         LKEQQyYtdCdrITo8RIreOGb1qzRE5ev4YZDz7TnodKFOFKz6luibL7eoEcNt9FUBF5oH
-         qItPSV7p8nnPY6VM88twrhz3mDUB0+F80g+zqDnSZbEEcbvChgxhGdow+iwFeZAdQd9b
-         4+NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714655551; x=1715260351;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e9IfF2XRrC1/or05aEZt3Pgg1CS/l8eHWqh1tFVKZN4=;
-        b=TxJGUenC1rgeXSzKwPGG/BXp9trjbN+jXUG/3pxAyesztFp5U9wzluakQt70Py1paW
-         dcLAEn23G3ARZAa27kB/TsHjqfOU5stdg4K/DYG+D1yE+8rg0B2W/HWEXRh5WSCXRQ7Y
-         mIQsOA554s+9bvnUSyj3542z+dJH3QuSUXHqSuGtyHikw1TfeWcS727WI6qStAqEW8rS
-         ovpjmeL8+K1cjCLPCaDGjy8cTvqLWkZ+Z/WVrvacFmcqVENUpsDRceYsdUSEfDIvdHtX
-         E25L83IGZUZillosrpJ6vDzKZ4YIAQzmiWANRLMKw3Bj9xdInu48N+64LStlygvNahV1
-         UwEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXb1OlGS8Wqefiica2mk494fVox5iQC6IxW24KUm9n+12I4MLiHt87BKeeoGBYafgPQgJjCbVQBa0u6joOk0iKFhDVok3wjfJ5Ei1p5
-X-Gm-Message-State: AOJu0YzFs4H7++cbG803y7Xe3rgchx1k61nAPk0AbYTX7Oqt+36MUB1f
-	OvRvWccq6HvTZIk7S2BAH+zOKWdBh2U0aBCAF1f4YzR5F97PbAzMzXIQg3w9Ojf8V/ZNAAlJaww
-	K3TaYLnI+20cT4UG6BWBCUM1Kng91ORWaY9qwoA==
-X-Google-Smtp-Source: AGHT+IEmkdUGj5jxW8y/dVl1d+EP/OPmo0I1J+BrgLeQOzwiCRVJgZVKxM+VVh8ViBEG0rKvwXQFvcvTYJR/P/usunM=
-X-Received: by 2002:a25:db8e:0:b0:dca:a3e8:a25a with SMTP id
- g136-20020a25db8e000000b00dcaa3e8a25amr2216795ybf.62.1714655551232; Thu, 02
- May 2024 06:12:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32994824AC;
+	Thu,  2 May 2024 13:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.119
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714655624; cv=fail; b=d5dY2xxQ/a78IMKX1fI1msYXQZ4FzQTg7jDU2/K3tXVnb4QWdYHOdvhCf/P0N/B9SYHjI8Px94yHanD+nJSh1mNQt3gDATtpFcUYLju1cfs/O/Rf35jm/U99jNrqUhfyF1Fa3h1EKLPOGFZ6J0LUHgunGjCpSloZxfOJ+zqWVps=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714655624; c=relaxed/simple;
+	bh=Y+t4jh9ItlV5uG63DXPLk7KpWeg2fgmI3UZxxYPuXes=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ubwhmWI4TD+wvPLCWdlTwXqLoruJUJUfZTkqX25c1c6/KsUDrqMo5FC/HqRz9VSxaCcvQ1RloSD7AyEgrSzRBRC6phLM8IOH8wx1wRwm2+RsP05Rrk1wUfjBRY5LjDMwQi8heG7rwSjndMXUzw+IEK9A3w9n5DkkMq5/l50c3f4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j1lpFNapH0PKYfGa/lHFalqL0Flceh1eMXthgruSZ5elSQFjJvs0MGlQyq6EUaMPKw2bGM401QHfavUwblX0Qa3ZkCU7pKSGULEWaHAAHOk19EeVas3QeDzjeU5UhojOE3mgothSjNe1TO751SkC0QY+xGfr7Gx3xJ9BHiGJQySHnBIhJTNihDX+UksbSwmM4nPPnzXIZPxplUySk6W34+yIgI+wchBRvcFdmIedVmU2szxvnGc7LrVtPyZujB9FePYKf8w4OapfJvsljKyzMYavo9QYo8UgnG6Q4Qs8+JL+J3bFPuyqjix6lqGqd09COfeNZsSOgfCeoGr4Tp8l/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y+t4jh9ItlV5uG63DXPLk7KpWeg2fgmI3UZxxYPuXes=;
+ b=QjyNMtqEpWv+Uz/0X7dk7dxdnv7E9FWMUtjITbU4w55YB9Jk/WcfRAGgFikWj3BdFkjHeO7QKf0o2H8whVf+paY8B9plQhBXI2uSPFtcYqU4zaAPCKwjTyydCQjZbGCnojQFXZ1oUgd4skrFWQb2gvsn08mNVLAkuBsE6PFudui7g/D55LXPlgHcfILmTsL6MPexNkqDGM/qwnxQJBl3e87RYdK1JvZ5n2zKvYbv1tLKMsHQ5p7Yz3RKeiWOGE8NIrquVCpGUT9MTFDfw30xGHwwdykavScudXZd2Tegxpk636AbTh7wlyj1j0PQn/SXxjYxGUqQe5q7vw+mn2uHxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::9) by ZQ4PR01MB1235.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:15::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Thu, 2 May
+ 2024 12:58:13 +0000
+Received: from ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
+ ([fe80::301e:ec80:4356:8b14]) by
+ ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn ([fe80::301e:ec80:4356:8b14%6])
+ with mapi id 15.20.7472.044; Thu, 2 May 2024 12:58:13 +0000
+From: JiSheng Teoh <jisheng.teoh@starfivetech.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+	Michal Simek <michal.simek@amd.com>, Lars-Peter Clausen <lars@metafoo.de>
+CC: Leyfoon Tan <leyfoon.tan@starfivetech.com>, "linux-spi@vger.kernel.org"
+	<linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, EngLee Teh <englee.teh@starfivetech.com>
+Subject: RE: [PATCH v2 2/2] dt-bindings: spi: spi-cadence: Add optional reset
+ control
+Thread-Topic: [PATCH v2 2/2] dt-bindings: spi: spi-cadence: Add optional reset
+ control
+Thread-Index: AQHanH5J1xo3ta2QXkGkfo2fF/uLg7GD3ZcAgAADf9CAAAQVgIAAAXwQ
+Date: Thu, 2 May 2024 12:58:13 +0000
+Message-ID:
+ <ZQ4PR01MB1154491D456521284B3BACFBEB18A@ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn>
+References: <20240502104800.3030486-1-jisheng.teoh@starfivetech.com>
+ <20240502104800.3030486-3-jisheng.teoh@starfivetech.com>
+ <89f96e06-1966-43c2-b4c4-17e1669c2566@kernel.org>
+ <ZQ4PR01MB1154B6FBA361C503AC10E6B6EB18A@ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn>
+ <ea96eb15-2cd0-4f0a-8bba-8bd7f37cbbc2@kernel.org>
+In-Reply-To: <ea96eb15-2cd0-4f0a-8bba-8bd7f37cbbc2@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ4PR01MB1154:EE_|ZQ4PR01MB1235:EE_
+x-ms-office365-filtering-correlation-id: 60ba3ba4-991c-4b3e-17cd-08dc6aa786e7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ e6e6ZNDmKCx5RyxCtrl1+saN3SEHZo7oL8PRHJCcKAXIcHrJT4o+9g1JiJs9LMyl5s3a3F37i8KYy7tiOsiSkGYYue1mNQY4NydoLb0B0Max7omNNHYRKjsPMTso6HT6HBo5S2AUYJt0GpX4HALrhHlYLzv4jSUzTb43cLjutBEyO2cj88g4Igu4nh+LuON8iEH38XkTLTKSIcU19ZjRCTUjT1RcSnZw0nLIqrKWtMMX/wgn4OXFTMiahlb2C2RClAiipO2Mvr0obsYB2XgqwFK07/lzP68bpWxqcWHUAaGiIkS5QaiAe3KkWobG3U5Po/kgZ95Lctgd61Z0LRoGIukQ8p2S7veixR0p1sK42Q++aYY8xzk9BCySnl0y0ty/o7P/2oshroMrTIL1tTMbuSt2BU1RMI500qPSt/1TC9geyVUpWzToMYtiibXNwjAOYb/+RVVcqqGxx517tQ0nNG0cqgn7QnfW407rFeUiWE7BlVVLvGU48qRRUk9rkpRLOlo+UScyJnuC5LNh/Q0X6OxBOcBcwExKDaQfP8pQrfrG/KkGV4DS9HuiEir68bbRq/QpVIyQHBlq1bGR9OUSesVG628MGdAlv9svQ/hPwTFpbDiFNOMnfPdzNsB/Jt9N
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(1800799015)(7416005)(366007)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WHRKc2NEZjMya1hub282TllnY2FZcTF0cmI4L3ovaDlDb3VtMXYxb0k5dHBq?=
+ =?utf-8?B?VDdMMGZ6Y2M5S2pBVTJoMDg4ODJvWllCZFB0MG9Na0Y4YU56Q1pQcTlscnBh?=
+ =?utf-8?B?Ym1oMGtkcWEwODAyVUh5K2JHSGRmVWVBMjA4UGpIMXJWVHZxOTZsSEsrZkVu?=
+ =?utf-8?B?SERGNnBWQmlWWlprSDkxSGQ1U1lSeHppQVkraWFKWlRSSXdNY01UZ0JJdmZ5?=
+ =?utf-8?B?SjlDeGRDRkdnd3Z6cm1keEYrWFBIbTdrbzhQb256K3NTVTJCNWJUQ2JVNWJt?=
+ =?utf-8?B?TWZIeW5RakdQb05XaHFndUdMbjIzWnRVQ1NDMnlVOUZncjUxWTdycituUFo2?=
+ =?utf-8?B?MmpRYkNiRmZvSzZXZ2V0NElISVo5VjREQzNCS3JwY1RKdjFtQllLQmtiaTcr?=
+ =?utf-8?B?NGZHZXUxcm1zSVR4angwaXRLMUNieFgwZzA0bEdrdFpuR0toZnlVVEFhRElq?=
+ =?utf-8?B?dXNPOWZRbUhMejlnQlJmN1dhdzd6M0ZrWVR0RE56c1ZRTTZDdFEwRTJhek55?=
+ =?utf-8?B?QkJKSFFOU1dBT0ZBZ2tzMTcwN1JmOEs4RE5POXFGVis0WHp5QkdOcWRoRHJG?=
+ =?utf-8?B?YzlzMWhZMldYOG4zaVd6MTJNOFlTTEw5OGFlSWFqN1NpcU5mQnkzZ0VoTWpC?=
+ =?utf-8?B?VzdKNDZxMlp5WERzYUw2aFNLcEtiZGtwZW9GVk8yWDk5Vk1FanpJU3RVN1lQ?=
+ =?utf-8?B?WEM2cVkzejc1eng4YUNuMXFIT05DSllhTWxLdVE4VkIvbWRBemlCTVNidjZ5?=
+ =?utf-8?B?RnhvVnB4eGUwa05NK01OKzhJZ0FmT0N4SHJwMnA1TDVTYW15TFZTdktPMDl2?=
+ =?utf-8?B?ZHNHemJFUzFRNkE4QTJlQnZKNHhIcm4rcFVmdkRyQ0g5Yjd0bklRbjJBc25i?=
+ =?utf-8?B?ZFVxSXV0TUR6NzZwQk1hR0ZQU3RwRlhhNnk5VUgxQmxFTGo1bkg3Yk5UNitE?=
+ =?utf-8?B?QmU4UUFDaWdEYStnemFlelE0Z1BZL3RVbjFGUmFqd2N2cW1RNUdkdHdnMWxJ?=
+ =?utf-8?B?UXdnbThzYlh2bmcvWFBIdldXeEpZbWxLc1NteThPK1lOSWhVWXhNaE8rWlZw?=
+ =?utf-8?B?WFZ0U1lHNUtuVW40dkRBQTc2VnI3YlBuc2NFT2FBYTRLL3NDbjA0K3lZN0dr?=
+ =?utf-8?B?UGlZS3dpT0FwOWQ2Sml6dlljUmI4YXF6QzBnZm5LLzNhNXptUlNRY2Y3WDFJ?=
+ =?utf-8?B?NFRZU2tzUW5sK3hNTjBINzRUQkFud3hJVHExSGhzQUNJSEV3ZURWcXowN1pa?=
+ =?utf-8?B?eWg5T2pGeGNXQWNoeno5cjFOMGJFTGkvSlh6YithNEVXV3NTeFl0NWdyN1FS?=
+ =?utf-8?B?YVZmWndZRHIwSjZSazZjQmhYQWdpTThCSk9vZWhUdmVXN2ZOZE5uMXg2WDBo?=
+ =?utf-8?B?YkVRc1FkYUk1clJLWUxsclZUZ0lURkZ5Zkx5dXEwQWd5S3pxMjRmT0FtdDZX?=
+ =?utf-8?B?VE9BODhJa3Ezd1F2bGEvL0c5VXg3OWVic3hjbkZRS1FKcFArYlVRd0xVQ2pJ?=
+ =?utf-8?B?NkZQRi9nMnphelhNQWV5MjVRWjNyUElMZnZZZlNzaWF1ZWdYRytwKzFqUWh6?=
+ =?utf-8?B?RGRQdVEyYUcvWTlDSURPWXA5U2MzalJDUTBJYTR0cWtEUUVpSVpucmI1UHA0?=
+ =?utf-8?B?TFZiODhLK2FPeVdoOE4yUFhoWGR5U1JIaDBmVXpBc1c1M3poMnNJdzRjRDVq?=
+ =?utf-8?B?M3AzL3kvSUw0UzdSMVBhdUtScXViczNMRFJnVTc0SVZTQkcyRHRUOUZqVUtW?=
+ =?utf-8?B?VlpaSTJqb3E2d1FkbkZ1VXVPbmF4Rmo3RVhHdHppRkF4M3FObnpKUTFkbHds?=
+ =?utf-8?B?dGFPc21QZ2MwMmFnSzNVbFJoMUJTclRqdUtuQlpJRGdiU1RMSlAxL1QzOTNM?=
+ =?utf-8?B?QlJRTjYrTmVnK1pWYzNHK3pYQldCdnd2YUc0K3JYVEl4VUZvQ04xQVp4TERZ?=
+ =?utf-8?B?azBrVFYwV2IvOXBlUnZWQWNsQVVtamE4blBkOHNvY2xlQVRsZHk1VmdFb040?=
+ =?utf-8?B?ZnZETmxTVXFxVXBXc0UxUnJPcVRQR1ZpMUUvREF3MHZkNjNBUHUwT0JDU2xH?=
+ =?utf-8?B?eG5Mb0tOdjU1czc1NEllOFRMa0h5Wk9mUnZsTTA0RWtJcjRyOEcwMkllQksy?=
+ =?utf-8?B?cEdKYTFNd294S1h1Mm04dFBpNGdvMmdzK2JNZ0xrWEdITGNmeU5UTm9mNjVK?=
+ =?utf-8?B?MVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502123312.31083-1-quic_ugoswami@quicinc.com>
-In-Reply-To: <20240502123312.31083-1-quic_ugoswami@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 2 May 2024 16:12:20 +0300
-Message-ID: <CAA8EJppeQTadmny=hcs4xCQDXHwXEBHXjeecvZCUVcSXmwBTgg@mail.gmail.com>
-Subject: Re: [PATCH] phy: qcom-snps-femto-v2: Add load and voltage setting for
- LDO's used
-To: Udipto Goswami <quic_ugoswami@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60ba3ba4-991c-4b3e-17cd-08dc6aa786e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2024 12:58:13.4807
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WsqAAvMNrbtKCr5rS9opy3EfQDDRYTjHtSrz7kSNnmGlXE2F08dKCSf3KZO9El501AUykJjSWMT+eeP23NLXjoizn6C1Qrq2rwNrJmJSaTw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1235
 
-On Thu, 2 May 2024 at 15:33, Udipto Goswami <quic_ugoswami@quicinc.com> wrote:
->
-> The Femto phy depends on 0.88/ 1.8/ 3.3V regulators for its operation.
-> If one of the regulators is not voted to the required minimum voltage
-> for phy to operate, then High speed mode of operation will fail.
->
-> On certain targets like (qcm6490_rb3gen2) where the minimum voltage
-> of the regulator is lower than the operating voltage of the phy.
-> If not voted properly, the phy supply would be limited to the min value
-> of the LDO thereby rendering the phy non-operational.
->
-> The current implementation of the regulators in the Femto PHY is not
-> setting the load and voltage for each LDO. The appropriate voltages and
-> loads required for the PHY to operate should be set.
-
-Please move min/max voltages to the DTS. There is no need to set them
-from the driver.
-
-Also, is there any reason why you can't use `regulator-initial-mode =
-<RPMH_REGULATOR_MODE_HPM>;` like other boards do?
-
->
-> Implement a bulk operation api to set load & voltages before doing bulk
-> enable. This will ensure that the PHY remains operational under all
-> conditions.
->
-> Signed-off-by: Udipto Goswami <quic_ugoswami@quicinc.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c | 121 +++++++++++++++++-
->  1 file changed, 114 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-> index eb0b0f61d98e..cbe9cdaa6849 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-> @@ -78,11 +78,39 @@
->
->  #define LS_FS_OUTPUT_IMPEDANCE_MASK            GENMASK(3, 0)
->
-> -static const char * const qcom_snps_hsphy_vreg_names[] = {
-> -       "vdda-pll", "vdda33", "vdda18",
-> +
-> +struct qcom_snps_hsphy_regulator_data {
-> +       const char *name;
-> +       unsigned int enable_load;
-> +       unsigned int min_voltage;
-> +       unsigned int max_voltage;
-> +};
-> +
-> +static const struct qcom_snps_hsphy_regulator_data hsphy_vreg_l[] = {
-> +       {
-> +               .name = "vdda-pll",
-> +               .enable_load = 30000,
-> +               .min_voltage = 825000,
-> +               .max_voltage = 925000,
-> +       },
-> +
-> +       {
-> +               .name = "vdda18",
-> +               .enable_load = 19000,
-> +               .min_voltage = 1704000,
-> +               .max_voltage = 1800000
-> +       },
-> +
-> +       {
-> +               .name = "vdda33",
-> +               .enable_load = 16000,
-> +               .min_voltage = 3050000,
-> +               .max_voltage = 3300000
-> +       },
-> +
->  };
->
-> -#define SNPS_HS_NUM_VREGS              ARRAY_SIZE(qcom_snps_hsphy_vreg_names)
-> +#define SNPS_HS_NUM_VREGS              ARRAY_SIZE(hsphy_vreg_l)
->
->  struct override_param {
->         s32     value;
-> @@ -132,12 +160,90 @@ struct qcom_snps_hsphy {
->         struct clk_bulk_data *clks;
->         struct reset_control *phy_reset;
->         struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
-> +       const struct qcom_snps_hsphy_regulator_data *vreg_list;
->
->         bool phy_initialized;
->         enum phy_mode mode;
->         struct phy_override_seq update_seq_cfg[NUM_HSPHY_TUNING_PARAMS];
->  };
->
-> +static int __vdda_phy_bulk_enable_disable(struct qcom_snps_hsphy *hsphy, bool on)
-
-Separate functions, please.
-
-> +{
-> +       int ret = 0;
-> +       int i;
-> +
-> +       if (!on)
-> +               goto disable_vdd;
-> +
-> +       for (i = 0; i < SNPS_HS_NUM_VREGS; i++) {
-> +
-> +               ret = regulator_set_load(hsphy->vregs[i].consumer,
-> +                                        hsphy->vreg_list[i].enable_load);
-> +
-> +               if (ret < 0) {
-> +                       dev_err(hsphy->dev, "unable to set HPM of %s %d\n",
-> +                                               hsphy->vregs[i].supply, ret);
-> +                       goto err_vdd;
-> +               }
-> +       }
-> +
-> +       for (i = 0; i < SNPS_HS_NUM_VREGS; i++) {
-> +               ret = regulator_set_voltage(hsphy->vregs[i].consumer,
-> +                                           hsphy->vreg_list[i].min_voltage,
-> +                                           hsphy->vreg_list[i].max_voltage);
-> +               if (ret) {
-> +                       dev_err(hsphy->dev,
-> +                               "unable to set voltage of regulator %s %d\n",
-> +                                               hsphy->vregs[i].supply, ret);
-> +                       goto put_vdd_lpm;
-> +               }
-> +       }
-> +
-> +       ret = regulator_bulk_enable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-> +       if (ret)
-> +               goto unconfig_vdd;
-> +
-> +       return ret;
-> +
-> +disable_vdd:
-> +       regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-> +
-> +unconfig_vdd:
-> +       for (i = 0; i < SNPS_HS_NUM_VREGS; i++) {
-> +               ret = regulator_set_voltage(hsphy->vregs[i].consumer, 0,
-> +                                           hsphy->vreg_list[i].max_voltage);
-> +               if (ret) {
-> +                       dev_err(hsphy->dev,
-> +                       "unable to set voltage of regulator %s %d\n",
-> +                                       hsphy->vregs[i].supply, ret);
-> +               }
-> +       }
-> +
-> +put_vdd_lpm:
-> +       for (i = 0; i < SNPS_HS_NUM_VREGS; i++) {
-> +               ret = regulator_set_load(hsphy->vregs[i].consumer, 0);
-> +
-> +               if (ret < 0) {
-> +                       dev_err(hsphy->dev, "unable to set LPM of %s %d\n",
-> +                                               hsphy->vregs[i].supply, ret);
-> +               }
-> +       }
-> +
-> +err_vdd:
-> +       return ret;
-> +
-> +}
-> +
-> +static int vdda_phy_bulk_enable(struct qcom_snps_hsphy *hsphy)
-> +{
-> +       return __vdda_phy_bulk_enable_disable(hsphy, true);
-> +}
-> +
-> +static int vdda_phy_bulk_disable(struct qcom_snps_hsphy *hsphy)
-> +{
-> +       return __vdda_phy_bulk_enable_disable(hsphy, false);
-> +}
-> +
->  static int qcom_snps_hsphy_clk_init(struct qcom_snps_hsphy *hsphy)
->  {
->         struct device *dev = hsphy->dev;
-> @@ -390,7 +496,7 @@ static int qcom_snps_hsphy_init(struct phy *phy)
->
->         dev_vdbg(&phy->dev, "%s(): Initializing SNPS HS phy\n", __func__);
->
-> -       ret = regulator_bulk_enable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-> +       ret = vdda_phy_bulk_enable(hsphy);
->         if (ret)
->                 return ret;
->
-> @@ -471,7 +577,7 @@ static int qcom_snps_hsphy_init(struct phy *phy)
->  disable_clks:
->         clk_bulk_disable_unprepare(hsphy->num_clks, hsphy->clks);
->  poweroff_phy:
-> -       regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-> +       ret = vdda_phy_bulk_disable(hsphy);
->
->         return ret;
->  }
-> @@ -482,7 +588,7 @@ static int qcom_snps_hsphy_exit(struct phy *phy)
->
->         reset_control_assert(hsphy->phy_reset);
->         clk_bulk_disable_unprepare(hsphy->num_clks, hsphy->clks);
-> -       regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-> +       vdda_phy_bulk_disable(hsphy);
->         hsphy->phy_initialized = false;
->
->         return 0;
-> @@ -592,8 +698,9 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
->
->         num = ARRAY_SIZE(hsphy->vregs);
->         for (i = 0; i < num; i++)
-> -               hsphy->vregs[i].supply = qcom_snps_hsphy_vreg_names[i];
-> +               hsphy->vregs[i].supply = hsphy_vreg_l[i].name;
->
-> +       hsphy->vreg_list  = hsphy_vreg_l;
->         ret = devm_regulator_bulk_get(dev, num, hsphy->vregs);
->         if (ret)
->                 return dev_err_probe(dev, ret,
-> --
-> 2.17.1
->
->
-
-
--- 
-With best wishes
-Dmitry
+PiBPbiAwMi8wNS8yMDI0IDE0OjQ1LCBKaVNoZW5nIFRlb2ggd3JvdGU6DQo+ID4+IE9uIDAyLzA1
+LzIwMjQgMTI6NDgsIEppIFNoZW5nIFRlb2ggd3JvdGU6DQo+ID4+PiBEb2N1bWVudCB0aGUgb3B0
+aW9uYWwgcmVzZXQgY29udHJvbCB0byBTUEkuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTog
+RW5nIExlZSBUZWggPGVuZ2xlZS50ZWhAc3RhcmZpdmV0ZWNoLmNvbT4NCj4gPj4+IFNpZ25lZC1v
+ZmYtYnk6IExleSBGb29uIFRhbiA8bGV5Zm9vbi50YW5Ac3RhcmZpdmV0ZWNoLmNvbT4NCj4gPj4+
+IFNpZ25lZC1vZmYtYnk6IEppIFNoZW5nIFRlb2ggPGppc2hlbmcudGVvaEBzdGFyZml2ZXRlY2gu
+Y29tPg0KPiA+Pg0KPiA+PiBXaG8gaXMgdGhlIGF1dGhvciBoZXJlPyBXaGF0IGFyZSB0aGVzZSB0
+aHJlZSBTb0JzIGV4cHJlc3Npbmc/IFJvYiBhc2tlZCBmb3IgdGhpcyBsYXN0IHRpbWUuDQo+ID4N
+Cj4gPiBGaXJzdCBTb0Igd2FzIHRoZSBvcmlnaW5hbCBhdXRob3IsIHRoZSBzdWJzZXF1ZW50IFNv
+QiBtYWRlIGNoYW5nZXMgdG8gdGhlIG9yaWdpbmFsIHBhdGNoLg0KPiA+IElmIGludGVuZCB0byBv
+bmx5IGtlZXAgdGhlIGF1dGhvciwgdGhlbiBwbGVhc2UgdGFrZSB0aGUgZmlyc3QgU29CLiBTb3Jy
+eSBmb3IgdGhlIG5vaXNlLg0KPiANCj4gVGhlbiB5b3UgbWlzcyBDby1kZXZlbG9wZWQtYnkgdGFn
+cy4NCg0KVGhhbmtzLCBJIHdpbGwgZml4IHRoZSB0YWdzIGluIHRoZSBuZXh0IHJldmlzaW9uLg0K
