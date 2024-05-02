@@ -1,46 +1,46 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2057.outbound.protection.outlook.com [40.107.94.57])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2042.outbound.protection.outlook.com [40.107.92.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EF484A4C;
-	Thu,  2 May 2024 13:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBE383CD1;
+	Thu,  2 May 2024 13:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714655442; cv=fail; b=Ch/g2rxdMK2WECamzdqOW7ex+9JxZXLqWS/WwDhT+61m38BJcxwXKf3y6E0Aa+A0c9sUKKZZeYS9LzpwJm7G/6CTna8NWgPdNQMcIqkqwWf6sUwnWH3yAHF4ZZVIIYsDYa/6fq1cwBXjxkxbVzSVDYZl4AecDReerYABDyvi8Io=
+	t=1714655452; cv=fail; b=Kyih854gP5nuBFyNZi0WqZBQjq6ujPGW/y20phgVvpFjPgdfylDBwqHfsHkJX8q3rMBUwkUQ9n1TI5Q19l1gdlZz6vK8gUAJFB+AMDiImaRNE951n5AI26N1XdOxL0u0Qa7GKDHIbhjMri4/b/hXVtXuAVAMwfy7MdqLdnYAQMg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714655442; c=relaxed/simple;
-	bh=w9bhUqg6oqAtYJnC+gvdjbA2FR9qwJ8cIsGDaNiKjE0=;
+	s=arc-20240116; t=1714655452; c=relaxed/simple;
+	bh=v1JhYc6iUtZ9TCumyvSWziE9cjMb5FtLilah2sWZPB0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UdfZS6dZ5TJbUwUxKUNEOQyBHsOe3ggJj1y3G8WwkZFhdJzOeuL5TdROeEUcr/y7MKmK69mpzJjv/6vEFnOwJrQ15ey6MYXPIfQCMquJ2hfDnJDByVnzy2Lto8ecaoPDxad1n45a/5K3FIIwEIw4EJbx0AAETVRSqV/4VQfVXDo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OR96MOx9; arc=fail smtp.client-ip=40.107.94.57
+	 MIME-Version:Content-Type; b=FZuR+qCkiB9qjDOIE9N6CcEylATUYgVa53xEpZGinnyitB/jAoSsKbkeYk3VSKiPfPWlRPXiUTG8gB1VbdS3vXvGskNMhbVNe8BHtPKn8Av3TK2w6wXsIVgyxm4STZxRKNBr7fZwQVCj8WihIZSP9mPGDZo5J5VkZfbGLQEIKjk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ubcH7Hpr; arc=fail smtp.client-ip=40.107.92.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OR96MOx9"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ubcH7Hpr"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k1dm1noD3ulkcxJdQCCRz0y9ykGL6kkyz19al/mydF79+QpRKit4tBC5TB4KWvaE8uuRjKIgJfo54Fj+K+6Q84RTOHH5nykStjrPLsRJaTcpkjqBP5W6bUWoAzSdLIA+UF4yYqRcsF7F306vzMk1CvC1RK09vXhtPjJgbfi9Xe2ebGHIrQf2bPPNhhpBP8S0JpIsVLzW15neQZmgk6wafbSvW3LWrXBs6maLKzRX6c1MhHIjpLxLZHARlNLn9kc8XiWrG8lj+kOlnjq5EP5q7WXLYE+xRRJNrTZA0+oX9eaINTGJOcHzJqqHFjyyjx/BRJdFdiranF/4Qp2p9n4yVg==
+ b=JZx0aJtdn8l4C/T4jtUy+3c+cyqxzXNcyW6M2wcw4qF8AEsbo14wZvFGjRWKJ55CL2Y0IWhJXL/l6cH9sj5Vb0nFEICafXVQk9YhvlUN++v69F/5mf9FRge2+UMvNRiRP/qF45fccZ1MERr9ZYOGSYA6AUVYXpK08BzNUAVWg+0UTuCuCf5HEV8HIMUOQB6hy+CjPgbGGN0G0NY6aRlv8/rIlOiwunmS93OGBUlZFXWLr/KWwX1Mf3Rgm9CNmwP9lgwyTCFb7bgRr76sDj/vx3e/F2AMnf/Wyk5Evcl+BojVwaoIsG+Nm4xN9JEb0p1DnO/3KzVDGO5DfFH+QSLm+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H0fBmZ+MpiN8madmmxMpxrrfw202+Ko/QzP2gtvv7ZA=;
- b=Qm+tVVIarLFoV24tIXAS2Nw95G1qDMB5uBsXe2JHxERbjYizB91doTEANpMeaHTzu2pxjwgcVrmBecD6y00/H7UAm1T1aUNnFuYKsSfy43i7iEIPKknSn7ocDNb0KqhNetUN41dA42xDfZqmZLxEzDEEi6JKIJi0oDMCsu3QZy6ItlLyhP30B0pVdmNaMuspWbY1uPNjXiJvcAqBrMAHDBQCFK0g8nXhRGL00QWEdzcc31CCd4c5Mg9bO1bBbh8E5U8zwfHdRq+xsRHJp+vwyqXM9G6QSlNG+6xKdx01zkkU2x513tx9a2smpBbYfx2seYnJeQLrCVLFICSkrDyMUw==
+ bh=64z5yhRlLAyXKvUjNmlOhdqIx2ToTLjxrNdfM+KGR8M=;
+ b=ap1dG68GMGnJMBtO203cnfeu80030bbDpUaP/eHnRjXunpTfMNX/KyICOOBIde8jWVU3i2ZopMGICNa4BWaV2j9fyOroEH3XCT0Y0w3p2APSFNV1z3aAcR0BGPaF5X6zyQ+9QGLTn4C5enn+Mfg3g2hCnRRO5FDA4/ToFUwfa5zG3NbOF437Nif4GK3H2SAHPNshi5C+yNBnBjBVCzIzIhsW6KuQPhqh9E0qn/KX2FltR2Q+/iuBnDulavaU5hrYhGXeOgXCbNFtYyZLKR8DHloeR4kBiMAelKxx69190aWg9zl+p62EXatjKVEO8taluBQe5a6ra2JdM1rNaqFQxw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H0fBmZ+MpiN8madmmxMpxrrfw202+Ko/QzP2gtvv7ZA=;
- b=OR96MOx9tcBcbql6jaSBCUelkJjzUFyGUUa3iolA2SHMNTPjMQGjA2R8Q7tYKPZ6WKwZtz2Djbh0yosY+wlYEyLVwur0td40CaJp4V47/BHa4jihr8ATsZYHLk+rGvTAGZl34F2NgP2/xkikdy+biQvF73UIkgYJCNHcsJbr+wo=
-Received: from CH5P221CA0014.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:1f2::7)
- by CH3PR12MB9077.namprd12.prod.outlook.com (2603:10b6:610:1a2::13) with
+ bh=64z5yhRlLAyXKvUjNmlOhdqIx2ToTLjxrNdfM+KGR8M=;
+ b=ubcH7HprUvd+TJmiHLxAUWK40+c8/2hIxj0kDXcoVwes7ghEmO6H5ZHfrRyVMD9+qwOOutf1JEaCAsk5KedfxMg9hsAoIyIuLrW2HPtNBpycmhTP3SXx6ss3heGBFiGaGpAXVehX+kR3VoLZzaNlgTFq88M6trBxR0m7MPxZCWk=
+Received: from CH2PR05CA0004.namprd05.prod.outlook.com (2603:10b6:610::17) by
+ SN7PR12MB7369.namprd12.prod.outlook.com (2603:10b6:806:298::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36; Thu, 2 May
- 2024 13:10:37 +0000
-Received: from CH2PEPF0000009B.namprd02.prod.outlook.com
- (2603:10b6:610:1f2:cafe::a9) by CH5P221CA0014.outlook.office365.com
- (2603:10b6:610:1f2::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30 via Frontend
- Transport; Thu, 2 May 2024 13:10:37 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Thu, 2 May
+ 2024 13:10:46 +0000
+Received: from CH2PEPF0000009E.namprd02.prod.outlook.com
+ (2603:10b6:610:0:cafe::6) by CH2PR05CA0004.outlook.office365.com
+ (2603:10b6:610::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.29 via Frontend
+ Transport; Thu, 2 May 2024 13:10:46 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,27 +48,23 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF0000009B.mail.protection.outlook.com (10.167.244.23) with Microsoft
+ CH2PEPF0000009E.mail.protection.outlook.com (10.167.244.27) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Thu, 2 May 2024 13:10:36 +0000
+ 15.20.7544.18 via Frontend Transport; Thu, 2 May 2024 13:10:46 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 2 May
- 2024 08:10:33 -0500
+ 2024 08:10:41 -0500
 From: Robert Richter <rrichter@amd.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Alison Schofield <alison.schofield@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, Robert Richter <rrichter@amd.com>, Derick Marks
-	<derick.w.marks@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Len Brown <lenb@kernel.org>
-Subject: [PATCH v7 1/4] x86/numa: Fix SRAT lookup of CFMWS ranges with numa_fill_memblks()
-Date: Thu, 2 May 2024 15:10:09 +0200
-Message-ID: <20240502131012.2385725-2-rrichter@amd.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Dave Hansen <dave.hansen@linux.intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, Robert Richter <rrichter@amd.com>, "Jonathan
+ Cameron" <Jonathan.Cameron@huawei.com>, Len Brown <lenb@kernel.org>
+Subject: [PATCH v7 3/4] ACPI/NUMA: Squash acpi_numa_slit_init() into acpi_parse_slit()
+Date: Thu, 2 May 2024 15:10:11 +0200
+Message-ID: <20240502131012.2385725-4-rrichter@amd.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240502131012.2385725-1-rrichter@amd.com>
 References: <20240502131012.2385725-1-rrichter@amd.com>
@@ -84,156 +80,113 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009B:EE_|CH3PR12MB9077:EE_
-X-MS-Office365-Filtering-Correlation-Id: a087797f-9cb1-40dd-207d-08dc6aa94214
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000009E:EE_|SN7PR12MB7369:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e002282-0414-4a75-02db-08dc6aa947a5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|376005|1800799015|7416005|921011;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|36860700004|1800799015;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?j3uveNV40hoaS3+KBIYWHp5776UTqdoyLmbmDDwIJaG6ib9VpS7AOYMVDaIW?=
- =?us-ascii?Q?yuhRepUWv+Ke7BdZo8wbPFp5F4n9O9fRAfVAnszaSNoKOKGzXkZ7y8+n0eri?=
- =?us-ascii?Q?Ul4pw1ps4etK2Ct+iqdOFT96xieAJ79/ZNw0occvScav9jA3dgDez6/WCHQu?=
- =?us-ascii?Q?VGXDKU8ZhB5sxIVJhSgHLh7qi1GN6LSwULBJj2STjc/WF3jlGiak/5TdKauS?=
- =?us-ascii?Q?nPeASMej38Wlt4Llj8w+vhizOOvgu2vXV10q7iCXH/Qk1vp3x4lRAFAVJBSA?=
- =?us-ascii?Q?biiBopVk6ioRi+ou9XfiS4Pw4xsImfHolWAPSW7jZrp0hkEbZLQVh5HLYGfU?=
- =?us-ascii?Q?96sZX/xcWyzmyCCbewdVRAcux9CAgIHLodOKcUsyYX4k9/tdagza0DbkdPKN?=
- =?us-ascii?Q?QVdaBgUGTiVyYasxLLwnNEZw7MOvJU2wHXmo4ZiF53RlluNu5sKlJB70JESV?=
- =?us-ascii?Q?rLhB8JilPPqfiSdAA+TRLjujZM7Oig0NNmcmohzNAYgLh153gy7R7rFdkY5w?=
- =?us-ascii?Q?6iWmYX71VKQaTae4el35E1e06FyepMEYA+wiu7oHjeHytxs4wae0Be3zYJP5?=
- =?us-ascii?Q?/rsefpr1pQ3J9pYdiqaH2SIigTpAr/+1QlxY7JUl7Po+XdCyz8eUiG/IEkSQ?=
- =?us-ascii?Q?q5WHjQ4D4JcvuYau6XSRQNje5J8HDDqFGS9AFmnqlTNnvmrG+qQJXMiuADGq?=
- =?us-ascii?Q?lLs4zoT/wC6JWB6UnTr4dukMvhRpdQUdcCJ9NsuDSfY24uP+y9wmLrRJsGDm?=
- =?us-ascii?Q?MYGiWhN1i6rsQ7ysubS2cQNt/E3z7IRX27IYMkNuzBPCxEyuW+SQsdTzVjB7?=
- =?us-ascii?Q?C/WcC6jKJZISv1gazYpmFAKeCtQW8JFHuv8NHqzGfMX6t/BYNf+Z7NinUWKX?=
- =?us-ascii?Q?wXm7gKSuU8LzsARTx6uon+Mk0w26PbSiOfSarTDrtZRkEZePMWuOjuEXqx+t?=
- =?us-ascii?Q?Gq52gJzlcJqzAmrWAhjTeRam3Ic3WWWFUHk6Sf2YZZ3IrxE1vqymVXJv8wNT?=
- =?us-ascii?Q?P+wZDJy5AlY+wgKrhdfH3qDHMQikIqhbUeO3z+0hWs33u9Wt+YzI1GIBZDkL?=
- =?us-ascii?Q?x5yamneURymfoG1JpQvoL5WkMYTnogMDIdVDT4FCqr1OiTl1i8VjKakNRE3c?=
- =?us-ascii?Q?zWvxVTdzUG5wPp6+6ij0TN3GmVkQ3uFJaaOJk3E6V77pjfFLXrRV42ust5/Q?=
- =?us-ascii?Q?OMRGoVQosKBFZX4sRo0EYt8Bexy28SeSiYHL671jAiLJH4T9xVm+iOnoA9yI?=
- =?us-ascii?Q?nruS8vjgohYO6e7l/xhu5sI3kFNgTf7oQz4mVb3oqOeadKi7egEa0a+4YBnh?=
- =?us-ascii?Q?KfHBv8rtx1nOh5Lh4NDlSIuJuUkGRW71fAaZiXPH2flgZg=3D=3D?=
+	=?us-ascii?Q?95jXfq+nJPv3ZA0S1HGoyV1Y4igwipCrwL/eu2blQjaXhDBlHVzqzFBsBDgk?=
+ =?us-ascii?Q?JOd04w6iJfpZL7NYp5sGSKcZTvQsMvDcf/zng9LLditWg9NWs5tIcfR/C2Uw?=
+ =?us-ascii?Q?jpXIhSUC7VRwNx+S2raNYswkwL6GvEmhj6zKbzkIbwt/XxBN3BsEj1Lql7X3?=
+ =?us-ascii?Q?rByLGHtn7/JllQ6FjzW4CaOnXJ+SV1T9t7FBlPPl7UO0VvvvKRcVK66wZCAa?=
+ =?us-ascii?Q?BdVWf84jxe1ILAiuZYHiRYBXCf7xapxoPWrRBjsw5u5DYmj2gUdVg2HkHD6l?=
+ =?us-ascii?Q?913KPEGECwbkBln6cYLbjuh3QPUyU8nzO9u8WRl3dAL+fKAFMYR23l+Jf9Pb?=
+ =?us-ascii?Q?163LvxptM+FX7fGf0CJiEOcl9f1md9yJCAkKThMluAsa74yZWPnEFPnZmrjF?=
+ =?us-ascii?Q?XBa3AIXL9tzmDmz7Fc4zEFWliCkJpiHjjZG5bmM22oMWx1Cl6G6tj5i4Zl5p?=
+ =?us-ascii?Q?HKVPF6N5B4SxMgGcC97HoLPC2z+8um746uPpHHS7kqSUWBz2ILm8aB2QHTHw?=
+ =?us-ascii?Q?CPvX87GvDxfkBH19rDivMgbaf5RrVUsoEKRrQzZXVDuuB1zm0X0De98F9TZc?=
+ =?us-ascii?Q?fTl5v/A5VuUMGfounJH77/VG/Ot05XA2TdQD8xl7oqNrJZ8hjGro0dq8bmoS?=
+ =?us-ascii?Q?JoTsQWBVPsy/gz5xDkIt9aBX7k11PhOWky/yOZ9wfMWIwH8w/5rZyfPZiJrz?=
+ =?us-ascii?Q?Ai+r/9AyqRzkxP6E3ykT0urSKMc/dFMvSDyUsb4180Pc0lIgIHBEi5232dxb?=
+ =?us-ascii?Q?q3wl3g+WCJ6vM3jkTzk1vi/4TOeGZFOK8tJKuT1jS/TWBzSL4+RK6rjnSYo+?=
+ =?us-ascii?Q?K8qB1OdU7bBcI+NZm/pHDDC7uAlsUWIrQ4rUMPCMOZae50tk7nW5pQ4zXFVh?=
+ =?us-ascii?Q?jC9bHuOh6+3ZKb6AGb+03cfhM1w73H/ik17o+L4TLl53GDgz58aSTKFCEZqX?=
+ =?us-ascii?Q?TA58Ha2UOdgthLcNVkzwJeRAFtx2ktajVrDyONYAECmef+kIqNa06TkENapV?=
+ =?us-ascii?Q?pSF/nYoyKBV7FdntpIVDmUJhLmFMPw0wmeB/D0iiEdvOFu2wWfxfpoHPSq8p?=
+ =?us-ascii?Q?eE/b8ZXlAaLQqQSDoR4hSSeJEW9hpdtXGDp3isP0/dd92qvFNz0jscoHaITM?=
+ =?us-ascii?Q?njdetjpE+kXbIQqET9FSgV4ddnOo8B+0+Z5Zxzf6y9nbv3KokEn7QqxYwirX?=
+ =?us-ascii?Q?SZsCnGaeXiyr6adj90vKeTWAOsmk6p0n8HO99wyCKlOUN9DHY7jqIMAQBmGN?=
+ =?us-ascii?Q?e/gue3ZWLxfHzE+eOYfwrLHnYQibdqZkRogCL+zCA+1F7DFWyHj0tGiDicy0?=
+ =?us-ascii?Q?KQHu8kfZWMDKKMHnSeAZan5+YNna3posVuYIWK+705uXGxiPvt8WzxgWYAuE?=
+ =?us-ascii?Q?SIXF3jk=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(1800799015)(7416005)(921011);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(1800799015);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2024 13:10:36.9775
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2024 13:10:46.2219
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a087797f-9cb1-40dd-207d-08dc6aa94214
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e002282-0414-4a75-02db-08dc6aa947a5
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009B.namprd02.prod.outlook.com
+	CH2PEPF0000009E.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9077
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7369
 
-For configurations that have the kconfig option NUMA_KEEP_MEMINFO
-disabled, numa_fill_memblks() only returns with NUMA_NO_MEMBLK (-1).
-SRAT lookup fails then because an existing SRAT memory range cannot be
-found for a CFMWS address range. This causes the addition of a
-duplicate numa_memblk with a different node id and a subsequent page
-fault and kernel crash during boot.
+After removing architectural code the helper function
+acpi_numa_slit_init() is no longer needed. Squash it into
+acpi_parse_slit(). No functional changes intended.
 
-Fix this by making numa_fill_memblks() always available regardless of
-NUMA_KEEP_MEMINFO.
-
-As Dan suggested, the fix is implemented to remove numa_fill_memblks()
-from sparsemem.h and alos using __weak for the function.
-
-Note that the issue was initially introduced with [1]. But since
-phys_to_target_node() was originally used that returned the valid node
-0, an additional numa_memblk was not added. Though, the node id was
-wrong too, a message is seen then in the logs:
-
- kernel/numa.c:  pr_info_once("Unknown target node for memory at 0x%llx, assuming node 0\n",
-
-[1] commit fd49f99c1809 ("ACPI: NUMA: Add a node and memblk for each
-    CFMWS not in SRAT")
-
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Link: https://lore.kernel.org/all/66271b0072317_69102944c@dwillia2-xfh.jf.intel.com.notmuch/
-Fixes: 8f1004679987 ("ACPI/NUMA: Apply SRAT proximity domain to entire CFMWS window")
-Cc: Derick Marks <derick.w.marks@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
- arch/x86/include/asm/sparsemem.h | 2 --
- arch/x86/mm/numa.c               | 4 ++--
- drivers/acpi/numa/srat.c         | 5 +++++
- include/linux/numa.h             | 7 +------
- 4 files changed, 8 insertions(+), 10 deletions(-)
+ drivers/acpi/numa/srat.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/include/asm/sparsemem.h b/arch/x86/include/asm/sparsemem.h
-index 1be13b2dfe8b..64df897c0ee3 100644
---- a/arch/x86/include/asm/sparsemem.h
-+++ b/arch/x86/include/asm/sparsemem.h
-@@ -37,8 +37,6 @@ extern int phys_to_target_node(phys_addr_t start);
- #define phys_to_target_node phys_to_target_node
- extern int memory_add_physaddr_to_nid(u64 start);
- #define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
--extern int numa_fill_memblks(u64 start, u64 end);
--#define numa_fill_memblks numa_fill_memblks
- #endif
- #endif /* __ASSEMBLY__ */
- 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 65e9a6e391c0..ce84ba86e69e 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -929,6 +929,8 @@ int memory_add_physaddr_to_nid(u64 start)
- }
- EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
- 
-+#endif
-+
- static int __init cmp_memblk(const void *a, const void *b)
- {
- 	const struct numa_memblk *ma = *(const struct numa_memblk **)a;
-@@ -1001,5 +1003,3 @@ int __init numa_fill_memblks(u64 start, u64 end)
- 	}
- 	return 0;
- }
--
--#endif
 diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index e45e64993c50..3b09fd39eeb4 100644
+index e4d53e3660fd..430ddcfb8312 100644
 --- a/drivers/acpi/numa/srat.c
 +++ b/drivers/acpi/numa/srat.c
-@@ -208,6 +208,11 @@ int __init srat_disabled(void)
- 	return acpi_numa < 0;
+@@ -218,10 +218,16 @@ __weak int __init numa_fill_memblks(u64 start, u64 end)
+  * I/O localities since SRAT does not list them.  I/O localities are
+  * not supported at this point.
+  */
+-static void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
++static int __init acpi_parse_slit(struct acpi_table_header *table)
+ {
++	struct acpi_table_slit *slit = (struct acpi_table_slit *)table;
+ 	int i, j;
+ 
++	if (!slit_valid(slit)) {
++		pr_info("SLIT table looks invalid. Not used.\n");
++		return -EINVAL;
++	}
++
+ 	for (i = 0; i < slit->locality_count; i++) {
+ 		const int from_node = pxm_to_node(i);
+ 
+@@ -238,6 +244,8 @@ static void __init acpi_numa_slit_init(struct acpi_table_slit *slit)
+ 				slit->entry[slit->locality_count * i + j]);
+ 		}
+ 	}
++
++	return 0;
  }
  
-+__weak int __init numa_fill_memblks(u64 start, u64 end)
-+{
-+	return NUMA_NO_MEMBLK;
-+}
-+
- #if defined(CONFIG_X86) || defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
- /*
-  * Callback for SLIT parsing.  pxm_to_node() returns NUMA_NO_NODE for
-diff --git a/include/linux/numa.h b/include/linux/numa.h
-index 915033a75731..1d43371fafd2 100644
---- a/include/linux/numa.h
-+++ b/include/linux/numa.h
-@@ -36,12 +36,7 @@ int memory_add_physaddr_to_nid(u64 start);
- int phys_to_target_node(u64 start);
- #endif
+ static int __init
+@@ -341,19 +349,6 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+ 	return 0;
+ }
  
--#ifndef numa_fill_memblks
--static inline int __init numa_fill_memblks(u64 start, u64 end)
+-static int __init acpi_parse_slit(struct acpi_table_header *table)
 -{
--	return NUMA_NO_MEMBLK;
+-	struct acpi_table_slit *slit = (struct acpi_table_slit *)table;
+-
+-	if (!slit_valid(slit)) {
+-		pr_info("SLIT table looks invalid. Not used.\n");
+-		return -EINVAL;
+-	}
+-	acpi_numa_slit_init(slit);
+-
+-	return 0;
 -}
--#endif
-+int numa_fill_memblks(u64 start, u64 end);
- 
- #else /* !CONFIG_NUMA */
- static inline int numa_nearest_node(int node, unsigned int state)
+-
+ void __init __weak
+ acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa)
+ {
 -- 
 2.39.2
 
