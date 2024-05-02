@@ -1,124 +1,331 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604867C09E;
-	Thu,  2 May 2024 12:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2887F65E20;
+	Thu,  2 May 2024 12:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714652639; cv=none; b=n6LdXntr+jwM8PnpqbfqxDHRScLe827cqVeOOH4grdkg1tn8f85iiC8hpHelodKEKkXPurz63y0iMTWeHI9b6K80uoVUn5rSiTMlY2f3U3kKoJjqvYOvcOpfeVG4Q3vdgVV0Axkkqlv6tT3b6VQj3fgB265WTgQthi+x6o8hLWg=
+	t=1714652650; cv=none; b=Kgow0IuGlYGwxbXtbSRRW3MNdxI0u6Am6YgCxwFfecaRSuUUApIXndT3soSSPAkYJ6zszXL1ztSQl3OMzfTFnKNKsgLtMiKluBLy/1zJBizaBVmwzfN1BROs2qtUsJKXGw+5HVhGaj0DiunByynkuoWMqctLGbu6hzna5OAHClY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714652639; c=relaxed/simple;
-	bh=7GnW3L0UewFa21PxmF5jDVBd/1UxVNTKfDWfygZy/mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pf6hQ0KKYkus3HGCFXhm8jD86Dq2HoZtctiMxVc3X3Etmx70j/LeN31/96k6NpLuBDQPKZm3BzN7CI91fZnwBSJ4tbaNIGFveeverdd4PmhlgeekhF755SH21QmKbeXXZu6o9FebCfl25G0gEzd7sTzDL2BfVVgmpRdanpQHOdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SEGXKGk5; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1714652650; c=relaxed/simple;
+	bh=i71ywxUeskPv7X2cS5R4+uhw8eVE+iyv8HMxABm6vMU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=us2TTM2p940fFTDgUI8iI/YKIzX1JUAOWnLjqi1IeydNcpU8ddJVdwYQFsEC5vmeAWIPwM4SCA+bDGHo9b6jlZqUGjNUIETMVeBHYd16iT8JRiKT4i82GBh+jcCJatsaH9qOoBc8lsHkg3uNZh45XeoxGoPrBc8u6FPNhgRZLTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t2ne8OiY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SEGXKGk5"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 442C8iFM000348;
-	Thu, 2 May 2024 12:23:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=9IiB2rmnnc0DMtL9pSUSRkL32DSpalMr9dFB/bMDr94=;
- b=SEGXKGk58zZplNiG0PHDKBbsg0APlNvPQ2jcSaCyeZc7gKErDDYQibbBJVIpbH06qyIo
- itba+mhkE4yjjbZthBY34bkW5RLci0ppJmo7Y4AE8aOyEMIzrNDDKgJplIBQ/q/zJFRp
- 1EJXsyXAE3DTY+tx7Vr3w7kDiVL8bfoVob5fX6W03VIztlf76+52eMfWPl3BOziZDBUG
- 7Tl5bPWrmtFBvEqB/n06C8Yyj91eYka+CP8YUPcY914n+kU8WZXZGlgvd59PsvW7KIlM
- W0s2fwdNszuZc2gjVZa1rcjTNxPh+ssocIwvYdn/osIPmB3gqz5ZYEI2+oQTXekwotx4 Sg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xvajr810d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 May 2024 12:23:41 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 442CNeUi022471;
-	Thu, 2 May 2024 12:23:40 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xvajr8109-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 May 2024 12:23:40 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4429iej9015592;
-	Thu, 2 May 2024 12:23:39 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsed37esy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 May 2024 12:23:39 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 442CNYvF51904862
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 May 2024 12:23:36 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5678820063;
-	Thu,  2 May 2024 12:23:34 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 14DDE20049;
-	Thu,  2 May 2024 12:23:34 +0000 (GMT)
-Received: from DESKTOP-2CCOB1S. (unknown [9.171.162.63])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu,  2 May 2024 12:23:34 +0000 (GMT)
-Date: Thu, 2 May 2024 14:23:33 +0200
-From: Tobias Huschle <huschle@linux.ibm.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Luis Machado <luis.machado@arm.com>,
-        Jason Wang <jasowang@redhat.com>, Abel Wu <wuyun.abel@bytedance.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux.dev, netdev@vger.kernel.org,
-        nd <nd@arm.com>, borntraeger@linux.ibm.com,
-        Ingo Molnar <mingo@kernel.org>,
-        Mike Galbraith <umgwanakikbuti@gmail.com>
-Subject: Re: EEVDF/vhost regression (bisected to 86bfbb7ce4f6 sched/fair: Add
- lag based placement)
-Message-ID: <ZjOFxbsHuQZ+Zltu@DESKTOP-2CCOB1S.>
-References: <73123.124031407552500165@us-mta-156.us.mimecast.lan>
- <20240314110649-mutt-send-email-mst@kernel.org>
- <84704.124031504335801509@us-mta-515.us.mimecast.lan>
- <20240315062839-mutt-send-email-mst@kernel.org>
- <b3fd680c675208370fc4560bb3b4d5b8@linux.ibm.com>
- <20240319042829-mutt-send-email-mst@kernel.org>
- <4808eab5fc5c85f12fe7d923de697a78@linux.ibm.com>
- <ZjDM3SsZ3NkZuphP@DESKTOP-2CCOB1S.>
- <20240501105151.GG40213@noisy.programming.kicks-ass.net>
- <20240501112830-mutt-send-email-mst@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t2ne8OiY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10AFAC113CC;
+	Thu,  2 May 2024 12:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714652649;
+	bh=i71ywxUeskPv7X2cS5R4+uhw8eVE+iyv8HMxABm6vMU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=t2ne8OiYCUdk2LwVmCsAW87c2foWTYTVVQswoiIr3gkeDC7XFho2CZTtWqLbvY9kD
+	 FR+ST2Qs0PwdxM1qyjgSsFT3NX0XsWi30tl2TTxuMyE1WxuSNc/tgdXQ4uAQlyJAge
+	 4TUB8epf4nHWVMZTYlihIOp0Jv3Z1DIin+c7nJ94aY1yKTO7TpDNvzCChBl+vfXADh
+	 t6lJbNBdq0AfTZmChiAmfoOAqthVQhlmGfTbU9RbdUgWxewAKO1Dz6UlXPDXixi9CK
+	 sYwExxq+1hBZrl4krd5NsyEYRTPSw29NNaKHIf8/tjWTqwKREu25AiAPfV4uRAZAnn
+	 JkL9VmK8yRu+w==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org,
+	x86@kernel.org,
+	bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: [PATCHv4 bpf-next 4/7] selftests/bpf: Add uretprobe syscall test for regs changes
+Date: Thu,  2 May 2024 14:23:10 +0200
+Message-ID: <20240502122313.1579719-5-jolsa@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240502122313.1579719-1-jolsa@kernel.org>
+References: <20240502122313.1579719-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501112830-mutt-send-email-mst@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: kVN33WdBekBnhviasqzgZSNBnf04Rs00
-X-Proofpoint-GUID: D_B28lHPTZQArId0hWuIiQe6jqQ3ViYp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-02_01,2024-05-02_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 impostorscore=0
- mlxlogscore=605 priorityscore=1501 malwarescore=0 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405020078
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 01, 2024 at 11:31:02AM -0400, Michael S. Tsirkin wrote:
-> On Wed, May 01, 2024 at 12:51:51PM +0200, Peter Zijlstra wrote:
-> > On Tue, Apr 30, 2024 at 12:50:05PM +0200, Tobias Huschle wrote:
-<...>
-> > 
-> > I'm still wondering why exactly it is imperative for t2 to preempt t1.
-> > Is there some unexpressed serialization / spin-waiting ?
-> 
-> 
-> I am not sure but I think the point is that t2 is a kworker. It is
-> much cheaper to run it right now when we are already in the kernel
-> than return to userspace, let it run for a bit then interrupt it
-> and then run t2.
-> Right, Tobias?
-> 
+Adding test that creates uprobe consumer on uretprobe which changes some
+of the registers. Making sure the changed registers are propagated to the
+user space when the ureptobe syscall trampoline is used on x86_64.
 
-That would be correct, the optimal scenario would be that t1, the vhost
-does its thing, wakes up t2, the kworker, makes sure t2 executes immediately,
-then gets control again and continues watching its loops without ever 
-leaving kernel space.
+To be able to do this, adding support to bpf_testmod to create uprobe via
+new attribute file:
+  /sys/kernel/bpf_testmod_uprobe
+
+This file is expecting file offset and creates related uprobe on current
+process exe file and removes existing uprobe if offset is 0. The can be
+only single uprobe at any time.
+
+The uprobe has specific consumer that changes registers used in ureprobe
+syscall trampoline and which are later checked in the test.
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ .../selftests/bpf/bpf_testmod/bpf_testmod.c   | 123 +++++++++++++++++-
+ .../selftests/bpf/prog_tests/uprobe_syscall.c |  67 ++++++++++
+ 2 files changed, 189 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+index eb2b78552ca2..27a12d125b9f 100644
+--- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+@@ -10,6 +10,7 @@
+ #include <linux/percpu-defs.h>
+ #include <linux/sysfs.h>
+ #include <linux/tracepoint.h>
++#include <linux/namei.h>
+ #include "bpf_testmod.h"
+ #include "bpf_testmod_kfunc.h"
+ 
+@@ -343,6 +344,119 @@ static struct bin_attribute bin_attr_bpf_testmod_file __ro_after_init = {
+ 	.write = bpf_testmod_test_write,
+ };
+ 
++/* bpf_testmod_uprobe sysfs attribute is so far enabled for x86_64 only,
++ * please see test_uretprobe_regs_change test
++ */
++#ifdef __x86_64__
++
++static int
++uprobe_ret_handler(struct uprobe_consumer *self, unsigned long func,
++		   struct pt_regs *regs)
++
++{
++	regs->ax  = 0x12345678deadbeef;
++	regs->cx  = 0x87654321feebdaed;
++	regs->r11 = (u64) -1;
++	return true;
++}
++
++struct testmod_uprobe {
++	struct path path;
++	loff_t offset;
++	struct uprobe_consumer consumer;
++};
++
++static DEFINE_MUTEX(testmod_uprobe_mutex);
++
++static struct testmod_uprobe uprobe = {
++	.consumer.ret_handler = uprobe_ret_handler,
++};
++
++static int testmod_register_uprobe(loff_t offset)
++{
++	int err = -EBUSY;
++
++	if (uprobe.offset)
++		return -EBUSY;
++
++	mutex_lock(&testmod_uprobe_mutex);
++
++	if (uprobe.offset)
++		goto out;
++
++	err = kern_path("/proc/self/exe", LOOKUP_FOLLOW, &uprobe.path);
++	if (err)
++		goto out;
++
++	err = uprobe_register_refctr(d_real_inode(uprobe.path.dentry),
++				     offset, 0, &uprobe.consumer);
++	if (err)
++		path_put(&uprobe.path);
++	else
++		uprobe.offset = offset;
++
++out:
++	mutex_unlock(&testmod_uprobe_mutex);
++	return err;
++}
++
++static void testmod_unregister_uprobe(void)
++{
++	mutex_lock(&testmod_uprobe_mutex);
++
++	if (uprobe.offset) {
++		uprobe_unregister(d_real_inode(uprobe.path.dentry),
++				  uprobe.offset, &uprobe.consumer);
++		uprobe.offset = 0;
++	}
++
++	mutex_unlock(&testmod_uprobe_mutex);
++}
++
++static ssize_t
++bpf_testmod_uprobe_write(struct file *file, struct kobject *kobj,
++			 struct bin_attribute *bin_attr,
++			 char *buf, loff_t off, size_t len)
++{
++	unsigned long offset;
++	int err;
++
++	if (kstrtoul(buf, 0, &offset))
++		return -EINVAL;
++
++	if (offset)
++		err = testmod_register_uprobe(offset);
++	else
++		testmod_unregister_uprobe();
++
++	return err ?: strlen(buf);
++}
++
++static struct bin_attribute bin_attr_bpf_testmod_uprobe_file __ro_after_init = {
++	.attr = { .name = "bpf_testmod_uprobe", .mode = 0666, },
++	.write = bpf_testmod_uprobe_write,
++};
++
++static int register_bpf_testmod_uprobe(void)
++{
++	return sysfs_create_bin_file(kernel_kobj, &bin_attr_bpf_testmod_uprobe_file);
++}
++
++static void unregister_bpf_testmod_uprobe(void)
++{
++	testmod_unregister_uprobe();
++	sysfs_remove_bin_file(kernel_kobj, &bin_attr_bpf_testmod_uprobe_file);
++}
++
++#else
++static int register_bpf_testmod_uprobe(void)
++{
++	return 0;
++}
++
++static void unregister_bpf_testmod_uprobe(void) { }
++#endif
++
+ BTF_KFUNCS_START(bpf_testmod_common_kfunc_ids)
+ BTF_ID_FLAGS(func, bpf_iter_testmod_seq_new, KF_ITER_NEW)
+ BTF_ID_FLAGS(func, bpf_iter_testmod_seq_next, KF_ITER_NEXT | KF_RET_NULL)
+@@ -655,7 +769,13 @@ static int bpf_testmod_init(void)
+ 		return ret;
+ 	if (bpf_fentry_test1(0) < 0)
+ 		return -EINVAL;
+-	return sysfs_create_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
++	ret = sysfs_create_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
++	if (ret < 0)
++		return ret;
++	ret = register_bpf_testmod_uprobe();
++	if (ret < 0)
++		return ret;
++	return 0;
+ }
+ 
+ static void bpf_testmod_exit(void)
+@@ -669,6 +789,7 @@ static void bpf_testmod_exit(void)
+ 		msleep(20);
+ 
+ 	sysfs_remove_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
++	unregister_bpf_testmod_uprobe();
+ }
+ 
+ module_init(bpf_testmod_init);
+diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+index 311ac19d8992..1a50cd35205d 100644
+--- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
++++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+@@ -149,15 +149,82 @@ static void test_uretprobe_regs_equal(void)
+ cleanup:
+ 	uprobe_syscall__destroy(skel);
+ }
++
++#define BPF_TESTMOD_UPROBE_TEST_FILE "/sys/kernel/bpf_testmod_uprobe"
++
++static int write_bpf_testmod_uprobe(unsigned long offset)
++{
++	size_t n, ret;
++	char buf[30];
++	int fd;
++
++	n = sprintf(buf, "%lu", offset);
++
++	fd = open(BPF_TESTMOD_UPROBE_TEST_FILE, O_WRONLY);
++	if (fd < 0)
++		return -errno;
++
++	ret = write(fd, buf, n);
++	close(fd);
++	return ret != n ? (int) ret : 0;
++}
++
++static void test_uretprobe_regs_change(void)
++{
++	struct pt_regs before = {}, after = {};
++	unsigned long *pb = (unsigned long *) &before;
++	unsigned long *pa = (unsigned long *) &after;
++	unsigned long cnt = sizeof(before)/sizeof(*pb);
++	unsigned int i, err, offset;
++
++	offset = get_uprobe_offset(uretprobe_regs_trigger);
++
++	err = write_bpf_testmod_uprobe(offset);
++	if (!ASSERT_OK(err, "register_uprobe"))
++		return;
++
++	uretprobe_regs(&before, &after);
++
++	err = write_bpf_testmod_uprobe(0);
++	if (!ASSERT_OK(err, "unregister_uprobe"))
++		return;
++
++	for (i = 0; i < cnt; i++) {
++		unsigned int offset = i * sizeof(unsigned long);
++
++		switch (offset) {
++		case offsetof(struct pt_regs, rax):
++			ASSERT_EQ(pa[i], 0x12345678deadbeef, "rax");
++			break;
++		case offsetof(struct pt_regs, rcx):
++			ASSERT_EQ(pa[i], 0x87654321feebdaed, "rcx");
++			break;
++		case offsetof(struct pt_regs, r11):
++			ASSERT_EQ(pa[i], (__u64) -1, "r11");
++			break;
++		default:
++			if (!ASSERT_EQ(pa[i], pb[i], "register before-after value check"))
++				fprintf(stdout, "failed register offset %u\n", offset);
++		}
++	}
++}
++
+ #else
+ static void test_uretprobe_regs_equal(void)
+ {
+ 	test__skip();
+ }
++
++static void test_uretprobe_regs_change(void)
++{
++	test__skip();
++}
+ #endif
+ 
+ void test_uprobe_syscall(void)
+ {
+ 	if (test__start_subtest("uretprobe_regs_equal"))
+ 		test_uretprobe_regs_equal();
++	if (test__start_subtest("uretprobe_regs_change"))
++		test_uretprobe_regs_change();
+ }
+-- 
+2.44.0
+
