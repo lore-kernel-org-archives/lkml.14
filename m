@@ -1,161 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53589181BAA;
-	Thu,  2 May 2024 20:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3535180A82
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 20:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714680499; cv=none; b=bjzLh+5nMlt3dpDX5lp4FCzhTO3ZM/EJH+WW4zGaxV/9FWHzU2JrU25+MiCwEtCP+QTI5/IpfJFd2Kkm8TfsQI4cl8hCsrHlpzot99wCug6KeCUIv+WBsgb7lJVTycM9JkH1/fKRrgGij74w0f3q3LRpSbRO5yw1k0awvtKypD0=
+	t=1714680519; cv=none; b=ewLAyrjprQtKBy2SJKKk+QX2Ww4xT4/aA8kKnie6bt1IDEUXCWCm5KSCAqWp1xjvXPg9CqaLMvNYnHTCj6lbaDWGhEZrIEFusCgALVSpDwVes4CLEWI5zV/Jw5j1ewJgAcdUya45cE3Q0aKYDef8He6WbI4VHMlNhhaL9cMo1mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714680499; c=relaxed/simple;
-	bh=rxMqV71humHqtFXm6yRvythtULUic6ZGWZAjWEIS5Jo=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=IaPivQMgU3RgOpTOnbzRFua/BvLXGonvzuD+pCVBjumP2sK4FOClOOqCbkWoI3P5jtbFi1RmnPI1WIlSEMU/8MEqvIDoIF9TkWDMoc3y7kdR901xxbHiNWZp42NqlVZ7TW5XNrfnCLc+AlH5vCTun7xIDSnixQS8I4AhTMdrCvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C4E2C4AF52;
-	Thu,  2 May 2024 20:08:19 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1s2cjq-00000003M6A-1G6Y;
-	Thu, 02 May 2024 16:09:06 -0400
-Message-ID: <20240502200906.161887248@goodmis.org>
-User-Agent: quilt/0.67
-Date: Thu, 02 May 2024 16:08:27 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org
-Subject: [PATCH v3 6/6] eventfs: Have "events" directory get permissions from its parent
-References: <20240502200821.125580570@goodmis.org>
+	s=arc-20240116; t=1714680519; c=relaxed/simple;
+	bh=3IYp4lRTQzmLzgGC9pmgdaaE/T9wslCBCEEl1047Fdo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c13H1vlzX6SAxCYzGxiz31vyGQmbgMWRxoIqOthPed8sdDe1zcso0JukjM6CQ87nII446tauYHX8whBMJ1nFaq8oyizHyBhSzRO3lUxn5xH93r/lDXuiVyY1COqutYGts1FxOI+d8L9oK5WG5c61vmsiHaG4iRQBOTCZk9L10Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g87r6rca; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g87r6rca"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a595199cb9bso323860566b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 13:08:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714680516; x=1715285316; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w7bHDLJ7ExWZnW/zCrBxpFgsWVLK4EooXDm/uirDOi4=;
+        b=g87r6rcaroN6m6Ha3jE6mL6bgDXBYxYsfo8/2VrEd0v3QO/baPSi9d6kGq2alrLXqK
+         Whenv6Qasq7HMnibi7bt9aprjuUJ4a1ZE+7xffxwGb6sn7kPtEj8YL/InK7F868n7XRu
+         564jfcJF9mhv0C4vdVUTwWYmgFCYBqiXUma/UInYCZGsnK/W++FXvPrN8cnGyHJd4YIe
+         GTgiTIcypwld51rG0k4vF/vxkQf/JkTy7FuM3JSWqAzt0d1AEBwZQrItvXBZXRgUMWsl
+         uqzibryvsK14x4TsmhE6SRvVmbqqkG7N+u/HdsPimJiIRZjsiGJ+i/smreDmPeqhD4v7
+         M9uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714680516; x=1715285316;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w7bHDLJ7ExWZnW/zCrBxpFgsWVLK4EooXDm/uirDOi4=;
+        b=Hi8979Qa7ZplFxtjYbkr7Ksu7+lngQx8S7asSsvZh9E4MGX6fIYTnmzW4e9Q1jti8h
+         /gOXCygDrxrpWRF+pdIEAiOQ8SNrJZBStqO03ytr6UFdZ4N54bIukm0CRZ02lynHcK9j
+         VFem/xEe8+dYIt9yQ8PuyKatopusHi/oVjvZjFpE4zUPcTlvd9no+nSLM+AvYWWI0HnL
+         H7lARpOUPzVaCdG99oraZlUa/XtIubncARDQOYHPPb3QzKfndzbpjF/PLMfE6SC7mtFT
+         jRonNamwVrO3sb3+D/IrO+eotaBcaZm8awnjMJPYdj8hze3UC2H+htatZLeWrF65u6cS
+         t99w==
+X-Forwarded-Encrypted: i=1; AJvYcCWNt2JV+0I4myoBpWM3vptQPsdFaBYoD9HTYr5F9Q6ENl6qad2o1j6sRj/BQRGN8EshU8XsL7G/9ojS3Hhm26q8K8+GSi88klBSZzsa
+X-Gm-Message-State: AOJu0YxIbbCmxC6db5+1RbQQdXbUbzln64s77T/h5m/8UUZTgfrZgDMr
+	7Iwtks3Y0p5YvDWIgCgAVwxicn8aI5POU92/a06xcC5/vvYKWot1jQ/FPWPKDPkRqhf/JvaAet7
+	H15PnTqVESmiKZSQrq28D3jp7RbWTXzxfpKgX
+X-Google-Smtp-Source: AGHT+IFc79OoA6cHdMREvw/F5+U+f5TUvfpAw59eNfwjV/TrZ+jI0Si/9Dzy8J7JFxVy8yrrTpCSw98BqmRTC+TzxDI=
+X-Received: by 2002:a17:906:387:b0:a58:bce5:9b49 with SMTP id
+ b7-20020a170906038700b00a58bce59b49mr315966eja.44.1714680515692; Thu, 02 May
+ 2024 13:08:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240424165646.1625690-2-dtatulea@nvidia.com> <4ba023709249e11d97c78a98ac7db3b37f419960.camel@nvidia.com>
+ <CAHS8izMbAJHatnM6SvsZVLPY+N7LgGJg03pSdNfSRFCufGh9Zg@mail.gmail.com>
+ <4c20b500c2ed615aba424c0f3c7a79f5f5a04171.camel@nvidia.com>
+ <CAHS8izPkRJyLctmyj+Ppc5j3Qq5O1u3aPe5h9mnFNHDU2OxA=A@mail.gmail.com>
+ <20240426160859.0d85908e@kernel.org> <CAHS8izNs-LV=6FE39sjF3V7qVfveOsOAOJ_X62TSzWpvamsS0Q@mail.gmail.com>
+ <20240429080022.214a9df9@kernel.org>
+In-Reply-To: <20240429080022.214a9df9@kernel.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Thu, 2 May 2024 13:08:23 -0700
+Message-ID: <CAHS8izPBhZ1USvSoDdR-Xwg3jNL5ppRXTzc3FEM9gjx6B1fJAw@mail.gmail.com>
+Subject: Re: [RFC PATCH] net: Fix one page_pool page leak from skb_frag_unref
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Dragos Tatulea <dtatulea@nvidia.com>, "davem@davemloft.net" <davem@davemloft.net>, 
+	"pabeni@redhat.com" <pabeni@redhat.com>, 
+	"ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"jacob.e.keller@intel.com" <jacob.e.keller@intel.com>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Jianbo Liu <jianbol@nvidia.com>, 
+	"edumazet@google.com" <edumazet@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, Apr 29, 2024 at 8:00=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Fri, 26 Apr 2024 21:24:09 -0700 Mina Almasry wrote:
+> > On Fri, Apr 26, 2024 at 4:09=E2=80=AFPM Jakub Kicinski <kuba@kernel.org=
+> wrote:
+> > >
+> > > On Thu, 25 Apr 2024 12:20:59 -0700 Mina Almasry wrote:
+> > > > -       if (recycle && napi_pp_get_page(page))
+> > > > +       if (napi_pp_get_page(page))
+> > >
+> > > Pretty sure you can't do that. The "recycle" here is a concurrency
+> > > guarantee. A guarantee someone is holding a pp ref on that page,
+> > > a ref which will not go away while napi_pp_get_page() is executing.
+> >
+> > I don't mean to argue, but I think the get_page()/put_page() pair we
+> > do in the page ref path is susceptible to the same issue. AFAIU it's
+> > not safe to get_page() if another CPU can be dropping the last ref,
+> > get_page_unless_zero() should be used instead.
+>
 
-The events directory gets its permissions from the root inode. But this
-can cause an inconsistency if the instances directory changes its
-permissions, as the permissions of the created directories under it should
-inherit the permissions of the instances directory when directories under
-it are created.
+I uploaded a revert for review, but to reland I perhaps need to
+understand a bit more the concern here. AFAICT that diff you're
+responding to is safe and it works very well with devmem so it would
+be my preferred approach to reland (but there are other options if you
+are convinced it's bad). FWIW my thoughts:
 
-Currently the behavior is:
+> Whoever gave us the pointer to operate on has a reference, so the page
+> can't disappear. get_page() is safe.
 
- # cd /sys/kernel/tracing
- # chgrp 1002 instances
- # mkdir instances/foo
- # ls -l instances/foo
-[..]
- -r--r-----  1 root lkp  0 May  1 18:55 buffer_total_size_kb
- -rw-r-----  1 root lkp  0 May  1 18:55 current_tracer
- -rw-r-----  1 root lkp  0 May  1 18:55 error_log
- drwxr-xr-x  1 root root 0 May  1 18:55 events
- --w-------  1 root lkp  0 May  1 18:55 free_buffer
- drwxr-x---  2 root lkp  0 May  1 18:55 options
- drwxr-x--- 10 root lkp  0 May  1 18:55 per_cpu
- -rw-r-----  1 root lkp  0 May  1 18:55 set_event
+Agreed.
 
-All the files and directories under "foo" has the "lkp" group except the
-"events" directory. That's because its getting its default value from the
-mount point instead of its parent.
+> The problem with pp is that we
+> don't know whether the caller has a pp ref or a page ref. IOW the pp
+> ref may not be owned by whoever called us.
+>
 
-Have the "events" directory make its default value based on its parent's
-permissions. That now gives:
+OK, this is where I'm not sure anymore. The diff you're replying to
+attempts to enforce the invariant: "if anyone wants a reference on an
+skb_frag, skb_frag_ref will be a pp ref on pp frags
+(is_pp_page=3D=3Dtrue), and page refs on non-pp frags
+(is_pp_page=3D=3Dfalse)".
 
- # ls -l instances/foo
-[..]
- -rw-r-----  1 root lkp 0 May  1 21:16 buffer_subbuf_size_kb
- -r--r-----  1 root lkp 0 May  1 21:16 buffer_total_size_kb
- -rw-r-----  1 root lkp 0 May  1 21:16 current_tracer
- -rw-r-----  1 root lkp 0 May  1 21:16 error_log
- drwxr-xr-x  1 root lkp 0 May  1 21:16 events
- --w-------  1 root lkp 0 May  1 21:16 free_buffer
- drwxr-x---  2 root lkp 0 May  1 21:16 options
- drwxr-x--- 10 root lkp 0 May  1 21:16 per_cpu
- -rw-r-----  1 root lkp 0 May  1 21:16 set_event
+Additionally the page doesn't transition from pp to non-pp and vice
+versa while anyone is holding a pp ref, because
+page_pool_set_pp_info() is called right after the page is obtained
+from the buddy allocator (before released from the page pool) and
+page_pool_clear_pp_info() is called only after all the pp refs are
+dropped.
 
-Cc: stable@vger.kernel.org
-Fixes: 8186fff7ab649 ("tracefs/eventfs: Use root and instance inodes as default ownership")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+So:
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 6e08405892ae..a878cea70f4c 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -37,6 +37,7 @@ static DEFINE_MUTEX(eventfs_mutex);
- 
- struct eventfs_root_inode {
- 	struct eventfs_inode		ei;
-+	struct inode			*parent_inode;
- 	struct dentry			*events_dir;
- };
- 
-@@ -226,12 +227,23 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
- 
- static void update_events_attr(struct eventfs_inode *ei, struct super_block *sb)
- {
--	struct inode *root;
-+	struct eventfs_root_inode *rei;
-+	struct inode *parent;
-+
-+	rei = get_root_inode(ei);
-+
-+	/* Use the parent inode permissions unless root set its permissions */
-+	parent = rei->parent_inode;
- 
--	/* Get the tracefs root inode. */
--	root = d_inode(sb->s_root);
--	ei->attr.uid = root->i_uid;
--	ei->attr.gid = root->i_gid;
-+	if (rei->ei.attr.mode & EVENTFS_SAVE_UID)
-+		ei->attr.uid = rei->ei.attr.uid;
-+	else
-+		ei->attr.uid = parent->i_uid;
-+
-+	if (rei->ei.attr.mode & EVENTFS_SAVE_GID)
-+		ei->attr.gid = rei->ei.attr.gid;
-+	else
-+		ei->attr.gid = parent->i_gid;
- }
- 
- static void set_top_events_ownership(struct inode *inode)
-@@ -817,6 +829,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	// Note: we have a ref to the dentry from tracefs_start_creating()
- 	rei = get_root_inode(ei);
- 	rei->events_dir = dentry;
-+	rei->parent_inode = d_inode(dentry->d_sb->s_root);
- 
- 	ei->entries = entries;
- 	ei->nr_entries = size;
-@@ -826,10 +839,15 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	uid = d_inode(dentry->d_parent)->i_uid;
- 	gid = d_inode(dentry->d_parent)->i_gid;
- 
--	/* This is used as the default ownership of the files and directories */
- 	ei->attr.uid = uid;
- 	ei->attr.gid = gid;
- 
-+	/*
-+	 * When the "events" directory is created, it takes on the
-+	 * permissions of its parent. But can be reset on remount.
-+	 */
-+	ei->attr.mode |= EVENTFS_SAVE_UID | EVENTFS_SAVE_GID;
-+
- 	INIT_LIST_HEAD(&ei->children);
- 	INIT_LIST_HEAD(&ei->list);
- 
--- 
-2.43.0
+1. We know the caller has a ref (otherwise get_page() wouldn't be safe
+in the non-pp case).
+2. We know that the page has not transitioned from pp to non-pp or
+vice versa since the caller obtained the ref (from code inspection, pp
+info is not changed until all the refs are dropped for pp pages).
+3. AFAICT, it follows that if the page is pp, then the caller has a pp
+ref, and if the page is non-pp, then the caller has a page ref.
+4. So, if is_pp_page=3D=3Dtrue, then the caller has a pp ref, then
+napi_pp_get_page() should be concurrently safe.
 
+AFAICT the only way my mental model is broken is if there is code
+doing a raw get_page() rather than a skb_frag_ref() in core net stack.
+I would like to get rid of these call sites if they exist. They would
+not interact well with devmem I think (but could be made to work with
+some effort).
 
+--
+Thanks,
+Mina
