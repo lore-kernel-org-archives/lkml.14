@@ -1,173 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EB556766
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 09:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E455466C;
+	Thu,  2 May 2024 09:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714640650; cv=none; b=bSyMrbUtAUUJN9AOluojFpUDvfKK9p6llwySeCppxSz/VSAtW0l59sZYdjqZT1QpRAgHol8VMmxlbQd0IjjJJWgyX0cIG707fTFAjTL5S7Uh82J2qcVshZofqdNPtPM2rBhsF82atv1B1xK6o7UfaGh8OP+x8vhB+cKJ4H1u0AQ=
+	t=1714640657; cv=none; b=Z66PODFKfzr5CLwFX07AGgAQcW3khvqRy8aM6WnN5pxvT5QNOdDvHUBoXcIrvVL/Nnz1r/wYO3+6xMxv5Pq3Um1zrSpIOzWi1GZbjnvJEBqGpZ5hVEpqyjKATIUbaAoHp13MfpVmK9AJW21/sflJiqE9xDuYggMve6231eRAFDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714640650; c=relaxed/simple;
-	bh=RBNo7t5IGu2yThFFulb8qCfz4Zt2E7C/FOw15MNEb5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rC6rq9p+TVrdkMVv+DPVwbsWtQ3M4ChEyZNhQ/xU7bHQhqI/PcGNO8MamV/zEiTJrYsz5hSXDuo6Nx+fynBYvKDg0gkREhtztiolCpAqBSTo+oJLNKj9Nv9uyd8gpssGyzGTorMzKOt2WpzSbccQjLbC94ad1465R/J4RlZaY1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g0vCt9sr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714640657; c=relaxed/simple;
+	bh=6ybnRSgzmwgQhvj2h0wA5WBI6u0bsgXxQhPo6NKgvDA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oRZbSpe+G5tfqYW+O38Y6NRLKIpANPjJu5XQG4EyP10+WTWgzNaCg8IIr12oTUm6b5fnASD1ojQFXnKH1RnlvVVWbXCbEk4muhiUP5hCyxk8C87RqtDVNeUsUwPdnsO+ooUsHdRPk8Jua97z7XJekfHLWX3dxrPAKDXBhvyjbUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D2qoC6O7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0vCt9sr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714640647;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+3z/p7PSnITLar6zjViIxQUZhsvkqQniW+UpUaJYwp0=;
-	b=g0vCt9srzzxgOvDFY+d2VULr8KkstIjMmefgpuGFCDgUFbraaMtD//my2ycW1o095BvQbG
-	F2jMdcsuxNx7/4QRVfFJjQG+olER8NMsC/VjsIfocRFPavK2hl+fqWeLPydbUkkTw3qWn7
-	BW58tygEY/RFewsWfOOnCViK38rLxZo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-74-shbXHky0Ojewoz46za8lZg-1; Thu, 02 May 2024 05:04:04 -0400
-X-MC-Unique: shbXHky0Ojewoz46za8lZg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CC69080E95D;
-	Thu,  2 May 2024 09:04:03 +0000 (UTC)
-Received: from fedora (unknown [10.39.194.153])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 36235EC685;
-	Thu,  2 May 2024 09:04:01 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  2 May 2024 05:04:03 -0400 (EDT)
-Date: Thu, 2 May 2024 05:04:00 -0400
-From: Oleg Nesterov <oleg@redhat.com>
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Phil Auld <pauld@redhat.com>
-Subject: Re: kernel/sched/isolation.c:143 housekeeping_setup() warn: always
- true condition '(first_cpu >= 0) => (0-u32max >= 0)'
-Message-ID: <ZjNXAEGhAnXX20Xk@redhat.com>
-References: <202404300915.WNvfwBz3-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D2qoC6O7"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4428uIDQ024281;
+	Thu, 2 May 2024 09:04:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=56YwCakw/N/Wc/uAVUqHrPlre6xDW45zzKL9YBLI5ZE=; b=D2
+	qoC6O7FH4Ul09kIEB4WfbywXfx4/A03nZ51YBBbTwCReLsE5/8xepl4faDbN/DxT
+	Ok6bWrylq9jewUheUWEIuq2jfQtV/6vKCxr5jvjEjK+ohVdmlTzVuWgTqDqiUWVr
+	WlJonHAWDqyduSeZ7XCdvO/EWFm593hKkmP29n4F3DhIgnsjw8bV49MuWLx4wKRF
+	cCF2MUkYKatsphC7fb+mSfOIhFgeJnQD5vFIcoNt/qgggdSZHUh0Vg11ym4NXpu5
+	MjryeN/lw8IPSo2TVnRjhmJ2DwcEY5cYnGlv2AanpyjUmXCYGstRneMnMhUaYFaE
+	7rY4Wzf0axDQYLJ25PUg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xud76axmh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 May 2024 09:04:06 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 442945EU004937
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 2 May 2024 09:04:05 GMT
+Received: from hu-kbajaj-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 2 May 2024 02:04:00 -0700
+From: Komal Bajaj <quic_kbajaj@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>, <quic_wcheng@quicinc.com>,
+        <quic_ppratap@quicinc.com>, Jack Pham
+	<quic_jackp@quicinc.com>,
+        Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>,
+        Komal Bajaj <quic_kbajaj@quicinc.com>,
+        Amrit Anand
+	<quic_amrianan@quicinc.com>
+Subject: [PATCH v3 3/3] arm64: dts: qcom: qru1000-idp: enable USB nodes
+Date: Thu, 2 May 2024 14:33:26 +0530
+Message-ID: <20240502090326.21489-4-quic_kbajaj@quicinc.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240502090326.21489-1-quic_kbajaj@quicinc.com>
+References: <20240502090326.21489-1-quic_kbajaj@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202404300915.WNvfwBz3-lkp@intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: qruT8GfQ36aZWrjg0pEqTNA5jdVeS7Yc
+X-Proofpoint-GUID: qruT8GfQ36aZWrjg0pEqTNA5jdVeS7Yc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-01_16,2024-05-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1015 bulkscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=388
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2405020053
 
-Hello,
+Enable both USB controllers and associated hsphy and qmp phy
+nodes on QRU1000 IDP.
 
-I am on PTO till May 9 without my working laptop, can't even read the source code.
-I'll return to this when I'm back. CONFIG_SMP=n I guess.
+Co-developed-by: Amrit Anand <quic_amrianan@quicinc.com>
+Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
+Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/qru1000-idp.dts | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-On 04/30, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   98369dccd2f8e16bf4c6621053af7aa4821dcf8e
-> commit: 257bf89d84121280904800acd25cc2c444c717ae sched/isolation: Fix boot crash when maxcpus < first housekeeping CPU
-> date:   2 days ago
-> config: xtensa-randconfig-r081-20240429 (https://download.01.org/0day-ci/archive/20240430/202404300915.WNvfwBz3-lkp@intel.com/config)
-> compiler: xtensa-linux-gcc (GCC) 13.2.0
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202404300915.WNvfwBz3-lkp@intel.com/
-> 
-> New smatch warnings:
-> kernel/sched/isolation.c:143 housekeeping_setup() warn: always true condition '(first_cpu >= 0) => (0-u32max >= 0)'
-> 
-> Old smatch warnings:
-> arch/xtensa/include/asm/thread_info.h:97 current_thread_info() warn: inconsistent indenting
-> 
-> vim +143 kernel/sched/isolation.c
-> 
->    117	
->    118	static int __init housekeeping_setup(char *str, unsigned long flags)
->    119	{
->    120		cpumask_var_t non_housekeeping_mask, housekeeping_staging;
->    121		unsigned int first_cpu;
->    122		int err = 0;
->    123	
->    124		if ((flags & HK_FLAG_TICK) && !(housekeeping.flags & HK_FLAG_TICK)) {
->    125			if (!IS_ENABLED(CONFIG_NO_HZ_FULL)) {
->    126				pr_warn("Housekeeping: nohz unsupported."
->    127					" Build with CONFIG_NO_HZ_FULL\n");
->    128				return 0;
->    129			}
->    130		}
->    131	
->    132		alloc_bootmem_cpumask_var(&non_housekeeping_mask);
->    133		if (cpulist_parse(str, non_housekeeping_mask) < 0) {
->    134			pr_warn("Housekeeping: nohz_full= or isolcpus= incorrect CPU range\n");
->    135			goto free_non_housekeeping_mask;
->    136		}
->    137	
->    138		alloc_bootmem_cpumask_var(&housekeeping_staging);
->    139		cpumask_andnot(housekeeping_staging,
->    140			       cpu_possible_mask, non_housekeeping_mask);
->    141	
->    142		first_cpu = cpumask_first_and(cpu_present_mask, housekeeping_staging);
->  > 143		if (first_cpu >= nr_cpu_ids || first_cpu >= setup_max_cpus) {
->    144			__cpumask_set_cpu(smp_processor_id(), housekeeping_staging);
->    145			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
->    146			if (!housekeeping.flags) {
->    147				pr_warn("Housekeeping: must include one present CPU, "
->    148					"using boot CPU:%d\n", smp_processor_id());
->    149			}
->    150		}
->    151	
->    152		if (cpumask_empty(non_housekeeping_mask))
->    153			goto free_housekeeping_staging;
->    154	
->    155		if (!housekeeping.flags) {
->    156			/* First setup call ("nohz_full=" or "isolcpus=") */
->    157			enum hk_type type;
->    158	
->    159			for_each_set_bit(type, &flags, HK_TYPE_MAX)
->    160				housekeeping_setup_type(type, housekeeping_staging);
->    161		} else {
->    162			/* Second setup call ("nohz_full=" after "isolcpus=" or the reverse) */
->    163			enum hk_type type;
->    164			unsigned long iter_flags = flags & housekeeping.flags;
->    165	
->    166			for_each_set_bit(type, &iter_flags, HK_TYPE_MAX) {
->    167				if (!cpumask_equal(housekeeping_staging,
->    168						   housekeeping.cpumasks[type])) {
->    169					pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
->    170					goto free_housekeeping_staging;
->    171				}
->    172			}
->    173	
->    174			iter_flags = flags & ~housekeeping.flags;
->    175	
->    176			for_each_set_bit(type, &iter_flags, HK_TYPE_MAX)
->    177				housekeeping_setup_type(type, housekeeping_staging);
->    178		}
->    179	
->    180		if ((flags & HK_FLAG_TICK) && !(housekeeping.flags & HK_FLAG_TICK))
->    181			tick_nohz_full_setup(non_housekeeping_mask);
->    182	
->    183		housekeeping.flags |= flags;
->    184		err = 1;
->    185	
->    186	free_housekeeping_staging:
->    187		free_bootmem_cpumask_var(housekeeping_staging);
->    188	free_non_housekeeping_mask:
->    189		free_bootmem_cpumask_var(non_housekeeping_mask);
->    190	
->    191		return err;
->    192	}
->    193	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+diff --git a/arch/arm64/boot/dts/qcom/qru1000-idp.dts b/arch/arm64/boot/dts/qcom/qru1000-idp.dts
+index 2a862c83309e..1c781d9e24cf 100644
+--- a/arch/arm64/boot/dts/qcom/qru1000-idp.dts
++++ b/arch/arm64/boot/dts/qcom/qru1000-idp.dts
+@@ -467,3 +467,26 @@ &tlmm {
+ &uart7 {
+ 	status = "okay";
+ };
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "peripheral";
++};
++
++&usb_1_hsphy {
++	vdda-pll-supply = <&vreg_l8a_0p91>;
++	vdda18-supply = <&vreg_l14a_1p8>;
++	vdda33-supply = <&vreg_l2a_2p3>;
++
++	status = "okay";
++};
++
++&usb_1_qmpphy {
++	vdda-phy-supply = <&vreg_l8a_0p91>;
++	vdda-pll-supply = <&vreg_l3a_1p2>;
++
++	status = "okay";
++};
+--
+2.42.0
 
