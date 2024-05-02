@@ -1,94 +1,67 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3D71C2AD;
-	Thu,  2 May 2024 22:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104294779D
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 22:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714690646; cv=none; b=iJGP6xGPpgMl5ojVXS0srlWeewAw4xpVjxvHxWZjFlmM5TnnwiIsQPc5j5X7P55/6I2MoSkn2UO0ejEXUCvUUVlFgqF9zxsEWXpjpX5DxYkwmAgNwrcBUKl0D6fd9oCsPvrt9ThDQLimmlR7kVKOvLDjPXilcPuufVY3pjdL2og=
+	t=1714690658; cv=none; b=slcmTTyPxVDixvHR67IqR54+2hvUiO9Tg9dFx36A1nz9XilDC2b1tV7V5UsV4Fs1OneoJpBiVMM9qd1jk5zIb+CT/KNbDrcp/cd8hqlMgNr44XKOC/oIVeo+pWvJOoGVYe5SQhUU3/nvhKFUo1nWaEa76qDTZ+MJ5F5k93RzYiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714690646; c=relaxed/simple;
-	bh=KNuj+zPw1itV3KkMBcKodkx4OvddR49LGBRoZuKC0jw=;
+	s=arc-20240116; t=1714690658; c=relaxed/simple;
+	bh=d6YsudNt7ErlgEKi50Pmqygmqv6ZRUJ8QlgoCBZeXxA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MAtxZuLuvlYhcytpkBcwSWiWgr8dKLatm7G8A7EmXwEGa+Qevtf1OWoXEEJZIV/EpFwSa13SHfFiDBVN+WGu891d0dejgkrZBpSAITZ29yhwTDrNGS/v20mkx/3ZdpTGFMvgoyKdReSmorHh87HYCvMQzhmryAuOaiH6alUBono=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vXFR8b+4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HNqahZD0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vXFR8b+4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HNqahZD0; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=JzLnUjd9R37ysc8aeIULQ1A5saegCtCnk3FFI1yxpYQOREv/Bbm5LhwCSn8F6K982H4+SfafhxwqTC7k6yXpqgWOIEFgm8OcoOr+2m+fdtDKSZeYkYr0RjSQX9yBxpzVKAB9TXkRZYjVFOnHCigLMZ5R16opsFPu0RRtgGO4Ye0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lzVnlRqx; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vXFR8b+4";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HNqahZD0";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vXFR8b+4";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HNqahZD0"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4BA8521B6D;
-	Thu,  2 May 2024 22:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1714690642;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YzZUXDPV0PB0GLA7qoIAy85H9S+PZoQXohv8tj76ZUE=;
-	b=vXFR8b+47fVienxCNHPpZEgaFl8IRR1Mv71xdUtU2622Csxiucd04oEJVudXAF/3dZZNOL
-	5qNcdcB9sSojwmpUriiCZRok+GGh4OGmhrQ7fE2dhTP1etELCXv80VumvTxLCy0EOxtpo/
-	H8bcJ9lxrkFjfxAvCydRKS1OSGHKjno=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1714690642;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YzZUXDPV0PB0GLA7qoIAy85H9S+PZoQXohv8tj76ZUE=;
-	b=HNqahZD0v59hLZv9836klkwGH5Zx+9048K1YzBWruiSenefzAMz0+ei9HFfuJv8vmMbSVh
-	rve/oT7LivploiAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=vXFR8b+4;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=HNqahZD0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1714690642;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YzZUXDPV0PB0GLA7qoIAy85H9S+PZoQXohv8tj76ZUE=;
-	b=vXFR8b+47fVienxCNHPpZEgaFl8IRR1Mv71xdUtU2622Csxiucd04oEJVudXAF/3dZZNOL
-	5qNcdcB9sSojwmpUriiCZRok+GGh4OGmhrQ7fE2dhTP1etELCXv80VumvTxLCy0EOxtpo/
-	H8bcJ9lxrkFjfxAvCydRKS1OSGHKjno=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1714690642;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YzZUXDPV0PB0GLA7qoIAy85H9S+PZoQXohv8tj76ZUE=;
-	b=HNqahZD0v59hLZv9836klkwGH5Zx+9048K1YzBWruiSenefzAMz0+ei9HFfuJv8vmMbSVh
-	rve/oT7LivploiAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2D3EC1386E;
-	Thu,  2 May 2024 22:57:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XE/sClIaNGauegAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Thu, 02 May 2024 22:57:22 +0000
-Date: Fri, 3 May 2024 00:50:06 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>,
-	David Howells <dhowells@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>, Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-unionfs@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH 1/4] btrfs: Remove duplicate included header
-Message-ID: <20240502225006.GU2585@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20240502212631.110175-1-thorsten.blum@toblux.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lzVnlRqx"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f4472561f1so642703b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 15:57:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714690656; x=1715295456; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D7utRIDihwTrDtNFq4O/sCtJGTa8ljX+sdlBJo2Fu0o=;
+        b=lzVnlRqxECX6Bk7BarDYFFid6Pr1usg2qymXbV66PwPXKPuNvHpZe6I1gWAEqjU4r6
+         lmnWEm/D0+8ofTHJiSRE6eUejNtLEeSEbBy7i5dyPzFYXd3W4GdGuath8djEwJE+D+oa
+         U0Tc3ibu+ju7EKLh9fSmIHelHUySKJosBJgGw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714690656; x=1715295456;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D7utRIDihwTrDtNFq4O/sCtJGTa8ljX+sdlBJo2Fu0o=;
+        b=nmj+G3i9wxxO46+5iOUz+IeYx8SeXDEBDSjNIF3K5lxpJ7NEhqWhoTYKwRYwGvPuo6
+         iZsmI4LiYNVCApwtDkEXIiEbBObiV2UmW/6mdSsSelrn0fmK+LTFb7QPuCJrXVxqzNEB
+         LUU4Yj/ffbt4PjQH2oXBuf3NGj/poSWq2/A5Hv7c45c5NR9yImLeDhpDRmb/87cLCJIg
+         ewFluQQereqkiZEmp82I1+7Piy5vSgere0AHty16YRVO/RhPoSHNzyckFex5Y3rLVPCu
+         KR8oeGL3QdtXTe553bTQbmcZ7yPVFF9V8Ud+vXV2IwRiDSyAQd/O2U4UHiL7/FEVbapy
+         E54Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXvar/JG5a3O9GTVXpbGpIemExc5vw3+L0M0wJvS4/1wOUWNCvWf5UrX80IYfIFXvkbAcFLFGKVnZNInlYUpKhx1zvew0OtKjGeTb7E
+X-Gm-Message-State: AOJu0YykPfv0QQVHhhWpMyPOtjkMOWFS6fBhzsERjQDq7QqgyCHjMdqF
+	vuFRBagBWd+Ja77RsdhEx0CDMOro9EzvhkkzVnQed9j27jLZ2WLEk9+NluwHGw==
+X-Google-Smtp-Source: AGHT+IHeipZnVfdal9PG/RbB6O/kgz3jUCJHRq4M3tw+Q+8pHR5xS0qgblTNyIpoX9VYxPinBrPagg==
+X-Received: by 2002:a05:6a20:4327:b0:1ad:999b:de34 with SMTP id h39-20020a056a20432700b001ad999bde34mr1584724pzk.38.1714690656398;
+        Thu, 02 May 2024 15:57:36 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p8-20020a056a000a0800b006ecc6c1c67asm1801341pfh.215.2024.05.02.15.57.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 15:57:35 -0700 (PDT)
+Date: Thu, 2 May 2024 15:57:35 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Joe Perches <joe@perches.com>
+Cc: Justin Stitt <justinstitt@google.com>,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
+	linux-hardening@vger.kernel.org, Finn Thain <fthain@linux-m68k.org>
+Subject: Re: [PATCH v6] checkpatch: add check for snprintf to scnprintf
+Message-ID: <202405021556.374C2E8@keescook>
+References: <20240429-snprintf-checkpatch-v6-1-354c62c88290@google.com>
+ <202404291249.078D924@keescook>
+ <aacd7c3a5ad5bb4df71ec5dd107ef12b6ebf4079.camel@perches.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,44 +70,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240502212631.110175-1-thorsten.blum@toblux.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.17 / 50.00];
-	BAYES_HAM(-2.96)[99.83%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[fb.com,toxicpanda.com,suse.com,redhat.com,kernel.org,szeredi.hu,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:replyto];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 4BA8521B6D
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -4.17
+In-Reply-To: <aacd7c3a5ad5bb4df71ec5dd107ef12b6ebf4079.camel@perches.com>
 
-On Thu, May 02, 2024 at 11:26:28PM +0200, Thorsten Blum wrote:
-> Remove duplicate included header file linux/blkdev.h
+On Mon, Apr 29, 2024 at 08:21:49PM -0700, Joe Perches wrote:
+> On Mon, 2024-04-29 at 12:49 -0700, Kees Cook wrote:
+> > On Mon, Apr 29, 2024 at 06:39:28PM +0000, Justin Stitt wrote:
+> > > I am going to quote Lee Jones who has been doing some snprintf ->
+> > > scnprintf refactorings:
+> > > 
+> > > "There is a general misunderstanding amongst engineers that
+> > > {v}snprintf() returns the length of the data *actually* encoded into the
+> > > destination array.  However, as per the C99 standard {v}snprintf()
+> > > really returns the length of the data that *would have been* written if
+> > > there were enough space for it.  This misunderstanding has led to
+> > > buffer-overruns in the past.  It's generally considered safer to use the
+> > > {v}scnprintf() variants in their place (or even sprintf() in simple
+> > > cases).  So let's do that."
+> > > 
+> > > To help prevent new instances of snprintf() from popping up, let's add a
+> > > check to checkpatch.pl.
+> > > 
+> > > Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > 
+> > Thanks!
+> > 
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > 
 > 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> $ git grep -P '\b((v|)snprintf)\s*\(' | wc -l
+> 7745
+> $ git grep -P '(?:return\s+|=\s*)\b((v|)snprintf)\s*\(' | wc -l
+> 1626
+> 
+> Given there are ~5000 uses of these that don't care
+> whether or not it's snprintf or scnprintf, I think this
+> is not great.
 
-Added to for-next, thanks.
+But let's not add more of either case. :)
+
+> I'd much rather make sure the return value of the call
+> is used before suggesting an alternative.
+> 
+> $ git grep  -P '\b((v|)snprintf)\s*\(.*PAGE_SIZE' | wc -l
+> 515
+> 
+> And about 1/3 of these snprintf calls are for sysfs style
+> output that ideally would be converted to sysfs_emit or
+> sysfs_emit_at instead.
+
+Detecting that we're in the right place for sysfs_emit seems out of
+scope for here, but maybe it should be more clearly called out by the
+contents at the reported URL?
+
+-- 
+Kees Cook
