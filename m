@@ -1,133 +1,153 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFECF819;
-	Thu,  2 May 2024 06:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AD9819;
+	Thu,  2 May 2024 06:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714631829; cv=none; b=rD3TMCbFzq7oArNzxnr06gx3W4Ts8gTaDbMl+U4eEn6UFeNB5gsbPsY0Dg5TeaVTp1iRr8DaXxo98weXcpayOVsvpr5aaunHkkyfnWegaJo6WuuC6Is2BZMXkvdWlUN1sC8cEwMKUrzSCLYBALp0jaDUn0q2wI3lIO4d7OHlqKo=
+	t=1714632038; cv=none; b=mFy/ZJ37jxlzcX0pFsMH9FdmZAURHZJesaCPPGJjophH9JHBfLUKLeDHefxDCiIxPiwL+dqJJH84jW78Ab8/e1SojLCB7CjZmMdKBcQRcsr6PyZvoZEGfWcZtmpfbVB3PDa32WyvNY2NJiuxkXY3Cc0gASmdOIYfI2+sgyH7ZG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714631829; c=relaxed/simple;
-	bh=+AGde7ihoVL37RNfwg2ChkKnBeZbRb8zV7vZfOgq33c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nH8ToHoir727riz92chxtCR2HLJWu1jCFowP0WbgGFMPE7z7ybXjTYXQx3XIqAdui8CwGOW32M727eP+UfXNmOxhRoveKnEzpPzj24K8ZP2KEg+zgndlgBMv2v7BTt1LPty/pm6uwA7EG2RYGsC1WbimzLc0XCdkCKpWytefl/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/cfPT9/; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1714632038; c=relaxed/simple;
+	bh=g7O/FTV5aw8TNqO5hGbp9xrYkBTNWiZYjFZk99ZxNA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=byqSmz3/9fxR2xJGSwoEBKHxKIdZBn5dWf58dI4QbHqfVNNG/DBerNlfX+62TaIpVR491WKGG8PRsR4ELgM0xGOHhmk4iTnZox5W5eLsz7k1yo+IuRjRV9jRKcWzlqkPGyKtvjhsvrsdZuMLzox22z+Bud88LHQQuQJDGUzI92g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BfhaWgBL; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/cfPT9/"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1ec4dd8525cso19819535ad.3;
-        Wed, 01 May 2024 23:37:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BfhaWgBL"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2dcc8d10d39so88205291fa.3;
+        Wed, 01 May 2024 23:40:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714631827; x=1715236627; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BoLV4NBTi5WshpxXLizBmf79HWwJfptg7//iRnwuPL0=;
-        b=X/cfPT9/34432LS4NL37vOIFs89N8f87G6haaKx8vVFUfB4mbe7kLFD/koClphcUJa
-         YthT8yug3FcSH6vpymlvynraBXxgq52jMrU6X91feSKUwl+miBzhyQUArMD7KaGhVGBb
-         OZnN6gKm2gk0pfaRJWxNvQFECYDTUSWcpz8wACCLy3+capfGfOYjyI7TlQoNLVPjPxFR
-         1oYKkh+4rH7i8TGGQY42e3BjgaHyWDgH8iVc7scaOohAfAY2cZ9J4lTJ5VOO59D4jmoJ
-         hmhQqll4Tvd46BP0Lnp2/9wRE0QOga2s1LirWFNZ6dQrBcCysZMYdxBKId1wWz3Fm2wf
-         b10A==
+        d=gmail.com; s=20230601; t=1714632035; x=1715236835; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xZpUqMc1AWGAd42jK4I6d478ur2G3QayWm0JOEMgEho=;
+        b=BfhaWgBLC98uT+plnCpwruAQISlXlXftLVVnvODRG62PM26I4cSiqyRvQhaAl7nHKI
+         USLD0K7rrvOf+81kOHI3iCJeB5/gvdfdnnNjeyMrHSyU8mIOOEKnTuYly3C6Zz2KGJDR
+         el7Sv4Z+MYWgSj2SnTT1CkLvZYN8ODnowCC4hUm37qix2p/+aPiMXnl5BA4hgR8I/7FK
+         TA+tMXoLllrmHsE5C+QAw7yycsXtXcneRGjUmvtt7u3rJYjTeWCj7+UNMF377hSWSLdz
+         P7WvZpCckg2+ReWan281sPky/3GhbqmIgLzPmtCgfeDYn/WsCowd8pJm+dKicCEBU6qI
+         lqqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714631827; x=1715236627;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BoLV4NBTi5WshpxXLizBmf79HWwJfptg7//iRnwuPL0=;
-        b=hsSxGBgbgGdjfNZU3ayomvocVsfy93JSqq4YsZJZtPnn5XerMPl/eHCXxnNu1dx63h
-         S32g6YfcMpWawzpSLSDKDBRs3QGTkn4iDP7NHdb839Hf8bm6aVcVgxNkPLOqkADFwews
-         DxrR0aofjmH29xwM5jN8OQfJZ4LYJIGz7XlAnwWkEuqGAMQuyJoYSiV7t1/y3Cg0z7O0
-         VhboLr5Nw7POPo8FZ+vRsJR60dgAyVi0nok95ArY989FQ2VUrEEGojkpoxIzDDGbZZ9S
-         Gt1inXBL4sDGhHM5/0anYj7oQtSTAP2zm9tx5Ca7F3cQzHS3aAKNAo64OtPIInDhPeTs
-         xePw==
-X-Forwarded-Encrypted: i=1; AJvYcCULIKhSudAQzZNJnsSiQHPoa44RjJ5qQ6a0k9836a+b+GK9Pn/KtjyAHwl4j0sNr4oDi/vZrCgJhZ9MFoye/rGccadCGqs1wGg2v9S9ZqCw+Jn4j9XdN3AblwIoWzWpC6HLN7MAVTtOOvw=
-X-Gm-Message-State: AOJu0YwzJP4vKnqnclmiChYtkd6NCb7B9sWQe37ag6Kq6cin9IylEvXG
-	LXd0ZWVHp1YS6Csn2PaPWCmUC7Fb1Pte9dcByB+DQX5z3eKDsfIj
-X-Google-Smtp-Source: AGHT+IGRsFloWjksJZp0KragxTnZKgqBKV04pCsU3xT3150e9iJsRxDV8vqtiXoBmaMkF0RRlmSAFA==
-X-Received: by 2002:a17:902:e883:b0:1e3:e4ff:7054 with SMTP id w3-20020a170902e88300b001e3e4ff7054mr6427245plg.38.1714631826997;
-        Wed, 01 May 2024 23:37:06 -0700 (PDT)
-Received: from shresth-aspirea71576g.abesec.ac.in ([139.5.197.146])
-        by smtp.gmail.com with ESMTPSA id lf4-20020a170902fb4400b001e8d180766dsm450881plb.278.2024.05.01.23.37.02
+        d=1e100.net; s=20230601; t=1714632035; x=1715236835;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xZpUqMc1AWGAd42jK4I6d478ur2G3QayWm0JOEMgEho=;
+        b=Ynqq2vqzqTiGng+y2Zl6Bzmaxd1rx5/+gGhshDKRKaqWcWY0L4qPm02HB2R8z1wq7y
+         W3Jz9jG30K8eYcuBSEG0De/rUah+V0ZMhlH2jlQgShPC70+jgem4ln0lMfOOWKB+mNL0
+         44bnJJ9c1ISsQq7BRMUD9IJ7CC/8I4/2NdcZFKQHwCuodt6oM65lPjP29ZyjF8ujQtMV
+         EUaE2n2oKKTYpPwAFtPlO17mmcscOkF4i+/uQlum5n7/Rns3Oqz0wmBUE4o3cccB1Z5F
+         FYahQmk9T19Mcugh5GKeB7/7A1E1lRlWULaINIlG+tm+URL2x9pjB8igM+2kWqGJhS2Y
+         ULvA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6+uPHukqxG/jl1CJF40LTrYC1TckCQcn+AnnJxi3gT22rxlJiXBU6UZTFku7XuE4vj0eGxqQTYiq+a8lVSUFsGY4oaJyJRwVAVG8R
+X-Gm-Message-State: AOJu0YxeWa0XvuyU+qxL8cvFFMSICDq/cPvpWLL6Q17HpW5dwZxdgfzD
+	T8Eo2upmWM+T8urTefCmY8eHhDe6gUR5UXPHokxGNsN0/USFQSz6
+X-Google-Smtp-Source: AGHT+IFYYRbix+ExG/nhZbY2F7j2QWgpils/MV+01rQlb/CgTzI2aSH849mq3gF5ni0gLqY0tnfkmQ==
+X-Received: by 2002:a2e:b53b:0:b0:2d4:5321:9daf with SMTP id z27-20020a2eb53b000000b002d453219dafmr2748212ljm.44.1714632034621;
+        Wed, 01 May 2024 23:40:34 -0700 (PDT)
+Received: from localhost.localdomain ([178.70.43.28])
+        by smtp.gmail.com with ESMTPSA id a23-20020a2e88d7000000b002d69186df71sm64717ljk.54.2024.05.01.23.40.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 23:37:06 -0700 (PDT)
-From: Shresth Prasad <shresthprasad7@gmail.com>
-To: lee@kernel.org,
-	daniel.thompson@linaro.org,
-	jingoohan1@gmail.com,
-	deller@gmx.de
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	javier.carrasco.cruz@gmail.com,
-	skhan@linuxfoundation.org,
-	julia.lawall@inria.fr,
-	Shresth Prasad <shresthprasad7@gmail.com>
-Subject: [PATCH v3][next] backlight: sky81452-backlight: Remove unnecessary call to of_node_get
-Date: Thu,  2 May 2024 12:06:22 +0530
-Message-ID: <20240502063621.65687-2-shresthprasad7@gmail.com>
-X-Mailer: git-send-email 2.45.0
+        Wed, 01 May 2024 23:40:34 -0700 (PDT)
+Date: Thu, 2 May 2024 09:40:31 +0300
+From: Ivan Bornyakov <brnkv.i1@gmail.com>
+To: Nas Chung <nas.chung@chipsnmedia.com>, 
+	Jackson Lee <jackson.lee@chipsnmedia.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Sebastian Fricke <sebastian.fricke@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] Wave515 decoder IP support
+Message-ID: <mwgydgjstvedkatdvopt3wh4imhnzflr7ut3vejgl6fz3vbgzg@x4spldwklrm3>
+References: <20240415100726.19911-1-brnkv.i1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240415100726.19911-1-brnkv.i1@gmail.com>
 
-`dev->of_node` already has a reference to the device_node and calling
-of_node_get on it is unnecessary. All conresponding calls to
-of_node_put are also removed.
+On Mon, Apr 15, 2024 at 01:07:18PM GMT, Ivan Bornyakov wrote:
+> Initial support for Wave515 multi-decoder IP among other refinements.
+> This was tested on FPGA prototype, so wave5_dt_ids[] was not expanded.
+> 
+> fluster score for JCT-VC-HEVC_V1 testsuite with
+> GStreamer-H.265-V4L2-Gst1.0 decoder is 132/147
+> 
+> The issue with Main10 tests is that fluster expects decoded file to be
+> in yuv420p10le format while this driver decodes HEVC Main10 into 8-bit
+> yuv420p. Though result is looks alright to the naked eye, proper
+> decoding into yuv420p10le is to be added.
+> 
+> The rest failed fluster tests are common with Wave521.
+> 
+> ChangeLog:
+>   v1:
+> https://lore.kernel.org/linux-media/20240318144225.30835-1-brnkv.i1@gmail.com/
+>   v2:
+> https://lore.kernel.org/linux-media/20240325064102.9278-1-brnkv.i1@gmail.com/
+>     * drop patch "dt-bindings: media: cnm,wave521c: drop resets restriction"
+>       The only user of Wave5 in mainline is TI K3 boards, thus there is
+>       no real need to alter dt-bindings
+>     * in patch "media: chips-media: wave5: support decoding HEVC Main10 profile"
+>       add check for flag "support_hevc10bit_dec"
+>     * in patch "media: chips-media: wave5: support reset lines" move
+>       reset_control_deassert() out of else branch, add
+>       reset_control_assert() to probe error path.
+>     * rework patch "media: chips-media: wave5: drop "sram-size" DT prop"
+>        - don't move alloc/free form device open/close
+>        - intead of exact configuration of reserved SRAM memory in DT and
+> 	 allocating all of it, allocate all available SRAM memory up to
+> 	 WAVE5_MAX_SRAM_SIZE from whatever pool provided.
+>     * adjust patch "media: chips-media: wave5: support Wave515 decoder"
+>       according to changes in patches
+>       "media: chips-media: wave5: support decoding HEVC Main10 profile" and
+>       "media: chips-media: wave5: drop "sram-size" DT prop"
+>   v3:
+> https://lore.kernel.org/linux-media/20240405164112.24571-1-brnkv.i1@gmail.com/
+>     * reword patch "media: chips-media: wave5: separate irq setup routine"
+>       a bit.
+>     * in patch "media: chips-media: wave5: drop "sram-size" DT prop"
+>        - move MAX_SRAM_SIZE define into match_data->sram_size
+>        - add placeholders for validation that allocated SRAM memory is
+> 	 enough to encode/decode bitstream of given resolution before
+> 	 setting W5_USE_SEC_AXI and W5_CMD_ENC_PIC_USE_SEC_AXI registers
+>        - reword accordingly
+>     * in patch "media: chips-media: wave5: support Wave515 decoder"
+>        - add comments around SRAM memory allocation/freeing about
+> 	 Wave515 specifics
+>        - add comments about BSOPTION_RD_PTR_VALID_FLAG bit in
+> 	 W5_BS_OPTION register
+>        - add W[AVE]521_ prefix to defines, for wich there are W[AVE]515_
+> 	 alternatieves
+>        - add semi-magic Wave515 specific formulas to estimate SRAM usage
+>   v4:
+>     * rebase onto next-20240415, no functional changes
+> 
+> Ivan Bornyakov (5):
+>   media: chips-media: wave5: support decoding HEVC Main10 profile
+>   media: chips-media: wave5: support reset lines
+>   media: chips-media: wave5: separate irq setup routine
+>   media: chips-media: wave5: drop "sram-size" DT prop
+>   media: chips-media: wave5: support Wave515 decoder
+> 
+>  .../platform/chips-media/wave5/wave5-helper.c |   8 +-
+>  .../platform/chips-media/wave5/wave5-hw.c     | 395 +++++++++++++-----
+>  .../chips-media/wave5/wave5-regdefine.h       |   5 +
+>  .../platform/chips-media/wave5/wave5-vdi.c    |  27 +-
+>  .../chips-media/wave5/wave5-vpu-dec.c         |  51 ++-
+>  .../chips-media/wave5/wave5-vpu-enc.c         |   2 +-
+>  .../platform/chips-media/wave5/wave5-vpu.c    |  35 +-
+>  .../platform/chips-media/wave5/wave5-vpuapi.h |   3 +
+>  .../chips-media/wave5/wave5-vpuconfig.h       |  16 +-
+>  .../media/platform/chips-media/wave5/wave5.h  |   6 +
+>  10 files changed, 407 insertions(+), 141 deletions(-)
+> 
+> -- 
+> 2.44.0
+> 
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
----
-Changes in v3:
-    - Remove unnecessary braces
-
- drivers/video/backlight/sky81452-backlight.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-backlight.c
-index eb18c6eb0ff0..19f9f84a9fd6 100644
---- a/drivers/video/backlight/sky81452-backlight.c
-+++ b/drivers/video/backlight/sky81452-backlight.c
-@@ -182,7 +182,7 @@ static const struct attribute_group sky81452_bl_attr_group = {
- static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
- 							struct device *dev)
- {
--	struct device_node *np = of_node_get(dev->of_node);
-+	struct device_node *np = dev->of_node;
- 	struct sky81452_bl_platform_data *pdata;
- 	int num_entry;
- 	unsigned int sources[6];
-@@ -194,10 +194,8 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
- 	}
- 
- 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
--	if (!pdata) {
--		of_node_put(np);
-+	if (!pdata)
- 		return ERR_PTR(-ENOMEM);
--	}
- 
- 	of_property_read_string(np, "name", &pdata->name);
- 	pdata->ignore_pwm = of_property_read_bool(np, "skyworks,ignore-pwm");
-@@ -217,7 +215,6 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
- 					num_entry);
- 		if (ret < 0) {
- 			dev_err(dev, "led-sources node is invalid.\n");
--			of_node_put(np);
- 			return ERR_PTR(-EINVAL);
- 		}
- 
-@@ -237,7 +234,6 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
- 	if (ret < 0)
- 		pdata->boost_current_limit = 2750;
- 
--	of_node_put(np);
- 	return pdata;
- }
- #else
--- 
-2.45.0
-
+Friendly ping.
