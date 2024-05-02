@@ -1,120 +1,77 @@
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9287460BB6;
-	Thu,  2 May 2024 16:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16D015D5A2;
+	Thu,  2 May 2024 16:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714666458; cv=none; b=kfQUITt5yb5Q2AaO1BgSwQxZT0sZJVJUmw6D8JbzzyC13JuoK3bVUFX9L4tyUYsBS9YaskUchvZQv7Pp/EdDqz0NWd4s6DBDgDSA0W74zRSouVZYuy6CBAHRVZ2jzeag8BQxQhrEOviZyhTfEPMkJpmMj58qMB0NHbrulLR2UqU=
+	t=1714666580; cv=none; b=EM9N54hYV8XnHsOVF7ATkwb8NqgmudeGt4vJqpWBwnlTj/NicUy2XDt2lUSomNYohfR5S8MOMAPi5VPdzqdWMSEOKWBmJ3IExq0Yeto+9gHfhqR/1rjtzmAnNJ4HQwZp3jPzTbCIDvurSaLrYmVQuYhI5GIIQlB525LjG6ESkX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714666458; c=relaxed/simple;
-	bh=EYyBIpXtLbrojJ0gwTNmKNe8NZCDfNPHVGhDJtgJFL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JUL30wiflJi+rftvnzMcIvpQYinozrNNQMxfA0sZfNMjMUVO/xQeQlWSXL+XggEmadHpJ47K0/Ly3PK8p6uSgnygwuWxrOacbvVaVlEsRlqKsIRgn2Xd2JOES0qp/atencdO7WiX97AicW0WJF8S2K+OaWsN4FWAiIsaOYs7EWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=AiMtJSxM; arc=none smtp.client-ip=74.208.4.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
+	s=arc-20240116; t=1714666580; c=relaxed/simple;
+	bh=Z2OYISWByIYzD9+VFOy92tbxhQNUhGkkVQwpims5ZzY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GYT0Oi/uD9t/q9SBOTQ2uIbJx8C5zikWGRaNfuYZUofcUzYerKk/shXZyOLwM3C47MbJLlEZ8buhBV4F6Zjd7nzRdj53DEs2tpAZR8opRoh7+JBn/8fXfmuPOKtYz1aAFF3/rimNzkij+3NNP4go4Jc72Dp7eJ2pal6l9J1rAWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=lS1dmT+4; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="AiMtJSxM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
-	s=s1-ionos; t=1714666452; x=1715271252; i=parker@finest.io;
-	bh=F1Ux9cZrOuJh9vuypt4bqQwJFsHtjYpAaryxJnzC8UU=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=AiMtJSxMjCb+kfDU2A/JPuN5r3PE1QqXY10l88NeBVQF0PAXqKDa2MwZtZpKshhN
-	 PnEPGikcO1ZX5rmLRufde5ecl2HnXURqQZUz44/hKK/m+InG+FuYJ1WqTOD+Q8tCr
-	 8saN3QuXY+W4cWq2ReaC/CU70YgImhhOlCFIBl115upW9Gz/X3j8pjBB05Posyeb/
-	 2UByhCmoOy2IRfKU+TJORwY3LyE2IG540b8ikdE9/SYUtZ4+p2xq/y0J3ftJCkHqD
-	 IvkSht3zcLKRoCYcYTF33BMRdqnPfb+ljxaBGfSXEUIdwANSCIC1tRIFcwcm8JtKT
-	 Yy9d1sxO5RsLZI2viA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from SWDEV2.connecttech.local ([98.159.241.229]) by
- mrelay.perfora.net (mreueus002 [74.208.5.2]) with ESMTPSA (Nemesis) id
- 0MNa9c-1rzmlW1OiQ-001dPt; Thu, 02 May 2024 18:08:48 +0200
-Date: Thu, 2 May 2024 12:08:40 -0400
-From: Parker Newman <parker@finest.io>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Parker Newman <pnewman@connecttech.com>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [PATCH v1 00/13] serial: 8250_exar: Clean up the driver
-Message-ID: <20240502120840.02c65f30@SWDEV2.connecttech.local>
-In-Reply-To: <ZjO4vYEBzxU3fpzC@smile.fi.intel.com>
-References: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
-	<20240502114645.4445b3da@SWDEV2.connecttech.local>
-	<ZjO4vYEBzxU3fpzC@smile.fi.intel.com>
-Organization: Connect Tech Inc.
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="lS1dmT+4"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net BF4A847C39
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1714666577; bh=Z2OYISWByIYzD9+VFOy92tbxhQNUhGkkVQwpims5ZzY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=lS1dmT+4kkmazaFSuYX7qLUHNjOR2lDwQQBqpWZH5RBEKGx9bq5LYcWIiBEPqjOfg
+	 h555z/2OTXG36oBqdrpFy5lGsjZ4qT7k9XSGVurs0GxKW3NYRiH8X8N0QOzNH0XJ5J
+	 uzM/xx4nb4NPFtM2Aa0/gDoFhCkivBYGf52B3HSxKIXPkzK6aJXPRyDYnJ9h6A/h4s
+	 qE6j62idbOoa6iI0FrE75a7toL1m6RbvDMLTL3GwrphGhDKuEWFkQvLAR2FtQasDlq
+	 /MEmdZFydHFUBc3ju19MR+mPW1gyXAzrfkrq0oQZXDAQ26vKpSkp1aPtoJ27tPRgUw
+	 gsKy9fLtAZOuA==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id BF4A847C39;
+	Thu,  2 May 2024 16:16:17 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Dongliang Mu <dzm91@hust.edu.cn>, Alex Shi <alexs@kernel.org>, Yanteng
+ Si <siyanteng@loongson.cn>
+Cc: Dongliang Mu <dzm91@hust.edu.cn>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs/zh_CN: remove two inconsistent spaces
+In-Reply-To: <20240427053703.2339727-1-dzm91@hust.edu.cn>
+References: <20240427053703.2339727-1-dzm91@hust.edu.cn>
+Date: Thu, 02 May 2024 10:16:16 -0600
+Message-ID: <87bk5o6vfz.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wQQFg7JqXeyMc7J73yaQ3i6/8bCsSfUwf0eyYZhDGpSV4C2Mv2x
- JTendR9EQupIO/Pd9qAVsd5yJShMGZ8QXCgqhinFWqRPUwGI0rs5phSJZ2QzJ5Nf6qfJNUB
- V9pSo9Xm7tTTzNBK90bs7WZN+q2Y6qHhlQ9hWlpOopnhoE30t8rHvdjl/rDnPVvJCjmnJgu
- V4wtVuG/m/6Dzm91mmp9Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:s0b9kt01wnY=;NqVlvOczYkO9YsE+8ETmlKaC1Zx
- RckKbwJGmHeqMNlH6eJsN2Kllaw9z36miib9msAcsG1svYihv8ITSlLGeeUK0HUv3xOU0cmO6
- GpWVh80Q2uhCOzwylw1/6zAkCHrQHvmcbREydYiVhDb8gcUZhgc3jM1ObTqUrx1sU1WCCOEwh
- Y6Y4OC74tRozI8LWRE090MIZ8pj3O8HDO5BJkcU4FqoNSDTM4SSfc+pSbA+X92SUanqNmfBz0
- z3VVX5aCst+d4NGwh75IRMOuOAOzUNxUlrdQo9OOrYrCeDDdkc12r5xWRrjkpMX97McvOjw1i
- 2xvTGO4ty+/wYFJE4jtaBzB6GYYpj2KSym+LwP4jcYT9kCS802GqHs3wtjvX/NtCump+5kWnH
- RRiU30o/CihhCeScbNHvPUVd0ZXRCc/2F1GFi1vdNpk8m8bxrEfWUWtsjLT94dp8EUbTBQzwS
- 1ghS+If3FsRmpcZ2//g+dPgLBhbFsxj0rcsgJtxgJNOzWQJWMlecNwuu0gMZ8HvlpAWxskDwf
- +LzeZEzqF8zhezgAM9K0T5lkRexY+106+XxSwIq41+iSyzLIAhRhBqVV397jDiLyJMaFlq9PZ
- am6SHL3ufrLaoJbIrlNHJGzhvJAkqE3ffIPW3TpqI5+vL21Zj1WxaQycHm3Z6v11GFigra0uE
- XRg1hCwh48ETNB9k2o4hfEc8HNvM5IaayZvD7UMk4iJ6V9KQDVXlpZvRaY49UDpDXHVOorExg
- 1P8S4u+aHqc5FiyYfBokzztxV7CZPrLYinY+C1LAfrgIMkuZ84ssNs=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 
-On Thu, 2 May 2024 19:01:01 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-
-> On Thu, May 02, 2024 at 11:46:45AM -0400, Parker Newman wrote:
-> > On Thu,  2 May 2024 17:43:54 +0300
-> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > > After a rework for CONNTECH was done, the driver may need a bit of
-> > > love in order to become less verbose (in terms of indentation and
-> > > code duplication) and hence easier to read.
-> > >
-> > > This clean up series fixes a couple of (not so critical) issues and
-> > > cleans up the recently added code. No functional change indented by
-> > > the cleaning up part.
-> > >
-> >
-> > Just an FYI I submitted a patch series that fixed several of these iss=
-ues but I
-> > think it fell through the cracks (I know everyone is very busy!).
-> >
-> > Link: https://lore.kernel.org/linux-serial/cover.1713533298.git.pnewma=
-n@connecttech.com/
-> >
-> > I believe my previous patch series is no longer required. This one fix=
-es
-> > everything.
->
-> I haven't noticed that, if it contains duplicated patches, I may replace=
- mine
-> with yours if you insist.
->
-> In any case it's better to reply there that you prefer this series to be
-> applied, so Greg will not pick it up.
->
-
-I do not have a preference. I am fine with using yours if it is easier on
-the maintainers.
-
-I will send a reply on my previous series that it is not needed and link
-to this. I am new to the mailing lists so I didn't know what the procedure
-is for this situation.
-
-Thanks for the fixes :),
-Parker
-
+RG9uZ2xpYW5nIE11IDxkem05MUBodXN0LmVkdS5jbj4gd3JpdGVzOg0KDQo+IFRoZSBzcGFjZXMg
+b24gdGhlIGxlZnQgYW5kIHJpZ2h0IG9mIHRleHRzIHNob3VsZCBiZSBjb25zaXN0ZW50Lg0KPiBS
+ZW1vdmUgdGhlc2UgcmVkdW5kZW50IHNwYWNlcy4NCj4NCj4gU2lnbmVkLW9mZi1ieTogRG9uZ2xp
+YW5nIE11IDxkem05MUBodXN0LmVkdS5jbj4NCj4gLS0tDQo+ICBEb2N1bWVudGF0aW9uL3RyYW5z
+bGF0aW9ucy96aF9DTi9pbmRleC5yc3QgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
+c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL3RyYW5zbGF0aW9ucy96aF9DTi9pbmRleC5yc3QgYi9Eb2N1bWVudGF0aW9uL3RyYW5zbGF0
+aW9ucy96aF9DTi9pbmRleC5yc3QNCj4gaW5kZXggNmNjZWM5NjU3Y2M2Li4yMGI5ZDQyNzBkMWYg
+MTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vdHJhbnNsYXRpb25zL3poX0NOL2luZGV4LnJz
+dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL3RyYW5zbGF0aW9ucy96aF9DTi9pbmRleC5yc3QNCj4g
+QEAgLTI0LDggKzI0LDggQEANCj4gIOS4iueahGxpbnV4LWRvY+mCruS7tuWIl+ihqOOAgg0KPiAg
+DQo+ICDpobrkvr/or7TkuIvvvIzkuK3mlofmlofmoaPkuZ/pnIDopoHpgbXlrojlhoXmoLjnvJbn
+oIHpo47moLzvvIzpo47moLzkuK3kuK3mloflkozoi7HmlofnmoTkuLvopoHkuI3lkIzlsLHmmK/k
+uK3mlocNCj4gLeeahOWtl+espuagh+eCueWNoOeUqOS4pOS4quiLseaWh+Wtl+espuWuveW6pu+8
+jCDmiYDku6XvvIzlvZPoi7HmlofopoHmsYLkuI3opoHotoXov4fmr4/ooYwxMDDkuKrlrZfnrKbm
+l7bvvIwNCj4gLeS4reaWh+WwseS4jeimgei2hei/hzUw5Liq5a2X56ym44CC5Y+m5aSW77yM5Lmf
+6KaB5rOo5oSPJy0n77yMJz0nIOetieespuWPt+S4juebuOWFs+agh+mimOeahOWvuem9kOOAguWc
+qOWwhg0KPiAr55qE5a2X56ym5qCH54K55Y2g55So5Lik5Liq6Iux5paH5a2X56ym5a695bqm77yM
+5omA5Lul77yM5b2T6Iux5paH6KaB5rGC5LiN6KaB6LaF6L+H5q+P6KGMMTAw5Liq5a2X56ym5pe2
+77yMDQo+ICvkuK3mloflsLHkuI3opoHotoXov4c1MOS4quWtl+espuOAguWPpuWklu+8jOS5n+im
+geazqOaEjyctJ++8jCc9J+etieespuWPt+S4juebuOWFs+agh+mimOeahOWvuem9kOOAguWcqOWw
+hg0KPiAg6KGl5LiB5o+Q5Lqk5Yiw56S+5Yy65LmL5YmN77yM5LiA5a6a6KaB6L+b6KGM5b+F6KaB
+55qEIGBgY2hlY2twYXRjaC5wbGBgIOajgOafpeWSjOe8luivkea1i+ivleOAgg0KDQpBcHBsaWVk
+LCB0aGFua3MuDQoNCmpvbg0K
