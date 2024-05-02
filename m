@@ -1,137 +1,107 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560F6548E7;
-	Thu,  2 May 2024 09:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEA75466C;
+	Thu,  2 May 2024 09:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714641751; cv=none; b=mJ/PHNYHuD/oqZLFp97s7VBe8M/4NuDofponpol6kJfcm6I7MvOsqQyhVkDloUoteR9lny5mIu6pFupNHuAAsG5LUnRHnAP7mLvdnItpRMks3WFlrCeeomQN43WLlcOcZDr4IG0kcJuLxalL1U4M3UO7eK4sKA2F/JxBWxBAUm4=
+	t=1714641763; cv=none; b=RvyyeeHik9TcfaEFs84tddXohzi4C5ybkLiJrWda4aukecOcO2HroIGpk/x7ZJnIFpZ7gb9bIM4BKt0nD7pQWEx75RJD7b6+tKFFiitvl9sqdhQgGpLmTHykw8fPURoIEx4F91490x8DKdSPXRSc5hfzja3rYUmV5PtJEz5/D6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714641751; c=relaxed/simple;
-	bh=y1jwBf7Bi9E4iSsBmwVrFXCieuN307HWzrKedCrJ/eI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ghWiXPajxlHQQCdv/RXUnQLx8iANbiKIvqs5hFNqPt823/pgKlLAu1kqm4y9hR2cC3Pg2Lp9tbHteGhszTwft2qMCuEv+fG76uSY3RQ5TAa+c9c2V1tdmV3C96phXQMz8V0ryHCRiFc0zQs3QGgFvwo8V30tW2dFdxvPEcCkvpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4429MB9002332798, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4429MB9002332798
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 May 2024 17:22:11 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 2 May 2024 17:22:12 +0800
-Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 2 May
- 2024 17:22:11 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, "Justin
- Lai" <justinlai0215@realtek.com>
-Subject: [PATCH net-next v17 09/13] rtase: Implement pci_driver suspend and resume function
-Date: Thu, 2 May 2024 17:18:43 +0800
-Message-ID: <20240502091847.65181-10-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240502091847.65181-1-justinlai0215@realtek.com>
-References: <20240502091847.65181-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1714641763; c=relaxed/simple;
+	bh=2oA8ldgZYHkMjR2V+LxaGdrDpb1xKBe+lL+dxCNsNr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RzeyTI2gkK11EoazGtOeAie/BNjtxiCPdGRQqFpott33wvYYz0LtaC1fyTOxi1ukC+XJNlnWKfRYVYj2B3B1dX681N11B+kXnuh8kGbJehiRWdainG63OkpPJXJbzMv6IVzm7J9lqoXronXPquoyjTqfW8RDVkrILI8gJfs2gmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bJgPMuqT; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bJgPMuqT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714641762; x=1746177762;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2oA8ldgZYHkMjR2V+LxaGdrDpb1xKBe+lL+dxCNsNr8=;
+  b=bJgPMuqTAlww/ogzeImMDcuHbM9OaCOwGOKPOkWQN0nD0twOOfdqPKAn
+   ML9O1KFUy4b4BK6HjiZGcFLYDmUCyExKcHE5CgsOzxR42tANC00HCyEQD
+   ZkdPreh2EEHxFAgM4rq4sPV7BtKRU0tb/U+SRjgwbmOjUUeraDoyuNEp2
+   DPCtLFDm/OlSOLA8NabQpOPlUlpzf4skxDzQ3O4MdLInVZUEpwv6WaFK1
+   CcosXNP31gA8ZnzZZgg8ie8tYxyAhk7+pCXELwsWBYotuvRfbzMOrlbuL
+   4thmbm+O5F/mqtWEG1jsG/XNvi4q12x8vWy2u+pmmH2MeFvp6Rv8qAXLu
+   w==;
+X-CSE-ConnectionGUID: D0u3vmgOSvyfexR3CkWevg==
+X-CSE-MsgGUID: g6sHbP7FQIqfGV5sUUwXWQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="10225125"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10225125"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 02:22:40 -0700
+X-CSE-ConnectionGUID: rOlQAAf0R+mpvFFX9nD5Sw==
+X-CSE-MsgGUID: hJxq4rkXSQqFppQsZhlRbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="31539169"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 02:22:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s2Se4-00000003GHS-2Yz6;
+	Thu, 02 May 2024 12:22:28 +0300
+Date: Thu, 2 May 2024 12:22:28 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Andrei Warkentin <andrei.warkentin@intel.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
+Subject: Re: [PATCH v5 01/17] arm64: PCI: Migrate ACPI related functions to
+ pci-acpi.c
+Message-ID: <ZjNbVPYIjINdk4Fn@smile.fi.intel.com>
+References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
+ <20240501121742.1215792-2-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240501121742.1215792-2-sunilvl@ventanamicro.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Implement the pci_driver suspend function to enable the device
-to sleep, and implement the resume function to enable the device
-to resume operation.
+On Wed, May 01, 2024 at 05:47:26PM +0530, Sunil V L wrote:
+> The functions defined in arm64 for ACPI support are required
+> for RISC-V also. To avoid duplication, move these functions
+> to common location.
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
+...
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index a9b3848e8e8a..b8af5edc13a2 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -2160,12 +2160,63 @@ static void rtase_shutdown(struct pci_dev *pdev)
- 	rtase_reset_interrupt(pdev, tp);
- }
- 
-+static int rtase_suspend(struct device *device)
-+{
-+	struct net_device *dev = dev_get_drvdata(device);
-+
-+	if (netif_running(dev)) {
-+		netif_device_detach(dev);
-+		rtase_hw_reset(dev);
-+	}
-+
-+	return 0;
-+}
-+
-+static int rtase_resume(struct device *device)
-+{
-+	struct net_device *dev = dev_get_drvdata(device);
-+	struct rtase_private *tp = netdev_priv(dev);
-+	int ret;
-+
-+	/* restore last modified mac address */
-+	rtase_rar_set(tp, dev->dev_addr);
-+
-+	if (!netif_running(dev))
-+		goto out;
-+
-+	rtase_wait_for_quiescence(dev);
-+
-+	rtase_tx_clear(tp);
-+	rtase_rx_clear(tp);
-+
-+	ret = rtase_init_ring(dev);
-+	if (ret) {
-+		netdev_err(dev, "unable to init ring\n");
-+		rtase_free_desc(tp);
-+		return -ENOMEM;
-+	}
-+
-+	rtase_hw_config(dev);
-+	/* always link, so start to transmit & receive */
-+	rtase_hw_start(dev);
-+
-+	netif_device_attach(dev);
-+out:
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops rtase_pm_ops = {
-+	SYSTEM_SLEEP_PM_OPS(rtase_suspend, rtase_resume)
-+};
-+
- static struct pci_driver rtase_pci_driver = {
- 	.name = KBUILD_MODNAME,
- 	.id_table = rtase_pci_tbl,
- 	.probe = rtase_init_one,
- 	.remove = rtase_remove_one,
- 	.shutdown = rtase_shutdown,
-+	.driver.pm = pm_ptr(&rtase_pm_ops),
- };
- 
- module_pci_driver(rtase_pci_driver);
+There are -M -C parameters to git format-patch. Use them in the next version of
+the series. (Note, you may add percentage numbers to each of those parameters
+to get prettier result.)
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
