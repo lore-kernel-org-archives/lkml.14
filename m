@@ -1,127 +1,245 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70807171AA;
-	Thu,  2 May 2024 03:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338D917BAF;
+	Thu,  2 May 2024 03:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714621389; cv=none; b=nX/ycGQP8560fJuDS7bjhflOq2fQ1oHJrleqWNszmLEV3XITX/H+iySUFGQPQxkYSl0taoDCcOL/adBxnr1SE+NHFU+pjvMwNYvXJQGTQ9B2DeKNsz4MDEB3tNPk5MfG1fCkhXuFgLorK5kIUQd4gt62FAl/JodR16LP6R7sLOE=
+	t=1714621801; cv=none; b=SO91jcJg1nNCMtwLgNoyzIPbOtuPpPIfkCPBuvZrb9Jb1cM75m149cfz/eRvjo/+xRWHUa07SGzdquiWzRXpxZy50sRHNcIMYo5qBoJSm1Mnv1PEl2SpR6oydAr1DSc800qjeFnCEttCVkyrqksaG5qh/C7TRbWpjrgBwYxWlHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714621389; c=relaxed/simple;
-	bh=tmsjShpqsEq0HAAjahxF2xhs/w2jg75Ng8GplS2wmuM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bgBGLndnch9r6a3fX+khphnuOXWhI8MTKtdh5ePeUJGUFqMxIED3JI4AhA8ozAIpEjfaSF4uQnoOnhPGwFtB3jMNOj7jC0PQ94OaHrjxwZoLlr2M3C3cUbchVnqn5y2e5Or/r97TcC1SWUmE0TX81/x+86EmGKovo6KmmwfXLZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AWCWmjPk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AWCWmjPk"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4423cqWZ024441;
-	Thu, 2 May 2024 03:43:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=qcppdkim1; bh=gxdEopZ/Ro0CDr4L5WL6
-	Rzvof/Wduh9C1em6P9/T0vs=; b=AWCWmjPkN7mZOiBLNxh9xZkzEXxlr7/360O7
-	9/yb4HMhHlUk34p2tWHTvwTIXjcgjwHwMsF0W7qIJyugEMoBQoNT3ijQxxgWEwp3
-	VDNO7bBPESngmYUeI3S9H4rU9J2h5VAw9UnV7VUMQPbX18nR5EBK/G4Xz1WasLDL
-	Mj0FMAmrHd8em6GRwRJc1+Vo5HK1atyIyyhiXGbIY7/Yw1Rb/rUQAH7nHo9nS/5c
-	Wud0jcWMu7Jzroe1bkEafJcQNMKbcZOJxeF1v95r8dr5XAha0spxr1U8cbt7NHDO
-	6zHr6gKeYGA2ojNB666aJGUOXOhCcQT3rFXYpTgJul3WLC4aBw==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xud76adtw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 May 2024 03:43:02 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 4423gxGx005872;
-	Thu, 2 May 2024 03:42:59 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3xv1t60e4e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 May 2024 03:42:59 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4423gxDU005867;
-	Thu, 2 May 2024 03:42:59 GMT
-Received: from hu-devc-blr-u22-a.qualcomm.com (hu-mdalam-blr.qualcomm.com [10.131.36.157])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 4423gxA8005862
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 May 2024 03:42:59 +0000
-Received: by hu-devc-blr-u22-a.qualcomm.com (Postfix, from userid 466583)
-	id 47C234127E; Thu,  2 May 2024 09:12:58 +0530 (+0530)
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-To: mturquette@baylibre.com, sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_srichara@quicinc.com, quic_varada@quicinc.com
-Cc: quic_mdalam@quicinc.com
-Subject: [PATCH] clk: qcom: gcc-ipq9574: Add BRANCH_HALT_VOTED flag
-Date: Thu,  2 May 2024 09:12:47 +0530
-Message-Id: <20240502034247.2621996-1-quic_mdalam@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1714621801; c=relaxed/simple;
+	bh=0iW6LRA2O9QJ4ENmDbEx2S85lUIoCamAAIRwWXqkVHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Il3dJTmyXTvnV+5VEhbhWGSlHxVDXYWEwIlscu+x8nrDfI8WAp90fYulYteDR34ResEm1RBh6u0ImHXGGTphfnxdr5niIXlmP1cde69H76ME/j3WMtkX60OLkH+iUty1g40Kh7PynY98mlquHUjlE818RsRnbf/tjK96AYrOBf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87CB8C116B1;
+	Thu,  2 May 2024 03:49:59 +0000 (UTC)
+Date: Wed, 1 May 2024 23:50:44 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Tze-nan Wu (=?UTF-8?B?5ZCz5r6k5Y2X?=)" <Tze-nan.Wu@mediatek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "Cheng-Jui Wang (=?UTF-8?B?546L5q2j552/?=)" <Cheng-Jui.Wang@mediatek.com>,
+ wsd_upstream <wsd_upstream@mediatek.com>, "Bobule Chang (=?UTF-8?B?5by1?=
+ =?UTF-8?B?5byY576p?=)" <bobule.chang@mediatek.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "mhiramat@kernel.org"
+ <mhiramat@kernel.org>, "mathieu.desnoyers@efficios.com"
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Fix uaf issue in tracing_open_file_tr
+Message-ID: <20240501235044.12fa3297@gandalf.local.home>
+In-Reply-To: <661f101456506db945ccbd94700a0f47b95f91e5.camel@mediatek.com>
+References: <20240426073410.17154-1-Tze-nan.Wu@mediatek.com>
+	<20240428202837.0cabca17@rorschach.local.home>
+	<20240429144626.7d868ad3@gandalf.local.home>
+	<661f101456506db945ccbd94700a0f47b95f91e5.camel@mediatek.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zATVBlhobrCKXkkuarJ1tPcnhUf3XnL6
-X-Proofpoint-GUID: zATVBlhobrCKXkkuarJ1tPcnhUf3XnL6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_16,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
- clxscore=1011 bulkscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2405020015
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Add BRANCH_HALT_VOTED flag to inform clock framework
-don't check for CLK_OFF bit.
+On Thu, 2 May 2024 03:10:24 +0000
+Tze-nan Wu (=E5=90=B3=E6=BE=A4=E5=8D=97) <Tze-nan.Wu@mediatek.com> wrote:
 
-CRYPTO_AHB_CLK_ENA and CRYPTO_AXI_CLK_ENA enable bit is
-present in other VOTE registers also, like TZ.
-If anyone else also enabled this clock, even if we turn
-off in GCC_APCS_CLOCK_BRANCH_ENA_VOTE | 0x180B004, it won't
-turn off.
+> >  =20
+> Sorry for my late reply, I'm testing the patch on my machine now.=20
+> Test will be done in four hours.
+>=20
+> There's something I'm worrying about in the patch,
+> what I'm worrying about is commented in the code below.
+>=20
+> /kernel/trace/trace_events.c:
+>   static int
+>   event_create_dir(struct eventfs_inode *parent,=20
+>   struct trace_event_file *file)=20
+>   {
+>         ...
+>         ...
+>         ...
+>         nr_entries =3D ARRAY_SIZE(event_entries);
+>=20
+>         name =3D trace_event_name(call);
+>=20
+>         +event_file_get(file);        // Line A
+>             ^^^^^^^^^^^^^
+>         // Should we move the "event_file_get" to here, instead =20
+>         // of calling it at line C?
+>         // Due to Line B could eventually invoke "event_file_put".
+>         //   eventfs_create_dir -> free_ei ->put_ei -> kref_put=20
+>         //  -> release_ei -> event_release -> event_file_put
+>         // Not sure if this is a potential risk? If Line B do call  =20
+>         // event_file_put,"event_file_put" will be called prior to
+>         // "event_file_get", could corrupt the reference of the file.
 
-Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
----
- drivers/clk/qcom/gcc-ipq9574.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+No, but you do bring up a good point. The release should not be called on
+error, but it looks like it possibly can be.
 
-diff --git a/drivers/clk/qcom/gcc-ipq9574.c b/drivers/clk/qcom/gcc-ipq9574.c
-index 0a3f846695b8..f8b9a1e93bef 100644
---- a/drivers/clk/qcom/gcc-ipq9574.c
-+++ b/drivers/clk/qcom/gcc-ipq9574.c
-@@ -2140,9 +2140,10 @@ static struct clk_rcg2 pcnoc_bfdcd_clk_src = {
- 
- static struct clk_branch gcc_crypto_axi_clk = {
- 	.halt_reg = 0x16010,
-+	.halt_check = BRANCH_HALT_VOTED,
- 	.clkr = {
--		.enable_reg = 0x16010,
--		.enable_mask = BIT(0),
-+		.enable_reg = 0xb004,
-+		.enable_mask = BIT(15),
- 		.hw.init = &(const struct clk_init_data) {
- 			.name = "gcc_crypto_axi_clk",
- 			.parent_hws = (const struct clk_hw *[]) {
-@@ -2156,9 +2157,10 @@ static struct clk_branch gcc_crypto_axi_clk = {
- 
- static struct clk_branch gcc_crypto_ahb_clk = {
- 	.halt_reg = 0x16014,
-+	.halt_check = BRANCH_HALT_VOTED,
- 	.clkr = {
--		.enable_reg = 0x16014,
--		.enable_mask = BIT(0),
-+		.enable_reg = 0xb004,
-+		.enable_mask = BIT(16),
- 		.hw.init = &(const struct clk_init_data) {
- 			.name = "gcc_crypto_ahb_clk",
- 			.parent_hws = (const struct clk_hw *[]) {
--- 
-2.34.1
+>=20
+>         ei =3D eventfs_create_dir(name, e_events,    // Line B=20
+>              event_entries, nr_entries, file);
+>         if (IS_ERR(ei)) {
+>                 pr_warn("Could not create tracefs '%s' directory\n",=20
+>                 name);
+>                 return -1;
+>         }
+>         file->ei =3D ei;
+>=20
+>         ret =3D event_define_fields(call);
+>         if (ret < 0) {
+>                 pr_warn("Could not initialize trace point events/%s\n",
+> name);
+>                 return ret;
+>                    ^^^^^^^^^         =20
+>        // Maybe we chould have similar concern if we return here.
+>        // Due to the event_inode had been created, but we did not call=20
+>        // event_file_get.=20
+>        // Could it lead to some issues in the future while freeing=20
+>        // event_indoe?
+>         }
+>=20
+>=20
+>         -event_file_get(file);       //Line C
+>         return 0;
+>   }
 
+This prevents the release() function from being called on failure of
+creating the ei.
+
+Can you try this patch instead?
+
+-- Steve
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 894c6ca1e500..f5510e26f0f6 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -84,10 +84,17 @@ enum {
+ static void release_ei(struct kref *ref)
+ {
+ 	struct eventfs_inode *ei =3D container_of(ref, struct eventfs_inode, kref=
+);
++	const struct eventfs_entry *entry;
+ 	struct eventfs_root_inode *rei;
+=20
+ 	WARN_ON_ONCE(!ei->is_freed);
+=20
++	for (int i =3D 0; i < ei->nr_entries; i++) {
++		entry =3D &ei->entries[i];
++		if (entry->release)
++			entry->release(entry->name, ei->data);
++	}
++
+ 	kfree(ei->entry_attrs);
+ 	kfree_const(ei->name);
+ 	if (ei->is_events) {
+@@ -112,6 +119,18 @@ static inline void free_ei(struct eventfs_inode *ei)
+ 	}
+ }
+=20
++/*
++ * Called when creation of an ei fails, do not call release() functions.
++ */
++static inline void cleanup_ei(struct eventfs_inode *ei)
++{
++	if (ei) {
++		/* Set nr_entries to 0 to prevent release() function being called */
++		ei->nr_entries =3D 0;
++		free_ei(ei);
++	}
++}
++
+ static inline struct eventfs_inode *get_ei(struct eventfs_inode *ei)
+ {
+ 	if (ei)
+@@ -734,7 +753,7 @@ struct eventfs_inode *eventfs_create_dir(const char *na=
+me, struct eventfs_inode
+=20
+ 	/* Was the parent freed? */
+ 	if (list_empty(&ei->list)) {
+-		free_ei(ei);
++		cleanup_ei(ei);
+ 		ei =3D NULL;
+ 	}
+ 	return ei;
+@@ -835,7 +854,7 @@ struct eventfs_inode *eventfs_create_events_dir(const c=
+har *name, struct dentry
+ 	return ei;
+=20
+  fail:
+-	free_ei(ei);
++	cleanup_ei(ei);
+ 	tracefs_failed_creating(dentry);
+ 	return ERR_PTR(-ENOMEM);
+ }
+diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
+index 7a5fe17b6bf9..d03f74658716 100644
+--- a/include/linux/tracefs.h
++++ b/include/linux/tracefs.h
+@@ -62,6 +62,8 @@ struct eventfs_file;
+ typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **da=
+ta,
+ 				const struct file_operations **fops);
+=20
++typedef void (*eventfs_release)(const char *name, void *data);
++
+ /**
+  * struct eventfs_entry - dynamically created eventfs file call back handl=
+er
+  * @name:	Then name of the dynamic file in an eventfs directory
+@@ -72,6 +74,7 @@ typedef int (*eventfs_callback)(const char *name, umode_t=
+ *mode, void **data,
+ struct eventfs_entry {
+ 	const char			*name;
+ 	eventfs_callback		callback;
++	eventfs_release			release;
+ };
+=20
+ struct eventfs_inode;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 52f75c36bbca..6ef29eba90ce 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2552,6 +2552,14 @@ static int event_callback(const char *name, umode_t =
+*mode, void **data,
+ 	return 0;
+ }
+=20
++/* The file is incremented on creation and freeing the enable file decreme=
+nts it */
++static void event_release(const char *name, void *data)
++{
++	struct trace_event_file *file =3D data;
++
++	event_file_put(file);
++}
++
+ static int
+ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *fi=
+le)
+ {
+@@ -2566,6 +2574,7 @@ event_create_dir(struct eventfs_inode *parent, struct=
+ trace_event_file *file)
+ 		{
+ 			.name		=3D "enable",
+ 			.callback	=3D event_callback,
++			.release	=3D event_release,
+ 		},
+ 		{
+ 			.name		=3D "filter",
+@@ -2634,6 +2643,9 @@ event_create_dir(struct eventfs_inode *parent, struct=
+ trace_event_file *file)
+ 		return ret;
+ 	}
+=20
++	/* Gets decremented on freeing of the "enable" file */
++	event_file_get(file);
++
+ 	return 0;
+ }
+=20
