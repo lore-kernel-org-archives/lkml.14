@@ -1,120 +1,77 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826A4153519;
-	Thu,  2 May 2024 14:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702C9153587;
+	Thu,  2 May 2024 14:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714660535; cv=none; b=GXDvuPJBwHslLa9QTIl92xY0T0agNcE3VvWW0EU+/i7ygRxcN9wzusbU00ZhDdLE/sT9WTnj9n6uSSisZM89ynVCNOof222XfRFi/dd67XG/rihz01iQC/ZDntf1KHAvBe4lJqZCrGErVPGq9bl6MvkOQ5pjJmAJBktfNTCMcgs=
+	t=1714660538; cv=none; b=Sg4H8t/iR3q/3eqiygcd3O3zIRuG+i3ogVGu8AJ1eKH3eTsjPssASoW5fhLEJ3/2bNHHUiEdlOT9QgBT0thGkXcTVaY7qCOpvk8BnVdJKAngDTqhxKlSyfSOW5FQFHHJgCUx907e9jK6BmsVlJwTtgaSXdQLGoHoh9Ql8xA87Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714660535; c=relaxed/simple;
-	bh=srvRpnt+6CmvKsyLXphEyCpMECe+q0Va3JX9d0EkVVw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MDxUj3H/lLKiwQPdlIK8HecUiz8tJ49MCF+mTLqsH3BLTISwONSn4iF2FlXuBjGxK9scUx6EnzZyQHXSepPQtgOGZxuOAYuh2DYsejzgTP/cQ6PO6/RKSt0RIkb4ubZOeThtuwhig/flmwmBrrqQBz8V7yxjrYCJS7a/n0VPFoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=tl5dugvB; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1714660538; c=relaxed/simple;
+	bh=sMBrADE2JhJ9VMLmjn6LuipV096YR1K8BaZa4eR/Ixo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cM0/ere2IA/iMr40b/u7oi0GX3iDlRsBifFhkcBejiV6XNpv7m7ViKezIHBSQzvSE5r3wpAEik/dqYp8VLsR7I35ln2P86bl8NomVccE4Vtlc+rn9O8xMKsi0kqxpcp53jkwOyZx3KfCyeW4NmCBdwVf6QCl8vgXDbeuPmhWgA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAIBRS9g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tl5dugvB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1714660533; x=1746196533;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=srvRpnt+6CmvKsyLXphEyCpMECe+q0Va3JX9d0EkVVw=;
-  b=tl5dugvBHtPU7IgnDwpgN4Jm/cTciRgIcwq28m8M895Ja52pelkpvubu
-   kqwXfOcGDJCbQL2XVJXH3FtK3g3x0nTK7PNc0Yl/e1zqOH6QA//XBEwy/
-   JQ91a6CtQQmNROn4FEn7tA/16rNtPnOzJlUwEBc1JfP3mvluWPSWI5Jit
-   fPxoeDGGaKFAYNgFCiWofiFx1o0TWCw5Lx4hQXSYTmuyh9Ihgzo6C1OfU
-   aX/YT8ok3ZRXWBfL+e3Z2cvSwbbg7WVQ3EOkLT3g1Kd1eFe6RgbNOqDZX
-   H+V9TlCB1xvZiV1eDsn52+D5teQ9WdQ5uBIC/mATjKGG7ybg6CPRISgJ/
-   g==;
-X-CSE-ConnectionGUID: F9keJgHaQq6ZBD0kgjKFCA==
-X-CSE-MsgGUID: 2p2e97gBSBSzumW7E9JOdA==
-X-IronPort-AV: E=Sophos;i="6.07,247,1708412400"; 
-   d="scan'208";a="190725994"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 May 2024 07:35:32 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 2 May 2024 07:34:52 -0700
-Received: from Lily.microchip.com (10.10.85.11) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Thu, 2 May 2024 07:34:50 -0700
-From: Prajna Rajendra Kumar <prajna.rajendrakumar@microchip.com>
-To: Mark Brown <broonie@kernel.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Conor Dooley
-	<conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>,
-	<valentina.fernandezalanis@microchip.com>, Prajna Rajendra Kumar
-	<prajna.rajendrakumar@microchip.com>
-Subject: [PATCH 2/3] spi: dt-bindings: Add num-cs property for mpfs-spi
-Date: Thu, 2 May 2024 15:34:09 +0100
-Message-ID: <20240502143410.12629-3-prajna.rajendrakumar@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240502143410.12629-1-prajna.rajendrakumar@microchip.com>
-References: <20240502143410.12629-1-prajna.rajendrakumar@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAIBRS9g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A6BC32789;
+	Thu,  2 May 2024 14:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714660538;
+	bh=sMBrADE2JhJ9VMLmjn6LuipV096YR1K8BaZa4eR/Ixo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rAIBRS9gHglqAT+OihBqCDSlaDcFZnWoDSUUvAORPeblpWZHx1MEETR5IoOxSMFnf
+	 tqUNQvFkO2GXRPoMQHNN9vVJhFE0pr7sccx8R6LH0JtJ95+Qp5ECtZzStnnHxSrMt9
+	 xs5WyftoiwJkAZOGs4rrAPj+ib8z20/KMLWBBnlxN5t4BT8vkDgeLoVb9SGraSCyvh
+	 xkOw0/Ed51wD5F9SXQcncJrLzqcuf3PecnfsUf4TRFRFO/DtG0JNAsHyVSLTcwhtpg
+	 MkHLa/FvY8OLgJJR5S3lakkAaxiJ5otVrG1vWJTk0ues5kKEF/GCac8Orj5Km78JIU
+	 WjWqwRncBYJig==
+Date: Thu, 2 May 2024 11:35:33 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+	leo.yan@linux.dev, irogers@google.com,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] perf cs-etm: Improve version detection and error
+ reporting
+Message-ID: <ZjOktWrI2-Db1sNH@x1>
+References: <20240501135753.508022-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240501135753.508022-1-james.clark@arm.com>
 
-The PolarFire SoC SPI controller supports multiple chip selects,but in
-the MSS, only one CS line is physically wired. To reflect this hardware
-limitation in the device tree, the binding enforces that the 'num-cs'
-property defaults to 1 and cannot exceed 1 unless additional
-chip select lines are explicitly defined using GPIO descriptors.
+On Wed, May 01, 2024 at 02:57:50PM +0100, James Clark wrote:
+> Changes since v1:
+>   * Add a commit to use struct perf_cpu in place of some of the ints
+>   * Add a commit to remove repeated fetches of the ETM PMU
 
-Fixes: 2da187304e55 ("spi: add bindings for microchip mpfs spi")
-Signed-off-by: Prajna Rajendra Kumar <prajna.rajendrakumar@microchip.com>
----
- .../bindings/spi/microchip,mpfs-spi.yaml      | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+Thanks, applied to perf-tools-next locally, going thru tests.
 
-diff --git a/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml b/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
-index 74a817cc7d94..19951951fdd6 100644
---- a/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
-@@ -13,9 +13,6 @@ description:
- maintainers:
-   - Conor Dooley <conor.dooley@microchip.com>
+- Arnaldo
  
--allOf:
--  - $ref: spi-controller.yaml#
--
- properties:
-   compatible:
-     oneOf:
-@@ -43,6 +40,22 @@ required:
-   - interrupts
-   - clocks
- 
-+allOf:
-+  - $ref: spi-controller.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: microchip,mpfs-spi
-+      not:
-+        required:
-+          - cs-gpios
-+    then:
-+      properties:
-+        num-cs:
-+          default: 1
-+          maximum: 1
-+
- unevaluatedProperties: false
- 
- examples:
--- 
-2.25.1
-
+> James Clark (3):
+>   perf cs-etm: Use struct perf_cpu as much as possible
+>   perf cs-etm: Remove repeated fetches of the ETM PMU
+>   perf cs-etm: Improve version detection and error reporting
+> 
+>  tools/perf/arch/arm/util/cs-etm.c | 287 +++++++++++++++---------------
+>  1 file changed, 139 insertions(+), 148 deletions(-)
+> 
+> -- 
+> 2.34.1
