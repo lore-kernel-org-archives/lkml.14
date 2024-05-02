@@ -1,159 +1,102 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B912B18054
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 03:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31A014292
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 03:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714619561; cv=none; b=nLqe9cvdtPQwojSsFivCYhC17GexURwT6BUurgzBbRkfiLI4fe9yrwMZ5XhwOD5jywSdoIWI3p1oN2B8zfrDbqhl9dDxCjQcVCjERXjkyWAyq6T3IbsHcEbgBbyIQO05RLUUsQFmHgS9E08g8Hcgm5Tb1ugoxxPQarh4x/MDcok=
+	t=1714619617; cv=none; b=teFrjWXhF3DYa9RoSitFL/TvGz3avxTMkLqRi37kRAysTXQRRKA0jgI3V7zzpsmKs2pbXT6ya1ZJLoyA1SLuDNCu7/N2zzuEu6nDIPiGPRBW0ySoCkq8aMRIDmft8O+j6LybioQJkhVWkC4jTx2gH5P3HL9xdSxdQGhTVzeuoxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714619561; c=relaxed/simple;
-	bh=WgnYev3iL3bTtE7UnbSWD1Q1DqsNg+ZMEji4e1ykjnY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M2ZBprXUl41WVrnjshejUkydfji7B/dtAPyp9AcWVR8ID0LhBF4t8uqg++7/vRzxMUn/5UeZnn99Bg2Z5zdVvbnIgHi5lYsqWBpw67bba8XUfK4UoVQlS7yPM9mfdPmBCoJuSvKBkqhChs6jjmwelY/G0Jcbr99HF3ngNrs3dOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=sOxfjY5Y; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1714619617; c=relaxed/simple;
+	bh=5XTfPr4IRbJ7mVGRcfndFaOJC4COJuxR/NwIjpIlx2g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r/ISpzTx1l8Q7uPbVBYzCFeay3+CNpoHS2s6cPulFXcEQWV/uID3X1bd0nwjPE20mfME+2QkzCZ3PpUMoaeVSpzy3wqlBuaFLSqMnT/X71opVrr29E/5Rr/TAijtVovibFhPTlxm9ZZaFOC4mBVqpSXY5FLnj5a0mK6kkV6CqaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Yccow8Dx; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="sOxfjY5Y"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5d3907ff128so5874929a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 20:12:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Yccow8Dx"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7dec9c65057so31207939f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2024 20:13:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1714619557; x=1715224357; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oxU4uj4hkcp1dLz22ktDIDCqUdqy1TVfUCsqX6hkqK0=;
-        b=sOxfjY5Y6Emew5nkqpEQxXxQ1dUAilUXiA0tcT1h0wYOXyOeoe3JjXm/N/Dk4XjZoK
-         5EqgbPhu6G77A1CPwiCRB7N78vtNNBY022g4npkbAkReQVlQ6b6eKFIfFFxv0Fn9JnT+
-         YHqCbr5KLq60q0sWwwYdNaeD2Yaf1MTjgm3RKo+pRdjhkG/Q4WuhOhyY7pgVK/y77k7J
-         099kxL2oK/rUpyeH0gHJW+Mg2ISQz4rjU1QuosSkqK+lVI690E9mobEycLb/TquHjB+S
-         yUxnlCjbyGBRR4rfWSbNroNgayo3akedthGKquWDXp9B2lXgcg3890gQ0ajO3GTMGrTK
-         fbDg==
+        d=linuxfoundation.org; s=google; t=1714619615; x=1715224415; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LWSztiZ0J905gZ/ofKM8FZjwM5J8mddj2PYT/nPR83k=;
+        b=Yccow8DxMX1tcgsAeDQ2ZznLzIIeBabatEjJ4Fu7/EmPMiot6ShZDlgKRjHiXUeXNx
+         WJdefOGqd7eFp2dPQ+3VsJDtJ72aj03LUPPILDxU9ooh1+ZGVIjYwzJPKUS/1mCWgwUr
+         AotlrexwYrPCtfBFHrgiQYONbbJOTmV4w79Dw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714619557; x=1715224357;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oxU4uj4hkcp1dLz22ktDIDCqUdqy1TVfUCsqX6hkqK0=;
-        b=FUJSWVDC/QLnoU1fLbl2MKvBZHoEjAMvSPoh4yyGK6EVABTBn3YD3kc+kS2hYTB+PK
-         uH/UoxTEdUDN/pYvCG0IL71+UY3A3l1h7u/nxQzcarwEinSFOSExiBqg+wc0v4m5fWls
-         vy/27RHw4nA923UzudJyx9pvtXEBeiaGxnIDKeOs/DvgUKLkFm9eACthihanVGssl8r+
-         kuclWWX6wnjR0mbi4Np/u4fhW240OnFRVSacRTQxjcQY+Vlp/0682IWTGsnPGxF7WPDH
-         VGEN0aXlPrk7xpygdXq1R+9TaiiK9xwO+Fl2GVUZzhFXzH/wMOUyXQAwdpp3tueF7qGG
-         mhdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtzLiLkDNqxNivZzLQ0M+u/dVSgyw0WMX/CswX18k8V6WwSr9ifUbqkdphackNFO/6+XiSVpa+xy8bIHmImindq2TqlYH4Szx5k4tq
-X-Gm-Message-State: AOJu0YwJfiuufDEJAIdrJq02RwArn4svlo3Gjr2/1ifJUFg3jzZTkAFs
-	+AkAvFYJ/qMst+ZFX/3EdxTSB/pkidsn236myrGr4QXInlm9oZPi+DCCO/8aMOqUHJiaKy/IGVl
-	/
-X-Google-Smtp-Source: AGHT+IFk0SsIAhiTdnh8fa+N0OtU/vL7UYnH56mZggyi13eZnYq8j8uY1qc9WZRSbkde1s6/dI0yvA==
-X-Received: by 2002:a05:6a21:498e:b0:1a5:bc5d:3c0a with SMTP id ax14-20020a056a21498e00b001a5bc5d3c0amr870776pzc.61.1714619556914;
-        Wed, 01 May 2024 20:12:36 -0700 (PDT)
-Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
-        by smtp.gmail.com with ESMTPSA id fu6-20020a056a00610600b006f3f5d3595fsm131849pfb.80.2024.05.01.20.12.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 20:12:36 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1s2Ms5-000T8k-1e;
-	Thu, 02 May 2024 13:12:33 +1000
-Date: Thu, 2 May 2024 13:12:33 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: John Garry <john.g.garry@oracle.com>, hch@lst.de,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	chandan.babu@oracle.com, willy@infradead.org, axboe@kernel.dk,
-	martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com, mcgrof@kernel.org,
-	p.raghav@samsung.com, linux-xfs@vger.kernel.org,
-	catherine.hoang@oracle.com
-Subject: Re: [PATCH RFC v3 12/21] xfs: Only free full extents for forcealign
-Message-ID: <ZjMEob4s3721orKp@dread.disaster.area>
-References: <20240429174746.2132161-1-john.g.garry@oracle.com>
- <20240429174746.2132161-13-john.g.garry@oracle.com>
- <ZjGSiOt21g5JCOhf@dread.disaster.area>
- <20240501235310.GP360919@frogsfrogsfrogs>
+        d=1e100.net; s=20230601; t=1714619615; x=1715224415;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LWSztiZ0J905gZ/ofKM8FZjwM5J8mddj2PYT/nPR83k=;
+        b=Xj+G4VdDh9Q6ccllCvnyuDo6YKXVM535UDeeEYbuMnhVE3l5h5HJHeGkofsyES7WJd
+         MkXyI57KZyg+5gAHFsNUXHIOknj8s8JzZ4eKGfSm0c0WUA2rQa7prXGhdrwvk3EQpOUf
+         N/UuKFYtA39/eVy7GaWUVhONJYX1BtADpIycLReaHXjrdTn1ZPA3jTXLRUsWVyA09puF
+         E93yv1SuAJIVfoM2nW8llhF506SIDWgsSDgvhVMSkHhS0rWgH9H0iE8bxZXJ6Sb20ksc
+         i0YDfjQsOrPFKwx/2nQE0S6ZVuQZOi15vajWVh8AMn4y0SGwPx75RGdA9kWA04VfqQq1
+         CKwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEhylQ/BroqLA46HQJgRz9dX1e6/R7g10JXID3U2aSmMNdzp+iRH8cP7x9Cipc6zP9Oxgg9WY4ZVEZwNBj4i9qQiJCv5WQ5TELWEyV
+X-Gm-Message-State: AOJu0Yy/v0q8m0QCXq4jbKwR3mYOLau9/jQQQHWMkNTX5ll1mfJXoQih
+	isxGkcMua1vHRCZZFtUBEpHp7GKZJssnKS29o0m4gInH4oTGCiE4U4pRZzyhSRE=
+X-Google-Smtp-Source: AGHT+IGflx79ER+Vhq1h7akcsKhdeZmwayTvTxHYAuKOu0N6/C9SX0Nukp7IpIEJP73j4ChlCLBcFg==
+X-Received: by 2002:a05:6e02:13a5:b0:368:974b:f7c7 with SMTP id h5-20020a056e0213a500b00368974bf7c7mr5573879ilo.0.1714619614970;
+        Wed, 01 May 2024 20:13:34 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id m3-20020a056e02158300b0036c6bb70d9csm15814ilu.10.2024.05.01.20.13.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 May 2024 20:13:34 -0700 (PDT)
+Message-ID: <e1b6cabd-adef-44f3-a4e8-739629037632@linuxfoundation.org>
+Date: Wed, 1 May 2024 21:13:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501235310.GP360919@frogsfrogsfrogs>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4.19 00/77] 4.19.313-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240430103041.111219002@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240430103041.111219002@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 01, 2024 at 04:53:10PM -0700, Darrick J. Wong wrote:
-> On Wed, May 01, 2024 at 10:53:28AM +1000, Dave Chinner wrote:
-> > On Mon, Apr 29, 2024 at 05:47:37PM +0000, John Garry wrote:
-> > > Like we already do for rtvol, only free full extents for forcealign in
-> > > xfs_free_file_space().
-> > > 
-> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
-> > > ---
-> > >  fs/xfs/xfs_bmap_util.c | 7 +++++--
-> > >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-> > > index f26d1570b9bd..1dd45dfb2811 100644
-> > > --- a/fs/xfs/xfs_bmap_util.c
-> > > +++ b/fs/xfs/xfs_bmap_util.c
-> > > @@ -847,8 +847,11 @@ xfs_free_file_space(
-> > >  	startoffset_fsb = XFS_B_TO_FSB(mp, offset);
-> > >  	endoffset_fsb = XFS_B_TO_FSBT(mp, offset + len);
-> > >  
-> > > -	/* We can only free complete realtime extents. */
-> > > -	if (XFS_IS_REALTIME_INODE(ip) && mp->m_sb.sb_rextsize > 1) {
-> > > +	/* Free only complete extents. */
-> > > +	if (xfs_inode_has_forcealign(ip) && ip->i_extsize > 1) {
-> > > +		startoffset_fsb = roundup_64(startoffset_fsb, ip->i_extsize);
-> > > +		endoffset_fsb = rounddown_64(endoffset_fsb, ip->i_extsize);
-> > > +	} else if (XFS_IS_REALTIME_INODE(ip) && mp->m_sb.sb_rextsize > 1) {
-> > >  		startoffset_fsb = xfs_rtb_roundup_rtx(mp, startoffset_fsb);
-> > >  		endoffset_fsb = xfs_rtb_rounddown_rtx(mp, endoffset_fsb);
-> > >  	}
-> > 
-> > When you look at xfs_rtb_roundup_rtx() you'll find it's just a one
-> > line wrapper around roundup_64().
+On 4/30/24 04:38, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.313 release.
+> There are 77 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I added this a couple of cycles ago to get ready for realtime
-> modernization.
+> Responses should be made by Thu, 02 May 2024 10:30:27 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.313-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Yes, I know. I'm not suggesting that there's anything wrong with
-this code, just pointing out that the RT wrappers are doing the
-exact same conversion as the force-align code is doing. And from
-that observation, a common implementation makes a lot of sense
-because that same logic is repeated in quite a few places....
+Compiled and booted on my test system. No dmesg regressions.
 
-> That will create a bunch *more* churn in my tree just to
-> convert everything *back*.
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-This doesn't change anything significant in your tree, nor do you
-need to "convert everything back". The RT wrappers are unchanged,
-and the only material difference in your tree vs the upstream
-xfs_free_file_space() this patchset is based on is this:
-
--	if (XFS_IS_REALTIME_INODE(ip) && mp->m_sb.sb_rextsize > 1) {
-+	if (xfs_inode_has_bigrtalloc(ip)) {
-
-That's it.
-
-All the suggestion I made does is change where you need to make this
-one line change. It would also remove the need to do this one line
-change in multiple other places, so it would actually -reduce- your
-ongoing rebase pain, not make it worse.
-
-That's a net win for everyone, and it's most definitely not a reason
-to shout at people and threaten to revert any changes they might
-make in this area of the code.
-
-> Where the hell were you when that was being reviewed?!!!
-
-How is this sort of unhelpful statement in any way relevant to
-improving the forcealign functionality to the point where we can
-actually merge it and start making use of it for atomic writes?
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+thanks,
+-- Shuah
