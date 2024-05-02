@@ -1,72 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520831B800;
-	Thu,  2 May 2024 06:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E79B20B28;
+	Thu,  2 May 2024 06:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714632639; cv=none; b=XjMM9bAGSYH86/w75tEmZj3Ds4yxY585ySxtyatAUkAlAdb9SxVYNEKuiNkdj/lTLKPFl1+1kW5TKKL1uY8a96R6yAy28vEnqj3ym/vxPceIm052Fpe+g9ZuFv+sQl0BoQ0E3ZxqE1gQ+dMz3wlwByvtFa6wcfqqfyxaIKKFUwQ=
+	t=1714632647; cv=none; b=Yr/QEdwH7/Wm+PnBDNOVnVGD+tgMfcXBNDAcA6OiFAWdvYSWef+LnMPojnFDiNqOzHxyNaFsTrQ+kdkjbxZtpojgFpD09OiVhu4TO7IQxDyjgeGpzq7ANt/2GxpXwdbebLvWRuWxnAHWu72t6P5iauQMsE/o0lCcatGNSGsg6ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714632639; c=relaxed/simple;
-	bh=xUROgI/ZajIQoWeMQfgRdgy7GUCyUj9o84+NUFZWShg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eWQhT5WhkVqEhJQztuN7Q540DumAOV4cq8L5hd4aLPUR3yEuUkPZQTyXR6cDEUrvpaQG0IVLadYjGtmlVZrVOeMGrRouZIuN8iPVdnldSMiF/NT9g26i+fetZyiOEYIbubfdd/zv06ZyLnmN/FvR3sbOixanZYp4VHMdnztNjdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0ISh8Kvc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714632647; c=relaxed/simple;
+	bh=0KtAjG/lQgOLJAFTu2txRbylcS7quAOoyaCIXOphnRE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C/B9IIiXw0VVNoHmQvUGsI09fc9zIWoNESl44ohwzB2/uEhfg3DZYviPGn/B2eetYvFrZGhA/s1CKk7yFhCkHKHVdHbUgNVda1tfMHCQhmYQsbOpwdxGm8NnX6Me7ktvtspV8HpTz9yI0ndxyEc9kVojHJEFCYrVoMnRnKORdis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Z0eNvovy; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0ISh8Kvc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42DD8C116B1;
-	Thu,  2 May 2024 06:50:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1714632638;
-	bh=xUROgI/ZajIQoWeMQfgRdgy7GUCyUj9o84+NUFZWShg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0ISh8Kvc7tFScTfj1qNpowrdqd9YJtVVwTKt9D2knXCMaNvSDvtmboOIA9fU+V0A6
-	 0rVOwJD4w9ZH4rjIh6LB4eC6Z4VlU+yul3zgJFYaH5RenGrFT5IS3spafDwBG5IBgb
-	 eoTSA4zGQ+vTQ6wfzIPIiOh+Ev6zYayRRkFDKHiU=
-Date: Thu, 2 May 2024 08:50:36 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Pascal Ernster <git@hardfalcon.net>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 6.6 000/186] 6.6.30-rc1 review
-Message-ID: <2024050218-olive-majestic-f64b@gregkh>
-References: <20240430103058.010791820@linuxfoundation.org>
- <356c4202-875f-4277-885e-31fdbfd746c1@hardfalcon.net>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Z0eNvovy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1714632644; x=1746168644;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0KtAjG/lQgOLJAFTu2txRbylcS7quAOoyaCIXOphnRE=;
+  b=Z0eNvovyAvOCOfS0HzQfpKk4ZPbZylmdysCXcxOM4BOuO9Ad0LmqoTiu
+   4D9fwicoPC3IZav15cfStLivb3/x5qJlgZ8hxpJnwxo6qd13LE08v6tRs
+   guA83ORm2jiI0KPhYvkwps1xLgDGPrFvpzGSR4Cf10xCz8C+SI8W2UNd1
+   c9hwdxH9TPm+RtSyLFo3rSvswosSbzWdWDg/KPPZLSEtkSl6J1aftmJIZ
+   aHOsVaoGu0+PtYdlcgWxjM6T++QzsYA+Gs2yQSGcPzefFowKXfZlGNc+D
+   2C0dByk9IA0zPHc1Vsjon0CbJDY2n8NfGb1KkI7sE8YEMSSVkION9KCk5
+   A==;
+X-CSE-ConnectionGUID: i2nnprOWT+as/Z9/JQ0dlg==
+X-CSE-MsgGUID: uhYcgmjHQaO4Rf4DNJeUmg==
+X-IronPort-AV: E=Sophos;i="6.07,247,1708412400"; 
+   d="scan'208";a="23940607"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 May 2024 23:50:43 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 1 May 2024 23:49:47 -0700
+Received: from localhost (10.10.85.11) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Wed, 1 May 2024 23:49:47 -0700
+Date: Thu, 2 May 2024 08:49:46 +0200
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: Min Li <lnimi@hotmail.com>
+CC: <richardcochran@gmail.com>, <lee@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, Min Li
+	<min.li.xe@renesas.com>
+Subject: Re: [PATCH net-next v7 3/5] ptp: clockmatrix: dco input-to-output
+ delay is 20 FOD cycles + 8ns
+Message-ID: <20240502064946.yc6v7xadwkfldbsw@DEN-DL-M31836.microchip.com>
+References: <20240501160324.27514-1-lnimi@hotmail.com>
+ <LV3P220MB12024CB984967E4AC05A1E13A0192@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <356c4202-875f-4277-885e-31fdbfd746c1@hardfalcon.net>
+In-Reply-To: <LV3P220MB12024CB984967E4AC05A1E13A0192@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
 
-On Thu, May 02, 2024 at 08:44:30AM +0200, Pascal Ernster wrote:
-> [2024-04-30 12:37] Greg Kroah-Hartman:
-> > This is the start of the stable review cycle for the 6.6.30 release.
-> > There are 186 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 02 May 2024 10:30:27 +0000.
-> > Anything received after that time might be too late.
+The 05/01/2024 12:03, Min Li wrote:
+
+Hi Min Li,
+
 > 
-> Hi, 6.6.30-rc1 is running fine on an x86_64 Haswell VM.
+> From: Min Li <min.li.xe@renesas.com>
 > 
-> Note that I have *not* tested building the kernel documentation, and I
-> suspect that building the documentation with docutils >= 0.21 would likely
-> fail without the patch from
+> Set dco input-to-output delay is 20 FOD cycles + 8ns
+
+Can you explain why you are doing this change in the commit message?
+Is this a fix or just improvement?
+
 > 
-> https://lore.kernel.org/all/faf5fa45-2a9d-4573-9d2e-3930bdc1ed65@gmail.com/
+> Signed-off-by: Min Li <min.li.xe@renesas.com>
+> ---
+>  drivers/ptp/ptp_clockmatrix.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
+> index d069b6e451ef..21f3a2c179f5 100644
+> --- a/drivers/ptp/ptp_clockmatrix.c
+> +++ b/drivers/ptp/ptp_clockmatrix.c
+> @@ -2165,7 +2165,7 @@ static int configure_channel_pll(struct idtcm_channel *channel)
+> 
+>  /*
+>   * Compensate for the PTP DCO input-to-output delay.
+> - * This delay is 18 FOD cycles.
+> + * This delay is 20 FOD cycles + 8ns.
+>   */
+>  static u32 idtcm_get_dco_delay(struct idtcm_channel *channel)
+>  {
+> @@ -2196,7 +2196,7 @@ static u32 idtcm_get_dco_delay(struct idtcm_channel *channel)
+>         fodFreq = (u32)div_u64(m, n);
+> 
+>         if (fodFreq >= 500000000)
+> -               return (u32)div_u64(18 * (u64)NSEC_PER_SEC, fodFreq);
+> +               return (u32)div_u64(20 * (u64)NSEC_PER_SEC, fodFreq) + 8;
+> 
+>         return 0;
+>  }
+> --
+> 2.39.2
+> 
+> 
 
-What is the git id of this in Linus's tree?
-
-thanks,
-
-greg k-h
+-- 
+/Horatiu
