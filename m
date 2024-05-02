@@ -1,129 +1,133 @@
-Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6422C76048
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 12:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3EF60DCF
+	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 12:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714651625; cv=none; b=u0J7Q4HihhxNks+lFR+ymVkkGLfJ2+3B2vuPBDrJ2f9bZmgu/z1gg9XRZlEwW2Fc8OyU6SEhUf5ZCIIuGDAZrpCh4pujK27bFRsYt9E9AAHsgWM2vHS1JRP6BQo5pBoBaLL3rsKAwDXztylUTnqDE94HIV3W64Csok0GZDeLrBA=
+	t=1714651867; cv=none; b=LbBGk/VRg3Xo/0DGePZFB9W6JFBjdADPqbRRq+8Ul39s5Gg2R9CY2aMslpsT/zWNZcdmbjWMVlK0K5KnKt3FR9tqLgqi5c9RxTSI4DF6B1vMN9GE2tI+jAsPuW4zwNAM27LNlPXJpa5++qeOmEL1csZ9pT+B6WTc75Z0hwamM30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714651625; c=relaxed/simple;
-	bh=8IrV1T9CB7HVTX7Hf4sBrMPMMLE4m4iOalJ7OH9cstY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KtoywL3RiKJIfvhxGAE46KxqutcTy/ILWixosqj4De4AQSdIk/gX1PZukkmT9hBaHFVHQCMit0AhA1rvk15nqyxzG01B3T6hGDQcbxQ4CBfmjWQE83/KNU3s7XsaXrUL3xw++EM9bH1mqfMp4nxInpxl32c8OqNIPPgRPiDkITE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=IhGIqq0I; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=a60KI2QL; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="IhGIqq0I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a60KI2QL"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 2D5081140092;
-	Thu,  2 May 2024 08:07:02 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 02 May 2024 08:07:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm3; t=1714651622; x=1714738022; bh=cpgbTJPINWDuCQJJISt3p
-	MMPFgRhdl1XPatpsg7wiwk=; b=IhGIqq0IlDnYjXzpQOPDFfN1Hqy3bKNpQZ/8t
-	e6N55CokaWKPaD3diPRNc7gXwDfLqRUK201dEeOsxE0ILj/s9BiWiJhACUesCFzC
-	9G1A8+zau5gMrg98EPqy72KqdtKqWEpv4rTkPKyhc1gRlXZ97NDi+EXc1PcWq4Fa
-	pzcWzvGLWc9hxS3vSMqmRfjElmj2RSDsUbHb8oa6bGbtIM8wj7YKrNg9aVp6NNep
-	kFu+W4gvwiqmiQjBuram0xO5iMImeTdOzjqCXHQIdjIHcptGQHnp7BS984WhxnHS
-	BPzKeyQtr5JeuG0vinUP//Ud3hbNDTWx60c21V90U2VcVxo1w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1714651622; x=1714738022; bh=cpgbTJPINWDuCQJJISt3pMMPFgRhdl1XPat
-	psg7wiwk=; b=a60KI2QLZR8VqBq6MUlGmA3acYbHyCqU2ooMtF2B//imRHm3RFJ
-	kJ0lFAr4q0HHIgsfGqgzKTinoRcj0fTRKP6uS1GrjT2kU+5jPBy+uVEbsH8b91sy
-	NiDrIcLVSvFHepj7C3MZX908U+jsRTO3ufwX4jFv0/v4BcoIHr3pJsa/Ns6yrPO6
-	ft3dRQJxd1/OhRbxyLm8o+vYOz+hkXMASF6kfJKTWZ8XYFMtv54+84mh+sa0ELai
-	HaJxDe8L3w3XmUN+S305Pa5fRlpefDhppFtbwYRoCGKwSaK+g4IYHQJzJNnpyBBq
-	GAgo9pfhmdZkA18mAgxbTCn0ZY4fu3H4ZOA==
-X-ME-Sender: <xms:5YEzZsGv6CIlZb6vLAlPo_mbTo1DrbRrFBYFIxOvWEoYGd_h1Scbaw>
-    <xme:5YEzZlVX3JbGrF0uUtK9gLAHzTckg1fzvcvgg9RF82_4FviD-7mdBZnYtrJLNkUDF
-    qNopVFxQi1d6XXSQnk>
-X-ME-Received: <xmr:5YEzZmLlA2LqakGZE8MzRrODdqyqncwgtNmWpXCNFMa_SFu8y7cdhj9go5hUnpkjTKfdqmlNxX2wITjF8qT6J3JmdnLcERglwK0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddukedggeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfggtggusehttdertd
-    dttddvnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghs
-    hhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeetfeeiteefve
-    egvdfggeffheetleejkeekleeugeffffdtgfdtteetkeevvddvgfenucffohhmrghinhep
-    khgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjph
-X-ME-Proxy: <xmx:5YEzZuEi-vJiXAbUNSnbtFsexGARMcJ2v0lP7MkFKV9ufxRCeBrdFQ>
-    <xmx:5YEzZiXEhrE9Ze15w-U7vlmr02eYT4zAybkus_EnMJBDI7b6FCeqQA>
-    <xmx:5YEzZhNenRM70LNDeN0gyno5r34YuwrRFzqUOFdfI2l0LwUVMVIz5g>
-    <xmx:5YEzZp2xp2KZRIOYuhHTjxdbbir8RTryKHUsMwh40Kc1knHYZeziZw>
-    <xmx:5oEzZhRTHpBA_0vsIRLEkuP6AD__F0U2dnRvPIXON1l_Gp6XBh2bcLOb>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 2 May 2024 08:07:00 -0400 (EDT)
-Date: Thu, 2 May 2024 21:06:57 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, linux1394-devel@lists.sourceforge.net
-Subject: [GIT PULL] firewire: fixes for v6.9-rc6
-Message-ID: <20240502120657.GA121265@workstation.local>
-Mail-Followup-To: torvalds@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux1394-devel@lists.sourceforge.net
+	s=arc-20240116; t=1714651867; c=relaxed/simple;
+	bh=J0ys2nCMeqQznpcv3TvixEojj3WOQhbihu0iZmOz7CM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GMhCrYtvDC2gPdjOLF7Drh7qyW6Iv0w9twC6jMRGlsNjL3fIpAm7Ql3LyjdQoXrROdiVciHCmJaNoGDjDySoCRku0zxYLHO7KjJs2fvltz5fe1synAGESj9gQGwejHeZBKx5/FFaaP2vgfQuNGOz7PcopPt+I/uVhk+0FOqAgrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:93f:7d7e:5c98:dabc])
+	by laurent.telenet-ops.be with bizsmtp
+	id JCB12C00P3PjoSD01CB1XB; Thu, 02 May 2024 14:11:02 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1s2VGR-0034NX-Be;
+	Thu, 02 May 2024 14:11:01 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1s2VHB-004jt6-I9;
+	Thu, 02 May 2024 14:11:01 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH resend v2] locking/spinlocks: Make __raw_* lock ops static
+Date: Thu,  2 May 2024 14:10:59 +0200
+Message-Id: <d3300a978761220729b58367f7051212826b0f16.1714651617.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+If CONFIG_GENERIC_LOCKBREAK=y and CONFIG_DEBUG_LOCK_ALLOC=n
+(e.g. sh/sdk7786_defconfig):
 
-The following changes since commit e67572cd2204894179d89bd7b984072f19313b03:
+    kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_spin_lock' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_spin_lock_irqsave' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_spin_lock_irq' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_spin_lock_bh' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_read_lock' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_read_lock_irqsave' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_read_lock_irq' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_read_lock_bh' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:68:17: warning: no previous prototype for '__raw_write_lock' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:80:26: warning: no previous prototype for '__raw_write_lock_irqsave' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:98:17: warning: no previous prototype for '__raw_write_lock_irq' [-Wmissing-prototypes]
+    kernel/locking/spinlock.c:103:17: warning: no previous prototype for '__raw_write_lock_bh' [-Wmissing-prototypes]
 
-  Linux 6.9-rc6 (2024-04-28 13:47:24 -0700)
+All __raw_* lock ops are internal functions without external callers.
+Hence fix this by making them static.
 
-are available in the Git repository at:
+Note that if CONFIG_GENERIC_LOCKBREAK=y, no lock ops are inlined, as all
+of CONFIG_INLINE_*_LOCK* depend on !GENERIC_LOCKBREAK.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git tags/firewire-fixes-6.9-rc6
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Waiman Long <longman@redhat.com>
+---
+Compile-tested on all defconfigs that have CONFIG_GENERIC_LOCKBREAK=y:
+  - sh/sdk7786_defconfig,
+  - sh/shx3_defconfig,
+  - s390/debug_defconfig,
+and also on s390/debug_defconfig after changing:
+    CONFIG_DEBUG_LOCK_ALLOC=n
+    CONFIG_DEBUG_WW_MUTEX_SLOWPATH=n
+    CONFIG_LOCK_STAT=n
+    CONFIG_PROVE_LOCKING=n
 
-for you to fetch changes up to 09773bf55aeabe3fd61745d900798dc1272c778a:
+v2:
+  - Add Acked-by,
+  - Drop RFC,
+  - Improve patch description.
+---
+ kernel/locking/spinlock.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-  firewire: ohci: fulfill timestamp for some local asynchronous transaction (2024-04-29 18:41:00 +0900)
+diff --git a/kernel/locking/spinlock.c b/kernel/locking/spinlock.c
+index 8475a0794f8c5ad2..7009b568e6255d64 100644
+--- a/kernel/locking/spinlock.c
++++ b/kernel/locking/spinlock.c
+@@ -65,7 +65,7 @@ EXPORT_PER_CPU_SYMBOL(__mmiowb_state);
+  * towards that other CPU that it should break the lock ASAP.
+  */
+ #define BUILD_LOCK_OPS(op, locktype)					\
+-void __lockfunc __raw_##op##_lock(locktype##_t *lock)			\
++static void __lockfunc __raw_##op##_lock(locktype##_t *lock)		\
+ {									\
+ 	for (;;) {							\
+ 		preempt_disable();					\
+@@ -77,7 +77,7 @@ void __lockfunc __raw_##op##_lock(locktype##_t *lock)			\
+ 	}								\
+ }									\
+ 									\
+-unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock)	\
++static unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock) \
+ {									\
+ 	unsigned long flags;						\
+ 									\
+@@ -95,12 +95,12 @@ unsigned long __lockfunc __raw_##op##_lock_irqsave(locktype##_t *lock)	\
+ 	return flags;							\
+ }									\
+ 									\
+-void __lockfunc __raw_##op##_lock_irq(locktype##_t *lock)		\
++static void __lockfunc __raw_##op##_lock_irq(locktype##_t *lock)	\
+ {									\
+ 	_raw_##op##_lock_irqsave(lock);					\
+ }									\
+ 									\
+-void __lockfunc __raw_##op##_lock_bh(locktype##_t *lock)		\
++static void __lockfunc __raw_##op##_lock_bh(locktype##_t *lock)		\
+ {									\
+ 	unsigned long flags;						\
+ 									\
+-- 
+2.34.1
 
-----------------------------------------------------------------
-firewire: fixes for v6.9-rc6
-
-The following two driver fixes:
-
-* The firewire-ohci driver for 1394 OHCI hardware does not fill time stamp
-  for response packet when handling asynchronous transaction to local
-  destination. This brings an inconvenience that the response packet is not
-  equivalent between the transaction to local and remote. It is fixed by
-  fulfilling the time stamp with hardware time. The fix should be
-  applied to Linux kernel v6.5 or later as well.
-
-* The nosy driver for Texas Instruments TSB12LV21A (PCILynx) has
-  long-standing issue about the behaviour when user space application
-  passes less size of buffer than expected. It is fixed by returning zero
-  according to the convention of UNIX-like systems.
-
-----------------------------------------------------------------
-Takashi Sakamoto (1):
-      firewire: ohci: fulfill timestamp for some local asynchronous transaction
-
-Thanassis Avgerinos (1):
-      firewire: nosy: ensure user_length is taken into account when fetching packet contents
-
- drivers/firewire/nosy.c | 6 ++++--
- drivers/firewire/ohci.c | 8 ++++++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
-
-
-Regards
-
-Takashi Sakamoto
