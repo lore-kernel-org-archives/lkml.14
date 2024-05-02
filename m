@@ -1,133 +1,116 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94078367
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 00:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981287F6;
+	Thu,  2 May 2024 00:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714608181; cv=none; b=clg/EqL80F6CXygt56XDxrcEcpB+JMjdUNyWO4gO5llOapSnmG2yxPHZ0dmUe7FDpTSF+6O6Na12z7MeIdFUU6N744ZI+7gRildI1CFH3TC8DEnDeru6EglEuLtMR+O+u4+vMJ5YJbvv2hFaq4igVMh6HwEkejnOSS1dRWOJkk0=
+	t=1714608211; cv=none; b=qASusfLfIuwtCQMSWZzrrcfGvXieCX0rJ2YF6uz5TPSAj+BBuL5+ahSWempTx+UHIMAKdMdjhPKFm7kX0DLykPh0BtGKoAAL6f+Jgwn0Gad8D/3/tYGhwH7Zc7FLhQHVGKL8l+dp5BBWe+WEkUEK9rX3nmfPQqtX5zJ8tjH7XH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714608181; c=relaxed/simple;
-	bh=MQnQdiNVTwTDDyeL4S/RcdxCDIpsfhbfXDclL6IJ44s=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dW904ToCNzMLe09fowcY4AoKEVc2rKRaX/khsAbW3QnWLtX90PZ9YIKPb/nHJ6Ibk4UM45xQxuiCBu+zfbdzXlphBXM101jDPolWLyaB7i88ZRaiIO3jw0i9QiAoL4gt6vK2J/sq0aXzoCDWcaB8bUpgFKrnsb3uuWKp58rFuAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cOAW+aeJ; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1714608211; c=relaxed/simple;
+	bh=1sKkjFU96N7WQ/Alcm0gt69fbHMFNm4H/4w/Y1PgO/w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DAp1tqmf3A25MfsbZLvqTFbnDlGFC1qtajQfDCyJsrg+Mq0M/KkpBJkCwgqaT/9TuVGDkHkva0mKV/k1i9HvYS9+PaxWnae0k35+ufqZaYgVH2zfCxRnxp3BMrYEUvOBqZsMrNlVEjrBoOayAc9jJsUDpS5gRr0znpAGU6Vn6ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kp8qZs/i; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eJnJ1sG7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cOAW+aeJ"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 441NKAPw010464;
-	Thu, 2 May 2024 00:02:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2023-11-20;
- bh=iBNgjATm1g/dvs/mF70E3zaHDPEr1jQSRo6dBQGN4Yc=;
- b=cOAW+aeJW6MGxJkg049vVzz2Zzrb8XnTgk5GVZgHLiP74GRfVHXxw7mt9e2OxPnwPT8R
- t3+s32yTrY/ROVhL2IlZ1BJixpwJMqTOJhPM2JSztBbn2Sq16rfeuex6hKuxwpNHlsK8
- 1SC4qfcynTe3dxcCdxXZOmlwnvGwixyZdzlITCGCTuholKSh1CQP6x6cAUO6j8vYpNee
- P5BU2EzhcktlZAo6gYwGm9bGcwpcMl9JbDSh/kLwk1ePIgpiMWlXygpHMp/LcAjs8GL6
- uq++DN7DScLxq5wM5tN4bqMK6X1YvKjOvm5L10vZbUZWZUPh8zN4QGvrk9zRU4+JcoWt dQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xrsdetpj7-261
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 02 May 2024 00:02:47 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 441MBS4E033172;
-	Wed, 1 May 2024 23:25:12 GMT
-Received: from brm-x62-16.us.oracle.com (brm-x62-16.us.oracle.com [10.80.150.37])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3xrqt9vbuq-4;
-	Wed, 01 May 2024 23:25:12 +0000
-From: Jane Chu <jane.chu@oracle.com>
-To: linmiaohe@huawei.com, nao.horiguchi@gmail.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] mm/memory-failure: send SIGBUS in the event of thp split fail
-Date: Wed,  1 May 2024 17:24:58 -0600
-Message-Id: <20240501232458.3919593-4-jane.chu@oracle.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240501232458.3919593-1-jane.chu@oracle.com>
-References: <20240501232458.3919593-1-jane.chu@oracle.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kp8qZs/i";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eJnJ1sG7"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1714608202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J4jzCGoAK5gYl8hpdgidkPo+bYHUWqSGYg+U6RVV820=;
+	b=kp8qZs/i/NeO7qfmBU3pkT3RZ2CP7BAPeXs2WILS38escNUt21sBZ8FPt9ISkTZMM1JnR6
+	TgNk6LX4GPGmIA3aABXnoLlisukSiyZLBGOfl9+ZyZG8xd5tZi1u0ZfCtQYEsTt49JcA6D
+	/j1jfLobwICqaaUuO0qwuXKQWrwKtycYAnQiFIY/OnKMOiAMmicgsLedA4tCzQ9pJVQg2q
+	/jJlTqpyywNqqyW2lPvaXtcslXk0bDS5bYetRkwKaPskN/jBFFOuJ7iAFQkZe1yIPql96x
+	xmckFM53fcT+6ESd0DZF6IQleqJCg5Gd/Yvdf5WZNgIOpKeiGq2fRauCZzbHAA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1714608202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J4jzCGoAK5gYl8hpdgidkPo+bYHUWqSGYg+U6RVV820=;
+	b=eJnJ1sG70pSoKYDNmnIMoXYuvS14n1rytkredEJDGF5uaJOItsoLTMSzHeQnrN6W6lovD5
+	k+88/oJHU9x5qUBw==
+To: Herve Codina <herve.codina@bootlin.com>, Herve Codina
+ <herve.codina@bootlin.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Lee
+ Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Saravana Kannan <saravanak@google.com>, Bjorn
+ Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund
+ <Steen.Hegelund@microchip.com>, Daniel Machon
+ <daniel.machon@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 10/17] irqdomain: Add missing parameter descriptions in
+ docs
+In-Reply-To: <20240430083730.134918-11-herve.codina@bootlin.com>
+References: <20240430083730.134918-1-herve.codina@bootlin.com>
+ <20240430083730.134918-11-herve.codina@bootlin.com>
+Date: Thu, 02 May 2024 02:03:17 +0200
+Message-ID: <87cyq5rsfu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_16,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
- suspectscore=0 malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2405010165
-X-Proofpoint-GUID: ovlQb9iG_YSm1K2_mAapQrq0LojExnvH
-X-Proofpoint-ORIG-GUID: ovlQb9iG_YSm1K2_mAapQrq0LojExnvH
+Content-Type: text/plain
 
-When handle hwpoison in a GUP longterm pin'ed thp page,
-try_to_split_thp_page() will fail. And at this point, there is little else
-the kernel could do except sending a SIGBUS to the user process, thus
-give it a chance to recover.
+On Tue, Apr 30 2024 at 10:37, Herve Codina wrote:
+>  /**
+>   * irq_domain_xlate_onecell() - Generic xlate for direct one cell bindings
+> + * @d: IRQ domain involved in the translation
 
-Signed-off-by: Jane Chu <jane.chu@oracle.com>
----
- mm/memory-failure.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Please write out 'Interrupt domain'
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 7fcf182abb96..67f4d24a98e7 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -2168,6 +2168,37 @@ static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
- 	return rc;
- }
- 
-+/*
-+ * The calling condition is as such: thp split failed, page might have
-+ * been GUP longterm pinned, not much can be done for recovery.
-+ * But a SIGBUS should be delivered with vaddr provided so that the user
-+ * application has a chance to recover. Also, application processes'
-+ * election for MCE early killed will be honored.
-+ */
-+static int kill_procs_now(struct page *p, unsigned long pfn, int flags,
-+			struct page *hpage)
-+{
-+	struct folio *folio = page_folio(hpage);
-+	LIST_HEAD(tokill);
-+	int res = -EHWPOISON;
-+
-+	/* deal with user pages only */
-+	if (PageReserved(p) || PageSlab(p) || PageTable(p) || PageOffline(p))
-+		res = -EBUSY;
-+	if (!(PageLRU(hpage) || PageHuge(p)))
-+		res = -EBUSY;
-+
-+	if (res == -EHWPOISON) {
-+		collect_procs(folio, p, &tokill, flags & MF_ACTION_REQUIRED);
-+		kill_procs(&tokill, true, pfn, flags);
-+	}
-+
-+	if (flags & MF_COUNT_INCREASED)
-+		put_page(p);
-+
-+	return res;
-+}
-+
- /**
-  * memory_failure - Handle memory failure of a page.
-  * @pfn: Page Number of the corrupted page
-@@ -2297,6 +2328,11 @@ int memory_failure(unsigned long pfn, int flags)
- 		 */
- 		SetPageHasHWPoisoned(hpage);
- 		if (try_to_split_thp_page(p) < 0) {
-+			if (flags & MF_ACTION_REQUIRED) {
-+				pr_err("%#lx: thp split failed\n", pfn);
-+				res = kill_procs_now(p, pfn, flags, hpage);
-+				goto unlock_mutex;
-+			}
- 			res = action_result(pfn, MF_MSG_UNSPLIT_THP, MF_IGNORED);
- 			goto unlock_mutex;
- 		}
--- 
-2.39.3
+> + * @ctrlr: the DT node for the device whose interrupt we're translating
 
+Device tree node. And we are not translating anything.
+
+> + * @intspec: the interrupt specifier data from the DT
+> + * @intsize: the number of entries in @intspec
+> + * @out_hwirq: pointer at which to write the hwirq number
+
+Pointer to starage for the hardware interrupt number
+
+> + * @out_type: pointer at which to write the interrupt type
+
+...
+
+Please align these in tabular fashion:
+
++ * @d:         Interrupt domain involved in the translation
++ * @ctrlr:     The device tree node for the device whose interrupt is translated
++ * @intspec:   The interrupt specifier data from the device tree
++ * @intsize:   The number of entries in @intspec
++ * @out_hwirq: Pointer to storage for the hardware interrupt number
++ * @out_type:  Pointer to storage for the interrupt type
+
+
+>  /**
+>   * irq_domain_translate_onecell() - Generic translate for direct one cell
+>   * bindings
+> + * @d: IRQ domain involved in the translation
+> + * @fwspec: FW interrupt specifier to translate
+
+Firmware interrupt specifier
+
+Thanks,
+
+        tglx
