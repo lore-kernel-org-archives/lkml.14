@@ -1,55 +1,59 @@
 Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF2F5490A;
-	Thu,  2 May 2024 10:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34DC5490A;
+	Thu,  2 May 2024 10:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714645618; cv=none; b=rvBbilBDF9+H3i1qkG75JL9ZuQDCqIxcUsTza8stKH15iMPa4R9Y4fGD9LxKJLOl/6TQ2F0KJKbZO6Ny4BP5GUZiOn/TzDVEWt3VCiQdUkfXwMzj0KFUtY4DaAnRXbzNfFsR5nmbdDL0ua+rK4AYoYXAdUjhpAD5EcKS0bcUN1c=
+	t=1714645695; cv=none; b=Z1rEUopdsyZ8sAR6yPPsC/drqpU174f8iakAD8ifGr2oX9ibhnGi8PbmPjHnt9vUznyYLWQLiKQk0h8PUDthUVS1+WlFndiOp+7SDPdlyE8ryFXNrMpC1HCs8V1XxLA7On4JAqbSXdIzfMEsivyn6qiOxmMm6RC3oP5vPkT8/W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714645618; c=relaxed/simple;
-	bh=vsokJlEAs2pLfpkrKP3KPyZHTycX48VeFSxd1MFdfcw=;
+	s=arc-20240116; t=1714645695; c=relaxed/simple;
+	bh=QmV/eTHFw8ZKJX10ez9RvU5h49+qC63UtC3QhKPZVpw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mMhnjDqADKOUkpU9MS1jcvDoEw0YsB99BZGjBNHQLBChjh63mB3WNUoJEbm5AScF24nRIqkknuVfyF6iM4vbGWa1Mdh9QU+tQFrzZpey1W9WxpkAgUKc3235WypmdqImHWZCUISh+fDr8X4reBrcqxJIkcEOr18sqJVvFo9c1nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=IhQcEI+/; arc=none smtp.client-ip=130.133.4.66
+	 Content-Type:MIME-Version; b=bRPYxCF4Vzlx+sfVDFCPaHACEZz/ZYBZC46tA1b1I6K7Ix5leeXFaUL7nMlO7D0pLW340bdaVu98NWD52A+RfKqndvQCFzNDRBjw4V7fGdr4WryObmFdyhVsYK1lJHu4fxGVbC/etM4NBvoMVpNgxkB+8/PAdkvn7YoOi4sH4HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=R75ht3ED; arc=none smtp.client-ip=130.133.4.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="IhQcEI+/"
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="R75ht3ED"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
 	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WL4pbRyudVWidx2o5kr5Q1pZoZ/278JM0VwjKQ5brso=; t=1714645615; x=1715250415; 
-	b=IhQcEI+/vG0G5RjW3QFo3u9Weyk3uu23uCh2aUpOhilJd2hVkfKyOo7Vfl80/hN8SEQI46/Rujz
-	wrhPOmDP93I6L9RY6gg6PzXrMayCFdAnPX+IRCNURMF3uimCg40pbzrMWNuqAqV5mE1WrTSnQqeMj
-	grtAIwWDgALOQjwXwyrGuvbWSf03juWiWDMXJoJ4ZvvAMkmWgDSeEWQeAgAVQatMnY9e2UjsWX28N
-	JYmFr7o0e2pT9aB7BIR3AcrSfYJ88NGqNvYQQ45eY3lQVbTkHEccbqVxLmGiBy56SeJyJAcdsQpg8
-	0NiwsU1gU7Z5YrUmbzxb+kOJ71LgqpiBy3EA==;
+	bh=ravhJOzIKgIW3saDRAbKe8VZQUb/zFOpUwQ7zgeZ6Ms=; t=1714645693; x=1715250493; 
+	b=R75ht3EDRsv8hOTbRSDFY64C+zTBXL99lvQUfQi6nby8K+RsqFmRd7QwxXpG/VaYQsnAdJUaFPT
+	cEhx6ALSCt5aUth80JP9XNJFKDxHzZqkgFvLV7SLaqrJXx3V+5HP53xsH/REBCc4t/yFhOQD8fNxG
+	moMtNOBtLp021DGOos4zwry+IP4ZItn4V64owk2AwooKHjcXCvpf5/PFnCmlcaHF+DpvkXjdn0N88
+	66gKpZjnHh3tgWXBEIYjbgky5sybh9bq+/VBAOiL3R5pmQ0vYXzA8qqVpK3OvTSOWDBgU1Ruid3ZV
+	mGdt0KUDS+a8a1i+PjVUgZotG+93zh9ELntA==;
 Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
           by outpost.zedat.fu-berlin.de (Exim 4.97)
           with esmtps (TLS1.3)
           tls TLS_AES_256_GCM_SHA384
           (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1s2TeN-00000001xZc-3m9C; Thu, 02 May 2024 12:26:51 +0200
+          id 1s2Tfe-00000001yC6-1TSg; Thu, 02 May 2024 12:28:10 +0200
 Received: from p57bd90e8.dip0.t-ipconnect.de ([87.189.144.232] helo=[192.168.178.20])
           by inpost2.zedat.fu-berlin.de (Exim 4.97)
           with esmtpsa (TLS1.3)
           tls TLS_AES_256_GCM_SHA384
           (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1s2TeN-000000007IT-1iDt; Thu, 02 May 2024 12:26:51 +0200
-Message-ID: <84b635b9706205147038bbc152aee4a2da92c2ac.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH 0/7] sh: Fix missing prototypes (part two)
+          id 1s2Tfe-000000007WF-0Y7d; Thu, 02 May 2024 12:28:10 +0200
+Message-ID: <1280dad5fe1761d0c8828d6cee6dbd91e077a5b0.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] sh: j2: drop incorrect SPI controller max frequency
+ property
 From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Yoshinori Sato
-	 <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Arnd Bergmann
-	 <arnd@arndb.de>
-Cc: linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 02 May 2024 12:26:50 +0200
-In-Reply-To: <cover.1709579038.git.geert+renesas@glider.be>
-References: <cover.1709579038.git.geert+renesas@glider.be>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+  Conor Dooley <conor+dt@kernel.org>, Yoshinori Sato
+ <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+ devicetree@vger.kernel.org, linux-sh@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Cc: Kousik Sanagavarapu <five231003@gmail.com>
+Date: Thu, 02 May 2024 12:28:09 +0200
+In-Reply-To: <20240322064221.25776-1-krzysztof.kozlowski@linaro.org>
+References: <20240322064221.25776-1-krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.52.0 
@@ -62,42 +66,34 @@ MIME-Version: 1.0
 X-Original-Sender: glaubitz@physik.fu-berlin.de
 X-ZEDAT-Hint: PO
 
-On Mon, 2024-03-04 at 20:10 +0100, Geert Uytterhoeven wrote:
-> 	Hi all,
+On Fri, 2024-03-22 at 07:42 +0100, Krzysztof Kozlowski wrote:
+> The J2 SPI controller bindings never allowed spi-max-frequency property
+> in the controller node.  Neither old spi-bus.txt bindings, nor new DT
+> schema allows it.  Linux driver does not parse that property from
+> controller node, thus drop it from DTS as incorrect hardware
+> description.  The SPI child device has already the same property with
+> the same value, so functionality should not be affected.
 >=20
-> This patch series fixes more "no previous prototype for <foo>" warnings
-> when building a kernel for SuperH, and is a follow-up to [1].
+> Cc: Kousik Sanagavarapu <five231003@gmail.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  arch/sh/boot/dts/j2_mimas_v2.dts | 2 --
+>  1 file changed, 2 deletions(-)
 >=20
-> This has been boot-tested on landisk and on qemu/rts7751r2d.
->=20
-> Thanks for your comments!
->=20
-> [1] "[PATCH 00/20] sh: Fix missing prototypes"
->     https://lore.kernel.org/r/cover.1709326528.git.geert+renesas@glider.b=
-e>
->=20
-> Geert Uytterhoeven (7):
->   sh: cache: Move forward declarations to <asm/cacheflush.h>
->   sh: traps: Make is_dsp_inst() static
->   sh: mach-highlander: Add missing #include <mach/highlander.h>
->   sh: mach-sh03: Make sh03_rtc_settimeofday() static
->   sh: sh7757lcr: Make init_sh7757lcr_IRQ() static
->   sh: sh7757: Add missing #include <asm/mmzone.h>
->   sh: sh7785lcr: Make init_sh7785lcr_IRQ() static
->=20
->  arch/sh/boards/board-sh7757lcr.c                |  2 +-
->  arch/sh/boards/board-sh7785lcr.c                |  2 +-
->  arch/sh/boards/mach-highlander/pinmux-r7785rp.c |  1 +
->  arch/sh/boards/mach-sh03/rtc.c                  |  2 +-
->  arch/sh/include/asm/cacheflush.h                | 12 ++++++++++++
->  arch/sh/kernel/cpu/sh4a/setup-sh7723.c          |  3 +++
->  arch/sh/kernel/cpu/sh4a/setup-sh7724.c          |  1 +
->  arch/sh/kernel/cpu/sh4a/setup-sh7757.c          |  3 +++
->  arch/sh/kernel/traps_32.c                       |  4 ++--
->  arch/sh/mm/cache-sh4.c                          |  2 --
->  arch/sh/mm/cache-shx3.c                         |  1 +
->  arch/sh/mm/cache.c                              | 14 --------------
->  12 files changed, 26 insertions(+), 21 deletions(-)
+> diff --git a/arch/sh/boot/dts/j2_mimas_v2.dts b/arch/sh/boot/dts/j2_mimas=
+_v2.dts
+> index fa9562f78d53..faf884f53804 100644
+> --- a/arch/sh/boot/dts/j2_mimas_v2.dts
+> +++ b/arch/sh/boot/dts/j2_mimas_v2.dts
+> @@ -71,8 +71,6 @@ spi0: spi@40 {
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <0>;
+> =20
+> -			spi-max-frequency =3D <25000000>;
+> -
+>  			reg =3D <0x40 0x8>;
+> =20
+>  			sdcard@0 {
 
 Applied to my sh-linux tree in the for-next branch.
 
