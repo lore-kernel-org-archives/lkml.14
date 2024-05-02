@@ -1,434 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A2A1865A
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 04:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B695E1865A;
+	Thu,  2 May 2024 04:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714622601; cv=none; b=dGVQIUI7H9KRenYHBK1pjh6Ttox7iMqfwDUHbqAwuHPCYgvBA3Lf/l7J8KC0xohAnTgTCfZ/ZPKBV90gXNIblrOCsePuAqwsMkqoKUkZvfzgYlGkc7RjRgmIfyWx0L72I8kH7Uo9NIFUQt0NWFrQOWUSEniJusXUx7mgqUJGZKk=
+	t=1714623115; cv=none; b=DxJ/OlIA2d7PwegFo0Ki7M7BGxjBRXltFTVAY9x7q0ddLVY2nTQR1JbqLCcjCgTRh0P66nlI/uOtlk1DXaIrwl/vXR6OzVFnOor+I3tWpUFhXNS48x5lVsBTjnebSL3Yh5Dd//DoiS3MFTcPQdnOvsTcJ7TsnFjUtNRW6z8wpew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714622601; c=relaxed/simple;
-	bh=DJ/uAH8SydFD3/HgsmNr0ujarGup1hsbT2Xgl78xkvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JAkW6c/CFR7M9NrUZnKCkTpiYa4eZ5QbmmoUdZqo11mndTDSrdHFn+wV2uLxOTyolQvdYnrg/ex3+ZbiJScgHCdlGE6ugfC3+OOnYc7J2sqRL3xcF/r5vKFLj7kJnPMNk73O+VcRJvYq++BZR3u0dvbZcD+xEl/JNGU3xtk5L9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mKWmVjQG; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714623115; c=relaxed/simple;
+	bh=9P2xg7FQQsOTqsM9+ldNhqpV6mM5zpq+Ljk3LmOB/qU=;
+	h=Date:Message-Id:From:To:Cc:Subject:In-Reply-To; b=r2kBmjmYVn4NCyZKXc29iEixED7Sd5mRKlchuNdCatFKV2Ze+QW60x7cHdKZy2Ihc9OeI+M9EIiI0Ty4xcDhF6RgioHHQTzXvW8OvDrCESYXzIB6iVhAf+NZj9aOs/tYUI4n2V7zkl9qqCHK8hAcbrqw+t9rCEiXmTuYBcFW9Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SZDdX0d1; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mKWmVjQG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714622600; x=1746158600;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=DJ/uAH8SydFD3/HgsmNr0ujarGup1hsbT2Xgl78xkvU=;
-  b=mKWmVjQGicbczaQJHYxwwqCKWfICi1BmHCgRIU8gCfSePxbPl9HF7GJE
-   j4Rgjk19x3Q6o1+QZ+2m8keoiagTSaD3jFsNnmvICP1YNkavcGZKJcgUI
-   FuxZ8/Buoovu5Tx6V161XBYd1TVzmyYLfqO0G5pSEXaxSRnSd1veFBQZD
-   aqYHYh4q2Tz84FSJRhtgm4rMKPSIheP5LiSfRm+mJxjIfKZj4TmCseKrW
-   JLBE0prGGOIbynPt0E18Czi1DNSegf9Ooc3OwgFEJn7ZOHEWQfrm2bC7v
-   9lCYfxgz7R2+GExd/mKjtkxxuUjvzxyGAUlbRUCrNokTJxwqlbhl3yQom
-   g==;
-X-CSE-ConnectionGUID: BDcmI1OASNWzfWm4I4t2kA==
-X-CSE-MsgGUID: mpCy7mbyTv2YHZY7YCbLPg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="21062578"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="21062578"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 21:03:19 -0700
-X-CSE-ConnectionGUID: Y9kLkyNbRYyfR1TEkdTwQQ==
-X-CSE-MsgGUID: sL/Mx3BvRtG92zp9tC3gPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="64437361"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 01 May 2024 21:03:18 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s2Nf8-000ANI-23;
-	Thu, 02 May 2024 04:03:14 +0000
-Date: Thu, 2 May 2024 12:02:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev.2024.04.18a 34/34]
- arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned
- int' from 'struct fs_pin *' makes integer from pointer without a cast
-Message-ID: <202405021142.NAwlap1u-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZDdX0d1"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f07de6ab93so7003090b3a.2;
+        Wed, 01 May 2024 21:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714623113; x=1715227913; darn=vger.kernel.org;
+        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=d/pO3KnwV5/hmCMrLfPzaasia4xkM57wUS++D9NkkGM=;
+        b=SZDdX0d18CUSTMLrCSPYdQI/+aBPoUswr8jpOm9j3R8K7UR9/mQHkotu5BFhEikQ6I
+         DtLczDuLv3HUDLgynG1J6jpHe22vAdhDu5pcPH4nchVK+r8MlwBjHCRSm7SCWJI3y8Rn
+         hPraL6ksyvTnrz807oOwbGYXHiPlyPJwFNz+yO6FflNnrVepMqtGAZbENEOpLKmkUxlX
+         AI7b9WxetdnkHEY3JGQOzZWx27EJEkToacVo76QEUdhh6j+RC/o/TeUmgeBSx/CcJ3bn
+         1BYRGPSqAqagKENYCtMa/zXhYquYyAOER0BIGf7MfHuQdd+sQZ+KFbtC562tZdVxcv+M
+         26Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714623113; x=1715227913;
+        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d/pO3KnwV5/hmCMrLfPzaasia4xkM57wUS++D9NkkGM=;
+        b=l8dsh5TVvrHS2mssEOs3rFCcmEyzo4QtFwaeunaY0XW+X2eThwNdj/7yA26MrM8QD9
+         8eqEbUgyO3DPaG9EFyFZzkFSYQKGnnwXQGA3P7gDoV+lxd2gbVdYD+SglYZsrqzqsHVr
+         tUTxQd8olu3WTHaCVGYLMc/574ewkqsuXCDSeFrwd1Ud41I7iR5rLCVYkRnqtvp3E9Pw
+         3aJbp4/8Y1uPCvF6b5kB3OHjsAaVwupf2mOfDq1pEDODovr10GaeY9mdAJGk3+T+f41S
+         28PVo9R+6/6kqmQ/Po+r4UOaqTLvmPbmwVYSXObqUwQWWQXqk3bdqfKG8ui0OMn/kR+y
+         AITA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBVIZhKXRzAbANF8FebYQBgCqWNmGOM6NDYKUYW8YgNLAS9YZ06rfRW15mcdlZtB2bcC23IDYsB6OENfPnSTaxC2yR1UV04rLn8mSCARGEaOC12aZGi54lwcH/vWZ8FkJhT5niH6VCrS1fFLDxBJs1KwJ1W6J4sZimeJs5v9pOSeDPslBmRuI=
+X-Gm-Message-State: AOJu0YwckLwEsq0kJ0WXRp1TJkl071TDigRPuE7v9cWUz7JGNaDfKfwV
+	5u16zYh811pwvdbHe96au1b12CuXhLPc+U0Giy3trZLc7z0XhXu9
+X-Google-Smtp-Source: AGHT+IHBezvM4qNTsf04QOHARohIj7h1mUhy1D38HBCSojZX6TJxw+sBESjB8870/wRg2sNyBm0Xjw==
+X-Received: by 2002:a05:6a21:8189:b0:1af:63f2:bc62 with SMTP id pd9-20020a056a21818900b001af63f2bc62mr4674374pzb.15.1714623112936;
+        Wed, 01 May 2024 21:11:52 -0700 (PDT)
+Received: from dw-tp ([129.41.58.7])
+        by smtp.gmail.com with ESMTPSA id b11-20020a170902d50b00b001eb2f4648d3sm169228plg.228.2024.05.01.21.11.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 21:11:52 -0700 (PDT)
+Date: Thu, 02 May 2024 09:41:39 +0530
+Message-Id: <87a5l8am4k.fsf@gmail.com>
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, hch@infradead.org, djwong@kernel.org, willy@infradead.org, zokeefe@google.com, yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com, wangkefeng.wang@huawei.com
+Subject: Re: [PATCH v4 02/34] ext4: check the extent status again before inserting delalloc block
+In-Reply-To: <ZjLG9PK0uMFgSqhj@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2024.04.18a
-head:   274af360588db0dafe36ffb5c61799fa77757ce7
-commit: 274af360588db0dafe36ffb5c61799fa77757ce7 [34/34] fixup! xtensa: Emulate one-byte cmpxchg
-config: arc-randconfig-001-20240502 (https://download.01.org/0day-ci/archive/20240502/202405021142.NAwlap1u-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240502/202405021142.NAwlap1u-lkp@intel.com/reproduce)
+Dave Chinner <david@fromorbit.com> writes:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405021142.NAwlap1u-lkp@intel.com/
+> On Wed, May 01, 2024 at 05:49:50PM +0530, Ritesh Harjani wrote:
+>> Dave Chinner <david@fromorbit.com> writes:
+>> 
+>> > On Wed, Apr 10, 2024 at 10:29:16PM +0800, Zhang Yi wrote:
+>> >> From: Zhang Yi <yi.zhang@huawei.com>
+>> >> 
+>> >> Now we lookup extent status entry without holding the i_data_sem before
+>> >> inserting delalloc block, it works fine in buffered write path and
+>> >> because it holds i_rwsem and folio lock, and the mmap path holds folio
+>> >> lock, so the found extent locklessly couldn't be modified concurrently.
+>> >> But it could be raced by fallocate since it allocate block whitout
+>> >> holding i_rwsem and folio lock.
+>> >> 
+>> >> ext4_page_mkwrite()             ext4_fallocate()
+>> >>  block_page_mkwrite()
+>> >>   ext4_da_map_blocks()
+>> >>    //find hole in extent status tree
+>> >>                                  ext4_alloc_file_blocks()
+>> >>                                   ext4_map_blocks()
+>> >>                                    //allocate block and unwritten extent
+>> >>    ext4_insert_delayed_block()
+>> >>     ext4_da_reserve_space()
+>> >>      //reserve one more block
+>> >>     ext4_es_insert_delayed_block()
+>> >>      //drop unwritten extent and add delayed extent by mistake
+>> >
+>> > Shouldn't this be serialised by the file invalidation lock?  Hole
+>> > punching via fallocate must do this to avoid data use-after-free
+>> > bugs w.r.t racing page faults and all the other fallocate ops need
+>> > to serialise page faults to avoid page cache level data corruption.
+>> > Yet here we see a problem resulting from a fallocate operation
+>> > racing with a page fault....
+>> 
+>> IIUC, fallocate operations which invalidates the page cache contents needs
+>> to take th invalidate_lock in exclusive mode to prevent page fault
+>> operations from loading pages for stale mappings (blocks which were
+>> marked free might get reused). This can cause stale data exposure.
+>> 
+>> Here the fallocate operation require allocation of unwritten extents and
+>> does not require truncate of pagecache range. So I guess, it is not
+>> strictly necessary to hold the invalidate lock here.
+>
+> True, but you can make exactly the same argument for write() vs
+> fallocate(). Yet this path in ext4_fallocate() locks out 
+> concurrent write()s and waits for DIOs in flight to drain. What
+> makes buffered writes triggered by page faults special?
+>
+> i.e. if you are going to say "we don't need serialisation between
+> writes and fallocate() allocating unwritten extents", then why is it
+> still explicitly serialising against both buffered and direct IO and
+> not just truncate and other fallocate() operations?
+>
+>> But I see XFS does take IOLOCK_EXCL AND MMAPLOCK_EXCL even for this operation.
+>
+> Yes, that's the behaviour preallocation has had in XFS since we
+> introduced the MMAPLOCK almost a decade ago. This was long before
+> the file_invalidation_lock() was even a glimmer in Jan's eye.
+>
+> btrfs does the same thing, for the same reasons. COW support makes
+> extent tree manipulations excitingly complex at times...
+>
+>> I guess we could use the invalidate lock for fallocate operation in ext4
+>> too. However, I think we still require the current patch. The reason is
+>> ext4_da_map_blocks() call here first tries to lookup the extent status
+>> cache w/o any i_data_sem lock in the fastpath. If it finds a hole, it
+>> takes the i_data_sem in write mode and just inserts an entry into extent
+>> status cache w/o re-checking for the same under the exclusive lock. 
+>> ...So I believe we still should have this patch which re-verify under
+>> the write lock if whether any other operation has inserted any entry
+>> already or not.
+>
+> Yup, I never said the code in the patch is wrong or unnecessary; I'm
+> commenting on the high level race condition that lead to the bug
+> beting triggered. i.e. that racing data modification operations with
+> low level extent manipulations is often dangerous and a potential
+> source of very subtle, hard to trigger, reproduce and debug issues
+> like the one reported...
+>
 
-All warnings (new ones prefixed by >>):
-
-   In file included from arch/arc/include/asm/atomic.h:13,
-                    from include/linux/atomic.h:7,
-                    from include/asm-generic/bitops/lock.h:5,
-                    from arch/arc/include/asm/bitops.h:188,
-                    from include/linux/bitops.h:68,
-                    from include/linux/thread_info.h:27,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/arc/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/mm.h:7,
-                    from kernel/acct.c:47:
-   kernel/acct.c: In function 'acct_pin_kill':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct fs_pin *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   kernel/acct.c:196:9: note: in expansion of macro 'cmpxchg'
-     196 |         cmpxchg(&acct->ns->bacct, pin, NULL);
-         |         ^~~~~~~
---
-   In file included from arch/arc/include/asm/atomic.h:13,
-                    from include/linux/atomic.h:7,
-                    from include/linux/page_counter.h:5,
-                    from mm/memcontrol.c:28:
-   mm/memcontrol.c: In function 'mem_cgroup_iter':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct mem_cgroup *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   mm/memcontrol.c:1200:31: note: in expansion of macro 'cmpxchg'
-    1200 |                         (void)cmpxchg(&iter->position, pos, NULL);
-         |                               ^~~~~~~
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct mem_cgroup *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   mm/memcontrol.c:1240:23: note: in expansion of macro 'cmpxchg'
-    1240 |                 (void)cmpxchg(&iter->position, pos, memcg);
-         |                       ^~~~~~~
-   mm/memcontrol.c: In function '__invalidate_reclaim_iterators':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct mem_cgroup *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   mm/memcontrol.c:1281:17: note: in expansion of macro 'cmpxchg'
-    1281 |                 cmpxchg(&iter->position, dead_memcg, NULL);
-         |                 ^~~~~~~
-   mm/memcontrol.c: In function 'current_objcg_update':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct obj_cgroup *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-arch-fallback.h:192:16: note: in expansion of macro 'raw_cmpxchg'
-     192 |         ___r = raw_cmpxchg((_ptr), ___o, (_new)); \
-         |                ^~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4880:9: note: in expansion of macro 'raw_try_cmpxchg'
-    4880 |         raw_try_cmpxchg(__ai_ptr, __ai_oldp, __VA_ARGS__); \
-         |         ^~~~~~~~~~~~~~~
-   mm/memcontrol.c:3184:19: note: in expansion of macro 'try_cmpxchg'
-    3184 |         } while (!try_cmpxchg(&current->objcg, &old, objcg));
-         |                   ^~~~~~~~~~~
---
-   In file included from arch/arc/include/asm/atomic.h:13,
-                    from include/linux/atomic.h:7,
-                    from include/asm-generic/bitops/lock.h:5,
-                    from arch/arc/include/asm/bitops.h:188,
-                    from include/linux/bitops.h:68,
-                    from include/linux/thread_info.h:27,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/arc/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/mm.h:7,
-                    from mm/page_io.c:14:
-   mm/page_io.c: In function 'sio_pool_init':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'mempool_t *' {aka 'struct mempool_s *'} makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   mm/page_io.c:256:21: note: in expansion of macro 'cmpxchg'
-     256 |                 if (cmpxchg(&sio_pool, NULL, pool))
-         |                     ^~~~~~~
---
-   In file included from arch/arc/include/asm/atomic.h:13,
-                    from include/linux/atomic.h:7,
-                    from include/asm-generic/bitops/lock.h:5,
-                    from arch/arc/include/asm/bitops.h:188,
-                    from include/linux/bitops.h:68,
-                    from include/linux/kernel.h:23,
-                    from fs/posix_acl.c:14:
-   fs/posix_acl.c: In function '__get_acl':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct posix_acl *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   fs/posix_acl.c:146:9: note: in expansion of macro 'cmpxchg'
-     146 |         cmpxchg(p, ACL_NOT_CACHED, sentinel);
-         |         ^~~~~~~
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct posix_acl *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   fs/posix_acl.c:169:17: note: in expansion of macro 'cmpxchg'
-     169 |                 cmpxchg(p, sentinel, ACL_NOT_CACHED);
-         |                 ^~~~~~~
-   In file included from include/linux/array_size.h:5,
-                    from include/linux/kernel.h:16:
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct posix_acl *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/compiler.h:77:45: note: in definition of macro 'unlikely'
-      77 | # define unlikely(x)    __builtin_expect(!!(x), 0)
-         |                                             ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-arch-fallback.h:192:16: note: in expansion of macro 'raw_cmpxchg'
-     192 |         ___r = raw_cmpxchg((_ptr), ___o, (_new)); \
-         |                ^~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4880:9: note: in expansion of macro 'raw_try_cmpxchg'
-    4880 |         raw_try_cmpxchg(__ai_ptr, __ai_oldp, __VA_ARGS__); \
-         |         ^~~~~~~~~~~~~~~
-   fs/posix_acl.c:177:23: note: in expansion of macro 'try_cmpxchg'
-     177 |         if (unlikely(!try_cmpxchg(p, &sentinel, acl)))
-         |                       ^~~~~~~~~~~
---
-   In file included from arch/arc/include/asm/atomic.h:13,
-                    from include/linux/atomic.h:7,
-                    from include/asm-generic/bitops/lock.h:5,
-                    from arch/arc/include/asm/bitops.h:188,
-                    from include/linux/bitops.h:68,
-                    from include/linux/thread_info.h:27,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/arc/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/slab.h:16,
-                    from drivers/accessibility/speakup/selection.c:2:
-   drivers/accessibility/speakup/selection.c: In function 'speakup_set_selection':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct tty_struct *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   drivers/accessibility/speakup/selection.c:71:13: note: in expansion of macro 'cmpxchg'
-      71 |         if (cmpxchg(&speakup_sel_work.tty, NULL, tty)) {
-         |             ^~~~~~~
-   drivers/accessibility/speakup/selection.c: In function 'speakup_paste_selection':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct tty_struct *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   drivers/accessibility/speakup/selection.c:124:13: note: in expansion of macro 'cmpxchg'
-     124 |         if (cmpxchg(&speakup_paste_work.tty, NULL, tty)) {
-         |             ^~~~~~~
---
-   In file included from arch/arc/include/asm/atomic.h:13,
-                    from include/linux/atomic.h:7,
-                    from include/asm-generic/bitops/lock.h:5,
-                    from arch/arc/include/asm/bitops.h:188,
-                    from include/linux/bitops.h:68,
-                    from include/linux/thread_info.h:27,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/arc/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/wait.h:9,
-                    from include/linux/wait_bit.h:8,
-                    from include/linux/fs.h:6,
-                    from include/linux/highmem.h:5,
-                    from include/linux/bvec.h:10,
-                    from include/linux/blk_types.h:10,
-                    from include/linux/blkdev.h:9,
-                    from drivers/nvme/target/fabrics-cmd.c:7:
-   drivers/nvme/target/fabrics-cmd.c: In function 'nvmet_install_queue':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct nvmet_ctrl *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   drivers/nvme/target/fabrics-cmd.c:169:15: note: in expansion of macro 'cmpxchg'
-     169 |         old = cmpxchg(&req->sq->ctrl, NULL, ctrl);
-         |               ^~~~~~~
---
-   In file included from arch/arc/include/asm/atomic.h:13,
-                    from include/linux/atomic.h:7,
-                    from include/asm-generic/bitops/lock.h:5,
-                    from arch/arc/include/asm/bitops.h:188,
-                    from include/linux/bitops.h:68,
-                    from include/linux/thread_info.h:27,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/arc/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/wait.h:9,
-                    from include/linux/wait_bit.h:8,
-                    from include/linux/fs.h:6,
-                    from fs/notify/mark.c:63:
-   fs/notify/mark.c: In function 'fsnotify_attach_connector_to_object':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct fsnotify_mark_connector *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   fs/notify/mark.c:559:13: note: in expansion of macro 'cmpxchg'
-     559 |         if (cmpxchg(connp, NULL, conn)) {
-         |             ^~~~~~~
---
-   In file included from arch/arc/include/asm/atomic.h:13,
-                    from include/linux/atomic.h:7,
-                    from include/asm-generic/bitops/lock.h:5,
-                    from arch/arc/include/asm/bitops.h:188,
-                    from include/linux/bitops.h:68,
-                    from include/linux/thread_info.h:27,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/arc/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/wait.h:9,
-                    from include/linux/wait_bit.h:8,
-                    from include/linux/fs.h:6,
-                    from include/linux/highmem.h:5,
-                    from include/linux/bvec.h:10,
-                    from include/linux/blk_types.h:10,
-                    from include/linux/blkdev.h:9,
-                    from drivers/usb/gadget/function/f_fs.c:17:
-   drivers/usb/gadget/function/f_fs.c: In function '__ffs_epfile_read_buffered':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct ffs_buffer *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   drivers/usb/gadget/function/f_fs.c:922:13: note: in expansion of macro 'cmpxchg'
-     922 |         if (cmpxchg(&epfile->read_buffer, NULL, buf))
-         |             ^~~~~~~
-   drivers/usb/gadget/function/f_fs.c: In function '__ffs_epfile_read_data':
->> arch/arc/include/asm/cmpxchg.h:74:25: warning: assignment to 'long unsigned int' from 'struct ffs_buffer *' makes integer from pointer without a cast [-Wint-conversion]
-      74 |                 __flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);       \
-         |                         ^
-   include/linux/atomic/atomic-arch-fallback.h:55:21: note: in expansion of macro 'arch_cmpxchg'
-      55 | #define raw_cmpxchg arch_cmpxchg
-         |                     ^~~~~~~~~~~~
-   include/linux/atomic/atomic-instrumented.h:4788:9: note: in expansion of macro 'raw_cmpxchg'
-    4788 |         raw_cmpxchg(__ai_ptr, __VA_ARGS__); \
-         |         ^~~~~~~~~~~
-   drivers/usb/gadget/function/f_fs.c:960:13: note: in expansion of macro 'cmpxchg'
-     960 |         if (cmpxchg(&epfile->read_buffer, NULL, buf))
-         |             ^~~~~~~
-..
+Yes, thanks for explaining and commenting on the high level design.
+It was indeed helpful. And I agree with your comment on, we can refactor
+out the common operations from fallocate path and use invalidate lock to
+protect against data modification (page fault) and extent manipulation
+path (fallocate operations).
 
 
-vim +74 arch/arc/include/asm/cmpxchg.h
-
-    63	
-    64	#define arch_cmpxchg(ptr, old, new)				        \
-    65	({									\
-    66		volatile __typeof__(ptr) _p_ = (ptr);				\
-    67		__typeof__(*(ptr)) _o_ = (old);					\
-    68		__typeof__(*(ptr)) _n_ = (new);					\
-    69		__typeof__(*(ptr)) _prev_;					\
-    70		unsigned long __flags;						\
-    71										\
-    72		switch(sizeof((_p_))) {						\
-    73		case 1:								\
-  > 74			__flags = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)_p_, (uintptr_t)_o_, (uintptr_t)_n_);	\
-    75			_prev_ = (__typeof__(*(ptr)))__flags;			\
-    76			break;							\
-    77			break;							\
-    78		case 4:								\
-    79			/*							\
-    80			 * spin lock/unlock provide the needed smp_mb()		\
-    81			 * before/after						\
-    82			 */							\
-    83			atomic_ops_lock(__flags);				\
-    84			_prev_ = *_p_;						\
-    85			if (_prev_ == _o_)					\
-    86				*_p_ = _n_;					\
-    87			atomic_ops_unlock(__flags);				\
-    88			break;							\
-    89		default:							\
-    90			BUILD_BUG();						\
-    91		}								\
-    92										\
-    93		_prev_;								\
-    94	})
-    95	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-ritesh
