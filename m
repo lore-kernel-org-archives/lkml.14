@@ -1,237 +1,105 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B769535DB;
-	Thu,  2 May 2024 09:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7E756B73;
+	Thu,  2 May 2024 09:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714641613; cv=none; b=C5A9y+zHHGjtGS44/jrIBEj78CZKuCttouQ6smNbT5HNOitaItnXCr9eR1dJPG/jlExHJmvW5yHMVO2DUojvajOP7oTpxoWDGgrOWsq0LQBl5rF1uzDuw26My85MGvzls8+88Nu37lPznoT4t+YVppliJuBBu/jyJAn1P24ZZrQ=
+	t=1714641618; cv=none; b=f9UBauuf0hXwPwduQOh3rtALEIWMaKuF0+EmG+MQX37uH4Gx+t7A7mo4ivqcCBdIdVuCysCxm9UOsvZmoRhr8VyGt9DMXV2QnAxSBsqFoMqESBBXnWuH+UefQmDxmg9QGiUaM7kLJvIJh9NcH6GyiLn5SRVmpam8DdL4jC+qnCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714641613; c=relaxed/simple;
-	bh=5Le49xu9s1kZMgp0aqr3hL9Yqz5k0zIPUrCRhOC+QLc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iWIawOw/a24p6MnG/GgtWI6WRwGZLEzxBTPLRXKEj1ssIYRi46fsmZOgDwU1YmNiQOE3ZJacMD8QgV78AC/vSrf/oWYZQA26nK045cmJbEwP9t1EZQ0s6V3KbJU5t7s6fi2n8lc8jOlLGKMsPXJoMwTZm8e0sUtjQ1I12m7cv18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4429JoHE22331037, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4429JoHE22331037
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 May 2024 17:19:51 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 2 May 2024 17:19:51 +0800
-Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 2 May
- 2024 17:19:50 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, "Justin
- Lai" <justinlai0215@realtek.com>
-Subject: [PATCH net-next v17 03/13] rtase: Implement the rtase_down function
-Date: Thu, 2 May 2024 17:18:37 +0800
-Message-ID: <20240502091847.65181-4-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240502091847.65181-1-justinlai0215@realtek.com>
-References: <20240502091847.65181-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1714641618; c=relaxed/simple;
+	bh=2ELzIZ73e2akUHQJpgdE0zMt86IGlmi1Bdva3N+17hw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F/68ldO1KvVrFB+sGjqG+Za9Zv7cP4n3D2rZPUlD84WO46nvk/F33LP99Bb03bQixU7oz7Yhsp7pb3MyQzVKLiQnxxQ3r/1CmMsxJxvRVrxT1Mb9vOMgwOM8C74t+943tVskQ7uRnbOwfctIkYEfw9cltBENYpZ/cygYA4ZTK3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B4zw7Czz; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B4zw7Czz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714641617; x=1746177617;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2ELzIZ73e2akUHQJpgdE0zMt86IGlmi1Bdva3N+17hw=;
+  b=B4zw7CzzHSC8ETZDjRajNp/4oiLBsbclgg+7fybgK/jNDA7HHSBmmyZ5
+   VvAnig4TwIhgLgIRWXs17aNBoVE7brbbO0mGF8QQVpfAClI9G9nITiU7F
+   o7JVHOkAW1Se+8kaCuh74iKdYBo9qoSVymKOwE5gmdIgfDVxg6SxedZEK
+   buJURjrmG20D+PxdMAgB0sZ8CrSrbHQQtZ1Myj4VR2Kfr2FXSILKQWYH1
+   Q9X3FKfaJs14+0H2HEMs2RcdXX+13KPDpBuIsSs8Bg9347peN94J76JRy
+   80m6UdO9/eIc1mT/4O8l2SxxaPK7ZoFBOKMcfNbJfZHuR6stfwuMN2njO
+   w==;
+X-CSE-ConnectionGUID: o9+FBA1CRG6DV9t5OBLZdQ==
+X-CSE-MsgGUID: THzNy5pxT9eJ/QDC3ejvFg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="14205199"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="14205199"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 02:20:16 -0700
+X-CSE-ConnectionGUID: P6lk84EsQEGlm9RlHsRk/g==
+X-CSE-MsgGUID: mTWM/FTNSfil7mVmwM/XnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="64501407"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 02:20:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s2Sbm-00000003GEk-2Bl0;
+	Thu, 02 May 2024 12:20:06 +0300
+Date: Thu, 2 May 2024 12:20:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Andrei Warkentin <andrei.warkentin@intel.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
+Subject: Re: [PATCH v5 04/17] ACPI: scan: Refactor dependency creation
+Message-ID: <ZjNaxvh2ZSfDcTa8@smile.fi.intel.com>
+References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
+ <20240501121742.1215792-5-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240501121742.1215792-5-sunilvl@ventanamicro.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Implement the rtase_down function to disable hardware setting
-and interrupt and clear descriptor ring.
+On Wed, May 01, 2024 at 05:47:29PM +0530, Sunil V L wrote:
+> Some architectures like RISC-V will use implicit dependencies like GSI
+> map to create dependencies between interrupt controller and devices. To
+> support doing that, the function which creates the dependency, is
+> refactored bit and made public so that dependency can be added from
+> outside of scan.c as well.
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 148 ++++++++++++++++++
- 1 file changed, 148 insertions(+)
+Side note: If you haven't used --histogram diff algo when preparing
+the patches, do it from now on.
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index b286aac1eedc..709c0bb6d2e7 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -190,6 +190,57 @@ static void rtase_free_desc(struct rtase_private *tp)
- 	}
- }
- 
-+static void rtase_unmap_tx_skb(struct pci_dev *pdev, u32 len,
-+			       struct rtase_tx_desc *desc)
-+{
-+	dma_unmap_single(&pdev->dev, le64_to_cpu(desc->addr), len,
-+			 DMA_TO_DEVICE);
-+	desc->opts1 = cpu_to_le32(RTK_OPTS1_DEBUG_VALUE);
-+	desc->opts2 = 0x00;
-+	desc->addr = cpu_to_le64(RTK_MAGIC_NUMBER);
-+}
-+
-+static void rtase_tx_clear_range(struct rtase_ring *ring, u32 start, u32 n)
-+{
-+	const struct rtase_private *tp = ring->ivec->tp;
-+	struct rtase_tx_desc *desc_base = ring->desc;
-+	struct net_device *dev = tp->dev;
-+	u32 i;
-+
-+	for (i = 0; i < n; i++) {
-+		u32 entry = (start + i) % RTASE_NUM_DESC;
-+		struct rtase_tx_desc *desc = desc_base + entry;
-+		u32 len = ring->mis.len[entry];
-+		struct sk_buff *skb;
-+
-+		if (len == 0)
-+			continue;
-+
-+		rtase_unmap_tx_skb(tp->pdev, len, desc);
-+		ring->mis.len[entry] = 0;
-+		skb = ring->skbuff[entry];
-+		if (!skb)
-+			continue;
-+
-+		dev->stats.tx_dropped++;
-+		dev_kfree_skb_any(skb);
-+		ring->skbuff[entry] = NULL;
-+	}
-+}
-+
-+static void rtase_tx_clear(struct rtase_private *tp)
-+{
-+	struct rtase_ring *ring;
-+	u16 i;
-+
-+	for (i = 0; i < tp->func_tx_queue_num; i++) {
-+		ring = &tp->tx_ring[i];
-+		rtase_tx_clear_range(ring, ring->dirty_idx, RTASE_NUM_DESC);
-+		ring->cur_idx = 0;
-+		ring->dirty_idx = 0;
-+	}
-+}
-+
- static void rtase_mark_to_asic(union rtase_rx_desc *desc, u32 rx_buf_sz)
- {
- 	u32 eor = le32_to_cpu(desc->desc_cmd.opts1) & RTASE_RING_END;
-@@ -425,6 +476,77 @@ static void rtase_tally_counter_clear(const struct rtase_private *tp)
- 	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_RESET);
- }
- 
-+static void rtase_irq_dis_and_clear(const struct rtase_private *tp)
-+{
-+	const struct rtase_int_vector *ivec = &tp->int_vector[0];
-+	u32 val1;
-+	u16 val2;
-+	u8 i;
-+
-+	rtase_w32(tp, ivec->imr_addr, 0);
-+	val1 = rtase_r32(tp, ivec->isr_addr);
-+	rtase_w32(tp, ivec->isr_addr, val1);
-+
-+	for (i = 1; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		rtase_w16(tp, ivec->imr_addr, 0);
-+		val2 = rtase_r16(tp, ivec->isr_addr);
-+		rtase_w16(tp, ivec->isr_addr, val2);
-+	}
-+}
-+
-+static void rtase_poll_timeout(const struct rtase_private *tp, u32 cond,
-+			       u32 sleep_us, u64 timeout_us, u16 reg)
-+{
-+	int err;
-+	u8 val;
-+
-+	err = read_poll_timeout(rtase_r8, val, val & cond, sleep_us, timeout_us,
-+				false, tp, reg);
-+
-+	if (err == -ETIMEDOUT)
-+		netdev_err(tp->dev, "poll reg 0x00%x timeout\n", reg);
-+}
-+
-+static void rtase_nic_reset(const struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	u16 rx_config;
-+	u8 val;
-+
-+	rx_config = rtase_r16(tp, RTASE_RX_CONFIG_0);
-+	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config & ~RTASE_ACCEPT_MASK);
-+
-+	val = rtase_r8(tp, RTASE_MISC);
-+	rtase_w8(tp, RTASE_MISC, val | RTASE_RX_DV_GATE_EN);
-+
-+	val = rtase_r8(tp, RTASE_CHIP_CMD);
-+	rtase_w8(tp, RTASE_CHIP_CMD, val | RTASE_STOP_REQ);
-+	mdelay(2);
-+
-+	rtase_poll_timeout(tp, RTASE_STOP_REQ_DONE, 100, 150000, RTASE_CHIP_CMD);
-+
-+	rtase_poll_timeout(tp, RTASE_TX_FIFO_EMPTY, 100, 100000, RTASE_FIFOR);
-+
-+	rtase_poll_timeout(tp, RTASE_RX_FIFO_EMPTY, 100, 100000, RTASE_FIFOR);
-+
-+	val = rtase_r8(tp, RTASE_CHIP_CMD);
-+	rtase_w8(tp, RTASE_CHIP_CMD, val & ~(RTASE_TE | RTASE_RE));
-+	val = rtase_r8(tp, RTASE_CHIP_CMD);
-+	rtase_w8(tp, RTASE_CHIP_CMD, val & ~RTASE_STOP_REQ);
-+
-+	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config);
-+}
-+
-+static void rtase_hw_reset(const struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+
-+	rtase_irq_dis_and_clear(tp);
-+
-+	rtase_nic_reset(dev);
-+}
-+
- static void rtase_nic_enable(const struct net_device *dev)
- {
- 	const struct rtase_private *tp = netdev_priv(dev);
-@@ -526,6 +648,32 @@ static int rtase_open(struct net_device *dev)
- 	return ret;
- }
- 
-+static void rtase_down(struct net_device *dev)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	struct rtase_int_vector *ivec;
-+	struct rtase_ring *ring, *tmp;
-+	u32 i;
-+
-+	for (i = 0; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		napi_disable(&ivec->napi);
-+		list_for_each_entry_safe(ring, tmp, &ivec->ring_list, ring_entry) {
-+			list_del(&ring->ring_entry);
-+		}
-+	}
-+
-+	netif_tx_disable(dev);
-+
-+	netif_carrier_off(dev);
-+
-+	rtase_hw_reset(dev);
-+
-+	rtase_tx_clear(tp);
-+
-+	rtase_rx_clear(tp);
-+}
-+
- static int rtase_close(struct net_device *dev)
- {
- 	struct rtase_private *tp = netdev_priv(dev);
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
