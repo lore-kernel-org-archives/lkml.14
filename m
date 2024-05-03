@@ -1,165 +1,67 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAB714534A
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 11:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22289152E1D;
+	Fri,  3 May 2024 11:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714736330; cv=none; b=C64yiIJ/17SbGOV9G06U3pwL8okjckV2jKuTy6w1XW8fBINIOfCGNq0NrtLfVYGiuLQKBPt6UeLiVvmKr9o/Nfeuh5S0Nrsm/39SBWHFbhIOJoUChfM6QeNBSYLqi+zlBSxf85DHaX/Ng2TsGIpTEKpe0aLGrHp/2fhCqMSe2Vg=
+	t=1714736334; cv=none; b=tfyXxrNEQlyCQOA0MpBsMsGkZBFAblgzEF033rTwuW+M9m0U4gKVzB7a2wtYIImjineWhy3bTZ04id6Eq+bXqQWdAujWz1PFYzi9nLp0ZsVT9dxasSRS6ZrNlirLA787sc5TBNH7TR+COb37qy4q68dG8zwPt/oW9ae10jA18wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714736330; c=relaxed/simple;
-	bh=2YhKxh3OG6MTAwjZAphP2OhTLjKcyUM9UyqB4UpZq0g=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=oRfPbupbaIBmQJQpCp173Y5immBB46GuRSNQaHqoJhEQpWVpZ/z1mZq9f0BQoAeg/2jhzOyeEEpR/J+JmqyCGAkI8elMswmv2i7PGyHYqIv9Zv/JeT4ySOgqbA4cr61mKE4Qq+5S20h+cb0E52XKdekelRmDLbdteh5yZyusv68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7da41da873bso1120515739f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 04:38:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714736328; x=1715341128;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pSGzZ2Q94nDINSiwaf3tEOU+6Qd4BCLcgtdCZBuXrNM=;
-        b=BstWkYqIM+Al/9v/cAN9bDRgGdfDzCSvXLh+9lpZIQnbkl2/8c65WyRIYoAG7wmnDB
-         Jp2+GcTGppNiLUqnzdn+cYzp9EDL5vUJviTzl5UY4c9eMp2HzMu2s/eD3St6qBjsYNBO
-         CAezXKi/k0k5WOSrmU3sn8UmmIlD0wMPz4CtWoHdb8OEMwku0SFsFdh0rZUm36Wx+8BO
-         L9+cBXSm4jOWHig4KOVA3+IlXq0LZlgJ+ezX3oruCMtmV3iEB/2BaNTBQ/BBpuHoeix3
-         GXRdPXz5kYlLlqbHRrI9OoYGepaJZ9miDNKAKMlZzbRGoQtCVypW2PNRyqu+m+nwV3bQ
-         FNxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsBs27fHNmtJkUXtwHmfw+DVjKjCc4oAp8UyzHg8ceo+xvRh65jrO8YKfEmvSoYFmzik6GkR9eLowQBCZT7JHEzDwnvrhFkw6YIh2B
-X-Gm-Message-State: AOJu0Yx7T7UbR0eoIwAmTe46ICE0FEmVWGBTY5VNXF+NSwebYJYCcxwa
-	UckXa+70VaeeIq/Ty7XPwiKFGHHyAO8w/BOiqOl6aDCa2ueL5pzmnqXwh250m/qlHeOUUE2RmlI
-	kcL3qzUeaqTEpyCWc+RpXvaK5mrXlrc5qc15Amuy7IlJTc5TqdQlWPbE=
-X-Google-Smtp-Source: AGHT+IFn8BLlMYW+AzmzCdtrBn7J+L8l5HkYITOHl4gPrV5fo0xn/f716HUtvoXo4eV4wGHrdylnftuPa+AySPD3BypatPlxUu9T
+	s=arc-20240116; t=1714736334; c=relaxed/simple;
+	bh=Jway82AsPdhO04WhQYbW1WMsFZwfn5TxuGBO2IOOefk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RwKQgXZ8x4/tgoQvUo5t9ryMtGWfxgm2lYL/LzcmdT0y9ofPncBjbn992dOc3iuglkxRSi85Bg09zs0Y4La45d4RBXmUdZlE38rasr+6VnoO/GQfOnbsIZIn+odubCpWs8Ua0WXJsb8SLb5XYVcVyWmjacIVB57Jy/WcPy5/IHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from [213.70.33.226] (helo=phil.sntech)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1s2rFO-0000Tc-1q; Fri, 03 May 2024 13:38:38 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Chukun Pan <amadeus@jmu.edu.cn>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH v2 0/2] arm64: dts: rockchip: Add Radxa ROCK 3C
+Date: Fri,  3 May 2024 13:38:19 +0200
+Message-Id: <171473602992.3469033.3176474743011728197.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240428123618.72170-1-amadeus@jmu.edu.cn>
+References: <20240428123618.72170-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:31c5:b0:487:100b:9212 with SMTP id
- n5-20020a05663831c500b00487100b9212mr94631jav.3.1714736326346; Fri, 03 May
- 2024 04:38:46 -0700 (PDT)
-Date: Fri, 03 May 2024 04:38:46 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009d99ed06178b29b5@google.com>
-Subject: [syzbot] [bcachefs?] BUG: unable to handle kernel paging request in bch2_fs_btree_key_cache_exit
-From: syzbot <syzbot+a35cdb62ec34d44fb062@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On Sun, 28 Apr 2024 20:36:16 +0800, Chukun Pan wrote:
+> Changes in v2:
+>   Collected Acked-by.
+>   Drop cd-gpios for sdhci.
+>   Add mmc-hs200-1_8v to eMMC.
+>   Correct the spi max frequency.
+>   Update model name and compatible.
+>   Update regulator according to the schematic.
+> 
+> [...]
 
-syzbot found the following issue on:
+Applied, thanks!
 
-HEAD commit:    6a71d2909427 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=11889a4c980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fca646cf17cc616b
-dashboard link: https://syzkaller.appspot.com/bug?extid=a35cdb62ec34d44fb062
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
+[1/2] dt-bindings: arm: rockchip: add Radxa ROCK 3C
+      commit: c0c153e341d2a82241bf0a0b78117ceeb29be3eb
+[2/2] arm64: dts: rockchip: Add Radxa ROCK 3C
+      commit: ee219017ddb50be14c60d3cbe3e51ac0b2008d40
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c77d21fa1405/disk-6a71d290.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/429fcd369816/vmlinux-6a71d290.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d3d8a4b85112/Image-6a71d290.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a35cdb62ec34d44fb062@syzkaller.appspotmail.com
-
-Unable to handle kernel paging request at virtual address ffff7000249ff210
-KASAN: probably wild-memory-access in range [0xffff800124ff9080-0xffff800124ff9087]
-Mem abort info:
-  ESR = 0x0000000096000006
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x06: level 2 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000001ad5bd000
-[ffff7000249ff210] pgd=0000000000000000, p4d=000000023e882003, pud=000000023e880003, pmd=0000000000000000
-Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 7242 Comm: syz-executor.4 Not tainted 6.9.0-rc4-syzkaller-g6a71d2909427 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-pstate: 80401005 (Nzcv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-pc : bch2_fs_btree_key_cache_exit+0x7ec/0xfcc fs/bcachefs/btree_key_cache.c:974
-lr : bch2_fs_btree_key_cache_exit+0x78c/0xfcc fs/bcachefs/btree_key_cache.c:970
-sp : ffff8000aa1d6e80
-x29: ffff8000aa1d6f50 x28: 1fffe0001c790010 x27: ffff0000e3c844b0
-x26: 1ffff0001543ade0 x25: dfff800000000000 x24: 1ffff0001168e5d4
-x23: 0000000000000000 x22: ffff800124ff9080 x21: ffff8000aa1d6f00
-x20: ffff80008ee81218 x19: dfff800000000000 x18: 1fffe000367b9596
-x17: ffff80008ee7d000 x16: ffff8000802896e4 x15: 0000000000000001
-x14: 1fffe0001c790898 x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000040000 x10: 0000000000ff0100 x9 : 0000000000000003
-x8 : 1ffff000249ff210 x7 : ffff80008275d4e8 x6 : 0000000000000000
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008275d4f8
-x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000008
-Call trace:
- bch2_fs_btree_key_cache_exit+0x7ec/0xfcc fs/bcachefs/btree_key_cache.c:974
- __bch2_fs_free fs/bcachefs/super.c:562 [inline]
- bch2_fs_release+0x1e0/0x564 fs/bcachefs/super.c:609
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x2a8/0x41c lib/kobject.c:737
- bch2_fs_free+0x288/0x2f0 fs/bcachefs/super.c:674
- bch2_fs_alloc+0xe4c/0x1c60 fs/bcachefs/super.c:965
- bch2_fs_open+0x740/0xb64 fs/bcachefs/super.c:2080
- bch2_mount+0x558/0xe10 fs/bcachefs/fs.c:1900
- legacy_get_tree+0xd4/0x16c fs/fs_context.c:662
- vfs_get_tree+0x90/0x288 fs/super.c:1779
- do_new_mount+0x278/0x900 fs/namespace.c:3352
- path_mount+0x590/0xe04 fs/namespace.c:3679
- do_mount fs/namespace.c:3692 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount fs/namespace.c:3875 [inline]
- __arm64_sys_mount+0x45c/0x594 fs/namespace.c:3875
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-Code: f90027e8 d343fec8 11000d29 f9002be8 (38f36908) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	f90027e8 	str	x8, [sp, #72]
-   4:	d343fec8 	lsr	x8, x22, #3
-   8:	11000d29 	add	w9, w9, #0x3
-   c:	f9002be8 	str	x8, [sp, #80]
-* 10:	38f36908 	ldrsb	w8, [x8, x19] <-- trapping instruction
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
