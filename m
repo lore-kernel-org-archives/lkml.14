@@ -1,53 +1,73 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A86414A0A2;
-	Fri,  3 May 2024 08:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4591979CD;
+	Fri,  3 May 2024 08:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714726088; cv=none; b=J1JRKpzRPYEoFlNqhuHCRMTPIWDa0JK9O1YZdvV2WdPRlU4O+jfnlB6u3RAH+u5R4Xdnl/fhQUuTqc9Kdh0yo9m/6YityvZXmJIdTZvybuz20umBATeLZUq8BynMMXyf3nSG5Rt8c3R7UwTAsq5ukm+FolWniz0GR115d6IQDKc=
+	t=1714726112; cv=none; b=KPaOl90VvbvIINo+U9G3iaMJBhA8eyafV1sQYwL/E/bS/QOy39klPHGthexC1wEIMjJlh9iNlUaZOcMMn9RepvxFAkya4ueTX1ejerjo3uVvTxraU1TnRLR6VgcxxBtwXkwoWrDzHMbvkbXLmG0b9k2CfkC39qQjUBK3HFUiV64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714726088; c=relaxed/simple;
-	bh=Etxg/YHMDKlpBP32lFDLlbJbSn/TfzZAQBVqlraiDDQ=;
+	s=arc-20240116; t=1714726112; c=relaxed/simple;
+	bh=4LAK9etsRaOQZ6Axh1wlzY3z93PBUnIV4rktOBkXROg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oDIVzWHAQKYZAJWj1DmMeVmFm/CeZhby4KgK05SK3rxfKlSJS3Qw2ROjRyTKhlOnL9O8lXraCeUEo84indLQOdOgbrU5IekS0y54NHGS6KYVAzdaeJ7MUHHOEoBcfGEGIl5ZXRjgHHdlJ9l1dmPpoBmTdLFQcZPrLa1oD2VLfqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YY49NBns; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DjmL9IEZC1rZqdJ7KZWK62e2gGTkoKpfLdYYxJKPO6UMFdMolRaMS/jOMezqT6c6JMaEKViM2zAaFuWgpwWaxNBxxY8LagYMuDEzzbVZbzCrpMdroPBeizngKmMGSqG/J4KW/XX8puPd/MFGZnY8QyIwWRctcCSTMO3XA7meT7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KQZv1N6i; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YY49NBns"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id C9B0220B2C80; Fri,  3 May 2024 01:48:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C9B0220B2C80
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1714726086;
-	bh=i7337QBeIGytOvVKmvrACz56gMsVGvMlwWZTi53xsLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YY49NBnsr3733U23ONC3HeNSrFWhcfqJUUOhGmt7SF2sx8ELfV27k8uB3Qh4zpyy7
-	 2m9l5urjC7tt5mvzIANbyq/jaTnKqxyjdnawdBUZQMA37FuLWSRSTiBvoS2EOzcrXj
-	 bSmPiBcruCWnyQzZzPTBlcfeHLRZylpxj25fi7GQ=
-Date: Fri, 3 May 2024 01:48:06 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Breno Leitao <leitao@debian.org>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Yury Norov <yury.norov@gmail.com>, linux-hyperv@vger.kernel.org,
-	shradhagupta@microsoft.com
-Subject: Re: [PATCH net-next v2 0/2] Add sysfs attributes for MANA
-Message-ID: <20240503084806.GA1248@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1713954774-29953-1-git-send-email-shradhagupta@linux.microsoft.com>
- <ZikbpoXWmcQrBP3V@nanopsycho>
- <20240430053138.GA6429@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KQZv1N6i"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4438jcMi004089;
+	Fri, 3 May 2024 08:48:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=bXFb74UHnqadsLdb0RbUOARUSWrSSEa7RZIBYJ2ApO0=;
+ b=KQZv1N6igTzVOXlu+fPckpGSkDaGUDXRXtgoYQw48gP+gfUaKl9MT5yV2n6bdGcgO0zy
+ oBBRHBtSbs5/ZqYNa1b2ZJWz24TXWHtQJYfDJqu3hIwwGTEymb4hducuasbCh561tEoE
+ 4BCRsdjEU6/r0mWQ5ZlG0/Ts/dudMG5IRq109QHumJ61T3h/6EhfO3qOLLbd+Mh00qoB
+ ayF0byzT55SThP9NPAD7WxKZmUSQGJeGoqOOblRXldrZ4LjNosqWxEGNtQErb/YAjlEx
+ /dVI3/aV5xhj+z33auPCAURZiGGc6NTuZtQEZJBJP9fkT4pd8u8j9a7/eKQIHPN2OPzj 0g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xvvgbr15p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 May 2024 08:48:29 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4438mSQv010418;
+	Fri, 3 May 2024 08:48:28 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xvvgbr152-7
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 May 2024 08:48:28 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4435WPhe001509;
+	Fri, 3 May 2024 08:21:15 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsbpucux0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 May 2024 08:21:15 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4438L9ID17105312
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 3 May 2024 08:21:11 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AE71620040;
+	Fri,  3 May 2024 08:21:09 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 28C6D20043;
+	Fri,  3 May 2024 08:21:09 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.68.221])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  3 May 2024 08:21:09 +0000 (GMT)
+Date: Fri, 3 May 2024 10:21:07 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Thomas Huth <thuth@redhat.com>
+Cc: linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH v2] s390: Remove comment about TIF_FPU
+Message-ID: <ZjSecweC4gCRa80x@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20240503080648.81461-1-thuth@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,48 +76,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240430053138.GA6429@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20240503080648.81461-1-thuth@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: sPleoafmuW_otZpaQspvGUpoJAdV0bK-
+X-Proofpoint-GUID: kd5mTUzxk5t5o-Y645cKcDvwLJ0aHOZC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-03_05,2024-05-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ clxscore=1015 impostorscore=0 mlxlogscore=514 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 adultscore=0 phishscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2405030063
 
-On Mon, Apr 29, 2024 at 10:31:38PM -0700, Shradha Gupta wrote:
-> On Wed, Apr 24, 2024 at 04:48:06PM +0200, Jiri Pirko wrote:
-> > Wed, Apr 24, 2024 at 12:32:54PM CEST, shradhagupta@linux.microsoft.com wrote:
-> > >These patches include adding sysfs attributes for improving
-> > >debuggability on MANA devices.
-> > >
-> > >The first patch consists on max_mtu, min_mtu attributes that are
-> > >implemented generically for all devices
-> > >
-> > >The second patch has mana specific attributes max_num_msix and num_ports
-> > 
-> > 1) you implement only max, min is never implemented, no point
-> > introducing it.
-> Sure. I had added it for the sake of completeness.
-> > 2) having driver implement sysfs entry feels *very wrong*, don't do that
-> > 3) why DEVLINK_PARAM_GENERIC_ID_MSIX_VEC_PER_PF_MAX
-> >    and DEVLINK_PARAM_GENERIC_ID_MSIX_VEC_PER_PF_MIN
-> >    Are not what you want?
-> Thanks for pointing this out. We are still evaluating if this devlink param
-> could be used for our usecase where we only need a read-only msix value for VF.
-> We keep the thread updated.
-The attribute that we want is per VF msix max. This is per PF and would not be
-the right one for our use case.
-Do you have any other recommendations/suggestions around this?
+On Fri, May 03, 2024 at 10:06:48AM +0200, Thomas Huth wrote:
+> It has been removed in commit 2c6b96762fbd ("s390/fpu: remove TIF_FPU"),
+> so we should not mention TIF_FPU in the comment here anymore. Since the
+> remaining parts of the comment just document the obvious fact that
+> save_user_fpu_regs() saves the FPU state, simply remove the comment now
+> completely.
+> 
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  v2: Drop the comment completely
+> 
+>  arch/s390/kernel/process.c | 5 -----
+>  1 file changed, 5 deletions(-)
 
-Regards,
-Shradha.
-> > 
-> > >
-> > >Shradha Gupta (2):
-> > >  net: Add sysfs atttributes for max_mtu min_mtu
-> > >  net: mana: Add new device attributes for mana
-> > >
-> > > Documentation/ABI/testing/sysfs-class-net     | 16 ++++++++++
-> > > .../net/ethernet/microsoft/mana/gdma_main.c   | 32 +++++++++++++++++++
-> > > net/core/net-sysfs.c                          |  4 +++
-> > > 3 files changed, 52 insertions(+)
-> > >
-> > >-- 
-> > >2.34.1
-> > >
-> > >
+Applied, thanks!
