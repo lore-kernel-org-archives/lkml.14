@@ -1,166 +1,135 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFDE155342
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 15:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E13D154C08;
+	Fri,  3 May 2024 15:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714750526; cv=none; b=sVEMznW8wtFVY6NfVxcesPum8GlbC03Ee1fHzF9+sxryNTU5rDk/ovLJjrkstrNLEicRC2jENb8H+pat9+ygccVFeBnYkFFmPTDMCO7zVej19yyYEqUCVqgyX6vyrAL43My+Wqy9r7oWAi65dK7mjqRETwG1IQ04BfbneIjoQA8=
+	t=1714750552; cv=none; b=lCVyOAr0E4j2KuhSBim19U+/FdfmnsbwG4srOGgsq7R6uxGBziibzhyb14XPclMe7rgSanxTwuukzoJ4//QPsia/ZUucpUE+octeWinvfwg5hJSqUM4D885cCZb38SOLRxU4sH5+fCe1+Vwt/OPLvnIQ/UDbA1m+43zsdrNHbDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714750526; c=relaxed/simple;
-	bh=b1HL/jZPMQHwvdCggBwYWudLG2vrv1+NFKL1uOCOUv0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Jr/FaNmZndqs5apuv/U7nJ+tM6db5iTw9i1Q8fAuSpvaZwoiJlAyGUN0IeeSEd5vt0iEgcP5AH2HB8EMakTeWeJi1csDl+DePugMjIGOwQKU85LRTHF7FrQke0AkxjyiwjFgu1b93bSSKcjAMeDqoypQ8yDl4cKLUkFq+MKv2lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GzCEau9T; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1714750552; c=relaxed/simple;
+	bh=+qiUyuHYdoF2a6KXNUlTVYCi8PbGgXjnFiDn9PglpeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I98qLxEamfBZ2b5OjzIkFaYjXjiiwb6HhW5Kc9JXzo8sHpbpi22aICiEpKWPjtrGxSiGPVuxTg8YqSxgr/76ESh+XtzNiqz0bqbljbrZBgnC1gsbSYAJFG4/hMNT7BJ7rCbwR8yzIA1450Gib3/lx+va6k/p63PhzotG8c8YYdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A0AaBGf1; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GzCEau9T"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41b5dd5af48so66334405e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 08:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1714750522; x=1715355322; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ii2L9a7LgGm5B2lSyJXyTDrVlYtG8HCf76CxmpWEszg=;
-        b=GzCEau9TwPYZIwusilKf+Xq+9JY2ar5GgObYOqhAY/FNx/OvlmASrn5nxxJVd7Wh2c
-         HLm/JK+bLYxt5DwSbGKW00hBHadv1Q03KfIjyEu2Zcyq7sS2Tueh5V9E9qibEB2wEied
-         21F6vkHnAEazOyGMv6lT/oosGY+11BAxZfdhutSlMTbLX0EfMACRB7bfo+XUXhWhIdUo
-         JSneGPv/0qx/356mzQZ+lzkt332k7QFxFV/6C2whYCuFd5Qa6Jb49EMFb1AgIiHJFkPv
-         YORjoacQLoXsEmxDOZ8HvqNvmLYXSEMWkTSE4EwHhtpFLO/1Ro3Q9WrWHsQdKCGmeHYV
-         uXaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714750522; x=1715355322;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ii2L9a7LgGm5B2lSyJXyTDrVlYtG8HCf76CxmpWEszg=;
-        b=OgE+zyzzPVfUcrsvlF78geKifJuBHqZGM1sdq1KJ+Q5z2xZSkg9kdNYDg+wFNNsl8x
-         Ho40IO2ro2dVqDihpJvLdnrj6FAmqpILrDV7obKaA059I/pGuNjHW9H+yRIGG8f0z9EQ
-         gPm5Pdg8NpecZo1InZaKfFwOF/kz67rAS4Y7Md9RmxbkfEOM9c9AAGeBiT74v7OETN4A
-         Fy8Qqcctwa/l2lao9Wcuduar5JZDdP83PKOlhH2cjuvwBQGtk4sHt7Imibyp4IIfTfCg
-         01ZFasVs1pwvxnldnQRpeNnlxED0DERrvWbcdA5iXh3g4su5h02P7OsaWYDenbhwwD1V
-         4BrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWw92QvQ67y6ESoWk6zjar6gB2mtSuA4NAqcvQy1cktZcYfS0bloMZoMqXwgK9RbRCc1zCIKc6EaWfbYi/UUvFZvu9u3ndT/iZMqhyJ
-X-Gm-Message-State: AOJu0Yzy39Ndb2dYapuH7Qa04mbZb2QGf2SffQrcpKLKDEFWcXvlXccQ
-	+kQ+wGSRYF9KLKsqAuJwBp1PmUUanM+dhDtMzpoAi4g+e3klKTGPS1NwIBiXf7M=
-X-Google-Smtp-Source: AGHT+IFm2aMinKAIGlz3LTlYrkDzfhhW4AooIKgnWvrQaOqMrThwAfJaBbSv81s4fUC5wecGUrxU0w==
-X-Received: by 2002:a05:600c:35d2:b0:41b:82ba:7997 with SMTP id r18-20020a05600c35d200b0041b82ba7997mr2371381wmq.3.1714750521731;
-        Fri, 03 May 2024 08:35:21 -0700 (PDT)
-Received: from [127.0.1.1] ([79.87.205.120])
-        by smtp.gmail.com with ESMTPSA id d10-20020a05600c3aca00b00418e4cc9de7sm9702373wms.7.2024.05.03.08.35.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 08:35:21 -0700 (PDT)
-From: Julien Panis <jpanis@baylibre.com>
-Date: Fri, 03 May 2024 17:35:14 +0200
-Subject: [PATCH 2/2] thermal/drivers/mediatek/lvts_thermal: Fix wrong
- lvts_ctrl index
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A0AaBGf1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714750551; x=1746286551;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=+qiUyuHYdoF2a6KXNUlTVYCi8PbGgXjnFiDn9PglpeM=;
+  b=A0AaBGf1O9E4ZxdNzyCRS5m2yuwUj3QWAZAeGg9R3wvQ6jZGs6Cb0JiY
+   NvB3o6lh0UaPyJOrlxOWTY5yy5Kbr2+Pm9ad8ZVCnnF57amXvolL0ZaD3
+   fAMJnyo7bu7jNRcIm9kOWJ6LkkCZrCUgkDeHD7jsDqFQkJEdPbmGNhdCE
+   qwChnI1f2qFfkVMPVBASXVIJViqAY6dFyGFYRifHzF45sWUfR+8FNTbeH
+   oe8eUrmYZewXhNOZDdfwEpoK5yB5XOv76UWCxEZ1ChTeu2WTlM6F3ExIE
+   M1L2XzT9qnwyEa/TyPVHOi1Sn/53jrdSRISTq+koV2wfA/R06deb1enTd
+   Q==;
+X-CSE-ConnectionGUID: 1AXXTsaBQJ+FPpljLtAkmQ==
+X-CSE-MsgGUID: WfT/VcznQzuf0gQkdadWXA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="21713269"
+X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
+   d="scan'208";a="21713269"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 08:35:51 -0700
+X-CSE-ConnectionGUID: U3TqNEvQQwCYqIVjk76aMA==
+X-CSE-MsgGUID: UjPF7OFaR/acqaIhouctQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
+   d="scan'208";a="27358043"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 08:35:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s2uwr-00000003gr7-3yxQ;
+	Fri, 03 May 2024 18:35:45 +0300
+Date: Fri, 3 May 2024 18:35:45 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Parker Newman <parker@finest.io>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Parker Newman <pnewman@connecttech.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-serial <linux-serial@vger.kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH v1 11/13] serial: 8250_exar: Use BIT() in exar_ee_read()
+Message-ID: <ZjUEURneUmZ4nmbC@smile.fi.intel.com>
+References: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
+ <20240502144626.2716994-12-andriy.shevchenko@linux.intel.com>
+ <702a9145-5bc1-c765-a1fa-278702741637@linux.intel.com>
+ <ZjPLQeTEKvt7B3mj@smile.fi.intel.com>
+ <20240503102632.112a34bd@SWDEV2.connecttech.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240503-mtk-thermal-lvts-ctrl-idx-fix-v1-2-f605c50ca117@baylibre.com>
-References: <20240503-mtk-thermal-lvts-ctrl-idx-fix-v1-0-f605c50ca117@baylibre.com>
-In-Reply-To: <20240503-mtk-thermal-lvts-ctrl-idx-fix-v1-0-f605c50ca117@baylibre.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Nicolas Pitre <npitre@baylibre.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Julien Panis <jpanis@baylibre.com>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714750518; l=3124;
- i=jpanis@baylibre.com; s=20230526; h=from:subject:message-id;
- bh=b1HL/jZPMQHwvdCggBwYWudLG2vrv1+NFKL1uOCOUv0=;
- b=A72Gw9WaUfJAIEbb5OzwO7zSEFc7tittIF0gO7OlcYnX0Sb6YIs8fYiU2z6GTT4ehRCuZ4n7z
- ENc0i8f2dlNCwBbG3HHLq21ntVhchbfbc9kuWKwJ80892zxwGXzagrT
-X-Developer-Key: i=jpanis@baylibre.com; a=ed25519;
- pk=8eSM4/xkiHWz2M1Cw1U3m2/YfPbsUdEJPCWY3Mh9ekQ=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240503102632.112a34bd@SWDEV2.connecttech.local>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-In 'lvts_should_update_thresh()' and 'lvts_ctrl_start()' functions,
-the parameter passed to 'lvts_for_each_valid_sensor()' macro is always
-'lvts_ctrl->lvts_data->lvts_ctrl'. In other words, the array index 0
-is systematically passed as 'struct lvts_ctrl_data' type item, even
-when another item should be consumed instead.
+On Fri, May 03, 2024 at 10:26:32AM -0400, Parker Newman wrote:
+> On Thu, 2 May 2024 20:20:01 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, May 02, 2024 at 07:08:21PM +0300, Ilpo Järvinen wrote:
+> > > On Thu, 2 May 2024, Andy Shevchenko wrote:  
 
-Hence, the 'valid_sensor_mask' value which is selected can be wrong
-because unrelated to the 'struct lvts_ctrl_data' type item that should
-be used. Hence, some thermal zone can be registered for a sensor 'i'
-that does not actually exist. Because of the invalid address used
-as 'lvts_sensor[i].msr', this situation ends up with a crash in
-'lvts_get_temp()' function, where this 'msr' pointer is passed to
-'readl_poll_timeout()' function. The following message is output:
-"Unable to handle kernel NULL pointer dereference at virtual
-address <msr>", with <msr> = 0.
+...
 
-This patch fixes the issue.
+> > > >  	// Send address to read from
+> > > > -	for (i = 1 << (UART_EXAR_REGB_EE_ADDR_SIZE - 1); i; i >>= 1)
+> > > > -		exar_ee_write_bit(priv, (ee_addr & i));
+> > > > +	for (i = UART_EXAR_REGB_EE_ADDR_SIZE - 1; i >= 0; i--)
+> > > > +		exar_ee_write_bit(priv, ee_addr & BIT(i));
+> > > >  
+> > > >  	// Read data 1 bit at a time
+> > > >  	for (i = 0; i <= UART_EXAR_REGB_EE_DATA_SIZE; i++) {
+> > > > -		data <<= 1;
+> > > > -		data |= exar_ee_read_bit(priv);
+> > > > +		if (exar_ee_read_bit(priv))
+> > > > +			data |= BIT(i);  
+> > > 
+> > > Does this end up reversing the order of bits? In the original, data was left
+> > > shifted which moved the existing bits and added the lsb but the replacement
+> > > adds highest bit on each iteration?  
+> > 
+> > Oh, seems a good catch!
+> > 
+> > I was also wondering, but missed this somehow. Seems the EEPROM is in BE mode,
+> > so two loops has to be aligned.
+> > 
+> 
+> I just tested this and Ilpo is correct, the read loop portion is backwards as 
+> expected. This is the corrected loop:
+> 
+>     // Read data 1 bit at a time
+>     for (i = UART_EXAR_REGB_EE_DATA_SIZE; i >= 0; i--) {
+>         if (exar_ee_read_bit(priv))
+>             data |= BIT(i);
+>     }
+> 
+> I know this looks wrong because its looping from 16->0 rather than the 
+> more intuitive 15->0 for a 16bit value. This is actually correct however 
+> because according to the AT93C46D datasheet there is always dummy 0 bit
+> before the actual 16 bits of data.
+> 
+> I hope that helps,
 
-Fixes: 11e6f4c31447 ("thermal/drivers/mediatek/lvts_thermal: Allow early empty sensor slots")
-Signed-off-by: Julien Panis <jpanis@baylibre.com>
----
- drivers/thermal/mediatek/lvts_thermal.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Yes, it helps and means that we need that comment to be added to the code. Is
+it the same applicable to the write part above (for address)? Because AFAIU
+mine is one bit longer than yours. Maybe in the original code is a bug? Have
+you tried to read high addresses?
 
-diff --git a/drivers/thermal/mediatek/lvts_thermal.c b/drivers/thermal/mediatek/lvts_thermal.c
-index 18a796386cd0..d7df6f09938b 100644
---- a/drivers/thermal/mediatek/lvts_thermal.c
-+++ b/drivers/thermal/mediatek/lvts_thermal.c
-@@ -116,9 +116,9 @@ struct lvts_ctrl_data {
- 			      ((s2) ? BIT(2) : 0) | \
- 			      ((s3) ? BIT(3) : 0))
- 
--#define lvts_for_each_valid_sensor(i, lvts_ctrl_data) \
-+#define lvts_for_each_valid_sensor(i, lvts_ctrl) \
- 	for ((i) = 0; (i) < LVTS_SENSOR_MAX; (i)++) \
--		if (!((lvts_ctrl_data)->valid_sensor_mask & BIT(i))) \
-+		if (!((lvts_ctrl)->valid_sensor_mask & BIT(i))) \
- 			continue; \
- 		else
- 
-@@ -145,6 +145,7 @@ struct lvts_ctrl {
- 	const struct lvts_data *lvts_data;
- 	u32 calibration[LVTS_SENSOR_MAX];
- 	u32 hw_tshut_raw_temp;
-+	u8 valid_sensor_mask;
- 	int mode;
- 	void __iomem *base;
- 	int low_thresh;
-@@ -356,7 +357,7 @@ static bool lvts_should_update_thresh(struct lvts_ctrl *lvts_ctrl, int high)
- 	if (high > lvts_ctrl->high_thresh)
- 		return true;
- 
--	lvts_for_each_valid_sensor(i, lvts_ctrl->lvts_data->lvts_ctrl)
-+	lvts_for_each_valid_sensor(i, lvts_ctrl)
- 		if (lvts_ctrl->sensors[i].high_thresh == lvts_ctrl->high_thresh
- 		    && lvts_ctrl->sensors[i].low_thresh == lvts_ctrl->low_thresh)
- 			return false;
-@@ -617,6 +618,8 @@ static int lvts_sensor_init(struct device *dev, struct lvts_ctrl *lvts_ctrl,
- 		lvts_sensor[i].high_thresh = INT_MIN;
- 	};
- 
-+	lvts_ctrl->valid_sensor_mask = lvts_ctrl_data->valid_sensor_mask;
-+
- 	return 0;
- }
- 
-@@ -1112,7 +1115,7 @@ static int lvts_ctrl_start(struct device *dev, struct lvts_ctrl *lvts_ctrl)
- 	u32 *sensor_bitmap = lvts_ctrl->mode == LVTS_MSR_IMMEDIATE_MODE ?
- 			     sensor_imm_bitmap : sensor_filt_bitmap;
- 
--	lvts_for_each_valid_sensor(i, lvts_ctrl->lvts_data->lvts_ctrl) {
-+	lvts_for_each_valid_sensor(i, lvts_ctrl) {
- 
- 		int dt_id = lvts_sensors[i].dt_id;
- 
 
 -- 
-2.37.3
+With Best Regards,
+Andy Shevchenko
+
 
