@@ -1,231 +1,409 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E4523749;
-	Fri,  3 May 2024 16:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714752571; cv=fail; b=pNw5cs6fih30Aat658V1+BNrDZONHFI06Ystc73j070MZg+l8+UOx65oqFbHc4+sBBp29OYX1EMVisSyoAyd3IWEzt6A2NPYsNEd+7C5o2BIk5O40VkOWcfvL51+WFkMS5QrtsG05ZZjZT2eFsiqbIOzt78eJahZcbzpBmM4bT4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714752571; c=relaxed/simple;
-	bh=diWg98s18EYgLpKvYqLHxT7ll7v2Sj+rXsjY5CqIqMA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=q9rzCzQrfa/l5gWaPusyYV+V4YxTFdAM6bKnaZ2EwUMT3dDyloYxPZT/KLAu3aCrPuRGic+0V+Z8TwdHfQyZkhwyCLx2ZaADkascyaU46GBA0PWAeb1PEEO71UGcvegSOJhMpEyU6inJOCZGB39nUPCrcYcO+V9Lzze8mAryOd8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gG4PVeWf; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451B1155310
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 16:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714752660; cv=none; b=LPyLdIY1Yh5e2Imyb9HHfdr9SsgQ3RmYj3yAOq2m1Jsm1qLScp5KCM6Khjc8XKnIQB/R8xcWQQwAICKxKNjhAxEiqwEAA5kTN4fYrnPRZg9XrJx8XtLhqqU+OnYQPZAVZ1zz3cZt0UoC5pvZ8/I0Xs2EudV7q7n37USxSA/PSNg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714752660; c=relaxed/simple;
+	bh=Z5b0CqouN93JJsmB9TzKqVvmhGRgsFIWRgcvB8hrs3A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SS1oQqoSVQfRzdQXzZn5nCMsSjKkcpc2oL1+PFPc+uQC0F6D7aoe6Yrc1MoMijG7W1yYcYuwkWgTyeIa8RRuc7rbMe3hJjSAB1tnTAyIBbKTN9aAiaahhecGxskrcFeSJV4iLfiuOhO2QnweGNdDXIH8qvC18YiS2kDxoHNMotU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fjUicAQh; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gG4PVeWf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fjUicAQh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714752569; x=1746288569;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=diWg98s18EYgLpKvYqLHxT7ll7v2Sj+rXsjY5CqIqMA=;
-  b=gG4PVeWfl7azRxJj+OzFtoo3LOFFFvcG3ML44aVNRZER0uezd/oK8RCc
-   f9zM/8B4ootbeWL6ZqOIEinDdhsw5GYa1kC5M04Uqv97Ceoafexz4mWrT
-   x8C5npV7VWTn/NQD58F6GTEFlcYH2FAGYy7UlbL853F+1MQhzpoEzUTiP
-   G74DaeT7ia79+AoDQV4HNnqYUjy4dTzbrm5Qkq1tIJKW2+VKA8lI35/rO
-   6o0ns4mN80WpL5om1Y0DDHJQjibtFY3Cg4pkSUlp1EHOhRoAprczJ65dA
-   bNc+Qum8okr2O5ynwEhjfUTVOn//AUXFLsgGrtrGJb/mMNOH+afpVOTJt
-   w==;
-X-CSE-ConnectionGUID: 2KmCR5VcTBiiAmqnQ1xJXg==
-X-CSE-MsgGUID: dxe53LGXSyOXMZglldLUag==
-X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="21118041"
+  t=1714752658; x=1746288658;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Z5b0CqouN93JJsmB9TzKqVvmhGRgsFIWRgcvB8hrs3A=;
+  b=fjUicAQhQhqU9EPYzc4sW2im111Cvq03LaWhnJigz9dgTlnSsmkpps//
+   FY9dqcyzCs501a+fP2xDTQVb3CLm3aI00yzXpO2Fr3x8Z7EQW2+R0QrSa
+   j2Mo0X2ApL5AWgVib8G95yHLTs/2aJvPMwgc6D6CVjhGyMjTJrjxneFNT
+   PbycrEDrk50cwBPujcaj7vsSPOOBWhMdtr/xu2Wh694NkotBiVoOAiN3O
+   T301Hsz+k4cMbdUMi8YsbtLSDTwxUtEsbNQPqrvc/Sk9Lso+JN6oiKbd2
+   bcnxbmJXMGOYmadwUQIVL0vMmCZbQDqiPn6CEmCqx1GAjbeqMKArdfFkj
+   A==;
+X-CSE-ConnectionGUID: xYeJiTKlQWWOE+HJ7ZKIKw==
+X-CSE-MsgGUID: HfLCb7Q0Qw6q2Jw/OpVFtA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="14383701"
 X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="21118041"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 09:07:24 -0700
-X-CSE-ConnectionGUID: JPsUjQ0vQni4OAj/IyWhhA==
-X-CSE-MsgGUID: erNj247fQXKy91ExW84SLQ==
+   d="scan'208";a="14383701"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 09:10:57 -0700
+X-CSE-ConnectionGUID: Z48Gzqo8Re2XNqqnJ3hTUg==
+X-CSE-MsgGUID: B7hFfWUnTGyD/a5oWFEKtw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="28080368"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 May 2024 09:07:21 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 3 May 2024 09:07:20 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 3 May 2024 09:07:19 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 3 May 2024 09:07:19 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 3 May 2024 09:07:18 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CItp4GtLC+u62H55PU3alWNU9ZjwIyMldp0FKLD2GEKCzU+N2iBcLC1U1ZMtVyU51s0K06PmfQ36zoGqJKEAwt4K1d//p/H3/eP6WYkDYY5AXtMZ31VNJan9tzeEIJAzqIY1xowcZS3RJIu6uRKCu4HN3IL555FAcfdp4Lm22glQfPgdT6ILyRyiCM3YepFoJxgWdjIBBfuD1mRHlxE667J3g15EuOwNT45ZRTuWBQQlmyDBkcuS+CXY2Zj1Lc4SGeeApTv0NeacaGEf54KHTuVbt1so2TP518qjx2p/kQC96XF2cQdgIVdhkpttubocJxewStYe0SyaqCSyJveQkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a382vT4kUIRZppjReTd2uNIbYY0J/cWdmKC01vgEifg=;
- b=cfCd6Z+W93RYJwLpef4VyZWvW3Y2N6hLzFCgJqd5hE/Jz0bINxhQpXG1yigcxjkpBjuWi7Gj/gHJwBu7IkQ3yWxLVj9TecirTz6lfplCbLkvIICxzXLjfb4KmkOed/BTihZ7OcEUobjEm6iXSxgJIH/N/QZqrRAT80CchBfUpUVdysVYu0Ij8uIWJHT6yyxMKBS4roHzSWeLC6K6k6C0/tbGoC9RvTDkvIYltFWchL4v4E3AG9BZNqgNOkL9r2G6duriFkvxrLa5H8IHxiPWieSgT/RPNnNljTkwSi/vo1konxfSETgTVP59DrmcQJpeGSmHZSqx7pI1MOi3lWTEdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM6PR11MB4529.namprd11.prod.outlook.com (2603:10b6:5:2ae::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30; Fri, 3 May
- 2024 16:07:16 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.7519.031; Fri, 3 May 2024
- 16:07:16 +0000
-Date: Fri, 3 May 2024 09:07:13 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>, Ira Weiny
-	<ira.weiny@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"jonathan.cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/region: Fix memregion leaks in devm_cxl_add_region()
-Message-ID: <66350bb1d3817_1aefb294ba@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240428053715.327444-1-lizhijian@fujitsu.com>
- <662fc9659f6ab_19ca3929435@iweiny-mobl.notmuch>
- <TY1PR01MB1562E0A5EA4F95FFE0F39602A51F2@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB1562E0A5EA4F95FFE0F39602A51F2@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-X-ClientProxiedBy: MW4PR04CA0316.namprd04.prod.outlook.com
- (2603:10b6:303:82::21) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+   d="scan'208";a="27517165"
+Received: from unknown (HELO [10.125.109.193]) ([10.125.109.193])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 09:10:56 -0700
+Message-ID: <e3c945b6-910e-451b-8a0f-4b97525f85b4@linux.intel.com>
+Date: Fri, 3 May 2024 09:10:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM6PR11MB4529:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0550dacc-14ef-41ef-4d1f-08dc6b8b1a17
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|376005;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?+c7qp/8qpO9G7G5dOcEqDMcfF8ArEcRHCjfkAEZaPgZOrvpXTg+66Hlaiw/7?=
- =?us-ascii?Q?3Eszh0PUMR8HHyL12hnwBRcP7nc4E7ENN5FHsVGtgr+6VZldJbuY2mWgUeoH?=
- =?us-ascii?Q?wrD82SQfJTta07HAWN360XdmLbmYT7mD3Rq1J6NcAkP4BvwIZcClFPuPJtlV?=
- =?us-ascii?Q?moFBdTGJs2o0UHfIQOrzEtEWHOJrYptFW7WTDFy3m0nrme3pZ2uFBvGeKJMF?=
- =?us-ascii?Q?tBNt+MkpZOGtERraOghEAyGCJnpevdbfi34dcCNgwDqfVlDrJhaSAgCRfL74?=
- =?us-ascii?Q?Ofk2/B8pCWmjPsTOB3Dbm711tcvdkuwyZiN7RRvBnUtars45yv0C1SPTj6Uh?=
- =?us-ascii?Q?VmijCBuH22GE6P4XXqQQbGj5TSRtXluQmnXhigHn2DZDZndlW6WyQzen9ISA?=
- =?us-ascii?Q?9H0d+GxiMHyKc1rSuyp3KBeEK9U5ojqDE206XdHp01to8gzku0XLz3F1BR4S?=
- =?us-ascii?Q?QHZEsMI2wLVYvsi+Mhr9sXclPa6kvP5UgmP6GWBD31/TaO27SzuFtngDupNQ?=
- =?us-ascii?Q?xN1+ZHdnPfZ0k81u3/3qcQUeEeIzk0fnQhldjuYcEIu6n3Td76DruIgVRwcL?=
- =?us-ascii?Q?i3lI3pt7VrXEecMXE2c/eymL4zwYh57aggPlEk2HoRlof3KQdvW7VJKGtKID?=
- =?us-ascii?Q?+kJ3pNanKe9Sd6H8XvAWBVpA/iMJC91WzW5Y0WHnwoq1ZfVDdLxKPdjevQI3?=
- =?us-ascii?Q?GA1lyb1sIHACKd83lnJUqx89gKboeipEdHKSIvHAl9F+OGgW3YPHJmekOzhC?=
- =?us-ascii?Q?apNWUmWCmzH2oP6QEiE/lYsxt5Nf8VsD096v1En2mfX8xXCQu/9e4Ci0XnLp?=
- =?us-ascii?Q?NFCd6Btw48SQ0cB+rg3U5U6mMUoq/mvf5c26Ms1foN8ujuO9Q3noM/X6nQSk?=
- =?us-ascii?Q?NsuW1yK/Hou0CYRJWXp39zGXbuTIF8FgRgcwySAn/BWFxFhwhKNmOE+GaAfc?=
- =?us-ascii?Q?XeRTeyG0KYreuhpF6we3f08+VnTD//kSw8mZMLIrhFPCgvwPnsbG+YjFzl6d?=
- =?us-ascii?Q?yiN84SZiv2sKe4cHyGDcmPU5ptj6kGVnei49IMORs0QVWEGOrB6BQynKMEz3?=
- =?us-ascii?Q?JlXpq0I06HmYSLglSCl+5alrW7MYFzKT7+4A54ypc40aWHvAXgyJ13+RRzTF?=
- =?us-ascii?Q?D7zid/8cbY+8oGd9/4jo0idVWGEv+MnRDT3MWfMMXM3iNcxFrigbqzNahKd/?=
- =?us-ascii?Q?XigbkBsiuB2CNQBPi4Zbs4ooAIxhTgttauWfo5TrgpRjLfoOJ5uMjOUI7UTe?=
- =?us-ascii?Q?ASiW7FRlsGA4Imr1yHNG839JX+DFUSQLXAV2V2WPdg=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UrtCAGOCYG8aPnYAhHRdyU65+sz3Ci4+fPrJig1CYq5gX7dndUwM1IG/uMbX?=
- =?us-ascii?Q?Q0ixLyDWjXCgqKtApuiC9xad+m3ZlUfDhIFi8sabAxHIWuEP7aT8NBEZdb3z?=
- =?us-ascii?Q?i/ASLHSA6KMeh6mEHjvmI+aT9ajqKXuVfbpmCxDUnbYJ7k5ucXoUz7Qa4SkE?=
- =?us-ascii?Q?PHABb7jceeESRk1ukd0wfES/LzSvesImM0g1w8Ol2yHDbQmuAMYb2JcS5KYR?=
- =?us-ascii?Q?MoP44Z01jAkcMBNg4t+P+Q565k1DY1bvfX4Ob5EPqkCpQhHjbvOPWWIo78eh?=
- =?us-ascii?Q?vNlfP9i28rWeomDgrn03P/IKWNiauW72EBxpXDDGMf8poQyheukyePnoHNWS?=
- =?us-ascii?Q?UrhLL67Ssi/PBfI9CeMonGl4/OsksNP4MQt7Ow9aBZPL3kR6AxYnHxMg7Ia9?=
- =?us-ascii?Q?kiZ0XmjY2CWYzm0bWjPgOPGbZu6toc5/3zUWZcnZc1sdCbE+UsJhgrcp3Gra?=
- =?us-ascii?Q?a9xQN3WSwvLgCmy7N3nYPiXPnZcVk1c3Rs5WcLtzGB2UUpmrRWN4RChlNI14?=
- =?us-ascii?Q?u3czWaeJJT9z4a0NRS289DYcGdGPvjcBJmDZI1+9Za0wIZmTxStI0WpaIZDO?=
- =?us-ascii?Q?y+reXg/EwmwKZlSNhqI1G3rJjId47eGEv03DCqjkjrbpTnUko0LCZ02W5bLM?=
- =?us-ascii?Q?WkxOYSAyTC4JCRxXmLgU7wnZl+ZGE50dxDXjgeJnQsPMoiEN4xlJReSS0aJL?=
- =?us-ascii?Q?eQDlEaw6lTrw1W3f6LD0zycgJd+WfJRpks3SJZlyRx+O3GFXEKyZTc9irNgN?=
- =?us-ascii?Q?cJhLV0TqxRQIn2en9DBDEx+DDR42MtoAAm+5rvos0Sk/brETjZCXgETN7Ly9?=
- =?us-ascii?Q?VnUJ3nWtpVM/nS/UrklWse6FFsssdf4argc/RIXOn4F72g8qVZPgLwGQWlZJ?=
- =?us-ascii?Q?Vz9kZr7PI+Sbp882mtordH9Gtl8fSkAe6aYIIJ2B9kL2OyqQKwojPdfVGx/5?=
- =?us-ascii?Q?4HS59MSItuX4JRC8O3oBZ3J/xeFWJSliwcnMs3EXOqFjndqikcvxSqmjYmSz?=
- =?us-ascii?Q?v5xGaEL/zrUnwkFtpNolvaPNrSDxTy/Zef0mQrUz1IdT4ARaSGIcCCkNWrmF?=
- =?us-ascii?Q?p+KludYPWd1zGfWVMJOZm5I49IvJY+rzFHm8hfx4/MdqKlEdu2oqpWt0Dex5?=
- =?us-ascii?Q?w7YkyBI6kzjbBns/SkL8++jlV6t8LGt2ZE0i2G3Zmyq6vjC8PwJp7fzRry7u?=
- =?us-ascii?Q?qXD+PmE8igW5Y47ys3J7VOPybeQ1Ys5/hogpT02U/oZ2eMkdcNreSC3xWP7G?=
- =?us-ascii?Q?a+zE3Owl3KLEAvo+go3x3N3pam/67sGBOf4/zKA8L/4iUmyMNl15l0mJHcFm?=
- =?us-ascii?Q?iKPmadNZrj4+3ZBqaGqAikxsbax9pgTLMOMTpPlFTAnTDzgn86PiSABORPuj?=
- =?us-ascii?Q?x08PtBpIHyY1VWLcLOxECubX0CE42tMD6BadXb1OJMmM/dWtTveF652uOV2a?=
- =?us-ascii?Q?66lXsuTSwEz6ulNPv0ICvIccQWNM85X4ux081AK9aL/qBIV2G7oieBrvGond?=
- =?us-ascii?Q?YPtb5HaifMlDmCjYVrc5SD3Ll72cR4jt68FUJJLxUz5F4kOm1BC2ChUQ8SKT?=
- =?us-ascii?Q?DbE5hK0FWRUCTioy1rl6npJN6p9ODWgauws2DJRBmKgq94aCwG3Ny8DwVJgB?=
- =?us-ascii?Q?kw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0550dacc-14ef-41ef-4d1f-08dc6b8b1a17
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2024 16:07:16.3152
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MuKpdOjtCBriN5YabzlSCwk86Bz/UtGQQf5PvTJqtzTfaOiQvSVunTErbkEZSSopIwDiUQqT1Qw3qNyRTiWf8V6fnP8VMsFwc2fmrBCocqI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4529
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 13/15] x86/sev: Take advantage of configfs visibility
+ support in TSM
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Dan Williams <dan.j.williams@intel.com>, Michael Roth
+ <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
+References: <cover.1713974291.git.thomas.lendacky@amd.com>
+ <e3143c1f3d0b26fcd8884c6f75644b634a7138e8.1713974291.git.thomas.lendacky@amd.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <e3143c1f3d0b26fcd8884c6f75644b634a7138e8.1713974291.git.thomas.lendacky@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Zhijian Li (Fujitsu) wrote:
-> > I'm not following what the problem is you are trying to fix.  This seems
-> > like it just moves the memregion_free() around a bit but the logic is the
-> > same.
-> 
-> This patch not only memregion_free(id) out of cxl_region_alloc() but
-> also add an  extra memregion_free(id) in EINVAL case which led to a
-> memory leak previously
-> 
 
-I think I would prefer to just eliminate that failure case, something
-like:
+On 4/24/24 8:58 AM, Tom Lendacky wrote:
+> The TSM attestation report support provides multiple configfs attribute
+> types (both for standard and binary attributes) to allow for additional
+> attributes to be displayed for SNP as compared to TDX. With the ability
+> to hide attributes via configfs, consoldate the multiple attribute groups
+> into a single standard attribute group and a single binary attribute
+> group. Modify the TDX support to hide the attributes that were previously
+> "hidden" as a result of registering the selective attribute groups.
+>
+> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
 
--- >8 --
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 5c186e0a39b9..95ba32f8649c 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2352,15 +2352,6 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
-        struct device *dev;
-        int rc;
- 
--       switch (mode) {
--       case CXL_DECODER_RAM:
--       case CXL_DECODER_PMEM:
--               break;
--       default:
--               dev_err(&cxlrd->cxlsd.cxld.dev, "unsupported mode %d\n", mode);
--               return ERR_PTR(-EINVAL);
--       }
--
-        cxlr = cxl_region_alloc(cxlrd, id);
-        if (IS_ERR(cxlr))
-                return cxlr;
-@@ -2415,6 +2406,15 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
- {
-        int rc;
- 
-+       switch (mode) {
-+       case CXL_DECODER_RAM:
-+       case CXL_DECODER_PMEM:
-+               break;
-+       default:
-+               dev_err(&cxlrd->cxlsd.cxld.dev, "unsupported mode %d\n", mode);
-+               return ERR_PTR(-EINVAL);
-+       }
-+
-        rc = memregion_alloc(GFP_KERNEL);
-        if (rc < 0)
-                return ERR_PTR(rc);
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+>  drivers/virt/coco/sev-guest/sev-guest.c |  3 +-
+>  drivers/virt/coco/tdx-guest/tdx-guest.c | 29 ++++++++-
+>  drivers/virt/coco/tsm.c                 | 82 ++++++++++++-------------
+>  include/linux/tsm.h                     | 41 ++++++++++---
+>  4 files changed, 102 insertions(+), 53 deletions(-)
+>
+> diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
+> index 2abb51bd034f..ec3d894cfe31 100644
+> --- a/drivers/virt/coco/sev-guest/sev-guest.c
+> +++ b/drivers/virt/coco/sev-guest/sev-guest.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/sockptr.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/uuid.h>
+> +#include <linux/configfs.h>
+>  #include <uapi/linux/sev-guest.h>
+>  #include <uapi/linux/psp-sev.h>
+>  
+> @@ -975,7 +976,7 @@ static int __init sev_guest_probe(struct platform_device *pdev)
+>  	/* Set the privlevel_floor attribute based on the vmpck_id */
+>  	sev_tsm_ops.privlevel_floor = vmpck_id;
+>  
+> -	ret = tsm_register(&sev_tsm_ops, snp_dev, &tsm_report_extra_type);
+> +	ret = tsm_register(&sev_tsm_ops, snp_dev);
+>  	if (ret)
+>  		goto e_free_cert_data;
+>  
+> diff --git a/drivers/virt/coco/tdx-guest/tdx-guest.c b/drivers/virt/coco/tdx-guest/tdx-guest.c
+> index 1253bf76b570..964af57f345c 100644
+> --- a/drivers/virt/coco/tdx-guest/tdx-guest.c
+> +++ b/drivers/virt/coco/tdx-guest/tdx-guest.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/tsm.h>
+>  #include <linux/sizes.h>
+> +#include <linux/configfs.h>
+>  
+>  #include <uapi/linux/tdx-guest.h>
+>  
+> @@ -249,6 +250,30 @@ static int tdx_report_new(struct tsm_report *report, void *data)
+>  	return ret;
+>  }
+>  
+> +static bool tdx_report_attr_visible(struct config_item *item,
+> +				    struct configfs_attribute *attr, int n)
+> +{
+> +	switch (n) {
+> +	case TSM_REPORT_GENERATION:
+> +	case TSM_REPORT_PROVIDER:
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static bool tdx_report_bin_attr_visible(struct config_item *item,
+> +					struct configfs_bin_attribute *attr, int n)
+> +{
+> +	switch (n) {
+> +	case TSM_REPORT_INBLOB:
+> +	case TSM_REPORT_OUTBLOB:
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  static long tdx_guest_ioctl(struct file *file, unsigned int cmd,
+>  			    unsigned long arg)
+>  {
+> @@ -281,6 +306,8 @@ MODULE_DEVICE_TABLE(x86cpu, tdx_guest_ids);
+>  static const struct tsm_ops tdx_tsm_ops = {
+>  	.name = KBUILD_MODNAME,
+>  	.report_new = tdx_report_new,
+> +	.report_attr_visible = tdx_report_attr_visible,
+> +	.report_bin_attr_visible = tdx_report_bin_attr_visible,
+>  };
+>  
+>  static int __init tdx_guest_init(void)
+> @@ -301,7 +328,7 @@ static int __init tdx_guest_init(void)
+>  		goto free_misc;
+>  	}
+>  
+> -	ret = tsm_register(&tdx_tsm_ops, NULL, NULL);
+> +	ret = tsm_register(&tdx_tsm_ops, NULL);
+>  	if (ret)
+>  		goto free_quote;
+>  
+> diff --git a/drivers/virt/coco/tsm.c b/drivers/virt/coco/tsm.c
+> index d1c2db83a8ca..dedb4f582630 100644
+> --- a/drivers/virt/coco/tsm.c
+> +++ b/drivers/virt/coco/tsm.c
+> @@ -14,7 +14,6 @@
+>  
+>  static struct tsm_provider {
+>  	const struct tsm_ops *ops;
+> -	const struct config_item_type *type;
+>  	void *data;
+>  } provider;
+>  static DECLARE_RWSEM(tsm_rwsem);
+> @@ -252,34 +251,18 @@ static ssize_t tsm_report_auxblob_read(struct config_item *cfg, void *buf,
+>  }
+>  CONFIGFS_BIN_ATTR_RO(tsm_report_, auxblob, NULL, TSM_OUTBLOB_MAX);
+>  
+> -#define TSM_DEFAULT_ATTRS() \
+> -	&tsm_report_attr_generation, \
+> -	&tsm_report_attr_provider
+> -
+>  static struct configfs_attribute *tsm_report_attrs[] = {
+> -	TSM_DEFAULT_ATTRS(),
+> +	[TSM_REPORT_GENERATION] = &tsm_report_attr_generation,
+> +	[TSM_REPORT_PROVIDER] = &tsm_report_attr_provider,
+> +	[TSM_REPORT_PRIVLEVEL] = &tsm_report_attr_privlevel,
+> +	[TSM_REPORT_PRIVLEVEL_FLOOR] = &tsm_report_attr_privlevel_floor,
+>  	NULL,
+>  };
+>  
+> -static struct configfs_attribute *tsm_report_extra_attrs[] = {
+> -	TSM_DEFAULT_ATTRS(),
+> -	&tsm_report_attr_privlevel,
+> -	&tsm_report_attr_privlevel_floor,
+> -	NULL,
+> -};
+> -
+> -#define TSM_DEFAULT_BIN_ATTRS() \
+> -	&tsm_report_attr_inblob, \
+> -	&tsm_report_attr_outblob
+> -
+>  static struct configfs_bin_attribute *tsm_report_bin_attrs[] = {
+> -	TSM_DEFAULT_BIN_ATTRS(),
+> -	NULL,
+> -};
+> -
+> -static struct configfs_bin_attribute *tsm_report_bin_extra_attrs[] = {
+> -	TSM_DEFAULT_BIN_ATTRS(),
+> -	&tsm_report_attr_auxblob,
+> +	[TSM_REPORT_INBLOB] = &tsm_report_attr_inblob,
+> +	[TSM_REPORT_OUTBLOB] = &tsm_report_attr_outblob,
+> +	[TSM_REPORT_AUXBLOB] = &tsm_report_attr_auxblob,
+>  	NULL,
+>  };
+>  
+> @@ -297,21 +280,12 @@ static struct configfs_item_operations tsm_report_item_ops = {
+>  	.release = tsm_report_item_release,
+>  };
+>  
+> -const struct config_item_type tsm_report_default_type = {
+> +static const struct config_item_type tsm_report_type = {
+>  	.ct_owner = THIS_MODULE,
+>  	.ct_bin_attrs = tsm_report_bin_attrs,
+>  	.ct_attrs = tsm_report_attrs,
+>  	.ct_item_ops = &tsm_report_item_ops,
+>  };
+> -EXPORT_SYMBOL_GPL(tsm_report_default_type);
+> -
+> -const struct config_item_type tsm_report_extra_type = {
+> -	.ct_owner = THIS_MODULE,
+> -	.ct_bin_attrs = tsm_report_bin_extra_attrs,
+> -	.ct_attrs = tsm_report_extra_attrs,
+> -	.ct_item_ops = &tsm_report_item_ops,
+> -};
+> -EXPORT_SYMBOL_GPL(tsm_report_extra_type);
+>  
+>  static struct config_item *tsm_report_make_item(struct config_group *group,
+>  						const char *name)
+> @@ -326,12 +300,40 @@ static struct config_item *tsm_report_make_item(struct config_group *group,
+>  	if (!state)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -	config_item_init_type_name(&state->cfg, name, provider.type);
+> +	config_item_init_type_name(&state->cfg, name, &tsm_report_type);
+>  	return &state->cfg;
+>  }
+>  
+> +static bool tsm_report_is_visible(struct config_item *item,
+> +				  struct configfs_attribute *attr, int n)
+> +{
+> +	guard(rwsem_read)(&tsm_rwsem);
+> +	if (!provider.ops)
+> +		return false;
+> +
+> +	if (!provider.ops->report_attr_visible)
+> +		return true;
+> +
+> +	return provider.ops->report_attr_visible(item, attr, n);
+> +}
+> +
+> +static bool tsm_report_is_bin_visible(struct config_item *item,
+> +				      struct configfs_bin_attribute *attr, int n)
+> +{
+> +	guard(rwsem_read)(&tsm_rwsem);
+> +	if (!provider.ops)
+> +		return false;
+> +
+> +	if (!provider.ops->report_bin_attr_visible)
+> +		return true;
+> +
+> +	return provider.ops->report_bin_attr_visible(item, attr, n);
+> +}
+> +
+>  static struct configfs_group_operations tsm_report_group_ops = {
+>  	.make_item = tsm_report_make_item,
+> +	.is_visible = tsm_report_is_visible,
+> +	.is_bin_visible = tsm_report_is_bin_visible,
+>  };
+>  
+>  static const struct config_item_type tsm_reports_type = {
+> @@ -353,16 +355,10 @@ static struct configfs_subsystem tsm_configfs = {
+>  	.su_mutex = __MUTEX_INITIALIZER(tsm_configfs.su_mutex),
+>  };
+>  
+> -int tsm_register(const struct tsm_ops *ops, void *priv,
+> -		 const struct config_item_type *type)
+> +int tsm_register(const struct tsm_ops *ops, void *priv)
+>  {
+>  	const struct tsm_ops *conflict;
+>  
+> -	if (!type)
+> -		type = &tsm_report_default_type;
+> -	if (!(type == &tsm_report_default_type || type == &tsm_report_extra_type))
+> -		return -EINVAL;
+> -
+>  	guard(rwsem_write)(&tsm_rwsem);
+>  	conflict = provider.ops;
+>  	if (conflict) {
+> @@ -372,7 +368,6 @@ int tsm_register(const struct tsm_ops *ops, void *priv,
+>  
+>  	provider.ops = ops;
+>  	provider.data = priv;
+> -	provider.type = type;
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(tsm_register);
+> @@ -384,7 +379,6 @@ int tsm_unregister(const struct tsm_ops *ops)
+>  		return -EBUSY;
+>  	provider.ops = NULL;
+>  	provider.data = NULL;
+> -	provider.type = NULL;
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(tsm_unregister);
+> diff --git a/include/linux/tsm.h b/include/linux/tsm.h
+> index 50c5769657d8..fa19291a9854 100644
+> --- a/include/linux/tsm.h
+> +++ b/include/linux/tsm.h
+> @@ -4,6 +4,7 @@
+>  
+>  #include <linux/sizes.h>
+>  #include <linux/types.h>
+> +#include <linux/configfs.h>
+>  
+>  #define TSM_INBLOB_MAX 64
+>  #define TSM_OUTBLOB_MAX SZ_32K
+> @@ -42,12 +43,40 @@ struct tsm_report {
+>  	u8 *auxblob;
+>  };
+>  
+> +/**
+> + * enum tsm_attr_index - index used to reference report attributes
+> + * @TSM_REPORT_GENERATION: index of the report generation number attribute
+> + * @TSM_REPORT_PROVIDER: index of the provider name attribute
+> + * @TSM_REPORT_PRIVLEVEL: index of the desired privilege level attribute
+> + * @TSM_REPORT_PRIVLEVEL_FLOOR: index of the minimum allowed privileg level attribute
+> + */
+> +enum tsm_attr_index {
+> +	TSM_REPORT_GENERATION,
+> +	TSM_REPORT_PROVIDER,
+> +	TSM_REPORT_PRIVLEVEL,
+> +	TSM_REPORT_PRIVLEVEL_FLOOR,
+> +};
+> +
+> +/**
+> + * enum tsm_bin_attr_index - index used to reference binary report attributes
+> + * @TSM_REPORT_INBLOB: index of the binary report input attribute
+> + * @TSM_REPORT_OUTBLOB: index of the binary report output attribute
+> + * @TSM_REPORT_AUXBLOB: index of the binary auxiliary data attribute
+> + */
+> +enum tsm_bin_attr_index {
+> +	TSM_REPORT_INBLOB,
+> +	TSM_REPORT_OUTBLOB,
+> +	TSM_REPORT_AUXBLOB,
+> +};
+> +
+>  /**
+>   * struct tsm_ops - attributes and operations for tsm instances
+>   * @name: tsm id reflected in /sys/kernel/config/tsm/report/$report/provider
+>   * @privlevel_floor: convey base privlevel for nested scenarios
+>   * @report_new: Populate @report with the report blob and auxblob
+>   * (optional), return 0 on successful population, or -errno otherwise
+> + * @report_attr_visible: show or hide a report attribute entry
+> + * @report_bin_attr_visible: show or hide a report binary attribute entry
+>   *
+>   * Implementation specific ops, only one is expected to be registered at
+>   * a time i.e. only one of "sev-guest", "tdx-guest", etc.
+> @@ -56,14 +85,12 @@ struct tsm_ops {
+>  	const char *name;
+>  	unsigned int privlevel_floor;
+>  	int (*report_new)(struct tsm_report *report, void *data);
+> +	bool (*report_attr_visible)(struct config_item *item,
+> +				    struct configfs_attribute *attr, int n);
+> +	bool (*report_bin_attr_visible)(struct config_item *item,
+> +					struct configfs_bin_attribute *attr, int n);
+>  };
+>  
+> -extern const struct config_item_type tsm_report_default_type;
+> -
+> -/* publish @privlevel, @privlevel_floor, and @auxblob attributes */
+> -extern const struct config_item_type tsm_report_extra_type;
+> -
+> -int tsm_register(const struct tsm_ops *ops, void *priv,
+> -		 const struct config_item_type *type);
+> +int tsm_register(const struct tsm_ops *ops, void *priv);
+>  int tsm_unregister(const struct tsm_ops *ops);
+>  #endif /* __TSM_H */
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
