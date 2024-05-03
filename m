@@ -1,97 +1,239 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C54914F9FD;
-	Fri,  3 May 2024 10:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4082A150981;
+	Fri,  3 May 2024 10:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714731582; cv=none; b=TKQAO6S3iH9rOfu8lNKzMn3/WqRreyZSIiQ3qufeeVAkjcmaI72ucYHH2wHMHjd4ppNm7xuvx34eYm++K5m4SzIgGKYOiTEQNuBFHJxhRzZFj2uxlVwa2nSWkH38uNuYuDuTTxXKi4rf7g1kYq36bcrZa4Z1P90yVqVagHU6QJY=
+	t=1714731817; cv=none; b=JIB5RBEndqfG47m6OEg2ulzK/G0dE7tcTrqzJJ5BWRyqgw8w/vkIbCWg5B2BUjZROqmK6BfAGZ7SZ/b8c+Xx0Io8RxQsjC3dPYwQZOkGEFaPYvfCzZ85ifhbbQH1Fz+vOauabBXfxu3Z7R8+aV1VD+wg4Xh2qtYaIlBDwlUMOeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714731582; c=relaxed/simple;
-	bh=CwbRZryxDvSIlBPZ/SNUliy+TfASd/RcVyRRmY5+U0c=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ua6H5g3ph9wHFWcr13aASpx84S70zdFMV/ZOL/8EKEE98/g7OJDYnrA1dkKqLdr5MRdcvmbAiSaScLaMDlrVnonBY9J9TU/2GxrpRbRUi3tkce1MMosJZH2q2esvUBvxNNOt0V0V/W+n6VturY2CcpxrM6/OEIOwI8f09vGgNU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 443AJ5byC3408017, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 443AJ5byC3408017
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 3 May 2024 18:19:05 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 3 May 2024 18:19:06 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 3 May 2024 18:19:05 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Fri, 3 May 2024 18:19:05 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Simon Horman <horms@kernel.org>
-CC: "kuba@kernel.org" <kuba@kernel.org>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        Ping-Ke Shih <pkshih@realtek.com>, Larry Chiu <larry.chiu@realtek.com>
-Subject: RE: [PATCH net-next v17 02/13] rtase: Implement the .ndo_open function
-Thread-Topic: [PATCH net-next v17 02/13] rtase: Implement the .ndo_open
- function
-Thread-Index: AQHanHHZpNHx0voP+0CDD26jysJVP7GEr5aAgACdBfA=
-Date: Fri, 3 May 2024 10:19:05 +0000
-Message-ID: <3199bfed19ad4e0bb8ca868b6c46588a@realtek.com>
-References: <20240502091847.65181-1-justinlai0215@realtek.com>
- <20240502091847.65181-3-justinlai0215@realtek.com>
- <20240503085257.GM2821784@kernel.org>
-In-Reply-To: <20240503085257.GM2821784@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1714731817; c=relaxed/simple;
+	bh=fHtHD+g9ZeMccn+bieIn+XHwW1USx6/ejeg+8z6817o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+xMg/dxYXJ93cLJmJRNULoU/L5NMZbNINp6ecejrvTp3IFCvbyqSziBzSckMAvCB9fH4YiYdQaPYd3iYLePc+P01UyY6iudTuOOi/uxQnJ0aRYtGKkUZSNITIWfLJjwtRkGJdisj4C0VWZd9NBw1xZff9vAF0CIPfIfjYjSpmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eHBR2JW9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+IWhWpVd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eHBR2JW9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+IWhWpVd; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eHBR2JW9";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+IWhWpVd";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eHBR2JW9";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+IWhWpVd"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4F6B5337BF;
+	Fri,  3 May 2024 10:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1714731813; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fbe1RMkmxuSQr7773iy44PO+z9CJb3ltRRFeG3he+PM=;
+	b=eHBR2JW91Cub5ghh08YZgv0gotBMYgWmUYcxm0nc9ddIdpMtjYHkaYiB/MdBy0g6WtZgj1
+	KZ3g1iVOEgzaZU2saWuY1aBCD3cbRhd4rm9yb1sL0GHhiuWxsFx+COGId8Eoaf8BiZK12n
+	ahBepk7qxjL0DG9Q74e3fsl95DgSY70=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1714731813;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fbe1RMkmxuSQr7773iy44PO+z9CJb3ltRRFeG3he+PM=;
+	b=+IWhWpVd47hr9VNZX2IscVXbEBcjuy7zjRj+/nMQu0vqKOtif3k8gsV8PvkC2ww6YpjlLl
+	QBgO0uEWI3hXBNCQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=eHBR2JW9;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=+IWhWpVd
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1714731813; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fbe1RMkmxuSQr7773iy44PO+z9CJb3ltRRFeG3he+PM=;
+	b=eHBR2JW91Cub5ghh08YZgv0gotBMYgWmUYcxm0nc9ddIdpMtjYHkaYiB/MdBy0g6WtZgj1
+	KZ3g1iVOEgzaZU2saWuY1aBCD3cbRhd4rm9yb1sL0GHhiuWxsFx+COGId8Eoaf8BiZK12n
+	ahBepk7qxjL0DG9Q74e3fsl95DgSY70=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1714731813;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fbe1RMkmxuSQr7773iy44PO+z9CJb3ltRRFeG3he+PM=;
+	b=+IWhWpVd47hr9VNZX2IscVXbEBcjuy7zjRj+/nMQu0vqKOtif3k8gsV8PvkC2ww6YpjlLl
+	QBgO0uEWI3hXBNCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 40A2613991;
+	Fri,  3 May 2024 10:23:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 8Lm/DyW7NGZeRAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 03 May 2024 10:23:33 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id CF584A0A12; Fri,  3 May 2024 12:23:28 +0200 (CEST)
+Date: Fri, 3 May 2024 12:23:28 +0200
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: Jan Kara <jack@suse.cz>, tytso@mit.edu,
+	syzbot <syzbot+dd43bd0f7474512edc47@syzkaller.appspotmail.com>,
+	adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, nathan@kernel.org, ndesaulniers@google.com,
+	ritesh.list@gmail.com, syzkaller-bugs@googlegroups.com,
+	trix@redhat.com, yangerkun <yangerkun@huawei.com>
+Subject: Re: [syzbot] [ext4?] WARNING in mb_cache_destroy
+Message-ID: <20240503102328.cstcauc5qakmk2bg@quack3>
+References: <00000000000072c6ba06174b30b7@google.com>
+ <0000000000003bf5be061751ae70@google.com>
+ <20240502103341.t53u6ya7ujbzkkxo@quack3>
+ <dca44ba5-5c33-05ef-d9de-21a84f9d7eaa@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dca44ba5-5c33-05ef-d9de-21a84f9d7eaa@huawei.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.51
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 4F6B5337BF
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[dd43bd0f7474512edc47];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[suse.cz,mit.edu,syzkaller.appspotmail.com,dilger.ca,vger.kernel.org,lists.linux.dev,kernel.org,google.com,gmail.com,googlegroups.com,redhat.com,huawei.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	SUBJECT_HAS_QUESTION(0.00)[]
 
-> On Thu, May 02, 2024 at 05:18:36PM +0800, Justin Lai wrote:
-> > Implement the .ndo_open function to set default hardware settings and
-> > initialize the descriptor ring and interrupts. Among them, when
-> > requesting irq, because the first group of interrupts needs to process
-> > more events, the overall structure will be different from other groups
-> > of interrupts, so it needs to be processed separately.
-> >
-> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
->=20
-> Hi Justin,
->=20
-> some minor feedback from my side.
->=20
-> > +static int rtase_open(struct net_device *dev) {
-> > +     struct rtase_private *tp =3D netdev_priv(dev);
-> > +     struct rtase_int_vector *ivec =3D &tp->int_vector[0];
-> > +     const struct pci_dev *pdev =3D tp->pdev;
-> > +     u16 i, j;
-> > +     int ret;
->=20
-> nit: please use reverse xmas tree order - longest line to shortest -
->      for local variable declarations in new Networking code.
->=20
-Hi Simon,
-This is partly because ivec needs to use tp for initialization,
-so tp is placed in front of ivec, causing this situation.
+Hi!
+
+On Fri 03-05-24 17:51:07, Baokun Li wrote:
+> On 2024/5/2 18:33, Jan Kara wrote:
+> > On Tue 30-04-24 08:04:03, syzbot wrote:
+> > > syzbot has bisected this issue to:
+> > > 
+> > > commit 67d7d8ad99beccd9fe92d585b87f1760dc9018e3
+> > > Author: Baokun Li <libaokun1@huawei.com>
+> > > Date:   Thu Jun 16 02:13:56 2022 +0000
+> > > 
+> > >      ext4: fix use-after-free in ext4_xattr_set_entry
+> > So I'm not sure the bisect is correct since the change is looking harmless.
+> Yes, the root cause of the problem has nothing to do with this patch,
+> and please see the detailed analysis below.
+> > But it is sufficiently related that there indeed may be some relationship.
+> > Anyway, the kernel log has:
+> > 
+> > [   44.932900][ T1063] EXT4-fs warning (device loop0): ext4_evict_inode:297: xattr delete (err -12)
+> > [   44.943316][ T1063] EXT4-fs (loop0): unmounting filesystem.
+> > [   44.949531][ T1063] ------------[ cut here ]------------
+> > [   44.955050][ T1063] WARNING: CPU: 0 PID: 1063 at fs/mbcache.c:409 mb_cache_destroy+0xda/0x110
+> > 
+> > So ext4_xattr_delete_inode() called when removing inode has failed with
+> > ENOMEM and later mb_cache_destroy() was eventually complaining about having
+> > mbcache entry with increased refcount. So likely some error cleanup path is
+> > forgetting to drop mbcache entry reference somewhere but at this point I
+> > cannot find where. We'll likely need to play with the reproducer to debug
+> > that. Baokun, any chance for looking into this?
+> > 
+> > 								Honza
+> As you guessed, when -ENOMEM is returned in ext4_sb_bread(),
+> the reference count of ce is not properly released, as follows.
+> 
+> ext4_create
+>  __ext4_new_inode
+>   security_inode_init_security
+>    ext4_initxattrs
+>     ext4_xattr_set_handle
+>      ext4_xattr_block_find
+>      ext4_xattr_block_set
+>       ext4_xattr_block_cache_find
+>         ce = mb_cache_entry_find_first
+>             __entry_find
+>             atomic_inc_not_zero(&entry->e_refcnt)
+>         bh = ext4_sb_bread(inode->i_sb, ce->e_value, REQ_PRIO);
+>         if (PTR_ERR(bh) == -ENOMEM)
+>             return NULL;
+> 
+> Before merging into commit 67d7d8ad99be("ext4: fix use-after-free
+> in ext4_xattr_set_entry"), it will not return early in
+> ext4_xattr_ibody_find(),
+> so it tries to find it in iboy, fails the check in xattr_check_inode() and
+> returns without executing ext4_xattr_block_find(). Thus it will bisect
+> the patch, but actually has nothing to do with it.
+> 
+> ext4_xattr_ibody_get
+>  xattr_check_inode
+>   __xattr_check_inode
+>    check_xattrs
+>     if (end - (void *)header < sizeof(*header) + sizeof(u32))
+>       "in-inode xattr block too small"
+> 
+> Here's the patch in testing, I'll send it out officially after it is tested.
+> (PS:  I'm not sure if propagating the ext4_xattr_block_cache_find() errors
+> would be better.)
+
+Great! Thanks for debugging this! Some comments to your fix below:
+
+> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+> index b67a176bfcf9..5c9e751915fd 100644
+> --- a/fs/ext4/xattr.c
+> +++ b/fs/ext4/xattr.c
+> @@ -3113,11 +3113,10 @@ ext4_xattr_block_cache_find(struct inode *inode,
+> 
+>          bh = ext4_sb_bread(inode->i_sb, ce->e_value, REQ_PRIO);
+>          if (IS_ERR(bh)) {
+> -            if (PTR_ERR(bh) == -ENOMEM)
+> -                return NULL;
+> +            if (PTR_ERR(bh) != -ENOMEM)
+> +                EXT4_ERROR_INODE(inode, "block %lu read error",
+> +                         (unsigned long)ce->e_value);
+>              bh = NULL;
+> -            EXT4_ERROR_INODE(inode, "block %lu read error",
+> -                     (unsigned long)ce->e_value);
+>          } else if (ext4_xattr_cmp(header, BHDR(bh)) == 0) {
+>              *pce = ce;
+>              return bh;
+
+So if we get the ENOMEM error, continuing the iteration seems to be
+pointless as we'll likely get it for the following entries as well. I think
+the original behavior of aborting the iteration in case of ENOMEM is
+actually better. We just have to do mb_cache_entry_put(ea_block_cache, ce)
+before returning...
+
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
