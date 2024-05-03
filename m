@@ -1,252 +1,244 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CE374407;
-	Wed,  8 May 2024 09:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715159487; cv=fail; b=GYp7p1MsUNHOqBlgzxRYCw3Cs613Pi2p+hl13S88u6noaE7sfblzbICUHLa7P1mAwdA4g/E8nyMUVdVZ1KBBI8V9WJFH35xmtnXtIVAr/xIrjPGaB/B/rbUyLM5rftF9fUN9pojpNOZoxBCPPVDCjPSzQCSoaTnxne/xyvmIxYk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715159487; c=relaxed/simple;
-	bh=xS768L9Rao6jyTpUYZQk/BFXHKfrc7rO4jZb/QdjLk4=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HqJjWaxzosi6kKtlF6sV7+UB3Z278jK+J4mHR7QN4z8QTWG6C8pNdG8Ykis6bTUoYrSRivzXrYFIOdVcCe4yWdh3Wtgc9GQlW7i8TApgLNek0sC22gGp3WTKmXW/MT8hYeAeZLiJ5gUZJMNPDnysYjVxuaYJUzvtUqgo9RfNGjw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O/UmfhNA; arc=fail smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O/UmfhNA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715159485; x=1746695485;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=xS768L9Rao6jyTpUYZQk/BFXHKfrc7rO4jZb/QdjLk4=;
-  b=O/UmfhNALYRBCI5BxC3PXXnDRomU89xyZu6/+fvw8g0Hcsbf89rc4OFh
-   jTZDJtxgBUHuSYdpfeiMn4zggJpw8+yTShfcz+8L1iwvw8yybQx4dVSPP
-   I41YDjiM+o1PySv9y3Ug8jjP1q4IVn9ZZx7nOkFenWiLvLn8ShgkreMTP
-   kn2nF5iCtIE8m8VfIBbVxdKMr153jB//SfreOLzgxMJdPkx+RPp9glpN1
-   zjjO+uSs/pvYoW/5WNmBwafbkMJusxLMMeiJ0DW87ssD2TgQcU5V7eFis
-   kxi+cV1qtkUFIpsj3eEh+2TT+bBMOw4xUHpqLETtJCDoKioiqwg3UqYay
-   g==;
-X-CSE-ConnectionGUID: jUTHnKkYSyOlLSHmVazykw==
-X-CSE-MsgGUID: k6GMA0mFRB+mtQP1vwtuDg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="14811025"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="14811025"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 02:11:24 -0700
-X-CSE-ConnectionGUID: oIgPRUTTQTC6fAhUmSJIAw==
-X-CSE-MsgGUID: c7Akn3R8SrG936chhy+DCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="59679512"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 May 2024 02:11:25 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 8 May 2024 02:11:23 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 8 May 2024 02:11:23 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 8 May 2024 02:11:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M5YNIp1wGQhpNTRh8P1sKPZVVzBO/476DIv7YtTpFb/DExICPC1X5nm2sYg2bVep1B1QALsjnUjSDllPjLcwJQiM+lmAzcCplUY/BETcNtUzA00l57IhuWjuExiwPxN/f2/ulDT9YCnNEU+xg/0AUU1PGxgo86V9Fn/BjRlpV3HPuAjd0RX5TqbuwU22O9fki0VXfJru4/QQLNcnhp+2zMNUN4p1qs8wqBswko5db6NQnDM5HsM0CHYHQ0HmWfKn+rXl5rggXwqAtb/fVvezP3dBy1wLAKFpGaOixbmlEXmzHzgoEjoJ8mtlwSyFdd55z4jylIRtkm6zcNFFFBy87Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AOZyb1jUsPNvQkMJl1rxYEYy8a1p9iZqwSIITxg21MQ=;
- b=O2FZzSrEOK53QTVc9SuRyGPobLFg7s5xgtwknpkSKT3FZjOG9PQoNKAa8inlFzByd6rn4XE/7ttXiC0UT0q1XJrHID7Qj2dkh3VIz2DwggiW4jq9uo65ZA+NsAPhTEXvAhGCuK3shGZ1vXSKpOfdx3d6f59+ZfvVld/6QdIxD4Ru0jDIusJTQEFBAPtKNSiutpASsDq7GuMv+0O+9+S6O4MPDa809DKXJzA+OqDj8ed4AdHqLyt70clrtYPvd+fnffFZ48C/ij/XdsSEGNlZIkDAfSxidVWHFNrhv+9J91sm4jRRjWrV9bpiVHDQ9FZwmXme29Xb15WG6kIWJNVUjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by PH0PR11MB7421.namprd11.prod.outlook.com (2603:10b6:510:281::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Wed, 8 May
- 2024 09:11:15 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808%4]) with mapi id 15.20.7544.041; Wed, 8 May 2024
- 09:11:15 +0000
-Message-ID: <90fd7cd7-72dc-4df6-88ec-fbc8b64735ad@intel.com>
-Date: Wed, 8 May 2024 11:10:46 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] netdevice: define and allocate &net_device
- _properly_
-To: Eric Dumazet <edumazet@google.com>
-CC: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Kees Cook <keescook@chromium.org>, "Gustavo
- A. R. Silva" <gustavoars@kernel.org>, Simon Horman <horms@kernel.org>,
-	<nex.sw.ncis.osdt.itp.upstreaming@intel.com>,
-	<linux-hardening@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240507123937.15364-1-aleksander.lobakin@intel.com>
- <CANn89iLANEp-tjkKSawPTmH8DxaSQZ_OoJaAYHjLPkmwGEJ6nw@mail.gmail.com>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Content-Language: en-US
-In-Reply-To: <CANn89iLANEp-tjkKSawPTmH8DxaSQZ_OoJaAYHjLPkmwGEJ6nw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZR2P278CA0064.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:52::18) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB05171B49;
+	Wed,  8 May 2024 09:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715159576; cv=none; b=CC90jSLE3u9kYvcajjPU8qrSSdpi4oDBEBhMIHJzoKPT0K71VvEe31toFBcrb5PZqvfIuL50zklBqG8/QA80Ue7OE76BIV5xnjWWWwYwcmsP7eFnSHW9jMzPvmcWqMIPcOZkQ7H7dnfw/BFXL5ZVkBMCYrNxN2H7NrHr4gmz8+8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715159576; c=relaxed/simple;
+	bh=6XVaT/rOwjD6l7J+zEX/991xLR3yWl6JEhyuKgB9bEE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rn1LU82gR4fozlFHz5/VKh5uWP+W4xvUArSkaYBQWJwwNpMsiZ/mlI7DxBmkgdAiqdxbC2qNiscuiQftVxwjoz3xFYvaHngGhkWwsVigKR8nepcUwkvh3yiuxBFevh8kaLztgdzzXBanek9H8ADqsxPApMcvHbprLPzivoIJrPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZ8VL0CLvz6K63J;
+	Wed,  8 May 2024 17:09:46 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 35040140B2A;
+	Wed,  8 May 2024 17:12:51 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 8 May
+ 2024 10:12:50 +0100
+Date: Fri, 3 May 2024 10:52:45 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: John Groves <John@groves.net>
+CC: Dongsheng Yang <dongsheng.yang@easystack.cn>, Gregory Price
+	<gregory.price@memverge.com>, Dan Williams <dan.j.williams@intel.com>,
+	<axboe@kernel.dk>, <linux-block@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>
+Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
+Message-ID: <20240503105245.00003676@Huawei.com>
+In-Reply-To: <wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
+References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+	<66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
+	<ZikhwAAIGFG0UU23@memverge.com>
+	<bbf692ec-2109-baf2-aaae-7859a8315025@easystack.cn>
+	<ZiuwyIVaKJq8aC6g@memverge.com>
+	<98ae27ff-b01a-761d-c1c6-39911a000268@easystack.cn>
+	<ZivS86BrfPHopkru@memverge.com>
+	<8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
+	<wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|PH0PR11MB7421:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2c73d623-b1bc-4dc4-4701-08dc6f3ed02b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|376005|366007|1800799015;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?aTBCL0lSUEh1WGZtSDlYTnlkSnE3Q1lhY3ppbWVTelBJcHQ2WFR6VnBubEdL?=
- =?utf-8?B?SzREOXB5UVhYdmRlSy9Md0ZXS2JtQm5GZ1lvQVlRK242SzBkMkRPay9JTzdm?=
- =?utf-8?B?SjNOQlo0TzZXemlEVTZMb3M5MEMyNGRKK3lIeVd2aFlTeHlXRHZHckptNHdy?=
- =?utf-8?B?V3h5MDJxRFBTS01CdURIZmFnTHlncjl1MWk1cG43S2NLbzFsdGd6Z3c0dXBi?=
- =?utf-8?B?NTZPbzVmdm9wbDlNMG00QVJEYzVkU242M0tlN0ZacnBCSGx0aGdZT1VVcmpq?=
- =?utf-8?B?UXhtY2tVNCs1amVuS2Z1ekhwK085eTkyUUUxR1FNcldSNW5pU0U2NzF5alBT?=
- =?utf-8?B?aE8yaGI0ck1aRmU1NlZRdmtmNTJ1bjY1cnVleDdmY2JwQTdER3hIZE9QN2J5?=
- =?utf-8?B?alpHK2pWVHRSWm9MZ1FTWGQ1eDhHZ3pLVnd3QVZlWFk1MEZ2WmgwRFd3ZWVJ?=
- =?utf-8?B?NmEyTmxXYkRlQnRqRGRCNVdNaEJmNG94WVFCdHdER0hxT1NtRTY1TEFabmZt?=
- =?utf-8?B?SXNzbXdDWXowMzVHYkhiNEpkMXVVQTg4dnFNWTc4OUZDOWRBb0lGRDl0am9k?=
- =?utf-8?B?em5CdWl0clhIa1R6NFIwTFBCQnpSN3ZLaGhPcEFjQlM2RmpPZ0psMVBMMHN5?=
- =?utf-8?B?VXF3ZzlPVGhRQ21USHRZZEJWSVZXRlp3dXZQUDc4OWdDdERQemdnc0hRcWNs?=
- =?utf-8?B?UXlLQmVtWUV6T0E1bHJEa1ppcEd6WXBpOFU0T2djS0JscnNTdWxENFZBUHpS?=
- =?utf-8?B?cndPSFRyT2tlaTJhUnNWQ2VZb3JyM3FsUGR5VkVPWGxIYldDaWQxcndGTGNR?=
- =?utf-8?B?SnpmVm9VMDY3cWQwcjBYY1ZQWFpxNGZYNmZpd0pkYVpReHFwL28rY1hDamNV?=
- =?utf-8?B?dUd0aDFNR2ZwaFRKTWFkbktnenJrdmNCM0NYOVNMcU80MlV6dUFUZFhGRTYr?=
- =?utf-8?B?WEZwSkk3MjhNOVUwZ1pwWldIaXJucVVqb1N0ZUZEZEVjbG1XYWtXNU9KTGdE?=
- =?utf-8?B?bkEwWnBKQ0MveDlRTzQvSUVNSVh5TVhsaVBvR0ZHbHFya2lBbWNRZFNMaXFr?=
- =?utf-8?B?UlNWUC8wYnNvSXUvTThUQms2OElFSlJ4M29yS3BGRXUra0RGZWRrRHpQM2NX?=
- =?utf-8?B?cEc3TGFxa3RISE5CZVpnNXg0SnF6dTdoWnAxamtuME4wV1JPeFh0UHhhbC9j?=
- =?utf-8?B?OU9wSHR1ZiswMTBBQ0V6c2VHcjN3S0VjR3F1SFVES3VvOFFzWFlpSVA5WDVn?=
- =?utf-8?B?bEhNQktTV3RVclRId1BXZ0FUaFpYVEExbW5MdUhmYzdUMzdQQ1lIYSsvalZi?=
- =?utf-8?B?QWREdHNZWHBEUklhVjVqcE85azJmUTBsRmdqU05zZy9aWkc5cXc2QUZEb1p6?=
- =?utf-8?B?czZKRzBEc3k3Z0tiNXN3RUIvS0pNeWlTcWxBeHJqV1ZPMU9KczNFNHdnd3JB?=
- =?utf-8?B?aUR6Nk4wOEF2YUpQME5HQ3BHMTN1ZmhCdk1BTjlDZkczWG4wUUJIbkFDVXZh?=
- =?utf-8?B?cFE3V2JjY0pVNEY1RFRZTjB6UmI3Yko4UWZBdjc4bGI3eFpBS0VlT1Jzcktm?=
- =?utf-8?B?ZDVHM0pTSkJaQXBqODJ3Ump1a3N2ZmkraHB3bHM5WU9JK3pJL2p4UUg4R0d1?=
- =?utf-8?B?Mm9TQzZjTU5qMHZkMlNUd29pYWRkNXpHNXhtOTh1NzFZTEMrNVBqMUpHMmFj?=
- =?utf-8?B?U1BrUmpVL1p3QmlDSWhZSWZXY0JUVHdkbkt5blpkWENVem04MnptclZBPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V2JaT3dRMllaMmUydVVPNlFBaEVlUFdqMVNaR0NhYkJmR21BK0tWWFdEV3Qr?=
- =?utf-8?B?NUd1UHRBbThmRHlYSWsxbFVGM0JLbzRLZHViYlgvQUZoaUNyOUtJdkR4UXdV?=
- =?utf-8?B?WnJIYnIyejNLcWVBNzZVQ0pybDFzSWd6eUpsbGlPQjhSWlBtNHNPTWdzTlVv?=
- =?utf-8?B?TnJONzVuTVorNE9yZE9FOGpjTmhlYzJpblhqaEJoTjAvV0NiaXpSNkxkdWto?=
- =?utf-8?B?NU9acURLSDFFaEZ5U1dJOVNhYmpQY2VYdUF0bkwzd2htN2tKMk9XbCtvWDBv?=
- =?utf-8?B?T1VwNktnTytxdUJraDNMSjJvdTRXOVFwYW1VSDZqUi9MUWdlcy9zV2xROVZX?=
- =?utf-8?B?V2xBZ2l0S0p1YWkvTEJLTFJiWmE2ZTVWK1FhZ042REtxTVBEOG4yNStLOGsr?=
- =?utf-8?B?RXZ1bHBUK0xLUHRzaFlkTUZDZ2lnQTg3L1JtQkd5aWhUeWtNdVJMaTA4VHFu?=
- =?utf-8?B?VU1jRUJrZWNpenRxWVpQM05PUEdaT2x5enFHVE8xUHVHNHZTSE05OTR4YTlH?=
- =?utf-8?B?N2J0RFluam5wSkh2R1I5R3A3MzFvNlI5SXBvZE1ic3Z6M2paeCtFSGlTSG0y?=
- =?utf-8?B?a1FwWm9xbmd5MldpT1NvaWNYUEowTEdPQnFuVHNLdHdSYVAyMHo4RllNc00y?=
- =?utf-8?B?QUhNZ2ZLMDVlUitML3ozQXZuQ0NIOFoxK2k3Q29NRWxyeTg4M09kdjFLeSs2?=
- =?utf-8?B?MjhYck1kbUZLYUN0TVdEZmtablM4ZnRHK3NFbTREY3d5SHRKOW9EaWpxeSt2?=
- =?utf-8?B?MnBUM3V6TTdUZWRtUHZmT3lPVEJBQXcwU3NSUHM4Z3lwVWdWejZJSlFYN1RT?=
- =?utf-8?B?ZHBDamNFQ2tVTmloSEVramF6WlFHa0J2VkNrQ3NxaXdRMHNJSWJDK0JvRUNI?=
- =?utf-8?B?SHlQTVZIanA3MTBDSkxwTTFWR2lub05uVXV2YW9SZ3o4L3Q2ZTNVb2RQQ00r?=
- =?utf-8?B?T1hHazBUNmlRRUVIbzNOdE5YSHVWVTJES1BXWXExNEZIN2p5SHdWMmJjam5t?=
- =?utf-8?B?blJMMHU3ZW9BL25HU0xIVzZoYjhhMmJ0Q2k5dEtLNE5raXJKNVVVeW9hMUxH?=
- =?utf-8?B?RnJTcC9TRXBVMHMrQitPTVBxUzB2bEhuZzFvOXJONk50NndhTFZzeXZQNWM1?=
- =?utf-8?B?d2ZwVng3YWFsdko2OGxaenhyMjVSWWErNGl2dVJkYjYyaGdXb1dOaTM2MWgr?=
- =?utf-8?B?S2VTU3A3cWZGbHMwSzRMSCtucjNQY0F4c29SM2pkMklRMHNuVEphcEROSmMx?=
- =?utf-8?B?amg0VUxuRWEvRzJUWTg5ZjhuTWh1RFJxVHk4MlVvSnFqb0RzZmZzazFGUVZY?=
- =?utf-8?B?SzJkZGIvNkVDaSthTERublVycWpIQkN4ZkhlalZzb3JSYXpDd1lUTElnbFZY?=
- =?utf-8?B?Y3ZXYjdQWkVwQU5WMmNrTkRyc3YzandBWWZTQzlyTERENnBGOVR6WVhUazZL?=
- =?utf-8?B?bHJDN3FLQVYwbVl4S0xNck9hSVE4WGZrdXZ1cmZpUitKc242ZzhBL2lnbDVw?=
- =?utf-8?B?eEdNY3VwRE4xVi9LS2o1cFNnekJTUG1JNG9VbHB5bWYyNldmNXNsdUFpeXNY?=
- =?utf-8?B?UnBGSkhlRHF3bGpTZnJ4cndVM09xTU5DY1YwUlZBblcxRCs0Q09YN3QxODNu?=
- =?utf-8?B?SDFGdDZBTDNuOUpsNXo1cElzNHk3elB5VDBFR2JFTFJCZjhxWnJIT2V0Qnda?=
- =?utf-8?B?aStRNE8xZGR4UzI2ZUEyYmRSdllPUVdtcGcyRFh5Skt2T2QzbXNaNllGUFVw?=
- =?utf-8?B?R1BUTk9Wd1RpdnlBTnlzUUlLb3lqd2xma1BBK0F1aGhBTExTN0FKRXhIU1Yz?=
- =?utf-8?B?ZEo1R1oxaGEydHBkMVFoOXF2Q2Fha0RWYmJmUXhTLzdRS2x6NEtucVg1M3k2?=
- =?utf-8?B?NTV2VUhnQmI1ek82NmtOWTRCRVBuejJFTDhHVmZXdnBlTnVVVkUxNkN1dHlQ?=
- =?utf-8?B?dENaTFkrZXpQUldmV0VTWStiL3IzaUQveExWaURpb0RGRzhZVHpBMGxqb3RR?=
- =?utf-8?B?bkVnM0NZL2VvRElPdWlSMVR1NnVYNUZkVWcwdVRhcW5iUGcwenZXT29ObnVJ?=
- =?utf-8?B?QjhtQ3J5SWwvUmR4STRNQ3NlZ3U1R0pPTUlZVGc0WHNHTFppUldROTVTVkRh?=
- =?utf-8?B?Rjc4MmpRSlUvZk5DMXhzUFFDNHRXQ2U4eWpOUS9kalpEMUx2VkY1dTVpS3ow?=
- =?utf-8?B?RVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c73d623-b1bc-4dc4-4701-08dc6f3ed02b
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 09:11:15.3171
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1L+wmnOesKJ41Ld/maM64caiYZJForZcfSqlebDdpirEP4DY6tf5k9eptDDFzxTcehZOOhxYE6/wNRzE4DBcEJCgyp1lsg3wIrxHTvUYcOU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7421
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 7 May 2024 20:21:58 +0200
+On Sun, 28 Apr 2024 11:55:10 -0500
+John Groves <John@groves.net> wrote:
 
-> On Tue, May 7, 2024 at 2:40 PM Alexander Lobakin
-> <aleksander.lobakin@intel.com> wrote:
->>
->> In fact, this structure contains a flexible array at the end, but
->> historically its size, alignment etc., is calculated manually.
->> There are several instances of the structure embedded into other
->> structures, but also there's ongoing effort to remove them and we
->> could in the meantime declare &net_device properly.
->> Declare the array explicitly, use struct_size() and store the array
->> size inside the structure, so that __counted_by() can be applied.
->> Don't use PTR_ALIGN(), as SLUB itself tries its best to ensure the
->> allocated buffer is aligned to what the user expects.
->> Also, change its alignment from %NETDEV_ALIGN to the cacheline size
->> as per several suggestions on the netdev ML.
->>
->> bloat-o-meter for vmlinux:
->>
->> free_netdev                                  445     440      -5
->> netdev_freemem                                24       -     -24
->> alloc_netdev_mqs                            1481    1450     -31
->>
->> On x86_64 with several NICs of different vendors, I was never able to
->> get a &net_device pointer not aligned to the cacheline size after the
->> change.
->>
->> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
->> ---
-> 
-> ...
-> 
->> -       p = kvzalloc(alloc_size, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
->> -       if (!p)
->> +       sizeof_priv = ALIGN(sizeof_priv, SMP_CACHE_BYTES);
-> 
-> If we have a __counted_by(priv_len), why do you ALIGN(sizeof_priv,
-> SMP_CACHE_BYTES) ?
+> On 24/04/28 01:47PM, Dongsheng Yang wrote:
+> >=20
+> >=20
+> > =E5=9C=A8 2024/4/27 =E6=98=9F=E6=9C=9F=E5=85=AD =E4=B8=8A=E5=8D=88 12:1=
+4, Gregory Price =E5=86=99=E9=81=93: =20
+> > > On Fri, Apr 26, 2024 at 10:53:43PM +0800, Dongsheng Yang wrote: =20
+> > > >=20
+> > > >=20
+> > > > =E5=9C=A8 2024/4/26 =E6=98=9F=E6=9C=9F=E4=BA=94 =E4=B8=8B=E5=8D=88 =
+9:48, Gregory Price =E5=86=99=E9=81=93: =20
+> > > > >  =20
+> > > >=20
+> > > > In (5) of the cover letter, I mentioned that cbd addresses cache co=
+herence
+> > > > at the software level:
+> > > >=20
+> > > > (5) How do blkdev and backend interact through the channel?
+> > > > 	a) For reader side, before reading the data, if the data in this c=
+hannel
+> > > > may be modified by the other party, then I need to flush the cache =
+before
+> > > > reading to ensure that I get the latest data. For example, the blkd=
+ev needs
+> > > > to flush the cache before obtaining compr_head because compr_head w=
+ill be
+> > > > updated by the backend handler.
+> > > > 	b) For writter side, if the written information will be read by ot=
+hers,
+> > > > then after writing, I need to flush the cache to let the other part=
+y see it
+> > > > immediately. For example, after blkdev submits cbd_se, it needs to =
+update
+> > > > cmd_head to let the handler have a new cbd_se. Therefore, after upd=
+ating
+> > > > cmd_head, I need to flush the cache to let the backend see it.
+> > > >  =20
+> > >=20
+> > > Flushing the cache is insufficient.  All that cache flushing guarante=
+es
+> > > is that the memory has left the writer's CPU cache.  There are potent=
+ially
+> > > many write buffers between the CPU and the actual backing media that =
+the
+> > > CPU has no visibility of and cannot pierce through to force a full
+> > > guaranteed flush back to the media.
+> > >=20
+> > > for example:
+> > >=20
+> > > memcpy(some_cacheline, data, 64);
+> > > mfence();
+> > >=20
+> > > Will not guarantee that after mfence() completes that the remote host
+> > > will have visibility of the data.  mfence() does not guarantee a full
+> > > flush back down to the device, it only guarantees it has been pushed =
+out
+> > > of the CPU's cache.
+> > >=20
+> > > similarly:
+> > >=20
+> > > memcpy(some_cacheline, data, 64);
+> > > mfence();
+> > > memcpy(some_other_cacheline, data, 64);
+> > > mfence()
+> > >=20
+> > > Will not guarantee that some_cacheline reaches the backing media prior
+> > > to some_other_cacheline, as there is no guarantee of write-ordering in
+> > > CXL controllers (with the exception of writes to the same cacheline).
+> > >=20
+> > > So this statement:
+> > >  =20
+> > > > I need to flush the cache to let the other party see it immediately=
+. =20
+> > >=20
+> > > Is misleading.  They will not see is "immediately", they will see it
+> > > "eventually at some completely unknowable time in the future". =20
+> >=20
+> > This is indeed one of the issues I wanted to discuss at the RFC stage. =
+Thank
+> > you for pointing it out.
+> >=20
+> > In my opinion, using "nvdimm_flush" might be one way to address this is=
+sue,
+> > but it seems to flush the entire nd_region, which might be too heavy.
+> > Moreover, it only applies to non-volatile memory.
+> >=20
+> > This should be a general problem for cxl shared memory. In theory, FAMFS
+> > should also encounter this issue.
+> >=20
+> > Gregory, John, and Dan, Any suggestion about it?
+> >=20
+> > Thanx a lot =20
+> > >=20
+> > > ~Gregory
+> > >  =20
+>=20
+> Hi Dongsheng,
+>=20
+> Gregory is right about the uncertainty around "clflush" operations, but
+> let me drill in a bit further.
+>=20
+> Say you copy a payload into a "bucket" in a queue and then update an
+> index in a metadata structure; I'm thinking of the standard producer/
+> consumer queuing model here, with one index mutated by the producer and
+> the other mutated by the consumer.=20
+>=20
+> (I have not reviewed your queueing code, but you *must* be using this
+> model - things like linked-lists won't work in shared memory without=20
+> shared locks/atomics.)
+>=20
+> Normal logic says that you should clflush the payload before updating
+> the index, then update and clflush the index.
+>=20
+> But we still observe in non-cache-coherent shared memory that the payload=
+=20
+> may become valid *after* the clflush of the queue index.
+>=20
+> The famfs user space has a program called pcq.c, which implements a
+> producer/consumer queue in a pair of famfs files. The only way to=20
+> currently guarantee a valid read of a payload is to use sequence numbers=
+=20
+> and checksums on payloads.  We do observe mismatches with actual shared=20
+> memory, and the recovery is to clflush and re-read the payload from the=20
+> client side. (Aside: These file pairs theoretically might work for CBD=20
+> queues.)
+>=20
+> Anoter side note: it would be super-helpful if the CPU gave us an explici=
+t=20
+> invalidate rather than just clflush, which will write-back before=20
+> invalidating *if* the cache line is marked as dirty, even when software
+> knows this should not happen.
+>=20
+> Note that CXL 3.1 provides a way to guarantee that stuff that should not
+> be written back can't be written back: read-only mappings. This one of
+> the features I got into the spec; using this requires CXL 3.1 DCD, and=20
+> would require two DCD allocations (i.e. two tagged-capacity dax devices -=
+=20
+> one writable by the server and one by the client).
+>=20
+> Just to make things slightly gnarlier, the MESI cache coherency protocol
+> allows a CPU to speculatively convert a line from exclusive to modified,
+> meaning it's not clear as of now whether "occasional" clean write-backs
+> can be avoided. Meaning those read-only mappings may be more important
+> than one might think. (Clean write-backs basically make it
+> impossible for software to manage cache coherency.)
 
-To have the whole block of &net_device + private part aligned to a
-cacheline size.
+My understanding is that clean write backs are an implementation specific
+issue that came as a surprise to some CPU arch folk I spoke to, we will
+need some path for a host to say if they can ever do that.
 
-> 
-> If a driver pretends its private part is 4 bytes, we should get a
-> warning if 20 bytes are used instead.
+Given this definitely effects one CPU vendor, maybe solutions that
+rely on this not happening are not suitable for upstream.
 
-Ah okay, so this should be
+Maybe this market will be important enough for that CPU vendor to stop
+doing it but if they do it will take a while...
 
-	p = kvzalloc(struct_size(ALIGN(sizeof_priv, SMP_CACHE_BYTES)));
-	p->priv_len = sizeof_priv;
+Flushing in general is as CPU architecture problem where each of the
+architectures needs to be clear what they do / specify that their
+licensees do.
 
-> 
-> You added two ____cacheline_aligned already in net_device already.
+I'm with Dan on encouraging all memory vendors to do hardware coherence!
 
-The whole size passed to kvzalloc() must be cacheline-aligned, otherwise
-the MM layer can miscalculate the pointer alignment.
+J
 
-Thanks,
-Olek
+>=20
+> Keep in mind that I don't think anybody has cxl 3 devices or CPUs yet, an=
+d=20
+> shared memory is not explicitly legal in cxl 2, so there are things a cpu=
+=20
+> could do (or not do) in a cxl 2 environment that are not illegal because=
+=20
+> they should not be observable in a no-shared-memory environment.
+>=20
+> CBD is interesting work, though for some of the reasons above I'm somewhat
+> skeptical of shared memory as an IPC mechanism.
+>=20
+> Regards,
+> John
+>=20
+>=20
+>=20
+
