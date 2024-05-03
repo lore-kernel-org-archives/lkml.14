@@ -1,91 +1,104 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A5341746;
-	Fri,  3 May 2024 21:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEFF41C7F;
+	Fri,  3 May 2024 21:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714770681; cv=none; b=hYSoo5VppYtLtSnFe0b5JYEbsOzi0YpdGota5peXEnsoDee0BS1ARUTrZiBPWGxI2CAIEUrdYkP1MtNlg2hH6Ttmu/DoSRsXA2fXwd2AOoAnQlLzCyACIXvoExA1gNjEfQhW1XPB/ifd2Yt9vBn1kRcEsVfVxD9Q1h0Ch44Jc9k=
+	t=1714770681; cv=none; b=T03iAgNFJvqYCJWFnXa1fZ13z9ssSxEkHILFbmTaSaMs7Qk+TJV8iRQrxyG7ODeUvRoLP18fdQmQTrOV4bZdNytKKxOGcQmiW1PzKwEn0OMHU7t0+tEcu9Ehhs0bQGZokET4JKIktXAjRwaDWX6OXKomRIi8Emf1b4z/DCU0RKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714770681; c=relaxed/simple;
-	bh=ir4jVAwHqZZPJB/DE9uWzxgHlCj8HSje/nWd9XFDyhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l/2br5Z+mvgfi+nJgRC8/+n6F3fzgUJOBSVgagc1/SC0AhUuP7gHGeDjW9TIl2OIDUyIiRxx0owzJdTEJStOCyyJfkif54BA5xaxAZEUYiR/mHnQIX4lzzd52/Pb4IjuylT4lfppqkvE5IcmymX6ciw3G/lDMf+tlQRnqe/0/dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=Rs9B3xI+; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	bh=d/SD6qIRdSFdmB6XYHh2XnFL0LvVoGCB7gGxH6DO6E0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kr2bAdPr9Qk4u0gidxn4f/KjT4wVN8WkCCJVNE1o0Zy5+BT4BHoerRsTHG+2cZqaV8NQrDgndJPHyBAh+ygiBHPAT73L1zncx2j0IN/QW5lowG+v5RJdqcnqCbjFjVNjo6l06Z8/lQj3OS8AeQpSgBQWnm5ygBXEcBiqWriZ2WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EaTNk1PU; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Rs9B3xI+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=NY7dpnWNXhQQKVFdAJPJlG4e4ZXMaDmQRQbDTVWLCeE=; b=Rs9B3xI+XdmJK5vPYQK8J22QKS
-	EgQQjCflBDYUtxW7SIX67RGaVIh3sQxNGH90bxispPeYAm3Rch22e5sDAaxhSEmNW2ySJllWffdb5
-	a4oV0hJkK1wMLB0wsYYYxmpIJp7sPoevLWMdPWdjnwETEp1S5NfsIj1h0wJX1d3jNqehubjWUYPn+
-	7uDmwbVMNILcV4WyvLYqHObXMuav53kC37sidi15Uw1VLUrj5+Sngx5+0djz5feXF5HjHfmThe2Wn
-	SpKgjexjGpBfd+US1tn2T08npPs/aGPCeX21rEsxXS0Wot3Ugzg/2Yns9RIFdjTU5nMXuJMK+yyG7
-	QAAoXHQQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1s30BR-00B72n-1X;
-	Fri, 03 May 2024 21:11:09 +0000
-Date: Fri, 3 May 2024 22:11:09 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Bui Quang Minh <minhquangbui99@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	syzbot <syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com>,
-	io-uring@vger.kernel.org, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, Laura Abbott <laura@labbott.name>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: get_file() unsafe under epoll (was Re: [syzbot] [fs?]
- [io-uring?] general protection fault in __ep_remove)
-Message-ID: <20240503211109.GX2118490@ZenIV>
-References: <0000000000002d631f0615918f1e@google.com>
- <7c41cf3c-2a71-4dbb-8f34-0337890906fc@gmail.com>
- <202405031110.6F47982593@keescook>
- <64b51cc5-9f5b-4160-83f2-6d62175418a2@kernel.dk>
- <202405031207.9D62DA4973@keescook>
- <d6285f19-01aa-49c8-8fef-4b5842136215@kernel.dk>
- <202405031237.B6B8379@keescook>
- <202405031325.B8979870B@keescook>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaTNk1PU"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-34eb52bfca3so43f8f.0;
+        Fri, 03 May 2024 14:11:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714770659; x=1715375459; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gFiIP6TYjHJaDi+mdlJ+P1+Htp6nG8gyq660Ei0mCwI=;
+        b=EaTNk1PU2agFC4D9yBcNSVkoridsOET3WUhY5aLUagMuiq5LFaf0YTnRMoIPM0Ede1
+         hQiR7xc8JEldpqrKzb33ctfLkePxBQ+ddtM9NleToGAUtVSNvz7rEoKcORyDX2uvEy5k
+         UvomMz0FIF7+8KdMrIDqPZ8zdup9WBF03TyqbMmyKJhhFbtDLPHiR5Lq9mNxgmgJfmg2
+         aXqLBdcIKhH3EtG+CmbN/eGBnW7l64TxdIK1iTq1kZRgyE1KN4OucjnP/kf7AKqfXrxl
+         VGe/mIx5hIgtjg47C2V3ykmSjWjHdkvhdiTHMGKmzLCBorfz0Kfcw3+UTfV2m/Rr2Xii
+         XJeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714770659; x=1715375459;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gFiIP6TYjHJaDi+mdlJ+P1+Htp6nG8gyq660Ei0mCwI=;
+        b=OX1jfJ3XSbfxX4U9d6nTFVCNWcIxIu9NBlYZXxWmkEdFPPoNEKWJqABNGTCd+lwYI1
+         VmkaVYrdePnSFzX6k4tKRHeS5FmVMMX6QSFHrwR7yfgnOdCir/64dZ5aC4EKk/yX9rA5
+         sugK/hyFSge+mcl0cWgpFEUdQIvMljZbXArKpUHbTLx7KnPMONZhNeaLv9qGUx7RI99m
+         Se0QllMZy58lMNhlzfEk702Ss116yRC4X0s3M7LN6EUt+A+jAEAF9xMK1eJ6PFXqCRs7
+         UhnsyYoIG4a2LxkRsJTMbmCyNXIq+MqKvj8ZdrNZbJO8jtddezGmi2RzsPimTYeby2eH
+         g5CA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJFTYgtxv4U8cUSDrEoIEAUY73zNtmzMy9pCEMP5o992lDdUghN896oGo4wfFxFE7IPEkUzYku/BsOLTaq+pKEd8/EC1zoH2aqs5/UhrkGdQfroLRsFYcaisLftfTjGj5kcO3KEa+F0klM
+X-Gm-Message-State: AOJu0YzkUmrH/wgB5X/ECE70XBcoryIaW+hcEbi1hIMuclJ64CPbIes9
+	TG8CID43wD0Bx6SQBnqUF7yXSnLlxvTcGb6WCxxYFSHhrSmpuYd2
+X-Google-Smtp-Source: AGHT+IGfa5q14NXQ2Z8X2gRIXybvC2IDcQj5fP0NrlA9hdgN8bemn/OKKjEsD1OhXnquVgR9MF06mA==
+X-Received: by 2002:adf:fc44:0:b0:34c:fa08:791c with SMTP id e4-20020adffc44000000b0034cfa08791cmr3214794wrs.45.1714770658778;
+        Fri, 03 May 2024 14:10:58 -0700 (PDT)
+Received: from 58b9ec80ce2f.v.cablecom.net (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
+        by smtp.gmail.com with ESMTPSA id jy9-20020a170907762900b00a598646f173sm1475948ejc.191.2024.05.03.14.10.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 14:10:58 -0700 (PDT)
+From: Lothar Rubusch <l.rubusch@gmail.com>
+To: herbert@gondor.apana.org.au,
+	davem@davemloft.net
+Cc: nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev,
+	linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	l.rubusch@gmail.com
+Subject: [PATCH v2 0/4] crypto: atmel-sha204a - read out otp zone
+Date: Fri,  3 May 2024 21:10:50 +0000
+Message-Id: <20240503211054.1231-1-l.rubusch@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202405031325.B8979870B@keescook>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 03, 2024 at 01:28:37PM -0700, Kees Cook wrote:
-> 
-> Is this the right approach? It still feels to me like get_file() needs
-> to happen much earlier...
+Read out otp memory zone of this secure eeprom and rng chip. The chip
+has an otp zone and data zone, both still not accessed. The otp zone
+can be used to store persistently serial numbers or similar, if externally
+pre-configured. In any way the Atmel SHA204a needs to be preconfgured and
+fuse locked in order to be useful also for the already implemented RNG
+functionality. Placing data into the otp zone is optional. If empty, the
+chip returns 0xff on all field. The implementation passes the content to
+a new sysfs handle to userspace. If the chip is locked or not accessible
+no sysfs handle is set.
 
-I don't believe it needs to happen at all.  The problem is not that
-->release() can be called during ->poll() - it can't and it doesn't.
-It's that this instance of ->poll() is trying to extend the lifetime
-of that struct file, when it might very well be past the point of no
-return.
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+---
+v1 -> v2
+- fix typo in commit title
+- drop patch: remove unused includes
 
-What we need is
-	* promise that ep_item_poll() won't happen after eventpoll_release_file().
-AFAICS, we do have that.
-	* ->poll() not playing silly buggers.
+Lothar Rubusch (4):
+  crypto: atmel-i2c - add missing arg description
+  crypto: atmel-i2c - rename read function
+  crypto: atmel-sha204a - add reading from otp zone
+  crypto: atmel-sha204a - provide the otp content
 
-As it is, dma_buf ->poll() is very suspicious regardless of that
-mess - it can grab reference to file for unspecified interval.
-Have that happen shortly before reboot and you are asking for failing
-umount.
+ drivers/crypto/atmel-i2c.c     | 30 +++++++++++++--
+ drivers/crypto/atmel-i2c.h     |  8 +++-
+ drivers/crypto/atmel-sha204a.c | 68 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 102 insertions(+), 4 deletions(-)
 
-->poll() must be refcount-neutral wrt file passed to it.  I'm seriously
-tempted to make ->poll() take const struct file * and see if there's
-anything else that would fall out.
+-- 
+2.25.1
+
