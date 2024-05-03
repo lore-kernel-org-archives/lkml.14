@@ -1,216 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE0515885F
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 17:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F456158853;
+	Fri,  3 May 2024 17:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714756787; cv=none; b=COUE3UKMq/NQh+TB+eUTFuozMvz2Gyv0Mmw8dIoeBNnOwdcDHbMkSswN6xhWXu74+cFSufyna1Bd6TNJreBICHgELEegYCvMNe0Fch2/+b4mKP6l57PSaVFVqnZUWpeAxln6ZUiy8838db77p3SFOB8wF80tYiDIYpbqCFNlvXw=
+	t=1714756788; cv=none; b=h+NuEtxjLaZ0mQKeDtil2pOkwChPDpQK5XL4YAPufaN8oA7Q++qZmXBMgg6vJy8hn0ZYbGgw5PQjmPPsCwCWTei1hABy/iIJ2aEqFGZWvFXMAl9HVQY9jtfZv+dhjqxYKjlHGBJ2wtEzfdxPyjqnvu4P7kBXbLy/nTiFVTGU0Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714756787; c=relaxed/simple;
-	bh=gFfce9/YqUqKMKl8N7lkGvPv61pbijOYVPdAqGSFILU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kbCE3KGzXZ85VDEmePCpvxIiHQOV8fWgp+qoUKhZxY09FIE5nYOnEz1ftqe8701uEYvgtAhhPVy9NyvxCEJqg2dUuxQ9GiBWrEuefuB3Ii64gEkWEJg0Ysz5RKn+sKezbWNpTM3pk7qzVqUSG7ugI09lxBCqh3g/CsQvwzCPtas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/l5s6AH; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714756788; c=relaxed/simple;
+	bh=0P8W5/r5S5k6SwXf7VCCJC2Qrhne6InBiWz5NUC6oPI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KuVYL9XlV7LeEBI7hCjOMSfu5GQJJfawb/Foa60GcRaftgQxEAyZptx1VeZP8E3wMTwsyv0164BOIDj+mLSQu5RmxlocdVUIfsIHLLOJ3q4fWgfqFJlFezDXffufz5qM5dnwEguXelxS2oJe97QM8Hew3yke4vb++7EsHrK1lrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XT6mUd65; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/l5s6AH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XT6mUd65"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714756786; x=1746292786;
-  h=date:from:to:cc:subject:message-id;
-  bh=gFfce9/YqUqKMKl8N7lkGvPv61pbijOYVPdAqGSFILU=;
-  b=K/l5s6AHuVqfzw8/eCNcPxQuj8T4je+HXiXW9YYj+PhmajA6eH1DBjTH
-   zR+TgqG6JYhlWq3rsjQgn1ngpnBRUNtphA/FetLZqM6mEB/vUsmWv+l2W
-   pKbr1udfpq28VusnhUK89+MgNlzzrQBwOeHqk+HIoikZUbpHfEyKXsnaP
-   WYaZxnX6CuOEzNI+PmEDYYqKqFRHLGw87/FyXmfBM3T9UCmK5XqLnSJxK
-   5x43VzI54zZ0Og1MNYlgM5dQ8I0nJ9pjbWq2sDvFi7xnPa84LhHs5yG6B
-   KhsMt6jXcPhME3TO8XRiId5DyhovxbjttiQ0i2MDYx6+cB3gjbm2IDJBD
+  t=1714756785; x=1746292785;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0P8W5/r5S5k6SwXf7VCCJC2Qrhne6InBiWz5NUC6oPI=;
+  b=XT6mUd654wiUQ4Bq6uOrr9wsmOdImXThpaztTL/RlDlZEu0CZfGTg8gl
+   eTYGZuePM6CYUJXC8sWAJ8QFRhtyo5puZ7xrDd/mpvCcA22JtWRzhTutH
+   ocMgFoaAxZDgybcGJVANu50+r96yp4uyhZj3gnnQzGRzYcIbHZr2M0VOP
+   lUYiYg6TbpfAPquZgqbhjVSZtjGug4JLKdlaRoS95u/RJ739klGza6Uxr
+   i6VVXOIIzX3WQA16VwGAvt9rDI6zpRfA3joms4hYXZfKFDnJlWf5XUXOY
+   tcmM/IBowg4ORfsE0imXfAozDvBudrEEoxwpvPB9WrX2gbhrs5ryQAI/C
    Q==;
-X-CSE-ConnectionGUID: Mjc3csYBRs+1HpycrG11IQ==
-X-CSE-MsgGUID: 0OWXKi/GRDe/Oz1eR7M24w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="10500208"
+X-CSE-ConnectionGUID: e6aR1tFZSK6ES7ORgJJS/w==
+X-CSE-MsgGUID: 9hq/X+e4SISmHqtSFz/JeA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="35962105"
 X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="10500208"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 10:19:46 -0700
-X-CSE-ConnectionGUID: hqz3UYJNS76Oe20uFtLv0A==
-X-CSE-MsgGUID: IZOvtKIpTR+1tZV0UksdRw==
+   d="scan'208";a="35962105"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 10:19:44 -0700
+X-CSE-ConnectionGUID: VRw+1/qcSJafBnw+I0soJw==
+X-CSE-MsgGUID: cbpKREC1TyGqC+jHb26UvA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="27911515"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 03 May 2024 10:19:44 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s2wZS-000Bwe-0Q;
-	Fri, 03 May 2024 17:19:42 +0000
-Date: Sat, 04 May 2024 01:19:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/WFAMNAE-next20240501-CbC] BUILD SUCCESS
- f4d622e4c21a03b694e3ffe991cff14742187f5f
-Message-ID: <202405040159.b3fhOPGh-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="28098215"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 03 May 2024 10:19:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 7521F48B; Fri,  3 May 2024 20:19:38 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Parker Newman <pnewman@connecttech.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Subject: [PATCH v2 08/13] serial: 8250_exar: Decrease indentation level
+Date: Fri,  3 May 2024 20:16:00 +0300
+Message-ID: <20240503171917.2921250-9-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240503171917.2921250-1-andriy.shevchenko@linux.intel.com>
+References: <20240503171917.2921250-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/WFAMNAE-next20240501-CbC
-branch HEAD: f4d622e4c21a03b694e3ffe991cff14742187f5f  treewide_some: fix multiple -Wfamnae warnings that must be audited separately
+Decrease indentation level in some places.
+No functional change intended.
 
-elapsed time: 1460m
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/tty/serial/8250/8250_exar.c | 100 ++++++++++++++--------------
+ 1 file changed, 50 insertions(+), 50 deletions(-)
 
-configs tested: 139
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240503   gcc  
-arc                   randconfig-002-20240503   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240503   clang
-arm                   randconfig-002-20240503   clang
-arm                   randconfig-003-20240503   clang
-arm                   randconfig-004-20240503   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240503   clang
-arm64                 randconfig-002-20240503   gcc  
-arm64                 randconfig-003-20240503   clang
-arm64                 randconfig-004-20240503   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240503   gcc  
-csky                  randconfig-002-20240503   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240503   clang
-hexagon               randconfig-002-20240503   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240503   clang
-i386         buildonly-randconfig-002-20240503   clang
-i386         buildonly-randconfig-003-20240503   gcc  
-i386         buildonly-randconfig-004-20240503   gcc  
-i386         buildonly-randconfig-005-20240503   gcc  
-i386         buildonly-randconfig-006-20240503   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240503   gcc  
-i386                  randconfig-002-20240503   clang
-i386                  randconfig-003-20240503   clang
-i386                  randconfig-004-20240503   gcc  
-i386                  randconfig-005-20240503   clang
-i386                  randconfig-006-20240503   clang
-i386                  randconfig-011-20240503   clang
-i386                  randconfig-012-20240503   gcc  
-i386                  randconfig-013-20240503   gcc  
-i386                  randconfig-014-20240503   gcc  
-i386                  randconfig-015-20240503   gcc  
-i386                  randconfig-016-20240503   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240503   gcc  
-loongarch             randconfig-002-20240503   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240503   gcc  
-nios2                 randconfig-002-20240503   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240503   gcc  
-parisc                randconfig-002-20240503   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc               randconfig-001-20240503   clang
-powerpc               randconfig-002-20240503   clang
-powerpc               randconfig-003-20240503   gcc  
-powerpc64             randconfig-001-20240503   clang
-powerpc64             randconfig-002-20240503   clang
-powerpc64             randconfig-003-20240503   clang
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240503   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240503   gcc  
-x86_64       buildonly-randconfig-002-20240503   gcc  
-x86_64       buildonly-randconfig-003-20240503   gcc  
-x86_64       buildonly-randconfig-004-20240503   clang
-x86_64       buildonly-randconfig-005-20240503   gcc  
-x86_64       buildonly-randconfig-006-20240503   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240503   clang
-x86_64                randconfig-002-20240503   clang
-x86_64                randconfig-003-20240503   clang
-x86_64                randconfig-004-20240503   gcc  
-x86_64                randconfig-005-20240503   gcc  
-x86_64                randconfig-006-20240503   clang
-x86_64                randconfig-011-20240503   clang
-x86_64                randconfig-012-20240503   clang
-x86_64                randconfig-013-20240503   clang
-x86_64                randconfig-014-20240503   clang
-x86_64                randconfig-015-20240503   clang
-x86_64                randconfig-016-20240503   clang
-x86_64                randconfig-071-20240503   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index 4e683ca76de0..1f04d4562878 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -607,28 +607,30 @@ pci_fastcom335_setup(struct exar8250 *priv, struct pci_dev *pcidev,
+ 	writeb(32, p + UART_EXAR_TXTRG);
+ 	writeb(32, p + UART_EXAR_RXTRG);
+ 
++	/* Skip the initial (per device) setup */
++	if (idx)
++		return 0;
++
+ 	/*
+ 	 * Setup Multipurpose Input/Output pins.
+ 	 */
+-	if (idx == 0) {
+-		switch (pcidev->device) {
+-		case PCI_DEVICE_ID_COMMTECH_4222PCI335:
+-		case PCI_DEVICE_ID_COMMTECH_4224PCI335:
+-			writeb(0x78, p + UART_EXAR_MPIOLVL_7_0);
+-			writeb(0x00, p + UART_EXAR_MPIOINV_7_0);
+-			writeb(0x00, p + UART_EXAR_MPIOSEL_7_0);
+-			break;
+-		case PCI_DEVICE_ID_COMMTECH_2324PCI335:
+-		case PCI_DEVICE_ID_COMMTECH_2328PCI335:
+-			writeb(0x00, p + UART_EXAR_MPIOLVL_7_0);
+-			writeb(0xc0, p + UART_EXAR_MPIOINV_7_0);
+-			writeb(0xc0, p + UART_EXAR_MPIOSEL_7_0);
+-			break;
+-		}
+-		writeb(0x00, p + UART_EXAR_MPIOINT_7_0);
+-		writeb(0x00, p + UART_EXAR_MPIO3T_7_0);
+-		writeb(0x00, p + UART_EXAR_MPIOOD_7_0);
++	switch (pcidev->device) {
++	case PCI_DEVICE_ID_COMMTECH_4222PCI335:
++	case PCI_DEVICE_ID_COMMTECH_4224PCI335:
++		writeb(0x78, p + UART_EXAR_MPIOLVL_7_0);
++		writeb(0x00, p + UART_EXAR_MPIOINV_7_0);
++		writeb(0x00, p + UART_EXAR_MPIOSEL_7_0);
++		break;
++	case PCI_DEVICE_ID_COMMTECH_2324PCI335:
++	case PCI_DEVICE_ID_COMMTECH_2328PCI335:
++		writeb(0x00, p + UART_EXAR_MPIOLVL_7_0);
++		writeb(0xc0, p + UART_EXAR_MPIOINV_7_0);
++		writeb(0xc0, p + UART_EXAR_MPIOSEL_7_0);
++		break;
+ 	}
++	writeb(0x00, p + UART_EXAR_MPIOINT_7_0);
++	writeb(0x00, p + UART_EXAR_MPIO3T_7_0);
++	writeb(0x00, p + UART_EXAR_MPIOOD_7_0);
+ 
+ 	return 0;
+ }
+@@ -853,21 +855,19 @@ static enum cti_port_type cti_get_port_type_xr17v35x(struct exar8250 *priv,
+ 	port_flags = exar_ee_read(priv, offset);
+ 
+ 	port_type = FIELD_GET(CTI_EE_MASK_PORT_FLAGS_TYPE, port_flags);
+-	if (!CTI_PORT_TYPE_VALID(port_type)) {
+-		/*
+-		 * If the port type is missing the card assume it is a
+-		 * RS232/RS422/RS485 card to be safe.
+-		 *
+-		 * There is one known board (BEG013) that only has
+-		 * 3 of 4 port types written to the EEPROM so this
+-		 * acts as a work around.
+-		 */
+-		dev_warn(&pcidev->dev,
+-			"failed to get port %d type from EEPROM\n", port_num);
+-		port_type = CTI_PORT_TYPE_RS232_422_485_HW;
+-	}
++	if (CTI_PORT_TYPE_VALID(port_type))
++		return port_type;
+ 
+-	return port_type;
++	/*
++	 * If the port type is missing the card assume it is a
++	 * RS232/RS422/RS485 card to be safe.
++	 *
++	 * There is one known board (BEG013) that only has 3 of 4 port types
++	 * written to the EEPROM so this acts as a work around.
++	 */
++	dev_warn(&pcidev->dev, "failed to get port %d type from EEPROM\n", port_num);
++
++	return CTI_PORT_TYPE_RS232_422_485_HW;
+ }
+ 
+ static int cti_rs485_config_mpio_tristate(struct uart_port *port,
+@@ -1190,11 +1190,10 @@ static void setup_gpio(struct pci_dev *pcidev, u8 __iomem *p)
+ 	 * devices will export them as GPIOs, so we pre-configure them safely
+ 	 * as inputs.
+ 	 */
+-
+ 	u8 dir = 0x00;
+ 
+ 	if  ((pcidev->vendor == PCI_VENDOR_ID_EXAR) &&
+-		(pcidev->subsystem_vendor != PCI_VENDOR_ID_SEALEVEL)) {
++	     (pcidev->subsystem_vendor != PCI_VENDOR_ID_SEALEVEL)) {
+ 		// Configure GPIO as inputs for Commtech adapters
+ 		dir = 0xff;
+ 	} else {
+@@ -1284,27 +1283,28 @@ static int sealevel_rs485_config(struct uart_port *port, struct ktermios *termio
+ 	if (ret)
+ 		return ret;
+ 
+-	if (rs485->flags & SER_RS485_ENABLED) {
+-		old_lcr = readb(p + UART_LCR);
++	if (!(rs485->flags & SER_RS485_ENABLED))
++		return 0;
+ 
+-		/* Set EFR[4]=1 to enable enhanced feature registers */
+-		efr = readb(p + UART_XR_EFR);
+-		efr |= UART_EFR_ECB;
+-		writeb(efr, p + UART_XR_EFR);
++	old_lcr = readb(p + UART_LCR);
+ 
+-		/* Set MCR to use DTR as Auto-RS485 Enable signal */
+-		writeb(UART_MCR_OUT1, p + UART_MCR);
++	/* Set EFR[4]=1 to enable enhanced feature registers */
++	efr = readb(p + UART_XR_EFR);
++	efr |= UART_EFR_ECB;
++	writeb(efr, p + UART_XR_EFR);
+ 
+-		/* Set LCR[7]=1 to enable access to DLD register */
+-		writeb(old_lcr | UART_LCR_DLAB, p + UART_LCR);
++	/* Set MCR to use DTR as Auto-RS485 Enable signal */
++	writeb(UART_MCR_OUT1, p + UART_MCR);
+ 
+-		/* Set DLD[7]=1 for inverted RS485 Enable logic */
+-		dld = readb(p + UART_EXAR_DLD);
+-		dld |= UART_EXAR_DLD_485_POLARITY;
+-		writeb(dld, p + UART_EXAR_DLD);
++	/* Set LCR[7]=1 to enable access to DLD register */
++	writeb(old_lcr | UART_LCR_DLAB, p + UART_LCR);
+ 
+-		writeb(old_lcr, p + UART_LCR);
+-	}
++	/* Set DLD[7]=1 for inverted RS485 Enable logic */
++	dld = readb(p + UART_EXAR_DLD);
++	dld |= UART_EXAR_DLD_485_POLARITY;
++	writeb(dld, p + UART_EXAR_DLD);
++
++	writeb(old_lcr, p + UART_LCR);
+ 
+ 	return 0;
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0.rc1.1336.g36b5255a03ac
+
