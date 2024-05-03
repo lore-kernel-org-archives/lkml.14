@@ -1,171 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054401509B2;
-	Fri,  3 May 2024 10:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDB814F9E3;
+	Fri,  3 May 2024 10:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714731529; cv=none; b=Js7zEZUxijuzQuW6quXfOhfmAX/D8gPFHWDc1Ky1+N/2hPE75Y01exUbeqPGqGvNlggpPFFW+ggl0jCg+9rxlyCiRnPXtuFkiuHZ9Wnx/Nzo1nzpOP6rg2pwi/F1FVm3t1aoC1aD5beCwSvmSNecGAKoOwqDE3lC6aUHb8/T5Ao=
+	t=1714731553; cv=none; b=aE7ulha3Ha0r4bc/iI37/5xo0dToV/8xEpv2CfaB0SLpfxmu4uEcQlpifg0e9yf9k1VyiVJ+xt2UXnqZdivmpPUijwxCnaULGf2yuswpPPDQBKkrqtd605LPVCwFd2BKRa1VX6uiY//EWERxuwmSHyki//K4QK+9yjtBmZezA6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714731529; c=relaxed/simple;
-	bh=10Jfz7g2I63T6OjaKjymVfcINKOaZ2J6fHxtq+P/NAM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=aB/syVDSAdxKtU+re2BQnHCv6I7kVTL3C0quAtq74Mz/hSTTWWcHwzHEoP1uZiucAZ8Hw/7z8WQyjJYO7RhcvvMcy9xynSaWhRLJfxc19J/U+QdAWZJZstP+WotI0F7jdWs0Z9Cl+9WFXKNdAQRgZEGxfFwCgzmuaT02KRCg0ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j+h7jgG7; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714731553; c=relaxed/simple;
+	bh=w6EbXMLbZy+Iq3jqd1Fpizg4P9aa3UkGFXgdsxOAiOE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Afc21NHHB2wb0FJ/JDm0jKI1oU/4r7VNe/EkMb8gxYJFAGCJUdWnMSWlBW20AviIu+QOIYUauAa1lV5+n/5QSOzGfYpNwEz4PnZ7fX0RsA4oikgmH7mhjeDZ1Wcq4yX9JPfVsMSi7T+Yvp8zneJbF3aZdobmC/q8mJPHIrXt4+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DA3+D+AX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j+h7jgG7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714731526; x=1746267526;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=10Jfz7g2I63T6OjaKjymVfcINKOaZ2J6fHxtq+P/NAM=;
-  b=j+h7jgG7i6HgGQNI2Jpz3aiJCo/SDy67Xx2R+VJBeX6/sHeH6e6PPB4r
-   bAL3ZtDeRljDnk2V141NaugnaIjl6JhtoVTXryXJeJv/fJ8dH2zi+Lasw
-   4vRflK+FsD7j6IAvfLpxo4e1QnTBNUQMtcnt5QPu+jcUvQ8tw3wQzS8ZE
-   r/fQHuQzqOxFLqXu9OkkxC1JCw1qre9jK0OAOTJZH/sRwXLkS1uj43Xbg
-   yDWtqCItYmX/RyY6wWpE4Yl1D5tD3308qpQl3m1sy1YUrffJRxIpbUfId
-   fhL04jDY8Catj2hT68EFwDkVd2pwV6IvZT2SiI510ijgU804jOf5AAKzR
-   w==;
-X-CSE-ConnectionGUID: VQzpT/yNTMGzlMFEADN4VA==
-X-CSE-MsgGUID: zjD8uXNySJukRrLe5exepw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10386639"
-X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="10386639"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 03:18:45 -0700
-X-CSE-ConnectionGUID: fg5BmVqpSRyyi5slzLMDnA==
-X-CSE-MsgGUID: IEo6vwxzSGqiLHBTgxJ77A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="32215585"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.56])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 03:18:42 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 3 May 2024 13:18:35 +0300 (EEST)
-To: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-cc: Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org, 
-    Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
-    Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
-    dri-devel@lists.freedesktop.org, Jason Gunthorpe <jgg@ziepe.ca>, 
-    Leon Romanovsky <leon@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-    linux-rdma@vger.kernel.org, "Pan, Xinhui" <Xinhui.Pan@amd.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Dean Luick <dean.luick@cornelisnetworks.com>
-Subject: Re: [PATCH 3/3] RDMA/hfi1: Use RMW accessors for changing LNKCTL2
-In-Reply-To: <20240215133155.9198-4-ilpo.jarvinen@linux.intel.com>
-Message-ID: <26be3948-e687-f510-0612-abcac5d919af@linux.intel.com>
-References: <20240215133155.9198-1-ilpo.jarvinen@linux.intel.com> <20240215133155.9198-4-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DA3+D+AX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD506C116B1;
+	Fri,  3 May 2024 10:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714731552;
+	bh=w6EbXMLbZy+Iq3jqd1Fpizg4P9aa3UkGFXgdsxOAiOE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DA3+D+AXpjojEMciQeTe1i220pdfpQ2s1jKP7ixvlbzkYFvSXkQvoPyPp0SVVAZkg
+	 grs9jC0mqBlOKno9ibb889SH+1MH88nYrYntgKf/2isFppzu5+zWc8IoseCy4udfio
+	 2AEWS5a1gGu23Ir4M0vUDkFSaoV6b88EehNn2qraBQluFSugljkD+CxvZeMCuVp3Cb
+	 1aAZsA3YFnCV2R9BHPlABwcGuQgui1+Kp29Wze9wUxoLBOrwaycnB+taHiJFVYZBnv
+	 WxEy3GHXWCUPytWLRC5lqdF4h9VrtyunwF8vLdoMQkPKOeKHaKOIe91PhG1hNNjwHc
+	 meRsB9t7qUz8Q==
+From: Georgi Djakov <djakov@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	djakov@kernel.org
+Subject: [GIT PULL] interconnect changes for 6.10
+Date: Fri,  3 May 2024 13:19:01 +0300
+Message-Id: <20240503101901.1681356-1-djakov@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-818284186-1714731515=:1852"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello Greg,
 
---8323328-818284186-1714731515=:1852
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+This is the pull request with interconnect changes for the v6.10-rc1 merge
+window. It contains tiny clean-up and fix. As always, the summary is
+in the signed tag.
 
-On Thu, 15 Feb 2024, Ilpo J=C3=A4rvinen wrote:
+The patches have been in linux-next for more than a week with no reported
+issues. Please pull into char-misc-next when possible.
 
-> Convert open coded RMW accesses for LNKCTL2 to use
-> pcie_capability_clear_and_set_word() which makes its easier to
-> understand what the code tries to do.
->=20
-> LNKCTL2 is not really owned by any driver because it is a collection of
-> control bits that PCI core might need to touch. RMW accessors already
-> have support for proper locking for a selected set of registers
-> (LNKCTL2 is not yet among them but likely will be in the future) to
-> avoid losing concurrent updates.
->=20
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Reviewed-by: Dean Luick <dean.luick@cornelisnetworks.com>
+Thanks,
+Georgi
 
-I found out from Linux RDMA and InfiniBand patchwork that this patch had=20
-been silently closed as "Not Applicable". Is there some reason for that?
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
-I was sending this change independently out (among 2 similar ones that=20
-already got applied) so I wouldn't need to keep carrying it within my PCIe=
-=20
-bandwidth controller series. It seemed useful enough as cleanups to stand=
-=20
-on its own legs w/o requiring it to be part of PCIe bw controller series.
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
 
-Should I resend the patch or do RDMA/IB maintainers prefer it to remain=20
-as a part of PCIe BW controller series?
+are available in the Git repository at:
 
---=20
- i.
+  git://git.kernel.org/pub/scm/linux/kernel/git/djakov/icc.git tags/icc-6.10-rc1
 
-> ---
->  drivers/infiniband/hw/hfi1/pcie.c | 30 ++++++++----------------------
->  1 file changed, 8 insertions(+), 22 deletions(-)
->=20
-> diff --git a/drivers/infiniband/hw/hfi1/pcie.c b/drivers/infiniband/hw/hf=
-i1/pcie.c
-> index 119ec2f1382b..7133964749f8 100644
-> --- a/drivers/infiniband/hw/hfi1/pcie.c
-> +++ b/drivers/infiniband/hw/hfi1/pcie.c
-> @@ -1207,14 +1207,11 @@ int do_pcie_gen3_transition(struct hfi1_devdata *=
-dd)
->  =09=09    (u32)lnkctl2);
->  =09/* only write to parent if target is not as high as ours */
->  =09if ((lnkctl2 & PCI_EXP_LNKCTL2_TLS) < target_vector) {
-> -=09=09lnkctl2 &=3D ~PCI_EXP_LNKCTL2_TLS;
-> -=09=09lnkctl2 |=3D target_vector;
-> -=09=09dd_dev_info(dd, "%s: ..new link control2: 0x%x\n", __func__,
-> -=09=09=09    (u32)lnkctl2);
-> -=09=09ret =3D pcie_capability_write_word(parent,
-> -=09=09=09=09=09=09 PCI_EXP_LNKCTL2, lnkctl2);
-> +=09=09ret =3D pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2=
-,
-> +=09=09=09=09=09=09=09 PCI_EXP_LNKCTL2_TLS,
-> +=09=09=09=09=09=09=09 target_vector);
->  =09=09if (ret) {
-> -=09=09=09dd_dev_err(dd, "Unable to write to PCI config\n");
-> +=09=09=09dd_dev_err(dd, "Unable to change parent PCI target speed\n");
->  =09=09=09return_error =3D 1;
->  =09=09=09goto done;
->  =09=09}
-> @@ -1223,22 +1220,11 @@ int do_pcie_gen3_transition(struct hfi1_devdata *=
-dd)
->  =09}
-> =20
->  =09dd_dev_info(dd, "%s: setting target link speed\n", __func__);
-> -=09ret =3D pcie_capability_read_word(dd->pcidev, PCI_EXP_LNKCTL2, &lnkct=
-l2);
-> +=09ret =3D pcie_capability_clear_and_set_word(dd->pcidev, PCI_EXP_LNKCTL=
-2,
-> +=09=09=09=09=09=09 PCI_EXP_LNKCTL2_TLS,
-> +=09=09=09=09=09=09 target_vector);
->  =09if (ret) {
-> -=09=09dd_dev_err(dd, "Unable to read from PCI config\n");
-> -=09=09return_error =3D 1;
-> -=09=09goto done;
-> -=09}
-> -
-> -=09dd_dev_info(dd, "%s: ..old link control2: 0x%x\n", __func__,
-> -=09=09    (u32)lnkctl2);
-> -=09lnkctl2 &=3D ~PCI_EXP_LNKCTL2_TLS;
-> -=09lnkctl2 |=3D target_vector;
-> -=09dd_dev_info(dd, "%s: ..new link control2: 0x%x\n", __func__,
-> -=09=09    (u32)lnkctl2);
-> -=09ret =3D pcie_capability_write_word(dd->pcidev, PCI_EXP_LNKCTL2, lnkct=
-l2);
-> -=09if (ret) {
-> -=09=09dd_dev_err(dd, "Unable to write to PCI config\n");
-> +=09=09dd_dev_err(dd, "Unable to change device PCI target speed\n");
->  =09=09return_error =3D 1;
->  =09=09goto done;
->  =09}
->=20
---8323328-818284186-1714731515=:1852--
+for you to fetch changes up to 230d05b1179f6ce6f8dc8a2b99eba92799ac22d7:
+
+  interconnect: qcom: qcm2290: Fix mas_snoc_bimc QoS port assignment (2024-04-11 20:46:26 +0300)
+
+----------------------------------------------------------------
+interconnect changes for 6.10
+
+This pull request contains the interconnect changes for the 6.10-rc1 merge
+window. It contains some small driver changes listed below:
+
+Driver changes:
+- Cleanup sm6115 QoS port numbering.
+- Fix incorrect port value in qcm2290 driver.
+
+Signed-off-by: Georgi Djakov <djakov@kernel.org>
+
+----------------------------------------------------------------
+Konrad Dybcio (2):
+      interconnect: qcom: sm6115: Unspaghettify SNoC QoS port numbering
+      interconnect: qcom: qcm2290: Fix mas_snoc_bimc QoS port assignment
+
+ drivers/interconnect/qcom/qcm2290.c |  2 +-
+ drivers/interconnect/qcom/sm6115.c  | 33 ++++----
+ 2 files changed, 19 insertions(+), 16 deletions(-)
