@@ -1,127 +1,85 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3A412B89
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D7B12B89
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714722995; cv=none; b=k5IkHQQIPtP/ioCaYI4QEt9B9s2CtyNLhgSVDzmZhtiKrPhxk2SnxLItFYYgANdx7sOq1eWwsHx2rVc+k6dlqa94xagGNWMw5KyIzeFPxGxEJudmiBtYKV+j2F15WkcpUR03/ooOUGcYomkQN7+ysbbjS9UGDuCWkLlsYpQiD1M=
+	t=1714723086; cv=none; b=UVbF0427AQqIYvJc12dM2v/dIYdXgOy+P49/LUIRya/j+Yt62cyBQLOAlG+TGgi5nk4jClfUX+8x8MFqgpK2sQX4uK+AsCACxF2dZ1bqQykHKZA+bUHG8Q5P3ggUb4Pgu4XTzJkvpywS7HJPb+vfIFHBkGmzDiXrrO8a86vs9W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714722995; c=relaxed/simple;
-	bh=R8T1v8EZH/ISTf7ox7ECemx6mr1HcouHkvC0u50vIbk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qPMX4s/0FwpvtmS0wJWI+/KpijPbywClzyfBvoCIf6kIbN78hK9Hdo+ffbn0JugGfTPXpQrpkGU3kTY5ICCThKucYzlxq4lEOOR+duE60KGKCCvwGbe5rM4vN4kakRPpumaCyIirGw7FdkGE38+V9z8aYyaZPMfq6qTyJyFHdkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=QIqslCSC; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1714723086; c=relaxed/simple;
+	bh=9lds1dTNJm20KO2gDxu3lgrciPV698y5y+f6AzLSwyE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dzjopa3guE/isZCtgbbg13Ggshaj4yX6uBvqo70oYnex3uM/ZMVdNAlCmGjtc2c6MOB8VDg5AJx+apCL4YIgYFXyXD+hqSx1j6UqaLRlImT7Etv6yPXMdN/pLG77UZd8jqWKyPJ/bRebNXnYbkm8mVdIWMxhibUSoKzg+LoSR7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K5JhXjhu; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="QIqslCSC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1714722991;
-	bh=UjLD++sCprS88MnBhqOqFETPu+2OZQ+7tRYQ68fD7jM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QIqslCSC6eNXBXzKXle8voU3oFdZO3C+zysmqRxMpHw/vwcUaM8Y3IIqUSTtM1r2C
-	 WCUsuQ6U7hOky2ZeRbctD7TAcTJqrvNcFbjsEeGqeltJ+55QqepjThflzU8jjWXTE6
-	 FNfBolzylSeMXzEp3RECifsnFFb9T8k7tRZnijg+ln2jglAcZgI8heQkXXr0ZZ/pjw
-	 8BFuwe6nM4U56Pbpn+kePz9lC3e66cQyhVXCFxzc9Ln+UD5KTn5SJ5AeyAP0FJjP41
-	 R5Zb4lnZNJ+nsrmeo3OpX+cLZiTOmp1Rx9Zi8PCx4ukB9kGp2YaN6YvNHrR+fokFCO
-	 qiIvbYq15hLkg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VW3670lMSz4wcr;
-	Fri,  3 May 2024 17:56:31 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: <linuxppc-dev@lists.ozlabs.org>
-Cc: <arnd@arndb.de>,
-	naresh.kamboju@linaro.org,
-	<linux-kernel@vger.kernel.org>,
-	<nathan@kernel.org>
-Subject: [PATCH v2 1/2] powerpc/io: Avoid clang null pointer arithmetic warnings
-Date: Fri,  3 May 2024 17:56:18 +1000
-Message-ID: <20240503075619.394467-1-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K5JhXjhu"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de6074a464aso4849337276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 00:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714723084; x=1715327884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9lds1dTNJm20KO2gDxu3lgrciPV698y5y+f6AzLSwyE=;
+        b=K5JhXjhucB4znLF+uB/FGtrBnpkQ6Ed1SqK6TBeAL/h9zDvnt3Ht35b5qknF/ut0Lz
+         Egr0k1YMgX4ZyYmbJSeSczilgscglEImgPLM175CZ+on0CiQrtiC95KJRFWRSylzk/bO
+         pMopCT3MEWyq5DbQLX6b6mSfeyqmvUDJsorft1j4otZ18uyCSmvkE3/E0/rxc1i+Y/J4
+         WAPAmcypM76lvsEn0mBU5LyGMS2rYkuJDOE0xevaEOjzEk0rD3/se15RzZMktNWGu+wv
+         lhQKCHW7Uy7DSVBHx7lqWF47lgoQUFP5CCXO5Hr+EI3LhMBozgQLtc36O8HIWmgaM3rX
+         1flw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714723084; x=1715327884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9lds1dTNJm20KO2gDxu3lgrciPV698y5y+f6AzLSwyE=;
+        b=cnB5PHD+EtrsXUZxjUxnO8SdoNA8fvf9BdI0x3npQpXUtc6G8EqJ1Pp1c7QTezJvUY
+         Zk22jXUT24ltwF6Q1HZr6nFjc2xucJM24JzukAHkP9+oaua7EY4IDrvtrGmKrpqtKSM3
+         nFczmIjDAHZM6BenrDVCOhPZCgbaejRs+BvKA/VzDXA+hA/87Naz/VDW26RPWRbswlSR
+         HGJsBPaXb2S+AOl5j1oEvzQHq3STRiQRIfW/Im0lVha2NhUgzfTldQ2SubFhzUhsFXAA
+         fwooI6d8VrbiWdKbgwr3EZLj6A5iXm9KbqIZG28dodKAtzzokUlPVj6QjoCxR3nh5gMX
+         651A==
+X-Forwarded-Encrypted: i=1; AJvYcCV9gAE4ZTq5h5q4B9ei2q0lHC0RTez+jJ3WcUFhvsxOCH5jKBD8HfhR3issK7diHVNxwBpAxKn6B86Q7//jUiOpPPrZa1liOUpdVXca
+X-Gm-Message-State: AOJu0Yxsx4RBjV4fvngiWvlQcKG9iJOT0RmJAXfCoAzUzfE0G/v50obf
+	hyCRA7l4pJ8PeK9vGIQwIjP/b9uZ2dQAOsgcLlwIxIbU8MezhdzKaWc2luszob6KnrC/uK2Qu0a
+	+MdqoQMPlbovgfNNE5lzpkpGvW7dSeakT9KlClw==
+X-Google-Smtp-Source: AGHT+IEG4nOciPICYFkjWxdsB7yxrB7cRVj6SjUMBpSK0kxFtgIH4MKqI3NxijFyX2wkk8IVPl+GECzNHLPUJ6D97IM=
+X-Received: by 2002:a25:cec5:0:b0:de5:6a82:49dd with SMTP id
+ x188-20020a25cec5000000b00de56a8249ddmr2210883ybe.13.1714723083855; Fri, 03
+ May 2024 00:58:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240424185039.1707812-1-opendmb@gmail.com> <20240424185039.1707812-2-opendmb@gmail.com>
+In-Reply-To: <20240424185039.1707812-2-opendmb@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 3 May 2024 09:57:53 +0200
+Message-ID: <CACRpkdZKdnDqDMnWFaZwwVW1BqcOMa8qFiu-aUbQa7UnXFtcnQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: brcmstb: add gpio-ranges
+To: Doug Berger <opendmb@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Phil Elwell <phil@raspberrypi.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With -Wextra clang warns about pointer arithmetic using a null pointer.
-When building with CONFIG_PCI=n, that triggers a warning in the IO
-accessors, eg:
+On Wed, Apr 24, 2024 at 8:51=E2=80=AFPM Doug Berger <opendmb@gmail.com> wro=
+te:
 
-  In file included from linux/arch/powerpc/include/asm/io.h:672:
-  linux/arch/powerpc/include/asm/io-defs.h:23:1: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     23 | DEF_PCI_AC_RET(inb, u8, (unsigned long port), (port), pio, port)
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ...
-  linux/arch/powerpc/include/asm/io.h:591:53: note: expanded from macro '__do_inb'
-    591 | #define __do_inb(port)          readb((PCI_IO_ADDR)_IO_BASE + port);
-        |                                       ~~~~~~~~~~~~~~~~~~~~~ ^
+> Add optional gpio-ranges device-tree property to the Broadcom
+> Set-Top-Box GPIO controller.
+>
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 
-That is because when CONFIG_PCI=n, _IO_BASE is defined as 0.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Although _IO_BASE is defined as plain 0, the cast (PCI_IO_ADDR) converts
-it to void * before the addition with port happens.
-
-Instead the addition can be done first, and then the cast. The resulting
-value will be the same, but avoids the warning, and also avoids void
-pointer arithmetic which is apparently non-standard.
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Closes: https://lore.kernel.org/all/CA+G9fYtEh8zmq8k8wE-8RZwW-Qr927RLTn+KqGnq1F=ptaaNsA@mail.gmail.com
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
----
- arch/powerpc/include/asm/io.h | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-v2: New.
-
-diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
-index 08c550ed49be..ba2e13bb879d 100644
---- a/arch/powerpc/include/asm/io.h
-+++ b/arch/powerpc/include/asm/io.h
-@@ -585,12 +585,12 @@ __do_out_asm(_rec_outl, "stwbrx")
- #define __do_inw(port)		_rec_inw(port)
- #define __do_inl(port)		_rec_inl(port)
- #else /* CONFIG_PPC32 */
--#define __do_outb(val, port)	writeb(val,(PCI_IO_ADDR)_IO_BASE+port);
--#define __do_outw(val, port)	writew(val,(PCI_IO_ADDR)_IO_BASE+port);
--#define __do_outl(val, port)	writel(val,(PCI_IO_ADDR)_IO_BASE+port);
--#define __do_inb(port)		readb((PCI_IO_ADDR)_IO_BASE + port);
--#define __do_inw(port)		readw((PCI_IO_ADDR)_IO_BASE + port);
--#define __do_inl(port)		readl((PCI_IO_ADDR)_IO_BASE + port);
-+#define __do_outb(val, port)	writeb(val,(PCI_IO_ADDR)(_IO_BASE+port));
-+#define __do_outw(val, port)	writew(val,(PCI_IO_ADDR)(_IO_BASE+port));
-+#define __do_outl(val, port)	writel(val,(PCI_IO_ADDR)(_IO_BASE+port));
-+#define __do_inb(port)		readb((PCI_IO_ADDR)(_IO_BASE + port));
-+#define __do_inw(port)		readw((PCI_IO_ADDR)(_IO_BASE + port));
-+#define __do_inl(port)		readl((PCI_IO_ADDR)(_IO_BASE + port));
- #endif /* !CONFIG_PPC32 */
- 
- #ifdef CONFIG_EEH
-@@ -606,12 +606,12 @@ __do_out_asm(_rec_outl, "stwbrx")
- #define __do_writesw(a, b, n)	_outsw(PCI_FIX_ADDR(a),(b),(n))
- #define __do_writesl(a, b, n)	_outsl(PCI_FIX_ADDR(a),(b),(n))
- 
--#define __do_insb(p, b, n)	readsb((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
--#define __do_insw(p, b, n)	readsw((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
--#define __do_insl(p, b, n)	readsl((PCI_IO_ADDR)_IO_BASE+(p), (b), (n))
--#define __do_outsb(p, b, n)	writesb((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
--#define __do_outsw(p, b, n)	writesw((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
--#define __do_outsl(p, b, n)	writesl((PCI_IO_ADDR)_IO_BASE+(p),(b),(n))
-+#define __do_insb(p, b, n)	readsb((PCI_IO_ADDR)(_IO_BASE+(p)), (b), (n))
-+#define __do_insw(p, b, n)	readsw((PCI_IO_ADDR)(_IO_BASE+(p)), (b), (n))
-+#define __do_insl(p, b, n)	readsl((PCI_IO_ADDR)(_IO_BASE+(p)), (b), (n))
-+#define __do_outsb(p, b, n)	writesb((PCI_IO_ADDR)(_IO_BASE+(p)),(b),(n))
-+#define __do_outsw(p, b, n)	writesw((PCI_IO_ADDR)(_IO_BASE+(p)),(b),(n))
-+#define __do_outsl(p, b, n)	writesl((PCI_IO_ADDR)(_IO_BASE+(p)),(b),(n))
- 
- #define __do_memset_io(addr, c, n)	\
- 				_memset_io(PCI_FIX_ADDR(addr), c, n)
--- 
-2.44.0
-
+Yours,
+Linus Walleij
