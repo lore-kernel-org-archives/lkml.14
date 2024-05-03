@@ -1,396 +1,389 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4A714BFA8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0F214F62;
 	Fri,  3 May 2024 09:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714727029; cv=none; b=oJslPSNhYXh5K5QO9nCohXRSopvcVbGJc72yEqwpI8DcaQ7vw2ZkEyFzMtfxI8JQdKWSxbKbZGHPUq+spuGoz1lbJW5c322isSpItk9bCOoJ5kQXA20BFIAMxJVi3qoeFNLXihtyZngQ0BzHzafnNPJRaKZq/mgdULHQu9ERoj0=
+	t=1714727029; cv=none; b=TDRL4EknNrGXbQ6QjtvmwpCKLyslIu7ZAmooBe+3ewAu4NtSHr2sykMGt9gdhj9zwYRhcfVH0VW5E3hWkfFuU9lP3PpAufU4knwCr451STs+P+h9Uw6FoAzVRUtBhJFEH5JlOB9sGXJqfoUv5Dfn50FH9VfyZILCDIgLKD30yWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714727029; c=relaxed/simple;
-	bh=Bk4Zza8EYRCRkedfcxu47DOvpBSaC6BwAnmuSeVosVU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FTQtBZVu9Pa2plx2FnOmeb78Pt7JofIwjOrpHOIp3Sy3lQaVLMEDQ6hXGs9oR17AtOkOlTiw5zubZU1S1ZTizlZJxA58VEk5mLxhGcvw8JhpKC+KP9RhNBJxhyOE8gE3XyIKgD9+fW2RO3LOVpFB7BWzDz4c5M0albH7j8whuGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hJab+Wqy; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=H4OwBwwEJLoUrKgErNPAJ4aWKXfqp1/GW2h+1cPY6mY=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=LELIdvB94u4VG7Xl+VUb+dOAlJzdIImPOiWg1ONIISGco6uNrDnbtN5vQuS2LAJ/NRfJUIRebhYvF6BE23O6h6qdT/UUemv/kqLLeDooaSN6kwrjugPZgWSH3yX8qfUt6xL4WSNKVgbgrCFU8Y2NquZSNlxFAkDNfVMKlyJMboY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hNizHVdn; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJab+Wqy"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a599a3b233cso22926266b.3;
-        Fri, 03 May 2024 02:03:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714727025; x=1715331825; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4y4vT9BTiV20HdXMjZF7RMcH0dJBgqS4NIhpx2HoEyU=;
-        b=hJab+WqyqBHCJoinsrpuZjPDnYR8ga4Dnya7wPH0slGJTAQzXy3piAR18ggsfO5IKC
-         XfZ2PzzqaguswCGaor6KNwH0k6z0G6XObShMSL/ha9Z8kyGsPEMh3RVIgSIhq0JmUuIP
-         8FwNbQUTqO6BF3tLQF9zBFOT4DkpvOSHEwFaoze7N0CIFd4euKOdfyeycKUsEC3kqXC5
-         +1NwsSHtt/Yc5vkwHGPGZ9aNRPsx9sorZOJewLxUVCSKvW7NtY6vvuQD0PcyKnHafHwt
-         FIGnWQbaaA6pRWogPI4ybmQ8bzYS51+XBb6brykBtopLXo6j3ZAXO207KTuveblO2YCM
-         ld9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714727025; x=1715331825;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4y4vT9BTiV20HdXMjZF7RMcH0dJBgqS4NIhpx2HoEyU=;
-        b=F4En68/tyChp9G46WgIv4D/vWOnX0+Rm/4I3WhiG+BENqI0f+HhEBsrZWH7D+uCx6/
-         hcq+WTvc2ZXs97C6iSQ7ySYa6c0PEQM2f/TggSlFhMPzE8ih9unOlmuY8QRuJ5JKlHVz
-         1aSeTk/koE7uaL+O3qfC4fiKS+JwHyzWP4pIpab74aI70cXxDTc59SoHFOGKb/9iUi3S
-         t1RLzqQ6QPhRT1hsINyMo0QXs0zsDFCgnsfyj03bIm0+tY5M6YdCeffXQh6YYQLmSjAC
-         tjiYKg7GffQ1HFF4KBgJdrZZ+rm1UkM4wknIIgHPl3+ntRoHBQ8xShYpapbZ6vyKfIJr
-         WOoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWC4C67PwaI2++k80YJCwKdmsx1ENmfjPPdz/kp0/XsPMnny3FvewKKB7kRQdpEb10WKgsEJOcqsmaaaY/yJO8CGx4QC8pJI6Abxepq8Nyoyae5H83jjwSqOhN3t/cry6BGvPGF0LqCHiCey+1FqDDEoMFZygCRH79nMjwoiqJ82GtYcLPusJ3W9ePgKXUiHueUFalXcwziXCl3fdq+g==
-X-Gm-Message-State: AOJu0YyJEEcFk8RW8KSFkYTyQLafiUP52+yHBHDiNQ2TINGKPMEFKr1k
-	N6wNeMxPPnBXDLxrjziDPOHueVazqIJPzf/Qj/T14OSbClg3Vkbr
-X-Google-Smtp-Source: AGHT+IG5O9deX+SF26zkZv/YFJnDvgFDFjmcCOtWlSq7rEN9c4LyKQXLDiEk3UovXPRzh0a7NTLGTQ==
-X-Received: by 2002:a50:bb06:0:b0:56e:3088:49a with SMTP id y6-20020a50bb06000000b0056e3088049amr1439112ede.37.1714727024930;
-        Fri, 03 May 2024 02:03:44 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
-        by smtp.gmail.com with ESMTPSA id f20-20020a056402195400b005725c56b35bsm1474991edz.71.2024.05.03.02.03.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 02:03:44 -0700 (PDT)
-Message-ID: <928971b3b62a04144e1661ef6585264668efc447.camel@gmail.com>
-Subject: Re: [PATCH 4/5] iio: adis16480: add support for adis16545/7 families
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: jic23@kernel.org, Ramona.Gradinariu@analog.com,
- ramona.bolboaca13@gmail.com,  linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org,  linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, corbet@lwn.net,  conor+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, robh@kernel.org,  Nuno.Sa@analog.com
-Date: Fri, 03 May 2024 11:07:23 +0200
-In-Reply-To: <20240503094113.00001879@Huawei.com>
-References: <20240423084210.191987-1-ramona.gradinariu@analog.com>
-	 <20240423084210.191987-5-ramona.gradinariu@analog.com>
-	 <20240428162555.3ddf31ea@jic23-huawei>
-	 <e62f8df4b06abc371b1e9fe3232cb593e468d54c.camel@gmail.com>
-	 <BL1PR03MB5992DEBF82C0DB7BDC5EA0FF971B2@BL1PR03MB5992.namprd03.prod.outlook.com>
-	 <20240429204027.3e47074a@jic23-huawei>
-	 <0e13f8b643bb7afcc7c4f0d62741cf9fda66c1e0.camel@gmail.com>
-	 <20240502201408.216575e4@jic23-huawei>
-	 <0df8386e74cbdfaaaf35a4bc59326151b863ae4c.camel@gmail.com>
-	 <20240503094113.00001879@Huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hNizHVdn"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240503090338euoutp0194b4a66649b9801585df2f01f69d5a50~L7yOBYBSa0516505165euoutp01e;
+	Fri,  3 May 2024 09:03:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240503090338euoutp0194b4a66649b9801585df2f01f69d5a50~L7yOBYBSa0516505165euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1714727018;
+	bh=5DfAXm0BybfL0wB90HdoJ2+ecXzl3T3phLFwP9QlX+o=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=hNizHVdn9K9XbhBNhn1nDSO/5KZUNj2XoxMSsTacSd3jPs0o0drSRiC4H6bkslwSW
+	 B/QSvO9HwlzhFW4zaHFyGSJ5H6nnh83o7MAyLAhqznaRM1mK98m5CnfxgNvbZnC8qx
+	 hsrB//hR8ZhJR5rlu9tY5Zsijl1EM085ggZXO+JQ=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240503090338eucas1p1622ca105c87c20c6bbe96b62943fe717~L7yNnz7IW1025710257eucas1p1p;
+	Fri,  3 May 2024 09:03:38 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 2A.F6.09624.A68A4366; Fri,  3
+	May 2024 10:03:38 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240503090337eucas1p17add844fd822fa0889270ae9e12ca4d0~L7yM6N_nm1858018580eucas1p1z;
+	Fri,  3 May 2024 09:03:37 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240503090337eusmtrp2e33e44757c1c281d7e60e444934cfff9~L7yM4xFdH1141911419eusmtrp2R;
+	Fri,  3 May 2024 09:03:37 +0000 (GMT)
+X-AuditID: cbfec7f2-bfbff70000002598-4f-6634a86abd4b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id DB.59.08810.968A4366; Fri,  3
+	May 2024 10:03:37 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240503090337eusmtip245d74ecfb1a665d8dac0f5363231e909~L7yMjDsdX1588515885eusmtip2r;
+	Fri,  3 May 2024 09:03:37 +0000 (GMT)
+Received: from localhost (106.210.248.112) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Fri, 3 May 2024 10:03:36 +0100
+Date: Fri, 3 May 2024 11:03:32 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+CC: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+	Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>,
+	<linux-fsdevel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-security-module@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-xfs@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
+	<coreteam@netfilter.org>, <kexec@lists.infradead.org>,
+	<linux-hardening@vger.kernel.org>, <bridge@lists.linux.dev>,
+	<lvs-devel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<rds-devel@oss.oracle.com>, <linux-sctp@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>, <apparmor@lists.ubuntu.com>
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="pu6elde4hy573vso"
+Content-Disposition: inline
+In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VSfUxTVxzNfe/1vVe24mvp5AZkZIiayIcQWbzZKrC4Px4hM5PMLPLHRjOe
+	4KBFW2DqdOJEFHBbBVEpX2UiMnDFFKhURLFjRcABG8SgwzI+SkBwQIsCq8Isj80l++/8fuec
+	e8+5uTQueUh60fuUqZxKKU/2I90Io2WxK+jzqrC9IUNmD3TcohMgR2sbiYyXcjH0wnQKR/UW
+	K0A2yzCF7uUqUFPnUwwZRu4L0M3mdgKV1i4C1HujmETWq8sC1NPSKUB9DXoCjZm/IZDRkUki
+	TfkJHNl0kwI0c2aYRK21vxDoxvNGCjkXxjDknF8SoBNldhz1a2wAWXRrkUbfQaCuOocg0oct
+	yviVYDu+h6zOkMYaqrNJ1mDPo9i6imPseF0hYLsvlgP2fv8gwT5x3sXYnsopknUY3mS/y7VQ
+	H4pi3WTxXPK+dE61JTzOLdFp+53cX/Txwe7BnRmgKzIHCGnIhME7lmtkDnCjJUwVgCPTdwA/
+	zAE4N/ktcKkkjAPAWze/ygH0iuPHOU9ecwXAyXsj+L+a8Uev80Q9gDWjfwhcBMH4w7qJbMyF
+	SSYQdk8NrBikjAz+8MxBuTDOFFCw6HqcC3swcbD+cv7KxSImElr1TQSPxbC9cJRwhcCZg3Bo
+	IZaH3vDKEu1SCJkPYFbFNMEXWw9br5dQPD4KO+ofYq5okJlxg+bZUcAT78MzDXwcyHjAx231
+	q4Z1cNlUtmrIB/D20gzFDzUAVh5/ivGqd2Fm3+iq4z1o7X4A+Bdyh/1PxHwvd5hnvIDzaxE8
+	nSXh1RthjXWK0ID12v80075qpn3VTLtyTiDUNdnJ/60DYGX5JM7j7VCvnyZ0gKoGnlyaWpHA
+	qUOV3BfBarlCnaZMCP4sRWEAL79851KbvRGUPJ4NNgOMBmbg/9I8fK2mB3gRyhQl5ycVBeRv
+	3SsRxcsPHeZUKZ+q0pI5tRl404Sfp2hDvC8nYRLkqVwSx+3nVP+wGC30ysDSCwPswc2nK7SJ
+	u46EjoZI18i6djc81wszz+8oGTq/uaSpb+sBQ4nBMeAYxCxHt/w82WOq0J9rEAu/jL1Iz8dE
+	ptnz9kTQittJBedyNeiyqSV5g8mnWi3rLDwy5/A1/8aG9RbtpDZVuTuXo7F37k6cahf31Ebs
+	ic4wmiOTZLNXLxXj0nZpcdCScxf3SX/42fbyRXHjuvE3os5ub342sM2my/bxpeThu/Heqbe8
+	s5ix0sAHZTXzh4YOX1g4kBdi++kYFYSZQv862TlRUNsijSqNDjhpWBO+rFnruWnbeNzbSoX7
+	xhfuMfiOMLEs97WCr4MiokI+umV8FAPT/0xs809K9SPUifLQzbhKLf8bTKfE620EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJKsWRmVeSWpSXmKPExsVy+t/xe7qZK0zSDH7sl7VoPLaA1eLzkeNs
+	FtsWdzNZ/N3Zzmyx5dg9Rounxx6xW5zpzrXYffork8Wmx9dYLfbsPcliMW/9T0aLy7vmsFnc
+	W/Of1eLCgdOsFle2rmOxeHaol8Vi2+cWNosJC5uZLZ4ueM1q8aHnEZvFkfVnWSx2/dnBbvH7
+	xzMmi9/f/7FaNM//xGxxY8JTRotjC8QsJqw7xWJxbvNnVgdZj9kNF1k8Ti2S8FiwqdRj06pO
+	No9Nnyaxe2xeUu/xYvNMRo/zMxYyely7cZ/F4+3vE0weF5a9YfP4vEnOo7/7GHsAb5SeTVF+
+	aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexpz+v0wFM8Mr
+	Ph6+xNrAeMahi5GDQ0LARGLtF/EuRi4OIYGljBI3+n6ydDFyAsVlJDZ+ucoKYQtL/LnWxQZR
+	9JFR4tebn8wQzhZGietnD4F1sAioSGx+2ckEYrMJ6Eicf3OHGcQWEbCRWPntMzuIzSwwlV1i
+	9vYEEFtYIEFiy9LJjCA2r4CDxL11u1kghi5glJjevhYqIShxcuYTFpBTmQXKJN7fNoYwpSWW
+	/+MAqeAU8JVoW/Ie6mhliSPb57JD2LUSn/8+Y5zAKDwLyaBZCINmIQyaBXablsSNfy+ZMIS1
+	JZYtfM0MYdtKrFv3nmUBI/sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwHS37djPzTsY5736
+	qHeIkYmD8RCjClDnow2rLzBKseTl56UqifBqTzZOE+JNSaysSi3Kjy8qzUktPsRoCgzDicxS
+	osn5wEScVxJvaGZgamhiZmlgamlmrCTO61nQkSgkkJ5YkpqdmlqQWgTTx8TBKdXANH3uY4E0
+	2xYBo9Mirv0ldwM2JeXqPak55K24q+zrxBohrh2WGfamDnIvAq2vLWOefW1xx/xL/75ENCX9
+	vqot8bXk/BKxn6F9nTImM+a53WtI2Xgg3tez4H/e1kWOlx5e8/WsP/e1yuuIcl/Z/wLbadY8
+	KiufaMxeF5jCvf62Uu03kYK5wRGfjrzc92dKt2DT2pBb3qeD5d7cEz/wpqLi2sLZNb+7lkZM
+	n+Ie5awmssqS9+w9mbNLU2RnBT5VsBSSrBRo3iWV/Wb3rR8mMzi+2SzRU5f6N7MyzCXp4P/d
+	yaIWaeGfHbVicn6JfVP4Uf55nj6jjUNn7tegOU2nuZ60PNqZxc/sn/6VMT1xt32vEktxRqKh
+	FnNRcSIAsZFFMwwEAAA=
+X-CMS-MailID: 20240503090337eucas1p17add844fd822fa0889270ae9e12ca4d0
+X-Msg-Generator: CA
+X-RootMTR: 20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803
+References: <CGME20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803@eucas1p2.samsung.com>
+	<20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
 
-On Fri, 2024-05-03 at 09:42 +0100, Jonathan Cameron wrote:
-> On Fri, 03 May 2024 08:09:29 +0200
-> Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
->=20
-> Resend as the to / cc entries were garbled. No idea why!
->=20
-> > On Thu, 2024-05-02 at 20:14 +0100, Jonathan Cameron wrote:
-> > > On Thu, 02 May 2024 13:31:55 +0200
-> > > Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
-> > > =C2=A0=20
-> > > > On Mon, 2024-04-29 at 20:40 +0100, Jonathan Cameron wrote:=C2=A0=
-=20
-> > > > > On Mon, 29 Apr 2024 13:17:42 +0000
-> > > > > "Gradinariu, Ramona" <Ramona.Gradinariu@analog.com> wrote:
-> > > > > =C2=A0=C2=A0=C2=A0=20
-> > > > > > > -----Original Message-----
-> > > > > > > From: Nuno S=C3=A1 <noname.nuno@gmail.com>
-> > > > > > > Sent: Monday, April 29, 2024 10:59 AM
-> > > > > > > To: Jonathan Cameron <jic23@kernel.org>; Ramona Gradinariu
-> > > > > > > <ramona.bolboaca13@gmail.com>
-> > > > > > > Cc: linux-kernel@vger.kernel.org; linux-iio@vger.kernel.org;
-> > > > > > > linux-
-> > > > > > > doc@vger.kernel.org; devicetree@vger.kernel.org; corbet@lwn.n=
-et;
-> > > > > > > conor+dt@kernel.org; krzysztof.kozlowski+dt@linaro.org;
-> > > > > > > robh@kernel.org;
-> > > > > > > Gradinariu, Ramona <Ramona.Gradinariu@analog.com>; Sa, Nuno
-> > > > > > > <Nuno.Sa@analog.com>
-> > > > > > > Subject: Re: [PATCH 4/5] iio: adis16480: add support for
-> > > > > > > adis16545/7
-> > > > > > > families
-> > > > > > >=20
-> > > > > > > [External]
-> > > > > > >=20
-> > > > > > > On Sun, 2024-04-28 at 16:25 +0100, Jonathan Cameron wrote:=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > > > > > > > On Tue, 23 Apr 2024 11:42:09 +0300
-> > > > > > > > Ramona Gradinariu <ramona.bolboaca13@gmail.com> wrote:
-> > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=20
-> > > > > > > > > The ADIS16545 and ADIS16547 are a complete inertial syste=
-m
-> > > > > > > > > that
-> > > > > > > > > includes a triaxis gyroscope and a triaxis accelerometer.
-> > > > > > > > > The serial peripheral interface (SPI) and register struct=
-ure
-> > > > > > > > > provide a
-> > > > > > > > > simple interface for data collection and configuration
-> > > > > > > > > control.
-> > > > > > > > >=20
-> > > > > > > > > These devices are similar to the ones already supported i=
-n the
-> > > > > > > > > driver,
-> > > > > > > > > with changes in the scales, timings and the max spi speed=
- in
-> > > > > > > > > burst
-> > > > > > > > > mode.
-> > > > > > > > > Also, they support delta angle and delta velocity reading=
-s in
-> > > > > > > > > burst
-> > > > > > > > > mode, for which support was added in the trigger handler.
-> > > > > > > > >=20
-> > > > > > > > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=20
-> > > > > > > >=20
-> > > > > > > > What is Nuno's relationship to this patch?=C2=A0 You are au=
-thor and
-> > > > > > > > the
-> > > > > > > > sender
-> > > > > > > > which is fine, but in that case you need to make Nuno's
-> > > > > > > > involvement
-> > > > > > > > explicit.
-> > > > > > > > Perhaps a Co-developed-by or similar is appropriate?
-> > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=20
-> > > > > > > > > Signed-off-by: Ramona Gradinariu
-> > > > > > > > > <ramona.gradinariu@analog.com>=C2=A0=C2=A0=C2=A0=C2=A0=
-=20
-> > > > > > > > A few comments inline.=C2=A0 Biggest one is I'd like a clea=
-r
-> > > > > > > > statement of
-> > > > > > > > why you
-> > > > > > > > can't do a burst of one type, then a burst of other.=C2=A0 =
-My guess
-> > > > > > > > is
-> > > > > > > > that the
-> > > > > > > > transition is very time consuming?=C2=A0 If so, that is fin=
-e, but you
-> > > > > > > > should be
-> > > > > > > > able
-> > > > > > > > to let available_scan_masks handle the disjoint channel
-> > > > > > > > sets.=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > > > > > >=20
-> > > > > > > Yeah, the burst message is a special spi transfer that brings=
- you
-> > > > > > > all
-> > > > > > > of the
-> > > > > > > channels data at once but for the accel/gyro you need to
-> > > > > > > explicitly
-> > > > > > > configure
-> > > > > > > the chip to either give you the "normal vs "delta" readings. =
-Re-
-> > > > > > > configuring the
-> > > > > > > chip and then do another burst would destroy performance I th=
-ink.
-> > > > > > > We
-> > > > > > > could
-> > > > > > > do
-> > > > > > > the manual readings as we do in adis16475 for chips not suppo=
-rting
-> > > > > > > burst32.
-> > > > > > > But
-> > > > > > > in the burst32 case those manual readings should be minimal w=
-hile
-> > > > > > > in
-> > > > > > > here we
-> > > > > > > could have to do 6 of them which could also be very time
-> > > > > > > consuming...
-> > > > > > >=20
-> > > > > > > Now, why we don't use available_scan_masks is something I can=
-'t
-> > > > > > > really
-> > > > > > > remember
-> > > > > > > but this implementation goes in line with what we have in the
-> > > > > > > adis16475
-> > > > > > > driver.
-> > > > > > >=20
-> > > > > > > - Nuno S=C3=A1
-> > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > > > > >=20
-> > > > > > Thank you Nuno for all the additional explanations.
-> > > > > > Regarding the use of available_scan_masks, the idea is to have =
-any
-> > > > > > possible
-> > > > > > combination for accel, gyro, temp and timestamp channels or del=
-ta
-> > > > > > angle,
-> > > > > > delta=20
-> > > > > > velocity, temp and=C2=A0 timestamp channels. There are a lot of
-> > > > > > combinations
-> > > > > > for=20
-> > > > > > this and it does not seem like a good idea to write them all
-> > > > > > manually.
-> > > > > > That is=20
-> > > > > > why adis16480_update_scan_mode is used for checking the correct
-> > > > > > channels
-> > > > > > selection.=C2=A0=C2=A0=C2=A0=20
-> > > > >=20
-> > > > > If you are using bursts, the data is getting read anyway - which =
-is
-> > > > > the
-> > > > > main
-> > > > > cost here. The real question becomes what are you actually saving=
- by
-> > > > > supporting all
-> > > > > the combinations of the the two subsets of channels in the pollfu=
-nc?
-> > > > > Currently you have to pick the channels out and repack them, if
-> > > > > pushing
-> > > > > them all
-> > > > > looks to me like a mempcy and a single value being set
-> > > > > (unconditionally).=C2=A0=C2=A0=20
-> > > > =C2=A0=20
-> > > > > Then it's a question of what the overhead of the channel demux in=
- the
-> > > > > core
-> > > > > is.
-> > > > > What you pass out of the driver via iio_push_to_buffers*()
-> > > > > is not what ends up in the buffer if you allow the IIO core to do=
- data
-> > > > > demuxing
-> > > > > for you - that is enabled by providing available_scan_masks.=C2=
-=A0 At
-> > > > > buffer
-> > > > > start up the demux code computes a fairly optimal set of copies t=
-o
-> > > > > repack
-> > > > > the incoming data to match with what channels the consumer (here
-> > > > > probably
-> > > > > the kfifo on the way to userspace) is expecting.
-> > > > >=20
-> > > > > That demux adds a small overhead but it should be small as long
-> > > > > as the channels wanted aren't pathological (i.e. every other one)=
-.
-> > > > >=20
-> > > > > Advantage is the driver ends up simpler and in the common case of=
- turn
-> > > > > on all the channels (why else did you buy a device with those
-> > > > > measurements
-> > > > > if you didn't want them!) the demux is zerocopy so effectively fr=
-ee
-> > > > > which
-> > > > > is not going to be the case for the bitmap walk and element copy =
-in
-> > > > > the
-> > > > > driver.
-> > > > > =C2=A0=C2=A0=C2=A0=20
-> > > >=20
-> > > > Maybe my younger me was smarter but reading again the validation of=
- the
-> > > > scan
-> > > > mask
-> > > > code (when available_scan_masks is available), I'm not sure why we'=
-re
-> > > > not
-> > > > using them.
-> > > > I think that having one mask with delta values + temperature and an=
+--pu6elde4hy573vso
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hey Thomas
+
+Here is my feedback for your outstanding constification patches [1] and [2].
+
+# You need to split the patch
+The answer that you got from Jakub in the network subsystem is very clear a=
+nd
+baring a change of heart from the network folks, this will go in as but as a
+split patchset. Please split it considering the following:
+1. Create a different patchset for drivers/,  fs/, kernel/, net, and a
+   miscellaneous that includes whatever does not fit into the others.
+2. Consider that this might take several releases.
+3. Consider the following sufix for the interim function name "_const". Lik=
+e in
+   kfree_const. Please not "_new".
+4. Please publish the final result somewhere. This is important so someone =
+can
+   take over in case you need to stop.
+5. Consistently mention the motivation in your cover letters. I specify more
+   further down in "#Motivation".
+6. Also mention that this is part of a bigger effort (like you did in your
+   original cover letters). I would include [3,4,5,6]
+7. Include a way to show what made it into .rodata. I specify more further =
+down
+   in "#Show the move".
+
+# Motivation
+As I read it, the motivation for these constification efforts are:
+1. It provides increased safety: Having things in .rodata section reduces t=
+he
+   attack surface. This is especially relevant for structures that have fun=
+ction
+   pointers (like ctl_table); having these in .rodata means that these poin=
+ters
+   always point to the "intended" function and cannot be changed.
+2. Compiler optimizations: This was just a comment in the patchsets that I =
+have
+   mentioned ([3,4,5]). Do you know what optimizations specifically? Does it
+   have to do with enhancing locality for the data in .rodata? Do you have =
 other
-> > > > one
-> > > > with
-> > > > normal + temperature would be enough for what we want in here. The =
-code
-> > > > in
-> > > > adis16480_update_scan_mode() could then be simpler I think.
-> > > >=20
-> > > > Now, what I'm still not following is the straight memcpy(). I may b=
-e
-> > > > missing
-> > > > something but the demux code only appears to kick in when we have
-> > > > compound
-> > > > masks
-> > > > resulting of multiple buffers being enabled. So I'm not seeing how =
-we
-> > > > can
-> > > > get away
-> > > > without picking the channels and place them correctly in the buffer
-> > > > passed
-> > > > to IIO?=C2=A0=20
-> > >=20
-> > > It runs whenever the enabled mask requested (the channels that are
-> > > enabled) is
-> > > different from the active_scan_mask. It only sends channels in one
-> > > direction if there is only one user but it only sends the ones enable=
-d by
-> > > that
-> > > consumer.
-> > > It's called unconditionally from iio_enable_buffers()
-> > >=20
-> > > That iterates over all enabled buffers (often there is only 1)
-> > >=20
-> > > and then checks if the active scan mask is the same as the one for th=
-is
-> > > buffer.
-> > > https://elixir.bootlin.com/linux/v6.9-rc6/source/drivers/iio/industri=
-alio-buffer.c#L1006
-> > >=20
-> > > The setup for whether to find a superset from available_scan_masks is=
- here
-> > > https://elixir.bootlin.com/linux/v6.9-rc6/source/drivers/iio/industri=
-alio-buffer.c#L928
-> > >=20
-> > > Key is that if it happens to match, then we don't actually do anythin=
-g in
-> > > the
-> > > demux.
-> > > It just gets passed straight on through.=C2=A0 That does the fast pat=
-h you
-> > > mention
-> > > below.=C2=A0=20
-> >=20
-> > Ahh got it... May failure was not realizing that iio_scan_mask_match()
-> > returns
-> > the available masks so I was assuming that the bitmap_equal() check wou=
-ld
-> > only
-> > differ when multiple buffers are enabled.
-> >=20
-> > Oh well, I think then this should work... I'm not sure it will be more
-> > performant for the case where we don't enable all the channels because =
-the
-> > demux
-> > is a linked list which is far from being a performance friend (maybe we=
- can
-> > do
-> > some trials with something like xarray...). Still, for this to work the
-> > buffer
-> > we pass into IIO has to be bigger than it needs to be (so bigger memset=
-())
-> > because, AFAIU, we will have to pass on all the scan elements and, as I
-> > said,
-> > the burst data will either have delta or normal measurements (not both)=
-. I
-> > guess
-> > the code will still look simpler so if there's no visible difference in
-> > performance I'm fine with the change. I guess Ramona can give it a try =
-to
-> > see
-> > how it looks like.
->=20
-> Would be interesting to look at the performance of that code, but the
-> real question is what channels do users typically enabled. If they enable=
-d
-> a full set (and I suspect most do) then that code doesn't nothing at all.
->=20
+   specific optimizations in mind?
+3. Readability: because it is easier to know up-front that data is not supp=
+osed
+   to change or its obvious that a function is re-entrant. Actually a lot o=
+f the
+   readability reasons is about knowing things "up-front".
+As we move forward with the constification in sysctl, please include a more
+detailed motivation in all your cover letters. This helps maintainers (that
+don't have the context) understand what you are trying to do. It does not n=
+eed
+to be my three points, but it should be more than just "put things into
+=2Erodata". Please tell me if I have missed anything in the motivation.
 
-The only channel that makes me doubt is the temperature one but yeah, I wou=
-ld
-also expect  most users just enable them all...
+# Show the move
+I created [8] because there is no easy way to validate which objects made it
+into .rodata. I ran [8] for your Dec 2nd patcheset [7] and there are less in
+=2Erodata than I expected (the results are in [9]) Why is that? Is it somet=
+hing
+that has not been posted to the lists yet?=20
 
-> Original thinking was that the non common case didn't really matter much.
-> If it is worth optimizing I'd suggest a double pass (or cheat - see later=
-)
-> 1st pass works out number of elements, 2nd just saves them in a nice
-> linear array.=C2=A0 It's typically small however, so maybe just allocate =
-a linear
-> array big enough for the worst case.
->=20
+Best
 
-Yeah, linear array should also be fine and likely simpler. Maybe if I'm bor=
-ed at
-some point I'll run some experiments :)
+[1] https://lore.kernel.org/all/20240423-sysctl-const-handler-v3-0-e0beccb8=
+36e2@weissschuh.net/
+[2] https://lore.kernel.org/all/20240418-sysctl-const-table-arg-v2-1-4012ab=
+c31311@weissschuh.net
+[3] [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
+    https://lore.kernel.org/all/20240426-n-const-ops-var-v2-0-e553fe67ae82@=
+kernel.org
+[4] [PATCH v2 00/19] backlight: Constify lcd_ops
+    https://lore.kernel.org/all/20240424-video-backlight-lcd-ops-v2-0-1aaa8=
+2b07bc6@kernel.org
+[5] [PATCH 1/4] iommu: constify pointer to bus_type
+    https://lore.kernel.org/all/20240216144027.185959-1-krzysztof.kozlowski=
+@linaro.org
+[6] [PATCH 00/29] const xattr tables
+    https://lore.kernel.org/all/20230930050033.41174-1-wedsonaf@gmail.com
+[7] https://lore.kernel.org/all/20231204-const-sysctl-v2-0-7a5060b11447@wei=
+ssschuh.net/
 
-- Nuno S=C3=A1
+[8]
+    #!/usr/bin/python3
+
+    import subprocess
+    import re
+
+    def exec_cmd( cmd ):
+        try:
+            result =3D subprocess.run(cmd, shell=3DTrue, text=3DTrue, check=
+=3DTrue, capture_output=3DTrue)
+            output_lines =3D result.stdout.splitlines()
+            return output_lines
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return []
+
+    def remove_tokens_re(lines, regex_patterns, uniq =3D True):
+        filtered_lines =3D []
+        seen_lines =3D set()
+        regexes =3D [re.compile(pattern) for pattern in regex_patterns]
+
+        for line in lines:
+            for regex in regexes:
+                line =3D regex.sub('', line)  # Replace matches with empty =
+string
+
+            if uniq:
+                if line not in seen_lines:
+                    seen_lines.add(line)
+                    filtered_lines.append(line)
+            else:
+                    filtered_lines.append(line)
+
+        return filtered_lines
+
+    def filter_in_lines(lines, regex_patterns):
+        filtered_lines =3D []
+        regexes =3D [re.compile(pattern) for pattern in regex_patterns]
+
+        for line in lines:
+            if any(regex.search(line) for regex in regexes):
+                filtered_lines.append(line)
+
+        return filtered_lines
+
+    cmd =3D "git grep 'static \(const \)\?struct ctl_table '"
+    regex_patterns =3D ['[\}]*;$', ' =3D \{', '\[.*\]', '.*\.(c|h):[ \t]*st=
+atic (const )?struct ctl_table ']
+    ctl_table_structs =3D remove_tokens_re(exec_cmd( cmd ), regex_patterns)
+
+    cmd =3D "readelf -X -Ws build/vmlinux"
+    regex_patterns =3D ['.*OBJECT.*']
+    output_lines =3D filter_in_lines(exec_cmd( cmd ), regex_patterns);
+
+    regex_patterns =3D ['^.*OBJECT', '[ \t]+[A-Z]+[ \t]+[A-Z]+.*\(.*\)[ \t]=
++']
+    obj_elems =3D remove_tokens_re( output_lines, regex_patterns, uniq=3DFa=
+lse)
+
+    regex_patterns =3D ['^.*\(', '\)[ ]+.*$']
+    sec_names =3D remove_tokens_re( output_lines, regex_patterns, uniq=3DFa=
+lse)
+
+    for i in range(len(sec_names)):
+        obj_name =3D obj_elems[i]
+        if obj_name in ctl_table_structs:
+            print ("section: {}\t\tobj_name : {}". format(sec_names[i], obj=
+_name))
+
+[9]
+    section: .rodata                obj_name : kern_table
+    section: .rodata                obj_name : sysctl_mount_point
+    section: .rodata                obj_name : addrconf_sysctl
+    section: .rodata                obj_name : ax25_param_table
+    section: .rodata                obj_name : mpls_table
+    section: .rodata                obj_name : mpls_dev_table
+    section: .data          obj_name : sld_sysctls
+    section: .data          obj_name : kern_panic_table
+    section: .data          obj_name : kern_exit_table
+    section: .data          obj_name : vm_table
+    section: .data          obj_name : signal_debug_table
+    section: .data          obj_name : usermodehelper_table
+    section: .data          obj_name : kern_reboot_table
+    section: .data          obj_name : user_table
+    section: .bss           obj_name : sched_core_sysctls
+    section: .data          obj_name : sched_fair_sysctls
+    section: .data          obj_name : sched_rt_sysctls
+    section: .data          obj_name : sched_dl_sysctls
+    section: .data          obj_name : printk_sysctls
+    section: .data          obj_name : pid_ns_ctl_table_vm
+    section: .data          obj_name : seccomp_sysctl_table
+    section: .data          obj_name : uts_kern_table
+    section: .data          obj_name : vm_oom_kill_table
+    section: .data          obj_name : vm_page_writeback_sysctls
+    section: .data          obj_name : page_alloc_sysctl_table
+    section: .data          obj_name : hugetlb_table
+    section: .data          obj_name : fs_stat_sysctls
+    section: .data          obj_name : fs_exec_sysctls
+    section: .data          obj_name : fs_pipe_sysctls
+    section: .data          obj_name : namei_sysctls
+    section: .data          obj_name : fs_dcache_sysctls
+    section: .data          obj_name : inodes_sysctls
+    section: .data          obj_name : fs_namespace_sysctls
+    section: .data          obj_name : dnotify_sysctls
+    section: .data          obj_name : inotify_table
+    section: .data          obj_name : epoll_table
+    section: .data          obj_name : aio_sysctls
+    section: .data          obj_name : locks_sysctls
+    section: .data          obj_name : coredump_sysctls
+    section: .data          obj_name : fs_shared_sysctls
+    section: .data          obj_name : fs_dqstats_table
+    section: .data          obj_name : root_table
+    section: .data          obj_name : pty_table
+    section: .data          obj_name : xfs_table
+    section: .data          obj_name : ipc_sysctls
+    section: .data          obj_name : key_sysctls
+    section: .data          obj_name : kernel_io_uring_disabled_table
+    section: .data          obj_name : tty_table
+    section: .data          obj_name : random_table
+    section: .data          obj_name : scsi_table
+    section: .data          obj_name : iwcm_ctl_table
+    section: .data          obj_name : net_core_table
+    section: .data          obj_name : netns_core_table
+    section: .bss           obj_name : nf_log_sysctl_table
+    section: .data          obj_name : nf_log_sysctl_ftable
+    section: .data          obj_name : vs_vars
+    section: .data          obj_name : vs_vars_table
+    section: .data          obj_name : ipv4_route_netns_table
+    section: .data          obj_name : ipv4_route_table
+    section: .data          obj_name : ip4_frags_ns_ctl_table
+    section: .data          obj_name : ip4_frags_ctl_table
+    section: .data          obj_name : ctl_forward_entry
+    section: .data          obj_name : ipv4_table
+    section: .data          obj_name : ipv4_net_table
+    section: .data          obj_name : unix_table
+    section: .data          obj_name : ipv6_route_table_template
+    section: .data          obj_name : ipv6_icmp_table_template
+    section: .data          obj_name : ip6_frags_ns_ctl_table
+    section: .data          obj_name : ip6_frags_ctl_table
+    section: .data          obj_name : ipv6_table_template
+    section: .data          obj_name : ipv6_rotable
+    section: .data          obj_name : sctp_net_table
+    section: .data          obj_name : sctp_table
+    section: .data          obj_name : smc_table
+    section: .data          obj_name : lowpan_frags_ns_ctl_table
+    section: .data          obj_name : lowpan_frags_ctl_table
+
+--
+
+Joel Granados
+
+--pu6elde4hy573vso
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmY0qGMACgkQupfNUreW
+QU9meQwAhSiWxhtL9djecqOkREsAyj1iIrA1uEV4NTghMsTyhC1r83HyDUEWGOJo
+fTZ8jrYwxeDy9qnd5vC+hEYgx/tBWXv+79vssjd28m2Mn4DogQlWABKsPJlPw/8R
+IB9dau7hME9YLSiZQaKoL8DuqnQ4jvdN/zvWcuYHl2s/jF+qzsI3DT4Dy98S1Sr8
+63rSYg/sulLme7ov/3gAQ3ceSPYlLRUfYdWLlGkUYT2iIjcBIybKotaKGkERq8xL
+Z2PcPpWj15gYh6Ewd0GL7AMq2M/dSGYYxPIbv0Mnjpe5AV5HzGZ06MUg4Tt11p1z
+5Fchr0Hg24b2UYcx4mjbsDCy/OyF2oA8cjjj79ODXcgpsVxWX8GZdcFh/gNmsPw5
+dKZyo4v1ZSvDmu8uDCcaV92GLelxc2YfGHYEfbE+hhJR0YaAukrL8mfqPJIanYv+
+zzIuChlVlLB5xoY0CT3XgLo8NJrc/ERnY8JibAauNNLQvTjHV/tbd0UknFQQC4XL
+gDaMqz5j
+=1R4C
+-----END PGP SIGNATURE-----
+
+--pu6elde4hy573vso--
