@@ -1,52 +1,54 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63D54CDE0
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578FF59162
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714772186; cv=none; b=F+U3rByDTRAuRlWXU4Ki98auQf14i0CuLSR1zV8QE9PgKbOX7n83cAyhKKxIpYWjV/eOlRGfSAb8g98AKz319OOtH7nTE7jJDFiAXqtG+SeRfYOIqLcjic4iqLE8HWKF/E688oOmYSX4ehXzWd/9Q5S/eKGAvBfP1rqj1fEgykA=
+	t=1714772190; cv=none; b=KXC/JWTTe+E/mc7BmaTvzEGjP7V6wAnwR+LUnlaLIVmyR2MbLsPqrN3JLAf2bXPAb7zzu7c17u5rBu4EJakJWKGuex6ExcKh7/L48BUHK5BFHjBAtFqcJZOz+wLx44fTgYq2ZgfAxzHJBxLfV9v8gU17jwrRpRQ/S7KwoQdiNCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714772186; c=relaxed/simple;
-	bh=zPdUhEqWBJ29dUl2NmZwwOZKTWDEHAXfImCAJa6FEJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pF6+QxHvHxTOoFStvHARV7cqHfiTuN2HCAklGcQvzH4g8b0wixmvyj12URhmtsmqYCBuT+uMkUNbWo8gCbcoMeEHQTKQ1nuwdKD7b11AIDozRAAvk/7uL2NggsxuFsGv348Grj4e63IqYXCKqtq8GxD8QUGYpBM/UvoM7baO00c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bejV8R1y; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1714772190; c=relaxed/simple;
+	bh=cqR7hS4vud8zXa5zW9gAw2iNuJRgRwzWpTUNSCfJM78=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CdK7na75N7XjnNo11AcxtlMbzAJYVrA8c1kDC0dHuzhohnOh528eugLhpS4i2VdhNPea0Pn6mz4W/9k3532R3KnUhmjdts+jj+UpZxilnHxF+3UNpdJI30VX/s8qPXFZzs/bwlgEjEnr5PfOvJNf0vmMeTJsJujUuVuaSdErULI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MvAkl/X0; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bejV8R1y"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e3f17c6491so778445ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:36:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MvAkl/X0"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e83a2a4f2cso847105ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714772183; x=1715376983; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O7IvcNsNHU8RMEEGHB36x94SUhZEWVNbyGS+d0gObkA=;
-        b=bejV8R1yB7mZngTOPiRdHYmUxE05BRPS1ROUnG/rWyJuT8Ns78KGXJ+QHqFvu24O9e
-         VVPJ9zO74+duR5I/J2Bn3wQ13DmF2hImmkqmM7hhiXCetce6CZNLqyP8UzcNP5gSmQzc
-         Qj4VS74FJqI93SFvOEp+9VLes4vNTwQ9NLawI=
+        d=chromium.org; s=google; t=1714772187; x=1715376987; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YlLGPoCdKZFYuD2WMpAl+nCcCPU9f5yFXStRl2ODaEI=;
+        b=MvAkl/X0nCAxHWFmhsviVHIlPSMwQaD0p6VrQ4/rrVOUfKKxM+jN7ZT5DGi6/x8bK2
+         PkQc3wn/eGVUiWorvh3/pJTBMcHFrG/GdEblNZrtiR9XkLv8650pCdNthU/w52/SUxu7
+         jTiR6gUJILRnD9KtY0hA3OSytQgxMuw0BjgtQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714772183; x=1715376983;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O7IvcNsNHU8RMEEGHB36x94SUhZEWVNbyGS+d0gObkA=;
-        b=QI4QY4VUI04xQ1z55wiUkDdCjMM+Kq+XJnpB5DHq9aFBHMLKvoomOpFp1A7EAEG2am
-         FwbcxSEmbIOQkGmZO+a5eY5iswgWBitLVkcSH+4O/C+lrY9Jezw/cqnvdh7x6lQs2HON
-         JfDNTWkMD9D3zRLl6V50Kwu5+UFdQJtZ4kkU0ZuAb4rMSBJzwcWXE1tbU1o4Ok7xF9RF
-         PFMNM/Pk3zjC2QMILDM3lmy5cE3gK679lXlGR5OStzTDTKvySUeAfaHs9NIzIdMMXDb2
-         0o90jKa4rTgAgbWpNJQY24AU1BaT4RNk5UiPu+QeX1fHssQbUAQk7A+25VdwWk0WD69E
-         IX2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW6JyyXe9Zd/iLbw3H/6tQ7mFn5yKel1lSS2a/WamAhzNjCrYyjt3D5+v+lsLFysXV2VQveNQdQo4OERhkEZ0PIkdTa4CGmhvUWTqtJ
-X-Gm-Message-State: AOJu0YxN+k27X3V3RXfJs4m7td0MdXfLhidYL0T6C02wPlPDI/P20Rna
-	1NUcGG3jNmD75QHmCYnSf5Ei0tRtrVR3/b3B2HJaDZDXPUmv/lXtp3is/OLqjA==
-X-Google-Smtp-Source: AGHT+IH5eduOHdb1FCgLuhTvqIJg3l60grEr/JNT4BiC6IxKFTTgVq2iMUFgza4DOD4xTrjDsAYlqw==
-X-Received: by 2002:a17:902:e882:b0:1eb:4950:554f with SMTP id w2-20020a170902e88200b001eb4950554fmr4690309plg.22.1714772183009;
-        Fri, 03 May 2024 14:36:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714772187; x=1715376987;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YlLGPoCdKZFYuD2WMpAl+nCcCPU9f5yFXStRl2ODaEI=;
+        b=ZHQmgPex7Z8LBPl68x2ihfsyc4QAzurnExgMhhDcF1Bqmi/gXtx3/gp1l1laEjzWCq
+         KjZzSJ68VneqZA5dtaDcFDVOCA+W69uxxolMLhbthdtRYrgLsE9uz8RlYQmk6OaoVHSb
+         lAasdG//pGVFxpVn8GUXSqrR0Yt1AxeWr6L2pZ0t8mtynCLvjgx+ljPDzD3Akfk2Gbkd
+         oIQYS/OjRPpPJWXDx1u+mmGR8LGrvQXBna5rsDN/155sHcX/SYcdIyEtBpHXitw/diNI
+         GsLlJesUC7UOqYAKUVdlmO8j14ZxRY3m2LBZe39VWISX3yUQtADtJvqaf72XdvTaMdqS
+         1q5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVszsuukpSbiyPrTUqH+EA/NI49R7eJGv8bBFnfV6mTVzRaoyLULi9LKPXEevUYObPjOAskTXEeLm5+4WOirO4RUOxzUwQZmY7FRYsu
+X-Gm-Message-State: AOJu0YwzM/2QV8XMJYxxtXT/lKIlpP1w8c3Qj6ByGFZvGFX/CMlBDGi2
+	BIxC0qJekpfCGTpPWLStcyAcnpfc7el7XVvzEVYzSnYhzGB0VpRC9bZ37Q6oBA==
+X-Google-Smtp-Source: AGHT+IFaMjrOZx6PlnR9YpeAGNYEPKz0BZS22xq3/WCuAMWn8FGGgonr0VuEXbwoSJfpxSoPjNw6pg==
+X-Received: by 2002:a17:902:db0e:b0:1ec:3227:94ea with SMTP id m14-20020a170902db0e00b001ec322794eamr4805493plx.67.1714772187608;
+        Fri, 03 May 2024 14:36:27 -0700 (PDT)
 Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:fb6a:b54b:7580:64f3])
-        by smtp.gmail.com with ESMTPSA id j12-20020a170903024c00b001eb51a46f5bsm3729134plh.43.2024.05.03.14.36.20
+        by smtp.gmail.com with ESMTPSA id j12-20020a170903024c00b001eb51a46f5bsm3729134plh.43.2024.05.03.14.36.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 14:36:22 -0700 (PDT)
+        Fri, 03 May 2024 14:36:27 -0700 (PDT)
 From: Douglas Anderson <dianders@chromium.org>
 To: dri-devel@lists.freedesktop.org,
 	Maxime Ripard <mripard@kernel.org>
@@ -55,39 +57,34 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Yuran Pereira <yuran.pereira@hotmail.com>,
 	Neil Armstrong <neil.armstrong@linaro.org>,
 	Douglas Anderson <dianders@chromium.org>,
+	Jerry Han <jerry.han.hq@gmail.com>,
+	Jitao Shi <jitao.shi@mediatek.com>,
+	Rock Wang <rock_wang@himax.com.cn>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Daniel Vetter <daniel@ffwll.ch>,
 	David Airlie <airlied@gmail.com>,
-	=?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
 	Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
 	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Jonathan Corbet <corbet@lwn.net>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Matthias Brugger <matthias.bgg@gmail.com>,
-	Ondrej Jirman <megi@xff.cz>,
-	Purism Kernel Team <kernel@puri.sm>,
-	Robert Chiras <robert.chiras@nxp.com>,
 	Sam Ravnborg <sam@ravnborg.org>,
-	Stefan Mavrodiev <stefan@olimex.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-mediatek@lists.infradead.org
-Subject: [RFT PATCH v2 00/48] drm/panel: Remove most store/double-check of prepared/enabled state
-Date: Fri,  3 May 2024 14:32:41 -0700
-Message-ID: <20240503213441.177109-1-dianders@chromium.org>
+Subject: [RFT PATCH v2 02/48] drm/panel: boe-himax8279d: Stop tracking prepared/enabled
+Date: Fri,  3 May 2024 14:32:43 -0700
+Message-ID: <20240503143327.RFT.v2.2.Ia3f254ab6e04e4f7afba6c066454498c8fb01324@changeid>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+In-Reply-To: <20240503213441.177109-1-dianders@chromium.org>
+References: <20240503213441.177109-1-dianders@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-
 
 As talked about in commit d2aacaf07395 ("drm/panel: Check for already
 prepared/enabled in drm_panel"), we want to remove needless code from
@@ -96,155 +93,137 @@ prepared/enabled state. Even if someone was relying on the
 double-check before, that double-check is now in the core and not
 needed in individual drivers.
 
-This series attempts to do just that. While the original grep, AKA:
-  git grep 'if.*>prepared' -- drivers/gpu/drm/panel
-  git grep 'if.*>enabled' -- drivers/gpu/drm/panel
-...still produces a few hits after my series, they are _mostly_ all
-gone. The ones that are left are less trivial to fix.
+NOTE: as part of this, transition the panel's direct calls to its
+disable/unprepare functions in shutdown/remove to call through DRM
+panel.
 
-One of the main reasons that many panels probably needed to store and
-double-check their prepared/enabled appears to have been to handle
-shutdown and/or remove. Panels drivers often wanted to force the power
-off for panels in these cases and this was a good reason for the
-double-check.
-
-In response to my V1 series [1] we had much discussion of what to
-do. The conclusion was that as long as DRM modeset drivers properly
-called drm_atomic_helper_shutdown() that we should be able to remove
-the explicit shutdown/remove handling in the panel drivers. Most of
-the patches to improve DRM modeset drivers [2] [3] [4] have now
-landed.
-
-In contrast to my V1 series, I broke the V2 series up a lot
-more. Since a few of the panel drivers in V1 already landed, we had
-fewer total drivers and so we could devote a patch to each panel.
-Also, since we were now relying on DRM modeset drivers I felt like we
-should split the patches for each panel into two: one that's
-definitely safe and one that could be reverted if we found a
-problematic DRM modeset driver that we couldn't fix.
-
-Sorry for the large number of patches. I've set things to mostly just
-CC people on the cover letter and the patches that are relevant to
-them. I've tried to CC people on the whole series that have shown
-interest in this TODO item.
-
-As patches in this series are reviewed and/or tested they could be
-landed. There's really no ordering requirement for the series unless
-patches touch the same driver.
-
-NOTE: this touches _a lot_ of drivers, is repetitive, and is not
-really possible to generate automatically. That means it's entirely
-possible that my eyes glazed over and I did something wrong. Please
-double-check me and don't assume that I got everything perfect, though
-I did my best. I have at least confirmed that "allmodconfig" for arm64
-doesn't fall on its face with this series. I haven't done a ton of
-other testing.
-
-[1] https://lore.kernel.org/r/20230804140605.RFC.4.I930069a32baab6faf46d6b234f89613b5cec0f14@changeid
-[2] https://lore.kernel.org/r/20230901234015.566018-1-dianders@chromium.org
-[3] https://lore.kernel.org/r/20230901234202.566951-1-dianders@chromium.org
-[4] https://lore.kernel.org/r/20230921192749.1542462-1-dianders@chromium.org
+Cc: Jerry Han <jerry.han.hq@gmail.com>
+Cc: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Rock Wang <rock_wang@himax.com.cn>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
 Changes in v2:
-- ("drm/panel: raydium-rm692e5: Stop tracking prepared") new for v2.
 - Only handle 1 panel per patch.
 - Split removal of prepared/enabled from handling of remove/shutdown.
-- panel-edp and panel-simple just get a comment now.
 
-Douglas Anderson (48):
-  drm/panel: raydium-rm692e5: Stop tracking prepared
-  drm/panel: boe-himax8279d: Stop tracking prepared/enabled
-  drm/panel: boe-himax8279d: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: boe-tv101wum-nl6: Stop tracking prepared
-  drm/panel: boe-tv101wum-nl6: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: edp: Stop tracking prepared/enabled
-  drm/panel: edp: Add a comment about unprepare+disable at
-    shutdown/remove
-  drm/panel: innolux-p079zca: Stop tracking prepared/enabled
-  drm/panel: innolux-p079zca: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: khadas-ts050: Stop tracking prepared/enabled
-  drm/panel: khadas-ts050: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: kingdisplay-kd097d04: Stop tracking prepared/enabled
-  drm/panel: kingdisplay-kd097d04: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: ltk050h3146w: Stop tracking prepared
-  drm/panel: ltk050h3146w: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: ltk500hd1829: Stop tracking prepared
-  drm/panel: ltk500hd1829: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: novatek-nt36672a: Stop tracking prepared
-  drm/panel: novatek-nt36672a: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: olimex-lcd-olinuxino: Stop tracking prepared/enabled
-  drm/panel: olimex-lcd-olinuxino: Don't call unprepare+disable at
-    remove
-  drm/panel: osd-osd101t2587-53ts: Stop tracking prepared/enabled
-  drm/panel: osd-osd101t2587-53ts: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: samsung-atna33xc20: Stop tracking prepared/enabled
-  drm/panel: samsung-atna33xc20: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: simple: Stop tracking prepared/enabled
-  drm/panel: simple: Add a comment about unprepare+disable at
-    shutdown/remove
-  drm/panel: tdo-tl070wsh30: Stop tracking prepared
-  drm/panel: tdo-tl070wsh30: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: xinpeng-xpp055c272: Stop tracking prepared
-  drm/panel: xinpeng-xpp055c272: Don't call unprepare+disable at
-    shutdown/remove
-  drm/panel: jdi-lt070me05000: Stop tracking prepared/enabled
-  drm/panel: jdi-lt070me05000: Don't call disable at shutdown/remove
-  drm/panel: panasonic-vvx10f034n00: Stop tracking prepared/enabled
-  drm/panel: panasonic-vvx10f034n00: Don't call disable at
-    shutdown/remove
-  drm/panel: seiko-43wvf1g: Stop tracking prepared/enabled
-  drm/panel: seiko-43wvf1g: Don't call disable at shutdown/remove
-  drm/panel: sharp-lq101r1sx01: Stop tracking prepared/enabled
-  drm/panel: sharp-lq101r1sx01: Don't call disable at shutdown/remove
-  drm/panel: sharp-ls043t1le01: Stop tracking prepared
-  drm/panel: sharp-ls043t1le01: Don't call disable at shutdown/remove
-  drm/panel: sitronix-st7703: Stop tracking prepared
-  drm/panel: sitronix-st7703: Don't call disable at shutdown/remove
-  drm/panel: raydium-rm67191: Stop tracking enabled
-  drm/panel: raydium-rm67191: Don't call unprepare+disable at shutdown
-  drm/panel: sony-acx565akm: Don't double-check enabled state in disable
-  drm/panel: sony-acx565akm: Don't call disable at remove
-  drm/panel: Update TODO list item for cleaning up prepared/enabled
-    tracking
+ drivers/gpu/drm/panel/panel-boe-himax8279d.c | 31 +++-----------------
+ 1 file changed, 4 insertions(+), 27 deletions(-)
 
- Documentation/gpu/todo.rst                    | 47 +++++++-------
- drivers/gpu/drm/panel/panel-boe-himax8279d.c  | 40 ------------
- .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 23 -------
- drivers/gpu/drm/panel/panel-edp.c             | 60 +++++++-----------
- drivers/gpu/drm/panel/panel-innolux-p079zca.c | 55 ----------------
- .../gpu/drm/panel/panel-jdi-lt070me05000.c    | 35 -----------
- drivers/gpu/drm/panel/panel-khadas-ts050.c    | 39 ------------
- .../drm/panel/panel-kingdisplay-kd097d04.c    | 48 --------------
- .../drm/panel/panel-leadtek-ltk050h3146w.c    | 28 ---------
- .../drm/panel/panel-leadtek-ltk500hd1829.c    | 28 ---------
- .../gpu/drm/panel/panel-novatek-nt36672a.c    | 29 ---------
- .../drm/panel/panel-olimex-lcd-olinuxino.c    | 44 -------------
- .../drm/panel/panel-osd-osd101t2587-53ts.c    | 41 +-----------
- .../drm/panel/panel-panasonic-vvx10f034n00.c  | 47 +-------------
- drivers/gpu/drm/panel/panel-raydium-rm67191.c | 26 --------
- drivers/gpu/drm/panel/panel-raydium-rm692e5.c | 10 ---
- .../gpu/drm/panel/panel-samsung-atna33xc20.c  | 36 -----------
- drivers/gpu/drm/panel/panel-seiko-43wvf1g.c   | 49 ---------------
- .../gpu/drm/panel/panel-sharp-lq101r1sx01.c   | 63 +------------------
- .../gpu/drm/panel/panel-sharp-ls043t1le01.c   | 24 -------
- drivers/gpu/drm/panel/panel-simple.c          | 60 +++++++-----------
- drivers/gpu/drm/panel/panel-sitronix-st7703.c | 35 +++--------
- drivers/gpu/drm/panel/panel-sony-acx565akm.c  |  6 --
- drivers/gpu/drm/panel/panel-tdo-tl070wsh30.c  | 23 -------
- .../gpu/drm/panel/panel-xinpeng-xpp055c272.c  | 28 ---------
- 25 files changed, 83 insertions(+), 841 deletions(-)
-
+diff --git a/drivers/gpu/drm/panel/panel-boe-himax8279d.c b/drivers/gpu/drm/panel/panel-boe-himax8279d.c
+index e225840b0d67..12e14615298b 100644
+--- a/drivers/gpu/drm/panel/panel-boe-himax8279d.c
++++ b/drivers/gpu/drm/panel/panel-boe-himax8279d.c
+@@ -47,9 +47,6 @@ struct panel_info {
+ 	struct gpio_desc *enable_gpio;
+ 	struct gpio_desc *pp33_gpio;
+ 	struct gpio_desc *pp18_gpio;
+-
+-	bool prepared;
+-	bool enabled;
+ };
+ 
+ static inline struct panel_info *to_panel_info(struct drm_panel *panel)
+@@ -86,17 +83,12 @@ static int boe_panel_disable(struct drm_panel *panel)
+ 	struct panel_info *pinfo = to_panel_info(panel);
+ 	int err;
+ 
+-	if (!pinfo->enabled)
+-		return 0;
+-
+ 	err = mipi_dsi_dcs_set_display_off(pinfo->link);
+ 	if (err < 0) {
+ 		dev_err(panel->dev, "failed to set display off: %d\n", err);
+ 		return err;
+ 	}
+ 
+-	pinfo->enabled = false;
+-
+ 	return 0;
+ }
+ 
+@@ -105,9 +97,6 @@ static int boe_panel_unprepare(struct drm_panel *panel)
+ 	struct panel_info *pinfo = to_panel_info(panel);
+ 	int err;
+ 
+-	if (!pinfo->prepared)
+-		return 0;
+-
+ 	err = mipi_dsi_dcs_set_display_off(pinfo->link);
+ 	if (err < 0)
+ 		dev_err(panel->dev, "failed to set display off: %d\n", err);
+@@ -121,8 +110,6 @@ static int boe_panel_unprepare(struct drm_panel *panel)
+ 
+ 	disable_gpios(pinfo);
+ 
+-	pinfo->prepared = false;
+-
+ 	return 0;
+ }
+ 
+@@ -131,9 +118,6 @@ static int boe_panel_prepare(struct drm_panel *panel)
+ 	struct panel_info *pinfo = to_panel_info(panel);
+ 	int err;
+ 
+-	if (pinfo->prepared)
+-		return 0;
+-
+ 	gpiod_set_value(pinfo->pp18_gpio, 1);
+ 	/* T1: 5ms - 6ms */
+ 	usleep_range(5000, 6000);
+@@ -180,8 +164,6 @@ static int boe_panel_prepare(struct drm_panel *panel)
+ 	/* T7: 20ms - 21ms */
+ 	usleep_range(20000, 21000);
+ 
+-	pinfo->prepared = true;
+-
+ 	return 0;
+ 
+ poweroff:
+@@ -194,9 +176,6 @@ static int boe_panel_enable(struct drm_panel *panel)
+ 	struct panel_info *pinfo = to_panel_info(panel);
+ 	int ret;
+ 
+-	if (pinfo->enabled)
+-		return 0;
+-
+ 	usleep_range(120000, 121000);
+ 
+ 	ret = mipi_dsi_dcs_set_display_on(pinfo->link);
+@@ -205,8 +184,6 @@ static int boe_panel_enable(struct drm_panel *panel)
+ 		return ret;
+ 	}
+ 
+-	pinfo->enabled = true;
+-
+ 	return 0;
+ }
+ 
+@@ -917,11 +894,11 @@ static void panel_remove(struct mipi_dsi_device *dsi)
+ 	struct panel_info *pinfo = mipi_dsi_get_drvdata(dsi);
+ 	int err;
+ 
+-	err = boe_panel_disable(&pinfo->base);
++	err = drm_panel_disable(&pinfo->base);
+ 	if (err < 0)
+ 		dev_err(&dsi->dev, "failed to disable panel: %d\n", err);
+ 
+-	err = boe_panel_unprepare(&pinfo->base);
++	err = drm_panel_unprepare(&pinfo->base);
+ 	if (err < 0)
+ 		dev_err(&dsi->dev, "failed to unprepare panel: %d\n", err);
+ 
+@@ -936,8 +913,8 @@ static void panel_shutdown(struct mipi_dsi_device *dsi)
+ {
+ 	struct panel_info *pinfo = mipi_dsi_get_drvdata(dsi);
+ 
+-	boe_panel_disable(&pinfo->base);
+-	boe_panel_unprepare(&pinfo->base);
++	drm_panel_disable(&pinfo->base);
++	drm_panel_unprepare(&pinfo->base);
+ }
+ 
+ static struct mipi_dsi_driver panel_driver = {
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
