@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB092158844;
-	Fri,  3 May 2024 18:03:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03FE158A04;
+	Fri,  3 May 2024 18:03:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714759404; cv=none; b=YTwwksw5Svbdx8exFcHytXV7GAVFP2SAOKJ5mpONFR1oVWg6ANpurOBk2QYk7DlKqZE4/c97RzeE4VteJlNSsa0ficx2XZEyNGWbsUq9l5fgFL6skOc2jy6aHXqRHXLv+5LRWX1vUtnQxxFRyjHwEcYEwQy4nrUuV5sMQ3Xj/u0=
+	t=1714759405; cv=none; b=ghO0c5FIdcxNoJcPtAC1EBm+3vq/qc4jJa/qy68u8l/YMUYICRY0/AkmXOoHQW69C8RSjp4K1UVtCelhQy+hvgk0BpjfWGs7+1COOYUz0geukz+LJ7psEWq+byPInYn7UDlyhfoK11RvoNKN+So4cSEKLa25JPyFV9ujorNFzi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714759404; c=relaxed/simple;
-	bh=BxWQ3nfJ8G0tvTTltgrGE2Vi8fVZjZKQ8RTpaGZaaWo=;
+	s=arc-20240116; t=1714759405; c=relaxed/simple;
+	bh=wl4KaQNGGSUoln/HN59nrI9DZXm2wms4eum28pA9dLo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tXu4t4ddHO/v1zGTnBY3yrkE+DtWAlNzQRLPjSackYKpO+NfNP75LAN4DmlRaoUI3hI7krBaSj7MgTdI0l0UaFM3MYoSO3xnBl7PsL64pIV5PgO7zKugsJQ9WUZNV2+MYuxpWpcb2bTjG6jKezBq19ekxrAe6+ob3fxVYgCspiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ozf53p/Y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cYHOpsSyaWVNLYzTZvEv8FPymtNMJ5VBHk9Oaq2ac0fngv74K5bp4dTciA2ZKngdeT2aDFq/l48ZLGPpCr3T0/WkuoJ1ybmOKeLsZgfGA5i1ymzkZm/nuHTxBNXZWGI6IXrbZQ2U8tgWBArQ82qmdSHpEemqhqEihpQpBTHjm+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GcMdqlu0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ozf53p/Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E110DC4AF1C;
-	Fri,  3 May 2024 18:03:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GcMdqlu0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2465BC116B1;
+	Fri,  3 May 2024 18:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714759403;
-	bh=BxWQ3nfJ8G0tvTTltgrGE2Vi8fVZjZKQ8RTpaGZaaWo=;
+	s=k20201202; t=1714759405;
+	bh=wl4KaQNGGSUoln/HN59nrI9DZXm2wms4eum28pA9dLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ozf53p/YJ8O1q9ETgyXzeTGjW/yQlxn6NO1VcwwlyB5fhh79Z/RU1DvDX94tKHXJu
-	 NsxMbG/hnGuFZpLqegru2su4C38GCd4GeW5Quns/i/+qP9o6be8FGs4t0BGVZB55Mn
-	 9trnxuoEJq8oeqtK7BMePrWszC+NOztLCzuHG46t7ldbbHESDRT9Dwmltq/TaZ3Y/M
-	 BE5CX1uGYcY9suy8F8PdvDWsy+Fw6WJNRGelV/7dsjeVyxYEannjrjzGitWrtL5jjT
-	 CRis0hFCHlOrM/BpzLuYChhdkNGITy96Kn3Z0ap8peht+EgMJDHn63ctEz1Q+oWGKr
-	 U+M1NpLfXp42A==
+	b=GcMdqlu028SzxGvUHkmkFsYzLK9DLlJ0smYEoaFbRsz6nd0eJHiWiTS3Ba1ejCjpw
+	 CoAJow0Rt1FgNM4tEdiLD6cQLwt8572cvjve44lT7OPGhFGsWFVAB7XqESNvHuT1LP
+	 VkqwJ0uEVSMlW/MsUzOQ4kEg9GJ4Gx96jyQXgPACJyMvdU1WnWWk7Q6v7RoCmlzCd4
+	 UICxzjc+YRXF4qhGiU56z1PQL+iXRxM+cdpqMTXGlPNFqI7yF7kA5s3yamKARLqDPl
+	 +kVh3zZZUEy0UmxksbLdRSmD2MZLM8dXFRGY2EYvlxwlyDKlh52qs9Lv5odKsIFyxf
+	 bQDzBQivuom/w==
 From: SeongJae Park <sj@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: SeongJae Park <sj@kernel.org>,
@@ -34,9 +34,9 @@ Cc: SeongJae Park <sj@kernel.org>,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 02/10] selftests/damon/_damon_sysfs: check errors from nr_schemes file reads
-Date: Fri,  3 May 2024 11:03:10 -0700
-Message-Id: <20240503180318.72798-3-sj@kernel.org>
+Subject: [PATCH 05/10] selftests/damon: classify tests for functionalities and regressions
+Date: Fri,  3 May 2024 11:03:13 -0700
+Message-Id: <20240503180318.72798-6-sj@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240503180318.72798-1-sj@kernel.org>
 References: <20240503180318.72798-1-sj@kernel.org>
@@ -48,28 +48,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DAMON context staging method in _damon_sysfs.py is not checking the
-returned error from nr_schemes file read.  Check it.
+DAMON selftests can be classified into two categories: functionalities
+and regressions.  Functionality tests are for checking if the function
+is working as specified, while the regression tests are basically
+reproducers of previously reported and fixed bugs.  The tests of the
+categories are mixed in the selftests Makefile.  Separate those for
+easier understanding of the types of tests.
 
-Fixes: f5f0e5a2bef9 ("selftests/damon/_damon_sysfs: implement kdamonds start function")
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- tools/testing/selftests/damon/_damon_sysfs.py | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/damon/Makefile | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/damon/_damon_sysfs.py b/tools/testing/selftests/damon/_damon_sysfs.py
-index f80fdcef507c..fffa74a78bd7 100644
---- a/tools/testing/selftests/damon/_damon_sysfs.py
-+++ b/tools/testing/selftests/damon/_damon_sysfs.py
-@@ -341,6 +341,8 @@ class DamonCtx:
-         nr_schemes_file = os.path.join(
-                 self.sysfs_dir(), 'schemes', 'nr_schemes')
-         content, err = read_file(nr_schemes_file)
-+        if err is not None:
-+            return err
-         if int(content) != len(self.schemes):
-             err = write_file(nr_schemes_file, '%d' % len(self.schemes))
-             if err != None:
+diff --git a/tools/testing/selftests/damon/Makefile b/tools/testing/selftests/damon/Makefile
+index 06c248880172..29a22f50e762 100644
+--- a/tools/testing/selftests/damon/Makefile
++++ b/tools/testing/selftests/damon/Makefile
+@@ -7,16 +7,21 @@ TEST_GEN_FILES += debugfs_target_ids_pid_leak
+ TEST_GEN_FILES += access_memory
+ 
+ TEST_FILES = _chk_dependency.sh _debugfs_common.sh
++
++# functionality tests
+ TEST_PROGS = debugfs_attrs.sh debugfs_schemes.sh debugfs_target_ids.sh
++TEST_PROGS += sysfs.sh
++TEST_PROGS += sysfs_update_schemes_tried_regions_wss_estimation.py
++TEST_PROGS += damos_quota.py damos_quota_goal.py damos_apply_interval.py
++TEST_PROGS += reclaim.sh lru_sort.sh
++
++# regression tests (reproducers of previously found bugs)
+ TEST_PROGS += debugfs_empty_targets.sh debugfs_huge_count_read_write.sh
+ TEST_PROGS += debugfs_duplicate_context_creation.sh
+ TEST_PROGS += debugfs_rm_non_contexts.sh
+ TEST_PROGS += debugfs_target_ids_read_before_terminate_race.sh
+ TEST_PROGS += debugfs_target_ids_pid_leak.sh
+-TEST_PROGS += sysfs.sh sysfs_update_removed_scheme_dir.sh
++TEST_PROGS += sysfs_update_removed_scheme_dir.sh
+ TEST_PROGS += sysfs_update_schemes_tried_regions_hang.py
+-TEST_PROGS += sysfs_update_schemes_tried_regions_wss_estimation.py
+-TEST_PROGS += damos_quota.py damos_quota_goal.py damos_apply_interval.py
+-TEST_PROGS += reclaim.sh lru_sort.sh
+ 
+ include ../lib.mk
 -- 
 2.39.2
 
