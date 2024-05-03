@@ -1,94 +1,112 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5802B146D5B
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264351474B8;
+	Fri,  3 May 2024 07:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714721759; cv=none; b=XVprmk+5TWBRuoCp1cj44AjnHfCeL1jOBhSS+cJ2MCB9jZE29a9jT3oj1vXbYfH3um/z6gepEmRrSzzBSBe3Hm4tXHbxlxlQl1fpeCXGU0glc4b8Ym9wLs8CFFAZHZLcdegZJX16/3BVUT0oIptt6Q9KwzxFlTWknpvYSsIhy9w=
+	t=1714721784; cv=none; b=RuEZzQinEDpxlSjxQGFuGYtndbAuV71Y3E2lu8fzeSVKKHGdsj2erq/FJcqhPcQQh2aXsXBgtoZ2AkZSVdPEA+gWAdUwH/an3clABLZcc1w/KLtuOXgT3efl5W8zw+Zk9owxv1xADRPffJXd3aMZ7DYIsBVwbVFnuc99EgB3U9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714721759; c=relaxed/simple;
-	bh=5Rs3pBpzgm60FTVaM6YXseZbN560iglv7RG+Vh9AXrw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qUEfEYFXYx859RTCdM3DITLM+klInqRw1aW0DaJiSFQGlR7sTidGcASsqgatqpR2K0BF3INC69jNklmr4aZ0jawldCXB2ZvqMG9fiSPL6C29ViyllLLEy+5pMgn9zmfZSQBoOTrteP9L254OLyOoR54vHMIkJfi0RX2fZAWlbgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=zgH0Y8RL; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+	s=arc-20240116; t=1714721784; c=relaxed/simple;
+	bh=uDu1QNx07sEE5UtL8idu7li2seT8o+SYA+gutMazzcY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Xvb7XpbkaNWgdj/pUtnqeTlhSxmOVjZV+w3ukOO9KrEH0If6AJi1ILqycclF7ahvLaFuDYGhFKncFgWQLJFNi9Psvjz7CjeWk1MO9eh/7qRi46o8GN8cjUeE38sfTKePFDr3MLFvMtxPM01O+j7T8aTj8lfkkdMTFrTK2GvwFlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=G5N8yGqI; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="zgH0Y8RL"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1714721749;
-	bh=10xZCuql4TPgrgP4qz5sC2A8B87AtLlLXWNSC/pTUbw=; l=1345;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=zgH0Y8RLTIq7autOsJqemXRl/P/UHs1PqkozOKhB8zn0AVXJrSYkwfHjMYJFnIxUL
-	 OjT2WxncrGCxORsX+0fH7yJtbG5cj9ltwwyitFLd23/w+ie9Z41y/L/RsxSyYI4NNj
-	 W5BwVTmHfNhmObONUoLdf9qETSe/KsBx+/PyXVj9i+UK0EYedZkbvzm59nHzzRO1f1
-	 gmJtmPdARrX1NvDvI8WPimzRgwxlwc1k2NVec9aAncpvEYm+xjTVZxqPcR4jxIFCfw
-	 2q3fEVJvK1r25JxShARwbcFsnHF22Oq19y8djxa2d+xEeMhUvk0S+rvLl8m+oDTkEM
-	 zW23cy8Dm7mNw==
-Received: from 192.168.10.47
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(398666:1:AUTH_RELAY)
-	(envelope-from <alina_yu@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Fri, 03 May 2024 15:35:37 +0800 (CST)
-Received: from ex4.rt.l (192.168.10.47) by ex4.rt.l (192.168.10.47) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 3 May 2024
- 15:35:36 +0800
-Received: from linuxcarl2.richtek.com (192.168.10.154) by ex4.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 3 May 2024 15:35:36 +0800
-Date: Fri, 3 May 2024 15:35:36 +0800
-From: Alina Yu <alina_yu@richtek.com>
-To: Mark Brown <broonie@kernel.org>
-CC: <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<johnny_lai@richtek.com>, <cy_huang@richtek.com>
-Subject: Re: [PATCH v2 2/4] regulator: rtq2208: Fix LDO to be compatible with
- both fixed and adjustable vout
-Message-ID: <20240503073536.GA12846@linuxcarl2.richtek.com>
-References: <cover.1714467553.git.alina_yu@richtek.com>
- <ffeecd61c194df1f7f049bd50cb2bbbad3cf1025.1714467553.git.alina_yu@richtek.com>
- <ZjGmmYWHu-ZQQdIh@finisterre.sirena.org.uk>
- <20240502073029.GA4055@linuxcarl2.richtek.com>
- <20240502092614.GA31518@linuxcarl2.richtek.com>
- <ZjRAsJHn57pZy5UH@finisterre.sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G5N8yGqI"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4437aC7a075675;
+	Fri, 3 May 2024 02:36:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714721772;
+	bh=NAuouXKQJwWg0JMmYfKZjZJi4ycsvu1MT8jf7d2FKng=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=G5N8yGqIbGpKgZCRcM96cQBETRr9fZ88A7UPpfEvvdp3zdDLfko5iqSrONfC53KCe
+	 V2TlrgMlJf8H7oUwMDuD91jTKwCRd5HHq6wzlgQS8Lq1s1DOTivy5gbQUPO9Zmpz21
+	 U9lvLOXSCWpp3NcXv5qdIq9pjPd+1Sov4Jgy7iYc=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4437aCaR100824
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 3 May 2024 02:36:12 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 3
+ May 2024 02:36:12 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 3 May 2024 02:36:12 -0500
+Received: from [172.24.227.88] (uda0500640.dhcp.ti.com [172.24.227.88])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4437a8oZ008242;
+	Fri, 3 May 2024 02:36:09 -0500
+Message-ID: <d67a0ed2-d0a2-7c10-d247-74953590af5c@ti.com>
+Date: Fri, 3 May 2024 13:06:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZjRAsJHn57pZy5UH@finisterre.sirena.org.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-j784s4-evm: Enable USB3 support
+Content-Language: en-US
+To: Roger Quadros <rogerq@kernel.org>, <nm@ti.com>, <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <srk@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Ravi
+ Gunasekaran <r-gunasekaran@ti.com>
+References: <20240502053615.29514-1-r-gunasekaran@ti.com>
+ <20240502053615.29514-3-r-gunasekaran@ti.com>
+ <865b6c46-b09c-4251-867c-992f008001ae@kernel.org>
+From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+In-Reply-To: <865b6c46-b09c-4251-867c-992f008001ae@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, May 03, 2024 at 10:41:04AM +0900, Mark Brown wrote:
-> On Thu, May 02, 2024 at 05:26:14PM +0800, Alina Yu wrote:
+Roger, Rob
+
+On 5/3/24 12:18 PM, Roger Quadros wrote:
 > 
-> > For the fixed LDO Vout, it will be set to either 0.9V or 1.2V, which are outside the range of 1.8V to 3.3V.
-> > The determination of whether it is fixed or adjustable lies solely with the user.
-> > This modification aims to ensure compatibility with the user's application.
 > 
-> That's a substantail reconfiguration of the regulator, it would be
-> better to have an explicit property for these non-standard fixed
-> voltages rather than trying to do this using constraints, or at the very
-> least have validation that the values being set are supported by the
-> hardware.  The code should also be very clear about what is going on.
+> On 02/05/2024 08:36, Ravi Gunasekaran wrote:
+>> From: Matt Ranostay <mranostay@ti.com>
+>>
+>> The board uses SERDES0 Lane 3 for USB3 IP. So update the
+>> SerDes lane info for USB. Add the pin mux data and
+>> enable USB3 support.
+>>
+>> Signed-off-by: Matt Ranostay <mranostay@ti.com>
+>> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+>> ---
+>>  arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 41 ++++++++++++++++++++++++
+>>  1 file changed, 41 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+>> index d511b25d62e3..bee73dab803d 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+>> @@ -336,6 +336,13 @@
+>>  			J784S4_IOPAD(0x010, PIN_INPUT_PULLUP, 8) /* (AH33) MCAN13_RX.I2C4_SDA */
+>>  		>;
+>>  	};
+>> +
+>> +	main_usbss0_pins_default: main-usbss0-pins-default {
+> 
+> Should be main-usbss0-default-pins
+> 
+> This should fix the checkpatch warning.
+> 
 
-May I add the 'richtek,use-fix-dvs' property back ?
-which is the proerty I add in v1 patch series to let the user determines whether the LDO Vout is fixed or not.
+I will fix and send a v2
 
-+		fixed_uV = of_property_read_bool(match->of_node, "richtek,use-fix-dvs");
-+
-+		if (fixed_uV) {
-+			desc->n_voltages = 1;
-+			desc->fixed_uV = init_data->constraints.min_uV;
-+			desc->ops = &rtq2208_regulator_ldo_fix_ops;
-+		} else {
-+			desc->n_voltages = ARRAY_SIZE(rtq2208_ldo_volt_table);
-+			desc->volt_table = rtq2208_ldo_volt_table;
-+			desc->ops = &rtq2208_regulator_ldo_adj_ops;
-+		}
+[...]
 
-
-Thanks,
-Alina
+-- 
+Regards,
+Ravi
