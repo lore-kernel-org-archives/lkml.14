@@ -1,123 +1,159 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2058.outbound.protection.outlook.com [40.107.14.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FF414A094
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 08:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714725602; cv=none; b=UdNscK0sNpxHhht+DmHpspBu5Bq+Nm+85c6KqpZlXp5zNv99JzQTsbEqGNxQQ6I0Z4xzqV5PFtNOh3jd7oyCmXkryemgegjj47LlIqJmK+ox4C6zbL07TLGz3q1NjxHkEZhXXfKPtl48Qf1NuZEzc1foDmZ8kllhenrGAj2kBzo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714725602; c=relaxed/simple;
-	bh=6cqDU6nyC9QVmMog1BprNjYhQIvdazHuL/+8ud4VoTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=urYETYFU2DDcsYpn2bTP4HE0SD15z+mMRCXz21zNTuTxi3mmhTotUzuf2LXmnbaDy4BHsvMPCKqavAzjO+rwQ4pIq/pYfLHY/bYMmLfp7GSFeqr9MYimTCQd+gaJJQc+i0/0jCVHz3cqroR6ROIdpw3thhfDvijtMT4murEU0zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DC2q8hZ/; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEFF79CD;
+	Fri,  3 May 2024 08:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714725684; cv=fail; b=lB7Sdqlh2QeVTC4FTgUhy7vnFXqrS0UIyxekVl3X13cqO3i8IUF5t0ahYjVKYYJyWzTgovGtg+x4FosFcadaB+1bfzK5E2i93MmJ7dRAxJO1ep5JyJzHF+Sura/J4JHomrxoMdShT7/dGdhFWx4ROXErDEsdxstOkL9NfDdkOFY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714725684; c=relaxed/simple;
+	bh=TP6MxVvRed7gq7I+fxgjVWsa3D/UAG1bnDDdzijVt6g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cJI4SFDsWUiLcSYKaF3iUzSYjquBvcdHJRCAq74X8jDDYDgoGdhMsPVwyeEs+ks022+Ya4oqlU7SzGhto2xX5Mg9LjhDeKrtfxUhAgOUyrGXFLglr+D+2iFbLOBggS7YOh+Ul/YXND32DwcKEib5ve35DU0LTfdnmFqTQtUobO8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=it8WXQPl; arc=fail smtp.client-ip=40.107.14.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DC2q8hZ/"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51f60817e34so1315897e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 01:40:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714725599; x=1715330399; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xd2nsty2WG6SHHF8+nkpeQv9fDcTG+0JYjbHe+PLVZg=;
-        b=DC2q8hZ/ASRjwd1kEpdWbaje5M7aJvCYlmtaIXCJfYKl8F9sPrlL7j7lE5S2WFKETM
-         /FNg3lyC9b9CdIwTA4+OElvrBELNuldLre/zk/8sybAaUS5OKURNuHpcBtNoanJy/oxH
-         dnyEgJ8Z0cAfkJ98N3tSfQWFE0iCJcqInbduMRJP2V3KXt1i8n8KOXNBc/fqnmN/t8D8
-         slWzuNqNGRzLTi5LUgyJ6leKkPREjbZkBQfgXMwkXbgK2d4oIWWVD1RIxbekEvqYRAFU
-         SMiDPqRBY0tlmdc0M68EkM13K/W7+loRWlztKIe3HxnKDFnISWLYjOmha+FYpSRPWhu5
-         02XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714725599; x=1715330399;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xd2nsty2WG6SHHF8+nkpeQv9fDcTG+0JYjbHe+PLVZg=;
-        b=vMGjFcnc+TXJjwV4dBwy2tP887p6JsscoXuadzzzDYDcYL2CtG1annxJVbccfhgNLR
-         nlLJJwXIMRjrUc0y3fxFWE6Iv1smC/z2vmLtI6YgBGGoPk/KD4xgRCJuyOz+5G9aGIhe
-         vdil+sCZhhIhjmOCrlaeT8/Jv3yBHmy8phwUSNQ7sIS2FKKYvllePNUnynqzokVh3wNW
-         X828iOtuS1nQwVIT0evroekJKbRy0gwHag3wlKz+Qcv5ncExv6cQa2zOI3aPKaqZBp0a
-         r+6V2+3CS/eonx519WCbuth/paQG/lFIkzDLjDVYjt/yK8DTQTdtPYY+v57eBJ0QAi0m
-         +z2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXPTOBucnSAzzAX7DvgSBf/NAWL7njziEEtOV3HVqkjUMjtg3DKrwuLg3G8b7f0USrGmvfu2SfTE1QL5oBwixfycER3sOgLKXCbwhGu
-X-Gm-Message-State: AOJu0Yych942QUUV7PAB9JOJcY5wBPr2fmJLdSTSQTj2s6swFYdYN7tj
-	6xxb5Xs0rvKeHg9IkvrWpQRK3ldmdkl5HHPaHu9tRFGsXoJPCTEr6rHOy5u+jQ8=
-X-Google-Smtp-Source: AGHT+IF4QKcb/sXAo8+X01dOQnrnNqk2SSFq/L9I8igfxBKKMdF/CsCxYt2AjVAF4ukP/fC/AnH4MA==
-X-Received: by 2002:ac2:58d9:0:b0:51d:bbb:7a4e with SMTP id u25-20020ac258d9000000b0051d0bbb7a4emr1341798lfo.24.1714725598711;
-        Fri, 03 May 2024 01:39:58 -0700 (PDT)
-Received: from [192.168.1.119] ([37.251.223.213])
-        by smtp.gmail.com with ESMTPSA id j3-20020a05600c1c0300b004186f979543sm8674790wms.33.2024.05.03.01.39.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 May 2024 01:39:53 -0700 (PDT)
-Message-ID: <7f5e3ab6-515c-4943-8678-03232fd9aed5@linaro.org>
-Date: Fri, 3 May 2024 09:39:50 +0100
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="it8WXQPl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B5PKvJUtMx0q4Y65I7ensC2AfK6CWRQOlh4rL5QNtQm08wC4Ng0RGUkqhUOx4OC78etE3DNQVXJvGh6ZAUG0UwSHerwhKZchAEPEK7YC906ho2thA4zUd5P65FNlvR8QHlcSmiUq33HEeWRQajXIc0PXbYmLjtHx/YkifSVFZ+mt3Og+zxagxfVLcqgQUaTbWWXS7rKEuUF30SEDD2lDvioSLpkwfvy4oXzPYO9IGRh3ePbOZJ/gpH6YefS7i7A6VStitzyMKgWeHAo4KyR4bS7Ts75OMgd1dcN6SxN5l4v1QU+AWuEaughUmcriC9uU46iD9h2pwArQEAtLfe1lHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ECzCRteI9Lfwn1cLw14YEPYuLnR3EBIhJVW4H7ad5R4=;
+ b=YpaVCffgFbnV28aR0C1biQ3eL6OhujN8ekY+uATuozyycK1RLs+JIrBRZScjz8BNhDcgUfkNfULUrlWGBuu7qX+mBKtt7kubm4ys5ljI9EllaWBj6Oph5BRtHKWEKaPy0hFPkaOz8e9oYekoeH737aznf4t4Sq2VMTrqCLMDyQPSx5oPFXY+bk+CMhfmMUi1UV/E1TIAwbxP4xdc3U1wFURFdA/2xaEOLOA1cra0YHFBlb/3HpBtFxlzdiMjfAcr1F0CVgvHFTclmg4DEqkBFiTj5/hWVDvJ3vbRefYth8JJya4BedeIcdnKDWxNaAYY3Qs8Lw4R8LsBxgAcq19YXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ECzCRteI9Lfwn1cLw14YEPYuLnR3EBIhJVW4H7ad5R4=;
+ b=it8WXQPlQKDlThUzZmLtCr1GHlwQRcA7M09fEAk/byLRhxrpFVyauSDaYDsjJx0otKc623//msJA2nemR6eAot6yACFAXsrGEH2r09sQScwETFPkRD7Pr9Wv1/E2JwHc/OQCSkuAxQCeRiFefqW43k1xKdVnrB9+nprsegpBqRU=
+Received: from DB9PR05CA0001.eurprd05.prod.outlook.com (2603:10a6:10:1da::6)
+ by AM9PR02MB6625.eurprd02.prod.outlook.com (2603:10a6:20b:2cc::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30; Fri, 3 May
+ 2024 08:41:19 +0000
+Received: from DB1PEPF00050A01.eurprd03.prod.outlook.com
+ (2603:10a6:10:1da:cafe::3a) by DB9PR05CA0001.outlook.office365.com
+ (2603:10a6:10:1da::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.29 via Frontend
+ Transport; Fri, 3 May 2024 08:41:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
+ action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of 2n.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ DB1PEPF00050A01.mail.protection.outlook.com (10.167.242.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7519.19 via Frontend Transport; Fri, 3 May 2024 08:41:18 +0000
+Received: from pcczc3457tyd.2n.cz.axis.com (10.0.5.60) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 3 May
+ 2024 10:41:17 +0200
+From: =?UTF-8?q?Kamil=20Hor=C3=A1k=20-=202N?= <kamilh@axis.com>
+To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
+	<andrew@lunn.ch>, <hkallweit1@gmail.com>
+CC: <kamilh@axis.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/3] net: phy: bcm5481x: add support for BroadR-Reach mode
+Date: Fri, 3 May 2024 10:37:16 +0200
+Message-ID: <20240503083719.899312-1-kamilh@axis.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: mfd: Use full path to other schemas
-To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20240503072116.12430-1-krzysztof.kozlowski@linaro.org>
- <a2886f72-210e-41a1-aae0-c079a4d11396@linaro.org>
- <0af10387-ddfb-47b0-b59e-eeba1644be1c@kernel.org>
- <20240503082444.GJ1227636@google.com>
- <72f94454-867f-4a6c-90c8-134db2ce150e@kernel.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <72f94454-867f-4a6c-90c8-134db2ce150e@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB1PEPF00050A01:EE_|AM9PR02MB6625:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2de0ba31-c2fc-4dc2-bb59-08dc6b4ccd64
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|36860700004;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZzBCSlNmdllZaW9QZFRSTDdzL2piVkJqQTRZbDA4T1NPeENrb0NYY1B1SGR1?=
+ =?utf-8?B?ZUVIRzRsek9ZNjV4amdmdnE4Y04yTmFocXNMejlncGFTT1oyNCtuY1BlYjVo?=
+ =?utf-8?B?c0hrTkpBbHJjbWkyMzB1bU84OWQydWFNdC91NnYzR3FLUUx5QkNjQmtOd25l?=
+ =?utf-8?B?MEE0blQrc2tuc0x5ajA5aENJNnZRa2hxREI2TWJRWk5CZXAxZ01CbFhsN1VH?=
+ =?utf-8?B?U21MNmQ1eUc4ck1RbjY1ZnhlYXJSd0NhVjFQUlNrbEJsT0NpdmFjalNqbFJH?=
+ =?utf-8?B?bGVueWQvay9laGpWL0MrejBOUHRGNXJrZ2NkamNNczdqUFhMUXNqWTRKSEd6?=
+ =?utf-8?B?ZkJtNDhXbEltdUkzb1p4alppY01EK3hnOFlsNjJZaWdQRjQ4blEwekVBcisy?=
+ =?utf-8?B?US94Q3JqRENQRUdVRkp3Uk00MXFjUDNob0dmeWVLc29FRzUzaUdUeFc4RGNU?=
+ =?utf-8?B?ejhwSTI4MGN2ZS9NRU5RRVJ4YXFDWWRhSXp5Y2R3KzhUb2NzRXFOUVRjdkdr?=
+ =?utf-8?B?cXIzNVh5NFZGdklzT3pxenE0bUxRamZLUEZJK01pb3BlMVdKREx3MDI4bkhu?=
+ =?utf-8?B?LzB5NVlVTDFmdmdrVkJnR2VzM01hSzJTT1BWWkpLajlZWjZaNXdWN1VteVBx?=
+ =?utf-8?B?ZzhxNUxrem84R3piZzM4VFpHaXVXcVM1cHNCbUwvYVRTendDOFlySjdwaHI4?=
+ =?utf-8?B?b2hRVE1NVmRQbWNreC9lUkNOTmVrUnVKNXg0d3VHWllkR0llYkxiY1p2Tnoy?=
+ =?utf-8?B?TlJzeVgwZ0E4bnhUamFsdFE3bk84M2lUUFBNVU1MTzlCaU1kQXJ1Qy8xMFgy?=
+ =?utf-8?B?bjQ4ZFFCYk9vbzJyMGFrdkdRS3l5dVpwOHJrUnlsS096LzFFaUM1Yys3UEFD?=
+ =?utf-8?B?bU5lajhvNzZiRzdhV0hObnY1eHRoeW5pamZSR3RTK09vZ0xjR2p5UERRUjJ5?=
+ =?utf-8?B?cEc4Y215VTFnWjlUSGZ0Z091ZFNjWUZtUHVBUGNrdjBIUGw1VlQ4N2ErN0pM?=
+ =?utf-8?B?MFp4N3FEZjFKSVUyMVJ5dDlWY2huVWhObGxYWFJtVGxsKytZZnZjaSsxQnln?=
+ =?utf-8?B?U3daUnd6cThZNkx2eUIvdUw2SC9KZS8reWpuZldGUTlPamZDdzlHNW90RFFL?=
+ =?utf-8?B?VHhVK21ZeXF5ZmtVa0lVaXlOTE9YYmJTT3hUeUxOaVlwZ0JuMjduYndiOFNV?=
+ =?utf-8?B?WFlsZ3NVSnR6ZGdSYVFWQ1UxamZSeXo1bE9EY1RVWlpvd25UcTZDQjNpQXZx?=
+ =?utf-8?B?Z3pMVnJpb0dSYzh3TFNhN0tzMGNlVFdiOW9QSVJxRzlhNUQ4L1B6ODk3cncz?=
+ =?utf-8?B?TXp4SitYTWphbDhtQjlEaWxoVWVwRU5FUVZxVHRtU2JENUs0ZHVlVlJ5ajFZ?=
+ =?utf-8?B?cEI4MjBOUDZ5VFFjVzhucWp5V21IVXlpR0FIU3hibnFISUljT24yY2RoWFdF?=
+ =?utf-8?B?STA3UHloa3hQYmZQSFpubXJQTXZYL0Y4M2EveTkyTzREdkhlVGRhMnpHU3po?=
+ =?utf-8?B?TFBUTjh2Y2dZNnozVDNvMFVJdk5uemtkbm50TE5kclBkMGttRFJlOVlrUHFU?=
+ =?utf-8?B?bWsvSVBQc3AvSld4cXNYZ2pkU2FYN2hqRkdNUlA2SGpUQ3hwTlJiSjZ4SWFI?=
+ =?utf-8?B?K3dQNW9pWFhLeVdhcEpGbzFSMlFXVFAyYU9WTnVyMXBXOTFHNEk1OStQdGpD?=
+ =?utf-8?B?WVNrcU1EZzBySE5Ud1VLc2Y0a2lZZytnczZsaUFWbmtDT0dZWVBwUFZkS29R?=
+ =?utf-8?B?b0RKSUdjU3Q0Mm4zbUVvR0RNNkdHUHZZdldCcndwdmwvTytiOXRUcmVSUXdp?=
+ =?utf-8?Q?/nsXJVwb3wXyS6wlyRLEHV6Br7cbI6xV80oy4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2024 08:41:18.6603
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2de0ba31-c2fc-4dc2-bb59-08dc6b4ccd64
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF00050A01.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR02MB6625
+
+PATCH 1 - Add the 1BR10 link mode and capability to switch to 
+   BroadR-Reach as a PHY tunable value
+
+PATCH 2 - Add the definitions of LRE registers, necessary to use
+   BroadR-Reach modes on the BCM5481x PHY
+
+PATCH 3 - Implementation of the BroadR-Reach modes for the Broadcom
+   PHYs
+
+Changes in v2:
+  - Divided into multiple patches, removed useless link modes
 
 
+Kamil Horák - 2N (3):
+  net: phy: bcm54811: New link mode for BroadR-Reach
+  net: phy: bcm54811: Add LRE registers definitions
+  net: phy: bcm-phy-lib: Implement BroadR-Reach link modes
 
-On 5/3/24 09:31, Krzysztof Kozlowski wrote:
-> On 03/05/2024 10:24, Lee Jones wrote:
->> On Fri, 03 May 2024, Krzysztof Kozlowski wrote:
->>
->>> On 03/05/2024 10:08, Tudor Ambarus wrote:
->>>>
->>>>
->>>> On 5/3/24 08:21, Krzysztof Kozlowski wrote:
->>>>>  .../bindings/mfd/samsung,s2mpa01.yaml         |  2 +-
->>>>>  .../bindings/mfd/samsung,s2mps11.yaml         | 12 ++---
->>>>>  .../bindings/mfd/samsung,s5m8767.yaml         |  4 +-
->>>>
->>>> Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
->>>
->>> So this should be Ack. You cannot review part of the patch ("I have
->>> carried out a technical review of this patch...").
->>> https://elixir.bootlin.com/linux/v6.8-rc5/source/Documentation/process/submitting-patches.rst
->>
->> Reviewed-by is totally appropriate here.
-> 
-> Submitting patches is clear on that:
-> "A Reviewed-by tag is a statement of opinion that the patch is an"
-> Not "the patch or part of patch"
-> 
-> And ack:
-> " It is a record that the acker has at least reviewed the patch ....
-> Acked-by: does not necessarily indicate acknowledgement of the entire
-> patch."
-> 
-> So no, reviewing part of the patch means you Ack it. Especially that in
-> git log the Rb tag will suggest entire patch was reviewed, while it was
-> not true. Review of 80% of patch did not happen.
+ drivers/net/phy/bcm-phy-lib.c | 122 ++++++++++++
+ drivers/net/phy/bcm-phy-lib.h |   4 +
+ drivers/net/phy/broadcom.c    | 336 ++++++++++++++++++++++++++++++++--
+ drivers/net/phy/phy-core.c    |   9 +-
+ include/linux/brcmphy.h       |  91 ++++++++-
+ include/uapi/linux/ethtool.h  |   9 +-
+ net/ethtool/common.c          |   7 +
+ net/ethtool/ioctl.c           |   1 +
+ 8 files changed, 559 insertions(+), 20 deletions(-)
 
-Thanks, Krzysztof, I'll keep in mind next time. I now confirm I went
-through all the substitutions and they look good to me. R-b now applies
-to all the changes.
+-- 
+2.39.2
 
-ta
