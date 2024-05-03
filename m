@@ -1,92 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB2E42078;
-	Fri,  3 May 2024 09:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7697714BFBF;
+	Fri,  3 May 2024 09:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714729057; cv=none; b=VUZVEGwxUNTWFQ5fxp/3uGigSObcOItlbo8iEkfwkgvuA5GJlwVBGQuvpMre4O5NiM6oxlX0Gk5NO01OLMZJF3Q61tHCScujcGwkk+XLdWsw/4XpcoJw/1iWF0KwPyr3krJjlqn0NlHFnZdbmCuTt0cAnAYw3Sv17IMxMWoENSw=
+	t=1714729251; cv=none; b=X4zPpeLTQ+cfd6n9IIy3E1bQuHXJYHPQJl7Yv03g/NjAisQgdZ/KKxWxB1p82/zLcmWMmFL+8wahRLVwYpDkZ+tzpCsX/fxI6hTi5Eab5PVE+Fqpul+ox3TzUhH1xgO+gi+zBHahg32lf5Fdy4N2gKOJiOaNXxN3IvsMkk6QDQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714729057; c=relaxed/simple;
-	bh=EY1m386ze5p5efmGezaRioeyr4xQQNVljq2tWo0fXlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BdiwK+fdeT2SjE/BFBGkMcVFdVuGXDRb/QZtVSapnT/9PDKZXB6ujR+Qv4MovHDxrFoJHI5I6IrSbyFEt4W1FPuYFt2aEc/DjKVrm65TKyRuPNPmzyltd4j6IWynZbqRjTOMtcJyhtCrJKAuJ1YvRFvxorx6W3IQG+OOwkMqgXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbvW7QrS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714729251; c=relaxed/simple;
+	bh=39A8OWlUv3UHFjQvm5veN9ZOLUCUQiJrOOD153SpmyI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=GE/d//afzv26eSvUMF7eJSxWJtuCZ6/CltunBH3mb4ZsoG0vLXlF1+smD0GwJFLHoNtHGOBv0JPysQYQckHdA3QP8OyrRRU/ds1OS00meIHPwkKPTBCRMuKkPPKBiXAebgvtXyMmvfDe43xFV+ZlTGwU4bvol23twHvMaagMSiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cQDlFno/; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbvW7QrS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E47C116B1;
-	Fri,  3 May 2024 09:37:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714729056;
-	bh=EY1m386ze5p5efmGezaRioeyr4xQQNVljq2tWo0fXlY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bbvW7QrSUYaP7ll/nGqB8pNM3bYN8sV9MkSKBUePESxJ5x8/Vn3Y+PwKBz/X+x19y
-	 2v9TnIRi6ivEtcarof8Y685DmLp3CJlXXRGXdMdiwLqyZr4o5yM2aLqSRa9Nj4+59K
-	 REDZ7vgd6608hUHudlZ/ac9mJUabY8+yduLtuNKbgWn2X9VYbzEplRFVv64ePQExSt
-	 0AatHid8re8GR7Rofi9O+SJql98nf+mvKZwcX0rW10J6LFM7g+ZifZQ9PfKVL6TLCO
-	 KWOixJUGNN5Lgl6iDEJ3WHBgZ+Y7vSVu6PLRZ4olHsDGeO+Cysql0pUbhEl3HXE1mf
-	 5crSWWJpt/jrQ==
-Date: Fri, 3 May 2024 11:37:25 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, Zack Rusin <zack.rusin@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Andi Shyti <andi.shyti@linux.intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, 
-	Matt Atwood <matthew.s.atwood@intel.com>, Matthew Auld <matthew.auld@intel.com>, 
-	Nirmoy Das <nirmoy.das@intel.com>, Jonathan Cavitt <jonathan.cavitt@intel.com>, 
-	Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5/5] fs: Convert struct file::f_count to refcount_long_t
-Message-ID: <20240503-inventar-braut-c82e15e56a32@brauner>
-References: <20240502222252.work.690-kees@kernel.org>
- <20240502223341.1835070-5-keescook@chromium.org>
- <20240502224250.GM2118490@ZenIV>
- <202405021548.040579B1C@keescook>
- <20240502231228.GN2118490@ZenIV>
- <202405021620.C8115568@keescook>
- <20240502234152.GP2118490@ZenIV>
- <202405021708.267B02842@keescook>
- <20240503001445.GR2118490@ZenIV>
- <202405021736.574A688@keescook>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQDlFno/"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51f174e316eso1944918e87.0;
+        Fri, 03 May 2024 02:40:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714729248; x=1715334048; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=b9gO1v4sXfXdAITvo0BN7gOXupM7E3E+qa7nXDHVYeI=;
+        b=cQDlFno/TX6BZuiftdQM7AQb2g87c1a+46b0ArciDE9O7xkuTXmkbzf/yW3Qcy059c
+         OWLYdItV4MZKe5nIh3iU0AviS6zz259iA+QVgxGHJl5r/Sr8s3DCpiXBiVoDDTJS34Ci
+         lJTqqu0f8o3IVby6VR4vDr/jOMCo1KuuJ+79BYGf9y85jJ0wGCU22MCrb/8GgAFELSI7
+         svgb1yfCmxBURheHByeZp9ZDm9m+UOvy/4TKaYg1ITmQfqgsNL5rzR4c6df6fHcBwb9k
+         ZvrlOaMSqzT1OlnJZdnQqmKm2QihWxL24X1NnAyUMpEcnWfVBQn7rAmYBlXTiBVMKmWA
+         AxZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714729248; x=1715334048;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b9gO1v4sXfXdAITvo0BN7gOXupM7E3E+qa7nXDHVYeI=;
+        b=S2M4EigGlI6XzzF3TiGl8xo85gynYr577ZEP6y9tpgKqIxvgEmRxAmy8JAnUTVJMJF
+         c95fCnB9i91XVlgrhh9uOkUtTMFn1tZ0Y7outUfJW6+T3+eaYfpugbydB0/K60GLjIBr
+         uwWb2nq1gtxz528s5vIhVNpMI7CeemG/EOCEG3SkMTKgp1Owzh/PItR/E+SmhZ45MHHp
+         kRNHbN3ie4/oOz/4cCeD1B6oLIFDGl3xttdtikSo2RtmKr8BxE+mL7j2ngFWpsEunhEH
+         szP0jNbM5tbc8Mz4DiKQd7N3mX04Y624QqeTtgWdrEBGMHcxyAiXFg8Diw9rIVeDHAhJ
+         iJZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKRrUTeAKoLxel5KWPCFFAi3qcFE0s0ILOROMyW0iT518x9L/tx9KGJJNyvkY1nvSfKIOZD/ZFrEEz6ZKIscT8XiwN1nYAVHIsEj4hIh4Hm58UNf2BUbBQzjkQbpwBsRcMcJF9OJMNzsI=
+X-Gm-Message-State: AOJu0Yy8ybGOt5zJdednbYxD+gDuOOhBjesMwk5LkFqdP7w8Za6GOE81
+	BsguiMiTEWRcnyo2Nf6sXkXxPq0KGY/i/MTUtmsZpIL3BDp1kX4O
+X-Google-Smtp-Source: AGHT+IGEMJv3fOcAWHTovUp3S5CuQ55ZULKUeY4/+3V4Dqn+tcro3oKC6xYCBsyM8UR7dEUmI4dU5w==
+X-Received: by 2002:ac2:4e83:0:b0:51f:4dba:d331 with SMTP id o3-20020ac24e83000000b0051f4dbad331mr1258629lfr.67.1714729247323;
+        Fri, 03 May 2024 02:40:47 -0700 (PDT)
+Received: from localhost (host81-157-180-37.range81-157.btcentralplus.com. [81.157.180.37])
+        by smtp.gmail.com with ESMTPSA id bf9-20020a0560001cc900b00341b451a31asm3327791wrb.36.2024.05.03.02.40.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 02:40:46 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] btrfs: Fix spelling mistake "decompresssed" -> "decompressed"
+Date: Fri,  3 May 2024 10:40:40 +0100
+Message-Id: <20240503094040.2712326-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202405021736.574A688@keescook>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 02, 2024 at 05:41:23PM -0700, Kees Cook wrote:
-> On Fri, May 03, 2024 at 01:14:45AM +0100, Al Viro wrote:
-> > On Thu, May 02, 2024 at 05:10:18PM -0700, Kees Cook wrote:
-> > 
-> > > But anyway, there needs to be a general "oops I hit 0"-aware form of
-> > > get_file(), and it seems like it should just be get_file() itself...
-> > 
-> > ... which brings back the question of what's the sane damage mitigation
-> > for that.  Adding arseloads of never-exercised failure exits is generally
-> > a bad idea - it's asking for bitrot and making the thing harder to review
-> > in future.
-> 
-> Linus seems to prefer best-effort error recovery to sprinkling BUG()s
-> around.  But if that's really the solution, then how about get_file()
-> switching to to use inc_not_zero and BUG on 0?
+There is a spelling mistake in a btrfs_err message. Fix it.
 
-Making get_file() return an error is not an option. For all current
-callers that's pointless churn for a condition that's not supposed to
-happen at all.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ fs/btrfs/zlib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Additionally, iirc *_inc_not_zero() variants are implemented with
-try_cmpxchg() which scales poorly under contention for a condition
-that's not supposed to happen.
+diff --git a/fs/btrfs/zlib.c b/fs/btrfs/zlib.c
+index 518d05b00a20..d7e5f681bc32 100644
+--- a/fs/btrfs/zlib.c
++++ b/fs/btrfs/zlib.c
+@@ -435,7 +435,7 @@ int zlib_decompress(struct list_head *ws, const u8 *data_in,
+ 		struct btrfs_inode *inode = BTRFS_I(dest_page->mapping->host);
+ 
+ 		btrfs_err(inode->root->fs_info,
+-"zlib decompression failed, error %d root %llu inode %llu offset %llu decompresssed %lu expected %zu",
++"zlib decompression failed, error %d root %llu inode %llu offset %llu decompressed %lu expected %zu",
+ 			  ret, inode->root->root_key.objectid, btrfs_ino(inode),
+ 			  page_offset(dest_page), to_copy, destlen);
+ 		ret = -EIO;
+-- 
+2.39.2
+
