@@ -1,116 +1,122 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F284C4D9FD
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 16:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FF8155342
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 16:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714753386; cv=none; b=pad+JdK3R7sF1gQisWeJCia6f4Y045jwKf2HtTu9torWhV20ro9FxuWvwh7s5njZnagJzXsE4lMsYRqPEdrmpAm0tzGztKm4a01sxiqdgygwwoihBRaiuc/MfTg27Sk6Q5jOPzA1yNS+iil+mWa8Xr5uEUtWqT8UI/w0rtmFh/0=
+	t=1714753405; cv=none; b=jcdLXB4e2nCsOP0738SDYt3HhlbCxJEsKzHBZ19NdUdyeuKLKwkKIJSvOJuIX2WzdlREkzYSOnsPkqHGpUMTP4c3KvfdZs7xlcHviKe7Hg2TiSoEvFkMUEFy1dDPqPb41T9XhoWoilih1GKmtHoFedE1CYW68d8b8mM8gPVPnU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714753386; c=relaxed/simple;
-	bh=uRsf89PYPNNB+MDH2jhxz1s0c6RGa/OSvDNRlwMEnsc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=RTs89J8eZbbTpGeHDKn3ZPGWh5mVf1Zecvwjz/VA/E/sHTMCsEdqTQ/R3WpaKNWyH+SqkqvivGedZqd8iwUzAvTYWihrLWfAa2gq1hNVl1kR0wPx1sc+YpY9wErmnAMtZJ/fuszL/HTY8pfWCRxBHkfrAI8uwo15DIqC9pguV0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-136-6zAZYStTPmWnjs5bkxLi4w-1; Fri, 03 May 2024 17:16:52 +0100
-X-MC-Unique: 6zAZYStTPmWnjs5bkxLi4w-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 3 May
- 2024 17:16:22 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 3 May 2024 17:16:22 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Waiman Long' <longman@redhat.com>, "'linux-kernel@vger.kernel.org'"
-	<linux-kernel@vger.kernel.org>, "'peterz@infradead.org'"
-	<peterz@infradead.org>
-CC: "'mingo@redhat.com'" <mingo@redhat.com>, "'will@kernel.org'"
-	<will@kernel.org>, "'boqun.feng@gmail.com'" <boqun.feng@gmail.com>, "'Linus
- Torvalds'" <torvalds@linux-foundation.org>,
-	"'virtualization@lists.linux-foundation.org'"
-	<virtualization@lists.linux-foundation.org>, 'Zeng Heng'
-	<zengheng4@huawei.com>
-Subject: RE: [PATCH next v2 5/5] locking/osq_lock: Optimise decode_cpu() and
- per_cpu_ptr().
-Thread-Topic: [PATCH next v2 5/5] locking/osq_lock: Optimise decode_cpu() and
- per_cpu_ptr().
-Thread-Index: Ado8NCf0vtha6NqURtGgfE7//QxHexhPrXlAAACWziA=
-Date: Fri, 3 May 2024 16:16:21 +0000
-Message-ID: <a4b3b3a260b94bfdb46a4b5d57b36f01@AcuMS.aculab.com>
-References: <2b4e8a5816a742d2bd23fdbaa8498e80@AcuMS.aculab.com>
- <7c1148fe64fb46a7a81c984776cd91df@AcuMS.aculab.com>
- <9d4024ba-6422-4775-b934-bfa80a72a858@redhat.com>
- <16557e30-8353-4cd1-995b-23ec763d2b07@redhat.com>
-In-Reply-To: <16557e30-8353-4cd1-995b-23ec763d2b07@redhat.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1714753405; c=relaxed/simple;
+	bh=2TK0WfyT+uobla4qoKzP2gAKcDWPP/VYNZP4PYQFP0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gcZ3iTEBjfkrDu9MhVUWV0pn6z+MHn1Ct92vxjRQhf9xBrh1VB9SeN9nNh41YL5zR6weuo6zxNfvY2Svk0DZrvyv1HQ68fI52JJqh2+kOJgcc9iatbu5/Nf38EYGuY9zs/VRyRkpQ3ClURE8rW2xMCTAX46c/OaJB/lNZkGi+O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mrW1Rvth; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrW1Rvth"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ee13f19e7eso8508364b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 09:23:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714753403; x=1715358203; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mwKDafe28MIieMSNGIPW3eOTsHHrwRXu1m7RhuwOcZc=;
+        b=mrW1RvthgHzIVZ4kN045WXM/fhPCmMc/Rm+6Xv+rkewGVy1kS4uiPcgpFLWjMBmZw5
+         ne6uHunDYyK1Lmr2UBJ81uI8ODy8VMmWN6hIKADn26n1Gjqi3WqjT3KNJByLbml9BNrI
+         tG2+4YjZ1FEh18bPj2ErjQcssAOGQEi+4oMogWAWuaqfkkGS/0vRCCIn8YU7uXyO6XRC
+         Xm4cFt7Ud6SUuJ8f10M2nCOAEHtqMavBhLSxrTd3pfDxAKD9E/eeBnioPzZ7lbIHbMbr
+         x8S1DnSd25Wgc9U40kSKbFZyFwVssFeyzxx4d00OXedlCuGBhGfbUFO4XwqjSxSkHLSq
+         mMRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714753403; x=1715358203;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mwKDafe28MIieMSNGIPW3eOTsHHrwRXu1m7RhuwOcZc=;
+        b=lVX/jlav6nmSA78V0/R+FXxRc2v2GCl6jhNwZGnd508Jm8KYUMsAOdH97eRWWs3jlF
+         HdQHk1YxE2VJ7nVBCcvG7K9cb2/TE+OAaUFxTyv8jgIf+d/MuBn7+eqPZRca50ddw4Gi
+         RIvLVjamR/TD5VQMNEq8bQaW/Z4NpIkCR6B/5mZ6p/jIFmZCjWR4Gotun0H9SZLh2yfF
+         TlLIL8MZEPh4AGNOC9V892aJ5R+dyUBagBr8ugBMLQjOWstIeCzEfQeUUgpWgy+sZ30L
+         rXC4ASL4QZUI0/lbH4EJ+8GqmB31EvDe2daof0Cd3ksmhcfBD3k+XTWiWn2eajFx1E0U
+         /8kA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2hiDM94VflGmxrnzwC/qtTCtsRGN6V+JQ9T60ttaFi1Vpzhn+jbA0+qtuk1Ru/nz4cdIJHfWk4KgFdNvqdrVBJwRcSWNO62Sh2UPC
+X-Gm-Message-State: AOJu0Yyf21s2N2kaS2WKbMIsmT++/YXoruzDzmN6erfbbVUjC0hu+RLU
+	YpfIEQIuMumwjtlCADnOkqwYaKs31vHkFe/RV+wPHRfNeydDPYdE
+X-Google-Smtp-Source: AGHT+IGuqVde44+OlfespuDSTAfHKUhnMDH3dyay8UhKf4umdgctT17gfataxz2qw5xl3u+0CdUBww==
+X-Received: by 2002:a05:6a00:130a:b0:6f3:e6e0:d9fb with SMTP id j10-20020a056a00130a00b006f3e6e0d9fbmr3124846pfu.11.1714753403334;
+        Fri, 03 May 2024 09:23:23 -0700 (PDT)
+Received: from ?IPV6:2402:e280:214c:86:b096:5d6e:50c3:70e5? ([2402:e280:214c:86:b096:5d6e:50c3:70e5])
+        by smtp.gmail.com with ESMTPSA id w17-20020a639351000000b0061cf79eab38sm1612625pgm.37.2024.05.03.09.23.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 May 2024 09:23:23 -0700 (PDT)
+Message-ID: <f87bfbb1-b80f-46a5-be85-058a406de99d@gmail.com>
+Date: Fri, 3 May 2024 21:53:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH linux-next] gpu:ipu-v3:pre: replace of_node_put() with
+ __free
+To: p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com,
+ Julia Lawall <julia.lawall@inria.fr>
+References: <20240427045024.7083-1-prosunofficial@gmail.com>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+From: R Sundar <prosunofficial@gmail.com>
+In-Reply-To: <20240427045024.7083-1-prosunofficial@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-RnJvbTogV2FpbWFuIExvbmcNCj4gU2VudDogMDMgTWF5IDIwMjQgMTc6MDANCj4gVG86IERhdmlk
-IExhaWdodCA8RGF2aWQuTGFpZ2h0QEFDVUxBQi5DT00+OyAnbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZycgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgJ3BldGVyekBpbmZy
-YWRlYWQub3JnJyA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+DQo+IENjOiAnbWluZ29AcmVkaGF0LmNv
-bScgPG1pbmdvQHJlZGhhdC5jb20+OyAnd2lsbEBrZXJuZWwub3JnJyA8d2lsbEBrZXJuZWwub3Jn
-PjsgJ2JvcXVuLmZlbmdAZ21haWwuY29tJw0KPiA8Ym9xdW4uZmVuZ0BnbWFpbC5jb20+OyAnTGlu
-dXMgVG9ydmFsZHMnIDx0b3J2YWxkc0BsaW51eC1mb3VuZGF0aW9uLm9yZz47ICd2aXJ0dWFsaXph
-dGlvbkBsaXN0cy5saW51eC0NCj4gZm91bmRhdGlvbi5vcmcnIDx2aXJ0dWFsaXphdGlvbkBsaXN0
-cy5saW51eC1mb3VuZGF0aW9uLm9yZz47ICdaZW5nIEhlbmcnIDx6ZW5naGVuZzRAaHVhd2VpLmNv
-bT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCBuZXh0IHYyIDUvNV0gbG9ja2luZy9vc3FfbG9jazog
-T3B0aW1pc2UgZGVjb2RlX2NwdSgpIGFuZCBwZXJfY3B1X3B0cigpLg0KPiANCj4gDQo+IE9uIDEy
-LzMxLzIzIDIzOjE0LCBXYWltYW4gTG9uZyB3cm90ZToNCj4gPg0KPiA+IE9uIDEyLzMxLzIzIDE2
-OjU1LCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+ID4+IHBlcl9jcHVfcHRyKCkgaW5kZXhlcyBfX3Bl
-cl9jcHVfb2Zmc2V0W10gd2l0aCB0aGUgY3B1IG51bWJlci4NCj4gPj4gVGhpcyByZXF1aXJlcyB0
-aGUgY3B1IG51bWJlciBiZSA2NGJpdC4NCj4gPj4gSG93ZXZlciB0aGUgdmFsdWUgaXMgb3NxX2xv
-Y2soKSBjb21lcyBmcm9tIGEgMzJiaXQgeGNoZygpIGFuZCB0aGVyZQ0KPiA+PiBpc24ndCBhIHdh
-eSBvZiB0ZWxsaW5nIGdjYyB0aGUgaGlnaCBiaXRzIGFyZSB6ZXJvICh0aGV5IGFyZSkgc28NCj4g
-Pj4gdGhlcmUgd2lsbCBhbHdheXMgYmUgYW4gaW5zdHJ1Y3Rpb24gdG8gY2xlYXIgdGhlIGhpZ2gg
-Yml0cy4NCj4gPj4NCj4gPj4gVGhlIGNwdSBudW1iZXIgaXMgYWxzbyBvZmZzZXQgYnkgb25lICh0
-byBtYWtlIHRoZSBpbml0aWFsaXNlciAwKQ0KPiA+PiBJdCBzZWVtcyB0byBiZSBpbXBvc3NpYmxl
-IHRvIGdldCBnY2MgdG8gY29udmVydA0KPiA+PiBfX3Blcl9jcHVfb2Zmc2V0W2NwdV9wMSAtIDFd
-DQo+ID4+IGludG8gKF9fcGVyX2NwdV9vZmZzZXQgLSAxKVtjcHVfcDFdICh0cmFuc2ZlcnJpbmcg
-dGhlIG9mZnNldCB0byB0aGUNCj4gPj4gYWRkcmVzcykuDQo+ID4+DQo+ID4+IENvbnZlcnRpbmcg
-dGhlIGNwdSBudW1iZXIgdG8gMzJiaXQgdW5zaWduZWQgcHJpb3IgdG8gdGhlIGRlY3JlbWVudCBt
-ZWFucw0KPiA+PiB0aGF0IGdjYyBrbm93cyB0aGUgZGVjcmVtZW50IGhhcyBzZXQgdGhlIGhpZ2gg
-Yml0cyB0byB6ZXJvIGFuZCBkb2Vzbid0DQo+ID4+IGFkZCBhIHJlZ2lzdGVyLXJlZ2lzdGVyIG1v
-dmUgKG9yIGNsdHEpIHRvIHplcm8vc2lnbiBleHRlbmQgdGhlIHZhbHVlLg0KPiA+Pg0KPiA+PiBO
-b3QgbWFzc2l2ZSBidXQgc2F2ZXMgdHdvIGluc3RydWN0aW9ucy4NCj4gPj4NCj4gPj4gU2lnbmVk
-LW9mZi1ieTogRGF2aWQgTGFpZ2h0IDxkYXZpZC5sYWlnaHRAYWN1bGFiLmNvbT4NCj4gPj4gLS0t
-DQo+ID4+IMKgIGtlcm5lbC9sb2NraW5nL29zcV9sb2NrLmMgfCA2ICsrLS0tLQ0KPiA+PiDCoCAx
-IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+Pg0KPiA+
-PiBkaWZmIC0tZ2l0IGEva2VybmVsL2xvY2tpbmcvb3NxX2xvY2suYyBiL2tlcm5lbC9sb2NraW5n
-L29zcV9sb2NrLmMNCj4gPj4gaW5kZXggMzViYjk5ZTk2Njk3Li4zN2E0ZmE4NzI5ODkgMTAwNjQ0
-DQo+ID4+IC0tLSBhL2tlcm5lbC9sb2NraW5nL29zcV9sb2NrLmMNCj4gPj4gKysrIGIva2VybmVs
-L2xvY2tpbmcvb3NxX2xvY2suYw0KPiA+PiBAQCAtMjksMTEgKzI5LDkgQEAgc3RhdGljIGlubGlu
-ZSBpbnQgZW5jb2RlX2NwdShpbnQgY3B1X25yKQ0KPiA+PiDCoMKgwqDCoMKgIHJldHVybiBjcHVf
-bnIgKyAxOw0KPiA+PiDCoCB9DQo+ID4+IMKgIC1zdGF0aWMgaW5saW5lIHN0cnVjdCBvcHRpbWlz
-dGljX3NwaW5fbm9kZSAqZGVjb2RlX2NwdShpbnQNCj4gPj4gZW5jb2RlZF9jcHVfdmFsKQ0KPiA+
-PiArc3RhdGljIGlubGluZSBzdHJ1Y3Qgb3B0aW1pc3RpY19zcGluX25vZGUgKmRlY29kZV9jcHUo
-dW5zaWduZWQgaW50DQo+ID4+IGVuY29kZWRfY3B1X3ZhbCkNCj4gPj4gwqAgew0KPiA+PiAtwqDC
-oMKgIGludCBjcHVfbnIgPSBlbmNvZGVkX2NwdV92YWwgLSAxOw0KPiA+PiAtDQo+ID4+IC3CoMKg
-wqAgcmV0dXJuIHBlcl9jcHVfcHRyKCZvc3Ffbm9kZSwgY3B1X25yKTsNCj4gPj4gK8KgwqDCoCBy
-ZXR1cm4gcGVyX2NwdV9wdHIoJm9zcV9ub2RlLCBlbmNvZGVkX2NwdV92YWwgLSAxKTsNCj4gPj4g
-wqAgfQ0KPiA+PiDCoCDCoCAvKg0KPiA+DQo+ID4gWW91IHJlYWxseSBsaWtlIG1pY3JvLW9wdGlt
-aXphdGlvbi4NCj4gPg0KPiA+IEFueXdheSwNCj4gPg0KPiA+IFJldmlld2VkLWJ5OiBXYWltYW4g
-TG9uZyA8bG9uZ21hbkByZWRoYXQuY29tPg0KPiA+DQo+IERhdmlkLA0KPiANCj4gQ291bGQgeW91
-IHJlc3BpbiB0aGUgc2VyaWVzIGJhc2VkIG9uIHRoZSBsYXRlc3QgdXBzdHJlYW0gY29kZT8NCg0K
-TG9va3MgbGlrZSBhIHdldCBiYW5rIGhvbGlkYXkgd2Vla2VuZC4uLi4uDQoNCglEYXZpZA0KDQot
-DQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwg
-TWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2Fs
-ZXMpDQo=
+On 27/04/24 10:20, R Sundar wrote:
+> use the new cleanup magic to replace of_node_put() with
+> __free(device_node) marking to auto release when they get out of scope.
+> 
+> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> Signed-off-by: R Sundar <prosunofficial@gmail.com>
+> ---
+>   drivers/gpu/ipu-v3/ipu-pre.c | 7 ++-----
+>   1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/ipu-v3/ipu-pre.c b/drivers/gpu/ipu-v3/ipu-pre.c
+> index aef984a43190..95830cf8fa3e 100644
+> --- a/drivers/gpu/ipu-v3/ipu-pre.c
+> +++ b/drivers/gpu/ipu-v3/ipu-pre.c
+> @@ -113,8 +113,8 @@ int ipu_pre_get_available_count(void)
+>   struct ipu_pre *
+>   ipu_pre_lookup_by_phandle(struct device *dev, const char *name, int index)
+>   {
+> -	struct device_node *pre_node = of_parse_phandle(dev->of_node,
+> -							name, index);
+> +	struct device_node *pre_node __free(device_node) =
+> +		of_parse_phandle(dev->of_node, name, index);
+>   	struct ipu_pre *pre;
+>   
+>   	mutex_lock(&ipu_pre_list_mutex);
+> @@ -123,14 +123,11 @@ ipu_pre_lookup_by_phandle(struct device *dev, const char *name, int index)
+>   			mutex_unlock(&ipu_pre_list_mutex);
+>   			device_link_add(dev, pre->dev,
+>   					DL_FLAG_AUTOREMOVE_CONSUMER);
+> -			of_node_put(pre_node);
+>   			return pre;
+>   		}
+>   	}
+>   	mutex_unlock(&ipu_pre_list_mutex);
+>   
+> -	of_node_put(pre_node);
+> -
+>   	return NULL;
+>   }
+>   
+Hi,
 
+Any feedback on this patch.
+
+Thanks,
+Sundar
