@@ -1,102 +1,164 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FFD1474AA
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 08:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D4614A0AC;
+	Fri,  3 May 2024 08:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714726281; cv=none; b=IdjFwBPiAYhMOmWNZ5mPMYJPdA9TiHRsr3GCchQu9cc9u4qvnCLCUk2VxtnaoV2AQD44ZC7J796TTrI88gXgXreAabPaZQhQ3JfrrdyzERvCVPakhjIbydra5CPKVt9rclOTQNp4GytKIvaGGvmxFqQ5aG7k5aQl0SnmI5EyPAM=
+	t=1714726382; cv=none; b=VsPlNLlK3GSrY/FLcsoqXvCVnU+ia7MOQVIGR1JWkjlbpYvoUWtxOc/6dfShKdUPAghcu3jsCj983owhFx6Jyi6g025btlKF80ng97FSeoEztU57Eef/9o7D+gbVY6QWCp6yGADSxy1Y8sMhLXNSMOfqCKu3mmu7zLfJyY6xWoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714726281; c=relaxed/simple;
-	bh=IEjd9yHeRN2jxLghIr0Q/jIHE64VNvDXmfQrbY/lmKM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KyaUsxTmEvfatMhp8hQrdy8MA1228SS8jvHR/d5skNcLSxm8qI+CAJaVxnFCwvl1sjjQ8zrv1073L4CRiEKhNJdWUTdj4+UoO1tQSWlj2GgBa4aXqPqGyFDvEf9TPyJbYW7PBhBv2kqtI2UV4thUV+tzWglp7nLTCb4urNabKeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HCrXgZ1E; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714726382; c=relaxed/simple;
+	bh=UidPnR0rZN2K/R4rjDZjFLcQrMT3kKQ/ZzUwZ/or2iI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XPv8tKKZJrHyxOXnW0P5eMgCy1gAOhp5Ajsb5qN8ErI7u3GOEcJfAfo3XvbNs2XYfFx8aaiE0/nmHsX5EPQWdylQJAf0bcKv6qjWL+mcH7gljjdznLRX2id8qYowMYYBgvmH7C5x/bD2pS9uEtfS7DACVX4Nw8XXFMQMsU+KWww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bPaIg6UZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HCrXgZ1E"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e271acb015so1638971fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 01:51:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714726278; x=1715331078; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZWk/psw7Jn7h8F9Bpz9pTT51OJv92Z7OG1gjIzaGghI=;
-        b=HCrXgZ1EX0CBIZ7mbj3uk+1mDN13w1okTDa8Y/rgCmAPRi0/bOG913P6prd1wdWIt6
-         aqEXgzerEWWyWmk8K/WpxcrWynH6PSvSpj5teKdFzj56bJtlpmcib7jKJc3llm/1aiMh
-         d8QUWW68QgTHqVU6Z0DMqyHZtiqTIyju40ud8kQ4fYum7vSk9xBb31WT5kLIFnEG/OJ2
-         1b9HnK7T42e7c6hwf09untSlj6RMPsuMtKXwpBgyuyH8AAcYN3TtJKN8cnuDO6svdZy7
-         EBYowrzKn6YR5jNOBDdhBZm+aUTU1ykNcKmL/wfpr10dL/y3fO6LrYZEG4ICRKYDtrnP
-         akgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714726278; x=1715331078;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZWk/psw7Jn7h8F9Bpz9pTT51OJv92Z7OG1gjIzaGghI=;
-        b=J6Kxn4c0/609mjMFe9mQqsdPrBniMiFq8gLX8nrwAaBJgB5+IjzonZx3pzeJxAc0B0
-         J1btZn9mondlPhhwLZJkT/KKDoIUGt/H83Aezaz9HqNWIvAhbc21sbCFRvirOlInRSbM
-         dnvhdgjdJPmE7VgQ6Syp1koz+tuu2yhNUaPtUPV8INCML41oVFUh/wT1Hl0Hp/Q1DtVq
-         N3z6ma8VkGY5HacNTD+6P0Rd9k2CpTc+v+GUGkiAiuw7bByebhNb8Rrw9fHdLLss4dBo
-         5mKABPUBlqyGYQuEY8Zj/wcWB78lHo256ITGAJAO+KYS5TVo0TgIu1HvL83mJtbG9Xvq
-         L9Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1IXW/GpiB4fsmJVFXfwBJZn/YyzMBwDYRsJYWsja4h8IH6bz7g/bRF9glguwECmnQo/G4CaQW6HcuvGF9Kzu0KCBzcrKXRpAqOcYm
-X-Gm-Message-State: AOJu0YwqdEQwmqz5Skmmtmgvu6VLFSJqfLMAoOYqpewTf3zUfYf5SYJX
-	ANovNlGOmhQx3cPx3OgykH0Ha9SRfMEbdvlXn1ODxOXHrFLp1eJTvtkNNHwm/LdWWoJqJbvZMTa
-	uqZ0=
-X-Google-Smtp-Source: AGHT+IHcI2LurCc2hKenAfI5jjKmPmOLR9ME3lIwcmztZCp99vEXqtLskwgBUgkpuv4Q6SUOsRVoww==
-X-Received: by 2002:a05:6512:2eb:b0:51d:70d9:ece0 with SMTP id m11-20020a05651202eb00b0051d70d9ece0mr1451847lfq.6.1714726277628;
-        Fri, 03 May 2024 01:51:17 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id i15-20020adfb64f000000b0034af40b2efdsm3204178wre.108.2024.05.03.01.51.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 01:51:17 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240426160256.3089978-1-jbrunet@baylibre.com>
-References: <20240426160256.3089978-1-jbrunet@baylibre.com>
-Subject: Re: [PATCH 0/2] drm/meson: fix hdmi auxiliary system operation
- without display
-Message-Id: <171472627680.386161.1617857178874394298.b4-ty@linaro.org>
-Date: Fri, 03 May 2024 10:51:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bPaIg6UZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A9DC4AF14;
+	Fri,  3 May 2024 08:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714726382;
+	bh=UidPnR0rZN2K/R4rjDZjFLcQrMT3kKQ/ZzUwZ/or2iI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bPaIg6UZhFQ1HZ3WfD4Xd8CSyroUAqyrJGFyf/7lZxCPdBqetBjPKu9Qrd7f8zJug
+	 dW9qnAMYhRLDAeHYRsCinw8l8B6sF0ObxuPnfOMdRSOxjBpDw5/VZD8Grom8uMUyk/
+	 ZQT89izhefWhqa38DQcutRBxptbBdC/nkqcyqHE+ScrkMKCRdIXPEPRMLtoXbhPtfb
+	 WoJLw/jC08qjO52jzKRHYfbtn7P4TwH4vworE9RD/oX5o0W4wvjcM9qqX3UlRJ+4WW
+	 PmqoU4epC6pZxObjUd5QyGckAMU/abVC5t1NUkAl4I2Uwva96LYjSzLE/kJfxdR0vg
+	 LSwTJ6cu3ZVpg==
+Date: Fri, 3 May 2024 09:52:57 +0100
+From: Simon Horman <horms@kernel.org>
+To: Justin Lai <justinlai0215@realtek.com>
+Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
+	pabeni@redhat.com, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, andrew@lunn.ch, jiri@resnulli.us,
+	pkshih@realtek.com, larry.chiu@realtek.com
+Subject: Re: [PATCH net-next v17 02/13] rtase: Implement the .ndo_open
+ function
+Message-ID: <20240503085257.GM2821784@kernel.org>
+References: <20240502091847.65181-1-justinlai0215@realtek.com>
+ <20240502091847.65181-3-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502091847.65181-3-justinlai0215@realtek.com>
 
-Hi,
-
-On Fri, 26 Apr 2024 18:02:52 +0200, Jerome Brunet wrote:
-> CEC and ARC should work even when HDMI is not actively used for the
-> display but it is not the case with Amlogic HDMI.
+On Thu, May 02, 2024 at 05:18:36PM +0800, Justin Lai wrote:
+> Implement the .ndo_open function to set default hardware settings
+> and initialize the descriptor ring and interrupts. Among them,
+> when requesting irq, because the first group of interrupts needs to
+> process more events, the overall structure will be different from
+> other groups of interrupts, so it needs to be processed separately.
 > 
-> This is important for devices such as sound bars which may use DSI
-> to display a UI and HDMI for CEC/ARC. A display is not required for these
-> functions
+> Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+
+Hi Justin,
+
+some minor feedback from my side.
+
+> ---
+>  .../net/ethernet/realtek/rtase/rtase_main.c   | 419 ++++++++++++++++++
+>  1 file changed, 419 insertions(+)
 > 
-> [...]
+> diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> index 5ddb5f7abfe9..b286aac1eedc 100644
+> --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> @@ -130,6 +130,293 @@ static u32 rtase_r32(const struct rtase_private *tp, u16 reg)
+>  	return readl(tp->mmio_addr + reg);
+>  }
+>  
+> +static void rtase_set_rxbufsize(struct rtase_private *tp)
+> +{
+> +	tp->rx_buf_sz = RTASE_RX_BUF_SIZE;
+> +}
 
-Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-fixes)
+I'm a big fan of helpers, but maybe it's better to just open-code this one
+as it is trivial and seems to only be used once.
 
-[1/2] drm/meson: dw-hdmi: power up phy on device init
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/04703bfd7f99c016a823c74712b97f8b5590ce87
-[2/2] drm/meson: dw-hdmi: add bandgap setting for g12
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/08001033121dd92b8297a5b7333636b466c30f13
+...
 
--- 
-Neil
+> +static int rtase_open(struct net_device *dev)
+> +{
+> +	struct rtase_private *tp = netdev_priv(dev);
+> +	struct rtase_int_vector *ivec = &tp->int_vector[0];
+> +	const struct pci_dev *pdev = tp->pdev;
+> +	u16 i, j;
+> +	int ret;
 
+nit: please use reverse xmas tree order - longest line to shortest -
+     for local variable declarations in new Networking code.
+
+> +
+> +	rtase_set_rxbufsize(tp);
+> +
+> +	ret = rtase_alloc_desc(tp);
+> +	if (ret)
+> +		goto err_free_all_allocated_mem;
+> +
+> +	ret = rtase_init_ring(dev);
+> +	if (ret)
+> +		goto err_free_all_allocated_mem;
+> +
+> +	rtase_hw_config(dev);
+> +
+> +	if (tp->sw_flag & RTASE_SWF_MSIX_ENABLED) {
+> +		ret = request_irq(ivec->irq, rtase_interrupt, 0,
+> +				  dev->name, ivec);
+> +		if (ret)
+> +			goto err_free_all_allocated_irq;
+
+This goto jumps to code that relies on i to set the bounds on a loop.
+However, i is not initialised here. Perhaps it should be set to 1?
+
+Flagged by Smatch, and clang-18 W=1 builds.
+
+> +
+> +		/* request other interrupts to handle multiqueue */
+> +		for (i = 1; i < tp->int_nums; i++) {
+> +			ivec = &tp->int_vector[i];
+> +			snprintf(ivec->name, sizeof(ivec->name), "%s_int%i", tp->dev->name, i);
+
+nit: This line could trivially be split into two lines,
+     each less than 80 columns wide.
+
+> +			ret = request_irq(ivec->irq, rtase_q_interrupt, 0,
+> +					  ivec->name, ivec);
+> +			if (ret)
+> +				goto err_free_all_allocated_irq;
+> +		}
+> +	} else {
+> +		ret = request_irq(pdev->irq, rtase_interrupt, 0, dev->name,
+> +				  ivec);
+> +		if (ret)
+> +			goto err_free_all_allocated_mem;
+> +	}
+> +
+> +	rtase_hw_start(dev);
+> +
+> +	for (i = 0; i < tp->int_nums; i++) {
+> +		ivec = &tp->int_vector[i];
+> +		napi_enable(&ivec->napi);
+> +	}
+> +
+> +	netif_carrier_on(dev);
+> +	netif_wake_queue(dev);
+> +
+> +	return 0;
+> +
+> +err_free_all_allocated_irq:
+> +	for (j = 0; j < i; j++)
+> +		free_irq(tp->int_vector[j].irq, &tp->int_vector[j]);
+> +
+> +err_free_all_allocated_mem:
+> +	rtase_free_desc(tp);
+> +
+> +	return ret;
+> +}
+
+...
