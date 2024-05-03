@@ -1,30 +1,32 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B220155333
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 16:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9731115539B
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 16:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714753347; cv=none; b=MZPtqBDom5WJHNL09nl5mQbrjBKoFoXXQ0vXpHOGAGpc9TLq8TX0YrPVEO1p42UdWBjspPdV+H86etG0oJp7q13EoU3MbozxhWFOrfV1T8V/1ecQzx4NdwOiNI+V1PrtpEYLDCG+YOpbFSVAufFBNbBYlDBnggQ0dwlRnQhf6As=
+	t=1714753350; cv=none; b=uAYkh6gWsumhy3NuuPdhdkvm0mEvR3fnrpBx2/dUSJ6rU0AJJP+kYEOh8HSzlNRcUWrXIZem7BgcxbVPtL5cHq+LsT3DcWh7kAaxGg0ANt5P97cNTE0IHaRUJf3JBWdcCFBa8EHNmARQ9h8iZiBWNy8TWOcRLAgTpHLGdmAUqsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714753347; c=relaxed/simple;
-	bh=J4+OVdF9NycY9uPpp5VNvqKh8hgvCLPHf5ryhnZ0hZo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OwBUciKpMl45hYgi60gFni4iuezUWvBEZArX7xpQ72No9AEVAQ0yZiaDRi6X8J6/Tcb1S0owdEUDFHT1DIbbfNjX+TZ2yluMqpKnXjq6/8754lPz6rZJbaOBjFhZr+jHLPl8wSox6F4B2GOYthUDSunWUKJOjyzkbxEUdh7Kqhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MDO8H5l+; arc=none smtp.client-ip=91.218.175.180
+	s=arc-20240116; t=1714753350; c=relaxed/simple;
+	bh=sxWk1kyzJe459ZF807IGaoNEXtJYOMA0WnR1dYVPGd8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=erSfFbIbGzG8VPuo7m33EwnGTsATl5Hx2tT55eE49I7oJ4DHopXsBwIPYruBJ+fTkpGmL8CHK1RU5OJgIm3hWZTaKKQ5omT73rn/4DBoV8xZhHSfP9CXOvP5Xp4qHvue3bfic33C/49hNY9eqXDVWyhMILlOxTnKYMJJ9pALNQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PleDJKNh; arc=none smtp.client-ip=91.218.175.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MDO8H5l+"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PleDJKNh"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714753343;
+	t=1714753347;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KP44cf8QKhMXu5ffjHI0m+hur3z2Dlqf8PHPq6RoGLQ=;
-	b=MDO8H5l+ItJTiZCk3zMF9/ViSoHOLASF0iDshxKCKXR0SyELESqumRGF/p5ojgPuTRh3pO
-	ChXq1Rn0V5sUbaLY45OLVcqgpodKVk9wGWxnus9FbP0KXws9JdQ0iWjJN8VV7nxxjArSvJ
-	0cOUn/IflKzbcysiXkVAHoaY3r354wk=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CpdUrrfvqPyGvsIJRAWt/WzCNSwYYm+TR0RUAGPWFiU=;
+	b=PleDJKNh3NgsRKu4C1QCkkI8sbW0Tw4lxhT8YQGxlEK2tijEYkETKFq6lLa/w95KZJoXs+
+	q6xg7mp7J7Wzzr+mzDv5HzNvUsDkPb8HlPFO+ky3QWTDTgfG4Mg99QMB+A6haBaP+ZShkO
+	ZdksKWvWI8a8ztZDw9b5u3rS3mQJeO0=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Michal Simek <michal.simek@amd.com>,
@@ -32,14 +34,12 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: Krishna Potthuri <sai.krishna.potthuri@amd.com>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	Sean Anderson <sean.anderson@linux.dev>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	devicetree@vger.kernel.org
-Subject: [PATCH 0/2] pinctrl: zynqmp: Support muxing individual pins
-Date: Fri,  3 May 2024 12:22:15 -0400
-Message-Id: <20240503162217.1999467-1-sean.anderson@linux.dev>
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [PATCH 2/2] pinctrl: zynqmp: Support muxing individual pins
+Date: Fri,  3 May 2024 12:22:17 -0400
+Message-Id: <20240503162217.1999467-3-sean.anderson@linux.dev>
+In-Reply-To: <20240503162217.1999467-1-sean.anderson@linux.dev>
+References: <20240503162217.1999467-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,21 +49,159 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This series adds support for muxing individual pins, instead of
-requiring groups to be muxed together. See [1] for additional
-discussion.
+While muxing groups of pins at once can be convenient for large
+interfaces, it can also be rigid. This is because the group is set to
+all pins which support a particular function, even though not all pins
+may be used. For example, the sdhci0 function may be used with a 8-bit
+eMMC, 4-bit SD card, or even a 1-bit SD card. In these cases, the extra
+pins may be repurposed for other uses, but this is not currently
+allowed.
 
-[1] https://lore.kernel.org/linux-arm-kernel/5bb0dc7e-4c89-4f3d-abc6-41ae9ded5ae9@linux.dev/
+Add a new group for each pin which can be muxed. These groups are part
+of each function the pin can be muxed to. We treat group selectors
+beyond the number of groups as "pin" groups. To set this up, we
+initialize groups before functions, and then create a bitmap of used
+pins for each function. These used pins are appended to the function's
+list of groups.
 
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+---
 
-Sean Anderson (2):
-  dt-bindings: pinctrl: xilinx: Add support for function with pins
-  pinctrl: zynqmp: Support muxing individual pins
+ drivers/pinctrl/pinctrl-zynqmp.c | 61 ++++++++++++++++++++++----------
+ 1 file changed, 43 insertions(+), 18 deletions(-)
 
- .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml | 344 +++++++++---------
- drivers/pinctrl/pinctrl-zynqmp.c              |  61 +++-
- 2 files changed, 219 insertions(+), 186 deletions(-)
-
+diff --git a/drivers/pinctrl/pinctrl-zynqmp.c b/drivers/pinctrl/pinctrl-zynqmp.c
+index 5c46b7d7ebcb..4829150ab069 100644
+--- a/drivers/pinctrl/pinctrl-zynqmp.c
++++ b/drivers/pinctrl/pinctrl-zynqmp.c
+@@ -10,6 +10,7 @@
+ 
+ #include <dt-bindings/pinctrl/pinctrl-zynqmp.h>
+ 
++#include <linux/bitmap.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+@@ -97,7 +98,7 @@ static int zynqmp_pctrl_get_groups_count(struct pinctrl_dev *pctldev)
+ {
+ 	struct zynqmp_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+-	return pctrl->ngroups;
++	return pctrl->ngroups + zynqmp_desc.npins;
+ }
+ 
+ static const char *zynqmp_pctrl_get_group_name(struct pinctrl_dev *pctldev,
+@@ -105,7 +106,10 @@ static const char *zynqmp_pctrl_get_group_name(struct pinctrl_dev *pctldev,
+ {
+ 	struct zynqmp_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+-	return pctrl->groups[selector].name;
++	if (selector < pctrl->ngroups)
++		return pctrl->groups[selector].name;
++
++	return zynqmp_desc.pins[selector - pctrl->ngroups].name;
+ }
+ 
+ static int zynqmp_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
+@@ -115,8 +119,13 @@ static int zynqmp_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
+ {
+ 	struct zynqmp_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+-	*pins = pctrl->groups[selector].pins;
+-	*npins = pctrl->groups[selector].npins;
++	if (selector < pctrl->ngroups) {
++		*pins = pctrl->groups[selector].pins;
++		*npins = pctrl->groups[selector].npins;
++	} else {
++		*pins = &zynqmp_desc.pins[selector - pctrl->ngroups].number;
++		*npins = 1;
++	}
+ 
+ 	return 0;
+ }
+@@ -560,10 +569,12 @@ static int zynqmp_pinctrl_prepare_func_groups(struct device *dev, u32 fid,
+ {
+ 	u16 resp[NUM_GROUPS_PER_RESP] = {0};
+ 	const char **fgroups;
+-	int ret, index, i;
++	int ret, index, i, pin;
++	unsigned int npins;
++	unsigned long *used_pins __free(bitmap) =
++		bitmap_zalloc(zynqmp_desc.npins, GFP_KERNEL);
+ 
+-	fgroups = devm_kcalloc(dev, func->ngroups, sizeof(*fgroups), GFP_KERNEL);
+-	if (!fgroups)
++	if (!used_pins)
+ 		return -ENOMEM;
+ 
+ 	for (index = 0; index < func->ngroups; index += NUM_GROUPS_PER_RESP) {
+@@ -578,23 +589,37 @@ static int zynqmp_pinctrl_prepare_func_groups(struct device *dev, u32 fid,
+ 			if (resp[i] == RESERVED_GROUP)
+ 				continue;
+ 
+-			fgroups[index + i] = devm_kasprintf(dev, GFP_KERNEL,
+-							    "%s_%d_grp",
+-							    func->name,
+-							    index + i);
+-			if (!fgroups[index + i])
+-				return -ENOMEM;
+-
+ 			groups[resp[i]].name = devm_kasprintf(dev, GFP_KERNEL,
+ 							      "%s_%d_grp",
+ 							      func->name,
+ 							      index + i);
+ 			if (!groups[resp[i]].name)
+ 				return -ENOMEM;
++
++			for (pin = 0; pin < groups[resp[i]].npins; pin++)
++				set_bit(groups[resp[i]].pins[pin], used_pins);
+ 		}
+ 	}
+ done:
++	npins = bitmap_weight(used_pins, zynqmp_desc.npins);
++	fgroups = devm_kcalloc(dev, func->ngroups + npins, sizeof(*fgroups),
++			       GFP_KERNEL);
++	if (!fgroups)
++		return -ENOMEM;
++
++	for (i = 0; i < func->ngroups; i++) {
++		fgroups[i] = devm_kasprintf(dev, GFP_KERNEL, "%s_%d_grp",
++					    func->name, i);
++		if (!fgroups[i])
++			return -ENOMEM;
++	}
++
++	pin = 0;
++	for_each_set_bit(pin, used_pins, zynqmp_desc.npins)
++		fgroups[i++] = zynqmp_desc.pins[pin].name;
++
+ 	func->groups = fgroups;
++	func->ngroups += npins;
+ 
+ 	return 0;
+ }
+@@ -772,6 +797,10 @@ static int zynqmp_pinctrl_prepare_function_info(struct device *dev,
+ 	if (!groups)
+ 		return -ENOMEM;
+ 
++	ret = zynqmp_pinctrl_prepare_group_pins(dev, groups, pctrl->ngroups);
++	if (ret)
++		return ret;
++
+ 	for (i = 0; i < pctrl->nfuncs; i++) {
+ 		ret = zynqmp_pinctrl_prepare_func_groups(dev, i, &funcs[i],
+ 							 groups);
+@@ -779,10 +808,6 @@ static int zynqmp_pinctrl_prepare_function_info(struct device *dev,
+ 			return ret;
+ 	}
+ 
+-	ret = zynqmp_pinctrl_prepare_group_pins(dev, groups, pctrl->ngroups);
+-	if (ret)
+-		return ret;
+-
+ 	pctrl->funcs = funcs;
+ 	pctrl->groups = groups;
+ 
 -- 
 2.35.1.1320.gc452695387.dirty
 
