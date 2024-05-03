@@ -1,71 +1,99 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7953C152DF0
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 11:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7A4152180;
+	Fri,  3 May 2024 11:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714736045; cv=none; b=ENb3UGsVnWkLEqPY4DwqHocxXYpi7rgVTcTEKaQVI6xdBqvCNsUSSuGtYMvezRehdi1FEX32ez7NTzNd1k27ep+4RW/TGW3k4bDWWB22ntfGKI7H4twD5SeTw6XdBWiPkO940Ab+i17uQC5a89koRucHjHFMln72eSNOdPvfxk8=
+	t=1714736111; cv=none; b=q2fLiPD8gEl/o91Ew48Pi8cLDB3S5CS7Lev/PI6M6/MRKuuQ+do3Z83IrYeXc7ehrzovpZbF6dlWZ3ZDsDi84dY168coxPuZNUJ60mx+ZGS8j5LrRCDhG5oGPwjNanQRMKLYS91MOl7oframZjFIr8dkGvfnzvXT8tPuTobH/hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714736045; c=relaxed/simple;
-	bh=0QRcbB4NbODfEff2mqjjyLfkZCbztXT1gNxbMpmFjhc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=RrBt3CMp5xztOGkcKvakcV65ERrYbn25tD77iZNRWYO2No1N1qKdjvmGuxYrJ020Yzs2AOfzKoaLDYyJZRDWctvrHmj/IPOaigbNc1HGLTappXq6PrRuwKqXIcZemIKYvR+4wFhfB8A86JYpQvXKj9Qj7PBYjSsdkNSXyukB/68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7dea5889eb7so780290939f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 04:34:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714736043; x=1715340843;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oYX3yrJFiKDZF351JkQ7FZtXiiJZok6AVk8TXfhJRhA=;
-        b=BWUWeWpLVIYII63IzMUWk0qbCpDjN79MP8T/JdMMLHt1YQiRlZmExb9KghPyX2nioY
-         HfwnlvbS9+BDtfmOBX2xlF5zdBwLfrp6bA18fE/KUv7BCUQlHvurDB8hHnRa7ubMWaHd
-         HW97pcR9VUxLQPfACOQzWi2aNz6JZiNRt891+h+WIKVn0gkk/3ZTOJs3T6PPJSuASjxW
-         ByKpjrXjmJvhohI87wFLpZ9faIM9D7dJuW7gdFSVrnG9ygu7Lq4PEt17rsTzeqpVlRww
-         yaqDXGABiJ0iRdZzAaMoI6i85lgAricEizI+OGrJtTkThZS+3HvpJ5soe1F1+tXATzIH
-         3WJA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/g5JKOt7zdrGZOSHf3aS2KDLZ4h+75j61o+95tMdZGIRf76LkFF5I0GI+ERqeDOrv0+PhzhXWzd7n7yqfY+wc+PQztcEO5oV2elpS
-X-Gm-Message-State: AOJu0Yyv21XAGYKMntAN8MyW1V+YQues8ux2WXIeZLcWwwzCiYHl7Q6A
-	rVJ5/MAdv3ryWaQE3SbvxTUJ/1bN6jDXFGOsuFpdLzeminymo7UuVJEu+PxMep/QBHdsRUvGWCJ
-	k25YlWMiHUkY7rbkl+k9ys8p+vu9hUohivS9mI8/I91mCtNQixg0wVs4=
-X-Google-Smtp-Source: AGHT+IFbkJBWPUbffTldamcTbxcuRPEVoZQG/tMqcpkt99uKbx23cEO9zZZqbADRRIFqaLhwoz2bm923ZD0ZI0J+ZVxHxTdOnK/S
+	s=arc-20240116; t=1714736111; c=relaxed/simple;
+	bh=NGCnV/jwRUnhIBk4eqhuNe7GPUCIIScfqyZphbH1u3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WC+Y8zT6rOAqVqaUCs+rPfz6UCXVZAQFfXBOtXxWJg480qGvRMsVsnlB6MOBSx33NM1VHA0dmH0764rarVpFZ0ygoNLODwz88zl1s6qB4d/Dz1KQQnQI0JeDm7SjiZEa5hqwzmkIuLagK2Nx/n8nhHMFihiM/gzYIsZKmGF0ONA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EXuP307l; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EXuP307l"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=sxVQ/UPJFlyGRDmIkbFV8gUftaJHcE4mZegeO9XShts=; b=EXuP307lalwf/R+RmqAOGe5qq7
+	fd0cZn6+STJkV0IVWQAvGai3Xv8VqeUTQDeTM+eLovrpsJdA9poPUUo9ixiHOuhGjF9pcTh0+BcBV
+	5tY53XLfIFtG8bdHSl+1j9o/lYoG40IWQwJXh/T4LNo3GVaieoUX1gaYBiWvHUgUzv0coI0C1AwoQ
+	FTHXpzpbryJZzYtmVfrCsQ/kB/mf/OJNoRS+FnZaKoFOmdQd1sQiDqi+9UOkh2/g1INakPnV9JkRg
+	t1bIFnHXZ6bizin2WR/1+A43kT8i2CgTUPF7wwMczJZyPxRRftalTK75WgFLre8CBtjD9ChyoDKe3
+	1nL5c0vg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s2rBl-00000003z6t-33bZ;
+	Fri, 03 May 2024 11:34:53 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 62FD73001FD; Fri,  3 May 2024 13:34:53 +0200 (CEST)
+Date: Fri, 3 May 2024 13:34:53 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+	rick.p.edgecombe@intel.com
+Subject: Re: [PATCHv4 bpf-next 2/7] uprobe: Add uretprobe syscall to speed up
+ return probe
+Message-ID: <20240503113453.GK40213@noisy.programming.kicks-ass.net>
+References: <20240502122313.1579719-1-jolsa@kernel.org>
+ <20240502122313.1579719-3-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:13c9:b0:7de:d86d:b7de with SMTP id
- o9-20020a05660213c900b007ded86db7demr43659iov.4.1714736043732; Fri, 03 May
- 2024 04:34:03 -0700 (PDT)
-Date: Fri, 03 May 2024 04:34:03 -0700
-In-Reply-To: <4a780cc4-3081-4a48-980f-2ffe31be1a62@kernel.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c53eb306178b1831@google.com>
-Subject: Re: [syzbot] [f2fs?] KASAN: slab-use-after-free Read in sanity_check_extent_cache
-From: syzbot <syzbot+74ebe2104433e9dc610d@syzkaller.appspotmail.com>
-To: chao@kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502122313.1579719-3-jolsa@kernel.org>
 
-Hello,
+On Thu, May 02, 2024 at 02:23:08PM +0200, Jiri Olsa wrote:
+> Adding uretprobe syscall instead of trap to speed up return probe.
+> 
+> At the moment the uretprobe setup/path is:
+> 
+>   - install entry uprobe
+> 
+>   - when the uprobe is hit, it overwrites probed function's return address
+>     on stack with address of the trampoline that contains breakpoint
+>     instruction
+> 
+>   - the breakpoint trap code handles the uretprobe consumers execution and
+>     jumps back to original return address
+> 
+> This patch replaces the above trampoline's breakpoint instruction with new
+> ureprobe syscall call. This syscall does exactly the same job as the trap
+> with some more extra work:
+> 
+>   - syscall trampoline must save original value for rax/r11/rcx registers
+>     on stack - rax is set to syscall number and r11/rcx are changed and
+>     used by syscall instruction
+> 
+>   - the syscall code reads the original values of those registers and
+>     restore those values in task's pt_regs area
+> 
+>   - only caller from trampoline exposed in '[uprobes]' is allowed,
+>     the process will receive SIGILL signal otherwise
+> 
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Did you consider shadow stacks? IIRC we currently have userspace shadow
+stack support available, and that will utterly break all of this.
 
-Reported-and-tested-by: syzbot+74ebe2104433e9dc610d@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         e106036e f2fs: fix to do sanity check on i_nid for inl..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git bugfix/syzbot
-console output: https://syzkaller.appspot.com/x/log.txt?x=13da0b54980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5a05c230e142f2bc
-dashboard link: https://syzkaller.appspot.com/bug?extid=74ebe2104433e9dc610d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+It would be really nice if the new scheme would consider shadow stacks.
