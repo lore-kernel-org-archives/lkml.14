@@ -1,104 +1,71 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8B9152517
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 11:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7953C152DF0
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 11:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714736023; cv=none; b=rVwkqCGdSHbID/D/0dsNzI9Og+wWARnrDtroF8Lv3udPdWKicGS7DvnvFWJ1FY9S1HmXl1v+v6tMpkV4EG7CGYJJ5TlNpn0hroxcqbUaC8YQPd6BsVqH5gou/uAZqa/gh9b6vsr5JSO5Qdas/tcrkbrbw66M00v3cXomzZRfKW4=
+	t=1714736045; cv=none; b=ENb3UGsVnWkLEqPY4DwqHocxXYpi7rgVTcTEKaQVI6xdBqvCNsUSSuGtYMvezRehdi1FEX32ez7NTzNd1k27ep+4RW/TGW3k4bDWWB22ntfGKI7H4twD5SeTw6XdBWiPkO940Ab+i17uQC5a89koRucHjHFMln72eSNOdPvfxk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714736023; c=relaxed/simple;
-	bh=WADYspwgMs2YdaZV7xUa0mIJSKnYTWlC60xHwnIngW4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tWcAxh6pniR3kbwBSovpP7DBekJKYlTR3mKAJSgZn9yKmxzkvFmMA/N29yXuKp5cSovYJo4hQPdQS77KqwvH0/Cv7DgRVJYGGZ4IraDSJPnrZx52FdmVFLlVrydzl+L5x77UEpQXIuyH1hnkmV9Q5HCG+wCzLBReItIBYEMfPB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ex1N/J/z; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ex1N/J/z"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-790e7c02430so508018985a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 04:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714736020; x=1715340820; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PV1uvsPD3hPVQBDeLEfhqbETDS++mq2cZ2grIK4TBwQ=;
-        b=Ex1N/J/zXeUWtVlEw9zP/ShKR7HxAkQC0S0l6bqsdPbmsy4j5FWojUOxxiCq9iixAT
-         u5lZi/2Xwon1dGTs8UKtzrrYrb4lfX7Id/5Xkavud9r56NFIjUcJSFt60sMs10b69kiP
-         Tgv6MzV4c1Gy5Yb/Dr5frXHF9dZV4ExXsRGjo=
+	s=arc-20240116; t=1714736045; c=relaxed/simple;
+	bh=0QRcbB4NbODfEff2mqjjyLfkZCbztXT1gNxbMpmFjhc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RrBt3CMp5xztOGkcKvakcV65ERrYbn25tD77iZNRWYO2No1N1qKdjvmGuxYrJ020Yzs2AOfzKoaLDYyJZRDWctvrHmj/IPOaigbNc1HGLTappXq6PrRuwKqXIcZemIKYvR+4wFhfB8A86JYpQvXKj9Qj7PBYjSsdkNSXyukB/68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7dea5889eb7so780290939f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 04:34:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714736020; x=1715340820;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PV1uvsPD3hPVQBDeLEfhqbETDS++mq2cZ2grIK4TBwQ=;
-        b=kLrBaA4E1k6c45d2MEc1L+RHDQ1uAk0muvhIDipZX2E4CHEf2rK9qQDByOiIIlzr5h
-         TN1GYULg3wKojjRmZr209iv07/DOWKG5I6gsb/Ec5WiN/gGSkuhWjUbsS1yKmX9m1Wi1
-         LIh1k29yyqzQlnH3xIskE/vcaz+1dfq6Y2wKoLd8HEz8bDJsmctGHL+RFuciLJaKvuUI
-         aCK5/O04viI8dvtIDC2f336uRbdOX/xgkkk9J3m4NtxWpse9+ciDWM2oy1uduTYpB0AG
-         O2ksFvuNI8TgnUW7p7/1bhQXifMHr5Q3mMX54PuQAt2vsTMMZAzpW4uUK/STDBI2oNvQ
-         6vCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbgjTyKQWYSzs+RaIqU9/S0cGG8jqgbwuuhHqRxnpUi/NOTAtD54jSrT7erJY5Tz/eyjUvQOaN1N9WhrSZ3ER0dujHe6TmZn/L1+6x
-X-Gm-Message-State: AOJu0YyBbeNdig4LdX1z6okqZztnEZa0KCRZ0UO4RPoJZuMsbzDaVf/V
-	Um7EKJhqarb6FAvyDlTUcx3yoTlfiSRPIj86/Lq+P7qqu8ffrxRjmHL00f/EhVsz/wfGlTdRUhz
-	mng==
-X-Google-Smtp-Source: AGHT+IFPT+c5g8iGSubsJn1MAU4lk1gCDhjOfclD78asjQf9ys4/KXilDg0+WfalUYicwon901btig==
-X-Received: by 2002:a05:6214:501d:b0:6a0:a7c7:4d5d with SMTP id jo29-20020a056214501d00b006a0a7c74d5dmr2533425qvb.58.1714736020543;
-        Fri, 03 May 2024 04:33:40 -0700 (PDT)
-Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
-        by smtp.gmail.com with ESMTPSA id f6-20020a056214164600b006a10054acadsm1137432qvw.19.2024.05.03.04.33.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 04:33:40 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 03 May 2024 11:33:20 +0000
-Subject: [PATCH] media: cec.h: Fix kerneldoc
+        d=1e100.net; s=20230601; t=1714736043; x=1715340843;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oYX3yrJFiKDZF351JkQ7FZtXiiJZok6AVk8TXfhJRhA=;
+        b=BWUWeWpLVIYII63IzMUWk0qbCpDjN79MP8T/JdMMLHt1YQiRlZmExb9KghPyX2nioY
+         HfwnlvbS9+BDtfmOBX2xlF5zdBwLfrp6bA18fE/KUv7BCUQlHvurDB8hHnRa7ubMWaHd
+         HW97pcR9VUxLQPfACOQzWi2aNz6JZiNRt891+h+WIKVn0gkk/3ZTOJs3T6PPJSuASjxW
+         ByKpjrXjmJvhohI87wFLpZ9faIM9D7dJuW7gdFSVrnG9ygu7Lq4PEt17rsTzeqpVlRww
+         yaqDXGABiJ0iRdZzAaMoI6i85lgAricEizI+OGrJtTkThZS+3HvpJ5soe1F1+tXATzIH
+         3WJA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/g5JKOt7zdrGZOSHf3aS2KDLZ4h+75j61o+95tMdZGIRf76LkFF5I0GI+ERqeDOrv0+PhzhXWzd7n7yqfY+wc+PQztcEO5oV2elpS
+X-Gm-Message-State: AOJu0Yyv21XAGYKMntAN8MyW1V+YQues8ux2WXIeZLcWwwzCiYHl7Q6A
+	rVJ5/MAdv3ryWaQE3SbvxTUJ/1bN6jDXFGOsuFpdLzeminymo7UuVJEu+PxMep/QBHdsRUvGWCJ
+	k25YlWMiHUkY7rbkl+k9ys8p+vu9hUohivS9mI8/I91mCtNQixg0wVs4=
+X-Google-Smtp-Source: AGHT+IFbkJBWPUbffTldamcTbxcuRPEVoZQG/tMqcpkt99uKbx23cEO9zZZqbADRRIFqaLhwoz2bm923ZD0ZI0J+ZVxHxTdOnK/S
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240503-fixdoc-v1-1-44d26e6f9dba@chromium.org>
-X-B4-Tracking: v=1; b=H4sIAH/LNGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDUwNj3bTMipT8ZN0UQ2MLg9QkIxPj5BQloOKColSgDNig6NjaWgCZWnJ
- 4WAAAAA==
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.12.4
+X-Received: by 2002:a05:6602:13c9:b0:7de:d86d:b7de with SMTP id
+ o9-20020a05660213c900b007ded86db7demr43659iov.4.1714736043732; Fri, 03 May
+ 2024 04:34:03 -0700 (PDT)
+Date: Fri, 03 May 2024 04:34:03 -0700
+In-Reply-To: <4a780cc4-3081-4a48-980f-2ffe31be1a62@kernel.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c53eb306178b1831@google.com>
+Subject: Re: [syzbot] [f2fs?] KASAN: slab-use-after-free Read in sanity_check_extent_cache
+From: syzbot <syzbot+74ebe2104433e9dc610d@syzkaller.appspotmail.com>
+To: chao@kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-is_claiming_log_addrs documentation was missing.
+Hello,
 
-fix this kernel-doc warning:
-include/media/cec.h:296: warning: Function parameter or struct member 'is_claiming_log_addrs' not described in 'cec_adapter'
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
-https://gitlab.freedesktop.org/linux-media/media-staging/-/pipelines/1169148/test_report?job_name=doc
----
- include/media/cec.h | 1 +
- 1 file changed, 1 insertion(+)
+Reported-and-tested-by: syzbot+74ebe2104433e9dc610d@syzkaller.appspotmail.com
 
-diff --git a/include/media/cec.h b/include/media/cec.h
-index d3abe84c9c9e..d131514032f2 100644
---- a/include/media/cec.h
-+++ b/include/media/cec.h
-@@ -187,6 +187,7 @@ struct cec_adap_ops {
-  *	in order to transmit or receive CEC messages. This is usually a HW
-  *	limitation.
-  * @is_enabled:		the CEC adapter is enabled
-+ * @is_claiming_log_addrs:  true if cec_claim_log_addrs() is running
-  * @is_configuring:	the CEC adapter is configuring (i.e. claiming LAs)
-  * @must_reconfigure:	while configuring, the PA changed, so reclaim LAs
-  * @is_configured:	the CEC adapter is configured (i.e. has claimed LAs)
+Tested on:
 
----
-base-commit: 1aa1329a67cc214c3b7bd2a14d1301a795760b07
-change-id: 20240503-fixdoc-d1380eb243cd
+commit:         e106036e f2fs: fix to do sanity check on i_nid for inl..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git bugfix/syzbot
+console output: https://syzkaller.appspot.com/x/log.txt?x=13da0b54980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5a05c230e142f2bc
+dashboard link: https://syzkaller.appspot.com/bug?extid=74ebe2104433e9dc610d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Best regards,
--- 
-Ricardo Ribalda <ribalda@chromium.org>
-
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
