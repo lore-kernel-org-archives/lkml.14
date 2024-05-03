@@ -1,127 +1,103 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73B326AF5
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 15:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273494BAA6;
+	Fri,  3 May 2024 15:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714750488; cv=none; b=axcYz064YtDzingTuXrYe3N7oylPz5WyCFIJQOkUotOrUT/FCkq/DVBQJHyvCEFUMU6UhO/ciS/0i9ZYf28PbplX2yeg2j8V4DV5PZyO7l2xIsaRg4KUdC+wwWxlAR1yH2wh37y6INFn+L78KjoONCTvMZ+v3KSXVB8+dZgcVE0=
+	t=1714750517; cv=none; b=CxJofVmoYa8lZ7NsimUUIAE5TmEwfLyBKDfXwuT3AvFMOTxtTHUXWY62tlxPa8x4JFxncP3+sdRqeJqlAuBXUwyWMDlaTu37FZ/c6bvcNBefHDznFEbvPDjcgfdUENi7jttBlayZHx8NkIpPs2YAHi7DBltCDQSfs+66H5wYhOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714750488; c=relaxed/simple;
-	bh=/xSlG3SNs8+ppWCTbOL5BO1qKtZj2vhrm9qb8I7TPYY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T8o82w3TZWnpjt25DEiqdW0EMhd9Oz0hV+qSNsGOAfdC09BMJy3KpgO0A9MWaPj0nYBFfJCJvh/mJAJwuVghbI3yHkxzctBWHzGPy0k4T1rVozOeL4FBtvsWDs3/Sphud/TUmBNezC0M1dqrERG+ogsc0sN/Lde9DP9VzMZ8f4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YVcFcUUe; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1714750517; c=relaxed/simple;
+	bh=5122ytSykAD8/7pq8djxBfhijWrS3hHsYPao9LwhmNQ=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=ME7w/0p5Buls5G+5lKCGSDkf/qPbbJpJdABO6xqzOt8UiPbuYb5VO834zFAt6LlDp/T8cqcj38dJ13Q5giqFiIjjlspKoB1jGRjGW5AYBrNGSBj3vqo7pWsJnrzsePPPql0JdP1vrZDdJ75ODi0qkto/a2KjTcAeybRG1M5QBvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJRJV0rW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YVcFcUUe"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714750484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=kXyBtcH22l6DIAru77xF46RpqXHr2mETb8HciLCvN4U=;
-	b=YVcFcUUeMeeSarSBoZQo+aQhE0A/dDAIhhH5fjHFo6Udy/iQUc2ZoceOWU5y+c7PN/ilWj
-	E0Z+NYIkhFUYIsA149ZLACKLyu4ALg4pWBiJ7ADHYLdl5ygIRMfTVN0c/SqaDM417t5Vkr
-	ho0kkCYYoo6bljeVAao6Q3fFgMMLlDA=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Michal Simek <michal.simek@amd.com>,
-	linux-arm-kernel@lists.infradead.org
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH] arm64: zynqmp: Add coresight cpu debug support
-Date: Fri,  3 May 2024 11:34:22 -0400
-Message-Id: <20240503153422.1958812-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJRJV0rW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80050C116B1;
+	Fri,  3 May 2024 15:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714750516;
+	bh=5122ytSykAD8/7pq8djxBfhijWrS3hHsYPao9LwhmNQ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=hJRJV0rWm2CPF11P6sOxYgxNcsV1cLMpZxMsKn4aX4oxHZkiTFvX5DQSQiqRTsBRl
+	 ojNq9yNvT3ihP89dxUneZkEaEx/1pA0FSJAuo6A1OsjI5gCcdto2mgs69J/MOZ5sZ7
+	 4xBq/Xa6o73jjshWUgyViAlso0cH4p9fyuvvT79U8/VwV2TqbqRZaBtPC/qe4YTn74
+	 mcU1qrgan3O0PMspAJJIWHuTXi5ebuq3Q7vWkGgKmvbDWm7rVHgtgRXyjB+FhHp83O
+	 Pr5r+GnPaLEJcjXLzuPC7GuhLGTUMDIKzS1zMMQFafYSTP7iklHKUeSdSl8VDMw+RV
+	 JvR6LYpHb6mpQ==
+Date: Fri, 03 May 2024 10:35:15 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Cc: linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Stephen Boyd <sboyd@kernel.org>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+In-Reply-To: <20240503-mbly-olb-v2-2-95ce5a1e18fe@bootlin.com>
+References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
+ <20240503-mbly-olb-v2-2-95ce5a1e18fe@bootlin.com>
+Message-Id: <171475051471.955521.7998302785295485922.robh@kernel.org>
+Subject: Re: [PATCH v2 02/11] dt-bindings: clock: mobileye,eyeq5-reset:
+ drop bindings
 
-Add coresight debug support to the device tree. This can be useful when
-panicking, especially when a core is hung in EL3.
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
----
+On Fri, 03 May 2024 16:20:47 +0200, Théo Lebrun wrote:
+> Switch from sub-nodes in system-controller for each functionality to a
+> single node representing the entire OLB instance. dt-bindings is
+> unnecessary and soc/mobileye/mobileye,eyeq5-olb.yaml will inherit all
+> properties.
+> 
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
+>  .../bindings/reset/mobileye,eyeq5-reset.yaml       | 43 ----------------------
+>  1 file changed, 43 deletions(-)
+> 
 
- .../arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi | 16 +++++++++++
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi        | 28 +++++++++++++++++++
- 2 files changed, 44 insertions(+)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-index dd4569e7bd95..60d1b1acf9a0 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-@@ -70,6 +70,22 @@ &cpu0 {
- 	clocks = <&zynqmp_clk ACPU>;
- };
- 
-+&cpu0_debug {
-+	clocks = <&zynqmp_clk DBF_FPD>;
-+};
-+
-+&cpu1_debug {
-+	clocks = <&zynqmp_clk DBF_FPD>;
-+};
-+
-+&cpu2_debug {
-+	clocks = <&zynqmp_clk DBF_FPD>;
-+};
-+
-+&cpu3_debug {
-+	clocks = <&zynqmp_clk DBF_FPD>;
-+};
-+
- &fpd_dma_chan1 {
- 	clocks = <&zynqmp_clk GDMA_REF>, <&zynqmp_clk LPD_LSBUS>;
- };
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 25d20d803230..ec8d5d19ac1c 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -330,6 +330,34 @@ pmu@9000 {
- 			};
- 		};
- 
-+		cpu0_debug: debug@fec10000 {
-+			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-+			reg = <0x0 0xfec10000 0x0 0x1000>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu0>;
-+		};
-+
-+		cpu1_debug: debug@fed10000 {
-+			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-+			reg = <0x0 0xfed10000 0x0 0x1000>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu1>;
-+		};
-+
-+		cpu2_debug: debug@fee10000 {
-+			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-+			reg = <0x0 0xfee10000 0x0 0x1000>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu2>;
-+		};
-+
-+		cpu3_debug: debug@fef10000 {
-+			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-+			reg = <0x0 0xfef10000 0x0 0x1000>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu3>;
-+		};
-+
- 		/* GDMA */
- 		fpd_dma_chan1: dma-controller@fd500000 {
- 			status = "disabled";
--- 
-2.35.1.1320.gc452695387.dirty
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/net/wireless/qcom,ath11k.example.dtb: /example-0/remoteproc@cd00000: failed to match any schema with compatible: ['qcom,ipq8074-wcss-pil']
+Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.example.dtb: /example-1/syscon@20e00000: failed to match any schema with compatible: ['sprd,sc9863a-glbregs', 'syscon', 'simple-mfd']
+Documentation/devicetree/bindings/clock/milbeaut-clock.example.dtb: /example-2/serial@1e700010: failed to match any schema with compatible: ['socionext,milbeaut-usio-uart']
+Documentation/devicetree/bindings/arm/hisilicon/controller/hi3798cv200-perictrl.example.dtb: /example-0/peripheral-controller@8a20000/phy@850: failed to match any schema with compatible: ['hisilicon,hi3798cv200-combphy']
+Documentation/devicetree/bindings/sound/st,stm32-sai.example.dtb: /example-0/sai@4400b000/audio-controller@4400b004: failed to match any schema with compatible: ['st,stm32-sai-sub-a']
+Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.example.dtb: /example-0/avs-monitor@7d5d2000: failed to match any schema with compatible: ['brcm,bcm2711-avs-monitor', 'syscon', 'simple-mfd']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240503-mbly-olb-v2-2-95ce5a1e18fe@bootlin.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
