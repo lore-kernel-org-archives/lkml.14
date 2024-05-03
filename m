@@ -1,174 +1,166 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80CBE45C0B
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 14:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C934206A;
+	Fri,  3 May 2024 14:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714747589; cv=none; b=Uo3ZM2Ps1B3XbD7yoKX/w+1aJiiQfwCz5UtldTlaIQXPtzyesUwF7E2Vnorkevucsgz6c3IbE2UyBtxwZ2w38pIbfXZ3e2uCKlnIQkECPVLidZDa/UX9M5xQ4wMN6XUePkmrFvODqzh5MGQ364ejYsfl+R3Vcm2yMv3XJ85i0JI=
+	t=1714747662; cv=none; b=FZgQYz0FmlTiaQXaCGXLQtVO6FRyo5H//HTcpIYR9idN226AoHxm0UJWYVCmihxot0NxVGchguJtbQ0FWfjXcK8TQf7Xv4AOqSaeDJljjRsGmnPQX8xlnPrWyuIOeHab1EPbG/OgDIEksSkxGHFIPpcqSrTq6WSGGv+EKHGISLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714747589; c=relaxed/simple;
-	bh=9qLEIhylcweEbt57bhvUkDOgGbnMMwPvxjdWTo4aFdo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ee2i3d6dfXXpmFQfrXhqzlwMXI3mwiweElJCdnv9pTy/bsk/RO5a9rdF9ot86nKer9A07WtvzcAmSZmVZLLYHDqPngTHe7+OKb9wsPISd9HovMXiDX0K/qIyQbaTLDak+bUlQgMSop/Plhi3QneuKute6dw41TxC+M0H6Ffnk1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C9D413D5;
-	Fri,  3 May 2024 07:46:52 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACE603F73F;
-	Fri,  3 May 2024 07:46:25 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Peter Xu <peterx@redhat.com>,
-	Mike Rapoport <rppt@linux.ibm.com>,
-	Shivansh Vij <shivanshvij@outlook.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] arm64/mm: Add uffd write-protect support
-Date: Fri,  3 May 2024 15:46:02 +0100
-Message-ID: <20240503144604.151095-5-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240503144604.151095-1-ryan.roberts@arm.com>
-References: <20240503144604.151095-1-ryan.roberts@arm.com>
+	s=arc-20240116; t=1714747662; c=relaxed/simple;
+	bh=TZJCI1romHYB3K7M0RnD7je7ZU6T6c8LjcioM4SVmjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RqtfUkR07oShb9RcUWQy+ueztgvIzs5tXRQUXf0jskHRmRrt8IOkcV/FkssOPDUXEDBCRXV7LukvIVaSvZmLv5fi6mKkcJVAME/m2jIQlqasumON4noaJ4Tw2HLZlk/yJqceincG50E632T9Tg9jlgOndrLCZfbRQWnfmmcFA78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=yn2Kqd6b; arc=none smtp.client-ip=74.208.4.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="yn2Kqd6b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
+	s=s1-ionos; t=1714747652; x=1715352452; i=parker@finest.io;
+	bh=T+69W9y9gDlQCEnhSbezE3ef/Q0WYMrfqF0FGdvI5SA=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=yn2Kqd6b3pRoSSrbwBF8FrgYEwKgNcWBS+J91CM2AQpwOrN0x9q1Z71m0wCAgX8D
+	 mIh80H/I4xrGZNm3EgtAi/2t0nouoiD3eChAkU+ZC7u8Cugm7VlpL2cTLEk0/l1Yc
+	 FRdBRLCwl+/hy/2B6jELkjaEqfCl5EW6x6+q19B+RdWi7YagT1X8Hvh5/j0z8VtgX
+	 9KQSUMf44dr9NeaWfo6LhroJBoRRtNHXVTw/w6PFv91Q3b/eiKjvt6aTT01XsLFbb
+	 miIWGpsju+b9RBLbkqv8QbJ90yPylnwGni5uAjUPSvC7Dy+7pT8bcXtfJ+SmkRw9t
+	 fWoYtiE1ItKwkHx02Q==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from SWDEV2.connecttech.local ([98.159.241.229]) by
+ mrelay.perfora.net (mreueus002 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 0M1DzC-1svgi348z2-00xAg6; Fri, 03 May 2024 16:47:32 +0200
+Date: Fri, 3 May 2024 10:47:30 -0400
+From: Parker Newman <parker@finest.io>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Parker Newman <pnewman@connecttech.com>, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH v1 00/13] serial: 8250_exar: Clean up the driver
+Message-ID: <20240503104730.3e0f55d0@SWDEV2.connecttech.local>
+In-Reply-To: <20240503083638.0f8d9afb@SWDEV2.connecttech.local>
+References: <20240502144626.2716994-1-andriy.shevchenko@linux.intel.com>
+	<20240502114645.4445b3da@SWDEV2.connecttech.local>
+	<ZjO4vYEBzxU3fpzC@smile.fi.intel.com>
+	<20240502120840.02c65f30@SWDEV2.connecttech.local>
+	<ZjPL5z7ah-Qkct6l@smile.fi.intel.com>
+	<20240502134949.5e780635@SWDEV2.connecttech.local>
+	<ZjPVEr7D0lEf86kQ@smile.fi.intel.com>
+	<20240503083638.0f8d9afb@SWDEV2.connecttech.local>
+Organization: Connect Tech Inc.
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:H/QltAz0nGlYfQDl9r0XHlXOofS8l7UvFlDkn49Jwh3MvBzTn26
+ OI6KbRdnUUp69MOTajTvFjM8WlY5pJf3Mz1siEKM/lJVi1rzsNd7tGm/h9MSdl9TteSLcbg
+ /9/zNCWabhcDZBmg2F5aTEH5qeoZSZi+yne7V5jlrD/8zYFPFfI3aBa61fHLNWexlkSOUdm
+ 3LP1/V1XKDXS7HluBRWsg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:n8xASmWg36Y=;WXw9ghYm9n6Z43z2zipX7m+qDlx
+ ntsqrm2aVP27mlEp2NXGVmTDQJhvw6DWl+aEZdrWMoFOcGcR/Xv9JNygmLDS3pvy1Ge+EADyF
+ wPLn0nDsIoVjvQzx+jM20zl066uWiCO1m2p2kOmgTwcIFZ5hV3osadsDWA8YwLk06huvhWLFJ
+ kqvOsTcJIsQdH/9D7LS2JGzytlaxnR8TkYckbDx4GvN/zqaQX3fHyiwEXPBF9M6P5Efg+SpsO
+ jxJyzibDPM0WJE+vUfciXkf2ZuZzo2tU8e8NF3rMsZ4bqbgknBOaeMc+1efRZy0OEXA9B71ft
+ ta39w+AI3Igcr3usJwPDw34Ga7nGOvodO9ahzF9V/Ynw6SjVVd/bz7Bzuh3LoU3nV4bwVOKuy
+ f6ojCTwcGWQlIlCBnnvTKNw9JVTJGl0bbeGqLU3OaMyzBdUMXEJ6rC81UlgeILmCYqgsNuM6m
+ gP7TcCcIIjuhQtsGCLDMHK/FLeSlYQsi55qadkYKAUlhODXBw6Z16tioQWE8tVW9bJElzQ0vy
+ dGx2l5NViIzydug2oICZSDTz017/aoGYXiGM0iqpEcrHEdbv9TW6TBPpEv60KYPOjuZvItcGS
+ IkdT+mrZ64leVFtQN6fG/BEOgvoEwh834zhIVSry/TQyrU5mG5f4B2P4jPgMdy8EYeHkVsmAt
+ 7pKY4XQebvfhN9OIRWUWXStondShibvfwVEijZG5I2NaEWW2dGO1fQtl64/mjdP+rFqyv6zDc
+ nM8mXNNEAvzHcpqiSNSXvGcpAMAmFU5xk7FmrShld3037zwvpx76Dg=
 
-Let's use the newly-free PTE SW bit (58) to add support for uffd-wp.
+On Fri, 3 May 2024 08:36:38 -0400
+Parker Newman <parker@finest.io> wrote:
 
-The standard handlers are implemented for set/test/clear for both pte
-and pmd. Additionally we must also track the uffd-wp state as a pte swp
-bit, so use a free swap pte bit (3).
+> On Thu, 2 May 2024 21:01:54 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+>
+> > On Thu, May 02, 2024 at 01:49:49PM -0400, Parker Newman wrote:
+> > > On Thu, 2 May 2024 20:22:47 +0300
+> > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Thu, May 02, 2024 at 12:08:40PM -0400, Parker Newman wrote:
+> > > > > On Thu, 2 May 2024 19:01:01 +0300
+> > > > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > On Thu, May 02, 2024 at 11:46:45AM -0400, Parker Newman wrote:
+> > > > > > > On Thu,  2 May 2024 17:43:54 +0300
+> > > > > > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > >
+> > > > > > > > After a rework for CONNTECH was done, the driver may need =
+a bit of
+> > > > > > > > love in order to become less verbose (in terms of indentat=
+ion and
+> > > > > > > > code duplication) and hence easier to read.
+> > > > > > > >
+> > > > > > > > This clean up series fixes a couple of (not so critical) i=
+ssues and
+> > > > > > > > cleans up the recently added code. No functional change in=
+dented by
+> > > > > > > > the cleaning up part.
+> > > > > > >
+> > > > > > > Just an FYI I submitted a patch series that fixed several of=
+ these issues but I
+> > > > > > > think it fell through the cracks (I know everyone is very bu=
+sy!).
+> > > > > > >
+> > > > > > > Link: https://lore.kernel.org/linux-serial/cover.1713533298.=
+git.pnewman@connecttech.com/
+> > > > > > >
+> > > > > > > I believe my previous patch series is no longer required. Th=
+is one fixes
+> > > > > > > everything.
+> > > > > >
+> > > > > > I haven't noticed that, if it contains duplicated patches, I m=
+ay replace mine
+> > > > > > with yours if you insist.
+> > > > > >
+> > > > > > In any case it's better to reply there that you prefer this se=
+ries to be
+> > > > > > applied, so Greg will not pick it up.
+> > > > > >
+> > > > >
+> > > > > I do not have a preference. I am fine with using yours if it is =
+easier on
+> > > > > the maintainers.
+> > > >
+> > > > Up to you, there is no issue to take your patches in case they are=
+ the same
+> > > > (or quite similar) as mine. I can pick them up, just tell me if yo=
+u want this
+> > > > to happen with a list of the patches (as mail Message-Id).
+> > >
+> > > Just use yours.
+> >
+> > Okay, thanks!
+> >
+> > If you are going to test, better to pay attention to the BIT() convers=
+ion patch
+> > as Ilpo noted an issue. I believe it's easy to drop (via local git-reb=
+ase run)
+> > or move and test separately.
+> >
+>
+> I am working on testing now but patches 7 and 12 did not apply with git =
+am.
+> Both failed around lines 1095/1096.
+> I can apply them manually but I may be using the wrong branch (tty-next)=
+.
+> Which branch/commit did you create your patches from? I don't see it in =
+the
+> patch submission.
 
-Acked-by: Peter Xu <peterx@redhat.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
- arch/arm64/Kconfig                    |  1 +
- arch/arm64/include/asm/pgtable-prot.h |  8 +++++
- arch/arm64/include/asm/pgtable.h      | 44 +++++++++++++++++++++++++++
- 3 files changed, 53 insertions(+)
+I figured it out. git am was applying the typo fix patch out of order.
+Sorry, I didn't notice that. Patches should be fine.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7b11c98b3e84..763e221f2169 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -255,6 +255,7 @@ config ARM64
- 	select SYSCTL_EXCEPTION_TRACE
- 	select THREAD_INFO_IN_TASK
- 	select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
-+	select HAVE_ARCH_USERFAULTFD_WP if USERFAULTFD
- 	select TRACE_IRQFLAGS_SUPPORT
- 	select TRACE_IRQFLAGS_NMI_SUPPORT
- 	select HAVE_SOFTIRQ_ON_OWN_STACK
-diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-index 35c9de13f7ed..b11cfb9fdd37 100644
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -26,6 +26,14 @@
-  */
- #define PTE_PRESENT_INVALID	(PTE_NG)		 /* only when !PTE_VALID */
- 
-+#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-+#define PTE_UFFD_WP		(_AT(pteval_t, 1) << 58) /* uffd-wp tracking */
-+#define PTE_SWP_UFFD_WP		(_AT(pteval_t, 1) << 3)	 /* only for swp ptes */
-+#else
-+#define PTE_UFFD_WP		(_AT(pteval_t, 0))
-+#define PTE_SWP_UFFD_WP		(_AT(pteval_t, 0))
-+#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
-+
- #define _PROT_DEFAULT		(PTE_TYPE_PAGE | PTE_AF | PTE_SHARED)
- #define _PROT_SECT_DEFAULT	(PMD_TYPE_SECT | PMD_SECT_AF | PMD_SECT_S)
- 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 7f1ff59c43ed..2dcf582981ae 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -280,6 +280,23 @@ static inline pte_t pte_mkdevmap(pte_t pte)
- 	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
- }
- 
-+#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-+static inline int pte_uffd_wp(pte_t pte)
-+{
-+	return !!(pte_val(pte) & PTE_UFFD_WP);
-+}
-+
-+static inline pte_t pte_mkuffd_wp(pte_t pte)
-+{
-+	return pte_wrprotect(set_pte_bit(pte, __pgprot(PTE_UFFD_WP)));
-+}
-+
-+static inline pte_t pte_clear_uffd_wp(pte_t pte)
-+{
-+	return clear_pte_bit(pte, __pgprot(PTE_UFFD_WP));
-+}
-+#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
-+
- static inline void __set_pte(pte_t *ptep, pte_t pte)
- {
- 	WRITE_ONCE(*ptep, pte);
-@@ -472,6 +489,23 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
- 	return clear_pte_bit(pte, __pgprot(PTE_SWP_EXCLUSIVE));
- }
- 
-+#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-+static inline pte_t pte_swp_mkuffd_wp(pte_t pte)
-+{
-+	return set_pte_bit(pte, __pgprot(PTE_SWP_UFFD_WP));
-+}
-+
-+static inline int pte_swp_uffd_wp(pte_t pte)
-+{
-+	return !!(pte_val(pte) & PTE_SWP_UFFD_WP);
-+}
-+
-+static inline pte_t pte_swp_clear_uffd_wp(pte_t pte)
-+{
-+	return clear_pte_bit(pte, __pgprot(PTE_SWP_UFFD_WP));
-+}
-+#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
-+
- #ifdef CONFIG_NUMA_BALANCING
- /*
-  * See the comment in include/linux/pgtable.h
-@@ -522,6 +556,15 @@ static inline int pmd_trans_huge(pmd_t pmd)
- #define pmd_mkdirty(pmd)	pte_pmd(pte_mkdirty(pmd_pte(pmd)))
- #define pmd_mkyoung(pmd)	pte_pmd(pte_mkyoung(pmd_pte(pmd)))
- #define pmd_mkinvalid(pmd)	pte_pmd(pte_mkinvalid(pmd_pte(pmd)))
-+#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-+#define pmd_uffd_wp(pmd)	pte_uffd_wp(pmd_pte(pmd))
-+#define pmd_mkuffd_wp(pmd)	pte_pmd(pte_mkuffd_wp(pmd_pte(pmd)))
-+#define pmd_clear_uffd_wp(pmd)	pte_pmd(pte_clear_uffd_wp(pmd_pte(pmd)))
-+#define pmd_swp_uffd_wp(pmd)	pte_swp_uffd_wp(pmd_pte(pmd))
-+#define pmd_swp_mkuffd_wp(pmd)	pte_pmd(pte_swp_mkuffd_wp(pmd_pte(pmd)))
-+#define pmd_swp_clear_uffd_wp(pmd) \
-+				pte_pmd(pte_swp_clear_uffd_wp(pmd_pte(pmd)))
-+#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
- 
- #define pmd_thp_or_huge(pmd)	(pmd_huge(pmd) || pmd_trans_huge(pmd))
- 
-@@ -1254,6 +1297,7 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
-  * Encode and decode a swap entry:
-  *	bits 0-1:	present (must be zero)
-  *	bits 2:		remember PG_anon_exclusive
-+ *	bit  3:		remember uffd-wp state
-  *	bits 6-10:	swap type
-  *	bit  11:	PTE_PRESENT_INVALID (must be zero)
-  *	bits 12-61:	swap offset
--- 
-2.43.0
+I can do a final test once you decide what to do with the BIT() conversion=
+ patch.
 
+Parker
