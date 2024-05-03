@@ -1,252 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8087B1C69D
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 05:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA8F1C69D;
+	Fri,  3 May 2024 05:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714714399; cv=none; b=gVPmQuNlwrFLkbnCx6sFlqnSswT5qF9ftc8j2f2doYqIjstZF1dznQcxeI0FgCUJtR/Im78DQcvBDhye5G+H7poqvjU6p5ILfS+QBXALlE/iYF5oWALF/VbUENZ8TP8lNp6UplDTeFlnJzvuJK8wlEMElrt5GpNDDwjT6idfbpg=
+	t=1714714468; cv=none; b=GQkuGrlqU7wJO4oM1Ckei+kUBBOqxLVFqL9+O0K453UK5v9n/OYwm9tTTmcqM3C0mTwBFl8Ctq9LLcmgGV0MvJ66cKQ8UvfVQsFX5oO6ROsx4UQ418cNbcmgVHP9SmEgD+0N/cc7l6wweiQ1ylBxaMmrAyCwWCqArYwhHQXa/Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714714399; c=relaxed/simple;
-	bh=OEqwxjQRosYukrFy642tb5yeSjEhzUyJJtZn4XqWdhY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=u5AogZF5KWgjsVyvOCF6kPXtjWgmArxzVEEc2kB7drLYYA5ObfvTeDb47ZJWmdln/Xn1Wy0kZLh/nhG679z9KcpSXSRqpznApMkYIcyb71Qj0+/KsZpezRdDhnU1co9obbaIpCL0rLkzSNvP+NmjGOjnonnmrCRfCShD4UgcIeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SrcVShOG; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714714468; c=relaxed/simple;
+	bh=GcoFEG78oRmOEqdye4jXox30wukosSt6f14MGQzy2xs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dcTIv/BOh61mgfU6TDbIzaMgPk8EYNczPmyYfl32BMD0gHlkCvGUXj/JiApGq6bc+Ju/64F+Kh3eZY7ccpoXHDX/DxG4VUdSSocsGEpfNAeXp39cWn7McNVvQJw7k8zyNzS11SWTT0xSdHSBHsAcKbgrFPdyabBzM/ykk6uzjGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GI69xPgE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SrcVShOG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714714398; x=1746250398;
-  h=date:from:to:cc:subject:message-id;
-  bh=OEqwxjQRosYukrFy642tb5yeSjEhzUyJJtZn4XqWdhY=;
-  b=SrcVShOGM6Ur3a4RrujOIFB+9Qjuqgg4hs7lykIPj/XIT/+2SfKNpiK3
-   jAT3LiJuBABfMDL2Wp/xV8urkeuV6EwNfxXQVp26BpkcxCo42/u6bfKSq
-   fQMzYI7zijL83aq3BqOFMCQ5vMMUiYLmdOUrRIt0Ah6HXlvAAXBUWX+7G
-   igXtc5tKgGWTXKrStJMXB++wkDLMYFDmgG4pM3vQ4CX6aS7nArAfJQHQx
-   y8SomprnF04QB1XUOTRk2BoBzI2/rKBpPSabkeqzqIoUMAEOLs+qCix7j
-   6P9guefq52dFh45wlqJUM6bbDZ0Yz3xhOOToP54+IXHpkUOxNrwO/N4+r
-   Q==;
-X-CSE-ConnectionGUID: h1mpxCtZTJeX6PnaehiEUA==
-X-CSE-MsgGUID: nieqZC+SRg66Jvpq6wEemQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="21926962"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="21926962"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 22:33:17 -0700
-X-CSE-ConnectionGUID: jjRH+SYJQ769iCQETeEq4w==
-X-CSE-MsgGUID: 5/kcvgsGTfO7aUopXKrNNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="27231374"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 02 May 2024 22:33:15 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s2lXl-000BLk-0y;
-	Fri, 03 May 2024 05:33:13 +0000
-Date: Fri, 03 May 2024 13:32:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:perf/core] BUILD REGRESSION
- 5d4d0283c0546559600dee7e9a4d87e402f3f4d9
-Message-ID: <202405031327.pUQAq2Vg-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GI69xPgE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5784C116B1;
+	Fri,  3 May 2024 05:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714714468;
+	bh=GcoFEG78oRmOEqdye4jXox30wukosSt6f14MGQzy2xs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GI69xPgEwXqz7gWnO5NqqPE6fMGxHiJrzquB8ZwNQyl60XRExkoofvEye9bnip7Pd
+	 HOJRVto5dqfBtSugWlGA0/4iZjt9lFn2W3TlkSNvHhd3NiVw9K1iJIuouOqooRKR4m
+	 hyBXzZhV2pbfiiTDYmIuXi8SbX1bGamqtp8KmeLA=
+Date: Fri, 3 May 2024 07:34:25 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Shresth Prasad <shresthprasad7@gmail.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	davem@davemloft.net, jirislaby@kernel.org,
+	sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, javier.carrasco.cruz@gmail.com,
+	skhan@linuxfoundation.org, Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH v2][next] tty: sunsu: Simplify device_node cleanup by
+ using __free
+Message-ID: <2024050357-shading-fedora-2d4f@gregkh>
+References: <20240501084110.4165-2-shresthprasad7@gmail.com>
+ <f1707254-ec32-4884-275a-c3c85b48d7d5@linux.intel.com>
+ <CAE8VWiJy-2x6sKCAmN69Uq9Kf1cTRnaJezOoLDyZ0SbgPWuHAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE8VWiJy-2x6sKCAmN69Uq9Kf1cTRnaJezOoLDyZ0SbgPWuHAQ@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
-branch HEAD: 5d4d0283c0546559600dee7e9a4d87e402f3f4d9  perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+On Thu, May 02, 2024 at 10:21:16PM +0530, Shresth Prasad wrote:
+> On Thu, May 2, 2024 at 9:35 PM Ilpo Järvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > On Wed, 1 May 2024, Shresth Prasad wrote:
+> >
+> > > Add `__free` function attribute to `ap` and `match` pointer
+> > > initialisations which ensure that the pointers are freed as soon as they
+> > > go out of scope, thus removing the need to manually free them using
+> > > `of_node_put`.
+> > >
+> > > This also removes the need for the `goto` statement and the `rc`
+> > > variable.
+> > >
+> > > Tested using a qemu x86_64 virtual machine.
+> >
+> > Eh, how can you test this with an x86_64 VM ???
+> >
+> > config SERIAL_SUNSU
+> >         tristate "Sun SU serial support"
+> >         depends on SPARC && PCI
+> >
+> 
+> By that, I mean that I compiled the kernel and ran the produced bzImage
+> on a x86_64 qemu machine.
 
-Error/Warning reports:
+But you didn't include the driver you were testing :(
 
-https://lore.kernel.org/oe-kbuild-all/202405030821.FtWhxfmP-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202405030828.RgFuznL9-lkp@intel.com
+> I unfortunately don't have the hardware to test it on, but I don't
+> think the change is complex enough to require testing on real hardware
+> (unless I'm assuming incorrectly).
 
-Error/Warning: (recently discovered and may have been fixed)
+That's why I asked if you had tested this or not...
 
-arch/x86/events/rapl.c:154:69: warning: return discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-arch/x86/events/rapl.c:154:9: error: returning 'const struct cpumask *' from a function with result type 'cpumask_t *' (aka 'struct cpumask *') discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- x86_64-buildonly-randconfig-001-20240503
-|   `-- arch-x86-events-rapl.c:warning:return-discards-const-qualifier-from-pointer-target-type
-`-- x86_64-randconfig-076-20240503
-    `-- arch-x86-events-rapl.c:warning:return-discards-const-qualifier-from-pointer-target-type
-clang_recent_errors
-|-- i386-buildonly-randconfig-001-20240503
-|   `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-|-- i386-randconfig-005-20240503
-|   `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-|-- i386-randconfig-052-20240503
-|   `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-|-- i386-randconfig-061-20240503
-|   `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-|-- x86_64-randconfig-003-20240503
-|   `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-|-- x86_64-randconfig-006-20240503
-|   `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-|-- x86_64-randconfig-011-20240503
-|   `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-|-- x86_64-randconfig-015-20240503
-|   `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-|-- x86_64-randconfig-071-20240503
-|   `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-`-- x86_64-randconfig-075-20240503
-    `-- arch-x86-events-rapl.c:error:returning-const-struct-cpumask-from-a-function-with-result-type-cpumask_t-(aka-struct-cpumask-)-discards-qualifiers-Werror-Wincompatible-pointer-types-discards-qualifiers
-
-elapsed time: 1053m
-
-configs tested: 139
-configs skipped: 3
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs103_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240503   gcc  
-arc                   randconfig-002-20240503   gcc  
-arc                           tb10x_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                        multi_v5_defconfig   gcc  
-arm                   randconfig-004-20240503   gcc  
-arm                         s3c6400_defconfig   gcc  
-arm                           sama5_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-002-20240503   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240503   gcc  
-csky                  randconfig-002-20240503   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240503   clang
-i386         buildonly-randconfig-002-20240503   clang
-i386         buildonly-randconfig-006-20240503   clang
-i386                                defconfig   clang
-i386                  randconfig-002-20240503   clang
-i386                  randconfig-003-20240503   clang
-i386                  randconfig-005-20240503   clang
-i386                  randconfig-006-20240503   clang
-i386                  randconfig-011-20240503   clang
-i386                  randconfig-016-20240503   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240503   gcc  
-loongarch             randconfig-002-20240503   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240503   gcc  
-nios2                 randconfig-002-20240503   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240503   gcc  
-parisc                randconfig-002-20240503   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                    ge_imp3a_defconfig   gcc  
-powerpc                 mpc8313_rdb_defconfig   gcc  
-powerpc               randconfig-003-20240503   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240503   gcc  
-riscv                 randconfig-002-20240503   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240503   gcc  
-s390                  randconfig-002-20240503   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                         apsh4a3a_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        edosk7705_defconfig   gcc  
-sh                    randconfig-001-20240503   gcc  
-sh                    randconfig-002-20240503   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240503   gcc  
-sparc64               randconfig-002-20240503   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240503   gcc  
-x86_64       buildonly-randconfig-002-20240503   gcc  
-x86_64       buildonly-randconfig-003-20240503   gcc  
-x86_64       buildonly-randconfig-005-20240503   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-004-20240503   gcc  
-x86_64                randconfig-005-20240503   gcc  
-x86_64                randconfig-076-20240503   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                       common_defconfig   gcc  
-xtensa                randconfig-001-20240503   gcc  
-xtensa                randconfig-002-20240503   gcc  
-xtensa                    xip_kc705_defconfig   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
