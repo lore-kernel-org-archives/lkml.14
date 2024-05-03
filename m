@@ -1,63 +1,77 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30701153505;
-	Fri,  3 May 2024 11:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495A0139CF8;
+	Fri,  3 May 2024 11:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714736335; cv=none; b=aK/qmvD3pzQB+tKE+nl5lUKhUkGoM+dC0x7R0Mu2je8YBoiqiX2KUMO+ogRwkIOns2XUuUA12kTdnhWsD1WI4uXC0j6k6uq6BLQxkMjEqNdfi7dwVRjhjNu+sOXnI9ygHe8z+s1cFnTNQcxpA8FoVHflsUVzysGUn3loYOpNSdI=
+	t=1714736481; cv=none; b=cJbvdHmX+2+iwqK0fryilt6ZQn28GF7EWE4eLA2iVIEtvFsEt00DJmcIW6IvqpwlOsf4LxhsqWIDK8PGVzwN5nCqyjSt7h8lefTahJWzSBevP6/PHKyc+1z6Qu+/82G7NMi1M5202ktLV87anT53FQa5wJTbiLZHrUquK7bZz2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714736335; c=relaxed/simple;
-	bh=mLWfIIvgdFVeHlAQC8RgX1zO0cqtrny715a0zLwvSC0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QRt4NQJ0l/MAkSvfiAV4jAnUaVAXxtqJGjfOKWy0VnuRouTr7e0Fv7rUokYh+030sEmyvAnbTfFo+OW3YnDlxQUbYYTAPncRhrJhSftQaA1dY0GYrADDw0Pk25O/r9AovuGlOoK+43fKcPQuNPeuuhAD0L05F9HEJ/U/KJdEolI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from [213.70.33.226] (helo=phil.sntech)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1s2rFP-0000Tc-U2; Fri, 03 May 2024 13:38:40 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Anand Moon <anand@edgeble.ai>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	Jagan Teki <jagan@edgeble.ai>
-Subject: Re: [PATCH v1 1/2] arm64: dts: rockchip: Support poweroff on Edgeble Neural Compute Module
-Date: Fri,  3 May 2024 13:38:21 +0200
-Message-Id: <171473602992.3469033.9822124851399795331.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240502094246.4695-1-anand@edgeble.ai>
-References: <20240502094246.4695-1-anand@edgeble.ai>
+	s=arc-20240116; t=1714736481; c=relaxed/simple;
+	bh=paeAkz+bILIyndefnz3puskAYJmZsO3+RT1VHMdrofU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tm7MPvkXTMuF69IrIYWIj/ekIVKG7AjoYKWjh1Aq9qpxaoNgAEATdaYDxGXbiQqCFp3Ia/tXvW70JTibl7Z8CWH1ntjggvAHmmcfKuI1T3pzYhlYrppgv1kvK8cEfIASIA6Kj/4VhFDPmuzzK6UkPuvslXry0iLVIkNWpR1VRsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54BBC116B1;
+	Fri,  3 May 2024 11:41:19 +0000 (UTC)
+Message-ID: <60c08e6b-4a1b-408b-9317-3abe1346cdc5@xs4all.nl>
+Date: Fri, 3 May 2024 13:41:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: cec.h: Fix kerneldoc
+Content-Language: en-US, nl
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240503-fixdoc-v1-1-44d26e6f9dba@chromium.org>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+In-Reply-To: <20240503-fixdoc-v1-1-44d26e6f9dba@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2 May 2024 09:42:37 +0000, Anand Moon wrote:
-> On Edgeble Neural Compute Module add system-power-controller
-> property to RK806 pmic so that these chips can power off the device.
+On 03/05/2024 13:33, Ricardo Ribalda wrote:
+> is_claiming_log_addrs documentation was missing.
 > 
+> fix this kernel-doc warning:
+> include/media/cec.h:296: warning: Function parameter or struct member 'is_claiming_log_addrs' not described in 'cec_adapter'
 > 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-Applied, thanks!
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[1/2] arm64: dts: rockchip: Support poweroff on Edgeble Neural Compute Module
-      commit: 3cd1ed57ce70dd64bd1dfb69cbb3173bf4fe0582
-[2/2] arm64: dts: rockchip: Add USB3 on Edgeble NCM6A-IO board
-      commit: 7676e12650055f4eff5f2cccdf9903981619553e
+Hmm, that happens when you don't run your own patches through the build tests :-(
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+Regards,
+
+	Hans
+
+> ---
+> https://gitlab.freedesktop.org/linux-media/media-staging/-/pipelines/1169148/test_report?job_name=doc
+> ---
+>  include/media/cec.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/media/cec.h b/include/media/cec.h
+> index d3abe84c9c9e..d131514032f2 100644
+> --- a/include/media/cec.h
+> +++ b/include/media/cec.h
+> @@ -187,6 +187,7 @@ struct cec_adap_ops {
+>   *	in order to transmit or receive CEC messages. This is usually a HW
+>   *	limitation.
+>   * @is_enabled:		the CEC adapter is enabled
+> + * @is_claiming_log_addrs:  true if cec_claim_log_addrs() is running
+>   * @is_configuring:	the CEC adapter is configuring (i.e. claiming LAs)
+>   * @must_reconfigure:	while configuring, the PA changed, so reclaim LAs
+>   * @is_configured:	the CEC adapter is configured (i.e. has claimed LAs)
+> 
+> ---
+> base-commit: 1aa1329a67cc214c3b7bd2a14d1301a795760b07
+> change-id: 20240503-fixdoc-d1380eb243cd
+> 
+> Best regards,
+
