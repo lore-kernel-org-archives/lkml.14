@@ -1,188 +1,349 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D4515357D
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838AE153BEC
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714742354; cv=none; b=dlDz3odtJynOAaYb0ohJseOCxMVQ6Zcb5nYiJ7BDe0HzPdonPaXlQq8doJ8EwmnZJdnh+eVxiDGFLoTe9MuMpZg/ZHGm307Pvq0JYyvVijpxw6AeriT7bbE/v/0guA0seQKMZ3SzaJ7SpegsI/VHEIFUrt44lSzxJsIbfcsM5js=
+	t=1714742365; cv=none; b=aTB9vQkLE5/kioBIo0x3ujHX9Q8xm2KFnfKHaQLFg3emtcKlwa/87YQUQSdaEKL/cp/MwPywgz/w/3pTbXN3pBmkx0yh4YH3SSZGD4kPMUJiCX5zImjOa+42UwQZavjo0U3gmS+VJ/usXXU40ef6l47NdC0RZ4sMAuf9aevtxk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714742354; c=relaxed/simple;
-	bh=dbK614Ny0Ax0eFq+sq8LyhVNe+/7K/IG3ecTbPe+KeQ=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=JuB71rYboze7qUV3gJ5WRdNd5zGzhz+s2S9rW7K2I+ZyaB1oP2oUjBkJxvSRiJqghgSfpeJT8HrXSU6iyg+lo8pbdKRE2Z7Xt2mRaLtfokuxymOm+IgOtwkLW0hRe779cqBdjpZvOaOmMK6OPzKShWV//E1W1cOWtSARdv8fWaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fu9yoDt2; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1714742365; c=relaxed/simple;
+	bh=obtQipiNRMFv28P9TKvF5pV8leBuQgSBtBcEQW3pxVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NBGCS9oH+qLnv/s7j/uai8CPlg3xX+BNLDYwfPR9gr7+cDu2Sw2FdQrruoqFebPtQm/BBKvt9fDAXmj4gC50+/EMbA95HEJUOLYEYc+ZG1lkSeqb7opRP1yn+vBVaXfCbCcP5kQiKLym+8ccNTnykD8N3jDZ6rOSeyIyi0V0KFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=NvcPqXJF; arc=none smtp.client-ip=185.125.25.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fu9yoDt2"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240503131904euoutp021fd6b571b71fd1d5338becd30d275a1a~L-RPZTFR02451024510euoutp02J;
-	Fri,  3 May 2024 13:19:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240503131904euoutp021fd6b571b71fd1d5338becd30d275a1a~L-RPZTFR02451024510euoutp02J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1714742344;
-	bh=etJsDlA9FEYnPJDiYXGITIvR7FE1m/kBa/g7gmo9+hU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=fu9yoDt20viYTS+3TLs78ICZ9KZQAvwdNyagUyD1ciP/yMSSmOA4MptHi5rQtIizx
-	 R1i26A5aaKa+b7ZUo+wMxne6Sc05sGJzpqUU3rNyaztjO9XHVDD6XkrKEUNr/U6erw
-	 u7PiAx5RrsBEC7ZR6xsqStlgy02+kEP5Xp84zt4w=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240503131904eucas1p2ac80a8197e8d141141078ab2ed68ffa5~L-RO1KlpI2734527345eucas1p2D;
-	Fri,  3 May 2024 13:19:04 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 6D.FC.09620.844E4366; Fri,  3
-	May 2024 14:19:04 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240503131903eucas1p16f1517f4dc0eec69433ef194071151a4~L-ROXHn251728917289eucas1p1p;
-	Fri,  3 May 2024 13:19:03 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240503131903eusmtrp17fb546bfc62c1975c7029383043b0792~L-ROWdkbG1648916489eusmtrp1L;
-	Fri,  3 May 2024 13:19:03 +0000 (GMT)
-X-AuditID: cbfec7f5-d31ff70000002594-86-6634e4486e8f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id C4.FD.08810.744E4366; Fri,  3
-	May 2024 14:19:03 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240503131903eusmtip2e902030fbdbd323a01f8aa7587635977~L-ROGvfN-0536805368eusmtip2O;
-	Fri,  3 May 2024 13:19:03 +0000 (GMT)
-Received: from localhost (106.210.248.112) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Fri, 3 May 2024 14:19:02 +0100
-Date: Fri, 3 May 2024 15:18:57 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Wen Yang <wen.yang@linux.dev>
-CC: "Eric W . Biederman" <ebiederm@xmission.com>, Luis Chamberlain
-	<mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, Christian Brauner
-	<brauner@kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] sysctl: move the extra1/2 boundary check of u8 to
- sysctl_check_table_array
-Message-ID: <20240503131857.7oqxlxckdmd2qzyn@joelS2.panther.com>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="NvcPqXJF"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VWBGc2g3hzS10;
+	Fri,  3 May 2024 15:19:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1714742360;
+	bh=obtQipiNRMFv28P9TKvF5pV8leBuQgSBtBcEQW3pxVc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NvcPqXJFBA2qsjuhqiLltCK88ANNHdMNpuz17Tcd63LbmHTm/KkiZOaiSif0w7f+4
+	 cftpGAbztXjbX5M6Zeun4BIRd81twRoYYKlWzYdwI+wJzU1gYbqcjIInB4q/5H0LNP
+	 PPfyGOD1eQbV3Tnb/7BmebaPzISSc/RgHtpbrUuw=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VWBGb2zTRzbPY;
+	Fri,  3 May 2024 15:19:19 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Alexander Graf <graf@amazon.com>,
+	Angelina Vu <angelinavu@linux.microsoft.com>,
+	Anna Trikalinou <atrikalinou@microsoft.com>,
+	Chao Peng <chao.p.peng@linux.intel.com>,
+	Forrest Yuan Yu <yuanyu@google.com>,
+	James Gowans <jgowans@amazon.com>,
+	James Morris <jamorris@linux.microsoft.com>,
+	John Andersen <john.s.andersen@intel.com>,
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+	Marian Rotariu <marian.c.rotariu@gmail.com>,
+	=?UTF-8?q?Mihai=20Don=C8=9Bu?= <mdontu@bitdefender.com>,
+	=?UTF-8?q?Nicu=C8=99or=20C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>,
+	Thara Gopinath <tgopinath@microsoft.com>,
+	Trilok Soni <quic_tsoni@quicinc.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Yu Zhang <yu.c.zhang@linux.intel.com>,
+	=?UTF-8?q?=C8=98tefan=20=C8=98icleru?= <ssicleru@bitdefender.com>,
+	dev@lists.cloudhypervisor.org,
+	kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	qemu-devel@nongnu.org,
+	virtualization@lists.linux-foundation.org,
+	x86@kernel.org,
+	xen-devel@lists.xenproject.org
+Subject: [RFC PATCH v3 1/5] virt: Introduce Hypervisor Enforced Kernel Integrity (Heki)
+Date: Fri,  3 May 2024 15:19:06 +0200
+Message-ID: <20240503131910.307630-2-mic@digikod.net>
+In-Reply-To: <20240503131910.307630-1-mic@digikod.net>
+References: <20240503131910.307630-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="u4b4sobnu47ymwhr"
-Content-Disposition: inline
-In-Reply-To: <20240419033639.259471-1-wen.yang@linux.dev>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJKsWRmVeSWpSXmKPExsWy7djP87oeT0zSDLa+Zrd4ffgTo8X/bS3s
-	Fme6cy0u75rDZnFjwlNGi/dr7rM6sHnMbrjI4rFpVSebx8KGqcwenzfJeUw51M4SwBrFZZOS
-	mpNZllqkb5fAlXHy1la2gvkCFdd3dLE2ML7h7WLk5JAQMJGYO7+VsYuRi0NIYAWjxNIlr9gg
-	nC+MErPfzoByPjNKHP+6gQWmZd+/JhaIxHJGifvdT9jhqh6+74IatoVRYtufc8wgLSwCKhKz
-	b35jA7HZBHQkzr+5AxYXEVCUmLt3ERNIA7PAUUaJ7fO7wIqEBVIkrj+6xgRi8wo4SCxr28II
-	YQtKnJz5BOwOZoEKidcfFgOt5gCypSWW/+MACXMKWEpM7lrIDHGqssSR7XPZIexaiVNbboHt
-	khDo55SYtmwfI0TCRWJT7xUoW1ji1fEtUA0yEqcn97BANExmlNj/7wM7hLOaUWJZ41cmiCpr
-	iZYrT8CukBBwlFjyTwrC5JO48VYQ4k4+iUnbpjNDhHklOtqEIBrVJFbfe8MygVF5FpLPZiH5
-	bBbCZxBhHYkFuz+xYQhrSyxb+JoZwraVWLfuPcsCRvZVjOKppcW56anFxnmp5XrFibnFpXnp
-	esn5uZsYgSns9L/jX3cwrnj1Ue8QIxMH4yFGFaDmRxtWX2CUYsnLz0tVEuHVnmycJsSbklhZ
-	lVqUH19UmpNafIhRmoNFSZxXNUU+VUggPbEkNTs1tSC1CCbLxMEp1cAkfWDS53e3hBunVXe3
-	iTmdun0kyibjmFeW+QqH7LvXk9Pld3UL/VEwFFF+5BO2P/HrQ/Hy/VcPqhdv+zvj+sL/u05w
-	Km55c311kmjDu+yun/l3w79zLI0+qKl0T6+wyKLk0t5dflnS1vJu63nELm/KvXZrs8WqyC2b
-	yj+dEg54m8YoWzfZUyDl5YbmXoeqVxlts1XX3sw4f+X7vA1vr21JTM6NkYhNux+UenHK6YdT
-	jk34umLVnmMfDl5P2KjW/fL4he8OS/sn6Af4s0Sf6+Z9Mr1nI28Vp40j94yCbxNFPkmduXYs
-	IrG0V1FQ81No15aTTv4LXswpjxFoyzS+8keqLXKp9YT+VBtb/9biGSffK7EUZyQaajEXFScC
-	ACBlu7TcAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCIsWRmVeSWpSXmKPExsVy+t/xe7ruT0zSDKae0bB4ffgTo8X/bS3s
-	Fme6cy0u75rDZnFjwlNGi/dr7rM6sHnMbrjI4rFpVSebx8KGqcwenzfJeUw51M4SwBqlZ1OU
-	X1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl7Fjf0rBXIGK
-	ezdOsjQwvuLtYuTkkBAwkdj3r4kFxBYSWMooceWNOURcRmLjl6usELawxJ9rXWxdjFxANR8Z
-	JSZvmMQO4WxhlDh/fD47SBWLgIrE7Jvf2EBsNgEdifNv7jCD2CICihJz9y5iAmlgFjjKKLF9
-	fhdYkbBAisT1R9eYQGxeAQeJZW1bGCGm9jBKrF55ASohKHFy5hOw+5gFyiS6Ph0EuokDyJaW
-	WP6PAyTMKWApMblrITPEqcoSR7bPZYewayU+/33GOIFReBaSSbOQTJqFMAkirCVx499LJgxh
-	bYllC18zQ9i2EuvWvWdZwMi+ilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzCKtx37uXkH47xX
-	H/UOMTJxMB5iVAHqfLRh9QVGKZa8/LxUJRFe7cnGaUK8KYmVValF+fFFpTmpxYcYTYHBOJFZ
-	SjQ5H5he8kriDc0MTA1NzCwNTC3NjJXEeT0LOhKFBNITS1KzU1MLUotg+pg4OKUamHa4dssf
-	mpWy70VZfrrU5vymxAsycX7f5vBpsZuwabtclDD2nT0tJ2zFxS/blq2Uc04Lut91e5HY29Uf
-	dfuvf0lmjvUwNF5y7bmt2uPsSRs2yJ72nvYiaPeb5OkxpZZHchceji3ytz/rYfktq0suds78
-	N8LirnenXspo6M1xS3d6y5AaY68owRTedfLTjWPfnl6/sOys7BV7dv3/0ZLbApK1PnXrcMRy
-	3Diw2JhNl+mS7PbSQh6vC/Y/+JuFur9pGE8LLP60wX/O7PDfV3YfXHIx+SIz72v+a3ez2OK3
-	/5ebe9Z46uJwZ+mO+e1Xez6kr1mt7fLiep2E9f/zlXcWvFQ7KWSQkDszfWr2DN4LO5VYijMS
-	DbWYi4oTAQFzQkd3AwAA
-X-CMS-MailID: 20240503131903eucas1p16f1517f4dc0eec69433ef194071151a4
-X-Msg-Generator: CA
-X-RootMTR: 20240419033727eucas1p1c7c7bbd508cf24066b5971c1015bd00c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240419033727eucas1p1c7c7bbd508cf24066b5971c1015bd00c
-References: <CGME20240419033727eucas1p1c7c7bbd508cf24066b5971c1015bd00c@eucas1p1.samsung.com>
-	<20240419033639.259471-1-wen.yang@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
---u4b4sobnu47ymwhr
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
 
-On Fri, Apr 19, 2024 at 11:36:39AM +0800, Wen Yang wrote:
-> Move boundary checking for proc_dou8ved_minmax into module loading, there=
-by
-> reporting errors in advance. And add a kunit test case ensuring the
-> boundary check is done correctly.
->=20
-=2E..
-> +	KUNIT_CASE(sysctl_test_register_sysctl_sz_invalid_extra_value),
->  	{}
->  };
-> =20
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index e0b917328cf9..c0a1164eaf59 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -977,16 +977,10 @@ int proc_dou8vec_minmax(struct ctl_table *table, in=
-t write,
->  	if (table->maxlen !=3D sizeof(u8))
->  		return -EINVAL;
-> =20
-> -	if (table->extra1) {
-> +	if (table->extra1)
->  		min =3D *(unsigned int *) table->extra1;
-> -		if (min > 255U)
-> -			return -EINVAL;
-> -	}
-> -	if (table->extra2) {
-> +	if (table->extra2)
->  		max =3D *(unsigned int *) table->extra2;
-> -		if (max > 255U)
-> -			return -EINVAL;
-> -	}
-> =20
->  	tmp =3D *table;
-> =20
-> --=20
-> 2.25.1
->=20
+Hypervisor Enforced Kernel Integrity (Heki) is a feature that will use
+the hypervisor to enhance guest virtual machine security.
 
-Queueing this up for 6.11. I'll put it into sysclt-testing.
+Implement minimal code to introduce Heki:
 
-Reviewed-by: Joel Granados <j.granados@samsung.com>
---=20
+- Define the config variables.
 
-Joel Granados
+- Define a kernel command line parameter "heki" to turn the feature
+  on or off. By default, Heki is on.
 
---u4b4sobnu47ymwhr
-Content-Type: application/pgp-signature; name="signature.asc"
+- Define heki_early_init() and call it in start_kernel(). Currently,
+  this function only prints the value of the "heki" command
+  line parameter.
 
------BEGIN PGP SIGNATURE-----
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Co-developed-by: Mickaël Salaün <mic@digikod.net>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Signed-off-by: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+Link: https://lore.kernel.org/r/20240503131910.307630-2-mic@digikod.net
+---
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmY05EEACgkQupfNUreW
-QU/uCAv+N3mG6q8G+JDitzIbzSsE8qy8zA2NFeABhlaHgZRkij0LB6zmqhr4a7zK
-n2rGDkPvUPDKfpb9tAzaQdsRUsqt1/jh5re6pZTfmP1w3G0bgEdRN2TIUv1hH5Cy
-cVqPJKWngxusOQSkSEDqalhgIJvptorO7B18rLVMAyL32r/VLpKiPHCP2v8FIuBv
-jTveLrEylGNsnfI/zdSFz1JX83jXWpP4fQF8tBbR597bc0aApPSU2uZetkkFXoTA
-PxeSg6THZdiEJNgJ60HkhEMSd/gDgSzkTlIgOEsuWjq2qqq1GANfX5PjW6PL73lb
-DuqCySBtk1Mg6D2Y4TZUYDHdZPIra228I0HVrv7uUw1z8A36m80YSwKPPDUnLxdW
-73C5rFqHFjlsKdogYPPbB9ktMW6jnbyRjmjfiol9asqfjINJMqQPgN4K+0O/o0um
-6oBRwdN2hSPgfW0j3cbcA5ruKrDLFylZjRUoLcHt0ZxAqDLSLSvLsBoET/jpTBQr
-J8++X6yL
-=L8lR
------END PGP SIGNATURE-----
+Changes since v2:
+* Move CONFIG_HEKI under a new CONFIG_HEKI_MENU to group it with the
+  test configuration (see following patches).
+* Hide CONFIG_ARCH_SUPPORS_HEKI from users.
 
---u4b4sobnu47ymwhr--
+Changes since v1:
+* Shrinked this patch to only contain the minimal common parts.
+* Moved heki_early_init() to start_kernel().
+* Use kstrtobool().
+---
+ Kconfig              |  2 ++
+ arch/x86/Kconfig     |  1 +
+ include/linux/heki.h | 31 +++++++++++++++++++++++++++++++
+ init/main.c          |  2 ++
+ mm/mm_init.c         |  1 +
+ virt/Makefile        |  1 +
+ virt/heki/Kconfig    | 25 +++++++++++++++++++++++++
+ virt/heki/Makefile   |  3 +++
+ virt/heki/common.h   | 16 ++++++++++++++++
+ virt/heki/main.c     | 33 +++++++++++++++++++++++++++++++++
+ 10 files changed, 115 insertions(+)
+ create mode 100644 include/linux/heki.h
+ create mode 100644 virt/heki/Kconfig
+ create mode 100644 virt/heki/Makefile
+ create mode 100644 virt/heki/common.h
+ create mode 100644 virt/heki/main.c
+
+diff --git a/Kconfig b/Kconfig
+index 745bc773f567..0c844d9bcb03 100644
+--- a/Kconfig
++++ b/Kconfig
+@@ -29,4 +29,6 @@ source "lib/Kconfig"
+ 
+ source "lib/Kconfig.debug"
+ 
++source "virt/heki/Kconfig"
++
+ source "Documentation/Kconfig"
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 928820e61cb5..d2fba63c289b 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -34,6 +34,7 @@ config X86_64
+ 	select SWIOTLB
+ 	select ARCH_HAS_ELFCORE_COMPAT
+ 	select ZONE_DMA32
++	select ARCH_SUPPORTS_HEKI
+ 
+ config FORCE_DYNAMIC_FTRACE
+ 	def_bool y
+diff --git a/include/linux/heki.h b/include/linux/heki.h
+new file mode 100644
+index 000000000000..4c18d2283392
+--- /dev/null
++++ b/include/linux/heki.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Hypervisor Enforced Kernel Integrity (Heki) - Definitions
++ *
++ * Copyright © 2023 Microsoft Corporation
++ */
++
++#ifndef __HEKI_H__
++#define __HEKI_H__
++
++#include <linux/types.h>
++#include <linux/cache.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/printk.h>
++
++#ifdef CONFIG_HEKI
++
++extern bool heki_enabled;
++
++void heki_early_init(void);
++
++#else /* !CONFIG_HEKI */
++
++static inline void heki_early_init(void)
++{
++}
++
++#endif /* CONFIG_HEKI */
++
++#endif /* __HEKI_H__ */
+diff --git a/init/main.c b/init/main.c
+index 5dcf5274c09c..bec2c8d939aa 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -102,6 +102,7 @@
+ #include <linux/randomize_kstack.h>
+ #include <linux/pidfs.h>
+ #include <linux/ptdump.h>
++#include <linux/heki.h>
+ #include <net/net_namespace.h>
+ 
+ #include <asm/io.h>
+@@ -1059,6 +1060,7 @@ void start_kernel(void)
+ 	uts_ns_init();
+ 	key_init();
+ 	security_init();
++	heki_early_init();
+ 	dbg_late_init();
+ 	net_ns_init();
+ 	vfs_caches_init();
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 549e76af8f82..89d9f97bd471 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -27,6 +27,7 @@
+ #include <linux/swap.h>
+ #include <linux/cma.h>
+ #include <linux/crash_dump.h>
++#include <linux/heki.h>
+ #include "internal.h"
+ #include "slab.h"
+ #include "shuffle.h"
+diff --git a/virt/Makefile b/virt/Makefile
+index 1cfea9436af9..856b5ccedb5a 100644
+--- a/virt/Makefile
++++ b/virt/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-y	+= lib/
++obj-$(CONFIG_HEKI_MENU) += heki/
+diff --git a/virt/heki/Kconfig b/virt/heki/Kconfig
+new file mode 100644
+index 000000000000..66e73d212856
+--- /dev/null
++++ b/virt/heki/Kconfig
+@@ -0,0 +1,25 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Hypervisor Enforced Kernel Integrity (Heki)
++
++config ARCH_SUPPORTS_HEKI
++	bool
++	# An architecture should select this when it can successfully build
++	# and run with CONFIG_HEKI. That is, it should provide all of the
++	# architecture support required for the HEKI feature.
++
++menuconfig HEKI_MENU
++	bool "Virtualization hardening"
++
++if HEKI_MENU
++
++config HEKI
++	bool "Hypervisor Enforced Kernel Integrity (Heki)"
++	depends on ARCH_SUPPORTS_HEKI
++	help
++	  This feature enhances guest virtual machine security by taking
++	  advantage of security features provided by the hypervisor for guests.
++	  This feature is helpful in maintaining guest virtual machine security
++	  even after the guest kernel has been compromised.
++
++endif
+diff --git a/virt/heki/Makefile b/virt/heki/Makefile
+new file mode 100644
+index 000000000000..8b10e73a154b
+--- /dev/null
++++ b/virt/heki/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_HEKI) += main.o
+diff --git a/virt/heki/common.h b/virt/heki/common.h
+new file mode 100644
+index 000000000000..edd98fc650a8
+--- /dev/null
++++ b/virt/heki/common.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Hypervisor Enforced Kernel Integrity (Heki) - Common header
++ *
++ * Copyright © 2023 Microsoft Corporation
++ */
++
++#ifndef _HEKI_COMMON_H
++
++#ifdef pr_fmt
++#undef pr_fmt
++#endif
++
++#define pr_fmt(fmt) "heki-guest: " fmt
++
++#endif /* _HEKI_COMMON_H */
+diff --git a/virt/heki/main.c b/virt/heki/main.c
+new file mode 100644
+index 000000000000..25c25f5700f7
+--- /dev/null
++++ b/virt/heki/main.c
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Hypervisor Enforced Kernel Integrity (Heki) - Common code
++ *
++ * Copyright © 2023 Microsoft Corporation
++ */
++
++#include <linux/heki.h>
++#include <linux/kstrtox.h>
++
++#include "common.h"
++
++bool heki_enabled __ro_after_init = true;
++
++/*
++ * Must be called after kmem_cache_init().
++ */
++__init void heki_early_init(void)
++{
++	if (!heki_enabled) {
++		pr_warn("Heki is not enabled\n");
++		return;
++	}
++	pr_warn("Heki is enabled\n");
++}
++
++static int __init heki_parse_config(char *str)
++{
++	if (kstrtobool(str, &heki_enabled))
++		pr_warn("Invalid option string for heki: '%s'\n", str);
++	return 1;
++}
++__setup("heki=", heki_parse_config);
+-- 
+2.45.0
+
