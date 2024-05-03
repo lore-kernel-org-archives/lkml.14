@@ -1,100 +1,154 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB401586F7;
-	Fri,  3 May 2024 17:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96071157A5A
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 17:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714755636; cv=none; b=NgSdD2Opig1djCoV5J71DYzEWZmY2TJRVT7gogSCGZJcRXt0Fr6QS1CgrIDIIzKnMnRBzjG7P24c6quKjeQchXQUmYATrTcII/Ev2id2QnhOaum40rn3Hge9O9hgGhlr3XmOKF89HSu4d1aV+lo0OhPLBhcrLrq5dVaJ2qSX+Tg=
+	t=1714755637; cv=none; b=HtPF4y3EJ1wU7hET7N42pQs8eM6qL6oUTEzwZ+E7E+3C9gI5pr2wVq/HsJGgQ8eLre3H28UrfCgqiCaI13pim8AFXS26VgPDE3J/aecy4d5NR8h4qcLS8WEXBsWBplhF5GFodIHpT4AxVzduE4cwtGP29oyBVvk23q6Q+o8SRl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714755636; c=relaxed/simple;
-	bh=q3e8MBRgHEJbP4RKyKpwIoCE7rfMSfjCfdYLxPwS8U4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W+mSK2PQ4O2UVGHR28d1jI7oanUhkWvkNQ94S2K9b4gesYmsYPrJ8Wr+mBex7Ryi6enmD+5xiL5HjzJY1t9Qy+NWuoaBZqdN0vk/lo3g/k3aBUwkf2NpLttpYDd4o/lINoQvHWNkDBVy8yi10qCXCepUoXcOdHHJApdgcY3Wrs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=FdPRuqnj; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="FdPRuqnj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JclG7D7+mKd9NVSxwbT/HEwCcDGC+RBtnv7LTTuYLz4=; b=FdPRuqnj9j9JU6ObgJP916TkzR
-	fxx+bLQkmo527u0p3EAcESLSMnxYbXhvYu/hFHj4JgJwdvK5YZthLIGDQMzdMcX2+zEsB+q+KTNf/
-	xlagHHDmU9q9SPNVqPParU2Citu4nq7LPqfEEkr5bc6PBBmNEQCReRQcI7pmzyOJJePeN9wUv3oqP
-	0jlCEpkIoD/OP+BRdUXNQ6XRQCh//VHoRDKSuxLSNEL0LBzNGnDEuglBA/dYbHRW2FvsQPaOHH5mU
-	2uYV4U+uzvTWMuV2ZnXQ/pZ9trX+8VFdC5Aa7R6fdCAK/Xsdvwqf4fjEAW6kbKipn/iXSIbEgefxo
-	76I3cJwQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1s2wGq-00Ar9A-2h;
-	Fri, 03 May 2024 17:00:28 +0000
-Date: Fri, 3 May 2024 18:00:28 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-alpha@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>, Marc Zyngier <maz@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/14] alpha: remove DECpc AXP150 (Jensen) support
-Message-ID: <20240503170028.GW2118490@ZenIV>
-References: <20240503081125.67990-1-arnd@kernel.org>
- <20240503081125.67990-11-arnd@kernel.org>
+	s=arc-20240116; t=1714755637; c=relaxed/simple;
+	bh=T8M79nhVX3roRd5LQrsXlmKQJOJvFfrD0cS8phH2OcA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=A9fLSmMijxjcbM5jMTiTQDUaOFmbZmQ4gpS9SN2e1RkCdSCit8efIpMoXyb1hrtGXzTrdo7NDsKK9bzqhlviQZrHKmF9iu9RvtfLq/e0CVmKYV0XYNhBNuBP62gdp6iA+CV/6bgef9ryEi3JyVl8/gmf16YaBepaEx/YmjsOqlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36c1af8f2f3so95828305ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 10:00:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714755634; x=1715360434;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iHzdAUqCZg3+KUajrBE1l8FdS/gIUaATmlWuObV2nAE=;
+        b=wq+/rfivgZXMv7TgKP6MTXYBwO5QKw3KWsO8PbYlj5hFXd9jOyEKl438slPTx5Tg8e
+         DWvgpxBjsWi1mQ6cwWTXQCliKhWCkUHXFPmjZgTNzYbbZEr17iYsC72gE1x089LqvlDS
+         faWfWO1hK1HiBwA0o8sjU8mpPsdsimtVd+lIS0WtZEZXWUcbvfzmXjNIsDr/d/rMPTZR
+         5HrQHuPYcWHcIaeA3UEgEcvuKabbIymAw9NbZmcwjNX04Ey/eBYZtrZ9Q66XRjaSWZkR
+         OVFsOKRPxNb7v3nna/J+y8A2KvjsCzcPqZncqrgaSW8CSGrBM02wSCA7pVilh7MsXENw
+         8aWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYKpCjTGqDZMjK7gnOu4aGvGRAfB/0utocm3vztJGpqE7CQfa6/PDrsNeBEU/oVyByEsAy2jq0jaqp05LB0gbfCHLvI1TlftEb0m5j
+X-Gm-Message-State: AOJu0YxL5RmExZUR7Tf+CyDjXugpBQmPmnJb59GBeDth2e4ERkW065KF
+	S5qniNrLION0pyyeMLRFnRK9mw6A+kwWsXhVViMnCG89Fe8X9UU2HuBONemRHCpWhWId+Fak4ip
+	mFqwgo24EBQVOdsD1nzGModvrRAF/vZst9RWmaOscm/2Jyxm+jGnrv2k=
+X-Google-Smtp-Source: AGHT+IE5CAolUw10A+f1rWjHOwLke+O9X0m/Ap50wBM3UR4BNfrzSPap8/QiWtnu/be9J+OW7BqVF/H/PcUV1Zug/mwyADKqZ6xO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503081125.67990-11-arnd@kernel.org>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Received: by 2002:a05:6e02:219c:b0:36c:d2b:d7d with SMTP id
+ j28-20020a056e02219c00b0036c0d2b0d7dmr157996ila.2.1714755634743; Fri, 03 May
+ 2024 10:00:34 -0700 (PDT)
+Date: Fri, 03 May 2024 10:00:34 -0700
+In-Reply-To: <0000000000009d99ed06178b29b5@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007c60d506178fa824@google.com>
+Subject: Re: [syzbot] [bcachefs?] BUG: unable to handle kernel paging request
+ in bch2_fs_btree_key_cache_exit
+From: syzbot <syzbot+a35cdb62ec34d44fb062@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 03, 2024 at 10:11:21AM +0200, Arnd Bergmann wrote:
-> diff --git a/arch/alpha/kernel/traps.c b/arch/alpha/kernel/traps.c
-> index 7fc72aeb7398..a9a8e9ab0f52 100644
-> --- a/arch/alpha/kernel/traps.c
-> +++ b/arch/alpha/kernel/traps.c
-> @@ -30,39 +30,6 @@
->  
->  #include "proto.h"
->  
-> -/* Work-around for some SRMs which mishandle opDEC faults.  */
-> -
-> -static int opDEC_fix;
-> -
-> -static void
-> -opDEC_check(void)
-> -{
-> -	__asm__ __volatile__ (
-> -	/* Load the address of... */
-> -	"	br	$16, 1f\n"
-> -	/* A stub instruction fault handler.  Just add 4 to the
-> -	   pc and continue.  */
-> -	"	ldq	$16, 8($sp)\n"
-> -	"	addq	$16, 4, $16\n"
-> -	"	stq	$16, 8($sp)\n"
-> -	"	call_pal %[rti]\n"
-> -	/* Install the instruction fault handler.  */
-> -	"1:	lda	$17, 3\n"
-> -	"	call_pal %[wrent]\n"
-> -	/* With that in place, the fault from the round-to-minf fp
-> -	   insn will arrive either at the "lda 4" insn (bad) or one
-> -	   past that (good).  This places the correct fixup in %0.  */
-> -	"	lda %[fix], 0\n"
-> -	"	cvttq/svm $f31,$f31\n"
-> -	"	lda %[fix], 4"
-> -	: [fix] "=r" (opDEC_fix)
-> -	: [rti] "n" (PAL_rti), [wrent] "n" (PAL_wrent)
-> -	: "$0", "$1", "$16", "$17", "$22", "$23", "$24", "$25");
-> -
-> -	if (opDEC_fix)
-> -		printk("opDEC fixup enabled.\n");
-> -}
-> -
+syzbot has found a reproducer for the following issue on:
 
-That should be moved into commit that removes the caller...
+HEAD commit:    6a71d2909427 Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=10066e4c980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fca646cf17cc616b
+dashboard link: https://syzkaller.appspot.com/bug?extid=a35cdb62ec34d44fb062
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15483e4b180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120e8250980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c77d21fa1405/disk-6a71d290.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/429fcd369816/vmlinux-6a71d290.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d3d8a4b85112/Image-6a71d290.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/933ef33aa6cb/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a35cdb62ec34d44fb062@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 0 to 32768
+workqueue: Failed to create a rescuer kthread for wq "bcachefs_copygc": -EINTR
+bcachefs (076a1832-646e-4f3c-b13d-b3e266154efd): shutdown complete
+Unable to handle kernel paging request at virtual address ffff7000249ff210
+KASAN: probably wild-memory-access in range [0xffff800124ff9080-0xffff800124ff9087]
+Mem abort info:
+  ESR = 0x0000000096000006
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x06: level 2 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000001ad5bd000
+[ffff7000249ff210] pgd=0000000000000000, p4d=000000023e882003, pud=000000023e880003, pmd=0000000000000000
+Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 1 PID: 6256 Comm: syz-executor158 Not tainted 6.9.0-rc4-syzkaller-g6a71d2909427 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+pstate: 80401005 (Nzcv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
+pc : bch2_fs_btree_key_cache_exit+0x7ec/0xfcc fs/bcachefs/btree_key_cache.c:974
+lr : bch2_fs_btree_key_cache_exit+0x78c/0xfcc fs/bcachefs/btree_key_cache.c:970
+sp : ffff8000980e6e80
+x29: ffff8000980e6f50 x28: 1fffe0001d160010 x27: ffff0000e8b044b0
+x26: 1ffff0001301cde0 x25: dfff800000000000 x24: 1ffff0001168e5d4
+x23: 0000000000000000 x22: ffff800124ff9080 x21: ffff8000980e6f00
+x20: ffff80008ee81218 x19: dfff800000000000 x18: 0000000000000008
+x17: 656c706d6f63206e x16: ffff8000802896e4 x15: 0000000000000001
+x14: 1fffe0001d160898 x13: 0000000000000000 x12: 0000000000000000
+x11: ffff60001d160899 x10: 0000000000ff0100 x9 : 0000000000000003
+x8 : 1ffff000249ff210 x7 : ffff80008275d4e8 x6 : 0000000000000000
+x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008275d4f8
+x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000008
+Call trace:
+ bch2_fs_btree_key_cache_exit+0x7ec/0xfcc fs/bcachefs/btree_key_cache.c:974
+ __bch2_fs_free fs/bcachefs/super.c:562 [inline]
+ bch2_fs_release+0x1e0/0x564 fs/bcachefs/super.c:609
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x2a8/0x41c lib/kobject.c:737
+ bch2_fs_free+0x288/0x2f0 fs/bcachefs/super.c:674
+ bch2_fs_alloc+0xe4c/0x1c60 fs/bcachefs/super.c:965
+ bch2_fs_open+0x740/0xb64 fs/bcachefs/super.c:2080
+ bch2_mount+0x558/0xe10 fs/bcachefs/fs.c:1900
+ legacy_get_tree+0xd4/0x16c fs/fs_context.c:662
+ vfs_get_tree+0x90/0x288 fs/super.c:1779
+ do_new_mount+0x278/0x900 fs/namespace.c:3352
+ path_mount+0x590/0xe04 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount fs/namespace.c:3875 [inline]
+ __arm64_sys_mount+0x45c/0x594 fs/namespace.c:3875
+ __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+ el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+ el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+Code: f90027e8 d343fec8 11000d29 f9002be8 (38f36908) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	f90027e8 	str	x8, [sp, #72]
+   4:	d343fec8 	lsr	x8, x22, #3
+   8:	11000d29 	add	w9, w9, #0x3
+   c:	f9002be8 	str	x8, [sp, #80]
+* 10:	38f36908 	ldrsb	w8, [x8, x19] <-- trapping instruction
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
