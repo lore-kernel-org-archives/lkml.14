@@ -1,88 +1,72 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CFA2B2DA;
-	Fri,  3 May 2024 08:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0727F219EB;
+	Fri,  3 May 2024 08:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714723757; cv=none; b=W2mrbYcRamEA1pCI37aSLBV1MVB7cbcuXlXILTOfucRLaPJRmIkAELSL+nay6c1EKfGwpFiuR37SizE2NOvciEqPTzdMx22XS/29TKJW9M7IIYLBJsIbR6ren6Cr6tMrkQx8mHGxVmOeYua+IaViygO1Jvr67MMCItOGkuE3W8Y=
+	t=1714723888; cv=none; b=nbIh2orLXZlSvkeGr9qHkhdWUrhnq4TdiLsYpMzMk3mV/R4bDQXWAjKGwfbumfh7L5GO8hCmHvKxzOb5GjsIPtkp603d/nwjzKuxYcMiYSym3ETaRVfVBR5+pwLnh8Trz3KYOZ/hz3Y1vGClprmTX9Q0cryuWc7n1fTGoXV9AQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714723757; c=relaxed/simple;
-	bh=ENBYZblky69TdSDJSNn9y3+7hJ7kpBrY9SAKhxMcPLk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=C0kVzNkdPNDivaXy0inSW7Zc2G08k62aeFUlx99RBiCcwra/sfLlLBPBUtPtZBhoT1PglSLikZfkkvRtxrfGQt/L1RJzLsX+/JYytDlDPdVoBpLTCXh1N8iGLZQI5ODnDBXfphwyb8FnOhrxlMqm0RnR/CQ95p294yvDqbRqMIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Blluietw; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1714723888; c=relaxed/simple;
+	bh=zW8kPPzhTDL3Y+nV9+ePejm9frxfcTnTVBMJ/MpjjNY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uo+GRLYIF33PNjjI6srMCcA2C96UAeTaSaepP65S954WPTqDG4jhE9EPBai3gw4M41qruhcQLcvv/RC29p6RdYb1f11WbOT0DZ383lYFlvH2gMKumvbhINFUCjRACJPAqNXWPDRkIPzSrMj1lIWFjf8j2xP7ztrpBRrzkr3/n7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adgumGdh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Blluietw"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D375D60002;
-	Fri,  3 May 2024 08:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714723753;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ENBYZblky69TdSDJSNn9y3+7hJ7kpBrY9SAKhxMcPLk=;
-	b=Blluietw4pdtohmjHd2RzatVreMetUg/mhou3P2N6SwAWZIfAublpJzB8x4GBuP641Dhle
-	mp3mE/SWphoWWrNIsdu1xOqu8wSkQifXZUwY0WRDtluUVSLtPcEIBuoPS69rNpHXKIZtF6
-	DW2KDGrnCMpfTEZRNBz32RuZ/11EpUS/AZYm1A2dYLjkQi5uMsF45CCo80rAsoXbM5NddF
-	ksfXnxsKBZnK7343Hx5sa5ji/suafrAsmgIV8HVttMDGk609QKi2S2mxqSvPBDywCDQzUH
-	YAddw6CACoSTKIIxjzuUeWxY+ieHwjyJYbUcofDi0pQ/KRQa5Ri3XD8urKrjyw==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adgumGdh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCDBC116B1;
+	Fri,  3 May 2024 08:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714723887;
+	bh=zW8kPPzhTDL3Y+nV9+ePejm9frxfcTnTVBMJ/MpjjNY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=adgumGdhDzuxmYh3kAZsp0gddPLx5Abm3vM/6/swNyiLE1H1qalo40Uo/rvtXd6bH
+	 Sq/wMf52ruyGpfkEbeLc9lJXznj2rJsCVrW6ADI9MmzXDn0N9uOHBMmKkJi0J1Dgf3
+	 mRIceLQNNJKOmbTJRlqnxEU7ZWULJCN8u/pd1yRLHKWd6l7hZdIRAZOU24JqGopwzx
+	 rrpjcREwOH4+9r2W6L2Qn5YUsAFwxvgZVRhoP3bIfBbWWLbp5l2ZBjjtYC+/I7DGn2
+	 oeMWU/OX3l3hZx2DRqh9KvDCPGpfv3wkTldS8KTsb40ySBnYoJMZ3g/nOMG+rQZ7FC
+	 84Hp4otqKv5+Q==
+Date: Fri, 3 May 2024 09:11:21 +0100
+From: Lee Jones <lee@kernel.org>
+To: Alex Bee <knaerzche@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>, Chris Zhong <zyw@rock-chips.com>,
+	Zhang Qing <zhangqing@rock-chips.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH v4 0/5] Add RK816 PMIC support
+Message-ID: <20240503081121.GH1227636@google.com>
+References: <20240416161237.2500037-1-knaerzche@gmail.com>
+ <69945c53-1fa5-4fde-b488-6056c5471095@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 03 May 2024 10:09:08 +0200
-Message-Id: <D0ZUU7BGDGRN.1NJ3GVVIBL3P1@bootlin.com>
-Cc: "Sergey Senozhatsky" <senozhatsky@chromium.org>, "Steven Rostedt"
- <rostedt@goodmis.org>, "Thomas Gleixner" <tglx@linutronix.de>,
- <linux-kernel@vger.kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Jiri Slaby" <jirislaby@kernel.org>, "Russell
- King" <linux@armlinux.org.uk>, "Tony Lindgren" <tony@atomide.com>, "Andy
- Shevchenko" <andriy.shevchenko@linux.intel.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Hongyu Xie" <xiehongyu1@kylinos.cn>,
- "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>, "Arnd Bergmann"
- <arnd@arndb.de>, "Lino Sanfilippo" <l.sanfilippo@kunbus.com>,
- <linux-serial@vger.kernel.org>
-To: "John Ogness" <john.ogness@linutronix.de>, "Petr Mladek"
- <pmladek@suse.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH printk v5 09/30] serial: core: Introduce wrapper to set
- @uart_port->cons
-X-Mailer: aerc 0.17.0
-References: <20240502213839.376636-1-john.ogness@linutronix.de>
- <20240502213839.376636-10-john.ogness@linutronix.de>
-In-Reply-To: <20240502213839.376636-10-john.ogness@linutronix.de>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <69945c53-1fa5-4fde-b488-6056c5471095@gmail.com>
 
-Hello,
+On Fri, 03 May 2024, Alex Bee wrote:
 
-On Thu May 2, 2024 at 11:38 PM CEST, John Ogness wrote:
-> Introduce uart_port_set_cons() as a wrapper to set @cons of a
-> uart_port. The wrapper sets @cons under the port lock in order
-> to prevent @cons from disappearing while another context is
-> holding the port lock. This is necessary for a follow-up
-> commit relating to the port lock wrappers, which rely on @cons
-> not changing between lock and unlock.
->
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> Hi Lee,
+> 
+> it looks like all patches except the MFD ones have been reviewed/acked by
+> now. I hope I integrated your feedback to v3 [0] in a way you were
+> expecting. Also I was hoping this whole series could be go though the MFD
+> tree, since all the none-MFD patches depend on the changes mfd-header.
+> 
+> Please let me know if there is anything left for me to do.
 
-Tested series on Mobileye EyeQ5, a MIPS64 platform that uses PL011.
+I have the patch open 'right now', please bear with me.
 
-Tested-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com> # EyeQ5, AMBA-PL011
-
-Thanks,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+-- 
+Lee Jones [李琼斯]
