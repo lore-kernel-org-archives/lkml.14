@@ -1,212 +1,205 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2079.outbound.protection.outlook.com [40.107.212.79])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0338101F2;
-	Fri,  3 May 2024 01:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714700490; cv=fail; b=K/zNPOWqTf1Y4MEh/dWsBZSEka0823/Qhbe/VJUGeUL+IJSr+v8Mjq5BWnh1uIpKKGn339IU2y+PJ0rtbfku2C1trr2/AOq3tuSxhdKHeCyb3IS3MBzoaiQJ8X0mvM6SMAwA8cKELHlU7aBY9s4Rm4l55vXhA4X9T3ihuoIelPA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714700490; c=relaxed/simple;
-	bh=4l3xkcD1caPDxCyWRL3tPe5FK9CqLpweGdbyFIOYZuU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZsjwDzQp/7jCzF0EXj1sHrL2KuTI1LYTVzZEXbVPjlios3omvaCzTuvBhWBYm780OKKBU0w5q6NmMN3bB8XToAYQcih/L5P9n2Xu6gzeN/IOwAAo01TvHjryXJ7YUUHXFz7MMpa9392i1kUh22VcSy14EEU1My0yNdaDr1OtTgc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mjPDc+N4; arc=fail smtp.client-ip=40.107.212.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D63FC0C;
+	Fri,  3 May 2024 01:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714700704; cv=none; b=EWoDoXPY+uFWt8aPj+Odn5CfIApZGzQWPW/yq4lou8Iws0mv0HOGHMtIwSInu05Uc4nUivAa9ZvgzzSWaYHOapwYFXHLD61+jIp87PntRzgEqHoH4mGd0LISungr4Aicqh9rw5sVxLhSN8Dir3oHxySMTnNclroBAqNCSpf42e8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714700704; c=relaxed/simple;
+	bh=6KMomhSz8zhsXPFTxWfV/8aUvl/7zXaRfUMTLeJdIF8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=brKNEiQwL61dyMsOQDjH83SsyTWyWaH2i2PwC8KxLAi+DkxLhW2j7gtDKdy/UcKiLeRijgsqgsLRPpP0skH1XF53ODwvmBfcB6QMFYV2Xc1GaUwLNmOmtNgHoDvseW2OzLAuCznDxaQMrLvfgPdJZx1C0sdXqEvhWkCDSaCJZ4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScvmS01x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mjPDc+N4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bv1CFWy1khJNXWAOuobGvTCgUpY03KdyQefJ6RDESj8x1yTSstqz12ho466PRAscTlDj17Qpe6zZXuDXD/jwpk+WYSMqT9SHLJLKGmvEqc7Pgyr1pY+jaW8eRhwG6brUPTP0WKkoeCFh/Hnv6D50mGb1blw0puXkLD76SfqbUelTH8c+zEDSRO4ODlz5Hn9jDDiaWs4NhxgkTXINcy0/Khw8nh4kjBhqpwfQUMR7wiNAHv1JswIDjgPJiSrfY57rmRlwG+y4Syn49yuUtccEZzlxHVZ9rIqxJdYoZm+th9XvCEH/KNSsq52e49QVlwrkiOz2Yj8zIu7F/SyiJHxCpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kbiOKEBQoR2Hat3wTb0V4CqW2uDZVItbne0hOqpr4HQ=;
- b=J/K3EpzBsWU9vQYSeXAMVkLMo94DRIl7hOdb8L+MIYifspDN1M4fkaAH0MMewJlWxuo0Pc2A5CGXoFGpWBMWLsdrd62LGghACThvWopye3aAh6gBfGeS3Yd1y3ykdWZBj3aDEZYJvnbKE9HgR0K7xywoYk/zwPuDRsh9djTj2Xk+IqrgE+nBNN/WPCeYzfqSnBByBSa+zpXCzNdt0mIqsnTqdz8HX6xbF3Gc9XTYypsJzfPbRzPf+/H3ZW+WWmY5tlI2VqdXccINGPDI2LuecD25+istBJhpngjs9OZMlvKncc76GLtBytLp/vtxA7DE4MXZ7Ww9K6kZRRsLpVF0WQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kbiOKEBQoR2Hat3wTb0V4CqW2uDZVItbne0hOqpr4HQ=;
- b=mjPDc+N4LuwtxLVXOkhemdGXv6iRYnacMeChLT789KXil3CUwcij8nuQM7KDTjiCyIYbJvQNHd4HnUYW3RFWJOyt4sQpq4GROdBOn5XXZQy288T5O3RPfcR9nfrxOys3kZfeVfTmF3KUQU5EYjWiIw1Cd6ElIMNj7s+ci69BLi5D+coD087AoVozE/yD8rSbsLZLL2Nn5lvT2Y23Ul0QD6OIPFViET/xJos6B7gAKMMXuSyNd/QF3/KjbRkXh8gtbOTJ0NfboesiD4wAzs9N3faTPnPDeiUKOCKc3hZuj2ktIWhG0LctAPzkeKUEADj9o9ahTFppjKvZFTGqga9zCw==
-Received: from BY3PR04CA0002.namprd04.prod.outlook.com (2603:10b6:a03:217::7)
- by PH7PR12MB9201.namprd12.prod.outlook.com (2603:10b6:510:2e8::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30; Fri, 3 May
- 2024 01:41:25 +0000
-Received: from CO1PEPF000066EB.namprd05.prod.outlook.com
- (2603:10b6:a03:217:cafe::ab) by BY3PR04CA0002.outlook.office365.com
- (2603:10b6:a03:217::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30 via Frontend
- Transport; Fri, 3 May 2024 01:41:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1PEPF000066EB.mail.protection.outlook.com (10.167.249.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7544.18 via Frontend Transport; Fri, 3 May 2024 01:41:25 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 2 May 2024
- 18:41:07 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 2 May 2024
- 18:41:06 -0700
-Received: from jjang.nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.7)
- with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Thu, 2 May
- 2024 18:41:06 -0700
-From: Joseph Jang <jjang@nvidia.com>
-To: <shuah@kernel.org>, <alexandre.belloni@bootlin.com>, <avagin@google.com>,
-	<jjang@nvidia.com>, <amir73il@gmail.com>, <brauner@kernel.org>,
-	<mochs@nvidia.com>, <linux-kernel@vger.kernel.org>,
-	<linux-rtc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-CC: <sdonthineni@nvidia.com>, <treding@nvidia.com>,
-	<linux-tegra@vger.kernel.org>
-Subject: [PATCH 1/1] selftest: rtc: Add support rtc alarm content check
-Date: Thu, 2 May 2024 18:41:02 -0700
-Message-ID: <20240503014102.3568130-2-jjang@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240503014102.3568130-1-jjang@nvidia.com>
-References: <20240503014102.3568130-1-jjang@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScvmS01x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E8A4C113CC;
+	Fri,  3 May 2024 01:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714700704;
+	bh=6KMomhSz8zhsXPFTxWfV/8aUvl/7zXaRfUMTLeJdIF8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=ScvmS01xy5teHAUmnYU1nnIhcIacQF7nuu72Gj97qy7S/6MvT1FiTsx3RRdjBZiCz
+	 PBBkS+zDlmatJ28bsEtNp9seqSbMeyc575YxJPDV/0fX2PA1Z3/pG+QpWQzJlCAZ7U
+	 tCXOr1/tyiPwDfnCH9MWqlzhFMDOg+ebjPH+J64gKytUYYMWrfmtIdy3C0KT020xo7
+	 R/zKaLPvNe5B16p82MwM5izfpl7a8iymkpkeivlPwDXwnMAatE35bJvkScj9hrfcMb
+	 2sFDfSxJxSDW2TVsqM7LvuWOqEbLQX1jkZOfKzhpjW5gyx41s/+Am5GqLTB9BMTK3I
+	 xWJsaXMUMiuXQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000066EB:EE_|PH7PR12MB9201:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0a14529-bbc5-475e-2d7e-08dc6b1224f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|36860700004|921011;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?02OfKI3AV/0Nki5pAaOjnofonDZ+4+8lfXWqjm8Erf9yv9UjiJnutVS7LIJX?=
- =?us-ascii?Q?1J14KbugMfIENbcWTM9R/9QuEK0v8PoKZh8TZbX6SP0uclxZd4jhV1tXndcQ?=
- =?us-ascii?Q?En+VZWiG7He7cqCo7Xha7CNYxy6jk3L8mQ8PcTKZcyynlSJjSCNWI8BrdXuI?=
- =?us-ascii?Q?6uX0nTzJmyKTKGTkPlCq9gsi7yCpbKvB1veCSpVacrYlhT0e2OdBx2A/nQ0f?=
- =?us-ascii?Q?kZS27s0zDTqMsCRNKRTwp6O5OU6eRrQgNP7kHKArGzgl0L8cKuPJ5RradZCE?=
- =?us-ascii?Q?X1rqb8w4bNyABOWTjzuPXQjfxBz5ECUFUB1v+PMZhIc+cP3OlIGwulNhGAtW?=
- =?us-ascii?Q?Dt1A2eWBl0WP7hCWsQ1XBViTr30hBHeMpt/aWYKMi8czskbnUM1cn0qinhKn?=
- =?us-ascii?Q?Tyh+q/IHK2Euzj7L8uPhBh3U46UP1fSGO1H0dXsMBcYe7eOlFZ4yXej/s6qz?=
- =?us-ascii?Q?frdqwHnA4xz5yGXQO8EJKRn3S5FNCkevJ79d47Hd3uRzldfje2cVH3U2poXT?=
- =?us-ascii?Q?WKx80hIk7zteFM+aFbo/iumV62uESbuv96WJd+vAorMFN5ZZvw5lS2Z/eag4?=
- =?us-ascii?Q?5ZBDIv/zz9G2mqFQO0Fx7CVhM3u5ZBTzqbQADfFJJTO2JvPIpk2b10taIvUw?=
- =?us-ascii?Q?CCBdIniqbBJTkiXyrirAHEnlRvcDH+krJBXFZyqSOZMxGlS8LXJYF9sriDWQ?=
- =?us-ascii?Q?AMfxJaSFgifkTaMVh7m27nWdln6io2WNJWkzsnjrQvBgpbgdwShPqwBFn3N6?=
- =?us-ascii?Q?iPcE9m+xVKUGYs9O/KQRLH7T5ow9BBFNOKPWHA39UaxPFc0cAZOtxDT2DRBD?=
- =?us-ascii?Q?q8jQdgdrXKvH3XY/b5BZgy1YozvdmRS10M/7tKHG1GJDeFG+2jer0+/iajNM?=
- =?us-ascii?Q?KwoL8uPHFer9ialjcscrZtD8Yk9sKL/kq1wfOH5jUebAx5D2k5lON3JKhGOf?=
- =?us-ascii?Q?E5sV3n9SYA5xWVS3+DrT+M472BBjKLN7k2mE7D0XFQ2x3+HP98V+4mToUF0Q?=
- =?us-ascii?Q?26Qz6j5S4rXxvP28DDG6dnGU68622FSBe/U7mWyGMgDLFQuItT9OYFCB2h/h?=
- =?us-ascii?Q?/gMc+epwBzijNCdm7SC8g2p0o6AmyIfvQCJYCTxHIjSHMTjuuguA1ae07b83?=
- =?us-ascii?Q?9sd3WeWXW/Ll7u0GhkUkBYAncwSxV4OtGPYuBlTh2/YrUmpqoxw8JsVtyM8R?=
- =?us-ascii?Q?e3X2W6GqIR+hrl9HjmXbWpNJvcyPzJ0MpNCHWTABMVMrfIEnMgEae1MOFscg?=
- =?us-ascii?Q?uwRGWPM4/dKvUb9m6h3wNhuiTcuFEcqbQ4GZhYWJSTQqClTHoVetWhykyZel?=
- =?us-ascii?Q?pmt3LO5E3MSyAVjDYhuNwLF+WWlE4HalRH4PAbAS1kKFvVvgrL3nBjtjr5a6?=
- =?us-ascii?Q?Hp1sYfEQ0JeRaZpzkUmiYraf8NkY?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(376005)(36860700004)(921011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2024 01:41:25.1342
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0a14529-bbc5-475e-2d7e-08dc6b1224f7
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000066EB.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9201
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 03 May 2024 04:44:57 +0300
+Message-Id: <D0ZMO1P1SE1I.3BP2LLE1Q0IJA@kernel.org>
+Cc: <zhiquan1.li@intel.com>, <kristen@linux.intel.com>, <seanjc@google.com>,
+ <zhanb@microsoft.com>, <anakrish@microsoft.com>,
+ <mikko.ylinen@linux.intel.com>, <yangjie@microsoft.com>,
+ <chrisyan@microsoft.com>
+Subject: Re: [PATCH v13 14/14] selftests/sgx: Add scripts for EPC cgroup
+ testing
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Haitao Huang" <haitao.huang@linux.intel.com>,
+ <dave.hansen@linux.intel.com>, <kai.huang@intel.com>, <tj@kernel.org>,
+ <mkoutny@suse.com>, <linux-kernel@vger.kernel.org>,
+ <linux-sgx@vger.kernel.org>, <x86@kernel.org>, <cgroups@vger.kernel.org>,
+ <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+ <sohil.mehta@intel.com>, <tim.c.chen@linux.intel.com>
+X-Mailer: aerc 0.17.0
+References: <20240430195108.5676-1-haitao.huang@linux.intel.com>
+ <20240430195108.5676-15-haitao.huang@linux.intel.com>
+In-Reply-To: <20240430195108.5676-15-haitao.huang@linux.intel.com>
 
-Some platforms do not support WAKEUP service by default, we use a shell
-script to check the absence of alarm content in /proc/driver/rtc.
+On Tue Apr 30, 2024 at 10:51 PM EEST, Haitao Huang wrote:
+> With different cgroups, the script starts one or multiple concurrent SGX
+> selftests (test_sgx), each to run the unclobbered_vdso_oversubscribed
+> test case, which loads an enclave of EPC size equal to the EPC capacity
+> available on the platform. The script checks results against the
+> expectation set for each cgroup and reports success or failure.
+>
+> The script creates 3 different cgroups at the beginning with following
+> expectations:
+>
+> 1) small - intentionally small enough to fail the test loading an
+> enclave of size equal to the capacity.
+> 2) large - large enough to run up to 4 concurrent tests but fail some if
+> more than 4 concurrent tests are run. The script starts 4 expecting at
+> least one test to pass, and then starts 5 expecting at least one test
+> to fail.
+> 3) larger - limit is the same as the capacity, large enough to run lots o=
+f
+> concurrent tests. The script starts 8 of them and expects all pass.
+> Then it reruns the same test with one process randomly killed and
+> usage checked to be zero after all processes exit.
+>
+> The script also includes a test with low mem_cg limit and large sgx_epc
+> limit to verify that the RAM used for per-cgroup reclamation is charged
+> to a proper mem_cg. For this test, it turns off swapping before start,
+> and turns swapping back on afterwards.
+>
+> Add README to document how to run the tests.
+>
+> Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
 
-The script will validate /proc/driver/rtc when it is not empty and then
-check if could find alarm content in it according to the rtc wakealarm
-is supported or not.
+Here's the transcript:
 
-Requires commit 101ca8d05913b ("rtc: efi: Enable SET/GET WAKEUP services
-as optional")
+make: Entering directory '/home/jarkko/linux-tpmdd/tools/testing/selftests/=
+sgx'
+gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/../=
+../../tools/include -fPIC -c main.c -o /home/jarkko/linux-tpmdd/tools/testi=
+ng/selftests/sgx/main.o
+gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/../=
+../../tools/include -fPIC -c load.c -o /home/jarkko/linux-tpmdd/tools/testi=
+ng/selftests/sgx/load.o
+gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/../=
+../../tools/include -fPIC -c sigstruct.c -o /home/jarkko/linux-tpmdd/tools/=
+testing/selftests/sgx/sigstruct.o
+gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/../=
+../../tools/include -fPIC -c call.S -o /home/jarkko/linux-tpmdd/tools/testi=
+ng/selftests/sgx/call.o
+gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/../=
+../../tools/include -fPIC -c sign_key.S -o /home/jarkko/linux-tpmdd/tools/t=
+esting/selftests/sgx/sign_key.o
+gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/../=
+../../tools/include -fPIC -o /home/jarkko/linux-tpmdd/tools/testing/selftes=
+ts/sgx/test_sgx /home/jarkko/linux-tpmdd/tools/testing/selftests/sgx/main.o=
+ /home/jarkko/linux-tpmdd/tools/testing/selftests/sgx/load.o /home/jarkko/l=
+inux-tpmdd/tools/testing/selftests/sgx/sigstruct.o /home/jarkko/linux-tpmdd=
+/tools/testing/selftests/sgx/call.o /home/jarkko/linux-tpmdd/tools/testing/=
+selftests/sgx/sign_key.o -z noexecstack -lcrypto
+gcc -Wall -Werror -static-pie -nostdlib -ffreestanding -fPIE -fno-stack-pro=
+tector -mrdrnd -I/home/jarkko/linux-tpmdd/tools/testing/selftests/../../../=
+tools/include test_encl.c test_encl_bootstrap.S -o /home/jarkko/linux-tpmdd=
+/tools/testing/selftests/sgx/test_encl.elf -Wl,-T,test_encl.lds,--build-id=
+=3Dnone
+/usr/lib64/gcc/x86_64-suse-linux/13/../../../../x86_64-suse-linux/bin/ld: w=
+arning: /tmp/ccToNCLw.o: missing .note.GNU-stack section implies executable=
+ stack
+/usr/lib64/gcc/x86_64-suse-linux/13/../../../../x86_64-suse-linux/bin/ld: N=
+OTE: This behaviour is deprecated and will be removed in a future version o=
+f the linker
+TAP version 13
+1..2
+# timeout set to 120
+# selftests: sgx: test_sgx
+# TAP version 13
+# 1..16
+# # Starting 16 tests from 1 test cases.
+# #  RUN           enclave.unclobbered_vdso ...
+# #            OK  enclave.unclobbered_vdso
+# ok 1 enclave.unclobbered_vdso
+# #  RUN           enclave.unclobbered_vdso_oversubscribed ...
+# #            OK  enclave.unclobbered_vdso_oversubscribed
+# ok 2 enclave.unclobbered_vdso_oversubscribed
+# #  RUN           enclave.unclobbered_vdso_oversubscribed_remove ...
+# # main.c:402:unclobbered_vdso_oversubscribed_remove:Creating an enclave w=
+ith 98566144 bytes heap may take a while ...
+# # main.c:457:unclobbered_vdso_oversubscribed_remove:Changing type of 9856=
+6144 bytes to trimmed may take a while ...
+# # main.c:473:unclobbered_vdso_oversubscribed_remove:Entering enclave to r=
+un EACCEPT for each page of 98566144 bytes may take a while ...
+# # main.c:494:unclobbered_vdso_oversubscribed_remove:Removing 98566144 byt=
+es from enclave may take a while ...
+# #            OK  enclave.unclobbered_vdso_oversubscribed_remove
+# ok 3 enclave.unclobbered_vdso_oversubscribed_remove
+# #  RUN           enclave.clobbered_vdso ...
+# #            OK  enclave.clobbered_vdso
+# ok 4 enclave.clobbered_vdso
+# #  RUN           enclave.clobbered_vdso_and_user_function ...
+# #            OK  enclave.clobbered_vdso_and_user_function
+# ok 5 enclave.clobbered_vdso_and_user_function
+# #  RUN           enclave.tcs_entry ...
+# #            OK  enclave.tcs_entry
+# ok 6 enclave.tcs_entry
+# #  RUN           enclave.pte_permissions ...
+# #            OK  enclave.pte_permissions
+# ok 7 enclave.pte_permissions
+# #  RUN           enclave.tcs_permissions ...
+# #            OK  enclave.tcs_permissions
+# ok 8 enclave.tcs_permissions
+# #  RUN           enclave.epcm_permissions ...
+# #            OK  enclave.epcm_permissions
+# ok 9 enclave.epcm_permissions
+# #  RUN           enclave.augment ...
+# #            OK  enclave.augment
+# ok 10 enclave.augment
+# #  RUN           enclave.augment_via_eaccept ...
+# #            OK  enclave.augment_via_eaccept
+# ok 11 enclave.augment_via_eaccept
+# #  RUN           enclave.tcs_create ...
+# #            OK  enclave.tcs_create
+# ok 12 enclave.tcs_create
+# #  RUN           enclave.remove_added_page_no_eaccept ...
+# #            OK  enclave.remove_added_page_no_eaccept
+# ok 13 enclave.remove_added_page_no_eaccept
+# #  RUN           enclave.remove_added_page_invalid_access ...
+# #            OK  enclave.remove_added_page_invalid_access
+# ok 14 enclave.remove_added_page_invalid_access
+# #  RUN           enclave.remove_added_page_invalid_access_after_eaccept .=
+..
+# #            OK  enclave.remove_added_page_invalid_access_after_eaccept
+# ok 15 enclave.remove_added_page_invalid_access_after_eaccept
+# #  RUN           enclave.remove_untouched_page ...
+# #            OK  enclave.remove_untouched_page
+# ok 16 enclave.remove_untouched_page
+# # PASSED: 16 / 16 tests passed.
+# # Totals: pass:16 fail:0 xfail:0 xpass:0 skip:0 error:0
+ok 1 selftests: sgx: test_sgx
+# timeout set to 120
+# selftests: sgx: run_epc_cg_selftests.sh
+# # Setting up SGX cgroup limits.
+# ./run_epc_cg_selftests.sh: line 129: echo: write error: Invalid argument
+# # Failed setting up misc limits for sgx_epc.
+# SKIP: Kernel does not support SGX cgroup.
+ok 2 selftests: sgx: run_epc_cg_selftests.sh # SKIP
+make: Leaving directory '/home/jarkko/linux-tpmdd/tools/testing/selftests/s=
+gx'
+jarkko@mustatorvisieni:~/linux-tpmdd> zcat /proc/config.gz | grep GROUP_MIS=
+C
+CONFIG_CGROUP_MISC=3Dy
 
-Reviewed-by: Matthew R. Ochs <mochs@nvidia.com>
-Signed-off-by: Joseph Jang <jjang@nvidia.com>
----
- tools/testing/selftests/Makefile              |  1 +
- tools/testing/selftests/rtc/property/Makefile |  5 ++++
- .../selftests/rtc/property/rtc-alarm-test.sh  | 27 +++++++++++++++++++
- 3 files changed, 33 insertions(+)
- create mode 100644 tools/testing/selftests/rtc/property/Makefile
- create mode 100755 tools/testing/selftests/rtc/property/rtc-alarm-test.sh
-
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index e1504833654d..f5d43e2132e8 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -80,6 +80,7 @@ TARGETS += riscv
- TARGETS += rlimits
- TARGETS += rseq
- TARGETS += rtc
-+TARGETS += rtc/property
- TARGETS += rust
- TARGETS += seccomp
- TARGETS += sgx
-diff --git a/tools/testing/selftests/rtc/property/Makefile b/tools/testing/selftests/rtc/property/Makefile
-new file mode 100644
-index 000000000000..c6f7aa4f0e29
---- /dev/null
-+++ b/tools/testing/selftests/rtc/property/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
-+TEST_PROGS := rtc-alarm-test.sh
-+
-+include ../../lib.mk
-+
-diff --git a/tools/testing/selftests/rtc/property/rtc-alarm-test.sh b/tools/testing/selftests/rtc/property/rtc-alarm-test.sh
-new file mode 100755
-index 000000000000..3bee1dd5fbd0
---- /dev/null
-+++ b/tools/testing/selftests/rtc/property/rtc-alarm-test.sh
-@@ -0,0 +1,27 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+if [ ! -f /proc/driver/rtc ]; then
-+	echo "SKIP: the /proc/driver/rtc is empty."
-+	exit 4
-+fi
-+
-+# Check if could find alarm content in /proc/driver/rtc according to
-+# the rtc wakealarm is supported or not.
-+if [ -n "$(ls /sys/class/rtc/rtc* | grep -i wakealarm)" ]; then
-+	if [ -n "$(grep -i alarm /proc/driver/rtc)" ]; then
-+		exit 0
-+	else
-+		echo "ERROR: The alarm content is not found."
-+		cat /proc/driver/rtc
-+		exit 1
-+	fi
-+else
-+	if [ -n "$(grep -i alarm /proc/driver/rtc)" ]; then
-+		echo "ERROR: The alarm content is found."
-+		cat /proc/driver/rtc
-+		exit 1
-+	else
-+		exit 0
-+	fi
-+fi
--- 
-2.34.1
-
+BR, Jarkko
