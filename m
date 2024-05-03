@@ -1,144 +1,141 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32D7C53372
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 10:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCBE14F9E8;
+	Fri,  3 May 2024 10:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714730534; cv=none; b=hpE6Xe2X7EGxxBBq6itYNJ72t+Edbzuk7aLvJoLJ5N9V5HxJJSe5mxJswCY+nHXJ5nPMrMg7ghQIqI3E5+3FgNY3+3cWRGjmASmxBY/lVFRtTSopt7ZTmjxukxzNF2KpIhEVV/Po5Oa34bkJ/dTp+irIiJY03mSbiR4n/gI57AE=
+	t=1714730693; cv=none; b=Eo4AddBY1VHJP8HPNfl9ThcGI+Ab68Lh5FBdzf1kgNkzVB5nCb8j6YFSP+Plyp9rlsO9mRgCxVrWsmsLTbqU7O+rf3HnefSMT/TznSPkWP9XTz3E6y/X1sTpKiFpTSsK4K/ClnwKDi6F9JMCCwwc1ILNiX9PWDTTOMQtw93xyxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714730534; c=relaxed/simple;
-	bh=KCwLPlV25d9uHuUcf5x3zYTtdNA1BuArmrXCavdiUyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GwmXdWRoPT6rSHoXoHI2mKqoXTtZ9bUJsVwYjqEql+1uKA8UGYfRlcfFpzVinzAc7bd3x/xNsxUum9+1NLh71egSi2tz3gfBqx1U3jCqhBFakg9R6CzUNrLO5JokBVAcZwUYX1phJA3jwumQuFAWhuQKZPI0KfAhHJCmXmf/qEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0D3D2F4;
-	Fri,  3 May 2024 03:02:36 -0700 (PDT)
-Received: from [10.57.67.51] (unknown [10.57.67.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B99C3F793;
-	Fri,  3 May 2024 03:02:08 -0700 (PDT)
-Message-ID: <df07855c-5f7f-4bac-bc46-461323e0f98c@arm.com>
-Date: Fri, 3 May 2024 11:02:06 +0100
+	s=arc-20240116; t=1714730693; c=relaxed/simple;
+	bh=qACal944bQbWQEFiDpgDFJ/ewySer9S+1JK+mVUz6TM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eUZsDhIlM9GUDTUzpmmsVpuQYdxyxt1vILKzLAgYjUdIFVkYwzSTQ3yAB+eEjMkcFYffCkO3PhRWhVjgCttcO6RiCg2lmy+adRc9hg6CyFLY9tkPP/UFAvniER+S1TpuI5+ZviVVuXScD5LEofXE0ZPY/6nSeRR4dChAZkqjFog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56c5d05128dso24911a12.0;
+        Fri, 03 May 2024 03:04:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714730690; x=1715335490;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e8adb3W1BmkNUKKb1fEwqwjiASLtL+TBOu09daXzuP4=;
+        b=aiReQ8vB5dA/mUd5aKxEchvFSsVandyEDL8E/HdxlhIfEMS9oHwh+fwY3V0c9b6ScX
+         ZGPQNVpHzwsLy7dK+UTkS7gACCUd8Xj78WxOGoq87b1greYZp9FtKvZOuHnW21kKIZmb
+         doDa9yHZdPglgnaE/vOCSXk5QvzL5XZdbq/vNoiDp129HE1IxJbRRK+IQVe2kpF5zNar
+         787LKQWgFgKYDmIkQjwI6PgoPcX1oR8yxinmA88VkQjZ6pX6KxrbNqU5pXd4kNjZhYlF
+         8Ne+c9+Kep0cqsejhm1Kk2JOns1n+F7wreRzDPGOwHnoTzB4oVYCzmH+mK8VC3S2klYd
+         Ag5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUnX33j7ThMgixgvsZk3ADrrsui7mSK68L961w1/dCKvdx5/a3xPn5Dp6sdq5p2kXHG8M4PWXpuBx/IcU/BJtLBCMEQkXLD1V6pb5D/BLutZ6knxXQNoFsnNkfDVylUDpRIQzmppsJv3vpJ1RY=
+X-Gm-Message-State: AOJu0YzI9sPFKpfp0yNxFiicIgMoesI3ewqTqEnr7pEApOeWu1oRJY4L
+	T2TEeMrtVDzsVehNEQ72n/w6Bn6QA0QEPH8QXK9qFyVLS8Te20z/EU1flQ==
+X-Google-Smtp-Source: AGHT+IFPf0CsqCaKdeCEgTGaKjbBlZc73fEjsXVrU0FhdVphBZ6Wbe4pceZhVttNvEkA48TuIAipCg==
+X-Received: by 2002:a50:9fa8:0:b0:56e:60d:9b16 with SMTP id c37-20020a509fa8000000b0056e060d9b16mr1350536edf.6.1714730689864;
+        Fri, 03 May 2024 03:04:49 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-008.fbsv.net. [2a03:2880:30ff:8::face:b00c])
+        by smtp.gmail.com with ESMTPSA id q28-20020a50aa9c000000b00572469a7948sm1559882edc.45.2024.05.03.03.04.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 03:04:49 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Kalle Valo <kvalo@kernel.org>,
+	Jeff Johnson <jjohnson@kernel.org>
+Cc: netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org (open list:NETWORKING DRIVERS (WIRELESS)),
+	ath12k@lists.infradead.org (open list:QUALCOMM ATH12K WIRELESS DRIVER),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH wireless-next] wifi: ath12k: allocate dummy net_device dynamically
+Date: Fri,  3 May 2024 03:04:39 -0700
+Message-ID: <20240503100440.6066-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/6] mm: introduce arch_do_swap_page_nr() which allows
- restore metadata for nr pages
-Content-Language: en-GB
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org
-Cc: baolin.wang@linux.alibaba.com, chrisl@kernel.org, david@redhat.com,
- hanchuanhua@oppo.com, hannes@cmpxchg.org, hughd@google.com,
- kasong@tencent.com, linux-kernel@vger.kernel.org, surenb@google.com,
- v-songbaohua@oppo.com, willy@infradead.org, xiang@kernel.org,
- ying.huang@intel.com, yosryahmed@google.com, yuzhao@google.com,
- ziy@nvidia.com, Khalid Aziz <khalid.aziz@oracle.com>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>
-References: <20240503005023.174597-1-21cnbao@gmail.com>
- <20240503005023.174597-5-21cnbao@gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240503005023.174597-5-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/05/2024 01:50, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
-> 
-> Should do_swap_page() have the capability to directly map a large folio,
-> metadata restoration becomes necessary for a specified number of pages
-> denoted as nr. It's important to highlight that metadata restoration is
-> solely required by the SPARC platform, which, however, does not enable
-> THP_SWAP. Consequently, in the present kernel configuration, there
-> exists no practical scenario where users necessitate the restoration of
-> nr metadata. Platforms implementing THP_SWAP might invoke this function
-> with nr values exceeding 1, subsequent to do_swap_page() successfully
-> mapping an entire large folio. Nonetheless, their arch_do_swap_page_nr()
-> functions remain empty.
-> 
-> Cc: Khalid Aziz <khalid.aziz@oracle.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Andreas Larsson <andreas@gaisler.com>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> ---
->  include/linux/pgtable.h | 26 ++++++++++++++++++++------
->  mm/memory.c             |  3 ++-
->  2 files changed, 22 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index 18019f037bae..463e84c3de26 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -1084,6 +1084,15 @@ static inline int pgd_same(pgd_t pgd_a, pgd_t pgd_b)
->  })
->  
->  #ifndef __HAVE_ARCH_DO_SWAP_PAGE
-> +static inline void arch_do_swap_page_nr(struct mm_struct *mm,
-> +				     struct vm_area_struct *vma,
-> +				     unsigned long addr,
-> +				     pte_t pte, pte_t oldpte,
-> +				     int nr)
-> +{
-> +
-> +}
-> +#else
->  /*
->   * Some architectures support metadata associated with a page. When a
->   * page is being swapped out, this metadata must be saved so it can be
-> @@ -1092,12 +1101,17 @@ static inline int pgd_same(pgd_t pgd_a, pgd_t pgd_b)
->   * page as metadata for the page. arch_do_swap_page() can restore this
->   * metadata when a page is swapped back in.
->   */
-> -static inline void arch_do_swap_page(struct mm_struct *mm,
-> -				     struct vm_area_struct *vma,
-> -				     unsigned long addr,
-> -				     pte_t pte, pte_t oldpte)
+Embedding net_device into structures prohibits the usage of flexible
+arrays in the net_device structure. For more details, see the discussion
+at [1].
 
-This hook seems to be very similar to arch_swap_restore(), I wonder if it makes
-sense to merge them. Out of scope for this patch series though.
+Un-embed the net_device from struct ath12k_ext_irq_grp by converting it
+into a pointer. Then use the leverage alloc_netdev_dummy() to allocate
+the net_device object at ath12k_pci_ext_irq_config().
 
+The free of the device occurs at ath12k_pci_free_ext_irq().
 
-> -{
-> -
-> +static inline void arch_do_swap_page_nr(struct mm_struct *mm,
-> +					struct vm_area_struct *vma,
-> +					unsigned long addr,
-> +					pte_t pte, pte_t oldpte,
-> +					int nr)
-> +{
-> +	for (int i = 0; i < nr; i++) {
-> +		arch_do_swap_page(vma->vm_mm, vma, addr + i * PAGE_SIZE,
-> +				pte_advance_pfn(pte, i),
-> +				pte_advance_pfn(oldpte, i));
+[1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
 
-It seems a bit odd to create a batched version of this, but not allow arches to
-take advantage. Although I guess your point is that only SPARC implements it and
-on that platform nr will always be 1? So no point right now? So this is just a
-convenience for do_swap_page()? Makes sense.
+This is *very* similar to the same changes in ath11k commit
+bca592ead82528b ("wifi: ath11k: allocate dummy net_device dynamically")
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ drivers/net/wireless/ath/ath12k/core.h |  2 +-
+ drivers/net/wireless/ath/ath12k/pci.c  | 14 +++++++++++---
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-> +	}
->  }
->  #endif
->  
-> diff --git a/mm/memory.c b/mm/memory.c
-> index f033eb3528ba..74cdefd58f5f 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -4266,7 +4266,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->  	VM_BUG_ON(!folio_test_anon(folio) ||
->  			(pte_write(pte) && !PageAnonExclusive(page)));
->  	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, pte);
-> -	arch_do_swap_page(vma->vm_mm, vma, vmf->address, pte, vmf->orig_pte);
-> +	arch_do_swap_page_nr(vma->vm_mm, vma, vmf->address,
-> +			pte, vmf->orig_pte, 1);
->  
->  	folio_unlock(folio);
->  	if (folio != swapcache && swapcache) {
+diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
+index 97e5a0ccd233..71c67f47d0ad 100644
+--- a/drivers/net/wireless/ath/ath12k/core.h
++++ b/drivers/net/wireless/ath/ath12k/core.h
+@@ -144,7 +144,7 @@ struct ath12k_ext_irq_grp {
+ 	u32 grp_id;
+ 	u64 timestamp;
+ 	struct napi_struct napi;
+-	struct net_device napi_ndev;
++	struct net_device *napi_ndev;
+ };
+ 
+ struct ath12k_smbios_bdf {
+diff --git a/drivers/net/wireless/ath/ath12k/pci.c b/drivers/net/wireless/ath/ath12k/pci.c
+index 14954bc05144..322f0ad1b12d 100644
+--- a/drivers/net/wireless/ath/ath12k/pci.c
++++ b/drivers/net/wireless/ath/ath12k/pci.c
+@@ -350,6 +350,7 @@ static void ath12k_pci_free_ext_irq(struct ath12k_base *ab)
+ 			free_irq(ab->irq_num[irq_grp->irqs[j]], irq_grp);
+ 
+ 		netif_napi_del(&irq_grp->napi);
++		free_netdev(irq_grp->napi_ndev);
+ 	}
+ }
+ 
+@@ -560,7 +561,7 @@ static irqreturn_t ath12k_pci_ext_interrupt_handler(int irq, void *arg)
+ static int ath12k_pci_ext_irq_config(struct ath12k_base *ab)
+ {
+ 	struct ath12k_pci *ab_pci = ath12k_pci_priv(ab);
+-	int i, j, ret, num_vectors = 0;
++	int i, j, n, ret, num_vectors = 0;
+ 	u32 user_base_data = 0, base_vector = 0, base_idx;
+ 
+ 	base_idx = ATH12K_PCI_IRQ_CE0_OFFSET + CE_COUNT_MAX;
+@@ -577,8 +578,11 @@ static int ath12k_pci_ext_irq_config(struct ath12k_base *ab)
+ 
+ 		irq_grp->ab = ab;
+ 		irq_grp->grp_id = i;
+-		init_dummy_netdev(&irq_grp->napi_ndev);
+-		netif_napi_add(&irq_grp->napi_ndev, &irq_grp->napi,
++		irq_grp->napi_ndev = alloc_netdev_dummy(0);
++		if (!irq_grp->napi_ndev)
++			return -ENOMEM;
++
++		netif_napi_add(irq_grp->napi_ndev, &irq_grp->napi,
+ 			       ath12k_pci_ext_grp_napi_poll);
+ 
+ 		if (ab->hw_params->ring_mask->tx[i] ||
+@@ -611,6 +615,10 @@ static int ath12k_pci_ext_irq_config(struct ath12k_base *ab)
+ 			if (ret) {
+ 				ath12k_err(ab, "failed request irq %d: %d\n",
+ 					   vector, ret);
++				for (n = 0; n <= i; n++) {
++					irq_grp = &ab->ext_irq_grp[n];
++					free_netdev(irq_grp->napi_ndev);
++				}
+ 				return ret;
+ 			}
+ 		}
+-- 
+2.43.0
 
