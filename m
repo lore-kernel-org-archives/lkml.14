@@ -1,160 +1,90 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9FE131184
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFCE131192
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714772232; cv=none; b=Vf6d4p4bobTChIEARUwOFn9P6XM1nqtjuFEcJoKlvPn9KcTZ1U579wdmtZCwyBlBeFGcwLQ0G+EkuwZSqWpva6ODUMGf5/Wzm/Fsg8FWdjL96VAcZTowUesfnuDPzclGi+2n9H87PapMZAtcKraaTVeRQ8inG7CcCzAv41NJFwU=
+	t=1714772233; cv=none; b=QQ6jFImbZWbAab0+sS6L8ea9Cb/oLmUkZo1OiJ9zAReqZuHe8VCD50+4J/5RIZDmOeiqRvFpBlVHlQN3kf6ApwIDJP4FQDGB7VFcXNsuM45hrBVNZN6Tco+vE+VckqvNzyZ+pgFF1lIFgWrFvfv9nZ6+e7ZCwwUxbTaIP+pVRR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714772232; c=relaxed/simple;
-	bh=fBAyG8ZF/YZRA5320CSXCbxyFfF3cr2FGMyGleTMfpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oXSRZPRh3k2Ev2nPq+nfuqRHZSxncM5iCyGc5z32HiYztPp8JbF3JVJElopWV/6PC6qBg5N3mRAGhiX/PKXXbMRWa+jh3x444ZBkFOD0u9Dl1qOnKf6505y8OwS0K+qsB22vuqFeMJqOlo+R10F9Hi3OTAfOiVYZNVUswZDUpew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Y1Dj/Fdc; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714772233; c=relaxed/simple;
+	bh=T78GnKXhmF90EUMcoihJXbtnP3USZWPjBsko2Q+gE0w=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HEKZRwkeJkMgvr0cZS0q+sqUTM5Gk2C8G/tfNJMAws5MyhqQpsvETuWGjRys1kkH015H5qkKCgpoBbEalpnO7MF7ItnAES06DImX534/Qk4fjjfaXPOtgLP+nmY5UGVuAnX60YlBe00cFyLvM1nZZ89c4mxZobWzU3qXWuYtDI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A2oROz7I; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y1Dj/Fdc"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ed41eb3382so1029675ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:37:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A2oROz7I"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1ec3c838579so1324035ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:37:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714772229; x=1715377029; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jCEzmsJkNVqJjLKEek1G559OvdmwxBqijlKTr/wX13A=;
-        b=Y1Dj/Fdcrt28zdpemderW4vfG5nQpv7mSO1+ItxkOZ3HcvBsR6gXIuduHB5OARerfv
-         PiXygsxbhrS/AHoAlSUKjgPq9WBr5RA0UdIgWSsOUIBurJQi+FtCoAJbE4aKFc5aljK4
-         eUYjzpaMmbiXyg5Yoky7KdwNsRyCsRnUURfD0=
+        d=google.com; s=20230601; t=1714772230; x=1715377030; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pRR7KPd/cLlG8WnQvndczDv6yBxPP3pjh1dorGD2J1c=;
+        b=A2oROz7I7ccpF8L/yzqrHr6oyYtnT2BmZL7PsXAbOZ7bNjfCdWLfSIt65r0tC5l5EN
+         g1A6ZkgznrVOeWgPVGy+74b7yHtwE9G3ksvHpoePG1lU9Cb5nE9WgRXDNSM1I94tY2Xr
+         T1wnJPQzgJdm5WugjhuAD8LBgxF+rzkz1sk8gE1Un7dHuLje3W8RCLtfqw0i7ArimW5x
+         o8Nsq5h9fBNv4FZoRT5HWp0vMmXTvQQVsbvjaqVl1SNrs5kpwXVC3ZUORdn624rUpK9B
+         W1rOkyydBBkF2KWez2C7QJeMmZ9rYUX/PdMbDnUzw8f+Ell0X6Y4xHjJL69z7fkgDt2/
+         yDgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714772229; x=1715377029;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jCEzmsJkNVqJjLKEek1G559OvdmwxBqijlKTr/wX13A=;
-        b=oMEOucyma9O9seRpJlhGVzmlwdr7mcWxIuuukBqKtAam2ke9Pj4ppiwWWoGFSmSJBt
-         mAKDJNoJ6g8fu4taVElRF77QxG/naN4NjRRtWdO7T9p4YtIh+avArGi4FGiaV4lb9yQp
-         yzzaq/ABv0dv8XfBp+Zd8mFFuN4o+Fz6Tt9N/ZeCeR/K6mjLIzTD4ntXvY1GAzqsLQ6R
-         0ANoz9qDMFzhwalMQ3IjeE6qzhXjGEgLyxheWf+tTTbzdQnqe8JZsMLTCmQ83NXkT8fV
-         ZcQevV8FYEvecmeGlPCPNUquyHl1cr5PpJFnEvrAe6LvFCJMzcyYcnmsXkDFGxdhIBUm
-         2SVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1Piu9I9m0er2t2DZ1vA4D/X0delcMiUmpYsJN+/WfLSiA7Wj7oxAzLSEFq+Qx8nx23r+q7yaw/dhEW65fj8B9zFMuqFECouXj3d5t
-X-Gm-Message-State: AOJu0YzXcC22ETvFZsV/OZ1TcHNp+1hiOoLBK3SSbftbrDaJLHMkO6Wx
-	5OQHk6kKrGtXfP1OQrtPLX05j76mztopzI/lwwyJZ/8W1CoeebMvolVaH1lqWQ==
-X-Google-Smtp-Source: AGHT+IF/zJruBSwTUZM1XWyjeIBA3vGsxjzRfWQyTdUJXMgAkw1voDP5oQ1EzE0p/oXqEfQ5DM+Pdw==
-X-Received: by 2002:a17:902:bb17:b0:1ec:7b0d:9eb9 with SMTP id im23-20020a170902bb1700b001ec7b0d9eb9mr3415331plb.64.1714772229039;
-        Fri, 03 May 2024 14:37:09 -0700 (PDT)
-Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:fb6a:b54b:7580:64f3])
-        by smtp.gmail.com with ESMTPSA id j12-20020a170903024c00b001eb51a46f5bsm3729134plh.43.2024.05.03.14.37.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 14:37:08 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: dri-devel@lists.freedesktop.org,
-	Maxime Ripard <mripard@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benni Steini <bennisteinir@gmail.com>,
-	Joel Selvaraj <jo@jsfamily.in>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-kernel@vger.kernel.org
-Subject: [RFT PATCH v2 19/48] drm/panel: novatek-nt36672a: Don't call unprepare+disable at shutdown/remove
-Date: Fri,  3 May 2024 14:33:00 -0700
-Message-ID: <20240503143327.RFT.v2.19.I67819ba5513d4ef85f254a68b22a3402b4cdf30f@changeid>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-In-Reply-To: <20240503213441.177109-1-dianders@chromium.org>
-References: <20240503213441.177109-1-dianders@chromium.org>
+        d=1e100.net; s=20230601; t=1714772230; x=1715377030;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pRR7KPd/cLlG8WnQvndczDv6yBxPP3pjh1dorGD2J1c=;
+        b=Km9QoSkaJf7U4LoTxd5KCAkIo7jDS3lf5XNOyVhaWLztvjxmpIT25cPJFc1LJA81yu
+         X4rQiLudQjmTHnlAkilKo0jxvUZXB0ddv5Ipin9JvUfVzqxJ9Br/MvYewU8A9Us41oeP
+         ELDc5oXpbtigvDICp/Xa/yWJovC/GHNOGz9frntUUdVm/UPoCS0B+KQFqDq3YelDmUCi
+         zRaIccUhagrHrCwv85q3Cju/zS+9Jno0yyvhdFPIRpxBWUlZxrTuxyt9K+EXRqyc94c7
+         bS3ZhQVJTtw+cfu7TbExsdqKZ1+eGnZwp996drMWF79VcxXjRV2iTOD102kSuNU+1RvT
+         7MpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMDHnJBT2i1qROugkg5Pk+CvTb56ydD3+H53dNTl/YRr8pjEd0CgRTRz0GeG8sc7+5A39O+XY6BJa+4Pxzh/sgNjVGKBmsnWsJMMum
+X-Gm-Message-State: AOJu0YzYx7R/GXoRt1arm561MsnXgPwbT1uM70hVneRT3zqnFL6rOrpz
+	hm/GBtjyQfb+GgTuyAzHmGR6bJY2PXwN2aH+bBB1NBh2J4DFietFXDFNO8Fw361+qeDijmcxCbs
+	VQg==
+X-Google-Smtp-Source: AGHT+IGEgo4+diPoiyuTt2VZgasus5eMXUGK6JnD9ACDfLFd+or60o4UK1xIIX86iYt1vb7LAQ+9d2Drm40=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:903:41c2:b0:1eb:ac97:6c35 with SMTP id
+ u2-20020a17090341c200b001ebac976c35mr165223ple.9.1714772230517; Fri, 03 May
+ 2024 14:37:10 -0700 (PDT)
+Date: Fri,  3 May 2024 14:32:26 -0700
+In-Reply-To: <20240430162133.337541-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240430162133.337541-1-seanjc@google.com>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <171469160805.1008906.10298105633797388106.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: selftests: Require KVM_CAP_USER_MEMORY2 for tests
+ that create memslots
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Shuah Khan <skhan@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"
 
-It's the responsibility of a correctly written DRM modeset driver to
-call drm_atomic_helper_shutdown() at shutdown time and that should be
-disabling / unpreparing the panel if needed. Panel drivers shouldn't
-be calling these functions themselves.
+On Tue, 30 Apr 2024 09:21:33 -0700, Sean Christopherson wrote:
+> Explicitly require KVM_CAP_USER_MEMORY2 for selftests that create memslots,
+> i.e. skip selftests that need memslots instead of letting them fail on
+> KVM_SET_USER_MEMORY_REGION2.  While it's ok to take a dependency on new
+> kernel features, selftests should skip gracefully instead of failing hard
+> when run on older kernels.
+> 
+> 
+> [...]
 
-A recent effort was made to fix as many DRM modeset drivers as
-possible [1] [2] [3] and most drivers are fixed now.
+Applied somewhat quickly to kvm-x86 selftests, but feel free to provide feedback.
+It's the last commit in "selftests", and I don't have any more selftests patches
+in the queue for 6.10, so making changes if someone has a better idea should be
+quite easy.
 
-A grep through mainline for compatible strings used by this driver
-indicates that it is used by Qualcomm boards. The Qualcomm driver
-appears to be correctly calling drm_atomic_helper_shutdown() so we can
-remove the calls.
+[1/1] KVM: selftests: Require KVM_CAP_USER_MEMORY2 for tests that create memslots
+      https://github.com/kvm-x86/linux/commit/8a53e1302133
 
-[1] https://lore.kernel.org/r/20230901234015.566018-1-dianders@chromium.org
-[2] https://lore.kernel.org/r/20230901234202.566951-1-dianders@chromium.org
-[3] https://lore.kernel.org/r/20230921192749.1542462-1-dianders@chromium.org
-
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Benni Steini <bennisteinir@gmail.com>
-Cc: Joel Selvaraj <jo@jsfamily.in>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- Only handle 1 panel per patch.
-- Split removal of prepared/enabled from handling of remove/shutdown.
-
- drivers/gpu/drm/panel/panel-novatek-nt36672a.c | 17 -----------------
- 1 file changed, 17 deletions(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-novatek-nt36672a.c b/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
-index 35aace79613a..c2abd20e0734 100644
---- a/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
-+++ b/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
-@@ -656,14 +656,6 @@ static void nt36672a_panel_remove(struct mipi_dsi_device *dsi)
- 	struct nt36672a_panel *pinfo = mipi_dsi_get_drvdata(dsi);
- 	int err;
- 
--	err = drm_panel_unprepare(&pinfo->base);
--	if (err < 0)
--		dev_err(&dsi->dev, "failed to unprepare panel: %d\n", err);
--
--	err = drm_panel_disable(&pinfo->base);
--	if (err < 0)
--		dev_err(&dsi->dev, "failed to disable panel: %d\n", err);
--
- 	err = mipi_dsi_detach(dsi);
- 	if (err < 0)
- 		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", err);
-@@ -671,14 +663,6 @@ static void nt36672a_panel_remove(struct mipi_dsi_device *dsi)
- 	drm_panel_remove(&pinfo->base);
- }
- 
--static void nt36672a_panel_shutdown(struct mipi_dsi_device *dsi)
--{
--	struct nt36672a_panel *pinfo = mipi_dsi_get_drvdata(dsi);
--
--	drm_panel_disable(&pinfo->base);
--	drm_panel_unprepare(&pinfo->base);
--}
--
- static const struct of_device_id tianma_fhd_video_of_match[] = {
- 	{ .compatible = "tianma,fhd-video", .data = &tianma_fhd_video_panel_desc },
- 	{ },
-@@ -692,7 +676,6 @@ static struct mipi_dsi_driver nt36672a_panel_driver = {
- 	},
- 	.probe = nt36672a_panel_probe,
- 	.remove = nt36672a_panel_remove,
--	.shutdown = nt36672a_panel_shutdown,
- };
- module_mipi_dsi_driver(nt36672a_panel_driver);
- 
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
-
+--
+https://github.com/kvm-x86/linux/tree/next
