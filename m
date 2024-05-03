@@ -1,85 +1,129 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D7B12B89
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575131465B5;
+	Fri,  3 May 2024 07:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714723086; cv=none; b=UVbF0427AQqIYvJc12dM2v/dIYdXgOy+P49/LUIRya/j+Yt62cyBQLOAlG+TGgi5nk4jClfUX+8x8MFqgpK2sQX4uK+AsCACxF2dZ1bqQykHKZA+bUHG8Q5P3ggUb4Pgu4XTzJkvpywS7HJPb+vfIFHBkGmzDiXrrO8a86vs9W0=
+	t=1714723156; cv=none; b=bHkcykX++i2bmlZKV/Umn5l9XU3kvmcZIo1vUCUoQ5+hUYDv1FlEQ4Gei6EqYLOpazBBoCfzwFn832StsJZpIux6DaHC/nlUoNZY59+1mlRrOumhuSuI2f/vrhEABbRAhEEGa8ii9mwIv7W8bLnPFPgAqI38sINLtrmQF0Yo7hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714723086; c=relaxed/simple;
-	bh=9lds1dTNJm20KO2gDxu3lgrciPV698y5y+f6AzLSwyE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dzjopa3guE/isZCtgbbg13Ggshaj4yX6uBvqo70oYnex3uM/ZMVdNAlCmGjtc2c6MOB8VDg5AJx+apCL4YIgYFXyXD+hqSx1j6UqaLRlImT7Etv6yPXMdN/pLG77UZd8jqWKyPJ/bRebNXnYbkm8mVdIWMxhibUSoKzg+LoSR7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K5JhXjhu; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714723156; c=relaxed/simple;
+	bh=f7H+OF65L/hmMeYTdnOeeM0VJ0Havz3E8X5ne5zG0X0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fxfXw8iOEeMRPtYo7owbuoqrLQVelU/eR/fcVfMD2pGyXrO7lYP+REcdf8EUstUt6MQYMgCAQEU49DVxEZ6MpiiLH1faIDpPmm6IOH99bEQNuoeszjJEnxpWcqd4yhxNpfcyFIMH/n02JffUdg7gsyIynABmotkFepHqNZEU6hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=fpFYMV31; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K5JhXjhu"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de6074a464aso4849337276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 00:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714723084; x=1715327884; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9lds1dTNJm20KO2gDxu3lgrciPV698y5y+f6AzLSwyE=;
-        b=K5JhXjhucB4znLF+uB/FGtrBnpkQ6Ed1SqK6TBeAL/h9zDvnt3Ht35b5qknF/ut0Lz
-         Egr0k1YMgX4ZyYmbJSeSczilgscglEImgPLM175CZ+on0CiQrtiC95KJRFWRSylzk/bO
-         pMopCT3MEWyq5DbQLX6b6mSfeyqmvUDJsorft1j4otZ18uyCSmvkE3/E0/rxc1i+Y/J4
-         WAPAmcypM76lvsEn0mBU5LyGMS2rYkuJDOE0xevaEOjzEk0rD3/se15RzZMktNWGu+wv
-         lhQKCHW7Uy7DSVBHx7lqWF47lgoQUFP5CCXO5Hr+EI3LhMBozgQLtc36O8HIWmgaM3rX
-         1flw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714723084; x=1715327884;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9lds1dTNJm20KO2gDxu3lgrciPV698y5y+f6AzLSwyE=;
-        b=cnB5PHD+EtrsXUZxjUxnO8SdoNA8fvf9BdI0x3npQpXUtc6G8EqJ1Pp1c7QTezJvUY
-         Zk22jXUT24ltwF6Q1HZr6nFjc2xucJM24JzukAHkP9+oaua7EY4IDrvtrGmKrpqtKSM3
-         nFczmIjDAHZM6BenrDVCOhPZCgbaejRs+BvKA/VzDXA+hA/87Naz/VDW26RPWRbswlSR
-         HGJsBPaXb2S+AOl5j1oEvzQHq3STRiQRIfW/Im0lVha2NhUgzfTldQ2SubFhzUhsFXAA
-         fwooI6d8VrbiWdKbgwr3EZLj6A5iXm9KbqIZG28dodKAtzzokUlPVj6QjoCxR3nh5gMX
-         651A==
-X-Forwarded-Encrypted: i=1; AJvYcCV9gAE4ZTq5h5q4B9ei2q0lHC0RTez+jJ3WcUFhvsxOCH5jKBD8HfhR3issK7diHVNxwBpAxKn6B86Q7//jUiOpPPrZa1liOUpdVXca
-X-Gm-Message-State: AOJu0Yxsx4RBjV4fvngiWvlQcKG9iJOT0RmJAXfCoAzUzfE0G/v50obf
-	hyCRA7l4pJ8PeK9vGIQwIjP/b9uZ2dQAOsgcLlwIxIbU8MezhdzKaWc2luszob6KnrC/uK2Qu0a
-	+MdqoQMPlbovgfNNE5lzpkpGvW7dSeakT9KlClw==
-X-Google-Smtp-Source: AGHT+IEG4nOciPICYFkjWxdsB7yxrB7cRVj6SjUMBpSK0kxFtgIH4MKqI3NxijFyX2wkk8IVPl+GECzNHLPUJ6D97IM=
-X-Received: by 2002:a25:cec5:0:b0:de5:6a82:49dd with SMTP id
- x188-20020a25cec5000000b00de56a8249ddmr2210883ybe.13.1714723083855; Fri, 03
- May 2024 00:58:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="fpFYMV31"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 314C012000C;
+	Fri,  3 May 2024 10:52:56 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 314C012000C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1714722776;
+	bh=vPYAXAEpU06TIJUWj2rEgevmEmcxPqtBx4Bo9O+8NsY=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
+	b=fpFYMV31LZZ4ynG08Pe03cA8a9KzeMzVOBBPvA7yhE4GkpadK25lCQuKD2i2VquMz
+	 Yz2DhND7KNfEk2+ltk4DG2n5sHRn/ShXRUyQBX5z9Vtq/SzCVzCDXnu9WFmmsJPx48
+	 8HvcyN8as4yWi9tBk9eSuA3QviSdPYK2y5i8T9XOvrLluchZWqS3KvWT8nEmmMbGKI
+	 tbTiIsbUOP7BUvWAOvkkDjZapdbfl2s/lJPO9H7UBpNw9HFaXqduhJbwm6j/zoYJxD
+	 82MWVXvE5/336Red8Oe25+0pqPkLKRhcuELTb2VJ0iOdTsbKXVG3CxND1nltay1lBr
+	 /xQsNWMXw7uwA==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri,  3 May 2024 10:52:55 +0300 (MSK)
+Received: from localhost (100.64.160.123) by p-i-exch-sc-m02.sberdevices.ru
+ (172.16.192.103) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 3 May
+ 2024 10:52:55 +0300
+Date: Fri, 3 May 2024 10:52:55 +0300
+From: Dmitry Rokosov <ddrokosov@salutedevices.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+CC: <neil.armstrong@linaro.org>, <jbrunet@baylibre.com>,
+	<mturquette@baylibre.com>, <khilman@baylibre.com>,
+	<martin.blumenstingl@googlemail.com>, <glaroque@baylibre.com>,
+	<rafael@kernel.org>, <rui.zhang@intel.com>, <lukasz.luba@arm.com>,
+	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <kernel@salutedevices.com>, <rockosov@gmail.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 0/2] thermal: amlogic: introduce A1 SoC family Thermal
+ Sensor controller
+Message-ID: <20240503075221.suupx27777tvhdvu@CAB-WSD-L081021>
+References: <20240328191322.17551-1-ddrokosov@salutedevices.com>
+ <38ba3618-2a67-4e21-b08d-7e382411e51a@linaro.org>
+ <20240417084007.uzg2uc7gwb6mi7bi@CAB-WSD-L081021>
+ <20240426073106.3yl2dplvauper3lg@CAB-WSD-L081021>
+ <35c9dbe9-9166-4358-bfa9-99f205acd8de@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424185039.1707812-1-opendmb@gmail.com> <20240424185039.1707812-2-opendmb@gmail.com>
-In-Reply-To: <20240424185039.1707812-2-opendmb@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 3 May 2024 09:57:53 +0200
-Message-ID: <CACRpkdZKdnDqDMnWFaZwwVW1BqcOMa8qFiu-aUbQa7UnXFtcnQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: brcmstb: add gpio-ranges
-To: Doug Berger <opendmb@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Phil Elwell <phil@raspberrypi.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <35c9dbe9-9166-4358-bfa9-99f205acd8de@linaro.org>
+User-Agent: NeoMutt/20220415
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 185030 [May 03 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 19 0.3.19 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b, {Tracking_uf_ne_domains}, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;git.kernel.org:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/05/03 06:33:00
+X-KSMG-LinksScanning: Clean, bases: 2024/05/03 06:33:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/03 04:34:00 #25076274
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Wed, Apr 24, 2024 at 8:51=E2=80=AFPM Doug Berger <opendmb@gmail.com> wro=
-te:
+Hello Daniel,
 
-> Add optional gpio-ranges device-tree property to the Broadcom
-> Set-Top-Box GPIO controller.
->
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
+On Fri, Apr 26, 2024 at 09:57:29AM +0200, Daniel Lezcano wrote:
+> 
+> Hi Dmitry,
+> 
+> On 26/04/2024 09:31, Dmitry Rokosov wrote:
+> > Hello Neil,
+> > 
+> > I hope you're doing well. I was wondering if you could assist me with
+> > below problem.
+> > 
+> > I'm a bit confused about which kernel repository the series was applied
+> > to. I asked Daniel about it, but unfortunately, I didn't receive any
+> > feedback from him. Could you provide some clarification on this matter?
+> > 
+> > Thank you in advance for your help.
+> 
+> I was OoO the last two weeks.
+> 
+> Your series is in my tree [1], which is pulled automatically by the linux-pm
+> tree in its bleeding-edge branch.
+> 
+> Today, this branch will move to the linux-next branch [2] which will also be
+> pulled by the linux-pm/next branch automatically.
+> 
+> Hope that helps and sorry for the delay to answer
+> 
+>   -- Daniel
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/log/?h=thermal/bleeding-edge
+> 
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/log/?h=thermal/linux-next
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks a lot for the update! Now I see the patches in the above repos.
 
-Yours,
-Linus Walleij
+-- 
+Thank you,
+Dmitry
