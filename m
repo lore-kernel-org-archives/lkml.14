@@ -1,288 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5667984D3F;
-	Fri,  3 May 2024 22:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A3258AB9;
+	Fri,  3 May 2024 22:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714776635; cv=none; b=dP45/1nc0gspCBynEQnDItWQOOpoP1uddgC9CQh5p6ac0tObmkw/drn9yieidk7eMfbweBpTBsyaR3eQeVn2Z3Vx+3dVNCEMOvBnsHWevxAG/QBbDMU2BzZqLvCQwmB/9rdWZM4PAl/w1SahKcTrvoyQvoRugR/lior5tl5qsuU=
+	t=1714776741; cv=none; b=VVwPHq3GOujYL/0Cq+lgcFTwHgGNYOc1r9t6N6/EGeIOe8p/kgjiFkTAxvIJMeHm/sLXGiBEAVKVPFh9Sfok+z0y/1JHKXhErMAKZFjD33ny0QuhOtRhQPkcdF0C3832+UdUB5jxZL3PKRmFxrR/wYJnq4Ko3lkWx+GdJUClS5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714776635; c=relaxed/simple;
-	bh=H4Hk+2/qx4vSRYTE2tHxHStdgrk9jjJGXi0yqLkPahk=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=DZVB51T+W6QPHji2a0mN+m6xFSSElv5k7nw1uN7R39oQshGXxxtOLRAE/NMycxNFwpVxxLjVpWvRNGCXB11QGwSwO8JCsoPKqKmLURcBkJujbBOZcMLtzLmFcsGzOAYUrnAf/i9AOs4/3e9LV6So9zujkQ4dhauMfWS0mMq99Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 000F9C4AF49;
-	Fri,  3 May 2024 22:50:34 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1s31je-00000000NM5-1aH2;
-	Fri, 03 May 2024 18:50:34 -0400
-Message-ID: <20240503225034.243536891@goodmis.org>
-User-Agent: quilt/0.68
-Date: Fri, 03 May 2024 18:50:18 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org
-Subject: [for-linus][PATCH 5/9] tracefs: Reset permissions on remount if permissions are options
-References: <20240503225013.519028385@goodmis.org>
+	s=arc-20240116; t=1714776741; c=relaxed/simple;
+	bh=+k7smC01PbURrogCBgEc+38Tqvw0xyJMXL4rJUbsaSA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iP/WLEJSOxgmOLZGTc166ZjVvUoWquatAVDMAvGJC1GeeFcKJprr9IsZrQyuIIZj03DtsfHpjAIvCrGfhDOpc3tf+t7ddP/U2oVnXy8FRS9hiPlarfraLi8xWJCsc28a+aqvaP/DxUalx5SU2IqfHgJUfoo7fe6y465V3iySLcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Sat, 4 May
+ 2024 01:52:14 +0300
+Received: from [192.168.211.130] (10.0.253.138) by Ex16-01.fintech.ru
+ (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Sat, 4 May 2024
+ 01:52:13 +0300
+Message-ID: <73c24dd7-3cd8-4875-a33d-b546a346a24d@fintech.ru>
+Date: Fri, 3 May 2024 15:52:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: usb: siano: fix endpoint checks in
+ smsusb_init_device()
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Dongliang Mu <dzm91@hust.edu.cn>,
+	Andrew Morton <akpm@linux-foundation.org>, Alan Stern
+	<stern@rowland.harvard.edu>, <linux-media@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>,
+	<syzbot+12002a39b8c60510f8fb@syzkaller.appspotmail.com>
+References: <20240409143634.33230-1-n.zhandarovich@fintech.ru>
+ <20240503165833.4781fb4a@sal.lan>
+ <4069e01b-09d1-49e6-b053-3f6b99dd9405@fintech.ru>
+ <20240503222054.45ed636f@sal.lan>
+Content-Language: en-US
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+In-Reply-To: <20240503222054.45ed636f@sal.lan>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hi
 
-There's an inconsistency with the way permissions are handled in tracefs.
-Because the permissions are generated when accessed, they default to the
-root inode's permission if they were never set by the user. If the user
-sets the permissions, then a flag is set and the permissions are saved via
-the inode (for tracefs files) or an internal attribute field (for
-eventfs).
+On 5/3/24 14:20, Mauro Carvalho Chehab wrote:
+> Em Fri, 3 May 2024 09:14:37 -0700
+> Nikita Zhandarovich <n.zhandarovich@fintech.ru> escreveu:
+> 
+>>> Did you test it on what devices? I'm not sure if all siano devices
+>>> are bulk. Why did you decide to use usb_endpoint_is_bulk_(in|out)
+>>> instead of usb_endpoint_dir_(in|out)?  
+>>
+>> I did not have the hardware required to test it properly, I'm afraid.
+>> I made sure to point that out in the patch description.
+>>
+>> As for siano devices possibly having different endpoints type apart from
+>> bulk, I was relying on the rest of the driver code to determine just
+>> that (which is maybe somewhat flawed in this case). 
+> 
+> Most digital TV devices also have ISOC endpoints. I'm not sure about
+> Siano.
+After a quick glance at Siano driver I am not sure about that being true
+specifically for Siano devices just yet, but I understand your point
+nonetheless.
+> 
+>> Since
+>> smsusb_submit_urb() (and some other functions like usb_rcvbulkpipe())
+>> works exclusively with bulk types, I did not feel the need to even
+>> expect int types, for instance.
+> 
+> The problem is not with int endpoints. Most media devices have isoc
+> endpoints. There are even cases that different device models supported
+> by the same driver have some bulk and some isoc endpoints. See em28xx 
+> driver for instance: most devices are isoc only; some have both isoc
+> and bulk; a few have just bulk.
+> 
+> In the specific case of siano, it supports 3 generations of devices
+> (sms1000, sms11xx, sms22xx), each with several submodels. 
+> Those 3 generations have different specs, and sms1000 even have one
+> "boot" USB ID, and one "warm" USB ID, each one with different endpoints.
+> 
+> That's basically why I'm afraid of a patch like this could cause
+> regressions if not properly tested, as it is changing the logic
+> from just detecting the direction to also validate if the endpoint
+> is not isoc.
 
-But if a remount happens that specify the permissions, all the files that
-were not changed by the user gets updated, but the ones that were are not.
-If the user were to remount the file system with a given permission, then
-all files and directories within that file system should be updated.
+Thank you for being so thorough with your answer. I think I
+overestimated how much I should trust current driver implementation. I
+should be (at least, in this case) looking at what hardware expects of
+the driver.
 
-This can cause security issues if a file's permission was updated but the
-admin forgot about it. They could incorrectly think that remounting with
-permissions set would update all files, but miss some.
+Let me try to do a little more research into smsxxxx specs and maybe see
+about getting my hands on some actual devices for testing.
 
-For example:
+> 
+> Regards,
+> Mauro
 
- # cd /sys/kernel/tracing
- # chgrp 1002 current_tracer
- # ls -l
-[..]
- -rw-r-----  1 root root 0 May  1 21:25 buffer_size_kb
- -rw-r-----  1 root root 0 May  1 21:25 buffer_subbuf_size_kb
- -r--r-----  1 root root 0 May  1 21:25 buffer_total_size_kb
- -rw-r-----  1 root lkp  0 May  1 21:25 current_tracer
- -rw-r-----  1 root root 0 May  1 21:25 dynamic_events
- -r--r-----  1 root root 0 May  1 21:25 dyn_ftrace_total_info
- -r--r-----  1 root root 0 May  1 21:25 enabled_functions
-
-Where current_tracer now has group "lkp".
-
- # mount -o remount,gid=1001 .
- # ls -l
- -rw-r-----  1 root tracing 0 May  1 21:25 buffer_size_kb
- -rw-r-----  1 root tracing 0 May  1 21:25 buffer_subbuf_size_kb
- -r--r-----  1 root tracing 0 May  1 21:25 buffer_total_size_kb
- -rw-r-----  1 root lkp     0 May  1 21:25 current_tracer
- -rw-r-----  1 root tracing 0 May  1 21:25 dynamic_events
- -r--r-----  1 root tracing 0 May  1 21:25 dyn_ftrace_total_info
- -r--r-----  1 root tracing 0 May  1 21:25 enabled_functions
-
-Everything changed but the "current_tracer".
-
-Add a new link list that keeps track of all the tracefs_inodes which has
-the permission flags that tell if the file/dir should use the root inode's
-permission or not. Then on remount, clear all the flags so that the
-default behavior of using the root inode's permission is done for all
-files and directories.
-
-Link: https://lore.kernel.org/linux-trace-kernel/20240502200905.529542160@goodmis.org
-
-Cc: stable@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Fixes: 8186fff7ab649 ("tracefs/eventfs: Use root and instance inodes as default ownership")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 29 ++++++++++++++++++
- fs/tracefs/inode.c       | 65 +++++++++++++++++++++++++++++++++++++++-
- fs/tracefs/internal.h    |  7 ++++-
- 3 files changed, 99 insertions(+), 2 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index cc8b838bbe62..15a2a9c3c62b 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -308,6 +308,35 @@ static const struct file_operations eventfs_file_operations = {
- 	.llseek		= generic_file_llseek,
- };
- 
-+/*
-+ * On a remount of tracefs, if UID or GID options are set, then
-+ * the mount point inode permissions should be used.
-+ * Reset the saved permission flags appropriately.
-+ */
-+void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
-+{
-+	struct eventfs_inode *ei = ti->private;
-+
-+	if (!ei)
-+		return;
-+
-+	if (update_uid)
-+		ei->attr.mode &= ~EVENTFS_SAVE_UID;
-+
-+	if (update_gid)
-+		ei->attr.mode &= ~EVENTFS_SAVE_GID;
-+
-+	if (!ei->entry_attrs)
-+		return;
-+
-+	for (int i = 0; i < ei->nr_entries; i++) {
-+		if (update_uid)
-+			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_UID;
-+		if (update_gid)
-+			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_GID;
-+	}
-+}
-+
- /* Return the evenfs_inode of the "events" directory */
- static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
- {
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 5545e6bf7d26..52aa14bd2994 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -30,20 +30,47 @@ static struct vfsmount *tracefs_mount;
- static int tracefs_mount_count;
- static bool tracefs_registered;
- 
-+/*
-+ * Keep track of all tracefs_inodes in order to update their
-+ * flags if necessary on a remount.
-+ */
-+static DEFINE_SPINLOCK(tracefs_inode_lock);
-+static LIST_HEAD(tracefs_inodes);
-+
- static struct inode *tracefs_alloc_inode(struct super_block *sb)
- {
- 	struct tracefs_inode *ti;
-+	unsigned long flags;
- 
- 	ti = kmem_cache_alloc(tracefs_inode_cachep, GFP_KERNEL);
- 	if (!ti)
- 		return NULL;
- 
-+	spin_lock_irqsave(&tracefs_inode_lock, flags);
-+	list_add_rcu(&ti->list, &tracefs_inodes);
-+	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
-+
- 	return &ti->vfs_inode;
- }
- 
-+static void tracefs_free_inode_rcu(struct rcu_head *rcu)
-+{
-+	struct tracefs_inode *ti;
-+
-+	ti = container_of(rcu, struct tracefs_inode, rcu);
-+	kmem_cache_free(tracefs_inode_cachep, ti);
-+}
-+
- static void tracefs_free_inode(struct inode *inode)
- {
--	kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
-+	struct tracefs_inode *ti = get_tracefs(inode);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&tracefs_inode_lock, flags);
-+	list_del_rcu(&ti->list);
-+	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
-+
-+	call_rcu(&ti->rcu, tracefs_free_inode_rcu);
- }
- 
- static ssize_t default_read_file(struct file *file, char __user *buf,
-@@ -313,6 +340,8 @@ static int tracefs_apply_options(struct super_block *sb, bool remount)
- 	struct tracefs_fs_info *fsi = sb->s_fs_info;
- 	struct inode *inode = d_inode(sb->s_root);
- 	struct tracefs_mount_opts *opts = &fsi->mount_opts;
-+	struct tracefs_inode *ti;
-+	bool update_uid, update_gid;
- 	umode_t tmp_mode;
- 
- 	/*
-@@ -332,6 +361,25 @@ static int tracefs_apply_options(struct super_block *sb, bool remount)
- 	if (!remount || opts->opts & BIT(Opt_gid))
- 		inode->i_gid = opts->gid;
- 
-+	if (remount && (opts->opts & BIT(Opt_uid) || opts->opts & BIT(Opt_gid))) {
-+
-+		update_uid = opts->opts & BIT(Opt_uid);
-+		update_gid = opts->opts & BIT(Opt_gid);
-+
-+		rcu_read_lock();
-+		list_for_each_entry_rcu(ti, &tracefs_inodes, list) {
-+			if (update_uid)
-+				ti->flags &= ~TRACEFS_UID_PERM_SET;
-+
-+			if (update_gid)
-+				ti->flags &= ~TRACEFS_GID_PERM_SET;
-+
-+			if (ti->flags & TRACEFS_EVENT_INODE)
-+				eventfs_remount(ti, update_uid, update_gid);
-+		}
-+		rcu_read_unlock();
-+	}
-+
- 	return 0;
- }
- 
-@@ -398,7 +446,22 @@ static int tracefs_d_revalidate(struct dentry *dentry, unsigned int flags)
- 	return !(ei && ei->is_freed);
- }
- 
-+static void tracefs_d_iput(struct dentry *dentry, struct inode *inode)
-+{
-+	struct tracefs_inode *ti = get_tracefs(inode);
-+
-+	/*
-+	 * This inode is being freed and cannot be used for
-+	 * eventfs. Clear the flag so that it doesn't call into
-+	 * eventfs during the remount flag updates. The eventfs_inode
-+	 * gets freed after an RCU cycle, so the content will still
-+	 * be safe if the iteration is going on now.
-+	 */
-+	ti->flags &= ~TRACEFS_EVENT_INODE;
-+}
-+
- static const struct dentry_operations tracefs_dentry_operations = {
-+	.d_iput = tracefs_d_iput,
- 	.d_revalidate = tracefs_d_revalidate,
- 	.d_release = tracefs_d_release,
- };
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 15c26f9aaad4..29f0c999975b 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -11,8 +11,12 @@ enum {
- };
- 
- struct tracefs_inode {
--	struct inode            vfs_inode;
-+	union {
-+		struct inode            vfs_inode;
-+		struct rcu_head		rcu;
-+	};
- 	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
-+	struct list_head	list;
- 	unsigned long           flags;
- 	void                    *private;
- };
-@@ -73,6 +77,7 @@ struct dentry *tracefs_end_creating(struct dentry *dentry);
- struct dentry *tracefs_failed_creating(struct dentry *dentry);
- struct inode *tracefs_get_inode(struct super_block *sb);
- 
-+void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid);
- void eventfs_d_release(struct dentry *dentry);
- 
- #endif /* _TRACEFS_INTERNAL_H */
--- 
-2.43.0
-
-
+With regards,
+Nikita
