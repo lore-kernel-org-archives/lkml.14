@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44F015380F
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD4915442C
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:14:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714742056; cv=none; b=rMqP3h/09vVZYs8iw0mL7RCXyI8b0lFipt831Kl9Gzi0iI81Mo1M0atSKb0mrALbyYn0IkAiqCPweyMHpYHz8SVxQU0aysWShMRp6DuFuEkdLUiFKkUj0IqRNcGlp2ccmodSZEl1EZjHcxoyISC0aqzWX5bP9ctIkYUWCPLCZiw=
+	t=1714742054; cv=none; b=WOirL4RSv7k8joAK3kyfCZxdBWofMWhe6/YDWBsTyS5DekZdr0hnU/AlG6SHf8SizqbS3gtTu3+7Zcavx1/3swzeIQODJSV1vZl3bKJSrTJENdF+3naSO9dJhQ1RkSFhKM95I/Geytr7Y57s1zM8OxVRBl/h7OOIAbI26mHLWAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714742056; c=relaxed/simple;
-	bh=/iDFIYH+z3/L7MftiAaRft+d2EzDdPb0+RUH75GhE2Y=;
+	s=arc-20240116; t=1714742054; c=relaxed/simple;
+	bh=f8U15C2FskeHh1Xyvad5ZfX9RonSLWOi12ui6sXzhRI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CuWv39+C7Jm9wefHa7QdoFNHrgw9pPDWGEnQC/6JAY7W54bwJPRlUk6pZzRydjfAm9eAK+/CbnnZzTDlPqg+3lbsX5fwGK1+EAX/FbrIWFVoP6SrNTl9kTEjiIjBZ4igNRz5K7z8a1+nRI+Ei9J6RoRXDrcJEWj/zjirz1LpqzE=
+	 MIME-Version; b=ullGvwt216lLusNEpdiG99LO2/7OENUIBms5UJQLSNdNIllNM4abD1r5/5SAFDwxGHGD87whKxO2LGQkA480jtfRvIlIi4p8qlHDsoZqKFX9wb2JtgNrCz7utgonYfG8fxxCx6C00jcnX8h8GQucSfSK1wURBBnWyTo+WvBXocU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s2sjb-0006EK-6l; Fri, 03 May 2024 15:13:55 +0200
+	id 1s2sjf-0006EP-GH; Fri, 03 May 2024 15:13:59 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s2sjZ-00FiKI-SG; Fri, 03 May 2024 15:13:53 +0200
+	id 1s2sjZ-00FiKP-VA; Fri, 03 May 2024 15:13:53 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s2sjZ-008GHf-2L;
+	id 1s2sjZ-008GIA-2W;
 	Fri, 03 May 2024 15:13:53 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v7 08/12] net: dsa: microchip: init predictable IPV to queue mapping for all non KSZ8xxx variants
-Date: Fri,  3 May 2024 15:13:47 +0200
-Message-Id: <20240503131351.1969097-9-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v7 11/12] net: dsa: microchip: add support DSCP priority mapping
+Date: Fri,  3 May 2024 15:13:50 +0200
+Message-Id: <20240503131351.1969097-12-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240503131351.1969097-1-o.rempel@pengutronix.de>
 References: <20240503131351.1969097-1-o.rempel@pengutronix.de>
@@ -65,120 +65,151 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Init priority to queue mapping in the way as it shown in IEEE 802.1Q
-mapping example.
+Microchip KSZ and LAN variants do not have per port DSCP priority
+configuration. Instead there is a global DSCP mapping table.
+
+This patch provides write access to this global DSCP map. In case entry
+is "deleted", we map corresponding DSCP entry to a best effort prio,
+which is expected to be the default priority for all untagged traffic.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-changes v2:
-- s/ksz_set_default_prio_queue_mapping/ksz9477_set_default_prio_queue_mapping
-- remove error on queue < 0.
----
- drivers/net/dsa/microchip/ksz_common.c | 57 +++++++++++++++-----------
- 1 file changed, 33 insertions(+), 24 deletions(-)
+ drivers/net/dsa/microchip/ksz_common.c |  3 ++
+ drivers/net/dsa/microchip/ksz_dcb.c    | 60 +++++++++++++++++++-------
+ drivers/net/dsa/microchip/ksz_dcb.h    |  2 +
+ 3 files changed, 50 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index 6bf7e81c2f3ac..695748d33c02a 100644
+index 695748d33c02a..95622dec2b28a 100644
 --- a/drivers/net/dsa/microchip/ksz_common.c
 +++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -24,6 +24,7 @@
- #include <linux/of_net.h>
- #include <linux/micrel_phy.h>
- #include <net/dsa.h>
-+#include <net/ieee8021q.h>
- #include <net/pkt_cls.h>
- #include <net/switchdev.h>
+@@ -2360,6 +2360,7 @@ static int ksz_setup(struct dsa_switch *ds)
+ 	ksz_init_mib_timer(dev);
  
-@@ -2720,9 +2721,33 @@ static int ksz_port_mdb_del(struct dsa_switch *ds, int port,
- 	return dev->dev_ops->mdb_del(dev, port, mdb, db);
+ 	ds->configure_vlan_while_not_filtering = false;
++	ds->dscp_prio_mapping_is_global = true;
+ 
+ 	if (dev->dev_ops->setup) {
+ 		ret = dev->dev_ops->setup(ds);
+@@ -3990,6 +3991,8 @@ static const struct dsa_switch_ops ksz_switch_ops = {
+ 	.port_get_default_prio	= ksz_port_get_default_prio,
+ 	.port_set_default_prio	= ksz_port_set_default_prio,
+ 	.port_get_dscp_prio	= ksz_port_get_dscp_prio,
++	.port_add_dscp_prio	= ksz_port_add_dscp_prio,
++	.port_del_dscp_prio	= ksz_port_del_dscp_prio,
+ 	.port_get_apptrust	= ksz_port_get_apptrust,
+ 	.port_set_apptrust	= ksz_port_set_apptrust,
+ };
+diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
+index 80fb322de8f74..5e520c02afd72 100644
+--- a/drivers/net/dsa/microchip/ksz_dcb.c
++++ b/drivers/net/dsa/microchip/ksz_dcb.c
+@@ -310,6 +310,19 @@ int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp)
+ 	return (data >> shift) & mask;
  }
  
-+static int ksz9477_set_default_prio_queue_mapping(struct ksz_device *dev,
-+						  int port)
++static int ksz_set_global_dscp_entry(struct ksz_device *dev, u8 dscp, u8 ipv)
 +{
-+	u32 queue_map = 0;
-+	int ipv;
++	int reg, per_reg, shift;
++	u8 mask;
 +
-+	for (ipv = 0; ipv < dev->info->num_ipvs; ipv++) {
-+		int queue;
++	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
 +
-+		/* Traffic Type (TT) is corresponding to the Internal Priority
-+		 * Value (IPV) in the switch. Traffic Class (TC) is
-+		 * corresponding to the queue in the switch.
-+		 */
-+		queue = ieee8021q_tt_to_tc(ipv, dev->info->num_tx_queues);
-+		if (queue < 0)
-+			return queue;
++	shift = (dscp % per_reg) * (8 / per_reg);
 +
-+		queue_map |= queue << (ipv * KSZ9477_PORT_TC_MAP_S);
-+	}
-+
-+	return ksz_pwrite32(dev, port, KSZ9477_PORT_MRI_TC_MAP__4, queue_map);
++	return ksz_rmw8(dev, reg + (dscp / per_reg), mask << shift,
++			ipv << shift);
 +}
 +
- static int ksz_port_setup(struct dsa_switch *ds, int port)
+ /**
+  * ksz_init_global_dscp_map - Initializes the global DSCP-to-priority mapping
+  * @dev: Pointer to the KSZ switch device structure
+@@ -321,9 +334,7 @@ int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp)
+  */
+ static int ksz_init_global_dscp_map(struct ksz_device *dev)
  {
- 	struct ksz_device *dev = ds->priv;
-+	int ret;
+-	int reg, per_reg, ret, dscp;
+-	u8 data = 0;
+-	u8 mask;
++	int ret, dscp;
  
- 	if (!dsa_is_user_port(ds, port))
- 		return 0;
-@@ -2730,6 +2755,12 @@ static int ksz_port_setup(struct dsa_switch *ds, int port)
- 	/* setup user port */
- 	dev->dev_ops->port_setup(dev, port, false);
- 
-+	if (!is_ksz8(dev)) {
-+		ret = ksz9477_set_default_prio_queue_mapping(dev, port);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/* port_stp_state_set() will be called after to enable the port so
- 	 * there is no need to do anything.
- 	 */
-@@ -3589,8 +3620,7 @@ static int ksz_tc_ets_add(struct ksz_device *dev, int port,
- 
- static int ksz_tc_ets_del(struct ksz_device *dev, int port)
- {
--	int ret, queue, tc_prio, s;
--	u32 queue_map = 0;
-+	int ret, queue;
- 
- 	/* To restore the default chip configuration, set all queues to use the
- 	 * WRR scheduler with a weight of 1.
-@@ -3602,31 +3632,10 @@ static int ksz_tc_ets_del(struct ksz_device *dev, int port)
+ 	/* On KSZ9xxx variants, DSCP remapping is disabled by default.
+ 	 * Enable to have, predictable and reproducible behavior across
+@@ -337,10 +348,8 @@ static int ksz_init_global_dscp_map(struct ksz_device *dev)
  			return ret;
  	}
  
--	switch (dev->info->num_tx_queues) {
--	case 2:
--		s = 2;
--		break;
--	case 4:
--		s = 1;
--		break;
--	case 8:
--		s = 0;
--		break;
--	default:
--		return -EINVAL;
--	}
+-	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
 -
- 	/* Revert the queue mapping for TC-priority to its default setting on
- 	 * the chip.
- 	 */
--	for (tc_prio = 0; tc_prio < dev->info->num_ipvs; tc_prio++) {
--		int queue;
--
--		queue = tc_prio >> s;
--		queue_map |= queue << (tc_prio * KSZ9477_PORT_TC_MAP_S);
--	}
--
--	return ksz_pwrite32(dev, port, KSZ9477_PORT_MRI_TC_MAP__4, queue_map);
-+	return ksz9477_set_default_prio_queue_mapping(dev, port);
+ 	for (dscp = 0; dscp < DSCP_MAX; dscp++) {
+-		int ipv, shift, tt;
++		int ipv, tt;
+ 
+ 		/* Map DSCP to Traffic Type, which is corresponding to the
+ 		 * Internal Priority Value (IPV) in the switch.
+@@ -362,19 +371,40 @@ static int ksz_init_global_dscp_map(struct ksz_device *dev)
+ 		if (ipv < 0)
+ 			return ipv;
+ 
+-		shift = (dscp % per_reg) * (8 / per_reg);
+-		data |= (ipv & mask) << shift;
++		ret = ksz_set_global_dscp_entry(dev, dscp, ipv);
++	}
+ 
+-		if (dscp % per_reg == per_reg - 1) {
+-			ret = ksz_write8(dev, reg + (dscp / per_reg), data);
+-			if (ret)
+-				return ret;
++	return 0;
++}
+ 
+-			data = 0;
+-		}
++int ksz_port_add_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio)
++{
++	struct ksz_device *dev = ds->priv;
++
++	if (prio >= dev->info->num_ipvs)
++		return -ERANGE;
++
++	return ksz_set_global_dscp_entry(dev, dscp, prio);
++}
++
++int ksz_port_del_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio)
++{
++	struct ksz_device *dev = ds->priv;
++	int ipv;
++
++	if (ksz_port_get_dscp_prio(ds, port, dscp) != prio)
++		return 0;
++
++	if (is_ksz8(dev)) {
++		ipv = ieee8021q_tt_to_tc(IEEE8021Q_TT_BE,
++					 dev->info->num_tx_queues);
++		if (ipv < 0)
++			return ipv;
++	} else {
++		ipv = IEEE8021Q_TT_BE;
+ 	}
+ 
+-	return 0;
++	return ksz_set_global_dscp_entry(dev, dscp, ipv);
  }
  
- static int ksz_tc_ets_validate(struct ksz_device *dev, int port,
+ /**
+diff --git a/drivers/net/dsa/microchip/ksz_dcb.h b/drivers/net/dsa/microchip/ksz_dcb.h
+index 254c0e7bdafca..e2065223ba90c 100644
+--- a/drivers/net/dsa/microchip/ksz_dcb.h
++++ b/drivers/net/dsa/microchip/ksz_dcb.h
+@@ -11,6 +11,8 @@
+ int ksz_port_get_default_prio(struct dsa_switch *ds, int port);
+ int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio);
+ int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp);
++int ksz_port_add_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio);
++int ksz_port_del_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio);
+ int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
+ 			  const unsigned char *sel,
+ 			  int nsel);
 -- 
 2.39.2
 
