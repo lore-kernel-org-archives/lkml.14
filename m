@@ -1,191 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7197153BC9
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FA515098B;
+	Fri,  3 May 2024 13:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714743459; cv=none; b=A2ZVaPXaggnSuKc7DQ5gcQBwyabWtQ14VZNquQzBvl/nEdvr4BA97SnvkhFMGanop5I+LUneodcuj+Y9OHETatqy6NHUswMlhDOTv9IBoICf2rfit+m5Uv3A5jxQIxDa2BvFWekL17S4LLRvGLpFR3dsx8uF5ggIlzye/ItuIq8=
+	t=1714743574; cv=none; b=ew0nzqYHbLHUpKp6h7sYjYEHtlvnLNVXSXtQOkvxi2bodL9Qq4nYyk60n6cjefDqW/HYxU1rVoogzoxORG4v8DOcBRUIkLVXjg45DfgeY5biUn76uXlwxu5/TyDGKV9J0+1ar2E+1+T1xsXAsdNsgj9eLvYPh6FpwLE3rwHPh58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714743459; c=relaxed/simple;
-	bh=PckfaEN9GLMYQKxkehM8NbsbWnFBdYLfz1dj4dyqX98=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ID2sIlXydycgA/0nS17UjCK3LGC8hYwjZNM9tTkDNv3mGcsECISEURgZatNw4703HJ6M0DkyYtrvOGaxn0D5IWIs1WdrPRhipnSGhuD7s5JkJg45frtAOBEjh65kISI0jbB/VjCtNjfXi5XLyYpyUPRcGNyiNmljLAR7feGZDpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IXVKDqft; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714743574; c=relaxed/simple;
+	bh=wo0QU62gAcbFwDG11bIh1nXKjLRrclnV6zmqslwIfeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oWZ5b2Ycr492zhS+w6YM/19dR/X4BfEYyf5Hm42HO1cYXCs9If/tp84rGFjL9jYn4/wDLG6rTo2nM1MNir4uN6wOcTxwSonMHO6CBfObf9EQX1q8Iw9B+KD22UsYYDJdn6s90KgcbGWuxR7ISNVYaGtchhRAUGYnrgwd9gEIpNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hj4XE+y7; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IXVKDqft"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714743458; x=1746279458;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PckfaEN9GLMYQKxkehM8NbsbWnFBdYLfz1dj4dyqX98=;
-  b=IXVKDqft1wo88DOOaiTLP7CDmm0yUGBByzq0ls8myXtDYEnojIr1hsr3
-   x6dbe71i+ijvOvPbkPjApx3/MLtI0flww0hZ8/1tSdWlMpoj4TZXe9dn7
-   yvSi1q0IM1VWMRK2U1415G6KlzlV7AaGWOOlLbRXj5CmydnzJOkxVAT+U
-   r4/KrKPsW9pJysVmDdCK/eNLqKHWwE3BS1C5i34+sdvyxJSkwkjXOCyIB
-   2palt58RpDurEjp/1SKgzDTQprOnUMrHlP7Zsn9sKdP9RPooWoE6tztZL
-   sodYtzIVmwP6PkwbVrZQMoh03IgltslsZ0J1tjb2jI8x6Q2qDZMClbC4o
-   Q==;
-X-CSE-ConnectionGUID: TdetRNRHT26cbZ7Ugn1q9w==
-X-CSE-MsgGUID: dd/pa4JAQyCHcL+aVmQC9Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="13499476"
-X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="13499476"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 06:37:37 -0700
-X-CSE-ConnectionGUID: 5uVt1q6bQVGMFjVriNY+Ng==
-X-CSE-MsgGUID: /4kl+Zt0Q9igVn6mU+ExWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="27502243"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by orviesa009.jf.intel.com with ESMTP; 03 May 2024 06:37:36 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>
-Cc: iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] iommu/vt-d: Decouple igfx_off from graphic identity mapping
-Date: Fri,  3 May 2024 21:36:02 +0800
-Message-Id: <20240503133602.78992-2-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240503133602.78992-1-baolu.lu@linux.intel.com>
-References: <20240503133602.78992-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hj4XE+y7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714743543; x=1715348343; i=markus.elfring@web.de;
+	bh=IGI0qz3dQ+k6A0uofqhrJJ6evY2iyX3SxlzugUF9+xc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=hj4XE+y7o7C/GGnH6feTPHHSTb5ZeeZanw9AfycUnW3EUCwkR9guSftjaySEEAzk
+	 fSXVjDe/uWDzNfRp8vul2zb7alMn0argtyLEmTfwEh1oPtPJBpdcVt298qcJ9FgW8
+	 cyshmHA71QySuJre0VUCQQddtsVcDPBUK1UhTtBpmpjvrC0/WoSlNbaS+So5zgNNP
+	 3a9nYJw5JJm1I2cr9YIQ1MgQflHV70N864pHxhzow92e+iGY9CP/f2exD1nu5FePm
+	 BDE5mVCzCAtzS04DXMzKW48ENt+uF/Q9r18EiZ9MZAbututpUi+Rd73brFBEgE6LZ
+	 MfOkqjtNPjoqHjrbBw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MMGuC-1sJsHI3kNK-00Hhez; Fri, 03
+ May 2024 15:39:02 +0200
+Message-ID: <86a187fc-f5c1-4dd2-b04f-4bb645312778@web.de>
+Date: Fri, 3 May 2024 15:39:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2 2/2] ax25: fix potential reference counting leak in
+ ax25_addr_ax25dev
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Duoming Zhou <duoming@zju.edu.cn>, linux-hams@vger.kernel.org,
+ netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ =?UTF-8?Q?J=C3=B6rg_Reuter?= <jreuter@yaina.de>,
+ Paolo Abeni <pabeni@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Lars Kellogg-Stedman <lars@oddbit.com>, Simon Horman <horms@kernel.org>
+References: <cover.1714690906.git.duoming@zju.edu.cn>
+ <74e840d98f2bfc79c6059993b2fc1ed3888faba4.1714690906.git.duoming@zju.edu.cn>
+ <6eac7fc4-9ade-41bb-a861-d7f339b388f6@web.de>
+ <e471ec93-6182-4af0-9584-a35e2680c66d@moroto.mountain>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <e471ec93-6182-4af0-9584-a35e2680c66d@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:nd2DQJfArES+9w/0Cx8G6oyBYfgMbxDGGon9AdjSeBibAva6QhB
+ ARFO7Opz/0DOWAqwFPikyiG6wRJU6a27FBubqwGweudrWiVWgh0G1PB+0zqr5b8trETu5xR
+ p+ps/e8YWVJpqEhsnFR/yKVxF04WJBy6rn0HH4rI4xTEnQAMHc4Jd7xOdjUvO0vSWNLNoE3
+ PQZdAjTASvjJe9nbGpr8g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:YAgKMjnV/vk=;4QojFnJh2CxI5YSQZDmt8TFAuzI
+ rYqA6sJ9XCNZBMDMtBkxGEyU6IBAg6pZmUET1sWt+pC5ezTEyfdX2+xZpS5N4XNqTZtzDY88j
+ VQDAytfii7sqz/WR22PwdqgKtl3M6SQZrpWwbwT0SfrH0lhNO9pT958hO81fnz/DMJrkyR06+
+ tuTcHsU4SKQQATUs5qAZ/0JR3Tbwv4mscPfreVywrj+QVs0Ix8M6vELNRfZuR9QHNT5IsbUXM
+ 2l/5jmK9p/vYatVx0ly9ak2atfkfZVmGL0/WQ+XIJMnC7xqiOa9FT02KKylFihiBe/BWnIKj/
+ Y1X6JaaDDiQV6ITk9uJj9Ttrdl4Ji0E2gicEVh2nKBM+triopNoUOWKSZLbN5kiejtbuVZ0UY
+ Cv+/a+B8o5/9D2bUO5jo18MN/6pd84xmaI/YT06ctX8tGNlb+EXwLZZmo3lWo90U4xE+ptWZS
+ 4fHa8mj7XSXTW+K4tb73f6f5u2+dFCPB3Umi7KJqoCl0/lLxv89/drW2VuJjX8TvJyu6u0HK+
+ /A4gGQ8oEFYSaSXQff6c1/MbfFst7Bnyb8B/bFVxeTl62EDtbOeBw9oDPofqtvHi0XPRFllfN
+ FL5PxLoB3y6/9bNe8pajVU3kaKpZSE9SW+nD/FtQv0enD4bpxkksPCmOJqiw63/BQT7J9S1BF
+ WFT+zRfjeBJs4dGMr4iXpTbN8wAc7XIu8FuAQaoclx90SAW3osOoV8lxUvMiAFcX9VXkpfGtA
+ BN4zHuZruPPVnZOUMGdo/6qSQtsiPYuC3djzI/4rsXPcNGvQgGSGBLZZt/wxtiWusrFENxOe1
+ 9UHhkjC+oV8JqlyNBi/YCykMa0rZ+ufUGiV9G2qqekLGYXsMzZs0bQEQnIz3TjZsID
 
-A kernel command called igfx_off was introduced in commit <ba39592764ed>
-("Intel IOMMU: Intel IOMMU driver"). This command allows the user to
-disable the IOMMU dedicated to SOC-integrated graphic devices.
+> The commit message is fine as-is.  Please stop nit-picking.
 
-Commit <9452618e7462> ("iommu/intel: disable DMAR for g4x integrated gfx")
-used this mechanism to disable the graphic-dedicated IOMMU for some
-problematic devices. Later, more problematic graphic devices were added
-to the list by commit <1f76249cc3beb> ("iommu/vt-d: Declare Broadwell igfx
-dmar support snafu").
+I dare to point recurring improvement possibilities out.
+I became curious if the change acceptance will ever grow accordingly.
 
-On the other hand, commit <19943b0e30b05> ("intel-iommu: Unify hardware
-and software passthrough support") uses the identity domain for graphic
-devices if CONFIG_DMAR_BROKEN_GFX_WA is selected.
-
-+       if (iommu_pass_through)
-+               iommu_identity_mapping = 1;
-+#ifdef CONFIG_DMAR_BROKEN_GFX_WA
-+       else
-+               iommu_identity_mapping = 2;
-+#endif
-...
-
-static int iommu_should_identity_map(struct pci_dev *pdev, int startup)
-{
-+        if (iommu_identity_mapping == 2)
-+                return IS_GFX_DEVICE(pdev);
-...
-
-In the following driver evolution, CONFIG_DMAR_BROKEN_GFX_WA and
-quirk_iommu_igfx() are mixed together, causing confusion in the driver's
-device_def_domain_type callback. On one hand, dmar_map_gfx is used to turn
-off the graphic-dedicated IOMMU as a workaround for some buggy hardware;
-on the other hand, for those graphic devices, IDENTITY mapping is required
-for the IOMMU core.
-
-Commit <4b8d18c0c986> "iommu/vt-d: Remove INTEL_IOMMU_BROKEN_GFX_WA" has
-removed the CONFIG_DMAR_BROKEN_GFX_WA option, so the IDENTITY_DOMAIN
-requirement for graphic devices is no longer needed. Therefore, this
-requirement can be removed from device_def_domain_type() and igfx_off can
-be made independent.
-
-Fixes: 4b8d18c0c986 ("iommu/vt-d: Remove INTEL_IOMMU_BROKEN_GFX_WA")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Link: https://lore.kernel.org/r/20240428032020.214616-1-baolu.lu@linux.intel.com
----
- drivers/iommu/intel/iommu.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index fbbf8fda22f3..2e9811bf2a4e 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -217,12 +217,11 @@ int intel_iommu_sm = IS_ENABLED(CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON);
- int intel_iommu_enabled = 0;
- EXPORT_SYMBOL_GPL(intel_iommu_enabled);
- 
--static int dmar_map_gfx = 1;
- static int intel_iommu_superpage = 1;
- static int iommu_identity_mapping;
- static int iommu_skip_te_disable;
-+static int disable_igfx_iommu;
- 
--#define IDENTMAP_GFX		2
- #define IDENTMAP_AZALIA		4
- 
- const struct iommu_ops intel_iommu_ops;
-@@ -261,7 +260,7 @@ static int __init intel_iommu_setup(char *str)
- 			no_platform_optin = 1;
- 			pr_info("IOMMU disabled\n");
- 		} else if (!strncmp(str, "igfx_off", 8)) {
--			dmar_map_gfx = 0;
-+			disable_igfx_iommu = 1;
- 			pr_info("Disable GFX device mapping\n");
- 		} else if (!strncmp(str, "forcedac", 8)) {
- 			pr_warn("intel_iommu=forcedac deprecated; use iommu.forcedac instead\n");
-@@ -2196,9 +2195,6 @@ static int device_def_domain_type(struct device *dev)
- 
- 		if ((iommu_identity_mapping & IDENTMAP_AZALIA) && IS_AZALIA(pdev))
- 			return IOMMU_DOMAIN_IDENTITY;
--
--		if ((iommu_identity_mapping & IDENTMAP_GFX) && IS_GFX_DEVICE(pdev))
--			return IOMMU_DOMAIN_IDENTITY;
- 	}
- 
- 	return 0;
-@@ -2499,9 +2495,6 @@ static int __init init_dmars(void)
- 		iommu_set_root_entry(iommu);
- 	}
- 
--	if (!dmar_map_gfx)
--		iommu_identity_mapping |= IDENTMAP_GFX;
--
- 	check_tylersburg_isoch();
- 
- 	ret = si_domain_init(hw_pass_through);
-@@ -2592,7 +2585,7 @@ static void __init init_no_remapping_devices(void)
- 		/* This IOMMU has *only* gfx devices. Either bypass it or
- 		   set the gfx_mapped flag, as appropriate */
- 		drhd->gfx_dedicated = 1;
--		if (!dmar_map_gfx)
-+		if (disable_igfx_iommu)
- 			drhd->ignored = 1;
- 	}
- }
-@@ -4621,7 +4614,7 @@ static void quirk_iommu_igfx(struct pci_dev *dev)
- 		return;
- 
- 	pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
--	dmar_map_gfx = 0;
-+	disable_igfx_iommu = 1;
- }
- 
- /* G4x/GM45 integrated gfx dmar support is totally busted. */
-@@ -4702,8 +4695,8 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
- 
- 	if (!(ggc & GGC_MEMORY_VT_ENABLED)) {
- 		pci_info(dev, "BIOS has allocated no shadow GTT; disabling IOMMU for graphics\n");
--		dmar_map_gfx = 0;
--	} else if (dmar_map_gfx) {
-+		disable_igfx_iommu = 1;
-+	} else if (!disable_igfx_iommu) {
- 		/* we have to ensure the gfx device is idle before we flush */
- 		pci_info(dev, "Disabling batched IOTLB flush on Ironlake\n");
- 		iommu_set_dma_strict();
--- 
-2.34.1
-
+Regards,
+Markus
