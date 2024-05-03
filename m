@@ -1,23 +1,23 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B312E620
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 12:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FBA152E05
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 12:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714738484; cv=none; b=r7n+xuXy/JuZ3KwgO8l8XzRuAaPHMdEcaRjgkGAuLwp8KBluJn4lN8nTydrbJCDMyHhky5v+x3L9ZYwRHDzBS9gCOc7xagHig5FSZlYyvWiQHhfHPj680UW3ql9r/saNSQW0dM85fAlmUi8QP+0+HDmkD25eYInkXchLJy03zNM=
+	t=1714738586; cv=none; b=O87PDIJU8v2b37kAWbZre4zxKkX46TWqnvY8epfYNTeRxbGdYwCK8vcDOUKb40/fbAqQZw9zHe8fm0FwLVjFF8k81+tHhDaC9UYOJERCLpR+5n/y4JvqU68NQzcyhDZjZkDbnTPQuH2zMonAzpYHaCEUhg26sula91xsR8Rs+wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714738484; c=relaxed/simple;
-	bh=6ngDTEgKxo+5a3rSwfnFVQeuP2TjbUKFSm/lkEa/4y8=;
+	s=arc-20240116; t=1714738586; c=relaxed/simple;
+	bh=57TzwAwwvpMQNNFqifULioJP6l9hVSPfqlNks+zZBE0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=roQZ8OweqiSqHkBbOF7ycvCnPKklp3ph444B1UvfIo1nz4et1EekhZsXq1yiKvOIHR/rzOzhNPixrlESdEekz9UTz4g4T+xUrRjvswvAyGaROUq775siWgytn0+OcdtQnMF9EHW96JBhmBtEvUIbyPbHX+vTeOKB83YHgeZT+C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:Content-Type; b=AUhuTCfI2WGG+4c7Q+cwxfrlb9zS4qdFhWaVQjbqADIpk1b6801xft2QKT37JqJH+Ws0tuuNq/6WviTBteHPKy8CpoRzAyYo+V+vSU3u78GMGL5vkaf1oc0JvNI10KFPsVXk/44LRPgoxRF4XfefAzUVL5qIgA+U+lemIu/83oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7CEA420012;
-	Fri,  3 May 2024 12:14:35 +0000 (UTC)
-Message-ID: <20798b97-fa19-46fa-abce-54f7931c9210@ghiti.fr>
-Date: Fri, 3 May 2024 14:14:34 +0200
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E3FA66000C;
+	Fri,  3 May 2024 12:16:18 +0000 (UTC)
+Message-ID: <7ebc5b28-7115-494f-a607-e46c71214cce@ghiti.fr>
+Date: Fri, 3 May 2024 14:16:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,27 +25,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: uaccess: Relax the threshold for fast path
+Subject: Re: [PATCH] riscv: uaccess: Allow the last potential unrolled copy
 Content-Language: en-US
 To: Xiao Wang <xiao.w.wang@intel.com>, paul.walmsley@sifive.com,
  palmer@dabbelt.com, aou@eecs.berkeley.edu
 Cc: jerry.shih@sifive.com, nick.knight@sifive.com, ajones@ventanamicro.com,
  bjorn@rivosinc.com, andy.chiu@sifive.com, viro@zeniv.linux.org.uk,
  cleger@rivosinc.com, alexghiti@rivosinc.com, haicheng.li@intel.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240313091929.4029960-1-xiao.w.wang@intel.com>
+ akira.tsukamoto@gmail.com, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240313103334.4036554-1-xiao.w.wang@intel.com>
 From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240313091929.4029960-1-xiao.w.wang@intel.com>
+In-Reply-To: <20240313103334.4036554-1-xiao.w.wang@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-GND-Sasl: alex@ghiti.fr
 
 Hi Xiao,
 
-On 13/03/2024 10:19, Xiao Wang wrote:
-> The bytes copy for unaligned head would cover at most SZREG-1 bytes, so
-> it's better to set the threshold as >= (SZREG-1 + word_copy stride size)
-> which equals to 9*SZREG-1.
+On 13/03/2024 11:33, Xiao Wang wrote:
+> When the dst buffer pointer points to the last accessible aligned addr, we
+> could still run another iteration of unrolled copy.
 >
 > Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
 > ---
@@ -53,21 +53,21 @@ On 13/03/2024 10:19, Xiao Wang wrote:
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 >
 > diff --git a/arch/riscv/lib/uaccess.S b/arch/riscv/lib/uaccess.S
-> index bc22c078aba8..2e665f8f8fcc 100644
+> index 2e665f8f8fcc..1399d797d81b 100644
 > --- a/arch/riscv/lib/uaccess.S
 > +++ b/arch/riscv/lib/uaccess.S
-> @@ -44,7 +44,7 @@ SYM_FUNC_START(fallback_scalar_usercopy)
->   	 * Use byte copy only if too small.
->   	 * SZREG holds 4 for RV32 and 8 for RV64
->   	 */
-> -	li	a3, 9*SZREG /* size must be larger than size in word_copy */
-> +	li	a3, 9*SZREG-1 /* size must >= (word_copy stride + SZREG-1) */
->   	bltu	a2, a3, .Lbyte_copy_tail
+> @@ -103,7 +103,7 @@ SYM_FUNC_START(fallback_scalar_usercopy)
+>   	fixup REG_S   t4,  7*SZREG(a0), 10f
+>   	addi	a0, a0, 8*SZREG
+>   	addi	a1, a1, 8*SZREG
+> -	bltu	a0, t0, 2b
+> +	bleu	a0, t0, 2b
 >   
->   	/*
+>   	addi	t0, t0, 8*SZREG /* revert to original value */
+>   	j	.Lbyte_copy_tail
 
 
-This looks good to me:
+I agree it is still safe to continue for another word_copy here.
 
 Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
