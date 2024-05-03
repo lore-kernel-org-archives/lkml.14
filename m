@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7AE158844;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9248F63CF;
 	Fri,  3 May 2024 19:23:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714764210; cv=none; b=S/nkQf9IoduGsw2dwk4qGriVPDtk+XRKMqBYqCEWdfPOmy6UVuCmgmnRABMVlZvR7hc+P8PpLFDlLNiHTVFLsZ8mEoC36KmddK37E2U03wwvfc1bu6wwW6I69dZq7D+KVCVFFbf2zLFRGO6sLRmEQ+3LYwLNH+zbJDrzNSj6SjE=
+	t=1714764209; cv=none; b=u1lIy7K4D0z2ieVKQwwhwY11CGo9mZLY9rYnLYP8TwdrJg1ge/tTKXUBJ9fNweocqOLZJzNhGJpo7h0ZKM7JNIgcMGmKm2ftVAHvM8Bd+tW/zLSN3qTmMjfVUYSeA1dZRBKPX/KFu773BzeBBiSXnxVVCcpw16yDUyjelS/lazs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714764210; c=relaxed/simple;
-	bh=JCwptbYruZjLqAtDL8TMWBeSIo+hkKvgWUdTdyJjyWw=;
+	s=arc-20240116; t=1714764209; c=relaxed/simple;
+	bh=DaxfR4nd3a64EQUQw4NMPaAY0t4XypNnjDLYOANYiX4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U0gaKHnw7IJ8BbxtClb/payzvCnNbP3S0Rp4UoMTeRDWVSof64ggeVjuZz5hHQACUKIZIBQdntLDnYzNXAKE4eDZoQKjcl7/OAUs+LoiD7Al1aywZ2V88fKL3s9cenIyPhyRfhN7WX8DwzIiw4aMlMP4cShVovawORlKgeTjq90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DBYVdxGW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0rqJFfKw; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=DahePB4bENspD8oUgYnBcVi53r5p7JSGLRFbNMm9bs3f9j4MOnyetGp4/u8C/7v7dAVd//8kN7CsO4qCN4jE/b+E3JjFYVS6CmtP+Z0hKPXLb7JN7vVUZ9fazwBm5mBfmn0HfLLmPCRBGEmMANeh29dXQDl39b5LiTyJJtVf1bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qkaadJiX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4plJyvGC; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DBYVdxGW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0rqJFfKw"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qkaadJiX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4plJyvGC"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1714764207;
@@ -24,31 +24,32 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fc/r1OuWuEM/vzF5SITTG0OBh6zAtXYqIGqImW4XVPw=;
-	b=DBYVdxGWNWaIJO+Zj8D+xlgfP+PZCeRi/A8087FnCrA13r3/+92+fF7V+NpSJKFUHaOGaH
-	BWgrNrlCefUGHUTzi4i5inwViqOnTidI3G+sfqU5pLWxj1u9zo/VrWu6nCDHgeF337dAVJ
-	j6DqbLPDu1l8thP9lQb3bVI5EEAHx/BmW+CMFo5dXR36/yWAlO004ClGbesJibw2y8vseK
-	eOCKXo5XC8lAw27azVWaTtrlINiza0AhZ90wSPQjZwpy8fOfdo6+eqL8hRy4N9/c0VZ/DT
-	AZIIVgDpR+JdvrCMmit7cyTT0aQxXWA0QU84EUDb/WrrPBNY+xLUDnVVUcXr+Q==
+	bh=N5jIEdIgaqgrxTScZMNamJ/VXpKyySn2wZ02dAazQ0s=;
+	b=qkaadJiXro9eyKM9NKF9MwCToGL7taF+8MDW9IJNbl7s9g86wSsxhnNnyaLos85G2f4F03
+	XEM9EqPGHsiChm4XX6NMa0TD8G58LDwkZtHqf5pK6P+s8ZzUisN/9GUjdrhpsnMsWqbRyT
+	DR5JhUc213j9PF+ww3PpPFwwL4cHTR/Wdo1PkOOI0IQs5dzj1V8WHcuSeK/F8miPsOIEkl
+	Op3s6L9RLEBm6lhK4cgT4xnSg5KjDfDFKDK/TSWACphS71lWwbFcoixcDJNjQmwEvCzkJh
+	9cftqoFthVUtKV+qhXmuYAqOWnhmh3EhL6wSRmELER5CQlAjsAGj6RInZgfGxQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1714764207;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fc/r1OuWuEM/vzF5SITTG0OBh6zAtXYqIGqImW4XVPw=;
-	b=0rqJFfKwH8JGJ97Gnij8Qy15fC1+b170+RIXO5lheI+z1l6YJMrj0wysu0NUdWtpfnfWZD
-	xghuX+hoBYZ2q/DA==
+	bh=N5jIEdIgaqgrxTScZMNamJ/VXpKyySn2wZ02dAazQ0s=;
+	b=4plJyvGCzyfpMLlQEcJIOmsoajwdPs9a4JxmXMvg7I0l4o31erdjKmw0/wh6P35kcGlCJ4
+	/HIRlHM6JyJx7BDg==
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Yinghai Lu <yinghai@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Rajesh Shah <rajesh.shah@intel.com>,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 3/4] PCI: hotplug: document unchecked return value of pci_hp_add_bridge()
-Date: Fri,  3 May 2024 21:23:21 +0200
-Message-Id: <16a2442ea6ee896987a44df3ed509e4cfde44475.1714762038.git.namcao@linutronix.de>
+Cc: Nam Cao <namcao@linutronix.de>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/4] PCI: shpchp: bail out if pci_hp_add_bridge() fails
+Date: Fri,  3 May 2024 21:23:19 +0200
+Message-Id: <da60d5a41e8e554ca98d8d9b61e73291495bf820.1714762038.git.namcao@linutronix.de>
 In-Reply-To: <cover.1714762038.git.namcao@linutronix.de>
 References: <cover.1714762038.git.namcao@linutronix.de>
 Precedence: bulk
@@ -59,46 +60,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some hotplug drivers do not check the returned value of
-pci_hp_add_bridge(). This may be probmatic if the driver proceed while
-pci_hp_add_bridge() fails.
+If there is no bus number available for the downstream bus of the
+hot-plugged bridge, pci_hp_add_bridge() will fail. The driver proceeds
+regardless, and the kernel crashes.
 
+Abort if pci_hp_add_bridge() fails.
+
+Fixes: 7d01f70ac6f4 ("PCI: shpchp: use generic pci_hp_add_bridge()")
 Signed-off-by: Nam Cao <namcao@linutronix.de>
+Cc: Yinghai Lu <yinghai@kernel.org>
+Cc: <stable@vger.kernel.org>
 ---
- drivers/pci/hotplug/TODO | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/hotplug/shpchp_pci.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
-index fdb8dd6ea24d..f0a1746c3c88 100644
---- a/drivers/pci/hotplug/TODO
-+++ b/drivers/pci/hotplug/TODO
-@@ -6,6 +6,8 @@ cpcihp:
-   ->set_power callbacks in struct cpci_hp_controller_ops.  Why were they
-   introduced?  Can they be removed from the struct?
+diff --git a/drivers/pci/hotplug/shpchp_pci.c b/drivers/pci/hotplug/shpchp_pci.c
+index 36db0c3c4ea6..2ac98bdc83d9 100644
+--- a/drivers/pci/hotplug/shpchp_pci.c
++++ b/drivers/pci/hotplug/shpchp_pci.c
+@@ -48,8 +48,13 @@ int shpchp_configure_device(struct slot *p_slot)
+ 	}
  
-+* Returned code from pci_hp_add_bridge() is not checked.
-+
- cpqphp:
+ 	for_each_pci_bridge(dev, parent) {
+-		if (PCI_SLOT(dev->devfn) == p_slot->device)
+-			pci_hp_add_bridge(dev);
++		if (PCI_SLOT(dev->devfn) == p_slot->device) {
++			if (pci_hp_add_bridge(dev)) {
++				pci_stop_and_remove_bus_device(dev);
++				ret = -EINVAL;
++				goto out;
++			}
++		}
+ 	}
  
- * The driver spawns a kthread cpqhp_event_thread() which is woken by the
-@@ -16,6 +18,8 @@ cpqphp:
- * A large portion of cpqphp_ctrl.c and cpqphp_pci.c concerns resource
-   management.  Doesn't this duplicate functionality in the core?
- 
-+* Returned code from pci_hp_add_bridge() is not checked.
-+
- ibmphp:
- 
- * Implementations of hotplug_slot_ops callbacks such as get_adapter_present()
-@@ -43,6 +47,8 @@ ibmphp:
- * A large portion of ibmphp_res.c and ibmphp_pci.c concerns resource
-   management.  Doesn't this duplicate functionality in the core?
- 
-+* Returned code from pci_hp_add_bridge() is not checked.
-+
- sgi_hotplug:
- 
- * Several functions access the pci_slot member in struct hotplug_slot even
+ 	pci_assign_unassigned_bridge_resources(bridge);
 -- 
 2.39.2
 
