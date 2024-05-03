@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A445A153808
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42B71514E4
 	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714742054; cv=none; b=IjW6XY+m50QV0ynFuQLnBracxquPe5w0wF1L4otyV7jkwo0KOeOJlz4frdgj1s9WYlld83smWks1t4gl+h+WJkeP8Wqv8Y0UP/Thf25YY9zdZvdhlDnSWAfgreqvpN7k5oKY+DoUpAPUhTyJ/r+RtIMGEZy5/yTkZJrLNan4sQ0=
+	t=1714742054; cv=none; b=cXccBXMBIDung4Mrbu6ykSlE83GM0E70xapwOYTyttxykiezqJ61384NpTXmeOzhQcmvjamKElYh3Zbb7XxVPfThBFf9d0llupem5xlo01VXCIpDpOJJvz5a31qIxBCOYmjzqw6u/eoBz4vIaFKR+sDa8rXxq4/ll6h5HP6kVVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714742054; c=relaxed/simple;
-	bh=10ylxSO/mJzIRfnId7mBvEvqvoVFQCyMabO+Q7R4XgE=;
+	bh=wPlqpNcXNTq2uI/ebP1XEfVX1/oJMULiK+SesdSkB4k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fnpQkvuLtSpzW0yoNIJVFH8dfC1bqLEFCaimP7j8ZWz05e/bh/YX7HdOOYCgyVf86Ik8+cXQE/Ga6o18oA2+wM8Pskuiqi8XqSfBklVTQAIoCJDqZ8B5GC5x9VeorEtMWSDykcVPaCaeppB5MHZfw3OQDvSPt0AzAMMl1t9m5D4=
+	 MIME-Version; b=ommsF0fy34tf8N9XTK/IOT/sy5ew/q9Y5IZCJO3HyXJliXCVp0dH4Vrl/wnn6EyBbMTKBEPVIzBHa2gxejrN8exMqWen4jt42XV5RrNs61Udjwusa3i//4Y+mYZtNibWyHIy4I8ti2B8FOlVCY5TGZ6AxoE6L7ilP0r86wQBSGE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s2sjb-0006EM-6l; Fri, 03 May 2024 15:13:55 +0200
+	id 1s2sjb-0006EH-6l; Fri, 03 May 2024 15:13:55 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s2sjZ-00FiKQ-Ts; Fri, 03 May 2024 15:13:53 +0200
+	id 1s2sjZ-00FiKC-OG; Fri, 03 May 2024 15:13:53 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s2sjZ-008GIK-2Z;
+	id 1s2sjZ-008GH8-29;
 	Fri, 03 May 2024 15:13:53 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v7 12/12] selftests: microchip: add test for QoS support on KSZ9477 switch family
-Date: Fri,  3 May 2024 15:13:51 +0200
-Message-Id: <20240503131351.1969097-13-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v7 05/12] net: dsa: microchip: add support for different DCB app configurations
+Date: Fri,  3 May 2024 15:13:44 +0200
+Message-Id: <20240503131351.1969097-6-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240503131351.1969097-1-o.rempel@pengutronix.de>
 References: <20240503131351.1969097-1-o.rempel@pengutronix.de>
@@ -65,693 +65,699 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add tests covering following functionality on KSZ9477 switch family:
-- default port priority
-- global DSCP to Internal Priority Mapping
-- apptrust configuration
+Add DCB support to configure app trust sources and default port priority.
 
-This script was tested on KSZ9893R
+Following commands can be used for testing:
+dcb apptrust set dev lan1 order pcp dscp
+dcb app replace dev lan1 default-prio 3
+
+Since it is not possible to configure DSCP-Prio mapping per port, this
+patch provide only ability to read switch global dscp-prio mapping and
+way to enable/disable app trust for DSCP.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Acked-by: Arun Ramadoss <arun.ramadoss@microchip.com>
 ---
- .../drivers/net/microchip/ksz9477_qos.sh      | 668 ++++++++++++++++++
- 1 file changed, 668 insertions(+)
- create mode 100755 tools/testing/selftests/drivers/net/microchip/ksz9477_qos.sh
+changes v5:
+- reorder port_set_apptrust and port_get_apptrust
+- s/defult/default
+- group all the get register function in top of file
+- s/invalid/err_sel_not_vaild
+- s/apptrus_/apptrust_
+changes v3:
+- move ksz8_port2_supported_apptrust[] to a followup patch
+---
+ drivers/net/dsa/microchip/Kconfig      |   2 +
+ drivers/net/dsa/microchip/Makefile     |   2 +-
+ drivers/net/dsa/microchip/ksz_common.c |  12 +-
+ drivers/net/dsa/microchip/ksz_common.h |   5 +
+ drivers/net/dsa/microchip/ksz_dcb.c    | 543 +++++++++++++++++++++++++
+ drivers/net/dsa/microchip/ksz_dcb.h    |  21 +
+ 6 files changed, 583 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/net/dsa/microchip/ksz_dcb.c
+ create mode 100644 drivers/net/dsa/microchip/ksz_dcb.h
 
-diff --git a/tools/testing/selftests/drivers/net/microchip/ksz9477_qos.sh b/tools/testing/selftests/drivers/net/microchip/ksz9477_qos.sh
-new file mode 100755
-index 0000000000000..82be5d0133301
+diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
+index 394ca8678d2ba..c1b906c05a025 100644
+--- a/drivers/net/dsa/microchip/Kconfig
++++ b/drivers/net/dsa/microchip/Kconfig
+@@ -4,6 +4,8 @@ menuconfig NET_DSA_MICROCHIP_KSZ_COMMON
+ 	depends on NET_DSA
+ 	select NET_DSA_TAG_KSZ
+ 	select NET_DSA_TAG_NONE
++	select NET_IEEE8021Q_HELPERS
++	select DCB
+ 	help
+ 	  This driver adds support for Microchip KSZ9477 series switch and
+ 	  KSZ8795/KSZ88x3 switch chips.
+diff --git a/drivers/net/dsa/microchip/Makefile b/drivers/net/dsa/microchip/Makefile
+index 49459a50dbc81..1cfba1ec9355a 100644
+--- a/drivers/net/dsa/microchip/Makefile
++++ b/drivers/net/dsa/microchip/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-$(CONFIG_NET_DSA_MICROCHIP_KSZ_COMMON)	+= ksz_switch.o
+-ksz_switch-objs := ksz_common.o
++ksz_switch-objs := ksz_common.o ksz_dcb.o
+ ksz_switch-objs += ksz9477.o ksz9477_acl.o ksz9477_tc_flower.o
+ ksz_switch-objs += ksz8795.o
+ ksz_switch-objs += lan937x_main.o
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index 034d4a5c63fbf..5f02559a18bf5 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -28,6 +28,7 @@
+ #include <net/switchdev.h>
+ 
+ #include "ksz_common.h"
++#include "ksz_dcb.h"
+ #include "ksz_ptp.h"
+ #include "ksz8.h"
+ #include "ksz9477.h"
+@@ -2411,6 +2412,10 @@ static int ksz_setup(struct dsa_switch *ds)
+ 		goto out_ptp_clock_unregister;
+ 	}
+ 
++	ret = ksz_dcb_init(dev);
++	if (ret)
++		goto out_ptp_clock_unregister;
++
+ 	/* start switch */
+ 	regmap_update_bits(ksz_regmap_8(dev), regs[S_START_CTRL],
+ 			   SW_START, SW_START);
+@@ -2739,7 +2744,7 @@ static int ksz_port_setup(struct dsa_switch *ds, int port)
+ 	 * there is no need to do anything.
+ 	 */
+ 
+-	return 0;
++	return ksz_dcb_init_port(dev, port);
+ }
+ 
+ void ksz_port_stp_state_set(struct dsa_switch *ds, int port, u8 state)
+@@ -3983,6 +3988,11 @@ static const struct dsa_switch_ops ksz_switch_ops = {
+ 	.port_setup_tc		= ksz_setup_tc,
+ 	.get_mac_eee		= ksz_get_mac_eee,
+ 	.set_mac_eee		= ksz_set_mac_eee,
++	.port_get_default_prio	= ksz_port_get_default_prio,
++	.port_set_default_prio	= ksz_port_set_default_prio,
++	.port_get_dscp_prio	= ksz_port_get_dscp_prio,
++	.port_get_apptrust	= ksz_port_get_apptrust,
++	.port_set_apptrust	= ksz_port_set_apptrust,
+ };
+ 
+ struct ksz_device *ksz_switch_alloc(struct device *base, void *priv)
+diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+index 962e060f6f829..a0ae9dffa133f 100644
+--- a/drivers/net/dsa/microchip/ksz_common.h
++++ b/drivers/net/dsa/microchip/ksz_common.h
+@@ -620,6 +620,11 @@ static inline bool ksz_is_ksz88x3(struct ksz_device *dev)
+ 	return dev->chip_id == KSZ8830_CHIP_ID;
+ }
+ 
++static inline bool is_ksz8(struct ksz_device *dev)
++{
++	return ksz_is_ksz87xx(dev) || ksz_is_ksz88x3(dev);
++}
++
+ static inline int is_lan937x(struct ksz_device *dev)
+ {
+ 	return dev->chip_id == LAN9370_CHIP_ID ||
+diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
+new file mode 100644
+index 0000000000000..de46329ed6e85
 --- /dev/null
-+++ b/tools/testing/selftests/drivers/net/microchip/ksz9477_qos.sh
-@@ -0,0 +1,668 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
++++ b/drivers/net/dsa/microchip/ksz_dcb.c
+@@ -0,0 +1,543 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
 +
-+# The script is adopted to work with the Microchip KSZ switch driver.
++#include <linux/dsa/ksz_common.h>
++#include <net/dsa.h>
++#include <net/dscp.h>
++#include <net/ieee8021q.h>
 +
-+ETH_FCS_LEN=4
++#include "ksz_common.h"
++#include "ksz_dcb.h"
++#include "ksz8.h"
 +
-+WAIT_TIME=1
-+NUM_NETIFS=4
-+REQUIRE_JQ="yes"
-+REQUIRE_MZ="yes"
-+STABLE_MAC_ADDRS=yes
-+NETIF_CREATE=no
-+lib_dir=$(dirname $0)/../../../net/forwarding
-+source $lib_dir/tc_common.sh
-+source $lib_dir/lib.sh
++#define KSZ8_REG_PORT_1_CTRL_0			0x10
++#define KSZ8_PORT_DIFFSERV_ENABLE		BIT(6)
++#define KSZ8_PORT_802_1P_ENABLE			BIT(5)
++#define KSZ8_PORT_BASED_PRIO_M			GENMASK(4, 3)
 +
-+require_command dcb
++#define KSZ88X3_REG_TOS_DSCP_CTRL		0x60
++#define KSZ8765_REG_TOS_DSCP_CTRL		0x90
 +
-+h1=${NETIFS[p1]}
-+swp1=${NETIFS[p2]}
-+swp2=${NETIFS[p3]}
-+h2=${NETIFS[p4]}
++#define KSZ9477_REG_SW_MAC_TOS_CTRL		0x033e
++#define KSZ9477_SW_TOS_DSCP_REMAP		BIT(0)
++#define KSZ9477_SW_TOS_DSCP_DEFAULT_PRIO_M	GENMASK(5, 3)
 +
-+H1_IPV4="192.0.2.1"
-+H2_IPV4="192.0.2.2"
-+H1_IPV6="2001:db8:1::1"
-+H2_IPV6="2001:db8:1::2"
++#define KSZ9477_REG_DIFFSERV_PRIO_MAP		0x0340
 +
-+# On h1_ and h2_create do not set IP addresses to avoid interaction with the
-+# system, to keep packet counters clean.
-+h1_create()
++#define KSZ9477_REG_PORT_MRI_PRIO_CTRL		0x0801
++#define KSZ9477_PORT_HIGHEST_PRIO		BIT(7)
++#define KSZ9477_PORT_OR_PRIO			BIT(6)
++#define KSZ9477_PORT_MAC_PRIO_ENABLE		BIT(4)
++#define KSZ9477_PORT_VLAN_PRIO_ENABLE		BIT(3)
++#define KSZ9477_PORT_802_1P_PRIO_ENABLE		BIT(2)
++#define KSZ9477_PORT_DIFFSERV_PRIO_ENABLE	BIT(1)
++#define KSZ9477_PORT_ACL_PRIO_ENABLE		BIT(0)
++
++#define KSZ9477_REG_PORT_MRI_MAC_CTRL		0x0802
++#define KSZ9477_PORT_BASED_PRIO_M		GENMASK(2, 0)
++
++struct ksz_apptrust_map {
++	u8 apptrust;
++	u8 bit;
++};
++
++static const struct ksz_apptrust_map ksz8_apptrust_map_to_bit[] = {
++	{ DCB_APP_SEL_PCP, KSZ8_PORT_802_1P_ENABLE },
++	{ IEEE_8021QAZ_APP_SEL_DSCP, KSZ8_PORT_DIFFSERV_ENABLE },
++};
++
++static const struct ksz_apptrust_map ksz9477_apptrust_map_to_bit[] = {
++	{ DCB_APP_SEL_PCP, KSZ9477_PORT_802_1P_PRIO_ENABLE },
++	{ IEEE_8021QAZ_APP_SEL_DSCP, KSZ9477_PORT_DIFFSERV_PRIO_ENABLE },
++};
++
++/* ksz_supported_apptrust[] - Supported apptrust selectors and Priority Order
++ *			      of Internal Priority Value (IPV) sources.
++ *
++ * This array defines the apptrust selectors supported by the hardware, where
++ * the index within the array indicates the priority of the selector - lower
++ * indices correspond to higher priority. This fixed priority scheme is due to
++ * the hardware's design, which does not support configurable priority among
++ * different priority sources.
++ *
++ * The priority sources, including Tail Tag, ACL, VLAN PCP and DSCP are ordered
++ * by the hardware's fixed logic, as detailed below. The order reflects a
++ * non-configurable precedence where certain types of priority information
++ * override others:
++ *
++ * 1. Tail Tag - Highest priority, overrides ACL, VLAN PCP, and DSCP priorities.
++ * 2. ACL - Overrides VLAN PCP and DSCP priorities.
++ * 3. VLAN PCP - Overrides DSCP priority.
++ * 4. DSCP - Lowest priority, does not override any other priority source.
++ *
++ * In this context, the array's lower index (higher priority) for
++ * 'DCB_APP_SEL_PCP' suggests its relative priority over
++ * 'IEEE_8021QAZ_APP_SEL_DSCP' within the system's fixed priority scheme.
++ *
++ * DCB_APP_SEL_PCP - Priority Code Point selector
++ * IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
++ */
++static const u8 ksz_supported_apptrust[] = {
++	DCB_APP_SEL_PCP,
++	IEEE_8021QAZ_APP_SEL_DSCP,
++};
++
++static const char * const ksz_supported_apptrust_variants[] = {
++	"empty", "dscp", "pcp", "dscp pcp"
++};
++
++static void ksz_get_default_port_prio_reg(struct ksz_device *dev, int *reg,
++					  u8 *mask, int *shift)
 +{
-+	simple_if_init $h1
-+	sysctl_set net.ipv6.conf.${h1}.disable_ipv6 1
-+	# Get the MAC address of the interface to use it with mausezahn
-+	h1_mac=$(ip -j link show dev ${h1} | jq -e '.[].address')
++	if (is_ksz8(dev)) {
++		*reg = KSZ8_REG_PORT_1_CTRL_0;
++		*mask = KSZ8_PORT_BASED_PRIO_M;
++		*shift = __bf_shf(KSZ8_PORT_BASED_PRIO_M);
++	} else {
++		*reg = KSZ9477_REG_PORT_MRI_MAC_CTRL;
++		*mask = KSZ9477_PORT_BASED_PRIO_M;
++		*shift = __bf_shf(KSZ9477_PORT_BASED_PRIO_M);
++	}
 +}
 +
-+h1_destroy()
++/**
++ * ksz_get_dscp_prio_reg - Retrieves the DSCP-to-priority-mapping register
++ * @dev: Pointer to the KSZ switch device structure
++ * @reg: Pointer to the register address to be set
++ * @per_reg: Pointer to the number of DSCP values per register
++ * @mask: Pointer to the mask to be set
++ *
++ * This function retrieves the DSCP to priority mapping register, the number of
++ * DSCP values per register, and the mask to be set.
++ */
++static void ksz_get_dscp_prio_reg(struct ksz_device *dev, int *reg,
++				  int *per_reg, u8 *mask)
 +{
-+	sysctl_restore net.ipv6.conf.${h1}.disable_ipv6
-+	simple_if_fini $h1
++	if (ksz_is_ksz87xx(dev)) {
++		*reg = KSZ8765_REG_TOS_DSCP_CTRL;
++		*per_reg = 4;
++		*mask = GENMASK(1, 0);
++	} else if (ksz_is_ksz88x3(dev)) {
++		*reg = KSZ88X3_REG_TOS_DSCP_CTRL;
++		*per_reg = 4;
++		*mask = GENMASK(1, 0);
++	} else {
++		*reg = KSZ9477_REG_DIFFSERV_PRIO_MAP;
++		*per_reg = 2;
++		*mask = GENMASK(2, 0);
++	}
 +}
 +
-+h2_create()
++/**
++ * ksz_get_apptrust_map_and_reg - Retrieves the apptrust map and register
++ * @dev: Pointer to the KSZ switch device structure
++ * @map: Pointer to the apptrust map to be set
++ * @reg: Pointer to the register address to be set
++ * @mask: Pointer to the mask to be set
++ *
++ * This function retrieves the apptrust map and register address for the
++ * apptrust configuration.
++ */
++static void ksz_get_apptrust_map_and_reg(struct ksz_device *dev,
++					 const struct ksz_apptrust_map **map,
++					 int *reg, u8 *mask)
 +{
-+	simple_if_init $h2
-+	sysctl_set net.ipv6.conf.${h2}.disable_ipv6 1
-+	h2_mac=$(ip -j link show dev ${h2} | jq -e '.[].address')
++	if (is_ksz8(dev)) {
++		*map = ksz8_apptrust_map_to_bit;
++		*reg = KSZ8_REG_PORT_1_CTRL_0;
++		*mask = KSZ8_PORT_DIFFSERV_ENABLE | KSZ8_PORT_802_1P_ENABLE;
++	} else {
++		*map = ksz9477_apptrust_map_to_bit;
++		*reg = KSZ9477_REG_PORT_MRI_PRIO_CTRL;
++		*mask = KSZ9477_PORT_802_1P_PRIO_ENABLE |
++			KSZ9477_PORT_DIFFSERV_PRIO_ENABLE;
++	}
 +}
 +
-+h2_destroy()
++/**
++ * ksz_port_get_default_prio - Retrieves the default priority for a port on a
++ *			       KSZ switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number from which to get the default priority
++ *
++ * This function fetches the default priority for the specified port on a KSZ
++ * switch.
++ *
++ * Return: The default priority of the port on success, or a negative error
++ * code on failure.
++ */
++int ksz_port_get_default_prio(struct dsa_switch *ds, int port)
 +{
-+	sysctl_restore net.ipv6.conf.${h2}.disable_ipv6
-+	simple_if_fini $h2
++	struct ksz_device *dev = ds->priv;
++	int ret, reg, shift;
++	u8 data, mask;
++
++	ksz_get_default_port_prio_reg(dev, &reg, &mask, &shift);
++
++	ret = ksz_pread8(dev, port, reg, &data);
++	if (ret)
++		return ret;
++
++	return (data & mask) >> shift;
 +}
 +
-+switch_create()
++/**
++ * ksz_port_set_default_prio - Sets the default priority for a port on a KSZ
++ *			       switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to set the default priority
++ * @prio: Priority value to set
++ *
++ * This function sets the default priority for the specified port on a KSZ
++ * switch.
++ *
++ * Return: 0 on success, or a negative error code on failure.
++ */
++int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio)
 +{
-+	ip link set ${swp1} up
-+	ip link set ${swp2} up
-+	sysctl_set net.ipv6.conf.${swp1}.disable_ipv6 1
-+	sysctl_set net.ipv6.conf.${swp2}.disable_ipv6 1
++	struct ksz_device *dev = ds->priv;
++	int reg, shift;
++	u8 mask;
 +
-+	# Ports should trust VLAN PCP even with vlan_filtering=0
-+	ip link add br0 type bridge
-+	ip link set ${swp1} master br0
-+	ip link set ${swp2} master br0
-+	ip link set br0 up
-+	sysctl_set net.ipv6.conf.br0.disable_ipv6 1
++	if (prio >= dev->info->num_ipvs)
++		return -EINVAL;
++
++	ksz_get_default_port_prio_reg(dev, &reg, &mask, &shift);
++
++	return ksz_prmw8(dev, port, reg, mask, (prio << shift) & mask);
 +}
 +
-+switch_destroy()
++/**
++ * ksz_port_get_dscp_prio - Retrieves the priority for a DSCP value on a KSZ
++ *			    switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to get the priority
++ * @dscp: DSCP value for which to get the priority
++ *
++ * This function fetches the priority value from switch global DSCP-to-priorty
++ * mapping table for the specified DSCP value.
++ *
++ * Return: The priority value for the DSCP on success, or a negative error
++ * code on failure.
++ */
++int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp)
 +{
-+	sysctl_restore net.ipv6.conf.${swp2}.disable_ipv6
-+	sysctl_restore net.ipv6.conf.${swp1}.disable_ipv6
++	struct ksz_device *dev = ds->priv;
++	int reg, per_reg, ret, shift;
++	u8 data, mask;
 +
-+	ip link del br0
++	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
++
++	/* If DSCP remapping is disabled, DSCP bits 3-5 are used as Internal
++	 * Priority Value (IPV)
++	 */
++	if (!is_ksz8(dev)) {
++		ret = ksz_read8(dev, KSZ9477_REG_SW_MAC_TOS_CTRL, &data);
++		if (ret)
++			return ret;
++
++		/* If DSCP remapping is disabled, DSCP bits 3-5 are used as
++		 * Internal Priority Value (IPV)
++		 */
++		if (!(data & KSZ9477_SW_TOS_DSCP_REMAP))
++			return FIELD_GET(KSZ9477_SW_TOS_DSCP_DEFAULT_PRIO_M,
++					 dscp);
++	}
++
++	/* In case DSCP remapping is enabled, we need to write the DSCP to
++	 * priority mapping table.
++	 */
++	reg += dscp / per_reg;
++	ret = ksz_read8(dev, reg, &data);
++	if (ret)
++		return ret;
++
++	shift = (dscp % per_reg) * (8 / per_reg);
++
++	return (data >> shift) & mask;
 +}
 +
-+setup_prepare()
++/**
++ * ksz_init_global_dscp_map - Initializes the global DSCP-to-priority mapping
++ * @dev: Pointer to the KSZ switch device structure
++ *
++ * This function initializes the global DSCP-to-priority mapping table for the
++ * switch.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++static int ksz_init_global_dscp_map(struct ksz_device *dev)
 +{
-+	vrf_prepare
++	int reg, per_reg, ret, dscp;
++	u8 data = 0;
++	u8 mask;
 +
-+	h1_create
-+	h2_create
-+	switch_create
++	/* On KSZ9xxx variants, DSCP remapping is disabled by default.
++	 * Enable to have, predictable and reproducible behavior across
++	 * different devices.
++	 */
++	if (!is_ksz8(dev)) {
++		ret = ksz_rmw8(dev, KSZ9477_REG_SW_MAC_TOS_CTRL,
++			       KSZ9477_SW_TOS_DSCP_REMAP,
++			       KSZ9477_SW_TOS_DSCP_REMAP);
++		if (ret)
++			return ret;
++	}
++
++	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
++
++	for (dscp = 0; dscp < DSCP_MAX; dscp++) {
++		int ipv, shift, tt;
++
++		/* Map DSCP to Traffic Type, which is corresponding to the
++		 * Internal Priority Value (IPV) in the switch.
++		 */
++		if (!is_ksz8(dev)) {
++			ipv = ietf_dscp_to_ieee8021q_tt(dscp);
++		} else {
++			/* On KSZ8xxx variants we do not have IPV to queue
++			 * remapping table. We need to convert DSCP to Traffic
++			 * Type and then to queue.
++			 */
++			tt = ietf_dscp_to_ieee8021q_tt(dscp);
++			if (tt < 0)
++				return tt;
++
++			ipv = ieee8021q_tt_to_tc(tt, dev->info->num_tx_queues);
++		}
++
++		if (ipv < 0)
++			return ipv;
++
++		shift = (dscp % per_reg) * (8 / per_reg);
++		data |= (ipv & mask) << shift;
++
++		if (dscp % per_reg == per_reg - 1) {
++			ret = ksz_write8(dev, reg + (dscp / per_reg), data);
++			if (ret)
++				return ret;
++
++			data = 0;
++		}
++	}
++
++	return 0;
 +}
 +
-+cleanup()
++/**
++ * ksz_apptrust_error - Prints an error message for an invalid apptrust selector
++ * @dev: Pointer to the KSZ switch device structure
++ *
++ * This function prints an error message when an invalid apptrust selector is
++ * provided.
++ */
++static void ksz_apptrust_error(struct ksz_device *dev)
 +{
-+	pre_cleanup
++	char supported_apptrust_variants[64];
++	int i;
 +
-+	h2_destroy
-+	h1_destroy
-+	switch_destroy
++	supported_apptrust_variants[0] = '\0';
++	for (i = 0; i < ARRAY_SIZE(ksz_supported_apptrust_variants); i++) {
++		if (i > 0)
++			strlcat(supported_apptrust_variants, ", ",
++				sizeof(supported_apptrust_variants));
++		strlcat(supported_apptrust_variants,
++			ksz_supported_apptrust_variants[i],
++			sizeof(supported_apptrust_variants));
++	}
 +
-+	vrf_cleanup
++	dev_err(dev->dev, "Invalid apptrust selector or priority order. Supported: %s\n",
++		supported_apptrust_variants);
 +}
 +
-+set_apptrust_order()
++/**
++ * ksz_port_set_apptrust_validate - Validates the apptrust selectors
++ * @dev: Pointer to the KSZ switch device structure
++ * @port: Port number for which to set the apptrust selectors
++ * @sel: Array of apptrust selectors to validate
++ * @nsel: Number of apptrust selectors in the array
++ *
++ * This function validates the apptrust selectors provided and ensures that
++ * they are in the correct order.
++ *
++ * This family of switches supports two apptrust selectors: DCB_APP_SEL_PCP and
++ * IEEE_8021QAZ_APP_SEL_DSCP. The priority order of the selectors is fixed and
++ * cannot be changed. The order is as follows:
++ * 1. DCB_APP_SEL_PCP - Priority Code Point selector (highest priority)
++ * 2. IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
++ *   (lowest priority)
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++static int ksz_port_set_apptrust_validate(struct ksz_device *dev, int port,
++					  const u8 *sel, int nsel)
 +{
-+	local if_name=$1
-+	local order=$2
++	int i, j, found;
++	int j_prev = 0;
 +
-+	dcb apptrust set dev ${if_name} order ${order}
++	/* Iterate through the requested selectors */
++	for (i = 0; i < nsel; i++) {
++		found = 0;
++
++		/* Check if the current selector is supported by the hardware */
++		for (j = 0; j < sizeof(ksz_supported_apptrust); j++) {
++			if (sel[i] != ksz_supported_apptrust[j])
++				continue;
++
++			found = 1;
++
++			/* Ensure that no higher priority selector (lower index)
++			 * precedes a lower priority one
++			 */
++			if (i > 0 && j <= j_prev)
++				goto err_sel_not_vaild;
++
++			j_prev = j;
++			break;
++		}
++
++		if (!found)
++			goto err_sel_not_vaild;
++	}
++
++	return 0;
++
++err_sel_not_vaild:
++	ksz_apptrust_error(dev);
++
++	return -EINVAL;
 +}
 +
-+# Function to extract a specified field from a given JSON stats string
-+extract_network_stat() {
-+	local stats_json=$1
-+	local field_name=$2
-+
-+	echo $(echo "$stats_json" | jq -r "$field_name")
-+}
-+
-+run_test()
++/**
++ * ksz_port_set_apptrust - Sets the apptrust selectors for a port on a KSZ
++ *			   switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to set the apptrust selectors
++ * @sel: Array of apptrust selectors to set
++ * @nsel: Number of apptrust selectors in the array
++ *
++ * This function sets the apptrust selectors for the specified port on a KSZ
++ * switch.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
++			  const u8 *sel, int nsel)
 +{
-+	local test_name=$1;
-+	local apptrust_order=$2;
-+	local port_prio=$3;
-+	local dscp_ipv=$4;
-+	local dscp=$5;
-+	local have_vlan=$6;
-+	local pcp_ipv=$7;
-+	local vlan_pcp=$8;
-+	local ip_v6=$9
++	const struct ksz_apptrust_map *map;
++	struct ksz_device *dev = ds->priv;
++	int reg, i, ret;
++	u8 data = 0;
++	u8 mask;
 +
-+	local rx_ipv
-+	local tx_ipv
++	ret = ksz_port_set_apptrust_validate(dev, port, sel, nsel);
++	if (ret)
++		return ret;
 +
-+	RET=0
++	ksz_get_apptrust_map_and_reg(dev, &map, &reg, &mask);
 +
-+	# Send some packet to populate the switch MAC table
-+	$MZ ${h2} -a ${h2_mac} -b ${h1_mac} -p 64 -t icmp echores -c 1
++	for (i = 0; i < nsel; i++) {
++		int j;
 +
-+	# Based on the apptrust order, set the expected Internal Priority values
-+	# for the RX and TX paths.
-+	if [ "${apptrust_order}" == "" ]; then
-+		echo "Apptrust order not set."
-+		rx_ipv=${port_prio}
-+		tx_ipv=${port_prio}
-+	elif [ "${apptrust_order}" == "dscp" ]; then
-+		echo "Apptrust order is DSCP."
-+		rx_ipv=${dscp_ipv}
-+		tx_ipv=${dscp_ipv}
-+	elif [ "${apptrust_order}" == "pcp" ]; then
-+		echo "Apptrust order is PCP."
-+		rx_ipv=${pcp_ipv}
-+		tx_ipv=${pcp_ipv}
-+	elif [ "${apptrust_order}" == "pcp dscp" ]; then
-+		echo "Apptrust order is PCP DSCP."
-+		if [ ${have_vlan} -eq 1 ]; then
-+			rx_ipv=$((dscp_ipv > pcp_ipv ? dscp_ipv : pcp_ipv))
-+			tx_ipv=${pcp_ipv}
-+		else
-+			rx_ipv=${dscp_ipv}
-+			tx_ipv=${dscp_ipv}
-+		fi
-+	else
-+		RET=1
-+		echo "Error: Unknown apptrust order ${apptrust_order}"
-+		log_test "${test_name}"
-+		return
-+	fi
++		for (j = 0; j < ARRAY_SIZE(ksz_supported_apptrust); j++) {
++			if (sel[i] != ksz_supported_apptrust[j])
++				continue;
 +
-+	# Most/all? of the KSZ switches do not provide per-TC counters. There
-+	# are only tx_hi and rx_hi counters, which are used to count packets
-+	# which are considered as high priority and most likely not assigned
-+	# to the queue 0.
-+	# On the ingress path, packets seem to get high priority status
-+	# independently of the DSCP or PCP global mapping. On the egress path,
-+	# the high priority status is assigned based on the DSCP or PCP global
-+	# map configuration.
-+	# The thresholds for the high priority status are not documented, but
-+	# it seems that the switch considers packets as high priority on the
-+	# ingress path if detected Internal Priority is greater than 0. On the
-+	# egress path, the switch considers packets as high priority if
-+	# detected Internal Priority is greater than 1.
-+	if [ ${rx_ipv} -ge 1 ]; then
-+		local expect_rx_high_prio=1
-+	else
-+		local expect_rx_high_prio=0
-+	fi
++			data |= map[j].bit;
++			break;
++		}
++	}
 +
-+	if [ ${tx_ipv} -ge 2 ]; then
-+		local expect_tx_high_prio=1
-+	else
-+		local expect_tx_high_prio=0
-+	fi
-+
-+	# Use ip tool to get the current switch packet counters. ethool stats
-+	# need to be recalculated to get the correct values.
-+	local swp1_stats=$(ip -s -j link show dev ${swp1})
-+	local swp2_stats=$(ip -s -j link show dev ${swp2})
-+	local swp1_rx_packets_before=$(extract_network_stat "$swp1_stats" \
-+				       '.[0].stats64.rx.packets')
-+	local swp1_rx_bytes_before=$(extract_network_stat "$swp1_stats" \
-+				     '.[0].stats64.rx.bytes')
-+	local swp2_tx_packets_before=$(extract_network_stat "$swp2_stats" \
-+				       '.[0].stats64.tx.packets')
-+	local swp2_tx_bytes_before=$(extract_network_stat "$swp2_stats" \
-+				     '.[0].stats64.tx.bytes')
-+	local swp1_rx_hi_before=$(ethtool_stats_get ${swp1} "rx_hi")
-+	local swp2_tx_hi_before=$(ethtool_stats_get ${swp2} "tx_hi")
-+
-+	# Assamble the mausezahn command based on the test parameters
-+	# For the testis with ipv4 or ipv6, use icmp response packets,
-+	# to avoid interaction with the system, to keep packet counters
-+	# clean.
-+	if [ ${ip_v6} -eq 0 ]; then
-+		local ip="-a ${h1_mac} -b ${h2_mac} -A ${H1_IPV4} \
-+			  -B ${H2_IPV4} -t icmp unreach,code=1,dscp=${dscp}"
-+	else
-+		local ip="-6 -a ${h1_mac} -b ${h2_mac} -A ${H1_IPV6} \
-+			  -B ${H2_IPV6} -t icmp6 type=1,code=0,dscp=${dscp}"
-+	fi
-+
-+	if [ ${have_vlan} -eq 1 ]; then
-+		local vlan_pcp_opt="-Q ${vlan_pcp}:0"
-+	else
-+		local vlan_pcp_opt=""
-+	fi
-+	$MZ ${h1} ${ip} -c ${PING_COUNT} -d 10msec ${vlan_pcp_opt}
-+
-+	# Wait until the switch packet counters are updated
-+	sleep 6
-+
-+	local swp1_stats=$(ip -s -j link show dev ${swp1})
-+	local swp2_stats=$(ip -s -j link show dev ${swp2})
-+
-+	local swp1_rx_packets_after=$(extract_network_stat "$swp1_stats" \
-+				      '.[0].stats64.rx.packets')
-+	local swp1_rx_bytes_after=$(extract_network_stat "$swp1_stats" \
-+				    '.[0].stats64.rx.bytes')
-+	local swp2_tx_packets_after=$(extract_network_stat "$swp2_stats" \
-+				      '.[0].stats64.tx.packets')
-+	local swp2_tx_bytes_after=$(extract_network_stat "$swp2_stats" \
-+				    '.[0].stats64.tx.bytes')
-+
-+	local swp1_rx_packets_diff=$((${swp1_rx_packets_after} - \
-+				      ${swp1_rx_packets_before}))
-+	local swp2_tx_packets_diff=$((${swp2_tx_packets_after} - \
-+				      ${swp2_tx_packets_before}))
-+
-+	local swp1_rx_hi_after=$(ethtool_stats_get ${swp1} "rx_hi")
-+	local swp2_tx_hi_after=$(ethtool_stats_get ${swp2} "tx_hi")
-+
-+	# Test if any packets were received on swp1, we will rx before and after
-+	if [ ${swp1_rx_packets_diff} -lt ${PING_COUNT} ]; then
-+		echo "Not expected amount of received packets on ${swp1}"
-+		echo "before ${swp1_rx_packets_before} after ${swp1_rx_packets_after}"
-+		RET=1
-+	fi
-+
-+	# Test if any packets were transmitted on swp2, we will tx before and after
-+	if [ ${swp2_tx_packets_diff} -lt ${PING_COUNT} ]; then
-+		echo "Not expected amount of transmitted packets on ${swp2}"
-+		echo "before ${swp2_tx_packets_before} after ${swp2_tx_packets_after}"
-+		RET=1
-+	fi
-+
-+	# tx/rx_hi counted in bytes. So, we need to compare the difference in bytes
-+	local swp1_rx_bytes_diff=$(($swp1_rx_bytes_after - $swp1_rx_bytes_before))
-+	local swp2_tx_bytes_diff=$(($swp2_tx_bytes_after - $swp2_tx_bytes_before))
-+	local swp1_rx_hi_diff=$(($swp1_rx_hi_after - $swp1_rx_hi_before))
-+	local swp2_tx_hi_diff=$(($swp2_tx_hi_after - $swp2_tx_hi_before))
-+
-+	if [ ${expect_rx_high_prio} -eq 1 ]; then
-+		swp1_rx_hi_diff=$((${swp1_rx_hi_diff} - \
-+				   ${swp1_rx_packets_diff} * ${ETH_FCS_LEN}))
-+		if [ ${swp1_rx_hi_diff} -ne ${swp1_rx_bytes_diff} ]; then
-+			echo "Not expected amount of high priority packets received on ${swp1}"
-+			echo "RX hi diff: ${swp1_rx_hi_diff}, expected RX bytes diff: ${swp1_rx_bytes_diff}"
-+			RET=1
-+		fi
-+	else
-+		if [ ${swp1_rx_hi_diff} -ne 0 ]; then
-+			echo "Unexpected amount of high priority packets received on ${swp1}"
-+			echo "RX hi diff: ${swp1_rx_hi_diff}, expected 0"
-+			RET=1
-+		fi
-+	fi
-+
-+	if [ ${expect_tx_high_prio} -eq 1 ]; then
-+		swp2_tx_hi_diff=$((${swp2_tx_hi_diff} - \
-+				   ${swp2_tx_packets_diff} * ${ETH_FCS_LEN}))
-+		if [ ${swp2_tx_hi_diff} -ne ${swp2_tx_bytes_diff} ]; then
-+			echo "Not expected amount of high priority packets transmitted on ${swp2}"
-+			echo "TX hi diff: ${swp2_tx_hi_diff}, expected TX bytes diff: ${swp2_tx_bytes_diff}"
-+			RET=1
-+		fi
-+	else
-+		if [ ${swp2_tx_hi_diff} -ne 0 ]; then
-+			echo "Unexpected amount of high priority packets transmitted on ${swp2}"
-+			echo "TX hi diff: ${swp2_tx_hi_diff}, expected 0"
-+			RET=1
-+		fi
-+	fi
-+
-+	log_test "${test_name}"
++	return ksz_prmw8(dev, port, reg, mask, data);
 +}
 +
-+run_test_dscp()
++/**
++ * ksz_port_get_apptrust - Retrieves the apptrust selectors for a port on a KSZ
++ *			   switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to get the apptrust selectors
++ * @sel: Array to store the apptrust selectors
++ * @nsel: Number of apptrust selectors in the array
++ *
++ * This function fetches the apptrust selectors for the specified port on a KSZ
++ * switch.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel)
 +{
-+	# IPv4 test
-+	run_test "$1" "$2" "$3" "$4" "$5" 0 0 0 0
-+	# IPv6 test
-+	run_test "$1" "$2" "$3" "$4" "$5" 0 0 0 1
++	const struct ksz_apptrust_map *map;
++	struct ksz_device *dev = ds->priv;
++	int reg, i, ret;
++	u8 data;
++	u8 mask;
++
++	ksz_get_apptrust_map_and_reg(dev, &map, &reg, &mask);
++
++	ret = ksz_pread8(dev, port, reg, &data);
++	if (ret)
++		return ret;
++
++	*nsel = 0;
++	for (i = 0; i < ARRAY_SIZE(ksz_supported_apptrust); i++) {
++		if (data & map[i].bit)
++			sel[(*nsel)++] = ksz_supported_apptrust[i];
++	}
++
++	return 0;
 +}
 +
-+run_test_dscp_pcp()
++/**
++ * ksz_dcb_init_port - Initializes the DCB configuration for a port on a KSZ
++ * @dev: Pointer to the KSZ switch device structure
++ * @port: Port number for which to initialize the DCB configuration
++ *
++ * This function initializes the DCB configuration for the specified port on a
++ * KSZ switch. Particular DCB configuration is set for the port, including the
++ * default priority and apptrust selectors.
++ * The default priority is set to Best Effort, and the apptrust selectors are
++ * set to all supported selectors.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++int ksz_dcb_init_port(struct ksz_device *dev, int port)
 +{
-+	# IPv4 test
-+	run_test "$1" "$2" "$3" "$4" "$5" 1 "$6" "$7" 0
-+	# IPv6 test
-+	run_test "$1" "$2" "$3" "$4" "$5" 1 "$6" "$7" 1
++	int ret, ipv;
++
++	if (is_ksz8(dev)) {
++		ipv = ieee8021q_tt_to_tc(IEEE8021Q_TT_BE,
++					 dev->info->num_tx_queues);
++		if (ipv < 0)
++			return ipv;
++	} else {
++		ipv = IEEE8021Q_TT_BE;
++	}
++
++	/* Set the default priority for the port to Best Effort */
++	ret = ksz_port_set_default_prio(dev->ds, port, ipv);
++	if (ret)
++		return ret;
++
++	return ksz_port_set_apptrust(dev->ds, port, ksz_supported_apptrust,
++				     ARRAY_SIZE(ksz_supported_apptrust));
 +}
 +
-+port_default_prio_get()
++/**
++ * ksz_dcb_init - Initializes the DCB configuration for a KSZ switch
++ * @dev: Pointer to the KSZ switch device structure
++ *
++ * This function initializes the DCB configuration for a KSZ switch. The global
++ * DSCP-to-priority mapping table is initialized.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++int ksz_dcb_init(struct ksz_device *dev)
 +{
-+	local if_name=$1
-+	local prio
++	int ret;
 +
-+	prio="$(dcb -j app show dev ${if_name} default-prio | \
-+		jq '.default_prio[]')"
-+	if [ -z "${prio}" ]; then
-+		prio=0
-+	fi
++	ret = ksz_init_global_dscp_map(dev);
++	if (ret)
++		return ret;
 +
-+	echo ${prio}
++	return 0;
 +}
+diff --git a/drivers/net/dsa/microchip/ksz_dcb.h b/drivers/net/dsa/microchip/ksz_dcb.h
+new file mode 100644
+index 0000000000000..254c0e7bdafca
+--- /dev/null
++++ b/drivers/net/dsa/microchip/ksz_dcb.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de> */
 +
-+test_port_default()
-+{
-+	local orig_apptrust=$(port_get_default_apptrust ${swp1})
-+	local orig_prio=$(port_default_prio_get ${swp1})
-+	local apptrust_order=""
++#ifndef __KSZ_DCB_H
++#define __KSZ_DCB_H
 +
-+	RET=0
++#include <net/dsa.h>
 +
-+	# Make sure no other priority sources will interfere with the test
-+	set_apptrust_order ${swp1} "${apptrust_order}"
++#include "ksz_common.h"
 +
-+	for val in $(seq 0 7); do
-+		dcb app replace dev ${swp1} default-prio ${val}
-+		if [ $val -ne $(port_default_prio_get ${swp1}) ]; then
-+			RET=1
-+			break
-+		fi
++int ksz_port_get_default_prio(struct dsa_switch *ds, int port);
++int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio);
++int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp);
++int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
++			  const unsigned char *sel,
++			  int nsel);
++int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel);
++int ksz_dcb_init_port(struct ksz_device *dev, int port);
++int ksz_dcb_init(struct ksz_device *dev);
 +
-+		run_test_dscp "Port-default QoS classification, prio: ${val}" \
-+			"${apptrust_order}" ${val} 0 0
-+	done
-+
-+	set_apptrust_order ${swp1} "${orig_apptrust}"
-+	if [[ "$orig_apptrust" != "$(port_get_default_apptrust ${swp1})" ]]; then
-+		RET=1
-+	fi
-+
-+	dcb app replace dev ${swp1} default-prio ${orig_prio}
-+	if [ $orig_prio -ne $(port_default_prio_get ${swp1}) ]; then
-+		RET=1
-+	fi
-+
-+	log_test "Port-default QoS classification"
-+}
-+
-+port_get_default_apptrust()
-+{
-+	local if_name=$1
-+
-+	dcb -j apptrust show dev ${if_name} | jq -r '.order[]' | \
-+		tr '\n' ' ' | xargs
-+}
-+
-+test_port_apptrust()
-+{
-+	local original_dscp_prios_swp1=$(get_dscp_prios ${swp1})
-+	local orig_apptrust=$(port_get_default_apptrust ${swp1})
-+	local orig_port_prio=$(port_default_prio_get ${swp1})
-+	local order_variants=("pcp dscp" "dscp" "pcp")
-+	local apptrust_order
-+	local port_prio
-+	local dscp_prio
-+	local pcp_prio
-+	local dscp
-+	local pcp
-+
-+	RET=0
-+
-+	# First, test if apptrust configuration as taken by the kernel
-+	for order in "${order_variants[@]}"; do
-+		set_apptrust_order ${swp1} "${order}"
-+		if [[ "$order" != "$(port_get_default_apptrust ${swp1})" ]]; then
-+			RET=1
-+			break
-+		fi
-+	done
-+
-+	log_test "Apptrust, supported variants"
-+
-+	# To test if the apptrust configuration is working as expected, we need
-+	# to set DSCP priorities for the switch port.
-+	init_dscp_prios "${swp1}" "${original_dscp_prios_swp1}"
-+
-+	# Start with a simple test where all apptrust sources are disabled
-+	# default port priority is 0, DSCP priority is mapped to 7.
-+	# No high priority packets should be received or transmitted.
-+	port_prio=0
-+	dscp_prio=7
-+	dscp=4
-+
-+	dcb app replace dev ${swp1} default-prio ${port_prio}
-+	dcb app replace dev ${swp1} dscp-prio ${dscp}:${dscp_prio}
-+
-+	apptrust_order=""
-+	set_apptrust_order ${swp1} "${apptrust_order}"
-+	# Test with apptrust sources disabled, Packets should get port default
-+	# priority which is 0
-+	run_test_dscp "Apptrust, all disabled. DSCP-prio ${dscp}:${dscp_prio}" \
-+		"${apptrust_order}" ${port_prio} ${dscp_prio} ${dscp}
-+
-+	apptrust_order="pcp"
-+	set_apptrust_order ${swp1} "${apptrust_order}"
-+	# If PCP is enabled, packets should get PCP priority, which is not
-+	# set in this test (no VLAN tags are present in the packet). No high
-+	# priority packets should be received or transmitted.
-+	run_test_dscp "Apptrust, PCP enabled. DSCP-prio ${dscp}:${dscp_prio}" \
-+		"${apptrust_order}" ${port_prio} ${dscp_prio} ${dscp}
-+
-+	apptrust_order="dscp"
-+	set_apptrust_order ${swp1} "${apptrust_order}"
-+	# If DSCP is enabled, packets should get DSCP priority which is set to 7
-+	# in this test. High priority packets should be received and transmitted.
-+	run_test_dscp "Apptrust, DSCP enabled. DSCP-prio ${dscp}:${dscp_prio}" \
-+		"${apptrust_order}" ${port_prio} ${dscp_prio} ${dscp}
-+
-+	apptrust_order="pcp dscp"
-+	set_apptrust_order ${swp1} "${apptrust_order}"
-+	# If PCP and DSCP are enabled, PCP would have higher apptrust priority
-+	# so packets should get PCP priority. But in this test VLAN PCP is not
-+	# set, so it should get DSCP priority which is set to 7. High priority
-+	# packets should be received and transmitted.
-+	run_test_dscp "Apptrust, PCP and DSCP are enabled. DSCP-prio ${dscp}:${dscp_prio}" \
-+		"${apptrust_order}" ${port_prio} ${dscp_prio} ${dscp}
-+
-+	# If VLAN PCP is set, it should have higher apptrust priority than DSCP
-+	# so packets should get VLAN PCP priority. Send packets with VLAN PCP
-+	# set to 0, DSCP set to 7. Packets should get VLAN PCP priority.
-+	# No high priority packets should be transmitted. Due to nature of the
-+	# switch, high priority packets will be received.
-+	pcp_prio=0
-+	pcp=0
-+	run_test_dscp_pcp "Apptrust, PCP and DSCP are enabled. PCP ${pcp_prio}, DSCP-prio ${dscp}:${dscp_prio}" \
-+		"${apptrust_order}" ${port_prio} ${dscp_prio} ${dscp} ${pcp_prio} ${pcp}
-+
-+	# If VLAN PCP is set to 7, it should have higher apptrust priority than
-+	# DSCP so packets should get VLAN PCP priority. Send packets with VLAN
-+	# PCP set to 7, DSCP set to 7. Packets should get VLAN PCP priority.
-+	# High priority packets should be received and transmitted.
-+	pcp_prio=7
-+	pcp=7
-+	run_test_dscp_pcp "Apptrust, PCP and DSCP are enabled. PCP ${pcp_prio}, DSCP-prio ${dscp}:${dscp_prio}" \
-+		"${apptrust_order}" ${port_prio} ${dscp_prio} ${dscp} ${pcp_prio} ${pcp}
-+	# Now make sure that the switch is able to handle the case where DSCP
-+	# priority is set to 0 and PCP priority is set to 7. Packets should get
-+	# PCP priority. High priority packets should be received and transmitted.
-+	dscp_prio=0
-+	dcb app replace dev ${swp1} dscp-prio ${dscp}:${dscp_prio}
-+	run_test_dscp_pcp "Apptrust, PCP and DSCP are enabled. PCP ${pcp_prio}, DSCP-prio ${dscp}:${dscp_prio}" \
-+		"${apptrust_order}" ${port_prio} ${dscp_prio} ${dscp} ${pcp_prio} ${pcp}
-+	# If both VLAN PCP and DSCP are set to 0, packets should get 0 priority.
-+	# No high priority packets should be received or transmitted.
-+	pcp_prio=0
-+	pcp=0
-+	run_test_dscp_pcp "Apptrust, PCP and DSCP are enabled. PCP ${pcp_prio}, DSCP-prio ${dscp}:${dscp_prio}" \
-+		"${apptrust_order}" ${port_prio} ${dscp_prio} ${dscp} ${pcp_prio} ${pcp}
-+
-+	# Restore original priorities
-+	if ! restore_priorities "${swp1}" "${original_dscp_prios_swp1}"; then
-+		RET=1
-+	fi
-+
-+	set_apptrust_order ${swp1} "${orig_apptrust}"
-+	if [ "$orig_apptrust" != "$(port_get_default_apptrust ${swp1})" ]; then
-+		RET=1
-+	fi
-+
-+	dcb app replace dev ${swp1} default-prio ${orig_port_prio}
-+	if [ $orig_port_prio -ne $(port_default_prio_get ${swp1}) ]; then
-+		RET=1
-+	fi
-+
-+	log_test "Apptrust, restore original settings"
-+}
-+
-+# Function to get current DSCP priorities
-+get_dscp_prios() {
-+	local if_name=$1
-+	dcb -j app show dev ${if_name} | jq -c '.dscp_prio'
-+}
-+
-+# Function to set a specific DSCP priority on a device
-+replace_dscp_prio() {
-+	local if_name=$1
-+	local dscp=$2
-+	local prio=$3
-+	dcb app replace dev ${if_name} dscp-prio ${dscp}:${prio}
-+}
-+
-+# Function to compare DSCP maps
-+compare_dscp_maps() {
-+	local old_json=$1
-+	local new_json=$2
-+	local dscp=$3
-+	local prio=$4
-+
-+	# Create a modified old_json with the expected change for comparison
-+	local modified_old_json=$(echo "$old_json" |
-+		jq --argjson dscp $dscp --argjson prio $prio \
-+			'map(if .[0] == $dscp then [$dscp, $prio] else . end)' |
-+		tr -d " \n")
-+
-+	# Compare new_json with the modified_old_json
-+	if [[ "$modified_old_json" == "$new_json" ]]; then
-+		return 0
-+	else
-+		return 1
-+	fi
-+}
-+
-+# Function to set DSCP priorities
-+set_and_verify_dscp() {
-+	local port=$1
-+	local dscp=$2
-+	local new_prio=$3
-+
-+	local old_prios=$(get_dscp_prios $port)
-+
-+	replace_dscp_prio "$port" $dscp $new_prio
-+
-+	# Fetch current settings and compare
-+	local current_prios=$(get_dscp_prios $port)
-+	if ! compare_dscp_maps "$old_prios" "$current_prios" $dscp $new_prio; then
-+		echo "Error: Unintended changes detected in DSCP map for $port after setting DSCP $dscp to $new_prio."
-+		return 1
-+	fi
-+	return 0
-+}
-+
-+# Function to restore original priorities
-+restore_priorities() {
-+	local port=$1
-+	local original_prios=$2
-+
-+	echo "Removing test artifacts for $port"
-+	local current_prios=$(get_dscp_prios $port)
-+	local prio_str=$(echo "$current_prios" |
-+		jq -r 'map("\(.[0]):\(.[1])") | join(" ")')
-+	dcb app del dev $port dscp-prio $prio_str
-+
-+	echo "Restoring original DSCP priorities for $port"
-+	local restore_str=$(echo "$original_prios" |
-+		jq -r 'map("\(.[0]):\(.[1])") | join(" ")')
-+	dcb app add dev $port dscp-prio $restore_str
-+
-+	local current_prios=$(get_dscp_prios $port)
-+	if [[ "$original_prios" != "$current_prios" ]]; then
-+		echo "Error: Failed to restore original DSCP priorities for $port"
-+		return 1
-+	fi
-+	return 0
-+}
-+
-+# Initialize DSCP priorities. Set them to predictable values for testing.
-+init_dscp_prios() {
-+	local port=$1
-+	local original_prios=$2
-+
-+	echo "Removing any existing DSCP priority mappins for $port"
-+	local prio_str=$(echo "$original_prios" |
-+		jq -r 'map("\(.[0]):\(.[1])") | join(" ")')
-+	dcb app del dev $port dscp-prio $prio_str
-+
-+	# Initialize DSCP priorities list
-+	local dscp_prios=""
-+	for dscp in {0..63}; do
-+		dscp_prios+=("$dscp:0")
-+	done
-+
-+	echo "Setting initial DSCP priorities map to 0 for $port"
-+	dcb app add dev $port dscp-prio ${dscp_prios[@]}
-+}
-+
-+# Main function to test global DSCP map across specified ports
-+test_global_dscp_map() {
-+	local ports=("$swp1" "$swp2")
-+	local original_dscp_prios_port0=$(get_dscp_prios ${ports[0]})
-+	local orig_apptrust=$(port_get_default_apptrust ${swp1})
-+	local orig_port_prio=$(port_default_prio_get ${swp1})
-+	local apptrust_order="dscp"
-+	local port_prio=0
-+	local dscp_prio
-+	local dscp
-+
-+	RET=0
-+
-+	set_apptrust_order ${swp1} "${apptrust_order}"
-+	dcb app replace dev ${swp1} default-prio ${port_prio}
-+
-+	# Initialize DSCP priorities
-+	init_dscp_prios "${ports[0]}" "$original_dscp_prios_port0"
-+
-+	# Loop over each DSCP index
-+	for dscp in {0..63}; do
-+		# and test each Internal Priority value
-+		for dscp_prio in {0..7}; do
-+			# do it for each port. This is to test if the global DSCP map
-+			# is accessible from all ports.
-+			for port in "${ports[@]}"; do
-+				if ! set_and_verify_dscp "$port" $dscp $dscp_prio; then
-+					RET=1
-+				fi
-+			done
-+
-+			# Test if the DSCP priority is correctly applied to the packets
-+			run_test_dscp "DSCP (${dscp}) QoS classification, prio: ${dscp_prio}" \
-+				"${apptrust_order}" ${port_prio} ${dscp_prio} ${dscp}
-+			if [ ${RET} -eq 1 ]; then
-+				break
-+			fi
-+		done
-+	done
-+
-+	# Restore original priorities
-+	if ! restore_priorities "${ports[0]}" "${original_dscp_prios_port0}"; then
-+		RET=1
-+	fi
-+
-+	set_apptrust_order ${swp1} "${orig_apptrust}"
-+	if [[ "$orig_apptrust" != "$(port_get_default_apptrust ${swp1})" ]]; then
-+		RET=1
-+	fi
-+
-+	dcb app replace dev ${swp1} default-prio ${orig_port_prio}
-+	if [ $orig_port_prio -ne $(port_default_prio_get ${swp1}) ]; then
-+		RET=1
-+	fi
-+
-+	log_test "DSCP global map"
-+}
-+
-+trap cleanup EXIT
-+
-+ALL_TESTS="
-+	test_port_default
-+	test_port_apptrust
-+	test_global_dscp_map
-+"
-+
-+setup_prepare
-+setup_wait
-+tests_run
-+
-+exit $EXIT_STATUS
++#endif /* __KSZ_DCB_H */
 -- 
 2.39.2
 
