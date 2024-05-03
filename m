@@ -1,766 +1,239 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2345515357D;
-	Fri,  3 May 2024 18:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714761016; cv=none; b=Y0Nts+wdCTEkIRxxy4Rkn82CyFw0607/QBbkxOReALjDcNphPoiHqKweQyjcsbCbNc3r/klxECGIkWQsdHaf2OgXeTrm0TUBm38kC20RGicXBAOlNwY2O27U9aZiiK1dQKXHi0btHqRlZkAEeERqbpVde8PtAmT367JCofM8wmE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714761016; c=relaxed/simple;
-	bh=jKPBdTZBWfXKshm2xN+edmAIDX4Stlo1qSApKaQRygs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Uzhl4cSbsiDRHIg7h8QBU5sq6mfhRLaE/xRyYHINjx2zjNFfbq0ZRhhEqZhG8Xbkczxy5+63xqHBvPRRhA3wn+sAY8Mf+suF5JPwJPl+xnb9DqPrf43wSe3P+vXA/djbzaF5vFrzd4aDLAhArQbHSjjtyEKHBGZrAvZea/9iqoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=onJPdjEj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=st7aW3ad; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7266E139D19;
+	Fri,  3 May 2024 18:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714761095; cv=fail; b=LXKh+sIm0mqQOb6EYdAQLP4kx0qF77k0TX7OmULmLCwSyzEY7RqtpL/w+AdlTdGnkV+PBqxtsSXTnK0o8Wc1Bh5yffV9FuaPZwtIgunU8QjlRljyjznYUjhBy49fTfof4X3R6Y94MYvnzHQb/YflmzToaGZ2EvMkmSlJQcL4RqQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714761095; c=relaxed/simple;
+	bh=UwpGhYE+XRGHI+0X/IdtVXbj+6VjlpMDUn4kddJvyeA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=X5FgX/2GAmgtwAd1RQUCIuPsZWD3hbjrLN/aDuLvH9a6nvDHJ5CiCt57UJgp82yNA2tca5efvZzISJ2abyqISfFMLSNnWMzR9gCv4mWe+/O58IxBeJeDMfY2mujYsS3IRVcSxdzj4Fp1CH4OYdakA7WZ3XxAqbaPqhl37EG1Srk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A+68wcdp; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="onJPdjEj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="st7aW3ad"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1714761011;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U+z76MrGFwu7LZiEGuHxi2dOAcDWW4QXJPxN3zJkFME=;
-	b=onJPdjEj8jL9KimRcOxbquuqcoC8IDUTUVVSg3pas9glgEQ63DVInmbdSVJtCdAfAloK42
-	BoV0vM5pDD7J74hDyAmKqMKnSvhcnHb90sICGa54jwxWHUQA1I1hQav7ISUu41eb7kzqQs
-	vTCuWCXPu/FkGopYxm50a5d/EAakHk3PE8tG5eoC7rPoKOF5fK+zwrf/xZF+G5ZLVqaMyC
-	CQfMpayieLJX5Z0kIPRzIXkeOTSvvShTLuOlB7AqsUSS5ZSF9bGL81CCwAwOTL71HMuVzU
-	e+VNwTyzUuckcw0JYiJ499LepdN6wM683ChSv9AhEndRJrZM037udNAfaLGmXw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1714761011;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U+z76MrGFwu7LZiEGuHxi2dOAcDWW4QXJPxN3zJkFME=;
-	b=st7aW3adoCnUVLRXDCTB32glVy1tRQv03nxp/lZlBsionKm79y9/AUeiyo7lLCgrdh6mAt
-	3BIDabzJm/iCIoCA==
-To: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	bpf@vger.kernel.org
-Subject: [PATCH net-next 14/15] net: Reference bpf_redirect_info via task_struct on PREEMPT_RT.
-Date: Fri,  3 May 2024 20:25:18 +0200
-Message-ID: <20240503182957.1042122-15-bigeasy@linutronix.de>
-In-Reply-To: <20240503182957.1042122-1-bigeasy@linutronix.de>
-References: <20240503182957.1042122-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A+68wcdp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714761093; x=1746297093;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=UwpGhYE+XRGHI+0X/IdtVXbj+6VjlpMDUn4kddJvyeA=;
+  b=A+68wcdpQcdy2fM83otvVltnwSv8N8BO0qxMwpqWT+9KnbO7e+65DBgF
+   Gar9T+s78/K9Q1AL4lgiKqoj4q+XzwUZWV44OgcirW6VS1hUJVtyqnsaZ
+   gopS2juh5nHAxzkIoID2jGmBoDu/YL+RMm2H/68ZvwO6u8KpMpK9dyAB8
+   VNrU4gc852PDSrjgEuHKp4Qrumal6LsBDN2nnyFDpfP/BrcRDEoeuvg20
+   bAzIVQhp83/MepD/g4Ee4X6g+sXsTqU22hYhdYwonzuTksNsF4AbojO2o
+   7D1T0TaAs1LEeLnnf5qgB3hdE5EdneV88r3azKwsFePQTdFzaSk0DUTZp
+   g==;
+X-CSE-ConnectionGUID: UYruG3crRFKnYryfp0g//A==
+X-CSE-MsgGUID: DhAQyDUeQaCt7YmqkQIc6Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="11115083"
+X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
+   d="scan'208";a="11115083"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 11:31:32 -0700
+X-CSE-ConnectionGUID: kUdehmERQtm1K3yY0v/riw==
+X-CSE-MsgGUID: ER059oywRaiEOmIwWomJhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
+   d="scan'208";a="27551785"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 May 2024 11:31:32 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 3 May 2024 11:31:31 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 3 May 2024 11:31:31 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 3 May 2024 11:31:31 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 3 May 2024 11:31:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ONg9CnKgyAkE1oBhWNRzH7pVZ8k9rHSlleUOUqYi0k8yHVJnRVWxqZMFV/2IAwmbyTyQA2aOs1dvGAvc9bSpC1uRNAVXb77B5+7uGyD7hQTz/zLbJsohwsG8fCJLEJEIlBlwlorHaOF/yswoba7o1eyg/B4RDrwfmv5eFpLOaQaipa32pQgnFydgxAS19ybT6rAiSCI3h2pPxYXchhFfv3OKR2+CA9hi7pa6qcC5vaWSv4c4PcebmwdK4CvmIxZh4Fre+16gVt9u/fUsfyJIpDB8fu9BeteIpHvNe9axaQMvKbPIJo6LUMx8MojEn4Cg7+gVhwH+XiH0tCqLuba1aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UwpGhYE+XRGHI+0X/IdtVXbj+6VjlpMDUn4kddJvyeA=;
+ b=FJlZPR3OnQUboB+UeXJ6/MoTySy/1fzGGwyj5SCzxfaH3hXhjsJoWSPXVBknm72FtpJWKqHDbg09FhpCbmhnIdYHGaDwuoDdBuATNAK11ijOOq1hSoxQ3Pgc77nQRSQqYCZOvYpmLej5Rrkq8+aw4px+C9wfLEIRWfl14fSUztuB0hwifcbZ7W1nK+AwcV0jgfIcBj8u5/j7jZBRno1zBOLeZX1TOQYvIOuLifFGyI5XJfNlXYw3wrov3bqhPLQQaq0Okc4A4QF2t2vTEwQDSVVV+GwXvaQVQeXkFF9jKi5/izEzZzBQpoMJQkcXVH5zfueFWsrrf0hZXPiz4iHR7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by CY8PR11MB7745.namprd11.prod.outlook.com (2603:10b6:930:90::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Fri, 3 May
+ 2024 18:31:28 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9%3]) with mapi id 15.20.7519.031; Fri, 3 May 2024
+ 18:31:28 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Huang, Kai"
+	<kai.huang@intel.com>
+CC: "Hansen, Dave" <dave.hansen@intel.com>, "seanjc@google.com"
+	<seanjc@google.com>, "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org"
+	<x86@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>,
+	"hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "jgross@suse.com" <jgross@suse.com>, "Yamahata, Isaku"
+	<isaku.yamahata@intel.com>
+Subject: Re: [PATCH 5/5] x86/virt/tdx: Export global metadata read
+ infrastructure
+Thread-Topic: [PATCH 5/5] x86/virt/tdx: Export global metadata read
+ infrastructure
+Thread-Index: AQHanO1LpwQKjb3BWkmudfJCqyD9LbGEpckAgAAgcQCAARAjgA==
+Date: Fri, 3 May 2024 18:31:28 +0000
+Message-ID: <6e839de0e66ac2a9a8af7fd78757b2ed1bffbca4.camel@intel.com>
+References: <cover.1709288433.git.kai.huang@intel.com>
+	 <ec9fc9f1d45348ddfc73362ddfb310cc5f129646.1709288433.git.kai.huang@intel.com>
+	 <affad906c557f251ab189770f5a45cd2087aca19.camel@intel.com>
+	 <330c909a-4b96-4960-9cad-fd10e86c67b8@intel.com>
+In-Reply-To: <330c909a-4b96-4960-9cad-fd10e86c67b8@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|CY8PR11MB7745:EE_
+x-ms-office365-filtering-correlation-id: 5b83f971-d287-4277-dbad-08dc6b9f3f22
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|376005|366007|7416005|1800799015|38070700009;
+x-microsoft-antispam-message-info: =?utf-8?B?UTNqUW8ydDFSQ29NcHBpNWZrQ1g5WWc0WkRRVVFSL0ZoQ0ZBN3hseGFpRHBU?=
+ =?utf-8?B?ekhrMkNtTHZhSDJSb2l2cUtDeU1CT1dkNGJGcmNPU0hPanp4VFdUaFU5NUVR?=
+ =?utf-8?B?UTJtdjVjMWtMN1lzMzk0K2Q5ZVZZTDdFdFhFS3REY3dWNXo0UDdBZ3ZwL1pS?=
+ =?utf-8?B?Ny9Dd1NTUUZUTEpFc0tEZG5taFBwQmlxazcyZFI2U0hmVTMrV1phRDkvMzRH?=
+ =?utf-8?B?V0tpWTVNb3BYc1ZRYXhKQVpyUWk5SnNaRDIrVkFFdW9GQjFhQ1NZVW5Fb29s?=
+ =?utf-8?B?c29MWTJtZFo3QktodDdYdTZVRm53WUQ0OVozL2xhUmZhYXd6SHhaMXBRa2lU?=
+ =?utf-8?B?aFdXUlpRU1c2SkZmR0dFTlVrMUdlUFVYMFZMRnBHMnhFamNvY0xxamRVZzJP?=
+ =?utf-8?B?L29kWUU1b3FFRkxtZ3U2Nm5LMk9OU3hOZGNRdUpDQmQ3K1NHa2JhME00UDNq?=
+ =?utf-8?B?aC85T0orMlYrdll4TEN0TmRRUlYxRytrSi8vb25FVUw2TVhkb2QyYXhYK3dF?=
+ =?utf-8?B?U1BNOG94MnZIVFV4N2FaSVJ6RWFtaWxieFpRRDJLbmpGSXV3Z3pzbk1VSEhq?=
+ =?utf-8?B?a2VzVkZvaXZyaGM0eVpUcDNkN2k1eUdLSlBSRUJzcFBFVEduckpQb1pxdUtR?=
+ =?utf-8?B?STdYbjZabFFTZWw4cVlDYjB1dTZzL0wvSVNVSnE5VEtKeTNUWUJnZFNrTVEv?=
+ =?utf-8?B?QzZaVlVZcDNEMVhHcWd3M0hSTEdTRTI3NDNFb0F6eTkzNE1LYUxaalhmYWEy?=
+ =?utf-8?B?Qk82QkxxSDFuZUsrQ2llbERkNFlyK2xDLzFCaHE1bzZ4WXdmZHc2SytnaHhO?=
+ =?utf-8?B?SFhWam12OUM2bEVidWk0TG1lRGZuRGdzTTlFWmZXb1prWXh6ekV0UXMzTFFR?=
+ =?utf-8?B?a2pyTEhHSEQzNER1N1JTMWVwNXpYVHQvZzhvbzlGV0hZYVJFelhabVpaQ2pG?=
+ =?utf-8?B?aUtUZUMrd3NiNFp2aUlCbE5PYnBlS1Z3WDkwcUc5aHJCdnBFMUR5SHFwTGQ4?=
+ =?utf-8?B?WENWT3VOSVl3d3Fnc00wOUlCeVJZVDNmUUhBU1VrZG9tN01Ud0R6MFNkZGxs?=
+ =?utf-8?B?RU10WFFacVhZcjhuWEw1WUFid2JrdXUrMHJWSEZ6bE5POTArMTV1dGN5VWVW?=
+ =?utf-8?B?STZPTU13NGJsYUtmUHBJWkdpdGZYMkFLY0dPdzB3cE51Wnk4blNCVkc0Q3dE?=
+ =?utf-8?B?c0RxcDhiL2w5UFB1VFh0b1M4dFo0bm5sY2d1ejZmeVFSVEhaMmJkZWx3bmJZ?=
+ =?utf-8?B?ZC9EZE1QcGVPV2tkNWppd0YvanU0V1piejNtY0V6OSs0MFRCVUpIMytXM2gy?=
+ =?utf-8?B?RXZlZmhucUZGWlNYM2tTRXVieWhwcUtWVlZMeUNPMTV4a1dNVnlQL0dPSyt0?=
+ =?utf-8?B?TG9UbTZkMjJtOHlyMlBwMGo1UVNQUm80K1RJWEhFdWFoM2lDb2lteHdFcjRK?=
+ =?utf-8?B?bmdpaVBXYVN4MVgrRWlBQ0x5aEs3WmxrZ2tzaW1jN1p2NnYzclpRL1VyNXlk?=
+ =?utf-8?B?aXdwSmQvRFdqZzZtelZCaU0rVXR0UjdIQndGWkxReXNPMEcyTm1EZ2pDVEVD?=
+ =?utf-8?B?Zm1WN1ZhTjlSVU5XVTI1SGN6anVqNDZoc2Z3Q3NPV0pZNGVIRXJJdzVaMUZa?=
+ =?utf-8?B?UHo1Y0VqOTVvUnl1ODFBQW9kY3p1ODBwOEsvUWx3S3ZOZGp4T2h4UThqUkJm?=
+ =?utf-8?B?U0RRRGk2OGlWMStXaGt0aXdySUlHNkRaN3IxV1AwYXVRQitQZzJpcnZ4dmd5?=
+ =?utf-8?B?MzZFSVNFUndMNTBzdVFqL2RBSnhvQTgwcGE3dFNuWVFlei9wTlVlY2p3ZjY1?=
+ =?utf-8?B?eHV0dmJBNSttQkEzMGNUdz09?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(7416005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TzAwcE1WQkt3dVltVHQ5ZzVtTWdHSnlnZ3N1Z0g3ME1xYVBjM1EyczFFMVdx?=
+ =?utf-8?B?VVgrTzRjdWJYdWljc09vYUtDUlc4MlFCU0VkOVVLa3pSLzRjU2pXc2N0THkz?=
+ =?utf-8?B?TmNrQklUS3V1RWVEcUF1bHFZaWl0RUNsbmdlNTJVbEVWdmZLZjRpZDMyTW9M?=
+ =?utf-8?B?MEdDNVlJZTZkQU9jSFE0c1prRlFnZU1rRGU3ZXNWK2JwbTAvU1FjZ1ZCb3pq?=
+ =?utf-8?B?RVZzNlluVlhtRDl2N0dGLzJwWjJDbmJTZ3k3SU9xYmJoSk00NDltSlR5YW4x?=
+ =?utf-8?B?K0YyaVFRUjRsSGZxMTRCa1BEOVUwRllqekZlbytNU0JIRDMwYUFSR04xd292?=
+ =?utf-8?B?UjJ1Y3RhQkl4VksrcksvSEs1YUJLNlk4cnZHTGNBeEdlTWhBYXhtdm1Fc1Bq?=
+ =?utf-8?B?ekUzekJiUzB2MGJlV0J0dmVDdnc1VXJuazhCWVFSeVlEVnRNRWZYVm8yMjRZ?=
+ =?utf-8?B?MkFTeFBJU2JqSEJEdHBPa0J2Vkk4WUFjbW9LYnRNc3hQc3hjZFgvbUtZRjN5?=
+ =?utf-8?B?RHcxSi9CdmhoL2I5SDZtWGNqWlcxRDlsQXhlVjZMajU4dUtobHAramVCc3ph?=
+ =?utf-8?B?WXZBUXZZOExYVXVvUXBkcEh6bVo1d0hJV1NwbElkWXpGTXNYYnNSZ2Z0S0ND?=
+ =?utf-8?B?RlBvZWIyb2JLTThDK21ZR0RxZS9Kd0VCQW9jQm84SkNGTGtVL0NwU1VrK3lz?=
+ =?utf-8?B?SXdVYW1QYm9BdU9tc3VRZ0wxQTZoK3BCb2djWERtU0FkWG1VNit2c09obnlx?=
+ =?utf-8?B?N2luT2NzSEREanpqUWdCc3dXb0ZldkJFdUV6TzlxWFd5UkVyS2lLUU5HdXIw?=
+ =?utf-8?B?Qy9IR0pESTBEQ1VyUHZrdEgydDlOOE9VTHpHZzdNT0RQVEhTOC85dStMSEtr?=
+ =?utf-8?B?RUNjalFZMUd4SlhxOUhUcHFDQnZNSjUvUEYzYVhsZkVFSy9lb0F4OUZDY1ZP?=
+ =?utf-8?B?TVFPbzJxaExSUUtzaWRmcHlneFVjdE0xSVZzQVgzejBVSS91Ti9pajZiWDFT?=
+ =?utf-8?B?UmpqampUNldHUlhLcjhkOEgyTVhMdFU0YSswTDZhc055bndTdkh1NzJYUUQx?=
+ =?utf-8?B?Szl2L2pCU2ErcDNIUTdLU1lVcmtZQUY0ZktxU0xyR01USW9EVzhaODgxaVg0?=
+ =?utf-8?B?NzZCUEpKcndIZnJaN2NRQisyaUpTMTN4d1FKdXdOS2FYTkFSbTFWRXFoU3Rn?=
+ =?utf-8?B?U0x4d1BLcHhId0tCQ1g5RG9YNVJpZTZaU255UkVkdHF3MkRiRURwWWRFZEN2?=
+ =?utf-8?B?bnlRUFBPWncwTitXY3VZaU14TC95SXVRTUJNLzRMZ1I0NWFLa3NReTBrcUg4?=
+ =?utf-8?B?TzBucWxXTmZjVW54RmJGS0VSMS9iUkhJb3NOdEIwbktNYnM5VFJ0ai84MVVj?=
+ =?utf-8?B?Nm1qQTgrdnAzV1Q1Tmk1c1pybWc4eHZ2VExRT3Mra0ZsdEJaZ05hSUhiMGs1?=
+ =?utf-8?B?WThDSm45U2FFbDBZazgrdWY0OXcyV2Y0MUh6WEZPbSs5cHNCMFloSElobFR3?=
+ =?utf-8?B?UGNpbDZUVFNkTmdodndRbU5SRXNYajVuOENrZnI3aEs0OTIvZXVydFE4UGda?=
+ =?utf-8?B?ZWJ0ZVdLSnVPYmhQdjFQNE81TmlsNHhhUTBLdURLeWZUZlAxUTBGdHJBNTcv?=
+ =?utf-8?B?ckdHQzRCQXI5WTJaaitrZk5aTytjWkxxejJVNGFpNkRFWC9VeU1TSi9xSXJl?=
+ =?utf-8?B?aTdsd2ZSbG5PemsrUW56TkdmcVNqMnhnRzErbCtVVWJoUzQwdEhPM202bUs5?=
+ =?utf-8?B?ZUVOeDQ2Y1lXTUNRSExkNEc5RkMrbzg0VWNCQXVrS1FpUDlncVZuWGIyaHVO?=
+ =?utf-8?B?WkhLY0lIQk5nemxyZkFEajBBMC81K2V0WUp3dmZFV2Q3RnJVandVOFBOL2NW?=
+ =?utf-8?B?THpzOTl3UzJqTkRBMXM0UFRvUVVvUDBaTnljWWJ6aEVEdTc5S3A2R1RmSHBo?=
+ =?utf-8?B?dU9zdHhxZW9RdSsrdEZkMEF2OUlMaDBIWlBya25xY0NhRmVVdVBBZmNTLzRz?=
+ =?utf-8?B?SE41NU1GSFZwN0l6TDBGZkpVZWJSZnJGekhxN0x1M09jSnBBeTJhOGJZL3VP?=
+ =?utf-8?B?Tzh6SkRrcmxHcWJLQ3VjV25nZklBaElqVmlaOE1BenZ6TkVLTEJ2MkxKekl6?=
+ =?utf-8?B?ODFxUnBwU2FsTUtvbTgySFhsRXlvbUFJMXl4TnVYTUVlQzRvVzBDSURWTnlE?=
+ =?utf-8?Q?jVBvTplDU8LdcMCtZEDU33s=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9C2853E32BE1844287A8DABE178580D7@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b83f971-d287-4277-dbad-08dc6b9f3f22
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2024 18:31:28.2929
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2e5pun8uouFPT26QRQDke5Z+uL/sqJgDWFJqs1RSs0gr3iNcyuR+KJjtdhulZKAZgUpbfeW6NU53ylScpQtB5WnnUppqKggeSVywOKx01hM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7745
+X-OriginatorOrg: intel.com
 
-The XDP redirect process is two staged:
-- bpf_prog_run_xdp() is invoked to run a eBPF program which inspects the
-  packet and makes decisions. While doing that, the per-CPU variable
-  bpf_redirect_info is used.
-
-- Afterwards xdp_do_redirect() is invoked and accesses bpf_redirect_info
-  and it may also access other per-CPU variables like xskmap_flush_list.
-
-At the very end of the NAPI callback, xdp_do_flush() is invoked which
-does not access bpf_redirect_info but will touch the individual per-CPU
-lists.
-
-The per-CPU variables are only used in the NAPI callback hence disabling
-bottom halves is the only protection mechanism. Users from preemptible
-context (like cpu_map_kthread_run()) explicitly disable bottom halves
-for protections reasons.
-Without locking in local_bh_disable() on PREEMPT_RT this data structure
-requires explicit locking.
-
-PREEMPT_RT has forced-threaded interrupts enabled and every
-NAPI-callback runs in a thread. If each thread has its own data
-structure then locking can be avoided.
-
-Create a struct bpf_net_context which contains struct bpf_redirect_info.
-Define the variable on stack, use bpf_net_ctx_set() to save a pointer to
-it. Use the __free() annotation to automatically reset the pointer once
-function returns.
-The bpf_net_ctx_set() may nest. For instance a function can be used from
-within NET_RX_SOFTIRQ/ net_rx_action which uses bpf_net_ctx_set() and
-NET_TX_SOFTIRQ which does not. Therefore only the first invocations
-updates the pointer.
-Use bpf_net_ctx_get_ri() as a wrapper to retrieve the current struct
-bpf_redirect_info.
-
-On PREEMPT_RT the pointer to bpf_net_context is saved task's
-task_struct. On non-PREEMPT_RT builds the pointer saved in a per-CPU
-variable (which is always NODE-local memory). Using always the
-bpf_net_context approach has the advantage that there is almost zero
-differences between PREEMPT_RT and non-PREEMPT_RT builds.
-
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Eduard Zingerman <eddyz87@gmail.com>
-Cc: Hao Luo <haoluo@google.com>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Song Liu <song@kernel.org>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-Cc: Yonghong Song <yonghong.song@linux.dev>
-Cc: bpf@vger.kernel.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/filter.h | 96 ++++++++++++++++++++++++++++++++++++++---
- include/linux/sched.h  |  5 +++
- kernel/bpf/cpumap.c    |  3 ++
- kernel/fork.c          |  3 ++
- net/bpf/test_run.c     | 11 ++++-
- net/core/dev.c         | 19 +++++++-
- net/core/filter.c      | 98 ++++++++++++++++++++++++++----------------
- net/core/lwt_bpf.c     |  3 ++
- 8 files changed, 191 insertions(+), 47 deletions(-)
-
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index d5fea03cb6e61..bdd69bd81df45 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -744,7 +744,83 @@ struct bpf_redirect_info {
- 	struct bpf_nh_params nh;
- };
-=20
--DECLARE_PER_CPU(struct bpf_redirect_info, bpf_redirect_info);
-+struct bpf_net_context {
-+	struct bpf_redirect_info ri;
-+};
-+
-+#ifndef CONFIG_PREEMPT_RT
-+DECLARE_PER_CPU(struct bpf_net_context *, bpf_net_context);
-+
-+static inline struct bpf_net_context *bpf_net_ctx_set(struct bpf_net_conte=
-xt *bpf_net_ctx)
-+{
-+	struct bpf_net_context *ctx;
-+
-+	ctx =3D this_cpu_read(bpf_net_context);
-+	if (ctx !=3D NULL)
-+		return NULL;
-+	this_cpu_write(bpf_net_context, bpf_net_ctx);
-+	return bpf_net_ctx;
-+}
-+
-+static inline void bpf_net_ctx_clear(struct bpf_net_context *bpf_net_ctx)
-+{
-+	struct bpf_net_context *ctx;
-+
-+	ctx =3D this_cpu_read(bpf_net_context);
-+	if (ctx !=3D bpf_net_ctx)
-+		return;
-+	this_cpu_write(bpf_net_context, NULL);
-+}
-+
-+static inline struct bpf_net_context *bpf_net_ctx_get(void)
-+{
-+	struct bpf_net_context *bpf_net_ctx =3D this_cpu_read(bpf_net_context);
-+
-+	WARN_ON_ONCE(!bpf_net_ctx);
-+	return bpf_net_ctx;
-+}
-+
-+#else
-+
-+static inline struct bpf_net_context *bpf_net_ctx_set(struct bpf_net_conte=
-xt *bpf_net_ctx)
-+{
-+	struct task_struct *tsk =3D current;
-+
-+	if (tsk->bpf_net_context !=3D NULL)
-+		return NULL;
-+	tsk->bpf_net_context =3D bpf_net_ctx;
-+	return bpf_net_ctx;
-+}
-+
-+static inline void bpf_net_ctx_clear(struct bpf_net_context *bpf_net_ctx)
-+{
-+	struct task_struct *tsk =3D current;
-+
-+	if (tsk->bpf_net_context !=3D bpf_net_ctx)
-+		return;
-+	tsk->bpf_net_context =3D NULL;
-+}
-+
-+static inline struct bpf_net_context *bpf_net_ctx_get(void)
-+{
-+	struct bpf_net_context *bpf_net_ctx =3D current->bpf_net_context;
-+
-+	WARN_ON_ONCE(!bpf_net_ctx);
-+	return bpf_net_ctx;
-+}
-+
-+#endif
-+
-+static inline struct bpf_redirect_info *bpf_net_ctx_get_ri(void)
-+{
-+	struct bpf_net_context *bpf_net_ctx =3D bpf_net_ctx_get();
-+
-+	if (!bpf_net_ctx)
-+		return NULL;
-+	return &bpf_net_ctx->ri;
-+}
-+
-+DEFINE_FREE(bpf_net_ctx_clear, struct bpf_net_context *, if (_T) bpf_net_c=
-tx_clear(_T));
-=20
- /* flags for bpf_redirect_info kern_flags */
- #define BPF_RI_F_RF_NO_DIRECT	BIT(0)	/* no napi_direct on return_frame */
-@@ -1021,23 +1097,27 @@ void bpf_clear_redirect_map(struct bpf_map *map);
-=20
- static inline bool xdp_return_frame_no_direct(void)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
-+	if (!ri)
-+		return false;
- 	return ri->kern_flags & BPF_RI_F_RF_NO_DIRECT;
- }
-=20
- static inline void xdp_set_return_frame_no_direct(void)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
--	ri->kern_flags |=3D BPF_RI_F_RF_NO_DIRECT;
-+	if (ri)
-+		ri->kern_flags |=3D BPF_RI_F_RF_NO_DIRECT;
- }
-=20
- static inline void xdp_clear_return_frame_no_direct(void)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
--	ri->kern_flags &=3D ~BPF_RI_F_RF_NO_DIRECT;
-+	if (ri)
-+		ri->kern_flags &=3D ~BPF_RI_F_RF_NO_DIRECT;
- }
-=20
- static inline int xdp_ok_fwd_dev(const struct net_device *fwd,
-@@ -1591,9 +1671,11 @@ static __always_inline long __bpf_xdp_redirect_map(s=
-truct bpf_map *map, u64 inde
- 						   u64 flags, const u64 flag_mask,
- 						   void *lookup_elem(struct bpf_map *map, u32 key))
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
- 	const u64 action_mask =3D XDP_ABORTED | XDP_DROP | XDP_PASS | XDP_TX;
-=20
-+	if (!ri)
-+		return XDP_ABORTED;
- 	/* Lower bits of the flags are used as return code on lookup failure */
- 	if (unlikely(flags & ~(action_mask | flag_mask)))
- 		return XDP_ABORTED;
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 6779d3b8f2578..26324fb0e532d 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -53,6 +53,7 @@ struct bio_list;
- struct blk_plug;
- struct bpf_local_storage;
- struct bpf_run_ctx;
-+struct bpf_net_context;
- struct capture_control;
- struct cfs_rq;
- struct fs_struct;
-@@ -1504,6 +1505,10 @@ struct task_struct {
- 	/* Used for BPF run context */
- 	struct bpf_run_ctx		*bpf_ctx;
- #endif
-+#ifdef CONFIG_PREEMPT_RT
-+	/* Used by BPF for per-TASK xdp storage */
-+	struct bpf_net_context		*bpf_net_context;
-+#endif
-=20
- #ifdef CONFIG_GCC_PLUGIN_STACKLEAK
- 	unsigned long			lowest_stack;
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index a8e34416e960f..66974bd027109 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -240,12 +240,14 @@ static int cpu_map_bpf_prog_run(struct bpf_cpu_map_en=
-try *rcpu, void **frames,
- 				int xdp_n, struct xdp_cpumap_stats *stats,
- 				struct list_head *list)
- {
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	int nframes;
-=20
- 	if (!rcpu->prog)
- 		return xdp_n;
-=20
- 	rcu_read_lock_bh();
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-=20
- 	nframes =3D cpu_map_bpf_prog_run_xdp(rcpu, frames, xdp_n, stats);
-=20
-@@ -255,6 +257,7 @@ static int cpu_map_bpf_prog_run(struct bpf_cpu_map_entr=
-y *rcpu, void **frames,
- 	if (unlikely(!list_empty(list)))
- 		cpu_map_bpf_prog_run_skb(rcpu, list, stats);
-=20
-+	bpf_net_ctx_clear(bpf_net_ctx);
- 	rcu_read_unlock_bh(); /* resched point, may call do_softirq() */
-=20
- 	return nframes;
-diff --git a/kernel/fork.c b/kernel/fork.c
-index aebb3e6c96dc6..82c16c22d960c 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2355,6 +2355,9 @@ __latent_entropy struct task_struct *copy_process(
- 	RCU_INIT_POINTER(p->bpf_storage, NULL);
- 	p->bpf_ctx =3D NULL;
- #endif
-+#ifdef CONFIG_PREEMPT_RT
-+	p->bpf_net_context =3D  NULL;
-+#endif
-=20
- 	/* Perform scheduler related setup. Assign this task to a CPU. */
- 	retval =3D sched_fork(clone_flags, p);
-diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-index f6aad4ed2ab2f..600cc8e428c1a 100644
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -283,9 +283,10 @@ static int xdp_recv_frames(struct xdp_frame **frames, =
-int nframes,
- static int xdp_test_run_batch(struct xdp_test_data *xdp, struct bpf_prog *=
-prog,
- 			      u32 repeat)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	int err =3D 0, act, ret, i, nframes =3D 0, batch_sz;
- 	struct xdp_frame **frames =3D xdp->frames;
-+	struct bpf_redirect_info *ri;
- 	struct xdp_page_head *head;
- 	struct xdp_frame *frm;
- 	bool redirect =3D false;
-@@ -295,6 +296,8 @@ static int xdp_test_run_batch(struct xdp_test_data *xdp=
-, struct bpf_prog *prog,
- 	batch_sz =3D min_t(u32, repeat, xdp->batch_size);
-=20
- 	local_bh_disable();
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-+	ri =3D bpf_net_ctx_get_ri();
- 	xdp_set_return_frame_no_direct();
-=20
- 	for (i =3D 0; i < batch_sz; i++) {
-@@ -359,6 +362,7 @@ static int xdp_test_run_batch(struct xdp_test_data *xdp=
-, struct bpf_prog *prog,
- 	}
-=20
- 	xdp_clear_return_frame_no_direct();
-+	bpf_net_ctx_clear(bpf_net_ctx);
- 	local_bh_enable();
- 	return err;
- }
-@@ -394,6 +398,7 @@ static int bpf_test_run_xdp_live(struct bpf_prog *prog,=
- struct xdp_buff *ctx,
- static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat,
- 			u32 *retval, u32 *time, bool xdp)
- {
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	struct bpf_prog_array_item item =3D {.prog =3D prog};
- 	struct bpf_run_ctx *old_ctx;
- 	struct bpf_cg_run_ctx run_ctx;
-@@ -419,10 +424,14 @@ static int bpf_test_run(struct bpf_prog *prog, void *=
-ctx, u32 repeat,
- 	do {
- 		run_ctx.prog_item =3D &item;
- 		local_bh_disable();
-+		bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-+
- 		if (xdp)
- 			*retval =3D bpf_prog_run_xdp(prog, ctx);
- 		else
- 			*retval =3D bpf_prog_run(prog, ctx);
-+
-+		bpf_net_ctx_clear(bpf_net_ctx);
- 		local_bh_enable();
- 	} while (bpf_test_timer_continue(&t, 1, repeat, &ret, time));
- 	bpf_reset_run_ctx(old_ctx);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 1503883ce15a4..26e524544942d 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4031,11 +4031,15 @@ sch_handle_ingress(struct sk_buff *skb, struct pack=
-et_type **pt_prev, int *ret,
- 		   struct net_device *orig_dev, bool *another)
- {
- 	struct bpf_mprog_entry *entry =3D rcu_dereference_bh(skb->dev->tcx_ingres=
-s);
-+	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) =3D NULL;
- 	enum skb_drop_reason drop_reason =3D SKB_DROP_REASON_TC_INGRESS;
-+	struct bpf_net_context __bpf_net_ctx;
- 	int sch_ret;
-=20
- 	if (!entry)
- 		return skb;
-+
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
- 	if (*pt_prev) {
- 		*ret =3D deliver_skb(skb, *pt_prev, orig_dev);
- 		*pt_prev =3D NULL;
-@@ -4086,13 +4090,17 @@ sch_handle_ingress(struct sk_buff *skb, struct pack=
-et_type **pt_prev, int *ret,
- static __always_inline struct sk_buff *
- sch_handle_egress(struct sk_buff *skb, int *ret, struct net_device *dev)
- {
-+	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) =3D NULL;
- 	struct bpf_mprog_entry *entry =3D rcu_dereference_bh(dev->tcx_egress);
- 	enum skb_drop_reason drop_reason =3D SKB_DROP_REASON_TC_EGRESS;
-+	struct bpf_net_context __bpf_net_ctx;
- 	int sch_ret;
-=20
- 	if (!entry)
- 		return skb;
-=20
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-+
- 	/* qdisc_skb_cb(skb)->pkt_len & tcx_set_ingress() was
- 	 * already set by the caller.
- 	 */
-@@ -6357,13 +6365,15 @@ static void __napi_busy_loop(unsigned int napi_id,
- 		      bool (*loop_end)(void *, unsigned long),
- 		      void *loop_end_arg, unsigned flags, u16 budget)
- {
-+	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) =3D NULL;
- 	unsigned long start_time =3D loop_end ? busy_loop_current_time() : 0;
- 	int (*napi_poll)(struct napi_struct *napi, int budget);
-+	struct bpf_net_context __bpf_net_ctx;
- 	void *have_poll_lock =3D NULL;
- 	struct napi_struct *napi;
-=20
- 	WARN_ON_ONCE(!rcu_read_lock_held());
--
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
- restart:
- 	napi_poll =3D NULL;
-=20
-@@ -6834,6 +6844,7 @@ static int napi_thread_wait(struct napi_struct *napi)
-=20
- static void napi_threaded_poll_loop(struct napi_struct *napi)
- {
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	struct softnet_data *sd;
- 	unsigned long last_qs =3D jiffies;
-=20
-@@ -6842,6 +6853,8 @@ static void napi_threaded_poll_loop(struct napi_struc=
-t *napi)
- 		void *have;
-=20
- 		local_bh_disable();
-+		bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-+
- 		sd =3D this_cpu_ptr(&softnet_data);
- 		sd->in_napi_threaded_poll =3D true;
-=20
-@@ -6857,6 +6870,7 @@ static void napi_threaded_poll_loop(struct napi_struc=
-t *napi)
- 			net_rps_action_and_irq_enable(sd);
- 		}
- 		skb_defer_free_flush(sd);
-+		bpf_net_ctx_clear(bpf_net_ctx);
- 		local_bh_enable();
-=20
- 		if (!repoll)
-@@ -6879,13 +6893,16 @@ static int napi_threaded_poll(void *data)
-=20
- static __latent_entropy void net_rx_action(struct softirq_action *h)
- {
-+	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear);
- 	struct softnet_data *sd =3D this_cpu_ptr(&softnet_data);
- 	unsigned long time_limit =3D jiffies +
- 		usecs_to_jiffies(READ_ONCE(net_hotdata.netdev_budget_usecs));
- 	int budget =3D READ_ONCE(net_hotdata.netdev_budget);
-+	struct bpf_net_context __bpf_net_ctx;
- 	LIST_HEAD(list);
- 	LIST_HEAD(repoll);
-=20
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
- start:
- 	sd->in_net_rx_action =3D true;
- 	local_irq_disable();
-diff --git a/net/core/filter.c b/net/core/filter.c
-index e95b235a1e4f4..90afa393d0648 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2475,8 +2475,10 @@ static const struct bpf_func_proto bpf_clone_redirec=
-t_proto =3D {
- 	.arg3_type      =3D ARG_ANYTHING,
- };
-=20
--DEFINE_PER_CPU(struct bpf_redirect_info, bpf_redirect_info);
--EXPORT_PER_CPU_SYMBOL_GPL(bpf_redirect_info);
-+#ifndef CONFIG_PREEMPT_RT
-+DEFINE_PER_CPU(struct bpf_net_context *, bpf_net_context);
-+EXPORT_PER_CPU_SYMBOL_GPL(bpf_net_context);
-+#endif
-=20
- static struct net_device *skb_get_peer_dev(struct net_device *dev)
- {
-@@ -2490,11 +2492,15 @@ static struct net_device *skb_get_peer_dev(struct n=
-et_device *dev)
-=20
- int skb_do_redirect(struct sk_buff *skb)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
- 	struct net *net =3D dev_net(skb->dev);
-+	struct bpf_redirect_info *ri;
- 	struct net_device *dev;
--	u32 flags =3D ri->flags;
-+	u32 flags;
-=20
-+	ri =3D bpf_net_ctx_get_ri();
-+	if (!ri)
-+		goto out_drop;
-+	flags =3D ri->flags;
- 	dev =3D dev_get_by_index_rcu(net, ri->tgt_index);
- 	ri->tgt_index =3D 0;
- 	ri->flags =3D 0;
-@@ -2523,9 +2529,9 @@ int skb_do_redirect(struct sk_buff *skb)
-=20
- BPF_CALL_2(bpf_redirect, u32, ifindex, u64, flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
--	if (unlikely(flags & (~(BPF_F_INGRESS) | BPF_F_REDIRECT_INTERNAL)))
-+	if (unlikely((flags & (~(BPF_F_INGRESS) | BPF_F_REDIRECT_INTERNAL)) || !r=
-i))
- 		return TC_ACT_SHOT;
-=20
- 	ri->flags =3D flags;
-@@ -2544,9 +2550,9 @@ static const struct bpf_func_proto bpf_redirect_proto=
- =3D {
-=20
- BPF_CALL_2(bpf_redirect_peer, u32, ifindex, u64, flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
--	if (unlikely(flags))
-+	if (unlikely(flags || !ri))
- 		return TC_ACT_SHOT;
-=20
- 	ri->flags =3D BPF_F_PEER;
-@@ -2566,9 +2572,9 @@ static const struct bpf_func_proto bpf_redirect_peer_=
-proto =3D {
- BPF_CALL_4(bpf_redirect_neigh, u32, ifindex, struct bpf_redir_neigh *, par=
-ams,
- 	   int, plen, u64, flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
--	if (unlikely((plen && plen < sizeof(*params)) || flags))
-+	if (unlikely((plen && plen < sizeof(*params)) || flags || !ri))
- 		return TC_ACT_SHOT;
-=20
- 	ri->flags =3D BPF_F_NEIGH | (plen ? BPF_F_NEXTHOP : 0);
-@@ -4294,19 +4300,17 @@ void xdp_do_check_flushed(struct napi_struct *napi)
-=20
- void bpf_clear_redirect_map(struct bpf_map *map)
- {
--	struct bpf_redirect_info *ri;
--	int cpu;
--
--	for_each_possible_cpu(cpu) {
--		ri =3D per_cpu_ptr(&bpf_redirect_info, cpu);
--		/* Avoid polluting remote cacheline due to writes if
--		 * not needed. Once we pass this test, we need the
--		 * cmpxchg() to make sure it hasn't been changed in
--		 * the meantime by remote CPU.
--		 */
--		if (unlikely(READ_ONCE(ri->map) =3D=3D map))
--			cmpxchg(&ri->map, map, NULL);
--	}
-+	/* ri->map is assigned in __bpf_xdp_redirect_map() from within a eBPF
-+	 * program/ during NAPI callback. It is used during
-+	 * xdp_do_generic_redirect_map()/ __xdp_do_redirect_frame() from the
-+	 * redirect callback afterwards. ri->map is cleared after usage.
-+	 * The path has no explicit RCU read section but the local_bh_disable()
-+	 * is also a RCU read section which makes the complete softirq callback
-+	 * RCU protected. This in turn makes ri->map RCU protocted and it is
-+	 * sufficient to wait a grace period to ensure that no "ri->map =3D=3D ma=
-p"
-+	 * exist.  dev_map_free() removes the map from the list and then
-+	 * invokes synchronize_rcu() after calling this function.
-+	 */
- }
-=20
- DEFINE_STATIC_KEY_FALSE(bpf_master_redirect_enabled_key);
-@@ -4315,11 +4319,14 @@ EXPORT_SYMBOL_GPL(bpf_master_redirect_enabled_key);
- u32 xdp_master_redirect(struct xdp_buff *xdp)
- {
- 	struct net_device *master, *slave;
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri;
-=20
- 	master =3D netdev_master_upper_dev_get_rcu(xdp->rxq->dev);
- 	slave =3D master->netdev_ops->ndo_xdp_get_xmit_slave(master, xdp);
- 	if (slave && slave !=3D xdp->rxq->dev) {
-+		ri =3D bpf_net_ctx_get_ri();
-+		if (!ri)
-+			return XDP_ABORTED;
- 		/* The target device is different from the receiving device, so
- 		 * redirect it to the new device.
- 		 * Using XDP_REDIRECT gets the correct behaviour from XDP enabled
-@@ -4432,10 +4439,12 @@ static __always_inline int __xdp_do_redirect_frame(=
-struct bpf_redirect_info *ri,
- int xdp_do_redirect(struct net_device *dev, struct xdp_buff *xdp,
- 		    struct bpf_prog *xdp_prog)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
--	enum bpf_map_type map_type =3D ri->map_type;
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
--	if (map_type =3D=3D BPF_MAP_TYPE_XSKMAP)
-+	if (!ri)
-+		return -EINVAL;
-+
-+	if (ri->map_type =3D=3D BPF_MAP_TYPE_XSKMAP)
- 		return __xdp_do_redirect_xsk(ri, dev, xdp, xdp_prog);
-=20
- 	return __xdp_do_redirect_frame(ri, dev, xdp_convert_buff_to_frame(xdp),
-@@ -4446,10 +4455,12 @@ EXPORT_SYMBOL_GPL(xdp_do_redirect);
- int xdp_do_redirect_frame(struct net_device *dev, struct xdp_buff *xdp,
- 			  struct xdp_frame *xdpf, struct bpf_prog *xdp_prog)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
--	enum bpf_map_type map_type =3D ri->map_type;
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
--	if (map_type =3D=3D BPF_MAP_TYPE_XSKMAP)
-+	if (!ri)
-+		return -EINVAL;
-+
-+	if (ri->map_type =3D=3D BPF_MAP_TYPE_XSKMAP)
- 		return __xdp_do_redirect_xsk(ri, dev, xdp, xdp_prog);
-=20
- 	return __xdp_do_redirect_frame(ri, dev, xdpf, xdp_prog);
-@@ -4463,10 +4474,13 @@ static int xdp_do_generic_redirect_map(struct net_d=
-evice *dev,
- 				       enum bpf_map_type map_type, u32 map_id,
- 				       u32 flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
- 	struct bpf_map *map;
- 	int err;
-=20
-+	if (!ri)
-+		return -EINVAL;
-+
- 	switch (map_type) {
- 	case BPF_MAP_TYPE_DEVMAP:
- 		fallthrough;
-@@ -4517,13 +4531,21 @@ static int xdp_do_generic_redirect_map(struct net_d=
-evice *dev,
- int xdp_do_generic_redirect(struct net_device *dev, struct sk_buff *skb,
- 			    struct xdp_buff *xdp, struct bpf_prog *xdp_prog)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
--	enum bpf_map_type map_type =3D ri->map_type;
--	void *fwd =3D ri->tgt_value;
--	u32 map_id =3D ri->map_id;
--	u32 flags =3D ri->flags;
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-+	enum bpf_map_type map_type;
-+	u32 map_id;
-+	void *fwd;
-+	u32 flags;
- 	int err;
-=20
-+	if (!ri)
-+		return -EINVAL;
-+
-+	map_type =3D ri->map_type;
-+	fwd =3D ri->tgt_value;
-+	map_id =3D ri->map_id;
-+	flags =3D ri->flags;
-+
- 	ri->map_id =3D 0; /* Valid map id idr range: [1,INT_MAX[ */
- 	ri->flags =3D 0;
- 	ri->map_type =3D BPF_MAP_TYPE_UNSPEC;
-@@ -4553,9 +4575,9 @@ int xdp_do_generic_redirect(struct net_device *dev, s=
-truct sk_buff *skb,
-=20
- BPF_CALL_2(bpf_xdp_redirect, u32, ifindex, u64, flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
--	if (unlikely(flags))
-+	if (unlikely(flags || !ri))
- 		return XDP_ABORTED;
-=20
- 	/* NB! Map type UNSPEC and map_id =3D=3D INT_MAX (never generated
-diff --git a/net/core/lwt_bpf.c b/net/core/lwt_bpf.c
-index a94943681e5aa..afb05f58b64c5 100644
---- a/net/core/lwt_bpf.c
-+++ b/net/core/lwt_bpf.c
-@@ -38,12 +38,14 @@ static inline struct bpf_lwt *bpf_lwt_lwtunnel(struct l=
-wtunnel_state *lwt)
- static int run_lwt_bpf(struct sk_buff *skb, struct bpf_lwt_prog *lwt,
- 		       struct dst_entry *dst, bool can_redirect)
- {
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	int ret;
-=20
- 	/* Disabling BH is needed to protect per-CPU bpf_redirect_info between
- 	 * BPF prog and skb_do_redirect().
- 	 */
- 	local_bh_disable();
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
- 	bpf_compute_data_pointers(skb);
- 	ret =3D bpf_prog_run_save_cb(lwt->prog, skb);
-=20
-@@ -76,6 +78,7 @@ static int run_lwt_bpf(struct sk_buff *skb, struct bpf_lw=
-t_prog *lwt,
- 		break;
- 	}
-=20
-+	bpf_net_ctx_clear(bpf_net_ctx);
- 	local_bh_enable();
-=20
- 	return ret;
---=20
-2.43.0
-
+T24gRnJpLCAyMDI0LTA1LTAzIGF0IDE0OjE3ICsxMjAwLCBIdWFuZywgS2FpIHdyb3RlOg0KPiAN
+Cj4gDQo+IE9uIDMvMDUvMjAyNCAxMjoyMSBwbSwgRWRnZWNvbWJlLCBSaWNrIFAgd3JvdGU6DQo+
+ID4gT24gU2F0LCAyMDI0LTAzLTAyIGF0IDAwOjIwICsxMzAwLCBLYWkgSHVhbmcgd3JvdGU6DQo+
+ID4gPiBLVk0gd2lsbCBuZWVkIHRvIHJlYWQgYSBidW5jaCBvZiBub24tVERNUiByZWxhdGVkIG1l
+dGFkYXRhIHRvIGNyZWF0ZSBhbmQNCj4gPiA+IHJ1biBURFggZ3Vlc3RzLsKgIEV4cG9ydCB0aGUg
+bWV0YWRhdGEgcmVhZCBpbmZyYXN0cnVjdHVyZSBmb3IgS1ZNIHRvIHVzZS4NCj4gPiA+IA0KPiA+
+ID4gU3BlY2lmaWNhbGx5LCBleHBvcnQgdHdvIGhlbHBlcnM6DQo+ID4gPiANCj4gPiA+IDEpIFRo
+ZSBoZWxwZXIgd2hpY2ggcmVhZHMgbXVsdGlwbGUgbWV0YWRhdGEgZmllbGRzIHRvIGEgYnVmZmVy
+IG9mIGENCj4gPiA+IMKgIMKgwqAgc3RydWN0dXJlIGJhc2VkIG9uIHRoZSAiZmllbGQgSUQgLT4g
+c3RydWN0dXJlIG1lbWJlciIgbWFwcGluZyB0YWJsZS4NCj4gPiA+IA0KPiA+ID4gMikgVGhlIGxv
+dyBsZXZlbCBoZWxwZXIgd2hpY2gganVzdCByZWFkcyBhIGdpdmVuIGZpZWxkIElELg0KPiA+ID4g
+DQo+ID4gQ291bGQgMiBiZSBhIHN0YXRpYyBpbmxpbmUgaW4gYSBoZWxwZXIsIGFuZCB0aGVuIG9u
+bHkgaGF2ZSBvbmUgZXhwb3J0Pw0KPiANCj4gSSBhc3N1bWUgeW91IHdlcmUgdGhpbmtpbmcgYWJv
+dXQgbWFraW5nIDIpIGNhbGwgdGhlIDEpLCBzbyB3ZSBkb24ndCBuZWVkIA0KPiB0byBleHBvcnQg
+MikuDQo+IA0KPiBUaGlzIGlzIG5vdCBmZWFzaWJsZSBkdWUgdG86DQo+IA0KPiBhKS4gMSkgbXVz
+dCAnc3RydWN0IHRkeF9tZXRhZGF0YV9maWVsZF9tYXBwaW5nJyB0YWJsZSBhcyBpbnB1dCwgYW5k
+IGZvciANCj4gdGhhdCB3ZSBuZWVkIHRvIHVlcyB0aGUgVERYX1NZU0lORk9fTUFQKCkgbWFjcm8g
+dG8gZGVmaW5lIGEgc3RydWN0dXJlIA0KPiBmb3IganVzdCBvbmUgJ3U2NCcgYW5kIGRlZmluZSBh
+ICdzdHJ1Y3QgdGR4X21ldGFkYXRhX2ZpZWxkX21hcHBpbmcnIA0KPiB0YWJsZSB3aGljaCBvbmx5
+IGhhcyBvbmUgZWxlbWVudCBmb3IgdGhhdC4NCj4gDQo+IGIpLiBURFhfU1lTSU5GT19NQVAoKSBt
+YWNybyBhY3R1YWxseSBkb2Vzbid0IHN1cHBvcnQgdGFraW5nIGEgbWV0YWRhdGEgDQo+IGZpZWxk
+ICJ2YXJpYWJsZSIsIGJ1dCBjYW4gb25seSBzdXBwb3J0IHVzaW5nIHRoZSBuYW1lIG9mIHRoZSBt
+ZXRhZGF0YSBmaWVsZC4NCj4gDQo+IEhvd2V2ZXIgd2UgY2FuIHRyeSB0byBtYWtlIDEpIGFzIGEg
+d3JhcHBlciBvZiAyKS7CoCBCdXQgdGhpcyB3b3VsZCANCj4gcmVxdWlyZSBzb21lIGNoYW5nZSB0
+byB0aGUgcGF0Y2ggNC4NCj4gDQo+IEknbGwgcmVwbHkgc2VwYXJhdGVseSB0byBwYXRjaCA0IGFu
+ZCB5b3UgY2FuIHRha2UgYSBsb29rIHdoZXRoZXIgdGhhdCBpcyANCj4gYmV0dGVyLg0KDQpIYXZp
+bmcgb25lIGV4cG9ydCB3b3VsZCBiZSBuaWNlLiBZZWEsIHNpbmNlIHRoZSBtdWx0aXBsZSBmaWVs
+ZCBwcm9jZXNzaW5nDQp2ZXJzaW9uIGp1c3QgbG9vcHMgYW55d2F5LCBkb2luZyBpdCBsaWtlIHlv
+dSBwcm9wb3NlIHNlZW1zIHJlYXNvbmFibGUuDQo=
