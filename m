@@ -1,107 +1,165 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1C882D64;
-	Fri,  3 May 2024 21:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AA454BD8
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714771376; cv=none; b=k64CCsPVCrhke99/bpPUFUUq0hcr+n+Y1wzXEcsHCD7XQJpXcgbbW8DAR5f/QkRDSDuoeC9WT18I+PViVShcf1HaZ1D13r7ZXzTeX9lri8J70ZKKIbaJkOQ77MtKJuLbr598Wlg5SoLzquHonNUwlnAm7j2U/1LRPPrkRxtuqEc=
+	t=1714771407; cv=none; b=joe8P+X5oc6m7Ybul4D63G4FbUUaKhEcH46ZRvmewJTQHeys01585/HuaYxrO/hwi6hZ8yu2PnK+8UsHAwk/v5N24bO4nng+VysscMGgsQ3FbgvbYa7dA1jHcD3zpudN5aq3kYqT87uBkhm4rspYcrLM6vNhxByzrVOJj/kLayY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714771376; c=relaxed/simple;
-	bh=K4NcSEpC7I/4aUwVZiqF2rm1O+WGjxoElYis3WpGrUM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EVVXs/adkNoo3+5lhftfY8UlCBqcp5zpVa9aIDQc6YR1UIgyLEs9Blw86PWd7ScZaffgFmYrJNwHbPncU1hKNvuOIXwFU2JaGZRzEDWi0qCnjwGbDJGzxeORGNYgkJM3fkTkQnl9ixlvtFx6S7PAw/+7muH2xre+exp6qvhVbto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MxWLOxNt; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxWLOxNt"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51f3a49ff7dso87122e87.2;
-        Fri, 03 May 2024 14:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714771373; x=1715376173; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1bvhcIi7s7OtBZ29qVZiiarvKCxPVK9OqdYkfozMUGo=;
-        b=MxWLOxNtxxWJ3uQG7KQOZ06Cv2XZVmKw6PAoqu6/OV2m5EkG7a+J7VwPUVuofZCCAv
-         JzoLLajHcFt4FKILsB8m863l1LRNQWQbinv2qx0UUl9rv4n0RA/XBJddJV7+FKk/OWy/
-         LTE9/GGpzhjWhDsdoyH3OCdu2RE8l2fKtjIdx3juLEKKIvEBglArTvdtWbsUZdvKXn4/
-         1lLz0ZyUB5XyNGIJlYFKs3M1r8na+2s1Bo9awLKTkjafFrMprjcBy3PbDWuqcuIwfp3U
-         yzTFc/AJG9BFLh75iXpXaRQUtowXp/wWRuQQkczo7nj/rv/b/4dQXsaiUPa2kRaApoxy
-         zg2A==
+	s=arc-20240116; t=1714771407; c=relaxed/simple;
+	bh=0I9HYehUPiTbvcoZm+bi9oIqOfptahzemmvOSF8E9kQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Q4Nz5Vk+7pOQ8gMkVfRTFlRYf5xn06RhQuQaRiR7GyGmPHi9Kz1d7UrWwWzkVMT3ptqnk0Y3r4Q+wFT0ufy7OSK8KkndVau2P44t623AntsVoYNadNVJ1CDmxBG1ka2GIpHv1J6Ih9EnEQxVjqy8XZ+FqbVPPotRVJ0J2tK0c9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7deb999eea4so9238239f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:23:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714771373; x=1715376173;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1bvhcIi7s7OtBZ29qVZiiarvKCxPVK9OqdYkfozMUGo=;
-        b=S2KwNAPS/k4soq/qZISijrh5QpPenTulqaL86Upc/XhxIZy92OcsYxuZI7PwUKLT8A
-         h4DUuwxqx+i6uOHlPCAomUJYxfQHdhN4vp5xTwYIfO8gADF+cFrty1yu7BADnDAe89/i
-         2SfPZbxFzmQhiTsvecSbCz7LvtXYhIaomO5Ug/NJLJmlyt9u8PKXBa2QHDtRAzup+4h5
-         68f0PU9h7dT9araurFU7wqCpZlIBiMSrWRtIYgoxtjtBZ6tHA9Wf8iYi+2wroXWd8wTJ
-         beAOs//9ed16EPO9WfBrmSVS4+QdACsRyP5PSjAL977F9TCZSYHqR6EIiDD36uAr4aBK
-         SKgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiZGarekBO2V6dQXixDpkVlndzEdOFAlO6YLhzojkFzZjJuyY4/qjuv3uERY/LgpM0cO2FX3d8n9ikP2/HEntpz3EHv3QMd4yXVPVv2/KirUGlKurW9fX846xbwvM7phC+ArB8nFVOnw==
-X-Gm-Message-State: AOJu0Yz6eTpVGtYEHfYCvMicy8moGG60J4XHAsLeNL+WGgjLWh3KbWd7
-	ucLpB5+nnmCGEDd3gGYQaqtyhQdvqldNwqDOQqPHLGUOatIq6Zm1
-X-Google-Smtp-Source: AGHT+IHKt7/IlhLnAgzH8evYd55jGnh8jC+7MGS9qJrx7K/YQeZM+131ljiwIjiNWKPIrFhyU1yuIQ==
-X-Received: by 2002:a05:6512:3ba:b0:51c:d528:c333 with SMTP id v26-20020a05651203ba00b0051cd528c333mr1804987lfp.20.1714771372707;
-        Fri, 03 May 2024 14:22:52 -0700 (PDT)
-Received: from localhost.localdomain (80-108-76-242.cable.dynamic.surfer.at. [80.108.76.242])
-        by smtp.gmail.com with ESMTPSA id mt20-20020a170907619400b00a59a4261b84sm162073ejc.141.2024.05.03.14.22.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 14:22:52 -0700 (PDT)
-From: Christian Gmeiner <christian.gmeiner@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Christian Gmeiner <cgmeiner@igalia.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: imx8qm: Add GPU nodes
-Date: Fri,  3 May 2024 23:22:48 +0200
-Message-ID: <20240503212249.3102288-1-christian.gmeiner@gmail.com>
-X-Mailer: git-send-email 2.44.0
+        d=1e100.net; s=20230601; t=1714771405; x=1715376205;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x4GbqEKgZuUa1KrnN/Su4ZMPhtfNcJzTLzCPfurOMJw=;
+        b=dZy8eufHNzToWQfKBAOKZ73F/ASuIEt4iyAbH7hvFAEqfkoHJbJ7QvJMVYnVJBdV53
+         VbwY0ezkLolXAL+QpqgqqIo3iKeDo1ThT+D581nAFFVFAVLWyyBy/guvaqbst33YhiWA
+         zfg55e52+SI4lfTT+LIqf2dAV0A8n8Gokbb0Oe76Ur8FngHOJ0uD21gXieHzKE6gEMKM
+         4avOi9MgTAuuXBVTr2ERfD3UZfkiSUjRWEEuJN4hkfBDndxG/+zQKDtDU8pnp4pOE+y2
+         t7IbnYkW7ZASIVJRW0LcJN3Fbxyxv8ifL6kXfSLSlUBKfU6tmpov7O21IPyLvrm9AcNc
+         mOEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLwEkfKP7sH2z7xXJDq6txEz0m84pgpQlpTkvI5ZF7qiEgoEN0PXjwdbY6HbeHbIGLJDOvDk8BlIzaqyDJOhZedPZ6gKVLVYkFK53N
+X-Gm-Message-State: AOJu0YwAaR6/6WlooXiVTPZKdqQaMJs6tcIaLOZVgRUouiqZ0EmwOsIs
+	HzlMvtvRFY9d79BJC66v7xjcYGAkWKerHYBkVO6/+Cmy8xqnRQF14rF6LR9R9ydf40rs7Y3LfhJ
+	8RG/SEksPIc7ySmQn1Kod45BQQIs8l9GddlDjsI9EYzmj7zxJhh7T6J0=
+X-Google-Smtp-Source: AGHT+IESXSSXDGivXRyeDdWZ+LhL6+oKegoJ1a3vEN9LKW76nx/PAeBHz1CdWCfX0td7zXksEE0ZqjkBPLGM3WYb+8lhIzF59bPP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:6d12:b0:487:31da:eaf1 with SMTP id
+ he18-20020a0566386d1200b0048731daeaf1mr82103jab.1.1714771405656; Fri, 03 May
+ 2024 14:23:25 -0700 (PDT)
+Date: Fri, 03 May 2024 14:23:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008160ad06179354a2@google.com>
+Subject: [syzbot] [bcachefs?] kernel BUG in bch2_fs_recovery
+From: syzbot <syzbot+05c1843ef85da9e52042@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Christian Gmeiner <cgmeiner@igalia.com>
+Hello,
 
-Add the DT node for the GPU core found on the i.MX8QM.
+syzbot found the following issue on:
 
-etnaviv-gpu 53100000.gpu: model: GC7000, revision: 6009
-[drm] Initialized etnaviv 1.4.0 20151214 for etnaviv on minor 0
+HEAD commit:    3d25a941ea50 Merge tag 'block-6.9-20240503' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=114b39ff180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3310e643b6ef5d69
+dashboard link: https://syzkaller.appspot.com/bug?extid=05c1843ef85da9e52042
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13aed9df180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ac7a28980000
 
-Signed-off-by: Christian Gmeiner <cgmeiner@igalia.com>
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-3d25a941.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/9d8ed74e49f1/vmlinux-3d25a941.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d724e9151b52/bzImage-3d25a941.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/998b7ff57836/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+05c1843ef85da9e52042@syzkaller.appspotmail.com
+
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq afc6cc17f332ffe0 written 24 min_key POS_MIN durability: 0 (invalid extent entry 0000000000020040)
+  invalid extent entry type (got 6, max 6), shutting down
+bcachefs (loop0): inconsistency detected - emergency read only at journal seq 0
+------------[ cut here ]------------
+kernel BUG at arch/x86/mm/physaddr.c:23!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 2 PID: 5178 Comm: syz-executor317 Not tainted 6.9.0-rc6-syzkaller-00227-g3d25a941ea50 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+RIP: 0010:__phys_addr+0x120/0x150 arch/x86/mm/physaddr.c:23
+Code: 10 00 75 39 48 8b 1d 4f c8 1b 0c 48 89 ee bf ff ff ff 1f e8 72 49 4f 00 48 01 eb 48 81 fd ff ff ff 1f 76 a7 e8 51 4e 4f 00 90 <0f> 0b 48 c7 c7 bd 39 9f 8f e8 b2 99 aa 00 e9 52 ff ff ff 48 c7 c7
+RSP: 0018:ffffc900032ef4a0 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 000000007ffff75e RCX: ffffffff813e77ce
+RDX: ffff888011aca440 RSI: ffffffff813e77df RDI: 0000000000000007
+RBP: 000000007ffff75e R08: 0000000000000007 R09: 000000001fffffff
+R10: 000000007ffff75e R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000001 R14: 00000000663551f8 R15: ffffed1005ea010e
+FS:  000055557a454380(0000) GS:ffff88806b400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff7a9096410 CR3: 00000000203ec000 CR4: 0000000000350ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ virt_to_folio include/linux/mm.h:1306 [inline]
+ kfree+0x6c/0x390 mm/slub.c:4382
+ bch2_fs_recovery+0xfe9/0x3c40 fs/bcachefs/recovery.c:905
+ bch2_fs_start+0x2e9/0x600 fs/bcachefs/super.c:1043
+ bch2_fs_open+0xf87/0x1110 fs/bcachefs/super.c:2102
+ bch2_mount+0xdcc/0x1130 fs/bcachefs/fs.c:1903
+ legacy_get_tree+0x109/0x220 fs/fs_context.c:662
+ vfs_get_tree+0x8f/0x380 fs/super.c:1779
+ do_new_mount fs/namespace.c:3352 [inline]
+ path_mount+0x14e6/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount fs/namespace.c:3875 [inline]
+ __x64_sys_mount+0x297/0x320 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f1ad400a8fa
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd674e3108 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007ffd674e3120 RCX: 00007f1ad400a8fa
+RDX: 0000000020011a00 RSI: 0000000020000080 RDI: 00007ffd674e3120
+RBP: 0000000000000004 R08: 00007ffd674e3160 R09: 00000000000119fd
+R10: 0000000000000000 R11: 0000000000000282 R12: 0000000000000000
+R13: 00007ffd674e3160 R14: 0000000000000003 R15: 0000000001000000
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__phys_addr+0x120/0x150 arch/x86/mm/physaddr.c:23
+Code: 10 00 75 39 48 8b 1d 4f c8 1b 0c 48 89 ee bf ff ff ff 1f e8 72 49 4f 00 48 01 eb 48 81 fd ff ff ff 1f 76 a7 e8 51 4e 4f 00 90 <0f> 0b 48 c7 c7 bd 39 9f 8f e8 b2 99 aa 00 e9 52 ff ff ff 48 c7 c7
+RSP: 0018:ffffc900032ef4a0 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 000000007ffff75e RCX: ffffffff813e77ce
+RDX: ffff888011aca440 RSI: ffffffff813e77df RDI: 0000000000000007
+RBP: 000000007ffff75e R08: 0000000000000007 R09: 000000001fffffff
+R10: 000000007ffff75e R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000001 R14: 00000000663551f8 R15: ffffed1005ea010e
+FS:  000055557a454380(0000) GS:ffff88806b400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff7a9096410 CR3: 00000000203ec000 CR4: 0000000000350ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
-v1 -> v2:
- - Order by subsystem register address.
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- arch/arm64/boot/dts/freescale/imx8qm.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-index b3d01677b70c..8e061582a4c9 100644
---- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-@@ -463,6 +463,7 @@ drc_crit0: trip1 {
- 
- 	/* sorted in register address */
- 	#include "imx8-ss-vpu.dtsi"
-+	#include "imx8-ss-gpu0.dtsi"
- 	#include "imx8-ss-img.dtsi"
- 	#include "imx8-ss-dma.dtsi"
- 	#include "imx8-ss-conn.dtsi"
--- 
-2.44.0
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
