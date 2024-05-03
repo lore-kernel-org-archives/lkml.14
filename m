@@ -1,90 +1,105 @@
-Received: from 12.mo583.mail-out.ovh.net (12.mo583.mail-out.ovh.net [46.105.39.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D24139593
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.39.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73078146D54
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714721288; cv=none; b=XgWXv1hPGCD1mdbWs2SRbakfiKFYWgcqahnPV6p2+ZLrvMd7cw6rxPJ1bllM9+7woz/yF24Q8dLTJy1wauHeqDSHX54nGXzTRIMq8xxv79WdpYnErdVHDXrRwUETMfkA28xG32mPuXxpKEg3MSLQByqIEZksyYhmBgsV5Rwau3g=
+	t=1714721336; cv=none; b=blecJSvBVmlWS2YvJLS0YBN1zNhzqTCqaJt59qYV/X19S5HLpKkf7NYFbjakakXJSA5r4wwk/EFj/ZHo2wfHEH4ja4pz7n91YkENR+HK0g3URq/iK6amjaaHG9QbMI4rymi8EGzwaN+rH6pmRVjZWd5VkM6S7kkBfnKbE2L7jD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714721288; c=relaxed/simple;
-	bh=O9dHTfqdUKYqYcEkVxGpE1PpwlajnvKSe2uB3eZESzc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=TMOQYg7N4j87s92bl0ruwa039/SACWk8BEPNOpr5NF1Cre8M9xvicdSe7AkiecgcNjuxJEJ8ZM+UOSJ0L10p8WBh037v+aAhYSL+yFcQxAU6oP3HP11erbGU0Khr64W3zvNw2ZFeC2SQ2t7tiH9iMGILKmlQApKHh+sV4Rqler4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=46.105.39.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director3.ghost.mail-out.ovh.net (unknown [10.108.2.118])
-	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4VVqPg5frzz1QjG
-	for <linux-kernel@vger.kernel.org>; Thu,  2 May 2024 23:09:11 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-b6h52 (unknown [10.108.42.39])
-	by director3.ghost.mail-out.ovh.net (Postfix) with ESMTPS id A17F91FDF8;
-	Thu,  2 May 2024 23:09:06 +0000 (UTC)
-Received: from etezian.org ([37.59.142.105])
-	by ghost-submission-6684bf9d7b-b6h52 with ESMTPSA
-	id 8ifaEBIdNGZnZx8AitxrAg
-	(envelope-from <andi@etezian.org>); Thu, 02 May 2024 23:09:06 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-105G006ccf2312c-b8e8-4f3e-a551-11cf7daafa4c,
-                    C3C300A9F266149161DCD69BC7DE92F4F10D7925) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: linux-kernel@vger.kernel.org, 
- Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Mika Westerberg <mika.westerberg@linux.intel.com>, 
- Jan Dabros <jsd@semihalf.com>, Lee Jones <lee@kernel.org>, 
- Jiawen Wu <jiawenwu@trustnetic.com>, 
- Mengyuan Lou <mengyuanlou@net-swift.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
- Andrew Lunn <andrew@lunn.ch>, Duanqiang Wen <duanqiangwen@net-swift.com>, 
- linux-i2c@vger.kernel.org, netdev@vger.kernel.org
-In-Reply-To: <20240425214438.2100534-1-florian.fainelli@broadcom.com>
-References: <20240425214438.2100534-1-florian.fainelli@broadcom.com>
-Subject: Re: (subset) [PATCH v3 0/5] Define i2c_designware in a header file
-Message-Id: <171469134545.1016503.10207141192762647093.b4-ty@kernel.org>
-Date: Fri, 03 May 2024 01:09:05 +0200
+	s=arc-20240116; t=1714721336; c=relaxed/simple;
+	bh=Hn+kibtNuVGY16LR1Tui4J9dCha04H++GGopC0OUDOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PBDTDnV7wydIBAyLY/vv/PTS5Nu8zK8hfBR/zo6nDd8RhgCrkYclI5YPtO98jAfljAV6biiMvOPOCggZqKe4U21x74nYnD4ywA3vQEbynYdw6RFyPOUHCFkXGBZkJpNpfbIGwfS1aaNFZQ7UkxUGHgaFqIUHOHYWITXu57Ymv+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bWCxnhYi; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWCxnhYi"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-de462f3d992so9345733276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 00:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714721332; x=1715326132; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hn+kibtNuVGY16LR1Tui4J9dCha04H++GGopC0OUDOA=;
+        b=bWCxnhYi1vzW7akPHe39Sq0l65OBVtnxZfGzJmGAVxFKRT8QpSInC5K9T8Uj1at039
+         JNC5tHoPar9bSAoQasXba6ZWaFA9NKZFei2ThX655NfNkUxBqRo1igwSDyoJsEsoyjFV
+         k4BxBmx+7gPWX5RoJo4C469uIC2EGbWstwzYaDrXFJT6l3KF8jNyV0JLskKyl1BBAJNI
+         wqw/qFCgXY6lJkVAKmB7s5CQcHtVOD8qkU5yVCDaSmaTHog9/lPfCJ+e+7ty0YFKXdty
+         MWJFFvkhHtfmmivbA+WqevsBGzrXpbmQiBBOXsU4EpCnz2trDDM/Vc5ahIlvuYchXD/S
+         b3tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714721332; x=1715326132;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hn+kibtNuVGY16LR1Tui4J9dCha04H++GGopC0OUDOA=;
+        b=sxKo8eACwybxTPbCjXfH6aJNb/Uu4jVg9O1QvUeJYQ253Rz3ZttYG2yfWgG8dyKSkB
+         /eEhwGm7lC472+ZqTXJHVOKijQ1zVu3Di4ZH1F2GBL0pFutClQJ0vQrOWXQ3rdZxsSY+
+         oauawM3/Wxxb3Ji3WOdyUcapDCKuh0uS40zm3KTnJXLfdmQPjuFDQkLB+7jW03xxloPa
+         9Xrvg3LgHC09Ba/becmea8CBeeRs2MMI1k6mf6ZQHM7wEit3UBfHE28o7inFLtRs3s4O
+         Qd+k7+EXzKbVqGsXWgsED+fjP17wZC8Q1Pj3LRHrnza1GiFTpx854dvTIIvEnLAmJiDC
+         gIPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXO3vlQT1XKe9Fvlx7TJvkEE7+7Pafm+95sNFNQV5fMXjiyPBGEgI1hYru0TyP90B6sFKfym+5CH+6zXuisvXTxgAkO4oDTOx68ePcp
+X-Gm-Message-State: AOJu0Yx68AlsShtQgpZDVRiJpKA0I1nbENt/u9mcPbhy3teanyC1S92C
+	TfMnX7ZkzAhU7IEMZWM/GBKtJHUCjeFUOIp1/8Po8kxbSdbXKectu8O5+CzOb2aKypoeXN7zFLC
+	zaKFmk28HvcAVd/FNL44eD9Jp0wGJjv4DAqTGmA==
+X-Google-Smtp-Source: AGHT+IF0xjlVgsvZVFX4uIc9xGkdM4zN5rBjDCjVF5rIBWnC2grAED83RKEyEUanO8Zm+9uvlUebxitXHnTav2HLKug=
+X-Received: by 2002:a25:dc08:0:b0:de6:723:3035 with SMTP id
+ y8-20020a25dc08000000b00de607233035mr2121144ybe.13.1714721332503; Fri, 03 May
+ 2024 00:28:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 2096144151853337100
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrvdduledgudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddruddtheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeefpdhmohguvgepshhmthhpohhuth
+References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
+In-Reply-To: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 3 May 2024 09:28:41 +0200
+Message-ID: <CACRpkdYw8jzFH5n377G76iMqri70Tf-1Vc=P5D6ESU_U0qRXWQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain support
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Brian Norris <computersforpeace@gmail.com>, 
+	Jaiganesh Narayanan <njaigane@codeaurora.org>, Johan Hovold <johan@kernel.org>, 
+	Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+On Thu, Apr 25, 2024 at 5:46=E2=80=AFAM Bjorn Andersson
+<quic_bjorande@quicinc.com> wrote:
 
-On Thu, 25 Apr 2024 14:44:33 -0700, Florian Fainelli wrote:
-> This patch series depends upon the following two patches being applied:
-> 
-> https://lore.kernel.org/all/20240422084109.3201-1-duanqiangwen@net-swift.com/
-> https://lore.kernel.org/all/20240422084109.3201-2-duanqiangwen@net-swift.com/
-> 
-> There is no reason why each driver should have to repeat the
-> "i2c_designware" string all over the place, because when that happens we
-> see the reverts like the above being necessary.
-> 
-> [...]
+> When a GPIO is configured as OPEN_DRAIN gpiolib will in
+> gpiod_direction_output() attempt to configure the open-drain property of
+> the hardware and if this fails fall back to software emulation of this
+> state.
+>
+> The TLMM block in most Qualcomm platform does not implement such
+> functionality, so this call would be expected to fail. But due to lack
+> of checks for this condition, the zero-initialized od_bit will cause
+> this request to silently corrupt the lowest bit in the config register
+> (which typically is part of the bias configuration) and happily continue
+> on.
+>
+> Fix this by checking if the od_bit value is unspecified and if so fail
+> the request to avoid the unexpected state, and to make sure the software
+> fallback actually kicks in.
+>
+> It is assumed for now that no implementation will come into existence
+> with BIT(0) being the open-drain bit, simply for convenience sake.
+>
+> Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
+> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-Applied to i2c/i2c-host on
+I tried to follow the discussion but couldn't get to a verdict on this patc=
+h,
+should it be applied or not, and if it should be applied, should the Fixes:
+tag be dropped or left and considered a nonurgent fix as it does not
+affect current behaviour?
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
-
-Thank you,
-Andi
-
-Patches applied
-===============
-[1/5] i2c: designware: Replace MODULE_ALIAS() with MODULE_DEVICE_TABLE()
-      commit: 91647e64f0f5677ace84165dc25dc99579147b8f
-[2/5] i2c: designware: Create shared header hosting driver name
-      commit: 856cd5f13de7cebca44db5ff4bc2ca73490dd8d7
-
+Yours,
+Linus Walleij
