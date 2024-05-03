@@ -1,173 +1,80 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74375C2E9;
-	Fri,  3 May 2024 11:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84B831509B2
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 11:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714736308; cv=none; b=t9omWwCl10uT48h/TpUsjnZ1UFIFMY3BeMUDlUmyUQmNTzU79sybf3DFHOkBjQ1L1NKqv/mNu5a1hRwidRga0jQZBjzQV8xlnmMcEq8IiX4snRFbmu9RzxJFiObglQLNj1ZunTRtDIH38N9XyTN9dr3yXn3P/xsyEYcJbmLOg9E=
+	t=1714736307; cv=none; b=q624IkXAdyo0gIcotkni64+l9XmfwNMk1UUHCYmSIzlyfEGtKRrftk+9+K+VWY3tiJTwhWsJsDvF9JI19/mjk6odld54FGLM6b1MfdAhtx/MSbFmFOiVcfcIipDPfobvLdmFRxi0Ao3kLKRB85OGFgt4WEDYojs4oVfukc/b/EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714736308; c=relaxed/simple;
-	bh=k5AjE5JLkBAfjGLh7xerPBX/7aoAXhBzlXTnHmIL+us=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SA5X96K1pbZN/MDMs60bJ25831JJVV8598K1HZDoFohM1F14+CLaIydnAO8tOBEO1MfZbhJsFCgxbtz9oV2QhErnBVXl06kg7iIc1C4YsWBZOc5d78kTbAp+5NQErnF8+Wn1LRTAFfteg1jxFM8/97Q+1+y4tNuE0xti5Iid50I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VW80n6HpyzcdFh;
-	Fri,  3 May 2024 19:37:13 +0800 (CST)
-Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
-	by mail.maildlp.com (Postfix) with ESMTPS id A7D1B180A9C;
-	Fri,  3 May 2024 19:38:22 +0800 (CST)
-Received: from [10.174.177.174] (10.174.177.174) by
- dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 3 May 2024 19:38:21 +0800
-Message-ID: <9209062c-fa94-33f3-fd89-834a3314c7ed@huawei.com>
-Date: Fri, 3 May 2024 19:38:21 +0800
+	s=arc-20240116; t=1714736307; c=relaxed/simple;
+	bh=rBI030nnjBaGuDp119mQ6rF4+O/VVsNKdIq/NQwkRf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uagOcVmrIa5zgioU6fAC4AdEj46NCBpuEH587fuWO0CQckIjWq95Pko5avi3KXhdlXnMRs/CZtxA76ZB+5blO1rLOIh/loVykTZZ3wS7Rz5rLgEhAj6hZXTWibmhtoGmEyqeOW4p0avcBd7dZP4euJD+USLTjAanQhRABfAgWts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=4cuJ8QfQ; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="4cuJ8QfQ"
+Received: from 8bytes.org (p4ffe0bdf.dip0.t-ipconnect.de [79.254.11.223])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 8A30B1C0D01;
+	Fri,  3 May 2024 13:38:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1714736304;
+	bh=rBI030nnjBaGuDp119mQ6rF4+O/VVsNKdIq/NQwkRf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=4cuJ8QfQOgGOa4WUzUJMVUE9bxrwxLie0fgcNzaEjt7JoBadWwPunovk+QEXETfZh
+	 bbOpG6oIKAByFvKq7eq2XgjBauhWYYNwinBbuzl3qHnhCeGW3JMDmLIwTDUB9El+Er
+	 HYnX+PkEsL/UVx9vpYV4M9SBf91X+pFpqn+g625CQbuKrRralVXzcUeQNK0fYdQtzG
+	 CQPqEJbLT5Qk4Q+KDTVadwqZeku0/zRwpgit0O/iyA+ZfbgpIq/XDKS2J1k94J8Y2U
+	 lesfpgcHMN71yeWJXDpt/kmMPgdvmzwXCZdBzN1ZQtD8Q22SPJ0nsPDrGvq5Fo2aWI
+	 DSSurMAzOMRvA==
+Date: Fri, 3 May 2024 13:38:23 +0200
+From: =?iso-8859-1?Q?J=F6rg_R=F6del?= <joro@8bytes.org>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Roth <michael.roth@amd.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Christoph Hellwig <hch@lst.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Joel Becker <jlbec@evilplan.org>,
+	Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [svsm-devel] [PATCH v4 00/15] Provide SEV-SNP support for
+ running under an SVSM
+Message-ID: <ZjTMr8CAA3STRlDR@8bytes.org>
+References: <cover.1713974291.git.thomas.lendacky@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [syzbot] [ext4?] WARNING in mb_cache_destroy
-Content-Language: en-US
-To: Jan Kara <jack@suse.cz>
-CC: <tytso@mit.edu>, syzbot
-	<syzbot+dd43bd0f7474512edc47@syzkaller.appspotmail.com>,
-	<adilger.kernel@dilger.ca>, <linux-ext4@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<llvm@lists.linux.dev>, <nathan@kernel.org>, <ndesaulniers@google.com>,
-	<ritesh.list@gmail.com>, <syzkaller-bugs@googlegroups.com>,
-	<trix@redhat.com>, yangerkun <yangerkun@huawei.com>, Baokun Li
-	<libaokun1@huawei.com>
-References: <00000000000072c6ba06174b30b7@google.com>
- <0000000000003bf5be061751ae70@google.com>
- <20240502103341.t53u6ya7ujbzkkxo@quack3>
- <dca44ba5-5c33-05ef-d9de-21a84f9d7eaa@huawei.com>
- <20240503102328.cstcauc5qakmk2bg@quack3>
-From: Baokun Li <libaokun1@huawei.com>
-In-Reply-To: <20240503102328.cstcauc5qakmk2bg@quack3>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500021.china.huawei.com (7.185.36.21)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1713974291.git.thomas.lendacky@amd.com>
 
-On 2024/5/3 18:23, Jan Kara wrote:
-> Hi!
->
-> On Fri 03-05-24 17:51:07, Baokun Li wrote:
->> On 2024/5/2 18:33, Jan Kara wrote:
->>> On Tue 30-04-24 08:04:03, syzbot wrote:
->>>> syzbot has bisected this issue to:
->>>>
->>>> commit 67d7d8ad99beccd9fe92d585b87f1760dc9018e3
->>>> Author: Baokun Li <libaokun1@huawei.com>
->>>> Date:   Thu Jun 16 02:13:56 2022 +0000
->>>>
->>>>       ext4: fix use-after-free in ext4_xattr_set_entry
->>> So I'm not sure the bisect is correct since the change is looking harmless.
->> Yes, the root cause of the problem has nothing to do with this patch,
->> and please see the detailed analysis below.
->>> But it is sufficiently related that there indeed may be some relationship.
->>> Anyway, the kernel log has:
->>>
->>> [   44.932900][ T1063] EXT4-fs warning (device loop0): ext4_evict_inode:297: xattr delete (err -12)
->>> [   44.943316][ T1063] EXT4-fs (loop0): unmounting filesystem.
->>> [   44.949531][ T1063] ------------[ cut here ]------------
->>> [   44.955050][ T1063] WARNING: CPU: 0 PID: 1063 at fs/mbcache.c:409 mb_cache_destroy+0xda/0x110
->>>
->>> So ext4_xattr_delete_inode() called when removing inode has failed with
->>> ENOMEM and later mb_cache_destroy() was eventually complaining about having
->>> mbcache entry with increased refcount. So likely some error cleanup path is
->>> forgetting to drop mbcache entry reference somewhere but at this point I
->>> cannot find where. We'll likely need to play with the reproducer to debug
->>> that. Baokun, any chance for looking into this?
->>>
->>> 								Honza
->> As you guessed, when -ENOMEM is returned in ext4_sb_bread(),
->> the reference count of ce is not properly released, as follows.
->>
->> ext4_create
->>   __ext4_new_inode
->>    security_inode_init_security
->>     ext4_initxattrs
->>      ext4_xattr_set_handle
->>       ext4_xattr_block_find
->>       ext4_xattr_block_set
->>        ext4_xattr_block_cache_find
->>          ce = mb_cache_entry_find_first
->>              __entry_find
->>              atomic_inc_not_zero(&entry->e_refcnt)
->>          bh = ext4_sb_bread(inode->i_sb, ce->e_value, REQ_PRIO);
->>          if (PTR_ERR(bh) == -ENOMEM)
->>              return NULL;
->>
->> Before merging into commit 67d7d8ad99be("ext4: fix use-after-free
->> in ext4_xattr_set_entry"), it will not return early in
->> ext4_xattr_ibody_find(),
->> so it tries to find it in iboy, fails the check in xattr_check_inode() and
->> returns without executing ext4_xattr_block_find(). Thus it will bisect
->> the patch, but actually has nothing to do with it.
->>
->> ext4_xattr_ibody_get
->>   xattr_check_inode
->>    __xattr_check_inode
->>     check_xattrs
->>      if (end - (void *)header < sizeof(*header) + sizeof(u32))
->>        "in-inode xattr block too small"
->>
->> Here's the patch in testing, I'll send it out officially after it is tested.
->> (PS:  I'm not sure if propagating the ext4_xattr_block_cache_find() errors
->> would be better.)
-> Great! Thanks for debugging this! Some comments to your fix below:
->
->> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
->> index b67a176bfcf9..5c9e751915fd 100644
->> --- a/fs/ext4/xattr.c
->> +++ b/fs/ext4/xattr.c
->> @@ -3113,11 +3113,10 @@ ext4_xattr_block_cache_find(struct inode *inode,
->>
->>           bh = ext4_sb_bread(inode->i_sb, ce->e_value, REQ_PRIO);
->>           if (IS_ERR(bh)) {
->> -            if (PTR_ERR(bh) == -ENOMEM)
->> -                return NULL;
->> +            if (PTR_ERR(bh) != -ENOMEM)
->> +                EXT4_ERROR_INODE(inode, "block %lu read error",
->> +                         (unsigned long)ce->e_value);
->>               bh = NULL;
->> -            EXT4_ERROR_INODE(inode, "block %lu read error",
->> -                     (unsigned long)ce->e_value);
->>           } else if (ext4_xattr_cmp(header, BHDR(bh)) == 0) {
->>               *pce = ce;
->>               return bh;
-> So if we get the ENOMEM error, continuing the iteration seems to be
-> pointless as we'll likely get it for the following entries as well. I think
-> the original behavior of aborting the iteration in case of ENOMEM is
-> actually better. We just have to do mb_cache_entry_put(ea_block_cache, ce)
-> before returning...
->
-> 								Honza
-Returning NULL here would normally attempt to allocate a new
-xattr_block in ext4_xattr_block_set(), and when ext4_sb_bread() fails,
-allocating the new block and inserting it would most likely fail as well,
-so my initial thought was to propagate the error from ext4_sb_bread()
-to also make ext4_xattr_block_set() fail when ext4_sb_bread() fails.
+On Wed, Apr 24, 2024 at 10:57:56AM -0500, Tom Lendacky wrote:
+> Tom Lendacky (15):
+>   x86/sev: Shorten snp_secrets_page_layout to snp_secrets_page
+>   x86/sev: Rename snp_init() in the boot/compressed/sev.c file
+>   x86/sev: Make the VMPL0 checking more straight forward
+>   x86/sev: Check for the presence of an SVSM in the SNP Secrets page
+>   x86/sev: Use kernel provided SVSM Calling Areas
+>   x86/sev: Perform PVALIDATE using the SVSM when not at VMPL0
+>   x86/sev: Use the SVSM to create a vCPU when not in VMPL0
+>   x86/sev: Provide SVSM discovery support
+>   x86/sev: Provide guest VMPL level to userspace
+>   virt: sev-guest: Choose the VMPCK key based on executing VMPL
+>   configfs-tsm: Allow the privlevel_floor attribute to be updated
+>   fs/configfs: Add a callback to determine attribute visibility
+>   x86/sev: Take advantage of configfs visibility support in TSM
+>   x86/sev: Extend the config-fs attestation support for an SVSM
+>   x86/sev: Allow non-VMPL0 execution when an SVSM is present
 
-But I noticed that before Ted added the special handling for -ENOMEM,
-EXT4_ERROR_INODE was called to set the ERROR_FS flag no matter
-what error ext4_sb_bread() returned, and after we can distinguish
-between -EIO and -ENOMEM, we don't have to set the ERROR_FS flag
-in the case of -ENOMEM. So there's this conservative fix now.
+I tested these on latest COCONUT-SVSM upstream and found no issues.
 
-In short, in my personal opinion, for -EIO and -ENOMEM, they should
-be the same except whether or not the ERROR_FS flag is set.
-Otherwise, I think adding mb_cache_entry_put() directly is the easiest
-and most straightforward fix.  Honza, do you have any other thoughts?
-
-Thanks,
-Baokun
+Tested-by: Joerg Roedel <jroedel@suse.de>
