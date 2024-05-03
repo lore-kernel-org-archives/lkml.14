@@ -1,65 +1,118 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396F679E5
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 14:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9B62E827;
+	Fri,  3 May 2024 14:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714747345; cv=none; b=YG0GGk9CRu6WliHXE1tUC/1KEPWwS4uzGYSRo0lI+XJgQTopsw/+/8B7chMu/r/d5niH5wggz2PYgyxT6L6z5/RLvCCkzzsZ4wz88i8aJ9y7GR/C+dgvAsU1wJQG1NfKJ1XKTJAysyG4LEozDkU83cUJwWlVnL1BXMKosW+4rxg=
+	t=1714747580; cv=none; b=Jew/l4XYJ7Py/xDZvSLoE0UkWtTNfV2UJsHhttGeiZIdwa3UDd/ADdeVmg16YSk8+wlkjPB27ZOfd2v8aZRco1r6mxvu5iD8h9ZOqexucYvlFmRN2Va0RgqLU/sVlGZWpGtqBRqxRV2NV0pdb26xjxuG9ZKtaCim3HGtW7LRmRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714747345; c=relaxed/simple;
-	bh=mDc7l4BQOtQuW0woQaACXN7GwQ/3uPIg/A4ox0GMq4k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jMHYeQLjb03hc3czQJ4PDLkLBd3WOcGZjQhbebThHQSuEfbYPz9MbGaAIW7hceoZYtXV37P5xqZn3fL2onUEKj7tkh0RddfS14yd2bryK0SynIUhwPK0TKzCU9Sfherny6WxBLFaogTwlLNYj90RCP0D5EtQqoTFz0UbfEtd9AU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Fri, 3 May
- 2024 17:41:05 +0300
-Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 3 May 2024
- 17:41:05 +0300
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-To: <syzbot+97b4444a5bd7bf30b3a8@syzkaller.appspotmail.com>
-CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [syzbot] [crypto?] KMSAN: uninit-value in skcipher_walk_virt
-Date: Fri, 3 May 2024 07:40:55 -0700
-Message-ID: <20240503144055.3820-1-n.zhandarovich@fintech.ru>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <000000000000dcd2ae06178bccb0@google.com>
-References:
+	s=arc-20240116; t=1714747580; c=relaxed/simple;
+	bh=NxNcbhOCjngDaCVHjRPwz5ihVV74qe9PSAym9R0E9Ck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nN2heyeS1BXkpKJywCChw1AjPnsUh8VaXyOSAlTOmG7F/98/DLyoHDFXds7iZnOszGJPLr8fLjg6g8TC00PoaWEhdV6ZX/JPCj/VpwPf4IFmdlhHXmNtUy1hUbp2zBt0NleSlEUbCukSIAY8d64nQZgMDQkqb3/6NfOGSqQsSH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bItzuRmS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bItzuRmS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C03C116B1;
+	Fri,  3 May 2024 14:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714747579;
+	bh=NxNcbhOCjngDaCVHjRPwz5ihVV74qe9PSAym9R0E9Ck=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bItzuRmSftrASWXB8bfUvrheyly/NaMWMiZQW4eHmGkRMGYNww3pxYY64dpdozKTv
+	 d8AADK4gzmIXE6E7N0rxqaszsmistNyFl8eEu33s2Mub9zd8RxHzdQLTkt0M8R4+GT
+	 a2mtDcos4Bto0Kh9BEQEmVfoReSiE2DweXQ4m2KdP6CuawLqQ7Ek7fGf4Kpf8CDcTU
+	 muhTuAULZZlK//rOOyRwlegbaNd786nFfWkFBHBuJViUOKgaQpI6+8kHnYNOvW2s2m
+	 Vk2CDrVZ/4QpjcInj4czmf6wJxMHe6/UJe5qA7mckJbnTGF9Fd7S95r66jv3WfJpQv
+	 a6EzMyNiXXkHw==
+Message-ID: <7b6489b7-ec9f-4fc7-af72-4d5cc87acd7f@kernel.org>
+Date: Fri, 3 May 2024 16:46:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] spi: dt-bindings: Add num-cs property for mpfs-spi
+To: Prajna.Rajendrakumar@microchip.com, broonie@kernel.org
+Cc: linux-spi@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Conor.Dooley@microchip.com, devicetree@vger.kernel.org, robh@kernel.org,
+ linux-kernel@vger.kernel.org, krzk+dt@kernel.org,
+ Valentina.FernandezAlanis@microchip.com, Daire.McNamara@microchip.com
+References: <20240502143410.12629-1-prajna.rajendrakumar@microchip.com>
+ <20240502143410.12629-3-prajna.rajendrakumar@microchip.com>
+ <10671947-f418-4520-a29f-4ce129770e65@kernel.org>
+ <1edb6c4c1a66c1a2009278b99f897e3a71b592c6.camel@microchip.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1edb6c4c1a66c1a2009278b99f897e3a71b592c6.camel@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-req->base.flags were not initialized, zero might suit in this case.
-Do it with skcipher_request_set_callback() as it's common practice.
+On 03/05/2024 14:54, Prajna.Rajendrakumar@microchip.com wrote:
+>>
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: microchip,mpfs-spi
+>>> +      not:
+>>> +        required:
+>>> +          - cs-gpios
+>>
+>> I don't understand what you are expressing here. Did you actually
+>> validate it that it achieves exactly what you want?
+> 
+> Since the controller supports only one chip select, the num-cs should
+> default to 1 and cannot exceed 1 unless GPIOs are used as chip selects.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+That's not really the answer... or you want to say you did not test it?
 
----
- fs/bcachefs/checksum.c | 1 +
- 1 file changed, 1 insertion(+)
+Best regards,
+Krzysztof
 
-diff --git a/fs/bcachefs/checksum.c b/fs/bcachefs/checksum.c
-index 7ed779b411f6..088fd2e7bdf1 100644
---- a/fs/bcachefs/checksum.c
-+++ b/fs/bcachefs/checksum.c
-@@ -102,6 +102,7 @@ static inline int do_encrypt_sg(struct crypto_sync_skcipher *tfm,
- 	int ret;
- 
- 	skcipher_request_set_sync_tfm(req, tfm);
-+	skcipher_request_set_callback(req, 0, NULL, NULL);
- 	skcipher_request_set_crypt(req, sg, sg, len, nonce.d);
- 
- 	ret = crypto_skcipher_encrypt(req);
