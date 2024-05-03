@@ -1,165 +1,155 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C236E152DF0
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 11:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120F4152DF5
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 11:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714737443; cv=none; b=rnQhZ2WqwAalnVAa//2Lq8RUwoHsChZGBhXLh7jxLalteAFA+NhG0pHgqyW/dv9qXefyJa3quj/UzIZt89xRH5jc+uAg8LreQbHDPxyBt4zQmB/IDM4AMcrfU7pd4leoJgi2dCM4GJzWiELoye6vv/YREz3fHj300p0zPDtW6Wg=
+	t=1714737505; cv=none; b=jF473aXrJTLWgh59moJMr9z1NHF4SgQF2v7MCvNErA9XfTqRaVgW2yzqcEsq1EX7fzF5v7VsIOsgG5FDgXNhipFZ7sIDNA0swg1jzY+07hTmL7ggT1ppG7a2JcCYNarny3BK652TYItP/PnvhKkwxaO7UT0ARbvmuVmqJG93b8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714737443; c=relaxed/simple;
-	bh=CmcuBbTVhho6EBimKTWKrm1lTdbe7FzUQrr9f+yUs1U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XTjzt9VGsyKswrehhmmZbW/1qCd13ergMJAbj7Tvp1PZQ93jjJUt+sAfOx6MEiGfsHDSl0vWqTHUCsX4hyn5rENu/NLYEugIKbQW3YeqP4M4OcCuAzkdGCwbAx171APAT/ixaNihMTSVQnDtj1BwJjEp2AEIS88+Z6ID0AO1s4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ee3ChdEh; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ee3ChdEh"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6f44dd41a5cso326570b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 04:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714737440; x=1715342240; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K7hPKV3HF7+4pxzh8EgR7k2JkSmFNYuW+tKLwH6I0Lg=;
-        b=Ee3ChdEhqgMcMnYD+98HDx2vIaePiS4F8ej72udYqhX68vnFv7st5bt2/2MPVLsXR8
-         jOIM3PdJNsZy/omnxG4Uz5S3OJN9ebb710IRuYS7eS5l+h1iIGUGsuP6UVfHwaghY3xY
-         DYChXe3C90vExbTk1fbB0ndJBWVPaVz5GBRNY=
+	s=arc-20240116; t=1714737505; c=relaxed/simple;
+	bh=YaifA61orL93F1z51xxGDPNVb/aBwr7JGokIH5e29SY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=n4s6wzpNF1k9WpEklTRRhQDO15KtcUfSxYh2AMb3dcv9YYApwmtEB6Y4DjfzEq398dTOfDwCx4I1Y7OpaKxBbrwkEZlpI+VBd9RakjL6F8EDcGuA8ovDcqj1s0i2U/j0mVb6ge69o0mJUR1zr0KoyrQwbPh4C+IhSRwcD1TO5sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7da7d4ccb67so951290439f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 04:58:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714737440; x=1715342240;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K7hPKV3HF7+4pxzh8EgR7k2JkSmFNYuW+tKLwH6I0Lg=;
-        b=UjwNsbW7WVv2fcliiOzvikCH6CVJ3LP8m5Or/VdTWWa4r1n2tOnB18x5Q/VxFFCmhP
-         EsGssrTYatRqjNX3wSaOdf3dY8+uG1dfn/IM2YJTG7aW4lOzYgTneETAuRtA2bFv6BYK
-         19xO4JhQipnElfONpTwDoZlXB6aWftPYHbPDr8AdGSU/N8cljpUlc78UUEZbxeGqVgxM
-         NoJ+1j0fK7U/505MNiF292D+a7tnOMeReDl9VwOQzwxx+vUsmewWFrylM6aKIc9PhN59
-         l6tvTYo7wTWqEN/sXg3uIM1V8VRBuSH+KohoV9QpubyWc06Nwt4nxOcaSujNhoY0F0Mt
-         P4sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMhNdi/ZNi6f9n7TMcpaaqAkNgajpN1rRr9wqMM3szMDwC+HK2spC7l9Mz46UWr/f94pVOu4r2SdjWssIsuBl9MpA6FSFIi987lSx+
-X-Gm-Message-State: AOJu0YwupISpWfClk4hdZOyIyqFuYDgzIM4tF3KdwtYa8QHOYBewDGES
-	WWlkTn2KQ7ZHQ/fAlwMcOb27FJ7VYkg7WkDV+r3tyffba9FAXnJKoh4qXKjnAZwESBKB4IkWfJw
-	DIw==
-X-Google-Smtp-Source: AGHT+IHKQ6JPcE22hviAwZgz4gQZZDgFc+0w+hO7WXJ6mla3dcNffreanwXDbTRbMMxHss90ykqRLA==
-X-Received: by 2002:a05:6a00:2287:b0:6f3:ee4f:e28a with SMTP id f7-20020a056a00228700b006f3ee4fe28amr2306793pfe.32.1714737439786;
-        Fri, 03 May 2024 04:57:19 -0700 (PDT)
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com. [209.85.214.171])
-        by smtp.gmail.com with ESMTPSA id p8-20020a056a000a0800b006ecc6c1c67asm2892448pfh.215.2024.05.03.04.57.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 May 2024 04:57:17 -0700 (PDT)
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so89514005ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 04:57:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWCgD96Ul0LW4v5LX0T2fcgeXOAmFuVv/99V2TymEW9vlAbRP+sRO4aje+mTjqwNP6mlUry/Lpill4IZDcQ3942zJFGYTFebO+LuFEm
-X-Received: by 2002:a05:6102:2329:b0:47b:d717:b689 with SMTP id
- b9-20020a056102232900b0047bd717b689mr2266975vsa.4.1714737415965; Fri, 03 May
- 2024 04:56:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714737503; x=1715342303;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOhPRJgVEitnomUm+1knlzOavziwEOygxrwj9usYCWU=;
+        b=mRPS7ZOc4t6utHxwTpnvOjzkfQdvxvKnJnmfJ5qyYfGe8xX8zK8kkHEJZk5o/UJp3g
+         NOphaxdF7Aq1R4x3khXJN8LTpgjQXYwstNrN96kvuFlVA6h+8uwViFhPGKyBBq11ozyi
+         tlxgGZ37N1tXZk+q1jhyKkR8aXztTg29NqX3fIqsuuvxjoZQ/qIs5PeuPgmhSMIp/WPM
+         Ef93fZwbICQ/Udt9qit3BS9HiYM0XFvEGJ376VLX1tori4n+hSE8wApp0aXMyEuf6RS3
+         /e2l/muKxRPFyTV97HS8zJmtBlfjAgPOIx+BzAY/fkTMQWMUC3VJpG1I8DwtMQFbG1u/
+         on5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU/AXeln+r6RLfQpPBxyrxtoYRKFZhieDGgEJ3b8LxBvkos95zVLM4wRI5xa5n0KSM6nPEQpCP9NwgWglpy52S926m9e2TOTbir5Csy
+X-Gm-Message-State: AOJu0Yx8644vL+Tf+7ct8Gjg4qlmpjyCu9org5H4wju7zug5NGp8Qf5b
+	sIdsX4+ex3PvISRLqzAVqSGd3lPsgEVvli+LCMGu9kQJgYCAyV2+Jr90Rf7ON1KXNa46s69jza5
+	Kk9RjG2m4qZ1PAkzhY4KBf7lLSXz47Guq67w3SL0sSXTAWxDJjhMohdU=
+X-Google-Smtp-Source: AGHT+IHMxlg4LR0Y29EJqqi3eoweYexP6RgQEfebTgHVsVzOhdGsRLogeDIf/2LIdRIUaNyfpSp79eneZEQi7HCh5IBZ5muqC19g
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240429-fix-cocci-v3-0-3c4865f5a4b0@chromium.org>
- <20240429-fix-cocci-v3-26-3c4865f5a4b0@chromium.org> <20240503112758.763d8d31@sal.lan>
- <c4287024-8012-458d-9829-15ffbceb25cf@moroto.mountain>
-In-Reply-To: <c4287024-8012-458d-9829-15ffbceb25cf@moroto.mountain>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 3 May 2024 13:56:44 +0200
-X-Gmail-Original-Message-ID: <CANiDSCsU+jgYkUmHZOC8xPsL2DbgU7_sWrby1bQAXQNnp+g6Bg@mail.gmail.com>
-Message-ID: <CANiDSCsU+jgYkUmHZOC8xPsL2DbgU7_sWrby1bQAXQNnp+g6Bg@mail.gmail.com>
-Subject: Re: [PATCH v3 26/26] media: dvb-frontends: tda10048: Make the range
- of z explicit.
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Martin Tuma <martin.tuma@digiteqautomotive.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Hugues Fruchet <hugues.fruchet@foss.st.com>, Alain Volmat <alain.volmat@foss.st.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Paul Kocialkowski <paul.kocialkowski@bootlin.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Sowjanya Komatineni <skomatineni@nvidia.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sergey Kozlov <serjk@netup.ru>, Abylay Ospan <aospan@netup.ru>, 
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Dmitry Osipenko <digetx@gmail.com>, 
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>, 
-	Sylvain Petinot <sylvain.petinot@foss.st.com>, 
-	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, Vikash Garodia <quic_vgarodia@quicinc.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev, 
-	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
+X-Received: by 2002:a05:6602:2c03:b0:7da:19cb:1c7f with SMTP id
+ w3-20020a0566022c0300b007da19cb1c7fmr108039iov.0.1714737503279; Fri, 03 May
+ 2024 04:58:23 -0700 (PDT)
+Date: Fri, 03 May 2024 04:58:23 -0700
+In-Reply-To: <0000000000009d99ed06178b29b5@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c4312c06178b6f62@google.com>
+Subject: Re: [syzbot] [bcachefs?] BUG: unable to handle kernel paging request
+ in bch2_fs_btree_key_cache_exit
+From: syzbot <syzbot+a35cdb62ec34d44fb062@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-I am trying to get the DS, but
-https://www.nxp.com/acrobat_download/literature/9397/75015931.pdf is a
-dead links now.
+syzbot has found a reproducer for the following issue on:
 
-Anyone have access to the datasheet?
+HEAD commit:    6a71d2909427 Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=157bb450980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fca646cf17cc616b
+dashboard link: https://syzkaller.appspot.com/bug?extid=a35cdb62ec34d44fb062
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=124d68a7180000
 
-Thanks!
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c77d21fa1405/disk-6a71d290.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/429fcd369816/vmlinux-6a71d290.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d3d8a4b85112/Image-6a71d290.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/5eb4d59a9b9e/mount_0.gz
 
-On Fri, 3 May 2024 at 13:55, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> On Fri, May 03, 2024 at 11:27:58AM +0100, Mauro Carvalho Chehab wrote:
-> > Em Mon, 29 Apr 2024 15:05:05 +0000
-> > Ricardo Ribalda <ribalda@chromium.org> escreveu:
-> >
-> > > We do not expect the sample_freq to be over 613MHz.
-> > >
-> > > Found by cocci:
-> > > drivers/media/dvb-frontends/tda10048.c:345:1-7: WARNING: do_div() does a 64-by-32 division, please consider using div64_u64 instead.
-> > >
-> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > ---
-> > >  drivers/media/dvb-frontends/tda10048.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/media/dvb-frontends/tda10048.c b/drivers/media/dvb-frontends/tda10048.c
-> > > index 3e725cdcc66b..1886f733dbbf 100644
-> > > --- a/drivers/media/dvb-frontends/tda10048.c
-> > > +++ b/drivers/media/dvb-frontends/tda10048.c
-> > > @@ -328,7 +328,8 @@ static int tda10048_set_wref(struct dvb_frontend *fe, u32 sample_freq_hz,
-> > >                          u32 bw)
-> > >  {
-> > >     struct tda10048_state *state = fe->demodulator_priv;
-> > > -   u64 t, z;
-> > > +   u32 z;
-> > > +   u64 t;
-> > >
-> > >     dprintk(1, "%s()\n", __func__);
-> > >
-> > > @@ -341,6 +342,7 @@ static int tda10048_set_wref(struct dvb_frontend *fe, u32 sample_freq_hz,
-> > >     /* t *= 2147483648 on 32bit platforms */
-> > >     t *= (2048 * 1024);
-> > >     t *= 1024;
-> > > +   /* Sample frequency is under 613MHz */
-> >
-> > Are you sure about that? Some DVB devices have very high frequency
-> > clocks, specially if they're also used for satellite, so I can't
-> > be sure by just looking at the driver's code.
-> >
-> > Also, we had already a bunch of regressions with "fixes" like this
-> > that actually broke frontend drivers.
->
-> This patch preserves the existing behavior. The sample_freq_hz variable
-> is a u32 so, in the original code, z couldn't have been more than
-> U32_MAX even though it was declared as a u64.
->
-> It's possible that the original code was wrong.  We have seen that in
-> other places in this patchset.  Adding a note about the datasheet is
-> also a good idea.
->
-> regards,
-> dan carpenter
->
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a35cdb62ec34d44fb062@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 0 to 32768
+workqueue: Failed to create a rescuer kthread for wq "bcachefs": -EINTR
+bcachefs (1e246536-b1b3-4f86-83c2-3dfcc2979a4c): shutdown complete
+Unable to handle kernel paging request at virtual address ffff7000249ff210
+KASAN: probably wild-memory-access in range [0xffff800124ff9080-0xffff800124ff9087]
+Mem abort info:
+  ESR = 0x0000000096000006
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x06: level 2 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000001ad5bd000
+[ffff7000249ff210] pgd=0000000000000000, p4d=000000023e882003, pud=000000023e880003, pmd=0000000000000000
+Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 1 PID: 6351 Comm: syz-executor.0 Not tainted 6.9.0-rc4-syzkaller-g6a71d2909427 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+pstate: 80401005 (Nzcv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
+pc : bch2_fs_btree_key_cache_exit+0x7ec/0xfcc fs/bcachefs/btree_key_cache.c:974
+lr : bch2_fs_btree_key_cache_exit+0x78c/0xfcc fs/bcachefs/btree_key_cache.c:970
+sp : ffff8000a19f6e80
+x29: ffff8000a19f6f50 x28: 1fffe0001df60010
+ x27: ffff0000efb044b0
+x26: 1ffff0001433ede0 x25: dfff800000000000 x24: 1ffff0001168e5d4
+x23: 0000000000000000 x22: ffff800124ff9080 x21: ffff8000a19f6f00
+x20: ffff80008ee81218
+ x19: dfff800000000000 x18: ffff8000a19f6960
+x17: 0000000000017999 x16: ffff8000802896e4 x15: 0000000000000001
+x14: 1fffe0001df60898 x13: 0000000000000000 x12: 0000000000000000
+x11: ffff60001df60899 x10: 0000000000ff0100 x9 : 0000000000000003
+x8 : 1ffff000249ff210 x7 : ffff80008275d4e8 x6 : 0000000000000000
+x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008275d4f8
+x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000008
+Call trace:
+ bch2_fs_btree_key_cache_exit+0x7ec/0xfcc fs/bcachefs/btree_key_cache.c:974
+ __bch2_fs_free fs/bcachefs/super.c:562 [inline]
+ bch2_fs_release+0x1e0/0x564 fs/bcachefs/super.c:609
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x2a8/0x41c lib/kobject.c:737
+ bch2_fs_free+0x288/0x2f0 fs/bcachefs/super.c:674
+ bch2_fs_alloc+0xe4c/0x1c60 fs/bcachefs/super.c:965
+ bch2_fs_open+0x740/0xb64 fs/bcachefs/super.c:2080
+ bch2_mount+0x558/0xe10 fs/bcachefs/fs.c:1900
+ legacy_get_tree+0xd4/0x16c fs/fs_context.c:662
+ vfs_get_tree+0x90/0x288 fs/super.c:1779
+ do_new_mount+0x278/0x900 fs/namespace.c:3352
+ path_mount+0x590/0xe04 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount fs/namespace.c:3875 [inline]
+ __arm64_sys_mount+0x45c/0x594 fs/namespace.c:3875
+ __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+ el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+ el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+Code: f90027e8 d343fec8 11000d29 f9002be8 (38f36908) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	f90027e8 	str	x8, [sp, #72]
+   4:	d343fec8 	lsr	x8, x22, #3
+   8:	11000d29 	add	w9, w9, #0x3
+   c:	f9002be8 	str	x8, [sp, #80]
+* 10:	38f36908 	ldrsb	w8, [x8, x19] <-- trapping instruction
 
 
--- 
-Ricardo Ribalda
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
