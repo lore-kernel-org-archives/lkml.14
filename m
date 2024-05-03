@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A434215358F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4384153590
 	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714742052; cv=none; b=X9VQ9hrnkijRKkGwCaPOHnsRvIe6WKyIt8yUiGoyIwDhUKdj29soAXltRqf7X08C3l4SRfX4nnaDxJyJz4qvvIgROc/hXxBUVsUs+QCCOCNKR/mAe92x3mVuB0K7Ci+IjH9aRKsjMNVPGvEGoRHd9JT8FVq9whTt+BEkYAslUDA=
+	t=1714742051; cv=none; b=kcvD+jV5j+SKknymKhIDdq9jRjPOhxCE5dxsq8x6xy/CcWFu+zHVtPqauzW94qHgZ+P5OwiAHQF1bscLTBKq2FEodcJGFaQesEtyM5SncEHKRi5ItWDDcqf8Rne15HmgjRhYVhQvZH80c/kAD5sF8zT5ZdynIezkYO4pB9UTyCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714742052; c=relaxed/simple;
-	bh=CMmR1PQCL8CPLw2XGxubBH3eRd4+D/IB7iVro70lnfQ=;
+	s=arc-20240116; t=1714742051; c=relaxed/simple;
+	bh=86IHE4o+blfTWxUKPyBZ4wSvVAUWznOlFsmeocRp+Tk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n8/gcBXBPOx8Rjs8IyFL5SOz96WsLy994/v3a1DOhqqyv+2eA7I4je47RU/oZbGhFLEsRBfgaJzbIexhOOm0AAGtkR5UmCfmDAcajLAhtZsRUwK6ehD2thP+yP9ibJbrf1iu6ZR6LkJ8x2Uf70Tz15eCoyboRLBI8sIZAM5jZr8=
+	 MIME-Version; b=S3Y4fTEGmVr/XXQI/2boQzb0/bk4nyaEqsErxKSTWfAmwXPk32H5zmJCUACnhQtwYvcuv7PR3fWOUKH7h22BpAqF6ySAV1xEagED+mkGDposzaxZ6QbLnDbeaWvKYq/SThhE24b/t6aDCh43+jAP5il5aXL5J8ADspZycjXHK9k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s2sjb-0006EL-6l; Fri, 03 May 2024 15:13:55 +0200
+	id 1s2sjb-0006EJ-6k; Fri, 03 May 2024 15:13:55 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s2sjZ-00FiKN-Sr; Fri, 03 May 2024 15:13:53 +0200
+	id 1s2sjZ-00FiKA-Og; Fri, 03 May 2024 15:13:53 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s2sjZ-008GI0-2S;
+	id 1s2sjZ-008GGx-25;
 	Fri, 03 May 2024 15:13:53 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v7 10/12] net: dsa: add support switches global DSCP priority mapping
-Date: Fri,  3 May 2024 15:13:49 +0200
-Message-Id: <20240503131351.1969097-11-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v7 04/12] net: dsa: microchip: add multi queue support for KSZ88X3 variants
+Date: Fri,  3 May 2024 15:13:43 +0200
+Message-Id: <20240503131351.1969097-5-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240503131351.1969097-1-o.rempel@pengutronix.de>
 References: <20240503131351.1969097-1-o.rempel@pengutronix.de>
@@ -65,146 +65,172 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Some switches like Microchip KSZ variants do not support per port DSCP
-priority configuration. Instead there is a global DSCP mapping table.
+KSZ88X3 switches support up to 4 queues. Rework ksz8795_set_prio_queue()
+to support KSZ8795 and KSZ88X3 families of switches.
 
-To handle it, we will accept set/del request to any of user ports to
-make global configuration and update dcb app entries for all other
-ports.
+Per default, configure KSZ88X3 to use one queue, since it need special
+handling due to priority related errata. Errata handling is implemented
+in a separate patch.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Acked-by: Arun Ramadoss <arun.ramadoss@microchip.com>
 ---
- include/net/dsa.h |  9 ++++++
- net/dsa/user.c    | 75 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 84 insertions(+)
+changes v6:
+- use if/else if, instead of if/if
+---
+ drivers/net/dsa/microchip/ksz8795.c     | 87 ++++++++++++++++---------
+ drivers/net/dsa/microchip/ksz8795_reg.h |  9 ++-
+ 2 files changed, 61 insertions(+), 35 deletions(-)
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 40c127a301878..b60e7e410aba7 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -433,6 +433,11 @@ struct dsa_switch {
- 	 */
- 	u32			fdb_isolation:1;
- 
-+	/* Drivers that have global DSCP mapping settings must set this to
-+	 * true to automatically apply the settings to all ports.
-+	 */
-+	u32			dscp_prio_mapping_is_global:1;
-+
- 	/* Listener for switch fabric events */
- 	struct notifier_block	nb;
- 
-@@ -586,6 +591,10 @@ static inline bool dsa_is_user_port(struct dsa_switch *ds, int p)
- 	dsa_switch_for_each_port((_dp), (_ds)) \
- 		if (dsa_port_is_user((_dp)))
- 
-+#define dsa_switch_for_each_user_port_continue_reverse(_dp, _ds) \
-+	dsa_switch_for_each_port_continue_reverse((_dp), (_ds)) \
-+		if (dsa_port_is_user((_dp)))
-+
- #define dsa_switch_for_each_cpu_port(_dp, _ds) \
- 	dsa_switch_for_each_port((_dp), (_ds)) \
- 		if (dsa_port_is_cpu((_dp)))
-diff --git a/net/dsa/user.c b/net/dsa/user.c
-index f4ac82e8a39e8..b9dd508f1fd9e 100644
---- a/net/dsa/user.c
-+++ b/net/dsa/user.c
-@@ -2189,6 +2189,58 @@ dsa_user_dcbnl_set_default_prio(struct net_device *dev, struct dcb_app *app)
- 	return 0;
+diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
+index b2f66cc752082..51b8ffe5a61f8 100644
+--- a/drivers/net/dsa/microchip/ksz8795.c
++++ b/drivers/net/dsa/microchip/ksz8795.c
+@@ -127,37 +127,56 @@ int ksz8_change_mtu(struct ksz_device *dev, int port, int mtu)
+ 	return -EOPNOTSUPP;
  }
  
-+/* Update the DSCP prio entries on all user ports of the switch in case
-+ * the switch supports global DSCP prio instead of per port DSCP prios.
-+ */
-+static int dsa_user_dcbnl_ieee_global_dscp_setdel(struct net_device *dev,
-+						  struct dcb_app *app, bool del)
-+{
-+	int (*setdel)(struct net_device *dev, struct dcb_app *app);
-+	struct dsa_port *dp = dsa_user_to_port(dev);
-+	struct dsa_switch *ds = dp->ds;
-+	struct dsa_port *other_dp;
-+	int err, restore_err;
-+
-+	if (del)
-+		setdel = dcb_ieee_delapp;
-+	else
-+		setdel = dcb_ieee_setapp;
-+
-+	dsa_switch_for_each_user_port(other_dp, ds) {
-+		struct net_device *user = other_dp->user;
-+
-+		if (!user || user == dev)
-+			continue;
-+
-+		err = setdel(user, app);
-+		if (err)
-+			goto err_try_to_restore;
-+	}
-+
-+	return 0;
-+
-+err_try_to_restore:
-+
-+	/* Revert logic to restore previous state of app entries */
-+	if (!del)
-+		setdel = dcb_ieee_delapp;
-+	else
-+		setdel = dcb_ieee_setapp;
-+
-+	dsa_switch_for_each_user_port_continue_reverse(other_dp, ds) {
-+		struct net_device *user = other_dp->user;
-+
-+		if (!user || user == dev)
-+			continue;
-+
-+		restore_err = setdel(user, app);
-+		if (restore_err)
-+			netdev_err(user, "Failed to restore DSCP prio entry configuration\n");
-+	}
-+
-+	return err;
-+}
-+
- static int __maybe_unused
- dsa_user_dcbnl_add_dscp_prio(struct net_device *dev, struct dcb_app *app)
+-static void ksz8795_set_prio_queue(struct ksz_device *dev, int port, int queue)
++static int ksz8_port_queue_split(struct ksz_device *dev, int port, int queues)
  {
-@@ -2220,6 +2272,17 @@ dsa_user_dcbnl_add_dscp_prio(struct net_device *dev, struct dcb_app *app)
- 		return err;
- 	}
+-	u8 hi, lo;
++	u8 mask_4q, mask_2q;
++	u8 reg_4q, reg_2q;
++	u8 data_4q = 0;
++	u8 data_2q = 0;
++	int ret;
  
-+	if (!ds->dscp_prio_mapping_is_global)
-+		return 0;
+-	/* Number of queues can only be 1, 2, or 4. */
+-	switch (queue) {
+-	case 4:
+-	case 3:
+-		queue = PORT_QUEUE_SPLIT_4;
+-		break;
+-	case 2:
+-		queue = PORT_QUEUE_SPLIT_2;
+-		break;
+-	default:
+-		queue = PORT_QUEUE_SPLIT_1;
++	if (ksz_is_ksz88x3(dev)) {
++		mask_4q = KSZ8873_PORT_4QUEUE_SPLIT_EN;
++		mask_2q = KSZ8873_PORT_2QUEUE_SPLIT_EN;
++		reg_4q = REG_PORT_CTRL_0;
++		reg_2q = REG_PORT_CTRL_2;
 +
-+	err = dsa_user_dcbnl_ieee_global_dscp_setdel(dev, app, false);
-+	if (err) {
-+		if (ds->ops->port_del_dscp_prio)
-+			ds->ops->port_del_dscp_prio(ds, port, dscp, new_prio);
-+		dcb_ieee_delapp(dev, app);
-+		return err;
-+	}
++		/* KSZ8795 family switches have Weighted Fair Queueing (WFQ)
++		 * enabled by default. Enable it for KSZ8873 family switches
++		 * too. Default value for KSZ8873 family is strict priority,
++		 * which should be enabled by using TC_SETUP_QDISC_ETS, not
++		 * by default.
++		 */
++		ret = ksz_rmw8(dev, REG_SW_CTRL_3, WEIGHTED_FAIR_QUEUE_ENABLE,
++			       WEIGHTED_FAIR_QUEUE_ENABLE);
++		if (ret)
++			return ret;
++	} else {
++		mask_4q = KSZ8795_PORT_4QUEUE_SPLIT_EN;
++		mask_2q = KSZ8795_PORT_2QUEUE_SPLIT_EN;
++		reg_4q = REG_PORT_CTRL_13;
++		reg_2q = REG_PORT_CTRL_0;
 +
- 	return 0;
++		/* TODO: this is legacy from initial KSZ8795 driver, should be
++		 * moved to appropriate place in the future.
++		 */
++		ret = ksz_rmw8(dev, REG_SW_CTRL_19,
++			       SW_OUT_RATE_LIMIT_QUEUE_BASED,
++			       SW_OUT_RATE_LIMIT_QUEUE_BASED);
++		if (ret)
++			return ret;
+ 	}
+-	ksz_pread8(dev, port, REG_PORT_CTRL_0, &lo);
+-	ksz_pread8(dev, port, P_DROP_TAG_CTRL, &hi);
+-	lo &= ~PORT_QUEUE_SPLIT_L;
+-	if (queue & PORT_QUEUE_SPLIT_2)
+-		lo |= PORT_QUEUE_SPLIT_L;
+-	hi &= ~PORT_QUEUE_SPLIT_H;
+-	if (queue & PORT_QUEUE_SPLIT_4)
+-		hi |= PORT_QUEUE_SPLIT_H;
+-	ksz_pwrite8(dev, port, REG_PORT_CTRL_0, lo);
+-	ksz_pwrite8(dev, port, P_DROP_TAG_CTRL, hi);
+-
+-	/* Default is port based for egress rate limit. */
+-	if (queue != PORT_QUEUE_SPLIT_1)
+-		ksz_cfg(dev, REG_SW_CTRL_19, SW_OUT_RATE_LIMIT_QUEUE_BASED,
+-			true);
++
++	if (queues == 4)
++		data_4q = mask_4q;
++	else if (queues == 2)
++		data_2q = mask_2q;
++
++	ret = ksz_prmw8(dev, port, reg_4q, mask_4q, data_4q);
++	if (ret)
++		return ret;
++
++	return ksz_prmw8(dev, port, reg_2q, mask_2q, data_2q);
  }
  
-@@ -2290,6 +2353,18 @@ dsa_user_dcbnl_del_dscp_prio(struct net_device *dev, struct dcb_app *app)
- 		return err;
- 	}
+ void ksz8_r_mib_cnt(struct ksz_device *dev, int port, u16 addr, u64 *cnt)
+@@ -1513,6 +1532,7 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ {
+ 	struct dsa_switch *ds = dev->ds;
+ 	const u32 *masks;
++	int queues;
+ 	u8 member;
  
-+	if (!ds->dscp_prio_mapping_is_global)
-+		return 0;
-+
-+	err = dsa_user_dcbnl_ieee_global_dscp_setdel(dev, app, true);
-+	if (err) {
-+		if (ds->ops->port_add_dscp_prio)
-+			ds->ops->port_add_dscp_prio(ds, port, dscp,
-+						    app->priority);
-+		dcb_ieee_setapp(dev, app);
-+		return err;
-+	}
-+
- 	return 0;
- }
+ 	masks = dev->info->masks;
+@@ -1520,8 +1540,15 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 	/* enable broadcast storm limit */
+ 	ksz_port_cfg(dev, port, P_BCAST_STORM_CTRL, PORT_BROADCAST_STORM, true);
  
+-	if (!ksz_is_ksz88x3(dev))
+-		ksz8795_set_prio_queue(dev, port, 4);
++	/* For KSZ88x3 enable only one queue by default, otherwise we won't
++	 * be able to get rid of PCP prios on Port 2.
++	 */
++	if (ksz_is_ksz88x3(dev))
++		queues = 1;
++	else
++		queues = dev->info->num_tx_queues;
++
++	ksz8_port_queue_split(dev, port, queues);
+ 
+ 	/* disable DiffServ priority */
+ 	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_DIFFSERV_ENABLE, false);
+diff --git a/drivers/net/dsa/microchip/ksz8795_reg.h b/drivers/net/dsa/microchip/ksz8795_reg.h
+index 0d13a6e29b0e6..69566a5d9cda1 100644
+--- a/drivers/net/dsa/microchip/ksz8795_reg.h
++++ b/drivers/net/dsa/microchip/ksz8795_reg.h
+@@ -124,7 +124,8 @@
+ #define PORT_BASED_PRIO_3		3
+ #define PORT_INSERT_TAG			BIT(2)
+ #define PORT_REMOVE_TAG			BIT(1)
+-#define PORT_QUEUE_SPLIT_L		BIT(0)
++#define KSZ8795_PORT_2QUEUE_SPLIT_EN	BIT(0)
++#define KSZ8873_PORT_4QUEUE_SPLIT_EN	BIT(0)
+ 
+ #define REG_PORT_1_CTRL_1		0x11
+ #define REG_PORT_2_CTRL_1		0x21
+@@ -143,6 +144,7 @@
+ #define REG_PORT_4_CTRL_2		0x42
+ #define REG_PORT_5_CTRL_2		0x52
+ 
++#define KSZ8873_PORT_2QUEUE_SPLIT_EN	BIT(7)
+ #define PORT_INGRESS_FILTER		BIT(6)
+ #define PORT_DISCARD_NON_VID		BIT(5)
+ #define PORT_FORCE_FLOW_CTRL		BIT(4)
+@@ -463,10 +465,7 @@
+ #define REG_PORT_4_CTRL_13		0xE1
+ #define REG_PORT_5_CTRL_13		0xF1
+ 
+-#define PORT_QUEUE_SPLIT_H		BIT(1)
+-#define PORT_QUEUE_SPLIT_1		0
+-#define PORT_QUEUE_SPLIT_2		1
+-#define PORT_QUEUE_SPLIT_4		2
++#define KSZ8795_PORT_4QUEUE_SPLIT_EN	BIT(1)
+ #define PORT_DROP_TAG			BIT(0)
+ 
+ #define REG_PORT_1_CTRL_14		0xB2
 -- 
 2.39.2
 
