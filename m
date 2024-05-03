@@ -1,88 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDB814F9E3;
-	Fri,  3 May 2024 10:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269A81514C3;
+	Fri,  3 May 2024 10:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714731553; cv=none; b=aE7ulha3Ha0r4bc/iI37/5xo0dToV/8xEpv2CfaB0SLpfxmu4uEcQlpifg0e9yf9k1VyiVJ+xt2UXnqZdivmpPUijwxCnaULGf2yuswpPPDQBKkrqtd605LPVCwFd2BKRa1VX6uiY//EWERxuwmSHyki//K4QK+9yjtBmZezA6w=
+	t=1714731570; cv=none; b=dc5JhQJR88PqjhwrSGcFsY5v7gnZYMsmOC1Ri0D290sG2Dnvgehpei7YLqLPL70i0FZJ4FjLGXJNgm20oVOYXLJwu1R8uGzUmB79KigRWiCqpn81rAHNldWl/kNT4viV/oKqOujAJeGD9bQ52VyJqw+oOiOlalCf/RfFU3YLrbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714731553; c=relaxed/simple;
-	bh=w6EbXMLbZy+Iq3jqd1Fpizg4P9aa3UkGFXgdsxOAiOE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Afc21NHHB2wb0FJ/JDm0jKI1oU/4r7VNe/EkMb8gxYJFAGCJUdWnMSWlBW20AviIu+QOIYUauAa1lV5+n/5QSOzGfYpNwEz4PnZ7fX0RsA4oikgmH7mhjeDZ1Wcq4yX9JPfVsMSi7T+Yvp8zneJbF3aZdobmC/q8mJPHIrXt4+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DA3+D+AX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714731570; c=relaxed/simple;
+	bh=RJodMdiCqV1H+srp+wmAlmr2N64s2/ekyL+2Gqy5MIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mH/4Im4/FPJyliIdhvImwCse5en7zNcPpuZCDaZcscMfx+puiWNMTfVA0mqnKyAqGUEK/vp0PXN4ozwgzjMh/2nr6XD3TNjsLeKeRM3nZGNaY3MjcG4pOc2c4AaYvbBmYSDqzVXsVzbHVJNkE1fzhKVP0xm1dKJXo9rJZzZtdBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OlmoVPGq; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DA3+D+AX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD506C116B1;
-	Fri,  3 May 2024 10:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714731552;
-	bh=w6EbXMLbZy+Iq3jqd1Fpizg4P9aa3UkGFXgdsxOAiOE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DA3+D+AXpjojEMciQeTe1i220pdfpQ2s1jKP7ixvlbzkYFvSXkQvoPyPp0SVVAZkg
-	 grs9jC0mqBlOKno9ibb889SH+1MH88nYrYntgKf/2isFppzu5+zWc8IoseCy4udfio
-	 2AEWS5a1gGu23Ir4M0vUDkFSaoV6b88EehNn2qraBQluFSugljkD+CxvZeMCuVp3Cb
-	 1aAZsA3YFnCV2R9BHPlABwcGuQgui1+Kp29Wze9wUxoLBOrwaycnB+taHiJFVYZBnv
-	 WxEy3GHXWCUPytWLRC5lqdF4h9VrtyunwF8vLdoMQkPKOeKHaKOIe91PhG1hNNjwHc
-	 meRsB9t7qUz8Q==
-From: Georgi Djakov <djakov@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	djakov@kernel.org
-Subject: [GIT PULL] interconnect changes for 6.10
-Date: Fri,  3 May 2024 13:19:01 +0300
-Message-Id: <20240503101901.1681356-1-djakov@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OlmoVPGq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714731568; x=1746267568;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RJodMdiCqV1H+srp+wmAlmr2N64s2/ekyL+2Gqy5MIU=;
+  b=OlmoVPGqUA8VvM7RfgC2Qzf2fMsoNbpPDh9qOAcXElX1CdKr7PCe8Ma8
+   fUWp2u4bAFrM1MNvSjEgLzmLmwaHIw7IKtIkiG5/blSXuRzMHB+R0Edsu
+   dY2P/AUdNenBPrrGUYEkljphNfKMYBEsxxVutXLVog5ybfy12EZtqcLIS
+   L+IxsV27R7ZSeHPbeZuxZO9jFfOBLrTYYfHSk+pq0d02wGNZRJ/57OEYq
+   WoRY+wSAmPRI9o5jhIEvSwLXO0CPvNy94biW3dmn7hnRly1ML7wsc3v4q
+   wVUhkdCJjJN25WaVuoSmqkRt/6MSVC9WQ0Yfd1HbHQkpBSBTAsT2cySs+
+   g==;
+X-CSE-ConnectionGUID: NBX/hSvfSQmfrmef126DlA==
+X-CSE-MsgGUID: vA7lmEB1TXKgEuw3CZSsyw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10386666"
+X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
+   d="scan'208";a="10386666"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 03:19:27 -0700
+X-CSE-ConnectionGUID: ZRiV3XMeRaSj1B/GfchsVQ==
+X-CSE-MsgGUID: 6HRYxUCUSEiCS8vx5FnX4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
+   d="scan'208";a="32215817"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 03 May 2024 03:19:27 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s2q0i-000BZy-0P;
+	Fri, 03 May 2024 10:19:24 +0000
+Date: Fri, 3 May 2024 18:19:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Naresh Solanki <naresh.solanki@9elements.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] hwmon (max6639): Use regmap
+Message-ID: <202405031504.sA1rmWDu-lkp@intel.com>
+References: <20240502183604.1216576-1-naresh.solanki@9elements.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502183604.1216576-1-naresh.solanki@9elements.com>
 
-Hello Greg,
+Hi Naresh,
 
-This is the pull request with interconnect changes for the v6.10-rc1 merge
-window. It contains tiny clean-up and fix. As always, the summary is
-in the signed tag.
+kernel test robot noticed the following build warnings:
 
-The patches have been in linux-next for more than a week with no reported
-issues. Please pull into char-misc-next when possible.
+[auto build test WARNING on 1d4d6733594d407e54153b8e031ba6356ceba81e]
 
-Thanks,
-Georgi
+url:    https://github.com/intel-lab-lkp/linux/commits/Naresh-Solanki/hwmon-max6639-Use-regmap/20240503-024046
+base:   1d4d6733594d407e54153b8e031ba6356ceba81e
+patch link:    https://lore.kernel.org/r/20240502183604.1216576-1-naresh.solanki%409elements.com
+patch subject: [PATCH v3] hwmon (max6639): Use regmap
+config: i386-buildonly-randconfig-003-20240503 (https://download.01.org/0day-ci/archive/20240503/202405031504.sA1rmWDu-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240503/202405031504.sA1rmWDu-lkp@intel.com/reproduce)
 
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405031504.sA1rmWDu-lkp@intel.com/
 
-  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+All warnings (new ones prefixed by >>):
 
-are available in the Git repository at:
+   drivers/hwmon/max6639.c: In function 'max6639_suspend':
+>> drivers/hwmon/max6639.c:540:13: warning: unused variable 'ret' [-Wunused-variable]
+     540 |         int ret;
+         |             ^~~
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/djakov/icc.git tags/icc-6.10-rc1
 
-for you to fetch changes up to 230d05b1179f6ce6f8dc8a2b99eba92799ac22d7:
+vim +/ret +540 drivers/hwmon/max6639.c
 
-  interconnect: qcom: qcm2290: Fix mas_snoc_bimc QoS port assignment (2024-04-11 20:46:26 +0300)
+   536	
+   537	static int max6639_suspend(struct device *dev)
+   538	{
+   539		struct max6639_data *data = dev_get_drvdata(dev);
+ > 540		int ret;
+   541	
+   542		if (data->reg)
+   543			regulator_disable(data->reg);
+   544	
+   545		return regmap_write_bits(data->regmap, MAX6639_REG_GCONFIG, MAX6639_GCONFIG_STANDBY,
+   546					 MAX6639_GCONFIG_STANDBY);
+   547	}
+   548	
 
-----------------------------------------------------------------
-interconnect changes for 6.10
-
-This pull request contains the interconnect changes for the 6.10-rc1 merge
-window. It contains some small driver changes listed below:
-
-Driver changes:
-- Cleanup sm6115 QoS port numbering.
-- Fix incorrect port value in qcm2290 driver.
-
-Signed-off-by: Georgi Djakov <djakov@kernel.org>
-
-----------------------------------------------------------------
-Konrad Dybcio (2):
-      interconnect: qcom: sm6115: Unspaghettify SNoC QoS port numbering
-      interconnect: qcom: qcm2290: Fix mas_snoc_bimc QoS port assignment
-
- drivers/interconnect/qcom/qcm2290.c |  2 +-
- drivers/interconnect/qcom/sm6115.c  | 33 ++++----
- 2 files changed, 19 insertions(+), 16 deletions(-)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
