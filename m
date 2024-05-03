@@ -1,91 +1,173 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D1314534A
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 11:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74375C2E9;
+	Fri,  3 May 2024 11:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714736287; cv=none; b=CeK24+rwZVK+4g3fAjR5YLMQ5myfiawGN++v7l3jiMsZT5CITE1IHDf0trCyZ4dosbU9ysUhQ5rf8BqXKCHnyji1sGKzciYbH8NjvFezMz9eXrk+0pF6tdLQjYo+4igtArWtpTy/9+m20ap9viold+Bhmm/eUmDMCrPI7jWtLJk=
+	t=1714736308; cv=none; b=t9omWwCl10uT48h/TpUsjnZ1UFIFMY3BeMUDlUmyUQmNTzU79sybf3DFHOkBjQ1L1NKqv/mNu5a1hRwidRga0jQZBjzQV8xlnmMcEq8IiX4snRFbmu9RzxJFiObglQLNj1ZunTRtDIH38N9XyTN9dr3yXn3P/xsyEYcJbmLOg9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714736287; c=relaxed/simple;
-	bh=2mFwIyJjhlyZVBLu3QUcc225c9YGrTsjtcIlVVK9h4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dOajeLaAffWkdt2vBcJsmW1g1FjpSBy3ZD+xbbRNgLpoqlldJw/5V5RiO8wtEKy6LHK7+Zn+Ukm7kscaxCpRtSIJTNo3+caIPk4h1hQAiQgz3hrSyvqL1VCM6jzD8KvUJRVfPK4Fr9UQyKnrcWlwVPokVtDZF2r0V3jyJNXyY4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XizIh0rW; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XizIh0rW"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41b5e74fa2fso59711865e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 04:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714736285; x=1715341085; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MLQCofPdnJ63uOr5tDqjn2YZWUonrylBn211XOLOE44=;
-        b=XizIh0rWMaGtGbkF5dUoT3wX2ZbEhrBEWDLxu3KA74Dk8WkpGgqsXSvlCyRaq/SPnt
-         d2cpaOkZSUR/Y6M8KTAo4H4nFmQBQNbghTM3aHNeGjZYm/A+OvMbDdBviW1gMr+zoZT4
-         MrSlqRIu1K4zbOHpHU4ThYpHfSzncy1vqlKvwNL3RMTzk92J7lMrPl+hU3kDn34AFaXz
-         FF0Y29A3ouZjpLFvDHwHbVseEbC1RZLgYQXisZjmhqSh9NMmQsmbtt1q/65KFVfZffml
-         xalTMZ40rCcRN3QURAgeb5tt8CkVZmJprGW/5YBwD+glgRqaCWeU7m070tevUbfVwk5V
-         iqhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714736285; x=1715341085;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MLQCofPdnJ63uOr5tDqjn2YZWUonrylBn211XOLOE44=;
-        b=CSxlTms8IrrB7Rfm5jXdDUxsjVL0PPZFAWqSNrbBDa5Kr8nnW1LAluW9FvCczrhi1u
-         f/ArP7vxDTFcQYqkb2Sgr4Pf9wXjZHCSymI+1th/yEXQx0QlXrC0MkW0kJQZL977Bznb
-         0AMGOJAWwGsa+V27P4+Yz4yGj+2fEQwCheyoyqn/wUQf32rKcEqQZhORJORBq/9/ju4P
-         Js+pTHMsDuvenJRGBWp36lK70z6+T8H1O3DLYwaeYEJQZlm/Zp70UG2h8mMAxJO2o/so
-         i0pnRT0fRr2i/R0y+0K3svEW8MTk6Rq0F0Hvs9DU9mdta6xjGb2S96jbmB4OGqwzajtK
-         F2HA==
-X-Forwarded-Encrypted: i=1; AJvYcCX61SR1yy1o3KRknd7HBODfyeOuAv/laZUmabQuEF4Ez+qvrbhjg9jU4qYFpB2ML5SftTe3lsj/j6Sh9vBqtqY4LUg7687FVVA8roXC
-X-Gm-Message-State: AOJu0YxPW+bGnzBD9erF4sfritvY7Lce4pgTc1yuynjjVOlsdNPxPK7R
-	Qm9rUuCyZhgXsWEj0tTLHN2gmEZF/sbFUMaB8SQRPjcmo5LnTSmfQmrMWpZUqkqo/iPfK2+MJUV
-	c
-X-Google-Smtp-Source: AGHT+IEUFq74MPGIgnW3XCqkUsaInfSWPvUq0gwS1ToGTdl+wAiuIT9mb9JtsW4g2vBgPQlcLO6dgw==
-X-Received: by 2002:a05:600c:4fc3:b0:41a:ff7d:2473 with SMTP id o3-20020a05600c4fc300b0041aff7d2473mr1857856wmq.4.1714736284563;
-        Fri, 03 May 2024 04:38:04 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id u21-20020a05600c139500b004190d7126c0sm9131680wmf.38.2024.05.03.04.38.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 04:38:04 -0700 (PDT)
-Date: Fri, 3 May 2024 14:38:00 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Duoming Zhou <duoming@zju.edu.cn>, linux-hams@vger.kernel.org,
-	netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Reuter <jreuter@yaina.de>,
-	Paolo Abeni <pabeni@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Lars Kellogg-Stedman <lars@oddbit.com>,
-	Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH net v2 2/2] ax25: fix potential reference counting leak
- in ax25_addr_ax25dev
-Message-ID: <e471ec93-6182-4af0-9584-a35e2680c66d@moroto.mountain>
-References: <cover.1714690906.git.duoming@zju.edu.cn>
- <74e840d98f2bfc79c6059993b2fc1ed3888faba4.1714690906.git.duoming@zju.edu.cn>
- <6eac7fc4-9ade-41bb-a861-d7f339b388f6@web.de>
+	s=arc-20240116; t=1714736308; c=relaxed/simple;
+	bh=k5AjE5JLkBAfjGLh7xerPBX/7aoAXhBzlXTnHmIL+us=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SA5X96K1pbZN/MDMs60bJ25831JJVV8598K1HZDoFohM1F14+CLaIydnAO8tOBEO1MfZbhJsFCgxbtz9oV2QhErnBVXl06kg7iIc1C4YsWBZOc5d78kTbAp+5NQErnF8+Wn1LRTAFfteg1jxFM8/97Q+1+y4tNuE0xti5Iid50I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VW80n6HpyzcdFh;
+	Fri,  3 May 2024 19:37:13 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id A7D1B180A9C;
+	Fri,  3 May 2024 19:38:22 +0800 (CST)
+Received: from [10.174.177.174] (10.174.177.174) by
+ dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 3 May 2024 19:38:21 +0800
+Message-ID: <9209062c-fa94-33f3-fd89-834a3314c7ed@huawei.com>
+Date: Fri, 3 May 2024 19:38:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6eac7fc4-9ade-41bb-a861-d7f339b388f6@web.de>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [syzbot] [ext4?] WARNING in mb_cache_destroy
+Content-Language: en-US
+To: Jan Kara <jack@suse.cz>
+CC: <tytso@mit.edu>, syzbot
+	<syzbot+dd43bd0f7474512edc47@syzkaller.appspotmail.com>,
+	<adilger.kernel@dilger.ca>, <linux-ext4@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>, <nathan@kernel.org>, <ndesaulniers@google.com>,
+	<ritesh.list@gmail.com>, <syzkaller-bugs@googlegroups.com>,
+	<trix@redhat.com>, yangerkun <yangerkun@huawei.com>, Baokun Li
+	<libaokun1@huawei.com>
+References: <00000000000072c6ba06174b30b7@google.com>
+ <0000000000003bf5be061751ae70@google.com>
+ <20240502103341.t53u6ya7ujbzkkxo@quack3>
+ <dca44ba5-5c33-05ef-d9de-21a84f9d7eaa@huawei.com>
+ <20240503102328.cstcauc5qakmk2bg@quack3>
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <20240503102328.cstcauc5qakmk2bg@quack3>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
-Yeah, it's true that we should delete the curly braces around the if
-block.  Otherwise checkpatch.pl -f will complain.
+On 2024/5/3 18:23, Jan Kara wrote:
+> Hi!
+>
+> On Fri 03-05-24 17:51:07, Baokun Li wrote:
+>> On 2024/5/2 18:33, Jan Kara wrote:
+>>> On Tue 30-04-24 08:04:03, syzbot wrote:
+>>>> syzbot has bisected this issue to:
+>>>>
+>>>> commit 67d7d8ad99beccd9fe92d585b87f1760dc9018e3
+>>>> Author: Baokun Li <libaokun1@huawei.com>
+>>>> Date:   Thu Jun 16 02:13:56 2022 +0000
+>>>>
+>>>>       ext4: fix use-after-free in ext4_xattr_set_entry
+>>> So I'm not sure the bisect is correct since the change is looking harmless.
+>> Yes, the root cause of the problem has nothing to do with this patch,
+>> and please see the detailed analysis below.
+>>> But it is sufficiently related that there indeed may be some relationship.
+>>> Anyway, the kernel log has:
+>>>
+>>> [   44.932900][ T1063] EXT4-fs warning (device loop0): ext4_evict_inode:297: xattr delete (err -12)
+>>> [   44.943316][ T1063] EXT4-fs (loop0): unmounting filesystem.
+>>> [   44.949531][ T1063] ------------[ cut here ]------------
+>>> [   44.955050][ T1063] WARNING: CPU: 0 PID: 1063 at fs/mbcache.c:409 mb_cache_destroy+0xda/0x110
+>>>
+>>> So ext4_xattr_delete_inode() called when removing inode has failed with
+>>> ENOMEM and later mb_cache_destroy() was eventually complaining about having
+>>> mbcache entry with increased refcount. So likely some error cleanup path is
+>>> forgetting to drop mbcache entry reference somewhere but at this point I
+>>> cannot find where. We'll likely need to play with the reproducer to debug
+>>> that. Baokun, any chance for looking into this?
+>>>
+>>> 								Honza
+>> As you guessed, when -ENOMEM is returned in ext4_sb_bread(),
+>> the reference count of ce is not properly released, as follows.
+>>
+>> ext4_create
+>>   __ext4_new_inode
+>>    security_inode_init_security
+>>     ext4_initxattrs
+>>      ext4_xattr_set_handle
+>>       ext4_xattr_block_find
+>>       ext4_xattr_block_set
+>>        ext4_xattr_block_cache_find
+>>          ce = mb_cache_entry_find_first
+>>              __entry_find
+>>              atomic_inc_not_zero(&entry->e_refcnt)
+>>          bh = ext4_sb_bread(inode->i_sb, ce->e_value, REQ_PRIO);
+>>          if (PTR_ERR(bh) == -ENOMEM)
+>>              return NULL;
+>>
+>> Before merging into commit 67d7d8ad99be("ext4: fix use-after-free
+>> in ext4_xattr_set_entry"), it will not return early in
+>> ext4_xattr_ibody_find(),
+>> so it tries to find it in iboy, fails the check in xattr_check_inode() and
+>> returns without executing ext4_xattr_block_find(). Thus it will bisect
+>> the patch, but actually has nothing to do with it.
+>>
+>> ext4_xattr_ibody_get
+>>   xattr_check_inode
+>>    __xattr_check_inode
+>>     check_xattrs
+>>      if (end - (void *)header < sizeof(*header) + sizeof(u32))
+>>        "in-inode xattr block too small"
+>>
+>> Here's the patch in testing, I'll send it out officially after it is tested.
+>> (PS:  I'm not sure if propagating the ext4_xattr_block_cache_find() errors
+>> would be better.)
+> Great! Thanks for debugging this! Some comments to your fix below:
+>
+>> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+>> index b67a176bfcf9..5c9e751915fd 100644
+>> --- a/fs/ext4/xattr.c
+>> +++ b/fs/ext4/xattr.c
+>> @@ -3113,11 +3113,10 @@ ext4_xattr_block_cache_find(struct inode *inode,
+>>
+>>           bh = ext4_sb_bread(inode->i_sb, ce->e_value, REQ_PRIO);
+>>           if (IS_ERR(bh)) {
+>> -            if (PTR_ERR(bh) == -ENOMEM)
+>> -                return NULL;
+>> +            if (PTR_ERR(bh) != -ENOMEM)
+>> +                EXT4_ERROR_INODE(inode, "block %lu read error",
+>> +                         (unsigned long)ce->e_value);
+>>               bh = NULL;
+>> -            EXT4_ERROR_INODE(inode, "block %lu read error",
+>> -                     (unsigned long)ce->e_value);
+>>           } else if (ext4_xattr_cmp(header, BHDR(bh)) == 0) {
+>>               *pce = ce;
+>>               return bh;
+> So if we get the ENOMEM error, continuing the iteration seems to be
+> pointless as we'll likely get it for the following entries as well. I think
+> the original behavior of aborting the iteration in case of ENOMEM is
+> actually better. We just have to do mb_cache_entry_put(ea_block_cache, ce)
+> before returning...
+>
+> 								Honza
+Returning NULL here would normally attempt to allocate a new
+xattr_block in ext4_xattr_block_set(), and when ext4_sb_bread() fails,
+allocating the new block and inserting it would most likely fail as well,
+so my initial thought was to propagate the error from ext4_sb_bread()
+to also make ext4_xattr_block_set() fail when ext4_sb_bread() fails.
 
-The commit message is fine as-is.  Please stop nit-picking.
+But I noticed that before Ted added the special handling for -ENOMEM,
+EXT4_ERROR_INODE was called to set the ERROR_FS flag no matter
+what error ext4_sb_bread() returned, and after we can distinguish
+between -EIO and -ENOMEM, we don't have to set the ERROR_FS flag
+in the case of -ENOMEM. So there's this conservative fix now.
 
-regards,
-dan carpenter
+In short, in my personal opinion, for -EIO and -ENOMEM, they should
+be the same except whether or not the ERROR_FS flag is set.
+Otherwise, I think adding mb_cache_entry_put() directly is the easiest
+and most straightforward fix.  Honza, do you have any other thoughts?
 
+Thanks,
+Baokun
