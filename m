@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9619885622;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBC885287;
 	Fri,  3 May 2024 22:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714776635; cv=none; b=aSb7rv340od29xLiONqnlurajNe0H6dzEtD4hoviQEYCqMchJNtoHl05b27ORolqZ9AabXsVUsC+0CrKZfOjhE86yozFHhOLZxbyav5WcileBo+GDr6VcQ3iHiVXA0bo118DPRDAdSNkT/RxVi4ctqk3RadZxhKhJ2iYkB2ugfg=
+	t=1714776635; cv=none; b=qspZcEEwb9321ND8H31IoFgM/1mAgG+zCLEDBiNB90n4nzLv1JYmVMy9OgdPjYFU6SHvi5iLbjCV2m25BS9sBDCIubdyk8ZnrZNA+nujd5e/CeKr1BAMASkdCSaYttCIBh2ioLAofDekJ6w0FVn8dlMNLpg3DG0xmVgbFecpwxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714776635; c=relaxed/simple;
-	bh=u/EZgVZkDUDhIetTtuhbb5L70RCnlDqupCSWlJU3QQg=;
+	bh=xZ/sSsffpRpykQNQXdOGiuCwm9AKrw69hclbGFeqz1I=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=HUaLO6z8fGBvM4H7R4u3vtqnXZLDo5wGeoWHhMzah3lHMuAyfJxUUSvyZPd4l0Ka5ntQxv9RmZ5kHU/2zFjbG/Epuz+FldTtSzAIpx0s+/wXPVzFjivFR/d5tzhDWhFO+iyCa0xLozK+BPGkFrHCZ6mN8GLH3PHJNO40jxrcHsA=
+	 Content-Type; b=PE3qPF/JQLYxAXNfVZV0cOswKSsJxnffDm5OT0fgC6MK9tgQYHGNb03U094NE1MxUnVb2IhTTLj+b6YJrMrfszhtmOou+YR5QLw4MnQUeMmmwjvv8WTrSBTV6gUpIgY4yycYDcfjDnYm8+DHDft7MCZfZvcEUXjbXQ4Hz7lH5gA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DECDC116B1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395B5C4AF67;
 	Fri,  3 May 2024 22:50:35 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1s31jf-00000000NO3-04VZ;
-	Fri, 03 May 2024 18:50:35 -0400
-Message-ID: <20240503225034.883634677@goodmis.org>
+	id 1s31je-00000000NN3-2veg;
+	Fri, 03 May 2024 18:50:34 -0400
+Message-ID: <20240503225034.559360726@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 03 May 2024 18:50:22 -0400
+Date: Fri, 03 May 2024 18:50:20 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -28,7 +28,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  stable@vger.kernel.org
-Subject: [for-linus][PATCH 9/9] eventfs: Have "events" directory get permissions from its parent
+Subject: [for-linus][PATCH 7/9] eventfs: Do not differentiate the toplevel events directory
 References: <20240503225013.519028385@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,48 +40,13 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The events directory gets its permissions from the root inode. But this
-can cause an inconsistency if the instances directory changes its
-permissions, as the permissions of the created directories under it should
-inherit the permissions of the instances directory when directories under
-it are created.
+The toplevel events directory is really no different than the events
+directory of instances. Having the two be different caused
+inconsistencies and made it harder to fix the permissions bugs.
 
-Currently the behavior is:
+Make all events directories act the same.
 
- # cd /sys/kernel/tracing
- # chgrp 1002 instances
- # mkdir instances/foo
- # ls -l instances/foo
-[..]
- -r--r-----  1 root lkp  0 May  1 18:55 buffer_total_size_kb
- -rw-r-----  1 root lkp  0 May  1 18:55 current_tracer
- -rw-r-----  1 root lkp  0 May  1 18:55 error_log
- drwxr-xr-x  1 root root 0 May  1 18:55 events
- --w-------  1 root lkp  0 May  1 18:55 free_buffer
- drwxr-x---  2 root lkp  0 May  1 18:55 options
- drwxr-x--- 10 root lkp  0 May  1 18:55 per_cpu
- -rw-r-----  1 root lkp  0 May  1 18:55 set_event
-
-All the files and directories under "foo" has the "lkp" group except the
-"events" directory. That's because its getting its default value from the
-mount point instead of its parent.
-
-Have the "events" directory make its default value based on its parent's
-permissions. That now gives:
-
- # ls -l instances/foo
-[..]
- -rw-r-----  1 root lkp 0 May  1 21:16 buffer_subbuf_size_kb
- -r--r-----  1 root lkp 0 May  1 21:16 buffer_total_size_kb
- -rw-r-----  1 root lkp 0 May  1 21:16 current_tracer
- -rw-r-----  1 root lkp 0 May  1 21:16 error_log
- drwxr-xr-x  1 root lkp 0 May  1 21:16 events
- --w-------  1 root lkp 0 May  1 21:16 free_buffer
- drwxr-x---  2 root lkp 0 May  1 21:16 options
- drwxr-x--- 10 root lkp 0 May  1 21:16 per_cpu
- -rw-r-----  1 root lkp 0 May  1 21:16 set_event
-
-Link: https://lore.kernel.org/linux-trace-kernel/20240502200906.161887248@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/20240502200905.846448710@goodmis.org
 
 Cc: stable@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
@@ -91,75 +56,127 @@ Cc: Andrew Morton <akpm@linux-foundation.org>
 Fixes: 8186fff7ab649 ("tracefs/eventfs: Use root and instance inodes as default ownership")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ fs/tracefs/event_inode.c | 29 ++++++++---------------------
+ fs/tracefs/internal.h    |  7 +++----
+ 2 files changed, 11 insertions(+), 25 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 6e08405892ae..a878cea70f4c 100644
+index 15a2a9c3c62b..9dacf65c0b6e 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -37,6 +37,7 @@ static DEFINE_MUTEX(eventfs_mutex);
- 
- struct eventfs_root_inode {
- 	struct eventfs_inode		ei;
-+	struct inode			*parent_inode;
- 	struct dentry			*events_dir;
+@@ -68,7 +68,6 @@ enum {
+ 	EVENTFS_SAVE_MODE	= BIT(16),
+ 	EVENTFS_SAVE_UID	= BIT(17),
+ 	EVENTFS_SAVE_GID	= BIT(18),
+-	EVENTFS_TOPLEVEL	= BIT(19),
  };
  
-@@ -226,12 +227,23 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
- 
- static void update_events_attr(struct eventfs_inode *ei, struct super_block *sb)
- {
--	struct inode *root;
-+	struct eventfs_root_inode *rei;
-+	struct inode *parent;
-+
-+	rei = get_root_inode(ei);
-+
-+	/* Use the parent inode permissions unless root set its permissions */
-+	parent = rei->parent_inode;
- 
--	/* Get the tracefs root inode. */
--	root = d_inode(sb->s_root);
--	ei->attr.uid = root->i_uid;
--	ei->attr.gid = root->i_gid;
-+	if (rei->ei.attr.mode & EVENTFS_SAVE_UID)
-+		ei->attr.uid = rei->ei.attr.uid;
-+	else
-+		ei->attr.uid = parent->i_uid;
-+
-+	if (rei->ei.attr.mode & EVENTFS_SAVE_GID)
-+		ei->attr.gid = rei->ei.attr.gid;
-+	else
-+		ei->attr.gid = parent->i_gid;
+ #define EVENTFS_MODE_MASK	(EVENTFS_SAVE_MODE - 1)
+@@ -239,14 +238,10 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	return ret;
  }
  
- static void set_top_events_ownership(struct inode *inode)
-@@ -817,6 +829,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	// Note: we have a ref to the dentry from tracefs_start_creating()
- 	rei = get_root_inode(ei);
- 	rei->events_dir = dentry;
-+	rei->parent_inode = d_inode(dentry->d_sb->s_root);
+-static void update_top_events_attr(struct eventfs_inode *ei, struct super_block *sb)
++static void update_events_attr(struct eventfs_inode *ei, struct super_block *sb)
+ {
+ 	struct inode *root;
  
- 	ei->entries = entries;
- 	ei->nr_entries = size;
-@@ -826,10 +839,15 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+-	/* Only update if the "events" was on the top level */
+-	if (!ei || !(ei->attr.mode & EVENTFS_TOPLEVEL))
+-		return;
+-
+ 	/* Get the tracefs root inode. */
+ 	root = d_inode(sb->s_root);
+ 	ei->attr.uid = root->i_uid;
+@@ -259,10 +254,10 @@ static void set_top_events_ownership(struct inode *inode)
+ 	struct eventfs_inode *ei = ti->private;
+ 
+ 	/* The top events directory doesn't get automatically updated */
+-	if (!ei || !ei->is_events || !(ei->attr.mode & EVENTFS_TOPLEVEL))
++	if (!ei || !ei->is_events)
+ 		return;
+ 
+-	update_top_events_attr(ei, inode->i_sb);
++	update_events_attr(ei, inode->i_sb);
+ 
+ 	if (!(ei->attr.mode & EVENTFS_SAVE_UID))
+ 		inode->i_uid = ei->attr.uid;
+@@ -291,7 +286,7 @@ static int eventfs_permission(struct mnt_idmap *idmap,
+ 	return generic_permission(idmap, inode, mask);
+ }
+ 
+-static const struct inode_operations eventfs_root_dir_inode_operations = {
++static const struct inode_operations eventfs_dir_inode_operations = {
+ 	.lookup		= eventfs_root_lookup,
+ 	.setattr	= eventfs_set_attr,
+ 	.getattr	= eventfs_get_attr,
+@@ -359,7 +354,7 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
+ 		// Walk upwards until you find the events inode
+ 	} while (!ei->is_events);
+ 
+-	update_top_events_attr(ei, dentry->d_sb);
++	update_events_attr(ei, dentry->d_sb);
+ 
+ 	return ei;
+ }
+@@ -465,7 +460,7 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
+ 	update_inode_attr(dentry, inode, &ei->attr,
+ 			  S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO);
+ 
+-	inode->i_op = &eventfs_root_dir_inode_operations;
++	inode->i_op = &eventfs_dir_inode_operations;
+ 	inode->i_fop = &eventfs_file_operations;
+ 
+ 	/* All directories will have the same inode number */
+@@ -845,14 +840,6 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
  	uid = d_inode(dentry->d_parent)->i_uid;
  	gid = d_inode(dentry->d_parent)->i_gid;
  
--	/* This is used as the default ownership of the files and directories */
+-	/*
+-	 * If the events directory is of the top instance, then parent
+-	 * is NULL. Set the attr.mode to reflect this and its permissions will
+-	 * default to the tracefs root dentry.
+-	 */
+-	if (!parent)
+-		ei->attr.mode = EVENTFS_TOPLEVEL;
+-
+ 	/* This is used as the default ownership of the files and directories */
  	ei->attr.uid = uid;
  	ei->attr.gid = gid;
- 
-+	/*
-+	 * When the "events" directory is created, it takes on the
-+	 * permissions of its parent. But can be reset on remount.
-+	 */
-+	ei->attr.mode |= EVENTFS_SAVE_UID | EVENTFS_SAVE_GID;
-+
- 	INIT_LIST_HEAD(&ei->children);
+@@ -861,13 +848,13 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
  	INIT_LIST_HEAD(&ei->list);
  
+ 	ti = get_tracefs(inode);
+-	ti->flags |= TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
++	ti->flags |= TRACEFS_EVENT_INODE;
+ 	ti->private = ei;
+ 
+ 	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+ 	inode->i_uid = uid;
+ 	inode->i_gid = gid;
+-	inode->i_op = &eventfs_root_dir_inode_operations;
++	inode->i_op = &eventfs_dir_inode_operations;
+ 	inode->i_fop = &eventfs_file_operations;
+ 
+ 	dentry->d_fsdata = get_ei(ei);
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 29f0c999975b..f704d8348357 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -4,10 +4,9 @@
+ 
+ enum {
+ 	TRACEFS_EVENT_INODE		= BIT(1),
+-	TRACEFS_EVENT_TOP_INODE		= BIT(2),
+-	TRACEFS_GID_PERM_SET		= BIT(3),
+-	TRACEFS_UID_PERM_SET		= BIT(4),
+-	TRACEFS_INSTANCE_INODE		= BIT(5),
++	TRACEFS_GID_PERM_SET		= BIT(2),
++	TRACEFS_UID_PERM_SET		= BIT(3),
++	TRACEFS_INSTANCE_INODE		= BIT(4),
+ };
+ 
+ struct tracefs_inode {
 -- 
 2.43.0
 
