@@ -1,54 +1,54 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75ADB13775F
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07819137766
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714772291; cv=none; b=eyxzaReKdmW0pa5qRf9ZChXZ2zY3mV9ogT/6mzHMerhMwXqqE+6jHrlFxGqHKKoFn67xQSmJ1FoHswmllyzjf/alV9h28/cXvg/O3La2KYsyLKyDZlxvUxe/xQlDWLz9nWqTgPTK4z7/OngSKPQssPryZvubQLdnnR+9FWp6io4=
+	t=1714772294; cv=none; b=rpYhCnkK9tbbnGMK8CQEI16MKMPTsA9v6qZYcJmxfnHOl/UtzwSkAr3IRGVzRVfjVVBzzMs1ITEHaQJE2exUJHHzmKwuEzh0gAbW2TFmtUEmi8RPLkSA5bHVWeA1zivr2bxz4lnEM6L+TLoh+7pdkvz53iBrEZVeEYptkh3klkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714772291; c=relaxed/simple;
-	bh=mdz7Fil6G5HtVsThsciyp8mFKe8053PCBwsR0ckmCe4=;
+	s=arc-20240116; t=1714772294; c=relaxed/simple;
+	bh=wi3nhmfubaEs7FDrXqrqYUjUQwr5WxQmbUhvxgTasvE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pHBHWWetPSiifb0Cw6d160Ed1zJHi+u408P6V07XOcnuHJlLG+jKOO+68jH3V+7lZSEtfJ6RdX06rJjoXXyXbtfqBPD9ASW6hy7TITPWVwDVSzkuTky7VQjPL7gKyAmvpB/l5JMAFtbbB8HqLAtT7KrFWG/Yp0KEE01Uqhx0N+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NPr1KpgS; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=eO4oIf7l4uCV2v964HNkRqT5sDfN7P9ZohabygVLXDswzIQ3EbwtHvBLyhAJdfDfXnljO7QdcUzvEOpVI/Cvm3OermssquDnhfuy23jJlRTBDvefkNJ3P6KZ2DDUUULwWkBpUxZU3q9t9qttCa3iNJdG3ElZrqHnJhU1J64R9o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dctPQnKg; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NPr1KpgS"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e9ffd3f96eso791345ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:38:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dctPQnKg"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1ecc23e6c9dso733305ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:38:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714772290; x=1715377090; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714772292; x=1715377092; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xmnOhTLenfwPbkZ+9fOpNpevbnj0AgHZgHCpxDLbWgM=;
-        b=NPr1KpgSXZk5gKHbyx0ZceKqrUITAdaA32k4r1g9A6aMu3BW9XKr8kBsKVQyw2CWL3
-         dUtdGRb4ohTG8IpHXhIHKybsy/FWBw6TMAua46EOUA5kNS8eHLFH5cPs/c6vQZY0aTWx
-         akdO+qllMGtLIGV3Opv29qLFUVSLgO5XjLVbg=
+        bh=X9J+mwbNCcE7m50P9Dlsv1H2Zyb5eg1SoTrNCCSKKxs=;
+        b=dctPQnKgta/9VLmEkKA7V7Bmlord9jpRKM7e1lcSKJqOTSJAvvU8MUPsee4Jf6FnEQ
+         QAHfnPXR7oyyUveBYTozIAO8ztruoqKNHQutO5r7tFU2f0V5yCplDSdBq7TpOYZPEkbV
+         SWV9nnEX6xBfTCLDl94DUekp8h1OYMmM0OijI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714772290; x=1715377090;
+        d=1e100.net; s=20230601; t=1714772292; x=1715377092;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xmnOhTLenfwPbkZ+9fOpNpevbnj0AgHZgHCpxDLbWgM=;
-        b=FEEXWAbdOgWf8O+1OLcMiSnoZdWoeylcecj8dfLqJayDLq7PuKzfuGT0y0+xgK2DTG
-         lbJnVV7a5dSQV8EyyijdEyM+o95kxI/BAW1kDt6elM4obJkD7KTBb7E6M2xOmnV2TsFB
-         LA67tRYK2Oq++0womuWT0axiFXTbFn55bjy9wSJv7mKvEd1Zl5zwnAfZMCqfiNeiTRFs
-         vDYVQGFEVROTVhpRqLslIpHaZbQB5hrnm1LMtHxcXUXVY/H8Vj85pWjxjKPX7k9mqZDz
-         +9iHZIlJEdEDUKwA3gEhOgL4CfIjq9Glx5w23LLbrd1a6C87/dJjImwnfXqYo46g8mv5
-         +0Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCXxqSTH/HSC6KpeO2s9Hpkp51T/8QRDriUKfxVWRl4cdfiapLcrmm9q4MPQWgt2yJv7c9oOHYW12xDzNKN5YG0Hfn6jewJ8gwmjPMxi
-X-Gm-Message-State: AOJu0Yy/ASgm7+vrX+2JhN72zK9Ul/BB4o52QATGnShXc/f3buQ9Cxyc
-	/bqr1nS+5ku5ddtrAul5WH3kTXPUiSKRFGudFrR8aKM88QPSrRG2vQkd0EXVLA==
-X-Google-Smtp-Source: AGHT+IGBGVcpKQhnQ/va5QMpwiScWawVFF//2NM+v5dTbUM+lAsV+J43k0O4T3CyMAnt3mgiK6JpMQ==
-X-Received: by 2002:a17:903:234b:b0:1e2:b13f:bd64 with SMTP id c11-20020a170903234b00b001e2b13fbd64mr5192227plh.0.1714772289909;
-        Fri, 03 May 2024 14:38:09 -0700 (PDT)
+        bh=X9J+mwbNCcE7m50P9Dlsv1H2Zyb5eg1SoTrNCCSKKxs=;
+        b=F7vNHpxP0InFUidowu47dkfrMYd2LpoWOm7R020h2J8AzriEZDYgra9jH6fCsLm3x4
+         w+DuF8bjZFKORIRZ2mm5q+zRE6YWKORlSNrlaip3l8gCyiIocccQpIaJVzqyX1/YuUUx
+         0FXwZA22aUJVW4c4Qyqa/oElAK3+pFUau2xN4e+e4C2MsaS6kpVOQ36zWpiGY0DGDhS5
+         1Jqn4aHbQaqrGNe1HYz2qjrfL4+AGVDb1OdzSdszp4ueG1Tlgb2INlMHA1SylLCCx2ge
+         ONsyQxQfTJDJpZcA7Q0bde/DMj5CnX5z+qzGzuLtaRWHZIIeLkEmiIYHnhYO32B4Uz26
+         prsA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKbfqxy/5TEboS5bOti0NfhIyBn6JsX8QOI+wl2uCUMt2SFbzVHrYZvvfr22GIi1YQHre+fiJN1wyAxRTW5R61PyNa8uMSQv/0bW1k
+X-Gm-Message-State: AOJu0YxciW4yP84QD804r1ElUC0YL58HnKOV6Hq9eUfLLWcZ9gbHwIac
+	e9vDwxv4Vr8f5Y8Qi6mJpgBOkTxK4YmPmWo9xk6vdaujDBQE7Ev0VI3ZrmWvTQ==
+X-Google-Smtp-Source: AGHT+IEhvNbol5zNlkCIgLPtF12l61bvixPmv0EHaY4itQnvJImVMXDJ99WT0lhGIYbPhxxJaaynFw==
+X-Received: by 2002:a17:902:da8c:b0:1e3:cfc5:589e with SMTP id j12-20020a170902da8c00b001e3cfc5589emr4661779plx.64.1714772292404;
+        Fri, 03 May 2024 14:38:12 -0700 (PDT)
 Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:fb6a:b54b:7580:64f3])
-        by smtp.gmail.com with ESMTPSA id j12-20020a170903024c00b001eb51a46f5bsm3729134plh.43.2024.05.03.14.38.08
+        by smtp.gmail.com with ESMTPSA id j12-20020a170903024c00b001eb51a46f5bsm3729134plh.43.2024.05.03.14.38.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 14:38:09 -0700 (PDT)
+        Fri, 03 May 2024 14:38:11 -0700 (PDT)
 From: Douglas Anderson <dianders@chromium.org>
 To: dri-devel@lists.freedesktop.org,
 	Maxime Ripard <mripard@kernel.org>
@@ -57,7 +57,8 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Yuran Pereira <yuran.pereira@hotmail.com>,
 	Neil Armstrong <neil.armstrong@linaro.org>,
 	Douglas Anderson <dianders@chromium.org>,
-	Robert Chiras <robert.chiras@nxp.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
 	Daniel Vetter <daniel@ffwll.ch>,
 	David Airlie <airlied@gmail.com>,
 	Jessica Zhang <quic_jesszhan@quicinc.com>,
@@ -65,9 +66,9 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Sam Ravnborg <sam@ravnborg.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	linux-kernel@vger.kernel.org
-Subject: [RFT PATCH v2 45/48] drm/panel: raydium-rm67191: Don't call unprepare+disable at shutdown
-Date: Fri,  3 May 2024 14:33:26 -0700
-Message-ID: <20240503143327.RFT.v2.45.Id14188f1a8af7d524751c27c343a5b583ff5361f@changeid>
+Subject: [RFT PATCH v2 46/48] drm/panel: sony-acx565akm: Don't double-check enabled state in disable
+Date: Fri,  3 May 2024 14:33:27 -0700
+Message-ID: <20240503143327.RFT.v2.46.I6a51b36831a5c7b2b82bccf8c550cf0d076aa541@changeid>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 In-Reply-To: <20240503213441.177109-1-dianders@chromium.org>
 References: <20240503213441.177109-1-dianders@chromium.org>
@@ -79,60 +80,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's the responsibility of a correctly written DRM modeset driver to
-call drm_atomic_helper_shutdown() at shutdown time and that should be
-disabling / unpreparing the panel if needed. Panel drivers shouldn't
-be calling these functions themselves.
+As talked about in commit d2aacaf07395 ("drm/panel: Check for already
+prepared/enabled in drm_panel"), we want to remove needless code from
+panel drivers that was storing and double-checking the
+prepared/enabled state. Even if someone was relying on the
+double-check before, that double-check is now in the core and not
+needed in individual drivers.
 
-A recent effort was made to fix as many DRM modeset drivers as
-possible [1] [2] [3] and most drivers are fixed now.
+The acx565akm seems to do some unique stuff with the "enabled"
+state. Specifically:
+1. It seems to detect the enabled state based on how the bootloader
+   left the panel.
+2. It uses the enabled state to prevent certain sysfs files from
+   accessing a disabled panel.
 
-A grep through mainline for compatible strings used by this driver
-indicates that it is used by IMX boards. The IMX driver appears to be
-correctly calling drm_atomic_helper_shutdown() so we can remove the
-calls.
+We'll leave the "enabled" state tracking for this. However, we can at
+least get rid of the double-check when trying to disable.
 
-[1] https://lore.kernel.org/r/20230901234015.566018-1-dianders@chromium.org
-[2] https://lore.kernel.org/r/20230901234202.566951-1-dianders@chromium.org
-[3] https://lore.kernel.org/r/20230921192749.1542462-1-dianders@chromium.org
-
-Cc: Robert Chiras <robert.chiras@nxp.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v2:
 - Split removal of prepared/enabled from handling of remove/shutdown.
 
- drivers/gpu/drm/panel/panel-raydium-rm67191.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/gpu/drm/panel/panel-sony-acx565akm.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-raydium-rm67191.c b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-index fa9bf89d3bb5..b2029e035635 100644
---- a/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-+++ b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-@@ -612,14 +612,6 @@ static void rad_panel_remove(struct mipi_dsi_device *dsi)
- 	drm_panel_remove(&rad->panel);
- }
+diff --git a/drivers/gpu/drm/panel/panel-sony-acx565akm.c b/drivers/gpu/drm/panel/panel-sony-acx565akm.c
+index 3d6a286056a0..a9a545a56404 100644
+--- a/drivers/gpu/drm/panel/panel-sony-acx565akm.c
++++ b/drivers/gpu/drm/panel/panel-sony-acx565akm.c
+@@ -454,9 +454,6 @@ static int acx565akm_power_on(struct acx565akm_panel *lcd)
  
--static void rad_panel_shutdown(struct mipi_dsi_device *dsi)
--{
--	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
+ static void acx565akm_power_off(struct acx565akm_panel *lcd)
+ {
+-	if (!lcd->enabled)
+-		return;
 -
--	drm_panel_disable(&rad->panel);
--	drm_panel_unprepare(&rad->panel);
--}
--
- static const struct of_device_id rad_of_match[] = {
- 	{ .compatible = "raydium,rm67191", },
- 	{ /* sentinel */ }
-@@ -633,7 +625,6 @@ static struct mipi_dsi_driver rad_panel_driver = {
- 	},
- 	.probe = rad_panel_probe,
- 	.remove = rad_panel_remove,
--	.shutdown = rad_panel_shutdown,
- };
- module_mipi_dsi_driver(rad_panel_driver);
- 
+ 	acx565akm_set_display_state(lcd, 0);
+ 	acx565akm_set_sleep_mode(lcd, 1);
+ 	lcd->enabled = false;
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
