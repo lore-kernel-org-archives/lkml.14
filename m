@@ -1,106 +1,102 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4591979CD;
-	Fri,  3 May 2024 08:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FFD1474AA
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 08:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714726112; cv=none; b=KPaOl90VvbvIINo+U9G3iaMJBhA8eyafV1sQYwL/E/bS/QOy39klPHGthexC1wEIMjJlh9iNlUaZOcMMn9RepvxFAkya4ueTX1ejerjo3uVvTxraU1TnRLR6VgcxxBtwXkwoWrDzHMbvkbXLmG0b9k2CfkC39qQjUBK3HFUiV64=
+	t=1714726281; cv=none; b=IdjFwBPiAYhMOmWNZ5mPMYJPdA9TiHRsr3GCchQu9cc9u4qvnCLCUk2VxtnaoV2AQD44ZC7J796TTrI88gXgXreAabPaZQhQ3JfrrdyzERvCVPakhjIbydra5CPKVt9rclOTQNp4GytKIvaGGvmxFqQ5aG7k5aQl0SnmI5EyPAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714726112; c=relaxed/simple;
-	bh=4LAK9etsRaOQZ6Axh1wlzY3z93PBUnIV4rktOBkXROg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DjmL9IEZC1rZqdJ7KZWK62e2gGTkoKpfLdYYxJKPO6UMFdMolRaMS/jOMezqT6c6JMaEKViM2zAaFuWgpwWaxNBxxY8LagYMuDEzzbVZbzCrpMdroPBeizngKmMGSqG/J4KW/XX8puPd/MFGZnY8QyIwWRctcCSTMO3XA7meT7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KQZv1N6i; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1714726281; c=relaxed/simple;
+	bh=IEjd9yHeRN2jxLghIr0Q/jIHE64VNvDXmfQrbY/lmKM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KyaUsxTmEvfatMhp8hQrdy8MA1228SS8jvHR/d5skNcLSxm8qI+CAJaVxnFCwvl1sjjQ8zrv1073L4CRiEKhNJdWUTdj4+UoO1tQSWlj2GgBa4aXqPqGyFDvEf9TPyJbYW7PBhBv2kqtI2UV4thUV+tzWglp7nLTCb4urNabKeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HCrXgZ1E; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KQZv1N6i"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4438jcMi004089;
-	Fri, 3 May 2024 08:48:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=bXFb74UHnqadsLdb0RbUOARUSWrSSEa7RZIBYJ2ApO0=;
- b=KQZv1N6igTzVOXlu+fPckpGSkDaGUDXRXtgoYQw48gP+gfUaKl9MT5yV2n6bdGcgO0zy
- oBBRHBtSbs5/ZqYNa1b2ZJWz24TXWHtQJYfDJqu3hIwwGTEymb4hducuasbCh561tEoE
- 4BCRsdjEU6/r0mWQ5ZlG0/Ts/dudMG5IRq109QHumJ61T3h/6EhfO3qOLLbd+Mh00qoB
- ayF0byzT55SThP9NPAD7WxKZmUSQGJeGoqOOblRXldrZ4LjNosqWxEGNtQErb/YAjlEx
- /dVI3/aV5xhj+z33auPCAURZiGGc6NTuZtQEZJBJP9fkT4pd8u8j9a7/eKQIHPN2OPzj 0g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xvvgbr15p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 May 2024 08:48:29 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4438mSQv010418;
-	Fri, 3 May 2024 08:48:28 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xvvgbr152-7
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 May 2024 08:48:28 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4435WPhe001509;
-	Fri, 3 May 2024 08:21:15 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsbpucux0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 May 2024 08:21:15 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4438L9ID17105312
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 3 May 2024 08:21:11 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE71620040;
-	Fri,  3 May 2024 08:21:09 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 28C6D20043;
-	Fri,  3 May 2024 08:21:09 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.68.221])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  3 May 2024 08:21:09 +0000 (GMT)
-Date: Fri, 3 May 2024 10:21:07 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Thomas Huth <thuth@redhat.com>
-Cc: linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v2] s390: Remove comment about TIF_FPU
-Message-ID: <ZjSecweC4gCRa80x@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20240503080648.81461-1-thuth@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HCrXgZ1E"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e271acb015so1638971fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 01:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714726278; x=1715331078; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZWk/psw7Jn7h8F9Bpz9pTT51OJv92Z7OG1gjIzaGghI=;
+        b=HCrXgZ1EX0CBIZ7mbj3uk+1mDN13w1okTDa8Y/rgCmAPRi0/bOG913P6prd1wdWIt6
+         aqEXgzerEWWyWmk8K/WpxcrWynH6PSvSpj5teKdFzj56bJtlpmcib7jKJc3llm/1aiMh
+         d8QUWW68QgTHqVU6Z0DMqyHZtiqTIyju40ud8kQ4fYum7vSk9xBb31WT5kLIFnEG/OJ2
+         1b9HnK7T42e7c6hwf09untSlj6RMPsuMtKXwpBgyuyH8AAcYN3TtJKN8cnuDO6svdZy7
+         EBYowrzKn6YR5jNOBDdhBZm+aUTU1ykNcKmL/wfpr10dL/y3fO6LrYZEG4ICRKYDtrnP
+         akgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714726278; x=1715331078;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZWk/psw7Jn7h8F9Bpz9pTT51OJv92Z7OG1gjIzaGghI=;
+        b=J6Kxn4c0/609mjMFe9mQqsdPrBniMiFq8gLX8nrwAaBJgB5+IjzonZx3pzeJxAc0B0
+         J1btZn9mondlPhhwLZJkT/KKDoIUGt/H83Aezaz9HqNWIvAhbc21sbCFRvirOlInRSbM
+         dnvhdgjdJPmE7VgQ6Syp1koz+tuu2yhNUaPtUPV8INCML41oVFUh/wT1Hl0Hp/Q1DtVq
+         N3z6ma8VkGY5HacNTD+6P0Rd9k2CpTc+v+GUGkiAiuw7bByebhNb8Rrw9fHdLLss4dBo
+         5mKABPUBlqyGYQuEY8Zj/wcWB78lHo256ITGAJAO+KYS5TVo0TgIu1HvL83mJtbG9Xvq
+         L9Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCX1IXW/GpiB4fsmJVFXfwBJZn/YyzMBwDYRsJYWsja4h8IH6bz7g/bRF9glguwECmnQo/G4CaQW6HcuvGF9Kzu0KCBzcrKXRpAqOcYm
+X-Gm-Message-State: AOJu0YwqdEQwmqz5Skmmtmgvu6VLFSJqfLMAoOYqpewTf3zUfYf5SYJX
+	ANovNlGOmhQx3cPx3OgykH0Ha9SRfMEbdvlXn1ODxOXHrFLp1eJTvtkNNHwm/LdWWoJqJbvZMTa
+	uqZ0=
+X-Google-Smtp-Source: AGHT+IHcI2LurCc2hKenAfI5jjKmPmOLR9ME3lIwcmztZCp99vEXqtLskwgBUgkpuv4Q6SUOsRVoww==
+X-Received: by 2002:a05:6512:2eb:b0:51d:70d9:ece0 with SMTP id m11-20020a05651202eb00b0051d70d9ece0mr1451847lfq.6.1714726277628;
+        Fri, 03 May 2024 01:51:17 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id i15-20020adfb64f000000b0034af40b2efdsm3204178wre.108.2024.05.03.01.51.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 01:51:17 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240426160256.3089978-1-jbrunet@baylibre.com>
+References: <20240426160256.3089978-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH 0/2] drm/meson: fix hdmi auxiliary system operation
+ without display
+Message-Id: <171472627680.386161.1617857178874394298.b4-ty@linaro.org>
+Date: Fri, 03 May 2024 10:51:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503080648.81461-1-thuth@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: sPleoafmuW_otZpaQspvGUpoJAdV0bK-
-X-Proofpoint-GUID: kd5mTUzxk5t5o-Y645cKcDvwLJ0aHOZC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-03_05,2024-05-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- clxscore=1015 impostorscore=0 mlxlogscore=514 malwarescore=0 mlxscore=0
- lowpriorityscore=0 adultscore=0 phishscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405030063
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Fri, May 03, 2024 at 10:06:48AM +0200, Thomas Huth wrote:
-> It has been removed in commit 2c6b96762fbd ("s390/fpu: remove TIF_FPU"),
-> so we should not mention TIF_FPU in the comment here anymore. Since the
-> remaining parts of the comment just document the obvious fact that
-> save_user_fpu_regs() saves the FPU state, simply remove the comment now
-> completely.
-> 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  v2: Drop the comment completely
-> 
->  arch/s390/kernel/process.c | 5 -----
->  1 file changed, 5 deletions(-)
+Hi,
 
-Applied, thanks!
+On Fri, 26 Apr 2024 18:02:52 +0200, Jerome Brunet wrote:
+> CEC and ARC should work even when HDMI is not actively used for the
+> display but it is not the case with Amlogic HDMI.
+> 
+> This is important for devices such as sound bars which may use DSI
+> to display a UI and HDMI for CEC/ARC. A display is not required for these
+> functions
+> 
+> [...]
+
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-fixes)
+
+[1/2] drm/meson: dw-hdmi: power up phy on device init
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/04703bfd7f99c016a823c74712b97f8b5590ce87
+[2/2] drm/meson: dw-hdmi: add bandgap setting for g12
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/08001033121dd92b8297a5b7333636b466c30f13
+
+-- 
+Neil
+
