@@ -1,118 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9724C57333
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 22:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450E617C66;
+	Fri,  3 May 2024 22:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714773683; cv=none; b=LKW8X/Md4/JZ9ZcfokOwWR/6qfubntKxcnD5r//BNsXdXf4h9vS8fPApQzBSf57eC4lkm2fWGxcro/UMZ9A1Z0yX4kDzDQygLhzaxfmtEAe7wtZ3/YaCjB71qvnjm3DO5UGpIiK0Po7MTK8S8Q28tSprmU9zDRuwiSrQsSRbP6I=
+	t=1714773716; cv=none; b=no9orNom3m1jqrFS+8M1FUCdfzO1kHiF4LT7EZiDrcAIyKGk8NSJq9Qo0ZGr/v+Mnz1MaJ1liLMLGdUvr0bOQ6wrcWF0xHf70G97YfSXdvkHGNuZkr4pmgdnBRU8imG54VOpqgrNg5KxfvBLjj+zhaFx1MXgpxkIv8+Kio9zdao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714773683; c=relaxed/simple;
-	bh=pUxq7jUksP4Q+cMJXZOkqnA/K+QpYMgfwqOUdO4C2e0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D91a+pogRDj+qf+P1OzDMJHhq6N4elx5ELhDYA2v0X9cm2lF450oazHGc1ePDYwgIyisWkz7e2PbA2wgBnDvghv+0rNlCPCr88bigbqXCsrPysU/Q6S4/FjiZEjVmhb/CldQs46LXjC8JFmobzKRDPofbbf+56yUrxQOq3MtR6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HAzJeiXl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714773716; c=relaxed/simple;
+	bh=s8vVwtQRVxNI/I/AfduomXJRnXJ45uenWrtYjSca3AA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cvvywWBY8SfXuLNeDziaaOvPgv5QHGHlsNZVC8ONpmQQVwt7wgoxD1mhTYgVEwtutKBAegBhjjLh7nyWYFmm0iYsddJNRQQ4AV57A1SrKUcs3q5vkra23kDUEGZ7f1TwHg0P6PJmlk2GULYr9rwx+xYgkBFyCqah5WVF8ImOfRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=ixw6Zn2z; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HAzJeiXl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714773680;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0sjv9T+egk2i7mbNVwnFuef2h+PLNLCnFrs/sJ5ral0=;
-	b=HAzJeiXlLy2R/Clb4B2WvYd2TcvYdl/reDnVPcmDDNknteMF3Bo7oa63Ili4m8EfGHc4Oq
-	807ZK25bce04BiPt6OBSLtAX1XVROanc6fA6wGia1u7xlIb7jddxcp3aZOptzVZzu+I9sJ
-	ktmX7kax8q9guN73GI7HM5IOpx5y9xQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-451-48_ZKH75MNSAPskrKHvgoA-1; Fri,
- 03 May 2024 18:01:17 -0400
-X-MC-Unique: 48_ZKH75MNSAPskrKHvgoA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 14C713C000B5;
-	Fri,  3 May 2024 22:01:17 +0000 (UTC)
-Received: from llong.com (unknown [10.22.34.156])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 757C340C6CC0;
-	Fri,  3 May 2024 22:01:16 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Vernon Lovejoy <vlovejoy@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH] locking/qspinlock: Save qspinlock owner CPU into mcs_spinlock
-Date: Fri,  3 May 2024 17:59:18 -0400
-Message-Id: <20240503215918.639519-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="ixw6Zn2z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=e9Q+lbqOogW8HNifFtsIP7Map61/HL1nsdMCnQKDqeg=; b=ixw6Zn2z08k8IXQn2UeXsg+bKm
+	YT3mHFmtdAxGr/T71cJoTeAIJ9cybNhYjA10uBoNjdruajFBVfshWTS99mzQn2BmAvL0djycRGaQz
+	xO/QjrzDFf9tqc5QzRG6rzZrX99A81BgK3nEiL9esE/1qEfd7lk3nh6DcYI/Av3A3MXZLD1vmsqZY
+	wCSMQDHzhg4C+aMRUsopmDTuohWXXzzBH1hOQUtkVRzh2Ep1hwz+1DIcC0xxSOjGPRTETMXEaoTk3
+	zQkG2/bCiipFfKanmwEaPpVtxOzrxyksfbooWWc39v4tytCwFwZSumInNvhBsO7Uj9Re0lt+ZNJ5O
+	6A9rw/Iw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1s30yP-00BAPg-2r;
+	Fri, 03 May 2024 22:01:46 +0000
+Date: Fri, 3 May 2024 23:01:45 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: keescook@chromium.org, axboe@kernel.dk, brauner@kernel.org,
+	christian.koenig@amd.com, dri-devel@lists.freedesktop.org,
+	io-uring@vger.kernel.org, jack@suse.cz, laura@labbott.name,
+	linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	minhquangbui99@gmail.com, sumit.semwal@linaro.org,
+	syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] epoll: try to be a _bit_ better about file lifetimes
+Message-ID: <20240503220145.GD2118490@ZenIV>
+References: <202405031110.6F47982593@keescook>
+ <20240503211129.679762-2-torvalds@linux-foundation.org>
+ <20240503212428.GY2118490@ZenIV>
+ <CAHk-=wjpsTEkHgo1uev3xGJ2bQXYShaRf3GPEqDWNgUuKx0JFw@mail.gmail.com>
+ <20240503214531.GB2118490@ZenIV>
+ <CAHk-=wgC+QpveKCJpeqsaORu7htoNNKA8mp+d9mvJEXmSKjhbw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgC+QpveKCJpeqsaORu7htoNNKA8mp+d9mvJEXmSKjhbw@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-When examining a contended spinlock in a crash dump, we can trace out the
-list of lock waiter CPUs waiting for the lock by following the linked
-list of mcs_spinlock structures. However, the actual owner of the lock
-is not there making it hard to figure out who the current lock owner is.
+On Fri, May 03, 2024 at 02:52:38PM -0700, Linus Torvalds wrote:
+> On Fri, 3 May 2024 at 14:45, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > How do you get through eventpoll_release_file() while someone
+> > has entered ep_item_poll()?
+> 
+> Doesn't matter.
+> 
+> Look, it's enough that the file count has gone down to zero. You may
+> not even have gotten to eventpoll_release_file() yet - the important
+> part is that you're on your *way* to it.
+> 
+> That means that the file will be released - and it means that you have
+> violated all the refcounting rules for poll().
+> 
+> So I think you're barking up the wrong tree.
 
-Make it easier to figure out this information by saving the lock owner
-CPU into the mcs_spinlock structure of new MCS lock owner, if available,
-when acquiring the lock in the qspinlock slowpath. We can then follow
-the linked list of mcs_spinlock structures to the end to get an encoded
-CPU number of the lock owner, if set.
+IMO there are several things in that mess (aside of epoll being what it is).
 
-This owner information is still not available when the lock is acquired
-directly in the fast path or in the pending code path. There is no easy
-way around that.
+Trying to grab refcount as you do is fine; the comment is seriously
+misleading, though - we *are* guaranteed that struct file hasn't hit ->release(),
+let alone getting freed and reused.
 
-The additional cost to get the current CPU number in the slowpath should
-be minimal as it should be in a hot cacheline.
+Having pollwait callback grab references is fine - and the callback belongs
+to whoever's calling ->poll().
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/mcs_spinlock.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/locking/mcs_spinlock.h b/kernel/locking/mcs_spinlock.h
-index 85251d8771d9..ac0ed0a8f028 100644
---- a/kernel/locking/mcs_spinlock.h
-+++ b/kernel/locking/mcs_spinlock.h
-@@ -13,11 +13,17 @@
- #ifndef __LINUX_MCS_SPINLOCK_H
- #define __LINUX_MCS_SPINLOCK_H
- 
-+/*
-+ * Save an encoded version of the current MCS lock owner CPU to the
-+ * mcs_spinlock structure of the next lock owner.
-+ */
-+#define MCS_LOCKED	(smp_processor_id() + 1)
-+
- #include <asm/mcs_spinlock.h>
- 
- struct mcs_spinlock {
- 	struct mcs_spinlock *next;
--	int locked; /* 1 if lock acquired */
-+	int locked; /* non-zero if lock acquired */
- 	int count;  /* nesting count, see qspinlock.c */
- };
- 
-@@ -42,7 +48,7 @@ do {									\
-  * unlocking.
-  */
- #define arch_mcs_spin_unlock_contended(l)				\
--	smp_store_release((l), 1)
-+	smp_store_release((l), MCS_LOCKED)
- #endif
- 
- /*
--- 
-2.39.3
-
+Having ->poll() instance itself grab reference is really asking for problem,
+even on the boxen that have CONFIG_EPOLL turned off.  select(2) is enough;
+it will take care of references grabbed by __pollwait(), but it doesn't
+know anything about the references driver has stashed hell knows where for
+hell knows how long.
