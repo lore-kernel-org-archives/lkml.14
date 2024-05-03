@@ -1,61 +1,60 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2849D139D0B
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 04:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DE613AD3F
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 04:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714711614; cv=none; b=tbEEFEo9FJkeI9s1+98eDb99NM1cRADZ2aYbt/LBp5tDKeHV29wvxrkwZSYa0mCiXYEWiat2cPfm1lDkhI+QZBInG/sjJetNf2dU5QemaeqFZpETYi4q09L+xL7JJ2p72cHOQgvcGkMfBQJRaHyOj+ymW51+HKhjZLJVyVI6Vdo=
+	t=1714711618; cv=none; b=Kd7X+IhU2hJC5cmSm/XHBpz5UN5X1N7y95AFr9noXt/Z8ypj9MOoC1qh8C+AfMCt2JIsyc/AGsV8C3vqCJbm8DTU7VoTDbkkcPeITHRyko37lavt9a/hae+JkZSUYF3LwNLFgK/Mw6SYashB0UwXi4oRR6WHkB7Ex6HhOKIP5xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714711614; c=relaxed/simple;
-	bh=eg5f+2eUdPorsjTg1AXnvbZp1Gz8QKwXU/sn4bArQ/o=;
+	s=arc-20240116; t=1714711618; c=relaxed/simple;
+	bh=pqN1lFvFRjrgQQgZqYCWrh0drQd/FoIFRL9Qt9AtemU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tGU8GQay0u7Z6lOirfhhlQ+ATYUiPS7OsSPE3dLUFmqNHTinJdG3YY/WhOO5/c3DiNKuiH3le84NiEg8O7xiyZc//LC0KSvi/NETQhbWqU40a+GuYxXbmSu9+WN5sHmiIyt1Dlq5U5TaawQVxVFn80fl03ClW495tpsrd/yk9Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=bOB6lElm; arc=none smtp.client-ip=209.85.215.179
+	 In-Reply-To:To:Cc; b=u1NtUXLXOj0E4Yq/ZdbwfkdPytLNhqbDZZXpcAxeeJ2JvekzZ0amZ/Nn3pOtkLP6qR66tMWsuVej89IHwG4ddXJZ5XO80pylVY6MgQvHdqDbtYLThHSl2zew2USXVH6Ec/XsrE8DMW5j65sc0OhTxLyytaU7511T+4aLXyGqxCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=tUmRuimO; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="bOB6lElm"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so6448400a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 21:46:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="tUmRuimO"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e65a1370b7so81150305ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 21:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714711612; x=1715316412; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714711617; x=1715316417; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Xb9tww82u8GPwb/D9ZGp2c9YRfA1MZ53TtnEydxWwQE=;
-        b=bOB6lElmS6SNA4Kp6jRre3LuMAkD9gpCnA+N1P0J9wmP2PjnremYegZaHkqEW1nOLj
-         ZEtff5ixFJaV0f/iRf/swA9AJ34XQCrFZUtrQUC8mioGYlXo+AdeevA1Vfd7Mlbw2+jm
-         YSgtPA+Eyq3i9ejXiG8JeeF6cfnDQNeI1ppzrWdwWj99iJ2ZQLOCUsb0ClRa6sy736Z8
-         HHAmwG7Hht2MZV1kca+F9cczIj/2pqJLcVyw9SVAovHeUZEP+PaTKcI9vKwzlYbPX54i
-         oFBgum1hYOr3SnaSCemo/Aldc1tFmbHbNLbOowtwpWqOIWRgNK9OfuLdiiPuqo8Hyakp
-         crOw==
+        bh=g1x3fnfXZgKbRNZW52PQl31Hn8/VT/niX2j925w6Muw=;
+        b=tUmRuimOjsN/lQbEklDW0kopDD8XeDISMvJEM1n4GrssIVVVJILQi3UKV5qVbz1vYU
+         GTS5AExqQUjiR3SmMdX0hB5/RZwqvZ7/VY/dOoN4ERRuzK3XyJnjOyZEhbJDdgExwajq
+         0EN+nH3vyrVu9V35uduP54jGTik8u+9/Vx/pqUYJRlG/hgyBJyGAknvn8jk7KE1yLy7/
+         oozon+OGdwnFEsZ/GZJEC/U4fovqwbDRhy1t28U/9oPeWU4jPWo0IFGtP/TgGdpTafqi
+         RH5loMNS+mTjfMp+QtOXYE48eJEl0WAtJKTRnmek1BT+rWlPoTo5R9fwD1tQl9dvJsav
+         RgJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714711612; x=1715316412;
+        d=1e100.net; s=20230601; t=1714711617; x=1715316417;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xb9tww82u8GPwb/D9ZGp2c9YRfA1MZ53TtnEydxWwQE=;
-        b=ONo3+Agil7YGRlurjRfRA/go9gxSfXi+nPfqTW7gkeG8ekMmHwtN302HrvzYMlINxO
-         Nw1VKpDPGkE/9K5OBdG2OuifTD6Y2DIAdnWCXVlqfVeszgsgCuL7uXkimTvJGy7KMTNu
-         6z2bvoGKKiNjRZuzGihmvY38wM1iWa+fvsdSUAHStM4acB4xwExtu5iTiVoCjNr+IRYA
-         UjmMB6C5hHD+1yXH/F6zASBU5vzsmoMqKDvyit0zjsCkf/Q87UKxRzFLC7UvppWp3bny
-         4+E+47IrMu2C4j/aFnayfrBj4TkjQjUpPWqWoE/LDegMUtwssJhG/NYp70fyMWtZKJUc
-         wk3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUPZpSM/14IhMTqo+VhY9S/9IXTWfZXBDIup1UJEOyeBGUJAPjNI9dNi0zbBZmw8WlvYNp2AGyt9HMa32bomwmYWJA3jWLHraGSlbX+
-X-Gm-Message-State: AOJu0YyZqtdZdDBe3cHbyzrf2kNXIPcC+jmZYKJo8XTtJrAmfJhG/sYe
-	M/866EbKzu4V63gsKLJ5dAEYOayneBw0lpBpiDvV+gIEylXl6bFy6Cmt+pPnHkM=
-X-Google-Smtp-Source: AGHT+IF41hzKf/haVFQvven/JbxBJ+u/Mlmilmw8xyMi++Oyo7SayUCiC8aXNcvJL+QSQBIxRKdnGg==
-X-Received: by 2002:a05:6a20:6f8b:b0:1af:59b9:74e9 with SMTP id gv11-20020a056a206f8b00b001af59b974e9mr2154976pzb.2.1714711612474;
-        Thu, 02 May 2024 21:46:52 -0700 (PDT)
+        bh=g1x3fnfXZgKbRNZW52PQl31Hn8/VT/niX2j925w6Muw=;
+        b=wT+fdkfo5PIj7bp6SZl+dOh5L704wfMUW780Q6Ksj+mPgipTZG/0Z7ob3ictaxVHU6
+         OOLXOU0c1v7wXz1zdcNsGNPWQJTbHo7RnM8b9SpFrg0DptNqW2+UtmpDtHiM9HwIuYGA
+         SAytVeLbL0tfJEmoidCen6jJ3L2/Tp86/7ltg8h/JZyq+FzfGYwbsxg8DmFyT9hRvQGT
+         ZTFwW5nPQiFMX7YYQFH61ktfdwD2zlFvVQO7bFFG99RWn3uNwjgD6bbur9DkyUFWS8dZ
+         7M2NJOFok4+DTry8U540pst71x024Cyt0wQVWJfe03O+u4JJQOFXFKtvoO1IsDBngNDJ
+         SI1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWzU+cWka0OKZ+ywiKSDdYL1xMhOKVef+cPYm/Y1KO+5kx2PwFIZgSR/UqcI9NHNzyDWqJtCwzja5UhIhUpu1DJ0HVxHiwPUrxVYREk
+X-Gm-Message-State: AOJu0YwQgd6F0+FZmvj29DQW6Qn9Hc38qZwojzwQZnDnCOMIyLNg1RVE
+	LWmsRCSNbCLKNc/mEUkDSqjnpOA2cS+IyGmNBh1PwUnCfFS/Fn+SsnF8v77XdQU=
+X-Google-Smtp-Source: AGHT+IHbNMkuv/su3XYOiyps0iZwtZ876nCqWFEdktTVe4e6t6GWJkz5DfWvpaj9ZsUbI8EqMDprbw==
+X-Received: by 2002:a17:902:ecc7:b0:1eb:dae:bdab with SMTP id a7-20020a170902ecc700b001eb0daebdabmr2129152plh.46.1714711616732;
+        Thu, 02 May 2024 21:46:56 -0700 (PDT)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id e8-20020a17090301c800b001e2bb03893dsm2240411plh.198.2024.05.02.21.46.50
+        by smtp.gmail.com with ESMTPSA id e8-20020a17090301c800b001e2bb03893dsm2240411plh.198.2024.05.02.21.46.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 21:46:51 -0700 (PDT)
+        Thu, 02 May 2024 21:46:55 -0700 (PDT)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Thu, 02 May 2024 21:46:39 -0700
-Subject: [PATCH v5 04/17] riscv: dts: allwinner: Add xtheadvector to the
- D1/D1s devicetree
+Date: Thu, 02 May 2024 21:46:41 -0700
+Subject: [PATCH v5 06/17] riscv: Add vendor extensions to /proc/cpuinfo
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240502-dev-charlie-support_thead_vector_6_9-v5-4-d1b5c013a966@rivosinc.com>
+Message-Id: <20240502-dev-charlie-support_thead_vector_6_9-v5-6-d1b5c013a966@rivosinc.com>
 References: <20240502-dev-charlie-support_thead_vector_6_9-v5-0-d1b5c013a966@rivosinc.com>
 In-Reply-To: <20240502-dev-charlie-support_thead_vector_6_9-v5-0-d1b5c013a966@rivosinc.com>
 To: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -83,36 +82,96 @@ Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714711602; l=904;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714711602; l=2459;
  i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=eg5f+2eUdPorsjTg1AXnvbZp1Gz8QKwXU/sn4bArQ/o=;
- b=8IiFogJx9JBBPQ5oODZ/+sRV7hNPdv1Ar9s5kqJOcntxexJjJ6jCBV/6P4yvKFz+I1naMnzjp
- ueolnUb0+eoAAIxaJQM00OvIraOUtrlv7jCWmPGAhRsCznbLEKcwh5j
+ bh=pqN1lFvFRjrgQQgZqYCWrh0drQd/FoIFRL9Qt9AtemU=;
+ b=H+DX3cVVjv1vLieQvFF/GzHeHnV6V/D0UYWMIUMz9yJnTEHNzwd2Lhb1bwFvj20Y7hip0X35P
+ f1ya+z76CwvDzykr4rBxhsKf62CDwPGbJNyH02uPIH6mLHUmhes2dAq
 X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
  pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-The D1/D1s SoCs support xtheadvector so it can be included in the
-devicetree. Also include vlenb for the cpu.
+All of the supported vendor extensions that have been listed in
+riscv_isa_vendor_ext_list can be exported through /proc/cpuinfo.
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/cpu.c | 35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi b/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
-index 64c3c2e6cbe0..50c9f4ec8a7f 100644
---- a/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
-+++ b/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
-@@ -27,7 +27,8 @@ cpu0: cpu@0 {
- 			riscv,isa = "rv64imafdc";
- 			riscv,isa-base = "rv64i";
- 			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "zicntr", "zicsr",
--					       "zifencei", "zihpm";
-+					       "zifencei", "zihpm", "xtheadvector";
-+			riscv,vlenb = <128>;
- 			#cooling-cells = <2>;
+diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
+index d11d6320fb0d..2a7924dd809b 100644
+--- a/arch/riscv/kernel/cpu.c
++++ b/arch/riscv/kernel/cpu.c
+@@ -16,6 +16,7 @@
+ #include <asm/sbi.h>
+ #include <asm/smp.h>
+ #include <asm/pgtable.h>
++#include <asm/vendor_extensions.h>
  
- 			cpu0_intc: interrupt-controller {
+ bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
+ {
+@@ -203,7 +204,33 @@ arch_initcall(riscv_cpuinfo_init);
+ 
+ #ifdef CONFIG_PROC_FS
+ 
+-static void print_isa(struct seq_file *f, const unsigned long *isa_bitmap)
++#define ALL_CPUS -1
++
++static void print_vendor_isa(struct seq_file *f, int cpu)
++{
++	struct riscv_isavendorinfo *vendor_bitmap;
++	struct riscv_isa_vendor_ext_data_list *ext_list;
++	const struct riscv_isa_ext_data *ext_data;
++
++	for (int i = 0; i < riscv_isa_vendor_ext_list_size; i++) {
++		ext_list = riscv_isa_vendor_ext_list[i];
++		ext_data = riscv_isa_vendor_ext_list[i]->ext_data;
++
++		if (cpu == ALL_CPUS)
++			vendor_bitmap = &ext_list->all_harts_isa_bitmap;
++		else
++			vendor_bitmap = &ext_list->per_hart_isa_bitmap[cpu];
++
++		for (int j = 0; j < ext_list->ext_data_count; j++) {
++			if (!__riscv_isa_extension_available(vendor_bitmap->isa, ext_data[j].id))
++				continue;
++
++			seq_printf(f, "_%s", ext_data[j].name);
++		}
++	}
++}
++
++static void print_isa(struct seq_file *f, const unsigned long *isa_bitmap, int cpu)
+ {
+ 
+ 	if (IS_ENABLED(CONFIG_32BIT))
+@@ -222,6 +249,8 @@ static void print_isa(struct seq_file *f, const unsigned long *isa_bitmap)
+ 		seq_printf(f, "%s", riscv_isa_ext[i].name);
+ 	}
+ 
++	print_vendor_isa(f, cpu);
++
+ 	seq_puts(f, "\n");
+ }
+ 
+@@ -284,7 +313,7 @@ static int c_show(struct seq_file *m, void *v)
+ 	 * line.
+ 	 */
+ 	seq_puts(m, "isa\t\t: ");
+-	print_isa(m, NULL);
++	print_isa(m, NULL, ALL_CPUS);
+ 	print_mmu(m);
+ 
+ 	if (acpi_disabled) {
+@@ -306,7 +335,7 @@ static int c_show(struct seq_file *m, void *v)
+ 	 * additional extensions not present across all harts.
+ 	 */
+ 	seq_puts(m, "hart isa\t: ");
+-	print_isa(m, hart_isa[cpu_id].isa);
++	print_isa(m, hart_isa[cpu_id].isa, cpu_id);
+ 	seq_puts(m, "\n");
+ 
+ 	return 0;
 
 -- 
 2.44.0
