@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF11824AC
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 22:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D110280038;
+	Fri,  3 May 2024 22:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714776634; cv=none; b=kmMfqNpWurRyjp2q95BKJwifko1qIYPjao1p3ZkzBfrfNgBEn3goiol15YuN5SOFPY099+iYEaQppic9N48yRdwFk+u9xMXunTqv0Er83xlbecd92J+6fDyEaqhmzAQoV6/fdxnpOnqH++XD9YmlayWafyoPBesEjWK6SgpYdyM=
+	t=1714776634; cv=none; b=cdnCQ5d0ZEL5cgXr/yDcEXbAUaBSS7ZZSZW+H2sFaj6iAw0tppbRc6bIxOydX/kla5egz4zSeuZAQX2MvLJDy8Vg3lizQusR0WDUx8cg+EMv41u7kcNDIWV7u4405ka5S/yfbZ+U2v5EH8HCUOHhu4c5foO0pcBgv1PsXUI5Z/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714776634; c=relaxed/simple;
-	bh=VuXalIPTL9sTa7bnw/R/Fo8g3BmGZ0SIUARYlC9WdwQ=;
+	bh=J3vNSDJFeIfDScHNg/+KPqU3RuxXUEMvLmcG3GsFWx4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=cMfoCv7aSXagqRvyY3dJ4ytpFL5kFE4Bm5VeskDMLQQ9HXpNQ7PfYShSRijxVyrQEGi13r0bpu0LcMbgTZFUuf4Gn3UA+wzal9rCBfGwgEg/e3glFjvfWNW29o+Ypya08Fb5EY5PONUg/aFDZ1leUCzS4i3Atg94k3AE1MU0KY8=
+	 Content-Type; b=CQDfMuxwjaBu9YBY7krnKhu+ZJiToO9sE1t6bkCcI2fPEYdWLjoAVrCWHSsAz6lwWD9QXxgLgrmRHGXOANqEs6etxKcyocHqgpvFZjjb415u95PMpgTklxIu5YMLN9CvEnUsGIDPEJHGyQ7MeyFhmQqUQU25Wq69o4U5q4dgNOY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E42DC4AF1B;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB553C4AF1A;
 	Fri,  3 May 2024 22:50:34 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1s31jd-00000000NKd-3lK5;
-	Fri, 03 May 2024 18:50:33 -0400
-Message-ID: <20240503225033.758019899@goodmis.org>
+	id 1s31je-00000000NLb-0vti;
+	Fri, 03 May 2024 18:50:34 -0400
+Message-ID: <20240503225034.079856045@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 03 May 2024 18:50:15 -0400
+Date: Fri, 03 May 2024 18:50:17 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Beau Belgrave <beaub@linux.microsoft.com>
-Subject: [for-linus][PATCH 2/9] selftests/user_events: Add non-spacing separator check
+ stable@vger.kernel.org
+Subject: [for-linus][PATCH 4/9] eventfs: Free all of the eventfs_inode after RCU
 References: <20240503225013.519028385@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,50 +38,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Beau Belgrave <beaub@linux.microsoft.com>
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The ABI documentation indicates that field separators do not need a
-space between them, only a ';'. When no spacing is used, the register
-must work. Any subsequent register, with or without spaces, must match
-and not return -EADDRINUSE.
+The freeing of eventfs_inode via a kfree_rcu() callback. But the content
+of the eventfs_inode was being freed after the last kref. This is
+dangerous, as changes are being made that can access the content of an
+eventfs_inode from an RCU loop.
 
-Add a non-spacing separator case to our self-test register case to ensure
-it works going forward.
+Instead of using kfree_rcu() use call_rcu() that calls a function to do
+all the freeing of the eventfs_inode after a RCU grace period has expired.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240423162338.292-3-beaub@linux.microsoft.com
+Link: https://lore.kernel.org/linux-trace-kernel/20240502200905.370261163@goodmis.org
 
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: stable@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Fixes: 43aa6f97c2d03 ("eventfs: Get rid of dentry pointers without refcounts")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/testing/selftests/user_events/ftrace_test.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/tracefs/event_inode.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
-index dcd7509fe2e0..0bb46793dcd4 100644
---- a/tools/testing/selftests/user_events/ftrace_test.c
-+++ b/tools/testing/selftests/user_events/ftrace_test.c
-@@ -261,6 +261,12 @@ TEST_F(user, register_events) {
- 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
- 	ASSERT_EQ(0, reg.write_index);
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index f5510e26f0f6..cc8b838bbe62 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -73,6 +73,21 @@ enum {
  
-+	/* Register without separator spacing should still match */
-+	reg.enable_bit = 29;
-+	reg.name_args = (__u64)"__test_event u32 field1;u32 field2";
-+	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
-+	ASSERT_EQ(0, reg.write_index);
+ #define EVENTFS_MODE_MASK	(EVENTFS_SAVE_MODE - 1)
+ 
++static void free_ei_rcu(struct rcu_head *rcu)
++{
++	struct eventfs_inode *ei = container_of(rcu, struct eventfs_inode, rcu);
++	struct eventfs_root_inode *rei;
 +
- 	/* Multiple registers to same name but different args should fail */
- 	reg.enable_bit = 29;
- 	reg.name_args = (__u64)"__test_event u32 field1;";
-@@ -288,6 +294,8 @@ TEST_F(user, register_events) {
- 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSUNREG, &unreg));
- 	unreg.disable_bit = 30;
- 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSUNREG, &unreg));
-+	unreg.disable_bit = 29;
-+	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSUNREG, &unreg));
++	kfree(ei->entry_attrs);
++	kfree_const(ei->name);
++	if (ei->is_events) {
++		rei = get_root_inode(ei);
++		kfree(rei);
++	} else {
++		kfree(ei);
++	}
++}
++
+ /*
+  * eventfs_inode reference count management.
+  *
+@@ -85,7 +100,6 @@ static void release_ei(struct kref *ref)
+ {
+ 	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
+ 	const struct eventfs_entry *entry;
+-	struct eventfs_root_inode *rei;
  
- 	/* Delete should have been auto-done after close and unregister */
- 	close(self->data_fd);
+ 	WARN_ON_ONCE(!ei->is_freed);
+ 
+@@ -95,14 +109,7 @@ static void release_ei(struct kref *ref)
+ 			entry->release(entry->name, ei->data);
+ 	}
+ 
+-	kfree(ei->entry_attrs);
+-	kfree_const(ei->name);
+-	if (ei->is_events) {
+-		rei = get_root_inode(ei);
+-		kfree_rcu(rei, ei.rcu);
+-	} else {
+-		kfree_rcu(ei, rcu);
+-	}
++	call_rcu(&ei->rcu, free_ei_rcu);
+ }
+ 
+ static inline void put_ei(struct eventfs_inode *ei)
 -- 
 2.43.0
 
