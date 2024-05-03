@@ -1,133 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A94B57CA8;
-	Fri,  3 May 2024 06:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032B057CA8;
+	Fri,  3 May 2024 06:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714718931; cv=none; b=Y07Oby9QNRe9mPEAFvBUadtcubb24neA0r2iNIh7vB+CTuVGJlv9hKPqzXMsSLzmaaqkPuV4USMWgFi3fS+yW3wmGEpA3gr8bQSEoa49z+H+mxXAnNSVbhekMoQuHeQ1NxXsbzlnBIHxNC0i5vC5iA3zNm4HXsGTZ2N8vuW/cO0=
+	t=1714719307; cv=none; b=s1MP19t+Cog20fzvDFLTQ5z/ECiN9RXdEYTOOuLx1t1ZuO7dpptkFmu5b9ymXEcd+dK5CW0KZvTqQ6N/JOXGHFFwRFdJqnwtcjMeIcScEXrl7D6o5qssYn6fj+N9dLBPfglW9zdhD/j8sNuDlAtjSr47tdyK1gQBDkLyq5xfwAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714718931; c=relaxed/simple;
-	bh=Rlk2JdJLQfIWr3bOPVKzsCNfAPRlYscY3ZEGu+wdrqE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C+SONrksN+rdzAyNN55/MpJRA2rTHely3pACIX+grUWluIXK/ongaaV+AvmXybcoKmYHMIzwuJqoPNAptAam5u/Gs2Ozd4I8n5ROlmpUmHnujFYqbqjQ9bwb1CeePUNT/whmSEHn6+6idv+ZAnQ4X5WYzqI5OsiuYD4EovXkIp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pAdgtNPV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714719307; c=relaxed/simple;
+	bh=aeR6d7QNpNGKgjioiG0+Wi/T3DUmWoGfYOl6RO/Rd8o=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MiEbue7WJZ9u8qSTAmUQfOPbj28AvPe5mb5fYlFAupRxClM7AptoDEDyzWR4lQ88HExsrkvYFUgtg1GsWXqLXwKzNdtxbFurgGVPe+KHFk+1MjGgEbATnR35XfwF8r5s9DxHAqMoL7M/rIj5V98FTr2utiErkP/HnHZSnY/y7uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=eprVmb7G; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pAdgtNPV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1268EC116B1;
-	Fri,  3 May 2024 06:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714718930;
-	bh=Rlk2JdJLQfIWr3bOPVKzsCNfAPRlYscY3ZEGu+wdrqE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pAdgtNPVXg+TSZI20J8ISr/7P41UuzCuBkw5Mm67Ar5UQZEyfFBI5CPtftboxUkEG
-	 RoKHWgqUYR/MOF7CDbH6CTmKcdy+xkoZX8cX9G7uyrXtCuIzmbVcIpDDtRB4q8zdl5
-	 3hFsphAJfOcYGtnn4aV9Kt3fIjk48LjLokVTlw1/js/NkdgPova7ENarcXEDWowDn4
-	 +FIPBetNp+TQ3X5lHXkE3Eawisbx09vdvOKQkLly54YTrmGG7jNIe69vBxJZ1FuqHH
-	 fnEEiidsZa0bfA+37ICZ48NOwZDgRsiV+6q5YebLNvbEPkCWOI6CPxvV8c9gXcn1oJ
-	 RLovzWPhlFH4w==
-Message-ID: <865b6c46-b09c-4251-867c-992f008001ae@kernel.org>
-Date: Fri, 3 May 2024 09:48:45 +0300
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="eprVmb7G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=pAEE6F/lHC0qjSxFbOHdQMXput3X1kOxyC2NSyVYBlg=;
+  b=eprVmb7Gv+jGy029uLyHQLJIW3qkFZGOd5emIquo3oByYR9gRPfZWw0o
+   0nsW4ZHbSPUrwxDe3CCQMiGhDVS5wHi8Uy7Q5XV6KrkKG5fk4jMn1xaTX
+   EZZ5+C+HSUcI29As3FffHJTd8J1TOWSZ0QcI1MJ9dDq8eAQ/YNnQ2m3h+
+   o=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.07,247,1708383600"; 
+   d="scan'208";a="86281735"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 08:54:56 +0200
+Date: Fri, 3 May 2024 08:54:55 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Ashok Kumar <ashokemailat@yahoo.com>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+    linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+    outreachy@lists.linux.dev
+Subject: Re: [PATCH] staging: fb_tinylcd Alignment to open parenthesis
+In-Reply-To: <ZjRDUO6/M+RDCcQJ@c>
+Message-ID: <c8d24241-1763-f7b7-4491-2e5aa3ea3be@inria.fr>
+References: <ZjRDUO6/M+RDCcQJ.ref@c> <ZjRDUO6/M+RDCcQJ@c>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-j784s4-evm: Enable USB3 support
-To: Ravi Gunasekaran <r-gunasekaran@ti.com>, nm@ti.com, vigneshr@ti.com
-Cc: kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, srk@ti.com, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240502053615.29514-1-r-gunasekaran@ti.com>
- <20240502053615.29514-3-r-gunasekaran@ti.com>
-Content-Language: en-US
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <20240502053615.29514-3-r-gunasekaran@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
 
 
-On 02/05/2024 08:36, Ravi Gunasekaran wrote:
-> From: Matt Ranostay <mranostay@ti.com>
-> 
-> The board uses SERDES0 Lane 3 for USB3 IP. So update the
-> SerDes lane info for USB. Add the pin mux data and
-> enable USB3 support.
-> 
-> Signed-off-by: Matt Ranostay <mranostay@ti.com>
-> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+On Thu, 2 May 2024, Ashok Kumar wrote:
+
+> Corrected coding style CHECK: Alignment should match open parenthesis
+
+Ashok, I think the code is nicer as is, because it has all the constant
+numbers lined up.
+
+julia
+
+>
+> Signed-off-by: Ashok Kumar <ashokemailat@yahoo.com>
 > ---
->  arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 41 ++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-> index d511b25d62e3..bee73dab803d 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-> @@ -336,6 +336,13 @@
->  			J784S4_IOPAD(0x010, PIN_INPUT_PULLUP, 8) /* (AH33) MCAN13_RX.I2C4_SDA */
->  		>;
->  	};
-> +
-> +	main_usbss0_pins_default: main-usbss0-pins-default {
-
-Should be main-usbss0-default-pins
-
-This should fix the checkpatch warning.
-
-> +		bootph-all;
-> +		pinctrl-single,pins = <
-> +			J784S4_IOPAD(0x0ec, PIN_OUTPUT, 6) /* (AN37) TIMER_IO1.USB0_DRVVBUS */
-> +		>;
-> +	};
->  };
->  
->  &wkup_pmx2 {
-> @@ -1041,6 +1048,40 @@
->  				 <&k3_clks 218 22>;
->  };
->  
-> +&serdes0 {
-> +	status = "okay";
-> +
-> +	serdes0_usb_link: phy@3 {
-> +		reg = <3>;
-> +		cdns,num-lanes = <1>;
-> +		#phy-cells = <0>;
-> +		cdns,phy-type = <PHY_TYPE_USB3>;
-> +		resets = <&serdes_wiz0 4>;
-> +	};
-> +};
-> +
-> +&serdes_wiz0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_serdes_mux {
-> +	idle-states = <0>; /* USB0 to SERDES lane 3 */
-> +};
-> +
-> +&usbss0 {
-> +	status = "okay";
-> +	pinctrl-0 = <&main_usbss0_pins_default>;
-> +	pinctrl-names = "default";
-> +	ti,vbus-divider;
-> +};
-> +
-> +&usb0 {
-> +	dr_mode = "otg";
-> +	maximum-speed = "super-speed";
-> +	phys = <&serdes0_usb_link>;
-> +	phy-names = "cdns3,usb3-phy";
-> +};
-> +
->  &serdes_wiz4 {
->  	status = "okay";
->  };
-
--- 
-cheers,
--roger
+>  drivers/staging/fbtft/fb_tinylcd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/fbtft/fb_tinylcd.c b/drivers/staging/fbtft/fb_tinylcd.c
+> index 9469248f2c50..60cda57bcb33 100644
+> --- a/drivers/staging/fbtft/fb_tinylcd.c
+> +++ b/drivers/staging/fbtft/fb_tinylcd.c
+> @@ -38,7 +38,7 @@ static int init_display(struct fbtft_par *par)
+>  	write_reg(par, 0xE5, 0x00);
+>  	write_reg(par, 0xF0, 0x36, 0xA5, 0x53);
+>  	write_reg(par, 0xE0, 0x00, 0x35, 0x33, 0x00, 0x00, 0x00,
+> -		       0x00, 0x35, 0x33, 0x00, 0x00, 0x00);
+> +		  0x00, 0x35, 0x33, 0x00, 0x00, 0x00);
+>  	write_reg(par, MIPI_DCS_SET_PIXEL_FORMAT, 0x55);
+>  	write_reg(par, MIPI_DCS_EXIT_SLEEP_MODE);
+>  	udelay(250);
+> --
+> 2.34.1
+>
+>
+>
