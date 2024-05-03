@@ -1,249 +1,316 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2062.outbound.protection.outlook.com [40.107.22.62])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA6F79CD;
-	Fri,  3 May 2024 08:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714725694; cv=fail; b=dwkqAWSUiJkv6P19c6X2kLCVbCyUUSWnXtYWOhZgBdIeARKXio+eNZovqnMfbwsxnCu1qiLWZTpMKZD6t6dn+Q0YD6aVsk6fRGv7HOWiEaP5NvE08IbbP2VoCWe2OBROO7IicrgATnIQSHiNCgAzEaHvXo6nMNlb0JwY5MuGWFA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714725694; c=relaxed/simple;
-	bh=ql6MX3PQKVCr6P5TajVkFhz95idCAmM1zDB/CutAOpU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S4RB73Y69b75k+0Lq+WFbfrCZV5VxENZnErH97obWa01/rxkC1MRCtypS/ZQvbkEFqlwC5npUbwRDYmF7yUC6yC6aiYnWfpC3iyovXF8vc2CypPwEV0R6Z+EqHCZUVq3RrGIkHCWyb4hlbmKVd1cqBVcZbuVx/IhYXn+OVOMkuc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=XQ3vo+7O; arc=fail smtp.client-ip=40.107.22.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9166514F11E;
+	Fri,  3 May 2024 08:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714725700; cv=none; b=Ya7bzgNaZ+pv06cVcJ/xfdfkq4+S97B8m1yGXp811pCYDosansodXvIPGHzRsWI0AIhAvLhjlhtdrkoLwNmbeSV+zOzugmHZOWLaxHYgkQP8vwheL5LpsB0wlifvZLPGQMTuuulWgQvklzDIAMPuLa1KkJm2CUlK/C/2/h4tnzA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714725700; c=relaxed/simple;
+	bh=FGtuc8fN+adV5IdcKxxzcZiz/3q8oYorz13jCNFz09Q=;
+	h=Message-ID:Date:MIME-Version:From:Subject:References:To:CC:
+	 In-Reply-To:Content-Type; b=L5GtqgDlwYEkoTJ+GWqj8IjsDsBw7a1CEtezF7X1lKGJMWZRU7Ob2WIj5XUYrMbYCgpAb4VHvDL8c2foiFJgpvGI9FLi4AovjUCtQ1r/3o3mkaSnxtnf25TgbwRxQC6tvSH+acYfOfexMqtqLLIT0BctUB7nX4A/M9Y51HUPmZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=lZSLAXFc; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="XQ3vo+7O"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P/+L7Eh+Ich461oGMRd/qxAutgxwH4ZxMCmLuUwGZF/K2k3/OprJvL2MmNstdY8nehh/TmiOGmjGT8X/6hXxZ8IpgzzvAgXyM/kmrIHrv5aHlIQ9rNWu76AdfRWiZsK9L6Y1Tq/GCSSuoL/85SH3Q8JcnTaUoQMOpU8MTPHGUkhzvMPlkZSBxeJnyHLuTUyKvV9aQcBeaPF4iBj+yXtP72tJjGM6t85MXc4yc9euqCDz1a18PRFGaqER63TWStD3eb2+WufxL5hp5brJssOgDXbGQgx7waSQRd31nOAsz1M0zk3aCbsyWB543TRyyJCOCMgKqReTCIQMTpPK22hCOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3Gfxp8eWvRaT/oL2qcMuBOgBvFCpuRyaGOmIcHLxsXQ=;
- b=H7Gx0qwzQ30WINN1nRb0kp3rbBY6R/6FdV2lH04s2ph58MS9a/yTfkv8d+HuKL0TcWt1ewu3per6V6PHHBwNYnV0e6MSifbHw7XKrDQYZf7rg5tJV8F16gRsODkG4Acf9pkbMT4H0SchGzfHT2z9jpVoJq3oHKDN+LKiaxul5W4AoTjUafg0A+KO9Xic1saHxJFvdO2miWgFAshuT7bgAZxWOC388U/0pBXefqFzd50tv02ruFy2KimKdfAIEItn+tecDGCVdn8jjoWALiYO2uhpPZ/dagTZltYNUpJFHBrWk4bIgn1QMRYgmaq+P7j4hsZCQFZof8VxKA3gleTI7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Gfxp8eWvRaT/oL2qcMuBOgBvFCpuRyaGOmIcHLxsXQ=;
- b=XQ3vo+7OTvGaDPYRM25D0bTgyhbqxo7TxmZC6KUsZ6rZV4Rk+S1PnrQ/rLtYrIIgWIFKS3Uh/gwORyV/Ct4qT1EZTScce/TZzOuMHAB9wp1Gs/tmpGR5sVUpNHdb0Y3KxWzDHQWidccZPqUTB0F7ka4liysUY8mxc0W1Zsriwio=
-Received: from DB9PR06CA0005.eurprd06.prod.outlook.com (2603:10a6:10:1db::10)
- by PAWPR02MB9149.eurprd02.prod.outlook.com (2603:10a6:102:33d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Fri, 3 May
- 2024 08:41:28 +0000
-Received: from DB1PEPF000509FB.eurprd03.prod.outlook.com
- (2603:10a6:10:1db:cafe::1) by DB9PR06CA0005.outlook.office365.com
- (2603:10a6:10:1db::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.29 via Frontend
- Transport; Fri, 3 May 2024 08:41:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
- action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of 2n.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- DB1PEPF000509FB.mail.protection.outlook.com (10.167.242.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Fri, 3 May 2024 08:41:26 +0000
-Received: from pcczc3457tyd.2n.cz.axis.com (10.0.5.60) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 3 May
- 2024 10:41:26 +0200
-From: =?UTF-8?q?Kamil=20Hor=C3=A1k=20-=202N?= <kamilh@axis.com>
-To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
-	<andrew@lunn.ch>, <hkallweit1@gmail.com>
-CC: <kamilh@axis.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/3] net: phy: bcm54811: New link mode for BroadR-Reach
-Date: Fri, 3 May 2024 10:37:17 +0200
-Message-ID: <20240503083719.899312-2-kamilh@axis.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240503083719.899312-1-kamilh@axis.com>
-References: <20240503083719.899312-1-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="lZSLAXFc"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4437eMtk025388;
+	Fri, 3 May 2024 10:41:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:from:subject:references:to:cc
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=UqDgrPAApxhY5AFKzDUvYTeIrPyzOChzVfZX2ndZdd8=; b=lZ
+	SLAXFc8ZaPw/F40VwTCkKuILxd7zPuN7TJee3s5P3yMh7bO5k0u5y8Z8gf+d9PvA
+	hT9d5MfjRoHTkRMTFMSCPVqvgf39YdVgtsrysRT/v6WdZ9FSILhiEItpG9ygbG/H
+	i2Ga6HJ38bF9VQeyQO2oRWc9aFllBOXmHEaiOBP70EuPrTvZ9QVZTOXhPqqXbvhh
+	IztHteZUy6in0ccYYfgGR9fGNbmYE0sgTi5/Ve+eWk2C04LILI4u2lLF4tsKoKHt
+	CsxzAiI0H3vkhKCUarKsW6e9A2MNfG9wk2QX5PMjJJONxlTfy4ltvS0TIPTSVosP
+	3LE+Ytk61irPr6DcAEhg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xsax1ek5f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 May 2024 10:41:17 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2C9154004B;
+	Fri,  3 May 2024 10:41:08 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7B90A211601;
+	Fri,  3 May 2024 10:40:34 +0200 (CEST)
+Received: from [10.252.22.51] (10.252.22.51) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 3 May
+ 2024 10:40:33 +0200
+Message-ID: <26520ee7-3c0d-497d-b4d7-6e1300ba07dc@foss.st.com>
+Date: Fri, 3 May 2024 10:40:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Sylvain Petinot <sylvain.petinot@foss.st.com>
+Subject: Re: [PATCH 1/2] media: dt-bindings: Add ST VD56G3 camera sensor
+ binding
+References: <20240417133453.17406-1-sylvain.petinot@foss.st.com>
+ <20240417133453.17406-2-sylvain.petinot@foss.st.com>
+ <Zilvm98FNzWoGFL_@valkosipuli.retiisi.eu>
+Content-Language: en-US
+To: Sakari Ailus <sakari.ailus@iki.fi>
+CC: <benjamin.mugnier@foss.st.com>, <mchehab@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <Zilvm98FNzWoGFL_@valkosipuli.retiisi.eu>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509FB:EE_|PAWPR02MB9149:EE_
-X-MS-Office365-Filtering-Correlation-Id: 82266147-aca6-4a74-c6d5-08dc6b4cd245
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|36860700004|376005|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MDZQOTAzaVZYWTJTYXk3K25KSDlER2c1dDk5a3NJVlg5ODFHUktKcXVtWDk0?=
- =?utf-8?B?MXRJMFRhVHh4Y3lMSXdXbjk4V0RrZnFBbld0S0UyRmJSdFdnck9sMExvbEhk?=
- =?utf-8?B?ZlFBTDdnWjVpRE40aW1MRzRvang4VWkvZkJ3M0ZmSjVkaXBCc2w3c0lyVURX?=
- =?utf-8?B?ZlJScUJKNFZwMHMwMnJBY2RKakFqVUVGNnFhNnQ5RWJoeHJxMktWRE9WVVRZ?=
- =?utf-8?B?cjRLR3dTc0laMXRQb2xTTy9pdkZheVRJWHdVOGdDa1FqMWVjV2xOWUdJRTFI?=
- =?utf-8?B?Tm0xSE01dFdJd2hUWU5wcllKN1pIcnZydHZOdUtoYXg0aDRGTEMzckt2aEp5?=
- =?utf-8?B?QzRMV1graEtiSGJQVzZicFZSS0ZVWlk0SjFUd1c4b1V2am1nR1c3RTF6Q0l4?=
- =?utf-8?B?MXVyY0phWSttSVFiTERkN3FyeHZNeUlwQ25veUh6bE1UT3lXRlkySDhWU0k4?=
- =?utf-8?B?dlg1bW9Sa3pqRSsydkJ0SURhNWZTMHFpTW5GN01SRWFyL1ZuYTlNanBuN25V?=
- =?utf-8?B?czdHVkNQMU5DOE0yTzdiLy91dURaOGNzVzNyWjM3dXpaaisvZk9wZ3R5Tjdt?=
- =?utf-8?B?SDRiRTNrUHJWQlA0aXVFa0lXQjNOZXJYUEswTTIycU9FMWp0NGtuRk9BOFli?=
- =?utf-8?B?REI2M3ZUeWZ4elQxSTJZcEU3MkJpM0VMamdETU9VQlRPK2JSckxVUkpKQ2tJ?=
- =?utf-8?B?NGNYMTRYYWRCNnNPZmZrcFBHUDBxVG9xbnpORmQwL2dEczJjOEpXVUYvZkRW?=
- =?utf-8?B?UE9BSlNKNnFEb01vYStyRStmWlNqMkJQd0VNQkhxVGJxTGRicThNRTRMNlhW?=
- =?utf-8?B?M3JmSC9QNDN0Tjg2b2NJNmhHV2Y2Q0FvSFUrZVhNUWh6Z1JhM0x2UGdudXVF?=
- =?utf-8?B?eXFSS29uUS9FT253M2E3Q0Ywd3lpWlRVaHIyZUZoMzltNzBIVlR6VDNzOCt5?=
- =?utf-8?B?cE4wOW9nNE0rc3FZZVFXNk1xMUNsS3ZRQ2lDT1FBVVlYZ2QwcnByTE8vajZu?=
- =?utf-8?B?cEtwRTVoaUR1RFNJdWtQSUd1RU81UVYyb0hlMnZOVjhMaUlaR1V3bkJLQ0Zs?=
- =?utf-8?B?bjA5ZkFkSkRVWnNnL2xmVkR0YTkyeWFjN0IvU0NOdkRMSnI1M2ZGdHU5OWpP?=
- =?utf-8?B?S2FKbW91T2pXWXB1bHduY3EvQjlBWkJ5N0ppdlg3M1l0Y0hnUkMwdk5XRDFO?=
- =?utf-8?B?TXFIakVtU3pURm9pS0E2ZHhzSjVVaTJkTW95dkZtY1YyemhDTzMyYlMvR3NN?=
- =?utf-8?B?UWJOT1NIZGxWM0lIZkd0d3l1UFhaUzB0OTFZRkFYcGFobnJ0dW1tcDVlQk1E?=
- =?utf-8?B?dFBvclNMUTRrOFBBZmhSWEdGdklHQUtETDFFZnQva3hlWXVwak0xWWlYK0lS?=
- =?utf-8?B?UUVMSU51bnA0ZGRPbTdld1lSeHVSK0kxUVVJWVVQUzdkcFloLzVrQnZ0czhT?=
- =?utf-8?B?MlY3WTRidXp2MjZZL1ROWVFaQm1sREdVMjcyNWJpZ3lneDJXT0oyTkhIYzJM?=
- =?utf-8?B?R1h2aDA1V29KOE1vS2wrRUdtUGoxR21UYmQzQ1VtdUYrVU5BY21pQTNjbVFs?=
- =?utf-8?B?di9tS0cydEhuOUJLV2QrL0lJU2pydHJpYnpHNlE5Y3kzdHA1WEFCL3BWbjBN?=
- =?utf-8?B?QmtaaTIvbTVNSTFZZmo0RUl2NXA2eEYreUFGTFNxem9SRjdtTDRlYzZnWk5Q?=
- =?utf-8?B?bzJOeXpxc0pHZXRGcTA0a2J2dVkxRVRmSkxvSVQwdXN5cHREZVF3NzR6cGlP?=
- =?utf-8?B?RFplMG1iOTJVM1hJUGJiQ1BtdWVmMTFjSDNYYVFDT082L0pUUW1wdXRLWWVH?=
- =?utf-8?Q?JIjPOeaWBH5eCaBm/XxxIjH+oM+euchk5Xyzs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230031)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2024 08:41:26.8461
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82266147-aca6-4a74-c6d5-08dc6b4cd245
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509FB.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR02MB9149
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-03_05,2024-05-03_01,2023-05-22_02
 
-Introduce new link modes necessary for the BroadR-Reach mode on
-bcm5481x PHY by Broadcom and new PHY tunable to choose between
-normal (IEEE) ethernet and BroadR-Reach modes of the PHY.
+Hi Sakari,
 
-Signed-off-by: Kamil Horák - 2N <kamilh@axis.com>
----
- drivers/net/phy/phy-core.c   | 9 +++++----
- include/uapi/linux/ethtool.h | 9 ++++++++-
- net/ethtool/common.c         | 7 +++++++
- net/ethtool/ioctl.c          | 1 +
- 4 files changed, 21 insertions(+), 5 deletions(-)
+Thanks for the review.
 
-diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
-index 15f349e5995a..129e223d8985 100644
---- a/drivers/net/phy/phy-core.c
-+++ b/drivers/net/phy/phy-core.c
-@@ -13,10 +13,9 @@
-  */
- const char *phy_speed_to_str(int speed)
- {
--	BUILD_BUG_ON_MSG(__ETHTOOL_LINK_MODE_MASK_NBITS != 102,
--		"Enum ethtool_link_mode_bit_indices and phylib are out of sync. "
--		"If a speed or mode has been added please update phy_speed_to_str "
--		"and the PHY settings array.\n");
-+	BUILD_BUG_ON_MSG(__ETHTOOL_LINK_MODE_MASK_NBITS != 103,
-+			 "Enum ethtool_link_mode_bit_indices and phylib are out of sync. If a speed or mode has been added please update phy_speed_to_str and the PHY settings array.\n"
-+			);
- 
- 	switch (speed) {
- 	case SPEED_10:
-@@ -265,6 +264,8 @@ static const struct phy_setting settings[] = {
- 	PHY_SETTING(     10, FULL,     10baseT1S_Full		),
- 	PHY_SETTING(     10, HALF,     10baseT1S_Half		),
- 	PHY_SETTING(     10, HALF,     10baseT1S_P2MP_Half	),
-+	PHY_SETTING(     10, FULL,     1BR10			),
-+
- };
- #undef PHY_SETTING
- 
-diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-index 041e09c3515d..105432565e6d 100644
---- a/include/uapi/linux/ethtool.h
-+++ b/include/uapi/linux/ethtool.h
-@@ -289,11 +289,18 @@ struct ethtool_tunable {
- #define ETHTOOL_PHY_EDPD_NO_TX			0xfffe
- #define ETHTOOL_PHY_EDPD_DISABLE		0
- 
-+/*
-+ *	BroadR-Reach Mode Control
-+ */
-+#define ETHTOOL_PHY_BRR_MODE_ON		1
-+#define ETHTOOL_PHY_BRR_MODE_OFF	0
-+
- enum phy_tunable_id {
- 	ETHTOOL_PHY_ID_UNSPEC,
- 	ETHTOOL_PHY_DOWNSHIFT,
- 	ETHTOOL_PHY_FAST_LINK_DOWN,
- 	ETHTOOL_PHY_EDPD,
-+	ETHTOOL_PHY_BRR_MODE,
- 	/*
- 	 * Add your fresh new phy tunable attribute above and remember to update
- 	 * phy_tunable_strings[] in net/ethtool/common.c
-@@ -1845,7 +1852,7 @@ enum ethtool_link_mode_bit_indices {
- 	ETHTOOL_LINK_MODE_10baseT1S_Full_BIT		 = 99,
- 	ETHTOOL_LINK_MODE_10baseT1S_Half_BIT		 = 100,
- 	ETHTOOL_LINK_MODE_10baseT1S_P2MP_Half_BIT	 = 101,
--
-+	ETHTOOL_LINK_MODE_1BR10_BIT			 = 102,
- 	/* must be last entry */
- 	__ETHTOOL_LINK_MODE_MASK_NBITS
- };
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 6b2a360dcdf0..5e37804958e9 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -98,6 +98,7 @@ phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
- 	[ETHTOOL_PHY_DOWNSHIFT]	= "phy-downshift",
- 	[ETHTOOL_PHY_FAST_LINK_DOWN] = "phy-fast-link-down",
- 	[ETHTOOL_PHY_EDPD]	= "phy-energy-detect-power-down",
-+	[ETHTOOL_PHY_BRR_MODE]	= "phy-broadrreach-mode",
- };
- 
- #define __LINK_MODE_NAME(speed, type, duplex) \
-@@ -211,6 +212,7 @@ const char link_mode_names[][ETH_GSTRING_LEN] = {
- 	__DEFINE_LINK_MODE_NAME(10, T1S, Full),
- 	__DEFINE_LINK_MODE_NAME(10, T1S, Half),
- 	__DEFINE_LINK_MODE_NAME(10, T1S_P2MP, Half),
-+	__DEFINE_SPECIAL_MODE_NAME(1BR10, "1BR10"),
- };
- static_assert(ARRAY_SIZE(link_mode_names) == __ETHTOOL_LINK_MODE_MASK_NBITS);
- 
-@@ -374,6 +376,11 @@ const struct link_mode_info link_mode_params[] = {
- 	__DEFINE_LINK_MODE_PARAMS(10, T1S, Full),
- 	__DEFINE_LINK_MODE_PARAMS(10, T1S, Half),
- 	__DEFINE_LINK_MODE_PARAMS(10, T1S_P2MP, Half),
-+	[ETHTOOL_LINK_MODE_1BR10_BIT] = {
-+		.speed	= SPEED_10,
-+		.lanes  = 1,
-+		.duplex = DUPLEX_FULL,
-+	},
- };
- static_assert(ARRAY_SIZE(link_mode_params) == __ETHTOOL_LINK_MODE_MASK_NBITS);
- 
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 5a55270aa86e..9e68c8562fa3 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -2722,6 +2722,7 @@ static int ethtool_phy_tunable_valid(const struct ethtool_tunable *tuna)
- 	switch (tuna->id) {
- 	case ETHTOOL_PHY_DOWNSHIFT:
- 	case ETHTOOL_PHY_FAST_LINK_DOWN:
-+	case ETHTOOL_PHY_BRR_MODE:
- 		if (tuna->len != sizeof(u8) ||
- 		    tuna->type_id != ETHTOOL_TUNABLE_U8)
- 			return -EINVAL;
--- 
-2.39.2
+On 4/24/2024 10:46 PM, Sakari Ailus wrote:
+> Hi Sylvain,
+> 
+> Thanks for the patch.
+> 
+> On Wed, Apr 17, 2024 at 03:34:52PM +0200, Sylvain Petinot wrote:
+>> Add devicetree bindings Documentation for ST VD56G3 & ST VD66GY camera
+>> sensors. Update MAINTAINERS file.
+>>
+>> Signed-off-by: Sylvain Petinot <sylvain.petinot@foss.st.com>
+>> ---
+>>  .../bindings/media/i2c/st,st-vd56g3.yaml      | 143 ++++++++++++++++++
+>>  MAINTAINERS                                   |   9 ++
+>>  2 files changed, 152 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml b/Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml
+>> new file mode 100644
+>> index 000000000000..6792c02fea5c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml
+>> @@ -0,0 +1,143 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +# Copyright (c) 2024 STMicroelectronics SA.
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/media/i2c/st,st-vd56g3.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: STMicroelectronics VD56G3 Global Shutter Image Sensor
+>> +
+>> +maintainers:
+>> +  - Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>> +  - Sylvain Petinot <sylvain.petinot@foss.st.com>
+>> +
+>> +description: |-
+> 
+>> +  The STMicroelectronics VD56G3 is a 1.5 M pixel global shutter image sensor
+>> +  with an active array size of 1124 x 1364 (portrait orientation).
+>> +  It is programmable through I2C, the address is fixed to 0x10.
+>> +  The sensor output is available via CSI-2, which is configured as either 1 or
+>> +  2 data lanes.
+> 
+> The flow of the text could be improved by wrapping the text before 80
+> columns (not earlier). Most editors can do this.
 
+Sure, will be fixed in V2.
+
+> 
+>> +  The sensor provides 8 GPIOS that can be used for either
+>> +    - frame synchronization (Master: out-sync or Slave: in-sync)
+>> +    - external LED signal (synchronized with sensor integration periods)
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - st,st-vd56g3
+>> +      - st,st-vd66gy
+>> +    description:
+>> +      Two variants are availables; VD56G3 is a monochrome sensor while VD66GY
+>> +      is a colour variant.
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  VCORE-supply:
+>> +    description: Digital core power supply (1.15V)
+>> +
+>> +  VDDIO-supply:
+>> +    description: Digital IO power supply (1.8V)
+>> +
+>> +  VANA-supply:
+>> +    description: Analog power supply (2.8V)
+>> +
+>> +  reset-gpios:
+>> +    description: Sensor reset active low GPIO (XSHUTDOWN)
+>> +    maxItems: 1
+>> +
+>> +  st,leds:
+>> +    description:
+>> +      Sensor's GPIOs used for external LED control.
+>> +      Signal being the enveloppe of the integration time.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    minItems: 1
+>> +    maxItems: 8
+>> +    items:
+>> +      minimum: 0
+>> +      maximum: 7
+>> +
+>> +  port:
+>> +    $ref: /schemas/graph.yaml#/$defs/port-base
+>> +
+>> +    properties:
+>> +      endpoint:
+>> +        $ref: /schemas/media/video-interfaces.yaml#
+>> +        unevaluatedProperties: false
+>> +
+>> +        properties:
+>> +          clock-lanes:
+>> +            const: 0
+> 
+> If the clock lane is always zero, you can drop the property.
+
+I added it to be consistent with the data-lanes that can be
+reordered/swapped. But yes, it serves nothing.
+
+Does it make sense to keep the corresponding dev_err() message in the
+driver ?
+
+> 
+>> +
+>> +          data-lanes:
+>> +            minItems: 1
+>> +            maxItems: 2
+>> +            items:
+>> +              enum: [1, 2]
+>> +
+>> +          link-frequencies:
+>> +            minItems: 1
+>> +            maxItems: 1
+>> +            items:
+>> +              enum: [402000000, 750000000]
+> 
+> Is this a property of the sensor or the driver? Presumably the driver?
+> 
+> What about the input clock frequency?
+
+Here are the HW constraints :
+
+- Input clock must be in [6Mhz-27Mhz]
+- By design, Pll Clock must target 804Mhz : the driver set some
+prediv/mult to achieve this
+- Then the MIPI frequency can be configured in the range [125Mhz-750Mhz]
+
+That being said, the common usage (and what is implemented in the
+driver) is :
+- 1 data lane -> MIPI freq = 750Mhz
+- 2 data lanes -> MIPI freq = 402Mhz
+
+> 
+>> +
+>> +          lane-polarities:
+>> +            minItems: 1
+>> +            maxItems: 3
+>> +            items:
+>> +              enum: [0, 1]
+> 
+> The items are already in video-interfaces.yaml.
+
+Ok, will be dropped for V2.
+
+> 
+>> +            description: Any lane can be inverted or not.
+>> +
+>> +        required:
+>> +          - clock-lanes
+>> +          - data-lanes
+>> +          - link-frequencies
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - VCORE-supply
+>> +  - VDDIO-supply
+>> +  - VANA-supply
+>> +  - reset-gpios
+>> +  - port
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +
+>> +    i2c {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        vd56g3: camera-sensor@10 {
+>> +            compatible = "st,st-vd56g3";
+>> +            reg = <0x10>;
+>> +
+>> +            clocks = <&camera_clk_12M>;
+>> +
+>> +            VCORE-supply = <&camera_vcore_v1v15>;
+>> +            VDDIO-supply = <&camera_vddio_v1v8>;
+>> +            VANA-supply = <&camera_vana_v2v8>;
+>> +
+>> +            reset-gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
+>> +            st,leds = <6>;
+>> +
+>> +            port {
+>> +                vd56g3_ep: endpoint {
+>> +                    clock-lanes = <0>;
+>> +                    data-lanes = <1 2>;
+>> +                    link-frequencies =
+>> +                      /bits/ 64 <402000000>;
+> 
+> No need for a newline after "=".
+
+Thanks.
+
+> 
+>> +                    remote-endpoint = <&csiphy0_ep>;
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> +...
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 7c121493f43d..991e65627e18 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -20868,6 +20868,15 @@ S:	Maintained
+>>  F:	Documentation/hwmon/stpddc60.rst
+>>  F:	drivers/hwmon/pmbus/stpddc60.c
+>>  
+>> +ST VD56G3 DRIVER
+>> +M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>> +M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
+>> +L:	linux-media@vger.kernel.org
+>> +S:	Maintained
+>> +T:	git git://linuxtv.org/media_tree.git
+>> +F:	Documentation/devicetree/bindings/media/i2c/st,st-vd56g3.yaml
+>> +F:	drivers/media/i2c/st-vd56g3.c
+>> +
+>>  ST VGXY61 DRIVER
+>>  M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>>  M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
+> 
+
+--
+Sylvain
