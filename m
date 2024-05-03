@@ -1,130 +1,116 @@
-Received: from sonic309-21.consmr.mail.ne1.yahoo.com (sonic309-21.consmr.mail.ne1.yahoo.com [66.163.184.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4AD157E69
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 17:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.184.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B48D8495;
+	Fri,  3 May 2024 17:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714755655; cv=none; b=cJanXD234YdG1V92j9nm0qyl/e+PBBU8fej6YiSqqGvoLviChya+eChTzOk6pkWICeaxCjWe9Z8DNDsSeYtKKsF3sHUqpDv16HY8z2XcuYE374g/Dz77+/bk0ZyoqTAz9xmkusR246L7fBLvfR9ax0aj9/5CbOPk1+RO9eQf9sU=
+	t=1714755699; cv=none; b=XGIGzypCnCap+M8YKdwgMxuyu2BaH6u5PR/jbI0Z/Mogy6GwHM11iVy/ge/mJjgykk/rvYmACHLiVKCoPN/1k9LoqoPjryRTtiqSDA/ha0trYSFw8JXZPBNDqy/EFdThzql6VjSCDAh8eBgzHlHPxp0fWIxbQ3Rm1Nd//TTlr+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714755655; c=relaxed/simple;
-	bh=OpuBHTwhnfArlf2PsQ6g2wnS/DKkhtNrSqNbd0Cd8cY=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=gXl+yf7mKywFkKcjif2mNkSCuQJOI49IyjapsvEVBqtJpYUrcrdAUVJA+lErWMCBNrpAVXp4B7BgGeAzvvGOXOkWyDgUaCuEtlJXwRQAw6Ms5Yb8nxSTX6lbBHykiLlSkcfEW3ohBAziO6Xy8qWlt7fZtACnTL83piWp1fDO9lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=h/XuJOfP; arc=none smtp.client-ip=66.163.184.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1714755699; c=relaxed/simple;
+	bh=+yflGw8lFPTunnW6GGmdYjuR3pV0ADDhPZKgYdcwOCA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DYybLAJ5JNxhAuEsTH+8emHluAJwAD7rLKdhhQj5wubYLHdPq+03cL0xA/x4Dl/8yC+LmS2/DcJHigZkjueDXyevmjh/WFqtED1qq6gfnKFnsLpEwmDFK6vl89mNrSkucMrwqfHV8FuDwCiAxzBCOhmySmUiCnNoWOHd0AxFYAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SdcqKSqH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="h/XuJOfP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1714755652; bh=OpuBHTwhnfArlf2PsQ6g2wnS/DKkhtNrSqNbd0Cd8cY=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=h/XuJOfP4qeWJeJUfu9XI2dvEgzygtrC4CQkQr52hHqL+u5d0EZKbP2COHmnzEf/JrOcrHLPnb3WKJ8WKv7KYu67zkNNbxwbMhHZAkfXWXsOApW31dy8X39SKCTp7/aUnyM+SkluOIU1tReyUEiYIPp83FqHP+7BHFnLBWjlh7AoF8bnulEyF2VKqInpLbYgAM31rUm5IpaFK88Qmb+Xm/jPTZSkNBXqogko/W5N6AuBT0PRrH9mWkBQHSH0zAL5AE/2EeQWUS9lvCZNTpQK4mFb07RYgGwHL6cgc0kaJnLvM27Za+5x+X2Sv32SB53OshVlWVpage6SsD2T8PfCkg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1714755652; bh=0roRuDy5zj7FoPPBMx4pCT5IazAPisE/VYX4kM5YcgX=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=HN77FixkNFiIjdzTyPTCglXSTr73Q8fEfEGAbRTRYzo88nHJQOH9TKg/z4eTL0k0WD3sJsnOenB0QLHcY3ttLXCvw5wHfeI/hEKOSz98IlZbow//bKIscA0ODOnBLYW7eCiszIyiiWVu1vNVc1EMtvLrIcrYubuC5EFu/EhKyDv33/ckazLlFjDjQDgtt0Sxn7EnoGSATXzRlDKsVelY2A0ReFSC0ZWlkpF7JDYCnJ1vd9+pXt+22hCXMVFdFpOKcMfRuVBGaPqG2WDmGV4vzfhJ9e+dNQqL6bCLtudkdhmYIYD21igDk1HidLAYyb5l75+V0av8B0W9KVv1kkDMlQ==
-X-YMail-OSG: u7CikhkVM1mEMBJgRhgeFfykAxEVELBK2D8SuCjgxXEHVfhg2Mh1jCun.7euP4n
- YuKTaefJTFGNeHA6y0GKN8r5o3pt6uZ4L7fJsdR9huBW4xI._HbSxGmtwL7Q.r.q2HNLUhrxNcqJ
- iQk0clfL4rJB7emk22t.djOQDkv.3brzpvxYm7mD76etPxjsHtjznB4tUyLYzXFO.6IDvqV7cuVU
- s7YU8V1I5QXnD2RY954jhO_zWBG1FHHEhnmc2lafLzGClMxUD1sSeuRmEUnPzd9UJb1XvnNuPzoR
- HDhGIP5Qbmk9vsiiNBfzez4x4g8KFg3M.G5Uk5n2WX7L_k6B9_ZGCVtrDh348xQOjY1Y_1Cd81b4
- noQswoJiZsryvGYbOrdRyqJAQrn1NxglYFDVVQ8ihsj3JFsAg8idJ57wbS4lW1zJR0z2hwX0D5L8
- Ah9_5UWH5vGNxPLESZLBXSsL8X91UjsCxu6TnFw7uhzNds6_ofPqhWISo6wokWtoHo4s5i_Dd1g1
- pgusS5pHJ1PX8KPBpv1fMxnUGbma5Mq06lphYU_SSXY4i5qCBUK37DNnJIV5AgXDEbpreAvPY5KN
- vR8Tb6Q2yF6axmhLYw2qwsfnAUr0vA_Jzc2pUUzAeDxF6I0UPkjLA7a7yiaDIczakKX6dwdSJ.mG
- 58OM_lkjw52d71AdkfrDJUX2MksGHq1K63WSXuFurdzA3S18AlusvV.5PFProfYCIRztn0BDISD2
- Qa0GpFEiFwlzby4x0fgGxV8dJZ7Xq5ugd4xBCV.6.A2dnjy26PjzG0jwSLH9GPjFaJGaVk9uUasX
- Ix6sSXmG_K_jm3KYote_PDn6JLIa0hbq_HNpR__3cjgTP1plr_6Akyd1GFihjkHF_mscqbk6S76Q
- jpIhhLUmyHcsZ.NWMfj678JphFYyxPaOOxLXXAMfL_zhiEjNUJvyW4VexTTgNZ3xy4unuIoacAoJ
- i65ljO1IAGxShzOLanEqKFAMguiVBBN84wbYDBpr0kbG1lU32E1cGTIczqgW2w82DRV0zMHp7_sk
- RkIuj5k_JzxlnN5zNfGNQ27h3I4gVCCP9gOc5wekqRwLV8ifLYRb0bPkd8tD7JmD2LZ4W42b5344
- HsLeoU48IJJDVr0YJZVirumWrxsKvF2I3o7_KXaVyliAP25U_deLjmT.BBE1UONAftNh2kNMOZhG
- ak5IKdiwLyK6_12ip8oazaBJj_0W2q_gqrvjiq4bKG6iI._HycRHunW22uHeF9wvQrk5tc_APutn
- ySnbWQ9ziXxvaBWtboypHwNZUDPR.1KsQgcqJSY2RL3r9XfaUo845YNVfdFuXJRnWkIvdttDKler
- fyJKbvSmeSCJKhNzvxBHRQYh5n.3NYvEikv_TsZJacJhbUnWXZUvXasP37MGyoQ7GLT5da687ovE
- MPDnTVH5iJuFgVqg.nx3oyRUA1nTBGBfvFZYSiKFVAvWHa4stTt3NH3SSaTDdTBWfIGRsYGhkvLA
- dGy3Z7XijAEEDsjVV7IcaVpLVWIbJ5jIIBJ13eYMxWVJ5f4A4lIZrv_SZBpvByB1sfv.DS7gSonq
- 1VNOutIuK8hijTa9otiRaFsP5_Q0XVFGUteywvHokJuiKc9VgRr3JHFzTPQ4VicD_5wUtc5IFJ1G
- Whv.16lmZ496l.ekC09_B7nK3cP4JcBG1bvLevBfXuZGDgqGnk69NAcG7XfInLZXd.siTtH_j2Hu
- Um8ryul1Tv18C0USqxm8iwpFTlN8Nnzyfmboy0o0wiQplgRXpa.HUUaRAp_Q1evqftIW2KXhIQd.
- PgvidYsIBtF.XIaFWMsLdcMg1GvBlnp_6PRqwXVoLM2PAqh5VqVkQQTOfaBeMPEn8jtbd6qNLLqP
- 0LUJpjXA1La1EIPftMu6oPuaNY5s2vCt4KwXJcivqOm8eJpB7YSB6SjubeIV9IqXdILqqdTIJ5I1
- loXhSfvkPvTocCDcdoz7FvbKaejGqeAjQjG8RIM0v82Pdtw0DCF.8aCwGPn7CiVmUwVA3AB8L30S
- N_n9FCd6TcDBPoK5HwRSX..z0kdfVosVSs6SS2qsrOs3jY06vlXP0PhNz2EG_YmgI7YvRoqKxbY7
- PKcwpvJsXvM7YBuftOiseBjk3I_KzychmFW.f.Ls34I5eM8XzWMW0LfYeBAwTIprJKhvL6V_Vrms
- tgESrkIU7v9UtaRwWh7DKRHDJUDHgqExo6lBS0mqHPrUKy.hVNgkJlB2PDa_Qv4JSP3Rf1VmTgvH
- Fcv96CSp4tjyCAXFkI47vWUo4VCWan1qd7NG.JaBVJ1kVaf_Z0uiLr9CVPVJD6A.o_UxUDqo-
-X-Sonic-MF: <ashokemailat@yahoo.com>
-X-Sonic-ID: b20f7dc0-ce88-4f67-8215-c25d657d58b6
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Fri, 3 May 2024 17:00:52 +0000
-Date: Fri, 3 May 2024 16:20:24 +0000 (UTC)
-From: Ashok Kumar <ashokemailat@yahoo.com>
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, 
-	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"outreachy@lists.linux.dev" <outreachy@lists.linux.dev>
-Message-ID: <1389558595.6771301.1714753224419@mail.yahoo.com>
-In-Reply-To: <c8d24241-1763-f7b7-4491-2e5aa3ea3be@inria.fr>
-References: <ZjRDUO6/M+RDCcQJ.ref@c> <ZjRDUO6/M+RDCcQJ@c> <c8d24241-1763-f7b7-4491-2e5aa3ea3be@inria.fr>
-Subject: Re: [PATCH] staging: fb_tinylcd Alignment to open parenthesis
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SdcqKSqH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07375C116B1;
+	Fri,  3 May 2024 17:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714755698;
+	bh=+yflGw8lFPTunnW6GGmdYjuR3pV0ADDhPZKgYdcwOCA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SdcqKSqHqLXVPXOUPiWd2R67qp5j/76q2UzwvrVQSWyfysPNCT+eFY+5blSiWERjt
+	 4Werw1VUsRnoal0SKJ5xeaVHZlVTOf4clATdeR/7DofXiJz0QtigfrwWh6N3Whi2s9
+	 ZwH4lhMdKoBelJ4SkB1UiVfWwrCOrGccbPTAqt7mOSaLcJkDMQUpCnID2mrQlk86Mg
+	 2ROg9Ioisv4Kg1mz3vxyZZIRVCwtjQo/sYfTsEfJXPsEV7db97895epyCPru6p23Sy
+	 r1UD/dR65V/G0T9nTy73srU7WxExDgmqc3lI8MNaqW6J3xWviNcEi1EVOijXjS6HR0
+	 hWEqKHed0H5dA==
+Message-ID: <ad9ff9ea-2c0e-40ac-9068-ece9937b80c8@kernel.org>
+Date: Fri, 3 May 2024 19:01:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: arm: sunxi: Fix incorrect '-' usage
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>,
+ Ryan Walklin <ryan@testtoast.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240503154402.967632-1-robh@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240503154402.967632-1-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: WebService/1.1.22256 YMailNorrin
+Content-Transfer-Encoding: 7bit
 
-
-On Thursday, May 2, 2024 at 11:54:58 PM PDT, Julia Lawall <julia.lawall@inr=
-ia.fr> wrote:=20
-
-
-
-
-
-
-
-On Thu, 2 May 2024, Ashok Kumar wrote:
-
-> Corrected coding style CHECK: Alignment should match open parenthesis
-
-Ashok, I think the code is nicer as is, because it has all the constant
-numbers lined up.
-
-julia
-
-Thanks for the update I will ignore this change.=C2=A0
-
-Is there a list of exceptions to the checkpatch information that we can ign=
-ore in general.
-
-
->
-> Signed-off-by: Ashok Kumar <ashokemailat@yahoo.com>
+On 03/05/2024 17:44, Rob Herring (Arm) wrote:
+> Commit 6bc6bf8a940a ("dt-bindings: arm: sunxi: document Anbernic RG35XX
+> handheld gaming device variants") mistakenly added '-' on each line
+> which created empty (i.e. description only) schemas matching anything.
+> This causes validation to fail on all the root node compatibles as
+> there are multiple oneOf clauses passing.
+> 
+> Fixes: 6bc6bf8a940a ("dt-bindings: arm: sunxi: document Anbernic RG35XX handheld gaming device variants")
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->=C2=A0 drivers/staging/fbtft/fb_tinylcd.c | 2 +-
->=C2=A0 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/fbtft/fb_tinylcd.c b/drivers/staging/fbtft/f=
-b_tinylcd.c
-> index 9469248f2c50..60cda57bcb33 100644
-> --- a/drivers/staging/fbtft/fb_tinylcd.c
-> +++ b/drivers/staging/fbtft/fb_tinylcd.c
-> @@ -38,7 +38,7 @@ static int init_display(struct fbtft_par *par)
->=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, 0xE5, 0x00);
->=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, 0xF0, 0x36, 0xA5, 0x53);
->=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, 0xE0, 0x00, 0x35, 0x33, 0x00, 0x0=
-0, 0x00,
-> -=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 0x00, 0x35, 0=
-x33, 0x00, 0x00, 0x00);
-> +=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0 0x00, 0x35, 0x33, 0x00, 0x0=
-0, 0x00);
->=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, MIPI_DCS_SET_PIXEL_FORMAT, 0x55);
->=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, MIPI_DCS_EXIT_SLEEP_MODE);
->=C2=A0 =C2=A0=C2=A0=C2=A0 udelay(250);
-> --
-> 2.34.1
->
->
->
+>  Documentation/devicetree/bindings/arm/sunxi.yaml | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
