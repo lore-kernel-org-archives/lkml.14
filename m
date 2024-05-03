@@ -1,128 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46D115358C;
-	Fri,  3 May 2024 13:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10823153815;
+	Fri,  3 May 2024 13:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714743297; cv=none; b=QdDI7ui1SE8JkdrvIddevXD/wh+CrcgphpEO3lca11r4Ex6/r+Dwt1ouKzeUTxTL3UXxXYzX+RRiyPnHCkkg+O3Gc+5D0t0MBfwyiUKcp/dulvnoTKj0+47P85km0GALALDGRJGHM5L3J1ln5QWKWKCDf2AncaIlJueFSugTcww=
+	t=1714743413; cv=none; b=oJ6vBd2kEE3lsEdlLx6yer/R3MwNfLE4nGbNlybEKH3bsQ3ou/yOkaGD0xUu/NFoECMb89MuYflVM8JnuFshm5gZEU2nMhwajNGOGJMi/W7GrCo9yfrAkJgR8BJI7Y4dV1xc16ejQ2NeZYpubpKoJVcEnDeZBzKjz+EsP5yhoDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714743297; c=relaxed/simple;
-	bh=AGslWhle4NIaFIY0mVoJpE21AAJwhRwa4mBQbv6ZRFM=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=ZbJR8BoAB0xNMdbXKEZA52H3HLQaEMQIy4+bExftRviAXcSzqF4uD9hM6QPNWrbhO6u0eFBnnh0Vr7+XUb2UscEUOd4rTGiaB8H+ugWSpVJIAiRb9kmRX1KjI3i6PtRQtDZ7IRKFlNkToL8v8T9vZ6HfqLqT+VJNGQmXgq5tuGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8pxkAeR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714743413; c=relaxed/simple;
+	bh=7pJ5q5LbH0iJOm0Bg/dm21/xbfIlw7Cm0hnQW91qbDE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cRDMsj3Atk083rCvY62y3lxgZ67PK5cuxg5dFocsTb2VTaxoSdDU7UN3e8G8bqTRbgcfm5hJPaneKK1sxQWAcmheSREV1VERcgtB9tOY8bD9jlbAJ9kqG46fI+NqztozYkZY4OLrj7KE79KjStVVOlXMIR9gQcaqZBYTjMKIFzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cQ89anbO; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8pxkAeR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD5EC2BBFC;
-	Fri,  3 May 2024 13:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714743297;
-	bh=AGslWhle4NIaFIY0mVoJpE21AAJwhRwa4mBQbv6ZRFM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=k8pxkAeRmvIoVFkp6t0iXIq3Gk4/1zk2zsNC6IImZ8848Oj6h/sv3hrHQbujGE8F9
-	 Th53FltcJuJmWM2gttqffpQyn0Npyg8ipLNkJYhLH+ngxHqDK3G1LS+F2YNbjnur/a
-	 R/IHfBkmS4ZD0JOoIfMgS+WDOyoynrWM0NOQaiPZlSb3RgE2ljKQ9+zpVOgoblwOg7
-	 AMSE0fgJ+qkieWzWp+Dv9EdL1WrF4lrrEqD70VPZHcX4aYP5DYV9BCv4w+Seaa6lsj
-	 J083SIH0G8vlrWMiVw/r9Cj97UYB9BVmfr3uAj+Q6fBKCffkmIgaQWIMwcnGC6hsgZ
-	 OY1Fxq7Iuc7jg==
-Date: Fri, 03 May 2024 08:34:55 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cQ89anbO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714743412; x=1746279412;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7pJ5q5LbH0iJOm0Bg/dm21/xbfIlw7Cm0hnQW91qbDE=;
+  b=cQ89anbOmjFFd9MWTcWVqiXLGMbJzawC0SHKVHq/OqNkX8RQrzEzJ+/1
+   AnQlBen8FIIIDs4kXxSb4s4C1ju1ngYgWloyDp2rEpJ97VXia1BYrcBSd
+   Xb4c9CQk7jA6JM7xxiRM4s3ui42r+4gHJ3z2dfXuIwtGfixLcX5cGKNzL
+   vDPYQLaJwR6DJFQOm8lhIA9ST6qgfAEEQX8q6G2JNLisEIzQ0Kb2jGV50
+   S5EsBzOiXkeSk+G6ktDkBqG4Bd8UA+P+n+sGumKh7sx3H6yy3Gns0WjyP
+   utYEIjMcrlHTkQ70scEsjqcLRACiKa38mskSBO3eJLDO4XyE6TzBvBtkA
+   w==;
+X-CSE-ConnectionGUID: 5SOiyjFNRSO9urPQKaj1Ag==
+X-CSE-MsgGUID: X01JBy5dQByaUBb0/WD7Jg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="10479389"
+X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
+   d="scan'208";a="10479389"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 06:36:51 -0700
+X-CSE-ConnectionGUID: F9ytbLenQra98K6ky2IBQg==
+X-CSE-MsgGUID: AJz3CST7Q0yDfmFyt0FbFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
+   d="scan'208";a="27963572"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.56])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 06:36:48 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Dean Luick <dean.luick@cornelisnetworks.com>
+Subject: [PATCH v2 1/1] RDMA/hfi1: Use RMW accessors for changing LNKCTL2
+Date: Fri,  3 May 2024 16:36:40 +0300
+Message-Id: <20240503133640.15899-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Alex Soo <yuklin.soo@starfivetech.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Drew Fustini <drew@beagleboard.org>, 
- linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
- Jianlong Huang <jianlong.huang@starfivetech.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Hal Feng <hal.feng@starfivetech.com>, 
- Emil Renner Berthing <kernel@esmil.dk>
-In-Reply-To: <20240503111436.113089-2-yuklin.soo@starfivetech.com>
-References: <20240503111436.113089-1-yuklin.soo@starfivetech.com>
- <20240503111436.113089-2-yuklin.soo@starfivetech.com>
-Message-Id: <171474329596.655929.15885006298482703153.robh@kernel.org>
-Subject: Re: [RFC PATCH v3 1/7] dt-bindings: pinctrl: starfive: Add JH8100
- pinctrl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Convert open coded RMW accesses for LNKCTL2 to use
+pcie_capability_clear_and_set_word() which makes its easier to
+understand what the code tries to do.
 
-On Fri, 03 May 2024 19:14:30 +0800, Alex Soo wrote:
-> Add documentation and header file for JH8100 pinctrl driver.
-> 
-> Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
-> ---
->  .../pinctrl/starfive,jh8100-aon-pinctrl.yaml  | 260 ++++++++++++++++++
->  .../starfive,jh8100-sys-east-pinctrl.yaml     | 222 +++++++++++++++
->  .../starfive,jh8100-sys-gmac-pinctrl.yaml     | 162 +++++++++++
->  .../starfive,jh8100-sys-west-pinctrl.yaml     | 219 +++++++++++++++
->  .../pinctrl/starfive,jh8100-pinctrl.h         |  13 +
->  5 files changed, 876 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml
->  create mode 100644 include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h
-> 
+In addition, this futureproofs the code. LNKCTL2 is not really owned by
+any driver because it is a collection of control bits that PCI core
+might need to touch. RMW accessors already have support for proper
+locking for a selected set of registers to avoid losing concurrent
+updates (LNKCTL2 is not yet among the registers that need protection
+but likely will be in the future).
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Dean Luick <dean.luick@cornelisnetworks.com>
+---
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml:109:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
-./Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml:96:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
-./Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml:99:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
-./Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml:136:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
+This was part of other series earlier but sending this indenpendent now
+to not appear to be part of a cross subsystem series.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-gmac'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-gmac'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-west'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-west'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-east'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-east'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-aon-pinctrl'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-aon-pinctrl'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml: ignoring, error in schema: properties: compatible
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml: ignoring, error in schema: properties: compatible
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml: ignoring, error in schema: properties: compatible
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml: ignoring, error in schema: properties: compatible
-Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.example.dtb: /example-0/soc/pinctrl@123e0000: failed to match any schema with compatible: ['starfive,jh8100-sys-pinctrl-west', 'syscon', 'simple-mfd']
-Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.example.dtb: /example-0/soc/pinctrl@12770000: failed to match any schema with compatible: ['starfive,jh8100-sys-pinctrl-gmac', 'syscon', 'simple-mfd']
-Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.example.dtb: /example-0/soc/pinctrl@122d0000: failed to match any schema with compatible: ['starfive,jh8100-sys-pinctrl-east', 'syscon', 'simple-mfd']
-Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.example.dtb: /example-0/soc/pinctrl@1f300000: failed to match any schema with compatible: ['starfive,jh8100-aon-pinctrl', 'syscon', 'simple-mfd']
+v2:
+- Small improvements into the commit message
 
-doc reference errors (make refcheckdocs):
+ drivers/infiniband/hw/hfi1/pcie.c | 30 ++++++++----------------------
+ 1 file changed, 8 insertions(+), 22 deletions(-)
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240503111436.113089-2-yuklin.soo@starfivetech.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/infiniband/hw/hfi1/pcie.c b/drivers/infiniband/hw/hfi1/pcie.c
+index 119ec2f1382b..7133964749f8 100644
+--- a/drivers/infiniband/hw/hfi1/pcie.c
++++ b/drivers/infiniband/hw/hfi1/pcie.c
+@@ -1207,14 +1207,11 @@ int do_pcie_gen3_transition(struct hfi1_devdata *dd)
+ 		    (u32)lnkctl2);
+ 	/* only write to parent if target is not as high as ours */
+ 	if ((lnkctl2 & PCI_EXP_LNKCTL2_TLS) < target_vector) {
+-		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+-		lnkctl2 |= target_vector;
+-		dd_dev_info(dd, "%s: ..new link control2: 0x%x\n", __func__,
+-			    (u32)lnkctl2);
+-		ret = pcie_capability_write_word(parent,
+-						 PCI_EXP_LNKCTL2, lnkctl2);
++		ret = pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
++							 PCI_EXP_LNKCTL2_TLS,
++							 target_vector);
+ 		if (ret) {
+-			dd_dev_err(dd, "Unable to write to PCI config\n");
++			dd_dev_err(dd, "Unable to change parent PCI target speed\n");
+ 			return_error = 1;
+ 			goto done;
+ 		}
+@@ -1223,22 +1220,11 @@ int do_pcie_gen3_transition(struct hfi1_devdata *dd)
+ 	}
+ 
+ 	dd_dev_info(dd, "%s: setting target link speed\n", __func__);
+-	ret = pcie_capability_read_word(dd->pcidev, PCI_EXP_LNKCTL2, &lnkctl2);
++	ret = pcie_capability_clear_and_set_word(dd->pcidev, PCI_EXP_LNKCTL2,
++						 PCI_EXP_LNKCTL2_TLS,
++						 target_vector);
+ 	if (ret) {
+-		dd_dev_err(dd, "Unable to read from PCI config\n");
+-		return_error = 1;
+-		goto done;
+-	}
+-
+-	dd_dev_info(dd, "%s: ..old link control2: 0x%x\n", __func__,
+-		    (u32)lnkctl2);
+-	lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+-	lnkctl2 |= target_vector;
+-	dd_dev_info(dd, "%s: ..new link control2: 0x%x\n", __func__,
+-		    (u32)lnkctl2);
+-	ret = pcie_capability_write_word(dd->pcidev, PCI_EXP_LNKCTL2, lnkctl2);
+-	if (ret) {
+-		dd_dev_err(dd, "Unable to write to PCI config\n");
++		dd_dev_err(dd, "Unable to change device PCI target speed\n");
+ 		return_error = 1;
+ 		goto done;
+ 	}
+-- 
+2.39.2
 
