@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7872E157E6C;
-	Fri,  3 May 2024 18:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B138158D9F;
+	Fri,  3 May 2024 18:30:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714761012; cv=none; b=d0IsmYxi9fYvmyYRZToZ8QfjIcA7io7b0S14t/Nuca2tNjvRwJ5euatH0iyyE1KRFVbIhqZNhqCMBUl+QmrSvExLEMNTjWK8E/ipcTGrT4tdIwN87y/yyzkhdXOyHPrQeh9B+0wuCe53oucPwYHrUZHdCxeHkT0beDjfkhwIp/I=
+	t=1714761013; cv=none; b=aNyzyNVA6ox3iW+J1UubStnm/VQjX2dyZxvv5WQNl+7H//kqTwP0mx5PR7qfHef1b8DWEOrhmUb+RVrsb4mQ+WH72qkF/pr8l0eEPFV6UtGWM3MrIjZLqMMBIxtITROVoFF2KTraNhO+xGsB21if2tiwJL1rsr8tsYbT1+hgNe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714761012; c=relaxed/simple;
-	bh=0ek9e1xkSu9ugJNGW/WQGFdfj6oRd6gAc/VlLaOX934=;
+	s=arc-20240116; t=1714761013; c=relaxed/simple;
+	bh=owGjXj1gRcQHvfXuD018vQxaCTN0J8efK7YMuWyF8As=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nLJV/s+adFwKlhYFN3kTZFwE31uarUHA7AquU12R017np2lETM6niw6jAmDhruEA0fquNhLnygCP+q5X3vL0NDt9KdGMXPkcYvNIImA1Z72k7f//sUECey/JQoNVwa8HYwVgA75hRwD/1gmBulQFErN1QV0BXGvinPERHSJl7gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hYNnkDu/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=h4PyCzf+; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=t4jySER6s4bXxOkHn9mfm4cGEdeNQAGwMlR/zch3slWJzSPTf9ij2pTHUYTLCNWKrI3VtMIEqnUfAveBrhyT5fhRXyN3PxdQ0O7QSV+TOhoh+tv9e7bRg6g0baQPjUvxn7cKAbLujsSDZ9MUihLlrq6AJ0of9/BRB4sS6FQaYQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b44alsuR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YeNEJOBT; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hYNnkDu/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h4PyCzf+"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b44alsuR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YeNEJOBT"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1714761008;
+	s=2020; t=1714761009;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=W12KgBST4nx2eve2nFTDwC2VpCtYmoeYSIe9gYf7jLU=;
-	b=hYNnkDu/YEIkbMmlcXSrr3zUKVjI0lBbG6xwH8ZICrBAHKq2h9Y0QNnOvxQlhNvhwS7Cph
-	lDweOre4LmCytwQLo0zojT6Bboy9yAl+try72DiqCSsZxTgat7elEodRt7Fp54b+qbaY8l
-	TOWtuyBj5bLqis8pgaK0m4ZF4EXp9p3ra7V5nZOApqeP3V+wM/0/7r7nEN/GX5srHe7E6T
-	u7jyg78ZGy4IOPNiJ5X2mqWZ1sYs57ZJk8cTMKGKymdxVrwt4Lem0YD9EBiznNQ6gREzHP
-	c/6nY0QOXAXeoM4hrNCsQbLAED2yZHKUogV/kTnfguxeDEpqHxm8aByRMv9H+Q==
+	bh=bsXcW5uZG6cWaMVlyAXK8eicxATBh3uvSrRgqWotKdM=;
+	b=b44alsuR2QcrVlf59gZX0/PyvBQ3IOqwVn1z1csODKySqTQ0CI5M251JLg46rxDWQyJTC0
+	k0fAKLRn+wdULW7GKRDTEWPs8Dp3ms99AZXnkK9nTrrw9w1ZjOl8b8aHFj9JK3jfAHHTcC
+	dKePv+zpQ23u8ntg/qV+kibZr6QYgBQZeEadjTOManbb4/1Lk5HBTR2+40P3aumaJYoqxW
+	pEAvQWxS4yHQujjzCB8bfgPEhfr180KvF2EyV9BiMZiJkWTo6X0A5HhywlCadh85k+o4DS
+	QQpa0A9owaUc6Ce/di1SpwDdGng9EfjFxBi5UlvlIzs2c9VGIa7wpYuHKr4G/w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1714761008;
+	s=2020e; t=1714761009;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=W12KgBST4nx2eve2nFTDwC2VpCtYmoeYSIe9gYf7jLU=;
-	b=h4PyCzf+pnGgWSsUNbwR4a3djIi273FCLgVuwKNb1yWnxRnZ4OU0CTPr6DranJvPH9o5cW
-	WV4AeZ+T70BCCwCg==
+	bh=bsXcW5uZG6cWaMVlyAXK8eicxATBh3uvSrRgqWotKdM=;
+	b=YeNEJOBTMY+L6UBwB4PdTxNfxklNmtz+hgddyru9gz8MnCWeQkdHeZY3YfDE99OCC2sn+k
+	ZCWDz75clMOBIoBg==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -53,18 +53,10 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ben Segall <bsegall@google.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH net-next 08/15] net: softnet_data: Make xmit.recursion per task.
-Date: Fri,  3 May 2024 20:25:12 +0200
-Message-ID: <20240503182957.1042122-9-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH net-next 10/15] dev: Use nested-BH locking for softnet_data.process_queue.
+Date: Fri,  3 May 2024 20:25:14 +0200
+Message-ID: <20240503182957.1042122-11-bigeasy@linutronix.de>
 In-Reply-To: <20240503182957.1042122-1-bigeasy@linutronix.de>
 References: <20240503182957.1042122-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -75,124 +67,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Softirq is preemptible on PREEMPT_RT. Without a per-CPU lock in
-local_bh_disable() there is no guarantee that only one device is
-transmitting at a time.
-With preemption and multiple senders it is possible that the per-CPU
-recursion counter gets incremented by different threads and exceeds
-XMIT_RECURSION_LIMIT leading to a false positive recursion alert.
+softnet_data::process_queue is a per-CPU variable and relies on disabled
+BH for its locking. Without per-CPU locking in local_bh_disable() on
+PREEMPT_RT this data structure requires explicit locking.
 
-Instead of adding a lock to protect the per-CPU variable it is simpler
-to make the counter per-task. Sending and receiving skbs happens always
-in thread context anyway.
+softnet_data::input_queue_head can be updated lockless. This is fine
+because this value is only update CPU local by the local backlog_napi
+thread.
 
-Having a lock to protected the per-CPU counter would block/ serialize two
-sending threads needlessly. It would also require a recursive lock to
-ensure that the owner can increment the counter further.
+Add a local_lock_t to softnet_data and use local_lock_nested_bh() for locki=
+ng
+of process_queue. This change adds only lockdep coverage and does not
+alter the functional behaviour for !PREEMPT_RT.
 
-Make the recursion counter a task_struct member on PREEMPT_RT.
-
-Cc: Ben Segall <bsegall@google.com>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/netdevice.h | 11 +++++++++++
- include/linux/sched.h     |  4 +++-
- net/core/dev.h            | 20 ++++++++++++++++++++
- 3 files changed, 34 insertions(+), 1 deletion(-)
+ include/linux/netdevice.h |  1 +
+ net/core/dev.c            | 12 +++++++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 41853424b41d7..c551ec235f9af 100644
+index c551ec235f9af..9d19e6ace7cb7 100644
 --- a/include/linux/netdevice.h
 +++ b/include/linux/netdevice.h
-@@ -3222,7 +3222,9 @@ struct softnet_data {
- #endif
- 	/* written and read only by owning cpu: */
- 	struct {
-+#ifndef CONFIG_PREEMPT_RT
- 		u16 recursion;
-+#endif
- 		u8  more;
- #ifdef CONFIG_NET_EGRESS
- 		u8  skip_txqueue;
-@@ -3255,10 +3257,19 @@ struct softnet_data {
+@@ -3199,6 +3199,7 @@ static inline bool dev_has_header(const struct net_de=
+vice *dev)
+ struct softnet_data {
+ 	struct list_head	poll_list;
+ 	struct sk_buff_head	process_queue;
++	local_lock_t		process_queue_bh_lock;
 =20
- DECLARE_PER_CPU_ALIGNED(struct softnet_data, softnet_data);
+ 	/* stats */
+ 	unsigned int		processed;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index cf7b452ce0d74..1503883ce15a4 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -450,7 +450,9 @@ static RAW_NOTIFIER_HEAD(netdev_chain);
+  *	queue in the local softnet handler.
+  */
 =20
-+#ifdef CONFIG_PREEMPT_RT
-+static inline int dev_recursion_level(void)
-+{
-+	return current->net_xmit_recursion;
-+}
-+
-+#else
-+
- static inline int dev_recursion_level(void)
- {
- 	return this_cpu_read(softnet_data.xmit.recursion);
+-DEFINE_PER_CPU_ALIGNED(struct softnet_data, softnet_data);
++DEFINE_PER_CPU_ALIGNED(struct softnet_data, softnet_data) =3D {
++	.process_queue_bh_lock =3D INIT_LOCAL_LOCK(process_queue_bh_lock),
++};
+ EXPORT_PER_CPU_SYMBOL(softnet_data);
+=20
+ /* Page_pool has a lockless array/stack to alloc/recycle pages.
+@@ -5935,6 +5937,7 @@ static void flush_backlog(struct work_struct *work)
+ 	}
+ 	backlog_unlock_irq_enable(sd);
+=20
++	local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
+ 	skb_queue_walk_safe(&sd->process_queue, skb, tmp) {
+ 		if (skb->dev->reg_state =3D=3D NETREG_UNREGISTERING) {
+ 			__skb_unlink(skb, &sd->process_queue);
+@@ -5942,6 +5945,7 @@ static void flush_backlog(struct work_struct *work)
+ 			rps_input_queue_head_incr(sd);
+ 		}
+ 	}
++	local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
+ 	local_bh_enable();
  }
-+#endif
 =20
- void __netif_schedule(struct Qdisc *q);
- void netif_schedule_queue(struct netdev_queue *txq);
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 3c2abbc587b49..6779d3b8f2578 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -969,7 +969,9 @@ struct task_struct {
- 	/* delay due to memory thrashing */
- 	unsigned                        in_thrashing:1;
- #endif
--
-+#ifdef CONFIG_PREEMPT_RT
-+	u8				net_xmit_recursion;
-+#endif
- 	unsigned long			atomic_flags; /* Flags requiring atomic access. */
+@@ -6063,7 +6067,9 @@ static int process_backlog(struct napi_struct *napi, =
+int quota)
+ 	while (again) {
+ 		struct sk_buff *skb;
 =20
- 	struct restart_block		restart_block;
-diff --git a/net/core/dev.h b/net/core/dev.h
-index b7b518bc2be55..2f96d63053ad0 100644
---- a/net/core/dev.h
-+++ b/net/core/dev.h
-@@ -150,6 +150,25 @@ struct napi_struct *napi_by_id(unsigned int napi_id);
- void kick_defer_list_purge(struct softnet_data *sd, unsigned int cpu);
++		local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
+ 		while ((skb =3D __skb_dequeue(&sd->process_queue))) {
++			local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
+ 			rcu_read_lock();
+ 			__netif_receive_skb(skb);
+ 			rcu_read_unlock();
+@@ -6072,7 +6078,9 @@ static int process_backlog(struct napi_struct *napi, =
+int quota)
+ 				return work;
+ 			}
 =20
- #define XMIT_RECURSION_LIMIT	8
-+
-+#ifdef CONFIG_PREEMPT_RT
-+static inline bool dev_xmit_recursion(void)
-+{
-+	return unlikely(current->net_xmit_recursion > XMIT_RECURSION_LIMIT);
-+}
-+
-+static inline void dev_xmit_recursion_inc(void)
-+{
-+	current->net_xmit_recursion++;
-+}
-+
-+static inline void dev_xmit_recursion_dec(void)
-+{
-+	current->net_xmit_recursion--;
-+}
-+
-+#else
-+
- static inline bool dev_xmit_recursion(void)
- {
- 	return unlikely(__this_cpu_read(softnet_data.xmit.recursion) >
-@@ -165,5 +184,6 @@ static inline void dev_xmit_recursion_dec(void)
- {
- 	__this_cpu_dec(softnet_data.xmit.recursion);
- }
-+#endif
++			local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
+ 		}
++		local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
 =20
- #endif
+ 		backlog_lock_irq_disable(sd);
+ 		if (skb_queue_empty(&sd->input_pkt_queue)) {
+@@ -6087,8 +6095,10 @@ static int process_backlog(struct napi_struct *napi,=
+ int quota)
+ 			napi->state &=3D NAPIF_STATE_THREADED;
+ 			again =3D false;
+ 		} else {
++			local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
+ 			skb_queue_splice_tail_init(&sd->input_pkt_queue,
+ 						   &sd->process_queue);
++			local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
+ 		}
+ 		backlog_unlock_irq_enable(sd);
+ 	}
 --=20
 2.43.0
 
