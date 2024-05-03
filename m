@@ -1,98 +1,78 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABE957CB7;
-	Fri,  3 May 2024 14:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299F02B9C0
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 14:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714747218; cv=none; b=ZyREa1eW3XqPnRRNeaY3OYSqbYB+FLRdeXEIdHvRzc9Yg2hrHxNlxQL97WgoihT78aEEnnR8nNIdWp3xBvunYXJHmIuZDiv0OSg+SsmrG/RcU6uVZLjyixgvZVmHWQYqoUX5n7l+qFIfQefTb9A7zSjIyQ81ldxMMPuqrYM8Jmc=
+	t=1714747269; cv=none; b=YDuxGg4VfyAeXPelPmvHVQih+nFV2T9XVXIQAVSdc81lj0LBEr5L84XuGHuk0DY4mG0As8guEmWsVaEyoAenhkLINTbCqO3bhbKHOS2PXKRXM+YabNmIToxbkZu671krjHeIoZQyIBFpN/rc7Bvnyf5h45Pjy7GOmDoszqo1Ee4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714747218; c=relaxed/simple;
-	bh=7BtnR9RIBEkfdbceTTLR0pLPolLNCRzRcmlTMaHVZ24=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uN6/r+zs8WqjquOm5ApiQ57ugQvkBKpX8NNwDlnW+aGociqo0WFyCZDMCd03UaFqedoYElPW/l6uNDyd3RfsBk1/AB9BFrXBf/SuEY8MfJhlVCi42fvB7vX3HrhgyA0ofWoTiuo+EzQ7lFZLGIhWbsqHaHSPQxiM0/PNwSp/I64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LI/G1r9+; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LI/G1r9+"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D60A1C0005;
-	Fri,  3 May 2024 14:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714747208;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tf6rG3rOuawc5yY8Jvkp/nAZaJ9cong6+YwM20vUweQ=;
-	b=LI/G1r9+F5hHmudrVZgl+FhWe1cx3c4zASY1twGIyWwNBd0bKtOgrb64vqpw+L/vbBWTkZ
-	WTFzxF+zCHvvzjW6FVSIvLh9AnMfTwU677Fox74DwaahvBPH78XbQAFp/syUaLC9rf8Y0m
-	Y/ueil+R5O5WGty2ArXqfbquZLIZ1Q7NuLOsw2pj4FdOgpaBsTr1jr0jk8XcRzFGujTPSF
-	EMzN3ivFepb212GPm9OGEFMxZoL17qfYrSfRaNnTuHxKnn8xDLHHtea0mAk4CX7+6nijDW
-	GLQNWXELwoYlRw+MewekajkgP41hBz+B/UbHP9GVY/U5xLgwUVvf4Kt76Ts2JQ==
-Date: Fri, 3 May 2024 16:40:03 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Lee Jones <lee@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Philipp
- Zabel <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>,
- Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Allan
- Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 15/17] pci: of_property: Add the interrupt-controller
- property in PCI device nodes
-Message-ID: <20240503164003.36e7f182@bootlin.com>
-In-Reply-To: <20240501173826.GA808463@bhelgaas>
-References: <20240430083730.134918-16-herve.codina@bootlin.com>
-	<20240501173826.GA808463@bhelgaas>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1714747269; c=relaxed/simple;
+	bh=WQN/EnPah1ram2Vd3RsbdX40jJtEnD2QyPPDAIT0EFU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=CTfjUHYkRuhCy2p/hQ+dZYFPBbn1QhtOopoI5xYP/9U5MUEarA300reOLR8Ain0zptnFlW9LEgAYryE9fAvpOV7zf2TI4uiJrxG7n5JvhQaICtnI7hv1uwgOXGLBnIG4VIIUPLHcy3VsTOylMcMvJhLa4CcdPJefhjlzZmMc1DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-36c2ff79144so84416955ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 07:41:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714747267; x=1715352067;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RCRfSlaPM1t5F/6SBS/FBJZDsXajbzGONBj6BMeCrak=;
+        b=tsjxLJri9Dyvb+05GWkBjeDNljjSVBuvzz5wswFwxCHgdHFonD9Udm4Owz1wJ7YyND
+         q6AtV1oEZIs3nwY38lijlJsEjOFjvhomaZMEduaXsSyVw+r5JhMjeDwvZANSbhS+dlJW
+         Q1fCaqlh0OzMqZD2lAPjSqff7WkCHJgUVLCinrb5EAihs1zP+GH0aVBjyGvPWg5eVn+S
+         nCL15HI95mlmzzNRgUsEiLP3WqSTbUFZlIvBRC7xUSp22tBJQQ3K01s7b3LlVSyurnjQ
+         yE9k0gAZJWlj6jSj8hpGzwRjpEQTQ3oJ/nbwEelj3Fl0xnRCl8KbUJ6dbC9Hw/X+lzoG
+         GpHw==
+X-Gm-Message-State: AOJu0YxvsNZ0/RaEih2RHw/F5A5ugK6FKw2e6XPN+CWypz7FYAEpKz/m
+	HhT5NEzRhTtuacut2tvfOhpCWyjSMGx2IoZKJ6Pqn0jvLb/h4FTYpz2d3NL7mnQHBWE+xpmtqrN
+	mOyFrx0ppOzJvbqIRnBvLS6fCshodSnpE/Lugx81wJai4BZhW6BAcdNo=
+X-Google-Smtp-Source: AGHT+IEZzzy0L3gvpaqgTyOdlHFloLgjERn7EHi0NtbTEiMb9YdgWxZGjYiWbMzZSOlTCNqqW+xmcMXbXZGwnhrLoqMczdzk/Who
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+X-Received: by 2002:a05:6e02:1522:b0:368:c9e2:b372 with SMTP id
+ i2-20020a056e02152200b00368c9e2b372mr118992ilu.0.1714747267452; Fri, 03 May
+ 2024 07:41:07 -0700 (PDT)
+Date: Fri, 03 May 2024 07:41:07 -0700
+In-Reply-To: <20240503144055.3820-1-n.zhandarovich@fintech.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c1a36406178db530@google.com>
+Subject: Re: [syzbot] [crypto?] KMSAN: uninit-value in skcipher_walk_virt
+From: syzbot <syzbot+97b4444a5bd7bf30b3a8@syzkaller.appspotmail.com>
+To: n.zhandarovich@fintech.ru
+Cc: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Bjorn,
+> req->base.flags were not initialized, zero might suit in this case.
+> Do it with skcipher_request_set_callback() as it's common practice.
+>
+> #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-On Wed, 1 May 2024 12:38:26 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+This crash does not have a reproducer. I cannot test it.
 
-> In subject: s/pci:/PCI:/ to match history. s/Add the/Add/ for brevity.
-
-Will be done in the next iteration.
-
-> 
-> On Tue, Apr 30, 2024 at 10:37:24AM +0200, Herve Codina wrote:
-> > PCI devices and bridges DT nodes created during the PCI scan are created
-> > with the interrupt-map property set to handle interrupts.
-> > 
-> > In order to set this interrupt-map property at a specific level, a
-> > phandle to the parent interrupt controller is needed.
-> > On systems that are not fully described by a device-tree, the parent
-> > interrupt controller may be unavailable (i.e. not described by the
-> > device-tree).  
-> 
-> Rewrap into one paragraph or add blank line to separate paragraphs.
-
-Will be rewrapped in one paragraph in the next iteration.
-
-Thanks for your review.
-Best regards,
-Hervé
+>
+> ---
+>  fs/bcachefs/checksum.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/fs/bcachefs/checksum.c b/fs/bcachefs/checksum.c
+> index 7ed779b411f6..088fd2e7bdf1 100644
+> --- a/fs/bcachefs/checksum.c
+> +++ b/fs/bcachefs/checksum.c
+> @@ -102,6 +102,7 @@ static inline int do_encrypt_sg(struct crypto_sync_skcipher *tfm,
+>  	int ret;
+>  
+>  	skcipher_request_set_sync_tfm(req, tfm);
+> +	skcipher_request_set_callback(req, 0, NULL, NULL);
+>  	skcipher_request_set_crypt(req, sg, sg, len, nonce.d);
+>  
+>  	ret = crypto_skcipher_encrypt(req);
