@@ -1,151 +1,168 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F291BF31
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 14:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D853154BEF
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 14:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714745840; cv=none; b=MleOkFJLdlpzdL+m8xjqSyjrZr+OwlkZNBC7Mc2RhITo1HE6E6N1REjt7Z1TeOW4VuQ6SjdUYjSAUV3Z6fFfXd7B4s9OhidFX9JS2gCFgXZnH7GDHDP4zoRbjWtorogNpWRjbkhUbODPngnsO6316uKFQEsovxYHHj6tSEuFSFY=
+	t=1714745841; cv=none; b=HsedwOZrG641KMLkKCTrh9XtoE4+jqoD5KLov6ewvrMzZJoLMmXyVSI0IZugzagUvzIjO3tSUixTPTx8f6u/lBovNs/Rbhpq4juUf/25cDbGE0xSHStL9VrPpfbe6gbO/Ux8BWhGIt26dmG6hYv5Du/7K5KrYXHRj7/ZJMZ/aGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714745840; c=relaxed/simple;
-	bh=Tw2mHGCJBZondqE0Nbp48iklfjoW+xXMxK0fvzgsi4M=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nzwFA8I6uqEAXFUIFLkt+stU5euvdkfnzKP6IG20fj5ob42mIxACD5Nc8d0E/3mPIq5CiGP8bICVzGcRE6XU08N9lQugOp842kAz5LYuxaqUcNG7fGc1hEpGcYHU5hQYCU7Ijf0RC01Mc6LR5BJVNEY92D5M0jcmyvN8lKYvpws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ADcoalrC; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1714745841; c=relaxed/simple;
+	bh=HLNnngZtVS6/xr3NuvGsRGtSiLzoXBl1xah47pEzPZI=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=GaqJAtagPQxxrjSbVi1U59zjoio31DXCSRbVPzhutG+BiQKymb1eh5f3wDAx10W18rLceJWc3al2mhZkxpobNkq0QVMHPLZWU6giGWsQqplW5H6kTUIIqP47WFjwAsnzX6PNRNzweiRIgTPJq9If8i1lh88GacRek5jTRqAuM4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MTnG/V4G; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ADcoalrC"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-61eea13e924so253481a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 07:17:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MTnG/V4G"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41b5e74fa2fso60834245e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 07:17:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714745838; x=1715350638; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=euaWG2d1xrAd5eW72Lhyga6K2ICgPg5ZdZZkZnwoCG8=;
-        b=ADcoalrCktZfm9wwMo8gYx9SYC7zLL5WOagtw8vpTsMTMkDbDzwn95quOU8z6A+z1U
-         w3TcXHWTbmcVuYw4tep1j7zpQqyxRgG8Zmy0i2amxcPEcPB7me4Miuzh4DLRxlcMO7nQ
-         ueorGKQaj4HmY+AFj9YvipJgTu56gqJsy1E8TAj6ATM2MT3SuR07pTfXyVj/cJtQwsjW
-         djpTznxnz05V/o6pRcmmqjoJ8q/lYDziFUKM1xTnYnGKW4ptJbezWxRVqvNt80w0JtSa
-         Mm/qsQFB/dc0+ut/dR1mnRuPDNfp+8HOB7OmHUIUiB4DZ2kYIsguNl3LjkgyyeyNAudn
-         J87w==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1714745838; x=1715350638; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=mi/mhU22fI9RIiTkHOJlpI4wXPcoOgAYplYoLc68pRk=;
+        b=MTnG/V4GfEwxnz6XzmWaSRJFCh9rgeuoYuNfuF+3FNf4EM9eNrLbUt3E+pz/uW7fzr
+         WuBktsanSuC+04gOm4ES/4Wk/7paT+BwVqyb8Q8R0neestq6jt2KFEf/PTgSaQ0YEsrj
+         PHelwMoPaEfj0F8SauB6KyuTWGJcEbStaI7iWEfnxXZSwF31sDC1UgcyRqq7QlbwBJjD
+         qPEMEtOXZVaKnaJELQSaC96XRE8cGDyr93bHF6G7M+4HCz4roDnrcbWihoet0jSrvg78
+         hbKFUZZC/1qX6gaSBiAzixROJzjnVTVkK5i4JAFuCoj049kY9J/jtrn6TiiS/nt/2mdC
+         PpNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1714745838; x=1715350638;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=euaWG2d1xrAd5eW72Lhyga6K2ICgPg5ZdZZkZnwoCG8=;
-        b=wzkJ7z+hsBIsU5gBpvHUZ8uoGFKrDJm3kcnrxMfYFOpO6eFV3r4qq8NuDKtbNBpORu
-         /EI2MTOsAjDEk9CaYjqpzWLO6diunvWM3ktad9dUpBNO+S0oPB0Db39tAVa+i3ptndwP
-         NN3NQMjcHP95liUIOmKeiz1iGjBdUaD7L8FE+JL8KpACRt7utRf2k83rmdEGx/bsYpcc
-         xw14U0E9dEM1mfkNZ9Pac71+RLUJ9zAxnEQ9Lg/n5ftQ1p2eA/0XbMIAFCS6HYyoZyBI
-         yfmUooBVgVRbNxAVuMRyb+LAW+2terw46ReIxMCLA7SbzE/VpdAdZI198TCWay+tpeDS
-         cDeg==
-X-Forwarded-Encrypted: i=1; AJvYcCXuip7VHEjTqgYT8s8m2irifeaRsDCk8zkCiKIZVXld7DIMyEYxce2Rzd7GAJP4FKphiyfRdK0bVSjIWyXmRsPa6ajeLsBzBBOuRUGM
-X-Gm-Message-State: AOJu0YwZlNvmhXfYO5R1KpXFDkPMDBK9S0yRs5jPpUCOXboCOgINVtXk
-	jZlWXgZax/SnphiMgbLLIwLy4pZuIUqhmCzAF6QGuZfHsFFpCyH/N0Awj36E+9O2z5xANEMtI+j
-	fQg==
-X-Google-Smtp-Source: AGHT+IFXmNX8BI/5OInh9uFJfx5hH/VOCZeejP86ugVK83ToSLHsemrYMRjQmBhAQcz5sMlxtgdDcmPXGNw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:d2d0:b0:1e2:97f1:87c0 with SMTP id
- n16-20020a170902d2d000b001e297f187c0mr247114plc.1.1714745838315; Fri, 03 May
- 2024 07:17:18 -0700 (PDT)
-Date: Fri, 3 May 2024 07:17:16 -0700
-In-Reply-To: <20240503105820.300927-11-mic@digikod.net>
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mi/mhU22fI9RIiTkHOJlpI4wXPcoOgAYplYoLc68pRk=;
+        b=UZ0Hr6dtQ3q3Eq3RC5h0Sb3lDseenJqX8VwISRoVlrLn3YS4D/2K2ghRKeEG/CsaVv
+         t6HqwXTu7/qJznQ4LA0tr4FEZlGk9rY5IEA+VkQrS/jvC4FzfnQkYHjWlmyeFdmPKd9e
+         OoQUTtIis8ettEbAkChp6hENNsh+OqEqA6YP10xbqby1Ld0ECejdmAu4KtN7M37+D1hY
+         70+eqhG8JlAVGxzY+aaUxQOIs0o+4UToAzSvmFt9bD9arX81gj44MegiOgV84uvCe8/I
+         sKunkQGy3Qk4J2+RHajerR0/BcepKwlVNJLr7SkUa1yoMf+y1ADxQ5beXeVJjwEGCibF
+         /WVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWD515fLkz/wjLEaeF+oLmCWnagoG3DwyBGVfkqGvUCyOTBLfpwmf6B4iVQy8rafXC/AsPvLUjhqQZBHlUCKu+MdR4BHcdomJjMmlNk
+X-Gm-Message-State: AOJu0YwSXuy0AYwDmIw8XFvVQiWs2mo43UYiLzwp8a7oE1g0fFfj8Lx6
+	49rFkO5vlKaNQzslIjtWiVL013a9u2RbM9EAU1KgrtDVwB4+n5lgo+TBPayDYJI=
+X-Google-Smtp-Source: AGHT+IGl8A3CNGIOXabjv5H9Oz2zuPwg61o4PRCCpsIbyOo0AUsxBa9pb1Pfsk4BzFD31YbUj0yF7g==
+X-Received: by 2002:a05:600c:4706:b0:41a:b56c:2929 with SMTP id v6-20020a05600c470600b0041ab56c2929mr2348971wmo.34.1714745837574;
+        Fri, 03 May 2024 07:17:17 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:1b85:e590:355b:9957])
+        by smtp.gmail.com with ESMTPSA id r12-20020a05600c458c00b0041bfa2171efsm5781969wmo.40.2024.05.03.07.17.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 07:17:17 -0700 (PDT)
+References: <20240430064438.2094701-1-xianwei.zhao@amlogic.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Neil Armstrong
+ <neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen  Boyd <sboyd@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v8 0/5] Add C3 SoC PLLs and Peripheral clock
+Date: Fri, 03 May 2024 16:12:34 +0200
+In-reply-to: <20240430064438.2094701-1-xianwei.zhao@amlogic.com>
+Message-ID: <1jv83v2d5f.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240503105820.300927-1-mic@digikod.net> <20240503105820.300927-11-mic@digikod.net>
-Message-ID: <ZjTx7BYvbrqFSNuH@google.com>
-Subject: Re: [PATCH v5 10/10] selftests/harness: Handle TEST_F()'s explicit
- exit codes
-From: Sean Christopherson <seanjc@google.com>
-To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
-Cc: Christian Brauner <brauner@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Mark Brown <broonie@kernel.org>, 
-	Shengyu Li <shengyu.li.evgeny@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	"David S . Miller" <davem@davemloft.net>, "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>, Will Drewry <wad@chromium.org>, 
-	kernel test robot <oliver.sang@intel.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Fri, May 03, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
-> If TEST_F() explicitly calls exit(code) with code different than 0, then
-> _metadata->exit_code is set to this code (e.g. KVM_ONE_VCPU_TEST()).  We
-> need to keep in mind that _metadata->exit_code can be KSFT_SKIP while
-> the process exit code is 0.
->=20
-> Initial patch written by Sean Christopherson [1].
 
-Heh, my pseudo patch barely has any relevance at this point.  How about rep=
-lacing
-that with:
+On Tue 30 Apr 2024 at 14:44, Xianwei Zhao <xianwei.zhao@amlogic.com> wrote:
 
-  Reported-by: Sean Christopherson <seanjc@google.com>
-  Closes: https://lore.kernel.org/r/ZjPelW6-AbtYvslu@google.com
+> Changes since V7 [1]:
+>  - Remove included head file not used.
+>  - Link to v7: https://lore.kernel.org/all/20240424050928.1997820-1-xianwei.zhao@amlogic.com
+>
 
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Sean Christopherson <seanjc@google.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Will Drewry <wad@chromium.org>
-> Link: https://lore.kernel.org/r/ZjPelW6-AbtYvslu@google.com [1]
-> Fixes: 0710a1a73fb4 ("selftests/harness: Merge TEST_F_FORK() into TEST_F(=
-)")
-> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Link: https://lore.kernel.org/r/20240503105820.300927-11-mic@digikod.net
-> ---
->=20
-> Changes since v4:
-> * Check abort status when the grandchild exited.
-> * Keep the _exit(0) calls because _metadata->exit_code is always
->   checked.
-> * Only set _metadata->exit_code to WEXITSTATUS() if it is not zero.
->=20
-> Changes since v3:
-> * New patch mainly from Sean Christopherson.
-> ---
->  tools/testing/selftests/kselftest_harness.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/=
-selftests/kselftest_harness.h
-> index eb25f7c11949..7612bf09c5f8 100644
-> --- a/tools/testing/selftests/kselftest_harness.h
-> +++ b/tools/testing/selftests/kselftest_harness.h
-> @@ -462,9 +462,13 @@ static inline pid_t clone3_vfork(void)
->  		munmap(teardown, sizeof(*teardown)); \
->  		if (self && fixture_name##_teardown_parent) \
->  			munmap(self, sizeof(*self)); \
-> -		if (!WIFEXITED(status) && WIFSIGNALED(status)) \
-> +		if (WIFEXITED(status)) { \
-> +			if (WEXITSTATUS(status)) \
-> +				_metadata->exit_code =3D WEXITSTATUS(status); \
+Overall this v8 looks good. Please address the remaining comments.
 
-Ah, IIUC, this works because __run_test() effectively forwards the exit_cod=
-e?
+There is no need to rush sending a v9. Please allow some time for other
+to review this. I will not apply a v9 until the -rc1 is out anyway.
 
-	} else if (t->pid =3D=3D 0) {
-		setpgrp();
-		t->fn(t, variant);
-		_exit(t->exit_code);
-	}
+> Changes since V6 [12]:
+>  - Add pad src for rtc clock.
+>  - Add SCMI clock controller support, move some clock node in SCMI,such as GP1 PLL DDR USB etc.
+>  - Fix some spelling mistake.
+>  - Use lower case for bindings and update some input clocks desc.
+>  - Update some clock comments.
+>  - Delete prefix "AML_" for macro definition.
+>  - Addd some clock annotation and some clock flag CRITICAL.
+>  - Add maximum for regmap_config.
+>  - Delete some unused register definition and unused clock inputs. 
+>  - Drop patch subject redundant "bindings". Suggested by Krzysztof.
+>  - Not reference header file "clk.h" and replace comment. Suggested by Jerome.
+>  - Modify description about board in Kconfig file help item. Suggested by Jerome.
+>  - Link to v6: https://lore.kernel.org/all/20231106085554.3237511-1-xianwei.zhao@amlogic.com
+>
+> Changes since V5 [3]:
+>  - Fix some typo and modify formart for MARCO. Suggested by Jerome.
+>  - Add pad clock for peripheral input clock in bindings.
+>  - Add some description for explaining why ddr_dpll_pt_clk and cts_msr_clk are out of tree.
+> Changes since V4 [10]:
+>  - Change some fw_name of clocks. Suggested by Jerome.
+>  - Delete minItem of clocks.
+>  - Add CLk_GET_RATE_NOCACHE flags for gp1_pll
+>  - Fix some format. and fix width as 8 for mclk_pll_dco.
+>  - exchange gate and divder for fclk_50m clock.
+>  - add CLK_SET_RATE_PARENT for axi_a_divder & axi_b_divder.
+>  - add CLK_IS_CRITICAL for axi_clk
+>  - Optimized macro define for pwm clk.
+>  - add cts_oscin_clk mux between 24M and 32k
+>  - add some missing gate clock, such as ddr_pll.
+> Changes since V3 [7]:
+>  - Modify Kconfig desc and PLL yaml clk desc.
+>  - Fix some format.Suggested by Yixun and Jerome.
+>  - Add flag CLK_GET_RATE_NOCACHE for sys_clk.
+>  - Optimized macro define for pwm clk.
+>  - Use flag CLK_IS_CRITICAL for axi_clk.
+>  - Add some description for some clocks.
+>  - Use FCLK_50M instead of FCLK_DIV40.
+> Changes since V2 [4]:
+>  - Modify some format, include clk name & inline, and so on.
+>  - Define marco for pwm clock.
+>  - Add GP1_PLL clock.
+>  - Modify yaml use raw instead of macro.
+> Changes since V1 [2]:
+>  - Fix errors when check binding by using "make dt_binding_check".
+>  - Delete macro definition.
+>
+> Xianwei Zhao (5):
+>   dt-bindings: clock: add Amlogic C3 PLL clock controller
+>   dt-bindings: clock: add Amlogic C3 SCMI clock controller support
+>   dt-bindings: clock: add Amlogic C3 peripherals clock controller
+>   clk: meson: c3: add support for the C3 SoC PLL clock
+>   clk: meson: c3: add c3 clock peripherals controller driver
+>
+>  .../clock/amlogic,c3-peripherals-clkc.yaml    |  120 +
+>  .../bindings/clock/amlogic,c3-pll-clkc.yaml   |   59 +
+>  drivers/clk/meson/Kconfig                     |   29 +
+>  drivers/clk/meson/Makefile                    |    2 +
+>  drivers/clk/meson/c3-peripherals.c            | 2365 +++++++++++++++++
+>  drivers/clk/meson/c3-pll.c                    |  746 ++++++
+>  .../clock/amlogic,c3-peripherals-clkc.h       |  212 ++
+>  .../dt-bindings/clock/amlogic,c3-pll-clkc.h   |   40 +
+>  .../dt-bindings/clock/amlogic,c3-scmi-clkc.h  |   27 +
+>  9 files changed, 3600 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,c3-peripherals-clkc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,c3-pll-clkc.yaml
+>  create mode 100644 drivers/clk/meson/c3-peripherals.c
+>  create mode 100644 drivers/clk/meson/c3-pll.c
+>  create mode 100644 include/dt-bindings/clock/amlogic,c3-peripherals-clkc.h
+>  create mode 100644 include/dt-bindings/clock/amlogic,c3-pll-clkc.h
+>  create mode 100644 include/dt-bindings/clock/amlogic,c3-scmi-clkc.h
+>
+>
+> base-commit: ba535bce57e71463a86f8b33a0ea88c26e3a6418
 
-Tested-by: Sean Christopherson <seanjc@google.com>
 
-> +		} else if (WIFSIGNALED(status)) { \
->  			/* Forward signal to __wait_for_test(). */ \
->  			kill(getpid(), WTERMSIG(status)); \
-> +		} \
->  		__test_check_assert(_metadata); \
->  	} \
->  	static void __attribute__((constructor)) \
-> --=20
-> 2.45.0
->=20
+-- 
+Jerome
