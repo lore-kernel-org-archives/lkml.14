@@ -1,249 +1,128 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2089.outbound.protection.outlook.com [40.107.236.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49729F4E2;
-	Fri,  3 May 2024 03:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714707004; cv=fail; b=LOkPfc6qXqv4LTf7A3tHlT5wSpY6qTJ9aRHf6siknjGHdzo2eXmZbPvKu2A4Uz2GwtaihyXlveEfFlqX8q0Wp6OM8gFk1U6SEdOraqsnXeJnelsnlyIz/tJjhqci5sXfsnmkduPN7yfM1JhCqwJHzZdV9ZLDGjKSVZ//gxKrews=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714707004; c=relaxed/simple;
-	bh=KRlTvt7iYTIh7WuXr7nTBJ2A2wCJrpAQLn9a0YaqdZA=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=hM7jmclxl8BOuP4i9Iz2i0oFwgG1eMyPXuGn+3OQyXNg5IDbJpqHDzhw/KsKcay13kZZfqRjalApCTfHks4Y1ctR5dRS0VV17xwprk9RT5xWGdO+yoCm17KXjeuM9aEYjJEl1yeWk+sxru7OzH5+NYlcV4Vwkk1hZm0CFEkrmwY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=p9/pnUfh; arc=fail smtp.client-ip=40.107.236.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABA757C97;
+	Fri,  3 May 2024 03:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714707483; cv=none; b=NjUYjHgU+qde3jIaJ8SRiZU6PvVpfN4tuXAWpS5pQJcEX4HyYsIMyQPUqiAxKQTdAs6XdgeiMUpcip5hE4n+d5d3YXvA0mQkOZ3DhpJw0jAjqs2Uo1B1/QslYmzlrj8hxcYV1RYZuQlpqrfaSlBJubEZGppz/WjJKb5p5mPxKhA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714707483; c=relaxed/simple;
+	bh=qx09Xw6lAj/yy0Yo18iddcFGzuADm9dJZALEXyGVlc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HDCuMBTB63679anTrK9znIlQUSKOUV64qVz1qULaZXKyYfGgQ5mvJ8PSr4erTD9AA76V+S2+6xLLOMyzLt33yMbFz6NbE+ALnDJB0AczDjXUoq2+Tdd8Nk4IDuajngcgftqSDsBzAyf1MZCK3feoo1ztcRV3gbFhOkn4mEjpdXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nIbx/Heq; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="p9/pnUfh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TLpbVuBRKU+/fkQbnil5aa6bmTaLHS37kOxlJaZtlbvotBxpkWXfyvBSd10fy4IpB6CWl9kREvlzNLDrMYkF6G/QxcnW+JMa1T4VhHgnIvs6i1Ggf0a3ZRvLh/NlkDex1USaTRLzU/HII846ju0m3g292kNs/RAfCQve6ZbxWunnY//NlHfglXmh1JPu8mvwwC/h4dPWTK07h5nO4VcsRdQ5gpG3AQPcbp5Bza69lN4MbU/YL4bNFsps8TmsNnTlF+o1be/qCUS0AN0BOH3CU7zsXgMkS3Pt5H9Roga5sORkU98nghH8Isu/KhqERQoDNgw61o+L1jymU4ym80OlJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qA7vAc3zkxNzS0PO5aB6CRBYeRlEDeOKe29dfHndRB4=;
- b=B5zRh30P+A5Q5dwFv3zb4WfdEk/O03h2mEOLlzwVY7zo5f1sqc4yak+tNKyT6GN8zn4miF3E6xcxdyfNRHVFGfGJdmvOKa626xCbVkp5R/n4iNcMyoJBLWKcGi4eifdYhYqFcDT6EvGCFQLCQN/95YqbAue/8fYRExhsUM8wZOP64RphG5JXF23OOYZApdXaJPsj6Wj5yx66ikKacrQNuRmth2mjlaLTRTRX//yGmlq4qmQ7b++lqwpEz26853+3QytWQRUu6Axt0vs2iAvVxRPdiWvqYFgtQRPIsjTQwrjOwDgySDuHuxc9BGPMdbTEkrnPZeS9soty43WVw9PRWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qA7vAc3zkxNzS0PO5aB6CRBYeRlEDeOKe29dfHndRB4=;
- b=p9/pnUfhglgoDrbLF34G5pC2OnnYWT7/HaYrZi3/KvyLJ1YzQFRort5tQ3IhP7T2ZbyJFZbDBLgxdKCXWwDj41JWgb5SSqcmBe/FBQWoWwCGkrH3dwI67TUL1poQwYXsyuE2yI+n9VQmQxPRoKgkw8K3FvCgXY+YCWqxNqBV6VVfbeOiAHzrNIEB0624R3a7aR80Q1Mn5IrZimnVC62BZSKy/kZtKwL8CNssl2H6zEutvnlzSeh1UGuvbQXRYH+86/07Jv6wuneRyTyWn5d5FT6iVuO5KOPt5+h7feF/28G0GCtyR3YbOZPYJyjzpKcMp9rrdWluM3fkQ8lVVLWLgg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
- by SA1PR12MB6947.namprd12.prod.outlook.com (2603:10b6:806:24e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30; Fri, 3 May
- 2024 03:29:59 +0000
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::2cf4:5198:354a:cd07]) by BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::2cf4:5198:354a:cd07%4]) with mapi id 15.20.7519.035; Fri, 3 May 2024
- 03:29:58 +0000
-From: John Hubbard <jhubbard@nvidia.com>
-To: Shuah Khan <shuah@kernel.org>
-Cc: Andrei Vagin <avagin@openvz.org>,
-	Andrei Vagin <avagin@gmail.com>,
-	Dmitry Safonov <dima@arista.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Obst <kernel@valentinobst.de>,
-	linux-kselftest@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	llvm@lists.linux.dev,
-	John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH] selftest/timerns: fix clang build failures for abs() calls
-Date: Thu,  2 May 2024 20:29:56 -0700
-Message-ID: <20240503032956.89290-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.45.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0100.namprd03.prod.outlook.com
- (2603:10b6:a03:333::15) To BY5PR12MB4130.namprd12.prod.outlook.com
- (2603:10b6:a03:20b::16)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nIbx/Heq"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51f036e9f4dso1900417e87.3;
+        Thu, 02 May 2024 20:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714707480; x=1715312280; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dmk//KTYeIM79p+Jrab69pCmxQN5kiKJMYJHLJ+sJXw=;
+        b=nIbx/Heql9oBa5Ox+kfzTqEO5SqE5HoLog1TkC4b2Ha9apFt6FJ0REdf7UQ7tc0s3O
+         sSKAIJ2UNuFPL3BGken9kN5i1yS1pMvmAlwlzGEzgzFDUiEp5ndiKR/Mbwm7+0X5y5VZ
+         1r1zWxiH6+EbCMyG5wA32k8J32a4/oSXm2n0UoV2JwipcGWrOi5kzgMXsYhMi2W2a5i6
+         hj+rAw92aVZOMNrzuFtAW0uDbpnQBx7Pe2bYVTSfq3cTxWmHxoBlBXOAX2iI0sl2QhmR
+         BrlD/sPElZva1P/W7aKa+03SaYt6BFiRBY34mNzo3I4q86tEAtHYMO+V+5O+gPDsxqYQ
+         ebXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714707480; x=1715312280;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dmk//KTYeIM79p+Jrab69pCmxQN5kiKJMYJHLJ+sJXw=;
+        b=mYKXYoC98DG2mHP7DqEPULAQ4Cbspy/ewOu/Q8obU3ycyghGVPYXrdjKuZU8wQ/D+k
+         iajpwGOL2mHnMStfxk+j8AZ0rGvPJGaL6hwl8RfM8zru33PWrgvDb/xdRwt2BOqvqqCR
+         w1Bo/PvGuUJaDeOSZAYTFatOh8xjyoLpdCtkG/eYVPZa0pSwZpjjKl4gP+Ou39oyN8Cj
+         UUCSEf/Obauzh+viO+wtHN6bKjYTnrrzSRVbYwj0uJ1pf30IWivgCneL4eG/K3GU9a8C
+         n7Cg5QRPfFOkGzT6pfyRV5iDZKI+es/Na9PftEYMUoDCbI1AsUje/0EBeBtZBGLd2xlE
+         iXIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXW+bnYh0El4gyKV1ZNk0YejIL1z729YDuKR1lhcIKDdbMkXgh3BjVYqDhoxBS9tPFbVnkl9mSENeToa7PEcITiauFARW2AmJlAtEJW/ygiXvZ+nNsxKXuk0X8je02v3jO/7mYfYGu5BxmJ01rQBVCzFu8pUXO4OQS5KCpJUJPEL0RGad59
+X-Gm-Message-State: AOJu0YxGh3BFInUglzIzMZ2aFV6rjEan/FlBOtMG+QsWUbGXxrMWzdk8
+	ZtsFDuaQrnA0g85tzKCm0P9iPLfzlgCfGI3yxvJ/u6YpyR8cJxAgbzXEuC87K3e3VSAFEnGy1UM
+	U64EVc4zR0ZdQd5NQGlmxonN6NQU=
+X-Google-Smtp-Source: AGHT+IGqZzbUf0HyeB3TulezACFzF8VurHyR0y5UIr/AEq43qER2RS/oluVxAFzJOcBQRdq5t7IFk6h5IPX+1Ce2PUc=
+X-Received: by 2002:ac2:51b3:0:b0:51c:1e98:30c1 with SMTP id
+ f19-20020ac251b3000000b0051c1e9830c1mr921731lfk.8.1714707479376; Thu, 02 May
+ 2024 20:37:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR12MB4130:EE_|SA1PR12MB6947:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3f7b7222-98ee-4d61-e377-08dc6b214f42
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BC7HWymxsAhUh8qQFuNLy36JW6JAbuudLr0NdKOt6TTZfhVVNfj/C/PTLKu6?=
- =?us-ascii?Q?lnSB127LGDoap8mo+itwOY3pmISI/4t+gQu7Ux/s966Bc9F9ro4WK0inXgZ9?=
- =?us-ascii?Q?Qkx0m+N7Y9eYn4ZcAhf81v/5j6xzarLfsiksRAj05btahcgwJSkWM0ZmkoCg?=
- =?us-ascii?Q?lw2d7j9NAXwi3ABIuE4pa6S/GkDeYPIZQb4xH2C+F6qaPsT/fxkZbopLdT7X?=
- =?us-ascii?Q?5ECB1dyO7OuUClTZFCfWLQK4CLwNrhpHRn3l+SPJy03N5Xrbe6FwerYaMlH/?=
- =?us-ascii?Q?7n1/HRCRKBgjgi+A1kPyNSsdQs8hxAPkwVhsPAPaB0Xm5DP2Fuk/IQ5saRjT?=
- =?us-ascii?Q?32L/saX59pcbAJotrMsIswxXO5q60j72mFaltKi4A7NOyw1GbZlWsToZxUmZ?=
- =?us-ascii?Q?PK+yMvFDs+C6Ih6I3q3Do/ebIFE/vWX8qBuKpwAgHV0sLzHTNzqPyaFjXXKi?=
- =?us-ascii?Q?6HBIXZOC/egUbiXjuO8N/qv3jJWawwotkohcwQvKewJf72KKGTPTz+HMl4KX?=
- =?us-ascii?Q?zkwk9eKpNF6BnVtRyyZaN9FmH1S8Qoh4AF4tqoKhfj48o/cKltpeONU1579b?=
- =?us-ascii?Q?IAT1iozrxE+m/0nMZmVDEmr4UvtFHCsA+kxBlyb+d0H3Zf8k7uUSLzsoCcC4?=
- =?us-ascii?Q?MJqFdiqzvE07R5CCd+p7dFTEhqomJsX73ZxS1FU5GTzoXdv/wfNsocPJd2V1?=
- =?us-ascii?Q?LfsV19Fc/8eQHSxYpsf/40tXNglSQvpdesGsaMQuZ8FLuwQVtKbbK3fYvitj?=
- =?us-ascii?Q?rZB+2Uyh2GF0/Y1/IHn2p5hhkRkDL7nXaxI5xnNSQxKXc/bdodHKVcAeBnmG?=
- =?us-ascii?Q?Y4fQ30iipYr1LZlsX93TYlT5hYPCBCQR4zq9Na0rGFl2GOHhS00MiznlFvoh?=
- =?us-ascii?Q?71xZ3+jrSXCFqJw8fr81jsL+5IhInGnWKcr5ux68Yp69eX/1fFUeatmO1JrW?=
- =?us-ascii?Q?Iy5VfN/N6dvgK7zGgBl5manbfQSLVmCQr8hGLCXUVZlWjoJyeoHYjCZM5lf6?=
- =?us-ascii?Q?cBC54K5zT6k2a5JlgawVELsm3jZSoti1AhPSqcZTOsZZEyS7j8pFXoY+pxbj?=
- =?us-ascii?Q?xMbmFhWBk/3Wwqj6apE12ByZk3x8lWfUEhXe/5GlUTeA9B6XyNZrWRojGVu0?=
- =?us-ascii?Q?oF3Nb4EP/hZ3nad8Gjk0l3fWshvTBI687dpmpt+ZO3xw6JzPJYAqjJIDMXSx?=
- =?us-ascii?Q?GYNbjkDj4LxOdY4yDfszHmBv7/4H4sbCH9ENK92qkBA7NgRA9n2jpadk0o6w?=
- =?us-ascii?Q?nWjD3VBxYsAWvF810Q4ekMOI8Tks6PgT9E70z3J1Bg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1//f4hbo7diA3p1QPu5mHgTIpOa/6uqSsuUEsV5uvW7p9IzZzsOAv+i0ePaF?=
- =?us-ascii?Q?ToUnwOOi3MV/3F4dm/gWQwjNq3/u4PtxSjBY8wyNIywk66mfhevRn8+wXtIg?=
- =?us-ascii?Q?ceU5GrN6cn9zqsVrHiO2YnBq0zUgCKiIxx3H8NEfiT0NThf6QdWV3hgKUsAx?=
- =?us-ascii?Q?uyW3WpDko+pO1NSDMnUpshVXUYli1lVAhMgAmRLkF74Aq7czJ/b2ljGO+nwH?=
- =?us-ascii?Q?UMM3DVVtY3myYmwCHWtd8Mj0AcMlXbDQnzrDiYvXS0saWgvvSGylLydusbDf?=
- =?us-ascii?Q?vGYouzHEnSN6+6RHKmooJ/kCzok7eu+l6Gz7bghhfYiAVwhNcJ7qoRpsVXMT?=
- =?us-ascii?Q?x/watQ3RcrLidTHmHUVWHeyzVC/s8Wp5paYHK9CaCgxWf8ZSShpz5IAvMYiW?=
- =?us-ascii?Q?50W8/G8dG5BBJRJ3hYzU1JOV+LQAo+RJHVn2L7v1Rci/0keYyuRM83d3rMhB?=
- =?us-ascii?Q?ckRHfdnPY5dJg1hTBaqHVWULxJ0mVCtVevp6Sl5GhX8IhXQl1aqfv3EI5lBw?=
- =?us-ascii?Q?a9zGwIobXUqTQnTL1U6cZuVgOqX8qvAiqbj2rbBBWlp58K4OoN+7zqWlRw3b?=
- =?us-ascii?Q?QkifhC7f7El6K33989joJdYes7xM5W6O2w8sEIa6ZB4Aktg1DFpPVVCXLdfq?=
- =?us-ascii?Q?aS2MjE5lBUbIKGFljZptKqnm/vQGMTjiiCEhqlWXc7wiQmMk1eiEyeJD82o3?=
- =?us-ascii?Q?Bk4jwtosNBuqxDSzSxVmWuuQKGwL/cpVBJC4T47VA5X8i9mGxqUMpiEed6W/?=
- =?us-ascii?Q?dZ9mJkBB15NK3Rc/eIRIA4tMN1wCnicfeYF6vgpqCKd6vej7FoyL+35ND/9v?=
- =?us-ascii?Q?dHQTCFZI43guGJmmmPygCTUsscPsY9Q1Sk3e1ogbL/s0sJAn9pV5zxe1803E?=
- =?us-ascii?Q?qeyW6CO/b6Vt18YdugEPPUGbnQRb+bGRy4Ebb5MHTFUrHR9MdbFUX+EEI3fj?=
- =?us-ascii?Q?2vFvGYnYtCsDMefR5tpdqoEuodwtMs6R2wj1nCo+LRsxehOF7mmmvKRHiuWx?=
- =?us-ascii?Q?udQTy7pyLMSQdacU6G67KT3Hsi5YqTxXoPKt4aPxEmf9LDmF6OYVYUnEiHvS?=
- =?us-ascii?Q?ylPRL9sT0TTEk3XsumtXhRQBVazr25twhttfLI86sf5gjFNFPsNY9oUs/Q09?=
- =?us-ascii?Q?k2AvW8lxtoDaFX9NNUEFglOQNK2eRxQIFmuFFhtOx0hOe2F81IC0gZZhp4n3?=
- =?us-ascii?Q?1mW68zI3ccIzerq0KHTaeyshoilwU1gTz0dswtvvqQajIwlF4K5b3IQyw9OS?=
- =?us-ascii?Q?2kpOf9/vABJdqQj/Z6anJvangp4YIQaiXY4oNeV6VfnKHG1PRTGkH17F68B4?=
- =?us-ascii?Q?ydYCYALL0V4NbScJZ9r7NcpOiqZmizgN8ssIHQyRVZtMcnHxO7RFMcvqZFze?=
- =?us-ascii?Q?nNAIBuq4LErdOOeFnzvyz0aV4xgunhY/Ooju9kcDbDLJ6xSbglZC347VQieM?=
- =?us-ascii?Q?KJsirsz4kEDl25b+f91HrkP0Wn3I52cdflU6Ljm9As59rLbWWC9nUVbx1b5+?=
- =?us-ascii?Q?6MRMLCsM8aPIrZBRDz35PjranF9efC0Xu21t8H3fwN1L/MrUrnGmtQgK5vZ8?=
- =?us-ascii?Q?/R0+8X9mDg1dHzponvUQntAOC1t/3xJcChP+K5hB?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f7b7222-98ee-4d61-e377-08dc6b214f42
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2024 03:29:58.8697
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EKV0/WPJnhM+/3NUGZes9bwAv0Qfo35Tp9PW30Aica/PoK09KQ9/s3sdYIxqsWLKewUHXtVMvtZ72uV2MWLprQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6947
+References: <20240502185819.788716-1-andreas@kemnade.info> <20240502185819.788716-3-andreas@kemnade.info>
+ <CAHp75Vd1A8sy2Oky9TENUTAj0SCCyVQ8Zh49AN3X7t9cK2F+iw@mail.gmail.com> <ZjQdWdpmqoXhJeek@google.com>
+In-Reply-To: <ZjQdWdpmqoXhJeek@google.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 3 May 2024 06:37:22 +0300
+Message-ID: <CAHp75VcyRiE3+CnZo4VbXWYFQ8f_N9zhp7gmEqBHEMQ9rEn2Fw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] Input: ektf2127 - add ektf2232 support
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Andreas Kemnade <andreas@kemnade.info>, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, hdegoede@redhat.com, u.kleine-koenig@pengutronix.de, 
+	siebren.vroegindeweij@hotmail.com, linux-input@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-First of all, in order to build with clang at all, one must first apply
-Valentin Obst's build fix for LLVM [1]. Once that is done, then when
-building with clang, via:
+On Fri, May 3, 2024 at 2:10=E2=80=AFAM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Thu, May 02, 2024 at 10:16:01PM +0300, Andy Shevchenko wrote:
+> > On Thu, May 2, 2024 at 9:58=E2=80=AFPM Andreas Kemnade <andreas@kemnade=
+.info> wrote:
 
-    make LLVM=1 -C tools/testing/selftests
+...
 
-...then clang warns about mismatches between the expected and required
-integer length being supplied to abs(3).
+> > > +       if (ts->shifted_status) {
+>
+> Instead of the flag I think it would be better if you had
+> ts->status_shift and did
+>
+>                 status =3D buf[7] >> ts->status_shift;
+>                 ektf2127_report2_contact(ts, 0, &buf[1], status & BIT(0))=
+;
+>                 ektf2127_report2_contact(ts, 1, &buf[4], status & BIT(1))=
+;
+>
+> > > +               ektf2127_report2_contact(ts, 0, &buf[1], !!(buf[7] & =
+1));
+> > > +               ektf2127_report2_contact(ts, 1, &buf[4], !!(buf[7] & =
+2));
+> >
+> > BIT(0)
+> > BIT(1)
+> >
+> > > +       } else {
+> > > +               ektf2127_report2_contact(ts, 0, &buf[1], !!(buf[7] & =
+2));
+> > > +               ektf2127_report2_contact(ts, 1, &buf[4], !!(buf[7] & =
+4));
+> >
+> > BIT(1)
+> > BIT(2)
+> >
+> > > +       }
 
-Fix this by using the correct variant of abs(3): labs(3) or llabs(3), in
-these cases.
+...
 
-[1] https://lore.kernel.org/all/20240329-selftests-libmk-llvm-rfc-v1-1-2f9ed7d1c49f@valentinobst.de/
+> > > +       if (dev->of_node &&
+> > > +           of_device_is_compatible(dev->of_node, "elan,ektf2232"))
+> >
+> > if (device_is_compatible(...))
+>
+> Actually I think this better come from data obtained via
+> device_get_match_data().
+>
+> > > +               ts->shifted_status =3D true;
 
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- tools/testing/selftests/timens/exec.c       | 6 +++---
- tools/testing/selftests/timens/timer.c      | 2 +-
- tools/testing/selftests/timens/timerfd.c    | 2 +-
- tools/testing/selftests/timens/vfork_exec.c | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+I agree with your comments. Hopefully the author as well.
 
-diff --git a/tools/testing/selftests/timens/exec.c b/tools/testing/selftests/timens/exec.c
-index e40dc5be2f66..d12ff955de0d 100644
---- a/tools/testing/selftests/timens/exec.c
-+++ b/tools/testing/selftests/timens/exec.c
-@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
- 
- 		for (i = 0; i < 2; i++) {
- 			_gettime(CLOCK_MONOTONIC, &tst, i);
--			if (abs(tst.tv_sec - now.tv_sec) > 5)
-+			if (labs(tst.tv_sec - now.tv_sec) > 5)
- 				return pr_fail("%ld %ld\n", now.tv_sec, tst.tv_sec);
- 		}
- 		return 0;
-@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
- 
- 	for (i = 0; i < 2; i++) {
- 		_gettime(CLOCK_MONOTONIC, &tst, i);
--		if (abs(tst.tv_sec - now.tv_sec) > 5)
-+		if (labs(tst.tv_sec - now.tv_sec) > 5)
- 			return pr_fail("%ld %ld\n",
- 					now.tv_sec, tst.tv_sec);
- 	}
-@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
- 		/* Check that a child process is in the new timens. */
- 		for (i = 0; i < 2; i++) {
- 			_gettime(CLOCK_MONOTONIC, &tst, i);
--			if (abs(tst.tv_sec - now.tv_sec - OFFSET) > 5)
-+			if (labs(tst.tv_sec - now.tv_sec - OFFSET) > 5)
- 				return pr_fail("%ld %ld\n",
- 						now.tv_sec + OFFSET, tst.tv_sec);
- 		}
-diff --git a/tools/testing/selftests/timens/timer.c b/tools/testing/selftests/timens/timer.c
-index 5e7f0051bd7b..5b939f59dfa4 100644
---- a/tools/testing/selftests/timens/timer.c
-+++ b/tools/testing/selftests/timens/timer.c
-@@ -56,7 +56,7 @@ int run_test(int clockid, struct timespec now)
- 			return pr_perror("timerfd_gettime");
- 
- 		elapsed = new_value.it_value.tv_sec;
--		if (abs(elapsed - 3600) > 60) {
-+		if (llabs(elapsed - 3600) > 60) {
- 			ksft_test_result_fail("clockid: %d elapsed: %lld\n",
- 					      clockid, elapsed);
- 			return 1;
-diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
-index 9edd43d6b2c1..a4196bbd6e33 100644
---- a/tools/testing/selftests/timens/timerfd.c
-+++ b/tools/testing/selftests/timens/timerfd.c
-@@ -61,7 +61,7 @@ int run_test(int clockid, struct timespec now)
- 			return pr_perror("timerfd_gettime(%d)", clockid);
- 
- 		elapsed = new_value.it_value.tv_sec;
--		if (abs(elapsed - 3600) > 60) {
-+		if (llabs(elapsed - 3600) > 60) {
- 			ksft_test_result_fail("clockid: %d elapsed: %lld\n",
- 					      clockid, elapsed);
- 			return 1;
-diff --git a/tools/testing/selftests/timens/vfork_exec.c b/tools/testing/selftests/timens/vfork_exec.c
-index beb7614941fb..5b8907bf451d 100644
---- a/tools/testing/selftests/timens/vfork_exec.c
-+++ b/tools/testing/selftests/timens/vfork_exec.c
-@@ -32,7 +32,7 @@ static void *tcheck(void *_args)
- 
- 	for (i = 0; i < 2; i++) {
- 		_gettime(CLOCK_MONOTONIC, &tst, i);
--		if (abs(tst.tv_sec - now->tv_sec) > 5) {
-+		if (labs(tst.tv_sec - now->tv_sec) > 5) {
- 			pr_fail("%s: in-thread: unexpected value: %ld (%ld)\n",
- 				args->tst_name, tst.tv_sec, now->tv_sec);
- 			return (void *)1UL;
-@@ -64,7 +64,7 @@ static int check(char *tst_name, struct timespec *now)
- 
- 	for (i = 0; i < 2; i++) {
- 		_gettime(CLOCK_MONOTONIC, &tst, i);
--		if (abs(tst.tv_sec - now->tv_sec) > 5)
-+		if (labs(tst.tv_sec - now->tv_sec) > 5)
- 			return pr_fail("%s: unexpected value: %ld (%ld)\n",
- 					tst_name, tst.tv_sec, now->tv_sec);
- 	}
-
-base-commit: f03359bca01bf4372cf2c118cd9a987a5951b1c8
-prerequisite-patch-id: b901ece2a5b78503e2fb5480f20e304d36a0ea27
--- 
-2.45.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
