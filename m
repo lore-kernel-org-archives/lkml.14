@@ -1,113 +1,108 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC5D139D12;
-	Fri,  3 May 2024 07:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2ECB13959B;
+	Fri,  3 May 2024 07:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714721795; cv=none; b=VxFK8KAkx8Guki0LofM695QO7+BRTIuvUGURf5001hc2yDiexvCrxzjzYV3TD5R5EwLpe4UM1UoLTBj0OFGaeBL3i7D3yWlyYtW7iu22LtXK9wVwuhMIv+F3L4wscSW5CXcmF8zWsDXIYt8WncLEABE4e8RdmMPAKeft6d1crDY=
+	t=1714721949; cv=none; b=rUxyk6km67/5TUG0UxL/HZ0nA6MdNODRYi19jfbT67R9B55a16JHmomews9FeicoAmLwKgxcoM7UJNIsOo9H/TwDjn+yG2j38yarVwvu5dgmV251hxpcRF+tXWvAwMU+ZebVMuPsmfmZDrTOVAaCtwKYikrrOZVhKnwEyQkE3nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714721795; c=relaxed/simple;
-	bh=7KoCLlZBSOFASgSu6MYjnBmP3h1VL0xbXZBQuWHgi5U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B4p9yA2hSnt+XixkVLMGnX/Otdu6eLNFRGOEpr5ZkXhHDLmKqbmb8fzVfgtZjZDYykSdFl0Pb8LBuuSAoUR+fsvO4tedyUeZWK9sXr8w5G968qj5L69rHKV5ygE/sa/aAzQ8OhS05AcrBAHlD+mRGBdamElP6DzLEBlDR0SfYxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ZV92GoCD; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714721949; c=relaxed/simple;
+	bh=phooMRarU/0xrivjAwCBcwnpeJiTRTePATT7ls23gHU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=danJ/ES8E1sMh/BfhRtC/fVZK1udAOF9njseWmfQCOJPrRRmxSsO5ISAuVP5dFyERBbQEwyA8hP7Fpi2o3TvcX72FGlytU5+9sZ0RRqC9hcziPh0ERpxWyOL3VtKrIeFGAvyQD5sSAVnHz/gdtmZ4WRpzxzVUC31BFvqVULVQpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LXOkw9CO; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ZV92GoCD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714721789; x=1715326589; i=markus.elfring@web.de;
-	bh=tTc56wSSVJv4iZDOZUEc20yuwRleSTjh1lHhSpz3Qng=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ZV92GoCDhbobZP4TPyEUBx8zDd41Ia5ocGweYzqZ6eV6ITNBiodnpQuAftw+umMn
-	 Megw/dceTCuiMpWGfbBW+M4UzNCwsHrQ3Q7DqVCZQEav2z6JoJCO2VF3EYoiK9xas
-	 niyH1SKv4nX69HKarMxLThK7k9JhaKRm/kYiEYhlNiEioG8B5MQqhPO/vfxmhJRAf
-	 pJDyJ0rp61GvRFcNscB1DP/TwG1SvBPy6JjdS+gPwmX/pWzzf0W4bSbB0mDEfpV9J
-	 PCKzZY1V2CD/jaV7y3pIiQy/ImIuJ72ZtlqJ9+SMgPUdlCFwUKDWBPYwRAunc8DTS
-	 1DTfFM+XTdxItegOeQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MnpGi-1sRQga3uzi-00prNa; Fri, 03
- May 2024 09:30:35 +0200
-Message-ID: <6eac7fc4-9ade-41bb-a861-d7f339b388f6@web.de>
-Date: Fri, 3 May 2024 09:30:33 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXOkw9CO"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-61e0f733e8aso17721257b3.0;
+        Fri, 03 May 2024 00:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714721947; x=1715326747; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EPEvS0qK5UcK4PLaAgghQY6fqmdqWcs7u1b/vENJXdw=;
+        b=LXOkw9COuzFSAkwzFcJsXsWO28zSFjfdNl6XVc3pPgL2Rg+vfJuFyTFq7yfhiCZj7T
+         3HJgJp8t5oCYOkghfIGoMOJIX0+ohC6uGDRSbqdYDieEg2GVKMsTa72kMZ4ouC4LMhJj
+         0ulF2iuN39pmtMfNANKNV5crWrbUo1pK/8eMmFQ9gYEj5ofQz67JN5xcarQFwia0i7JM
+         0euBKQALCqxiltZx0BwWYoFdPQWulXJipSw6u9kcz67f3PwkxwYJQmqBoxJhIjxngCji
+         rn001czXYF8rJJAqyP2rqCwP9tXzZukMsjoExy0mLq37YL6YnEE92nCqkF2sG/8sbvjA
+         FP6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714721947; x=1715326747;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EPEvS0qK5UcK4PLaAgghQY6fqmdqWcs7u1b/vENJXdw=;
+        b=JoVcDvFlispNq6ghK77VWDpBixoHyQC2eYCo9czbA6psUBdUmL5i3Amwvg9qId4xUB
+         8KdA1csEC5NDpMO6sVi4lyGSzfi7PE+sNFPlxAKmVGYOAJnzDDtL5v8QU2VQUku5qgj7
+         QY2zlLDFYhaGszxampH2RrcyV4uqrCgzO/v251YP35dGqQDLJpk9J/KeHLKYRP6yR/KT
+         +oObtPg3QQON2iUtTlkIW3fXz7FG85byQ3/pxXHpKlxNdr/3KypUwzhh+bZ5P72UaCoF
+         PBz2eoyBTyHR3yvlVolMc/nE99lHLzf3VPRkB9pzYL4O3Q8qAxpz6J23GGPgtQ623IXe
+         +ppQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/kD0U0BOoJCszOMYFMER1q/I1Q6zbOg0zT6Sotgj7KNpe1RDcyorum9PGlLmy0S13MfUJVoebYY0gdzQFpNkWnUnXtNJ5AQ92F6vskcOfKRwagXMTFBO5pLlGRoke7uFh5IjmLccnM0vhn/h0
+X-Gm-Message-State: AOJu0Yxf7NyKu1wNM6uxNxJoGBUCX2fdNQJGvNzL/rL69wFtPHuwLXmz
+	iixj49k+yCs8ddvZR4i4+e0gHYqXEqGPnA8tg6fn2Pbgh6IavgljkiaAYnw0tEg4J6IZ/A254Wl
+	Lbsv2DG9vDKScbWFA4QJuOMJXd08=
+X-Google-Smtp-Source: AGHT+IGliypnZWfDbUdqOvUUIpgR2+a0zXwhwmSmDCfGwN97GTEOSPRd0xLYH1khdRiq550wJGDKrBovrHPT2uWWIAY=
+X-Received: by 2002:a0d:dd88:0:b0:61b:33b6:41dd with SMTP id
+ g130-20020a0ddd88000000b0061b33b641ddmr1739009ywe.37.1714721946830; Fri, 03
+ May 2024 00:39:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2 2/2] ax25: fix potential reference counting leak in
- ax25_addr_ax25dev
-To: Duoming Zhou <duoming@zju.edu.cn>, linux-hams@vger.kernel.org,
- netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, =?UTF-8?Q?J=C3=B6rg_Reuter?=
- <jreuter@yaina.de>, Paolo Abeni <pabeni@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Lars Kellogg-Stedman <lars@oddbit.com>, Simon Horman <horms@kernel.org>
-References: <cover.1714690906.git.duoming@zju.edu.cn>
- <74e840d98f2bfc79c6059993b2fc1ed3888faba4.1714690906.git.duoming@zju.edu.cn>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <74e840d98f2bfc79c6059993b2fc1ed3888faba4.1714690906.git.duoming@zju.edu.cn>
-Content-Type: text/plain; charset=UTF-8
+References: <20240314163511.2372458-1-colin.i.king@gmail.com>
+In-Reply-To: <20240314163511.2372458-1-colin.i.king@gmail.com>
+From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Date: Fri, 3 May 2024 09:38:55 +0200
+Message-ID: <CAMeQTsZKk-af5xhnnb=PfHiCNWzBK7VnEc1iBevfYdnyxrXDfA@mail.gmail.com>
+Subject: Re: [PATCH][next] drm/gma500: Fix spelling mistake "patter" -> "pattern"
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fyEaMnRrnNvXcfnnCsy95pUZQYP6d4iTVya14Y35u0lKhfCNXWH
- sjb6AoMx6a27q2adKg/1eQDvJH4aHEKwGTLhXARxvdWUG1+Ud1cPRv7HqZNzk315/VCUaBH
- B91xSUcToLX2iOdINlQXl363NaB6E3QUXOI/4HnkqX0auYxz3xCuwBUdF71kTsNpqYfz5Hp
- e6E4An+24Z58olqplCVMA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Y5nGvnd2AQM=;6gXhRfyb2lyixwSuZj9IZk9twB1
- yaS9x+tAjWeLsKgigaBdAMOnu7CQw9oTJ2zLqZzkiyOP93jpx8cEar+yIs+dxrqcsgfB9aosE
- TXs57fmqKJU7fzaMVBHMn48VfyoDNoGm4JXXNUObpIjxwUP2vaADn52hsKhpzfwTZf18Sg33d
- sTJrmZinGVUs86bSXIZdnnXfAz4pBzYRYNLF8ogyhm8otvbZnOJXp4raC/Mqe5Xau2s3TmLdX
- 5NhB38usJFQvpfw1eXfsZ0JQFpTLF+tAufKwC9YFosWeUcaFRkipcQ43AqcHlt6WP/JEL61tB
- /qTDumEVGpBo8JoFZD2pg6lthpteWyUMSJClT0PpGcHtNCTxMlpKqLw8q7Eva9Bxx5XFSAjrv
- y6OHMlhfBfyE4hjg8hzQLzEsoYHErPm2TC3cQ5MbGREywOdM1aXA29ForvQWt4gdpHJz7pcvb
- ecVIhgUHcgiMq9lSVL/D304oh7c/oAolEZNrEnvqyv0Xd5kuXEJgPwkiKB7YMhYXupOQqc5js
- qqGXnyx7jrPGmTjpinQ3p0XR+/qK3RbQ7esOGW/xrtJQHONuvlywwU8yKfZsghYWfQvN8+JjL
- kd00PZFFPQcA0aoVCELJr1Mw5fm3FFZkAepmqRpl8N8698N6pFmr1V5f0yj3thkkiGBoInDQF
- Spo/BwBp15xl2dw3tlwNwJYENun6rFshOOGJ9O+t9f1RpiFFzWKQF7njcdk5tw076WtggnUP9
- IRRvHGzQnPdgnICzHlhw08snhc7/fqRihSFDEkNy6vCk6RyfU3XQ1FizJePmev87v7NAENo8m
- YEJ3671Am7umulyDXa5HwHHvLhZm5sGy9VVemku8REUBnD630OOdxqeyYLk94bFJ4r
 
-How do you think about to append parentheses to the function name
-in the summary phrase?
-
-
-> The reference counting of ax25_dev potentially increase more
-> than once in ax25_addr_ax25dev(), which will cause memory leak.
+On Thu, Mar 14, 2024 at 5:35=E2=80=AFPM Colin Ian King <colin.i.king@gmail.=
+com> wrote:
 >
-> In order to fix the above issue, only increase the reference
-> counting of ax25_dev once, when the res is not null.
+> There is a spelling mistake in a DRM_DEBUG_KMS message. Fix it.
+>
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-Would you find the following change description a bit nicer?
+Applied to drm-misc-next
 
-   The reference counter of the object =E2=80=9Cax25_dev=E2=80=9D can be i=
-ncreased multiple times
-   in ax25_addr_ax25dev(). This will cause a memory leak so far.
+Thanks
+Patrik
 
-   Thus move a needed function call behind a for loop
-   and increase the reference counter only when the local variable =E2=80=
-=9Cres=E2=80=9D
-   is not a null pointer.
-
-
-=E2=80=A6
-> +++ b/net/ax25/ax25_dev.c
-> @@ -37,8 +37,9 @@ ax25_dev *ax25_addr_ax25dev(ax25_address *addr)
-=E2=80=A6
-
-Would you like to omit curly brackets in the affected function implementat=
-ion?
-
-Regards,
-Markus
+> ---
+>  drivers/gpu/drm/gma500/cdv_intel_dp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma5=
+00/cdv_intel_dp.c
+> index dd1eb7e9877d..cc2ed9b3fd2d 100644
+> --- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
+> +++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
+> @@ -1547,7 +1547,7 @@ cdv_intel_dp_start_link_train(struct gma_encoder *e=
+ncoder)
+>         }
+>
+>         if (!clock_recovery) {
+> -               DRM_DEBUG_KMS("failure in DP patter 1 training, train set=
+ %x\n", intel_dp->train_set[0]);
+> +               DRM_DEBUG_KMS("failure in DP pattern 1 training, train se=
+t %x\n", intel_dp->train_set[0]);
+>         }
+>
+>         intel_dp->DP =3D DP;
+> --
+> 2.39.2
+>
