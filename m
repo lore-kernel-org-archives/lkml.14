@@ -1,125 +1,107 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E791BC49;
-	Fri,  3 May 2024 02:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288E6BA2F
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 02:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714701808; cv=none; b=BFyqd/OPozzUPnkHimSlAAKZVsFLA4DKeWn30JnWsH4SnldqizXi+Jx3A2gMiLTgwAIguCFVQainE4+9oMFlbUHej9gWZAt+UMpnENIZrAYnrBtZTBzL2E1k2butw7dFiE8ckw73S9pH6jHdBA70hiNK91b6UU2gY0PZpqoC3Fg=
+	t=1714702050; cv=none; b=Qz2FfUnBpQeQkxP+7+5U7uvJ4xMn5Kfhq0BOJqCSOEcF+rzPQGYB6krelYX103XMwhatsVMjK+qwoxCzHlThmUtPKAnB9WoNyGJaYcF4SraLk2W+dovWSdC1mg3qWyee9Nf4BDNt0zZUGRoLinQCE34RJITXD/UeOQRzMw7VBFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714701808; c=relaxed/simple;
-	bh=SVHHtn8OKM9t8LE9cQrAjdRlkmcsVzh9eDpnFhbnTjM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rDEi1uiSSeRmN80X/gonpOMQT+871Z7pleq0lwga4K6KFiteHNsXWMZdIyqKjr+UwXrlvtBMyoFU+w+MkPyDpf7bKP/J+KDcXnoyvUZlDJ0skQwEeMN3DRCMwF/FAVnJc1FkFIjc+1oSMhGPypYpU+/gCbq/113e5UNIS764WLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=H5k68sDS; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1714702050; c=relaxed/simple;
+	bh=hs4PEv8xh7/XhwxrVOthopcHb4VoKw8p8nCkkni6bmY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EBM9SfHPAerFX3nROSWw2oMtkOpOmtMw/umCQ4+HwK/loG9iPv4uuADwO+ZAnE0e5aHts3wj5dEF/FJdFuizFOp7Pg1BxWZn5bI3pM+/loWm03mL+n6DvaZocX49blYI+nz0NDX0m3HiPE8sFDMmGgGFXHEdUlbQqu1n49RV0Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CvCkqmHf; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="H5k68sDS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1714701803;
-	bh=O2rIImNa5eTX5JMS2gK4B5+p9DQZTIlWwqfyVhLPEjs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=H5k68sDSmC2DbJz+33czp8ldQxidcRYZnKOy5boIYRoBRouyDG78TxydSwEUPk+U+
-	 r94Agvp8BLRxLOGOxj0MJqqQpKPbOMfZvdphYSpPBx9pRTF+IMCS7niDPzXn7kS2oL
-	 dgc4JJf3xI+wurpAbKMqW8pO2nHH8MLpdFB7zfdG5YzGF8c9bkNZf2Gpz6V3477v1W
-	 VN5Zb1r8ULqYPNlMJxgWijx4y+2uOSwomPntynB4Wvd1EtESkKyKAnCUWCfbRZSYuE
-	 vxFEbobYnEYwZmCzp70+QVJfXaf3SBBXJ4utTr0l5UTHcUr3ceJKDCmXJmLV4BcZkN
-	 knTSkRFwnTSDw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VVvGc44T2z4wcg;
-	Fri,  3 May 2024 12:03:20 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Allen Pais <apais@linux.microsoft.com>, linux-scsi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- target-devel@vger.kernel.org, megaraidlinux.pdl@broadcom.com,
- jejb@linux.ibm.com, hare@suse.com, martin.petersen@oracle.com,
- linuxdrivers@attotech.com, tyreld@linux.ibm.com, npiggin@gmail.com,
- christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
- naveen.n.rao@linux.ibm.com, artur.paszkiewicz@intel.co,
- kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
- shivasharan.srikanteshwara@broadcom.com, chandrakanth.patil@broadcom.com,
- jinpu.wang@cloud.ionos.com
-Subject: Re: [PATCH] [RFC] scsi: Convert from tasklet to BH workqueue
-In-Reply-To: <20240502203433.15811-2-apais@linux.microsoft.com>
-References: <20240502203433.15811-1-apais@linux.microsoft.com>
- <20240502203433.15811-2-apais@linux.microsoft.com>
-Date: Fri, 03 May 2024 12:03:20 +1000
-Message-ID: <87ikzv3b4n.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CvCkqmHf"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-516d4d80d00so10856578e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 19:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714702047; x=1715306847; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wJrtYsU7ekXDKHkSe8mX9YgTBJPSi4fRDqN6RMmLDgA=;
+        b=CvCkqmHfC+Ilx3fsOItT81C7Az/dsKBK6xwCLx30sK7+JftINEwbOFIYqkLFW1dPEo
+         HXjwp+qoRTukREKMMLJnFAnfR42YjoprrAxwQjP0DVciurYciGqPO/NuDRjiV79R2Dz7
+         26bXssEawy0UYudduJTuA7iVKLXhEvB+RfuPlu9W3EYN1SNoFdon4Ac/H22TD7szaWKX
+         RvZ5+UvkblCBF9mChP5mIYHPIUrdfgFKWfDtffbviXN6DselsZQ1rAH1PhVyq7nYjncr
+         o2f4GGf9XyC2ozS6lkhX8tWT8YjiwiN3lpcrGM21IYEYgcj5ERdPRXpUOXOYk8BxGu11
+         PWWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714702047; x=1715306847;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wJrtYsU7ekXDKHkSe8mX9YgTBJPSi4fRDqN6RMmLDgA=;
+        b=OGflZYXui/tWIC5fFyAOukQ0hKM3GkOl1Mgp9dUJ8JdtYWYFJBaqAUsSGpofVMx+T9
+         45WYJoMS0sF/4bF69sfkWS+gvoCVwQqv2n7gjmGtfp46ScwF5o/ctr4ptjLoHje5Uorm
+         RrXbwg8mp0WYTysLcvBYZc1xncqFrtwPDfRiJKpPYTShXwZqb+SsqJE408H07xUh/+hY
+         7dauZFyiKKQOXz9tw9D563JxTAfAJq6I4b2ztd5dhDghBAbt4Cvui1vRofq/s1lW5NgG
+         qBuN37oogEI7+6Zevwa9Au/cgBsX977buopmUybqf/AuBebLUj+yDWyqMzyGn9cG5kni
+         dgWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmpBCVUpSwFljpKxaiKFiAZrhQqnIq8xG+Npt6nFV46FHI+6BvQn8zrQGJMoCuUOq1FshShZdVUNITFw/2VyFn8De5j+8V4vXxfOlb
+X-Gm-Message-State: AOJu0YxM31UddMqarz3bVOFomYXXdnI7UxJGWFuuo2e5futeTKSAccua
+	ZM8awDLOG3my1J437wrNuGQt40p1q+HP1vBBUkWyPUpuXJR6Hdgj8cL+9y+Fhxr4bVRRqWxgUr+
+	RQBE+Vvz7s9lPXNytCz7ESSVqstsX0lyVdfGT
+X-Google-Smtp-Source: AGHT+IH3BNa+OfWhcjhYgjYPNeUgQUqIL3S8QOwfCsVAA9Rubgu4KLI4vw8am1ku907CHfrHR/bze4P6anRW1GMqaaE=
+X-Received: by 2002:a19:9118:0:b0:518:a55b:b612 with SMTP id
+ t24-20020a199118000000b00518a55bb612mr812100lfd.54.1714702047015; Thu, 02 May
+ 2024 19:07:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240502200529.4193651-1-usamaarif642@gmail.com> <20240502200529.4193651-2-usamaarif642@gmail.com>
+In-Reply-To: <20240502200529.4193651-2-usamaarif642@gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 2 May 2024 19:06:50 -0700
+Message-ID: <CAJD7tkbgknhot8Kz9jpF=0z1OHiLH5s3PfmbHd=TetrK7PtC6w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] selftests: cgroup: remove redundant addition of
+ memory controller
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, nphamcs@gmail.com, 
+	chengming.zhou@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Allen Pais <apais@linux.microsoft.com> writes:
-> The only generic interface to execute asynchronously in the BH context is
-> tasklet; however, it's marked deprecated and has some design flaws. To
-> replace tasklets, BH workqueue support was recently added. A BH workqueue
-> behaves similarly to regular workqueues except that the queued work items
-> are executed in the BH context.
+On Thu, May 2, 2024 at 1:05=E2=80=AFPM Usama Arif <usamaarif642@gmail.com> =
+wrote:
 >
-> This patch converts drivers/scsi/* from tasklet to BH workqueue.
+> Memory controller is already added in main which invokes
+> the test, hence this does not need to be done in test_no_kmem_bypass.
+
+nit: The memory controller is "enabled", not added. Same for the subject li=
+ne.
+
 >
-> Based on the work done by Tejun Heo <tj@kernel.org>
-> Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.10
->
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+
+Acked-by: Yosry Ahmed <yosryahmed@google.com>
+
 > ---
->  drivers/scsi/aic7xxx/aic7xxx_osm.c          |  2 +-
->  drivers/scsi/aic94xx/aic94xx_hwi.c          | 14 ++--
->  drivers/scsi/aic94xx/aic94xx_hwi.h          |  5 +-
->  drivers/scsi/aic94xx/aic94xx_scb.c          | 36 +++++-----
->  drivers/scsi/aic94xx/aic94xx_task.c         | 14 ++--
->  drivers/scsi/aic94xx/aic94xx_tmf.c          | 34 ++++-----
->  drivers/scsi/esas2r/esas2r.h                | 12 ++--
->  drivers/scsi/esas2r/esas2r_init.c           | 14 ++--
->  drivers/scsi/esas2r/esas2r_int.c            | 18 ++---
->  drivers/scsi/esas2r/esas2r_io.c             |  2 +-
->  drivers/scsi/esas2r/esas2r_main.c           | 16 ++---
->  drivers/scsi/ibmvscsi/ibmvfc.c              | 16 ++---
->  drivers/scsi/ibmvscsi/ibmvfc.h              |  3 +-
->  drivers/scsi/ibmvscsi/ibmvscsi.c            | 16 ++---
->  drivers/scsi/ibmvscsi/ibmvscsi.h            |  3 +-
->  drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c    | 15 ++--
->  drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.h    |  3 +-
-
-Something there is giving me a build failure (ppc64le_guest_defconfig):
-
-  + make -s 'CC=ccache powerpc64le-linux-gnu-gcc' -j 4
-  /linux/drivers/scsi/ibmvscsi/ibmvscsi.c: In function 'ibmvscsi_init_crq_queue':
-  Error: /linux/drivers/scsi/ibmvscsi/ibmvscsi.c:370:331: error: 'ibmvscsi_work' undeclared (first use in this function)
-  /linux/drivers/scsi/ibmvscsi/ibmvscsi.c:370:331: note: each undeclared identifier is reported only once for each function it appears in
-  /linux/scripts/Makefile.build:244: recipe for target 'drivers/scsi/ibmvscsi/ibmvscsi.o' failed
-  /linux/scripts/Makefile.build:485: recipe for target 'drivers/scsi/ibmvscsi' failed
-  /linux/scripts/Makefile.build:485: recipe for target 'drivers/scsi' failed
-  /linux/scripts/Makefile.build:485: recipe for target 'drivers' failed
-  /linux/drivers/scsi/ibmvscsi/ibmvscsi.c: In function 'ibmvscsi_probe':
-  Error: /linux/drivers/scsi/ibmvscsi/ibmvscsi.c:2255:78: error: passing argument 1 of 'kthread_create_on_node' from incompatible pointer type [-Werror=incompatible-pointer-types]
-  In file included from /linux/drivers/scsi/ibmvscsi/ibmvscsi.c:56:0:
-  /linux/include/linux/kthread.h:11:21: note: expected 'int (*)(void *)' but argument is of type 'int (*)(struct work_struct *)'
-   struct task_struct *kthread_create_on_node(int (*threadfn)(void *data),
-                       ^
-  /linux/drivers/scsi/ibmvscsi/ibmvscsi.c: At top level:
-  Warning: /linux/drivers/scsi/ibmvscsi/ibmvscsi.c:212:13: warning: 'ibmvscsi_task' defined but not used [-Wunused-function]
-   static void ibmvscsi_task(void *data)
-               ^
-  Warning: cc1: warning: unrecognized command line option '-Wno-shift-negative-value'
-  Warning: cc1: warning: unrecognized command line option '-Wno-stringop-overflow'
-  cc1: some warnings being treated as errors
-  make[6]: *** [drivers/scsi/ibmvscsi/ibmvscsi.o] Error 1
-  make[5]: *** [drivers/scsi/ibmvscsi] Error 2
-  make[4]: *** [drivers/scsi] Error 2
-  make[3]: *** [drivers] Error 2
-  make[3]: *** Waiting for unfinished jobs....
-
-Full log here: https://github.com/linuxppc/linux-snowpatch/actions/runs/8930174372/job/24529645923
-
-Cross compile instructions if you're keen: https://github.com/linuxppc/wiki/wiki/Building-powerpc-kernels
-
-cheers
+>  tools/testing/selftests/cgroup/test_zswap.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/tools/testing/selftests/cgroup/test_zswap.c b/tools/testing/=
+selftests/cgroup/test_zswap.c
+> index cd864ab825d0..19ac29c533e0 100644
+> --- a/tools/testing/selftests/cgroup/test_zswap.c
+> +++ b/tools/testing/selftests/cgroup/test_zswap.c
+> @@ -485,8 +485,6 @@ static int test_no_kmem_bypass(const char *root)
+>         trigger_allocation_size =3D sys_info.totalram / 20;
+>
+>         /* Set up test memcg */
+> -       if (cg_write(root, "cgroup.subtree_control", "+memory"))
+> -               goto out;
+>         test_group =3D cg_name(root, "kmem_bypass_test");
+>         if (!test_group)
+>                 goto out;
+> --
+> 2.43.0
+>
