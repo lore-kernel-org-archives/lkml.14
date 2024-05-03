@@ -1,154 +1,130 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from sonic309-21.consmr.mail.ne1.yahoo.com (sonic309-21.consmr.mail.ne1.yahoo.com [66.163.184.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96071157A5A
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 17:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4AD157E69
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 17:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.184.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714755637; cv=none; b=HtPF4y3EJ1wU7hET7N42pQs8eM6qL6oUTEzwZ+E7E+3C9gI5pr2wVq/HsJGgQ8eLre3H28UrfCgqiCaI13pim8AFXS26VgPDE3J/aecy4d5NR8h4qcLS8WEXBsWBplhF5GFodIHpT4AxVzduE4cwtGP29oyBVvk23q6Q+o8SRl4=
+	t=1714755655; cv=none; b=cJanXD234YdG1V92j9nm0qyl/e+PBBU8fej6YiSqqGvoLviChya+eChTzOk6pkWICeaxCjWe9Z8DNDsSeYtKKsF3sHUqpDv16HY8z2XcuYE374g/Dz77+/bk0ZyoqTAz9xmkusR246L7fBLvfR9ax0aj9/5CbOPk1+RO9eQf9sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714755637; c=relaxed/simple;
-	bh=T8M79nhVX3roRd5LQrsXlmKQJOJvFfrD0cS8phH2OcA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=A9fLSmMijxjcbM5jMTiTQDUaOFmbZmQ4gpS9SN2e1RkCdSCit8efIpMoXyb1hrtGXzTrdo7NDsKK9bzqhlviQZrHKmF9iu9RvtfLq/e0CVmKYV0XYNhBNuBP62gdp6iA+CV/6bgef9ryEi3JyVl8/gmf16YaBepaEx/YmjsOqlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36c1af8f2f3so95828305ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 10:00:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714755634; x=1715360434;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iHzdAUqCZg3+KUajrBE1l8FdS/gIUaATmlWuObV2nAE=;
-        b=wq+/rfivgZXMv7TgKP6MTXYBwO5QKw3KWsO8PbYlj5hFXd9jOyEKl438slPTx5Tg8e
-         DWvgpxBjsWi1mQ6cwWTXQCliKhWCkUHXFPmjZgTNzYbbZEr17iYsC72gE1x089LqvlDS
-         faWfWO1hK1HiBwA0o8sjU8mpPsdsimtVd+lIS0WtZEZXWUcbvfzmXjNIsDr/d/rMPTZR
-         5HrQHuPYcWHcIaeA3UEgEcvuKabbIymAw9NbZmcwjNX04Ey/eBYZtrZ9Q66XRjaSWZkR
-         OVFsOKRPxNb7v3nna/J+y8A2KvjsCzcPqZncqrgaSW8CSGrBM02wSCA7pVilh7MsXENw
-         8aWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYKpCjTGqDZMjK7gnOu4aGvGRAfB/0utocm3vztJGpqE7CQfa6/PDrsNeBEU/oVyByEsAy2jq0jaqp05LB0gbfCHLvI1TlftEb0m5j
-X-Gm-Message-State: AOJu0YxL5RmExZUR7Tf+CyDjXugpBQmPmnJb59GBeDth2e4ERkW065KF
-	S5qniNrLION0pyyeMLRFnRK9mw6A+kwWsXhVViMnCG89Fe8X9UU2HuBONemRHCpWhWId+Fak4ip
-	mFqwgo24EBQVOdsD1nzGModvrRAF/vZst9RWmaOscm/2Jyxm+jGnrv2k=
-X-Google-Smtp-Source: AGHT+IE5CAolUw10A+f1rWjHOwLke+O9X0m/Ap50wBM3UR4BNfrzSPap8/QiWtnu/be9J+OW7BqVF/H/PcUV1Zug/mwyADKqZ6xO
+	s=arc-20240116; t=1714755655; c=relaxed/simple;
+	bh=OpuBHTwhnfArlf2PsQ6g2wnS/DKkhtNrSqNbd0Cd8cY=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=gXl+yf7mKywFkKcjif2mNkSCuQJOI49IyjapsvEVBqtJpYUrcrdAUVJA+lErWMCBNrpAVXp4B7BgGeAzvvGOXOkWyDgUaCuEtlJXwRQAw6Ms5Yb8nxSTX6lbBHykiLlSkcfEW3ohBAziO6Xy8qWlt7fZtACnTL83piWp1fDO9lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=h/XuJOfP; arc=none smtp.client-ip=66.163.184.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="h/XuJOfP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1714755652; bh=OpuBHTwhnfArlf2PsQ6g2wnS/DKkhtNrSqNbd0Cd8cY=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=h/XuJOfP4qeWJeJUfu9XI2dvEgzygtrC4CQkQr52hHqL+u5d0EZKbP2COHmnzEf/JrOcrHLPnb3WKJ8WKv7KYu67zkNNbxwbMhHZAkfXWXsOApW31dy8X39SKCTp7/aUnyM+SkluOIU1tReyUEiYIPp83FqHP+7BHFnLBWjlh7AoF8bnulEyF2VKqInpLbYgAM31rUm5IpaFK88Qmb+Xm/jPTZSkNBXqogko/W5N6AuBT0PRrH9mWkBQHSH0zAL5AE/2EeQWUS9lvCZNTpQK4mFb07RYgGwHL6cgc0kaJnLvM27Za+5x+X2Sv32SB53OshVlWVpage6SsD2T8PfCkg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1714755652; bh=0roRuDy5zj7FoPPBMx4pCT5IazAPisE/VYX4kM5YcgX=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=HN77FixkNFiIjdzTyPTCglXSTr73Q8fEfEGAbRTRYzo88nHJQOH9TKg/z4eTL0k0WD3sJsnOenB0QLHcY3ttLXCvw5wHfeI/hEKOSz98IlZbow//bKIscA0ODOnBLYW7eCiszIyiiWVu1vNVc1EMtvLrIcrYubuC5EFu/EhKyDv33/ckazLlFjDjQDgtt0Sxn7EnoGSATXzRlDKsVelY2A0ReFSC0ZWlkpF7JDYCnJ1vd9+pXt+22hCXMVFdFpOKcMfRuVBGaPqG2WDmGV4vzfhJ9e+dNQqL6bCLtudkdhmYIYD21igDk1HidLAYyb5l75+V0av8B0W9KVv1kkDMlQ==
+X-YMail-OSG: u7CikhkVM1mEMBJgRhgeFfykAxEVELBK2D8SuCjgxXEHVfhg2Mh1jCun.7euP4n
+ YuKTaefJTFGNeHA6y0GKN8r5o3pt6uZ4L7fJsdR9huBW4xI._HbSxGmtwL7Q.r.q2HNLUhrxNcqJ
+ iQk0clfL4rJB7emk22t.djOQDkv.3brzpvxYm7mD76etPxjsHtjznB4tUyLYzXFO.6IDvqV7cuVU
+ s7YU8V1I5QXnD2RY954jhO_zWBG1FHHEhnmc2lafLzGClMxUD1sSeuRmEUnPzd9UJb1XvnNuPzoR
+ HDhGIP5Qbmk9vsiiNBfzez4x4g8KFg3M.G5Uk5n2WX7L_k6B9_ZGCVtrDh348xQOjY1Y_1Cd81b4
+ noQswoJiZsryvGYbOrdRyqJAQrn1NxglYFDVVQ8ihsj3JFsAg8idJ57wbS4lW1zJR0z2hwX0D5L8
+ Ah9_5UWH5vGNxPLESZLBXSsL8X91UjsCxu6TnFw7uhzNds6_ofPqhWISo6wokWtoHo4s5i_Dd1g1
+ pgusS5pHJ1PX8KPBpv1fMxnUGbma5Mq06lphYU_SSXY4i5qCBUK37DNnJIV5AgXDEbpreAvPY5KN
+ vR8Tb6Q2yF6axmhLYw2qwsfnAUr0vA_Jzc2pUUzAeDxF6I0UPkjLA7a7yiaDIczakKX6dwdSJ.mG
+ 58OM_lkjw52d71AdkfrDJUX2MksGHq1K63WSXuFurdzA3S18AlusvV.5PFProfYCIRztn0BDISD2
+ Qa0GpFEiFwlzby4x0fgGxV8dJZ7Xq5ugd4xBCV.6.A2dnjy26PjzG0jwSLH9GPjFaJGaVk9uUasX
+ Ix6sSXmG_K_jm3KYote_PDn6JLIa0hbq_HNpR__3cjgTP1plr_6Akyd1GFihjkHF_mscqbk6S76Q
+ jpIhhLUmyHcsZ.NWMfj678JphFYyxPaOOxLXXAMfL_zhiEjNUJvyW4VexTTgNZ3xy4unuIoacAoJ
+ i65ljO1IAGxShzOLanEqKFAMguiVBBN84wbYDBpr0kbG1lU32E1cGTIczqgW2w82DRV0zMHp7_sk
+ RkIuj5k_JzxlnN5zNfGNQ27h3I4gVCCP9gOc5wekqRwLV8ifLYRb0bPkd8tD7JmD2LZ4W42b5344
+ HsLeoU48IJJDVr0YJZVirumWrxsKvF2I3o7_KXaVyliAP25U_deLjmT.BBE1UONAftNh2kNMOZhG
+ ak5IKdiwLyK6_12ip8oazaBJj_0W2q_gqrvjiq4bKG6iI._HycRHunW22uHeF9wvQrk5tc_APutn
+ ySnbWQ9ziXxvaBWtboypHwNZUDPR.1KsQgcqJSY2RL3r9XfaUo845YNVfdFuXJRnWkIvdttDKler
+ fyJKbvSmeSCJKhNzvxBHRQYh5n.3NYvEikv_TsZJacJhbUnWXZUvXasP37MGyoQ7GLT5da687ovE
+ MPDnTVH5iJuFgVqg.nx3oyRUA1nTBGBfvFZYSiKFVAvWHa4stTt3NH3SSaTDdTBWfIGRsYGhkvLA
+ dGy3Z7XijAEEDsjVV7IcaVpLVWIbJ5jIIBJ13eYMxWVJ5f4A4lIZrv_SZBpvByB1sfv.DS7gSonq
+ 1VNOutIuK8hijTa9otiRaFsP5_Q0XVFGUteywvHokJuiKc9VgRr3JHFzTPQ4VicD_5wUtc5IFJ1G
+ Whv.16lmZ496l.ekC09_B7nK3cP4JcBG1bvLevBfXuZGDgqGnk69NAcG7XfInLZXd.siTtH_j2Hu
+ Um8ryul1Tv18C0USqxm8iwpFTlN8Nnzyfmboy0o0wiQplgRXpa.HUUaRAp_Q1evqftIW2KXhIQd.
+ PgvidYsIBtF.XIaFWMsLdcMg1GvBlnp_6PRqwXVoLM2PAqh5VqVkQQTOfaBeMPEn8jtbd6qNLLqP
+ 0LUJpjXA1La1EIPftMu6oPuaNY5s2vCt4KwXJcivqOm8eJpB7YSB6SjubeIV9IqXdILqqdTIJ5I1
+ loXhSfvkPvTocCDcdoz7FvbKaejGqeAjQjG8RIM0v82Pdtw0DCF.8aCwGPn7CiVmUwVA3AB8L30S
+ N_n9FCd6TcDBPoK5HwRSX..z0kdfVosVSs6SS2qsrOs3jY06vlXP0PhNz2EG_YmgI7YvRoqKxbY7
+ PKcwpvJsXvM7YBuftOiseBjk3I_KzychmFW.f.Ls34I5eM8XzWMW0LfYeBAwTIprJKhvL6V_Vrms
+ tgESrkIU7v9UtaRwWh7DKRHDJUDHgqExo6lBS0mqHPrUKy.hVNgkJlB2PDa_Qv4JSP3Rf1VmTgvH
+ Fcv96CSp4tjyCAXFkI47vWUo4VCWan1qd7NG.JaBVJ1kVaf_Z0uiLr9CVPVJD6A.o_UxUDqo-
+X-Sonic-MF: <ashokemailat@yahoo.com>
+X-Sonic-ID: b20f7dc0-ce88-4f67-8215-c25d657d58b6
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Fri, 3 May 2024 17:00:52 +0000
+Date: Fri, 3 May 2024 16:20:24 +0000 (UTC)
+From: Ashok Kumar <ashokemailat@yahoo.com>
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, 
+	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"outreachy@lists.linux.dev" <outreachy@lists.linux.dev>
+Message-ID: <1389558595.6771301.1714753224419@mail.yahoo.com>
+In-Reply-To: <c8d24241-1763-f7b7-4491-2e5aa3ea3be@inria.fr>
+References: <ZjRDUO6/M+RDCcQJ.ref@c> <ZjRDUO6/M+RDCcQJ@c> <c8d24241-1763-f7b7-4491-2e5aa3ea3be@inria.fr>
+Subject: Re: [PATCH] staging: fb_tinylcd Alignment to open parenthesis
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:219c:b0:36c:d2b:d7d with SMTP id
- j28-20020a056e02219c00b0036c0d2b0d7dmr157996ila.2.1714755634743; Fri, 03 May
- 2024 10:00:34 -0700 (PDT)
-Date: Fri, 03 May 2024 10:00:34 -0700
-In-Reply-To: <0000000000009d99ed06178b29b5@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007c60d506178fa824@google.com>
-Subject: Re: [syzbot] [bcachefs?] BUG: unable to handle kernel paging request
- in bch2_fs_btree_key_cache_exit
-From: syzbot <syzbot+a35cdb62ec34d44fb062@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-syzbot has found a reproducer for the following issue on:
-
-HEAD commit:    6a71d2909427 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=10066e4c980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fca646cf17cc616b
-dashboard link: https://syzkaller.appspot.com/bug?extid=a35cdb62ec34d44fb062
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15483e4b180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120e8250980000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c77d21fa1405/disk-6a71d290.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/429fcd369816/vmlinux-6a71d290.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d3d8a4b85112/Image-6a71d290.gz.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/933ef33aa6cb/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a35cdb62ec34d44fb062@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 0 to 32768
-workqueue: Failed to create a rescuer kthread for wq "bcachefs_copygc": -EINTR
-bcachefs (076a1832-646e-4f3c-b13d-b3e266154efd): shutdown complete
-Unable to handle kernel paging request at virtual address ffff7000249ff210
-KASAN: probably wild-memory-access in range [0xffff800124ff9080-0xffff800124ff9087]
-Mem abort info:
-  ESR = 0x0000000096000006
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x06: level 2 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000001ad5bd000
-[ffff7000249ff210] pgd=0000000000000000, p4d=000000023e882003, pud=000000023e880003, pmd=0000000000000000
-Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 1 PID: 6256 Comm: syz-executor158 Not tainted 6.9.0-rc4-syzkaller-g6a71d2909427 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-pstate: 80401005 (Nzcv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-pc : bch2_fs_btree_key_cache_exit+0x7ec/0xfcc fs/bcachefs/btree_key_cache.c:974
-lr : bch2_fs_btree_key_cache_exit+0x78c/0xfcc fs/bcachefs/btree_key_cache.c:970
-sp : ffff8000980e6e80
-x29: ffff8000980e6f50 x28: 1fffe0001d160010 x27: ffff0000e8b044b0
-x26: 1ffff0001301cde0 x25: dfff800000000000 x24: 1ffff0001168e5d4
-x23: 0000000000000000 x22: ffff800124ff9080 x21: ffff8000980e6f00
-x20: ffff80008ee81218 x19: dfff800000000000 x18: 0000000000000008
-x17: 656c706d6f63206e x16: ffff8000802896e4 x15: 0000000000000001
-x14: 1fffe0001d160898 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff60001d160899 x10: 0000000000ff0100 x9 : 0000000000000003
-x8 : 1ffff000249ff210 x7 : ffff80008275d4e8 x6 : 0000000000000000
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008275d4f8
-x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000008
-Call trace:
- bch2_fs_btree_key_cache_exit+0x7ec/0xfcc fs/bcachefs/btree_key_cache.c:974
- __bch2_fs_free fs/bcachefs/super.c:562 [inline]
- bch2_fs_release+0x1e0/0x564 fs/bcachefs/super.c:609
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x2a8/0x41c lib/kobject.c:737
- bch2_fs_free+0x288/0x2f0 fs/bcachefs/super.c:674
- bch2_fs_alloc+0xe4c/0x1c60 fs/bcachefs/super.c:965
- bch2_fs_open+0x740/0xb64 fs/bcachefs/super.c:2080
- bch2_mount+0x558/0xe10 fs/bcachefs/fs.c:1900
- legacy_get_tree+0xd4/0x16c fs/fs_context.c:662
- vfs_get_tree+0x90/0x288 fs/super.c:1779
- do_new_mount+0x278/0x900 fs/namespace.c:3352
- path_mount+0x590/0xe04 fs/namespace.c:3679
- do_mount fs/namespace.c:3692 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount fs/namespace.c:3875 [inline]
- __arm64_sys_mount+0x45c/0x594 fs/namespace.c:3875
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-Code: f90027e8 d343fec8 11000d29 f9002be8 (38f36908) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	f90027e8 	str	x8, [sp, #72]
-   4:	d343fec8 	lsr	x8, x22, #3
-   8:	11000d29 	add	w9, w9, #0x3
-   c:	f9002be8 	str	x8, [sp, #80]
-* 10:	38f36908 	ldrsb	w8, [x8, x19] <-- trapping instruction
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: WebService/1.1.22256 YMailNorrin
 
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+On Thursday, May 2, 2024 at 11:54:58 PM PDT, Julia Lawall <julia.lawall@inr=
+ia.fr> wrote:=20
+
+
+
+
+
+
+
+On Thu, 2 May 2024, Ashok Kumar wrote:
+
+> Corrected coding style CHECK: Alignment should match open parenthesis
+
+Ashok, I think the code is nicer as is, because it has all the constant
+numbers lined up.
+
+julia
+
+Thanks for the update I will ignore this change.=C2=A0
+
+Is there a list of exceptions to the checkpatch information that we can ign=
+ore in general.
+
+
+>
+> Signed-off-by: Ashok Kumar <ashokemailat@yahoo.com>
+> ---
+>=C2=A0 drivers/staging/fbtft/fb_tinylcd.c | 2 +-
+>=C2=A0 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/fbtft/fb_tinylcd.c b/drivers/staging/fbtft/f=
+b_tinylcd.c
+> index 9469248f2c50..60cda57bcb33 100644
+> --- a/drivers/staging/fbtft/fb_tinylcd.c
+> +++ b/drivers/staging/fbtft/fb_tinylcd.c
+> @@ -38,7 +38,7 @@ static int init_display(struct fbtft_par *par)
+>=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, 0xE5, 0x00);
+>=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, 0xF0, 0x36, 0xA5, 0x53);
+>=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, 0xE0, 0x00, 0x35, 0x33, 0x00, 0x0=
+0, 0x00,
+> -=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 0x00, 0x35, 0=
+x33, 0x00, 0x00, 0x00);
+> +=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0 0x00, 0x35, 0x33, 0x00, 0x0=
+0, 0x00);
+>=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, MIPI_DCS_SET_PIXEL_FORMAT, 0x55);
+>=C2=A0 =C2=A0=C2=A0=C2=A0 write_reg(par, MIPI_DCS_EXIT_SLEEP_MODE);
+>=C2=A0 =C2=A0=C2=A0=C2=A0 udelay(250);
+> --
+> 2.34.1
+>
+>
+>
