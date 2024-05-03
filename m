@@ -1,63 +1,64 @@
-Received: from smtp101.iad3b.emailsrvr.com (smtp101.iad3b.emailsrvr.com [146.20.161.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A1458ACC
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 23:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E54F58ACC;
+	Fri,  3 May 2024 23:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714780189; cv=none; b=Hcrd8oG/RWmJS37VkL07q8XhzqoK0pZqo3BKXSmIWs8sB/lFnzuUqF5emFD0f1taXLAgc1kF9xhEoBQQOiJUJrje5t2bVEfuzAVxAw2isO9XsZuD/LDeaUl4w7afnKu+s0CF52rWACyNUePEhI7MxXmRVVNjTQBTHMppcRbh6sI=
+	t=1714780202; cv=none; b=R3OBF8TA6RzOEbgM1EdhTSr4iPQYgEVseBkJzEKgIe4VOAAB4wvrTuHm9iYbdCemV34UfwmfvR6KvSIVUk5SOIKQuIur9Yl5BlCsPgrEsLtZ0f+H1IzgI1TPAg3uKvVeAghIegH4EfGlmi4kGU0T0M8dL5j0mN/m/ZdiqYPOfN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714780189; c=relaxed/simple;
-	bh=sEjZ83Sw1Dl1XxIKn2KeQPWM4I5AmiVyc4bGvGyYSiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uorysKzqIloHDyCDDhA33ahqo9ifVtZseU2d6jrddpTO0jWw6wSDjBlL1xLVaTQLQ9iVGrem/buwXTM/Z77gulIY3mYbj/XnFnr91gvTQ2Uj+CfDdWvYMRPPzeKZpRPD8J8JNTRdiq67Xof/zLfVbKfKvGmVf27sRnWVFN0pYiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oddbit.com; spf=pass smtp.mailfrom=oddbit.com; dkim=pass (1024-bit key) header.d=oddbit.com header.i=@oddbit.com header.b=F2DLZfUB; arc=none smtp.client-ip=146.20.161.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oddbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oddbit.com
+	s=arc-20240116; t=1714780202; c=relaxed/simple;
+	bh=2YpmUB6M3pSqN3NzsLH/1Ao0GXXtZMFte53gEx/HtJU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=bG9P5qkFAhHLfXHipBaBIV61PUJ17QZQfMK+xPFc/ENom9H2LXydjyPRaB/IETUcx3aJBWV5ISu3CHt+AzG4OsZY3CqMC4T8LayW4CXZq+W4IQ5vfqYJ+hKIviSuB3nO9VBWDP0SIOUxtFmnxC3cIhWoFOLblBclsn5IWanNRgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bytY8/uF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=oddbit.com header.i=@oddbit.com header.b="F2DLZfUB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=oddbit.com;
-	s=20180920-g2b7aziw; t=1714779633;
-	bh=sEjZ83Sw1Dl1XxIKn2KeQPWM4I5AmiVyc4bGvGyYSiY=;
-	h=Date:From:To:Subject:From;
-	b=F2DLZfUBhQ3QPw4CMlMcCre1KISmfn2mRJBTkSTCQveEH9SLP/50vpjpGdc6vn5vF
-	 pKS2H+SuKkBZZASLVkXqTPUlzkCAw1ce+Ffpt4OMkcP6u34+0P89j3riGjoceeRjiM
-	 ElHe5zEs6MrrXXM4dd0OEqjhoge7O0Y80hbA1fjA=
-X-Auth-ID: lars@oddbit.com
-Received: by smtp13.relay.iad3b.emailsrvr.com (Authenticated sender: lars-AT-oddbit.com) with ESMTPSA id F10F1602B0;
-	Fri,  3 May 2024 19:40:32 -0400 (EDT)
-Date: Fri, 3 May 2024 19:40:32 -0400
-From: Lars Kellogg-Stedman <lars@oddbit.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Duoming Zhou <duoming@zju.edu.cn>, linux-hams@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com, kuba@kernel.org, 
-	edumazet@google.com, davem@davemloft.net, jreuter@yaina.de
-Subject: Re: [PATCH net] ax25: Fix refcount leak issues of ax25_dev
-Message-ID: <ekgwuycs3hioz6vve57e6z7igovpls6s644rvdxpxqqr7v7is6@u5lqegkuwcex>
-References: <20240501060218.32898-1-duoming@zju.edu.cn>
- <my4l7ljo35dnwxl33maqhyvw7666dmuwtduwtyhnzdlb6bbf5m@5sbp4tvg246f>
- <78ae8aa0-eac5-4ade-8e85-0479a22e98a3@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bytY8/uF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4487FC116B1;
+	Fri,  3 May 2024 23:50:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714780201;
+	bh=2YpmUB6M3pSqN3NzsLH/1Ao0GXXtZMFte53gEx/HtJU=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=bytY8/uFZrCn37wOWEy3wId3z3QN5E14L9yhJt0D+EYhIdXPHW10GivvdAUibjWAA
+	 77KVVH3Tr9z7QsqxN0i872jVu1dAILURmwjlJTWvaar2F8qu8RxIOl8G77Aqoaqa/0
+	 aqyVah3WabniMmvfn87oH4SsqR89Jl3PoOTVaDzrRS5e9wj1Z3/XgEsgVdimvLPJnV
+	 SuCq3OGEbTxS6eIfgRhzEM9EWoCrrb8enpHUWhY3BtcZ3z31i+NGloYB8XJBC8I67u
+	 ASayxzLM3AoyBfXDr47x+3Y7ijNWI1FocxZmes/1RWmOfLQL90MMjOEADJmZ3PvaUf
+	 ksE3KLiIxNtfQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78ae8aa0-eac5-4ade-8e85-0479a22e98a3@moroto.mountain>
-X-Classification-ID: ab5b3add-fbf9-4fe3-adb7-2c2d96a83c57-1-1
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 04 May 2024 02:49:58 +0300
+Message-Id: <D10EUK2TUF57.1E87NSEA2ZYU@kernel.org>
+Cc: "Lukas Wunner" <lukas@wunner.de>, "Stefan Berger"
+ <stefanb@linux.ibm.com>, <keyrings@vger.kernel.org>,
+ <linux-crypto@vger.kernel.org>, <davem@davemloft.net>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] crypto: ecc - Protect ecc_digits_from_bytes from
+ reading too many bytes
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Herbert Xu" <herbert@gondor.apana.org.au>
+X-Mailer: aerc 0.17.0
+References: <20240426225553.3038070-1-stefanb@linux.ibm.com>
+ <D0W3MTR0CY08.Q2UIYE4N274L@kernel.org> <Zi8UXS1MD5V58dnN@wunner.de>
+ <D0WIZTMRKHSJ.1Z4ZV54DLVWAB@kernel.org>
+ <ZjS83WIPglXiUH3n@gondor.apana.org.au>
+In-Reply-To: <ZjS83WIPglXiUH3n@gondor.apana.org.au>
 
-On Fri, May 03, 2024 at 11:36:37PM +0300, Dan Carpenter wrote:
-> Could you test this diff?
+On Fri May 3, 2024 at 1:30 PM EEST, Herbert Xu wrote:
+> On Mon, Apr 29, 2024 at 01:14:15PM +0300, Jarkko Sakkinen wrote:
+> >=20
+> > Yeah, sure, that would be even better, or even memzero_explicit()?
+>
+> memzero_explicit should only be used for stack memory.
 
-With that diff applied, there is no kernel panic, but I see the same
-refcount errors that I saw before the latest series of patches from
-Duoming:
+BTW, is this in kernel documentation? It's a guideline really
+and would be nice to have reminder, that's all.
 
-  refcount_t: decrement hit 0; leaking memory.
-  refcount_t: underflow; use-after-free.
-
--- 
-Lars Kellogg-Stedman <lars@oddbit.com> | larsks @ {irc,twitter,github}
-http://blog.oddbit.com/                | N1LKS
+BR, Jarkko
