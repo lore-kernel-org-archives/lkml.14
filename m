@@ -1,144 +1,111 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D18DF510
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 01:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B95DF5B;
+	Fri,  3 May 2024 01:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714700706; cv=none; b=rVzEvbgOWy//KodU6gO0vXv4Eat/BemtKRMvvuVS7uehFuH5tosJfYf80G9ISUYBEumJxwLopI6W7IPvIHqjLGj9HDBSFYshNwd9r1A8qrncvpwxErQLuQ1hMjy7GOseKxqv2UJUL2INE/wXwG7+ruBLTIq40twWRnb4pDdXlwQ=
+	t=1714700811; cv=none; b=hRq6vBYf9cFOof9/+Twza/+vVQJejzZSlzxN+ln2C0CQcDspjuN9iF9AQv3oHYIylt8M9fE9/fyywwLNXapcWfgdr66hWlLFqirC2GXIxcmZo844P95+epZZAFL9bDB31e9TyETuZ60KZziG6d0369jMSSNXo8vyC95O1UCdOhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714700706; c=relaxed/simple;
-	bh=ey+G/MUCESd2sdoi0DGUPvdRUSE5ujEB7MzNjilZVjA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HqxHLyuU/WJ3jP2qn6N9/LbtT9g/fsT0rfWungzzJ9332qmUZehRUwUhzoMIlSDF/8xig0DaI2HWAghDMe777xp2xrU1/Irc0O/Uy85aGseOnj3o/d+8xGzQ7Zu+ZHzBRun65YjXc4Wsc4luHWFPWhjJgk8YiXLwBYKz65FC7so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSdIChzv; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714700811; c=relaxed/simple;
+	bh=JKgTE6YUHTKq659Fh+4WxOwvtYqFaO/UHPdHf0PyxU8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=RJ4/L/ZJJSRT/o+dlvt/gOFYSILX/mwZESqCh5/MzQeJPNZgvPkPR5RRIYomfkwQBmtfnvVogUrmlWqyAKlFOINpp5ULJaz3xKJf0UzXy3MSm/geQAinPyMhsqix4iyq3chN5hufVf39WImVSpQsbVu/ML3KR+YqnD9V6mxcMEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPjALbxq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSdIChzv"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7e043f577c5so1231913241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 18:45:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714700702; x=1715305502; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OBpaufwW255tHTakY+OCArHInOzRj+zykzi7grRdC1U=;
-        b=QSdIChzvK+BQA5cQWiTb4CxhP97XO71q4ummreVIhk2zDfkIjibDRkNT/gVwgW3fmP
-         xuh0QDzPNf4a6TYid8nOEQ/VyqAgZEdXHoCFQLq3AJK/0VHEmYhLkITU0JYNSmK5Fzzh
-         uGiFoSz6I25tLb4HtbdjpzDGEmA/+ZFyHEOdIB6pmv9HH8ELMW8+IJRsTr4NouQ5ihLY
-         mEj88a1IrvEN6sQDkSZKtw5/QWy+VcZj7ibhCVOXg2Rl1YZek42yO0gvmDfnaW+ssRM4
-         QHsbbmXUYlwGT8RZqV8JZwvf/b0PuRw2yhtEbYWMZqUDBPdxlA2sV5y8gvZbQMF1XHvO
-         0n5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714700702; x=1715305502;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OBpaufwW255tHTakY+OCArHInOzRj+zykzi7grRdC1U=;
-        b=dkGm2WSylzNALWCazdGDucdWhKq463fgBbf7y+dTimB3okSmlXID9xHofAmgHpC2w8
-         4Ytg1fwNWiCbiizPVIA4vh2//9DGPvKmxWr3BAgRKy0y0DXEawMhw4PyEFrUVAIgKrGk
-         Ym24L9Yn+Wa/9bXTrDL8+GYefQM+wpVe6/i3o2gu1ty3qpIUs4VTqBnG541e0Oj4Vl5g
-         ujmm6B7WFdn/zudWHC2buBq/oHUIso+SwnrBOgrAGeoI69asKjc4fVq75mgC0RSa9mkH
-         Xp+DYNAtd7fXW231gxhUi353f0Cc1zdR2sFKpXdc/Yjq5lKGEpHwbhAXi7g89StSqw1b
-         5jsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXBwH7P806mcp2LFxEPwWefMQQC+hN8+GTQ6h072xDmqOuyQolkl6hueugAbikDFlcx3pI1yP9KX4F+nBtPKeGHtSq/FWktSBg7R1d
-X-Gm-Message-State: AOJu0YyYw5XhC1gbxwbXScnlTMeyhXSgnZB343QJvBIxzv4R3H1G2iY+
-	CvCrFxrzIK38dAccSxwYhYMvf1dQySvNiUZDHPYpBQabtQsPI04IMgoMJYwjpDUBA6nPmLZsmcQ
-	Uh6ABoNbiFNWKHAJb5tjPNIBJkfw=
-X-Google-Smtp-Source: AGHT+IFZyWmBAJipXUPPt+Uv0QLkbPfwvtGgat1yYkY94P24DIj2C1Oirn7fshUPnUvtMM9lPCqJXhZGWJE6z4SC6r8=
-X-Received: by 2002:a67:c58e:0:b0:47b:bda4:c30d with SMTP id
- h14-20020a67c58e000000b0047bbda4c30dmr2040619vsk.3.1714700702183; Thu, 02 May
- 2024 18:45:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPjALbxq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D76EC113CC;
+	Fri,  3 May 2024 01:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714700810;
+	bh=JKgTE6YUHTKq659Fh+4WxOwvtYqFaO/UHPdHf0PyxU8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=PPjALbxqtye4I1DIDKjHVl3qcro5MlE9tek/ju94lTHQ9wY/pjbVv71TylRbsvFvW
+	 CreAHaLMHr1FL/n18IY54+vHGoxxHhpj2LSSdkdGE2XA5WU4uy97Bq/ZcEdTxqTaJu
+	 Nr5j403GWzpYiPXxaJV0a73HDuaPrDeeRiTQAyNx0x50uJCVjldPII9JL+L7BRBCF7
+	 VOEwB9bAfcnBooec5W605A00+FEMqc97nE1f9fjytDNUkxb0cxbgGBDl+GZY4E4r6t
+	 Qqc4adGqWtNz7GkLUA41T2o/j6mF1PCbadNmSnqlRreB2PpKAqYryTJoC3Nnbgq+N7
+	 BCl62C/NQ2Row==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240502161827.403338-1-pchelkin@ispras.ru> <20240502161827.403338-3-pchelkin@ispras.ru>
-In-Reply-To: <20240502161827.403338-3-pchelkin@ispras.ru>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 3 May 2024 13:44:51 +1200
-Message-ID: <CAGsJ_4zKRSnpoepYsw8qiwVHY-ztWYixKjtD7D1SKbhYho=pUw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dma-mapping: benchmark: prevent potential kthread hang
-To: Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Xiang Chen <chenxiang66@hisilicon.com>, Christoph Hellwig <hch@lst.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Barry Song <song.bao.hua@hisilicon.com>, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>, 
-	lvc-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 03 May 2024 04:46:43 +0300
+Message-Id: <D0ZMPEICUP93.YHFFOSJBS27X@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <kernel-team@android.com>, <linux-sound@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+ <linux-sgx@vger.kernel.org>, "kernel test robot" <oliver.sang@intel.com>
+Subject: Re: [PATCH v1 01/10] selftests/sgx: Compile with -D_GNU_SOURCE
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Edward Liaw" <edliaw@google.com>, <shuah@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai"
+ <tiwai@suse.com>, "Jiri Kosina" <jikos@kernel.org>, "Benjamin Tissoires"
+ <bentiss@kernel.org>, "Sean Christopherson" <seanjc@google.com>, "Paolo
+ Bonzini" <pbonzini@redhat.com>, "Bongsu Jeon" <bongsu.jeon@samsung.com>,
+ "David S. Miller" <davem@davemloft.net>, "Eric Dumazet"
+ <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni"
+ <pabeni@redhat.com>, "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Muhammad Usama Anjum"
+ <usama.anjum@collabora.com>
+X-Mailer: aerc 0.17.0
+References: <20240430235057.1351993-1-edliaw@google.com>
+ <20240430235057.1351993-2-edliaw@google.com>
+In-Reply-To: <20240430235057.1351993-2-edliaw@google.com>
 
-On Fri, May 3, 2024 at 4:29=E2=80=AFAM Fedor Pchelkin <pchelkin@ispras.ru> =
-wrote:
+On Wed May 1, 2024 at 2:50 AM EEST, Edward Liaw wrote:
+> 809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
+> asprintf into kselftest_harness.h, which is a GNU extension and needs
+> _GNU_SOURCE to either be defined prior to including headers or with the
+> -D_GNU_SOURCE flag passed to the compiler.
 >
-> If some of kthreads executing map_benchmark_thread() return with an error
-> code (e.g. due to a memory allocation failure), then the next kthreads in
-> the array are not stopped and potentially loop for indefinite time.
->
-> Call kthread_stop() for each started thread as map_benchmark_thread()
-> expects that happening in order to exit.
->
-> Found by Linux Verification Center (linuxtesting.org).
->
-> Fixes: 65789daa8087 ("dma-mapping: add benchmark support for streaming DM=
-A APIs")
-> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+> Fixes: 809216233555 ("selftests/harness: remove use of LINE_MAX")
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202404301040.3bea5782-oliver.sang@=
+intel.com
+> Signed-off-by: Edward Liaw <edliaw@google.com>
 > ---
->  kernel/dma/map_benchmark.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+>  tools/testing/selftests/sgx/Makefile    | 2 +-
+>  tools/testing/selftests/sgx/sigstruct.c | 2 --
+>  2 files changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-> index ea938bc6c7e3..7e39a4690331 100644
-> --- a/kernel/dma/map_benchmark.c
-> +++ b/kernel/dma/map_benchmark.c
-> @@ -140,13 +140,17 @@ static int do_map_benchmark(struct map_benchmark_da=
-ta *map)
+> diff --git a/tools/testing/selftests/sgx/Makefile b/tools/testing/selftes=
+ts/sgx/Makefile
+> index 867f88ce2570..272da790d9ae 100644
+> --- a/tools/testing/selftests/sgx/Makefile
+> +++ b/tools/testing/selftests/sgx/Makefile
+> @@ -12,7 +12,7 @@ OBJCOPY :=3D $(CROSS_COMPILE)objcopy
+>  endif
 >
->         msleep_interruptible(map->bparam.seconds * 1000);
->
-> -       /* wait for the completion of benchmark threads */
-> +       /* wait for the completion of all started benchmark threads */
->         for (i =3D 0; i < threads; i++) {
-> -               ret =3D kthread_stop(tsk[i]);
-> -               if (ret)
-> -                       goto out;
-> +               int kthread_ret =3D kthread_stop(tsk[i]);
-> +
-> +               if (kthread_ret)
-> +                       ret =3D kthread_ret;
->         }
->
-> +       if (ret)
-> +               goto out;
-> +
-
-do we still need to do copy_to_user(argp, &map->bparam, sizeof(map->bparam)
-after  do_map_benchmark(map) fails?
-do we also need the below?
-diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-index 02205ab53b7e..28ca165cb62c 100644
---- a/kernel/dma/map_benchmark.c
-+++ b/kernel/dma/map_benchmark.c
-@@ -252,6 +252,9 @@ static long map_benchmark_ioctl(struct file *file,
-unsigned int cmd,
-                 * dma_mask changed by benchmark
-                 */
-                dma_set_mask(map->dev, old_dma_mask);
-+
-+               if (ret)
-+                       return ret;
-                break;
-        default:
-                return -EINVAL;
-
-
->         loops =3D atomic64_read(&map->loops);
->         if (likely(loops > 0)) {
->                 u64 map_variance, unmap_variance;
+>  INCLUDES :=3D -I$(top_srcdir)/tools/include
+> -HOST_CFLAGS :=3D -Wall -Werror -g $(INCLUDES) -fPIC
+> +HOST_CFLAGS :=3D -Wall -Werror -g $(INCLUDES) -fPIC -D_GNU_SOURCE
+>  HOST_LDFLAGS :=3D -z noexecstack -lcrypto
+>  ENCL_CFLAGS +=3D -Wall -Werror -static-pie -nostdlib -ffreestanding -fPI=
+E \
+>  	       -fno-stack-protector -mrdrnd $(INCLUDES)
+> diff --git a/tools/testing/selftests/sgx/sigstruct.c b/tools/testing/self=
+tests/sgx/sigstruct.c
+> index d73b29becf5b..a0c2de7c5302 100644
+> --- a/tools/testing/selftests/sgx/sigstruct.c
+> +++ b/tools/testing/selftests/sgx/sigstruct.c
+> @@ -1,7 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*  Copyright(c) 2016-20 Intel Corporation. */
+> -
+> -#define _GNU_SOURCE
+>  #include <assert.h>
+>  #include <getopt.h>
+>  #include <stdbool.h>
 > --
-> 2.45.0
->
->
+> 2.45.0.rc0.197.gbae5840b3b-goog
+
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+
+BR, Jarkko
