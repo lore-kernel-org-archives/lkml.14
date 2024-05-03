@@ -1,136 +1,94 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D131598ED
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 19:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFA9158D6E;
+	Fri,  3 May 2024 19:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714764591; cv=none; b=nELRVes7JIBaqxEQWAJoXNKbFtke22UhullHsQyd6Ih/KcMIXrk7xhjhlZdeNgtpULZDrkHQgXAsfAwG78TeETdomjXbbJ3ozLlkYgkw0hH3ljxjrQfWuqxJAZu6I+8gO/dBt7CbmX6t6Gx0w4+GLRTyUgrJGSRrx6oayFxv1Cc=
+	t=1714764596; cv=none; b=ldxY8BYhZM6s78uTvGgFc5ImpWgVQcv3qI818hWVTA0pCMIjF5EaGZMyMKBlOnLjjh1X6mFBejuvTIpUE+A5vqU/etLyLmHGfjHvDGeK95FcUXKE88LWMDQTHqlttWRcMSiO1aRZqOzBqz0rtsZIGn9jqHm45TOv93L7NmqnEeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714764591; c=relaxed/simple;
-	bh=aSjAhdSR9LarmwINb9KQ4scksGVrnsC32oUhBbn0efQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q36n53bwrSKAHMXsb7MQvy8JevEKT/BbaPGLTQetpel7sB4CDs3YajzH37d8bmvcKHN1nQVvq0eOM9TSy7sD06UxcuapOZbDoI6q3qy0G0yTdp5+v14VEDw+YKzog71wAGuqjmqzjXdKwMPEHuZwezbIc36vvOgdxvfcf0W2rPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=P9GeCfZQ; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1714764596; c=relaxed/simple;
+	bh=m5MhwZYrQf56wlUh3xaqPGaPzrokLuXzfFsOkWQE3Do=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T7g0YT7nQ4eGjZPmf8d2ol+LhNM0bhGLSdYLvHBH08LzVTXhl3elJ1f2MAMo66LkcQumenONoQII85drlfTTRTmnD4wDRMKKgof/EiPWTJELr9HMbGAlt2uqWtDOoNuFPy6ioJqiEywJrAYeP5q/tPtXjIYQo6TtuCsyOYQ2yP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UuhBR78h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="P9GeCfZQ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714764588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DMD5RVBwkMYmGCgYVDFRWe+ej+oru7pO54GULnyHuDg=;
-	b=P9GeCfZQ+aq6eQwIwiuL8gqD9ILBdbJs76oSjeSbPeEcrAEr7aEzmHlYqKkXkKpaJVVXxy
-	qLawkl4pev9Px3WUOiK+FLs3cb1W+vTm9nHRDmIqsxxQl44ewLBQIg4Mix4lfSInVo+Pbx
-	Y/oMkNMtEf1rMsO9cqlPWe05E8BAaHc=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	David Airlie <airlied@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v5 09/10] drm: zynqmp_dp: Take dp->lock in zynqmp_dp_hpd_work_func
-Date: Fri,  3 May 2024 15:29:21 -0400
-Message-Id: <20240503192922.2172314-10-sean.anderson@linux.dev>
-In-Reply-To: <20240503192922.2172314-1-sean.anderson@linux.dev>
-References: <20240503192922.2172314-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UuhBR78h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB83DC4AF14;
+	Fri,  3 May 2024 19:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714764596;
+	bh=m5MhwZYrQf56wlUh3xaqPGaPzrokLuXzfFsOkWQE3Do=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UuhBR78hPJyqGFp6vzkoJDmIZDhaza2rV4Hf7qKYFFLUYwtifnoMM1BGjNKs71tSG
+	 L9gUVYfSzUS65LahDPjaF1FJGUJH9KM3SQOL8W9Zr61QeqwwmNKUERjO7h+oHpliNW
+	 IaBS/LA7gX2wZaCUtsZw0g6Kpr++ZdZwYBsMNIZyfgZUV5OGpitEJiyWq6F/lu/K8P
+	 8AhQaCCINk+BWGBwfsz1CMLxTr9Z3e1RhRBehnzXA5CH7+5nZpzrKS0VFeyusCPqdx
+	 eYphMjVpmvAgewpYhgZmdS7LuE1XiC7TQtwtV34/VfT/8TiCeTmXoBZC//NiKv32v/
+	 YbisTCPt+22SQ==
+Date: Fri, 3 May 2024 12:29:54 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Praveen Kannoju <praveen.kannoju@oracle.com>
+Cc: "jhs@mojatatu.com" <jhs@mojatatu.com>, "xiyou.wangcong@gmail.com"
+ <xiyou.wangcong@gmail.com>, "jiri@resnulli.us" <jiri@resnulli.us>,
+ "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Rajesh Sivaramasubramaniom
+ <rajesh.sivaramasubramaniom@oracle.com>, Rama Nichanamatlu
+ <rama.nichanamatlu@oracle.com>, Manjunath Patil
+ <manjunath.b.patil@oracle.com>
+Subject: Re: [PATCH RFC] net/sched: adjust device watchdog timer to detect
+ stopped queue at right time
+Message-ID: <20240503122954.58bee752@kernel.org>
+In-Reply-To: <SA1PR10MB644567B49D44BA641CF63E828C1F2@SA1PR10MB6445.namprd10.prod.outlook.com>
+References: <20240430140010.5005-1-praveen.kannoju@oracle.com>
+	<20240501151251.2eccb4d0@kernel.org>
+	<SA1PR10MB644567B49D44BA641CF63E828C1F2@SA1PR10MB6445.namprd10.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add a non-locking version of zynqmp_dp_bridge_detect and use it in
-zynqmp_dp_hpd_work_func so we can take the lock explicitly. This will
-make it easier to check for hpd_ignore when we add debugfs support.
+On Fri, 3 May 2024 14:28:13 +0000 Praveen Kannoju wrote:
+> > >  				txq = netdev_get_tx_queue(dev, i);
+> > >  				trans_start = READ_ONCE(txq->trans_start);
+> > > -				if (netif_xmit_stopped(txq) &&
+> > > -				    time_after(jiffies, (trans_start +
+> > > -							 dev->watchdog_timeo))) {
+> > > -					timedout_ms = jiffies_to_msecs(jiffies - trans_start);
+> > > -					atomic_long_inc(&txq->trans_timeout);
+> > > -					break;
+> > > +				if (netif_xmit_stopped(txq)) {  
+> > 
+> > please use continue instead of adding another indentation level  
+> 
+> We need to take decision on whether to break out of loop or modify "oldest_start" only when
+> Queue is stopped. Hence one more level of indentation is needed. Can you please elaborate
+> on using "continue" in existing condition instead of adding a new indentation level.
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
----
+If the queue is not stopped, continue. Split the condition into
+multiple ifs.
 
-(no changes since v3)
+> > > +								   dev->watchdog_timeo))) {
+> > > +						timedout_ms = jiffies_to_msecs(current_jiffies -
+> > > +										trans_start);
+> > > +						atomic_long_inc(&txq->trans_timeout);
+> > > +						break;
+> > > +					}
+> > > +					next_check = trans_start + dev->watchdog_timeo -
+> > > +									current_jiffies;  
+> > 
+> > this will give us "next_check" for last queue. Let's instead find the oldest trans_start in the loop. Do:
+> > 
+> > 		unsigned long oldest_start = jiffies;
+> > 
+> > then in the loop:
+> > 
+> > 		oldest_start = min(...)
 
-Changes in v3:
-- New
-
- drivers/gpu/drm/xlnx/zynqmp_dp.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-index 91767ddbe1ce..6f3792dcac28 100644
---- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-+++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-@@ -1567,14 +1567,13 @@ static int zynqmp_dp_bridge_atomic_check(struct drm_bridge *bridge,
- 	return 0;
- }
- 
--static enum drm_connector_status zynqmp_dp_bridge_detect(struct drm_bridge *bridge)
-+static enum drm_connector_status __zynqmp_dp_bridge_detect(struct zynqmp_dp *dp)
- {
--	struct zynqmp_dp *dp = bridge_to_dp(bridge);
- 	struct zynqmp_dp_link_config *link_config = &dp->link_config;
- 	u32 state, i;
- 	int ret;
- 
--	mutex_lock(&dp->lock);
-+	lockdep_assert_held(&dp->lock);
- 
- 	/*
- 	 * This is from heuristic. It takes some delay (ex, 100 ~ 500 msec) to
-@@ -1603,16 +1602,26 @@ static enum drm_connector_status zynqmp_dp_bridge_detect(struct drm_bridge *brid
- 					       dp->num_lanes);
- 
- 		dp->status = connector_status_connected;
--		mutex_unlock(&dp->lock);
- 		return connector_status_connected;
- 	}
- 
- disconnected:
- 	dp->status = connector_status_disconnected;
--	mutex_unlock(&dp->lock);
- 	return connector_status_disconnected;
- }
- 
-+static enum drm_connector_status zynqmp_dp_bridge_detect(struct drm_bridge *bridge)
-+{
-+	struct zynqmp_dp *dp = bridge_to_dp(bridge);
-+	enum drm_connector_status ret;
-+
-+	mutex_lock(&dp->lock);
-+	ret = __zynqmp_dp_bridge_detect(dp);
-+	mutex_unlock(&dp->lock);
-+
-+	return ret;
-+}
-+
- static const struct drm_edid *zynqmp_dp_bridge_edid_read(struct drm_bridge *bridge,
- 							 struct drm_connector *connector)
- {
-@@ -1696,7 +1705,10 @@ static void zynqmp_dp_hpd_work_func(struct work_struct *work)
- 	struct zynqmp_dp *dp = container_of(work, struct zynqmp_dp, hpd_work);
- 	enum drm_connector_status status;
- 
--	status = zynqmp_dp_bridge_detect(&dp->bridge);
-+	mutex_lock(&dp->lock);
-+	status = __zynqmp_dp_bridge_detect(dp);
-+	mutex_unlock(&dp->lock);
-+
- 	drm_bridge_hpd_notify(&dp->bridge, status);
- }
- 
--- 
-2.35.1.1320.gc452695387.dirty
-
+BTW, the min() I suggested here needs to be a if (time_after(...)),
+we can't use bare min() to compare jiffies, because they may wrap.
