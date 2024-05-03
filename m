@@ -1,102 +1,91 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEFB535A8;
-	Fri,  3 May 2024 21:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8EF537E9
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714772005; cv=none; b=HT2o2lzg6YVvVLJ9RBKBIeA7e4PtfMsboxkBl/LCwC12qe+HL/MqE2VDx5Hb2Z+a6b3VglJbN6rX8MPw6GUjb6mKVWOggrXpdVuuRyGcBrMGJZs0LrEVH9djg5yE7Q2xtC8pfoJ2KrU0Yrd1jJsrG21VgXcI4z/f5u2sEzn2TUM=
+	t=1714772028; cv=none; b=tjxcVxT8ujzOfyjmyD2bPwlirYFREM0qOpO8MTa5M0dn2neGGwxrJUXIw8xS3D6V5TavshNPGO66lWbzy0hEAMWAZCEHJekLOM5jzMZ/W6eD56T7LdBvMhhx6zWjLWI5GMSCdlA+djqBr1xq0EZlnCyfZbKeh8dGCJCSxGKnyB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714772005; c=relaxed/simple;
-	bh=NCAXwfHyr61OCXX/ZRFhD5O/01D/pMK9dk2BzvaMrcc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bnm6z5LYoDTS93WFK2S9vuHZ2wGrSESrWfBKFVHY7+EEFBhn8ZlzlPE92xmdHWmLGcSG0xCfTj1Fy4icFuDyxplmpJAx9KhoLQN/wTjQvKgQEkT84AuYwEwFYH7IyqcY4MOuFMEiKhRqMtOXlnI6Q37PF4CsqbLxvwC6c1ilwOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V7Xcns+h; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714772028; c=relaxed/simple;
+	bh=2p3EmqeLa76hFcxzVFu3IM1y0mu3LdQ1D6og4KfIlyc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=X4PQffF5SRZ8oCM8unjL2IODpymKib1cLZvkr4BCJLD1Gg1VKsfleAQqihy7Q2HsEych+6NVkUKy8eorvmGy5C4U4CA8A6gGc7bylFZ9xEi+le7zF6Z9o8eGkwDOq3QNohfGXBqRfiVjpKLx9ZMHepukC79zZAqIyprx+AnIaHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OmUaLXQp; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7Xcns+h"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6f44d2b3130so166110b3a.2;
-        Fri, 03 May 2024 14:33:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OmUaLXQp"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6ed663aa4a7so204098b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:33:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714772003; x=1715376803; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yJ1rjd2I3L8WgYwmzP2Belj1FKW5S0lN+W1hzufyv1M=;
-        b=V7Xcns+hoctowIec1VLFRsvlHL51CwS+X6jFv7OkMpCilJOnRsu4YZJ5TNFv10/OWK
-         +jLS6wRi6nFpA44iMooN1kG3LDoreKMoAKfszooIdx+4hK5NTQUOJ6CI3D78e+wALS5F
-         mhuZnPxBuomHf3xK9qlQDf3jR/S19wuOX1l0drObmUTIMrGpvz1cib1Q9GccKNmyCW2m
-         Aka9sH3U9r3Qpw4sU//G0aP1PnOrjsAuNAHEqPaPdAZus6iWLW+7nHoHXbD3cbG0vzAJ
-         hNV1Q9mElG3un6xkK/d2AXtsS5omu8RkfG2/DDstskmoA+UY23eAVwDK0DCK+CGcbLRb
-         N2Kg==
+        d=google.com; s=20230601; t=1714772026; x=1715376826; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MlrISKi2c+M0hlWH8F4xXuKQHxXn7iCZjvDMr+QQnwo=;
+        b=OmUaLXQp24JfPCMh5pOxUVioevzmlQEqyZSwtrWKODVyaGCrGZ2Lt3Q9tO6POuOTaS
+         GyDUNpr3YtVpdZau2BeUI5vLgkRAEi6HG1P7s78Dnl6he+PYsF5YO63sRioI4+w5MXrw
+         woz0Bhcov90Rhk1qomiNFfym/PrfV62UkO4YtkK+H25dgtO2F1OUpJfx1kesv2CR9xAQ
+         K1/RsYhakr8ylcNuHuql2/1KvFG1TkHL6vFmgoCSMO8yd7daiigCP1dVhOQ8CeSvqWfl
+         wMZBsuzKoSlWSJ5xp0+anL4P0bqExoeCxaAwNGZ/doIPlQZoQsbKvz86KTiIy02y7yza
+         u7Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714772003; x=1715376803;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yJ1rjd2I3L8WgYwmzP2Belj1FKW5S0lN+W1hzufyv1M=;
-        b=vsKCO1volPDijkoToIdpctue2zf5epReldeZB3Iown2URPNR2Ir7SgFRfpNRiCZPns
-         b5XOAJum70kECvU3SlHZNEj9n/sCvKAQXlagZYfZKKnFLlktqeXE6o40hs7LM0IsawzF
-         JEIYjTNNgvQJ86hkYv1G0/2JU8PvMrT8fyfyVgrA53eRJoontR1XYkcWK8zV1YSrkA/l
-         14z+F6WXe9DkxJAcJB104Qxlocbrr5e8Bf+cVZBoi224626mDLVm+le7HFLo9vCR6QOh
-         PnB71ENczTCaOEY9ovb/OUBhmivyUQMeLgN05XK3XwAoqaCyDM2LAaf37DMWNKdDAXke
-         9NJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMCLkTtLRH5nBu6P45dPpMy4xDghlHDjU7jJ901xFutyoduHbIORUV0tdAKyqPPkPK0qaCWU+IYPX7D0IEtWiLzqrEaCAqXlogF3mRrOXSDcXcxCoPMYzyq+wTJuzWGXJD1q/Uz9emGbe8ryq+SwnbStTgWIjJLgV6qIFYT4fj6HKIXBM=
-X-Gm-Message-State: AOJu0Yzd9+RHCDdupmZFSX2y8CVKL9cBGhKLZzspH/FVrox0IMeZykis
-	+JIvj7xGlv/IZqSOL/F/lakKF9zhkbH9BmStNuXIz8pHGOg2+J0A
-X-Google-Smtp-Source: AGHT+IGu4d+JB6H6GVxzxsiFWbM1p1lxUwqo0405OocYqBrS24F6eOYzEVRzk7IwracOeHHe6x7wyg==
-X-Received: by 2002:a05:6a20:948c:b0:1ad:747:3fd9 with SMTP id hs12-20020a056a20948c00b001ad07473fd9mr3790769pzb.54.1714772003163;
-        Fri, 03 May 2024 14:33:23 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id y8-20020a17090264c800b001e868e29fabsm3793795pli.251.2024.05.03.14.33.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 May 2024 14:33:22 -0700 (PDT)
-Message-ID: <f010f127-ed51-43ca-9c88-7bc7e06025e1@gmail.com>
-Date: Fri, 3 May 2024 14:33:20 -0700
+        d=1e100.net; s=20230601; t=1714772026; x=1715376826;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MlrISKi2c+M0hlWH8F4xXuKQHxXn7iCZjvDMr+QQnwo=;
+        b=g/85PG2WOfZy5osirBaIHAzQEM3E3hdnJ7MIYMJkUBsR/8zPO/qkIWSyFVBXoZzlmM
+         OoEH58N7DxbHUnoeDoNE0U8OlrPEVsVLT/lH4dyq/nLPHYTqE+CGfq43/P2GbhnF5c/y
+         fcKKl2kmN3m8hocTYubv0iUnL0FHSAOjGmAee+J+sprxKEpCViZ2bbyZMHHN6mICX7KY
+         1ootgs5E0UPsi7RgjGiRILDlVV4n6eKGJ8GDCt7E6d5yVZ6uvn+0mkrvBWod2n13jqGB
+         ZJjswCGfKbvMt2aswtyUZmKCspZoPH7ozRn41vffoSFA8zd6LHxazo/Zsng64A51CEw3
+         BKTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLIh3/qTNYFnueguyrNGr8AcQPOjfHGEi0BMusMfxkttgGhVDi6cCHR5ot63GrEckt1nHvq3tHIMlljWYPT8Kp7oRQMeN4WEDwclqU
+X-Gm-Message-State: AOJu0YwQvAvFmKTP/SMunU/eenSY3DDx1CMj9aSnZBbw8EHw2cok9x+G
+	Rofh5HLVGCRHEIs9Y1QjbUL24/rj4rkV+akS+Ay3CVtAJ2OSbTxGVlwPliC8PkbRZg2bDdlAz5x
+	xZg==
+X-Google-Smtp-Source: AGHT+IEHyKqw2sfoqSfrlqHZmBh3uSQ8p/kW7UX2W50ATZadR3KM3oZfm4nJXRLPcnOkKXVpCRpkzPQWRKg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:2d8a:b0:6f3:84f4:78e4 with SMTP id
+ fb10-20020a056a002d8a00b006f384f478e4mr124606pfb.4.1714772026488; Fri, 03 May
+ 2024 14:33:46 -0700 (PDT)
+Date: Fri,  3 May 2024 14:32:14 -0700
+In-Reply-To: <20240418021823.1275276-1-alejandro.j.jimenez@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] mips: bmips: enable RAC on BMIPS4350
-To: Christian Marangi <ansuelsmth@gmail.com>,
- Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <zajec5@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
- linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, =?UTF-8?Q?Daniel_Gonz=C3=A1lez_Cabanelas?=
- <dgcbueu@gmail.com>
-References: <20240503212139.5811-1-ansuelsmth@gmail.com>
- <20240503212139.5811-6-ansuelsmth@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240503212139.5811-6-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240418021823.1275276-1-alejandro.j.jimenez@oracle.com>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <171469178174.1010245.3908365461241095071.b4-ty@google.com>
+Subject: Re: [PATCH v2 0/2] APICv-related fixes for inhibits and tracepoint
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
+	Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+Cc: pbonzini@redhat.com, linux-kernel@vger.kernel.org, 
+	joao.m.martins@oracle.com, boris.ostrovsky@oracle.com, 
+	suravee.suthikulpanit@amd.com, mlevitsk@redhat.com
+Content-Type: text/plain; charset="utf-8"
 
-On 5/3/24 14:21, Christian Marangi wrote:
-> From: Daniel González Cabanelas <dgcbueu@gmail.com>
+On Thu, 18 Apr 2024 02:18:21 +0000, Alejandro Jimenez wrote:
+> v2: Add Sean's changes to [PATCH 1/2].
 > 
-> The data RAC is left disabled by the bootloader in some SoCs, at least in
-> the core it boots from.
-> Enabling this feature increases the performance up to +30% depending on the
-> task.
+> --
 > 
-> Signed-off-by: Daniel González Cabanelas <dgcbueu@gmail.com>
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> [ rework code and reduce code duplication ]
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> Patch 1 fixes an issue when avic=0 (current default) where
+> APICV_INHIBIT_REASON_ABSENT remains set even after an in-kernel local APIC has
+> been created. e.g. tracing the inhibition tracepoint shows:
+> 
+> [...]
 
-Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Applied to kvm-x86 misc, with the previously mentioned fixups, thanks!
 
+[1/2] KVM: x86: Only set APICV_INHIBIT_REASON_ABSENT if APICv is enabled
+      https://github.com/kvm-x86/linux/commit/6982b34c21cb
+[2/2] KVM: x86: Remove VT-d mention in posted interrupt tracepoint
+      https://github.com/kvm-x86/linux/commit/51937f2aae18
+
+--
+https://github.com/kvm-x86/linux/tree/next
