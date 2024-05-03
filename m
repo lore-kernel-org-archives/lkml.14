@@ -1,254 +1,140 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F04139CF8;
-	Fri,  3 May 2024 13:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D203E1474BF
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714743634; cv=none; b=Bg87d/EMC5PSOibmXEFGWtAeM2OUiDIRSbNhr5C7Cfy1w4cDndJ+HEpVBIlBYDNH/TswO6+hS/6aXzfD7XmTrxmJ6Er6p9uT4gMPJYf3R+N9AhoKAp7b4KZEizHoavE9TjmJtN3nwDT8o6B6RvKBIlOipmrDZrbTFJsOwqfPZYE=
+	t=1714743690; cv=none; b=VPnF9kprQrCMvE6WfNg6Y5Vq7Lq36GZwSHaG0UMsj+FwV20TJPRAu75MbWCIP0UvMcxXl1Hq55cWBWzzcbSs29zxFjjFr0eJAJ/BB5215GwnLIaznPXq6ENu14pAc2JI9MIsMzybdoaXHwLx7YmKnNkuip7P5gf5iVxbnqDWn1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714743634; c=relaxed/simple;
-	bh=izGzRh53kNir17NtrU6uAf2uWt6oz72X9pbN6GcH8g4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aIfy5dLdwoJXbvtQotpq8UtZ6HhKTmeLW+e4cvmXfRs6M5sbyWONaBTj3p7UghJb0v60dmgRS+shrqjFIiAhehBzQtE8z4/1TV7Nc0dIApMyMod8em7JQ2NNZJYzppnRVQV1EcTZenb8ptBnVzsGhlCOzJ2xp0cvsACyCMWDnHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OkOB9RfS; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OkOB9RfS"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 443CLH05026098;
-	Fri, 3 May 2024 13:40:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=OTB8nHFLPaquXF5F/bBkNoQstl6p52xaF/pLsiIiK+E=; b=Ok
-	OB9RfSaE7dFEwpgN2ng24tTsRGHoRUdPZRLivDNQc4Kt5kpR4600xo8WiRIWzXjJ
-	sZabYLm8mWq8xYidXK8lDUJcMMH1FsPlkh0TngbWtId51nBXMhlkVPvZIU8nbLY3
-	Gi0thrgzD648jWAhKJW7Ke+pEi8oRF3wO9aer31NVSl9HctOKpORMHlLAPRA2gjV
-	UB9tX1NMJxom6EfLvAzi/5wBE8XEVyknmVz4UjXit1TTr0pfZfmGV5hT7jtZ7DXH
-	wvL9+Cqaue8c8sDGaMFH4KFDrL7FebKh4G2nslCXk6TphxdCR2J4/M+FO1dRWt8x
-	Anesn5ZMPjLpX9Xrh4ug==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xv7pxk1jy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 May 2024 13:40:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 443DeOCE027742
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 3 May 2024 13:40:24 GMT
-Received: from [10.214.66.164] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 3 May 2024
- 06:40:21 -0700
-Message-ID: <289b9ad6-58a3-aa39-48ae-a244fe108354@quicinc.com>
-Date: Fri, 3 May 2024 19:10:18 +0530
+	s=arc-20240116; t=1714743690; c=relaxed/simple;
+	bh=YzBsIJFXDqLgDA3FCpHuVIFrGfe1FFzjhQ/UF8NhHI0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=a3BGXVYNDMtORysPA42JEaCRD0qWIXtGIIEsB6yiZCW+LXX2RKyaqC729ohMNuc4siODhpmjN2IqJ+CNE9EU4FricVVz826D7nO++GAsvRVYAQIA5As4Q7gvNC1fCluvIVTpH+ZoNvU88xLQ8wrfD0bNnsQsO55JsqD2usuIfiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-36c5d1c48d3so26748475ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 06:41:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714743688; x=1715348488;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pHF73fXV9YBzhlAyLN1LlD3cj+yK8oEXzez72G9MWbY=;
+        b=FpysVhGcGCPaJJDOtfHC/X14rBRTnaJbygKgbKyxYm2waLIiUMbIb1bleLPry2HQie
+         CdIJy3LSpexyL1MQp18gDHyUCmctl4jb+b8OkloJsJ3KkS85u0EjdG+jL/orzNvC+PzF
+         worqeDppe2RBfXye1/t6dmXKfgp56UlvqxmZJ5YNFCewtkgcN/pBvXa4x/xu2SDbiCO5
+         nLk3GPQndluOAVPODEXt8R87lnuw5iZdUxziU2L+OoX9O1XWisAooKeulnKp9v5fP7EX
+         s1QayMMA86YSTZZZjUhcwJOs54RIEKPmT+fhGvt8tAu1mt4Fp9mWWDuOm38oHi7ka1Fu
+         560Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV9SMF5iLJP6WjdeS1Asr8jMgPNfNJd+DuNjyBvD2M7888f9rfYUEnWy127A9Bm6ERCVSZC0Gvyu2LRU59Ul9Z63Amyk1Z5fr/DxVVo
+X-Gm-Message-State: AOJu0YysavJ5sgoNysA9NGpnyp1yJ0swCajxrM6OhmKb2Cd5hTEHvzAp
+	IURof+ZK2c5ekj4p2YO1ZXN0SgxV+8wAv2Bp15vB0Mk+1JSTitSkLbmSbIniZugCMuatmHVqbB+
+	vBuwzymp0tprIHydS4EdBoK7yPaCx9mmsUdhl8AIke6GUpkg9etCGOPM=
+X-Google-Smtp-Source: AGHT+IGNaS7EuIrM/DtrBgMbQOBFKh5oHIf0eww9bEoUDBoVGZqDbHtx1ynsMXbVfoU1F/2kzogv+fEmPyn/TGBu7pAX2+QVf8Lk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] dmabuf: fix dmabuf file poll uaf issue
-To: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        zhiguojiang
-	<justinjiang@vivo.com>,
-        "T.J. Mercier" <tjmercier@google.com>
-CC: Sumit Semwal <sumit.semwal@linaro.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-        <linux-kernel@vger.kernel.org>, <opensource.kernel@vivo.com>
-References: <20240327022903.776-1-justinjiang@vivo.com>
- <5cf29162-a29d-4af7-b68e-aac5c862d20e@amd.com>
- <cc7defae-60c1-4cc8-aee5-475d4460e574@vivo.com>
- <23375ba8-9558-4886-9c65-af9fe8e8e8b6@amd.com>
- <CABdmKX2Kf4ZmVzv3LGTz2GyP-9+rAtFY9hSAxdkrwK8mG0gDvQ@mail.gmail.com>
- <e55cad9b-a361-4d27-a351-f6a4f5b8b734@vivo.com>
- <40ac02bb-efe2-4f52-a4f2-7b56d9b93d2c@amd.com>
- <4fedd80c-d5b6-4478-bfd3-02d1ee1a26e5@vivo.com>
- <aab5ec51-fcff-44f2-a4f5-2979bd776a03@amd.com>
- <2ebca2fd-9465-4e64-b3cc-ffb88ef87800@vivo.com>
- <d4209754-5f26-422d-aca0-45cccbc44ad0@amd.com>
-Content-Language: en-US
-From: Charan Teja Kalla <quic_charante@quicinc.com>
-In-Reply-To: <d4209754-5f26-422d-aca0-45cccbc44ad0@amd.com>
+X-Received: by 2002:a05:6e02:1389:b0:36c:4c3c:e16 with SMTP id
+ d9-20020a056e02138900b0036c4c3c0e16mr93724ilo.2.1714743688106; Fri, 03 May
+ 2024 06:41:28 -0700 (PDT)
+Date: Fri, 03 May 2024 06:41:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006923bb06178ce04a@google.com>
+Subject: [syzbot] [mm?] [io-uring?] WARNING in hpage_collapse_scan_pmd (2)
+From: syzbot <syzbot+5ea2845f44caa77f5543@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Rg_pKWba3Akm2TNgCyjNcGyIoHI3gh5C
-X-Proofpoint-ORIG-GUID: Rg_pKWba3Akm2TNgCyjNcGyIoHI3gh5C
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-03_09,2024-05-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0 mlxscore=0
- bulkscore=0 spamscore=0 malwarescore=0 impostorscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2405030098
 
-Thanks Christian/TJ for the inputs!!
+Hello,
 
-On 4/18/2024 12:16 PM, Christian König wrote:
-> As far as I can see the EPOLL holds a reference to the files it
-> contains. So it is perfectly valid to add the file descriptor to EPOLL
-> and then close it.
->
-> In this case the file won't be closed, but be kept alive by it's
-> reference in the EPOLL file descriptor.
+syzbot found the following issue on:
 
-I am not seeing that adding a 'fd' into the epoll monitoring list will
-increase its refcount.  Confirmed by writing a testcase that just do
-open + EPOLL_CTL_ADD and see the /proc/../fdinfo of epoll fd(Added
-file_count() info to the output)
-# cat /proc/136/fdinfo/3
-pos:    0
-flags:  02
-mnt_id: 14
-ino:    1041
-tfd:        4 events:       19 data:                4  pos:0 ino:81 sdev:5
-refcount: 1<-- The fd added to the epoll monitoring is still 1(same as
-open file refcount)
+HEAD commit:    e67572cd2204 Linux 6.9-rc6
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1067d2f8980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3310e643b6ef5d69
+dashboard link: https://syzkaller.appspot.com/bug?extid=5ea2845f44caa77f5543
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10874a40980000
 
-From the code too, I don't see a file added in the epoll monitoring list
-will have an extra refcount but momentarily (where it increases the
-refcount of target file, add it to the rbtree of the epoll context and
-then decreasing the file refcount):
-do_epoll_ctl():
-	f = fdget(epfd);
-	tf = fdget(fd);
-	epoll_mutex_lock(&ep->mtx)
-	EPOLL_CTL_ADD:
-		ep_insert(ep, epds, tf.file, fd, full_check); // Added to the epoll
-monitoring rb tree list as epitem.
-	mutex_unlock(&ep->mtx);
-	fdput(tf);
-	fdput(f);
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d3c4905a7f32/disk-e67572cd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/9e4d1fc8f9c1/vmlinux-e67572cd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4616b77edaee/bzImage-e67572cd.xz
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5ea2845f44caa77f5543@syzkaller.appspotmail.com
 
-Not sure If i am completely mistaken what you're saying here.
-
-> The fs layer which calls dma_buf_poll() should make sure that the file
-> can't go away until the function returns.
-> 
-> Then inside dma_buf_poll() we add another reference to the file while
-> installing the callback:
-> 
->                         /* Paired with fput in dma_buf_poll_cb */
->                         get_file(dmabuf->file); No, exactly that can't
-> happen either.
-> 
-
-I am not quite comfortable with epoll internals but I think below race
-is possible where "The 'file' passed to dma_buf_poll() is proper but
-->f_count == 0, which is indicating that a parallel freeing is
-happening". So, we should check the file->f_count value before taking
-the refcount.
-
-(A 'fd' registered for the epoll monitoring list is maintained as
-'epitem(epi)' in the rbtree of 'eventpoll(ep, called as epoll context).
-
-epoll_wait()				    __fput()(as file->f_count=0)
-------------------------------------------------------------------------
-a) ep_poll_callback():
-     Is the waitqueue function
-   called when signaled on the
-   wait_queue_head_t of the registered
-   poll() function.
-
-   1) It links the 'epi' to the ready list
-      of 'ep':
-       if (!ep_is_linked(epi))
-	 list_add_tail_lockless(&epi->rdllink,
-		&ep->rdllist)
-
-   2) wake_up(&ep->wq);
-	Wake up the process waiting
-	on epoll_wait() that endup
-	in ep_poll.
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 5288 at arch/x86/include/asm/pgtable.h:403 pte_uffd_wp arch/x86/include/asm/pgtable.h:403 [inline]
+WARNING: CPU: 1 PID: 5288 at arch/x86/include/asm/pgtable.h:403 hpage_collapse_scan_pmd+0xd32/0x14c0 mm/khugepaged.c:1316
+Modules linked in:
+CPU: 1 PID: 5288 Comm: syz-executor.4 Not tainted 6.9.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:pte_uffd_wp arch/x86/include/asm/pgtable.h:403 [inline]
+RIP: 0010:hpage_collapse_scan_pmd+0xd32/0x14c0 mm/khugepaged.c:1316
+Code: 90 90 e9 4b f6 ff ff 4c 8b 64 24 48 e8 f7 ee 9e ff 31 ff 4c 89 ee e8 fd e9 9e ff 4d 85 ed 0f 84 b5 01 00 00 e8 df ee 9e ff 90 <0f> 0b 90 41 be 09 00 00 00 0f b6 6c 24 47 48 8b 5c 24 10 e9 fb fa
+RSP: 0018:ffffc90003abf9b0 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff88807a402000 RCX: ffffffff81eed643
+RDX: ffff888021ddbc00 RSI: ffffffff81eed651 RDI: 0000000000000007
+RBP: 000000006897fc67 R08: 0000000000000007 R09: 0000000000000000
+R10: 0000000000000002 R11: 0000000000000002 R12: 0000000020800000
+R13: 0000000000000002 R14: 0000000000000400 R15: ffff88801e4dcc00
+FS:  00007fd661dde6c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f7e57ed9ba1 CR3: 0000000025328000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ madvise_collapse+0x738/0xb10 mm/khugepaged.c:2761
+ madvise_vma_behavior+0x202/0x1b20 mm/madvise.c:1074
+ madvise_walk_vmas+0x1cf/0x2c0 mm/madvise.c:1248
+ do_madvise+0x309/0x640 mm/madvise.c:1428
+ __do_sys_madvise mm/madvise.c:1441 [inline]
+ __se_sys_madvise mm/madvise.c:1439 [inline]
+ __x64_sys_madvise+0xa9/0x110 mm/madvise.c:1439
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd66227dea9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fd661dde0c8 EFLAGS: 00000246 ORIG_RAX: 000000000000001c
+RAX: ffffffffffffffda RBX: 00007fd6623ac050 RCX: 00007fd66227dea9
+RDX: 0000000000000019 RSI: 00000000dfc3efff RDI: 00000000203c1000
+RBP: 00007fd6622ca4a4 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000006e R14: 00007fd6623ac050 R15: 00007ffd98c8dfa8
+ </TASK>
 
 
-b) ep_poll():
-    1) while (1) {
-	eavail = ep_events_available(ep);
-	(checks ep->rdlist)
-	ep_send_events(ep);
-	(notify the events to user)
-    }
-    (epoll_wait() calling process gets
-     woken up from a.2 and process the
-     events raised added to rdlist in a.1)
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-   2) ep_send_events():
-	mutex_lock(&ep->mtx);
-	(** The sync lock is taken **)
-	list_for_each_entry_safe(epi, tmp,
-			&txlist, rdllink) {
-	    list_del_init(&epi->rdllink);
-	    revents = ep_item_poll(epi, &pt, 1)
-	    (vfs_poll()-->...f_op->poll(=dma_buf_poll)
-	}
-	mutex_unlock(&ep->mtx)
-	(**release the lock.**)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-	(As part of procession of events,
-	 each epitem is removed from rdlist
-         and call the f_op->poll() of a file
-	 which will endup in dma_buf_poll())
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-   3) dma_buf_poll():
- 	get_file(dmabuf->file);
-	(** f_count changed from 0->1 **)
-	dma_buf_poll_add_cb(resv, true, dcb):
-	(registers dma_buf_poll_cb() against fence)
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-				c) eventpoll_release_file():
-				   mutex_lock(&ep->mtx);
-				   __ep_remove(ep, epi, true):
-				   mutex_unlock(&ep->mtx);
-				  (__ep_remove() will remove the
-				   'epi' from rbtree and if present
-				   from rdlist as well)
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-				d) file_free(file), free the 'file'.
-
-e) dma_buf_poll_cb:
- /* Paired with get_file in dma_buf_poll */
- fput(dmabuf->file);
- (f_count changed from 1->0, where
-  we try to free the 'file' again
-  which is UAF/double free).
-
-
-		
-In the above race, If c) gets called first, then the 'epi' is removed
-from both rbtree and 'rdlink' under ep->mtx lock thus b.2 don't end up
-in calling the ->poll() as it don't see this event in the rdlist.
-
-Race only exist If b.2 executes first, where it will call dma_buf_poll
-with __valid 'struct file' under ep->mtx but its refcount is already
-could have been zero__. Later When e) is executed, it turns into double
-free of the 'file' structure.
-
-If you're convinced with the above race, should the fix here will be
-this simple check:
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 8fe5aa67b167..e469dd9288cc
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -240,6 +240,10 @@ static __poll_t dma_buf_poll(struct file *file,
-poll_table *poll)
- 	struct dma_resv *resv;
- 	__poll_t events;
-
-+	/* Check parallel freeing of file */
-+	if (!file_count(file))
-+		return 0;
-+
-
-Thanks,
-Charan
+If you want to undo deduplication, reply with:
+#syz undup
