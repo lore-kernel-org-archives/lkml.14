@@ -1,802 +1,245 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2052.outbound.protection.outlook.com [40.107.243.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D442414A601
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 10:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714730687; cv=none; b=CZmpmZMA7LdX3QhjWek2FqzvhwRAvUNivBgJHLg60P7wRvSMaV0nLMs9qu8f37BXzUWBehEEZgoUZ+XEQWKB07b90skAYe01BwwF+pgVImX3qFVUBZv2ht3qqjjX5gvsu2V5WqW4vn1aZXTWrr1sp0CY4kB5J9nzzs0PNtLjK3I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714730687; c=relaxed/simple;
-	bh=0+YSlkTwDhNov3WDl9Km2TVb4OVZ78zyZDK3LhEbKHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HZgDOKNEZG7QFxtTcbo2CrPcJMQM3OXWR4BHfs+UOD2Tk4Th5n++eq5EdfdI6ByJ9U3iTtxCon9tFn8qhAO6a4ZgrVBzvsdYHsluBoVsnJMX65H9ceSPfvq3IWCfd5wEQrVFdIUTMc58s0Gdo2s9KH8dj0/lXmqqhSXPXI+oGk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=IngonnQe; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E6814F114;
+	Fri,  3 May 2024 10:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714730836; cv=fail; b=bk/F6efLHAGJLS8HJoCoqlyXvSIaA4fQ3EDOUr209yOyMISzxkxi0R8i/ivfupeqYYAb4FxgILIvgqjSBq6DxwlU2QjiU66KOrzOru/70xkjMlCuFjmFRPUQ8QK0dzWD0HMQMSKJlxkYTqhSE0X9t9FLya+yajiV5ykJwROhmgQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714730836; c=relaxed/simple;
+	bh=8YDE3TY6Af90RO+SVb2FTghOr+5kQwjPVRgmP/5D0T8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Odi/1bvN8pdvbM4VE3AK36W8pPHc5HzmxOYzT5rGNTi+X6dKbn1BCu/BKc+8mXqH+2774/cChJZ/UFNmRp/taJk0lGgpAo4Lo3G6qG0bQ+9bAEzwK98uIVWLkFby9zMSSLL+HOKNQ7n/zoziX3BtvL/OMeYumSXhF+70XHKI1XU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1uwP2q5R; arc=fail smtp.client-ip=40.107.243.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="IngonnQe"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5d8b519e438so7038537a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 03:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1714730684; x=1715335484; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0QlRc6XuAJnnqxkQVx8zMCJjFKjputAg62Lw6STArfI=;
-        b=IngonnQeHE7E2Vf31V3CTlpv0OlkZHUoFHqiDxRQcOSaA07GSUBxfU3zkzbdGfJDcz
-         jql1YYG1hTQjYIRNwQ1GIcj98rK+ehv4H/APl91QVKf0CH0enIx/JayiMpQndqmaHUKJ
-         rNSxngOiCPYHWOjQIJgreHla2gMOCKsK2Cb5x4fyDyvDK9vZnAFK6L53+zcXmJavhVxM
-         wC1hODoRd6tPV3gHVLvndfqMY1+Xjvap2eijViykgR0pxnQIJGXGM79akquS9L7t+00V
-         28B1HGlR3v6w/PY8dmMh2qDAmuvtPgFeyQAP/M85l8OddBL1f3FjF0a5ug6UQLYkHiZK
-         elDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714730684; x=1715335484;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0QlRc6XuAJnnqxkQVx8zMCJjFKjputAg62Lw6STArfI=;
-        b=nrPfK9pBNGxwzCPwZWvXqPGKvJizq98vZjOg37zmzpz8mfII7iUf47IXCEB1gIJAFp
-         Rb4gN5fBRGd13NIHVnq98O+vcsRDCxBpbuSfuryOMEfWnVXZsRSCjy+utkRKX0YfMIq8
-         rgU6bWPiAoK51k0bBIY8J4xvL+8Nde3+f5ka+ZFR1f+omE7SZgmUE9PdfR+rTu+GQL5H
-         xoVxWRmNsVrTfQwxfcQsDJtHzZaximFoRG+tdHsKfxhTEPofbRzHt/wlZThI+LPcgXQQ
-         6tvkheVVAEovN0t7fB+NdShuvtztcvR3LNa29TKF64w3pYDJCUMgztn1BQtsUVPPTECV
-         l8pg==
-X-Forwarded-Encrypted: i=1; AJvYcCXha0ZTEu/n4zYRWkxeEV6G8CW1xmre0MLav4AzE/xLWjbWxNxRe/CXm1xYfxOrZV2FZ3s+sVzNltJfngf0NQ9IJjvUxOlPU9mVNKdw
-X-Gm-Message-State: AOJu0Yx+YDBvCGig03QkawRwvc7XXBx+vSQgI5WquC2gRGz8fdPAygcR
-	07kye4lOJ5wwjuJUoRHCziSmZrW0U5zBtwYHpLfHfZMVFer2aql1WbNDtqwEp3VRY9AYR+zS541
-	EQCaJEzsiIibP7xZ8/uOyDbXHjoBdYiRJLJ6U5A==
-X-Google-Smtp-Source: AGHT+IGe93ENTtNXnC3u63lLWZmhfrzE7WbAM/DIBuCLadqT8x6tjos7UYs6Xfv9EVaJn43Md3gXAzLgh7SFOxx7G8o=
-X-Received: by 2002:a17:90a:ea91:b0:2af:ff3:e14a with SMTP id
- h17-20020a17090aea9100b002af0ff3e14amr2099186pjz.16.1714730683801; Fri, 03
- May 2024 03:04:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1uwP2q5R"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OlzgkY5pzwSBX25hwAiYGzd31sQB9FQyBsv0Pzhd05CN3VyFHO0NRY3Z+GJnN0lG/r4ynGiWSlZZ+g1pyjjqyZd9YdKj/HOFaVg1DHpbr0/kuKf2TI8FmcL0VEjmviG48KDn8r2EXsW+E90teTezraXF7ylQk0GZCYLSo3NteezaO+K8JjfjBEOsjzdJ94cJocSysSqYFPrJZ8fIdAvlmnELS8UDF9z8RgIxE/Yq3OP5ylPqvi7RHj+beeSOW19Kks9Jz0u7QVK7yhD7s2vnEBNBVczUMbHoaBnybP3vhL1lPQSfIkDXOUlXGbQZoKl1OA9iQ0YLpyuoU1wbG7dF8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=U69VzoapZSsDLsDaLChWAqtggE/r9o8hVWHwp4TX0O4=;
+ b=KXmubTDfjRLELFxP5ZoUm8hVNMrZe6H+K41VzDy33i3/YJQWA0WH0YZqEYUf/VKoC37Viq+5E0E/Aq3XbCFhfSY4cfflerPOZUaLvLBEzioeEtuduorW1vEF6KAiZU50CwU/jO4QZt6HEKZGEVIsEa8lSQWHSoomenBYw5uBsnRg4M6GoBWKZShq/zGar3UamIO8oNuguHoBtZOV1enoqL2BOJD/+Tycc9pLxyZM0yGJnKB0V0Y5tGz5iN42gr+C6WGj1lI5+4xl5yxVlptLprhBJljeIrmYZxWmXT5Os4UGIaptASyuonBut2TDlgFyzYe09GwMi1/j7zqR7jaLZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U69VzoapZSsDLsDaLChWAqtggE/r9o8hVWHwp4TX0O4=;
+ b=1uwP2q5RZliAeuZF7MLo03nBkOa60P3grSSlvnpumXU/8omLPdEjqdKOY7VTpGDV0ykIhzzJ61bpCraH0vfzGycQBNbVYb2+LPWMF6YT24AhcBb/1axzzoHS7k/wCf0LQYK8mVuk70YHTzLlKccfbjaRZ6U8ZvcBeIM5JB8GlmI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
+ by MN2PR12MB4424.namprd12.prod.outlook.com (2603:10b6:208:26a::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.33; Fri, 3 May
+ 2024 10:07:12 +0000
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9%3]) with mapi id 15.20.7544.029; Fri, 3 May 2024
+ 10:07:12 +0000
+Message-ID: <32b1b0e0-133f-4000-b4ab-9babaa2ae035@amd.com>
+Date: Fri, 3 May 2024 15:37:01 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+To: Ingo Molnar <mingo@kernel.org>
+Cc: tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, peterz@infradead.org, mingo@redhat.com,
+ ananth.narayan@amd.com, gautham.shenoy@amd.com,
+ linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+ alexander.shishkin@linux.intel.com, irogers@google.com,
+ gustavoars@kernel.org, kprateek.nayak@amd.com, ravi.bangoria@amd.com
+References: <20240502095115.177713-1-Dhananjay.Ugwekar@amd.com>
+ <20240502095115.177713-3-Dhananjay.Ugwekar@amd.com>
+ <ZjS0Uio+nvZLLmyb@gmail.com>
+Content-Language: en-US
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <ZjS0Uio+nvZLLmyb@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0064.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:23::9) To LV8PR12MB9207.namprd12.prod.outlook.com
+ (2603:10b6:408:187::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502183604.1216576-1-naresh.solanki@9elements.com> <78af0dfa-7021-4d20-8ea4-69e60ed1263e@roeck-us.net>
-In-Reply-To: <78af0dfa-7021-4d20-8ea4-69e60ed1263e@roeck-us.net>
-From: Naresh Solanki <naresh.solanki@9elements.com>
-Date: Fri, 3 May 2024 15:34:32 +0530
-Message-ID: <CABqG17i4Rnw2PPWCb-aAosu3YHmXgO_+ONU-UB8TDaArqXFWLg@mail.gmail.com>
-Subject: Re: [PATCH v3] hwmon (max6639): Use regmap
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|MN2PR12MB4424:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ba15695-8298-459f-7fb8-08dc6b58cce4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|7416005|1800799015|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WThnMldxMnA0U3Y5V3NPTHN2aisyTDBnTnprTVRna0pjVXhFdkhpN0xlSGVF?=
+ =?utf-8?B?dWZSMUxQS2x4cXR0aitabzFaWHVQQmc5UlN6eVJDU2s1Sjg1UHlPWWxLVlVU?=
+ =?utf-8?B?OXNWMnF3RW5EZytZcTRZcGRvd2JKNkZqdVIxbEQvTGZWRUJ0MW5qdDVrTDdk?=
+ =?utf-8?B?bGY3Sk45b1FCQnA0dDU1b0RwZWNlTTFOMEJORzBvbFpYMXkrdkFhVXo4L2Fu?=
+ =?utf-8?B?cDJ4aFdudFo5RkFOVFQvcHpIRlpWNDEwZkhXckdRVnFpVytJTjN1b1hHdGcy?=
+ =?utf-8?B?MzBkOVQ0YzJoamZDY1ZaVUJOa3ZPWGtHRUlybFZzbzhheG1SNHo1VTEvbjZy?=
+ =?utf-8?B?QXg3T3NwZWpaRjlDcjN0V1M4ZjkwMkNEZ3U4TVhaK2ZON2drbHF0WHVEejM3?=
+ =?utf-8?B?NnVDbnlmWXRFVWxUZ2FWTU53Ynp5QUpYdXFxSmJvdWhSUkpNL0ZoL2JuUWd3?=
+ =?utf-8?B?bldPNmJwR1drTWptMDRmSmFJNUhyMXNOL2QvanNkVTB4bmluUzJBWXFVRU9Y?=
+ =?utf-8?B?Mm9EUFM4eUZUeUFKaUljMkxjNEhSRmRhVG1yeTJYU0dDamg2RWpZd2J1VkdB?=
+ =?utf-8?B?MXBDRGhRY1p2UU5kWVBPZjVuVHNMeENzZHJmTHFkOWYxa3dtbkdoaVF2UVNL?=
+ =?utf-8?B?eDVmUDB5VEp5WE5YNkNqazNBeHZEK0JsYkhVdGJoalgyRzFnL2NaamRscW8z?=
+ =?utf-8?B?QW1lQUFsSldJY1cvZXEvczVJRkxFeHowUGpkbFhZbGRhRkhYWmN0SEJuY1c5?=
+ =?utf-8?B?bmM0NjUzQW5rMk4ySGxnZk1jaHlLbVdTeWFENEZseTNicXRRdGZhMzhSZ0xD?=
+ =?utf-8?B?MEV6b2dBSUJ6M0QxVllNQWhFYU11TmxFQkxlSjczdFpxZCtDMmRPYTFKWUhD?=
+ =?utf-8?B?NXVWTWRocjM2eUdZRnNWcjl1eGNKVzVJOUs1R1lQWFhpMGRDa0h3UUxoRGZP?=
+ =?utf-8?B?bkpkSVl5VnFGdGVNa0dsbGxHcTlsUlB0QUNjQk9hWERSY1ZJcldHRWptWUE1?=
+ =?utf-8?B?WEgxZnkwZnNZc1h6bGdTUEhCdVkyOTAvVFN2b3BxNXhPNXZPOUlzRUtVamRG?=
+ =?utf-8?B?S3orTEFRNmpIRnprTzlmWS91bGxhRXgwTU9CcVp6Skh0RXN2bEV2WmhYblFU?=
+ =?utf-8?B?VWliWHlhOGwrVGRpRmhidHNGVXYxYld4TnpwbHNkWHdUTDRCYWlBK2I4cWRP?=
+ =?utf-8?B?RWpPeDhYRjJrbjJsQzE4NkJNWnlMaDNqTkNFNnZsWDdnL0dyaVVZQkhrdU1h?=
+ =?utf-8?B?RG9rSHhzMGpyQjBsbERIMzBYK0lHOE1VcisyQTVUZVM2QlBMcFIwZWxwUjdw?=
+ =?utf-8?B?V2tnWTZ6SDBnRE9yK09MOVVaM3VpTkRzdVVwemY5TUttdjltOUxpRzVHVitU?=
+ =?utf-8?B?bERlbWRKd2llcCsrQjVONHRsM2w5ZzBwMFBDd3hZSVlzVndWWSt0T2YvQ3hj?=
+ =?utf-8?B?UnJ0bzhnVEVERHpVb3ZPS1hhSkRVa0FrZUsxWGZTY1NkL1ZCRzRELzVIS2pX?=
+ =?utf-8?B?anlIQlYwTzlXbkM3WThNazhLK3RVVm9zaHBTMUU4MXRsVlFLWlRBa2FISHNM?=
+ =?utf-8?B?Rjd1cElxQnNua0ZycjNTS1RacnYxRDFhVzlFRlpsaERNMzJ1dENleGNDamxr?=
+ =?utf-8?Q?jGFOLRH5JdGAcsw8d0QG+EVqMNaNRYNr7g8GSklaDeQo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dzdDZ3QyTmJ1S1VHY1g5d1ZoZTBUYmVzbHhaQ3F2NjYvZnhaeWQ1Zi9iUlY5?=
+ =?utf-8?B?a1dWOWN5QWt2VkNDemRkdmtuUkkwa0h2cElxR1BaY3R5eWN2NlhuRzBOM0lO?=
+ =?utf-8?B?YUFpVWlCU0Iwekw2endTS3M4Y05NRmVJVXkyVHVSQUczKzd0WFZlVmJmVnN6?=
+ =?utf-8?B?VW8venNTNE53MGgrMGROMmxRck9NRXRjSDVmZTBhUFJxcTRQS1E0M1FrRGE4?=
+ =?utf-8?B?aE5wUC8rVExnRFpDSkV6S0ZDL1lkeG5weng1bnlZUkc2b1Zkd0pLVjRlb0p5?=
+ =?utf-8?B?WWZQL0xwb0o0V1dDRnJiS1h0RzRVVW0rcVdGVnVyWk1CVUY0UE13MVhpcEVw?=
+ =?utf-8?B?VXh2eEtldmhURUdDNVhWMm13QXpLRE5qU1JqaWtrM0lzN3lQd1VGSVJHQU9k?=
+ =?utf-8?B?L281RU9OczUyUStaQ0d1cnVONDdESGx0NlBZb1VHSm80UGFMeTRNUENiakNq?=
+ =?utf-8?B?ODJ5YXpTME5ONmh1amVJdzczTmtoTXJzdFR5Tko5VTZuYTYyTGhrWWJpMlBh?=
+ =?utf-8?B?VEhNRkd6eHdrQXRIRVoxaldxanBMWGJTT25KUExXTFFIMU1KUUV3ckVkeVVu?=
+ =?utf-8?B?REVRSVZRUnVyc0pkOHVYSWQ1Y1NvbHQvTEVyTFNCSXRick1jaEcwb01oc2E0?=
+ =?utf-8?B?bWx4YmVleUN4eVBEdnhTOXl2YTFkdXRUT3NsWEhscllyVWJvYmZHcTNEajRH?=
+ =?utf-8?B?YVNsZE80Y2pBNGovV0d2Wk16MEptcjFPall3eFhHUjVKUlg3WjB6QXkvM1Zi?=
+ =?utf-8?B?S3o1QWRwdFJDOWowL3hLV21GNStEL2xJWGQxQ1I5ejZWdHcyamJ5ZC9wcC9P?=
+ =?utf-8?B?dVZSWDd3NTVwOHI0LzZYTnpWZlAya2ZFdk9XS0VMYWVwZjMzb3dyQUpzYzZC?=
+ =?utf-8?B?d1VIV1ZJeStjMU9RUW5UdXJhdzFwU2N3dDcrbS8wOW5kdEdLTGZkQkhlckVD?=
+ =?utf-8?B?NE81TDQ2YmZHbHJWcDU2Nk1YenI4bDhNbloyK2hGTHJTZlg1b2VLekpSYms3?=
+ =?utf-8?B?czNLVkZvc250SmRYQkU2M2pEZ2Y2TTEwckZ4YzdtSmNsc1JxV3l5bURqSVAw?=
+ =?utf-8?B?aStLNlRUbGp1ckF5UUl5VVZpdjQ4V2xaanVyTEJ1U0xpTnloOTAwV2ZaYlRI?=
+ =?utf-8?B?ZUV1ZjJZMExsejY4cDY3dFh0cTU5bmVCdG0rVm9pWVg5VHUvM3RjWTg5ckl4?=
+ =?utf-8?B?d1p5MFlNSCtGMXdoeFVTcjJRTGVnMm9VVW9mYWRsTnN6dUJYLzZqTkhjUnNY?=
+ =?utf-8?B?RGhIN3ZUMXpBejhweEdJTU9POXlmOUtnVi9ROG9WQXIreDZIN01pNzg1Q3JR?=
+ =?utf-8?B?SThBWEJYbTVMdlFVN1lqOVpkRE05SFUvSEFJQVJCbTQ0TGdkMnNGWWdpcHZx?=
+ =?utf-8?B?RXliamU4azkzZDZ1VUJIb1pQdXl1N09IYzBENmp5T1pkcWhTWEk5SDM4M3hY?=
+ =?utf-8?B?SzNqQldhR0lkRkIwLzVKR2VTK3NjMHF0dmw0RUtoOWdnbDUzT3hadENGa2ZW?=
+ =?utf-8?B?Tm9sL3RkTWVwZ3JWc1ZzRXlzaFhDZU5sVmh0bkFSUkhIMjZZaUozL2ppNVpm?=
+ =?utf-8?B?VXQ0c2lkaGdaWmFVTmJVNytvTE5Cb00yb3p2bnR6MGlyTHhnNUg3aDZ3ZWpl?=
+ =?utf-8?B?cXJsaFpxQjFNUXlDZEdkZ1hHbjhQQ1NtaUZZcFJUbGd1Z0ZRTUpHUndKT0FY?=
+ =?utf-8?B?MW1Rei9CMHVvbjA3V1g4WHkrbUUxbi8rY2MrQXcrWjhvd1kwdEJwREFEay9p?=
+ =?utf-8?B?NjdTTWtGMXVNOHdMdy8rQ2Z2Y0J1aVA4Ky9YemZIandHeHRtRjZma3ZRUzY3?=
+ =?utf-8?B?VWpHSEROOFB6Y1lvNVNBblptbnVMU0RXRnREOG1IQ04vTFB5b3l3OEQ3Z1Rm?=
+ =?utf-8?B?ZkZOY1N2blFaTjVMNENRUUFEQ1lGU21XL040bUFFMGVWRExpN0prZFFSRFZO?=
+ =?utf-8?B?WGpNR1VmbURmMGJyMDlqUFYreGJ5Y25nYUtkMlZqbHFpNlVSakJ0WjlBWEpV?=
+ =?utf-8?B?WW9NWVBZeXhXTHU5R21aM1R1TEhXVTk1eG5JdDVKWS9jM0ZwS0pkVjBUYWdF?=
+ =?utf-8?B?aTYwMlpGRUszZjBJVzNNQ1ozTzZiZGZmdjhLNnJ6T084WHZyZnlna1pGVjJk?=
+ =?utf-8?Q?2cGWPchvXiZ5MveT0hl1JdoNx?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ba15695-8298-459f-7fb8-08dc6b58cce4
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2024 10:07:12.1621
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jKwd1s8xBdMD5wT68ioLd2Dojm3xJkxwiZlieGQL7/Wu/z2t4QHUbZ3UkQ6mVlnGfcKlJadvxlnVkIOGOhKkFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4424
 
-Hi Guenter,
+Hi Ingo,
 
+On 5/3/2024 3:24 PM, Ingo Molnar wrote:
+> 
+> * Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com> wrote:
+> 
+>> After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
+>> on AMD processors that support extended CPUID leaf 0x80000026, the
+>> topology_die_cpumask() and topology_logical_die_id() macros, no longer 
+>> return the package cpumask and package id, instead they return the CCD 
+>> (Core Complex Die) mask and id respectively. This leads to the energy-pkg 
+>> event scope to be modified to CCD instead of package.
+>>
+>> Replacing these macros with their package counterparts fixes the
+>> energy-pkg event for AMD CPUs.
+>>
+>> However due to the difference between the scope of energy-pkg event for 
+>> Intel and AMD CPUs, we have to replace these macros conditionally only for
+>> AMD CPUs.
+>>
+>> On a 12 CCD 1 Package AMD Zen4 Genoa machine:
+>>
+>> Before:
+>> $ cat /sys/devices/power/cpumask
+>> 0,8,16,24,32,40,48,56,64,72,80,88.
+>>
+>> The expected cpumask here is supposed to be just "0", as it is a package 
+>> scope event, only one CPU will be collecting the event for all the CPUs in 
+>> the package.
+>>
+>> After:
+>> $ cat /sys/devices/power/cpumask
+>> 0
+>>
+>> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+>> Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
+>> ---
+>>  arch/x86/events/rapl.c | 30 ++++++++++++++++++++++++++----
+>>  1 file changed, 26 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+>> index 46e673585560..d77bf7959a43 100644
+>> --- a/arch/x86/events/rapl.c
+>> +++ b/arch/x86/events/rapl.c
+>> @@ -102,6 +102,10 @@ static struct perf_pmu_events_attr event_attr_##v = {				\
+>>  	.event_str	= str,							\
+>>  };
+>>  
+>> +#define rapl_pmu_is_pkg_scope()				\
+>> +	(boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||	\
+>> +	 boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
+>> +
+>>  struct rapl_pmu {
+>>  	raw_spinlock_t		lock;
+>>  	int			n_active;
+>> @@ -139,9 +143,21 @@ static unsigned int rapl_cntr_mask;
+>>  static u64 rapl_timer_ms;
+>>  static struct perf_msr *rapl_msrs;
+>>  
+>> +static inline unsigned int get_rapl_pmu_idx(int cpu)
+>> +{
+>> +	return rapl_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
+>> +					 topology_logical_die_id(cpu);
+>> +}
+>> +
+>> +static inline cpumask_t *get_rapl_pmu_cpumask(int cpu)
+>> +{
+>> +	return rapl_pmu_is_pkg_scope() ? topology_core_cpumask(cpu) :
+>> +					 topology_die_cpumask(cpu);
+>> +}
+> 
+> Note that this breaks the build with this config:
+> 
+>   https://download.01.org/0day-ci/archive/20240503/202405030828.RgFuznL9-lkp@intel.com/config
+> 
+> I've removed the commit from perf/core for now.
 
-On Fri, 3 May 2024 at 01:31, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Fri, May 03, 2024 at 12:06:02AM +0530, Naresh Solanki wrote:
-> > Add regmap support & remove local caching.
-> >
-> > Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
->
-> Almost there. Couple of minor comments.
->
-> Thanks,
-> Guenter
->
-> > ---
-> > Changes in V3:
-> > - Remove mutex lock
-> > - Remove caching of variable pwm in max6639_data
-> > - Use regmap_write_bits in suspend & resume
-> > - Remove error check for data in attrube show/store functions.
-> > - Remove goto
-> >
-> > Changes in V2:
-> > - Remove local caching in max6639_data struct.
-> > - Use define MAX6639_NDEV wherever possible
-> > ---
-> >  drivers/hwmon/Kconfig   |   1 +
-> >  drivers/hwmon/max6639.c | 334 +++++++++++++++++-----------------------
-> >  2 files changed, 145 insertions(+), 190 deletions(-)
-> >
-> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> > index bafc0058c728..e14ae18a973b 100644
-> > --- a/drivers/hwmon/Kconfig
-> > +++ b/drivers/hwmon/Kconfig
-> > @@ -1233,6 +1233,7 @@ config SENSORS_MAX6621
-> >  config SENSORS_MAX6639
-> >       tristate "Maxim MAX6639 sensor chip"
-> >       depends on I2C
-> > +     select REGMAP_I2C
-> >       help
-> >         If you say yes here you get support for the MAX6639
-> >         sensor chips.
-> > diff --git a/drivers/hwmon/max6639.c b/drivers/hwmon/max6639.c
-> > index 5dd0349e8bd0..f914f1500c96 100644
-> > --- a/drivers/hwmon/max6639.c
-> > +++ b/drivers/hwmon/max6639.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/err.h>
-> >  #include <linux/mutex.h>
-> >  #include <linux/platform_data/max6639.h>
-> > +#include <linux/regmap.h>
-> >
-> >  /* Addresses to scan */
-> >  static const unsigned short normal_i2c[] =3D { 0x2c, 0x2e, 0x2f, I2C_C=
-LIENT_END };
-> > @@ -57,6 +58,8 @@ static const unsigned short normal_i2c[] =3D { 0x2c, =
-0x2e, 0x2f, I2C_CLIENT_END };
-> >
-> >  #define MAX6639_FAN_CONFIG3_THERM_FULL_SPEED 0x40
-> >
-> > +#define MAX6639_NDEV                         2
-> > +
->
-> FWIW, the define is only used once. I'd suggest to drop it because it
-> isn't really that valuable. I'll accept it if you really want it, but
-> then please rename it to something like MAX6639_NUM_CHANNELS do
-> better reflect its meaning.
-I want to retain it & will update it to MAX6639_NUM_CHANNELS
->
-> >  static const int rpm_ranges[] =3D { 2000, 4000, 8000, 16000 };
-> >
-> >  #define FAN_FROM_REG(val, rpm_range) ((val) =3D=3D 0 || (val) =3D=3D 2=
-55 ? \
-> > @@ -67,22 +70,7 @@ static const int rpm_ranges[] =3D { 2000, 4000, 8000=
-, 16000 };
-> >   * Client data (each client gets its own)
-> >   */
-> >  struct max6639_data {
-> > -     struct i2c_client *client;
-> > -     struct mutex update_lock;
-> > -     bool valid;             /* true if following fields are valid */
-> > -     unsigned long last_updated;     /* In jiffies */
-> > -
-> > -     /* Register values sampled regularly */
-> > -     u16 temp[2];            /* Temperature, in 1/8 C, 0..255 C */
-> > -     bool temp_fault[2];     /* Detected temperature diode failure */
-> > -     u8 fan[2];              /* Register value: TACH count for fans >=
-=3D30 */
-> > -     u8 status;              /* Detected channel alarms and fan failur=
-es */
-> > -
-> > -     /* Register values only written to */
-> > -     u8 pwm[2];              /* Register value: Duty cycle 0..120 */
-> > -     u8 temp_therm[2];       /* THERM Temperature, 0..255 C (->_max) *=
-/
-> > -     u8 temp_alert[2];       /* ALERT Temperature, 0..255 C (->_crit) =
-*/
-> > -     u8 temp_ot[2];          /* OT Temperature, 0..255 C (->_emergency=
-) */
-> > +     struct regmap *regmap;
-> >
-> >       /* Register values initialized only once */
-> >       u8 ppr;                 /* Pulses per rotation 0..3 for 1..4 ppr =
-*/
-> > @@ -92,90 +80,43 @@ struct max6639_data {
-> >       struct regulator *reg;
-> >  };
-> >
-> > -static struct max6639_data *max6639_update_device(struct device *dev)
-> > -{
-> > -     struct max6639_data *data =3D dev_get_drvdata(dev);
-> > -     struct i2c_client *client =3D data->client;
-> > -     struct max6639_data *ret =3D data;
-> > -     int i;
-> > -     int status_reg;
-> > -
-> > -     mutex_lock(&data->update_lock);
-> > -
-> > -     if (time_after(jiffies, data->last_updated + 2 * HZ) || !data->va=
-lid) {
-> > -             int res;
-> > -
-> > -             dev_dbg(&client->dev, "Starting max6639 update\n");
-> > -
-> > -             status_reg =3D i2c_smbus_read_byte_data(client,
-> > -                                                   MAX6639_REG_STATUS)=
-;
-> > -             if (status_reg < 0) {
-> > -                     ret =3D ERR_PTR(status_reg);
-> > -                     goto abort;
-> > -             }
-> > -
-> > -             data->status =3D status_reg;
-> > -
-> > -             for (i =3D 0; i < 2; i++) {
-> > -                     res =3D i2c_smbus_read_byte_data(client,
-> > -                                     MAX6639_REG_FAN_CNT(i));
-> > -                     if (res < 0) {
-> > -                             ret =3D ERR_PTR(res);
-> > -                             goto abort;
-> > -                     }
-> > -                     data->fan[i] =3D res;
-> > -
-> > -                     res =3D i2c_smbus_read_byte_data(client,
-> > -                                     MAX6639_REG_TEMP_EXT(i));
-> > -                     if (res < 0) {
-> > -                             ret =3D ERR_PTR(res);
-> > -                             goto abort;
-> > -                     }
-> > -                     data->temp[i] =3D res >> 5;
-> > -                     data->temp_fault[i] =3D res & 0x01;
-> > -
-> > -                     res =3D i2c_smbus_read_byte_data(client,
-> > -                                     MAX6639_REG_TEMP(i));
-> > -                     if (res < 0) {
-> > -                             ret =3D ERR_PTR(res);
-> > -                             goto abort;
-> > -                     }
-> > -                     data->temp[i] |=3D res << 3;
-> > -             }
-> > -
-> > -             data->last_updated =3D jiffies;
-> > -             data->valid =3D true;
-> > -     }
-> > -abort:
-> > -     mutex_unlock(&data->update_lock);
-> > -
-> > -     return ret;
-> > -}
-> > -
-> >  static ssize_t temp_input_show(struct device *dev,
-> >                              struct device_attribute *dev_attr, char *b=
-uf)
-> >  {
-> >       long temp;
-> > -     struct max6639_data *data =3D max6639_update_device(dev);
-> > +     struct max6639_data *data =3D dev_get_drvdata(dev);
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> > +     unsigned int val;
-> > +     int res;
-> >
-> > -     if (IS_ERR(data))
-> > -             return PTR_ERR(data);
-> > +     res =3D regmap_read(data->regmap, MAX6639_REG_TEMP_EXT(attr->inde=
-x), &val);
-> > +     if (res < 0)
-> > +             return res;
-> > +
-> > +     temp =3D val >> 5;
-> > +     res =3D regmap_read(data->regmap, MAX6639_REG_TEMP(attr->index), =
-&val);
-> > +     if (res < 0)
-> > +             return res;
-> > +
->
-> It might be worthwhile adding a comment explaining that MAX6639_REG_TEMP
-> won't change for at least 250ms after reading MAX6639_REG_TEMP_EXT,
-> making a lock unnecessary.
-Sure.
->
-> > +     temp |=3D val << 3;
-> > +     temp *=3D 125;
-> >
-> > -     temp =3D data->temp[attr->index] * 125;
-> >       return sprintf(buf, "%ld\n", temp);
-> >  }
-> >
-> >  static ssize_t temp_fault_show(struct device *dev,
-> >                              struct device_attribute *dev_attr, char *b=
-uf)
-> >  {
-> > -     struct max6639_data *data =3D max6639_update_device(dev);
-> > +     struct max6639_data *data =3D dev_get_drvdata(dev);
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> > +     unsigned int val;
-> > +     int res;
-> >
-> > -     if (IS_ERR(data))
-> > -             return PTR_ERR(data);
-> > +     res =3D regmap_read(data->regmap, MAX6639_REG_TEMP_EXT(attr->inde=
-x), &val);
-> > +     if (res < 0)
-> > +             return res;
-> >
-> > -     return sprintf(buf, "%d\n", data->temp_fault[attr->index]);
-> > +     return sprintf(buf, "%d\n", val & 1);
-> >  }
-> >
-> >  static ssize_t temp_max_show(struct device *dev,
-> > @@ -183,8 +124,14 @@ static ssize_t temp_max_show(struct device *dev,
-> >  {
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> > +     unsigned int val;
-> > +     int res;
-> >
-> > -     return sprintf(buf, "%d\n", (data->temp_therm[attr->index] * 1000=
-));
-> > +     res =3D regmap_read(data->regmap, MAX6639_REG_THERM_LIMIT(attr->i=
-ndex), &val);
-> > +     if (res < 0)
-> > +             return res;
-> > +
-> > +     return sprintf(buf, "%d\n", (val * 1000));
-> >  }
-> >
-> >  static ssize_t temp_max_store(struct device *dev,
-> > @@ -193,7 +140,6 @@ static ssize_t temp_max_store(struct device *dev,
-> >  {
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> > -     struct i2c_client *client =3D data->client;
-> >       unsigned long val;
-> >       int res;
-> >
-> > @@ -201,12 +147,8 @@ static ssize_t temp_max_store(struct device *dev,
-> >       if (res)
-> >               return res;
-> >
-> > -     mutex_lock(&data->update_lock);
-> > -     data->temp_therm[attr->index] =3D TEMP_LIMIT_TO_REG(val);
-> > -     i2c_smbus_write_byte_data(client,
-> > -                               MAX6639_REG_THERM_LIMIT(attr->index),
-> > -                               data->temp_therm[attr->index]);
-> > -     mutex_unlock(&data->update_lock);
-> > +     regmap_write(data->regmap, MAX6639_REG_THERM_LIMIT(attr->index),
-> > +                  TEMP_LIMIT_TO_REG(val));
-> >       return count;
-> >  }
-> >
-> > @@ -215,8 +157,14 @@ static ssize_t temp_crit_show(struct device *dev,
-> >  {
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> > +     unsigned int val;
-> > +     int res;
-> > +
-> > +     res =3D regmap_read(data->regmap, MAX6639_REG_ALERT_LIMIT(attr->i=
-ndex), &val);
-> > +     if (res < 0)
-> > +             return res;
-> >
-> > -     return sprintf(buf, "%d\n", (data->temp_alert[attr->index] * 1000=
-));
-> > +     return sprintf(buf, "%d\n", (val * 1000));
-> >  }
-> >
-> >  static ssize_t temp_crit_store(struct device *dev,
-> > @@ -225,7 +173,6 @@ static ssize_t temp_crit_store(struct device *dev,
-> >  {
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> > -     struct i2c_client *client =3D data->client;
-> >       unsigned long val;
-> >       int res;
-> >
-> > @@ -233,12 +180,8 @@ static ssize_t temp_crit_store(struct device *dev,
-> >       if (res)
-> >               return res;
-> >
-> > -     mutex_lock(&data->update_lock);
-> > -     data->temp_alert[attr->index] =3D TEMP_LIMIT_TO_REG(val);
-> > -     i2c_smbus_write_byte_data(client,
-> > -                               MAX6639_REG_ALERT_LIMIT(attr->index),
-> > -                               data->temp_alert[attr->index]);
-> > -     mutex_unlock(&data->update_lock);
-> > +     regmap_write(data->regmap, MAX6639_REG_ALERT_LIMIT(attr->index),
-> > +                  TEMP_LIMIT_TO_REG(val));
-> >       return count;
-> >  }
-> >
-> > @@ -248,8 +191,14 @@ static ssize_t temp_emergency_show(struct device *=
-dev,
-> >  {
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> > +     unsigned int val;
-> > +     int res;
-> > +
-> > +     res =3D regmap_read(data->regmap, MAX6639_REG_OT_LIMIT(attr->inde=
-x), &val);
-> > +     if (res < 0)
-> > +             return res;
-> >
-> > -     return sprintf(buf, "%d\n", (data->temp_ot[attr->index] * 1000));
-> > +     return sprintf(buf, "%d\n", (val * 1000));
-> >  }
-> >
-> >  static ssize_t temp_emergency_store(struct device *dev,
-> > @@ -258,7 +207,6 @@ static ssize_t temp_emergency_store(struct device *=
-dev,
-> >  {
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> > -     struct i2c_client *client =3D data->client;
-> >       unsigned long val;
-> >       int res;
-> >
-> > @@ -266,12 +214,8 @@ static ssize_t temp_emergency_store(struct device =
-*dev,
-> >       if (res)
-> >               return res;
-> >
-> > -     mutex_lock(&data->update_lock);
-> > -     data->temp_ot[attr->index] =3D TEMP_LIMIT_TO_REG(val);
-> > -     i2c_smbus_write_byte_data(client,
-> > -                               MAX6639_REG_OT_LIMIT(attr->index),
-> > -                               data->temp_ot[attr->index]);
-> > -     mutex_unlock(&data->update_lock);
-> > +     regmap_write(data->regmap, MAX6639_REG_OT_LIMIT(attr->index), TEM=
-P_LIMIT_TO_REG(val));
-> > +
-> >       return count;
-> >  }
-> >
-> > @@ -280,8 +224,14 @@ static ssize_t pwm_show(struct device *dev, struct=
- device_attribute *dev_attr,
-> >  {
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> > +     unsigned int val;
-> > +     int res;
-> > +
-> > +     res =3D regmap_read(data->regmap, MAX6639_REG_TARGTDUTY(attr->ind=
-ex), &val);
-> > +     if (res < 0)
-> > +             return res;
-> >
-> > -     return sprintf(buf, "%d\n", data->pwm[attr->index] * 255 / 120);
-> > +     return sprintf(buf, "%d\n", val * 255 / 120);
-> >  }
-> >
-> >  static ssize_t pwm_store(struct device *dev,
-> > @@ -290,7 +240,6 @@ static ssize_t pwm_store(struct device *dev,
-> >  {
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> > -     struct i2c_client *client =3D data->client;
-> >       unsigned long val;
-> >       int res;
-> >
-> > @@ -300,38 +249,39 @@ static ssize_t pwm_store(struct device *dev,
-> >
-> >       val =3D clamp_val(val, 0, 255);
-> >
-> > -     mutex_lock(&data->update_lock);
-> > -     data->pwm[attr->index] =3D (u8)(val * 120 / 255);
-> > -     i2c_smbus_write_byte_data(client,
-> > -                               MAX6639_REG_TARGTDUTY(attr->index),
-> > -                               data->pwm[attr->index]);
-> > -     mutex_unlock(&data->update_lock);
-> > +     regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(attr->index), va=
-l * 120 / 255);
-> > +
-> >       return count;
-> >  }
-> >
-> >  static ssize_t fan_input_show(struct device *dev,
-> >                             struct device_attribute *dev_attr, char *bu=
-f)
-> >  {
-> > -     struct max6639_data *data =3D max6639_update_device(dev);
-> > +     struct max6639_data *data =3D dev_get_drvdata(dev);
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> > +     unsigned int val;
-> > +     int res;
-> >
-> > -     if (IS_ERR(data))
-> > -             return PTR_ERR(data);
-> > +     res =3D regmap_read(data->regmap, MAX6639_REG_FAN_CNT(attr->index=
-), &val);
-> > +     if (res < 0)
-> > +             return res;
-> >
-> > -     return sprintf(buf, "%d\n", FAN_FROM_REG(data->fan[attr->index],
-> > -                    data->rpm_range));
-> > +     return sprintf(buf, "%d\n", FAN_FROM_REG(val, data->rpm_range));
-> >  }
-> >
-> >  static ssize_t alarm_show(struct device *dev,
-> >                         struct device_attribute *dev_attr, char *buf)
-> >  {
-> > -     struct max6639_data *data =3D max6639_update_device(dev);
-> > +     struct max6639_data *data =3D dev_get_drvdata(dev);
-> >       struct sensor_device_attribute *attr =3D to_sensor_dev_attr(dev_a=
-ttr);
-> > +     unsigned int val;
-> > +     int res;
-> >
-> > -     if (IS_ERR(data))
-> > -             return PTR_ERR(data);
-> > +     res =3D regmap_read(data->regmap, MAX6639_REG_STATUS, &val);
-> > +     if (res < 0)
-> > +             return res;
-> >
-> > -     return sprintf(buf, "%d\n", !!(data->status & (1 << attr->index))=
-);
-> > +     return sprintf(buf, "%d\n", !!(val & (1 << attr->index)));
-> >  }
-> >
-> >  static SENSOR_DEVICE_ATTR_RO(temp1_input, temp_input, 0);
-> > @@ -401,6 +351,11 @@ static int rpm_range_to_reg(int range)
-> >       return 1; /* default: 4000 RPM */
-> >  }
-> >
-> > +static int max6639_set_ppr(struct max6639_data *data, u8 channel, u8 p=
-pr)
-> > +{
-> > +     return regmap_write(data->regmap, MAX6639_REG_FAN_PPR(channel), p=
-pr << 6);
-> > +}
-> > +
-> >  static int max6639_init_client(struct i2c_client *client,
-> >                              struct max6639_data *data)
-> >  {
-> > @@ -408,94 +363,76 @@ static int max6639_init_client(struct i2c_client =
-*client,
-> >               dev_get_platdata(&client->dev);
-> >       int i;
-> >       int rpm_range =3D 1; /* default: 4000 RPM */
-> > -     int err;
-> > +     int err, ppr;
-> >
-> >       /* Reset chip to default values, see below for GCONFIG setup */
-> > -     err =3D i2c_smbus_write_byte_data(client, MAX6639_REG_GCONFIG,
-> > -                               MAX6639_GCONFIG_POR);
-> > +     err =3D regmap_write(data->regmap, MAX6639_REG_GCONFIG, MAX6639_G=
-CONFIG_POR);
-> >       if (err)
-> > -             goto exit;
-> > +             return err;
-> >
-> >       /* Fans pulse per revolution is 2 by default */
-> >       if (max6639_info && max6639_info->ppr > 0 &&
-> >                       max6639_info->ppr < 5)
-> > -             data->ppr =3D max6639_info->ppr;
-> > +             ppr =3D max6639_info->ppr;
-> >       else
-> > -             data->ppr =3D 2;
-> > -     data->ppr -=3D 1;
-> > +             ppr =3D 2;
-> > +     ppr -=3D 1;
-> >
-> >       if (max6639_info)
-> >               rpm_range =3D rpm_range_to_reg(max6639_info->rpm_range);
-> >       data->rpm_range =3D rpm_range;
-> >
-> > -     for (i =3D 0; i < 2; i++) {
-> > +     for (i =3D 0; i < MAX6639_NDEV; i++) {
-> >
-> >               /* Set Fan pulse per revolution */
-> > -             err =3D i2c_smbus_write_byte_data(client,
-> > -                             MAX6639_REG_FAN_PPR(i),
-> > -                             data->ppr << 6);
-> > +             err =3D max6639_set_ppr(data, i, ppr);
-> >               if (err)
-> > -                     goto exit;
-> > +                     return err;
-> >
-> >               /* Fans config PWM, RPM */
-> > -             err =3D i2c_smbus_write_byte_data(client,
-> > -                     MAX6639_REG_FAN_CONFIG1(i),
-> > -                     MAX6639_FAN_CONFIG1_PWM | rpm_range);
-> > +             err =3D regmap_write(data->regmap, MAX6639_REG_FAN_CONFIG=
-1(i),
-> > +                                MAX6639_FAN_CONFIG1_PWM | rpm_range);
-> >               if (err)
-> > -                     goto exit;
-> > +                     return err;
-> >
-> >               /* Fans PWM polarity high by default */
-> >               if (max6639_info && max6639_info->pwm_polarity =3D=3D 0)
-> > -                     err =3D i2c_smbus_write_byte_data(client,
-> > -                             MAX6639_REG_FAN_CONFIG2a(i), 0x00);
-> > +                     err =3D regmap_write(data->regmap, MAX6639_REG_FA=
-N_CONFIG2a(i), 0x00);
-> >               else
-> > -                     err =3D i2c_smbus_write_byte_data(client,
-> > -                             MAX6639_REG_FAN_CONFIG2a(i), 0x02);
-> > +                     err =3D regmap_write(data->regmap, MAX6639_REG_FA=
-N_CONFIG2a(i), 0x02);
-> >               if (err)
-> > -                     goto exit;
-> > +                     return err;
-> >
-> >               /*
-> >                * /THERM full speed enable,
-> >                * PWM frequency 25kHz, see also GCONFIG below
-> >                */
-> > -             err =3D i2c_smbus_write_byte_data(client,
-> > -                     MAX6639_REG_FAN_CONFIG3(i),
-> > -                     MAX6639_FAN_CONFIG3_THERM_FULL_SPEED | 0x03);
-> > +             err =3D regmap_write(data->regmap, MAX6639_REG_FAN_CONFIG=
-3(i),
-> > +                                MAX6639_FAN_CONFIG3_THERM_FULL_SPEED |=
- 0x03);
-> >               if (err)
-> > -                     goto exit;
-> > +                     return err;
-> >
-> >               /* Max. temp. 80C/90C/100C */
-> > -             data->temp_therm[i] =3D 80;
-> > -             data->temp_alert[i] =3D 90;
-> > -             data->temp_ot[i] =3D 100;
-> > -             err =3D i2c_smbus_write_byte_data(client,
-> > -                             MAX6639_REG_THERM_LIMIT(i),
-> > -                             data->temp_therm[i]);
-> > +             err =3D regmap_write(data->regmap, MAX6639_REG_THERM_LIMI=
-T(i), 80);
-> >               if (err)
-> > -                     goto exit;
-> > -             err =3D i2c_smbus_write_byte_data(client,
-> > -                             MAX6639_REG_ALERT_LIMIT(i),
-> > -                             data->temp_alert[i]);
-> > +                     return err;
-> > +             err =3D regmap_write(data->regmap, MAX6639_REG_ALERT_LIMI=
-T(i), 90);
-> >               if (err)
-> > -                     goto exit;
-> > -             err =3D i2c_smbus_write_byte_data(client,
-> > -                             MAX6639_REG_OT_LIMIT(i), data->temp_ot[i]=
-);
-> > +                     return err;
-> > +             err =3D regmap_write(data->regmap, MAX6639_REG_OT_LIMIT(i=
-), 100);
-> >               if (err)
-> > -                     goto exit;
-> > +                     return err;
-> >
-> >               /* PWM 120/120 (i.e. 100%) */
-> > -             data->pwm[i] =3D 120;
-> > -             err =3D i2c_smbus_write_byte_data(client,
-> > -                             MAX6639_REG_TARGTDUTY(i), data->pwm[i]);
-> > +             err =3D regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(=
-i), 120);
-> >               if (err)
-> > -                     goto exit;
-> > +                     return err;
-> >       }
-> >       /* Start monitoring */
-> > -     err =3D i2c_smbus_write_byte_data(client, MAX6639_REG_GCONFIG,
-> > -             MAX6639_GCONFIG_DISABLE_TIMEOUT | MAX6639_GCONFIG_CH2_LOC=
-AL |
-> > -             MAX6639_GCONFIG_PWM_FREQ_HI);
-> > -exit:
-> > -     return err;
-> > +     return regmap_write(data->regmap, MAX6639_REG_GCONFIG,
-> > +                         MAX6639_GCONFIG_DISABLE_TIMEOUT | MAX6639_GCO=
-NFIG_CH2_LOCAL |
-> > +                         MAX6639_GCONFIG_PWM_FREQ_HI);
-> > +
-> >  }
-> >
-> >  /* Return 0 if detection is successful, -ENODEV otherwise */
-> > @@ -524,6 +461,30 @@ static void max6639_regulator_disable(void *data)
-> >       regulator_disable(data);
-> >  }
-> >
-> > +static bool max6639_regmap_is_volatile(struct device *dev, unsigned in=
-t reg)
-> > +{
-> > +     switch (reg) {
-> > +     case MAX6639_REG_TEMP(0):
-> > +     case MAX6639_REG_TEMP_EXT(0):
-> > +     case MAX6639_REG_TEMP(1):
-> > +     case MAX6639_REG_TEMP_EXT(1):
-> > +     case MAX6639_REG_STATUS:
-> > +     case MAX6639_REG_FAN_CNT(0):
-> > +     case MAX6639_REG_FAN_CNT(1):
->
-> MAX6639_REG_TARGTDUTY() is also volatile.
-I can do that but my observation is that register reads what is written
-to it. So I'm not sure marking it volatile is worth it unless I missed
-something.
->
-> > +             return true;
-> > +     default:
-> > +             return false;
-> > +     }
-> > +}
-> > +
-> > +static const struct regmap_config max6639_regmap_config =3D {
-> > +     .reg_bits =3D 8,
-> > +     .val_bits =3D 8,
-> > +     .max_register =3D MAX6639_REG_DEVREV,
-> > +     .cache_type =3D REGCACHE_MAPLE,
-> > +     .volatile_reg =3D max6639_regmap_is_volatile,
-> > +};
-> > +
-> >  static int max6639_probe(struct i2c_client *client)
-> >  {
-> >       struct device *dev =3D &client->dev;
-> > @@ -535,7 +496,11 @@ static int max6639_probe(struct i2c_client *client=
-)
-> >       if (!data)
-> >               return -ENOMEM;
-> >
-> > -     data->client =3D client;
-> > +     data->regmap =3D devm_regmap_init_i2c(client, &max6639_regmap_con=
-fig);
-> > +     if (IS_ERR(data->regmap))
-> > +             return dev_err_probe(dev,
-> > +                                  PTR_ERR(data->regmap),
-> > +                                  "regmap initialization failed\n");
-> >
-> >       data->reg =3D devm_regulator_get_optional(dev, "fan");
-> >       if (IS_ERR(data->reg)) {
-> > @@ -558,8 +523,6 @@ static int max6639_probe(struct i2c_client *client)
-> >               }
-> >       }
-> >
-> > -     mutex_init(&data->update_lock);
-> > -
-> >       /* Initialize the max6639 chip */
-> >       err =3D max6639_init_client(client, data);
-> >       if (err < 0)
-> > @@ -573,23 +536,18 @@ static int max6639_probe(struct i2c_client *clien=
-t)
-> >
-> >  static int max6639_suspend(struct device *dev)
-> >  {
-> > -     struct i2c_client *client =3D to_i2c_client(dev);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> > -     int ret =3D i2c_smbus_read_byte_data(client, MAX6639_REG_GCONFIG)=
-;
-> > -
-> > -     if (ret < 0)
-> > -             return ret;
-> > +     int ret;
->
-> /home/groeck/src/max6639/max6639.c: In function =E2=80=98max6639_suspend=
-=E2=80=99:
-> /home/groeck/src/max6639/max6639.c:540:13: warning: unused variable =E2=
-=80=98ret=E2=80=99
-Sure.
+Sure, will fix this in v2.
 
 Regards,
-Naresh
->
-> >
-> >       if (data->reg)
-> >               regulator_disable(data->reg);
-> >
-> > -     return i2c_smbus_write_byte_data(client,
-> > -                     MAX6639_REG_GCONFIG, ret | MAX6639_GCONFIG_STANDB=
-Y);
-> > +     return regmap_write_bits(data->regmap, MAX6639_REG_GCONFIG, MAX66=
-39_GCONFIG_STANDBY,
-> > +                              MAX6639_GCONFIG_STANDBY);
-> >  }
-> >
-> >  static int max6639_resume(struct device *dev)
-> >  {
-> > -     struct i2c_client *client =3D to_i2c_client(dev);
-> >       struct max6639_data *data =3D dev_get_drvdata(dev);
-> >       int ret;
-> >
-> > @@ -601,12 +559,8 @@ static int max6639_resume(struct device *dev)
-> >               }
-> >       }
-> >
-> > -     ret =3D i2c_smbus_read_byte_data(client, MAX6639_REG_GCONFIG);
-> > -     if (ret < 0)
-> > -             return ret;
-> > -
-> > -     return i2c_smbus_write_byte_data(client,
-> > -                     MAX6639_REG_GCONFIG, ret & ~MAX6639_GCONFIG_STAND=
-BY);
-> > +     return regmap_write_bits(data->regmap, MAX6639_REG_GCONFIG, MAX66=
-39_GCONFIG_STANDBY,
-> > +                              ~MAX6639_GCONFIG_STANDBY);
-> >  }
-> >
-> >  static const struct i2c_device_id max6639_id[] =3D {
-> >
-> > base-commit: 1d4d6733594d407e54153b8e031ba6356ceba81e
-> > --
-> > 2.42.0
-> >
-> >
+Dhananjay
+
+> 
+> Thanks,
+> 
+> 	Ingo
