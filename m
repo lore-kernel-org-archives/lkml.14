@@ -1,79 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69396E556;
-	Fri,  3 May 2024 01:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B816E541
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 01:41:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714700429; cv=none; b=JgJdnbRYhnTMebZfuvxWE2+vnf6jXBL+4SE1jvKaPGd6oQQEp6JNN6KIqQNvk9+gFNXanQBYvAdMX7C4SaQXjaDpyhL7DE7H+XjpLRQVdUUvB+F3X2KwmG/TOIqmQJ+Dv2O3olMEHxQDaQvg5PlO4SxjnZHcGrvtbBUEjMVLx68=
+	t=1714700467; cv=none; b=DtdgnA9s0/b/D8Vxc+8lZXqG9fTSEtH2NTiTIMW4YeNrTANR2i3nCQLtu2KB1QxTM/xj8khwDUDc3UFbV86A22Agy51fbRqnwOS+18YEACq0+ScTfH6EwnLepG7PMmfzACRQX1RaQx6vVuPBcbsCliFx/XHC7NCgWOllq3MXpgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714700429; c=relaxed/simple;
-	bh=APb8kPNe4Hg1SPW8kYNVM5C42jOxnKGFjcGj9GeVUdw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CbfJCxElx3SLc1lK815DOaeCW7JbQoINpyfyWjZNNUuwoB8LLXNK8KOIB9dzAFwxhxRPHmnI/7kjJMPJhhYtT+y5t6/zWL3huKha4hFLCfC3e3h1Fmzpuj3Fg+gy6vbIcH3gp4KcjrKxQx1Wp9kszP5affY7UKYsAhaBJKltvT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+/SUTZA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714700467; c=relaxed/simple;
+	bh=IGq7YAK1DyJEdi0gyI8AFsujwGjRxsNggeBJbUDhPHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KaQYhHADpzPkV1mkgM7j5o3vOKdDye+CRRR0uItxgOnK2Y7XAsTXAjJTv19L6ib1B4qeNPOQvq9quIkWSQjaIQ+BbcOF8MCyWtVGcKwiP80o4TMhzIIP7gB3WDtj4VfS010yaUM3JK0g23cxA4VRnBdzXVFN7Nr6vrL0qM4AWqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQrYFdbw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+/SUTZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1132BC4AF1C;
-	Fri,  3 May 2024 01:40:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQrYFdbw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF0C4C113CC;
+	Fri,  3 May 2024 01:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714700429;
-	bh=APb8kPNe4Hg1SPW8kYNVM5C42jOxnKGFjcGj9GeVUdw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=F+/SUTZAUlmmE5JAdyzW7f/nVZlsiR6zLrhUmNbcPI2goVXR3moqhcYu+G8akZ0iT
-	 Z41T1PiT/WVO0Tbe+TOi9tkcs4D3/m2DwSMdwHV1KjwCKzOopoodnirjLVfdXVyNfJ
-	 pkBpC61CSQWs5+ZlkbJ/8jwrbKvksco6COy3xgzwv5URemyL5JWO3R0/dy6LNS3g/W
-	 x94R9U5cOS/dTJBYuccn6MjFWd1NUwClV/1jsBIi8REBnYozYjypMDep4ykBCwNM8j
-	 bdV2AmecaK3yXZEN+V2JuHZKaSxcEybPo9Cga6dE6BgvwBcrNKUdF+pKkiBNk2YtYI
-	 uO0wIN5122uJg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ED771C4333E;
-	Fri,  3 May 2024 01:40:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1714700467;
+	bh=IGq7YAK1DyJEdi0gyI8AFsujwGjRxsNggeBJbUDhPHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jQrYFdbwGtgM+zHoTX5rdYIXT0pM8vKbi94UG08dXoxSqtMQPO8UUwVCpPVqzJf3Q
+	 f7z5tKjIQs30PyDXbpVZlrsky70GHoqo15ai+Eput/SV43Rpd0JzXB3ssRJKT2gqvO
+	 ZH8a3S6ADD7Vjwg+8LDtbxXzmdVgnFEmZCNvFACNBvUb1DTdCXznGZ+/idu0QrgPlV
+	 Ci8YOrQAmtrSh32FfzUc5y1Ot5fMpPCUrqi8a2STDNCjABxch8tDm2qwaa3hP945/y
+	 N96C3wVmYeXC6ulI5qaTDzrPl0cLHxtVgpH6gEFVuVY9fTbAJW5gAJmRQLnTea7eeT
+	 fXhZtcjDlLIBw==
+Date: Fri, 3 May 2024 10:41:04 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Alina Yu <alina_yu@richtek.com>
+Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+	johnny_lai@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v2 2/4] regulator: rtq2208: Fix LDO to be compatible with
+ both fixed and adjustable vout
+Message-ID: <ZjRAsJHn57pZy5UH@finisterre.sirena.org.uk>
+References: <cover.1714467553.git.alina_yu@richtek.com>
+ <ffeecd61c194df1f7f049bd50cb2bbbad3cf1025.1714467553.git.alina_yu@richtek.com>
+ <ZjGmmYWHu-ZQQdIh@finisterre.sirena.org.uk>
+ <20240502073029.GA4055@linuxcarl2.richtek.com>
+ <20240502092614.GA31518@linuxcarl2.richtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH RESEND net-next v5] IB/hfi1: allocate dummy net_device
- dynamically
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171470042896.13840.3413595720317631413.git-patchwork-notify@kernel.org>
-Date: Fri, 03 May 2024 01:40:28 +0000
-References: <20240430162213.746492-1-leitao@debian.org>
-In-Reply-To: <20240430162213.746492-1-leitao@debian.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
- edumazet@google.com, dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
- leon@kernel.org, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org
-
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 30 Apr 2024 09:22:11 -0700 you wrote:
-> Embedding net_device into structures prohibits the usage of flexible
-> arrays in the net_device structure. For more details, see the discussion
-> at [1].
-> 
-> Un-embed the net_device from struct hfi1_netdev_rx by converting it
-> into a pointer. Then use the leverage alloc_netdev() to allocate the
-> net_device object at hfi1_alloc_rx().
-> 
-> [...]
-
-Here is the summary with links:
-  - [RESEND,net-next,v5] IB/hfi1: allocate dummy net_device dynamically
-    https://git.kernel.org/netdev/net-next/c/1c8f43f477d9
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="v3Pbxy3XR/i3izJR"
+Content-Disposition: inline
+In-Reply-To: <20240502092614.GA31518@linuxcarl2.richtek.com>
+X-Cookie: lisp, v.:
 
 
+--v3Pbxy3XR/i3izJR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, May 02, 2024 at 05:26:14PM +0800, Alina Yu wrote:
+
+> For the fixed LDO Vout, it will be set to either 0.9V or 1.2V, which are outside the range of 1.8V to 3.3V.
+> The determination of whether it is fixed or adjustable lies solely with the user.
+> This modification aims to ensure compatibility with the user's application.
+
+That's a substantail reconfiguration of the regulator, it would be
+better to have an explicit property for these non-standard fixed
+voltages rather than trying to do this using constraints, or at the very
+least have validation that the values being set are supported by the
+hardware.  The code should also be very clear about what is going on.
+
+--v3Pbxy3XR/i3izJR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY0QK8ACgkQJNaLcl1U
+h9AG+ggAgPDHwSBgOVlPGTgUQMeT5eYCmBzi9FIfmdiPaU88tF2UzX5hGzI0RuvB
+ntbNtCdIrgaF9Z8n4V+xIYoUhBK53+8+rNXR9YtAjJvK8DPhKLfH0dyEYzUl+Akt
+i38SGrUUfHcS6ZCWFCeK7Gvm3eE5yEIkhkG+rwhivnWiJOpx1HgUGO8Rz1gZbeyc
+0/W6upAeHiSJkwwTYeWS2OBcS1aE/JV/+4BsW+gEmY49QZ83BeV2+00q9M/JInr5
+mugnyUEc9aMaaTOkLZu8F3jzx4ys9nj3i+B7O/aXDDqjOqFFgxOC2t2Bg0bd6AKE
+0/J8trkNef+nN15GAWLn0MQGepvTUA==
+=E/Hq
+-----END PGP SIGNATURE-----
+
+--v3Pbxy3XR/i3izJR--
