@@ -1,111 +1,99 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D353FC11
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 01:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9188C05
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 01:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714700203; cv=none; b=R0uyFQkkW2u6+ZblGUng1KjRimgJ+71GDfZJJ+bDOIuV3RFaiwuq/GosLVw/xD2EO2J2pcZVzgAgdG7P/3ejnBH8ecbL0SpNpNNAXjLWq+OGaIhTBoso7S+Hhj6uZVf498tfkf2E4RDjA5FjU8ggtE5ncWO5kqOK5Uk3r8NEebM=
+	t=1714700254; cv=none; b=T+rXBdp/BEmwV2jowyOT960MPiAG+mrjfmfDH8jZikAVivbMQpH9EW4aF+iZE0I3ChaK6UcEIHaD8NIl2gxyXk598lOnhAF1e7URQFGDffbvYdWyEDzVRL5LJNstViaHrghCGjj4sOepOkxJ1l0DZCYkP4Fom4SooZBoYwmwtqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714700203; c=relaxed/simple;
-	bh=RKeSGwVWMd/kRozhUIAFCmzXmnNvyig96sBUiNLx3S0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UZSH0SLNhX3ctfIY6F908IgcRiZg8wTd1PDmscyoyCoBy1vthF8WrxTG/UnCY7kEBJmT0y7AJ+kMxuMFV05NIU03n/xu7hr+nQiEXz/wLVtj+q4Jn9ukASirdDLJdZGuS2BoMaGSFeQQlnz+vY7aKfmTEdM6PPEetkB3nrrmWIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vn7hWOkr; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714700254; c=relaxed/simple;
+	bh=Sp65uvwAWYdNzfIJirCPF7kUSiJmaYnIID7Yps4ujfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FcMC100+fClvSFwmPyU18h6qPhDBWQjZIXou+YLxvUemJWtp7VndIth6WDOoVGlNQcX5ucFI1SpU3TQ67LCYgMUdZ2oawa8Ce5bB3VI7zMJkz8B5Sh9of6xSoFvQiQQFbUyBwdV6hLhiBiuMdjCo2CeD0fecs8uNiRPtE72gXMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IEEEXDjS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vn7hWOkr"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4affeacaff9so1800496e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 18:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714700201; x=1715305001; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nrFyQBGNythIvg6X/90l73Utbc1IO7PWL/H9UUkOuvA=;
-        b=Vn7hWOkr7sxkqOcGqOSrG3TqeML/MWFExD6HbA0pBLa/ULODmIICrcLOQgaQdIQtY7
-         gMpdH2XLhLLXMgol1N1rNF5nYchhzBXiR9oP081NKgt5jQlcfW4G1nqlgZhMg0RWnLJz
-         ddwxHBqf2Tf11E8p+cPbb6FVGQ0pHXwYNH/aS9/AlLky/K5xJiwv5+daf8oPM3S17oVT
-         35+pNv13k/8YRtBqkiA5gTf2JWCfmQbchilrFk8ntX1KHyH/59k41uAZ6xYvUZu9Cr4Q
-         4q2Naj7jic9+JnXzuygaBw39j1jez7BFN+66Wd5iu+rMBCU/0/tobHkRuwPUHr0frbkW
-         Cf4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714700201; x=1715305001;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nrFyQBGNythIvg6X/90l73Utbc1IO7PWL/H9UUkOuvA=;
-        b=hau4tEiW1LM4moI0cW9i7WJPQHLe3mNkQ9gB4FgQaqiqeayAS6gCj2gncwrPX1MwJq
-         MKlNsPbZ32kmERNuIIFcbc20GKuLY+PhOSOf2RHx64T019x30vGMIVWfsK9I7/7dvqFn
-         8krWnd7Teo2k7qVBdzsC6mBqdWrIvRJ1l1XJaZKVrTevuyjg+BLjGY0/b+dnc3Ga4xIH
-         p5MYSF7dMtqzCI9shJ/dky/b8Cb45VGO+NufgeOwIxjyYEs7v1Zq9aPNrt2AuWIGWua6
-         cBZ4bjdWmSOfS2rjxx5hJ3RmEDXdC16ReiCYYMQgcNflnJzjiIqKVj0892myX4CMRTaf
-         vt3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWBoEFBYlCKc0MM+g5M4eGsJEDgSRYXmLJJTiimnW2+yDFARp5U7SCVl00ExSL7F4y/B36c1kO7i9kKJgG7bFrkrswnY70qQ1y+o52a
-X-Gm-Message-State: AOJu0Yx3IXcdPU1RkiWPMeuaazvySEzOlEqHzArrCzmXiWlLF4p5YaYx
-	2t3DJkTgUlj6NMiNbDa/x2yGxKk+A7pi0vYbzTXuxJRpPB0gfw8nq5/0me4lAjP4IcSNBQ7h4oI
-	tzsgGM5TSjlgvVS1Qu7eNdBKoVJ4=
-X-Google-Smtp-Source: AGHT+IHhMmjUuWPdCPTy+Ube8hlzNh3C48it5jM9NxcPeKrEiHu+1RTJ82EoLDet+hq4ITJpu4qrY8AkGZ3kbXfppNk=
-X-Received: by 2002:a05:6122:459b:b0:4d4:20fa:eb0c with SMTP id
- de27-20020a056122459b00b004d420faeb0cmr1725015vkb.5.1714700201313; Thu, 02
- May 2024 18:36:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IEEEXDjS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1782C113CC;
+	Fri,  3 May 2024 01:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714700254;
+	bh=Sp65uvwAWYdNzfIJirCPF7kUSiJmaYnIID7Yps4ujfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IEEEXDjSQU1u2pzfHNeA0FeXteC2P6RJDly4cX/miR/9dMYm2PjQcv+T+ll7uEqUJ
+	 96Mb+E5StryK+yDfBC2RCIRCVNVS7YN/q8MK/O+48rTL2kbwk9FV4jysnDnTWnnYQP
+	 mRoCO9/Bt0kasnekKknyiPnyktuwsYoCPUlz0JHRDxdAuxlvRJ24Z1FERYijtRQbg9
+	 VteAB9/SboaqKdG6NqwX5GD3Iw3ZXcQYwSF4/W9Qp+7EQi+yP6pbRA4IaZcTYlRm+i
+	 FVmrn4z9enCRoPaKNZ3xPS9m1PG26iGww3Qo40rGn+aUjPVQ2HsqSXvkrEmbAsKI76
+	 5SZ98FPS821ow==
+Date: Fri, 3 May 2024 10:37:31 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Alina Yu <alina_yu@richtek.com>
+Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+	johnny_lai@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v2 2/4] regulator: rtq2208: Fix LDO to be compatible with
+ both fixed and adjustable vout
+Message-ID: <ZjQ_2_tywLZ5EaM-@finisterre.sirena.org.uk>
+References: <cover.1714467553.git.alina_yu@richtek.com>
+ <ffeecd61c194df1f7f049bd50cb2bbbad3cf1025.1714467553.git.alina_yu@richtek.com>
+ <ZjGmmYWHu-ZQQdIh@finisterre.sirena.org.uk>
+ <20240502073029.GA4055@linuxcarl2.richtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502161827.403338-1-pchelkin@ispras.ru> <20240502161827.403338-2-pchelkin@ispras.ru>
-In-Reply-To: <20240502161827.403338-2-pchelkin@ispras.ru>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 3 May 2024 13:36:30 +1200
-Message-ID: <CAGsJ_4yFzR2RYBsLX2oqUHZpzySfT=0rtt6F71hkbFp1iqxCAA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dma-mapping: benchmark: fix up kthread creation error handling
-To: Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Xiang Chen <chenxiang66@hisilicon.com>, Christoph Hellwig <hch@lst.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Barry Song <song.bao.hua@hisilicon.com>, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>, 
-	lvc-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="j+uibN81L2oDx5ns"
+Content-Disposition: inline
+In-Reply-To: <20240502073029.GA4055@linuxcarl2.richtek.com>
+X-Cookie: lisp, v.:
 
-On Fri, May 3, 2024 at 4:29=E2=80=AFAM Fedor Pchelkin <pchelkin@ispras.ru> =
-wrote:
->
-> If a kthread creation fails for some reason then uninitialized members of
-> the tasks array will be accessed on the error path since it is allocated
-> by kmalloc_array().
->
-> Limit the bound in such case.
->
-> Found by Linux Verification Center (linuxtesting.org).
->
-> Fixes: 65789daa8087 ("dma-mapping: add benchmark support for streaming DM=
-A APIs")
-> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> ---
 
-Reviewed-by: Barry Song <baohua@kernel.org>
+--j+uibN81L2oDx5ns
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  kernel/dma/map_benchmark.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-> index 02205ab53b7e..ea938bc6c7e3 100644
-> --- a/kernel/dma/map_benchmark.c
-> +++ b/kernel/dma/map_benchmark.c
-> @@ -118,6 +118,7 @@ static int do_map_benchmark(struct map_benchmark_data=
- *map)
->                 if (IS_ERR(tsk[i])) {
->                         pr_err("create dma_map thread failed\n");
->                         ret =3D PTR_ERR(tsk[i]);
-> +                       threads =3D i;
->                         goto out;
->                 }
->
-> --
-> 2.45.0
->
->
+On Thu, May 02, 2024 at 03:30:29PM +0800, Alina Yu wrote:
+> On Wed, May 01, 2024 at 11:19:05AM +0900, Mark Brown wrote:
+> > On Tue, Apr 30, 2024 at 05:58:25PM +0800, Alina Yu wrote:
+
+> > > +		if (init_data->constraints.min_uV == init_data->constraints.max_uV) {
+> > > +			desc->n_voltages = 1;
+> > > +			desc->fixed_uV = init_data->constraints.min_uV;
+> > > +			desc->ops = &rtq2208_regulator_ldo_fix_ops;
+> > > +		} else {
+> > > +			desc->n_voltages = ARRAY_SIZE(rtq2208_ldo_volt_table);
+> > > +			desc->volt_table = rtq2208_ldo_volt_table;
+> > > +			desc->ops = &rtq2208_regulator_ldo_adj_ops;
+> > > +		}
+
+> > Why are you making this change?  The operations supported by the
+> > regulator don't change depending on if the system is going to chnage the
+> > voltage.
+
+> The change is necessary due to the requirement of the SD card for high/default and ultra-high-speed modes. The system needs to adjust the LDO Vout accordingly.
+> In ultra-high-speed mode, the LDO Vout needs to be adjusted to 1.8V; otherwise, it will remain at 1.8V.
+
+That just sounds like normal constraints usage, and something that
+applies to a wide variety of systems not just this specific regulator.
+If there are limits on what voltages can be configured the constraints
+will enforce them.
+
+--j+uibN81L2oDx5ns
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY0P9oACgkQJNaLcl1U
+h9ClnQf9HcOrR94eQDtUDFa/g82kKtfAKJLc2VKB7+K2KH8IfzdFGBnQowOKB63d
+L9WY94SQmFWkltV3Fgfgpv76O/5l9JrL83xErOwPktNrKpMJK+wIsSTUFYTmLtk4
+Sj7ZZy2XzUFoYyExyCzC9xSAHJ3XdZ+td8BA44ziOUygKeKirpqVFGenTJWYmMe0
+ClJ/IdJYJcSoQVVIoCyWo4CTkuw2WQei5foU8EkNLmPCXLnSULI9Gto7/dJaqg8D
+AL9kMwSRHnseRxHTI+GbyeeBGEYKIBLj6lLPT4z2rAYXr9sXY5XnfEAEPndY2DCW
+Ht+2JbeLBXY1gJkS6CCALrYyKhTPzQ==
+=UOIY
+-----END PGP SIGNATURE-----
+
+--j+uibN81L2oDx5ns--
