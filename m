@@ -1,108 +1,120 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0DD381DA
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 06:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98574848D;
+	Fri,  3 May 2024 06:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714718165; cv=none; b=jrcq1bXtSiNkwHZBgRrMf8kS4iQXFfvq1CUT5q4Bqz2xhpI5odcWa11eu3TI/6dceY7JZfM9QnD4SjwZuqL8N6TmKREN1JuB1tsqLGs+58n0f/SnBEmsUKcktmsoaGSiZv6VSqYJdxFBcVkKcPdxEaUrU8EVSDxoJG0js+KA4x0=
+	t=1714718400; cv=none; b=j8i5LHj5h5Z5U3eLCsIvuEYPqqSKVO4usec9uwdzIJ+/rRe05ajDh4eurKN5BLWsZAs0GEEzVdKLfzI2AsZ9olQLw/BashPdjnp1OlJOiQPFnGLw59UsSCNrB8BUxok+Qaq2gHP8dor2BlqqzRXUlzE0t+RTT3BbtH5zWUcRAmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714718165; c=relaxed/simple;
-	bh=cd7yTrt6GWBxWkHwzMQubHiZtWWF/F5VLurzT+aYYRg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BbOKFnRMVgwwxLPpScRgIr9zHf+r1YZ1wRduG4YJ1+AhnpoHIZAUzBD+yWWUoAKrGd2pyWV6SKpggf9a/vAztOZch+kdCWgu1iS1DZN1pftyV+P8w23psVw44vtqqp1TRa8FW3ow422rB1DtQN96js3ohudy74kCgoJnP/dfULg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org; spf=pass smtp.mailfrom=kali.org; dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b=JgeKiXLQ; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kali.org
+	s=arc-20240116; t=1714718400; c=relaxed/simple;
+	bh=qo6gNNSP/j6kpY7IcyU/qgjiBE3W7wIKyPUWxhxHQMM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=k8y29M12sIE11cd8XFCdSXvJw0Loycr4IJ5nJvb1BdYO8V4qJczh94wZ3Y9TED7XexNIJ257KSzfSNZGgV4dMSMzCoNPysNTmpIaHX7kadGedjaPFlPcYZiIwseYak+jxb3UO04cXCYOqfEHLLvRusF8dp84sr5Uo4BoJb0sjyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NJAnpq4B; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="JgeKiXLQ"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a5200afe39eso1092763566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2024 23:36:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google; t=1714718162; x=1715322962; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HKZVfrEnHgDm/tlBdppJQIcDCasqaomHZPpbSKozHVo=;
-        b=JgeKiXLQhUseedrl2W/BOeLFvEHyHDnAKbiuloE3Ff4XJ20tRLTQ4nNN/RdCTq/i/G
-         Duu2BKrTOMDozCiqaEMbfwjbhpX8ZHOl948Gv7+iHCGr+sau0kIsi7f+VFa3MvcxoAvF
-         BhASqNLNdje19IIGObTYqSowqB06gg4Z76u8gNxuZtzrPI4E1SakjhukwljmuCNA9PSf
-         CjEaBdKexnVQra+ivvpu2EdWfftXIN/VMt4LSLqA82aBtf0b0CI9GWgz3LFbvgmnEPD4
-         MeYx/YQRQblDbYEPvncDtHBRD9Pq9jEUKa+gVG+gpjRwocE2Lk8wnXvG3bPUtNJLTqBL
-         +PDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714718162; x=1715322962;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HKZVfrEnHgDm/tlBdppJQIcDCasqaomHZPpbSKozHVo=;
-        b=q8OZcJ6Y/wRNlCrScd3g3nAAHQtxZ1C7PfhDjHyf2Qa90OMCkg9xHSG4SND6fUNDWW
-         UJ70ae7rDL8ZA+7dhGOn86Li/Gnwtpkfau3gzJeb9bhfKm/kzblr6NoI6wKPLlxe7T6x
-         Ku6eM3K/QsPXQuCNNNPIW5ctr6gx7n9XwYsjeQi7p0G+HwsMBuPbu6EVDwbJupDarmWE
-         uw+z9oXyR94TrxHxW1bCTNP5jF7coyBB/H54vWdQ6QnQ/7Rt2xUB6U68YKhJvnWOw+cE
-         T3WajcXcEQVyFl0Jwvkyab4a3ae/FgmJwU4k077VH9QrF0h+nVtwge34rN2TYBrlx/i1
-         xVOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTMbkynBA1JZyaXNoF9LrJwx5wU5OWvSBjHe5Q6zR7nM/rW6kXIWLPWTFVv1vn6oXTc05lOTVPjbOitwBPTenl4jncKujw/90ZdmpV
-X-Gm-Message-State: AOJu0Yxh+nDIqAXXcUIcNkbUCEXKPM+kl7Y1sN6g9HMOsDvJh2uQtE4e
-	gmGQR/gvkxqMt6faEVGLMSZFn9DxHIugTL/buuZR4DD+fOa0BGVqb/tNgickhr7Z4yYC8qxMtF1
-	EDC9Qnj1IOFbc8S1WLXTs1WgAB7ibor6nW1Lo9g==
-X-Google-Smtp-Source: AGHT+IHJT537wyzxsdoNYXT//WCkrfyVvA5aV6ewIY0e2q5E9nRhCBRhsDywWt1RP69zblCAg3piQ7kt3cTya8BgsNQ=
-X-Received: by 2002:a50:8e15:0:b0:56d:fb36:c388 with SMTP id
- 21-20020a508e15000000b0056dfb36c388mr1389392edw.9.1714718162420; Thu, 02 May
- 2024 23:36:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NJAnpq4B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=7zeNTz9dZI8LnTBatn2bq2v7BK5j7Weg7XVPNxsiLDY=;
+	t=1714718398; x=1715150398; b=NJAnpq4B1bewI3YJelHuwEV9QLPjvu03d1It33hpGYLBcCP
+	OB1SqFG7MfSffK7ZkFICBKsJtmJlNcIwdUL1o6gO/VcBN223Z3cZmsM7gmYVFYdxTDNMR1bgoFx7c
+	TcZ++0ZAa8aCL4uHg3tPhIJU/Xtw2Fs2VTIp0WRXcBUuEz0wSKuHlmMeKw+sgPpnKihAtrZgQxQ2a
+	p3VYOZl7FXwAFOumB7N7qfOwxjHqzJ+tL+rRBT1BeskWWNi4igfWqCTkgmqAsTSRquesFlu2FYl1w
+	QTF/E7j2XJVeTkpoXTg1xkBOA1IWRwsTSdbKcBUEfXuaHvSZazzpj3Lajk8nDAiA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s2lwZ-0004pK-RV; Fri, 03 May 2024 07:58:51 +0200
+Message-ID: <82fde49f-5dc8-47de-b220-83f9d7555485@leemhuis.info>
+Date: Fri, 3 May 2024 07:58:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307-topic-8280_nodes-v1-0-4eba20e08902@linaro.org>
-In-Reply-To: <20240307-topic-8280_nodes-v1-0-4eba20e08902@linaro.org>
-From: Steev Klimaszewski <steev@kali.org>
-Date: Fri, 3 May 2024 01:35:51 -0500
-Message-ID: <CAKXuJqii1FjG64m1=3J_P0LmeV0FKgcxXF3V7Rz4imasVmeDcQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Random 8280 bits
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] Tri-band AMD RZ608 (MediaTek MT7921K) has 6GHz band
+ disabled in kernel 6.8 despite working in <=6.6
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>
+Cc: Kalle Valo <kvalo@kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <e17e5bf2-657a-4a22-a925-94db95fe8ca1@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <e17e5bf2-657a-4a22-a925-94db95fe8ca1@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714718398;42eb24cc;
+X-HE-SMSGID: 1s2lwZ-0004pK-RV
 
-On Thu, Mar 7, 2024 at 2:26=E2=80=AFPM Konrad Dybcio <konrad.dybcio@linaro.=
-org> wrote:
+On 18.04.24 10:48, Linux regression tracking (Thorsten Leemhuis) wrote:
 >
-> As the series title and patch titles say
->
-> p1 for Srini/nvmem, rest for qcom
->
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
-> Konrad Dybcio (4):
->       dt-bindings: nvmem: Add compatible for SC8280XP
->       arm64: dts: qcom: sc8280xp: Add QFPROM node
->       arm64: dts: qcom: sc8280xp: Add PS_HOLD restart
->       arm64: dts: qcom: sc8280xp: Describe TCSR download mode register
->
->  .../devicetree/bindings/nvmem/qcom,qfprom.yaml         |  1 +
->  arch/arm64/boot/dts/qcom/sc8280xp.dtsi                 | 18 ++++++++++++=
-++++++
->  2 files changed, 19 insertions(+)
-> ---
-> base-commit: 1843e16d2df9d98427ef8045589571749d627cf7
-> change-id: 20240307-topic-8280_nodes-da70ee866935
->
-> Best regards,
+> mt7921 maintainers, I noticed a report about a regression in
+> bugzilla.kernel.org related to your driver. As many (most?) kernel
+> developers don't keep an eye on bugzilla, I decided to write this mail.
+> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=218731 :
+
+FWIW, the reporter meanwhile confirmed that this happens with 6.9-rc6.
+No bisection so far
+
+Mt7921 maintainers, so you have any idea what might be wrong? Or is this
+a situation along the lines of "uhhps, we screwed up somewhere (hardware
+detection, regulatory stuff, ...) and had to fix this, which leads to this".
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+>> On kernel 6.6.27-1-lts, running `iw list` shows that 6GHz channels are supported:>
+>> [...]
+>> Similarly, discovering and connecting to 6GHz APs works fine.
+>>
+>> However, in recent kernel 6.8.5, running `iw list` shows that 6GHz channels are disabled:
+>>
+>> [...]
+>>
+>> And scanning or connecting to 6GHz APs does not work. 
+>>
+>> There's nothing in `dmesg` that differs between boots of the two kernels. On 6.8.5, 6GHz band doesn't work like it did on previous kernels. 
+>>
+>> I can provide more logs or help debug the issue if needed.
+> 
+> See the ticket for more details. Note, you have to use bugzilla to reach
+> the reporter, as I sadly[1] can not CCed them in mails like this.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > --
-> Konrad Dybcio <konrad.dybcio@linaro.org>
->
->
-
-My apologies for sending this so late, since this is now in -next,
-but, I'd gotten reports of people with the X13s not shutting down when
-using "my kernel" - I finally had the chance to dig through and do
-some testing today and it seems that with this patchset applied, is
-when the X13s will no longer power off.  Telling the system to
-poweroff or shutdown simply causes a reboot instead.
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> [1] because bugzilla.kernel.org tells users upon registration their
+> "email address will never be displayed to logged out users"
+> 
+> P.S.: let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: v6.6..v6.8.5
+> #regzbot title: wifi drivers: mt7921: 6GHz band stopped working
+> #regzbot from: AlexDeLorenzo.dev
+> #regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218731
+> #regzbot ignore-activity
+> 
+> 
