@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0075D1586C0;
-	Fri,  3 May 2024 17:19:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3024158A07;
+	Fri,  3 May 2024 17:19:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714756786; cv=none; b=PcaSp7k3fyVk2QND3kSp6BEWlL9VFJ+MY0O5cSf8kGSOLveg9kb2tmYYzyQ0dGZG3TFll7M3iNZbqc+H72yNhkU6QAbb3qrw0wO6TqwR3CLvtozPKjVMiomhOvxXs6O6GG49CnWUli/L4sjrW/Yk2H2/TT0l/6yAkJzMXDsbpog=
+	t=1714756788; cv=none; b=fydnY7H/HXBoiRV59LMk78Rt1OXAMmXdec2o0s0c8fFnxXXjbs+HGWeDukLYrS7LlYJGeyM8G/k7TavXJF56RoFMSBuSYnWSfQI9MCldWgxOlQSBRDsXaneIJbM+92LvxpWUVtnYRzZgb9q6+5aIHyV3613DRUXw9AdCzIuX+rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714756786; c=relaxed/simple;
-	bh=Hcgz7372JSWmrvRQywcGylEztD7txJvhGznmILq6zB4=;
+	s=arc-20240116; t=1714756788; c=relaxed/simple;
+	bh=HSPO3BYYrHNKLlywx1qmFZnk+RVxu/4s6sl1HAdCBHQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pebHZ868J6iFkloq/RcKeGizvDP3Qj9V1KnwOlpiDdCSSZm6pAniXQTp92AvG08wNZ83OvZCdHrIgOF2IfiF5zoEMtPBtFRqQ4LvI8dZYuQ6NZHesJ345Mo+jTdCRKnu7t0//RVG9NVMgmDhoyuWQM7JFFVn2eHwrxjo8+LNI0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GYLqjtvl; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version; b=h3OvGNywblhGdPrK4m0+VLZ4P/rfkm6IGm0jwOCl3TZYAK0qXCaBIPFyGKc5/oV/Lp5Tz0v8YYHFeWGbYma5Ug1OVanEld/FSaG3nm4MffFs38kJZQSt/YheG33iamL3vnO+q6WwoQdBoxFGI+vnZyxrGrtvgvqFBJl9HIXbzp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FM8XKVSs; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GYLqjtvl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FM8XKVSs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714756785; x=1746292785;
+  t=1714756786; x=1746292786;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Hcgz7372JSWmrvRQywcGylEztD7txJvhGznmILq6zB4=;
-  b=GYLqjtvldvH6QwwH8Lns9yQsk6jGcCfDUSYKI3QmtNYt0J4cUgIU3vDk
-   nXDNF6tO3rX/8BzQY8voa9u4COCzT9kLOLp1PpBArZ/x3mEp/IhQbb1mc
-   0A1ahILEjSxErTMoVTMgwK4FWLNmk9twdOxGavxGIqSCIAjc1Ly5do64C
-   FYuGNtgQq1St6XEGq7hDvJJ69/IaU3VZdac3O0nX+wfVLipBtrMDz6U/m
-   edu/3nU3KwXAp8bKQUEimU/h7hf/trGaP1P4v82jkdtYidq2nDzakr3IZ
-   NmcT9nYkUNs/4GpBcUqTsM/eiXsML3VMTI/rdyrSCK36e53kkbXkjBBuA
+  bh=HSPO3BYYrHNKLlywx1qmFZnk+RVxu/4s6sl1HAdCBHQ=;
+  b=FM8XKVSsA4gMPahmf2QG5HxjUoPz3nLlD0cMeqToNBF8uLStG3T9gfzK
+   lFWZm8rzszgArQbAiMTB1IM0bM/NtxyDwH0JCi1Bj233ecdS/lTIbuojA
+   GEWST4th7iSkCMBA08Ygj7WrOg9LxSazQ3AyEGB+ApxJ8tXxtKw6FLspD
+   wcwdf1GYLGdBdP861/V0fpbQV8cgzP1RPTHfS17tf8qYzAMNT1q82nZ2E
+   YMkeeZ7B2V49RrYfEP7RIS3oOo9gAYnBjo616h39lopIQvPAmAj5CkmWO
+   DQNMO5hPtwus7fIBiuSLfX+3khVf/6RwHY8AzkW1HcHPUncrwGV/VWmQE
    A==;
-X-CSE-ConnectionGUID: Jf2h6PuARM63v7pZZsM6IQ==
-X-CSE-MsgGUID: PI7NB5/4RSalkxl5A3hn5w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="11107808"
+X-CSE-ConnectionGUID: lduSk7ykTfG0NcnwiX+CGg==
+X-CSE-MsgGUID: 5Vq0t4bFR6C127elLUgLnQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="11107819"
 X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="11107808"
+   d="scan'208";a="11107819"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 10:19:44 -0700
-X-CSE-ConnectionGUID: 0S5fgwx+RuGGjX3mv209/g==
-X-CSE-MsgGUID: vq5wy9W0SKq6Swtvz3e3Hg==
+X-CSE-ConnectionGUID: k7YE1zu7QG2Gy40YjxVtmg==
+X-CSE-MsgGUID: oVe/rjzDTTGMxgTvIVH2hA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,251,1708416000"; 
-   d="scan'208";a="58415424"
+   d="scan'208";a="58415426"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orviesa002.jf.intel.com with ESMTP; 03 May 2024 10:19:42 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 606F91C7; Fri,  3 May 2024 20:19:38 +0300 (EEST)
+	id 8C2E5699; Fri,  3 May 2024 20:19:38 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Parker Newman <pnewman@connecttech.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -52,9 +52,9 @@ To: Parker Newman <pnewman@connecttech.com>,
 	linux-serial@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH v2 06/13] serial: 8250_exar: Extract cti_board_init_osc_freq() helper
-Date: Fri,  3 May 2024 20:15:58 +0300
-Message-ID: <20240503171917.2921250-7-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 10/13] serial: 8250_exar: Switch to use dev_err_probe()
+Date: Fri,  3 May 2024 20:16:02 +0300
+Message-ID: <20240503171917.2921250-11-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20240503171917.2921250-1-andriy.shevchenko@linux.intel.com>
 References: <20240503171917.2921250-1-andriy.shevchenko@linux.intel.com>
@@ -66,102 +66,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extract cti_board_init_osc_freq() helper to avoid code duplication.
+Switch to use dev_err_probe() to simplify the error path and
+unify a message template.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/tty/serial/8250/8250_exar.c | 48 ++++++++++++-----------------
- 1 file changed, 19 insertions(+), 29 deletions(-)
+ drivers/tty/serial/8250/8250_exar.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-index ac373cde7e39..956323e2de4a 100644
+index 51f6af16c557..306bc6d7c141 100644
 --- a/drivers/tty/serial/8250/8250_exar.c
 +++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -695,7 +695,6 @@ static int cti_read_osc_freq(struct exar8250 *priv, u8 eeprom_offset)
- {
- 	u16 lower_word;
- 	u16 upper_word;
--	int osc_freq;
+@@ -889,11 +889,8 @@ static int cti_port_setup_common(struct exar8250 *priv,
+ 	port->port.uartclk = priv->osc_freq;
  
- 	lower_word = exar_ee_read(priv, eeprom_offset);
- 	// Check if EEPROM word was blank
-@@ -706,10 +705,8 @@ static int cti_read_osc_freq(struct exar8250 *priv, u8 eeprom_offset)
- 	if (upper_word == 0xFFFF)
- 		return -EIO;
- 
--	osc_freq = FIELD_PREP(CTI_EE_MASK_OSC_FREQ_LOWER, lower_word) |
--		FIELD_PREP(CTI_EE_MASK_OSC_FREQ_UPPER, upper_word);
--
--	return osc_freq;
-+	return FIELD_PREP(CTI_EE_MASK_OSC_FREQ_LOWER, lower_word) |
-+	       FIELD_PREP(CTI_EE_MASK_OSC_FREQ_UPPER, upper_word);
- }
- 
- /**
-@@ -890,6 +887,19 @@ static int cti_rs485_config_mpio_tristate(struct uart_port *port,
- 	return cti_tristate_disable(priv, port->port_id);
- }
- 
-+static void cti_board_init_osc_freq(struct exar8250 *priv, struct pci_dev *pcidev, u8 eeprom_offset)
-+{
-+	int osc_freq;
-+
-+	osc_freq = cti_read_osc_freq(priv, eeprom_offset);
-+	if (osc_freq <= 0) {
-+		dev_warn(&pcidev->dev, "failed to read OSC freq from EEPROM, using default\n");
-+		osc_freq = CTI_DEFAULT_PCI_OSC_FREQ;
-+	}
-+
-+	priv->osc_freq = osc_freq;
-+}
-+
- static int cti_port_setup_common(struct exar8250 *priv,
- 				struct pci_dev *pcidev,
- 				int idx, unsigned int offset,
-@@ -1095,19 +1105,9 @@ static int cti_board_init_xr17v35x(struct exar8250 *priv,
- 	return 0;
- }
- 
--static int cti_board_init_xr17v25x(struct exar8250 *priv,
--				struct pci_dev *pcidev)
-+static int cti_board_init_xr17v25x(struct exar8250 *priv, struct pci_dev *pcidev)
- {
--	int osc_freq;
--
--	osc_freq = cti_read_osc_freq(priv, CTI_EE_OFF_XR17V25X_OSC_FREQ);
--	if (osc_freq < 0) {
--		dev_warn(&pcidev->dev,
--			"failed to read osc freq from EEPROM, using default\n");
--		osc_freq = CTI_DEFAULT_PCI_OSC_FREQ;
+ 	ret = serial8250_pci_setup_port(pcidev, port, 0, offset, 0);
+-	if (ret) {
+-		dev_err(&pcidev->dev,
+-			"failed to setup pci for port %d err: %d\n", idx, ret);
++	if (ret)
+ 		return ret;
 -	}
--
--	priv->osc_freq = osc_freq;
-+	cti_board_init_osc_freq(priv, pcidev, CTI_EE_OFF_XR17V25X_OSC_FREQ);
  
- 	/* enable interrupts on cards that need the "PLX fix" */
- 	switch (pcidev->subsystem_device) {
-@@ -1123,19 +1123,9 @@ static int cti_board_init_xr17v25x(struct exar8250 *priv,
- 	return 0;
- }
+ 	port->port.private_data = (void *)priv;
+ 	port->port.pm = exar_pm;
+@@ -1522,11 +1519,8 @@ exar_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *ent)
+ 	maxnr = pci_resource_len(pcidev, bar) >> (board->reg_shift + 3);
  
--static int cti_board_init_xr17c15x(struct exar8250 *priv,
--				struct pci_dev *pcidev)
-+static int cti_board_init_xr17c15x(struct exar8250 *priv, struct pci_dev *pcidev)
- {
--	int osc_freq;
--
--	osc_freq = cti_read_osc_freq(priv, CTI_EE_OFF_XR17C15X_OSC_FREQ);
--	if (osc_freq <= 0) {
--		dev_warn(&pcidev->dev,
--			"failed to read osc freq from EEPROM, using default\n");
--		osc_freq = CTI_DEFAULT_PCI_OSC_FREQ;
+ 	nr_ports = exar_get_nr_ports(board, pcidev);
+-	if (nr_ports == 0) {
+-		dev_err_probe(&pcidev->dev, -ENODEV,
+-				"failed to get number of ports\n");
+-		return -ENODEV;
 -	}
--
--	priv->osc_freq = osc_freq;
-+	cti_board_init_osc_freq(priv, pcidev, CTI_EE_OFF_XR17C15X_OSC_FREQ);
++	if (nr_ports == 0)
++		return dev_err_probe(&pcidev->dev, -ENODEV, "failed to get number of ports\n");
  
- 	/* enable interrupts on cards that need the "PLX fix" */
- 	switch (pcidev->subsystem_device) {
+ 	priv = devm_kzalloc(&pcidev->dev, struct_size(priv, line, nr_ports), GFP_KERNEL);
+ 	if (!priv)
+@@ -1559,7 +1553,7 @@ exar_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *ent)
+ 	for (i = 0; i < nr_ports && i < maxnr; i++) {
+ 		rc = board->setup(priv, pcidev, &uart, i);
+ 		if (rc) {
+-			dev_err(&pcidev->dev, "Failed to setup port %u\n", i);
++			dev_err_probe(&pcidev->dev, rc, "Failed to setup port %u\n", i);
+ 			break;
+ 		}
+ 
+@@ -1568,10 +1562,9 @@ exar_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *ent)
+ 
+ 		priv->line[i] = serial8250_register_8250_port(&uart);
+ 		if (priv->line[i] < 0) {
+-			dev_err(&pcidev->dev,
+-				"Couldn't register serial port %lx, irq %d, type %d, error %d\n",
+-				uart.port.iobase, uart.port.irq,
+-				uart.port.iotype, priv->line[i]);
++			dev_err_probe(&pcidev->dev, priv->line[i],
++				"Couldn't register serial port %lx, type %d, irq %d\n",
++				uart.port.iobase, uart.port.iotype, uart.port.irq);
+ 			break;
+ 		}
+ 	}
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
