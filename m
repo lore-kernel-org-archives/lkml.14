@@ -1,92 +1,141 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A568E556
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 16:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C37C134B1
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 16:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714753834; cv=none; b=Cdk9uSrPF7lp+RZOFe7TuQXJ9iSPzn0J9ugV6bML5e6Sg7ynsBbWWiQ7S91nhnwiJpgAybL3HXT3/XLu6VcSyyji16ipo7PhlSuj6EN4GOJyHaESahdDcPCPvmpwbEbZF1qFmaeXa7FyuhhO1OV/v6T2ltFbCJud1Gs7Me4F6Gs=
+	t=1714753990; cv=none; b=AR4QvonXrugQTXhjBvHL/XjqY7xEpOwXLIq6241V+KXrxQx90iP2JldX3HTQBmTjb4/XJ5nzYtr8nKjZ8ANC9+RhwGT1J6xbpniB41xjpO3SuYiqpSvrxkV3maimzNkrpy/90/DqWrmKgiss9gpw5MgQPTCPzhcws9x38wGK4GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714753834; c=relaxed/simple;
-	bh=WPVcs1TOpK/zIamQ+wtUWsaV9d+WzS0scr8FdFX/12Q=;
+	s=arc-20240116; t=1714753990; c=relaxed/simple;
+	bh=Wb/E/ZBmghIgft2E8B2VLHz6uP/QIkfTrbqbKxU75Yc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eLXq66kQS1xzpEcxo+B2EfjnTZ6YXq/3dianBIPyvtBYZyDH663xHZRymIhyIPDhYt0OnJKpmtkSZJWdYi0hqK2CFVP4x9YGW7VeVkR/fXbu46RTFWFwWFBK+5dltyIYfR1Vmf96L9AZHS1CMWJn/s20DDE3BckhYK9+X6hcA0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=FSr2ZLmH; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 To:Cc:Content-Type; b=dXfOMeMmQg/7J+qHhVyEprzg55IOWdUlgSOAa5XLp2LkGWr6Wrc3VIgCnrkF/GrICwmyb6DNaij23mbS33Gx30wnNlH1ka4HwiY9epCXeJrTvsEOf1J3t61GYwh0fgAA680+ZF0B9C0UAMAaB/Tgnz2Fi+Rxlz1rwHducSNCG8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ST5tr9oZ; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="FSr2ZLmH"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e10b6e2bacso39790381fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 09:30:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ST5tr9oZ"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4376e3fd7e4so52106951cf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 09:33:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714753831; x=1715358631; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714753987; x=1715358787; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WPVcs1TOpK/zIamQ+wtUWsaV9d+WzS0scr8FdFX/12Q=;
-        b=FSr2ZLmH5u81pj8YyV/fFO6Yk3pWm8h06ua+SE9TTcWl2Nr9xrcYgGPf3GDrcURo5q
-         zet2haQI/ccg/TGlbBo52xghSTT2l5+d8fc1D04teiQLgQ71RpmmuXAFrgRl9GVDZ3+/
-         6VEssdQW/sYW1G0OeEqFJPyNi+QXpOuwd3NjR8cCIGpwfTWpxOeLBdMGs7Ya4+B6RbyN
-         qIjVU5LcG7n2eC4YR2/c/9mfmq1+n6ltIS5D0iMKqqhZfNEcmQRKwg5Uwy0KIyDDJwqX
-         cxqg2fMNm6QQy8qOpwjMrvTF39zBBpxbwvWKlS6Dqyj/86CJmhZb5B0HtmLGRamowh+P
-         P+0g==
+        bh=sjSWzAvI8127nFCBAhRj+G6Ozr2Q97LS17/PxW+N9NU=;
+        b=ST5tr9oZmUlezeA9AXz5plzmzXQozHrVZvwrFrhrH+WcXBrpsX/aFMa2tS8yRSAofs
+         WoJ9FafvBw6yY2/bvfTibfHfO5afvsGv8UzCqT8fzK54BlqTAdVA+UBGw5uc9+DxpyOe
+         zsMz3teQYXBiiMpgBm+ZTho8wGrEmyp0QiHRk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714753831; x=1715358631;
+        d=1e100.net; s=20230601; t=1714753987; x=1715358787;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WPVcs1TOpK/zIamQ+wtUWsaV9d+WzS0scr8FdFX/12Q=;
-        b=IHw6b53NQuDhrqPi8Gj3be8lYFO0FthaqXbpaWbFAhJscam2cx6ZLXZnKmEjR3Mhpq
-         bS0UpKWTTWOU7bkMqR2BG9QX0UmHpTPnEhwnd8jSTrmQMcsFBy9QlP81ocf/DgojSLJU
-         IIfS9W4pCV8qgxpZr7DizU43sQPt3hlV+yM/SVeyg9EEkFkkO4jVZyrzVDfIjX+oJifg
-         tSFRm+QHoECrqulFzx+10XS4LPS3guVw9PsF2urat6Tqfp2EmPvfiBtVCnt3rYfBYnx0
-         Wfgequ+U7vjPrPXlNsjVRMzh/qxvR/lWH2xHA4xXo8FMVLeHYMnaOmXIA1lKHEu3iZVO
-         cRpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVb3E/ENRIJBty4ZjgOEi9R6KAIxu73SM6KglbwjqEwlLFe1Ba0wDJqxab9Zv9edBfrmayTewAMTjN0qhwB/fcSwcm6d5arGuBQWhBA
-X-Gm-Message-State: AOJu0YwDLCq8QDXGoihPXZa40oNk/w0/nhf40SUa4ygH0Q4BGH8zWvy5
-	A8HQ+ClCM5/8mH7c9QRWSWjjcGjj+DMgO+w8LlzSD8uPsRgzo26PuV86JqaU9vwJOHknpqkA9w1
-	tT5DQ9Q/IS4+PHsGtheEINudiDlIMnR9ryHXm8Q==
-X-Google-Smtp-Source: AGHT+IGE7xxu21b/33CNpShSktw1p7c14hONSdRe5GLkslIarmkQXZLYgc3VeAksgpSpBEPHVsKNhmZwLeEcUDNOhGw=
-X-Received: by 2002:a2e:9310:0:b0:2e2:72a7:843c with SMTP id
- e16-20020a2e9310000000b002e272a7843cmr1041621ljh.36.1714753831332; Fri, 03
- May 2024 09:30:31 -0700 (PDT)
+        bh=sjSWzAvI8127nFCBAhRj+G6Ozr2Q97LS17/PxW+N9NU=;
+        b=fgKJY3UZhXrNGEPZeR6ZFjMkX1uZ3dQILiV48OZAA9bzvO/uF+9Rn6FBAFW9ouaXm5
+         XyVwZx/txaxBemXpQM2W4p626ofIIamc49srakLVV7jWdqMOHw4SB3bcVqRFlim0Slld
+         8XJQuABpXKLICyOZ5npIe40qzMteS55/mdhrLSEB+GBNcYpAMqC06KZVAzWv+Z7L+lMd
+         YgkgR00RydbYpFw2Z2kIO+KcPMy4g2+6+qAfW6VSJH/hLqwNbP9ReX5FUzKdTV0Xoqdi
+         0XDNJMwhRJcVEkedNGKw8BlAKQbu8MlKlUXu2Ga434bFMGYy3doZK57oQdm0O955hjU1
+         lEXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3LBjAclZgWRbi3ksVVQjY2UuUHy4fWoJIbgq14ChuCMJj8YWBtGKoY/NiGoAZp+peneolBO0398c+tpQWq2DUpZnrcFwjAQMhVTBv
+X-Gm-Message-State: AOJu0YwpaxgcqsctA+7y8i52QLS5Wwc5zuDluE0tSggwqH5U8q+JIWUM
+	vUH3H5ylbkgSvBDK4z4/ZGLlhz/8X5mjoCti7kQTf+E23VmPx5K5c9e1JEo63v4V69+X/NnwPBK
+	/Gw==
+X-Google-Smtp-Source: AGHT+IEaM0qW8keyK9VInx0gz9SE9XeC7LpbOFIo91u9cJGQa+SbZp1/rf+wtUPLk7JZGyrfRT4adw==
+X-Received: by 2002:ac8:5dca:0:b0:43a:be0b:4761 with SMTP id e10-20020ac85dca000000b0043abe0b4761mr3496215qtx.1.1714753986952;
+        Fri, 03 May 2024 09:33:06 -0700 (PDT)
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com. [209.85.160.178])
+        by smtp.gmail.com with ESMTPSA id fv14-20020a05622a4a0e00b0043936ed09bfsm1732978qtb.27.2024.05.03.09.33.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 May 2024 09:33:05 -0700 (PDT)
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-436ed871225so420671cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 09:33:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVz/0mYmEpjekQC2wSqD6bgE3sfhY/4hKn+cFOUlifN1KQozxymh6NfRmKpTZZlCbFjPfTPPxZpzb/UIVlQVntIiAmXY0r/fo/nZv/X
+X-Received: by 2002:ac8:580b:0:b0:43a:2e2b:eec with SMTP id
+ d75a77b69052e-43cd6f1d31amr3382801cf.2.1714753984705; Fri, 03 May 2024
+ 09:33:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502-dev-charlie-support_thead_vector_6_9-v5-0-d1b5c013a966@rivosinc.com>
- <20240502-dev-charlie-support_thead_vector_6_9-v5-15-d1b5c013a966@rivosinc.com>
-In-Reply-To: <20240502-dev-charlie-support_thead_vector_6_9-v5-15-d1b5c013a966@rivosinc.com>
-From: Evan Green <evan@rivosinc.com>
-Date: Fri, 3 May 2024 09:29:55 -0700
-Message-ID: <CALs-HssJRSZjuDQjeDiSRYCyEnUDBKQRNCsEVPmLrCKfz_H4Ug@mail.gmail.com>
-Subject: Re: [PATCH v5 15/17] riscv: hwprobe: Document thead vendor extensions
- and xtheadvector extension
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Palmer Dabbelt <palmer@rivosinc.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
+References: <20240501154251.3302887-1-dianders@chromium.org> <20240501084109.v3.9.I947e28c81f9ef7dcd3add6e193be72d6f8ea086f@changeid>
+In-Reply-To: <20240501084109.v3.9.I947e28c81f9ef7dcd3add6e193be72d6f8ea086f@changeid>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 3 May 2024 09:32:48 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U51FTOV2nnTbqkqUuaHFqib7-ua03O9tZN21EoX2dMsg@mail.gmail.com>
+Message-ID: <CAD=FV=U51FTOV2nnTbqkqUuaHFqib7-ua03O9tZN21EoX2dMsg@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] drm/panel: innolux-p079zca: Don't use a table for
+ initting panels
+To: dri-devel@lists.freedesktop.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Cong Yang <yangcong5@huaqin.corp-partner.google.com>, Hsin-Yi Wang <hsinyi@google.com>, 
+	Brian Norris <briannorris@chromium.org>, Sam Ravnborg <sam@ravnborg.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Javier Martinez Canillas <javierm@redhat.com>, 
+	Joel Selvaraj <jo@jsfamily.in>, lvzhaoxiong@huaqin.corp-partner.google.com, 
+	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 2, 2024 at 9:47=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.co=
-m> wrote:
->
-> Document support for thead vendor extensions using the key
-> RISCV_HWPROBE_KEY_VENDOR_EXT_THEAD_0 and xtheadvector extension using
-> the key RISCV_HWPROBE_VENDOR_EXT_XTHEADVECTOR.
->
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Hi,
 
-Reviewed-by: Evan Green <evan@rivosinc.com>
+On Wed, May 1, 2024 at 8:43=E2=80=AFAM Douglas Anderson <dianders@chromium.=
+org> wrote:
+>
+> @@ -132,33 +125,9 @@ static int innolux_panel_prepare(struct drm_panel *p=
+anel)
+>         /* p079zca: t4, p097pfg: t5 */
+>         usleep_range(20000, 21000);
+>
+> -       if (innolux->desc->init_cmds) {
+> -               const struct panel_init_cmd *cmds =3D
+> -                                       innolux->desc->init_cmds;
+> -               unsigned int i;
+> -
+> -               for (i =3D 0; cmds[i].len !=3D 0; i++) {
+> -                       const struct panel_init_cmd *cmd =3D &cmds[i];
+> -
+> -                       err =3D mipi_dsi_generic_write(innolux->link, cmd=
+->data,
+> -                                                    cmd->len);
+> -                       if (err < 0) {
+> -                               dev_err(panel->dev, "failed to write comm=
+and %u\n", i);
+> -                               goto poweroff;
+> -                       }
+> -
+> -                       /*
+> -                        * Included by random guessing, because without t=
+his
+> -                        * (or at least, some delay), the panel sometimes
+> -                        * didn't appear to pick up the command sequence.
+> -                        */
+> -                       err =3D mipi_dsi_dcs_nop(innolux->link);
+> -                       if (err < 0) {
+> -                               dev_err(panel->dev, "failed to send DCS n=
+op: %d\n", err);
+> -                               goto poweroff;
+> -                       }
+> -               }
+> -       }
+> +       err =3D innolux->desc->init(innolux);
+> +       if (err < 0)
+> +               goto poweroff;
+
+FWIW, I happened to notice a bug in the above by code inspection. The
+old code checked "if (innolux->desc->init_cmds)" and thus handled
+init_cmds being NULL. The new code doesn't handle the init function
+being NULL. One of the two panels in this file (which seems to have no
+users in mainline) doesn't specify an init sequence.
+
+I'll spin this next week with the extra "if" test.
+
+-Doug
