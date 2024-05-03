@@ -1,389 +1,511 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0F214F62;
-	Fri,  3 May 2024 09:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACEF14E2F2;
+	Fri,  3 May 2024 09:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714727029; cv=none; b=TDRL4EknNrGXbQ6QjtvmwpCKLyslIu7ZAmooBe+3ewAu4NtSHr2sykMGt9gdhj9zwYRhcfVH0VW5E3hWkfFuU9lP3PpAufU4knwCr451STs+P+h9Uw6FoAzVRUtBhJFEH5JlOB9sGXJqfoUv5Dfn50FH9VfyZILCDIgLKD30yWM=
+	t=1714727070; cv=none; b=UQoa7XlkFuMZcdhyZBTiUopF5L9ipYAc5SIf03yZkv/HfuvJb6RrIE3PO2Fv8HFj2NXugylRXCKKd5/UEeiCX3VvTSUFOf9tZZgs5DhjHx95AlC3sL58I2qC2E14nAD2o3ONLzRaowhqNSOg3ua0YOEcuB7b/bpnIasZQ7DEU34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714727029; c=relaxed/simple;
-	bh=H4OwBwwEJLoUrKgErNPAJ4aWKXfqp1/GW2h+1cPY6mY=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=LELIdvB94u4VG7Xl+VUb+dOAlJzdIImPOiWg1ONIISGco6uNrDnbtN5vQuS2LAJ/NRfJUIRebhYvF6BE23O6h6qdT/UUemv/kqLLeDooaSN6kwrjugPZgWSH3yX8qfUt6xL4WSNKVgbgrCFU8Y2NquZSNlxFAkDNfVMKlyJMboY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hNizHVdn; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1714727070; c=relaxed/simple;
+	bh=L9mym5HUs0jB6zHpWIWPd24vsCgaxBi+qB3rwEwqx+4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iloD9fj/ET/pb9HqNoAyGmtdaDZlnyZjuV2urylxmM/AHYFE4CvnQiIuMtjvO7Trf6QfXh+1hLvHnjgh7KspTtR501Xaz3+O+jtaV/WrilORGzxAprzE0bDuyPMKuh0eW7tU217fkJBvC597zUfm4/i+1V204Z5loNiv11l0QZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DpJu4Ale; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hNizHVdn"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240503090338euoutp0194b4a66649b9801585df2f01f69d5a50~L7yOBYBSa0516505165euoutp01e;
-	Fri,  3 May 2024 09:03:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240503090338euoutp0194b4a66649b9801585df2f01f69d5a50~L7yOBYBSa0516505165euoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1714727018;
-	bh=5DfAXm0BybfL0wB90HdoJ2+ecXzl3T3phLFwP9QlX+o=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=hNizHVdn9K9XbhBNhn1nDSO/5KZUNj2XoxMSsTacSd3jPs0o0drSRiC4H6bkslwSW
-	 B/QSvO9HwlzhFW4zaHFyGSJ5H6nnh83o7MAyLAhqznaRM1mK98m5CnfxgNvbZnC8qx
-	 hsrB//hR8ZhJR5rlu9tY5Zsijl1EM085ggZXO+JQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240503090338eucas1p1622ca105c87c20c6bbe96b62943fe717~L7yNnz7IW1025710257eucas1p1p;
-	Fri,  3 May 2024 09:03:38 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 2A.F6.09624.A68A4366; Fri,  3
-	May 2024 10:03:38 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240503090337eucas1p17add844fd822fa0889270ae9e12ca4d0~L7yM6N_nm1858018580eucas1p1z;
-	Fri,  3 May 2024 09:03:37 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240503090337eusmtrp2e33e44757c1c281d7e60e444934cfff9~L7yM4xFdH1141911419eusmtrp2R;
-	Fri,  3 May 2024 09:03:37 +0000 (GMT)
-X-AuditID: cbfec7f2-bfbff70000002598-4f-6634a86abd4b
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id DB.59.08810.968A4366; Fri,  3
-	May 2024 10:03:37 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240503090337eusmtip245d74ecfb1a665d8dac0f5363231e909~L7yMjDsdX1588515885eusmtip2r;
-	Fri,  3 May 2024 09:03:37 +0000 (GMT)
-Received: from localhost (106.210.248.112) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Fri, 3 May 2024 10:03:36 +0100
-Date: Fri, 3 May 2024 11:03:32 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-CC: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
-	Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>,
-	<linux-fsdevel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-mm@kvack.org>, <linux-security-module@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-xfs@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
-	<coreteam@netfilter.org>, <kexec@lists.infradead.org>,
-	<linux-hardening@vger.kernel.org>, <bridge@lists.linux.dev>,
-	<lvs-devel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<rds-devel@oss.oracle.com>, <linux-sctp@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>, <apparmor@lists.ubuntu.com>
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DpJu4Ale"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714727068; x=1746263068;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=L9mym5HUs0jB6zHpWIWPd24vsCgaxBi+qB3rwEwqx+4=;
+  b=DpJu4AleBOfF70xFTWgfTbZQ//Ci8+LHB2eqgJG2v3tDxcphFJxZWFd6
+   FAcuHnLfklP5Ji7X/lm18HAkJQD7CHEwEVvF1gqriQDQf+fpB4mCHh70P
+   c5WT/3TaU6IbeaXJriuth0SJtTC8pyYvuIEH8NysX+zTg+Igkn3cRcwgg
+   yv/PcMvzk/ZD0c/dFb9DtThYD9uKXyXbog+oPgwF+/EqIvJetn2GhTp0K
+   cX+poqaAVL3ZwqZZaa2rAp+JJSm1ke6UBmc7HgV0OzX7ubmmfy3mMznDn
+   fICK4+8fM3giTqixY5kX5Wp/EC1//xlQVIZ9UM1anc+YOCin8v9/+KexF
+   Q==;
+X-CSE-ConnectionGUID: 7wgEkiC/RqCSbqtcyOxXaA==
+X-CSE-MsgGUID: RhRWtEHdQ/+tr3Nn2QrKHg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10656572"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10656572"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 02:04:27 -0700
+X-CSE-ConnectionGUID: gyWdPFp4S9u31rhTod4NBQ==
+X-CSE-MsgGUID: 5hkp3xgURZetLduywtwaLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="27369361"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.56])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 02:04:24 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 3 May 2024 12:04:19 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: linux-doc@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform/x86/intel/sdsi: Add ioctl SPDM transport
+In-Reply-To: <20240503025727.10254-1-david.e.box@linux.intel.com>
+Message-ID: <9a91ca6e-99cd-d53a-0ea1-228ac555cd02@linux.intel.com>
+References: <20240503025727.10254-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="pu6elde4hy573vso"
-Content-Disposition: inline
-In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VSfUxTVxzNfe/1vVe24mvp5AZkZIiayIcQWbzZKrC4Px4hM5PMLPLHRjOe
-	4KBFW2DqdOJEFHBbBVEpX2UiMnDFFKhURLFjRcABG8SgwzI+SkBwQIsCq8Isj80l++/8fuec
-	e8+5uTQueUh60fuUqZxKKU/2I90Io2WxK+jzqrC9IUNmD3TcohMgR2sbiYyXcjH0wnQKR/UW
-	K0A2yzCF7uUqUFPnUwwZRu4L0M3mdgKV1i4C1HujmETWq8sC1NPSKUB9DXoCjZm/IZDRkUki
-	TfkJHNl0kwI0c2aYRK21vxDoxvNGCjkXxjDknF8SoBNldhz1a2wAWXRrkUbfQaCuOocg0oct
-	yviVYDu+h6zOkMYaqrNJ1mDPo9i6imPseF0hYLsvlgP2fv8gwT5x3sXYnsopknUY3mS/y7VQ
-	H4pi3WTxXPK+dE61JTzOLdFp+53cX/Txwe7BnRmgKzIHCGnIhME7lmtkDnCjJUwVgCPTdwA/
-	zAE4N/ktcKkkjAPAWze/ygH0iuPHOU9ecwXAyXsj+L+a8Uev80Q9gDWjfwhcBMH4w7qJbMyF
-	SSYQdk8NrBikjAz+8MxBuTDOFFCw6HqcC3swcbD+cv7KxSImElr1TQSPxbC9cJRwhcCZg3Bo
-	IZaH3vDKEu1SCJkPYFbFNMEXWw9br5dQPD4KO+ofYq5okJlxg+bZUcAT78MzDXwcyHjAx231
-	q4Z1cNlUtmrIB/D20gzFDzUAVh5/ivGqd2Fm3+iq4z1o7X4A+Bdyh/1PxHwvd5hnvIDzaxE8
-	nSXh1RthjXWK0ID12v80075qpn3VTLtyTiDUNdnJ/60DYGX5JM7j7VCvnyZ0gKoGnlyaWpHA
-	qUOV3BfBarlCnaZMCP4sRWEAL79851KbvRGUPJ4NNgOMBmbg/9I8fK2mB3gRyhQl5ycVBeRv
-	3SsRxcsPHeZUKZ+q0pI5tRl404Sfp2hDvC8nYRLkqVwSx+3nVP+wGC30ysDSCwPswc2nK7SJ
-	u46EjoZI18i6djc81wszz+8oGTq/uaSpb+sBQ4nBMeAYxCxHt/w82WOq0J9rEAu/jL1Iz8dE
-	ptnz9kTQittJBedyNeiyqSV5g8mnWi3rLDwy5/A1/8aG9RbtpDZVuTuXo7F37k6cahf31Ebs
-	ic4wmiOTZLNXLxXj0nZpcdCScxf3SX/42fbyRXHjuvE3os5ub342sM2my/bxpeThu/Heqbe8
-	s5ix0sAHZTXzh4YOX1g4kBdi++kYFYSZQv862TlRUNsijSqNDjhpWBO+rFnruWnbeNzbSoX7
-	xhfuMfiOMLEs97WCr4MiokI+umV8FAPT/0xs809K9SPUifLQzbhKLf8bTKfE620EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJKsWRmVeSWpSXmKPExsVy+t/xe7qZK0zSDH7sl7VoPLaA1eLzkeNs
-	FtsWdzNZ/N3Zzmyx5dg9Rounxx6xW5zpzrXYffork8Wmx9dYLfbsPcliMW/9T0aLy7vmsFnc
-	W/Of1eLCgdOsFle2rmOxeHaol8Vi2+cWNosJC5uZLZ4ueM1q8aHnEZvFkfVnWSx2/dnBbvH7
-	xzMmi9/f/7FaNM//xGxxY8JTRotjC8QsJqw7xWJxbvNnVgdZj9kNF1k8Ti2S8FiwqdRj06pO
-	No9Nnyaxe2xeUu/xYvNMRo/zMxYyely7cZ/F4+3vE0weF5a9YfP4vEnOo7/7GHsAb5SeTVF+
-	aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexpz+v0wFM8Mr
-	Ph6+xNrAeMahi5GDQ0LARGLtF/EuRi4OIYGljBI3+n6ydDFyAsVlJDZ+ucoKYQtL/LnWxQZR
-	9JFR4tebn8wQzhZGietnD4F1sAioSGx+2ckEYrMJ6Eicf3OHGcQWEbCRWPntMzuIzSwwlV1i
-	9vYEEFtYIEFiy9LJjCA2r4CDxL11u1kghi5glJjevhYqIShxcuYTFpBTmQXKJN7fNoYwpSWW
-	/+MAqeAU8JVoW/Ie6mhliSPb57JD2LUSn/8+Y5zAKDwLyaBZCINmIQyaBXablsSNfy+ZMIS1
-	JZYtfM0MYdtKrFv3nmUBI/sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwHS37djPzTsY5736
-	qHeIkYmD8RCjClDnow2rLzBKseTl56UqifBqTzZOE+JNSaysSi3Kjy8qzUktPsRoCgzDicxS
-	osn5wEScVxJvaGZgamhiZmlgamlmrCTO61nQkSgkkJ5YkpqdmlqQWgTTx8TBKdXANH3uY4E0
-	2xYBo9Mirv0ldwM2JeXqPak55K24q+zrxBohrh2WGfamDnIvAq2vLWOefW1xx/xL/75ENCX9
-	vqot8bXk/BKxn6F9nTImM+a53WtI2Xgg3tez4H/e1kWOlx5e8/WsP/e1yuuIcl/Z/wLbadY8
-	KiufaMxeF5jCvf62Uu03kYK5wRGfjrzc92dKt2DT2pBb3qeD5d7cEz/wpqLi2sLZNb+7lkZM
-	n+Ie5awmssqS9+w9mbNLU2RnBT5VsBSSrBRo3iWV/Wb3rR8mMzi+2SzRU5f6N7MyzCXp4P/d
-	yaIWaeGfHbVicn6JfVP4Uf55nj6jjUNn7tegOU2nuZ60PNqZxc/sn/6VMT1xt32vEktxRqKh
-	FnNRcSIAsZFFMwwEAAA=
-X-CMS-MailID: 20240503090337eucas1p17add844fd822fa0889270ae9e12ca4d0
-X-Msg-Generator: CA
-X-RootMTR: 20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803
-References: <CGME20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803@eucas1p2.samsung.com>
-	<20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+Content-Type: text/plain; charset=US-ASCII
 
---pu6elde4hy573vso
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2 May 2024, David E. Box wrote:
 
-Hey Thomas
+> Intel On Demand adds attestation and firmware measurement retrieval
+> services through use of the protocols defined the Security Protocols and
+> Data Measurement (SPDM) specification. SPDM messages exchanges are used to
+> authenticate On Demand hardware and to retrieve signed measurements of the
+> NVRAM state used to track feature provisioning and the NVRAM state used for
+> metering services. These allow software to verify the authenticity of the
+> On Demand hardware as well as the integrity of the reported silicon
+> configuration.
+> 
+> Add an ioctl interface for sending SPDM messages through the On Demand
+> mailbox. Provides commands to get a list of SPDM enabled devices, get the
+> message size limits for SPDM Requesters and Responders, and perform an SPDM
+> message exchange.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Link: https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf [1]
+> ---
+>  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+>  MAINTAINERS                                   |   1 +
+>  drivers/platform/x86/intel/sdsi.c             | 210 +++++++++++++++++-
+>  include/uapi/linux/intel_sdsi.h               |  72 ++++++
+>  4 files changed, 283 insertions(+), 1 deletion(-)
+>  create mode 100644 include/uapi/linux/intel_sdsi.h
+> 
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index c472423412bf..20dcc2dbcaf6 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -382,6 +382,7 @@ Code  Seq#    Include File                                           Comments
+>                                                                       <mailto:mathieu.desnoyers@efficios.com>
+>  0xF8  all    arch/x86/include/uapi/asm/amd_hsmp.h                    AMD HSMP EPYC system management interface driver
+>                                                                       <mailto:nchatrad@amd.com>
+> +0xFC  all    linux/intel_sdsi.h
+>  0xFD  all    linux/dm-ioctl.h
+>  0xFE  all    linux/isst_if.h
+>  ====  =====  ======================================================= ================================================================
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3fb0fa67576d..e3865e61f302 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11165,6 +11165,7 @@ INTEL SDSI DRIVER
+>  M:	David E. Box <david.e.box@linux.intel.com>
+>  S:	Supported
+>  F:	drivers/platform/x86/intel/sdsi.c
+> +F:	include/uapi/linux/intel_sdsi.h
+>  F:	tools/arch/x86/intel_sdsi/
+>  F:	tools/testing/selftests/drivers/sdsi/
+>  
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+> index 277e4f4b20ac..bab6df0521b4 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -11,9 +11,12 @@
+>  #include <linux/auxiliary_bus.h>
+>  #include <linux/bits.h>
+>  #include <linux/bitfield.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/device.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/intel_sdsi.h>
+>  #include <linux/kernel.h>
+> +#include <linux/miscdevice.h>
+>  #include <linux/module.h>
+>  #include <linux/overflow.h>
+>  #include <linux/pci.h>
+> @@ -42,6 +45,7 @@
+>  
+>  #define SDSI_ENABLED_FEATURES_OFFSET	16
+>  #define SDSI_FEATURE_SDSI		BIT(3)
+> +#define SDSI_FEATURE_ATTESTATION	BIT(12)
+>  #define SDSI_FEATURE_METERING		BIT(26)
+>  
+>  #define SDSI_SOCKET_ID_OFFSET		64
+> @@ -91,6 +95,7 @@ enum sdsi_command {
+>  	SDSI_CMD_PROVISION_CAP		= 0x0008,
+>  	SDSI_CMD_READ_STATE		= 0x0010,
+>  	SDSI_CMD_READ_METER		= 0x0014,
+> +	SDSI_CMD_ATTESTATION		= 0x1012,
+>  };
+>  
+>  struct sdsi_mbox_info {
+> @@ -109,12 +114,14 @@ struct disc_table {
+>  struct sdsi_priv {
+>  	struct mutex		mb_lock;	/* Mailbox access lock */
+>  	struct device		*dev;
+> +	struct miscdevice	miscdev;
+>  	void __iomem		*control_addr;
+>  	void __iomem		*mbox_addr;
+>  	void __iomem		*regs_addr;
+>  	int			control_size;
+>  	int			maibox_size;
+>  	int			registers_size;
+> +	int			id;
+>  	u32			guid;
+>  	u32			features;
+>  };
+> @@ -582,6 +589,94 @@ static const struct attribute_group sdsi_group = {
+>  };
+>  __ATTRIBUTE_GROUPS(sdsi);
+>  
+> +/* SPDM transport  */
+> +static int sdsi_spdm_exchange(void *private, const void *request,
+> +			      size_t request_sz, void *response,
+> +			      size_t response_sz)
+> +{
+> +	struct sdsi_priv *priv = private;
+> +	struct sdsi_mbox_info info = {};
+> +	size_t spdm_msg_size, size;
+> +	int ret;
+> +
+> +	/*
+> +	 * For the attestation command, the mailbox write size is the sum of:
+> +	 *     Size of the SPDM request payload, padded for qword alignment
+> +	 *     8 bytes for the mailbox command
+> +	 *     8 bytes for the actual (non-padded) size of the SPDM request
+> +	 */
+> +	if (request_sz > (SDSI_SIZE_WRITE_MSG - (2 * sizeof(u64))))
 
-Here is my feedback for your outstanding constification patches [1] and [2].
+This looks way more readable when unnecessary parethesis are eliminated:
 
-# You need to split the patch
-The answer that you got from Jakub in the network subsystem is very clear a=
-nd
-baring a change of heart from the network folks, this will go in as but as a
-split patchset. Please split it considering the following:
-1. Create a different patchset for drivers/,  fs/, kernel/, net, and a
-   miscellaneous that includes whatever does not fit into the others.
-2. Consider that this might take several releases.
-3. Consider the following sufix for the interim function name "_const". Lik=
-e in
-   kfree_const. Please not "_new".
-4. Please publish the final result somewhere. This is important so someone =
-can
-   take over in case you need to stop.
-5. Consistently mention the motivation in your cover letters. I specify more
-   further down in "#Motivation".
-6. Also mention that this is part of a bigger effort (like you did in your
-   original cover letters). I would include [3,4,5,6]
-7. Include a way to show what made it into .rodata. I specify more further =
-down
-   in "#Show the move".
+	if (request_sz > SDSI_SIZE_WRITE_MSG - 2 * sizeof(u64))
 
-# Motivation
-As I read it, the motivation for these constification efforts are:
-1. It provides increased safety: Having things in .rodata section reduces t=
-he
-   attack surface. This is especially relevant for structures that have fun=
-ction
-   pointers (like ctl_table); having these in .rodata means that these poin=
-ters
-   always point to the "intended" function and cannot be changed.
-2. Compiler optimizations: This was just a comment in the patchsets that I =
-have
-   mentioned ([3,4,5]). Do you know what optimizations specifically? Does it
-   have to do with enhancing locality for the data in .rodata? Do you have =
-other
-   specific optimizations in mind?
-3. Readability: because it is easier to know up-front that data is not supp=
-osed
-   to change or its obvious that a function is re-entrant. Actually a lot o=
-f the
-   readability reasons is about knowing things "up-front".
-As we move forward with the constification in sysctl, please include a more
-detailed motivation in all your cover letters. This helps maintainers (that
-don't have the context) understand what you are trying to do. It does not n=
-eed
-to be my three points, but it should be more than just "put things into
-=2Erodata". Please tell me if I have missed anything in the motivation.
+> +		return -EOVERFLOW;
+> +
+> +	info.size = round_up(request_sz, sizeof(u64)) + 2 * sizeof(u64);
+>
+> +	u64 *payload __free(kfree) = kzalloc(info.size, GFP_KERNEL);
+> +	if (!payload)
+> +		return -ENOMEM;
+> +
+> +	memcpy(payload, request, request_sz);
+> +
+> +	/* The non-padded SPDM payload size is the 2nd-to-last qword */
+> +	payload[(info.size / sizeof(u64)) - 2] = request_sz;
+> +
+> +	/* Attestation mailbox command is the last qword of payload buffer */
+> +	payload[(info.size / sizeof(u64)) - 1] = SDSI_CMD_ATTESTATION;
+> +
+> +	info.payload = payload;
+> +	info.buffer = response;
+> +
+> +	ret = mutex_lock_interruptible(&priv->mb_lock);
+> +	if (ret)
+> +		return ret;
+> +	ret = sdsi_mbox_write(priv, &info, &size);
+> +	mutex_unlock(&priv->mb_lock);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * The read size is the sum of:
+> +	 *     Size of the SPDM response payload, padded for qword alignment
+> +	 *     8 bytes for the actual (non-padded) size of the SPDM payload
+> +	 */
+> +
+> +	if (size < sizeof(u64)) {
+> +		dev_err(priv->dev,
+> +			"Attestation error: Mailbox reply size, %ld, too small\n",
+> +			size);
+> +		return -EPROTO;
+> +	}
+> +
+> +	if (!IS_ALIGNED(size, sizeof(u64))) {
+> +		dev_err(priv->dev,
+> +			"Attestation error: Mailbox reply size, %ld, is not aligned\n",
+> +			size);
+> +		return -EPROTO;
+> +	}
+> +
+> +	/*
+> +	 * Get the SPDM response size from the last QWORD and check it fits
+> +	 * with no more than 7 bytes of padding
+> +	 */
+> +	spdm_msg_size = ((u64 *)info.buffer)[(size - sizeof(u64)) / sizeof(u64)];
+> +	if (!in_range(size - spdm_msg_size - sizeof(u64), 0, 8)) {
+> +		dev_err(priv->dev,
+> +			"Attestation error: Invalid SPDM response size, %ld\n",
+> +			spdm_msg_size);
+> +		return -EPROTO;
+> +	}
+> +
+> +	if (spdm_msg_size > response_sz) {
+> +		dev_err(priv->dev, "Attestation error: Expected response size %ld, got %ld\n",
+> +			 response_sz, spdm_msg_size);
+> +		return -EOVERFLOW;
+> +	}
+> +
+> +	memcpy(response, info.buffer, spdm_msg_size);
+> +
+> +	return spdm_msg_size;
+> +}
+> +
+>  static int sdsi_get_layout(struct sdsi_priv *priv, struct disc_table *table)
+>  {
+>  	switch (table->guid) {
+> @@ -649,6 +744,92 @@ static int sdsi_map_mbox_registers(struct sdsi_priv *priv, struct pci_dev *paren
+>  	return 0;
+>  }
+>  
+> +#define SDSI_SPDM_DRIVER_VERSION	1
+> +
+> +static int sdsi_spdm_get_info(struct sdsi_priv *priv,
+> +			      struct sdsi_spdm_info __user *argp)
+> +{
+> +	struct sdsi_spdm_info info;
+> +
+> +	info.driver_version = SDSI_SPDM_DRIVER_VERSION;
+> +	info.api_version = priv->guid;
+> +	info.dev_no = priv->id;
+> +	info.max_request_size = SDSI_SIZE_WRITE_MSG - (2 * sizeof(u64));
+> +	info.max_response_size = SDSI_SIZE_READ_MSG - (sizeof(u64));
 
-# Show the move
-I created [8] because there is no easy way to validate which objects made it
-into .rodata. I ran [8] for your Dec 2nd patcheset [7] and there are less in
-=2Erodata than I expected (the results are in [9]) Why is that? Is it somet=
-hing
-that has not been posted to the lists yet?=20
+Unnecessary parenthesis on both lines.
 
-Best
+> +
+> +	if (copy_to_user(argp, &info, sizeof(info)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdsi_spdm_do_command(struct sdsi_priv *priv,
+> +				struct sdsi_spdm_command __user *argp)
+> +{
+> +	u32 req_size, rsp_size;
+> +
+> +	if (get_user(req_size, &argp->size))
+> +		return -EFAULT;
+> +
+> +	if (req_size < 4 || req_size > sizeof(struct sdsi_spdm_message))
+> +		return -EINVAL;
+> +
+> +	struct sdsi_spdm_message *request __free(kfree) =
+> +		kmalloc(req_size, GFP_KERNEL);
+> +	if (!request)
+> +		return -ENOMEM;
+> +
+> +	struct sdsi_spdm_command *response __free(kfree) =
+> +		kmalloc(SDSI_SIZE_READ_MSG, GFP_KERNEL);
+> +	if (!response)
+> +		return -ENOMEM;
+> +
+> +	if (copy_from_user(request, &argp->message, req_size))
+> +		return -EFAULT;
+> +
+> +	rsp_size = sdsi_spdm_exchange(priv, request, req_size, response,
+> +				      SDSI_SIZE_READ_MSG);
+> +	if (rsp_size < 4)
+> +		return rsp_size;
 
-[1] https://lore.kernel.org/all/20240423-sysctl-const-handler-v3-0-e0beccb8=
-36e2@weissschuh.net/
-[2] https://lore.kernel.org/all/20240418-sysctl-const-table-arg-v2-1-4012ab=
-c31311@weissschuh.net
-[3] [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
-    https://lore.kernel.org/all/20240426-n-const-ops-var-v2-0-e553fe67ae82@=
-kernel.org
-[4] [PATCH v2 00/19] backlight: Constify lcd_ops
-    https://lore.kernel.org/all/20240424-video-backlight-lcd-ops-v2-0-1aaa8=
-2b07bc6@kernel.org
-[5] [PATCH 1/4] iommu: constify pointer to bus_type
-    https://lore.kernel.org/all/20240216144027.185959-1-krzysztof.kozlowski=
-@linaro.org
-[6] [PATCH 00/29] const xattr tables
-    https://lore.kernel.org/all/20230930050033.41174-1-wedsonaf@gmail.com
-[7] https://lore.kernel.org/all/20231204-const-sysctl-v2-0-7a5060b11447@wei=
-ssschuh.net/
+Hmm, what the return value of this function actually means? Here it can 
+returns -inf..3 but in the end you return 0. So clearly the return value 
+isn't size. Is it something "work remaining to do" or what? Consider 
+adding function comment about the return value because it looks a bit 
+odd from the code alone.
 
-[8]
-    #!/usr/bin/python3
+> +
+> +	if (put_user(rsp_size, &argp->size))
+> +		return -EFAULT;
+> +
+> +	if (copy_to_user(&argp->message, response, rsp_size))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+> +
+> +static long sdsi_spdm_ioctl(struct file *file, unsigned int cmd,
+> +			    unsigned long arg)
+> +{
+> +	struct sdsi_priv *priv;
+> +	long ret = -ENOTTY;
+> +
+> +	priv = container_of(file->private_data, struct sdsi_priv, miscdev);
+> +
+> +	switch (cmd) {
+> +	case SDSI_IF_SPDM_INFO:
+> +		ret = sdsi_spdm_get_info(priv,
+> +				(struct sdsi_spdm_info __user *)arg);
+> +		break;
+> +	case SDSI_IF_SPDM_COMMAND:
+> +		ret = sdsi_spdm_do_command(priv,
+> +				(struct sdsi_spdm_command __user *)arg);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct file_operations sdsi_spdm_ops = {
+> +	.owner = THIS_MODULE,
+> +	.unlocked_ioctl = sdsi_spdm_ioctl,
+> +};
+> +
+>  static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
+>  {
+>  	struct intel_vsec_device *intel_cap_dev = auxdev_to_ivdev(auxdev);
+> @@ -663,6 +844,7 @@ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_de
+>  		return -ENOMEM;
+>  
+>  	priv->dev = &auxdev->dev;
+> +	priv->id = auxdev->id;
+>  	mutex_init(&priv->mb_lock);
+>  	auxiliary_set_drvdata(auxdev, priv);
+>  
+> @@ -686,9 +868,35 @@ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_de
+>  	if (ret)
+>  		return ret;
+>  
+> +	/* Attestation miscdevice */
+> +	if (priv->features & SDSI_FEATURE_ATTESTATION) {
+> +		priv->miscdev.name = kasprintf(GFP_KERNEL, "isdsi%d", priv->id);
 
-    import subprocess
-    import re
+devm_kasprintf() ?
 
-    def exec_cmd( cmd ):
-        try:
-            result =3D subprocess.run(cmd, shell=3DTrue, text=3DTrue, check=
-=3DTrue, capture_output=3DTrue)
-            output_lines =3D result.stdout.splitlines()
-            return output_lines
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return []
+> +		if (!priv->miscdev.name)
+> +			return -ENOMEM;
+> +
+> +		priv->miscdev.minor = MISC_DYNAMIC_MINOR;
+> +		priv->miscdev.fops = &sdsi_spdm_ops;
+> +
+> +		ret = misc_register(&priv->miscdev);
+> +		if (!ret) {
+> +			kfree_const(priv->miscdev.name);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> +static void sdsi_remove(struct auxiliary_device *auxdev)
+> +{
+> +	struct sdsi_priv *priv = auxiliary_get_drvdata(auxdev);
+> +
+> +	if (priv->features & SDSI_FEATURE_ATTESTATION) {
+> +		misc_deregister(&priv->miscdev);
+> +		kfree_const(priv->miscdev.name);
+> +	}
+> +}
+> +
+>  static const struct auxiliary_device_id sdsi_aux_id_table[] = {
+>  	{ .name = "intel_vsec.sdsi" },
+>  	{}
+> @@ -701,7 +909,7 @@ static struct auxiliary_driver sdsi_aux_driver = {
+>  	},
+>  	.id_table	= sdsi_aux_id_table,
+>  	.probe		= sdsi_probe,
+> -	/* No remove. All resources are handled under devm */
+> +	.remove		= sdsi_remove,
+>  };
+>  module_auxiliary_driver(sdsi_aux_driver);
+>  
+> diff --git a/include/uapi/linux/intel_sdsi.h b/include/uapi/linux/intel_sdsi.h
+> new file mode 100644
+> index 000000000000..de9e7f6c44c5
+> --- /dev/null
+> +++ b/include/uapi/linux/intel_sdsi.h
+> @@ -0,0 +1,72 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +/*
+> + * Intel On Demand (SDSi) Interface for SPDM based attestation.
+> + * Copyright (c) 2019, Intel Corporation.
+> + * All rights reserved.
+> + *
+> + * Author: David E. Box <david.e.box@linux.intel.com>
+> + */
+> +
+> +#ifndef __SDSI_H
+> +#define __SDSI_H
+> +
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct sdsi_spdm_info - Define platform information
+> + * @api_version:	Version of the firmware document, which this driver
+> + *			can communicate
+> + * @driver_version:	Driver version, which will help user to send right
+> + *			commands. Even if the firmware is capable, driver may
+> + *			not be ready
+> + * @dev_no:		Returns the auxiliary device number the corresponding
+> + *			sdsi instance
+> + * @max_request_size:	Returns the maximum allowed size for SPDM request
+> + *			messages
+> + * @max_response_size:	Returns the maximum size of an SPDM response message
+> + *
+> + * Used to return output of IOCTL SDSI_SPDM_INFO. This
+> + * information can be used by the user space, to get the driver, firmware
+> + * support and also number of commands to send in a single IOCTL request.
+> + */
+> +struct sdsi_spdm_info {
+> +	__u32 api_version;
+> +	__u16 driver_version;
+> +	__u16 dev_no;
+> +	__u16 max_request_size;
+> +	__u16 max_response_size;
+> +};
+> +
+> +/**
+> + * struct sdsi_spdm_message - The SPDM message sent and received from the device
+> + * @spdm_version:		Supported SPDM version
+> + * @request_response_code:	The SPDM message code for requests and responses
+> + * @param1:			Parameter 1
+> + * @param2:			Parameter 2
+> + * @buffer:			SDPM message specific buffer
+> + *
+> + */
+> +struct sdsi_spdm_message {
+> +	__u8 spdm_version;
+> +	__u8 request_response_code;
+> +	__u8 param1;
+> +	__u8 param2;
+> +	__u8 buffer[4092];
 
-    def remove_tokens_re(lines, regex_patterns, uniq =3D True):
-        filtered_lines =3D []
-        seen_lines =3D set()
-        regexes =3D [re.compile(pattern) for pattern in regex_patterns]
+How about SZ_4K - 4 * sizeof(__u8) ?
 
-        for line in lines:
-            for regex in regexes:
-                line =3D regex.sub('', line)  # Replace matches with empty =
-string
+Or move those header/metadata fields into another struct which is 
+anonymously embedded into this one so you could do SZ_4K - sizeof(struct 
+sdsi_spdm_message_header).
 
-            if uniq:
-                if line not in seen_lines:
-                    seen_lines.add(line)
-                    filtered_lines.append(line)
-            else:
-                    filtered_lines.append(line)
+Remember to add #include for SZ_4K.
 
-        return filtered_lines
+-- 
+ i.
 
-    def filter_in_lines(lines, regex_patterns):
-        filtered_lines =3D []
-        regexes =3D [re.compile(pattern) for pattern in regex_patterns]
-
-        for line in lines:
-            if any(regex.search(line) for regex in regexes):
-                filtered_lines.append(line)
-
-        return filtered_lines
-
-    cmd =3D "git grep 'static \(const \)\?struct ctl_table '"
-    regex_patterns =3D ['[\}]*;$', ' =3D \{', '\[.*\]', '.*\.(c|h):[ \t]*st=
-atic (const )?struct ctl_table ']
-    ctl_table_structs =3D remove_tokens_re(exec_cmd( cmd ), regex_patterns)
-
-    cmd =3D "readelf -X -Ws build/vmlinux"
-    regex_patterns =3D ['.*OBJECT.*']
-    output_lines =3D filter_in_lines(exec_cmd( cmd ), regex_patterns);
-
-    regex_patterns =3D ['^.*OBJECT', '[ \t]+[A-Z]+[ \t]+[A-Z]+.*\(.*\)[ \t]=
-+']
-    obj_elems =3D remove_tokens_re( output_lines, regex_patterns, uniq=3DFa=
-lse)
-
-    regex_patterns =3D ['^.*\(', '\)[ ]+.*$']
-    sec_names =3D remove_tokens_re( output_lines, regex_patterns, uniq=3DFa=
-lse)
-
-    for i in range(len(sec_names)):
-        obj_name =3D obj_elems[i]
-        if obj_name in ctl_table_structs:
-            print ("section: {}\t\tobj_name : {}". format(sec_names[i], obj=
-_name))
-
-[9]
-    section: .rodata                obj_name : kern_table
-    section: .rodata                obj_name : sysctl_mount_point
-    section: .rodata                obj_name : addrconf_sysctl
-    section: .rodata                obj_name : ax25_param_table
-    section: .rodata                obj_name : mpls_table
-    section: .rodata                obj_name : mpls_dev_table
-    section: .data          obj_name : sld_sysctls
-    section: .data          obj_name : kern_panic_table
-    section: .data          obj_name : kern_exit_table
-    section: .data          obj_name : vm_table
-    section: .data          obj_name : signal_debug_table
-    section: .data          obj_name : usermodehelper_table
-    section: .data          obj_name : kern_reboot_table
-    section: .data          obj_name : user_table
-    section: .bss           obj_name : sched_core_sysctls
-    section: .data          obj_name : sched_fair_sysctls
-    section: .data          obj_name : sched_rt_sysctls
-    section: .data          obj_name : sched_dl_sysctls
-    section: .data          obj_name : printk_sysctls
-    section: .data          obj_name : pid_ns_ctl_table_vm
-    section: .data          obj_name : seccomp_sysctl_table
-    section: .data          obj_name : uts_kern_table
-    section: .data          obj_name : vm_oom_kill_table
-    section: .data          obj_name : vm_page_writeback_sysctls
-    section: .data          obj_name : page_alloc_sysctl_table
-    section: .data          obj_name : hugetlb_table
-    section: .data          obj_name : fs_stat_sysctls
-    section: .data          obj_name : fs_exec_sysctls
-    section: .data          obj_name : fs_pipe_sysctls
-    section: .data          obj_name : namei_sysctls
-    section: .data          obj_name : fs_dcache_sysctls
-    section: .data          obj_name : inodes_sysctls
-    section: .data          obj_name : fs_namespace_sysctls
-    section: .data          obj_name : dnotify_sysctls
-    section: .data          obj_name : inotify_table
-    section: .data          obj_name : epoll_table
-    section: .data          obj_name : aio_sysctls
-    section: .data          obj_name : locks_sysctls
-    section: .data          obj_name : coredump_sysctls
-    section: .data          obj_name : fs_shared_sysctls
-    section: .data          obj_name : fs_dqstats_table
-    section: .data          obj_name : root_table
-    section: .data          obj_name : pty_table
-    section: .data          obj_name : xfs_table
-    section: .data          obj_name : ipc_sysctls
-    section: .data          obj_name : key_sysctls
-    section: .data          obj_name : kernel_io_uring_disabled_table
-    section: .data          obj_name : tty_table
-    section: .data          obj_name : random_table
-    section: .data          obj_name : scsi_table
-    section: .data          obj_name : iwcm_ctl_table
-    section: .data          obj_name : net_core_table
-    section: .data          obj_name : netns_core_table
-    section: .bss           obj_name : nf_log_sysctl_table
-    section: .data          obj_name : nf_log_sysctl_ftable
-    section: .data          obj_name : vs_vars
-    section: .data          obj_name : vs_vars_table
-    section: .data          obj_name : ipv4_route_netns_table
-    section: .data          obj_name : ipv4_route_table
-    section: .data          obj_name : ip4_frags_ns_ctl_table
-    section: .data          obj_name : ip4_frags_ctl_table
-    section: .data          obj_name : ctl_forward_entry
-    section: .data          obj_name : ipv4_table
-    section: .data          obj_name : ipv4_net_table
-    section: .data          obj_name : unix_table
-    section: .data          obj_name : ipv6_route_table_template
-    section: .data          obj_name : ipv6_icmp_table_template
-    section: .data          obj_name : ip6_frags_ns_ctl_table
-    section: .data          obj_name : ip6_frags_ctl_table
-    section: .data          obj_name : ipv6_table_template
-    section: .data          obj_name : ipv6_rotable
-    section: .data          obj_name : sctp_net_table
-    section: .data          obj_name : sctp_table
-    section: .data          obj_name : smc_table
-    section: .data          obj_name : lowpan_frags_ns_ctl_table
-    section: .data          obj_name : lowpan_frags_ctl_table
-
---
-
-Joel Granados
-
---pu6elde4hy573vso
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmY0qGMACgkQupfNUreW
-QU9meQwAhSiWxhtL9djecqOkREsAyj1iIrA1uEV4NTghMsTyhC1r83HyDUEWGOJo
-fTZ8jrYwxeDy9qnd5vC+hEYgx/tBWXv+79vssjd28m2Mn4DogQlWABKsPJlPw/8R
-IB9dau7hME9YLSiZQaKoL8DuqnQ4jvdN/zvWcuYHl2s/jF+qzsI3DT4Dy98S1Sr8
-63rSYg/sulLme7ov/3gAQ3ceSPYlLRUfYdWLlGkUYT2iIjcBIybKotaKGkERq8xL
-Z2PcPpWj15gYh6Ewd0GL7AMq2M/dSGYYxPIbv0Mnjpe5AV5HzGZ06MUg4Tt11p1z
-5Fchr0Hg24b2UYcx4mjbsDCy/OyF2oA8cjjj79ODXcgpsVxWX8GZdcFh/gNmsPw5
-dKZyo4v1ZSvDmu8uDCcaV92GLelxc2YfGHYEfbE+hhJR0YaAukrL8mfqPJIanYv+
-zzIuChlVlLB5xoY0CT3XgLo8NJrc/ERnY8JibAauNNLQvTjHV/tbd0UknFQQC4XL
-gDaMqz5j
-=1R4C
------END PGP SIGNATURE-----
-
---pu6elde4hy573vso--
+> +};
+> +
+> +/**
+> + * struct sdsi_spdm_command - The SPDM command
+> + * @ size:		The size of the SPDM message
+> + * @ message:		The SPDM message
+> + *
+> + * Used to return output of IOCTL SDSI_SPDM_COMMAND.
+> + */
+> +struct sdsi_spdm_command {
+> +	__u32 size;
+> +	struct sdsi_spdm_message message;
+> +};
+> +
+> +#define SDSI_IF_MAGIC		0xFC
+> +#define SDSI_IF_SPDM_INFO	_IOR(SDSI_IF_MAGIC, 0, struct sdsi_spdm_info *)
+> +#define SDSI_IF_SPDM_COMMAND	_IOWR(SDSI_IF_MAGIC, 1, struct sdsi_spdm_command *)
+> +#endif
+> 
+> base-commit: 36dc58c367149680bed334e83ec54728f980a96e
+> 
