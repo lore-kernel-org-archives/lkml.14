@@ -1,108 +1,119 @@
-Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2558495
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585A614267
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 13:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714741292; cv=none; b=h8ySjDoA5Uv8XYr2EDiHOi7jGXYUfhFvVM0DsmWrmnvjPSkw5YZ5/bXqlv58KeY1M3uAg7boXvb99QnBd9H7FQGurLxcP/IxQSSLvWq7PJKn9usEYYk+KS0W92tQfPjpyRK2AaZUEeSCy/3DKPhoXTi1svUBalXGh8OHgXsvZVk=
+	t=1714741329; cv=none; b=j8p/vOA0uL4gtt7VPv5eZWo4+UXWx1QiZHe7Y9rjMHJjENBvBxfdYvSA+9xzIIJ5a1dPjHmo4h8zaXZMwoDzbuWgO7gGfPEmtuyLypS0m4+8sdBKTmNlTU8kyKXZedqPsjK3eTJeUGmQBOvPcVUrr2ZtCCpmqCVanKrH7cqQtpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714741292; c=relaxed/simple;
-	bh=BPmr4NyPZSzsqJmgL40VjcbOoVTmGpoNIqNJe+trfyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D9QAf6S0S0YCKSKjiCXZQh3FVB7tXPcld0hWYo6BlC83gmiqWyvH5yQc4+bEFUiz/AQe48sPnYVrcGxlB98Z9Ne/nvXZlZuKlkm101tMSJQRmdd4A9BzCSOBgiRmCMKUQGKZSY731Ntg0sS9dDXfvDhV9EBaCQLULzgX4N/tKTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=S9xoFgyU; arc=none smtp.client-ip=188.40.203.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="S9xoFgyU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap4-20230908; h=Sender:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=nrKtj6pAhuqpN++t5oFkqusThl46U1xzi7qk6r4wSuM=; b=S9xoFgyUSJE2p/2JBqE0YpGBpJ
-	QwckRrBl9cBYy++fD+wFfHSF0GCtxPDsRg4xnpytbcvoe516loFGg7raYIKeXvDuM1EQgUw3qrqe8
-	EfWtriskAQF3S74PnEmsfAxleewBbxj8Iz7NbuMysAaplmm8VnYDJYJNBiLp0hqsb1oJSdyY0XQWg
-	jVlqTxSh6An7dE8fpUpMRcaR6r5Lb9TMNhpZt1Z2mXW/nTGyA1jaRgw9ivWAhFudkbe7nPQ4sZFa1
-	ToiFSN9VqVjPIW0W/y1HxEgPmICmwLXTUznruhbxW+cjpx0o6iDMJPz9qBdKAISACcXcVsWqGPG1L
-	We43Catw==;
-Received: from [167.98.27.226] (helo=[10.35.6.244])
-	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1s2rtE-004KaJ-2W; Fri, 03 May 2024 13:19:48 +0100
-Message-ID: <4bc238eb-410b-46b1-98e1-4aaa35e34404@codethink.co.uk>
-Date: Fri, 3 May 2024 13:19:47 +0100
+	s=arc-20240116; t=1714741329; c=relaxed/simple;
+	bh=b3qbE/w6bO7OGRolrMjXe2DRKXc4y4+CHo4Ddy4n8Jk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Unxv6wQP6kaL9q8ZDZAQ8OVD4pEq5I2mjdOOpPoD12e5E3jK9J7SBEVtpws+hY3Y4yUHFORVlzGPAWn5+++XvHWm43LVXztkqKdsl5b6znOnAIETiROjPm38OCAU9s3XFjBjElt4/pq8g4FaMstM6/Dskdx3/hk20r6GMY6XYtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875b01.versanet.de ([83.135.91.1] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1s2sY6-0000wj-1A; Fri, 03 May 2024 15:02:02 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: hjc@rock-chips.com, andy.yan@rock-chips.com,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject:
+ Re: [PATCH 2/2] drm/rockchip: vop2: configure layers for vp3 on rk3588
+Date: Fri, 03 May 2024 15:02:01 +0200
+Message-ID: <9626238.rMLUfLXkoz@diego>
+In-Reply-To: <062d86ab-1518-4160-870c-3cd36228d055@cherry.de>
+References:
+ <20240425195506.2935955-1-heiko@sntech.de>
+ <20240425195506.2935955-3-heiko@sntech.de>
+ <062d86ab-1518-4160-870c-3cd36228d055@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: uaccess: Allow the last potential unrolled copy
-Content-Language: en-GB
-To: Alexandre Ghiti <alex@ghiti.fr>, Xiao Wang <xiao.w.wang@intel.com>,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc: jerry.shih@sifive.com, nick.knight@sifive.com, ajones@ventanamicro.com,
- bjorn@rivosinc.com, andy.chiu@sifive.com, viro@zeniv.linux.org.uk,
- cleger@rivosinc.com, alexghiti@rivosinc.com, haicheng.li@intel.com,
- akira.tsukamoto@gmail.com, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240313103334.4036554-1-xiao.w.wang@intel.com>
- <7ebc5b28-7115-494f-a607-e46c71214cce@ghiti.fr>
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <7ebc5b28-7115-494f-a607-e46c71214cce@ghiti.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Sender: ben.dooks@codethink.co.uk
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 03/05/2024 13:16, Alexandre Ghiti wrote:
-> Hi Xiao,
+Am Freitag, 3. Mai 2024, 14:57:03 CEST schrieb Quentin Schulz:
+> Hi Heiko,
 > 
-> On 13/03/2024 11:33, Xiao Wang wrote:
->> When the dst buffer pointer points to the last accessible aligned 
->> addr, we
->> could still run another iteration of unrolled copy.
->>
->> Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
->> ---
->>   arch/riscv/lib/uaccess.S | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/riscv/lib/uaccess.S b/arch/riscv/lib/uaccess.S
->> index 2e665f8f8fcc..1399d797d81b 100644
->> --- a/arch/riscv/lib/uaccess.S
->> +++ b/arch/riscv/lib/uaccess.S
->> @@ -103,7 +103,7 @@ SYM_FUNC_START(fallback_scalar_usercopy)
->>       fixup REG_S   t4,  7*SZREG(a0), 10f
->>       addi    a0, a0, 8*SZREG
->>       addi    a1, a1, 8*SZREG
->> -    bltu    a0, t0, 2b
->> +    bleu    a0, t0, 2b
->>       addi    t0, t0, 8*SZREG /* revert to original value */
->>       j    .Lbyte_copy_tail
+> On 4/25/24 9:55 PM, Heiko Stuebner wrote:
+> > From: Heiko Stuebner <heiko.stuebner@cherry.de>
+> > 
+> > The rk3588 VOP2 has 4 video-ports, yet the driver currently only
+> > configures the first 3, as used on the rk3568.
+> > 
 > 
+> I'm wondering whether we should update the drawing at the top of the 
+> driver then?
 > 
-> I agree it is still safe to continue for another word_copy here.
+> > Add another block to configure the vp3 as well, if applicable.
+> > 
+> > Fixes: 5a028e8f062f ("drm/rockchip: vop2: Add support for rk3588")
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+> > ---
+> >   drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 12 ++++++++++++
+> >   drivers/gpu/drm/rockchip/rockchip_drm_vop2.h |  1 +
+> >   2 files changed, 13 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> > index 523880a4e8e74..1a327a9ed7ee4 100644
+> > --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> > @@ -2303,6 +2303,7 @@ static void vop2_setup_alpha(struct vop2_video_port *vp)
+> >   static void vop2_setup_layer_mixer(struct vop2_video_port *vp)
+> >   {
+> >   	struct vop2 *vop2 = vp->vop2;
+> > +	const struct vop2_data *vop2_data = vop2->data;
+> >   	struct drm_plane *plane;
+> >   	u32 layer_sel = 0;
+> >   	u32 port_sel;
+> > @@ -2344,6 +2345,17 @@ static void vop2_setup_layer_mixer(struct vop2_video_port *vp)
+> >   	else
+> >   		port_sel |= FIELD_PREP(RK3568_OVL_PORT_SET__PORT2_MUX, 8);
+> >   
+> > +	/* configure vp3 */
+> > +	if (vop2_data->soc_id == 3588) {
 > 
-> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> I think it'd be smarter to check against vop2->data->nr_vps >= 4; so 
+> that we don't need to maintain a list of SoCs that support a specific 
+> number of video ports.
 
-Out of interest, has anyone checked if causing a schedule event during
-this code breaks like the last time we had issues with the upstream
-testing?
+probably ;-)
 
-I did propose saving the state of the user-access flag in the task
-struct but we mostly solved it by making sleeping functions stay
-away from the address calculation. This of course may have been done
-already or need to be done if three's long areas where the user-access
-flags can be disabled (generally only a few drivers did this, so we
-may not have come across the problem)
+> 
+> > +		struct vop2_video_port *vp3 = &vop2->vps[3];
+> 
+> This is always possible because vps is statically allocated for 4 items, 
+> c.f. struct vop2_video_port vps[ROCKCHIP_MAX_CRTC]; so we don't 
+> necessarily need it in this specific location and can group it with the 
+> others. Cosmetic suggestion though.
+> 
+> Otherwise, the change itself makes sense to me, so:
+> 
+> Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+though comments from Andy from Rockchip in another thread suggest that
+this is not necessary at all, as the "last" vp somehow has a hardware lock
+to take the remaining layers or so.
 
-https://www.codethink.co.uk/privacy.html
+And while tracking down dsi issues I had a "binary" state of
+"gray display" without this patch and working DSI with it, in the last days
+I haven't been able to reproduce this anymore.
+
+So I guess I'll fix up the first patch according to your comment and keep
+this change here for later.
+
+
+Heiko
+
 
