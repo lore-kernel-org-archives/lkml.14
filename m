@@ -1,229 +1,96 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578FF59162
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3172A5CDF2;
+	Fri,  3 May 2024 21:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714772190; cv=none; b=KXC/JWTTe+E/mc7BmaTvzEGjP7V6wAnwR+LUnlaLIVmyR2MbLsPqrN3JLAf2bXPAb7zzu7c17u5rBu4EJakJWKGuex6ExcKh7/L48BUHK5BFHjBAtFqcJZOz+wLx44fTgYq2ZgfAxzHJBxLfV9v8gU17jwrRpRQ/S7KwoQdiNCg=
+	t=1714772191; cv=none; b=H8G0V/ca8x4Kg4g8vvAG4YkmyvMEo/kRd1Nk86KVXeim3aJZlOLj3KKf/39Hzg+9PCPFe/RbPY6/5q3aCB3RvZPja3/otN6l6aab2DMqbw8DQSIev0AQUZfdGyQ4d6PHFovl1/JHz8PWtTXxRxhG0pFpmZvdoSfV6M0lsO2K5us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714772190; c=relaxed/simple;
-	bh=cqR7hS4vud8zXa5zW9gAw2iNuJRgRwzWpTUNSCfJM78=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CdK7na75N7XjnNo11AcxtlMbzAJYVrA8c1kDC0dHuzhohnOh528eugLhpS4i2VdhNPea0Pn6mz4W/9k3532R3KnUhmjdts+jj+UpZxilnHxF+3UNpdJI30VX/s8qPXFZzs/bwlgEjEnr5PfOvJNf0vmMeTJsJujUuVuaSdErULI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MvAkl/X0; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714772191; c=relaxed/simple;
+	bh=qE5JsI+Gw929zCd7z8ChJ12FxlC+w9fukEWTQF9pEac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=upHGMFRYTfT5dSzhlDz+f2eDaFs6Y0gz1nYJyv/wvpn8rBjj/Sx4pDlaslcsVi/Q5MmYK2OoLqqccmmMhbW0zIJNuC8zJDaCbTXbzbUsKtIUL4IRnw2epOrYpDwZESQE7V7c4VpbploCkGC+wN/F3BmwM5Y4X6HL6VamE4O97qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=QT8f1mjV; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MvAkl/X0"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e83a2a4f2cso847105ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:36:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714772187; x=1715376987; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YlLGPoCdKZFYuD2WMpAl+nCcCPU9f5yFXStRl2ODaEI=;
-        b=MvAkl/X0nCAxHWFmhsviVHIlPSMwQaD0p6VrQ4/rrVOUfKKxM+jN7ZT5DGi6/x8bK2
-         PkQc3wn/eGVUiWorvh3/pJTBMcHFrG/GdEblNZrtiR9XkLv8650pCdNthU/w52/SUxu7
-         jTiR6gUJILRnD9KtY0hA3OSytQgxMuw0BjgtQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714772187; x=1715376987;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YlLGPoCdKZFYuD2WMpAl+nCcCPU9f5yFXStRl2ODaEI=;
-        b=ZHQmgPex7Z8LBPl68x2ihfsyc4QAzurnExgMhhDcF1Bqmi/gXtx3/gp1l1laEjzWCq
-         KjZzSJ68VneqZA5dtaDcFDVOCA+W69uxxolMLhbthdtRYrgLsE9uz8RlYQmk6OaoVHSb
-         lAasdG//pGVFxpVn8GUXSqrR0Yt1AxeWr6L2pZ0t8mtynCLvjgx+ljPDzD3Akfk2Gbkd
-         oIQYS/OjRPpPJWXDx1u+mmGR8LGrvQXBna5rsDN/155sHcX/SYcdIyEtBpHXitw/diNI
-         GsLlJesUC7UOqYAKUVdlmO8j14ZxRY3m2LBZe39VWISX3yUQtADtJvqaf72XdvTaMdqS
-         1q5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVszsuukpSbiyPrTUqH+EA/NI49R7eJGv8bBFnfV6mTVzRaoyLULi9LKPXEevUYObPjOAskTXEeLm5+4WOirO4RUOxzUwQZmY7FRYsu
-X-Gm-Message-State: AOJu0YwzM/2QV8XMJYxxtXT/lKIlpP1w8c3Qj6ByGFZvGFX/CMlBDGi2
-	BIxC0qJekpfCGTpPWLStcyAcnpfc7el7XVvzEVYzSnYhzGB0VpRC9bZ37Q6oBA==
-X-Google-Smtp-Source: AGHT+IFaMjrOZx6PlnR9YpeAGNYEPKz0BZS22xq3/WCuAMWn8FGGgonr0VuEXbwoSJfpxSoPjNw6pg==
-X-Received: by 2002:a17:902:db0e:b0:1ec:3227:94ea with SMTP id m14-20020a170902db0e00b001ec322794eamr4805493plx.67.1714772187608;
-        Fri, 03 May 2024 14:36:27 -0700 (PDT)
-Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:fb6a:b54b:7580:64f3])
-        by smtp.gmail.com with ESMTPSA id j12-20020a170903024c00b001eb51a46f5bsm3729134plh.43.2024.05.03.14.36.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 14:36:27 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: dri-devel@lists.freedesktop.org,
-	Maxime Ripard <mripard@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Jerry Han <jerry.han.hq@gmail.com>,
-	Jitao Shi <jitao.shi@mediatek.com>,
-	Rock Wang <rock_wang@himax.com.cn>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: [RFT PATCH v2 02/48] drm/panel: boe-himax8279d: Stop tracking prepared/enabled
-Date: Fri,  3 May 2024 14:32:43 -0700
-Message-ID: <20240503143327.RFT.v2.2.Ia3f254ab6e04e4f7afba6c066454498c8fb01324@changeid>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-In-Reply-To: <20240503213441.177109-1-dianders@chromium.org>
-References: <20240503213441.177109-1-dianders@chromium.org>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="QT8f1mjV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=J3cXx30+FsboiPTcISOtZ9TwfuIcCg4JxBIH2uqHWq8=; b=QT8f1mjVdApb6qDPIYAjbnpkXa
+	huWJ8WJkoI5MWTqxqBfivrYJAGWWz9GQcJDFBaHiLEkKu3dwesImOrNP9SYMXxS1z4uhtQCjc+Lkl
+	SUirU7g26F8NX/T0yaZVYScsT1TccXQaORjVO3HH+n+JjgdGmmtvVLBK5raOfaCu9jSJyxJAQVtDy
+	qIsaithpJee/MVfppIsBP4Z3bqcg+1vZWIgupErqLWUqr6KIim87g5615EV32qW3zOigsdrpMFT9K
+	NoLhUSqNDAw8suQ4f7sPMc02J2taTcMV4BLsWPBBjLg+Kp4m+dBi71MZhNGBdEM+XhSQPtKevD8SG
+	6LiY+Ybg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1s30Zt-00B8nN-0t;
+	Fri, 03 May 2024 21:36:25 +0000
+Date: Fri, 3 May 2024 22:36:25 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Kees Cook <keescook@chromium.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Bui Quang Minh <minhquangbui99@gmail.com>,
+	Christian Brauner <brauner@kernel.org>,
+	syzbot <syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com>,
+	io-uring@vger.kernel.org, jack@suse.cz,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, Laura Abbott <laura@labbott.name>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: get_file() unsafe under epoll (was Re: [syzbot] [fs?]
+ [io-uring?] general protection fault in __ep_remove)
+Message-ID: <20240503213625.GA2118490@ZenIV>
+References: <0000000000002d631f0615918f1e@google.com>
+ <7c41cf3c-2a71-4dbb-8f34-0337890906fc@gmail.com>
+ <202405031110.6F47982593@keescook>
+ <64b51cc5-9f5b-4160-83f2-6d62175418a2@kernel.dk>
+ <202405031207.9D62DA4973@keescook>
+ <d6285f19-01aa-49c8-8fef-4b5842136215@kernel.dk>
+ <202405031237.B6B8379@keescook>
+ <202405031325.B8979870B@keescook>
+ <20240503211109.GX2118490@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240503211109.GX2118490@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-As talked about in commit d2aacaf07395 ("drm/panel: Check for already
-prepared/enabled in drm_panel"), we want to remove needless code from
-panel drivers that was storing and double-checking the
-prepared/enabled state. Even if someone was relying on the
-double-check before, that double-check is now in the core and not
-needed in individual drivers.
+On Fri, May 03, 2024 at 10:11:09PM +0100, Al Viro wrote:
+> On Fri, May 03, 2024 at 01:28:37PM -0700, Kees Cook wrote:
+> > 
+> > Is this the right approach? It still feels to me like get_file() needs
+> > to happen much earlier...
+> 
+> I don't believe it needs to happen at all.  The problem is not that
+> ->release() can be called during ->poll() - it can't and it doesn't.
+> It's that this instance of ->poll() is trying to extend the lifetime
+> of that struct file, when it might very well be past the point of no
+> return.
+> 
+> What we need is
+> 	* promise that ep_item_poll() won't happen after eventpoll_release_file().
+> AFAICS, we do have that.
+> 	* ->poll() not playing silly buggers.
+> 
+> As it is, dma_buf ->poll() is very suspicious regardless of that
+> mess - it can grab reference to file for unspecified interval.
+> Have that happen shortly before reboot and you are asking for failing
+> umount.
+> 
+> ->poll() must be refcount-neutral wrt file passed to it.  I'm seriously
+> tempted to make ->poll() take const struct file * and see if there's
+> anything else that would fall out.
 
-NOTE: as part of this, transition the panel's direct calls to its
-disable/unprepare functions in shutdown/remove to call through DRM
-panel.
-
-Cc: Jerry Han <jerry.han.hq@gmail.com>
-Cc: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Rock Wang <rock_wang@himax.com.cn>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- Only handle 1 panel per patch.
-- Split removal of prepared/enabled from handling of remove/shutdown.
-
- drivers/gpu/drm/panel/panel-boe-himax8279d.c | 31 +++-----------------
- 1 file changed, 4 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-boe-himax8279d.c b/drivers/gpu/drm/panel/panel-boe-himax8279d.c
-index e225840b0d67..12e14615298b 100644
---- a/drivers/gpu/drm/panel/panel-boe-himax8279d.c
-+++ b/drivers/gpu/drm/panel/panel-boe-himax8279d.c
-@@ -47,9 +47,6 @@ struct panel_info {
- 	struct gpio_desc *enable_gpio;
- 	struct gpio_desc *pp33_gpio;
- 	struct gpio_desc *pp18_gpio;
--
--	bool prepared;
--	bool enabled;
- };
- 
- static inline struct panel_info *to_panel_info(struct drm_panel *panel)
-@@ -86,17 +83,12 @@ static int boe_panel_disable(struct drm_panel *panel)
- 	struct panel_info *pinfo = to_panel_info(panel);
- 	int err;
- 
--	if (!pinfo->enabled)
--		return 0;
--
- 	err = mipi_dsi_dcs_set_display_off(pinfo->link);
- 	if (err < 0) {
- 		dev_err(panel->dev, "failed to set display off: %d\n", err);
- 		return err;
- 	}
- 
--	pinfo->enabled = false;
--
- 	return 0;
- }
- 
-@@ -105,9 +97,6 @@ static int boe_panel_unprepare(struct drm_panel *panel)
- 	struct panel_info *pinfo = to_panel_info(panel);
- 	int err;
- 
--	if (!pinfo->prepared)
--		return 0;
--
- 	err = mipi_dsi_dcs_set_display_off(pinfo->link);
- 	if (err < 0)
- 		dev_err(panel->dev, "failed to set display off: %d\n", err);
-@@ -121,8 +110,6 @@ static int boe_panel_unprepare(struct drm_panel *panel)
- 
- 	disable_gpios(pinfo);
- 
--	pinfo->prepared = false;
--
- 	return 0;
- }
- 
-@@ -131,9 +118,6 @@ static int boe_panel_prepare(struct drm_panel *panel)
- 	struct panel_info *pinfo = to_panel_info(panel);
- 	int err;
- 
--	if (pinfo->prepared)
--		return 0;
--
- 	gpiod_set_value(pinfo->pp18_gpio, 1);
- 	/* T1: 5ms - 6ms */
- 	usleep_range(5000, 6000);
-@@ -180,8 +164,6 @@ static int boe_panel_prepare(struct drm_panel *panel)
- 	/* T7: 20ms - 21ms */
- 	usleep_range(20000, 21000);
- 
--	pinfo->prepared = true;
--
- 	return 0;
- 
- poweroff:
-@@ -194,9 +176,6 @@ static int boe_panel_enable(struct drm_panel *panel)
- 	struct panel_info *pinfo = to_panel_info(panel);
- 	int ret;
- 
--	if (pinfo->enabled)
--		return 0;
--
- 	usleep_range(120000, 121000);
- 
- 	ret = mipi_dsi_dcs_set_display_on(pinfo->link);
-@@ -205,8 +184,6 @@ static int boe_panel_enable(struct drm_panel *panel)
- 		return ret;
- 	}
- 
--	pinfo->enabled = true;
--
- 	return 0;
- }
- 
-@@ -917,11 +894,11 @@ static void panel_remove(struct mipi_dsi_device *dsi)
- 	struct panel_info *pinfo = mipi_dsi_get_drvdata(dsi);
- 	int err;
- 
--	err = boe_panel_disable(&pinfo->base);
-+	err = drm_panel_disable(&pinfo->base);
- 	if (err < 0)
- 		dev_err(&dsi->dev, "failed to disable panel: %d\n", err);
- 
--	err = boe_panel_unprepare(&pinfo->base);
-+	err = drm_panel_unprepare(&pinfo->base);
- 	if (err < 0)
- 		dev_err(&dsi->dev, "failed to unprepare panel: %d\n", err);
- 
-@@ -936,8 +913,8 @@ static void panel_shutdown(struct mipi_dsi_device *dsi)
- {
- 	struct panel_info *pinfo = mipi_dsi_get_drvdata(dsi);
- 
--	boe_panel_disable(&pinfo->base);
--	boe_panel_unprepare(&pinfo->base);
-+	drm_panel_disable(&pinfo->base);
-+	drm_panel_unprepare(&pinfo->base);
- }
- 
- static struct mipi_dsi_driver panel_driver = {
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
-
+... the last part is no-go - poll_wait() must be able to grab a reference
+(well, the callback in it must)
