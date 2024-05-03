@@ -1,106 +1,123 @@
-Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A201474CF
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1169C12B89;
+	Fri,  3 May 2024 07:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714722678; cv=none; b=XFI10eSyPkxa/EtGKO00WgGt5uFwsiyNaIjMXsP1+HH2Td7zMxJLvWNLo7hNGAa+weAh+9dWpu9BW7yBEOGogxiyQ3LfxG5eEO6mQdmQG7BtxFOCdmhUT1SIcw/nqsqyErwIND96ZrlSrnP4Yl7tBCMeqvEDX5Ku9fo67aIgrSw=
+	t=1714722928; cv=none; b=tdWtHsvfdymUKzG+ZGrOh4bHh3rUpGU4WzntAxHv30tH4fqAxsq1JrkReJCH/7QqDm8ZjJHpdQFwxRYPt/sBrW+Lr5vLlGBrhJCtxb/AJZsIAx9wbeYEqY+tjEhLLCsenpWTUrNHmxRIP/gGSlCrgNad1aiLc+9ir5dEx1UYRZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714722678; c=relaxed/simple;
-	bh=6c0haiQoTMm6CuVFZmVqDcjCcgLU9+wd+9CRI4uiK0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wf+XNlsOtJ92w83lnWpanAKHebs67i83vHGtHgZm4HEz4QonlAIiX6eWo43H0Ve5z9rMGO2l/yXheFzKFwt0xgQWbyAcMYRXKLEI15VNM2ezuRgW1QqWWpqktwDteAccOZ100BV9KLRn6xDRU5v/wnm64iK8dPKK7rmMmFxn0ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=wx5xxcGZ; arc=none smtp.client-ip=83.166.143.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1714722928; c=relaxed/simple;
+	bh=yojA61f3TtJGPtJOIsjSGNe4XU32tQPgeWdkDlvF0mU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GimUv6YCptZc3+uK1KNpzjXaTsKoApcGihOVBkHV46Z6U7ypFH7dSzpduUGMvP380zzwU8C56VttQczrhzJhHNbCeere9eFAh7TxFvx9hMKEo9FYBhK8qXoOZvkZd1RmO/yVGIeWaruvdNU2qRBD9Gi0PFvC8vt+9qqhU+BLL40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rTsX1+O+; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="wx5xxcGZ"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VW2zv14ZWzgcK;
-	Fri,  3 May 2024 09:51:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1714722667;
-	bh=6c0haiQoTMm6CuVFZmVqDcjCcgLU9+wd+9CRI4uiK0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wx5xxcGZpH3eufHQ7rxuS+5ylmeNv5Ytla2iQrw6capOvA+poACjyD6S8fDq/z4ph
-	 xz8Guyk8+5WSOwN4XCSUV1J/5mpVWGCtpUtqTGnfmkf1NoSRWkPt1iytVCmjNGJEzu
-	 CsJKb9NN74GuWhgCTnhKC+XHCEZ9uP58VAzeBG3I=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VW2zt0QQkznrQ;
-	Fri,  3 May 2024 09:51:06 +0200 (CEST)
-Date: Fri, 3 May 2024 09:51:05 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	Mark Brown <broonie@kernel.org>, Shengyu Li <shengyu.li.evgeny@gmail.com>, 
-	Shuah Khan <shuah@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Will Drewry <wad@chromium.org>, 
-	kernel test robot <oliver.sang@intel.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 10/10] selftests/harness: Fix TEST_F()'s exit codes
-Message-ID: <20240503.Ioj0ahCi7aeN@digikod.net>
-References: <20240502210926.145539-1-mic@digikod.net>
- <20240502210926.145539-11-mic@digikod.net>
- <ZjQXghB6imRFU4HX@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rTsX1+O+"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4437ZOLr001313;
+	Fri, 3 May 2024 07:55:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=ICDaggG/gXeTRB72xqxW3n+JXQUcDwKM9WB6+j4TVjQ=;
+ b=rTsX1+O+VgpZCCWC5Sr/sdnxV8vBrEqHM2xD5c1UKbkXMD0+UljwPYK1La/Ya+WDLM14
+ 1kVdCTWWqA3vzo9pNY8fo4W5Ygk/hQSMucxlyWS4zxC1Wpj29s+AI5RNP3MiKeQFmoDs
+ ScM61ZPNuYqHsFZrrh2Iv+MYoXVIFg+j8sdH/HyvoupHChqPrT84383TP6l9m72jvTgH
+ 6sKzJUmhh6AyUkv7fWFGy+lPrXCfQX2/nA1iioyF3a2QyaFI94BfrNt6hlNW2Zwny5Ue
+ W09CmbPN6GZMkpoj9++6x5XO0ISwXI6kpSWj+HaoICR9rOfDELyGikm/QTr/fpXM0R8Y 5g== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xvuhy01nx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 May 2024 07:55:18 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4437H6B2011769;
+	Fri, 3 May 2024 07:55:17 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsdwmm77w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 May 2024 07:55:17 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4437tDxg17105334
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 3 May 2024 07:55:15 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A72EA2004B;
+	Fri,  3 May 2024 07:55:13 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3D86F20043;
+	Fri,  3 May 2024 07:55:13 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  3 May 2024 07:55:13 +0000 (GMT)
+Received: from jarvis.ozlabs.ibm.com (unknown [9.150.11.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 55F406109C;
+	Fri,  3 May 2024 17:55:07 +1000 (AEST)
+Message-ID: <2492716e18c515e21b855305c0bc760057dbcf7a.camel@linux.ibm.com>
+Subject: Re: [PATCH 2/2] MAINTAINERS: Make cxl obsolete
+From: Andrew Donnellan <ajd@linux.ibm.com>
+To: Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc: manoj@linux.ibm.com, ukrishn@linux.ibm.com, fbarrat@linux.ibm.com
+Date: Fri, 03 May 2024 17:55:03 +1000
+In-Reply-To: <33cf08b4fe751af156b1a7c17f69a0ca37dc5eed.camel@linux.ibm.com>
+References: <20240409031027.41587-1-ajd@linux.ibm.com>
+	 <20240409031027.41587-2-ajd@linux.ibm.com> <87bk6jb17s.fsf@mail.lhotse>
+	 <33cf08b4fe751af156b1a7c17f69a0ca37dc5eed.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjQXghB6imRFU4HX@google.com>
-X-Infomaniak-Routing: alpha
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: O3ITnM5Exdb-zeuEU-fV7oRMwwQWOrP4
+X-Proofpoint-GUID: O3ITnM5Exdb-zeuEU-fV7oRMwwQWOrP4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-03_04,2024-05-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=876 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2405030056
 
-On Thu, May 02, 2024 at 03:45:22PM GMT, Sean Christopherson wrote:
-> On Thu, May 02, 2024, Mickaël Salaün wrote:
-> > @@ -462,8 +462,10 @@ static inline pid_t clone3_vfork(void)
-> >  		munmap(teardown, sizeof(*teardown)); \
-> >  		if (self && fixture_name##_teardown_parent) \
-> >  			munmap(self, sizeof(*self)); \
-> > -		if (!WIFEXITED(status) && WIFSIGNALED(status)) \
-> > -			/* Forward signal to __wait_for_test(). */ \
-> > +		/* Forward exit codes and signals to __wait_for_test(). */ \
-> > +		if (WIFEXITED(status)) \
-> > +			_exit(_metadata->exit_code); \
-> 
-> This needs to be:
-> 
-> 		if (WIFEXITED(status)) \
-> 			_exit(WEXITSTATUS(status)); \
-> 
-> otherwise existing tests that communicate FAIL/SKIP via exit() continue to yield
-> exit(0) and thus false passes.
+On Fri, 2024-05-03 at 13:15 +1000, Andrew Donnellan wrote:
+> This doesn't seem quite right to me, I don't think we can just
+> redefine
+> CONFIG_CXL as a bool, but I'll do something like this. Probably won't
+> bother for CXLFLASH since they'll see it for CXL anyway, but I might
+> add a warning message on probe to both drivers.
 
-Yes of course.
+The more I look at how to do this, the more issues I see, though
+perhaps because I personally use olddefconfig more than I use
+oldconfig.
 
-> 
-> If that conflicts with tests that want to communicate via _metadata->exit_code,
-> then maybe this?
-> 
-> 		if (WIFEXITED(status)) \
-> 			_exit(WEXITSTATUS(status) ?: _metadata->exit_code); \
+Without changing the default to n, running olddefconfig is liable to
+switch CXL back on in configs where the user has disabled it.
 
-I prefer this approach handling failed expectations in the fixture
-teardown too.
+Conversely, if the user has set CXL=3Dy rather than CXL=3Dm, I'm not sure
+if there's any way to make it such that olddefconfig doesn't reset one
+symbol or the other to the default m.
 
-However, the direct call to _exit() doesn't handle failed asserts.  I'll
-fix that.
+Honestly, I'm very tempted to be a little more aggressive and a) not
+bother with trying to play games with symbols, b) change the default to
+n in this release, c) add a warning printed on probe, and see whether
+anyone complains.
 
+We could also print a message during the build itself, though that kind
+of noise is liable to break things in other ways?
 
-> 
-> Or I suppose _metadata->exit_code could have priority, but that seems weird to
-> me, e.g. if a test sets exit_code and then explodes, it seems like the explosion
-> should be reported.
-> 
-> > +		if (WIFSIGNALED(status)) \
-> >  			kill(getpid(), WTERMSIG(status)); \
-> >  		__test_check_assert(_metadata); \
-> >  	} \
-> > -- 
-> > 2.45.0
-> > 
-> 
+It would be kind of nice if kbuild had some way to mark a symbol for
+deprecation which could print a warning during configuration.
+
+--=20
+Andrew Donnellan    OzLabs, ADL Canberra
+ajd@linux.ibm.com   IBM Australia Limited
