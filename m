@@ -1,91 +1,119 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8EF537E9
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A580954BD8
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 21:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714772028; cv=none; b=tjxcVxT8ujzOfyjmyD2bPwlirYFREM0qOpO8MTa5M0dn2neGGwxrJUXIw8xS3D6V5TavshNPGO66lWbzy0hEAMWAZCEHJekLOM5jzMZ/W6eD56T7LdBvMhhx6zWjLWI5GMSCdlA+djqBr1xq0EZlnCyfZbKeh8dGCJCSxGKnyB0=
+	t=1714772038; cv=none; b=CrM5qVFq5be+EeaJhjM548Rz+7wLO03H+MZhuB4t0IRPUQPhT0GBxh9EQsSYj9CdV76thm0QuKrQGphJf/lQCa7MyPf+e2t2VG0MxbMAw2RsgKUg4eFKfpaOO55DDGSfp5nbTPpxDLQyMfq9nWyWhIBtTZyQTEMh+xa66fryB1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714772028; c=relaxed/simple;
-	bh=2p3EmqeLa76hFcxzVFu3IM1y0mu3LdQ1D6og4KfIlyc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=X4PQffF5SRZ8oCM8unjL2IODpymKib1cLZvkr4BCJLD1Gg1VKsfleAQqihy7Q2HsEych+6NVkUKy8eorvmGy5C4U4CA8A6gGc7bylFZ9xEi+le7zF6Z9o8eGkwDOq3QNohfGXBqRfiVjpKLx9ZMHepukC79zZAqIyprx+AnIaHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OmUaLXQp; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1714772038; c=relaxed/simple;
+	bh=9Qapmfzm6lSNA1KjLLEHmaWSypEB5MZ/Duccomf7UwA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HbVzQVh1SznxwWGKLm+C9srm60jsrAY6sEzt/M36TXGVwNej9QkmC2cbqoAP0RMb8b+Wu7jFmccXaaYKWQeg13mlzy5kSH7cW0rc3K1UTeaJsx+KeGTbCcFCsqBPxzha6xd7NiSVvyq3sHZRnoNaA/x+Hp//bhxMgsgJ0gPrzH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=I041ed7w; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OmUaLXQp"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6ed663aa4a7so204098b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:33:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="I041ed7w"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a599a298990so13922966b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:33:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714772026; x=1715376826; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MlrISKi2c+M0hlWH8F4xXuKQHxXn7iCZjvDMr+QQnwo=;
-        b=OmUaLXQp24JfPCMh5pOxUVioevzmlQEqyZSwtrWKODVyaGCrGZ2Lt3Q9tO6POuOTaS
-         GyDUNpr3YtVpdZau2BeUI5vLgkRAEi6HG1P7s78Dnl6he+PYsF5YO63sRioI4+w5MXrw
-         woz0Bhcov90Rhk1qomiNFfym/PrfV62UkO4YtkK+H25dgtO2F1OUpJfx1kesv2CR9xAQ
-         K1/RsYhakr8ylcNuHuql2/1KvFG1TkHL6vFmgoCSMO8yd7daiigCP1dVhOQ8CeSvqWfl
-         wMZBsuzKoSlWSJ5xp0+anL4P0bqExoeCxaAwNGZ/doIPlQZoQsbKvz86KTiIy02y7yza
-         u7Vg==
+        d=linux-foundation.org; s=google; t=1714772035; x=1715376835; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=H0cKj1/eeDlsag1nYyx5cuj3RktPC8YvvhuCxa/6SIc=;
+        b=I041ed7wq74EqHv+lLpw/4OnY1kI3FzQ0ynGOUp7811sa7ORamvQCjH55bC3YnkSar
+         Klx1rhzeK82r5sekSRH+Cic3Wo0satWx94LLNP051CXWwirSPCCliSE8FVQHfxNUSvej
+         uk8KtcOJLyEkqe0pyZgWuEHuRw49MMa4Hn1p4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714772026; x=1715376826;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MlrISKi2c+M0hlWH8F4xXuKQHxXn7iCZjvDMr+QQnwo=;
-        b=g/85PG2WOfZy5osirBaIHAzQEM3E3hdnJ7MIYMJkUBsR/8zPO/qkIWSyFVBXoZzlmM
-         OoEH58N7DxbHUnoeDoNE0U8OlrPEVsVLT/lH4dyq/nLPHYTqE+CGfq43/P2GbhnF5c/y
-         fcKKl2kmN3m8hocTYubv0iUnL0FHSAOjGmAee+J+sprxKEpCViZ2bbyZMHHN6mICX7KY
-         1ootgs5E0UPsi7RgjGiRILDlVV4n6eKGJ8GDCt7E6d5yVZ6uvn+0mkrvBWod2n13jqGB
-         ZJjswCGfKbvMt2aswtyUZmKCspZoPH7ozRn41vffoSFA8zd6LHxazo/Zsng64A51CEw3
-         BKTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWLIh3/qTNYFnueguyrNGr8AcQPOjfHGEi0BMusMfxkttgGhVDi6cCHR5ot63GrEckt1nHvq3tHIMlljWYPT8Kp7oRQMeN4WEDwclqU
-X-Gm-Message-State: AOJu0YwQvAvFmKTP/SMunU/eenSY3DDx1CMj9aSnZBbw8EHw2cok9x+G
-	Rofh5HLVGCRHEIs9Y1QjbUL24/rj4rkV+akS+Ay3CVtAJ2OSbTxGVlwPliC8PkbRZg2bDdlAz5x
-	xZg==
-X-Google-Smtp-Source: AGHT+IEHyKqw2sfoqSfrlqHZmBh3uSQ8p/kW7UX2W50ATZadR3KM3oZfm4nJXRLPcnOkKXVpCRpkzPQWRKg=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:2d8a:b0:6f3:84f4:78e4 with SMTP id
- fb10-20020a056a002d8a00b006f384f478e4mr124606pfb.4.1714772026488; Fri, 03 May
- 2024 14:33:46 -0700 (PDT)
-Date: Fri,  3 May 2024 14:32:14 -0700
-In-Reply-To: <20240418021823.1275276-1-alejandro.j.jimenez@oracle.com>
+        d=1e100.net; s=20230601; t=1714772035; x=1715376835;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H0cKj1/eeDlsag1nYyx5cuj3RktPC8YvvhuCxa/6SIc=;
+        b=lXX/SL7nJ1CXyaRv9z7YcqEhevezV13m1PDRl4Ea8W4m3mvkB2cp2ZX2WdvRAz9Pgd
+         O/BsXioTV5QupsMQ9v/a73EV11Vt51LD46HByZk9RekjAPJ4kUt2jxtRyFVp9ZmGdHAF
+         erba8WUXhMFk4E60jPwJL3IoUH9t/Edk7EGIAMQBatr5cTBBmBmsMOTkyqiGV9jACnVf
+         7i3w1+G8zYDuVyHCXwp937KoC1puWXeTq0mCfZjA6svKDeoKPB2rcUHzoHpE3+LnIpkL
+         TH9HcQ9w1jRnFUQTVNaxZdvcLKQcZ6e4kJskd3DdnEbVLw6j+D09iPn8AL2XiShPIK2Z
+         401Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU5rMSUUuqYg0swefKCjDaLb4MyBJTdFxdi8S58H3R6iVWjiiPlOX7zqJS9zIC9cV/q2Vn4aX+/68M6skpzXJ4KtvuVNWJLXY0Vqafn
+X-Gm-Message-State: AOJu0YxSNzTgoRPUImWIIJZI6Ist8ZIudSrfCTAbSc5q+Lxo2NSUT4YU
+	OdkJqb9vVCM6mNStwhHfKWWiiHVkggy5BMv/sVV0xiu63yXo3NPR08sU/+KEH7DeYXBpI0ULojJ
+	fweRToA==
+X-Google-Smtp-Source: AGHT+IG8MhpUXmKnXX/11quCokJaAqAwf2Vj5OIgCJccUL6T64QtDABYTBQcAin7T4x/QZrlRzN1Aw==
+X-Received: by 2002:a17:906:2492:b0:a59:9f4e:4e3d with SMTP id e18-20020a170906249200b00a599f4e4e3dmr809157ejb.3.1714772034809;
+        Fri, 03 May 2024 14:33:54 -0700 (PDT)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id dt14-20020a170907728e00b00a5974a4d662sm1737366ejc.151.2024.05.03.14.33.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 May 2024 14:33:54 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a599a298990so13918466b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 14:33:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUl+cnbXHSRYiie7KCI+yuTgiWT4lFBoT3lVlxO++wXyqu8eJVhkU1unjlstugFZWwzbGDn5R7utdynpxC5P/zC4T4Bdt9FBmlajPiQ
+X-Received: by 2002:a17:906:2c50:b0:a59:761d:8291 with SMTP id
+ f16-20020a1709062c5000b00a59761d8291mr2183947ejh.9.1714772033952; Fri, 03 May
+ 2024 14:33:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240418021823.1275276-1-alejandro.j.jimenez@oracle.com>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <171469178174.1010245.3908365461241095071.b4-ty@google.com>
-Subject: Re: [PATCH v2 0/2] APICv-related fixes for inhibits and tracepoint
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
-	Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
-Cc: pbonzini@redhat.com, linux-kernel@vger.kernel.org, 
-	joao.m.martins@oracle.com, boris.ostrovsky@oracle.com, 
-	suravee.suthikulpanit@amd.com, mlevitsk@redhat.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <202405031110.6F47982593@keescook> <20240503211129.679762-2-torvalds@linux-foundation.org>
+ <20240503212428.GY2118490@ZenIV>
+In-Reply-To: <20240503212428.GY2118490@ZenIV>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 3 May 2024 14:33:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjpsTEkHgo1uev3xGJ2bQXYShaRf3GPEqDWNgUuKx0JFw@mail.gmail.com>
+Message-ID: <CAHk-=wjpsTEkHgo1uev3xGJ2bQXYShaRf3GPEqDWNgUuKx0JFw@mail.gmail.com>
+Subject: Re: [PATCH] epoll: try to be a _bit_ better about file lifetimes
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: keescook@chromium.org, axboe@kernel.dk, brauner@kernel.org, 
+	christian.koenig@amd.com, dri-devel@lists.freedesktop.org, 
+	io-uring@vger.kernel.org, jack@suse.cz, laura@labbott.name, 
+	linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	minhquangbui99@gmail.com, sumit.semwal@linaro.org, 
+	syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 18 Apr 2024 02:18:21 +0000, Alejandro Jimenez wrote:
-> v2: Add Sean's changes to [PATCH 1/2].
-> 
-> --
-> 
-> Patch 1 fixes an issue when avic=0 (current default) where
-> APICV_INHIBIT_REASON_ABSENT remains set even after an in-kernel local APIC has
-> been created. e.g. tracing the inhibition tracepoint shows:
-> 
-> [...]
+On Fri, 3 May 2024 at 14:24, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> Can we get to ep_item_poll(epi, ...) after eventpoll_release_file()
+> got past __ep_remove()?  Because if we can, we have a worse problem -
+> epi freed under us.
 
-Applied to kvm-x86 misc, with the previously mentioned fixups, thanks!
+Look at the hack in __ep_remove(): if it is concurrent with
+eventpoll_release_file(), it will hit this code
 
-[1/2] KVM: x86: Only set APICV_INHIBIT_REASON_ABSENT if APICv is enabled
-      https://github.com/kvm-x86/linux/commit/6982b34c21cb
-[2/2] KVM: x86: Remove VT-d mention in posted interrupt tracepoint
-      https://github.com/kvm-x86/linux/commit/51937f2aae18
+        spin_lock(&file->f_lock);
+        if (epi->dying && !force) {
+                spin_unlock(&file->f_lock);
+                return false;
+        }
 
---
-https://github.com/kvm-x86/linux/tree/next
+and not free the epi.
+
+But as far as I can tell, almost nothing else cares about the f_lock
+and dying logic.
+
+And in fact, I don't think doing
+
+        spin_lock(&file->f_lock);
+
+is even valid in the places that look up file through "epi->ffd.file",
+because the lock itself is inside the thing that you can't trust until
+you've taken the lock...
+
+So I agree with Kees about the use of "atomic_dec_not_zero()" kind of
+logic - but it also needs to be in an RCU-readlocked region, I think.
+
+I wish epoll() just took the damn file ref itself. But since it relies
+on the file refcount to release the data structure, that obviously
+can't work.
+
+                Linus
