@@ -1,105 +1,234 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73078146D54
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3FE1465BC
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 07:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714721336; cv=none; b=blecJSvBVmlWS2YvJLS0YBN1zNhzqTCqaJt59qYV/X19S5HLpKkf7NYFbjakakXJSA5r4wwk/EFj/ZHo2wfHEH4ja4pz7n91YkENR+HK0g3URq/iK6amjaaHG9QbMI4rymi8EGzwaN+rH6pmRVjZWd5VkM6S7kkBfnKbE2L7jD4=
+	t=1714721467; cv=none; b=F+OYbyQSKQhYB/7Euc4IAUoQCpEvOPDW4aaZ+jGE6phCRksuwB8nla4SFFG7OMo/+VqRe3uvBr0kpB9stK3dCplEO8Ad0xbmRQ+518flNDrBcgC8IE/7EDSWlgzviBtNIFXuNRSJ/+DTV4zJEXDqIK6EgNv5wlmb0C+/38sdM9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714721336; c=relaxed/simple;
-	bh=Hn+kibtNuVGY16LR1Tui4J9dCha04H++GGopC0OUDOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PBDTDnV7wydIBAyLY/vv/PTS5Nu8zK8hfBR/zo6nDd8RhgCrkYclI5YPtO98jAfljAV6biiMvOPOCggZqKe4U21x74nYnD4ywA3vQEbynYdw6RFyPOUHCFkXGBZkJpNpfbIGwfS1aaNFZQ7UkxUGHgaFqIUHOHYWITXu57Ymv+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bWCxnhYi; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714721467; c=relaxed/simple;
+	bh=LHo8e5MgzEpABxZMmyiDu+cre42cy1wLl6f0BueObXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=daluXd+L/pWz9NMiIWo8DPeEVcgN+79BbrGLJ+Xtz/0SqC37uu55b5l6fNqY221zWEuUhD07R1KZGgtALN6wEpzbMhPlHTlgcVSrbazKyzHWDgA3FcRZqgyvAnOjLF1JB/zLP8v1CDCccDJ24drtFWcb/yTCeNoRnzjHWHT8ZdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IlqJNhKQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWCxnhYi"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-de462f3d992so9345733276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 00:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714721332; x=1715326132; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hn+kibtNuVGY16LR1Tui4J9dCha04H++GGopC0OUDOA=;
-        b=bWCxnhYi1vzW7akPHe39Sq0l65OBVtnxZfGzJmGAVxFKRT8QpSInC5K9T8Uj1at039
-         JNC5tHoPar9bSAoQasXba6ZWaFA9NKZFei2ThX655NfNkUxBqRo1igwSDyoJsEsoyjFV
-         k4BxBmx+7gPWX5RoJo4C469uIC2EGbWstwzYaDrXFJT6l3KF8jNyV0JLskKyl1BBAJNI
-         wqw/qFCgXY6lJkVAKmB7s5CQcHtVOD8qkU5yVCDaSmaTHog9/lPfCJ+e+7ty0YFKXdty
-         MWJFFvkhHtfmmivbA+WqevsBGzrXpbmQiBBOXsU4EpCnz2trDDM/Vc5ahIlvuYchXD/S
-         b3tg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IlqJNhKQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714721464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kay3G1XsLA4JleZx3Fv2uRt6GLaRElqrFFYQVMsBqFo=;
+	b=IlqJNhKQnCNUy25FTyNh6xcep3n/i8dsTab/3RAX+GYM8Vw+QHmkImzzlnp8ZkVEXc/4le
+	RnDRDV2Nmr/fnkWXdBfxqgk9pTA7Re017ntVNkR2/kHsqTcqJNw/NUwssR6A/UUSr+yqRS
+	wFRWGltItMS8+k/gqEdEQ8+wl/kaDgw=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-589-hyyHWYFfPJWIv2U21Cf7eg-1; Fri, 03 May 2024 03:31:03 -0400
+X-MC-Unique: hyyHWYFfPJWIv2U21Cf7eg-1
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6ee64e5576eso4780640a34.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 00:31:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714721332; x=1715326132;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hn+kibtNuVGY16LR1Tui4J9dCha04H++GGopC0OUDOA=;
-        b=sxKo8eACwybxTPbCjXfH6aJNb/Uu4jVg9O1QvUeJYQ253Rz3ZttYG2yfWgG8dyKSkB
-         /eEhwGm7lC472+ZqTXJHVOKijQ1zVu3Di4ZH1F2GBL0pFutClQJ0vQrOWXQ3rdZxsSY+
-         oauawM3/Wxxb3Ji3WOdyUcapDCKuh0uS40zm3KTnJXLfdmQPjuFDQkLB+7jW03xxloPa
-         9Xrvg3LgHC09Ba/becmea8CBeeRs2MMI1k6mf6ZQHM7wEit3UBfHE28o7inFLtRs3s4O
-         Qd+k7+EXzKbVqGsXWgsED+fjP17wZC8Q1Pj3LRHrnza1GiFTpx854dvTIIvEnLAmJiDC
-         gIPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXO3vlQT1XKe9Fvlx7TJvkEE7+7Pafm+95sNFNQV5fMXjiyPBGEgI1hYru0TyP90B6sFKfym+5CH+6zXuisvXTxgAkO4oDTOx68ePcp
-X-Gm-Message-State: AOJu0Yx68AlsShtQgpZDVRiJpKA0I1nbENt/u9mcPbhy3teanyC1S92C
-	TfMnX7ZkzAhU7IEMZWM/GBKtJHUCjeFUOIp1/8Po8kxbSdbXKectu8O5+CzOb2aKypoeXN7zFLC
-	zaKFmk28HvcAVd/FNL44eD9Jp0wGJjv4DAqTGmA==
-X-Google-Smtp-Source: AGHT+IF0xjlVgsvZVFX4uIc9xGkdM4zN5rBjDCjVF5rIBWnC2grAED83RKEyEUanO8Zm+9uvlUebxitXHnTav2HLKug=
-X-Received: by 2002:a25:dc08:0:b0:de6:723:3035 with SMTP id
- y8-20020a25dc08000000b00de607233035mr2121144ybe.13.1714721332503; Fri, 03 May
- 2024 00:28:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714721462; x=1715326262;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kay3G1XsLA4JleZx3Fv2uRt6GLaRElqrFFYQVMsBqFo=;
+        b=s4C7EaHqn5aH4sDoZ3QkRhucbhkUNor3W+omYfa5+pXXXiSFixjvN3/3Sw7JGwVPf9
+         izJX+Jb/0Ea8RmfYLe3yv/cWqfKxtmDS/TQJn4YuPzmq276aavAcIIIJBjWnojlodGAk
+         /Phb9lJrPm8XNNyjbtOUSI0hvKGc0+AVOYJXfgWq7M6vx2D3XvcCb+O91oA4rL5GhUQg
+         EqGJuJ96Xy490I7iM7f0jLNUZQUIDYbbf503LPq2g2OB3lQJqa5Oi3YYzSrt6en1fvs7
+         fIuYa98h0u4frGyDM2yYDz7Y5E9F7u3Ds63/+8uVEwtJdwkS2GT2rru8H27+DFFUz3E0
+         RkLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWt973CcGr/9iJ/ZUwDKPEn0jcIVYX7clJ4hn8iN+QmsrqctzN21b7nBCz/XUh5oyA6/6mF9eE9glm7KS+OmzqkvKz9GD3OBJmaTwKf
+X-Gm-Message-State: AOJu0YzIk3vBuWqte1WsKbEKVABkcgLLIALAf3vbwRhOmWn8V6yyB0is
+	69CFJeGX7dQLfRLQkUhrpxm0P0ocipi5zYwUtB77TugvwrIaPTLsXqRk3qIyO5UyoifyAv5bq+t
+	LVlg9wJF/iJqPr4uOzA3MhVLBVydUOTtwyfNuItwbIll8e6cbfkqPYrY0gmvDAQ==
+X-Received: by 2002:a05:6830:3149:b0:6ee:5560:4031 with SMTP id c9-20020a056830314900b006ee55604031mr2614739ots.38.1714721462107;
+        Fri, 03 May 2024 00:31:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGGxYIIkxGIgyH8aktHNZwF1zguXlgnaHiw5tGDmBHmpDDHgKQ6H7EwBYU2hX/95eHSN7chVg==
+X-Received: by 2002:a05:6830:3149:b0:6ee:5560:4031 with SMTP id c9-20020a056830314900b006ee55604031mr2614728ots.38.1714721461701;
+        Fri, 03 May 2024 00:31:01 -0700 (PDT)
+Received: from [192.168.0.9] (ip-109-43-179-34.web.vodafone.de. [109.43.179.34])
+        by smtp.gmail.com with ESMTPSA id c23-20020ae9e217000000b0078d5fdc929fsm1013411qkc.104.2024.05.03.00.30.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 May 2024 00:31:01 -0700 (PDT)
+Message-ID: <25cc89b7-822f-4735-bec5-59458ec18a49@redhat.com>
+Date: Fri, 3 May 2024 09:30:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
-In-Reply-To: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 3 May 2024 09:28:41 +0200
-Message-ID: <CACRpkdYw8jzFH5n377G76iMqri70Tf-1Vc=P5D6ESU_U0qRXWQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain support
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Brian Norris <computersforpeace@gmail.com>, 
-	Jaiganesh Narayanan <njaigane@codeaurora.org>, Johan Hovold <johan@kernel.org>, 
-	Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] KVM: selftests: Use TAP interface in the
+ set_memory_region test
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <shuah@kernel.org>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>
+References: <20240426114552.667346-1-thuth@redhat.com>
+ <ZjPrlLNNGNh2mOmW@google.com>
+From: Thomas Huth <thuth@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=thuth@redhat.com; keydata=
+ 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
+In-Reply-To: <ZjPrlLNNGNh2mOmW@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 25, 2024 at 5:46=E2=80=AFAM Bjorn Andersson
-<quic_bjorande@quicinc.com> wrote:
+On 02/05/2024 21.37, Sean Christopherson wrote:
+> On Fri, Apr 26, 2024, Thomas Huth wrote:
+>> Use the kselftest_harness.h interface in this test to get TAP
+>> output, so that it is easier for the user to see what the test
+>> is doing. (Note: We are not using the KVM_ONE_VCPU_TEST_SUITE()
+>> macro here since these tests are creating their VMs with the
+>> vm_create_barebones() function, not with vm_create_with_one_vcpu())
+>>
+>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+>> Signed-off-by: Thomas Huth <thuth@redhat.com>
+>> ---
+>>   v2:
+>>   - Rebase to linux-next branch
+>>   - Make "loops" variable static
+>>   - Added Andrew's Reviewed-by
+>>
+>>   .../selftests/kvm/set_memory_region_test.c    | 86 +++++++++----------
+>>   1 file changed, 42 insertions(+), 44 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
+>> index 68c899d27561..a5c9bee5235a 100644
+>> --- a/tools/testing/selftests/kvm/set_memory_region_test.c
+>> +++ b/tools/testing/selftests/kvm/set_memory_region_test.c
+>> @@ -16,6 +16,7 @@
+>>   #include <test_util.h>
+>>   #include <kvm_util.h>
+>>   #include <processor.h>
+>> +#include "kselftest_harness.h"
+>>   
+>>   /*
+>>    * s390x needs at least 1MB alignment, and the x86_64 MOVE/DELETE tests need a
+>> @@ -38,6 +39,8 @@ extern const uint64_t final_rip_end;
+>>   
+>>   static sem_t vcpu_ready;
+>>   
+>> +static int loops;
+> 
+> ...
+> 
+>> -static void test_add_overlapping_private_memory_regions(void)
+>> +TEST(add_overlapping_private_memory_regions)
+>>   {
+>>   	struct kvm_vm *vm;
+>>   	int memfd;
+>>   	int r;
+>>   
+>> -	pr_info("Testing ADD of overlapping KVM_MEM_GUEST_MEMFD memory regions\n");
+>> +	if (!has_cap_guest_memfd())
+>> +		SKIP(return, "Missing KVM_MEM_GUEST_MEMFD / KVM_X86_SW_PROTECTED_VM");
+> 
+> I like that we can actually report sub-tests as being skipped, but I don't like
+> having multiple ways to express requirements.  And IMO, this is much less readable
+> than TEST_REQUIRE(has_cap_guest_memfd());
+> 
+> AIUI, each test runs in a child process, so TEST_REQUIRE() can simply exit(), it
+> just needs to avoid ksft_exit_skip() so that a sub-test doesn't spit out the full
+> test summary.
+> 
+> And if using exit() isn't an option, setjmp()+longjmp() will do the trick (I got
+> that working for KVM_ONE_VCPU_TEST() before I realized tests run as a child).
+> 
+> The below is lightly tested, but I think it does what we want?
 
-> When a GPIO is configured as OPEN_DRAIN gpiolib will in
-> gpiod_direction_output() attempt to configure the open-drain property of
-> the hardware and if this fails fall back to software emulation of this
-> state.
->
-> The TLMM block in most Qualcomm platform does not implement such
-> functionality, so this call would be expected to fail. But due to lack
-> of checks for this condition, the zero-initialized od_bit will cause
-> this request to silently corrupt the lowest bit in the config register
-> (which typically is part of the bias configuration) and happily continue
-> on.
->
-> Fix this by checking if the od_bit value is unspecified and if so fail
-> the request to avoid the unexpected state, and to make sure the software
-> fallback actually kicks in.
->
-> It is assumed for now that no implementation will come into existence
-> with BIT(0) being the open-drain bit, simply for convenience sake.
->
-> Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+Not quite ... for example, if I force vmx_pmu_caps_test to skip the last 
+test, I get:
 
-I tried to follow the discussion but couldn't get to a verdict on this patc=
-h,
-should it be applied or not, and if it should be applied, should the Fixes:
-tag be dropped or left and considered a nonurgent fix as it does not
-affect current behaviour?
+TAP version 13
+1..5
+# Starting 5 tests from 1 test cases.
+#  RUN           vmx_pmu_caps.guest_wrmsr_perf_capabilities ...
+#            OK  vmx_pmu_caps.guest_wrmsr_perf_capabilities
+ok 1 vmx_pmu_caps.guest_wrmsr_perf_capabilities
+#  RUN           vmx_pmu_caps.basic_perf_capabilities ...
+#            OK  vmx_pmu_caps.basic_perf_capabilities
+ok 2 vmx_pmu_caps.basic_perf_capabilities
+#  RUN           vmx_pmu_caps.fungible_perf_capabilities ...
+#            OK  vmx_pmu_caps.fungible_perf_capabilities
+ok 3 vmx_pmu_caps.fungible_perf_capabilities
+#  RUN           vmx_pmu_caps.immutable_perf_capabilities ...
+#            OK  vmx_pmu_caps.immutable_perf_capabilities
+ok 4 vmx_pmu_caps.immutable_perf_capabilities
+#  RUN           vmx_pmu_caps.lbr_perf_capabilities ...
+ok 5 # SKIP - Requirement not met: host_cap.lbr_format && 0
+#            OK  vmx_pmu_caps.lbr_perf_capabilities
+ok 5 vmx_pmu_caps.lbr_perf_capabilities
+# PASSED: 5 / 5 tests passed.
+# Totals: pass:5 fail:0 xfail:0 xpass:0 skip:0 error:0
 
-Yours,
-Linus Walleij
+As you can see, the "ok 5" line is duplicated now, once marked with "# SKIP" 
+and once as successfull. I don't think that this is valid TAP anymore?
+
+> I also think we would effectively forbid direct use of TEST().  Partly because
+> it's effectively necessary to use TEST_REQUIRE(), but also so that all tests will
+> have an existing single point of contact if we need/want to make similar changes
+> in the future.
+
+Ok, but I wrote in the patch description, KVM_ONE_VCPU_TEST_SUITE() does not 
+work for the set_memory_region test since it does not like to have a 
+pre-defined vcpu ... so if we want to forbid TEST(), I assume we'd need 
+another macro like KVM_BAREBONE_TEST_SUITE() ?
+
+Not sure whether I really like it, though, since I'd prefer if we could keep 
+the possibility to use the original selftest macros (for people who are 
+already used to those macros from other selftests).
+
+  Thomas
+
